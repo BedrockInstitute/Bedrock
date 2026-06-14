@@ -7,8 +7,10 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
   2. Chinese double quotes "..." / “...”  -> 「...」                               [auto-fix]
   3. Parentheses in Chinese context must be half-width ( ), with English-style outer
      spacing: a space before '(' and after ')'   (e.g. 经典原理 (LEM、AC) 是…)        [auto-fix]
-     No space after a full-width symbol; no space between two Chinese characters
-     (markdown-adjacent spaces are exempt).                                            [auto-fix]
+     No space before/after a full-width symbol; no space between two Chinese
+     characters (markdown-adjacent spaces are exempt). A soft line-wrap that falls
+     between two CJK characters renders as a space, so such paragraphs are reflowed
+     (the wrapped lines are joined); breaks at Latin word boundaries are kept.        [auto-fix]
   4. No em dash — (U+2014), ― (U+2015), or 中文 破折号 ——                          [report only]
   5. No single quotes as quotation marks in Chinese context, no quote nesting       [report only]
 
@@ -110,6 +112,96 @@ def cjk_adjacent(text, prot, i):
     return (left is not None and is_cjk(left)) or (right is not None and is_cjk(right))
 
 
+# ---- line reflow (a soft wrap between two CJK chars renders as a space) -------
+
+_BLOCK_START = re.compile(r"^\s*([-*+]\s|\d+\.\s|#{1,6}\s|```|~~~|\||>)")
+
+
+def _strip_trailing_md(s):
+    s = s.rstrip()
+    while True:
+        n = re.sub(r"`[^`]*`$", "", re.sub(r"(?:\*+|_+|~+)$", "", s)).rstrip()
+        if n == s:
+            return s
+        s = n
+
+
+def _strip_leading_md(s):
+    while True:
+        n = re.sub(r"^`[^`]*`", "", re.sub(r"^(?:\*+|_+|~+)", "", s)).lstrip()
+        if n == s:
+            return s
+        s = n
+
+
+def _cont_text(line, blockquote):
+    s = line.lstrip()
+    return re.sub(r"^>\s?", "", s) if blockquote else s
+
+
+def _can_merge(prev, line):
+    """Should `line` (a wrapped continuation) join `prev` with no space between them?"""
+    if not prev.strip() or not line.strip():
+        return False, False
+    bq = prev.lstrip().startswith(">") and line.lstrip().startswith(">")
+    if _BLOCK_START.match(line) and not bq:
+        return False, False
+    last = _strip_trailing_md(prev)
+    first = _strip_leading_md(_cont_text(line, bq))
+    if not last or not first:
+        return False, bq
+    L, R = last[-1], first[0]
+    # Join when the wrap would render a bad space: between two CJK ideographs, or
+    # adjacent to a full-width symbol (which never takes an adjacent space). Keep the
+    # break at CJK<->Latin / Latin<->Latin boundaries, where the space is wanted.
+    join = is_cjk_punct(L) or is_cjk_punct(R) or (is_cjk_ideograph(L) and is_cjk_ideograph(R))
+    return join, bq
+
+
+def reflow(text):
+    out = []
+    fenced = False
+    for line in text.split("\n"):
+        if line.lstrip().startswith(("```", "~~~")):
+            fenced = not fenced
+            out.append(line)
+            continue
+        if fenced or not out:
+            out.append(line)
+            continue
+        ok, bq = _can_merge(out[-1], line)
+        if ok:
+            out[-1] = out[-1].rstrip() + _cont_text(line, bq)
+        else:
+            out.append(line)
+    return "\n".join(out)
+
+
+def wrap_break_lines(text):
+    """1-based line numbers whose trailing soft-wrap renders as a CJK-CJK space."""
+    lines = text.split("\n")
+    res = []
+    fenced = False
+    for i in range(len(lines) - 1):
+        if lines[i].lstrip().startswith(("```", "~~~")):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        if _can_merge(lines[i], lines[i + 1])[0]:
+            res.append(i + 1)
+    return res
+
+
+def line_to_index(text, lineno):
+    off = 0
+    for k, line in enumerate(text.split("\n")):
+        if k + 1 == lineno:
+            return off
+        off += len(line) + 1
+    return 0
+
+
 # ---- analysis ----------------------------------------------------------------
 
 class Violation:
@@ -185,7 +277,7 @@ def analyze(text):
                 edits[e] = ") "
                 fixable.append(Violation(e, "half-width ')' in Chinese context needs a trailing space", True))
 
-    # Rule 3c: no space immediately after a full-width punctuation symbol
+    # Rule 3c: no space adjacent to a full-width punctuation symbol (same line)
     for i, ch in enumerate(text):
         if prot[i] or not is_cjk_punct(ch):
             continue
@@ -195,6 +287,15 @@ def analyze(text):
                 edits[j] = ""
                 fixable.append(Violation(i, f"no space after full-width '{ch}'", True))
             j += 1
+        # space(s) before, but only when they are not leading indentation
+        k = i - 1
+        while k >= 0 and text[k] in " \t":
+            k -= 1
+        if k >= 0 and text[k] != "\n" and k < i - 1:
+            for m2 in range(k + 1, i):
+                if m2 not in edits:
+                    edits[m2] = ""
+            fixable.append(Violation(i, f"no space before full-width '{ch}'", True))
 
     # Rule 3d: no space between two CJK ideographs (markdown-adjacent spaces are exempt)
     ideo = r"[㐀-䶿一-鿿]"
@@ -235,10 +336,13 @@ def analyze(text):
         elif ch == "」" and depth > 0:
             depth -= 1
 
-    if edits:
-        fixed = "".join(edits.get(i, c) for i, c in enumerate(text))
-    else:
-        fixed = text
+    char_fixed = "".join(edits.get(i, c) for i, c in enumerate(text)) if edits else text
+
+    # Rule 3e: reflow CJK soft-wraps (a line break between two CJK chars renders as a space)
+    for ln in wrap_break_lines(char_fixed):
+        fixable.append(Violation(line_to_index(char_fixed, ln),
+                                 "line break renders as a space between Chinese characters; join with the next line", True))
+    fixed = reflow(char_fixed)
     return fixed, fixable, manual
 
 
@@ -303,14 +407,20 @@ def main(argv):
         fixed, fixable, manual = analyze(text)
 
         if mode == "fix":
-            if fixed != text:
+            cur = text
+            for _ in range(6):  # converge: char fixes + reflow may interact
+                nxt = analyze(cur)[0]
+                if nxt == cur:
+                    break
+                cur = nxt
+            if cur != text:
                 with open(path, "w", encoding="utf-8") as fh:
-                    fh.write(fixed)
+                    fh.write(cur)
                 fixed_files.append(path)
             # report manual violations against the fixed text
-            _, _, manual = analyze(fixed)
+            manual = analyze(cur)[2]
             if manual:
-                report(path, fixed, manual)
+                report(path, cur, manual)
                 total_manual += len(manual)
         else:  # check
             if fixable:

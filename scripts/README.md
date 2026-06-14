@@ -10,8 +10,9 @@ Checks Markdown prose (`*.md`, `*.lagda.md`; the verbatim `LICENSE` is excluded)
 - Chinese sentence punctuation `, ; : ! ?` must be full-width `，；：！？` (auto-fixable).
 - Chinese double quotes use the corner brackets `「」`, not `"…"` or `“…”` (auto-fixable).
 - Parentheses in Chinese text stay half-width `()`, with English-style outer spacing
-  (`经典原理 (LEM、AC) 是…`); no space between Chinese characters; no space after a
-  full-width symbol (auto-fixable).
+  (`经典原理 (LEM、AC) 是…`); no space between Chinese characters; no space adjacent to a
+  full-width symbol; Chinese paragraphs are reflowed so a soft line-wrap never falls
+  between two CJK characters (which would render as a space). All auto-fixable.
 - Em dash (`—`, `―`, `——`) is banned everywhere; en dash `–` and hyphen `-` are allowed.
 - Single quotes as Chinese quotation marks, and any quote nesting, are banned.
 
