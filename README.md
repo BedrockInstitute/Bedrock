@@ -39,9 +39,9 @@ The host is Cubical Agda; classical principles (LEM, AC) are explicit module
 parameters, not global assumptions, so the constructive/classical boundary stays
 visible. Beyond that, the aim is not to settle the metaphysics of V, but to lay
 verified groundwork on which its questions can be studied in a proof assistant.
-The theorems that arbitrate the debate — ground-model definability, the mantle,
-generic absoluteness — are the field's arbitration infrastructure, and mechanizing
-them is groundwork in the literal sense.
+The theorems that arbitrate the debate, such as ground-model definability, the
+mantle, and generic absoluteness, are the field's arbitration infrastructure, and
+mechanizing them is groundwork in the literal sense.
 
 The one methodological choice everything follows from is **host-language
 maximalism**: rather than transcribing the textbook ZF axioms and bending the
@@ -53,23 +53,24 @@ models; satisfaction is structural recursion on `Formula`, so the Tarski equatio
 hold by computation; `L` is an inductive predicate, not an arithmetised Δ₀ formula.
 The host does the *speaking*; the deep-embedded `Formula` is what gets *studied*.
 This can look like the opposite of grounding, which usually means retreating to an
-austere base — but a proof assistant offers rigor, not reductive security, and
+austere base. But a proof assistant offers rigor, not reductive security, and
 rigor is independent of the metatheory's strength. Maximalism is in fact what makes
 the checking attainable: the metaphysics of V needs a metatheory rich enough to
 express V's own structure, and the metatheoretic cost is declared openly.
 
-The groundwork is also neutral. The metaphysics of V is contested — universism
-holds V is a single determinate universe; multiversism holds forcing extensions,
-grounds, and ultrapowers are equally real — and each side has carried a
+The groundwork is also neutral. The metaphysics of V is contested: universism
+holds V is a single determinate universe, while multiversism holds forcing
+extensions, grounds, and ultrapowers are equally real. Each side has carried a
 methodological weakness. Set-theoretic geology repairs both with one body of ZFC
 theorems, making the multiverse a definable, quantifiable structure (the legitimacy
 multiversism needs) while handing universism a falsifiable instrument, and
 parameterising the dispute by the strength of the infinity axiom assumed. This
 project takes no side: it mechanizes theorems that presuppose neither position and
-serve both — neutral ground beneath the debate, on which either camp can build.
+serve both. That is the sense in which it is bedrock: neutral ground beneath the
+debate, on which either camp can build.
 
-The full treatment — the bullet-by-bullet rationale, the defense of maximalism, and
-the geology positioning — is in the [Charter](docs/CHARTER.md).
+The full treatment, covering the bullet-by-bullet rationale, the defense of
+maximalism, and the geology positioning, is in the [Charter](docs/CHARTER.md).
 
 ## Name
 

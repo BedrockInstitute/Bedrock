@@ -1,4 +1,4 @@
-# Bedrock — Charter
+# Bedrock Charter
 
 **English** · [中文](./CHARTER.zh.md)
 
