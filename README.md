@@ -38,11 +38,10 @@ These are goals, not promises. Each will be claimed here only when it is checked
 
 ## Groundwork
 
-The host is Cubical Agda, with classical principles (LEM, AC) as explicit module
-parameters. The aim is not to settle the metaphysics of V but to lay verified
-groundwork for it: mechanizing the theorems that arbitrate the debate, such as
-ground-model definability, the mantle, and generic absoluteness, is groundwork in
-the literal sense.
+The aim is not to settle the metaphysics of V but to lay verified groundwork for
+it: mechanizing the theorems that arbitrate the debate, such as ground-model
+definability, the mantle, and generic absoluteness, is groundwork in the literal
+sense.
 
 The one choice everything follows from is **host-language maximalism**: rather than
 transcribing the textbook ZF axioms and bending the proof assistant around them,
