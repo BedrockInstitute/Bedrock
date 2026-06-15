@@ -1,19 +1,45 @@
 #!/bin/sh
-# Bedrock pre-commit: enforce prose conventions (full-width CJK punctuation,
-# 「」 quotes, half-width Chinese parens, no em dash, no single quotes / nesting).
-# Activated via: git config --local core.hooksPath scripts/git-hooks
+# Bedrock pre-commit: fast, source-level checks on staged Markdown only (no Agda, no site
+# build). Enforces prose conventions (full-width CJK punctuation, 「」 quotes, half-width
+# Chinese parens, no em dash, no single quotes / nesting) and i18n marker integrity.
+# Activated via: git config --local core.hooksPath scripts/git-hooks   (or: make hooks)
 # Bypass in an emergency with: git commit --no-verify
 
-files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(md|lagda\.md)$')
-[ -z "$files" ] && exit 0
+md=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(md|lagda\.md)$')
+masters=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.lagda\.md$')
 
-# shellcheck disable=SC2086
-if ! python3 scripts/lint-prose.py --check $files; then
-	echo ""
-	echo "Prose lint failed. Auto-fix punctuation/quotes with:"
-	echo "    python3 scripts/lint-prose.py --fix $files"
-	echo "Em dashes, single quotes, and quote nesting must be rewritten by hand."
-	echo "(To bypass: git commit --no-verify)"
-	exit 1
+status=0
+
+if [ -n "$md" ]; then
+	# shellcheck disable=SC2086
+	if ! python3 scripts/lint-prose.py --check $md; then
+		echo ""
+		echo "Prose lint failed. Auto-fix punctuation/quotes with:"
+		echo "    python3 scripts/lint-prose.py --fix $md"
+		echo "Em dashes, single quotes, and quote nesting must be rewritten by hand."
+		status=1
+	fi
 fi
-exit 0
+
+if [ -n "$masters" ]; then
+	# shellcheck disable=SC2086
+	if ! python3 scripts/weave-i18n.py --check $masters; then
+		echo ""
+		echo "i18n marker check failed (see dev/STYLE-i18n.md for the grammar)."
+		status=1
+	fi
+fi
+
+if [ -n "$md" ]; then
+	# shellcheck disable=SC2086
+	if ! python3 scripts/check-glossary.py --check $md; then
+		echo ""
+		echo "Glossary check failed: an off-glossary term rendering was used."
+		echo "Fix it to the canonical rendering in dev/GLOSSARY.md, or mark a genuine"
+		echo "exception with <!-- glossary-ignore --> on the line."
+		status=1
+	fi
+fi
+
+[ "$status" -ne 0 ] && echo "(To bypass: git commit --no-verify)"
+exit $status

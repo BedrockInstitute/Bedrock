@@ -26,18 +26,8 @@ jobs:
           echo "${AGDA_DIR}/libraries.d/cubical-0.9/cubical.agda-lib" >> "${AGDA_DIR}/libraries"
           cat "${AGDA_DIR}/libraries"
 
-      - name: Typecheck
+      - name: Check (typecheck masters + marker integrity + prose lint)
         shell: bash
         run: |
           set -euo pipefail
-          shopt -s globstar nullglob
-          files=(src/**/*.agda)
-          if (( ${#files[@]} == 0 )); then
-            echo "No Agda source files under src/ yet; nothing to typecheck."
-            exit 0
-          fi
-          for f in "${files[@]}"; do
-            echo "::group::agda $f"
-            agda "$f"
-            echo "::endgroup::"
-          done
+          make check

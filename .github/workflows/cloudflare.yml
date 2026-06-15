@@ -1,0 +1,50 @@
+name: cloudflare
+
+# Build the site (at domain root) and deploy it to Cloudflare Pages -> bedrock.institute.
+# This is the canonical deployment; .github/workflows/pages.yml keeps a GitHub Pages mirror.
+# Owner setup (once): create a Cloudflare Pages project named "bedrock", point
+# bedrock.institute at it, and add the repository secrets CLOUDFLARE_API_TOKEN and
+# CLOUDFLARE_ACCOUNT_ID.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Agda 2.8.0
+        uses: agda/agda-setup-action@v1
+        with:
+          agda-version: '2.8.0'
+
+      - name: Install and register cubical 0.9
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL https://github.com/agda/cubical/archive/refs/tags/v0.9.tar.gz -o cubical.tar.gz
+          mkdir -p "${AGDA_DIR}/libraries.d"
+          tar xf cubical.tar.gz -C "${AGDA_DIR}/libraries.d/"
+          echo "${AGDA_DIR}/libraries.d/cubical-0.9/cubical.agda-lib" >> "${AGDA_DIR}/libraries"
+
+      - name: Build site (domain root)
+        shell: bash
+        run: |
+          set -euo pipefail
+          make site BASE_URL=
+
+      - name: Link check
+        shell: bash
+        run: python3 scripts/link-check.py _build/site
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _build/site --project-name=bedrock

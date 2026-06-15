@@ -55,8 +55,14 @@
 
 プッシュのたびに、[GitHub Actions](../../.github/workflows/typecheck.yml) によって上記のバージョンに対して型検査される。
 
+## 貢献
+
+貢献者 (AI エージェントを含む) は [CONTRIBUTING.md](../../CONTRIBUTING.md) を参照してください。
+
 ## ライセンス
 
-リポジトリ全体は、ソースコードも文章も区別なく、[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) のもとで公開される。その Agda 開発は、従来型のソフトウェアではなく一篇の数学的文章として扱われ、それに即して許諾される。
+数学的開発と文章は、ソースコードも文章も区別なく、[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) のもとで公開される。その Agda 開発は、従来型のソフトウェアではなく一篇の数学的文章として扱われ、それに即して許諾される。
+
+ドキュメントサイトのレンダラーは [1lab](https://1lab.dev) を改変したフロントエンド資産を再利用しており、これらは AGPL-3.0 のもとにある。該当部分は AGPL-3.0 のままであり、ここでは単なる集合体として組み合わされている。詳しくは [NOTICE](../../NOTICE) を参照。
 
 © 2026 choukh (choukyuhei@gmail.com)。非営利目的であれば本作品を共有・改変してよいが、適切なクレジットを表示し、同一の条件のもとで派生物を許諾することを条件とする。

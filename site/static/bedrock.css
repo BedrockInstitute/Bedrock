@@ -1,0 +1,235 @@
+/* Bedrock site styles.
+ *
+ * The colour palette and the Agda syntax-token colours are adapted from the 1lab
+ * (https://1lab.dev), which is licensed AGPL-3.0; this file is therefore likewise
+ * AGPL-3.0. The page layout is Bedrock's own. See site/vendor/1lab/LICENSE and NOTICE.
+ */
+
+/* All web fonts self-hosted (see site/static/fonts/, all OFL-1.1): EB Garamond (body serif),
+   Inria Sans (UI sans), JuliaMono (code) -- matching 1lab's typefaces, but with no runtime
+   dependency on Google Fonts (which can be blocked or slow). CJK falls back to the system
+   rounded font (see --cjk-font). URLs are relative to this stylesheet, so they work under
+   any deploy base path. */
+@font-face { font-family: "EB Garamond"; font-display: swap; font-weight: 400; font-style: normal;
+  src: url("fonts/eb-garamond-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-display: swap; font-weight: 400; font-style: italic;
+  src: url("fonts/eb-garamond-latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-display: swap; font-weight: 600; font-style: normal;
+  src: url("fonts/eb-garamond-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-display: swap; font-weight: 700; font-style: normal;
+  src: url("fonts/eb-garamond-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inria Sans"; font-display: swap; font-weight: 400; font-style: normal;
+  src: url("fonts/inria-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inria Sans"; font-display: swap; font-weight: 700; font-style: normal;
+  src: url("fonts/inria-sans-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "JuliaMono"; font-display: swap; font-weight: 400; font-style: normal;
+  src: url("fonts/JuliaMono-Regular.woff2") format("woff2"); }
+@font-face { font-family: "JuliaMono"; font-display: swap; font-weight: 700; font-style: normal;
+  src: url("fonts/JuliaMono-Bold.woff2") format("woff2"); }
+
+:root {
+  --text-bg: #fff;       --text-fg: #222;       --fg-alt: #475569;
+  --primary: #0054F4;    --ruler: #94A3B8;      --highlight: #F5DEB3;
+  --code-bg: #f6f8fa;    --code-fg: #222;
+  --code-comment: #6a737d; --code-keyword: #BB3B13; --code-string: #d52753;
+  --code-number: #8A1060;  --code-module: #8A1060;  --code-field: #9C1BD6;
+  --code-macro: #0054F4;   --code-constructor: #207B1D; --code-identifier: #0054F4;
+  --popup-bg: #fff;        --banner-bg: #FEF3C7;    --banner-fg: #92400E;
+  --button-hover: #e5e7eb; --input-border: #cbd5e1;
+  /* CJK glyphs fall through to a rounded system sans (PingFang on macOS). Latin uses the
+     fonts before it (EB Garamond / Inria Sans) via per-glyph fallback. ja is overridden
+     below to prefer Hiragino. */
+  --cjk-font: "PingFang SC", "PingFang TC", "Hiragino Sans GB", "Microsoft YaHei",
+              "Noto Sans CJK SC", sans-serif;
+  --serif: "EB Garamond", Georgia, "Times New Roman", var(--cjk-font);
+  --sans: "Inria Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", var(--cjk-font);
+  --mono: "JuliaMono", "Cascadia Code", "JetBrains Mono", "Fira Code", ui-monospace,
+          "SF Mono", Menlo, Consolas, monospace;
+  --font-size: 1.3rem;                      /* 1lab's default (sans-serif mode) body size */
+  --code-font-size: calc(0.92 * var(--font-size));
+}
+
+/* Japanese prefers Hiragino (Mac) over PingFang to avoid Han-unification glyph mismatch. */
+html[lang="ja"] {
+  --cjk-font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+              "Noto Sans CJK JP", sans-serif;
+}
+
+:root.theme-dark, html.theme-dark {
+  --text-bg: #1B1E24;    --text-fg: #ABB2BF;    --fg-alt: #94A3B8;
+  --primary: #119DDB;    --ruler: #475569;      --highlight: #EF444499;
+  --code-bg: #15181d;    --code-fg: #ABB2BF;
+  --code-comment: #919EBB; --code-keyword: #F28100; --code-string: #FF5E6C;
+  --code-number: #FF5E6C;  --code-module: #EC97B7;  --code-field: #FF46AC;
+  --code-macro: #EAD16E;   --code-constructor: #15D5A6; --code-identifier: #119DDB;
+  --popup-bg: #1B1E24;     --banner-bg: #3f2d12;    --banner-fg: #FCD34D;
+  --button-hover: #3B4454; --input-border: #475569;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) {
+    --text-bg: #1B1E24;    --text-fg: #ABB2BF;    --fg-alt: #94A3B8;
+    --primary: #119DDB;    --ruler: #475569;      --highlight: #EF444499;
+    --code-bg: #15181d;    --code-fg: #ABB2BF;
+    --code-comment: #919EBB; --code-keyword: #F28100; --code-string: #FF5E6C;
+    --code-number: #FF5E6C;  --code-module: #EC97B7;  --code-field: #FF46AC;
+    --code-macro: #EAD16E;   --code-constructor: #15D5A6; --code-identifier: #119DDB;
+    --popup-bg: #1B1E24;     --banner-bg: #3f2d12;    --banner-fg: #FCD34D;
+    --button-hover: #3B4454; --input-border: #475569;
+  }
+}
+
+* { box-sizing: border-box; }
+/* Base rem = browser default (16px), so 1.4rem matches 1lab's body size exactly. */
+/* Prose font: Inria Sans (sans-serif), matching 1lab's default. (1lab also ships EB Garamond
+   for an optional "Serif" toggle; we keep the @font-face above but default to sans like 1lab.) */
+body {
+  margin: 0; background: var(--text-bg); color: var(--text-fg);
+  font-family: var(--sans); font-size: var(--font-size); line-height: 1.5;
+}
+
+/* ---- top bar ---- */
+#topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.5rem 1rem; background: var(--text-bg);
+}
+#brand { font-family: var(--sans); font-weight: 700; font-size: 1.2rem;
+         color: var(--primary); text-decoration: none; }
+.topbar-spacer { flex: 1; }
+.search-form { position: relative; }
+#search-box {
+  font-family: var(--sans); font-size: 0.95rem; padding: 0.3rem 0.6rem;
+  border: 1px solid var(--input-border); border-radius: 6px;
+  background: var(--text-bg); color: var(--text-fg); width: 14rem; max-width: 40vw;
+}
+#search-results {
+  position: absolute; right: 0; top: 2.2rem; width: 28rem; max-width: 80vw;
+  max-height: 60vh; overflow-y: auto; background: var(--popup-bg);
+  border: 1px solid var(--input-border); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 0.25rem;
+}
+#search-results .res { display: block; padding: 0.35rem 0.5rem; border-radius: 6px;
+  text-decoration: none; color: var(--text-fg); font-family: var(--sans); font-size: 0.9rem; }
+#search-results .res:hover, #search-results .res.sel { background: var(--button-hover); }
+#search-results .res .nm { font-family: var(--mono); color: var(--primary); }
+#search-results .res .mod { color: var(--fg-alt); font-size: 0.8rem; }
+#search-results .res .ty { font-family: var(--mono); color: var(--fg-alt); font-size: 0.8rem; }
+#lang-switch { font-family: var(--sans); font-size: 0.9rem; }
+#lang-switch a { color: var(--fg-alt); text-decoration: none; }
+#lang-switch a:hover { text-decoration: underline; }
+#lang-switch .cur { font-weight: 700; color: var(--text-fg); }
+#theme-toggle { font-size: 1.1rem; background: none; border: none; cursor: pointer;
+  color: var(--text-fg); padding: 0.2rem 0.4rem; border-radius: 6px; }
+#theme-toggle:hover { background: var(--button-hover); }
+
+/* ---- layout (matches 1lab: centered up to 80rem; a full-width sidebar | content | gutter
+   grid that uses ultra-wide screens at >=95rem) ---- */
+main { max-width: 80rem; width: 100%; margin: 0 auto; padding: 0 1rem; box-sizing: border-box; }
+#post-toc-container {
+  display: grid; gap: 1.5rem 2.5rem; align-items: start;
+  grid-template-columns: 14rem minmax(0, 1fr);
+  grid-template-areas: "sidebar content";
+}
+article { grid-area: content; }
+#sidenote-container { grid-area: gutter; display: none; }
+
+@media (min-width: 95rem) {                  /* ultra-wide: span the screen, 1lab-style */
+  main { max-width: 100%; }
+  #post-toc-container {
+    grid-template-columns: 0.1fr 1fr 0.1fr minmax(0, 3fr) 1fr 0.1fr;
+    grid-template-areas: ". sidebar . content gutter .";
+  }
+  #sidenote-container { display: block; }
+}
+
+#toc { grid-area: sidebar; position: sticky; top: 4rem; font-family: var(--sans); font-size: 1rem;
+  max-height: calc(100vh - 5rem); overflow-y: auto; }
+.nav-title { font-weight: 700; color: var(--fg-alt); text-transform: uppercase;
+  font-size: 0.75rem; letter-spacing: 0.05em; margin: 1rem 0 0.4rem; }
+.nav-title:first-child { margin-top: 0; }
+ul.toc, ul.modnav { list-style: none; padding-left: 0; margin: 0; }
+ul.toc li, ul.modnav li { margin: 0.2rem 0; }
+ul.toc .toc-l3 { padding-left: 1rem; }
+ul.toc .toc-l4 { padding-left: 2rem; }
+ul.toc a, ul.modnav a { color: var(--fg-alt); text-decoration: none; }
+ul.toc a:hover, ul.modnav a:hover { color: var(--primary); }
+ul.modnav a { font-family: var(--mono); font-size: 0.82rem; }
+ul.modnav li.cur > a { color: var(--primary); font-weight: 700; }
+article { min-width: 0; line-height: 1.2; }   /* 1lab's prose line-height */
+article p, article ul, article ol, article blockquote { margin-block: 0.95em; }
+/* CJK at 1.2 is cramped; relax slightly for Chinese/Japanese prose (1lab is Latin-only). */
+html[lang="zh"] article, html[lang="ja"] article { line-height: 1.5; }
+article h1 { font-size: 2rem; margin-top: 0; }
+article h2, article h3 { margin-top: 2rem; }   /* no underline, like 1lab */
+#sidenote-container { }
+
+/* ---- prose ---- */
+article a { color: var(--primary); text-decoration: none; }
+article a:hover { text-decoration: underline; }
+article :not(pre) > code { font-family: var(--mono); font-size: 0.88em;
+  background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 4px; }
+.banner { background: var(--banner-bg); color: var(--banner-fg);
+  padding: 0.6rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; font-family: var(--sans);
+  font-size: 0.9rem; }
+
+/* External-library pages (cubical): a coloured header marking you have left Bedrock. No
+   divider line (the background colour alone signals the state), to match 1lab's clean style. */
+.ext-banner { background: var(--banner-bg); color: var(--banner-fg); font-family: var(--sans);
+  font-weight: 600; text-align: center; padding: 0.55rem 1rem; }
+.ext-banner a { color: var(--banner-fg); text-decoration: underline; margin-left: 0.5rem; }
+blockquote { border-left: 0.3ex solid var(--ruler); margin-left: 0; padding-left: 1rem;
+  color: var(--fg-alt); }
+.module-index { list-style: none; padding-left: 0; }
+.module-index li { margin: 0.3rem 0; }
+.module-index a { font-family: var(--mono); }
+
+/* ---- code blocks (Agda) ---- */
+pre.Agda, pre.sourceCode {
+  font-family: var(--mono); font-size: var(--code-font-size); line-height: 1.45;
+  background: var(--code-bg); padding: 0.8rem 1rem; border-radius: 8px;
+  overflow-x: auto; margin: 1.2rem 0;
+}
+pre.Agda a { text-decoration: none; color: var(--code-fg); }
+pre.Agda a:hover[href] { text-decoration: underline; }
+.Agda .Comment, .Agda .Markup, .Agda .Pragma { color: var(--code-comment); }
+.Agda .Comment { font-style: italic; }
+.Agda .Keyword { color: var(--code-keyword); }
+.Agda .String  { color: var(--code-string); }
+.Agda .Number  { color: var(--code-number); }
+.Agda .Symbol  { color: var(--code-fg); }
+.Agda .Bound, .Agda .Generalizable { color: var(--code-fg); }
+.Agda .InductiveConstructor, .Agda .CoinductiveConstructor { color: var(--code-constructor); }
+.Agda .Field   { color: var(--code-field); }
+.Agda .Module  { color: var(--code-module); }
+.Agda .Datatype, .Agda .Function, .Agda .Postulate, .Agda .Primitive,
+.Agda .Record, .Agda .PrimitiveType { color: var(--code-identifier); }
+.Agda .Macro   { color: var(--code-macro); }
+.inline-ref { font-family: var(--mono); font-size: 0.88em; }
+a.inline-ref { color: var(--code-identifier); }
+
+/* ---- type-on-hover popup ---- */
+.hover-popup {
+  position: absolute; z-index: 50; max-width: 40rem;
+  background: var(--popup-bg); border: 1px solid var(--input-border);
+  border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.2);
+  padding: 0.4rem 0.6rem; font-family: var(--mono); font-size: 0.8rem;
+  white-space: pre-wrap; pointer-events: none;
+}
+.hover-popup a { color: var(--code-identifier); text-decoration: none; }
+
+/* ---- math ---- */
+.math.display { display: block; overflow-x: auto; margin: 1rem 0; text-align: center; }
+
+/* ---- footer ---- */
+#site-footer { margin-top: 4rem;
+  padding: 1.5rem 1rem; font-family: var(--sans); font-size: 0.85rem;
+  color: var(--fg-alt); text-align: center; }
+#site-footer a { color: var(--primary); text-decoration: none; }
+#site-footer .footer-copyright { margin-top: 0.35rem; font-size: 0.8rem; opacity: 0.9; }
+
+/* ---- narrow screens ---- */
+@media (max-width: 60rem) {
+  #post-toc-container { grid-template-columns: minmax(0, 1fr); grid-template-areas: "content"; }
+  #toc { display: none; }                    /* narrow screens: content only (topbar search remains) */
+  #search-box { width: 8rem; }
+}

@@ -1,0 +1,69 @@
+name: pages
+
+# Build the multilingual hyperlinked site and deploy it to GitHub Pages.
+# Nothing generated is committed; the site is built fresh in CI from the masters.
+# Repo setting required once: Settings -> Pages -> Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; don't cancel an in-progress one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Agda 2.8.0
+        uses: agda/agda-setup-action@v1
+        with:
+          agda-version: '2.8.0'
+
+      - name: Install and register cubical 0.9
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL https://github.com/agda/cubical/archive/refs/tags/v0.9.tar.gz -o cubical.tar.gz
+          mkdir -p "${AGDA_DIR}/libraries.d"
+          tar xf cubical.tar.gz -C "${AGDA_DIR}/libraries.d/"
+          echo "${AGDA_DIR}/libraries.d/cubical-0.9/cubical.agda-lib" >> "${AGDA_DIR}/libraries"
+
+      - name: Build site
+        shell: bash
+        run: |
+          set -euo pipefail
+          make site BASE_URL=/${GITHUB_REPOSITORY#*/}
+
+      - name: Link check
+        shell: bash
+        run: python3 scripts/link-check.py _build/site
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _build/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

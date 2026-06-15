@@ -54,6 +54,10 @@ FULLWIDTH = {",": "，", ";": "；", ":": "：", "!": "！", "?": "？"}
 EM_DASHES = {"—", "―"}            # U+2014, U+2015  (en dash U+2013 and hyphen are allowed)
 SKIP = set(" \t\r*_~()[]")        # whitespace, markdown emphasis, transparent brackets
 
+# i18n language markers (see dev/STYLE-i18n.md). Treated as hard block boundaries so the
+# CJK reflow never merges prose across (or into) a language switch.
+MARKER_RE = re.compile(r"^\s*<!--\s*(en|zh|ja|/)\s*-->\s*$")
+
 
 def _in(cp, ranges):
     return any(a <= cp <= b for a, b in ranges)
@@ -99,6 +103,8 @@ def build_protected(text):
     mask(r"`[^`\n]*`")                       # inline code
     mask(r"\]\([^)\n]*\)", start_off=1)      # markdown link/image destination: the (...) part
     mask(r"[A-Za-z][A-Za-z0-9+.\-]*://[^\s)]+")  # bare URLs
+    mask(r"\$\$[^$]*\$\$")                    # display math $$...$$ (may span lines)
+    mask(r"\$[^$\n]+\$")                      # inline math $...$
     return prot
 
 
@@ -155,6 +161,8 @@ def _cont_text(line, blockquote):
 def _can_merge(prev, line):
     """Should `line` (a wrapped continuation) join `prev` with no space between them?"""
     if not prev.strip() or not line.strip():
+        return False, False
+    if MARKER_RE.match(prev) or MARKER_RE.match(line):
         return False, False
     bq = prev.lstrip().startswith(">") and line.lstrip().startswith(">")
     if _BLOCK_START.match(line) and not bq:
@@ -423,7 +431,8 @@ def target_files(explicit, staged):
         files = git_lines(["ls-files", "*.md", "*.lagda.md"])
     return [f for f in files
             if (f.endswith(".md") or f.endswith(".lagda.md"))
-            and os.path.basename(f).lower() not in EXCLUDE_BASENAMES]
+            and os.path.basename(f).lower() not in EXCLUDE_BASENAMES
+            and not f.startswith(".claude/")]   # Claude skill/config, not prose docs
 
 
 def main(argv):

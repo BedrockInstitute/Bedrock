@@ -1,0 +1,40 @@
+Bedrock
+Copyright (C) 2026 choukh (choukyuhei@gmail.com)
+
+The mathematical development and prose (everything under src/, docs/, and dev/, and the
+repository's own scripts) are licensed under CC BY-NC-SA 4.0; see LICENSE.
+
+This repository also aggregates third-party material under different terms. These are
+separate works combined by mere aggregation; each retains its own license.
+
+================================================================================
+1lab  --  https://1lab.dev  --  https://github.com/the1lab/1lab
+Copyright (C) 2021 Amelia Liao and contributors
+Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only).
+
+  Bedrock's site renderer vendors and adapts the 1lab's front-end assets (CSS palette
+  and Agda syntax-token colours, the type-on-hover idea). The vendored files live under
+  site/vendor/1lab/ with the upstream LICENSE; derived files (site/static/bedrock.css,
+  and the hover mechanism in site/static/bedrock.js) are likewise AGPL-3.0 and are
+  marked as such. Per AGPL-3.0 section 13, the corresponding source of the deployed site
+  is this public repository: https://github.com/choukh/Bedrock
+
+  The 1lab itself bundles, in turn, the following (their licenses apply to those parts):
+    - KaTeX                            MIT
+    - octicons                         MIT
+    - Noto Emoji                       Apache-2.0
+    - fast-fuzzy                       ISC
+    - JuliaMono, Inria Sans, EB Garamond   SIL Open Font License 1.1
+  See site/vendor/1lab/static/licenses/ for the upstream texts.
+
+================================================================================
+KaTeX  --  https://katex.org  --  MIT
+  The deployed site loads KaTeX (CSS + JS) from a CDN at view time to render math.
+================================================================================
+Self-hosted web fonts (site/static/fonts/, all under the SIL Open Font License 1.1):
+  - EB Garamond  (body serif)  https://github.com/octaviopardo/EBGaramond12
+  - Inria Sans   (UI sans)     https://github.com/BlackFoundryCom/InriaFonts
+  - JuliaMono    (code)        https://github.com/cormullion/juliamono
+  The JuliaMono license text is at site/static/fonts/LICENSE-JuliaMono.txt. No runtime
+  font CDN is used; CJK text uses the reader's system font (e.g. PingFang on macOS).
+================================================================================

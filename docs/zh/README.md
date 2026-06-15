@@ -55,9 +55,15 @@
 
 每次推送都会经 [GitHub Actions](../../.github/workflows/typecheck.yml) 针对上述版本进行类型检查。
 
+## 贡献
+
+贡献者 (包括 AI agent) 请阅读 [CONTRIBUTING.md](../../CONTRIBUTING.md)。
+
 ## 许可
 
-整个仓库，源码与文稿一视同仁，以
+数学开发与文稿，源码与文字一视同仁，以
 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可发布。其中的 Agda 开发被视作一份数学写作，而非传统软件，并据此授权。
+
+文档站点的渲染器复用了改编自 [1lab](https://1lab.dev) 的前端资源，这些资源以 AGPL-3.0 许可，相应部分仍为 AGPL-3.0，在此仅以聚合方式组合。详见 [NOTICE](../../NOTICE)。
 
 © 2026 choukh (choukyuhei@gmail.com)。您可出于非商业目的分享与演绎本作品，但须给予适当署名，并以相同条款许可您的衍生作品。

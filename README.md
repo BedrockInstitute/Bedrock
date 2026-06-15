@@ -83,12 +83,20 @@ The development typechecks against the following pinned toolchain:
 Every push is typechecked against these versions by
 [GitHub Actions](.github/workflows/typecheck.yml).
 
+## Contributing
+
+Contributors, including AI agents, should read [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
-The entire repository, source and prose alike, is licensed under
+The mathematical development and prose, source and writing alike, are licensed under
 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 The Agda development is treated as a piece of mathematical writing rather than
 conventional software, and licensed accordingly.
+
+The documentation site's renderer reuses front-end assets adapted from
+[the 1lab](https://1lab.dev), which are licensed under AGPL-3.0; those parts stay
+AGPL-3.0 and are combined here by mere aggregation. See [NOTICE](NOTICE).
 
 © 2026 choukh (choukyuhei@gmail.com). You may share and adapt this work for
 non-commercial purposes, provided you give appropriate credit and license your

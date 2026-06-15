@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="%%LANG%%">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>%%TITLE%% · %%SITE%%</title>
+  <meta name="description" content="%%DESC%%" />
+%%HREFLANG%%
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="%%BASEURL%%/static/bedrock.css" />
+  <link rel="icon" href="%%BASEURL%%/static/favicon.svg" />
+  <script>
+    window.bedrock = { baseUrl: "%%BASEURL%%", lang: "%%LANG%%", module: "%%MODULE%%" };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="%%BASEURL%%/static/bedrock.js"></script>
+</head>
+
+<body class="%%BODYCLASS%%">
+%%EXTBANNER%%
+  <header id="topbar">
+    <a id="brand" href="%%BASEURL%%/%%LANG%%/index.html">%%SITE%%</a>
+    <div class="topbar-spacer"></div>
+    <div class="search-form" role="search">
+      <input id="search-box" type="text" placeholder="%%S_SEARCH%%" autocomplete="off" aria-label="%%S_SEARCH%%" />
+      <div id="search-results" role="listbox" hidden></div>
+    </div>
+    <nav id="lang-switch" aria-label="language">%%LANGNAV%%</nav>
+    <button id="theme-toggle" type="button" title="%%S_THEME%%" aria-label="%%S_THEME%%">◐</button>
+  </header>
+
+  <main>
+    <div id="post-toc-container">
+      <aside id="toc">
+        <div id="toc-container">
+          %%MODNAV%%
+          %%TOC%%
+        </div>
+      </aside>
+
+      <article>
+%%BANNER%%
+%%BODY%%
+      </article>
+
+      <aside id="sidenote-container"></aside>
+    </div>
+  </main>
+
+  <footer id="site-footer">%%FOOTER%%</footer>
+</body>
+</html>
