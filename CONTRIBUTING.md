@@ -25,6 +25,13 @@ Bedrock separates documentation by audience, and the two follow different langua
 
 This taxonomy is itself a rule, recorded here. If you add a document, place it by audience.
 
+Developer docs are written **primarily for AI-agent readers** (humans second): favour explicit
+structure and file-by-file description over narrative, so an agent can orient quickly. Every
+top-level directory carries a short `README.md` to that end: [src/](src/README.md),
+[docs/](docs/README.md), [dev/](dev/README.md), [site/](site/README.md),
+[scripts/](scripts/README.md), and [.github/](.github/README.md). When you add a top-level
+directory, add its README.
+
 ## Prose conventions (all languages)
 
 Enforced by `scripts/lint-prose.py` and the pre-commit hook (see Tooling below):
