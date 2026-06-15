@@ -1,9 +1,9 @@
 # Bedrock Charter
 
-**English** · [中文](./CHARTER.zh.md)
+**English** · [中文](../zh/CHARTER.md) · [日本語](../ja/CHARTER.md)
 
 The full methodological and philosophical commitments behind Bedrock. The
-[README](../README.md) condenses these into a single *Groundwork* section and
+[README](../../README.md) condenses these into a single *Groundwork* section and
 links here for the complete treatment, preserved below in three parts.
 
 ## Approach
@@ -93,4 +93,4 @@ the debate, but neutral ground beneath it, on which either camp can build.
 
 ---
 
-← Back to [README](../README.md)
+← Back to [README](../../README.md)

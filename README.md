@@ -1,6 +1,6 @@
 # Bedrock
 
-**English** · [中文](./README.zh.md)
+**English** · [中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
 [![Typecheck](https://github.com/choukh/Bedrock/actions/workflows/typecheck.yml/badge.svg)](https://github.com/choukh/Bedrock/actions/workflows/typecheck.yml)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -55,7 +55,7 @@ The groundwork is also neutral: set-theoretic geology gives both universism and
 multiversism the rigorous footing each has lacked, and parameterises the dispute by
 the strength of the infinity axiom assumed, so the project takes no side.
 
-The full treatment is in the [Charter](docs/CHARTER.md).
+The full treatment is in the [Charter](docs/en/CHARTER.md).
 
 ## Name
 

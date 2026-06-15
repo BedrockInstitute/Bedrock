@@ -1,8 +1,8 @@
 # Bedrock 宪章
 
-[English](./CHARTER.md) · **中文**
+[English](../en/CHARTER.md) · **中文** · [日本語](../ja/CHARTER.md)
 
-Bedrock 完整的方法论与哲学承诺。[README](../README.zh.md) 把这些内容压缩为单一的*奠基* 一章并链接到此处，完整论述分三部分保存于下。
+Bedrock 完整的方法论与哲学承诺。[README](README.md) 把这些内容压缩为单一的*奠基* 一章并链接到此处，完整论述分三部分保存于下。
 
 ## 技术进路
 
@@ -35,4 +35,4 @@ V 的形而上学是有争议的。单宇宙观认为 V 是唯一确定的宇宙
 
 ---
 
-← 返回 [README](../README.zh.md)
+← 返回 [README](README.md)

@@ -1,6 +1,6 @@
 # Bedrock
 
-[English](./README.md) · **中文**
+[English](../../README.md) · **中文** · [日本語](../ja/README.md)
 
 [![Typecheck](https://github.com/choukh/Bedrock/actions/workflows/typecheck.yml/badge.svg)](https://github.com/choukh/Bedrock/actions/workflows/typecheck.yml)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -31,7 +31,7 @@
 
 这份根基也是中立的：集合论地质学为单宇宙观与多宇宙观补上各自缺失的严格立足点，并把争论参数化为所假定的无穷公理的强度，因此本项目不站在任何一边。
 
-完整论述见 [宪章](docs/CHARTER.zh.md)。
+完整论述见 [宪章](CHARTER.md)。
 
 ## 命名
 
@@ -50,7 +50,7 @@
 | [Agda](https://github.com/agda/agda) | 2.8.0 |
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 
-每次推送都会经 [GitHub Actions](.github/workflows/typecheck.yml) 针对上述版本进行类型检查。
+每次推送都会经 [GitHub Actions](../../.github/workflows/typecheck.yml) 针对上述版本进行类型检查。
 
 ## 许可
 

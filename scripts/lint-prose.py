@@ -42,7 +42,11 @@ EXCLUDE_BASENAMES = {
 
 # ---- character classes -------------------------------------------------------
 
-CJK_IDEOGRAPH = [(0x3400, 0x4DBF), (0x4E00, 0x9FFF), (0xF900, 0xFAFF), (0x20000, 0x2FA1F)]
+# "CJK wide" characters that wrap without spaces: Han ideographs plus Japanese kana.
+# (The long-vowel mark ー U+30FC and middle dot ・ U+30FB fall in the katakana block and
+#  are plain text here, never dashes — EM_DASHES below is unchanged.)
+CJK_IDEOGRAPH = [(0x3040, 0x309F), (0x30A0, 0x30FF), (0x31F0, 0x31FF),
+                 (0x3400, 0x4DBF), (0x4E00, 0x9FFF), (0xF900, 0xFAFF), (0x20000, 0x2FA1F)]
 # CJK punctuation / full-width forms used as "Chinese context":
 CJK_PUNCT = [(0x3000, 0x303F), (0xFF00, 0xFFEF), (0x2018, 0x2019), (0x201C, 0x201D)]
 
@@ -339,7 +343,7 @@ def analyze(text):
             fixable.append(Violation(i, f"no space before full-width '{ch}'", True))
 
     # Rule 3d: no space between two CJK ideographs (markdown-adjacent spaces are exempt)
-    ideo = r"[㐀-䶿一-鿿]"
+    ideo = r"[぀-ヿㇰ-ㇿ㐀-䶿一-鿿]"
     for m in re.finditer(rf"(?<={ideo})[ \t]+(?={ideo})", text):
         if any(prot[k] for k in range(m.start(), m.end())):
             continue
