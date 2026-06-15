@@ -23,9 +23,9 @@ the README condenses.
 
 - All content here is **trilingual** (en + zh now; ja pre-supported). Add a page in every
   language, keeping the same filename across `en/`, `zh/`, and `ja/`.
-- Translate from English, then **cross-check against the Chinese** (the owner's tuned
-  reference). Confirmed term renderings are enforced from the canonical glossary
-  [dev/GLOSSARY.md](../dev/GLOSSARY.md).
+- **Author in English first**, then translate the Chinese and Japanese from the English, then
+  **cross-check the two translations against each other**. Confirmed term renderings are
+  enforced from the canonical glossary [dev/GLOSSARY.md](../dev/GLOSSARY.md).
 - CJK prose conventions (full-width punctuation, `「」` quotes, no em dash, spacing) are
   machine-checked; see [CONTRIBUTING.md](../CONTRIBUTING.md) and `scripts/lint-prose.py`.
 - Developer specs do **not** go here; they live in [dev/](../dev/) and are English-only.

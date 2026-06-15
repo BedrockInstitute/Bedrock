@@ -29,8 +29,10 @@ Developer docs are written **primarily for AI-agent readers** (humans second): f
 structure and file-by-file description over narrative, so an agent can orient quickly. Every
 top-level directory carries a short `README.md` to that end: [src/](src/README.md),
 [docs/](docs/README.md), [dev/](dev/README.md), [site/](site/README.md),
-[scripts/](scripts/README.md), and [.github/](.github/README.md). When you add a top-level
-directory, add its README.
+[scripts/](scripts/README.md), and [.github/workflows/](.github/workflows/README.md). (The
+`.github/` guide lives under `workflows/` because a `README.md` placed directly in `.github/`
+would be shown as the repository homepage in place of the root `README.md`.) When you add a
+top-level directory, add its README.
 
 ## Prose conventions (all languages)
 
@@ -77,9 +79,10 @@ dashes, single quotes, and quote nesting are reported but must be rewritten by h
 
 ## Translation workflow
 
-Translate from English, then **cross-check against the Chinese** (the owner's tuned
-reference) for mistranslation, omission, addition, and term drift. Prefer **meaning over
-literal calque**.
+Author each document **in English first**, then translate both the Chinese and the Japanese
+from the English. Finally, **cross-check the Chinese and Japanese against each other** once
+more for mistranslation, omission, addition, and term drift, and fix before finalizing. Prefer
+**meaning over literal calque**.
 
 Confirmed term renderings live in the **canonical glossary [dev/GLOSSARY.md](dev/GLOSSARY.md)**,
 which `scripts/check-glossary.py` machine-enforces via `make check` (so a wrong rendering is

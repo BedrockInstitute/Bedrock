@@ -1,10 +1,14 @@
-# .github
+# .github/workflows
 
-GitHub configuration. English developer doc; see [CONTRIBUTING.md](../CONTRIBUTING.md).
+CI and deployment for Bedrock. English developer doc; see
+[CONTRIBUTING.md](../../CONTRIBUTING.md). This guide lives here rather than at
+`.github/README.md` on purpose: GitHub renders a `.github/README.md` as the repository
+homepage in place of the root [README.md](../../README.md), so the `.github/` folder is
+documented one level down instead.
 
-## `workflows/`
+## Workflows
 
-CI and deployment, triggered on push to `main` (typecheck also runs on pull requests):
+Triggered on push to `main` (typecheck also runs on pull requests):
 
 - `typecheck.yml`: the **proof gate**. Runs `make check` (typecheck the masters, validate i18n
   markers, prose linter, glossary check).
