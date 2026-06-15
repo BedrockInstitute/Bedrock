@@ -1,8 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bedrock">
-<style>
-  .mark { stroke: #0054F4; }
-  @media (prefers-color-scheme: dark) { .mark { stroke: #119DDB; } }
-</style>
-<g class="mark" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M25.70,41.00 C29.35,53.00 34.65,53.00 38.30,41.00" stroke-width="4" opacity="1"></path><path d="M20.98,32.00 C27.37,44.00 36.63,44.00 43.02,32.00" stroke-width="4" opacity="0.8"></path><path d="M16.25,23.00 C25.39,35.00 38.62,35.00 47.75,23.00" stroke-width="4" opacity="0.62"></path><path d="M11.53,14.00 C23.40,26.00 40.60,26.00 52.47,14.00" stroke-width="4" opacity="0.46"></path></g>
-<circle cx="32" cy="51" r="2.5" fill="#F5DEB3"></circle>
+<g fill="none" stroke="#38BDF8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M24.69,42.44 C28.93,56.36 35.07,56.36 39.31,42.44" opacity="1"></path><path d="M19.22,32.00 C26.63,45.92 37.37,45.92 44.78,32.00" opacity="0.88"></path><path d="M13.73,21.56 C24.33,35.48 39.68,35.48 50.27,21.56" opacity="0.76"></path><path d="M8.25,11.12 C22.02,25.04 41.98,25.04 55.75,11.12" opacity="0.64"></path></g>
+<circle cx="32" cy="54" r="2.8" fill="#F5DEB3"></circle>
 </svg>
