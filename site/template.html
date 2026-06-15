@@ -7,16 +7,17 @@
   <meta name="description" content="%%DESC%%" />
 %%HREFLANG%%
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-  <link rel="stylesheet" href="%%BASEURL%%/static/bedrock.css" />
+  <link rel="stylesheet" href="%%BASEURL%%/static/bedrock.css?v=%%CSSVER%%" />
   <link rel="icon" href="%%BASEURL%%/static/favicon.svg" />
   <script>
     window.bedrock = { baseUrl: "%%BASEURL%%", lang: "%%LANG%%", module: "%%MODULE%%" };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="%%BASEURL%%/static/bedrock.js"></script>
+  <script defer src="%%BASEURL%%/static/bedrock.js?v=%%JSVER%%"></script>
 </head>
 
 <body class="%%BODYCLASS%%">
+  <div id="site-header">
 %%EXTBANNER%%
   <header id="topbar">
     <a id="brand" href="%%BASEURL%%/%%LANG%%/index.html">%%SITE%%</a>
@@ -28,6 +29,7 @@
     <nav id="lang-switch" aria-label="language">%%LANGNAV%%</nav>
     <button id="theme-toggle" type="button" title="%%S_THEME%%" aria-label="%%S_THEME%%">◐</button>
   </header>
+  </div>
 
   <main>
     <div id="post-toc-container">

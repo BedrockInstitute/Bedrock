@@ -88,8 +88,9 @@ body {
 }
 
 /* ---- top bar ---- */
+/* Banner (if any) + topbar pin to the top together; the external warning stays on scroll. */
+#site-header { position: sticky; top: 0; z-index: 20; background: var(--text-bg); }
 #topbar {
-  position: sticky; top: 0; z-index: 20;
   display: flex; align-items: center; gap: 0.75rem;
   padding: 0.5rem 1rem; background: var(--text-bg);
 }

@@ -20,6 +20,7 @@ Usage:
 """
 
 import glob
+import hashlib
 import html as htmllib
 import json
 import os
@@ -458,6 +459,14 @@ def main(argv):
 
     types_raw = json.load(open(types_path, encoding="utf-8")) if os.path.exists(types_path) else {}
     tpl = open(tpl_path, encoding="utf-8").read()
+    # cache-bust: stamp ?v=<hash> on the CSS/JS so browsers always pick up changes
+    def _ver(name):
+        p = os.path.join(static_dir, name)
+        try:
+            return hashlib.sha1(open(p, "rb").read()).hexdigest()[:8]
+        except OSError:
+            return "0"
+    tpl = tpl.replace("%%CSSVER%%", _ver("bedrock.css")).replace("%%JSVER%%", _ver("bedrock.js"))
 
     # first pass: index every definition (names, positions, aspects) across ALL rendered modules
     name2pos, pos_aspect = {}, {}
