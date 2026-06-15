@@ -23,8 +23,7 @@ hobbling the development for "formal purity":
 - unique existence is `isContr`, so the definite-description operator `℩` is a
   *projection* rather than an axiom, and the description axiom dissolves;
 - extensional characterisations are path equalities, so propositional
-  extensionality is a *theorem*; structure transport is underwritten by the SIP;
-  adequacy is a literal `≡`;
+  extensionality is a *theorem* and structure transport is underwritten by the SIP;
 - Regularity is the meta-level `WellFounded`, and Infinity makes a ZF-set
   *reflect* the meta-level inductive `Nat`, so that the ZF axiomatised in the host
   admits only **standard models** (no non-standard ω, no infinite descent);
@@ -37,8 +36,10 @@ hobbling the development for "formal purity":
 This is why the deeply embedded `Formula` is *not* an expressive device: the host
 language is strictly more expressive, and `Formula` appears only where first-order
 definability is itself the object of study (bridged to host predicates by
-reflection-driven *reification*). The host language does the *speaking*; `Formula`
-is what gets *studied*.
+reflection-driven *reification*). That bridge carries a machine-checked certificate
+that the formula means exactly its predicate (its *adequacy*), and the certificate
+is a literal `≡`, not a postulated bi-implication. The host language does the
+*speaking*; `Formula` is what gets *studied*.
 
 ## Groundwork
 
