@@ -8,5 +8,6 @@ _build/
 # Cloudflare wrangler local cache/state
 .wrangler/
 
-# Claude Code local settings (the shared project skill under .claude/skills/ IS committed)
-.claude/settings.local.json
+# Claude Code: owner-private, kept local only, never committed/pushed (default; only
+# commit anything here if the owner explicitly asks).
+.claude/
