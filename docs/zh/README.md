@@ -57,7 +57,7 @@
 
 ## 贡献
 
-贡献者 (包括 AI agent) 请阅读 [CONTRIBUTING.md](../../CONTRIBUTING.md)。
+AI agent 以 [AGENTS.md](../../AGENTS.md) 为准，人类贡献者请从 [CONTRIBUTING.md](../../CONTRIBUTING.md) 开始。
 
 ## 许可
 

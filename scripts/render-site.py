@@ -38,18 +38,24 @@ UI = {
            "untranslated": "This page is not yet translated; showing English.",
            "modules": "Modules", "source": "Source", "overview": "Overview",
            "license": "content licensed CC BY-NC-SA 4.0",
+           "credit": 'Rendered with a generator adapted from '
+                     '<a href="https://1lab.dev">the 1lab</a> (AGPL-3.0).',
            "external": "You are viewing the Cubical library.",
            "back": "Back to Bedrock"},
     "zh": {"search": "搜索…", "theme": "切换主题", "contents": "本页内容",
            "untranslated": "本页尚未翻译，此处显示英文。",
            "modules": "模块", "source": "源码", "overview": "概览",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
+           "credit": '使用改编自 <a href="https://1lab.dev">1lab</a> 的生成器渲染 '
+                     '(AGPL-3.0)。',
            "external": "您正在浏览 Cubical 库。",
            "back": "返回 Bedrock"},
     "ja": {"search": "検索…", "theme": "テーマ切替", "contents": "このページの内容",
            "untranslated": "このページは未翻訳です。英語を表示しています。",
            "modules": "モジュール", "source": "ソース", "overview": "概要",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
+           "credit": '<a href="https://1lab.dev">1lab</a> を改変した'
+                     'ジェネレータでレンダリング (AGPL-3.0)。',
            "external": "Cubical ライブラリを閲覧しています。",
            "back": "Bedrock に戻る"},
 }
@@ -251,11 +257,9 @@ def ext_banner(lang):
 
 def footer_html(lang):
     s = UI[lang]
-    credit = ('Rendered with a generator adapted from '
-              '<a href="https://1lab.dev">the 1lab</a> (AGPL-3.0). · '
-              f'<a href="{SOURCE_URL}">{s["source"]}</a>')
-    copyright_ = f'© 2026 choukh (choukyuhei@gmail.com) · {s["license"]}'
-    return (f'<div class="footer-credit">{credit}</div>'
+    source = f'<a href="{SOURCE_URL}">{s["source"]}</a>'
+    copyright_ = f'© 2026 choukh (choukyuhei@gmail.com) · {s["license"]} · {source}'
+    return (f'<div class="footer-credit">{s["credit"]}</div>'
             f'<div class="footer-copyright">{copyright_}</div>')
 
 

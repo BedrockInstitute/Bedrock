@@ -3,7 +3,7 @@
 The static-site **front-end assets** consumed by
 [scripts/render-site.py](../scripts/render-site.py). These are committed source; the rendered
 site they produce is generated into `_build/site/` (git-ignored). English developer doc; see
-[CONTRIBUTING.md](../CONTRIBUTING.md).
+[AGENTS.md](../AGENTS.md).
 
 ## Contents
 

@@ -2,7 +2,7 @@
 
 The Agda development: literate `.lagda.md` **masters**, the single source of truth for both
 the proofs and their prose. This is an English developer-facing folder guide; see
-[CONTRIBUTING.md](../CONTRIBUTING.md) for the full contributor guide.
+[AGENTS.md](../AGENTS.md) for the full rulebook.
 
 ## What a master is
 

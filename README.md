@@ -85,7 +85,8 @@ Every push is typechecked against these versions by
 
 ## Contributing
 
-Contributors, including AI agents, should read [CONTRIBUTING.md](CONTRIBUTING.md).
+AI agents work from [AGENTS.md](AGENTS.md); human contributors, start with
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

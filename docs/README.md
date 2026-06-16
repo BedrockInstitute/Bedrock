@@ -3,7 +3,7 @@
 **User-facing** documentation: the mathematics and the project itself, written for readers
 rather than contributors. This is the one place **trilingual** content lives. This file itself
 is an English developer-facing folder guide (the doc taxonomy is in
-[CONTRIBUTING.md](../CONTRIBUTING.md)).
+[AGENTS.md](../AGENTS.md)).
 
 ## Layout
 
@@ -27,5 +27,5 @@ the README condenses.
   **cross-check the two translations against each other**. Confirmed term renderings are
   enforced from the canonical glossary [dev/GLOSSARY.md](../dev/GLOSSARY.md).
 - CJK prose conventions (full-width punctuation, `「」` quotes, no em dash, spacing) are
-  machine-checked; see [CONTRIBUTING.md](../CONTRIBUTING.md) and `scripts/lint-prose.py`.
+  machine-checked; see [AGENTS.md](../AGENTS.md) and `scripts/lint-prose.py`.
 - Developer specs do **not** go here; they live in [dev/](../dev/) and are English-only.

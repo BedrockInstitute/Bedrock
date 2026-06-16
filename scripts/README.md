@@ -1,9 +1,10 @@
 # scripts
 
-Repository tooling. English-only: this is developer documentation. Only user-facing docs
-(`docs/<lang>/`) are trilingual; developer docs (`dev/`, `CONTRIBUTING.md`, and this file)
-are English. See [CONTRIBUTING.md](../CONTRIBUTING.md) for the full contributor guide and the
-user/developer doc split. The marker grammar these tools share is specified in
+Repository tooling. English-only: this is developer documentation. User-facing docs
+(`docs/<lang>/`) are trilingual; developer docs are English. Developer docs include `dev/`,
+the root `AGENTS.md` and `CONTRIBUTING.md`, the per-directory `README.md` files such as this
+one, and anything else written for contributors. See [AGENTS.md](../AGENTS.md) for the full
+rulebook and the user/developer doc split. The marker grammar these tools share is specified in
 [dev/STYLE-i18n.md](../dev/STYLE-i18n.md).
 
 ## The multilingual literate-Agda pipeline

@@ -1,7 +1,7 @@
 # Multilingual literate Agda: the marker convention
 
-> Developer documentation (English only). See [CONTRIBUTING.md](../CONTRIBUTING.md) for the
-> full contributor guide and the user/developer doc split.
+> Developer documentation (English only). See [AGENTS.md](../AGENTS.md) for the
+> full rulebook and the user/developer doc split.
 
 Bedrock keeps **one master `.lagda.md` per module** as the single source of truth: the
 Agda code appears exactly once, and prose for every language lives in the same file, wrapped

@@ -2,7 +2,7 @@
 
 **Developer-facing** documentation: conventions and specifications for contributors, written
 primarily for AI-agent contributors (humans second). **English only** (developer docs are not
-translated). The top-level index is [CONTRIBUTING.md](../CONTRIBUTING.md); this folder holds
+translated). The top-level index is [AGENTS.md](../AGENTS.md); this folder holds
 the detailed specs it points to.
 
 ## Contents

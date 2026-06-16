@@ -1,7 +1,7 @@
 # .github/workflows
 
 CI and deployment for Bedrock. English developer doc; see
-[CONTRIBUTING.md](../../CONTRIBUTING.md). This guide lives here rather than at
+[AGENTS.md](../../AGENTS.md). This guide lives here rather than at
 `.github/README.md` on purpose: GitHub renders a `.github/README.md` as the repository
 homepage in place of the root [README.md](../../README.md), so the `.github/` folder is
 documented one level down instead.

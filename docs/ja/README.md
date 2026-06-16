@@ -57,7 +57,7 @@
 
 ## 貢献
 
-貢献者 (AI エージェントを含む) は [CONTRIBUTING.md](../../CONTRIBUTING.md) を参照してください。
+AI エージェントは [AGENTS.md](../../AGENTS.md) を、人間の貢献者は [CONTRIBUTING.md](../../CONTRIBUTING.md) を参照してください。
 
 ## ライセンス
 
