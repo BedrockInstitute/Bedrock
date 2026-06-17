@@ -25,7 +25,7 @@ the README condenses.
   language, keeping the same filename across `en/`, `zh/`, and `ja/`.
 - **Author in English first**, then translate the Chinese and Japanese from the English, then
   **cross-check the two translations against each other**. Confirmed term renderings are
-  enforced from the canonical glossary [dev/GLOSSARY.md](../dev/GLOSSARY.md).
+  enforced from the canonical glossary data [dev/glossary.toml](../dev/glossary.toml).
 - CJK prose conventions (full-width punctuation, `「」` quotes, no em dash, spacing) are
   machine-checked; see [AGENTS.md](../AGENTS.md) and `scripts/lint-prose.py`.
 - Developer specs do **not** go here; they live in [dev/](../dev/) and are English-only.

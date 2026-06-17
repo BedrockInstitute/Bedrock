@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Glossary checker for Bedrock: flags off-glossary term renderings in the CJK docs.
 
-The canonical glossary is the Markdown table in dev/GLOSSARY.md (which is both the human
-reference and this checker's data, so the two can never drift). Each row gives a term's
-canonical Chinese and Japanese rendering plus an `Avoid` list of known wrong renderings.
-This script scans the trilingual docs and reports any avoided rendering, pointing at the
-canonical one.
+The canonical glossary data is dev/glossary.toml (read here via tomllib); the prose that
+explains the checks and how to maintain entries is dev/GLOSSARY.md. Each entry gives a term's
+canonical Chinese and Japanese rendering plus an optional `avoid` list of known wrong
+renderings. This script scans the trilingual docs and reports any avoided rendering, pointing
+at the canonical one.
 
 Language scoping: a `zh:`-tagged avoid term is only flagged in Chinese context, a `ja:`-tagged
 one only in Japanese context, and an untagged term in both. Chinese context is `docs/zh/**`
@@ -29,8 +29,13 @@ import re
 import subprocess
 import sys
 
+if sys.version_info < (3, 11):
+    sys.exit("check-glossary.py needs Python 3.11+ (tomllib); run `make venv` and use .venv/bin/python")
+import tomllib
+
 HERE = os.path.dirname(os.path.abspath(__file__))
-GLOSSARY = "dev/GLOSSARY.md"
+GLOSSARY = "dev/glossary.toml"      # canonical term data (this checker's input)
+GLOSSARY_DOC = "dev/GLOSSARY.md"    # human prose explaining the glossary (excluded from scans)
 
 
 def _load(modname, filename):
@@ -46,65 +51,32 @@ build_protected = _lp.build_protected          # reuse the exact protected-regio
 EXCLUDE_BASENAMES = _lp.EXCLUDE_BASENAMES       # reuse the LICENSE/NOTICE exclusions
 
 CJK_LANGS = ("zh", "ja")
-COL = {"zh": 1, "ja": 2}                         # table column index of each canonical rendering
 
 MARKER_RE = re.compile(r"^\s*<!--\s*(en|zh|ja|/)\s*-->\s*$")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 IGNORE_RE = re.compile(r"<!--\s*glossary-ignore(?::([^>]*?))?\s*-->")
 
 
-# ---- glossary table ----------------------------------------------------------
-
-def _cell(c):
-    """A table cell, with any inline-code backticks stripped.
-
-    CJK renderings are wrapped in `…` in the table so the prose linter leaves their
-    half-width `:`/`;` separators alone; the backticks are not part of the value."""
-    return c.strip().strip("`").strip()
-
-
-def _cells(line):
-    """Cells of a Markdown table row (leading-`|` lines only), else None."""
-    s = line.strip()
-    if not s.startswith("|"):
-        return None
-    return [_cell(c) for c in s.strip("|").split("|")]
-
-
-def _is_sep(cells):
-    """True for a |---|:--:|---| separator row."""
-    return bool(cells) and all(c and set(c) <= set("-: ") for c in cells)
-
+# ---- glossary data -----------------------------------------------------------
 
 def load_glossary(path):
-    """Parse dev/GLOSSARY.md's tables into (term, zh, ja, avoid, presence) rows.
+    """Parse dev/glossary.toml into (term, zh, ja, avoid, presence) rows.
 
-    Supports several tables (one per category section): a header row is recognised as the
-    row immediately followed by a |---| separator, and both are skipped. `presence` is the
-    truthiness of the optional Presence column (the safety-net opt-in)."""
-    with open(path, encoding="utf-8") as fh:
-        lines = fh.read().split("\n")
-    rows = []
-    for i, line in enumerate(lines):
-        cells = _cells(line)
-        if cells is None or _is_sep(cells):
-            continue
-        nxt = _cells(lines[i + 1]) if i + 1 < len(lines) else None
-        if _is_sep(nxt):
-            continue  # this is a header row (its next row is the separator)
-        if len(cells) >= 4:
-            presence = len(cells) > 4 and cells[4].lower() in ("yes", "y", "true", "x", "✓")
-            rows.append((cells[0], cells[1], cells[2], cells[3], presence))
-    return rows
+    `avoid` is a list of known wrong renderings (each optionally `zh:`/`ja:`-tagged);
+    `presence` is the safety-net opt-in bool. Array order is preserved (tomllib keeps it).
+    The `category` and `notes` fields are human-only and ignored here."""
+    with open(path, "rb") as fh:
+        data = tomllib.load(fh)
+    return [(t["en"], t["zh"], t["ja"], t.get("avoid", []), bool(t.get("presence", False)))
+            for t in data.get("term", [])]
 
 
 def build_checks(rows):
     """Expand rows into Avoid-check tuples: (forbidden, lang, term, canonical_rendering)."""
     checks = []
-    for row in rows:
-        term, zh, ja, avoid = row[0], row[1], row[2], row[3]
+    for term, zh, ja, avoid, _presence in rows:
         canon = {"zh": zh, "ja": ja}
-        for item in avoid.split(";"):
+        for item in avoid:
             item = item.strip()
             if not item:
                 continue
@@ -121,8 +93,8 @@ def build_checks(rows):
 
 
 def build_presence(rows):
-    """Presence-check terms (opt-in via the Presence column): (term, zh, ja)."""
-    return [(row[0], row[1], row[2]) for row in rows if len(row) > 4 and row[4]]
+    """Presence-check terms (opt-in via the `presence` flag): (term, zh, ja)."""
+    return [(term, zh, ja) for term, zh, ja, _avoid, presence in rows if presence]
 
 
 # ---- per-line language scope -------------------------------------------------
@@ -310,10 +282,10 @@ def target_files(explicit, staged):
         files = git_lines(["diff", "--cached", "--name-only", "--diff-filter=ACM"])
     else:
         files = git_lines(["ls-files", "*.md", "*.lagda.md"])
-    gloss = os.path.normpath(GLOSSARY)
+    excluded = {os.path.normpath(GLOSSARY), os.path.normpath(GLOSSARY_DOC)}
     return [f for f in files
             if (f.endswith(".md") or f.endswith(".lagda.md"))
-            and os.path.normpath(f) != gloss
+            and os.path.normpath(f) not in excluded
             and os.path.basename(f).lower() not in EXCLUDE_BASENAMES]
 
 

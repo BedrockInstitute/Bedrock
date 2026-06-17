@@ -94,10 +94,10 @@ python3 scripts/lint-prose.py --check --staged # only staged files (used by the 
 
 ## `check-glossary.py`
 
-Enforces the translation glossary so term renderings cannot drift between passes. Its data
-source is the table in [dev/GLOSSARY.md](../dev/GLOSSARY.md) (which doubles as the
-human-readable reference, so there is no second copy to fall out of sync). For each term's
-`Avoid` entries it scans the CJK docs (`docs/zh/`, `docs/ja/`, and the `<!--zh-->` / `<!--ja-->`
+Enforces the translation glossary so term renderings cannot drift between passes. Its data source
+is [dev/glossary.toml](../dev/glossary.toml), read via `tomllib` (so Python 3.11+; use the `.venv`
+from `make venv`); the human-readable explanation is [dev/GLOSSARY.md](../dev/GLOSSARY.md). For each
+term's `avoid` entries it scans the CJK docs (`docs/zh/`, `docs/ja/`, and the `<!--zh-->` / `<!--ja-->`
 prose of masters) and reports any off-glossary rendering, pointing at the canonical one. A
 `zh:`/`ja:` tag scopes an avoided term to one language; an untagged one applies to both.
 Code spans, fenced blocks, links and URLs are protected (shared with `lint-prose.py`).

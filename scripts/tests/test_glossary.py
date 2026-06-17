@@ -22,10 +22,10 @@ def _load(modname, filename):
 
 cg = _load("check_glossary", "check-glossary.py")  # noqa: E402
 
-# Golden glossary rows (term, zh, ja, avoid), exercising tagged and untagged avoids.
+# Golden glossary rows (term, zh, ja, avoid-list, presence), exercising tagged and untagged avoids.
 ROWS = [
-    ("charter", "纲领", "綱領", "zh:宪章; ja:憲章"),
-    ("prose", "文稿", "文章", "散文"),
+    ("charter", "纲领", "綱領", ["zh:宪章", "ja:憲章"], True),
+    ("prose", "文稿", "文章", ["散文"], False),
 ]
 CHECKS = cg.build_checks(ROWS)
 
@@ -51,30 +51,28 @@ class GlossaryTableTests(unittest.TestCase):
         self.assertIn(("散文", "zh"), forb)       # untagged applies to both
         self.assertIn(("散文", "ja"), forb)
 
-    def test_load_glossary_strips_backticks_and_reads_presence(self):
+    def test_load_glossary_reads_toml(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = write(tmp, "GLOSSARY.md",
-                      "# t\n\n| Term | zh | ja | Avoid | Presence | Notes |\n"
-                      "|---|---|---|---|---|---|\n"
-                      "| charter | `纲领` | `綱領` | `zh:宪章` | yes | n |\n"
-                      "| prose | `文稿` | `文章` | `散文` |  | n |\n")
+            p = write(tmp, "glossary.toml",
+                      '[[term]]\ncategory = "Other"\nen = "charter"\nzh = "纲领"\nja = "綱領"\n'
+                      'avoid = ["zh:宪章"]\npresence = true\n\n'
+                      '[[term]]\nen = "prose"\nzh = "文稿"\nja = "文章"\navoid = ["散文"]\n')
             rows = cg.load_glossary(p)
-            self.assertEqual(rows[0], ("charter", "纲领", "綱領", "zh:宪章", True))
-            self.assertEqual(rows[1], ("prose", "文稿", "文章", "散文", False))
+            self.assertEqual(rows[0], ("charter", "纲领", "綱領", ["zh:宪章"], True))
+            self.assertEqual(rows[1], ("prose", "文稿", "文章", ["散文"], False))
 
-    def test_load_glossary_reads_multiple_category_tables(self):
+    def test_load_glossary_preserves_order_and_optional_fields(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = write(tmp, "GLOSSARY.md",
-                      "# t\n\n## Set theory\n\n| Term | zh | ja | Avoid | Presence | Notes |\n"
-                      "|---|---|---|---|---|---|\n| forcing | `力迫` | `強制` | | yes | n |\n\n"
-                      "## Other\n\n| Term | zh | ja | Avoid | Presence | Notes |\n"
-                      "|---|---|---|---|---|---|\n| charter | `纲领` | `綱領` | `zh:宪章` | yes | n |\n")
+            p = write(tmp, "glossary.toml",
+                      '[[term]]\nen = "forcing"\nzh = "力迫"\nja = "強制"\npresence = true\n\n'
+                      '[[term]]\nen = "charter"\nzh = "纲领"\nja = "綱領"\navoid = ["zh:宪章"]\n')
             rows = cg.load_glossary(p)
-            terms = [r[0] for r in rows]
-            self.assertEqual(terms, ["forcing", "charter"])  # both tables, no header rows leaked
+            self.assertEqual([r[0] for r in rows], ["forcing", "charter"])  # array order preserved
+            self.assertEqual(rows[0][3], [])    # missing avoid -> empty list
+            self.assertFalse(rows[1][4])        # missing presence -> False
 
     def test_build_presence_selects_opted_in_rows(self):
-        rows = [("charter", "纲领", "綱領", "", True), ("prose", "文稿", "文章", "散文", False)]
+        rows = [("charter", "纲领", "綱領", [], True), ("prose", "文稿", "文章", ["散文"], False)]
         self.assertEqual(cg.build_presence(rows), [("charter", "纲领", "綱領")])
 
 

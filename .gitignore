@@ -2,6 +2,12 @@
 _build/
 *.agdai
 
+# Python developer-tooling virtual environment (created by `make venv` from
+# requirements-dev.txt; never committed). Python bytecode caches.
+.venv/
+__pycache__/
+*.pyc
+
 # macOS
 .DS_Store
 

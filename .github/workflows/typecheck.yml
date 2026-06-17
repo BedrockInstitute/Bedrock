@@ -26,8 +26,14 @@ jobs:
           echo "${AGDA_DIR}/libraries.d/cubical-0.9/cubical.agda-lib" >> "${AGDA_DIR}/libraries"
           cat "${AGDA_DIR}/libraries"
 
-      - name: Check (typecheck masters + marker integrity + prose lint)
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check (typecheck + markers + prose lint + glossary + reuse lint)
         shell: bash
         run: |
           set -euo pipefail
+          make venv PYTHON=python3
           make check

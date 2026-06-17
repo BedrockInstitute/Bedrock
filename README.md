@@ -6,7 +6,9 @@
 ![Status: early](https://img.shields.io/badge/status-early-orange)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+[![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/content-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+[![Code: AGPL-3.0-only](https://img.shields.io/badge/code-AGPL--3.0--only-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.html)
+[![REUSE status](https://api.reuse.software/badge/github.com/choukh/Bedrock)](https://api.reuse.software/info/github.com/choukh/Bedrock)
 
 *Laying the groundwork for the metaphysics of V.*
 
@@ -79,9 +81,12 @@ The development typechecks against the following pinned toolchain:
 | --- | --- |
 | [Agda](https://github.com/agda/agda) | 2.8.0 |
 | [cubical](https://github.com/agda/cubical) | 0.9 |
+| [Python](https://www.python.org) | 3.11+ |
 
-Every push is typechecked against these versions by
-[GitHub Actions](.github/workflows/typecheck.yml).
+`make check` and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
+pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
+environment by `make venv` (run once per clone). Every push is typechecked against these versions
+by [GitHub Actions](.github/workflows/typecheck.yml).
 
 ## Contributing
 
@@ -90,15 +95,21 @@ AI agents work from [AGENTS.md](AGENTS.md); human contributors, start with
 
 ## License
 
-The mathematical development and prose, source and writing alike, are licensed under
-[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
-The Agda development is treated as a piece of mathematical writing rather than
-conventional software, and licensed accordingly.
+Bedrock is multi-licensed; per-file terms are declared in [`REUSE.toml`](REUSE.toml) and
+verified by `reuse lint`. In short:
 
-The documentation site's renderer reuses front-end assets adapted from
-[the 1lab](https://1lab.dev), which are licensed under AGPL-3.0; those parts stay
-AGPL-3.0 and are combined here by mere aggregation. See [NOTICE](NOTICE).
+- **The mathematics and prose** (`src/`, `docs/`, this `README`) and the brand mark
+  (`site/static/favicon.svg`) are licensed
+  [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/); the Agda development
+  is treated as a piece of mathematical writing rather than conventional software.
+- **All first-party code and configuration** (the tooling, the site front-end, build and dev
+  files) is [AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html). This includes the
+  front-end assets adapted from [the 1lab](https://1lab.dev) and the vendored 1lab tree under
+  `site/vendor/1lab/`, combined here by mere aggregation.
+- **The self-hosted web fonts** (`site/static/fonts/`) are third-party, under
+  [OFL-1.1](https://openfontlicense.org).
 
-© 2026 choukh (choukyuhei@gmail.com). You may share and adapt this work for
-non-commercial purposes, provided you give appropriate credit and license your
-derivatives under the same terms.
+Full texts are in [`LICENSES/`](LICENSES/); [NOTICE](NOTICE) has the third-party attributions
+and the AGPL section 13 corresponding-source statement.
+
+© 2026 choukh (choukyuhei@gmail.com).

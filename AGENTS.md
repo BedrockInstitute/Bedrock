@@ -14,8 +14,13 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
 ## Commands
 
 - **`make check`** is the gate before any commit. It typechecks the masters
-  (`agda src/Everything.lagda.md`), validates i18n markers, runs the prose linter, and runs the
-  glossary checker (`scripts/check-glossary.py` against [dev/GLOSSARY.md](dev/GLOSSARY.md)).
+  (`agda src/Everything.lagda.md`), validates i18n markers, runs the prose linter, runs the
+  glossary checker (`scripts/check-glossary.py` against the term data in
+  [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)), and
+  runs `reuse lint` for per-file licensing.
+- **`make venv`** creates the project virtual environment (`.venv`) from Python 3.11+ and
+  installs the pinned tooling in [requirements-dev.txt](requirements-dev.txt). Run it once per
+  clone before `make check`.
 - **`make site`** builds the multilingual hyperlinked site into `_build/site`; **`make serve`**
   previews it; **`make gen`** weaves the on-demand mono-lingual `.lagda.md` copies.
 - **`make hooks`** activates the version-controlled pre-commit hook
@@ -24,21 +29,26 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
 - **`python3 scripts/lint-prose.py --fix <files>`** auto-fixes prose (CJK punctuation, quotes,
   paren spacing). Em dashes, single quotes, and quote nesting are reported but fixed by hand.
 
-Requirements: Agda 2.8.0 + cubical 0.9 and Python 3 for `make check`; the site build also uses
-Node only at deploy time (KaTeX and fonts load from a CDN). Tooling: [scripts/README.md](scripts/README.md).
+Requirements: Agda 2.8.0 + cubical 0.9 and Python 3.11+ for `make check`. Python tooling
+dependencies (currently `reuse`) are pinned in [requirements-dev.txt](requirements-dev.txt) and
+installed into the project `.venv` by `make venv`; `make` then uses that interpreter. The site
+build also uses Node only at deploy time (KaTeX and fonts load from a CDN). Tooling:
+[scripts/README.md](scripts/README.md).
 
 ## Boundaries
 
 - **Always:** run `make check` before committing; author each document in English first, then
   translate; verify a load-bearing assumption cheaply before committing to heavy or
-  hard-to-reverse work (large installs, forks, multi-hour builds, framework choices).
+  hard-to-reverse work (large installs, forks, multi-hour builds, framework choices); install
+  Python tooling with `make venv` and pin any new dependency in `requirements-dev.txt`.
 - **Ask first:** genuine architecture forks (surface them to the owner with a recommendation
   rather than charging ahead on one interpretation); adding a top-level directory (then add its
-  `README.md`); a translation term not yet in [dev/GLOSSARY.md](dev/GLOSSARY.md) (choose by
+  `README.md`); a translation term not yet in [dev/glossary.toml](dev/glossary.toml) (choose by
   meaning and surface the choice).
 - **Never:** commit generated files (anything under `_build/`, or woven mono-lingual
   `.lagda.md`); translate developer docs; use an em dash in any language; use half-width
-  sentence punctuation in CJK prose; commit or print deployment secrets.
+  sentence punctuation in CJK prose; commit or print deployment secrets; add an unpinned or
+  globally-installed dependency (pin it in `requirements-dev.txt`, installed into `.venv`).
 
 ## Documentation taxonomy (user docs vs developer docs)
 
@@ -117,18 +127,36 @@ from the English. Finally, **cross-check the Chinese and Japanese against each o
 for mistranslation, omission, addition, and term drift, and fix before finalizing. Prefer
 **meaning over literal calque**.
 
-Confirmed term renderings live in the **canonical glossary [dev/GLOSSARY.md](dev/GLOSSARY.md)**,
-which `scripts/check-glossary.py` machine-enforces via `make check` (so a wrong rendering is
-caught in CI, not review). Consult it before translating, and when you confirm a new
-load-bearing term, **add a row there** rather than recording it anywhere else. For a term not
-yet in the glossary, choose by meaning and surface the choice to the owner.
+Confirmed term renderings live in the **canonical glossary data
+[dev/glossary.toml](dev/glossary.toml)** (explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)), which
+`scripts/check-glossary.py` machine-enforces via `make check` (so a wrong rendering is caught in
+CI, not review). Consult it before translating, and when you confirm a new load-bearing term,
+**add a `[[term]]` entry there** rather than recording it anywhere else. For a term not yet in the
+glossary, choose by meaning and surface the choice to the owner.
 
 ## Licensing
 
-Project content (everything under `src/`, `docs/`, `dev/`, and the repository's scripts) is
-licensed CC BY-NC-SA 4.0. The documentation site's front-end is adapted from
-[the 1lab](https://1lab.dev) and is AGPL-3.0; see [NOTICE](NOTICE). Keep the two clearly
-separated and credited.
+Bedrock is multi-licensed under a three-bucket rule, declared per file in [`REUSE.toml`](REUSE.toml)
+and enforced by `reuse lint` (part of `make check`):
+
+- **CC BY-NC-SA 4.0**: the mathematical development and user prose (`src/`, `docs/`), the `README`,
+  and the brand mark `site/static/favicon.svg`.
+- **OFL-1.1**: the self-hosted third-party web fonts under `site/static/fonts/`.
+- **AGPL-3.0-only** (the default): every other first-party file, the tooling, the site front-end,
+  build and config, and the prose developer docs (`dev/`, this `AGENTS.md`, `CONTRIBUTING.md`).
+  This folds in the front-end adapted from [the 1lab](https://1lab.dev) and the vendored
+  `site/vendor/1lab/` tree, which are AGPL-3.0.
+
+A newly added file inherits AGPL-3.0 automatically via the `**` default in `REUSE.toml`; the
+carve-outs are the finite content/font set. Full texts are in [`LICENSES/`](LICENSES/) (mirrored as
+root `LICENSE-*` files so GitHub's detector lists all three); attributions and the AGPL section 13
+corresponding-source statement are in [NOTICE](NOTICE).
+
+All per-file licensing is declared centrally in `REUSE.toml` and verified by `reuse lint`. **Do not
+add in-file `SPDX-*` headers** to any file: licensing has one source of truth (like the glossary in
+[dev/glossary.toml](dev/glossary.toml) and the i18n masters), so there is nothing per-file to keep
+consistent. A new file inherits the `**` default (AGPL-3.0-only) automatically; if it should instead
+be CC or OFL, add its path to the matching carve-out in `REUSE.toml`.
 
 ## Deployment
 
