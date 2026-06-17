@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          make site BASE_URL=/${GITHUB_REPOSITORY#*/}
+          make site BASE_URL=/${GITHUB_REPOSITORY#*/} PY=python3
 
       - name: Link check
         shell: bash

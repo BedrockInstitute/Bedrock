@@ -19,7 +19,10 @@ site they produce is generated into `_build/site/` (git-ignored). English develo
 
 ## Licensing
 
-The site front-end is **derived from [the 1lab](https://1lab.dev) and is AGPL-3.0**, which is
-distinct from the project's CC BY-NC-SA content. Keep the two separated and credited; the
-attributions are in [NOTICE](../NOTICE). Per AGPL section 13, this public repository is the
-corresponding source of the deployed site.
+All first-party code here (`template.html`, `static/bedrock.css`, `static/bedrock.js`, and the
+renderer) is **AGPL-3.0-only**, the repository's default; that folds in the front-end assets
+adapted from [the 1lab](https://1lab.dev) and the vendored 1lab tree under `vendor/1lab/` (also
+AGPL-3.0). The self-hosted fonts under `static/fonts/` are **OFL-1.1**, and the brand mark
+`static/favicon.svg` is **CC BY-NC-SA 4.0** (the project content license). Per-file terms are
+declared in [`REUSE.toml`](../REUSE.toml) and verified by `reuse lint`; attributions and the
+AGPL section 13 source statement are in [NOTICE](../NOTICE).

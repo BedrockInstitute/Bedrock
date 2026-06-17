@@ -1,0 +1,8 @@
+# Bedrock developer tooling dependencies, pinned and installed into the project
+# virtual environment (.venv) by `make venv`. See AGENTS.md ("Dependencies").
+#
+# reuse: the canonical FSFE REUSE linter (https://reuse.software). `make reuse`
+# runs `reuse lint` over REUSE.toml + LICENSES/ to enforce per-file licensing.
+# The [charset-normalizer] extra supplies an encoding detector (no system libmagic
+# needed on macOS).
+reuse[charset-normalizer]==6.2.0

@@ -1,0 +1,387 @@
+# Bedrock translation glossary -- canonical, machine-checked term data.
+#
+# This TOML file is the single source of truth for the trilingual glossary; the prose
+# explanation (what the checks do, how to maintain entries) lives in dev/GLOSSARY.md.
+# scripts/check-glossary.py reads this file via tomllib (Python 3.11+) and enforces it as
+# part of `make check` and the pre-commit hook.
+#
+# Each [[term]] has: category, en, zh, ja; optional avoid (a list of known wrong
+# renderings, each optionally tagged `zh:`/`ja:` to scope it to one language; an untagged
+# entry applies to both); optional presence (true enables the safety-net check); optional
+# notes (human-only; the checker ignores it). CJK values are plain strings -- TOML is not
+# prose-linted, so no backtick wrapping is needed.
+
+# ---- Set theory --------------------------------------------------------------
+
+[[term]]
+category = "Set theory"
+en = "forcing"
+zh = "力迫"
+ja = "強制"
+presence = true
+notes = "zh 力迫 vs ja 強制 (deliberate)"
+
+[[term]]
+category = "Set theory"
+en = "forcing extension"
+zh = "力迫扩张"
+ja = "強制拡大"
+
+[[term]]
+category = "Set theory"
+en = "ground model"
+zh = "基模型"
+ja = "基礎モデル"
+notes = "\"grounds\" also renders 基模型"
+
+[[term]]
+category = "Set theory"
+en = "ground-model definability"
+zh = "基模型的可定义性"
+ja = "基礎モデルの定義可能性"
+
+[[term]]
+category = "Set theory"
+en = "multiverse"
+zh = "多宇宙"
+ja = "多宇宙"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "universism"
+zh = "单宇宙观"
+ja = "単一宇宙観"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "multiversism"
+zh = "多宇宙观"
+ja = "多宇宙観"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "ultrapower"
+zh = "超幂"
+ja = "超冪"
+
+[[term]]
+category = "Set theory"
+en = "set-theoretic geology"
+zh = "集合论地质学"
+ja = "集合論の地質学"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "mantle"
+zh = "地幔"
+ja = "マントル"
+
+[[term]]
+category = "Set theory"
+en = "generic absoluteness"
+zh = "脱殊绝对性"
+ja = "ジェネリック絶対性"
+presence = true
+notes = "zh 脱殊 (translate) vs ja ジェネリック (transliterate)"
+
+[[term]]
+category = "Set theory"
+en = "independence results"
+zh = "独立性结果"
+ja = "独立性の結果"
+
+[[term]]
+category = "Set theory"
+en = "axiom of infinity"
+zh = "无穷公理"
+ja = "無限公理"
+notes = "also \"infinity axiom\""
+
+[[term]]
+category = "Set theory"
+en = "regularity"
+zh = "正则公理"
+ja = "正則性公理"
+notes = "zh also 正则性"
+
+[[term]]
+category = "Set theory"
+en = "standard model"
+zh = "标准模型"
+ja = "標準モデル"
+notes = "of ZF"
+
+[[term]]
+category = "Set theory"
+en = "infinite descent"
+zh = "无穷下降"
+ja = "無限降下"
+
+[[term]]
+category = "Set theory"
+en = "constructible hierarchy"
+zh = "可构造层级"
+ja = "構成可能階層"
+presence = true
+notes = "the L hierarchy"
+
+# ---- Type theory -------------------------------------------------------------
+
+[[term]]
+category = "Type theory"
+en = "host language"
+zh = "宿主语言"
+ja = "ホスト言語"
+notes = "the proof assistant's own language"
+
+[[term]]
+category = "Type theory"
+en = "host-language maximalism"
+zh = "宿主语言最大化"
+ja = "ホスト言語最大主義"
+presence = true
+notes = "zh 最大化 vs ja 最大主義 (deliberate)"
+
+[[term]]
+category = "Type theory"
+en = "unique existence"
+zh = "唯一存在"
+ja = "一意存在"
+notes = "the isContr notion"
+
+[[term]]
+category = "Type theory"
+en = "definite-description operator"
+zh = "摹状词算子"
+ja = "確定記述の演算子"
+notes = "the ℩ operator"
+
+[[term]]
+category = "Type theory"
+en = "description axiom"
+zh = "描述公理"
+ja = "記述公理"
+
+[[term]]
+category = "Type theory"
+en = "propositional extensionality"
+zh = "命题外延性"
+ja = "命題外延性"
+
+[[term]]
+category = "Type theory"
+en = "path equality"
+zh = "路径等式"
+ja = "道の等式"
+notes = "zh 路径 vs ja 道"
+
+[[term]]
+category = "Type theory"
+en = "transport"
+zh = "传输"
+ja = "輸送"
+notes = "structure transport (SIP)"
+
+[[term]]
+category = "Type theory"
+en = "inductive type"
+zh = "归纳类型"
+ja = "帰納型"
+
+[[term]]
+category = "Type theory"
+en = "inductive predicate"
+zh = "归纳谓词"
+ja = "帰納的述語"
+notes = "how L is defined"
+
+[[term]]
+category = "Type theory"
+en = "structural recursion"
+zh = "结构递归"
+ja = "構造的再帰"
+
+[[term]]
+category = "Type theory"
+en = "deep embedding"
+zh = "深嵌入"
+ja = "深い埋め込み"
+notes = "of Formula"
+
+[[term]]
+category = "Type theory"
+en = "reflection"
+zh = "反射"
+ja = "反射"
+notes = "drives reification"
+
+[[term]]
+category = "Type theory"
+en = "reification"
+zh = "reification"
+ja = "reification"
+notes = "keep the English word in all languages; do not translate"
+
+[[term]]
+category = "Type theory"
+en = "adequacy"
+zh = "适足性"
+ja = "妥当性"
+presence = true
+notes = "zh 适足性 vs ja 妥当性 (deliberate)"
+
+# ---- Logic and philosophy ----------------------------------------------------
+
+[[term]]
+category = "Logic and philosophy"
+en = "satisfaction"
+zh = "满足关系"
+ja = "充足関係"
+notes = "zh 满足 vs ja 充足 (deliberate)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "arithmetization"
+zh = "算术化"
+ja = "算術化"
+notes = "of syntax"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Gödel numbering"
+zh = "哥德尔数"
+ja = "ゲーデル数化"
+
+[[term]]
+category = "Logic and philosophy"
+en = "first-order definability"
+zh = "一阶可定义性"
+ja = "一階定義可能性"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bi-implication"
+zh = "双向蕴含"
+ja = "双条件"
+notes = "ja 双条件 (biconditional); not the calque 双方向含意"
+
+[[term]]
+category = "Logic and philosophy"
+en = "proof-theoretic reduction"
+zh = "证明论归约"
+ja = "証明論的還元"
+notes = "reduction: zh 归约 vs ja 還元"
+
+[[term]]
+category = "Logic and philosophy"
+en = "classical principles"
+zh = "经典原理"
+ja = "古典原理"
+notes = "LEM, AC"
+
+[[term]]
+category = "Logic and philosophy"
+en = "metatheory"
+zh = "元理论"
+ja = "メタ理論"
+notes = "meta-level is 元层 / メタレベル"
+
+[[term]]
+category = "Logic and philosophy"
+en = "metaphysics"
+zh = "形而上学"
+ja = "形而上学"
+presence = true
+notes = "of V"
+
+[[term]]
+category = "Logic and philosophy"
+en = "determinate"
+zh = "确定"
+ja = "確定"
+notes = "of V's structure"
+
+[[term]]
+category = "Logic and philosophy"
+en = "canonical"
+zh = "典范"
+ja = "典範"
+
+[[term]]
+category = "Logic and philosophy"
+en = "falsifiable"
+zh = "可证伪"
+ja = "反証可能"
+
+[[term]]
+category = "Logic and philosophy"
+en = "rigor"
+zh = "严格性"
+ja = "厳密さ"
+
+[[term]]
+category = "Logic and philosophy"
+en = "finitism"
+zh = "有穷主义"
+ja = "有限主義"
+
+[[term]]
+category = "Logic and philosophy"
+en = "neutral ground"
+zh = "中立的地基"
+ja = "中立的な地盤"
+notes = "zh 地基 vs ja 地盤"
+
+[[term]]
+category = "Logic and philosophy"
+en = "groundwork"
+zh = "奠基"
+ja = "基盤"
+notes = "the Groundwork / 奠基 / 基盤 section"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bedrock"
+zh = "基岩"
+ja = "岩盤"
+notes = "the metaphor; the project name Bedrock stays untranslated"
+
+# ---- Other -------------------------------------------------------------------
+
+[[term]]
+category = "Other"
+en = "charter"
+zh = "纲领"
+ja = "綱領"
+avoid = ["zh:宪章", "ja:憲章"]
+presence = true
+notes = "the project's founding document; file slug stays CHARTER.md"
+
+[[term]]
+category = "Other"
+en = "prose"
+zh = "文稿"
+ja = "文章"
+avoid = ["散文"]
+notes = "written body text, not the literary essay genre"
+
+[[term]]
+category = "Other"
+en = "proof assistant"
+zh = "证明助理"
+ja = "証明支援系"
+presence = true
+notes = "zh 证明助理 vs ja 証明支援系 (deliberate)"
+
+[[term]]
+category = "Other"
+en = "machine-checked development"
+zh = "机器验证工作"
+ja = "機械検証の開発"
+avoid = ["zh:机器验证开发", "zh:机械验证", "ja:機械検査の開発"]
+presence = true
+notes = "the README tagline; \"machine-checked\" is zh 机器 / ja 機械 and \"development\" is zh 工作 / ja 開発 (deliberate); the certificate/ground phrasings (机器可检的证书 / 经机器检验的地基 etc.) are separate and not covered here"

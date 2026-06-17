@@ -10,8 +10,10 @@ the detailed specs it points to.
 - `STYLE-i18n.md`: the full i18n **marker grammar** (`<!--en|zh|ja|/-->`) used by the
   literate-Agda masters and shared by `scripts/i18n_markers.py`, `weave-i18n.py`, and
   `render-site.py`.
-- `GLOSSARY.md`: the canonical **translation glossary**. It is both the human-readable
-  reference and the **data source** for `scripts/check-glossary.py`, so there is no second copy
-  to drift. Add a row when you confirm a new load-bearing term.
+- `glossary.toml`: the canonical **translation glossary data**, the single source
+  `scripts/check-glossary.py` reads (via `tomllib`). Add a `[[term]]` entry when you confirm a new
+  load-bearing term.
+- `GLOSSARY.md`: the human-readable **explanation** of the glossary, what the two checks do and how
+  to maintain `glossary.toml`.
 
 See [scripts/README.md](../scripts/README.md) for the tooling that consumes these.

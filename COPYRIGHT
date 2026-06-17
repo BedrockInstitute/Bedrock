@@ -1,0 +1,30 @@
+Bedrock
+Copyright (C) 2026 choukh (choukyuhei@gmail.com)
+
+Bedrock is multi-licensed. Per-file licensing is declared, machine-readably, in REUSE.toml
+(https://reuse.software) and verified by `reuse lint`; the full license texts are in LICENSES/.
+The summary below is for humans; REUSE.toml is authoritative.
+
+Three buckets
+-------------
+1. CC BY-NC-SA 4.0  (LICENSES/CC-BY-NC-SA-4.0.txt, mirrored at LICENSE-CC-BY-NC-SA)
+   The mathematical development and the user-facing prose, plus the brand mark:
+     - src/**            the Cubical Agda development
+     - docs/**           the trilingual user documentation
+     - README.md         the (trilingual) project readme
+     - site/static/favicon.svg
+
+2. OFL-1.1  (LICENSES/OFL-1.1.txt, mirrored at LICENSE-OFL)
+   The self-hosted third-party web fonts under site/static/fonts/ (EB Garamond, Inria Sans,
+   JuliaMono). Not Bedrock's to relicense; each font's own license text is co-located there.
+
+3. AGPL-3.0-only  (LICENSES/AGPL-3.0-only.txt, mirrored at LICENSE-AGPL)  -- the default
+   Everything else: all first-party code and configuration (scripts, .github/**, Makefile,
+   bedrock.agda-lib), the site front-end (site/static/bedrock.css, site/static/bedrock.js,
+   scripts/render-site.py, site/template.html), the prose developer docs (dev/**, AGENTS.md,
+   CONTRIBUTING.md, NOTICE, this file), and the vendored 1lab front-end under site/vendor/1lab/
+   (Copyright (C) 2021 Amelia Liao and contributors; the catch-all default folds it in).
+
+The three LICENSE-* files in the repository root duplicate the LICENSES/ texts so GitHub's
+license detection (which does not read the REUSE LICENSES/ directory) lists all three. See
+NOTICE for third-party attributions and the AGPL section 13 corresponding-source statement.

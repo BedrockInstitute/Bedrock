@@ -1,17 +1,24 @@
 # Bedrock build orchestration.
 #
-#   make check   typecheck the masters + prose lint + marker + glossary integrity (the gate)
+#   make venv    create .venv (Python 3.11+) and install pinned tooling (requirements-dev.txt)
+#   make check   typecheck + prose lint + marker + glossary + reuse-lint integrity (the gate)
 #   make site    build the multilingual hyperlinked site into _build/site
 #   make serve   preview the built site locally
 #   make gen     weave per-language mono-lingual .lagda.md (agda --html compatibility)
 #   make hooks   activate the version-controlled git pre-commit hook
 #
-# Type-checking/linting need only Agda + Python; the site build also needs them (no node,
-# no GHC). Math fonts and KaTeX load from a CDN at view time. Everything generated lives
-# under _build/ (git-ignored).
+# Run `make venv` once per clone; `make` then uses the venv interpreter and tools. Type-checking
+# needs Agda; everything Python (lint, markers, glossary, reuse, the site build) runs from .venv
+# (Python 3.11+). No node, no GHC; math fonts and KaTeX load from a CDN at view time. Everything
+# generated lives under _build/ (git-ignored).
 
 AGDA      := agda
-PY        := python3
+VENV      := .venv
+# Bootstrap interpreter for `make venv` (must be >= 3.11); override in CI, e.g. PYTHON=python3.
+PYTHON    ?= python3.11
+# Interpreter and tools used by all targets (the venv); override only if needed, e.g. PY=python3.
+PY        ?= $(VENV)/bin/python
+REUSE     ?= $(VENV)/bin/reuse
 EVERYTHING := src/Everything.lagda.md
 HTML_DIR  := _build/html
 SITE_OUT  := _build/site
@@ -20,9 +27,19 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint markers glossary gen html types site serve clean hooks test deploy
+.PHONY: check typecheck lint markers glossary reuse gen html types site serve clean hooks test deploy venv venv-check
 
-check: typecheck markers lint glossary
+check: venv-check typecheck markers lint glossary reuse
+
+venv:
+	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
+	$(PYTHON) -m venv $(VENV)
+	$(PY) -m pip install --quiet --upgrade pip
+	$(PY) -m pip install --quiet -r requirements-dev.txt
+	@echo "venv ready: $(VENV) ($$($(PY) --version))"
+
+venv-check:
+	@test -x $(PY) || { echo "No virtualenv at $(VENV)/. Run: make venv"; exit 1; }
 
 typecheck:
 	$(AGDA) $(EVERYTHING)
@@ -35,6 +52,9 @@ markers:
 
 glossary:
 	$(PY) scripts/check-glossary.py --check
+
+reuse:
+	$(REUSE) lint
 
 gen:
 	$(PY) scripts/weave-i18n.py --gen --out _build/woven

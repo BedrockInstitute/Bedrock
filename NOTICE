@@ -5,8 +5,13 @@ note on Bedrock's own license. The filename NOTICE follows common (Apache-style)
 Bedrock
 Copyright (C) 2026 choukh (choukyuhei@gmail.com)
 
-The mathematical development and prose (everything under src/, docs/, and dev/, and the
-repository's own scripts) are licensed under CC BY-NC-SA 4.0; see LICENSE.
+Bedrock is multi-licensed; per-file terms are declared in REUSE.toml (verified by `reuse lint`),
+with the full texts in LICENSES/ and a human summary in COPYRIGHT:
+  - CC BY-NC-SA 4.0  the mathematical development and user prose (src/, docs/), the README,
+                     and the brand mark (site/static/favicon.svg);
+  - AGPL-3.0-only    every other first-party file (tooling, the site front-end, build and
+                     config, and the prose developer docs), the catch-all default;
+  - OFL-1.1          the self-hosted third-party web fonts under site/static/fonts/.
 
 This repository also aggregates third-party material under different terms. These are
 separate works combined by mere aggregation; each retains its own license.
