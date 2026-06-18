@@ -23,7 +23,7 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 
 # ---- Carve-out: math + user prose + brand mark + user README -> CC BY-NC-SA 4.0 ----
 [[annotations]]
-path = ["src/**", "docs/**", "README.md", "site/static/favicon.svg"]
+path = ["src/**", "docs/**", "README.md", "site/static/favicon.svg", "site/static/brand.svg"]
 precedence = "override"
 SPDX-FileCopyrightText = "2026 choukh <choukyuhei@gmail.com>"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"

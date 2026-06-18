@@ -1,4 +1,4 @@
-<h1 style="display: flex; align-items: center; gap: 0.35rem"><img src="site/static/favicon.svg" alt="" height="32" align="middle"> Bedrock</h1>
+<h1><img src="site/static/brand.svg" alt="" height="44" align="middle"> Bedrock</h1>
 
 **English** · [中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
@@ -98,8 +98,8 @@ AI agents work from [AGENTS.md](AGENTS.md); human contributors, start with
 Bedrock is multi-licensed; per-file terms are declared in [`REUSE.toml`](REUSE.toml) and
 verified by `reuse lint`. In short:
 
-- **The mathematics and prose** (`src/`, `docs/`, this `README`) and the brand mark
-  (`site/static/favicon.svg`) are licensed
+- **The mathematics and prose** (`src/`, `docs/`, this `README`) and the brand marks
+  (`site/static/favicon.svg`, `site/static/brand.svg`) are licensed
   [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/); the Agda development
   is treated as a piece of mathematical writing rather than conventional software.
 - **All first-party code and configuration** (the tooling, the site front-end, build and dev

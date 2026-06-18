@@ -8,11 +8,12 @@ The summary below is for humans; REUSE.toml is authoritative.
 Three buckets
 -------------
 1. CC BY-NC-SA 4.0  (LICENSES/CC-BY-NC-SA-4.0.txt, mirrored at LICENSE-CC-BY-NC-SA)
-   The mathematical development and the user-facing prose, plus the brand mark:
+   The mathematical development and the user-facing prose, plus the brand marks:
      - src/**            the Cubical Agda development
      - docs/**           the trilingual user documentation
      - README.md         the (trilingual) project readme
      - site/static/favicon.svg
+     - site/static/brand.svg
 
 2. OFL-1.1  (LICENSES/OFL-1.1.txt, mirrored at LICENSE-OFL)
    The self-hosted third-party web fonts under site/static/fonts/ (EB Garamond, Inria Sans,

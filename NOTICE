@@ -8,7 +8,7 @@ Copyright (C) 2026 choukh (choukyuhei@gmail.com)
 Bedrock is multi-licensed; per-file terms are declared in REUSE.toml (verified by `reuse lint`),
 with the full texts in LICENSES/ and a human summary in COPYRIGHT:
   - CC BY-NC-SA 4.0  the mathematical development and user prose (src/, docs/), the README,
-                     and the brand mark (site/static/favicon.svg);
+                     and the brand marks (site/static/favicon.svg, site/static/brand.svg);
   - AGPL-3.0-only    every other first-party file (tooling, the site front-end, build and
                      config, and the prose developer docs), the catch-all default;
   - OFL-1.1          the self-hosted third-party web fonts under site/static/fonts/.

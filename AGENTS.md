@@ -140,7 +140,7 @@ Bedrock is multi-licensed under a three-bucket rule, declared per file in [`REUS
 and enforced by `reuse lint` (part of `make check`):
 
 - **CC BY-NC-SA 4.0**: the mathematical development and user prose (`src/`, `docs/`), the `README`,
-  and the brand mark `site/static/favicon.svg`.
+  and the brand marks `site/static/favicon.svg` and `site/static/brand.svg`.
 - **OFL-1.1**: the self-hosted third-party web fonts under `site/static/fonts/`.
 - **AGPL-3.0-only** (the default): every other first-party file, the tooling, the site front-end,
   build and config, and the prose developer docs (`dev/`, this `AGENTS.md`, `CONTRIBUTING.md`).
