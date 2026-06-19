@@ -64,6 +64,19 @@ the strength of the infinity axiom assumed, so the project takes no side.
 
 The full treatment is in the [Charter](docs/en/CHARTER.md).
 
+## Why Cubical
+
+Cubical type theory is the frontier of contemporary type theory: the foundations
+of mathematics worked out in the present tense. The metaphysics of V is the most
+classical branch of the same inquiry, the oldest question of what the mathematical
+universe is. Carrying the most classical of foundational questions into the most
+contemporary of foundations is not a constraint to be tolerated but one of the
+things this project is for; the contrast between the two is deliberate.
+
+The choice earns its keep as well: the cumulative hierarchy V is realised here as
+a higher inductive type, which cubical makes computational rather than postulated.
+But the deeper reason is the contrast itself.
+
 ## Name
 
 *Bedrock* is the deepest ground model; whether one exists at all is a delicate,
