@@ -1,4 +1,6 @@
-<h1><img src="../../site/static/brand.svg" alt="" height="56" align="middle"> Bedrock</h1>
+<p align="center"><img src="../../site/static/assets/banner.png" alt="" width="800"></p>
+
+<h1><img src="../../site/static/assets/brand.svg" alt="" height="56" align="middle"> Bedrock</h1>
 
 [English](../../README.md) · **中文** · [日本語](../ja/README.md)
 
@@ -66,7 +68,7 @@ AI agent 以 [AGENTS.md](../../AGENTS.md) 为准，人类贡献者请从 [CONTRI
 
 Bedrock 采用多重许可；逐文件的条款在 [`REUSE.toml`](../../REUSE.toml) 中声明，并由 `reuse lint` 验证。简而言之：
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学、文稿与品牌标识 (`src/`、`docs/`、`README`、favicon/brand SVG)。
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学、文稿与品牌标识 (`src/`、`docs/`、`README`、`site/static/assets/`)。
 - **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：其余所有第一方代码与配置，含内嵌的 [1lab](https://1lab.dev) 前端。
 - **[OFL-1.1](https://openfontlicense.org)**：自托管网页字体 (`site/static/fonts/`)。
 

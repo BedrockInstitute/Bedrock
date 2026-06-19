@@ -1,4 +1,6 @@
-<h1><img src="site/static/brand.svg" alt="" height="56" align="middle"> Bedrock</h1>
+<p align="center"><img src="site/static/assets/banner.png" alt="" width="800"></p>
+
+<h1><img src="site/static/assets/brand.svg" alt="" height="56" align="middle"> Bedrock</h1>
 
 **English** · [中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
@@ -98,7 +100,7 @@ AI agents work from [AGENTS.md](AGENTS.md); human contributors, start with
 Bedrock is multi-licensed; per-file terms are declared in [`REUSE.toml`](REUSE.toml) and
 verified by `reuse lint`. In short:
 
-- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**: the maths, prose, and brand marks (`src/`, `docs/`, `README`, the favicon/brand SVGs).
+- **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**: the maths, prose, and brand assets (`src/`, `docs/`, `README`, `site/static/assets/`).
 - **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**: all other first-party code and config, including the vendored [1lab](https://1lab.dev) front-end.
 - **[OFL-1.1](https://openfontlicense.org)**: the self-hosted web fonts (`site/static/fonts/`).
 

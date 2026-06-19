@@ -12,8 +12,7 @@ Three buckets
      - src/**            the Cubical Agda development
      - docs/**           the trilingual user documentation
      - README.md         the (trilingual) project readme
-     - site/static/favicon.svg
-     - site/static/brand.svg
+     - site/static/assets/  the brand marks (favicon, inline README mark, social banner)
 
 2. OFL-1.1  (LICENSES/OFL-1.1.txt, mirrored at LICENSE-OFL)
    The self-hosted third-party web fonts under site/static/fonts/ (EB Garamond, Inria Sans,
