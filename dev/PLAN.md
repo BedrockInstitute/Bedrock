@@ -440,8 +440,8 @@ One row per goal code; update the row in the same commit that changes the status
 | L0.1 | First glossary batch | DONE 2026-07-16 |
 | L0.2 | LEM parameterization spike | DONE 2026-07-16, verdict green |
 | L0.3 | Agda linter (import necessity) | DONE 2026-07-16 |
-| L1 | Root and trunk skeleton | PLANNED |
-| L1.0 | Skeleton, src/README, agda-lib flag, source pin | PLANNED |
+| L1 | Root and trunk skeleton | ACTIVE 2026-07-16 |
+| L1.0 | Skeleton, src/README, agda-lib flag, source pin | DONE 2026-07-16 |
 | L1.1 | Port Base/ | PLANNED |
 | L1.2 | Port FOL/ core | PLANNED |
 | L1.3 | Port FOL/Reification/ | PLANNED |
@@ -486,7 +486,10 @@ One row per goal code; update the row in the same commit that changes the status
   (+3%). Far inside the 1.5x gate: **D2 stands, no fallback needed.** Residual
   risk: the deep certificate clusters were not exercised; §7 budgets police them
   during L2/L3 porting.
-- **Source commit pin for the port [L1.0]:** pending (reference at planning time:
-  `8b190d5`).
+- **Source commit pin for the port [L1.0]:** `8b190d50feb0` (2026-07-16, the tree as
+  of the M2.7 build optimization; the Con(AC) mathematical content is unchanged since
+  527f13b, 2026-07-14). All L1-L3 porting reads the source at this commit; advancing
+  the pin is an explicit `[L0.x]` decision. (The `-WnoUnsupportedIndexedMatch` flag
+  turned out to be present in `bedrock.agda-lib` from the start; no change needed.)
 - **Cold-check baseline (§7.5):** n/a (no ported modules yet).
 - **Frontier field count:** n/a (record not yet created).
