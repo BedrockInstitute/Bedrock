@@ -129,6 +129,67 @@ ja = "構成可能階層"
 presence = true
 notes = "the L hierarchy"
 
+[[term]]
+category = "Set theory"
+en = "constructible universe"
+zh = "可构造宇宙"
+ja = "構成可能宇宙"
+presence = true
+notes = "the class L; 可构造/構成可能 matches the constructible hierarchy entry"
+
+[[term]]
+category = "Set theory"
+en = "cumulative hierarchy"
+zh = "累积层级"
+ja = "累積階層"
+presence = true
+notes = "V; the zh rendering is already in use in Everything.lagda.md"
+
+[[term]]
+category = "Set theory"
+en = "condensation"
+zh = "凝聚"
+ja = "凝縮"
+presence = true
+notes = "condensation lemma = 凝聚引理 / 凝縮補題; zh 凝聚 vs ja 凝縮 (deliberate)"
+
+[[term]]
+category = "Set theory"
+en = "absoluteness"
+zh = "绝对性"
+ja = "絶対性"
+notes = "consistent with the generic absoluteness entry; Δ₀-absoluteness keeps the prefix symbol"
+
+[[term]]
+category = "Set theory"
+en = "relative consistency"
+zh = "相对一致性"
+ja = "相対無矛盾性"
+presence = true
+notes = "consistency diverges: zh 一致性 vs ja 無矛盾性 (deliberate); see the consistency entry"
+
+[[term]]
+category = "Set theory"
+en = "well-order"
+zh = "良序"
+ja = "整列順序"
+notes = "the noun; well-ordered = zh 良序的 / ja 整列された"
+
+[[term]]
+category = "Set theory"
+en = "axiom of choice"
+zh = "选择公理"
+ja = "選択公理"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "inner model"
+zh = "内模型"
+ja = "内部モデル"
+presence = true
+notes = "the zh rendering is already in use in the README trio"
+
 # ---- Type theory -------------------------------------------------------------
 
 [[term]]
@@ -233,6 +294,13 @@ zh = "适足性"
 ja = "妥当性"
 presence = true
 notes = "zh 适足性 vs ja 妥当性 (deliberate)"
+
+[[term]]
+category = "Type theory"
+en = "representation"
+zh = "表示"
+ja = "表現"
+notes = "the Rep family: a formula paired with its adequacy certificate; paired with reification"
 
 # ---- Logic and philosophy ----------------------------------------------------
 
@@ -349,6 +417,21 @@ en = "bedrock"
 zh = "基岩"
 ja = "岩盤"
 notes = "the metaphor; the project name Bedrock stays untranslated"
+
+[[term]]
+category = "Logic and philosophy"
+en = "consistency"
+zh = "一致性"
+ja = "無矛盾性"
+notes = "of a theory; zh 一致性 vs ja 無矛盾性 (deliberate); no presence check, the English word is too common"
+
+[[term]]
+category = "Logic and philosophy"
+en = "excluded middle"
+zh = "排中律"
+ja = "排中律"
+presence = true
+notes = "law of excluded middle, LEM"
 
 # ---- Other -------------------------------------------------------------------
 
