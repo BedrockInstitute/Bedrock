@@ -20,8 +20,7 @@ to itself.
 {-# OPTIONS --cubical --safe --guardedness #-}
 module Example.Doubling where
 
-open import Cubical.Foundations.Prelude
-open import Example.Naturals
+open import Example.Naturals using ( Nat; _+_ )
 
 double : Nat → Nat
 double n = n + n

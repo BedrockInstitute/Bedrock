@@ -27,9 +27,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint markers glossary reuse gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary reuse gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint glossary reuse
+check: venv-check typecheck markers lint lint-agda glossary reuse
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -46,6 +46,9 @@ typecheck:
 
 lint:
 	$(PY) scripts/lint-prose.py --check
+
+lint-agda:
+	$(PY) scripts/lint-agda.py --check
 
 markers:
 	$(PY) scripts/weave-i18n.py --check
@@ -81,6 +84,7 @@ deploy: site
 test:
 	$(PY) scripts/tests/test_i18n.py
 	$(PY) scripts/tests/test_glossary.py
+	$(PY) scripts/tests/test_lint_agda.py
 
 clean:
 	rm -rf _build

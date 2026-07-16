@@ -11,6 +11,10 @@ Rules marked **(provisional)** are expected to harden after real porting experie
 (PLAN §8 T1). Changing any rule is legislation: open an `[L0.x]` item, do not
 improvise silently.
 
+The mechanical subset of these rules (the OPTIONS header, the import discipline of
+§2, and the forbidden constructs of §1) is machine-enforced by `scripts/lint-agda.py`
+as part of `make check` and the pre-commit hook `[L0.3]`.
+
 ## 0. Meta-principles
 
 1. **Notation aligns with set-theoretic LaTeX tradition.** If it can look like the
@@ -61,8 +65,14 @@ improvise silently.
   parameters (`module L.Model {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ') (F : Frontier ℓ)`).
 - Imports needed by the telescope go **before** the module header; everything else
   after it.
-- `open import` always carries a `using`/`renaming` list (audit-friendly); the only
-  exception is `Everything`, whose bare import block is the site's module list.
+- `open import` always carries a `using`/`renaming` list (audit-friendly), and every
+  imported name must actually be used: imports are **necessary** (the linter checks
+  this) as well as sufficient (the typechecker checks that). Exceptions: `Everything`,
+  whose bare import block is the site's module list, and the designated **hub
+  modules** `Base.Prelude` and `Base.Truth`, curated re-export preludes designed to
+  be opened wholesale (the hubs' own `public` re-exports stay curated with `using`
+  lists). A genuine exception the linter cannot see (an instance-only import) is
+  marked `-- lint-agda: keep`.
 - Every module is imported by `Everything` in reading order (enforced by the
   L5-ported audit; a module outside `Everything` is unchecked and unlisted).
 
@@ -162,8 +172,8 @@ Corresponding operations across layers share a level (`∧̇` with `⊓`, `⇒̇
 
 At a symbol's definition site, the prose gives, in each language block: its
 **reading** (per language), its **LaTeX counterpart**, and its **Agda input
-sequence** (for example `⊨` reads "satisfies" / 满足, LaTeX `\models`, input
-`\models`; `∈̇` is `\in` + `\^.`). `src/README.md` carries the master symbol table:
+sequence** (for example `⊨` reads "satisfies" in English and 满足 in Chinese, with
+LaTeX and input `\models`; `∈̇` is `\in` + `\^.`). `src/README.md` carries the master symbol table:
 symbol / reading / layer / defining chapter / input sequence. **(provisional:** the
 exact table format is fixed when the first symbols land in L1.)
 
