@@ -7,6 +7,13 @@ the detailed specs it points to.
 
 ## Contents
 
+- `PLAN.md`: the **construction plan** for the current milestone (porting L ⊨ ZFC from
+  `fol-reification`): ratified decisions, target skeleton, rename ledger, the route
+  tree of goal codes (`[L0]` to `[L5]`), binding build constraints, and the live
+  MASTER status table. Read it before touching `src/`; work carries a goal code.
+- `STYLE-agda.md`: the **Agda code and literate-chapter style** rules for `src/` masters:
+  OPTIONS and assumption policy, naming, the layer-marking system, performance-idiom
+  annotations, and the chapter template. Inherits the source project's finalized spec.
 - `STYLE-i18n.md`: the full i18n **marker grammar** (`<!--en|zh|ja|/-->`) used by the
   literate-Agda masters and shared by `scripts/i18n_markers.py`, `weave-i18n.py`, and
   `render-site.py`.
