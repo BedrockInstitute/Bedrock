@@ -11,7 +11,7 @@ Bedrock 的最小文学化模块：自反性给出从任意一点到其自身的
 {-# OPTIONS --cubical --safe --guardedness #-}
 module HelloWorld where
 
-open import Cubical.Foundations.Prelude
+open import Cubical.Foundations.Prelude using ( Level; Type; _≡_; refl )
 
 hello : {ℓ : Level} {A : Type ℓ} (x : A) → x ≡ x
 hello x = refl

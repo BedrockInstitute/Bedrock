@@ -109,11 +109,38 @@ python3 scripts/check-glossary.py --check          # scan tracked files; exit 1 
 python3 scripts/check-glossary.py --check --staged # only staged files (used by the hook)
 ```
 
+## `lint-agda.py`
+
+Enforces the code-side rules of [dev/STYLE-agda.md](../dev/STYLE-agda.md) on the ```agda
+fences of the masters (report-only; prose is `lint-prose.py`'s business):
+
+- `[options]` the file's first pragma is exactly `{-# OPTIONS --cubical --safe --guardedness #-}`.
+- `[bare-open]` every `open import` carries a `using`/`renaming` list (`hiding` alone does
+  not qualify). Exempt: `Everything`, and the designated hub modules (`Base.Prelude`,
+  `Base.Truth`), which are curated re-export preludes designed to be opened wholesale.
+- `[unused-import]` **import necessity**: every name bound by a `using`/`renaming` clause
+  (of an import or a plain `open`), and the handle of every qualified `import M [as A]`,
+  is actually used outside the binding clauses. Sufficiency is exactly what `agda`
+  typechecking enforces, so together imports are always necessary and sufficient.
+  Exempt: `Everything`, `... public` re-exports, and names ending in `-syntax` (used
+  through their notation). Usage detection is lexical (mixfix names match by their name
+  parts); a name imported from two modules and used once leaves both unflagged.
+- `[forbidden]` no `postulate`, no `TERMINATING`-family pragma, no interaction holes
+  (`{! !}` or a bare `?`): the Frontier record (dev/PLAN.md §5) is the only debt form.
+
+Suppress a genuine exception (e.g. an instance-only import) with a `-- lint-agda: keep`
+comment on the import line or the line above it.
+
+```sh
+python3 scripts/lint-agda.py --check           # scan tracked src masters; exit 1 on any violation
+python3 scripts/lint-agda.py <files>           # specific masters (used by the hook)
+```
+
 ## Pre-commit hook
 
 `git-hooks/pre-commit` runs fast source checks on staged Markdown (the prose linter, marker
-integrity, and the glossary check) and blocks the commit on any violation. Version-controlled;
-activate it once per clone (or run `make hooks`):
+integrity, the glossary check, and the Agda code linter) and blocks the commit on any
+violation. Version-controlled; activate it once per clone (or run `make hooks`):
 
 ```sh
 git config --local core.hooksPath scripts/git-hooks

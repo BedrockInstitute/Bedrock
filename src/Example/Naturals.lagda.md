@@ -21,7 +21,7 @@ mathematical development.
 {-# OPTIONS --cubical --safe --guardedness #-}
 module Example.Naturals where
 
-open import Cubical.Foundations.Prelude
+open import Cubical.Foundations.Prelude using ( Type )
 
 data Nat : Type where
   zero : Nat

@@ -35,6 +35,16 @@ if [ -n "$masters" ]; then
 	fi
 fi
 
+if [ -n "$masters" ]; then
+	# shellcheck disable=SC2086
+	if ! $PY scripts/lint-agda.py $masters; then
+		echo ""
+		echo "Agda code lint failed (see dev/STYLE-agda.md): the OPTIONS header,"
+		echo "the using-list discipline, import necessity, or a forbidden construct."
+		status=1
+	fi
+fi
+
 if [ -n "$md" ]; then
 	# shellcheck disable=SC2086
 	if ! $PY scripts/check-glossary.py --check $md; then

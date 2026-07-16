@@ -15,6 +15,8 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
 
 - **`make check`** is the gate before any commit. It typechecks the masters
   (`agda src/Everything.lagda.md`), validates i18n markers, runs the prose linter, runs the
+  Agda code linter (`scripts/lint-agda.py` against the [dev/STYLE-agda.md](dev/STYLE-agda.md)
+  rules: OPTIONS header, import necessity, no forbidden constructs), runs the
   glossary checker (`scripts/check-glossary.py` against the term data in
   [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)), and
   runs `reuse lint` for per-file licensing.

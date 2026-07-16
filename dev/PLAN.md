@@ -240,9 +240,17 @@ uncovers an un-legislated situation.
 - **[L0.2]** LEM parameterization spike (gates D2): parameterize one or two
   representative heavy `L` modules over LEM, measure cold-check time against the
   source baseline, project the full-cone cost, record the verdict in §11.
-- **[L0.3+]** Reserved for mid-course legislation, opened as discovered.
+- **[L0.3]** `scripts/lint-agda.py`: a code-side linter for the masters, wired into
+  `make check` and the pre-commit hook. Flagship check: **import necessity**, every
+  name bound by a `using`/`renaming` clause must actually be used, so the import
+  block is always necessary (sufficiency is the typechecker's job). Companions:
+  the exact OPTIONS header, the using-list discipline for `open import`, and the
+  forbidden-construct ban (postulate, TERMINATING pragmas, holes). `Everything` and
+  the designated hub modules (`Base.Prelude`, `Base.Truth`) are exempt from the
+  import checks by design; `-- lint-agda: keep` is the per-import escape hatch.
+- **[L0.4+]** Reserved for mid-course legislation, opened as discovered.
 
-Gate for L1: L0.0 to L0.2 DONE and approved by the owner.
+Gate for L1: L0.0 to L0.3 DONE and approved by the owner.
 
 **[L1] Root and trunk skeleton.**
 
@@ -427,10 +435,11 @@ One row per goal code; update the row in the same commit that changes the status
 
 | Code | Goal | Status |
 |---|---|---|
-| L0 | Legislation (standing track) | ACTIVE 2026-07-16 |
-| L0.0 | STYLE-agda.md initial edition | DONE 2026-07-16 (owner gate pending) |
-| L0.1 | First glossary batch | DONE 2026-07-16 (owner gate pending) |
+| L0 | Legislation (standing track) | ACTIVE (initial set gate cleared by owner 2026-07-16) |
+| L0.0 | STYLE-agda.md initial edition | DONE 2026-07-16 |
+| L0.1 | First glossary batch | DONE 2026-07-16 |
 | L0.2 | LEM parameterization spike | DONE 2026-07-16, verdict green |
+| L0.3 | Agda linter (import necessity) | DONE 2026-07-16 |
 | L1 | Root and trunk skeleton | PLANNED |
 | L1.0 | Skeleton, src/README, agda-lib flag, source pin | PLANNED |
 | L1.1 | Port Base/ | PLANNED |
