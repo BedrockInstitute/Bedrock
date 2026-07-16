@@ -302,6 +302,28 @@ zh = "表示"
 ja = "表現"
 notes = "the Rep family: a formula paired with its adequacy certificate; paired with reification"
 
+[[term]]
+category = "Type theory"
+en = "truth value"
+zh = "真值"
+ja = "真理値"
+notes = "zh 真值 vs ja 真理値"
+
+[[term]]
+category = "Type theory"
+en = "truth algebra"
+zh = "真值代数"
+ja = "真理値代数"
+presence = true
+notes = "the TruthAlg record, Base.Truth"
+
+[[term]]
+category = "Type theory"
+en = "propositional resizing"
+zh = "命题降层"
+ja = "命題リサイズ"
+notes = "tentative (owner review): zh renders by meaning (drop a universe level); ja transliterates"
+
 # ---- Logic and philosophy ----------------------------------------------------
 
 [[term]]

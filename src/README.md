@@ -23,6 +23,15 @@ Modules sidebar.
 
 ## Current modules
 
+- `Base/`: Part 0, host-language groundwork, landed with `[L1.1]`:
+  - `Base/Prelude.lagda.md`: the host vocabulary (curated cubical re-exports),
+    environments `A ^ n`, and `absurd`. One of the two designated hubs (STYLE-agda §2).
+  - `Base/Truth.lagda.md`: the truth algebra `TruthAlg` (a pure operation signature;
+    the book's only source of logic symbols) and its canonical instance `hPropAlg`.
+    The other hub.
+  - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
+    its two dividends `lem→smallΩ` (small classifier) and `lem→resize` (propositional
+    resizing). No postulate, per PLAN D2.
 - `HelloWorld.lagda.md`: minimal smoke-test module.
 - `Example/Naturals.lagda.md`, `Example/Doubling.lagda.md`: demo modules with real `##`
   sections that exercise the renderer's per-page table of contents and inline
@@ -33,9 +42,6 @@ Modules sidebar.
 The book-part skeleton fixed by [dev/PLAN.md](../dev/PLAN.md) §4; porting fills these in
 per the route tree (`[L1]` onward). By part:
 
-- `Base/`: Part 0, host-language groundwork: `Prelude` (cubical re-exports and global
-  conventions), `Truth` (truth values), `Classical` (LEM as a parameter interface; no
-  postulate anywhere, per PLAN D2).
 - `FOL/`: Part 1, first-order logic as an object of study: `Syntax` (the deeply embedded
   `Formula`), `Semantics` (Tarski satisfaction by structural recursion), `Renaming`, and
   `Reification/` (the bridge between host predicates and object formulas, with
@@ -51,6 +57,20 @@ per the route tree (`[L1]` onward). By part:
 
 ## Symbol master table
 
-Required by [dev/STYLE-agda.md](../dev/STYLE-agda.md) §5: one row per symbol, giving
-symbol / reading / layer / defining chapter / Agda input sequence. Lands with the first
-ported symbols (`[L1.1]` onward).
+Required by [dev/STYLE-agda.md](../dev/STYLE-agda.md) §5: one row per symbol introduced
+so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth algebra,
+③ structure fields, ④ object syntax).
+
+| Symbol | Reading | Layer | Chapter | Input |
+|---|---|---|---|---|
+| `⟨_⟩` | the underlying type of | ① | `Base.Prelude` (re-export) | `\<` `\>` |
+| `_^_` | power (environments) | ① | `Base.Prelude` | `^` |
+| `⊥*` | lifted empty type | ① | `Base.Prelude` (re-export) | `\bot` `*` |
+| `⊓` | and (meet) | ② | `Base.Truth` | `\glb` |
+| `⊔` | or (join) | ② | `Base.Truth` | `\lub` |
+| `⇒` | implies | ② | `Base.Truth` | `\=>` |
+| `¬` | not | ② | `Base.Truth` | `\neg` |
+| `⊤` | true | ② | `Base.Truth` | `\top` |
+| `⊥` | false | ② | `Base.Truth` | `\bot` |
+| `⋀` | indexed meet (universal) | ② | `Base.Truth` | `\bigwedge` |
+| `⋁` | indexed join (existential) | ② | `Base.Truth` | `\bigvee` |

@@ -140,7 +140,8 @@ rows rather than editing old ones):
 
 | Source (fol-reification) | Bedrock | Notes |
 |---|---|---|
-| `Prelude`, `Truth`, `Classical` | `Base.Prelude`, `Base.Truth`, `Base.Classical` | `Classical` loses its postulate (D2) |
+| `Prelude`, `Truth`, `Classical` | `Base.Prelude`, `Base.Truth`, `Base.Classical` | `Classical` loses its postulate (D2); `LEM` stated per level, dividends take it explicitly |
+| `Classical.lem→VResizing` | lands in `V/` with `[L1.5]` | re-layered: the V-side redemption belongs to Part 3; `Base.Classical` keeps `lem→smallΩ` / `lem→resize` |
 | `FOL.Syntax` / `FOL.Semantics` / `FOL.Rename` | `FOL.Syntax` / `FOL.Semantics` / `FOL.Renaming` | |
 | `Reification.*` (11 modules) | `FOL.Reification.*` | merge `Absoluteness2` into `Absoluteness` |
 | `ZF.Structure` / `ZF.Model` | same names | |
@@ -423,7 +424,7 @@ An accepted candidate is executed under the goal code of the cluster it affects.
 
 | # | Candidate | Verification needed | Status |
 |---|-----------|---------------------|--------|
-| S1 | Specialize the truth-algebra abstraction (`TruthAlg`) to plain hProp | Check whether any non-hProp instance is load-bearing in the source | open |
+| S1 | Specialize the truth-algebra abstraction (`TruthAlg`) to plain hProp | Check whether any non-hProp instance is load-bearing in the source | verified 2026-07-16: **rejected**. The record is a law-free operation signature, definitionally transparent on `hPropAlg` (record ι), and is the designed seam for the forcing-stage Boolean instance; only one instance exists today, but the Charter targets forcing. Ported faithfully in `[L1.1]`. |
 | S2 | Merge `Absoluteness2` into `Absoluteness` | Diff the two modules' roles | open |
 | S3 | Unify the five graph-certificate families under shared combinators | This is the L3.3 reduction review itself | open |
 | S4 | Fold `ZF.Encoding` / `ZF.Coding` into their consumers | Map their import sites | open |
@@ -442,7 +443,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L0.3 | Agda linter (import necessity) | DONE 2026-07-16 |
 | L1 | Root and trunk skeleton | ACTIVE 2026-07-16 |
 | L1.0 | Skeleton, src/README, agda-lib flag, source pin | DONE 2026-07-16 |
-| L1.1 | Port Base/ | PLANNED |
+| L1.1 | Port Base/ | DONE 2026-07-16 |
 | L1.2 | Port FOL/ core | PLANNED |
 | L1.3 | Port FOL/Reification/ | PLANNED |
 | L1.4 | Port ZF/ | PLANNED |
