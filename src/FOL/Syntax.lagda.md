@@ -147,17 +147,20 @@ mapFo f (∃̇∈ t φ) = ∃̇∈ (mapTm f t) (mapFo f φ)
 
 <!--en-->
 A **sentence** is a formula with no free variables; with intrinsic scoping this is
-a type, `Formula K 0`, not a side condition. The **closed syntax** additionally has
-no constants: its domain is the empty type `⊥*`{.Agda}. From the empty type
-anything follows, and the library's eliminator `Empty.rec*`{.Agda} says so; here it
-interprets the constants that do not exist, embedding a closed formula into the
-syntax over any constant domain whatsoever. The closed syntax is not a rival of the
-working syntax but its companion: a syntax whose constants are all sets is too big
-to be counted or coded, so whenever a later part needs formulas *as data*, theories
-as sets of formulas, codes of formulas inside a model, it is `Closed`{.Agda}
-formulas that get collected, with parameters fed through environments instead.
+a type, `Formula K 0`, not a side condition. The **closed syntax** restricts along
+a different, orthogonal axis: its constant domain is the empty type `⊥*`{.Agda}, so
+no ambient set can enter a formula as a constant, while free variables remain,
+`Closed n`{.Agda} having exactly `n` of them. Closed, that is, against the ambient
+world, not closed in the sense of a sentence. From the empty type anything follows,
+and the library's eliminator `Empty.rec*`{.Agda} says so; here it interprets the
+constants that do not exist, embedding a constant-free formula into the syntax over
+any domain whatsoever. The closed syntax is not a rival of the working syntax but
+its companion: a syntax whose constants are all sets is too big to be counted or
+coded, so whenever a later part needs formulas *as data*, theories as sets of
+formulas, codes of formulas inside a model, it is the constant-free formulas that
+get collected, their parameters fed through environments instead.
 <!--zh-->
-**语句**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件。**封闭语法**更进一步连常量也没有：其常量域是空类型 `⊥*`{.Agda}。从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的就是这句话；在这里它解释那些不存在的常量，把闭公式嵌入任意常量域上的语法。封闭语法不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是 `Closed`{.Agda} 公式，参数改经环境喂入。
+**语句**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件。**封闭语法**限制的是另一条正交的轴：常量域取空类型 `⊥*`{.Agda}，外部集合无从以常量身份进入公式，而自由变量照旧，`Closed n`{.Agda} 恰有 `n` 个。所谓封闭，是对外部世界封闭，不是语句那种「闭」。从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的就是这句话；在这里它解释那些不存在的常量，把无常量的公式嵌入任意常量域上的语法。封闭语法不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无常量公式，参数改经环境喂入。
 <!--/-->
 
 ```agda
