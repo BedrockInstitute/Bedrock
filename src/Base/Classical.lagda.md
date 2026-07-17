@@ -68,11 +68,26 @@ postulated, the whole book carries Agda's `--safe` seal.
 <!--en-->
 Classically a proposition has only two possible values, and that innocent remark has
 universe-level teeth. First: the entire type of truth values collapses to a
-two-element type. `decodeB`{.Agda} sends `true`{.Agda} and `false`{.Agda} to `⊤` and
-`⊥`; excluded middle decides any proposition back onto a Boolean; the round trips
-below make this an equivalence `Lift Bool ≃ hProp ℓ`, at **every** level `ℓ`.
+two-element type, `Lift Bool ≃ hProp ℓ`, at **every** level `ℓ`. The construction is
+arranged so that all the real work is constructive: the four helpers below take a
+**decision** of a proposition (a proof, or a refutation) as an ordinary argument,
+and excluded middle enters only at the final assembly, to supply those decisions.
 <!--zh-->
-经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。第一：整个真值类型坍缩为二元类型。`decodeB`{.Agda} 把 `true`{.Agda} 与 `false`{.Agda} 送到 `⊤` 与 `⊥`；排中律把任何命题判定回一个布尔值；下面的往返互逆使之成为等价 `Lift Bool ≃ hProp ℓ`，且在**每一个**层级 `ℓ` 上成立。
+经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。第一笔：整个真值类型坍缩为二元类型，在**每一个**层级 `ℓ` 上都有 `Lift Bool ≃ hProp ℓ`。构造被刻意安排为：全部实际工作都是构造性的，下面四个助手把命题的**判定** (一个证明，或一个反驳) 当作普通参数接收；排中律只在最后的总装处出场，负责供应这些判定。
+<!--/-->
+
+<!--en-->
+First the decoding direction, from Booleans to propositions. `⊥ₚ`{.Agda} is a local
+abbreviation for the false proposition: the host type `⊥*`{.Agda} packaged with its
+propositionality, the same pair the previous chapter installed as the algebra's `⊥`
+field. `decodeB`{.Agda} sends `true`{.Agda} to the true proposition and
+`false`{.Agda} to `⊥ₚ`{.Agda}; its `where` line opens the hProp algebra just long
+enough to borrow its `⊤`, renamed `⊤ₚ` to keep the layer visible. The domain is
+`Lift {ℓ-zero} {ℓ} Bool` rather than bare `Bool`{.Agda} because `Bool`{.Agda} lives
+at the bottom level while the propositions live at `ℓ`: the lifted copy is what
+lets the two ends of the coming equivalence share a universe.
+<!--zh-->
+先做解码方向，从布尔值到命题。`⊥ₚ`{.Agda} 是假命题的局部缩写：宿主类型 `⊥*`{.Agda} 连同其命题性打包，与上一章装进代数 `⊥` 字段的是同一个对。`decodeB`{.Agda} 把 `true`{.Agda} 送到真命题、`false`{.Agda} 送到 `⊥ₚ`{.Agda}；它的 `where` 行短暂打开 hProp 代数，只为借用其中的 `⊤`，改名 `⊤ₚ` 以保持层次可见。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
 <!--/-->
 
 ```agda
@@ -83,16 +98,59 @@ private
   decodeB : ∀ {ℓ} → Lift {ℓ-zero} {ℓ} Bool → hProp ℓ
   decodeB (lift true)  = ⊤ₚ where open TruthAlg (hPropAlg) renaming ( ⊤ to ⊤ₚ )
   decodeB (lift false) = ⊥ₚ
+```
 
+<!--en-->
+The encoding direction cannot be written outright: whether a proposition holds is
+not something one can inspect. So `encodeB`{.Agda} asks to be **handed** a decision
+`d` of `P`, and reads the answer off it: a proof gives `true`{.Agda}, a refutation
+gives `false`{.Agda}. No excluded middle here; the decision is an input.
+<!--zh-->
+编码方向没法直接写出来：一个命题成不成立，不是能检视出来的东西。所以 `encodeB`{.Agda} 要求**递给**它一个 `P` 的判定 `d`，照着判定读出答案：有证明就是 `true`{.Agda}，有反驳就是 `false`{.Agda}。这里没有排中律；判定是输入。
+<!--/-->
+
+```agda
   encodeB : ∀ {ℓ} (P : hProp ℓ) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥) → Lift {ℓ-zero} {ℓ} Bool
   encodeB P (inl _) = lift true
   encodeB P (inr _) = lift false
+```
 
+<!--en-->
+One round trip: decoding the encoding of `P` gives back `P` itself. The tool is
+`⇔toPath`{.Agda}, the library's propositional extensionality: between propositions,
+maps in both directions already make a path (in this book that principle is a
+theorem, not an axiom). If the decision is a proof `p`, the goal is `⊤ₚ ≡ P`, and
+both directions are trivial: from `⊤ₚ` to `P` the answer `p` is already in hand,
+and back the other way everything maps to `tt*`{.Agda}, the inhabitant of `⊤ₚ`. If
+the decision is a refutation `np`, the goal is `⊥ₚ ≡ P`: out of `⊥*`{.Agda} nothing
+needs saying, which is what the absurd pattern `λ ()` says, and any alleged proof
+`p` of `P` is crushed by `np`, with `Empty.rec`{.Agda} eliminating the resulting
+absurdity.
+<!--zh-->
+第一趟往返：把 `P` 编码再解码，得回 `P` 自身。工具是 `⇔toPath`{.Agda}，即库的命题外延性：命题之间，两个方向的映射就足以给出一条路径 (在本书中，这条原理是定理而非公理)。若判定是证明 `p`，目标为 `⊤ₚ ≡ P`，两个方向都平凡：从 `⊤ₚ` 到 `P`，答案 `p` 已在手上；反向则一切送到 `⊤ₚ` 的居民 `tt*`{.Agda}。若判定是反驳 `np`，目标为 `⊥ₚ ≡ P`：从 `⊥*`{.Agda} 出发无话可说，荒谬模式 `λ ()` 说的正是这个；而任何声称的 `P` 之证明 `p` 都被 `np` 击碎，`Empty.rec`{.Agda} 消去随之而来的荒谬。
+<!--/-->
+
+```agda
   secB : ∀ {ℓ} (P : hProp ℓ) (d : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥))
        → decodeB (encodeB P d) ≡ P
   secB P (inl p)  = ⇔toPath (λ _ → p) (λ _ → tt*)
   secB P (inr np) = ⇔toPath (λ ()) (λ p → Empty.rec (np p))
+```
 
+<!--en-->
+The other round trip: encoding the decoding of a Boolean `b` gives back `b`. One
+subtlety deserves attention: at assembly time it is excluded middle that will decide
+`decodeB b`, and nothing promises which decision it hands over. So `retrB`{.Agda}
+proves the equation for **every** decision `d`, by four cases. `true`{.Agda} with a
+proof: `refl`{.Agda}. `true`{.Agda} with an alleged refutation `n⊤`: impossible,
+since `⊤` does hold, and `n⊤ tt*` is the absurdity. `false`{.Agda} with an alleged
+proof: that proof is a term of `⊥*`{.Agda}, and the absurd pattern `()` closes the
+case before any equation is owed. `false`{.Agda} with a refutation: `refl`{.Agda}.
+<!--zh-->
+另一趟往返：把布尔值 `b` 解码再编码，得回 `b`。有一处细微值得注意：总装时来判定 `decodeB b` 的将是排中律，而它递来哪个判定无从许诺。所以 `retrB`{.Agda} 对**每一个**判定 `d` 证明该等式，分四种情形。`true`{.Agda} 配证明：`refl`{.Agda}。`true`{.Agda} 配所谓反驳 `n⊤`：不可能，因为 `⊤` 明明成立，`n⊤ tt*` 即是荒谬。`false`{.Agda} 配所谓证明：该证明是 `⊥*`{.Agda} 的项，荒谬模式 `()` 在欠下任何等式之前就了结此案。`false`{.Agda} 配反驳：`refl`{.Agda}。
+<!--/-->
+
+```agda
   retrB : ∀ {ℓ} (b : Lift {ℓ-zero} {ℓ} Bool)
           (d : ⟨ decodeB b ⟩ ⊎ (⟨ decodeB b ⟩ → Empty.⊥))
         → encodeB (decodeB b) d ≡ b
@@ -100,7 +158,19 @@ private
   retrB (lift true)  (inr n⊤) = Empty.rec (n⊤ tt*)
   retrB (lift false) (inl ())
   retrB (lift false) (inr _)  = refl
+```
 
+<!--en-->
+The assembly. `iso`{.Agda} packages the four pieces (decode; decide, then encode;
+the two round trips), and `isoToEquiv`{.Agda} upgrades the isomorphism to an
+equivalence. Count the occurrences of `lem`: three, and all three do the same job,
+supplying the decisions the constructive helpers asked for as inputs. That is the
+entire footprint of excluded middle in this dividend.
+<!--zh-->
+总装。`iso`{.Agda} 把四件套打包 (解码；先判定、再编码；两趟往返)，`isoToEquiv`{.Agda} 把同构升级为等价。数一数 `lem` 的出场：三次，且三次干的是同一件事，为构造性助手供应它们当作输入索要的判定。这就是排中律在这笔红利中的全部足迹。
+<!--/-->
+
+```agda
 lem→smallΩ : ∀ {ℓ} → LEM ℓ → Lift {ℓ-zero} {ℓ} Bool ≃ hProp ℓ
 lem→smallΩ lem = isoToEquiv (iso decodeB
   (λ P → encodeB P (lem P))
@@ -119,10 +189,25 @@ Second: a proposition living one universe up is equivalent to one living below.
 Decide it: if it holds it is equivalent to `⊤`, if it fails it is equivalent to
 `⊥`, and both are small. This is **propositional resizing**, and it is the precise
 reason classical set theory never worries about which universe a proposition
-inhabits. Note the signatures do exact bookkeeping: `lem→resize`{.Agda} consumes
-excluded middle at the higher level `ℓ-suc ℓ`, no more.
+inhabits.
 <!--zh-->
-第二：住在高一层宇宙的命题等价于住在低层的命题。判定它：若成立则等价于 `⊤`，若不成立则等价于 `⊥`，而两者都是小的。这就是**命题降层**，也正是经典集合论从不操心命题住在哪个宇宙的确切原因。注意签名做了精确记账：`lem→resize`{.Agda} 恰在较高层级 `ℓ-suc ℓ` 上消费排中律，分毫不多。
+第二笔：住在高一层宇宙的命题等价于住在低层的命题。判定它：若成立则等价于 `⊤`，若不成立则等价于 `⊥`，而两者都是小的。这就是**命题降层**，也正是经典集合论从不操心命题住在哪个宇宙的确切原因。
+<!--/-->
+
+<!--en-->
+As before, the work is done from a handed-over decision, and `P .snd` (the
+propositionality proof, as the Prelude promised) is used directly. If `P` holds,
+the small stand-in is the `⊤ₚ` of level `ℓ`: between two propositions, maps in both
+directions already form an **equivalence of underlying types**, which is what
+`propBiimpl→Equiv`{.Agda} builds from the two propositionality proofs and the two
+maps; from `P` to `⊤ₚ` everything goes to `tt*`{.Agda}, and back the other way `p`
+is in hand. If `P` fails, the stand-in is `⊥ₚ`{.Agda}, with the same two absurdity
+moves as in `secB`{.Agda}. Note the shift against the first dividend: there the
+output was a path between propositions (`⇔toPath`{.Agda}), here it is an
+equivalence between their underlying types, so the same pair of maps is fed to
+`propBiimpl→Equiv`{.Agda} instead.
+<!--zh-->
+与之前一样，工作从递来的判定做起，其中直接用到 `P .snd` (命题性证明，正如序章预告的那样)。若 `P` 成立，小替身取 `ℓ` 层的 `⊤ₚ`：命题之间，两个方向的映射就足以构成**底层类型的等价**，这正是 `propBiimpl→Equiv`{.Agda} 从两侧的命题性证明与两个映射装配出的东西；从 `P` 到 `⊤ₚ` 一切送到 `tt*`{.Agda}，反向则 `p` 已在手上。若 `P` 不成立，替身取 `⊥ₚ`{.Agda}，两手荒谬招式与 `secB`{.Agda} 相同。留意与第一笔红利的差别：那里产出的是命题之间的路径 (`⇔toPath`{.Agda})，这里产出的是底层类型之间的等价，于是同样的一对映射改喂给 `propBiimpl→Equiv`{.Agda}。
 <!--/-->
 
 ```agda
@@ -133,7 +218,17 @@ private
     where open TruthAlg (hPropAlg {ℓ}) renaming ( ⊤ to ⊤ₚ )
   resizeDec P (inr np) = ⊥ₚ , propBiimpl→Equiv (P .snd) isProp⊥*
                                (λ p → Empty.rec (np p)) (λ ())
+```
 
+<!--en-->
+The assembly is one line: decide `P` with excluded middle, hand the decision over.
+The signature is the strength bookkeeping: this dividend consumes excluded middle
+at the higher level `ℓ-suc ℓ`, once, and nothing more.
+<!--zh-->
+总装只有一行：用排中律判定 `P`，把判定递过去。签名就是强度记账：这笔红利在较高层级 `ℓ-suc ℓ` 上消费排中律，一次，仅此而已。
+<!--/-->
+
+```agda
 lem→resize : ∀ {ℓ} → LEM (ℓ-suc ℓ) → (P : hProp (ℓ-suc ℓ)) → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
 lem→resize lem P = resizeDec P (lem P)
 ```
