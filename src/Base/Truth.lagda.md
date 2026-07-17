@@ -27,14 +27,19 @@ import Cubical.Functions.Logic as Logic
 <!--/-->
 
 <!--en-->
-The striking design fact is that the framework core needs **not a single algebraic
-law** about these operations. What the core will prove about them only ever takes
-congruence (equal inputs give equal outputs: the `cong`{.Agda} of the Prelude), and
-congruence holds for arbitrary operations. Laws like the lattice axioms are consumed
-only by later theorems, and those work at a concrete instance anyway. So the record
-is a pure operation signature:
+The record below is a **pure operation signature**: it asks for eight operations
+and not a single law about them (no associativity, no distributivity, no lattice
+axioms). A law in an interface is a debt every instance must pay, and here nobody
+would ever collect it: everything the framework core builds over `Ω` treats the
+operations as black boxes, needing only congruence (equal inputs give equal
+outputs: the `cong`{.Agda} of the Prelude), which holds for any operations
+whatsoever. Laws are needed only by later theorems about particular models, and
+those work at a concrete instance, where the laws are theorems rather than
+assumptions. Staying law-free therefore costs nothing, and buys a cheap ticket of
+admission: a semantics joins the book by handing over eight operations, owing no
+proofs.
 <!--zh-->
-醒目的设计事实是：框架核心对这些运算**一条代数定律都不要求**。核心要证明的事情只用得上同余 (输入相等则输出相等，即序章的 `cong`{.Agda})，而同余对任意运算都成立；格公理之类的定律只被后面的定理消费，而那些定理本来就在具体实例上进行。所以这个 record 是纯运算签名：
+下面的 record 是**纯运算签名**：只索要八个运算，对它们不要求任何定律 (不要结合律、分配律，也不要任何格公理)。接口里的每条定律都是每个实例必须偿付的债务，而这里根本无人收账：框架核心在 `Ω` 上构建的一切都把这些运算当黑箱，只需要同余 (输入相等则输出相等，即序章的 `cong`{.Agda})，而同余对任意运算都成立。定律只有后面关于具体模型的定理才需要，而那些定理本来就在具体实例上进行，届时定律是实例上的定理而非接口上的假设。零定律因此毫无代价，换来的是廉价的入场券：一个语义要加入本书，交出八个运算即可，不欠任何证明。
 <!--/-->
 
 ```agda
