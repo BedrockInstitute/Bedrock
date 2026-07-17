@@ -46,8 +46,8 @@ data Term {ℓ} (K : Type ℓ) (n : ℕ) : Type ℓ where
 
 <!--en-->
 Formulas follow, indexed the same way. Every constructor of the object language
-carries an **upper dot**: the dot is layer mark ④ of the book's notation system,
-and seeing it tells you at once that a symbol is syntax, not meaning. Reading them:
+carries an **upper dot**: a layer mark, and seeing it tells you at once that a
+symbol is syntax, not meaning. Reading them:
 `∈̇` is object membership, `≐` object equality, `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` the connectives,
 `∃̇ ∀̇` the quantifiers, and `∀̇∈`, `∃̇∈` the **bounded** quantifiers, read "for every
 member of" and "for some member of". Binding is by de Bruijn: a quantifier takes a
@@ -64,7 +64,7 @@ and carried into Part 4, wants the bounded forms as first-class syntax. The fixi
 table here is the book's single declaration for the object layer, each level chosen
 to match the truth-algebra operation it will be interpreted by.
 <!--zh-->
-公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：点是本书记号体系的层标记 ④，见点即知这个符号是语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象等词，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词取一个多一个自由变量的公式体，变量 `0` 即刚被约束的那个。
+公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：这是一枚层标记，见点即知这个符号是语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象等词，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词取一个多一个自由变量的公式体，变量 `0` 即刚被约束的那个。
 
 构造子清单里可以看出两个设计决定。其一，**联结词全部是原语**。在构造性元理论中，`∀`、`∨`、`⇒` 无法从其余联结词派生；把剩下的 (`⊤̇`、`⊥̇`、`¬̇`) 也原语化，则让后续各章对每个构造子一视同仁、一子句一条。其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位：全部量词皆有界的公式，在不同结构之间的表现格外驯良，这条线索将贯穿本部后半并延伸进第四部，它需要有界形式作为一等语法。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
 <!--/-->
