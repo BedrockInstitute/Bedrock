@@ -487,7 +487,16 @@ def main(argv):
     if not rendered:
         sys.stderr.write(f"no highlighted output in {html_dir}; run `agda --html` first\n")
         return 1
-    modnav_list = sorted(m for m in internal if m != LANDING)  # Modules sidebar (home excluded)
+    # Modules sidebar (home excluded): the order is the reading order, i.e. the
+    # import order of the Everything master, never the alphabet
+    order = {}
+    try:
+        landing_src = open(os.path.join(src, LANDING + ".lagda.md"), encoding="utf-8").read()
+        order = {m: i for i, m in enumerate(re.findall(r"^import\s+(\S+)", landing_src, re.M))}
+    except OSError:
+        pass
+    modnav_list = sorted((m for m in internal if m != LANDING),
+                         key=lambda m: (order.get(m, len(order)), m))
 
     types_raw = json.load(open(types_path, encoding="utf-8")) if os.path.exists(types_path) else {}
     tpl = open(tpl_path, encoding="utf-8").read()

@@ -32,10 +32,6 @@ Modules sidebar.
   - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
     its two dividends `lem→smallΩ` (small classifier) and `lem→resize` (propositional
     resizing). No postulate, per PLAN D2.
-- `HelloWorld.lagda.md`: minimal smoke-test module.
-- `Example/Naturals.lagda.md`, `Example/Doubling.lagda.md`: demo modules with real `##`
-  sections that exercise the renderer's per-page table of contents and inline
-  `` `name`{.Agda} `` references. Honest demo material, not part of the mathematics.
 
 ## Reserved namespaces (currently empty, marked with `.gitkeep`)
 
