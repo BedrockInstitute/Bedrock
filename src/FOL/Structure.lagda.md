@@ -112,19 +112,6 @@ module _ {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ})) where
 ```
 
 <!--en-->
-A class `M` over the carrier is **transitive** when members of its members stay in
-it. This is not needed to cut a structure down; it is the recurring hypothesis of
-the tameness theorems later in this part, so it gets its name here.
-<!--zh-->
-载体上的类 `M` 若成员的成员仍在其中，便称**传递**。裁剪结构并不需要它；它是本部后面那些驯良性定理反复出现的前提，故在此得名。
-<!--/-->
-
-```agda
-  Transitive : (S → hProp ℓ) → Type ℓ
-  Transitive M = ∀ {x y} → y ∈ᵗ x → ⟨ M x ⟩ → ⟨ M y ⟩
-```
-
-<!--en-->
 ## Substructures
 <!--zh-->
 ## 子结构

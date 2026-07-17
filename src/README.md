@@ -38,8 +38,8 @@ entry in the table of contents**, in reading order.
     parameter, intrinsic scoping, all constructors primitive), sentences, and the
     closed syntax with `embed` (via the library's `Empty.rec*`).
   - `FOL/Structure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
-    a truth algebra), `pathStructure`, `∈ᵗ`, `Transitive`, restriction `↾`, and
-    environments `_^_`. Re-cut from `ZF/` (PLAN §4 ledger).
+    a truth algebra), `pathStructure`, `∈ᵗ`, restriction `↾`, and environments `_^_`.
+    Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
   - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
     recursion; relabelling lemmas `⟦⟧-map`, `⊨-map`, `embed-⊨`.
   - `FOL/Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
