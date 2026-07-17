@@ -19,10 +19,11 @@ open import FOL.Structure using ( ZFStructure; _^_ )
 
 module FOL.Semantics {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
 
+import Cubical.Data.Empty as Empty
 open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈
-  ; mapTm; mapFo; Closed; embed; absurd )
+  ; mapTm; mapFo; Closed; embed )
 
 open TruthAlg 𝕋
 open ZFStructure 𝒮
@@ -150,8 +151,8 @@ working syntax share one semantics; nothing needs proving twice.
 
 ```agda
 embed-⊨ : ∀ {ℓe ℓc} {K : Type ℓc} (ι : K → S) {n} (φ : Closed {ℓe} n) (γ : S ^ n)
-        → At._⊨_ ι γ (embed φ) ≡ At._⊨_ (λ b → ι (absurd b)) γ φ
-embed-⊨ ι = ⊨-map absurd ι
+        → At._⊨_ ι γ (embed φ) ≡ At._⊨_ (λ b → ι (Empty.rec* b)) γ φ
+embed-⊨ ι = ⊨-map Empty.rec* ι
 ```
 
 <!--en-->
