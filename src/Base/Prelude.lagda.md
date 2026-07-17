@@ -46,14 +46,14 @@ the book wants it.
 
 The host organises its types into a tower of Tarski-style universes with explicit
 levels. `Level`{.Agda} is the type of the levels themselves, with its arithmetic
-`ℓ-zero`{.Agda}, `ℓ-suc`{.Agda}, `ℓ-max`{.Agda}; `Type`{.Agda}` ℓ` is the universe
-at level `ℓ`, and it is itself a type one floor up, in `Type (ℓ-suc ℓ)`. Whenever
+`ℓ-zero`{.Agda}, `ℓ-suc`{.Agda}, `ℓ-max`{.Agda}; `Type ℓ`{.Agda} is the universe
+at level `ℓ`, and it is itself a type one floor up, in `Type (ℓ-suc ℓ)`{.Agda}. Whenever
 the book surveys a totality ("all sets", "all propositions"), this level bookkeeping
 is what says how large a totality is being surveyed.
 <!--zh-->
 以下逐条转出，一段说明领一条 import：它带来什么，本书要它做什么。
 
-宿主把类型组织成一座塔斯基式宇宙塔，层级显式。`Level`{.Agda} 是层级本身的类型，配有层级算术 `ℓ-zero`{.Agda}、`ℓ-suc`{.Agda}、`ℓ-max`{.Agda}；`Type`{.Agda}` ℓ` 是第 `ℓ` 层宇宙，它自身又是高一层的类型，住在 `Type (ℓ-suc ℓ)` 里。本书凡检视某个总体 (「所有集合」「所有命题」)，都由这套层级记账精确说明检视的总体有多大。
+宿主把类型组织成一座塔斯基式宇宙塔，层级显式。`Level`{.Agda} 是层级本身的类型，配有层级算术 `ℓ-zero`{.Agda}、`ℓ-suc`{.Agda}、`ℓ-max`{.Agda}；`Type ℓ`{.Agda} 是第 `ℓ` 层宇宙，它自身又是高一层的类型，住在 `Type (ℓ-suc ℓ)`{.Agda} 里。本书凡检视某个总体 (「所有集合」「所有命题」)，都由这套层级记账精确说明检视的总体有多大。
 <!--/-->
 
 ```agda
@@ -130,10 +130,10 @@ open import Cubical.Foundations.HLevels public
 
 <!--en-->
 `⟨_⟩`{.Agda} (read "the underlying type of") projects the underlying type back out
-of an `hProp`{.Agda}; for `P : hProp ℓ` the proposition-hood proof is just
-`P .snd`, and the book gives it no separate name.
+of an `hProp`{.Agda}; for `P : hProp ℓ`{.Agda} the proposition-hood proof is just
+`P .snd`{.Agda}, and the book gives it no separate name.
 <!--zh-->
-`⟨_⟩`{.Agda} (读作「延展」) 把底层类型从 `hProp`{.Agda} 中投影出来；对 `P : hProp ℓ`，其命题性证明就是 `P .snd`，本书不为它另设名字。
+`⟨_⟩`{.Agda} (读作「延展」) 把底层类型从 `hProp`{.Agda} 中投影出来；对 `P : hProp ℓ`{.Agda}，其命题性证明就是 `P .snd`{.Agda}，本书不为它另设名字。
 <!--/-->
 
 ```agda
@@ -167,11 +167,11 @@ open import Cubical.Data.Nat public
 ```
 
 <!--en-->
-Vectors: `Vec A n` is a list of exactly `n` elements of `A`, built with `[]`{.Agda}
+Vectors: `Vec A n`{.Agda} is a list of exactly `n` elements of `A`, built with `[]`{.Agda}
 and `_∷_`{.Agda} and queried with `lookup`{.Agda}. Vectors are the raw material of
 variable environments, coming in Part 1.
 <!--zh-->
-向量：`Vec A n` 是恰含 `n` 个 `A` 元素的表，由 `[]`{.Agda} 与 `_∷_`{.Agda} 构造，用 `lookup`{.Agda} 查询。向量是变量环境的原材料，将在第一部登场。
+向量：`Vec A n`{.Agda} 是恰含 `n` 个 `A` 元素的表，由 `[]`{.Agda} 与 `_∷_`{.Agda} 构造，用 `lookup`{.Agda} 查询。向量是变量环境的原材料，将在第一部登场。
 <!--/-->
 
 ```agda

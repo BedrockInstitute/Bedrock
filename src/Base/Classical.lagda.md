@@ -41,22 +41,22 @@ LEM ℓ = (P : hProp ℓ) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
 ```
 
 <!--en-->
-`LEM`{.Agda}` ℓ` says: every proposition at level `ℓ` is either true or false. Why
+`LEM ℓ`{.Agda} says: every proposition at level `ℓ` is either true or false. Why
 this particular form? In univalent foundations a type-level global choice or
 excluded middle is inconsistent with univalence; what can consistently be assumed is
 exactly this propositional form, quantified over `hProp`{.Agda}. The foundation
 itself forces the honest phrasing.
 
-A chapter that works classically takes `(lem : ∀ {ℓ} → LEM ℓ)` in its module
+A chapter that works classically takes `(lem : ∀ {ℓ} → LEM ℓ)`{.Agda} in its module
 telescope and passes it along when importing other classical chapters. The
 consequence is worth pausing on: **whether a theorem uses excluded middle is a
 compile-time fact.** The classical debt is part of a chapter's type, visible at
 every import site, instead of an invisible global axiom; and since nothing is
 postulated, the whole book carries Agda's `--safe` seal.
 <!--zh-->
-`LEM`{.Agda}` ℓ` 说的是：层级 `ℓ` 上的每个命题要么真要么假。为什么取这个形式？在 univalent 基础中，类型层的全局选择或排中律与 univalence 不相容；能够一致地假设的恰是这个对 `hProp`{.Agda} 量化的命题形式。是基础本身逼出了这个诚实的措辞。
+`LEM ℓ`{.Agda} 说的是：层级 `ℓ` 上的每个命题要么真要么假。为什么取这个形式？在 univalent 基础中，类型层的全局选择或排中律与 univalence 不相容；能够一致地假设的恰是这个对 `hProp`{.Agda} 量化的命题形式。是基础本身逼出了这个诚实的措辞。
 
-经典论证的章节在模块参数表中取 `(lem : ∀ {ℓ} → LEM ℓ)`，并在导入其他经典章节时把它传递下去。这带来一个值得停下体会的后果：**一条定理是否用了排中律，是编译期事实。**经典债务是章节类型的一部分，在每个导入处可见，而不是一条看不见的全局公理；又因为无一处 postulate，全书佩戴 Agda 的 `--safe` 印章。
+经典论证的章节在模块参数表中取 `(lem : ∀ {ℓ} → LEM ℓ)`{.Agda}，并在导入其他经典章节时把它传递下去。这带来一个值得停下体会的后果：**一条定理是否用了排中律，是编译期事实。**经典债务是章节类型的一部分，在每个导入处可见，而不是一条看不见的全局公理；又因为无一处 postulate，全书佩戴 Agda 的 `--safe` 印章。
 <!--/-->
 
 <!--en-->
@@ -68,24 +68,24 @@ postulated, the whole book carries Agda's `--safe` seal.
 <!--en-->
 Classically a proposition has only two possible values, and that innocent remark has
 universe-level teeth. First: the entire type of truth values collapses to a
-two-element type, `Lift Bool ≃ hProp ℓ`, at **every** level `ℓ`. The construction is
+two-element type, `Lift Bool ≃ hProp ℓ`{.Agda}, at **every** level `ℓ`. The construction is
 arranged so that all the real work is constructive: the four helpers below take a
 **decision** of a proposition (a proof, or a refutation) as an ordinary argument,
 and excluded middle enters only at the final assembly, to supply those decisions.
 <!--zh-->
-经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。第一笔：整个真值类型坍缩为二元类型，在**每一个**层级 `ℓ` 上都有 `Lift Bool ≃ hProp ℓ`。构造被刻意安排为：全部实际工作都是构造性的，下面四个助手把命题的**判定** (一个证明，或一个反驳) 当作普通参数接收；排中律只在最后的总装处出场，负责供应这些判定。
+经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。第一笔：整个真值类型坍缩为二元类型，在**每一个**层级 `ℓ` 上都有 `Lift Bool ≃ hProp ℓ`{.Agda}。构造被刻意安排为：全部实际工作都是构造性的，下面四个助手把命题的**判定** (一个证明，或一个反驳) 当作普通参数接收；排中律只在最后的总装处出场，负责供应这些判定。
 <!--/-->
 
 <!--en-->
 First the decoding direction, from Booleans to propositions. `decodeB`{.Agda} sends
 `true`{.Agda} to the algebra's `⊤` and `false`{.Agda} to its `⊥`, each written by
-qualified projection (`TruthAlg.⊤ hPropAlg`); by definitional transparency the `⊥`
-here is the pair `(⊥* , isProp⊥*)` itself. The domain is `Lift {ℓ-zero} {ℓ} Bool` rather than
+qualified projection (`TruthAlg.⊤ hPropAlg`{.Agda}); by definitional transparency the `⊥`
+here is the pair `(⊥* , isProp⊥*)`{.Agda} itself. The domain is `Lift {ℓ-zero} {ℓ} Bool`{.Agda} rather than
 bare `Bool`{.Agda} because `Bool`{.Agda} lives at the bottom level while the
 propositions live at `ℓ`: the lifted copy is what lets the two ends of the coming
 equivalence share a universe.
 <!--zh-->
-先做解码方向，从布尔值到命题。`decodeB`{.Agda} 把 `true`{.Agda} 送到代数的 `⊤`、`false`{.Agda} 送到它的 `⊥`，均以限定投影写出 (`TruthAlg.⊤ hPropAlg`)；由定义性透明，这里的 `⊥` 就是 `(⊥* , isProp⊥*)` 这个对本身。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
+先做解码方向，从布尔值到命题。`decodeB`{.Agda} 把 `true`{.Agda} 送到代数的 `⊤`、`false`{.Agda} 送到它的 `⊥`，均以限定投影写出 (`TruthAlg.⊤ hPropAlg`{.Agda})；由定义性透明，这里的 `⊥` 就是 `(⊥* , isProp⊥*)`{.Agda} 这个对本身。定义域取 `Lift {ℓ-zero} {ℓ} Bool`{.Agda} 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
 <!--/-->
 
 ```agda
@@ -135,14 +135,14 @@ crushed by `np`, with `Empty.rec`{.Agda} eliminating the resulting absurdity.
 <!--en-->
 The other round trip: encoding the decoding of a Boolean `b` gives back `b`. One
 subtlety deserves attention: at assembly time it is excluded middle that will decide
-`decodeB b`, and nothing promises which decision it hands over. So `retrB`{.Agda}
+`decodeB b`{.Agda}, and nothing promises which decision it hands over. So `retrB`{.Agda}
 proves the equation for **every** decision `d`, by four cases. `true`{.Agda} with a
 proof: `refl`{.Agda}. `true`{.Agda} with an alleged refutation `n⊤`: impossible,
-since `⊤` does hold, and `n⊤ tt*` is the absurdity. `false`{.Agda} with an alleged
+since `⊤` does hold, and `n⊤ tt*`{.Agda} is the absurdity. `false`{.Agda} with an alleged
 proof: that proof is a term of `⊥*`{.Agda}, and the absurd pattern `()` closes the
 case before any equation is owed. `false`{.Agda} with a refutation: `refl`{.Agda}.
 <!--zh-->
-另一趟往返：把布尔值 `b` 解码再编码，得回 `b`。有一处细微值得注意：总装时来判定 `decodeB b` 的将是排中律，而它递来哪个判定无从许诺。所以 `retrB`{.Agda} 对**每一个**判定 `d` 证明该等式，分四种情形。`true`{.Agda} 配证明：`refl`{.Agda}。`true`{.Agda} 配所谓反驳 `n⊤`：不可能，因为 `⊤` 明明成立，`n⊤ tt*` 即是荒谬。`false`{.Agda} 配所谓证明：该证明是 `⊥*`{.Agda} 的项，荒谬模式 `()` 在欠下任何等式之前就了结此案。`false`{.Agda} 配反驳：`refl`{.Agda}。
+另一趟往返：把布尔值 `b` 解码再编码，得回 `b`。有一处细微值得注意：总装时来判定 `decodeB b`{.Agda} 的将是排中律，而它递来哪个判定无从许诺。所以 `retrB`{.Agda} 对**每一个**判定 `d` 证明该等式，分四种情形。`true`{.Agda} 配证明：`refl`{.Agda}。`true`{.Agda} 配所谓反驳 `n⊤`：不可能，因为 `⊤` 明明成立，`n⊤ tt*`{.Agda} 即是荒谬。`false`{.Agda} 配所谓证明：该证明是 `⊥*`{.Agda} 的项，荒谬模式 `()` 在欠下任何等式之前就了结此案。`false`{.Agda} 配反驳：`refl`{.Agda}。
 <!--/-->
 
 ```agda
@@ -190,7 +190,7 @@ inhabits.
 <!--/-->
 
 <!--en-->
-As before, the work is done from a handed-over decision, and `P .snd` (the
+As before, the work is done from a handed-over decision, and `P .snd`{.Agda} (the
 propositionality proof, as the Prelude promised) is used directly. If `P` holds,
 the small stand-in is the algebra's `⊤` at level `ℓ`: between two propositions,
 maps in both directions already form an **equivalence of underlying types**, which
@@ -202,7 +202,7 @@ output was a path between propositions (`⇔toPath`{.Agda}), here it is an
 equivalence between their underlying types, so the same pair of maps is fed to
 `propBiimpl→Equiv`{.Agda} instead.
 <!--zh-->
-与之前一样，工作从递来的判定做起，其中直接用到 `P .snd` (命题性证明，正如序章预告的那样)。若 `P` 成立，小替身取 `ℓ` 层的代数 `⊤`：命题之间，两个方向的映射就足以构成**底层类型的等价**，这正是 `propBiimpl→Equiv`{.Agda} 从两侧的命题性证明与两个映射装配出的东西；从 `P` 到 `⊤` 一切送到 `tt*`{.Agda}，反向则 `p` 已在手上。若 `P` 不成立，替身取代数的 `⊥`，两手荒谬招式与 `secB`{.Agda} 相同。留意与第一笔红利的差别：那里产出的是命题之间的路径 (`⇔toPath`{.Agda})，这里产出的是底层类型之间的等价，于是同样的一对映射改喂给 `propBiimpl→Equiv`{.Agda}。
+与之前一样，工作从递来的判定做起，其中直接用到 `P .snd`{.Agda} (命题性证明，正如序章预告的那样)。若 `P` 成立，小替身取 `ℓ` 层的代数 `⊤`：命题之间，两个方向的映射就足以构成**底层类型的等价**，这正是 `propBiimpl→Equiv`{.Agda} 从两侧的命题性证明与两个映射装配出的东西；从 `P` 到 `⊤` 一切送到 `tt*`{.Agda}，反向则 `p` 已在手上。若 `P` 不成立，替身取代数的 `⊥`，两手荒谬招式与 `secB`{.Agda} 相同。留意与第一笔红利的差别：那里产出的是命题之间的路径 (`⇔toPath`{.Agda})，这里产出的是底层类型之间的等价，于是同样的一对映射改喂给 `propBiimpl→Equiv`{.Agda}。
 <!--/-->
 
 ```agda

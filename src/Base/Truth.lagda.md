@@ -69,13 +69,13 @@ across layers.
 Here the book's **scope discipline for logic** is laid down: these eight symbols are
 the book's only logic notation, and the Prelude deliberately exports none of them,
 so the only way they enter scope is by opening a truth algebra
-(`open TruthAlg 𝕋`). Whichever algebra a chapter opens, that is what its logic
+(`open TruthAlg 𝕋`{.Agda}). Whichever algebra a chapter opens, that is what its logic
 symbols mean: no symbol ever has two readings in one scope. Generic chapters open an
 abstract `𝕋`; chapters on the propositional side open the canonical instance below.
 <!--zh-->
 逐个符号：`⊓` 读「且」(交)，`⊔` 读「或」(并)，`⇒` 读「蕴含」，`¬` 读「非」，`⊤` 读「真」，`⊥` 读「假」；`⋀` 与其对偶 `⋁` 是按任意小类型索引的交与并，量词语义正由它们给出。这里的优先级刻意与之后引入的对象语言联结词同级，跨层的混合表达式因此读法一致。
 
-本书**逻辑符号的作用域纪律**在此立下：这八个符号是全书仅有的逻辑记号，序章刻意不导出其中任何一个，于是它们进入作用域的唯一方式就是打开某个真值代数 (`open TruthAlg 𝕋`)。一章打开哪个代数，它的逻辑符号就是那个代数的运算：任一作用域中，没有符号会有两种读法。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
+本书**逻辑符号的作用域纪律**在此立下：这八个符号是全书仅有的逻辑记号，序章刻意不导出其中任何一个，于是它们进入作用域的唯一方式就是打开某个真值代数 (`open TruthAlg 𝕋`{.Agda})。一章打开哪个代数，它的逻辑符号就是那个代数的运算：任一作用域中，没有符号会有两种读法。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
 <!--/-->
 
 <!--en-->
@@ -111,11 +111,11 @@ hPropAlg {ℓ} = record
 Three points worth keeping:
 
 1. **The abstraction costs nothing.** Record projections compute on a concrete
-   instance, so `TruthAlg._⊓_ hPropAlg` **is** the library's `_⊓_`{.Agda},
+   instance, so `TruthAlg._⊓_ hPropAlg`{.Agda} **is** the library's `_⊓_`{.Agda},
    definitionally. Working at the hProp instance is exactly as if the abstraction
    had never happened: whatever held by `refl`{.Agda} before still holds by
    `refl`{.Agda}.
-2. The `⊥` field takes the level-polymorphic pair `(⊥* , isProp⊥*)`, since the
+2. The `⊥` field takes the level-polymorphic pair `(⊥* , isProp⊥*)`{.Agda}, since the
    library's falsum is pinned to the bottom universe. This is also the whole
    relationship between the two symbols: the truth value `⊥` is the host type
    `⊥*`{.Agda} packaged with its propositionality, so `⟨ ⊥ ⟩` **is** `⊥*`{.Agda}.
@@ -129,8 +129,8 @@ Three points worth keeping:
 <!--zh-->
 三个值得记住的要点：
 
-1. **抽象零成本。**record 投影在具体实例上按定义计算，所以 `TruthAlg._⊓_ hPropAlg` 定义性地**就是**库的 `_⊓_`{.Agda}。在 hProp 实例上工作与从未抽象过完全一样：凡此前由 `refl`{.Agda} 成立的等式，如今照旧由 `refl`{.Agda} 成立。
-2. `⊥` 字段取层级多态的对 `(⊥* , isProp⊥*)`，因为库的假固定在最底层宇宙。这也是两个符号之间的全部关系：真值 `⊥` 就是宿主类型 `⊥*`{.Agda} 连同其命题性打包而成，故 `⟨ ⊥ ⟩` **就是** `⊥*`{.Agda}。要真值的位置写 `⊥`，要类型的位置写 `⊥*`{.Agda}；两个位置不可互换，分工由类型检查器把守。
+1. **抽象零成本。**record 投影在具体实例上按定义计算，所以 `TruthAlg._⊓_ hPropAlg`{.Agda} 定义性地**就是**库的 `_⊓_`{.Agda}。在 hProp 实例上工作与从未抽象过完全一样：凡此前由 `refl`{.Agda} 成立的等式，如今照旧由 `refl`{.Agda} 成立。
+2. `⊥` 字段取层级多态的对 `(⊥* , isProp⊥*)`{.Agda}，因为库的假固定在最底层宇宙。这也是两个符号之间的全部关系：真值 `⊥` 就是宿主类型 `⊥*`{.Agda} 连同其命题性打包而成，故 `⟨ ⊥ ⟩` **就是** `⊥*`{.Agda}。要真值的位置写 `⊥`，要类型的位置写 `⊥*`{.Agda}；两个位置不可互换，分工由类型检查器把守。
 3. `⋁` 是命题截断的存在量词，`⋀` 是货真价实的 Π 类型：这正是构造性语义的形态。hProp 侧的章节仍可直接从库中取用证明手段 (`∃[ x ] …` 糖衣、截断消去子)：它们与本实例的字段定义性相同，不构成第二套含义。
 <!--/-->
 
