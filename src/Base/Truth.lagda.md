@@ -52,11 +52,10 @@ record TruthAlg (ℓ ℓ' : Level) : Type (ℓ-suc (ℓ-max ℓ ℓ')) where
 ```
 
 <!--en-->
-Symbol by symbol: `⊓` reads "and" (meet; typed `\glb`), `⊔` reads "or" (join;
-`\lub`), `⇒` reads "implies" (`\=>`), `¬` reads "not" (`\neg`), `⊤` reads "true"
-(`\top`), `⊥` reads "false" (`\bot`); `⋀` and `⋁` (`\bigwedge`, `\bigvee`) are
-meet and join indexed by an arbitrary small type, and quantifier semantics will be
-given by exactly them. The fixity levels here deliberately match
+Symbol by symbol: `⊓` reads "and" (meet), `⊔` reads "or" (join), `⇒` reads
+"implies", `¬` reads "not", `⊤` reads "true", `⊥` reads "false"; `⋀` and its dual
+`⋁` are meet and join indexed by an arbitrary small type, and quantifier semantics
+will be given by exactly them. The fixity levels here deliberately match
 the object-language connectives introduced later, so mixed expressions read the same
 across layers.
 
@@ -65,7 +64,7 @@ are the book's only logic notation, and a chapter obtains them by opening a trut
 algebra (`open TruthAlg 𝕋`). Generic chapters open an abstract `𝕋`; chapters on the
 propositional side open the canonical instance below.
 <!--zh-->
-逐个符号：`⊓` 读「且」(交；输入 `\glb`)，`⊔` 读「或」(并；`\lub`)，`⇒` 读「蕴含」(`\=>`)，`¬` 读「非」(`\neg`)，`⊤` 读「真」(`\top`)，`⊥` 读「假」(`\bot`)；`⋀` 与其对偶 `⋁` (`\bigwedge`、`\bigvee`) 是按任意小类型索引的交与并，量词语义正由它们给出。这里的优先级刻意与之后引入的对象语言联结词同级，跨层的混合表达式因此读法一致。
+逐个符号：`⊓` 读「且」(交)，`⊔` 读「或」(并)，`⇒` 读「蕴含」，`¬` 读「非」，`⊤` 读「真」，`⊥` 读「假」；`⋀` 与其对偶 `⋁` 是按任意小类型索引的交与并，量词语义正由它们给出。这里的优先级刻意与之后引入的对象语言联结词同级，跨层的混合表达式因此读法一致。
 
 序章预告的作用域纪律自此生效：这八个符号是全书仅有的逻辑记号，一章通过打开某个真值代数 (`open TruthAlg 𝕋`) 取得它们。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
 <!--/-->
