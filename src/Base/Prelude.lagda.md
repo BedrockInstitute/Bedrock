@@ -93,46 +93,6 @@ open import Cubical.Data.Empty public
 ```
 
 <!--en-->
-## Environments
-<!--zh-->
-## 环境
-<!--/-->
-
-<!--en-->
-An environment assigns values to $n$ free variables. The book writes `S ^ n`
-for it, a vector of length $n$, matching the traditional superscript $S^n$
-(`_^_`{.Agda} reads "power"). It is nothing but notation:
-<!--zh-->
-环境为 $n$ 个自由变量指派取值。本书将其写作 `S ^ n`，即长度为 $n$ 的向量，对齐传统上标记号 $S^n$ (`_^_`{.Agda} 读作「幂」)。它只是记号：
-<!--/-->
-
-```agda
-infixl 30 _^_
-
-_^_ : ∀ {ℓ} → Type ℓ → ℕ → Type ℓ
-A ^ n = Vec A n
-```
-
-<!--en-->
-## Absurdity
-<!--zh-->
-## 荒谬消去
-<!--/-->
-
-<!--en-->
-From the empty type anything follows. `absurd`{.Agda} is that standard elimination
-for the lifted empty `⊥*`{.Agda}; closed syntax will later use `⊥*`{.Agda} as its
-constant domain, and `absurd`{.Agda} interprets the constants that do not exist.
-<!--zh-->
-从空类型可以推出一切。`absurd`{.Agda} 就是提升空类型 `⊥*`{.Agda} 的这一标准消去；封闭语法之后会以 `⊥*`{.Agda} 作为常量域，而 `absurd`{.Agda} 负责解释那些不存在的常量。
-<!--/-->
-
-```agda
-absurd : ∀ {ℓ ℓ'} {A : Type ℓ'} → ⊥* {ℓ} → A
-absurd (lift ())
-```
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -140,9 +100,10 @@ absurd (lift ())
 
 <!--en-->
 In scope from here on: universes, paths, h-levels, `hProp`{.Agda} with `⟨_⟩`{.Agda},
-pairs, `ℕ`{.Agda}, `Vec`{.Agda}, `Fin`{.Agda}, `⊥*`{.Agda}, environments `A ^ n`,
-and `absurd`{.Agda}. Logic symbols are deliberately absent: they arrive with the
-truth algebra, next.
+pairs, `ℕ`{.Agda}, `Vec`{.Agda}, `Fin`{.Agda}, and `⊥*`{.Agda}. This chapter defines
+nothing of its own, and the logic symbols are deliberately absent: every notion of
+the book is introduced in the chapter where it first earns its keep, and the logic
+arrives with the truth algebra, next.
 <!--zh-->
-自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}、`⊥*`{.Agda}、环境 `A ^ n`，以及 `absurd`{.Agda}。逻辑符号刻意缺席：它们随下一章的真值代数登场。
+自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}，以及 `⊥*`{.Agda}。本章没有任何自己的定义，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
 <!--/-->

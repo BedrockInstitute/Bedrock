@@ -24,8 +24,8 @@ Modules sidebar.
 ## Current modules
 
 - `Base/`: Part 0, host-language groundwork, landed with `[L1.1]`:
-  - `Base/Prelude.lagda.md`: the host vocabulary (curated cubical re-exports),
-    environments `A ^ n`, and `absurd`. One of the two designated hubs (STYLE-agda §2).
+  - `Base/Prelude.lagda.md`: the host vocabulary (curated cubical re-exports, defining
+    nothing of its own). One of the two designated hubs (STYLE-agda §2).
   - `Base/Truth.lagda.md`: the truth algebra `TruthAlg` (a pure operation signature;
     the book's only source of logic symbols) and its canonical instance `hPropAlg`.
     The other hub.
@@ -64,7 +64,6 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | Symbol | Reading | Layer | Chapter | Input |
 |---|---|---|---|---|
 | `⟨_⟩` | the underlying type of | ① | `Base.Prelude` (re-export) | `\<` `\>` |
-| `_^_` | power (environments) | ① | `Base.Prelude` | `^` |
 | `⊥*` | lifted empty type | ① | `Base.Prelude` (re-export) | `\bot` `*` |
 | `⊓` | and (meet) | ② | `Base.Truth` | `\glb` |
 | `⊔` | or (join) | ② | `Base.Truth` | `\lub` |
