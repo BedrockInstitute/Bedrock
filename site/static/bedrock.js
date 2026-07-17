@@ -29,6 +29,7 @@
     renderMath();
     initSearch();
     initHover();
+    initOccur();
     initNav();
   });
 
@@ -104,6 +105,29 @@
         });
       });
       a.addEventListener("mouseleave", hide);
+    });
+  }
+
+  /* ---- same-definition occurrence highlight: hovering any identifier lights
+          up every occurrence on the page that resolves to the same definition
+          (code tokens, bound variables, and prose inline refs alike) -------- */
+  function initOccur() {
+    var groups = {};
+    document.querySelectorAll("pre.Agda a[href], span.Agda a[href]").forEach(function (a) {
+      var key = a.getAttribute("href");
+      (groups[key] = groups[key] || []).push(a);
+    });
+    Object.keys(groups).forEach(function (key) {
+      var as = groups[key];
+      function set(on) {
+        return function () {
+          as.forEach(function (b) { b.classList.toggle("occ", on); });
+        };
+      }
+      as.forEach(function (a) {
+        a.addEventListener("mouseenter", set(true));
+        a.addEventListener("mouseleave", set(false));
+      });
     });
   }
 

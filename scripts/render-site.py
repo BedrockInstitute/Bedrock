@@ -71,7 +71,9 @@ DEF_RE = re.compile(r'<a id="([^"]+)"></a><a id="(\d+)"[^>]*class="([^"]*)"')
 # Any cross-reference link inside highlighted code (optional self-id, optional #position).
 LINK_RE = re.compile(r'<a (id="\d+" )?href="([^"#]+)\.html(#\d+)?"([^>]*)>')
 INLINE_AGDA_RE = re.compile(r'`([^`]+)`\{\.Agda\}')
-CODE_ANCHOR_RE = re.compile(r'<a[^>]*\bhref="([^"]+\.html#\d+)"[^>]*>([^<]+)</a>')
+A_TAG_RE  = re.compile(r'<a\b([^>]*)>([^<]+)</a>')
+HREF_RE   = re.compile(r'\bhref="([^"]+\.html#\d+)"')
+CLASS_RE  = re.compile(r'\bclass="([^"]*)"')
 NUL = "\x00"
 
 
@@ -322,11 +324,17 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             return f"{NUL}CODE{len(code_blocks)-1}{NUL}"
         text = PRE_RE.sub(lift, raw)
         # links agda already resolved in this module's own code (imports included):
-        # name -> href, the fallback that lets prose reference library identifiers
+        # name -> (href, aspect classes). The href lets prose reference library
+        # identifiers; the aspect paints an inline ref like its code tokens.
         local_refs = {}
         for blk in code_blocks:
-            for href, txt in CODE_ANCHOR_RE.findall(blk):
-                local_refs.setdefault(htmllib.unescape(txt), href)
+            for attrs, txt in A_TAG_RE.findall(blk):
+                href = HREF_RE.search(attrs)
+                if not href:
+                    continue
+                cls = CLASS_RE.search(attrs)
+                local_refs.setdefault(htmllib.unescape(txt),
+                                      (href.group(1), cls.group(1) if cls else ""))
 
     def page_body(lang):
         if not literate:
@@ -400,16 +408,20 @@ def inline_ref(name, internal, name2pos, local_refs):
         for mod in internal:
             if name in name2pos.get(mod, {}):
                 target = (mod, name2pos[mod][name]); break
-    if target is None and name in local_refs:
+    href_aspect = local_refs.get(name)
+    if target is None and href_aspect:
         # fall back to a link agda already resolved in this module's own code;
         # this is how prose references library identifiers (Type, refl, ...)
-        mod, _, pos = local_refs[name].rpartition(".html#")
+        mod, _, pos = href_aspect[0].rpartition(".html#")
         target = (mod, pos)
     label = htmllib.escape(name)
     if target:
         mod, pos = target
-        return (f'<a class="Agda inline-ref" href="{mod}.html#{pos}" '
-                f'data-type="{mod}#{pos}">{label}</a>')
+        # reuse the aspect of the module's own code tokens, and wrap in a
+        # span.Agda so the .Agda .<Aspect> colour rules apply to prose refs too
+        aspect = " " + href_aspect[1] if href_aspect and href_aspect[1] else ""
+        return (f'<span class="Agda"><a class="inline-ref{aspect}" '
+                f'href="{mod}.html#{pos}" data-type="{mod}#{pos}">{label}</a></span>')
     return f'<code class="Agda inline-ref">{label}</code>'
 
 
