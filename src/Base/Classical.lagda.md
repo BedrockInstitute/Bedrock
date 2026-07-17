@@ -77,26 +77,27 @@ and excluded middle enters only at the final assembly, to supply those decisions
 <!--/-->
 
 <!--en-->
-First the decoding direction, from Booleans to propositions. `⊥ₚ`{.Agda} is a local
-abbreviation for the false proposition: the host type `⊥*`{.Agda} packaged with its
-propositionality, the same pair the previous chapter installed as the algebra's `⊥`
-field. `decodeB`{.Agda} sends `true`{.Agda} to the true proposition and
-`false`{.Agda} to `⊥ₚ`{.Agda}; its `where` line opens the hProp algebra just long
-enough to borrow its `⊤`, renamed `⊤ₚ` to keep the layer visible. The domain is
-`Lift {ℓ-zero} {ℓ} Bool` rather than bare `Bool`{.Agda} because `Bool`{.Agda} lives
-at the bottom level while the propositions live at `ℓ`: the lifted copy is what
-lets the two ends of the coming equivalence share a universe.
+First the decoding direction, from Booleans to propositions. `⊤ₚ`{.Agda} and
+`⊥ₚ`{.Agda} are local abbreviations for the previous chapter's `⊤` and `⊥`, taken
+from the hProp algebra by qualified projection (the subscript marks the instance);
+by definitional transparency, `⊥ₚ`{.Agda} is the pair `(⊥* , isProp⊥*)` itself.
+`decodeB`{.Agda} then sends `true`{.Agda} to `⊤ₚ`{.Agda} and `false`{.Agda} to
+`⊥ₚ`{.Agda}. The domain is `Lift {ℓ-zero} {ℓ} Bool` rather than bare `Bool`{.Agda}
+because `Bool`{.Agda} lives at the bottom level while the propositions live at `ℓ`:
+the lifted copy is what lets the two ends of the coming equivalence share a
+universe.
 <!--zh-->
-先做解码方向，从布尔值到命题。`⊥ₚ`{.Agda} 是假命题的局部缩写：宿主类型 `⊥*`{.Agda} 连同其命题性打包，与上一章装进代数 `⊥` 字段的是同一个对。`decodeB`{.Agda} 把 `true`{.Agda} 送到真命题、`false`{.Agda} 送到 `⊥ₚ`{.Agda}；它的 `where` 行短暂打开 hProp 代数，只为借用其中的 `⊤`，改名 `⊤ₚ` 以保持层次可见。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
+先做解码方向，从布尔值到命题。`⊤ₚ`{.Agda} 与 `⊥ₚ`{.Agda} 是上一章 `⊤` 与 `⊥` 的局部缩写，经限定投影从 hProp 代数中取出 (下标标记实例)；由定义性透明，`⊥ₚ`{.Agda} 就是 `(⊥* , isProp⊥*)` 这个对本身。`decodeB`{.Agda} 于是把 `true`{.Agda} 送到 `⊤ₚ`{.Agda}、`false`{.Agda} 送到 `⊥ₚ`{.Agda}。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
 <!--/-->
 
 ```agda
 private
-  ⊥ₚ : ∀ {ℓ} → hProp ℓ
-  ⊥ₚ = ⊥* , isProp⊥*
+  ⊤ₚ ⊥ₚ : ∀ {ℓ} → hProp ℓ
+  ⊤ₚ = TruthAlg.⊤ hPropAlg
+  ⊥ₚ = TruthAlg.⊥ hPropAlg
 
   decodeB : ∀ {ℓ} → Lift {ℓ-zero} {ℓ} Bool → hProp ℓ
-  decodeB (lift true)  = ⊤ₚ where open TruthAlg (hPropAlg) renaming ( ⊤ to ⊤ₚ )
+  decodeB (lift true)  = ⊤ₚ
   decodeB (lift false) = ⊥ₚ
 ```
 
@@ -214,9 +215,8 @@ equivalence between their underlying types, so the same pair of maps is fed to
 private
   resizeDec : ∀ {ℓ} (P : hProp (ℓ-suc ℓ)) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
             → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
-  resizeDec {ℓ} P (inl p)  = ⊤ₚ , propBiimpl→Equiv (P .snd) (⊤ₚ .snd) (λ _ → tt*) (λ _ → p)
-    where open TruthAlg (hPropAlg {ℓ}) renaming ( ⊤ to ⊤ₚ )
-  resizeDec P (inr np) = ⊥ₚ , propBiimpl→Equiv (P .snd) isProp⊥*
+  resizeDec P (inl p)  = ⊤ₚ , propBiimpl→Equiv (P .snd) (⊤ₚ .snd) (λ _ → tt*) (λ _ → p)
+  resizeDec P (inr np) = ⊥ₚ , propBiimpl→Equiv (P .snd) (⊥ₚ .snd)
                                (λ p → Empty.rec (np p)) (λ ())
 ```
 
