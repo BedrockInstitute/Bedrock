@@ -31,12 +31,12 @@ open import Cubical.Data.Sigma using ( Σ≡Prop )
 <!--en-->
 The conventions again, book-wide: script `𝒮` stands for a structure, `S` for its
 carrier, and `x`, `y`, `z` for carrier elements, the "sets" the language speaks of.
-The superscript `ˢ` on the two relation fields is layer mark ③: it says a symbol is
-a **field of the structure at hand**. The membership family now has three members
+The superscript `ˢ` on the two relation fields is another layer mark: it says a
+symbol is a **field of the structure at hand**. The membership family now has three members
 on the page, one glyph per layer: the library's `∈` (the host), this chapter's
 `∈ˢ` (the structure), and the previous chapter's `∈̇` (the syntax).
 <!--zh-->
-仍先立约定，全书通用：花体 `𝒮` 代表结构，`S` 代表其载体，`x`、`y`、`z` 代表载体元素，即这门语言所谈的「集合」。两个关系字段上的上标 `ˢ` 是层标记 ③：它宣告一个符号是**当前结构的字段**。至此 `∈` 家族在纸面上已有三员，一字一层：库的 `∈` (宿主)、本章的 `∈ˢ` (结构)、上一章的 `∈̇` (语法)。
+仍先立约定，全书通用：花体 `𝒮` 代表结构，`S` 代表其载体，`x`、`y`、`z` 代表载体元素，即这门语言所谈的「集合」。两个关系字段上的上标 `ˢ` 是又一枚层标记：它宣告一个符号是**当前结构的字段**。至此 `∈` 家族在纸面上已有三员，一字一层：库的 `∈` (宿主)、本章的 `∈ˢ` (结构)、上一章的 `∈̇` (语法)。
 <!--/-->
 
 ```agda
