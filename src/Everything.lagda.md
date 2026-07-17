@@ -33,12 +33,33 @@ cumulative hierarchy, and the constructible universe follow.
 - `Base.Classical`{.Agda}: the classical boundary: excluded middle as the parameter
   interface `LEM`{.Agda}, and its two dividends, a small classifier of propositions
   and propositional resizing.
+
+## Part 1: first-order logic as an object of study
+
+- `FOL.Syntax`{.Agda}: the object language: a deeply embedded `Formula`{.Agda} with
+  the constant domain as a parameter, intrinsic scoping, and every constructor
+  primitive; sentences and the closed syntax.
+- `FOL.Structure`{.Agda}: the structures formulas talk about: carrier, equality,
+  and membership, valued in a truth algebra; restriction `↾` and environments.
+- `FOL.Semantics`{.Agda}: evaluation `⟦_⟧`{.Agda} and satisfaction `_⊨_`{.Agda} by
+  structural recursion, each clause exactly its truth-algebra operation;
+  relabelling preserves meaning.
+- `FOL.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
+  syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
+  exchange, and contraction.
 <!--zh-->
 ## 第零部：奠基
 
 - `Base.Prelude`{.Agda}：精选的宿主词汇 (宇宙、路径、h-层级、`hProp`{.Agda}、依值对与索引数据)，以及决定本书读法的可溯源纪律。
 - `Base.Truth`{.Agda}：真值代数 `TruthAlg`{.Agda}，零定律的运算签名，全书逻辑符号的唯一来源；附典范实例 `hPropAlg`{.Agda}。
 - `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}，及其两笔红利，命题的小分类器与命题降层。
+
+## 第一部：作为研究对象的一阶逻辑
+
+- `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语；语句与封闭语法。
+- `FOL.Structure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；限制 `↾` 与环境。
+- `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算；重标记保含义。
+- `FOL.Renaming`{.Agda}：本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
 <!--/-->
 
 ```agda
@@ -48,4 +69,9 @@ module Everything where
 import Base.Prelude
 import Base.Truth
 import Base.Classical
+
+import FOL.Syntax
+import FOL.Structure
+import FOL.Semantics
+import FOL.Renaming
 ```

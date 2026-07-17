@@ -33,18 +33,27 @@ entry in the table of contents**, in reading order.
   - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
     its two dividends `lem→smallΩ` (small classifier) and `lem→resize` (propositional
     resizing). No postulate, per PLAN D2.
+- `FOL/`: Part 1, first-order logic as an object of study, landed with `[L1.2]`:
+  - `FOL/Syntax.lagda.md`: the deeply embedded `Formula` (constant domain as a
+    parameter, intrinsic scoping, all constructors primitive), sentences, the closed
+    syntax with `embed`, and `absurd`.
+  - `FOL/Structure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
+    a truth algebra), `pathStructure`, `∈ᵗ`, `Transitive`, restriction `↾`, and
+    environments `_^_`. Re-cut from `ZF/` (PLAN §4 ledger).
+  - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
+    recursion; relabelling lemmas `⟦⟧-map`, `⊨-map`, `embed-⊨`.
+  - `FOL/Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
+    (weakening, exchange, contraction in one stroke).
 
 ## Reserved namespaces (currently empty, marked with `.gitkeep`)
 
 The book-part skeleton fixed by [dev/PLAN.md](../dev/PLAN.md) §4; porting fills these in
 per the route tree (`[L1]` onward). By part:
 
-- `FOL/`: Part 1, first-order logic as an object of study: `Syntax` (the deeply embedded
-  `Formula`), `Semantics` (Tarski satisfaction by structural recursion), `Renaming`, and
-  `Reification/` (the bridge between host predicates and object formulas, with
-  machine-checked adequacy certificates).
-- `ZF/`: Part 2, what a ZF(C) model is: `Structure` and `Model` (the axiom-field
-  records), in type-theory-native idiom (not transcribed axiom by axiom).
+- `FOL/Reification/`: the rest of Part 1: the bridge between host predicates and object
+  formulas, with machine-checked adequacy certificates.
+- `ZF/`: Part 2, what a ZF(C) model is: `Model` (the axiom-field records), in
+  type-theory-native idiom (not transcribed axiom by axiom).
 - `V/`: Part 3, the cumulative hierarchy as a HIT, and `V ⊨ ZF(C)`; later, set-theoretic
   geology (grounds, the mantle).
 - `L/`: Part 4, the constructible universe as an inductive predicate: the capstone
@@ -70,3 +79,15 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `⊥` | false | ② | `Base.Truth` | `\bot` |
 | `⋀` | indexed meet (universal) | ② | `Base.Truth` | `\bigwedge` |
 | `⋁` | indexed join (existential) | ② | `Base.Truth` | `\bigvee` |
+| `∈̇` | object membership | ④ | `FOL.Syntax` | `\in` `\^.` |
+| `≐` | object equality | ④ | `FOL.Syntax` | `\.=` |
+| `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` | dotted connectives | ④ | `FOL.Syntax` | base symbol + `\^.` |
+| `∃̇ ∀̇` | quantifiers | ④ | `FOL.Syntax` | `\ex` / `\all` + `\^.` |
+| `∀̇∈ ∃̇∈` | bounded quantifiers | ④ | `FOL.Syntax` | dotted quantifier + `\in` |
+| `≈ˢ` | structure equality | ③ | `FOL.Structure` | `\~~` `\^s` |
+| `∈ˢ` | structure membership | ③ | `FOL.Structure` | `\in` `\^s` |
+| `∈ᵗ` | Type-valued membership | ③ | `FOL.Structure` | `\in` `\^t` |
+| `↾` | restriction (substructure) | ① | `FOL.Structure` | `\rest` |
+| `_^_` | power (environments) | ① | `FOL.Structure` | `^` |
+| `⟦_⟧` | the value of (evaluation) | ① | `FOL.Semantics` | `\[[` `\]]` |
+| `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
