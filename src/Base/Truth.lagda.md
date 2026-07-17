@@ -59,14 +59,16 @@ will be given by exactly them. The fixity levels here deliberately match
 the object-language connectives introduced later, so mixed expressions read the same
 across layers.
 
-The scope discipline announced in the Prelude now takes effect: these eight symbols
-are the book's only logic notation, and a chapter obtains them by opening a truth
-algebra (`open TruthAlg 𝕋`). Generic chapters open an abstract `𝕋`; chapters on the
-propositional side open the canonical instance below.
+Here the book's **scope discipline for logic** is laid down: these eight symbols are
+the book's only logic notation, and the Prelude deliberately exports none of them,
+so the only way they enter scope is by opening a truth algebra
+(`open TruthAlg 𝕋`). Whichever algebra a chapter opens, that is what its logic
+symbols mean: no symbol ever has two readings in one scope. Generic chapters open an
+abstract `𝕋`; chapters on the propositional side open the canonical instance below.
 <!--zh-->
 逐个符号：`⊓` 读「且」(交)，`⊔` 读「或」(并)，`⇒` 读「蕴含」，`¬` 读「非」，`⊤` 读「真」，`⊥` 读「假」；`⋀` 与其对偶 `⋁` 是按任意小类型索引的交与并，量词语义正由它们给出。这里的优先级刻意与之后引入的对象语言联结词同级，跨层的混合表达式因此读法一致。
 
-序章预告的作用域纪律自此生效：这八个符号是全书仅有的逻辑记号，一章通过打开某个真值代数 (`open TruthAlg 𝕋`) 取得它们。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
+本书**逻辑符号的作用域纪律**在此立下：这八个符号是全书仅有的逻辑记号，序章刻意不导出其中任何一个，于是它们进入作用域的唯一方式就是打开某个真值代数 (`open TruthAlg 𝕋`)。一章打开哪个代数，它的逻辑符号就是那个代数的运算：任一作用域中，没有符号会有两种读法。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
 <!--/-->
 
 <!--en-->

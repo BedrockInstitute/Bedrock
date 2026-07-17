@@ -3,40 +3,29 @@
 <!--en-->
 Every chapter of this book is literate Agda: the prose you are reading and the
 machine-checked code live in the same file. This opening chapter sets the table.
-It first lays down the two disciplines that fix how the book is read (where a
-logic symbol gets its meaning, and how any name is traced to its source), then
-re-exports, from the cubical library, the small host-language vocabulary the whole
-development stands on. Nothing is proved here; skim it now, and return when a
-symbol looks unfamiliar.
+It first lays down one discipline that fixes how the book is read (every name is
+traceable to its source), then re-exports, from the cubical library, the small
+host-language vocabulary the whole development stands on. Nothing is proved here;
+skim it now, and return when a symbol looks unfamiliar.
 <!--zh-->
-本书的每一章都是文学化 Agda：你正在读的文稿与经机器检查的代码同住一个文件。这开篇一章负责摆桌子：先立下两条决定本书读法的纪律 (逻辑符号从哪取得含义、名字如何溯源)；再从 cubical 标准库转出全书立足的一小套宿主语言词汇。本章不证明任何东西；现在可以速览，之后遇到陌生符号再回来查。
+本书的每一章都是文学化 Agda：你正在读的文稿与经机器检查的代码同住一个文件。这开篇一章负责摆桌子：先立下一条决定本书读法的纪律 (任何名字都可溯源)；再从 cubical 标准库转出全书立足的一小套宿主语言词汇。本章不证明任何东西；现在可以速览，之后遇到陌生符号再回来查。
 <!--/-->
 
 <!--en-->
-## Two disciplines
+## Traceable names
 <!--zh-->
-## 两条纪律
+## 名字可溯源
 <!--/-->
 
 <!--en-->
-Both are machine-enforced conventions of the codebase, stated here because each one
-changes how the book is read:
-
-1. **Logic symbols have one source.** This chapter exports none of
-   `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁`; they come only from opening a truth algebra (next chapter).
-   So whenever you meet a logic symbol, its meaning is the corresponding operation
-   of whichever algebra the chapter has open: no symbol ever has two readings in
-   one scope.
-2. **Names are traceable on the page.** Every import lists exactly the names it
-   takes, so a chapter's import block doubles as its precise list of prerequisites,
-   and "where does this name come from" always has a visible answer. The deliberate
-   exception is the book's two designated hubs, this chapter and the next: they are
-   opened wholesale, so a name not listed in any import comes from a hub.
+One machine-enforced convention is stated up front, because it changes how the book
+is read: **every import lists exactly the names it takes**. A chapter's import block
+therefore doubles as its precise list of prerequisites, and "where does this name
+come from" always has a visible answer on the page. The deliberate exception is the
+book's two designated hubs, this chapter and the next: they are opened wholesale,
+so a name not listed in any import comes from a hub.
 <!--zh-->
-这两条纪律由机器执法，写在这里是因为它们各自改变本书的读法：
-
-1. **逻辑符号只有一个来源。**本章不导出 `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` 中的任何一个；这些符号只有在打开某个真值代数 (下一章) 时才进入作用域。于是每当你遇到逻辑符号，其含义就是所在章节打开的那个代数中的对应运算：任一作用域中，没有符号会有两种读法。
-2. **名字在页面上可溯源。**每条 import 都精确列出所取的名字，一章的 import 块因此兼作它的先修清单，「这个名字从哪来」在页面上总有答案。有意设置的例外是全书指定的两个枢纽，即本章与下一章：它们被整体打开，凡未见于任何 import 清单的名字都来自枢纽。
+有一条由机器执法的纪律须在开篇言明，因为它改变本书的读法：**每条 import 都精确列出所取的名字**。一章的 import 块因此兼作它的先修清单，「这个名字从哪来」在页面上总有答案。有意设置的例外是全书指定的两个枢纽，即本章与下一章：它们被整体打开，凡未见于任何 import 清单的名字都来自枢纽。
 <!--/-->
 
 <!--en-->
