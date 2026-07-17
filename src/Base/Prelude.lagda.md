@@ -3,12 +3,13 @@
 <!--en-->
 Every chapter of this book is literate Agda: the prose you are reading and the
 machine-checked code live in the same file. This opening chapter sets the table.
-It first lays down two disciplines governing how names come into scope, then
+It first lays down the two disciplines that fix how the book is read (where a
+logic symbol gets its meaning, and how any name is traced to its source), then
 re-exports, from the cubical library, the small host-language vocabulary the whole
 development stands on. Nothing is proved here; skim it now, and return when a
 symbol looks unfamiliar.
 <!--zh-->
-本书的每一章都是文学化 Agda：你正在读的文稿与经机器检查的代码同住一个文件。这开篇一章负责摆桌子：先立下两条纪律，约束名字如何进入作用域；再从 cubical 标准库转出全书立足的一小套宿主语言词汇。本章不证明任何东西；现在可以速览，之后遇到陌生符号再回来查。
+本书的每一章都是文学化 Agda：你正在读的文稿与经机器检查的代码同住一个文件。这开篇一章负责摆桌子：先立下两条决定本书读法的纪律 (逻辑符号从哪取得含义、名字如何溯源)；再从 cubical 标准库转出全书立足的一小套宿主语言词汇。本章不证明任何东西；现在可以速览，之后遇到陌生符号再回来查。
 <!--/-->
 
 <!--en-->
