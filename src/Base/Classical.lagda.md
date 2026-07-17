@@ -96,12 +96,17 @@ private
 ```
 
 <!--en-->
-The encoding direction cannot be written outright: whether a proposition holds is
-not something one can inspect. So `encodeB`{.Agda} asks to be **handed** a decision
-`d` of `P`, and reads the answer off it: a proof gives `true`{.Agda}, a refutation
-gives `false`{.Agda}. No excluded middle here; the decision is an input.
+The encoding direction hides an asymmetry. Its would-be signature is
+`hProp ℓ → Lift Bool`{.Agda}, the exact inverse of `decodeB`{.Agda}, but no such
+function can be defined: unlike `lift true`{.Agda} and `lift false`{.Agda}, an
+arbitrary proposition `P` is not a pattern one can match on, so there is no case
+split "if `P` holds, otherwise" to write. `encodeB`{.Agda} therefore takes one
+extra argument, a decision `d` of `P`, and matches on **that**: a proof gives
+`true`{.Agda}, a refutation gives `false`{.Agda}. The shape mirrors
+`decodeB`{.Agda}, but the thing being inspected is the handed-over decision, never
+the proposition itself. No excluded middle here; the decision is an input.
 <!--zh-->
-编码方向没法直接写出来：一个命题成不成立，不是能检视出来的东西。所以 `encodeB`{.Agda} 要求**递给**它一个 `P` 的判定 `d`，照着判定读出答案：有证明就是 `true`{.Agda}，有反驳就是 `false`{.Agda}。这里没有排中律；判定是输入。
+编码方向藏着一处不对称。它「本该」有签名 `hProp ℓ → Lift Bool`{.Agda}，即 `decodeB`{.Agda} 的严格逆向，但这样的函数定义不出来：与 `lift true`{.Agda}、`lift false`{.Agda} 不同，任意命题 `P` 不是可供模式匹配的东西，写不出「若 `P` 成立、否则如何」的分支。所以 `encodeB`{.Agda} 多收一个参数，即 `P` 的判定 `d`，转而对**它**做匹配：有证明就是 `true`{.Agda}，有反驳就是 `false`{.Agda}。形状与 `decodeB`{.Agda} 相仿，但被检视的对象是递来的判定，从来不是命题本身。这里没有排中律；判定是输入。
 <!--/-->
 
 ```agda
