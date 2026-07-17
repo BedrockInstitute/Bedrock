@@ -475,7 +475,7 @@ en = "parameter-free"
 zh = "无参"
 ja = "無パラメータ"
 avoid = ["zh:无参数"]
-notes = "无参公式 / 无参语法, the ParamFree syntax (constant domain ⊥*); ja tentative"
+notes = "无参公式, the ParamFree formulas (constant domain ⊥*); ja tentative"
 
 [[term]]
 category = "Logic and philosophy"
