@@ -113,11 +113,17 @@ open import Cubical.Foundations.HLevels public
 
 <!--en-->
 `hProp`{.Agda} packages a type with a proof that it is a proposition: the type of
-truth values on the classical side of this book. `isSetHProp`{.Agda} and
-`isPropΠ`{.Agda} are two library facts about propositions the coming chapters
-consume.
+truth values on the classical side of this book. The two accompanying facts deserve
+spelling out. `isSetHProp`{.Agda} says that `hProp`{.Agda} is itself a **set**: by
+univalence, a path between two propositions is the same thing as a bi-implication
+between them, and that is itself a proposition, so equality of propositions carries
+no structure beyond truth. This is the fact that qualifies `hProp`{.Agda} as a type
+of truth values in the next chapter (the `isSetΩ` field will demand exactly it).
+`isPropΠ`{.Agda} says that propositions are **closed under Π types**: if `B x` is a
+proposition for every `x`, then `(x : A) → B x` is one too. It is the reason a
+universally quantified truth value is again a truth value.
 <!--zh-->
-`hProp`{.Agda} 把一个类型与其命题性证明打包：它就是本书经典侧的真值类型。`isSetHProp`{.Agda} 与 `isPropΠ`{.Agda} 是关于命题的两条库事实，接下来的章节会消费它们。
+`hProp`{.Agda} 把一个类型与其命题性证明打包：它就是本书经典侧的真值类型。随行的两条事实值得说清。`isSetHProp`{.Agda} 说的是 `hProp`{.Agda} 自身是**集合**：由 univalence，两个命题之间的路径就是它们之间的双向蕴含，而双向蕴含本身是命题，所以命题之间的相等除真假之外不携带任何额外结构。正是这条事实使 `hProp`{.Agda} 有资格在下一章充当真值类型 (`isSetΩ` 字段要求的恰是它)。`isPropΠ`{.Agda} 说的是命题在 **Π 类型下封闭**：若对每个 `x`，`B x` 都是命题，则 `(x : A) → B x` 也是命题。这就是全称量化的真值仍是真值的原因。
 <!--/-->
 
 ```agda
