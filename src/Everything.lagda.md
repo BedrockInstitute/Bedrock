@@ -66,6 +66,18 @@ import Base.Classical
 - `FOL.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
   syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
   exchange, and contraction.
+- `FOL.Reification.Base`{.Agda}: representation, the bridge: a formula paired with
+  its adequacy certificate; `translate`{.Agda} and `adequacy`{.Agda} as the only
+  exits.
+- `FOL.Reification.Combinators`{.Agda}: the certificate algebra: one combinator per
+  constructor, every certificate a single congruence.
+- `FOL.Reification.Graded`{.Agda}: the Levy hierarchy as inductive certificates:
+  Δ₀ by absence, Σ₁/Π₁, the alternating Σₙ/Πₙ tower, and graded representations.
+- `FOL.Reification.Absoluteness`{.Agda}: transitive classes and the Δ₀
+  absoluteness theorem `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down; `transfer`{.Agda}
+  composes adequacy with absoluteness.
+- `FOL.Reification.Relativize`{.Agda}: tightening unbounded quantifiers to a
+  constant bound, Δ₀ certificate included, with the correctness equation.
 <!--zh-->
 ## 第一部：作为研究对象的一阶逻辑
 
@@ -73,6 +85,11 @@ import Base.Classical
 - `FOL.Structure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；限制 `↾` 与环境。
 - `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算；重标记保含义。
 - `FOL.Renaming`{.Agda}：本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
+- `FOL.Reification.Base`{.Agda}：表示，即那座桥：公式配上其适足性证书；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。
+- `FOL.Reification.Combinators`{.Agda}：证书代数：一构造子一组合子，每张证书一次同余。
+- `FOL.Reification.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁、交替的 Σₙ/Πₙ 之塔，以及分级表示。
+- `FOL.Reification.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下；`transfer`{.Agda} 把适足性与绝对性复合。
+- `FOL.Reification.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 证书随附，并给出正确性等式。
 <!--/-->
 
 ```agda
@@ -80,4 +97,9 @@ import FOL.Syntax
 import FOL.Structure
 import FOL.Semantics
 import FOL.Renaming
+import FOL.Reification.Base
+import FOL.Reification.Combinators
+import FOL.Reification.Graded
+import FOL.Reification.Absoluteness
+import FOL.Reification.Relativize
 ```

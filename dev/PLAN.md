@@ -105,7 +105,7 @@ src/
 │   ├─ Semantics             Tarski satisfaction by structural recursion (holds by refl)
 │   ├─ Renaming
 │   └─ Reification/          host predicate ↔ object formula, with adequacy certificates
-│       (Base, Combinators, Graded, Absoluteness, Relativize, Characterization, Tactic)
+│       (Base, Combinators, Graded, Absoluteness, Relativize; the rest deferred, see ledger)
 ├─ ZF/                       Part 2: what a ZF(C) model is
 │   ├─ Model                 ZFModel / ZFCModel records (the axiom fields; the root's type)
 │   └─ Encoding, Coding      (may fold into consumers at port time; see S4)
@@ -148,7 +148,14 @@ rows rather than editing old ones):
 | `FOL.Syntax.Closed` | `ParamFree` (owner ruling, 2026-07-17) | "closed" collides with closed formula = sentence; the standard set-theoretic name is parameter-free (constants are how parameters enter); zh 无参 |
 | `FOL.Syntax.Sentence` | dropped (owner question, 2026-07-17) | zero consumers in the entire source development; where closed-ness matters the index says it (`ParamFree 0`), and the concept stays as prose |
 | `FOL.Syntax` / `FOL.Semantics` / `FOL.Rename` | `FOL.Syntax` / `FOL.Semantics` / `FOL.Renaming` | |
-| `Reification.*` (11 modules) | `FOL.Reification.*` | merge `Absoluteness2` into `Absoluteness` |
+| `Reification.{Base, Combinators, Graded, Absoluteness, Relativize}` | `FOL.Reification.*` | `[L1.3]`; `Absoluteness` restructured: unparameterized top + `Transitive` + inner `module Single`; downstream instantiates `Absoluteness.Single` |
+| `Reification.Absoluteness2` | deferred (zero code consumers) | its route was superseded by the source's RAW reflection breakthrough; revisit at `[L2.2]` only if the reflection engine wants it |
+| `Reification.Graph` | deferred to `[L2.2]` | sole consumer is `L.ModelACSep`; on landing, its private renaming copy is replaced by `FOL.Renaming` |
+| `Reification.Characterization` | deferred (zero consumers) | `charac→/←` unconsumed; `RepPred` and `toFormula` deferred with it |
+| `Reification.Universe` | deferred (zero consumers) | the Code universe scaffolded a coding layer that was built via parameter-free formulas instead |
+| `Reification.Ceiling` | dropped as code | zero consumers; the compactness-ceiling argument becomes prose in the `ZF.Model` chapter (`[L1.4]`), where it explains why strong axioms are model fields |
+| `Reification.Tactic` | deferred (zero consumers) | the source's entire L development hand-builds its representations |
+| `Reification.Base.{ClassOf, Definable}` | deferred | parameterized definable classes; land with the geology part |
 | `ZF.Structure` | `FOL.Structure` | re-cut `[L1.2]`: the bare {∈,≐}-structure is model-theory material and must be read before `FOL.Semantics`, which consumes it as a module parameter; `ZF/` keeps the axioms (`Model`) |
 | `ZF.Model` | same name | |
 | `Models.HITV.{Smallness, ZF, Def, Coding, Sat, Instance}` | `V.{Smallness, Model, Definability, Coding, Satisfaction}` | `Instance` folds into `V.Model`; `V.Hierarchy` introduces the HIT |
@@ -431,7 +438,7 @@ An accepted candidate is executed under the goal code of the cluster it affects.
 | # | Candidate | Verification needed | Status |
 |---|-----------|---------------------|--------|
 | S1 | Specialize the truth-algebra abstraction (`TruthAlg`) to plain hProp | Check whether any non-hProp instance is load-bearing in the source | verified 2026-07-16: **rejected**. The record is a law-free operation signature, definitionally transparent on `hPropAlg` (record ι), and is the designed seam for the forcing-stage Boolean instance; only one instance exists today, but the Charter targets forcing. Ported faithfully in `[L1.1]`. |
-| S2 | Merge `Absoluteness2` into `Absoluteness` | Diff the two modules' roles | open |
+| S2 | Merge `Absoluteness2` into `Absoluteness` | Diff the two modules' roles | resolved 2026-07-18: **deferred entirely** instead of merged; `Absoluteness2` has zero code consumers (its route superseded by the source's RAW reflection breakthrough). Ledger row added. |
 | S3 | Unify the five graph-certificate families under shared combinators | This is the L3.3 reduction review itself | open |
 | S4 | Fold `ZF.Encoding` / `ZF.Coding` into their consumers | Map their import sites | open |
 
@@ -451,7 +458,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.0 | Skeleton, src/README, agda-lib flag, source pin | DONE 2026-07-16 |
 | L1.1 | Port Base/ | DONE 2026-07-16 |
 | L1.2 | Port FOL/ core | DONE 2026-07-17 (four chapters: Syntax, Structure re-cut from ZF/, Semantics, Renaming) |
-| L1.3 | Port FOL/Reification/ | PLANNED |
+| L1.3 | Port FOL/Reification/ | DONE 2026-07-18 (five chapters, consumption-pruned; six deferrals in the ledger) |
 | L1.4 | Port ZF/ | PLANNED |
 | L1.5 | Port V/ | PLANNED |
 | L1.6 | Port L.Constructible | PLANNED |
