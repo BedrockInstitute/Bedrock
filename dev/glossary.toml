@@ -472,9 +472,10 @@ notes = "a formula with no free variables; zh 句子 per the owner's math-logic 
 [[term]]
 category = "Logic and philosophy"
 en = "parameter-free"
-zh = "无参数"
+zh = "无参"
 ja = "無パラメータ"
-notes = "the ParamFree syntax (constant domain ⊥*); ja tentative"
+avoid = ["zh:无参数"]
+notes = "无参公式 / 无参语法, the ParamFree syntax (constant domain ⊥*); ja tentative"
 
 [[term]]
 category = "Logic and philosophy"
