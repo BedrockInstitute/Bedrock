@@ -304,6 +304,13 @@ notes = "the Rep family: a formula paired with its adequacy certificate; paired 
 
 [[term]]
 category = "Type theory"
+en = "Tarski universe"
+zh = "塔斯基宇宙"
+ja = "タルスキ宇宙"
+notes = "the explicit-level universe tower of the host (Base.Prelude)"
+
+[[term]]
+category = "Type theory"
 en = "truth value"
 zh = "真值"
 ja = "真理値"

@@ -71,6 +71,7 @@ DEF_RE = re.compile(r'<a id="([^"]+)"></a><a id="(\d+)"[^>]*class="([^"]*)"')
 # Any cross-reference link inside highlighted code (optional self-id, optional #position).
 LINK_RE = re.compile(r'<a (id="\d+" )?href="([^"#]+)\.html(#\d+)?"([^>]*)>')
 INLINE_AGDA_RE = re.compile(r'`([^`]+)`\{\.Agda\}')
+CODE_ANCHOR_RE = re.compile(r'<a[^>]*\bhref="([^"]+\.html#\d+)"[^>]*>([^<]+)</a>')
 NUL = "\x00"
 
 
@@ -320,6 +321,12 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             code_blocks.append(m.group(0))
             return f"{NUL}CODE{len(code_blocks)-1}{NUL}"
         text = PRE_RE.sub(lift, raw)
+        # links agda already resolved in this module's own code (imports included):
+        # name -> href, the fallback that lets prose reference library identifiers
+        local_refs = {}
+        for blk in code_blocks:
+            for href, txt in CODE_ANCHOR_RE.findall(blk):
+                local_refs.setdefault(htmllib.unescape(txt), href)
 
     def page_body(lang):
         if not literate:
@@ -341,7 +348,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                                        + htmllib.escape(m.group(1)) + '$</span>'),
                        woven)
         woven = INLINE_AGDA_RE.sub(lambda m: stash("REF", inline_ref(m.group(1),
-                                   internal, name2pos)), woven)
+                                   internal, name2pos, local_refs)), woven)
         body, toc = md_to_html(woven)
         body = re.sub(r'<p>\s*(' + NUL + r'CODE\d+' + NUL + r')\s*</p>', r'\1', body)
         body = re.sub(r'<p>\s*(' + NUL + r'DMATH\d+' + NUL + r')\s*</p>', r'\1', body)
@@ -382,7 +389,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         open(os.path.join(tdir, module + ".json"), "w", encoding="utf-8").write(sidecar)
 
 
-def inline_ref(name, internal, name2pos):
+def inline_ref(name, internal, name2pos, local_refs):
     """Render `name`{.Agda} as a highlighted, hyperlinked span if the identifier is known."""
     target = None
     if "." in name:
@@ -393,6 +400,11 @@ def inline_ref(name, internal, name2pos):
         for mod in internal:
             if name in name2pos.get(mod, {}):
                 target = (mod, name2pos[mod][name]); break
+    if target is None and name in local_refs:
+        # fall back to a link agda already resolved in this module's own code;
+        # this is how prose references library identifiers (Type, refl, ...)
+        mod, _, pos = local_refs[name].rpartition(".html#")
+        target = (mod, pos)
     label = htmllib.escape(name)
     if target:
         mod, pos = target
