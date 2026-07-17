@@ -449,6 +449,74 @@ notes = "the metaphor; the project name Bedrock stays untranslated"
 
 [[term]]
 category = "Logic and philosophy"
+en = "term"
+zh = "词项"
+ja = "項"
+notes = "of the object language"
+
+[[term]]
+category = "Logic and philosophy"
+en = "formula"
+zh = "公式"
+ja = "論理式"
+notes = "zh 公式 vs ja 論理式 (deliberate)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "sentence"
+zh = "语句"
+ja = "文"
+notes = "a formula with no free variables (闭公式)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "constant domain"
+zh = "常量域"
+ja = "定数域"
+notes = "the K parameter of the syntax; ja tentative"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bounded quantifier"
+zh = "有界量词"
+ja = "有界量化子"
+
+[[term]]
+category = "Logic and philosophy"
+en = "environment"
+zh = "环境"
+ja = "環境"
+notes = "an assignment of carrier elements to free variables"
+
+[[term]]
+category = "Logic and philosophy"
+en = "structure"
+zh = "结构"
+ja = "構造"
+notes = "model-theoretic structure, ZFStructure"
+
+[[term]]
+category = "Logic and philosophy"
+en = "carrier"
+zh = "载体"
+ja = "台"
+notes = "of a structure; ja 台 as in 台集合"
+
+[[term]]
+category = "Logic and philosophy"
+en = "renaming"
+zh = "重命名"
+ja = "リネーミング"
+notes = "the variable calculus of FOL.Renaming; ja transliteration tentative"
+
+[[term]]
+category = "Set theory"
+en = "transitive class"
+zh = "传递类"
+ja = "推移的クラス"
+
+[[term]]
+category = "Logic and philosophy"
 en = "consistency"
 zh = "一致性"
 ja = "無矛盾性"

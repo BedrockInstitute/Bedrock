@@ -101,12 +101,12 @@ src/
 │   └─ Classical             LEM as a parameter interface and its consequences; no postulate
 ├─ FOL/                      Part 1: first-order logic as an object of study
 │   ├─ Syntax                Formula (12 constructors, incl. Δ₀ bounded quantifiers)
+│   ├─ Structure             ZFStructure: carrier, equality, membership; ↾, environments
 │   ├─ Semantics             Tarski satisfaction by structural recursion (holds by refl)
 │   ├─ Renaming
 │   └─ Reification/          host predicate ↔ object formula, with adequacy certificates
 │       (Base, Combinators, Graded, Absoluteness, Relativize, Characterization, Tactic)
 ├─ ZF/                       Part 2: what a ZF(C) model is
-│   ├─ Structure             ZFStructure: carrier, membership, extensional equality, restriction
 │   ├─ Model                 ZFModel / ZFCModel records (the axiom fields; the root's type)
 │   └─ Encoding, Coding      (may fold into consumers at port time; see S4)
 ├─ V/                        Part 3: the cumulative hierarchy realizes ZF(C)
@@ -142,11 +142,12 @@ rows rather than editing old ones):
 |---|---|---|
 | `Prelude`, `Truth`, `Classical` | `Base.Prelude`, `Base.Truth`, `Base.Classical` | `Classical` loses its postulate (D2); `LEM` stated per level, dividends take it explicitly; `lem→smallΩ` returns `Lift Bool ≃ hProp ℓ` directly (the source's Σ-packaging happens at the V-side `smallΩ` field, `[L1.5]`) |
 | `Classical.lem→VResizing` | lands in `V/` with `[L1.5]` | re-layered: the V-side redemption belongs to Part 3; `Base.Classical` keeps `lem→smallΩ` / `lem→resize` |
-| `Prelude._^_` | `FOL.Semantics`, with `[L1.2]` | just-in-time (STYLE-agda §2): environments are motivated at evaluation |
+| `Prelude._^_` | `FOL.Structure`, with `[L1.2]` | just-in-time (STYLE-agda §2): environments are assignments into a carrier, and the parameterized `FOL.Semantics` module cannot host a generic definition |
 | `Prelude.absurd` | `FOL.Syntax`, with `[L1.2]` | just-in-time: serves the closed constant domain `⊥*` (`embed`); host-layer, so not `Base.Truth` |
 | `FOL.Syntax` / `FOL.Semantics` / `FOL.Rename` | `FOL.Syntax` / `FOL.Semantics` / `FOL.Renaming` | |
 | `Reification.*` (11 modules) | `FOL.Reification.*` | merge `Absoluteness2` into `Absoluteness` |
-| `ZF.Structure` / `ZF.Model` | same names | |
+| `ZF.Structure` | `FOL.Structure` | re-cut `[L1.2]`: the bare {∈,≐}-structure is model-theory material and must be read before `FOL.Semantics`, which consumes it as a module parameter; `ZF/` keeps the axioms (`Model`) |
+| `ZF.Model` | same name | |
 | `Models.HITV.{Smallness, ZF, Def, Coding, Sat, Instance}` | `V.{Smallness, Model, Definability, Coding, Satisfaction}` | `Instance` folds into `V.Model`; `V.Hierarchy` introduces the HIT |
 | `Examples.HITV` | folds into `V.Hierarchy` | the structure instance is part of the chapter |
 | `L.Constructible` (`isL'`) | `L.Constructible` (`isL`) | primes dropped (D7) |
@@ -446,7 +447,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1 | Root and trunk skeleton | ACTIVE 2026-07-16 |
 | L1.0 | Skeleton, src/README, agda-lib flag, source pin | DONE 2026-07-16 |
 | L1.1 | Port Base/ | DONE 2026-07-16 |
-| L1.2 | Port FOL/ core | PLANNED |
+| L1.2 | Port FOL/ core | DONE 2026-07-17 (four chapters: Syntax, Structure re-cut from ZF/, Semantics, Renaming) |
 | L1.3 | Port FOL/Reification/ | PLANNED |
 | L1.4 | Port ZF/ | PLANNED |
 | L1.5 | Port V/ | PLANNED |
