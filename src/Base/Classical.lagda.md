@@ -79,14 +79,13 @@ and excluded middle enters only at the final assembly, to supply those decisions
 <!--en-->
 First the decoding direction, from Booleans to propositions. `decodeB`{.Agda} sends
 `true`{.Agda} to the algebra's `⊤` and `false`{.Agda} to its `⊥`, each written by
-qualified projection (`TruthAlg.⊤ hPropAlg`): no bare logic symbol appears, so the
-scope discipline is untouched, and by definitional transparency the `⊥` here is the
-pair `(⊥* , isProp⊥*)` itself. The domain is `Lift {ℓ-zero} {ℓ} Bool` rather than
+qualified projection (`TruthAlg.⊤ hPropAlg`); by definitional transparency the `⊥`
+here is the pair `(⊥* , isProp⊥*)` itself. The domain is `Lift {ℓ-zero} {ℓ} Bool` rather than
 bare `Bool`{.Agda} because `Bool`{.Agda} lives at the bottom level while the
 propositions live at `ℓ`: the lifted copy is what lets the two ends of the coming
 equivalence share a universe.
 <!--zh-->
-先做解码方向，从布尔值到命题。`decodeB`{.Agda} 把 `true`{.Agda} 送到代数的 `⊤`、`false`{.Agda} 送到它的 `⊥`，均以限定投影写出 (`TruthAlg.⊤ hPropAlg`)：没有任何裸逻辑符号出现，作用域纪律毫发无损；且由定义性透明，这里的 `⊥` 就是 `(⊥* , isProp⊥*)` 这个对本身。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
+先做解码方向，从布尔值到命题。`decodeB`{.Agda} 把 `true`{.Agda} 送到代数的 `⊤`、`false`{.Agda} 送到它的 `⊥`，均以限定投影写出 (`TruthAlg.⊤ hPropAlg`)；由定义性透明，这里的 `⊥` 就是 `(⊥* , isProp⊥*)` 这个对本身。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
 <!--/-->
 
 ```agda
