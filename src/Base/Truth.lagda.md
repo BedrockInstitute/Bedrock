@@ -26,6 +26,16 @@ import Cubical.Functions.Logic as Logic
 ## 接口
 <!--/-->
 
+<!--en-->
+The striking design fact is that the framework core needs **not a single algebraic
+law**. The adequacy proofs of the upcoming combinators are all congruences, which
+hold for arbitrary operations; lattice axioms and the like are consumed only at the
+theorem level, and those theorems work instance by instance anyway. So the record is
+a pure operation signature:
+<!--zh-->
+醒目的设计事实是：框架核心**一条代数定律都不需要**。后续组合子的全部适足性证明都是同余，对任意运算成立；格公理之类只在定理层被消费，而那些定理本来就按实例进行。所以这个 record 是纯运算签名：
+<!--/-->
+
 ```agda
 record TruthAlg (ℓ ℓ' : Level) : Type (ℓ-suc (ℓ-max ℓ ℓ')) where
   field
@@ -40,16 +50,6 @@ record TruthAlg (ℓ ℓ' : Level) : Type (ℓ-suc (ℓ-max ℓ ℓ')) where
   infixr 10 _⇒_
   infix  13 ¬_
 ```
-
-<!--en-->
-The record is a **pure operation signature**, and that is the striking design fact:
-the framework core needs not a single algebraic law. The adequacy proofs of the
-upcoming combinators are all congruences, which hold for arbitrary operations;
-lattice axioms and the like are consumed only at the theorem level, and those
-theorems work instance by instance anyway.
-<!--zh-->
-这个 record 是**纯运算签名**，这正是醒目的设计事实：框架核心一条代数定律都不需要。后续组合子的全部适足性证明都是同余，对任意运算成立；格公理之类只在定理层被消费，而那些定理本来就按实例进行。
-<!--/-->
 
 <!--en-->
 Symbol by symbol: `⊓` reads "and" (meet), `⊔` reads "or" (join), `⇒` reads
@@ -77,6 +77,14 @@ abstract `𝕋`; chapters on the propositional side open the canonical instance 
 ## 典范实例：hProp
 <!--/-->
 
+<!--en-->
+Propositions form a truth algebra. Everything in this sentence stands on univalence:
+that `hProp`{.Agda} is a set, and that the operations below are well defined on it,
+are theorems of the cubical library, not assumptions.
+<!--zh-->
+命题构成一个真值代数。这句话的全部内容都站在 univalence 上：`hProp`{.Agda} 是集合、下列运算在其上良定义，这些在 cubical 库里都是定理而非假设。
+<!--/-->
+
 ```agda
 hPropAlg : ∀ {ℓ} → TruthAlg ℓ (ℓ-suc ℓ)
 hPropAlg {ℓ} = record
@@ -91,14 +99,6 @@ hPropAlg {ℓ} = record
   ; ⋀      = λ A P → Logic.∀[]-syntax P
   ; ⋁      = λ A P → Logic.∃[]-syntax P }
 ```
-
-<!--en-->
-Propositions form a truth algebra. Everything in this sentence stands on univalence:
-that `hProp`{.Agda} is a set, and that these operations are well defined on it, are
-theorems of the cubical library, not assumptions.
-<!--zh-->
-命题构成一个真值代数。这句话的全部内容都站在 univalence 上：`hProp`{.Agda} 是集合、这些运算在其上良定义，在 cubical 库里都是定理而非假设。
-<!--/-->
 
 <!--en-->
 Three points worth keeping:

@@ -220,11 +220,10 @@ STYLE-i18n; code fences are language-neutral and English-only):
 
 1. `# Title`, then an opening block: what this chapter proves, why the reader
    should care, and where it sits in the part's arc (one to three paragraphs).
-2. **Code leads, prose follows** (owner ruling, 2026-07-17): each code block comes
-   first and the prose that explains it comes after, one passage per block (one
-   import statement per block in a hub). Prose standing before a code block is
-   reserved for chapter and section openings and genuine motivation; it never
-   paraphrases the code that is about to appear.
+2. **Prose leads, code follows** (owner ruling, 2026-07-17, reversing the same-day
+   code-first ruling): each code block is immediately preceded by the passage that
+   explains it, one passage per block (one import statement per block in a hub).
+   Follow-up remarks may trail a block, but a block never appears unannounced.
 3. `##` sections in the order: motivation and informal picture, definitions,
    statements, proof development, recap. Small chapters may merge sections; the
    recap (what was established, what it feeds) is never skipped.
