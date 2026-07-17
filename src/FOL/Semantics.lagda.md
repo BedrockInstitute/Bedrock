@@ -23,7 +23,7 @@ import Cubical.Data.Empty as Empty
 open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈
-  ; mapTm; mapFo; Closed; embed )
+  ; mapTm; mapFo; ParamFree; embed )
 
 open TruthAlg 𝕋
 open ZFStructure 𝒮
@@ -142,15 +142,15 @@ congruence; the two term cases are even `refl`{.Agda}.
 ```
 
 <!--en-->
-The corollary the closed syntax was waiting for: a closed formula entering any
-constant domain through `embed`{.Agda} keeps its meaning. The data axis and the
+The corollary the parameter-free syntax was waiting for: a parameter-free formula
+entering any constant domain through `embed`{.Agda} keeps its meaning. The data axis and the
 working syntax share one semantics; nothing needs proving twice.
 <!--zh-->
-封闭语法等候的推论：闭公式经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。
+无参数语法等候的推论：无参数公式经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。
 <!--/-->
 
 ```agda
-embed-⊨ : ∀ {ℓe ℓc} {K : Type ℓc} (ι : K → S) {n} (φ : Closed {ℓe} n) (γ : S ^ n)
+embed-⊨ : ∀ {ℓe ℓc} {K : Type ℓc} (ι : K → S) {n} (φ : ParamFree {ℓe} n) (γ : S ^ n)
         → At._⊨_ ι γ (embed φ) ≡ At._⊨_ (λ b → ι (Empty.rec* b)) γ φ
 embed-⊨ ι = ⊨-map Empty.rec* ι
 ```
