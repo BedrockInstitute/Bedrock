@@ -220,13 +220,18 @@ STYLE-i18n; code fences are language-neutral and English-only):
 
 1. `# Title`, then an opening block: what this chapter proves, why the reader
    should care, and where it sits in the part's arc (one to three paragraphs).
-2. `##` sections in the order: motivation and informal picture, definitions,
+2. **Code leads, prose follows** (owner ruling, 2026-07-17): each code block comes
+   first and the prose that explains it comes after, one passage per block (one
+   import statement per block in a hub). Prose standing before a code block is
+   reserved for chapter and section openings and genuine motivation; it never
+   paraphrases the code that is about to appear.
+3. `##` sections in the order: motivation and informal picture, definitions,
    statements, proof development, recap. Small chapters may merge sections; the
    recap (what was established, what it feeds) is never skipped.
-3. Inline code references use `` `name`{.Agda} ``; section headings are stable
+4. Inline code references use `` `name`{.Agda} ``; section headings are stable
    anchors for cross-references.
-4. New symbols follow §5; new terms enter `dev/glossary.toml` in the same change.
-5. Authoring order per PLAN D6: English first, then Chinese, cross-checked; the
+5. New symbols follow §5; new terms enter `dev/glossary.toml` in the same change.
+6. Authoring order per PLAN D6: English first, then Chinese, cross-checked; the
    Japanese block may be added later without touching code.
 
 ## 9. Commits

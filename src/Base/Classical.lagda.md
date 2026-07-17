@@ -65,16 +65,6 @@ postulated, the whole book carries Agda's `--safe` seal.
 ## 第一笔红利：小分类器
 <!--/-->
 
-<!--en-->
-Classically a proposition has only two possible values, and that innocent remark has
-universe-level teeth. First: the entire type of truth values collapses to a
-two-element type. `decodeB`{.Agda} sends `true`{.Agda} and `false`{.Agda} to `⊤` and
-`⊥`; excluded middle decides any proposition back onto a Boolean; the round trips
-below make this an equivalence `Lift Bool ≃ hProp ℓ`, at **every** level `ℓ`.
-<!--zh-->
-经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上是有牙齿的。第一：整个真值类型坍缩为二元类型。`decodeB`{.Agda} 把 `true`{.Agda} 与 `false`{.Agda} 送到 `⊤` 与 `⊥`；排中律把任何命题判定回一个布尔值；下面的往返互逆使之成为等价 `Lift Bool ≃ hProp ℓ`，且在**每一个**层级 `ℓ` 上成立。
-<!--/-->
-
 ```agda
 private
   ⊥ₚ : ∀ {ℓ} → hProp ℓ
@@ -109,20 +99,19 @@ lem→smallΩ {ℓ} lem = Lift Bool , isoToEquiv (iso decodeB
 ```
 
 <!--en-->
-## The second dividend: propositional resizing
+Classically a proposition has only two possible values, and that innocent remark has
+universe-level teeth. First: the entire type of truth values collapses to a
+two-element type. `decodeB`{.Agda} sends `true`{.Agda} and `false`{.Agda} to `⊤` and
+`⊥`; excluded middle decides any proposition back onto a Boolean; the round trips make this an
+equivalence `Lift Bool ≃ hProp ℓ`, at **every** level `ℓ`.
 <!--zh-->
-## 第二笔红利：命题降层
+经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上是有牙齿的。第一：整个真值类型坍缩为二元类型。`decodeB`{.Agda} 把 `true`{.Agda} 与 `false`{.Agda} 送到 `⊤` 与 `⊥`；排中律把任何命题判定回一个布尔值；往返互逆使之成为等价 `Lift Bool ≃ hProp ℓ`，且在**每一个**层级 `ℓ` 上成立。
 <!--/-->
 
 <!--en-->
-Second: a proposition living one universe up is equivalent to one living below.
-Decide it: if it holds it is equivalent to `⊤`, if it fails it is equivalent to
-`⊥`, and both are small. This is **propositional resizing**, and it is the precise
-reason classical set theory never worries about which universe a proposition
-inhabits. Note the signatures do exact bookkeeping: `lem→resize`{.Agda} consumes
-excluded middle at the higher level `ℓ-suc ℓ`, no more.
+## The second dividend: propositional resizing
 <!--zh-->
-第二：住在高一层宇宙的命题等价于住在低层的命题。判定它：若成立则等价于 `⊤`，若不成立则等价于 `⊥`，而两者都是小的。这就是**命题降层**，也正是经典集合论从不操心命题住在哪个宇宙的确切原因。注意签名做了精确记账：`lem→resize`{.Agda} 恰在较高层级 `ℓ-suc ℓ` 上消费排中律，分毫不多。
+## 第二笔红利：命题降层
 <!--/-->
 
 ```agda
@@ -137,6 +126,17 @@ private
 lem→resize : ∀ {ℓ} → LEM (ℓ-suc ℓ) → (P : hProp (ℓ-suc ℓ)) → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
 lem→resize lem P = resizeDec P (lem P)
 ```
+
+<!--en-->
+Second: a proposition living one universe up is equivalent to one living below.
+Decide it: if it holds it is equivalent to `⊤`, if it fails it is equivalent to
+`⊥`, and both are small. This is **propositional resizing**, and it is the precise
+reason classical set theory never worries about which universe a proposition
+inhabits. Note the signatures do exact bookkeeping: `lem→resize`{.Agda} consumes
+excluded middle at the higher level `ℓ-suc ℓ`, no more.
+<!--zh-->
+第二：住在高一层宇宙的命题等价于住在低层的命题。判定它：若成立则等价于 `⊤`，若不成立则等价于 `⊥`，而两者都是小的。这就是**命题降层**，也正是经典集合论从不操心命题住在哪个宇宙的确切原因。注意签名做了精确记账：`lem→resize`{.Agda} 恰在较高层级 `ℓ-suc ℓ` 上消费排中律，分毫不多。
+<!--/-->
 
 <!--en-->
 ## Recap
