@@ -174,12 +174,12 @@ Corresponding operations across layers share a level (`∧̇` with `⊓`, `⇒̇
 
 ## 5. Symbol introduction discipline
 
-At a symbol's definition site, the prose gives, in each language block: its
-**reading** (per language), its **LaTeX counterpart**, and its **Agda input
-sequence** (for example `⊨` reads "satisfies" in English and 满足 in Chinese, with
-LaTeX and input `\models`; `∈̇` is `\in` + `\^.`). `src/README.md` carries the master symbol table:
-symbol / reading / layer / defining chapter / input sequence. **(provisional:** the
-exact table format is fixed when the first symbols land in L1.)
+At a symbol's definition site, the prose gives its **reading**, in each language
+block (for example `⊨` reads "satisfies" in English and 满足 in Chinese). **Input
+methods and LaTeX counterparts never appear in reader-facing prose** (owner ruling,
+2026-07-17): readers read, they do not type. The place contributors look up how to
+type a symbol is the master symbol table in `src/README.md` (a developer doc):
+symbol / reading / layer / defining chapter / input sequence.
 
 ## 6. Layout and proof organization
 
