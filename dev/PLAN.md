@@ -452,7 +452,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.5 | Port V/ | PLANNED |
 | L1.6 | Port L.Constructible | PLANNED |
 | L1.7 | Frontier + root L.Model | PLANNED |
-| L1.8 | Landmarks + Everything order | PLANNED |
+| L1.8 | Landmarks + Everything order | ACTIVE 2026-07-17 (sidebar now follows the Everything import order; Landmarks pending) |
 | L2 | Axiom branches | PLANNED |
 | L2.0 | Basic axioms | PLANNED |
 | L2.1 | Infinity | PLANNED |
