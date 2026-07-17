@@ -169,6 +169,7 @@ article { grid-area: content; }
   font-size: 0.75rem; letter-spacing: 0.05em; margin: 1rem 0 0.4rem; }
 .nav-title:first-child { margin-top: 0; }
 ul.toc, ul.modnav { list-style: none; padding-left: 0; margin: 0; }
+ul.toc { font-size: 0.85rem; }
 ul.toc li, ul.modnav li { margin: 0.2rem 0; }
 ul.toc .toc-l3 { padding-left: 1rem; }
 ul.toc .toc-l4 { padding-left: 2rem; }
