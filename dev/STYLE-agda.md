@@ -227,6 +227,9 @@ STYLE-i18n; code fences are language-neutral and English-only):
 3. `##` sections in the order: motivation and informal picture, definitions,
    statements, proof development, recap. Small chapters may merge sections; the
    recap (what was established, what it feeds) is never skipped.
+   **No forward jargon** (owner ruling, 2026-07-17): prose argues only from notions
+   the reader already has at that point of the book. A forward pointer may name a
+   destination ("Part 1 makes this concrete"), never lean on its terminology.
 4. Inline code references use `` `name`{.Agda} ``; section headings are stable
    anchors for cross-references.
 5. New symbols follow §5; new terms enter `dev/glossary.toml` in the same change.
