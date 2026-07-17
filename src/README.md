@@ -45,14 +45,24 @@ entry in the table of contents**, in reading order.
     recursion; relabelling lemmas `⟦⟧-map`, `⊨-map`, `embed-⊨`.
   - `FOL/Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
     (weakening, exchange, contraction in one stroke).
+  - `FOL/Reification/`, landed with `[L1.3]` (consumption-pruned; deferrals in the
+    PLAN ledger):
+    - `Base.lagda.md`: representation = formula × adequacy certificate; `RepP`,
+      `RepS`, `translate`, `adequacy`.
+    - `Combinators.lagda.md`: the certificate algebra, one combinator per
+      constructor, publicly re-exporting Base.
+    - `Graded.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive certificates;
+      `mapΔ₀` and friends; `Certified` (graded representations `RepΔ₀`).
+    - `Absoluteness.lagda.md`: `Transitive` (landed here per the ledger), `Single`
+      (`abs₀`, `σ₁-up`, `π₁-down`, `transfer`).
+    - `Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
+      (`_⊨ᴬ_`, `relativize-correct`).
 
 ## Reserved namespaces (currently empty, marked with `.gitkeep`)
 
 The book-part skeleton fixed by [dev/PLAN.md](../dev/PLAN.md) §4; porting fills these in
 per the route tree (`[L1]` onward). By part:
 
-- `FOL/Reification/`: the rest of Part 1: the bridge between host predicates and object
-  formulas, with machine-checked adequacy certificates.
 - `ZF/`: Part 2, what a ZF(C) model is: `Model` (the axiom-field records), in
   type-theory-native idiom (not transcribed axiom by axiom).
 - `V/`: Part 3, the cumulative hierarchy as a HIT, and `V ⊨ ZF(C)`; later, set-theoretic
@@ -92,3 +102,5 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `_^_` | power (environments) | ① | `FOL.Structure` | `^` |
 | `⟦_⟧` | the value of (evaluation) | ① | `FOL.Semantics` | `\[[` `\]]` |
 | `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
+| `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Reification.Absoluteness` | `\models` + `\^v` / `\^m` |
+| `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Reification.Relativize` | `\models` + `\^A` |
