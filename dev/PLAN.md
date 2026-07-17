@@ -140,7 +140,7 @@ rows rather than editing old ones):
 
 | Source (fol-reification) | Bedrock | Notes |
 |---|---|---|
-| `Prelude`, `Truth`, `Classical` | `Base.Prelude`, `Base.Truth`, `Base.Classical` | `Classical` loses its postulate (D2); `LEM` stated per level, dividends take it explicitly |
+| `Prelude`, `Truth`, `Classical` | `Base.Prelude`, `Base.Truth`, `Base.Classical` | `Classical` loses its postulate (D2); `LEM` stated per level, dividends take it explicitly; `lem→smallΩ` returns `Lift Bool ≃ hProp ℓ` directly (the source's Σ-packaging happens at the V-side `smallΩ` field, `[L1.5]`) |
 | `Classical.lem→VResizing` | lands in `V/` with `[L1.5]` | re-layered: the V-side redemption belongs to Part 3; `Base.Classical` keeps `lem→smallΩ` / `lem→resize` |
 | `Prelude._^_` | `FOL.Semantics`, with `[L1.2]` | just-in-time (STYLE-agda §2): environments are motivated at evaluation |
 | `Prelude.absurd` | `FOL.Syntax`, with `[L1.2]` | just-in-time: serves the closed constant domain `⊥*` (`embed`); host-layer, so not `Base.Truth` |

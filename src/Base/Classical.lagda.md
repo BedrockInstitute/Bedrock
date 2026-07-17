@@ -101,8 +101,8 @@ private
   retrB (lift false) (inl ())
   retrB (lift false) (inr _)  = refl
 
-lem→smallΩ : ∀ {ℓ} → LEM ℓ → Σ[ Ω ∈ Type ℓ ] (Ω ≃ hProp ℓ)
-lem→smallΩ {ℓ} lem = Lift Bool , isoToEquiv (iso decodeB
+lem→smallΩ : ∀ {ℓ} → LEM ℓ → Lift {ℓ-zero} {ℓ} Bool ≃ hProp ℓ
+lem→smallΩ lem = isoToEquiv (iso decodeB
   (λ P → encodeB P (lem P))
   (λ P → secB P (lem P))
   (λ b → retrB b (lem (decodeB b))))
