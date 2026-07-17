@@ -464,9 +464,17 @@ notes = "zh 公式 vs ja 論理式 (deliberate)"
 [[term]]
 category = "Logic and philosophy"
 en = "sentence"
-zh = "语句"
+zh = "句子"
 ja = "文"
-notes = "a formula with no free variables (闭公式)"
+avoid = ["zh:语句"]
+notes = "a formula with no free variables; zh 句子 per the owner's math-logic convention"
+
+[[term]]
+category = "Logic and philosophy"
+en = "parameter-free"
+zh = "无参数"
+ja = "無パラメータ"
+notes = "the ParamFree syntax (constant domain ⊥*); ja tentative"
 
 [[term]]
 category = "Logic and philosophy"

@@ -36,7 +36,7 @@ entry in the table of contents**, in reading order.
 - `FOL/`: Part 1, first-order logic as an object of study, landed with `[L1.2]`:
   - `FOL/Syntax.lagda.md`: the deeply embedded `Formula` (constant domain as a
     parameter, intrinsic scoping, all constructors primitive), sentences, and the
-    closed syntax with `embed` (via the library's `Empty.rec*`).
+    parameter-free syntax with `embed` (via the library's `Empty.rec*`).
   - `FOL/Structure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
     a truth algebra), `pathStructure`, `∈ᵗ`, restriction `↾`, and environments `_^_`.
     Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
