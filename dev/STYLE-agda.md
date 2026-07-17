@@ -230,6 +230,9 @@ STYLE-i18n; code fences are language-neutral and English-only):
    **No forward jargon** (owner ruling, 2026-07-17): prose argues only from notions
    the reader already has at that point of the book. A forward pointer may name a
    destination ("Part 1 makes this concrete"), never lean on its terminology.
+   **Prose teaches, it never defends** (owner ruling, 2026-07-17): compliance
+   arguments, replies to review questions, and self-justifications ("this does not
+   violate rule X") stay out of the text, exactly as such comments stay out of code.
 4. Inline code references use `` `name`{.Agda} ``; section headings are stable
    anchors for cross-references.
 5. New symbols follow §5; new terms enter `dev/glossary.toml` in the same change.
