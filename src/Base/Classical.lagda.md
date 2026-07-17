@@ -77,22 +77,26 @@ and excluded middle enters only at the final assembly, to supply those decisions
 <!--/-->
 
 <!--en-->
-First the decoding direction, from Booleans to propositions. `decodeB`{.Agda} sends
-`true`{.Agda} to the algebra's `⊤` and `false`{.Agda} to its `⊥`, each written by
-qualified projection (`TruthAlg.⊤ hPropAlg`{.Agda}); by definitional transparency the `⊥`
-here is the pair `(⊥* , isProp⊥*)`{.Agda} itself. The domain is `Lift {ℓ-zero} {ℓ} Bool`{.Agda} rather than
-bare `Bool`{.Agda} because `Bool`{.Agda} lives at the bottom level while the
-propositions live at `ℓ`: the lifted copy is what lets the two ends of the coming
-equivalence share a universe.
+First the chapter cashes the promise of the scope discipline: it opens the
+canonical instance, taking exactly its `⊤`{.Agda} and `⊥`{.Agda}. From here on the
+two symbols mean the hProp algebra's truth values, and by definitional transparency
+this `⊥`{.Agda} is the pair `(⊥* , isProp⊥*)`{.Agda} itself. Then the decoding
+direction, from Booleans to propositions: `decodeB`{.Agda} sends `true`{.Agda} to
+`⊤`{.Agda} and `false`{.Agda} to `⊥`{.Agda}. The domain is
+`Lift {ℓ-zero} {ℓ} Bool`{.Agda} rather than bare `Bool`{.Agda} because `Bool`{.Agda}
+lives at the bottom level while the propositions live at `ℓ`: the lifted copy is
+what lets the two ends of the coming equivalence share a universe.
 <!--zh-->
-先做解码方向，从布尔值到命题。`decodeB`{.Agda} 把 `true`{.Agda} 送到代数的 `⊤`、`false`{.Agda} 送到它的 `⊥`，均以限定投影写出 (`TruthAlg.⊤ hPropAlg`{.Agda})；由定义性透明，这里的 `⊥` 就是 `(⊥* , isProp⊥*)`{.Agda} 这个对本身。定义域取 `Lift {ℓ-zero} {ℓ} Bool`{.Agda} 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
+本章先兑现作用域纪律的承诺：打开典范实例，恰取其中的 `⊤`{.Agda} 与 `⊥`{.Agda}。自此这两个符号就是 hProp 代数的真值，且由定义性透明，这个 `⊥`{.Agda} 就是 `(⊥* , isProp⊥*)`{.Agda} 这个对本身。然后做解码方向，从布尔值到命题：`decodeB`{.Agda} 把 `true`{.Agda} 送到 `⊤`{.Agda}、`false`{.Agda} 送到 `⊥`{.Agda}。定义域取 `Lift {ℓ-zero} {ℓ} Bool`{.Agda} 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
 <!--/-->
 
 ```agda
+open module Canonical {ℓ : Level} = TruthAlg (hPropAlg {ℓ}) using ( ⊤; ⊥ )
+
 private
   decodeB : ∀ {ℓ} → Lift {ℓ-zero} {ℓ} Bool → hProp ℓ
-  decodeB (lift true)  = TruthAlg.⊤ hPropAlg
-  decodeB (lift false) = TruthAlg.⊥ hPropAlg
+  decodeB (lift true)  = ⊤
+  decodeB (lift false) = ⊥
 ```
 
 <!--en-->
@@ -119,15 +123,15 @@ the proposition itself. No excluded middle here; the decision is an input.
 One round trip: decoding the encoding of `P` gives back `P` itself. The tool is
 `⇔toPath`{.Agda}, the library's propositional extensionality: between propositions,
 maps in both directions already make a path (in this book that principle is a
-theorem, not an axiom). If the decision is a proof `p`, the goal is that the
-algebra's `⊤` equals `P`, and both directions are trivial: from `⊤` to `P` the
+theorem, not an axiom). If the decision is a proof `p`, the goal is
+`⊤ ≡ P`{.Agda}, and both directions are trivial: from `⊤`{.Agda} to `P` the
 answer `p` is already in hand, and back the other way everything maps to
-`tt*`{.Agda}, the inhabitant of `⊤`. If the decision is a refutation `np`, the goal
-is that the algebra's `⊥` equals `P`: out of `⊥*`{.Agda} nothing needs saying,
+`tt*`{.Agda}, the inhabitant of `⊤`{.Agda}. If the decision is a refutation `np`, the
+goal is `⊥ ≡ P`{.Agda}: out of `⊥*`{.Agda} nothing needs saying,
 which is what the absurd pattern `λ ()` says, and any alleged proof `p` of `P` is
 crushed by `np`, with `Empty.rec`{.Agda} eliminating the resulting absurdity.
 <!--zh-->
-第一趟往返：把 `P` 编码再解码，得回 `P` 自身。工具是 `⇔toPath`{.Agda}，即库的命题外延性：命题之间，两个方向的映射就足以给出一条路径 (在本书中，这条原理是定理而非公理)。若判定是证明 `p`，目标为代数的 `⊤` 等于 `P`，两个方向都平凡：从 `⊤` 到 `P`，答案 `p` 已在手上；反向则一切送到 `⊤` 的居民 `tt*`{.Agda}。若判定是反驳 `np`，目标为代数的 `⊥` 等于 `P`：从 `⊥*`{.Agda} 出发无话可说，荒谬模式 `λ ()` 说的正是这个；而任何声称的 `P` 之证明 `p` 都被 `np` 击碎，`Empty.rec`{.Agda} 消去随之而来的荒谬。
+第一趟往返：把 `P` 编码再解码，得回 `P` 自身。工具是 `⇔toPath`{.Agda}，即库的命题外延性：命题之间，两个方向的映射就足以给出一条路径 (在本书中，这条原理是定理而非公理)。若判定是证明 `p`，目标为 `⊤ ≡ P`{.Agda}，两个方向都平凡：从 `⊤`{.Agda} 到 `P`，答案 `p` 已在手上；反向则一切送到 `⊤`{.Agda} 的居民 `tt*`{.Agda}。若判定是反驳 `np`，目标为 `⊥ ≡ P`{.Agda}：从 `⊥*`{.Agda} 出发无话可说，荒谬模式 `λ ()` 说的正是这个；而任何声称的 `P` 之证明 `p` 都被 `np` 击碎，`Empty.rec`{.Agda} 消去随之而来的荒谬。
 <!--/-->
 
 ```agda
@@ -143,11 +147,11 @@ subtlety deserves attention: at assembly time it is excluded middle that will de
 `decodeB b`{.Agda}, and nothing promises which decision it hands over. So `retrB`{.Agda}
 proves the equation for **every** decision `d`, by four cases. `true`{.Agda} with a
 proof: `refl`{.Agda}. `true`{.Agda} with an alleged refutation `n⊤`: impossible,
-since `⊤` does hold, and `n⊤ tt*`{.Agda} is the absurdity. `false`{.Agda} with an alleged
+since `⊤`{.Agda} does hold, and `n⊤ tt*`{.Agda} is the absurdity. `false`{.Agda} with an alleged
 proof: that proof is a term of `⊥*`{.Agda}, and the absurd pattern `()` closes the
 case before any equation is owed. `false`{.Agda} with a refutation: `refl`{.Agda}.
 <!--zh-->
-另一趟往返：把布尔值 `b` 解码再编码，得回 `b`。有一处细微值得注意：总装时来判定 `decodeB b`{.Agda} 的将是排中律，而它递来哪个判定无从许诺。所以 `retrB`{.Agda} 对**每一个**判定 `d` 证明该等式，分四种情形。`true`{.Agda} 配证明：`refl`{.Agda}。`true`{.Agda} 配所谓反驳 `n⊤`：不可能，因为 `⊤` 明明成立，`n⊤ tt*`{.Agda} 即是荒谬。`false`{.Agda} 配所谓证明：该证明是 `⊥*`{.Agda} 的项，荒谬模式 `()` 在欠下任何等式之前就了结此案。`false`{.Agda} 配反驳：`refl`{.Agda}。
+另一趟往返：把布尔值 `b` 解码再编码，得回 `b`。有一处细微值得注意：总装时来判定 `decodeB b`{.Agda} 的将是排中律，而它递来哪个判定无从许诺。所以 `retrB`{.Agda} 对**每一个**判定 `d` 证明该等式，分四种情形。`true`{.Agda} 配证明：`refl`{.Agda}。`true`{.Agda} 配所谓反驳 `n⊤`：不可能，因为 `⊤`{.Agda} 明明成立，`n⊤ tt*`{.Agda} 即是荒谬。`false`{.Agda} 配所谓证明：该证明是 `⊥*`{.Agda} 的项，荒谬模式 `()` 在欠下任何等式之前就了结此案。`false`{.Agda} 配反驳：`refl`{.Agda}。
 <!--/-->
 
 ```agda
@@ -197,28 +201,26 @@ inhabits.
 <!--en-->
 As before, the work is done from a handed-over decision, and `P .snd`{.Agda} (the
 propositionality proof, as the Prelude promised) is used directly. If `P` holds,
-the small stand-in is the algebra's `⊤` at level `ℓ`: between two propositions,
+the small stand-in is the `⊤`{.Agda} of level `ℓ`: between two propositions,
 maps in both directions already form an **equivalence of underlying types**, which
 is what `propBiimpl→Equiv`{.Agda} builds from the two propositionality proofs and
-the two maps; from `P` to `⊤` everything goes to `tt*`{.Agda}, and back the other
-way `p` is in hand. If `P` fails, the stand-in is the algebra's `⊥`, with the same
+the two maps; from `P` to `⊤`{.Agda} everything goes to `tt*`{.Agda}, and back the other
+way `p` is in hand. If `P` fails, the stand-in is `⊥`{.Agda}, with the same
 two absurdity moves as in `secB`{.Agda}. Note the shift against the first dividend: there the
 output was a path between propositions (`⇔toPath`{.Agda}), here it is an
 equivalence between their underlying types, so the same pair of maps is fed to
 `propBiimpl→Equiv`{.Agda} instead.
 <!--zh-->
-与之前一样，工作从递来的判定做起，其中直接用到 `P .snd`{.Agda} (命题性证明，正如序章预告的那样)。若 `P` 成立，小替身取 `ℓ` 层的代数 `⊤`：命题之间，两个方向的映射就足以构成**底层类型的等价**，这正是 `propBiimpl→Equiv`{.Agda} 从两侧的命题性证明与两个映射装配出的东西；从 `P` 到 `⊤` 一切送到 `tt*`{.Agda}，反向则 `p` 已在手上。若 `P` 不成立，替身取代数的 `⊥`，两手荒谬招式与 `secB`{.Agda} 相同。留意与第一笔红利的差别：那里产出的是命题之间的路径 (`⇔toPath`{.Agda})，这里产出的是底层类型之间的等价，于是同样的一对映射改喂给 `propBiimpl→Equiv`{.Agda}。
+与之前一样，工作从递来的判定做起，其中直接用到 `P .snd`{.Agda} (命题性证明，正如序章预告的那样)。若 `P` 成立，小替身取 `ℓ` 层的 `⊤`{.Agda}：命题之间，两个方向的映射就足以构成**底层类型的等价**，这正是 `propBiimpl→Equiv`{.Agda} 从两侧的命题性证明与两个映射装配出的东西；从 `P` 到 `⊤`{.Agda} 一切送到 `tt*`{.Agda}，反向则 `p` 已在手上。若 `P` 不成立，替身取 `⊥`{.Agda}，两手荒谬招式与 `secB`{.Agda} 相同。留意与第一笔红利的差别：那里产出的是命题之间的路径 (`⇔toPath`{.Agda})，这里产出的是底层类型之间的等价，于是同样的一对映射改喂给 `propBiimpl→Equiv`{.Agda}。
 <!--/-->
 
 ```agda
 private
   resizeDec : ∀ {ℓ} (P : hProp (ℓ-suc ℓ)) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
             → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
-  resizeDec P (inl p)  = TruthAlg.⊤ hPropAlg ,
-    propBiimpl→Equiv (P .snd) (TruthAlg.⊤ hPropAlg .snd) (λ _ → tt*) (λ _ → p)
-  resizeDec P (inr np) = TruthAlg.⊥ hPropAlg ,
-    propBiimpl→Equiv (P .snd) (TruthAlg.⊥ hPropAlg .snd)
-      (λ p → Empty.rec (np p)) (λ ())
+  resizeDec P (inl p)  = ⊤ , propBiimpl→Equiv (P .snd) (⊤ .snd) (λ _ → tt*) (λ _ → p)
+  resizeDec P (inr np) = ⊥ , propBiimpl→Equiv (P .snd) (⊥ .snd)
+                               (λ p → Empty.rec (np p)) (λ ())
 ```
 
 <!--en-->
