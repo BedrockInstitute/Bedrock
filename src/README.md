@@ -15,11 +15,12 @@ Nothing here is generated: the woven mono-lingual copies and the rendered site l
 
 ## `Everything.lagda.md`
 
-The aggregator. It imports every module, so `agda src/Everything.lagda.md` typechecks the
-whole development (this is what `make check` runs). It is also rendered as the **site landing
-page** (`index.html`), and its import block is the hyperlinked module list. **When you add a
-module, add its import here** so it is typechecked, listed on the site, and reachable from the
-Modules sidebar.
+The aggregator and the book's **table of contents**. It imports every module, so
+`agda src/Everything.lagda.md` typechecks the whole development (this is what `make check`
+runs). It is also rendered as the **site landing page** (`index.html`); its prose lists every
+module with a one-line bilingual description, and its import order is the reading order (the
+Modules sidebar follows it). **When you add a module, add its import here and its one-line
+entry in the table of contents**, in reading order.
 
 ## Current modules
 
