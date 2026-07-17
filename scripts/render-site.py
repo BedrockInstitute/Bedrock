@@ -422,6 +422,22 @@ def inline_ref(name, internal, name2pos, local_refs):
         aspect = " " + href_aspect[1] if href_aspect and href_aspect[1] else ""
         return (f'<span class="Agda"><a class="inline-ref{aspect}" '
                 f'href="{mod}.html#{pos}" data-type="{mod}#{pos}">{label}</a></span>')
+    # not a single known identifier: render as an expression, token by token,
+    # reusing the module's own links (keywords, brackets, and bound variables
+    # stay plain; identifiers get their code aspect and hyperlink)
+    parts, linked = [], 0
+    for tok in re.split(r"([\s(){};]+)", name):
+        info = local_refs.get(tok)
+        if tok.strip() and info and "Bound" not in info[1]:
+            mod, _, pos = info[0].rpartition(".html#")
+            cls = f' class="{info[1]}"' if info[1] else ""
+            parts.append(f'<a{cls} href="{info[0]}" '
+                         f'data-type="{mod}#{pos}">{htmllib.escape(tok)}</a>')
+            linked += 1
+        else:
+            parts.append(htmllib.escape(tok))
+    if linked:
+        return '<span class="Agda inline-ref">' + "".join(parts) + "</span>"
     return f'<code class="Agda inline-ref">{label}</code>'
 
 
