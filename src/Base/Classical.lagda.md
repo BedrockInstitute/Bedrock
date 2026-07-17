@@ -203,7 +203,7 @@ output was a path between propositions (`⇔toPath`{.Agda}), here it is an
 equivalence between their underlying types, so the same pair of maps is fed to
 `propBiimpl→Equiv`{.Agda} instead.
 <!--zh-->
-与之前一样，工作从递来的判定做起，其中直接用到 `P .snd` (命题性证明，正如序章预告的那样)。若 `P` 成立，小替身取 `ℓ` 层的 `⊤ₚ`：命题之间，两个方向的映射就足以构成**底层类型的等价**，这正是 `propBiimpl→Equiv`{.Agda} 从两侧的命题性证明与两个映射装配出的东西；从 `P` 到 `⊤ₚ` 一切送到 `tt*`{.Agda}，反向则 `p` 已在手上。若 `P` 不成立，替身取 `⊥ₚ`{.Agda}，两手荒谬招式与 `secB`{.Agda} 相同。留意与第一笔红利的差别：那里产出的是命题之间的路径 (`⇔toPath`{.Agda})，这里产出的是底层类型之间的等价，于是同样的一对映射改喂给 `propBiimpl→Equiv`{.Agda}。
+与之前一样，工作从递来的判定做起，其中直接用到 `P .snd` (命题性证明，正如序章预告的那样)。若 `P` 成立，小替身取 `ℓ` 层的代数 `⊤`：命题之间，两个方向的映射就足以构成**底层类型的等价**，这正是 `propBiimpl→Equiv`{.Agda} 从两侧的命题性证明与两个映射装配出的东西；从 `P` 到 `⊤` 一切送到 `tt*`{.Agda}，反向则 `p` 已在手上。若 `P` 不成立，替身取代数的 `⊥`，两手荒谬招式与 `secB`{.Agda} 相同。留意与第一笔红利的差别：那里产出的是命题之间的路径 (`⇔toPath`{.Agda})，这里产出的是底层类型之间的等价，于是同样的一对映射改喂给 `propBiimpl→Equiv`{.Agda}。
 <!--/-->
 
 ```agda
