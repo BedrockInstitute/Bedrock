@@ -2,12 +2,37 @@
 
 <!--en-->
 Every chapter of this book is literate Agda: the prose you are reading and the
-machine-checked code live in the same file. This opening chapter sets the table. It
+machine-checked code live in the same file. This opening chapter sets the table.
+It first lays down two disciplines governing how names come into scope, then
 re-exports, from the cubical library, the small host-language vocabulary the whole
-development stands on, and it fixes two disciplines about how names enter scope.
-Nothing is proved here; skim it now, and return when a symbol looks unfamiliar.
+development stands on. Nothing is proved here; skim it now, and return when a
+symbol looks unfamiliar.
 <!--zh-->
-本书的每一章都是文学化 Agda：你正在读的文稿与经机器检查的代码同住一个文件。这开篇一章负责摆桌子：它从 cubical 标准库转出全书立足的一小套宿主语言词汇，并确立两条名字进入作用域的纪律。本章不证明任何东西；现在可以速览，之后遇到陌生符号再回来查。
+本书的每一章都是文学化 Agda：你正在读的文稿与经机器检查的代码同住一个文件。这开篇一章负责摆桌子：先立下两条纪律，约束名字如何进入作用域；再从 cubical 标准库转出全书立足的一小套宿主语言词汇。本章不证明任何东西；现在可以速览，之后遇到陌生符号再回来查。
+<!--/-->
+
+<!--en-->
+## Two disciplines
+<!--zh-->
+## 两条纪律
+<!--/-->
+
+<!--en-->
+Both are machine-enforced, and both are worth knowing as a reader:
+
+1. **This chapter exports no logic.** The symbols `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` have exactly
+   one source in the whole book: the truth algebra of the next chapter. Whichever
+   algebra a chapter opens, that is what its logic symbols mean, so every logic
+   symbol has one meaning in any scope.
+2. **Every import carries an explicit list** of the names it takes, so the export
+   surface is always visible. The two exceptions are this chapter and the next: they
+   are the book's designated hubs, curated precisely so that later chapters can open
+   them wholesale.
+<!--zh-->
+两条纪律均由机器执法，读者也值得知道：
+
+1. **本章不导出任何逻辑运算。**符号 `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` 在全书只有一个来源：下一章的真值代数。一章打开哪个代数，它的逻辑符号就是哪个代数的运算，因此任一作用域中每个逻辑符号只有一个含义。
+2. **每条 import 都带显式名单**，列出所取的名字，导出面永远可见。仅有的两个例外是本章与下一章：它们是全书指定的枢纽，之所以精心策划，正是为了让后续章节整体打开。
 <!--/-->
 
 <!--en-->
@@ -66,24 +91,6 @@ open import Cubical.Data.FinData public
 open import Cubical.Data.Empty public
   using ( ⊥*; isProp⊥* )
 ```
-
-<!--en-->
-Two disciplines, both machine-enforced, both worth knowing as a reader:
-
-1. **This chapter exports no logic.** The symbols `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` have exactly
-   one source in the whole book: the truth algebra of the next chapter. Whichever
-   algebra a chapter opens, that is what its logic symbols mean, so every logic
-   symbol has one meaning in any scope.
-2. **Every import carries an explicit list** of the names it takes, so the export
-   surface is always visible. The two exceptions are this chapter and the next: they
-   are the book's designated hubs, curated precisely so that later chapters can open
-   them wholesale.
-<!--zh-->
-两条纪律，均由机器执法，读者也值得知道：
-
-1. **本章不导出任何逻辑运算。**符号 `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` 在全书只有一个来源：下一章的真值代数。一章打开哪个代数，它的逻辑符号就是哪个代数的运算，因此任一作用域中每个逻辑符号只有一个含义。
-2. **每条 import 都带显式名单**，列出所取的名字，导出面永远可见。仅有的两个例外是本章与下一章：它们是全书指定的枢纽，之所以精心策划，正是为了让后续章节整体打开。
-<!--/-->
 
 <!--en-->
 ## Environments
