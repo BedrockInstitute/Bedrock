@@ -92,11 +92,15 @@ open import Cubical.Foundations.Prelude public
 ```
 
 <!--en-->
-`Lift`{.Agda} moves a type to a higher universe level, with `lift`{.Agda} and
-`lower`{.Agda} converting back and forth: the standard patch when something lives
-one floor too low.
+`Lift`{.Agda} makes a copy of a type at a higher universe level: the standard patch
+when something lives one floor too low. `lift`{.Agda} and `lower`{.Agda} shuttle
+**elements** between the type and its copy, and those two are mutually inverse; the
+asymmetry is at the level of types, where the traffic is one-way: a type can always
+be copied upward, but there is no general way to move one down. (The exception is
+propositions: two chapters from now, excluded middle buys exactly the downward
+direction.)
 <!--zh-->
-`Lift`{.Agda} 把一个类型抬到更高的宇宙层级，`lift`{.Agda} 与 `lower`{.Agda} 负责来回转换：当某个东西住得低了一层，这就是标准补丁。
+`Lift`{.Agda} 把一个类型复制到更高的宇宙层级：当某个东西住得低了一层，这就是标准补丁。`lift`{.Agda} 与 `lower`{.Agda} 在原类型与其副本之间搬运**元素**，这两者确实互逆；不对称发生在类型层面，那里是单行道：类型总能向上复制，却一般没有办法把一个类型搬下来。(例外是命题：两章之后会看到，排中律恰好买得到这个向下方向。)
 <!--/-->
 
 ```agda
