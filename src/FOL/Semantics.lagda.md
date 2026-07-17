@@ -92,13 +92,13 @@ two, and this faithfulness is what will make every plank of that bridge a one-li
 congruence.
 
 The two bounded clauses deserve a second look: their quantification is pinned to
-the members of `⟦ t ⟧ γ`. This is where the tameness promised in the syntax
-chapter physically lives, and later chapters return to these two lines again and
-again.
+the members of `⟦ t ⟧ γ`. The syntax chapter promised that formulas whose
+quantifiers are all bounded behave tamely across structures; that behaviour lives
+physically in these two lines, and later chapters return to them again and again.
 <!--zh-->
 看各子句的右端：每一条都**恰好是**真值代数的对应运算，作用在子公式的含义上。对象合取的含义就是宿主合取，对象量词的含义就是载体上的 `⋀` 与 `⋁`，中间没有任何翻译层。于是带 `n` 个自由变量的公式，含义是一个 `S ^ n → Ω`{.Agda} 型的函数，与宿主语言直接写出的**谓词**刻意同形；本部稍后将在两者之间架桥，而这份忠实性将让那座桥的每一块板都归于一行同余。
 
-两条有界子句值得再看一眼：它们的量化被钉在 `⟦ t ⟧ γ` 的成员上。语法章许诺的驯良性，物理上就住在这里，后面的章节将一次次回到这两行。
+两条有界子句值得再看一眼：它们的量化被钉在 `⟦ t ⟧ γ` 的成员上。语法章许诺过，全部量词皆有界的公式在结构之间表现驯良；那份驯良物理上就住在这两行里，后面的章节将一次次回到这里。
 <!--/-->
 
 <!--en-->
