@@ -18,21 +18,24 @@ symbol looks unfamiliar.
 <!--/-->
 
 <!--en-->
-Both are machine-enforced, and both are worth knowing as a reader:
+Both are machine-enforced conventions of the codebase, stated here because each one
+changes how the book is read:
 
-1. **This chapter exports no logic.** The symbols `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` have exactly
-   one source in the whole book: the truth algebra of the next chapter. Whichever
-   algebra a chapter opens, that is what its logic symbols mean, so every logic
-   symbol has one meaning in any scope.
-2. **Every import carries an explicit list** of the names it takes, so the export
-   surface is always visible. The two exceptions are this chapter and the next: they
-   are the book's designated hubs, curated precisely so that later chapters can open
-   them wholesale.
+1. **Logic symbols have one source.** This chapter exports none of
+   `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁`; they come only from opening a truth algebra (next chapter).
+   So whenever you meet a logic symbol, its meaning is the corresponding operation
+   of whichever algebra the chapter has open: no symbol ever has two readings in
+   one scope.
+2. **Names are traceable on the page.** Every import lists exactly the names it
+   takes, so a chapter's import block doubles as its precise list of prerequisites,
+   and "where does this name come from" always has a visible answer. The deliberate
+   exception is the book's two designated hubs, this chapter and the next: they are
+   opened wholesale, so a name not listed in any import comes from a hub.
 <!--zh-->
-两条纪律均由机器执法，读者也值得知道：
+这两条纪律由机器执法，写在这里是因为它们各自改变本书的读法：
 
-1. **本章不导出任何逻辑运算。**符号 `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` 在全书只有一个来源：下一章的真值代数。一章打开哪个代数，它的逻辑符号就是哪个代数的运算，因此任一作用域中每个逻辑符号只有一个含义。
-2. **每条 import 都带显式名单**，列出所取的名字，导出面永远可见。仅有的两个例外是本章与下一章：它们是全书指定的枢纽，之所以精心策划，正是为了让后续章节整体打开。
+1. **逻辑符号只有一个来源。**本章不导出 `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` 中的任何一个；它们只能来自打开某个真值代数 (下一章)。于是每当你遇到逻辑符号，其含义就是所在章节打开的那个代数中的对应运算：任一作用域中，没有符号会有两种读法。
+2. **名字在页面上可溯源。**每条 import 都精确列出所取的名字，一章的 import 块因此兼作它的先修清单，「这个名字从哪来」在页面上总有答案。有意设置的例外是全书指定的两个枢纽，即本章与下一章：它们被整体打开，凡未见于任何 import 清单的名字都来自枢纽。
 <!--/-->
 
 <!--en-->
