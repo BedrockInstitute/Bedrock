@@ -146,7 +146,7 @@ The corollary the parameter-free syntax was waiting for: a parameter-free formul
 entering any constant domain through `embed`{.Agda} keeps its meaning. The data axis and the
 working syntax share one semantics; nothing needs proving twice.
 <!--zh-->
-无参数语法等候的推论：无参数公式经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。
+无参语法等候的推论：无参公式经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。
 <!--/-->
 
 ```agda

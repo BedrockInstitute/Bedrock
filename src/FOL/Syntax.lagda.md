@@ -99,7 +99,7 @@ The parameter `K` is where one syntax covers every use the book will make of it:
 | `K` 的取法 | 得到什么 |
 |---|---|
 | 某结构的载体 | 日常工作语法：任何集合都能以参数身份出现在公式里 |
-| `⊥*`{.Agda} (无常量) | **无参数语法**：可数、可编码，理论与码的居所 |
+| `⊥*`{.Agda} (无常量) | **无参语法**：可数、可编码，理论与码的居所 |
 | 受限制的载体 | 参数只许来自某个类；第四部构造 `L` 用的正是这个形状 |
 <!--/-->
 
@@ -142,12 +142,13 @@ mapFo f (∃̇∈ t φ) = ∃̇∈ (mapTm f t) (mapFo f φ)
 <!--en-->
 ## Sentences and the parameter-free syntax
 <!--zh-->
-## 句子与无参数语法
+## 句子与无参语法
 <!--/-->
 
 <!--en-->
 A **sentence** is a formula with no free variables; with intrinsic scoping this is
-a type, `Formula K 0`, not a side condition. The **parameter-free syntax** restricts
+a type, `Formula K 0`, not a side condition, and the book gives it no separate
+name. The **parameter-free syntax** restricts
 along a different, orthogonal axis. A constant is how an ambient set enters a
 formula as a parameter; here the constant domain is the empty type `⊥*`{.Agda}, so
 there are no parameters at all, while free variables remain, `ParamFree n`{.Agda}
@@ -160,13 +161,10 @@ counted or coded, so whenever a later part needs formulas *as data*, theories as
 sets of formulas, codes of formulas inside a model, it is the parameter-free
 formulas that get collected, their parameters fed through environments instead.
 <!--zh-->
-**句子**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件。**无参数语法**限制的是另一条正交的轴。常量是外部集合以参数身份进入公式的通道；这里常量域取空类型 `⊥*`{.Agda}，参数于是全然没有，而自由变量照旧，`ParamFree n`{.Agda} 恰有 `n` 个。从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的就是这句话；在这里它解释那些不存在的常量，把无参数公式嵌入任意常量域上的语法。无参数语法不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无参数公式，参数改经环境喂入。
+**句子**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件，本书不为它另设名字。**无参语法**限制的是另一条正交的轴。常量是外部集合以参数身份进入公式的通道；这里常量域取空类型 `⊥*`{.Agda}，参数于是全然没有，而自由变量照旧，`ParamFree n`{.Agda} 恰有 `n` 个。从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的就是这句话；在这里它解释那些不存在的常量，把无参公式嵌入任意常量域上的语法。无参语法不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无参公式，参数改经环境喂入。
 <!--/-->
 
 ```agda
-Sentence : ∀ {ℓ} (K : Type ℓ) → Type ℓ
-Sentence K = Formula K 0
-
 ParamFree : ∀ {ℓ} → ℕ → Type ℓ
 ParamFree {ℓ} = Formula (⊥* {ℓ})
 
@@ -183,11 +181,11 @@ embed = mapFo Empty.rec*
 <!--en-->
 The object language is an inductive family `Formula K n`{.Agda}: constant domain as
 a parameter, scoping intrinsic through `Fin`{.Agda}, every constructor primitive
-and dotted. Around it: functorial relabelling (`mapTm`{.Agda}, `mapFo`{.Agda}),
-sentences as a type, and the parameter-free syntax with its `embed`{.Agda}. Note what is
+and dotted. Around it: functorial relabelling (`mapTm`{.Agda}, `mapFo`{.Agda})
+and the parameter-free syntax with its `embed`{.Agda}. Note what is
 absent: no substitution and no weakening operators anywhere. The design will keep
 it that way, and the little variable machinery the book does need arrives later in
 this part. First, formulas need something to talk about.
 <!--zh-->
-对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全原语、全带点。围绕它的：函子式重标记 (`mapTm`{.Agda}、`mapFo`{.Agda})、类型化的句子，以及带 `embed`{.Agda} 的无参数语法。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本部稍后登场。眼下，公式先得有可谈论的对象。
+对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全原语、全带点。围绕它的：函子式重标记 (`mapTm`{.Agda}、`mapFo`{.Agda})，以及带 `embed`{.Agda} 的无参语法。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本部稍后登场。眼下，公式先得有可谈论的对象。
 <!--/-->
