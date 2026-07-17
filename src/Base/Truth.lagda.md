@@ -2,12 +2,13 @@
 
 <!--en-->
 When a formula is evaluated, the result has to live somewhere: a type of truth
-values. The usual answer is the type of propositions, `hProp`{.Agda}. But this
-book is headed for forcing, where truth values live in a complete Boolean algebra
-instead. So the answer is not hard-wired: the semantic codomain is a parameter,
-called a **truth algebra**, and everything built over it serves both destinations.
+values. This book travels to two places that want different answers. On the road to
+the constructible universe, propositions (`hProp`{.Agda}) serve as truth values; in
+the forcing part, truth values live in a complete Boolean algebra instead. So the
+answer is not hard-wired: the semantic codomain is a parameter, called a **truth
+algebra**, and everything built over it serves both journeys.
 <!--zh-->
-公式求值的结果必须落脚在某处：一个真值类型。通常的答案是命题类型 `hProp`{.Agda}。但本书的目的地包括力迫，届时真值将改住完备布尔代数。所以这个答案不被焊死：语义值域是一个参数，称为**真值代数**，其上构建的一切同时服务两个目的地。
+公式求值的结果必须落脚在某处：一个真值类型。本书要去的两个地方对此想要不同的答案：通往可构造宇宙的旅程，以命题 (`hProp`{.Agda}) 作真值即可；力迫部分则要求真值住在完备布尔代数里。所以这个答案不被焊死：语义值域是一个参数，称为**真值代数**，其上构建的一切两程通用。
 <!--/-->
 
 ```agda
