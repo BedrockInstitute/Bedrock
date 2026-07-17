@@ -101,6 +101,10 @@ names (`Fin`, `Vec`, `ℕ`), and the affixes `inj`/`comm`/`assoc`. Anything else
 registration here first. Forbidden: pinyin, ASCII two-character operators (`=>`,
 `<=`), unregistered abbreviations.
 
+**Qualified-import aliases are full words** (`import Cubical.Functions.Logic as
+Logic`), never single letters: single capital letters (`L`, `V`, ...) are the book's
+mathematical subjects, and an alias must not collide with them.
+
 **Primes are forbidden in principle.** No public name (anything importable:
 definitions, record fields, constructors, module names) carries a prime. The single
 sanctioned use is strictly local: inside one definition or proof, a primed twin `x'`

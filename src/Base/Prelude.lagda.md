@@ -17,8 +17,13 @@ Nothing is proved here; skim it now, and return when a symbol looks unfamiliar.
 <!--/-->
 
 <!--en-->
-`Type`{.Agda} and `Level`{.Agda} are the universes: every type lives at some level,
-and `ℓ-zero`{.Agda}, `ℓ-suc`{.Agda}, `ℓ-max`{.Agda} navigate them. `_≡_`{.Agda} is
+The host organises its types into a tower of Tarski-style universes with explicit
+levels, the convention familiar from mathematical logic. `Level`{.Agda} is the type
+of the levels themselves, with its arithmetic `ℓ-zero`{.Agda}, `ℓ-suc`{.Agda},
+`ℓ-max`{.Agda}; `Type`{.Agda}` ℓ` is the universe at level `ℓ`, and it is itself a
+type one floor up, in `Type (ℓ-suc ℓ)`. Whenever the book surveys a totality
+("all sets", "all propositions"), this level bookkeeping is what says how large a
+totality is being surveyed. `_≡_`{.Agda} is
 the path type, the host's equality, with the usual kit (`refl`{.Agda}, `sym`{.Agda},
 `_∙_`{.Agda} for composition, `cong`{.Agda}, `transport`{.Agda}, `subst`{.Agda},
 `funExt`{.Agda}). The h-level predicates grade a type by how much equality structure
@@ -32,7 +37,7 @@ is a proposition, and `⟨_⟩`{.Agda} projects the underlying type back out (re
 `Vec`{.Agda} with finite indices `Fin`{.Agda} (the raw material of variable
 environments), and the level-polymorphic empty type `⊥*`{.Agda}.
 <!--zh-->
-`Type`{.Agda} 与 `Level`{.Agda} 是宇宙：每个类型都住在某一层级，`ℓ-zero`{.Agda}、`ℓ-suc`{.Agda}、`ℓ-max`{.Agda} 在层级间导航。`_≡_`{.Agda} 是路径类型，即宿主的相等，配齐常用件 (`refl`{.Agda}、`sym`{.Agda}、复合 `_∙_`{.Agda}、`cong`{.Agda}、`transport`{.Agda}、`subst`{.Agda}、`funExt`{.Agda})。h-层级谓词按「相等结构的多少」为类型分级：`isProp`{.Agda} (任意两个居民相等)、`isSet`{.Agda} (相等本身是命题)、`isContr`{.Agda} (恰有一个居民，在路径意义下)。`isContr`{.Agda} 就是本书表述**唯一存在**的方式，这一承重决策在纲领中有完整论述。`hProp`{.Agda} 把一个类型与其命题性证明打包，`⟨_⟩`{.Agda} 把底层类型投影出来 (读作「延展」，输入 `\<` `\>`)。然后是数据件：依值对 `Σ`{.Agda} 与积 `_×_`{.Agda}、自然数 `ℕ`{.Agda}、向量 `Vec`{.Agda} 与有限索引 `Fin`{.Agda} (变量环境的原材料)，以及层级多态的空类型 `⊥*`{.Agda}。
+宿主把类型组织成一座塔斯基式宇宙塔，层级显式，这是数理逻辑中熟悉的惯例。`Level`{.Agda} 是层级本身的类型，配有层级算术 `ℓ-zero`{.Agda}、`ℓ-suc`{.Agda}、`ℓ-max`{.Agda}；`Type`{.Agda}` ℓ` 是第 `ℓ` 层宇宙，它自身又是高一层的类型，住在 `Type (ℓ-suc ℓ)` 里。本书凡检视某个总体 (「所有集合」「所有命题」)，都由这套层级记账精确说明检视的总体有多大。`_≡_`{.Agda} 是路径类型，即宿主的相等，配齐常用件 (`refl`{.Agda}、`sym`{.Agda}、复合 `_∙_`{.Agda}、`cong`{.Agda}、`transport`{.Agda}、`subst`{.Agda}、`funExt`{.Agda})。h-层级谓词按「相等结构的多少」为类型分级：`isProp`{.Agda} (任意两个居民相等)、`isSet`{.Agda} (相等本身是命题)、`isContr`{.Agda} (恰有一个居民，在路径意义下)。`isContr`{.Agda} 就是本书表述**唯一存在**的方式，这一承重决策在纲领中有完整论述。`hProp`{.Agda} 把一个类型与其命题性证明打包，`⟨_⟩`{.Agda} 把底层类型投影出来 (读作「延展」，输入 `\<` `\>`)。然后是数据件：依值对 `Σ`{.Agda} 与积 `_×_`{.Agda}、自然数 `ℕ`{.Agda}、向量 `Vec`{.Agda} 与有限索引 `Fin`{.Agda} (变量环境的原材料)，以及层级多态的空类型 `⊥*`{.Agda}。
 <!--/-->
 
 ```agda

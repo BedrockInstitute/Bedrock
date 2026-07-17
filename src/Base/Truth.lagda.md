@@ -16,7 +16,7 @@ called a **truth algebra**, and everything built over it serves both destination
 module Base.Truth where
 
 open import Base.Prelude
-import Cubical.Functions.Logic as L
+import Cubical.Functions.Logic as Logic
   using ( _⊓_; _⊔_; _⇒_; ¬_; ⊤; ∃[]-syntax; ∀[]-syntax )
 ```
 
@@ -89,14 +89,14 @@ hPropAlg : ∀ {ℓ} → TruthAlg ℓ (ℓ-suc ℓ)
 hPropAlg {ℓ} = record
   { Ω      = hProp ℓ
   ; isSetΩ = isSetHProp
-  ; _⊓_    = L._⊓_
-  ; _⊔_    = L._⊔_
-  ; _⇒_    = L._⇒_
-  ; ¬_     = L.¬_
-  ; ⊤      = L.⊤
+  ; _⊓_    = Logic._⊓_
+  ; _⊔_    = Logic._⊔_
+  ; _⇒_    = Logic._⇒_
+  ; ¬_     = Logic.¬_
+  ; ⊤      = Logic.⊤
   ; ⊥      = ⊥* , isProp⊥*
-  ; ⋀      = λ A P → L.∀[]-syntax P
-  ; ⋁      = λ A P → L.∃[]-syntax P }
+  ; ⋀      = λ A P → Logic.∀[]-syntax P
+  ; ⋁      = λ A P → Logic.∃[]-syntax P }
 ```
 
 <!--en-->

@@ -41,7 +41,7 @@ LEM ℓ = (P : hProp ℓ) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
 ```
 
 <!--en-->
-`LEM ℓ`{.Agda} says: every proposition at level `ℓ` is either true or false. Why
+`LEM`{.Agda}` ℓ` says: every proposition at level `ℓ` is either true or false. Why
 this particular form? In univalent foundations a type-level global choice or
 excluded middle is inconsistent with univalence; what can consistently be assumed is
 exactly this propositional form, quantified over `hProp`{.Agda}. The foundation
@@ -54,7 +54,7 @@ compile-time fact.** The classical debt is part of a chapter's type, visible at
 every import site, instead of an invisible global axiom; and since nothing is
 postulated, the whole book carries Agda's `--safe` seal.
 <!--zh-->
-`LEM ℓ`{.Agda} 说的是：层级 `ℓ` 上的每个命题要么真要么假。为什么取这个形式？在 univalent 基础中，类型层的全局选择或排中律与 univalence 不相容；能够一致地假设的恰是这个对 `hProp`{.Agda} 量化的命题形式。是基础本身逼出了这个诚实的措辞。
+`LEM`{.Agda}` ℓ` 说的是：层级 `ℓ` 上的每个命题要么真要么假。为什么取这个形式？在 univalent 基础中，类型层的全局选择或排中律与 univalence 不相容；能够一致地假设的恰是这个对 `hProp`{.Agda} 量化的命题形式。是基础本身逼出了这个诚实的措辞。
 
 经典论证的章节在模块参数表中取 `(lem : ∀ {ℓ} → LEM ℓ)`，并在导入其他经典章节时把它传递下去。这带来一个值得停下体会的后果：**一条定理是否用了排中律，是编译期事实。**经典债务是章节类型的一部分，在每个导入处可见，而不是一条看不见的全局公理；又因为无一处 postulate，全书佩戴 Agda 的 `--safe` 印章。
 <!--/-->
