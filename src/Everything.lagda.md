@@ -21,6 +21,11 @@ cumulative hierarchy, and the constructible universe follow.
 本站点由文学化 Agda 生成；本页是全书目录，按阅读顺序排列 (侧边栏与之一致)。数学本体正在施工中：奠基部分已就位，逻辑、模型、累积层级与可构造宇宙诸部随后。
 <!--/-->
 
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+module Everything where
+```
+
 <!--en-->
 ## Part 0: the groundwork
 
@@ -33,7 +38,21 @@ cumulative hierarchy, and the constructible universe follow.
 - `Base.Classical`{.Agda}: the classical boundary: excluded middle as the parameter
   interface `LEM`{.Agda}, and its two dividends, a small classifier of propositions
   and propositional resizing.
+<!--zh-->
+## 第零部：奠基
 
+- `Base.Prelude`{.Agda}：精选的宿主词汇 (宇宙、路径、h-层级、`hProp`{.Agda}、依值对与索引数据)，以及决定本书读法的可溯源纪律。
+- `Base.Truth`{.Agda}：真值代数 `TruthAlg`{.Agda}，零定律的运算签名，全书逻辑符号的唯一来源；附典范实例 `hPropAlg`{.Agda}。
+- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}，及其两笔红利，命题的小分类器与命题降层。
+<!--/-->
+
+```agda
+import Base.Prelude
+import Base.Truth
+import Base.Classical
+```
+
+<!--en-->
 ## Part 1: first-order logic as an object of study
 
 - `FOL.Syntax`{.Agda}: the object language: a deeply embedded `Formula`{.Agda} with
@@ -48,12 +67,6 @@ cumulative hierarchy, and the constructible universe follow.
   syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
   exchange, and contraction.
 <!--zh-->
-## 第零部：奠基
-
-- `Base.Prelude`{.Agda}：精选的宿主词汇 (宇宙、路径、h-层级、`hProp`{.Agda}、依值对与索引数据)，以及决定本书读法的可溯源纪律。
-- `Base.Truth`{.Agda}：真值代数 `TruthAlg`{.Agda}，零定律的运算签名，全书逻辑符号的唯一来源；附典范实例 `hPropAlg`{.Agda}。
-- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}，及其两笔红利，命题的小分类器与命题降层。
-
 ## 第一部：作为研究对象的一阶逻辑
 
 - `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语；语句与封闭语法。
@@ -63,13 +76,6 @@ cumulative hierarchy, and the constructible universe follow.
 <!--/-->
 
 ```agda
-{-# OPTIONS --cubical --safe --guardedness #-}
-module Everything where
-
-import Base.Prelude
-import Base.Truth
-import Base.Classical
-
 import FOL.Syntax
 import FOL.Structure
 import FOL.Semantics
