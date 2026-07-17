@@ -115,10 +115,15 @@ def _inline(s):
 
 def _is_block_start(line):
     s = line.lstrip()
-    return (not s or s.startswith("#") or s.startswith(">")
+    return (not s or s.startswith("#") or s.startswith(">") or s.startswith("|")
             or re.match(r'^([-*+]|\d+\.)\s', s) or re.match(r'^(```|~~~)', s)
             or re.match(r'^([-*_])(\s*\1){2,}\s*$', s.strip())
             or s.startswith("<") or re.match(r'^' + NUL, s))
+
+
+def _is_table_sep(line):
+    s = line.strip()
+    return bool(s) and set(s) <= set("|:- ") and "-" in s
 
 
 def md_to_html(text):
@@ -180,6 +185,20 @@ def md_to_html(text):
                 block.append(re.sub(r'^\s*>\s?', '', lines[i])); i += 1
             inner, _ = md_to_html("\n".join(block))
             out.append("<blockquote>" + inner + "</blockquote>")
+            continue
+        if line.lstrip().startswith("|") and i + 1 < n and _is_table_sep(lines[i + 1]):
+            def _cells(s):
+                return [c.strip() for c in s.strip().strip("|").split("|")]
+            header = _cells(line)
+            i += 2
+            body = []
+            while i < n and lines[i].lstrip().startswith("|") and not _is_table_sep(lines[i]):
+                body.append(_cells(lines[i])); i += 1
+            rows = ["<thead><tr>" + "".join(f"<th>{_inline(c)}</th>" for c in header)
+                    + "</tr></thead><tbody>"]
+            for r in body:
+                rows.append("<tr>" + "".join(f"<td>{_inline(c)}</td>" for c in r) + "</tr>")
+            out.append("<table>" + "".join(rows) + "</tbody></table>")
             continue
         para = [line]; i += 1
         while i < n and lines[i].strip() and not _is_block_start(lines[i]):

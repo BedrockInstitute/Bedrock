@@ -205,6 +205,12 @@ blockquote { border-left: 0.3ex solid var(--ruler); margin-left: 0; padding-left
 .module-index li { margin: 0.3rem 0; }
 .module-index a { font-family: var(--mono); }
 
+/* ---- prose tables ---- */
+main table { border-collapse: collapse; margin: 1.2rem 0; }
+main th, main td { border: 1px solid var(--ruler); padding: 0.4rem 0.9rem;
+  text-align: left; vertical-align: top; }
+main th { background: var(--code-bg); font-family: var(--sans); font-size: 0.9em; }
+
 /* ---- code blocks (Agda) ---- */
 pre.Agda, pre.sourceCode {
   font-family: var(--mono); font-size: var(--code-font-size); line-height: 1.45;
