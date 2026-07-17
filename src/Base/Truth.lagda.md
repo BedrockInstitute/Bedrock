@@ -28,12 +28,13 @@ import Cubical.Functions.Logic as Logic
 
 <!--en-->
 The striking design fact is that the framework core needs **not a single algebraic
-law**. The adequacy proofs of the upcoming combinators are all congruences, which
-hold for arbitrary operations; lattice axioms and the like are consumed only at the
-theorem level, and those theorems work instance by instance anyway. So the record is
-a pure operation signature:
+law** about these operations. What the core will prove about them only ever takes
+congruence (equal inputs give equal outputs: the `cong`{.Agda} of the Prelude), and
+congruence holds for arbitrary operations. Laws like the lattice axioms are consumed
+only by later theorems, and those work at a concrete instance anyway. So the record
+is a pure operation signature:
 <!--zh-->
-醒目的设计事实是：框架核心**一条代数定律都不需要**。后续组合子的全部适足性证明都是同余，对任意运算成立；格公理之类只在定理层被消费，而那些定理本来就按实例进行。所以这个 record 是纯运算签名：
+醒目的设计事实是：框架核心对这些运算**一条代数定律都不要求**。核心要证明的事情只用得上同余 (输入相等则输出相等，即序章的 `cong`{.Agda})，而同余对任意运算都成立；格公理之类的定律只被后面的定理消费，而那些定理本来就在具体实例上进行。所以这个 record 是纯运算签名：
 <!--/-->
 
 ```agda
@@ -106,8 +107,8 @@ Three points worth keeping:
 1. **The abstraction costs nothing.** Record projections compute on a concrete
    instance, so `TruthAlg._⊓_ hPropAlg` **is** the library's `_⊓_`{.Agda},
    definitionally. Working at the hProp instance is exactly as if the abstraction
-   had never happened; in particular the atomic adequacy certificates later in the
-   book still hold by `refl`{.Agda}.
+   had never happened: whatever held by `refl`{.Agda} before still holds by
+   `refl`{.Agda}.
 2. The `⊥` field takes the level-polymorphic pair `(⊥* , isProp⊥*)`, since the
    library's falsum is pinned to the bottom universe. This is also the whole
    relationship between the two symbols: the truth value `⊥` is the host type
@@ -122,7 +123,7 @@ Three points worth keeping:
 <!--zh-->
 三个值得记住的要点：
 
-1. **抽象零成本。**record 投影在具体实例上按定义计算，所以 `TruthAlg._⊓_ hPropAlg` 定义性地**就是**库的 `_⊓_`{.Agda}。在 hProp 实例上工作与从未抽象过完全一样；特别地，本书后面的原子适足性证书照旧由 `refl`{.Agda} 成立。
+1. **抽象零成本。**record 投影在具体实例上按定义计算，所以 `TruthAlg._⊓_ hPropAlg` 定义性地**就是**库的 `_⊓_`{.Agda}。在 hProp 实例上工作与从未抽象过完全一样：凡此前由 `refl`{.Agda} 成立的等式，如今照旧由 `refl`{.Agda} 成立。
 2. `⊥` 字段取层级多态的对 `(⊥* , isProp⊥*)`，因为库的假固定在最底层宇宙。这也是两个符号之间的全部关系：真值 `⊥` 就是宿主类型 `⊥*`{.Agda} 连同其命题性打包而成，故 `⟨ ⊥ ⟩` **就是** `⊥*`{.Agda}。要真值的位置写 `⊥`，要类型的位置写 `⊥*`{.Agda}；两个位置不可互换，分工由类型检查器把守。
 3. `⋁` 是命题截断的存在量词，`⋀` 是货真价实的 Π 类型：这正是构造性语义的形态。hProp 侧的章节仍可直接从库中取用证明手段 (`∃[ x ] …` 糖衣、截断消去子)：它们与本实例的字段定义性相同，不构成第二套含义。
 <!--/-->
