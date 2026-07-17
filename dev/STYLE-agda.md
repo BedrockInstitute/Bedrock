@@ -70,6 +70,18 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   **pure re-export surfaces** and define nothing of their own (so `_^_` belongs to
   the semantics chapter that needs environments, and `absurd` to the syntax chapter
   whose closed constant domain it serves; neither belongs to `Base.Prelude`).
+- **Hub admission** (owner question, 2026-07-17): a name enters `Base.Prelude` only
+  if it is **statement-ambient**, needed to read definitions and theorem statements
+  throughout the book (universes, paths, h-levels, `hProp` with `⟨_⟩`, pairs, the
+  indexing data `ℕ`/`Vec`/`Fin`, `⊥*`), and its statement-level role is not already
+  played by one of the book's own abstractions (logic connectives belong to the
+  truth algebra; truncated existence reaches statements as its `⋁`, which is why
+  even the near-ubiquitous propositional truncation stays chapter-local).
+  Proof-side machinery stays chapter-local however common (`⊎` decisions,
+  `Empty.⊥` refutations, equivalence assembly, `⇔toPath`): every admission enlarges
+  the set of untraceable names, and a local import line is information. When in
+  doubt keep it local; promotion is one cheap change, demotion touches every
+  chapter.
 - `open import` always carries a `using`/`renaming` list (audit-friendly), and every
   imported name must actually be used: imports are **necessary** (the linter checks
   this) as well as sufficient (the typechecker checks that). Exceptions: `Everything`,
