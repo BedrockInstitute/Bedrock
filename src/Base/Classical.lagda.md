@@ -77,28 +77,23 @@ and excluded middle enters only at the final assembly, to supply those decisions
 <!--/-->
 
 <!--en-->
-First the decoding direction, from Booleans to propositions. `⊤ₚ`{.Agda} and
-`⊥ₚ`{.Agda} are local abbreviations for the previous chapter's `⊤` and `⊥`, taken
-from the hProp algebra by qualified projection (the subscript marks the instance);
-by definitional transparency, `⊥ₚ`{.Agda} is the pair `(⊥* , isProp⊥*)` itself.
-`decodeB`{.Agda} then sends `true`{.Agda} to `⊤ₚ`{.Agda} and `false`{.Agda} to
-`⊥ₚ`{.Agda}. The domain is `Lift {ℓ-zero} {ℓ} Bool` rather than bare `Bool`{.Agda}
-because `Bool`{.Agda} lives at the bottom level while the propositions live at `ℓ`:
-the lifted copy is what lets the two ends of the coming equivalence share a
-universe.
+First the decoding direction, from Booleans to propositions. `decodeB`{.Agda} sends
+`true`{.Agda} to the algebra's `⊤` and `false`{.Agda} to its `⊥`, each written by
+qualified projection (`TruthAlg.⊤ hPropAlg`): no bare logic symbol appears, so the
+scope discipline is untouched, and by definitional transparency the `⊥` here is the
+pair `(⊥* , isProp⊥*)` itself. The domain is `Lift {ℓ-zero} {ℓ} Bool` rather than
+bare `Bool`{.Agda} because `Bool`{.Agda} lives at the bottom level while the
+propositions live at `ℓ`: the lifted copy is what lets the two ends of the coming
+equivalence share a universe.
 <!--zh-->
-先做解码方向，从布尔值到命题。`⊤ₚ`{.Agda} 与 `⊥ₚ`{.Agda} 是上一章 `⊤` 与 `⊥` 的局部缩写，经限定投影从 hProp 代数中取出 (下标标记实例)；由定义性透明，`⊥ₚ`{.Agda} 就是 `(⊥* , isProp⊥*)` 这个对本身。`decodeB`{.Agda} 于是把 `true`{.Agda} 送到 `⊤ₚ`{.Agda}、`false`{.Agda} 送到 `⊥ₚ`{.Agda}。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
+先做解码方向，从布尔值到命题。`decodeB`{.Agda} 把 `true`{.Agda} 送到代数的 `⊤`、`false`{.Agda} 送到它的 `⊥`，均以限定投影写出 (`TruthAlg.⊤ hPropAlg`)：没有任何裸逻辑符号出现，作用域纪律毫发无损；且由定义性透明，这里的 `⊥` 就是 `(⊥* , isProp⊥*)` 这个对本身。定义域取 `Lift {ℓ-zero} {ℓ} Bool` 而非裸 `Bool`{.Agda}，因为 `Bool`{.Agda} 住在最底层而命题住在 `ℓ` 层：正是这份提升的副本，让即将登场的等价两端住进同一个宇宙。
 <!--/-->
 
 ```agda
 private
-  ⊤ₚ ⊥ₚ : ∀ {ℓ} → hProp ℓ
-  ⊤ₚ = TruthAlg.⊤ hPropAlg
-  ⊥ₚ = TruthAlg.⊥ hPropAlg
-
   decodeB : ∀ {ℓ} → Lift {ℓ-zero} {ℓ} Bool → hProp ℓ
-  decodeB (lift true)  = ⊤ₚ
-  decodeB (lift false) = ⊥ₚ
+  decodeB (lift true)  = TruthAlg.⊤ hPropAlg
+  decodeB (lift false) = TruthAlg.⊥ hPropAlg
 ```
 
 <!--en-->
@@ -120,15 +115,15 @@ gives `false`{.Agda}. No excluded middle here; the decision is an input.
 One round trip: decoding the encoding of `P` gives back `P` itself. The tool is
 `⇔toPath`{.Agda}, the library's propositional extensionality: between propositions,
 maps in both directions already make a path (in this book that principle is a
-theorem, not an axiom). If the decision is a proof `p`, the goal is `⊤ₚ ≡ P`, and
-both directions are trivial: from `⊤ₚ` to `P` the answer `p` is already in hand,
-and back the other way everything maps to `tt*`{.Agda}, the inhabitant of `⊤ₚ`. If
-the decision is a refutation `np`, the goal is `⊥ₚ ≡ P`: out of `⊥*`{.Agda} nothing
-needs saying, which is what the absurd pattern `λ ()` says, and any alleged proof
-`p` of `P` is crushed by `np`, with `Empty.rec`{.Agda} eliminating the resulting
-absurdity.
+theorem, not an axiom). If the decision is a proof `p`, the goal is that the
+algebra's `⊤` equals `P`, and both directions are trivial: from `⊤` to `P` the
+answer `p` is already in hand, and back the other way everything maps to
+`tt*`{.Agda}, the inhabitant of `⊤`. If the decision is a refutation `np`, the goal
+is that the algebra's `⊥` equals `P`: out of `⊥*`{.Agda} nothing needs saying,
+which is what the absurd pattern `λ ()` says, and any alleged proof `p` of `P` is
+crushed by `np`, with `Empty.rec`{.Agda} eliminating the resulting absurdity.
 <!--zh-->
-第一趟往返：把 `P` 编码再解码，得回 `P` 自身。工具是 `⇔toPath`{.Agda}，即库的命题外延性：命题之间，两个方向的映射就足以给出一条路径 (在本书中，这条原理是定理而非公理)。若判定是证明 `p`，目标为 `⊤ₚ ≡ P`，两个方向都平凡：从 `⊤ₚ` 到 `P`，答案 `p` 已在手上；反向则一切送到 `⊤ₚ` 的居民 `tt*`{.Agda}。若判定是反驳 `np`，目标为 `⊥ₚ ≡ P`：从 `⊥*`{.Agda} 出发无话可说，荒谬模式 `λ ()` 说的正是这个；而任何声称的 `P` 之证明 `p` 都被 `np` 击碎，`Empty.rec`{.Agda} 消去随之而来的荒谬。
+第一趟往返：把 `P` 编码再解码，得回 `P` 自身。工具是 `⇔toPath`{.Agda}，即库的命题外延性：命题之间，两个方向的映射就足以给出一条路径 (在本书中，这条原理是定理而非公理)。若判定是证明 `p`，目标为代数的 `⊤` 等于 `P`，两个方向都平凡：从 `⊤` 到 `P`，答案 `p` 已在手上；反向则一切送到 `⊤` 的居民 `tt*`{.Agda}。若判定是反驳 `np`，目标为代数的 `⊥` 等于 `P`：从 `⊥*`{.Agda} 出发无话可说，荒谬模式 `λ ()` 说的正是这个；而任何声称的 `P` 之证明 `p` 都被 `np` 击碎，`Empty.rec`{.Agda} 消去随之而来的荒谬。
 <!--/-->
 
 ```agda
@@ -198,12 +193,12 @@ inhabits.
 <!--en-->
 As before, the work is done from a handed-over decision, and `P .snd` (the
 propositionality proof, as the Prelude promised) is used directly. If `P` holds,
-the small stand-in is the `⊤ₚ` of level `ℓ`: between two propositions, maps in both
-directions already form an **equivalence of underlying types**, which is what
-`propBiimpl→Equiv`{.Agda} builds from the two propositionality proofs and the two
-maps; from `P` to `⊤ₚ` everything goes to `tt*`{.Agda}, and back the other way `p`
-is in hand. If `P` fails, the stand-in is `⊥ₚ`{.Agda}, with the same two absurdity
-moves as in `secB`{.Agda}. Note the shift against the first dividend: there the
+the small stand-in is the algebra's `⊤` at level `ℓ`: between two propositions,
+maps in both directions already form an **equivalence of underlying types**, which
+is what `propBiimpl→Equiv`{.Agda} builds from the two propositionality proofs and
+the two maps; from `P` to `⊤` everything goes to `tt*`{.Agda}, and back the other
+way `p` is in hand. If `P` fails, the stand-in is the algebra's `⊥`, with the same
+two absurdity moves as in `secB`{.Agda}. Note the shift against the first dividend: there the
 output was a path between propositions (`⇔toPath`{.Agda}), here it is an
 equivalence between their underlying types, so the same pair of maps is fed to
 `propBiimpl→Equiv`{.Agda} instead.
@@ -215,9 +210,11 @@ equivalence between their underlying types, so the same pair of maps is fed to
 private
   resizeDec : ∀ {ℓ} (P : hProp (ℓ-suc ℓ)) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
             → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
-  resizeDec P (inl p)  = ⊤ₚ , propBiimpl→Equiv (P .snd) (⊤ₚ .snd) (λ _ → tt*) (λ _ → p)
-  resizeDec P (inr np) = ⊥ₚ , propBiimpl→Equiv (P .snd) (⊥ₚ .snd)
-                               (λ p → Empty.rec (np p)) (λ ())
+  resizeDec P (inl p)  = TruthAlg.⊤ hPropAlg ,
+    propBiimpl→Equiv (P .snd) (TruthAlg.⊤ hPropAlg .snd) (λ _ → tt*) (λ _ → p)
+  resizeDec P (inr np) = TruthAlg.⊥ hPropAlg ,
+    propBiimpl→Equiv (P .snd) (TruthAlg.⊥ hPropAlg .snd)
+      (λ p → Empty.rec (np p)) (λ ())
 ```
 
 <!--en-->
