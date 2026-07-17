@@ -65,6 +65,11 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   parameters (`module L.Model {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ') (F : Frontier ℓ)`).
 - Imports needed by the telescope go **before** the module header; everything else
   after it.
+- **Just-in-time introduction** (owner ruling, 2026-07-17): every definition lives in
+  the chapter where it is first motivated, never earlier. The hubs in particular are
+  **pure re-export surfaces** and define nothing of their own (so `_^_` belongs to
+  the semantics chapter that needs environments, and `absurd` to the syntax chapter
+  whose closed constant domain it serves; neither belongs to `Base.Prelude`).
 - `open import` always carries a `using`/`renaming` list (audit-friendly), and every
   imported name must actually be used: imports are **necessary** (the linter checks
   this) as well as sufficient (the typechecker checks that). Exceptions: `Everything`,
