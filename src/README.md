@@ -120,7 +120,8 @@ per the route tree (`[L1]` onward). By part:
 
 `Landmarks.lagda.md` (landed with `[L1.8]`): the trophy case: `V⊨ZF`,
 `V⊨ZF-classical`, `V⊨ZFC`, and the frontier-conditional `L⊨ZFC`, each a
-self-contained signature naming its proving chapter.
+self-contained signature naming its proving chapter. By owner ruling it reads
+**first** in the catalog (the storefront), before Part 0.
 
 ## Symbol master table
 
