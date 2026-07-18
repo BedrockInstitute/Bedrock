@@ -23,7 +23,7 @@ open import Base.Truth
 
 module V.Model {ℓ : Level} where
 
-open import Base.Classical using ( Resizing; lem→Resizing )
+open import Base.Classical using ( LEM; HPropSmallness; Impredicativity; lem→Impredicativity )
 open import Base.Choice using ( SetChoice; choice→lem )
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
@@ -32,7 +32,7 @@ import ZF
 open import V.Hierarchy using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Smallness {ℓ} using ( separateFromSmall )
 
-open import Cubical.Foundations.Equiv using ( _≃_; equivFun; invEq; secEq )
+open import Cubical.Foundations.Equiv using ( equivFun; invEq; secEq )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Functions.Embedding
   using ( Embedding-into-isSet→isSet; isEmbedding→Inj )
@@ -248,13 +248,13 @@ self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
 <!--en-->
 Two fields remain, full separation and power set, and neither is free: both need
 truth values brought down a universe with no Δ₀ certificate to pay the fare. The
-price is exactly Part 0's resizing wallet, `Resizing`{.Agda}: `resize`{.Agda}
-compresses any proposition, and `smallΩ`{.Agda} is the small classifier the
-power set will be indexed by. Nothing here is an axiom; the assembly takes the
-wallet as a parameter, and the classical reader rides free through
-`lem→Resizing`{.Agda}, which is what the dividends were saved for.
+price is exactly Part 0's impredicativity wallet: `resizing`{.Agda} compresses
+any proposition, and `hPropSmallness`{.Agda} is the small classifier the power
+set will be indexed by. Nothing here is an axiom; the assembly takes the wallet
+as a parameter, and the classical reader rides free through
+`lem→Impredicativity`{.Agda}, which is what the dividends were saved for.
 <!--zh-->
-还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部那只降层钱包 `Resizing`{.Agda}：`resize`{.Agda} 压缩任意命题，`smallΩ`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以钱包为参数，经典读者则经 `lem→Resizing`{.Agda} 免票，当初存下红利，等的就是今天。
+还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部那只非直谓性钱包：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以钱包为参数，经典读者则经 `lem→Impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
 <!--/-->
 
 <!--en-->
@@ -276,7 +276,7 @@ closes the loop.
 <!--/-->
 
 ```agda
-module Power (sΩ : Σ[ Ω' ∈ Type ℓ ] (Ω' ≃ hProp ℓ)) where
+module Power (sΩ : HPropSmallness ℓ) where
 
   private
     decode : sΩ .fst → hProp ℓ
@@ -338,29 +338,29 @@ module Power (sΩ : Σ[ Ω' ∈ Type ℓ ] (Ω' ≃ hProp ℓ)) where
 <!--/-->
 
 <!--en-->
-Given the resizing parameter, full separation is the smallness chapter's pipe
-with the fare paid by `resize`{.Agda} instead of a certificate, and every field
+Given the impredicativity parameter, full separation is the smallness chapter's
+pipe with the fare paid by `resizing`{.Agda} instead of a certificate, and every field
 is on the table. One discipline governs the assembly: each unique-existence field
 takes a **library set as its centre**, so that the description operator's
 projections compute back to the stock sets by definition. The two pinning
 equations for the numeral chain are discharged through the `sucV` case analysis,
 riding `numeralV≡#`{.Agda} between the model's chain and the library's.
 <!--zh-->
-降层参数在手，全分离就是小性章那根水管，票钱由 `resize`{.Agda} 代替证书付讫，十二个字段至此凑齐。合龙由一条纪律统辖：每个唯一存在字段都以**库存集合为中心**，让摹状词算子的投影按定义算回库存。数码链的两条钉死方程经 `sucV` 分情形装置兑现，其间靠 `numeralV≡#`{.Agda} 在模型链与库链之间往返。
+非直谓性参数在手，全分离就是小性章那根水管，票钱由 `resizing`{.Agda} 代替证书付讫，十二个字段至此凑齐。合龙由一条纪律统辖：每个唯一存在字段都以**库存集合为中心**，让摹状词算子的投影按定义算回库存。数码链的两条钉死方程经 `sucV` 分情形装置兑现，其间靠 `numeralV≡#`{.Agda} 在模型链与库链之间往返。
 <!--/-->
 
 ```agda
-module VModel (rsz : Resizing ℓ) where
-  open Resizing rsz
-  open Power smallΩ public
+module VModel (imp : Impredicativity ℓ) where
+  open Impredicativity imp
+  open Power hPropSmallness public
 
   separateFull : (a : S) (φ : Formula S 1)
                → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
   separateFull a φ =
-    separateFromSmall a (λ y → (y ∷ []) ⊨ φ) (λ y → resize ((y ∷ []) ⊨ φ))
+    separateFromSmall a (λ y → (y ∷ []) ⊨ φ) (λ y → resizing ((y ∷ []) ⊨ φ))
 
-  V⊨ZF : ZFModel
-  V⊨ZF = record
+  V⊨ZF-impredicative : ZFModel
+  V⊨ZF-impredicative = record
     { extensional    = extensionalV
     ; regularity     = regularityV
     ; hasEmpty       = one _ (∅ , empty-spec)
@@ -401,12 +401,19 @@ module VModel (rsz : Resizing ℓ) where
 
 <!--en-->
 **This is the semantic relative-consistency theorem this part promised**: within
-cubical Agda and its universes, granted resizing, the cumulative hierarchy is a
-model of ZF. The schemas are honoured for **all** formulas at once; the deep
-embedding of Part 1 takes its first full load here.
+cubical Agda and its universes, granted impredicativity, the cumulative
+hierarchy is a model of ZF. The schemas are honoured for **all** formulas at
+once; the deep embedding of Part 1 takes its first full load here. The name
+carries the exact hypothesis as a suffix, and the unsuffixed headline is the
+classical redemption:
 <!--zh-->
-**这就是本部许诺的语义版相对一致性定理**：在 cubical Agda 及其宇宙之内，给定降层，累积层级是 ZF 的模型。两条模式公理对**所有**公式一次性履约；第一部的深嵌入语法在此第一次满载。
+**这就是本部许诺的语义版相对一致性定理**：在 cubical Agda 及其宇宙之内，给定非直谓性，累积层级是 ZF 的模型。两条模式公理对**所有**公式一次性履约；第一部的深嵌入语法在此第一次满载。定理名以后缀携带精确假设，不带后缀的主打名则是经典赎回版：
 <!--/-->
+
+```agda
+V⊨ZF : (∀ {ℓ'} → LEM ℓ') → ZFModel
+V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→Impredicativity lem)
+```
 
 <!--en-->
 ## Choice, independently
@@ -415,10 +422,10 @@ embedding of Part 1 takes its first full load here.
 <!--/-->
 
 <!--en-->
-The excluded middle does not prove choice, so the ZFC instance takes a second
-meta-assumption: the choice chapter's `SetChoice`{.Agda}, at the working level.
-(Recall that the dependence runs the *other* way, `choice→lem`{.Agda}; the
-chapter closes on what that buys.) Choice is applied only at small member
+The excluded middle does not prove choice, so upgrading to ZFC costs a genuinely
+new assumption: the choice chapter's `SetChoice`{.Agda}. (Recall that the
+dependence runs the *other* way, `choice→lem`{.Agda}; the section after this one
+cashes exactly that.) Choice is applied only at small member
 types, asserting the choice of *indices*, the lowest level at which the
 statement makes sense. From it, the model's choice-set axiom follows for **any**
 ZF model on this carrier, not just the one assembled above: the proof consumes
@@ -428,7 +435,7 @@ constructional accident. The choice set is `sett` over the chosen indices, and
 disjointness plus the embedding property pin its intersection with each member
 to exactly one point.
 <!--zh-->
-排中律推不出选择，于是 ZFC 实例另收第二个元层假设：选择章的 `SetChoice`{.Agda}，取工作层级。(请记得依赖关系走的是**另一个**方向，`choice→lem`{.Agda}；本章收尾处兑现它的回报。) 选择只施加在小成员类型上，断言的是**索引**的选择，是这句话有意义的最低层级。由它可得本载体上**任意** ZF 模型的选择集公理，而不只是上面装配的那一个：证明不消费模型的任何构造细节，只用它的 `∩` 与外延性。这一点值得玩味，选择在此是 V 上 ZF 模型的结构性事实，不是构造的偶然。选择集是选中索引上的一次 `sett`，不交性加嵌入性把它与每个成员的交钉死在恰好一点。
+排中律推不出选择，于是升级到 ZFC 要花一笔真正新的假设：选择章的 `SetChoice`{.Agda}。(请记得依赖关系走的是**另一个**方向，`choice→lem`{.Agda}；下一节兑现的正是它。) 选择只施加在小成员类型上，断言的是**索引**的选择，是这句话有意义的最低层级。由它可得本载体上**任意** ZF 模型的选择集公理，而不只是上面装配的那一个：证明不消费模型的任何构造细节，只用它的 `∩` 与外延性。这一点值得玩味，选择在此是 V 上 ZF 模型的结构性事实，不是构造的偶然。选择集是选中索引上的一次 `sett`，不交性加嵌入性把它与每个成员的交钉死在恰好一点。
 <!--/-->
 
 ```agda
@@ -495,36 +502,33 @@ module ChoiceLemma (zf : ZFModel) (ac : SetChoice ℓ) where
             zcx : ⟨ z ∈ˢ c ⟩ × ⟨ z ∈ˢ x ⟩
             zcx = subst ⟨_⟩ (∩-spec c x z) pf
 
-module VZFC (rsz : Resizing ℓ) (ac : SetChoice ℓ) where
-  open VModel rsz public
-
-  V⊨ZFC : ZFCModel
-  V⊨ZFC = record { zf = V⊨ZF ; hasChoice = ChoiceLemma.choice V⊨ZF ac }
 ```
 
 <!--en-->
-## The single hypothesis
+## V ⊨ ZFC, on choice alone
 <!--zh-->
-## 单假设
+## V ⊨ ZFC：单凭选择
 <!--/-->
 
 <!--en-->
-Now Diaconescu's theorem is cashed. Choice at each level decides that level's
-propositions, so **level-polymorphic** choice funds the excluded middle at both
-`ℓ` and `ℓ-suc ℓ`, which is exactly what `lem→Resizing`{.Agda} charges; the
-fixed-level instance then feeds the choice set. The two-parameter bill above
-collapses to one line item: choice, at every level, is the entire price of
-`V ⊨ ZFC`. (At a *fixed* level nothing collapses: `SetChoice ℓ` decides only
-`hProp ℓ`, while `resize`{.Agda} must decide `hProp (ℓ-suc ℓ)`, so the
-two-parameter form remains the finer accounting.)
+The ZFC theorem now assembles from one hypothesis, with Diaconescu's theorem
+paying every other bill. Choice at each level decides that level's propositions,
+so **level-polymorphic** choice funds the excluded middle everywhere, hence the
+whole impredicativity wallet; the fixed-level instance then feeds the choice
+set. Choice, at every level, is the entire price of `V ⊨ ZFC`. (The finer
+accounting stays visible in the pieces: `VModel`{.Agda} charges exactly
+impredicativity, `ChoiceLemma`{.Agda} exactly one level of choice; only their
+sum is stated here.)
 <!--zh-->
-现在兑现 Diaconescu 定理。每层的选择判定该层的命题，故**层级多态**的选择在 `ℓ` 与 `ℓ-suc ℓ` 两层都付得起排中律，恰是 `lem→Resizing`{.Agda} 开的价；固定层的实例再喂给选择集。上文的双参数账单塌缩成一行：全层级的选择，就是 `V ⊨ ZFC` 的全部价格。(在**固定**层级上无物塌缩：`SetChoice ℓ` 只判定 `hProp ℓ`，而 `resize`{.Agda} 要判定 `hProp (ℓ-suc ℓ)`，所以双参数形式仍是更细的账目。)
+ZFC 定理现在由单一假设合龙，其余账单全由 Diaconescu 定理代付。每层的选择判定该层的命题，故**层级多态**的选择处处付得起排中律，从而付得起整只非直谓性钱包；固定层的实例再喂给选择集。全层级的选择，就是 `V ⊨ ZFC` 的全部价格。(更细的账目在零件上仍然可见：`VModel`{.Agda} 恰收非直谓性，`ChoiceLemma`{.Agda} 恰收一层选择；此处陈述的只是它们的总和。)
 <!--/-->
 
 ```agda
-V⊨ZFC-fromChoice : (∀ {ℓ'} → SetChoice ℓ') → ZFCModel
-V⊨ZFC-fromChoice ac =
-  VZFC.V⊨ZFC (lem→Resizing (λ {ℓ'} → choice→lem (ac {ℓ'}))) (ac {ℓ})
+V⊨ZFC : (∀ {ℓ'} → SetChoice ℓ') → ZFCModel
+V⊨ZFC ac = record { zf = base ; hasChoice = ChoiceLemma.choice base (ac {ℓ}) }
+  where
+  base : ZFModel
+  base = V⊨ZF (λ {ℓ'} → choice→lem (ac {ℓ'}))
 ```
 
 <!--en-->
@@ -538,11 +542,10 @@ The account closes balanced. Empty set, pair, and union were library stock
 reshaped by `∈∈ₛ` and `⇔toPath`{.Agda}; replacement came free through `sett`
 over untruncated fibers; strong infinity was `ω`'s definition plus one chain
 alignment (`numeralV≡#`{.Agda}). The two debts, full separation and power set,
-cost exactly Part 0's `Resizing`{.Agda} wallet, which the excluded middle
-redeems (`lem→Resizing`{.Agda}); assembly gives `V⊨ZF`{.Agda}, `SetChoice`{.Agda}
-upgrades it to `V⊨ZFC`{.Agda}, and Diaconescu compresses the whole bill into
-`V⊨ZFC-fromChoice`{.Agda}: level-polymorphic choice alone. The universe that
-Part 4 will dig inside now exists.
+cost exactly Part 0's `Impredicativity`{.Agda} wallet: assembly gives
+`V⊨ZF-impredicative`{.Agda} at that exact price, the excluded middle redeems it
+into the headline `V⊨ZF`{.Agda}, and by Diaconescu the choice interface alone
+funds `V⊨ZFC`{.Agda}. The universe that Part 4 will dig inside now exists.
 <!--zh-->
-账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为第零部的降层钱包 `Resizing`{.Agda}，排中律可以代付 (`lem→Resizing`{.Agda})；合龙得 `V⊨ZF`{.Agda}，`SetChoice`{.Agda} 升级出 `V⊨ZFC`{.Agda}，Diaconescu 再把整份账单压成 `V⊨ZFC-fromChoice`{.Agda}：单凭层级多态的选择。第四部将要向内开凿的那个宇宙，现在存在了。
+账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为第零部的非直谓性钱包 `Impredicativity`{.Agda}：合龙以此精确价格给出 `V⊨ZF-impredicative`{.Agda}，排中律把它赎回成主打的 `V⊨ZF`{.Agda}，经 Diaconescu 更是单凭选择接口就资助了 `V⊨ZFC`{.Agda}。第四部将要向内开凿的那个宇宙，现在存在了。
 <!--/-->

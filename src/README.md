@@ -33,9 +33,10 @@ entry in the reading catalog**, at the position its first consumer dictates.
     the book's only source of logic symbols) and its canonical instance `hPropAlgebra`.
     The other hub.
   - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
-    its two dividends `lem→smallΩ` (small classifier) and `lem→resize` (propositional
-    resizing), packaged as the interface `Resizing` with `lem→Resizing` as the
-    classical redemption. No postulate, per PLAN D2.
+    its two dividends, named `HPropSmallness` (small classifier, by
+    `lem→hPropSmallness`) and `Resizing` (propositional resizing, by
+    `lem→resizing`), bundled as `Impredicativity` with `lem→Impredicativity` as
+    the classical redemption. No postulate, per PLAN D2.
   - `Base/Choice.lagda.md` (landed with `[L1.9]`): the choice interface `SetChoice`
     (levelwise, LEM-style) and Diaconescu's theorem `choice→lem` via set quotients.
     By owner ruling it reads in Part 0, right after `Base.Classical`.
@@ -90,9 +91,9 @@ entry in the reading catalog**, at the position its first consumer dictates.
     `separateΔ₀` (Δ₀ separation is axiom-free).
   - `V/Model.lagda.md`: stock-set specs, `replaceImage` (free replacement),
     `numeralV`/`numeralV≡#`/`ω-specV` + the `sucV` case-analysis lemmas,
-    `Power.𝒫V`, `VModel.V⊨ZF` (parameterized over `Base.Classical.Resizing`),
-    `ChoiceLemma.choice`, `VZFC.V⊨ZFC`, and the single-hypothesis
-    `V⊨ZFC-fromChoice` (via `Base.Choice`).
+    `Power.𝒫V`, `VModel.V⊨ZF-impredicative` (parameterized over
+    `Impredicativity`), `ChoiceLemma.choice`, the classical headline `V⊨ZF`,
+    and `V⊨ZFC` from choice alone (via `Base.Choice`).
 - `L/`: Part 4, the constructible universe, trunk landed with `[L1.6]`/`[L1.7]`:
   - `L/Definability.lagda.md`: the `Def` operator, landed with `[L1.6]` as
     `V.Definability`, re-homed to `L` by owner ruling (the ledger): `DefOf`
@@ -131,9 +132,9 @@ per the route tree (`[L1]` onward). By part:
   `L ⊨ ZFC`, built root-first through the temporary `Frontier` record (PLAN §5).
 
 `Landmarks.lagda.md` (landed with `[L1.8]`): the trophy case: `V⊨ZF`,
-`V⊨ZF-classical`, `V⊨ZFC`, and the frontier-conditional `L⊨ZFC`, each a
-self-contained signature naming its proving chapter. By owner ruling it reads
-**first** in the catalog (the storefront), before Part 0.
+`V⊨ZF-impredicative`, `V⊨ZFC` (choice alone), and the frontier-conditional
+`L⊨ZFC`, each a self-contained signature naming its proving chapter. By owner
+ruling it reads **first** in the catalog (the storefront), before Part 0.
 
 ## Symbol master table
 

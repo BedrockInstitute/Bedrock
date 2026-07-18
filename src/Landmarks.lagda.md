@@ -19,7 +19,7 @@ cite one without caring where inside the book its proof lives.
 module Landmarks where
 
 open import Base.Prelude
-open import Base.Classical using ( LEM; Resizing )
+open import Base.Classical using ( LEM; Impredicativity )
 open import Base.Choice using ( SetChoice )
 open import V.Hierarchy using ( 𝒮ᵥ )
 import ZF
@@ -32,40 +32,26 @@ import L.Model
 <!--en-->
 ## The hierarchy models ZF(C)
 
-Granted resizing, the cumulative hierarchy is a model of ZF (chapter
-`V.Model`{.Agda}); the excluded middle redeems the resizing, so the classical
-reader assumes only the Part 0 interface; and an independent set-level choice
-upgrades the model to ZFC.
+The headline is classical: granted the excluded middle, the cumulative
+hierarchy is a model of ZF (chapter `V.Model`{.Agda}). Its exact-price form
+carries the hypothesis as a suffix, charging only Part 0's impredicativity
+wallet; and by Diaconescu's theorem (chapter `Base.Choice`{.Agda}), set-level
+choice alone, level-polymorphically, funds the upgrade all the way to ZFC.
 <!--zh-->
 ## 层级满足 ZF(C)
 
-给定降层，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})；排中律可代付降层，故经典读者只需第零部的接口；再加独立的集合层选择，模型升级为 ZFC。
+主打名是经典版：给定排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收第零部的非直谓性钱包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，单凭层级多态的集合层选择就资助到 ZFC。
 <!--/-->
 
 ```agda
-V⊨ZF : ∀ {ℓ : Level} → Resizing ℓ → ZF.ZFModel (𝒮ᵥ {ℓ})
-V⊨ZF = V.Model.VModel.V⊨ZF
+V⊨ZF : ∀ {ℓ : Level} → (∀ {ℓ'} → LEM ℓ') → ZF.ZFModel (𝒮ᵥ {ℓ})
+V⊨ZF = V.Model.V⊨ZF
 
-V⊨ZF-classical : ∀ {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ')
-               → ZF.ZFModel (𝒮ᵥ {ℓ})
-V⊨ZF-classical lem = V.Model.VModel.V⊨ZF (Base.Classical.lem→Resizing lem)
+V⊨ZF-impredicative : ∀ {ℓ : Level} → Impredicativity ℓ → ZF.ZFModel (𝒮ᵥ {ℓ})
+V⊨ZF-impredicative = V.Model.VModel.V⊨ZF-impredicative
 
-V⊨ZFC : ∀ {ℓ : Level} → Resizing ℓ → SetChoice ℓ
-      → ZF.ZFCModel (𝒮ᵥ {ℓ})
-V⊨ZFC = V.Model.VZFC.V⊨ZFC
-```
-
-<!--en-->
-And by Diaconescu's theorem (chapter `Base.Choice`{.Agda}), the whole bill
-compresses into one hypothesis: level-polymorphic set choice alone.
-<!--zh-->
-再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，整份账单压成一个假设：单凭层级多态的集合层选择。
-<!--/-->
-
-```agda
-V⊨ZFC-fromChoice : ∀ {ℓ : Level} → (∀ {ℓ'} → SetChoice ℓ')
-                 → ZF.ZFCModel (𝒮ᵥ {ℓ})
-V⊨ZFC-fromChoice = V.Model.V⊨ZFC-fromChoice
+V⊨ZFC : ∀ {ℓ : Level} → (∀ {ℓ'} → SetChoice ℓ') → ZF.ZFCModel (𝒮ᵥ {ℓ})
+V⊨ZFC = V.Model.V⊨ZFC
 ```
 
 <!--en-->
