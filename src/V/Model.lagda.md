@@ -24,6 +24,7 @@ open import Base.Truth
 module V.Model {ℓ : Level} where
 
 open import Base.Classical using ( LEM; lem→resize; lem→smallΩ )
+open import Base.Choice using ( SetChoice; choice→lem )
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
 import FOL.Semantics
@@ -428,10 +429,11 @@ embedding of Part 1 takes its first full load here.
 <!--/-->
 
 <!--en-->
-The excluded middle does not prove choice, so the ZFC instance takes a second,
-independent meta-assumption: **set-level choice**, the commuting of truncation
-with products over an h-set of indices. It is applied only at small member
-types, and it asserts the choice of *indices*, the lowest level at which the
+The excluded middle does not prove choice, so the ZFC instance takes a second
+meta-assumption: the choice chapter's `SetChoice`{.Agda}, at the working level.
+(Recall that the dependence runs the *other* way, `choice→lem`{.Agda}; the
+chapter closes on what that buys.) Choice is applied only at small member
+types, asserting the choice of *indices*, the lowest level at which the
 statement makes sense. From it, the model's choice-set axiom follows for **any**
 ZF model on this carrier, not just the one assembled above: the proof consumes
 nothing about how the model was built, only its `∩` and extensionality, which is
@@ -440,14 +442,10 @@ constructional accident. The choice set is `sett` over the chosen indices, and
 disjointness plus the embedding property pin its intersection with each member
 to exactly one point.
 <!--zh-->
-排中律推不出选择，于是 ZFC 实例另收一个独立的元层假设：**集合层选择**，即截断与 h-集索引族上乘积的交换。它只施加在小成员类型上，断言的是**索引**的选择，是这句话有意义的最低层级。由它可得本载体上**任意** ZF 模型的选择集公理，而不只是上面装配的那一个：证明不消费模型的任何构造细节，只用它的 `∩` 与外延性。这一点值得玩味，选择在此是 V 上 ZF 模型的结构性事实，不是构造的偶然。选择集是选中索引上的一次 `sett`，不交性加嵌入性把它与每个成员的交钉死在恰好一点。
+排中律推不出选择，于是 ZFC 实例另收第二个元层假设：选择章的 `SetChoice`{.Agda}，取工作层级。(请记得依赖关系走的是**另一个**方向，`choice→lem`{.Agda}；本章收尾处兑现它的回报。) 选择只施加在小成员类型上，断言的是**索引**的选择，是这句话有意义的最低层级。由它可得本载体上**任意** ZF 模型的选择集公理，而不只是上面装配的那一个：证明不消费模型的任何构造细节，只用它的 `∩` 与外延性。这一点值得玩味，选择在此是 V 上 ZF 模型的结构性事实，不是构造的偶然。选择集是选中索引上的一次 `sett`，不交性加嵌入性把它与每个成员的交钉死在恰好一点。
 <!--/-->
 
 ```agda
-SetChoice : Type (ℓ-suc ℓ)
-SetChoice = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
-          → ((x : X) → ∥ B x ∥₁) → ∥ ((x : X) → B x) ∥₁
-
 private
   isSet⟪_⟫ : (a : S) → isSet ⟪ a ⟫
   isSet⟪ a ⟫ = Embedding-into-isSet→isSet (⟪ a ⟫↪ , isEmb⟪ a ⟫↪) setIsSet
@@ -458,7 +456,7 @@ private
   isContrΣ-fromCenter {P} z₀ p₀ u =
     (z₀ , p₀) , λ w → Σ≡Prop (λ v → snd (P v)) (u (w .fst) (w .snd))
 
-module ChoiceLemma (zf : ZFModel) (ac : SetChoice) where
+module ChoiceLemma (zf : ZFModel) (ac : SetChoice ℓ) where
   open Model.ZFModel zf using ( _∩_; ∩-spec )
 
   choice : (a : S)
@@ -511,11 +509,36 @@ module ChoiceLemma (zf : ZFModel) (ac : SetChoice) where
             zcx : ⟨ z ∈ˢ c ⟩ × ⟨ z ∈ˢ x ⟩
             zcx = subst ⟨_⟩ (∩-spec c x z) pf
 
-module VZFC (rsz : VResizing) (ac : SetChoice) where
+module VZFC (rsz : VResizing) (ac : SetChoice ℓ) where
   open VModel rsz public
 
   V⊨ZFC : ZFCModel
   V⊨ZFC = record { zf = V⊨ZF ; hasChoice = ChoiceLemma.choice V⊨ZF ac }
+```
+
+<!--en-->
+## The single hypothesis
+<!--zh-->
+## 单假设
+<!--/-->
+
+<!--en-->
+Now Diaconescu's theorem is cashed. Choice at each level decides that level's
+propositions, so **level-polymorphic** choice funds the excluded middle at both
+`ℓ` and `ℓ-suc ℓ`, which is exactly what `lem→VResizing`{.Agda} charges; the
+fixed-level instance then feeds the choice set. The two-parameter bill above
+collapses to one line item: choice, at every level, is the entire price of
+`V ⊨ ZFC`. (At a *fixed* level nothing collapses: `SetChoice ℓ` decides only
+`hProp ℓ`, while `resize`{.Agda} must decide `hProp (ℓ-suc ℓ)`, so the
+two-parameter form remains the finer accounting.)
+<!--zh-->
+现在兑现 Diaconescu 定理。每层的选择判定该层的命题，故**层级多态**的选择在 `ℓ` 与 `ℓ-suc ℓ` 两层都付得起排中律，恰是 `lem→VResizing`{.Agda} 开的价；固定层的实例再喂给选择集。上文的双参数账单塌缩成一行：全层级的选择，就是 `V ⊨ ZFC` 的全部价格。(在**固定**层级上无物塌缩：`SetChoice ℓ` 只判定 `hProp ℓ`，而 `resize`{.Agda} 要判定 `hProp (ℓ-suc ℓ)`，所以双参数形式仍是更细的账目。)
+<!--/-->
+
+```agda
+V⊨ZFC-fromChoice : (∀ {ℓ'} → SetChoice ℓ') → ZFCModel
+V⊨ZFC-fromChoice ac =
+  VZFC.V⊨ZFC (lem→VResizing (λ {ℓ'} → choice→lem (ac {ℓ'}))) (ac {ℓ})
 ```
 
 <!--en-->
@@ -530,9 +553,10 @@ reshaped by `∈∈ₛ` and `⇔toPath`{.Agda}; replacement came free through `s
 over untruncated fibers; strong infinity was `ω`'s definition plus one chain
 alignment (`numeralV≡#`{.Agda}). The two debts, full separation and power set,
 cost exactly `VResizing`{.Agda}, which the excluded middle redeems
-(`lem→VResizing`{.Agda}); assembly gives `V⊨ZF`{.Agda}, and an independent
-`SetChoice`{.Agda} upgrades it to `V⊨ZFC`{.Agda}. The universe that Part 4 will
-dig inside now exists.
+(`lem→VResizing`{.Agda}); assembly gives `V⊨ZF`{.Agda}, `SetChoice`{.Agda}
+upgrades it to `V⊨ZFC`{.Agda}, and Diaconescu compresses the whole bill into
+`V⊨ZFC-fromChoice`{.Agda}: level-polymorphic choice alone. The universe that
+Part 4 will dig inside now exists.
 <!--zh-->
-账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为 `VResizing`{.Agda}，排中律可以代付 (`lem→VResizing`{.Agda})；合龙得 `V⊨ZF`{.Agda}，再加独立的 `SetChoice`{.Agda} 升级为 `V⊨ZFC`{.Agda}。第四部将要向内开凿的那个宇宙，现在存在了。
+账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为 `VResizing`{.Agda}，排中律可以代付 (`lem→VResizing`{.Agda})；合龙得 `V⊨ZF`{.Agda}，`SetChoice`{.Agda} 升级出 `V⊨ZFC`{.Agda}，Diaconescu 再把整份账单压成 `V⊨ZFC-fromChoice`{.Agda}：单凭层级多态的选择。第四部将要向内开凿的那个宇宙，现在存在了。
 <!--/-->

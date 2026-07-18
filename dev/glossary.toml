@@ -732,3 +732,17 @@ en = "frontier"
 zh = "前沿"
 ja = "フロンティア"
 notes = "the L.Frontier debt registry; reader-facing name for the root-first device"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Diaconescu's theorem"
+zh = "Diaconescu 定理"
+ja = "ディアコネスクの定理"
+notes = "choice implies excluded middle (Goodman-Myhill form); zh keeps the surname in Latin, matching the book's practice for untransliterated names; choice→lem in Base.Choice"
+
+[[term]]
+category = "Type theory"
+en = "set quotient"
+zh = "集合商"
+ja = "集合商"
+notes = "the SetQuotients HIT; quotient by a relation = 按关系取商"

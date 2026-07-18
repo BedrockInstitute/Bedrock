@@ -404,8 +404,8 @@ the atoms compress through the library, the connectives and the bounded
 quantifiers pass witnesses along, and `separateFromSmall`{.Agda} is the one pipe
 from small predicates to sets. The induction `Δ₀-small`{.Agda} then makes the
 Levy hierarchy a cost accounting, with `separateΔ₀`{.Agda} as the free tier. What
-Δ₀ cannot reach is priced in the next chapter, and the price has a name:
+Δ₀ cannot reach is priced in the model chapter, and the price has a name:
 resizing.
 <!--zh-->
-小性即与低一层命题的等价 (`isSmall`{.Agda})；原子经库压缩，联结词与有界量词传递见证，`separateFromSmall`{.Agda} 是从小谓词到集合的唯一水管。归纳 `Δ₀-small`{.Agda} 让列维层级兼任成本账簿，`separateΔ₀`{.Agda} 是其中的免费档。Δ₀ 够不到的部分在下一章标价，而那个价格有名字：降层。
+小性即与低一层命题的等价 (`isSmall`{.Agda})；原子经库压缩，联结词与有界量词传递见证，`separateFromSmall`{.Agda} 是从小谓词到集合的唯一水管。归纳 `Δ₀-small`{.Agda} 让列维层级兼任成本账簿，`separateΔ₀`{.Agda} 是其中的免费档。Δ₀ 够不到的部分在模型章标价，而那个价格有名字：降层。
 <!--/-->

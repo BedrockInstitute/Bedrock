@@ -34,12 +34,13 @@ module Everything where
 - `Landmarks`{.Agda}: the trophy case, displayed at the entrance: the milestone
   theorems restated as self-contained signatures with their full assumption
   bills, `V⊨ZF`{.Agda} (and its classical redemption), `V⊨ZFC`{.Agda}, and the
-  frontier-conditional `L⊨ZFC`{.Agda}. Read it first to see the destination;
-  understanding the signatures is what the rest of the book is for.
+  frontier-conditional `L⊨ZFC`{.Agda}, with `V⊨ZFC-fromChoice`{.Agda} as the
+  single-hypothesis form. Read it first to see the destination; understanding
+  the signatures is what the rest of the book is for.
 <!--zh-->
 ## 地标：本书的终点
 
-- `Landmarks`{.Agda}：奖杯陈列室，摆在入口处：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其经典代付版)、`V⊨ZFC`{.Agda}，与带前沿条件的 `L⊨ZFC`{.Agda}。先读它，看清目的地；至于读懂这些签名，正是全书其余部分的任务。
+- `Landmarks`{.Agda}：奖杯陈列室，摆在入口处：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其经典代付版)、`V⊨ZFC`{.Agda} (及其单假设版 `V⊨ZFC-fromChoice`{.Agda})，与带前沿条件的 `L⊨ZFC`{.Agda}。先读它，看清目的地；至于读懂这些签名，正是全书其余部分的任务。
 <!--/-->
 
 ```agda
@@ -160,21 +161,27 @@ import FOL.Reification.Absoluteness
   library, connectives and bounded quantifiers pass witnesses along,
   `separateFromSmall`{.Agda} is the one pipe to sets; `Δ₀-small`{.Agda} makes Δ₀
   separation an axiom-free theorem (`separateΔ₀`{.Agda}).
+- `Base.Choice`{.Agda}: the choice interface `SetChoice`{.Agda}, stated
+  levelwise like `LEM`{.Agda}, and Diaconescu's theorem mechanized: set-level
+  choice proves the excluded middle (`choice→lem`{.Agda}).
 - `V.Model`{.Agda}: the summit: stock sets reshaped, replacement and strong
   infinity for free, `VResizing`{.Agda} pricing full separation and power set
-  (redeemed classically by `lem→VResizing`{.Agda}); assembly `V⊨ZF`{.Agda}, and
-  with `SetChoice`{.Agda}, `V⊨ZFC`{.Agda}.
+  (redeemed classically by `lem→VResizing`{.Agda}); assembly `V⊨ZF`{.Agda},
+  with `SetChoice`{.Agda} the upgrade `V⊨ZFC`{.Agda}, and by Diaconescu the
+  single-hypothesis `V⊨ZFC-fromChoice`{.Agda}.
 <!--zh-->
 ## 第三部：累积层级实现 ZF(C)
 
 - `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 一行插入，外延与正则免费入账。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
-- `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，`VResizing`{.Agda} 为全分离与幂集标价 (经典侧由 `lem→VResizing`{.Agda} 代付)；合龙 `V⊨ZF`{.Agda}，加 `SetChoice`{.Agda} 得 `V⊨ZFC`{.Agda}。
+- `Base.Choice`{.Agda}：选择接口 `SetChoice`{.Agda}，与 `LEM`{.Agda} 同款逐层级陈述；Diaconescu 定理机器化：集合层选择证明排中律 (`choice→lem`{.Agda})。
+- `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，`VResizing`{.Agda} 为全分离与幂集标价 (经典侧由 `lem→VResizing`{.Agda} 代付)；合龙 `V⊨ZF`{.Agda}，加 `SetChoice`{.Agda} 得 `V⊨ZFC`{.Agda}，经 Diaconescu 更有单假设的 `V⊨ZFC-fromChoice`{.Agda}。
 <!--/-->
 
 ```agda
 import V.Hierarchy
 import V.Smallness
+import Base.Choice
 import V.Model
 ```
 
