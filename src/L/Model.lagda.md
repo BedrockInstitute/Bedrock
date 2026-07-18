@@ -18,9 +18,9 @@ host's strength is a price printed on the label, not hidden in the machinery.
 This is no defect of mechanization: every consistency proof anywhere is relative
 to the metatheory that carries it, and the only choice is whether to say so.
 
-**What is assumed, today.** The module takes two parameters: the excluded-middle
-interface of Part 0, the standing assumption of the book's classical cone, and
-the previous chapter's **frontier**, the registry of statements not yet proven.
+**What is assumed, today.** The module takes two parameters: one instance of
+the excluded middle, at the model's own truth level, and the previous chapter's
+**frontier**, the registry of statements not yet proven.
 Given these, the theorem below is an ordinary, machine-checked theorem, and it
 compiles today. Every remaining part of the book shrinks the frontier; when the
 registry is empty its parameter disappears, and this page's statement stands
@@ -33,7 +33,7 @@ book's main theorem, and its progress meter.
 
 **相对于什么。**相对于宿主。整个构造住在带宇宙塔的 cubical Agda 里，这个元理论的强度非形式地约当于 ZFC 加一个不可达基数。本书从不宣称无条件的「Con (ZFC)」；此处的一致性永远是**相对于申明的宿主**的一致性，宿主的强度是印在标签上的价格，不是藏在机器里的暗账。这并非机械化的缺陷：任何地方的任何一致性证明都相对于承载它的元理论，可选的只是说不说出来。
 
-**今天假设了什么。**本模块收两个参数：第零部的排中律接口，即本书经典锥的常设假设；以及上一章的**前沿**，尚未证明的陈述之登记簿。给定二者，下面的定理是一条普通的、机器检验的定理，今天就能编译。本书余下各部不断缩减前沿；登记簿清空之日，其参数消失，本页的陈述便只倚排中律独立成立。所以本章同时是两样东西：本书的主定理，与它的进度表。
+**今天假设了什么。**本模块收两个参数：一份排中律实例，取模型自己的真值层级；以及上一章的**前沿**，尚未证明的陈述之登记簿。给定二者，下面的定理是一条普通的、机器检验的定理，今天就能编译。本书余下各部不断缩减前沿；登记簿清空之日，其参数消失，本页的陈述便只倚排中律独立成立。所以本章同时是两样东西：本书的主定理，与它的进度表。
 <!--/-->
 
 ```agda
@@ -44,7 +44,7 @@ open import Base.Truth
 open import Base.Classical using ( LEM )
 open import L.Frontier using ( Frontier )
 
-module L.Model {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ') (F : Frontier {ℓ}) where
+module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (F : Frontier {ℓ}) where
 
 open import FOL.Structure using ( ZFStructure; ↾-reflects; _∈ᵗ_ )
 import ZF
