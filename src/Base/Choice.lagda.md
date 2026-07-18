@@ -80,14 +80,27 @@ lowerSetChoice sc X setX B inh =
 <!--/-->
 
 <!--en-->
-Fix a proposition `P`; everything below lives in a module named after the
-theorem's author. The proof builds the most economical set that *depends* on
-`P`: take the two booleans and glue them together exactly when `P` holds. The
-gluing relation is best given as a four-entry table: trivial on the diagonal,
-and **literally `P` itself** in the two mixed squares. That last clause is the
+The theorem: given set-level choice, **any** proposition `P` can be decided,
+proved or refuted. On its face this is absurd, since a decision procedure has
+nothing to inspect: an arbitrary `P` offers no case to split on. The proof's
+idea is to make *geometry* do the inspecting. Build a little space whose very
+shape depends on `P`: it has one point if `P` holds and two points if it fails.
+Ask choice a single question about that space; the answer cannot help but leak
+the shape, and the shape is `P`.
+
+Concretely, fix `P`; everything below lives in a module named after the
+theorem's author. Take the two booleans and glue them together exactly when
+`P` holds. "Gluing" is a **set quotient**: the points are still `true` and
+`false`, but a path is added between them whenever the gluing relation says
+so, and the result is truncated to an h-set. The relation is best given as a
+four-entry table: trivially satisfied on the diagonal, and **literally `P`
+itself** in the two mixed squares, so that "the two points are related" and
+"`P` holds" are the same proposition by definition. That last clause is the
 whole trick, and it will pay twice below.
 <!--zh-->
-固定命题 `P`；以下一切都住在以定理作者命名的模块里。证明构造出**依赖于** `P` 的最经济的集合：取两个布尔值，恰当 `P` 成立时把它们粘起来。粘合关系最好用一张四格表给出：对角线上平凡，而混色的两格**就是 `P` 本身**。最后这一款是全部戏法所在，下文将两次兑付。
+定理说：给定集合层选择，**任何**命题 `P` 都可判定，即或证明或反驳。乍看这很荒谬，因为判定程序无从下手：任意的 `P` 没有可分情形的把手。证明的想法是让**几何**来下手。造一个形状依赖于 `P` 的小空间：`P` 成立时它只有一个点，不成立时有两个点。然后向选择原理问一个关于这个空间的问题；答案不可能不泄露形状，而形状就是 `P`。
+
+具体地，固定 `P`；以下一切都住在以定理作者命名的模块里。取两个布尔值，恰当 `P` 成立时把它们粘起来。「粘合」指**集合商**：点仍是 `true` 与 `false`，但凡粘合关系点头，两点之间就添一条路径，最后把结果截断为 h-集。粘合关系最好用一张四格表给出：对角线上平凡成立，混色的两格**就是 `P` 本身**，于是「这两点相关」与「`P` 成立」按定义是同一个命题。最后这一款是全部戏法所在，下文将两次兑付。
 <!--/-->
 
 ```agda
@@ -105,12 +118,14 @@ module Diaconescu {ℓ} (P : hProp ℓ) where
 <!--en-->
 Because the relation is a table, its certificates are tables too: propositional
 in every square, reflexive on the diagonal, symmetric since the table is, and
-transitive by reading off whichever mixed square survives. No truncations are
-juggled anywhere. The certificates are not bookkeeping: they are the ticket to
-the library's **effectivity** theorem, the right to read a quotient path
-backwards.
+transitive by reading off whichever mixed square survives. The certificates are
+not bookkeeping: they are the ticket to the library's **effectivity** theorem,
+which says that a quotient by a propositional equivalence relation glues
+*honestly*: two points end up connected only if the relation actually related
+them, never by accident. In other words, a path in the quotient can be read
+backwards, recovering the relation that caused it.
 <!--zh-->
-关系是表，它的证书也就是表：逐格皆命题，对角线自反，表格对称故关系对称，传递性则读出幸存的那个混色格。全程不摆弄任何截断。证书不是记账：它们是库的**有效性**定理的入场券，即倒着读商路径的权利。
+关系是表，它的证书也就是表：逐格皆命题，对角线自反，表格对称故关系对称，传递性则读出幸存的那个混色格。证书不是记账：它们是库的**有效性**定理的入场券。该定理说，按命题值等价关系取商，粘合是**诚实**的：两点最终连通，只可能因为关系确实关联过它们，绝无误伤。换句话说，商里的路径可以倒着读，读回引起它的那份关系。
 <!--/-->
 
 ```agda
@@ -143,14 +158,17 @@ backwards.
 ```
 
 <!--en-->
-The heart of the construction is a two-line dictionary: **the two classes are
-glued exactly when `P` holds**. Here the mixed square pays for the first time,
-twice over: since `true ~ false` *is* `⟨ P ⟩`, the forward direction feeds a
-`P`-witness straight to the quotient's path constructor, and the backward
-direction is the effectivity theorem applied and nothing else, its output
-already of type `⟨ P ⟩`, with no decoding and no absurd case to dismiss.
+The heart of the construction is a two-line dictionary: **the two points of the
+quotient coincide exactly when `P` holds**. One direction: if `P` holds, the
+table relates `true` to `false`, so the quotient identifies their classes; the
+space has collapsed to a single point. The other direction: if the two classes
+coincide, honesty of the gluing says the relation must have related `true` to
+`false`, and by the table that relation *is* `P`, so `P` holds. This is where
+the mixed square pays for the first time, twice over: a `P`-witness feeds the
+path constructor directly, and the effectivity theorem's output is already a
+proof of `P`, with no decoding and no impossible case to dismiss.
 <!--zh-->
-构造的心脏是一部两行的词典：**两个等价类被粘住，当且仅当 `P` 成立**。混色格在此第一次付账，还一次付了两笔：`true ~ false` **就是** `⟨ P ⟩`，于是正向把 `P` 的见证直接喂给商的路径构造子，反向则是有效性定理的一次裸应用，其输出本身就是 `⟨ P ⟩` 型，无须解码，也没有荒谬情形要驳。
+构造的心脏是一部两行的词典：**商的两个点重合，当且仅当 `P` 成立**。一个方向：若 `P` 成立，表格便判 `true` 与 `false` 相关，商随之把两个等价类等同起来，空间坍缩为一个点。另一个方向：若两个类重合，粘合的诚实性说明关系必定关联过 `true` 与 `false`，而按表格那份关系**就是** `P`，故 `P` 成立。这正是混色格第一次付账之处，还一次付了两笔：`P` 的见证直接喂给路径构造子，有效性定理的输出本身就已是 `P` 的证明，无须解码，也没有不可能情形要驳。
 <!--/-->
 
 ```agda
@@ -162,14 +180,18 @@ already of type `⟨ P ⟩`, with no decoding and no absurd case to dismiss.
 ```
 
 <!--en-->
-Now the choice principle enters. A **pick** at a point of the glued set is a
-boolean representative together with the path connecting its class to the
-point; every point merely has one, because the quotient's points are merely
-hit by `[_]`. That is precisely the shape `SetChoice`{.Agda} consumes, and the
-glued set is an h-set by construction, so choice will hand over a *function*
-picking representatives everywhere at once.
+Now the choice principle enters, and here is the single question we ask it:
+*hand every point of the glued space a boolean representative.* A **pick** at a
+point is a boolean together with the guarantee that its class is that point.
+Each point separately is sure to have one, but only *merely* so: a quotient
+remembers that its points came from somewhere without remembering from where.
+Turning "each point merely has a representative" into one **function** choosing
+representatives everywhere at once is exactly what set-level choice does, and
+it applies because the glued space is an h-set by construction. Note what the
+function cannot do: it was built with no access to `P`, so it answers the same
+way whether or not `P` holds; it merely, blindly, picks.
 <!--zh-->
-现在选择原理进场。粘合集某点处的一次**认领**，是一个布尔代表元，连同把其等价类接到该点的路径；每个点都仅仅拥有一次认领，因为商的点仅仅被 `[_]` 命中。这恰是 `SetChoice`{.Agda} 消费的形状，而粘合集按构造是 h-集，于是选择将交出一个**函数**，一举在处处认领代表元。
+现在选择原理进场，我们只问它一个问题：*给粘合空间的每个点发一个布尔代表元。*某点处的一次**认领**，是一个布尔值，连同「其等价类就是该点」的保证。每个点单独看必有认领，但只是**仅仅**有：商记得自己的点各有来处，却不记得来处是谁。把「每点仅仅有代表元」变成一个一举在处处认领的**函数**，正是集合层选择的本领，而它适用是因为粘合空间按构造是 h-集。留意这个函数做不到的事：它的构造完全接触不到 `P`，故无论 `P` 成立与否它都同样作答；它只是盲目地认领。
 <!--/-->
 
 ```agda
@@ -181,15 +203,20 @@ picking representatives everywhere at once.
 ```
 
 <!--en-->
-Suppose, then, that a picking function `g` is in hand, and name the two
-representatives it selects at the glued classes. Comparing them decides `P`,
-one small lemma per direction. If they agree, the two classes were forced
-together, and `unglue`{.Agda} recovers `P`. If `P` holds, the classes *are*
-together, and projecting `g` along the gluing path makes the representatives
-agree, with no transport gymnastics: `Pick`'s first component is a boolean on
-both ends.
+Suppose, then, that a picking function `g` is in hand. Apply it to the two
+distinguished points, the class of `true` and the class of `false`, and name
+the two boolean representatives it selects, `b₀` and `b₁`. These two booleans
+are the leak. One lemma per direction ties them to `P`. **If the
+representatives agree**, walk the guarantees: the class of `true` connects to
+the class of `b₀`, which is the class of `b₁`, which connects to the class of
+`false`; so the two points coincide, and the dictionary's backward entry turns
+that coincidence into a proof of `P`. **If `P` holds**, the two points *are*
+one single point, and a function applied to one point yields one answer, so
+`b₀` and `b₁` are forced to be the same boolean. (Formally: project `g` along
+the gluing path; both endpoints of the projection are plain booleans, so no
+transport is even needed.)
 <!--zh-->
-于是假设认领函数 `g` 已经在手，给它在两个粘合类处选出的代表元起名。比较二者即可判定 `P`，每个方向一条小引理。若二者一致，则两个类曾被迫粘合，`unglue`{.Agda} 反解出 `P`。若 `P` 成立，则两个类**本就**粘在一起，把 `g` 沿粘合路径投影，代表元便一致，且无须任何搬运体操：`Pick` 的第一分量在两端都是布尔值。
+于是假设认领函数 `g` 已经在手。把它作用在两个特殊的点上，即 `true` 的类与 `false` 的类，给选出的两个布尔代表元起名 `b₀` 与 `b₁`。这两个布尔值就是泄密者。每个方向一条引理把它们与 `P` 绑在一起。**若代表元一致**，就沿保证走一遍：`true` 的类接到 `b₀` 的类，即 `b₁` 的类，再接到 `false` 的类；于是两点重合，词典的反向条目把这次重合翻译成 `P` 的证明。**若 `P` 成立**，则两点**本是**同一个点，而函数作用在同一个点上只能给出同一个答案，`b₀` 与 `b₁` 被迫是同一个布尔值。(形式化地：把 `g` 沿粘合路径投影，投影的两端都是普通布尔值，连搬运都不需要。)
 <!--/-->
 
 ```agda
@@ -209,10 +236,15 @@ both ends.
 ```
 
 <!--en-->
-Equality of booleans is decidable, courtesy of the library's `_≟_`{.Agda}; the
-decision transports along the lemma pair and becomes a decision of `P`.
+Now decide `P` by looking at the two booleans, which, unlike `P`, **can** be
+inspected: two booleans are equal or they are not, mechanically. If `b₀` and
+`b₁` agree, the first lemma proves `P`. If they differ, `P` must fail, for had
+it held, the second lemma would force them to agree. Either way `P` is
+decided, and note where the classical rabbit came out of the hat: the case
+split happened on finite data that the choice function was forced to commit to,
+not on `P` itself.
 <!--zh-->
-布尔值的相等可判定，由库的 `_≟_`{.Agda} 供应；这个判定沿上面那对引理搬运，变成对 `P` 的判定。
+现在改看那两个布尔值来判定 `P`。与 `P` 不同，它们**可以**被检视：两个布尔值要么相等要么不等，机械可判。若 `b₀` 与 `b₁` 一致，第一条引理证出 `P`。若二者相异，`P` 必不成立，因为它若成立，第二条引理将迫使二者一致。无论哪边 `P` 都被判定；请留意经典兔子从哪顶帽子里蹦出：分情形发生在选择函数被迫表态的有限数据上，从头到尾不在 `P` 自身上。
 <!--/-->
 
 ```agda
@@ -225,12 +257,13 @@ decision transports along the lemma pair and becomes a decision of `P`.
 ```
 
 <!--en-->
-One last observation and the theorem assembles. Deciding a proposition is
-itself a proposition (the two sides exclude each other), so the *mere*
-existence of a picking function suffices: truncation is eliminated straight
-into the decision.
+One last gap and the theorem assembles. Choice never hands over an actual
+picking function, only its *mere* existence. But the goal "`P` or not `P`" is
+itself a proposition: the two sides exclude each other, so between any two
+decisions there is nothing to distinguish. Into such a goal, mere existence
+eliminates as if it were actual, and the proof closes.
 <!--zh-->
-最后一个观察，定理即可合拢。判定一个命题本身是命题 (两侧互斥)，于是认领函数的**仅仅**存在就已足够：截断被直接消去到判定里。
+最后一道缺口，定理即合拢。选择从不真正交出认领函数，只交出它的**仅仅**存在。但目标「`P` 或非 `P`」自身是命题：两侧互斥，任何两个判定之间无可区分。对这样的目标，仅仅存在可以当作真实存在来消去，证明就此闭合。
 <!--/-->
 
 ```agda
