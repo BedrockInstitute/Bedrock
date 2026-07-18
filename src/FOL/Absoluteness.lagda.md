@@ -11,21 +11,21 @@ question of the previous chapter needed), and mechanizes the textbook theorem:
 one-line composition that turns an inner graded representation into outer
 satisfaction.
 <!--zh-->
-证书开始挣饭钱。这里的场景正是第四部将要大规模上演的那一幕：一个模型，一个由类裁出的子世界 `𝒮 ↾ M`，同一批公式两侧各问一遍。本章给驯服这趟通行的唯一条件起名：`M` 的**传递性** (成员的成员不出 `M`，恰是上一章那个空集之问所需要的)；然后机械化教科书定理：**Δ₀ 公式在传递类与全宇宙之间绝对**，Σ₁ 向上、Π₁ 向下两条转移作为廉价延伸；压轴的，是把内层分级表示一步换算为外层满足的那一行复合。
+证书开始挣饭钱。这里的场景正是第四部将要大规模上演的那一幕：一个模型，一个由类裁出的子世界 `𝒮 ↾ M`，同一批公式两侧各问一遍。本章给驯服这趟通行的唯一条件起名：`M` 的**传递性** (成员的成员不出 `M`，恰是上一章那个空集之问所需要的)；然后机械化教科书定理：**Δ₀ 公式在传递类与全宇宙之间绝对**，Σ₁ 向上、Π₁ 向下两条转移作为廉价延伸。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Reification.Absoluteness where
+module FOL.Absoluteness where
 
 open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _∈ᵗ_; _↾_; _^_ )
 open import FOL.Syntax using ( Term; con; var; Formula; ∀̇∈; ∃̇∈ )
-open import FOL.Reification.Graded using
+open import FOL.Graded using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈
-  ; Σ₁; σ-Δ₀; σ-∃; Π₁; π-Δ₀; π-∀; module Certified )
+  ; Σ₁; σ-Δ₀; σ-∃; Π₁; π-Δ₀; π-∀ )
 import FOL.Semantics
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Functions.Logic using ( ⇔toPath )
@@ -208,30 +208,6 @@ fine print exactly.
 ```
 
 <!--en-->
-## The capstone: transfer
-<!--zh-->
-## 压轴：transfer
-<!--/-->
-
-<!--en-->
-Everything composes. Take a graded representation living inside: its adequacy
-certificate and the absoluteness certificate meet end to end, and a predicate on
-the inner world converts to outer satisfaction in **one path composition**. This
-is the shape in which the whole framework will be spent, chapter after chapter,
-from here to the constructible universe.
-<!--zh-->
-一切就此复合。取一份住在内层的分级表示：它的适足性证书与绝对性证书首尾相接，内层世界上的谓词经**一次路径复合**换算为外层满足。整个框架此后被花费的形态就是它，一章接一章，直到可构造宇宙。
-<!--/-->
-
-```agda
-  module Inner = Certified (hPropAlg {ℓ}) 𝒮M SM (λ m → m)
-
-  transfer : ∀ {n} {P : SM ^ n → hProp ℓ} (r : Inner.RepΔ₀ n P) (δ : SM ^ n)
-           → P δ ≡ ((map fst δ) ⊨ᵛ (r .fst))
-  transfer (φ , c , a) δ = sym (a δ) ∙ abs₀ c δ
-```
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -241,8 +217,9 @@ from here to the constructible universe.
 Transitive classes named, and over them the theorem: `abs₀`{.Agda} makes Δ₀
 formulas absolute, with transitivity consumed exactly at the bounded quantifiers;
 `σ₁-up`{.Agda} and `π₁-down`{.Agda} extend the transfer one quantifier kind each,
-free of the hypothesis; `transfer`{.Agda} composes adequacy with absoluteness into
-the framework's working currency.
+free of the hypothesis. These theorems are pure certificate arithmetic; the
+composition that will spend them wholesale is catalogued with the reification
+framework at the book's tail.
 <!--zh-->
-传递类得名，其上是定理本体：`abs₀`{.Agda} 使 Δ₀ 公式绝对，传递性恰在有界量词处被消费；`σ₁-up`{.Agda} 与 `π₁-down`{.Agda} 各以一种量词延伸转移，且不花前提；`transfer`{.Agda} 把适足性与绝对性复合成框架的流通货币。
+传递类得名，其上是定理本体：`abs₀`{.Agda} 使 Δ₀ 公式绝对，传递性恰在有界量词处被消费；`σ₁-up`{.Agda} 与 `π₁-down`{.Agda} 各以一种量词延伸转移，且不花前提。这些定理是纯粹的证书算术；将要成批花费它们的那次复合，编在书末的 reification 框架里。
 <!--/-->

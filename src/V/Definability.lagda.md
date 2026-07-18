@@ -33,7 +33,7 @@ module V.Definability {ℓ : Level} where
 
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
-open import FOL.Reification.Absoluteness using ( Transitive )
+open import FOL.Absoluteness using ( Transitive )
 open import V.Hierarchy using ( 𝒮ᵥ )
 open import V.Smallness {ℓ} using ( module InnerSmall )
 

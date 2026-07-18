@@ -12,20 +12,19 @@ syntax alone: the first formula's quantifier is bounded, the second's is not. Th
 **Levy hierarchy** grades formulas by exactly this: **Δ₀** allows only bounded
 quantifiers, Σ₁ prefixes existentials to a Δ₀ core, Π₁ prefixes universals. This
 chapter makes the grades **certificates**: inductive data, purely syntactic,
-portable across any constant domain, travelling with a formula the way adequacy
-certificates do; the next chapter proves the travel theorems they enable.
+portable across any constant domain, travelling with the formula they certify;
+the next chapter proves the travel theorems they enable.
 <!--zh-->
-公式的旅行能力并不平等。取模型某个子世界 `𝒮 ↾ M` (结构章的限制) 中的一个集合 `x`，同一个问题问两遍：一遍在 `M` 里问，一遍在全世界问。「`x` 空吗？」只要成员的成员不出 `M`，两处答案就一致：公式 `∀̇∈ x ⊥̇` 只盘问 `x` 的**成员**，而它们谁也没有逃走。可「有集合与 `x` 不相交吗？」对**一切**量化，全世界心里想的那个见证可能恰好不在 `M` 中。这份差别单看语法就能看出：前一条公式的量词有界，后一条无界。**列维层级**恰按此给公式分级：**Δ₀** 只许有界量词，Σ₁ 在 Δ₀ 核心之前加存在量词，Π₁ 加全称量词。本章把级别做成**证书**：纯语法的归纳数据，对任意常量域可携，像适足性证书一样随公式旅行；它们所解锁的旅行定理由下一章证明。
+公式的旅行能力并不平等。取模型某个子世界 `𝒮 ↾ M` (结构章的限制) 中的一个集合 `x`，同一个问题问两遍：一遍在 `M` 里问，一遍在全世界问。「`x` 空吗？」只要成员的成员不出 `M`，两处答案就一致：公式 `∀̇∈ x ⊥̇` 只盘问 `x` 的**成员**，而它们谁也没有逃走。可「有集合与 `x` 不相交吗？」对**一切**量化，全世界心里想的那个见证可能恰好不在 `M` 中。这份差别单看语法就能看出：前一条公式的量词有界，后一条无界。**列维层级**恰按此给公式分级：**Δ₀** 只许有界量词，Σ₁ 在 Δ₀ 核心之前加存在量词，Π₁ 加全称量词。本章把级别做成**证书**：纯语法的归纳数据，对任意常量域可携，随其所证的公式旅行；它们所解锁的旅行定理由下一章证明。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Reification.Graded where
+module FOL.Graded where
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _^_ )
 open import FOL.Syntax using
   ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈; mapFo )
 ```
@@ -155,80 +154,6 @@ mutual
 ```
 
 <!--en-->
-## Graded representations
-<!--zh-->
-## 分级表示
-<!--/-->
-
-<!--en-->
-Bundling one step further: a **graded representation** is a triple, formula, Δ₀
-certificate, adequacy. `forget₀`{.Agda} drops back to a plain representation by
-projection, and the graded combinators run the flat factory of the previous
-chapter while composing the Δ₀ evidence on the side; the naming pattern appends
-the grade as a subscript.
-<!--zh-->
-再进一步捆绑：**分级表示**是三元组：公式、Δ₀ 证书、适足性。`forget₀`{.Agda} 经投影退回普通表示；分级组合子驱动上一章的平车间，顺手复合 Δ₀ 证据；命名模式以下标缀上级别。
-<!--/-->
-
-```agda
-module Certified {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋)
-                 {ℓc} (K : Type ℓc) (ι : K → ZFStructure.S 𝒮) where
-
-  open TruthAlg 𝕋
-  open ZFStructure 𝒮
-  open import FOL.Semantics 𝕋 𝒮 using ( module At )
-  open At ι using ( _⊨_ )
-  open import FOL.Reification.Combinators 𝕋 𝒮 K ι using
-    ( RepP; RepS; ∈-rep; ≐-rep; ∧-rep; ∨-rep; ⇒-rep; ¬-rep; ⊤-rep; ⊥-rep
-    ; ∀∈-rep; ∃∈-rep )
-
-  RepΔ₀ : (n : ℕ) → (S ^ n → Ω) → Type (ℓ-max ℓc (ℓ-max ℓ ℓ'))
-  RepΔ₀ n P = Σ[ φ ∈ Formula K n ] (Δ₀ φ × (∀ γ → (γ ⊨ φ) ≡ P γ))
-
-  forget₀ : ∀ {n} {P : S ^ n → Ω} → RepΔ₀ n P → RepP n P
-  forget₀ (φ , _ , a) = φ , a
-
-  ∈-rep₀ : ∀ {n} {a b : S ^ n → S} → RepS n a → RepS n b
-         → RepΔ₀ n (λ γ → a γ ∈ˢ b γ)
-  ∈-rep₀ ra rb = ∈-rep ra rb .fst , δ-∈ , ∈-rep ra rb .snd
-
-  ≐-rep₀ : ∀ {n} {a b : S ^ n → S} → RepS n a → RepS n b
-         → RepΔ₀ n (λ γ → a γ ≈ˢ b γ)
-  ≐-rep₀ ra rb = ≐-rep ra rb .fst , δ-≐ , ≐-rep ra rb .snd
-
-  ∧-rep₀ : ∀ {n} {P Q : S ^ n → Ω} → RepΔ₀ n P → RepΔ₀ n Q
-         → RepΔ₀ n (λ γ → P γ ⊓ Q γ)
-  ∧-rep₀ (φ , c , a) (ψ , d , b) = (φ ∧̇ ψ) , δ-∧ c d , ∧-rep (φ , a) (ψ , b) .snd
-
-  ∨-rep₀ : ∀ {n} {P Q : S ^ n → Ω} → RepΔ₀ n P → RepΔ₀ n Q
-         → RepΔ₀ n (λ γ → P γ ⊔ Q γ)
-  ∨-rep₀ (φ , c , a) (ψ , d , b) = (φ ∨̇ ψ) , δ-∨ c d , ∨-rep (φ , a) (ψ , b) .snd
-
-  ⇒-rep₀ : ∀ {n} {P Q : S ^ n → Ω} → RepΔ₀ n P → RepΔ₀ n Q
-         → RepΔ₀ n (λ γ → P γ ⇒ Q γ)
-  ⇒-rep₀ (φ , c , a) (ψ , d , b) = (φ ⇒̇ ψ) , δ-⇒ c d , ⇒-rep (φ , a) (ψ , b) .snd
-
-  ¬-rep₀ : ∀ {n} {P : S ^ n → Ω} → RepΔ₀ n P → RepΔ₀ n (λ γ → ¬ P γ)
-  ¬-rep₀ (φ , c , a) = (¬̇ φ) , δ-¬ c , ¬-rep (φ , a) .snd
-
-  ⊤-rep₀ : ∀ {n} → RepΔ₀ n (λ _ → ⊤)
-  ⊤-rep₀ = ⊤̇ , δ-⊤ , ⊤-rep .snd
-
-  ⊥-rep₀ : ∀ {n} → RepΔ₀ n (λ _ → ⊥)
-  ⊥-rep₀ = ⊥̇ , δ-⊥ , ⊥-rep .snd
-
-  ∀∈-rep₀ : ∀ {n} {a : S ^ n → S} {P : S ^ suc n → Ω}
-          → RepS n a → RepΔ₀ (suc n) P
-          → RepΔ₀ n (λ γ → ⋀ S (λ x → (x ∈ˢ a γ) ⇒ P (x ∷ γ)))
-  ∀∈-rep₀ rt (φ , c , a) = ∀̇∈ (rt .fst) φ , δ-∀∈ c , ∀∈-rep rt (φ , a) .snd
-
-  ∃∈-rep₀ : ∀ {n} {a : S ^ n → S} {P : S ^ suc n → Ω}
-          → RepS n a → RepΔ₀ (suc n) P
-          → RepΔ₀ n (λ γ → ⋁ S (λ x → (x ∈ˢ a γ) ⊓ P (x ∷ γ)))
-  ∃∈-rep₀ rt (φ , c , a) = ∃̇∈ (rt .fst) φ , δ-∃∈ c , ∃∈-rep rt (φ , a) .snd
-```
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -237,9 +162,8 @@ module Certified {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋)
 <!--en-->
 The Levy hierarchy lives as inductive certificates, Δ₀ by the absence of unbounded
 constructors, Σ₁/Π₁ and the alternating Σₙ/Πₙ tower above it, all stable under
-constant relabelling; graded representations carry the Δ₀ witness alongside
-adequacy. The certificates are pure syntax; the theorem that gives them their
-force is next.
+constant relabelling. The certificates are pure syntax; the theorem that gives
+them their force is next.
 <!--zh-->
-列维层级以归纳证书的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔，全体在常量重标记下稳定；分级表示让 Δ₀ 见证与适足性并肩随行。证书是纯语法；赋予它们力量的定理在下一章。
+列维层级以归纳证书的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔，全体在常量重标记下稳定。证书是纯语法；赋予它们力量的定理在下一章。
 <!--/-->

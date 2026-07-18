@@ -24,7 +24,7 @@ module V.Smallness {ℓ : Level} where
 open import FOL.Structure using ( ZFStructure; _^_; _↾_ )
 open import FOL.Syntax
   using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Reification.Graded
+open import FOL.Graded
   using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 open import V.Hierarchy using ( 𝒮ᵥ )

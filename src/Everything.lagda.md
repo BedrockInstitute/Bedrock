@@ -123,33 +123,28 @@ import ZF.Model
 ```
 
 <!--en-->
-## The formula factory (Part 1 resumed)
+## Certificates and absoluteness (Part 1 resumed)
 
-Separation and replacement accept only formulas; these chapters set up the
-representation notion and the certificates that make formulas portable.
+The syntax chapter's bounded quantifiers pay off: the Levy grades become
+portable certificates, and the certificates prove their travel theorems.
 
-- `FOL.Reification.Base`{.Agda}: representation, the bridge: a formula paired with
-  its adequacy certificate; `translate`{.Agda} and `adequacy`{.Agda} as the only
-  exits.
-- `FOL.Reification.Graded`{.Agda}: the Levy hierarchy as inductive certificates:
-  Δ₀ by absence, Σ₁/Π₁, the alternating Σₙ/Πₙ tower, and graded representations.
-- `FOL.Reification.Absoluteness`{.Agda}: transitive classes and the Δ₀
-  absoluteness theorem `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down; `transfer`{.Agda}
-  composes adequacy with absoluteness.
+- `FOL.Graded`{.Agda}: the Levy hierarchy as inductive certificates: Δ₀ by
+  absence, Σ₁/Π₁, and the alternating Σₙ/Πₙ tower, all stable under
+  relabelling.
+- `FOL.Absoluteness`{.Agda}: transitive classes and the Δ₀ absoluteness theorem
+  `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down.
 <!--zh-->
-## 公式工厂 (第一部再续)
+## 证书与绝对性 (第一部再续)
 
-分离与替换只收公式；这几章立起表示概念，并给公式配上可携的证书。
+语法章的有界量词开始兑付：列维层级化为可携证书，证书再证出自己的旅行定理。
 
-- `FOL.Reification.Base`{.Agda}：表示，即那座桥：公式配上其适足性证书；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。
-- `FOL.Reification.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁、交替的 Σₙ/Πₙ 之塔，以及分级表示。
-- `FOL.Reification.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下；`transfer`{.Agda} 把适足性与绝对性复合。
+- `FOL.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔，全体在重标记下稳定。
+- `FOL.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
 <!--/-->
 
 ```agda
-import FOL.Reification.Base
-import FOL.Reification.Graded
-import FOL.Reification.Absoluteness
+import FOL.Graded
+import FOL.Absoluteness
 ```
 
 <!--en-->
@@ -229,31 +224,58 @@ import L.Model
 <!--en-->
 ## Tools in waiting
 
-Three chapters with, as of today, no consumer anywhere in the trunk: the
-combinator assembly line, the variable calculus, and relativization. Their first
-consumers arrive with Part 4's deeper machinery; they read last so the main line
-stays unbroken.
+Two chapters with, as of today, no consumer anywhere in the trunk; their first
+consumers arrive with Part 4's deeper machinery, and they read late so the main
+line stays unbroken.
 
-- `FOL.Reification.Combinators`{.Agda}: the certificate algebra: one combinator per
-  constructor, every certificate a single congruence.
 - `FOL.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
   syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
   exchange, and contraction.
-- `FOL.Reification.Relativize`{.Agda}: tightening unbounded quantifiers to a
-  constant bound, Δ₀ certificate included, with the correctness equation.
+- `FOL.Relativize`{.Agda}: tightening unbounded quantifiers to a constant bound,
+  Δ₀ certificate included, with the correctness equation.
 <!--zh-->
 ## 候用的工具
 
-三章至今在主干上没有任何消费者：组合子流水线、变量演算与相对化。它们的首批消费者随第四部的深层机器到来；读在最后，好让主线不断。
+两章至今在主干上没有任何消费者；它们的首批消费者随第四部的深层机器到来，读在靠后，好让主线不断。
 
-- `FOL.Reification.Combinators`{.Agda}：证书代数：一构造子一组合子，每张证书一次同余。
 - `FOL.Renaming`{.Agda}：本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
-- `FOL.Reification.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 证书随附，并给出正确性等式。
+- `FOL.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 证书随附，并给出正确性等式。
 <!--/-->
 
 ```agda
-import FOL.Reification.Combinators
 import FOL.Renaming
-import FOL.Reification.Relativize
+import FOL.Relativize
+```
+
+<!--en-->
+## The reification framework (in waiting)
+
+The formula factory proper: manufacture, from a host predicate, a formula
+certified to mean it. Nothing in the trunk consumes the line yet; it closes the
+catalog, ready for the chapters that will run it at scale.
+
+- `FOL.Reification.Base`{.Agda}: representation, the bridge: a formula paired with
+  its adequacy certificate; `translate`{.Agda} and `adequacy`{.Agda} as the only
+  exits.
+- `FOL.Reification.Combinators`{.Agda}: the assembly line: one combinator per
+  constructor, every certificate a single congruence.
+- `FOL.Reification.Certified`{.Agda}: the graded tier: representations carrying a
+  Δ₀ certificate alongside adequacy (`RepΔ₀`{.Agda}), the graded combinators,
+  and `transfer`{.Agda}, composing adequacy with absoluteness into the
+  framework's working currency.
+<!--zh-->
+## Reification 框架 (候用)
+
+公式工厂本尊：从宿主谓词制造经认证与之同义的公式。主干至今没有消费这条线；它收束全目录，静候将来大规模开动它的章节。
+
+- `FOL.Reification.Base`{.Agda}：表示，即那座桥：公式配上其适足性证书；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。
+- `FOL.Reification.Combinators`{.Agda}：流水线：一构造子一组合子，每张证书一次同余。
+- `FOL.Reification.Certified`{.Agda}：分级层：Δ₀ 证书与适足性并肩的表示 (`RepΔ₀`{.Agda})、分级组合子，与把适足性同绝对性复合成框架流通货币的 `transfer`{.Agda}。
+<!--/-->
+
+```agda
+import FOL.Reification.Base
+import FOL.Reification.Combinators
+import FOL.Reification.Certified
 ```
 

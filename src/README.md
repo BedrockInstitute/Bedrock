@@ -50,18 +50,22 @@ entry in the reading catalog**, at the position its first consumer dictates.
     recursion; relabelling lemmas `⟦⟧-map`, `⊨-map`, `embed-⊨`.
   - `FOL/Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
     (weakening, exchange, contraction in one stroke).
-  - `FOL/Reification/`, landed with `[L1.3]` (consumption-pruned; deferrals in the
-    PLAN ledger):
+  - `FOL/Graded.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive
+    certificates; `mapΔ₀` and friends. (Re-homed from `FOL.Reification` by owner
+    ruling 2026-07-18; see the ledger.)
+  - `FOL/Absoluteness.lagda.md`: `Transitive`, `Single` (`abs₀`, `σ₁-up`,
+    `π₁-down`). Re-homed likewise.
+  - `FOL/Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
+    (`_⊨ᴬ_`, `relativize-correct`). Re-homed likewise.
+  - `FOL/Reification/`, landed with `[L1.3]`, re-cut 2026-07-18 to the
+    representation framework proper (zero consumers today; reads at the tail):
     - `Base.lagda.md`: representation = formula × adequacy certificate; `RepP`,
       `RepS`, `translate`, `adequacy`.
-    - `Combinators.lagda.md`: the certificate algebra, one combinator per
-      constructor, publicly re-exporting Base.
-    - `Graded.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive certificates;
-      `mapΔ₀` and friends; `Certified` (graded representations `RepΔ₀`).
-    - `Absoluteness.lagda.md`: `Transitive` (landed here per the ledger), `Single`
-      (`abs₀`, `σ₁-up`, `π₁-down`, `transfer`).
-    - `Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
-      (`_⊨ᴬ_`, `relativize-correct`).
+    - `Combinators.lagda.md`: the assembly line, one combinator per constructor,
+      publicly re-exporting Base.
+    - `Certified.lagda.md`: the graded tier: `Certified` (graded representations
+      `RepΔ₀`, graded combinators) and `Transfer.transfer` (adequacy composed
+      with absoluteness).
 - `ZF/`: Part 2, what a ZF(C) model is, landed with `[L1.4]`:
   - `ZF/Model.lagda.md`: `IsSetOf`/`SetOf` (class realization), the description
     operator `℩`, `_⊆ˢ_`, the `ZFModel` record (extensionality, meta-level
@@ -159,8 +163,8 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `_^_` | power (environments) | ① | `FOL.Structure` | `^` |
 | `⟦_⟧` | the value of (evaluation) | ① | `FOL.Semantics` | `\[[` `\]]` |
 | `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
-| `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Reification.Absoluteness` | `\models` + `\^v` / `\^m` |
-| `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Reification.Relativize` | `\models` + `\^A` |
+| `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Absoluteness` | `\models` + `\^v` / `\^m` |
+| `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Relativize` | `\models` + `\^A` |
 | `℩` | that (description operator) | ① | `ZF.Model` | `\riota` |
 | `⊆ˢ` | subset (structure layer) | ③ | `ZF.Model` | `\sub=` `\^s` |
 | `∅` | empty set | ① | `ZF.Model` | `\emptyset` |
