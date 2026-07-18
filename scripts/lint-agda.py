@@ -38,8 +38,8 @@ Usage:
   with no FILE, scans git-tracked src/**/*.lagda.md. Exit 1 on any violation.
 """
 
+import glob
 import re
-import subprocess
 import sys
 
 OPTIONS_EXPECTED = ["--cubical", "--safe", "--guardedness"]
@@ -359,9 +359,9 @@ def lint_file(path):
 # ---- CLI -------------------------------------------------------------------
 
 def tracked_masters():
-    out = subprocess.run(["git", "ls-files", "src"], capture_output=True,
-                         text=True, check=True).stdout.split()
-    return [f for f in out if f.endswith(".lagda.md")]
+    """All masters on disk, tracked or not: a new file must not escape the gate
+    merely by not being committed yet."""
+    return sorted(glob.glob("src/**/*.lagda.md", recursive=True))
 
 
 def main(argv):
