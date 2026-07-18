@@ -29,6 +29,24 @@ module Everything where
 ```
 
 <!--en-->
+## Landmarks: where the book ends up
+
+- `Landmarks`{.Agda}: the trophy case, displayed at the entrance: the milestone
+  theorems restated as self-contained signatures with their full assumption
+  bills, `V⊨ZF`{.Agda} (and its classical redemption), `V⊨ZFC`{.Agda}, and the
+  frontier-conditional `L⊨ZFC`{.Agda}. Read it first to see the destination;
+  understanding the signatures is what the rest of the book is for.
+<!--zh-->
+## 地标：本书的终点
+
+- `Landmarks`{.Agda}：奖杯陈列室，摆在入口处：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其经典代付版)、`V⊨ZFC`{.Agda}，与带前沿条件的 `L⊨ZFC`{.Agda}。先读它，看清目的地；至于读懂这些签名，正是全书其余部分的任务。
+<!--/-->
+
+```agda
+import Landmarks
+```
+
+<!--en-->
 ## Part 0: the groundwork
 
 - `Base.Prelude`{.Agda}: the curated host vocabulary (universes, paths, h-levels,
@@ -229,19 +247,3 @@ import L.Frontier
 import L.Model
 ```
 
-<!--en-->
-## Landmarks
-
-- `Landmarks`{.Agda}: the trophy case: the milestone theorems restated as
-  self-contained signatures with their full assumption bills, `V⊨ZF`{.Agda}
-  (and its classical redemption), `V⊨ZFC`{.Agda}, and the frontier-conditional
-  `L⊨ZFC`{.Agda}.
-<!--zh-->
-## 地标
-
-- `Landmarks`{.Agda}：奖杯陈列室：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其经典代付版)、`V⊨ZFC`{.Agda}，与带前沿条件的 `L⊨ZFC`{.Agda}。
-<!--/-->
-
-```agda
-import Landmarks
-```

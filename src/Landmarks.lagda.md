@@ -1,13 +1,16 @@
 # Landmarks
 
 <!--en-->
-The trophy case. Each landmark below restates a milestone theorem of the book in
-one self-contained signature, with its full bill of assumptions on display, and
-names the chapter that proves it. Nothing here is new mathematics; the point is
-stable anchors: a reader, or a paper, can cite a landmark without caring where
-inside the book its proof lives.
+The trophy case, and it stands at the entrance on purpose. Each landmark below
+restates a milestone theorem of the book in one self-contained signature, with
+its full bill of assumptions on display, and names the chapter that proves it.
+On a first reading nothing here is expected to make sense yet: these signatures
+are the destination, and learning to read them, symbol by symbol and assumption
+by assumption, is what the rest of the book is for. Come back after each part
+lands. For the returning reader the landmarks are stable anchors: a paper can
+cite one without caring where inside the book its proof lives.
 <!--zh-->
-奖杯陈列室。下面每座地标都以一条自足的签名重述本书的一项里程碑定理，假设账单全额陈列，并指认证明它的章节。此处没有新数学；要义在于稳定的锚点：读者或论文可以直接引用地标，而不必关心其证明住在书中何处。
+奖杯陈列室，而且是故意摆在入口处的。下面每座地标都以一条自足的签名重述本书的一项里程碑定理，假设账单全额陈列，并指认证明它的章节。初读时这里的一切都不指望被看懂：这些签名就是目的地，而学会逐个符号、逐条假设地读懂它们，正是全书其余部分的任务。每读完一部，请回到这里。对回访的读者，地标是稳定的锚点：论文可以直接引用，而不必关心其证明住在书中何处。
 <!--/-->
 
 ```agda
