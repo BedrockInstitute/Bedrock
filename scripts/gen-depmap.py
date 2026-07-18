@@ -45,6 +45,7 @@ UI = {
         "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
         "alledges": "all direct imports",
         "lmk": "include Landmarks' references",
+        "legfront": "dashed: temporary chapter (the frontier; deleted once its debts are paid)",
         "hint": "— hover or click any chapter —",
         "hubnote": ("The hubs <span class=mono>Base.Prelude</span> and <span class=mono>"
                     "Base.Truth</span> are imported by every chapter; those edges are "
@@ -64,6 +65,7 @@ UI = {
         "edgemode": "边：", "skeleton": "骨架 (传递约简)",
         "alledges": "全部直接边",
         "lmk": "包含 Landmarks 的引用边",
+        "legfront": "虚线：临时章节 (前沿登记簿，债务偿清即删)",
         "hint": "— 悬停或点击任一章节 —",
         "hubnote": ("中枢 <span class=mono>Base.Prelude</span> 与 <span class=mono>Base.Truth"
                     "</span> 被每一章导入，图中省略这些边 (详情卡仍列出)。"),
@@ -81,6 +83,7 @@ UI = {
         "edgemode": "辺：", "skeleton": "骨格 (推移簡約)",
         "alledges": "すべての直接 import",
         "lmk": "Landmarks の参照を含める",
+        "legfront": "破線：一時的な章 (フロンティア、完済で削除)",
         "hint": "— 章にホバーまたはクリック —",
         "hubnote": ("ハブ <span class=mono>Base.Prelude</span> と <span class=mono>Base.Truth"
                     "</span> は全章から import されるため、辺は省略 (詳細カードには表示)。"),
@@ -221,6 +224,7 @@ def main(argv):
         page = page.replace("__SKELETON__", ui["skeleton"])
         page = page.replace("__ALLEDGES__", ui["alledges"])
         page = page.replace("__LMK__", ui["lmk"])
+        page = page.replace("__LEGFRONT__", ui["legfront"])
         page = page.replace("__HINT__", ui["hint"])
         page = page.replace("__HUBNOTE__", ui["hubnote"])
         page = page.replace("__FRONTNOTE__", ui["frontnote"])
