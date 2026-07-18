@@ -23,7 +23,7 @@ open import Base.Truth
 
 module V.Model {ℓ : Level} where
 
-open import Base.Classical using ( LEM; HPropSmallness; Impredicativity; lem→Impredicativity )
+open import Base.Classical using ( LEM; HPropSmallness; Impredicativity; lem→impredicativity )
 open import Base.Choice using ( SetChoice; choice→lem; lowerSetChoice )
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
@@ -252,9 +252,9 @@ price is exactly Part 0's impredicativity wallet: `resizing`{.Agda} compresses
 any proposition, and `hPropSmallness`{.Agda} is the small classifier the power
 set will be indexed by. Nothing here is an axiom; the assembly takes the wallet
 as a parameter, and the classical reader rides free through
-`lem→Impredicativity`{.Agda}, which is what the dividends were saved for.
+`lem→impredicativity`{.Agda}, which is what the dividends were saved for.
 <!--zh-->
-还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部那只非直谓性钱包：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以钱包为参数，经典读者则经 `lem→Impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
+还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部那只非直谓性钱包：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以钱包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
 <!--/-->
 
 <!--en-->
@@ -412,7 +412,7 @@ classical redemption:
 
 ```agda
 V⊨ZF : LEM (ℓ-suc ℓ) → isZFModel
-V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→Impredicativity lem)
+V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→impredicativity lem)
 ```
 
 <!--en-->

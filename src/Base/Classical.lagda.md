@@ -295,12 +295,12 @@ They also share their consumers, so they get a wallet, one level at a time in
 the same style as `LEM`{.Agda}. The bundling is by co-consumption, not by
 implication: neither instrument derives the other (they descend from two of
 Voevodsky's separate resizing axioms), and only the excluded middle redeems both
-at once (`lem→Impredicativity`{.Agda}), from a **single instance** at the higher
+at once (`lem→impredicativity`{.Agda}), from a **single instance** at the higher
 level: resizing consumes it as is, and `lowerLEM`{.Agda} hands the classifier
 its lower copy. The interface says nothing about any particular structure; it
 is pure universe-level policy, and Part 3 will name its exact price in it.
 <!--zh-->
-两件器具共有一种品格：各自都在说命题的世界拒绝随宇宙一起膨胀，而这正是**非直谓性**的标志。它们也共享消费者，于是配一只钱包，与 `LEM`{.Agda} 同款逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)，唯有排中律能一次赎回两件 (`lem→Impredicativity`{.Agda})，而且只需较高层级上的**单个实例**：降层原样消费它，`lowerLEM`{.Agda} 把它的低层副本递给分类器。这个接口不谈任何特定结构，是纯粹的宇宙层级政策；第三部将用它开出自己的准确价格。
+两件器具共有一种品格：各自都在说命题的世界拒绝随宇宙一起膨胀，而这正是**非直谓性**的标志。它们也共享消费者，于是配一只钱包，与 `LEM`{.Agda} 同款逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)，唯有排中律能一次赎回两件 (`lem→impredicativity`{.Agda})，而且只需较高层级上的**单个实例**：降层原样消费它，`lowerLEM`{.Agda} 把它的低层副本递给分类器。这个接口不谈任何特定结构，是纯粹的宇宙层级政策；第三部将用它开出自己的准确价格。
 <!--/-->
 
 ```agda
@@ -309,8 +309,8 @@ record Impredicativity (ℓ : Level) : Type (ℓ-suc (ℓ-suc ℓ)) where
     resizing       : Resizing ℓ
     hPropSmallness : HPropSmallness ℓ
 
-lem→Impredicativity : ∀ {ℓ} → LEM (ℓ-suc ℓ) → Impredicativity ℓ
-lem→Impredicativity lem = record
+lem→impredicativity : ∀ {ℓ} → LEM (ℓ-suc ℓ) → Impredicativity ℓ
+lem→impredicativity lem = record
   { resizing       = lem→resizing lem
   ; hPropSmallness = lem→hPropSmallness (lowerLEM lem) }
 ```
@@ -328,9 +328,9 @@ classical mathematics is therefore a compile-time fact. Two dividends are banked
 a small classifier of propositions (`HPropSmallness`{.Agda}, by
 `lem→hPropSmallness`{.Agda}) and propositional resizing (`Resizing`{.Agda}, by
 `lem→resizing`{.Agda}), and bundled as the interface `Impredicativity`{.Agda},
-which the excluded middle redeems whole (`lem→Impredicativity`{.Agda}). Part 3
+which the excluded middle redeems whole (`lem→impredicativity`{.Agda}). Part 3
 will spend exactly this wallet: it prices, for the cumulative hierarchy `V`, the
 smallness assumptions behind full separation and power set.
 <!--zh-->
-排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。存入两笔红利：命题的小分类器 (`HPropSmallness`{.Agda}，经 `lem→hPropSmallness`{.Agda}) 与命题降层 (`Resizing`{.Agda}，经 `lem→resizing`{.Agda})，并捆绑为接口 `Impredicativity`{.Agda}，排中律可整份赎回 (`lem→Impredicativity`{.Agda})。第三部将恰好花掉这只钱包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
+排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。存入两笔红利：命题的小分类器 (`HPropSmallness`{.Agda}，经 `lem→hPropSmallness`{.Agda}) 与命题降层 (`Resizing`{.Agda}，经 `lem→resizing`{.Agda})，并捆绑为接口 `Impredicativity`{.Agda}，排中律可整份赎回 (`lem→impredicativity`{.Agda})。第三部将恰好花掉这只钱包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
 <!--/-->

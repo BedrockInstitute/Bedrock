@@ -35,7 +35,7 @@ entry in the reading catalog**, at the position its first consumer dictates.
   - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
     its two dividends, named `HPropSmallness` (small classifier, by
     `lem→hPropSmallness`) and `Resizing` (propositional resizing, by
-    `lem→resizing`), bundled as `Impredicativity` with `lem→Impredicativity` as
+    `lem→resizing`), bundled as `Impredicativity` with `lem→impredicativity` as
     the classical redemption. No postulate, per PLAN D2.
   - `Base/Choice.lagda.md` (landed with `[L1.9]`): the choice interface `SetChoice`
     (levelwise, LEM-style) and Diaconescu's theorem `choice→lem` via set quotients.
