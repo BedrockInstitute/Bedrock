@@ -21,7 +21,7 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _∈ᵗ_ )
 
-module ZF.Model {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ})) where
+module ZF {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ})) where
 ```
 
 <!--en-->
@@ -324,13 +324,13 @@ hand. But the book will need a formula for every predicate it ever wants to
 separate or replace along, each with a proof that the formula means that
 predicate, and hand-assembling syntax at that scale is out of the question.
 Turning host predicates into formulas, certificate included, is a craft of its
-own, the *reification* framework catalogued at the book's tail; the two chapters
-that follow first grade formulas by quantifier shape and prove the travel
-theorems that everything downstream runs on.
+own, the *reification* framework catalogued at the book's tail; the certificates
+it runs on, the grades and their travel theorems, are already in hand from the
+close of Part 1.
 <!--zh-->
 二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 说「该变量是 `b` 的成员」；把它递给 `separate`{.Agda} 作用在 `a` 上，公理便交回 `a ∩ b`。更妙的是：它的规格就**是**分离的规格，一字不差，因为按 `⊨` 的定义子句，那条公式的满足直接计算为 `x ∈ˢ b`。语义章许诺的忠实性，此刻开始以集合、而不只是以逻辑付账。
 
-这也是本章的坦白。一条公式手写便宜。可本书今后想沿着分离或替换使用的每个谓词都需要一条公式，每条还得配上「公式的含义恰是该谓词」的证明，那样的规模之下手工拼装语法绝无可能。把宿主谓词变成公式、随附保义证书，这门手艺自成一体，即编在书末的 reification 框架；紧随本章的两章先按量词形状给公式分级，并证明下游一切所依赖的旅行定理。
+这也是本章的坦白。一条公式手写便宜。可本书今后想沿着分离或替换使用的每个谓词都需要一条公式，每条还得配上「公式的含义恰是该谓词」的证明，那样的规模之下手工拼装语法绝无可能。把宿主谓词变成公式、随附保义证书，这门手艺自成一体，即编在书末的 reification 框架；它所依赖的证书，即分级与其旅行定理，第一部收束时已然在手。
 <!--/-->
 
 ```agda
@@ -479,8 +479,7 @@ specifications are projections; intersection fell out of separation and a
 two-symbol formula, the first set built by feeding the framework its own language.
 `ZFCModel`{.Agda} adds choice on top. The record's appetite for formulas is now
 the book's outstanding debt; the reification framework at the book's tail is the
-factory that will pay it, and the next two chapters forge the certificates that
-the whole journey runs on.
+factory that will pay it, running on the certificates Part 1 already forged.
 <!--zh-->
-ZF 模型是一个 record：外延公理、元层面的正则公理 (紧致性天花板使其他任何安置都不诚实)、以唯一存在形态陈述的诸构造字段、消费本书自家公式的分离与替换，以及经数码链的强无穷。`℩` 把字段兑成运算，规格皆为投影；交由分离加一条两符号公式落袋，是框架吃自家语言造出的第一个集合。`ZFCModel`{.Agda} 在其上添加选择。record 对公式的胃口成了本书的未清之债；书末的 reification 框架是将来还债的工厂，紧随其后的两章则先锻造全程赖以运转的证书。
+ZF 模型是一个 record：外延公理、元层面的正则公理 (紧致性天花板使其他任何安置都不诚实)、以唯一存在形态陈述的诸构造字段、消费本书自家公式的分离与替换，以及经数码链的强无穷。`℩` 把字段兑成运算，规格皆为投影；交由分离加一条两符号公式落袋，是框架吃自家语言造出的第一个集合。`ZFCModel`{.Agda} 在其上添加选择。record 对公式的胃口成了本书的未清之债；书末的 reification 框架是将来还债的工厂，其燃料，即证书，第一部已锻造完毕。
 <!--/-->

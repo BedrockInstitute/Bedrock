@@ -90,24 +90,33 @@ import Base.Choice
 - `FOL.Semantics`{.Agda}: evaluation `⟦_⟧`{.Agda} and satisfaction `_⊨_`{.Agda} by
   structural recursion, each clause exactly its truth-algebra operation;
   relabelling preserves meaning.
+- `FOL.Graded`{.Agda}: the Levy hierarchy as inductive certificates: Δ₀ by
+  absence, Σ₁/Π₁, and the alternating Σₙ/Πₙ tower, all stable under
+  relabelling.
+- `FOL.Absoluteness`{.Agda}: transitive classes and the Δ₀ absoluteness theorem
+  `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down.
 <!--zh-->
 ## 第一部：作为研究对象的一阶逻辑
 
 - `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语；句子与无参公式。
 - `FOL.Structure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；限制 `↾` 与环境。
 - `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算；重标记保含义。
+- `FOL.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔，全体在重标记下稳定。
+- `FOL.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
 <!--/-->
 
 ```agda
 import FOL.Syntax
 import FOL.Structure
 import FOL.Semantics
+import FOL.Graded
+import FOL.Absoluteness
 ```
 
 <!--en-->
 ## Part 2: what a model of ZF is
 
-- `ZF.Model`{.Agda}: the axioms as a record: `ZFModel`{.Agda} with extensionality,
+- `ZF`{.Agda}: the axioms as a record: `ZFModel`{.Agda} with extensionality,
   meta-level regularity (the compactness ceiling), unique existence discharged by
   the description operator `℩`, separation and replacement consuming the book's
   own formulas, and strong infinity through the numeral chain; `ZFCModel`{.Agda}
@@ -115,36 +124,11 @@ import FOL.Semantics
 <!--zh-->
 ## 第二部：何谓 ZF 模型
 
-- `ZF.Model`{.Agda}：公理作为 record：`ZFModel`{.Agda} 含外延公理、元层面的正则公理 (紧致性天花板)、经摹状词算子 `℩` 兑现的唯一存在、消费本书自家公式的分离与替换，以及经数码链的强无穷；`ZFCModel`{.Agda} 以扩展形式添加选择公理。
+- `ZF`{.Agda}：公理作为 record：`ZFModel`{.Agda} 含外延公理、元层面的正则公理 (紧致性天花板)、经摹状词算子 `℩` 兑现的唯一存在、消费本书自家公式的分离与替换，以及经数码链的强无穷；`ZFCModel`{.Agda} 以扩展形式添加选择公理。
 <!--/-->
 
 ```agda
-import ZF.Model
-```
-
-<!--en-->
-## Certificates and absoluteness (Part 1 resumed)
-
-The syntax chapter's bounded quantifiers pay off: the Levy grades become
-portable certificates, and the certificates prove their travel theorems.
-
-- `FOL.Graded`{.Agda}: the Levy hierarchy as inductive certificates: Δ₀ by
-  absence, Σ₁/Π₁, and the alternating Σₙ/Πₙ tower, all stable under
-  relabelling.
-- `FOL.Absoluteness`{.Agda}: transitive classes and the Δ₀ absoluteness theorem
-  `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down.
-<!--zh-->
-## 证书与绝对性 (第一部再续)
-
-语法章的有界量词开始兑付：列维层级化为可携证书，证书再证出自己的旅行定理。
-
-- `FOL.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔，全体在重标记下稳定。
-- `FOL.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
-<!--/-->
-
-```agda
-import FOL.Graded
-import FOL.Absoluteness
+import ZF
 ```
 
 <!--en-->
@@ -180,7 +164,7 @@ import V.Model
 <!--en-->
 ## Part 4: the constructible universe
 
-- `V.Definability`{.Agda}: the single step: `Def A`, the definable subsets of
+- `L.Definability`{.Agda}: the single step: `Def A`, the definable subsets of
   `A` with parameters from `A`: syntax as index set, inner satisfaction for
   meaning, essential smallness footing the bill; `A ∈ Def A` always, and
   `A ⊆ Def A` under transitivity.
@@ -191,12 +175,12 @@ import V.Model
 <!--zh-->
 ## 第四部：可构造宇宙
 
-- `V.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
+- `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 <!--/-->
 
 ```agda
-import V.Definability
+import L.Definability
 import L.Constructible
 ```
 
