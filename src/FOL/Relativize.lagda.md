@@ -101,10 +101,10 @@ exactly two clauses.
 <!--/-->
 
 ```agda
-module Correct {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋)
+module Correct {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
                {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) (c : K) where
 
-  open TruthAlg 𝕋
+  open TruthAlgebra 𝕋
   open ZFStructure 𝒮
   open module Sem = FOL.Semantics 𝕋 𝒮 using ( module At )
   open At ι using ( _⊨_; ⟦_⟧ )

@@ -322,7 +322,7 @@ en = "truth algebra"
 zh = "真值代数"
 ja = "真理値代数"
 presence = true
-notes = "the TruthAlg record, Base.Truth"
+notes = "the TruthAlgebra record, Base.Truth"
 
 [[term]]
 category = "Type theory"

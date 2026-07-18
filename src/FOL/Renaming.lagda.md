@@ -88,10 +88,10 @@ truth algebra, the structure, and the constant interpretation.
 <!--/-->
 
 ```agda
-module Sat {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋)
+module Sat {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
            {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) where
 
-  open TruthAlg 𝕋
+  open TruthAlgebra 𝕋
   open ZFStructure 𝒮
 
   private module Sem = FOL.Semantics 𝕋 𝒮

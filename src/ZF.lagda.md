@@ -21,24 +21,24 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _∈ᵗ_ )
 
-module ZF {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ})) where
+module ZF {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ})) where
 ```
 
 <!--en-->
 Two standing choices, both announced in earlier chapters and both exercised here
-for the first time. The truth algebra is the canonical `hPropAlg`{.Agda}: axioms
+for the first time. The truth algebra is the canonical `hPropAlgebra`{.Agda}: axioms
 assert facts, and the book's mathematical facts live in `hProp`{.Agda} (per the
 scope discipline, opening the algebra is what brings the logic symbols into
 scope). And the constant interpretation is the canonical one from the semantics
 chapter: the constant domain is the carrier itself and `ι` is the identity, so a
 parameter appearing in a formula simply *is* the set it names.
 <!--zh-->
-两项常设选择，都在前面章节宣布过，都在此第一次真正上场。真值代数取典范的 `hPropAlg`{.Agda}：公理断言事实，而本书数学的事实住在 `hProp`{.Agda} (按作用域纪律，逻辑符号恰经打开代数入场)。常量解释也取语义章的典范情形：常量域就是载体自身，`ι` 为恒等，于是公式里出现的参数就**是**它指名的那个集合。
+两项常设选择，都在前面章节宣布过，都在此第一次真正上场。真值代数取典范的 `hPropAlgebra`{.Agda}：公理断言事实，而本书数学的事实住在 `hProp`{.Agda} (按作用域纪律，逻辑符号恰经打开代数入场)。常量解释也取语义章的典范情形：常量域就是载体自身，`ι` 为恒等，于是公式里出现的参数就**是**它指名的那个集合。
 <!--/-->
 
 ```agda
 open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
-open import FOL.Semantics (hPropAlg {ℓ}) 𝒮 using ( module At )
+open import FOL.Semantics (hPropAlgebra {ℓ}) 𝒮 using ( module At )
 open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Induction.WellFounded using ( WellFounded; wf→x≮x )
@@ -46,7 +46,7 @@ import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 
-open TruthAlg (hPropAlg {ℓ})
+open TruthAlgebra (hPropAlgebra {ℓ})
 open ZFStructure 𝒮
 
 private

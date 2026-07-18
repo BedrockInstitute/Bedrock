@@ -8,9 +8,9 @@ output certificate. The second job costs one line each, and this is the semantic
 chapter's faithfulness paying out: `γ ⊨ (φ ∧̇ ψ)` **is**, by definition,
 `(γ ⊨ φ) ⊓ (γ ⊨ ψ)`, so the certificate part is a congruence and nothing more. The
 whole chapter is generic in the truth algebra, cashing the promise made when
-`TruthAlg`{.Agda} was declared law-free: not one algebraic fact is used.
+`TruthAlgebra`{.Agda} was declared law-free: not one algebraic fact is used.
 <!--zh-->
-车间预先备案，候单开工：对象语言一构造子一个组合子。每个组合子做两件事，把语法拼起来，并把输入证书复合成输出证书。第二件事每处只花一行，兑现的正是语义章的忠实性：`γ ⊨ (φ ∧̇ ψ)` **按定义就是** `(γ ⊨ φ) ⊓ (γ ⊨ ψ)`，于是证书部分只剩同余，分毫不多。整章对真值代数泛型，兑现 `TruthAlg`{.Agda} 立为零定律时的许诺：没有用到任何一条代数事实。
+车间预先备案，候单开工：对象语言一构造子一个组合子。每个组合子做两件事，把语法拼起来，并把输入证书复合成输出证书。第二件事每处只花一行，兑现的正是语义章的忠实性：`γ ⊨ (φ ∧̇ ψ)` **按定义就是** `(γ ⊨ φ) ⊓ (γ ⊨ ψ)`，于是证书部分只剩同余，分毫不多。整章对真值代数泛型，兑现 `TruthAlgebra`{.Agda} 立为零定律时的许诺：没有用到任何一条代数事实。
 <!--/-->
 
 ```agda
@@ -20,7 +20,7 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _^_ )
 
-module FOL.Reification.Combinators {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋)
+module FOL.Reification.Combinators {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
                                    {ℓc} (K : Type ℓc) (ι : K → ZFStructure.S 𝒮) where
 
 open import FOL.Syntax using
@@ -28,7 +28,7 @@ open import FOL.Syntax using
 open import FOL.Reification.Base 𝕋 𝒮 K ι public
   using ( RepP; RepS; translate; adequacy )
 
-open TruthAlg 𝕋
+open TruthAlgebra 𝕋
 open ZFStructure 𝒮
 ```
 

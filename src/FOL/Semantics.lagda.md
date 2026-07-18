@@ -17,7 +17,7 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _^_ )
 
-module FOL.Semantics {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
+module FOL.Semantics {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
 
 import Cubical.Data.Empty as Empty
 open import FOL.Syntax using
@@ -25,7 +25,7 @@ open import FOL.Syntax using
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈
   ; mapTm; mapFo; ParamFree; embed )
 
-open TruthAlg 𝕋
+open TruthAlgebra 𝕋
 open ZFStructure 𝒮
 ```
 

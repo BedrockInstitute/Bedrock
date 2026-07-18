@@ -40,8 +40,8 @@ on the page, one glyph per layer: the library's `∈` (the host), this chapter's
 <!--/-->
 
 ```agda
-record ZFStructure {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') : Type (ℓ-max (ℓ-suc ℓ) ℓ') where
-  open TruthAlg 𝕋
+record ZFStructure {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') : Type (ℓ-max (ℓ-suc ℓ) ℓ') where
+  open TruthAlgebra 𝕋
   field
     S         : Type ℓ
     isSetS    : isSet S
@@ -76,16 +76,16 @@ identity principle, simply equal, and the whole development transports across.
 <!--/-->
 
 <!--en-->
-When the truth algebra is `hPropAlg`{.Agda}, a structure can be assembled from just
+When the truth algebra is `hPropAlgebra`{.Agda}, a structure can be assembled from just
 a carrier, its set-hood, and a membership relation; equality is taken to be the
 path type, packaged as a proposition by `isSetS`.
 <!--zh-->
-当真值代数取 `hPropAlg`{.Agda} 时，结构只需载体、其集合性，与一个成员关系即可装配；等词取路径类型，由 `isSetS` 打包成命题。
+当真值代数取 `hPropAlgebra`{.Agda} 时，结构只需载体、其集合性，与一个成员关系即可装配；等词取路径类型，由 `isSetS` 打包成命题。
 <!--/-->
 
 ```agda
 pathStructure : ∀ {ℓ} (S : Type ℓ) → isSet S → (S → S → hProp ℓ)
-              → ZFStructure (hPropAlg {ℓ})
+              → ZFStructure (hPropAlgebra {ℓ})
 pathStructure S₀ set ∈₀ = record
   { S = S₀ ; isSetS = set
   ; _≈ˢ_ = λ x y → (x ≡ y) , set x y
@@ -102,7 +102,7 @@ quantify over it.
 <!--/-->
 
 ```agda
-module _ {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ})) where
+module _ {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ})) where
   open ZFStructure 𝒮
 
   _∈ᵗ_ : S → S → Type ℓ
@@ -132,8 +132,8 @@ exactly this channel.
 <!--/-->
 
 ```agda
-_↾_ : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ}))
-    → (ZFStructure.S 𝒮 → hProp ℓ) → ZFStructure (hPropAlg {ℓ})
+_↾_ : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ}))
+    → (ZFStructure.S 𝒮 → hProp ℓ) → ZFStructure (hPropAlgebra {ℓ})
 _↾_ {ℓ} 𝒮 M = record
   { S      = Σ[ x ∈ S ] ⟨ M x ⟩
   ; isSetS = isSetΣSndProp isSetS (λ x → (M x) .snd)
@@ -153,7 +153,7 @@ back to equality of the pairs, so nothing is lost.
 <!--/-->
 
 ```agda
-↾-reflects : ∀ {ℓ} {𝒮 : ZFStructure (hPropAlg {ℓ})} {M : ZFStructure.S 𝒮 → hProp ℓ}
+↾-reflects : ∀ {ℓ} {𝒮 : ZFStructure (hPropAlgebra {ℓ})} {M : ZFStructure.S 𝒮 → hProp ℓ}
              {a b : ZFStructure.S (𝒮 ↾ M)}
            → fst a ≡ fst b → a ≡ b
 ↾-reflects {M = M} = Σ≡Prop (λ x → (M x) .snd)
