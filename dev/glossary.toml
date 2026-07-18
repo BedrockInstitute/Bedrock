@@ -696,7 +696,7 @@ category = "Type theory"
 en = "small classifier"
 zh = "小分类器"
 ja = "小分類子"
-notes = "the smallΩ field: a small type equivalent to hProp"
+notes = "HPropSmallness: a small type equivalent to hProp"
 
 [[term]]
 category = "Set theory"
@@ -746,3 +746,10 @@ en = "set quotient"
 zh = "集合商"
 ja = "集合商"
 notes = "the SetQuotients HIT; quotient by a relation = 按关系取商"
+
+[[term]]
+category = "Type theory"
+en = "impredicativity"
+zh = "非直谓性"
+ja = "非可述性"
+notes = "the Impredicativity wallet (Resizing + HPropSmallness); impredicative = 非直谓 / 非可述"

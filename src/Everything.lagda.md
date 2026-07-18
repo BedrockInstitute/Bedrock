@@ -34,13 +34,13 @@ module Everything where
 - `Landmarks`{.Agda}: the trophy case, displayed at the entrance: the milestone
   theorems restated as self-contained signatures with their full assumption
   bills, `V⊨ZF`{.Agda} (and its classical redemption), `V⊨ZFC`{.Agda}, and the
-  frontier-conditional `L⊨ZFC`{.Agda}, with `V⊨ZFC-fromChoice`{.Agda} as the
-  single-hypothesis form. Read it first to see the destination; understanding
-  the signatures is what the rest of the book is for.
+  frontier-conditional `L⊨ZFC`{.Agda}, each hypothesis spelled in the name.
+  Read it first to see the destination; understanding the signatures is what
+  the rest of the book is for.
 <!--zh-->
 ## 地标：本书的终点
 
-- `Landmarks`{.Agda}：奖杯陈列室，摆在入口处：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其经典代付版)、`V⊨ZFC`{.Agda} (及其单假设版 `V⊨ZFC-fromChoice`{.Agda})，与带前沿条件的 `L⊨ZFC`{.Agda}。先读它，看清目的地；至于读懂这些签名，正是全书其余部分的任务。
+- `Landmarks`{.Agda}：奖杯陈列室，摆在入口处：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其精确价格版 `V⊨ZF-impredicative`{.Agda})、单凭选择的 `V⊨ZFC`{.Agda}，与带前沿条件的 `L⊨ZFC`{.Agda}。先读它，看清目的地；至于读懂这些签名，正是全书其余部分的任务。
 <!--/-->
 
 ```agda
@@ -57,9 +57,10 @@ import Landmarks
   signature that is the book's sole source of logic symbols, with its canonical
   instance `hPropAlgebra`{.Agda}.
 - `Base.Classical`{.Agda}: the classical boundary: excluded middle as the parameter
-  interface `LEM`{.Agda}, its two dividends (a small classifier of propositions
-  and propositional resizing), and their wallet, the interface `Resizing`{.Agda}
-  with its classical redemption `lem→Resizing`{.Agda}.
+  interface `LEM`{.Agda}, its two dividends, named `HPropSmallness`{.Agda} (the
+  small classifier) and `Resizing`{.Agda}, and their wallet
+  `Impredicativity`{.Agda} with its classical redemption
+  `lem→Impredicativity`{.Agda}.
 - `Base.Choice`{.Agda}: the boundary's second interface: set-level choice
   `SetChoice`{.Agda}, stated levelwise like `LEM`{.Agda}, with Diaconescu's
   theorem mechanized at once: choice proves the excluded middle
@@ -69,7 +70,7 @@ import Landmarks
 
 - `Base.Prelude`{.Agda}：精选的宿主词汇 (宇宙、路径、h-层级、`hProp`{.Agda}、依值对与索引数据)，以及决定本书读法的可溯源纪律。
 - `Base.Truth`{.Agda}：真值代数 `TruthAlgebra`{.Agda}，零定律的运算签名，全书逻辑符号的唯一来源；附典范实例 `hPropAlgebra`{.Agda}。
-- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}；两笔红利 (命题的小分类器与命题降层) 及其钱包，接口 `Resizing`{.Agda}，附经典赎回 `lem→Resizing`{.Agda}。
+- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}；两笔得名的红利，`HPropSmallness`{.Agda} (小分类器) 与 `Resizing`{.Agda} (命题降层)，及其钱包 `Impredicativity`{.Agda}，附经典赎回 `lem→Impredicativity`{.Agda}。
 - `Base.Choice`{.Agda}：边界的第二个接口：集合层选择 `SetChoice`{.Agda}，与 `LEM`{.Agda} 同款逐层级陈述；Diaconescu 定理当场机器化：选择证明排中律 (`choice→lem`{.Agda})。
 <!--/-->
 
@@ -144,16 +145,16 @@ import ZF
   `separateFromSmall`{.Agda} is the one pipe to sets; `Δ₀-small`{.Agda} makes Δ₀
   separation an axiom-free theorem (`separateΔ₀`{.Agda}).
 - `V.Model`{.Agda}: the summit: stock sets reshaped, replacement and strong
-  infinity for free, Part 0's `Resizing`{.Agda} pricing full separation and
-  power set; assembly `V⊨ZF`{.Agda},
-  with `SetChoice`{.Agda} the upgrade `V⊨ZFC`{.Agda}, and by Diaconescu the
-  single-hypothesis `V⊨ZFC-fromChoice`{.Agda}.
+  infinity for free, Part 0's `Impredicativity`{.Agda} pricing full separation
+  and power set; `V⊨ZF-impredicative`{.Agda} at that exact price, the headline
+  `V⊨ZF`{.Agda} from the excluded middle, and by Diaconescu `V⊨ZFC`{.Agda} from
+  choice alone.
 <!--zh-->
 ## 第三部：累积层级实现 ZF(C)
 
 - `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 一行插入，外延与正则免费入账。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
-- `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，第零部的 `Resizing`{.Agda} 为全分离与幂集标价；合龙 `V⊨ZF`{.Agda}，加 `SetChoice`{.Agda} 得 `V⊨ZFC`{.Agda}，经 Diaconescu 更有单假设的 `V⊨ZFC-fromChoice`{.Agda}。
+- `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，第零部的 `Impredicativity`{.Agda} 为全分离与幂集标价；`V⊨ZF-impredicative`{.Agda} 以此精确价格合龙，主打的 `V⊨ZF`{.Agda} 由排中律赎回，经 Diaconescu 的 `V⊨ZFC`{.Agda} 则单凭选择。
 <!--/-->
 
 ```agda
