@@ -173,6 +173,9 @@ ul.toc { font-size: 0.85rem; }
 ul.toc li, ul.modnav li { margin: 0.2rem 0; }
 ul.toc .toc-l3 { padding-left: 1rem; }
 ul.toc .toc-l4 { padding-left: 2rem; }
+ul.modnav li { padding-left: calc(var(--d, 0) * 0.85rem); }
+ul.modnav li.modgroup { font-weight: 700; color: var(--fg-alt); font-family: var(--sans);
+  font-size: 0.8rem; margin-top: 0.45rem; }
 ul.toc a, ul.modnav a { color: var(--fg-alt); text-decoration: none; }
 ul.toc a:hover, ul.modnav a:hover { color: var(--primary); }
 ul.modnav a { font-family: var(--mono); font-size: 0.82rem; }
@@ -241,6 +244,13 @@ span.inline-ref { color: var(--code-fg); }
 .inline-ref a:hover[href] { text-decoration: underline; }
 /* same-definition occurrence highlight (hover any occurrence, all light up) */
 .Agda a.occ { background: var(--occ-bg); border-radius: 3px; }
+
+/* ---- chapter prev/next navigation (the reading order, on every page) ---- */
+.chapnav { display: flex; justify-content: space-between; gap: 1rem;
+  margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--ruler);
+  font-family: var(--sans); font-size: 0.95rem; }
+.chapnav a { text-decoration: none; color: var(--primary); }
+.chapnav .chapnav-next { margin-left: auto; text-align: right; }
 
 /* ---- type-on-hover popup ---- */
 .hover-popup {

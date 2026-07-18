@@ -91,7 +91,10 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   lists). A genuine exception the linter cannot see (an instance-only import) is
   marked `-- lint-agda: keep`.
 - Every module is imported by `Everything` in reading order (enforced by the
-  L5-ported audit; a module outside `Everything` is unchecked and unlisted).
+  L5-ported audit; a module outside `Everything` is unchecked and unlisted). Its
+  reading position is where its first consumer needs it; thematic grouping is the
+  derived structure catalog's job (PLAN §5), never a reason to move a chapter
+  forward.
 
 ## 3. Naming
 
