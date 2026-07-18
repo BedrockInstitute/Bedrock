@@ -185,7 +185,6 @@ a.navlink { display: block; text-decoration: none; padding-left: 1.05rem; }
 a.navlink:hover { color: var(--primary); }
 details.navsec > ul.modnav, details.navsec > ul.toc { padding-left: 1.05rem; }
 ul.modnav ul { list-style: none; padding-left: 0.95rem; margin: 0; }
-ul.modnav li.modleaf { padding-left: 1.02rem; }
 ul.modnav summary.modgroup { font-weight: 700; color: var(--fg-alt);
   font-family: var(--sans); font-size: 0.8rem; margin-top: 0.35rem;
   cursor: pointer; list-style: none; }
