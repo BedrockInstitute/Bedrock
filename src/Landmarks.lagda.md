@@ -32,25 +32,26 @@ import L.Model
 <!--en-->
 ## The hierarchy models ZF(C)
 
-The headline is classical: granted the excluded middle, the cumulative
-hierarchy is a model of ZF (chapter `V.Model`{.Agda}). Its exact-price form
-carries the hypothesis as a suffix, charging only Part 0's impredicativity
-wallet; and by Diaconescu's theorem (chapter `Base.Choice`{.Agda}), set-level
-choice alone, level-polymorphically, funds the upgrade all the way to ZFC.
+The headline is classical: granted one instance of the excluded middle, at the
+model's own truth level, the cumulative hierarchy is a model of ZF (chapter
+`V.Model`{.Agda}). Its exact-price form carries the hypothesis as a suffix,
+charging only Part 0's impredicativity wallet; and by Diaconescu's theorem
+(chapter `Base.Choice`{.Agda}), one instance of set-level choice funds the
+upgrade all the way to ZFC.
 <!--zh-->
 ## 层级满足 ZF(C)
 
-主打名是经典版：给定排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收第零部的非直谓性钱包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，单凭层级多态的集合层选择就资助到 ZFC。
+主打名是经典版：给定模型自身真值层上的一份排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收第零部的非直谓性钱包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择就资助到 ZFC。
 <!--/-->
 
 ```agda
-V⊨ZF : ∀ {ℓ : Level} → (∀ {ℓ'} → LEM ℓ') → isZFModel (𝒮ᵥ {ℓ})
+V⊨ZF : ∀ {ℓ : Level} → LEM (ℓ-suc ℓ) → isZFModel (𝒮ᵥ {ℓ})
 V⊨ZF = V.Model.V⊨ZF
 
 V⊨ZF-impredicative : ∀ {ℓ : Level} → Impredicativity ℓ → isZFModel (𝒮ᵥ {ℓ})
 V⊨ZF-impredicative = V.Model.VModel.V⊨ZF-impredicative
 
-V⊨ZFC : ∀ {ℓ : Level} → (∀ {ℓ'} → SetChoice ℓ') → isZFCModel (𝒮ᵥ {ℓ})
+V⊨ZFC : ∀ {ℓ : Level} → SetChoice (ℓ-suc ℓ) → isZFCModel (𝒮ᵥ {ℓ})
 V⊨ZFC = V.Model.V⊨ZFC
 ```
 
@@ -58,20 +59,20 @@ V⊨ZFC = V.Model.V⊨ZFC
 ## The constructible universe models ZFC
 
 The book's main theorem, in its current, honestly conditional form (chapter
-`L.Model`{.Agda}): given the excluded-middle interface and the frontier, the
-registry of statements the remaining parts still owe, the constructible
-structure models ZFC. This landmark upgrades automatically as the frontier
+`L.Model`{.Agda}): given one instance of the excluded middle at the model's truth level, and the
+frontier, the registry of statements the remaining parts still owe, the
+constructible structure models ZFC. This landmark upgrades automatically as the frontier
 shrinks, and sheds its second hypothesis the day the registry empties. Read
 with the previous landmark, it is the semantic form of the relative
 consistency of choice: a ZF universe carries a ZFC sub-universe inside it.
 <!--zh-->
 ## 可构造宇宙满足 ZFC
 
-本书的主定理，以其当前的、诚实带条件的形式 (章节 `L.Model`{.Agda})：给定排中律接口与前沿，即余部尚欠陈述的登记簿，可构造结构满足 ZFC。此地标随前沿缩减自动升级，登记簿清空之日卸下第二个假设。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
+本书的主定理，以其当前的、诚实带条件的形式 (章节 `L.Model`{.Agda})：给定模型真值层上的一份排中律与前沿 (余部尚欠陈述的登记簿)，可构造结构满足 ZFC。此地标随前沿缩减自动升级，登记簿清空之日卸下第二个假设。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
 <!--/-->
 
 ```agda
-L⊨ZFC : ∀ {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ') (F : L.Frontier.Frontier {ℓ})
+L⊨ZFC : ∀ {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (F : L.Frontier.Frontier {ℓ})
       → isZFCModel (𝒮ʟ {ℓ})
 L⊨ZFC = L.Model.L⊨ZFC
 ```

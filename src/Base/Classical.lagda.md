@@ -60,6 +60,27 @@ postulated, the whole book carries Agda's `--safe` seal.
 <!--/-->
 
 <!--en-->
+One transfer lemma before the dividends. Excluded middle passes **downward**
+through the levels: to decide a small proposition, lift its underlying type one
+universe up, decide there, and lower the verdict. So a single instance of
+`LEM`{.Agda} at a higher level silently covers every level below it, a fact the
+end of this chapter spends.
+<!--zh-->
+红利之前先备一条传递引理。排中律沿层级**向下**通行：要判定一个小命题，把其底层类型抬高一层宇宙，在那里判定，再把裁决降回来。于是较高层级上的单个 `LEM`{.Agda} 实例默默覆盖其下每一层，本章结尾就要花掉这个事实。
+<!--/-->
+
+```agda
+lowerLEM : ∀ {ℓ} → LEM (ℓ-suc ℓ) → LEM ℓ
+lowerLEM {ℓ} lem P = fromLifted (lem lifted)
+  where
+  lifted : hProp (ℓ-suc ℓ)
+  lifted = Lift ⟨ P ⟩ , λ x y → cong lift (P .snd (lower x) (lower y))
+  fromLifted : ⟨ lifted ⟩ ⊎ (⟨ lifted ⟩ → Empty.⊥) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
+  fromLifted (inl p)  = inl (lower p)
+  fromLifted (inr np) = inr (λ p → np (lift p))
+```
+
+<!--en-->
 ## The first dividend: a small classifier
 <!--zh-->
 ## 第一笔红利：小分类器
@@ -274,11 +295,12 @@ They also share their consumers, so they get a wallet, one level at a time in
 the same style as `LEM`{.Agda}. The bundling is by co-consumption, not by
 implication: neither instrument derives the other (they descend from two of
 Voevodsky's separate resizing axioms), and only the excluded middle redeems both
-at once (`lem→Impredicativity`{.Agda}). The interface says nothing about any
-particular structure; it is pure universe-level policy, and Part 3 will name its
-exact price in it.
+at once (`lem→Impredicativity`{.Agda}), from a **single instance** at the higher
+level: resizing consumes it as is, and `lowerLEM`{.Agda} hands the classifier
+its lower copy. The interface says nothing about any particular structure; it
+is pure universe-level policy, and Part 3 will name its exact price in it.
 <!--zh-->
-两件器具共有一种品格：各自都在说命题的世界拒绝随宇宙一起膨胀，而这正是**非直谓性**的标志。它们也共享消费者，于是配一只钱包，与 `LEM`{.Agda} 同款逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)，唯有排中律能一次赎回两件 (`lem→Impredicativity`{.Agda})。这个接口不谈任何特定结构，是纯粹的宇宙层级政策；第三部将用它开出自己的准确价格。
+两件器具共有一种品格：各自都在说命题的世界拒绝随宇宙一起膨胀，而这正是**非直谓性**的标志。它们也共享消费者，于是配一只钱包，与 `LEM`{.Agda} 同款逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)，唯有排中律能一次赎回两件 (`lem→Impredicativity`{.Agda})，而且只需较高层级上的**单个实例**：降层原样消费它，`lowerLEM`{.Agda} 把它的低层副本递给分类器。这个接口不谈任何特定结构，是纯粹的宇宙层级政策；第三部将用它开出自己的准确价格。
 <!--/-->
 
 ```agda
@@ -287,10 +309,10 @@ record Impredicativity (ℓ : Level) : Type (ℓ-suc (ℓ-suc ℓ)) where
     resizing       : Resizing ℓ
     hPropSmallness : HPropSmallness ℓ
 
-lem→Impredicativity : ∀ {ℓ} → (∀ {ℓ'} → LEM ℓ') → Impredicativity ℓ
+lem→Impredicativity : ∀ {ℓ} → LEM (ℓ-suc ℓ) → Impredicativity ℓ
 lem→Impredicativity lem = record
   { resizing       = lem→resizing lem
-  ; hPropSmallness = lem→hPropSmallness lem }
+  ; hPropSmallness = lem→hPropSmallness (lowerLEM lem) }
 ```
 
 <!--en-->

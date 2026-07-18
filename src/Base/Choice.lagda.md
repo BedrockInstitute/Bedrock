@@ -31,6 +31,7 @@ open import Base.Prelude
 open import Base.Classical using ( LEM )
 
 open import Cubical.Foundations.Prelude using ( Path )
+open import Cubical.Foundations.HLevels using ( isOfHLevelLift )
 open import Cubical.Data.Bool using ( Bool; true; false; _≟_ )
 open import Cubical.Data.Unit using ( Unit*; tt*; isPropUnit* )
 open import Cubical.Relation.Nullary using ( Dec; yes; no )
@@ -53,6 +54,23 @@ open import Cubical.Relation.Binary.Base using ( module BinaryRelation )
 SetChoice : ∀ ℓ → Type (ℓ-suc ℓ)
 SetChoice ℓ = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
             → ((x : X) → ∥ B x ∥₁) → ∥ ((x : X) → B x) ∥₁
+```
+
+<!--en-->
+Like the excluded middle, choice passes **downward** through the levels: lift
+the index set and the fibers one universe up, choose there, lower the choice
+function. A single higher instance therefore covers the levels below.
+<!--zh-->
+与排中律一样，选择沿层级**向下**通行：把索引集与纤维抬高一层宇宙，在那里选择，再把选择函数降回来。于是较高层级上的单个实例覆盖其下诸层。
+<!--/-->
+
+```agda
+lowerSetChoice : ∀ {ℓ} → SetChoice (ℓ-suc ℓ) → SetChoice ℓ
+lowerSetChoice sc X setX B inh =
+  PT.map (λ f x → lower (f (lift x)))
+         (sc (Lift X) (isOfHLevelLift 2 setX)
+             (λ x → Lift (B (lower x)))
+             (λ x → PT.map lift (inh (lower x))))
 ```
 
 <!--en-->
@@ -237,8 +255,8 @@ two: choice decides every proposition of its level, through the glued booleans,
 the `glue`{.Agda}/`unglue`{.Agda} dictionary, and one comparison of chosen
 representatives. The excluded middle does not return the favour, so the two
 interfaces remain distinct. The model chapter spends choice on its choice set,
-and closes by cashing this chapter's theorem: level-polymorphic choice, alone,
-funds the entire classical bill.
+and closes by cashing this chapter's theorem: one instance of choice, one
+universe up, funds the entire classical bill.
 <!--zh-->
-`SetChoice`{.Agda} 是本书的选择接口，逐层级陈述，与 `LEM`{.Agda} 同款形状；而经 `choice→lem`{.Agda}，它是两者中更强的那个：经由粘合布尔值、`glue`{.Agda}/`unglue`{.Agda} 词典与一次代表元比较，选择判定其层级的每个命题。排中律不回此礼，所以两个接口依然分立。模型章将把选择花在选择集上，并在收尾处兑现本章定理：单凭层级多态的选择，就能付清全部经典账单。
+`SetChoice`{.Agda} 是本书的选择接口，逐层级陈述，与 `LEM`{.Agda} 同款形状；而经 `choice→lem`{.Agda}，它是两者中更强的那个：经由粘合布尔值、`glue`{.Agda}/`unglue`{.Agda} 词典与一次代表元比较，选择判定其层级的每个命题。排中律不回此礼，所以两个接口依然分立。模型章将把选择花在选择集上，并在收尾处兑现本章定理：高一层宇宙上的一份选择，就能付清全部经典账单。
 <!--/-->

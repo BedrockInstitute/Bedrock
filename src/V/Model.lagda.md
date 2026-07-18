@@ -24,7 +24,7 @@ open import Base.Truth
 module V.Model {ℓ : Level} where
 
 open import Base.Classical using ( LEM; HPropSmallness; Impredicativity; lem→Impredicativity )
-open import Base.Choice using ( SetChoice; choice→lem )
+open import Base.Choice using ( SetChoice; choice→lem; lowerSetChoice )
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
 import FOL.Semantics
@@ -411,7 +411,7 @@ classical redemption:
 <!--/-->
 
 ```agda
-V⊨ZF : (∀ {ℓ'} → LEM ℓ') → isZFModel
+V⊨ZF : LEM (ℓ-suc ℓ) → isZFModel
 V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→Impredicativity lem)
 ```
 
@@ -511,24 +511,25 @@ module ChoiceLemma (zf : isZFModel) (ac : SetChoice ℓ) where
 <!--/-->
 
 <!--en-->
-The ZFC theorem now assembles from one hypothesis, with Diaconescu's theorem
-paying every other bill. Choice at each level decides that level's propositions,
-so **level-polymorphic** choice funds the excluded middle everywhere, hence the
-whole impredicativity wallet; the fixed-level instance then feeds the choice
-set. Choice, at every level, is the entire price of `V ⊨ ZFC`. (The finer
-accounting stays visible in the pieces: `VModel`{.Agda} charges exactly
+The ZFC theorem now assembles from one hypothesis, one instance, with
+Diaconescu's theorem paying every other bill. Choice at the truth level
+`ℓ-suc ℓ` decides that level's propositions, funding the whole impredicativity
+wallet; and the same instance, lowered one universe, feeds the choice set. One
+choice, at the model's own truth level, is the entire price of `V ⊨ ZFC`. (The
+finer accounting stays visible in the pieces: `VModel`{.Agda} charges exactly
 impredicativity, `ChoiceLemma`{.Agda} exactly one level of choice; only their
 sum is stated here.)
 <!--zh-->
-ZFC 定理现在由单一假设合龙，其余账单全由 Diaconescu 定理代付。每层的选择判定该层的命题，故**层级多态**的选择处处付得起排中律，从而付得起整只非直谓性钱包；固定层的实例再喂给选择集。全层级的选择，就是 `V ⊨ ZFC` 的全部价格。(更细的账目在零件上仍然可见：`VModel`{.Agda} 恰收非直谓性，`ChoiceLemma`{.Agda} 恰收一层选择；此处陈述的只是它们的总和。)
+ZFC 定理现在由单一假设、单个实例合龙，其余账单全由 Diaconescu 定理代付。真值层 `ℓ-suc ℓ` 上的选择判定该层的命题，付得起整只非直谓性钱包；同一份实例降一层宇宙，再喂给选择集。模型自己真值层上的一份选择，就是 `V ⊨ ZFC` 的全部价格。(更细的账目在零件上仍然可见：`VModel`{.Agda} 恰收非直谓性，`ChoiceLemma`{.Agda} 恰收一层选择；此处陈述的只是它们的总和。)
 <!--/-->
 
 ```agda
-V⊨ZFC : (∀ {ℓ'} → SetChoice ℓ') → isZFCModel
-V⊨ZFC ac = record { zf = base ; hasChoice = ChoiceLemma.choice base (ac {ℓ}) }
+V⊨ZFC : SetChoice (ℓ-suc ℓ) → isZFCModel
+V⊨ZFC ac = record
+  { zf = base ; hasChoice = ChoiceLemma.choice base (lowerSetChoice ac) }
   where
   base : isZFModel
-  base = V⊨ZF (λ {ℓ'} → choice→lem (ac {ℓ'}))
+  base = V⊨ZF (choice→lem ac)
 ```
 
 <!--en-->
