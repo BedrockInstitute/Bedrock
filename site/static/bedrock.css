@@ -183,9 +183,18 @@ details.navsec[open] > summary.nav-title::before { transform: rotate(90deg); }
   details.navsec > summary.nav-title::before { transition: none; } }
 a.navlink { display: block; text-decoration: none; padding-left: 1.05rem; }
 a.navlink:hover { color: var(--primary); }
-ul.modnav li { padding-left: calc(var(--d, 0) * 0.85rem); }
-ul.modnav li.modgroup { font-weight: 700; color: var(--fg-alt); font-family: var(--sans);
-  font-size: 0.8rem; margin-top: 0.45rem; }
+ul.modnav ul { list-style: none; padding-left: 0.95rem; margin: 0; }
+ul.modnav li.modleaf { padding-left: 1.02rem; }
+ul.modnav summary.modgroup { font-weight: 700; color: var(--fg-alt);
+  font-family: var(--sans); font-size: 0.8rem; margin-top: 0.35rem;
+  cursor: pointer; list-style: none; }
+ul.modnav summary.modgroup::-webkit-details-marker { display: none; }
+ul.modnav summary.modgroup::before {
+  content: "\25B8"; display: inline-block; margin-right: 0.3rem;
+  transition: transform 0.15s ease; }
+ul.modnav details[open] > summary.modgroup::before { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) {
+  ul.modnav summary.modgroup::before { transition: none; } }
 ul.toc a, ul.modnav a { color: var(--fg-alt); text-decoration: none; }
 ul.toc a:hover, ul.modnav a:hover { color: var(--primary); }
 ul.modnav a { font-family: var(--mono); font-size: 0.82rem; }
