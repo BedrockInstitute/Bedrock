@@ -38,6 +38,7 @@ UI = {
            "menu": "Menu", "close": "Close",
            "untranslated": "This page is not yet translated; showing English.",
            "modules": "Modules", "source": "Source", "overview": "Overview",
+           "depmap": "Dependency map",
            "prev": "Previous", "next": "Next",
            "license": "content licensed CC BY-NC-SA 4.0",
            "credit": 'Rendered with a generator adapted from '
@@ -48,6 +49,7 @@ UI = {
            "menu": "菜单", "close": "关闭",
            "untranslated": "本页尚未翻译，此处显示英文。",
            "modules": "模块", "source": "源码", "overview": "概览",
+           "depmap": "依赖地图",
            "prev": "上一章", "next": "下一章",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
            "credit": '使用改编自 <a href="https://1lab.dev">1lab</a> 的生成器渲染 '
@@ -58,6 +60,7 @@ UI = {
            "menu": "メニュー", "close": "閉じる",
            "untranslated": "このページは未翻訳です。英語を表示しています。",
            "modules": "モジュール", "source": "ソース", "overview": "概要",
+           "depmap": "依存マップ",
            "prev": "前の章", "next": "次の章",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
            "credit": '<a href="https://1lab.dev">1lab</a> を改変した'
@@ -281,8 +284,9 @@ def toc_html(toc, lang):
         return ""
     items = "".join(f'<li class="toc-l{lvl}"><a href="#{hid}">{htmllib.escape(t)}</a></li>'
                     for lvl, hid, t in toc)
-    return (f'<div class="nav-title">{UI[lang]["contents"]}</div>'
-            f'<ul class="toc">{items}</ul>')
+    return (f'<details class="navsec" open><summary class="nav-title">'
+            f'{UI[lang]["contents"]}</summary>'
+            f'<ul class="toc">{items}</ul></details>')
 
 
 def modules_nav(current, mods, lang):
@@ -311,8 +315,10 @@ def modules_nav(current, mods, lang):
                 out.extend(render(sub, depth + 1))
         return out
 
-    return (f'<div class="nav-title">{UI[lang]["modules"]}</div>'
-            f'<ul class="modnav">{"".join(render(tree, 0))}</ul>')
+    return (f'<details class="navsec"><summary class="nav-title">'
+            f'{UI[lang]["modules"]}</summary>'
+            f'<ul class="modnav">{"".join(render(tree, 0))}</ul></details>'
+            f'<a class="navlink" href="depmap.html">{UI[lang]["depmap"]}</a>')
 
 
 def ext_banner(lang):

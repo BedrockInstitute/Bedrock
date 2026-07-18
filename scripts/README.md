@@ -19,6 +19,7 @@ src/**/*.lagda.md ──agda──────────────► typech
         │
         └─ render-site.py ─► _build/site/<lang>/…  (the hyperlinked multilingual site)
                  ▲   uses: agda --html  +  extract-types.py  +  vendored 1lab assets
+        └─ gen-depmap.py ─► _build/site/<lang>/depmap.html  (the dependency map)
 ```
 
 Everything generated lives under `_build/` (git-ignored); nothing generated is committed.
@@ -144,4 +145,17 @@ violation. Version-controlled; activate it once per clone (or run `make hooks`):
 
 ```sh
 git config --local core.hooksPath scripts/git-hooks
+```
+
+## `gen-depmap.py`
+
+Generates the per-language dependency-map page (`depmap.html`, linked from the
+site sidebar), fully derived: nodes and edges from the masters' `import` lines,
+reading order and per-module descriptions from the `Everything` reading catalog,
+lanes from the namespace tree, columns from longest-path dependency depth. The
+page shell is `depmap-template.html` (self-contained inline CSS/JS; follows the
+site's stored theme). Runs as part of `make site`.
+
+```sh
+python3 scripts/gen-depmap.py --src src --out _build/site --langs en,zh
 ```
