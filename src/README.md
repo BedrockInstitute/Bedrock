@@ -37,7 +37,7 @@ entry in the reading catalog**, at the position its first consumer dictates.
     resizing). No postulate, per PLAN D2.
   - `Base/Choice.lagda.md` (landed with `[L1.9]`): the choice interface `SetChoice`
     (levelwise, LEM-style) and Diaconescu's theorem `choice→lem` via set quotients.
-    Reads just before `V.Model` (its first consumer).
+    By owner ruling it reads in Part 0, right after `Base.Classical`.
 - `FOL/`: Part 1, first-order logic as an object of study, landed with `[L1.2]`:
   - `FOL/Syntax.lagda.md`: the deeply embedded `Formula` (constant domain as a
     parameter, intrinsic scoping, all constructors primitive) and the parameter-free

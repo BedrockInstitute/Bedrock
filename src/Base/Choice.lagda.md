@@ -1,24 +1,25 @@
 # Choice
 
 <!--en-->
-One provision remains before Part 3's summit: the model chapter's last section
-will ask for a choice principle, and this chapter states it, one level at a
-time, in the same interface style as the excluded middle. **Set-level choice**
-says that over an h-set of indices, truncation commutes with the product: if
-every fiber is merely inhabited, then merely, every fiber is inhabited at once.
-This is the type-theoretic reading of "a family of nonempty sets has a choice
-function", and the h-set restriction on the index is what keeps it honest, since
-over arbitrary types the principle is simply false.
+The classical boundary has a second interface. Alongside the excluded middle,
+classical mathematics runs on choice, and this chapter states the book's form of
+it, one level at a time, in the same interface style as `LEM`{.Agda}.
+**Set-level choice** says that over an h-set of indices, truncation commutes
+with the product: if every fiber is merely inhabited, then merely, every fiber
+is inhabited at once. This is the type-theoretic reading of "a family of
+nonempty sets has a choice function", and the h-set restriction on the index is
+what keeps it honest, since over arbitrary types the principle is simply false.
+Like the excluded middle, choice is never assumed globally: a chapter that needs
+it takes it as a parameter, and the first to do so is Part 3's summit.
 
-The chapter then delivers a classical surprise, and mechanizes it: **choice
-proves the excluded middle**. The observation is due to Diaconescu, with the
-type-theoretic form by Goodman and Myhill, and it means the choice principle is
-not one assumption among equals: at each level, it quietly carries the whole
-classical boundary with it.
+The two interfaces are not peers, and this chapter proves it on the spot:
+**choice proves the excluded middle**. The observation is due to Diaconescu,
+with the type-theoretic form by Goodman and Myhill; it means that at each level
+the choice interface quietly carries the whole classical boundary with it.
 <!--zh-->
-第三部登顶前还差一件补给：模型章的最后一节将索要一条选择原理，本章把它陈述出来，逐层级、与排中律同款的接口风格。**集合层选择**说：在 h-集索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法，而索引上的 h-集限制正是它诚实的关键，因为对任意类型这条原理干脆为假。
+经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法，而索引上的 h-集限制正是它诚实的关键，因为对任意类型这条原理干脆为假。与排中律一样，选择从不全局假设：需要它的章节以参数领取，而第一个领取者是第三部之巅。
 
-本章随即交付一个经典的惊奇，并把它机器化：**选择证明排中律**。这个观察出自 Diaconescu，类型论形式归于 Goodman 与 Myhill；它意味着选择原理并非诸假设中平起平坐的一员：在每个层级上，它悄悄把整条经典边界都背在身上。
+两个接口并非平级，本章当场证明这一点：**选择证明排中律**。这个观察出自 Diaconescu，类型论形式归于 Goodman 与 Myhill；它意味着在每个层级上，选择接口都悄悄把整条经典边界背在身上。
 <!--/-->
 
 ```agda
