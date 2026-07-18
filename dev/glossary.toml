@@ -106,7 +106,7 @@ category = "Set theory"
 en = "regularity"
 zh = "正则公理"
 ja = "正則性公理"
-notes = "zh also 正则性; also called foundation in some books, a name this book does not use; ZF.Model field name regularity ([L1.4])"
+notes = "zh also 正则性; also called foundation in some books, a name this book does not use; ZF field name regularity ([L1.4])"
 
 [[term]]
 category = "Set theory"
@@ -593,42 +593,42 @@ category = "Set theory"
 en = "axiom of extensionality"
 zh = "外延公理"
 ja = "外延性公理"
-notes = "the property alone reads zh 外延性 / ja 外延性; ZF.Model field extensional"
+notes = "the property alone reads zh 外延性 / ja 外延性; ZF field extensional"
 
 [[term]]
 category = "Set theory"
 en = "axiom of separation"
 zh = "分离公理"
 ja = "分出公理"
-notes = "first-order schema; ZF.Model field hasSeparation, operation separate"
+notes = "first-order schema; ZF field hasSeparation, operation separate"
 
 [[term]]
 category = "Set theory"
 en = "axiom of replacement"
 zh = "替换公理"
 ja = "置換公理"
-notes = "ZF.Model field hasReplacement"
+notes = "ZF field hasReplacement"
 
 [[term]]
 category = "Set theory"
 en = "axiom of pairing"
 zh = "配对公理"
 ja = "対の公理"
-notes = "ZF.Model field hasPair"
+notes = "ZF field hasPair"
 
 [[term]]
 category = "Set theory"
 en = "axiom of union"
 zh = "并公理"
 ja = "和集合の公理"
-notes = "ZF.Model field hasUnion; the operation 并/和集合"
+notes = "ZF field hasUnion; the operation 并/和集合"
 
 [[term]]
 category = "Set theory"
 en = "power set"
 zh = "幂集"
 ja = "冪集合"
-notes = "the axiom reads 幂集公理 / 冪集合公理; ZF.Model field hasPower, operation 𝒫"
+notes = "the axiom reads 幂集公理 / 冪集合公理; ZF field hasPower, operation 𝒫"
 
 [[term]]
 category = "Set theory"
@@ -648,7 +648,7 @@ category = "Set theory"
 en = "numeral"
 zh = "数码"
 ja = "数項"
-notes = "the von Neumann naturals inside a model; ZF.Model field numeral, class isNumeral"
+notes = "the von Neumann naturals inside a model; ZF field numeral, class isNumeral"
 
 [[term]]
 category = "Set theory"
@@ -676,7 +676,7 @@ category = "Logic and philosophy"
 en = "compactness"
 zh = "紧致性"
 ja = "コンパクト性"
-notes = "the compactness theorem = 紧致性定理 / コンパクト性定理; told, not proven, in ZF.Model"
+notes = "the compactness theorem = 紧致性定理 / コンパクト性定理; told, not proven, in the ZF chapter"
 
 [[term]]
 category = "Other"

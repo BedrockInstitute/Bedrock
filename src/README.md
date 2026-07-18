@@ -66,8 +66,9 @@ entry in the reading catalog**, at the position its first consumer dictates.
     - `Certified.lagda.md`: the graded tier: `Certified` (graded representations
       `RepΔ₀`, graded combinators) and `Transfer.transfer` (adequacy composed
       with absoluteness).
-- `ZF/`: Part 2, what a ZF(C) model is, landed with `[L1.4]`:
-  - `ZF/Model.lagda.md`: `IsSetOf`/`SetOf` (class realization), the description
+- `ZF.lagda.md`: Part 2, what a ZF(C) model is, landed with `[L1.4]` (renamed
+  from `ZF.Model` by owner ruling; `ZF.Coding` nests under it at `[L2.x]`):
+  - `IsSetOf`/`SetOf` (class realization), the description
     operator `℩`, `_⊆ˢ_`, the `ZFModel` record (extensionality, meta-level
     `regularity`, unique-existence fields, first-order `hasSeparation`/
     `hasReplacement`, strong infinity via the `numeral` field pinned by
@@ -91,12 +92,12 @@ entry in the reading catalog**, at the position its first consumer dictates.
     `VResizing` + `lem→VResizing`, `Power.𝒫V`, `VModel.V⊨ZF`,
     `ChoiceLemma.choice`, `VZFC.V⊨ZFC`, and the single-hypothesis
     `V⊨ZFC-fromChoice` (via `Base.Choice`).
-  - `V/Definability.lagda.md`: the `Def` operator, landed with `[L1.6]`:
-    `DefOf` (inner semantics via `InnerSmall`, `smallSat`, `defSet`, `Def`),
-    membership specs (`Def-spec`, `defSet-mem`, `defSet⊆A`, `Def∋⊆A`),
-    `A∈Def`, and `Refine.A⊆Def` under transitivity. Reads at the head of
-    Part 4 (its first consumer).
 - `L/`: Part 4, the constructible universe, trunk landed with `[L1.6]`/`[L1.7]`:
+  - `L/Definability.lagda.md`: the `Def` operator, landed with `[L1.6]` as
+    `V.Definability`, re-homed to `L` by owner ruling (the ledger): `DefOf`
+    (inner semantics via `InnerSmall`, `smallSat`, `defSet`, `Def`), membership
+    specs (`Def-spec`, `defSet-mem`, `defSet⊆A`, `Def∋⊆A`), `A∈Def`, and
+    `Refine.A⊆Def` under transitivity. Reads at the head of Part 4.
   - `L/Constructible.lagda.md`: transitivity closure lemmas, `IsOrd` (just the
     predicate), `isLayer` + `layer-trans`, the tower `Lset` by ∈-recursion
     (`opaque`-sealed; `Lset-compute` is the official unfolding), `Lset-layer`,
@@ -165,15 +166,15 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
 | `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Absoluteness` | `\models` + `\^v` / `\^m` |
 | `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Relativize` | `\models` + `\^A` |
-| `℩` | that (description operator) | ① | `ZF.Model` | `\riota` |
-| `⊆ˢ` | subset (structure layer) | ③ | `ZF.Model` | `\sub=` `\^s` |
-| `∅` | empty set | ① | `ZF.Model` | `\emptyset` |
-| `⋃` | union | ① | `ZF.Model` | `\bigcup` |
-| `∪` | binary union | ① | `ZF.Model` | `\cup` |
-| `⁺` | successor | ① | `ZF.Model` | `\^+` |
-| `𝒫` | power set | ① | `ZF.Model` | `\McP` |
+| `℩` | that (description operator) | ① | `ZF` | `\riota` |
+| `⊆ˢ` | subset (structure layer) | ③ | `ZF` | `\sub=` `\^s` |
+| `∅` | empty set | ① | `ZF` | `\emptyset` |
+| `⋃` | union | ① | `ZF` | `\bigcup` |
+| `∪` | binary union | ① | `ZF` | `\cup` |
+| `⁺` | successor | ① | `ZF` | `\^+` |
+| `𝒫` | power set | ① | `ZF` | `\McP` |
 | `𝒮ᵥ` | the cumulative-hierarchy structure | ③ | `V.Hierarchy` | `\McS` `\_v` |
 | `𝒟` | the definable-subsets operator | ① | `L.Constructible` | `\McD` |
 | `𝒮ʟ` | the constructible structure | ③ | `L.Constructible` | `\McS` `\_L` |
-| `∩` | binary intersection | ① | `ZF.Model` | `\cap` |
-| `ω` | the set of numerals | ① | `ZF.Model` | `\omega` |
+| `∩` | binary intersection | ① | `ZF` | `\cap` |
+| `ω` | the set of numerals | ① | `ZF` | `\omega` |

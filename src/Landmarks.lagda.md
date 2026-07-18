@@ -22,7 +22,7 @@ open import Base.Prelude
 open import Base.Classical using ( LEM )
 open import Base.Choice using ( SetChoice )
 open import V.Hierarchy using ( 𝒮ᵥ )
-import ZF.Model
+import ZF
 import V.Model
 import L.Constructible
 import L.Frontier
@@ -43,15 +43,15 @@ upgrades the model to ZFC.
 <!--/-->
 
 ```agda
-V⊨ZF : ∀ {ℓ : Level} → V.Model.VResizing {ℓ} → ZF.Model.ZFModel (𝒮ᵥ {ℓ})
+V⊨ZF : ∀ {ℓ : Level} → V.Model.VResizing {ℓ} → ZF.ZFModel (𝒮ᵥ {ℓ})
 V⊨ZF = V.Model.VModel.V⊨ZF
 
 V⊨ZF-classical : ∀ {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ')
-               → ZF.Model.ZFModel (𝒮ᵥ {ℓ})
+               → ZF.ZFModel (𝒮ᵥ {ℓ})
 V⊨ZF-classical lem = V.Model.VModel.V⊨ZF (V.Model.lem→VResizing lem)
 
 V⊨ZFC : ∀ {ℓ : Level} → V.Model.VResizing {ℓ} → SetChoice ℓ
-      → ZF.Model.ZFCModel (𝒮ᵥ {ℓ})
+      → ZF.ZFCModel (𝒮ᵥ {ℓ})
 V⊨ZFC = V.Model.VZFC.V⊨ZFC
 ```
 
@@ -64,7 +64,7 @@ compresses into one hypothesis: level-polymorphic set choice alone.
 
 ```agda
 V⊨ZFC-fromChoice : ∀ {ℓ : Level} → (∀ {ℓ'} → SetChoice ℓ')
-                 → ZF.Model.ZFCModel (𝒮ᵥ {ℓ})
+                 → ZF.ZFCModel (𝒮ᵥ {ℓ})
 V⊨ZFC-fromChoice = V.Model.V⊨ZFC-fromChoice
 ```
 
@@ -86,6 +86,6 @@ consistency of choice: a ZF universe carries a ZFC sub-universe inside it.
 
 ```agda
 L⊨ZFC : ∀ {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ') (F : L.Frontier.Frontier {ℓ})
-      → ZF.Model.ZFCModel (L.Constructible.𝒮ʟ {ℓ})
+      → ZF.ZFCModel (L.Constructible.𝒮ʟ {ℓ})
 L⊨ZFC = L.Model.L⊨ZFC
 ```

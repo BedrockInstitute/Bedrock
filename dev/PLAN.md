@@ -109,13 +109,12 @@ src/
 │   ├─ Relativize            quantifier tightening to a constant bound
 │   └─ Reification/          host predicate ↔ object formula, with adequacy certificates
 │       (Base, Combinators, Certified; the rest deferred, see ledger)
-├─ ZF/                       Part 2: what a ZF(C) model is
-│   ├─ Model                 ZFModel / ZFCModel records (the axiom fields; the root's type)
-│   └─ Encoding, Coding      (may fold into consumers at port time; see S4)
+├─ ZF.lagda.md               Part 2: what a ZF(C) model is: ZFModel / ZFCModel records
+│                            (single chapter; Encoding deferred, Coding returns under ZF/ at L2)
 ├─ V/                        Part 3: the cumulative hierarchy realizes ZF(C)
 │   ├─ Hierarchy             the HIT V and its ZF structure 𝒮ᵥ
 │   ├─ Smallness             the resizing interface
-│   ├─ Definability, Coding, Satisfaction
+│   ├─ Coding, Satisfaction
 │   └─ Model                 V ⊨ ZF; with set choice, V ⊨ ZFC
 └─ L/                        Part 4: the constructible universe (the capstone)
     ├─ Constructible         isL as an inductive predicate
@@ -191,6 +190,8 @@ rows rather than editing old ones):
 | `V.Model.SetChoice` | `Base.Choice.SetChoice` | `[L1.9]`: re-homed and level-indexed (LEM-style packaging) so Diaconescu can be applied at two levels; owner ruling 2026-07-18: reads in Part 0, right after `Base.Classical` (the boundary's second interface) |
 | `FOL.Reification.{Graded, Absoluteness, Relativize}` | `FOL.{Graded, Absoluteness, Relativize}` | owner ruling 2026-07-18: certificate, absoluteness, and relativization theory is FOL material parallel to `Renaming`; only the representation framework keeps the `Reification` namespace |
 | `FOL.Reification.Graded.Certified`, `FOL.Reification.Absoluteness.Single.{Inner, transfer}` | `FOL.Reification.Certified` | extracted so `FOL.Graded` and `FOL.Absoluteness` genuinely do not inherit the representation line (they no longer import it); the framework's graded tier, zero consumers, closes the catalog |
+| `ZF.Model` | `ZF` | owner ruling 2026-07-18: a one-module namespace read abrupt; the chapter is the part; `ZF.Coding` will nest under it when it returns at `[L2.x]` |
+| `V.Definability` | `L.Definability` | owner ruling 2026-07-18: the Def operator is the L-construction step, matching the fixed skeleton's `L/Definability`; reading position unchanged (head of Part 4) |
 | `Classical.lem→VResizing` | `V.Model.lem→VResizing` | `[L1.5]`: as planned in the L1.1 row; consumes `Base.Classical.{lem→resize, lem→smallΩ}` |
 | `Models.HITV.Smallness.{small-⋀, small-⋁, InnerSmall}` | un-deferred into `V.Smallness` | `[L1.6]`: their consumer `Def` un-deferred; supersedes the L1.5 deferral row |
 | `Models.HITV.Def` | `V.Definability` | `[L1.6]`: un-deferred (first consumer is `L.Constructible`); `abs-defSet` + `module Abs` deferred to `[L2.x]` (condensation-side); `DemoEmpty` and `ι-fst` dropped |
@@ -524,7 +525,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.6 | Port L.Constructible | DONE 2026-07-18 (`V.Definability` un-deferred as prerequisite; `∈-induction` re-homed to `V.Hierarchy`; `InnerSmall` added to `V.Smallness`; `isL` is the Lset-form predicate, `𝒮ʟ` delivered) |
 | L1.7 | Frontier + root L.Model | DONE 2026-07-18 (Frontier: 11 fields, the verbatim model-field statements at 𝒮ʟ; root proves extensional/regularity outright and assembles L⊨ZF/L⊨ZFC; field count is the progress meter) |
 | L1.9 | Diaconescu + single-hypothesis V⊨ZFC | DONE 2026-07-18 (`Base.Choice` with `choice→lem`; `V⊨ZFC-fromChoice`; fourth landmark) |
-| L1.8 | Landmarks + Everything order | DONE 2026-07-18 (Landmarks restates V⊨ZF, V⊨ZF-classical, V⊨ZFC, and the frontier-conditional L⊨ZFC; owner rulings 2026-07-18: Landmarks reads **first**; the zero-consumer chapters read **last**, after Part 4; re-cut same day: Reification namespace = {Base, Combinators, Certified} (the framework, in waiting), Graded/Absoluteness/Relativize re-homed to FOL as peers of Renaming; reading order = Landmarks, Parts 0–4, tools-in-waiting, framework) |
+| L1.8 | Landmarks + Everything order | DONE 2026-07-18 (Landmarks restates V⊨ZF, V⊨ZF-classical, V⊨ZFC, and the frontier-conditional L⊨ZFC; owner rulings 2026-07-18: Landmarks reads **first**; the zero-consumer chapters read **last**, after Part 4; re-cut same day: Reification namespace = {Base, Combinators, Certified} (the framework, in waiting), Graded/Absoluteness/Relativize re-homed to FOL as peers of Renaming and read inside Part 1 for FOL continuity; `ZF.Model`→`ZF`, `V.Definability`→`L.Definability`; reading order = Landmarks, Parts 0–4, tools-in-waiting, framework) |
 | L0.4 | Two-catalog doctrine (reading vs structure) | DONE 2026-07-18 |
 | L2 | Axiom branches | PLANNED |
 | L2.0 | Basic axioms | PLANNED |

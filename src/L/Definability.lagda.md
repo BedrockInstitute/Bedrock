@@ -29,7 +29,7 @@ smallness of the previous chapters bite: every formula evaluates small, so
 open import Base.Prelude
 open import Base.Truth
 
-module V.Definability {ℓ : Level} where
+module L.Definability {ℓ : Level} where
 
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )

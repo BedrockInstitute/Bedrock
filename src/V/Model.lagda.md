@@ -28,7 +28,7 @@ open import Base.Choice using ( SetChoice; choice→lem )
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
 import FOL.Semantics
-import ZF.Model
+import ZF
 open import V.Hierarchy using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Smallness {ℓ} using ( separateFromSmall )
 
@@ -57,7 +57,7 @@ open InfinitySet using ( sucV; #_; ω )
 open TruthAlg (hPropAlg {ℓ-suc ℓ})
 open ZFStructure (𝒮ᵥ {ℓ})
 
-module Model = ZF.Model (𝒮ᵥ {ℓ})
+module Model = ZF (𝒮ᵥ {ℓ})
 open Model using ( SetOf; _⊆ˢ_; setOf-unique; ZFModel; ZFCModel )
 
 module SemanticsV = FOL.Semantics (hPropAlg {ℓ-suc ℓ}) (𝒮ᵥ {ℓ})

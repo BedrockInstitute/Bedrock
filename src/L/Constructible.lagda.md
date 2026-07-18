@@ -34,7 +34,7 @@ module L.Constructible {ℓ : Level} where
 open import FOL.Structure using ( ZFStructure; _↾_; _∈ᵗ_ )
 open import FOL.Absoluteness using ( Transitive )
 open import V.Hierarchy using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
-open import V.Definability {ℓ} using ( module DefOf )
+open import L.Definability {ℓ} using ( module DefOf )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.Data.Empty as Empty
