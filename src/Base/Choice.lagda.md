@@ -31,11 +31,13 @@ open import Base.Prelude
 open import Base.Classical using ( LEM )
 
 open import Cubical.Foundations.Prelude using ( Path )
-open import Cubical.Data.Bool using ( Bool; true; false; true≢false )
+open import Cubical.Data.Bool using ( Bool; true; false; _≟_ )
+open import Cubical.Data.Unit using ( Unit*; tt*; isPropUnit* )
+open import Cubical.Relation.Nullary using ( Dec; yes; no )
 import Cubical.Data.Sum as Sum
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁ )
+open PT using ( ∥_∥₁ )
 open import Cubical.HITs.SetQuotients
   using ( _/_; [_]; eq/; squash/; []surjective; effective )
 open import Cubical.Relation.Binary.Base using ( module BinaryRelation )
@@ -63,68 +65,82 @@ SetChoice ℓ = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
 Fix a proposition `P`; everything below lives in a module named after the
 theorem's author. The proof builds the most economical set that *depends* on
 `P`: take the two booleans and glue them together exactly when `P` holds. The
-gluing relation says "equal, or else `P`", and the glued set is its set
-quotient.
+gluing relation is best given as a four-entry table: trivial on the diagonal,
+and **literally `P` itself** in the two mixed squares. That last clause is the
+whole trick, and it will pay twice below.
 <!--zh-->
-固定命题 `P`；以下一切都住在以定理作者命名的模块里。证明构造出**依赖于** `P` 的最经济的集合：取两个布尔值，恰当 `P` 成立时把它们粘起来。粘合关系说「相等，或者 `P`」，粘合集就是它的集合商。
+固定命题 `P`；以下一切都住在以定理作者命名的模块里。证明构造出**依赖于** `P` 的最经济的集合：取两个布尔值，恰当 `P` 成立时把它们粘起来。粘合关系最好用一张四格表给出：对角线上平凡，而混色的两格**就是 `P` 本身**。最后这一款是全部戏法所在，下文将两次兑付。
 <!--/-->
 
 ```agda
 module Diaconescu {ℓ} (P : hProp ℓ) where
 
-  R : Bool → Bool → Type ℓ
-  R a b = ∥ (a ≡ b) Sum.⊎ ⟨ P ⟩ ∥₁
+  _~_ : Bool → Bool → Type ℓ
+  true  ~ true  = Unit*
+  false ~ false = Unit*
+  _     ~ _     = ⟨ P ⟩
 
   Glued : Type ℓ
-  Glued = Bool / R
+  Glued = Bool / _~_
 ```
 
 <!--en-->
-`R` is propositional by its truncation and an equivalence relation by three
-routine checks; transitivity chains the equality case and lets any `P`-witness
-absorb the rest. These two certificates are not bookkeeping: they are the
-ticket to the library's **effectivity** theorem, the right to read a quotient
-path backwards.
+Because the relation is a table, its certificates are tables too: propositional
+in every square, reflexive on the diagonal, symmetric since the table is, and
+transitive by reading off whichever mixed square survives. No truncations are
+juggled anywhere. The certificates are not bookkeeping: they are the ticket to
+the library's **effectivity** theorem, the right to read a quotient path
+backwards.
 <!--zh-->
-`R` 因截断而是命题值，因三条例行检查而是等价关系；传递性把相等情形串接起来，任何 `P` 见证则吸收其余。这两张证书不是记账：它们是库的**有效性**定理的入场券，即倒着读商路径的权利。
+关系是表，它的证书也就是表：逐格皆命题，对角线自反，表格对称故关系对称，传递性则读出幸存的那个混色格。全程不摆弄任何截断。证书不是记账：它们是库的**有效性**定理的入场券，即倒着读商路径的权利。
 <!--/-->
 
 ```agda
-  Rprop : BinaryRelation.isPropValued R
-  Rprop a b = PT.squash₁
+  ~-prop : BinaryRelation.isPropValued _~_
+  ~-prop true  true  = isPropUnit*
+  ~-prop false false = isPropUnit*
+  ~-prop true  false = P .snd
+  ~-prop false true  = P .snd
 
-  Requiv : BinaryRelation.isEquivRel R
-  Requiv = BinaryRelation.equivRel
-    (λ a → ∣ Sum.inl refl ∣₁)
-    (λ a b → PT.map (Sum.map sym (λ h → h)))
-    (λ a b c → PT.rec2 PT.squash₁ chain)
-    where
-    chain : {a b c : Bool}
-          → (a ≡ b) Sum.⊎ ⟨ P ⟩ → (b ≡ c) Sum.⊎ ⟨ P ⟩ → R _ _
-    chain (Sum.inl p) (Sum.inl q) = ∣ Sum.inl (p ∙ q) ∣₁
-    chain (Sum.inl p) (Sum.inr h) = ∣ Sum.inr h ∣₁
-    chain (Sum.inr h) _           = ∣ Sum.inr h ∣₁
+  ~-refl : (a : Bool) → a ~ a
+  ~-refl true  = tt*
+  ~-refl false = tt*
+
+  ~-sym : (a b : Bool) → a ~ b → b ~ a
+  ~-sym true  true  _ = tt*
+  ~-sym false false _ = tt*
+  ~-sym true  false p = p
+  ~-sym false true  p = p
+
+  ~-trans : (a b c : Bool) → a ~ b → b ~ c → a ~ c
+  ~-trans true  _     true  _ _ = tt*
+  ~-trans false _     false _ _ = tt*
+  ~-trans true  false false p _ = p
+  ~-trans false true  true  p _ = p
+  ~-trans true  true  false _ p = p
+  ~-trans false false true  _ p = p
+
+  ~-equivRel : BinaryRelation.isEquivRel _~_
+  ~-equivRel = BinaryRelation.equivRel ~-refl ~-sym ~-trans
 ```
 
 <!--en-->
 The heart of the construction is a two-line dictionary: **the two classes are
-glued exactly when `P` holds**. Forwards, a `P`-witness feeds the quotient's
-path constructor. Backwards is where effectivity earns its ticket: a path
-between the classes is decoded back into the relation, and the absurd
-alternative `true ≡ false` is dismissed.
+glued exactly when `P` holds**. Here the mixed square pays for the first time,
+twice over: since `true ~ false` *is* `⟨ P ⟩`, the forward direction feeds a
+`P`-witness straight to the quotient's path constructor, and the backward
+direction is the effectivity theorem applied and nothing else, its output
+already of type `⟨ P ⟩`, with no decoding and no absurd case to dismiss.
 <!--zh-->
-构造的心脏是一部两行的词典：**两个等价类被粘住，当且仅当 `P` 成立**。正向，`P` 的见证喂给商的路径构造子。反向正是有效性兑现入场券之处：类之间的路径被解码回关系，荒谬的备选项 `true ≡ false` 被驳回。
+构造的心脏是一部两行的词典：**两个等价类被粘住，当且仅当 `P` 成立**。混色格在此第一次付账，还一次付了两笔：`true ~ false` **就是** `⟨ P ⟩`，于是正向把 `P` 的见证直接喂给商的路径构造子，反向则是有效性定理的一次裸应用，其输出本身就是 `⟨ P ⟩` 型，无须解码，也没有荒谬情形要驳。
 <!--/-->
 
 ```agda
   glue : ⟨ P ⟩ → Path Glued [ true ] [ false ]
-  glue p = eq/ true false ∣ Sum.inr p ∣₁
+  glue p = eq/ true false p
 
   unglue : Path Glued [ true ] [ false ] → ⟨ P ⟩
-  unglue e = PT.rec (P .snd)
-    (λ { (Sum.inl t≡f) → Empty.rec (true≢false t≡f)
-       ; (Sum.inr h)   → h })
-    (effective Rprop Requiv true false e)
+  unglue = effective ~-prop ~-equivRel true false
 ```
 
 <!--en-->
@@ -175,25 +191,19 @@ both ends.
 ```
 
 <!--en-->
-Two booleans can always be compared, by four cases; the comparison turns the
-lemma pair into a decision of `P`.
+Equality of booleans is decidable, courtesy of the library's `_≟_`{.Agda}; the
+decision transports along the lemma pair and becomes a decision of `P`.
 <!--zh-->
-两个布尔值总能比较，四个情形而已；这次比较把上面那对引理变成对 `P` 的判定。
+布尔值的相等可判定，由库的 `_≟_`{.Agda} 供应；这个判定沿上面那对引理搬运，变成对 `P` 的判定。
 <!--/-->
 
 ```agda
     decide : ⟨ P ⟩ Sum.⊎ (⟨ P ⟩ → Empty.⊥)
-    decide = fromComparison (compare b₀ b₁)
+    decide = fromDec (b₀ ≟ b₁)
       where
-      compare : (a b : Bool) → (a ≡ b) Sum.⊎ ((a ≡ b) → Empty.⊥)
-      compare true  true  = Sum.inl refl
-      compare false false = Sum.inl refl
-      compare true  false = Sum.inr true≢false
-      compare false true  = Sum.inr (λ q → true≢false (sym q))
-      fromComparison : (b₀ ≡ b₁) Sum.⊎ ((b₀ ≡ b₁) → Empty.⊥)
-                     → ⟨ P ⟩ Sum.⊎ (⟨ P ⟩ → Empty.⊥)
-      fromComparison (Sum.inl q)  = Sum.inl (agree→P q)
-      fromComparison (Sum.inr ne) = Sum.inr (λ p → ne (P→agree p))
+      fromDec : Dec (b₀ ≡ b₁) → ⟨ P ⟩ Sum.⊎ (⟨ P ⟩ → Empty.⊥)
+      fromDec (yes q) = Sum.inl (agree→P q)
+      fromDec (no ne) = Sum.inr (λ p → ne (P→agree p))
 ```
 
 <!--en-->
