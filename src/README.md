@@ -108,9 +108,11 @@ entry in the reading catalog**, at the position its first consumer dictates.
 
 Note the **reading order** (the `Everything` import order) is not the namespace
 order: the `FOL.Reification` chapters read after `ZF.Model` (whose separation and
-replacement motivate them), and `FOL.Renaming` + `FOL.Reification.Relativize` read
-at the tail, ahead of their Part 4 consumers (PLAN §5, two-catalog doctrine;
-re-cut executed with `[L1.4]`).
+replacement motivate them), and the zero-consumer trio `FOL.Reification.Combinators`
++ `FOL.Renaming` + `FOL.Reification.Relativize` reads at the very end, after
+Part 4 (PLAN §5, two-catalog doctrine; re-cuts executed with `[L1.4]` and, by
+owner ruling 2026-07-18, after the dependency map made the zero-consumer status
+visible).
 
 ## Reserved namespaces (currently empty, marked with `.gitkeep`)
 

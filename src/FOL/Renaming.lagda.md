@@ -1,8 +1,8 @@
 # Renaming
 
 <!--en-->
-This chapter and the next stock the toolbox for Part 4, whose constructible
-universe will consume both. First, variables.
+A tool stocked ahead of need: nothing in the trunk consumes it yet, and its
+first consumers arrive with Part 4's deeper chapters. First, variables.
 
 The syntax chapter pointed out an absence: no substitution, no weakening. The
 quantifier clauses take bodies in an extended context directly, so the classical
@@ -11,7 +11,7 @@ motion the book does need is covered by one device: **renaming**, a map
 `ρ : Fin n → Fin m` pushed through a formula, with a single correctness theorem
 that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
-本章与下一章为第四部备货：可构造宇宙将同时消费这两件工具。先说变量。
+一件提前备下的工具：主干至今没有消费它，首批消费者随第四部的深层章节到来。先说变量。
 
 语法章点过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**重命名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
 <!--/-->

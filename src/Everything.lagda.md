@@ -125,14 +125,12 @@ import ZF.Model
 <!--en-->
 ## The formula factory (Part 1 resumed)
 
-Separation and replacement accept only formulas; these four chapters manufacture
-formulas from host predicates, meaning-preservation certificates included.
+Separation and replacement accept only formulas; these chapters set up the
+representation notion and the certificates that make formulas portable.
 
 - `FOL.Reification.Base`{.Agda}: representation, the bridge: a formula paired with
   its adequacy certificate; `translate`{.Agda} and `adequacy`{.Agda} as the only
   exits.
-- `FOL.Reification.Combinators`{.Agda}: the certificate algebra: one combinator per
-  constructor, every certificate a single congruence.
 - `FOL.Reification.Graded`{.Agda}: the Levy hierarchy as inductive certificates:
   Δ₀ by absence, Σ₁/Π₁, the alternating Σₙ/Πₙ tower, and graded representations.
 - `FOL.Reification.Absoluteness`{.Agda}: transitive classes and the Δ₀
@@ -141,17 +139,15 @@ formulas from host predicates, meaning-preservation certificates included.
 <!--zh-->
 ## 公式工厂 (第一部再续)
 
-分离与替换只收公式；这四章从宿主谓词制造公式，保义证书随附。
+分离与替换只收公式；这几章立起表示概念，并给公式配上可携的证书。
 
 - `FOL.Reification.Base`{.Agda}：表示，即那座桥：公式配上其适足性证书；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。
-- `FOL.Reification.Combinators`{.Agda}：证书代数：一构造子一组合子，每张证书一次同余。
 - `FOL.Reification.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁、交替的 Σₙ/Πₙ 之塔，以及分级表示。
 - `FOL.Reification.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下；`transfer`{.Agda} 把适足性与绝对性复合。
 <!--/-->
 
 ```agda
 import FOL.Reification.Base
-import FOL.Reification.Combinators
 import FOL.Reification.Graded
 import FOL.Reification.Absoluteness
 ```
@@ -184,31 +180,6 @@ import FOL.Reification.Absoluteness
 import V.Hierarchy
 import V.Smallness
 import V.Model
-```
-
-<!--en-->
-## The doorstep of Part 4: tools in waiting
-
-Two tools whose first consumers arrive with the constructible universe; they read
-here so the toolbox is complete when Part 4 opens.
-
-- `FOL.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
-  syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
-  exchange, and contraction.
-- `FOL.Reification.Relativize`{.Agda}: tightening unbounded quantifiers to a
-  constant bound, Δ₀ certificate included, with the correctness equation.
-<!--zh-->
-## 第四部门前：候用的工具
-
-两件工具的首批消费者随可构造宇宙到来；它们读在此处，好让第四部开幕时工具箱已然齐备。
-
-- `FOL.Renaming`{.Agda}：本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
-- `FOL.Reification.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 证书随附，并给出正确性等式。
-<!--/-->
-
-```agda
-import FOL.Renaming
-import FOL.Reification.Relativize
 ```
 
 <!--en-->
@@ -253,5 +224,36 @@ The root, stated today and finished over the remaining parts:
 ```agda
 import L.Frontier
 import L.Model
+```
+
+<!--en-->
+## Tools in waiting
+
+Three chapters with, as of today, no consumer anywhere in the trunk: the
+combinator assembly line, the variable calculus, and relativization. Their first
+consumers arrive with Part 4's deeper machinery; they read last so the main line
+stays unbroken.
+
+- `FOL.Reification.Combinators`{.Agda}: the certificate algebra: one combinator per
+  constructor, every certificate a single congruence.
+- `FOL.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
+  syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
+  exchange, and contraction.
+- `FOL.Reification.Relativize`{.Agda}: tightening unbounded quantifiers to a
+  constant bound, Δ₀ certificate included, with the correctness equation.
+<!--zh-->
+## 候用的工具
+
+三章至今在主干上没有任何消费者：组合子流水线、变量演算与相对化。它们的首批消费者随第四部的深层机器到来；读在最后，好让主线不断。
+
+- `FOL.Reification.Combinators`{.Agda}：证书代数：一构造子一组合子，每张证书一次同余。
+- `FOL.Renaming`{.Agda}：本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
+- `FOL.Reification.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 证书随附，并给出正确性等式。
+<!--/-->
+
+```agda
+import FOL.Reification.Combinators
+import FOL.Renaming
+import FOL.Reification.Relativize
 ```
 

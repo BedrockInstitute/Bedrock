@@ -1,7 +1,8 @@
 # Combinators
 
 <!--en-->
-The factory floor: one combinator per constructor of the object language. Each does
+The factory floor, catalogued ahead of demand: one combinator per constructor of
+the object language. Each does
 two jobs, gluing the syntax together and composing the input certificates into the
 output certificate. The second job costs one line each, and this is the semantics
 chapter's faithfulness paying out: `γ ⊨ (φ ∧̇ ψ)` **is**, by definition,
@@ -9,7 +10,7 @@ chapter's faithfulness paying out: `γ ⊨ (φ ∧̇ ψ)` **is**, by definition,
 whole chapter is generic in the truth algebra, cashing the promise made when
 `TruthAlg`{.Agda} was declared law-free: not one algebraic fact is used.
 <!--zh-->
-车间开工：对象语言一构造子一个组合子。每个组合子做两件事，把语法拼起来，并把输入证书复合成输出证书。第二件事每处只花一行，兑现的正是语义章的忠实性：`γ ⊨ (φ ∧̇ ψ)` **按定义就是** `(γ ⊨ φ) ⊓ (γ ⊨ ψ)`，于是证书部分只剩同余，分毫不多。整章对真值代数泛型，兑现 `TruthAlg`{.Agda} 立为零定律时的许诺：没有用到任何一条代数事实。
+车间预先备案，候单开工：对象语言一构造子一个组合子。每个组合子做两件事，把语法拼起来，并把输入证书复合成输出证书。第二件事每处只花一行，兑现的正是语义章的忠实性：`γ ⊨ (φ ∧̇ ψ)` **按定义就是** `(γ ⊨ φ) ⊓ (γ ⊨ ψ)`，于是证书部分只剩同余，分毫不多。整章对真值代数泛型，兑现 `TruthAlg`{.Agda} 立为零定律时的许诺：没有用到任何一条代数事实。
 <!--/-->
 
 ```agda
