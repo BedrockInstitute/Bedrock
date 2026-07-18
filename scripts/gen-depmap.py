@@ -42,8 +42,9 @@ UI = {
                 "dependency depth (no dependencies at the left, the root theorem at the "
                 "right); lanes are the sidebar's namespace tree. <b>A → B means B imports "
                 "A</b>. Hover for a chapter's dependency cones; click to pin."),
-        "tred": "Transitive reduction (hide edges implied by longer paths)",
-        "lmk": "Show Landmarks' reference edges",
+        "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
+        "alledges": "all direct imports",
+        "lmk": "include Landmarks' references",
         "hint": "— hover or click any chapter —",
         "hubnote": ("The hubs <span class=mono>Base.Prelude</span> and <span class=mono>"
                     "Base.Truth</span> are imported by every chapter; those edges are "
@@ -60,8 +61,9 @@ UI = {
         "title": "依赖地图", "back": "← Bedrock",
         "sub": ("{n} 个文学化章节的直接导入关系。横轴为依赖深度 (左端无依赖，右端是根定理)；"
                 "泳道即侧边栏的命名空间结构树。<b>A → B 表示 B 导入 A</b>。悬停看依赖锥，点击钉住。"),
-        "tred": "传递约简 (隐藏被更长路径蕴含的边)",
-        "lmk": "显示 Landmarks 的引用边",
+        "edgemode": "边：", "skeleton": "骨架 (传递约简)",
+        "alledges": "全部直接边",
+        "lmk": "包含 Landmarks 的引用边",
         "hint": "— 悬停或点击任一章节 —",
         "hubnote": ("中枢 <span class=mono>Base.Prelude</span> 与 <span class=mono>Base.Truth"
                     "</span> 被每一章导入，图中省略这些边 (详情卡仍列出)。"),
@@ -76,8 +78,9 @@ UI = {
         "title": "依存マップ", "back": "← Bedrock",
         "sub": ("{n} 章の直接 import 関係。横軸は依存の深さ、レーンはサイドバーの名前空間ツリー。"
                 "<b>A → B は B が A を import する</b>ことを表す。ホバーで依存錐、クリックで固定。"),
-        "tred": "推移簡約 (より長い経路に含意される辺を隠す)",
-        "lmk": "Landmarks の参照辺を表示",
+        "edgemode": "辺：", "skeleton": "骨格 (推移簡約)",
+        "alledges": "すべての直接 import",
+        "lmk": "Landmarks の参照を含める",
         "hint": "— 章にホバーまたはクリック —",
         "hubnote": ("ハブ <span class=mono>Base.Prelude</span> と <span class=mono>Base.Truth"
                     "</span> は全章から import されるため、辺は省略 (詳細カードには表示)。"),
@@ -214,7 +217,9 @@ def main(argv):
         page = page.replace("__TITLE__", ui["title"])
         page = page.replace("__BACK__", ui["back"])
         page = page.replace("__SUB__", ui["sub"].format(n=len(internal)))
-        page = page.replace("__TRED__", ui["tred"])
+        page = page.replace("__EDGEMODE__", ui["edgemode"])
+        page = page.replace("__SKELETON__", ui["skeleton"])
+        page = page.replace("__ALLEDGES__", ui["alledges"])
         page = page.replace("__LMK__", ui["lmk"])
         page = page.replace("__HINT__", ui["hint"])
         page = page.replace("__HUBNOTE__", ui["hubnote"])

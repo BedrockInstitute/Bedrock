@@ -36,6 +36,11 @@ h1 {
 }
 .controls label { display: inline-flex; gap: .4rem; align-items: center; cursor: pointer; }
 .controls input { accent-color: var(--link); }
+.radiogroup { display: inline-flex; gap: .8rem; align-items: center;
+  padding: .15rem .6rem; border: 1px solid var(--panel-edge); border-radius: 6px;
+  background: var(--panel); }
+.grouplbl { font-weight: 600; }
+.lmklbl { padding-left: .2rem; }
 .legend { display: flex; flex-wrap: wrap; gap: .35rem .95rem; align-items: center; }
 .chip { display: inline-flex; align-items: center; gap: .34rem; }
 .chip .mono { font-size: .8em; }
@@ -79,8 +84,12 @@ svg { display: block; }
 </header>
 
 <div class="controls">
-  <label><input type="checkbox" id="tred" checked> __TRED__</label>
-  <label><input type="checkbox" id="lmk"> __LMK__</label>
+  <span class="radiogroup" role="radiogroup" aria-label="__EDGEMODE__">
+    <span class="grouplbl">__EDGEMODE__</span>
+    <label><input type="radio" name="edgemode" value="skeleton" checked> __SKELETON__</label>
+    <label><input type="radio" name="edgemode" value="all"> __ALLEDGES__</label>
+  </span>
+  <label class="lmklbl"><input type="checkbox" id="lmk"> __LMK__</label>
   <span class="legend" id="legend"></span>
 </div>
 
@@ -152,7 +161,7 @@ function cone(start, adj) {
 function visibleEdges() {
   const showLmk = document.getElementById("lmk").checked;
   let es = DATA.edges.filter(([a, b]) => !HUBS.has(a) && (showLmk || b !== DATA.landmark));
-  if (document.getElementById("tred").checked) {
+  if (document.querySelector('input[name="edgemode"]:checked').value === "skeleton") {
     const adj = {}; es.forEach(([a, b]) => (adj[a] = adj[a] || []).push(b));
     es = es.filter(([a, b]) => {
       const rest = { ...adj, [a]: (adj[a] || []).filter(x => x !== b) };
@@ -279,7 +288,7 @@ function showCard(id) {
 document.getElementById("legend").innerHTML = DATA.lanes.map((l, i) =>
   `<span class="chip"><span class="dot" style="background:var(--lc-${i})"></span><span class="mono">${l.key}</span></span>`).join("");
 
-document.getElementById("tred").addEventListener("change", render);
+document.querySelectorAll('input[name="edgemode"]').forEach(el => el.addEventListener("change", render));
 document.getElementById("lmk").addEventListener("change", render);
 render();
 </script>
