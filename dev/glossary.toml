@@ -683,3 +683,24 @@ category = "Other"
 en = "von Neumann"
 zh = "冯·诺伊曼"
 ja = "フォン・ノイマン"
+
+[[term]]
+category = "Type theory"
+en = "smallness"
+zh = "小性"
+ja = "小ささ"
+notes = "isSmall: equivalence to a proposition one universe down; small = 小"
+
+[[term]]
+category = "Type theory"
+en = "small classifier"
+zh = "小分类器"
+ja = "小分類子"
+notes = "the smallΩ field: a small type equivalent to hProp"
+
+[[term]]
+category = "Set theory"
+en = "set-level choice"
+zh = "集合层选择"
+ja = "集合レベルの選択"
+notes = "SetChoice: truncation commutes with products over an h-set of indices"
