@@ -59,18 +59,24 @@ import Landmarks
 - `Base.Classical`{.Agda}: the classical boundary: excluded middle as the parameter
   interface `LEM`{.Agda}, and its two dividends, a small classifier of propositions
   and propositional resizing.
+- `Base.Choice`{.Agda}: the boundary's second interface: set-level choice
+  `SetChoice`{.Agda}, stated levelwise like `LEM`{.Agda}, with Diaconescu's
+  theorem mechanized at once: choice proves the excluded middle
+  (`choice→lem`{.Agda}).
 <!--zh-->
 ## 第零部：奠基
 
 - `Base.Prelude`{.Agda}：精选的宿主词汇 (宇宙、路径、h-层级、`hProp`{.Agda}、依值对与索引数据)，以及决定本书读法的可溯源纪律。
 - `Base.Truth`{.Agda}：真值代数 `TruthAlg`{.Agda}，零定律的运算签名，全书逻辑符号的唯一来源；附典范实例 `hPropAlg`{.Agda}。
 - `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}，及其两笔红利，命题的小分类器与命题降层。
+- `Base.Choice`{.Agda}：边界的第二个接口：集合层选择 `SetChoice`{.Agda}，与 `LEM`{.Agda} 同款逐层级陈述；Diaconescu 定理当场机器化：选择证明排中律 (`choice→lem`{.Agda})。
 <!--/-->
 
 ```agda
 import Base.Prelude
 import Base.Truth
 import Base.Classical
+import Base.Choice
 ```
 
 <!--en-->
@@ -161,9 +167,6 @@ import FOL.Reification.Absoluteness
   library, connectives and bounded quantifiers pass witnesses along,
   `separateFromSmall`{.Agda} is the one pipe to sets; `Δ₀-small`{.Agda} makes Δ₀
   separation an axiom-free theorem (`separateΔ₀`{.Agda}).
-- `Base.Choice`{.Agda}: the choice interface `SetChoice`{.Agda}, stated
-  levelwise like `LEM`{.Agda}, and Diaconescu's theorem mechanized: set-level
-  choice proves the excluded middle (`choice→lem`{.Agda}).
 - `V.Model`{.Agda}: the summit: stock sets reshaped, replacement and strong
   infinity for free, `VResizing`{.Agda} pricing full separation and power set
   (redeemed classically by `lem→VResizing`{.Agda}); assembly `V⊨ZF`{.Agda},
@@ -174,14 +177,12 @@ import FOL.Reification.Absoluteness
 
 - `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 一行插入，外延与正则免费入账。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
-- `Base.Choice`{.Agda}：选择接口 `SetChoice`{.Agda}，与 `LEM`{.Agda} 同款逐层级陈述；Diaconescu 定理机器化：集合层选择证明排中律 (`choice→lem`{.Agda})。
 - `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，`VResizing`{.Agda} 为全分离与幂集标价 (经典侧由 `lem→VResizing`{.Agda} 代付)；合龙 `V⊨ZF`{.Agda}，加 `SetChoice`{.Agda} 得 `V⊨ZFC`{.Agda}，经 Diaconescu 更有单假设的 `V⊨ZFC-fromChoice`{.Agda}。
 <!--/-->
 
 ```agda
 import V.Hierarchy
 import V.Smallness
-import Base.Choice
 import V.Model
 ```
 
