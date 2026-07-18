@@ -69,6 +69,21 @@ entry in the reading catalog**, at the position its first consumer dictates.
     ceiling (why regularity is meta-level) lives here as prose, per the ledger's
     `Reification.Ceiling` row.
 
+- `V/`: Part 3, the cumulative hierarchy realizes ZF(C), landed with `[L1.5]`
+  (`Definability`/`Coding`/`Satisfaction` deferred to `[L2.x]` by consumption
+  audit; see the ledger):
+  - `V/Hierarchy.lagda.md`: the library HIT `V` introduced; `𝒮ᵥ` via
+    `pathStructure`; `extensionalV` and `regularityV` (the two record fields the
+    HIT gives free).
+  - `V/Smallness.lagda.md`: `isSmall`, atomic compressions (`small-∈`,
+    `small-≡`), connective + bounded-quantifier closure, `separateFromSmall`
+    (the one separation pipe), `Δ₀Small.Δ₀-small`, and the flagship
+    `separateΔ₀` (Δ₀ separation is axiom-free).
+  - `V/Model.lagda.md`: stock-set specs, `replaceImage` (free replacement),
+    `numeralV`/`numeralV≡#`/`ω-specV` + the `sucV` case-analysis lemmas,
+    `VResizing` + `lem→VResizing`, `Power.𝒫V`, `VModel.V⊨ZF`, `SetChoice`,
+    `ChoiceLemma.choice`, `VZFC.V⊨ZFC`.
+
 Note the **reading order** (the `Everything` import order) is not the namespace
 order: the `FOL.Reification` chapters read after `ZF.Model` (whose separation and
 replacement motivate them), and `FOL.Renaming` + `FOL.Reification.Relativize` read
@@ -126,5 +141,6 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `∪` | binary union | ① | `ZF.Model` | `\cup` |
 | `⁺` | successor | ① | `ZF.Model` | `\^+` |
 | `𝒫` | power set | ① | `ZF.Model` | `\McP` |
+| `𝒮ᵥ` | the cumulative-hierarchy structure | ③ | `V.Hierarchy` | `\McS` `\_v` |
 | `∩` | binary intersection | ① | `ZF.Model` | `\cap` |
 | `ω` | the set of numerals | ① | `ZF.Model` | `\omega` |
