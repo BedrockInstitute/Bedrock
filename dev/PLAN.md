@@ -508,7 +508,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.5 | Port V/ | DONE 2026-07-18 (`V.{Hierarchy, Smallness, Model}`; `Def`/`Sat`/`Coding` and `InnerSmall` deferred to `[L2.x]` by consumption audit; `V⊨ZF`/`V⊨ZFC` delivered) |
 | L1.6 | Port L.Constructible | DONE 2026-07-18 (`V.Definability` un-deferred as prerequisite; `∈-induction` re-homed to `V.Hierarchy`; `InnerSmall` added to `V.Smallness`; `isL` is the Lset-form predicate, `𝒮ʟ` delivered) |
 | L1.7 | Frontier + root L.Model | DONE 2026-07-18 (Frontier: 11 fields, the verbatim model-field statements at 𝒮ʟ; root proves extensional/regularity outright and assembles L⊨ZF/L⊨ZFC; field count is the progress meter) |
-| L1.8 | Landmarks + Everything order | ACTIVE 2026-07-17 (Everything is the reading catalog; sidebar derives the structure tree per L0.4; Landmarks pending) |
+| L1.8 | Landmarks + Everything order | DONE 2026-07-18 (Landmarks restates V⊨ZF, V⊨ZF-classical, V⊨ZFC, and the frontier-conditional L⊨ZFC; the Everything reading order stands at Parts 0–4 + doorstep + Landmarks) |
 | L0.4 | Two-catalog doctrine (reading vs structure) | DONE 2026-07-18 |
 | L2 | Axiom branches | PLANNED |
 | L2.0 | Basic axioms | PLANNED |
