@@ -207,3 +207,24 @@ import FOL.Reification.Relativize
 import V.Definability
 import L.Constructible
 ```
+
+<!--en-->
+The root, stated today and finished over the remaining parts:
+
+- `L.Frontier`{.Agda}: the debt registry: eleven fields, each the verbatim
+  statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
+  is done when the record is empty.
+- `L.Model`{.Agda}: the root chapter: the honest relative-consistency framing;
+  extensionality and regularity descend along transitivity; `L⊨ZF`{.Agda} and
+  `L⊨ZFC`{.Agda} assembled from the frontier.
+<!--zh-->
+根，今日陈述，余部完成：
+
+- `L.Frontier`{.Agda}：债务登记簿：十一个字段，每个都是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
+- `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
+<!--/-->
+
+```agda
+import L.Frontier
+import L.Model
+```

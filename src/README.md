@@ -94,6 +94,13 @@ entry in the reading catalog**, at the position its first consumer dictates.
     (`opaque`-sealed; `Lset-compute` is the official unfolding), `Lset-layer`,
     the class `isL` (the source's `isL'`, primes dropped), `isL-trans`, and
     the structure `𝒮ʟ`.
+  - `L/Frontier.lagda.md`: the debt registry (PLAN §5), landed with `[L1.7]`:
+    `ChoiceStatement` and the `Frontier` record, eleven fields mirroring the
+    model fields at `𝒮ʟ` verbatim. Fields are deleted as they are proven.
+  - `L/Model.lagda.md`: the root, landed with `[L1.7]`: the honest D1 framing,
+    `extensionalL`/`regularityL` proven from transitivity, and
+    `L⊨ZF`/`L⊨ZFC` assembled from the frontier. Module telescope:
+    `{ℓ} (lem : ∀ {ℓ'} → LEM ℓ') (F : Frontier {ℓ})`.
 
 Note the **reading order** (the `Everything` import order) is not the namespace
 order: the `FOL.Reification` chapters read after `ZF.Model` (whose separation and
