@@ -274,7 +274,15 @@ Gate for L1: L0.0 to L0.3 DONE and approved by the owner.
 - **[L1.1]** Port `Base/` (Prelude, Truth, Classical-as-interface).
 - **[L1.2]** Port `FOL/` core (Syntax, Semantics, Renaming).
 - **[L1.3]** Port `FOL/Reification/`.
-- **[L1.4]** Port `ZF/` (Structure, Model; Encoding/Coding as needed).
+- **[L1.4]** Port `ZF/` (Model; Encoding/Coding as needed), fold in the Ceiling
+  prose (compactness explains why strong axioms are model fields), and execute the
+  **reading-order re-cut** (owner ruling, 2026-07-18): Part 1 slims to Syntax,
+  Structure, Semantics; the reification chapters (Base, Combinators, Graded,
+  Absoluteness) move to read right after `ZF.Model`, their openings rewritten to
+  point backward at the separation/replacement fields and to motivate with
+  self-contained micro-examples instead of destination-naming; `Renaming` and
+  `Relativize` move to the Part 4 doorstep at `[L2.x]`, before their first
+  consumers. Namespaces stay `FOL.*`; only reading order and ToC placement move.
 - **[L1.5]** Port `V/` (Hierarchy with the structure instance, Smallness,
   Definability, Coding, Satisfaction, Model).
 - **[L1.6]** Port `L.Constructible` (isL and the minimal machinery to define `𝒮ʟ`).
