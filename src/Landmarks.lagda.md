@@ -20,6 +20,7 @@ module Landmarks where
 
 open import Base.Prelude
 open import Base.Classical using ( LEM )
+open import Base.Choice using ( SetChoice )
 open import V.Hierarchy using ( 𝒮ᵥ )
 import ZF.Model
 import V.Model
@@ -49,9 +50,22 @@ V⊨ZF-classical : ∀ {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ')
                → ZF.Model.ZFModel (𝒮ᵥ {ℓ})
 V⊨ZF-classical lem = V.Model.VModel.V⊨ZF (V.Model.lem→VResizing lem)
 
-V⊨ZFC : ∀ {ℓ : Level} → V.Model.VResizing {ℓ} → V.Model.SetChoice {ℓ}
+V⊨ZFC : ∀ {ℓ : Level} → V.Model.VResizing {ℓ} → SetChoice ℓ
       → ZF.Model.ZFCModel (𝒮ᵥ {ℓ})
 V⊨ZFC = V.Model.VZFC.V⊨ZFC
+```
+
+<!--en-->
+And by Diaconescu's theorem (chapter `Base.Choice`{.Agda}), the whole bill
+compresses into one hypothesis: level-polymorphic set choice alone.
+<!--zh-->
+再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，整份账单压成一个假设：单凭层级多态的集合层选择。
+<!--/-->
+
+```agda
+V⊨ZFC-fromChoice : ∀ {ℓ : Level} → (∀ {ℓ'} → SetChoice ℓ')
+                 → ZF.Model.ZFCModel (𝒮ᵥ {ℓ})
+V⊨ZFC-fromChoice = V.Model.V⊨ZFC-fromChoice
 ```
 
 <!--en-->

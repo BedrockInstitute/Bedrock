@@ -185,6 +185,7 @@ rows rather than editing old ones):
 | `Models.HITV.{Def, Sat, Coding}` | deferred to `[L2.x]` | consumers are the L definability/coding stack; the `sucV` lemmas `∈sucV-elim` (from `L.Ordinal`) and `∈sucV-inl`/`self∈sucV` (from `Models.HITV.Coding`) are re-homed to `V.Model` for the numeral pinning |
 | `Models.HITV.ZF.NumeralSpec` | inlined as `V.Model.numeralV≡#` | `[L1.5]`: the field-form `numeral` (L1.4 row) removed the parameterization's purpose; `iter` (deferred at L1.4) is dropped entirely, `numeralV` is direct recursion |
 | `Models.HITV.Instance.{fullSep, replImage, con!}` | `separateFull`, `replaceImage`, `one` | `[L1.5]`: abbreviation rule; `con!` was local and stays local |
+| `V.Model.SetChoice` | `Base.Choice.SetChoice` | `[L1.9]`: re-homed and level-indexed (LEM-style packaging) so Diaconescu can be applied at two levels; reads just before `V.Model` |
 | `Classical.lem→VResizing` | `V.Model.lem→VResizing` | `[L1.5]`: as planned in the L1.1 row; consumes `Base.Classical.{lem→resize, lem→smallΩ}` |
 | `Models.HITV.Smallness.{small-⋀, small-⋁, InnerSmall}` | un-deferred into `V.Smallness` | `[L1.6]`: their consumer `Def` un-deferred; supersedes the L1.5 deferral row |
 | `Models.HITV.Def` | `V.Definability` | `[L1.6]`: un-deferred (first consumer is `L.Constructible`); `abs-defSet` + `module Abs` deferred to `[L2.x]` (condensation-side); `DemoEmpty` and `ι-fst` dropped |
@@ -325,6 +326,15 @@ Gate for L1: L0.0 to L0.3 DONE and approved by the owner.
 - **[L1.6]** Port `L.Constructible` (isL and the minimal machinery to define `𝒮ʟ`).
 - **[L1.7]** Write `L.Frontier` and the root `L.Model` statement.
 - **[L1.8]** Create `Landmarks`; set the `Everything` reading order.
+- **[L1.9]** Diaconescu and the single-hypothesis ZFC instance (owner ruling,
+  2026-07-18): a `Base.Choice` chapter (`SetChoice` re-homed from `V.Model`,
+  level-indexed like `LEM`; `choice→lem` mechanized via set quotients and
+  effectivity), the corollary `V.Model.V⊨ZFC-fromChoice`, and a fourth
+  landmark. The "two independent assumptions" prose is corrected to the one-way
+  statement: LEM does not prove choice; choice proves LEM levelwise, but
+  `SetChoice ℓ` cannot reach `LEM (ℓ-suc ℓ)`, so the fixed-level pair stays
+  mutually non-implying and the two-parameter `V⊨ZFC` remains the finer
+  accounting.
 
 All L1 ports carry full textbook prose (en + zh). Gate for L2: `make check` green;
 the owner reads the trunk end to end as a book and signs off the tone.
@@ -508,6 +518,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.5 | Port V/ | DONE 2026-07-18 (`V.{Hierarchy, Smallness, Model}`; `Def`/`Sat`/`Coding` and `InnerSmall` deferred to `[L2.x]` by consumption audit; `V⊨ZF`/`V⊨ZFC` delivered) |
 | L1.6 | Port L.Constructible | DONE 2026-07-18 (`V.Definability` un-deferred as prerequisite; `∈-induction` re-homed to `V.Hierarchy`; `InnerSmall` added to `V.Smallness`; `isL` is the Lset-form predicate, `𝒮ʟ` delivered) |
 | L1.7 | Frontier + root L.Model | DONE 2026-07-18 (Frontier: 11 fields, the verbatim model-field statements at 𝒮ʟ; root proves extensional/regularity outright and assembles L⊨ZF/L⊨ZFC; field count is the progress meter) |
+| L1.9 | Diaconescu + single-hypothesis V⊨ZFC | DONE 2026-07-18 (`Base.Choice` with `choice→lem`; `V⊨ZFC-fromChoice`; fourth landmark) |
 | L1.8 | Landmarks + Everything order | DONE 2026-07-18 (Landmarks restates V⊨ZF, V⊨ZF-classical, V⊨ZFC, and the frontier-conditional L⊨ZFC; owner ruling 2026-07-18: Landmarks reads **first**, the trophy case is the storefront; reading order = Landmarks, Parts 0–4, doorstep) |
 | L0.4 | Two-catalog doctrine (reading vs structure) | DONE 2026-07-18 |
 | L2 | Axiom branches | PLANNED |

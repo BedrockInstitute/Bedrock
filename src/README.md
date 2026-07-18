@@ -35,6 +35,9 @@ entry in the reading catalog**, at the position its first consumer dictates.
   - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
     its two dividends `lem→smallΩ` (small classifier) and `lem→resize` (propositional
     resizing). No postulate, per PLAN D2.
+  - `Base/Choice.lagda.md` (landed with `[L1.9]`): the choice interface `SetChoice`
+    (levelwise, LEM-style) and Diaconescu's theorem `choice→lem` via set quotients.
+    Reads just before `V.Model` (its first consumer).
 - `FOL/`: Part 1, first-order logic as an object of study, landed with `[L1.2]`:
   - `FOL/Syntax.lagda.md`: the deeply embedded `Formula` (constant domain as a
     parameter, intrinsic scoping, all constructors primitive) and the parameter-free
@@ -81,8 +84,9 @@ entry in the reading catalog**, at the position its first consumer dictates.
     `separateΔ₀` (Δ₀ separation is axiom-free).
   - `V/Model.lagda.md`: stock-set specs, `replaceImage` (free replacement),
     `numeralV`/`numeralV≡#`/`ω-specV` + the `sucV` case-analysis lemmas,
-    `VResizing` + `lem→VResizing`, `Power.𝒫V`, `VModel.V⊨ZF`, `SetChoice`,
-    `ChoiceLemma.choice`, `VZFC.V⊨ZFC`.
+    `VResizing` + `lem→VResizing`, `Power.𝒫V`, `VModel.V⊨ZF`,
+    `ChoiceLemma.choice`, `VZFC.V⊨ZFC`, and the single-hypothesis
+    `V⊨ZFC-fromChoice` (via `Base.Choice`).
   - `V/Definability.lagda.md`: the `Def` operator, landed with `[L1.6]`:
     `DefOf` (inner semantics via `InnerSmall`, `smallSat`, `defSet`, `Def`),
     membership specs (`Def-spec`, `defSet-mem`, `defSet⊆A`, `Def∋⊆A`),
