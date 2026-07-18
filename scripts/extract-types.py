@@ -77,7 +77,7 @@ def query(loader_abs, modules):
     cmds = f'IOTCM "{loader_abs}" NonInteractive Direct (Cmd_load "{loader_abs}" [])\n'
     for m in modules:
         cmds += (f'IOTCM "{loader_abs}" None Direct '
-                 f'(Cmd_show_module_contents_toplevel Normalised "{m}")\n')
+                 f'(Cmd_show_module_contents_toplevel Simplified "{m}")\n')
     responses = parse_contents(run_agda(cmds))
     result = {}
     for i, m in enumerate(modules):
