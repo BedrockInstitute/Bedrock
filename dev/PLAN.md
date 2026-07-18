@@ -206,6 +206,17 @@ consequences; the packaging validated by the L0.2 spike is
 `(lem : ∀ {ℓ} → LEM ℓ)` in their telescopes (STYLE-agda §1). The entire tree,
 `Everything` included, is `--safe`.
 
+**Reading order versus structure order** (owner ruling, 2026-07-18): the book
+keeps two catalogs. The **reading catalog** is `Everything.lagda.md`, the landing
+page: import order = reading order, hand-maintained, and its sections are reading
+units that need not coincide with namespaces, since a chapter reads where its
+first consumer needs it. The **structure catalog** is the namespace tree, derived
+automatically and never hand-maintained: the sidebar groups modules by namespace
+(groups ordered by first appearance in `Everything`, members in reading order
+restricted to the group), and chapter pages carry previous/next links along the
+reading order. Namespace membership is decided by subject, reading position by
+first consumption; the two are independent.
+
 **Construction order versus reading order.** These are deliberately different. The
 build proceeds root-first (Frontier shrinks over time); the book reads
 foundations-first (`Base → FOL → ZF → V → L → Landmarks`, fixed by the `Everything`
@@ -262,7 +273,13 @@ uncovers an un-legislated situation.
   forbidden-construct ban (postulate, TERMINATING pragmas, holes). `Everything` and
   the designated hub modules (`Base.Prelude`, `Base.Truth`) are exempt from the
   import checks by design; `-- lint-agda: keep` is the per-import escape hatch.
-- **[L0.4+]** Reserved for mid-course legislation, opened as discovered.
+- **[L0.4]** Two-catalog doctrine (owner ruling, 2026-07-18): legislate the
+  reading-catalog / structure-catalog split of §5 (`Everything` = hand-maintained
+  reading order; sidebar = namespace tree derived from it, never hand-maintained;
+  per-chapter previous/next links along the reading order). Implementation: the
+  §5 paragraph, the `STYLE-agda` §2 note, the `src/README.md` Everything section,
+  the `Everything` opening prose, and the renderer (sidebar tree + `chapnav`).
+- **[L0.5+]** Reserved for mid-course legislation, opened as discovered.
 
 Gate for L1: L0.0 to L0.3 DONE and approved by the owner.
 
@@ -471,7 +488,8 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.5 | Port V/ | PLANNED |
 | L1.6 | Port L.Constructible | PLANNED |
 | L1.7 | Frontier + root L.Model | PLANNED |
-| L1.8 | Landmarks + Everything order | ACTIVE 2026-07-17 (sidebar now follows the Everything import order; Landmarks pending) |
+| L1.8 | Landmarks + Everything order | ACTIVE 2026-07-17 (Everything is the reading catalog; sidebar derives the structure tree per L0.4; Landmarks pending) |
+| L0.4 | Two-catalog doctrine (reading vs structure) | DONE 2026-07-18 |
 | L2 | Axiom branches | PLANNED |
 | L2.0 | Basic axioms | PLANNED |
 | L2.1 | Infinity | PLANNED |

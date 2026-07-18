@@ -38,6 +38,7 @@ UI = {
            "menu": "Menu", "close": "Close",
            "untranslated": "This page is not yet translated; showing English.",
            "modules": "Modules", "source": "Source", "overview": "Overview",
+           "prev": "Previous", "next": "Next",
            "license": "content licensed CC BY-NC-SA 4.0",
            "credit": 'Rendered with a generator adapted from '
                      '<a href="https://1lab.dev">the 1lab</a> (AGPL-3.0).',
@@ -47,6 +48,7 @@ UI = {
            "menu": "菜单", "close": "关闭",
            "untranslated": "本页尚未翻译，此处显示英文。",
            "modules": "模块", "source": "源码", "overview": "概览",
+           "prev": "上一章", "next": "下一章",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
            "credit": '使用改编自 <a href="https://1lab.dev">1lab</a> 的生成器渲染 '
                      '(AGPL-3.0)。',
@@ -56,6 +58,7 @@ UI = {
            "menu": "メニュー", "close": "閉じる",
            "untranslated": "このページは未翻訳です。英語を表示しています。",
            "modules": "モジュール", "source": "ソース", "overview": "概要",
+           "prev": "前の章", "next": "次の章",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
            "credit": '<a href="https://1lab.dev">1lab</a> を改変した'
                      'ジェネレータでレンダリング (AGPL-3.0)。',
@@ -274,12 +277,33 @@ def toc_html(toc, lang):
 
 
 def modules_nav(current, mods, lang):
-    """The 'Modules' sidebar section: every internal module (current one highlighted)."""
-    items = "".join(
-        f'<li{" class=cur" if m == current else ""}><a href="{m}.html">{m}</a></li>'
-        for m in mods)
+    """The 'Modules' sidebar section: the structural catalog. A namespace tree is
+    derived from the module list (never hand-maintained): groups by namespace,
+    ordered by first appearance in the reading order, members in reading order
+    restricted to the group; leaf labels drop the group prefix."""
+    tree = {}
+    for m in mods:
+        node = tree
+        for g in m.split(".")[:-1]:
+            node = node.setdefault(g, {})
+        node.setdefault(None, []).append(m)
+
+    def render(node, depth):
+        out = []
+        for key, sub in node.items():
+            if key is None:
+                for m in sub:
+                    cur = " class=cur" if m == current else ""
+                    label = m.rsplit(".", 1)[-1]
+                    out.append(f'<li{cur} style="--d:{depth}">'
+                               f'<a href="{m}.html">{label}</a></li>')
+            else:
+                out.append(f'<li class="modgroup" style="--d:{depth}">{key}</li>')
+                out.extend(render(sub, depth + 1))
+        return out
+
     return (f'<div class="nav-title">{UI[lang]["modules"]}</div>'
-            f'<ul class="modnav">{items}</ul>')
+            f'<ul class="modnav">{"".join(render(tree, 0))}</ul>')
 
 
 def ext_banner(lang):
@@ -396,6 +420,18 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
 
     for lang in langs:
         body, toc = page_body(lang)
+
+        # previous/next links along the reading order (the reading catalog)
+        if not is_external and not is_landing and module in modnav_list:
+            i = modnav_list.index(module)
+            parts = []
+            if i > 0:
+                parts.append(f'<a class="chapnav-prev" href="{modnav_list[i - 1]}.html">'
+                             f'&larr; {UI[lang]["prev"]} · {modnav_list[i - 1]}</a>')
+            if i + 1 < len(modnav_list):
+                parts.append(f'<a class="chapnav-next" href="{modnav_list[i + 1]}.html">'
+                             f'{UI[lang]["next"]} · {modnav_list[i + 1]} &rarr;</a>')
+            body += '<nav class="chapnav">' + "".join(parts) + "</nav>"
 
         banner = ""
         if langs_present and lang not in langs_present:

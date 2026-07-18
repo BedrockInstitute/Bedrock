@@ -9,16 +9,18 @@ immediate target is a full mechanization of `L` ⊨ GCH, with the cumulative hie
 realised as a higher inductive type. The full treatment is in the
 [Charter](https://github.com/BedrockInstitute/Bedrock/blob/main/docs/en/CHARTER.md).
 
-This site is generated from literate Agda; this page is the book's table of contents,
-in reading order (the sidebar follows it). The mathematics proper is under
-construction: the groundwork part is in place, and the parts on logic, models, the
-cumulative hierarchy, and the constructible universe follow.
+This site is generated from literate Agda; this page is the book's **reading
+catalog**: the table of contents in learning order, which the chapter-end
+navigation also follows. For the structural view, by namespace, use the module
+tree in the sidebar. The mathematics proper is under construction: the groundwork
+part is in place, and the parts on logic, models, the cumulative hierarchy, and
+the constructible universe follow.
 <!--zh-->
 *为 V 的形而上学奠基。*
 
 一项在 Cubical Agda 中的机器验证工作，针对当代集合宇宙问题背后的那部分集合论：力迫、内模型，以及 V 的结构。当前目标是完整机械化 `L` ⊨ GCH，其中累积层级 `V` 以高阶归纳类型实现。完整论述见 [纲领](https://github.com/BedrockInstitute/Bedrock/blob/main/docs/zh/CHARTER.md)。
 
-本站点由文学化 Agda 生成；本页是全书目录，按阅读顺序排列 (侧边栏与之一致)。数学本体正在施工中：奠基部分已就位，逻辑、模型、累积层级与可构造宇宙诸部随后。
+本站点由文学化 Agda 生成；本页是全书的**阅读目录**：按学习顺序排列，每章页尾的导航循此顺序。按知识结构浏览，请用侧边栏按命名空间分组的模块树。数学本体正在施工中：奠基部分已就位，逻辑、模型、累积层级与可构造宇宙诸部随后。
 <!--/-->
 
 ```agda
