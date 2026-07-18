@@ -228,3 +228,20 @@ The root, stated today and finished over the remaining parts:
 import L.Frontier
 import L.Model
 ```
+
+<!--en-->
+## Landmarks
+
+- `Landmarks`{.Agda}: the trophy case: the milestone theorems restated as
+  self-contained signatures with their full assumption bills, `V⊨ZF`{.Agda}
+  (and its classical redemption), `V⊨ZFC`{.Agda}, and the frontier-conditional
+  `L⊨ZFC`{.Agda}.
+<!--zh-->
+## 地标
+
+- `Landmarks`{.Agda}：奖杯陈列室：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其经典代付版)、`V⊨ZFC`{.Agda}，与带前沿条件的 `L⊨ZFC`{.Agda}。
+<!--/-->
+
+```agda
+import Landmarks
+```

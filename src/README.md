@@ -118,7 +118,9 @@ per the route tree (`[L1]` onward). By part:
 - `L/`: Part 4, the constructible universe as an inductive predicate: the capstone
   `L ⊨ ZFC`, built root-first through the temporary `Frontier` record (PLAN §5).
 
-`Landmarks.lagda.md` (milestone theorems restated, the trophy case) arrives with `[L1.8]`.
+`Landmarks.lagda.md` (landed with `[L1.8]`): the trophy case: `V⊨ZF`,
+`V⊨ZF-classical`, `V⊨ZFC`, and the frontier-conditional `L⊨ZFC`, each a
+self-contained signature naming its proving chapter.
 
 ## Symbol master table
 
