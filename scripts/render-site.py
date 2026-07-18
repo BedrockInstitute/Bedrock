@@ -293,7 +293,9 @@ def modules_nav(current, mods, lang):
     """The 'Modules' sidebar section: the structural catalog. A namespace tree is
     derived from the module list (never hand-maintained): children of every
     level, leaves and subgroups alike, ordered by first appearance in the
-    reading order; leaf labels drop the group prefix."""
+    reading order; leaf labels drop the group prefix. Namespace groups are
+    disclosure sections, collapsed by default, with the current page's
+    ancestor chain opened."""
     root = []          # entries: ("leaf", module) | ("group", name, children)
 
     def insert(children, parts, mod):
@@ -311,24 +313,28 @@ def modules_nav(current, mods, lang):
     for m in mods:
         insert(root, m.split("."), m)
 
-    def render(children, depth):
+    def render(children, prefix):
         out = []
         for entry in children:
             if entry[0] == "leaf":
                 m = entry[1]
-                cur = " class=cur" if m == current else ""
+                cur = ' class="modleaf cur"' if m == current else ' class="modleaf"'
                 label = m.rsplit(".", 1)[-1]
-                out.append(f'<li{cur} style="--d:{depth}">'
-                           f'<a href="{m}.html">{label}</a></li>')
+                out.append(f'<li{cur}><a href="{m}.html">{label}</a></li>')
             else:
-                out.append(f'<li class="modgroup" style="--d:{depth}">{entry[1]}</li>')
-                out.extend(render(entry[2], depth + 1))
+                name = entry[1]
+                path = f"{prefix}{name}."
+                is_open = " open" if current.startswith(path) else ""
+                out.append(f'<li class="modgrp"><details{is_open}>'
+                           f'<summary class="modgroup">{name}</summary>'
+                           f'<ul>{"".join(render(entry[2], path))}</ul>'
+                           f'</details></li>')
         return out
 
     return (f'<a class="navlink nav-title" href="depmap.html">{UI[lang]["depmap"]}</a>'
             f'<details class="navsec"><summary class="nav-title">'
             f'{UI[lang]["modules"]}</summary>'
-            f'<ul class="modnav">{"".join(render(root, 0))}</ul></details>')
+            f'<ul class="modnav">{"".join(render(root, ""))}</ul></details>')
 
 
 def ext_banner(lang):
