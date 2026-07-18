@@ -19,7 +19,7 @@ cite one without caring where inside the book its proof lives.
 module Landmarks where
 
 open import Base.Prelude
-open import Base.Classical using ( LEM )
+open import Base.Classical using ( LEM; Resizing )
 open import Base.Choice using ( SetChoice )
 open import V.Hierarchy using ( 𝒮ᵥ )
 import ZF
@@ -43,14 +43,14 @@ upgrades the model to ZFC.
 <!--/-->
 
 ```agda
-V⊨ZF : ∀ {ℓ : Level} → V.Model.VResizing {ℓ} → ZF.ZFModel (𝒮ᵥ {ℓ})
+V⊨ZF : ∀ {ℓ : Level} → Resizing ℓ → ZF.ZFModel (𝒮ᵥ {ℓ})
 V⊨ZF = V.Model.VModel.V⊨ZF
 
 V⊨ZF-classical : ∀ {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ')
                → ZF.ZFModel (𝒮ᵥ {ℓ})
-V⊨ZF-classical lem = V.Model.VModel.V⊨ZF (V.Model.lem→VResizing lem)
+V⊨ZF-classical lem = V.Model.VModel.V⊨ZF (Base.Classical.lem→Resizing lem)
 
-V⊨ZFC : ∀ {ℓ : Level} → V.Model.VResizing {ℓ} → SetChoice ℓ
+V⊨ZFC : ∀ {ℓ : Level} → Resizing ℓ → SetChoice ℓ
       → ZF.ZFCModel (𝒮ᵥ {ℓ})
 V⊨ZFC = V.Model.VZFC.V⊨ZFC
 ```

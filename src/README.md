@@ -34,7 +34,8 @@ entry in the reading catalog**, at the position its first consumer dictates.
     The other hub.
   - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
     its two dividends `lem→smallΩ` (small classifier) and `lem→resize` (propositional
-    resizing). No postulate, per PLAN D2.
+    resizing), packaged as the interface `Resizing` with `lem→Resizing` as the
+    classical redemption. No postulate, per PLAN D2.
   - `Base/Choice.lagda.md` (landed with `[L1.9]`): the choice interface `SetChoice`
     (levelwise, LEM-style) and Diaconescu's theorem `choice→lem` via set quotients.
     By owner ruling it reads in Part 0, right after `Base.Classical`.
@@ -89,7 +90,7 @@ entry in the reading catalog**, at the position its first consumer dictates.
     `separateΔ₀` (Δ₀ separation is axiom-free).
   - `V/Model.lagda.md`: stock-set specs, `replaceImage` (free replacement),
     `numeralV`/`numeralV≡#`/`ω-specV` + the `sucV` case-analysis lemmas,
-    `VResizing` + `lem→VResizing`, `Power.𝒫V`, `VModel.V⊨ZF`,
+    `Power.𝒫V`, `VModel.V⊨ZF` (parameterized over `Base.Classical.Resizing`),
     `ChoiceLemma.choice`, `VZFC.V⊨ZFC`, and the single-hypothesis
     `V⊨ZFC-fromChoice` (via `Base.Choice`).
 - `L/`: Part 4, the constructible universe, trunk landed with `[L1.6]`/`[L1.7]`:

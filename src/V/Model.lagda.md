@@ -23,7 +23,7 @@ open import Base.Truth
 
 module V.Model {ℓ : Level} where
 
-open import Base.Classical using ( LEM; lem→resize; lem→smallΩ )
+open import Base.Classical using ( Resizing; lem→Resizing )
 open import Base.Choice using ( SetChoice; choice→lem )
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
@@ -37,7 +37,6 @@ open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Functions.Embedding
   using ( Embedding-into-isSet→isSet; isEmbedding→Inj )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Bool using ( Bool )
 import Cubical.Data.Sum as Sum
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
@@ -249,27 +248,14 @@ self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
 <!--en-->
 Two fields remain, full separation and power set, and neither is free: both need
 truth values brought down a universe with no Δ₀ certificate to pay the fare. The
-price is named by a record with two fields: `resize`{.Agda} compresses any
-proposition, and `smallΩ`{.Agda} is a small classifier, a small type equivalent
-to the propositions. Neither is an axiom of this book; a consumer of the model
-supplies them as parameters. The classical reader rides free: the excluded
-middle interface of Part 0 mints exactly these two coins, which is what its two
-dividends were saved for.
+price is exactly Part 0's resizing wallet, `Resizing`{.Agda}: `resize`{.Agda}
+compresses any proposition, and `smallΩ`{.Agda} is the small classifier the
+power set will be indexed by. Nothing here is an axiom; the assembly takes the
+wallet as a parameter, and the classical reader rides free through
+`lem→Resizing`{.Agda}, which is what the dividends were saved for.
 <!--zh-->
-还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格由一个双字段 record 点名：`resize`{.Agda} 压缩任意命题，`smallΩ`{.Agda} 是小分类器，即一个与命题等价的小类型。二者都不是本书的公理；模型的消费者以参数形式供应。经典读者免票：第零部的排中律接口恰好铸出这两枚硬币，当初存下那两笔红利，等的就是今天。
+还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部那只降层钱包 `Resizing`{.Agda}：`resize`{.Agda} 压缩任意命题，`smallΩ`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以钱包为参数，经典读者则经 `lem→Resizing`{.Agda} 免票，当初存下红利，等的就是今天。
 <!--/-->
-
-```agda
-record VResizing : Type (ℓ-suc (ℓ-suc ℓ)) where
-  field
-    resize : (P : hProp (ℓ-suc ℓ)) → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
-    smallΩ : Σ[ Ω' ∈ Type ℓ ] (Ω' ≃ hProp ℓ)
-
-lem→VResizing : (∀ {ℓ'} → LEM ℓ') → VResizing
-lem→VResizing lem = record
-  { resize = lem→resize lem
-  ; smallΩ = Lift Bool , lem→smallΩ lem }
-```
 
 <!--en-->
 ## Power set
@@ -364,8 +350,8 @@ riding `numeralV≡#`{.Agda} between the model's chain and the library's.
 <!--/-->
 
 ```agda
-module VModel (rsz : VResizing) where
-  open VResizing rsz
+module VModel (rsz : Resizing ℓ) where
+  open Resizing rsz
   open Power smallΩ public
 
   separateFull : (a : S) (φ : Formula S 1)
@@ -509,7 +495,7 @@ module ChoiceLemma (zf : ZFModel) (ac : SetChoice ℓ) where
             zcx : ⟨ z ∈ˢ c ⟩ × ⟨ z ∈ˢ x ⟩
             zcx = subst ⟨_⟩ (∩-spec c x z) pf
 
-module VZFC (rsz : VResizing) (ac : SetChoice ℓ) where
+module VZFC (rsz : Resizing ℓ) (ac : SetChoice ℓ) where
   open VModel rsz public
 
   V⊨ZFC : ZFCModel
@@ -525,20 +511,20 @@ module VZFC (rsz : VResizing) (ac : SetChoice ℓ) where
 <!--en-->
 Now Diaconescu's theorem is cashed. Choice at each level decides that level's
 propositions, so **level-polymorphic** choice funds the excluded middle at both
-`ℓ` and `ℓ-suc ℓ`, which is exactly what `lem→VResizing`{.Agda} charges; the
+`ℓ` and `ℓ-suc ℓ`, which is exactly what `lem→Resizing`{.Agda} charges; the
 fixed-level instance then feeds the choice set. The two-parameter bill above
 collapses to one line item: choice, at every level, is the entire price of
 `V ⊨ ZFC`. (At a *fixed* level nothing collapses: `SetChoice ℓ` decides only
 `hProp ℓ`, while `resize`{.Agda} must decide `hProp (ℓ-suc ℓ)`, so the
 two-parameter form remains the finer accounting.)
 <!--zh-->
-现在兑现 Diaconescu 定理。每层的选择判定该层的命题，故**层级多态**的选择在 `ℓ` 与 `ℓ-suc ℓ` 两层都付得起排中律，恰是 `lem→VResizing`{.Agda} 开的价；固定层的实例再喂给选择集。上文的双参数账单塌缩成一行：全层级的选择，就是 `V ⊨ ZFC` 的全部价格。(在**固定**层级上无物塌缩：`SetChoice ℓ` 只判定 `hProp ℓ`，而 `resize`{.Agda} 要判定 `hProp (ℓ-suc ℓ)`，所以双参数形式仍是更细的账目。)
+现在兑现 Diaconescu 定理。每层的选择判定该层的命题，故**层级多态**的选择在 `ℓ` 与 `ℓ-suc ℓ` 两层都付得起排中律，恰是 `lem→Resizing`{.Agda} 开的价；固定层的实例再喂给选择集。上文的双参数账单塌缩成一行：全层级的选择，就是 `V ⊨ ZFC` 的全部价格。(在**固定**层级上无物塌缩：`SetChoice ℓ` 只判定 `hProp ℓ`，而 `resize`{.Agda} 要判定 `hProp (ℓ-suc ℓ)`，所以双参数形式仍是更细的账目。)
 <!--/-->
 
 ```agda
 V⊨ZFC-fromChoice : (∀ {ℓ'} → SetChoice ℓ') → ZFCModel
 V⊨ZFC-fromChoice ac =
-  VZFC.V⊨ZFC (lem→VResizing (λ {ℓ'} → choice→lem (ac {ℓ'}))) (ac {ℓ})
+  VZFC.V⊨ZFC (lem→Resizing (λ {ℓ'} → choice→lem (ac {ℓ'}))) (ac {ℓ})
 ```
 
 <!--en-->
@@ -552,11 +538,11 @@ The account closes balanced. Empty set, pair, and union were library stock
 reshaped by `∈∈ₛ` and `⇔toPath`{.Agda}; replacement came free through `sett`
 over untruncated fibers; strong infinity was `ω`'s definition plus one chain
 alignment (`numeralV≡#`{.Agda}). The two debts, full separation and power set,
-cost exactly `VResizing`{.Agda}, which the excluded middle redeems
-(`lem→VResizing`{.Agda}); assembly gives `V⊨ZF`{.Agda}, `SetChoice`{.Agda}
+cost exactly Part 0's `Resizing`{.Agda} wallet, which the excluded middle
+redeems (`lem→Resizing`{.Agda}); assembly gives `V⊨ZF`{.Agda}, `SetChoice`{.Agda}
 upgrades it to `V⊨ZFC`{.Agda}, and Diaconescu compresses the whole bill into
 `V⊨ZFC-fromChoice`{.Agda}: level-polymorphic choice alone. The universe that
 Part 4 will dig inside now exists.
 <!--zh-->
-账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为 `VResizing`{.Agda}，排中律可以代付 (`lem→VResizing`{.Agda})；合龙得 `V⊨ZF`{.Agda}，`SetChoice`{.Agda} 升级出 `V⊨ZFC`{.Agda}，Diaconescu 再把整份账单压成 `V⊨ZFC-fromChoice`{.Agda}：单凭层级多态的选择。第四部将要向内开凿的那个宇宙，现在存在了。
+账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为第零部的降层钱包 `Resizing`{.Agda}，排中律可以代付 (`lem→Resizing`{.Agda})；合龙得 `V⊨ZF`{.Agda}，`SetChoice`{.Agda} 升级出 `V⊨ZFC`{.Agda}，Diaconescu 再把整份账单压成 `V⊨ZFC-fromChoice`{.Agda}：单凭层级多态的选择。第四部将要向内开凿的那个宇宙，现在存在了。
 <!--/-->

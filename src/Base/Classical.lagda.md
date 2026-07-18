@@ -237,6 +237,36 @@ lem→resize lem P = resizeDec P (lem P)
 ```
 
 <!--en-->
+## The resizing interface
+<!--zh-->
+## 降层接口
+<!--/-->
+
+<!--en-->
+The two dividends travel together, so they get a wallet: the **resizing
+interface**, one level at a time in the same style as `LEM`{.Agda}. A consumer
+that needs truth values brought down a universe asks for `Resizing ℓ` and gets
+both instruments; a classical reader never pays cash, since the excluded middle
+redeems the whole record (`lem→Resizing`{.Agda}). The interface says nothing
+about any particular structure; it is pure universe-level policy, and Part 3
+will name its exact price in it.
+<!--zh-->
+两笔红利总是结伴出行，于是给它们配一只钱包：**降层接口**，与 `LEM`{.Agda} 同款逐层级陈述。需要把真值降下一层宇宙的消费者领取一份 `Resizing ℓ`，两件器具同时到手；经典读者从不付现，排中律可赎回整个 record (`lem→Resizing`{.Agda})。这个接口不谈任何特定结构，是纯粹的宇宙层级政策；第三部将用它开出自己的准确价格。
+<!--/-->
+
+```agda
+record Resizing (ℓ : Level) : Type (ℓ-suc (ℓ-suc ℓ)) where
+  field
+    resize : (P : hProp (ℓ-suc ℓ)) → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
+    smallΩ : Σ[ Ω' ∈ Type ℓ ] (Ω' ≃ hProp ℓ)
+
+lem→Resizing : ∀ {ℓ} → (∀ {ℓ'} → LEM ℓ') → Resizing ℓ
+lem→Resizing lem = record
+  { resize = lem→resize lem
+  ; smallΩ = Lift Bool , lem→smallΩ lem }
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -245,11 +275,12 @@ lem→resize lem P = resizeDec P (lem P)
 <!--en-->
 Excluded middle is stated as the interface `LEM`{.Agda}, taken by chapters as a
 parameter and never assumed globally; the boundary between constructive and
-classical mathematics is therefore a compile-time fact. Two dividends are banked:
+classical mathematics is therefore a compile-time fact. Two dividends are banked,
 a small classifier of propositions (`lem→smallΩ`{.Agda}) and propositional resizing
-(`lem→resize`{.Agda}). Part 3 will spend exactly these two coins: they redeem, for
-the cumulative hierarchy `V`, the smallness assumptions behind full separation and
-power set.
+(`lem→resize`{.Agda}), and packaged as the interface `Resizing`{.Agda}, which the
+excluded middle redeems whole (`lem→Resizing`{.Agda}). Part 3 will spend exactly
+this wallet: it prices, for the cumulative hierarchy `V`, the smallness
+assumptions behind full separation and power set.
 <!--zh-->
-排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。存入两笔红利：命题的小分类器 (`lem→smallΩ`{.Agda}) 与命题降层 (`lem→resize`{.Agda})。第三部将恰好花掉这两枚硬币：它们为累积层级 `V` 兑付全分离与幂集背后的小性假设。
+排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。存入两笔红利：命题的小分类器 (`lem→smallΩ`{.Agda}) 与命题降层 (`lem→resize`{.Agda})，并打包为接口 `Resizing`{.Agda}，排中律可整份赎回 (`lem→Resizing`{.Agda})。第三部将恰好花掉这只钱包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
 <!--/-->
