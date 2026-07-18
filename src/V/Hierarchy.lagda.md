@@ -22,6 +22,7 @@ open import Base.Truth
 open import FOL.Structure using ( ZFStructure; pathStructure; _∈ᵗ_ )
 
 import Cubical.HITs.PropositionalTruncation as PT
+import Cubical.Induction.WellFounded as WellFoundedInduction
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded; isPropAcc )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; setIsSet; _∈_; elimProp )
@@ -132,6 +133,35 @@ regularityV {ℓ} = elimProp (λ s → isPropAcc s)
     PT.rec (isPropAcc y)
            (λ { (i , p) → subst (Acc (_∈ᵗ_ (𝒮ᵥ {ℓ}))) p (rec i) })
            y∈))
+```
+
+<!--en-->
+## Recursion on membership
+<!--zh-->
+## 沿成员关系的递归
+<!--/-->
+
+<!--en-->
+Regularity pays its first dividend at once. A well-founded relation supports
+recursion, so the library's well-founded induction instantiates on membership:
+to define something for every set, it suffices to define it for `x` given its
+values on the members of `x`, into an **arbitrary** type family, with the
+recursion equation holding propositionally. This is transfinite recursion with
+no ordinals in sight, and Part 4 builds its universe with it.
+<!--zh-->
+正则性立刻付出第一笔红利。良基关系支持递归，于是库的良基归纳在成员关系上实例化：要对每个集合定义某物，只需在给定 `x` 各成员处取值的前提下给出 `x` 处的值，落点是**任意**类型族，递归方程命题级成立。这是不见序数的超穷递归，第四部就用它构造自己的宇宙。
+<!--/-->
+
+```agda
+∈-induction : ∀ {ℓ ℓ'} {P : V ℓ → Type ℓ'}
+            → (∀ x → (∀ y → _∈ᵗ_ (𝒮ᵥ {ℓ}) y x → P y) → P x)
+            → ∀ x → P x
+∈-induction {ℓ} = WellFoundedInduction.WFI.induction (regularityV {ℓ})
+
+∈-induction-compute : ∀ {ℓ ℓ'} {P : V ℓ → Type ℓ'}
+  (e : ∀ x → (∀ y → _∈ᵗ_ (𝒮ᵥ {ℓ}) y x → P y) → P x) (x : V ℓ)
+  → ∈-induction e x ≡ e x (λ y _ → ∈-induction e y)
+∈-induction-compute {ℓ} = WellFoundedInduction.WFI.induction-compute (regularityV {ℓ})
 ```
 
 <!--en-->

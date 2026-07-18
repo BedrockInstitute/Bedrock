@@ -704,3 +704,31 @@ en = "set-level choice"
 zh = "集合层选择"
 ja = "集合レベルの選択"
 notes = "SetChoice: truncation commutes with products over an h-set of indices"
+
+[[term]]
+category = "Set theory"
+en = "transitive set"
+zh = "传递集"
+ja = "推移的集合"
+notes = "matches the transitive class entry; isTransV"
+
+[[term]]
+category = "Set theory"
+en = "definable subset"
+zh = "可定义子集"
+ja = "定義可能部分集合"
+notes = "the Def operator's output; V.Definability"
+
+[[term]]
+category = "Set theory"
+en = "layer"
+zh = "层"
+ja = "層"
+notes = "a stage of the L tower; isLayer"
+
+[[term]]
+category = "Other"
+en = "frontier"
+zh = "前沿"
+ja = "フロンティア"
+notes = "the L.Frontier debt registry; reader-facing name for the root-first device"
