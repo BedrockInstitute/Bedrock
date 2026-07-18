@@ -71,6 +71,7 @@ types:
 site: html types
 	$(PY) scripts/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \
 		--langs $(LANGS) --base-url "$(BASE_URL)"
+	$(PY) scripts/gen-depmap.py --src src --out $(SITE_OUT) --langs $(LANGS)
 
 serve:
 	@echo "Serving $(SITE_OUT) at http://localhost:$(PORT)/ (Ctrl-C to stop)"

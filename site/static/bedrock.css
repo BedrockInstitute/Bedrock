@@ -173,6 +173,18 @@ ul.toc { font-size: 0.85rem; }
 ul.toc li, ul.modnav li { margin: 0.2rem 0; }
 ul.toc .toc-l3 { padding-left: 1rem; }
 ul.toc .toc-l4 { padding-left: 2rem; }
+details.navsec > summary.nav-title { cursor: pointer; list-style: none; }
+details.navsec > summary.nav-title::-webkit-details-marker { display: none; }
+details.navsec > summary.nav-title::before {
+  content: "\25B8"; display: inline-block; margin-right: 0.35rem;
+  transition: transform 0.15s ease; }
+details.navsec[open] > summary.nav-title::before { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) {
+  details.navsec > summary.nav-title::before { transition: none; } }
+a.navlink { display: block; font-family: var(--sans); font-size: 0.85rem;
+  font-weight: 700; color: var(--fg-alt); text-decoration: none;
+  margin: 0.9rem 0 0.35rem; }
+a.navlink:hover { color: var(--primary); }
 ul.modnav li { padding-left: calc(var(--d, 0) * 0.85rem); }
 ul.modnav li.modgroup { font-weight: 700; color: var(--fg-alt); font-family: var(--sans);
   font-size: 0.8rem; margin-top: 0.45rem; }

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="__LANG__">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ · Bedrock</title>
+<style>
+:root {
+  --bg: #FCFCFA; --ink: #24292F; --ink-soft: #57606A; --ruler: #D8DCE0;
+  --panel: #FFFFFF; --panel-edge: #E3E7EB; --lane: #F4F5F3; --lane-alt: #EFF1EE;
+  --edge-dim: .16; --shadow: 0 1px 3px rgba(30,40,60,.10); --link: #0054F4;
+}
+.dark-tokens {
+  --bg: #15181D; --ink: #C6CDD6; --ink-soft: #8B95A3; --ruler: #2C323B;
+  --panel: #1B1F26; --panel-edge: #2C323B; --lane: #191D23; --lane-alt: #1D222A;
+  --edge-dim: .22; --shadow: 0 1px 3px rgba(0,0,0,.4); --link: #119DDB;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.65 -apple-system, "PingFang SC", "Hiragino Sans GB", "Segoe UI", sans-serif;
+}
+header { max-width: 1180px; margin: 0 auto; padding: 1.6rem 1.4rem 0.6rem; }
+.backrow { font-size: .85rem; margin-bottom: .8rem; }
+.backrow a { color: var(--link); text-decoration: none; font-weight: 600; }
+h1 {
+  font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+  font-size: 1.7rem; margin: 0 0 .3rem; letter-spacing: .01em; text-wrap: balance;
+}
+.sub { color: var(--ink-soft); margin: 0; max-width: 68ch; }
+.mono { font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .88em; }
+.controls {
+  max-width: 1180px; margin: .9rem auto 0; padding: 0 1.4rem;
+  display: flex; flex-wrap: wrap; gap: .55rem 1.4rem; align-items: center;
+  font-size: .84rem; color: var(--ink-soft);
+}
+.controls label { display: inline-flex; gap: .4rem; align-items: center; cursor: pointer; }
+.controls input { accent-color: var(--link); }
+.legend { display: flex; flex-wrap: wrap; gap: .35rem .95rem; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: .34rem; }
+.chip .mono { font-size: .8em; }
+.dot { width: .62rem; height: .62rem; border-radius: 2px; display: inline-block; }
+.mapwrap { max-width: 1180px; margin: 1rem auto; padding: 0 1.4rem 0.4rem; }
+.mapscroll {
+  overflow-x: auto; border: 1px solid var(--panel-edge); border-radius: 10px;
+  background: var(--panel); box-shadow: var(--shadow);
+}
+svg { display: block; }
+.lanelabel { font: 600 .72rem/1 -apple-system, "PingFang SC", sans-serif; letter-spacing: .09em; }
+.node rect { rx: 6; stroke-width: 1.4; cursor: pointer; transition: opacity .15s ease, stroke-width .15s ease; }
+.node text { cursor: pointer; }
+.node .lbl { font: 500 .82rem/1 "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+.node .ord { font: 600 .62rem/1 -apple-system, sans-serif; }
+.edge { fill: none; stroke-width: 1.5; transition: opacity .15s ease, stroke-width .15s ease; }
+.node.faded rect, .node.faded text { opacity: .18; }
+.node.pinned rect { stroke-width: 3; }
+@media (prefers-reduced-motion: reduce) { .edge, .node rect { transition: none; } }
+.info { max-width: 1180px; margin: 0 auto 1.4rem; padding: 0 1.4rem; }
+.infocard {
+  border: 1px solid var(--panel-edge); border-left-width: 4px; border-radius: 8px;
+  background: var(--panel); padding: .9rem 1.1rem; box-shadow: var(--shadow);
+}
+.infocard h2 { margin: 0 0 .15rem; font-size: 1.02rem;
+  font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+.infocard .meta { color: var(--ink-soft); font-size: .8rem; margin-bottom: .45rem; }
+.infocard p { margin: .2rem 0 .5rem; max-width: 74ch; }
+.deps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .3rem 1.4rem; font-size: .84rem; }
+.deps b { font-weight: 600; color: var(--ink-soft); }
+.deps span { font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .86em; }
+.note { max-width: 1180px; margin: 0 auto 2.4rem; padding: 0 1.4rem; color: var(--ink-soft); font-size: .82rem; }
+.note p { max-width: 74ch; margin: .3rem 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="backrow"><a href="index.html">__BACK__</a></div>
+  <h1>__TITLE__</h1>
+  <p class="sub">__SUB__</p>
+</header>
+
+<div class="controls">
+  <label><input type="checkbox" id="tred" checked> __TRED__</label>
+  <label><input type="checkbox" id="lmk"> __LMK__</label>
+  <span class="legend" id="legend"></span>
+</div>
+
+<div class="mapwrap"><div class="mapscroll" id="scroll"></div></div>
+
+<div class="info"><div class="infocard" id="card" style="border-left-color: var(--ruler)">
+  <h2 id="c-name">__HINT__</h2>
+  <div class="meta" id="c-meta">__HUBNOTE__</div>
+  <p id="c-desc">__FRONTNOTE__</p>
+  <div class="deps" id="c-deps"></div>
+</div></div>
+
+<div class="note"><p>__FOOTER__</p></div>
+
+<script>
+const DATA = __DATA__;
+const STR = { reading: "__READING__", imports: "__IMPORTS__", consumers: "__CONSUMERS__",
+              hubnote: document.getElementById("c-meta").innerHTML,
+              frontnote: document.getElementById("c-desc").innerHTML };
+
+// follow the site's stored theme (bedrock.js convention), else the OS preference
+(function () {
+  let t = "system";
+  try { t = localStorage.getItem("bedrock-theme") || "system"; } catch (e) {}
+  const dark = t === "dark" ||
+    (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  if (dark) document.documentElement.classList.add("dark-tokens");
+})();
+
+// lane colour tokens, from the generated lane list
+(function () {
+  const dark = document.documentElement.classList.contains("dark-tokens");
+  const st = document.createElement("style");
+  st.textContent = ":root { " + DATA.lanes.map((l, i) =>
+    `--lc-${i}: ${dark ? l.dark : l.light};`).join(" ") + " }";
+  document.head.appendChild(st);
+})();
+
+const laneColor = {}; DATA.lanes.forEach((l, i) => laneColor[l.key] = `var(--lc-${i})`);
+const byId = {}; DATA.nodes.forEach(n => byId[n.id] = n);
+const HUBS = new Set(DATA.hubs);
+const short = id => id.split(".").pop();
+
+// ---- geometry ----------------------------------------------------------
+const COLW = 132, NODEW = 108, NODEH = 30, ROWH = 44, LANEPAD = 12, LABELW = 130, TOPPAD = 8;
+const laneOrder = DATA.lanes.map(l => l.key);
+const maxCol = Math.max(...DATA.nodes.map(n => n.col));
+const laneRows = {};
+DATA.nodes.forEach(n => { laneRows[n.lane] = Math.max(laneRows[n.lane] || 0, n.row + 1); });
+let y0 = TOPPAD; const laneY = {};
+laneOrder.forEach(k => { laneY[k] = y0; y0 += (laneRows[k] || 1) * ROWH + LANEPAD * 2; });
+const W = LABELW + (maxCol + 1) * COLW + 24, H = y0 + 6;
+const pos = {};
+DATA.nodes.forEach(n => {
+  pos[n.id] = { x: LABELW + n.col * COLW + 12,
+                y: laneY[n.lane] + LANEPAD + n.row * ROWH + (ROWH - NODEH) / 2 };
+});
+
+// ---- graph helpers -----------------------------------------------------
+const consumersOf = {}, importsOf = {};
+DATA.nodes.forEach(n => { consumersOf[n.id] = []; importsOf[n.id] = []; });
+DATA.edges.forEach(([a, b]) => { consumersOf[a].push(b); importsOf[b].push(a); });
+
+function cone(start, adj) {
+  const seen = new Set(); const st = [...(adj[start] || [])];
+  while (st.length) { const x = st.pop(); if (!seen.has(x)) { seen.add(x); (adj[x] || []).forEach(y => st.push(y)); } }
+  return seen;
+}
+function visibleEdges() {
+  const showLmk = document.getElementById("lmk").checked;
+  let es = DATA.edges.filter(([a, b]) => !HUBS.has(a) && (showLmk || b !== DATA.landmark));
+  if (document.getElementById("tred").checked) {
+    const adj = {}; es.forEach(([a, b]) => (adj[a] = adj[a] || []).push(b));
+    es = es.filter(([a, b]) => {
+      const rest = { ...adj, [a]: (adj[a] || []).filter(x => x !== b) };
+      return !cone(a, rest).has(b);
+    });
+  }
+  return es;
+}
+
+// ---- render ------------------------------------------------------------
+const scroll = document.getElementById("scroll");
+let pinned = null;
+function render() {
+  const es = visibleEdges();
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W); svg.setAttribute("height", H);
+  svg.style.minWidth = W + "px";
+
+  laneOrder.forEach((k, i) => {
+    const r = document.createElementNS(svgNS, "rect");
+    r.setAttribute("x", 0); r.setAttribute("y", laneY[k]);
+    r.setAttribute("width", W); r.setAttribute("height", (laneRows[k] || 1) * ROWH + LANEPAD * 2);
+    r.setAttribute("fill", i % 2 ? "var(--lane-alt)" : "var(--lane)");
+    svg.appendChild(r);
+    const t = document.createElementNS(svgNS, "text");
+    t.setAttribute("x", 12); t.setAttribute("y", laneY[k] + 18);
+    t.setAttribute("fill", laneColor[k]); t.setAttribute("class", "lanelabel");
+    t.textContent = k;
+    svg.appendChild(t);
+  });
+
+  const edgeEls = [];
+  es.forEach(([a, b]) => {
+    const p1 = pos[a], p2 = pos[b];
+    const x1 = p1.x + NODEW, y1 = p1.y + NODEH / 2, x2 = p2.x, y2 = p2.y + NODEH / 2;
+    const dx = Math.max(34, (x2 - x1) * 0.45);
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`);
+    path.setAttribute("class", "edge");
+    path.setAttribute("stroke", laneColor[byId[a].lane]);
+    path.setAttribute("opacity", "var(--edge-dim)");
+    path.dataset.a = a; path.dataset.b = b;
+    svg.appendChild(path); edgeEls.push(path);
+  });
+
+  const nodeEls = {};
+  DATA.nodes.forEach(n => {
+    const g = document.createElementNS(svgNS, "g");
+    g.setAttribute("class", "node"); g.dataset.id = n.id;
+    const { x, y } = pos[n.id];
+    const r = document.createElementNS(svgNS, "rect");
+    r.setAttribute("x", x); r.setAttribute("y", y);
+    r.setAttribute("width", NODEW); r.setAttribute("height", NODEH);
+    r.setAttribute("fill", "var(--panel)"); r.setAttribute("stroke", laneColor[n.lane]);
+    if (n.id === DATA.frontier) r.setAttribute("stroke-dasharray", "5 3");
+    g.appendChild(r);
+    const t = document.createElementNS(svgNS, "text");
+    t.setAttribute("x", x + 10); t.setAttribute("y", y + NODEH / 2 + 4);
+    t.setAttribute("fill", "var(--ink)"); t.setAttribute("class", "lbl");
+    t.textContent = short(n.id);
+    g.appendChild(t);
+    if (n.ord) {
+      const o = document.createElementNS(svgNS, "text");
+      o.setAttribute("x", x + NODEW - 7); o.setAttribute("y", y + 11);
+      o.setAttribute("text-anchor", "end"); o.setAttribute("fill", laneColor[n.lane]);
+      o.setAttribute("class", "ord"); o.textContent = String(n.ord).padStart(2, "0");
+      g.appendChild(o);
+    }
+    svg.appendChild(g); nodeEls[n.id] = g;
+  });
+
+  function highlight(id) {
+    const up = cone(id, importsOf), down = cone(id, consumersOf);
+    Object.entries(nodeEls).forEach(([nid, el]) =>
+      el.classList.toggle("faded", nid !== id && !up.has(nid) && !down.has(nid)));
+    edgeEls.forEach(el => {
+      const { a, b } = el.dataset;
+      const onUp = (up.has(a) || a === id) && (up.has(b) || b === id);
+      const onDown = (down.has(b) || b === id) && (down.has(a) || a === id);
+      el.setAttribute("opacity", onUp || onDown ? "0.9" : "0.05");
+      el.setAttribute("stroke-width", onUp || onDown ? "2.4" : "1.5");
+    });
+    showCard(id);
+  }
+  function clear() {
+    if (pinned) { highlight(pinned); return; }
+    Object.values(nodeEls).forEach(el => el.classList.remove("faded"));
+    edgeEls.forEach(el => { el.setAttribute("opacity", "var(--edge-dim)"); el.setAttribute("stroke-width", "1.5"); });
+  }
+  Object.entries(nodeEls).forEach(([id, el]) => {
+    el.addEventListener("mouseenter", () => highlight(id));
+    el.addEventListener("mouseleave", clear);
+    el.addEventListener("click", ev => {
+      ev.stopPropagation();
+      pinned = (pinned === id) ? null : id;
+      Object.values(nodeEls).forEach(e => e.classList.remove("pinned"));
+      if (pinned) nodeEls[pinned].classList.add("pinned");
+      pinned ? highlight(pinned) : clear();
+    });
+  });
+  svg.addEventListener("click", () => {
+    pinned = null; Object.values(nodeEls).forEach(e => e.classList.remove("pinned")); clear();
+  });
+
+  scroll.replaceChildren(svg);
+  if (pinned) { nodeEls[pinned].classList.add("pinned"); highlight(pinned); }
+}
+
+function showCard(id) {
+  const n = byId[id];
+  document.getElementById("card").style.borderLeftColor = laneColor[n.lane];
+  document.getElementById("c-name").textContent = id;
+  document.getElementById("c-meta").textContent =
+    `${n.lane} · ${STR.reading} ${String(n.ord).padStart(2, "0")}`;
+  document.getElementById("c-desc").textContent = n.desc;
+  const imp = importsOf[id], con = consumersOf[id];
+  document.getElementById("c-deps").innerHTML =
+    `<div><b>${STR.imports}（${imp.length}）</b><br><span>${imp.map(short).join("、") || "—"}</span></div>` +
+    `<div><b>${STR.consumers}（${con.length}）</b><br><span>${con.map(short).join("、") || "—"}</span></div>`;
+}
+
+document.getElementById("legend").innerHTML = DATA.lanes.map((l, i) =>
+  `<span class="chip"><span class="dot" style="background:var(--lc-${i})"></span><span class="mono">${l.key}</span></span>`).join("");
+
+document.getElementById("tred").addEventListener("change", render);
+document.getElementById("lmk").addEventListener("change", render);
+render();
+</script>
+</body>
+</html>
