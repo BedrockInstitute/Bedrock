@@ -135,19 +135,23 @@ const byId = {}; DATA.nodes.forEach(n => byId[n.id] = n);
 const HUBS = new Set(DATA.hubs);
 const short = id => id.split(".").pop();
 
-// ---- geometry ----------------------------------------------------------
-const COLW = 132, NODEW = 108, NODEH = 30, ROWH = 44, LANEPAD = 12, LABELW = 130, TOPPAD = 8;
+// ---- geometry: vertical lanes, dependency depth flowing downward -------
+const NODEW = 112, NODEH = 30, HGAP = 14, VROW = 58, LANEPAD = 14, LANEHEAD = 34, TOPPAD = 4;
 const laneOrder = DATA.lanes.map(l => l.key);
 const maxCol = Math.max(...DATA.nodes.map(n => n.col));
-const laneRows = {};
-DATA.nodes.forEach(n => { laneRows[n.lane] = Math.max(laneRows[n.lane] || 0, n.row + 1); });
-let y0 = TOPPAD; const laneY = {};
-laneOrder.forEach(k => { laneY[k] = y0; y0 += (laneRows[k] || 1) * ROWH + LANEPAD * 2; });
-const W = LABELW + (maxCol + 1) * COLW + 24, H = y0 + 6;
+const laneSlots = {};
+DATA.nodes.forEach(n => { laneSlots[n.lane] = Math.max(laneSlots[n.lane] || 0, n.row + 1); });
+let x0 = TOPPAD; const laneX = {}, laneW = {};
+laneOrder.forEach(k => {
+  laneX[k] = x0;
+  laneW[k] = (laneSlots[k] || 1) * (NODEW + HGAP) - HGAP + LANEPAD * 2;
+  x0 += laneW[k];
+});
+const W = x0 + 4, H = LANEHEAD + (maxCol + 1) * VROW + 18;
 const pos = {};
 DATA.nodes.forEach(n => {
-  pos[n.id] = { x: LABELW + n.col * COLW + 12,
-                y: laneY[n.lane] + LANEPAD + n.row * ROWH + (ROWH - NODEH) / 2 };
+  pos[n.id] = { x: laneX[n.lane] + LANEPAD + n.row * (NODEW + HGAP),
+                y: LANEHEAD + n.col * VROW + (VROW - NODEH) / 2 };
 });
 
 // ---- graph helpers -----------------------------------------------------
@@ -186,12 +190,13 @@ function render() {
 
   laneOrder.forEach((k, i) => {
     const r = document.createElementNS(svgNS, "rect");
-    r.setAttribute("x", 0); r.setAttribute("y", laneY[k]);
-    r.setAttribute("width", W); r.setAttribute("height", (laneRows[k] || 1) * ROWH + LANEPAD * 2);
+    r.setAttribute("x", laneX[k]); r.setAttribute("y", 0);
+    r.setAttribute("width", laneW[k]); r.setAttribute("height", H);
     r.setAttribute("fill", i % 2 ? "var(--lane-alt)" : "var(--lane)");
     svg.appendChild(r);
     const t = document.createElementNS(svgNS, "text");
-    t.setAttribute("x", 12); t.setAttribute("y", laneY[k] + 18);
+    t.setAttribute("x", laneX[k] + laneW[k] / 2); t.setAttribute("y", 20);
+    t.setAttribute("text-anchor", "middle");
     t.setAttribute("fill", laneColor[k]); t.setAttribute("class", "lanelabel");
     t.textContent = k;
     svg.appendChild(t);
@@ -200,10 +205,10 @@ function render() {
   const edgeEls = [];
   es.forEach(([a, b]) => {
     const p1 = pos[a], p2 = pos[b];
-    const x1 = p1.x + NODEW, y1 = p1.y + NODEH / 2, x2 = p2.x, y2 = p2.y + NODEH / 2;
-    const dx = Math.max(34, (x2 - x1) * 0.45);
+    const x1 = p1.x + NODEW / 2, y1 = p1.y + NODEH, x2 = p2.x + NODEW / 2, y2 = p2.y;
+    const dy = Math.max(26, (y2 - y1) * 0.45);
     const path = document.createElementNS(svgNS, "path");
-    path.setAttribute("d", `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`);
+    path.setAttribute("d", `M ${x1} ${y1} C ${x1} ${y1 + dy}, ${x2} ${y2 - dy}, ${x2} ${y2}`);
     path.setAttribute("class", "edge");
     path.setAttribute("stroke", laneColor[byId[a].lane]);
     path.setAttribute("opacity", "var(--edge-dim)");
