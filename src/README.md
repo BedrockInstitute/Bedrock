@@ -83,6 +83,17 @@ entry in the reading catalog**, at the position its first consumer dictates.
     `numeralV`/`numeralV≡#`/`ω-specV` + the `sucV` case-analysis lemmas,
     `VResizing` + `lem→VResizing`, `Power.𝒫V`, `VModel.V⊨ZF`, `SetChoice`,
     `ChoiceLemma.choice`, `VZFC.V⊨ZFC`.
+  - `V/Definability.lagda.md`: the `Def` operator, landed with `[L1.6]`:
+    `DefOf` (inner semantics via `InnerSmall`, `smallSat`, `defSet`, `Def`),
+    membership specs (`Def-spec`, `defSet-mem`, `defSet⊆A`, `Def∋⊆A`),
+    `A∈Def`, and `Refine.A⊆Def` under transitivity. Reads at the head of
+    Part 4 (its first consumer).
+- `L/`: Part 4, the constructible universe, trunk landed with `[L1.6]`/`[L1.7]`:
+  - `L/Constructible.lagda.md`: transitivity closure lemmas, `IsOrd` (just the
+    predicate), `isLayer` + `layer-trans`, the tower `Lset` by ∈-recursion
+    (`opaque`-sealed; `Lset-compute` is the official unfolding), `Lset-layer`,
+    the class `isL` (the source's `isL'`, primes dropped), `isL-trans`, and
+    the structure `𝒮ʟ`.
 
 Note the **reading order** (the `Everything` import order) is not the namespace
 order: the `FOL.Reification` chapters read after `ZF.Model` (whose separation and
@@ -142,5 +153,7 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `⁺` | successor | ① | `ZF.Model` | `\^+` |
 | `𝒫` | power set | ① | `ZF.Model` | `\McP` |
 | `𝒮ᵥ` | the cumulative-hierarchy structure | ③ | `V.Hierarchy` | `\McS` `\_v` |
+| `𝒟` | the definable-subsets operator | ① | `L.Constructible` | `\McD` |
+| `𝒮ʟ` | the constructible structure | ③ | `L.Constructible` | `\McS` `\_L` |
 | `∩` | binary intersection | ① | `ZF.Model` | `\cap` |
 | `ω` | the set of numerals | ① | `ZF.Model` | `\omega` |

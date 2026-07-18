@@ -21,15 +21,16 @@ open import Base.Truth
 
 module V.Smallness {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure; _^_ )
-open import FOL.Syntax using ( Formula )
+open import FOL.Structure using ( ZFStructure; _^_; _↾_ )
+open import FOL.Syntax
+  using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Reification.Graded
   using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 open import V.Hierarchy using ( 𝒮ᵥ )
 
 open import Cubical.Foundations.Equiv
-  using ( _≃_; equivFun; invEq; invEquiv; propBiimpl→Equiv )
+  using ( _≃_; equivFun; invEq; invEquiv; secEq; propBiimpl→Equiv )
 import Cubical.Functions.Logic as Logic
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Sum as Sum
@@ -290,6 +291,105 @@ open SemanticsV.At (λ (x : S) → x) using ( _⊨_ )
 separateΔ₀ : (a : S) (φ : Formula S 1) → Δ₀ φ
            → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
 separateΔ₀ a φ c = separateFromSmall a (λ y → (y ∷ []) ⊨ φ) (λ y → Δ₀-small c (y ∷ []))
+```
+
+<!--en-->
+## Essentially small worlds
+<!--zh-->
+## 本质小的世界
+<!--/-->
+
+<!--en-->
+One more register of smallness, bought not by certificates but by **location**.
+When the quantification range is itself equivalent to a small type, even the
+*unbounded* quantifiers preserve smallness: quantify along the equivalence. This
+does not contradict the cost accounting above, which priced quantifiers ranging
+over all of `V ℓ`; here the range is the carrier of a **restricted structure**
+`𝒮ᵥ ↾ M`, and smallness is exactly what the restriction buys.
+<!--zh-->
+小性还有一个音区，买单的不是证书而是**地段**。当量化范围自身等价于某个小类型时，连**无界**量词也保小：沿等价搬运量化即可。这与上文的成本账簿并不冲突，那里标价的是范围为全 `V ℓ` 的量词；此处的范围是**限制结构** `𝒮ᵥ ↾ M` 的载体，小性恰是「限制」二字买来的。
+<!--/-->
+
+```agda
+small-⋀ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
+        → (∀ a → isSmall (B a))
+        → isSmall (⋀ A B)
+small-⋀ {A} {X} e {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
+  where
+  big = ⋀ A B
+  Qsm = Logic.∀[]-syntax (λ (m : X) → sm (equivFun e m) .fst)
+  fwd : ⟨ big ⟩ → ⟨ Qsm ⟩
+  fwd f m = equivFun (sm (equivFun e m) .snd) (f (equivFun e m))
+  bwd : ⟨ Qsm ⟩ → ⟨ big ⟩
+  bwd g a = subst (λ v → ⟨ B v ⟩) (secEq e a)
+                  (invEq (sm (equivFun e (invEq e a)) .snd) (g (invEq e a)))
+
+small-⋁ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
+        → (∀ a → isSmall (B a))
+        → isSmall (⋁ A B)
+small-⋁ {A} {X} e {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
+  where
+  big = ⋁ A B
+  Qsm = Logic.∃[]-syntax (λ (m : X) → sm (equivFun e m) .fst)
+  fwd : ⟨ big ⟩ → ⟨ Qsm ⟩
+  fwd = PT.map λ where
+    (a , ba) → invEq e a ,
+               equivFun (sm (equivFun e (invEq e a)) .snd)
+                        (subst (λ v → ⟨ B v ⟩) (sym (secEq e a)) ba)
+  bwd : ⟨ Qsm ⟩ → ⟨ big ⟩
+  bwd = PT.map λ where
+    (m , q) → equivFun e m , invEq (sm (equivFun e m) .snd) q
+```
+
+<!--en-->
+The consequence: over an essentially small restricted structure, **every** formula
+evaluates small, no certificate required. The quantifier clauses walk along the
+equivalence, the atoms drop back to `V`'s atomic smallness through the first
+projection. This is "spoken inside a small world, everything said is small", and
+it is the engine of Part 4's single construction step.
+<!--zh-->
+后果是：在本质小的限制结构上，**任何**公式求值皆小，无需证书。量词子句沿等价行走，原子经第一投影落回 `V` 的原子小性。这就是「在小世界里说话，说什么都小」，也是第四部那一步构造的发动机。
+<!--/-->
+
+```agda
+module InnerSmall (M : S → hProp (ℓ-suc ℓ))
+                  (X : Type ℓ) (e : X ≃ (Σ[ x ∈ S ] ⟨ M x ⟩))
+                  {ℓc} {K : Type ℓc}
+                  (ι : K → Σ[ x ∈ S ] ⟨ M x ⟩) where
+
+  SM : Type (ℓ-suc ℓ)
+  SM = Σ[ x ∈ S ] ⟨ M x ⟩
+
+  𝒮M : ZFStructure (hPropAlg {ℓ-suc ℓ})
+  𝒮M = 𝒮ᵥ {ℓ} ↾ M
+
+  module SemanticsM = FOL.Semantics (hPropAlg {ℓ-suc ℓ}) 𝒮M
+  open SemanticsM.At ι renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ ) public
+
+  ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → isSmall (δ ⊨ᵐ φ)
+  ⊨ᵐ-small (t ∈̇ u)  δ = small-∈ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
+  ⊨ᵐ-small (t ≐ u)  δ = small-≡ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
+  ⊨ᵐ-small (φ ∧̇ ψ)  δ =
+    small⊓ {P = δ ⊨ᵐ φ} {Q = δ ⊨ᵐ ψ} (⊨ᵐ-small φ δ) (⊨ᵐ-small ψ δ)
+  ⊨ᵐ-small (φ ∨̇ ψ)  δ =
+    small⊔ {P = δ ⊨ᵐ φ} {Q = δ ⊨ᵐ ψ} (⊨ᵐ-small φ δ) (⊨ᵐ-small ψ δ)
+  ⊨ᵐ-small (φ ⇒̇ ψ)  δ =
+    small⇒ {P = δ ⊨ᵐ φ} {Q = δ ⊨ᵐ ψ} (⊨ᵐ-small φ δ) (⊨ᵐ-small ψ δ)
+  ⊨ᵐ-small (¬̇ φ)    δ = small¬ {P = δ ⊨ᵐ φ} (⊨ᵐ-small φ δ)
+  ⊨ᵐ-small ⊤̇        δ = small⊤
+  ⊨ᵐ-small ⊥̇        δ = small⊥
+  ⊨ᵐ-small (∃̇ φ)    δ =
+    small-⋁ e {B = λ xm → (xm ∷ δ) ⊨ᵐ φ} (λ xm → ⊨ᵐ-small φ (xm ∷ δ))
+  ⊨ᵐ-small (∀̇ φ)    δ =
+    small-⋀ e {B = λ xm → (xm ∷ δ) ⊨ᵐ φ} (λ xm → ⊨ᵐ-small φ (xm ∷ δ))
+  ⊨ᵐ-small (∀̇∈ t φ) δ =
+    small-⋀ e {B = λ xm → (fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)) ⇒ ((xm ∷ δ) ⊨ᵐ φ)} (λ xm →
+      small⇒ {P = fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)} {Q = (xm ∷ δ) ⊨ᵐ φ}
+        (small-∈ (fst xm) (fst (⟦ t ⟧ᵐ δ))) (⊨ᵐ-small φ (xm ∷ δ)))
+  ⊨ᵐ-small (∃̇∈ t φ) δ =
+    small-⋁ e {B = λ xm → (fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)) ⊓ ((xm ∷ δ) ⊨ᵐ φ)} (λ xm →
+      small⊓ {P = fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)} {Q = (xm ∷ δ) ⊨ᵐ φ}
+        (small-∈ (fst xm) (fst (⟦ t ⟧ᵐ δ))) (⊨ᵐ-small φ (xm ∷ δ)))
 ```
 
 <!--en-->

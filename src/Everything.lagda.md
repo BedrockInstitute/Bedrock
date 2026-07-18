@@ -184,3 +184,26 @@ here so the toolbox is complete when Part 4 opens.
 import FOL.Renaming
 import FOL.Reification.Relativize
 ```
+
+<!--en-->
+## Part 4: the constructible universe
+
+- `V.Definability`{.Agda}: the single step: `Def A`, the definable subsets of
+  `A` with parameters from `A`: syntax as index set, inner satisfaction for
+  meaning, essential smallness footing the bill; `A ∈ Def A` always, and
+  `A ⊆ Def A` under transitivity.
+- `L.Constructible`{.Agda}: the tower `Lset`{.Agda} by membership recursion,
+  one equation for zero, successors, and limits; the layer predicate
+  `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
+  structure `𝒮ʟ`{.Agda}.
+<!--zh-->
+## 第四部：可构造宇宙
+
+- `V.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
+- `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
+<!--/-->
+
+```agda
+import V.Definability
+import L.Constructible
+```
