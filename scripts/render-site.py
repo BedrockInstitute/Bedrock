@@ -99,21 +99,30 @@ _PLACEHOLDER = re.compile(NUL + r'[A-Z]+\d+' + NUL)
 
 
 def _inline(s):
+    # Code spans are stashed as protected placeholders first, so emphasis may span
+    # them (`**bold with `code` inside**`); the emphasis regexes then run over the
+    # whole string, in which placeholders are inert (no `*`, nothing escapable).
+    stash = {}
+
+    def _code(m):
+        key = f"{NUL}C{len(stash)}{NUL}"
+        stash[key] = f"<code>{htmllib.escape(m.group(1))}</code>"
+        return key
+
+    s = re.sub(r'`([^`]+)`', _code, s)
     out = []
-    for part in re.split(r'(`[^`]+`)', s):
-        if part.startswith("`") and part.endswith("`"):
-            out.append(f"<code>{htmllib.escape(part[1:-1])}</code>")
-            continue
-        for seg in re.split(r'(' + NUL + r'[A-Z]+\d+' + NUL + r')', part):
-            if _PLACEHOLDER.fullmatch(seg):    # protected span: leave verbatim
-                out.append(seg)
-                continue
-            p = htmllib.escape(seg, quote=False)
-            p = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', p)
-            p = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', p)
-            p = re.sub(r'(?<!\*)\*([^*\s][^*]*?)\*(?!\*)', r'<em>\1</em>', p)
-            out.append(p)
-    return "".join(out)
+    for seg in re.split(r'(' + NUL + r'[A-Z]+\d+' + NUL + r')', s):
+        if _PLACEHOLDER.fullmatch(seg):    # protected span: leave verbatim
+            out.append(seg)
+        else:
+            out.append(htmllib.escape(seg, quote=False))
+    p = "".join(out)
+    p = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', p)
+    p = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', p)
+    p = re.sub(r'(?<!\*)\*([^*\s][^*]*?)\*(?!\*)', r'<em>\1</em>', p)
+    for key, val in stash.items():
+        p = p.replace(key, val)
+    return p
 
 
 def _is_block_start(line):
