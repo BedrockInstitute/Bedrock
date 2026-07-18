@@ -519,7 +519,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.6 | Port L.Constructible | DONE 2026-07-18 (`V.Definability` un-deferred as prerequisite; `∈-induction` re-homed to `V.Hierarchy`; `InnerSmall` added to `V.Smallness`; `isL` is the Lset-form predicate, `𝒮ʟ` delivered) |
 | L1.7 | Frontier + root L.Model | DONE 2026-07-18 (Frontier: 11 fields, the verbatim model-field statements at 𝒮ʟ; root proves extensional/regularity outright and assembles L⊨ZF/L⊨ZFC; field count is the progress meter) |
 | L1.9 | Diaconescu + single-hypothesis V⊨ZFC | DONE 2026-07-18 (`Base.Choice` with `choice→lem`; `V⊨ZFC-fromChoice`; fourth landmark) |
-| L1.8 | Landmarks + Everything order | DONE 2026-07-18 (Landmarks restates V⊨ZF, V⊨ZF-classical, V⊨ZFC, and the frontier-conditional L⊨ZFC; owner ruling 2026-07-18: Landmarks reads **first**, the trophy case is the storefront; reading order = Landmarks, Parts 0–4, doorstep) |
+| L1.8 | Landmarks + Everything order | DONE 2026-07-18 (Landmarks restates V⊨ZF, V⊨ZF-classical, V⊨ZFC, and the frontier-conditional L⊨ZFC; owner rulings 2026-07-18: Landmarks reads **first**, the trophy case is the storefront; the zero-consumer trio Combinators/Renaming/Relativize reads **last**, after Part 4; reading order = Landmarks, Parts 0–4, tools-in-waiting) |
 | L0.4 | Two-catalog doctrine (reading vs structure) | DONE 2026-07-18 |
 | L2 | Axiom branches | PLANNED |
 | L2.0 | Basic axioms | PLANNED |

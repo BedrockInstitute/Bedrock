@@ -113,8 +113,9 @@ adequacy = snd
 <!--en-->
 A representation is a formula with its adequacy certificate, adequacy is a path,
 and the represented things are environment-indexed families; `translate`{.Agda} and
-`adequacy`{.Agda} are the only exits. Nothing has been built yet: the factory
-opens next.
+`adequacy`{.Agda} are the only exits. Nothing has been built yet: the next chapter
+grades formulas instead, and the assembly line itself (the combinators) waits at
+the book's tail for its first consumers.
 <!--zh-->
-表示是公式配适足性证书，适足性是路径，被表示者是按环境索引的族；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。到此还什么都没造：工厂下一章开张。
+表示是公式配适足性证书，适足性是路径，被表示者是按环境索引的族；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。到此还什么都没造：下一章先给公式分级，流水线本身 (组合子) 则在书末候场，静待第一批消费者。
 <!--/-->
