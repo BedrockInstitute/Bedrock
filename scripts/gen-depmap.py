@@ -25,7 +25,7 @@ from i18n_markers import weave  # noqa: E402
 
 AGGREGATOR = "Everything"
 HUBS = ["Base.Prelude", "Base.Truth"]   # the designated hub modules (STYLE-agda §2)
-IMPORT_RE = re.compile(r'^(?:open )?import ([A-Za-z][\w.]*)', re.M)
+IMPORT_RE = re.compile(r'^\s*(?:open )?import ([A-Za-z][\w.]*)', re.M)
 BULLET_RE = re.compile(r'^- `([A-Za-z][\w.]*)`\{\.Agda\}[:：]\s*(.*)$')
 
 # lane colour slots, assigned by lane order of first appearance in the catalog

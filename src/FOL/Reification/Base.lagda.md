@@ -1,17 +1,19 @@
 # Representation
 
 <!--en-->
-The model chapter ended with a confession: separation and replacement accept only
-formulas, and building one by hand, correctness proof included, was tolerable
-exactly once. So the long-promised bridge gets built. On one side stand host
+The reification framework opens here, catalogued ahead of demand: nothing in the
+trunk consumes it yet, and its hour comes with the deeper chapters of Part 4,
+where formulas for separation and replacement get mass-produced. The model
+chapter's confession stands as its charter: building a formula by hand,
+correctness proof included, was tolerable exactly once. On one side stand host
 predicates, `S ^ n → Ω`: the language in which this book actually states
 mathematics. On the other side stand formulas: the currency the axiom fields
 insist on. A **representation** is the bridge: a formula bundled with the proof
 that it means a given predicate. Manufacturing such bundles is the activity this
-framework is named after, *reification*, and the next chapter sets up its assembly
-line; this chapter fixes the notion itself.
+framework is named after, *reification*; the next chapter sets up its assembly
+line, and this chapter fixes the notion itself.
 <!--zh-->
-模型章以一句坦白收尾：分离与替换只收公式，而手工造一条公式、附带正确性证明，忍一次尚可。于是久经预告的桥在此动工。桥的一头是宿主谓词 `S ^ n → Ω`：本书实际陈述数学所用的语言。另一头是公式：公理字段只认的通货。**表示**就是这座桥：一条公式，捆绑着「它的含义恰是给定谓词」的证明。制造这种捆绑正是本框架得名的营生，即 reification；下一章为它架设流水线，本章先把概念本身立好。
+reification 框架在此开篇，预先备案，候单开工：主干至今没有消费它，它的时辰随第四部的深层章节到来，届时分离与替换所需的公式将被批量生产。模型章那句坦白是它的立厂章程：手工造一条公式、附带正确性证明，忍一次尚可。桥的一头是宿主谓词 `S ^ n → Ω`：本书实际陈述数学所用的语言。另一头是公式：公理字段只认的通货。**表示**就是这座桥：一条公式，捆绑着「它的含义恰是给定谓词」的证明。制造这种捆绑正是本框架得名的营生，即 reification；下一章为它架设流水线，本章先把概念本身立好。
 <!--/-->
 
 ```agda
@@ -113,9 +115,8 @@ adequacy = snd
 <!--en-->
 A representation is a formula with its adequacy certificate, adequacy is a path,
 and the represented things are environment-indexed families; `translate`{.Agda} and
-`adequacy`{.Agda} are the only exits. Nothing has been built yet: the next chapter
-grades formulas instead, and the assembly line itself (the combinators) waits at
-the book's tail for its first consumers.
+`adequacy`{.Agda} are the only exits. Nothing has been built yet: the assembly
+line opens next.
 <!--zh-->
-表示是公式配适足性证书，适足性是路径，被表示者是按环境索引的族；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。到此还什么都没造：下一章先给公式分级，流水线本身 (组合子) 则在书末候场，静待第一批消费者。
+表示是公式配适足性证书，适足性是路径，被表示者是按环境索引的族；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。到此还什么都没造：流水线下一章开张。
 <!--/-->

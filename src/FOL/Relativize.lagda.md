@@ -15,14 +15,14 @@ becomes a Δ₀ matter of the ambient world.
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Reification.Relativize where
+module FOL.Relativize where
 
 open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _^_ )
 open import FOL.Syntax using
   ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Reification.Graded using
+open import FOL.Graded using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 ```
