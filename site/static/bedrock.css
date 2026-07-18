@@ -181,9 +181,7 @@ details.navsec > summary.nav-title::before {
 details.navsec[open] > summary.nav-title::before { transform: rotate(90deg); }
 @media (prefers-reduced-motion: reduce) {
   details.navsec > summary.nav-title::before { transition: none; } }
-a.navlink { display: block; font-family: var(--sans); font-size: 0.85rem;
-  font-weight: 700; color: var(--fg-alt); text-decoration: none;
-  margin: 0.9rem 0 0.35rem; }
+a.navlink { display: block; text-decoration: none; padding-left: 1.05rem; }
 a.navlink:hover { color: var(--primary); }
 ul.modnav li { padding-left: calc(var(--d, 0) * 0.85rem); }
 ul.modnav li.modgroup { font-weight: 700; color: var(--fg-alt); font-family: var(--sans);

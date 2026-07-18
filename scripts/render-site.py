@@ -315,10 +315,10 @@ def modules_nav(current, mods, lang):
                 out.extend(render(sub, depth + 1))
         return out
 
-    return (f'<details class="navsec"><summary class="nav-title">'
+    return (f'<a class="navlink nav-title" href="depmap.html">{UI[lang]["depmap"]}</a>'
+            f'<details class="navsec"><summary class="nav-title">'
             f'{UI[lang]["modules"]}</summary>'
-            f'<ul class="modnav">{"".join(render(tree, 0))}</ul></details>'
-            f'<a class="navlink" href="depmap.html">{UI[lang]["depmap"]}</a>')
+            f'<ul class="modnav">{"".join(render(tree, 0))}</ul></details>')
 
 
 def ext_banner(lang):
