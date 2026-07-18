@@ -203,6 +203,18 @@ way whether or not `P` holds; it merely, blindly, picks.
 ```
 
 <!--en-->
+The question deserves to be a lemma of its own, so that its type displays
+exactly what choice delivers: *merely*, a picking function, whole.
+<!--zh-->
+这个问题值得单独立为引理，好让类型原样展示选择交付的东西：**仅仅地**，一整个认领函数。
+<!--/-->
+
+```agda
+  merePicker : SetChoice ℓ → ∥ ((x : Glued) → Pick x) ∥₁
+  merePicker sc = sc Glued squash/ Pick pickable
+```
+
+<!--en-->
 Suppose, then, that a picking function `g` is in hand. Apply it to the two
 distinguished points, the class of `true` and the class of `false`, and name
 the two boolean representatives it selects, `b₀` and `b₁`. These two booleans
@@ -271,7 +283,7 @@ eliminates as if it were actual, and the proof closes.
   decideIsProp = Sum.isProp⊎ (P .snd) (isPropΠ (λ _ → Empty.isProp⊥)) (λ p np → np p)
 
 choice→lem : ∀ {ℓ} → SetChoice ℓ → LEM ℓ
-choice→lem sc P = PT.rec decideIsProp decide (sc Glued squash/ Pick pickable)
+choice→lem sc P = PT.rec decideIsProp decide (merePicker sc)
   where open Diaconescu P
 ```
 
