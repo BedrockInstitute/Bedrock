@@ -59,7 +59,7 @@ open ZFStructure 𝒮ʟ
 open Frontier F
 
 module ModelL = ZF 𝒮ʟ
-open ModelL using ( ZFModel; ZFCModel )
+open ModelL using ( isZFModel; isZFCModel )
 ```
 
 <!--en-->
@@ -124,7 +124,7 @@ frontier states it.
 <!--/-->
 
 ```agda
-L⊨ZF : ZFModel
+L⊨ZF : isZFModel
 L⊨ZF = record
   { extensional    = extensionalL
   ; regularity     = regularityL
@@ -139,7 +139,7 @@ L⊨ZF = record
   ; numeral-suc    = numeralL-suc
   ; hasInfinity    = hasInfinityL }
 
-L⊨ZFC : ZFCModel
+L⊨ZFC : isZFCModel
 L⊨ZFC = record { zf = L⊨ZF ; hasChoice = hasChoiceL L⊨ZF }
 ```
 

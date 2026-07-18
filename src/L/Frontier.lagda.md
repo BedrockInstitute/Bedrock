@@ -45,7 +45,7 @@ open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
 open ZFStructure 𝒮ʟ
 
 module ModelL = ZF 𝒮ʟ
-open ModelL using ( SetOf; _⊆ˢ_; ZFModel )
+open ModelL using ( SetOf; _⊆ˢ_; isZFModel )
 
 module SemanticsL = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮ʟ
 open SemanticsL.At (λ (x : S) → x) using ( _⊨_ )
@@ -59,7 +59,7 @@ supplying the intersection it mentions:
 <!--/-->
 
 ```agda
-ChoiceStatement : ZFModel → Type (ℓ-suc ℓ)
+ChoiceStatement : isZFModel → Type (ℓ-suc ℓ)
 ChoiceStatement zf =
   (a : S)
   → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
@@ -67,7 +67,7 @@ ChoiceStatement zf =
        → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
   → ∥ Σ[ c ∈ S ] ((x : S) → ⟨ x ∈ˢ a ⟩
        → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
-  where open ModelL.ZFModel zf using ( _∩_ )
+  where open ModelL.isZFModel zf using ( _∩_ )
 ```
 
 <!--en-->
@@ -101,7 +101,7 @@ record Frontier : Type (ℓ-suc (ℓ-suc ℓ)) where
                          → ⟨ z ∈ˢ numeralL (suc n) ⟩)
     hasInfinityL    : isContr (SetOf (λ x →
                         ⋁ (Lift {ℓ-zero} {ℓ-suc ℓ} ℕ) (λ n → x ≈ˢ numeralL (lower n))))
-    hasChoiceL      : (zf : ZFModel) → ChoiceStatement zf
+    hasChoiceL      : (zf : isZFModel) → ChoiceStatement zf
 ```
 
 <!--en-->

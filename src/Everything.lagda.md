@@ -118,15 +118,15 @@ import FOL.Absoluteness
 <!--en-->
 ## Part 2: what a model of ZF is
 
-- `ZF`{.Agda}: the axioms as a record: `ZFModel`{.Agda} with extensionality,
+- `ZF`{.Agda}: the axioms as a record: `isZFModel`{.Agda} with extensionality,
   meta-level regularity (the compactness ceiling), unique existence discharged by
   the description operator `℩`, separation and replacement consuming the book's
-  own formulas, and strong infinity through the numeral chain; `ZFCModel`{.Agda}
+  own formulas, and strong infinity through the numeral chain; `isZFCModel`{.Agda}
   adds choice as an extension.
 <!--zh-->
 ## 第二部：何谓 ZF 模型
 
-- `ZF`{.Agda}：公理作为 record：`ZFModel`{.Agda} 含外延公理、元层面的正则公理 (紧致性天花板)、经摹状词算子 `℩` 兑现的唯一存在、消费本书自家公式的分离与替换，以及经数码链的强无穷；`ZFCModel`{.Agda} 以扩展形式添加选择公理。
+- `ZF`{.Agda}：公理作为 record：`isZFModel`{.Agda} 含外延公理、元层面的正则公理 (紧致性天花板)、经摹状词算子 `℩` 兑现的唯一存在、消费本书自家公式的分离与替换，以及经数码链的强无穷；`isZFCModel`{.Agda} 以扩展形式添加选择公理。
 <!--/-->
 
 ```agda

@@ -57,7 +57,7 @@ open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
 open ZFStructure (𝒮ᵥ {ℓ})
 
 module Model = ZF (𝒮ᵥ {ℓ})
-open Model using ( SetOf; _⊆ˢ_; setOf-unique; ZFModel; ZFCModel )
+open Model using ( SetOf; _⊆ˢ_; setOf-unique; isZFModel; isZFCModel )
 
 module SemanticsV = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) (𝒮ᵥ {ℓ})
 open SemanticsV.At (λ (x : S) → x) using ( _⊨_ )
@@ -359,7 +359,7 @@ module VModel (imp : Impredicativity ℓ) where
   separateFull a φ =
     separateFromSmall a (λ y → (y ∷ []) ⊨ φ) (λ y → resizing ((y ∷ []) ⊨ φ))
 
-  V⊨ZF-impredicative : ZFModel
+  V⊨ZF-impredicative : isZFModel
   V⊨ZF-impredicative = record
     { extensional    = extensionalV
     ; regularity     = regularityV
@@ -411,7 +411,7 @@ classical redemption:
 <!--/-->
 
 ```agda
-V⊨ZF : (∀ {ℓ'} → LEM ℓ') → ZFModel
+V⊨ZF : (∀ {ℓ'} → LEM ℓ') → isZFModel
 V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→Impredicativity lem)
 ```
 
@@ -449,8 +449,8 @@ private
   isContrΣ-fromCenter {P} z₀ p₀ u =
     (z₀ , p₀) , λ w → Σ≡Prop (λ v → snd (P v)) (u (w .fst) (w .snd))
 
-module ChoiceLemma (zf : ZFModel) (ac : SetChoice ℓ) where
-  open Model.ZFModel zf using ( _∩_; ∩-spec )
+module ChoiceLemma (zf : isZFModel) (ac : SetChoice ℓ) where
+  open Model.isZFModel zf using ( _∩_; ∩-spec )
 
   choice : (a : S)
          → ((x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
@@ -524,10 +524,10 @@ ZFC 定理现在由单一假设合龙，其余账单全由 Diaconescu 定理代�
 <!--/-->
 
 ```agda
-V⊨ZFC : (∀ {ℓ'} → SetChoice ℓ') → ZFCModel
+V⊨ZFC : (∀ {ℓ'} → SetChoice ℓ') → isZFCModel
 V⊨ZFC ac = record { zf = base ; hasChoice = ChoiceLemma.choice base (ac {ℓ}) }
   where
-  base : ZFModel
+  base : isZFModel
   base = V⊨ZF (λ {ℓ'} → choice→lem (ac {ℓ'}))
 ```
 

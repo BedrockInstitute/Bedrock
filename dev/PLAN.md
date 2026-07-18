@@ -18,7 +18,7 @@ them. Work is managed by the goal codes of §6; the MASTER status table is §11.
 What the source proves, and what Bedrock will claim, is:
 
 > In Cubical Agda (the host), the constructible sub-universe L of the HIT cumulative
-> hierarchy V is a ZFC model: `L⊨ZFC : ZFCModel 𝒮ʟ` where `𝒮ʟ` is `𝒮ᵥ` restricted to
+> hierarchy V is a ZFC model: `L⊨ZFC : isZFCModel 𝒮ʟ` where `𝒮ʟ` is `𝒮ᵥ` restricted to
 > the inductive constructibility predicate. Semantically this yields the **relative**
 > consistency Con(ZF) → Con(ZFC), relative to the host theory (Cubical Agda with
 > universes, informally about ZFC plus an inaccessible).
@@ -109,7 +109,7 @@ src/
 │   ├─ Relativize            quantifier tightening to a constant bound
 │   └─ Reification/          host predicate ↔ object formula, with adequacy certificates
 │       (Base, Combinators, Certified; the rest deferred, see ledger)
-├─ ZF.lagda.md               Part 2: what a ZF(C) model is: ZFModel / ZFCModel records
+├─ ZF.lagda.md               Part 2: what a ZF(C) model is: isZFModel / isZFCModel records
 │                            (single chapter; Encoding deferred, Coding returns under ZF/ at L2)
 ├─ V/                        Part 3: the cumulative hierarchy realizes ZF(C)
 │   ├─ Hierarchy             the HIT V and its ZF structure 𝒮ᵥ
@@ -196,6 +196,7 @@ rows rather than editing old ones):
 | `V.Model.{VResizing, lem→VResizing}` | `Base.Classical.{Resizing, lem→Resizing}` | owner ruling 2026-07-18: the record is pure universe-level policy, the `V` was consumer-naming; promoted to the assumption-interface pattern D2/STYLE §1 always anticipated for resizing, level-indexed like `LEM`, minted beside the dividends it bundles |
 | `Base.Classical.{Resizing (record), lem→Resizing, lem→resize, lem→smallΩ}` | `Impredicativity`, `lem→Impredicativity`, `lem→resizing : … → Resizing ℓ`, `lem→hPropSmallness : … → HPropSmallness ℓ` | owner ruling 2026-07-18: the two instruments get named types (`Resizing` = the function type, `HPropSmallness` = the Σ), the wallet is renamed for what it is, impredicativity |
 | `V.Model.{V⊨ZF, VZFC.V⊨ZFC, V⊨ZFC-fromChoice}` | `VModel.V⊨ZF-impredicative`, (deleted), `V⊨ZFC` | owner ruling 2026-07-18: headline names carry the classical reading (`V⊨ZF` from LEM, `V⊨ZFC` from choice alone via Diaconescu); the exact-price form wears its hypothesis as a suffix; the two-hypothesis ZFC form is retired |
+| `ZF.{ZFModel, ZFCModel}` | `isZFModel`, `isZFCModel` | owner ruling 2026-07-18: the records are predicates on a structure, and the names now read as such (`isZFModel 𝒮` = "𝒮 is a ZF model"), matching the library's is-prefix convention |
 | `Classical.lem→VResizing` | `V.Model.lem→VResizing` | `[L1.5]`: as planned in the L1.1 row; consumes `Base.Classical.{lem→resize, lem→smallΩ}` |
 | `Models.HITV.Smallness.{small-⋀, small-⋁, InnerSmall}` | un-deferred into `V.Smallness` | `[L1.6]`: their consumer `Def` un-deferred; supersedes the L1.5 deferral row |
 | `Models.HITV.Def` | `V.Definability` | `[L1.6]`: un-deferred (first consumer is `L.Constructible`); `abs-defSet` + `module Abs` deferred to `[L2.x]` (condensation-side); `DemoEmpty` and `ι-fst` dropped |
@@ -216,7 +217,7 @@ record Frontier ℓ : Type (ℓ-suc ℓ) where
     sep-in-L : ...    -- statement of the separation lemma, etc.
 
 module L.Model {ℓ} (lem : LEM ℓ) (F : Frontier ℓ) where
-  L⊨ZFC : ZFCModel 𝒮ʟ
+  L⊨ZFC : isZFCModel 𝒮ʟ
 ```
 
 The record is the cut across the dependency tree: each ported branch deletes its
