@@ -106,7 +106,7 @@ category = "Set theory"
 en = "regularity"
 zh = "正则公理"
 ja = "正則性公理"
-notes = "zh also 正则性"
+notes = "zh also 正则性; also called foundation in some books, a name this book does not use; ZF.Model field name regularity ([L1.4])"
 
 [[term]]
 category = "Set theory"
@@ -587,3 +587,99 @@ ja = "機械検証の開発"
 avoid = ["zh:机器验证开发", "zh:机械验证", "ja:機械検査の開発"]
 presence = true
 notes = "the README tagline; \"machine-checked\" is zh 机器 / ja 機械 and \"development\" is zh 工作 / ja 開発 (deliberate); the certificate/ground phrasings (机器可检的证书 / 经机器检验的地基 etc.) are separate and not covered here"
+
+[[term]]
+category = "Set theory"
+en = "axiom of extensionality"
+zh = "外延公理"
+ja = "外延性公理"
+notes = "the property alone reads zh 外延性 / ja 外延性; ZF.Model field extensional"
+
+[[term]]
+category = "Set theory"
+en = "axiom of separation"
+zh = "分离公理"
+ja = "分出公理"
+notes = "first-order schema; ZF.Model field hasSeparation, operation separate"
+
+[[term]]
+category = "Set theory"
+en = "axiom of replacement"
+zh = "替换公理"
+ja = "置換公理"
+notes = "ZF.Model field hasReplacement"
+
+[[term]]
+category = "Set theory"
+en = "axiom of pairing"
+zh = "配对公理"
+ja = "対の公理"
+notes = "ZF.Model field hasPair"
+
+[[term]]
+category = "Set theory"
+en = "axiom of union"
+zh = "并公理"
+ja = "和集合の公理"
+notes = "ZF.Model field hasUnion; the operation 并/和集合"
+
+[[term]]
+category = "Set theory"
+en = "power set"
+zh = "幂集"
+ja = "冪集合"
+notes = "the axiom reads 幂集公理 / 冪集合公理; ZF.Model field hasPower, operation 𝒫"
+
+[[term]]
+category = "Set theory"
+en = "empty set"
+zh = "空集"
+ja = "空集合"
+
+[[term]]
+category = "Set theory"
+en = "successor"
+zh = "后继"
+ja = "後者"
+notes = "the von Neumann step a ⁺ = a ∪ {a}"
+
+[[term]]
+category = "Set theory"
+en = "numeral"
+zh = "数码"
+ja = "数項"
+notes = "the von Neumann naturals inside a model; ZF.Model field numeral, class isNumeral"
+
+[[term]]
+category = "Set theory"
+en = "choice set"
+zh = "选择集"
+ja = "選択集合"
+notes = "the form of hasChoice: one point in each member of a disjoint family"
+
+[[term]]
+category = "Set theory"
+en = "class"
+zh = "类"
+ja = "クラス"
+notes = "propositional predicate on a carrier; proper class = 真类 / 真クラス"
+
+[[term]]
+category = "Set theory"
+en = "well-founded"
+zh = "良基"
+ja = "整礎"
+notes = "well-foundedness = 良基性 / 整礎性"
+
+[[term]]
+category = "Logic and philosophy"
+en = "compactness"
+zh = "紧致性"
+ja = "コンパクト性"
+notes = "the compactness theorem = 紧致性定理 / コンパクト性定理; told, not proven, in ZF.Model"
+
+[[term]]
+category = "Other"
+en = "von Neumann"
+zh = "冯·诺伊曼"
+ja = "フォン・ノイマン"

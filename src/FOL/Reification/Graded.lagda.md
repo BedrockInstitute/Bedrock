@@ -1,15 +1,21 @@
 # Graded certificates
 
 <!--en-->
-The **Levy hierarchy** classifies formulas by quantifier complexity: **Δ₀** allows
-only bounded quantifiers, Σ₁ prefixes existentials to a Δ₀ core, Π₁ prefixes
-universals. The classification matters because of a textbook theorem the next
-chapter proves: Δ₀ formulas keep their meaning between a transitive class and the
-full universe, Σ₁ transfer upward, Π₁ downward. This chapter makes the hierarchy
-itself a **certificate**: an inductive datum, purely syntactic, portable across any
-constant domain, that travels with a formula the way adequacy certificates do.
+Not every formula travels equally well. Take a set `x` in some sub-world `𝒮 ↾ M`
+of a model (the structure chapter's restriction), and ask one question twice:
+inside `M`, and in the full world. "Is `x` empty?" gets the same answer in both
+places whenever members of members stay inside `M`: the formula `∀̇∈ x ⊥̇`
+interrogates only the *members* of `x`, and none of them has escaped. But "is some
+set disjoint from `x`?" quantifies over *everything*, and the witness the full
+world has in mind may simply be missing from `M`. The difference shows in the
+syntax alone: the first formula's quantifier is bounded, the second's is not. The
+**Levy hierarchy** grades formulas by exactly this: **Δ₀** allows only bounded
+quantifiers, Σ₁ prefixes existentials to a Δ₀ core, Π₁ prefixes universals. This
+chapter makes the grades **certificates**: inductive data, purely syntactic,
+portable across any constant domain, travelling with a formula the way adequacy
+certificates do; the next chapter proves the travel theorems they enable.
 <!--zh-->
-**列维层级**按量词复杂度为公式分类：**Δ₀** 只许有界量词，Σ₁ 在 Δ₀ 核心之前加存在量词，Π₁ 加全称量词。这个分类之所以要紧，在于下一章将证明的教科书定理：Δ₀ 公式在传递类与全宇宙之间含义不变，Σ₁ 向上转移，Π₁ 向下。本章把层级本身做成**证书**：纯语法层面的归纳数据，对任意常量域可携，像适足性证书一样随公式旅行。
+公式的旅行能力并不平等。取模型某个子世界 `𝒮 ↾ M` (结构章的限制) 中的一个集合 `x`，同一个问题问两遍：一遍在 `M` 里问，一遍在全世界问。「`x` 空吗？」只要成员的成员不出 `M`，两处答案就一致：公式 `∀̇∈ x ⊥̇` 只盘问 `x` 的**成员**，而它们谁也没有逃走。可「有集合与 `x` 不相交吗？」对**一切**量化，全世界心里想的那个见证可能恰好不在 `M` 中。这份差别单看语法就能看出：前一条公式的量词有界，后一条无界。**列维层级**恰按此给公式分级：**Δ₀** 只许有界量词，Σ₁ 在 Δ₀ 核心之前加存在量词，Π₁ 加全称量词。本章把级别做成**证书**：纯语法的归纳数据，对任意常量域可携，像适足性证书一样随公式旅行；它们所解锁的旅行定理由下一章证明。
 <!--/-->
 
 ```agda

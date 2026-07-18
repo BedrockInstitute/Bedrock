@@ -172,6 +172,13 @@ rows rather than editing old ones):
 | `L.{ConstructibleOrder, WellOrder2}` | `L.WellOrder.*` | |
 | `L.{Cmp*, Depth*, Order*, Trace*, Coh*}` | `L.WellOrder.Certificates.*` | layout decided by the L3.3 reduction review |
 | `L.{ChoiceSetInL2, Choice*}` | `L.Choice.*` | |
+| `ZF.Model.foundation` | `regularity` | `[L1.4]`: aligns with the glossary's canonical term for the axiom; one axiom, one name |
+| `ZF.Model.{hasSep, hasRepl, sep, num0, numS}` | `hasSeparation`, `hasReplacement`, `separate`, `numeral-zero`, `numeral-suc` | `[L1.4]`: registered-abbreviation rule (STYLE-agda §3); `Sep`/`Repl`/`num` are unregistered |
+| `ZF.Model.ℕ̄` | `isNumeral` | `[L1.4]`: no invented symbols (STYLE-agda §0); the bar had no tradition to lean on |
+| `ZF.Model.contrFromExt` | `setOf-unique` | `[L1.4]`: theorem names are kebab phrases; `Contr`/`Ext` unregistered |
+| `ZF.Model.iter` | deferred to `[L1.5]` | just-in-time: zero consumers in this chapter; first consumer is the V-side chain assembly (`numeral = iterate ∅ _⁺` with two `refl` equations); rename to `iterate` on landing |
+| `ZF.Encoding` | deferred (zero consumers) | `Class`/`Encoding` are consumed by nothing outside `Everything` in the source; the class concept appears as prose in `ZF.Model`; revisit if a consumer lands |
+| `ZF.Coding` | deferred to `[L2.x]` | all consumers are the L-side coding stack (`L.{VarCoding, SubBridge, SatCert*, Defstep, CodeOrder, OrderGraph}`) and `V.Coding` |
 
 ## 5. Working mechanisms (D2, D8)
 
@@ -484,7 +491,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.1 | Port Base/ | DONE 2026-07-16 |
 | L1.2 | Port FOL/ core | DONE 2026-07-17 (four chapters: Syntax, Structure re-cut from ZF/, Semantics, Renaming) |
 | L1.3 | Port FOL/Reification/ | DONE 2026-07-18 (five chapters, consumption-pruned; six deferrals in the ledger) |
-| L1.4 | Port ZF/ | PLANNED |
+| L1.4 | Port ZF/ | DONE 2026-07-18 (`ZF.Model` with the Ceiling compactness prose folded in; `Encoding`/`Coding` deferred by consumption audit; reading-order re-cut executed: reification reads after `ZF.Model`, `Renaming`/`Relativize` at the Part 4 doorstep) |
 | L1.5 | Port V/ | PLANNED |
 | L1.6 | Port L.Constructible | PLANNED |
 | L1.7 | Frontier + root L.Model | PLANNED |

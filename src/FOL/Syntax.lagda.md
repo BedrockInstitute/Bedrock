@@ -60,14 +60,14 @@ the others, and making the remaining ones (`⊤̇`, `⊥̇`, `¬̇`) primitive t
 next chapters treat every constructor uniformly, one clause each. Second, the
 bounded quantifiers earn primitive seats even though `∀̇∈ t φ` could be spelled with
 `∀̇`: formulas all of whose quantifiers are bounded behave remarkably tamely across
-different structures, and that thread, picked up in the later chapters of this part
-and carried into Part 4, wants the bounded forms as first-class syntax. The fixity
+different structures, and that thread, picked up once Part 2's model is on the
+table and carried into Part 4, wants the bounded forms as first-class syntax. The fixity
 table here is the book's single declaration for the object layer, each level chosen
 to match the truth-algebra operation it will be interpreted by.
 <!--zh-->
 公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：这是一枚层标记，见点即知这个符号是语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象等词，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词所取的公式体多出一个自由变量，变量 `0` 即刚被约束的那个。
 
-构造子清单里可以看出两个设计决定。其一，**联结词全部是原语**。在构造性元理论中，`∀`、`∨`、`⇒` 无法从其余联结词派生；把剩下的 (`⊤̇`、`⊥̇`、`¬̇`) 也原语化，则让后续各章对每个构造子一视同仁、一子句一条。其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位：全部量词皆有界的公式，在不同结构之间的表现格外驯良，这条线索将贯穿本部后半并延伸进第四部，它需要有界形式作为一等语法。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
+构造子清单里可以看出两个设计决定。其一，**联结词全部是原语**。在构造性元理论中，`∀`、`∨`、`⇒` 无法从其余联结词派生；把剩下的 (`⊤̇`、`⊥̇`、`¬̇`) 也原语化，则让后续各章对每个构造子一视同仁、一子句一条。其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位：全部量词皆有界的公式，在不同结构之间的表现格外驯良，这条线索将在第二部的模型落定后重新拾起并延伸进第四部，它需要有界形式作为一等语法。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
 <!--/-->
 
 ```agda
@@ -185,7 +185,7 @@ and dotted. Around it: functorial relabelling (`mapTm`{.Agda}, `mapFo`{.Agda})
 and the parameter-free formulas with their `embed`{.Agda}. Note what is
 absent: no substitution and no weakening operators anywhere. The design will keep
 it that way, and the little variable machinery the book does need arrives later in
-this part. First, formulas need something to talk about.
+the book. First, formulas need something to talk about.
 <!--zh-->
-对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全原语、全带点。围绕它的：函子式重标记 (`mapTm`{.Agda}、`mapFo`{.Agda})，以及无参公式与其 `embed`{.Agda}。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本部稍后登场。眼下，公式先得有可谈论的对象。
+对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全原语、全带点。围绕它的：函子式重标记 (`mapTm`{.Agda}、`mapFo`{.Agda})，以及无参公式与其 `embed`{.Agda}。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本书稍后登场。眼下，公式先得有可谈论的对象。
 <!--/-->

@@ -4,12 +4,12 @@
 The textbook's other classic move: **relativize** a formula to a bound, tightening
 every unbounded quantifier `∃̇`, `∀̇` into its bounded counterpart. Two facts make
 the operation valuable here. The result is always Δ₀, certificate included, so the
-previous chapter's theorem applies to it; and when the bound denotes a transitive
+absoluteness chapter's theorem applies to it; and when the bound denotes a transitive
 set, satisfaction of the relativized formula in the big world coincides with
 satisfaction of the original in the small one. Between them, "truth inside a set"
 becomes a Δ₀ matter of the ambient world.
 <!--zh-->
-教科书的另一手经典操作：把公式**相对化**到一个界，将每个无界量词 `∃̇`、`∀̇` 收紧为对应的有界量词。两件事实使这一操作在此处值钱。其一，结果永远是 Δ₀，证书随附，于是上一章的定理对它适用；其二，当界指称一个传递集时，相对化公式在大世界的满足与原公式在小世界的满足重合。两相夹击，「集合内部的真」就化成了环境世界里的一桩 Δ₀ 事务。
+教科书的另一手经典操作：把公式**相对化**到一个界，将每个无界量词 `∃̇`、`∀̇` 收紧为对应的有界量词。两件事实使这一操作在此处值钱。其一，结果永远是 Δ₀，证书随附，于是绝对性章的定理对它适用；其二，当界指称一个传递集时，相对化公式在大世界的满足与原公式在小世界的满足重合。两相夹击，「集合内部的真」就化成了环境世界里的一桩 Δ₀ 事务。
 <!--/-->
 
 ```agda
