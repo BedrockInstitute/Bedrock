@@ -291,34 +291,44 @@ def toc_html(toc, lang):
 
 def modules_nav(current, mods, lang):
     """The 'Modules' sidebar section: the structural catalog. A namespace tree is
-    derived from the module list (never hand-maintained): groups by namespace,
-    ordered by first appearance in the reading order, members in reading order
-    restricted to the group; leaf labels drop the group prefix."""
-    tree = {}
-    for m in mods:
-        node = tree
-        for g in m.split(".")[:-1]:
-            node = node.setdefault(g, {})
-        node.setdefault(None, []).append(m)
+    derived from the module list (never hand-maintained): children of every
+    level, leaves and subgroups alike, ordered by first appearance in the
+    reading order; leaf labels drop the group prefix."""
+    root = []          # entries: ("leaf", module) | ("group", name, children)
 
-    def render(node, depth):
+    def insert(children, parts, mod):
+        if len(parts) == 1:
+            children.append(("leaf", mod))
+            return
+        for entry in children:
+            if entry[0] == "group" and entry[1] == parts[0]:
+                insert(entry[2], parts[1:], mod)
+                return
+        group = ("group", parts[0], [])
+        children.append(group)
+        insert(group[2], parts[1:], mod)
+
+    for m in mods:
+        insert(root, m.split("."), m)
+
+    def render(children, depth):
         out = []
-        for key, sub in node.items():
-            if key is None:
-                for m in sub:
-                    cur = " class=cur" if m == current else ""
-                    label = m.rsplit(".", 1)[-1]
-                    out.append(f'<li{cur} style="--d:{depth}">'
-                               f'<a href="{m}.html">{label}</a></li>')
+        for entry in children:
+            if entry[0] == "leaf":
+                m = entry[1]
+                cur = " class=cur" if m == current else ""
+                label = m.rsplit(".", 1)[-1]
+                out.append(f'<li{cur} style="--d:{depth}">'
+                           f'<a href="{m}.html">{label}</a></li>')
             else:
-                out.append(f'<li class="modgroup" style="--d:{depth}">{key}</li>')
-                out.extend(render(sub, depth + 1))
+                out.append(f'<li class="modgroup" style="--d:{depth}">{entry[1]}</li>')
+                out.extend(render(entry[2], depth + 1))
         return out
 
     return (f'<a class="navlink nav-title" href="depmap.html">{UI[lang]["depmap"]}</a>'
             f'<details class="navsec"><summary class="nav-title">'
             f'{UI[lang]["modules"]}</summary>'
-            f'<ul class="modnav">{"".join(render(tree, 0))}</ul></details>')
+            f'<ul class="modnav">{"".join(render(root, 0))}</ul></details>')
 
 
 def ext_banner(lang):
