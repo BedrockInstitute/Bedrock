@@ -44,13 +44,13 @@ choice alone, level-polymorphically, funds the upgrade all the way to ZFC.
 <!--/-->
 
 ```agda
-V⊨ZF : ∀ {ℓ : Level} → (∀ {ℓ'} → LEM ℓ') → ZF.ZFModel (𝒮ᵥ {ℓ})
+V⊨ZF : ∀ {ℓ : Level} → (∀ {ℓ'} → LEM ℓ') → ZF.isZFModel (𝒮ᵥ {ℓ})
 V⊨ZF = V.Model.V⊨ZF
 
-V⊨ZF-impredicative : ∀ {ℓ : Level} → Impredicativity ℓ → ZF.ZFModel (𝒮ᵥ {ℓ})
+V⊨ZF-impredicative : ∀ {ℓ : Level} → Impredicativity ℓ → ZF.isZFModel (𝒮ᵥ {ℓ})
 V⊨ZF-impredicative = V.Model.VModel.V⊨ZF-impredicative
 
-V⊨ZFC : ∀ {ℓ : Level} → (∀ {ℓ'} → SetChoice ℓ') → ZF.ZFCModel (𝒮ᵥ {ℓ})
+V⊨ZFC : ∀ {ℓ : Level} → (∀ {ℓ'} → SetChoice ℓ') → ZF.isZFCModel (𝒮ᵥ {ℓ})
 V⊨ZFC = V.Model.V⊨ZFC
 ```
 
@@ -72,6 +72,6 @@ consistency of choice: a ZF universe carries a ZFC sub-universe inside it.
 
 ```agda
 L⊨ZFC : ∀ {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ') (F : L.Frontier.Frontier {ℓ})
-      → ZF.ZFCModel (L.Constructible.𝒮ʟ {ℓ})
+      → ZF.isZFCModel (L.Constructible.𝒮ʟ {ℓ})
 L⊨ZFC = L.Model.L⊨ZFC
 ```

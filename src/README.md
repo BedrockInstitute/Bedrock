@@ -71,11 +71,11 @@ entry in the reading catalog**, at the position its first consumer dictates.
 - `ZF.lagda.md`: Part 2, what a ZF(C) model is, landed with `[L1.4]` (renamed
   from `ZF.Model` by owner ruling; `ZF.Coding` nests under it at `[L2.x]`):
   - `IsSetOf`/`SetOf` (class realization), the description
-    operator `℩`, `_⊆ˢ_`, the `ZFModel` record (extensionality, meta-level
+    operator `℩`, `_⊆ˢ_`, the `isZFModel` record (extensionality, meta-level
     `regularity`, unique-existence fields, first-order `hasSeparation`/
     `hasReplacement`, strong infinity via the `numeral` field pinned by
     `numeral-zero`/`numeral-suc`), derived operations (`∅ pair ⋃ ∪ ⁺ separate 𝒫 ∩`
-    with `-spec`s), and `ZFCModel` (choice-set form `hasChoice`). The compactness
+    with `-spec`s), and `isZFCModel` (choice-set form `hasChoice`). The compactness
     ceiling (why regularity is meta-level) lives here as prose, per the ledger's
     `Reification.Ceiling` row.
 

@@ -2,14 +2,14 @@
 
 <!--en-->
 Part 3 opens, and the tone changes. So far every model has been hypothetical:
-`ZFModel`{.Agda} is a specification, and nothing yet inhabits it. This part
+`isZFModel`{.Agda} is a specification, and nothing yet inhabits it. This part
 exhibits the inhabitant, and the universe it lives on is not built by this book at
 all: the cubical library ships the **cumulative hierarchy** `V`{.Agda} as a higher
 inductive type, following the HoTT book. This chapter introduces that type, plugs
 it into the framework as a structure, and banks the first two fields of the record
 for free.
 <!--zh-->
-第三部开幕，语气随之一变。至此的模型都是假设性的：`ZFModel`{.Agda} 是一份规格书，尚无居民。本部就来交出居民，而它栖身的宇宙甚至不是本书亲手所造：cubical 库自带**累积层级** `V`{.Agda}，一个沿 HoTT book 构造的高阶归纳类型。本章介绍这个类型，把它作为结构插进框架，并免费入账 record 的头两个字段。
+第三部开幕，语气随之一变。至此的模型都是假设性的：`isZFModel`{.Agda} 是一份规格书，尚无居民。本部就来交出居民，而它栖身的宇宙甚至不是本书亲手所造：cubical 库自带**累积层级** `V`{.Agda}，一个沿 HoTT book 构造的高阶归纳类型。本章介绍这个类型，把它作为结构插进框架，并免费入账 record 的头两个字段。
 <!--/-->
 
 ```agda
