@@ -181,7 +181,7 @@ details.navsec > summary.nav-title::before {
 details.navsec[open] > summary.nav-title::before { transform: rotate(90deg); }
 @media (prefers-reduced-motion: reduce) {
   details.navsec > summary.nav-title::before { transition: none; } }
-a.navlink { display: block; text-decoration: none; padding-left: 1.05rem; }
+a.navlink { display: block; text-decoration: none; }
 a.navlink:hover { color: var(--primary); }
 details.navsec > ul.modnav, details.navsec > ul.toc { padding-left: 1.05rem; }
 ul.modnav ul { list-style: none; padding-left: 0.95rem; margin: 0; }
