@@ -23,14 +23,14 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _^_ )
 
-module FOL.Reification.Base {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋)
+module FOL.Reification.Base {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
                             {ℓc} (K : Type ℓc) (ι : K → ZFStructure.S 𝒮) where
 
 open import FOL.Syntax using ( Term; Formula )
 open import FOL.Semantics 𝕋 𝒮 using ( module At )
 open At ι using ( _⊨_; ⟦_⟧ )
 
-open TruthAlg 𝕋
+open TruthAlgebra 𝕋
 open ZFStructure 𝒮
 ```
 

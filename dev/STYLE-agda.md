@@ -102,7 +102,7 @@ Decision tree (in order):
 
 ```
 Type / record / module / chapter?
-  → full English word, PascalCase (Formula, ZFStructure, TruthAlg).
+  → full English word, PascalCase (Formula, ZFStructure, TruthAlgebra).
 Theorem / axiom / lemma / property name?
   → kebab phrase, topic symbols allowed (encode-inj, Δ₀-absolute, ∩-spec).
 Operation or relation (returns data / Ω / Type)?
@@ -158,7 +158,7 @@ Fixed variable conventions:
 
 Locals and bound variables are single letters, matching mathematical text. Module
 parameters for structures use script/blackboard single letters (`𝕋`, `𝒮`, `ℳ`);
-top-level named instances use searchable English words (`hPropAlg`) or subscripted
+top-level named instances use searchable English words (`hPropAlgebra`) or subscripted
 symbols mirroring the mathematical object (`𝒮ᵥ`, `𝒮ʟ`).
 
 ## 4. The layer-marking system

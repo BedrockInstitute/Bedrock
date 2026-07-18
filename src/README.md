@@ -29,8 +29,8 @@ entry in the reading catalog**, at the position its first consumer dictates.
 - `Base/`: Part 0, host-language groundwork, landed with `[L1.1]`:
   - `Base/Prelude.lagda.md`: the host vocabulary (curated cubical re-exports, defining
     nothing of its own). One of the two designated hubs (STYLE-agda §2).
-  - `Base/Truth.lagda.md`: the truth algebra `TruthAlg` (a pure operation signature;
-    the book's only source of logic symbols) and its canonical instance `hPropAlg`.
+  - `Base/Truth.lagda.md`: the truth algebra `TruthAlgebra` (a pure operation signature;
+    the book's only source of logic symbols) and its canonical instance `hPropAlgebra`.
     The other hub.
   - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
     its two dividends `lem→smallΩ` (small classifier) and `lem→resize` (propositional

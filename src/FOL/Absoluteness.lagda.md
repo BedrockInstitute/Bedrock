@@ -47,7 +47,7 @@ where it gets its name.
 <!--/-->
 
 ```agda
-Transitive : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ}))
+Transitive : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ}))
            → (ZFStructure.S 𝒮 → hProp ℓ) → Type ℓ
 Transitive 𝒮 M = ∀ {x y} → _∈ᵗ_ 𝒮 y x → ⟨ M x ⟩ → ⟨ M y ⟩
 ```
@@ -73,21 +73,21 @@ satisfaction symbols read "evaluated where".
 <!--/-->
 
 ```agda
-module Single {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ}))
+module Single {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ}))
               (M : ZFStructure.S 𝒮 → hProp ℓ)
               (trans : Transitive 𝒮 M) where
 
-  open TruthAlg (hPropAlg {ℓ})
+  open TruthAlgebra (hPropAlgebra {ℓ})
   open ZFStructure 𝒮
 
   SM : Type ℓ
   SM = Σ[ x ∈ S ] ⟨ M x ⟩
 
-  𝒮M : ZFStructure (hPropAlg {ℓ})
+  𝒮M : ZFStructure (hPropAlgebra {ℓ})
   𝒮M = 𝒮 ↾ M
 
-  module SemV = FOL.Semantics (hPropAlg {ℓ}) 𝒮
-  module SemM = FOL.Semantics (hPropAlg {ℓ}) 𝒮M
+  module SemV = FOL.Semantics (hPropAlgebra {ℓ}) 𝒮
+  module SemM = FOL.Semantics (hPropAlgebra {ℓ}) 𝒮M
 
   open module V = SemV.At {K = SM} fst public
     renaming ( _⊨_ to _⊨ᵛ_ ; ⟦_⟧ to ⟦_⟧ᵛ )

@@ -50,7 +50,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; presentation
         ; isEmb⟪_⟫↪; _⊆_; extensionality )
 
-open TruthAlg (hPropAlg {ℓ-suc ℓ})
+open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
 open ZFStructure (𝒮ᵥ {ℓ})
 ```
 

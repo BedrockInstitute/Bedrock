@@ -45,10 +45,10 @@ naming pattern appending the grade as a subscript.
 <!--/-->
 
 ```agda
-module Certified {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 : ZFStructure 𝕋)
+module Certified {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
                  {ℓc} (K : Type ℓc) (ι : K → ZFStructure.S 𝒮) where
 
-  open TruthAlg 𝕋
+  open TruthAlgebra 𝕋
   open ZFStructure 𝒮
   open import FOL.Semantics 𝕋 𝒮 using ( module At )
   open At ι using ( _⊨_ )
@@ -119,13 +119,13 @@ outer satisfaction in **one path composition**.
 <!--/-->
 
 ```agda
-module Transfer {ℓ} (𝒮 : ZFStructure (hPropAlg {ℓ}))
+module Transfer {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ}))
                 (M : ZFStructure.S 𝒮 → hProp ℓ)
                 (trans : Transitive 𝒮 M) where
 
   open Single 𝒮 M trans using ( SM; 𝒮M; _⊨ᵛ_; abs₀ )
 
-  module Inner = Certified (hPropAlg {ℓ}) 𝒮M SM (λ m → m)
+  module Inner = Certified (hPropAlgebra {ℓ}) 𝒮M SM (λ m → m)
 
   transfer : ∀ {n} {P : SM ^ n → hProp ℓ} (r : Inner.RepΔ₀ n P) (δ : SM ^ n)
            → P δ ≡ ((map fst δ) ⊨ᵛ (r .fst))
