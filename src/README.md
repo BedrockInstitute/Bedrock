@@ -59,14 +59,27 @@ entry in the reading catalog**, at the position its first consumer dictates.
       (`abs₀`, `σ₁-up`, `π₁-down`, `transfer`).
     - `Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
       (`_⊨ᴬ_`, `relativize-correct`).
+- `ZF/`: Part 2, what a ZF(C) model is, landed with `[L1.4]`:
+  - `ZF/Model.lagda.md`: `IsSetOf`/`SetOf` (class realization), the description
+    operator `℩`, `_⊆ˢ_`, the `ZFModel` record (extensionality, meta-level
+    `regularity`, unique-existence fields, first-order `hasSeparation`/
+    `hasReplacement`, strong infinity via the `numeral` field pinned by
+    `numeral-zero`/`numeral-suc`), derived operations (`∅ pair ⋃ ∪ ⁺ separate 𝒫 ∩`
+    with `-spec`s), and `ZFCModel` (choice-set form `hasChoice`). The compactness
+    ceiling (why regularity is meta-level) lives here as prose, per the ledger's
+    `Reification.Ceiling` row.
+
+Note the **reading order** (the `Everything` import order) is not the namespace
+order: the `FOL.Reification` chapters read after `ZF.Model` (whose separation and
+replacement motivate them), and `FOL.Renaming` + `FOL.Reification.Relativize` read
+at the tail, ahead of their Part 4 consumers (PLAN §5, two-catalog doctrine;
+re-cut executed with `[L1.4]`).
 
 ## Reserved namespaces (currently empty, marked with `.gitkeep`)
 
 The book-part skeleton fixed by [dev/PLAN.md](../dev/PLAN.md) §4; porting fills these in
 per the route tree (`[L1]` onward). By part:
 
-- `ZF/`: Part 2, what a ZF(C) model is: `Model` (the axiom-field records), in
-  type-theory-native idiom (not transcribed axiom by axiom).
 - `V/`: Part 3, the cumulative hierarchy as a HIT, and `V ⊨ ZF(C)`; later, set-theoretic
   geology (grounds, the mantle).
 - `L/`: Part 4, the constructible universe as an inductive predicate: the capstone
@@ -106,3 +119,12 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
 | `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Reification.Absoluteness` | `\models` + `\^v` / `\^m` |
 | `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Reification.Relativize` | `\models` + `\^A` |
+| `℩` | that (description operator) | ① | `ZF.Model` | `\riota` |
+| `⊆ˢ` | subset (structure layer) | ③ | `ZF.Model` | `\sub=` `\^s` |
+| `∅` | empty set | ① | `ZF.Model` | `\emptyset` |
+| `⋃` | union | ① | `ZF.Model` | `\bigcup` |
+| `∪` | binary union | ① | `ZF.Model` | `\cup` |
+| `⁺` | successor | ① | `ZF.Model` | `\^+` |
+| `𝒫` | power set | ① | `ZF.Model` | `\McP` |
+| `∩` | binary intersection | ① | `ZF.Model` | `\cap` |
+| `ω` | the set of numerals | ① | `ZF.Model` | `\omega` |

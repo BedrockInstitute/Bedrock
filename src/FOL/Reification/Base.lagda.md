@@ -1,15 +1,17 @@
 # Representation
 
 <!--en-->
-The bridge announced two chapters ago gets built here. On one side stand host
+The model chapter ended with a confession: separation and replacement accept only
+formulas, and building one by hand, correctness proof included, was tolerable
+exactly once. So the long-promised bridge gets built. On one side stand host
 predicates, `S ^ n → Ω`: the language in which this book actually states
-mathematics. On the other side stand formulas, which Part 2's separation and
-replacement will insist on. A **representation** is the bridge: a formula bundled
-with the proof that it means a given predicate. Manufacturing such bundles is the
-activity this framework is named after, *reification*, and the next chapter sets up
-its assembly line; this chapter fixes the notion itself.
+mathematics. On the other side stand formulas: the currency the axiom fields
+insist on. A **representation** is the bridge: a formula bundled with the proof
+that it means a given predicate. Manufacturing such bundles is the activity this
+framework is named after, *reification*, and the next chapter sets up its assembly
+line; this chapter fixes the notion itself.
 <!--zh-->
-两章之前预告的桥在此动工。桥的一头是宿主谓词 `S ^ n → Ω`：本书实际陈述数学所用的语言。另一头是公式：第二部的分离与替换只认它。**表示**就是这座桥：一条公式，捆绑着「它的含义恰是给定谓词」的证明。制造这种捆绑正是本框架得名的营生，即 reification；下一章为它架设流水线，本章先把概念本身立好。
+模型章以一句坦白收尾：分离与替换只收公式，而手工造一条公式、附带正确性证明，忍一次尚可。于是久经预告的桥在此动工。桥的一头是宿主谓词 `S ^ n → Ω`：本书实际陈述数学所用的语言。另一头是公式：公理字段只认的通货。**表示**就是这座桥：一条公式，捆绑着「它的含义恰是给定谓词」的证明。制造这种捆绑正是本框架得名的营生，即 reification；下一章为它架设流水线，本章先把概念本身立好。
 <!--/-->
 
 ```agda

@@ -1,6 +1,9 @@
 # Renaming
 
 <!--en-->
+This chapter and the next stock the toolbox for Part 4, whose constructible
+universe will consume both. First, variables.
+
 The syntax chapter pointed out an absence: no substitution, no weakening. The
 quantifier clauses take bodies in an extended context directly, so the classical
 apparatus for moving variables around never has to exist. What little variable
@@ -8,6 +11,8 @@ motion the book does need is covered by one device: **renaming**, a map
 `ρ : Fin n → Fin m` pushed through a formula, with a single correctness theorem
 that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
+本章与下一章为第四部备货：可构造宇宙将同时消费这两件工具。先说变量。
+
 语法章点过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**重命名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
 <!--/-->
 
@@ -150,8 +155,8 @@ obtained by choosing `ρ`.
 <!--en-->
 Renaming is the book's entire variable calculus: `renameFo`{.Agda} on syntax,
 `⊨-rename`{.Agda} on meaning, with `Agrees`{.Agda} naming the exact condition under
-which nothing changes. The logic toolkit of this part is now complete on the
-speaking side; what remains is the bridge between formulas and host predicates.
+which nothing changes. The book's variable machinery now exists, once and in
+full, ahead of the heavy consumers waiting in Part 4.
 <!--zh-->
-重命名就是本书全部的变量演算：语法上 `renameFo`{.Agda}，含义上 `⊨-rename`{.Agda}，`Agrees`{.Agda} 点明了「什么都不变」的确切条件。本部工具箱在言说侧至此配齐；余下的是公式与宿主谓词之间的那座桥。
+重命名就是本书全部的变量演算：语法上 `renameFo`{.Agda}，含义上 `⊨-rename`{.Agda}，`Agrees`{.Agda} 点明了「什么都不变」的确切条件。本书的变量机件至此一次到位、整装完毕，静候第四部那些重量级消费者。
 <!--/-->
