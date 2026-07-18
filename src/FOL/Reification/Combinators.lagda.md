@@ -24,8 +24,6 @@ module FOL.Reification.Combinators {ℓ ℓ'} (𝕋 : TruthAlg ℓ ℓ') (𝒮 :
 
 open import FOL.Syntax using
   ( con; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Semantics 𝕋 𝒮 using ( module At )
-open At ι using ( _⊨_; ⟦_⟧ )
 open import FOL.Reification.Base 𝕋 𝒮 K ι public
   using ( RepP; RepS; translate; adequacy )
 
