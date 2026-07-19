@@ -8,9 +8,9 @@ principles enter as **explicit parameters**, never as global assumptions: a chap
 that reasons classically says so in its own interface, the type checker polices the
 boundary, and there is not a single `postulate` in this book. This chapter states
 the one classical principle everything later appeals to, and banks its two basic
-dividends.
+dividends: the impredicativity interfaces of the previous chapter, redeemed.
 <!--zh-->
-多数读者熟悉的集合论是经典的：排中律如空气般无处不在。然而宿主是构造性的，本书把两者之间的边界作为法条保持可见。纲领定下的规则是：经典原理一律作为**显式参数**进入，绝不作为全局假设。凡经典论证的章节都在自己的接口上言明，类型检查器守卫这条边界，全书没有一个 `postulate`。本章陈述后文一切经典论证所诉诸的那唯一原理，并存入它的两笔基本红利。
+多数读者熟悉的集合论是经典的：排中律如空气般无处不在。然而宿主是构造性的，本书把两者之间的边界作为法条保持可见。纲领定下的规则是：经典原理一律作为**显式参数**进入，绝不作为全局假设。凡经典论证的章节都在自己的接口上言明，类型检查器守卫这条边界，全书没有一个 `postulate`。本章陈述后文一切经典论证所诉诸的那唯一原理，并存入它的两笔基本红利：上一章的非直谓性诸接口，在此赎回。
 <!--/-->
 
 ```agda
@@ -20,11 +20,13 @@ module Base.Classical where
 
 open import Base.Prelude
 open import Base.Truth
+open import Base.Impredicativity
+  using ( isSmall; Resizing; HPropSmallness; Impredicativity )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.Data.Unit using ( tt* )
-open import Cubical.Foundations.Equiv using ( _≃_; propBiimpl→Equiv )
+open import Cubical.Foundations.Equiv using ( propBiimpl→Equiv )
 open import Cubical.Foundations.Isomorphism using ( iso; isoToEquiv )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
@@ -88,27 +90,15 @@ lowerLEM {ℓ} lem P = fromLifted (lem lifted)
 
 <!--en-->
 Classically a proposition has only two possible values, and that innocent remark
-has universe-level teeth. First: the type of truth values, which lives one
-universe up, is equivalent to a **small** type. The property deserves a name
-before its proof: `HPropSmallness ℓ`{.Agda} asks for a small type equivalent to
-`hProp ℓ`{.Agda}, a small classifier of propositions.
-<!--zh-->
-经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。第一笔：真值类型本住在高一层宇宙，却等价于一个**小**类型。这条性质先于其证明得名：`HPropSmallness ℓ`{.Agda} 索要一个与 `hProp ℓ`{.Agda} 等价的小类型，即命题的小分类器。
-<!--/-->
-
-```agda
-HPropSmallness : ∀ ℓ → Type (ℓ-suc ℓ)
-HPropSmallness ℓ = Σ[ Ω' ∈ Type ℓ ] (Ω' ≃ hProp ℓ)
-```
-
-<!--en-->
-Classically the classifier is `Lift Bool`{.Agda}, at **every** level `ℓ`. The
+has universe-level teeth. First the classifier: `HPropSmallness ℓ`{.Agda}, named
+in the previous chapter, asks for a small type equivalent to `hProp ℓ`{.Agda}.
+Classically it is `Lift Bool`{.Agda}, at **every** level `ℓ`. The
 construction is arranged so that all the real work is constructive: the four
 helpers below take a **decision** of a proposition (a proof, or a refutation) as
 an ordinary argument, and excluded middle enters only at the final assembly, to
 supply those decisions.
 <!--zh-->
-经典地看，分类器就是 `Lift Bool`{.Agda}，在**每一个**层级 `ℓ` 上皆然。构造被刻意安排为：全部实际工作都是构造性的，下面四个助手把命题的**判定** (一个证明，或一个反驳) 当作普通参数接收；排中律只在最后的总装处出场，负责供应这些判定。
+经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。先看分类器：上一章命名的 `HPropSmallness ℓ`{.Agda}，索要一个与 `hProp ℓ`{.Agda} 等价的小类型。经典地看它就是 `Lift Bool`{.Agda}，在**每一个**层级 `ℓ` 上皆然。构造被刻意安排为：全部实际工作都是构造性的，下面四个助手把命题的**判定** (一个证明，或一个反驳) 当作普通参数接收；排中律只在最后的总装处出场，负责供应这些判定。
 <!--/-->
 
 <!--en-->
@@ -224,24 +214,11 @@ lem→hPropSmallness lem = Lift Bool , isoToEquiv (iso decodeB
 <!--/-->
 
 <!--en-->
-Second: a proposition living one universe up is equivalent to one living below.
-This is **propositional resizing**, the precise reason classical set theory
-never worries about which universe a proposition inhabits, and it too gets its
-name before its proof.
-<!--zh-->
-第二笔：住在高一层宇宙的命题等价于住在低层的命题。这就是**命题降层**，也正是经典集合论从不操心命题住在哪个宇宙的确切原因；它同样先于证明得名。
-<!--/-->
-
-```agda
-Resizing : ∀ ℓ → Type (ℓ-suc (ℓ-suc ℓ))
-Resizing ℓ = (P : hProp (ℓ-suc ℓ)) → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
-```
-
-<!--en-->
+Second, `Resizing`{.Agda}: every proposition one universe up is small.
 Classically, decide the proposition: if it holds it is equivalent to `⊤`, if it
 fails to `⊥`, and both are small.
 <!--zh-->
-经典地做：判定该命题，若成立则等价于 `⊤`，若不成立则等价于 `⊥`，而两者都是小的。
+第二笔，`Resizing`{.Agda}：高一层的每个命题都是小的。经典地做：判定该命题，若成立则等价于 `⊤`，若不成立则等价于 `⊥`，而两者都是小的。
 <!--/-->
 
 <!--en-->
@@ -263,7 +240,7 @@ equivalence between their underlying types, so the same pair of maps is fed to
 ```agda
 private
   resizeDec : ∀ {ℓ} (P : hProp (ℓ-suc ℓ)) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
-            → Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
+            → isSmall P
   resizeDec P (inl p)  = ⊤ , propBiimpl→Equiv (P .snd) (⊤ .snd) (λ _ → tt*) (λ _ → p)
   resizeDec P (inr np) = ⊥ , propBiimpl→Equiv (P .snd) (⊥ .snd)
                                (λ p → Empty.rec (np p)) (λ ())
@@ -283,32 +260,22 @@ lem→resizing lem P = resizeDec P (lem P)
 ```
 
 <!--en-->
-## The impredicativity interface
+## Redeeming the packing
 <!--zh-->
-## 非直谓性接口
+## 赎回打包
 <!--/-->
 
 <!--en-->
-The two instruments share one character: each says the world of propositions
-refuses to grow with the universe, which is the hallmark of **impredicativity**.
-They also share their consumers, so they are packed into one interface, one
-level at a time in the same style as `LEM`{.Agda}. The packing is by co-consumption, not by
-implication: neither instrument derives the other (they descend from two of
-Voevodsky's separate resizing axioms), and only the excluded middle redeems both
-at once (`lem→impredicativity`{.Agda}), from a **single instance** at the higher
-level: resizing consumes it as is, and `lowerLEM`{.Agda} hands the classifier
-its lower copy. The interface says nothing about any particular structure; it
-is pure universe-level policy, and Part 3 will name its exact price in it.
+The previous chapter packed the two instruments as `Impredicativity`{.Agda},
+by co-consumption, not implication: neither derives the other. Only the
+excluded middle redeems both at once, and from a **single instance** at the
+higher level: resizing consumes it as is, and `lowerLEM`{.Agda} hands the
+classifier its lower copy. Part 3 will name its exact prices in this packing.
 <!--zh-->
-两件器具共有一种品格：各自都在说命题的世界拒绝随宇宙一起膨胀，而这正是**非直谓性**的标志。它们也共享消费者，于是打包成一个接口，与 `LEM`{.Agda} 同款逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)，唯有排中律能一次赎回两件 (`lem→impredicativity`{.Agda})，而且只需较高层级上的**单个实例**：降层原样消费它，`lowerLEM`{.Agda} 把它的低层副本递给分类器。这个接口不谈任何特定结构，是纯粹的宇宙层级政策；第三部将用它开出自己的准确价格。
+上一章把两件器具打包为 `Impredicativity`{.Agda}，依据是共同消费而非相互蕴含：谁也推不出谁。唯有排中律能一次赎回两件，而且只需较高层级上的**单个实例**：降层原样消费它，`lowerLEM`{.Agda} 把它的低层副本递给分类器。第三部将用这份打包开出自己的准确价格。
 <!--/-->
 
 ```agda
-record Impredicativity (ℓ : Level) : Type (ℓ-suc (ℓ-suc ℓ)) where
-  field
-    resizing       : Resizing ℓ
-    hPropSmallness : HPropSmallness ℓ
-
 lem→impredicativity : ∀ {ℓ} → LEM (ℓ-suc ℓ) → Impredicativity ℓ
 lem→impredicativity lem = record
   { resizing       = lem→resizing lem
@@ -324,13 +291,13 @@ lem→impredicativity lem = record
 <!--en-->
 Excluded middle is stated as the interface `LEM`{.Agda}, taken by chapters as a
 parameter and never assumed globally; the boundary between constructive and
-classical mathematics is therefore a compile-time fact. Two dividends are banked,
-a small classifier of propositions (`HPropSmallness`{.Agda}, by
-`lem→hPropSmallness`{.Agda}) and propositional resizing (`Resizing`{.Agda}, by
-`lem→resizing`{.Agda}), and packed as the interface `Impredicativity`{.Agda},
-which the excluded middle redeems whole (`lem→impredicativity`{.Agda}). Part 3
+classical mathematics is therefore a compile-time fact. The previous chapter's
+two interfaces are banked as dividends, the small classifier by
+`lem→hPropSmallness`{.Agda} and propositional resizing by
+`lem→resizing`{.Agda}, and the packing `Impredicativity`{.Agda} is redeemed
+whole (`lem→impredicativity`{.Agda}). Part 3
 will spend exactly this packing: it prices, for the cumulative hierarchy `V`,
 the smallness assumptions behind full separation and power set.
 <!--zh-->
-排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。存入两笔红利：命题的小分类器 (`HPropSmallness`{.Agda}，经 `lem→hPropSmallness`{.Agda}) 与命题降层 (`Resizing`{.Agda}，经 `lem→resizing`{.Agda})，并打包为接口 `Impredicativity`{.Agda}，排中律可整份赎回 (`lem→impredicativity`{.Agda})。第三部将恰好花掉这份打包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
+排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。上一章的两个接口作为红利入账：小分类器经 `lem→hPropSmallness`{.Agda}，命题降层经 `lem→resizing`{.Agda}；打包 `Impredicativity`{.Agda} 整份赎回 (`lem→impredicativity`{.Agda})。第三部将恰好花掉这份打包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
 <!--/-->

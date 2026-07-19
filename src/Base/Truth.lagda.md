@@ -158,8 +158,8 @@ reserved for that day.
 <!--en-->
 Truth values are a parameter: the operation-only record `TruthAlgebra`{.Agda}, whose
 eight symbols are the book's entire logic notation, with `hPropAlgebra`{.Agda} as the
-canonical, definitionally transparent instance. Next: the one classical principle
-this book ever appeals to, stated as an interface.
+canonical, definitionally transparent instance. Next: the size vocabulary of
+impredicativity, and then the one classical principle that redeems it.
 <!--zh-->
-真值是一个参数：只含运算的 record `TruthAlgebra`{.Agda}，其八个符号就是全书的全部逻辑记号；`hPropAlgebra`{.Agda} 是典范且定义性透明的实例。下一章：本书唯一诉诸的经典原理，以接口的形式陈述。
+真值是一个参数：只含运算的 record `TruthAlgebra`{.Agda}，其八个符号就是全书的全部逻辑记号；`hPropAlgebra`{.Agda} 是典范且定义性透明的实例。接下来：非直谓性的尺寸词汇，与随后赎回它的那唯一经典原理。
 <!--/-->

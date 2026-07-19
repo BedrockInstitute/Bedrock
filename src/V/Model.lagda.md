@@ -23,7 +23,8 @@ open import Base.Truth
 
 module V.Model {ℓ : Level} where
 
-open import Base.Classical using ( LEM; HPropSmallness; Impredicativity; lem→impredicativity )
+open import Base.Impredicativity using ( HPropSmallness; Impredicativity )
+open import Base.Classical using ( LEM; lem→impredicativity )
 open import Base.Choice using ( SetChoice; choice→lem; lowerSetChoice )
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )

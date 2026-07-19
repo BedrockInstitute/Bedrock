@@ -19,7 +19,8 @@ cite one without caring where inside the book its proof lives.
 module Landmarks where
 
 open import Base.Prelude
-open import Base.Classical using ( LEM; Impredicativity )
+open import Base.Impredicativity using ( Impredicativity )
+open import Base.Classical using ( LEM )
 open import Base.Choice using ( SetChoice )
 open import V.Hierarchy using ( 𝒮ᵥ )
 open import FOL.ZFModel using ( isZFModel; isZFCModel )
