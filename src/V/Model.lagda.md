@@ -248,13 +248,13 @@ self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
 <!--en-->
 Two fields remain, full separation and power set, and neither is free: both need
 truth values brought down a universe with no Δ₀ certificate to pay the fare. The
-price is exactly Part 0's impredicativity wallet: `resizing`{.Agda} compresses
+price is exactly Part 0's impredicativity packing: `resizing`{.Agda} compresses
 any proposition, and `hPropSmallness`{.Agda} is the small classifier the power
-set will be indexed by. Nothing here is an axiom; the assembly takes the wallet
-as a parameter, and the classical reader rides free through
+set will be indexed by. Nothing here is an axiom; the assembly takes the
+packing as a parameter, and the classical reader rides free through
 `lem→impredicativity`{.Agda}, which is what the dividends were saved for.
 <!--zh-->
-还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部那只非直谓性钱包：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以钱包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
+还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部打包好的非直谓性接口：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以这份打包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
 <!--/-->
 
 <!--en-->
@@ -514,13 +514,13 @@ module ChoiceLemma (zf : isZFModel) (ac : SetChoice ℓ) where
 The ZFC theorem now assembles from one hypothesis, one instance, with
 Diaconescu's theorem paying every other bill. Choice at the truth level
 `ℓ-suc ℓ` decides that level's propositions, funding the whole impredicativity
-wallet; and the same instance, lowered one universe, feeds the choice set. One
+packing; and the same instance, lowered one universe, feeds the choice set. One
 choice, at the model's own truth level, is the entire price of `V ⊨ ZFC`. (The
 finer accounting stays visible in the pieces: `VModel`{.Agda} charges exactly
 impredicativity, `ChoiceLemma`{.Agda} exactly one level of choice; only their
 sum is stated here.)
 <!--zh-->
-ZFC 定理现在由单一假设、单个实例合龙，其余账单全由 Diaconescu 定理代付。真值层 `ℓ-suc ℓ` 上的选择判定该层的命题，付得起整只非直谓性钱包；同一份实例降一层宇宙，再喂给选择集。模型自己真值层上的一份选择，就是 `V ⊨ ZFC` 的全部价格。(更细的账目在零件上仍然可见：`VModel`{.Agda} 恰收非直谓性，`ChoiceLemma`{.Agda} 恰收一层选择；此处陈述的只是它们的总和。)
+ZFC 定理现在由单一假设、单个实例合龙，其余账单全由 Diaconescu 定理代付。真值层 `ℓ-suc ℓ` 上的选择判定该层的命题，付得起整份非直谓性打包；同一份实例降一层宇宙，再喂给选择集。模型自己真值层上的一份选择，就是 `V ⊨ ZFC` 的全部价格。(更细的账目在零件上仍然可见：`VModel`{.Agda} 恰收非直谓性，`ChoiceLemma`{.Agda} 恰收一层选择；此处陈述的只是它们的总和。)
 <!--/-->
 
 ```agda
@@ -543,10 +543,10 @@ The account closes balanced. Empty set, pair, and union were library stock
 reshaped by `∈∈ₛ` and `⇔toPath`{.Agda}; replacement came free through `sett`
 over untruncated fibers; strong infinity was `ω`'s definition plus one chain
 alignment (`numeralV≡#`{.Agda}). The two debts, full separation and power set,
-cost exactly Part 0's `Impredicativity`{.Agda} wallet: assembly gives
+cost exactly Part 0's `Impredicativity`{.Agda} packing: assembly gives
 `V⊨ZF-impredicative`{.Agda} at that exact price, the excluded middle redeems it
 into the headline `V⊨ZF`{.Agda}, and by Diaconescu the choice interface alone
 funds `V⊨ZFC`{.Agda}. The universe that Part 4 will dig inside now exists.
 <!--zh-->
-账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为第零部的非直谓性钱包 `Impredicativity`{.Agda}：合龙以此精确价格给出 `V⊨ZF-impredicative`{.Agda}，排中律把它赎回成主打的 `V⊨ZF`{.Agda}，经 Diaconescu 更是单凭选择接口就资助了 `V⊨ZFC`{.Agda}。第四部将要向内开凿的那个宇宙，现在存在了。
+账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为第零部打包的 `Impredicativity`{.Agda}：合龙以此精确价格给出 `V⊨ZF-impredicative`{.Agda}，排中律把它赎回成主打的 `V⊨ZF`{.Agda}，经 Diaconescu 更是单凭选择接口就资助了 `V⊨ZFC`{.Agda}。第四部将要向内开凿的那个宇宙，现在存在了。
 <!--/-->

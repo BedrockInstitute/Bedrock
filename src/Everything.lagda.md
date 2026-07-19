@@ -58,7 +58,7 @@ import Landmarks
   instance `hPropAlgebra`{.Agda}.
 - `Base.Classical`{.Agda}: the classical boundary: excluded middle as the parameter
   interface `LEM`{.Agda}, its two dividends, named `HPropSmallness`{.Agda} (the
-  small classifier) and `Resizing`{.Agda}, and their wallet
+  small classifier) and `Resizing`{.Agda}, and their packing
   `Impredicativity`{.Agda} with its classical redemption
   `lem→impredicativity`{.Agda}.
 - `Base.Choice`{.Agda}: the boundary's second interface: set-level choice
@@ -70,7 +70,7 @@ import Landmarks
 
 - `Base.Prelude`{.Agda}：精选的宿主词汇 (宇宙、路径、h-层级、`hProp`{.Agda}、依值对与索引数据)，以及决定本书读法的可溯源纪律。
 - `Base.Truth`{.Agda}：真值代数 `TruthAlgebra`{.Agda}，零定律的运算签名，全书逻辑符号的唯一来源；附典范实例 `hPropAlgebra`{.Agda}。
-- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}；两笔得名的红利，`HPropSmallness`{.Agda} (小分类器) 与 `Resizing`{.Agda} (命题降层)，及其钱包 `Impredicativity`{.Agda}，附经典赎回 `lem→impredicativity`{.Agda}。
+- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}；两笔红利：`HPropSmallness`{.Agda} (小分类器) 与 `Resizing`{.Agda} (命题降层)；以及这两者的打包 `Impredicativity`{.Agda}，附经典赎回 `lem→impredicativity`{.Agda}。
 - `Base.Choice`{.Agda}：边界的第二个接口：集合层选择 `SetChoice`{.Agda}，与 `LEM`{.Agda} 同款逐层级陈述；Diaconescu 定理当场机器化：选择证明排中律 (`choice→lem`{.Agda})。
 <!--/-->
 
