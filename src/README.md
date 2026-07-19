@@ -150,6 +150,7 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 |---|---|---|---|---|
 | `⟨_⟩` | the underlying type of | ① | `Base.Prelude` (re-export) | `\<` `\>` |
 | `⊥*` | lifted empty type | ① | `Base.Prelude` (re-export) | `\bot` `*` |
+| `∈ᶜ` | class membership | ① | `Base.Prelude` (re-export) | `\in` `\^c` |
 | `⊓` | and (meet) | ② | `Base.Truth` | `\glb` |
 | `⊔` | or (join) | ② | `Base.Truth` | `\lub` |
 | `⇒` | implies | ② | `Base.Truth` | `\=>` |

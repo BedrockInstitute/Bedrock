@@ -121,7 +121,7 @@ exactly this channel.
 _↾_ : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
     → (ZFStructure.S 𝒮 → hProp ℓ) → ZFStructure (hPropAlgebra ℓ)
 _↾_ {ℓ} 𝒮 M = record
-  { S      = Σ[ x ∈ S ] ⟨ M x ⟩
+  { S      = Σ[ x ∈ S ] (x ∈ᶜ M)
   ; isSetS = isSetΣSndProp isSetS (λ x → (M x) .snd)
   ; _≈ˢ_   = λ a b → fst a ≈ˢ fst b
   ; _∈ˢ_   = λ a b → fst a ∈ˢ fst b }

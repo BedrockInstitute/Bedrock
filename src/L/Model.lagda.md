@@ -105,7 +105,7 @@ regularityL : WellFounded _∈ᵗ_
 regularityL (v , p) = accL v (regularityV v) p
   where
   module Vmem = hPropStructure 𝒮ᵥ
-  accL : (u : V ℓ) → Acc Vmem._∈ᵗ_ u → (q : ⟨ isL u ⟩)
+  accL : (u : V ℓ) → Acc Vmem._∈ᵗ_ u → (q : u ∈ᶜ isL)
        → Acc _∈ᵗ_ (u , q)
   accL u (acc rec) q = acc (λ { (y , r) y∈ → accL y (rec y y∈) r })
 ```
