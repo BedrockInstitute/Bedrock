@@ -19,7 +19,7 @@ that handles weakening, exchange, and contraction in one stroke.
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Renaming where
+module FOL.Manipulation.Renaming where
 
 open import Base.Prelude
 open import Base.Truth

@@ -17,7 +17,7 @@ empty domain, and the ambient carrier.
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Relabelling where
+module FOL.Manipulation.Relabelling where
 
 open import Base.Prelude
 open import Base.Truth

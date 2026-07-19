@@ -49,19 +49,19 @@ entry in the reading catalog**, at the position its first consumer dictates.
     Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
   - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
     recursion.
-  - `FOL/Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
-    (weakening, exchange, contraction in one stroke).
   - `FOL/Graded.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive
     certificates. (Re-homed from `FOL.Reification` by owner ruling 2026-07-18;
     see the ledger.)
-  - `FOL/Relabelling.lagda.md`: the constant-domain kit, extracted by owner
-    ruling 2026-07-18: `mapTm`/`mapFo`, `ParamFree` + `embed`,
-    `⟦⟧-map`/`⊨-map`/`embed-⊨`, `mapΔ₀`/`mapΣₙ`/`mapΠₙ`. Zero trunk consumers;
-    reads at the tail.
+  - `FOL/Manipulation/` (owner ruling 2026-07-18): the syntax-manipulation
+    cluster, zero trunk consumers, reads at the tail:
+    - `Relabelling.lagda.md`: the constant-domain kit: `mapTm`/`mapFo`,
+      `ParamFree` + `embed`, `⟦⟧-map`/`⊨-map`/`embed-⊨`, `mapΔ₀`/`mapΣₙ`/`mapΠₙ`.
+    - `Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
+      (weakening, exchange, contraction in one stroke).
+    - `Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
+      (`_⊨ᴬ_`, `relativize-correct`).
   - `FOL/Absoluteness.lagda.md`: `Transitive`, `Single` (`abs₀`, `σ₁-up`,
     `π₁-down`). Re-homed likewise.
-  - `FOL/Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
-    (`_⊨ᴬ_`, `relativize-correct`). Re-homed likewise.
   - `FOL/Reification/`, landed with `[L1.3]`, re-cut 2026-07-18 to the
     representation framework proper (zero consumers today; reads at the tail):
     - `Base.lagda.md`: representation = formula × adequacy certificate; `RepP`,

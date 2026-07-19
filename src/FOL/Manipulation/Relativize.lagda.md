@@ -15,7 +15,7 @@ becomes a Δ₀ matter of the ambient world.
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Relativize where
+module FOL.Manipulation.Relativize where
 
 open import Base.Prelude
 open import Base.Truth
