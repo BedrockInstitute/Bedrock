@@ -68,22 +68,19 @@ mapFo f (∃̇∈ t φ) = ∃̇∈ (mapTm f t) (mapFo f φ)
 ```
 
 <!--en-->
-The most-travelled instance deserves its own name: entering a constant domain
-from **no** constants. The syntax chapter promised the **parameter-free
-formulas**, the data axis with the empty type as constant domain; the one-line
-definition lives here, beside its only machinery. From the empty type anything
+The most-travelled instance: entering a constant domain from **no** constants.
+The syntax chapter introduced the **parameter-free formulas**, the data axis
+with the empty type as constant domain; like sentences they bear no separate
+name, the type `Formula (⊥* {ℓ}) n` says it whole. From the empty type anything
 follows, the library's eliminator `Empty.rec*`{.Agda} says so, and relabelling
 along it embeds a parameter-free formula into the syntax over any domain
 whatsoever.
 <!--zh-->
-走动最勤的实例值得专名：从**没有**常量的域进入任何常量域。语法章许诺过**无参公式**，即以空类型为常量域的数据轴；那一行定义就住在这里，与它唯一的机器为邻。从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的正是这句话，沿它变换，无参公式便嵌入任意常量域上的语法。
+走动最勤的实例：从**没有**常量的域进入任何常量域。语法章介绍过**无参公式**，即以空类型为常量域的数据轴；与句子一样，本书不为它另设名字，类型 `Formula (⊥* {ℓ}) n` 已经说完全部。从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的正是这句话，沿它变换，无参公式便嵌入任意常量域上的语法。
 <!--/-->
 
 ```agda
-ParamFree : ∀ {ℓ} → ℕ → Type ℓ
-ParamFree {ℓ} = Formula (⊥* {ℓ})
-
-embed : ∀ {ℓ ℓ'} {K : Type ℓ'} {n} → ParamFree {ℓ} n → Formula K n
+embed : ∀ {ℓ ℓ'} {K : Type ℓ'} {n} → Formula (⊥* {ℓ}) n → Formula K n
 embed = mapFo Empty.rec*
 ```
 
@@ -142,7 +139,7 @@ the working syntax share one semantics; nothing needs proving twice.
 <!--/-->
 
 ```agda
-  embed-⊨ : ∀ {ℓe ℓc} {K : Type ℓc} (ι : K → S) {n} (φ : ParamFree {ℓe} n) (γ : S ^ n)
+  embed-⊨ : ∀ {ℓe ℓc} {K : Type ℓc} (ι : K → S) {n} (φ : Formula (⊥* {ℓe}) n) (γ : S ^ n)
           → At._⊨_ ι γ (embed φ) ≡ At._⊨_ (λ b → ι (Empty.rec* b)) γ φ
   embed-⊨ ι = ⊨-map Empty.rec* ι
 ```
