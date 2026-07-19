@@ -114,23 +114,18 @@ a type, `Formula K 0`, not a side condition, and the book gives it no separate
 name. **Parameter-free formulas** restrict
 along a different, orthogonal axis. A constant is how an ambient set enters a
 formula as a parameter; here the constant domain is the empty type `⊥*`{.Agda}, so
-there are no parameters at all, while free variables remain, `ParamFree n`{.Agda}
-having exactly `n` of them. From the empty type anything follows, so a
-parameter-free formula can enter the syntax over any domain whatsoever; the map
-that performs the entry lives with the relabelling kit at the book's tail.
-Parameter-free formulas are no rivals of the working
+there are no parameters at all, while free variables remain. From the empty
+type anything follows, so a parameter-free formula can enter the syntax over
+any domain whatsoever; the one-line definition (`ParamFree`) and the map that
+performs the entry both live with the constant-transformation kit at the book's
+tail. Parameter-free formulas are no rivals of the working
 syntax but its companions: a syntax whose constants are all sets is too big to be
 counted or coded, so whenever a later part needs formulas *as data*, theories as
 sets of formulas, codes of formulas inside a model, it is the parameter-free
 formulas that get collected, their parameters fed through environments instead.
 <!--zh-->
-**句子**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件，本书不为它另设名字。**无参公式**限制的是另一条正交的轴。常量是外部集合以参数身份进入公式的通道；这里常量域取空类型 `⊥*`{.Agda}，参数于是全然没有，而自由变量照旧，`ParamFree n`{.Agda} 恰有 `n` 个。从空类型可以推出一切，所以无参公式可以进入任意常量域上的语法；执行这次进入的映射，编在书末的常量变换章里。无参公式不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无参公式，参数改经环境喂入。
+**句子**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件，本书不为它另设名字。**无参公式**限制的是另一条正交的轴。常量是外部集合以参数身份进入公式的通道；这里常量域取空类型 `⊥*`{.Agda}，参数于是全然没有，而自由变量照旧。从空类型可以推出一切，所以无参公式可以进入任意常量域上的语法；一行的定义 (`ParamFree`) 与执行这次进入的映射，都编在书末的常量变换章里。无参公式不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无参公式，参数改经环境喂入。
 <!--/-->
-
-```agda
-ParamFree : ∀ {ℓ} → ℕ → Type ℓ
-ParamFree {ℓ} = Formula (⊥* {ℓ})
-```
 
 <!--en-->
 ## Recap
