@@ -1,7 +1,7 @@
 # Absoluteness
 
 <!--en-->
-The witnesses earn their keep. The scene is the one Part 4 will play out at
+The Levy witnesses earn their keep. The scene is the one Part 4 will play out at
 scale: a model, a sub-world `𝒮 ↾ M` carved out by a class, and formulas asked on
 both sides. This chapter names the one condition that tames the passage,
 **transitivity** of `M` (members of members stay in `M`, exactly what the empty
@@ -11,7 +11,7 @@ question of the previous chapter needed), and mechanizes the textbook theorem:
 one-line composition that turns an inner graded representation into outer
 satisfaction.
 <!--zh-->
-见证开始挣饭钱。这里的场景正是第四部将要大规模上演的那一幕：一个模型，一个由类裁出的子世界 `𝒮 ↾ M`，同一批公式两侧各问一遍。本章给驯服这趟通行的唯一条件起名：`M` 的**传递性** (成员的成员不出 `M`，恰是上一章那个空集之问所需要的)；然后机械化教科书定理：**Δ₀ 公式在传递类与全宇宙之间绝对**，Σ₁ 向上、Π₁ 向下两条转移作为廉价延伸。
+Lévy 见证开始挣饭钱。这里的场景正是第四部将要大规模上演的那一幕：一个模型，一个由类裁出的子世界 `𝒮 ↾ M`，同一批公式两侧各问一遍。本章给驯服这趟通行的唯一条件起名：`M` 的**传递性** (成员的成员不出 `M`，恰是上一章那个空集之问所需要的)；然后机械化教科书定理：**Δ₀ 公式在传递类与全宇宙之间绝对**，Σ₁ 向上、Π₁ 向下两条转移作为廉价延伸。
 <!--/-->
 
 ```agda
@@ -217,9 +217,9 @@ fine print exactly.
 Transitive classes named, and over them the theorem: `abs₀`{.Agda} makes Δ₀
 formulas absolute, with transitivity consumed exactly at the bounded quantifiers;
 `σ₁-up`{.Agda} and `π₁-down`{.Agda} extend the transfer one quantifier kind each,
-free of the hypothesis. These theorems are pure witness arithmetic; the
+free of the hypothesis. These theorems are pure arithmetic on the Levy witnesses; the
 composition that will spend them wholesale is catalogued with the reification
 framework at the book's tail.
 <!--zh-->
-传递类得名，其上是定理本体：`abs₀`{.Agda} 使 Δ₀ 公式绝对，传递性恰在有界量词处被消费；`σ₁-up`{.Agda} 与 `π₁-down`{.Agda} 各以一种量词延伸转移，且不花前提。这些定理是纯粹的见证算术；将要成批花费它们的那次复合，编在书末的 reification 框架里。
+传递类得名，其上是定理本体：`abs₀`{.Agda} 使 Δ₀ 公式绝对，传递性恰在有界量词处被消费；`σ₁-up`{.Agda} 与 `π₁-down`{.Agda} 各以一种量词延伸转移，且不花前提。这些定理是对 Lévy 见证的纯粹算术；将要成批花费它们的那次复合，编在书末的 reification 框架里。
 <!--/-->

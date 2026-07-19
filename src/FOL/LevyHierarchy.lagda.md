@@ -121,5 +121,5 @@ witnesses are pure syntax, and they stay put under a change of constant
 domain, a fact catalogued with the relabelling kit at the book's tail. The
 theorem that gives them their force is next.
 <!--zh-->
-Lévy 层级以归纳见证的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。见证是纯语法，且在常量变换下纹丝不动，这一事实编在书末的常量变换工具组里。赋予它们力量的定理在下一章。
+Lévy 层级以归纳见证的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。这些见证是纯语法，且在常量变换下纹丝不动，这一事实编在书末的常量变换工具组里。赋予它们力量的定理在下一章。
 <!--/-->

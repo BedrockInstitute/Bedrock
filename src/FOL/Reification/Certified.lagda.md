@@ -5,14 +5,14 @@ The framework's graded tier, and its closing chapter. The assembly line so far
 produces representations; the Levy chapters, read long ago, grade
 formulas. This chapter welds the two: a **graded representation** is a triple,
 formula, Δ₀ witness, adequacy, and the graded combinators run the flat
-assembly line while composing the Δ₀ evidence on the side. The chapter then
+assembly line while composing the Δ₀ witnesses on the side. The chapter then
 forges `transfer`{.Agda}, the composition of an adequacy certificate with the
 absoluteness theorem: the one-line conversion of an inner-world predicate into
 outer satisfaction. Like the rest of the framework, none of this has a consumer
 in the trunk yet; `transfer` is the shape in which the framework is designed to
 be spent, once the deeper chapters of Part 4 start paying the frontier.
 <!--zh-->
-框架的分级层，也是它的收官章。流水线至此生产表示；早先读过的 Lévy 诸章给公式分级。本章把两者焊接起来：**分级表示**是三元组：公式、Δ₀ 见证、适足性；分级组合子驱动平流水线，顺手复合 Δ₀ 证据。随后锻造 `transfer`{.Agda}：适足性证书与绝对性定理的复合，把内层世界的谓词一行换算为外层满足。与框架其余部分一样，这一切在主干上尚无消费者；`transfer` 是框架设计中被花费的形态，待第四部的深层章节开始偿付前沿时启用。
+框架的分级层，也是它的收官章。流水线至此生产表示；早先读过的 Lévy 诸章给公式分级。本章把两者焊接起来：**分级表示**是三元组：公式、Δ₀ 见证、适足性；分级组合子驱动平流水线，顺手复合 Δ₀ 见证。随后锻造 `transfer`{.Agda}：适足性证书与绝对性定理的复合，把内层世界的谓词一行换算为外层满足。与框架其余部分一样，这一切在主干上尚无消费者；`transfer` 是框架设计中被花费的形态，待第四部的深层章节开始偿付前沿时启用。
 <!--/-->
 
 ```agda

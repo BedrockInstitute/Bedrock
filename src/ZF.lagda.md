@@ -479,7 +479,7 @@ specifications are projections; intersection fell out of separation and a
 two-symbol formula, the first set built by feeding the framework its own language.
 `isZFCModel`{.Agda} adds choice on top. The record's appetite for formulas is now
 the book's outstanding debt; the reification framework at the book's tail is the
-factory that will pay it, running on the witnesses Part 1 already forged.
+factory that will pay it, running on the Levy witnesses Part 1 already forged.
 <!--zh-->
-ZF 模型是一个 record：外延公理、元层面的正则公理 (紧致性天花板使其他任何安置都不诚实)、以唯一存在形态陈述的诸构造字段、消费本书自家公式的分离与替换，以及经数码链的强无穷。`℩` 把字段兑成运算，规格皆为投影；交由分离加一条两符号公式落袋，是框架吃自家语言造出的第一个集合。`isZFCModel`{.Agda} 在其上添加选择。record 对公式的胃口成了本书的未清之债；书末的 reification 框架是将来还债的工厂，其燃料，即见证，第一部已锻造完毕。
+ZF 模型是一个 record：外延公理、元层面的正则公理 (紧致性天花板使其他任何安置都不诚实)、以唯一存在形态陈述的诸构造字段、消费本书自家公式的分离与替换，以及经数码链的强无穷。`℩` 把字段兑成运算，规格皆为投影；交由分离加一条两符号公式落袋，是框架吃自家语言造出的第一个集合。`isZFCModel`{.Agda} 在其上添加选择。record 对公式的胃口成了本书的未清之债；书末的 reification 框架是将来还债的工厂，其燃料，即 Lévy 见证，第一部已锻造完毕。
 <!--/-->
