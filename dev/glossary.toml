@@ -527,9 +527,10 @@ notes = "of a structure; ja 台 as in 台集合"
 [[term]]
 category = "Logic and philosophy"
 en = "renaming"
-zh = "重命名"
-ja = "リネーミング"
-notes = "the variable calculus of FOL.Renaming; ja transliteration tentative"
+zh = "变量变换"
+ja = "変数変換"
+avoid = ["zh:重命名"]
+notes = "the variable calculus of FOL.Renaming; the zh/ja pair 变量变换/変数変換 mirrors relabelling = 常量变换/定数変換 (owner ruling 2026-07-18)"
 
 [[term]]
 category = "Set theory"
@@ -757,7 +758,7 @@ notes = "the Impredicativity packing (Resizing + HPropSmallness); impredicative 
 [[term]]
 category = "Logic and philosophy"
 en = "relabelling"
-zh = "改换"
-ja = "付け替え"
-avoid = ["zh:重标记"]
-notes = "of constants, along a map of constant domains (mapFo; chapter FOL.Relabelling); deliberately distinct from renaming 重命名, which moves variables"
+zh = "常量变换"
+ja = "定数変換"
+avoid = ["zh:重标记", "zh:改换"]
+notes = "of constants, along a map of constant domains (mapFo; chapter FOL.Relabelling); paired with renaming = 变量变换, which moves variables (owner ruling 2026-07-18)"

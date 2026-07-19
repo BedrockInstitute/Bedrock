@@ -124,7 +124,7 @@ counted or coded, so whenever a later part needs formulas *as data*, theories as
 sets of formulas, codes of formulas inside a model, it is the parameter-free
 formulas that get collected, their parameters fed through environments instead.
 <!--zh-->
-**句子**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件，本书不为它另设名字。**无参公式**限制的是另一条正交的轴。常量是外部集合以参数身份进入公式的通道；这里常量域取空类型 `⊥*`{.Agda}，参数于是全然没有，而自由变量照旧，`ParamFree n`{.Agda} 恰有 `n` 个。从空类型可以推出一切，所以无参公式可以进入任意常量域上的语法；执行这次进入的映射，编在书末的改换章里。无参公式不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无参公式，参数改经环境喂入。
+**句子**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件，本书不为它另设名字。**无参公式**限制的是另一条正交的轴。常量是外部集合以参数身份进入公式的通道；这里常量域取空类型 `⊥*`{.Agda}，参数于是全然没有，而自由变量照旧，`ParamFree n`{.Agda} 恰有 `n` 个。从空类型可以推出一切，所以无参公式可以进入任意常量域上的语法；执行这次进入的映射，编在书末的常量变换章里。无参公式不是工作语法的对手，而是它的同伴：常量囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无参公式，参数改经环境喂入。
 <!--/-->
 
 ```agda
@@ -148,5 +148,5 @@ anywhere. The design will keep
 it that way, and the little variable machinery the book does need arrives later in
 the book. First, formulas need something to talk about.
 <!--zh-->
-对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全原语、全带点。围绕它的：无参公式，这条数据轴的进入映射随书末的改换工具组到来。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本书稍后登场。眼下，公式先得有可谈论的对象。
+对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全原语、全带点。围绕它的：无参公式，这条数据轴的进入映射随书末的常量变换工具组到来。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本书稍后登场。眼下，公式先得有可谈论的对象。
 <!--/-->

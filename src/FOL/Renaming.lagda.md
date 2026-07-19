@@ -13,7 +13,7 @@ that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
 一件提前备下的工具：主干至今没有消费它，首批消费者随第四部的深层章节到来。先说变量。
 
-语法章点过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**重命名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
+语法章点过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**变量变换**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
 <!--/-->
 
 ```agda
@@ -43,7 +43,7 @@ that, pushing a renaming through terms and formulas is one clause per constructo
 note it moves only variables, leaving constants alone, exactly complementary to
 the `mapFo`{.Agda} of the previous chapter.
 <!--zh-->
-进入约束子之下，重命名须为新约束的变量让位：`liftρ ρ` 固定变量 `0`，其余经 `ρ` 平移。此后沿词项与公式推送重命名就是一构造子一子句；注意它只动变量、不碰常量，与上一章的 `mapFo`{.Agda} 恰好互补。
+进入约束子之下，变量变换须为新约束的变量让位：`liftρ ρ` 固定变量 `0`，其余经 `ρ` 平移。此后沿词项与公式推送变换就是一构造子一子句；注意它只动变量、不碰常量，与上一章的 `mapFo`{.Agda} 恰好互补。
 <!--/-->
 
 ```agda
@@ -84,7 +84,7 @@ same things to corresponding variables: `Agrees ρ γ δ` asks that looking up
 sides, which is what happens under a binder. The development is generic over the
 truth algebra, the structure, and the constant interpretation.
 <!--zh-->
-重命名何时保含义？恰当两个环境对相应的变量说同样的话：`Agrees ρ γ δ` 要求在大环境里查 `ρ i` 等于在小环境里查 `i`；`agrees∷`{.Agda} 表明该条件经得起向两侧同时压入一个新值，即约束子之下发生的事。整个展开对真值代数、结构与常量解释都是泛型的。
+变量变换何时保含义？恰当两个环境对相应的变量说同样的话：`Agrees ρ γ δ` 要求在大环境里查 `ρ i` 等于在小环境里查 `i`；`agrees∷`{.Agda} 表明该条件经得起向两侧同时压入一个新值，即约束子之下发生的事。整个展开对真值代数、结构与常量解释都是泛型的。
 <!--/-->
 
 ```agda
@@ -108,7 +108,7 @@ case a congruence, the binder cases stepping through `agrees∷`{.Agda}. Weakeni
 (inserting an unused variable), exchange, and contraction are all instances,
 obtained by choosing `ρ`.
 <!--zh-->
-正确性定理：重命名后的公式在大环境中的含义，与原公式在小环境中的相同。先词项，然后照例归纳，每个情形一条同余，约束子情形踩着 `agrees∷`{.Agda} 过河。弱化 (插入未用的变量)、交换、收缩全是特例，取相应的 `ρ` 即得。
+正确性定理：变换后的公式在大环境中的含义，与原公式在小环境中的相同。先词项，然后照例归纳，每个情形一条同余，约束子情形踩着 `agrees∷`{.Agda} 过河。弱化 (插入未用的变量)、交换、收缩全是特例，取相应的 `ρ` 即得。
 <!--/-->
 
 ```agda
@@ -158,5 +158,5 @@ Renaming is the book's entire variable calculus: `renameFo`{.Agda} on syntax,
 which nothing changes. The book's variable machinery now exists, once and in
 full, ahead of the heavy consumers waiting in Part 4.
 <!--zh-->
-重命名就是本书全部的变量演算：语法上 `renameFo`{.Agda}，含义上 `⊨-rename`{.Agda}，`Agrees`{.Agda} 点明了「什么都不变」的确切条件。本书的变量机件至此一次到位、整装完毕，静候第四部那些重量级消费者。
+变量变换就是本书全部的变量演算：语法上 `renameFo`{.Agda}，含义上 `⊨-rename`{.Agda}，`Agrees`{.Agda} 点明了「什么都不变」的确切条件。本书的变量机件至此一次到位、整装完毕，静候第四部那些重量级消费者。
 <!--/-->
