@@ -27,7 +27,7 @@ open import FOL.Syntax
 open import FOL.LevyHierarchy
   using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
-open import V.Hierarchy using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 
 open import Cubical.Foundations.Equiv
   using ( _≃_; equivFun; invEq; invEquiv; secEq; propBiimpl→Equiv )
@@ -42,7 +42,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module SeparationSet )
 
 open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
-open ZFStructure (𝒮ᵥ {ℓ})
+open ZFStructure 𝒮ᵥ
 ```
 
 <!--en-->
@@ -244,7 +244,7 @@ accounting: Δ₀ means *free*, in the precise sense of universe levels.
 <!--/-->
 
 ```agda
-module SemanticsV = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) (𝒮ᵥ {ℓ})
+module SemanticsV = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮ᵥ
 
 module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 
@@ -361,7 +361,7 @@ module InnerSmall (M : S → hProp (ℓ-suc ℓ))
   SM = Σ[ x ∈ S ] ⟨ M x ⟩
 
   𝒮M : ZFStructure (hPropAlgebra {ℓ-suc ℓ})
-  𝒮M = 𝒮ᵥ {ℓ} ↾ M
+  𝒮M = 𝒮ᵥ ↾ M
 
   module SemanticsM = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮M
   open SemanticsM.At ι renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ ) public

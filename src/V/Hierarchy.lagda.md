@@ -15,10 +15,11 @@ for free.
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module V.Hierarchy where
-
 open import Base.Prelude
 open import Base.Truth
+
+module V.Hierarchy {ℓ : Level} where
+
 open import FOL.Structure using ( ZFStructure; pathStructure; _∈ᵗ_ )
 
 import Cubical.HITs.PropositionalTruncation as PT
@@ -72,8 +73,8 @@ the model record itself, is available on `𝒮ᵥ` at once. The subscript is a p
 <!--/-->
 
 ```agda
-𝒮ᵥ : ∀ {ℓ} → ZFStructure (hPropAlgebra {ℓ-suc ℓ})
-𝒮ᵥ {ℓ} = pathStructure (V ℓ) setIsSet _∈_
+𝒮ᵥ : ZFStructure (hPropAlgebra {ℓ-suc ℓ})
+𝒮ᵥ = pathStructure (V ℓ) setIsSet _∈_
 ```
 
 <!--en-->
@@ -102,8 +103,8 @@ carries membership along the pointwise paths to convert one into the other.
 <!--/-->
 
 ```agda
-extensionalV : ∀ {ℓ} {a b : V ℓ} → ((x : V ℓ) → (x ∈ a) ≡ (x ∈ b)) → a ≡ b
-extensionalV {ℓ} {a} {b} h = extensionality a b
+extensionalV : {a b : V ℓ} → ((x : V ℓ) → (x ∈ a) ≡ (x ∈ b)) → a ≡ b
+extensionalV {a} {b} h = extensionality a b
   ( (λ x x∈ₛa → ∈∈ₛ {a = x} {b = b} .fst
       (subst ⟨_⟩ (h x) (∈∈ₛ {a = x} {b = a} .snd x∈ₛa)))
   , (λ x x∈ₛb → ∈∈ₛ {a = x} {b = a} .fst
@@ -127,11 +128,11 @@ constructors impose no obligations at all.
 <!--/-->
 
 ```agda
-regularityV : ∀ {ℓ} → WellFounded (_∈ᵗ_ (𝒮ᵥ {ℓ}))
-regularityV {ℓ} = elimProp (λ s → isPropAcc s)
+regularityV : WellFounded (_∈ᵗ_ 𝒮ᵥ)
+regularityV = elimProp (λ s → isPropAcc s)
   (λ X ix rec → acc (λ y y∈ →
     PT.rec (isPropAcc y)
-           (λ { (i , p) → subst (Acc (_∈ᵗ_ (𝒮ᵥ {ℓ}))) p (rec i) })
+           (λ { (i , p) → subst (Acc (_∈ᵗ_ 𝒮ᵥ)) p (rec i) })
            y∈))
 ```
 
@@ -153,15 +154,15 @@ no ordinals in sight, and Part 4 builds its universe with it.
 <!--/-->
 
 ```agda
-∈-induction : ∀ {ℓ ℓ'} {P : V ℓ → Type ℓ'}
-            → (∀ x → (∀ y → _∈ᵗ_ (𝒮ᵥ {ℓ}) y x → P y) → P x)
+∈-induction : ∀ {ℓ'} {P : V ℓ → Type ℓ'}
+            → (∀ x → (∀ y → _∈ᵗ_ 𝒮ᵥ y x → P y) → P x)
             → ∀ x → P x
-∈-induction {ℓ} = WellFoundedInduction.WFI.induction (regularityV {ℓ})
+∈-induction = WellFoundedInduction.WFI.induction regularityV
 
-∈-induction-compute : ∀ {ℓ ℓ'} {P : V ℓ → Type ℓ'}
-  (e : ∀ x → (∀ y → _∈ᵗ_ (𝒮ᵥ {ℓ}) y x → P y) → P x) (x : V ℓ)
+∈-induction-compute : ∀ {ℓ'} {P : V ℓ → Type ℓ'}
+  (e : ∀ x → (∀ y → _∈ᵗ_ 𝒮ᵥ y x → P y) → P x) (x : V ℓ)
   → ∈-induction e x ≡ e x (λ y _ → ∈-induction e y)
-∈-induction-compute {ℓ} = WellFoundedInduction.WFI.induction-compute (regularityV {ℓ})
+∈-induction-compute = WellFoundedInduction.WFI.induction-compute regularityV
 ```
 
 <!--en-->

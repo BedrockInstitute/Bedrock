@@ -33,7 +33,7 @@ module L.Constructible {ℓ : Level} where
 
 open import FOL.Structure using ( ZFStructure; _↾_; _∈ᵗ_ )
 open import FOL.Absoluteness using ( Transitive )
-open import V.Hierarchy using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
 open import L.Definability {ℓ} using ( module DefOf )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
@@ -48,7 +48,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; _∪_ )
 
 open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
-open ZFStructure (𝒮ᵥ {ℓ})
+open ZFStructure 𝒮ᵥ
 
 𝒟 : S → S
 𝒟 A = DefOf.Def A
@@ -81,7 +81,7 @@ small-indexed union cases.
 
 ```agda
 isTransV : S → Type (ℓ-suc ℓ)
-isTransV A = Transitive (𝒮ᵥ {ℓ}) (λ x → x ∈ˢ A)
+isTransV A = Transitive 𝒮ᵥ (λ x → x ∈ˢ A)
 
 isPropIsTransV : (A : S) → isProp (isTransV A)
 isPropIsTransV A p q i {x} {y} y∈x x∈A = (y ∈ˢ A) .snd (p y∈x x∈A) (q y∈x x∈A) i
@@ -212,10 +212,10 @@ opaque
   𝒟ₒ : S → S
   𝒟ₒ A = 𝒟 A
 
-LsetStep : (α : S) → (∀ β → _∈ᵗ_ (𝒮ᵥ {ℓ}) β α → S) → S
+LsetStep : (α : S) → (∀ β → _∈ᵗ_ 𝒮ᵥ β α → S) → S
 LsetStep α rec = ⋃ (sett ⟪ α ⟫ (λ m → 𝒟ₒ (rec (⟪ α ⟫↪ m) (mem m))))
   where
-  mem : (m : ⟪ α ⟫) → _∈ᵗ_ (𝒮ᵥ {ℓ}) (⟪ α ⟫↪ m) α
+  mem : (m : ⟪ α ⟫) → _∈ᵗ_ 𝒮ᵥ (⟪ α ⟫↪ m) α
   mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
 
 opaque
@@ -246,12 +246,12 @@ opaque
 Lset-layer : (α : S) → isLayer (Lset α)
 Lset-layer = ∈-induction step
   where
-  step : (α : S) → (∀ β → _∈ᵗ_ (𝒮ᵥ {ℓ}) β α → isLayer (Lset β)) → isLayer (Lset α)
+  step : (α : S) → (∀ β → _∈ᵗ_ 𝒮ᵥ β α → isLayer (Lset β)) → isLayer (Lset α)
   step α IH = subst isLayer (sym (Lset-compute α))
     (setUnion-layer ⟪ α ⟫ (λ m → 𝒟ₒ (Lset (⟪ α ⟫↪ m)))
       (λ m → 𝒟ₒ-layer (IH (⟪ α ⟫↪ m) (mem m))))
     where
-    mem : (m : ⟪ α ⟫) → _∈ᵗ_ (𝒮ᵥ {ℓ}) (⟪ α ⟫↪ m) α
+    mem : (m : ⟪ α ⟫) → _∈ᵗ_ 𝒮ᵥ (⟪ α ⟫↪ m) α
     mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
 ```
 
@@ -275,7 +275,7 @@ move.
 isL : S → Ω
 isL x = ⋁ S (λ α → ((IsOrd α , isPropIsOrd α) ⊓ (x ∈ˢ Lset α)))
 
-isL-trans : Transitive (𝒮ᵥ {ℓ}) isL
+isL-trans : Transitive 𝒮ᵥ isL
 isL-trans {x} {y} y∈x x∈L = PT.rec (snd (isL y))
   (λ { (α , (ordα , x∈Lα)) →
     ∣ α , (ordα , layer-trans (Lset-layer α) y∈x x∈Lα) ∣₁ })
@@ -294,7 +294,7 @@ applies to it verbatim. The subscript is a small capital ʟ.
 
 ```agda
 𝒮ʟ : ZFStructure (hPropAlgebra {ℓ-suc ℓ})
-𝒮ʟ = 𝒮ᵥ {ℓ} ↾ isL
+𝒮ʟ = 𝒮ᵥ ↾ isL
 ```
 
 <!--en-->
