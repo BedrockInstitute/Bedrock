@@ -56,11 +56,14 @@ import Landmarks
 - `Base.Truth`{.Agda}: the truth algebra `TruthAlgebra`{.Agda}, a law-free operation
   signature that is the book's sole source of logic symbols, with its canonical
   instance `hPropAlgebra`{.Agda}.
+- `Base.Impredicativity`{.Agda}: the size vocabulary: `isSmall`{.Agda},
+  resizing as "every proposition is small" (`Resizing`{.Agda}), the small
+  classifier `HPropSmallness`{.Agda}, and their packing
+  `Impredicativity`{.Agda}; interfaces only, nothing assumed.
 - `Base.Classical`{.Agda}: the classical boundary: excluded middle as the parameter
-  interface `LEM`{.Agda}, its two dividends, named `HPropSmallness`{.Agda} (the
-  small classifier) and `Resizing`{.Agda}, and their packing
-  `Impredicativity`{.Agda} with its classical redemption
-  `lem→impredicativity`{.Agda}.
+  interface `LEM`{.Agda}, and the impredicativity interfaces redeemed from it
+  (`lem→resizing`{.Agda}, `lem→hPropSmallness`{.Agda},
+  `lem→impredicativity`{.Agda}).
 - `Base.Choice`{.Agda}: the boundary's second interface: set-level choice
   `SetChoice`{.Agda}, stated levelwise like `LEM`{.Agda}, with Diaconescu's
   theorem mechanized at once: choice proves the excluded middle
@@ -70,13 +73,15 @@ import Landmarks
 
 - `Base.Prelude`{.Agda}：精选的宿主词汇 (宇宙、路径、h-层级、`hProp`{.Agda}、依值对与索引数据)，以及决定本书读法的可溯源纪律。
 - `Base.Truth`{.Agda}：真值代数 `TruthAlgebra`{.Agda}，零定律的运算签名，全书逻辑符号的唯一来源；附典范实例 `hPropAlgebra`{.Agda}。
-- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}；两笔红利：`HPropSmallness`{.Agda} (小分类器) 与 `Resizing`{.Agda} (命题降层)；以及这两者的打包 `Impredicativity`{.Agda}，附经典赎回 `lem→impredicativity`{.Agda}。
+- `Base.Impredicativity`{.Agda}：尺寸词汇：`isSmall`{.Agda}；降层即「任意命题皆小」(`Resizing`{.Agda})；小分类器 `HPropSmallness`{.Agda}；及其打包 `Impredicativity`{.Agda}。只有接口，无所假设。
+- `Base.Classical`{.Agda}：经典边界：排中律作为参数接口 `LEM`{.Agda}，与从它赎回的非直谓性诸接口 (`lem→resizing`{.Agda}、`lem→hPropSmallness`{.Agda}、`lem→impredicativity`{.Agda})。
 - `Base.Choice`{.Agda}：边界的第二个接口：集合层选择 `SetChoice`{.Agda}，与 `LEM`{.Agda} 同款逐层级陈述；Diaconescu 定理当场机器化：选择证明排中律 (`choice→lem`{.Agda})。
 <!--/-->
 
 ```agda
 import Base.Prelude
 import Base.Truth
+import Base.Impredicativity
 import Base.Classical
 import Base.Choice
 ```

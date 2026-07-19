@@ -32,11 +32,13 @@ entry in the reading catalog**, at the position its first consumer dictates.
   - `Base/Truth.lagda.md`: the truth algebra `TruthAlgebra` (a pure operation signature;
     the book's only source of logic symbols) and its canonical instance `hPropAlgebra`.
     The other hub.
-  - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`, plus
-    its two dividends, named `HPropSmallness` (small classifier, by
-    `lem→hPropSmallness`) and `Resizing` (propositional resizing, by
-    `lem→resizing`), bundled as `Impredicativity` with `lem→impredicativity` as
-    the classical redemption. No postulate, per PLAN D2.
+  - `Base/Impredicativity.lagda.md` (owner ruling 2026-07-19): the size
+    vocabulary, interfaces only: `isSmall`, `Resizing` (= every proposition is
+    small), `HPropSmallness`, and the `Impredicativity` record. Lets the
+    smallness chapter consume `isSmall` without touching the classical chapter.
+  - `Base/Classical.lagda.md`: excluded middle as the parameter interface `LEM`,
+    `lowerLEM`, and the redemptions `lem→hPropSmallness`, `lem→resizing`, and
+    `lem→impredicativity`. No postulate, per PLAN D2.
   - `Base/Choice.lagda.md` (landed with `[L1.9]`): the choice interface `SetChoice`
     (levelwise, LEM-style) and Diaconescu's theorem `choice→lem` via set quotients.
     By owner ruling it reads in Part 0, right after `Base.Classical`.
@@ -91,7 +93,7 @@ entry in the reading catalog**, at the position its first consumer dictates.
   - `V/Hierarchy.lagda.md`: the library HIT `V` introduced; `𝒮ᵥ` assembled as a
     record literal; `extensionalV` and `regularityV` (the two record fields the
     HIT gives free).
-  - `V/Smallness.lagda.md`: `isSmall`, atomic compressions (`small-∈`,
+  - `V/Smallness.lagda.md`: atomic compressions (`small-∈`,
     `small-≡`), connective + bounded-quantifier closure, `separateFromSmall`
     (the one separation pipe), `Δ₀Small.Δ₀-small`, and the flagship
     `separateΔ₀` (Δ₀ separation is axiom-free).

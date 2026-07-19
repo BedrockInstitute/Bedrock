@@ -21,6 +21,7 @@ open import Base.Truth
 
 module V.Smallness {ℓ : Level} where
 
+open import Base.Impredicativity using ( isSmall )
 open import FOL.ZFStructure using ( ZFStructure; _↾_ )
 open import FOL.Syntax
   using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -53,16 +54,13 @@ open ZFStructure 𝒮ᵥ
 
 <!--en-->
 A proposition one universe up **is small** when it is equivalent to some
-proposition one universe down. The definition carries the smallness witness, and the whole
-chapter is an exercise in passing such witnesses around.
+proposition one universe down: the definition (`isSmall`{.Agda}) was minted in
+Part 0, where the resizing interface asserts it of every proposition wholesale.
+This chapter assumes no such thing. It **earns** instances, one atom at a time,
+and the whole chapter is an exercise in passing the earned witnesses around.
 <!--zh-->
-高一层的命题**是小的**，指它与某个低一层的命题等价。定义随身携带小性见证，而整章无非是把这种见证传来传去的一套体操。
+高一层的命题**是小的**，指它与某个低一层的命题等价：这个定义 (`isSmall`{.Agda}) 铸于第零部，在那里，降层接口把它一揽子断言于每个命题。本章不作这种假设。它逐原子地**挣得**实例，而整章无非是把挣来的见证传来传去的一套体操。
 <!--/-->
-
-```agda
-isSmall : hProp (ℓ-suc ℓ) → Type (ℓ-suc ℓ)
-isSmall P = Σ[ Q ∈ hProp ℓ ] (⟨ P ⟩ ≃ ⟨ Q ⟩)
-```
 
 <!--en-->
 The atoms are small straight from the library. This is the local-smallness
