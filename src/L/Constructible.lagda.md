@@ -47,7 +47,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; _∪_ )
 
-open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ᵥ
 
 𝒟 : S → S
@@ -293,7 +293,7 @@ applies to it verbatim. The subscript is a small capital ʟ.
 <!--/-->
 
 ```agda
-𝒮ʟ : ZFStructure (hPropAlgebra {ℓ-suc ℓ})
+𝒮ʟ : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
 𝒮ʟ = 𝒮ᵥ ↾ isL
 ```
 

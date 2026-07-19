@@ -41,13 +41,13 @@ import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 
-open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ʟ
 
 module ModelL = ZF 𝒮ʟ
 open ModelL using ( SetOf; _⊆ˢ_; isZFModel )
 
-module SemanticsL = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮ʟ
+module SemanticsL = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ
 open SemanticsL.At (λ (x : S) → x) using ( _⊨_ )
 ```
 

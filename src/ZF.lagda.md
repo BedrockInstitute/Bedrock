@@ -21,7 +21,7 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _∈ᵗ_ )
 
-module ZF {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ})) where
+module ZF {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
 ```
 
 <!--en-->
@@ -38,7 +38,7 @@ parameter appearing in a formula simply *is* the set it names.
 
 ```agda
 open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
-open import FOL.Semantics (hPropAlgebra {ℓ}) 𝒮 using ( module At )
+open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At )
 open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Induction.WellFounded using ( WellFounded; wf→x≮x )
@@ -46,7 +46,7 @@ import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 
-open TruthAlgebra (hPropAlgebra {ℓ})
+open TruthAlgebra (hPropAlgebra ℓ)
 open ZFStructure 𝒮
 
 private
