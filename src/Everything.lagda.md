@@ -214,8 +214,8 @@ consumers arrive with Part 4's deeper machinery, and they read late so the main
 line stays unbroken.
 
 - `FOL.Manipulation.Relabelling`{.Agda}: the constant-domain kit, three altitudes at once:
-  functorial `mapFo`{.Agda}, the parameter-free formulas `ParamFree`{.Agda}
-  with their entrance `embed`{.Agda}, meaning untouched (`⊨-map`{.Agda},
+  functorial `mapFo`{.Agda}, the parameter-free entrance `embed`{.Agda},
+  meaning untouched (`⊨-map`{.Agda},
   `embed-⊨`{.Agda}), witnesses carried along (`mapΔ₀`{.Agda} and the
   tower).
 - `FOL.Manipulation.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
@@ -228,7 +228,7 @@ line stays unbroken.
 
 这几章至今在主干上没有任何消费者；它们的首批消费者随第四部的深层机器到来，读在靠后，好让主线不断。
 
-- `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式 `ParamFree`{.Agda} 与其入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，见证随行 (`mapΔ₀`{.Agda} 及其塔)。
+- `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式的入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，见证随行 (`mapΔ₀`{.Agda} 及其塔)。
 - `FOL.Manipulation.Renaming`{.Agda}：变量变换，本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
 - `FOL.Manipulation.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 见证随附，并给出正确性等式。
 <!--/-->

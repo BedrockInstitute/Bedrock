@@ -55,7 +55,7 @@ entry in the reading catalog**, at the position its first consumer dictates.
   - `FOL/Manipulation/` (owner ruling 2026-07-18): the syntax-manipulation
     cluster, zero trunk consumers, reads at the tail:
     - `Relabelling.lagda.md`: the constant-domain kit: `mapTm`/`mapFo`,
-      `ParamFree` + `embed`, `⟦⟧-map`/`⊨-map`/`embed-⊨`, `mapΔ₀`/`mapΣₙ`/`mapΠₙ`.
+      `embed`, `⟦⟧-map`/`⊨-map`/`embed-⊨`, `mapΔ₀`/`mapΣₙ`/`mapΠₙ`.
     - `Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
       (weakening, exchange, contraction in one stroke).
     - `Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
