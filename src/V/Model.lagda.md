@@ -29,7 +29,7 @@ open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
 import FOL.Semantics
 import ZF
-open import V.Hierarchy using ( 𝒮ᵥ; extensionalV; regularityV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Smallness {ℓ} using ( separateFromSmall )
 
 open import Cubical.Foundations.Equiv using ( equivFun; invEq; secEq )
@@ -54,12 +54,12 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 open InfinitySet using ( sucV; #_; ω )
 
 open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
-open ZFStructure (𝒮ᵥ {ℓ})
+open ZFStructure 𝒮ᵥ
 
-module Model = ZF (𝒮ᵥ {ℓ})
+module Model = ZF 𝒮ᵥ
 open Model using ( SetOf; _⊆ˢ_; setOf-unique; isZFModel; isZFCModel )
 
-module SemanticsV = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) (𝒮ᵥ {ℓ})
+module SemanticsV = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮ᵥ
 open SemanticsV.At (λ (x : S) → x) using ( _⊨_ )
 ```
 

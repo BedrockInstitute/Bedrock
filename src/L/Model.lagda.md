@@ -48,7 +48,7 @@ module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (F : Frontier {ℓ}) wher
 
 open import FOL.Structure using ( ZFStructure; ↾-reflects; _∈ᵗ_ )
 import ZF
-open import V.Hierarchy using ( 𝒮ᵥ; extensionalV; regularityV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
@@ -81,7 +81,7 @@ and `↾-reflects`{.Agda} lifts the path back through the restriction.
 
 ```agda
 extensionalL : {a b : S} → ((x : S) → (x ∈ˢ a) ≡ (x ∈ˢ b)) → a ≡ b
-extensionalL {a} {b} h = ↾-reflects {𝒮 = 𝒮ᵥ {ℓ}} {M = isL} (extensionalV {a = fst a} {b = fst b} vwise)
+extensionalL {a} {b} h = ↾-reflects {𝒮 = 𝒮ᵥ} {M = isL} (extensionalV {a = fst a} {b = fst b} vwise)
   where
   vwise : (v : V ℓ) → (v ∈ fst a) ≡ (v ∈ fst b)
   vwise v = ⇔toPath fwd bwd
@@ -104,7 +104,7 @@ set, member by member.
 regularityL : WellFounded (_∈ᵗ_ 𝒮ʟ)
 regularityL (v , p) = accL v (regularityV v) p
   where
-  accL : (u : V ℓ) → Acc (_∈ᵗ_ (𝒮ᵥ {ℓ})) u → (q : ⟨ isL u ⟩)
+  accL : (u : V ℓ) → Acc (_∈ᵗ_ 𝒮ᵥ) u → (q : ⟨ isL u ⟩)
        → Acc (_∈ᵗ_ 𝒮ʟ) (u , q)
   accL u (acc rec) q = acc (λ { (y , r) y∈ → accL y (rec y y∈) r })
 ```

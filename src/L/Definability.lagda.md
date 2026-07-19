@@ -34,7 +34,7 @@ module L.Definability {ℓ : Level} where
 open import FOL.Structure using ( ZFStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
 open import FOL.Absoluteness using ( Transitive )
-open import V.Hierarchy using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Smallness {ℓ} using ( module InnerSmall )
 
 open import Cubical.Foundations.Equiv
@@ -51,7 +51,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
         ; isEmb⟪_⟫↪; _⊆_; extensionality )
 
 open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
-open ZFStructure (𝒮ᵥ {ℓ})
+open ZFStructure 𝒮ᵥ
 ```
 
 <!--en-->
@@ -217,7 +217,7 @@ shape Part 4's tower needs.
 <!--/-->
 
 ```agda
-  module Refine (Atrans : Transitive (𝒮ᵥ {ℓ}) M) where
+  module Refine (Atrans : Transitive 𝒮ᵥ M) where
 
     atom : ⟪ A ⟫ → Formula ⟪ A ⟫ 1
     atom mₐ = var zero ∈̇ con mₐ
