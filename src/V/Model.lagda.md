@@ -3,7 +3,7 @@
 <!--en-->
 Time to settle the account. The model record demands twelve fields; two are
 banked (extensionality and regularity, from the hierarchy chapter), and the
-smallness chapter's free tier covers separation only for Δ₀ certificates, while
+smallness chapter's free tier covers separation only for Δ₀ witnesses, while
 the record wants it for **every** formula. This chapter delivers the rest: the
 stock sets that the library simply has (empty, pair, union), replacement and
 strong infinity, which turn out to cost nothing, and then the two genuine debts,
@@ -12,7 +12,7 @@ that assumption paid, the record is assembled: **V is a model of ZF**, the
 relative-consistency theorem this part exists to prove. Choice then enters as a
 second, independent assumption, and upgrades the model to ZFC.
 <!--zh-->
-清账的时候到了。模型 record 要十二个字段；两个已入账 (外延与正则，层级章)，小性章的免费档又只覆盖带 Δ₀ 证书的分离，而 record 要的是**每条**公式。本章交付其余一切：库里现成的库存集合 (空集、配对、并)，成本意外为零的替换与强无穷，然后是两笔真正的欠账，全分离与幂集，其精确价格是一个降层假设。付讫，record 合龙：**V 是 ZF 的模型**，本部为之而生的相对一致性定理。随后选择公理作为第二个独立假设进场，把模型升级到 ZFC。
+清账的时候到了。模型 record 要十二个字段；两个已入账 (外延与正则，层级章)，小性章的免费档又只覆盖带 Δ₀ 见证的分离，而 record 要的是**每条**公式。本章交付其余一切：库里现成的库存集合 (空集、配对、并)，成本意外为零的替换与强无穷，然后是两笔真正的欠账，全分离与幂集，其精确价格是一个降层假设。付讫，record 合龙：**V 是 ZF 的模型**，本部为之而生的相对一致性定理。随后选择公理作为第二个独立假设进场，把模型升级到 ZFC。
 <!--/-->
 
 ```agda
@@ -247,14 +247,14 @@ self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
 
 <!--en-->
 Two fields remain, full separation and power set, and neither is free: both need
-truth values brought down a universe with no Δ₀ certificate to pay the fare. The
+truth values brought down a universe with no Δ₀ witness to pay the fare. The
 price is exactly Part 0's impredicativity packing: `resizing`{.Agda} compresses
 any proposition, and `hPropSmallness`{.Agda} is the small classifier the power
 set will be indexed by. Nothing here is an axiom; the assembly takes the
 packing as a parameter, and the classical reader rides free through
 `lem→impredicativity`{.Agda}, which is what the dividends were saved for.
 <!--zh-->
-还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 证书替它们买票。价格恰是第零部打包好的非直谓性接口：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以这份打包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
+还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 见证替它们买票。价格恰是第零部打包好的非直谓性接口：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以这份打包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
 <!--/-->
 
 <!--en-->
@@ -339,14 +339,14 @@ module Power (sΩ : HPropSmallness ℓ) where
 
 <!--en-->
 Given the impredicativity parameter, full separation is the smallness chapter's
-pipe with the fare paid by `resizing`{.Agda} instead of a certificate, and every field
+pipe with the fare paid by `resizing`{.Agda} instead of a witness, and every field
 is on the table. One discipline governs the assembly: each unique-existence field
 takes a **library set as its centre**, so that the description operator's
 projections compute back to the stock sets by definition. The two pinning
 equations for the numeral chain are discharged through the `sucV` case analysis,
 riding `numeralV≡#`{.Agda} between the model's chain and the library's.
 <!--zh-->
-非直谓性参数在手，全分离就是小性章那根水管，票钱由 `resizing`{.Agda} 代替证书付讫，十二个字段至此凑齐。合龙由一条纪律统辖：每个唯一存在字段都以**库存集合为中心**，让摹状词算子的投影按定义算回库存。数码链的两条钉死方程经 `sucV` 分情形装置兑现，其间靠 `numeralV≡#`{.Agda} 在模型链与库链之间往返。
+非直谓性参数在手，全分离就是小性章那根水管，票钱由 `resizing`{.Agda} 代替见证付讫，十二个字段至此凑齐。合龙由一条纪律统辖：每个唯一存在字段都以**库存集合为中心**，让摹状词算子的投影按定义算回库存。数码链的两条钉死方程经 `sucV` 分情形装置兑现，其间靠 `numeralV≡#`{.Agda} 在模型链与库链之间往返。
 <!--/-->
 
 ```agda

@@ -3,13 +3,13 @@
 <!--en-->
 The textbook's other classic move: **relativize** a formula to a bound, tightening
 every unbounded quantifier `∃̇`, `∀̇` into its bounded counterpart. Two facts make
-the operation valuable here. The result is always Δ₀, certificate included, so the
+the operation valuable here. The result is always Δ₀, witness included, so the
 absoluteness chapter's theorem applies to it; and when the bound denotes a transitive
 set, satisfaction of the relativized formula in the big world coincides with
 satisfaction of the original in the small one. Between them, "truth inside a set"
 becomes a Δ₀ matter of the ambient world.
 <!--zh-->
-教科书的另一手经典操作：把公式**相对化**到一个界，将每个无界量词 `∃̇`、`∀̇` 收紧为对应的有界量词。两件事实使这一操作在此处值钱。其一，结果永远是 Δ₀，证书随附，于是绝对性章的定理对它适用；其二，当界指称一个传递集时，相对化公式在大世界的满足与原公式在小世界的满足重合。两相夹击，「集合内部的真」就化成了环境世界里的一桩 Δ₀ 事务。
+教科书的另一手经典操作：把公式**相对化**到一个界，将每个无界量词 `∃̇`、`∀̇` 收紧为对应的有界量词。两件事实使这一操作在此处值钱。其一，结果永远是 Δ₀，见证随附，于是绝对性章的定理对它适用；其二，当界指称一个传递集时，相对化公式在大世界的满足与原公式在小世界的满足重合。两相夹击，「集合内部的真」就化成了环境世界里的一桩 Δ₀ 事务。
 <!--/-->
 
 ```agda
@@ -22,7 +22,7 @@ open import Base.Truth
 open import FOL.Structure using ( ZFStructure; _^_ )
 open import FOL.Syntax using
   ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Graded using
+open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 ```
@@ -62,10 +62,10 @@ relativize c (∃̇∈ t φ) = ∃̇∈ t (relativize c φ)
 
 <!--en-->
 Every unbounded quantifier became bounded and nothing else changed, so the result
-has no `∃̇`/`∀̇` constructors at all: the Δ₀ certificate assembles constructor by
+has no `∃̇`/`∀̇` constructors at all: the Δ₀ witness assembles constructor by
 constructor.
 <!--zh-->
-每个无界量词都变有界，其余分毫未动，结果便不含任何 `∃̇`/`∀̇` 构造子：Δ₀ 证书逐构造子装配即得。
+每个无界量词都变有界，其余分毫未动，结果便不含任何 `∃̇`/`∀̇` 构造子：Δ₀ 见证逐构造子装配即得。
 <!--/-->
 
 ```agda
@@ -170,8 +170,8 @@ companion's clause, since `⟦ con c ⟧ γ` is `A`; everything else is congruen
 `Δ₀-relativize`{.Agda} certifies the result, and `relativize-correct`{.Agda} pins
 its meaning to the bounded reading. With this, Part 1 closes: the object language,
 its structures and semantics, the variable calculus, representations with their
-certificate algebra, the graded hierarchy, absoluteness, and relativization. Every
+certificate algebra, the Levy hierarchy, absoluteness, and relativization. Every
 later part of the book speaks through this toolkit; next, the axioms of set theory.
 <!--zh-->
-`relativize`{.Agda} 把无界量词收紧到常量界，`Δ₀-relativize`{.Agda} 为结果发证，`relativize-correct`{.Agda} 把它的含义钉在有界读法上。至此第一部收官：对象语言、其结构与语义、变量演算、表示与证书代数、分级层级、绝对性与相对化。本书此后各部都经这套工具箱说话；接下来，集合论的公理。
+`relativize`{.Agda} 把无界量词收紧到常量界，`Δ₀-relativize`{.Agda} 为结果出具见证，`relativize-correct`{.Agda} 把它的含义钉在有界读法上。至此第一部收官：对象语言、其结构与语义、变量演算、表示与证书代数、分级层级、绝对性与相对化。本书此后各部都经这套工具箱说话；接下来，集合论的公理。
 <!--/-->

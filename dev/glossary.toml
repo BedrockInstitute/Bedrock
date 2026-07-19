@@ -336,9 +336,10 @@ notes = "tentative (owner review): zh renders by meaning (drop a universe level)
 [[term]]
 category = "Logic and philosophy"
 en = "Levy hierarchy"
-zh = "列维层级"
-ja = "レヴィ階層"
-notes = "Δ₀/Σₙ/Πₙ; zh 列维 transliteration tentative"
+zh = "Lévy 层级"
+ja = "Lévy 階層"
+avoid = ["zh:列维层级", "zh:分级证书", "zh:Levy 层级"]
+notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18)"
 
 [[term]]
 category = "Logic and philosophy"

@@ -1,4 +1,4 @@
-# Graded certificates
+# The Levy hierarchy
 
 <!--en-->
 Not every formula travels equally well. Take a set `x` in some sub-world `𝒮 ↾ M`
@@ -11,17 +11,17 @@ world has in mind may simply be missing from `M`. The difference shows in the
 syntax alone: the first formula's quantifier is bounded, the second's is not. The
 **Levy hierarchy** grades formulas by exactly this: **Δ₀** allows only bounded
 quantifiers, Σ₁ prefixes existentials to a Δ₀ core, Π₁ prefixes universals. This
-chapter makes the grades **certificates**: inductive data, purely syntactic,
+chapter makes the grades **witnesses**: inductive data, purely syntactic,
 portable across any constant domain, travelling with the formula they certify;
 the next chapter proves the travel theorems they enable.
 <!--zh-->
-公式的旅行能力并不平等。取模型某个子世界 `𝒮 ↾ M` (结构章的限制) 中的一个集合 `x`，同一个问题问两遍：一遍在 `M` 里问，一遍在全世界问。「`x` 空吗？」只要成员的成员不出 `M`，两处答案就一致：公式 `∀̇∈ x ⊥̇` 只盘问 `x` 的**成员**，而它们谁也没有逃走。可「有集合与 `x` 不相交吗？」对**一切**量化，全世界心里想的那个见证可能恰好不在 `M` 中。这份差别单看语法就能看出：前一条公式的量词有界，后一条无界。**列维层级**恰按此给公式分级：**Δ₀** 只许有界量词，Σ₁ 在 Δ₀ 核心之前加存在量词，Π₁ 加全称量词。本章把级别做成**证书**：纯语法的归纳数据，对任意常量域可携，随其所证的公式旅行；它们所解锁的旅行定理由下一章证明。
+公式的旅行能力并不平等。取模型某个子世界 `𝒮 ↾ M` (结构章的限制) 中的一个集合 `x`，同一个问题问两遍：一遍在 `M` 里问，一遍在全世界问。「`x` 空吗？」只要成员的成员不出 `M`，两处答案就一致：公式 `∀̇∈ x ⊥̇` 只盘问 `x` 的**成员**，而它们谁也没有逃走。可「有集合与 `x` 不相交吗？」对**一切**量化，全世界心里想的那个见证可能恰好不在 `M` 中。这份差别单看语法就能看出：前一条公式的量词有界，后一条无界。**Lévy 层级**恰按此给公式分级：**Δ₀** 只许有界量词，Σ₁ 在 Δ₀ 核心之前加存在量词，Π₁ 加全称量词。本章把级别做成**见证**：纯语法的归纳数据，对任意常量域可携，随其所证的公式旅行；它们所解锁的旅行定理由下一章证明。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Graded where
+module FOL.LevyHierarchy where
 
 open import Base.Prelude
 open import Base.Truth
@@ -30,9 +30,9 @@ open import FOL.Syntax using
 ```
 
 <!--en-->
-## The Δ₀ certificate
+## The Δ₀ witness
 <!--zh-->
-## Δ₀ 证书
+## Δ₀ 见证
 <!--/-->
 
 <!--en-->
@@ -115,11 +115,11 @@ mutual
 <!--/-->
 
 <!--en-->
-The Levy hierarchy lives as inductive certificates, Δ₀ by the absence of
+The Levy hierarchy lives as inductive witnesses, Δ₀ by the absence of
 unbounded constructors, Σ₁/Π₁ and the alternating Σₙ/Πₙ tower above it. The
-certificates are pure syntax, and they stay put under a change of constant
+witnesses are pure syntax, and they stay put under a change of constant
 domain, a fact catalogued with the relabelling kit at the book's tail. The
 theorem that gives them their force is next.
 <!--zh-->
-列维层级以归纳证书的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。证书是纯语法，且在常量变换下纹丝不动，这一事实编在书末的常量变换工具组里。赋予它们力量的定理在下一章。
+Lévy 层级以归纳见证的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。见证是纯语法，且在常量变换下纹丝不动，这一事实编在书末的常量变换工具组里。赋予它们力量的定理在下一章。
 <!--/-->
