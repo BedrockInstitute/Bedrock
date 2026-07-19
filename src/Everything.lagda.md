@@ -137,8 +137,8 @@ import ZF
 
 - `V.Hierarchy`{.Agda}: the library's higher inductive type `V`{.Agda}: sets as
   images of small families, extensional equality as a path constructor; the
-  structure `𝒮ᵥ`{.Agda} in one line, with extensionality and regularity banked
-  free.
+  structure `𝒮ᵥ`{.Agda} assembled directly, with extensionality and regularity
+  banked free.
 - `V.Smallness`{.Agda}: the smallness toolkit: atoms compress through the
   library, connectives and bounded quantifiers pass witnesses along,
   `separateFromSmall`{.Agda} is the one pipe to sets; `Δ₀-small`{.Agda} makes Δ₀
@@ -151,7 +151,7 @@ import ZF
 <!--zh-->
 ## 第三部：累积层级实现 ZF(C)
 
-- `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 一行插入，外延与正则免费入账。
+- `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 径直装配，外延与正则免费入账。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
 - `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，第零部的 `Impredicativity`{.Agda} 为全分离与幂集标价；`V⊨ZF-impredicative`{.Agda} 以此精确价格合龙，主打的 `V⊨ZF`{.Agda} 由排中律赎回，经 Diaconescu 的 `V⊨ZFC`{.Agda} 则单凭选择。
 <!--/-->

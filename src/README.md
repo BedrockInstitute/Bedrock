@@ -45,7 +45,7 @@ entry in the reading catalog**, at the position its first consumer dictates.
     parameter, intrinsic scoping, all constructors primitive); sentences are the
     `n = 0` instance, deliberately unnamed.
   - `FOL/Structure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
-    a truth algebra), `pathStructure`, `∈ᵗ`, restriction `↾`, and environments `_^_`.
+    a truth algebra), `∈ᵗ`, restriction `↾`, and environments `_^_`.
     Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
   - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
     recursion.
@@ -85,8 +85,8 @@ entry in the reading catalog**, at the position its first consumer dictates.
 - `V/`: Part 3, the cumulative hierarchy realizes ZF(C), landed with `[L1.5]`
   (`Definability`/`Coding`/`Satisfaction` deferred to `[L2.x]` by consumption
   audit; see the ledger):
-  - `V/Hierarchy.lagda.md`: the library HIT `V` introduced; `𝒮ᵥ` via
-    `pathStructure`; `extensionalV` and `regularityV` (the two record fields the
+  - `V/Hierarchy.lagda.md`: the library HIT `V` introduced; `𝒮ᵥ` assembled as a
+    record literal; `extensionalV` and `regularityV` (the two record fields the
     HIT gives free).
   - `V/Smallness.lagda.md`: `isSmall`, atomic compressions (`small-∈`,
     `small-≡`), connective + bounded-quantifier closure, `separateFromSmall`
