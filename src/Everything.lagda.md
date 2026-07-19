@@ -91,8 +91,10 @@ import Base.Choice
   and membership, valued in a truth algebra; restriction `↾` and environments.
 - `FOL.Semantics`{.Agda}: evaluation `⟦_⟧`{.Agda} and satisfaction `_⊨_`{.Agda} by
   structural recursion, each clause exactly its truth-algebra operation.
-- `FOL.LevyHierarchy`{.Agda}: the Levy hierarchy as inductive witnesses: Δ₀ by
-  absence, Σ₁/Π₁, and the alternating Σₙ/Πₙ tower.
+- `FOL.LevyHierarchy`{.Agda}: the Levy hierarchy as inductive witnesses: the Δ₀
+  witness is a datatype with no constructors for the unbounded quantifiers, so
+  inhabiting it certifies every quantifier bounded (absence is the
+  classification); above it, Σ₁/Π₁ and the alternating Σₙ/Πₙ tower.
 - `FOL.Absoluteness`{.Agda}: transitive classes and the Δ₀ absoluteness theorem
   `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down.
 <!--zh-->
@@ -101,7 +103,7 @@ import Base.Choice
 - `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语。
 - `FOL.Structure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；限制 `↾` 与环境。
 - `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算。
-- `FOL.LevyHierarchy`{.Agda}：作为归纳见证的 Lévy 层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。
+- `FOL.LevyHierarchy`{.Agda}：作为归纳见证的 Lévy 层级：Δ₀ 见证是不给无界量词设构造子的归纳数据，居民本身就证明每个量词皆有界 (缺席即分类)；其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。
 - `FOL.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
 <!--/-->
 
