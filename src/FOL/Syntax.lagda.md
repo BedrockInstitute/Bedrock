@@ -53,20 +53,36 @@ symbol is syntax, not meaning. Reading them:
 member of" and "for some member of". Binding is by de Bruijn: a quantifier takes a
 body with one more free variable, and variable `0` is the one just bound.
 
-Two design decisions are visible in the constructor list. First, **every connective
-is a primitive**. In a constructive metatheory `∀`, `∨`, `⇒` cannot be derived from
-the others, and making the remaining ones (`⊤̇`, `⊥̇`, `¬̇`) primitive too lets the
-next chapters treat every constructor uniformly, one clause each. Second, the
-bounded quantifiers earn primitive seats even though `∀̇∈ t φ` could be spelled with
-`∀̇`: formulas all of whose quantifiers are bounded behave remarkably tamely across
-different structures, and that thread, picked up once Part 2's model is on the
-table and carried into Part 4, wants the bounded forms as first-class syntax. The fixity
-table here is the book's single declaration for the object layer, each level chosen
-to match the truth-algebra operation it will be interpreted by.
+Two design decisions are visible in the constructor list. First, **every
+connective is a primitive**, and the reason is the semantics this language is
+headed for: each constructor will mean exactly one truth-algebra operation, and
+the algebra is constructive. A classical text can economize, spelling
+`φ ∨ ψ` as `¬ (¬ φ ∧ ¬ ψ)`, `∀` as `¬ ∃ ¬`, `φ ⇒ ψ` as `¬ φ ∨ ψ`, because
+classically the double negations cancel. Constructively they do not: `¬ ¬ P`
+is weaker than `P`, so every one of those spellings would assign the connective
+the **wrong meaning**. `∨`, `∀`, `⇒` therefore must be constructors. The
+remaining three (`⊤̇`, `⊥̇`, `¬̇`) *could* be spelled honestly, say `¬̇ φ` as
+`φ ⇒̇ ⊥̇`; they are primitive anyway so that every later structural recursion
+treats every connective alike, one clause each, no encoded special cases.
+
+Second, the bounded quantifiers earn primitive seats even though `∀̇∈ t φ`
+could be spelled with `∀̇`. Had they been abbreviations, "every quantifier in
+`φ` is bounded" would be a fact about how `φ` happens to be spelled, invisible
+to anything that computes over `φ`'s shape. As constructors, boundedness is
+shape: later chapters classify formulas by a datatype over their constructors,
+and certify "all quantifiers bounded" by a datatype that simply has **no case**
+for `∃̇` and `∀̇`, an absence that can only speak if the bounded forms stand on
+their own. Formulas of that shape behave remarkably tamely across structures,
+a thread picked up once Part 2's model is on the table and carried into
+Part 4. The fixity table here is the book's single declaration for the object
+layer, each level chosen to match the truth-algebra operation it will be
+interpreted by.
 <!--zh-->
 公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：这是一枚层标记，见点即知这个符号是语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象等词，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词所取的公式体多出一个自由变量，变量 `0` 即刚被约束的那个。
 
-构造子清单里可以看出两个设计决定。其一，**联结词全部是原语**。在构造性元理论中，`∀`、`∨`、`⇒` 无法从其余联结词派生；把剩下的 (`⊤̇`、`⊥̇`、`¬̇`) 也原语化，则让后续各章对每个构造子一视同仁、一子句一条。其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位：全部量词皆有界的公式，在不同结构之间的表现格外驯良，这条线索将在第二部的模型落定后重新拾起并延伸进第四部，它需要有界形式作为一等语法。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
+构造子清单里可以看出两个设计决定。其一，**联结词全部是原语**，理由在这门语言即将奔赴的语义：每个构造子将恰好意指一个真值代数运算，而该代数是构造性的。经典教科书可以省笔墨，把 `φ ∨ ψ` 拼作 `¬ (¬ φ ∧ ¬ ψ)`、`∀` 拼作 `¬ ∃ ¬`、`φ ⇒ ψ` 拼作 `¬ φ ∨ ψ`，因为经典地看双重否定会互相抵消。构造性地看它们不抵消：`¬ ¬ P` 严格弱于 `P`，上述每一种拼写都会给联结词指派**错误的含义**。所以 `∨`、`∀`、`⇒` 必须是构造子。剩下三个 (`⊤̇`、`⊥̇`、`¬̇`) 本来**可以**诚实地拼出，例如 `¬̇ φ` 拼作 `φ ⇒̇ ⊥̇`；仍将它们原语化，是为了让后续每一次结构递归对所有联结词一视同仁，一子句一条，不留任何需要特判的编码。
+
+其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位。倘若它们只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` **恰巧如何拼写**的事实，任何在 `φ` 的形状上计算的东西都看不见它。作为构造子，有界性就是形状：后面的章节按构造子给公式分类，用一个对 `∃̇` 与 `∀̇` **不设情形**的归纳数据来证明「量词皆有界」，而这种缺席要能开口说话，有界形式必须自立门户。这种形状的公式在不同结构之间表现格外驯良，这条线索将在第二部的模型落定后重新拾起并延伸进第四部。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
 <!--/-->
 
 ```agda
