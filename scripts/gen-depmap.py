@@ -106,8 +106,8 @@ def masters(src):
 
 def lane_of(mod):
     parts = mod.split(".")
-    if mod.startswith("FOL.Reification"):
-        return "FOL.Reification"
+    if len(parts) >= 3:                      # sub-namespace clusters get their own lane
+        return ".".join(parts[:2])
     return parts[0]
 
 
