@@ -20,7 +20,7 @@ open import Base.Truth
 
 module V.Hierarchy {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure; pathStructure; _∈ᵗ_ )
+open import FOL.Structure using ( ZFStructure; _∈ᵗ_ )
 
 import Cubical.HITs.PropositionalTruncation as PT
 import Cubical.Induction.WellFounded as WellFoundedInduction
@@ -56,25 +56,30 @@ are exactly what the rest of this part must supply.
 <!--/-->
 
 <!--en-->
-## The structure, in one line
+## The structure
 <!--zh-->
-## 结构，一行
+## 结构
 <!--/-->
 
 <!--en-->
 The interface fit is exact: the carrier is an h-set, membership lands in
-`hProp`{.Agda}, and equality can be taken to be the path type, which is what
-`pathStructure`{.Agda} was made for. One line, no adapter code, and every tool of
+`hProp`{.Agda}, and equality is simply the path type, packaged as a proposition
+by set-hood, the promise the structure chapter made for the propositional side,
+kept. Four fields, no adapter code, and every tool of
 Parts 1 and 2, syntax, satisfaction, representations, witnesses, absoluteness,
 the model record itself, is available on `𝒮ᵥ` at once. The subscript is a plain
 `v`, for the hierarchy.
 <!--zh-->
-接口严丝合缝：载体是 h-集，成员关系落在 `hProp`{.Agda}，等词可取路径类型，而这正是 `pathStructure`{.Agda} 的用武之地。一行，零适配代码，第一、二部的全部工具，语法、满足、表示、见证、绝对性，连同模型 record 本身，即刻在 `𝒮ᵥ` 上可用。下标就是普通的 `v`，指层级。
+接口严丝合缝：载体是 h-集，成员关系落在 `hProp`{.Agda}，等词径直取路径类型，由集合性打包成命题，结构章对命题侧许下的诺言在此兑现。四个字段，零适配代码，第一、二部的全部工具，语法、满足、表示、见证、绝对性，连同模型 record 本身，即刻在 `𝒮ᵥ` 上可用。下标就是普通的 `v`，指层级。
 <!--/-->
 
 ```agda
 𝒮ᵥ : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
-𝒮ᵥ = pathStructure (V ℓ) setIsSet _∈_
+𝒮ᵥ = record
+  { S      = V ℓ
+  ; isSetS = setIsSet
+  ; _≈ˢ_   = λ x y → (x ≡ y) , setIsSet x y
+  ; _∈ˢ_   = _∈_ }
 ```
 
 <!--en-->
@@ -174,10 +179,10 @@ no ordinals in sight, and Part 4 builds its universe with it.
 <!--en-->
 The cumulative hierarchy arrives from the library as a higher inductive type:
 sets are images of small families, extensional equality is a constructor, and the
-whole type is an h-set. `𝒮ᵥ`{.Agda} plugs it into the framework in one line, and
+whole type is an h-set. `𝒮ᵥ`{.Agda} plugs it into the framework, and
 extensionality (`extensionalV`{.Agda}) and regularity (`regularityV`{.Agda}) are
 already banked. Everything still owed lives one universe down: the next chapter
 builds the smallness toolkit that pays for it.
 <!--zh-->
-累积层级以高阶归纳类型的身份从库中到来：集合是小族的像，外延相等是构造子，整个类型是 h-集。`𝒮ᵥ`{.Agda} 一行把它插进框架，外延 (`extensionalV`{.Agda}) 与正则 (`regularityV`{.Agda}) 已然入账。尚欠的一切都住在低一层宇宙里：下一章打造为它付账的小性工具链。
+累积层级以高阶归纳类型的身份从库中到来：集合是小族的像，外延相等是构造子，整个类型是 h-集。`𝒮ᵥ`{.Agda} 把它插进框架，外延 (`extensionalV`{.Agda}) 与正则 (`regularityV`{.Agda}) 已然入账。尚欠的一切都住在低一层宇宙里：下一章打造为它付账的小性工具链。
 <!--/-->

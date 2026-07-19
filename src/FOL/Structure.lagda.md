@@ -55,8 +55,8 @@ Two remarks on the fields. That the structure equality `≈ˢ` is a **field**, r
 than being hard-wired to the host's path equality, is load-bearing: in the forcing
 part of the book, equality and membership will be a mutually defined pair of graded
 relations, genuine content of the model that no meta-level equality could supply.
-On the propositional side nothing is lost, as the convenience constructor below
-takes paths for `≈ˢ`.
+On the propositional side nothing is lost: when the hierarchy chapter assembles
+the book's instance, it simply takes paths for `≈ˢ`.
 
 And a remark on what is **not** here: no axioms. This record is the bare structure;
 well-foundedness, extensionality, and the rest belong to Part 2, where they become
@@ -64,7 +64,7 @@ the fields of a model. Everything this part builds consumes only the three
 projections above, so any two isomorphic structures are, by the host's structure
 identity principle, simply equal, and the whole development transports across.
 <!--zh-->
-关于字段的两点。结构等词 `≈ˢ` 是**字段**而非硬连到宿主的路径相等，这一点是承重的：在本书的力迫部分，等词与成员将是一对互递归定义的分级关系，是模型的真实内容，任何元层相等都供应不了。命题侧则毫无损失，下面的便利构造子会以路径充当 `≈ˢ`。
+关于字段的两点。结构等词 `≈ˢ` 是**字段**而非硬连到宿主的路径相等，这一点是承重的：在本书的力迫部分，等词与成员将是一对互递归定义的分级关系，是模型的真实内容，任何元层相等都供应不了。命题侧则毫无损失，届时装配本书实例的层级章径直以路径充当 `≈ˢ`。
 
 再说说这里**没有**的东西：公理。这个 record 是裸结构；良基、外延等等属于第二部，在那里它们将成为模型的字段。本部构建的一切只消费上面三个投影，于是任何两个同构的结构，按宿主的结构等同原理，干脆就相等，整个开发沿之搬运。
 <!--/-->
@@ -74,23 +74,6 @@ identity principle, simply equal, and the whole development transports across.
 <!--zh-->
 ## 命题侧
 <!--/-->
-
-<!--en-->
-When the truth algebra is `hPropAlgebra`{.Agda}, a structure can be assembled from just
-a carrier, its set-hood, and a membership relation; equality is taken to be the
-path type, packaged as a proposition by `isSetS`.
-<!--zh-->
-当真值代数取 `hPropAlgebra`{.Agda} 时，结构只需载体、其集合性，与一个成员关系即可装配；等词取路径类型，由 `isSetS` 打包成命题。
-<!--/-->
-
-```agda
-pathStructure : ∀ {ℓ} (S : Type ℓ) → isSet S → (S → S → hProp ℓ)
-              → ZFStructure (hPropAlgebra ℓ)
-pathStructure S₀ set ∈₀ = record
-  { S = S₀ ; isSetS = set
-  ; _≈ˢ_ = λ x y → (x ≡ y) , set x y
-  ; _∈ˢ_ = ∈₀ }
-```
 
 <!--en-->
 On the propositional side one more form of membership is available: extract the
@@ -191,10 +174,10 @@ A ^ n = Vec A n
 
 <!--en-->
 A structure is three projections, carrier, equality, membership, valued in a truth
-algebra and carrying no axioms; `pathStructure`{.Agda} builds the propositional
-ones, `↾` cuts them down to a class with nothing lost (`↾-reflects`{.Agda}), and
+algebra and carrying no axioms; `↾` cuts a structure down to a class with
+nothing lost (`↾-reflects`{.Agda}), and
 environments `S ^ n`{.Agda} stand ready to feed carrier elements to variables.
 Syntax on one side, structures on the other: the next chapter joins them.
 <!--zh-->
-结构就是三个投影：载体、等词、成员，取值于真值代数，不带公理；`pathStructure`{.Agda} 装配命题侧实例，`↾` 把结构裁剪到一个类而毫无损失 (`↾-reflects`{.Agda})，环境 `S ^ n`{.Agda} 已就位，随时把载体元素喂给变量。一边是语法，一边是结构：下一章让它们相遇。
+结构就是三个投影：载体、等词、成员，取值于真值代数，不带公理；`↾` 把结构裁剪到一个类而毫无损失 (`↾-reflects`{.Agda})，环境 `S ^ n`{.Agda} 已就位，随时把载体元素喂给变量。一边是语法，一边是结构：下一章让它们相遇。
 <!--/-->
