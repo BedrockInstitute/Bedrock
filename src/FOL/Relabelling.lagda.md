@@ -43,7 +43,7 @@ The syntax is functorial in its constant domain: a map `K → K'` pushes through
 term or formula, relabelling constants and touching nothing else. One clause per
 constructor, each doing the obvious thing.
 <!--zh-->
-语法对常量域是函子式的：一个映射 `K → K'` 沿词项或公式推送，改换常量，不碰其他任何东西。一构造子一子句，各做显然之事。
+语法对常量域是函子式的：一个映射 `K → K'` 沿词项或公式推送，变换常量，不碰其他任何东西。一构造子一子句，各做显然之事。
 <!--/-->
 
 ```agda
@@ -75,7 +75,7 @@ the empty type as their domain; from the empty type anything follows, the
 library's eliminator `Empty.rec*`{.Agda} says so, and relabelling along it
 embeds a parameter-free formula into the syntax over any domain whatsoever.
 <!--zh-->
-走动最勤的实例值得专名：从**没有**常量的域进入任何常量域。语法章的无参公式以空类型为域；从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的正是这句话，沿它改换，无参公式便嵌入任意常量域上的语法。
+走动最勤的实例值得专名：从**没有**常量的域进入任何常量域。语法章的无参公式以空类型为域；从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的正是这句话，沿它变换，无参公式便嵌入任意常量域上的语法。
 <!--/-->
 
 ```agda
@@ -94,7 +94,7 @@ Relabelling constants along `f : K → K'` and then evaluating under `ι` is the
 same as evaluating under `ι ∘ f` directly. One structural induction, every case
 a congruence; the two term cases are even `refl`{.Agda}.
 <!--zh-->
-沿 `f : K → K'` 改换常量后在 `ι` 下求值，与直接在 `ι ∘ f` 下求值相同。一次结构归纳，每个情形都是同余；两个词项情形干脆是 `refl`{.Agda}。
+沿 `f : K → K'` 变换常量后在 `ι` 下求值，与直接在 `ι ∘ f` 下求值相同。一次结构归纳，每个情形都是同余；两个词项情形干脆是 `refl`{.Agda}。
 <!--/-->
 
 ```agda
@@ -155,7 +155,7 @@ certificate follows along, constructor by constructor. This little lemma is
 what will let an absoluteness argument carry a Δ₀ witness across a change of
 constant domain.
 <!--zh-->
-改换常量保持公式的结构，列维证书遂逐构造子随行。正是这条小引理，将让绝对性论证携着 Δ₀ 见证跨越常量域的更换。
+变换常量保持公式的结构，列维证书遂逐构造子随行。正是这条小引理，将让绝对性论证携着 Δ₀ 见证跨越常量域的更换。
 <!--/-->
 
 ```agda
