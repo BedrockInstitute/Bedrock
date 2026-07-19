@@ -119,13 +119,13 @@ outer satisfaction in **one path composition**.
 <!--/-->
 
 ```agda
-module Transfer {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ}))
+module Transfer {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
                 (M : ZFStructure.S 𝒮 → hProp ℓ)
                 (trans : Transitive 𝒮 M) where
 
   open Single 𝒮 M trans using ( SM; 𝒮M; _⊨ᵛ_; abs₀ )
 
-  module Inner = Certified (hPropAlgebra {ℓ}) 𝒮M SM (λ m → m)
+  module Inner = Certified (hPropAlgebra ℓ) 𝒮M SM (λ m → m)
 
   transfer : ∀ {n} {P : SM ^ n → hProp ℓ} (r : Inner.RepΔ₀ n P) (δ : SM ^ n)
            → P δ ≡ ((map fst δ) ⊨ᵛ (r .fst))

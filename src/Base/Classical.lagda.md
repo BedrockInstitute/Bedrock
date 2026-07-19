@@ -126,7 +126,7 @@ what lets the two ends of the coming equivalence share a universe.
 <!--/-->
 
 ```agda
-open module Canonical {ℓ : Level} = TruthAlgebra (hPropAlgebra {ℓ}) using ( ⊤; ⊥ )
+open module Canonical {ℓ : Level} = TruthAlgebra (hPropAlgebra ℓ) using ( ⊤; ⊥ )
 
 private
   decodeB : ∀ {ℓ} → Lift {ℓ-zero} {ℓ} Bool → hProp ℓ

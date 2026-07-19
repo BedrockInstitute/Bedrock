@@ -53,13 +53,13 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( SetPackage )  -- lint-agda: keep (used qualified: SetPackage.classification)
 open InfinitySet using ( sucV; #_; ω )
 
-open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ᵥ
 
 module Model = ZF 𝒮ᵥ
 open Model using ( SetOf; _⊆ˢ_; setOf-unique; isZFModel; isZFCModel )
 
-module SemanticsV = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮ᵥ
+module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open SemanticsV.At (λ (x : S) → x) using ( _⊨_ )
 ```
 

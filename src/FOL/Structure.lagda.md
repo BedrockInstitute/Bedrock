@@ -85,7 +85,7 @@ path type, packaged as a proposition by `isSetS`.
 
 ```agda
 pathStructure : ∀ {ℓ} (S : Type ℓ) → isSet S → (S → S → hProp ℓ)
-              → ZFStructure (hPropAlgebra {ℓ})
+              → ZFStructure (hPropAlgebra ℓ)
 pathStructure S₀ set ∈₀ = record
   { S = S₀ ; isSetS = set
   ; _≈ˢ_ = λ x y → (x ≡ y) , set x y
@@ -102,7 +102,7 @@ quantify over it.
 <!--/-->
 
 ```agda
-module _ {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ})) where
+module _ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
   open ZFStructure 𝒮
 
   _∈ᵗ_ : S → S → Type ℓ
@@ -132,8 +132,8 @@ exactly this channel.
 <!--/-->
 
 ```agda
-_↾_ : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra {ℓ}))
-    → (ZFStructure.S 𝒮 → hProp ℓ) → ZFStructure (hPropAlgebra {ℓ})
+_↾_ : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+    → (ZFStructure.S 𝒮 → hProp ℓ) → ZFStructure (hPropAlgebra ℓ)
 _↾_ {ℓ} 𝒮 M = record
   { S      = Σ[ x ∈ S ] ⟨ M x ⟩
   ; isSetS = isSetΣSndProp isSetS (λ x → (M x) .snd)
@@ -153,7 +153,7 @@ back to equality of the pairs, so nothing is lost.
 <!--/-->
 
 ```agda
-↾-reflects : ∀ {ℓ} {𝒮 : ZFStructure (hPropAlgebra {ℓ})} {M : ZFStructure.S 𝒮 → hProp ℓ}
+↾-reflects : ∀ {ℓ} {𝒮 : ZFStructure (hPropAlgebra ℓ)} {M : ZFStructure.S 𝒮 → hProp ℓ}
              {a b : ZFStructure.S (𝒮 ↾ M)}
            → fst a ≡ fst b → a ≡ b
 ↾-reflects {M = M} = Σ≡Prop (λ x → (M x) .snd)

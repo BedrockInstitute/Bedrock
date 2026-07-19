@@ -73,7 +73,7 @@ the model record itself, is available on `𝒮ᵥ` at once. The subscript is a p
 <!--/-->
 
 ```agda
-𝒮ᵥ : ZFStructure (hPropAlgebra {ℓ-suc ℓ})
+𝒮ᵥ : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
 𝒮ᵥ = pathStructure (V ℓ) setIsSet _∈_
 ```
 

@@ -93,8 +93,8 @@ are theorems of the cubical library, not assumptions.
 <!--/-->
 
 ```agda
-hPropAlgebra : ∀ {ℓ} → TruthAlgebra ℓ (ℓ-suc ℓ)
-hPropAlgebra {ℓ} = record
+hPropAlgebra : ∀ ℓ → TruthAlgebra ℓ (ℓ-suc ℓ)
+hPropAlgebra ℓ = record
   { Ω      = hProp ℓ
   ; isSetΩ = isSetHProp
   ; _⊓_    = Logic._⊓_
@@ -111,7 +111,7 @@ hPropAlgebra {ℓ} = record
 Three points worth keeping:
 
 1. **The abstraction costs nothing.** Record projections compute on a concrete
-   instance, so `TruthAlgebra._⊓_ hPropAlgebra`{.Agda} **is** the library's `_⊓_`{.Agda},
+   instance, so `TruthAlgebra._⊓_ (hPropAlgebra ℓ)`{.Agda} **is** the library's `_⊓_`{.Agda},
    definitionally. Working at the hProp instance is exactly as if the abstraction
    had never happened: whatever held by `refl`{.Agda} before still holds by
    `refl`{.Agda}.
@@ -129,7 +129,7 @@ Three points worth keeping:
 <!--zh-->
 三个值得记住的要点：
 
-1. **抽象零成本。**record 投影在具体实例上按定义计算，所以 `TruthAlgebra._⊓_ hPropAlgebra`{.Agda} 定义性地**就是**库的 `_⊓_`{.Agda}。在 hProp 实例上工作与从未抽象过完全一样：凡此前由 `refl`{.Agda} 成立的等式，如今照旧由 `refl`{.Agda} 成立。
+1. **抽象零成本。**record 投影在具体实例上按定义计算，所以 `TruthAlgebra._⊓_ (hPropAlgebra ℓ)`{.Agda} 定义性地**就是**库的 `_⊓_`{.Agda}。在 hProp 实例上工作与从未抽象过完全一样：凡此前由 `refl`{.Agda} 成立的等式，如今照旧由 `refl`{.Agda} 成立。
 2. `⊥` 字段取层级多态的对 `(⊥* , isProp⊥*)`{.Agda}，因为库的假固定在最底层宇宙。这也是两个符号之间的全部关系：真值 `⊥` 就是宿主类型 `⊥*`{.Agda} 连同其命题性打包而成，故 `⟨ ⊥ ⟩` **就是** `⊥*`{.Agda}。要真值的位置写 `⊥`，要类型的位置写 `⊥*`{.Agda}；两个位置不可互换，分工由类型检查器把守。
 3. `⋁` 是命题截断的存在量词，`⋀` 是货真价实的 Π 类型：这正是构造性语义的形态。hProp 侧的章节仍可直接从库中取用证明手段 (`∃[ x ] …` 糖衣、截断消去子)：它们与本实例的字段定义性相同，不构成第二套含义。
 <!--/-->

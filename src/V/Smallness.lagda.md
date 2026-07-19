@@ -41,7 +41,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module SeparationSet )
 
-open TruthAlgebra (hPropAlgebra {ℓ-suc ℓ})
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ᵥ
 ```
 
@@ -244,7 +244,7 @@ accounting: Δ₀ means *free*, in the precise sense of universe levels.
 <!--/-->
 
 ```agda
-module SemanticsV = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮ᵥ
+module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 
 module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 
@@ -360,10 +360,10 @@ module InnerSmall (M : S → hProp (ℓ-suc ℓ))
   SM : Type (ℓ-suc ℓ)
   SM = Σ[ x ∈ S ] ⟨ M x ⟩
 
-  𝒮M : ZFStructure (hPropAlgebra {ℓ-suc ℓ})
+  𝒮M : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
   𝒮M = 𝒮ᵥ ↾ M
 
-  module SemanticsM = FOL.Semantics (hPropAlgebra {ℓ-suc ℓ}) 𝒮M
+  module SemanticsM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮M
   open SemanticsM.At ι renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ ) public
 
   ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → isSmall (δ ⊨ᵐ φ)
