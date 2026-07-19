@@ -42,19 +42,22 @@ entry in the reading catalog**, at the position its first consumer dictates.
     By owner ruling it reads in Part 0, right after `Base.Classical`.
 - `FOL/`: Part 1, first-order logic as an object of study, landed with `[L1.2]`:
   - `FOL/Syntax.lagda.md`: the deeply embedded `Formula` (constant domain as a
-    parameter, intrinsic scoping, all constructors primitive) and the parameter-free
-    formulas with `embed` (via the library's `Empty.rec*`); sentences are the `n = 0`
-    instance, deliberately unnamed.
+    parameter, intrinsic scoping, all constructors primitive) and the
+    parameter-free formulas; sentences are the `n = 0` instance, deliberately
+    unnamed.
   - `FOL/Structure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
     a truth algebra), `pathStructure`, `∈ᵗ`, restriction `↾`, and environments `_^_`.
     Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
   - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
-    recursion; relabelling lemmas `⟦⟧-map`, `⊨-map`, `embed-⊨`.
+    recursion.
   - `FOL/Renaming.lagda.md`: `renameFo` and the correctness theorem `⊨-rename`
     (weakening, exchange, contraction in one stroke).
   - `FOL/Graded.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive
-    certificates; `mapΔ₀` and friends. (Re-homed from `FOL.Reification` by owner
-    ruling 2026-07-18; see the ledger.)
+    certificates. (Re-homed from `FOL.Reification` by owner ruling 2026-07-18;
+    see the ledger.)
+  - `FOL/Relabelling.lagda.md`: the constant-domain kit, extracted by owner
+    ruling 2026-07-18: `mapTm`/`mapFo` + `embed`, `⟦⟧-map`/`⊨-map`/`embed-⊨`,
+    `mapΔ₀`/`mapΣₙ`/`mapΠₙ`. Zero trunk consumers; reads at the tail.
   - `FOL/Absoluteness.lagda.md`: `Transitive`, `Single` (`abs₀`, `σ₁-up`,
     `π₁-down`). Re-homed likewise.
   - `FOL/Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`

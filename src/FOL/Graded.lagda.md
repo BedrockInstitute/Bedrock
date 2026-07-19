@@ -26,7 +26,7 @@ module FOL.Graded where
 open import Base.Prelude
 open import Base.Truth
 open import FOL.Syntax using
-  ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈; mapFo )
+  ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
 
 <!--en-->
@@ -55,29 +55,6 @@ data Δ₀ {ℓc} {K : Type ℓc} : ∀ {n} → Formula K n → Type ℓc where
   δ-⊥  : ∀ {n} → Δ₀ {n = n} ⊥̇
   δ-∀∈ : ∀ {n} {t : Term K n} {φ : Formula K (suc n)} → Δ₀ φ → Δ₀ (∀̇∈ t φ)
   δ-∃∈ : ∀ {n} {t : Term K n} {φ : Formula K (suc n)} → Δ₀ φ → Δ₀ (∃̇∈ t φ)
-```
-
-<!--en-->
-Relabelling constants preserves the structure of a formula, so the certificate
-follows along, constructor by constructor. This little lemma is what lets an
-absoluteness argument carry a Δ₀ witness across a change of constant domain.
-<!--zh-->
-重标记常量保持公式的结构，证书遂逐构造子随行。这条小引理让绝对性论证得以携着 Δ₀ 见证跨越常量域的更换。
-<!--/-->
-
-```agda
-mapΔ₀ : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K')
-        {n} {φ : Formula K n} → Δ₀ φ → Δ₀ (mapFo f φ)
-mapΔ₀ f δ-∈ = δ-∈
-mapΔ₀ f δ-≐ = δ-≐
-mapΔ₀ f (δ-∧ c d) = δ-∧ (mapΔ₀ f c) (mapΔ₀ f d)
-mapΔ₀ f (δ-∨ c d) = δ-∨ (mapΔ₀ f c) (mapΔ₀ f d)
-mapΔ₀ f (δ-⇒ c d) = δ-⇒ (mapΔ₀ f c) (mapΔ₀ f d)
-mapΔ₀ f (δ-¬ c)   = δ-¬ (mapΔ₀ f c)
-mapΔ₀ f δ-⊤ = δ-⊤
-mapΔ₀ f δ-⊥ = δ-⊥
-mapΔ₀ f (δ-∀∈ c) = δ-∀∈ (mapΔ₀ f c)
-mapΔ₀ f (δ-∃∈ c) = δ-∃∈ (mapΔ₀ f c)
 ```
 
 <!--en-->
@@ -132,38 +109,17 @@ mutual
 ```
 
 <!--en-->
-The relabelling lemma extends to the tower by mutual induction, reusing
-`mapΔ₀`{.Agda} at the leaves.
-<!--zh-->
-重标记引理经互归纳延伸到整座塔，叶位复用 `mapΔ₀`{.Agda}。
-<!--/-->
-
-```agda
-mutual
-  mapΣₙ : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K')
-          {k n} {φ : Formula K n} → Σₙ k φ → Σₙ k (mapFo f φ)
-  mapΣₙ f (σ-Δ₀ d) = σ-Δ₀ (mapΔ₀ f d)
-  mapΣₙ f (σ-Π p)  = σ-Π (mapΠₙ f p)
-  mapΣₙ f (σ-∃ s)  = σ-∃ (mapΣₙ f s)
-
-  mapΠₙ : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K')
-          {k n} {φ : Formula K n} → Πₙ k φ → Πₙ k (mapFo f φ)
-  mapΠₙ f (π-Δ₀ d) = π-Δ₀ (mapΔ₀ f d)
-  mapΠₙ f (π-Σ s)  = π-Σ (mapΣₙ f s)
-  mapΠₙ f (π-∀ p)  = π-∀ (mapΠₙ f p)
-```
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
 <!--/-->
 
 <!--en-->
-The Levy hierarchy lives as inductive certificates, Δ₀ by the absence of unbounded
-constructors, Σ₁/Π₁ and the alternating Σₙ/Πₙ tower above it, all stable under
-constant relabelling. The certificates are pure syntax; the theorem that gives
-them their force is next.
+The Levy hierarchy lives as inductive certificates, Δ₀ by the absence of
+unbounded constructors, Σ₁/Π₁ and the alternating Σₙ/Πₙ tower above it. The
+certificates are pure syntax, and they stay put under a change of constant
+domain, a fact catalogued with the relabelling kit at the book's tail. The
+theorem that gives them their force is next.
 <!--zh-->
-列维层级以归纳证书的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔，全体在常量重标记下稳定。证书是纯语法；赋予它们力量的定理在下一章。
+列维层级以归纳证书的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。证书是纯语法，且在常量改换下纹丝不动，这一事实编在书末的改换工具组里。赋予它们力量的定理在下一章。
 <!--/-->
