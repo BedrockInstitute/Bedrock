@@ -35,13 +35,13 @@ import L.Model
 The headline is classical: granted one instance of the excluded middle, at the
 model's own truth level, the cumulative hierarchy is a model of ZF (chapter
 `V.Model`{.Agda}). Its exact-price form carries the hypothesis as a suffix,
-charging only Part 0's impredicativity wallet; and by Diaconescu's theorem
+charging only Part 0's impredicativity packing; and by Diaconescu's theorem
 (chapter `Base.Choice`{.Agda}), one instance of set-level choice funds the
 upgrade all the way to ZFC.
 <!--zh-->
 ## 层级满足 ZF(C)
 
-主打名是经典版：给定模型自身真值层上的一份排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收第零部的非直谓性钱包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择就资助到 ZFC。
+主打名是经典版：给定模型自身真值层上的一份排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收第零部的非直谓性打包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择就资助到 ZFC。
 <!--/-->
 
 ```agda
