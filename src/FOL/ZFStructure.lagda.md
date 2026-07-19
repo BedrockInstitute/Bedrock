@@ -14,7 +14,7 @@ their elements to formulas.
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-module FOL.Structure where
+module FOL.ZFStructure where
 
 open import Base.Prelude
 open import Base.Truth
@@ -98,6 +98,28 @@ module hPropStructure {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
 ```
 
 <!--en-->
+## Transitive classes
+<!--zh-->
+## 传递类
+<!--/-->
+
+<!--en-->
+A class `M` over a carrier is **transitive** when members of its members stay in
+it. The absoluteness chapter's theorems consume exactly this hypothesis, and
+Part 4 builds its world out of transitive stages; the name is minted here,
+beside the memberships it speaks.
+<!--zh-->
+载体上的类 `M`，若成员的成员仍在其中，称为**传递**。绝对性一章的诸定理消费的恰是这一前提，第四部的世界也由传递的阶段砌成；名字在此铸下，与它谈论的成员关系为邻。
+<!--/-->
+
+```agda
+Transitive : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+           → (ZFStructure.S 𝒮 → hProp ℓ) → Type ℓ
+Transitive 𝒮 M = ∀ {x y} → y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M
+  where open hPropStructure 𝒮
+```
+
+<!--en-->
 ## Substructures
 <!--zh-->
 ## 子结构
@@ -146,30 +168,6 @@ back to equality of the pairs, so nothing is lost.
 ```
 
 <!--en-->
-## Environments
-<!--zh-->
-## 环境
-<!--/-->
-
-<!--en-->
-One more piece of kit and the table is set for semantics. To evaluate a formula
-with `n` free variables, each variable needs a value from the carrier: an
-**assignment**, or environment, written `γ` throughout the book. The book's
-notation for its type is `S ^ n`{.Agda}, a vector of length `n`, matching the
-traditional superscript $S^n$ (`_^_`{.Agda} reads "power"); it is nothing but
-notation.
-<!--zh-->
-再备一件行头，语义的桌子就摆齐了。要对带 `n` 个自由变量的公式求值，每个变量都需要一个来自载体的取值：一份**赋值表**，即环境，全书写作 `γ`。其类型记为 `S ^ n`{.Agda}，长度为 `n` 的向量，对齐传统上标记号 $S^n$ (`_^_`{.Agda} 读作「幂」)；它只是记号。
-<!--/-->
-
-```agda
-infixl 30 _^_
-
-_^_ : ∀ {ℓ} → Type ℓ → ℕ → Type ℓ
-A ^ n = Vec A n
-```
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -177,10 +175,10 @@ A ^ n = Vec A n
 
 <!--en-->
 A structure is three projections, carrier, equality, membership, valued in a truth
-algebra and carrying no axioms; `↾` cuts a structure down to a class with
-nothing lost (`↾-reflects`{.Agda}), and
-environments `S ^ n`{.Agda} stand ready to feed carrier elements to variables.
+algebra and carrying no axioms; transitive classes name the condition the
+travelling chapters will keep consuming; `↾` cuts a structure down to a class
+with nothing lost (`↾-reflects`{.Agda}).
 Syntax on one side, structures on the other: the next chapter joins them.
 <!--zh-->
-结构就是三个投影：载体、等词、成员，取值于真值代数，不带公理；`↾` 把结构裁剪到一个类而毫无损失 (`↾-reflects`{.Agda})，环境 `S ^ n`{.Agda} 已就位，随时把载体元素喂给变量。一边是语法，一边是结构：下一章让它们相遇。
+结构就是三个投影：载体、等词、成员，取值于真值代数，不带公理；传递类为后文各章反复消费的条件命名；`↾` 把结构裁剪到一个类而毫无损失 (`↾-reflects`{.Agda})。一边是语法，一边是结构：下一章让它们相遇。
 <!--/-->

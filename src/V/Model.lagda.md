@@ -25,10 +25,10 @@ module V.Model {ℓ : Level} where
 
 open import Base.Classical using ( LEM; HPropSmallness; Impredicativity; lem→impredicativity )
 open import Base.Choice using ( SetChoice; choice→lem; lowerSetChoice )
-open import FOL.Structure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
 import FOL.Semantics
-import ZF
+import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Smallness {ℓ} using ( separateFromSmall )
 
@@ -56,7 +56,7 @@ open InfinitySet using ( sucV; #_; ω )
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ᵥ
 
-module Model = ZF 𝒮ᵥ
+module Model = FOL.ZFModel 𝒮ᵥ
 open Model using ( SetOf; _⊆ˢ_; setOf-unique; isZFModel; isZFCModel )
 
 module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ

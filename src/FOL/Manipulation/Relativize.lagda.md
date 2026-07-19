@@ -19,7 +19,7 @@ module FOL.Manipulation.Relativize where
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _^_ )
+open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
   ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
@@ -106,7 +106,7 @@ module Correct {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure �
 
   open TruthAlgebra 𝕋
   open ZFStructure 𝒮
-  open module Sem = FOL.Semantics 𝕋 𝒮 using ( module At )
+  open module Sem = FOL.Semantics 𝕋 𝒮 using ( module At; _^_ )
   open At ι using ( _⊨_; ⟦_⟧ )
 
   A : S

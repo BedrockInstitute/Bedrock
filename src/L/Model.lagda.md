@@ -46,8 +46,8 @@ open import L.Frontier using ( Frontier )
 
 module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (F : Frontier {ℓ}) where
 
-open import FOL.Structure using ( ↾-reflects; module hPropStructure )
-import ZF
+open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
+import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 
@@ -58,7 +58,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open hPropStructure 𝒮ʟ
 open Frontier F
 
-module ModelL = ZF 𝒮ʟ
+module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( isZFModel; isZFCModel )
 ```
 

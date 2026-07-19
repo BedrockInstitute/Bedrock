@@ -87,28 +87,30 @@ import Base.Choice
 - `FOL.Syntax`{.Agda}: the object language: a deeply embedded `Formula`{.Agda} with
   the constant domain as a parameter, intrinsic scoping, and every constructor
   primitive.
-- `FOL.Structure`{.Agda}: the structures formulas talk about: carrier, equality,
-  and membership, valued in a truth algebra; restriction `↾` and environments.
-- `FOL.Semantics`{.Agda}: evaluation `⟦_⟧`{.Agda} and satisfaction `_⊨_`{.Agda} by
+- `FOL.ZFStructure`{.Agda}: the structures formulas talk about: carrier, equality,
+  and membership, valued in a truth algebra; transitive classes and the
+  restriction `↾`.
+- `FOL.Semantics`{.Agda}: environments `S ^ n`, then evaluation `⟦_⟧`{.Agda} and
+  satisfaction `_⊨_`{.Agda} by
   structural recursion, each clause exactly its truth-algebra operation.
 - `FOL.LevyHierarchy`{.Agda}: the Levy hierarchy as inductive witnesses: the
   absence of unbounded quantifiers is Δ₀; above it, Σ₁/Π₁ and the alternating
   Σₙ/Πₙ tower.
-- `FOL.Absoluteness`{.Agda}: transitive classes and the Δ₀ absoluteness theorem
-  `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down.
+- `FOL.Absoluteness`{.Agda}: the Δ₀ absoluteness theorem `abs₀`{.Agda} over a
+  transitive class; Σ₁ transfers up, Π₁ down.
 <!--zh-->
 ## 第一部：作为研究对象的一阶逻辑
 
 - `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语。
-- `FOL.Structure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；限制 `↾` 与环境。
-- `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算。
+- `FOL.ZFStructure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；传递类与限制 `↾`。
+- `FOL.Semantics`{.Agda}：环境 `S ^ n`，与结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算。
 - `FOL.LevyHierarchy`{.Agda}：作为归纳见证的 Lévy 层级：无界量词的缺席即 Δ₀，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。
-- `FOL.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
+- `FOL.Absoluteness`{.Agda}：传递类上的 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
 <!--/-->
 
 ```agda
 import FOL.Syntax
-import FOL.Structure
+import FOL.ZFStructure
 import FOL.Semantics
 import FOL.LevyHierarchy
 import FOL.Absoluteness
@@ -117,7 +119,7 @@ import FOL.Absoluteness
 <!--en-->
 ## Part 2: what a model of ZF is
 
-- `ZF`{.Agda}: the axioms as a record: `isZFModel`{.Agda} with extensionality,
+- `FOL.ZFModel`{.Agda}: the axioms as a record: `isZFModel`{.Agda} with extensionality,
   meta-level regularity (the compactness ceiling), unique existence discharged by
   the description operator `℩`, separation and replacement consuming the book's
   own formulas, and strong infinity through the numeral chain; `isZFCModel`{.Agda}
@@ -125,11 +127,11 @@ import FOL.Absoluteness
 <!--zh-->
 ## 第二部：何谓 ZF 模型
 
-- `ZF`{.Agda}：公理作为 record：`isZFModel`{.Agda} 含外延公理、元层面的正则公理 (紧致性天花板)、经摹状词算子 `℩` 兑现的唯一存在、消费本书自家公式的分离与替换，以及经数码链的强无穷；`isZFCModel`{.Agda} 以扩展形式添加选择公理。
+- `FOL.ZFModel`{.Agda}：公理作为 record：`isZFModel`{.Agda} 含外延公理、元层面的正则公理 (紧致性天花板)、经摹状词算子 `℩` 兑现的唯一存在、消费本书自家公式的分离与替换，以及经数码链的强无穷；`isZFCModel`{.Agda} 以扩展形式添加选择公理。
 <!--/-->
 
 ```agda
-import ZF
+import FOL.ZFModel
 ```
 
 <!--en-->

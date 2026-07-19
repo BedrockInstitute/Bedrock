@@ -21,7 +21,7 @@ open import Base.Truth
 
 module V.Smallness {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure; _^_; _↾_ )
+open import FOL.ZFStructure using ( ZFStructure; _↾_ )
 open import FOL.Syntax
   using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy
@@ -245,6 +245,7 @@ accounting: Δ₀ means *free*, in the precise sense of universe levels.
 
 ```agda
 module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+open SemanticsV using ( _^_ )
 
 module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 

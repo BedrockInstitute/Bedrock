@@ -20,7 +20,7 @@ open import Base.Truth
 
 module V.Hierarchy {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure; module hPropStructure )
+open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
 
 import Cubical.HITs.PropositionalTruncation as PT
 import Cubical.Induction.WellFounded as WellFoundedInduction

@@ -15,7 +15,7 @@ as the scope discipline prescribes.
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _^_ )
+open import FOL.ZFStructure using ( ZFStructure )
 
 module FOL.Semantics {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
 
@@ -25,6 +25,30 @@ open import FOL.Syntax using
 
 open TruthAlgebra 𝕋
 open ZFStructure 𝒮
+```
+
+<!--en-->
+## Environments
+<!--zh-->
+## 环境
+<!--/-->
+
+<!--en-->
+One piece of kit first. To evaluate a formula
+with `n` free variables, each variable needs a value from the carrier: an
+**assignment**, or environment, written `γ` throughout the book. The book's
+notation for its type is `S ^ n`{.Agda}, a vector of length `n`, matching the
+traditional superscript $S^n$ (`_^_`{.Agda} reads "power"); it is nothing but
+notation.
+<!--zh-->
+先备一件行头。要对带 `n` 个自由变量的公式求值，每个变量都需要一个来自载体的取值：一份**赋值表**，即环境，全书写作 `γ`。其类型记为 `S ^ n`{.Agda}，长度为 `n` 的向量，对齐传统上标记号 $S^n$ (`_^_`{.Agda} 读作「幂」)；它只是记号。
+<!--/-->
+
+```agda
+infixl 30 _^_
+
+_^_ : ∀ {ℓ''} → Type ℓ'' → ℕ → Type ℓ''
+A ^ n = Vec A n
 ```
 
 <!--en-->

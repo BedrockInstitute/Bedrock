@@ -21,7 +21,7 @@ module FOL.Manipulation.Relabelling where
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _^_ )
+open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
   ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
@@ -105,7 +105,7 @@ module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) whe
 
   open TruthAlgebra 𝕋
   open ZFStructure 𝒮
-  open FOL.Semantics 𝕋 𝒮 using ( module At )
+  open FOL.Semantics 𝕋 𝒮 using ( module At; _^_ )
 
   module _ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S) where
 
