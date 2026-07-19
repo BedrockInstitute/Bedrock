@@ -64,11 +64,11 @@ are exactly what the rest of this part must supply.
 The interface fit is exact: the carrier is an h-set, membership lands in
 `hProp`{.Agda}, and equality can be taken to be the path type, which is what
 `pathStructure`{.Agda} was made for. One line, no adapter code, and every tool of
-Parts 1 and 2, syntax, satisfaction, representations, certificates, absoluteness,
+Parts 1 and 2, syntax, satisfaction, representations, witnesses, absoluteness,
 the model record itself, is available on `𝒮ᵥ` at once. The subscript is a plain
 `v`, for the hierarchy.
 <!--zh-->
-接口严丝合缝：载体是 h-集，成员关系落在 `hProp`{.Agda}，等词可取路径类型，而这正是 `pathStructure`{.Agda} 的用武之地。一行，零适配代码，第一、二部的全部工具，语法、满足、表示、证书、绝对性，连同模型 record 本身，即刻在 `𝒮ᵥ` 上可用。下标就是普通的 `v`，指层级。
+接口严丝合缝：载体是 h-集，成员关系落在 `hProp`{.Agda}，等词可取路径类型，而这正是 `pathStructure`{.Agda} 的用武之地。一行，零适配代码，第一、二部的全部工具，语法、满足、表示、见证、绝对性，连同模型 record 本身，即刻在 `𝒮ᵥ` 上可用。下标就是普通的 `v`，指层级。
 <!--/-->
 
 ```agda

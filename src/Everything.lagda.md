@@ -91,7 +91,7 @@ import Base.Choice
   and membership, valued in a truth algebra; restriction `↾` and environments.
 - `FOL.Semantics`{.Agda}: evaluation `⟦_⟧`{.Agda} and satisfaction `_⊨_`{.Agda} by
   structural recursion, each clause exactly its truth-algebra operation.
-- `FOL.Graded`{.Agda}: the Levy hierarchy as inductive certificates: Δ₀ by
+- `FOL.LevyHierarchy`{.Agda}: the Levy hierarchy as inductive witnesses: Δ₀ by
   absence, Σ₁/Π₁, and the alternating Σₙ/Πₙ tower.
 - `FOL.Absoluteness`{.Agda}: transitive classes and the Δ₀ absoluteness theorem
   `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down.
@@ -101,7 +101,7 @@ import Base.Choice
 - `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语。
 - `FOL.Structure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；限制 `↾` 与环境。
 - `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算。
-- `FOL.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。
+- `FOL.LevyHierarchy`{.Agda}：作为归纳见证的 Lévy 层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。
 - `FOL.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
 <!--/-->
 
@@ -109,7 +109,7 @@ import Base.Choice
 import FOL.Syntax
 import FOL.Structure
 import FOL.Semantics
-import FOL.Graded
+import FOL.LevyHierarchy
 import FOL.Absoluteness
 ```
 
@@ -215,21 +215,21 @@ line stays unbroken.
 - `FOL.Manipulation.Relabelling`{.Agda}: the constant-domain kit, three altitudes at once:
   functorial `mapFo`{.Agda}, the parameter-free formulas `ParamFree`{.Agda}
   with their entrance `embed`{.Agda}, meaning untouched (`⊨-map`{.Agda},
-  `embed-⊨`{.Agda}), certificates carried along (`mapΔ₀`{.Agda} and the
+  `embed-⊨`{.Agda}), witnesses carried along (`mapΔ₀`{.Agda} and the
   tower).
 - `FOL.Manipulation.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
   syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
   exchange, and contraction.
 - `FOL.Manipulation.Relativize`{.Agda}: tightening unbounded quantifiers to a constant bound,
-  Δ₀ certificate included, with the correctness equation.
+  Δ₀ witness included, with the correctness equation.
 <!--zh-->
 ## 候用的工具
 
 这几章至今在主干上没有任何消费者；它们的首批消费者随第四部的深层机器到来，读在靠后，好让主线不断。
 
-- `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式 `ParamFree`{.Agda} 与其入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，证书随行 (`mapΔ₀`{.Agda} 及其塔)。
+- `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式 `ParamFree`{.Agda} 与其入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，见证随行 (`mapΔ₀`{.Agda} 及其塔)。
 - `FOL.Manipulation.Renaming`{.Agda}：变量变换，本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
-- `FOL.Manipulation.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 证书随附，并给出正确性等式。
+- `FOL.Manipulation.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 见证随附，并给出正确性等式。
 <!--/-->
 
 ```agda
@@ -251,7 +251,7 @@ catalog, ready for the chapters that will run it at scale.
 - `FOL.Reification.Combinators`{.Agda}: the assembly line: one combinator per
   constructor, every certificate a single congruence.
 - `FOL.Reification.Certified`{.Agda}: the graded tier: representations carrying a
-  Δ₀ certificate alongside adequacy (`RepΔ₀`{.Agda}), the graded combinators,
+  Δ₀ witness alongside adequacy (`RepΔ₀`{.Agda}), the graded combinators,
   and `transfer`{.Agda}, composing adequacy with absoluteness into the
   framework's working currency.
 <!--zh-->
@@ -261,7 +261,7 @@ catalog, ready for the chapters that will run it at scale.
 
 - `FOL.Reification.Base`{.Agda}：表示，即那座桥：公式配上其适足性证书；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。
 - `FOL.Reification.Combinators`{.Agda}：流水线：一构造子一组合子，每张证书一次同余。
-- `FOL.Reification.Certified`{.Agda}：分级层：Δ₀ 证书与适足性并肩的表示 (`RepΔ₀`{.Agda})、分级组合子，与把适足性同绝对性复合成框架流通货币的 `transfer`{.Agda}。
+- `FOL.Reification.Certified`{.Agda}：分级层：Δ₀ 见证与适足性并肩的表示 (`RepΔ₀`{.Agda})、分级组合子，与把适足性同绝对性复合成框架流通货币的 `transfer`{.Agda}。
 <!--/-->
 
 ```agda

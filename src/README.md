@@ -49,9 +49,9 @@ entry in the reading catalog**, at the position its first consumer dictates.
     Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
   - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
     recursion.
-  - `FOL/Graded.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive
-    certificates. (Re-homed from `FOL.Reification` by owner ruling 2026-07-18;
-    see the ledger.)
+  - `FOL/LevyHierarchy.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive
+    witnesses. (Renamed from `Graded` by owner ruling 2026-07-18; the word
+    certificate is reserved for adequacy, see the ledger.)
   - `FOL/Manipulation/` (owner ruling 2026-07-18): the syntax-manipulation
     cluster, zero trunk consumers, reads at the tail:
     - `Relabelling.lagda.md`: the constant-domain kit: `mapTm`/`mapFo`,
