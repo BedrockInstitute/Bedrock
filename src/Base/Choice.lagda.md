@@ -191,7 +191,7 @@ it applies because the glued space is an h-set by construction. Note what the
 function cannot do: it was built with no access to `P`, so it answers the same
 way whether or not `P` holds; it merely, blindly, picks.
 <!--zh-->
-现在选择原理进场，我们只问它一个问题：*给粘合空间的每个点发一个布尔代表元。*某点处的一次**认领**，是一个布尔值，连同「其等价类就是该点」的保证。每个点单独看必有认领，但只是**仅仅**有：商记得自己的点各有来处，却不记得来处是谁。把「每点仅仅有代表元」变成一个一举在处处认领的**函数**，正是集合层选择的本领，而它适用是因为粘合空间按构造是 h-集。留意这个函数做不到的事：它的构造完全接触不到 `P`，故无论 `P` 成立与否它都同样作答；它只是盲目地认领。
+现在选择原理进场，我们只问它一个问题：*给粘合空间的每个点发一个布尔代表元。*某点处的一次**选取**，是一个布尔值，连同「其等价类就是该点」的保证。每个点单独看必有选取，但只是**仅仅**有：商记得自己的点各有来处，却不记得来处是谁。把「每点仅仅有代表元」变成一个一举在处处选取的**函数**，正是集合层选择的本领，而它适用是因为粘合空间按构造是 h-集。留意这个函数做不到的事：它的构造完全接触不到 `P`，故无论 `P` 成立与否它都同样作答；它只是盲目地选取。
 <!--/-->
 
 ```agda
@@ -206,7 +206,7 @@ way whether or not `P` holds; it merely, blindly, picks.
 The question deserves to be a lemma of its own, so that its type displays
 exactly what choice delivers: *merely*, a picking function, whole.
 <!--zh-->
-这个问题值得单独立为引理，好让类型原样展示选择交付的东西：**仅仅地**，一整个认领函数。
+这个问题值得单独立为引理，好让类型原样展示选择交付的东西：**仅仅地**，一整个选取函数。
 <!--/-->
 
 ```agda
@@ -228,7 +228,7 @@ one single point, and a function applied to one point yields one answer, so
 the gluing path; both endpoints of the projection are plain booleans, so no
 transport is even needed.)
 <!--zh-->
-于是假设认领函数 `g` 已经在手。把它作用在两个特殊的点上，即 `true` 的类与 `false` 的类，给选出的两个布尔代表元起名 `b₀` 与 `b₁`。这两个布尔值就是泄密者。每个方向一条引理把它们与 `P` 绑在一起。**若代表元一致**，就沿保证走一遍：`true` 的类接到 `b₀` 的类，即 `b₁` 的类，再接到 `false` 的类；于是两点重合，词典的反向条目把这次重合翻译成 `P` 的证明。**若 `P` 成立**，则两点**本是**同一个点，而函数作用在同一个点上只能给出同一个答案，`b₀` 与 `b₁` 被迫是同一个布尔值。(形式化地：把 `g` 沿粘合路径投影，投影的两端都是普通布尔值，连搬运都不需要。)
+于是假设选取函数 `g` 已经在手。把它作用在两个特殊的点上，即 `true` 的类与 `false` 的类，给选出的两个布尔代表元起名 `b₀` 与 `b₁`。这两个布尔值就是泄密者。每个方向一条引理把它们与 `P` 绑在一起。**若代表元一致**，就沿保证走一遍：`true` 的类接到 `b₀` 的类，即 `b₁` 的类，再接到 `false` 的类；于是两点重合，词典的反向条目把这次重合翻译成 `P` 的证明。**若 `P` 成立**，则两点**本是**同一个点，而函数作用在同一个点上只能给出同一个答案，`b₀` 与 `b₁` 被迫是同一个布尔值。(形式化地：把 `g` 沿粘合路径投影，投影的两端都是普通布尔值，连搬运都不需要。)
 <!--/-->
 
 ```agda
@@ -275,7 +275,7 @@ itself a proposition: the two sides exclude each other, so between any two
 decisions there is nothing to distinguish. Into such a goal, mere existence
 eliminates as if it were actual, and the proof closes.
 <!--zh-->
-最后一道缺口，定理即合拢。选择从不真正交出认领函数，只交出它的**仅仅**存在。但目标「`P` 或非 `P`」自身是命题：两侧互斥，任何两个判定之间无可区分。对这样的目标，仅仅存在可以当作真实存在来消去，证明就此闭合。
+最后一道缺口，定理即合拢。选择从不真正交出选取函数，只交出它的**仅仅**存在。但目标「`P` 或非 `P`」自身是命题：两侧互斥，任何两个判定之间无可区分。对这样的目标，仅仅存在可以当作真实存在来消去，证明就此闭合。
 <!--/-->
 
 ```agda
