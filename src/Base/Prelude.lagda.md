@@ -142,6 +142,22 @@ open import Cubical.Foundations.Structure public
 ```
 
 <!--en-->
+One derived notation rides along. A **class** over a carrier `A` is a
+propositional predicate `A → hProp ℓ`, and `x ∈ᶜ M` (read "x belongs to the
+class M") is exactly `⟨ M x ⟩`: the library's powerset membership under a marked
+name. The superscript `ᶜ` says *class*, keeping the notation apart from the
+object-level memberships to come, which denote sets rather than host-level
+predicates.
+<!--zh-->
+随行的还有一个派生记号。载体 `A` 上的**类**是命题值谓词 `A → hProp ℓ`，而 `x ∈ᶜ M` (读作「x 属于类 M」) 恰是 `⟨ M x ⟩`：库的幂集成员关系，换上带标记的名字。上标 `ᶜ` 说的就是**类**，把这个记号与后文诸对象层成员关系区分开，后者指称集合，而非宿主层的谓词。
+<!--/-->
+
+```agda
+open import Cubical.Foundations.Powerset public
+  using () renaming ( _∈_ to _∈ᶜ_ )
+```
+
+<!--en-->
 Dependent pairs: `Σ`{.Agda} with its `Σ-syntax`{.Agda} sugar, the plain product
 `_×_`{.Agda}, the pairing `_,_`{.Agda}, and the projections `fst`{.Agda} and
 `snd`{.Agda}. A Σ type is how the book bundles a thing with a property of it.
@@ -212,11 +228,12 @@ open import Cubical.Data.Empty public
 <!--/-->
 
 <!--en-->
-In scope from here on: universes, paths, h-levels, `hProp`{.Agda} with `⟨_⟩`{.Agda},
-pairs, `ℕ`{.Agda}, `Vec`{.Agda}, `Fin`{.Agda}, and `⊥*`{.Agda}. This chapter defines
+In scope from here on: universes, paths, h-levels, `hProp`{.Agda} with `⟨_⟩`{.Agda}
+and the class membership `∈ᶜ`{.Agda}, pairs, `ℕ`{.Agda}, `Vec`{.Agda}, `Fin`{.Agda},
+and `⊥*`{.Agda}. This chapter defines
 nothing of its own, and the logic symbols are deliberately absent: every notion of
 the book is introduced in the chapter where it first earns its keep, and the logic
 arrives with the truth algebra, next.
 <!--zh-->
-自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}，以及 `⊥*`{.Agda}。本章没有任何自己的定义，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
+自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda} 及类隶属 `∈ᶜ`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}，以及 `⊥*`{.Agda}。本章没有任何自己的定义，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
 <!--/-->

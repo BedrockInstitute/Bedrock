@@ -443,9 +443,9 @@ private
   isSet⟪_⟫ : (a : S) → isSet ⟪ a ⟫
   isSet⟪ a ⟫ = Embedding-into-isSet→isSet (⟪ a ⟫↪ , isEmb⟪ a ⟫↪) setIsSet
 
-  isContrΣ-fromCenter : {P : S → hProp (ℓ-suc ℓ)} (z₀ : S) (p₀ : ⟨ P z₀ ⟩)
-                      → ((z : S) → ⟨ P z ⟩ → z₀ ≡ z)
-                      → isContr (Σ[ z ∈ S ] ⟨ P z ⟩)
+  isContrΣ-fromCenter : {P : S → hProp (ℓ-suc ℓ)} (z₀ : S) (p₀ : z₀ ∈ᶜ P)
+                      → ((z : S) → z ∈ᶜ P → z₀ ≡ z)
+                      → isContr (Σ[ z ∈ S ] (z ∈ᶜ P))
   isContrΣ-fromCenter {P} z₀ p₀ u =
     (z₀ , p₀) , λ w → Σ≡Prop (λ v → snd (P v)) (u (w .fst) (w .snd))
 

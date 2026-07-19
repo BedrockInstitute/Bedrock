@@ -353,12 +353,12 @@ it is the engine of Part 4's single construction step.
 
 ```agda
 module InnerSmall (M : S → hProp (ℓ-suc ℓ))
-                  (X : Type ℓ) (e : X ≃ (Σ[ x ∈ S ] ⟨ M x ⟩))
+                  (X : Type ℓ) (e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M)))
                   {ℓc} {K : Type ℓc}
-                  (ι : K → Σ[ x ∈ S ] ⟨ M x ⟩) where
+                  (ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)) where
 
   SM : Type (ℓ-suc ℓ)
-  SM = Σ[ x ∈ S ] ⟨ M x ⟩
+  SM = Σ[ x ∈ S ] (x ∈ᶜ M)
 
   𝒮M : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
   𝒮M = 𝒮ᵥ ↾ M

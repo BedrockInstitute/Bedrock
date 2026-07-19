@@ -78,13 +78,13 @@ module DefOf (A : S) where
   M : S → hProp (ℓ-suc ℓ)
   M x = x ∈ˢ A
 
-  e : ⟪ A ⟫ ≃ (Σ[ x ∈ S ] ⟨ M x ⟩)
+  e : ⟪ A ⟫ ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))
   e = compEquiv (invEquiv (presentation A))
         (Σ-cong-equiv-snd (λ v →
           propBiimpl→Equiv (snd (v ∈ₛ A)) (snd (v ∈ˢ A))
             (∈∈ₛ {a = v} {b = A} .snd) (∈∈ₛ {a = v} {b = A} .fst)))
 
-  ι : ⟪ A ⟫ → Σ[ x ∈ S ] ⟨ M x ⟩
+  ι : ⟪ A ⟫ → Σ[ x ∈ S ] (x ∈ᶜ M)
   ι = equivFun e
 
   open InnerSmall M ⟪ A ⟫ e {K = ⟪ A ⟫} ι public

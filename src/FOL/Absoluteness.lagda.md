@@ -49,7 +49,7 @@ where it gets its name.
 ```agda
 Transitive : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
            → (ZFStructure.S 𝒮 → hProp ℓ) → Type ℓ
-Transitive 𝒮 M = ∀ {x y} → y ∈ᵗ x → ⟨ M x ⟩ → ⟨ M y ⟩
+Transitive 𝒮 M = ∀ {x y} → y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M
   where open hPropStructure 𝒮
 ```
 
@@ -82,7 +82,7 @@ module Single {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
   open ZFStructure 𝒮
 
   SM : Type ℓ
-  SM = Σ[ x ∈ S ] ⟨ M x ⟩
+  SM = Σ[ x ∈ S ] (x ∈ᶜ M)
 
   𝒮M : ZFStructure (hPropAlgebra ℓ)
   𝒮M = 𝒮 ↾ M
@@ -129,11 +129,11 @@ atoms go through the term lemmas (equality is the structure field `≈ˢ` on bot
 sides, so even that case is a `cong₂`{.Agda}). The transitivity hypothesis is
 consumed **only in the two bounded-quantifier cases**, and there lies the whole
 mathematical content: outward, a member `x` of `⟦ t ⟧` must be re-packed as a
-member of `M`, and `x ∈ ⟦ t ⟧` together with `⟦ t ⟧ ∈ M` yields exactly that by
+member of `M`, and `x ∈ ⟦ t ⟧` together with `⟦ t ⟧ ∈ᶜ M` yields exactly that by
 transitivity. The machine locates the textbook proof's load-bearing step to the
 character.
 <!--zh-->
-对 Δ₀ 见证做一次归纳。联结词情形皆同余；原子走词项引理 (等词两侧都是结构字段 `≈ˢ`，连这个情形也归于 `cong₂`{.Agda})。传递性前提**只在两个有界量词情形被消费**，全部数学内容就在那里：往外走时，`⟦ t ⟧` 的成员 `x` 须重新打包为 `M` 的成员，而 `x ∈ ⟦ t ⟧` 加 `⟦ t ⟧ ∈ M` 经传递性恰好给出这一点。教科书证明的承重步被机器定位到字符。
+对 Δ₀ 见证做一次归纳。联结词情形皆同余；原子走词项引理 (等词两侧都是结构字段 `≈ˢ`，连这个情形也归于 `cong₂`{.Agda})。传递性前提**只在两个有界量词情形被消费**，全部数学内容就在那里：往外走时，`⟦ t ⟧` 的成员 `x` 须重新打包为 `M` 的成员，而 `x ∈ ⟦ t ⟧` 加 `⟦ t ⟧ ∈ᶜ M` 经传递性恰好给出这一点。教科书证明的承重步被机器定位到字符。
 <!--/-->
 
 ```agda
