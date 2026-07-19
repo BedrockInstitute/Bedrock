@@ -210,6 +210,18 @@ symbol / reading / layer / defining chapter / input sequence.
 - Proofs prefer `where` with **named, type-annotated** sub-terms over nested `let`.
 - Implicit-argument discipline: implicits passed through `⟨_⟩`/`fst` projections are
   given explicitly in hProp-instance proofs (a known unification trap).
+- **Mixfix operators are used mixfix** (owner ruling, 2026-07-19). Applying an
+  underscored operator name to its operands in prefix form (`_∈ᵗ_ 𝒮 y x`,
+  `At._⊨_ ι γ φ`) is banned. When the operator lives in a parameterized module,
+  open the module and write the operator infix (`y ∈ᵗ x`, `γ ⊨ φ`); when two
+  instances must coexist in one scope, open both with `renaming` under marked
+  names (`_⊨ᵛ_`/`_⊨ᵐ_`, `_⊨∘_`), or hold one behind a module alias and pass it
+  qualified as a value (`Acc Vmem._∈ᵗ_ u`). Passing an operator **as a value**
+  (`WellFounded _∈ᵗ_`, `cong₂ _⊓_ p q`), sections (`(x ∈ˢ_)`), and the
+  left-hand side of the operator's own defining clause (`_↾_ {ℓ} 𝒮 M = …`) are
+  all fine: the ban is on application. Application cannot be told from
+  value-passing by a regex, so this rule is enforced in review, not by
+  `lint-agda`.
 
 ## 7. Performance idioms (provisional)
 

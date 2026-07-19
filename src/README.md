@@ -171,6 +171,7 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `⟦_⟧` | the value of (evaluation) | ① | `FOL.Semantics` | `\[[` `\]]` |
 | `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
 | `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Absoluteness` | `\models` + `\^v` / `\^m` |
+| `⊨∘ ⊨∅` | satisfies, under the composite / the empty-domain entry | ① | `FOL.Manipulation.Relabelling` | `\models` + `\comp` / `\emptyset` |
 | `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Relativize` | `\models` + `\^A` |
 | `℩` | that (description operator) | ① | `ZF` | `\riota` |
 | `⊆ˢ` | subset (structure layer) | ③ | `ZF` | `\sub=` `\^s` |
