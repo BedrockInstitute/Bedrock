@@ -11,7 +11,7 @@ consumer in the trunk yet; its customers arrive with the deeper chapters of
 Part 4, where formulas migrate between the inner world's constants, the codes'
 empty domain, and the ambient carrier.
 <!--zh-->
-常量域是一个参数，而本书不停地换它：工作语法取载体，无参公式取空类型，第四部取受限载体。本章就是这类更换的工具组，且一次在三个海拔上工作：常量域之间的一个映射，沿**语法**函子式推送，在**含义**上分毫不差，还把 Levy **见证**原样携带。与书末诸同伴一样，这套工具在主干上尚无消费者；它的客户随第四部的深层章节到来，届时公式将在内层世界的常量、码的空域与环境载体之间迁徙。
+常量域是一个参数，而本书不停地换它：工作语法取载体，无参公式取空类型，第四部取受限载体。本章就是这类更换的工具组，且一次在三个海拔上工作：常量域之间的一个映射，沿**语法**函子式推送，在**含义**上分毫不差，还把 Lévy **见证**原样携带。与书末诸同伴一样，这套工具在主干上尚无消费者；它的客户随第四部的深层章节到来，届时公式将在内层世界的常量、码的空域与环境载体之间迁徙。
 <!--/-->
 
 ```agda
@@ -145,9 +145,9 @@ the working syntax share one semantics; nothing needs proving twice.
 ```
 
 <!--en-->
-## Witness level
+## Levy witness level
 <!--zh-->
-## 见证层
+## Lévy 见证层
 <!--/-->
 
 <!--en-->
@@ -206,9 +206,9 @@ mutual
 One map of constant domains, three altitudes of transport: `mapFo`{.Agda} moves
 the syntax (with `embed`{.Agda} as the parameter-free entrance), `⊨-map`{.Agda}
 and `embed-⊨`{.Agda} certify that meaning does not move at all, and
-`mapΔ₀`{.Agda} with its tower carries the witnesses. A formula, its meaning,
+`mapΔ₀`{.Agda} with its tower carries the Levy witnesses. A formula, its meaning,
 and its grade travel as one; the chapters that migrate formulas between worlds
 will lean on exactly that.
 <!--zh-->
-一个常量域映射，三个海拔的搬运：`mapFo`{.Agda} 搬语法 (`embed`{.Agda} 是无参入口)，`⊨-map`{.Agda} 与 `embed-⊨`{.Agda} 认证含义纹丝不动，`mapΔ₀`{.Agda} 及其塔搬见证。公式、含义与级别作为一体旅行；将来在诸世界之间迁徙公式的章节，靠的正是这一点。
+一个常量域映射，三个海拔的搬运：`mapFo`{.Agda} 搬语法 (`embed`{.Agda} 是无参入口)，`⊨-map`{.Agda} 与 `embed-⊨`{.Agda} 认证含义纹丝不动，`mapΔ₀`{.Agda} 及其塔搬 Lévy 见证。公式、含义与级别作为一体旅行；将来在诸世界之间迁徙公式的章节，靠的正是这一点。
 <!--/-->

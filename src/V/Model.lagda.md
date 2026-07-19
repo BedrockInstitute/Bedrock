@@ -339,14 +339,14 @@ module Power (sΩ : HPropSmallness ℓ) where
 
 <!--en-->
 Given the impredicativity parameter, full separation is the smallness chapter's
-pipe with the fare paid by `resizing`{.Agda} instead of a witness, and every field
+pipe with the fare paid by `resizing`{.Agda} instead of a Δ₀ witness, and every field
 is on the table. One discipline governs the assembly: each unique-existence field
 takes a **library set as its centre**, so that the description operator's
 projections compute back to the stock sets by definition. The two pinning
 equations for the numeral chain are discharged through the `sucV` case analysis,
 riding `numeralV≡#`{.Agda} between the model's chain and the library's.
 <!--zh-->
-非直谓性参数在手，全分离就是小性章那根水管，票钱由 `resizing`{.Agda} 代替见证付讫，十二个字段至此凑齐。合龙由一条纪律统辖：每个唯一存在字段都以**库存集合为中心**，让摹状词算子的投影按定义算回库存。数码链的两条钉死方程经 `sucV` 分情形装置兑现，其间靠 `numeralV≡#`{.Agda} 在模型链与库链之间往返。
+非直谓性参数在手，全分离就是小性章那根水管，票钱由 `resizing`{.Agda} 代替 Δ₀ 见证付讫，十二个字段至此凑齐。合龙由一条纪律统辖：每个唯一存在字段都以**库存集合为中心**，让摹状词算子的投影按定义算回库存。数码链的两条钉死方程经 `sucV` 分情形装置兑现，其间靠 `numeralV≡#`{.Agda} 在模型链与库链之间往返。
 <!--/-->
 
 ```agda

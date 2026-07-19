@@ -339,7 +339,7 @@ en = "Levy hierarchy"
 zh = "Lévy 层级"
 ja = "Lévy 階層"
 avoid = ["zh:列维层级", "zh:分级证书", "zh:Levy 层级"]
-notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18)"
+notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18); witness/见证 is not a standalone name: always write it anchored, the Δ₀ witness / Δ₀ 见证, Levy witnesses / Lévy 见证, smallness witness / 小性见证 (owner ruling 2026-07-19)"
 
 [[term]]
 category = "Logic and philosophy"

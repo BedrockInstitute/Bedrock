@@ -66,11 +66,11 @@ The interface fit is exact: the carrier is an h-set, membership lands in
 `hProp`{.Agda}, and equality is simply the path type, packaged as a proposition
 by set-hood, the promise the structure chapter made for the propositional side,
 kept. Four fields, no adapter code, and every tool of
-Parts 1 and 2, syntax, satisfaction, representations, witnesses, absoluteness,
+Parts 1 and 2, syntax, satisfaction, representations, Levy witnesses, absoluteness,
 the model record itself, is available on `𝒮ᵥ` at once. The subscript is a plain
 `v`, for the hierarchy.
 <!--zh-->
-接口严丝合缝：载体是 h-集，成员关系落在 `hProp`{.Agda}，等词径直取路径类型，由集合性打包成命题，结构章对命题侧许下的诺言在此兑现。四个字段，零适配代码，第一、二部的全部工具，语法、满足、表示、见证、绝对性，连同模型 record 本身，即刻在 `𝒮ᵥ` 上可用。下标就是普通的 `v`，指层级。
+接口严丝合缝：载体是 h-集，成员关系落在 `hProp`{.Agda}，等词径直取路径类型，由集合性打包成命题，结构章对命题侧许下的诺言在此兑现。四个字段，零适配代码，第一、二部的全部工具，语法、满足、表示、Lévy 见证、绝对性，连同模型 record 本身，即刻在 `𝒮ᵥ` 上可用。下标就是普通的 `v`，指层级。
 <!--/-->
 
 ```agda
