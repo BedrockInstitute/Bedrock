@@ -31,8 +31,7 @@ open import Base.Truth
 
 module L.Constructible {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure; _↾_; module hPropStructure )
-open import FOL.Absoluteness using ( Transitive )
+open import FOL.ZFStructure using ( ZFStructure; _↾_; module hPropStructure; Transitive )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
 open import L.Definability {ℓ} using ( module DefOf )
 

@@ -22,7 +22,7 @@ open import Base.Prelude
 open import Base.Classical using ( LEM; Impredicativity )
 open import Base.Choice using ( SetChoice )
 open import V.Hierarchy using ( 𝒮ᵥ )
-open import ZF using ( isZFModel; isZFCModel )
+open import FOL.ZFModel using ( isZFModel; isZFCModel )
 open import L.Constructible using ( 𝒮ʟ )
 import V.Model
 import L.Frontier

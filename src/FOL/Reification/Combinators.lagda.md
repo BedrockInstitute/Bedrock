@@ -18,13 +18,14 @@ whole chapter is generic in the truth algebra, cashing the promise made when
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _^_ )
+open import FOL.ZFStructure using ( ZFStructure )
 
 module FOL.Reification.Combinators {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
                                    {ℓc} (K : Type ℓc) (ι : K → ZFStructure.S 𝒮) where
 
 open import FOL.Syntax using
   ( con; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Semantics 𝕋 𝒮 using ( _^_ )
 open import FOL.Reification.Base 𝕋 𝒮 K ι public
   using ( RepP; RepS; translate; adequacy )
 

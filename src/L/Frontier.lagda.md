@@ -31,10 +31,10 @@ open import Base.Truth
 
 module L.Frontier {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
 import FOL.Semantics
-import ZF
+import FOL.ZFModel
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
 
 import Cubical.Data.Empty as Empty
@@ -44,7 +44,7 @@ open PT using ( ∥_∥₁ )
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ʟ
 
-module ModelL = ZF 𝒮ʟ
+module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf; _⊆ˢ_; isZFModel )
 
 module SemanticsL = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ

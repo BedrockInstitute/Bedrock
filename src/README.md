@@ -44,12 +44,12 @@ entry in the reading catalog**, at the position its first consumer dictates.
   - `FOL/Syntax.lagda.md`: the deeply embedded `Formula` (constant domain as a
     parameter, intrinsic scoping, all constructors primitive); sentences are the
     `n = 0` instance, deliberately unnamed.
-  - `FOL/Structure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
+  - `FOL/ZFStructure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
     a truth algebra), `hPropStructure` (the propositional-side opening, adding `∈ᵗ`),
-    restriction `↾`, and environments `_^_`.
-    Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
-  - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
-    recursion.
+    `Transitive`, and restriction `↾`.
+    Re-cut from `ZF/` (PLAN §4 ledger); renamed from `FOL/Structure` 2026-07-19.
+  - `FOL/Semantics.lagda.md`: environments `_^_`, then evaluation `⟦_⟧` and
+    satisfaction `_⊨_` by structural recursion.
   - `FOL/LevyHierarchy.lagda.md`: Δ₀/Σ₁/Π₁ and the Σₙ/Πₙ tower as inductive
     witnesses. (Renamed from `Graded` by owner ruling 2026-07-18; the word
     certificate is reserved for adequacy, see the ledger.)
@@ -61,8 +61,9 @@ entry in the reading catalog**, at the position its first consumer dictates.
       (weakening, exchange, contraction in one stroke).
     - `Relativize.lagda.md`: `relativize`, `Δ₀-relativize`, and `Correct`
       (`_⊨ᴬ_`, `relativize-correct`).
-  - `FOL/Absoluteness.lagda.md`: `Transitive`, `Single` (`abs₀`, `σ₁-up`,
-    `π₁-down`). Re-homed likewise.
+  - `FOL/Absoluteness.lagda.md`: `Single` (`abs₀`, `σ₁-up`,
+    `π₁-down`). Re-homed likewise; `Transitive` moved to `FOL/ZFStructure`
+    2026-07-19.
   - `FOL/Reification/`, landed with `[L1.3]`, re-cut 2026-07-18 to the
     representation framework proper (zero consumers today; reads at the tail):
     - `Base.lagda.md`: representation = formula × adequacy certificate; `RepP`,
@@ -72,8 +73,9 @@ entry in the reading catalog**, at the position its first consumer dictates.
     - `Certified.lagda.md`: the graded tier: `Certified` (graded representations
       `RepΔ₀`, graded combinators) and `Transfer.transfer` (adequacy composed
       with absoluteness).
-- `ZF.lagda.md`: Part 2, what a ZF(C) model is, landed with `[L1.4]` (renamed
-  from `ZF.Model` by owner ruling; `ZF.Coding` nests under it at `[L2.x]`):
+- `FOL/ZFModel.lagda.md`: Part 2, what a ZF(C) model is, landed with `[L1.4]`
+  (renamed from `ZF.Model` by owner ruling, then moved into `FOL/` as `ZFModel`
+  2026-07-19; a future `Coding` chapter nests beside it at `[L2.x]`):
   - `IsSetOf`/`SetOf` (class realization), the description
     operator `℩`, `_⊆ˢ_`, the `isZFModel` record (extensionality, meta-level
     `regularity`, unique-existence fields, first-order `hasSeparation`/
@@ -164,17 +166,17 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth alg
 | `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` | dotted connectives | ④ | `FOL.Syntax` | base symbol + `\^.` |
 | `∃̇ ∀̇` | quantifiers | ④ | `FOL.Syntax` | `\ex` / `\all` + `\^.` |
 | `∀̇∈ ∃̇∈` | bounded quantifiers | ④ | `FOL.Syntax` | dotted quantifier + `\in` |
-| `≈ˢ` | structure equality | ③ | `FOL.Structure` | `\~~` `\^s` |
-| `∈ˢ` | structure membership | ③ | `FOL.Structure` | `\in` `\^s` |
-| `∈ᵗ` | Type-valued membership | ③ | `FOL.Structure` | `\in` `\^t` |
-| `↾` | restriction (substructure) | ① | `FOL.Structure` | `\rest` |
-| `_^_` | power (environments) | ① | `FOL.Structure` | `^` |
+| `≈ˢ` | structure equality | ③ | `FOL.ZFStructure` | `\~~` `\^s` |
+| `∈ˢ` | structure membership | ③ | `FOL.ZFStructure` | `\in` `\^s` |
+| `∈ᵗ` | Type-valued membership | ③ | `FOL.ZFStructure` | `\in` `\^t` |
+| `↾` | restriction (substructure) | ① | `FOL.ZFStructure` | `\rest` |
+| `_^_` | power (environments) | ① | `FOL.Semantics` | `^` |
 | `⟦_⟧` | the value of (evaluation) | ① | `FOL.Semantics` | `\[[` `\]]` |
 | `⊨` | satisfies | ① | `FOL.Semantics` | `\models` |
 | `⊨ᵛ ⊨ᵐ` | satisfies, evaluated outside / inside | ① | `FOL.Absoluteness` | `\models` + `\^v` / `\^m` |
 | `⊨∘ ⊨∅` | satisfies, under the composite / the empty-domain entry | ① | `FOL.Manipulation.Relabelling` | `\models` + `\comp` / `\emptyset` |
-| `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Relativize` | `\models` + `\^A` |
-| `℩` | that (description operator) | ① | `ZF` | `\riota` |
+| `⊨ᴬ` | satisfies with quantifiers bounded by `A` | ① | `FOL.Manipulation.Relativize` | `\models` + `\^A` |
+| `℩` | that (description operator) | ① | `FOL.ZFModel` | `\riota` |
 | `⊆ˢ` | subset (structure layer) | ③ | `ZF` | `\sub=` `\^s` |
 | `∅` | empty set | ① | `ZF` | `\emptyset` |
 | `⋃` | union | ① | `ZF` | `\bigcup` |

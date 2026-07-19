@@ -23,7 +23,7 @@ module FOL.Manipulation.Renaming where
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _^_ )
+open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -95,6 +95,7 @@ module Sat {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
   open ZFStructure 𝒮
 
   private module Sem = FOL.Semantics 𝕋 𝒮
+  open Sem using ( _^_ )
   open Sem.At {K = K} ι using ( _⊨_; ⟦_⟧ )
 
   Agrees : ∀ {n m} → (Fin n → Fin m) → S ^ m → S ^ n → Type ℓ

@@ -22,11 +22,11 @@ module FOL.Reification.Certified where
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _^_ )
+open import FOL.ZFStructure using ( ZFStructure; Transitive )
 open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy
   using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
-open import FOL.Absoluteness using ( Transitive; module Single )
+open import FOL.Absoluteness using ( module Single )
 open import Cubical.Data.Vec using ( map )
 ```
 
@@ -50,7 +50,7 @@ module Certified {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure �
 
   open TruthAlgebra 𝕋
   open ZFStructure 𝒮
-  open import FOL.Semantics 𝕋 𝒮 using ( module At )
+  open import FOL.Semantics 𝕋 𝒮 using ( module At; _^_ )
   open At ι using ( _⊨_ )
   open import FOL.Reification.Combinators 𝕋 𝒮 K ι using
     ( RepP; RepS; ∈-rep; ≐-rep; ∧-rep; ∨-rep; ⇒-rep; ¬-rep; ⊤-rep; ⊥-rep
@@ -123,7 +123,7 @@ module Transfer {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
                 (M : ZFStructure.S 𝒮 → hProp ℓ)
                 (trans : Transitive 𝒮 M) where
 
-  open Single 𝒮 M trans using ( SM; 𝒮M; _⊨ᵛ_; abs₀ )
+  open Single 𝒮 M trans using ( SM; 𝒮M; _⊨ᵛ_; abs₀; _^_ )
 
   module Inner = Certified (hPropAlgebra ℓ) 𝒮M SM (λ m → m)
 

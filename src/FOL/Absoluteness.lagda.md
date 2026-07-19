@@ -3,15 +3,16 @@
 <!--en-->
 The Levy witnesses earn their keep. The scene is the one Part 4 will play out at
 scale: a model, a sub-world `𝒮 ↾ M` carved out by a class, and formulas asked on
-both sides. This chapter names the one condition that tames the passage,
-**transitivity** of `M` (members of members stay in `M`, exactly what the empty
-question of the previous chapter needed), and mechanizes the textbook theorem:
+both sides. The one condition that tames the passage, **transitivity** of `M`
+(members of members stay in `M`, exactly what the empty question of the previous
+chapter needed), was minted with the structures; this chapter spends it,
+mechanizing the textbook theorem:
 **Δ₀ formulas are absolute between a transitive class and the universe**, with the
 Σ₁-upward and Π₁-downward transfers as cheap extensions, and, as the capstone, the
 one-line composition that turns an inner graded representation into outer
 satisfaction.
 <!--zh-->
-Lévy 见证开始挣饭钱。这里的场景正是第四部将要大规模上演的那一幕：一个模型，一个由类裁出的子世界 `𝒮 ↾ M`，同一批公式两侧各问一遍。本章给驯服这趟通行的唯一条件起名：`M` 的**传递性** (成员的成员不出 `M`，恰是上一章那个空集之问所需要的)；然后机械化教科书定理：**Δ₀ 公式在传递类与全宇宙之间绝对**，Σ₁ 向上、Π₁ 向下两条转移作为廉价延伸。
+Lévy 见证开始挣饭钱。这里的场景正是第四部将要大规模上演的那一幕：一个模型，一个由类裁出的子世界 `𝒮 ↾ M`，同一批公式两侧各问一遍。驯服这趟通行的唯一条件，`M` 的**传递性** (成员的成员不出 `M`，恰是上一章那个空集之问所需要的)，已随结构一章铸下；本章将它花出，机械化教科书定理：**Δ₀ 公式在传递类与全宇宙之间绝对**，Σ₁ 向上、Π₁ 向下两条转移作为廉价延伸。
 <!--/-->
 
 ```agda
@@ -21,7 +22,7 @@ module FOL.Absoluteness where
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; module hPropStructure; _↾_; _^_ )
+open import FOL.ZFStructure using ( ZFStructure; Transitive; _↾_ )
 open import FOL.Syntax using ( Term; con; var; Formula; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈
@@ -30,27 +31,6 @@ import FOL.Semantics
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
-```
-
-<!--en-->
-## Transitive classes
-<!--zh-->
-## 传递类
-<!--/-->
-
-<!--en-->
-A class `M` over a carrier is **transitive** when members of its members stay in
-it. Transitivity is exactly the hypothesis of this chapter's theorems, so here is
-where it gets its name.
-<!--zh-->
-载体上的类 `M`，若成员的成员仍在其中，称为**传递**。传递性正是本章诸定理的前提，所以它在这里得名。
-<!--/-->
-
-```agda
-Transitive : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
-           → (ZFStructure.S 𝒮 → hProp ℓ) → Type ℓ
-Transitive 𝒮 M = ∀ {x y} → y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M
-  where open hPropStructure 𝒮
 ```
 
 <!--en-->
@@ -89,6 +69,8 @@ module Single {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
 
   module SemV = FOL.Semantics (hPropAlgebra ℓ) 𝒮
   module SemM = FOL.Semantics (hPropAlgebra ℓ) 𝒮M
+
+  open SemV using ( _^_ ) public
 
   open module V = SemV.At {K = SM} fst public
     renaming ( _⊨_ to _⊨ᵛ_ ; ⟦_⟧ to ⟦_⟧ᵛ )

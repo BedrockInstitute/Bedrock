@@ -19,9 +19,9 @@ inhabitant at `𝒮`".
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; module hPropStructure )
+open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
 
-module ZF {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+module FOL.ZFModel {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
 ```
 
 <!--en-->

@@ -31,9 +31,8 @@ open import Base.Truth
 
 module L.Definability {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure )
+open import FOL.ZFStructure using ( ZFStructure; Transitive )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
-open import FOL.Absoluteness using ( Transitive )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Smallness {ℓ} using ( module InnerSmall )
 
