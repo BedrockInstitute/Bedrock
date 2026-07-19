@@ -21,7 +21,7 @@ module FOL.Absoluteness where
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _∈ᵗ_; _↾_; _^_ )
+open import FOL.Structure using ( ZFStructure; module hPropStructure; _↾_; _^_ )
 open import FOL.Syntax using ( Term; con; var; Formula; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈
@@ -49,7 +49,8 @@ where it gets its name.
 ```agda
 Transitive : ∀ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
            → (ZFStructure.S 𝒮 → hProp ℓ) → Type ℓ
-Transitive 𝒮 M = ∀ {x y} → _∈ᵗ_ 𝒮 y x → ⟨ M x ⟩ → ⟨ M y ⟩
+Transitive 𝒮 M = ∀ {x y} → y ∈ᵗ x → ⟨ M x ⟩ → ⟨ M y ⟩
+  where open hPropStructure 𝒮
 ```
 
 <!--en-->

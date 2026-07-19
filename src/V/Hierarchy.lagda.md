@@ -20,7 +20,7 @@ open import Base.Truth
 
 module V.Hierarchy {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure; _∈ᵗ_ )
+open import FOL.Structure using ( ZFStructure; module hPropStructure )
 
 import Cubical.HITs.PropositionalTruncation as PT
 import Cubical.Induction.WellFounded as WellFoundedInduction
@@ -80,6 +80,8 @@ the model record itself, is available on `𝒮ᵥ` at once. The subscript is a p
   ; isSetS = setIsSet
   ; _≈ˢ_   = λ x y → (x ≡ y) , setIsSet x y
   ; _∈ˢ_   = _∈_ }
+
+open hPropStructure 𝒮ᵥ
 ```
 
 <!--en-->
@@ -133,11 +135,11 @@ constructors impose no obligations at all.
 <!--/-->
 
 ```agda
-regularityV : WellFounded (_∈ᵗ_ 𝒮ᵥ)
+regularityV : WellFounded _∈ᵗ_
 regularityV = elimProp (λ s → isPropAcc s)
   (λ X ix rec → acc (λ y y∈ →
     PT.rec (isPropAcc y)
-           (λ { (i , p) → subst (Acc (_∈ᵗ_ 𝒮ᵥ)) p (rec i) })
+           (λ { (i , p) → subst (Acc _∈ᵗ_) p (rec i) })
            y∈))
 ```
 
@@ -160,12 +162,12 @@ no ordinals in sight, and Part 4 builds its universe with it.
 
 ```agda
 ∈-induction : ∀ {ℓ'} {P : V ℓ → Type ℓ'}
-            → (∀ x → (∀ y → _∈ᵗ_ 𝒮ᵥ y x → P y) → P x)
+            → (∀ x → (∀ y → y ∈ᵗ x → P y) → P x)
             → ∀ x → P x
 ∈-induction = WellFoundedInduction.WFI.induction regularityV
 
 ∈-induction-compute : ∀ {ℓ'} {P : V ℓ → Type ℓ'}
-  (e : ∀ x → (∀ y → _∈ᵗ_ 𝒮ᵥ y x → P y) → P x) (x : V ℓ)
+  (e : ∀ x → (∀ y → y ∈ᵗ x → P y) → P x) (x : V ℓ)
   → ∈-induction e x ≡ e x (λ y _ → ∈-induction e y)
 ∈-induction-compute = WellFoundedInduction.WFI.induction-compute regularityV
 ```

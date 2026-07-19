@@ -19,7 +19,7 @@ inhabitant at `𝒮`".
 
 open import Base.Prelude
 open import Base.Truth
-open import FOL.Structure using ( ZFStructure; _∈ᵗ_ )
+open import FOL.Structure using ( ZFStructure; module hPropStructure )
 
 module ZF {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
 ```
@@ -47,7 +47,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 
 open TruthAlgebra (hPropAlgebra ℓ)
-open ZFStructure 𝒮
+open hPropStructure 𝒮
 
 private
   ι : S → S
@@ -192,7 +192,7 @@ set over through `℩`.
 record isZFModel : Type (ℓ-suc ℓ) where
   field
     extensional    : {a b : S} → ((x : S) → (x ∈ˢ a) ≡ (x ∈ˢ b)) → a ≡ b
-    regularity     : WellFounded (_∈ᵗ_ 𝒮)
+    regularity     : WellFounded _∈ᵗ_
     hasEmpty       : isContr (SetOf (λ _ → ⊥))
     hasPair        : (a b : S) → isContr (SetOf (λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)))
     hasUnion       : (a : S) → isContr (SetOf (λ x → ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))))
