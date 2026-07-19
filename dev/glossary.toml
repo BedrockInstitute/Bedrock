@@ -753,3 +753,11 @@ en = "impredicativity"
 zh = "非直谓性"
 ja = "非可述性"
 notes = "the Impredicativity packing (Resizing + HPropSmallness); impredicative = 非直谓 / 非可述"
+
+[[term]]
+category = "Logic and philosophy"
+en = "relabelling"
+zh = "改换"
+ja = "付け替え"
+avoid = ["zh:重标记"]
+notes = "of constants, along a map of constant domains (mapFo; chapter FOL.Relabelling); deliberately distinct from renaming 重命名, which moves variables"

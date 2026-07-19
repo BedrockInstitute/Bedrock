@@ -19,11 +19,9 @@ open import FOL.Structure using ( ZFStructure; _^_ )
 
 module FOL.Semantics {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
 
-import Cubical.Data.Empty as Empty
 open import FOL.Syntax using
   ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈
-  ; mapTm; mapFo; ParamFree; embed )
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 
 open TruthAlgebra 𝕋
 open ZFStructure 𝒮
@@ -102,60 +100,6 @@ physically in these two lines, and later chapters return to them again and again
 <!--/-->
 
 <!--en-->
-## Relabelling preserves meaning
-<!--zh-->
-## 重标记保语义
-<!--/-->
-
-<!--en-->
-Relabelling constants along `f : K → K'` and then evaluating under `ι` is the same
-as evaluating under `ι ∘ f` directly. One structural induction, every case a
-congruence; the two term cases are even `refl`{.Agda}.
-<!--zh-->
-沿 `f : K → K'` 重标记常量后在 `ι` 下求值，与直接在 `ι ∘ f` 下求值相同。一次结构归纳，每个情形都是同余；两个词项情形干脆是 `refl`{.Agda}。
-<!--/-->
-
-```agda
-⟦⟧-map : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S)
-         {n} (t : Term K n) (γ : S ^ n)
-       → At.⟦_⟧ ι (mapTm f t) γ ≡ At.⟦_⟧ (λ k → ι (f k)) t γ
-⟦⟧-map f ι (con k) γ = refl
-⟦⟧-map f ι (var i) γ = refl
-
-⊨-map : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S)
-        {n} (φ : Formula K n) (γ : S ^ n)
-      → At._⊨_ ι γ (mapFo f φ) ≡ At._⊨_ (λ k → ι (f k)) γ φ
-⊨-map f ι (t ∈̇ u)  γ = cong₂ _∈ˢ_ (⟦⟧-map f ι t γ) (⟦⟧-map f ι u γ)
-⊨-map f ι (t ≐ u)  γ = cong₂ _≈ˢ_ (⟦⟧-map f ι t γ) (⟦⟧-map f ι u γ)
-⊨-map f ι (φ ∧̇ ψ)  γ = cong₂ _⊓_ (⊨-map f ι φ γ) (⊨-map f ι ψ γ)
-⊨-map f ι (φ ∨̇ ψ)  γ = cong₂ _⊔_ (⊨-map f ι φ γ) (⊨-map f ι ψ γ)
-⊨-map f ι (φ ⇒̇ ψ)  γ = cong₂ _⇒_ (⊨-map f ι φ γ) (⊨-map f ι ψ γ)
-⊨-map f ι (¬̇ φ)    γ = cong ¬_ (⊨-map f ι φ γ)
-⊨-map f ι ⊤̇        γ = refl
-⊨-map f ι ⊥̇        γ = refl
-⊨-map f ι (∃̇ φ)    γ = cong (⋁ S) (funExt (λ x → ⊨-map f ι φ (x ∷ γ)))
-⊨-map f ι (∀̇ φ)    γ = cong (⋀ S) (funExt (λ x → ⊨-map f ι φ (x ∷ γ)))
-⊨-map f ι (∀̇∈ t φ) γ = cong (⋀ S) (funExt (λ x →
-  cong₂ _⇒_ (cong (x ∈ˢ_) (⟦⟧-map f ι t γ)) (⊨-map f ι φ (x ∷ γ))))
-⊨-map f ι (∃̇∈ t φ) γ = cong (⋁ S) (funExt (λ x →
-  cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-map f ι t γ)) (⊨-map f ι φ (x ∷ γ))))
-```
-
-<!--en-->
-The corollary the parameter-free formulas were waiting for: entering any constant
-domain through `embed`{.Agda} keeps their meaning. The data axis and the
-working syntax share one semantics; nothing needs proving twice.
-<!--zh-->
-无参公式等候的推论：经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。
-<!--/-->
-
-```agda
-embed-⊨ : ∀ {ℓe ℓc} {K : Type ℓc} (ι : K → S) {n} (φ : ParamFree {ℓe} n) (γ : S ^ n)
-        → At._⊨_ ι γ (embed φ) ≡ At._⊨_ (λ b → ι (Empty.rec* b)) γ φ
-embed-⊨ ι = ⊨-map Empty.rec* ι
-```
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -165,9 +109,9 @@ embed-⊨ ι = ⊨-map Empty.rec* ι
 Meaning is structural recursion: `⟦_⟧`{.Agda} evaluates terms, `γ ⊨ φ` lands in the
 truth algebra, and each clause is the corresponding algebra operation, nothing
 more. Formulas with `n` free variables mean functions `S ^ n → Ω`{.Agda}, the same
-shape as host predicates, and relabelling constants never disturbs meaning. The
+shape as host predicates. The
 one bridge still missing between formulas and predicates is catalogued at the
 book's tail, waiting for the day the demand turns industrial.
 <!--zh-->
-含义就是结构递归：`⟦_⟧`{.Agda} 给词项取值，`γ ⊨ φ` 落进真值代数，每条子句恰是对应的代数运算，分毫不多。带 `n` 个自由变量的公式，含义是 `S ^ n → Ω`{.Agda} 型函数，与宿主谓词同形；重标记常量永不扰动含义。公式与谓词之间尚缺一座桥；它编在书末，静候需求转入量产的那一天。
+含义就是结构递归：`⟦_⟧`{.Agda} 给词项取值，`γ ⊨ φ` 落进真值代数，每条子句恰是对应的代数运算，分毫不多。带 `n` 个自由变量的公式，含义是 `S ^ n → Ω`{.Agda} 型函数，与宿主谓词同形。公式与谓词之间尚缺一座桥；它编在书末，静候需求转入量产的那一天。
 <!--/-->

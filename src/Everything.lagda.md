@@ -90,11 +90,9 @@ import Base.Choice
 - `FOL.Structure`{.Agda}: the structures formulas talk about: carrier, equality,
   and membership, valued in a truth algebra; restriction `↾` and environments.
 - `FOL.Semantics`{.Agda}: evaluation `⟦_⟧`{.Agda} and satisfaction `_⊨_`{.Agda} by
-  structural recursion, each clause exactly its truth-algebra operation;
-  relabelling preserves meaning.
+  structural recursion, each clause exactly its truth-algebra operation.
 - `FOL.Graded`{.Agda}: the Levy hierarchy as inductive certificates: Δ₀ by
-  absence, Σ₁/Π₁, and the alternating Σₙ/Πₙ tower, all stable under
-  relabelling.
+  absence, Σ₁/Π₁, and the alternating Σₙ/Πₙ tower.
 - `FOL.Absoluteness`{.Agda}: transitive classes and the Δ₀ absoluteness theorem
   `abs₀`{.Agda}; Σ₁ transfers up, Π₁ down.
 <!--zh-->
@@ -102,8 +100,8 @@ import Base.Choice
 
 - `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语；句子与无参公式。
 - `FOL.Structure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；限制 `↾` 与环境。
-- `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算；重标记保含义。
-- `FOL.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔，全体在重标记下稳定。
+- `FOL.Semantics`{.Agda}：结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算。
+- `FOL.Graded`{.Agda}：作为归纳证书的列维层级：缺席即 Δ₀、Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。
 - `FOL.Absoluteness`{.Agda}：传递类与 Δ₀ 绝对性定理 `abs₀`{.Agda}；Σ₁ 向上、Π₁ 向下。
 <!--/-->
 
@@ -210,10 +208,14 @@ import L.Model
 <!--en-->
 ## Tools in waiting
 
-Two chapters with, as of today, no consumer anywhere in the trunk; their first
+Chapters with, as of today, no consumer anywhere in the trunk; their first
 consumers arrive with Part 4's deeper machinery, and they read late so the main
 line stays unbroken.
 
+- `FOL.Relabelling`{.Agda}: the constant-domain kit, three altitudes at once:
+  functorial `mapFo`{.Agda} with the parameter-free entrance `embed`{.Agda},
+  meaning untouched (`⊨-map`{.Agda}, `embed-⊨`{.Agda}), certificates carried
+  along (`mapΔ₀`{.Agda} and the tower).
 - `FOL.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
   syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
   exchange, and contraction.
@@ -222,13 +224,15 @@ line stays unbroken.
 <!--zh-->
 ## 候用的工具
 
-两章至今在主干上没有任何消费者；它们的首批消费者随第四部的深层机器到来，读在靠后，好让主线不断。
+这几章至今在主干上没有任何消费者；它们的首批消费者随第四部的深层机器到来，读在靠后，好让主线不断。
 
+- `FOL.Relabelling`{.Agda}：常量域工具组，一次三个海拔：函子式 `mapFo`{.Agda} 与无参入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，证书随行 (`mapΔ₀`{.Agda} 及其塔)。
 - `FOL.Renaming`{.Agda}：本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
 - `FOL.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 证书随附，并给出正确性等式。
 <!--/-->
 
 ```agda
+import FOL.Relabelling
 import FOL.Renaming
 import FOL.Relativize
 ```

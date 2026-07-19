@@ -41,9 +41,9 @@ Under a binder the renaming must step aside for the freshly bound variable:
 `liftρ ρ` keeps variable `0` fixed and shifts everything else through `ρ`. With
 that, pushing a renaming through terms and formulas is one clause per constructor;
 note it moves only variables, leaving constants alone, exactly complementary to
-the `mapFo`{.Agda} of the syntax chapter.
+the `mapFo`{.Agda} of the previous chapter.
 <!--zh-->
-进入约束子之下，重命名须为新约束的变量让位：`liftρ ρ` 固定变量 `0`，其余经 `ρ` 平移。此后沿词项与公式推送重命名就是一构造子一子句；注意它只动变量、不碰常量，与语法章的 `mapFo`{.Agda} 恰好互补。
+进入约束子之下，重命名须为新约束的变量让位：`liftρ ρ` 固定变量 `0`，其余经 `ρ` 平移。此后沿词项与公式推送重命名就是一构造子一子句；注意它只动变量、不碰常量，与上一章的 `mapFo`{.Agda} 恰好互补。
 <!--/-->
 
 ```agda
