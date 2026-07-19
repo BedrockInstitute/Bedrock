@@ -92,10 +92,12 @@ embed = mapFo Empty.rec*
 
 <!--en-->
 Relabelling constants along `f : K → K'` and then evaluating under `ι` is the
-same as evaluating under `ι ∘ f` directly. One structural induction, every case
-a congruence; the two term cases are even `refl`{.Agda}.
+same as evaluating under `ι ∘ f` directly; the `∘`-marked satisfaction and
+denotation below are the generic semantics opened at that composite. One
+structural induction, every case a congruence; the two term cases are even
+`refl`{.Agda}.
 <!--zh-->
-沿 `f : K → K'` 变换常量后在 `ι` 下求值，与直接在 `ι ∘ f` 下求值相同。一次结构归纳，每个情形都是同余；两个词项情形干脆是 `refl`{.Agda}。
+沿 `f : K → K'` 变换常量后在 `ι` 下求值，与直接在 `ι ∘ f` 下求值相同；下文带 `∘` 标记的满足与释义，就是在该复合解释处打开的泛型语义。一次结构归纳，每个情形都是同余；两个词项情形干脆是 `refl`{.Agda}。
 <!--/-->
 
 ```agda
@@ -105,43 +107,53 @@ module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) whe
   open ZFStructure 𝒮
   open FOL.Semantics 𝕋 𝒮 using ( module At )
 
-  ⟦⟧-map : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S)
-           {n} (t : Term K n) (γ : S ^ n)
-         → At.⟦_⟧ ι (mapTm f t) γ ≡ At.⟦_⟧ (λ k → ι (f k)) t γ
-  ⟦⟧-map f ι (con k) γ = refl
-  ⟦⟧-map f ι (var i) γ = refl
+  module _ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S) where
 
-  ⊨-map : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S)
-          {n} (φ : Formula K n) (γ : S ^ n)
-        → At._⊨_ ι γ (mapFo f φ) ≡ At._⊨_ (λ k → ι (f k)) γ φ
-  ⊨-map f ι (t ∈̇ u)  γ = cong₂ _∈ˢ_ (⟦⟧-map f ι t γ) (⟦⟧-map f ι u γ)
-  ⊨-map f ι (t ≐ u)  γ = cong₂ _≈ˢ_ (⟦⟧-map f ι t γ) (⟦⟧-map f ι u γ)
-  ⊨-map f ι (φ ∧̇ ψ)  γ = cong₂ _⊓_ (⊨-map f ι φ γ) (⊨-map f ι ψ γ)
-  ⊨-map f ι (φ ∨̇ ψ)  γ = cong₂ _⊔_ (⊨-map f ι φ γ) (⊨-map f ι ψ γ)
-  ⊨-map f ι (φ ⇒̇ ψ)  γ = cong₂ _⇒_ (⊨-map f ι φ γ) (⊨-map f ι ψ γ)
-  ⊨-map f ι (¬̇ φ)    γ = cong ¬_ (⊨-map f ι φ γ)
-  ⊨-map f ι ⊤̇        γ = refl
-  ⊨-map f ι ⊥̇        γ = refl
-  ⊨-map f ι (∃̇ φ)    γ = cong (⋁ S) (funExt (λ x → ⊨-map f ι φ (x ∷ γ)))
-  ⊨-map f ι (∀̇ φ)    γ = cong (⋀ S) (funExt (λ x → ⊨-map f ι φ (x ∷ γ)))
-  ⊨-map f ι (∀̇∈ t φ) γ = cong (⋀ S) (funExt (λ x →
-    cong₂ _⇒_ (cong (x ∈ˢ_) (⟦⟧-map f ι t γ)) (⊨-map f ι φ (x ∷ γ))))
-  ⊨-map f ι (∃̇∈ t φ) γ = cong (⋁ S) (funExt (λ x →
-    cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-map f ι t γ)) (⊨-map f ι φ (x ∷ γ))))
+    open At ι using ( _⊨_; ⟦_⟧ )
+    open At (λ k → ι (f k)) using () renaming ( _⊨_ to _⊨∘_ ; ⟦_⟧ to ⟦_⟧∘ )
+
+    ⟦⟧-map : ∀ {n} (t : Term K n) (γ : S ^ n)
+           → ⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ
+    ⟦⟧-map (con k) γ = refl
+    ⟦⟧-map (var i) γ = refl
+
+    ⊨-map : ∀ {n} (φ : Formula K n) (γ : S ^ n)
+          → (γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)
+    ⊨-map (t ∈̇ u)  γ = cong₂ _∈ˢ_ (⟦⟧-map t γ) (⟦⟧-map u γ)
+    ⊨-map (t ≐ u)  γ = cong₂ _≈ˢ_ (⟦⟧-map t γ) (⟦⟧-map u γ)
+    ⊨-map (φ ∧̇ ψ)  γ = cong₂ _⊓_ (⊨-map φ γ) (⊨-map ψ γ)
+    ⊨-map (φ ∨̇ ψ)  γ = cong₂ _⊔_ (⊨-map φ γ) (⊨-map ψ γ)
+    ⊨-map (φ ⇒̇ ψ)  γ = cong₂ _⇒_ (⊨-map φ γ) (⊨-map ψ γ)
+    ⊨-map (¬̇ φ)    γ = cong ¬_ (⊨-map φ γ)
+    ⊨-map ⊤̇        γ = refl
+    ⊨-map ⊥̇        γ = refl
+    ⊨-map (∃̇ φ)    γ = cong (⋁ S) (funExt (λ x → ⊨-map φ (x ∷ γ)))
+    ⊨-map (∀̇ φ)    γ = cong (⋀ S) (funExt (λ x → ⊨-map φ (x ∷ γ)))
+    ⊨-map (∀̇∈ t φ) γ = cong (⋀ S) (funExt (λ x →
+      cong₂ _⇒_ (cong (x ∈ˢ_) (⟦⟧-map t γ)) (⊨-map φ (x ∷ γ))))
+    ⊨-map (∃̇∈ t φ) γ = cong (⋁ S) (funExt (λ x →
+      cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-map t γ)) (⊨-map φ (x ∷ γ))))
 ```
 
 <!--en-->
 The corollary the parameter-free formulas were waiting for: entering any
 constant domain through `embed`{.Agda} keeps their meaning. The data axis and
-the working syntax share one semantics; nothing needs proving twice.
+the working syntax share one semantics; nothing needs proving twice. (The
+`∅`-marked satisfaction reads the empty constant domain through
+`Empty.rec*`{.Agda}.)
 <!--zh-->
-无参公式等候的推论：经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。
+无参公式等候的推论：经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。(带 `∅` 标记的满足经 `Empty.rec*`{.Agda} 解读空常量域。)
 <!--/-->
 
 ```agda
-  embed-⊨ : ∀ {ℓe ℓc} {K : Type ℓc} (ι : K → S) {n} (φ : Formula (⊥* {ℓe}) n) (γ : S ^ n)
-          → At._⊨_ ι γ (embed φ) ≡ At._⊨_ (λ b → ι (Empty.rec* b)) γ φ
-  embed-⊨ ι = ⊨-map Empty.rec* ι
+  module _ {ℓe ℓc} {K : Type ℓc} (ι : K → S) where
+
+    open At ι using ( _⊨_ )
+    open At (λ (b : ⊥* {ℓe}) → ι (Empty.rec* b)) using () renaming ( _⊨_ to _⊨∅_ )
+
+    embed-⊨ : ∀ {n} (φ : Formula (⊥* {ℓe}) n) (γ : S ^ n)
+            → (γ ⊨ embed φ) ≡ (γ ⊨∅ φ)
+    embed-⊨ = ⊨-map Empty.rec* ι
 ```
 
 <!--en-->
