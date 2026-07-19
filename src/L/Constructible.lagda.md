@@ -31,7 +31,7 @@ open import Base.Truth
 
 module L.Constructible {ℓ : Level} where
 
-open import FOL.Structure using ( ZFStructure; _↾_; _∈ᵗ_ )
+open import FOL.Structure using ( ZFStructure; _↾_; module hPropStructure )
 open import FOL.Absoluteness using ( Transitive )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
 open import L.Definability {ℓ} using ( module DefOf )
@@ -48,7 +48,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; _∪_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
-open ZFStructure 𝒮ᵥ
+open hPropStructure 𝒮ᵥ
 
 𝒟 : S → S
 𝒟 A = DefOf.Def A
@@ -212,10 +212,10 @@ opaque
   𝒟ₒ : S → S
   𝒟ₒ A = 𝒟 A
 
-LsetStep : (α : S) → (∀ β → _∈ᵗ_ 𝒮ᵥ β α → S) → S
+LsetStep : (α : S) → (∀ β → β ∈ᵗ α → S) → S
 LsetStep α rec = ⋃ (sett ⟪ α ⟫ (λ m → 𝒟ₒ (rec (⟪ α ⟫↪ m) (mem m))))
   where
-  mem : (m : ⟪ α ⟫) → _∈ᵗ_ 𝒮ᵥ (⟪ α ⟫↪ m) α
+  mem : (m : ⟪ α ⟫) → ⟪ α ⟫↪ m ∈ᵗ α
   mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
 
 opaque
@@ -246,12 +246,12 @@ opaque
 Lset-layer : (α : S) → isLayer (Lset α)
 Lset-layer = ∈-induction step
   where
-  step : (α : S) → (∀ β → _∈ᵗ_ 𝒮ᵥ β α → isLayer (Lset β)) → isLayer (Lset α)
+  step : (α : S) → (∀ β → β ∈ᵗ α → isLayer (Lset β)) → isLayer (Lset α)
   step α IH = subst isLayer (sym (Lset-compute α))
     (setUnion-layer ⟪ α ⟫ (λ m → 𝒟ₒ (Lset (⟪ α ⟫↪ m)))
       (λ m → 𝒟ₒ-layer (IH (⟪ α ⟫↪ m) (mem m))))
     where
-    mem : (m : ⟪ α ⟫) → _∈ᵗ_ 𝒮ᵥ (⟪ α ⟫↪ m) α
+    mem : (m : ⟪ α ⟫) → ⟪ α ⟫↪ m ∈ᵗ α
     mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
 ```
 

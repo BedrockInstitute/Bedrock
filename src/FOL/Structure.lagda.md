@@ -79,14 +79,17 @@ identity principle, simply equal, and the whole development transports across.
 On the propositional side one more form of membership is available: extract the
 underlying **type** of `x ∈ˢ y`. The superscript `ᵗ` marks this Type-valued
 variant; statements of well-foundedness and proofs by membership induction will
-quantify over it.
+quantify over it. It lives in `hPropStructure`{.Agda}, the propositional side's
+way of opening a structure: the module re-exports the three projections and adds
+`∈ᵗ`, so one `open` later a chapter writes `y ∈ᵗ x` with no structure argument
+in sight.
 <!--zh-->
-命题侧还有一种成员形式可用：把 `x ∈ˢ y` 的底层**类型**取出来。上标 `ᵗ` 标记这个 Type 值的变体；良基性的陈述与按成员归纳的证明都将对它量化。
+命题侧还有一种成员形式可用：把 `x ∈ˢ y` 的底层**类型**取出来。上标 `ᵗ` 标记这个 Type 值的变体；良基性的陈述与按成员归纳的证明都将对它量化。它住在 `hPropStructure`{.Agda} 里，即命题侧打开结构的方式：该模块公开再导出三个投影并添上 `∈ᵗ`，一次 `open` 之后，章节径直写 `y ∈ᵗ x`，不见任何结构参数。
 <!--/-->
 
 ```agda
-module _ {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
-  open ZFStructure 𝒮
+module hPropStructure {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+  open ZFStructure 𝒮 public
 
   _∈ᵗ_ : S → S → Type ℓ
   x ∈ᵗ y = ⟨ x ∈ˢ y ⟩

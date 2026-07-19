@@ -45,7 +45,8 @@ entry in the reading catalog**, at the position its first consumer dictates.
     parameter, intrinsic scoping, all constructors primitive); sentences are the
     `n = 0` instance, deliberately unnamed.
   - `FOL/Structure.lagda.md`: `ZFStructure` (carrier, equality, membership, valued in
-    a truth algebra), `∈ᵗ`, restriction `↾`, and environments `_^_`.
+    a truth algebra), `hPropStructure` (the propositional-side opening, adding `∈ᵗ`),
+    restriction `↾`, and environments `_^_`.
     Re-cut from `ZF/` (PLAN §4 ledger); `Transitive` deferred to `[L1.3]`.
   - `FOL/Semantics.lagda.md`: evaluation `⟦_⟧` and satisfaction `_⊨_` by structural
     recursion.

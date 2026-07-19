@@ -46,7 +46,7 @@ open import L.Frontier using ( Frontier )
 
 module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (F : Frontier {ℓ}) where
 
-open import FOL.Structure using ( ZFStructure; ↾-reflects; _∈ᵗ_ )
+open import FOL.Structure using ( ↾-reflects; module hPropStructure )
 import ZF
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
@@ -55,7 +55,7 @@ open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 
-open ZFStructure 𝒮ʟ
+open hPropStructure 𝒮ʟ
 open Frontier F
 
 module ModelL = ZF 𝒮ʟ
@@ -101,11 +101,12 @@ set, member by member.
 <!--/-->
 
 ```agda
-regularityL : WellFounded (_∈ᵗ_ 𝒮ʟ)
+regularityL : WellFounded _∈ᵗ_
 regularityL (v , p) = accL v (regularityV v) p
   where
-  accL : (u : V ℓ) → Acc (_∈ᵗ_ 𝒮ᵥ) u → (q : ⟨ isL u ⟩)
-       → Acc (_∈ᵗ_ 𝒮ʟ) (u , q)
+  module Vmem = hPropStructure 𝒮ᵥ
+  accL : (u : V ℓ) → Acc Vmem._∈ᵗ_ u → (q : ⟨ isL u ⟩)
+       → Acc _∈ᵗ_ (u , q)
   accL u (acc rec) q = acc (λ { (y , r) y∈ → accL y (rec y y∈) r })
 ```
 
