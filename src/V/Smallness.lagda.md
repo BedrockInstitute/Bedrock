@@ -306,7 +306,7 @@ does not contradict the cost accounting above, which priced quantifiers ranging
 over all of `V ℓ`; here the range is the carrier of a **restricted structure**
 `𝒮ᵥ ↾ M`, and smallness is exactly what the restriction buys.
 <!--zh-->
-小性还有一个音区，买单的不是 Δ₀ 见证而是**地段**。当量化范围自身等价于某个小类型时，连**无界**量词也保小：沿等价搬运量化即可。这与上文的成本账簿并不冲突，那里标价的是范围为全 `V ℓ` 的量词；此处的范围是**限制结构** `𝒮ᵥ ↾ M` 的载体，小性恰是「限制」二字买来的。
+小性还有一种买法，买单的不是 Δ₀ 见证而是**地段**。当量化范围自身等价于某个小类型时，连**无界**量词也保小：沿等价搬运量化即可。这与上文的成本账簿并不冲突，那里标价的是范围为全 `V ℓ` 的量词；此处的范围是**限制结构** `𝒮ᵥ ↾ M` 的载体，小性恰是「限制」二字买来的。
 <!--/-->
 
 ```agda
