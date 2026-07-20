@@ -92,7 +92,7 @@ co-consumption, not by implication: neither instrument derives the other (they
 descend from two of Voevodsky's separate resizing axioms). The interface says
 nothing about any particular structure; it is pure universe-level policy.
 <!--zh-->
-两件器具共有一种品格，各自以各自的音区说着「命题拒绝随宇宙膨胀」这一句话；它们也共享消费者，于是打包成一个接口，逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)。这个接口不谈任何特定结构，是纯粹的宇宙层级政策。
+两件器具共有一种品格，各自以各自的口吻说着「命题拒绝随宇宙膨胀」这一句话；它们也共享消费者，于是打包成一个接口，逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)。这个接口不谈任何特定结构，是纯粹的宇宙层级政策。
 <!--/-->
 
 ```agda
