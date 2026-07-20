@@ -109,8 +109,8 @@ module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) whe
 
   module _ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S) where
 
-    open At ι using ( _⊨_; ⟦_⟧ )
-    open At (λ k → ι (f k)) using () renaming ( _⊨_ to _⊨∘_ ; ⟦_⟧ to ⟦_⟧∘ )
+    open At K' ι using ( _⊨_; ⟦_⟧ )
+    open At K (λ k → ι (f k)) using () renaming ( _⊨_ to _⊨∘_ ; ⟦_⟧ to ⟦_⟧∘ )
 
     ⟦⟧-map : ∀ {n} (t : Term K n) (γ : S ^ n)
            → ⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ
@@ -148,8 +148,8 @@ the working syntax share one semantics; nothing needs proving twice. (The
 ```agda
   module _ {ℓe ℓc} {K : Type ℓc} (ι : K → S) where
 
-    open At ι using ( _⊨_ )
-    open At (λ (b : ⊥* {ℓe}) → ι (Empty.rec* b)) using () renaming ( _⊨_ to _⊨∅_ )
+    open At K ι using ( _⊨_ )
+    open At (⊥* {ℓe}) (λ b → ι (Empty.rec* b)) using () renaming ( _⊨_ to _⊨∅_ )
 
     embed-⊨ : ∀ {n} (φ : Formula (⊥* {ℓe}) n) (γ : S ^ n)
             → (γ ⊨ embed φ) ≡ (γ ⊨∅ φ)

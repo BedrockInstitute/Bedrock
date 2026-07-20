@@ -222,6 +222,20 @@ open import Cubical.Data.Empty public
 ```
 
 <!--en-->
+One definition of the book's own closes the chapter, and it is the smallest
+imaginable: the level-polymorphic identity function. It earns hub residence as
+the book's canonical constant interpretation: a constant standing for the very
+set it names is precisely `id`{.Agda}.
+<!--zh-->
+本章以唯一一个自家定义收尾，而且是能想象的最小的一个：层级多态的恒等函数。它凭一个身份落户枢纽：本书的典范常量解释。常量就代表它指名的那个集合，说的恰是 `id`{.Agda}。
+<!--/-->
+
+```agda
+id : ∀ {ℓ} {A : Type ℓ} → A → A
+id x = x
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -230,10 +244,10 @@ open import Cubical.Data.Empty public
 <!--en-->
 In scope from here on: universes, paths, h-levels, `hProp`{.Agda} with `⟨_⟩`{.Agda}
 and the class membership `∈ᶜ`{.Agda}, pairs, `ℕ`{.Agda}, `Vec`{.Agda}, `Fin`{.Agda},
-and `⊥*`{.Agda}. This chapter defines
-nothing of its own, and the logic symbols are deliberately absent: every notion of
+`⊥*`{.Agda}, and the identity `id`{.Agda}. This chapter proves nothing, defines
+only `id`{.Agda}, and the logic symbols are deliberately absent: every notion of
 the book is introduced in the chapter where it first earns its keep, and the logic
 arrives with the truth algebra, next.
 <!--zh-->
-自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda} 及类隶属 `∈ᶜ`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}，以及 `⊥*`{.Agda}。本章没有任何自己的定义，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
+自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda} 及类隶属 `∈ᶜ`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}、`⊥*`{.Agda}，以及恒等 `id`{.Agda}。本章不证明任何东西，自家定义仅 `id`{.Agda} 一个，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
 <!--/-->

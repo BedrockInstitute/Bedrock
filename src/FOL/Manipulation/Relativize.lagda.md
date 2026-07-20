@@ -107,7 +107,7 @@ module Correct {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure �
   open TruthAlgebra 𝕋
   open ZFStructure 𝒮
   open module Sem = FOL.Semantics 𝕋 𝒮 using ( module At; _^_ )
-  open At ι using ( _⊨_; ⟦_⟧ )
+  open At K ι using ( _⊨_; ⟦_⟧ )
 
   A : S
   A = ι c

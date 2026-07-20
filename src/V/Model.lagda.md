@@ -61,7 +61,7 @@ module Model = FOL.ZFModel 𝒮ᵥ
 open Model using ( SetOf; _⊆ˢ_; setOf-unique; isZFModel; isZFCModel )
 
 module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
-open SemanticsV.At (λ (x : S) → x) using ( _⊨_ )
+open SemanticsV.At S id using ( _⊨_ )
 ```
 
 <!--en-->

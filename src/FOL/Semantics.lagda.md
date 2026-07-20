@@ -68,7 +68,7 @@ of this chapter, uses qualified names.
 <!--/-->
 
 ```agda
-module At {ℓc} {K : Type ℓc} (ι : K → S) where
+module At {ℓc} (K : Type ℓc) (ι : K → S) where
 ```
 
 <!--en-->

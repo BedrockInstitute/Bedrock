@@ -28,7 +28,7 @@ module FOL.Reification.Base {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZF
 
 open import FOL.Syntax using ( Term; Formula )
 open import FOL.Semantics 𝕋 𝒮 using ( module At; _^_ )
-open At ι using ( _⊨_; ⟦_⟧ )
+open At K ι using ( _⊨_; ⟦_⟧ )
 
 open TruthAlgebra 𝕋
 open ZFStructure 𝒮
