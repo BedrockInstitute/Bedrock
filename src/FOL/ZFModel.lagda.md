@@ -30,10 +30,10 @@ for the first time. The truth algebra is the canonical `hPropAlgebra`{.Agda}: ax
 assert facts, and the book's mathematical facts live in `hProp`{.Agda} (per the
 scope discipline, opening the algebra is what brings the logic symbols into
 scope). And the constant interpretation is the canonical one from the semantics
-chapter: the constant domain is the carrier itself and `ι` is the identity, so a
-parameter appearing in a formula simply *is* the set it names.
+chapter: the constant domain is the carrier itself and the interpretation is
+`id`{.Agda}, so a parameter appearing in a formula simply *is* the set it names.
 <!--zh-->
-两项常设选择，都在前面章节宣布过，都在此第一次真正上场。真值代数取典范的 `hPropAlgebra`{.Agda}：公理断言事实，而本书数学的事实住在 `hProp`{.Agda} (按作用域纪律，逻辑符号恰经打开代数入场)。常量解释也取语义章的典范情形：常量域就是载体自身，`ι` 为恒等，于是公式里出现的参数就**是**它指名的那个集合。
+两项常设选择，都在前面章节宣布过，都在此第一次真正上场。真值代数取典范的 `hPropAlgebra`{.Agda}：公理断言事实，而本书数学的事实住在 `hProp`{.Agda} (按作用域纪律，逻辑符号恰经打开代数入场)。常量解释也取语义章的典范情形：常量域就是载体自身，解释就是 `id`{.Agda}，于是公式里出现的参数就**是**它指名的那个集合。
 <!--/-->
 
 ```agda
@@ -49,11 +49,7 @@ open PT using ( ∥_∥₁ )
 open TruthAlgebra (hPropAlgebra ℓ)
 open hPropStructure 𝒮
 
-private
-  ι : S → S
-  ι x = x
-
-open At ι using ( _⊨_ )
+open At S id using ( _⊨_ )
 ```
 
 <!--en-->

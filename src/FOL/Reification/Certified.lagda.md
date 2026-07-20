@@ -51,7 +51,7 @@ module Certified {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure �
   open TruthAlgebra 𝕋
   open ZFStructure 𝒮
   open import FOL.Semantics 𝕋 𝒮 using ( module At; _^_ )
-  open At ι using ( _⊨_ )
+  open At K ι using ( _⊨_ )
   open import FOL.Reification.Combinators 𝕋 𝒮 K ι using
     ( RepP; RepS; ∈-rep; ≐-rep; ∧-rep; ∨-rep; ⇒-rep; ¬-rep; ⊤-rep; ⊥-rep
     ; ∀∈-rep; ∃∈-rep )
@@ -125,7 +125,7 @@ module Transfer {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
 
   open Single 𝒮 M trans using ( SM; 𝒮M; _⊨ᵛ_; abs₀; _^_ )
 
-  module Inner = Certified (hPropAlgebra ℓ) 𝒮M SM (λ m → m)
+  module Inner = Certified (hPropAlgebra ℓ) 𝒮M SM id
 
   transfer : ∀ {n} {P : SM ^ n → hProp ℓ} (r : Inner.RepΔ₀ n P) (δ : SM ^ n)
            → P δ ≡ ((map fst δ) ⊨ᵛ (r .fst))

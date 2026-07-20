@@ -247,7 +247,7 @@ open SemanticsV using ( _^_ )
 
 module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 
-  open SemanticsV.At ι
+  open SemanticsV.At K ι
 
   Δ₀-small : ∀ {n} {φ : Formula K n} → Δ₀ φ → (γ : S ^ n) → isSmall (γ ⊨ φ)
   Δ₀-small (δ-∈ {t = t} {u}) γ = small-∈ (⟦ t ⟧ γ) (⟦ u ⟧ γ)
@@ -284,8 +284,8 @@ running theme: the Δ₀ witnesses are portable assets, and carrying them pays.
 <!--/-->
 
 ```agda
-open Δ₀Small (λ (x : S) → x)
-open SemanticsV.At (λ (x : S) → x) using ( _⊨_ )
+open Δ₀Small id
+open SemanticsV.At S id using ( _⊨_ )
 
 separateΔ₀ : (a : S) (φ : Formula S 1) → Δ₀ φ
            → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
@@ -363,7 +363,7 @@ module InnerSmall (M : S → hProp (ℓ-suc ℓ))
   𝒮M = 𝒮ᵥ ↾ M
 
   module SemanticsM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮M
-  open SemanticsM.At ι renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ ) public
+  open SemanticsM.At K ι renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ ) public
 
   ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → isSmall (δ ⊨ᵐ φ)
   ⊨ᵐ-small (t ∈̇ u)  δ = small-∈ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))

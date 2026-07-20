@@ -72,9 +72,9 @@ module Single {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
 
   open SemV using ( _^_ ) public
 
-  open module V = SemV.At {K = SM} fst public
+  open module V = SemV.At SM fst public
     renaming ( _⊨_ to _⊨ᵛ_ ; ⟦_⟧ to ⟦_⟧ᵛ )
-  open module Mse = SemM.At {K = SM} (λ m → m) public
+  open module Mse = SemM.At SM id public
     renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
 ```
 

@@ -96,7 +96,7 @@ module Sat {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
 
   private module Sem = FOL.Semantics 𝕋 𝒮
   open Sem using ( _^_ )
-  open Sem.At {K = K} ι using ( _⊨_; ⟦_⟧ )
+  open Sem.At K ι using ( _⊨_; ⟦_⟧ )
 
   Agrees : ∀ {n m} → (Fin n → Fin m) → S ^ m → S ^ n → Type ℓ
   Agrees ρ γ δ = ∀ i → lookup (ρ i) γ ≡ lookup i δ
