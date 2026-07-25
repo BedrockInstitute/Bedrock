@@ -38,19 +38,20 @@ open import Base.Truth
 module L.Ordinal {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import L.Constructible {ℓ}
-  using ( isTransV; isPropIsTransV; ∅-trans; setUnion-trans; IsOrd )
+  using ( isTransV; isPropIsTransV; ∅-trans; setUnion-trans; IsOrd; isPropIsOrd )
 
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( _∈ₛ_; ∈∈ₛ )
+open import Cubical.Induction.WellFounded using ( wf→x≮x )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⋃_; union-ax; module InfinitySet )
-open InfinitySet using ( sucV )
+open InfinitySet using ( sucV; #_; ω; #-in-ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
@@ -170,6 +171,84 @@ boundingOrd X f hf = β , (ordβ , memβ)
 ```
 
 <!--en-->
+## Members, and no self-membership
+<!--zh-->
+## 成员，与无自环
+<!--/-->
+
+<!--en-->
+Ordinals are closed downwards: a member of an ordinal is an ordinal. Its own
+transitivity is the second half of the hypothesis; that its members are
+transitive follows by pulling them back into the ambient ordinal along
+transitivity.
+
+The other fact is the first dividend of regularity. No set belongs to itself,
+because membership is well founded and a self-member would be an infinite
+descent. It is not an ordinal fact at all, but this is where the ordinal
+arguments start to need it.
+<!--zh-->
+序数向下封闭：序数的成员是序数。它自身的传递性就是假设的第二半；而其成员传递，则经传递性把它们拉回外层序数即得。
+
+另一个事实是正则性的第一笔红利。没有集合属于自身，因为成员关系良基，而自属会构成一条无穷下降。这根本不是关于序数的事实，但序数论证正是从此处开始需要它。
+<!--/-->
+
+```agda
+mem-ord : ∀ {A} → IsOrd A → (x : S) → ⟨ x ∈ˢ A ⟩ → IsOrd x
+mem-ord {A} (Atr , Amem) x x∈A =
+  Amem x x∈A , (λ y y∈x → Amem y (Atr y∈x x∈A))
+
+∈-irrefl : (A : S) → ⟨ A ∈ˢ A ⟩ → Empty.⊥
+∈-irrefl A = wf→x≮x regularityV {x = A}
+```
+
+<!--en-->
+## The numerals, and their limit
+<!--zh-->
+## 数码，及其极限
+<!--/-->
+
+<!--en-->
+The hierarchy's numerals are the iterated successors of zero, so they are
+ordinals by the two facts above, one induction deep. Their limit `ω` is an
+ordinal too, and that is the fact the collection step will need. Its second
+half is free from the numerals; its first half, transitivity, says that a
+member of a numeral is again a numeral, which is another induction, the
+successor case splitting by the eliminator.
+<!--zh-->
+层级的数码是零的迭代后继，故由上面两个事实即为序数，一层归纳而已。它们的极限 `ω` 也是序数，而那正是收集步骤将要用到的事实。其第二半由数码免费给出；第一半即传递性，说的是数码的成员仍是数码，那是另一次归纳，后继情形按消去子分情形。
+<!--/-->
+
+```agda
+numeral-ord : (n : ℕ) → IsOrd (# n)
+numeral-ord zero    = ∅-ord
+numeral-ord (suc n) = suc-ord (numeral-ord n)
+
+#∈ω : (k : ℕ) → ⟨ (# k) ∈ˢ ω ⟩
+#∈ω k = ∈∈ₛ {a = # k} {b = ω} .snd (#-in-ω k)
+
+numeral-mem : (k : ℕ) (y : S) → ⟨ y ∈ˢ (# k) ⟩ → ⟨ y ∈ˢ ω ⟩
+numeral-mem zero y y∈ =
+  Empty.rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
+numeral-mem (suc k) y y∈ = ∈sucV-elim (snd (y ∈ˢ ω)) y∈
+  (λ y∈#k → numeral-mem k y y∈#k)
+  (λ y≡#k → subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym y≡#k) (#∈ω k))
+
+ω-mem-ord : (y : S) → ⟨ y ∈ˢ ω ⟩ → IsOrd y
+ω-mem-ord y y∈ω = PT.rec (isPropIsOrd y)
+  (λ { (k , #k≡y) → subst IsOrd #k≡y (numeral-ord (lower k)) })
+  y∈ω
+
+ω-ord : IsOrd ω
+ω-ord = trans-ω , (λ x x∈ω → ω-mem-ord x x∈ω .fst)
+  where
+  trans-ω : isTransV ω
+  trans-ω {x} {y} y∈x x∈ω = PT.rec (snd (y ∈ˢ ω))
+    (λ { (k , #k≡x) →
+      numeral-mem (lower k) y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym #k≡x) y∈x) })
+    x∈ω
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -181,7 +260,10 @@ Zero, successors and small unions of ordinals are ordinals, and
 result is the chapter's whole purpose: it is how "each of finitely many
 ingredients lives at some stage" becomes "all of them live at one stage", and
 the next chapter spends it three times over, once for each of the first
-closure axioms.
+closure axioms. Downward closure, the absence of self-membership, and `ω`
+itself as an ordinal are the same theory continued; they wait here for the
+collection step of infinity, which is what first needs them.
 <!--zh-->
-零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。最后这条就是本章的全部目的：它把「有穷多份材料各有其阶段」变成「它们同处一个阶段」，而下一章会把它花掉三次，头几条闭包公理各一次。
+零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。最后这条就是本章的全部目的：它把「有穷多份材料各有其阶段」变成「它们同处一个阶段」，而下一章会把它花掉三次，头几条闭包公理各一次。向下封闭、无自环，以及 `ω` 自身是序数，都是同一套理论的续篇；它们在此等候无穷公理的收集那一步，那是最先需要它们的地方。
 <!--/-->
+

@@ -183,6 +183,12 @@ import V.Model
 - `L.Ordinal`{.Agda}: the supply of ordinals the closure arguments need: zero,
   successors and small unions are ordinals, and `boundingOrd`{.Agda} bounds any
   small family by a single ordinal. No comparison, hence no classical logic.
+- `L.Rank`{.Agda}: von Neumann rank by membership recursion, valued in the
+  hierarchy itself: `rank-ord`{.Agda} makes it a measurement in ordinals and
+  `rank-fix`{.Agda} certifies it as the canonical index.
+- `L.Ordinal.Linear`{.Agda}: trichotomy `ord-tri`{.Agda}, and with it the L
+  side's classical boundary: closure never had to decide anything, comparison
+  does, so this chapter takes the excluded middle as a module parameter.
 - `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
   regularity descend along transitivity; uniqueness then comes free; and the
   empty set, pairing and union are each carved out of one stage by one formula.
@@ -195,6 +201,8 @@ import V.Model
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
+- `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
+- `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
@@ -203,6 +211,8 @@ import V.Model
 import L.Definability
 import L.Constructible
 import L.Ordinal
+import L.Rank
+import L.Ordinal.Linear
 import L.Axioms.Basic
 import L.Axioms.Infinity
 ```
