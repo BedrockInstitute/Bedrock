@@ -33,6 +33,9 @@ module L.Definability {ℓ : Level} where
 
 open import FOL.ZFStructure using ( ZFStructure; Transitive )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
+open import FOL.LevyHierarchy using ( Δ₀ )
+open import FOL.Manipulation.Relabelling using ( mapFo; mapΔ₀; ⊨-map )
+import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Smallness {ℓ} using ( module InnerSmall )
 
@@ -252,6 +255,42 @@ shape Part 4's tower needs.
     A⊆Def a a∈ =
       let (mₐ , q) = ∈-asFiber {a = a} {b = A} a∈
       in ∣ atom mₐ , defSet-atom≡ mₐ ∙ q ∣₁
+```
+
+<!--en-->
+### Definability read from outside
+<!--zh-->
+### 从外部读可定义性
+<!--/-->
+
+<!--en-->
+One consequence deserves its own name, because Part 4 leans on it repeatedly.
+Membership in `defSet φ` is a statement of the *inner* world `(A, ∈)`, and the
+arguments to come are conducted in the ambient hierarchy. For a Δ₀ formula the
+two readings agree, which is the absoluteness theorem; what remains is
+bookkeeping, since absoluteness is stated over the members of the class while
+`defSet` is stated over the small index type. Relabelling closes that gap, and
+the whole proof is a three-step path: the specification of `defSet`, then the
+relabelling of the formula, then absoluteness.
+
+`A` must be transitive for this, which is why the lemma lives in this
+submodule; every stage of the tower is.
+<!--zh-->
+有一条推论值得单独命名，因为第四部要反复倚重它。属于 `defSet φ` 是**内层**世界 `(A, ∈)` 的陈述，而接下来的论证都在环境层级中进行。对 Δ₀ 公式，两种读法一致，那就是绝对性定理；余下的是记账，因为绝对性对类的成员陈述，而 `defSet` 对小索引类型陈述。重标填平这道缝，整个证明是一条三步路径：`defSet` 的规格、公式的重标、然后绝对性。
+
+这需要 `A` 传递，故本引理住在这个子模块里；塔的每个阶段都传递。
+<!--/-->
+
+```agda
+    module Abs = FOL.Absoluteness.Single 𝒮ᵥ M Atrans
+
+    abs-defSet : (φ : Formula ⟪ A ⟫ 1) → Δ₀ φ → (m : ⟪ A ⟫)
+               → (⟪ A ⟫↪ m ∈ˢ defSet φ)
+                 ≡ ((⟪ A ⟫↪ m ∷ []) Abs.⊨ᵛ (mapFo ι φ))
+    abs-defSet φ d m =
+        defSet-mem φ m
+      ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) Abs.𝒮M ι id φ (ι m ∷ []))
+      ∙ Abs.abs₀ (mapΔ₀ ι d) (ι m ∷ [])
 ```
 
 <!--en-->
