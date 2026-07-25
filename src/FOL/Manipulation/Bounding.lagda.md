@@ -36,6 +36,9 @@ module FOL.Manipulation.Bounding where
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy
+  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
+open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 
 open import Cubical.Data.Unit using ( Unit )
 ```
@@ -115,6 +118,119 @@ module _ {ℓk ℓp ℓq} {K : Type ℓk} {P : K → Type ℓp} {Q : K → Type 
 ```
 
 <!--en-->
+## Relabelling, partially
+<!--zh-->
+## 部分地重标
+<!--/-->
+
+<!--en-->
+And the payoff the certificate was for. Relabelling wanted a total function
+between constant domains; here there is only a partial one, defined where the
+predicate holds. The certificate says the predicate holds at every constant a
+given formula actually mentions, so the formula can be relabelled after all,
+occurrence by occurrence, with the certificate supplying the argument at each.
+
+The interface is stated in the generality its user needs. Two domains, a common
+world they both map into, a predicate on the source, a partial map defined under
+it, and the equation saying the partial map agrees with the two projections. In
+the intended instance the source is the model's carrier, the target is a stage's
+member type, the world is the hierarchy, and the equation is the fact that a
+member of a stage, viewed as a set, is the set it was.
+<!--zh-->
+然后是那份证书为之而设的回报。重标要的是常量域之间的全函数；此处只有一个部分函数，在谓词成立处有定义。而证书说该谓词在给定公式实际提到的每个常元处都成立，故这条公式终究还是可以被重标，逐次出现地重标，每一处由证书提供那个参数。
+
+接口以其使用者所需的一般性陈述：两个域、它们共同映入的一个世界、源上的一个谓词、在其之下有定义的一个部分映射，以及说明该部分映射与两个投影相符的等式。在预期的实例中，源是模型的载体，目标是某个阶段的成员类型，世界是层级，而那条等式就是「阶段的成员作为集合看，仍是它原本那个集合」这一事实。
+<!--/-->
+
+```agda
+module Relabel
+  {ℓk ℓk' ℓv ℓp : Level}
+  {K  : Type ℓk}
+  {K' : Type ℓk'}
+  {W  : Type ℓv}
+  (proj : K → W)
+  (up   : K' → W)
+  (P    : K → Type ℓp)
+  (down : (c : K) → P c → K')
+  (down-correct : (c : K) (p : P c) → up (down c p) ≡ proj c)
+  where
+
+  liftTm : ∀ {n} (t : Term K n) → BoundedTm P t → Term K' n
+  liftTm (con c) p = con (down c p)
+  liftTm (var i) _ = var i
+
+  liftFo : ∀ {n} (φ : Formula K n) → BoundedFo P φ → Formula K' n
+  liftFo (t ∈̇ u)  (ht , hu) = liftTm t ht ∈̇ liftTm u hu
+  liftFo (t ≐ u)  (ht , hu) = liftTm t ht ≐ liftTm u hu
+  liftFo (φ ∧̇ ψ)  (hφ , hψ) = liftFo φ hφ ∧̇ liftFo ψ hψ
+  liftFo (φ ∨̇ ψ)  (hφ , hψ) = liftFo φ hφ ∨̇ liftFo ψ hψ
+  liftFo (φ ⇒̇ ψ)  (hφ , hψ) = liftFo φ hφ ⇒̇ liftFo ψ hψ
+  liftFo (¬̇ φ)    hφ        = ¬̇ liftFo φ hφ
+  liftFo ⊤̇        _         = ⊤̇
+  liftFo ⊥̇        _         = ⊥̇
+  liftFo (∃̇ φ)    hφ        = ∃̇ liftFo φ hφ
+  liftFo (∀̇ φ)    hφ        = ∀̇ liftFo φ hφ
+  liftFo (∀̇∈ t φ) (ht , hφ) = ∀̇∈ (liftTm t ht) (liftFo φ hφ)
+  liftFo (∃̇∈ t φ) (ht , hφ) = ∃̇∈ (liftTm t ht) (liftFo φ hφ)
+```
+
+<!--en-->
+Correctness says the relabelling changed nothing that matters: pushing the result
+into the common world along one map gives the same formula as pushing the
+original along the other. That is the equation the two legs of an absoluteness
+argument meet at, and it holds occurrence by occurrence for the reason the
+interface demanded.
+
+The Levy witness survives too, since relabelling touches constants and the
+witness never looks at them.
+<!--zh-->
+正确性说这次重标没有改变任何要紧的东西：沿一个映射把结果推进那个共同世界，与沿另一个映射把原式推进去，得到的是同一条公式。那正是绝对性论证的两条腿会合之处的等式，而它逐次出现地成立，理由正是接口所索取的那一条。
+
+Lévy 见证也存活下来，因为重标动的是常元，而见证从不看它们。
+<!--/-->
+
+```agda
+  liftTm-correct : ∀ {n} (t : Term K n) (h : BoundedTm P t)
+                 → mapTm up (liftTm t h) ≡ mapTm proj t
+  liftTm-correct (con c) p = cong con (down-correct c p)
+  liftTm-correct (var i) _ = refl
+
+  liftFo-correct : ∀ {n} (φ : Formula K n) (h : BoundedFo P φ)
+                 → mapFo up (liftFo φ h) ≡ mapFo proj φ
+  liftFo-correct (t ∈̇ u) (ht , hu) =
+    cong₂ _∈̇_ (liftTm-correct t ht) (liftTm-correct u hu)
+  liftFo-correct (t ≐ u) (ht , hu) =
+    cong₂ _≐_ (liftTm-correct t ht) (liftTm-correct u hu)
+  liftFo-correct (φ ∧̇ ψ) (hφ , hψ) =
+    cong₂ _∧̇_ (liftFo-correct φ hφ) (liftFo-correct ψ hψ)
+  liftFo-correct (φ ∨̇ ψ) (hφ , hψ) =
+    cong₂ _∨̇_ (liftFo-correct φ hφ) (liftFo-correct ψ hψ)
+  liftFo-correct (φ ⇒̇ ψ) (hφ , hψ) =
+    cong₂ _⇒̇_ (liftFo-correct φ hφ) (liftFo-correct ψ hψ)
+  liftFo-correct (¬̇ φ) hφ = cong ¬̇_ (liftFo-correct φ hφ)
+  liftFo-correct ⊤̇ _ = refl
+  liftFo-correct ⊥̇ _ = refl
+  liftFo-correct (∃̇ φ) hφ = cong ∃̇_ (liftFo-correct φ hφ)
+  liftFo-correct (∀̇ φ) hφ = cong ∀̇_ (liftFo-correct φ hφ)
+  liftFo-correct (∀̇∈ t φ) (ht , hφ) =
+    cong₂ ∀̇∈ (liftTm-correct t ht) (liftFo-correct φ hφ)
+  liftFo-correct (∃̇∈ t φ) (ht , hφ) =
+    cong₂ ∃̇∈ (liftTm-correct t ht) (liftFo-correct φ hφ)
+
+  Δ₀-liftFo : ∀ {n} {φ : Formula K n} (h : BoundedFo P φ) → Δ₀ φ → Δ₀ (liftFo φ h)
+  Δ₀-liftFo (ht , hu) δ-∈       = δ-∈
+  Δ₀-liftFo (ht , hu) δ-≐       = δ-≐
+  Δ₀-liftFo (hφ , hψ) (δ-∧ c d) = δ-∧ (Δ₀-liftFo hφ c) (Δ₀-liftFo hψ d)
+  Δ₀-liftFo (hφ , hψ) (δ-∨ c d) = δ-∨ (Δ₀-liftFo hφ c) (Δ₀-liftFo hψ d)
+  Δ₀-liftFo (hφ , hψ) (δ-⇒ c d) = δ-⇒ (Δ₀-liftFo hφ c) (Δ₀-liftFo hψ d)
+  Δ₀-liftFo hφ        (δ-¬ c)   = δ-¬ (Δ₀-liftFo hφ c)
+  Δ₀-liftFo _         δ-⊤       = δ-⊤
+  Δ₀-liftFo _         δ-⊥       = δ-⊥
+  Δ₀-liftFo (ht , hφ) (δ-∀∈ c)  = δ-∀∈ (Δ₀-liftFo hφ c)
+  Δ₀-liftFo (ht , hφ) (δ-∃∈ c)  = δ-∃∈ (Δ₀-liftFo hφ c)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -123,9 +239,10 @@ module _ {ℓk ℓp ℓq} {K : Type ℓk} {P : K → Type ℓp} {Q : K → Type 
 <!--en-->
 `BoundedFo`{.Agda} is a per-occurrence certificate that a formula's constants
 satisfy a predicate, and `BoundedFo-mono`{.Agda} weakens it. Nothing here is
-about sets; the payoff comes when the predicate is "lies in a given stage", at
-which point the certificate is exactly the licence to relabel a formula into
-that stage's constant domain.
+about sets; the payoff is `Relabel`{.Agda}, where the certificate becomes the
+licence to relabel a formula into a smaller constant domain, with
+`liftFo-correct`{.Agda} saying the relabelling changed nothing the meaning
+depends on and `Δ₀-liftFo`{.Agda} carrying the Levy witness across.
 <!--zh-->
-`BoundedFo`{.Agda} 是「公式的常元满足某谓词」的逐次出现证书，`BoundedFo-mono`{.Agda} 把它放宽。此处与集合无关；回报发生在谓词取为「落在给定阶段里」之时，那时这份证书恰是把公式重标进该阶段常量域的许可。
+`BoundedFo`{.Agda} 是「公式的常元满足某谓词」的逐次出现证书，`BoundedFo-mono`{.Agda} 把它放宽。此处与集合无关；回报是 `Relabel`{.Agda}：那里这份证书成为把公式重标进更小常量域的许可，`liftFo-correct`{.Agda} 说这次重标没有改变含义所依赖的任何东西，而 `Δ₀-liftFo`{.Agda} 把 Lévy 见证带了过去。
 <!--/-->
