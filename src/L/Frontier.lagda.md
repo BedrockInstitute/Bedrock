@@ -12,14 +12,20 @@ separates the book from its unconditional theorem, and when it empties, this
 chapter disappears with it.
 
 The debts are exactly the model fields still owed for the constructible
-structure `𝒮ʟ`: earlier chapters produced the world and paid the five basic
-axioms, and the record below lists, field for field, what the model record still
-demands. The choice field is stated relative to an arbitrary ZF model on this
+structure `𝒮ʟ`: earlier chapters produced the world, paid the five basic axioms
+and built the numeral chain, and the record below lists, field for field, what
+the model record still demands. The choice field is stated relative to an arbitrary ZF model on this
 carrier, the same structural form the hierarchy's choice took.
 
-The record has already shrunk once. It opened at eleven fields; the basic axioms
-chapter deleted three of them, and this is what the device is for: the list gets
-shorter, never longer, and the book ends when it is empty.
+The record has already shrunk twice. It opened at eleven fields; the basic
+axioms chapter deleted three and the numeral chain another three, and this is
+what the device is for: the list gets shorter, never longer, and the book ends
+when it is empty. Infinity is the instructive case. Its four fields were never
+one debt: three of them merely built the chain, and only the fourth, the claim
+that the chain is collected into a set, is the axiom's real content. Paying the
+easy three left the hard one stated in terms of the chain now proven, which is
+why the surviving field below reads against an imported `numeralL`{.Agda} rather
+than a field of its own.
 <!--zh-->
 本书采取从根开始的构造：主定理**现在**陈述，在余下诸部中**逐步完成**。这需要一件装置，而诚实要求它既不是洞也不是公设。**前沿**就是那件装置：一个 record，其字段恰是尚未证明的陈述，于是下一章的根定理是一条**由**前沿出发的普通定理。这里的每个字段都是一笔债；本书余下的每一章偿还其中若干；字段一经证明即被删除。这个 record 是「离无条件定理还差什么」的实时登记簿，账清之日，本章随之消失。
 
@@ -41,8 +47,8 @@ open import FOL.Syntax using ( Formula )
 import FOL.Semantics
 import FOL.ZFModel
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Axioms.Infinity {ℓ} using ( numeralL )
 
-import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 
@@ -93,13 +99,6 @@ record Frontier : Type (ℓ-suc (ℓ-suc ℓ)) where
                          → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
                     → isContr (SetOf (λ y → ⋁ S (λ x → (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ))))
     hasPowerL       : (a : S) → isContr (SetOf (λ x → x ⊆ˢ a))
-    numeralL        : ℕ → S
-    numeralL-zero   : (z : S) → ⟨ z ∈ˢ numeralL zero ⟩ → Empty.⊥
-    numeralL-suc    : (n : ℕ) (z : S)
-                    → (⟨ z ∈ˢ numeralL (suc n) ⟩
-                         → ⟨ (z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n) ⟩)
-                    × (⟨ (z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n) ⟩
-                         → ⟨ z ∈ˢ numeralL (suc n) ⟩)
     hasInfinityL    : isContr (SetOf (λ x →
                         ⋁ (Lift {ℓ-zero} {ℓ-suc ℓ} ℕ) (λ n → x ≈ˢ numeralL (lower n))))
     hasChoiceL      : (zf : isZFModel) → ChoiceStatement zf
@@ -112,9 +111,11 @@ record Frontier : Type (ℓ-suc (ℓ-suc ℓ)) where
 <!--/-->
 
 <!--en-->
-Eight debts, each the verbatim statement of a model field at `𝒮ʟ`, none of them
-a postulate: they are hypotheses of the next chapter's theorem, and the book's
-remaining work is the shrinking of this record to nothing.
+Five debts, each the verbatim statement of a model field at `𝒮ʟ`, none of them a
+postulate: they are hypotheses of the next chapter's theorem, and the book's
+remaining work is the shrinking of this record to nothing. Separation,
+replacement, power set, the collection of the numerals, and choice: from here on
+every one of them is hard.
 <!--zh-->
-八笔债，每笔都是模型字段在 `𝒮ʟ` 处的原文陈述，无一是公设：它们是下一章定理的假设，而本书余下的工作，就是把这个 record 缩减为空。
+五笔债，每笔都是模型字段在 `𝒮ʟ` 处的原文陈述，无一是公设：它们是下一章定理的假设，而本书余下的工作，就是把这个 record 缩减为空。分离、替换、幂集、数码的收集，以及选择：从此处起，每一笔都是硬的。
 <!--/-->

@@ -51,6 +51,8 @@ import FOL.ZFModel
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
 open import L.Axioms.Basic {ℓ}
   using ( extensionalL; regularityL; hasEmptyL; hasPairL; hasUnionL )
+open import L.Axioms.Infinity {ℓ}
+  using ( numeralL; numeralL-zero; numeralL-suc )
 
 open hPropStructure 𝒮ʟ
 open Frontier F
@@ -66,13 +68,12 @@ open ModelL using ( isZFModel; isZFCModel )
 <!--/-->
 
 <!--en-->
-Assembly. Five fields come from the basic axioms chapter, seven from the
-frontier, and the choice field is applied to the very model being assembled, in
-the structural form the frontier states it. The proportion is the progress bar:
-every chapter that pays a debt moves a field from the second column to the
-first.
+Assembly. Eight fields come from the axiom chapters, four from the frontier, and
+the choice field is applied to the very model being assembled, in the structural
+form the frontier states it. The proportion is the progress bar: every chapter
+that pays a debt moves a field from the second column to the first.
 <!--zh-->
-合龙。五个字段来自基本公理那一章，七个取自前沿，选择字段则以前沿所陈述的结构形式，作用于正被装配的这个模型自身。这个比例就是进度条：每一章还清一笔债，就把一个字段从第二栏挪到第一栏。
+合龙。八个字段来自诸公理章，四个取自前沿，选择字段则以前沿所陈述的结构形式，作用于正被装配的这个模型自身。这个比例就是进度条：每一章还清一笔债，就把一个字段从第二栏挪到第一栏。
 <!--/-->
 
 ```agda
@@ -103,10 +104,10 @@ L⊨ZFC = record { zf = L⊨ZF ; hasChoice = hasChoiceL L⊨ZF }
 
 <!--en-->
 The root stands: `L⊨ZFC`{.Agda}, the constructible structure models ZFC, proven
-from the excluded-middle interface and the frontier, with extensionality and
-regularity supplied by transitivity rather than assumed. What the reader should
+from the excluded-middle interface and the frontier. What the reader should
 carry away is the shape of the claim: a semantic, relative consistency theorem,
-priced in the open. The rest of the book is the paying down of the frontier.
+priced in the open. Two thirds of the fields are now theorems rather than
+hypotheses, and the rest of the book is the paying down of the remainder.
 <!--zh-->
-根已立起：`L⊨ZFC`{.Agda}，可构造结构满足 ZFC，由排中律接口与前沿证得，其中外延与正则由传递性供应而非假设。读者该带走的是这个论断的形状：一条语义的、相对的一致性定理，价格摆在明处。本书余下的一切，就是逐笔偿清前沿。
+根已立起：`L⊨ZFC`{.Agda}，可构造结构满足 ZFC，由排中律接口与前沿证得。读者该带走的是这个论断的形状：一条语义的、相对的一致性定理，价格摆在明处。三分之二的字段如今是定理而非假设，而本书余下的一切，就是逐笔偿清其余。
 <!--/-->
