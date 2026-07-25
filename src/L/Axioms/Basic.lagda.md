@@ -112,6 +112,23 @@ because successors of ordinals are ordinals.
 ```
 
 <!--en-->
+Composing that with the recognition principle for the operator gives the form
+every later construction actually uses, and it deserves a name of its own: to
+put a set in `L`, exhibit a stage, a formula, and an extensional equation saying
+the formula carves out exactly that set. Nothing else is ever required, and the
+three constructions below are its first three instances.
+<!--zh-->
+把它与算子的识别原则复合，就得到日后每个构造实际使用的形式，值得单独命名：要把一个集合放进 `L`，拿出一个阶段、一条公式，以及一个说明该公式恰好刻出该集合的外延等式。此外别无要求，而下面三个构造正是它的头三个实例。
+<!--/-->
+
+```agda
+defSet→isL : (σ : V ℓ) → IsOrd σ → (x : V ℓ)
+           → ∥ Σ[ φ ∈ Formula ⟪ Lset σ ⟫ 1 ] (DefOf.defSet (Lset σ) φ ≡ x) ∥₁
+           → ⟨ isL x ⟩
+defSet→isL σ oσ x p = 𝒟ₒ→isL σ oσ x (𝒟ₒ-intro (Lset σ) x p)
+```
+
+<!--en-->
 ## Two sets, one stage
 <!--zh-->
 ## 两个集合，一个阶段
