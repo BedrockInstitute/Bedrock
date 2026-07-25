@@ -40,12 +40,14 @@ module L.Ordinal {ℓ : Level} where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import V.Coding {ℓ} using ( #-inj′ )
 open import L.Constructible {ℓ}
   using ( isTransV; isPropIsTransV; ∅-trans; setUnion-trans; IsOrd; isPropIsOrd )
 
+open import Cubical.Data.Nat.Order using ( _<_; ≤-suc; isProp≤ )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( _∈ₛ_; ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -241,6 +243,38 @@ numeral-mem (suc k) y y∈ = ∈sucV-elim (snd (y ∈ˢ ω)) y∈
     (λ { (k , #k≡x) →
       numeral-mem (lower k) y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym #k≡x) y∈x) })
     x∈ω
+```
+
+<!--en-->
+## What lies below a numeral
+<!--zh-->
+## 数码之下有什么
+<!--/-->
+
+<!--en-->
+The numerals are not merely ordinals, they are *counted* by ordinals: the members
+of the numeral for `n` are exactly the numerals for the smaller naturals. The
+first half of that, elimination, is one induction with the successor eliminator;
+the second half, that a numeral belonging to a numeral means the indices compare,
+follows by injectivity. The coding chapters will use these to read an index out of
+a set, which is what a bound on a variable ultimately means.
+<!--zh-->
+数码不只是序数，它们还被序数**计数**：`n` 的数码的成员，恰是更小自然数的数码。前一半即消去，是一次沿后继消去子的归纳；后一半，即数码属于数码意味着序号可比，则由单射性得出。编码诸章将用它们从一个集合里读出序号，而那正是变元的界最终的含义。
+<!--/-->
+
+```agda
+∈#-elim : (n : ℕ) (z : S) → ⟨ z ∈ˢ (# n) ⟩
+        → ∥ Σ[ m ∈ ℕ ] ((m < n) × (z ≡ # m)) ∥₁
+∈#-elim zero    z h = Empty.rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst h))
+∈#-elim (suc n) z h = ∈sucV-elim {A = # n} {x = z}
+  {P = ∥ Σ[ m ∈ ℕ ] ((m < suc n) × (z ≡ # m)) ∥₁} squash₁ h
+  (λ z∈#n → PT.map (λ { (m , p , e) → m , ≤-suc p , e }) (∈#-elim n z z∈#n))
+  (λ e → ∣ n , (0 , refl) , e ∣₁)
+
+#∈#-elim : (a b : ℕ) → ⟨ (# a) ∈ˢ (# b) ⟩ → a < b
+#∈#-elim a b h = PT.rec isProp≤
+  (λ { (m , p , e) → subst (_< b) (sym (#-inj′ e)) p })
+  (∈#-elim b (# a) h)
 ```
 
 <!--en-->
