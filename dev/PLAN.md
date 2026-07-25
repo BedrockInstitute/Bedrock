@@ -910,7 +910,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L2 | Axiom branches | SUSPENDED 2026-07-25 after L2.1, by owner ruling: phase B of L3 runs first (§6.1). Resumes at L2.2 |
 | L2.0 | Basic axioms | DONE 2026-07-25 (`L.Ordinal` + `L.Axioms.Basic` + `L.Constructible` additions; extensionality and regularity re-homed from `L.Model`; Frontier 11 fields → 8; no `lem`, the whole goal is constructive) |
 | L2.1 | Infinity | DONE 2026-07-25 (`L.Axioms.Infinity` + `L.Ordinal.Stages`; Frontier 8 → 4). The chain is constructive, the collection step is not: it needs `ω ∈ L`, hence `ord∈Lset-suc`, hence trichotomy |
-| L2.2 | Separation and Replacement | ACTIVE 2026-07-25 (resumed after L3.14 closed). Landed: `L.Stage` (generalized to `leastOrd`), `Relabel` (into `FOL.Manipulation.Bounding`); `Relativize` was already ported at `[L1.4]`. Landed `L.Axioms.Separation`, complete: the Δ₀ engine, the parameter-bounding recursion, and `separateΔ₀`/`replaceΔ₀` unconditionally for the bounded fragment. Landed `L.Reflect`: Montague closure and the single-∃ reflection theorem, **without the well-ordering of `L`** (finding below), so `WellOrder`/`FormulaOrder`/`ΣSWO` leave this goal for `[L2.4]`. Remaining: the multi-parameter and ∃-block extensions, then `ModelACSep` |
+| L2.2 | Separation and Replacement | ACTIVE 2026-07-25 (resumed after L3.14 closed). Landed: `L.Stage` (generalized to `leastOrd`), `Relabel` (into `FOL.Manipulation.Bounding`); `Relativize` was already ported at `[L1.4]`. Landed `L.Axioms.Separation`, complete: the Δ₀ engine, the parameter-bounding recursion, and `separateΔ₀`/`replaceΔ₀` unconditionally for the bounded fragment. Landed `L.Reflect`: Montague closure and the single-∃ reflection theorem at an arbitrary tuple of parameters, **without the well-ordering of `L`** (findings below), so `WellOrder`/`FormulaOrder`/`ΣSWO` leave this goal for `[L2.4]` and the source's `ReflectN` never becomes a chapter. Remaining: `ReflectFo` (structural induction over an arbitrary formula, the joint tower), then `ModelACSep` |
 | L2.3 | Power via Condensation | PLANNED, deferred behind L3 phase B |
 | L2.4 | Well-order and Choice trunk | PLANNED, deferred behind L3 phase B |
 | L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | PLANNED |
@@ -1018,6 +1018,16 @@ One row per goal code; update the row in the same commit that changes the status
   `Lset-mono` a two-line corollary, replacing the three ad-hoc inversion helpers the
   source rebuilds inside `Reflect`. `bound2` moved from `L.Axioms.Separation` to
   `L.Ordinal`, where it is one of two consumers' shared ordinal theory.
+  **Second saving in the same goal, taken immediately:** the source writes the
+  single-parameter reflection and then re-derives it at a tuple of parameters in a
+  separate chapter (`ReflectN`, 381), calling the second a "parallel re-derivation".
+  Every step of the construction is indifferent to the number of parameters; the tuple
+  is felt in exactly one place, locating it, where finitely many layers must be merged.
+  Bedrock therefore writes the engine once at `k` parameters, with the merge done by an
+  explicit-gap reach lemma (`βₙ n ∈ βₙ (suc (d + n))`, one `+-comm` to merge two) rather
+  than an order relation on ℕ. `ReflectN` does not exist as a chapter here. Combined
+  with the well-order finding, `[L2.2]` is about 1,000 source lines lighter before
+  `ReflectFo` is reached.
 - **Theorem statement [L3.0.4]:** delivered 2026-07-25 in
   [memos/L3.0.4-theorem-statement.md](memos/L3.0.4-theorem-statement.md), awaiting owner
   gate. **The prerequisite was narrower than PLAN assumed.** `[L2.2]` was made the gate on
