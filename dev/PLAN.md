@@ -910,7 +910,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L2 | Axiom branches | SUSPENDED 2026-07-25 after L2.1, by owner ruling: phase B of L3 runs first (§6.1). Resumes at L2.2 |
 | L2.0 | Basic axioms | DONE 2026-07-25 (`L.Ordinal` + `L.Axioms.Basic` + `L.Constructible` additions; extensionality and regularity re-homed from `L.Model`; Frontier 11 fields → 8; no `lem`, the whole goal is constructive) |
 | L2.1 | Infinity | DONE 2026-07-25 (`L.Axioms.Infinity` + `L.Ordinal.Stages`; Frontier 8 → 4). The chain is constructive, the collection step is not: it needs `ω ∈ L`, hence `ord∈Lset-suc`, hence trichotomy |
-| L2.2 | Separation and Replacement | ACTIVE 2026-07-25 (resumed after L3.14 closed). Landed: `L.Stage`, `Relabel` (into `FOL.Manipulation.Bounding`); `Relativize` was already ported at `[L1.4]`. Landed also `L.Axioms.Separation` (the Δ₀ engine). Remaining: the parameter-bounding recursion, `WellOrder`, the three reflection chapters, `ModelACSep` |
+| L2.2 | Separation and Replacement | ACTIVE 2026-07-25 (resumed after L3.14 closed). Landed: `L.Stage`, `Relabel` (into `FOL.Manipulation.Bounding`); `Relativize` was already ported at `[L1.4]`. Landed also `L.Axioms.Separation`, complete: the Δ₀ engine, the parameter-bounding recursion, and `separateΔ₀`/`replaceΔ₀` unconditionally for the bounded fragment. Remaining: `WellOrder`, the three reflection chapters, `ModelACSep` |
 | L2.3 | Power via Condensation | PLANNED, deferred behind L3 phase B |
 | L2.4 | Well-order and Choice trunk | PLANNED, deferred behind L3 phase B |
 | L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | PLANNED |
