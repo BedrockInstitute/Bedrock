@@ -240,10 +240,11 @@ import V.Model
   stage holding the argument and the formula's constants; the content is that
   membership in the carved set is satisfaction in the model.
 - `L.Reflect`{.Agda}: Montague's argument, answering a class-sized existential
-  inside a set. Iterating "bound the least stages that hold a witness" through
-  the naturals gives a stage that reflects the existential for every parameter it
-  contains; taking the least stage rather than the least witness is what keeps
-  the well-ordering of L out of it.
+  inside a set. A **ladder** is an ascending chain of ordinals; if each rung's
+  environments have their answering stages on the next, its limit reflects the
+  existential for every tuple of parameters it contains. `Single`{.Agda} is the
+  ladder for one matrix. Taking the least stage rather than the least witness is
+  what keeps the well-ordering of L out of it.
 - `L.Axioms.Infinity`{.Agda}: the numeral chain inside `L`, pinned to the
   hierarchy's numerals by projection equations for the model's own pairing,
   union and successor.
@@ -269,7 +270,7 @@ import V.Model
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 - `L.Axioms.Separation`{.Agda}：Δ₀ 公式的分离与替换，在装下实参与公式全部常元的阶段上；其内容是「属于刻出的集合就是在模型中满足」。
-- `L.Reflect`{.Agda}：Montague 的论证，在一个集合之内回答真类大小的存在量词。沿自然数迭代「界住装有见证的最小阶段」，就得到一个阶段，它为自己包含的每个参数反射那个存在量词；取最小阶段而非最小见证，正是把 L 的良序挡在门外的那一手。
+- `L.Reflect`{.Agda}：Montague 的论证，在一个集合之内回答真类大小的存在量词。**梯**是上升的序数链；若每一级的环境其作答阶段都落在下一级上，则它的极限为自己包含的每个参数元组反射那个存在量词。`Single`{.Agda} 是单矩阵的梯。取最小阶段而非最小见证，正是把 L 的良序挡在门外的那一手。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
 
