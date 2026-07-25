@@ -68,6 +68,88 @@ Facts an implementing agent needs before touching the port:
   (`../fol-reification/docs/ROUTE-TREE.md`) with dotted-decimal goal codes. Bedrock
   adopts a lightened version of the same discipline (D9, rules in §6.0).
 
+### 2.1 Cost anatomy (measured 2026-07-25)
+
+Where the source's mass actually sits, measured by attributing every module to the
+`isZFCModel` field whose proof term reaches it. Method: non-blank lines inside
+` ```agda ` fences (prose excluded, so these numbers are smaller than the 70.7k above);
+transitive dependency closure from each field's filling term; module granularity, except
+the six assembly modules (`L.ModelAC`, `L.ModelACSep`, `L.ModelACNum`, `L.Condensation`,
+`L.ModelZFC`, `L.ModelZFCFinal`), which are split per definition so that the small fields
+are not swallowed by the module hosting five of them. The whole `L⊨ZFC` cone is 150
+modules and 48,260 code lines; the other 22 modules (2,521 lines) are probes and unwired
+experiments, which the consumption audit drops at port time anyway.
+
+Field names below are Bedrock's (§4 ledger), source names in parentheses where they
+differ. "Body" is the code that literally fills the field, "cone" includes all shared
+dependencies (so the column does not add up), "own" is code reachable from this field
+alone.
+
+| `isZFCModel` field | body | cone | own |
+|---|---:|---:|---:|
+| `extensional` | 13 | 2,279 | 13 |
+| `regularity` (`foundation`) | 7 | 2,273 | 7 |
+| `hasEmpty` | 20 | 2,286 | 0 |
+| `hasPair` | 48 | 2,314 | 0 |
+| `hasUnion` | 65 | 2,331 | 0 |
+| `hasSeparation` (`hasSep`) | 87 | 4,924 | 0 |
+| `hasReplacement` (`hasRepl`) | 167 | 5,004 | 0 |
+| `hasPower` | 33 | 3,038 | 149 |
+| `numeral` | 54 | 2,791 | 0 |
+| `numeral-zero` (`num0`) | 3 | 2,819 | 3 |
+| `numeral-suc` (`numS`) | 18 | 2,834 | 18 |
+| `hasInfinity` | 21 | 2,812 | 21 |
+| `hasChoice` | 68 | 47,839 | **42,354** |
+
+Read as a partition, the twelve ZF fields own 211 lines between them. Their real cost is
+three shared blocks: the framework and carrier trunk (2,266 lines, reached by all
+thirteen), the Δ₀ engine with the full-formula reflection machinery (2,571 lines, serving
+separation, replacement, power and choice), and the numeral chain (392 lines, serving the
+four infinity-side fields). Everything else is `hasChoice`: 42,354 lines, 88% of the
+cone, of which 42,258 sit in 106 modules that no other field touches.
+
+That mass is not one proof. It is 8 to 10 hand-built instantiations of a single pipeline
+(step function to Δ₀ graph to "the graph is a set of L" to certificate to soundness),
+once each for comparison, depth, the order itself, satisfaction, traces, coherence,
+sequence codes, and the closure families. Clone measurement over the twin families, after
+normalizing names, gives the shape of it:
+
+| module pair (renaming-normalized) | similarity |
+|---|---:|
+| `CmpCertMatrix` / `DepthCertMatrix` | 86% |
+| `CmpCodeCarrier` / `DepthCodeCarrier` | 67% |
+| `CmpGraphInL` / `DepthGraphInL` | 60% |
+| `CmpGraphInLFinal` / `DepthGraphInLFinal` | 50% |
+| `CmpSound` / `DepthSound` | 8% |
+| `OrderGraph` / `CmpGraph` | 4% |
+
+So the scaffolding repeats and the soundness segments do not: the mathematics genuinely
+differs per instance, but the harness around it is written out once per instance. The
+reason is structural. The source has no counterpart of the layer textbooks carry as
+rudimentary functions and Σ-recursion absoluteness, that is, no general theorem saying a
+recursively defined function is internalizable in L. Every function builds its own.
+Density counts corroborate the picture: 27.9 formula-syntax tokens and 8.3 Δ₀ witness
+tokens per 100 lines, 3,963 explicitly spelled implicit arguments and 139 `opaque` seals
+(the M2.7 performance tax), and 53% of all lines sitting inside `where` blocks.
+
+Projected reduction, by lever, each with the goal code that executes it and the register
+entry that tracks it:
+
+| Lever | Headroom | Code | Candidate |
+|---|---|---|---|
+| General internalization theorem | to roughly 8k to 12k total | `[L3.0]` | S5 |
+| `reify!` macro industrialization | 4k to 6k | `[L3.2]` | S6 |
+| Scaffolding parameterization | 3k to 5k | `[L3.4]` | S3 |
+| Transition-layer sweep | 2k to 3k | `[L3.1]` | S9 |
+| Transport and cast solver | 1k to 2k, high risk | `[L3.9]` | S7 |
+| Dispatch-grid generation | 1k to 1.5k, source lines only | `[L3.8]` | S8 |
+
+The five syntactic levers together are 25% to 40%, and every one of them trades against
+cold-check time. The general theorem is the only lever that reaches further: it would
+collapse the 8 to 10 pipelines into one theorem plus small instances, putting the
+certificate mass in the 8k to 12k range. It is also the only lever that is research
+rather than refactoring. D12 rules on which to take, §6.1 orders their execution.
+
 ## 3. Ratified decisions
 
 | # | Decision | Ruling (owner, 2026-07-16) |
@@ -83,11 +165,12 @@ Facts an implementing agent needs before touching the port:
 | D9 | Goal management | Work is managed by route-tree goal codes in the style of the source's ROUTE-TREE register, rooted at the letter **L**: top-level goals L0 to L5, sub-goals Lx.0 onward. Coding rules in §6.0. Commits and docs touching planned work carry the code in brackets, for example `[L1.4]`. |
 | D10 | Build performance | The build constraints of §7 are binding from the first ported module: single-invocation trusted gate, parallelism outside the trust base, tracked cold-check budget, per-module heap caps. Cold-check regressions are defects, not background noise. |
 | D11 | Revisability | The plan legislates for known unknowns explicitly: legislation may be added mid-course (standing L0 track), the skeleton below the part level may be re-cut after L3, Frontier fields may be re-cut, and a whole-book harmonization pass runs at L4. Mechanisms in §8. |
+| D12 | L3 reduction strategy | Ruled 2026-07-25: **take the big lever first.** Before the certificate clusters are reduced one by one, attempt a general **internalization theorem for L-recursion** (goal `[L3.0]`). Grounds: the §2.1 measurement shows the certificate mass is 8 to 10 hand-built instantiations of one pipeline, repeating because the source has no rudimentary-function / Σ-recursion absoluteness layer; the syntactic levers cap out at 25% to 40%, the theorem reaches roughly 65%. This is research, not refactoring, so it runs under an explicit paper-level gate and pre-agreed kill criteria (`[L3.0.3]`, `[L3.0.1]`), and D3's per-cluster reduction review stands as the route for whatever the theorem does not absorb. Schedule ruling, same day: the paper-level probe `[L3.0.3]` opens **before** L2, so the route's cheap kill signal arrives before the axiom branches commit to a Frontier cut at the certificate boundary. |
 
 ## 4. Target skeleton (D5)
 
 Top-level parts mirror the book's parts. The part level (Base, FOL, ZF, V, L,
-Landmarks) is fixed; **cluster-internal layout is provisional until the L3.4
+Landmarks) is fixed; **cluster-internal layout is provisional until the L3.10
 re-layering review** (tension T2), and file splits inside a cluster are finalized at
 port time under the STYLE-agda rules (L0.0).
 
@@ -122,12 +205,14 @@ src/
     ├─ Model                 ★ root: L ⊨ ZFC (Frontier-parameterized until L4)
     ├─ Ordinal/, Hierarchy/  ordinals, L-stages
     ├─ Definability/         the Def operator
+    ├─ Recursion/            PENDING [L3.0]: the internalization theorem for
+    │                        L-recursion; the clusters below become its instances
     ├─ Satisfaction/         internal Tarski truth in L
     ├─ Coding/               formula and sequence coding
     ├─ Closure/              "x is in L" closure lemmas
     ├─ Axioms/               per-axiom chapters: Basic, Separation, Replacement, Infinity, Power
     ├─ Condensation/         condensation and the power-set bound
-    ├─ WellOrder/            the global well-order <L; Certificates/ pending L3.3 (§10 S3)
+    ├─ WellOrder/            the global well-order <L; Certificates/ pending L3.7 (§10 S3)
     └─ Choice/               the choice set in L
 ```
 
@@ -172,7 +257,7 @@ rows rather than editing old ones):
 | `L.{FFST*, Canon*, SatSetInL, SeqSetInL}` | `L.Closure.*` | |
 | `L.{Condensation, PowerBound, CondReduce}` | `L.Condensation.*`, feeding `L.Axioms.Power` | |
 | `L.{ConstructibleOrder, WellOrder2}` | `L.WellOrder.*` | |
-| `L.{Cmp*, Depth*, Order*, Trace*, Coh*}` | `L.WellOrder.Certificates.*` | layout decided by the L3.3 reduction review |
+| `L.{Cmp*, Depth*, Order*, Trace*, Coh*}` | `L.WellOrder.Certificates.*` | layout decided by the L3.7 reduction review |
 | `L.{ChoiceSetInL2, Choice*}` | `L.Choice.*` | |
 | `ZF.Model.foundation` | `regularity` | `[L1.4]`: aligns with the glossary's canonical term for the axiom; one axiom, one name |
 | `ZF.Model.{hasSep, hasRepl, sep, num0, numS}` | `hasSeparation`, `hasReplacement`, `separate`, `numeral-zero`, `numeral-suc` | `[L1.4]`: registered-abbreviation rule (STYLE-agda §3); `Sep`/`Repl`/`num` are unregistered |
@@ -223,6 +308,8 @@ rows rather than editing old ones):
 | `V.Smallness.isSmall` + `Base.Classical.{Resizing, HPropSmallness, Impredicativity}` | `Base.Impredicativity` (new chapter, owner ruling 2026-07-19) | `isSmall` moves to Part 0 so `Resizing ℓ` reads as "every `P : hProp (ℓ-suc ℓ)` is small"; the owner does not want `V.Smallness` to depend on the classical chapter, so the size vocabulary gets its own chapter between Truth and Classical, interfaces only; Classical keeps `LEM`, `lowerLEM`, and the three `lem→` redemptions (`resizeDec` restated over `isSmall`) |
 | identity lambdas (`ι x = x`, `λ m → m`, `λ (x : S) → x`) | `id`, minted in `Base.Prelude` (owner ruling, 2026-07-20) | cubical has only the explicit-argument `idfun`, so per owner instruction the hub defines the book's one home-grown function; the seven canonical-interpretation sites (`ZFModel`, `V.Smallness` twice, `V.Model`, `L.Frontier`, `Absoluteness.Single`, `Certified.Transfer`) now read `open At id`-style |
 | `module At {ℓc} {K} (ι : K → S)` | `module At {ℓc} (K : Type ℓc) (ι : K → S)` (owner ruling, 2026-07-20) | the constant domain is the load-bearing datum of an interpretation and every open now names it (`open At S id`, `SemV.At SM fst`, `open At (⊥* {ℓe}) …`), retiring the `{K = …}` pins at `Renaming` and `Single` |
+| `L.{Cmp*, Depth*, Order*, Trace*, Coh*}` | `L.Recursion` + per-function instances, pending `[L3.0]` | D12, 2026-07-25: conditional successor to the `L.WellOrder.Certificates.*` row above. On a green `[L3.0.2]` verdict the theorem takes the working name `L.Recursion` and reads before the clusters that instantiate it; each source pipeline becomes a short instance chapter under the cluster that owns its mathematics. On a red verdict this row is void and the `Certificates.*` row governs |
+| `Reification.Tactic` | revisited by S6 (§10) | 2026-07-25: the "deferred (zero consumers)" row above stands for the port itself, but the macro is the second-largest measured lever (4k to 6k); if S6 is taken up, the deferral is reversed under the goal code that takes it |
 
 ## 5. Working mechanisms (D2, D8)
 
@@ -285,7 +372,11 @@ import order). Neither order constrains the other.
 3. **Immutable and append-only.** A code, once assigned, is never renamed, deleted,
    reused, or renumbered. New work takes the next free number under its parent. A
    goal that gets re-stated or re-split gets a **new** code; the old one is marked
-   SUPERSEDED with a pointer.
+   SUPERSEDED with a pointer. **Carve-out (owner ruling, 2026-07-25):** a branch whose
+   codes have *all* never left PLANNED, with no work committed against any of them,
+   may be renumbered once by explicit owner ruling; the old-to-new map is recorded in
+   §11 so earlier references stay traceable. Exercised once so far, for L3, on the day
+   the reduction levers were registered.
 4. **What gets a code:** a goal with its own success criterion (a chapter cluster, a
    spike, a review, a piece of legislation). Individual lemmas and modules are
    artifacts hanging under a code, not codes themselves.
@@ -367,11 +458,15 @@ Gate for L1: L0.0 to L0.3 DONE and approved by the owner.
   accounting.
 
 All L1 ports carry full textbook prose (en + zh). Gate for L2: `make check` green;
-the owner reads the trunk end to end as a book and signs off the tone.
+the owner reads the trunk end to end as a book and signs off the tone. `[L3.0.3]`, the
+paper-level probe of the L3 big lever, opens at this same boundary and runs alongside
+L2; it is source-reading only, so it neither blocks nor is blocked by this gate.
 
 **[L2] The axiom branches, in pedagogical order.**
 Each branch descends until it hits a technical cluster flagged for reduction review;
-those cuts stay in the Frontier (T3). Per-branch exit: check green, prose complete
+those cuts stay in the Frontier (T3). `[L2.4]` additionally waits on the `[L3.0.3]`
+verdict before fixing its Frontier cut, so that the certificate-boundary cut is made in
+the theorem's shape if the theorem is viable (T5 avoidance, D12 schedule ruling). Per-branch exit: check green, prose complete
 (en + zh), glossary updated, the branch's Frontier fields deleted or explicitly
 re-cut.
 
@@ -387,21 +482,148 @@ re-cut.
 - **[L2.4]** Well-order and Choice trunk; source `L.ConstructibleOrder`,
   `L.WellOrder2`, `L.ChoiceSetInL2`, stopping at the certificate-cluster boundary.
 
-**[L3] The technical layer, reduction-first (D3).**
-Per cluster, in this order: (1) a **reduction review memo** (what the cluster does,
-why it is as large as it is, the consolidation plan, the projected size, the layering
-design for the narration, and the **impact list** on already ported chapters, T5);
-(2) owner gate on the memo; (3) port per the approved plan, measuring check-time
-throughout (§7); (4) prose at full narrative quality by default, with the D3
+**[L3] The technical layer, big lever first (D12), then reduction-first (D3).**
+`[L3.0]` runs ahead of the cluster work and decides its shape: it attempts the general
+internalization theorem, and only what the theorem does not absorb goes through the
+per-cluster review. That review is unchanged: (1) a **reduction review memo** (what the
+cluster does, why it is as large as it is, the consolidation plan, the projected size,
+the layering design for the narration, and the **impact list** on already ported
+chapters, T5); (2) owner gate on the memo; (3) port per the approved plan, measuring
+check-time throughout (§7); (4) prose at full narrative quality by default, with the D3
 per-cluster fallback only on explicit sign-off.
 
-- **[L3.0]** Coding cluster (source `Code*`, `Formula*`, `VarCoding`, `SeqChar`).
-- **[L3.1]** Satisfaction cluster (source `Sat*`, `Tarski*`, `Realize`, `Reflect*`
+Each measured reduction lever of §2.1 carries its own code. This branch was renumbered
+on 2026-07-25, before any L3 work began, under the §6.0 rule 3 carve-out (map in §11),
+so that sibling numbers run in **execution order**:
+
+> `[L3.0.3]` subsumption probe (opens **before** L2) → `[L3.0.4]` theorem statement
+> (after `[L2.2]`) → `[L3.1]` sweep → `[L3.2]` `reify!` → `[L3.3]` coding →
+> `[L3.0.1]` proof of concept → `[L3.0.2]` verdict → green: instantiation goals under
+> new codes / red: `[L3.4]` scaffolding merge → `[L3.5]` `[L3.6]` `[L3.7]` →
+> `[L3.10]` re-layering. `[L3.8]` and `[L3.9]` are opportunistic and execute inside
+> whichever goal first needs them.
+
+Two cautions on reading that sequence. The alignment is a convenience of this one
+branch, not a change to §6.0 rule 2: the gate conditions in each bullet stay
+authoritative, and any future L3 goal takes the next free number wherever it executes.
+And the alignment holds at the `L3.x` level only: `[L3.0]` sits first because it opens
+first, but its own sub-goals are numbered in registration order and execute out of it
+(`.3` and `.4` before `.1` and `.2`), which is rule 3 working as designed.
+
+- **[L3.0]** **Internalization theorem for L-recursion (the big lever, D12; S5).** Target
+  statement, working form: from a *step specification* (a tag alphabet, a Δ₀ clause
+  matrix over coded arguments, and a well-founded measure) derive, once and for all,
+  (i) that the induced recursion's trace is a set of L, (ii) a certificate relation
+  sound and complete against the meta-level recursion, and (iii) uniqueness of the
+  certified value. This is the layer the textbooks carry as rudimentary functions and
+  Σ-recursion absoluteness; the source has no counterpart, which is why §2.1 finds the
+  same pipeline written out 8 to 10 times.
+  - **[L3.0.0]** SUPERSEDED 2026-07-25 by `[L3.0.3]` and `[L3.0.4]`. The single design
+    memo was split once the schedule was audited: its source-facing half needs nothing
+    from Bedrock and can run before L2, while its Bedrock-idiom half is blocked on
+    vocabulary that `[L2.2]` fixes. Never started; no content lost.
+  - **[L3.0.3]** **Subsumption probe, source-reading only, opens before L2.** Read the
+    source at the pinned commit and answer one question: does a single step
+    specification subsume `Cmp*` and `Depth*`? They are the closest twins (scaffolding
+    overlap 50% to 86%) and they diverge exactly at soundness (8%), so the answer must
+    take the soundness argument as instance data and absorb only the harness; a design
+    that claims to absorb soundness is wrong. Then classify `Order*`, `Trace*`, `Coh*`,
+    `Sat*` and the closure families as fits or does not fit, with the reason.
+    Deliverables: that fits table, and a **required-interface checklist** naming the
+    vocabulary the theorem will need, so `[L2.2]` and `[L3.3]` can be ported in the
+    shape it wants (compare WORKLOG §5 case 12: codes must be an inductive relation,
+    never raw values whose equalities force normalization). **This is where the cheap
+    kill signal lives:** if no single shape subsumes even the twins, D12's route is red
+    before L2 begins. Runs entirely against `../fol-reification`, touches no `src/`
+    file, and cannot affect `make check`. Owner gate.
+  - **[L3.0.4]** **Theorem statement in Bedrock's idiom.** Prerequisite: `[L2.2]`,
+    which fixes `BoundedFo`, the reflection interface and the separation vocabulary the
+    statement has to speak. Consumes `[L3.0.3]`'s fits table and checklist as input.
+    Deliverables: the specification signature and the theorem stated over Bedrock's
+    names, a projected line budget for the theorem and for one instance, and the list
+    of §4 chapters it would displace. Gated before `[L3.3]` finishes. Owner gate.
+  - **[L3.0.1]** **Proof of concept.** Prerequisite: `[L3.3]`, the coding substrate,
+    since certificates quantify over coded formulas and sequences. Prove the theorem
+    and re-derive the two smallest source pipelines as instances. Measure lines and
+    cold-check per §7. **Kill criteria, agreed in advance:** the theorem fails to reach
+    two instances; or an instance is not materially smaller than the source pipeline;
+    or §7.6's per-module budget is breached and the WORKLOG §5 playbook does not clear
+    it. Any one of them ends the attempt, and the result is written up either way.
+  - **[L3.0.2]** **Verdict and rollout ruling.** Green: `[L3.5]` to `[L3.7]` are
+    re-stated as instantiation goals under new codes and the originals marked
+    SUPERSEDED (§6.0 rule 3); the theorem lands as `L.Recursion` per the §4 ledger row.
+    Red: `[L3.5]` to `[L3.7]` proceed exactly as originally planned, with the S6 and S7
+    levers of §10 as the remaining reduction budget.
+
+  Scheduling and safety: `[L3.0.3]` opens **now**, ahead of L2, because it is the only
+  research-risk item on the critical path and its inputs (the pinned source, plus the
+  `isL` / `Lset` / `Def` vocabulary already landed at `[L1.6]`) all exist; `[L3.0.4]`
+  follows `[L2.2]` and gates before `[L3.3]` finishes; `[L3.0.1]` runs after `[L3.3]`
+  and before `[L3.5]`. Running the probe ahead of `[L2.4]` is deliberate: that branch
+  states its Frontier cut at the certificate-cluster boundary, and knowing the theorem's
+  shape first lets the cut be made in that shape instead of being re-cut later under
+  T5. The Frontier (§5) is what makes a research gamble affordable at all: the
+  certificate cuts stay as fields for the duration, `make check` stays green throughout,
+  and a red verdict costs the attempt and nothing else.
+
+  One risk the split does not remove: a memo written before any axiom branch has been
+  ported in Bedrock is written by a porter still fluent mainly in the source's idiom,
+  which is the D6 failure mode (source research prose is porter intelligence, never
+  translation input). `[L3.0.3]` is scoped to survive it, since a fits table and an
+  interface checklist are findings about the source rather than Bedrock prose, and
+  `[L3.0.4]` is what waits for the idiom to exist.
+
+- **[L3.1]** **Transition-layer sweep (S9), standing.** The cheapest lever and the one
+  that runs first, because every later lever operates on whatever survives it: ahead of
+  each cluster port, run the consumption audit over that cluster and drop what the
+  source's own later strata superseded (iteration remnants such as the `SatWitness` /
+  `SatWitnessK4` pair, bridge modules such as `SubBridge` and `HierarchyBridge`, the
+  `ProbeM1*` probes). Measured headroom 2k to 3k. Success criterion: every cluster memo
+  opens with a drop list naming each dropped module and the audit finding that justifies
+  it, so the reduction is visible rather than silent. Standing goal, no single
+  completion date; it closes with `[L3.10]`.
+- **[L3.2]** **`reify!` industrialization (S6).** Extend the source's reflection macro
+  (currently deferred with zero consumers, §4 ledger) with the three things the L side
+  needs: Δ₀ witness output, `BoundedFo` witnesses, and L-side environment slices. Then
+  re-derive one hand-built formula group and compare. Measured headroom 4k to 6k against
+  roughly 8k to 10k of hand-built formula / witness / adequacy triples. **Independent of
+  the `[L3.0]` verdict**: both routes still need object formulas. Prerequisite: `[L2.2]`
+  (which lands `BoundedFo` and the reflection vocabulary). Gate: the first re-derived
+  group must be smaller and must not regress §7.6's per-module budget, since macro
+  output that misses the playbook's safe shapes will blow up conversion; land it before
+  `[L3.3]` completes so the coding cluster is its first beneficiary.
+- **[L3.3]** Coding cluster (source `Code*`, `Formula*`, `VarCoding`, `SeqChar`). Runs
+  before the `[L3.0]` verdict regardless of route: it is the substrate both need, and it
+  is the first consumer of `[L3.2]`.
+- **[L3.4]** **Scaffolding parameterization (S3), conditional.** Fallback consolidation:
+  merge the repeated pipeline harness (graph, in-L, in-L-final, certificate matrix, code
+  carrier) into modules parameterized over a step specification, leaving each function a
+  short instantiation. Measured headroom 3k to 5k, and measured ceiling: the twins share
+  50% to 86% of their scaffolding but only 4% to 9% of their soundness, so this lever
+  can only ever take the harness. **Gate: opens only on a red `[L3.0.2]`**, since a green
+  verdict absorbs it entirely. Carries the same blowup discipline as `[L3.0]` (explicit
+  implicits, `opaque` seals from the first commit).
+- **[L3.5]** Satisfaction cluster (source `Sat*`, `Tarski*`, `Realize`, `Reflect*`
   remnants).
-- **[L3.2]** Closure cluster (source `FFST*`, `Canon*`, `SatSetInL`, `SeqSetInL`).
-- **[L3.3]** Well-order certificate cluster (source `Cmp*`, `Depth*`, `Order*`,
-  `Trace*`, `Coh*`); the largest, and the §10 S3 unification review.
-- **[L3.4]** Post-reduction **re-layering review** of the whole `L/` subtree (T2):
+- **[L3.6]** Closure cluster (source `FFST*`, `Canon*`, `SatSetInL`, `SeqSetInL`).
+- **[L3.7]** Well-order certificate cluster (source `Cmp*`, `Depth*`, `Order*`,
+  `Trace*`, `Coh*`); the largest at 42.3k source lines (§2.1).
+- **[L3.8]** **Dispatch-grid generation (S8), opportunistic.** Generate the mechanical
+  coverage grids (the source's 12 by 12 tag dispatch in `CmpWitnessSat`, the
+  `CodeOrder.triSameTag` layout) instead of writing out clauses whose bodies carry no
+  mathematics. Measured headroom 1k to 1.5k of **source lines only**: the source's own
+  fix moved those clauses to a cheaper codomain rather than deleting them, so check-time
+  is unaffected and this lever buys readability, not speed. Naturally a byproduct of
+  `[L3.2]`; executes inside whichever cluster goal first hits a grid, and is skipped
+  outright if `[L3.0]` removes the grids.
+- **[L3.9]** **Transport and cast solver (S7), lowest priority.** Spike first, roll out
+  only on evidence: on one module, check whether generated `subst`/`cong` chains keep the
+  playbook's safe shape (path operations sunk into top-level helpers over neutral
+  endpoints) or the inlined shape that WORKLOG §5 cases 14, 15 and 18 had to undo. 3,300
+  measured sites, 1k to 2k of headroom, and the highest risk-to-reward of the five. A
+  failed shape check closes the goal ABANDONED with the measurement recorded; it is not
+  retried per cluster.
+- **[L3.10]** Post-reduction **re-layering review** of the whole `L/` subtree (T2):
   with all clusters landed, revisit the branch splits of §4, re-cut where the
   reduced code suggests a better decomposition, and append the renames to the §4
   ledger.
@@ -482,7 +704,7 @@ impossibility of change.**
   bounded cleanup sweep, scheduled as part of the same L0.x item.
 - **T2: Skeleton finality versus post-reduction insight.** The best split of the `L/`
   branches may only be visible after L3 shrinks the clusters. Relief: only the part
-  level of §4 is fixed; everything below is provisional until the dedicated L3.4
+  level of §4 is fixed; everything below is provisional until the dedicated L3.10
   re-layering review; renames land as appended ledger rows, and goal codes for
   superseded layouts are marked SUPERSEDED rather than rewritten.
 - **T3: Pedagogical order versus dependency order.** L2's teaching order does not
@@ -511,6 +733,8 @@ impossibility of change.**
 | CI wall-clock grows past budget | §7 ceiling plus L5.1/L5.2 split gates and nightly full check; upstream M2.7 numbers bound the worst case. |
 | Translation debt accumulates | A master merges only with en + zh complete (enforced by the marker checker); ja stays pre-supported. |
 | Simplification scope creep | §10 register: every simplification candidate gets its own verify-then-decide entry; the default is a faithful port. |
+| The internalization theorem does not converge (D12) | `[L3.0.3]` is paper-level, runs before L2 and gates before any code is written; `[L3.0.1]` carries kill criteria agreed in advance; the Frontier keeps the tree green for the whole attempt, so a red verdict costs the attempt alone and `[L3.5]` to `[L3.7]` resume as planned. |
+| The generic abstraction resurrects conversion blowups | Abstract parameters over large formulas are the source playbook's own worst case (WORKLOG §5 case 16: one implicit `{φ}` cost 74 minutes on a single module and was fixed by one explicit argument). The theorem's parameters are spelled explicitly and `opaque`-sealed from the first commit, and §7.6 polices every instance; a blowup the playbook cannot clear is a kill criterion, not a puzzle to grind on. |
 | Statement drift toward unqualified "Con(ZFC)" | D1 fixes the framing; the root chapter and Landmarks are the canonical wording; glossary pins the translated terms. |
 | Process drift (ad-hoc naming, unregistered work) | §6.0 rules: no work without a code, no backfilled registration; §11 updated in the same commit as the status change. |
 
@@ -524,8 +748,13 @@ An accepted candidate is executed under the goal code of the cluster it affects.
 |---|-----------|---------------------|--------|
 | S1 | Specialize the truth-algebra abstraction (`TruthAlg`) to plain hProp | Check whether any non-hProp instance is load-bearing in the source | verified 2026-07-16: **rejected**. The record is a law-free operation signature, definitionally transparent on `hPropAlg` (record ι), and is the designed seam for the forcing-stage Boolean instance; only one instance exists today, but the Charter targets forcing. Ported faithfully in `[L1.1]`. |
 | S2 | Merge `Absoluteness2` into `Absoluteness` | Diff the two modules' roles | resolved 2026-07-18: **deferred entirely** instead of merged; `Absoluteness2` has zero code consumers (its route superseded by the source's RAW reflection breakthrough). Ledger row added. |
-| S3 | Unify the five graph-certificate families under shared combinators | This is the L3.3 reduction review itself | open |
+| S3 | Unify the five graph-certificate families under shared combinators | Executes as `[L3.4]` | resolved 2026-07-25: **conditional fallback behind S5.** The §2.1 measurement puts shared combinators at 3k to 5k and shows the families diverge precisely where the mathematics is (soundness segments overlap 4% to 9% after renaming, scaffolding 50% to 86%), so this lever can only ever take the harness. Opens only on a red `[L3.0.2]`; a green verdict absorbs it. |
 | S4 | Fold `ZF.Encoding` / `ZF.Coding` into their consumers | Map their import sites | open |
+| S5 | General internalization theorem for L-recursion | Executes as `[L3.0]`: paper-level subsumption of `Cmp*` and `Depth*` first, then a two-instance proof of concept with kill criteria | **adopted as the primary route** (D12, 2026-07-25); projected to put the 42.3k certificate mass in the 8k to 12k range |
+| S6 | Industrialize the source's `reify!` macro over the L-side formula groups | Executes as `[L3.2]`: extend it with Δ₀ witness output, `BoundedFo` witnesses and L-side environment slices, then re-derive one hand-built formula group and compare lines and check-time | open; projected 4k to 6k against roughly 8k to 10k of hand-built formula / witness / adequacy triples (density: 27.9 formula tokens per 100 lines). Independent of S5 and worth taking on either verdict; reverses the `Reification.Tactic` deferral row in §4 |
+| S7 | Tactic-generated transport and cast steps | Executes as `[L3.9]`, spike first: on one module, check that generated terms keep the playbook's safe shape (top-level helpers, neutral endpoints) rather than the inlined shape that WORKLOG §5 cases 14, 15 and 18 had to undo | open, lowest priority; 3,300 measured `subst`/`cong` sites and 1k to 2k of headroom, but a naive tactic emits exactly the shape those fixes removed, so a failed shape check closes it ABANDONED rather than retrying per cluster |
+| S8 | Generate the mechanical dispatch grids instead of writing their clauses | Executes as `[L3.8]`, opportunistically inside whichever cluster first hits a grid | open; 1k to 1.5k of **source lines only**. The source's own fix moved those clauses to a cheaper codomain rather than deleting them, so check-time is unaffected: this lever buys readability. Byproduct of S6; void if S5 removes the grids |
+| S9 | Drop the source's superseded transition layers ahead of each cluster port | Executes as `[L3.1]`, standing: the consumption audit each port goal already runs, made explicit per cluster | open; 2k to 3k. Bedrock already does this informally (the "deferred (zero consumers)" rows of the §4 ledger); the candidate exists so the drop list is recorded in each cluster memo rather than happening silently |
 
 ## 11. MASTER status table (live)
 
@@ -557,12 +786,23 @@ One row per goal code; update the row in the same commit that changes the status
 | L2.2 | Separation and Replacement | PLANNED |
 | L2.3 | Power via Condensation | PLANNED |
 | L2.4 | Well-order and Choice trunk | PLANNED |
-| L3 | Technical layer (reduction-first) | PLANNED |
-| L3.0 | Coding cluster | PLANNED |
-| L3.1 | Satisfaction cluster | PLANNED |
-| L3.2 | Closure cluster | PLANNED |
-| L3.3 | Certificate cluster (S3) | PLANNED |
-| L3.4 | Re-layering review of L/ | PLANNED |
+| L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | PLANNED |
+| L3.0 | Internalization theorem for L-recursion (S5) | PLANNED (registered 2026-07-25; gates L3.5 to L3.7) |
+| L3.0.0 | Design memo (single) | SUPERSEDED 2026-07-25 by L3.0.3 + L3.0.4; never started |
+| L3.0.3 | Subsumption probe, source-reading only | PLANNED, **opens before L2** (registered 2026-07-25) |
+| L3.0.4 | Theorem statement in Bedrock's idiom | PLANNED (after L2.2, gates before L3.3 completes) |
+| L3.0.1 | Two-instance proof of concept | PLANNED (after L3.3) |
+| L3.0.2 | Verdict and rollout ruling | PLANNED |
+| L3.1 | Transition-layer sweep (S9) | PLANNED, standing (registered 2026-07-25; head of each cluster port, closes with L3.10) |
+| L3.2 | `reify!` industrialization (S6) | PLANNED (registered 2026-07-25; after L2.2, lands before L3.3 completes) |
+| L3.3 | Coding cluster | PLANNED (substrate for both routes; first consumer of L3.2) |
+| L3.4 | Scaffolding parameterization (S3) | PLANNED, conditional (registered 2026-07-25; opens only on a red L3.0.2) |
+| L3.5 | Satisfaction cluster | PLANNED |
+| L3.6 | Closure cluster | PLANNED |
+| L3.7 | Certificate cluster | PLANNED |
+| L3.8 | Dispatch-grid generation (S8) | PLANNED, opportunistic (registered 2026-07-25; inside the first cluster that hits a grid) |
+| L3.9 | Transport and cast solver (S7) | PLANNED, spike first (registered 2026-07-25; lowest priority, ABANDONED on a failed shape check) |
+| L3.10 | Re-layering review of L/ | PLANNED |
 | L4 | Convergence | PLANNED |
 | L4.0 | Empty Frontier, unconditional root | PLANNED |
 | L4.1 | Whole-book harmonization pass | PLANNED |
@@ -592,5 +832,37 @@ One row per goal code; update the row in the same commit that changes the status
   527f13b, 2026-07-14). All L1-L3 porting reads the source at this commit; advancing
   the pin is an explicit `[L0.x]` decision. (The `-WnoUnsupportedIndexedMatch` flag
   turned out to be present in `bedrock.agda-lib` from the start; no change needed.)
+- **L3.0.0 split (§6.0 rule 3, standard re-split):** owner ruling 2026-07-25, after a
+  schedule audit asked whether `[L3.0]` could start before L2. Finding: the memo's
+  source-facing half (does one specification subsume `Cmp*` and `Depth*`, and what
+  interface does the theorem need) depends on nothing but the pinned source, while its
+  Bedrock-idiom half is blocked on `BoundedFo` and the reflection vocabulary that
+  `[L2.2]` fixes; the trace-is-a-set and uniqueness statements are already sayable with
+  the `isL` / `Lset` / `IsOrd` / `Def` vocabulary landed at `[L1.6]`, but the
+  certificate relation is not. So `[L3.0.0]` is marked SUPERSEDED and replaced by
+  `[L3.0.3]` (probe, before L2) and `[L3.0.4]` (statement, after `[L2.2]`), per rule 3's
+  re-split clause rather than the spent renumbering carve-out. `[L3.0.1]` and `[L3.0.2]`
+  were examined and **cannot** move: the proof of concept needs the coding substrate
+  `[L3.3]`, which in turn needs `ZF.Coding` un-deferred.
+- **L3 renumbering (§6.0 rule 3 carve-out):** owner ruling 2026-07-25, exercised while
+  every L3 code was still PLANNED with no work committed against any of them, so that
+  sibling numbers read in execution order. Map, old to new: theorem `L3.5` → **`L3.0`**
+  (sub-goals `L3.5.0/.1/.2` → `L3.0.0/.1/.2`), sweep `L3.6` → **`L3.1`**, `reify!`
+  `L3.7` → **`L3.2`**, coding cluster `L3.0` → **`L3.3`**, scaffolding `L3.8` →
+  **`L3.4`**, satisfaction `L3.1` → **`L3.5`**, closure `L3.2` → **`L3.6`**,
+  certificates `L3.3` → **`L3.7`**, dispatch grids `L3.9` → **`L3.8`**, cast solver
+  `L3.10` → **`L3.9`**, re-layering `L3.4` → **`L3.10`**. No goal was retired, added, or
+  changed in status by the renumbering; the carve-out is spent and L3 codes are
+  immutable again from this point.
+- **Source cost anatomy (§2.1):** measured 2026-07-25 against the pinned commit. Cone of
+  `L⊨ZFC` = 150 modules, 48,260 code lines. Per-field attribution: `hasChoice` owns
+  42,354 (88%), `hasPower` 149, the other eleven fields 62 between them; the shared
+  blocks are the framework trunk 2,266, the Δ₀ engine plus reflection 2,571, the numeral
+  chain 392. Clone measurement over the twin families: scaffolding 50% to 86% identical
+  after renaming, soundness segments 4% to 9%. Verdict feeding D12: the certificate mass
+  is 8 to 10 instantiations of one pipeline, and the missing abstraction is the
+  rudimentary-function / Σ-recursion absoluteness layer. Reproduction: the attribution
+  is a dependency-closure count over ` ```agda ` fences, re-runnable from the pinned
+  source at any time.
 - **Cold-check baseline (§7.5):** n/a (no ported modules yet).
 - **Frontier field count:** n/a (record not yet created).
