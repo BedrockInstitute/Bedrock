@@ -42,7 +42,8 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
 open import L.Coding.Base {ℓ}
-  using ( prAt; Δ₀-prAt; prAt-adequate; ∈pair-introL; ∈pair-introR )
+  using ( prAt; Δ₀-prAt; prAt-adequate; tagAt; Δ₀-tagAt; tagAt-adequate
+        ; ∈pair-introL; ∈pair-introR )
 
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
@@ -392,6 +393,157 @@ shiftPairAt-adequate p' p γ = ⇔toPath fwd bwd
 ```
 
 <!--en-->
+## Extending an environment
+<!--zh-->
+## 扩张环境
+<!--/-->
+
+<!--en-->
+And the formula the quantifier clauses need: the extended environment is the old
+one with a new value at index zero. Three clauses. The entry at key zero holds the
+new value; every entry of the old environment appears shifted in the new one; and
+every entry of the new one is either that first entry or a shift of an old one.
+
+Adequacy is stated against an *encoded* environment, because that is the form the
+certificates hold. Given that the old environment is the graph of `g`, satisfaction
+of the formula says exactly that the new one is the graph of `g` with the value
+consed on. The two sides match key by key, and the match is definitional at the
+index: the numeral for `suc k` is the successor of the numeral for `k`, and
+consing shifts indices by exactly that.
+<!--zh-->
+然后是量词子句所需的那条公式：扩张后的环境就是旧环境在索引零处添上一个新值。三条子句。键零处的条目持有新值；旧环境的每个条目在新环境中移位出现；而新环境的每个条目，或是那第一个条目、或是某个旧条目的移位。
+
+适足性是对**编码后的**环境陈述的，因为那是诸证书所持有的形式。给定旧环境是 `g` 的图，该公式的满足恰好说新环境是 `g` 前置一个值之后的图。两侧逐键相符，而在索引上这个相符是定义性的：`suc k` 的数码就是 `k` 的数码的后继，而前置恰好把索引移那么多。
+<!--/-->
+
+```agda
+consAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
+consAt e' m e =
+  (∃̇∈ (var e') (tagAt zero 0 (suc m)))
+  ∧̇ ((∀̇∈ (var e) (∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero))))
+  ∧̇ (∀̇∈ (var e') ((tagAt zero 0 (suc m))
+                   ∨̇ (∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero)))))
+
+Δ₀-consAt : ∀ {n} (e' m e : Fin n) → Δ₀ (consAt e' m e)
+Δ₀-consAt e' m e =
+  δ-∧ (δ-∃∈ (Δ₀-tagAt zero 0 (suc m)))
+      (δ-∧ (δ-∀∈ (δ-∃∈ (Δ₀-shiftPairAt zero (suc zero))))
+           (δ-∀∈ (δ-∨ (Δ₀-tagAt zero 0 (suc m))
+                      (δ-∃∈ (Δ₀-shiftPairAt (suc zero) zero)))))
+
+consAt-adequate : ∀ {n} (e' m e : Fin n) (γ : (V ℓ) ^ n)
+  {k : ℕ} (g : Fin k → V ℓ)
+  → ⟦ var e ⟧ γ ≡ env g
+  → (γ ⊨ consAt e' m e)
+  ≡ ((⟦ var e' ⟧ γ ≡ env (cons (⟦ var m ⟧ γ) g)) , setIsSet _ _)
+consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
+  where
+  M = ⟦ var m ⟧ γ
+  E = ⟦ var e ⟧ γ
+  E' = ⟦ var e' ⟧ γ
+  G' : Fin (suc k) → V ℓ
+  G' = cons M g
+
+  classify : ((y : V ℓ) → ⟨ y ∈ E' ⟩
+               → ∥ ⟨ (y ∷ γ) ⊨ tagAt zero 0 (suc m) ⟩
+                 ⊎ ⟨ (y ∷ γ) ⊨ ∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero) ⟩ ∥₁)
+           → (y : V ℓ) → ⟨ y ∈ₛ E' ⟩ → ⟨ y ∈ₛ env G' ⟩
+  classify h₃ y y∈ₛE' = PT.rec ((y ∈ₛ env G') .snd)
+    (Sum.rec
+      (λ tsat → ∈∈ₛ {a = y} {b = env G'} .fst
+        ∣ lift zero
+        , sym (subst ⟨_⟩ (tagAt-adequate zero 0 (suc m) (y ∷ γ)) tsat) ∣₁)
+      (λ ssat → PT.rec ((y ∈ₛ env G') .snd)
+        (λ { (p , p∈E , sh) → PT.rec ((y ∈ₛ env G') .snd)
+          (λ { (li , peq) → PT.rec ((y ∈ₛ env G') .snd)
+            (λ { (i , v , epv , eyv) →
+              ∈∈ₛ {a = y} {b = env G'} .fst
+                ∣ lift (suc (lower li))
+                , sym (cong₂ (λ a b → pr (sucV a) b)
+                    (pr-inj {a = i} {b = v}
+                            {c = # (toℕ (lower li))} {d = g (lower li)}
+                            (sym epv ∙ sym peq) .fst)
+                    (pr-inj {a = i} {b = v}
+                            {c = # (toℕ (lower li))} {d = g (lower li)}
+                            (sym epv ∙ sym peq) .snd))
+                ∙ sym eyv ∣₁ })
+            (subst ⟨_⟩ (shiftPairAt-adequate (suc zero) zero (p ∷ y ∷ γ)) sh) })
+          (subst (λ z → ⟨ p ∈ z ⟩) hE p∈E) })
+        ssat))
+    (h₃ y (∈∈ₛ {a = y} {b = E'} .snd y∈ₛE'))
+
+  covered : ⟨ γ ⊨ ∃̇∈ (var e') (tagAt zero 0 (suc m)) ⟩
+          → ((p : V ℓ) → ⟨ p ∈ E ⟩
+              → ⟨ (p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero)) ⟩)
+          → (y : V ℓ) → ⟨ y ∈ₛ env G' ⟩ → ⟨ y ∈ₛ E' ⟩
+  covered h₁ h₂ y y∈ₛG' = PT.rec ((y ∈ₛ E') .snd)
+    (λ { (lj , eq) → byKey (lower lj) eq })
+    (∈∈ₛ {a = y} {b = env G'} .snd y∈ₛG')
+    where
+    byKey : (j : Fin (suc k)) → pr (# (toℕ j)) (G' j) ≡ y → ⟨ y ∈ₛ E' ⟩
+    byKey zero eq = PT.rec ((y ∈ₛ E') .snd)
+      (λ { (q , q∈E' , tsat) →
+        subst (λ z → ⟨ z ∈ₛ E' ⟩)
+          (subst ⟨_⟩ (tagAt-adequate zero 0 (suc m) (q ∷ γ)) tsat ∙ eq)
+          (∈∈ₛ {a = q} {b = E'} .fst q∈E') })
+      h₁
+    byKey (suc i₀) eq = PT.rec ((y ∈ₛ E') .snd)
+      (λ { (p' , p'∈E' , sh) → PT.rec ((y ∈ₛ E') .snd)
+        (λ { (i , v , epv , ep'v) →
+          subst (λ z → ⟨ z ∈ₛ E' ⟩)
+            (ep'v
+             ∙ cong₂ (λ a b → pr (sucV a) b)
+                 (pr-inj {a = i} {b = v} {c = # (toℕ i₀)} {d = g i₀} (sym epv) .fst)
+                 (pr-inj {a = i} {b = v} {c = # (toℕ i₀)} {d = g i₀} (sym epv) .snd)
+             ∙ eq)
+            (∈∈ₛ {a = p'} {b = E'} .fst p'∈E') })
+        (subst ⟨_⟩
+          (shiftPairAt-adequate zero (suc zero) (p' ∷ pr (# (toℕ i₀)) (g i₀) ∷ γ)) sh) })
+      (h₂ (pr (# (toℕ i₀)) (g i₀))
+          (subst (λ z → ⟨ pr (# (toℕ i₀)) (g i₀) ∈ z ⟩) (sym hE) ∣ lift i₀ , refl ∣₁))
+
+  fwd : ⟨ γ ⊨ consAt e' m e ⟩ → E' ≡ env G'
+  fwd (h₁ , h₂ , h₃) = extensionality E' (env G')
+    ( (λ y y∈ₛE' → classify h₃ y y∈ₛE')
+    , (λ y y∈ₛG' → covered h₁ h₂ y y∈ₛG') )
+
+  bwd : E' ≡ env G' → ⟨ γ ⊨ consAt e' m e ⟩
+  bwd e'eq =
+      ∣ pr (# 0) M
+      , subst (λ z → ⟨ pr (# 0) M ∈ z ⟩) (sym e'eq) ∣ lift zero , refl ∣₁
+      , subst ⟨_⟩ (sym (tagAt-adequate zero 0 (suc m) (pr (# 0) M ∷ γ))) refl ∣₁
+    , (λ p p∈E → PT.rec
+        (((p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero))) .snd)
+        (λ { (li , peq) →
+          ∣ pr (# (suc (toℕ (lower li)))) (g (lower li))
+          , subst (λ z → ⟨ pr (# (suc (toℕ (lower li)))) (g (lower li)) ∈ z ⟩)
+              (sym e'eq) ∣ lift (suc (lower li)) , refl ∣₁
+          , subst ⟨_⟩
+              (sym (shiftPairAt-adequate zero (suc zero)
+                (pr (# (suc (toℕ (lower li)))) (g (lower li)) ∷ p ∷ γ)))
+              ∣ # (toℕ (lower li)) , g (lower li) , sym peq , refl ∣₁ ∣₁ })
+        (subst (λ z → ⟨ p ∈ z ⟩) hE p∈E))
+    , (λ p' p'∈E' → PT.rec squash₁
+        (λ { (lj , eq) → byKey' p' (lower lj) eq })
+        (subst (λ z → ⟨ p' ∈ z ⟩) e'eq p'∈E'))
+    where
+    byKey' : (p' : V ℓ) (j : Fin (suc k))
+           → pr (# (toℕ j)) (G' j) ≡ p'
+           → ∥ ⟨ (p' ∷ γ) ⊨ tagAt zero 0 (suc m) ⟩
+             ⊎ ⟨ (p' ∷ γ) ⊨ ∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero) ⟩ ∥₁
+    byKey' p' zero eq =
+      ∣ inl (subst ⟨_⟩ (sym (tagAt-adequate zero 0 (suc m) (p' ∷ γ))) (sym eq)) ∣₁
+    byKey' p' (suc i₀) eq =
+      ∣ inr ∣ pr (# (toℕ i₀)) (g i₀)
+            , subst (λ z → ⟨ pr (# (toℕ i₀)) (g i₀) ∈ z ⟩) (sym hE)
+                ∣ lift i₀ , refl ∣₁
+            , subst ⟨_⟩
+                (sym (shiftPairAt-adequate (suc zero) zero
+                  (pr (# (toℕ i₀)) (g i₀) ∷ p' ∷ γ)))
+                ∣ # (toℕ i₀) , g i₀ , refl , sym eq ∣₁ ∣₁ ∣₁
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -404,9 +556,11 @@ merely definable. `memPairAt`{.Agda} reads a value out of it and
 `sucAt`{.Agda} recognizes the index shift that going under a quantifier
 performs, both Δ₀ and adequate. `seqSet`{.Agda} collects all finite sequences
 over a set, for the certificates that quantify over environments instead of
-naming one. `shiftPairAt`{.Agda} closes the chapter by recognizing the
-renumbering that extension performs, spending every reader built so far at
-once.
+naming one. `shiftPairAt`{.Agda} recognizes the renumbering that
+extension performs, and `consAt`{.Agda} puts it to work: the extended
+environment is the old one with a value consed on, stated against the encoded
+form the certificates actually hold. That is the last formula the coding stack
+owes the certificates.
 <!--zh-->
-环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`memPairAt`{.Agda} 从中查出一个值，`sucAt`{.Agda} 认出进入量词之下所作的序号移位，二者皆 Δ₀ 且适足。`seqSet`{.Agda} 汇集一个集合上的全部有穷序列，供那些对环境作量化而非点名某一个的证书使用。`shiftPairAt`{.Agda} 认出扩张所作的重编号，一举花光迄今造出的每一条读式，为本章收尾。
+环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`memPairAt`{.Agda} 从中查出一个值，`sucAt`{.Agda} 认出进入量词之下所作的序号移位，二者皆 Δ₀ 且适足。`seqSet`{.Agda} 汇集一个集合上的全部有穷序列，供那些对环境作量化而非点名某一个的证书使用。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
 <!--/-->
