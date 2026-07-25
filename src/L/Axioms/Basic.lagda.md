@@ -129,6 +129,109 @@ defSet→isL σ oσ x p = 𝒟ₒ→isL σ oσ x (𝒟ₒ-intro (Lset σ) x p)
 ```
 
 <!--en-->
+## Finite families
+<!--zh-->
+## 有穷族
+<!--/-->
+
+<!--en-->
+The first instance is general, and it is the one later chapters use most: any
+finite family of members of a stage is a set of `L`. The formula is the finite
+disjunction of "equals this one", built by recursion on the length with falsity
+at zero, and the family's members are named as constants because they are members
+of the stage.
+
+Membership in the carved set and being hit by the family are the same statement,
+and the induction proving so is the whole content. The construction subsumes
+pairing, which is its two-element case, and it is what puts a recursion's table
+of values at a single stage: a finite table drawn from a stage is a set of `L`
+without any further argument.
+<!--zh-->
+第一个实例是通用的，也是后续诸章用得最多的那个：阶段的任何有穷成员族都是 `L` 的一个集合。公式是「等于这一个」的有穷析取，沿长度递归造出，零处取假；而族的诸成员以常元命名，因为它们是该阶段的成员。
+
+属于刻出的集合与被该族命中，是同一句话，而证明这一点的归纳就是全部内容。这个构造涵盖配对，配对是它的二元情形；它也正是把递归的取值表安置在单一阶段上的东西：取自某阶段的有穷表，无须任何进一步的论证就是 `L` 的集合。
+<!--/-->
+
+```agda
+finSet : (n : ℕ) → (Fin n → V ℓ) → V ℓ
+finSet n h = sett (Lift {ℓ-zero} {ℓ} (Fin n)) (λ i → h (lower i))
+
+finSet-in : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
+          → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁ → ⟨ y ∈ finSet n h ⟩
+finSet-in n h y = PT.map (λ { (i , q) → lift i , q })
+
+finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
+           → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁
+finSet-out n h y = PT.map (λ { (i , q) → lower i , q })
+
+module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
+  private
+    module DefC = DefOf (Lset σ)
+
+    finDisj : (n : ℕ) → (Fin n → ⟪ Lset σ ⟫) → Formula ⟪ Lset σ ⟫ 1
+    finDisj zero    g = ⊥̇
+    finDisj (suc n) g =
+      (var zero ≐ con (g zero)) ∨̇ finDisj n (λ i → g (suc i))
+
+    Hits : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (y : V ℓ) → Type (ℓ-suc ℓ)
+    Hits n g y = ∥ Σ[ i ∈ Fin n ] (⟪ Lset σ ⟫↪ (g i) ≡ y) ∥₁
+
+    sat→hits : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (m : ⟪ Lset σ ⟫)
+             → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
+             → Hits n g (⟪ Lset σ ⟫↪ m)
+    sat→hits zero    g m bot = Empty.rec* bot
+    sat→hits (suc n) g m = PT.rec squash₁
+      (λ { (inl e)  → ∣ zero , sym e ∣₁
+         ; (inr sat) → PT.map (λ { (i , q) → suc i , q })
+                         (sat→hits n (λ i → g (suc i)) m sat) })
+
+    hits→sat : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (m : ⟪ Lset σ ⟫)
+             → Hits n g (⟪ Lset σ ⟫↪ m)
+             → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
+    hits→sat zero g m =
+      PT.rec (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj zero g)) (λ { (() , _) })
+    hits→sat (suc n) g m =
+      PT.rec (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj (suc n) g))
+        (λ { (zero  , q) → ∣ inl (sym q) ∣₁
+           ; (suc i , q) →
+             ∣ inr (hits→sat n (λ j → g (suc j)) m ∣ i , q ∣₁) ∣₁ })
+
+    defSet≡ : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫)
+            → DefC.defSet (finDisj n g) ≡ finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))
+    defSet≡ n g = extensionality _ _ (sub₁ , sub₂)
+      where
+      F = finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))
+      sub₁ : ⟨ DefC.defSet (finDisj n g) ⊆ F ⟩
+      sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = F} .fst (PT.rec (snd (y ∈ F))
+        (λ { ((m , h) , q) →
+          subst (λ v → ⟨ v ∈ F ⟩) q
+            (finSet-in n (λ i → ⟪ Lset σ ⟫↪ (g i)) (⟪ Lset σ ⟫↪ m)
+              (sat→hits n g m
+                (subst ⟨_⟩ (DefC.defSet-mem (finDisj n g) m)
+                  ∣ (m , h) , refl ∣₁))) })
+        (∈∈ₛ {a = y} {b = DefC.defSet (finDisj n g)} .snd y∈ₛ))
+      sub₂ : ⟨ F ⊆ DefC.defSet (finDisj n g) ⟩
+      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefC.defSet (finDisj n g)))
+        (λ { (i , q) →
+          subst (λ v → ⟨ v ∈ₛ DefC.defSet (finDisj n g) ⟩) q
+            (∈∈ₛ {a = ⟪ Lset σ ⟫↪ (g i)} {b = DefC.defSet (finDisj n g)} .fst
+              (subst ⟨_⟩ (sym (DefC.defSet-mem (finDisj n g) (g i)))
+                (hits→sat n g (g i) ∣ i , refl ∣₁))) })
+        (finSet-out n (λ i → ⟪ Lset σ ⟫↪ (g i)) y
+          (∈∈ₛ {a = y} {b = F} .snd y∈ₛ))
+
+  finSetL : (n : ℕ) (h : Fin n → V ℓ) → ((i : Fin n) → ⟨ h i ∈ Lset σ ⟩)
+          → ⟨ isL (finSet n h) ⟩
+  finSetL n h hσ = defSet→isL σ oσ (finSet n h)
+    ∣ finDisj n g , (defSet≡ n g ∙ cong (finSet n) (funExt qg)) ∣₁
+    where
+    g : Fin n → ⟪ Lset σ ⟫
+    g i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .fst
+    qg : (i : Fin n) → ⟪ Lset σ ⟫↪ (g i) ≡ h i
+    qg i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .snd
+```
+
+<!--en-->
 ## Two sets, one stage
 <!--zh-->
 ## 两个集合，一个阶段

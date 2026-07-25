@@ -236,6 +236,8 @@ import V.Model
 - `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
   regularity descend along transitivity; uniqueness then comes free; and the
   empty set, pairing and union are each carved out of one stage by one formula.
+  `finSetL`{.Agda} generalizes the pairing argument to any finite family drawn
+  from a stage, which is how a recursion's table of values reaches `L`.
 - `L.Axioms.Separation`{.Agda}: separation and replacement for Δ₀ formulas, at a
   stage holding the argument and the formula's constants; the content is that
   membership in the carved set is satisfaction in the model.
@@ -272,7 +274,7 @@ import V.Model
 - `L.Coding.Length`{.Agda}：把证书的元数分量与其环境长度系住的守卫；`lenAt-len`{.Agda} 钉死那个本来自由的数，正是它把垃圾挡在诸证书之外。
 - `L.Coding.Entry`{.Agda}：「这个元数、码与环境记录在这份证书里」的唯一形式 `tripleInT`{.Agda}，诸子句都经它读写自己的条目。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
-- `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
+- `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。`finSetL`{.Agda} 把配对的论证推广到取自某阶段的任意有穷族，递归的取值表正是这样抵达 `L` 的。
 - `L.Axioms.Separation`{.Agda}：Δ₀ 公式的分离与替换，在装下实参与公式全部常元的阶段上；其内容是「属于刻出的集合就是在模型中满足」。
 - `L.Reflect`{.Agda}：Montague 的论证，在一个集合之内回答真类大小的存在量词。**梯**是上升的序数链；若每一级的环境其作答阶段都落在下一级上，则它的极限为自己包含的每个参数元组反射那个存在量词。`Single`{.Agda} 是单矩阵的梯。取最小阶段而非最小见证，正是把 L 的良序挡在门外的那一手。
 - `L.ReflectFo`{.Agda}：整条公式的同一件事，经结构归纳。联合造出的梯一举为公式的每个矩阵作答，而 `mkReflect`{.Agda} 随即点名一个阶段，公式在其上与它到该阶段的相对化一致：以 Δ₀ 加一个阶段，换下任意的复杂度。
