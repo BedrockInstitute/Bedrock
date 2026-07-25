@@ -235,6 +235,9 @@ import V.Model
 - `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
   regularity descend along transitivity; uniqueness then comes free; and the
   empty set, pairing and union are each carved out of one stage by one formula.
+- `L.Axioms.Separation`{.Agda}: separation and replacement for Δ₀ formulas, at a
+  stage holding the argument and the formula's constants; the content is that
+  membership in the carved set is satisfaction in the model.
 - `L.Axioms.Infinity`{.Agda}: the numeral chain inside `L`, pinned to the
   hierarchy's numerals by projection equations for the model's own pairing,
   union and successor.
@@ -259,6 +262,7 @@ import V.Model
 - `L.Coding.Entry`{.Agda}：「这个元数、码与环境记录在这份证书里」的唯一形式 `tripleInT`{.Agda}，诸子句都经它读写自己的条目。
 - `L.Stage`{.Agda}：包含可构造集的最早序数阶段，经良基下降得到、经三歧而唯一；已封印，故那次下降永不抵达日后的转换问题。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
+- `L.Axioms.Separation`{.Agda}：Δ₀ 公式的分离与替换，在装下实参与公式全部常元的阶段上；其内容是「属于刻出的集合就是在模型中满足」。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
 
@@ -281,6 +285,7 @@ import L.Coding.Length
 import L.Coding.Entry
 import L.Stage
 import L.Axioms.Basic
+import L.Axioms.Separation
 import L.Axioms.Infinity
 ```
 
