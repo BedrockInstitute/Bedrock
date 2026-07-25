@@ -545,9 +545,27 @@ phases; the sequence below is authoritative, the numbers are not (§6.0 rule 2).
 > **B, substrate**: `[L3.1]` sweep (standing from here on) → `[L3.2]` `reify!` →
 > `[L3.3]` coding cluster.
 >
-> **C, machinery**: `[L3.11]` clause bundle → `[L3.0.1]` tier-1 proof of concept →
-> `[L3.0.2]` verdict → green: `[L3.12]` stage-indexed theorem and `[L3.13]`
-> partial-certificate variant / red: `[L3.4]` scaffolding merge.
+> **C, machinery** (re-evaluated 2026-07-25 after `[L2.2]`, see the three grounds
+> below): `[L3.0.5]` finite families → `[L3.11]` clause bundle → `[L3.0.1]` tier-1
+> proof of concept → `[L3.0.2]` verdict → green: `[L3.12]` stage-indexed theorem and
+> `[L3.13]` partial-certificate variant / red: `[L3.4]` scaffolding merge.
+>
+> **Grounds for the re-evaluation.** (a) `[L3.0.4]`'s stage table attributes stage 7 to
+> `[L3.2]`; it does not belong there. What stage 7 needs is one lemma, "a finite family
+> drawn from a stage is a set of `L`", about sixty lines by finite disjunction. It is now
+> `[L3.0.5]`, done, and **`[L3.2]` leaves L3.0's critical path entirely**. (b) `[L3.11]`'s
+> stated rationale was de-risk: the source's WORKLOG case 13 records a twelve-field record
+> of formula-valued fields failing to typecheck at all, and a bundle that blows up predicts
+> a theorem that blows up. **That de-risk has been paid, by accident, in `[L2.2]`**:
+> `L.ReflectFo` carries a twelve-clause tree (`Answers`), its twelve-clause raise, and a
+> twelve-clause recursion (`gstep`) returning a Σ-package of an ordinal with its witnesses,
+> the same shape at the same width, checking in about two seconds. What remains of
+> `[L3.11]` is line saving, not risk, so it no longer gates on caution: it gates because the
+> proof of concept consumes it. (c) `[L3.0.4]` §3's `reads : List (Σ[ t ∈ S ] ⟨ isL t ⟩)`
+> carries the exact hazard `[L2.2]` diagnosed at `L.Axioms.Full`: sets paired with
+> constructibility certificates, used as **constants of the clauses' object language**.
+> Those certificates must be sealed where they are built, or the theorem does not finish.
+> Recorded as an amendment to the statement memo rather than a re-statement of it.
 >
 > **D, ports**: `[L3.5]` `[L3.6]` `[L3.7]`, as instantiations on a green verdict and as
 > originally planned on a red one → `[L3.10]` re-layering. `[L3.8]` and `[L3.9]` are
@@ -617,10 +635,21 @@ working as designed.
     `Depth` is the reference instance and `Cmp` the stress instance; `FFST` is
     degenerate and will not exercise the signature. Gated before `[L3.3]` finishes.
     Owner gate.
+  - **[L3.0.5]** **Finite families at a stage.** DONE 2026-07-25. `finSet`{.Agda},
+    `finSet-in`/`finSet-out` and `FinOf.finSetL` in `L.Axioms.Basic`: a finite family
+    of members of `Lset σ` is a set of `L`, by the finite disjunction of "equals this
+    one" over the stage's index type. Registered on re-evaluation as stage 7's real
+    prerequisite, correcting `[L3.0.4]` §4's attribution of it to `[L3.2]`. It
+    generalizes the same chapter's hand-written pairing, which is its two-element case,
+    and it is what places a recursion's table of values at one stage. 60 lines.
   - **[L3.0.1]** **Proof of concept (tier 1, the constant-table theorem).**
-    Prerequisites: `[L3.3]`, the coding substrate, since certificates quantify over
-    coded formulas and sequences; and `[L3.11]`, whose bundle is the specification's
-    `clauses` field. Prove the theorem and re-derive `Depth` and `FFST` as instances,
+    Prerequisites, all now met or in hand: `[L3.14]`, the coding substrate (done),
+    since certificates quantify over coded formulas and sequences; `[L3.0.5]`, stage 7's
+    lemma (done); `liftFo`, stage 5, landed at `[L2.2]`; and `[L3.11]`, whose bundle is
+    the specification's `clauses` field. **Run the reference instance and the theorem in
+    one loop, not the theorem then the instance**: the `[L2.2]` lesson is that the right
+    interface is discovered from a real consumer and guessed wrong in the abstract, which
+    is how `Ladder` was found and how the source's `ReflectN` was avoided. Prove the theorem and re-derive `Depth` and `FFST` as instances,
     then `Cmp` as the stress case. Measure lines and cold-check per §7. **Kill
     criteria, agreed in advance:** the theorem fails to reach two instances; or an
     instance is not materially smaller than the source pipeline; or §7.6's per-module
@@ -916,15 +945,16 @@ One row per goal code; update the row in the same commit that changes the status
 | L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | PLANNED |
 | L3.0 | Internalization theorem for L-recursion (S5) | PLANNED (registered 2026-07-25; gates L3.5 to L3.7) |
 | L3.0.0 | Design memo (single) | SUPERSEDED 2026-07-25 by L3.0.3 + L3.0.4; never started |
-| L3.0.3 | Subsumption probe, source-reading only | ACTIVE: memo delivered 2026-07-25, **awaiting owner gate**; verdict amber (route alive, projection corrected) |
-| L3.0.4 | Theorem statement in Bedrock's idiom | ACTIVE: memo delivered 2026-07-25, **awaiting owner gate**; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine, both now ported |
-| L3.0.1 | Two-instance proof of concept | PLANNED (after L3.3) |
+| L3.0.3 | Subsumption probe, source-reading only | DONE 2026-07-25, memo delivered; verdict amber (route alive, projection corrected) |
+| L3.0.4 | Theorem statement in Bedrock's idiom | DONE 2026-07-25, memo delivered; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine. **Two amendments from the phase-C re-evaluation**: stage 7 is `[L3.0.5]`, not `[L3.2]`; and `reads`'s `isL` certificates must be sealed where built (the `L.Axioms.Full` hazard) |
+| L3.0.5 | Finite families at a stage (stage 7) | DONE 2026-07-25 (`finSetL` in `L.Axioms.Basic`; registered on the phase-C re-evaluation, correcting the memo's attribution of stage 7 to L3.2) |
+| L3.0.1 | Two-instance proof of concept | PLANNED, unblocked (all prerequisites met; runs after L3.11) |
 | L3.0.2 | Verdict and rollout ruling | PLANNED |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
-| L3.2 | `reify!` industrialization (S6) | PLANNED (registered 2026-07-25; after L2.2, lands before L3.3 completes) |
+| L3.2 | `reify!` industrialization (S6) | PLANNED, **off L3.0's critical path** (re-evaluated 2026-07-25: stage 7 needed a lemma, not the macro). Opportunistic accelerator for the reader half of the coding chapters |
 | L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
 | L3.14 | Coding substrate: the Δ₀ code readers | DONE 2026-07-25. Seven chapters: `L.WellOrder.Base`, `FOL.Coding`, `V.Coding`, `L.Coding.{Base, Environment, Tagged, Length, Entry}`. The source's `SatCert*` split by subject rather than by session |
-| L3.11 | Per-tag clause bundle (S10) | PLANNED (registered 2026-07-25 from the L3.0.3 measurement; runs before L3.0.1, which consumes it) |
+| L3.11 | Per-tag clause bundle (S10) | PLANNED, next. Runs before L3.0.1, which consumes it. Its de-risk rationale is spent (the twelve-clause shape checks fine, see `L.ReflectFo`); the remaining case is line saving, and the bundle's field list is to be driven by the reference instance rather than designed in the abstract |
 | L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional (registered 2026-07-25; opens only on a green L3.0.2; memo, PoC and verdict as sub-goals) |
 | L3.13 | Partial-certificate variant, tier 3 (S12) | PLANNED, conditional (registered 2026-07-25; green L3.0.2, runs before L3.5) |
 | L3.4 | Scaffolding parameterization (S3) | PLANNED, conditional (registered 2026-07-25; opens only on a red L3.0.2) |
