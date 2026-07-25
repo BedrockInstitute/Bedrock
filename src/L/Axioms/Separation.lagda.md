@@ -55,14 +55,13 @@ open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono
         ; 𝒟ₒ; 𝒟ₒ-intro; Lset→isL )
-open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd )
+open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2 )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; uniqueL )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
-open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
@@ -404,30 +403,18 @@ constant contributes its own earliest stage, a variable contributes nothing, and
 at every branching node the two stages are merged by bounding them, with
 monotonicity raising both certificates to the merge.
 
-Merging two ordinals is the two-element case of the bounding lemma, and it is the
+Merging two ordinals is `bound2`{.Agda} from the ordinal chapter, and it is the
 only thing this recursion needs from ordinal theory.
 <!--zh-->
 引擎要的是一个装下公式全部常元的阶段。造一个出来，是沿公式的一次递归，同时产出阶段与证书。常元贡献它自己的最早阶段，变元什么也不贡献，而在每个分叉节点上，两个阶段经界住而合并，单调性把两份证书都抬到合并处。
 
-合并两个序数就是界层引理的二元情形，而这也是这次递归从序数理论索取的全部。
+合并两个序数就是序数那一章的 `bound2`{.Agda}，而这也是这次递归从序数理论索取的全部。
 <!--/-->
 
 ```agda
 Below′ : V ℓ → S → Type (ℓ-suc ℓ)
 Below′ σ c = ⟨ fst c ∈ Lset σ ⟩
 
-bound2 : (σ₁ σ₂ : V ℓ) → IsOrd σ₁ → IsOrd σ₂
-       → Σ[ β ∈ V ℓ ] (IsOrd β × ⟨ σ₁ ∈ β ⟩ × ⟨ σ₂ ∈ β ⟩)
-bound2 σ₁ σ₂ o₁ o₂ =
-  fst r , (r .snd .fst , r .snd .snd (lift true) , r .snd .snd (lift false))
-  where
-  f : Lift {ℓ-zero} {ℓ} Bool → V ℓ
-  f (lift true)  = σ₁
-  f (lift false) = σ₂
-  fo : (b : Lift {ℓ-zero} {ℓ} Bool) → IsOrd (f b)
-  fo (lift true)  = o₁
-  fo (lift false) = o₂
-  r = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f fo
 
 liftTmTo : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → ∀ {n} (t : Term S n)
          → BoundedTm (Below′ σ) t → BoundedTm (Below′ β) t
