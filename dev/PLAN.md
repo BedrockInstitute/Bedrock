@@ -659,9 +659,19 @@ working as designed.
   group must be smaller and must not regress §7.6's per-module budget, since macro
   output that misses the playbook's safe shapes will blow up conversion; land it before
   `[L3.3]` completes so the coding cluster is its first beneficiary.
-- **[L3.3]** Coding cluster (source `Code*`, `Formula*`, `VarCoding`, `SeqChar`). Runs
-  before the `[L3.0]` verdict regardless of route: it is the substrate both need, and it
-  is the first consumer of `[L3.2]`.
+- **[L3.3]** SUPERSEDED 2026-07-25 by `[L3.14]`, after a consumption re-measurement
+  (§11). The goal was scoped as the source's whole `Code*` / `Formula*` / `VarCoding` /
+  `SeqChar` cluster, about 4.9k lines; measuring consumers showed that only the Δ₀ code
+  readers are substrate and the rest is instance data.
+- **[L3.14]** **Coding substrate: the Δ₀ code readers.** What the theorem and every
+  certificate actually consume: the set-theoretic characterizations of singleton, pair
+  and Kuratowski pair, and the object-level readers `sglAt`, `pairAt`, `prAt`, `tagAt`,
+  `unpairAt` with their adequacy lemmas, already parameterized over de Bruijn position
+  in the source. Source `SatCertBase` (68 consumers), `SatCertEnv` (44), `SatCertLen`
+  (46), `SatCertCons` (13); about 910 lines. `FOL.Coding` and `V.Coding` landed under
+  `[L3.3]` and stand. Optional accelerator: roughly the formula-and-adequacy half of
+  these chapters is what `[L3.2]`'s macro is for, so `[L3.2]` may be taken first; the
+  characterization lemmas are set-theoretic mathematics and no macro generates them.
 - **[L3.11]** **Per-tag clause bundle (S10).** Registered 2026-07-25 on the probe's
   finding that the twelve tags are traversed **five times per instance**: once for the
   clause formula, once for its Δ₀ witness, once for its bounding witness, once for
@@ -901,7 +911,8 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0.2 | Verdict and rollout ruling | PLANNED |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
 | L3.2 | `reify!` industrialization (S6) | PLANNED (registered 2026-07-25; after L2.2, lands before L3.3 completes) |
-| L3.3 | Coding cluster | ACTIVE 2026-07-25. Landed: `FOL.Coding` (generic, with the `Codes` relation) and `V.Coding` (the hierarchy discharges both parameters). Remaining: the Δ₀ code readers (`SatCert*`), `L.VarCoding`, `L.SeqChar`, `L.FormulaOrder`, `L.CodeOrder`, `CodeSeqCert*`, plus `L.ConstructibleOrder`, `L.Stage` and `FOL.Manipulation.Relativize`; about 4.2k source lines |
+| L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
+| L3.14 | Coding substrate: the Δ₀ code readers | PLANNED (registered 2026-07-25; about 910 lines, down from 4.2k) |
 | L3.11 | Per-tag clause bundle (S10) | PLANNED (registered 2026-07-25 from the L3.0.3 measurement; runs before L3.0.1, which consumes it) |
 | L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional (registered 2026-07-25; opens only on a green L3.0.2; memo, PoC and verdict as sub-goals) |
 | L3.13 | Partial-certificate variant, tier 3 (S12) | PLANNED, conditional (registered 2026-07-25; green L3.0.2, runs before L3.5) |
@@ -941,6 +952,25 @@ One row per goal code; update the row in the same commit that changes the status
   527f13b, 2026-07-14). All L1-L3 porting reads the source at this commit; advancing
   the pin is an explicit `[L0.x]` decision. (The `-WnoUnsupportedIndexedMatch` flag
   turned out to be present in `bedrock.agda-lib` from the start; no change needed.)
+- **Coding re-measurement [L3.3] → [L3.14]:** 2026-07-25, before porting the remaining
+  4.2k lines. Method: count consumers of each remaining module in the pinned source. The
+  cut is stark. **Substrate** (universally consumed, stays): `SatCertBase` 197 lines /
+  68 consumers, `SatCertLen` 259 / 46, `SatCertEnv` 135 / 44, `SatCertCons` 319 / 13;
+  910 lines total. **Instance data** (consumed only by the certificate families, moves
+  out): `CodeOrder` 1,277 lines whose 20 consumers are *all* `Cmp*` / `Depth*` /
+  `Order*` / `WellOrder2`; `CodeSeqCert*` 757, consumed by `FFST*` / `Cmp*` / `Depth*`;
+  `SeqChar` 422, all six consumers in the tier-2 trace machinery; `FormulaOrder` 361,
+  same families as `CodeOrder`; `VarCoding` 385 with **one** consumer (`TarskiSat`).
+  `ConstructibleOrder` 137 is well-order vocabulary for `[L2.2]` and tier 2, not for the
+  theorem. So `[L3.3]` shrinks by 78%, and the displaced 3.3k is not deleted but
+  **relocated**: per the `[L3.0.4]` memo those modules become `ClauseBundle` fields of
+  their instances, so porting them now would mean porting them in the shape the theorem
+  is meant to replace, then refactoring. They move to `[L3.5]` / `[L3.6]` / `[L3.7]` and
+  are written once, after the theorem exists. Two smaller findings: checklist item 2's
+  "parameterized over de Bruijn position from the start" is **already satisfied**
+  upstream (the readers take `Fin n` arguments), so that refactor is free; and `[L3.2]`'s
+  macro targets roughly the formula-and-adequacy half of the readers but cannot touch
+  the characterization lemmas, which are set-theoretic mathematics.
 - **Classical-cone finding [L2.0]:** the basic axioms of the constructible universe
   need **no** classical logic, against the source's shape. The source proves pairing
   by comparing the two stages with ordinal trichotomy (`L.OrdinalLinear.ord-tri`,
