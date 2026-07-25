@@ -32,6 +32,7 @@ open import Base.Truth
 module L.Constructible {ℓ : Level} where
 
 open import FOL.ZFStructure using ( ZFStructure; _↾_; module hPropStructure; Transitive )
+open import FOL.Syntax using ( Formula )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
 open import L.Definability {ℓ} using ( module DefOf )
 
@@ -39,10 +40,10 @@ open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.Data.Empty as Empty
 import Cubical.Data.Sum as Sum
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
+  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; _∪_ )
 
@@ -255,6 +256,67 @@ Lset-layer = ∈-induction step
 ```
 
 <!--en-->
+## Stages compared
+<!--zh-->
+## 阶段之间的比较
+<!--/-->
+
+<!--en-->
+Two more facts about the tower carry every closure argument in the chapters
+ahead, and both are cheap once the seal is opened in the right place.
+
+The first names the operator's membership. `𝒟ₒ A` was built as the set of
+definable subsets of `A`, so belonging to it is, by construction, "merely, is
+some `defSet φ`": exhibiting a formula together with an extensional equation is
+exactly what it takes to place a set inside the operator. The seal opens for one
+line and closes again.
+
+The second is monotonicity: a lower stage is contained in every higher one,
+where higher means the index is a member. Unfold the higher stage once and it is
+a union over the members of its index; one of those members is the lower index,
+contributing `𝒟ₒ` of the lower stage. So all that is needed is that a stage sits
+inside `𝒟ₒ` of itself, and that is the previous chapter's refinement bound
+applied to a transitive set.
+<!--zh-->
+关于塔还有两个事实，承载着后续诸章的每一个闭包论证，而只要在对的地方开封，二者都很廉价。
+
+第一条给算子的隶属命名。`𝒟ₒ A` 造出来就是 `A` 的可定义子集之集，故属于它按构造即「仅仅是某个 `defSet φ`」：要把一个集合放进算子里，拿出一条公式连同一个外延等式恰好就够。封印开一行，随即合上。
+
+第二条是单调性：低阶段包含于每个更高的阶段，其中「更高」指索引是成员。把高阶段展开一次，它是沿其索引的成员取的并；那些成员之一正是低索引，贡献出低阶段的 `𝒟ₒ`。于是所需的只是阶段落在自身的 `𝒟ₒ` 里面，而那正是上一章的精化界线施于传递集。
+<!--/-->
+
+```agda
+opaque
+  unfolding 𝒟ₒ
+  𝒟ₒ-intro : (A x : S)
+           → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁
+           → ⟨ x ∈ˢ 𝒟ₒ A ⟩
+  𝒟ₒ-intro A x p = p
+
+  Lset⊆𝒟ₒ : (β x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩
+  Lset⊆𝒟ₒ β x = DefOf.Refine.A⊆Def (Lset β) (layer-trans (Lset-layer β)) x
+
+Lset-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → {x : S} → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ Lset α ⟩
+Lset-mono {α} {β} β∈α {x} x∈Lβ =
+  subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Lset-compute α))
+    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ α ⟫ s)} .snd
+      (union-ax (sett ⟪ α ⟫ s) x .snd
+        ∣ 𝒟ₒ (Lset β) , (𝒟ₒLβ∈ₛsett , x∈ₛ𝒟ₒLβ) ∣₁))
+  where
+  s : ⟪ α ⟫ → S
+  s m = 𝒟ₒ (Lset (⟪ α ⟫↪ m))
+  fib = ∈-asFiber {a = β} {b = α} β∈α
+  m = fib .fst
+  p : ⟪ α ⟫↪ m ≡ β
+  p = fib .snd
+  𝒟ₒLβ∈ₛsett : ⟨ 𝒟ₒ (Lset β) ∈ₛ sett ⟪ α ⟫ s ⟩
+  𝒟ₒLβ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset β)} {b = sett ⟪ α ⟫ s} .fst
+    ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
+  x∈ₛ𝒟ₒLβ : ⟨ x ∈ₛ 𝒟ₒ (Lset β) ⟩
+  x∈ₛ𝒟ₒLβ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset β)} .fst (Lset⊆𝒟ₒ β x x∈Lβ)
+```
+
+<!--en-->
 ## The class L, and its structure
 <!--zh-->
 ## 类 L，及其结构
@@ -279,6 +341,19 @@ isL-trans {x} {y} y∈x x∈L = PT.rec (snd (isL y))
   (λ { (α , (ordα , x∈Lα)) →
     ∣ α , (ordα , layer-trans (Lset-layer α) y∈x x∈Lα) ∣₁ })
   x∈L
+```
+
+<!--en-->
+Sitting in an ordinal stage *is* the definition, so the bridge in that direction
+is the constructor itself. It is named because the chapters ahead reach for it
+constantly: every closure proof ends by exhibiting a stage.
+<!--zh-->
+落在某个序数阶段中**就是**定义，故这个方向的桥就是构造子本身。之所以为它命名，是因为后续诸章会不断取用：每个闭包证明都以拿出一个阶段收尾。
+<!--/-->
+
+```agda
+Lset→isL : (α : S) → IsOrd α → (x : S) → ⟨ x ∈ˢ Lset α ⟩ → ⟨ isL x ⟩
+Lset→isL α oα x x∈Lα = ∣ α , (oα , x∈Lα) ∣₁
 ```
 
 <!--en-->

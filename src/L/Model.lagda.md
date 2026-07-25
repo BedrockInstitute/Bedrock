@@ -46,14 +46,11 @@ open import L.Frontier using ( Frontier )
 
 module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (F : Frontier {ℓ}) where
 
-open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
+open import FOL.ZFStructure using ( module hPropStructure )
 import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Axioms.Basic {ℓ}
+  using ( extensionalL; regularityL; hasEmptyL; hasPairL; hasUnionL )
 
 open hPropStructure 𝒮ʟ
 open Frontier F
@@ -63,65 +60,19 @@ open ModelL using ( isZFModel; isZFCModel )
 ```
 
 <!--en-->
-## Two fields the restriction supplies
-<!--zh-->
-## 限制自己供应的两个字段
-<!--/-->
-
-<!--en-->
-Extensionality and regularity are not frontier debts: they descend from the
-ambient hierarchy to any transitive sub-universe, and `L` is transitive. For
-extensionality, two constructible sets with the same constructible members have
-the same members outright, because each member is itself constructible by
-transitivity; the hierarchy's extensionality then equates the underlying sets,
-and `↾-reflects`{.Agda} lifts the path back through the restriction.
-<!--zh-->
-外延与正则不在前沿的债目里：它们从环境层级下降到任何传递的子宇宙，而 `L` 传递。看外延：两个可构造集若可构造成员相同，则成员干脆全同，因为每个成员经传递性自身可构造；层级的外延性随即等同底层集合，`↾-reflects`{.Agda} 再把路径抬回限制结构。
-<!--/-->
-
-```agda
-extensionalL : {a b : S} → ((x : S) → (x ∈ˢ a) ≡ (x ∈ˢ b)) → a ≡ b
-extensionalL {a} {b} h = ↾-reflects {𝒮 = 𝒮ᵥ} {M = isL} (extensionalV {a = fst a} {b = fst b} vwise)
-  where
-  vwise : (v : V ℓ) → (v ∈ fst a) ≡ (v ∈ fst b)
-  vwise v = ⇔toPath fwd bwd
-    where
-    fwd : ⟨ v ∈ fst a ⟩ → ⟨ v ∈ fst b ⟩
-    fwd v∈a = subst ⟨_⟩ (h (v , isL-trans v∈a (a .snd))) v∈a
-    bwd : ⟨ v ∈ fst b ⟩ → ⟨ v ∈ fst a ⟩
-    bwd v∈b = subst ⟨_⟩ (sym (h (v , isL-trans v∈b (b .snd)))) v∈b
-```
-
-<!--en-->
-Regularity restricts even more easily: membership in the sub-universe is
-membership in the hierarchy, so accessibility transfers along the underlying
-set, member by member.
-<!--zh-->
-正则的下降更省事：子宇宙里的成员关系就是层级里的成员关系，可及性沿底层集合逐成员转移。
-<!--/-->
-
-```agda
-regularityL : WellFounded _∈ᵗ_
-regularityL (v , p) = accL v (regularityV v) p
-  where
-  module Vmem = hPropStructure 𝒮ᵥ
-  accL : (u : V ℓ) → Acc Vmem._∈ᵗ_ u → (q : u ∈ᶜ isL)
-       → Acc _∈ᵗ_ (u , q)
-  accL u (acc rec) q = acc (λ { (y , r) y∈ → accL y (rec y y∈) r })
-```
-
-<!--en-->
 ## The theorem
 <!--zh-->
 ## 定理
 <!--/-->
 
 <!--en-->
-Assembly. Two fields proven above, ten drawn from the frontier, and the choice
-field applied to the very model being assembled, in the structural form the
-frontier states it.
+Assembly. Five fields come from the basic axioms chapter, seven from the
+frontier, and the choice field is applied to the very model being assembled, in
+the structural form the frontier states it. The proportion is the progress bar:
+every chapter that pays a debt moves a field from the second column to the
+first.
 <!--zh-->
-合龙。两个字段来自上文的证明，十个取自前沿，选择字段则以前沿所陈述的结构形式，作用于正被装配的这个模型自身。
+合龙。五个字段来自基本公理那一章，七个取自前沿，选择字段则以前沿所陈述的结构形式，作用于正被装配的这个模型自身。这个比例就是进度条：每一章还清一笔债，就把一个字段从第二栏挪到第一栏。
 <!--/-->
 
 ```agda

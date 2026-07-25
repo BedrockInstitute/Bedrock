@@ -22,5 +22,9 @@ the detailed specs it points to.
   load-bearing term.
 - `GLOSSARY.md`: the human-readable **explanation** of the glossary, what the two checks do and how
   to maintain `glossary.toml`.
+- `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
+  (`L3.0.3-subsumption-probe.md` and so on). The route tree in `PLAN.md` §6.1 says which goals
+  produce one; `PLAN.md` §11 records their status. Findings that outlive the goal are promoted
+  into `PLAN.md` itself, so a memo is evidence and reasoning, never the current plan.
 
 See [scripts/README.md](../scripts/README.md) for the tooling that consumes these.

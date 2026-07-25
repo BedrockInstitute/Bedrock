@@ -116,9 +116,11 @@ High-frequency concept too long for signatures?
 
 Registered suffixes for theorem names: `-rep` (combinator families), `-spec`
 (specifications), `-inj` (injectivity), `-ax` (axiom instances, library tradition),
-`-map` (functoriality). Registered abbreviations: `Rep` (representation), library
-names (`Fin`, `Vec`, `ℕ`), and the affixes `inj`/`comm`/`assoc`. Anything else needs
-registration here first. Forbidden: pinyin, ASCII two-character operators (`=>`,
+`-map` (functoriality). Registered abbreviations: `Rep` (representation), `Ord`
+(ordinal, `[L0.5]`: the predicate `IsOrd` and the closure lemmas `∅-ord`, `suc-ord`,
+`setUnion-ord`, `boundingOrd`; "ordinal" is too long for a suffix that appears on every
+stage lemma, and the short form is the tradition), library names (`Fin`, `Vec`, `ℕ`),
+and the affixes `inj`/`comm`/`assoc`. Anything else needs registration here first. Forbidden: pinyin, ASCII two-character operators (`=>`,
 `<=`), unregistered abbreviations.
 
 **Qualified-import aliases are full words** (`import Cubical.Functions.Logic as

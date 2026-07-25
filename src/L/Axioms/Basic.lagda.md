@@ -1,0 +1,453 @@
+# The basic axioms
+
+<!--en-->
+The frontier opened with eleven debts. This chapter pays the first five, and
+they are the five that ask least: extensionality, regularity, the empty set,
+pairing, and union. Two of them descend from the ambient hierarchy for free,
+because `L` is a transitive sub-universe and those axioms survive restriction to
+any transitive class. The other three are genuine constructions, and all three
+run the same argument.
+
+That argument is worth naming before it appears three times. To place a set in
+`L` one must exhibit it as a definable subset of a single stage. So a closure
+proof has three moves: find one stage holding all the ingredients, write a
+formula that carves the target out of that stage, and check that the formula's
+extension is exactly the target. The first move is the bounding ordinal of the
+previous chapter, the second is the definability operator two chapters back, and
+the third is one application of extensionality in the ambient hierarchy. Union
+needs no search at all, since one stage already holds its single argument;
+pairing needs the bound; the empty set needs neither, and could be carved out of
+any stage whatsoever.
+
+Nothing here is classical. A reader who knows the textbook proof may expect the
+stages of two constructible sets to be *compared*, one of them shown to be the
+larger. Comparison is exactly what a bound makes unnecessary.
+<!--zh-->
+前沿开出十一笔债。本章偿还头五笔，也是要求最低的五笔：外延、正则、空集、配对与并。其中两笔从环境层级免费下降，因为 `L` 是传递的子宇宙，而这两条公理在限制到任何传递类之后仍然成立。另外三笔是货真价实的构造，而三者跑的是同一套论证。
+
+那套论证值得在它出现三次之前先行命名。要把一个集合放进 `L`，必须把它呈现为**单一阶段**的可定义子集。于是闭包证明有三步：找一个装得下全部材料的阶段，写一条从该阶段中刻出目标的公式，再验证公式的外延恰是目标。第一步是上一章的界层序数，第二步是往前两章的可定义性算子，第三步是环境层级中的一次外延性应用。并根本不需要搜索，因为已有一个阶段装着它唯一的实参；配对需要那个上界；空集两者皆不需要，从任何阶段里都刻得出来。
+
+此处没有任何经典逻辑。熟悉教科书证明的读者也许预期要**比较**两个可构造集的阶段，指认其中较大的那个。上界所免除的，恰恰就是比较。
+<!--/-->
+
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+
+module L.Axioms.Basic {ℓ : Level} where
+
+open import FOL.Syntax using ( Formula; var; con; _≐_; _∈̇_; _∨̇_; ⊥̇; ∃̇∈ )
+open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
+import FOL.ZFModel
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
+open import V.Model {ℓ} using ( empty-spec; pair-spec; union-spec; self∈sucV )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; Lset-compute
+        ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-mono; Lset→isL )
+open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; boundingOrd )
+
+open import Cubical.Data.Bool using ( Bool; true; false )
+open import Cubical.Data.FinData using ( zero; suc )
+open import Cubical.Data.Sum using ( inl; inr )
+open import Cubical.Functions.Logic using ( ⇔toPath )
+open import Cubical.Foundations.Prelude using ( isPropIsContr )
+open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
+import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
+open import Cubical.HITs.CumulativeHierarchy.Properties
+  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; extensionality; _⊆_; ⟪_⟫; ⟪_⟫↪ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+module ModelL = FOL.ZFModel 𝒮ʟ
+open ModelL using ( SetOf; setOf-unique )
+```
+
+<!--en-->
+## Definable subsets are constructible
+<!--zh-->
+## 可定义子集是可构造的
+<!--/-->
+
+<!--en-->
+The closing move of every construction below: a definable subset of a stage is
+itself constructible. The stage `Lset σ` sits one level down in the tower from
+`Lset (sucV σ)`, whose defining union runs over the members of `sucV σ`; and `σ`
+is one of those members. So the operator applied to `Lset σ` is one branch of
+that union, and anything inside it lands in the next stage, which is a stage
+because successors of ordinals are ordinals.
+<!--zh-->
+下文每个构造的收尾动作：阶段的可定义子集自身可构造。阶段 `Lset σ` 在塔中比 `Lset (sucV σ)` 低一级，而后者的定义之并沿 `sucV σ` 的成员跑；`σ` 正是那些成员之一。于是算子作用于 `Lset σ` 所得，是那个并的一支，其中的任何东西都落进下一个阶段，而那是个阶段，因为序数的后继是序数。
+<!--/-->
+
+```agda
+𝒟ₒ→isL : (σ : V ℓ) → IsOrd σ → (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (Lset σ) ⟩ → ⟨ isL x ⟩
+𝒟ₒ→isL σ oσ x x∈𝒟ₒσ = Lset→isL (sucV σ) (suc-ord oσ) x x∈Lsuc
+  where
+  s : ⟪ sucV σ ⟫ → V ℓ
+  s m = 𝒟ₒ (Lset (⟪ sucV σ ⟫↪ m))
+  fib = ∈-asFiber {a = σ} {b = sucV σ} (self∈sucV σ)
+  m = fib .fst
+  p : ⟪ sucV σ ⟫↪ m ≡ σ
+  p = fib .snd
+  𝒟ₒLσ∈ₛsett : ⟨ 𝒟ₒ (Lset σ) ∈ₛ sett ⟪ sucV σ ⟫ s ⟩
+  𝒟ₒLσ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset σ)} {b = sett ⟪ sucV σ ⟫ s} .fst
+    ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
+  x∈ₛ𝒟ₒLσ : ⟨ x ∈ₛ 𝒟ₒ (Lset σ) ⟩
+  x∈ₛ𝒟ₒLσ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset σ)} .fst x∈𝒟ₒσ
+  x∈Lsuc : ⟨ x ∈ Lset (sucV σ) ⟩
+  x∈Lsuc = subst (λ w → ⟨ x ∈ w ⟩) (sym (Lset-compute (sucV σ)))
+    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ sucV σ ⟫ s)} .snd
+      (union-ax (sett ⟪ sucV σ ⟫ s) x .snd
+        ∣ 𝒟ₒ (Lset σ) , (𝒟ₒLσ∈ₛsett , x∈ₛ𝒟ₒLσ) ∣₁))
+```
+
+<!--en-->
+## Two sets, one stage
+<!--zh-->
+## 两个集合，一个阶段
+<!--/-->
+
+<!--en-->
+Pairing needs both of its arguments visible at the same stage. Each is
+constructible, so each has a stage of its own; the bounding ordinal of the
+previous chapter turns those two ordinals into one that contains both, and
+monotonicity carries both sets up into its stage. The two-element family is the
+lifted booleans, since the bound is stated for families indexed at the level of
+the hierarchy.
+<!--zh-->
+配对需要它的两个实参在同一阶段上可见。二者各自可构造，故各有自己的阶段；上一章的界层序数把那两个序数并成一个同时包含二者的序数，而单调性把两个集合一并抬进它的阶段。两元族取提升后的布尔值，因为那条上界是对层级那一级的索引族陈述的。
+<!--/-->
+
+```agda
+isL-directed : (x y : V ℓ) → ⟨ isL x ⟩ → ⟨ isL y ⟩
+             → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩)) ∥₁
+isL-directed x y px py = PT.rec2 squash₁ go px py
+  where
+  Bound : Type (ℓ-suc ℓ)
+  Bound = Σ[ σ ∈ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩))
+  go : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ x ∈ Lset α ⟩)
+     → Σ[ β ∈ V ℓ ] (IsOrd β × ⟨ y ∈ Lset β ⟩) → ∥ Bound ∥₁
+  go (α , (oα , x∈Lα)) (β , (oβ , y∈Lβ)) =
+    ∣ σ , (oσ , ( Lset-mono (mem (lift true)) x∈Lα
+                , Lset-mono (mem (lift false)) y∈Lβ )) ∣₁
+    where
+    f : Lift {ℓ-zero} {ℓ} Bool → V ℓ
+    f (lift true)  = α
+    f (lift false) = β
+    hf : (b : Lift {ℓ-zero} {ℓ} Bool) → IsOrd (f b)
+    hf (lift true)  = oα
+    hf (lift false) = oβ
+    bnd = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f hf
+    σ = bnd .fst
+    oσ = bnd .snd .fst
+    mem = bnd .snd .snd
+```
+
+<!--en-->
+## The two inherited axioms
+<!--zh-->
+## 继承来的两条公理
+<!--/-->
+
+<!--en-->
+Extensionality and regularity are not constructions at all: they descend from
+the ambient hierarchy to any transitive sub-universe. For extensionality, two
+constructible sets with the same constructible members have the same members
+outright, because every member is itself constructible by transitivity; the
+hierarchy's extensionality equates the underlying sets, and the restriction
+reflects the path back. Regularity restricts even more easily: membership in the
+sub-universe *is* membership in the hierarchy, so accessibility transfers along
+the underlying set, member by member.
+<!--zh-->
+外延与正则根本不是构造：它们从环境层级下降到任何传递的子宇宙。看外延：两个可构造集若可构造成员相同，则成员干脆全同，因为每个成员经传递性自身可构造；层级的外延性等同底层集合，限制再把路径反射回来。正则的下降更省事：子宇宙里的成员关系**就是**层级里的成员关系，可及性沿底层集合逐成员转移。
+<!--/-->
+
+```agda
+extensionalL : {a b : S} → ((x : S) → (x ∈ˢ a) ≡ (x ∈ˢ b)) → a ≡ b
+extensionalL {a} {b} h =
+  ↾-reflects {𝒮 = 𝒮ᵥ} {M = isL} (extensionalV {a = fst a} {b = fst b} vwise)
+  where
+  vwise : (v : V ℓ) → (v ∈ fst a) ≡ (v ∈ fst b)
+  vwise v = ⇔toPath fwd bwd
+    where
+    fwd : ⟨ v ∈ fst a ⟩ → ⟨ v ∈ fst b ⟩
+    fwd v∈a = subst ⟨_⟩ (h (v , isL-trans v∈a (a .snd))) v∈a
+    bwd : ⟨ v ∈ fst b ⟩ → ⟨ v ∈ fst a ⟩
+    bwd v∈b = subst ⟨_⟩ (sym (h (v , isL-trans v∈b (b .snd)))) v∈b
+
+regularityL : WellFounded _∈ᵗ_
+regularityL (v , p) = accL v (regularityV v) p
+  where
+  module Vmem = hPropStructure 𝒮ᵥ
+  accL : (u : V ℓ) → Acc Vmem._∈ᵗ_ u → (q : u ∈ᶜ isL) → Acc _∈ᵗ_ (u , q)
+  accL u (acc rec) q = acc (λ { (y , r) y∈ → accL y (rec y y∈) r })
+```
+
+<!--en-->
+## Uniqueness, for free
+<!--zh-->
+## 唯一性，白拿
+<!--/-->
+
+<!--en-->
+Every existence field of the model record demands *unique* existence, and
+extensionality has just made uniqueness automatic: a set realising a given
+membership condition is determined by that condition. So each construction below
+need only produce a witness, and may produce it merely, since being the unique
+such set is a proposition.
+<!--zh-->
+模型 record 的每个存在字段要的都是**唯一**存在，而外延性刚刚使唯一性自动成立：实现给定隶属条件的集合由该条件决定。于是下文每个构造只需交出一个见证，而且交得出「仅仅存在」即可，因为「是那个唯一的集合」是命题。
+<!--/-->
+
+```agda
+uniqueL : (Q : S → Ω) → SetOf Q → isContr (SetOf Q)
+uniqueL = setOf-unique extensionalL
+
+mere→uniqueL : (Q : S → Ω) → ∥ SetOf Q ∥₁ → isContr (SetOf Q)
+mere→uniqueL Q = PT.rec isPropIsContr (uniqueL Q)
+```
+
+<!--en-->
+## The empty set
+<!--zh-->
+## 空集
+<!--/-->
+
+<!--en-->
+The falsehood of the object language carves nothing out of any stage: a member
+of `defSet ⊥̇` would carry a proof of falsehood at its index. So `defSet ⊥̇` is
+the empty set, one extensionality apart, and the empty set is therefore
+constructible. Its specification is inherited along the underlying set, since
+membership in `L` is membership in the hierarchy.
+<!--zh-->
+对象语言的假从任何阶段中都刻不出东西来：`defSet ⊥̇` 的成员会在其索引处携带一份假的证明。于是 `defSet ⊥̇` 就是空集，相隔一次外延，从而空集可构造。它的规格沿底层集合继承，因为 `L` 中的隶属就是层级中的隶属。
+<!--/-->
+
+```agda
+∅∈𝒟ₒ : (σ : V ℓ) → ⟨ ∅ ∈ 𝒟ₒ (Lset σ) ⟩
+∅∈𝒟ₒ σ = 𝒟ₒ-intro (Lset σ) ∅ ∣ ⊥̇ , defSet⊥≡∅ ∣₁
+  where
+  module DefC = DefOf (Lset σ)
+  defSet⊥≡∅ : DefC.defSet ⊥̇ ≡ ∅
+  defSet⊥≡∅ = extensionality (DefC.defSet ⊥̇) ∅ (sub₁ , sub₂)
+    where
+    sub₁ : ⟨ DefC.defSet ⊥̇ ⊆ ∅ ⟩
+    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ∅))
+      (λ { ((m , h) , q) → Empty.rec* h })
+      (∈∈ₛ {a = y} {b = DefC.defSet ⊥̇} .snd y∈ₛ)
+    sub₂ : ⟨ ∅ ⊆ DefC.defSet ⊥̇ ⟩
+    sub₂ y y∈ₛ = Empty.rec (∅-empty y y∈ₛ)
+
+∅∈L : ⟨ isL ∅ ⟩
+∅∈L = 𝒟ₒ→isL ∅ ∅-ord ∅ (∅∈𝒟ₒ ∅)
+
+∅ʟ : S
+∅ʟ = ∅ , ∅∈L
+
+hasEmptyL : isContr (SetOf (λ _ → ⊥))
+hasEmptyL = uniqueL _ (∅ʟ , (λ x → empty-spec (fst x)))
+```
+
+<!--en-->
+## Pairing
+<!--zh-->
+## 配对
+<!--/-->
+
+<!--en-->
+Given a common stage for the two arguments, each of them is `⟪ Lset σ ⟫↪` of
+some index, and the formula naming those two indices carves out exactly the
+pair. Checking that takes one extensionality against the hierarchy's own pairing
+axiom, in both directions: a member of the definable subset satisfies the
+disjunction, hence is one of the two; and each of the two satisfies it, hence is
+a member. The specification is the hierarchy's, transported along the underlying
+sets.
+<!--zh-->
+给定两个实参的公共阶段，二者各是某个索引的 `⟪ Lset σ ⟫↪`，而点名那两个索引的公式恰好刻出这个对。验证它要对着层级自己的配对公理做一次双向外延：可定义子集的成员满足那个析取，故是二者之一；而二者各自满足它，故是成员。规格取层级的，沿底层集合搬运。
+<!--/-->
+
+```agda
+module PairOf (a b : S) where
+  Q : S → Ω
+  Q x = (x ≈ˢ a) ⊔ (x ≈ˢ b)
+
+  mkPair : (σ : V ℓ) → IsOrd σ → ⟨ fst a ∈ Lset σ ⟩ → ⟨ fst b ∈ Lset σ ⟩
+         → SetOf Q
+  mkPair σ oσ fa∈ fb∈ = pairElt , (λ z → pair-spec (fst a) (fst b) (fst z))
+    where
+    module DefC = DefOf (Lset σ)
+    mₓ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .fst
+    qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ fst a
+    qₓ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .snd
+    mᵧ = ∈-asFiber {a = fst b} {b = Lset σ} fb∈ .fst
+    qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ fst b
+    qᵧ = ∈-asFiber {a = fst b} {b = Lset σ} fb∈ .snd
+
+    φ : Formula ⟪ Lset σ ⟫ 1
+    φ = (var zero ≐ con mₓ) ∨̇ (var zero ≐ con mᵧ)
+
+    defSet≡ : DefC.defSet φ ≡ ⁅ fst a , fst b ⁆
+    defSet≡ =
+        extensionality (DefC.defSet φ) ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆
+          (sub₁ , sub₂)
+      ∙ cong₂ ⁅_,_⁆ qₓ qᵧ
+      where
+      sub₁ : ⟨ DefC.defSet φ ⊆ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩
+      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆))
+        (λ { ((m , h) , q) →
+          subst (λ v → ⟨ v ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩) q
+            (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) (⟪ Lset σ ⟫↪ m) .snd
+              (subst ⟨_⟩ (DefC.defSet-mem φ m) ∣ (m , h) , refl ∣₁)) })
+        (∈∈ₛ {a = y} {b = DefC.defSet φ} .snd y∈ₛ)
+      sub₂ : ⟨ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⊆ DefC.defSet φ ⟩
+      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefC.defSet φ))
+        (λ { (inl p) → memOf mₓ ∣ inl refl ∣₁ p
+           ; (inr p) → memOf mᵧ ∣ inr refl ∣₁ p })
+        (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) y .fst y∈ₛ)
+        where
+        memOf : (mᵢ : ⟪ Lset σ ⟫) → ⟨ (DefC.ι mᵢ ∷ []) DefC.⊨ᵐ φ ⟩
+              → y ≡ ⟪ Lset σ ⟫↪ mᵢ → ⟨ y ∈ₛ DefC.defSet φ ⟩
+        memOf mᵢ sat p = subst (λ v → ⟨ v ∈ₛ DefC.defSet φ ⟩) (sym p)
+          (∈∈ₛ {a = ⟪ Lset σ ⟫↪ mᵢ} {b = DefC.defSet φ} .fst
+            (subst ⟨_⟩ (sym (DefC.defSet-mem φ mᵢ)) sat))
+
+    pair∈𝒟ₒ : ⟨ ⁅ fst a , fst b ⁆ ∈ 𝒟ₒ (Lset σ) ⟩
+    pair∈𝒟ₒ = 𝒟ₒ-intro (Lset σ) ⁅ fst a , fst b ⁆ ∣ φ , defSet≡ ∣₁
+
+    pairElt : S
+    pairElt = ⁅ fst a , fst b ⁆ , 𝒟ₒ→isL σ oσ ⁅ fst a , fst b ⁆ pair∈𝒟ₒ
+
+  build : ∥ SetOf Q ∥₁
+  build = PT.rec squash₁
+    (λ { (σ , (oσ , (fa∈ , fb∈))) → ∣ mkPair σ oσ fa∈ fb∈ ∣₁ })
+    (isL-directed (fst a) (fst b) (a .snd) (b .snd))
+
+hasPairL : (a b : S) → isContr (SetOf (λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)))
+hasPairL a b = mere→uniqueL (PairOf.Q a b) (PairOf.build a b)
+```
+
+<!--en-->
+## Union
+<!--zh-->
+## 并
+<!--/-->
+
+<!--en-->
+Union asks for no search: a stage containing the argument already contains every
+member of every member of it, because stages are transitive. The formula is a
+bounded existential, "some member of the argument has me as a member", and its
+quantifier ranges over the stage, which is exactly why transitivity is what makes
+the argument go through. One last bridge closes the specification: the model
+record quantifies over constructible witnesses while the hierarchy's union axiom
+quantifies over all of them, and transitivity of the class identifies the two.
+<!--zh-->
+并不需要搜索：装着实参的阶段已经装着实参的成员的每个成员，因为阶段传递。公式是一个有界存在，「实参的某个成员以我为成员」，其量词跑遍那个阶段，而这正是传递性使论证走通的原因。最后一道桥合上规格：模型 record 对可构造的见证量化，层级的并公理则对全部见证量化，而类的传递性把二者认同。
+<!--/-->
+
+```agda
+module UnionOf (a : S) where
+  Q : S → Ω
+  Q x = ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))
+
+  mkUnion : (σ : V ℓ) → IsOrd σ → ⟨ fst a ∈ Lset σ ⟩ → SetOf Q
+  mkUnion σ oσ fa∈ = unionElt , spec
+    where
+    module DefA = DefOf (Lset σ)
+    Atrans = layer-trans (Lset-layer σ)
+    mₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .fst
+    qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a
+    qₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .snd
+
+    φ : Formula ⟪ Lset σ ⟫ 1
+    φ = ∃̇∈ (con mₐ) (var (suc zero) ∈̇ var zero)
+
+    defSet≡ : DefA.defSet φ ≡ ⋃ (fst a)
+    defSet≡ = extensionality (DefA.defSet φ) (⋃ (fst a)) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet φ ⊆ ⋃ (fst a) ⟩
+      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⋃ (fst a)))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ ⋃ (fst a) ⟩) q
+            (PT.rec (snd (⟪ Lset σ ⟫↪ m ∈ₛ ⋃ (fst a)))
+              (λ { (v , (fstv∈mₐ , m∈fstv)) →
+                union-ax (fst a) (⟪ Lset σ ⟫↪ m) .snd
+                  ∣ fst v
+                  , ( ∈∈ₛ {a = fst v} {b = fst a} .fst
+                        (subst (λ w → ⟨ fst v ∈ w ⟩) qₐ fstv∈mₐ)
+                    , ∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = fst v} .fst m∈fstv ) ∣₁ })
+              (subst ⟨_⟩ (DefA.defSet-mem φ m) ∣ (m , h) , refl ∣₁)) })
+        (∈∈ₛ {a = y} {b = DefA.defSet φ} .snd y∈ₛ)
+      sub₂ : ⟨ ⋃ (fst a) ⊆ DefA.defSet φ ⟩
+      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet φ))
+        (λ { (v , (v∈ₛfa , y∈ₛv)) → member v v∈ₛfa y∈ₛv })
+        (union-ax (fst a) y .fst y∈ₛ)
+        where
+        member : (v : V ℓ) → ⟨ v ∈ₛ fst a ⟩ → ⟨ y ∈ₛ v ⟩
+               → ⟨ y ∈ₛ DefA.defSet φ ⟩
+        member v v∈ₛfa y∈ₛv =
+          subst (λ w → ⟨ w ∈ₛ DefA.defSet φ ⟩) q'
+            (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m'} {b = DefA.defSet φ} .fst
+              (subst ⟨_⟩ (sym (DefA.defSet-mem φ m')) sat))
+          where
+          v∈fa = ∈∈ₛ {a = v} {b = fst a} .snd v∈ₛfa
+          y∈v = ∈∈ₛ {a = y} {b = v} .snd y∈ₛv
+          v∈A = Atrans {x = fst a} {y = v} v∈fa fa∈
+          y∈A = Atrans {x = v} {y = y} y∈v v∈A
+          fib = ∈-asFiber {a = y} {b = Lset σ} y∈A
+          m' = fib .fst
+          q' = fib .snd
+          sat : ⟨ (DefA.ι m' ∷ []) DefA.⊨ᵐ φ ⟩
+          sat = ∣ (v , v∈A)
+                , ( subst (λ w → ⟨ v ∈ w ⟩) (sym qₐ) v∈fa
+                  , subst (λ w → ⟨ w ∈ v ⟩) (sym q') y∈v ) ∣₁
+
+    union∈𝒟ₒ : ⟨ ⋃ (fst a) ∈ 𝒟ₒ (Lset σ) ⟩
+    union∈𝒟ₒ = 𝒟ₒ-intro (Lset σ) (⋃ (fst a)) ∣ φ , defSet≡ ∣₁
+
+    unionElt : S
+    unionElt = ⋃ (fst a) , 𝒟ₒ→isL σ oσ (⋃ (fst a)) union∈𝒟ₒ
+
+    spec : (z : S) → (z ∈ˢ unionElt) ≡ Q z
+    spec z = union-spec (fst a) (fst z) ∙ bridge
+      where
+      bridge : ⋁ (V ℓ) (λ y → (y ∈ fst a) ⊓ (fst z ∈ y)) ≡ Q z
+      bridge = ⇔toPath
+        (PT.map (λ { (y , py) →
+          (y , isL-trans {x = fst a} {y = y} (py .fst) (a .snd)) , py }))
+        (PT.map (λ { (y , py) → fst y , py }))
+
+  build : ∥ SetOf Q ∥₁
+  build = PT.rec squash₁ (λ { (σ , (oσ , fa∈)) → ∣ mkUnion σ oσ fa∈ ∣₁ }) (a .snd)
+
+hasUnionL : (a : S) → isContr (SetOf (λ x → ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))))
+hasUnionL a = mere→uniqueL (UnionOf.Q a) (UnionOf.build a)
+```
+
+<!--en-->
+## Recap
+<!--zh-->
+## 小结
+<!--/-->
+
+<!--en-->
+Five model fields, none of them assumed. Extensionality and regularity came down
+from the hierarchy along transitivity, and with extensionality in hand every
+later field needs only a witness, since uniqueness follows. The empty set,
+pairing and union were each carved out of a single stage by a single formula,
+with the bounding ordinal supplying that stage where two arguments had to meet.
+The frontier is three debts lighter, and the pattern established here, one
+stage, one formula, one extensionality, is the pattern the remaining
+constructions follow.
+<!--zh-->
+五个模型字段，无一靠假设。外延与正则沿传递性从层级下降，而有了外延性，日后每个字段只需一个见证，唯一性随之而来。空集、配对与并各由单一公式从单一阶段中刻出，两个实参须会合之处，则由界层序数供应那个阶段。前沿轻了三笔债，而此处立下的套路，一个阶段、一条公式、一次外延，正是余下诸构造所遵循的套路。
+<!--/-->

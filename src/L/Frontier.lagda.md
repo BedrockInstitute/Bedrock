@@ -12,15 +12,20 @@ separates the book from its unconditional theorem, and when it empties, this
 chapter disappears with it.
 
 The debts are exactly the model fields still owed for the constructible
-structure `𝒮ʟ`: the previous chapter produced the world, and the record below
-lists, field for field, what the model record demands of it beyond the two
-facts (extensionality, regularity) that the next chapter proves outright. The
-choice field is stated relative to an arbitrary ZF model on this carrier, the
-same structural form the hierarchy's choice took.
+structure `𝒮ʟ`: earlier chapters produced the world and paid the five basic
+axioms, and the record below lists, field for field, what the model record still
+demands. The choice field is stated relative to an arbitrary ZF model on this
+carrier, the same structural form the hierarchy's choice took.
+
+The record has already shrunk once. It opened at eleven fields; the basic axioms
+chapter deleted three of them, and this is what the device is for: the list gets
+shorter, never longer, and the book ends when it is empty.
 <!--zh-->
 本书采取从根开始的构造：主定理**现在**陈述，在余下诸部中**逐步完成**。这需要一件装置，而诚实要求它既不是洞也不是公设。**前沿**就是那件装置：一个 record，其字段恰是尚未证明的陈述，于是下一章的根定理是一条**由**前沿出发的普通定理。这里的每个字段都是一笔债；本书余下的每一章偿还其中若干；字段一经证明即被删除。这个 record 是「离无条件定理还差什么」的实时登记簿，账清之日，本章随之消失。
 
-这些债恰是可构造结构 `𝒮ʟ` 尚欠的模型字段：上一章造出了世界，下面的 record 逐字段列出模型 record 对它的其余要求，扣除下一章直接证明的两条 (外延与正则)。选择字段相对于此载体上任意 ZF 模型陈述，与层级那边的选择取同一结构形式。
+这些债恰是可构造结构 `𝒮ʟ` 尚欠的模型字段：前几章造出了世界并偿清五条基本公理，下面的 record 逐字段列出模型 record 仍然索取的部分。选择字段相对于此载体上任意 ZF 模型陈述，与层级那边的选择取同一结构形式。
+
+这个 record 已经缩过一次。它开张时有十一个字段，基本公理那一章删去了其中三个，而这正是这件装置的用途：单子只会变短，不会变长，簿清之日即成书之时。
 <!--/-->
 
 ```agda
@@ -81,10 +86,6 @@ equations, exactly as in the record it will feed.
 ```agda
 record Frontier : Type (ℓ-suc (ℓ-suc ℓ)) where
   field
-    hasEmptyL       : isContr (SetOf (λ _ → ⊥))
-    hasPairL        : (a b : S) → isContr (SetOf (λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)))
-    hasUnionL       : (a : S)
-                    → isContr (SetOf (λ x → ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))))
     hasSeparationL  : (a : S) (φ : Formula S 1)
                     → isContr (SetOf (λ x → (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)))
     hasReplacementL : (a : S) (φ : Formula S 2)
@@ -111,9 +112,9 @@ record Frontier : Type (ℓ-suc (ℓ-suc ℓ)) where
 <!--/-->
 
 <!--en-->
-Eleven debts, each the verbatim statement of a model field at `𝒮ʟ`, none of
-them a postulate: they are hypotheses of the next chapter's theorem, and the
-book's remaining work is the shrinking of this record to nothing.
+Eight debts, each the verbatim statement of a model field at `𝒮ʟ`, none of them
+a postulate: they are hypotheses of the next chapter's theorem, and the book's
+remaining work is the shrinking of this record to nothing.
 <!--zh-->
-十一笔债，每笔都是模型字段在 `𝒮ʟ` 处的原文陈述，无一是公设：它们是下一章定理的假设，而本书余下的工作，就是把这个 record 缩减为空。
+八笔债，每笔都是模型字段在 `𝒮ʟ` 处的原文陈述，无一是公设：它们是下一章定理的假设，而本书余下的工作，就是把这个 record 缩减为空。
 <!--/-->
