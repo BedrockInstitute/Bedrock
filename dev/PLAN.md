@@ -332,6 +332,7 @@ rows rather than editing old ones):
 | `Models.HITV.Def.Refine.{abs-defSet, module Abs}` | `L.Definability.Refine.{abs-defSet, module Abs}` | `[L2.1]`: un-deferred from the `[L1.6]` row that parked it as condensation-side; its first consumer is the ordinal formula of the collection step. Landing it executes the reading-order re-cut `[L1.4]` promised for `[L2.x]`: `FOL.Manipulation.{Relabelling, Bounding}` move from the tail to the Part 4 doorstep, since `L.Definability` is now their first consumer. `Renaming` and `Relativize` stay at the tail, still unconsumed |
 | `L.{OrdLset, RankLset, OrdLsetSuc, OrdinalFormula}` | `L.Ordinal.Stages` (one chapter) | `[L2.1]`: four source modules merge, since they are one theorem read two ways (`ord∈Lset→∈` and `ord∈Lset-suc`) plus its two comparison lemmas and the Δ₀ predicate. `sucβ∈or≡` → `suc∈or≡`, `φ_ord` → `φ-ord` (kebab, no underscore). The source's per-branch helper discipline is kept verbatim and narrated: the conclusions are heavy membership types and inlining them in a case split normalizes them per branch |
 | `L.ModelACInfinity.{ω∈L', ωₗ'}`, `L.ModelACNum.{ℕ̄ₗ, ω-specₗ', hasInfinityₗ'}` | `L.Axioms.Infinity.{ω∈L, ωʟ, isNumeralL, ω-specL, hasInfinityL}` | `[L2.1]`: the collection step joins the chain chapter rather than getting its own, and the chapter gains the `lem` parameter for it. `ℕ̄` → `isNumeralL` per the `[L1.4]` ruling that retired the invented bar |
+| `ZF.Coding` | `FOL.Coding` | `[L3.3]`: un-deferred as L3 phase B opens. Namespace by subject, `FOL/`: it codes the object language into a structure, and it is generic over that structure (an injective pairing and an injection of the naturals, as module parameters), so it belongs beside `FOL.ZFStructure` rather than under the model chapter. Reads at the Part 4 doorstep with `Relabelling` and `Bounding`. **`⌜⌝-inj` is dropped by consumption audit** (`[L3.1]`, S9): it is the 12-by-12 grid of §10's S8, 132 of whose 144 clauses carry no mathematics, and the `Codes` relation with `codes-canon` is what every consumer was designed around. It returns only if a consumer demands it, and then as `[L3.9]` work |
 | `Reification.Tactic` | revisited by S6 (§10) | 2026-07-25: the "deferred (zero consumers)" row above stands for the port itself, but the macro is the second-largest measured lever (4k to 6k); if S6 is taken up, the deferral is reversed under the goal code that takes it |
 
 ## 5. Working mechanisms (D2, D8)
@@ -538,6 +539,17 @@ phases; the sequence below is authoritative, the numbers are not (§6.0 rule 2).
 > **D, ports**: `[L3.5]` `[L3.6]` `[L3.7]`, as instantiations on a green verdict and as
 > originally planned on a red one → `[L3.10]` re-layering. `[L3.8]` and `[L3.9]` are
 > opportunistic and execute inside whichever goal first needs them.
+
+**Schedule change (owner ruling, 2026-07-25): phase B opens before `[L2.2]`.** L2 is
+suspended after `[L2.1]` and L3's substrate starts now; `[L2.2]` to `[L2.4]` resume
+afterwards. Verified before adopting, by taking the dependency cone of the coding cluster
+against the pinned source: it reaches **none** of `L.ModelACSep` (separation),
+`L.Reflect*` (the reflection engine), `L.Condensation` (power) or `L.ChoiceSetInL2`
+(choice). The cone is 44 modules, of which 17 and about 4.9k lines are unported, and its
+one surprise is `L.ConstructibleOrder`, which is not L2 work at all but the strict
+well-order vocabulary that both branches need. Consequence to keep in view: the Frontier
+stays at four fields for the duration and `L.Model` keeps its parameter, which is the
+device working as designed rather than a regression.
 
 **Why all of phase C precedes any cluster port.** `[L3.0.3]` measured the tier
 boundaries and they cut *across* the cluster boundaries: `Canon*` sits in `[L3.6]`'s
@@ -872,12 +884,12 @@ One row per goal code; update the row in the same commit that changes the status
 | L1.8 | Landmarks + Everything order | DONE 2026-07-18 (Landmarks restates V⊨ZF, V⊨ZF-classical, V⊨ZFC, and the frontier-conditional L⊨ZFC; owner rulings 2026-07-18: Landmarks reads **first**; the zero-consumer chapters read **last**, after Part 4; re-cut same day: Reification namespace = {Base, Combinators, Certified} (the framework, in waiting), Graded/Absoluteness/Relativize re-homed to FOL as peers of Renaming and read inside Part 1 for FOL continuity; `ZF.Model`→`ZF`, `V.Definability`→`L.Definability`; reading order = Landmarks, Parts 0–4, tools-in-waiting, framework) |
 | L0.4 | Two-catalog doctrine (reading vs structure) | DONE 2026-07-18 |
 | L0.5 | Register `Ord` as an abbreviation (STYLE §3) | DONE 2026-07-25 (opened during L2.0; `IsOrd` had shipped at L1.6 unregistered) |
-| L2 | Axiom branches | ACTIVE 2026-07-25 |
+| L2 | Axiom branches | SUSPENDED 2026-07-25 after L2.1, by owner ruling: phase B of L3 runs first (§6.1). Resumes at L2.2 |
 | L2.0 | Basic axioms | DONE 2026-07-25 (`L.Ordinal` + `L.Axioms.Basic` + `L.Constructible` additions; extensionality and regularity re-homed from `L.Model`; Frontier 11 fields → 8; no `lem`, the whole goal is constructive) |
 | L2.1 | Infinity | DONE 2026-07-25 (`L.Axioms.Infinity` + `L.Ordinal.Stages`; Frontier 8 → 4). The chain is constructive, the collection step is not: it needs `ω ∈ L`, hence `ord∈Lset-suc`, hence trichotomy |
-| L2.2 | Separation and Replacement | PLANNED |
-| L2.3 | Power via Condensation | PLANNED |
-| L2.4 | Well-order and Choice trunk | PLANNED |
+| L2.2 | Separation and Replacement | PLANNED, deferred behind L3 phase B (owner ruling 2026-07-25) |
+| L2.3 | Power via Condensation | PLANNED, deferred behind L3 phase B |
+| L2.4 | Well-order and Choice trunk | PLANNED, deferred behind L3 phase B |
 | L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | PLANNED |
 | L3.0 | Internalization theorem for L-recursion (S5) | PLANNED (registered 2026-07-25; gates L3.5 to L3.7) |
 | L3.0.0 | Design memo (single) | SUPERSEDED 2026-07-25 by L3.0.3 + L3.0.4; never started |
@@ -885,9 +897,9 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0.4 | Theorem statement in Bedrock's idiom | ACTIVE: memo delivered 2026-07-25, **awaiting owner gate**; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine, both now ported |
 | L3.0.1 | Two-instance proof of concept | PLANNED (after L3.3) |
 | L3.0.2 | Verdict and rollout ruling | PLANNED |
-| L3.1 | Transition-layer sweep (S9) | PLANNED, standing (registered 2026-07-25; head of each cluster port, closes with L3.10) |
+| L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
 | L3.2 | `reify!` industrialization (S6) | PLANNED (registered 2026-07-25; after L2.2, lands before L3.3 completes) |
-| L3.3 | Coding cluster | PLANNED (substrate for both routes; first consumer of L3.2) |
+| L3.3 | Coding cluster | ACTIVE 2026-07-25 (substrate for both routes; cone measured at 17 unported modules / 4.9k lines, independent of L2.2 to L2.4) |
 | L3.11 | Per-tag clause bundle (S10) | PLANNED (registered 2026-07-25 from the L3.0.3 measurement; runs before L3.0.1, which consumes it) |
 | L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional (registered 2026-07-25; opens only on a green L3.0.2; memo, PoC and verdict as sub-goals) |
 | L3.13 | Partial-certificate variant, tier 3 (S12) | PLANNED, conditional (registered 2026-07-25; green L3.0.2, runs before L3.5) |
