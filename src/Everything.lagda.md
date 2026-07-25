@@ -180,6 +180,10 @@ import V.Model
 - `FOL.Manipulation.Bounding`{.Agda}: relabelling when the map is only partial:
   `BoundedFo`{.Agda} certifies, occurrence by occurrence, that a formula's
   constants satisfy a predicate, and `BoundedFo-mono`{.Agda} weakens it.
+- `FOL.Coding`{.Agda}: syntax as sets: `⌜_⌝`{.Agda} tags a constructor index
+  onto the codes of the parts (constants coding themselves), and the inductive
+  relation `Codes`{.Agda} is the interface, keeping code values out of the
+  equations a typechecker has to normalize.
 - `L.Definability`{.Agda}: the single step: `Def A`, the definable subsets of
   `A` with parameters from `A`: syntax as index set, inner satisfaction for
   meaning, essential smallness footing the bill; `A ∈ Def A` always, and
@@ -211,6 +215,7 @@ import V.Model
 
 - `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式的入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，Lévy 见证随行 (`mapΔ₀`{.Agda} 及其塔)。
 - `FOL.Manipulation.Bounding`{.Agda}：映射只是部分函数时的重标：`BoundedFo`{.Agda} 逐次出现地证明公式的常元满足某谓词，`BoundedFo-mono`{.Agda} 放宽它。
+- `FOL.Coding`{.Agda}：语法作为集合：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上 (常量编码自身)，而归纳关系 `Codes`{.Agda} 是接口，使码值不出现在类型检查器必须归一化的等式里。
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
@@ -224,6 +229,7 @@ import V.Model
 ```agda
 import FOL.Manipulation.Relabelling
 import FOL.Manipulation.Bounding
+import FOL.Coding
 import L.Definability
 import L.Constructible
 import L.Ordinal
