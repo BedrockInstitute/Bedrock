@@ -293,6 +293,10 @@ opaque
            → ⟨ x ∈ˢ 𝒟ₒ A ⟩
   𝒟ₒ-intro A x p = p
 
+  𝒟ₒ-inv : (A x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩
+         → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁
+  𝒟ₒ-inv A x p = p
+
   Lset⊆𝒟ₒ : (β x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩
   Lset⊆𝒟ₒ β x = DefOf.Refine.A⊆Def (Lset β) (layer-trans (Lset-layer β)) x
 

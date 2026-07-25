@@ -330,6 +330,8 @@ rows rather than editing old ones):
 | `L.FormulaBound.{BoundedTm, BoundedFo, BoundedTm-mono, BoundedFo-mono}` | `FOL.Manipulation.Bounding` (new chapter) | `[L3.0.4]`: minimal prerequisite for the theorem statement. Re-homed from `L/` to `FOL.Manipulation`, where it belongs by subject: it is relabelling when the map is only partial, and the source module is already pure syntax with no `Lset`/`defSet`/V dependency. `Relabel` (`liftFo`, `liftFo-correct`, `Δ₀-liftFo`) stays deferred to `[L2.2]`, where its consumer lands |
 | `L.ChoiceSetInL.metaφ⟹isL'` | `L.Axioms.Basic.defSet→isL` | `[L3.0.4]`: the probe's checklist item 4. The source buries the closure engine in the choice chapter though the whole closure tower uses it; in Bedrock it is two lines over `[L2.0]` (`𝒟ₒ→isL` after `𝒟ₒ-intro`) and sits with the axioms that first exhibit the pattern |
 | `Models.HITV.Def.Refine.{abs-defSet, module Abs}` | `L.Definability.Refine.{abs-defSet, module Abs}` | `[L2.1]`: un-deferred from the `[L1.6]` row that parked it as condensation-side; its first consumer is the ordinal formula of the collection step. Landing it executes the reading-order re-cut `[L1.4]` promised for `[L2.x]`: `FOL.Manipulation.{Relabelling, Bounding}` move from the tail to the Part 4 doorstep, since `L.Definability` is now their first consumer. `Renaming` and `Relativize` stay at the tail, still unconsumed |
+| `L.{OrdLset, RankLset, OrdLsetSuc, OrdinalFormula}` | `L.Ordinal.Stages` (one chapter) | `[L2.1]`: four source modules merge, since they are one theorem read two ways (`ord∈Lset→∈` and `ord∈Lset-suc`) plus its two comparison lemmas and the Δ₀ predicate. `sucβ∈or≡` → `suc∈or≡`, `φ_ord` → `φ-ord` (kebab, no underscore). The source's per-branch helper discipline is kept verbatim and narrated: the conclusions are heavy membership types and inlining them in a case split normalizes them per branch |
+| `L.ModelACInfinity.{ω∈L', ωₗ'}`, `L.ModelACNum.{ℕ̄ₗ, ω-specₗ', hasInfinityₗ'}` | `L.Axioms.Infinity.{ω∈L, ωʟ, isNumeralL, ω-specL, hasInfinityL}` | `[L2.1]`: the collection step joins the chain chapter rather than getting its own, and the chapter gains the `lem` parameter for it. `ℕ̄` → `isNumeralL` per the `[L1.4]` ruling that retired the invented bar |
 | `Reification.Tactic` | revisited by S6 (§10) | 2026-07-25: the "deferred (zero consumers)" row above stands for the port itself, but the macro is the second-largest measured lever (4k to 6k); if S6 is taken up, the deferral is reversed under the goal code that takes it |
 
 ## 5. Working mechanisms (D2, D8)
@@ -872,7 +874,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L0.5 | Register `Ord` as an abbreviation (STYLE §3) | DONE 2026-07-25 (opened during L2.0; `IsOrd` had shipped at L1.6 unregistered) |
 | L2 | Axiom branches | ACTIVE 2026-07-25 |
 | L2.0 | Basic axioms | DONE 2026-07-25 (`L.Ordinal` + `L.Axioms.Basic` + `L.Constructible` additions; extensionality and regularity re-homed from `L.Model`; Frontier 11 fields → 8; no `lem`, the whole goal is constructive) |
-| L2.1 | Infinity | ACTIVE 2026-07-25: numeral chain done (three fields, constructive, Frontier 8 → 5). Collection step underway: `L.Ordinal` completed (downward closure, `∈-irrefl`, `ω-ord`), `L.Rank` ported, `L.Ordinal.Linear` ports trichotomy and **opens the L side's classical cone**. `abs-defSet` un-deferred into `L.Definability.Refine`, with the reading-order re-cut `[L1.4]` anticipated (`Relabelling` and `Bounding` move from the tail to the Part 4 doorstep, their first consumer). Remaining: the stage/rank chapter (`rank-Lset`, `ord∈Lset-suc`), then `hasInfinityL` |
+| L2.1 | Infinity | DONE 2026-07-25 (`L.Axioms.Infinity` + `L.Ordinal.Stages`; Frontier 8 → 4). The chain is constructive, the collection step is not: it needs `ω ∈ L`, hence `ord∈Lset-suc`, hence trichotomy |
 | L2.2 | Separation and Replacement | PLANNED |
 | L2.3 | Power via Condensation | PLANNED |
 | L2.4 | Well-order and Choice trunk | PLANNED |
@@ -1017,8 +1019,7 @@ One row per goal code; update the row in the same commit that changes the status
 - **Cold-check baseline (§7.5):** whole-tree cold check well inside the ceiling at
   `[L2.0]`; no module is near the §7.6 per-module budget, and no performance idiom has
   been needed yet (zero `-- perf:` markers in `src/`).
-- **Frontier field count:** **5** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
-  `hasEmptyL`, `hasPairL`, `hasUnionL`; `[L2.1]` deleted the numeral chain's three).
-  Remaining: separation, replacement, power, the collection of the numerals, choice.
-  `hasInfinityL` is now stated against the **proven** `numeralL`, imported rather than
-  a field of its own.
+- **Frontier field count:** **4** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
+  `hasEmptyL`, `hasPairL`, `hasUnionL`; `[L2.1]` deleted the numeral chain's three and
+  then `hasInfinityL`). Remaining: separation, replacement, power, choice, all four
+  hard. Nine of the twelve model fields are theorems.

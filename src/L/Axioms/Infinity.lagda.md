@@ -30,16 +30,20 @@ numeral chain follow by transporting the hierarchy's own facts along them.
 
 open import Base.Prelude
 open import Base.Truth
+open import Base.Classical using ( LEM )
 
-module L.Axioms.Infinity {ℓ : Level} where
+module L.Axioms.Infinity {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 import FOL.ZFModel
 open import V.Model {ℓ}
   using ( pair-singleton; ∈sucV-elim; ∈sucV-inl; self∈sucV )
-open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
+open import L.Ordinal {ℓ} using ( suc-ord; ω-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Axioms.Basic {ℓ}
-  using ( hasPairL; hasUnionL; module PairOf; module UnionOf; isL-directed; ∅ʟ )
+  using ( hasPairL; hasUnionL; module PairOf; module UnionOf; isL-directed
+        ; ∅ʟ; uniqueL )
 
 open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.Data.Empty as Empty
@@ -47,9 +51,10 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; ⋃_; module InfinitySet )
-open InfinitySet using ( sucV; #_ )
+open InfinitySet using ( sucV; #_; ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -216,20 +221,74 @@ numeralL-suc n z = fwd , bwd
 ```
 
 <!--en-->
+## Collecting the chain
+<!--zh-->
+## 收集这条链
+<!--/-->
+
+<!--en-->
+Now the axiom proper. A set whose members are exactly the numerals must be
+exhibited inside `L`, and the ambient hierarchy has the obvious candidate,
+namely `ω`. What has to be shown is that `ω` is constructible, and the previous
+chapter gives it in one line: `ω` is an ordinal, and an ordinal appears at the
+stage after itself.
+
+This is the step that costs the excluded middle, and it is worth seeing where
+the cost went. Not into the chain, which was free; not into collecting a family,
+which no principle here does; but into knowing *which ordinals live at which
+stage*, and that is a comparison.
+<!--zh-->
+现在是公理本身。必须在 `L` 内拿出一个成员恰为诸数码的集合，而环境层级有现成的候选，即 `ω`。要证的是 `ω` 可构造，上一章一行给出：`ω` 是序数，而序数现身于自身之后的那个阶段。
+
+这就是花费排中律的那一步，值得看清代价花在了哪里。不在链上，链是免费的；不在收集一个族上，此处没有任何原则做那件事；而在于知道**哪些序数住在哪个阶段**，那是一次比较。
+<!--/-->
+
+```agda
+ω∈L : ⟨ isL ω ⟩
+ω∈L = ∣ sucV ω , (suc-ord ω-ord , ord∈Lset-suc ω ω-ord) ∣₁
+
+ωʟ : S
+ωʟ = ω , ω∈L
+```
+
+<!--en-->
+It remains to check that the members of `ωʟ` are exactly the numerals of the
+chain. Membership in `ωʟ` is membership in `ω`, which the library gives as
+"merely hit by some library numeral"; the chain's projection equation turns each
+of those into a member of the chain, and back. So `ωʟ` realises the numeral
+predicate, and extensionality makes it the unique such set.
+<!--zh-->
+余下要核对的是 `ωʟ` 的成员恰是链上的诸数码。属于 `ωʟ` 就是属于 `ω`，而库把后者给成「仅仅被某个库数码命中」；链的投影等式把其中每一个换成链的成员，反之亦然。于是 `ωʟ` 实现了那个数码谓词，而外延性使它成为唯一这样的集合。
+<!--/-->
+
+```agda
+isNumeralL : S → Ω
+isNumeralL x = ⋁ (Lift {ℓ-zero} {ℓ-suc ℓ} ℕ) (λ n → x ≈ˢ numeralL (lower n))
+
+ω-specL : (x : S) → (x ∈ˢ ωʟ) ≡ isNumeralL x
+ω-specL x = ⇔toPath
+  (PT.map (λ { (k , p) → lift (lower k)
+             , (sym p ∙ sym (numeralL-fst (lower k))) }))
+  (PT.map (λ { (n , q) → lift (lower n)
+             , (sym (q ∙ numeralL-fst (lower n))) }))
+
+hasInfinityL : isContr (SetOf isNumeralL)
+hasInfinityL = uniqueL isNumeralL (ωʟ , ω-specL)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
 <!--/-->
 
 <!--en-->
-The chain exists inside `L`, and it is the hierarchy's chain read through the
-restriction: `numeralL`{.Agda} with its two pinning equations, three more fields
-paid. What remains of infinity is the collection step, the claim that these
-numerals form a *set* of `L`, and that step is of a different character
-entirely. It needs the ordinal `ω` to be constructible, which needs to know
-which ordinals appear at which stage of the tower, and unlike everything in this
-chapter and the last, that is where the classical assumption finally enters the
-book's L side.
+The axiom of infinity is paid in full: the chain `numeralL`{.Agda} with its two
+pinning equations, and `hasInfinityL`{.Agda} collecting it into a set. Four
+fields leave the frontier, and the split between them is the chapter's lesson.
+Building the chain was free; collecting it cost one comparison of ordinals, and
+therefore the excluded middle. That is the whole classical content of infinity
+in `L`, and it is visible in this chapter's telescope.
 <!--zh-->
-链在 `L` 之内存在，而且它就是层级那条链沿限制读出的结果：`numeralL`{.Agda} 连同它的两条钉死方程，又还清三个字段。无穷公理余下的是收集那一步，即断言这些数码构成 `L` 的一个**集合**，而那一步的性质截然不同。它需要序数 `ω` 可构造，而那需要知道哪些序数出现在塔的哪个阶段上；与本章和上一章的一切不同，经典假设正是在那里终于进入本书的 L 侧。
+无穷公理已全额付清：链 `numeralL`{.Agda} 连同它的两条钉死方程，以及把它收集成集合的 `hasInfinityL`{.Agda}。四个字段离开前沿，而二者之间的分野正是本章的教益。造链是免费的；收集它花掉一次序数比较，从而花掉排中律。这就是 `L` 中无穷公理的全部经典内容，而它在本章的参数表里一望可见。
 <!--/-->

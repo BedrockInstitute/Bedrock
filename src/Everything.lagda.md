@@ -197,6 +197,9 @@ import V.Model
 - `L.Ordinal.Linear`{.Agda}: trichotomy `ord-tri`{.Agda}, and with it the L
   side's classical boundary: closure never had to decide anything, comparison
   does, so this chapter takes the excluded middle as a module parameter.
+- `L.Ordinal.Stages`{.Agda}: the ordinals of `Lset α` are exactly the members of
+  `α`: `rank-Lset`{.Agda} and `ord∈Lset→∈`{.Agda} say none appears early,
+  `ord∈Lset-suc`{.Agda} says none appears late.
 - `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
   regularity descend along transitivity; uniqueness then comes free; and the
   empty set, pairing and union are each carved out of one stage by one formula.
@@ -213,6 +216,7 @@ import V.Model
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
+- `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
@@ -225,6 +229,7 @@ import L.Constructible
 import L.Ordinal
 import L.Rank
 import L.Ordinal.Linear
+import L.Ordinal.Stages
 import L.Axioms.Basic
 import L.Axioms.Infinity
 ```
