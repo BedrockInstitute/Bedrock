@@ -323,6 +323,7 @@ rows rather than editing old ones):
 | `L.Ordinal.{∅-ord, suc-ord, setUnion-ord, boundingOrd}` | `L.Ordinal` (new chapter) | `[L2.0]`: un-deferred from the L1.6 row that kept only `IsOrd`. Consumption-pruned to what the closure axioms need; `mem-ord`, the numeral and ω lemmas, `A∉A` and `ord-antisym` stay deferred to `[L2.1]` and later. **`L.OrdinalLinear` is not ported and may never be**: its `ord-tri` was the source's route to pairing, and `boundingOrd` replaces it constructively |
 | `L.Constructible.{Lset-mono, 𝒟ₒ-intro, Lset⊆𝒟ₒ, Lset→isL}` | same names, back in `L.Constructible` | `[L2.0]`: un-deferred from the L1.6 deferral row, which named them for exactly this moment; `𝒟ₒ-inv` and `isL'→isL` stay deferred |
 | `L.ModelAC.{extensional', foundation', hasEmpty', hasPair', hasUnion', con!, mere→isContr, isL'-directed, 𝒟ₒ→isL', ∅ₗ}` | `L.Axioms.Basic.{extensionalL, regularityL, hasEmptyL, hasPairL, hasUnionL, uniqueL, mere→uniqueL, isL-directed, 𝒟ₒ→isL, ∅ʟ}` | `[L2.0]`: the source's basic-axiom block becomes the first axiom chapter. `extensionalL` and `regularityL` **move here from `L.Model`** (they were proven there at `[L1.7]`): the uniqueness of every existence field flows from extensionality, so the chapter that needs it must own it, and `L.Model` becomes a pure assembly chapter |
+| `L.ModelACNum.{pairₗ, unionₗ, sucₗ, pairₗ-fst, unionₗ-fst, suc-proj, numₗ, num-fst}`, `L.ModelZFC.{num0L, numSL}` | `L.Axioms.Infinity.{pairʟ, unionʟ, sucʟ, pairʟ-fst, unionʟ-fst, sucʟ-fst, numeralL, numeralL-fst, numeralL-zero, numeralL-suc}` | `[L2.1]`: the numeral chain becomes the second axiom chapter. Suffix convention settled here: `ʟ` marks an **object** of L (`∅ʟ`, `pairʟ`, mirroring `𝒮ʟ`), `-L` marks the L-instance of a **named model field** (`numeralL`, `hasEmptyL`), which is why the two coexist. `L.ModelACNum.{NumeralSpecL', ℕ̄ₗ, ω-specₗ', hasInfinityₗ'}` and all of `L.ModelACInfinity` wait for the collection step |
 | `Reification.Tactic` | revisited by S6 (§10) | 2026-07-25: the "deferred (zero consumers)" row above stands for the port itself, but the macro is the second-largest measured lever (4k to 6k); if S6 is taken up, the deferral is reversed under the goal code that takes it |
 
 ## 5. Working mechanisms (D2, D8)
@@ -865,7 +866,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L0.5 | Register `Ord` as an abbreviation (STYLE §3) | DONE 2026-07-25 (opened during L2.0; `IsOrd` had shipped at L1.6 unregistered) |
 | L2 | Axiom branches | ACTIVE 2026-07-25 |
 | L2.0 | Basic axioms | DONE 2026-07-25 (`L.Ordinal` + `L.Axioms.Basic` + `L.Constructible` additions; extensionality and regularity re-homed from `L.Model`; Frontier 11 fields → 8; no `lem`, the whole goal is constructive) |
-| L2.1 | Infinity | PLANNED |
+| L2.1 | Infinity | ACTIVE 2026-07-25: `L.Axioms.Infinity` ports the numeral chain (three fields, constructive, Frontier 8 → 5). The collection step `hasInfinityL` remains and is **not** constructive: it needs `ω ∈ L`, hence which ordinals sit at which stage, hence trichotomy |
 | L2.2 | Separation and Replacement | PLANNED |
 | L2.3 | Power via Condensation | PLANNED |
 | L2.4 | Well-order and Choice trunk | PLANNED |
@@ -928,6 +929,13 @@ One row per goal code; update the row in the same commit that changes the status
   So `L.Ordinal` and the coming `L.Axioms.Basic` are plain `--safe` with no `lem` in
   their telescopes, and the classical cone starts later than the source suggests.
   Re-examine the same question at each later axiom before importing a `lem` parameter.
+  **First re-examination [L2.1], and the answer flips:** the numeral *chain* is
+  constructive too (its projection equations ride on the constructive `isL-directed`,
+  where the source's were classical only because trichotomy was), but the *collection*
+  step is not. `hasInfinityL` needs `ω ∈ L`, hence `ord∈Lset-suc`, hence `rank-Lset` and
+  `sucβ∈or≡`, and the latter is ordinal trichotomy, which the source's probe P8-3 judged
+  constructively unprovable (it implies excluded middle). So the L side's classical cone
+  begins at the collection step, three chapters later than the source's shape suggests.
 - **Subsumption probe verdict [L3.0.3]:** **amber**, memo delivered 2026-07-25 in
   [memos/L3.0.3-subsumption-probe.md](memos/L3.0.3-subsumption-probe.md), awaiting owner
   gate. Central question answered **yes**: one step specification subsumes `Cmp*` and
@@ -989,6 +997,8 @@ One row per goal code; update the row in the same commit that changes the status
 - **Cold-check baseline (§7.5):** whole-tree cold check well inside the ceiling at
   `[L2.0]`; no module is near the §7.6 per-module budget, and no performance idiom has
   been needed yet (zero `-- perf:` markers in `src/`).
-- **Frontier field count:** **8** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
-  `hasEmptyL`, `hasPairL`, `hasUnionL`). Remaining: separation, replacement, power, the
-  numeral chain (three fields), infinity, choice.
+- **Frontier field count:** **5** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
+  `hasEmptyL`, `hasPairL`, `hasUnionL`; `[L2.1]` deleted the numeral chain's three).
+  Remaining: separation, replacement, power, the collection of the numerals, choice.
+  `hasInfinityL` is now stated against the **proven** `numeralL`, imported rather than
+  a field of its own.
