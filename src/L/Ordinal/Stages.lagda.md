@@ -47,13 +47,13 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∀∈ )
 open import FOL.Manipulation.Relabelling using ( mapFo )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-irrefl )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
   using ( IsOrd; isTransV; Lset; Lset-layer; Lset-compute; layer-trans
         ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; Lset-mono )
-open import L.Ordinal {ℓ} using ( mem-ord; ∈-irrefl; suc-ord )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Rank {ℓ} using ( rank; rank-compute; rank-ord; rank-fix )
 

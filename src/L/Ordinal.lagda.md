@@ -38,7 +38,7 @@ open import Base.Truth
 module L.Ordinal {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import L.Constructible {ℓ}
   using ( isTransV; isPropIsTransV; ∅-trans; setUnion-trans; IsOrd; isPropIsOrd )
@@ -48,7 +48,6 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( _∈ₛ_; ∈∈ₛ )
-open import Cubical.Induction.WellFounded using ( wf→x≮x )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⋃_; union-ax; module InfinitySet )
 open InfinitySet using ( sucV; #_; ω; #-in-ω )
@@ -171,9 +170,9 @@ boundingOrd X f hf = β , (ordβ , memβ)
 ```
 
 <!--en-->
-## Members, and no self-membership
+## Members
 <!--zh-->
-## 成员，与无自环
+## 成员
 <!--/-->
 
 <!--en-->
@@ -182,23 +181,19 @@ transitivity is the second half of the hypothesis; that its members are
 transitive follows by pulling them back into the ambient ordinal along
 transitivity.
 
-The other fact is the first dividend of regularity. No set belongs to itself,
-because membership is well founded and a self-member would be an infinite
-descent. It is not an ordinal fact at all, but this is where the ordinal
-arguments start to need it.
+The hierarchy chapter's irreflexivity, that no set belongs to itself, is the
+other fact these arguments need; it is recalled here because this is where the
+ordinal proofs start reaching for it.
 <!--zh-->
 序数向下封闭：序数的成员是序数。它自身的传递性就是假设的第二半；而其成员传递，则经传递性把它们拉回外层序数即得。
 
-另一个事实是正则性的第一笔红利。没有集合属于自身，因为成员关系良基，而自属会构成一条无穷下降。这根本不是关于序数的事实，但序数论证正是从此处开始需要它。
+层级那一章的无自环性，即没有集合属于自身，是这些论证需要的另一个事实；此处提起它，是因为序数的证明正是从这里开始取用。
 <!--/-->
 
 ```agda
 mem-ord : ∀ {A} → IsOrd A → (x : S) → ⟨ x ∈ˢ A ⟩ → IsOrd x
 mem-ord {A} (Atr , Amem) x x∈A =
   Amem x x∈A , (λ y y∈x → Amem y (Atr y∈x x∈A))
-
-∈-irrefl : (A : S) → ⟨ A ∈ˢ A ⟩ → Empty.⊥
-∈-irrefl A = wf→x≮x regularityV {x = A}
 ```
 
 <!--en-->

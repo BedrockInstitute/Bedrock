@@ -23,8 +23,9 @@ module V.Hierarchy {ℓ : Level} where
 open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
 
 import Cubical.HITs.PropositionalTruncation as PT
+import Cubical.Data.Empty as Empty
 import Cubical.Induction.WellFounded as WellFoundedInduction
-open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded; isPropAcc )
+open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded; isPropAcc; wf→x≮x )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; setIsSet; _∈_; elimProp )
 open import Cubical.HITs.CumulativeHierarchy.Base
@@ -141,6 +142,18 @@ regularityV = elimProp (λ s → isPropAcc s)
     PT.rec (isPropAcc y)
            (λ { (i , p) → subst (Acc _∈ᵗ_) p (rec i) })
            y∈))
+```
+
+<!--en-->
+Its first dividend, one line: no set belongs to itself, since a self-member
+would be an infinite descent. The later chapters reach for this constantly.
+<!--zh-->
+它的第一笔红利，一行：没有集合属于自身，因为自属会构成一条无穷下降。后文诸章会不断取用。
+<!--/-->
+
+```agda
+∈-irrefl : (A : S) → ⟨ A ∈ˢ A ⟩ → Empty.⊥
+∈-irrefl A = wf→x≮x regularityV {x = A}
 ```
 
 <!--en-->
