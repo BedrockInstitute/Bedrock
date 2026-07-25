@@ -172,6 +172,14 @@ import V.Model
 <!--en-->
 ## Part 4: the constructible universe
 
+- `FOL.Manipulation.Relabelling`{.Agda}: the constant-domain kit, three altitudes at once:
+  functorial `mapFo`{.Agda}, the parameter-free entrance `embed`{.Agda},
+  meaning untouched (`⊨-map`{.Agda},
+  `embed-⊨`{.Agda}), Levy witnesses carried along (`mapΔ₀`{.Agda} and the
+  tower).
+- `FOL.Manipulation.Bounding`{.Agda}: relabelling when the map is only partial:
+  `BoundedFo`{.Agda} certifies, occurrence by occurrence, that a formula's
+  constants satisfy a predicate, and `BoundedFo-mono`{.Agda} weakens it.
 - `L.Definability`{.Agda}: the single step: `Def A`, the definable subsets of
   `A` with parameters from `A`: syntax as index set, inner satisfaction for
   meaning, essential smallness footing the bill; `A ∈ Def A` always, and
@@ -198,6 +206,8 @@ import V.Model
 <!--zh-->
 ## 第四部：可构造宇宙
 
+- `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式的入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，Lévy 见证随行 (`mapΔ₀`{.Agda} 及其塔)。
+- `FOL.Manipulation.Bounding`{.Agda}：映射只是部分函数时的重标：`BoundedFo`{.Agda} 逐次出现地证明公式的常元满足某谓词，`BoundedFo-mono`{.Agda} 放宽它。
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
@@ -208,6 +218,8 @@ import V.Model
 <!--/-->
 
 ```agda
+import FOL.Manipulation.Relabelling
+import FOL.Manipulation.Bounding
 import L.Definability
 import L.Constructible
 import L.Ordinal
@@ -245,14 +257,6 @@ Chapters with, as of today, no consumer anywhere in the trunk; their first
 consumers arrive with Part 4's deeper machinery, and they read late so the main
 line stays unbroken.
 
-- `FOL.Manipulation.Relabelling`{.Agda}: the constant-domain kit, three altitudes at once:
-  functorial `mapFo`{.Agda}, the parameter-free entrance `embed`{.Agda},
-  meaning untouched (`⊨-map`{.Agda},
-  `embed-⊨`{.Agda}), Levy witnesses carried along (`mapΔ₀`{.Agda} and the
-  tower).
-- `FOL.Manipulation.Bounding`{.Agda}: relabelling when the map is only partial:
-  `BoundedFo`{.Agda} certifies, occurrence by occurrence, that a formula's
-  constants satisfy a predicate, and `BoundedFo-mono`{.Agda} weakens it.
 - `FOL.Manipulation.Renaming`{.Agda}: the book's entire variable calculus: `renameFo`{.Agda} on
   syntax, and the one correctness theorem `⊨-rename`{.Agda} covering weakening,
   exchange, and contraction.
@@ -263,15 +267,11 @@ line stays unbroken.
 
 这几章至今在主干上没有任何消费者；它们的首批消费者随第四部的深层机器到来，读在靠后，好让主线不断。
 
-- `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式的入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，Lévy 见证随行 (`mapΔ₀`{.Agda} 及其塔)。
-- `FOL.Manipulation.Bounding`{.Agda}：映射只是部分函数时的重标：`BoundedFo`{.Agda} 逐次出现地证明公式的常元满足某谓词，`BoundedFo-mono`{.Agda} 放宽它。
 - `FOL.Manipulation.Renaming`{.Agda}：变量变换，本书全部的变量演算：语法上的 `renameFo`{.Agda}，与一条通吃弱化、交换、收缩的正确性定理 `⊨-rename`{.Agda}。
 - `FOL.Manipulation.Relativize`{.Agda}：把无界量词收紧到常量界，Δ₀ 见证随附，并给出正确性等式。
 <!--/-->
 
 ```agda
-import FOL.Manipulation.Relabelling
-import FOL.Manipulation.Bounding
 import FOL.Manipulation.Renaming
 import FOL.Manipulation.Relativize
 ```
