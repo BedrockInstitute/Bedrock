@@ -218,6 +218,9 @@ import V.Model
   `lookup-spec`{.Agda}; `memPairAt`{.Agda} reads a value, `sucAt`{.Agda}
   recognizes the index shift under a quantifier, and `seqSet`{.Agda} collects
   all finite sequences over a set.
+- `L.Coding.Tagged`{.Agda}: codes carrying their arity, so a clause for a
+  quantifier can speak about its subformula's arity; `tagPairAt`{.Agda} matches
+  the shape every binary constructor's code has.
 - `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
   regularity descend along transitivity; uniqueness then comes free; and the
   empty set, pairing and union are each carved out of one stage by one formula.
@@ -240,6 +243,7 @@ import V.Model
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：反射与选择都会取用的那件选取装置。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
+- `L.Coding.Tagged`{.Agda}：携带元数的码，使量词的子句能谈论其子公式的元数；`tagPairAt`{.Agda} 匹配每个二元构造子的码所具有的形状。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
@@ -258,6 +262,7 @@ import L.Ordinal.Stages
 import L.WellOrder.Base
 import L.Coding.Base
 import L.Coding.Environment
+import L.Coding.Tagged
 import L.Axioms.Basic
 import L.Axioms.Infinity
 ```
