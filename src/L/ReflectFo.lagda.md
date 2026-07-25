@@ -85,15 +85,29 @@ cheaply: the formula "true" defines the whole of a set, so a stage is a definabl
 subset of itself, hence a member of the operator applied to itself, hence
 constructible one stage later. With that, relativization to a stage is
 instantiated once and its bounded reading is available for the induction.
+
+The certificate is sealed, and only it: the stage as an element of the model is
+the pair of the stage with the certificate, and the first component has to keep
+reducing, since "lies in the bound" and "lies in the stage" are the same
+statement only because it does. The certificate is a different matter. It unfolds
+through definability into the smallness machinery, and it sits inside a constant,
+so every consumer that mentions the constant in a type would carry that unfolding
+along; a chapter that separates with a relativized formula takes minutes rather
+than seconds without this one line.
 <!--zh-->
 相对化以一个常元界住诸量词，而该常元必须是模型的元素，故须证阶段可构造。确实可构造，而且很廉价：公式「真」定义出一个集合的全体，故阶段是它自身的可定义子集，因而属于施于自身的那个算子，因而在下一阶段可构造。有了这一条，到某阶段的相对化便可实例化一次，其有界读法随即供归纳取用。
+
+被封印的是那份证书，且仅有它：作为模型元素的阶段是「阶段与证书」之对，而第一分量必须继续规约，因为「落在界内」与「落在阶段内」是同一句话，恰恰倚仗它规约。证书则是另一回事。它经可定义性一路展开到小性机器，而它又坐在一个常元里，于是每个在类型中提到该常元的消费方都会把那次展开一并背上；一章若用相对化公式作分离，没有这一行就要以分钟而非秒计。
 <!--/-->
 
 ```agda
+opaque
+  isL-Lset : (β : V ℓ) → IsOrd β → ⟨ isL (Lset β) ⟩
+  isL-Lset β oβ = 𝒟ₒ→isL β oβ (Lset β)
+    (𝒟ₒ-intro (Lset β) (Lset β) ∣ ⊤̇ , DefOf.defSet⊤≡A (Lset β) ∣₁)
+
 LsetS : (β : V ℓ) → IsOrd β → S
-LsetS β oβ = Lset β
-           , 𝒟ₒ→isL β oβ (Lset β)
-               (𝒟ₒ-intro (Lset β) (Lset β) ∣ ⊤̇ , DefOf.defSet⊤≡A (Lset β) ∣₁)
+LsetS β oβ = Lset β , isL-Lset β oβ
 
 module Cor (β : V ℓ) (oβ : IsOrd β) =
   Correct (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id (LsetS β oβ)
@@ -492,10 +506,20 @@ the stage, and returns a stage containing it. The extra ordinal is not a
 convenience: the certificate is not inherited by larger stages, so a caller
 cannot enlarge the stage afterwards to fit the set it is working with. It has to
 say up front what must fit, and the joint step carries it.
+
+The package is sealed, and this is the seal that matters most in the book so far.
+Transparent, the stage it names unfolds through the joint step, the bounding
+lemma and the excluded middle at every rung; a consumer that mentions the stage
+in a type, as both consumers do, would drag that whole unfolding into every
+conversion check, and the next chapter simply does not finish. Sealed, the stage
+is a name, and the four things a consumer needs of it are the four the package
+already states.
 <!--zh-->
 把这次归纳与相对化的正确性复合，就把有界读法变回一次寻常的满足，只不过对象是相对化后的公式。这是能用的形式：右侧是 Δ₀ 的，故任意复杂度的公式已被换成一条有界公式加一个被点名的阶段。
 
 打包之后，定理接受那条公式与调用方想要落在阶段里的任意序数，交还一个包含它的阶段。那个额外的序数并非图个方便：证书不为更大的阶段所继承，故调用方事后无法把阶段扩大以容纳它手上的集合。它必须事先说清什么必须装得下，而联合步进把它带上。
+
+这个包被封印，而这是本书至此最要紧的一道封印。若是透明的，它所命名的阶段会在每一级上一路展开到联合步进、界层引理与排中律；而凡在类型中提到该阶段的消费方，都会把那整次展开拖进每一回转换检查，两个消费方恰恰都在类型中提到它，于是下一章根本跑不完。封印之后，那个阶段是一个名字，而消费方向它索取的四样东西，正是这个包已然陈述的四样。
 <!--/-->
 
 ```agda
@@ -505,19 +529,22 @@ say up front what must fit, and the joint step carries it.
     reflectFo φ₀ answersAt (liftFoTo κ∈β φ₀ bdd) γ bγ
     ∙ sym (relativize-correct φ₀ γ)
 
-mkReflect : ∀ {n} (φ : Formula S n) (δ : V ℓ) → IsOrd δ
-          → Σ[ β ∈ V ℓ ] Σ[ oβ ∈ IsOrd β ]
-              (⟨ δ ∈ β ⟩
-               × ((γ : S ^ n) → Below β γ
-                  → (γ ⊨ φ) ≡ (γ ⊨ relativize (LsetS β oβ) φ)))
-mkReflect φ δ oδ = M.β , (M.oβ , (δ∈β , M.reflectRel))
-  where
-  bdd = mkBoundedFo φ
-  b   = bound2 (bdd .fst) δ (bdd .snd .fst) oδ
-  module M = Mk φ (b .fst) (b .snd .fst)
-                (liftFoTo (b .snd .snd .fst) φ (bdd .snd .snd))
-  δ∈β : ⟨ δ ∈ M.β ⟩
-  δ∈β = M.oβ .fst {x = b .fst} {y = δ} (b .snd .snd .snd) M.κ∈β
+opaque
+  mkReflect : ∀ {n} (φ : Formula S n) (δ : V ℓ) → IsOrd δ
+            → Σ[ β ∈ V ℓ ] Σ[ oβ ∈ IsOrd β ]
+                (⟨ δ ∈ β ⟩
+                 × ((γ : S ^ n) → Below β γ
+                    → (γ ⊨ φ) ≡ (γ ⊨ relativize (LsetS β oβ) φ)))
+  mkReflect φ δ oδ = M.β , (M.oβ , (δ∈β , M.reflectRel))
+    where
+    bdd : Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedFo (Below′ σ) φ)
+    bdd = mkBoundedFo φ
+    b : Σ[ τ ∈ V ℓ ] (IsOrd τ × ⟨ bdd .fst ∈ τ ⟩ × ⟨ δ ∈ τ ⟩)
+    b = bound2 (bdd .fst) δ (bdd .snd .fst) oδ
+    module M = Mk φ (b .fst) (b .snd .fst)
+                  (liftFoTo (b .snd .snd .fst) φ (bdd .snd .snd))
+    δ∈β : ⟨ δ ∈ M.β ⟩
+    δ∈β = M.oβ .fst {x = b .fst} {y = δ} (b .snd .snd .snd) M.κ∈β
 ```
 
 <!--en-->
