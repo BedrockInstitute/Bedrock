@@ -127,24 +127,23 @@ are the meta-level content the readers will express.
 <!--/-->
 
 ```agda
-private
-  ∈sgl-elim : {u y : V ℓ} → ⟨ y ∈ ⁅ u ⁆s ⟩ → y ≡ u
-  ∈sgl-elim {u} {y} h =
+∈sgl-elim : {u y : V ℓ} → ⟨ y ∈ ⁅ u ⁆s ⟩ → y ≡ u
+∈sgl-elim {u} {y} h =
     SetPackage.classification (SingletonPackage u) y .fst (∈∈ₛ {a = y} {b = ⁅ u ⁆s} .fst h)
 
-  ∈sgl-intro : {u y : V ℓ} → y ≡ u → ⟨ y ∈ ⁅ u ⁆s ⟩
-  ∈sgl-intro {u} {y} e = ∈∈ₛ {a = y} {b = ⁅ u ⁆s} .snd
+∈sgl-intro : {u y : V ℓ} → y ≡ u → ⟨ y ∈ ⁅ u ⁆s ⟩
+∈sgl-intro {u} {y} e = ∈∈ₛ {a = y} {b = ⁅ u ⁆s} .snd
     (SetPackage.classification (SingletonPackage u) y .snd e)
 
-  ∈pair-elim : {u v y : V ℓ} → ⟨ y ∈ ⁅ u , v ⁆ ⟩ → ∥ (y ≡ u) ⊎ (y ≡ v) ∥₁
-  ∈pair-elim {u} {v} {y} h = pairing-ax u v y .fst (∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .fst h)
+∈pair-elim : {u v y : V ℓ} → ⟨ y ∈ ⁅ u , v ⁆ ⟩ → ∥ (y ≡ u) ⊎ (y ≡ v) ∥₁
+∈pair-elim {u} {v} {y} h = pairing-ax u v y .fst (∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .fst h)
 
-  ∈pair-introL : {u v y : V ℓ} → y ≡ u → ⟨ y ∈ ⁅ u , v ⁆ ⟩
-  ∈pair-introL {u} {v} {y} e = ∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .snd
+∈pair-introL : {u v y : V ℓ} → y ≡ u → ⟨ y ∈ ⁅ u , v ⁆ ⟩
+∈pair-introL {u} {v} {y} e = ∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .snd
     (pairing-ax u v y .snd ∣ inl e ∣₁)
 
-  ∈pair-introR : {u v y : V ℓ} → y ≡ v → ⟨ y ∈ ⁅ u , v ⁆ ⟩
-  ∈pair-introR {u} {v} {y} e = ∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .snd
+∈pair-introR : {u v y : V ℓ} → y ≡ v → ⟨ y ∈ ⁅ u , v ⁆ ⟩
+∈pair-introR {u} {v} {y} e = ∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .snd
     (pairing-ax u v y .snd ∣ inr e ∣₁)
 
 sgl-char : (x u : V ℓ) → ⟨ u ∈ x ⟩ → ((y : V ℓ) → ⟨ y ∈ x ⟩ → y ≡ u) → x ≡ ⁅ u ⁆s
