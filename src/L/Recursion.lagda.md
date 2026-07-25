@@ -47,7 +47,11 @@ open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset-mono )
+open import L.Ordinal {ℓ} using ( boundingOrd )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
 
 import Cubical.HITs.PropositionalTruncation as PT
@@ -100,6 +104,41 @@ record Recursion : Type (ℓ-suc (ℓ-suc ℓ)) where
     graph : Formula S 2
     funct : (x : S) → ⟨ x ∈ˢ dom ⟩
           → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ graph ⟩)
+```
+
+<!--en-->
+Of the three, the domain is the one that looks like it might be hard, and it is
+not. An index set is usually given as a family in the meta-language, indexed by
+some type of the ambient size: the closed formulas, the pairs of them, whatever
+the recursion is over. Such a family does not have to be collected into a set at
+all. It only has to be *contained* in one, and any small family of elements of
+`L` is contained in a single stage, by the bounding lemma applied to their
+earliest stages. A stage is a set of `L`, so it serves as the domain.
+
+The recursion is then defined on more than its intended indices, and that costs
+nothing: the graph is made total by giving the uninteresting elements a default
+value, and the intended table is recovered by separation, which is now available
+for arbitrary formulas. So the obligation "the index set is a set of `L`", which
+an instance would otherwise discharge by internalizing its own syntax, is
+discharged here once for every instance at once.
+<!--zh-->
+三者之中，看起来可能难办的是定义域，而它并不难。索引集通常以元语言中的族给出，由某个周遭大小的类型索引：闭公式、闭公式之对，或该递归所遍历的任何东西。这样的族根本不必被收集成一个集合。它只需被**包含**在某个集合里，而 `L` 的任何小族都被包含在单一阶段中，只需把界层引理施于它们的最早阶段。阶段是 `L` 的集合，故可充当定义域。
+
+于是递归定义在比其预期索引更多的东西上，而这不费分文：把无关的元素赋一个默认值，图便成为全函数，而预期的那张表经分离取回，而分离如今对任意公式可用。于是「索引集是 `L` 的集合」这笔债，本来要由实例自行内化其语法来偿付，此处一举为所有实例偿清。
+<!--/-->
+
+```agda
+smallDom : (X : Type ℓ) (f : X → S) → Σ[ d ∈ S ] ((x : X) → ⟨ f x ∈ˢ d ⟩)
+smallDom X f = LsetS β oβ , mem
+  where
+  b = boundingOrd X (λ x → stage (fst (f x)) (f x .snd))
+        (λ x → stage-ord (fst (f x)) (f x .snd))
+  β = b .fst
+  oβ : IsOrd β
+  oβ = b .snd .fst
+  mem : (x : X) → ⟨ f x ∈ˢ LsetS β oβ ⟩
+  mem x = Lset-mono {α = β} {β = stage (fst (f x)) (f x .snd)} (b .snd .snd x)
+            (stage-mem (fst (f x)) (f x .snd))
 ```
 
 <!--en-->
@@ -182,15 +221,17 @@ that usually rides along with it, of making that formula bounded and its
 constants stage-local so that a stage can read it. That job is gone, and it was
 the larger of the two.
 
-It also does not say the domain is easy. An index set of syntax has to be shown
-to be a set of `L` before it can be a domain, and that is its own obligation,
-discharged once per index and shared by every recursion over it.
+It also does not leave the domain as an obligation. `smallDom`{.Agda} discharges
+it for every instance at once: a small family of elements of `L` is contained in
+a stage, and a stage is a set of `L`. What an instance supplies is that its
+indices are elements of `L`, one at a time, which for coded syntax is pairing and
+the numerals.
 <!--zh-->
 它说：`L` 的集合上的单值可定义关系，其表在 `L` 中，而值函数在定义域上是全的。凡取值由一条公式所决定的递归都被涵盖，无论那条公式多复杂，也无论它的常元住在哪里。
 
 它没有说任何特定的递归**拥有**这样一条公式。把一个递归的图写进对象语言是实打实的活，而无论本章存在与否，那份活都一样；本章免去的是通常与之同行的第二份活：把那条公式弄成有界的、把它的常元弄成阶段局部的，好让某个阶段能读它。那份活没有了，而它是两者中较大的一份。
 
-它也没有说定义域好办。一个语法的索引集必须先被证明是 `L` 的集合，才能充当定义域，那是它自己的一笔债，每个索引偿付一次，而其上的每个递归共享它。
+它也没有把定义域留作债务。`smallDom`{.Agda} 一举为所有实例偿清：`L` 的小族被包含在某个阶段里，而阶段是 `L` 的集合。实例要供给的是「它的诸索引逐个都是 `L` 的元素」，而对编码后的语法，那就是配对与数码。
 <!--/-->
 
 <!--en-->
@@ -201,7 +242,9 @@ discharged once per index and shared by every recursion over it.
 
 <!--en-->
 `Recursion`{.Agda} is the form an instance fills: a domain in `L`, a graph of any
-complexity, and single-valuedness. `Of`{.Agda} reads off the table, its two
+complexity, and single-valuedness. `smallDom`{.Agda} fills the first field for
+any small family of elements of `L`, so an instance supplies a graph and its
+single-valuedness and nothing else. `Of`{.Agda} reads off the table, its two
 membership directions, and the value function with its uniqueness.
 
 The chapter is a wrapper around `hasReplacementL`{.Agda}, and that is the point.
@@ -210,7 +253,7 @@ paid, internalizing a recursion is not a theorem but a corollary, and the
 per-clause absoluteness discipline that the bounded setting forces never has to
 be entered.
 <!--zh-->
-`Recursion`{.Agda} 是实例要填的表格：`L` 中的定义域、任意复杂度的图，以及单值性。`Of`{.Agda} 把那张表、它的两个隶属方向、以及带唯一性的值函数读出来。
+`Recursion`{.Agda} 是实例要填的表格：`L` 中的定义域、任意复杂度的图，以及单值性。`smallDom`{.Agda} 为 `L` 元素的任意小族填好第一格，故实例只须供给一个图与它的单值性，别无他物。`Of`{.Agda} 把那张表、它的两个隶属方向、以及带唯一性的值函数读出来。
 
 本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是要点。任意公式的概括字段才是贵的东西；一旦付清，内化一个递归就不是定理而是推论，而有界情形所强加的逐子句绝对性纪律，压根无须踏入。
 <!--/-->

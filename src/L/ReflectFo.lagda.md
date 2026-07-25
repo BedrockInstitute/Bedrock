@@ -42,15 +42,15 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+-- lint-agda: keep (⊤̇ names the defining formula behind `LsetS`)
 open import FOL.Manipulation.Bounding using ( BoundedTm; BoundedFo )
 open import FOL.Manipulation.Relativize using ( relativize; module Correct )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans; 𝒟ₒ-intro )
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans )
 open import L.Ordinal {ℓ} using ( ∅-ord; bound2 )
-open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Separation {ℓ} lem
   using ( Below′; liftFoTo; mkBoundedFo )
 open import L.Reflect {ℓ} lem
@@ -101,14 +101,6 @@ than seconds without this one line.
 <!--/-->
 
 ```agda
-opaque
-  isL-Lset : (β : V ℓ) → IsOrd β → ⟨ isL (Lset β) ⟩
-  isL-Lset β oβ = 𝒟ₒ→isL β oβ (Lset β)
-    (𝒟ₒ-intro (Lset β) (Lset β) ∣ ⊤̇ , DefOf.defSet⊤≡A (Lset β) ∣₁)
-
-LsetS : (β : V ℓ) → IsOrd β → S
-LsetS β oβ = Lset β , isL-Lset β oβ
-
 module Cor (β : V ℓ) (oβ : IsOrd β) =
   Correct (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id (LsetS β oβ)
 ```
