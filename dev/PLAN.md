@@ -948,15 +948,15 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0.3 | Subsumption probe, source-reading only | DONE 2026-07-25, memo delivered; verdict amber (route alive, projection corrected) |
 | L3.0.4 | Theorem statement in Bedrock's idiom | DONE 2026-07-25, memo delivered; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine. **Two amendments from the phase-C re-evaluation**: stage 7 is `[L3.0.5]`, not `[L3.2]`; and `reads`'s `isL` certificates must be sealed where built (the `L.Axioms.Full` hazard) |
 | L3.0.5 | Finite families at a stage (stage 7) | DONE 2026-07-25 (`finSetL` in `L.Axioms.Basic`; registered on the phase-C re-evaluation, correcting the memo's attribution of stage 7 to L3.2) |
-| L3.0.1 | Two-instance proof of concept | PLANNED, unblocked (all prerequisites met; runs after L3.11) |
+| L3.0.1 | Two-instance proof of concept | **Theorem half DONE 2026-07-25**: `L.Recursion`, 52 lines of Agda, a wrapper around `hasReplacementL` (finding below). Instance half PLANNED; next unit is the code set in `L`, obligation (a) |
 | L3.0.2 | Verdict and rollout ruling | PLANNED |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
 | L3.2 | `reify!` industrialization (S6) | PLANNED, **off L3.0's critical path** (re-evaluated 2026-07-25: stage 7 needed a lemma, not the macro). Opportunistic accelerator for the reader half of the coding chapters |
 | L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
 | L3.14 | Coding substrate: the Δ₀ code readers | DONE 2026-07-25. Seven chapters: `L.WellOrder.Base`, `FOL.Coding`, `V.Coding`, `L.Coding.{Base, Environment, Tagged, Length, Entry}`. The source's `SatCert*` split by subject rather than by session |
-| L3.11 | Per-tag clause bundle (S10) | PLANNED, next. Runs before L3.0.1, which consumes it. Its de-risk rationale is spent (the twelve-clause shape checks fine, see `L.ReflectFo`); the remaining case is line saving, and the bundle's field list is to be driven by the reference instance rather than designed in the abstract |
-| L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional (registered 2026-07-25; opens only on a green L3.0.2; memo, PoC and verdict as sub-goals) |
-| L3.13 | Partial-certificate variant, tier 3 (S12) | PLANNED, conditional (registered 2026-07-25; green L3.0.2, runs before L3.5) |
+| L3.11 | Per-tag clause bundle (S10) | **RE-SCOPED to conditional 2026-07-25.** De-risk rationale spent (`L.ReflectFo` checks the twelve-clause shape); two of five fields removed by the internalization finding; and with the graph unconstrained there is no reason a clause must be a per-tag formula in a twelve-way grid. Do not build until an instance shows it is wanted |
+| L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional, **to be re-examined before opening**: tier 2 was separated from tier 1 by the complexity boundary the internalization finding dissolved |
+| L3.13 | Partial-certificate variant, tier 3 (S12) | PLANNED, conditional, **to be re-examined before opening**, same ground as L3.12 |
 | L3.4 | Scaffolding parameterization (S3) | PLANNED, conditional (registered 2026-07-25; opens only on a red L3.0.2) |
 | L3.5 | Satisfaction cluster | PLANNED |
 | L3.6 | Closure cluster | PLANNED |
@@ -1133,7 +1133,57 @@ One row per goal code; update the row in the same commit that changes the status
 - **Cold-check baseline (§7.5):** whole-tree cold check well inside the ceiling at
   `[L2.0]`; no module is near the §7.6 per-module budget, and no performance idiom has
   been needed yet (zero `-- perf:` markers in `src/`).
-- **Frontier field count:** **4** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
+- **Frontier field count:** **2** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
   `hasEmptyL`, `hasPairL`, `hasUnionL`; `[L2.1]` deleted the numeral chain's three and
-  then `hasInfinityL`). Remaining: separation, replacement, power, choice, all four
-  hard. Nine of the twelve model fields are theorems.
+  then `hasInfinityL`; `[L2.2]` deleted `hasSeparationL` and `hasReplacementL` together).
+  Remaining: power and choice. Eleven of the twelve model fields are theorems.
+- **Conversion-blowup finding [L2.2], the sharpest so far:** `L.Axioms.Full` did not
+  finish in ten minutes, and the cause was **one proof term**. Relativization bounds
+  quantifiers by a constant, the constant is the stage *as an element of the model*, and
+  an element of the model is a pair of a set with its constructibility certificate. That
+  certificate unfolds through `DefOf.defSet⊤≡A` into the definability and smallness
+  machinery, and it rides inside every type that mentions the constant, which is every
+  type in the chapter. Sealing the certificate alone (`opaque isL-Lset`, keeping the
+  *first* component reducing, since "lies in the bound" and "lies in the stage" are the
+  same statement only because it reduces) took the chapter from over 600 s to **1.4 s**.
+  Sealing the reflected ordinal was tried first and did nothing: the ordinal was never
+  the problem, the certificate travelling with it was. The shape generalizes: when a
+  restricted structure's elements appear as *constants of the object language*, seal the
+  membership certificate where the element is built, not the element.
+- **Internalization finding [L3.0.1], and it ends the theorem half of the goal:** the
+  internalization theorem is **52 lines of Agda** (`L.Recursion`), against `[L3.0.4]` §5's
+  projected 1,400 to 2,000 and the source's 13,518 for tier 1. It is a wrapper around
+  `hasReplacementL`. The reason the source needs its eight-stage pipeline is that its
+  comprehension fields are **Δ₀-only**, so a recursion's table must be made definable
+  *inside a stage*, where a formula does not mean what it means outside; hence
+  absoluteness, hence a Δ₀ certificate, hence per-clause Δ₀ and bounding witnesses, a
+  bounding ordinal, and a relabelling layer. `[L2.2]` paid for the general case once and
+  for all: replacement in `L` holds for formulas of **any** complexity and is read at the
+  class model. So a recursion whose graph is expressible at all has its table in `L`, the
+  table **is** the replacement image, and stages 1 to 5, 7 and 8 of the memo's table have
+  nothing left to discharge. There is no circularity: the per-index value is in `L` by
+  pairing and the numerals, and collecting infinitely many of them is what replacement is
+  for.
+
+  Consequences across the tree, all of them contractions:
+  - `[L3.0.1]`'s theorem half is **done**; what survives is the instance half, and the
+    kill criteria now apply to instances only.
+  - `[L3.11]` loses `ClauseBundle`'s `delta0` and `bounded`, two of five fields. More than
+    that, its premise weakens: with the graph unconstrained there is no reason a clause
+    must be a per-tag object-language formula in a twelve-way grid, so the bundle should
+    not be built until an instance shows it is wanted. **Re-scoped to conditional.**
+  - `[L3.12]` (tier 2) and `[L3.13]` (tier 3) were separated from tier 1 by exactly the
+    complexity boundary that has now dissolved. Both are to be re-examined before opening;
+    neither is claimed dead here.
+  - `[L3.0.5]` stands, but honestly: `finSetL` was registered as stage 7's prerequisite
+    and stage 7 no longer exists. It survives as a general lemma subsuming the chapter's
+    hand-written pairing, which is worth its sixty lines, but it was superseded within
+    the hour.
+
+  **What the instances still owe.** Two obligations, and they are the honest remainder.
+  (a) The index set must be a set of `L`: for the syntactic instances that is the code
+  set, discharged once and shared by every recursion over it, and it is the next unit.
+  (b) The graph must be written in the object language and proved single-valued. (b) is
+  the instance's own mathematics and was never in scope for absorption (`[L3.0.4]` §7.1
+  said so); what has gone is the *second* job that used to ride along with it, of making
+  that formula bounded and its constants stage-local, which was the larger of the two.
