@@ -40,7 +40,7 @@ open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.Data.Empty as Empty
 import Cubical.Data.Sum as Sum
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
@@ -271,18 +271,26 @@ some `defSet φ`": exhibiting a formula together with an extensional equation is
 exactly what it takes to place a set inside the operator. The seal opens for one
 line and closes again.
 
-The second is monotonicity: a lower stage is contained in every higher one,
-where higher means the index is a member. Unfold the higher stage once and it is
-a union over the members of its index; one of those members is the lower index,
-contributing `𝒟ₒ` of the lower stage. So all that is needed is that a stage sits
-inside `𝒟ₒ` of itself, and that is the previous chapter's refinement bound
-applied to a transitive set.
+The second unfolds the tower once and reads the union both ways. A stage is the
+union, over the members of its index, of `𝒟ₒ` of the earlier stages; so belonging
+to a stage is exactly belonging to `𝒟ₒ` of some earlier stage, and that
+equivalence is given as its two directions, since that is how consumers use it.
+Going in is a member of the union named by its index; coming out is the union
+axiom followed by naming the fibre.
+
+Monotonicity is then a corollary, not a construction: a lower stage sits inside
+`𝒟ₒ` of itself by the previous chapter's refinement bound applied to a transitive
+set, and going in carries it up. Stating the characterization rather than the
+corollary costs nothing here and saves the later chapters from re-deriving the
+union structure each time they need to walk down it.
 <!--zh-->
 关于塔还有两个事实，承载着后续诸章的每一个闭包论证，而只要在对的地方开封，二者都很廉价。
 
 第一条给算子的隶属命名。`𝒟ₒ A` 造出来就是 `A` 的可定义子集之集，故属于它按构造即「仅仅是某个 `defSet φ`」：要把一个集合放进算子里，拿出一条公式连同一个外延等式恰好就够。封印开一行，随即合上。
 
-第二条是单调性：低阶段包含于每个更高的阶段，其中「更高」指索引是成员。把高阶段展开一次，它是沿其索引的成员取的并；那些成员之一正是低索引，贡献出低阶段的 `𝒟ₒ`。于是所需的只是阶段落在自身的 `𝒟ₒ` 里面，而那正是上一章的精化界线施于传递集。
+第二条把塔展开一次，再把那个并两头都读一遍。一个阶段是沿其索引的成员、对更早诸阶段的 `𝒟ₒ` 取的并；故属于一个阶段，恰是属于某个更早阶段的 `𝒟ₒ`，而这条等价按其两个方向给出，因为消费方正是这样用它的。进去是成为该并的成员，由其索引点名；出来是并公理，随后为纤维命名。
+
+单调性于是是推论，而非构造：低阶段经上一章的精化界线施于传递集而落在自身的 `𝒟ₒ` 里面，再由「进去」抬上去。陈述这条刻画而非那条推论，此处不费分文，却省去后续诸章每次要沿并向下走时重新推导一遍并的结构。
 <!--/-->
 
 ```agda
@@ -300,24 +308,47 @@ opaque
   Lset⊆𝒟ₒ : (β x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩
   Lset⊆𝒟ₒ β x = DefOf.Refine.A⊆Def (Lset β) (layer-trans (Lset-layer β)) x
 
-Lset-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → {x : S} → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ Lset α ⟩
-Lset-mono {α} {β} β∈α {x} x∈Lβ =
+stageFam : (α : S) → ⟪ α ⟫ → S
+stageFam α m = 𝒟ₒ (Lset (⟪ α ⟫↪ m))
+
+Lset-in : (α δ x : S) → ⟨ δ ∈ˢ α ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩ → ⟨ x ∈ˢ Lset α ⟩
+Lset-in α δ x δ∈α x∈𝒟ₒδ =
   subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Lset-compute α))
-    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ α ⟫ s)} .snd
-      (union-ax (sett ⟪ α ⟫ s) x .snd
-        ∣ 𝒟ₒ (Lset β) , (𝒟ₒLβ∈ₛsett , x∈ₛ𝒟ₒLβ) ∣₁))
+    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ α ⟫ (stageFam α))} .snd
+      (union-ax (sett ⟪ α ⟫ (stageFam α)) x .snd
+        ∣ 𝒟ₒ (Lset δ) , (𝒟ₒLδ∈ₛsett , x∈ₛ𝒟ₒLδ) ∣₁))
   where
-  s : ⟪ α ⟫ → S
-  s m = 𝒟ₒ (Lset (⟪ α ⟫↪ m))
-  fib = ∈-asFiber {a = β} {b = α} β∈α
+  fib = ∈-asFiber {a = δ} {b = α} δ∈α
   m = fib .fst
-  p : ⟪ α ⟫↪ m ≡ β
+  p : ⟪ α ⟫↪ m ≡ δ
   p = fib .snd
-  𝒟ₒLβ∈ₛsett : ⟨ 𝒟ₒ (Lset β) ∈ₛ sett ⟪ α ⟫ s ⟩
-  𝒟ₒLβ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset β)} {b = sett ⟪ α ⟫ s} .fst
+  𝒟ₒLδ∈ₛsett : ⟨ 𝒟ₒ (Lset δ) ∈ₛ sett ⟪ α ⟫ (stageFam α) ⟩
+  𝒟ₒLδ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset δ)} {b = sett ⟪ α ⟫ (stageFam α)} .fst
     ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
-  x∈ₛ𝒟ₒLβ : ⟨ x ∈ₛ 𝒟ₒ (Lset β) ⟩
-  x∈ₛ𝒟ₒLβ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset β)} .fst (Lset⊆𝒟ₒ β x x∈Lβ)
+  x∈ₛ𝒟ₒLδ : ⟨ x ∈ₛ 𝒟ₒ (Lset δ) ⟩
+  x∈ₛ𝒟ₒLδ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset δ)} .fst x∈𝒟ₒδ
+
+Lset-out : (α x : S) → ⟨ x ∈ˢ Lset α ⟩
+         → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) ∥₁
+Lset-out α x x∈Lα = PT.rec squash₁ uStep
+  (union-ax (sett ⟪ α ⟫ (stageFam α)) x .fst
+    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ α ⟫ (stageFam α))} .fst
+      (subst (λ w → ⟨ x ∈ˢ w ⟩) (Lset-compute α) x∈Lα)))
+  where
+  G : Type (ℓ-suc ℓ)
+  G = Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+  atFib : (v : S) → ⟨ x ∈ₛ v ⟩ → (m : ⟪ α ⟫) → stageFam α m ≡ v → G
+  atFib v x∈ₛv m sm≡v = ⟪ α ⟫↪ m
+    , ( ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+      , ∈∈ₛ {a = x} {b = stageFam α m} .snd
+          (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym sm≡v) x∈ₛv) )
+  uStep : Σ[ v ∈ S ] (⟨ v ∈ₛ sett ⟪ α ⟫ (stageFam α) ⟩ × ⟨ x ∈ₛ v ⟩) → ∥ G ∥₁
+  uStep (v , v∈ₛsett , x∈ₛv) = PT.map
+    (λ { (m , sm≡v) → atFib v x∈ₛv m sm≡v })
+    (∈∈ₛ {a = v} {b = sett ⟪ α ⟫ (stageFam α)} .snd v∈ₛsett)
+
+Lset-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → {x : S} → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ Lset α ⟩
+Lset-mono {α} {β} β∈α {x} x∈Lβ = Lset-in α β x β∈α (Lset⊆𝒟ₒ β x x∈Lβ)
 ```
 
 <!--en-->

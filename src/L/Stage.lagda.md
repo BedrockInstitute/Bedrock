@@ -14,16 +14,24 @@ and membership is well founded so the recursion stops. And that it is unique,
 which is trichotomy: two least stages cannot be strictly ordered either way, so
 they are equal.
 
+Neither argument looks at what the property says. So the chapter proves them for
+an arbitrary property of ordinals and reads the stage function off as the
+instance, which costs nothing here and pays later: a canonical *choice* of
+ordinal is a thing several constructions want, and each one that gets it this way
+is one that does not need a well-ordering of L to get it.
+
 Both are classical, for reasons already seen. The descent asks, at each step, a
-question about an arbitrary set, and uniqueness is comparison. So the stage
-function joins the classical cone, and the chapter is the third and last place
+question about an arbitrary set, and uniqueness is comparison. So the least
+ordinal joins the classical cone, and the chapter is the third and last place
 the excluded middle enters the L-side machinery.
 <!--zh-->
 可构造性当初定义为「某个序数阶段包含它」，而那个见证被刻意留在陈述里，好让后续理论把它取回来。现在就取，并且加以锐化：不是**某个**阶段，而是**最早的**那个。正是这个函数，使此后每个构造能把有穷多个可构造集安置在公共阶段上，因为界住最早的阶段就界住了任何合用的阶段。
 
 要证的有两件。最小阶段存在，那是一次下降：从任何合用的阶段出发，问是否有更小的也合用；若有则递归，而成员关系良基，故递归会停。以及它唯一，那是三歧：两个最小阶段无论哪个方向都不能严格相比，故它们相等。
 
-两件都是经典的，理由前面已经见过。下降在每一步问的是关于任意集合的问题，而唯一性是比较。于是阶段函数加入经典锥，本章是排中律进入 L 侧机器的第三处、也是最后一处。
+两个论证都不看那条性质说了什么。故本章对任意的序数性质来证，再把阶段函数作为实例读出：此处不费分文，而日后有偿：序数的一个典范**选取**是若干构造都想要的东西，而每个由此获得它的构造，就是一个无须 L 的良序即可获得它的构造。
+
+两件都是经典的，理由前面已经见过。下降在每一步问的是关于任意集合的问题，而唯一性是比较。于是最小序数加入经典锥，本章是排中律进入 L 侧机器的第三处、也是最后一处。
 <!--/-->
 
 ```agda
@@ -43,7 +51,7 @@ open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
@@ -59,35 +67,44 @@ open hPropStructure 𝒮ᵥ
 <!--/-->
 
 <!--en-->
-An ordinal is earliest for `x` when no smaller ordinal is a stage containing `x`.
-Packaging that with the ordinal and the membership gives the data a later chapter
+An ordinal is least for a property when no smaller ordinal has that property.
+Packaging that with the ordinal and the property gives the data a later chapter
 wants; and the package is a proposition, which is what lets it be extracted from
-the truncated witness that constructibility carries.
+a truncated witness, as constructibility's is.
+
+Uniqueness is where the property's being an `hProp`{.Agda} earns its keep: the
+two candidates are compared by trichotomy, each strict direction is refuted by
+the other's minimality, and the remaining components are propositions, so the
+equality of the ordinals is the equality of the packages.
 <!--zh-->
-一个序数对 `x` 而言是最早的，指没有更小的序数是包含 `x` 的阶段。把这一条与序数性、成员性打成包，就得到后续章节想要的数据；而这个包是命题，正是这一点使它能从可构造性所携带的截断见证中被取出。
+一个序数对某条性质而言是最小的，指没有更小的序数具有该性质。把这一条与序数性、该性质打成包，就得到后续章节想要的数据；而这个包是命题，正是这一点使它能从截断的见证中被取出，可构造性携带的正是这样的见证。
+
+唯一性正是那条性质取值于 `hProp`{.Agda} 的用武之处：两个候选由三歧比较，每个严格方向都被对方的极小性反驳，而其余分量都是命题，故序数相等即是整包相等。
 <!--/-->
 
 ```agda
-isEarliest : (x α : S) → Type (ℓ-suc ℓ)
-isEarliest x α = (γ : S) → IsOrd γ → ⟨ x ∈ˢ Lset γ ⟩ → ⟨ γ ∈ˢ α ⟩ → Empty.⊥
+module _ (P : S → Ω) where
 
-Earliest : S → Type (ℓ-suc ℓ)
-Earliest x = Σ[ α ∈ S ] (IsOrd α × ⟨ x ∈ˢ Lset α ⟩ × isEarliest x α)
+  isLeastOrd : S → Type (ℓ-suc ℓ)
+  isLeastOrd α = (γ : S) → IsOrd γ → ⟨ P γ ⟩ → ⟨ γ ∈ˢ α ⟩ → Empty.⊥
 
-isPropEarliest : (x : S) → isProp (Earliest x)
-isPropEarliest x (α , ordα , memα , leastα) (α' , ordα' , memα' , leastα') =
-  Σ≡Prop propRest α≡α'
-  where
-  decide : (⟨ α ∈ˢ α' ⟩ ⊎ ((α ≡ α') ⊎ ⟨ α' ∈ˢ α ⟩)) → α ≡ α'
-  decide (inl α∈α')       = Empty.rec (leastα' α ordα memα α∈α')
-  decide (inr (inl e))    = e
-  decide (inr (inr α'∈α)) = Empty.rec (leastα α' ordα' memα' α'∈α)
-  α≡α' : α ≡ α'
-  α≡α' = decide (ord-tri α ordα α' ordα')
-  propRest : (β : S) → isProp (IsOrd β × ⟨ x ∈ˢ Lset β ⟩ × isEarliest x β)
-  propRest β = isProp× (isPropIsOrd β)
-    (isProp× (snd (x ∈ˢ Lset β))
-      (isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → Empty.isProp⊥))
+  LeastOrd : Type (ℓ-suc ℓ)
+  LeastOrd = Σ[ α ∈ S ] (IsOrd α × ⟨ P α ⟩ × isLeastOrd α)
+
+  isPropLeastOrd : isProp LeastOrd
+  isPropLeastOrd (α , ordα , pα , leastα) (α' , ordα' , pα' , leastα') =
+    Σ≡Prop propRest α≡α'
+    where
+    decide : (⟨ α ∈ˢ α' ⟩ ⊎ ((α ≡ α') ⊎ ⟨ α' ∈ˢ α ⟩)) → α ≡ α'
+    decide (inl α∈α')       = Empty.rec (leastα' α ordα pα α∈α')
+    decide (inr (inl e))    = e
+    decide (inr (inr α'∈α)) = Empty.rec (leastα α' ordα' pα' α'∈α)
+    α≡α' : α ≡ α'
+    α≡α' = decide (ord-tri α ordα α' ordα')
+    propRest : (β : S) → isProp (IsOrd β × ⟨ P β ⟩ × isLeastOrd β)
+    propRest β = isProp× (isPropIsOrd β)
+      (isProp× (snd (P β))
+        (isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → Empty.isProp⊥))
 ```
 
 <!--en-->
@@ -97,32 +114,41 @@ isPropEarliest x (α , ordα , memα , leastα) (α' , ordα' , memα' , leastα
 <!--/-->
 
 <!--en-->
-Given any stage containing `x`, walk down. Ask whether a strictly smaller ordinal
-is also a stage containing `x`; if one is, recurse into it, and membership being
-well founded the walk terminates; if none is, the current stage is earliest, and
-the refutation of the question is exactly the earliestness proof.
+Given any ordinal with the property, walk down. Ask whether a strictly smaller
+ordinal also has it; if one does, recurse into it, and membership being well
+founded the walk terminates; if none does, the current ordinal is least, and the
+refutation of the question is exactly the minimality proof.
+
+The result being a proposition, the starting ordinal may be given truncated, and
+that is the form the callers have: they know a suitable ordinal exists without
+having chosen one.
 <!--zh-->
-给定任一包含 `x` 的阶段，向下走。问是否有严格更小的序数也是包含 `x` 的阶段；若有则递归进去，而成员关系良基，故这趟行走会终止；若没有，则当前阶段最早，而对那个问题的反驳恰是最早性的证明。
+给定任一具有该性质的序数，向下走。问是否有严格更小的序数也具有它；若有则递归进去，而成员关系良基，故这趟行走会终止；若没有，则当前序数最小，而对那个问题的反驳恰是极小性的证明。
+
+结果既是命题，起始序数便可以截断的形式给出，而这正是诸调用方手上的形式：它们知道合用的序数存在，却未曾选定一个。
 <!--/-->
 
 ```agda
-earliestBelow : (x α : S) → IsOrd α → ⟨ x ∈ˢ Lset α ⟩ → Earliest x
-earliestBelow x = ∈-induction step
-  where
-  step : (α : S) → (∀ β → ⟨ β ∈ˢ α ⟩ → IsOrd β → ⟨ x ∈ˢ Lset β ⟩ → Earliest x)
-       → IsOrd α → ⟨ x ∈ˢ Lset α ⟩ → Earliest x
-  step α IH ordα memα = decide (lem Smaller)
+  leastOrdBelow : (α : S) → IsOrd α → ⟨ P α ⟩ → LeastOrd
+  leastOrdBelow = ∈-induction step
     where
-    Smaller : hProp (ℓ-suc ℓ)
-    Smaller =
-      ∃[ β ∶ S ] ((β ∈ˢ α) ⊓ ((IsOrd β , isPropIsOrd β) ⊓ (x ∈ˢ Lset β)))
-    decide : (⟨ Smaller ⟩ ⊎ (⟨ Smaller ⟩ → Empty.⊥)) → Earliest x
-    decide (inl ∃β) = PT.rec (isPropEarliest x)
-      (λ { (β , (β∈α , (ordβ , memβ))) → IH β β∈α ordβ memβ }) ∃β
-    decide (inr ¬∃β) = α , ordα , memα , earliestProof
+    step : (α : S) → (∀ β → ⟨ β ∈ˢ α ⟩ → IsOrd β → ⟨ P β ⟩ → LeastOrd)
+         → IsOrd α → ⟨ P α ⟩ → LeastOrd
+    step α IH ordα pα = decide (lem Smaller)
       where
-      earliestProof : isEarliest x α
-      earliestProof γ ordγ memγ γ∈α = ¬∃β ∣ γ , (γ∈α , (ordγ , memγ)) ∣₁
+      Smaller : hProp (ℓ-suc ℓ)
+      Smaller = ∃[ β ∶ S ] ((β ∈ˢ α) ⊓ ((IsOrd β , isPropIsOrd β) ⊓ P β))
+      decide : (⟨ Smaller ⟩ ⊎ (⟨ Smaller ⟩ → Empty.⊥)) → LeastOrd
+      decide (inl ∃β) = PT.rec isPropLeastOrd
+        (λ { (β , (β∈α , (ordβ , pβ))) → IH β β∈α ordβ pβ }) ∃β
+      decide (inr ¬∃β) = α , ordα , pα , leastProof
+        where
+        leastProof : isLeastOrd α
+        leastProof γ ordγ pγ γ∈α = ¬∃β ∣ γ , (γ∈α , (ordγ , pγ)) ∣₁
+
+  leastOrd : ∥ (Σ[ α ∈ S ] (IsOrd α × ⟨ P α ⟩)) ∥₁ → LeastOrd
+  leastOrd = PT.rec isPropLeastOrd
+    (λ { (α , (ordα , pα)) → leastOrdBelow α ordα pα })
 ```
 
 <!--en-->
@@ -147,9 +173,8 @@ each, and no consumer needs it open again.
 <!--/-->
 
 ```agda
-theEarliest : (x : S) → ⟨ isL x ⟩ → Earliest x
-theEarliest x = PT.rec (isPropEarliest x)
-  (λ { (α , (ordα , memα)) → earliestBelow x α ordα memα })
+theEarliest : (x : S) → ⟨ isL x ⟩ → LeastOrd (λ σ → x ∈ˢ Lset σ)
+theEarliest x = leastOrd (λ σ → x ∈ˢ Lset σ)
 
 opaque
   stage : (x : S) → ⟨ isL x ⟩ → S
@@ -163,7 +188,8 @@ opaque
   stage-mem : (x : S) (p : ⟨ isL x ⟩) → ⟨ x ∈ˢ Lset (stage x p) ⟩
   stage-mem x p = theEarliest x p .snd .snd .fst
 
-  stage-earliest : (x : S) (p : ⟨ isL x ⟩) → isEarliest x (stage x p)
+  stage-earliest : (x : S) (p : ⟨ isL x ⟩)
+                 → isLeastOrd (λ σ → x ∈ˢ Lset σ) (stage x p)
   stage-earliest x p = theEarliest x p .snd .snd .snd
 ```
 
@@ -174,13 +200,16 @@ opaque
 <!--/-->
 
 <!--en-->
-`stage`{.Agda} names the earliest ordinal stage containing a constructible set,
-with `stage-ord`{.Agda}, `stage-mem`{.Agda} and `stage-earliest`{.Agda} its three
+`leastOrd`{.Agda} picks the least ordinal satisfying any property of ordinals,
+from a truncated witness that one exists. `stage`{.Agda} is its first instance,
+naming the earliest stage containing a constructible set, with
+`stage-ord`{.Agda}, `stage-mem`{.Agda} and `stage-earliest`{.Agda} its three
 properties. Existence is a well-founded descent and uniqueness is trichotomy, so
 the chapter is classical; and the function is sealed, so the descent never
-reaches a later conversion problem. Reflection is the first consumer: to reflect
-a formula it must first place the formula's parameters at a common stage, and it
-gets there by bounding their stages.
+reaches a later conversion problem. Reflection is the first consumer, and it uses
+both: it places a formula's parameters at a common stage by bounding their
+stages, and it picks a witness for an existential by taking the least stage that
+has one.
 <!--zh-->
-`stage`{.Agda} 为可构造集命名包含它的最早序数阶段，`stage-ord`{.Agda}、`stage-mem`{.Agda} 与 `stage-earliest`{.Agda} 是它的三条性质。存在性是一次良基下降，唯一性是三歧，故本章经典；而函数被封印，故那次下降永不抵达日后的转换问题。反射是第一个消费方：要反射一条公式，必先把公式的参数安置在公共阶段上，而它正是经界住诸阶段而抵达那里的。
+`leastOrd`{.Agda} 从「合用的序数存在」这一截断见证出发，为任意序数性质选出满足它的最小序数。`stage`{.Agda} 是它的头一个实例，为可构造集命名包含它的最早阶段，`stage-ord`{.Agda}、`stage-mem`{.Agda} 与 `stage-earliest`{.Agda} 是它的三条性质。存在性是一次良基下降，唯一性是三歧，故本章经典；而函数被封印，故那次下降永不抵达日后的转换问题。反射是第一个消费方，且两者都用：它经界住诸阶段而把公式的参数安置在公共阶段上，又经取「有见证的最早阶段」而为一个存在量词选出见证。
 <!--/-->

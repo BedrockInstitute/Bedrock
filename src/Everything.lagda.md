@@ -229,15 +229,21 @@ import V.Model
 - `L.Coding.Entry`{.Agda}: the single form `tripleInT`{.Agda} for "this arity,
   code and environment are recorded in this certificate", which every clause
   reads and writes its entries through.
-- `L.Stage`{.Agda}: the earliest ordinal stage containing a constructible set,
-  by well-founded descent and unique by trichotomy; sealed, so the descent never
-  reaches a later conversion problem.
+- `L.Stage`{.Agda}: the least ordinal satisfying any property of ordinals, by
+  well-founded descent and unique by trichotomy; the earliest stage containing a
+  constructible set is its first instance, sealed so the descent never reaches a
+  later conversion problem.
 - `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
   regularity descend along transitivity; uniqueness then comes free; and the
   empty set, pairing and union are each carved out of one stage by one formula.
 - `L.Axioms.Separation`{.Agda}: separation and replacement for Δ₀ formulas, at a
   stage holding the argument and the formula's constants; the content is that
   membership in the carved set is satisfaction in the model.
+- `L.Reflect`{.Agda}: Montague's argument, answering a class-sized existential
+  inside a set. Iterating "bound the least stages that hold a witness" through
+  the naturals gives a stage that reflects the existential for every parameter it
+  contains; taking the least stage rather than the least witness is what keeps
+  the well-ordering of L out of it.
 - `L.Axioms.Infinity`{.Agda}: the numeral chain inside `L`, pinned to the
   hierarchy's numerals by projection equations for the model's own pairing,
   union and successor.
@@ -260,9 +266,10 @@ import V.Model
 - `L.Coding.Tagged`{.Agda}：携带元数的码，使量词的子句能谈论其子公式的元数；`tagPairAt`{.Agda} 匹配每个二元构造子的码所具有的形状。
 - `L.Coding.Length`{.Agda}：把证书的元数分量与其环境长度系住的守卫；`lenAt-len`{.Agda} 钉死那个本来自由的数，正是它把垃圾挡在诸证书之外。
 - `L.Coding.Entry`{.Agda}：「这个元数、码与环境记录在这份证书里」的唯一形式 `tripleInT`{.Agda}，诸子句都经它读写自己的条目。
-- `L.Stage`{.Agda}：包含可构造集的最早序数阶段，经良基下降得到、经三歧而唯一；已封印，故那次下降永不抵达日后的转换问题。
+- `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 - `L.Axioms.Separation`{.Agda}：Δ₀ 公式的分离与替换，在装下实参与公式全部常元的阶段上；其内容是「属于刻出的集合就是在模型中满足」。
+- `L.Reflect`{.Agda}：Montague 的论证，在一个集合之内回答真类大小的存在量词。沿自然数迭代「界住装有见证的最小阶段」，就得到一个阶段，它为自己包含的每个参数反射那个存在量词；取最小阶段而非最小见证，正是把 L 的良序挡在门外的那一手。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
 
@@ -286,6 +293,7 @@ import L.Coding.Entry
 import L.Stage
 import L.Axioms.Basic
 import L.Axioms.Separation
+import L.Reflect
 import L.Axioms.Infinity
 ```
 

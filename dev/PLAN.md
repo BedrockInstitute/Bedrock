@@ -910,7 +910,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L2 | Axiom branches | SUSPENDED 2026-07-25 after L2.1, by owner ruling: phase B of L3 runs first (§6.1). Resumes at L2.2 |
 | L2.0 | Basic axioms | DONE 2026-07-25 (`L.Ordinal` + `L.Axioms.Basic` + `L.Constructible` additions; extensionality and regularity re-homed from `L.Model`; Frontier 11 fields → 8; no `lem`, the whole goal is constructive) |
 | L2.1 | Infinity | DONE 2026-07-25 (`L.Axioms.Infinity` + `L.Ordinal.Stages`; Frontier 8 → 4). The chain is constructive, the collection step is not: it needs `ω ∈ L`, hence `ord∈Lset-suc`, hence trichotomy |
-| L2.2 | Separation and Replacement | ACTIVE 2026-07-25 (resumed after L3.14 closed). Landed: `L.Stage`, `Relabel` (into `FOL.Manipulation.Bounding`); `Relativize` was already ported at `[L1.4]`. Landed also `L.Axioms.Separation`, complete: the Δ₀ engine, the parameter-bounding recursion, and `separateΔ₀`/`replaceΔ₀` unconditionally for the bounded fragment. Remaining: `WellOrder`, the three reflection chapters, `ModelACSep` |
+| L2.2 | Separation and Replacement | ACTIVE 2026-07-25 (resumed after L3.14 closed). Landed: `L.Stage` (generalized to `leastOrd`), `Relabel` (into `FOL.Manipulation.Bounding`); `Relativize` was already ported at `[L1.4]`. Landed `L.Axioms.Separation`, complete: the Δ₀ engine, the parameter-bounding recursion, and `separateΔ₀`/`replaceΔ₀` unconditionally for the bounded fragment. Landed `L.Reflect`: Montague closure and the single-∃ reflection theorem, **without the well-ordering of `L`** (finding below), so `WellOrder`/`FormulaOrder`/`ΣSWO` leave this goal for `[L2.4]`. Remaining: the multi-parameter and ∃-block extensions, then `ModelACSep` |
 | L2.3 | Power via Condensation | PLANNED, deferred behind L3 phase B |
 | L2.4 | Well-order and Choice trunk | PLANNED, deferred behind L3 phase B |
 | L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | PLANNED |
@@ -999,6 +999,25 @@ One row per goal code; update the row in the same commit that changes the status
   `sucβ∈or≡`, and the latter is ordinal trichotomy, which the source's probe P8-3 judged
   constructively unprovable (it implies excluded middle). So the L side's classical cone
   begins at the collection step, three chapters later than the source's shape suggests.
+  **Second re-examination [L2.2], and the cone shrinks again in a different direction:**
+  reflection was expected to need the well-ordering of `L`, because the source picks its
+  Montague witness with `leastOf <L` and therefore drags in `L.WellOrder` (244),
+  `L.FormulaOrder` (361, already classified as instance data by `[L3.14]`) and
+  `ΣSWO`/`pullSWO` (deferred to `[L2.4]`), roughly 600 lines. Grepping the source's
+  `Reflect` shows `<L` is used in exactly one place, `decideStage`/`pickStage`, and only
+  to name a canonical witness. But the construction never needs a canonical *element*:
+  it needs a canonical *ordinal*, and the ordinals are already well-ordered by membership.
+  So Bedrock takes the least **stage** that holds a witness instead of the stage of the
+  least witness, by the descent already proved in `L.Stage`, and `pickWitness` becomes a
+  truncated statement, which is all `closure` ever consumed. **The well-ordering of `L`
+  moves entirely into `[L2.4]` with choice**, which is where it belongs; `[L2.2]` drops
+  about 600 lines and gains no assumption. Two refactors fell out and were taken:
+  `L.Stage`'s descent is now `leastOrd` over an arbitrary property of ordinals with the
+  stage function as its first instance (the argument never inspected the property), and
+  `L.Constructible` now states the tower's union structure as `Lset-in`/`Lset-out`, with
+  `Lset-mono` a two-line corollary, replacing the three ad-hoc inversion helpers the
+  source rebuilds inside `Reflect`. `bound2` moved from `L.Axioms.Separation` to
+  `L.Ordinal`, where it is one of two consumers' shared ordinal theory.
 - **Theorem statement [L3.0.4]:** delivered 2026-07-25 in
   [memos/L3.0.4-theorem-statement.md](memos/L3.0.4-theorem-statement.md), awaiting owner
   gate. **The prerequisite was narrower than PLAN assumed.** `[L2.2]` was made the gate on

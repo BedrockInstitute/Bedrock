@@ -48,6 +48,7 @@ open import Cubical.Data.Nat.Order using ( _<_; ≤-suc; isProp≤ )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
+open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( _∈ₛ_; ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -169,6 +170,30 @@ boundingOrd X f hf = β , (ordβ , memβ)
     s∈ₛsett = ∈∈ₛ {a = sucV (f x)} {b = sett X g} .fst ∣ x , refl ∣₁
     fx∈ₛs : ⟨ f x ∈ₛ sucV (f x) ⟩
     fx∈ₛs = ∈∈ₛ {a = f x} {b = sucV (f x)} .fst (self∈sucV (f x))
+```
+
+<!--en-->
+The two-element case is worth naming, because it is the one that gets used most:
+merging two ordinals into one that contains both. The family is indexed by the
+booleans, lifted to the ambient universe so that the general lemma applies, and
+the two memberships are read off at the two indices.
+<!--zh-->
+二元情形值得单独命名，因为用得最多的正是它：把两个序数合并为一个同时包含二者的序数。族由布尔值索引，抬升到周遭宇宙以便通用引理适用，而两条隶属关系在两个索引处读出。
+<!--/-->
+
+```agda
+bound2 : (σ₁ σ₂ : S) → IsOrd σ₁ → IsOrd σ₂
+       → Σ[ β ∈ S ] (IsOrd β × ⟨ σ₁ ∈ˢ β ⟩ × ⟨ σ₂ ∈ˢ β ⟩)
+bound2 σ₁ σ₂ o₁ o₂ =
+  fst r , (r .snd .fst , r .snd .snd (lift true) , r .snd .snd (lift false))
+  where
+  f : Lift {ℓ-zero} {ℓ} Bool → S
+  f (lift true)  = σ₁
+  f (lift false) = σ₂
+  fo : (b : Lift {ℓ-zero} {ℓ} Bool) → IsOrd (f b)
+  fo (lift true)  = o₁
+  fo (lift false) = o₂
+  r = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f fo
 ```
 
 <!--en-->
