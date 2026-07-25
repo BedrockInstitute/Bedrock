@@ -245,6 +245,10 @@ import V.Model
   existential for every tuple of parameters it contains. `Single`{.Agda} is the
   ladder for one matrix. Taking the least stage rather than the least witness is
   what keeps the well-ordering of L out of it.
+- `L.ReflectFo`{.Agda}: the same for a whole formula, by structural induction. A
+  jointly built ladder answers for every matrix of a formula at once, and
+  `mkReflect`{.Agda} then names a stage at which the formula agrees with its
+  relativization to it, trading arbitrary complexity for Δ₀ and a stage.
 - `L.Axioms.Infinity`{.Agda}: the numeral chain inside `L`, pinned to the
   hierarchy's numerals by projection equations for the model's own pairing,
   union and successor.
@@ -271,6 +275,7 @@ import V.Model
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 - `L.Axioms.Separation`{.Agda}：Δ₀ 公式的分离与替换，在装下实参与公式全部常元的阶段上；其内容是「属于刻出的集合就是在模型中满足」。
 - `L.Reflect`{.Agda}：Montague 的论证，在一个集合之内回答真类大小的存在量词。**梯**是上升的序数链；若每一级的环境其作答阶段都落在下一级上，则它的极限为自己包含的每个参数元组反射那个存在量词。`Single`{.Agda} 是单矩阵的梯。取最小阶段而非最小见证，正是把 L 的良序挡在门外的那一手。
+- `L.ReflectFo`{.Agda}：整条公式的同一件事，经结构归纳。联合造出的梯一举为公式的每个矩阵作答，而 `mkReflect`{.Agda} 随即点名一个阶段，公式在其上与它到该阶段的相对化一致：以 Δ₀ 加一个阶段，换下任意的复杂度。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
 
@@ -295,6 +300,7 @@ import L.Stage
 import L.Axioms.Basic
 import L.Axioms.Separation
 import L.Reflect
+import L.ReflectFo
 import L.Axioms.Infinity
 ```
 
