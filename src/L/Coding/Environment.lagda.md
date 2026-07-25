@@ -41,7 +41,8 @@ import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
-open import L.Coding.Base {ℓ} using ( prAt; Δ₀-prAt; prAt-adequate )
+open import L.Coding.Base {ℓ}
+  using ( prAt; Δ₀-prAt; prAt-adequate; ∈pair-introL; ∈pair-introR )
 
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
@@ -54,7 +55,8 @@ open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; sett; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; _⊆_; extensionality; ⟪_⟫; ⟪_⟫↪ )
-open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -265,6 +267,131 @@ seqSet-mem {A} {n} f = ∣ (n , f) , refl ∣₁
 ```
 
 <!--en-->
+## Shifting an entry
+<!--zh-->
+## 移位一个条目
+<!--/-->
+
+<!--en-->
+Extending an environment does not only add an entry, it renumbers the ones
+already there: what was at index `i` is now at index `i + 1`. The formula below
+recognizes one such renumbering, relating an entry to its shifted counterpart.
+
+Five nested bounded quantifiers, which is what it costs to reach the components
+of two pairs at once: the entry, its index, its value, the shifted entry and its
+index. The body is then two Kuratowski readers and the successor reader from
+above, saying that the two entries share a value and that the indices are one
+apart. Everything the reader chapters built is spent here at once, which is why
+this is the last formula the coding stack needs.
+<!--zh-->
+扩张环境不只是添一个条目，它还给已有的条目重新编号：原本在索引 `i` 处的，如今在 `i + 1` 处。下面这条公式认出一次这样的重编号，把一个条目与它移位后的对应物联系起来。
+
+五层嵌套的有界量词，那是一举抵达两个对的各个分量所需的代价：条目、它的索引、它的值、移位后的条目、以及后者的索引。主体随后是两条 Kuratowski 读式与上文那条后继读式，说这两个条目共享一个值，且两个索引相差一位。读式诸章造出的一切在此一次花光，这也是编码这一层所需的最后一条公式。
+<!--/-->
+
+```agda
+shiftPairAt : ∀ {n} → Fin n → Fin n → Formula (V ℓ) n
+shiftPairAt p' p =
+  ∃̇∈ (var p)
+    (∃̇∈ (var zero)
+      (∃̇∈ (var (suc zero))
+        (∃̇∈ (var (suc (suc (suc p'))))
+          (∃̇∈ (var zero)
+            ( prAt (suc (suc (suc (suc (suc p)))))
+                   (suc (suc (suc zero))) (suc (suc zero))
+            ∧̇ ( prAt (suc (suc (suc (suc (suc p'))))) zero (suc (suc zero))
+            ∧̇ sucAt (suc (suc (suc zero))) zero ))))))
+
+Δ₀-shiftPairAt : ∀ {n} (p' p : Fin n) → Δ₀ (shiftPairAt p' p)
+Δ₀-shiftPairAt p' p =
+  δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∧
+    (Δ₀-prAt (suc (suc (suc (suc (suc p))))) (suc (suc (suc zero))) (suc (suc zero)))
+    (δ-∧ (Δ₀-prAt (suc (suc (suc (suc (suc p'))))) zero (suc (suc zero)))
+         (Δ₀-sucAt (suc (suc (suc zero))) zero)))))))
+
+shiftPairAt-adequate : ∀ {n} (p' p : Fin n) (γ : (V ℓ) ^ n)
+  → (γ ⊨ shiftPairAt p' p)
+  ≡ (∥ Σ[ i ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+       ((⟦ var p ⟧ γ ≡ pr i v) × (⟦ var p' ⟧ γ ≡ pr (sucV i) v)) ∥₁ , squash₁)
+shiftPairAt-adequate p' p γ = ⇔toPath fwd bwd
+  where
+  P = ⟦ var p ⟧ γ
+  P' = ⟦ var p' ⟧ γ
+  Tgt : Type (ℓ-suc ℓ)
+  Tgt = ∥ Σ[ i ∈ V ℓ ] Σ[ v ∈ V ℓ ] ((P ≡ pr i v) × (P' ≡ pr (sucV i) v)) ∥₁
+
+  conclude : (c i v c' j : V ℓ)
+    → ⟨ (j ∷ c' ∷ v ∷ i ∷ c ∷ γ)
+        ⊨ prAt (suc (suc (suc (suc (suc p))))) (suc (suc (suc zero))) (suc (suc zero)) ⟩
+    → ⟨ (j ∷ c' ∷ v ∷ i ∷ c ∷ γ)
+        ⊨ prAt (suc (suc (suc (suc (suc p'))))) zero (suc (suc zero)) ⟩
+    → ⟨ (j ∷ c' ∷ v ∷ i ∷ c ∷ γ) ⊨ sucAt (suc (suc (suc zero))) zero ⟩
+    → Tgt
+  conclude c i v c' j sat₁ sat₂ sat₃ =
+    ∣ i , v
+    , subst ⟨_⟩
+        (prAt-adequate (suc (suc (suc (suc (suc p)))))
+          (suc (suc (suc zero))) (suc (suc zero)) (j ∷ c' ∷ v ∷ i ∷ c ∷ γ))
+        sat₁
+    , (subst ⟨_⟩
+        (prAt-adequate (suc (suc (suc (suc (suc p'))))) zero (suc (suc zero))
+          (j ∷ c' ∷ v ∷ i ∷ c ∷ γ))
+        sat₂
+       ∙ cong (λ z → pr z v)
+          (subst ⟨_⟩
+            (sucAt-adequate (suc (suc (suc zero))) zero (j ∷ c' ∷ v ∷ i ∷ c ∷ γ))
+            sat₃))
+    ∣₁
+
+  fwd : ⟨ γ ⊨ shiftPairAt p' p ⟩ → Tgt
+  fwd = PT.rec squash₁ (λ { (c , _ , h₁) → PT.rec squash₁
+    (λ { (i , _ , h₂) → PT.rec squash₁
+      (λ { (v , _ , h₃) → PT.rec squash₁
+        (λ { (c' , _ , h₄) → PT.rec squash₁
+          (λ { (j , _ , sat₁ , sat₂ , sat₃) → conclude c i v c' j sat₁ sat₂ sat₃ })
+          h₄ })
+        h₃ })
+      h₂ })
+    h₁ })
+
+  build : (i v : V ℓ) → P ≡ pr i v → P' ≡ pr (sucV i) v → ⟨ γ ⊨ shiftPairAt p' p ⟩
+  build i v eP eP' =
+    ∣ ⁅ i , v ⁆
+    , subst (λ z → ⟨ ⁅ i , v ⁆ ∈ z ⟩) (sym eP)
+        (∈pair-introR {u = ⁅ i ⁆s} {v = ⁅ i , v ⁆} {y = ⁅ i , v ⁆} refl)
+    , ∣ i , ∈pair-introL {u = i} {v = v} {y = i} refl
+      , ∣ v , ∈pair-introR {u = i} {v = v} {y = v} refl
+        , ∣ ⁅ sucV i , v ⁆
+          , subst (λ z → ⟨ ⁅ sucV i , v ⁆ ∈ z ⟩) (sym eP')
+              (∈pair-introR {u = ⁅ sucV i ⁆s} {v = ⁅ sucV i , v ⁆}
+                            {y = ⁅ sucV i , v ⁆} refl)
+          , ∣ sucV i
+            , ∈pair-introL {u = sucV i} {v = v} {y = sucV i} refl
+            , subst ⟨_⟩
+                (sym (prAt-adequate (suc (suc (suc (suc (suc p)))))
+                  (suc (suc (suc zero))) (suc (suc zero))
+                  (sucV i ∷ ⁅ sucV i , v ⁆ ∷ v ∷ i ∷ ⁅ i , v ⁆ ∷ γ)))
+                eP
+            , subst ⟨_⟩
+                (sym (prAt-adequate (suc (suc (suc (suc (suc p'))))) zero (suc (suc zero))
+                  (sucV i ∷ ⁅ sucV i , v ⁆ ∷ v ∷ i ∷ ⁅ i , v ⁆ ∷ γ)))
+                eP'
+            , subst ⟨_⟩
+                (sym (sucAt-adequate (suc (suc (suc zero))) zero
+                  (sucV i ∷ ⁅ sucV i , v ⁆ ∷ v ∷ i ∷ ⁅ i , v ⁆ ∷ γ)))
+                refl
+            ∣₁
+          ∣₁
+        ∣₁
+      ∣₁
+    ∣₁
+
+  bwd : Tgt → ⟨ γ ⊨ shiftPairAt p' p ⟩
+  bwd = PT.rec ((γ ⊨ shiftPairAt p' p) .snd)
+    (λ { (i , v , eP , eP') → build i v eP eP' })
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -277,7 +404,9 @@ merely definable. `memPairAt`{.Agda} reads a value out of it and
 `sucAt`{.Agda} recognizes the index shift that going under a quantifier
 performs, both Δ₀ and adequate. `seqSet`{.Agda} collects all finite sequences
 over a set, for the certificates that quantify over environments instead of
-naming one.
+naming one. `shiftPairAt`{.Agda} closes the chapter by recognizing the
+renumbering that extension performs, spending every reader built so far at
+once.
 <!--zh-->
-环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`memPairAt`{.Agda} 从中查出一个值，`sucAt`{.Agda} 认出进入量词之下所作的序号移位，二者皆 Δ₀ 且适足。`seqSet`{.Agda} 汇集一个集合上的全部有穷序列，供那些对环境作量化而非点名某一个的证书使用。
+环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`memPairAt`{.Agda} 从中查出一个值，`sucAt`{.Agda} 认出进入量词之下所作的序号移位，二者皆 Δ₀ 且适足。`seqSet`{.Agda} 汇集一个集合上的全部有穷序列，供那些对环境作量化而非点名某一个的证书使用。`shiftPairAt`{.Agda} 认出扩张所作的重编号，一举花光迄今造出的每一条读式，为本章收尾。
 <!--/-->
