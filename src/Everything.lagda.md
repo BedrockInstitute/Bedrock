@@ -207,6 +207,9 @@ import V.Model
 - `L.Ordinal.Stages`{.Agda}: the ordinals of `Lset α` are exactly the members of
   `α`: `rank-Lset`{.Agda} and `ord∈Lset→∈`{.Agda} say none appears early,
   `ord∈Lset-suc`{.Agda} says none appears late.
+- `L.WellOrder.Base`{.Agda}: strict well-orders as a bundle (`SWO`{.Agda}), and
+  the least element of a non-empty subset (`leastOf`{.Agda}), unique by
+  trichotomy: the choosing device both reflection and choice will take.
 - `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
   regularity descend along transitivity; uniqueness then comes free; and the
   empty set, pairing and union are each carved out of one stage by one formula.
@@ -226,6 +229,7 @@ import V.Model
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
+- `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：反射与选择都会取用的那件选取装置。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 - `L.Axioms.Infinity`{.Agda}：`L` 内的数码链，经模型自家配对、并与后继的投影等式，钉在层级的数码上。
 <!--/-->
@@ -241,6 +245,7 @@ import L.Ordinal
 import L.Rank
 import L.Ordinal.Linear
 import L.Ordinal.Stages
+import L.WellOrder.Base
 import L.Axioms.Basic
 import L.Axioms.Infinity
 ```
