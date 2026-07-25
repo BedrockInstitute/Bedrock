@@ -40,9 +40,12 @@ open import Base.Classical using ( LEM )
 module L.Axioms.Separation {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( Transitive; module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ∃̇∈ )
+open import FOL.Syntax
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∃∈ )
-open import FOL.Manipulation.Bounding using ( BoundedFo; module Relabel )
+open import FOL.Manipulation.Bounding
+  using ( BoundedTm; BoundedFo; BoundedTm-mono; BoundedFo-mono; module Relabel )
 open import FOL.Manipulation.Relabelling using ( mapFo; ⊨-map )
 import FOL.Semantics
 import FOL.Absoluteness
@@ -50,14 +53,18 @@ import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono
         ; 𝒟ₒ; 𝒟ₒ-intro; Lset→isL )
+open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; uniqueL )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
+open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
 
@@ -385,6 +392,230 @@ images.
 ```
 
 <!--en-->
+## Finding the stage
+<!--zh-->
+## 找到那个阶段
+<!--/-->
+
+<!--en-->
+The engine wants a stage holding every constant of the formula. Building one is a
+recursion on the formula that produces the stage and the certificate together. A
+constant contributes its own earliest stage, a variable contributes nothing, and
+at every branching node the two stages are merged by bounding them, with
+monotonicity raising both certificates to the merge.
+
+Merging two ordinals is the two-element case of the bounding lemma, and it is the
+only thing this recursion needs from ordinal theory.
+<!--zh-->
+引擎要的是一个装下公式全部常元的阶段。造一个出来，是沿公式的一次递归，同时产出阶段与证书。常元贡献它自己的最早阶段，变元什么也不贡献，而在每个分叉节点上，两个阶段经界住而合并，单调性把两份证书都抬到合并处。
+
+合并两个序数就是界层引理的二元情形，而这也是这次递归从序数理论索取的全部。
+<!--/-->
+
+```agda
+Below′ : V ℓ → S → Type (ℓ-suc ℓ)
+Below′ σ c = ⟨ fst c ∈ Lset σ ⟩
+
+bound2 : (σ₁ σ₂ : V ℓ) → IsOrd σ₁ → IsOrd σ₂
+       → Σ[ β ∈ V ℓ ] (IsOrd β × ⟨ σ₁ ∈ β ⟩ × ⟨ σ₂ ∈ β ⟩)
+bound2 σ₁ σ₂ o₁ o₂ =
+  fst r , (r .snd .fst , r .snd .snd (lift true) , r .snd .snd (lift false))
+  where
+  f : Lift {ℓ-zero} {ℓ} Bool → V ℓ
+  f (lift true)  = σ₁
+  f (lift false) = σ₂
+  fo : (b : Lift {ℓ-zero} {ℓ} Bool) → IsOrd (f b)
+  fo (lift true)  = o₁
+  fo (lift false) = o₂
+  r = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f fo
+
+liftTmTo : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → ∀ {n} (t : Term S n)
+         → BoundedTm (Below′ σ) t → BoundedTm (Below′ β) t
+liftTmTo {σ} {β} σ∈β t h =
+  BoundedTm-mono {P = Below′ σ} {Q = Below′ β}
+    (λ (c : S) h' → Lset-mono {α = β} {β = σ} σ∈β {x = fst c} h') t h
+
+liftFoTo : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → ∀ {n} (φ : Formula S n)
+         → BoundedFo (Below′ σ) φ → BoundedFo (Below′ β) φ
+liftFoTo {σ} {β} σ∈β φ h =
+  BoundedFo-mono {P = Below′ σ} {Q = Below′ β}
+    (λ (c : S) h' → Lset-mono {α = β} {β = σ} σ∈β {x = fst c} h') φ h
+
+mkBoundedTm : ∀ {n} (t : Term S n) → Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedTm (Below′ σ) t)
+mkBoundedTm (con c) = stage (fst c) (c .snd)
+                    , (stage-ord (fst c) (c .snd) , stage-mem (fst c) (c .snd))
+mkBoundedTm (var i) = ∅ , (∅-ord , _)
+
+mkBoundedFo : ∀ {n} (φ : Formula S n) → Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedFo (Below′ σ) φ)
+mkBoundedFo (t ∈̇ u) = b .fst , (b .snd .fst ,
+    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
+    , liftTmTo {β = b .fst} (b .snd .snd .snd) u (r₂ .snd .snd) ))
+  where
+  r₁ = mkBoundedTm t
+  r₂ = mkBoundedTm u
+  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (t ≐ u) = b .fst , (b .snd .fst ,
+    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
+    , liftTmTo {β = b .fst} (b .snd .snd .snd) u (r₂ .snd .snd) ))
+  where
+  r₁ = mkBoundedTm t
+  r₂ = mkBoundedTm u
+  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (φ ∧̇ ψ) = b .fst , (b .snd .fst ,
+    ( liftFoTo {β = b .fst} (b .snd .snd .fst) φ (r₁ .snd .snd)
+    , liftFoTo {β = b .fst} (b .snd .snd .snd) ψ (r₂ .snd .snd) ))
+  where
+  r₁ = mkBoundedFo φ
+  r₂ = mkBoundedFo ψ
+  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (φ ∨̇ ψ) = b .fst , (b .snd .fst ,
+    ( liftFoTo {β = b .fst} (b .snd .snd .fst) φ (r₁ .snd .snd)
+    , liftFoTo {β = b .fst} (b .snd .snd .snd) ψ (r₂ .snd .snd) ))
+  where
+  r₁ = mkBoundedFo φ
+  r₂ = mkBoundedFo ψ
+  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (φ ⇒̇ ψ) = b .fst , (b .snd .fst ,
+    ( liftFoTo {β = b .fst} (b .snd .snd .fst) φ (r₁ .snd .snd)
+    , liftFoTo {β = b .fst} (b .snd .snd .snd) ψ (r₂ .snd .snd) ))
+  where
+  r₁ = mkBoundedFo φ
+  r₂ = mkBoundedFo ψ
+  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (¬̇ φ)    = mkBoundedFo φ
+mkBoundedFo ⊤̇        = ∅ , (∅-ord , _)
+mkBoundedFo ⊥̇        = ∅ , (∅-ord , _)
+mkBoundedFo (∃̇ φ)    = mkBoundedFo φ
+mkBoundedFo (∀̇ φ)    = mkBoundedFo φ
+mkBoundedFo (∀̇∈ t φ) = b .fst , (b .snd .fst ,
+    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
+    , liftFoTo {β = b .fst} (b .snd .snd .snd) φ (r₂ .snd .snd) ))
+  where
+  r₁ = mkBoundedTm t
+  r₂ = mkBoundedFo φ
+  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (∃̇∈ t φ) = b .fst , (b .snd .fst ,
+    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
+    , liftFoTo {β = b .fst} (b .snd .snd .snd) φ (r₂ .snd .snd) ))
+  where
+  r₁ = mkBoundedTm t
+  r₂ = mkBoundedFo φ
+  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+```
+
+<!--en-->
+## Δ₀ separation
+<!--zh-->
+## Δ₀ 分离
+<!--/-->
+
+<!--en-->
+Everything is now in place. Merge the formula's stage with the argument's own
+earliest stage, raise the certificate to the merge, and hand the result to the
+engine. This is separation for the bounded fragment, unconditionally: no
+reflection, no frontier field, just the machinery of the last several chapters
+applied in order.
+<!--zh-->
+一切就位。把公式的阶段与实参自身的最早阶段合并，把证书抬到合并处，再把结果交给引擎。这就是有界片段的分离公理，无条件成立：不需要反射，不需要前沿字段，只是把前几章的机器按顺序用一遍。
+<!--/-->
+
+```agda
+separateΔ₀ : (a : S) (φ : Formula S 1) → Δ₀ φ
+           → isContr (SetOf (λ x → (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)))
+separateΔ₀ a φ dφ = AtStage.separateAt σ oσ a fa∈σ φ h dφ
+  where
+  rφ = mkBoundedFo φ
+  sa = stage (fst a) (a .snd)
+  bb = bound2 (rφ .fst) sa (rφ .snd .fst) (stage-ord (fst a) (a .snd))
+  σ  = bb .fst
+  oσ = bb .snd .fst
+  h  = liftFoTo {σ = rφ .fst} {β = σ} (bb .snd .snd .fst) φ (rφ .snd .snd)
+  fa∈σ : ⟨ fst a ∈ Lset σ ⟩
+  fa∈σ = Lset-mono {α = σ} {β = sa} (bb .snd .snd .snd) (stage-mem (fst a) (a .snd))
+```
+
+<!--en-->
+## Δ₀ replacement
+<!--zh-->
+## Δ₀ 替换
+<!--/-->
+
+<!--en-->
+Replacement needs one thing more: the engine asked that the image already lie in
+the stage, and here is where that is paid. Functionality gives, for each member of
+the argument, a unique image; each image has its own earliest stage; and the
+bounding lemma over the argument's member type merges all of them at once. The
+merged ordinal joins the argument's stage and the formula's, and the covering
+condition follows because anything in the image is, by uniqueness, the image of
+some member.
+
+Worth noting what this does *not* need. The defining formula's only quantifier is
+bounded by the argument, so it stays Δ₀ and absoluteness applies to the whole of
+it. The work is done by functionality, not by any reflection across structures,
+which is the clean line between this lemma and the unbounded case.
+<!--zh-->
+替换还多要一样：引擎要求像已经落在该阶段中，而正是在此处偿付。函数性为实参的每个成员给出唯一的像；每个像有自己的最早阶段；而界层引理在实参的成员类型上一举把它们全部合并。合并后的序数再与实参的阶段、公式的阶段相并，而覆盖条件随之成立，因为像中的任何东西经唯一性都是某个成员的像。
+
+值得注意它**不**需要什么。定义公式唯一的量词被实参所界，故它保持 Δ₀，绝对性适用于整条公式。出力的是函数性，而非任何跨结构的反射，这正是本引理与无界情形之间那条干净的分界。
+<!--/-->
+
+```agda
+replaceΔ₀ : (a : S) (φ : Formula S 2) → Δ₀ φ
+          → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (x ∷ y ∷ []) ⊨ φ ⟩))
+          → isContr (SetOf (ReplImage a φ))
+replaceΔ₀ a φ dφ fc = AtStage.replaceAt σ oσ a fa∈σ φ h dφ cover
+  where
+  memS : (m : ⟪ fst a ⟫) → Σ[ x ∈ S ] ⟨ x ∈ˢ a ⟩
+  memS m = xₘ , fm∈fa
+    where
+    fm∈fa : ⟨ ⟪ fst a ⟫↪ m ∈ fst a ⟩
+    fm∈fa = ∈∈ₛ {a = ⟪ fst a ⟫↪ m} {b = fst a} .snd (∈ₛ⟪ fst a ⟫↪ m)
+    xₘ : S
+    xₘ = ⟪ fst a ⟫↪ m , isL-trans {x = fst a} {y = ⟪ fst a ⟫↪ m} fm∈fa (a .snd)
+  imgElt : (m : ⟪ fst a ⟫) → S
+  imgElt m = fc (memS m .fst) (memS m .snd) .fst .fst
+  imgStage : ⟪ fst a ⟫ → V ℓ
+  imgStage m = stage (fst (imgElt m)) (imgElt m .snd)
+  bImg = boundingOrd ⟪ fst a ⟫ imgStage
+           (λ m → stage-ord (fst (imgElt m)) (imgElt m .snd))
+  βimg = bImg .fst
+  oβimg = bImg .snd .fst
+  img∈Lβimg : (m : ⟪ fst a ⟫) → ⟨ fst (imgElt m) ∈ Lset βimg ⟩
+  img∈Lβimg m = Lset-mono {α = βimg} {β = imgStage m} (bImg .snd .snd m)
+    (stage-mem (fst (imgElt m)) (imgElt m .snd))
+  rφ = mkBoundedFo φ
+  sa = stage (fst a) (a .snd)
+  b1 = bound2 βimg sa oβimg (stage-ord (fst a) (a .snd))
+  bb = bound2 (b1 .fst) (rφ .fst) (b1 .snd .fst) (rφ .snd .fst)
+  σ  = bb .fst
+  oσ = bb .snd .fst
+  b1∈σ : ⟨ b1 .fst ∈ σ ⟩
+  b1∈σ = bb .snd .snd .fst
+  βimg∈σ : ⟨ βimg ∈ σ ⟩
+  βimg∈σ = oσ .fst {x = b1 .fst} {y = βimg} (b1 .snd .snd .fst) b1∈σ
+  sa∈σ : ⟨ sa ∈ σ ⟩
+  sa∈σ = oσ .fst {x = b1 .fst} {y = sa} (b1 .snd .snd .snd) b1∈σ
+  fa∈σ : ⟨ fst a ∈ Lset σ ⟩
+  fa∈σ = Lset-mono {α = σ} {β = sa} sa∈σ (stage-mem (fst a) (a .snd))
+  h  = liftFoTo {σ = rφ .fst} {β = σ} (bb .snd .snd .snd) φ (rφ .snd .snd)
+  cover : (z : S) → ⟨ ReplImage a φ z ⟩ → ⟨ fst z ∈ Lset σ ⟩
+  cover z = PT.rec (snd (fst z ∈ Lset σ)) step
+    where
+    step : Σ[ x ∈ S ] (⟨ x ∈ˢ a ⟩ × ⟨ (x ∷ z ∷ []) ⊨ φ ⟩) → ⟨ fst z ∈ Lset σ ⟩
+    step (x , x∈a , φxz) = Lset-mono {α = σ} {β = βimg} βimg∈σ fz∈Lβimg
+      where
+      m = ∈-asFiber {a = fst x} {b = fst a} x∈a .fst
+      qx : ⟪ fst a ⟫↪ m ≡ fst x
+      qx = ∈-asFiber {a = fst x} {b = fst a} x∈a .snd
+      φxₘz : ⟨ (memS m .fst ∷ z ∷ []) ⊨ φ ⟩
+      φxₘz = AtStage.⊨-transport₂ σ oσ φ dφ x (memS m .fst) z (sym qx) φxz
+      img≡z : imgElt m ≡ z
+      img≡z = cong fst (fc (memS m .fst) (memS m .snd) .snd (z , φxₘz))
+      fz∈Lβimg : ⟨ fst z ∈ Lset βimg ⟩
+      fz∈Lβimg = subst (λ w → ⟨ fst w ∈ Lset βimg ⟩) img≡z (img∈Lβimg m)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -399,5 +630,5 @@ the definability, relabelling and absoluteness chapters, with Δ₀ spent exactl
 once at the last of them. What remains for the axioms proper is to produce such a
 stage for an arbitrary formula, which is what reflection does.
 <!--zh-->
-给定一个装下某集合与某 Δ₀ 公式全部常元的阶段，`separateAt`{.Agda} 刻出子集，`replaceAt`{.Agda} 取出像，二者都落在 `L` 中。全部内容就是 `carveSat`{.Agda}：属于刻出的集合就是在模型中满足，沿着一条其各环分别由可定义性、重标与绝对性三章证出的路径，而 Δ₀ 恰在最后一环花掉一次。诸公理本身余下的，是为任意公式产出这样一个阶段，而那正是反射所做的事。
+给定一个装下某集合与某 Δ₀ 公式全部常元的阶段，`separateAt`{.Agda} 刻出子集，`replaceAt`{.Agda} 取出像，二者都落在 `L` 中。全部内容就是 `carveSat`{.Agda}：属于刻出的集合就是在模型中满足，沿着一条其各环分别由可定义性、重标与绝对性三章证出的路径，而 Δ₀ 恰在最后一环花掉一次。`mkBoundedFo`{.Agda} 随后沿递归为任何公式产出这样一个阶段，故 `separateΔ₀`{.Agda} 与 `replaceΔ₀`{.Agda} 对有界片段无条件成立：不需要反射，也不需要前沿字段。诸公理本身余下的是无界情形，那里公式的含义不绝对，必须找到一个**反射**它的阶段。
 <!--/-->
