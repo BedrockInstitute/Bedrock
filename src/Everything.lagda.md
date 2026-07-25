@@ -180,16 +180,26 @@ import V.Model
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
   structure `𝒮ʟ`{.Agda}.
+- `L.Ordinal`{.Agda}: the supply of ordinals the closure arguments need: zero,
+  successors and small unions are ordinals, and `boundingOrd`{.Agda} bounds any
+  small family by a single ordinal. No comparison, hence no classical logic.
+- `L.Axioms.Basic`{.Agda}: the first five model fields. Extensionality and
+  regularity descend along transitivity; uniqueness then comes free; and the
+  empty set, pairing and union are each carved out of one stage by one formula.
 <!--zh-->
 ## 第四部：可构造宇宙
 
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
+- `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
+- `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。
 <!--/-->
 
 ```agda
 import L.Definability
 import L.Constructible
+import L.Ordinal
+import L.Axioms.Basic
 ```
 
 <!--en-->

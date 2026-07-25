@@ -716,6 +716,20 @@ notes = "matches the transitive class entry; isTransV"
 
 [[term]]
 category = "Set theory"
+en = "ordinal"
+zh = "序数"
+ja = "順序数"
+notes = "IsOrd: a transitive set whose members are all transitive (von Neumann)"
+
+[[term]]
+category = "Set theory"
+en = "bounding ordinal"
+zh = "界层序数"
+ja = "上界順序数"
+notes = "boundingOrd: a single ordinal containing every member of a small family"
+
+[[term]]
+category = "Set theory"
 en = "definable subset"
 zh = "可定义子集"
 ja = "定義可能部分集合"
