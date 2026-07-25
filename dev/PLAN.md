@@ -948,7 +948,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0.3 | Subsumption probe, source-reading only | DONE 2026-07-25, memo delivered; verdict amber (route alive, projection corrected) |
 | L3.0.4 | Theorem statement in Bedrock's idiom | DONE 2026-07-25, memo delivered; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine. **Two amendments from the phase-C re-evaluation**: stage 7 is `[L3.0.5]`, not `[L3.2]`; and `reads`'s `isL` certificates must be sealed where built (the `L.Axioms.Full` hazard) |
 | L3.0.5 | Finite families at a stage (stage 7) | DONE 2026-07-25 (`finSetL` in `L.Axioms.Basic`; registered on the phase-C re-evaluation, correcting the memo's attribution of stage 7 to L3.2) |
-| L3.0.1 | Two-instance proof of concept | **Theorem half DONE 2026-07-25**: `L.Recursion`, 52 lines of Agda, a wrapper around `hasReplacementL` (finding below). Instance half PLANNED; next unit is the code set in `L`, obligation (a) |
+| L3.0.1 | Two-instance proof of concept | **Theorem half DONE 2026-07-25**: `L.Recursion`, 64 lines of Agda, a wrapper around `hasReplacementL` plus `smallDom` (findings below). Obligation (a) discharged generically. Instance half PLANNED: obligation (b), the graph in the object language, per instance |
 | L3.0.2 | Verdict and rollout ruling | PLANNED |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
 | L3.2 | `reify!` industrialization (S6) | PLANNED, **off L3.0's critical path** (re-evaluated 2026-07-25: stage 7 needed a lemma, not the macro). Opportunistic accelerator for the reader half of the coding chapters |
@@ -1180,10 +1180,24 @@ One row per goal code; update the row in the same commit that changes the status
     hand-written pairing, which is worth its sixty lines, but it was superseded within
     the hour.
 
-  **What the instances still owe.** Two obligations, and they are the honest remainder.
-  (a) The index set must be a set of `L`: for the syntactic instances that is the code
-  set, discharged once and shared by every recursion over it, and it is the next unit.
-  (b) The graph must be written in the object language and proved single-valued. (b) is
-  the instance's own mathematics and was never in scope for absorption (`[L3.0.4]` §7.1
-  said so); what has gone is the *second* job that used to ride along with it, of making
-  that formula bounded and its constants stage-local, which was the larger of the two.
+  **What the instances still owe, after the follow-up.** Obligation (a), the index set
+  in `L`, looked like the next unit and turned out to be **generic**: an index set does
+  not have to be *collected* into a set of `L`, only *contained* in one, and any small
+  family of elements of `L` is contained in a single stage by the bounding lemma applied
+  to their earliest stages, a stage being a set of `L`. That is `smallDom`, twelve lines
+  in `L.Recursion`, and it discharges (a) for every instance at once. The recursion is
+  then defined on more than its intended indices, which costs nothing: the graph is made
+  total by a default value and the intended table is recovered by separation, now
+  available for arbitrary formulas. **So no instance ever has to internalize its own
+  syntax as a set.** What an instance supplies is that its indices are elements of `L`
+  one at a time, which for coded syntax is pairing and the numerals.
+
+  Obligation (b) stands and is now the only one: the graph must be written in the object
+  language and proved single-valued. It is the instance's own mathematics and was never in
+  scope for absorption (`[L3.0.4]` §7.1 said so). What has gone is the *second* job that
+  used to ride along with it, of making that formula bounded and its constants
+  stage-local, which was the larger of the two.
+
+  Re-homing taken with it: `isL-Lset` and `LsetS` ("a stage is a set of `L`", with the
+  certificate sealed) move from `L.ReflectFo` to `L.Axioms.Basic`, next to `𝒟ₒ→isL` and
+  `defSet→isL`. They are constructive and now have three consumers.

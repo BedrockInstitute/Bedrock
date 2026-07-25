@@ -38,7 +38,7 @@ open import Base.Truth
 
 module L.Axioms.Basic {ℓ : Level} where
 
-open import FOL.Syntax using ( Formula; var; con; _≐_; _∈̇_; _∨̇_; ⊥̇; ∃̇∈ )
+open import FOL.Syntax using ( Formula; var; con; _≐_; _∈̇_; _∨̇_; ⊤̇; ⊥̇; ∃̇∈ )
 open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
@@ -126,6 +126,34 @@ defSet→isL : (σ : V ℓ) → IsOrd σ → (x : V ℓ)
            → ∥ Σ[ φ ∈ Formula ⟪ Lset σ ⟫ 1 ] (DefOf.defSet (Lset σ) φ ≡ x) ∥₁
            → ⟨ isL x ⟩
 defSet→isL σ oσ x p = 𝒟ₒ→isL σ oσ x (𝒟ₒ-intro (Lset σ) x p)
+```
+
+<!--en-->
+The zeroth instance is the stage itself. The formula "true" defines the whole of
+a set, so a stage is a definable subset of itself, and constructible one stage
+later. It is what lets a stage be *named* by a formula, which every later chapter
+that bounds quantifiers by a stage needs.
+
+The certificate is sealed, and only it. The pairing has to keep reducing, since
+"lies in this bound" and "lies in this stage" are the same statement only because
+it does; but the certificate unfolds through definability into the smallness
+machinery, and it rides inside every type that mentions the constant. A chapter
+that separates with a formula relativized to a stage takes minutes rather than
+seconds without this one line.
+<!--zh-->
+第零个实例是阶段自身。公式「真」定义出一个集合的全体，故阶段是它自身的可定义子集，而在下一阶段可构造。正是这一点使阶段可以被一条公式**点名**，而此后每个用阶段界住量词的章节都需要它。
+
+被封印的是那份证书，且仅有它。配对必须继续规约，因为「落在这个界内」与「落在这个阶段内」是同一句话，恰恰倚仗它规约；而证书则经可定义性一路展开到小性机器，且坐在一个常元里，被每个提到该常元的类型一并背上。一章若用相对化到某阶段的公式作分离，没有这一行就要以分钟而非秒计。
+<!--/-->
+
+```agda
+opaque
+  isL-Lset : (β : V ℓ) → IsOrd β → ⟨ isL (Lset β) ⟩
+  isL-Lset β oβ = 𝒟ₒ→isL β oβ (Lset β)
+    (𝒟ₒ-intro (Lset β) (Lset β) ∣ ⊤̇ , DefOf.defSet⊤≡A (Lset β) ∣₁)
+
+LsetS : (β : V ℓ) → IsOrd β → S
+LsetS β oβ = Lset β , isL-Lset β oβ
 ```
 
 <!--en-->

@@ -51,7 +51,8 @@ open import L.Ordinal {ℓ} using ( boundingOrd; bound2 )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Separation {ℓ} lem
   using ( ReplImage; separateΔ₀; replaceΔ₀ )
-open import L.ReflectFo {ℓ} lem using ( LsetS; mkReflect )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.ReflectFo {ℓ} lem using ( mkReflect )
 
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
