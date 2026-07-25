@@ -301,13 +301,19 @@ import L.Axioms.Basic
 import L.Axioms.Separation
 import L.Reflect
 import L.ReflectFo
+import L.Axioms.Full
 import L.Axioms.Infinity
 ```
 
 <!--en-->
 The root, stated today and finished over the remaining parts:
 
-- `L.Frontier`{.Agda}: the debt registry: eleven fields, each the verbatim
+- `L.Axioms.Full`{.Agda}: separation and replacement for arbitrary formulas, by
+  reflecting the formula and applying the bounded instrument to its
+  relativization; the confinement atom is what keeps replacement's image from
+  escaping the stage.
+- `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
+  two, each the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
   is done when the record is empty.
 - `L.Model`{.Agda}: the root chapter: the honest relative-consistency framing;
@@ -316,7 +322,8 @@ The root, stated today and finished over the remaining parts:
 <!--zh-->
 根，今日陈述，余部完成：
 
-- `L.Frontier`{.Agda}：债务登记簿：十一个字段，每个都是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
+- `L.Axioms.Full`{.Agda}：任意公式的分离与替换，办法是反射那条公式，再把有界的器械施于它的相对化；那个禁闭原子正是使替换的像逃不出阶段的东西。
+- `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今剩两个，每个都是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->
 
