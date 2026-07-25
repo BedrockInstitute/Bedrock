@@ -327,6 +327,8 @@ rows rather than editing old ones):
 | `L.Ordinal.{mem-ord, A∉A, numeral-ord, #∈ω, numeral-mem, ω-mem-ord, ω-ord}` | `L.Ordinal.{mem-ord, ∈-irrefl, numeral-ord, #∈ω, numeral-mem, ω-mem-ord, ω-ord}` | `[L2.1]`: un-deferred as the collection step reaches them. `A∉A` renamed `∈-irrefl` (a theorem name is a kebab phrase, not a formula); `ord-antisym` stays deferred (no consumer), and it is asymmetry rather than antisymmetry if it ever lands |
 | `L.Rank.{rank, rank-compute, rank-ord, rank-fix}` | `L.Rank` (new chapter) | `[L2.1]`: `_∈ᵗ_`, `∈-induction` and `∈-induction-compute` already live in `FOL.ZFStructure` / `V.Hierarchy` from `[L1.6]`, so the chapter is just the rank theory; `rank-mono` deferred (no consumer yet) |
 | `L.OrdinalLinear.{⊆ᵇ, ⊆ᵇ-prop, extByBig, ¬sub→wit, ord-tri}` | `L.Ordinal.Linear.{_⊆ᵇ_, ⊆ᵇ-prop, ext-⊆ᵇ, ¬⊆ᵇ→witness, ord-tri}` | `[L2.1]`: **the first Bedrock chapter to take a `lem` parameter**, packaged per the L1.9 ruling as a single instance `LEM (ℓ-suc ℓ)` rather than the source's postulate. `extByBig`/`¬sub→wit` renamed to kebab phrases naming what they do |
+| `L.FormulaBound.{BoundedTm, BoundedFo, BoundedTm-mono, BoundedFo-mono}` | `FOL.Manipulation.Bounding` (new chapter) | `[L3.0.4]`: minimal prerequisite for the theorem statement. Re-homed from `L/` to `FOL.Manipulation`, where it belongs by subject: it is relabelling when the map is only partial, and the source module is already pure syntax with no `Lset`/`defSet`/V dependency. `Relabel` (`liftFo`, `liftFo-correct`, `Δ₀-liftFo`) stays deferred to `[L2.2]`, where its consumer lands |
+| `L.ChoiceSetInL.metaφ⟹isL'` | `L.Axioms.Basic.defSet→isL` | `[L3.0.4]`: the probe's checklist item 4. The source buries the closure engine in the choice chapter though the whole closure tower uses it; in Bedrock it is two lines over `[L2.0]` (`𝒟ₒ→isL` after `𝒟ₒ-intro`) and sits with the axioms that first exhibit the pattern |
 | `Reification.Tactic` | revisited by S6 (§10) | 2026-07-25: the "deferred (zero consumers)" row above stands for the port itself, but the macro is the second-largest measured lever (4k to 6k); if S6 is taken up, the deferral is reversed under the goal code that takes it |
 
 ## 5. Working mechanisms (D2, D8)
@@ -877,7 +879,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0 | Internalization theorem for L-recursion (S5) | PLANNED (registered 2026-07-25; gates L3.5 to L3.7) |
 | L3.0.0 | Design memo (single) | SUPERSEDED 2026-07-25 by L3.0.3 + L3.0.4; never started |
 | L3.0.3 | Subsumption probe, source-reading only | ACTIVE: memo delivered 2026-07-25, **awaiting owner gate**; verdict amber (route alive, projection corrected) |
-| L3.0.4 | Theorem statement in Bedrock's idiom | PLANNED (after L2.2, gates before L3.3 completes) |
+| L3.0.4 | Theorem statement in Bedrock's idiom | ACTIVE: memo delivered 2026-07-25, **awaiting owner gate**; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine, both now ported |
 | L3.0.1 | Two-instance proof of concept | PLANNED (after L3.3) |
 | L3.0.2 | Verdict and rollout ruling | PLANNED |
 | L3.1 | Transition-layer sweep (S9) | PLANNED, standing (registered 2026-07-25; head of each cluster port, closes with L3.10) |
@@ -939,6 +941,20 @@ One row per goal code; update the row in the same commit that changes the status
   `sucβ∈or≡`, and the latter is ordinal trichotomy, which the source's probe P8-3 judged
   constructively unprovable (it implies excluded middle). So the L side's classical cone
   begins at the collection step, three chapters later than the source's shape suggests.
+- **Theorem statement [L3.0.4]:** delivered 2026-07-25 in
+  [memos/L3.0.4-theorem-statement.md](memos/L3.0.4-theorem-statement.md), awaiting owner
+  gate. **The prerequisite was narrower than PLAN assumed.** `[L2.2]` was made the gate on
+  the reasoning that separation fixes the vocabulary; in fact the statement needs only
+  `BoundedFo` and the closure engine, so `[L2.2]`'s reflection interface is consumed by
+  the theorem's *proof*, not its statement. Both prerequisites were ported in this goal:
+  `FOL.Manipulation.Bounding` (`BoundedFo`, `BoundedFo-mono`, pure syntax, `--safe`) and
+  `L.Axioms.Basic.defSet→isL` (two lines composing `[L2.0]`'s `𝒟ₒ→isL` with
+  `𝒟ₒ-intro`, and the re-homing the probe's checklist item 4 asked for). `[L3.0.1]` still
+  waits on `[L3.3]`. Budget: tier 1 at 3.0k to 4.5k against 13,518, consistent with the
+  probe's corrected projection. Notable confirmation: stages 4 and 8 of the eight-stage
+  pipeline are **already Bedrock theorems** (`boundingOrd`/`Lset-mono` from `[L2.0]`,
+  `defSet→isL`), so the constructive foundation laid there is the theorem's substrate and
+  costs it no assumption.
 - **Subsumption probe verdict [L3.0.3]:** **amber**, memo delivered 2026-07-25 in
   [memos/L3.0.3-subsumption-probe.md](memos/L3.0.3-subsumption-probe.md), awaiting owner
   gate. Central question answered **yes**: one step specification subsumes `Cmp*` and
