@@ -1228,3 +1228,31 @@ One row per goal code; update the row in the same commit that changes the status
   have graphs that must talk about coded syntax, and the cost of *those* graphs is what
   `[L3.0.1]`'s kill criteria are about. The singleton instance says the frame holds, not
   that the hard instances are cheap.
+- **Verdict measurement [L3.0.2], 2026-07-26,
+  [memos/L3.0.2-verdict.md](memos/L3.0.2-verdict.md).** The source's `hasChoice` cone
+  (48,229 lines, 142 modules) classified by reason-the-code-exists: **satisfaction 16,400
+  (34%)**, recursion tables 12,019 (24%), order and choice 11,929 (24%), reflection and
+  model assembly 3,517 (7%), other 2,669, coding substrate 1,695. Two measured compression
+  ratios on chunks both repositories have built: reflection through arbitrary-φ
+  comprehension **2,283 → 721 (3.2x)**, coding substrate **2,638 → 1,065 (2.5x)**; the
+  internalization harness **4,673 → 96 (49x)**. Per-clause unit, measured from
+  `L.ReflectFo` (268 lines, four twelve-clause traversals): about **65 lines** per
+  traversal with proofs.
+
+  **D12 named the wrong lever, and the mistake is instructive.** D12 projected a general
+  internalization theorem costing 1,400 to 2,000 lines and reaching 65% of the certificate
+  mass. The theorem is 96 lines. The 13,518 the source spends on tier 1 exists because its
+  comprehension is **Δ₀-only**, so a table has to be definable inside a stage; that forces
+  absoluteness, per-clause Δ₀ and bounding witnesses, a bounding ordinal, a relabelling
+  layer, and a coherence argument. All of it is Δ₀ tax and none of it is about recursion.
+  The real lever was general-formula comprehension, paid at `[L2.2]` under a different
+  code. D12 stands as a *decision* (attempt the lever early) and falls as an *analysis*
+  (which lever, and what it costs).
+
+  **Projection for the remaining 43,017 lines: 3,000 to 6,400**, so the `L` side lands at
+  6,500 to 10,000 total against 3,361 already written, a **7x to 14x** compression against
+  D12's 3x. Weakest row, stated as such in the memo: order and choice, medium-low
+  confidence, error bar a factor of two on that row alone, because it holds the only
+  non-scaffolding mathematics in the cone and none of it has been built here. The number
+  is a projection from two measured ratios and one measured per-clause unit, and should
+  not be quoted without that caveat.
