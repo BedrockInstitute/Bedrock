@@ -1295,7 +1295,45 @@ One row per goal code; update the row in the same commit that changes the status
   abolished.
 
   Then `[L3.0.1]`'s instance half, satisfaction, which is what converts the 78% to 85%
-  projection into a measurement. Watch for, but do **not** build first, a generic
+  projection into a measurement.
+
+  **Reconnaissance and adjudication [L3.0.1], 2026-07-26. My working hypothesis was wrong,
+  and it was wrong in a way that would have cost five build steps.** The `[L3.0.2]` memo
+  says full comprehension "collapses the certificate machinery". It does not. It collapses
+  everything *around* it. Two fan-outs settled this: five parallel readings of what the
+  satisfaction graph needs, then, because the adversarial check on the load-bearing finding
+  crashed mid-run, three independent attacks on that finding alone. Ruling: the finding's
+  operative content **holds**, but its stated mechanism is **false**, and the false version
+  must not reach the book.
+
+  - **Not circularity of existence, and not of uniqueness.** Both are provable
+    non-circularly; the source does prove them. Uniqueness is not the obstruction, it is
+    what *kills the shortcut*, by depriving the description of a smaller witness.
+  - **The real mechanism is witness-locality.** Satisfaction is read at the model, so an
+    object-language `∃̇` ranges over `L`: discharging one means producing an element of `L`.
+    A graph therefore may not describe an object by asserting the existence of that very
+    object, because discharging the assertion is the problem it was meant to solve. Pinned
+    by the typechecker at `L.Recursion.witnessInModel` rather than left as an argument.
+  - **One sentence for the book:** every element of `L` is, at its birth stage, the
+    extension of one finite object formula (`𝒟ₒ-inv`); `finSetL` escapes this only by
+    writing that formula out as a finite disjunction; and a description whose existential
+    witness is the described object describes nothing.
+  - **Design change, and it retires machinery before it is written.** The claim as first
+    stated over-specified the fix ("quantify over a table on a subformula-closed slot").
+    Under `L.Recursion` the graph need not quantify over a table at all: make the slot the
+    recursion **index** and the table over it the **value**, so the clauses are stated of
+    `y` directly with quantifiers bounded by the index. No `∃̇C ∃̇S` wrapper, no standalone
+    `φ_sat` to define and prove sound.
+  - **`[L3.0.5]` is load-bearing after all.** `finSetL` glues the per-formula extensions
+    into a set of `L` without needing a prior formula, and it is the only route that does.
+    The "superseded within the hour" note stands corrected: it was superseded as *stage 7's
+    prerequisite* and is now load-bearing for a different reason.
+  - **Failure mode avoided.** Had the plan followed the total-certificate route that two of
+    the three attacks argued for, step 6 would have failed at `Definition.defines` **after
+    steps 1 to 5 were already paid**.
+  - **Largest residual risk is now step 1**, the object-level readers, ahead of anything
+    certificate-shaped. Revised estimate for the bucket: **1,200 to 1,850**, so the standing
+    1,150 to 1,900 holds with the risk mass relocated. Watch for, but do **not** build first, a generic
   "definable step gives a definable recursion" lemma: the standard approximation-function
   argument is uniform in the step and would cut every later instance, but per the
   `Ladder` lesson the interface is discovered from a real consumer and guessed wrong in
