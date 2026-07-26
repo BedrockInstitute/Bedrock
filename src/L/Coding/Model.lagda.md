@@ -32,7 +32,7 @@ open import Base.Truth
 module L.Coding.Model {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇; ∀̇_; ∃̇_; ∃̇∈ )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -43,6 +43,7 @@ open import L.Coding.Base {ℓ} using ( prAt; Δ₀-prAt; prAt-adequate )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst )
 
 open import Cubical.Data.Vec using ( map )
+open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
@@ -495,6 +496,80 @@ emptyAt y = extAt y ⊥̇
 ```
 
 <!--en-->
+## The shape of a clause
+<!--zh-->
+## 一条子句的形状
+<!--/-->
+
+<!--en-->
+A recursion on codes is stated by clauses, and the clauses come in a few shapes
+rather than twelve. A binary constructor's clause says: for every code in the
+index with this tag over these two subcodes, and for the values the table records
+at the three of them, such-and-such holds. All of that is fixed except the
+such-and-such, so it is written once with the relation as a parameter, and the
+three binary constructors differ only in which relation they hand it.
+
+Six things are bound, in the order a reader meets them: the code, its two
+subcodes, and the three values. The relation therefore speaks of the values at
+positions two, one and zero, which is exactly the argument order the set
+operations above take, so a clause is one application and no arithmetic.
+
+Reading the clause back is one chain of substitutions along the readers'
+adequacy, and it is stated in the direction a soundness proof consumes: given a
+code of that shape in the index and the three recorded values, the relation
+holds.
+<!--zh-->
+对码的递归由子句陈述，而子句只有几种形状，不是十二种。一个二元构造子的子句说：对索引中每个以此标签架在这两个子码之上的码，以及表在这三者处所记录的取值，某某成立。除了那个「某某」，其余全是固定的，故只写一次，把那条关系留作参数，而三个二元构造子只差交给它的是哪条关系。
+
+被绑定的有六样，按读者遇到的次序：那个码、它的两个子码、以及三个取值。故那条关系谈论的是位置二、一、零处的取值，而这恰是上面诸集合运算所取的实参次序，于是一条子句就是一次应用，不含任何算术。
+
+把子句读回来是沿诸读式的适足性作一串代换，而它按可靠性证明所消费的方向陈述：给定索引中一个那种形状的码与三个被记录的取值，那条关系成立。
+<!--/-->
+
+```agda
+module _ {n : ℕ} where
+  private
+    sh6 : Fin n → Fin (6 + n)
+    sh6 i = suc (suc (suc (suc (suc (suc i)))))
+
+    c6 a6 b6 yc6 ya6 yb6 : Fin (6 + n)
+    c6  = suc (suc (suc (suc (suc zero))))
+    a6  = suc (suc (suc (suc zero)))
+    b6  = suc (suc (suc zero))
+    yc6 = suc (suc zero)
+    ya6 = suc zero
+    yb6 = zero
+
+  binClauseAt : Fin n → Fin n → ℕ → Formula S (6 + n) → Formula S n
+  binClauseAt C T k rel =
+    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇ (∀̇ (∀̇
+      ( tagPairAtL c6 k a6 b6
+      ⇒̇ ( appAt (sh6 T) c6 yc6
+      ⇒̇ ( appAt (sh6 T) a6 ya6
+      ⇒̇ ( appAt (sh6 T) b6 yb6
+      ⇒̇ rel )))))))))
+
+  binClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (6 + n)) (γ : S ^ n)
+    → ⟨ γ ⊨ binClauseAt C T k rel ⟩
+    → (c a b yc ya yb : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (# k) (pr (fst a) (fst b))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (fst a) (fst ya) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (fst b) (fst yb) ∈ fst (lookup T γ) ⟩
+    → ⟨ (yb ∷ ya ∷ yc ∷ b ∷ a ∷ c ∷ γ) ⊨ rel ⟩
+  binClause-out C T k rel γ h c a b yc ya yb c∈ shape hc ha hb =
+    h c c∈ a b yc ya yb
+      (subst ⟨_⟩ (sym (tagPairAtL-adequate c6 k a6 b6 δ)) shape)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh6 T) c6 yc6 δ)) hc)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh6 T) a6 ya6 δ)) ha)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh6 T) b6 yb6 δ)) hb)
+    where
+    δ : S ^ (6 + n)
+    δ = yb ∷ ya ∷ yc ∷ b ∷ a ∷ c ∷ γ
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -512,8 +587,9 @@ construction can build a code as well as read one; and `tagAtL`{.Agda} and
 every binary constructor's code has. `envOverAt`{.Agda} then says what it is to
 be an environment over a set.
 
-`extAt`{.Agda} is the frame every set-valued clause is written in, and the set
-operations are its shortest instances.
+`extAt`{.Agda} is the frame every set-valued clause is written in, the set
+operations are its shortest instances, and `binClauseAt`{.Agda} is the shape the
+three binary constructors share, differing only in the relation handed to it.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -530,7 +606,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，而诸集合运算是它最短的实例。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而 `binClauseAt`{.Agda} 是三个二元构造子共有的形状，彼此只差交给它的那条关系。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
