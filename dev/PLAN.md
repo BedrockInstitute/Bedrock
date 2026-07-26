@@ -953,7 +953,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
 | L3.2 | `reify!` industrialization (S6) | PLANNED, **off L3.0's critical path** (re-evaluated 2026-07-25: stage 7 needed a lemma, not the macro). Opportunistic accelerator for the reader half of the coding chapters |
 | L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
-| L3.15 | Re-base the coding readers onto `S` | PLANNED, next (registered 2026-07-26). `[L3.14]`'s readers are `Formula (V ℓ) n`; `L.Recursion` speaks `Formula S n`. Bridge is `Relabel.liftFo`, at the cost of an "in `L`" witness per constant. The Δ₀ witnesses become dead weight; the characterization lemmas carry over |
+| L3.15 | Re-base the coding readers onto `S` | **DONE 2026-07-26, and it is not a re-base.** `L.Absoluteness`, **34 lines**: one instantiation of `Relabel` at the bound "constructible", and a four-step transfer chain with no induction of its own. `[L3.14]`'s 1,065 lines are neither stranded nor rewritten; they stay on the hierarchy side and are quoted |
 | L3.14 | Coding substrate: the Δ₀ code readers | DONE 2026-07-25. Seven chapters: `L.WellOrder.Base`, `FOL.Coding`, `V.Coding`, `L.Coding.{Base, Environment, Tagged, Length, Entry}`. The source's `SatCert*` split by subject rather than by session |
 | L3.11 | Per-tag clause bundle (S10) | **RE-SCOPED to conditional 2026-07-25.** De-risk rationale spent (`L.ReflectFo` checks the twelve-clause shape); two of five fields removed by the internalization finding; and with the graph unconstrained there is no reason a clause must be a per-tag formula in a twelve-way grid. Do not build until an instance shows it is wanted |
 | L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional, **to be re-examined before opening**: tier 2 was separated from tier 1 by the complexity boundary the internalization finding dissolved |
@@ -1299,3 +1299,24 @@ One row per goal code; update the row in the same commit that changes the status
   argument is uniform in the step and would cut every later instance, but per the
   `Ladder` lesson the interface is discovered from a real consumer and guessed wrong in
   the abstract. Let it fall out of satisfaction if it wants to.
+
+  **Outcome [L3.15], same day: 34 lines, and the word "re-base" was wrong.** Nothing is
+  re-based. `L.Absoluteness` instantiates the existing `Relabel` once, at the bound
+  "constructible" instead of "inside a stage" (`down c p = (c , p)`, round trip `refl`),
+  and composes four already-proved steps into
+  `(γ ⊨ liftFo φ h) ≡ ((map fst γ) ⊨v φ)`: absoluteness, then the relabelling theorem
+  twice, with the relabelling's own correctness in the middle. No induction of its own,
+  because every induction it needs was done in `[L2.2]` and `[L1.x]`.
+
+  Two things the estimate had wrong. The `BoundedFo InL` witness is **free for
+  constant-free readers**, and most of the structural readers (`sglAt`, `pairAt`,
+  `prAt`, `tripleInT`) are constant-free: they speak entirely through variables and
+  bounded quantifiers. And the identity relabelling in the last step is needed, because a
+  formula is not definitionally its own image under the identity map on constants,
+  though its meaning is; that is `⊨-map` at `f = id` and it costs one line rather than a
+  twelve-clause `mapFo-id`.
+
+  Standing limit recorded in the chapter: the bridge is **Δ₀ only**, because absoluteness
+  is. That no longer restricts what can be *said* in `L`, only what can be *imported* from
+  the hierarchy for free. A predicate that is easier unbounded is to be written unbounded,
+  directly over the model, and not routed through the bridge.
