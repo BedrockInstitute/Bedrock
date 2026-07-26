@@ -496,6 +496,98 @@ emptyAt y = extAt y ⊥̇
 ```
 
 <!--en-->
+## Reading a key in two layers
+<!--zh-->
+## 分两层读一个键
+<!--/-->
+
+<!--en-->
+The codes a recursion ranges over carry their arity: an entry is the arity's
+numeral paired with the code proper, and the code proper is in turn a tag paired
+with its payload. So a clause's hypothesis has to read *two* layers, not one, and
+reading only the outer one is worse than incomplete. Pairing is injective, so a
+one-layer reader silently matches the arity against the constructor tag and binds
+the payload's own tag as though it were a subcode: the clause is then vacuous at
+every arity but one, and wrong at that one. Nothing in Agda reports this, because
+the reader is still true; it simply cannot be supplied.
+
+Both layers are read by one existential over the inner code, with the pair reader
+above pinning the outer layer and the tag reader the inner. The arity is left as
+a variable, so a clause can speak of it, which the four constructors that change
+arity need.
+<!--zh-->
+递归所遍历的诸码携带自己的元数：一个条目是「元数的数码」与「码本身」之对，而码本身又是「标签」与「载荷」之对。故一条子句的假设必须读**两**层，不是一层；而只读外层比不完整更糟。配对是单射的，于是一层的读式会悄悄把元数与构造子标签匹配起来，并把载荷自己的标签当作子码绑定：那条子句于是在除一个元数外的所有元数上空洞，而在那一个上是错的。Agda 不会报告这件事，因为那条读式仍然为真；它只是无法被供给。
+
+两层由一个「对内层码作存在」读出，上面的对读式钉住外层，标签读式钉住内层。元数留作变元，好让子句能谈论它，而四个改变元数的构造子正需要这一点。
+<!--/-->
+
+```agda
+arityTagPairAtL : ∀ {n} → Fin n → Fin n → ℕ → Fin n → Fin n → Formula S n
+arityTagPairAtL c ar k a b =
+  ∃̇ (prAtL (suc c) (suc ar) zero ∧̇ tagPairAtL zero k (suc a) (suc b))
+
+arityTagPairAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a b : Fin n) (γ : S ^ n)
+  → (γ ⊨ arityTagPairAtL c ar k a b)
+  ≡ PairIs (fst (lookup c γ))
+      (pr (fst (lookup ar γ))
+        (pr (# k) (pr (fst (lookup a γ)) (fst (lookup b γ)))))
+arityTagPairAtL-adequate c ar k a b γ = ⇔toPath fwd bwd
+  where
+  N = fst (lookup ar γ)
+  P = pr (fst (lookup a γ)) (fst (lookup b γ))
+  target = PairIs (fst (lookup c γ)) (pr N (pr (# k) P))
+
+  fwd : ⟨ γ ⊨ arityTagPairAtL c ar k a b ⟩ → ⟨ target ⟩
+  fwd = PT.rec (snd target)
+    (λ { (z , (p , t)) →
+      subst ⟨_⟩ (prAtL-adequate (suc c) (suc ar) zero (z ∷ γ)) p
+      ∙ cong (pr N) (subst ⟨_⟩ (tagPairAtL-adequate zero k (suc a) (suc b) (z ∷ γ)) t) })
+
+  bwd : ⟨ target ⟩ → ⟨ γ ⊨ arityTagPairAtL c ar k a b ⟩
+  bwd q = ∣ zS
+    , ( subst ⟨_⟩ (sym (prAtL-adequate (suc c) (suc ar) zero (zS ∷ γ)))
+          (q ∙ cong (pr N) (sym e))
+      , subst ⟨_⟩ (sym (tagPairAtL-adequate zero k (suc a) (suc b) (zS ∷ γ))) e ) ∣₁
+    where
+    zS : S
+    zS = prʟ (numeralL k) (prʟ (lookup a γ) (lookup b γ))
+    e : fst zS ≡ pr (# k) P
+    e = prʟ-fst (numeralL k) (prʟ (lookup a γ) (lookup b γ))
+      ∙ cong₂ pr (numeralL-fst k) (prʟ-fst (lookup a γ) (lookup b γ))
+
+arityTagAtL : ∀ {n} → Fin n → Fin n → ℕ → Fin n → Formula S n
+arityTagAtL c ar k a =
+  ∃̇ (prAtL (suc c) (suc ar) zero ∧̇ tagAtL zero k (suc a))
+
+arityTagAtL-adequate : ∀ {n} (c ar : Fin n) (k : ℕ) (a : Fin n) (γ : S ^ n)
+  → (γ ⊨ arityTagAtL c ar k a)
+  ≡ PairIs (fst (lookup c γ))
+      (pr (fst (lookup ar γ)) (pr (# k) (fst (lookup a γ))))
+arityTagAtL-adequate c ar k a γ = ⇔toPath fwd bwd
+  where
+  N = fst (lookup ar γ)
+  A = fst (lookup a γ)
+  target = PairIs (fst (lookup c γ)) (pr N (pr (# k) A))
+
+  fwd : ⟨ γ ⊨ arityTagAtL c ar k a ⟩ → ⟨ target ⟩
+  fwd = PT.rec (snd target)
+    (λ { (z , (p , t)) →
+      subst ⟨_⟩ (prAtL-adequate (suc c) (suc ar) zero (z ∷ γ)) p
+      ∙ cong (pr N) (subst ⟨_⟩ (tagAtL-adequate zero k (suc a) (z ∷ γ)) t) })
+
+  bwd : ⟨ target ⟩ → ⟨ γ ⊨ arityTagAtL c ar k a ⟩
+  bwd q = ∣ zS
+    , ( subst ⟨_⟩ (sym (prAtL-adequate (suc c) (suc ar) zero (zS ∷ γ)))
+          (q ∙ cong (pr N) (sym e))
+      , subst ⟨_⟩ (sym (tagAtL-adequate zero k (suc a) (zS ∷ γ))) e ) ∣₁
+    where
+    zS : S
+    zS = prʟ (numeralL k) (lookup a γ)
+    e : fst zS ≡ pr (# k) A
+    e = prʟ-fst (numeralL k) (lookup a γ) ∙ cong₂ pr (numeralL-fst k) refl
+```
+
+<!--en-->
 ## The shape of a clause
 <!--zh-->
 ## 一条子句的形状
@@ -509,10 +601,10 @@ at the three of them, such-and-such holds. All of that is fixed except the
 such-and-such, so it is written once with the relation as a parameter, and the
 three binary constructors differ only in which relation they hand it.
 
-Four things are bound, in the order a reader meets them: the code, its two
-payload components, and the value the table records at the code. The values at
-the payload components are **not** bound, and that is the correction that makes
-the frame general. A connective's payload is a pair of formula codes and its
+Five things are bound, in the order a reader meets them: the code, its arity, its
+two payload components, and the value the table records at the code. The values
+at the payload components are **not** bound, and that is what makes the frame
+general. A connective's payload is a pair of formula codes and its
 clause does want them, but an atom's payload is a pair of *term* codes, at which
 the table has no entries at all, and a bounded quantifier's payload mixes the
 two. So the frame binds what every constructor has and leaves the lookups to the
@@ -525,7 +617,7 @@ holds.
 <!--zh-->
 对码的递归由子句陈述，而子句只有几种形状，不是十二种。一个二元构造子的子句说：对索引中每个以此标签架在这两个子码之上的码，以及表在这三者处所记录的取值，某某成立。除了那个「某某」，其余全是固定的，故只写一次，把那条关系留作参数，而三个二元构造子只差交给它的是哪条关系。
 
-被绑定的有四样，按读者遇到的次序：那个码、它的两个载荷分量、以及表在该码处记录的取值。诸载荷分量处的取值**不**被绑定，而这正是使该框架通用的那处更正。一个联结词的载荷是一对公式码，它的子句确实要它们；但一个原子的载荷是一对**词项**码，表在那里根本没有条目，而有界量词的载荷则两者混杂。故框架只绑定每个构造子都有的东西，把查表留给那条关系，由它自行执行。
+被绑定的有五样，按读者遇到的次序：那个码、它的元数、它的两个载荷分量、以及表在该码处记录的取值。诸载荷分量处的取值**不**被绑定，而这正是使该框架通用之处。一个联结词的载荷是一对公式码，它的子句确实要它们；但一个原子的载荷是一对**词项**码，表在那里根本没有条目，而有界量词的载荷则两者混杂。故框架只绑定每个构造子都有的东西，把查表留给那条关系，由它自行执行。
 
 把子句读回来是沿诸读式的适足性作一串代换，而它按可靠性证明所消费的方向陈述：给定索引中一个那种形状的码与三个被记录的取值，那条关系成立。
 <!--/-->
@@ -533,93 +625,101 @@ holds.
 ```agda
 module _ {n : ℕ} where
   private
-    sh4 : Fin n → Fin (4 + n)
-    sh4 i = suc (suc (suc (suc i)))
+    sh5 : Fin n → Fin (5 + n)
+    sh5 i = suc (suc (suc (suc (suc i))))
 
-    c4 a4 b4 yc4 : Fin (4 + n)
-    c4  = suc (suc (suc zero))
-    a4  = suc (suc zero)
-    b4  = suc zero
-    yc4 = zero
+    c5 n5 a5 b5 yc5 : Fin (5 + n)
+    c5  = suc (suc (suc (suc zero)))
+    n5  = suc (suc (suc zero))
+    a5  = suc (suc zero)
+    b5  = suc zero
+    yc5 = zero
 
-  binClauseAt : Fin n → Fin n → ℕ → Formula S (4 + n) → Formula S n
+  binClauseAt : Fin n → Fin n → ℕ → Formula S (5 + n) → Formula S n
   binClauseAt C T k rel =
-    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇
-      ( tagPairAtL c4 k a4 b4
-      ⇒̇ ( appAt (sh4 T) c4 yc4
-      ⇒̇ rel )))))
+    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇ (∀̇
+      ( arityTagPairAtL c5 n5 k a5 b5
+      ⇒̇ ( appAt (sh5 T) c5 yc5
+      ⇒̇ rel ))))))
 
-  binClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+  binClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (5 + n)) (γ : S ^ n)
     → ⟨ γ ⊨ binClauseAt C T k rel ⟩
-    → (c a b yc : S)
+    → (c ar a b yc : S)
     → ⟨ fst c ∈ fst (lookup C γ) ⟩
-    → fst c ≡ pr (# k) (pr (fst a) (fst b))
+    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
     → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-    → ⟨ (yc ∷ b ∷ a ∷ c ∷ γ) ⊨ rel ⟩
-  binClause-out C T k rel γ h c a b yc c∈ shape hc =
-    h c c∈ a b yc
-      (subst ⟨_⟩ (sym (tagPairAtL-adequate c4 k a4 b4 δ)) shape)
-      (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) c4 yc4 δ)) hc)
+    → ⟨ (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩
+  binClause-out C T k rel γ h c ar a b yc c∈ shape hc =
+    h c c∈ ar a b yc
+      (subst ⟨_⟩ (sym (arityTagPairAtL-adequate c5 n5 k a5 b5 δ)) shape)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh5 T) c5 yc5 δ)) hc)
     where
-    δ : S ^ (4 + n)
-    δ = yc ∷ b ∷ a ∷ c ∷ γ
+    δ : S ^ (5 + n)
+    δ = yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
 ```
 
 <!--en-->
 Counting the shapes is worth a moment, because it says how much of the twelve is
-really there, and because counting it wrong is easy. A code carries either a
-pair, a single component, or a dummy, and that is the *only* distinction the
-frames make. The pair shape covers the two atoms, the three connectives and the
-two bounded quantifiers, which is seven; the single-component shape covers
-negation and the two unbounded quantifiers, which is three; and the two constants
-are the remaining two.
+really there, and because counting it wrong is easy: this paragraph has been
+wrong twice.
 
-What the frames must **not** distinguish is what the payload components *are*.
-Grouping by that gives five shapes, not three, since term codes and formula codes
-behave differently under the table. Leaving the lookups to the relation is what
-collapses five back to three.
+The frames distinguish exactly one thing, whether the payload is a pair or a
+single component. The pair frame covers the two atoms, the three connectives and
+the two bounded quantifiers, which is seven; the single-component frame covers
+negation, the two unbounded quantifiers, **and the two constants**, which is
+five, since a constant's payload is a numeral and the frame does not care what a
+component is. **Two** frames, then, and twelve relations above them.
 
-The single-component shape is the pair shape with one binder fewer, and reads
+What the frames must not distinguish is what the payload components *are*.
+Grouping by that gives five kinds of relation, not five frames: term against
+term, formula against formula, term against formula, one formula, and one
+formula at the next arity. That is where the twelve actually divide, and it
+divides them in the relations, where the lookups live.
+
+The single-component frame is the pair frame with one binder fewer, and reads
 back the same way.
 <!--zh-->
-数一数有几种形状是值得的，因为它说出那十二条里真正存在多少，也因为数错很容易。一个码携带的要么是一个对，要么是单个分量，要么是一个虚位，而这是诸框架所作的**唯一**区分。对的形状覆盖两个原子、三个联结词与两个有界量词，共七个；单分量的形状覆盖否定与两个无界量词，共三个；剩下两个是那两个常量。
+数一数有几种形状是值得的，因为它说出那十二条里真正存在多少，也因为数错很容易：这一段已经错过两次。
 
-诸框架**不可**区分的，是那些载荷分量究竟**是什么**。按那个分组会得到五种形状而非三种，因为词项码与公式码在表之下表现不同。把查表留给那条关系，正是把五压回三的那一手。
+诸框架只区分一件事：载荷是一个对，还是单个分量。对框架覆盖两个原子、三个联结词与两个有界量词，共七个；单分量框架覆盖否定、两个无界量词、**以及那两个常量**，共五个，因为常量的载荷是一个数码，而框架并不在意某个分量究竟是什么。故是**两**个框架，其上有十二条关系。
 
-单分量形状就是少一个绑定的对形状，读回来的方式相同。
+诸框架不可区分的，是那些载荷分量究竟**是什么**。按那个分组得到的是五种关系、而非五个框架：词项对词项、公式对公式、词项对公式、单个公式、以及处于下一元数的单个公式。那才是十二条真正分开的地方，而它们分在诸关系里，也就是查表所在之处。
+
+单分量框架就是少一个绑定的对框架，读回来的方式相同。
 <!--/-->
 
 ```agda
   private
-    sh3 : Fin n → Fin (3 + n)
-    sh3 i = suc (suc (suc i))
+    sh4 : Fin n → Fin (4 + n)
+    sh4 i = suc (suc (suc (suc i)))
 
-    c3 a3 yc3 : Fin (3 + n)
-    c3  = suc (suc zero)
-    a3  = suc zero
-    yc3 = zero
+    c4 n4 a4 yc4 : Fin (4 + n)
+    c4  = suc (suc (suc zero))
+    n4  = suc (suc zero)
+    a4  = suc zero
+    yc4 = zero
 
-  unClauseAt : Fin n → Fin n → ℕ → Formula S (3 + n) → Formula S n
+  unClauseAt : Fin n → Fin n → ℕ → Formula S (4 + n) → Formula S n
   unClauseAt C T k rel =
-    ∀̇∈ (var C) (∀̇ (∀̇
-      ( tagAtL c3 k a3
-      ⇒̇ ( appAt (sh3 T) c3 yc3
-      ⇒̇ rel ))))
+    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇
+      ( arityTagAtL c4 n4 k a4
+      ⇒̇ ( appAt (sh4 T) c4 yc4
+      ⇒̇ rel )))))
 
-  unClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n)
+  unClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
     → ⟨ γ ⊨ unClauseAt C T k rel ⟩
-    → (c a yc : S)
+    → (c ar a yc : S)
     → ⟨ fst c ∈ fst (lookup C γ) ⟩
-    → fst c ≡ pr (# k) (fst a)
+    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
     → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-    → ⟨ (yc ∷ a ∷ c ∷ γ) ⊨ rel ⟩
-  unClause-out C T k rel γ h c a yc c∈ shape hc =
-    h c c∈ a yc
-      (subst ⟨_⟩ (sym (tagAtL-adequate c3 k a3 δ)) shape)
-      (subst ⟨_⟩ (sym (appAt-adequate (sh3 T) c3 yc3 δ)) hc)
+    → ⟨ (yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩
+  unClause-out C T k rel γ h c ar a yc c∈ shape hc =
+    h c c∈ ar a yc
+      (subst ⟨_⟩ (sym (arityTagAtL-adequate c4 n4 k a4 δ)) shape)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) c4 yc4 δ)) hc)
     where
-    δ : S ^ (3 + n)
-    δ = yc ∷ a ∷ c ∷ γ
+    δ : S ^ (4 + n)
+    δ = yc ∷ a ∷ ar ∷ c ∷ γ
 ```
 
 <!--en-->
@@ -641,11 +741,12 @@ every binary constructor's code has. `envOverAt`{.Agda} then says what it is to
 be an environment over a set.
 
 `extAt`{.Agda} is the frame every set-valued clause is written in, the set
-operations are its shortest instances, and the recursion's clauses come in three
-shapes rather than twelve: `binClauseAt`{.Agda} for the seven constructors whose
-code carries a pair, `unClauseAt`{.Agda} for the three carrying a single subcode,
-and the two constants for the rest. They differ only in the relation handed to
-them.
+operations are its shortest instances, and the recursion's clauses are written in
+**two** frames rather than twelve clauses: `binClauseAt`{.Agda} for the seven
+constructors whose payload is a pair, `unClauseAt`{.Agda} for the five whose
+payload is a single component, the constants included. Both read the key in two
+layers, arity outside and tag within, and both leave every lookup on a payload
+component to the relation handed to them.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -662,7 +763,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句只有三种形状、而非十二条：`binClauseAt`{.Agda} 管码携带一个对的那七个构造子，`unClauseAt`{.Agda} 管携带单个子码的那三个，其余两个是那两个常量。它们只差交给自己的那条关系。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
