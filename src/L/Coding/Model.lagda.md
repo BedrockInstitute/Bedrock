@@ -32,7 +32,7 @@ open import Base.Truth
 module L.Coding.Model {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
+open import FOL.Syntax using ( Formula; var; _≐_; _⇒̇_; ∀̇_; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -41,7 +41,10 @@ open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
 open import L.Coding.Base {ℓ} using ( prAt; Δ₀-prAt; prAt-adequate )
 
 open import Cubical.Data.Vec using ( map )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet )
+open import Cubical.Functions.Logic using ( ⇔toPath )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -110,6 +113,115 @@ prAtL-adequate q u v γ =
 ```
 
 <!--en-->
+## Application
+<!--zh-->
+## 取值
+<!--/-->
+
+<!--en-->
+A function in the object language is a set of ordered pairs, so the one thing
+every use of one asks is whether a given pair belongs to it. That is a bounded
+existential over the function, with the pair reader inside, and its meaning is
+membership of the Kuratowski pair.
+
+The backward direction is where the model earns its keep, and it is worth
+noticing. To satisfy the existential one must produce an *element of the model*
+whose underlying set is the pair; the hypothesis only supplies a set. It is
+constructible because it belongs to something constructible, and the class is
+transitive. That is the whole argument, and the same step will recur wherever a
+witness has to be produced inside the model rather than merely in the hierarchy.
+<!--zh-->
+对象语言里的函数是有序对之集，故凡用到函数的地方，所问的唯一一件事就是某个给定的对是否属于它。那是在该函数上的一个有界存在，里面装着对读式，而它的含义是那个 Kuratowski 对的隶属关系。
+
+反向是模型出力之处，值得留意。要满足那个存在量词，必须拿出一个**模型的元素**，其底集是那个对；而假设只给了一个集合。它可构造，因为它属于某个可构造之物，而这个类传递。全部论证仅此而已，而同一步将在此后每个「见证必须造在模型之内、而非仅在层级之内」的地方重现。
+<!--/-->
+
+```agda
+appAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+appAt f x y = ∃̇∈ (var f) (prAtL zero (suc x) (suc y))
+
+appAt-adequate : ∀ {n} (f x y : Fin n) (γ : S ^ n)
+  → (γ ⊨ appAt f x y)
+  ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst (lookup f γ))
+appAt-adequate f x y γ = ⇔toPath fwd bwd
+  where
+  a = fst (lookup x γ)
+  b = fst (lookup y γ)
+  F = lookup f γ
+
+  read : (z : S) → ⟨ (z ∷ γ) ⊨ prAtL zero (suc x) (suc y) ⟩ → fst z ≡ pr a b
+  read z h = subst ⟨_⟩ (prAtL-adequate zero (suc x) (suc y) (z ∷ γ)) h
+
+  fwd : ⟨ γ ⊨ appAt f x y ⟩ → ⟨ pr a b ∈ fst F ⟩
+  fwd = PT.rec (snd (pr a b ∈ fst F))
+    (λ { (z , (z∈F , h)) → subst (λ w → ⟨ w ∈ fst F ⟩) (read z h) z∈F })
+
+  bwd : ⟨ pr a b ∈ fst F ⟩ → ⟨ γ ⊨ appAt f x y ⟩
+  bwd h = ∣ zS , (h , subst ⟨_⟩
+      (sym (prAtL-adequate zero (suc x) (suc y) (zS ∷ γ))) refl) ∣₁
+    where
+    zS : S
+    zS = pr a b , isL-trans {x = fst F} {y = pr a b} h (F .snd)
+```
+
+<!--en-->
+## Single-valuedness
+<!--zh-->
+## 单值性
+<!--/-->
+
+<!--en-->
+The other half of being a function: a pair's first component determines its
+second. Three unbounded quantifiers, which cost nothing here, and two
+applications of the reader above.
+
+Stated as two directions rather than a path, because that is how consumers use
+it and because building the right-hand side as a proposition would say the same
+thing at more length. Reading it out is the direction that matters: from the
+object-language claim, an actual proof that two values recorded against the same
+argument agree.
+<!--zh-->
+作为函数的另一半：一个对的第一分量决定它的第二分量。三个无界量词 (此处不费分文)，加上面那条读式的两次应用。
+
+陈述为两个方向而非一条道路，因为消费方就是这么用的，也因为把右侧造成一个命题只会把同一句话说得更长。读出来的那个方向才要紧：从对象语言的断言，得到「记在同一自变量下的两个取值相等」的一份真凭实据。
+<!--/-->
+
+```agda
+svAt : ∀ {n} → Fin n → Formula S n
+svAt f = ∀̇ (∀̇ (∀̇ (
+      appAt (suc (suc (suc f))) (suc (suc zero)) (suc zero)
+  ⇒̇ (appAt (suc (suc (suc f))) (suc (suc zero)) zero
+  ⇒̇ (var (suc zero) ≐ var zero)))))
+
+module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
+  private
+    Holds : S → S → Type (ℓ-suc ℓ)
+    Holds x y = ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+
+    at : (x y y' : S)
+       → ((y' ∷ y ∷ x ∷ γ) ⊨ appAt (suc (suc (suc f))) (suc (suc zero)) (suc zero))
+       ≡ (pr (fst x) (fst y) ∈ fst (lookup f γ))
+    at x y y' = appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero)
+                  (y' ∷ y ∷ x ∷ γ)
+
+    at' : (x y y' : S)
+        → ((y' ∷ y ∷ x ∷ γ) ⊨ appAt (suc (suc (suc f))) (suc (suc zero)) zero)
+        ≡ (pr (fst x) (fst y') ∈ fst (lookup f γ))
+    at' x y y' = appAt-adequate (suc (suc (suc f))) (suc (suc zero)) zero
+                   (y' ∷ y ∷ x ∷ γ)
+
+  svAt-out : ⟨ γ ⊨ svAt f ⟩
+           → (x y y' : S) → Holds x y → Holds x y' → fst y ≡ fst y'
+  svAt-out h x y y' p q = h x y y'
+    (subst ⟨_⟩ (sym (at x y y')) p) (subst ⟨_⟩ (sym (at' x y y')) q)
+
+  svAt-in : ((x y y' : S) → Holds x y → Holds x y' → fst y ≡ fst y')
+          → ⟨ γ ⊨ svAt f ⟩
+  svAt-in h x y y' p q = h x y y'
+    (subst ⟨_⟩ (at x y y') p) (subst ⟨_⟩ (at' x y y') q)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -117,7 +229,10 @@ prAtL-adequate q u v γ =
 
 <!--en-->
 `prAtL`{.Agda} says, in the object language of the model, that one set is the
-ordered pair of two others, and `prAtL-adequate`{.Agda} is its meaning. It was
+ordered pair of two others, `appAt`{.Agda} that a function contains a given pair,
+and `svAt`{.Agda} that it contains at most one pair per argument. Together they
+are what "function" means in the object language, and every recursion graph is
+written through them. It was
 obtained by quoting, not by re-proving: the reader and its characterization stay
 where they were written, and the crossing cost one induction on environments.
 
@@ -126,7 +241,7 @@ coding chapters did not have to be re-based. What it does not cover is any
 predicate that is not Δ₀, and those are to be written directly over the model
 instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
-`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，而 `prAtL-adequate`{.Agda} 是它的含义。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
+`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，而 `svAt`{.Agda} 说「每个自变量至多含一个对」。三者合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
 这就是此后每条读式的套路，也是编码诸章无须换底的原因。它不覆盖的是任何非 Δ₀ 的谓词，那些应当直接在模型上写，因为模型的概括不要求它们有界。
 <!--/-->
