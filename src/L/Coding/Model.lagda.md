@@ -32,19 +32,24 @@ open import Base.Truth
 module L.Coding.Model {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∀̇_; ∃̇_; ∃̇∈ )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∀̇_; ∃̇_; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
+open import V.Model {ℓ} using ( pair-singleton )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
 open import L.Coding.Base {ℓ} using ( prAt; Δ₀-prAt; prAt-adequate )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst )
 
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ⁅_,_⁆ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
+open InfinitySet using ( #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -275,6 +280,119 @@ module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
 ```
 
 <!--en-->
+## The pair, inside the model
+<!--zh-->
+## 模型之内的对
+<!--/-->
+
+<!--en-->
+Every code is built by pairing, so every construction below needs the ordered
+pair of two elements of `L` to be one. It is, three applications of the model's
+own pairing, and the projection equations of the numeral chapter say that reading
+it through the underlying set gives the hierarchy's pair back. The singleton is
+the two-element pair with equal components, which is the one small identity the
+hierarchy supplies.
+<!--zh-->
+每个码都由配对造出，故下面每个构造都需要「`L` 两元素的有序对仍是 `L` 的元素」。确实如此，用模型自己的配对三次即可，而数码那一章的投影等式说：沿底层集合读出来就把层级的对还了回来。单点集是两分量相等的对，这是层级供给的那一条小小恒等式。
+<!--/-->
+
+```agda
+prʟ : S → S → S
+prʟ a b = pairʟ (pairʟ a a) (pairʟ a b)
+
+prʟ-fst : (a b : S) → fst (prʟ a b) ≡ pr (fst a) (fst b)
+prʟ-fst a b =
+    pairʟ-fst (pairʟ a a) (pairʟ a b)
+  ∙ cong₂ ⁅_,_⁆ (pairʟ-fst a a ∙ pair-singleton (fst a)) (pairʟ-fst a b)
+```
+
+<!--en-->
+## Tags
+<!--zh-->
+## 标签
+<!--/-->
+
+<!--en-->
+A code carries its constructor as a numeral in the first component of a pair, so
+reading a code's shape means reading a pair whose first component is a *given*
+numeral. The reader for that could be quoted like the others, but it would cost
+more than writing it: the hierarchy's version names the numeral as a constant of
+the hierarchy, so the bridge would demand a constructibility witness threaded
+through the whole shape of the formula.
+
+Writing it takes the shorter road, and the road the bridge chapter recommends.
+The numeral of `L` is already an element of the model, so it is already a legal
+constant here; one unbounded existential says "there is something equal to it,
+and the pair is built from that". Unbounded costs nothing, and the two readers
+below reuse the pair reader unchanged rather than re-deriving anything.
+
+The second is the one that does the work later. Every binary constructor of the
+object language has a code of the same shape, tag applied to the pair of the two
+subcodes, differing only in which numeral the tag is.
+<!--zh-->
+一个码把它的构造子作为数码放在一个对的第一分量里，故读一个码的形状，就是读一个第一分量为**给定**数码的对。那条读式本可以像别的一样被引用，但那样比直接写还贵：层级那边的版本把该数码作为层级的常元点名，于是桥会索取一份沿公式整个形状穿行的可构造性证书。
+
+直接写走的是短路，也是桥那一章推荐的路。`L` 的数码本来就是模型的元素，故它在此处本来就是合法常元；一个无界存在说「有个东西等于它，而那个对由它造出」。无界不费分文，而下面两条读式原样复用对读式，什么也不必重推。
+
+第二条是此后出力的那条。对象语言的每个二元构造子，其码都是同一个形状：标签施于两个子码之对，彼此只差标签是哪个数码。
+<!--/-->
+
+```agda
+tagAtL : ∀ {n} → Fin n → ℕ → Fin n → Formula S n
+tagAtL s k x = ∃̇ ((var zero ≐ con (numeralL k)) ∧̇ prAtL (suc s) zero (suc x))
+
+tagAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) (γ : S ^ n)
+  → (γ ⊨ tagAtL s k x)
+  ≡ PairIs (fst (lookup s γ)) (pr (# k) (fst (lookup x γ)))
+tagAtL-adequate s k x γ = ⇔toPath fwd bwd
+  where
+  target = PairIs (fst (lookup s γ)) (pr (# k) (fst (lookup x γ)))
+
+  fwd : ⟨ γ ⊨ tagAtL s k x ⟩ → ⟨ target ⟩
+  fwd = PT.rec (snd target)
+    (λ { (z , (e , p)) →
+      subst ⟨_⟩ (prAtL-adequate (suc s) zero (suc x) (z ∷ γ)) p
+      ∙ cong (λ w → pr w (fst (lookup x γ))) (e ∙ numeralL-fst k) })
+
+  bwd : ⟨ target ⟩ → ⟨ γ ⊨ tagAtL s k x ⟩
+  bwd q = ∣ numeralL k , (refl , subst ⟨_⟩
+      (sym (prAtL-adequate (suc s) zero (suc x) (numeralL k ∷ γ)))
+      (q ∙ cong (λ w → pr w (fst (lookup x γ))) (sym (numeralL-fst k)))) ∣₁
+
+tagPairAtL : ∀ {n} → Fin n → ℕ → Fin n → Fin n → Formula S n
+tagPairAtL s k a b =
+  ∃̇ (prAtL zero (suc a) (suc b) ∧̇ tagAtL (suc s) k zero)
+
+tagPairAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (a b : Fin n) (γ : S ^ n)
+  → (γ ⊨ tagPairAtL s k a b)
+  ≡ PairIs (fst (lookup s γ))
+      (pr (# k) (pr (fst (lookup a γ)) (fst (lookup b γ))))
+tagPairAtL-adequate s k a b γ = ⇔toPath fwd bwd
+  where
+  A = fst (lookup a γ)
+  B = fst (lookup b γ)
+  target = PairIs (fst (lookup s γ)) (pr (# k) (pr A B))
+
+  fwd : ⟨ γ ⊨ tagPairAtL s k a b ⟩ → ⟨ target ⟩
+  fwd = PT.rec (snd target)
+    (λ { (z , (p , t)) →
+      subst ⟨_⟩ (tagAtL-adequate (suc s) k zero (z ∷ γ)) t
+      ∙ cong (pr (# k))
+          (subst ⟨_⟩ (prAtL-adequate zero (suc a) (suc b) (z ∷ γ)) p) })
+
+  bwd : ⟨ target ⟩ → ⟨ γ ⊨ tagPairAtL s k a b ⟩
+  bwd q = ∣ zS
+    , ( subst ⟨_⟩ (sym (prAtL-adequate zero (suc a) (suc b) (zS ∷ γ))) e
+      , subst ⟨_⟩ (sym (tagAtL-adequate (suc s) k zero (zS ∷ γ)))
+          (q ∙ cong (pr (# k)) (sym e)) ) ∣₁
+    where
+    zS : S
+    zS = prʟ (lookup a γ) (lookup b γ)
+    e : fst zS ≡ pr A B
+    e = prʟ-fst (lookup a γ) (lookup b γ)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -286,7 +404,16 @@ ordered pair of two others, `appAt`{.Agda} that a function contains a given pair
 `svAt`{.Agda} that it contains at most one pair per argument, and
 `domAt`{.Agda} that a given set is exactly the arguments it answers for. Together
 they are what "function" means in the object language, and every recursion graph
-is written through them. It was
+is written through them. `prʟ`{.Agda} is the pair on the value side, so a
+construction can build a code as well as read one; and `tagAtL`{.Agda} and
+`tagPairAtL`{.Agda} read a code's constructor, the second matching the shape
+every binary constructor's code has.
+
+Two roads were used and both belong here. A reader with no constants is quoted,
+which costs a four-link chain and no thought. A reader naming a numeral is
+written instead, because quoting it would thread a constructibility witness
+through the whole shape of the formula while writing it needs one unbounded
+existential, and unbounded is free. It was
 obtained by quoting, not by re-proving: the reader and its characterization stay
 where they were written, and the crossing cost one induction on environments.
 
@@ -295,7 +422,9 @@ coding chapters did not have to be re-based. What it does not cover is any
 predicate that is not Δ₀, and those are to be written directly over the model
 instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
-`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
+`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。
+
+用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
 这就是此后每条读式的套路，也是编码诸章无须换底的原因。它不覆盖的是任何非 Δ₀ 的谓词，那些应当直接在模型上写，因为模型的概括不要求它们有界。
 <!--/-->
