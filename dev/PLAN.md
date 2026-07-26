@@ -1333,7 +1333,18 @@ One row per goal code; update the row in the same commit that changes the status
     steps 1 to 5 were already paid**.
   - **Largest residual risk is now step 1**, the object-level readers, ahead of anything
     certificate-shaped. Revised estimate for the bucket: **1,200 to 1,850**, so the standing
-    1,150 to 1,900 holds with the risk mass relocated. Watch for, but do **not** build first, a generic
+    1,150 to 1,900 holds with the risk mass relocated.
+
+  **Structural correction taken on the way in [L2.1 revisited], 2026-07-26.** Step 1 needs
+  numerals as *constants of the object language*, hence `isL (# k)`, and the obvious source
+  was `L.Axioms.Infinity`, which takes `lem`. Checking first (the rule that has paid twice
+  already): the chapter mentions `lem` exactly **twice**, both for `ω∈L`. The whole numeral
+  chain is constructive, which PLAN recorded in prose at `[L2.1]` but never made structural.
+  So the chapter is split: `L.Axioms.Numerals` (constructive: the model's pairing, union and
+  successor, the projection equations, `numeralL` and the two model equations) and
+  `L.Axioms.Infinity` (classical: `ω∈L` and the collection step, and nothing else). The
+  recorded finding is now true at the module level, and `L.Coding.Model` stays `lem`-free
+  where it could easily have acquired a classical parameter it does not use. Watch for, but do **not** build first, a generic
   "definable step gives a definable recursion" lemma: the standard approximation-function
   argument is uniform in the step and would cut every later instance, but per the
   `Ladder` lesson the interface is discovered from a real consumer and guessed wrong in
