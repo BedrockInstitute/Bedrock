@@ -51,8 +51,9 @@ import FOL.ZFModel
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
 open import L.Axioms.Basic {ℓ}
   using ( extensionalL; regularityL; hasEmptyL; hasPairL; hasUnionL )
-open import L.Axioms.Infinity {ℓ} lem
-  using ( numeralL; numeralL-zero; numeralL-suc; hasInfinityL )
+open import L.Axioms.Numerals {ℓ}
+  using ( numeralL; numeralL-zero; numeralL-suc )
+open import L.Axioms.Infinity {ℓ} lem using ( hasInfinityL )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL; hasReplacementL )
 
 open hPropStructure 𝒮ʟ
