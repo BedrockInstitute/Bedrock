@@ -1235,7 +1235,11 @@ One row per goal code; update the row in the same commit that changes the status
   model assembly 3,517 (7%), other 2,669, coding substrate 1,695. Two measured compression
   ratios on chunks both repositories have built: reflection through arbitrary-φ
   comprehension **2,283 → 721 (3.2x)**, coding substrate **2,638 → 1,065 (2.5x)**; the
-  internalization harness **4,673 → 96 (49x)**. Per-clause unit, measured from
+  internalization harness **4,673 → 96 (49x)**. **Those are selected slices**, and by whole
+  buckets the two Bedrock has covered go 5,212 → 3,409, **1.53x**: compression is strongly
+  uneven, at 1.2x to 1.6x for straight ports, about 3x where the design departs from the
+  source, and 49x on pure Δ₀ tax. The projection turns on how much of the remaining 43k is
+  tax rather than mathematics, which is the estimate's real load-bearing judgement. Per-clause unit, measured from
   `L.ReflectFo` (268 lines, four twelve-clause traversals): about **65 lines** per
   traversal with proofs.
 
