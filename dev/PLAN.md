@@ -1360,6 +1360,19 @@ One row per goal code; update the row in the same commit that changes the status
   does not appear to include it. Flagged rather than absorbed: it is the first place the
   reconnaissance's arithmetic looks thin.
 
+  **And the flag is already half retired, cheaper than either estimate.** "Recursion on `n`
+  from replacement" was the wrong shape twice over. First, an environment **is** a finite
+  set, on the nose: `env g` and `finSet n (λ i → pr (# (toℕ i)) (g i))` are the same image
+  of the same lifted index type, so `envIsFinSet` is `refl` and `[L3.0.5]`'s `finSetL`
+  applies to environments with no argument at all. `envL` follows in three lines: no
+  recursion on the length, no replacement. Second, `L.Coding.Environment.seqSet` already
+  collects the sequences over a set **at every length at once**, indexed by the small type
+  `Σ[ n ∈ ℕ ] (Fin n → ⟪ A ⟫)`, so the ambient set is a `smallDom`-plus-separation away
+  rather than a nested replacement, and the arity changing under `∃̇` costs nothing because
+  all arities are already there. What remains of the obligation is the *characterization*
+  (a set satisfying `envOverAt` is an `envIn`), which is genuine content and belongs with
+  the clauses. `[L3.0.5]` is now load-bearing in a third distinct way.
+
   **Structural correction taken on the way in [L2.1 revisited], 2026-07-26.** Step 1 needs
   numerals as *constants of the object language*, hence `isL (# k)`, and the obvious source
   was `L.Axioms.Infinity`, which takes `lem`. Checking first (the rule that has paid twice

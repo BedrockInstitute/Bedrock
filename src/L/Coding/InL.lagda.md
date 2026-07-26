@@ -39,12 +39,15 @@ open import FOL.Syntax
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 open import V.Coding {ℓ} using ( pr; module VCode )
-open import L.Constructible {ℓ} using ( isL )
+open import L.Constructible {ℓ} using ( isL; IsOrd; Lset )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
+open import L.Coding.Environment {ℓ} using ( env )
+open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )
 
 import Cubical.Data.Empty as Empty
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
+open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
@@ -128,6 +131,42 @@ codeL (∃̇∈ t φ) = tagL 11 (prL (codeTmL t) (codeL φ))
 ```
 
 <!--en-->
+## Environments
+<!--zh-->
+## 环境
+<!--/-->
+
+<!--en-->
+An environment is a finite set: the keys are the numerals below its length and
+the entries are pairs. It is, in fact, *the* finite set of the pairs, on the
+nose, because both are the same image of the same lifted index type. Saying so
+is one line, and it is the line that lets the finite-family lemma apply to
+environments without any further argument.
+
+The consequence is that an environment over a stage is an element of `L`
+immediately: its entries are pairs of a numeral with a member of the stage, and
+both are in the stage after one step. No recursion on the length, and no
+replacement.
+<!--zh-->
+一个环境是一个有穷集：键是长度以下的诸数码，条目是诸对。事实上它**恰恰就是**那些对构成的有穷集，一分不差，因为两者是同一个被抬升的索引类型的同一个像。把这一点说出来只需一行，而正是这一行使有穷族引理无须任何进一步论证便可施于环境。
+
+由此，落在某阶段之上的环境立刻是 `L` 的元素：它的条目是「数码与该阶段的成员」之对，而两者在一步之后都落在该阶段里。不必沿长度递归，也不必用替换。
+<!--/-->
+
+```agda
+envIsFinSet : ∀ {n} (g : Fin n → V ℓ)
+            → env g ≡ finSet n (λ i → pr (# (toℕ i)) (g i))
+envIsFinSet g = refl
+
+envL : (σ : V ℓ) (oσ : IsOrd σ) {n : ℕ} (g : Fin n → V ℓ)
+     → ((i : Fin n) → ⟨ pr (# (toℕ i)) (g i) ∈ Lset σ ⟩)
+     → ⟨ isL (env g) ⟩
+envL σ oσ {n} g h =
+  subst (λ w → ⟨ isL w ⟩) (sym (envIsFinSet g))
+    (FinOf.finSetL σ oσ n (λ i → pr (# (toℕ i)) (g i)) h)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -139,9 +178,15 @@ codeL (∃̇∈ t φ) = tagL 11 (prL (codeTmL t) (codeL φ))
 code may be named as a constant of the model's object language, and a family of
 codes may be the domain of an internalized recursion.
 
+`envL`{.Agda} then puts an environment in `L` with no recursion on its length and
+no use of replacement, because an environment is on the nose the finite set of
+its entries.
+
 The set of all codes is still not an element of `L`, and is still not needed.
 <!--zh-->
 `codeL`{.Agda} 说每个码都是 `L` 的元素，而 `numL`{.Agda}、`prL`{.Agda} 与 `tagL`{.Agda} 是它所由构造的三种形状。有了它，一个码就可以被点名为模型对象语言的常元，而一族码就可以充当某个已内化递归的定义域。
+
+`envL`{.Agda} 随后把一个环境放进 `L`，既不沿长度递归，也不用替换，因为一个环境恰恰就是它诸条目构成的有穷集。
 
 全体码之集仍然不是 `L` 的元素，也仍然不需要是。
 <!--/-->
