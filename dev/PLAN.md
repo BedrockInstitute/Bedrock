@@ -1335,6 +1335,31 @@ One row per goal code; update the row in the same commit that changes the status
     certificate-shaped. Revised estimate for the bucket: **1,200 to 1,850**, so the standing
     1,150 to 1,900 holds with the risk mass relocated.
 
+  **Steps 1 and 2 delivered 2026-07-26, and one obligation surfaced that the build order
+  did not scope.** `L.Coding.Model` (183) carries the object language's notion of function
+  (`prAtL`, `appAt`, `svAt`, `domAt`), the pair on the value side (`prʟ`), the tag readers,
+  and `envOverAt`; `L.Coding.InL` (43) proves every code is an element of `L`. Against the
+  order's own estimates (≈190 and ≈150) that is 226 for work it budgeted at 340, and the
+  step it called the **largest residual risk** came in without overrun.
+
+  Two roads were used and both are kept, with the rule written into the chapter. A reader
+  with no constants is **quoted** through `[L3.15]`: a four-link chain, no thought. A reader
+  naming a numeral is **written fresh**, because quoting it would thread a constructibility
+  witness through the formula's whole shape while writing it needs one unbounded
+  existential, and the numeral of `L` is already a legal constant of the model. Unbounded is
+  free now, which is precisely the case `L.Absoluteness` says not to route through the
+  bridge.
+
+  **The unscoped obligation.** The set-valued arrangement makes the negation clause
+  `T(¬̇a) = E ∖ T(a)`, so the ambient set `E` of environments of a given length over `B`
+  must itself be an element of `L`, and the arity changes under `∃̇`, so it is needed for
+  every length. `envOverAt` says what it is to *be* an environment; it does not say that
+  the set of all of them exists. That set is `B` to the power `n`, built by recursion on
+  `n` from replacement (`Bⁿ⁺¹` is the image of `Bⁿ` under consing), so it is a genuine
+  sub-unit of step 3 rather than a lemma, and the build order's step-3 estimate of ≈340
+  does not appear to include it. Flagged rather than absorbed: it is the first place the
+  reconnaissance's arithmetic looks thin.
+
   **Structural correction taken on the way in [L2.1 revisited], 2026-07-26.** Step 1 needs
   numerals as *constants of the object language*, hence `isL (# k)`, and the obvious source
   was `L.Axioms.Infinity`, which takes `lem`. Checking first (the rule that has paid twice

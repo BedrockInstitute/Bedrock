@@ -307,6 +307,52 @@ prʟ-fst a b =
 ```
 
 <!--en-->
+## Environments
+<!--zh-->
+## 环境
+<!--/-->
+
+<!--en-->
+An environment is a function whose values lie in a given set, so the last piece
+of vocabulary is that constraint, and an environment over a set is then the
+conjunction of the three: single-valued, with the given domain, and with values
+where they belong.
+
+Only the three projections are given, because that is all a consumer wants.
+Whether a particular set *is* the set of all environments of a given length is a
+different question, and a harder one; this says only what it means for a single
+thing to be one.
+<!--zh-->
+一个环境是取值落在给定集合中的函数，故最后一件词汇就是那条约束；而「某集合之上的环境」于是是三者的合取：单值、定义域为给定者、取值落在该落的地方。
+
+只给出三个投影，因为消费方想要的仅此而已。某个特定集合**是否就是**给定长度的全体环境之集，是另一个问题，而且更难；这里说的只是「单个东西是一个环境」是什么意思。
+<!--/-->
+
+```agda
+valuesInAt : ∀ {n} → Fin n → Fin n → Formula S n
+valuesInAt f B = ∀̇ (∀̇ ( appAt (suc (suc f)) (suc zero) zero
+                     ⇒̇ (var zero ∈̇ var (suc (suc B))) ))
+
+valuesInAt-out : ∀ {n} (f B : Fin n) (γ : S ^ n)
+               → ⟨ γ ⊨ valuesInAt f B ⟩ → (x y : S)
+               → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+               → ⟨ fst y ∈ fst (lookup B γ) ⟩
+valuesInAt-out f B γ h x y p = h x y
+  (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (y ∷ x ∷ γ))) p)
+
+envOverAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+envOverAt e d B = svAt e ∧̇ (domAt e d ∧̇ valuesInAt e B)
+
+module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B ⟩) where
+  envOver-sv     : ⟨ γ ⊨ svAt e ⟩
+  envOver-sv     = h .fst
+  envOver-dom    : ⟨ γ ⊨ domAt e d ⟩
+  envOver-dom    = h .snd .fst
+  envOver-values : ⟨ γ ⊨ valuesInAt e B ⟩
+  envOver-values = h .snd .snd
+```
+
+<!--en-->
 ## Tags
 <!--zh-->
 ## 标签
@@ -407,7 +453,8 @@ they are what "function" means in the object language, and every recursion graph
 is written through them. `prʟ`{.Agda} is the pair on the value side, so a
 construction can build a code as well as read one; and `tagAtL`{.Agda} and
 `tagPairAtL`{.Agda} read a code's constructor, the second matching the shape
-every binary constructor's code has.
+every binary constructor's code has. `envOverAt`{.Agda} then says what it is to
+be an environment over a set.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -422,7 +469,7 @@ coding chapters did not have to be re-based. What it does not cover is any
 predicate that is not Δ₀, and those are to be written directly over the model
 instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
-`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。
+`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
