@@ -1,4 +1,4 @@
-# Readers, quoted in the model
+# The object language over the model
 
 <!--en-->
 The readers were written about the hierarchy and the bridge carries them into the
@@ -32,7 +32,7 @@ open import Base.Truth
 module L.Coding.Model {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∀̇_; ∃̇_; ∃̇∈ )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇; ∀̇_; ∃̇_; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -439,6 +439,62 @@ tagPairAtL-adequate s k a b γ = ⇔toPath fwd bwd
 ```
 
 <!--en-->
+## Sets by extension
+<!--zh-->
+## 以外延给出集合
+<!--/-->
+
+<!--en-->
+Every clause of a recursion whose values are sets says the same thing: this value
+is the set of exactly those things satisfying such-and-such. Written once, with
+the condition left as a parameter, it is two implications under one quantifier,
+and its two readings are the two projections. Nothing is proved, which is the
+point: after this the clauses of a recursion cost only their conditions.
+
+The set operations follow immediately, each one condition long, and each with its
+meaning already in hand. The rest of a clause's content is whatever the condition
+says, and that is where the mathematics of a particular recursion lives.
+<!--zh-->
+凡取值为集合的递归，其每一条子句说的都是同一句话：这个取值恰是满足某某条件的那些东西之集。把它一次写出来，条件留作参数，那就是一个量词之下的两条蕴含，而它的两种读法就是两个投影。什么也没有证，而这正是要点：此后一条递归子句的代价，只剩它的条件。
+
+诸集合运算随即而来，每个一条条件那么长，且含义都已在手。一条子句其余的内容全在它的条件里说，而那正是某个特定递归的数学之所在。
+<!--/-->
+
+```agda
+extAt : ∀ {n} → Fin n → Formula S (suc n) → Formula S n
+extAt y φ = ∀̇ ((var zero ∈̇ var (suc y)) ⇒̇ φ)
+         ∧̇ ∀̇ (φ ⇒̇ (var zero ∈̇ var (suc y)))
+
+module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : S ^ n) where
+  extAt-out : ⟨ γ ⊨ extAt y φ ⟩ → (z : S)
+            → ⟨ fst z ∈ fst (lookup y γ) ⟩ → ⟨ (z ∷ γ) ⊨ φ ⟩
+  extAt-out h = h .fst
+
+  extAt-in : ⟨ γ ⊨ extAt y φ ⟩ → (z : S)
+           → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ fst z ∈ fst (lookup y γ) ⟩
+  extAt-in h = h .snd
+
+private
+  memb : ∀ {n} → Fin n → Formula S (suc n)
+  memb a = var zero ∈̇ var (suc a)
+
+interAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+interAt y a b = extAt y (memb a ∧̇ memb b)
+
+unionAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+unionAt y a b = extAt y (memb a ∨̇ memb b)
+
+diffAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+diffAt y a b = extAt y (memb a ∧̇ ¬̇ memb b)
+
+sameAt : ∀ {n} → Fin n → Fin n → Formula S n
+sameAt y a = extAt y (memb a)
+
+emptyAt : ∀ {n} → Fin n → Formula S n
+emptyAt y = extAt y ⊥̇
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -456,6 +512,9 @@ construction can build a code as well as read one; and `tagAtL`{.Agda} and
 every binary constructor's code has. `envOverAt`{.Agda} then says what it is to
 be an environment over a set.
 
+`extAt`{.Agda} is the frame every set-valued clause is written in, and the set
+operations are its shortest instances.
+
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
 written instead, because quoting it would thread a constructibility witness
@@ -470,6 +529,8 @@ predicate that is not Δ₀, and those are to be written directly over the model
 instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
+
+`extAt`{.Agda} 是每条集值子句的写作框架，而诸集合运算是它最短的实例。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 

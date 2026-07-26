@@ -329,10 +329,12 @@ The root, stated today and finished over the remaining parts:
   the language of `L` by `liftFo`{.Agda}, and `transferFo`{.Agda} says the two
   say the same thing; the coding chapters stay on the hierarchy side and are
   quoted from here.
-- `L.Coding.Model`{.Agda}: the readers quoted on the far side. `prAtL`{.Agda} says
-  in the model's own language that one set is the ordered pair of two others,
-  obtained by quoting rather than re-proving; the crossing costs one induction on
-  environments and nothing else.
+- `L.Coding.Model`{.Agda}: the object language over the model. What "function"
+  means (`prAtL`{.Agda}, `appAt`{.Agda}, `svAt`{.Agda}, `domAt`{.Agda}), the pair
+  on the value side, the tag readers, environments, and `extAt`{.Agda}, the frame
+  every set-valued clause is written in, whose two readings are its two
+  projections. Constant-free readers are quoted through the bridge; readers naming
+  a numeral are written fresh, since unbounded is now free.
 - `L.Coding.InL`{.Agda}: every code is an element of `L`, by one induction over
   the constructors with nothing in it. That is what lets a code be named as a
   constant of the model's object language, and a family of codes be the domain of
@@ -359,7 +361,7 @@ The root, stated today and finished over the remaining parts:
 
 - `L.Axioms.Full`{.Agda}：任意公式的分离与替换，办法是反射那条公式，再把有界的器械施于它的相对化；那个禁闭原子正是使替换的像逃不出阶段的东西。
 - `L.Absoluteness`{.Agda}：两门对象语言之间的桥。常元可构造的、关于层级的 Δ₀ 公式，经 `liftFo`{.Agda} 运进 `L` 的语言，而 `transferFo`{.Agda} 说两者说的是同一件事；编码诸章留在层级一侧，从此处被引用。
-- `L.Coding.Model`{.Agda}：诸读式在彼岸的引用。`prAtL`{.Agda} 用模型自己的语言说「这个集合是那两个的有序对」，由引用而非重证得来；这次过河只花一次关于环境的归纳，别无他物。
+- `L.Coding.Model`{.Agda}：模型之上的对象语言。「函数」的含义 (`prAtL`{.Agda}、`appAt`{.Agda}、`svAt`{.Agda}、`domAt`{.Agda})、取值一侧的对、标签读式、环境，以及 `extAt`{.Agda}：每条集值子句的写作框架，其两种读法就是它的两个投影。无常元的读式经桥引用；点名数码的读式直接写，因为无界如今免费。
 - `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，也不需要。
 - `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。`witnessInModel`{.Agda} 记下图必须遵守的那一条规矩：对象语言的存在量词在 `L` 上取值，故一个图不可以靠断言被描述者本身存在来描述它。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今剩两个，每个都是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
