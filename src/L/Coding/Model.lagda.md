@@ -570,6 +570,60 @@ module _ {n : ℕ} where
 ```
 
 <!--en-->
+Counting the shapes is worth a moment, because it says how much of the twelve is
+really there. A code carries either a pair, a single subcode, or a dummy. The
+pair shape covers the two atoms, the three connectives and the two bounded
+quantifiers, which is seven; the single-subcode shape covers negation and the two
+unbounded quantifiers, which is three; and the two constants are the remaining
+two. So the recursion is written in **three** shapes, and the twelve
+constructors appear only as the tags handed to them.
+
+The single-subcode shape is the pair shape with two binders fewer, and reads back
+the same way.
+<!--zh-->
+数一数有几种形状是值得的，因为它说出那十二条里真正存在多少。一个码携带的要么是一个对，要么是单个子码，要么是一个虚位。对的形状覆盖两个原子、三个联结词与两个有界量词，共七个；单子码的形状覆盖否定与两个无界量词，共三个；剩下两个是那两个常量。故这次递归由**三**种形状写出，而十二个构造子只作为交给它们的标签出现。
+
+单子码形状就是少两个绑定的对形状，读回来的方式相同。
+<!--/-->
+
+```agda
+  private
+    sh4 : Fin n → Fin (4 + n)
+    sh4 i = suc (suc (suc (suc i)))
+
+    c4 a4 yc4 ya4 : Fin (4 + n)
+    c4  = suc (suc (suc zero))
+    a4  = suc (suc zero)
+    yc4 = suc zero
+    ya4 = zero
+
+  unClauseAt : Fin n → Fin n → ℕ → Formula S (4 + n) → Formula S n
+  unClauseAt C T k rel =
+    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇
+      ( tagAtL c4 k a4
+      ⇒̇ ( appAt (sh4 T) c4 yc4
+      ⇒̇ ( appAt (sh4 T) a4 ya4
+      ⇒̇ rel ))))))
+
+  unClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+    → ⟨ γ ⊨ unClauseAt C T k rel ⟩
+    → (c a yc ya : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (# k) (fst a)
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (fst a) (fst ya) ∈ fst (lookup T γ) ⟩
+    → ⟨ (ya ∷ yc ∷ a ∷ c ∷ γ) ⊨ rel ⟩
+  unClause-out C T k rel γ h c a yc ya c∈ shape hc ha =
+    h c c∈ a yc ya
+      (subst ⟨_⟩ (sym (tagAtL-adequate c4 k a4 δ)) shape)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) c4 yc4 δ)) hc)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) a4 ya4 δ)) ha)
+    where
+    δ : S ^ (4 + n)
+    δ = ya ∷ yc ∷ a ∷ c ∷ γ
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -588,8 +642,11 @@ every binary constructor's code has. `envOverAt`{.Agda} then says what it is to
 be an environment over a set.
 
 `extAt`{.Agda} is the frame every set-valued clause is written in, the set
-operations are its shortest instances, and `binClauseAt`{.Agda} is the shape the
-three binary constructors share, differing only in the relation handed to it.
+operations are its shortest instances, and the recursion's clauses come in three
+shapes rather than twelve: `binClauseAt`{.Agda} for the seven constructors whose
+code carries a pair, `unClauseAt`{.Agda} for the three carrying a single subcode,
+and the two constants for the rest. They differ only in the relation handed to
+them.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -606,7 +663,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而 `binClauseAt`{.Agda} 是三个二元构造子共有的形状，彼此只差交给它的那条关系。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句只有三种形状、而非十二条：`binClauseAt`{.Agda} 管码携带一个对的那七个构造子，`unClauseAt`{.Agda} 管携带单个子码的那三个，其余两个是那两个常量。它们只差交给自己的那条关系。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
