@@ -54,8 +54,9 @@ open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
 
+open import Cubical.Data.Sigma using ( Σ≡Prop )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -203,16 +204,96 @@ module Of (R : Recursion) where
 ```
 
 <!--en-->
+## Defining a function, rather than a relation
+<!--zh-->
+## 定义一个函数，而非一个关系
+<!--/-->
+
+<!--en-->
+Asking an instance for single-valuedness is asking the wrong thing, because an
+instance never has a relation to start with. It has a **function**, written in
+the meta-language by ordinary recursion, and what it wants is that function's
+table. The recursion itself is Agda's business, not the object language's: the
+step, the well-founded descent, the pattern match on the constructors, all of
+that happens outside and none of it needs internalizing. Only the *graph* does.
+
+So the form to fill is a function together with a formula that defines it, and
+defining it is two implications. One says the formula holds of the function's own
+value, the other that nothing else satisfies it. Single-valuedness then comes for
+free, because a type of things equal to a given one is contractible, and that is
+the whole derivation.
+
+This is where the chapter's title is earned. A recursive definition is
+internalizable when its graph is expressible, and nothing about the recursion's
+shape, its depth, its order of descent, or the complexity of its clauses appears
+in the condition.
+<!--zh-->
+向实例索取单值性是索取错了东西，因为实例手上从来就没有关系。它手上有的是一个**函数**，以寻常递归写在元语言里，而它想要的是那个函数的表。递归本身是 Agda 的事，不是对象语言的事：步进、良基下降、对构造子的模式匹配，全都发生在外面，无一需要内化。要内化的只有那个**图**。
+
+于是要填的表格是「一个函数，连同一条定义它的公式」，而「定义它」就是两条蕴含。一条说该公式在函数自己的取值处成立，另一条说别无他物满足它。单值性随之白得，因为「与给定之物相等者」构成的类型可缩，而全部推导仅此而已。
+
+本章的标题在此处挣得。一个递归定义可内化，当它的图可表达；而递归的形状、它的深度、它下降的次序、它诸子句的复杂度，都不出现在这个条件里。
+<!--/-->
+
+```agda
+record Definition : Type (ℓ-suc (ℓ-suc ℓ)) where
+  field
+    dom     : S
+    fn      : S → S
+    graph   : Formula S 2
+    defines : (x : S) → ⟨ x ∈ˢ dom ⟩ → ⟨ (fn x ∷ x ∷ []) ⊨ graph ⟩
+    only    : (x : S) → ⟨ x ∈ˢ dom ⟩ → (y : S)
+            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x
+
+asRecursion : Definition → Recursion
+asRecursion D = record
+  { dom   = D.dom
+  ; graph = D.graph
+  ; funct = λ x x∈ → (D.fn x , D.defines x x∈)
+          , λ { (y , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ D.graph))
+                            (sym (D.only x x∈ y h)) } }
+  where module D = Definition D
+```
+
+<!--en-->
+And the theorem in the form an instance consumes: the image of a definable
+function on a set of `L` is a set of `L`, with its two membership directions. The
+backward one is truncated, because a member of the image is the value at *some*
+index and the index is not recoverable; every consumer so far only needs it
+truncated.
+<!--zh-->
+以及定理在实例所消费的那个形式：`L` 的集合上，可定义函数的像是 `L` 的集合，附其两个隶属方向。反向是截断的，因为像的成员是**某个**索引处的值，而那个索引取不回来；至此每个消费方也都只需要截断的形式。
+<!--/-->
+
+```agda
+module Image (D : Definition) where
+  open Definition D public
+  private
+    module R = Of (asRecursion D)
+
+  table : S
+  table = R.table
+
+  fn∈table : (x : S) → ⟨ x ∈ˢ dom ⟩ → ⟨ fn x ∈ˢ table ⟩
+  fn∈table x x∈ = R.table-in x (fn x) x∈ (defines x x∈)
+
+  table→fn : (y : S) → ⟨ y ∈ˢ table ⟩
+           → ∥ (Σ[ x ∈ S ] (⟨ x ∈ˢ dom ⟩ × (y ≡ fn x))) ∥₁
+  table→fn y h = PT.map (λ { (x , (x∈ , sat)) → x , (x∈ , only x x∈ y sat) })
+    (R.table-out y h)
+```
+
+<!--en-->
 ## What this does and does not say
 <!--zh-->
 ## 这说了什么、没说什么
 <!--/-->
 
 <!--en-->
-It says: a single-valued definable relation on a set of `L` has its table in `L`,
-and the value function is total on the domain. Every recursion whose values are
-determined by a formula is covered, whatever the formula's complexity and
-wherever its constants live.
+It says: a function on a set of `L` whose graph is expressible has its table in
+`L`. Every recursion whose values are determined by a formula is covered,
+whatever the formula's complexity and wherever its constants live, and the
+recursion itself stays in the meta-language where it was written.
 
 It does not say that any particular recursion *has* such a formula. Writing the
 graph of a recursion in the object language is the work, and it is the same work
@@ -227,7 +308,7 @@ a stage, and a stage is a set of `L`. What an instance supplies is that its
 indices are elements of `L`, one at a time, which for coded syntax is pairing and
 the numerals.
 <!--zh-->
-它说：`L` 的集合上的单值可定义关系，其表在 `L` 中，而值函数在定义域上是全的。凡取值由一条公式所决定的递归都被涵盖，无论那条公式多复杂，也无论它的常元住在哪里。
+它说：`L` 的集合上，图可表达的函数，其表在 `L` 中。凡取值由一条公式所决定的递归都被涵盖，无论那条公式多复杂，也无论它的常元住在哪里，而递归本身留在它被写下的元语言里。
 
 它没有说任何特定的递归**拥有**这样一条公式。把一个递归的图写进对象语言是实打实的活，而无论本章存在与否，那份活都一样；本章免去的是通常与之同行的第二份活：把那条公式弄成有界的、把它的常元弄成阶段局部的，好让某个阶段能读它。那份活没有了，而它是两者中较大的一份。
 
@@ -241,11 +322,12 @@ the numerals.
 <!--/-->
 
 <!--en-->
-`Recursion`{.Agda} is the form an instance fills: a domain in `L`, a graph of any
-complexity, and single-valuedness. `smallDom`{.Agda} fills the first field for
-any small family of elements of `L`, so an instance supplies a graph and its
-single-valuedness and nothing else. `Of`{.Agda} reads off the table, its two
-membership directions, and the value function with its uniqueness.
+`Definition`{.Agda} is the form an instance fills: a domain in `L`, a function
+written in the meta-language, and a formula that defines its graph, in the two
+directions. `smallDom`{.Agda} fills the domain for any small family of elements
+of `L`, and single-valuedness is derived, so **the defining formula and its
+adequacy are the entire obligation**. `Image`{.Agda} reads off the table and its
+two membership directions.
 
 The chapter is a wrapper around `hasReplacementL`{.Agda}, and that is the point.
 The general-formula comprehension fields were the expensive thing; once they are
@@ -253,7 +335,7 @@ paid, internalizing a recursion is not a theorem but a corollary, and the
 per-clause absoluteness discipline that the bounded setting forces never has to
 be entered.
 <!--zh-->
-`Recursion`{.Agda} 是实例要填的表格：`L` 中的定义域、任意复杂度的图，以及单值性。`smallDom`{.Agda} 为 `L` 元素的任意小族填好第一格，故实例只须供给一个图与它的单值性，别无他物。`Of`{.Agda} 把那张表、它的两个隶属方向、以及带唯一性的值函数读出来。
+`Definition`{.Agda} 是实例要填的表格：`L` 中的定义域、一个写在元语言里的函数，以及一条按两个方向定义其图的公式。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的适足性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
 
 本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是要点。任意公式的概括字段才是贵的东西；一旦付清，内化一个递归就不是定理而是推论，而有界情形所强加的逐子句绝对性纪律，压根无须踏入。
 <!--/-->
