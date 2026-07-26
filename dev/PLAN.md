@@ -948,7 +948,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0.3 | Subsumption probe, source-reading only | DONE 2026-07-25, memo delivered; verdict amber (route alive, projection corrected) |
 | L3.0.4 | Theorem statement in Bedrock's idiom | DONE 2026-07-25, memo delivered; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine. **Two amendments from the phase-C re-evaluation**: stage 7 is `[L3.0.5]`, not `[L3.2]`; and `reads`'s `isL` certificates must be sealed where built (the `L.Axioms.Full` hazard) |
 | L3.0.5 | Finite families at a stage (stage 7) | DONE 2026-07-25 (`finSetL` in `L.Axioms.Basic`; registered on the phase-C re-evaluation, correcting the memo's attribution of stage 7 to L3.2) |
-| L3.0.1 | Two-instance proof of concept | **Theorem half DONE 2026-07-25**: `L.Recursion`, 64 lines of Agda, a wrapper around `hasReplacementL` plus `smallDom` (findings below). Obligation (a) discharged generically. Instance half PLANNED: obligation (b), the graph in the object language, per instance |
+| L3.0.1 | Two-instance proof of concept | **Theorem DONE 2026-07-26**: `L.Recursion` complete at 96 lines of Agda: `Recursion`/`Of` over `hasReplacementL`, `smallDom` discharging the domain generically, and `Definition`/`Image` reducing an instance's obligation to a defining formula and its adequacy. Fillability probed at 35 lines (singleton map, uncommitted). **Instance half PLANNED**: `Depth` and `Cmp`, whose graphs talk about coded syntax, are what the kill criteria measure |
 | L3.0.2 | Verdict and rollout ruling | PLANNED |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
 | L3.2 | `reify!` industrialization (S6) | PLANNED, **off L3.0's critical path** (re-evaluated 2026-07-25: stage 7 needed a lemma, not the macro). Opportunistic accelerator for the reader half of the coding chapters |
@@ -1201,3 +1201,30 @@ One row per goal code; update the row in the same commit that changes the status
   Re-homing taken with it: `isL-Lset` and `LsetS` ("a stage is a set of `L`", with the
   certificate sealed) move from `L.ReflectFo` to `L.Axioms.Basic`, next to `𝒟ₒ→isL` and
   `defSet→isL`. They are constructive and now have three consumers.
+- **Interface completion and fillability probe [L3.0.1]:** the first cut of `L.Recursion`
+  asked an instance for **single-valuedness**, which is the wrong thing to ask, because an
+  instance never has a relation to start with. It has a *function*, written in the
+  meta-language by ordinary recursion, and it wants that function's table. The recursion
+  itself never needs internalizing: the step, the well-founded descent and the pattern
+  match on constructors all happen in Agda, and only the **graph** crosses into the object
+  language. So the form to fill is now `Definition` (domain, function, defining formula,
+  and the two directions of adequacy), single-valuedness is derived from it in one line
+  (a type of things equal to a given one is contractible), and `Image` reads off the
+  table. **The defining formula and its adequacy are the entire obligation.**
+
+  Fillability was then probed rather than assumed, and the probe is not committed (a
+  chapter with no consumer would violate the consumption discipline). Instance: the
+  singleton map `x ↦ {x}` on an arbitrary set of `L`, delivering that `{ {x} : x ∈ a }`
+  is a set of `L`. **35 lines**, of which the defining formula is 2:
+  `x ∈̇ y ∧̇ ∀̇∈ y (u ≐ x)`. Every field of `Definition` was exercised, `extensionalL`
+  discharged `only`, and it typechecked in four iterations, all of them mechanical (a
+  missing `inr`, a `Σ≡Prop` whose implicits needed a declared result type, and a
+  `where` attached at the wrong depth). No conversion cost: the chapter checks in about a
+  second.
+
+  What the probe does and does not establish. It establishes that the interface is
+  inhabitable in practice and that a Δ₀ instance costs tens of lines rather than
+  hundreds. It does **not** measure the reference or stress instances: `Depth` and `Cmp`
+  have graphs that must talk about coded syntax, and the cost of *those* graphs is what
+  `[L3.0.1]`'s kill criteria are about. The singleton instance says the frame holds, not
+  that the hard instances are cheap.

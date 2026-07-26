@@ -315,10 +315,13 @@ The root, stated today and finished over the remaining parts:
   reflecting the formula and applying the bounded instrument to its
   relativization; the confinement atom is what keeps replacement's image from
   escaping the stage.
-- `L.Recursion`{.Agda}: a single-valued definable relation on a set of `L` has its
-  table in `L`, and its value function is total. A corollary of general-formula
-  replacement, not a theorem: the usual absoluteness discipline exists to make a
-  table readable *inside a stage*, and nothing here reads inside a stage.
+- `L.Recursion`{.Agda}: a function on a set of `L` whose graph is expressible has
+  its table in `L`. A corollary of general-formula replacement, not a theorem: the
+  usual absoluteness discipline exists to make a table readable *inside a stage*,
+  and nothing here reads inside a stage. The recursion stays in the meta-language
+  where it was written; `smallDom`{.Agda} supplies the domain for any small family,
+  and `Definition`{.Agda} reduces an instance to a defining formula with its
+  adequacy.
 - `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
   two, each the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
@@ -330,7 +333,7 @@ The root, stated today and finished over the remaining parts:
 根，今日陈述，余部完成：
 
 - `L.Axioms.Full`{.Agda}：任意公式的分离与替换，办法是反射那条公式，再把有界的器械施于它的相对化；那个禁闭原子正是使替换的像逃不出阶段的东西。
-- `L.Recursion`{.Agda}：`L` 的集合上的单值可定义关系，其表在 `L` 中，值函数是全的。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。
+- `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今剩两个，每个都是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->
