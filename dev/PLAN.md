@@ -1373,6 +1373,24 @@ One row per goal code; update the row in the same commit that changes the status
   (a set satisfying `envOverAt` is an `envIn`), which is genuine content and belongs with
   the clauses. `[L3.0.5]` is now load-bearing in a third distinct way.
 
+  **Step 3 opened, and the twelve clauses are not twelve things.** Two frames carry them.
+  `extAt` says "this value is the set of exactly those things satisfying such-and-such",
+  once, with the condition a parameter; its two readings are its two projections, so it
+  proves nothing, and after it a clause costs only its condition. The set operations
+  (`interAt`, `unionAt`, `diffAt`, `sameAt`, `emptyAt`) are its one-line instances.
+  `binClauseAt` is then the shape the three binary constructors share: for every code in
+  the index with this tag over these two subcodes, and the three values the table records,
+  the relation holds. Six binders, and the relation speaks of positions two, one and zero,
+  which is exactly the argument order the set operations take, so a binary clause is one
+  application and no arithmetic at the call site. The unary, nullary and
+  bounded-quantifier shapes follow the same pattern and land when their conditions do.
+  `binClause-out` reads a clause in the direction soundness consumes; `-in` is the same
+  chain reversed and waits for the construction that needs it rather than being guessed.
+
+  This is the fifth time the winning move has been to find what the argument actually
+  needs and write it once: `Ladder`, `Definition`, `witnessInModel`, `extAt`,
+  `binClauseAt`.
+
   **Structural correction taken on the way in [L2.1 revisited], 2026-07-26.** Step 1 needs
   numerals as *constants of the object language*, hence `isL (# k)`, and the obvious source
   was `L.Axioms.Infinity`, which takes `lem`. Checking first (the rule that has paid twice
