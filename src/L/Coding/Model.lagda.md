@@ -854,6 +854,73 @@ module _ {n : ℕ} where
 ```
 
 <!--en-->
+## The negative connectives
+<!--zh-->
+## 负的联结词
+<!--/-->
+
+<!--en-->
+Negation wants the complement, so it wants the set of all environments at the
+code's arity, and the arity is a variable the frame bound. So the ambient set is
+a variable too, constrained by saying what its members are, which is the
+extension frame applied to the environment predicate. One line, and no new
+machinery: what looked like an obligation to construct a set is, inside a clause,
+an obligation to describe one.
+
+That the set exists is a different matter and belongs to the chapter that builds
+a table rather than the one that says what a table is. The clause only has to
+say, of whatever the table records, that it stands in the right relation to the
+ambient set; the construction has to produce an ambient set standing there.
+<!--zh-->
+否定要补集，故它要该码元数处的全体环境之集，而那个元数是框架绑定的一个变元。于是那个周遭集合也是一个变元，由「说出它的成员是什么」来约束，而那正是外延框架施于环境谓词。一行，无须新机件：看似「造出一个集合」的义务，在子句之内是「描述一个集合」的义务。
+
+那个集合确实存在，是另一回事，属于「造出一张表」的那一章，而非「说清什么是一张表」的这一章。子句只须说：无论表记录了什么，它与那个周遭集合处于正确的关系；而构造则须拿出一个真的处在那里的周遭集合。
+<!--/-->
+
+```agda
+envSetAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+envSetAt E ar B = extAt E (envOverAt zero (suc ar) (suc B))
+
+module _ {n : ℕ} where
+  private
+    sh6 : Fin n → Fin (6 + n)
+    sh6 i = suc (suc (suc (suc (suc (suc i)))))
+
+    c6 ar6 a6 yc6 ya6 E6 : Fin (6 + n)
+    c6  = suc (suc (suc (suc (suc zero))))
+    ar6 = suc (suc (suc (suc zero)))
+    a6  = suc (suc (suc zero))
+    yc6 = suc (suc zero)
+    ya6 = suc zero
+    E6  = zero
+
+    negRel : Fin n → Fin n → Formula S (4 + n)
+    negRel T B =
+      ∀̇ (∀̇ ( subValAt (sh6 T) ar6 a6 ya6
+           ⇒̇ ( envSetAt E6 ar6 (sh6 B)
+           ⇒̇ diffAt yc6 E6 ya6 )))
+
+  negClauseAt : Fin n → Fin n → Fin n → Formula S n
+  negClauseAt C T B = unClauseAt C T 5 (negRel T B)
+
+  negClause-out : (C T B : Fin n) (γ : S ^ n)
+    → ⟨ γ ⊨ negClauseAt C T B ⟩
+    → (c ar a yc ya E : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# 5) (fst a))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
+    → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6 ar6 (sh6 B) ⟩
+    → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ diffAt yc6 E6 ya6 ⟩
+  negClause-out C T B γ h c ar a yc ya E c∈ shape hc ha hE =
+    unClause-out C T 5 (negRel T B) γ h c ar a yc c∈ shape hc ya E
+      (subst ⟨_⟩ (sym (subValAt-adequate (sh6 T) ar6 a6 ya6 δ)) ha) hE
+    where
+    δ : S ^ (6 + n)
+    δ = E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -878,8 +945,10 @@ constructors whose payload is a pair, `unClauseAt`{.Agda} for the five whose
 payload is a single component, the constants included. Both read the key in two
 layers, arity outside and tag within, and both leave every lookup on a payload
 component to the relation handed to them, which performs it with
-`subValAt`{.Agda}. `andClauseAt`{.Agda} and `orClauseAt`{.Agda} are the first two
-of the twelve written out, one line each above the shared propositional relation.
+`subValAt`{.Agda}. `andClauseAt`{.Agda}, `orClauseAt`{.Agda} and
+`negClauseAt`{.Agda} are the first three of the twelve written out, and
+`envSetAt`{.Agda} is what negation needed: inside a clause, the ambient set of
+environments is described rather than constructed.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -896,7 +965,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。`andClauseAt`{.Agda} 与 `orClauseAt`{.Agda} 是十二条中最先写出的两条，在共用的命题关系之上各占一行。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。`andClauseAt`{.Agda}、`orClauseAt`{.Agda} 与 `negClauseAt`{.Agda} 是十二条中最先写出的三条，而 `envSetAt`{.Agda} 正是否定所需的那件：在子句之内，周遭的环境集合是被描述的，而非被构造的。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
