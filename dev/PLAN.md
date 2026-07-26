@@ -1416,7 +1416,30 @@ One row per goal code; update the row in the same commit that changes the status
   any lookups to the relation, which may perform them freely; that collapses five back to
   three and makes the frames genuinely uniform. Recorded because the error was in the
   committed prose, not just in a draft, and because eyeballing a twelve-way encoding is
-  evidently not reliable: an adversarial check on the corrected taxonomy is running.
+  evidently not reliable: an adversarial check on the corrected taxonomy was run.
+
+  **It came back `claim-fails`, on two grounds, and the second was a silent bug in
+  committed code.** (a) "Three frames" over-counted by one: `⌜⊤̇⌝ = mkTag 6 (encℕ 0)` is
+  the single-component shape, so the constants are instances of the unary frame whose
+  relation ignores the payload, and no third frame was ever written. **Two** frames, twelve
+  relations. (b) The fatal one: `taggedCodes` entries are `pr (# n) ⌜φ⌝`, so a code carries
+  its **arity on the outside**, and both frames read only one layer. With `pr-inj` and
+  `#-inj′` in force, matching forced the arity against the constructor tag and bound the
+  payload's own tag as though it were a subcode: the clause was vacuous at every arity but
+  one, and wrong at that one. **Both `-out` lemmas still typechecked and were still true**;
+  the failure would have surfaced only when a consumer could not supply the shape argument,
+  which is to say several chapters later.
+
+  Fixed by reading the key in two layers (`arityTagPairAtL`, `arityTagAtL`, each an
+  existential over the inner code with the pair reader pinning the outer layer and the tag
+  reader the inner) and by binding the arity in both frames, which the four arity-bumping
+  constructors need anyway. The prose is corrected in both languages, including the
+  paragraph that had been half-corrected and left the chapter self-contradicting.
+
+  Recorded as a rule, not an anecdote: **a shape reader that reads fewer layers than the
+  data has is silently vacuous rather than ill-typed.** Nothing downstream depended on the
+  frames yet, so the cost was zero, and it was zero because the check ran before a consumer
+  existed rather than after.
 
   **Structural correction taken on the way in [L2.1 revisited], 2026-07-26.** Step 1 needs
   numerals as *constants of the object language*, hence `isL (# k)`, and the obvious source
