@@ -509,10 +509,14 @@ at the three of them, such-and-such holds. All of that is fixed except the
 such-and-such, so it is written once with the relation as a parameter, and the
 three binary constructors differ only in which relation they hand it.
 
-Six things are bound, in the order a reader meets them: the code, its two
-subcodes, and the three values. The relation therefore speaks of the values at
-positions two, one and zero, which is exactly the argument order the set
-operations above take, so a clause is one application and no arithmetic.
+Four things are bound, in the order a reader meets them: the code, its two
+payload components, and the value the table records at the code. The values at
+the payload components are **not** bound, and that is the correction that makes
+the frame general. A connective's payload is a pair of formula codes and its
+clause does want them, but an atom's payload is a pair of *term* codes, at which
+the table has no entries at all, and a bounded quantifier's payload mixes the
+two. So the frame binds what every constructor has and leaves the lookups to the
+relation, which may perform them freely.
 
 Reading the clause back is one chain of substitutions along the readers'
 adequacy, and it is stated in the direction a soundness proof consumes: given a
@@ -521,7 +525,7 @@ holds.
 <!--zh-->
 对码的递归由子句陈述，而子句只有几种形状，不是十二种。一个二元构造子的子句说：对索引中每个以此标签架在这两个子码之上的码，以及表在这三者处所记录的取值，某某成立。除了那个「某某」，其余全是固定的，故只写一次，把那条关系留作参数，而三个二元构造子只差交给它的是哪条关系。
 
-被绑定的有六样，按读者遇到的次序：那个码、它的两个子码、以及三个取值。故那条关系谈论的是位置二、一、零处的取值，而这恰是上面诸集合运算所取的实参次序，于是一条子句就是一次应用，不含任何算术。
+被绑定的有四样，按读者遇到的次序：那个码、它的两个载荷分量、以及表在该码处记录的取值。诸载荷分量处的取值**不**被绑定，而这正是使该框架通用的那处更正。一个联结词的载荷是一对公式码，它的子句确实要它们；但一个原子的载荷是一对**词项**码，表在那里根本没有条目，而有界量词的载荷则两者混杂。故框架只绑定每个构造子都有的东西，把查表留给那条关系，由它自行执行。
 
 把子句读回来是沿诸读式的适足性作一串代换，而它按可靠性证明所消费的方向陈述：给定索引中一个那种形状的码与三个被记录的取值，那条关系成立。
 <!--/-->
@@ -529,98 +533,93 @@ holds.
 ```agda
 module _ {n : ℕ} where
   private
-    sh6 : Fin n → Fin (6 + n)
-    sh6 i = suc (suc (suc (suc (suc (suc i)))))
+    sh4 : Fin n → Fin (4 + n)
+    sh4 i = suc (suc (suc (suc i)))
 
-    c6 a6 b6 yc6 ya6 yb6 : Fin (6 + n)
-    c6  = suc (suc (suc (suc (suc zero))))
-    a6  = suc (suc (suc (suc zero)))
-    b6  = suc (suc (suc zero))
-    yc6 = suc (suc zero)
-    ya6 = suc zero
-    yb6 = zero
+    c4 a4 b4 yc4 : Fin (4 + n)
+    c4  = suc (suc (suc zero))
+    a4  = suc (suc zero)
+    b4  = suc zero
+    yc4 = zero
 
-  binClauseAt : Fin n → Fin n → ℕ → Formula S (6 + n) → Formula S n
+  binClauseAt : Fin n → Fin n → ℕ → Formula S (4 + n) → Formula S n
   binClauseAt C T k rel =
-    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇ (∀̇ (∀̇
-      ( tagPairAtL c6 k a6 b6
-      ⇒̇ ( appAt (sh6 T) c6 yc6
-      ⇒̇ ( appAt (sh6 T) a6 ya6
-      ⇒̇ ( appAt (sh6 T) b6 yb6
-      ⇒̇ rel )))))))))
+    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇
+      ( tagPairAtL c4 k a4 b4
+      ⇒̇ ( appAt (sh4 T) c4 yc4
+      ⇒̇ rel )))))
 
-  binClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (6 + n)) (γ : S ^ n)
+  binClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
     → ⟨ γ ⊨ binClauseAt C T k rel ⟩
-    → (c a b yc ya yb : S)
+    → (c a b yc : S)
     → ⟨ fst c ∈ fst (lookup C γ) ⟩
     → fst c ≡ pr (# k) (pr (fst a) (fst b))
     → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-    → ⟨ pr (fst a) (fst ya) ∈ fst (lookup T γ) ⟩
-    → ⟨ pr (fst b) (fst yb) ∈ fst (lookup T γ) ⟩
-    → ⟨ (yb ∷ ya ∷ yc ∷ b ∷ a ∷ c ∷ γ) ⊨ rel ⟩
-  binClause-out C T k rel γ h c a b yc ya yb c∈ shape hc ha hb =
-    h c c∈ a b yc ya yb
-      (subst ⟨_⟩ (sym (tagPairAtL-adequate c6 k a6 b6 δ)) shape)
-      (subst ⟨_⟩ (sym (appAt-adequate (sh6 T) c6 yc6 δ)) hc)
-      (subst ⟨_⟩ (sym (appAt-adequate (sh6 T) a6 ya6 δ)) ha)
-      (subst ⟨_⟩ (sym (appAt-adequate (sh6 T) b6 yb6 δ)) hb)
+    → ⟨ (yc ∷ b ∷ a ∷ c ∷ γ) ⊨ rel ⟩
+  binClause-out C T k rel γ h c a b yc c∈ shape hc =
+    h c c∈ a b yc
+      (subst ⟨_⟩ (sym (tagPairAtL-adequate c4 k a4 b4 δ)) shape)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) c4 yc4 δ)) hc)
     where
-    δ : S ^ (6 + n)
-    δ = yb ∷ ya ∷ yc ∷ b ∷ a ∷ c ∷ γ
+    δ : S ^ (4 + n)
+    δ = yc ∷ b ∷ a ∷ c ∷ γ
 ```
 
 <!--en-->
 Counting the shapes is worth a moment, because it says how much of the twelve is
-really there. A code carries either a pair, a single subcode, or a dummy. The
-pair shape covers the two atoms, the three connectives and the two bounded
-quantifiers, which is seven; the single-subcode shape covers negation and the two
-unbounded quantifiers, which is three; and the two constants are the remaining
-two. So the recursion is written in **three** shapes, and the twelve
-constructors appear only as the tags handed to them.
+really there, and because counting it wrong is easy. A code carries either a
+pair, a single component, or a dummy, and that is the *only* distinction the
+frames make. The pair shape covers the two atoms, the three connectives and the
+two bounded quantifiers, which is seven; the single-component shape covers
+negation and the two unbounded quantifiers, which is three; and the two constants
+are the remaining two.
 
-The single-subcode shape is the pair shape with two binders fewer, and reads back
-the same way.
+What the frames must **not** distinguish is what the payload components *are*.
+Grouping by that gives five shapes, not three, since term codes and formula codes
+behave differently under the table. Leaving the lookups to the relation is what
+collapses five back to three.
+
+The single-component shape is the pair shape with one binder fewer, and reads
+back the same way.
 <!--zh-->
-数一数有几种形状是值得的，因为它说出那十二条里真正存在多少。一个码携带的要么是一个对，要么是单个子码，要么是一个虚位。对的形状覆盖两个原子、三个联结词与两个有界量词，共七个；单子码的形状覆盖否定与两个无界量词，共三个；剩下两个是那两个常量。故这次递归由**三**种形状写出，而十二个构造子只作为交给它们的标签出现。
+数一数有几种形状是值得的，因为它说出那十二条里真正存在多少，也因为数错很容易。一个码携带的要么是一个对，要么是单个分量，要么是一个虚位，而这是诸框架所作的**唯一**区分。对的形状覆盖两个原子、三个联结词与两个有界量词，共七个；单分量的形状覆盖否定与两个无界量词，共三个；剩下两个是那两个常量。
 
-单子码形状就是少两个绑定的对形状，读回来的方式相同。
+诸框架**不可**区分的，是那些载荷分量究竟**是什么**。按那个分组会得到五种形状而非三种，因为词项码与公式码在表之下表现不同。把查表留给那条关系，正是把五压回三的那一手。
+
+单分量形状就是少一个绑定的对形状，读回来的方式相同。
 <!--/-->
 
 ```agda
   private
-    sh4 : Fin n → Fin (4 + n)
-    sh4 i = suc (suc (suc (suc i)))
+    sh3 : Fin n → Fin (3 + n)
+    sh3 i = suc (suc (suc i))
 
-    c4 a4 yc4 ya4 : Fin (4 + n)
-    c4  = suc (suc (suc zero))
-    a4  = suc (suc zero)
-    yc4 = suc zero
-    ya4 = zero
+    c3 a3 yc3 : Fin (3 + n)
+    c3  = suc (suc zero)
+    a3  = suc zero
+    yc3 = zero
 
-  unClauseAt : Fin n → Fin n → ℕ → Formula S (4 + n) → Formula S n
+  unClauseAt : Fin n → Fin n → ℕ → Formula S (3 + n) → Formula S n
   unClauseAt C T k rel =
-    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇
-      ( tagAtL c4 k a4
-      ⇒̇ ( appAt (sh4 T) c4 yc4
-      ⇒̇ ( appAt (sh4 T) a4 ya4
-      ⇒̇ rel ))))))
+    ∀̇∈ (var C) (∀̇ (∀̇
+      ( tagAtL c3 k a3
+      ⇒̇ ( appAt (sh3 T) c3 yc3
+      ⇒̇ rel ))))
 
-  unClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+  unClause-out : (C T : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n)
     → ⟨ γ ⊨ unClauseAt C T k rel ⟩
-    → (c a yc ya : S)
+    → (c a yc : S)
     → ⟨ fst c ∈ fst (lookup C γ) ⟩
     → fst c ≡ pr (# k) (fst a)
     → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-    → ⟨ pr (fst a) (fst ya) ∈ fst (lookup T γ) ⟩
-    → ⟨ (ya ∷ yc ∷ a ∷ c ∷ γ) ⊨ rel ⟩
-  unClause-out C T k rel γ h c a yc ya c∈ shape hc ha =
-    h c c∈ a yc ya
-      (subst ⟨_⟩ (sym (tagAtL-adequate c4 k a4 δ)) shape)
-      (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) c4 yc4 δ)) hc)
-      (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) a4 ya4 δ)) ha)
+    → ⟨ (yc ∷ a ∷ c ∷ γ) ⊨ rel ⟩
+  unClause-out C T k rel γ h c a yc c∈ shape hc =
+    h c c∈ a yc
+      (subst ⟨_⟩ (sym (tagAtL-adequate c3 k a3 δ)) shape)
+      (subst ⟨_⟩ (sym (appAt-adequate (sh3 T) c3 yc3 δ)) hc)
     where
-    δ : S ^ (4 + n)
-    δ = ya ∷ yc ∷ a ∷ c ∷ γ
+    δ : S ^ (3 + n)
+    δ = yc ∷ a ∷ c ∷ γ
 ```
 
 <!--en-->

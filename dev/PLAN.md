@@ -1391,6 +1391,18 @@ One row per goal code; update the row in the same commit that changes the status
   needs and write it once: `Ladder`, `Definition`, `witnessInModel`, `extAt`,
   `binClauseAt`.
 
+  **Mis-count caught and corrected, same day.** The first version of `binClauseAt` baked
+  three table lookups into the frame (at the code and at both payload components) and the
+  chapter claimed it covered seven constructors. **Wrong**: an atom's payload is a pair of
+  *term* codes and a bounded quantifier's is a term code paired with a formula code, and
+  the table has no entries at term codes at all. Grouping clauses by *what the payload
+  components are* gives five shapes, not three. The fix is to have the frames bind only
+  what every constructor has (the code, its payload, and the value at the code) and leave
+  any lookups to the relation, which may perform them freely; that collapses five back to
+  three and makes the frames genuinely uniform. Recorded because the error was in the
+  committed prose, not just in a draft, and because eyeballing a twelve-way encoding is
+  evidently not reliable: an adversarial check on the corrected taxonomy is running.
+
   **Structural correction taken on the way in [L2.1 revisited], 2026-07-26.** Step 1 needs
   numerals as *constants of the object language*, hence `isL (# k)`, and the obvious source
   was `L.Axioms.Infinity`, which takes `lem`. Checking first (the rule that has paid twice
