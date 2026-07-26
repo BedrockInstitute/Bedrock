@@ -32,7 +32,7 @@ open import Base.Truth
 module L.Coding.Model {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _≐_; _⇒̇_; ∀̇_; ∃̇∈ )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _≐_; _∧̇_; _⇒̇_; ∀̇_; ∃̇_; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -41,9 +41,9 @@ open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
 open import L.Coding.Base {ℓ} using ( prAt; Δ₀-prAt; prAt-adequate )
 
 open import Cubical.Data.Vec using ( map )
-open import Cubical.Functions.Logic using ( ⇔toPath )
+open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -222,6 +222,59 @@ module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
 ```
 
 <!--en-->
+## The domain
+<!--zh-->
+## 定义域
+<!--/-->
+
+<!--en-->
+Being in the domain is having a value: one unbounded existential over the reader
+above. The domain itself is then the set with exactly those members, said as two
+implications, since the object language has no biconditional of its own and
+spelling it out is shorter than adding one.
+
+Both are used in one direction each, and only those directions are extracted. A
+consumer holding a table asks either "this argument has an entry, so it is in the
+domain" or "this argument is in the domain, so it has an entry"; nothing wants
+the statement as a proposition.
+<!--zh-->
+落在定义域中就是有取值：在上面那条读式上作一个无界存在。定义域本身则是恰以那些东西为成员的集合，用两条蕴含说出，因为对象语言没有自带的双条件，而把它摊开来写比添一个更短。
+
+两者各自只用一个方向，而被取出的也只有那两个方向。一个握着表的消费方，要么问「这个自变量有条目，故它在定义域中」，要么问「这个自变量在定义域中，故它有条目」；没有谁想要那句陈述本身作为命题。
+<!--/-->
+
+```agda
+inDomAt : ∀ {n} → Fin n → Fin n → Formula S n
+inDomAt f x = ∃̇ (appAt (suc f) (suc x) zero)
+
+inDomAt-adequate : ∀ {n} (f x : Fin n) (γ : S ^ n)
+  → (γ ⊨ inDomAt f x)
+  ≡ (∃[ y ∶ S ] (pr (fst (lookup x γ)) (fst y) ∈ fst (lookup f γ)))
+inDomAt-adequate f x γ =
+  cong (⋁ S) (funExt (λ y → appAt-adequate (suc f) (suc x) zero (y ∷ γ)))
+
+domAt : ∀ {n} → Fin n → Fin n → Formula S n
+domAt f d = ∀̇ ( (inDomAt (suc f) zero ⇒̇ (var zero ∈̇ var (suc d)))
+             ∧̇ ((var zero ∈̇ var (suc d)) ⇒̇ inDomAt (suc f) zero) )
+
+module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
+  private
+    step : (x : S)
+         → ((x ∷ γ) ⊨ inDomAt (suc f) zero)
+         ≡ (∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst (lookup f γ)))
+    step x = inDomAt-adequate (suc f) zero (x ∷ γ)
+
+  domAt-out : ⟨ γ ⊨ domAt f d ⟩ → (x y : S)
+            → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+            → ⟨ fst x ∈ fst (lookup d γ) ⟩
+  domAt-out h x y p = h x .fst (subst ⟨_⟩ (sym (step x)) ∣ y , p ∣₁)
+
+  domAt-in : ⟨ γ ⊨ domAt f d ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩
+           → ∥ (Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
+  domAt-in h x m = subst ⟨_⟩ (step x) (h x .snd m)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -230,9 +283,10 @@ module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
 <!--en-->
 `prAtL`{.Agda} says, in the object language of the model, that one set is the
 ordered pair of two others, `appAt`{.Agda} that a function contains a given pair,
-and `svAt`{.Agda} that it contains at most one pair per argument. Together they
-are what "function" means in the object language, and every recursion graph is
-written through them. It was
+`svAt`{.Agda} that it contains at most one pair per argument, and
+`domAt`{.Agda} that a given set is exactly the arguments it answers for. Together
+they are what "function" means in the object language, and every recursion graph
+is written through them. It was
 obtained by quoting, not by re-proving: the reader and its characterization stay
 where they were written, and the crossing cost one induction on environments.
 
@@ -241,7 +295,7 @@ coding chapters did not have to be re-based. What it does not cover is any
 predicate that is not Δ₀, and those are to be written directly over the model
 instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
-`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，而 `svAt`{.Agda} 说「每个自变量至多含一个对」。三者合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
+`prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
 这就是此后每条读式的套路，也是编码诸章无须换底的原因。它不覆盖的是任何非 Δ₀ 的谓词，那些应当直接在模型上写，因为模型的概括不要求它们有界。
 <!--/-->
