@@ -588,6 +588,60 @@ arityTagAtL-adequate c ar k a γ = ⇔toPath fwd bwd
 ```
 
 <!--en-->
+## Looking a subcode up in the table
+<!--zh-->
+## 在表中查一个子码
+<!--/-->
+
+<!--en-->
+The frames bind a code's payload but never look the table up at it, because a
+payload component may be a term code, at which the table has nothing. A relation
+that does want the value must therefore build the key itself: pair the arity with
+the component, and read the table there.
+
+That is one existential over the key, and it is the piece four of the twelve
+relations are built from. The two that speak of a subformula at the next arity
+need the same thing with the arity bumped, which is this with one more layer.
+<!--zh-->
+诸框架绑定一个码的载荷，却从不在其上查表，因为载荷分量可能是词项码，而表在那里什么也没有。想要取值的关系于是必须自己造那个键：把元数与该分量配成对，再在那里读表。
+
+那是对该键的一个存在量词，也是十二条关系中四条所由构造的部件。谈论下一元数处子公式的那两条，需要的是同一件事而元数加一，即此物再加一层。
+<!--/-->
+
+```agda
+subValAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+subValAt T ar a y =
+  ∃̇ (prAtL zero (suc ar) (suc a) ∧̇ appAt (suc T) zero (suc y))
+
+subValAt-adequate : ∀ {n} (T ar a y : Fin n) (γ : S ^ n)
+  → (γ ⊨ subValAt T ar a y)
+  ≡ (pr (pr (fst (lookup ar γ)) (fst (lookup a γ))) (fst (lookup y γ))
+      ∈ fst (lookup T γ))
+subValAt-adequate T ar a y γ = ⇔toPath fwd bwd
+  where
+  K = pr (fst (lookup ar γ)) (fst (lookup a γ))
+  target = pr K (fst (lookup y γ)) ∈ fst (lookup T γ)
+
+  fwd : ⟨ γ ⊨ subValAt T ar a y ⟩ → ⟨ target ⟩
+  fwd = PT.rec (snd target)
+    (λ { (z , (p , q)) →
+      subst (λ w → ⟨ pr w (fst (lookup y γ)) ∈ fst (lookup T γ) ⟩)
+        (subst ⟨_⟩ (prAtL-adequate zero (suc ar) (suc a) (z ∷ γ)) p)
+        (subst ⟨_⟩ (appAt-adequate (suc T) zero (suc y) (z ∷ γ)) q) })
+
+  bwd : ⟨ target ⟩ → ⟨ γ ⊨ subValAt T ar a y ⟩
+  bwd h = ∣ zS
+    , ( subst ⟨_⟩ (sym (prAtL-adequate zero (suc ar) (suc a) (zS ∷ γ))) e
+      , subst ⟨_⟩ (sym (appAt-adequate (suc T) zero (suc y) (zS ∷ γ)))
+          (subst (λ w → ⟨ pr w (fst (lookup y γ)) ∈ fst (lookup T γ) ⟩) (sym e) h) ) ∣₁
+    where
+    zS : S
+    zS = prʟ (lookup ar γ) (lookup a γ)
+    e : fst zS ≡ K
+    e = prʟ-fst (lookup ar γ) (lookup a γ)
+```
+
+<!--en-->
 ## The shape of a clause
 <!--zh-->
 ## 一条子句的形状
@@ -746,7 +800,8 @@ operations are its shortest instances, and the recursion's clauses are written i
 constructors whose payload is a pair, `unClauseAt`{.Agda} for the five whose
 payload is a single component, the constants included. Both read the key in two
 layers, arity outside and tag within, and both leave every lookup on a payload
-component to the relation handed to them.
+component to the relation handed to them, which performs it with
+`subValAt`{.Agda}.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -763,7 +818,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
