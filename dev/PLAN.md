@@ -953,6 +953,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
 | L3.2 | `reify!` industrialization (S6) | PLANNED, **off L3.0's critical path** (re-evaluated 2026-07-25: stage 7 needed a lemma, not the macro). Opportunistic accelerator for the reader half of the coding chapters |
 | L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
+| L3.15 | Re-base the coding readers onto `S` | PLANNED, next (registered 2026-07-26). `[L3.14]`'s readers are `Formula (V ℓ) n`; `L.Recursion` speaks `Formula S n`. Bridge is `Relabel.liftFo`, at the cost of an "in `L`" witness per constant. The Δ₀ witnesses become dead weight; the characterization lemmas carry over |
 | L3.14 | Coding substrate: the Δ₀ code readers | DONE 2026-07-25. Seven chapters: `L.WellOrder.Base`, `FOL.Coding`, `V.Coding`, `L.Coding.{Base, Environment, Tagged, Length, Entry}`. The source's `SatCert*` split by subject rather than by session |
 | L3.11 | Per-tag clause bundle (S10) | **RE-SCOPED to conditional 2026-07-25.** De-risk rationale spent (`L.ReflectFo` checks the twelve-clause shape); two of five fields removed by the internalization finding; and with the graph unconstrained there is no reason a clause must be a per-tag formula in a twelve-way grid. Do not build until an instance shows it is wanted |
 | L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional, **to be re-examined before opening**: tier 2 was separated from tier 1 by the complexity boundary the internalization finding dissolved |
@@ -1260,3 +1261,41 @@ One row per goal code; update the row in the same commit that changes the status
   non-scaffolding mathematics in the cone and none of it has been built here. The number
   is a projection from two measured ratios and one measured per-clause unit, and should
   not be quoted without that caveat.
+- **Where the lever points next [L3.0.2 follow-up], 2026-07-26.** Satisfaction is not
+  merely the largest bucket, it is the **bottom of the other two**. `<L` orders `L` by
+  "the stage at which `x` first appears, then the formula and parameters defining it
+  there", so its graph mentions a definable enumeration of `Def(A)`, which is a truth
+  predicate. Order-and-choice (24%) therefore sits on satisfaction, and no reformulation
+  avoids it: well-ordering a single `Lset σ` instead of all of `L` needs the same
+  enumeration, and the alternative routes (condensation-plus-induction) need it too. This
+  is Gödel's actual work, and general-formula comprehension does not touch it. The
+  recursion-table bucket (24%) is the opposite: `Depth*` is a **termination measure** for
+  the comparison recursion, which Agda's structural recursion does not need, and `Cmp` is
+  a decidable comparison on `Formula`, a meta function. So of the remaining 43k, one third
+  is irreducible mathematics sitting under another third, and the last third is
+  bookkeeping for a language weaker than Agda.
+
+  **Checked before committing to it: is the coding substrate on the right base?** It is
+  not, quite. `[L3.14]`'s readers are `Formula (V ℓ) n`, while `L.Recursion` speaks
+  `Formula S n`. The bridge exists, `Relabel.liftFo` from `[L2.2]`, but it consumes a
+  `BoundedFo` witness, so every constant a reader names must be shown to be in `L`. Two
+  further observations from the same check. The readers' Δ₀ witnesses (`Δ₀-prAt` and
+  friends, roughly a third of the substrate's 1,065 lines) are **dead weight** for this
+  purpose: nothing downstream needs Δ₀ any more. But their *shape* is not over-engineered,
+  because Kuratowski pairing is naturally bounded, so the characterization lemmas carry
+  over unchanged. The substrate is usable, not free, and not to be extended.
+
+- **[L3.15]** (registered 2026-07-26) **Re-base the coding readers onto `S`.** Small and
+  mechanical, and every remaining instance needs it. Deliverables: the readers stated over
+  `Formula S n`, their constants shown to be in `L`, and a measurement of how much of the
+  1,065 survives the loss of the Δ₀ obligations. Runs before the satisfaction instance,
+  which is written on top of it. **Do not port further Δ₀ readers**: write new predicates
+  with unbounded quantifiers, since the Δ₀ discipline is exactly the tax `[L2.2]`
+  abolished.
+
+  Then `[L3.0.1]`'s instance half, satisfaction, which is what converts the 78% to 85%
+  projection into a measurement. Watch for, but do **not** build first, a generic
+  "definable step gives a definable recursion" lemma: the standard approximation-function
+  argument is uniform in the step and would cut every later instance, but per the
+  `Ladder` lesson the interface is discovered from a real consumer and guessed wrong in
+  the abstract. Let it fall out of satisfaction if it wants to.
