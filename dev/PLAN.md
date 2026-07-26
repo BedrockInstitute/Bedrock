@@ -1132,9 +1132,24 @@ One row per goal code; update the row in the same commit that changes the status
   rudimentary-function / Σ-recursion absoluteness layer. Reproduction: the attribution
   is a dependency-closure count over ` ```agda ` fences, re-runnable from the pinned
   source at any time.
-- **Cold-check baseline (§7.5):** whole-tree cold check well inside the ceiling at
-  `[L2.0]`; no module is near the §7.6 per-module budget, and no performance idiom has
-  been needed yet (zero `-- perf:` markers in `src/`).
+- **Cold-check baseline (§7.5), re-measured 2026-07-26 at `[L3.16]`.** Whole tree,
+  **51 modules, 5,519 Agda lines: 18.5 s serial** (not even `-j4`), against the §7.5
+  working ceiling of 15 minutes at `-j4`. That is about **2%** of the budget.
+
+  Per-module (`--profile=modules`), slowest first: `L.Rank` 670 ms, `L.Axioms.Separation`
+  667, `L.Coding.Environment` 592, `L.Coding.Model` 417, `FOL.Coding` 372, `V.Model` 306,
+  `L.Reflect` 296. Against the §7.6 per-module budget of ~120 s the worst module is at
+  **0.6%**, so nothing is close, and there are still **zero** `-- perf:` markers in `src/`.
+
+  The line worth keeping: **`L.Axioms.Full` checks in 259 ms**, and before its
+  constructibility certificate was sealed it did not finish in **600 s**. One `opaque` is
+  worth a factor of at least 2,300 there, which is the sharpest number the conversion-blowup
+  finding has produced and the reason it is stated as a rule rather than an anecdote.
+
+  Caveat on any cross-repository reading of these numbers: Bedrock is not finished, so 18.5 s
+  is not comparable to the source's ~8.5 minutes for the completed development. What the
+  measurement does establish is headroom, and that the design has not been buying its line
+  compression with check time.
 - **Frontier field count:** **2** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
   `hasEmptyL`, `hasPairL`, `hasUnionL`; `[L2.1]` deleted the numeral chain's three and
   then `hasInfinityL`; `[L2.2]` deleted `hasSeparationL` and `hasReplacementL` together).
