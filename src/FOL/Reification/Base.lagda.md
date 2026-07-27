@@ -107,6 +107,47 @@ adequacy = snd
 ```
 
 <!--en-->
+## Changing what a representation is said to represent
+<!--zh-->
+## 改说一个表示表示什么
+<!--/-->
+
+<!--en-->
+An assembly line composes representations of the predicates its parts happen to
+have, and what comes off the end is a representation of the *raw unfolding* of
+those parts: nested truncated sums, one layer per bounded quantifier. That is
+rarely the predicate anyone wants to read. The reader written by hand states
+something like "this set is the ordered pair of those two", and a proof that the
+unfolding equals that statement is the reader's own content, which no framework
+supplies.
+
+So the two are joined here. Given such a proof, a representation of one predicate
+is a representation of the other, and the formula is untouched: only the
+certificate changes, by composing with the given path. That the formula is
+untouched is what makes this safe to use everywhere. `translate`{.Agda} of the
+retargeted asset reduces to `translate`{.Agda} of the original, so anything that
+recognised the old formula by its shape still does.
+
+The last export names a representation's predicate. It is the identity on data
+and exists only so that a statement can say "the meaning of this asset" without
+writing the meaning out again.
+<!--zh-->
+一条流水线组合的是「其零件恰好具有的谓词」的表示，而从末端出来的，是那些零件**原始展开**的表示：层层嵌套的截断和，每个有界量词一层。那很少是谁想读的谓词。手写的读式陈述的是「这个集合是那两个的有序对」之类的话，而「展开等于那句话」的证明正是该读式自己的内容，任何框架都不供给它。
+
+于是两者在此接上。给定那样一个证明，一个谓词的表示便是另一个谓词的表示，而公式分毫未动：只有证书变了，办法是与给定的道路复合。公式分毫未动，正是这件事到处可用而无害的原因。改标后资产的 `translate`{.Agda} 规约到原资产的 `translate`{.Agda}，故凡按形状认出旧公式的东西，如今照样认得。
+
+最后一个出口为一个表示的谓词命名。它在数据上是恒等，存在的唯一理由是让某个陈述能说「这份资产的含义」，而不必把那个含义再写一遍。
+<!--/-->
+
+```agda
+retarget : ∀ {n} {P Q : S ^ n → Ω} → (∀ γ → P γ ≡ Q γ) → RepP n P → RepP n Q
+retarget e (φ , a) = φ , λ γ → a γ ∙ e γ
+
+predOf : ∀ {n} {P : S ^ n → Ω} → RepP n P → (S ^ n → Ω)
+predOf {P = P} _ = P
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -115,8 +156,10 @@ adequacy = snd
 <!--en-->
 A representation is a formula with its adequacy certificate, adequacy is a path,
 and the represented things are environment-indexed families; `translate`{.Agda} and
-`adequacy`{.Agda} are the only exits. Nothing has been built yet: the assembly
+`adequacy`{.Agda} are the only exits, with `retarget`{.Agda} the join between what
+an assembly line produces and what a reader wants stated, and `predOf`{.Agda} a
+name for a representation's meaning. Nothing has been built yet: the assembly
 line opens next.
 <!--zh-->
-表示是公式配适足性证书，适足性是路径，被表示者是按环境索引的族；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。到此还什么都没造：流水线下一章开张。
+表示是公式配适足性证书，适足性是路径，被表示者是按环境索引的族；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口，而 `retarget`{.Agda} 是「流水线产出什么」与「读式想陈述什么」之间的接缝，`predOf`{.Agda} 则为一个表示的含义命名。到此还什么都没造：流水线下一章开张。
 <!--/-->
