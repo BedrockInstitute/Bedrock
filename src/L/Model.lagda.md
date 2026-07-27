@@ -55,6 +55,7 @@ open import L.Axioms.Numerals {ℓ}
   using ( numeralL; numeralL-zero; numeralL-suc )
 open import L.Axioms.Infinity {ℓ} lem using ( hasInfinityL )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL; hasReplacementL )
+open import L.Axioms.Power {ℓ} lem using ( hasPowerL )
 
 open hPropStructure 𝒮ʟ
 open Frontier F
@@ -70,12 +71,13 @@ open ModelL using ( isZFModel; isZFCModel )
 <!--/-->
 
 <!--en-->
-Assembly. Eleven fields come from the axiom chapters, one from the frontier, and
+Assembly. All twelve fields of `isZFModel`{.Agda} now come from the axiom
+chapters, none from the frontier, and
 the choice field is applied to the very model being assembled, in the structural
 form the frontier states it. The proportion is the progress bar: every chapter
 that pays a debt moves a field from the second column to the first.
 <!--zh-->
-合龙。十一个字段来自诸公理章，一个取自前沿，选择字段则以前沿所陈述的结构形式，作用于正被装配的这个模型自身。这个比例就是进度条：每一章还清一笔债，就把一个字段从第二栏挪到第一栏。
+合龙。`isZFModel`{.Agda} 的十二个字段如今全部来自诸公理章，无一取自前沿，选择字段则以前沿所陈述的结构形式，作用于正被装配的这个模型自身。这个比例就是进度条：每一章还清一笔债，就把一个字段从第二栏挪到第一栏。
 <!--/-->
 
 ```agda
@@ -108,8 +110,8 @@ L⊨ZFC = record { zf = L⊨ZF ; hasChoice = hasChoiceL L⊨ZF }
 The root stands: `L⊨ZFC`{.Agda}, the constructible structure models ZFC, proven
 from the excluded-middle interface and the frontier. What the reader should
 carry away is the shape of the claim: a semantic, relative consistency theorem,
-priced in the open. Every field but the power set is now a theorem rather than a
-hypothesis, and the rest of the book is the paying down of the remainder.
+priced in the open. **Every field of ZF is now a theorem rather than a
+hypothesis**, and what is left of the frontier is choice alone.
 <!--zh-->
-根已立起：`L⊨ZFC`{.Agda}，可构造结构满足 ZFC，由排中律接口与前沿证得。读者该带走的是这个论断的形状：一条语义的、相对的一致性定理，价格摆在明处。除幂集外，每个字段如今都是定理而非假设，而本书余下的一切，就是逐笔偿清其余。
+根已立起：`L⊨ZFC`{.Agda}，可构造结构满足 ZFC，由排中律接口与前沿证得。读者该带走的是这个论断的形状：一条语义的、相对的一致性定理，价格摆在明处。**ZF 的每个字段如今都是定理而非假设**，而前沿所剩的只有选择一条。
 <!--/-->

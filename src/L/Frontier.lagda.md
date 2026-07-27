@@ -13,14 +13,14 @@ chapter disappears with it.
 
 The debts are exactly the model fields still owed for the constructible
 structure `𝒮ʟ`: earlier chapters produced the world, paid the five basic axioms,
-all of infinity, and separation and replacement in full, and the record below
-lists, field for field, what the model record still demands. The choice field is stated relative to an arbitrary ZF
+all of infinity, separation and replacement in full, and the power set, and the
+record below lists, field for field, what the model record still demands. The choice field is stated relative to an arbitrary ZF
 model on this carrier, the same structural form the hierarchy's choice took.
 
-The record has already shrunk four times. It opened at eleven fields; the basic
+The record has already shrunk five times. It opened at eleven fields; the basic
 axioms took three, the numeral chain three, the collection of the numerals one
-more, and reflection took the two comprehension fields together. This is what
-the device is for: the list gets shorter, never longer, and the book ends when it
+more, reflection took the two comprehension fields together, and
+bounding took the power set. This is what the device is for: the list gets shorter, never longer, and the book ends when it
 is empty. Infinity was the instructive case. Its four fields were never one debt:
 three merely built the chain, which cost nothing, and only the fourth, the claim
 that the chain is collected into a set, carried the axiom's real content and with
@@ -28,9 +28,9 @@ it the whole of its classical price.
 <!--zh-->
 本书采取从根开始的构造：主定理**现在**陈述，在余下诸部中**逐步完成**。这需要一件装置，而诚实要求它既不是洞也不是公设。**前沿**就是那件装置：一个 record，其字段恰是尚未证明的陈述，于是下一章的根定理是一条**由**前沿出发的普通定理。这里的每个字段都是一笔债；本书余下的每一章偿还其中若干；字段一经证明即被删除。这个 record 是「离无条件定理还差什么」的实时登记簿，账清之日，本章随之消失。
 
-这些债恰是可构造结构 `𝒮ʟ` 尚欠的模型字段：前几章造出了世界，偿清五条基本公理、整条无穷公理，以及完整的分离与替换，下面的 record 逐字段列出模型 record 仍然索取的部分。选择字段相对于此载体上任意 ZF 模型陈述，与层级那边的选择取同一结构形式。
+这些债恰是可构造结构 `𝒮ʟ` 尚欠的模型字段：前几章造出了世界，偿清五条基本公理、整条无穷公理、完整的分离与替换，以及幂集，下面的 record 逐字段列出模型 record 仍然索取的部分。选择字段相对于此载体上任意 ZF 模型陈述，与层级那边的选择取同一结构形式。
 
-这个 record 已经缩过四次。它开张时有十一个字段，基本公理拿走三个，数码链三个，数码的收集又一个，反射则一举拿走两条概括字段。这正是这件装置的用途：单子只会变短，不会变长，簿清之日即成书之时。无穷公理曾是有教益的一例。它那四个字段从来就不是一笔债：三个只是造出那条链，分文不花；唯有第四个，即断言那条链被收集成一个集合，承载着公理的真正内容，以及它全部的经典代价。
+这个 record 已经缩过五次。它开张时有十一个字段，基本公理拿走三个，数码链三个，数码的收集又一个，反射一举拿走两条概括字段，界层又拿走幂集。这正是这件装置的用途：单子只会变短，不会变长，簿清之日即成书之时。无穷公理曾是有教益的一例。它那四个字段从来就不是一笔债：三个只是造出那条链，分文不花；唯有第四个，即断言那条链被收集成一个集合，承载着公理的真正内容，以及它全部的经典代价。
 <!--/-->
 
 ```agda
@@ -52,7 +52,7 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
-open ModelL using ( SetOf; _⊆ˢ_; isZFModel )
+open ModelL using ( isZFModel )
 ```
 
 <!--en-->
@@ -85,7 +85,6 @@ the record asks for, with no reshaping at the assembly site.
 ```agda
 record Frontier : Type (ℓ-suc (ℓ-suc ℓ)) where
   field
-    hasPowerL  : (a : S) → isContr (SetOf (λ x → x ⊆ˢ a))
     hasChoiceL : (zf : isZFModel) → ChoiceStatement zf
 ```
 
@@ -96,11 +95,10 @@ record Frontier : Type (ℓ-suc (ℓ-suc ℓ)) where
 <!--/-->
 
 <!--en-->
-Two debts, each the verbatim statement of a model field at `𝒮ʟ`, neither of them
-a postulate: they are hypotheses of the next chapter's theorem, and the book's
-remaining work is the shrinking of this record to nothing. The power set and
-choice: the first wants condensation, the second wants a well-ordering of `L`,
-and each is a chapter of its own.
+One debt, the verbatim statement of a model field at `𝒮ʟ`, and not a postulate:
+it is the hypothesis of the next chapter's theorem, and the book's remaining work
+is the shrinking of this record to nothing. Choice, which wants a well-ordering
+of `L`, and that wants satisfaction internalized.
 <!--zh-->
-两笔债，每笔都是模型字段在 `𝒮ʟ` 处的原文陈述，无一是公设：它们是下一章定理的假设，而本书余下的工作，就是把这个 record 缩减为空。幂集与选择：前者要凝聚，后者要 L 的良序，各自都是独立的一章。
+一笔债，是模型字段在 `𝒮ʟ` 处的原文陈述，且不是公设：它是下一章定理的假设，而本书余下的工作，就是把这个 record 缩减为空。选择，它要 `L` 的良序，而后者要满足关系被内化。
 <!--/-->
