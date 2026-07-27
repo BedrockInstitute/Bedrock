@@ -1591,6 +1591,95 @@ why the eight are written without a module around them.
 ```
 
 <!--en-->
+The other direction, which the first instance needs and no clause needed. A
+consumer of a recursion reads its hypotheses; the meta-level set that will be
+handed to one has to *satisfy* them, so every frame and every relation is owed an
+introduction as well as an elimination. Both frames introduce by a lambda, since
+a bounded universal over the model is a function on members and the implication
+is a function on the reader's proof. The two arity-raising relations build the
+successor as an element of the model, which the numeral chapter supplies.
+<!--zh-->
+另一个方向，是第一个实例需要而任何子句都不需要的。递归的消费方读它的假设；而将要交给它的那个元语言层面的集合必须**满足**那些假设，故每个框架、每条关系都欠一条引入，正如它们欠一条消去。两个框架都以一个 λ 引入，因为模型上的有界全称就是成员上的函数，而那个蕴含是读式证明上的函数。两条抬升元数的关系要把后继造成模型的元素，而数码那一章供给它。
+<!--/-->
+
+```agda
+  binShape-in : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+    → ((c ar a b : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
+    → ⟨ γ ⊨ binShapeAt C k rel ⟩
+  binShape-in C k rel γ g c c∈ ar a b sh =
+    g c ar a b c∈
+      (subst ⟨_⟩ (arityTagPairAtL-adequate c4 n4 k a4 b4 (b ∷ a ∷ ar ∷ c ∷ γ)) sh)
+
+  unShape-in : (C : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n)
+    → ((c ar a : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
+    → ⟨ γ ⊨ unShapeAt C k rel ⟩
+  unShape-in C k rel γ g c c∈ ar a sh =
+    g c ar a c∈
+      (subst ⟨_⟩ (arityTagAtL-adequate c3 n3 k a3 (a ∷ ar ∷ c ∷ γ)) sh)
+
+  binSameClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ((c ar a b : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩
+       × ⟨ pr (fst ar) (fst b) ∈ fst (lookup C γ) ⟩)
+    → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
+  binSameClosed-in C k γ g = binShape-in C k (bothSameAt C) γ
+    (λ c ar a b c∈ sh →
+        subst ⟨_⟩ (sym (appAt-adequate (sh4 C) n4 a4 (b ∷ a ∷ ar ∷ c ∷ γ)))
+          (g c ar a b c∈ sh .fst)
+      , subst ⟨_⟩ (sym (appAt-adequate (sh4 C) n4 b4 (b ∷ a ∷ ar ∷ c ∷ γ)))
+          (g c ar a b c∈ sh .snd))
+
+  unSameClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ((c ar a : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩)
+    → ⟨ γ ⊨ unShapeAt C k (oneSameAt C) ⟩
+  unSameClosed-in C k γ g = unShape-in C k (oneSameAt C) γ
+    (λ c ar a c∈ sh →
+      subst ⟨_⟩ (sym (appAt-adequate (sh3 C) n3 a3 (a ∷ ar ∷ c ∷ γ)))
+        (g c ar a c∈ sh))
+
+  unSuccClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ((c ar a : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ pr (sucV (fst ar)) (fst a) ∈ fst (lookup C γ) ⟩)
+    → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩
+  unSuccClosed-in C k γ g = unShape-in C k (oneSuccAt C) γ
+    (λ c ar a c∈ sh → ∣ sucʟ ar
+      , ( subst ⟨_⟩ (sym (sucAtL-adequate (suc n3) zero
+            (sucʟ ar ∷ a ∷ ar ∷ c ∷ γ))) (sucʟ-fst ar)
+        , subst ⟨_⟩ (sym (appAt-adequate (suc (sh3 C)) zero (suc a3)
+            (sucʟ ar ∷ a ∷ ar ∷ c ∷ γ)))
+            (subst (λ w → ⟨ pr w (fst a) ∈ fst (lookup C γ) ⟩)
+              (sym (sucʟ-fst ar)) (g c ar a c∈ sh)) ) ∣₁)
+
+  binSuccClosed-in : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ((c ar a b : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ pr (sucV (fst ar)) (fst b) ∈ fst (lookup C γ) ⟩)
+    → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩
+  binSuccClosed-in C k γ g = binShape-in C k (succSndAt C) γ
+    (λ c ar a b c∈ sh → ∣ sucʟ ar
+      , ( subst ⟨_⟩ (sym (sucAtL-adequate (suc n4) zero
+            (sucʟ ar ∷ b ∷ a ∷ ar ∷ c ∷ γ))) (sucʟ-fst ar)
+        , subst ⟨_⟩ (sym (appAt-adequate (suc (sh4 C)) zero (suc b4)
+            (sucʟ ar ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
+            (subst (λ w → ⟨ pr w (fst b) ∈ fst (lookup C γ) ⟩)
+              (sym (sucʟ-fst ar)) (g c ar a b c∈ sh)) ) ∣₁)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
