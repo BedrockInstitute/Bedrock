@@ -45,7 +45,7 @@ open import L.Coding.EnvSet {ℓ} lem using ( envSet )
 
 open import Cubical.Data.FinData using ( toℕ )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
@@ -192,6 +192,34 @@ already substituted, which is why they are one line apiece.
 <!--/-->
 
 ```agda
+  CondAtom : ∀ {n} → Term S n → Term S n
+           → (S → S → Type (ℓ-suc ℓ)) → S → Type (ℓ-suc ℓ)
+  CondAtom t u R z = Σ[ v ∈ S ] (Σ[ w ∈ S ]
+    (⟨ (w ∷ v ∷ z ∷ []) ⊨ tmIs t (suc zero) (suc (suc zero)) ⟩
+     × (⟨ (w ∷ v ∷ z ∷ []) ⊨ tmIs u zero (suc (suc zero)) ⟩ × R v w)))
+
+  cond∈-in : ∀ {n} (t u : Term S n) (z : S)
+           → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
+           → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
+  cond∈-in t u z = PT.map (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
+
+  cond∈-out : ∀ {n} (t u : Term S n) (z : S)
+            → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
+            → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
+  cond∈-out t u z = PT.rec squash₁
+    (λ { (v , hv) → PT.map (λ { (w , r) → v , (w , r) }) hv })
+
+  cond≐-in : ∀ {n} (t u : Term S n) (z : S)
+           → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
+           → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
+  cond≐-in t u z = PT.map (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
+
+  cond≐-out : ∀ {n} (t u : Term S n) (z : S)
+            → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
+            → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
+  cond≐-out t u z = PT.rec squash₁
+    (λ { (v , hv) → PT.map (λ { (w , r) → v , (w , r) }) hv })
+
   Sat-mem : ∀ {n} (φ : Formula S n) (x : S)
           → (x ∈ˢ Sat φ) ≡ ((x ∈ˢ envSet B n) ⊓ ((x ∷ []) ⊨ cond φ))
   Sat-mem {n} φ = sep-mem (envSet B n) (cond φ)
