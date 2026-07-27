@@ -1891,6 +1891,53 @@ module _ {n : ℕ} where
                       ∧̇ ∃̇ ( consAtL e'11 m11 e11
                           ∧̇ (var e'11 ∈̇ var yb11) )))
 
+  BndWit : Fin n → S ^ (8 + n) → S → Type (ℓ-suc ℓ)
+  BndWit B γ w = Σ[ x ∈ S ] ((⟨ fst x ∈ fst (lookup (sh9B B) (w ∷ γ)) ⟩
+    × ⟨ fst x ∈ fst w ⟩)
+    × (Σ[ e' ∈ S ] (⟨ (e' ∷ x ∷ w ∷ γ) ⊨ consAtL e'11 m11 e11 ⟩
+                    × ⟨ fst e' ∈ fst (lookup (suc (suc zero)) γ) ⟩)))
+
+  bodyEx-in : (B : Fin n) (γ : S ^ (8 + n))
+            → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+            → ∥ (Σ[ w ∈ S ] (⟨ (w ∷ γ) ⊨ tmValAt a9B e9B w9B ⟩
+                             × ∥ BndWit B γ w ∥₁)) ∥₁
+            → ⟨ γ ⊨ bodyEx B ⟩
+  bodyEx-in B γ h k = h , PT.map
+    (λ { (w , (hw , hx)) → w , (hw , PT.map
+      (λ { (x , ((x∈B , x∈w) , (e' , r))) → x , (x∈B , (x∈w , ∣ e' , r ∣₁)) })
+      hx) }) k
+
+  bodyEx-out : (B : Fin n) (γ : S ^ (8 + n)) → ⟨ γ ⊨ bodyEx B ⟩
+             → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+             × ∥ (Σ[ w ∈ S ] (⟨ (w ∷ γ) ⊨ tmValAt a9B e9B w9B ⟩
+                              × ∥ BndWit B γ w ∥₁)) ∥₁
+  bodyEx-out B γ h = h .fst , PT.map
+    (λ { (w , (hw , hx)) → w , (hw , PT.rec squash₁
+      (λ { (x , (x∈B , (x∈w , hv))) → PT.map
+        (λ { (e' , r) → x , ((x∈B , x∈w) , (e' , r)) }) hv })
+      hx) }) (h .snd)
+
+  bodyAll-in : (B : Fin n) (γ : S ^ (8 + n))
+             → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+             → ((w : S) → ⟨ (w ∷ γ) ⊨ tmValAt a9B e9B w9B ⟩
+                → (x e' : S) → ⟨ fst x ∈ fst (lookup (sh9B B) (w ∷ γ)) ⟩
+                → ⟨ fst x ∈ fst w ⟩
+                → ⟨ (e' ∷ x ∷ w ∷ γ) ⊨ consAtL e'11 m11 e11 ⟩
+                → ⟨ fst e' ∈ fst (lookup (suc (suc zero)) γ) ⟩)
+             → ⟨ γ ⊨ bodyAll B ⟩
+  bodyAll-in B γ h k =
+    h , (λ w hw x x∈B x∈w e' hc → k w hw x e' x∈B x∈w hc)
+
+  bodyAll-out : (B : Fin n) (γ : S ^ (8 + n)) → ⟨ γ ⊨ bodyAll B ⟩
+              → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+              × ((w : S) → ⟨ (w ∷ γ) ⊨ tmValAt a9B e9B w9B ⟩
+                 → (x e' : S) → ⟨ fst x ∈ fst (lookup (sh9B B) (w ∷ γ)) ⟩
+                 → ⟨ fst x ∈ fst w ⟩
+                 → ⟨ (e' ∷ x ∷ w ∷ γ) ⊨ consAtL e'11 m11 e11 ⟩
+                 → ⟨ fst e' ∈ fst (lookup (suc (suc zero)) γ) ⟩)
+  bodyAll-out B γ h =
+    h .fst , (λ w hw x e' x∈B x∈w hc → h .snd w hw x x∈B x∈w e' hc)
+
   bndRel : Fin n → Fin n → Formula S (8 + n) → Formula S (5 + n)
   bndRel T B body =
       ∀̇ (∀̇ ( subValSuccAt (sh7B T) ar7B b7B yb7B
