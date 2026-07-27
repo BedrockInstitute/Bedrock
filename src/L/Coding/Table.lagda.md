@@ -50,6 +50,8 @@ open import Cubical.Foundations.Prelude using ( J )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
+open InfinitySet using ( #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -218,4 +220,51 @@ which is the only arity at which it is true.
   entry-in φ@(∀̇ a)    = cupʟ-inl _ _ _ (top φ)
   entry-in φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (top φ)
   entry-in φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (top φ)
+```
+
+<!--en-->
+## What a key of a given tag has under it
+<!--zh-->
+## 给定标签的键之下有什么
+<!--/-->
+
+<!--en-->
+The dispatch a clause performs, and the last piece before the twelve
+verifications. A clause is stated at a tag and receives a key of that shape; the
+formula the key names is recovered by the inversion above, and then its
+constructor has to be matched against the tag. That match is the coding chapter's
+own device, exported rather than rebuilt: the constructor is recoverable from the
+tag, so what a formula of a given tag looks like is **computed** from the tag,
+and the tag equation carries the formula's own case to it.
+
+So one lemma serves all twelve clauses, and it hands back three things: what the
+formula's constructor is, that the arity read is the formula's, and that the
+payload read is the formula's.
+<!--zh-->
+子句所作的那次分派，也是十二次验证之前的最后一块。一条子句在某个标签处陈述，收到一个那种形状的键；键所命名的公式由上面那次求逆恢复出来，随后它的构造子必须与那个标签对上。那次对上用的是编码那一章自己的装置，导出而非重造：构造子可从标签还原，故「带某个标签的公式长什么样」是从标签**算**出来的，而那条标签等式把公式自己的情形搬到它上面。
+
+于是一条引理服务全部十二条子句，而它交回三件东西：那条公式的构造子是什么、被读出的元数就是它的元数、被读出的载荷就是它的载荷。
+<!--/-->
+
+```agda
+keyʟ-shape : ∀ {m} (ψ : Formula S m) (k : ℕ) (ar p : V ℓ)
+           → fst (keyʟ ψ) ≡ pr ar (pr (# k) p)
+           → LCode.Match k ψ
+           × ((# m ≡ ar) × (fst (LCode.payOf ψ) ≡ p))
+keyʟ-shape {m} ψ k ar p e =
+    subst (λ j → LCode.Match j ψ) tag≡ (LCode.matches ψ)
+  , ( sym (numeralL-fst m) ∙ pr-inj e' .fst
+    , pr-inj inner .snd )
+  where
+  e' : pr (fst (numeralL m)) (fst LCode.⌜ ψ ⌝) ≡ pr ar (pr (# k) p)
+  e' = sym (prʟ-fst (numeralL m) LCode.⌜ ψ ⌝) ∙ e
+
+  inner : pr (fst (numeralL (LCode.tagOf ψ))) (fst (LCode.payOf ψ))
+        ≡ pr (# k) p
+  inner = sym (prʟ-fst (numeralL (LCode.tagOf ψ)) (LCode.payOf ψ))
+        ∙ sym (cong fst (LCode.shape ψ))
+        ∙ pr-inj e' .snd
+
+  tag≡ : LCode.tagOf ψ ≡ k
+  tag≡ = #-inj′ (sym (numeralL-fst (LCode.tagOf ψ)) ∙ pr-inj inner .fst)
 ```
