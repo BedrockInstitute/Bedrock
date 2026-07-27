@@ -313,6 +313,7 @@ import L.Axioms.Power
 import L.Absoluteness
 import L.Coding.Model
 import L.Coding.InL
+import L.Coding.Closed
 import L.Recursion
 import L.Axioms.Numerals
 import L.Axioms.Infinity
@@ -340,7 +341,13 @@ The root, stated today and finished over the remaining parts:
   the constructors with nothing in it. That is what lets a code be named as a
   constant of the model's object language, and a family of codes be the domain of
   an internalized recursion. The set of *all* codes is deliberately not proved to
-  be one, and is not needed.
+  be one, and is not needed here. Also `closure`{.Agda}, the finite set of a
+  formula's subformula keys, `closure-inv`{.Agda} reading it back, and
+  `byTag`{.Agda}, which matches the twelve constructors against the eight demands
+  a closedness predicate makes, once rather than twelve times eight.
+- `L.Coding.Closed`{.Agda}: the closure satisfies the object language's
+  closedness predicate. Eight instances of four readers, and the hypothesis a
+  recursion over the subcodes of a formula needs about its index set.
 - `L.Axioms.Power`{.Agda}: the power-set field, by bounding the constructible
   subsets and carving one stage. **Condensation is not used and is not needed**:
   the axiom asks that the constructible subsets form a set, not that they appear
@@ -367,7 +374,8 @@ The root, stated today and finished over the remaining parts:
 - `L.Axioms.Full`{.Agda}：任意公式的分离与替换，办法是反射那条公式，再把有界的器械施于它的相对化；那个禁闭原子正是使替换的像逃不出阶段的东西。
 - `L.Absoluteness`{.Agda}：两门对象语言之间的桥。常元可构造的、关于层级的 Δ₀ 公式，经 `liftFo`{.Agda} 运进 `L` 的语言，而 `transferFo`{.Agda} 说两者说的是同一件事；编码诸章留在层级一侧，从此处被引用。
 - `L.Coding.Model`{.Agda}：模型之上的对象语言。「函数」的含义 (`prAtL`{.Agda}、`appAt`{.Agda}、`svAt`{.Agda}、`domAt`{.Agda})、取值一侧的对、标签读式、环境，以及 `extAt`{.Agda}：每条集值子句的写作框架，其两种读法就是它的两个投影。无常元的读式经桥引用；点名数码的读式直接写，因为无界如今免费。
-- `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，也不需要。
+- `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，此处也不需要。另有 `closure`{.Agda}，一条公式的诸子公式键构成的有穷集；`closure-inv`{.Agda} 把它读回来；以及 `byTag`{.Agda}，它把十二个构造子与封闭性谓词提出的八项要求对上一次，而非对上十二乘八次。
+- `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词。四个读式的八个实例，也就是「对一条公式的诸子码作递归」关于其索引集所需的那条假设。
 - `L.Axioms.Power`{.Agda}：幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。**未用凝聚，也不需要**：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
 - `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。`witnessInModel`{.Agda} 记下图必须遵守的那一条规矩：对象语言的存在量词在 `L` 上取值，故一个图不可以靠断言被描述者本身存在来描述它。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。

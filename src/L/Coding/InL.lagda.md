@@ -39,7 +39,7 @@ open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
-open import V.Coding {ℓ} using ( pr; module VCode )
+open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
 open import L.Constructible {ℓ} using ( isL; IsOrd; Lset )
 open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; numL )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
@@ -52,10 +52,11 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_⁆s; ⁅_,_⁆; ⋃_; _∪_; module InfinitySet )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Unit using ( Unit*; tt* )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import V.Model {ℓ} using ( pair-singleton; pair-spec; union-spec )
-open InfinitySet using ( #_ )
+open InfinitySet using ( #_; sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
@@ -422,4 +423,175 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
   closure-inv φ@(∀̇ a)    x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
   closure-inv φ@(∀̇∈ t a) x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
   closure-inv φ@(∃̇∈ t a) x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
+```
+
+<!--en-->
+## What a key of that shape has under it
+<!--zh-->
+## 那种形状的键之下有什么
+<!--/-->
+
+<!--en-->
+The demand a closedness predicate makes is indexed by a constructor tag, and the
+formula it is made of is indexed by a constructor. Matching the two is the only
+real work in the first instance, and doing it clause by clause would be twelve
+formulas times eight demands. It is not, because the demand can be *computed*
+from the tag: one type family over the tag, one function over the formula, and
+the equation between tags that the key's injectivity yields carries the second to
+the first.
+
+Below the tag, a key is an arity paired with a code, and both layers are pinned
+by pairing's injectivity. What comes out is that an arity-preserving constructor
+demands its components at the arity read, an arity-raising one demands them at
+the successor, and a constructor with no subformula demands nothing.
+<!--zh-->
+封闭性谓词提的要求以构造子标签为索引，而它所谈论的公式以构造子为索引。把这两者对上，是第一个实例里唯一真正的活；而逐条去做会是十二条公式乘八项要求。不必如此，因为那项要求可以从标签**算**出来：一个以标签为索引的类型族、一个以公式为索引的函数，而键的单射性所给出的那条标签等式把后者搬到前者上。
+
+标签之下，一个键是元数与码之对，两层都由配对的单射性钉住。得出的是：保持元数的构造子在被读出的元数处索取它的诸分量，抬升元数的在后继处索取，而没有子公式的构造子什么也不索取。
+<!--/-->
+
+```agda
+module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+  private
+    Key = key f h
+    Cl : ∀ {n} → Formula K n → V ℓ
+    Cl = closure f h
+
+  key∈closure : ∀ {n} (φ : Formula K n) → ⟨ Key φ ∈ Cl φ ⟩
+  key∈closure φ@(t ∈̇ u)  = sgl-in (Key φ) (Key φ) refl
+  key∈closure φ@(t ≐ u)  = sgl-in (Key φ) (Key φ) refl
+  key∈closure φ@⊤̇        = sgl-in (Key φ) (Key φ) refl
+  key∈closure φ@⊥̇        = sgl-in (Key φ) (Key φ) refl
+  key∈closure φ@(a ∧̇ b)  = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+  key∈closure φ@(a ∨̇ b)  = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+  key∈closure φ@(a ⇒̇ b)  = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+  key∈closure φ@(¬̇ a)    = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+  key∈closure φ@(∃̇ a)    = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+  key∈closure φ@(∀̇ a)    = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+  key∈closure φ@(∀̇∈ t a) = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+  key∈closure φ@(∃̇∈ t a) = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
+
+  module _ (C : V ℓ) where
+    BothSame : V ℓ → V ℓ → Type (ℓ-suc ℓ)
+    BothSame ar p = (u v : V ℓ) → p ≡ pr u v
+                  → ⟨ pr ar u ∈ C ⟩ × ⟨ pr ar v ∈ C ⟩
+
+    SecondSucc : V ℓ → V ℓ → Type (ℓ-suc ℓ)
+    SecondSucc ar p = (u v : V ℓ) → p ≡ pr u v → ⟨ pr (sucV ar) v ∈ C ⟩
+
+    Concl : ℕ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
+    Concl 2  ar p = BothSame ar p
+    Concl 3  ar p = BothSame ar p
+    Concl 4  ar p = BothSame ar p
+    Concl 5  ar p = ⟨ pr ar p ∈ C ⟩
+    Concl 8  ar p = ⟨ pr (sucV ar) p ∈ C ⟩
+    Concl 9  ar p = ⟨ pr (sucV ar) p ∈ C ⟩
+    Concl 10 ar p = SecondSucc ar p
+    Concl 11 ar p = SecondSucc ar p
+    Concl _  _  _ = Unit*
+
+    private
+      Below : ∀ {n} → Formula K n → Type (ℓ-suc ℓ)
+      Below φ = (z : V ℓ) → ⟨ z ∈ Cl φ ⟩ → ⟨ z ∈ C ⟩
+
+      inC : ∀ {n m} (φ : Formula K n) (a : Formula K m)
+          → Below φ → ⟨ Key a ∈ Cl φ ⟩ → {w : V ℓ} → Key a ≡ w → ⟨ w ∈ C ⟩
+      inC φ a below mem q = subst (λ w → ⟨ w ∈ C ⟩) q (below (Key a) mem)
+
+      atTag : ∀ {m k : ℕ} {ar p : V ℓ} (j : ℕ) (q : V ℓ)
+            → pr (# m) (VCode.mkTag j q) ≡ pr ar (pr (# k) p)
+            → (j ≡ k) × ((# m ≡ ar) × (q ≡ p))
+      atTag j q e = VCode.mkTag-inj (pr-inj e .snd) .fst
+                  , (pr-inj e .fst , VCode.mkTag-inj (pr-inj e .snd) .snd)
+
+      bothOf : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
+             → Below φ' → ⟨ Key a ∈ Cl φ' ⟩ → ⟨ Key b ∈ Cl φ' ⟩
+             → (ar p : V ℓ) → # m' ≡ ar
+             → pr VCode.⌜ mapFo f a ⌝ VCode.⌜ mapFo f b ⌝ ≡ p
+             → BothSame ar p
+      bothOf φ' a b below ma mb ar p qa qp u v qu =
+          inC φ' a below ma (cong₂ pr qa (pr-inj (qp ∙ qu) .fst))
+        , inC φ' b below mb (cong₂ pr qa (pr-inj (qp ∙ qu) .snd))
+
+      oneOf : ∀ {n m'} (φ' : Formula K n) (a : Formula K m')
+            → Below φ' → ⟨ Key a ∈ Cl φ' ⟩
+            → (ar p : V ℓ) → # m' ≡ ar → VCode.⌜ mapFo f a ⌝ ≡ p
+            → ⟨ pr ar p ∈ C ⟩
+      oneOf φ' a below ma ar p qa qp = inC φ' a below ma (cong₂ pr qa qp)
+
+      upOf : ∀ {n m'} (φ' : Formula K n) (a : Formula K (suc m'))
+           → Below φ' → ⟨ Key a ∈ Cl φ' ⟩
+           → (ar p : V ℓ) → # m' ≡ ar → VCode.⌜ mapFo f a ⌝ ≡ p
+           → ⟨ pr (sucV ar) p ∈ C ⟩
+      upOf φ' a below ma ar p qa qp =
+        inC φ' a below ma (cong₂ pr (cong sucV qa) qp)
+
+      sndUpOf : ∀ {n m'} (φ' : Formula K n) (t : Term K m')
+                (a : Formula K (suc m'))
+              → Below φ' → ⟨ Key a ∈ Cl φ' ⟩
+              → (ar p : V ℓ) → # m' ≡ ar
+              → pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝ ≡ p
+              → SecondSucc ar p
+      sndUpOf φ' t a below ma ar p qa qp u v qu =
+        inC φ' a below ma (cong₂ pr (cong sucV qa) (pr-inj (qp ∙ qu) .snd))
+
+      left : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
+           → ⟨ Key a ∈ (⁅ Key φ' ⁆s ∪ (Cl a ∪ Cl b)) ⟩
+      left φ' a b = cup-inr ⁅ Key φ' ⁆s (Cl a ∪ Cl b) (Key a)
+                      (cup-inl (Cl a) (Cl b) (Key a) (key∈closure a))
+
+      right : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
+            → ⟨ Key b ∈ (⁅ Key φ' ⁆s ∪ (Cl a ∪ Cl b)) ⟩
+      right φ' a b = cup-inr ⁅ Key φ' ⁆s (Cl a ∪ Cl b) (Key b)
+                       (cup-inr (Cl a) (Cl b) (Key b) (key∈closure b))
+
+      only : ∀ {n m'} (φ' : Formula K n) (a : Formula K m')
+           → ⟨ Key a ∈ (⁅ Key φ' ⁆s ∪ Cl a) ⟩
+      only φ' a = cup-inr ⁅ Key φ' ⁆s (Cl a) (Key a) (key∈closure a)
+
+    byTag : ∀ {m} (φ : Formula K m) (k : ℕ) (ar p : V ℓ)
+          → Below φ → Key φ ≡ pr ar (pr (# k) p) → Concl k ar p
+    byTag (t ∈̇ u) k ar p below eq = subst (λ j → Concl j ar p)
+      (atTag 0 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapTm f u ⌝ᵗ) eq .fst) tt*
+    byTag (t ≐ u) k ar p below eq = subst (λ j → Concl j ar p)
+      (atTag 1 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapTm f u ⌝ᵗ) eq .fst) tt*
+    byTag ⊤̇ k ar p below eq = subst (λ j → Concl j ar p)
+      (atTag 6 (# 0) eq .fst) tt*
+    byTag ⊥̇ k ar p below eq = subst (λ j → Concl j ar p)
+      (atTag 7 (# 0) eq .fst) tt*
+    byTag φ@(a ∧̇ b) k ar p below eq =
+      let r = atTag 2 (pr VCode.⌜ mapFo f a ⌝ VCode.⌜ mapFo f b ⌝) eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (bothOf φ a b below (left φ a b) (right φ a b) ar p
+          (r .snd .fst) (r .snd .snd))
+    byTag φ@(a ∨̇ b) k ar p below eq =
+      let r = atTag 3 (pr VCode.⌜ mapFo f a ⌝ VCode.⌜ mapFo f b ⌝) eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (bothOf φ a b below (left φ a b) (right φ a b) ar p
+          (r .snd .fst) (r .snd .snd))
+    byTag φ@(a ⇒̇ b) k ar p below eq =
+      let r = atTag 4 (pr VCode.⌜ mapFo f a ⌝ VCode.⌜ mapFo f b ⌝) eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (bothOf φ a b below (left φ a b) (right φ a b) ar p
+          (r .snd .fst) (r .snd .snd))
+    byTag φ@(¬̇ a) k ar p below eq =
+      let r = atTag 5 VCode.⌜ mapFo f a ⌝ eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (oneOf φ a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
+    byTag φ@(∃̇ a) k ar p below eq =
+      let r = atTag 8 VCode.⌜ mapFo f a ⌝ eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (upOf φ a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
+    byTag φ@(∀̇ a) k ar p below eq =
+      let r = atTag 9 VCode.⌜ mapFo f a ⌝ eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (upOf φ a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
+    byTag φ@(∀̇∈ t a) k ar p below eq =
+      let r = atTag 10 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝) eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (sndUpOf φ t a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
+    byTag φ@(∃̇∈ t a) k ar p below eq =
+      let r = atTag 11 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝) eq in
+      subst (λ j → Concl j ar p) (r .fst)
+        (sndUpOf φ t a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
 ```
