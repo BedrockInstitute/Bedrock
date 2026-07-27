@@ -47,8 +47,6 @@ open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈ )
 open import FOL.Manipulation.Relabelling using ( embed )
-import FOL.Reification.Combinators
-import FOL.Reification.Certified
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; module VCode )
@@ -71,11 +69,6 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open Sem using ( _^_ )
 open Sem.At (V ℓ) id using ( _⊨_; ⟦_⟧ )
-
-open FOL.Reification.Combinators (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ (V ℓ) id
-  using ( var-rep )
-open FOL.Reification.Certified.Certified (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ (V ℓ) id
-  using ( RepΔ₀; retarget₀; ∈-rep₀; ≐-rep₀; ∧-rep₀; ∨-rep₀; ∀∈-rep₀; ∃∈-rep₀ )
 ```
 
 <!--en-->
@@ -329,42 +322,10 @@ constructor index is read.
 <!--/-->
 
 ```agda
-sglAt-rep : ∀ {n} (k i : Fin n)
-          → RepΔ₀ n (λ γ → (⟦ var i ⟧ γ ∈ ⟦ var k ⟧ γ)
-                         ⊓ ⋀ (V ℓ) (λ x → (x ∈ ⟦ var k ⟧ γ)
-                                        ⇒ ((x ≡ ⟦ var i ⟧ γ) , setIsSet _ _)))
-sglAt-rep k i =
-  ∧-rep₀ (∈-rep₀ (var-rep i) (var-rep k))
-         (∀∈-rep₀ (var-rep k) (≐-rep₀ (var-rep zero) (var-rep (suc i))))
-
-pairAt-rep : ∀ {n} (k i j : Fin n)
-           → RepΔ₀ n (λ γ → (⟦ var i ⟧ γ ∈ ⟦ var k ⟧ γ)
-                          ⊓ ((⟦ var j ⟧ γ ∈ ⟦ var k ⟧ γ)
-                          ⊓ ⋀ (V ℓ) (λ x → (x ∈ ⟦ var k ⟧ γ)
-                                 ⇒ (((x ≡ ⟦ var i ⟧ γ) , setIsSet _ _)
-                                 ⊔ ((x ≡ ⟦ var j ⟧ γ) , setIsSet _ _)))))
-pairAt-rep k i j =
-  ∧-rep₀ (∈-rep₀ (var-rep i) (var-rep k))
-    (∧-rep₀ (∈-rep₀ (var-rep j) (var-rep k))
-      (∀∈-rep₀ (var-rep k)
-        (∨-rep₀ (≐-rep₀ (var-rep zero) (var-rep (suc i)))
-                (≐-rep₀ (var-rep zero) (var-rep (suc j))))))
-
-prAt-rep : ∀ {n} (q u v : Fin n)
-         → RepΔ₀ n (λ γ → (⟦ var q ⟧ γ ≡ pr (⟦ var u ⟧ γ) (⟦ var v ⟧ γ))
-                          , setIsSet _ _)
-prAt-rep q u v =
-  retarget₀
-    (λ γ → ⇔toPath (λ { (h₁ , h₂ , h₃) → prChar-fwd _ _ _ h₁ h₂ h₃ })
-                   (λ e → prChar-bwd _ _ _ e))
-    (∧-rep₀ (∃∈-rep₀ (var-rep q) (sglAt-rep zero (suc u)))
-      (∧-rep₀ (∃∈-rep₀ (var-rep q) (pairAt-rep zero (suc u) (suc v)))
-        (∀∈-rep₀ (var-rep q)
-          (∨-rep₀ (sglAt-rep zero (suc u))
-                  (pairAt-rep zero (suc u) (suc v))))))
-
 prAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
-prAt q u v = prAt-rep q u v .fst
+prAt q u v = (∃̇∈ (var q) (sglAt zero (suc u)))
+          ∧̇ ((∃̇∈ (var q) (pairAt zero (suc u) (suc v)))
+          ∧̇ (∀̇∈ (var q) (sglAt zero (suc u) ∨̇ pairAt zero (suc u) (suc v))))
 
 tagAt : ∀ {n} → Fin n → ℕ → Fin n → Formula (V ℓ) n
 tagAt s k x = (∃̇∈ (var s) (sglConAt zero (# k)))
@@ -372,7 +333,9 @@ tagAt s k x = (∃̇∈ (var s) (sglConAt zero (# k)))
            ∧̇ (∀̇∈ (var s) (sglConAt zero (# k) ∨̇ pairConAt zero (# k) (suc x))))
 
 Δ₀-prAt : ∀ {n} (q u v : Fin n) → Δ₀ (prAt q u v)
-Δ₀-prAt q u v = prAt-rep q u v .snd .fst
+Δ₀-prAt q u v = δ-∧ (δ-∃∈ (Δ₀-sglAt zero (suc u)))
+  (δ-∧ (δ-∃∈ (Δ₀-pairAt zero (suc u) (suc v)))
+       (δ-∀∈ (δ-∨ (Δ₀-sglAt zero (suc u)) (Δ₀-pairAt zero (suc u) (suc v)))))
 
 Δ₀-tagAt : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) → Δ₀ (tagAt s k x)
 Δ₀-tagAt s k x = δ-∧ (δ-∃∈ (Δ₀-sglConAt zero (# k)))
@@ -401,7 +364,9 @@ that particular shape.
 prAt-adequate : ∀ {n} (q u v : Fin n) (γ : (V ℓ) ^ n)
               → (γ ⊨ prAt q u v) ≡ ((⟦ var q ⟧ γ ≡ pr (⟦ var u ⟧ γ) (⟦ var v ⟧ γ))
                                    , setIsSet _ _)
-prAt-adequate q u v = prAt-rep q u v .snd .snd
+prAt-adequate q u v γ = ⇔toPath
+  (λ { (h₁ , h₂ , h₃) → prChar-fwd _ _ _ h₁ h₂ h₃ })
+  (λ e → prChar-bwd _ _ _ e)
 
 tagAt-adequate : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) (γ : (V ℓ) ^ n)
                → (γ ⊨ tagAt s k x) ≡ ((⟦ var s ⟧ γ ≡ pr (# k) (⟦ var x ⟧ γ))
