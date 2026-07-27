@@ -176,6 +176,7 @@ rather than refactoring. D12 rules on which to take, §6.1 orders their executio
 | D10 | Build performance | The build constraints of §7 are binding from the first ported module: single-invocation trusted gate, parallelism outside the trust base, tracked cold-check budget, per-module heap caps. Cold-check regressions are defects, not background noise. |
 | D11 | Revisability | The plan legislates for known unknowns explicitly: legislation may be added mid-course (standing L0 track), the skeleton below the part level may be re-cut after L3, Frontier fields may be re-cut, and a whole-book harmonization pass runs at L4. Mechanisms in §8. |
 | D12 | L3 reduction strategy | **Outcome 2026-07-26 (`[L3.0.2]`): the decision was right, the analysis was wrong.** The lever was not a large internalization theorem (it is 96 lines) but general-formula comprehension, delivered at `[L2.2]`; the projected 65%-at-3x is now measured-and-projected at 7x to 14x. Original ruling, 2026-07-25: **take the big lever first.** Before the certificate clusters are reduced one by one, attempt a general **internalization theorem for L-recursion** (goal `[L3.0]`). Grounds: the §2.1 measurement shows the certificate mass is 8 to 10 hand-built instantiations of one pipeline, repeating because the source has no rudimentary-function / Σ-recursion absoluteness layer; the syntactic levers cap out at 25% to 40%, the theorem reaches roughly 65%. This is research, not refactoring, so it runs under an explicit paper-level gate and pre-agreed kill criteria (`[L3.0.3]`, `[L3.0.1]`), and D3's per-cluster reduction review stands as the route for whatever the theorem does not absorb. Schedule ruling, same day: the paper-level probe `[L3.0.3]` opens **before** L2, so the route's cheap kill signal arrives before the axiom branches commit to a Frontier cut at the certificate boundary. |
+| D13 | Macros and generated proof | **Ruled 2026-07-27 by the owner.** Opacity is **not** an objection: avoiding macro black boxes is not a project aim. Explain the macro's own logic, cut the code volume, and the reader's burden goes *down*, closer to real mathematical practice. **The single veto is conversion blowup.** So a macro or reification route is judged by exactly two measured questions: is it smaller, and does it keep `src/` inside the §7.5 and §7.6 budgets. If both, pursue it actively. Supersedes the exposition argument that had been recorded against `[L3.2]`, which is withdrawn. |
 
 ## 4. Target skeleton (D5)
 
@@ -701,31 +702,66 @@ working as designed.
   equivalent is `FOL.Manipulation.{Relabelling, Renaming, Bounding, Relativize}` = **338
   lines**, and those four modules are almost entirely twelve-clause traversal. Counting
   every traversal-dense module in the book (those four plus `FOL.{Coding, Semantics,
-  LevyHierarchy}`, `L.ReflectFo`, `L.Coding.InL`) gives **827 lines, 14% of `src/`**, and
-  the macro could reach only the congruence-shaped part of that. Realistic saving:
-  **200 to 350 lines**, roughly one twentieth of the inherited estimate.
+  LevyHierarchy}`, `L.ReflectFo`, `L.Coding.InL`) gives **827 lines, 14% of `src/`**.
 
-  **And the job has already been done, five times, by ordinary abstraction.** `Ladder`,
-  `Definition`, `extAt`, `binClauseAt`/`unClauseAt`, and `L.ReflectFo`'s
-  `Box`/`joinBox`/`addBox` each collapsed a family of traversals inside Agda, with no
-  metaprogramming: 16 combinator uses in `L.ReflectFo`, 40 in `L.Coding.Model`. Every one
-  was cheaper to write than a macro, legible as prose, and free of conversion risk.
+  **Probed 2026-07-27 under D13, and the answer is to adopt the framework, not to build a
+  macro.** Two deliverables were rebuilt through `FOL.Reification.Combinators` and measured
+  against their hand-written originals in `L.Coding.Model`:
 
-  **Three costs the source never paid.** Bedrock is a *book*: twelve `cong₂` clauses are
-  read as exposition, a macro call is opaque, and the audience is stated to be readers
-  learning the mathematics. Generated proof terms are exactly what the source's own
-  WORKLOG records blowing up conversion, against a §7.5 baseline that currently sits at
-  18.5 s with zero `-- perf:` markers. And the framework it would extend has had no
-  consumer for nine goals, which is itself evidence about demand.
+  | deliverable | hand-written | reification | ratio |
+  |---|---:|---:|---:|
+  | `appAt` + adequacy (content-heavy) | 21 | 19 | 1.1x |
+  | `svAt` + its two directions (pure congruence) | 27 | **10** | **2.7x** |
 
-  **Re-open trigger, stated so the decision is not re-litigated by taste.** Open `[L3.2]`
-  when *either* (a) a congruence-shaped traversal family is written out by hand a **third**
-  time and no combinator collapses it, or (b) the traversal-dense share of `src/` passes
-  **20%**. Until one fires, prefer an Agda-level combinator; the record says it wins.
+  The split is exactly where it should be. `appAt`'s work is `collapse`, the proof that a
+  truncated existential over the model is plain membership, which needs `isL-trans`; no
+  framework does mathematics, so nothing is saved. `svAt`'s work is de Bruijn bookkeeping
+  and four substitutions through two helper lemmas; the framework builds it inside out in
+  one expression and both helpers disappear.
 
-  **Correction on the record:** one turn before this re-evaluation I called `[L3.2]` "the
-  real lever" on the twenty-nine traversals. That was said before measuring and the
-  measurement does not support it.
+  **The obstruction I assumed does not exist.** `RepP` is a pair, so a *quoted* reader
+  injects as a leaf: `(prAtL … , prAtL-adequate …)` **is** a `RepP`, and the combinators
+  build upward from it. Quoting and reification compose, so the hierarchy-side readers and
+  the model-side predicates live in one calculus.
+
+  **D13's veto does not fire.** Per-module profile: `Probe` 107 ms,
+  `FOL.Reification.Combinators` 81 ms, `Base` 23 ms. No conversion cost at all.
+
+  **Consequence for the goal's own name.** The probe used **no macro**. `RepΔ₀` already
+  sits in `Certified`, which was one of the three extensions this goal proposed to add. So
+  the ordering is: adopt the combinators for congruence-shaped predicates now, and treat
+  `reify!` proper as a later question whose margin is smaller precisely because the
+  combinators will already have taken the saving.
+
+  **Ordinary abstraction has done part of the job**, five times: `Ladder`, `Definition`,
+  `extAt`, `binClauseAt`/`unClauseAt`, and `L.ReflectFo`'s `Box`/`joinBox`/`addBox`, with
+  16 combinator uses in `L.ReflectFo` and 40 in `L.Coding.Model`. That is evidence a
+  combinator is often enough, not evidence a macro is unwanted.
+
+  **D13 (owner ruling, 2026-07-27) governs this goal.** Opacity is **not** an objection:
+  the project does not aim to avoid macro black boxes. Explain the macro's own logic, cut
+  the code volume, and the reader's burden goes *down*, closer to real mathematical
+  practice. **The one veto is conversion blowup.** So the test is exactly two questions,
+  asked with measurements: does it shrink the code, and does it keep `src/` inside the §7.5
+  and §7.6 budgets. If both, pursue it.
+
+  An earlier version of this entry argued from exposition ("twelve `cong₂` clauses read as
+  prose, a macro call is opaque"). **That argument is withdrawn under D13** and must not be
+  reintroduced.
+
+  **Next unit, and a scheduling constraint.** Adopt `RepP` for the congruence-shaped
+  predicates of `L.Coding.Model`, and prefer it for every new one. **Not now**, because a
+  forked conversation is finishing the twelve clauses in that file and a refactor would
+  collide; the adoption lands when that file is quiet.
+
+  **Corrections on the record.** One turn before the re-evaluation I called `[L3.2]` "the
+  real lever" on the twenty-nine traversals; that was said before measuring. And the
+  re-evaluation cited `FOL.Reification`'s nine goals at zero consumers as "evidence about
+  demand"; **that inference does not hold.** `RepP n P = Σ[ φ ] (∀ γ → (γ ⊨ φ) ≡ P γ)` is
+  literally the shape of **11** adequacy lemmas hand-written in `L.Coding.Model` over two
+  days without the framework being reached for, and `Certified.RepΔ₀` already supplies the
+  Δ₀ witness that this goal listed as something the macro still had to add. Zero consumers
+  measured discoverability, not fit.
 - **[L3.3]** SUPERSEDED 2026-07-25 by `[L3.14]`, after a consumption re-measurement
   (§11). The goal was scoped as the source's whole `Code*` / `Formula*` / `VarCoding` /
   `SeqChar` cluster, about 4.9k lines; measuring consumers showed that only the Δ₀ code
@@ -978,7 +1014,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0.1 | Two-instance proof of concept | **RE-POINTED 2026-07-26** by the `[L3.0.2]` measurement: the instance to build is **satisfaction**, the largest bucket (34%) and the largest uncertainty at once, not `Depth`, which the same analysis expects to vanish (it is a termination measure and Agda needs none). **Theorem DONE 2026-07-26**: `L.Recursion` complete at 96 lines of Agda: `Recursion`/`Of` over `hasReplacementL`, `smallDom` discharging the domain generically, and `Definition`/`Image` reducing an instance's obligation to a defining formula and its adequacy. Fillability probed at 35 lines (singleton map, uncommitted). **Instance half PLANNED**: `Depth` and `Cmp`, whose graphs talk about coded syntax, are what the kill criteria measure |
 | L3.0.2 | Verdict and rollout ruling | DONE 2026-07-26, memo [memos/L3.0.2-verdict.md](memos/L3.0.2-verdict.md). **Green, for a different reason than D12 expected.** The 43k remaining becomes a projected 3,000 to 6,400; the `L` side lands at 6,500 to 10,000 total, 3,361 already written. L3.5 to L3.7 proceed as instantiations; L3.4 does not open |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
-| L3.2 | `reify!` industrialization (S6) | **DORMANT 2026-07-27**, re-evaluated with measurements: its headroom shrank about 20x in translation (8k-10k in the source, ~600 lines here), because ordinary abstraction has already done the macro's job five times. Re-open trigger stated in the goal; do not schedule until it fires |
+| L3.2 | `reify!` industrialization (S6) | **RE-OPENED 2026-07-27 and re-scoped, on a probe.** The win is the existing `FOL.Reification` **combinators**, needing no macro and none of this goal's three extensions (`RepΔ₀` is already in `Certified`). Measured: a congruence-shaped predicate goes **27 → 10 lines (2.7x)**, a content-heavy one 21 → 19. Conversion cost nil (probe 107 ms, `Combinators` 81 ms). Adopt the framework first; the macro proper is a later question with a smaller margin |
 | L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
 | L3.16 | Readers quoted in the model | ACTIVE 2026-07-26. `L.Coding.Model` (165): the object language's "function" (`prAtL`, `appAt`, `svAt`, `domAt`), the pair on the value side (`prʟ`), and the tag readers. `L.Coding.InL` (43): every code is an element of `L`. **Two roads, both kept**: constant-free readers are quoted through `[L3.15]`; readers naming a numeral are written fresh, since quoting would thread a constructibility witness through the formula's whole shape while writing needs one unbounded existential, and unbounded is now free. Step 1 of the `[L3.0.1]` build order, which the reconnaissance called its largest residual risk, is done at 208 lines against its own 190 estimate |
 | L3.15 | Re-base the coding readers onto `S` | **DONE 2026-07-26, and it is not a re-base.** `L.Absoluteness`, **34 lines**: one instantiation of `Relabel` at the bound "constructible", and a four-step transfer chain with no induction of its own. `[L3.14]`'s 1,065 lines are neither stranded nor rewritten; they stay on the hierarchy side and are quoted |
