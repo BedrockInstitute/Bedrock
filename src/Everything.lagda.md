@@ -309,6 +309,7 @@ import L.Axioms.Separation
 import L.Reflect
 import L.ReflectFo
 import L.Axioms.Full
+import L.Axioms.Power
 import L.Absoluteness
 import L.Coding.Model
 import L.Coding.InL
@@ -340,6 +341,10 @@ The root, stated today and finished over the remaining parts:
   constant of the model's object language, and a family of codes be the domain of
   an internalized recursion. The set of *all* codes is deliberately not proved to
   be one, and is not needed.
+- `L.Axioms.Power`{.Agda}: the power-set field, by bounding the constructible
+  subsets and carving one stage. **Condensation is not used and is not needed**:
+  the axiom asks that the constructible subsets form a set, not that they appear
+  early.
 - `L.Recursion`{.Agda}: a function on a set of `L` whose graph is expressible has
   its table in `L`. A corollary of general-formula replacement, not a theorem: the
   usual absoluteness discipline exists to make a table readable *inside a stage*,
@@ -350,7 +355,7 @@ The root, stated today and finished over the remaining parts:
   object-language existential ranges over `L`, so a graph may not describe an
   object by asserting that object's existence.
 - `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
-  two, each the verbatim
+  one, the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
   is done when the record is empty.
 - `L.Model`{.Agda}: the root chapter: the honest relative-consistency framing;
@@ -363,8 +368,9 @@ The root, stated today and finished over the remaining parts:
 - `L.Absoluteness`{.Agda}：两门对象语言之间的桥。常元可构造的、关于层级的 Δ₀ 公式，经 `liftFo`{.Agda} 运进 `L` 的语言，而 `transferFo`{.Agda} 说两者说的是同一件事；编码诸章留在层级一侧，从此处被引用。
 - `L.Coding.Model`{.Agda}：模型之上的对象语言。「函数」的含义 (`prAtL`{.Agda}、`appAt`{.Agda}、`svAt`{.Agda}、`domAt`{.Agda})、取值一侧的对、标签读式、环境，以及 `extAt`{.Agda}：每条集值子句的写作框架，其两种读法就是它的两个投影。无常元的读式经桥引用；点名数码的读式直接写，因为无界如今免费。
 - `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，也不需要。
+- `L.Axioms.Power`{.Agda}：幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。**未用凝聚，也不需要**：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
 - `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。`witnessInModel`{.Agda} 记下图必须遵守的那一条规矩：对象语言的存在量词在 `L` 上取值，故一个图不可以靠断言被描述者本身存在来描述它。
-- `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今剩两个，每个都是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
+- `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->
 
