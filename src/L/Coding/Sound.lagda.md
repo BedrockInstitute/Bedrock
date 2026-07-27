@@ -53,7 +53,7 @@ open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem
   using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out; cond∈-in; cond∈-out; cond≐-in; cond≐-out )
 open import L.Coding.EnvSet {ℓ} lem
-  using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
+  using ( envSet; envSet-in; envSet-out; envS; envOver; Ix; module Recover )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; keyʟ-shape; satTable; slot; slot-inv; entry-out )
 
@@ -114,6 +114,14 @@ module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
   into z hz = subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
     (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
     (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
+    where
+    ov : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
+    ov = extAt-out Ei (envOverAt zero (suc di) (suc bi)) γ hE z hz
+
+  asEnv : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+        → Σ[ g ∈ Ix B m ] (fst z ≡ fst (envS B g))
+  asEnv z hz = Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov
+             , Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov
     where
     ov : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
     ov = extAt-out Ei (envOverAt zero (suc di) (suc bi)) γ hE z hz

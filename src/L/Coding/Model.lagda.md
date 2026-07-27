@@ -53,6 +53,7 @@ open import L.Axioms.Numerals {ℓ}
   using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst; sucʟ; sucʟ-fst )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
+open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.FinData using ( toℕ )
@@ -1495,6 +1496,19 @@ consAtL-adequate e' m e γ g hE =
       (lookup-fst e γ ∙ hE)
   ∙ cong₂ PairIs (lookup-fst e' γ)
       (cong (λ w → env (cons w g)) (lookup-fst m γ))
+
+consAtL-transport : ∀ {n n'} (γ : S ^ n) (γ' : S ^ n')
+                    (e₁ m₁ d₁ : Fin n) (e₂ m₂ d₂ : Fin n')
+                    {k : ℕ} (g : Fin k → V ℓ)
+                  → fst (lookup d₁ γ) ≡ env g
+                  → fst (lookup e₁ γ) ≡ fst (lookup e₂ γ')
+                  → fst (lookup m₁ γ) ≡ fst (lookup m₂ γ')
+                  → fst (lookup d₁ γ) ≡ fst (lookup d₂ γ')
+                  → ⟨ γ ⊨ consAtL e₁ m₁ d₁ ⟩ → ⟨ γ' ⊨ consAtL e₂ m₂ d₂ ⟩
+consAtL-transport γ γ' e₁ m₁ d₁ e₂ m₂ d₂ g hE qe qm qd h =
+  subst ⟨_⟩ (sym (consAtL-adequate e₂ m₂ d₂ γ' g (sym qd ∙ hE)))
+    (subst2 (λ p q → ⟨ PairIs p (env (cons q g)) ⟩) qe qm
+      (subst ⟨_⟩ (consAtL-adequate e₁ m₁ d₁ γ g hE) h))
 ```
 
 <!--en-->
