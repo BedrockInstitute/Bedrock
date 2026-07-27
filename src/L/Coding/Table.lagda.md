@@ -192,17 +192,17 @@ between the two constructions, which is the rule that chapter measured.
     self φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
     self φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
 
-    left : ∀ {n} (a b : Formula S n) (z : V ℓ)
+    left : ∀ {n m} (χ : Formula S n) (a b : Formula S m) (z : V ℓ)
          → ⟨ z ∈ fst (tree f a) ⟩
-         → ⟨ z ∈ fst (cupʟ (sglʟ (f a)) (cupʟ (tree f a) (tree f b))) ⟩
-    left a b z h = cupʟ-inr (sglʟ (f a)) (cupʟ (tree f a) (tree f b)) z
-                     (cupʟ-inl (tree f a) (tree f b) z h)
+         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
+    left χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
+                       (cupʟ-inl (tree f a) (tree f b) z h)
 
-    right : ∀ {n} (a b : Formula S n) (z : V ℓ)
+    right : ∀ {n m} (χ : Formula S n) (a b : Formula S m) (z : V ℓ)
           → ⟨ z ∈ fst (tree f b) ⟩
-          → ⟨ z ∈ fst (cupʟ (sglʟ (f a)) (cupʟ (tree f a) (tree f b))) ⟩
-    right a b z h = cupʟ-inr (sglʟ (f a)) (cupʟ (tree f a) (tree f b)) z
-                      (cupʟ-inr (tree f a) (tree f b) z h)
+          → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
+    right χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
+                        (cupʟ-inr (tree f a) (tree f b) z h)
 
     only : ∀ {n m} (χ : Formula S n) (a : Formula S m) (z : V ℓ)
          → ⟨ z ∈ fst (tree f a) ⟩
