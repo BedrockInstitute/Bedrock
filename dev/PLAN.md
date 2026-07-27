@@ -1208,6 +1208,20 @@ One row per goal code; update the row in the same commit that changes the status
   `L.Reflect` 296. Against the §7.6 per-module budget of ~120 s the worst module is at
   **0.6%**, so nothing is close, and there are still **zero** `-- perf:` markers in `src/`.
 
+  **This per-module list is WRONG and was wrong when written; corrected 2026-07-27.** It
+  was produced by piping `--profile=modules` through `sort -rn`, and Agda prints a thousands
+  separator, so every module at or above 1,000 ms sorted as though it were under ten. The
+  real worst module then and now is **`L.Axioms.Basic` at 7,142 ms**, ten times the figure
+  reported, and `L.Coding.Model` was second at 1,632. Re-measured cold on the same machine
+  2026-07-27: **tree 20.0 s**, `L.Axioms.Basic` 7,142, `L.Coding.Model` 1,632, `Miscellaneous`
+  957, `L.Axioms.Separation` 719, `L.Rank` 687, `L.Coding.Environment` 631.
+
+  The budgets still hold with room: 20.0 s against 15 minutes is 2%, and 7.1 s against ~120 s
+  is 6%. But `L.Axioms.Basic` alone is **36% of the whole tree**, which is a fact the earlier
+  entry hid, and it is the module to watch: `finSetL` and its `finDisj` induction landed
+  there at `[L3.0.5]`. **Method note, since the error was in the measurement and not the
+  mathematics: never sort Agda's profile output numerically without stripping the separator.**
+
   The line worth keeping: **`L.Axioms.Full` checks in 259 ms**, and before its
   constructibility certificate was sealed it did not finish in **600 s**. One `opaque` is
   worth a factor of at least 2,300 there, which is the sharpest number the conversion-blowup
