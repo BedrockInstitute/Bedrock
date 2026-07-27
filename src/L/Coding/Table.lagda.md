@@ -41,7 +41,7 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ} using ( module LCode; prʟ; prʟ-fst )
 open import L.Coding.InL {ℓ}
-  using ( sglʟ; cupʟ; sglʟ-in; sglʟ-out; cupʟ-inl; cupʟ-out )
+  using ( sglʟ; cupʟ; sglʟ-in; sglʟ-out; cupʟ-inl; cupʟ-inr; cupʟ-out )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -122,55 +122,85 @@ between the two constructions, which is the rule that chapter measured.
 <!--/-->
 
 ```agda
-  Of : (∀ {m} → Formula S m → S) → V ℓ → Type (ℓ-suc ℓ)
-  Of f x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula S m ] (x ≡ fst (f χ))) ∥₁
+  Of : (f : ∀ {m} → Formula S m → S) {n : ℕ} → Formula S n → V ℓ
+     → Type (ℓ-suc ℓ)
+  Of f φ x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula S m ]
+                 ((x ≡ fst (f χ))
+                  × ((z : V ℓ) → ⟨ z ∈ fst (tree f χ) ⟩
+                     → ⟨ z ∈ fst (tree f φ) ⟩))) ∥₁
 
   private
     module _ (f : ∀ {m} → Formula S m → S) where
-      one : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f x
-      one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h ∣₁
+      one : ∀ {n} (φ : Formula S n) (x : V ℓ)
+          → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f φ x
+      one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
+
+      wider : ∀ {n m} (φ : Formula S n) (χ : Formula S m) {x : V ℓ}
+            → ((z : V ℓ) → ⟨ z ∈ fst (tree f χ) ⟩ → ⟨ z ∈ fst (tree f φ) ⟩)
+            → Of f χ x → Of f φ x
+      wider _ _ s = PT.map
+        (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
 
       un : ∀ {n m} (φ : Formula S n) (a : Formula S m)
-         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f x)
-         → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f x
-      un φ a ra x h = PT.rec squash₁
-        (λ { (inl e) → one φ x e ; (inr e) → ra x e })
-        (cupʟ-out (sglʟ (f φ)) (tree f a) x h)
+         → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩
+            → ⟨ z ∈ fst (tree f φ) ⟩)
+         → ((z : V ℓ) → ⟨ z ∈ fst (tree f φ) ⟩
+            → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩)
+         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f a x)
+         → (x : V ℓ) → ⟨ x ∈ fst (tree f φ) ⟩ → Of f φ x
+      un φ a into out ra x h = PT.rec squash₁
+        (λ { (inl e) → one φ x e
+           ; (inr e) → wider φ a
+               (λ z hz → into z (cupʟ-inr (sglʟ (f φ)) (tree f a) z hz)) (ra x e) })
+        (cupʟ-out (sglʟ (f φ)) (tree f a) x (out x h))
 
       bin : ∀ {n m} (φ : Formula S n) (a b : Formula S m)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f x)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f x)
-          → (x : V ℓ)
-          → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
-          → Of f x
-      bin φ a b ra rb x h = PT.rec squash₁
+          → ((z : V ℓ)
+             → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
+             → ⟨ z ∈ fst (tree f φ) ⟩)
+          → ((z : V ℓ) → ⟨ z ∈ fst (tree f φ) ⟩
+             → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f a x)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f b x)
+          → (x : V ℓ) → ⟨ x ∈ fst (tree f φ) ⟩ → Of f φ x
+      bin φ a b into out ra rb x h = PT.rec squash₁
         (λ { (inl e) → one φ x e
            ; (inr e) → PT.rec squash₁
-               (λ { (inl ea) → ra x ea ; (inr eb) → rb x eb })
+               (λ { (inl ea) → wider φ a (λ z hz → into z
+                      (cupʟ-inr (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) z
+                        (cupʟ-inl (tree f a) (tree f b) z hz)))
+                      (ra x ea)
+                  ; (inr eb) → wider φ b (λ z hz → into z
+                      (cupʟ-inr (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) z
+                        (cupʟ-inr (tree f a) (tree f b) z hz)))
+                      (rb x eb) })
                (cupʟ-out (tree f a) (tree f b) x e) })
-        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
+        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x (out x h))
 
   tree-inv : (f : ∀ {m} → Formula S m → S) → ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f x
+           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f φ x
   tree-inv f φ@(t ∈̇ u) = one f φ
   tree-inv f φ@(t ≐ u) = one f φ
   tree-inv f φ@⊤̇       = one f φ
   tree-inv f φ@⊥̇       = one f φ
-  tree-inv f φ@(a ∧̇ b) = bin f φ a b (tree-inv f a) (tree-inv f b)
-  tree-inv f φ@(a ∨̇ b) = bin f φ a b (tree-inv f a) (tree-inv f b)
-  tree-inv f φ@(a ⇒̇ b) = bin f φ a b (tree-inv f a) (tree-inv f b)
-  tree-inv f φ@(¬̇ a)    = un f φ a (tree-inv f a)
-  tree-inv f φ@(∃̇ a)    = un f φ a (tree-inv f a)
-  tree-inv f φ@(∀̇ a)    = un f φ a (tree-inv f a)
-  tree-inv f φ@(∀̇∈ t a) = un f φ a (tree-inv f a)
-  tree-inv f φ@(∃̇∈ t a) = un f φ a (tree-inv f a)
+  tree-inv f φ@(a ∧̇ b) = bin f φ a b (λ _ hz → hz) (λ _ hz → hz)
+                           (tree-inv f a) (tree-inv f b)
+  tree-inv f φ@(a ∨̇ b) = bin f φ a b (λ _ hz → hz) (λ _ hz → hz)
+                           (tree-inv f a) (tree-inv f b)
+  tree-inv f φ@(a ⇒̇ b) = bin f φ a b (λ _ hz → hz) (λ _ hz → hz)
+                           (tree-inv f a) (tree-inv f b)
+  tree-inv f φ@(¬̇ a)    = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
+  tree-inv f φ@(∃̇ a)    = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
+  tree-inv f φ@(∀̇ a)    = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
+  tree-inv f φ@(∀̇∈ t a) = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
+  tree-inv f φ@(∃̇∈ t a) = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
 
   satTable-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
-               → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent x
+               → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent φ x
   satTable-inv = tree-inv ent
 
   slot-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ x
+           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ φ x
   slot-inv = tree-inv keyʟ
 ```
 
@@ -219,7 +249,7 @@ which is the only arity at which it is true.
             → ⟨ pr (fst (keyʟ ψ)) y ∈ fst (satTable φ) ⟩
             → y ≡ fst (Sat B ψ)
   entry-out φ ψ y h = PT.rec (setIsSet y (fst (Sat B ψ)))
-    (λ { (m , χ , q) →
+    (λ { (m , χ , (q , _)) →
       let r = pr-inj (q ∙ prʟ-fst (keyʟ χ) (Sat B χ)) in
       r .snd ∙ cong fst (sym (key-determines ψ χ (r .fst))) })
     (satTable-inv φ (pr (fst (keyʟ ψ)) y) h)

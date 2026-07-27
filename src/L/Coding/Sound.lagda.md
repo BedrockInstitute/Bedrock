@@ -345,7 +345,7 @@ the specification of either.
           → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (satTable B φ) ⟩
           → ∥ Parts ar yc ya ∥₁
     parts c ar a yc ya c∈ sh hc ha = PT.map
-      (λ { (m , ψ , q) →
+      (λ { (m , ψ , (q , _)) →
         let r  = keyʟ-shape ψ k (fst ar) (fst a) (sym q ∙ sh)
             g  = get ψ (r .fst)
             a' = g .fst
@@ -384,7 +384,7 @@ the specification of either.
           → ⟨ pr (pr (fst ar) (fst b)) (fst yb) ∈ fst (satTable B φ) ⟩
           → ∥ Parts ar yc ya yb ∥₁
     parts c ar a b yc ya yb c∈ sh hc ha hb = PT.map
-      (λ { (m , ψ , q) →
+      (λ { (m , ψ , (q , _)) →
         let r  = keyʟ-shape ψ k (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
             g  = get ψ (r .fst)
             a' = g .fst
@@ -497,7 +497,7 @@ builds, and gets it from whichever disjunct it was handed.
           → ⟨ pr (pr (sucV (fst ar)) (fst a)) (fst ya) ∈ fst (satTable B φ) ⟩
           → ∥ Parts ar yc ya ∥₁
     parts c ar a yc ya c∈ sh hc ha = PT.map
-      (λ { (m , ψ , q) →
+      (λ { (m , ψ , (q , _)) →
         let r  = keyʟ-shape ψ k (fst ar) (fst a) (sym q ∙ sh)
             g  = get ψ (r .fst)
             a' = g .fst
@@ -536,7 +536,7 @@ builds, and gets it from whichever disjunct it was handed.
           → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
           → ∥ Parts ar a b yc ∥₁
     parts c ar a b yc c∈ sh hc = PT.map
-      (λ { (m , ψ , q) →
+      (λ { (m , ψ , (q , _)) →
         let r  = keyʟ-shape ψ k (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
             g  = get ψ (r .fst)
             t  = g .fst
@@ -575,7 +575,7 @@ builds, and gets it from whichever disjunct it was handed.
           → ⟨ pr (pr (sucV (fst ar)) (fst b)) (fst yb) ∈ fst (satTable B φ) ⟩
           → ∥ Parts ar a b yc yb ∥₁
     parts c ar a b yc yb c∈ sh hc hb = PT.map
-      (λ { (m , ψ , q) →
+      (λ { (m , ψ , (q , _)) →
         let r  = keyʟ-shape ψ k (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
             g  = get ψ (r .fst)
             t  = g .fst
@@ -611,7 +611,7 @@ builds, and gets it from whichever disjunct it was handed.
           → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
           → ∥ Parts ar yc ∥₁
     parts c ar a yc c∈ sh hc = PT.map
-      (λ { (m , ψ , q) →
+      (λ { (m , ψ , (q , _)) →
         let r  = keyʟ-shape ψ k (fst ar) (fst a) (sym q ∙ sh)
             eψ = get ψ (r .fst)
         in m , r .snd .fst
