@@ -72,15 +72,37 @@ it, as the union of a pair of pairs.
 唯一存在交出一个运算：摹状词算子把可缩性证明送到它的中心。配对与并成为可构造集上的函数，而后继就按模型 record 的写法写出，即一对之对的并。
 <!--/-->
 
+<!--en-->
+The chain is **sealed**, and the seal is not tidiness. Everything below reads
+these through their projection equations and nothing reads them through their
+construction, so the seal costs nothing here; what it buys is one module
+application elsewhere. Instantiating the coding chapter at this model rather than
+at the hierarchy means every code is an element of `L` by construction, and the
+coding chapter proves its shape lemma by twelve `refl`s, each of which forces
+whatever a pair unfolds to through normalization. Unsealed, that application
+**does not finish in ten minutes**; sealed, it costs about a third of a second.
+
+The rule is the development's own, at a scale it had not been seen at: a
+constructibility certificate is expensive to carry through conversion, so seal it
+where the element is built. What is new is that a *module application* is a
+conversion site too, and a large one, since it re-elaborates every definition in
+the chapter being applied.
+<!--zh-->
+这条链是**封住的**，而这道封印不是为了整洁。下面的一切都经诸投影等式读它们，没有谁经它们的构造去读，故封印在此处不花分文；它买到的是别处的一次模块实例化。把编码那一章实例化到这个模型上、而非实例化到层级上，意味着每个码按构造就是 `L` 的元素；而编码那一章用十二个 `refl` 证它的形状引理，每一个都会把「一个对展开成什么」推进归一化。不封，那次实例化**十分钟跑不完**；封了，它花约三分之一秒。
+
+这条规矩是本书自己的，只是出现在从未见过的尺度上：一份可构造性证书扛着过转换很贵，故要在元素被造出之处把它封住。新的一点是：**一次模块实例化也是一个转换现场**，而且是很大的一个，因为它把被实例化的那一章里每个定义都重新推导一遍。
+<!--/-->
+
 ```agda
-pairʟ : S → S → S
-pairʟ a b = ℩ (hasPairL a b)
+opaque
+  pairʟ : S → S → S
+  pairʟ a b = ℩ (hasPairL a b)
 
-unionʟ : S → S
-unionʟ a = ℩ (hasUnionL a)
+  unionʟ : S → S
+  unionʟ a = ℩ (hasUnionL a)
 
-sucʟ : S → S
-sucʟ a = unionʟ (pairʟ a (pairʟ a a))
+  sucʟ : S → S
+  sucʟ a = unionʟ (pairʟ a (pairʟ a a))
 ```
 
 <!--en-->
@@ -102,19 +124,19 @@ hierarchy's carrier is a set.
 <!--/-->
 
 ```agda
-pairʟ-fst : (a b : S) → fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆
-pairʟ-fst a b = PT.rec (setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆)
-  (λ { (σ , (oσ , (fa∈ , fb∈))) →
-       cong (λ (e : SetOf (PairOf.Q a b)) → fst (fst e))
-         (hasPairL a b .snd (PairOf.mkPair a b σ oσ fa∈ fb∈)) })
-  (isL-directed (fst a) (fst b) (a .snd) (b .snd))
+  pairʟ-fst : (a b : S) → fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆
+  pairʟ-fst a b = PT.rec (setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆)
+    (λ { (σ , (oσ , (fa∈ , fb∈))) →
+         cong (λ (e : SetOf (PairOf.Q a b)) → fst (fst e))
+           (hasPairL a b .snd (PairOf.mkPair a b σ oσ fa∈ fb∈)) })
+    (isL-directed (fst a) (fst b) (a .snd) (b .snd))
 
-unionʟ-fst : (a : S) → fst (unionʟ a) ≡ ⋃ (fst a)
-unionʟ-fst a = PT.rec (setIsSet (fst (unionʟ a)) (⋃ (fst a)))
-  (λ { (σ , (oσ , fa∈)) →
-       cong (λ (e : SetOf (UnionOf.Q a)) → fst (fst e))
-         (hasUnionL a .snd (UnionOf.mkUnion a σ oσ fa∈)) })
-  (a .snd)
+  unionʟ-fst : (a : S) → fst (unionʟ a) ≡ ⋃ (fst a)
+  unionʟ-fst a = PT.rec (setIsSet (fst (unionʟ a)) (⋃ (fst a)))
+    (λ { (σ , (oσ , fa∈)) →
+         cong (λ (e : SetOf (UnionOf.Q a)) → fst (fst e))
+           (hasUnionL a .snd (UnionOf.mkUnion a σ oσ fa∈)) })
+    (a .snd)
 ```
 
 <!--en-->
@@ -127,12 +149,12 @@ is the hierarchy's successor.
 <!--/-->
 
 ```agda
-sucʟ-fst : (a : S) → fst (sucʟ a) ≡ sucV (fst a)
-sucʟ-fst a =
-    unionʟ-fst (pairʟ a (pairʟ a a))
-  ∙ cong ⋃_ (pairʟ-fst a (pairʟ a a))
-  ∙ cong (λ w → ⋃ ⁅ fst a , w ⁆) (pairʟ-fst a a)
-  ∙ cong (λ w → ⋃ ⁅ fst a , w ⁆) (pair-singleton (fst a))
+  sucʟ-fst : (a : S) → fst (sucʟ a) ≡ sucV (fst a)
+  sucʟ-fst a =
+      unionʟ-fst (pairʟ a (pairʟ a a))
+    ∙ cong ⋃_ (pairʟ-fst a (pairʟ a a))
+    ∙ cong (λ w → ⋃ ⁅ fst a , w ⁆) (pairʟ-fst a a)
+    ∙ cong (λ w → ⋃ ⁅ fst a , w ⁆) (pair-singleton (fst a))
 ```
 
 <!--en-->
@@ -150,13 +172,13 @@ built in the previous chapter, whose projection is the empty set on the nose.
 <!--/-->
 
 ```agda
-numeralL : ℕ → S
-numeralL zero    = ∅ʟ
-numeralL (suc n) = sucʟ (numeralL n)
+  numeralL : ℕ → S
+  numeralL zero    = ∅ʟ
+  numeralL (suc n) = sucʟ (numeralL n)
 
-numeralL-fst : (n : ℕ) → fst (numeralL n) ≡ # n
-numeralL-fst zero    = refl
-numeralL-fst (suc n) = sucʟ-fst (numeralL n) ∙ cong sucV (numeralL-fst n)
+  numeralL-fst : (n : ℕ) → fst (numeralL n) ≡ # n
+  numeralL-fst zero    = refl
+  numeralL-fst (suc n) = sucʟ-fst (numeralL n) ∙ cong sucV (numeralL-fst n)
 ```
 
 <!--en-->

@@ -32,10 +32,14 @@ open import Base.Truth
 module L.Coding.Model {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
+open import FOL.Syntax
+  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+        ; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
+open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 import FOL.Absoluteness
+import FOL.Coding
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; module VCode )
 open import V.Model {ℓ} using ( pair-singleton )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import FOL.Manipulation.Bounding using ( BoundedFo )
@@ -51,6 +55,7 @@ open import L.Axioms.Numerals {ℓ}
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -326,6 +331,32 @@ prʟ-fst a b =
   ∙ cong₂ ⁅_,_⁆ (pairʟ-fst a a ∙ pair-singleton (fst a)) (pairʟ-fst a b)
 ```
 
+<!--en-->
+## The coding, at the model
+<!--zh-->
+## 编码，在模型处
+<!--/-->
+
+<!--en-->
+The pair and the numerals are injective, which is everything the coding chapter
+asks of a structure, so the object language codes into `L` itself. Two things
+follow and both are wanted. A code is an element of the model **by
+construction**, with no constructibility certificate to carry or to prove. And
+the code equation is injective at this arity, by the chapter's own theorem, which
+is what a table indexed by codes needs: two occurrences of different subformulas
+must not share a key, or the table is multi-valued and its existence fails.
+
+The bridge says the two codings agree: reading a code of the model through the
+underlying set gives the hierarchy's code of the relabelled formula. Twelve
+clauses and two, each one tag equation over the clause below it. It is what lets
+the readers of this chapter, which are written on the hierarchy side, be applied
+to codes built on the model side.
+<!--zh-->
+对与诸数码是单射的，而这就是编码那一章向一个结构索取的全部，故对象语言可以编码进 `L` 自身。由此得到两件事，而两件都是想要的。一个码**按构造**就是模型的元素，没有可构造性证书要扛、也没有要证。而码等式在该元数处是单射的，由那一章自己的定理给出，而这正是「以码为索引的表」所需要的：两处不同子公式的出现不可共用一个键，否则表就多值，而它的存在性会垮。
+
+那座桥说两套编码一致：把模型的一个码沿底层集合读出来，得到的是层级为那条换名后的公式所给的码。十二条子句加两条，每条都是「架在下面那条之上」的一条标签等式。正是它使本章那些写在层级一侧的读式，能施于造在模型一侧的诸码。
+<!--/-->
+
 ```agda
 prʟ-inj : {a b c d : S} → prʟ a b ≡ prʟ c d → (a ≡ c) × (b ≡ d)
 prʟ-inj {a} {b} {c} {d} e =
@@ -338,6 +369,37 @@ prʟ-inj {a} {b} {c} {d} e =
 numeralL-inj : {j k : ℕ} → numeralL j ≡ numeralL k → j ≡ k
 numeralL-inj {j} {k} e =
   #-inj′ (sym (numeralL-fst j) ∙ cong fst e ∙ numeralL-fst k)
+
+module LCode = FOL.Coding {ℓ-suc ℓ} 𝒮ʟ prʟ prʟ-inj numeralL numeralL-inj
+
+tagBridge : (k : ℕ) (x : S) → fst (LCode.mkTag k x) ≡ VCode.mkTag k (fst x)
+tagBridge k x = prʟ-fst (numeralL k) x ∙ cong₂ pr (numeralL-fst k) refl
+
+codeBridgeTm : ∀ {n} (t : Term S n) → fst LCode.⌜ t ⌝ᵗ ≡ VCode.⌜ mapTm fst t ⌝ᵗ
+codeBridgeTm (con c) = tagBridge 0 c
+codeBridgeTm (var i) =
+  tagBridge 1 (numeralL (toℕ i)) ∙ cong (VCode.mkTag 1) (numeralL-fst (toℕ i))
+
+codeBridge : ∀ {n} (φ : Formula S n) → fst LCode.⌜ φ ⌝ ≡ VCode.⌜ mapFo fst φ ⌝
+codeBridge (t ∈̇ u) = tagBridge 0 _ ∙ cong (VCode.mkTag 0)
+  (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridgeTm u))
+codeBridge (t ≐ u) = tagBridge 1 _ ∙ cong (VCode.mkTag 1)
+  (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridgeTm u))
+codeBridge (a ∧̇ b) = tagBridge 2 _ ∙ cong (VCode.mkTag 2)
+  (prʟ-fst _ _ ∙ cong₂ pr (codeBridge a) (codeBridge b))
+codeBridge (a ∨̇ b) = tagBridge 3 _ ∙ cong (VCode.mkTag 3)
+  (prʟ-fst _ _ ∙ cong₂ pr (codeBridge a) (codeBridge b))
+codeBridge (a ⇒̇ b) = tagBridge 4 _ ∙ cong (VCode.mkTag 4)
+  (prʟ-fst _ _ ∙ cong₂ pr (codeBridge a) (codeBridge b))
+codeBridge (¬̇ a)   = tagBridge 5 _ ∙ cong (VCode.mkTag 5) (codeBridge a)
+codeBridge ⊤̇       = tagBridge 6 _ ∙ cong (VCode.mkTag 6) (numeralL-fst 0)
+codeBridge ⊥̇       = tagBridge 7 _ ∙ cong (VCode.mkTag 7) (numeralL-fst 0)
+codeBridge (∃̇ a)   = tagBridge 8 _ ∙ cong (VCode.mkTag 8) (codeBridge a)
+codeBridge (∀̇ a)   = tagBridge 9 _ ∙ cong (VCode.mkTag 9) (codeBridge a)
+codeBridge (∀̇∈ t a) = tagBridge 10 _ ∙ cong (VCode.mkTag 10)
+  (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridge a))
+codeBridge (∃̇∈ t a) = tagBridge 11 _ ∙ cong (VCode.mkTag 11)
+  (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridge a))
 
 
 
