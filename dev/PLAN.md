@@ -177,6 +177,7 @@ rather than refactoring. D12 rules on which to take, §6.1 orders their executio
 | D11 | Revisability | The plan legislates for known unknowns explicitly: legislation may be added mid-course (standing L0 track), the skeleton below the part level may be re-cut after L3, Frontier fields may be re-cut, and a whole-book harmonization pass runs at L4. Mechanisms in §8. |
 | D12 | L3 reduction strategy | **Outcome 2026-07-26 (`[L3.0.2]`): the decision was right, the analysis was wrong.** The lever was not a large internalization theorem (it is 96 lines) but general-formula comprehension, delivered at `[L2.2]`; the projected 65%-at-3x is now measured-and-projected at 7x to 14x. Original ruling, 2026-07-25: **take the big lever first.** Before the certificate clusters are reduced one by one, attempt a general **internalization theorem for L-recursion** (goal `[L3.0]`). Grounds: the §2.1 measurement shows the certificate mass is 8 to 10 hand-built instantiations of one pipeline, repeating because the source has no rudimentary-function / Σ-recursion absoluteness layer; the syntactic levers cap out at 25% to 40%, the theorem reaches roughly 65%. This is research, not refactoring, so it runs under an explicit paper-level gate and pre-agreed kill criteria (`[L3.0.3]`, `[L3.0.1]`), and D3's per-cluster reduction review stands as the route for whatever the theorem does not absorb. Schedule ruling, same day: the paper-level probe `[L3.0.3]` opens **before** L2, so the route's cheap kill signal arrives before the axiom branches commit to a Frontier cut at the certificate boundary. |
 | D13 | Macros and generated proof | **Ruled 2026-07-27 by the owner.** Opacity is **not** an objection: avoiding macro black boxes is not a project aim. Explain the macro's own logic, cut the code volume, and the reader's burden goes *down*, closer to real mathematical practice. **The single veto is conversion blowup.** So a macro or reification route is judged by exactly two measured questions: is it smaller, and does it keep `src/` inside the §7.5 and §7.6 budgets. If both, pursue it actively. Supersedes the exposition argument that had been recorded against `[L3.2]`, which is withdrawn. |
+| D14 | Retiring a chapter in waiting | **Ruled 2026-07-27.** A chapter is *in waiting* when nothing outside its own namespace imports it (`Everything` never counts; it imports everything). Such a chapter is **retired** (files deleted, `Everything` entries dropped, the commit hash recorded in §11 so it is recoverable, plus one line saying what would bring it back) when **both**: no **open** goal names it in §6.1, and either a goal that did name it has closed without using it, or no goal ever named it. It is **kept** only under a **written warrant**: a named open goal *and* a dated expiry, the goal at whose closure the question is asked again. Warrants live in §11 and expire whether or not anyone looks. **Trigger:** at every goal closure, list the chapters in waiting and check their warrants; it is one grep. Rationale: this book is read, so a chapter with no consumer costs a reader's attention, not just disk; and `FOL.Reification` sat at zero consumers for nine goals precisely because nothing ever forced the question. |
 
 ## 4. Target skeleton (D5)
 
@@ -749,10 +750,85 @@ working as designed.
   prose, a macro call is opaque"). **That argument is withdrawn under D13** and must not be
   reintroduced.
 
-  **Next unit, and a scheduling constraint.** Adopt `RepP` for the congruence-shaped
-  predicates of `L.Coding.Model`, and prefer it for every new one. **Not now**, because a
-  forked conversation is finishing the twelve clauses in that file and a refactor would
-  collide; the adoption lands when that file is quiet.
+  **ATTEMPTED AND REJECTED ON MEASUREMENT, 2026-07-27, branch `l3.2-reification`.** The
+  adoption was carried out for real: `retarget`/`retarget₀`/`predOf` added to the framework
+  (step 1), `L.Coding.Base`'s hub reader `prAt` rebuilt through the certified combinators
+  with its three public names kept as projections (step 2), and `L.Coding.Entry` rebuilt on
+  top of it (step 3, the plan's own decisive test). Everything typechecks; `make check` is
+  green on the branch. **Both of D13's tests fail.**
+
+  **Not smaller.** `L.Coding.Entry` 78 → 56, a genuine 22-line saving, exactly the shape the
+  audit predicted. `L.Coding.Base` 187 → **218**, a 31-line cost. Net over the two modules
+  the plan rated best: **265 → 274, +9 lines.** And the hub cost is not deferred: 13 of the
+  31 lines are the three reps' type signatures, which the framework never removes, and the
+  step-6 shim deletion can recover only 3.
+
+  The reason is the discriminating rule, applied where the plan had not applied it. The
+  framework pays where an adequacy lemma already exists stating a nice predicate *and* two
+  or more `subst` sites hang off it. `prAt-adequate` has **zero** `subst` sites: it was
+  already a three-line `⇔toPath` over `prChar-fwd`/`prChar-bwd`. So the hub is the worst
+  possible shape, and the hub is the one module that cannot be skipped.
+
+  **And it degrades a budget for nothing.** `L.Coding.Model`, which was **not** converted,
+  goes 1,720 ms on `main` to 2,144 / 2,186 / 2,211 / 2,291 ms across four cold runs on the
+  branch, a consistent **+25% to +33%**; the tree goes 20.5 s to 21.1–21.8 s. That is not a
+  conversion blowup in D13's sense, and the absolute figures stay far inside §7.5 and §7.6.
+  But it trips the plan's own step-2 abort gate of 2.1 s, and paying it for a negative line
+  delta is a bad trade on both axes. The cause is structural: `prAt` is now
+  `prAt-rep q u v .fst`, so every downstream site that recognised it by its constructor tree
+  reduces through the rep.
+
+  **Would more consumers amortise it?** The plan projects `Tagged` −22 and `Length` −9. Even
+  if both hold exactly, all four chapters land at about −22 lines against a permanent
+  +25–33% on the largest coding module, and the two modules already measured came in 40
+  lines worse than projected. The expected value is break-even at best.
+
+  **Ruling: do not adopt.** The three source commits were **reverted in place** once the
+  measurement was in; this entry is the deliverable. (A first version of this ruling said
+  "the branch is the record and is not to be merged", which is wrong and is corrected the
+  same day:
+  the branch also carries `[L2.3]`, `[L3.18]` and `[L3.20]`, so it merges, and it is the
+  rejected refactor that comes out rather than the branch.) What survives is the calibration, which is now measured
+  rather than projected: a reification framework of this shape pays only where an adequacy
+  proof carries multiple transports, and a hub whose adequacy is already direct will eat the
+  savings of every leaf that quotes it.
+
+  **What would change the answer.** Not a macro; `reify!` generates the same reps and would
+  inherit the same hub cost. Only a different framework interface would: one where a rep's
+  predicate need not be restated in a signature (the 13 lines), and where `translate` of a
+  built rep is *definitionally* the hand-written formula in the eyes of downstream
+  pattern-matching rather than merely propositionally equal (the 25–33%). Both are framework
+  redesigns, not adoption work, and neither is scheduled.
+
+- **Chapters in waiting, and their warrants (D14), first census 2026-07-27.** Scanned by
+  the D14 rule: nothing outside the namespace imports it, `Everything` excluded.
+
+  | in waiting | warrant: which open goal needs it | expires at |
+  |---|---|---|
+  | `FOL.Reification.{Base, Combinators, Certified}` | the one use `[L3.2]` did **not** test: a graph handed to `L.Recursion.Definition.graph`, which `hasReplacementL` consumes without ever matching on the formula, so the 25–33% cost that sank the coding-chapter adoption cannot arise there | `[L3.0.1]` |
+  | `L.Coding.{Base, Entry, Tagged, Length, InL}` | `[L3.0.1]`, the satisfaction certificate | `[L3.0.1]` |
+  | `L.Recursion` | `[L3.0.1]`, its instance half | `[L3.0.1]` |
+  | `L.WellOrder.Base` | `[L2.4]` | `[L2.4]` |
+
+  **So the answer to "can `FOL.Reification` be deleted now" is: not yet, and for exactly one
+  more goal.** `[L3.2]` measured and rejected it for the coding chapters, where downstream
+  code recognises a formula by its constructor tree. It did not measure the case where a
+  built formula is handed straight to a comprehension field and nobody looks inside, which
+  is what `[L3.0.1]` will do. At `[L3.0.1]`'s closure the warrant expires: if the graph was
+  built by hand there too, the namespace is retired under D14 and the 133 lines go, with the
+  hash recorded.
+
+  **Process note, recorded because it cost real bookkeeping.** This exploration ran in a
+  git branch while a second conversation worked the same worktree. Its `git add -A` swept a
+  revert of mine into one of its commits, so `[L3.2]`'s backing-out is recorded inside
+  `7428a23` rather than in a commit of its own. Nothing was lost and the tree stayed green,
+  but two conversations must not share a worktree: give the second one its own, or serialise
+  them.
+
+  Note that most of `L.Coding` is also in waiting. That is not a smell: those chapters were
+  written **for** `[L3.0.1]` and are days old. The warrant mechanism exists to tell that
+  case apart from the one `FOL.Reification` was in, having had no dated expiry for nine
+  goals.
 
   **Corrections on the record.** One turn before the re-evaluation I called `[L3.2]` "the
   real lever" on the twenty-nine traversals; that was said before measuring. And the
@@ -1003,32 +1079,36 @@ One row per goal code; update the row in the same commit that changes the status
 | L2.0 | Basic axioms | DONE 2026-07-25 (`L.Ordinal` + `L.Axioms.Basic` + `L.Constructible` additions; extensionality and regularity re-homed from `L.Model`; Frontier 11 fields → 8; no `lem`, the whole goal is constructive) |
 | L2.1 | Infinity | DONE 2026-07-25 (`L.Axioms.Infinity` + `L.Ordinal.Stages`; Frontier 8 → 4). The chain is constructive, the collection step is not: it needs `ω ∈ L`, hence `ord∈Lset-suc`, hence trichotomy |
 | L2.2 | Separation and Replacement | DONE 2026-07-25 (resumed after L3.14 closed). Landed: `L.Stage` (generalized to `leastOrd`), `Relabel` (into `FOL.Manipulation.Bounding`); `Relativize` was already ported at `[L1.4]`. Landed `L.Axioms.Separation`, complete: the Δ₀ engine, the parameter-bounding recursion, and `separateΔ₀`/`replaceΔ₀` unconditionally for the bounded fragment. Landed `L.Reflect` (Montague closure and single-∃ reflection at an arbitrary tuple of parameters, **without the well-ordering of `L`**, so `WellOrder`/`FormulaOrder`/`ΣSWO` leave this goal for `[L2.4]` and `ReflectN` never becomes a chapter), `L.ReflectFo` (structural induction over an arbitrary formula on a jointly built ladder), and `L.Axioms.Full` (both comprehension fields). **Frontier 4 fields → 2**; only the power set and choice remain. Six source chapters (`WellOrder`, `FormulaOrder`, `Reflect`, `ReflectN`, `ReflectFo`, `ModelACReduce`, `ModelACSep`) became three |
-| L2.3 | Power via Condensation | PLANNED, deferred behind L3 phase B |
+| L2.3 | Power by bounding the constructible subsets (re-scoped 2026-07-27 from "Power via Condensation") | **DONE 2026-07-27.** `L.Axioms.Power`, **79 lines of Agda**, against the source's ≈185 across three chapters. `𝒫V` from `V.Model`, its constructible members resized to a small index, their stages bounded by `boundingOrd`, and `hasSeparationL` carves the stage by "every member of this is a member of `a`", whose meaning is the model's own `⊆ˢ` **definitionally** (`subFo-is-⊆` is `refl`). The bound makes the membership conjunct automatic, so the two predicates agree pointwise. **Condensation is not used**: the axiom asks that the constructible subsets form a set, not that they appear early, and the condensation chapters belong to the GCH successor plan. Assumption bill unchanged: `LEM (ℓ-suc ℓ)` alone, since `lem→impredicativity` already packs both the resizing and the `hProp ℓ` smallness through `lowerLEM`. **Frontier 2 fields → 1** |
 | L2.4 | Well-order and Choice trunk | PLANNED, deferred behind L3 phase B |
-| L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | PLANNED |
-| L3.0 | Internalization theorem for L-recursion (S5) | **DONE 2026-07-26** except `[L3.0.1]`'s instance half, re-pointed at satisfaction (verdict memo §4). Theorem delivered at 96 lines; verdict green |
+| L3 | Technical layer (big lever first, D12; renumbered 2026-07-25 into execution order) | ACTIVE 2026-07-27. Re-inventoried after the internalization finding: six goals closed as clutter created by that same finding, three new codes registered for unowned obligations, and the forward order re-cut (§11) |
+| L3.0 | Internalization theorem for L-recursion (S5) | **DONE 2026-07-26** except `[L3.0.1]`'s instance half, re-pointed at satisfaction (verdict memo §4). Theorem delivered at 99 lines; verdict green |
 | L3.0.0 | Design memo (single) | SUPERSEDED 2026-07-25 by L3.0.3 + L3.0.4; never started |
 | L3.0.3 | Subsumption probe, source-reading only | DONE 2026-07-25, memo delivered; verdict amber (route alive, projection corrected) |
 | L3.0.4 | Theorem statement in Bedrock's idiom | DONE 2026-07-25, memo delivered; prerequisite narrowed from all of L2.2 to `BoundedFo` + the closure engine. **Two amendments from the phase-C re-evaluation**: stage 7 is `[L3.0.5]`, not `[L3.2]`; and `reads`'s `isL` certificates must be sealed where built (the `L.Axioms.Full` hazard) |
 | L3.0.5 | Finite families at a stage (stage 7) | DONE 2026-07-25 (`finSetL` in `L.Axioms.Basic`; registered on the phase-C re-evaluation, correcting the memo's attribution of stage 7 to L3.2) |
-| L3.0.1 | Two-instance proof of concept | **RE-POINTED 2026-07-26** by the `[L3.0.2]` measurement: the instance to build is **satisfaction**, the largest bucket (34%) and the largest uncertainty at once, not `Depth`, which the same analysis expects to vanish (it is a termination measure and Agda needs none). **Theorem DONE 2026-07-26**: `L.Recursion` complete at 96 lines of Agda: `Recursion`/`Of` over `hasReplacementL`, `smallDom` discharging the domain generically, and `Definition`/`Image` reducing an instance's obligation to a defining formula and its adequacy. Fillability probed at 35 lines (singleton map, uncommitted). **Instance half ACTIVE, and it is being built under sibling codes, not here**: the reconnaissance's seven-step order splits into general-purpose object-language work, which is `[L3.15]` (the bridge) and `[L3.16]` (the object language over the model, steps 1 to 3, all twelve clauses written and audited), and satisfaction-specific work, which is steps 4 to 7 and stays here. The split follows §6.0 rule 4: the object language has its own success criterion and every later instance consumes it, so it is not a sub-goal of this one. **Remaining here**: `Depth` and `Cmp`, whose graphs talk about coded syntax, are what the kill criteria measure |
+| L3.0.1 | Two-instance proof of concept | **RE-POINTED 2026-07-26** by the `[L3.0.2]` measurement: the instance to build is **satisfaction**, the largest bucket (34%) and the largest uncertainty at once, not `Depth`, which the same analysis expects to vanish (it is a termination measure and Agda needs none). **Theorem DONE 2026-07-26**: `L.Recursion` complete at 99 lines of Agda: `Recursion`/`Of` over `hasReplacementL`, `smallDom` discharging the domain generically, and `Definition`/`Image` reducing an instance's obligation to a defining formula and its adequacy. Fillability probed at 35 lines (singleton map, uncommitted). **Instance half ACTIVE, and it is being built under sibling codes, not here**: the reconnaissance's seven-step order splits into general-purpose object-language work, which is `[L3.15]` (the bridge) and `[L3.16]` (the object language over the model, steps 1 to 3, all twelve clauses written and audited), and satisfaction-specific work, which is steps 4 to 7 and stays here. The split follows §6.0 rule 4: the object language has its own success criterion and every later instance consumes it, so it is not a sub-goal of this one. **Remaining here**: `Depth` and `Cmp`, whose graphs talk about coded syntax, are what the kill criteria measure |
 | L3.0.2 | Verdict and rollout ruling | DONE 2026-07-26, memo [memos/L3.0.2-verdict.md](memos/L3.0.2-verdict.md). **Green, for a different reason than D12 expected.** The 43k remaining becomes a projected 3,000 to 6,400; the `L` side lands at 6,500 to 10,000 total, 3,361 already written. L3.5 to L3.7 proceed as instantiations; L3.4 does not open |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
-| L3.2 | `reify!` industrialization (S6) | **RE-OPENED 2026-07-27 and re-scoped, on a probe.** The win is the existing `FOL.Reification` **combinators**, needing no macro and none of this goal's three extensions (`RepΔ₀` is already in `Certified`). Measured: a congruence-shaped predicate goes **27 → 10 lines (2.7x)**, a content-heavy one 21 → 19. Conversion cost nil (probe 107 ms, `Combinators` 81 ms). Adopt the framework first; the macro proper is a later question with a smaller margin |
+| L3.2 | `reify!` industrialization (S6) | **ATTEMPTED AND REJECTED ON MEASUREMENT, 2026-07-27.** Re-opened on a probe, adopted for real through step 3 of its own build order, then backed out. `L.Coding.Entry` 78 → 56 (the framework does pay where an adequacy proof carries several transports) but the hub `L.Coding.Base` cost 187 → 218 to enable it: **net +9 over the two modules the plan rated best**, and `L.Coding.Model`, which was never converted, went +25% to +33% because `prAt` became a projection. Both of D13's tests fail. Source commits reverted; the measurement is the deliverable. A macro would not change this, since `reify!` generates the same reps and inherits the same hub cost. `FOL.Reification` keeps a D14 warrant to `[L3.0.1]` |
 | L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
 | L3.16 | The object language over the model | ACTIVE 2026-07-26. `L.Coding.Model` (647), `L.Coding.InL` (52). Renamed from "readers quoted in the model": the chapter also builds values (`prʟ`), writes the readers the bridge would charge too much for (`tagAtL`), and frames clauses. Contents: what "function" means (`prAtL`, `appAt`, `svAt`, `domAt`), environments (`valuesInAt`, `envOverAt`, `pairsInAt`), the two-layer key readers, `extAt` with the set operations, the two clause frames, `subValAt`/`subValSuccAt`, `consAtL`, `tmValAt`, and **all twelve clauses**. `L.Coding.InL`: every code, and every environment, is an element of `L`. **Two roads, both kept**: constant-free readers are quoted through `[L3.15]`; readers naming a numeral are written fresh, since quoting would thread a constructibility witness through the formula's whole shape while writing needs one unbounded existential, and unbounded is now free. Steps 1 to 3 of the `[L3.0.1]` build order, at 699 lines against its own 680 estimate. Audited clause by clause (§11); six defects found and fixed, two fatal |
 | L3.15 | Re-base the coding readers onto `S` | **DONE 2026-07-26, and it is not a re-base.** `L.Absoluteness`, **34 lines**: one instantiation of `Relabel` at the bound "constructible", and a four-step transfer chain with no induction of its own. `[L3.14]`'s 1,065 lines are neither stranded nor rewritten; they stay on the hierarchy side and are quoted |
 | L3.14 | Coding substrate: the Δ₀ code readers | DONE 2026-07-25. Seven chapters: `L.WellOrder.Base`, `FOL.Coding`, `V.Coding`, `L.Coding.{Base, Environment, Tagged, Length, Entry}`. The source's `SatCert*` split by subject rather than by session |
-| L3.11 | Per-tag clause bundle (S10) | **RE-SCOPED to conditional 2026-07-25.** De-risk rationale spent (`L.ReflectFo` checks the twelve-clause shape); two of five fields removed by the internalization finding; and with the graph unconstrained there is no reason a clause must be a per-tag formula in a twelve-way grid. Do not build until an instance shows it is wanted |
-| L3.12 | Stage-indexed theorem, tier 2 (S11) | PLANNED, conditional, **to be re-examined before opening**: tier 2 was separated from tier 1 by the complexity boundary the internalization finding dissolved |
-| L3.13 | Partial-certificate variant, tier 3 (S12) | PLANNED, conditional, **to be re-examined before opening**, same ground as L3.12 |
-| L3.4 | Scaffolding parameterization (S3) | PLANNED, conditional (registered 2026-07-25; opens only on a red L3.0.2) |
-| L3.5 | Satisfaction cluster | PLANNED |
-| L3.6 | Closure cluster | PLANNED |
+| L3.11 | Per-tag clause bundle (S10) | **ABANDONED 2026-07-27 on a measurement, not a projection.** Its re-scoped condition was "an instance shows it is wanted"; the only instance ever written answers **no**: `L.Coding.Model`'s twelve clauses factor through two shared frames plus `extAt`, not a per-tag record. Its original condition was to be the specification's `clauses` field, and `L.Recursion` has no such field. Superseded rationale follows. **RE-SCOPED to conditional 2026-07-25.** De-risk rationale spent (`L.ReflectFo` checks the twelve-clause shape); two of five fields removed by the internalization finding; and with the graph unconstrained there is no reason a clause must be a per-tag formula in a twelve-way grid. Do not build until an instance shows it is wanted |
+| L3.12 | Stage-indexed theorem, tier 2 (S11) | **ABANDONED 2026-07-27.** Tier 2 existed because `Order*` sat outside tier 1's complexity boundary, and that boundary dissolved: `L.Recursion` imposes no complexity bound, no measure and no stage-locality, so an ordinal-indexed family is an ordinary instance. No staged variant is wanted. Re-open under a new code only if a concrete instance fails to fit |
+| L3.13 | Partial-certificate variant, tier 3 (S12) | **ABANDONED 2026-07-27.** Its subject is the source's `(C,S)`-pair partial certificate, which the `[L3.0.1]` design change retired by name (slot as index, table as value; no `∃̇C ∃̇S` wrapper). Its registered rationale, that the total certificate is circular, was itself adjudicated false: the mechanism is witness-locality. Nothing is left for it to be a variant of |
+| L3.4 | Scaffolding parameterization (S3) | **ABANDONED 2026-07-27.** Its gate is "opens only on a red `[L3.0.2]`", and that verdict returned **green**. The condition is not unmet, it is impossible |
+| L3.5 | Satisfaction cluster | **DISSOLVED as a cluster 2026-07-27**, contradicted on four of its five named sources: `Reflect*` shipped at `[L2.2]`, `Tarski*` at `[L3.16]`, `Sat*InL`/`Stage`/`Slice` and `SatWitness*` dissolve. What survives is one `L.Recursion` `Definition`, which `[L3.0.1]` also claims; **the owner must rule which code owns it**. The genuine residue (`Realize` when parameters enter, `SeqChar` object-adequacy) moves to `[L3.19]` |
+| L3.6 | Closure cluster | **DISSOLVED 2026-07-27.** Not one member survives as closure work: `FFST*` is what `L.Coding.InL.codeL` does in twelve lines with `finSetL`; `SeqSetInL` is superseded by `seqSet` plus `smallDom` and separation; `SatSetInL` dissolves into `L.Recursion.Of.table`; `Canon*` belongs to the well-order. The "closure engine" sense of the name shipped as `L.Axioms.Basic.defSet→isL`. Strike `L/Closure/` from §4 |
 | L3.7 | Certificate cluster | PLANNED |
-| L3.8 | Dispatch-grid generation (S8) | PLANNED, opportunistic (registered 2026-07-25; inside the first cluster that hits a grid) |
-| L3.9 | Transport and cast solver (S7) | PLANNED, spike first (registered 2026-07-25; lowest priority, ABANDONED on a failed shape check) |
+| L3.8 | Dispatch-grid generation (S8) | **ABANDONED 2026-07-27, premise spent.** Two goals have now walked the natural grid sites (`[L3.14]`, `[L3.16]`) and neither produced a grid: the Δ₀ obligations that forced them are gone, and the one real grid (`⌜⌝-inj`, 132 clauses) was dropped by consumption audit at `[L3.1]` |
+| L3.9 | Transport and cast solver (S7) | **ABANDONED 2026-07-27** (the row carried two statuses at once). The inherited 3,300-site figure is source-side; Bedrock's whole `src/` has **456** `subst`/`cong`/`transport` sites, so the lever is an order of magnitude smaller than registered. Recorded so the goal cannot be re-argued from the source figure; a future need returns as a new code |
 | L3.10 | Re-layering review of L/ | PLANNED |
+| L3.17 | The ambient environment set exists | PLANNED, **next after `[L2.3]`** (registered 2026-07-27). `L.Coding.Model` describes the set of environments at an arity and disowns its existence in both languages; `[L3.0.1]` never claimed it; PLAN's own bookkeeping calls it "a sub-unit of step 3" that the ≈340-line estimate did not include. **An unowned prerequisite is how a projected budget silently goes wrong**, so it gets a code. Also owes that a table's values are subsets of it. Est. 60 to 120 |
+| L3.18 | The parameter alphabet (was "the parameter bridge") | **RULED 2026-07-27, and neither side of the fork wins.** The owner delegated the ruling with the principle "minimise code size, subject to no conversion blowup". **Take the third option: widen the satisfaction table's alphabet and move neither representation.** Keep `L.Definability` exactly as it is, parameters as constants, and let the table range over codes of `Formula ⟪ A ⟫ n`. ~**20 net code lines across two files, zero in `L.Definability` or any of its four consumers**, against Option 1's 275 to 320 and Option 2's that-plus-400-to-700 of consumer rewrite. **The fork was mis-framed and the row said so**: the two options are **nested, not alternatives**. `L.Axioms.Separation` feeds `Def` a formula carrying arbitrary constants, so a parameter-free `Def` would need the same constants-to-variables traversal at the identical type; Option 2 therefore *contains* Option 1 and adds consumer churn on top, and cannot win under any weighting. Why the third option is available at all: coded syntax **already** admits set constants (`⌜ con x ⌝ᵗ = mkTag 0 x`, and `c-con` is already a constructor of the coding relation), `L.Coding.Model` never mentions parameter-freeness anywhere in its 647 lines, and the clause frames never descend into a term code, so an arbitrary set payload is inert to the recursion. What the parameter-free split buys is an **absolute, stage-independent code set**, and the well-order does not want one: `<L` is stage-first by construction, and `allCodes`/`taggedCodes`/`ClosedΣ`/`pairInAt` have **zero mathematical consumers today**. Blowup risk **low**, one named hazard: generalized `codeL` puts members' `isL` certificates inside code certificates, exactly the `L.Axioms.Full` shape, contained by the same `opaque`-at-the-construction-site fix already timed at 600 s → 259 ms. **What would overturn it**: if `[L3.19]` needs an absolute code set to state internal definability, since the third option makes the alphabet stage-relative by design. Spike that before `[L3.19]`, not before this change. **First step taken the same day and the hazard did not materialize**: `codeTmL`/`codeL` generalized from `Formula (⊥* {ℓ}) n` to `Formula K n` with a constructibility hypothesis on the alphabet, the parameter-free case recovered as the instance at the empty type (`codeFreeL`), and the instantiation at `{K = ⟪ Lset σ ⟫}` with `Lset→isL` timed at **16 ms**. `L.Coding.InL` went 59 → 74 ms. **No seal needed**, against the `L.Axioms.Full` precedent that motivated the concern |
+| L3.20 | Subformula closure, and the first measurement of the lever | ACTIVE 2026-07-27. The slot a recursion on codes is stated against, and **the cheapest honest test of `[L3.0.2]`'s biggest unknown**: `L.Recursion` buys its 99 lines by demanding `funct` of every client and supplying no measure, no stage-locality and no induction principle, and it has **zero importers**, so every downstream number rests on an unexercised field. The closure has the same recursion shape as satisfaction (value at a code from values at subcodes) with trivial values, so it isolates the cost of the `funct` frame from the cost of the content, at perhaps a third of satisfaction's size. Meta level delivered: `closure` and `closureL` in `L.Coding.InL`, twelve clauses each, on two new shapes (`sglL`, `cupL`); the chapter is 98 lines and checks in 123 ms. **First finding, and it is about the lever's interface rather than its cost.** `Definition` asks an instance for `fn : S → S`, a function on the whole model. A recursion over **coded** syntax cannot supply one without first deciding whether an arbitrary element is a code and recovering the syntax it encodes, which is a decoder the recursion never otherwise needs. Single-valuedness does not need it either: **contractibility is a proposition**, so an instance may decide by cases and take apart truncated witnesses on the way to proving it. `L.Recursion.mereFunct` records this in four lines, and every coded-syntax instance, satisfaction included, will fill `Recursion` through it rather than `Definition`. So `Definition` is the form for instances that have a total meta function, not the general one, and the chapter now says which is which. **The cost measurement itself lands with the graph and `funct`, the next unit** |
+| L3.19 | The L-hierarchy internalized | PLANNED (registered 2026-07-27). The internal definition of `L` off which the internal well-order is read, plus its adequacy against the meta hierarchy. The last mathematical content on the `hasChoiceL` chain, and named by no row before today. Est. 200 to 400. Also holds `[L3.5]`'s residue (`Realize` when parameters enter, `SeqChar` object-adequacy). Risk: `L.Absoluteness` is Δ₀ transfer with no induction of its own, so it will not cover a stage-recursive predicate; if a genuine absoluteness induction is needed here it is a chapter, not a lemma, and the likeliest place for the `L`-side budget to overrun |
 | L4 | Convergence | PLANNED |
 | L4.0 | Empty Frontier, unconditional root | PLANNED |
 | L4.1 | Whole-book harmonization pass | PLANNED |
@@ -1204,6 +1284,20 @@ One row per goal code; update the row in the same commit that changes the status
   `L.Reflect` 296. Against the §7.6 per-module budget of ~120 s the worst module is at
   **0.6%**, so nothing is close, and there are still **zero** `-- perf:` markers in `src/`.
 
+  **This per-module list is WRONG and was wrong when written; corrected 2026-07-27.** It
+  was produced by piping `--profile=modules` through `sort -rn`, and Agda prints a thousands
+  separator, so every module at or above 1,000 ms sorted as though it were under ten. The
+  real worst module then and now is **`L.Axioms.Basic` at 7,142 ms**, ten times the figure
+  reported, and `L.Coding.Model` was second at 1,632. Re-measured cold on the same machine
+  2026-07-27: **tree 20.0 s**, `L.Axioms.Basic` 7,142, `L.Coding.Model` 1,632, `Miscellaneous`
+  957, `L.Axioms.Separation` 719, `L.Rank` 687, `L.Coding.Environment` 631.
+
+  The budgets still hold with room: 20.0 s against 15 minutes is 2%, and 7.1 s against ~120 s
+  is 6%. But `L.Axioms.Basic` alone is **36% of the whole tree**, which is a fact the earlier
+  entry hid, and it is the module to watch: `finSetL` and its `finDisj` induction landed
+  there at `[L3.0.5]`. **Method note, since the error was in the measurement and not the
+  mathematics: never sort Agda's profile output numerically without stripping the separator.**
+
   The line worth keeping: **`L.Axioms.Full` checks in 259 ms**, and before its
   constructibility certificate was sealed it did not finish in **600 s**. One `opaque` is
   worth a factor of at least 2,300 there, which is the sharpest number the conversion-blowup
@@ -1213,10 +1307,12 @@ One row per goal code; update the row in the same commit that changes the status
   is not comparable to the source's ~8.5 minutes for the completed development. What the
   measurement does establish is headroom, and that the design has not been buying its line
   compression with check time.
-- **Frontier field count:** **2** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
+- **Frontier field count:** **1** (opened at 11 on `[L1.7]`; `[L2.0]` deleted
   `hasEmptyL`, `hasPairL`, `hasUnionL`; `[L2.1]` deleted the numeral chain's three and
-  then `hasInfinityL`; `[L2.2]` deleted `hasSeparationL` and `hasReplacementL` together).
-  Remaining: power and choice. Eleven of the twelve model fields are theorems.
+  then `hasInfinityL`; `[L2.2]` deleted `hasSeparationL` and `hasReplacementL` together;
+  `[L2.3]` deleted `hasPowerL`). Remaining: **choice alone**. All twelve fields of
+  `isZFModel` are theorems, so `L⊨ZF` is now unconditional in substance and the frontier
+  carries only the extension.
 - **Conversion-blowup finding [L2.2], the sharpest so far:** `L.Axioms.Full` did not
   finish in ten minutes, and the cause was **one proof term**. Relativization bounds
   quantifiers by a constant, the constant is the stage *as an element of the model*, and
