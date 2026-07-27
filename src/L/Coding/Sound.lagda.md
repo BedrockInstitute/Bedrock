@@ -34,7 +34,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; ¬̇_ )
+open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
@@ -42,7 +42,8 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( module LCode; prʟ; prʟ-fst; andClauseAt; orClauseAt
         ; propClause-in; interAt; unionAt; envSetAt; envOverAt
-        ; negClauseAt; negClause-in
+        ; negClauseAt; negClause-in; impClauseAt; impClause-in
+        ; topClauseAt; topClause-in; botClauseAt; botClause-in
         ; envOverAt-transport; extAt-out; extAt-in; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
@@ -54,6 +55,8 @@ open import L.Coding.Table {ℓ} lem
 
 open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Data.Empty using ( isProp⊥ )
+import Cubical.Data.Empty as Empty
+open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
@@ -202,11 +205,12 @@ the specification of either.
     (payOp : ∀ {m} (a' b' : Formula S m)
            → LCode.payOf (op a' b') ≡ prʟ LCode.⌜ a' ⌝ LCode.⌜ b' ⌝)
     where
-    Parts : (yc ya yb : S) → Type (ℓ-suc ℓ)
-    Parts yc ya yb =
+    Parts : (ar yc ya yb : S) → Type (ℓ-suc ℓ)
+    Parts ar yc ya yb =
       Σ[ m ∈ ℕ ] (Σ[ a' ∈ Formula S m ] (Σ[ b' ∈ Formula S m ]
-        ((fst yc ≡ fst (Sat B (op a' b')))
-         × ((fst ya ≡ fst (Sat B a')) × (fst yb ≡ fst (Sat B b'))))))
+        ((# m ≡ fst ar)
+         × ((fst yc ≡ fst (Sat B (op a' b')))
+            × ((fst ya ≡ fst (Sat B a')) × (fst yb ≡ fst (Sat B b')))))))
 
     parts : (c ar a b yc ya yb : S)
           → ⟨ fst c ∈ fst (slot B φ) ⟩
@@ -214,7 +218,7 @@ the specification of either.
           → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
           → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (satTable B φ) ⟩
           → ⟨ pr (pr (fst ar) (fst b)) (fst yb) ∈ fst (satTable B φ) ⟩
-          → ∥ Parts yc ya yb ∥₁
+          → ∥ Parts ar yc ya yb ∥₁
     parts c ar a b yc ya yb c∈ sh hc ha hb = PT.map
       (λ { (m , ψ , q) →
         let r  = keyʟ-shape ψ k (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
@@ -231,7 +235,7 @@ the specification of either.
             kb = cong₂ pr (sym (r .snd .fst)) (sym (pr-inj pay .snd))
                ∙ cong (λ w → pr w (fst LCode.⌜ b' ⌝)) (sym (numeralL-fst m))
                ∙ sym (prʟ-fst (numeralL m) LCode.⌜ b' ⌝)
-        in m , a' , b'
+        in m , a' , b' , r .snd .fst
          , ( entry-out B φ (op a' b') (fst yc)
                (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
                  (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc)
@@ -270,14 +274,14 @@ builds, and gets it from whichever disjunct it was handed.
     (λ c ar a b yc ya yb c∈ sh hc ha hb →
       let P = BinAnd.parts c ar a b yc ya yb c∈ sh hc ha hb in
         (λ z hz → PT.rec (isProp× (snd (fst z ∈ fst ya)) (snd (fst z ∈ fst yb)))
-          (λ { (m , a' , b' , (ec , (ea , eb))) →
+          (λ { (m , a' , b' , (qm , (ec , (ea , eb)))) →
             let s = subst ⟨_⟩ (Sat-mem B (a' ∧̇ b') z)
                       (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
             in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ea) (s .snd .fst)
              , subst (λ w → ⟨ fst z ∈ w ⟩) (sym eb) (s .snd .snd) })
           P)
       , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
-          (λ { (m , a' , b' , (ec , (ea , eb))) →
+          (λ { (m , a' , b' , (qm , (ec , (ea , eb)))) →
             let za = subst (λ w → ⟨ fst z ∈ w ⟩) ea (hz .fst)
                 zb = subst (λ w → ⟨ fst z ∈ w ⟩) eb (hz .snd)
             in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
@@ -290,14 +294,14 @@ builds, and gets it from whichever disjunct it was handed.
     (λ c ar a b yc ya yb c∈ sh hc ha hb →
       let P = BinOr.parts c ar a b yc ya yb c∈ sh hc ha hb in
         (λ z hz → PT.rec squash₁
-          (λ { (m , a' , b' , (ec , (ea , eb))) → PT.map
+          (λ { (m , a' , b' , (qm , (ec , (ea , eb)))) → PT.map
             (λ { (inl w) → inl (subst (λ v → ⟨ fst z ∈ v ⟩) (sym ea) w)
                ; (inr w) → inr (subst (λ v → ⟨ fst z ∈ v ⟩) (sym eb) w) })
             (subst ⟨_⟩ (Sat-mem B (a' ∨̇ b') z)
               (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz) .snd) })
           P)
       , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
-          (λ { (m , a' , b' , (ec , (ea , eb))) → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , a' , b' , (qm , (ec , (ea , eb)))) → PT.rec (snd (fst z ∈ fst yc))
             (λ { (inl w) →
                    let za = subst (λ v → ⟨ fst z ∈ v ⟩) ea w in
                    subst (λ v → ⟨ fst z ∈ v ⟩) (sym ec)
@@ -309,6 +313,95 @@ builds, and gets it from whichever disjunct it was handed.
                      (subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') z))
                        (subst ⟨_⟩ (Sat-mem B b' z) zb .fst , ∣ inr zb ∣₁)) })
             hz })
+          P))
+
+  module Const (k : ℕ) (c₀ : ∀ {m} → Formula S m)
+    (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ → ψ ≡ c₀)
+    where
+    Parts : (ar yc : S) → Type (ℓ-suc ℓ)
+    Parts ar yc =
+      Σ[ m ∈ ℕ ] ((# m ≡ fst ar) × (fst yc ≡ fst (Sat B (c₀ {m}))))
+
+    parts : (c ar a yc : S)
+          → ⟨ fst c ∈ fst (slot B φ) ⟩
+          → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+          → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
+          → ∥ Parts ar yc ∥₁
+    parts c ar a yc c∈ sh hc = PT.map
+      (λ { (m , ψ , q) →
+        let r  = keyʟ-shape ψ k (fst ar) (fst a) (sym q ∙ sh)
+            eψ = get ψ (r .fst)
+        in m , r .snd .fst
+         , entry-out B φ c₀ (fst yc)
+             (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
+               (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc) })
+      (slot-inv B φ (fst c) c∈)
+
+  private
+    module ConstTop = Const 6 ⊤̇ (λ _ m → m)
+    module ConstBot = Const 7 ⊥̇ (λ _ m → m)
+
+  topSound : ⟨ δ ⊨ topClauseAt Ci Ti Bi ⟩
+  topSound = topClause-in Ci Ti Bi δ
+    (λ c ar a yc E c∈ sh hc hE →
+      let P  = ConstTop.parts c ar a yc c∈ sh hc
+          δ' = E ∷ yc ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc Bi))))
+          ai = suc (suc (suc zero))
+      in
+        (λ z hz → PT.rec (snd (fst z ∈ fst E))
+          (λ { (m , (qm , ec)) →
+            Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z
+              (subst ⟨_⟩ (Sat-mem B (⊤̇ {n = m}) z)
+                (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz) .fst) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , (qm , ec)) →
+            subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+              (subst ⟨_⟩ (sym (Sat-mem B (⊤̇ {n = m}) z))
+                ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z hz
+                , tt* )) })
+          P))
+
+  botSound : ⟨ δ ⊨ botClauseAt Ci Ti ⟩
+  botSound = botClause-in Ci Ti δ
+    (λ c ar a yc c∈ sh hc →
+      let P = ConstBot.parts c ar a yc c∈ sh hc in
+        (λ z hz → PT.rec isProp⊥*
+          (λ { (m , (qm , ec)) →
+            subst ⟨_⟩ (Sat-mem B (⊥̇ {n = m}) z)
+              (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz) .snd })
+          P)
+      , (λ z hz → Empty.rec* hz))
+
+  private
+    module BinImp = Bin 4 _⇒̇_ (λ _ m → m) (λ _ _ → refl)
+
+  impSound : ⟨ δ ⊨ impClauseAt Ci Ti Bi ⟩
+  impSound = impClause-in Ci Ti Bi δ
+    (λ c ar a b yc ya yb E c∈ sh hc ha hb hE →
+      let P  = BinImp.parts c ar a b yc ya yb c∈ sh hc ha hb
+          δ' = E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc (suc (suc (suc Bi)))))))
+          ai = suc (suc (suc (suc (suc (suc zero)))))
+      in
+        (λ z hz → PT.rec
+          (isProp× (snd (fst z ∈ fst E))
+            (isPropΠ (λ _ → snd (fst z ∈ fst yb))))
+          (λ { (m , a' , b' , (qm , (ec , (ea , eb)))) →
+            let s = subst ⟨_⟩ (Sat-mem B (a' ⇒̇ b') z)
+                      (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+            in Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst)
+             , (λ w → subst (λ v → ⟨ fst z ∈ v ⟩) (sym eb)
+                 (s .snd (subst (λ v → ⟨ fst z ∈ v ⟩) ea w))) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , a' , b' , (qm , (ec , (ea , eb)))) →
+            subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+              (subst ⟨_⟩ (sym (Sat-mem B (a' ⇒̇ b') z))
+                ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z (hz .fst)
+                , (λ w → subst (λ v → ⟨ fst z ∈ v ⟩) eb
+                    (hz .snd (subst (λ v → ⟨ fst z ∈ v ⟩) (sym ea) w))) )) })
           P))
 
   private
