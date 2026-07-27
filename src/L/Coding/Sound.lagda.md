@@ -34,7 +34,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
@@ -46,12 +46,16 @@ open import L.Coding.Model {ℓ}
         ; topClauseAt; topClause-in; botClauseAt; botClause-in
         ; tmValAt; tmValAt-var; tmValAt-con; tmValAt-out
         ; memClauseAt; eqClauseAt; memRel; eqRel; atomClause-in
+        ; existClauseAt; forallClauseAt; quantClause-in
+        ; body∃; body∃-in; body∃-out; body∀; body∀-in; body∀-out
+        ; consAtL-transport
         ; atomBody; atomBody-in; atomBody-out
         ; envOverAt-transport; extAt-out; extAt-in; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem
-  using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out; cond∈-in; cond∈-out; cond≐-in; cond≐-out )
+  using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out; cond∈-in; cond∈-out; cond≐-in; cond≐-out
+        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out )
 open import L.Coding.EnvSet {ℓ} lem
   using ( envSet; envSet-in; envSet-out; envS; envOver; Ix; module Recover )
 open import L.Coding.Table {ℓ} lem
@@ -68,8 +72,9 @@ open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( #_ )
+open InfinitySet using ( #_; sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -426,6 +431,43 @@ builds, and gets it from whichever disjunct it was handed.
             hz })
           P))
 
+  module UnSucc (k : ℕ) (op : ∀ {m} → Formula S (suc m) → Formula S m)
+    (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ
+         → Σ[ a' ∈ Formula S (suc m) ] (ψ ≡ op a'))
+    (payOp : ∀ {m} (a' : Formula S (suc m)) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
+    where
+    Parts : (ar yc ya : S) → Type (ℓ-suc ℓ)
+    Parts ar yc ya =
+      Σ[ m ∈ ℕ ] (Σ[ a' ∈ Formula S (suc m) ]
+        ((# m ≡ fst ar)
+         × ((fst yc ≡ fst (Sat B (op a'))) × (fst ya ≡ fst (Sat B a')))))
+
+    parts : (c ar a yc ya : S)
+          → ⟨ fst c ∈ fst (slot B φ) ⟩
+          → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+          → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
+          → ⟨ pr (pr (sucV (fst ar)) (fst a)) (fst ya) ∈ fst (satTable B φ) ⟩
+          → ∥ Parts ar yc ya ∥₁
+    parts c ar a yc ya c∈ sh hc ha = PT.map
+      (λ { (m , ψ , q) →
+        let r  = keyʟ-shape ψ k (fst ar) (fst a) (sym q ∙ sh)
+            g  = get ψ (r .fst)
+            a' = g .fst
+            eψ = g .snd
+            pay = cong fst (sym (payOp a'))
+                ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+            ka = cong₂ pr (cong sucV (sym (r .snd .fst))) (sym pay)
+               ∙ cong (λ w → pr w (fst LCode.⌜ a' ⌝))
+                   (sym (numeralL-fst (suc m)))
+               ∙ sym (prʟ-fst (numeralL (suc m)) LCode.⌜ a' ⌝)
+        in m , a' , r .snd .fst
+         , ( entry-out B φ (op a') (fst yc)
+               (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
+                 (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc)
+           , entry-out B φ a' (fst ya)
+               (subst (λ w → ⟨ pr w (fst ya) ∈ fst (satTable B φ) ⟩) ka ha) ) })
+      (slot-inv B φ (fst c) c∈)
+
   module Atom (k : ℕ) (op : ∀ {m} → Term S m → Term S m → Formula S m)
     (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ
          → Σ[ t ∈ Term S m ] (Σ[ u ∈ Term S m ] (ψ ≡ op t u)))
@@ -521,6 +563,94 @@ builds, and gets it from whichever disjunct it was handed.
               (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz) .snd })
           P)
       , (λ z hz → Empty.rec* hz))
+
+  private
+    module UnEx  = UnSucc 8 ∃̇_ (λ _ m → m) (λ _ → refl)
+    module UnAll = UnSucc 9 ∀̇_ (λ _ m → m) (λ _ → refl)
+
+  existSound : ⟨ δ ⊨ existClauseAt Ci Ti Bi ⟩
+  existSound = quantClause-in Ci Ti Bi 8 (body∃ Bi) δ
+    (λ c ar a yc ya E c∈ sh hc ha hE →
+      let P  = UnEx.parts c ar a yc ya c∈ sh hc ha
+          δ' = E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc (suc Bi)))))
+          ai = suc (suc (suc (suc zero)))
+      in
+        (λ z hz → PT.rec (snd ((z ∷ δ') ⊨ body∃ Bi))
+          (λ { (m , a' , (qm , (ec , ea))) →
+            let s  = subst ⟨_⟩ (Sat-mem B (∃̇ a') z)
+                       (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z
+                       (Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst))
+            in body∃-in Bi (z ∷ δ')
+                 (Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst))
+                 (PT.map
+                   (λ { (x , (x∈ , (e' , (hcs , he)))) → x , x∈ , e'
+                      , ( consAtL-transport (e' ∷ x ∷ z ∷ []) (e' ∷ x ∷ z ∷ δ')
+                            zero (suc zero) (suc (suc zero))
+                            zero (suc zero) (suc (suc zero))
+                            (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                            refl refl refl hcs
+                        , subst (λ w → ⟨ fst e' ∈ w ⟩) (sym ea) he ) })
+                   (cond∃-out B a' z (s .snd))) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , a' , (qm , (ec , ea))) →
+            let r  = body∃-out Bi (z ∷ δ') hz
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+            in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+                 (subst ⟨_⟩ (sym (Sat-mem B (∃̇ a') z))
+                   ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+                   , cond∃-in B a' z (PT.map
+                       (λ { (x , (x∈ , (e' , (hcs , he)))) → x , x∈ , e'
+                          , ( consAtL-transport (e' ∷ x ∷ z ∷ δ') (e' ∷ x ∷ z ∷ [])
+                                zero (suc zero) (suc (suc zero))
+                                zero (suc zero) (suc (suc zero))
+                                (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                                refl refl refl hcs
+                            , subst (λ w → ⟨ fst e' ∈ w ⟩) ea he ) })
+                       (r .snd)) )) })
+          P))
+
+  forallSound : ⟨ δ ⊨ forallClauseAt Ci Ti Bi ⟩
+  forallSound = quantClause-in Ci Ti Bi 9 (body∀ Bi) δ
+    (λ c ar a yc ya E c∈ sh hc ha hE →
+      let P  = UnAll.parts c ar a yc ya c∈ sh hc ha
+          δ' = E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc (suc Bi)))))
+          ai = suc (suc (suc (suc zero)))
+      in
+        (λ z hz → PT.rec (snd ((z ∷ δ') ⊨ body∀ Bi))
+          (λ { (m , a' , (qm , (ec , ea))) →
+            let s  = subst ⟨_⟩ (Sat-mem B (∀̇ a') z)
+                       (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+                z∈ = Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst)
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z z∈
+            in body∀-in Bi (z ∷ δ') z∈
+                 (λ x e' x∈ hcs → subst (λ w → ⟨ fst e' ∈ w ⟩) (sym ea)
+                   (cond∀-out B a' z (s .snd) x e' x∈
+                     (consAtL-transport (e' ∷ x ∷ z ∷ δ') (e' ∷ x ∷ z ∷ [])
+                       zero (suc zero) (suc (suc zero))
+                       zero (suc zero) (suc (suc zero))
+                       (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                       refl refl refl hcs))) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , a' , (qm , (ec , ea))) →
+            let r  = body∀-out Bi (z ∷ δ') hz
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+            in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+                 (subst ⟨_⟩ (sym (Sat-mem B (∀̇ a') z))
+                   ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+                   , cond∀-in B a' z
+                       (λ x e' x∈ hcs → subst (λ w → ⟨ fst e' ∈ w ⟩) ea
+                         (r .snd x e' x∈
+                           (consAtL-transport (e' ∷ x ∷ z ∷ []) (e' ∷ x ∷ z ∷ δ')
+                             zero (suc zero) (suc (suc zero))
+                             zero (suc zero) (suc (suc zero))
+                             (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                             refl refl refl hcs))) )) })
+          P))
 
   private
     ai0 : ∀ {j} → Fin (suc j)
