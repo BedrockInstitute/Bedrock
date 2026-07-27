@@ -52,7 +52,7 @@ open import L.Coding.Model {ℓ}
         ; body∃; body∃-in; body∃-out; body∀; body∀-in; body∀-out
         ; consAtL-transport
         ; atomBody; atomBody-in; atomBody-out
-        ; envOverAt-transport; extAt-out; extAt-in; numL
+        ; envOverAt-transport; extAt-out; extAt-in; extAt-in-both; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem
@@ -247,6 +247,40 @@ termAgree {m} (con c) γ ti ei vi γ' vi' ei' qt qe qv =
              (qt ∙ tmCode {m} (con c) .snd .snd) h)
   , (λ h → TermAgree.fromCon γ ti ei vi (fst c)
       (qt ∙ tmCode {m} (con c) .snd .snd) (qv ∙ h))
+```
+
+<!--en-->
+And the same agreement in the producing direction. A clause that *binds* its
+ambient set has to be handed one, and the only candidate is the set the previous
+chapter built; this says it qualifies. The uniqueness half will want it at every
+clause that binds an ambient set, which is seven of the twelve.
+<!--zh-->
+以及同一份一致性的「产出」方向。一条**绑定**自己周遭集合的子句必须被递一个进来，而唯一的候选就是上一章造出的那个集合；这条说它合格。唯一性那一半会在每条绑定周遭集合的子句处要它，而那是十二条里的七条。
+<!--/-->
+
+```agda
+module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
+  (qE : fst (lookup Ei γ) ≡ fst (envSet B m))
+  (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
+  where
+
+  holds : ⟨ γ ⊨ envSetAt Ei di bi ⟩
+  holds = extAt-in-both Ei (envOverAt zero (suc di) (suc bi)) γ fwd bwd
+    where
+    fwd : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+        → ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
+    fwd z hz = PT.rec (snd ((z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi)))
+      (λ { (g , eg) → envOverAt-transport (B ∷ nn m ∷ envS B g ∷ []) (z ∷ γ)
+             (suc (suc zero)) (suc zero) zero zero (suc di) (suc bi)
+             (sym eg) (sym qd) (sym qb) (envOver B g) })
+      (envSet-out B m z (subst (λ w → ⟨ fst z ∈ w ⟩) qE hz))
+
+    bwd : (z : S) → ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
+        → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+    bwd z h = subst (λ w → ⟨ fst z ∈ w ⟩) (sym qE)
+      (subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
+        (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb h))
+        (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb h)))
 ```
 
 <!--en-->
