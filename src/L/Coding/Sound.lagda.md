@@ -1,0 +1,173 @@
+# The table satisfies the clauses
+
+<!--en-->
+The existence half. The table built by recursion on a formula of the
+meta-language really does stand in the relation the internal clauses describe,
+one clause at a time.
+
+Each verification is the same four moves, and three of them are already built.
+The index is inverted to the formula whose key it is; the formula's constructor
+is computed from the clause's tag; the recorded values are identified with the
+values the meta-level recursion built. What is left over, and the only part that
+is new, is a set identity: that the value at a conjunction really is the
+intersection of the values below it, and so on for the other eleven.
+
+Those identities are cheap for a reason worth saying plainly. The meta-level
+recursion defined the value at a constructor by separating the ambient set by a
+condition naming the values below, so the identity is that condition read back,
+which is what the separation's own specification says.
+<!--zh-->
+存在性的那一半。沿元语言公式递归造出的那张表，确实处在内部诸子句所描述的关系之中，一条子句一条子句地。
+
+每次验证都是同样四步，而其中三步已经造好。索引被求逆回「它是谁的键」的那条公式；该公式的构造子由子句的标签算出；被记录的诸取值与元语言递归造出的诸取值被认同起来。剩下的、也是唯一新的那一步，是一条集合等式：合取处的取值确实是它下面两个取值的交，其余十一条同理。
+
+那些等式便宜，而理由值得直说。元语言的递归是「用一条点名下层诸取值的条件雕出周遭集合」来定义某构造子处的取值的，故那条等式就是把那条条件读回来，而那正是那次分离自己的规格所说的话。
+<!--/-->
+
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; _∧̇_ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Model {ℓ}
+  using ( module LCode; prʟ-fst; andClauseAt; propClause-in; interAt
+        ; yc7; ya7; yb7 )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
+open import L.Coding.Table {ℓ} lem
+  using ( keyʟ; keyʟ-shape; satTable; slot; slot-inv; entry-out )
+
+open import Cubical.Foundations.HLevels using ( isProp× )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
+open InfinitySet using ( #_ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+```
+
+<!--en-->
+## The environment a clause is read in
+<!--zh-->
+## 子句被读入的那个环境
+<!--/-->
+
+<!--en-->
+Three slots, in the order the clauses take them: the index, the table, the
+carrier.
+<!--zh-->
+三个槽位，按诸子句取用的次序：索引、表、载体。
+<!--/-->
+
+```agda
+module _ (B : S) {n : ℕ} (φ : Formula S n) where
+  private
+    δ : S ^ 3
+    δ = B ∷ satTable B φ ∷ slot B φ ∷ []
+
+    Ci Ti Bi : Fin 3
+    Ci = suc (suc zero)
+    Ti = suc zero
+    Bi = zero
+```
+
+<!--en-->
+## Conjunction
+<!--zh-->
+## 合取
+<!--/-->
+
+<!--en-->
+The first of the twelve, and the shortest, because the intersection needs no
+ambient set: a member of both values is already a member of the ambient one, by
+the specification of either.
+<!--zh-->
+十二条里的第一条，也是最短的，因为交不需要周遭集合：两个取值的共同成员，按其中任一个的规格，本来就是周遭那个的成员。
+<!--/-->
+
+```agda
+  andSound : ⟨ δ ⊨ andClauseAt Ci Ti ⟩
+  andSound = propClause-in Ci Ti 2 (interAt yc7 ya7 yb7) δ
+    (λ c ar a b yc ya yb c∈ sh hc ha hb →
+        (λ z hz → fwd c ar a b yc ya yb c∈ sh hc ha hb z hz)
+      , (λ z hz → bwd c ar a b yc ya yb c∈ sh hc ha hb z hz))
+    where
+    Parts : (c ar a b yc ya yb : S) → Type (ℓ-suc ℓ)
+    Parts c ar a b yc ya yb =
+      Σ[ m ∈ ℕ ] (Σ[ a' ∈ Formula S m ] (Σ[ b' ∈ Formula S m ]
+        ((fst yc ≡ fst (Sat B (a' ∧̇ b')))
+         × ((fst ya ≡ fst (Sat B a')) × (fst yb ≡ fst (Sat B b'))))))
+
+    parts : (c ar a b yc ya yb : S)
+          → ⟨ fst c ∈ fst (slot B φ) ⟩
+          → fst c ≡ pr (fst ar) (pr (# 2) (pr (fst a) (fst b)))
+          → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
+          → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (satTable B φ) ⟩
+          → ⟨ pr (pr (fst ar) (fst b)) (fst yb) ∈ fst (satTable B φ) ⟩
+          → ∥ Parts c ar a b yc ya yb ∥₁
+    parts c ar a b yc ya yb c∈ sh hc ha hb = PT.map
+      (λ { (m , ψ , q) →
+        let r = keyʟ-shape ψ 2 (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
+            a' = r .fst .fst
+            b' = r .fst .snd .fst
+            eψ = r .fst .snd .snd
+            pay = sym (prʟ-fst LCode.⌜ a' ⌝ LCode.⌜ b' ⌝)
+                ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+            ka = cong₂ pr (sym (r .snd .fst)) (sym (pr-inj pay .fst))
+               ∙ cong (λ w → pr w (fst LCode.⌜ a' ⌝)) (sym (numeralL-fst m))
+               ∙ sym (prʟ-fst (numeralL m) LCode.⌜ a' ⌝)
+            kb = cong₂ pr (sym (r .snd .fst)) (sym (pr-inj pay .snd))
+               ∙ cong (λ w → pr w (fst LCode.⌜ b' ⌝)) (sym (numeralL-fst m))
+               ∙ sym (prʟ-fst (numeralL m) LCode.⌜ b' ⌝)
+        in m , a' , b'
+         , ( entry-out B φ (a' ∧̇ b') (fst yc)
+               (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
+                 (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc)
+           , ( entry-out B φ a' (fst ya)
+                 (subst (λ w → ⟨ pr w (fst ya) ∈ fst (satTable B φ) ⟩)
+                   ka ha)
+             , entry-out B φ b' (fst yb)
+                 (subst (λ w → ⟨ pr w (fst yb) ∈ fst (satTable B φ) ⟩)
+                   kb hb) ) ) })
+      (slot-inv B φ (fst c) c∈)
+
+    fwd : (c ar a b yc ya yb : S) → _ → _ → _ → _ → _ → (z : S)
+        → ⟨ fst z ∈ fst yc ⟩
+        → ⟨ fst z ∈ fst ya ⟩ × ⟨ fst z ∈ fst yb ⟩
+    fwd c ar a b yc ya yb c∈ sh hc ha hb z hz = PT.rec
+      (isProp× (snd (fst z ∈ fst ya)) (snd (fst z ∈ fst yb)))
+      (λ { (m , a' , b' , (ec , (ea , eb))) →
+        let s = subst ⟨_⟩ (Sat-mem B (a' ∧̇ b') z)
+                  (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+        in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ea) (s .snd .fst)
+         , subst (λ w → ⟨ fst z ∈ w ⟩) (sym eb) (s .snd .snd) })
+      (parts c ar a b yc ya yb c∈ sh hc ha hb)
+
+    bwd : (c ar a b yc ya yb : S) → _ → _ → _ → _ → _ → (z : S)
+        → ⟨ fst z ∈ fst ya ⟩ × ⟨ fst z ∈ fst yb ⟩
+        → ⟨ fst z ∈ fst yc ⟩
+    bwd c ar a b yc ya yb c∈ sh hc ha hb z hz = PT.rec
+      (snd (fst z ∈ fst yc))
+      (λ { (m , a' , b' , (ec , (ea , eb))) →
+        let za = subst (λ w → ⟨ fst z ∈ w ⟩) ea (hz .fst)
+            zb = subst (λ w → ⟨ fst z ∈ w ⟩) eb (hz .snd)
+        in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+             (subst ⟨_⟩ (sym (Sat-mem B (a' ∧̇ b') z))
+               ( subst ⟨_⟩ (Sat-mem B a' z) za .fst , (za , zb) )) })
+      (parts c ar a b yc ya yb c∈ sh hc ha hb)
+```
