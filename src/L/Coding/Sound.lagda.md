@@ -34,7 +34,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_ )
+open import FOL.Syntax using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
@@ -47,6 +47,8 @@ open import L.Coding.Model {ℓ}
         ; tmValAt; tmValAt-var; tmValAt-con; tmValAt-out
         ; memClauseAt; eqClauseAt; memRel; eqRel; atomClause-in
         ; existClauseAt; forallClauseAt; quantClause-in
+        ; allInClauseAt; exInClauseAt; bndClause-in
+        ; bodyAll; bodyAll-in; bodyAll-out; bodyEx; bodyEx-in; bodyEx-out
         ; body∃; body∃-in; body∃-out; body∀; body∀-in; body∀-out
         ; consAtL-transport
         ; atomBody; atomBody-in; atomBody-out
@@ -55,7 +57,8 @@ open import L.Coding.Model {ℓ}
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem
   using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out; cond∈-in; cond∈-out; cond≐-in; cond≐-out
-        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out )
+        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out
+        ; cond∀∈-in; cond∀∈-out; cond∃∈-in; cond∃∈-out )
 open import L.Coding.EnvSet {ℓ} lem
   using ( envSet; envSet-in; envSet-out; envS; envOver; Ix; module Recover )
 open import L.Coding.Table {ℓ} lem
@@ -262,6 +265,17 @@ module _ (B : S) {n : ℕ} (φ : Formula S n) where
     Ci = suc (suc zero)
     Ti = suc zero
     Bi = zero
+
+    ai0 : ∀ {j} → Fin (suc j)
+    ai0 = zero
+    ai1 : ∀ {j} → Fin (suc (suc j))
+    ai1 = suc zero
+    ai2 : ∀ {j} → Fin (suc (suc (suc j)))
+    ai2 = suc (suc zero)
+    ai5 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc j))))))
+    ai5 = suc (suc (suc (suc (suc zero))))
+    ai6 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc (suc j)))))))
+    ai6 = suc (suc (suc (suc (suc (suc zero)))))
 ```
 
 <!--en-->
@@ -505,6 +519,51 @@ builds, and gets it from whichever disjunct it was handed.
                    (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc) ) ) })
       (slot-inv B φ (fst c) c∈)
 
+  module BinSucc (k : ℕ)
+    (op : ∀ {m} → Term S m → Formula S (suc m) → Formula S m)
+    (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ
+         → Σ[ t ∈ Term S m ] (Σ[ a' ∈ Formula S (suc m) ] (ψ ≡ op t a')))
+    (payOp : ∀ {m} (t : Term S m) (a' : Formula S (suc m))
+           → LCode.payOf (op t a') ≡ prʟ LCode.⌜ t ⌝ᵗ LCode.⌜ a' ⌝)
+    where
+    Parts : (ar a b yc yb : S) → Type (ℓ-suc ℓ)
+    Parts ar a b yc yb =
+      Σ[ m ∈ ℕ ] (Σ[ t ∈ Term S m ] (Σ[ a' ∈ Formula S (suc m) ]
+        ((# m ≡ fst ar)
+         × ((fst a ≡ fst LCode.⌜ t ⌝ᵗ)
+            × ((fst yc ≡ fst (Sat B (op t a')))
+               × (fst yb ≡ fst (Sat B a')))))))
+
+    parts : (c ar a b yc yb : S)
+          → ⟨ fst c ∈ fst (slot B φ) ⟩
+          → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+          → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
+          → ⟨ pr (pr (sucV (fst ar)) (fst b)) (fst yb) ∈ fst (satTable B φ) ⟩
+          → ∥ Parts ar a b yc yb ∥₁
+    parts c ar a b yc yb c∈ sh hc hb = PT.map
+      (λ { (m , ψ , q) →
+        let r  = keyʟ-shape ψ k (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
+            g  = get ψ (r .fst)
+            t  = g .fst
+            a' = g .snd .fst
+            eψ = g .snd .snd
+            pay = sym (prʟ-fst LCode.⌜ t ⌝ᵗ LCode.⌜ a' ⌝)
+                ∙ cong fst (sym (payOp t a'))
+                ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+            kb = cong₂ pr (cong sucV (sym (r .snd .fst)))
+                   (sym (pr-inj pay .snd))
+               ∙ cong (λ w → pr w (fst LCode.⌜ a' ⌝))
+                   (sym (numeralL-fst (suc m)))
+               ∙ sym (prʟ-fst (numeralL (suc m)) LCode.⌜ a' ⌝)
+        in m , t , a' , r .snd .fst
+         , ( sym (pr-inj pay .fst)
+           , ( entry-out B φ (op t a') (fst yc)
+                 (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
+                   (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc)
+             , entry-out B φ a' (fst yb)
+                 (subst (λ w → ⟨ pr w (fst yb) ∈ fst (satTable B φ) ⟩) kb hb) ) ) })
+      (slot-inv B φ (fst c) c∈)
+
   module Const (k : ℕ) (c₀ : ∀ {m} → Formula S m)
     (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ → ψ ≡ c₀)
     where
@@ -563,6 +622,114 @@ builds, and gets it from whichever disjunct it was handed.
               (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz) .snd })
           P)
       , (λ z hz → Empty.rec* hz))
+
+  private
+    module BndAll = BinSucc 10 ∀̇∈ (λ _ m → m) (λ _ _ → refl)
+    module BndEx  = BinSucc 11 ∃̇∈ (λ _ m → m) (λ _ _ → refl)
+
+  allInSound : ⟨ δ ⊨ allInClauseAt Ci Ti Bi ⟩
+  allInSound = bndClause-in Ci Ti Bi 10 (bodyAll Bi) δ
+    (λ c ar a b yc yb E c∈ sh hc hb hE →
+      let P  = BndAll.parts c ar a b yc yb c∈ sh hc hb
+          δ' = E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc (suc (suc Bi))))))
+          ai = suc (suc (suc (suc (suc zero))))
+      in
+        (λ z hz → PT.rec (snd ((z ∷ δ') ⊨ bodyAll Bi))
+          (λ { (m , t , a' , (qm , (ea , (ec , eb)))) →
+            let s  = subst ⟨_⟩ (Sat-mem B (∀̇∈ t a') z)
+                       (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+                z∈ = Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst)
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z z∈
+            in bodyAll-in Bi (z ∷ δ') z∈
+                 (λ w hw x e' x∈B x∈w hcs →
+                   subst (λ v → ⟨ fst e' ∈ v ⟩) (sym eb)
+                     (cond∀∈-out B t a' z (s .snd) w
+                       (termAgree t (w ∷ z ∷ δ') ai6 ai1 ai0
+                          (w ∷ z ∷ []) ai0 ai1 ea refl refl .fst hw)
+                       x e' x∈B x∈w
+                       (consAtL-transport (e' ∷ x ∷ w ∷ z ∷ δ')
+                         (e' ∷ x ∷ w ∷ z ∷ []) zero (suc zero)
+                         (suc (suc (suc zero))) zero (suc zero)
+                         (suc (suc (suc zero)))
+                         (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                         refl refl refl hcs))) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , t , a' , (qm , (ea , (ec , eb)))) →
+            let r  = bodyAll-out Bi (z ∷ δ') hz
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+            in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+                 (subst ⟨_⟩ (sym (Sat-mem B (∀̇∈ t a') z))
+                   ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+                   , cond∀∈-in B t a' z
+                       (λ w hw x e' x∈B x∈w hcs →
+                         subst (λ v → ⟨ fst e' ∈ v ⟩) eb
+                           (r .snd w
+                             (termAgree t (w ∷ z ∷ δ') ai6 ai1 ai0
+                                (w ∷ z ∷ []) ai0 ai1 ea refl refl .snd hw)
+                             x e' x∈B x∈w
+                             (consAtL-transport (e' ∷ x ∷ w ∷ z ∷ [])
+                               (e' ∷ x ∷ w ∷ z ∷ δ') zero (suc zero)
+                               (suc (suc (suc zero))) zero (suc zero)
+                               (suc (suc (suc zero)))
+                               (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                               refl refl refl hcs))) )) })
+          P))
+
+  exInSound : ⟨ δ ⊨ exInClauseAt Ci Ti Bi ⟩
+  exInSound = bndClause-in Ci Ti Bi 11 (bodyEx Bi) δ
+    (λ c ar a b yc yb E c∈ sh hc hb hE →
+      let P  = BndEx.parts c ar a b yc yb c∈ sh hc hb
+          δ' = E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc (suc (suc Bi))))))
+          ai = suc (suc (suc (suc (suc zero))))
+      in
+        (λ z hz → PT.rec (snd ((z ∷ δ') ⊨ bodyEx Bi))
+          (λ { (m , t , a' , (qm , (ea , (ec , eb)))) →
+            let s  = subst ⟨_⟩ (Sat-mem B (∃̇∈ t a') z)
+                       (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+                z∈ = Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst)
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z z∈
+            in bodyEx-in Bi (z ∷ δ') z∈
+                 (PT.map (λ { (w , (hw , hx)) → w
+                    , ( termAgree t (w ∷ z ∷ δ') ai6 ai1 ai0
+                          (w ∷ z ∷ []) ai0 ai1 ea refl refl .snd hw
+                      , PT.map (λ { (x , ((x∈B , x∈w) , (e' , (hcs , he)))) →
+                          x , ((x∈B , x∈w) , (e'
+                          , ( consAtL-transport (e' ∷ x ∷ w ∷ z ∷ [])
+                                (e' ∷ x ∷ w ∷ z ∷ δ') zero (suc zero)
+                                (suc (suc (suc zero))) zero (suc zero)
+                                (suc (suc (suc zero)))
+                                (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                                refl refl refl hcs
+                            , subst (λ v → ⟨ fst e' ∈ v ⟩) (sym eb) he ))) })
+                          hx ) })
+                    (cond∃∈-out B t a' z (s .snd))) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , t , a' , (qm , (ea , (ec , eb)))) →
+            let r  = bodyEx-out Bi (z ∷ δ') hz
+                ae = Ambient.asEnv B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+            in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+                 (subst ⟨_⟩ (sym (Sat-mem B (∃̇∈ t a') z))
+                   ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+                   , cond∃∈-in B t a' z
+                       (PT.map (λ { (w , (hw , hx)) → w
+                          , ( termAgree t (w ∷ z ∷ δ') ai6 ai1 ai0
+                                (w ∷ z ∷ []) ai0 ai1 ea refl refl .fst hw
+                            , PT.map (λ { (x , ((x∈B , x∈w) , (e' , (hcs , he)))) →
+                                x , ((x∈B , x∈w) , (e'
+                                , ( consAtL-transport (e' ∷ x ∷ w ∷ z ∷ δ')
+                                      (e' ∷ x ∷ w ∷ z ∷ []) zero (suc zero)
+                                      (suc (suc (suc zero))) zero (suc zero)
+                                      (suc (suc (suc zero)))
+                                      (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                                      refl refl refl hcs
+                                  , subst (λ v → ⟨ fst e' ∈ v ⟩) eb he ))) })
+                                hx ) })
+                          (r .snd)) )) })
+          P))
 
   private
     module UnEx  = UnSucc 8 ∃̇_ (λ _ m → m) (λ _ → refl)
@@ -653,17 +820,6 @@ builds, and gets it from whichever disjunct it was handed.
           P))
 
   private
-    ai0 : ∀ {j} → Fin (suc j)
-    ai0 = zero
-    ai1 : ∀ {j} → Fin (suc (suc j))
-    ai1 = suc zero
-    ai2 : ∀ {j} → Fin (suc (suc (suc j)))
-    ai2 = suc (suc zero)
-    ai5 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc j))))))
-    ai5 = suc (suc (suc (suc (suc zero))))
-    ai6 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc (suc j)))))))
-    ai6 = suc (suc (suc (suc (suc (suc zero)))))
-
     module AtomMem = Atom 0 _∈̇_ (λ _ m → m) (λ _ _ → refl)
     module AtomEq  = Atom 1 _≐_ (λ _ m → m) (λ _ _ → refl)
 
@@ -820,3 +976,39 @@ ambient set by "not in that", which is what a difference says.
 <!--zh-->
 它写在上面、与它共用的诸框架一起，但值得在此说一句。它是第一条真正**使用**它的周遭集合、而非只点名它的子句，而差的两个方向就是前一节那份一致性各施用一次。里面没有别的：否定处的取值当初是用「不在那个之中」从周遭集合雕出的，而那正是差所说的话。
 <!--/-->
+
+<!--en-->
+## All twelve
+<!--zh-->
+## 十二条全部
+<!--/-->
+
+<!--en-->
+The existence half, complete: the table built by recursion on a formula of the
+meta-language satisfies every clause of the internal recursion, over the slot it
+is indexed by and the carrier its environments range over.
+
+What the twelve cost, and what they cost it in, is worth one line. Five frames
+carry them, and a frame is paid for once: the shared half of a clause is
+inverting its index to a formula, computing that formula's constructor from the
+tag, and identifying the recorded values with the ones the recursion built. What
+is left over is a set identity, and those are cheap because the recursion defined
+its value by the very condition the identity reads back.
+<!--zh-->
+存在性那一半，完成：沿元语言公式递归造出的那张表，在它所索引的槽与其诸环境所落的载体之上，满足内部递归的每一条子句。
+
+那十二条花了多少、花在什么上，值得写一行。五个框架托着它们，而一个框架只付一次：一条子句共用的那一半，是把它的索引求逆回一条公式、从标签算出那条公式的构造子、并把被记录的诸取值与递归造出的诸取值认同起来。剩下的是一条集合等式，而那些便宜，因为递归当初正是用那条等式所读回的那个条件来定义它的取值的。
+<!--/-->
+
+```agda
+  soundness : ⟨ δ ⊨ memClauseAt Ci Ti Bi ⟩ × (⟨ δ ⊨ eqClauseAt Ci Ti Bi ⟩
+            × (⟨ δ ⊨ andClauseAt Ci Ti ⟩ × (⟨ δ ⊨ orClauseAt Ci Ti ⟩
+            × (⟨ δ ⊨ impClauseAt Ci Ti Bi ⟩ × (⟨ δ ⊨ negClauseAt Ci Ti Bi ⟩
+            × (⟨ δ ⊨ topClauseAt Ci Ti Bi ⟩ × (⟨ δ ⊨ botClauseAt Ci Ti ⟩
+            × (⟨ δ ⊨ existClauseAt Ci Ti Bi ⟩ × (⟨ δ ⊨ forallClauseAt Ci Ti Bi ⟩
+            × (⟨ δ ⊨ allInClauseAt Ci Ti Bi ⟩
+            × ⟨ δ ⊨ exInClauseAt Ci Ti Bi ⟩))))))))))
+  soundness = memSound , (eqSound , (andSound , (orSound , (impSound , (negSound
+            , (topSound , (botSound , (existSound , (forallSound
+            , (allInSound , exInSound)))))))))) 
+```
