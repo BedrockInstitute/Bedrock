@@ -1111,6 +1111,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.19 | The L-hierarchy internalized | PLANNED (registered 2026-07-27). The internal definition of `L` off which the internal well-order is read, plus its adequacy against the meta hierarchy. The last mathematical content on the `hasChoiceL` chain, and named by no row before today. Est. 200 to 400. Also holds `[L3.5]`'s residue (`Realize` when parameters enter, `SeqChar` object-adequacy). Risk: `L.Absoluteness` is Δ₀ transfer with no induction of its own, so it will not cover a stage-recursive predicate; if a genuine absoluteness induction is needed here it is a chapter, not a lemma, and the likeliest place for the `L`-side budget to overrun |
 | L4 | Convergence | PLANNED |
 | L4.0 | Empty Frontier, unconditional root | PLANNED |
+| L3.21 | The code set at a stage, in `L`, with an object predicate | **REGISTERED 2026-07-27** by the `[L3.20]` route audit, which found it unowned. `Def A = sett (Formula ⟪A⟫ 1) defSet` takes **syntax as its index type**; internalized, that index has to be a *set* carrying an object-language membership predicate. `[L3.18]` names the absolute version of this question and defers it ("spike before `[L3.19]`"); the **stage-relative** version was never asked, and `[L3.18]` made the alphabet stage-relative by design, so it is the version that actually arises. `L.Coding.InL`'s standing disclaimer ("the set of all codes is deliberately not proved to be one") is true today and is expected to stop being true exactly here. Route: `smallDom` for the domain, then `hasSeparationL` by "x is a code over `Lset σ`", for which `closedAt` plus a well-formedness predicate is the tool. **This is the same failure mode `[L3.17]` was registered to prevent**, caught the same way. Est. 100 to 250 |
 | L4.1 | Whole-book harmonization pass | PLANNED |
 | L4.2 | Landmarks/README/Charter updates | PLANNED |
 | L4.3 | Seed the GCH successor plan | PLANNED |
@@ -1702,3 +1703,75 @@ One row per goal code; update the row in the same commit that changes the status
   is. That no longer restricts what can be *said* in `L`, only what can be *imported* from
   the hierarchy for free. A predicate that is easier unbounded is to be written unbounded,
   directly over the model, and not routed through the bridge.
+
+- **Route audit to `hasChoiceL` [L3.20 follow-up], 2026-07-27, five claims adversarially
+  checked against built code.** Two refuted, three survived with corrections, and the
+  corrections are the deliverable.
+
+  **Refuted, and it removes work.** "The recursion's domain must be the set of all keys,
+  because rank does not descend." The rank arithmetic is right (`key {n} φ = pr (# n) ⌜φ⌝`,
+  and for `φ = ∃̇⊤̇` at arity 10 the parent key has rank 12 and the subkey 13, so key-rank
+  is **not** a descent measure, which is worth recording on its own). Everything after
+  "hence" is wrong three ways: `Recursion` demands no descent at all (the descent happens
+  in Agda, outside), the delivered instance uses none, and its domain is the per-formula
+  closure, already in `L`. No new subgoal, and `L.Coding.InL`'s disclaimer stands.
+
+  **Refuted, and it corrects a mechanism, not a conclusion.** "`L.Recursion`'s first
+  genuine consumer is the uniform relation, because its domain is infinite and cannot be
+  built by hand." The delivered instance's domain **is** finite and hand-buildable and it
+  still goes through the theorem. The real discriminator: whether the object need merely
+  **be** in `L`, or be **defined by an object-language formula**. `finSetL` gives the
+  first; only `L.Recursion` gives the second, and the second is what an internal
+  well-order reads off.
+
+  **Corrected: `hasChoiceL` is the transversal form**, not a well-ordering statement
+  (`L.Frontier.ChoiceStatement`), and the equivalence of forms is unbuilt model-internal
+  mathematics. Earlier notes that phrase the target as "well-order every set of `L`" are
+  loose. The necessity of internal definability survives on a structural argument, not a
+  theorem: `isL` **is** definability, and every producer of it bottoms out at
+  `Lset→isL`, so a transversal has to be exhibited by a formula. One design note kept from
+  the attack: for pairwise-disjoint families **of ordinals**, `⊆`-least is already
+  object-language (`subFo-is-⊆` is `refl`), so that case falls out of separation with no
+  satisfaction predicate. The cost localizes exactly where the ordinals stop carrying the
+  order.
+
+  **Corrected: `[L3.17]` is a characterization debt, not a blocker.** Separation needs a
+  *superset* in `L`, not the environment set itself, and `envL` + `boundingOrd`/`smallDom`
+  + separation by `envOverAt` supplies one today. What `[L3.17]` owes is that a set
+  satisfying `envOverAt` **is** the environment set.
+
+  **The route, in dependency order, with the confidence attached to each number.**
+
+  | # | Subgoal | Est. | Confidence |
+  |---|---|---:|---|
+  | 1 | `[L3.17]` ambient environment set, plus its characterization | 80–150 | high |
+  | 2 | `[L3.0.1]` steps 4 to 7: the satisfaction graph, `funct`, adequacy | 500–1,000 | **low** |
+  | 3 | `[L3.21]` the code set at a stage, with an object predicate | 100–250 | low |
+  | 4 | `Def` internalized at a stage (consumes 2 and 3) | 150–300 | low |
+  | 5 | `[L3.19]` the internal `L`-hierarchy, over the ordinals | 200–400 | low |
+  | 6 | `[L2.4]` `<L`: `Cmp`, the order formula, well-orderedness, `leastOf` | 600–1,500 | **lowest** |
+  | 7 | `hasChoiceL`: union, then separation by the least-member formula | 60–150 | high |
+
+  **Total 1,700 to 3,750**, against the earlier 2,000 to 4,000 for the same cone. The
+  route does **not** need the set of all codes absolutely, does not need a per-formula
+  satisfaction table, and does not need replacement for step 1.
+
+  **The one question that now matters most, and it did not exist a day ago: does the
+  least-fixed-point idiom transfer to satisfaction?** `[L3.20]`'s 62-line frame bought its
+  uniqueness by antisymmetry, and satisfaction has no such characterization: the `¬̇`
+  clause takes a complement, so the value is not monotone in the table. If the idiom
+  transfers even partially (positive clauses split from negative), step 2 collapses the
+  way the closure's uniqueness did. If it does not, `[L3.20]` measured the frame against
+  an unrepresentative sample and said so in advance. **Split the question before paying
+  step 2.**
+
+  **Cheapest available de-risking, unproposed until now**: `Cmp`'s graph is plausibly
+  independent of satisfaction, and if so it can be built **in parallel, today**, ahead of
+  step 2, against the row that carries the largest error bar.
+
+  Three smaller items the audit surfaced. `smallDom` is `boundingOrd` + `stage` + `LsetS`
+  + `Lset-mono` with no replacement in it, and steps 1 and 3 want it without the
+  replacement wrapper: it probably belongs in `L.Ordinal` or `L.Axioms.Basic`. Whether the
+  satisfaction table must be uniform in the **stage** as well as the code is unasked, and
+  is the likeliest place step 2's estimate doubles. And `[L2.4]` has never certified its
+  assumption bill, where `[L2.3]` did.
