@@ -517,6 +517,9 @@ sameAt y a = extAt y (memb a)
 
 emptyAt : ∀ {n} → Fin n → Formula S n
 emptyAt y = extAt y ⊥̇
+
+implAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+implAt y e a b = extAt y (memb e ∧̇ (memb a ⇒̇ memb b))
 ```
 
 <!--en-->
@@ -951,10 +954,19 @@ module _ {n : ℕ} where
 <!--/-->
 
 <!--en-->
-Implication is the complement of the antecedent joined with the consequent, so it
-wants both subvalues, the ambient set, and one temporary to hold the difference:
-four bound values above the frame's five, and the longest relation of the twelve.
-Nothing in it is new.
+Implication is stated the way the reference semantics states it, as an
+implication, and not as the complement of the antecedent joined with the
+consequent. The two agree classically and do not agree here. The truth algebra's
+arrow is a function space, so the joined form is the weaker of the two, and
+recovering the intended one from it is excluded middle for "this environment
+satisfies the antecedent". A chapter that takes no classical parameter may not
+quietly need one.
+
+Said as an implication it is shorter than the joined form as well: the temporary
+that held the difference is gone, and the object language's own arrow does the
+work inside the extension frame. Negation keeps its difference, which is not the
+same trade: a difference read as "in the ambient set and not in this one" is the
+negation the algebra means.
 
 The constants are the shortest. Truth at an arity is the whole ambient set, and
 falsity is empty, so one binds the ambient set and the other binds nothing. They
@@ -962,7 +974,9 @@ go through the single-component frame, since a constant's payload is a numeral
 and the frame does not look at what a component is; their relations simply ignore
 it.
 <!--zh-->
-蕴含是前件的补集与后件的并，故它要两个子取值、那个周遭集合、以及一个存放差集的临时变元：在框架的五个之上再绑四个取值，是十二条中最长的一条关系。其中没有任何新东西。
+蕴含按参照语义陈述它的方式来陈述，即作为一条蕴含，而非「前件的补集与后件的并」。二者在经典下一致，在此处不一致。真值代数的箭头是函数空间，故那个并式是两者中较弱的一个，而从它恢复出本意，恰是「这个环境满足前件」的排中律。一章若不取经典参数，就不可以悄悄需要一个。
+
+写成蕴含也比写成并式更短：那个存放差集的临时变元没有了，而对象语言自己的箭头在外延框架之内完成了工作。否定保留它的差集，那不是同一笔交易：读作「在周遭集合中且不在此集合中」的差集，正是该代数所指的否定。
 
 两个常量最短。某元数处的「真」就是整个周遭集合，而「假」为空，故一个绑定那个周遭集合，另一个什么也不绑。它们走单分量框架，因为常量的载荷是一个数码，而框架并不看某个分量是什么；它们的关系径直忽略它。
 <!--/-->
@@ -970,26 +984,24 @@ it.
 ```agda
 module _ {n : ℕ} where
   private
-    sh9 : Fin n → Fin (9 + n)
-    sh9 i = suc (suc (suc (suc (suc (suc (suc (suc (suc i))))))))
+    sh8 : Fin n → Fin (8 + n)
+    sh8 i = suc (suc (suc (suc (suc (suc (suc (suc i)))))))
 
-    ar9 a9 b9 yc9 ya9 yb9 E9 d9 : Fin (9 + n)
-    ar9 = suc (suc (suc (suc (suc (suc (suc zero))))))
-    a9  = suc (suc (suc (suc (suc (suc zero)))))
-    b9  = suc (suc (suc (suc (suc zero))))
-    yc9 = suc (suc (suc (suc zero)))
-    ya9 = suc (suc (suc zero))
-    yb9 = suc (suc zero)
-    E9  = suc zero
-    d9  = zero
+    ar8 a8 b8 yc8 ya8 yb8 E8 : Fin (8 + n)
+    ar8 = suc (suc (suc (suc (suc (suc zero)))))
+    a8  = suc (suc (suc (suc (suc zero))))
+    b8  = suc (suc (suc (suc zero)))
+    yc8 = suc (suc (suc zero))
+    ya8 = suc (suc zero)
+    yb8 = suc zero
+    E8  = zero
 
     impRel : Fin n → Fin n → Formula S (5 + n)
     impRel T B =
-      ∀̇ (∀̇ (∀̇ (∀̇ ( subValAt (sh9 T) ar9 a9 ya9
-                 ⇒̇ ( subValAt (sh9 T) ar9 b9 yb9
-                 ⇒̇ ( envSetAt E9 ar9 (sh9 B)
-                 ⇒̇ ( diffAt d9 E9 ya9
-                 ⇒̇ unionAt yc9 d9 yb9 )))))))
+      ∀̇ (∀̇ (∀̇ ( subValAt (sh8 T) ar8 a8 ya8
+              ⇒̇ ( subValAt (sh8 T) ar8 b8 yb8
+              ⇒̇ ( envSetAt E8 ar8 (sh8 B)
+              ⇒̇ implAt yc8 E8 ya8 yb8 )))))
 
     sh5 : Fin n → Fin (5 + n)
     sh5 i = suc (suc (suc (suc (suc i))))
