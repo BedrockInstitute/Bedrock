@@ -320,19 +320,29 @@ prʟ-fst a b =
 <!--/-->
 
 <!--en-->
-An environment is a function whose values lie in a given set, so the last piece
-of vocabulary is that constraint, and an environment over a set is then the
-conjunction of the three: single-valued, with the given domain, and with values
-where they belong.
+An environment is a function whose values lie in a given set, so an environment
+over a set is the conjunction of four things: single-valued, with the given
+domain, with values where they belong, and *made of pairs*.
 
-Only the three projections are given, because that is all a consumer wants.
+The fourth is easy to leave out and fatal to leave out. The other three all speak
+about the pairs in a set and say nothing whatever about a member that is not one,
+so without it a set could carry any amount of junk and still qualify. That costs
+nothing where the predicate is only tested, but the frame that describes a set by
+its members asserts both directions, so a value satisfying it would have to
+contain every such junk-bearing set: a proper class, and a hypothesis no set can
+discharge. The conjunct pins each member to a pair of an index and a value, which
+makes an environment a subset of a product and the collection of them a set.
+
+Only the four projections are given, because that is all a consumer wants.
 Whether a particular set *is* the set of all environments of a given length is a
 different question, and a harder one; this says only what it means for a single
 thing to be one.
 <!--zh-->
-一个环境是取值落在给定集合中的函数，故最后一件词汇就是那条约束；而「某集合之上的环境」于是是三者的合取：单值、定义域为给定者、取值落在该落的地方。
+一个环境是取值落在给定集合中的函数，故「某集合之上的环境」是四者的合取：单值、定义域为给定者、取值落在该落的地方，以及**由诸对构成**。
 
-只给出三个投影，因为消费方想要的仅此而已。某个特定集合**是否就是**给定长度的全体环境之集，是另一个问题，而且更难；这里说的只是「单个东西是一个环境」是什么意思。
+第四条容易漏掉，而漏掉是致命的。另外三条谈的全是某集合中的诸对，对「不是对的成员」只字未提，故没有它，一个集合可以携带任意多的垃圾而仍然合格。若那条谓词只被检验，这不费分文；但「以成员描述集合」的那个框架断言双向，于是满足它的取值就得包含每一个带垃圾的集合：那是真类，是没有集合能兑现的假设。这一合取项把每个成员钉成「索引与取值之对」，从而使环境成为一个积的子集，而它们的全体成为一个集合。
+
+只给出四个投影，因为消费方想要的仅此而已。某个特定集合**是否就是**给定长度的全体环境之集，是另一个问题，而且更难；这里说的只是「单个东西是一个环境」是什么意思。
 <!--/-->
 
 ```agda
@@ -347,8 +357,14 @@ valuesInAt-out : ∀ {n} (f B : Fin n) (γ : S ^ n)
 valuesInAt-out f B γ h x y p = h x y
   (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (y ∷ x ∷ γ))) p)
 
+pairsInAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+pairsInAt e d B =
+  ∀̇∈ (var e) (∃̇∈ (var (suc d)) (∃̇∈ (var (suc (suc B)))
+    (prAtL (suc (suc zero)) (suc zero) zero)))
+
 envOverAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
-envOverAt e d B = svAt e ∧̇ (domAt e d ∧̇ valuesInAt e B)
+envOverAt e d B =
+  svAt e ∧̇ (domAt e d ∧̇ (valuesInAt e B ∧̇ pairsInAt e d B))
 
 module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B ⟩) where
   envOver-sv     : ⟨ γ ⊨ svAt e ⟩
@@ -356,7 +372,9 @@ module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B 
   envOver-dom    : ⟨ γ ⊨ domAt e d ⟩
   envOver-dom    = h .snd .fst
   envOver-values : ⟨ γ ⊨ valuesInAt e B ⟩
-  envOver-values = h .snd .snd
+  envOver-values = h .snd .snd .fst
+  envOver-pairs  : ⟨ γ ⊨ pairsInAt e d B ⟩
+  envOver-pairs  = h .snd .snd .snd
 ```
 
 <!--en-->
