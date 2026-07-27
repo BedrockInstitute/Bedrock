@@ -35,7 +35,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
 open import V.Model {ℓ} using ( pair-singleton )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import FOL.Manipulation.Bounding using ( BoundedFo )
@@ -48,6 +48,7 @@ open import L.Coding.Environment {ℓ}
 open import L.Axioms.Numerals {ℓ}
   using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst; sucʟ; sucʟ-fst )
 
+open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
@@ -323,6 +324,23 @@ prʟ-fst : (a b : S) → fst (prʟ a b) ≡ pr (fst a) (fst b)
 prʟ-fst a b =
     pairʟ-fst (pairʟ a a) (pairʟ a b)
   ∙ cong₂ ⁅_,_⁆ (pairʟ-fst a a ∙ pair-singleton (fst a)) (pairʟ-fst a b)
+```
+
+```agda
+prʟ-inj : {a b c d : S} → prʟ a b ≡ prʟ c d → (a ≡ c) × (b ≡ d)
+prʟ-inj {a} {b} {c} {d} e =
+    Σ≡Prop (λ v → snd (isL v)) (pr-inj q .fst)
+  , Σ≡Prop (λ v → snd (isL v)) (pr-inj q .snd)
+  where
+  q : pr (fst a) (fst b) ≡ pr (fst c) (fst d)
+  q = sym (prʟ-fst a b) ∙ cong fst e ∙ prʟ-fst c d
+
+numeralL-inj : {j k : ℕ} → numeralL j ≡ numeralL k → j ≡ k
+numeralL-inj {j} {k} e =
+  #-inj′ (sym (numeralL-fst j) ∙ cong fst e ∙ numeralL-fst k)
+
+
+
 ```
 
 <!--en-->
