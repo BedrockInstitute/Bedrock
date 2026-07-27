@@ -55,6 +55,7 @@ open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
+open import Cubical.Foundations.Prelude using ( isPropIsContr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 
@@ -237,6 +238,44 @@ module Of (R : Recursion) where
 ```
 
 <!--en-->
+## When the value function cannot be written down
+<!--zh-->
+## 当那个值函数写不出来的时候
+<!--/-->
+
+<!--en-->
+The form below asks an instance for a function on the whole model. That is the
+right thing to ask when the instance has one, and the wrong thing when its
+indices are *encoded*: a recursion over coded syntax knows what to do at a code,
+and to say what it does at an arbitrary element of the model it would first have
+to decide whether that element is a code and, if so, recover the syntax it
+encodes. Nothing in the recursion needs that, and paying for it would be paying
+for a decoding the instance never uses.
+
+Single-valuedness does not need it either, and the reason is worth naming.
+Contractibility is a proposition. So an instance may decide by cases, and may
+take apart a truncated witness, on the way to proving it: what has to be produced
+is a value, and it only has to be produced *merely*. The lemma below is that
+observation, and it is what a recursion over an encoded index uses in place of
+the form below.
+<!--zh-->
+下面那张表格向实例索取一个定义在整个模型上的函数。当实例确实有一个时，这索取得对；而当它的索引是**编码**的时候，就索取错了：对编码语法的递归知道在一个码处该做什么，而要说出它在模型的任意元素处做什么，就得先判定那个元素是不是码，若是还得把它所编码的语法还原出来。递归本身不需要这些，而为它付账，等于为一次实例从不使用的解码付账。
+
+单值性同样不需要它，而这个理由值得点名。可缩性是命题。故实例可以在通往它的证明途中分情形判定，也可以拆开一个截断的见证：要拿出来的是一个取值，而它只需**仅仅**被拿出来。下面这条引理就是这个观察，也是「对编码索引的递归」用来代替下面那张表格的东西。
+<!--/-->
+
+```agda
+mereFunct : (graph : Formula S 2) (x : S)
+          → ∥ (Σ[ y ∈ S ] (⟨ (y ∷ x ∷ []) ⊨ graph ⟩
+                          × ((y' : S) → ⟨ (y' ∷ x ∷ []) ⊨ graph ⟩ → y' ≡ y))) ∥₁
+          → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ graph ⟩)
+mereFunct graph x = PT.rec isPropIsContr
+  (λ { (y , (hy , uniq)) → (y , hy)
+     , (λ { (y' , hy') → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ graph))
+                           (sym (uniq y' hy')) }) })
+```
+
+<!--en-->
 ## Defining a function, rather than a relation
 <!--zh-->
 ## 定义一个函数，而非一个关系
@@ -355,9 +394,12 @@ the numerals.
 <!--/-->
 
 <!--en-->
-`Definition`{.Agda} is the form an instance fills: a domain in `L`, a function
-written in the meta-language, and a formula that defines its graph, in the two
-directions. `smallDom`{.Agda} fills the domain for any small family of elements
+`Definition`{.Agda} is the form an instance fills when it has a function on the
+whole model to offer: a domain in `L`, that function, and a formula that defines
+its graph, in the two directions. An instance whose indices are encoded has no
+such function without a decoder it does not otherwise need, and fills
+`Recursion`{.Agda} directly through `mereFunct`{.Agda} instead, which is sound
+because contractibility is a proposition. `smallDom`{.Agda} fills the domain for any small family of elements
 of `L`, and single-valuedness is derived, so **the defining formula and its
 adequacy are the entire obligation**. `Image`{.Agda} reads off the table and its
 two membership directions.
@@ -368,7 +410,7 @@ paid, internalizing a recursion is not a theorem but a corollary, and the
 per-clause absoluteness discipline that the bounded setting forces never has to
 be entered.
 <!--zh-->
-`Definition`{.Agda} 是实例要填的表格：`L` 中的定义域、一个写在元语言里的函数，以及一条按两个方向定义其图的公式。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的适足性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
+`Definition`{.Agda} 是实例在「手上有一个定义于整个模型的函数」时要填的表格：`L` 中的定义域、那个函数，以及一条按两个方向定义其图的公式。索引为编码的实例没有那样的函数，除非另配一个它本不需要的解码器；这类实例改经 `mereFunct`{.Agda} 直接填 `Recursion`{.Agda}，而那是可靠的，因为可缩性是命题。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的适足性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
 
 本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是要点。任意公式的概括字段才是贵的东西；一旦付清，内化一个递归就不是定理而是推论，而有界情形所强加的逐子句绝对性纪律，压根无须踏入。
 <!--/-->
