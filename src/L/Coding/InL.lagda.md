@@ -90,8 +90,17 @@ tagL k px = prL (numL k) px
 <!--/-->
 
 <!--en-->
-Terms first. A parameter-free term is a variable, so its code is a tag on a
-numeral; the constant case cannot occur, and the empty type says so.
+Terms first. A term is a variable or a constant, and the two are the two tags
+that terms carry: a numeral for the variable's index, and the constant's own set
+for a constant. So a code is constructible provided the constants it names are,
+and the induction takes that as its hypothesis rather than assuming there are
+none.
+
+That generality costs one clause and buys the parameters. A formula whose
+constants are members of a stage codes to a set of `L` exactly as a
+parameter-free one does, which is what lets the recursion below range over the
+formulas the constructible hierarchy is actually built from. The parameter-free
+case is the instance at the empty type.
 
 Then the formulas, twelve clauses and no content: each constructor's code is a
 tag on either a pair of sub-codes, a single sub-code, or a numeral, and the three
@@ -99,31 +108,37 @@ blocks above cover all three shapes. The induction is over the parameter-free
 formula rather than its embedding, which costs nothing because embedding is a
 relabelling and commutes with every constructor definitionally.
 <!--zh-->
-先看词项。无参词项是变元，故它的码是数码上的一个标签；常元情形不可能出现，而空类型正是这么说的。
+先看词项。一个词项要么是变元、要么是常元，而两者正是词项所携带的两个标签：变元带它的索引数码，常元带它自己那个集合。故一个码可构造，只要它所点名的诸常元可构造，而这次归纳把那一条取作假设，而非假定根本没有常元。
+
+这份一般性花掉一条子句，换来的是诸参数。常元取自某阶段成员的公式，其编码与无参公式一样是 `L` 的集合，而正是这一点，使下面的递归得以遍历可构造层级实际由之造出的那些公式。无参情形是空类型处的实例。
 
 然后是诸公式，十二条子句，毫无内容：每个构造子的码，都是「子码之对」「单个子码」或「数码」三者之一上的标签，而上面三块砖覆盖了这三种形状。归纳沿无参公式而非它的嵌入进行，这不费分文，因为嵌入是一次常量变换，按定义与每个构造子交换。
 <!--/-->
 
 ```agda
-codeTmL : ∀ {n} (t : Term (⊥* {ℓ}) n)
-        → ⟨ isL VCode.⌜ mapTm Empty.rec* t ⌝ᵗ ⟩
-codeTmL (con c) = Empty.rec* c
-codeTmL (var i) = tagL 1 (numL _)
+module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
 
-codeL : ∀ {n} (φ : Formula (⊥* {ℓ}) n)
-      → ⟨ isL VCode.⌜ mapFo Empty.rec* φ ⌝ ⟩
-codeL (t ∈̇ u)  = tagL 0  (prL (codeTmL t) (codeTmL u))
-codeL (t ≐ u)  = tagL 1  (prL (codeTmL t) (codeTmL u))
-codeL (φ ∧̇ ψ)  = tagL 2  (prL (codeL φ) (codeL ψ))
-codeL (φ ∨̇ ψ)  = tagL 3  (prL (codeL φ) (codeL ψ))
-codeL (φ ⇒̇ ψ)  = tagL 4  (prL (codeL φ) (codeL ψ))
-codeL (¬̇ φ)    = tagL 5  (codeL φ)
-codeL ⊤̇        = tagL 6  (numL 0)
-codeL ⊥̇        = tagL 7  (numL 0)
-codeL (∃̇ φ)    = tagL 8  (codeL φ)
-codeL (∀̇ φ)    = tagL 9  (codeL φ)
-codeL (∀̇∈ t φ) = tagL 10 (prL (codeTmL t) (codeL φ))
-codeL (∃̇∈ t φ) = tagL 11 (prL (codeTmL t) (codeL φ))
+  codeTmL : ∀ {n} (t : Term K n) → ⟨ isL VCode.⌜ mapTm f t ⌝ᵗ ⟩
+  codeTmL (con c) = tagL 0 (h c)
+  codeTmL (var i) = tagL 1 (numL _)
+
+  codeL : ∀ {n} (φ : Formula K n) → ⟨ isL VCode.⌜ mapFo f φ ⌝ ⟩
+  codeL (t ∈̇ u)  = tagL 0  (prL (codeTmL t) (codeTmL u))
+  codeL (t ≐ u)  = tagL 1  (prL (codeTmL t) (codeTmL u))
+  codeL (φ ∧̇ ψ)  = tagL 2  (prL (codeL φ) (codeL ψ))
+  codeL (φ ∨̇ ψ)  = tagL 3  (prL (codeL φ) (codeL ψ))
+  codeL (φ ⇒̇ ψ)  = tagL 4  (prL (codeL φ) (codeL ψ))
+  codeL (¬̇ φ)    = tagL 5  (codeL φ)
+  codeL ⊤̇        = tagL 6  (numL 0)
+  codeL ⊥̇        = tagL 7  (numL 0)
+  codeL (∃̇ φ)    = tagL 8  (codeL φ)
+  codeL (∀̇ φ)    = tagL 9  (codeL φ)
+  codeL (∀̇∈ t φ) = tagL 10 (prL (codeTmL t) (codeL φ))
+  codeL (∃̇∈ t φ) = tagL 11 (prL (codeTmL t) (codeL φ))
+
+codeFreeL : ∀ {n} (φ : Formula (⊥* {ℓ}) n)
+          → ⟨ isL VCode.⌜ mapFo Empty.rec* φ ⌝ ⟩
+codeFreeL = codeL Empty.rec* (λ ())
 ```
 
 <!--en-->
