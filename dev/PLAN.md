@@ -1503,6 +1503,48 @@ One row per goal code; update the row in the same commit that changes the status
   data has is silently vacuous rather than ill-typed.** Nothing downstream depended on the
   frames yet, so the cost was zero, and it was zero because the check ran before a consumer
   existed rather than after.
+
+  **Twelve-clause audit, 2026-07-26.** Six lenses over the finished twelve (the four
+  connectives; the atoms and constants; the unbounded quantifiers; the bounded ones; a
+  de Bruijn auditor instructed to assume every hand-computed index wrong; and a
+  do-they-determine-`T` lens), then an independent verifier per reported defect. **14
+  proposed, 11 confirmed, 6 distinct defects after de-duplication, two of them fatal.**
+
+  - **Every de Bruijn index was recomputed mechanically and every one was correct**, as
+    were all twelve tags, both frames' two-layer key reads, and all arity threading. The
+    place I had flagged as most likely to hide a silent error was clean; the errors were in
+    the *semantics*.
+  - **Fatal 1: `envOverAt` described a proper class.** Single-valued, this domain, these
+    values: all three speak about the *pairs* in a set and say nothing about a member that
+    is not one. Harmless while the predicate is only tested, fatal under `extAt`, which
+    asserts both directions: the ambient set would have to contain every junk-bearing set.
+    **Nine of the twelve clauses were vacuously true**, and the missing hypothesis was
+    *false*, not merely unproved, so no downstream proof would have caught it. Fixed by a
+    fourth conjunct pinning members to pairs.
+  - **Fatal 2: the universal clause's outer guard was `⇒̇` where every other clause has
+    `∧̇`.** Under `extAt` that forces the value to contain the whole complement of the
+    ambient set. One token, and it made the clause unsatisfiable rather than wrong.
+  - **Assumption-bill defect: implication was material.** `(E ∖ T(a)) ∪ T(b)` against the
+    reference's Heyting arrow; the gap is exactly excluded middle for "this environment
+    satisfies the antecedent". Taken constructively rather than by adding `lem`, since the
+    alternative changes what the chapter costs.
+  - **Two scope defects in the bounded quantifiers**: both ranged over the bound alone
+    where the reference ranges over the carrier and guards by the bound. The universal was
+    wrong outright (correct only under an unstated transitivity assumption on `B`); the
+    existential was extensionally equivalent but only via a global invariant of the table.
+  - **A prose defect that is the interesting one.** The sentence "the same with the two
+    innermost quantifiers turned around, which is the only place the two differ" asserted
+    an invariant the code violated. It is precisely the sentence that should have caught
+    fatal 2, and it hid it instead. Prose that states an invariant is load-bearing and has
+    to be checked like code.
+
+  The audit also listed **unstated constraints** that no clause states and a later chapter
+  must: that the ambient set exists at all (now a Power-or-Separation argument, since after
+  the fix an environment is a subset of a product); that `T`'s values are subsets of the
+  ambient set at the code's own arity; that the index is subcode-closed at arity `n` for the
+  connectives and `suc n` for the four binders; and that codes carry no constants, which is
+  true here only because the index ranges over parameter-free formulas and is nowhere
+  recorded as the reason. Those belong with steps 4 and 5.
 - **`[L3.2]` re-evaluation, 2026-07-27, and it is a downgrade.** Asked whether the macro
   should be re-scheduled after the twelve-clause count came up, and measured instead of
   reasoning from the inherited figure. Three results.
