@@ -254,6 +254,49 @@ already substituted, which is why they are one line apiece.
                → ⟨ fst e' ∈ fst (Sat a) ⟩)
   cond∀-out a z h x e' x∈ hc = h x x∈ e' hc
 
+  CondBnd : ∀ {n} → Formula S (suc n) → S → S → Type (ℓ-suc ℓ)
+  CondBnd a z w = Σ[ x ∈ S ] ((⟨ fst x ∈ fst B ⟩ × ⟨ fst x ∈ fst w ⟩)
+    × (Σ[ e' ∈ S ]
+        (⟨ (e' ∷ x ∷ w ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
+         × ⟨ fst e' ∈ fst (Sat a) ⟩)))
+
+  cond∃∈-in : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
+            → ∥ (Σ[ w ∈ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
+                             × ∥ CondBnd a z w ∥₁)) ∥₁
+            → ⟨ (z ∷ []) ⊨ cond (∃̇∈ t a) ⟩
+  cond∃∈-in t a z = PT.map
+    (λ { (w , (hw , hx)) → w , (hw , PT.map
+      (λ { (x , ((x∈B , x∈w) , (e' , r))) → x , (x∈B , (x∈w , ∣ e' , r ∣₁)) })
+      hx) })
+
+  cond∃∈-out : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
+             → ⟨ (z ∷ []) ⊨ cond (∃̇∈ t a) ⟩
+             → ∥ (Σ[ w ∈ S ] (⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
+                              × ∥ CondBnd a z w ∥₁)) ∥₁
+  cond∃∈-out t a z = PT.map
+    (λ { (w , (hw , hx)) → w , (hw , PT.rec squash₁
+      (λ { (x , (x∈B , (x∈w , hv))) → PT.map
+        (λ { (e' , r) → x , ((x∈B , x∈w) , (e' , r)) }) hv })
+      hx) })
+
+  cond∀∈-in : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
+            → ((w : S) → ⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
+               → (x e' : S) → ⟨ fst x ∈ fst B ⟩ → ⟨ fst x ∈ fst w ⟩
+               → ⟨ (e' ∷ x ∷ w ∷ z ∷ [])
+                    ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
+               → ⟨ fst e' ∈ fst (Sat a) ⟩)
+            → ⟨ (z ∷ []) ⊨ cond (∀̇∈ t a) ⟩
+  cond∀∈-in t a z k w hw x x∈B x∈w e' hc = k w hw x e' x∈B x∈w hc
+
+  cond∀∈-out : ∀ {n} (t : Term S n) (a : Formula S (suc n)) (z : S)
+             → ⟨ (z ∷ []) ⊨ cond (∀̇∈ t a) ⟩
+             → ((w : S) → ⟨ (w ∷ z ∷ []) ⊨ tmIs t zero (suc zero) ⟩
+                → (x e' : S) → ⟨ fst x ∈ fst B ⟩ → ⟨ fst x ∈ fst w ⟩
+                → ⟨ (e' ∷ x ∷ w ∷ z ∷ [])
+                     ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
+                → ⟨ fst e' ∈ fst (Sat a) ⟩)
+  cond∀∈-out t a z h w hw x e' x∈B x∈w hc = h w hw x x∈B x∈w e' hc
+
   Sat-mem : ∀ {n} (φ : Formula S n) (x : S)
           → (x ∈ˢ Sat φ) ≡ ((x ∈ˢ envSet B n) ⊓ ((x ∷ []) ⊨ cond φ))
   Sat-mem {n} φ = sep-mem (envSet B n) (cond φ)
