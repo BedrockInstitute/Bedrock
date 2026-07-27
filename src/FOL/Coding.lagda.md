@@ -302,77 +302,76 @@ side from the tag instead of matching both.**
 <!--/-->
 
 ```agda
-private
-  tagOf : ∀ {n} → Formula S n → ℕ
-  tagOf (t ∈̇ u)  = 0
-  tagOf (t ≐ u)  = 1
-  tagOf (a ∧̇ b)  = 2
-  tagOf (a ∨̇ b)  = 3
-  tagOf (a ⇒̇ b)  = 4
-  tagOf (¬̇ a)    = 5
-  tagOf ⊤̇        = 6
-  tagOf ⊥̇        = 7
-  tagOf (∃̇ a)    = 8
-  tagOf (∀̇ a)    = 9
-  tagOf (∀̇∈ t a) = 10
-  tagOf (∃̇∈ t a) = 11
+tagOf : ∀ {n} → Formula S n → ℕ
+tagOf (t ∈̇ u)  = 0
+tagOf (t ≐ u)  = 1
+tagOf (a ∧̇ b)  = 2
+tagOf (a ∨̇ b)  = 3
+tagOf (a ⇒̇ b)  = 4
+tagOf (¬̇ a)    = 5
+tagOf ⊤̇        = 6
+tagOf ⊥̇        = 7
+tagOf (∃̇ a)    = 8
+tagOf (∀̇ a)    = 9
+tagOf (∀̇∈ t a) = 10
+tagOf (∃̇∈ t a) = 11
 
-  payOf : ∀ {n} → Formula S n → S
-  payOf (t ∈̇ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
-  payOf (t ≐ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
-  payOf (a ∧̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
-  payOf (a ∨̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
-  payOf (a ⇒̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
-  payOf (¬̇ a)    = ⌜ a ⌝
-  payOf ⊤̇        = encℕ 0
-  payOf ⊥̇        = encℕ 0
-  payOf (∃̇ a)    = ⌜ a ⌝
-  payOf (∀̇ a)    = ⌜ a ⌝
-  payOf (∀̇∈ t a) = pr ⌜ t ⌝ᵗ ⌜ a ⌝
-  payOf (∃̇∈ t a) = pr ⌜ t ⌝ᵗ ⌜ a ⌝
+payOf : ∀ {n} → Formula S n → S
+payOf (t ∈̇ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
+payOf (t ≐ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
+payOf (a ∧̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
+payOf (a ∨̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
+payOf (a ⇒̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
+payOf (¬̇ a)    = ⌜ a ⌝
+payOf ⊤̇        = encℕ 0
+payOf ⊥̇        = encℕ 0
+payOf (∃̇ a)    = ⌜ a ⌝
+payOf (∀̇ a)    = ⌜ a ⌝
+payOf (∀̇∈ t a) = pr ⌜ t ⌝ᵗ ⌜ a ⌝
+payOf (∃̇∈ t a) = pr ⌜ t ⌝ᵗ ⌜ a ⌝
 
-  shape : ∀ {n} (φ : Formula S n) → ⌜ φ ⌝ ≡ mkTag (tagOf φ) (payOf φ)
-  shape (t ∈̇ u)  = refl
-  shape (t ≐ u)  = refl
-  shape (a ∧̇ b)  = refl
-  shape (a ∨̇ b)  = refl
-  shape (a ⇒̇ b)  = refl
-  shape (¬̇ a)    = refl
-  shape ⊤̇        = refl
-  shape ⊥̇        = refl
-  shape (∃̇ a)    = refl
-  shape (∀̇ a)    = refl
-  shape (∀̇∈ t a) = refl
-  shape (∃̇∈ t a) = refl
+shape : ∀ {n} (φ : Formula S n) → ⌜ φ ⌝ ≡ mkTag (tagOf φ) (payOf φ)
+shape (t ∈̇ u)  = refl
+shape (t ≐ u)  = refl
+shape (a ∧̇ b)  = refl
+shape (a ∨̇ b)  = refl
+shape (a ⇒̇ b)  = refl
+shape (¬̇ a)    = refl
+shape ⊤̇        = refl
+shape ⊥̇        = refl
+shape (∃̇ a)    = refl
+shape (∀̇ a)    = refl
+shape (∀̇∈ t a) = refl
+shape (∃̇∈ t a) = refl
 
-  Match : ∀ {n} → ℕ → Formula S n → Type ℓ
-  Match {n} 0  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ∈̇ u)))
-  Match {n} 1  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ≐ u)))
-  Match {n} 2  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∧̇ b)))
-  Match {n} 3  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∨̇ b)))
-  Match {n} 4  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ⇒̇ b)))
-  Match {n} 5  φ = Σ[ a ∈ Formula S n ] (φ ≡ (¬̇ a))
-  Match     6  φ = φ ≡ ⊤̇
-  Match     7  φ = φ ≡ ⊥̇
-  Match {n} 8  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∃̇ a))
-  Match {n} 9  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∀̇ a))
-  Match {n} 10 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
-  Match {n} 11 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
-  Match     _  _ = Empty.⊥*
+Match : ∀ {n} → ℕ → Formula S n → Type ℓ
+Match {n} 0  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ∈̇ u)))
+Match {n} 1  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ≐ u)))
+Match {n} 2  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∧̇ b)))
+Match {n} 3  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∨̇ b)))
+Match {n} 4  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ⇒̇ b)))
+Match {n} 5  φ = Σ[ a ∈ Formula S n ] (φ ≡ (¬̇ a))
+Match     6  φ = φ ≡ ⊤̇
+Match     7  φ = φ ≡ ⊥̇
+Match {n} 8  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∃̇ a))
+Match {n} 9  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∀̇ a))
+Match {n} 10 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
+Match {n} 11 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
+Match     _  _ = Empty.⊥*
 
-  matches : ∀ {n} (φ : Formula S n) → Match (tagOf φ) φ
-  matches (t ∈̇ u)  = t , (u , refl)
-  matches (t ≐ u)  = t , (u , refl)
-  matches (a ∧̇ b)  = a , (b , refl)
-  matches (a ∨̇ b)  = a , (b , refl)
-  matches (a ⇒̇ b)  = a , (b , refl)
-  matches (¬̇ a)    = a , refl
-  matches ⊤̇        = refl
-  matches ⊥̇        = refl
-  matches (∃̇ a)    = a , refl
-  matches (∀̇ a)    = a , refl
-  matches (∀̇∈ t a) = t , (a , refl)
-  matches (∃̇∈ t a) = t , (a , refl)
+matches : ∀ {n} (φ : Formula S n) → Match (tagOf φ) φ
+matches (t ∈̇ u)  = t , (u , refl)
+matches (t ≐ u)  = t , (u , refl)
+matches (a ∧̇ b)  = a , (b , refl)
+matches (a ∨̇ b)  = a , (b , refl)
+matches (a ⇒̇ b)  = a , (b , refl)
+matches (¬̇ a)    = a , refl
+matches ⊤̇        = refl
+matches ⊥̇        = refl
+matches (∃̇ a)    = a , refl
+matches (∀̇ a)    = a , refl
+matches (∀̇∈ t a) = t , (a , refl)
+matches (∃̇∈ t a) = t , (a , refl)
 
 ⌜⌝-inj : ∀ {n} (φ ψ : Formula S n) → ⌜ φ ⌝ ≡ ⌜ ψ ⌝ → φ ≡ ψ
 
