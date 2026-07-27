@@ -1384,6 +1384,213 @@ module _ {n : ℕ} where
 ```
 
 <!--en-->
+## A domain that is closed under subcodes
+<!--zh-->
+## 对子码封闭的定义域
+<!--/-->
+
+<!--en-->
+The clauses above constrain a table wherever both a code and its subcodes carry
+entries, and say nothing where the subcodes do not. That is the right reading,
+and it is also the reason a table satisfying all twelve can be almost empty: a
+single entry at one code satisfies every clause vacuously. So the clauses alone
+do not pin a value, and what pins it is a further demand on the index set, that
+it contain the subcodes of everything in it.
+
+Stating that demand needs the same two frames as the clauses, minus the table.
+What is left is the shape reader and the implication: for every key in the set of
+that shape, such and such keys are in the set too. A key is an arity paired with
+a code, so a subkey is built from the same arity, or from its successor for the
+four constructors that bind a variable, and `appAt`{.Agda} is already the reader
+for "this pair is in that set".
+
+Eight of the twelve say something. The two atoms have term codes below them and
+the two constants have a numeral, and none of the four has a subformula, so their
+clauses would be empty and are not written.
+<!--zh-->
+上面那些子句在「码与其诸子码都带有条目」之处约束一张表，在诸子码没有条目之处则什么也不说。那样读是对的，而这也正是「满足全部十二条的表可以几乎为空」的原因：单在一个码处放一个条目，就空洞地满足了每一条。故诸子句本身钉不住任何取值，而钉住它的是对索引集的一项进一步要求：它须含有其每个成员的诸子码。
+
+陈述这项要求所需的框架与诸子句相同，只是去掉了表。剩下的是形状读式与那个蕴含：对集合中每个那种形状的键，某某几个键也在该集合中。一个键是元数与码之对，故一个子键由同一个元数造出，或者对那四个绑定变元的构造子而言，由该元数的后继造出；而 `appAt`{.Agda} 早已是「这个对在那个集合中」的读式。
+
+十二条里有八条说了话。两个原子之下是词项码，两个常量之下是数码，而这四个都没有子公式，故它们的子句会是空的，不写。
+<!--/-->
+
+```agda
+module _ {n : ℕ} where
+  private
+    sh4 : Fin n → Fin (4 + n)
+    sh4 i = suc (suc (suc (suc i)))
+
+    c4 n4 a4 b4 : Fin (4 + n)
+    c4 = suc (suc (suc zero))
+    n4 = suc (suc zero)
+    a4 = suc zero
+    b4 = zero
+
+    sh3 : Fin n → Fin (3 + n)
+    sh3 i = suc (suc (suc i))
+
+    c3 n3 a3 : Fin (3 + n)
+    c3 = suc (suc zero)
+    n3 = suc zero
+    a3 = zero
+
+  binShapeAt : Fin n → ℕ → Formula S (4 + n) → Formula S n
+  binShapeAt C k rel =
+    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇ ( arityTagPairAtL c4 n4 k a4 b4 ⇒̇ rel))))
+
+  unShapeAt : Fin n → ℕ → Formula S (3 + n) → Formula S n
+  unShapeAt C k rel =
+    ∀̇∈ (var C) (∀̇ (∀̇ ( arityTagAtL c3 n3 k a3 ⇒̇ rel)))
+
+  binShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+    → ⟨ γ ⊨ binShapeAt C k rel ⟩
+    → (c ar a b : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩
+  binShape-out C k rel γ h c ar a b c∈ shape =
+    h c c∈ ar a b
+      (subst ⟨_⟩ (sym (arityTagPairAtL-adequate c4 n4 k a4 b4 (b ∷ a ∷ ar ∷ c ∷ γ)))
+        shape)
+
+  unShape-out : (C : Fin n) (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n)
+    → ⟨ γ ⊨ unShapeAt C k rel ⟩
+    → (c ar a : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+    → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩
+  unShape-out C k rel γ h c ar a c∈ shape =
+    h c c∈ ar a
+      (subst ⟨_⟩ (sym (arityTagAtL-adequate c3 n3 k a3 (a ∷ ar ∷ c ∷ γ))) shape)
+```
+
+<!--en-->
+Four relations, and they divide the eight the way the arities do. The three
+binary connectives want both components at the arity they were read at. Negation
+wants its one component there. The two unbounded quantifiers want their one
+component one arity up, which is an existential over the successor, and the two
+bounded ones want their *second* component there, the first being a term.
+<!--zh-->
+四条关系，而它们按元数把那八条分开。三个二元联结词要它们的两个分量都在被读出的那个元数处。否定要它的那一个分量在那里。两个无界量词要它们的那一个分量高一个元数，那是一个关于后继的存在；而两个有界量词要它们的**第二个**分量在那里，第一个是词项。
+<!--/-->
+
+```agda
+  bothSameAt : Fin n → Formula S (4 + n)
+  bothSameAt C = appAt (sh4 C) n4 a4 ∧̇ appAt (sh4 C) n4 b4
+
+  oneSameAt : Fin n → Formula S (3 + n)
+  oneSameAt C = appAt (sh3 C) n3 a3
+
+  oneSuccAt : Fin n → Formula S (3 + n)
+  oneSuccAt C = ∃̇ (sucAtL (suc n3) zero ∧̇ appAt (suc (sh3 C)) zero (suc a3))
+
+  succSndAt : Fin n → Formula S (4 + n)
+  succSndAt C = ∃̇ (sucAtL (suc n4) zero ∧̇ appAt (suc (sh4 C)) zero (suc b4))
+```
+
+<!--en-->
+Reading them back is what a consumer does, so each is stated at the clause,
+already composed with its frame: given a key of that shape in the set, the keys
+the constructor demands are in the set. The two that change arity discharge a
+truncation on the way, which the target admits because membership is a
+proposition.
+<!--zh-->
+把它们读回来是消费方要做的事，故每一条都在子句处陈述，且已与其框架复合：给定集合中一个那种形状的键，该构造子所要的诸键也在集合中。改变元数的那两条在途中消掉一个截断，而目标允许这件事，因为隶属是命题。
+<!--/-->
+
+```agda
+  binSameClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
+    → (c ar a b : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩
+    × ⟨ pr (fst ar) (fst b) ∈ fst (lookup C γ) ⟩
+  binSameClosed-out C k γ h c ar a b c∈ shape =
+      subst ⟨_⟩ (appAt-adequate (sh4 C) n4 a4 δ) (r .fst)
+    , subst ⟨_⟩ (appAt-adequate (sh4 C) n4 b4 δ) (r .snd)
+    where
+    δ : S ^ (4 + n)
+    δ = b ∷ a ∷ ar ∷ c ∷ γ
+    r = binShape-out C k (bothSameAt C) γ h c ar a b c∈ shape
+
+  unSameClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ⟨ γ ⊨ unShapeAt C k (oneSameAt C) ⟩
+    → (c ar a : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+    → ⟨ pr (fst ar) (fst a) ∈ fst (lookup C γ) ⟩
+  unSameClosed-out C k γ h c ar a c∈ shape =
+    subst ⟨_⟩ (appAt-adequate (sh3 C) n3 a3 (a ∷ ar ∷ c ∷ γ))
+      (unShape-out C k (oneSameAt C) γ h c ar a c∈ shape)
+
+  unSuccClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩
+    → (c ar a : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+    → ⟨ pr (sucV (fst ar)) (fst a) ∈ fst (lookup C γ) ⟩
+  unSuccClosed-out C k γ h c ar a c∈ shape =
+    PT.rec (snd target)
+      (λ { (z , (sz , ap)) →
+        subst (λ w → ⟨ pr w (fst a) ∈ fst (lookup C γ) ⟩)
+          (subst ⟨_⟩ (sucAtL-adequate (suc n3) zero (z ∷ δ)) sz)
+          (subst ⟨_⟩ (appAt-adequate (suc (sh3 C)) zero (suc a3) (z ∷ δ)) ap) })
+      (unShape-out C k (oneSuccAt C) γ h c ar a c∈ shape)
+    where
+    δ : S ^ (3 + n)
+    δ = a ∷ ar ∷ c ∷ γ
+    target = pr (sucV (fst ar)) (fst a) ∈ fst (lookup C γ)
+
+  binSuccClosed-out : (C : Fin n) (k : ℕ) (γ : S ^ n)
+    → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩
+    → (c ar a b : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → ⟨ pr (sucV (fst ar)) (fst b) ∈ fst (lookup C γ) ⟩
+  binSuccClosed-out C k γ h c ar a b c∈ shape =
+    PT.rec (snd target)
+      (λ { (z , (sz , ap)) →
+        subst (λ w → ⟨ pr w (fst b) ∈ fst (lookup C γ) ⟩)
+          (subst ⟨_⟩ (sucAtL-adequate (suc n4) zero (z ∷ δ)) sz)
+          (subst ⟨_⟩ (appAt-adequate (suc (sh4 C)) zero (suc b4) (z ∷ δ)) ap) })
+      (binShape-out C k (succSndAt C) γ h c ar a b c∈ shape)
+    where
+    δ : S ^ (4 + n)
+    δ = b ∷ a ∷ ar ∷ c ∷ γ
+    target = pr (sucV (fst ar)) (fst b) ∈ fst (lookup C γ)
+```
+
+<!--en-->
+The eight clauses, and their conjunction. A consumer takes the conjunct it wants
+and hands it to the reader that goes with it; nothing else is needed, which is
+why the eight are written without a module around them.
+<!--zh-->
+八条子句，及其合取。消费方取它要的那个合取项，交给与之配套的读式；此外不需要别的，这也是为何那八条没有套一层模块。
+<!--/-->
+
+```agda
+  andClosedAt orClosedAt impClosedAt negClosedAt : Fin n → Formula S n
+  existClosedAt forallClosedAt allInClosedAt exInClosedAt : Fin n → Formula S n
+
+  andClosedAt    C = binShapeAt C 2 (bothSameAt C)
+  orClosedAt     C = binShapeAt C 3 (bothSameAt C)
+  impClosedAt    C = binShapeAt C 4 (bothSameAt C)
+  negClosedAt    C = unShapeAt  C 5 (oneSameAt C)
+  existClosedAt  C = unShapeAt  C 8 (oneSuccAt C)
+  forallClosedAt C = unShapeAt  C 9 (oneSuccAt C)
+  allInClosedAt  C = binShapeAt C 10 (succSndAt C)
+  exInClosedAt   C = binShapeAt C 11 (succSndAt C)
+
+  closedAt : Fin n → Formula S n
+  closedAt C =
+    andClosedAt C ∧̇ (orClosedAt C ∧̇ (impClosedAt C ∧̇ (negClosedAt C
+      ∧̇ (existClosedAt C ∧̇ (forallClosedAt C
+      ∧̇ (allInClosedAt C ∧̇ exInClosedAt C))))))
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -1414,6 +1621,12 @@ frames, twelve relations, and five idioms among the relations. `envSetAt`{.Agda}
 needed, and it makes the point the chapter turns on: inside a clause, the ambient
 set of environments is described rather than constructed.
 
+`closedAt`{.Agda} is the demand the clauses cannot make: that the index set
+contain the subcodes of everything in it. Without it a one-entry table satisfies
+all twelve clauses and no value is pinned, so it is not an optimization but the
+other half of the definition. Eight of the twelve constructors say something
+under it, and it reuses the two frames with the table struck out.
+
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
 written instead, because quoting it would thread a constructibility witness
@@ -1430,6 +1643,8 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
 `extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。**十二条全部**写出：四个联结词、两个常量、两个原子，以及四个量词。两个框架、十二条关系，而诸关系之中有五种写法。`envSetAt`{.Agda} 正是负的那几条所需的那件，而它道出本章的关节：在子句之内，周遭的环境集合是被描述的，而非被构造的。
+
+`closedAt`{.Agda} 是诸子句提不出的那项要求：索引集须含有其每个成员的诸子码。没有它，一张只有一个条目的表就满足全部十二条，而没有任何取值被钉住；故它不是优化，而是定义的另一半。十二个构造子里有八个在它之下说了话，而它复用那两个框架，只是划掉了表。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
