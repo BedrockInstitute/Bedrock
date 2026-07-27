@@ -35,7 +35,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -43,7 +43,8 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( closedAt; domAt; domAt-in; botClauseAt; botClause-out; topClauseAt
         ; topClause-out; andClauseAt; orClauseAt; propClause-out
-        ; interAt; unionAt; yc7; ya7; yb7
+        ; interAt; unionAt; yc7; ya7; yb7; negClauseAt; negClause-out
+        ; unSameClosed-out
         ; binSameClosed-out; prʟ-fst; module LCode; numL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
@@ -116,6 +117,21 @@ module Good (B C T : S) where
 
   Or : Type (ℓ-suc ℓ)
   Or = ⟨ γ ⊨ orClauseAt Ci Ti ⟩
+
+  Neg : Type (ℓ-suc ℓ)
+  Neg = ⟨ γ ⊨ negClauseAt Ci Ti Bi ⟩
+
+  toS : (v : S) (w : V ℓ) → ⟨ w ∈ fst v ⟩ → S
+  toS v w hw = w , isL-trans hw (snd v)
+
+  kkey : ∀ {j} (χ : Formula S j) → pr (# j) (fst LCode.⌜ χ ⌝) ≡ fst (keyʟ χ)
+  kkey {j} χ = cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst j))
+             ∙ sym (prʟ-fst (numeralL j) LCode.⌜ χ ⌝)
+
+  up : ∀ {j} (χ : Formula S j) (v : S)
+     → ⟨ pr (fst (keyʟ χ)) (fst v) ∈ fst T ⟩
+     → ⟨ pr (pr (# j) (fst LCode.⌜ χ ⌝)) (fst v) ∈ fst T ⟩
+  up χ v h = subst (λ w → ⟨ pr w (fst v) ∈ fst T ⟩) (sym (kkey χ)) h
 
   Pinned : ∀ {m} → Formula S m → Type (ℓ-suc ℓ)
   Pinned {m} ψ = (c y : S) → fst c ≡ fst (keyʟ ψ)
@@ -221,14 +237,14 @@ because the goal is an equation between sets.
               e  = propClause-out Ci Ti 2 (interAt yc7 ya7 yb7) γ hand
                      c (nn m) ca cb y ya yb c∈ shape hy (up a' ya hya) (up b' yb hyb)
           in extensionalV (λ w → ⇔toPath
-               (λ hw → subst ⟨_⟩ (sym (Sat-mem B (a' ∧̇ b') (sy w hw)))
-                 ( subst ⟨_⟩ (Sat-mem B a' (sy w hw))
-                     (subst (λ v → ⟨ w ∈ v ⟩) ea (e .fst (sy w hw) hw .fst)) .fst
-                 , ( subst (λ v → ⟨ w ∈ v ⟩) ea (e .fst (sy w hw) hw .fst)
-                   , subst (λ v → ⟨ w ∈ v ⟩) eb (e .fst (sy w hw) hw .snd) ) ))
+               (λ hw → subst ⟨_⟩ (sym (Sat-mem B (a' ∧̇ b') (toS y w hw)))
+                 ( subst ⟨_⟩ (Sat-mem B a' (toS y w hw))
+                     (subst (λ v → ⟨ w ∈ v ⟩) ea (e .fst (toS y w hw) hw .fst)) .fst
+                 , ( subst (λ v → ⟨ w ∈ v ⟩) ea (e .fst (toS y w hw) hw .fst)
+                   , subst (λ v → ⟨ w ∈ v ⟩) eb (e .fst (toS y w hw) hw .snd) ) ))
                (λ hw →
-                 let r = subst ⟨_⟩ (Sat-mem B (a' ∧̇ b') (ss w hw)) hw in
-                 e .snd (ss w hw)
+                 let r = subst ⟨_⟩ (Sat-mem B (a' ∧̇ b') (toS (Sat B _) w hw)) hw in
+                 e .snd (toS (Sat B _) w hw)
                    ( subst (λ v → ⟨ w ∈ v ⟩) (sym ea) (r .snd .fst)
                    , subst (λ v → ⟨ w ∈ v ⟩) (sym eb) (r .snd .snd) ))) })
         (domAt-in Ti Ci γ hdom (keyʟ b') (ka .snd)) })
@@ -242,25 +258,13 @@ because the goal is an equation between sets.
     shape = q ∙ keyʟ-shape-in (a' ∧̇ b')
           ∙ cong (λ w → pr (# m) (pr (# 2) w)) (prʟ-fst ca cb)
 
-    kkey : ∀ {j} (χ : Formula S j) → pr (# j) (fst LCode.⌜ χ ⌝) ≡ fst (keyʟ χ)
-    kkey {j} χ = cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst j))
-               ∙ sym (prʟ-fst (numeralL j) LCode.⌜ χ ⌝)
 
     ka : ⟨ fst (keyʟ a') ∈ fst C ⟩ × ⟨ fst (keyʟ b') ∈ fst C ⟩
     ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkey a') (r .fst)
        , subst (λ w → ⟨ w ∈ fst C ⟩) (kkey b') (r .snd)
       where r = binSameClosed-out Ci 2 γ (hcl .fst) c (nn m) ca cb c∈ shape
 
-    up : ∀ {j} (χ : Formula S j) (v : S)
-       → ⟨ pr (fst (keyʟ χ)) (fst v) ∈ fst T ⟩
-       → ⟨ pr (pr (# j) (fst LCode.⌜ χ ⌝)) (fst v) ∈ fst T ⟩
-    up χ v h = subst (λ w → ⟨ pr w (fst v) ∈ fst T ⟩) (sym (kkey χ)) h
 
-    sy : (w : V ℓ) → ⟨ w ∈ fst y ⟩ → S
-    sy w hw = w , isL-trans hw (snd y)
-
-    ss : (w : V ℓ) → ⟨ w ∈ fst (Sat B (a' ∧̇ b')) ⟩ → S
-    ss w hw = w , isL-trans hw (snd (Sat B (a' ∧̇ b')))
 
   or : Closed → Total → Or
       → ∀ {m} (a' b' : Formula S m) → Pinned a' → Pinned b' → Pinned (a' ∨̇ b')
@@ -274,19 +278,19 @@ because the goal is an equation between sets.
                      c (nn m) ca cb y ya yb c∈ shape hy (up a' ya hya) (up b' yb hyb)
           in extensionalV (λ w → ⇔toPath
                (λ hw → PT.rec (snd (w ∈ fst (Sat B (a' ∨̇ b'))))
-                 (λ { (inl h) → subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') (sy w hw)))
-                        ( subst ⟨_⟩ (Sat-mem B a' (sy w hw))
+                 (λ { (inl h) → subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') (toS y w hw)))
+                        ( subst ⟨_⟩ (Sat-mem B a' (toS y w hw))
                             (subst (λ v → ⟨ w ∈ v ⟩) ea h) .fst
                         , ∣ inl (subst (λ v → ⟨ w ∈ v ⟩) ea h) ∣₁ )
-                    ; (inr h) → subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') (sy w hw)))
-                        ( subst ⟨_⟩ (Sat-mem B b' (sy w hw))
+                    ; (inr h) → subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') (toS y w hw)))
+                        ( subst ⟨_⟩ (Sat-mem B b' (toS y w hw))
                             (subst (λ v → ⟨ w ∈ v ⟩) eb h) .fst
                         , ∣ inr (subst (λ v → ⟨ w ∈ v ⟩) eb h) ∣₁ ) })
-                 (e .fst (sy w hw) hw))
-               (λ hw → e .snd (ss w hw) (PT.map
+                 (e .fst (toS y w hw) hw))
+               (λ hw → e .snd (toS (Sat B _) w hw) (PT.map
                  (λ { (inl h) → inl (subst (λ v → ⟨ w ∈ v ⟩) (sym ea) h)
                     ; (inr h) → inr (subst (λ v → ⟨ w ∈ v ⟩) (sym eb) h) })
-                 (subst ⟨_⟩ (Sat-mem B (a' ∨̇ b') (ss w hw)) hw .snd)))) })
+                 (subst ⟨_⟩ (Sat-mem B (a' ∨̇ b') (toS (Sat B _) w hw)) hw .snd)))) })
         (domAt-in Ti Ci γ hdom (keyʟ b') (ka .snd)) })
       (domAt-in Ti Ci γ hdom (keyʟ a') (ka .fst))
     where
@@ -298,23 +302,62 @@ because the goal is an equation between sets.
     shape = q ∙ keyʟ-shape-in (a' ∨̇ b')
           ∙ cong (λ w → pr (# m) (pr (# 3) w)) (prʟ-fst ca cb)
 
-    kkey : ∀ {j} (χ : Formula S j) → pr (# j) (fst LCode.⌜ χ ⌝) ≡ fst (keyʟ χ)
-    kkey {j} χ = cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst j))
-               ∙ sym (prʟ-fst (numeralL j) LCode.⌜ χ ⌝)
 
     ka : ⟨ fst (keyʟ a') ∈ fst C ⟩ × ⟨ fst (keyʟ b') ∈ fst C ⟩
     ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkey a') (r .fst)
        , subst (λ w → ⟨ w ∈ fst C ⟩) (kkey b') (r .snd)
       where r = binSameClosed-out Ci 3 γ (hcl .snd .fst) c (nn m) ca cb c∈ shape
 
-    up : ∀ {j} (χ : Formula S j) (v : S)
-       → ⟨ pr (fst (keyʟ χ)) (fst v) ∈ fst T ⟩
-       → ⟨ pr (pr (# j) (fst LCode.⌜ χ ⌝)) (fst v) ∈ fst T ⟩
-    up χ v h = subst (λ w → ⟨ pr w (fst v) ∈ fst T ⟩) (sym (kkey χ)) h
 
-    sy : (w : V ℓ) → ⟨ w ∈ fst y ⟩ → S
-    sy w hw = w , isL-trans hw (snd y)
+```
 
-    ss : (w : V ℓ) → ⟨ w ∈ fst (Sat B (a' ∨̇ b')) ⟩ → S
-    ss w hw = w , isL-trans hw (snd (Sat B (a' ∨̇ b')))
+<!--en-->
+## Negation, the last new combination
+<!--zh-->
+## 否定，最后一种新组合
+<!--/-->
+
+<!--en-->
+The three ingredients at once: an ambient set to supply, a subvalue to identify,
+and an induction hypothesis to use. Every remaining case is one of these with a
+different clause, and none needs a fourth ingredient.
+<!--zh-->
+三样成分一次到齐：一个要递出的周遭集合、一个要认同的子取值、一条要用的归纳假设。余下每一种情形都是这三样加一条不同的子句，没有谁需要第四样成分。
+<!--/-->
+
+```agda
+  neg : Closed → Total → Neg
+      → ∀ {m} (a' : Formula S m) → Pinned a' → Pinned (¬̇ a')
+  neg hcl hdom hneg {m} a' ia c y q c∈ hy =
+    PT.rec (setIsSet (fst y) (fst (Sat B (¬̇ a'))))
+      (λ { (ya , hya) →
+        let ea = ia (keyʟ a') ya refl ka hya
+            δ' : S ^ 9
+            δ' = envSet B m ∷ ya ∷ y ∷ ca ∷ nn m ∷ c ∷ γ
+            hE = AmbientHolds.holds B δ' zero (suc (suc (suc (suc zero))))
+                   (suc (suc (suc (suc (suc (suc Bi)))))) m refl refl refl
+            e  = negClause-out Ci Ti Bi γ hneg c (nn m) ca y ya (envSet B m)
+                   c∈ shape hy (up a' ya hya) hE
+        in extensionalV (λ w → ⇔toPath
+             (λ hw → subst ⟨_⟩ (sym (Sat-mem B (¬̇ a') (toS y w hw)))
+               ( e .fst (toS y w hw) hw .fst
+               , (λ h → e .fst (toS y w hw) hw .snd
+                   (subst (λ v → ⟨ w ∈ v ⟩) (sym ea) h)) ))
+             (λ hw →
+               let r = subst ⟨_⟩ (Sat-mem B (¬̇ a') (toS (Sat B (¬̇ a')) w hw)) hw
+               in e .snd (toS (Sat B (¬̇ a')) w hw)
+                    ( r .fst
+                    , (λ h → r .snd (subst (λ v → ⟨ w ∈ v ⟩) ea h)) ))) })
+      (domAt-in Ti Ci γ hdom (keyʟ a') ka)
+    where
+    ca : S
+    ca = LCode.⌜ a' ⌝
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 5) (fst ca))
+    shape = q ∙ keyʟ-shape-in (¬̇ a')
+
+    ka : ⟨ fst (keyʟ a') ∈ fst C ⟩
+    ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkey a')
+           (unSameClosed-out Ci 5 γ (hcl .snd .snd .snd .fst) c (nn m) ca
+             c∈ shape)
 ```
