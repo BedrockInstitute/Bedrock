@@ -35,7 +35,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_ )
+open import FOL.Syntax using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -49,11 +49,14 @@ open import L.Coding.Model {ℓ}
         ; atomBody; atomBody-in; atomBody-out
         ; extAt-out; extAt-in; existClauseAt; quantClause-out; body∃
         ; body∃-in; body∃-out; forallClauseAt; body∀; body∀-in; body∀-out
-        ; unSuccClosed-out; consAtL-transport
+        ; unSuccClosed-out; consAtL-transport; allInClauseAt; bndClause-out
+        ; bodyAll; bodyAll-in; bodyAll-out; exInClauseAt
+        ; bodyEx; bodyEx-in; bodyEx-out; binSuccClosed-out
         ; binSameClosed-out; prʟ-fst; module LCode; numL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem; cond∈-in; cond∈-out; cond≐-in; cond≐-out
-        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out )
+        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out
+        ; cond∀∈-in; cond∀∈-out; cond∃∈-in; cond∃∈-out )
 open import L.Coding.Table {ℓ} lem using ( keyʟ; keyʟ-shape-in )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
 open import L.Coding.Sound {ℓ} lem
@@ -143,6 +146,12 @@ module Good (B C T : S) where
 
   All : Type (ℓ-suc ℓ)
   All = ⟨ γ ⊨ forallClauseAt Ci Ti Bi ⟩
+
+  AllIn : Type (ℓ-suc ℓ)
+  AllIn = ⟨ γ ⊨ allInClauseAt Ci Ti Bi ⟩
+
+  ExIn : Type (ℓ-suc ℓ)
+  ExIn = ⟨ γ ⊨ exInClauseAt Ci Ti Bi ⟩
 
   ai0 : ∀ {j} → Fin (suc j)
   ai0 = zero
@@ -705,4 +714,207 @@ something, and that reader carried between the two frames.
     ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkeyS a')
            (unSuccClosed-out Ci 9 γ (hcl .snd .snd .snd .snd .snd .fst) c (nn m) ca
              c∈ shape)
+```
+
+<!--en-->
+## The bounded quantifiers
+<!--zh-->
+## 两个有界量词
+<!--/-->
+
+<!--en-->
+The last two, and everything in them has appeared already: the subvalue an arity
+up, the ambient set supplied, the environment recovered, the cons reader carried,
+and the bound term's value read through the bridge. The member is drawn from the
+carrier and guarded by the bound on both sides, which is the correction the
+existence half found by trying to prove exactly this.
+<!--zh-->
+最后两条，而它们里面的一切都已出现过：高一元数的子取值、递出的周遭集合、恢复出的环境、搬过去的 cons 读式，以及经桥读出的界项取值。成员两侧都是取自载体、由界设防，而那正是存在性那一半在试图证明这同一件事时找出的那处更正。
+<!--/-->
+
+```agda
+  allIn : Closed → Total → AllIn
+        → ∀ {m} (t : Term S m) (a' : Formula S (suc m))
+        → Pinned a' → Pinned (∀̇∈ t a')
+  allIn hcl hdom hall {m} t a' ia c y q c∈ hy =
+    PT.rec (setIsSet (fst y) (fst (Sat B (∀̇∈ t a'))))
+      (λ { (yb , hyb) →
+        let eb = ia (keyʟ a') yb refl ka hyb
+            δ' : S ^ 10
+            δ' = envSet B m ∷ yb ∷ y ∷ ca ∷ ct ∷ nn m ∷ c ∷ γ
+            di = suc (suc (suc (suc (suc zero))))
+            bi = suc (suc (suc (suc (suc (suc (suc Bi))))))
+            hE = AmbientHolds.holds B δ' zero di bi m refl refl refl
+            e  = bndClause-out Ci Ti Bi 10 (bodyAll Bi) γ hall c (nn m) ct ca
+                   y yb (envSet B m) c∈ shape hy (upS a' yb hyb) hE
+        in extensionalV (λ w → ⇔toPath
+             (λ hw →
+               let sy = toS y w hw
+                   bo = bodyAll-out Bi (sy ∷ δ')
+                          (extAt-out (suc (suc zero)) (bodyAll Bi) δ' e sy hw)
+                   ae = Ambient.asEnv B δ' zero di bi m refl refl hE sy (bo .fst)
+               in subst ⟨_⟩ (sym (Sat-mem B (∀̇∈ t a') sy))
+                    ( bo .fst
+                    , cond∀∈-in B t a' sy
+                        (λ v hv x e' x∈B x∈v hcs →
+                          subst (λ u → ⟨ fst e' ∈ u ⟩) eb
+                            (bo .snd v
+                              (termAgree t (v ∷ sy ∷ δ') ai6 ai1 ai0
+                                 (v ∷ sy ∷ []) ai0 ai1 refl refl refl .snd hv)
+                              x e' x∈B x∈v
+                              (consAtL-transport (e' ∷ x ∷ v ∷ sy ∷ [])
+                                (e' ∷ x ∷ v ∷ sy ∷ δ') zero (suc zero)
+                                (suc (suc (suc zero))) zero (suc zero)
+                                (suc (suc (suc zero)))
+                                (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                                refl refl refl hcs))) ))
+             (λ hw →
+               let sw = toS (Sat B (∀̇∈ t a')) w hw
+                   h  = subst ⟨_⟩ (Sat-mem B (∀̇∈ t a') sw) hw
+                   ae = Ambient.asEnv B δ' zero di bi m refl refl hE sw (h .fst)
+               in extAt-in (suc (suc zero)) (bodyAll Bi) δ' e sw
+                    (bodyAll-in Bi (sw ∷ δ') (h .fst)
+                      (λ v hv x e' x∈B x∈v hcs →
+                        subst (λ u → ⟨ fst e' ∈ u ⟩) (sym eb)
+                          (cond∀∈-out B t a' sw (h .snd) v
+                            (termAgree t (v ∷ sw ∷ δ') ai6 ai1 ai0
+                               (v ∷ sw ∷ []) ai0 ai1 refl refl refl .fst hv)
+                            x e' x∈B x∈v
+                            (consAtL-transport (e' ∷ x ∷ v ∷ sw ∷ δ')
+                              (e' ∷ x ∷ v ∷ sw ∷ []) zero (suc zero)
+                              (suc (suc (suc zero))) zero (suc zero)
+                              (suc (suc (suc zero)))
+                              (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                              refl refl refl hcs)))))) })
+      (domAt-in Ti Ci γ hdom (keyʟ a') ka)
+    where
+    ct ca : S
+    ct = LCode.⌜ t ⌝ᵗ
+    ca = LCode.⌜ a' ⌝
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 10) (pr (fst ct) (fst ca)))
+    shape = q ∙ keyʟ-shape-in (∀̇∈ t a')
+          ∙ cong (λ w → pr (# m) (pr (# 10) w)) (prʟ-fst ct ca)
+
+    ka : ⟨ fst (keyʟ a') ∈ fst C ⟩
+    ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkeyS a')
+           (binSuccClosed-out Ci 10 γ
+             (hcl .snd .snd .snd .snd .snd .snd .fst) c (nn m) ct ca c∈ shape)
+
+  exIn : Closed → Total → ExIn
+        → ∀ {m} (t : Term S m) (a' : Formula S (suc m))
+        → Pinned a' → Pinned (∃̇∈ t a')
+  exIn hcl hdom hex {m} t a' ia c y q c∈ hy =
+    PT.rec (setIsSet (fst y) (fst (Sat B (∃̇∈ t a'))))
+      (λ { (yb , hyb) →
+        let eb = ia (keyʟ a') yb refl ka hyb
+            δ' : S ^ 10
+            δ' = envSet B m ∷ yb ∷ y ∷ ca ∷ ct ∷ nn m ∷ c ∷ γ
+            di = suc (suc (suc (suc (suc zero))))
+            bi = suc (suc (suc (suc (suc (suc (suc Bi))))))
+            hE = AmbientHolds.holds B δ' zero di bi m refl refl refl
+            e  = bndClause-out Ci Ti Bi 11 (bodyEx Bi) γ hex c (nn m) ct ca
+                   y yb (envSet B m) c∈ shape hy (upS a' yb hyb) hE
+        in extensionalV (λ w → ⇔toPath
+             (λ hw →
+               let sy = toS y w hw
+                   bo = bodyEx-out Bi (sy ∷ δ')
+                          (extAt-out (suc (suc zero)) (bodyEx Bi) δ' e sy hw)
+                   ae = Ambient.asEnv B δ' zero di bi m refl refl hE sy (bo .fst)
+               in subst ⟨_⟩ (sym (Sat-mem B (∃̇∈ t a') sy))
+                    ( bo .fst
+                    , cond∃∈-in B t a' sy (PT.map
+                        (λ { (v , (hv , hx)) → v
+                           , ( termAgree t (v ∷ sy ∷ δ') ai6 ai1 ai0
+                                 (v ∷ sy ∷ []) ai0 ai1 refl refl refl .fst hv
+                             , PT.map (λ { (x , (gd , (e' , (hcs , he)))) →
+                                 x , (gd , (e'
+                                 , ( consAtL-transport (e' ∷ x ∷ v ∷ sy ∷ δ')
+                                       (e' ∷ x ∷ v ∷ sy ∷ []) zero (suc zero)
+                                       (suc (suc (suc zero))) zero (suc zero)
+                                       (suc (suc (suc zero)))
+                                       (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                                       refl refl refl hcs
+                                   , subst (λ u → ⟨ fst e' ∈ u ⟩) eb he ))) })
+                                 hx ) })
+                        (bo .snd)) ))
+             (λ hw →
+               let sw = toS (Sat B (∃̇∈ t a')) w hw
+                   h  = subst ⟨_⟩ (Sat-mem B (∃̇∈ t a') sw) hw
+                   ae = Ambient.asEnv B δ' zero di bi m refl refl hE sw (h .fst)
+               in extAt-in (suc (suc zero)) (bodyEx Bi) δ' e sw
+                    (bodyEx-in Bi (sw ∷ δ') (h .fst) (PT.map
+                      (λ { (v , (hv , hx)) → v
+                         , ( termAgree t (v ∷ sw ∷ δ') ai6 ai1 ai0
+                               (v ∷ sw ∷ []) ai0 ai1 refl refl refl .snd hv
+                           , PT.map (λ { (x , (gd , (e' , (hcs , he)))) →
+                               x , (gd , (e'
+                               , ( consAtL-transport (e' ∷ x ∷ v ∷ sw ∷ [])
+                                     (e' ∷ x ∷ v ∷ sw ∷ δ') zero (suc zero)
+                                     (suc (suc (suc zero))) zero (suc zero)
+                                     (suc (suc (suc zero)))
+                                     (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                                     refl refl refl hcs
+                                 , subst (λ u → ⟨ fst e' ∈ u ⟩) (sym eb) he ))) })
+                               hx ) })
+                      (cond∃∈-out B t a' sw (h .snd)))))) })
+      (domAt-in Ti Ci γ hdom (keyʟ a') ka)
+    where
+    ct ca : S
+    ct = LCode.⌜ t ⌝ᵗ
+    ca = LCode.⌜ a' ⌝
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 11) (pr (fst ct) (fst ca)))
+    shape = q ∙ keyʟ-shape-in (∃̇∈ t a')
+          ∙ cong (λ w → pr (# m) (pr (# 11) w)) (prʟ-fst ct ca)
+
+    ka : ⟨ fst (keyʟ a') ∈ fst C ⟩
+    ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkeyS a')
+           (binSuccClosed-out Ci 11 γ
+             (hcl .snd .snd .snd .snd .snd .snd .snd) c (nn m) ct ca c∈ shape)
+```
+
+<!--en-->
+## The induction
+<!--zh-->
+## 那次归纳
+<!--/-->
+
+<!--en-->
+Twelve cases and the recursion over the formula that ties them together. This is
+the uniqueness half entire: a table that is closed, total and satisfies the
+twelve records at every key the value the meta-level recursion built there.
+<!--zh-->
+十二种情形，以及把它们系在一起、沿公式的那次递归。这就是唯一性那一半的全部：一张封闭、全、且满足十二条的表，在每个键处记录的都是元语言递归在那里造出的取值。
+<!--/-->
+
+```agda
+  Clauses : Type (ℓ-suc ℓ)
+  Clauses = Mem × (Eq × (And × (Or × (Imp × (Neg × (Top × (Bot
+          × (Ex × (All × (AllIn × ExIn))))))))))
+
+  pinned : Closed → Total → Clauses → ∀ {m} (ψ : Formula S m) → Pinned ψ
+  pinned hc hd h (t ∈̇ u)  = mem (h .fst) t u
+  pinned hc hd h (t ≐ u)  = eq (h .snd .fst) t u
+  pinned hc hd h (a ∧̇ b)  = and hc hd (h .snd .snd .fst) a b
+                              (pinned hc hd h a) (pinned hc hd h b)
+  pinned hc hd h (a ∨̇ b)  = or hc hd (h .snd .snd .snd .fst) a b
+                              (pinned hc hd h a) (pinned hc hd h b)
+  pinned hc hd h (a ⇒̇ b)  = imp hc hd (h .snd .snd .snd .snd .fst) a b
+                              (pinned hc hd h a) (pinned hc hd h b)
+  pinned hc hd h (¬̇ a)    = neg hc hd (h .snd .snd .snd .snd .snd .fst) a
+                              (pinned hc hd h a)
+  pinned hc hd h ⊤̇        = top (h .snd .snd .snd .snd .snd .snd .fst)
+  pinned hc hd h ⊥̇        = bot (h .snd .snd .snd .snd .snd .snd .snd .fst)
+  pinned hc hd h (∃̇ a)    = ex hc hd (h .snd .snd .snd .snd .snd .snd .snd .snd .fst)
+                              a (pinned hc hd h a)
+  pinned hc hd h (∀̇ a)    = all hc hd
+                              (h .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst)
+                              a (pinned hc hd h a)
+  pinned hc hd h (∀̇∈ t a) = allIn hc hd
+                              (h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst)
+                              t a (pinned hc hd h a)
+  pinned hc hd h (∃̇∈ t a) = exIn hc hd
+                              (h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd)
+                              t a (pinned hc hd h a)
 ```
