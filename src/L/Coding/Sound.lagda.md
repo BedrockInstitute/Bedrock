@@ -34,7 +34,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; con; var; Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
@@ -45,11 +45,13 @@ open import L.Coding.Model {ℓ}
         ; negClauseAt; negClause-in; impClauseAt; impClause-in
         ; topClauseAt; topClause-in; botClauseAt; botClause-in
         ; tmValAt; tmValAt-var; tmValAt-con; tmValAt-out
+        ; memClauseAt; eqClauseAt; memRel; eqRel; atomClause-in
+        ; atomBody; atomBody-in; atomBody-out
         ; envOverAt-transport; extAt-out; extAt-in; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem
-  using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out )
+  using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out; cond∈-in; cond∈-out; cond≐-in; cond≐-out )
 open import L.Coding.EnvSet {ℓ} lem
   using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
 open import L.Coding.Table {ℓ} lem
@@ -511,6 +513,99 @@ builds, and gets it from whichever disjunct it was handed.
               (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz) .snd })
           P)
       , (λ z hz → Empty.rec* hz))
+
+  private
+    ai0 : ∀ {j} → Fin (suc j)
+    ai0 = zero
+    ai1 : ∀ {j} → Fin (suc (suc j))
+    ai1 = suc zero
+    ai2 : ∀ {j} → Fin (suc (suc (suc j)))
+    ai2 = suc (suc zero)
+    ai5 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc j))))))
+    ai5 = suc (suc (suc (suc (suc zero))))
+    ai6 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc (suc j)))))))
+    ai6 = suc (suc (suc (suc (suc (suc zero)))))
+
+    module AtomMem = Atom 0 _∈̇_ (λ _ m → m) (λ _ _ → refl)
+    module AtomEq  = Atom 1 _≐_ (λ _ m → m) (λ _ _ → refl)
+
+  memSound : ⟨ δ ⊨ memClauseAt Ci Ti Bi ⟩
+  memSound = atomClause-in Ci Ti Bi 0 memRel δ
+    (λ c ar a b yc E c∈ sh hc hE →
+      let P  = AtomMem.parts c ar a b yc c∈ sh hc
+          δ' = E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc (suc Bi)))))
+          ai = suc (suc (suc (suc zero)))
+      in
+        (λ z hz → PT.rec (snd ((z ∷ δ') ⊨ atomBody memRel))
+          (λ { (m , t , u , (qm , (ea , (eb , ec)))) →
+            let s = subst ⟨_⟩ (Sat-mem B (t ∈̇ u) z)
+                      (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+            in atomBody-in memRel (z ∷ δ')
+                 (Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst))
+                 (PT.map
+                   (λ { (v , (w , (ht , (hu , hr)))) → v , w
+                      , ( termAgree t (w ∷ v ∷ z ∷ δ') ai6 ai2 ai1
+                            (w ∷ v ∷ z ∷ []) ai1 ai2 ea refl refl .snd ht
+                        , ( termAgree u (w ∷ v ∷ z ∷ δ') ai5 ai2 ai0
+                              (w ∷ v ∷ z ∷ []) ai0 ai2 eb refl refl .snd hu
+                          , hr ) ) })
+                   (cond∈-out B t u z (s .snd))) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , t , u , (qm , (ea , (eb , ec)))) →
+            let r = atomBody-out memRel (z ∷ δ') hz in
+            subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+              (subst ⟨_⟩ (sym (Sat-mem B (t ∈̇ u) z))
+                ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+                , cond∈-in B t u z (PT.map
+                    (λ { (v , (w , (ht , (hu , hr)))) → v , w
+                       , ( termAgree t (w ∷ v ∷ z ∷ δ') ai6 ai2 ai1
+                             (w ∷ v ∷ z ∷ []) ai1 ai2 ea refl refl .fst ht
+                         , ( termAgree u (w ∷ v ∷ z ∷ δ') ai5 ai2 ai0
+                               (w ∷ v ∷ z ∷ []) ai0 ai2 eb refl refl .fst hu
+                           , hr ) ) })
+                    (r .snd)) )) })
+          P))
+
+  eqSound : ⟨ δ ⊨ eqClauseAt Ci Ti Bi ⟩
+  eqSound = atomClause-in Ci Ti Bi 1 eqRel δ
+    (λ c ar a b yc E c∈ sh hc hE →
+      let P  = AtomEq.parts c ar a b yc c∈ sh hc
+          δ' = E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ δ
+          Ea = suc (suc (suc (suc (suc (suc Bi)))))
+          ai = suc (suc (suc (suc zero)))
+      in
+        (λ z hz → PT.rec (snd ((z ∷ δ') ⊨ atomBody eqRel))
+          (λ { (m , t , u , (qm , (ea , (eb , ec)))) →
+            let s = subst ⟨_⟩ (Sat-mem B (t ≐ u) z)
+                      (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+            in atomBody-in eqRel (z ∷ δ')
+                 (Ambient.outof B δ' zero ai Ea m (sym qm) refl hE z (s .fst))
+                 (PT.map
+                   (λ { (v , (w , (ht , (hu , hr)))) → v , w
+                      , ( termAgree t (w ∷ v ∷ z ∷ δ') ai6 ai2 ai1
+                            (w ∷ v ∷ z ∷ []) ai1 ai2 ea refl refl .snd ht
+                        , ( termAgree u (w ∷ v ∷ z ∷ δ') ai5 ai2 ai0
+                              (w ∷ v ∷ z ∷ []) ai0 ai2 eb refl refl .snd hu
+                          , hr ) ) })
+                   (cond≐-out B t u z (s .snd))) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , t , u , (qm , (ea , (eb , ec)))) →
+            let r = atomBody-out eqRel (z ∷ δ') hz in
+            subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+              (subst ⟨_⟩ (sym (Sat-mem B (t ≐ u) z))
+                ( Ambient.into B δ' zero ai Ea m (sym qm) refl hE z (r .fst)
+                , cond≐-in B t u z (PT.map
+                    (λ { (v , (w , (ht , (hu , hr)))) → v , w
+                       , ( termAgree t (w ∷ v ∷ z ∷ δ') ai6 ai2 ai1
+                             (w ∷ v ∷ z ∷ []) ai1 ai2 ea refl refl .fst ht
+                         , ( termAgree u (w ∷ v ∷ z ∷ δ') ai5 ai2 ai0
+                               (w ∷ v ∷ z ∷ []) ai0 ai2 eb refl refl .fst hu
+                           , hr ) ) })
+                    (r .snd)) )) })
+          P))
 
   private
     module BinImp = Bin 4 _⇒̇_ (λ _ m → m) (λ _ _ → refl)

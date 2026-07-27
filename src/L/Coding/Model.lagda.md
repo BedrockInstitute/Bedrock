@@ -1715,6 +1715,25 @@ module _ {n : ℕ} where
   atomRel B cmp =
       ∀̇ ( envSetAt E6″ ar6″ (sh6″ B) ⇒̇ extAt yc6″ (atomBody cmp) )
 
+  AtomWit : Formula S (9 + n) → S ^ (7 + n) → Type (ℓ-suc ℓ)
+  AtomWit cmp γ = Σ[ v ∈ S ] (Σ[ w ∈ S ]
+    (⟨ (w ∷ v ∷ γ) ⊨ tmValAt a9″ e9″ v9″ ⟩
+     × (⟨ (w ∷ v ∷ γ) ⊨ tmValAt b9″ e9″ w9″ ⟩ × ⟨ (w ∷ v ∷ γ) ⊨ cmp ⟩)))
+
+  atomBody-in : (cmp : Formula S (9 + n)) (γ : S ^ (7 + n))
+              → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+              → ∥ AtomWit cmp γ ∥₁ → ⟨ γ ⊨ atomBody cmp ⟩
+  atomBody-in cmp γ h k =
+    h , PT.map (λ { (v , (w , r)) → v , ∣ w , r ∣₁ }) k
+
+  atomBody-out : (cmp : Formula S (9 + n)) (γ : S ^ (7 + n))
+               → ⟨ γ ⊨ atomBody cmp ⟩
+               → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+               × ∥ AtomWit cmp γ ∥₁
+  atomBody-out cmp γ h =
+    h .fst , PT.rec squash₁ (λ { (v , hv) →
+      PT.map (λ { (w , r) → v , (w , r) }) hv }) (h .snd)
+
   memRel eqRel : Formula S (9 + n)
   memRel = var v9″ ∈̇ var w9″
   eqRel  = var v9″ ≐ var w9″
