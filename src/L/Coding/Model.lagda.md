@@ -51,8 +51,9 @@ open import L.Axioms.Numerals {ℓ}
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ⁅_,_⁆ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
@@ -1240,17 +1241,33 @@ module _ {n : ℕ} where
 <!--/-->
 
 <!--en-->
-The last thing the chapter lacked. A term of a parameter-free formula is a
-variable, so its code is the variable tag over a key, and its value in an
-environment is what the environment records at that key. One existential over the
-key, and the two readers already written do the rest.
+The last thing the chapter lacked, and the place a wrong sentence sat for a day.
+A term is a variable **or a constant**, so a reader for its value has two cases,
+not one: a variable's code is the variable tag over a key and its value is what
+the environment records at that key; a constant's code is the constant tag over
+the constant itself, and its value is that, in any environment at all.
+
+The one-case version was written when the alphabet was empty, and the sentence
+that justified it, "a term of a parameter-free formula is a variable", stayed
+true of the alphabet and stopped being true of the chapter. What made it a defect
+rather than a gap is that this reader sits under `extAt`{.Agda}, which asserts
+**both** directions: a constant was not left unconstrained, its value was pinned
+to the empty set. And the case is the normal form rather than a corner, since
+relativization gives every bounded quantifier a constant bound.
+
+So the reader is stated with a characterization this time, in both directions,
+which is what makes the shape of the defect impossible to reintroduce silently.
 
 The atoms then read both sides and compare them. Their payload is a pair of
 *term* codes, at which the table has nothing, which is why the frame was made not
 to look there; here is where that pays. The two atoms differ in one atom of the
 object language, membership against equality, so they share everything else.
 <!--zh-->
-本章尚缺的最后一件。无参公式的一个词项是变元，故它的码是「变元标签架在一个键之上」，而它在某环境中的取值就是该环境在那个键处记录的东西。对该键作一个存在量词，其余由已写好的两条读式完成。
+本章尚缺的最后一件，也是一句错话待了一天的地方。一个词项是变元**或常元**，故读它取值的读式有两种情形、不是一种：变元的码是「变元标签架在一个键之上」，取值是环境在该键处记录的东西；常元的码是「常元标签架在那个常元自己之上」，而它的取值就是那个常元，在任何环境中都一样。
+
+一情形的版本写于字母表为空之时，而为它开脱的那句话「无参公式的一个词项是变元」，对字母表仍为真，对本章已不再为真。使它成为**缺陷**而非空缺的，是这条读式坐在 `extAt`{.Agda} 之下，而后者断言**双向**：一个常元并未被放任不管，它的取值被钉成了空集。而这一情形是常态、不是边角，因为相对化给每条有界量词都配一个常元界。
+
+故这次这条读式带着一份两个方向的刻画写出，而正是那份刻画使这种形状的缺陷不可能再悄悄回来。
 
 两个原子随后读出两侧并加以比较。它们的载荷是一对**词项**码，而表在那里什么也没有，这正是当初把框架做成不往那里看的原因；此处便是它的回报。两个原子只差对象语言的一个原子，隶属对相等，其余全部共享。
 <!--/-->
@@ -1258,6 +1275,37 @@ object language, membership against equality, so they share everything else.
 ```agda
 tmValAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 tmValAt t e v = ∃̇ (tagAtL (suc t) 1 zero ∧̇ appAt (suc e) zero (suc v))
+              ∨̇ tagAtL t 0 v
+
+module _ {n : ℕ} (t e v : Fin n) (γ : S ^ n) where
+  private
+    T = fst (lookup t γ)
+    Val = fst (lookup v γ)
+    Env = fst (lookup e γ)
+
+    Var : Type (ℓ-suc ℓ)
+    Var = Σ[ k ∈ S ] ((T ≡ pr (# 1) (fst k)) × ⟨ pr (fst k) Val ∈ Env ⟩)
+
+    Con : Type (ℓ-suc ℓ)
+    Con = T ≡ pr (# 0) Val
+
+  tmValAt-var : (k : S) → T ≡ pr (# 1) (fst k) → ⟨ pr (fst k) Val ∈ Env ⟩
+              → ⟨ γ ⊨ tmValAt t e v ⟩
+  tmValAt-var k q m = ∣ inl ∣ k
+    , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc t) 1 zero (k ∷ γ))) q
+      , subst ⟨_⟩ (sym (appAt-adequate (suc e) zero (suc v) (k ∷ γ))) m ) ∣₁ ∣₁
+
+  tmValAt-con : T ≡ pr (# 0) Val → ⟨ γ ⊨ tmValAt t e v ⟩
+  tmValAt-con q = ∣ inr (subst ⟨_⟩ (sym (tagAtL-adequate t 0 v γ)) q) ∣₁
+
+  tmValAt-out : ⟨ γ ⊨ tmValAt t e v ⟩ → ∥ (Var ⊎ Con) ∥₁
+  tmValAt-out = PT.rec squash₁
+    (λ { (inl h) → PT.map
+           (λ { (k , (ht , hm)) → inl (k
+             , ( subst ⟨_⟩ (tagAtL-adequate (suc t) 1 zero (k ∷ γ)) ht
+               , subst ⟨_⟩ (appAt-adequate (suc e) zero (suc v) (k ∷ γ)) hm )) })
+           h
+       ; (inr h) → ∣ inr (subst ⟨_⟩ (tagAtL-adequate t 0 v γ) h) ∣₁ })
 
 module _ {n : ℕ} where
   private

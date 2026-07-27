@@ -1844,3 +1844,24 @@ One row per goal code; update the row in the same commit that changes the status
   payload is the value, in the `tagAtL` idiom, plus adequacy both ways, then re-read the four
   clauses. Est. 55 to 80. **Blocking: nothing resting on the atoms or the bounded quantifiers
   is trustworthy until it lands.**
+
+  **FIXED the same day, at 26 lines against the 55 to 80 estimate, chapter unchanged at 3.3 s.**
+  `tmValAt` gains the constant disjunct (`tagAtL t 0 v`, "the code is the constant tag over the
+  value itself"), and the four clauses consume it unchanged, since the change is inside the
+  reader. What the estimate paid for and the fix did not need: no clause had to be re-cut,
+  because `binClauseAt`/`unClauseAt` never descend into a term code, which is the property the
+  frames were built with. A sweep confirms the defect was localized: `tmValAt` was the only
+  reader in the live chapters that matched a term tag at all.
+
+  **What the fix adds beyond the repair is the reason it will not recur.** The reader now
+  carries `tmValAt-var`, `tmValAt-con` and `tmValAt-out`, a characterization in both
+  directions. It had none before, which is exactly why a one-case reader could sit under a
+  two-directional frame for a day without a typechecker complaining. **Every reader that a
+  clause consumes should carry one**, and the two that do not (`atomBody`, `bodyAll`/`bodyEx`
+  are `private` and index-rigid) are where to look next if another clause turns out wrong.
+
+  **And the prose is the third finding.** The sentence that justified the one-case reader,
+  "a term of a parameter-free formula is a variable", was true of the alphabet when it was
+  written and stopped being true at `[L3.18]`, which widened it. It is the second time in this
+  goal that **a prose sentence stating an invariant hid a defect that the code could not
+  report**; the chapter now says both cases and says why.
