@@ -41,13 +41,16 @@ open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 open import V.Coding {ℓ} using ( pr; module VCode )
 open import L.Constructible {ℓ} using ( isL; IsOrd; Lset )
 open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; numL )
+open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )
 
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
-open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ⁅_⁆s; ⋃_; _∪_; module InfinitySet )
+open import V.Model {ℓ} using ( pair-singleton )
 open InfinitySet using ( #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -178,6 +181,103 @@ envL σ oσ {n} g h =
 ```
 
 <!--en-->
+## Unions and singletons
+<!--zh-->
+## 并与单点集
+<!--/-->
+
+<!--en-->
+Two more shapes, and the model supplies both directly. A singleton is the pair of
+a thing with itself, and a binary union is the union of the pair, so each is the
+model's own operation read through the underlying set. They are what a set built
+by recursion out of smaller sets needs, and the next section is the first such
+set.
+<!--zh-->
+再来两种形状，而模型直接供给两者。单点集是一物与自身之对，二元并是那个对之并，故各是模型自家的运算沿底集读出。它们正是「由更小的集合递归造出的集合」所需要的，而下一节就是第一个这样的集合。
+<!--/-->
+
+```agda
+sglL : {a : V ℓ} → ⟨ isL a ⟩ → ⟨ isL ⁅ a ⁆s ⟩
+sglL {a} pa =
+  subst (λ w → ⟨ isL w ⟩) (pairʟ-fst (a , pa) (a , pa) ∙ pair-singleton a)
+    (pairʟ (a , pa) (a , pa) .snd)
+
+cupL : {a b : V ℓ} → ⟨ isL a ⟩ → ⟨ isL b ⟩ → ⟨ isL (a ∪ b) ⟩
+cupL {a} {b} pa pb =
+  subst (λ w → ⟨ isL w ⟩)
+    (unionʟ-fst (pairʟ (a , pa) (b , pb))
+      ∙ cong (⋃_) (pairʟ-fst (a , pa) (b , pb)))
+    (unionʟ (pairʟ (a , pa) (b , pb)) .snd)
+```
+
+<!--en-->
+## The subformula closure
+<!--zh-->
+## 子公式闭包
+<!--/-->
+
+<!--en-->
+A recursion on codes is stated against a *slot*: a set of codes closed under
+immediate subcodes, holding the one the recursion is asked about. The smallest
+such slot is the set of codes of a formula's own subformulas, and it is built by
+the recursion the formula's shape dictates: a code, together with the closures of
+whatever it is built from.
+
+Each entry carries its arity, because the recursion's own key does; a binder's
+subformula therefore enters at the successor. That is the only place the
+bookkeeping is visible, and it is visible because the arity is what the frames
+bind.
+
+The set is constructible for the reason every finite thing here is: it is built
+by pairing and union out of pieces that are, and the shapes above say so in one
+line each.
+<!--zh-->
+对码的递归是相对某个**槽**陈述的：一个对直接子码封闭、且装着被问及的那个码的码集。最小的这种槽，就是一条公式自身诸子公式的码之集，而它由公式的形状所规定的递归造出：一个码，连同它所由构造之物的诸闭包。
+
+每个条目都携带自己的元数，因为递归自己的键就携带；故绑定子的子公式在后继处进入。那是记账唯一可见之处，而它可见，是因为元数正是诸框架所绑定的东西。
+
+这个集合可构造，理由与此处每件有穷之物相同：它由配对与并从可构造的部件造出，而上面两种形状各用一行把这一点说出。
+<!--/-->
+
+```agda
+module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+
+  key : ∀ {n} → Formula K n → V ℓ
+  key {n} φ = pr (# n) VCode.⌜ mapFo f φ ⌝
+
+  keyL : ∀ {n} (φ : Formula K n) → ⟨ isL (key φ) ⟩
+  keyL φ = prL (numL _) (codeL f h φ)
+
+  closure : ∀ {n} → Formula K n → V ℓ
+  closure φ@(t ∈̇ u)  = ⁅ key φ ⁆s
+  closure φ@(t ≐ u)  = ⁅ key φ ⁆s
+  closure φ@(a ∧̇ b)  = ⁅ key φ ⁆s ∪ (closure a ∪ closure b)
+  closure φ@(a ∨̇ b)  = ⁅ key φ ⁆s ∪ (closure a ∪ closure b)
+  closure φ@(a ⇒̇ b)  = ⁅ key φ ⁆s ∪ (closure a ∪ closure b)
+  closure φ@(¬̇ a)    = ⁅ key φ ⁆s ∪ closure a
+  closure φ@⊤̇        = ⁅ key φ ⁆s
+  closure φ@⊥̇        = ⁅ key φ ⁆s
+  closure φ@(∃̇ a)    = ⁅ key φ ⁆s ∪ closure a
+  closure φ@(∀̇ a)    = ⁅ key φ ⁆s ∪ closure a
+  closure φ@(∀̇∈ t a) = ⁅ key φ ⁆s ∪ closure a
+  closure φ@(∃̇∈ t a) = ⁅ key φ ⁆s ∪ closure a
+
+  closureL : ∀ {n} (φ : Formula K n) → ⟨ isL (closure φ) ⟩
+  closureL φ@(t ∈̇ u)  = sglL (keyL φ)
+  closureL φ@(t ≐ u)  = sglL (keyL φ)
+  closureL φ@(a ∧̇ b)  = cupL (sglL (keyL φ)) (cupL (closureL a) (closureL b))
+  closureL φ@(a ∨̇ b)  = cupL (sglL (keyL φ)) (cupL (closureL a) (closureL b))
+  closureL φ@(a ⇒̇ b)  = cupL (sglL (keyL φ)) (cupL (closureL a) (closureL b))
+  closureL φ@(¬̇ a)    = cupL (sglL (keyL φ)) (closureL a)
+  closureL φ@⊤̇        = sglL (keyL φ)
+  closureL φ@⊥̇        = sglL (keyL φ)
+  closureL φ@(∃̇ a)    = cupL (sglL (keyL φ)) (closureL a)
+  closureL φ@(∀̇ a)    = cupL (sglL (keyL φ)) (closureL a)
+  closureL φ@(∀̇∈ t a) = cupL (sglL (keyL φ)) (closureL a)
+  closureL φ@(∃̇∈ t a) = cupL (sglL (keyL φ)) (closureL a)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -191,13 +291,15 @@ codes may be the domain of an internalized recursion.
 
 `envL`{.Agda} then puts an environment in `L` with no recursion on its length and
 no use of replacement, because an environment is on the nose the finite set of
-its entries.
+its entries. `closure`{.Agda} is the smallest slot a recursion on a code can be
+stated against, and `closureL`{.Agda} puts it in `L` by the same two shapes,
+`sglL`{.Agda} and `cupL`{.Agda}, one line per constructor.
 
 The set of all codes is still not an element of `L`, and is still not needed.
 <!--zh-->
 `codeL`{.Agda} 说每个码都是 `L` 的元素，而 `numL`{.Agda}、`prL`{.Agda} 与 `tagL`{.Agda} 是它所由构造的三种形状。有了它，一个码就可以被点名为模型对象语言的常元，而一族码就可以充当某个已内化递归的定义域。
 
-`envL`{.Agda} 随后把一个环境放进 `L`，既不沿长度递归，也不用替换，因为一个环境恰恰就是它诸条目构成的有穷集。
+`envL`{.Agda} 随后把一个环境放进 `L`，既不沿长度递归，也不用替换，因为一个环境恰恰就是它诸条目构成的有穷集。`closure`{.Agda} 是「对一个码的递归」所能相对陈述的最小的槽，而 `closureL`{.Agda} 用同样两种形状 `sglL`{.Agda} 与 `cupL`{.Agda} 把它放进 `L`，每个构造子一行。
 
 全体码之集仍然不是 `L` 的元素，也仍然不需要是。
 <!--/-->
