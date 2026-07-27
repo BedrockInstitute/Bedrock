@@ -38,9 +38,13 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import V.Model {ℓ} using ( pair-singleton )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
-open import L.Coding.Base {ℓ} using ( prAt; Δ₀-prAt; prAt-adequate )
-open import L.Coding.Environment {ℓ} using ( sucAt; Δ₀-sucAt; sucAt-adequate )
+open import FOL.Manipulation.Bounding using ( BoundedFo )
+open import L.Absoluteness {ℓ} using ( InL; liftFo; transferFo )
+open import L.Coding.Base {ℓ}
+  using ( prAt; Δ₀-prAt; prAt-adequate; sglConAt; pairConAt; tagAt )
+open import L.Coding.Environment {ℓ}
+  using ( sucAt; Δ₀-sucAt; sucAt-adequate; consAt; Δ₀-consAt; consAt-adequate
+        ; env; cons; shiftPairAt )
 open import L.Axioms.Numerals {ℓ}
   using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst; sucʟ; sucʟ-fst )
 
@@ -1054,6 +1058,74 @@ subValSuccAt-adequate T ar a y γ = ⇔toPath fwd bwd
     zS = sucʟ (lookup ar γ)
     e : fst zS ≡ sucV (fst (lookup ar γ))
     e = sucʟ-fst (lookup ar γ)
+```
+
+<!--en-->
+## Extending an environment
+<!--zh-->
+## 扩展一个环境
+<!--/-->
+
+<!--en-->
+The other half of a quantifier clause: the environment the subformula is
+evaluated in is the one at hand with a value pushed on the front. That reader is
+already written on the hierarchy side, and its meaning there is stated against a
+meta-level family, which is exactly the form a soundness proof will want. So it
+is worth quoting rather than rewriting, even though quoting is not free here: it
+names a numeral as a hierarchy constant, so the bridge asks for that numeral's
+constructibility at every place the shape mentions it.
+
+Those places are written out once, per reader, and then the whole extension
+reader's admissibility is three of them. The numeral's own constructibility comes
+from the numeral chapter, which is why it sits here rather than with the codes.
+<!--zh-->
+量词子句的另一半：子公式所在的环境，就是手上这个环境前面推入一个取值。那条读式在层级一侧已经写好，而它在那边的含义是按元层的族陈述的，恰是可靠性证明将要的形式。故它值得引用而非重写，尽管此处引用并不免费：它把一个数码点名为层级的常元，于是桥会在形状提到它的每一处索取该数码的可构造性。
+
+那些位置逐条读式写一次，随后整条扩展读式的合格性就是其中三次。数码自身的可构造性来自数码那一章，这也是它住在此处而非与诸码同处的原因。
+<!--/-->
+
+```agda
+numL : (k : ℕ) → InL (# k)
+numL k = subst (λ w → ⟨ isL w ⟩) (numeralL-fst k) (numeralL k .snd)
+
+private
+  bddSglCon : ∀ {n} (k : Fin n) (j : ℕ) → BoundedFo InL (sglConAt k (# j))
+  bddSglCon k j = (numL j , _) , (_ , (_ , numL j))
+
+  bddPairCon : ∀ {n} (k : Fin n) (j : ℕ) (x : Fin n)
+             → BoundedFo InL (pairConAt k (# j) x)
+  bddPairCon k j x = (numL j , _) , ((_ , _) , (_ , ((_ , numL j) , (_ , _))))
+
+  bddTag : ∀ {n} (s : Fin n) (j : ℕ) (x : Fin n) → BoundedFo InL (tagAt s j x)
+  bddTag {n} s j x =
+      (_ , bddSglCon {suc n} zero j)
+    , ( (_ , bddPairCon {suc n} zero j (suc x))
+      , (_ , (bddSglCon {suc n} zero j , bddPairCon {suc n} zero j (suc x))) )
+
+  bddShift : ∀ {n} (p' p : Fin n) → BoundedFo InL (shiftPairAt p' p)
+  bddShift p' p = _
+
+  bddCons : ∀ {n} (e' m e : Fin n) → BoundedFo InL (consAt e' m e)
+  bddCons {n} e' m e =
+      (_ , bddTag {suc n} zero 0 (suc m))
+    , ( (_ , (_ , bddShift {suc (suc n)} zero (suc zero)))
+      , (_ , ( bddTag {suc n} zero 0 (suc m)
+             , (_ , bddShift {suc (suc n)} (suc zero) zero) )) )
+
+consAtL : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+consAtL e' m e = liftFo (consAt e' m e) (bddCons e' m e)
+
+consAtL-adequate : ∀ {n} (e' m e : Fin n) (γ : S ^ n)
+  {k : ℕ} (g : Fin k → V ℓ)
+  → fst (lookup e γ) ≡ env g
+  → (γ ⊨ consAtL e' m e)
+  ≡ PairIs (fst (lookup e' γ)) (env (cons (fst (lookup m γ)) g))
+consAtL-adequate e' m e γ g hE =
+    transferFo (consAt e' m e) (bddCons e' m e) (Δ₀-consAt e' m e) γ
+  ∙ consAt-adequate e' m e (map fst γ) g
+      (lookup-fst e γ ∙ hE)
+  ∙ cong₂ PairIs (lookup-fst e' γ)
+      (cong (λ w → env (cons w g)) (lookup-fst m γ))
 ```
 
 <!--en-->

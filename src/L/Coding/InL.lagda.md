@@ -40,8 +40,7 @@ open import FOL.Syntax
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 open import V.Coding {ℓ} using ( pr; module VCode )
 open import L.Constructible {ℓ} using ( isL; IsOrd; Lset )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; numL )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )
 
@@ -55,29 +54,26 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
 
 <!--en-->
-## Three building blocks
+## Two building blocks
 <!--zh-->
-## 三块砖
+## 两块砖
 <!--/-->
 
 <!--en-->
-A numeral is constructible because the numeral chain was built inside the model
-and its projection equation identifies it with the hierarchy's. A pair is
+A numeral is constructible for the same reason, and was needed a chapter earlier,
+so it lives there. A pair is
 constructible because the model has pairing and the same equation reads it back.
 A tag is a pair with a numeral on the left, so it is both.
 
-Each is the same two-line move: build the thing inside the model, then transport
+Both are the same two-line move: build the thing inside the model, then transport
 its membership along the equation saying that reading it out gives the thing.
 <!--zh-->
-数码可构造，因为数码链是在模型内部造的，而它的投影等式把它与层级的数码认同起来。对可构造，因为模型有配对，而同一条等式把它读回来。标签是左边放数码的对，故两者兼得。
+数码可构造同理，而它早一章就被需要，故住在那里。对可构造，因为模型有配对，而同一条等式把它读回来。标签是左边放数码的对，故两者兼得。
 
-三者都是同样的两行动作：先在模型内部把东西造出来，再沿「读出来就是那个东西」这条等式把它的隶属关系搬过去。
+两者都是同样的两行动作：先在模型内部把东西造出来，再沿「读出来就是那个东西」这条等式把它的隶属关系搬过去。
 <!--/-->
 
 ```agda
-numL : (k : ℕ) → ⟨ isL (# k) ⟩
-numL k = subst (λ w → ⟨ isL w ⟩) (numeralL-fst k) (numeralL k .snd)
-
 prL : {a b : V ℓ} → ⟨ isL a ⟩ → ⟨ isL b ⟩ → ⟨ isL (pr a b) ⟩
 prL {a} {b} pa pb =
   subst (λ w → ⟨ isL w ⟩) (prʟ-fst (a , pa) (b , pb))
