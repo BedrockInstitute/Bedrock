@@ -41,10 +41,13 @@ open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( module LCode; prʟ; prʟ-fst; andClauseAt; orClauseAt
-        ; propClause-in; interAt; unionAt
+        ; propClause-in; interAt; unionAt; envSetAt; envOverAt
+        ; envOverAt-transport; extAt-out; extAt-in; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
+open import L.Coding.EnvSet {ℓ} lem
+  using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; keyʟ-shape; satTable; slot; slot-inv; entry-out )
 
@@ -77,6 +80,10 @@ carrier.
 <!--/-->
 
 ```agda
+private
+  nn : ℕ → S
+  nn j = # j , numL j
+
 module _ (B : S) {n : ℕ} (φ : Formula S n) where
   private
     δ : S ^ 3
@@ -217,4 +224,52 @@ builds, and gets it from whichever disjunct it was handed.
                        (subst ⟨_⟩ (Sat-mem B b' z) zb .fst , ∣ inr zb ∣₁)) })
             hz })
           P))
+```
+
+<!--en-->
+## A clause's ambient set is the ambient set
+<!--zh-->
+## 子句的周遭集合就是那个周遭集合
+<!--/-->
+
+<!--en-->
+Seven of the twelve bind their own ambient set and say only that its members are
+the environments at the code's arity over the carrier. What a proof needs is that
+this is the set the previous chapter built, and it is, in both directions: a
+member of the clause's set satisfies the description, so it is recovered as an
+environment; an environment satisfies the description, so it is a member.
+
+Neither direction re-proves anything. The description moves between the clause's
+frame and the chapter's by the transport, and the two halves of the recovery are
+already there.
+<!--zh-->
+十二条里有七条绑定自己的周遭集合，只说它的成员就是「该码元数处、载体之上」的诸环境。证明需要的是「这就是上一章造出的那个集合」，而它确实是，两个方向都成立：那个子句的集合的成员满足那条描述，故被恢复为一个环境；而一个环境满足那条描述，故是它的成员。
+
+两个方向都不重证任何东西。那条描述经搬运在子句的框架与本章的框架之间移动，而恢复的两半早已就位。
+<!--/-->
+
+```agda
+module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
+  (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
+  (hE : ⟨ γ ⊨ envSetAt Ei di bi ⟩) where
+
+  into : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+       → ⟨ fst z ∈ fst (envSet B m) ⟩
+  into z hz = subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
+    (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
+    (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
+    where
+    ov : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
+    ov = extAt-out Ei (envOverAt zero (suc di) (suc bi)) γ hE z hz
+
+  outof : (z : S) → ⟨ fst z ∈ fst (envSet B m) ⟩
+        → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+  outof z hz = PT.rec (snd (fst z ∈ fst (lookup Ei γ)))
+    (λ { (g , eg) →
+      extAt-in Ei (envOverAt zero (suc di) (suc bi)) γ hE z
+        (envOverAt-transport (B ∷ nn m ∷ envS B g ∷ []) (z ∷ γ)
+          (suc (suc zero)) (suc zero) zero zero (suc di) (suc bi)
+          (sym eg) (sym qd) (sym qb)
+          (envOver B g)) })
+    (envSet-out B m z hz)
 ```

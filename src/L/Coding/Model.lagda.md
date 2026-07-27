@@ -495,6 +495,61 @@ module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B 
 ```
 
 <!--en-->
+A description reads the same in any frame that puts the same three sets where it
+looks. Every reader above is stated through `fst`{.Agda} of a lookup and nothing
+else, so moving the description from one environment to another is four
+transports and no thought. Seven of the twelve clauses bind their own ambient
+set, and this is what turns "the members of that set are the environments" back
+into a statement about the set a construction actually built.
+<!--zh-->
+一条描述在任何「把同样三个集合放在它所看之处」的框架里读起来都一样。上面每条读式都只经一次查表的 `fst`{.Agda} 陈述，别无其他，故把那条描述从一个环境搬到另一个环境是四次搬运、不必动脑。十二条子句里有七条绑定自己的周遭集合，而这就是把「那个集合的成员就是诸环境」变回「关于某个构造真正造出的集合」的那句话的东西。
+<!--/-->
+
+```agda
+valuesInAt-in : ∀ {n} (f B : Fin n) (γ : S ^ n)
+              → ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+                 → ⟨ fst y ∈ fst (lookup B γ) ⟩)
+              → ⟨ γ ⊨ valuesInAt f B ⟩
+valuesInAt-in f B γ k x y hp = k x y
+  (subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (y ∷ x ∷ γ)) hp)
+
+envOverAt-transport : ∀ {n n'} (γ : S ^ n) (γ' : S ^ n')
+                      (e d B : Fin n) (e' d' B' : Fin n')
+                    → fst (lookup e γ) ≡ fst (lookup e' γ')
+                    → fst (lookup d γ) ≡ fst (lookup d' γ')
+                    → fst (lookup B γ) ≡ fst (lookup B' γ')
+                    → ⟨ γ ⊨ envOverAt e d B ⟩ → ⟨ γ' ⊨ envOverAt e' d' B' ⟩
+envOverAt-transport γ γ' e d B e' d' B' qe qd qb h =
+    svAt-in e' γ' (λ x y y' p q →
+      svAt-out e γ (envOver-sv e d B γ h) x y y'
+        (subst ⟨_⟩ (sym (at x y)) p) (subst ⟨_⟩ (sym (at x y')) q))
+  , ( domAt-intro e' d' γ'
+      (λ x → (λ m → subst (λ w → ⟨ fst x ∈ w ⟩) qd
+                (PT.rec (snd (fst x ∈ fst (lookup d γ)))
+                  (λ { (y , p) → domAt-out e d γ (envOver-dom e d B γ h) x y
+                         (subst ⟨_⟩ (sym (at x y)) p) })
+                  m))
+            , (λ hx → PT.map (λ { (y , p) → y , subst ⟨_⟩ (at x y) p })
+                (domAt-in e d γ (envOver-dom e d B γ h) x
+                  (subst (λ w → ⟨ fst x ∈ w ⟩) (sym qd) hx))))
+    , ( valuesInAt-in e' B' γ'
+        (λ x y p → subst (λ w → ⟨ fst y ∈ w ⟩) qb
+          (valuesInAt-out e B γ (envOver-values e d B γ h) x y
+            (subst ⟨_⟩ (sym (at x y)) p)))
+      , pairsIn-in e' d' B' γ'
+        (λ s s∈ → PT.map
+          (λ { (u , (v , (u∈ , (v∈ , eq)))) →
+            u , (v , ( subst (λ w → ⟨ fst u ∈ w ⟩) qd u∈
+                     , ( subst (λ w → ⟨ fst v ∈ w ⟩) qb v∈ , eq ) )) })
+          (pairsIn-out e d B γ (envOver-pairs e d B γ h) s
+            (subst (λ w → ⟨ fst s ∈ w ⟩) (sym qe) s∈))) ) )
+  where
+  at : (x y : S) → (pr (fst x) (fst y) ∈ fst (lookup e γ))
+                 ≡ (pr (fst x) (fst y) ∈ fst (lookup e' γ'))
+  at x y = cong (λ w → pr (fst x) (fst y) ∈ w) qe
+```
+
+<!--en-->
 ## Tags
 <!--zh-->
 ## 标签
