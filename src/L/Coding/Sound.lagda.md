@@ -34,7 +34,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Term; con; var; Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
@@ -48,7 +48,8 @@ open import L.Coding.Model {ℓ}
         ; envOverAt-transport; extAt-out; extAt-in; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
+open import L.Coding.Sat {ℓ} lem
+  using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out )
 open import L.Coding.EnvSet {ℓ} lem
   using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
 open import L.Coding.Table {ℓ} lem
@@ -59,6 +60,8 @@ open import Cubical.Data.Empty using ( isProp⊥ )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Data.Nat using ( snotz; znots )
+open import Cubical.Foundations.Prelude using ( subst2 )
+open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
@@ -183,6 +186,49 @@ module TermAgree {k : ℕ} (γ : S ^ k) (ti ei vi : Fin k) where
            Empty.rec (znots (#-inj 0 1 (pr-inj (sym q ∙ qy) .fst)))
        ; (inr qc) → sym (pr-inj (sym q ∙ qc) .snd) })
     (tmValAt-out ti ei vi γ h)
+```
+
+<!--en-->
+Put together, a meta term reads the same on both sides. The clause's reader is
+handed the code and the two slots its own frame put things in; the recursion's
+reader is handed the term and its own two slots; the statement says they agree
+whenever the slots agree. Two cases, and each is the four readings above composed
+with the two of `tmIs`{.Agda}.
+<!--zh-->
+合起来说：一个元语言的词项在两侧读起来一样。子句那条读式拿到的是码、以及它自己框架给的两个槽位；递归那条读式拿到的是词项与它自己的两个槽位；而这条陈述说：只要槽位一致，两者就一致。两种情形，而每种都是上面那四条读法与 `tmIs`{.Agda} 那两条的复合。
+<!--/-->
+
+```agda
+private
+  tmCode : ∀ {m} (t : Term S m)
+         → Σ[ j ∈ ℕ ] (Σ[ x ∈ V ℓ ]
+             ((fst LCode.⌜ t ⌝ᵗ ≡ pr (# j) x)))
+  tmCode (con c) = 0 , fst c
+    , (prʟ-fst (numeralL 0) c ∙ cong (λ w → pr w (fst c)) (numeralL-fst 0))
+  tmCode (var i) = 1 , # (toℕ i)
+    , (prʟ-fst (numeralL 1) (numeralL (toℕ i))
+      ∙ cong₂ pr (numeralL-fst 1) (numeralL-fst (toℕ i)))
+
+termAgree : ∀ {m} (t : Term S m) {k k'} (γ : S ^ k) (ti ei vi : Fin k)
+            (γ' : S ^ k') (vi' ei' : Fin k')
+          → fst (lookup ti γ) ≡ fst LCode.⌜ t ⌝ᵗ
+          → fst (lookup ei γ) ≡ fst (lookup ei' γ')
+          → fst (lookup vi γ) ≡ fst (lookup vi' γ')
+          → (⟨ γ ⊨ tmValAt ti ei vi ⟩ → ⟨ γ' ⊨ tmIs t vi' ei' ⟩)
+          × (⟨ γ' ⊨ tmIs t vi' ei' ⟩ → ⟨ γ ⊨ tmValAt ti ei vi ⟩)
+termAgree (var i) γ ti ei vi γ' vi' ei' qt qe qv =
+    (λ h → tmIs-var-in i γ' vi' ei'
+      (subst2 (λ p q → ⟨ pr (# (toℕ i)) p ∈ q ⟩) qv qe
+        (TermAgree.toVar γ ti ei vi (toℕ i) (qt ∙ tmCode (var i) .snd .snd) h)))
+  , (λ h → TermAgree.fromVar γ ti ei vi (toℕ i)
+      (qt ∙ tmCode (var i) .snd .snd)
+      (subst2 (λ p q → ⟨ pr (# (toℕ i)) p ∈ q ⟩) (sym qv) (sym qe)
+        (tmIs-var-out i γ' vi' ei' h)))
+termAgree {m} (con c) γ ti ei vi γ' vi' ei' qt qe qv =
+    (λ h → sym qv ∙ TermAgree.toCon γ ti ei vi (fst c)
+             (qt ∙ tmCode {m} (con c) .snd .snd) h)
+  , (λ h → TermAgree.fromCon γ ti ei vi (fst c)
+      (qt ∙ tmCode {m} (con c) .snd .snd) (qv ∙ h))
 ```
 
 <!--en-->
