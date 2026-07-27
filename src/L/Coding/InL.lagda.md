@@ -38,12 +38,14 @@ open import Base.Truth
 
 module L.Coding.InL {ℓ : Level} where
 
+open import FOL.ZFStructure using ( module hPropStructure )
+
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
-open import L.Constructible {ℓ} using ( isL; IsOrd; Lset )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; IsOrd; Lset )
 open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; numL )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
 open import L.Coding.Environment {ℓ} using ( env )
@@ -62,6 +64,7 @@ open import V.Model {ℓ} using ( pair-singleton; pair-spec; union-spec )
 open InfinitySet using ( #_; sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ using ( S )
 ```
 
 <!--en-->
@@ -216,6 +219,7 @@ cupL {a} {b} pa pb =
     (unionʟ-fst (pairʟ (a , pa) (b , pb))
       ∙ cong (⋃_) (pairʟ-fst (a , pa) (b , pb)))
     (unionʟ (pairʟ (a , pa) (b , pb)) .snd)
+
 ```
 
 <!--en-->
@@ -360,6 +364,37 @@ cup-inl A B x h = subst ⟨_⟩ (sym (union-spec ⁅ A , B ⁆ x))
 cup-inr : (A B x : V ℓ) → ⟨ x ∈ B ⟩ → ⟨ x ∈ (A ∪ B) ⟩
 cup-inr A B x h = subst ⟨_⟩ (sym (union-spec ⁅ A , B ⁆ x))
   ∣ B , subst ⟨_⟩ (sym (pair-spec A B B)) ∣ inr refl ∣₁ , h ∣₁
+
+sglʟ : S → S
+sglʟ a = pairʟ a a
+
+sglʟ-fst : (a : S) → fst (sglʟ a) ≡ ⁅ fst a ⁆s
+sglʟ-fst a = pairʟ-fst a a ∙ pair-singleton (fst a)
+
+cupʟ : S → S → S
+cupʟ a b = unionʟ (pairʟ a b)
+
+cupʟ-fst : (a b : S) → fst (cupʟ a b) ≡ (fst a ∪ fst b)
+cupʟ-fst a b = unionʟ-fst (pairʟ a b) ∙ cong (⋃_) (pairʟ-fst a b)
+
+sglʟ-in : (a : S) (x : V ℓ) → x ≡ fst a → ⟨ x ∈ fst (sglʟ a) ⟩
+sglʟ-in a x e = subst (λ w → ⟨ x ∈ w ⟩) (sym (sglʟ-fst a)) (sgl-in (fst a) x e)
+
+sglʟ-out : (a : S) (x : V ℓ) → ⟨ x ∈ fst (sglʟ a) ⟩ → x ≡ fst a
+sglʟ-out a x h = sgl-out (fst a) x (subst (λ w → ⟨ x ∈ w ⟩) (sglʟ-fst a) h)
+
+cupʟ-inl : (a b : S) (x : V ℓ) → ⟨ x ∈ fst a ⟩ → ⟨ x ∈ fst (cupʟ a b) ⟩
+cupʟ-inl a b x h = subst (λ w → ⟨ x ∈ w ⟩) (sym (cupʟ-fst a b))
+  (cup-inl (fst a) (fst b) x h)
+
+cupʟ-inr : (a b : S) (x : V ℓ) → ⟨ x ∈ fst b ⟩ → ⟨ x ∈ fst (cupʟ a b) ⟩
+cupʟ-inr a b x h = subst (λ w → ⟨ x ∈ w ⟩) (sym (cupʟ-fst a b))
+  (cup-inr (fst a) (fst b) x h)
+
+cupʟ-out : (a b : S) (x : V ℓ) → ⟨ x ∈ fst (cupʟ a b) ⟩
+         → ∥ (⟨ x ∈ fst a ⟩ ⊎ ⟨ x ∈ fst b ⟩) ∥₁
+cupʟ-out a b x h = cup-out (fst a) (fst b) x
+  (subst (λ w → ⟨ x ∈ w ⟩) (cupʟ-fst a b) h)
 ```
 
 
