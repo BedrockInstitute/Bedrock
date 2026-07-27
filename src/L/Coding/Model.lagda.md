@@ -1715,11 +1715,15 @@ module _ {n : ℕ} where
   atomRel B cmp =
       ∀̇ ( envSetAt E6″ ar6″ (sh6″ B) ⇒̇ extAt yc6″ (atomBody cmp) )
 
+  memRel eqRel : Formula S (9 + n)
+  memRel = var v9″ ∈̇ var w9″
+  eqRel  = var v9″ ≐ var w9″
+
   memClauseAt : Fin n → Fin n → Fin n → Formula S n
-  memClauseAt C T B = binClauseAt C T 0 (atomRel B (var v9″ ∈̇ var w9″))
+  memClauseAt C T B = binClauseAt C T 0 (atomRel B memRel)
 
   eqClauseAt : Fin n → Fin n → Fin n → Formula S n
-  eqClauseAt C T B = binClauseAt C T 1 (atomRel B (var v9″ ≐ var w9″))
+  eqClauseAt C T B = binClauseAt C T 1 (atomRel B eqRel)
 ```
 
 ```agda
