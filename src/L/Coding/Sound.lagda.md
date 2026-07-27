@@ -34,7 +34,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_ )
+open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; ¬̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
@@ -42,6 +42,7 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( module LCode; prʟ; prʟ-fst; andClauseAt; orClauseAt
         ; propClause-in; interAt; unionAt; envSetAt; envOverAt
+        ; negClauseAt; negClause-in
         ; envOverAt-transport; extAt-out; extAt-in; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
@@ -52,6 +53,7 @@ open import L.Coding.Table {ℓ} lem
   using ( keyʟ; keyʟ-shape; satTable; slot; slot-inv; entry-out )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
+open import Cubical.Data.Empty using ( isProp⊥ )
 open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
@@ -64,6 +66,58 @@ open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+```
+
+<!--en-->
+## A clause's ambient set is the ambient set
+<!--zh-->
+## 子句的周遭集合就是那个周遭集合
+<!--/-->
+
+<!--en-->
+Seven of the twelve bind their own ambient set and say only that its members are
+the environments at the code's arity over the carrier. What a proof needs is that
+this is the set the previous chapter built, and it is, in both directions: a
+member of the clause's set satisfies the description, so it is recovered as an
+environment; an environment satisfies the description, so it is a member.
+
+Neither direction re-proves anything. The description moves between the clause's
+frame and the chapter's by the transport, and the two halves of the recovery are
+already there.
+<!--zh-->
+十二条里有七条绑定自己的周遭集合，只说它的成员就是「该码元数处、载体之上」的诸环境。证明需要的是「这就是上一章造出的那个集合」，而它确实是，两个方向都成立：那个子句的集合的成员满足那条描述，故被恢复为一个环境；而一个环境满足那条描述，故是它的成员。
+
+两个方向都不重证任何东西。那条描述经搬运在子句的框架与本章的框架之间移动，而恢复的两半早已就位。
+<!--/-->
+
+```agda
+private
+  nn : ℕ → S
+  nn j = # j , numL j
+
+module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
+  (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
+  (hE : ⟨ γ ⊨ envSetAt Ei di bi ⟩) where
+
+  into : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+       → ⟨ fst z ∈ fst (envSet B m) ⟩
+  into z hz = subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
+    (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
+    (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
+    where
+    ov : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
+    ov = extAt-out Ei (envOverAt zero (suc di) (suc bi)) γ hE z hz
+
+  outof : (z : S) → ⟨ fst z ∈ fst (envSet B m) ⟩
+        → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
+  outof z hz = PT.rec (snd (fst z ∈ fst (lookup Ei γ)))
+    (λ { (g , eg) →
+      extAt-in Ei (envOverAt zero (suc di) (suc bi)) γ hE z
+        (envOverAt-transport (B ∷ nn m ∷ envS B g ∷ []) (z ∷ γ)
+          (suc (suc zero)) (suc zero) zero zero (suc di) (suc bi)
+          (sym eg) (sym qd) (sym qb)
+          (envOver B g)) })
+    (envSet-out B m z hz)
 ```
 
 <!--en-->
@@ -80,10 +134,6 @@ carrier.
 <!--/-->
 
 ```agda
-private
-  nn : ℕ → S
-  nn j = # j , numL j
-
 module _ (B : S) {n : ℕ} (φ : Formula S n) where
   private
     δ : S ^ 3
@@ -110,6 +160,42 @@ the specification of either.
 <!--/-->
 
 ```agda
+  module Un (k : ℕ) (op : ∀ {m} → Formula S m → Formula S m)
+    (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ
+         → Σ[ a' ∈ Formula S m ] (ψ ≡ op a'))
+    (payOp : ∀ {m} (a' : Formula S m) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
+    where
+    Parts : (ar yc ya : S) → Type (ℓ-suc ℓ)
+    Parts ar yc ya =
+      Σ[ m ∈ ℕ ] (Σ[ a' ∈ Formula S m ]
+        ((# m ≡ fst ar)
+         × ((fst yc ≡ fst (Sat B (op a'))) × (fst ya ≡ fst (Sat B a')))))
+
+    parts : (c ar a yc ya : S)
+          → ⟨ fst c ∈ fst (slot B φ) ⟩
+          → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+          → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
+          → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (satTable B φ) ⟩
+          → ∥ Parts ar yc ya ∥₁
+    parts c ar a yc ya c∈ sh hc ha = PT.map
+      (λ { (m , ψ , q) →
+        let r  = keyʟ-shape ψ k (fst ar) (fst a) (sym q ∙ sh)
+            g  = get ψ (r .fst)
+            a' = g .fst
+            eψ = g .snd
+            pay = cong fst (sym (payOp a'))
+                ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+            ka = cong₂ pr (sym (r .snd .fst)) (sym pay)
+               ∙ cong (λ w → pr w (fst LCode.⌜ a' ⌝)) (sym (numeralL-fst m))
+               ∙ sym (prʟ-fst (numeralL m) LCode.⌜ a' ⌝)
+        in m , a' , r .snd .fst
+         , ( entry-out B φ (op a') (fst yc)
+               (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
+                 (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc)
+           , entry-out B φ a' (fst ya)
+               (subst (λ w → ⟨ pr w (fst ya) ∈ fst (satTable B φ) ⟩) ka ha) ) })
+      (slot-inv B φ (fst c) c∈)
+
   module Bin (k : ℕ) (op : ∀ {m} → Formula S m → Formula S m → Formula S m)
     (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ
          → Σ[ a' ∈ Formula S m ] (Σ[ b' ∈ Formula S m ] (ψ ≡ op a' b')))
@@ -224,52 +310,49 @@ builds, and gets it from whichever disjunct it was handed.
                        (subst ⟨_⟩ (Sat-mem B b' z) zb .fst , ∣ inr zb ∣₁)) })
             hz })
           P))
+
+  private
+    module UnNeg = Un 5 ¬̇_ (λ _ m → m) (λ _ → refl)
+
+  negSound : ⟨ δ ⊨ negClauseAt Ci Ti Bi ⟩
+  negSound = negClause-in Ci Ti Bi δ
+    (λ c ar a yc ya E c∈ sh hc ha hE →
+      let P = UnNeg.parts c ar a yc ya c∈ sh hc ha
+          δ' = E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ δ
+      in
+        (λ z hz → PT.rec
+          (isProp× (snd (fst z ∈ fst E)) (isPropΠ (λ _ → isProp⊥)))
+          (λ { (m , a' , (qm , (ec , ea))) →
+            let s = subst ⟨_⟩ (Sat-mem B (¬̇ a') z)
+                      (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+            in Ambient.outof B δ' zero (suc (suc (suc (suc zero))))
+                 (suc (suc (suc (suc (suc (suc Bi))))))
+                 m (sym qm) refl hE z (s .fst)
+             , (λ w → s .snd (subst (λ v → ⟨ fst z ∈ v ⟩) ea w)) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , a' , (qm , (ec , ea))) →
+            subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+              (subst ⟨_⟩ (sym (Sat-mem B (¬̇ a') z))
+                ( Ambient.into B δ' zero (suc (suc (suc (suc zero))))
+                    (suc (suc (suc (suc (suc (suc Bi)))))) m (sym qm) refl hE z
+                    (hz .fst)
+                , (λ w → hz .snd (subst (λ v → ⟨ fst z ∈ v ⟩) (sym ea) w)) )) })
+          P))
 ```
 
 <!--en-->
-## A clause's ambient set is the ambient set
+## Negation
 <!--zh-->
-## 子句的周遭集合就是那个周遭集合
+## 否定
 <!--/-->
 
 <!--en-->
-Seven of the twelve bind their own ambient set and say only that its members are
-the environments at the code's arity over the carrier. What a proof needs is that
-this is the set the previous chapter built, and it is, in both directions: a
-member of the clause's set satisfies the description, so it is recovered as an
-environment; an environment satisfies the description, so it is a member.
-
-Neither direction re-proves anything. The description moves between the clause's
-frame and the chapter's by the transport, and the two halves of the recovery are
-already there.
+Written above with the frames it shares, and worth a word here. It is the first
+clause that **uses** its ambient set rather than only naming it, and both
+directions of the difference are the agreement of the section before it applied
+once each. Nothing else is in them: the value at a negation was cut out of the
+ambient set by "not in that", which is what a difference says.
 <!--zh-->
-十二条里有七条绑定自己的周遭集合，只说它的成员就是「该码元数处、载体之上」的诸环境。证明需要的是「这就是上一章造出的那个集合」，而它确实是，两个方向都成立：那个子句的集合的成员满足那条描述，故被恢复为一个环境；而一个环境满足那条描述，故是它的成员。
-
-两个方向都不重证任何东西。那条描述经搬运在子句的框架与本章的框架之间移动，而恢复的两半早已就位。
+它写在上面、与它共用的诸框架一起，但值得在此说一句。它是第一条真正**使用**它的周遭集合、而非只点名它的子句，而差的两个方向就是前一节那份一致性各施用一次。里面没有别的：否定处的取值当初是用「不在那个之中」从周遭集合雕出的，而那正是差所说的话。
 <!--/-->
-
-```agda
-module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
-  (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
-  (hE : ⟨ γ ⊨ envSetAt Ei di bi ⟩) where
-
-  into : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
-       → ⟨ fst z ∈ fst (envSet B m) ⟩
-  into z hz = subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
-    (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
-    (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov))
-    where
-    ov : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
-    ov = extAt-out Ei (envOverAt zero (suc di) (suc bi)) γ hE z hz
-
-  outof : (z : S) → ⟨ fst z ∈ fst (envSet B m) ⟩
-        → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
-  outof z hz = PT.rec (snd (fst z ∈ fst (lookup Ei γ)))
-    (λ { (g , eg) →
-      extAt-in Ei (envOverAt zero (suc di) (suc bi)) γ hE z
-        (envOverAt-transport (B ∷ nn m ∷ envS B g ∷ []) (z ∷ γ)
-          (suc (suc zero)) (suc zero) zero zero (suc di) (suc bi)
-          (sym eg) (sym qd) (sym qb)
-          (envOver B g)) })
-    (envSet-out B m z hz)
-```
