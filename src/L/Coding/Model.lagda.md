@@ -1194,6 +1194,68 @@ module _ {n : ℕ} where
 ```
 
 <!--en-->
+## Evaluating a term, and the atoms
+<!--zh-->
+## 求一个词项的值，与两个原子
+<!--/-->
+
+<!--en-->
+The last thing the chapter lacked. A term of a parameter-free formula is a
+variable, so its code is the variable tag over a key, and its value in an
+environment is what the environment records at that key. One existential over the
+key, and the two readers already written do the rest.
+
+The atoms then read both sides and compare them. Their payload is a pair of
+*term* codes, at which the table has nothing, which is why the frame was made not
+to look there; here is where that pays. The two atoms differ in one atom of the
+object language, membership against equality, so they share everything else.
+<!--zh-->
+本章尚缺的最后一件。无参公式的一个词项是变元，故它的码是「变元标签架在一个键之上」，而它在某环境中的取值就是该环境在那个键处记录的东西。对该键作一个存在量词，其余由已写好的两条读式完成。
+
+两个原子随后读出两侧并加以比较。它们的载荷是一对**词项**码，而表在那里什么也没有，这正是当初把框架做成不往那里看的原因；此处便是它的回报。两个原子只差对象语言的一个原子，隶属对相等，其余全部共享。
+<!--/-->
+
+```agda
+tmValAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+tmValAt t e v = ∃̇ (tagAtL (suc t) 1 zero ∧̇ appAt (suc e) zero (suc v))
+
+module _ {n : ℕ} where
+  private
+    sh6″ : Fin n → Fin (6 + n)
+    sh6″ i = suc (suc (suc (suc (suc (suc i)))))
+
+    ar6″ yc6″ E6″ : Fin (6 + n)
+    ar6″ = suc (suc (suc (suc zero)))
+    yc6″ = suc zero
+    E6″  = zero
+
+    -- at the innermost point: w = 0, v = 1, e = 2, E = 3, yc = 4, b = 5, a = 6
+    a9″ b9″ e9″ v9″ w9″ : Fin (9 + n)
+    a9″ = suc (suc (suc (suc (suc (suc zero)))))
+    b9″ = suc (suc (suc (suc (suc zero))))
+    e9″ = suc (suc zero)
+    v9″ = suc zero
+    w9″ = zero
+
+    atomBody : Formula S (9 + n) → Formula S (7 + n)
+    atomBody cmp =
+      (var zero ∈̇ var (suc zero))
+      ∧̇ ∃̇ (∃̇ ( tmValAt a9″ e9″ v9″
+             ∧̇ ( tmValAt b9″ e9″ w9″
+             ∧̇ cmp )))
+
+    atomRel : Fin n → Formula S (9 + n) → Formula S (5 + n)
+    atomRel B cmp =
+      ∀̇ ( envSetAt E6″ ar6″ (sh6″ B) ⇒̇ extAt yc6″ (atomBody cmp) )
+
+  memClauseAt : Fin n → Fin n → Fin n → Formula S n
+  memClauseAt C T B = binClauseAt C T 0 (atomRel B (var v9″ ∈̇ var w9″))
+
+  eqClauseAt : Fin n → Fin n → Fin n → Formula S n
+  eqClauseAt C T B = binClauseAt C T 1 (atomRel B (var v9″ ≐ var w9″))
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -1218,8 +1280,9 @@ constructors whose payload is a pair, `unClauseAt`{.Agda} for the five whose
 payload is a single component, the constants included. Both read the key in two
 layers, arity outside and tag within, and both leave every lookup on a payload
 component to the relation handed to them, which performs it with
-`subValAt`{.Agda}. Ten of the twelve are written out: the five
-connectives, the two constants, and the two unbounded quantifiers. `envSetAt`{.Agda} is what the negative ones
+`subValAt`{.Agda}. Ten of the twelve are written out: the four
+connectives, the two constants, the two unbounded quantifiers, and the two
+atoms. The two bounded quantifiers are what is left. `envSetAt`{.Agda} is what the negative ones
 needed, and it makes the point the chapter turns on: inside a clause, the ambient
 set of environments is described rather than constructed.
 
@@ -1238,7 +1301,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。十二条中已写出十条：五个联结词、两个常量，以及两个无界量词。`envSetAt`{.Agda} 正是负的那几条所需的那件，而它道出本章的关节：在子句之内，周遭的环境集合是被描述的，而非被构造的。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。十二条中已写出十条：四个联结词、两个常量、两个无界量词，以及两个原子。剩下的是两个有界量词。`envSetAt`{.Agda} 正是负的那几条所需的那件，而它道出本章的关节：在子句之内，周遭的环境集合是被描述的，而非被构造的。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
