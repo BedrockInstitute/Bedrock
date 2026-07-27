@@ -672,6 +672,11 @@ module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : S ^ n) where
            → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ fst z ∈ fst (lookup y γ) ⟩
   extAt-in h = h .snd
 
+  extAt-in-both : ((z : S) → ⟨ fst z ∈ fst (lookup y γ) ⟩ → ⟨ (z ∷ γ) ⊨ φ ⟩)
+                → ((z : S) → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ fst z ∈ fst (lookup y γ) ⟩)
+                → ⟨ γ ⊨ extAt y φ ⟩
+  extAt-in-both f g = f , g
+
 private
   memb : ∀ {n} → Fin n → Formula S (suc n)
   memb a = var zero ∈̇ var (suc a)
