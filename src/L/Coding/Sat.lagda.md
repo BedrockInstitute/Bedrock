@@ -220,6 +220,34 @@ already substituted, which is why they are one line apiece.
   cond≐-out t u z = PT.rec squash₁
     (λ { (v , hv) → PT.map (λ { (w , r) → v , (w , r) }) hv })
 
+  CondQuant : ∀ {n} → Formula S (suc n) → S → Type (ℓ-suc ℓ)
+  CondQuant a z = Σ[ x ∈ S ] (⟨ fst x ∈ fst B ⟩
+    × (Σ[ e' ∈ S ] (⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
+                    × ⟨ fst e' ∈ fst (Sat a) ⟩)))
+
+  cond∃-in : ∀ {n} (a : Formula S (suc n)) (z : S)
+           → ∥ CondQuant a z ∥₁ → ⟨ (z ∷ []) ⊨ cond (∃̇ a) ⟩
+  cond∃-in a z = PT.map (λ { (x , (x∈ , (e' , r))) → x , (x∈ , ∣ e' , r ∣₁) })
+
+  cond∃-out : ∀ {n} (a : Formula S (suc n)) (z : S)
+            → ⟨ (z ∷ []) ⊨ cond (∃̇ a) ⟩ → ∥ CondQuant a z ∥₁
+  cond∃-out a z = PT.rec squash₁
+    (λ { (x , (x∈ , hv)) → PT.map (λ { (e' , r) → x , (x∈ , (e' , r)) }) hv })
+
+  cond∀-in : ∀ {n} (a : Formula S (suc n)) (z : S)
+           → ((x e' : S) → ⟨ fst x ∈ fst B ⟩
+              → ⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
+              → ⟨ fst e' ∈ fst (Sat a) ⟩)
+           → ⟨ (z ∷ []) ⊨ cond (∀̇ a) ⟩
+  cond∀-in a z k x x∈ e' hc = k x e' x∈ hc
+
+  cond∀-out : ∀ {n} (a : Formula S (suc n)) (z : S)
+            → ⟨ (z ∷ []) ⊨ cond (∀̇ a) ⟩
+            → ((x e' : S) → ⟨ fst x ∈ fst B ⟩
+               → ⟨ (e' ∷ x ∷ z ∷ []) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
+               → ⟨ fst e' ∈ fst (Sat a) ⟩)
+  cond∀-out a z h x e' x∈ hc = h x x∈ e' hc
+
   Sat-mem : ∀ {n} (φ : Formula S n) (x : S)
           → (x ∈ˢ Sat φ) ≡ ((x ∈ˢ envSet B n) ⊓ ((x ∷ []) ⊨ cond φ))
   Sat-mem {n} φ = sep-mem (envSet B n) (cond φ)

@@ -1559,6 +1559,39 @@ module _ {n : ℕ} where
                 ( consAtL zero (suc zero) (suc (suc zero))
                 ⇒̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))) ))
 
+  QuantWit : Fin n → S ^ (7 + n) → Type (ℓ-suc ℓ)
+  QuantWit B γ = Σ[ x ∈ S ] (⟨ fst x ∈ fst (lookup (sh7' B) γ) ⟩
+    × (Σ[ e' ∈ S ] (⟨ (e' ∷ x ∷ γ) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
+                    × ⟨ fst e' ∈ fst (lookup (suc (suc zero)) γ) ⟩)))
+
+  body∃-in : (B : Fin n) (γ : S ^ (7 + n))
+           → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+           → ∥ QuantWit B γ ∥₁ → ⟨ γ ⊨ body∃ B ⟩
+  body∃-in B γ h k =
+    h , PT.map (λ { (x , (x∈ , (e' , r))) → x , (x∈ , ∣ e' , r ∣₁) }) k
+
+  body∃-out : (B : Fin n) (γ : S ^ (7 + n)) → ⟨ γ ⊨ body∃ B ⟩
+            → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+            × ∥ QuantWit B γ ∥₁
+  body∃-out B γ h = h .fst , PT.rec squash₁
+    (λ { (x , (x∈ , hv)) → PT.map (λ { (e' , r) → x , (x∈ , (e' , r)) }) hv })
+    (h .snd)
+
+  body∀-in : (B : Fin n) (γ : S ^ (7 + n))
+           → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+           → ((x e' : S) → ⟨ fst x ∈ fst (lookup (sh7' B) γ) ⟩
+              → ⟨ (e' ∷ x ∷ γ) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
+              → ⟨ fst e' ∈ fst (lookup (suc (suc zero)) γ) ⟩)
+           → ⟨ γ ⊨ body∀ B ⟩
+  body∀-in B γ h k = h , (λ x x∈ e' hc → k x e' x∈ hc)
+
+  body∀-out : (B : Fin n) (γ : S ^ (7 + n)) → ⟨ γ ⊨ body∀ B ⟩
+            → ⟨ fst (lookup zero γ) ∈ fst (lookup (suc zero) γ) ⟩
+            × ((x e' : S) → ⟨ fst x ∈ fst (lookup (sh7' B) γ) ⟩
+               → ⟨ (e' ∷ x ∷ γ) ⊨ consAtL zero (suc zero) (suc (suc zero)) ⟩
+               → ⟨ fst e' ∈ fst (lookup (suc (suc zero)) γ) ⟩)
+  body∀-out B γ h = h .fst , (λ x e' x∈ hc → h .snd x x∈ e' hc)
+
   quantRel : Fin n → Fin n → Formula S (7 + n) → Formula S (4 + n)
   quantRel T B body =
       ∀̇ (∀̇ ( subValSuccAt (sh6' T) ar6' a6' ya6'
