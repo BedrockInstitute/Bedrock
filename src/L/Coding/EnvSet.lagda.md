@@ -179,8 +179,13 @@ description as the chapter wrote it, which is worth more than saving them.
     amb : (n : ℕ) → S
     amb n = LsetS (sf n .fst) (sf n .snd .fst)
 
-  envSet : (n : ℕ) → S
-  envSet n = hasSeparationL (amb n) (envFo n) .fst .fst
+  opaque
+    envSet : (n : ℕ) → S
+    envSet n = hasSeparationL (amb n) (envFo n) .fst .fst
+
+    envSet-mem : (n : ℕ) (x : S)
+               → (x ∈ˢ envSet n) ≡ ((x ∈ˢ amb n) ⊓ ((x ∷ []) ⊨ envFo n))
+    envSet-mem n = hasSeparationL (amb n) (envFo n) .fst .snd
 ```
 
 <!--en-->
@@ -366,10 +371,6 @@ pairs conjunct, which is the conjunct whose absence would have let junk in.
 
     recovers : fst e ≡ fst (envS g)
     recovers = extensionalV (λ w → ⇔toPath (bwd w) (fwd w))
-
-  envSet-mem : (n : ℕ) (x : S)
-             → (x ∈ˢ envSet n) ≡ ((x ∈ˢ amb n) ⊓ ((x ∷ []) ⊨ envFo n))
-  envSet-mem n = hasSeparationL (amb n) (envFo n) .fst .snd
 
   envSet-in : {n : ℕ} (g : Ix n) → ⟨ envS g ∈ˢ envSet n ⟩
   envSet-in {n} g = subst ⟨_⟩ (sym (envSet-mem n (envS g)))

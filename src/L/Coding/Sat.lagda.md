@@ -128,18 +128,23 @@ sides would not agree.
 
 ```agda
 private
-  sep : (a : S) → Formula S 1 → S
-  sep a φ = hasSeparationL a φ .fst .fst
+  opaque
+    sep : (a : S) → Formula S 1 → S
+    sep a φ = hasSeparationL a φ .fst .fst
 
-  sep-mem : (a : S) (φ : Formula S 1) (x : S)
-          → (x ∈ˢ sep a φ) ≡ ((x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ))
-  sep-mem a φ = hasSeparationL a φ .fst .snd
+    sep-mem : (a : S) (φ : Formula S 1) (x : S)
+            → (x ∈ˢ sep a φ) ≡ ((x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ))
+    sep-mem a φ = hasSeparationL a φ .fst .snd
 
 module _ (B : S) where
   cond : ∀ {n} → Formula S n → Formula S 1
 
   Sat : ∀ {n} → Formula S n → S
   Sat {n} φ = sep (envSet B n) (cond φ)
+
+  Sat-mem : ∀ {n} (φ : Formula S n) (x : S)
+          → (x ∈ˢ Sat φ) ≡ ((x ∈ˢ envSet B n) ⊓ ((x ∷ []) ⊨ cond φ))
+  Sat-mem {n} φ = sep-mem (envSet B n) (cond φ)
 
   cond (t ∈̇ u) =
     (∃̇ (∃̇ ( tmIs t (suc zero) (suc (suc zero))
@@ -297,7 +302,5 @@ already substituted, which is why they are one line apiece.
                 → ⟨ fst e' ∈ fst (Sat a) ⟩)
   cond∀∈-out t a z h w hw x e' x∈B x∈w hc = h w hw x x∈B x∈w e' hc
 
-  Sat-mem : ∀ {n} (φ : Formula S n) (x : S)
-          → (x ∈ˢ Sat φ) ≡ ((x ∈ˢ envSet B n) ⊓ ((x ∷ []) ⊨ cond φ))
-  Sat-mem {n} φ = sep-mem (envSet B n) (cond φ)
+
 ```
