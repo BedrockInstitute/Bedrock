@@ -34,13 +34,14 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_ )
+open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( module LCode; prʟ-fst; andClauseAt; propClause-in; interAt
+  using ( module LCode; prʟ; prʟ-fst; andClauseAt; orClauseAt
+        ; propClause-in; interAt; unionAt
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
@@ -48,8 +49,9 @@ open import L.Coding.Table {ℓ} lem
   using ( keyʟ; keyʟ-shape; satTable; slot; slot-inv; entry-out )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
+open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -101,32 +103,34 @@ the specification of either.
 <!--/-->
 
 ```agda
-  andSound : ⟨ δ ⊨ andClauseAt Ci Ti ⟩
-  andSound = propClause-in Ci Ti 2 (interAt yc7 ya7 yb7) δ
-    (λ c ar a b yc ya yb c∈ sh hc ha hb →
-        (λ z hz → fwd c ar a b yc ya yb c∈ sh hc ha hb z hz)
-      , (λ z hz → bwd c ar a b yc ya yb c∈ sh hc ha hb z hz))
+  module Bin (k : ℕ) (op : ∀ {m} → Formula S m → Formula S m → Formula S m)
+    (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ
+         → Σ[ a' ∈ Formula S m ] (Σ[ b' ∈ Formula S m ] (ψ ≡ op a' b')))
+    (payOp : ∀ {m} (a' b' : Formula S m)
+           → LCode.payOf (op a' b') ≡ prʟ LCode.⌜ a' ⌝ LCode.⌜ b' ⌝)
     where
-    Parts : (c ar a b yc ya yb : S) → Type (ℓ-suc ℓ)
-    Parts c ar a b yc ya yb =
+    Parts : (yc ya yb : S) → Type (ℓ-suc ℓ)
+    Parts yc ya yb =
       Σ[ m ∈ ℕ ] (Σ[ a' ∈ Formula S m ] (Σ[ b' ∈ Formula S m ]
-        ((fst yc ≡ fst (Sat B (a' ∧̇ b')))
+        ((fst yc ≡ fst (Sat B (op a' b')))
          × ((fst ya ≡ fst (Sat B a')) × (fst yb ≡ fst (Sat B b'))))))
 
     parts : (c ar a b yc ya yb : S)
           → ⟨ fst c ∈ fst (slot B φ) ⟩
-          → fst c ≡ pr (fst ar) (pr (# 2) (pr (fst a) (fst b)))
+          → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
           → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
           → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (satTable B φ) ⟩
           → ⟨ pr (pr (fst ar) (fst b)) (fst yb) ∈ fst (satTable B φ) ⟩
-          → ∥ Parts c ar a b yc ya yb ∥₁
+          → ∥ Parts yc ya yb ∥₁
     parts c ar a b yc ya yb c∈ sh hc ha hb = PT.map
       (λ { (m , ψ , q) →
-        let r = keyʟ-shape ψ 2 (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
-            a' = r .fst .fst
-            b' = r .fst .snd .fst
-            eψ = r .fst .snd .snd
+        let r  = keyʟ-shape ψ k (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
+            g  = get ψ (r .fst)
+            a' = g .fst
+            b' = g .snd .fst
+            eψ = g .snd .snd
             pay = sym (prʟ-fst LCode.⌜ a' ⌝ LCode.⌜ b' ⌝)
+                ∙ cong fst (sym (payOp a' b'))
                 ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
             ka = cong₂ pr (sym (r .snd .fst)) (sym (pr-inj pay .fst))
                ∙ cong (λ w → pr w (fst LCode.⌜ a' ⌝)) (sym (numeralL-fst m))
@@ -135,39 +139,82 @@ the specification of either.
                ∙ cong (λ w → pr w (fst LCode.⌜ b' ⌝)) (sym (numeralL-fst m))
                ∙ sym (prʟ-fst (numeralL m) LCode.⌜ b' ⌝)
         in m , a' , b'
-         , ( entry-out B φ (a' ∧̇ b') (fst yc)
+         , ( entry-out B φ (op a' b') (fst yc)
                (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
                  (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc)
            , ( entry-out B φ a' (fst ya)
-                 (subst (λ w → ⟨ pr w (fst ya) ∈ fst (satTable B φ) ⟩)
-                   ka ha)
+                 (subst (λ w → ⟨ pr w (fst ya) ∈ fst (satTable B φ) ⟩) ka ha)
              , entry-out B φ b' (fst yb)
-                 (subst (λ w → ⟨ pr w (fst yb) ∈ fst (satTable B φ) ⟩)
-                   kb hb) ) ) })
+                 (subst (λ w → ⟨ pr w (fst yb) ∈ fst (satTable B φ) ⟩) kb hb) ) ) })
       (slot-inv B φ (fst c) c∈)
 
-    fwd : (c ar a b yc ya yb : S) → _ → _ → _ → _ → _ → (z : S)
-        → ⟨ fst z ∈ fst yc ⟩
-        → ⟨ fst z ∈ fst ya ⟩ × ⟨ fst z ∈ fst yb ⟩
-    fwd c ar a b yc ya yb c∈ sh hc ha hb z hz = PT.rec
-      (isProp× (snd (fst z ∈ fst ya)) (snd (fst z ∈ fst yb)))
-      (λ { (m , a' , b' , (ec , (ea , eb))) →
-        let s = subst ⟨_⟩ (Sat-mem B (a' ∧̇ b') z)
-                  (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
-        in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ea) (s .snd .fst)
-         , subst (λ w → ⟨ fst z ∈ w ⟩) (sym eb) (s .snd .snd) })
-      (parts c ar a b yc ya yb c∈ sh hc ha hb)
+```
 
-    bwd : (c ar a b yc ya yb : S) → _ → _ → _ → _ → _ → (z : S)
-        → ⟨ fst z ∈ fst ya ⟩ × ⟨ fst z ∈ fst yb ⟩
-        → ⟨ fst z ∈ fst yc ⟩
-    bwd c ar a b yc ya yb c∈ sh hc ha hb z hz = PT.rec
-      (snd (fst z ∈ fst yc))
-      (λ { (m , a' , b' , (ec , (ea , eb))) →
-        let za = subst (λ w → ⟨ fst z ∈ w ⟩) ea (hz .fst)
-            zb = subst (λ w → ⟨ fst z ∈ w ⟩) eb (hz .snd)
-        in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
-             (subst ⟨_⟩ (sym (Sat-mem B (a' ∧̇ b') z))
-               ( subst ⟨_⟩ (Sat-mem B a' z) za .fst , (za , zb) )) })
-      (parts c ar a b yc ya yb c∈ sh hc ha hb)
+<!--en-->
+## The two propositional clauses
+<!--zh-->
+## 两条命题子句
+<!--/-->
+
+<!--en-->
+Conjunction and disjunction share the frame, so they share the hard half. What
+is left is the set identity, and it is the separation's specification read back:
+the value at a conjunction was cut out of the ambient set by "in this and in
+that", so being in it is being in both. Neither direction needs the ambient set
+in the conjunction's case; disjunction needs it once, in the direction that
+builds, and gets it from whichever disjunct it was handed.
+<!--zh-->
+合取与析取共用框架，故共用难的那一半。剩下的是那条集合等式，而它就是那次分离的规格读回来：合取处的取值当初是用「在这个之中且在那个之中」从周遭集合雕出的，故落在其中就是落在两者之中。合取那边两个方向都不需要周遭集合；析取需要一次，在「造出来」的那个方向上，而它从被递来的那个析取项里拿到。
+<!--/-->
+
+```agda
+  private
+    module BinAnd = Bin 2 _∧̇_ (λ _ m → m) (λ _ _ → refl)
+    module BinOr  = Bin 3 _∨̇_ (λ _ m → m) (λ _ _ → refl)
+
+  andSound : ⟨ δ ⊨ andClauseAt Ci Ti ⟩
+  andSound = propClause-in Ci Ti 2 (interAt yc7 ya7 yb7) δ
+    (λ c ar a b yc ya yb c∈ sh hc ha hb →
+      let P = BinAnd.parts c ar a b yc ya yb c∈ sh hc ha hb in
+        (λ z hz → PT.rec (isProp× (snd (fst z ∈ fst ya)) (snd (fst z ∈ fst yb)))
+          (λ { (m , a' , b' , (ec , (ea , eb))) →
+            let s = subst ⟨_⟩ (Sat-mem B (a' ∧̇ b') z)
+                      (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz)
+            in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ea) (s .snd .fst)
+             , subst (λ w → ⟨ fst z ∈ w ⟩) (sym eb) (s .snd .snd) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , a' , b' , (ec , (ea , eb))) →
+            let za = subst (λ w → ⟨ fst z ∈ w ⟩) ea (hz .fst)
+                zb = subst (λ w → ⟨ fst z ∈ w ⟩) eb (hz .snd)
+            in subst (λ w → ⟨ fst z ∈ w ⟩) (sym ec)
+                 (subst ⟨_⟩ (sym (Sat-mem B (a' ∧̇ b') z))
+                   (subst ⟨_⟩ (Sat-mem B a' z) za .fst , (za , zb))) })
+          P))
+
+  orSound : ⟨ δ ⊨ orClauseAt Ci Ti ⟩
+  orSound = propClause-in Ci Ti 3 (unionAt yc7 ya7 yb7) δ
+    (λ c ar a b yc ya yb c∈ sh hc ha hb →
+      let P = BinOr.parts c ar a b yc ya yb c∈ sh hc ha hb in
+        (λ z hz → PT.rec squash₁
+          (λ { (m , a' , b' , (ec , (ea , eb))) → PT.map
+            (λ { (inl w) → inl (subst (λ v → ⟨ fst z ∈ v ⟩) (sym ea) w)
+               ; (inr w) → inr (subst (λ v → ⟨ fst z ∈ v ⟩) (sym eb) w) })
+            (subst ⟨_⟩ (Sat-mem B (a' ∨̇ b') z)
+              (subst (λ w → ⟨ fst z ∈ w ⟩) ec hz) .snd) })
+          P)
+      , (λ z hz → PT.rec (snd (fst z ∈ fst yc))
+          (λ { (m , a' , b' , (ec , (ea , eb))) → PT.rec (snd (fst z ∈ fst yc))
+            (λ { (inl w) →
+                   let za = subst (λ v → ⟨ fst z ∈ v ⟩) ea w in
+                   subst (λ v → ⟨ fst z ∈ v ⟩) (sym ec)
+                     (subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') z))
+                       (subst ⟨_⟩ (Sat-mem B a' z) za .fst , ∣ inl za ∣₁))
+               ; (inr w) →
+                   let zb = subst (λ v → ⟨ fst z ∈ v ⟩) eb w in
+                   subst (λ v → ⟨ fst z ∈ v ⟩) (sym ec)
+                     (subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') z))
+                       (subst ⟨_⟩ (Sat-mem B b' z) zb .fst , ∣ inr zb ∣₁)) })
+            hz })
+          P))
 ```
