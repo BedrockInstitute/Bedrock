@@ -200,77 +200,76 @@ the indices below `n` are exactly the numerals below `n`.
 <!--/-->
 
 ```agda
-  private
-    module _ {n : ℕ} (g : Ix n) where
-      private
-        out : (s : V ℓ) → ⟨ s ∈ fst (envS g) ⟩
-            → ∥ (Σ[ i ∈ Fin n ] (pr (# (toℕ i)) (fst (ix (g i))) ≡ s)) ∥₁
-        out s = PT.map (λ { (li , e) → lower li , e })
+  module _ {n : ℕ} (g : Ix n) where
+    private
+      out : (s : V ℓ) → ⟨ s ∈ fst (envS g) ⟩
+          → ∥ (Σ[ i ∈ Fin n ] (pr (# (toℕ i)) (fst (ix (g i))) ≡ s)) ∥₁
+      out s = PT.map (λ { (li , e) → lower li , e })
 
-        into : (i : Fin n) → ⟨ pr (# (toℕ i)) (fst (ix (g i))) ∈ fst (envS g) ⟩
-        into i = ∣ lift i , refl ∣₁
+      into : (i : Fin n) → ⟨ pr (# (toℕ i)) (fst (ix (g i))) ∈ fst (envS g) ⟩
+      into i = ∣ lift i , refl ∣₁
 
-        val∈ : (i : Fin n) → ⟨ fst (ix (g i)) ∈ fst B ⟩
-        val∈ i = ∈∈ₛ {a = ⟪ fst B ⟫↪ (g i)} {b = fst B} .snd (∈ₛ⟪ fst B ⟫↪ (g i))
+      val∈ : (i : Fin n) → ⟨ fst (ix (g i)) ∈ fst B ⟩
+      val∈ i = ∈∈ₛ {a = ⟪ fst B ⟫↪ (g i)} {b = fst B} .snd (∈ₛ⟪ fst B ⟫↪ (g i))
 
-        δ : S ^ 3
-        δ = B ∷ nn n ∷ envS g ∷ []
+      δ : S ^ 3
+      δ = B ∷ nn n ∷ envS g ∷ []
 
-        E : Fin 3
-        E = suc (suc zero)
+      E : Fin 3
+      E = suc (suc zero)
 
-      envOver : ⟨ δ ⊨ envOverAt E (suc zero) zero ⟩
-      envOver = sv , (dom , (vals , pairs))
+    envOver : ⟨ δ ⊨ envOverAt E (suc zero) zero ⟩
+    envOver = sv , (dom , (vals , pairs))
+      where
+      sv : ⟨ δ ⊨ svAt E ⟩
+      sv = svAt-in E δ (λ x y y' p q →
+        PT.rec (setIsSet (fst y) (fst y'))
+          (λ { (i , ei) → PT.rec (setIsSet (fst y) (fst y'))
+            (λ { (j , ej) → sym (pr-inj ei .snd)
+               ∙ cong (λ k → fst (ix (g k)))
+                   (inj-toℕ (#-inj′ (pr-inj ei .fst ∙ sym (pr-inj ej .fst))))
+               ∙ pr-inj ej .snd })
+            (out (pr (fst x) (fst y')) q) })
+          (out (pr (fst x) (fst y)) p))
+
+      dom : ⟨ δ ⊨ domAt E (suc zero) ⟩
+      dom x = fwd , bwd
         where
-        sv : ⟨ δ ⊨ svAt E ⟩
-        sv = svAt-in E δ (λ x y y' p q →
-          PT.rec (setIsSet (fst y) (fst y'))
-            (λ { (i , ei) → PT.rec (setIsSet (fst y) (fst y'))
-              (λ { (j , ej) → sym (pr-inj ei .snd)
-                 ∙ cong (λ k → fst (ix (g k)))
-                     (inj-toℕ (#-inj′ (pr-inj ei .fst ∙ sym (pr-inj ej .fst))))
-                 ∙ pr-inj ej .snd })
-              (out (pr (fst x) (fst y')) q) })
-            (out (pr (fst x) (fst y)) p))
+        fwd : ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩ → ⟨ fst x ∈ (# n) ⟩
+        fwd hd = PT.rec (snd (fst x ∈ (# n)))
+          (λ { (y , p) → PT.rec (snd (fst x ∈ (# n)))
+            (λ { (i , ei) → subst (λ w → ⟨ w ∈ (# n) ⟩) (pr-inj ei .fst)
+                   (#mono (toℕ i) n (toℕ<n i)) })
+            (out (pr (fst x) (fst y)) p) })
+          (subst ⟨_⟩ (inDomAt-adequate (suc E) zero (x ∷ δ)) hd)
 
-        dom : ⟨ δ ⊨ domAt E (suc zero) ⟩
-        dom x = fwd , bwd
-          where
-          fwd : ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩ → ⟨ fst x ∈ (# n) ⟩
-          fwd hd = PT.rec (snd (fst x ∈ (# n)))
-            (λ { (y , p) → PT.rec (snd (fst x ∈ (# n)))
-              (λ { (i , ei) → subst (λ w → ⟨ w ∈ (# n) ⟩) (pr-inj ei .fst)
-                     (#mono (toℕ i) n (toℕ<n i)) })
-              (out (pr (fst x) (fst y)) p) })
-            (subst ⟨_⟩ (inDomAt-adequate (suc E) zero (x ∷ δ)) hd)
+        bwd : ⟨ fst x ∈ (# n) ⟩ → ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩
+        bwd hx = subst ⟨_⟩ (sym (inDomAt-adequate (suc E) zero (x ∷ δ)))
+          (PT.map
+            (λ { (m , m<n , e) →
+              ix (g (fromℕ' n m m<n))
+              , subst (λ w → ⟨ pr w (fst (ix (g (fromℕ' n m m<n))))
+                                 ∈ fst (envS g) ⟩)
+                  (cong #_ (toFromId' n m m<n) ∙ sym e) (into (fromℕ' n m m<n)) })
+            (∈#-elim n (fst x) hx))
 
-          bwd : ⟨ fst x ∈ (# n) ⟩ → ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩
-          bwd hx = subst ⟨_⟩ (sym (inDomAt-adequate (suc E) zero (x ∷ δ)))
-            (PT.map
-              (λ { (m , m<n , e) →
-                ix (g (fromℕ' n m m<n))
-                , subst (λ w → ⟨ pr w (fst (ix (g (fromℕ' n m m<n))))
-                                   ∈ fst (envS g) ⟩)
-                    (cong #_ (toFromId' n m m<n) ∙ sym e) (into (fromℕ' n m m<n)) })
-              (∈#-elim n (fst x) hx))
+      vals : ⟨ δ ⊨ valuesInAt E zero ⟩
+      vals x y hp = PT.rec (snd (fst y ∈ fst B))
+        (λ { (i , ei) → subst (λ w → ⟨ w ∈ fst B ⟩) (pr-inj ei .snd) (val∈ i) })
+        (out (pr (fst x) (fst y))
+          (subst ⟨_⟩ (appAt-adequate (suc (suc E)) (suc zero) zero (y ∷ x ∷ δ))
+            hp))
 
-        vals : ⟨ δ ⊨ valuesInAt E zero ⟩
-        vals x y hp = PT.rec (snd (fst y ∈ fst B))
-          (λ { (i , ei) → subst (λ w → ⟨ w ∈ fst B ⟩) (pr-inj ei .snd) (val∈ i) })
-          (out (pr (fst x) (fst y))
-            (subst ⟨_⟩ (appAt-adequate (suc (suc E)) (suc zero) zero (y ∷ x ∷ δ))
-              hp))
+      pairs : ⟨ δ ⊨ pairsInAt E (suc zero) zero ⟩
+      pairs = pairsIn-in E (suc zero) zero δ
+        (λ s s∈ → PT.map
+          (λ { (i , ei) → nn (toℕ i)
+             , ( ix (g i)
+               , ( #mono (toℕ i) n (toℕ<n i) , (val∈ i , sym ei) ) ) })
+          (out (fst s) s∈))
 
-        pairs : ⟨ δ ⊨ pairsInAt E (suc zero) zero ⟩
-        pairs = pairsIn-in E (suc zero) zero δ
-          (λ s s∈ → PT.map
-            (λ { (i , ei) → nn (toℕ i)
-               , ( ix (g i)
-                 , ( #mono (toℕ i) n (toℕ<n i) , (val∈ i , sym ei) ) ) })
-            (out (fst s) s∈))
-
-      envSetIn : ⟨ (envS g ∷ []) ⊨ envFo n ⟩
-      envSetIn = ∣ nn n , ∣ B , (refl , (refl , envOver)) ∣₁ ∣₁
+    envSetIn : ⟨ (envS g ∷ []) ⊨ envFo n ⟩
+    envSetIn = ∣ nn n , ∣ B , (refl , (refl , envOver)) ∣₁ ∣₁
 ```
 
 <!--en-->
@@ -281,7 +280,12 @@ the indices below `n` are exactly the numerals below `n`.
 
 <!--en-->
 The other direction, which is what four clauses want when they read a bound
-variable off an environment. A set that satisfies the description is the graph of
+variable off an environment, and which seven want in a weaker form: a clause
+binds its own ambient set and says only that its members are the environments,
+so a proof that consumes the clause has to turn that description back into
+**this** set. Both uses are the same recovery, which is why it takes the
+environment and the three slots as parameters rather than fixing them: a clause
+puts them where its own frame puts them, not where this chapter would. A set that satisfies the description is the graph of
 a function, and recovering the function is the only place the four conjuncts have
 to work together: the domain conjunct says every index below the length has an
 entry, single-valuedness says at most one, so the entry is a **proposition** and
@@ -291,21 +295,19 @@ is untruncated because the fibers of a set's own indexing are.
 Extensionality closes it, one direction from the entries and the other from the
 pairs conjunct, which is the conjunct whose absence would have let junk in.
 <!--zh-->
-另一个方向，也是四条子句在从环境读出被绑变元时所要的。满足那条描述的集合是一个函数的图，而把那个函数恢复出来，是四个合取项唯一必须协同工作的地方：定义域那一条说「长度以下的每个序号都有条目」，单值性说「至多一个」，于是那个条目是**命题**，定义域给的那个截断就掉了下来。隶属关系随后点出索引，而那是不截断的，因为一个集合自身索引的纤维就是不截断的。
+另一个方向，也是四条子句在从环境读出被绑变元时所要的；另有七条以更弱的形式要它：一条子句绑定它自己的周遭集合，只说它的成员就是那些环境，故消费该子句的证明必须把那句描述变回**这个**集合。两种用法是同一次恢复，这也是它把环境与三个槽位取作参数、而非把它们钉死的原因：子句把它们放在自己框架所放之处，而不是本章会放之处。满足那条描述的集合是一个函数的图，而把那个函数恢复出来，是四个合取项唯一必须协同工作的地方：定义域那一条说「长度以下的每个序号都有条目」，单值性说「至多一个」，于是那个条目是**命题**，定义域给的那个截断就掉了下来。隶属关系随后点出索引，而那是不截断的，因为一个集合自身索引的纤维就是不截断的。
 
 外延把它合上，一个方向来自诸条目，另一个来自「由诸对构成」那一条，而正是那一条的缺席会放垃圾进来。
 <!--/-->
 
 ```agda
-  module Recover (n : ℕ) (e d b : S) (qd : fst d ≡ # n) (qb : fst b ≡ fst B)
-    (h : ⟨ (b ∷ d ∷ e ∷ []) ⊨ envOverAt (suc (suc zero)) (suc zero) zero ⟩)
+  module Recover (n : ℕ) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k)
+    (qd : fst (lookup di γ) ≡ # n) (qb : fst (lookup bi γ) ≡ fst B)
+    (h : ⟨ γ ⊨ envOverAt Ei di bi ⟩)
     where
     private
-      δ : S ^ 3
-      δ = b ∷ d ∷ e ∷ []
-
-      Ei : Fin 3
-      Ei = suc (suc zero)
+      e : S
+      e = lookup Ei γ
 
       Entry : Fin n → Type (ℓ-suc ℓ)
       Entry i = Σ[ y ∈ S ] ⟨ pr (# (toℕ i)) (fst y) ∈ fst e ⟩
@@ -314,19 +316,19 @@ pairs conjunct, which is the conjunct whose absence would have let junk in.
       isPropEntry i (y , p) (y' , p') =
         Σ≡Prop (λ w → snd (pr (# (toℕ i)) (fst w) ∈ fst e))
           (Σ≡Prop (λ v → snd (isL v))
-            (svAt-out Ei δ (envOver-sv Ei (suc zero) zero δ h)
+            (svAt-out Ei γ (envOver-sv Ei di bi γ h)
               (nn (toℕ i)) y y' p p'))
 
       entry : (i : Fin n) → Entry i
       entry i = PT.rec (isPropEntry i) (λ z → z)
-        (domAt-in Ei (suc zero) δ (envOver-dom Ei (suc zero) zero δ h)
+        (domAt-in Ei di γ (envOver-dom Ei di bi γ h)
           (nn (toℕ i)) (subst (λ z → ⟨ (# (toℕ i)) ∈ z ⟩) (sym qd)
             (#mono (toℕ i) n (toℕ<n i))))
 
       fib : (i : Fin n) → Σ[ m ∈ ⟪ fst B ⟫ ] (⟪ fst B ⟫↪ m ≡ fst (entry i .fst))
       fib i = ∈-asFiber {a = fst (entry i .fst)} {b = fst B}
         (subst (λ z → ⟨ fst (entry i .fst) ∈ z ⟩) qb
-          (valuesInAt-out Ei zero δ (envOver-values Ei (suc zero) zero δ h)
+          (valuesInAt-out Ei bi γ (envOver-values Ei di bi γ h)
             (nn (toℕ i)) (entry i .fst) (entry i .snd)))
 
     g : Ix n
@@ -353,13 +355,13 @@ pairs conjunct, which is the conjunct whose absence would have let junk in.
                 hv = subst (λ z → ⟨ z ∈ fst e ⟩)
                        (eq ∙ cong (λ z → pr z (fst v)) (sym iu)) hw
                 same : fst v ≡ fst (entry i .fst)
-                same = svAt-out Ei δ (envOver-sv Ei (suc zero) zero δ h)
+                same = svAt-out Ei γ (envOver-sv Ei di bi γ h)
                          (nn (toℕ i)) v (entry i .fst) hv (entry i .snd)
             in ∣ lift i , cong (pr (# (toℕ i))) (val≡ i ∙ sym same)
                         ∙ cong (λ z → pr z (fst v)) iu ∙ sym eq ∣₁ })
           (∈#-elim n (fst u) (subst (λ z → ⟨ fst u ∈ z ⟩) qd u∈)) })
-        (pairsIn-out Ei (suc zero) zero δ
-          (envOver-pairs Ei (suc zero) zero δ h)
+        (pairsIn-out Ei di bi γ
+          (envOver-pairs Ei di bi γ h)
           (w , isL-trans {x = fst e} {y = w} hw (snd e)) hw)
 
     recovers : fst e ≡ fst (envS g)
@@ -378,7 +380,9 @@ pairs conjunct, which is the conjunct whose absence would have let junk in.
   envSet-out n x hx = PT.rec squash₁
     (λ { (d , hd) → PT.map
       (λ { (b , (qd , (qb , hov))) →
-        Recover.g n x d b qd qb hov , Recover.recovers n x d b qd qb hov })
+        Recover.g n (b ∷ d ∷ x ∷ []) (suc (suc zero)) (suc zero) zero qd qb hov
+        , Recover.recovers n (b ∷ d ∷ x ∷ []) (suc (suc zero)) (suc zero) zero
+            qd qb hov })
       hd })
     (subst ⟨_⟩ (envSet-mem n x) hx .snd)
 ```
