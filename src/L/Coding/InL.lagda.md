@@ -333,31 +333,30 @@ are stated first, in the shape the cases use.
 <!--/-->
 
 ```agda
-private
-  sgl-out : (a x : V ℓ) → ⟨ x ∈ ⁅ a ⁆s ⟩ → x ≡ a
-  sgl-out a x h = PT.rec (setIsSet x a) (λ { (inl e) → e ; (inr e) → e })
-    (subst ⟨_⟩ (pair-spec a a x)
-      (subst (λ w → ⟨ x ∈ w ⟩) (sym (pair-singleton a)) h))
+sgl-out : (a x : V ℓ) → ⟨ x ∈ ⁅ a ⁆s ⟩ → x ≡ a
+sgl-out a x h = PT.rec (setIsSet x a) (λ { (inl e) → e ; (inr e) → e })
+  (subst ⟨_⟩ (pair-spec a a x)
+    (subst (λ w → ⟨ x ∈ w ⟩) (sym (pair-singleton a)) h))
 
-  sgl-in : (a x : V ℓ) → x ≡ a → ⟨ x ∈ ⁅ a ⁆s ⟩
-  sgl-in a x e = subst (λ w → ⟨ x ∈ w ⟩) (pair-singleton a)
-    (subst ⟨_⟩ (sym (pair-spec a a x)) ∣ inl e ∣₁)
+sgl-in : (a x : V ℓ) → x ≡ a → ⟨ x ∈ ⁅ a ⁆s ⟩
+sgl-in a x e = subst (λ w → ⟨ x ∈ w ⟩) (pair-singleton a)
+  (subst ⟨_⟩ (sym (pair-spec a a x)) ∣ inl e ∣₁)
 
-  cup-out : (A B x : V ℓ) → ⟨ x ∈ (A ∪ B) ⟩ → ∥ (⟨ x ∈ A ⟩ ⊎ ⟨ x ∈ B ⟩) ∥₁
-  cup-out A B x h = PT.rec squash₁
-    (λ { (v , v∈ , x∈v) → PT.map
-           (λ { (inl e) → inl (subst (λ w → ⟨ x ∈ w ⟩) e x∈v)
-              ; (inr e) → inr (subst (λ w → ⟨ x ∈ w ⟩) e x∈v) })
-           (subst ⟨_⟩ (pair-spec A B v) v∈) })
-    (subst ⟨_⟩ (union-spec ⁅ A , B ⁆ x) h)
+cup-out : (A B x : V ℓ) → ⟨ x ∈ (A ∪ B) ⟩ → ∥ (⟨ x ∈ A ⟩ ⊎ ⟨ x ∈ B ⟩) ∥₁
+cup-out A B x h = PT.rec squash₁
+  (λ { (v , v∈ , x∈v) → PT.map
+         (λ { (inl e) → inl (subst (λ w → ⟨ x ∈ w ⟩) e x∈v)
+            ; (inr e) → inr (subst (λ w → ⟨ x ∈ w ⟩) e x∈v) })
+         (subst ⟨_⟩ (pair-spec A B v) v∈) })
+  (subst ⟨_⟩ (union-spec ⁅ A , B ⁆ x) h)
 
-  cup-inl : (A B x : V ℓ) → ⟨ x ∈ A ⟩ → ⟨ x ∈ (A ∪ B) ⟩
-  cup-inl A B x h = subst ⟨_⟩ (sym (union-spec ⁅ A , B ⁆ x))
-    ∣ A , subst ⟨_⟩ (sym (pair-spec A B A)) ∣ inl refl ∣₁ , h ∣₁
+cup-inl : (A B x : V ℓ) → ⟨ x ∈ A ⟩ → ⟨ x ∈ (A ∪ B) ⟩
+cup-inl A B x h = subst ⟨_⟩ (sym (union-spec ⁅ A , B ⁆ x))
+  ∣ A , subst ⟨_⟩ (sym (pair-spec A B A)) ∣ inl refl ∣₁ , h ∣₁
 
-  cup-inr : (A B x : V ℓ) → ⟨ x ∈ B ⟩ → ⟨ x ∈ (A ∪ B) ⟩
-  cup-inr A B x h = subst ⟨_⟩ (sym (union-spec ⁅ A , B ⁆ x))
-    ∣ B , subst ⟨_⟩ (sym (pair-spec A B B)) ∣ inr refl ∣₁ , h ∣₁
+cup-inr : (A B x : V ℓ) → ⟨ x ∈ B ⟩ → ⟨ x ∈ (A ∪ B) ⟩
+cup-inr A B x h = subst ⟨_⟩ (sym (union-spec ⁅ A , B ⁆ x))
+  ∣ B , subst ⟨_⟩ (sym (pair-spec A B B)) ∣ inr refl ∣₁ , h ∣₁
 ```
 
 

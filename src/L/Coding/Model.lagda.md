@@ -1392,10 +1392,15 @@ module _ {n : ℕ} where
 <!--en-->
 The clauses above constrain a table wherever both a code and its subcodes carry
 entries, and say nothing where the subcodes do not. That is the right reading,
-and it is also the reason a table satisfying all twelve can be almost empty: a
-single entry at one code satisfies every clause vacuously. So the clauses alone
-do not pin a value, and what pins it is a further demand on the index set, that
-it contain the subcodes of everything in it.
+and it is also the reason a table satisfying all twelve can be almost empty: take
+the index set to be one **compound** code and the table one entry there, with any
+value at all. The eight clauses that consult a subcode go vacuous because the
+subcodes carry no entry, and the four that do not consult one, the two atoms and
+the two constants, go vacuous because the index holds nothing of their shape. So
+the clauses alone do not pin a value, and what pins it is a further demand on the
+index set, that it contain the subcodes of everything in it. Compound matters:
+put the one entry at a constant's code instead and the clause for `⊥̇` pins the
+value outright, which is the shape of the whole argument in miniature.
 
 Stating that demand needs the same two frames as the clauses, minus the table.
 What is left is the shape reader and the implication: for every key in the set of
@@ -1408,7 +1413,7 @@ Eight of the twelve say something. The two atoms have term codes below them and
 the two constants have a numeral, and none of the four has a subformula, so their
 clauses would be empty and are not written.
 <!--zh-->
-上面那些子句在「码与其诸子码都带有条目」之处约束一张表，在诸子码没有条目之处则什么也不说。那样读是对的，而这也正是「满足全部十二条的表可以几乎为空」的原因：单在一个码处放一个条目，就空洞地满足了每一条。故诸子句本身钉不住任何取值，而钉住它的是对索引集的一项进一步要求：它须含有其每个成员的诸子码。
+上面那些子句在「码与其诸子码都带有条目」之处约束一张表，在诸子码没有条目之处则什么也不说。那样读是对的，而这也正是「满足全部十二条的表可以几乎为空」的原因：取索引集为单独一个**复合**码，取表为该处的一个条目，取值随便什么。查询子码的那八条空洞，因为诸子码没有条目；不查询子码的那四条 (两个原子与两个常量) 也空洞，因为索引里没有它们那种形状的东西。故诸子句本身钉不住任何取值，而钉住它的是对索引集的一项进一步要求：它须含有其每个成员的诸子码。「复合」这一点要紧：把那个条目改放在某个常量的码处，`⊥̇` 的子句立刻把取值钉死，而那正是整个论证的缩影。
 
 陈述这项要求所需的框架与诸子句相同，只是去掉了表。剩下的是形状读式与那个蕴含：对集合中每个那种形状的键，某某几个键也在该集合中。一个键是元数与码之对，故一个子键由同一个元数造出，或者对那四个绑定变元的构造子而言，由该元数的后继造出；而 `appAt`{.Agda} 早已是「这个对在那个集合中」的读式。
 
@@ -1711,10 +1716,16 @@ needed, and it makes the point the chapter turns on: inside a clause, the ambien
 set of environments is described rather than constructed.
 
 `closedAt`{.Agda} is the demand the clauses cannot make: that the index set
-contain the subcodes of everything in it. Without it a one-entry table satisfies
-all twelve clauses and no value is pinned, so it is not an optimization but the
-other half of the definition. Eight of the twelve constructors say something
-under it, and it reuses the two frames with the table struck out.
+contain the subcodes of everything in it. Without it a table with one entry at a
+compound code satisfies all twelve clauses and no value is pinned, so it is not
+an optimization but the other half of the definition. Eight of the twelve
+constructors say something under it, and it reuses the two frames with the table
+struck out. It is the other half **as the clauses are written**: guarding a
+subvalue by a universal over the table is what makes a clause vacuous where the
+entry is missing, and demanding the subvalues existentially instead would pin the
+same values with no closedness predicate. That road was not taken, and the reason
+is that the demand belongs to the index set rather than to each of eight
+clauses.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -1733,7 +1744,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 
 `extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。**十二条全部**写出：四个联结词、两个常量、两个原子，以及四个量词。两个框架、十二条关系，而诸关系之中有五种写法。`envSetAt`{.Agda} 正是负的那几条所需的那件，而它道出本章的关节：在子句之内，周遭的环境集合是被描述的，而非被构造的。
 
-`closedAt`{.Agda} 是诸子句提不出的那项要求：索引集须含有其每个成员的诸子码。没有它，一张只有一个条目的表就满足全部十二条，而没有任何取值被钉住；故它不是优化，而是定义的另一半。十二个构造子里有八个在它之下说了话，而它复用那两个框架，只是划掉了表。
+`closedAt`{.Agda} 是诸子句提不出的那项要求：索引集须含有其每个成员的诸子码。没有它，一张在某个复合码处只有一个条目的表就满足全部十二条，而没有任何取值被钉住；故它不是优化，而是定义的另一半。十二个构造子里有八个在它之下说了话，而它复用那两个框架，只是划掉了表。它是**按诸子句现在的写法**而言的那另一半：以「关于表的全称」为子取值设防，正是使子句在条目缺失处空洞的原因；改为以存在的方式索取诸子取值，同样能钉住那些取值，而不需要封闭性谓词。那条路没走，理由是这项要求属于索引集，而非属于八条子句各自。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 

@@ -28,7 +28,8 @@ open import Base.Truth
 module L.Coding.Closed {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
+open import FOL.Syntax
+  using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -36,14 +37,21 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( closedAt; binShapeAt; unShapeAt
         ; bothSameAt; oneSameAt; oneSuccAt; succSndAt
-        ; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in )
-open import L.Coding.InL {ℓ} using ( closure; closureL; closure-inv; byTag; Concl )
+        ; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in
+        ; binSameClosed-out; unSameClosed-out; unSuccClosed-out
+        ; binSuccClosed-out; numL )
+open import L.Coding.InL {ℓ}
+  using ( closure; closureL; closure-inv; byTag; Concl; key; keyL
+        ; codeL; codeTmL; sgl-out; cup-out )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet )
+  using ( ⁅_⁆s; _∪_; module InfinitySet )
+open import Cubical.Data.Sum using ( inl; inr )
+open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
+open import V.Coding {ℓ} using ( module VCode )
 open InfinitySet using ( #_; sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -100,8 +108,8 @@ them, and membership is a proposition.
 
 ```agda
   private
-    γφ : ∀ {n} → Formula K n → S ^ 1
-    γφ φ = clo φ ∷ []
+    γφ : ∀ {n m} → Formula K n → S ^ m → S ^ (suc m)
+    γφ φ γ = clo φ ∷ γ
 
     viaKey : ∀ {n} (φ : Formula K n) (k : ℕ) (c : S) (ar p : V ℓ)
            → ⟨ fst c ∈ Cl φ ⟩ → fst c ≡ pr ar (pr (# k) p)
@@ -112,38 +120,38 @@ them, and membership is a proposition.
         g (byTag f h (Cl φ) ψ k ar p incl (sym q ∙ sh)) })
       (closure-inv f h φ (fst c) c∈)
 
-    same : ∀ {n} (φ : Formula K n) (k : ℕ)
+    same : ∀ {n m} (φ : Formula K n) (γ : S ^ m) (k : ℕ)
          → ((ar a b : V ℓ) → Concl f h (Cl φ) k ar (pr a b)
             → ⟨ pr ar a ∈ Cl φ ⟩ × ⟨ pr ar b ∈ Cl φ ⟩)
-         → ⟨ γφ φ ⊨ binShapeAt zero k (bothSameAt zero) ⟩
-    same φ k use = binSameClosed-in zero k (γφ φ)
+         → ⟨ γφ φ γ ⊨ binShapeAt zero k (bothSameAt zero) ⟩
+    same φ γ k use = binSameClosed-in zero k (γφ φ γ)
       (λ c ar a b c∈ sh →
         viaKey φ k c (fst ar) (pr (fst a) (fst b)) c∈ sh _
           (isProp× (snd (pr (fst ar) (fst a) ∈ Cl φ))
                    (snd (pr (fst ar) (fst b) ∈ Cl φ)))
           (use (fst ar) (fst a) (fst b)))
 
-    one : ∀ {n} (φ : Formula K n) (k : ℕ)
+    one : ∀ {n m} (φ : Formula K n) (γ : S ^ m) (k : ℕ)
         → ((ar a : V ℓ) → Concl f h (Cl φ) k ar a → ⟨ pr ar a ∈ Cl φ ⟩)
-        → ⟨ γφ φ ⊨ unShapeAt zero k (oneSameAt zero) ⟩
-    one φ k use = unSameClosed-in zero k (γφ φ)
+        → ⟨ γφ φ γ ⊨ unShapeAt zero k (oneSameAt zero) ⟩
+    one φ γ k use = unSameClosed-in zero k (γφ φ γ)
       (λ c ar a c∈ sh →
         viaKey φ k c (fst ar) (fst a) c∈ sh _
           (snd (pr (fst ar) (fst a) ∈ Cl φ)) (use (fst ar) (fst a)))
 
-    up : ∀ {n} (φ : Formula K n) (k : ℕ)
+    up : ∀ {n m} (φ : Formula K n) (γ : S ^ m) (k : ℕ)
        → ((ar a : V ℓ) → Concl f h (Cl φ) k ar a → ⟨ pr (sucV ar) a ∈ Cl φ ⟩)
-       → ⟨ γφ φ ⊨ unShapeAt zero k (oneSuccAt zero) ⟩
-    up φ k use = unSuccClosed-in zero k (γφ φ)
+       → ⟨ γφ φ γ ⊨ unShapeAt zero k (oneSuccAt zero) ⟩
+    up φ γ k use = unSuccClosed-in zero k (γφ φ γ)
       (λ c ar a c∈ sh →
         viaKey φ k c (fst ar) (fst a) c∈ sh _
           (snd (pr (sucV (fst ar)) (fst a) ∈ Cl φ)) (use (fst ar) (fst a)))
 
-    sndUp : ∀ {n} (φ : Formula K n) (k : ℕ)
+    sndUp : ∀ {n m} (φ : Formula K n) (γ : S ^ m) (k : ℕ)
           → ((ar a b : V ℓ) → Concl f h (Cl φ) k ar (pr a b)
              → ⟨ pr (sucV ar) b ∈ Cl φ ⟩)
-          → ⟨ γφ φ ⊨ binShapeAt zero k (succSndAt zero) ⟩
-    sndUp φ k use = binSuccClosed-in zero k (γφ φ)
+          → ⟨ γφ φ γ ⊨ binShapeAt zero k (succSndAt zero) ⟩
+    sndUp φ γ k use = binSuccClosed-in zero k (γφ φ γ)
       (λ c ar a b c∈ sh →
         viaKey φ k c (fst ar) (pr (fst a) (fst b)) c∈ sh _
           (snd (pr (sucV (fst ar)) (fst b) ∈ Cl φ))
@@ -165,16 +173,17 @@ argument, not the shape, that makes the eight eight.
 <!--/-->
 
 ```agda
-  closureClosed : ∀ {n} (φ : Formula K n) → ⟨ γφ φ ⊨ closedAt zero ⟩
-  closureClosed φ =
-      same φ 2 (λ _ a b r → r a b refl)
-    , ( same φ 3 (λ _ a b r → r a b refl)
-    , ( same φ 4 (λ _ a b r → r a b refl)
-    , ( one φ 5 (λ _ _ r → r)
-    , ( up φ 8 (λ _ _ r → r)
-    , ( up φ 9 (λ _ _ r → r)
-    , ( sndUp φ 10 (λ _ a b r → r a b refl)
-    , sndUp φ 11 (λ _ a b r → r a b refl) ))))))
+  closureClosed : ∀ {n m} (φ : Formula K n) (γ : S ^ m)
+                → ⟨ (clo φ ∷ γ) ⊨ closedAt zero ⟩
+  closureClosed φ γ =
+      same φ γ 2 (λ _ a b r → r a b refl)
+    , ( same φ γ 3 (λ _ a b r → r a b refl)
+    , ( same φ γ 4 (λ _ a b r → r a b refl)
+    , ( one φ γ 5 (λ _ _ r → r)
+    , ( up φ γ 8 (λ _ _ r → r)
+    , ( up φ γ 9 (λ _ _ r → r)
+    , ( sndUp φ γ 10 (λ _ a b r → r a b refl)
+    , sndUp φ γ 11 (λ _ a b r → r a b refl) ))))))
 ```
 
 <!--en-->
@@ -199,3 +208,104 @@ twelve times eight.
 
 它的代价值得记下，因为满足关系那个实例要付的是同样的形状。四个读式、八行实例化、每个读式一条引理；内容在早一章的 `byTag`{.Agda} 里，那里把十二个构造子与八项要求一次性对上，而不是对上十二乘八次。
 <!--/-->
+
+<!--en-->
+## The closure is the least closed set
+<!--zh-->
+## 闭包是最小的封闭集
+<!--/-->
+
+<!--en-->
+Closed is half of what an instance wants; least is the other half, and it is
+what makes the value unique without an induction on anything but the formula. A
+closed set that contains a formula's key contains its subformulas' keys, by the
+clause the constructor answers to, and then by induction contains their closures.
+
+Each case reads the clause for its own tag out of the conjunction and hands the
+result to the induction hypothesis. The four with no subformula have nothing to
+read: their closure is a singleton and the assumption is already the conclusion.
+<!--zh-->
+封闭是实例想要的一半；最小是另一半，而正是它使那个取值唯一，且除公式之外不必对任何东西作归纳。一个含有某公式之键的封闭集，按该构造子所对应的那条子句，含有其诸子公式的键；再由归纳，含有它们的闭包。
+
+每种情形从那个合取里读出属于自己标签的那条子句，把结果交给归纳假设。没有子公式的那四种无可读：它们的闭包是单元集，而假设已经就是结论。
+<!--/-->
+
+```agda
+  private
+    Key : ∀ {n} → Formula K n → V ℓ
+    Key = key f h
+
+    cd : ∀ {n} → Formula K n → S
+    cd φ = VCode.⌜ mapFo f φ ⌝ , codeL f h φ
+
+    ct : ∀ {n} → Term K n → S
+    ct t = VCode.⌜ mapTm f t ⌝ᵗ , codeTmL f h t
+
+    kk : ∀ {n} → Formula K n → S
+    kk φ = Key φ , keyL f h φ
+
+    nn : ℕ → S
+    nn n = # n , numL n
+
+    atKey : ∀ {m} (ψ' : Formula K m) (z : S) → ⟨ Key ψ' ∈ fst z ⟩
+        → (w : V ℓ) → ⟨ w ∈ ⁅ Key ψ' ⁆s ⟩ → ⟨ w ∈ fst z ⟩
+    atKey ψ' z k∈ w hw =
+      subst (λ v → ⟨ v ∈ fst z ⟩) (sym (sgl-out (Key ψ') w hw)) k∈
+
+    sub : ∀ {m m'} (ψ' : Formula K m) (a : Formula K m') (z : S)
+        → ⟨ Key ψ' ∈ fst z ⟩
+        → ((w : V ℓ) → ⟨ w ∈ Cl a ⟩ → ⟨ w ∈ fst z ⟩)
+        → (w : V ℓ) → ⟨ w ∈ (⁅ Key ψ' ⁆s ∪ Cl a) ⟩ → ⟨ w ∈ fst z ⟩
+    sub ψ' a z k∈ ra w hw = PT.rec (snd (w ∈ fst z))
+      (λ { (inl e) → atKey ψ' z k∈ w e ; (inr e) → ra w e })
+      (cup-out ⁅ Key ψ' ⁆s (Cl a) w hw)
+
+    two : ∀ {m m'} (ψ' : Formula K m) (a b : Formula K m') (z : S)
+        → ⟨ Key ψ' ∈ fst z ⟩
+        → ((w : V ℓ) → ⟨ w ∈ Cl a ⟩ → ⟨ w ∈ fst z ⟩)
+        → ((w : V ℓ) → ⟨ w ∈ Cl b ⟩ → ⟨ w ∈ fst z ⟩)
+        → (w : V ℓ) → ⟨ w ∈ (⁅ Key ψ' ⁆s ∪ (Cl a ∪ Cl b)) ⟩ → ⟨ w ∈ fst z ⟩
+    two ψ' a b z k∈ ra rb w hw = PT.rec (snd (w ∈ fst z))
+      (λ { (inl e) → atKey ψ' z k∈ w e
+         ; (inr e) → PT.rec (snd (w ∈ fst z))
+             (λ { (inl ea) → ra w ea ; (inr eb) → rb w eb })
+             (cup-out (Cl a) (Cl b) w e) })
+      (cup-out ⁅ Key ψ' ⁆s (Cl a ∪ Cl b) w hw)
+
+  closureLeast : ∀ {n m} (ψ : Formula K n) (z : S) (γ : S ^ m)
+               → ⟨ Key ψ ∈ fst z ⟩ → ⟨ (z ∷ γ) ⊨ closedAt zero ⟩
+               → (w : V ℓ) → ⟨ w ∈ Cl ψ ⟩ → ⟨ w ∈ fst z ⟩
+  closureLeast ψ@(t ∈̇ u) z γ k∈ cl = atKey ψ z k∈
+  closureLeast ψ@(t ≐ u) z γ k∈ cl = atKey ψ z k∈
+  closureLeast ψ@⊤̇ z γ k∈ cl = atKey ψ z k∈
+  closureLeast ψ@⊥̇ z γ k∈ cl = atKey ψ z k∈
+  closureLeast {n} ψ@(a ∧̇ b) z γ k∈ cl = two ψ a b z k∈
+    (closureLeast a z γ (r .fst) cl) (closureLeast b z γ (r .snd) cl)
+    where r = binSameClosed-out zero 2 (z ∷ γ) (cl .fst)
+                (kk ψ) (nn n) (cd a) (cd b) k∈ refl
+  closureLeast {n} ψ@(a ∨̇ b) z γ k∈ cl = two ψ a b z k∈
+    (closureLeast a z γ (r .fst) cl) (closureLeast b z γ (r .snd) cl)
+    where r = binSameClosed-out zero 3 (z ∷ γ) (cl .snd .fst)
+                (kk ψ) (nn n) (cd a) (cd b) k∈ refl
+  closureLeast {n} ψ@(a ⇒̇ b) z γ k∈ cl = two ψ a b z k∈
+    (closureLeast a z γ (r .fst) cl) (closureLeast b z γ (r .snd) cl)
+    where r = binSameClosed-out zero 4 (z ∷ γ) (cl .snd .snd .fst)
+                (kk ψ) (nn n) (cd a) (cd b) k∈ refl
+  closureLeast {n} ψ@(¬̇ a) z γ k∈ cl = sub ψ a z k∈ (closureLeast a z γ r cl)
+    where r = unSameClosed-out zero 5 (z ∷ γ) (cl .snd .snd .snd .fst)
+                (kk ψ) (nn n) (cd a) k∈ refl
+  closureLeast {n} ψ@(∃̇ a) z γ k∈ cl = sub ψ a z k∈ (closureLeast a z γ r cl)
+    where r = unSuccClosed-out zero 8 (z ∷ γ) (cl .snd .snd .snd .snd .fst)
+                (kk ψ) (nn n) (cd a) k∈ refl
+  closureLeast {n} ψ@(∀̇ a) z γ k∈ cl = sub ψ a z k∈ (closureLeast a z γ r cl)
+    where r = unSuccClosed-out zero 9 (z ∷ γ) (cl .snd .snd .snd .snd .snd .fst)
+                (kk ψ) (nn n) (cd a) k∈ refl
+  closureLeast {n} ψ@(∀̇∈ t a) z γ k∈ cl = sub ψ a z k∈ (closureLeast a z γ r cl)
+    where r = binSuccClosed-out zero 10 (z ∷ [])
+                (cl .snd .snd .snd .snd .snd .snd .fst)
+                (kk ψ) (nn n) (ct t) (cd a) k∈ refl
+  closureLeast {n} ψ@(∃̇∈ t a) z γ k∈ cl = sub ψ a z k∈ (closureLeast a z γ r cl)
+    where r = binSuccClosed-out zero 11 (z ∷ [])
+                (cl .snd .snd .snd .snd .snd .snd .snd)
+                (kk ψ) (nn n) (ct t) (cd a) k∈ refl
+```
