@@ -37,13 +37,14 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( module LCode; prʟ; prʟ-fst; andClauseAt; orClauseAt
         ; propClause-in; interAt; unionAt; envSetAt; envOverAt
         ; negClauseAt; negClause-in; impClauseAt; impClause-in
         ; topClauseAt; topClause-in; botClauseAt; botClause-in
+        ; tmValAt; tmValAt-var; tmValAt-con; tmValAt-out
         ; envOverAt-transport; extAt-out; extAt-in; numL
         ; yc7; ya7; yb7 )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
@@ -57,10 +58,11 @@ open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Data.Empty using ( isProp⊥ )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Unit using ( tt* )
+open import Cubical.Data.Nat using ( snotz; znots )
 open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
@@ -134,6 +136,59 @@ Three slots, in the order the clauses take them: the index, the table, the
 carrier.
 <!--zh-->
 三个槽位，按诸子句取用的次序：索引、表、载体。
+<!--/-->
+
+<!--en-->
+## The two term readers agree
+<!--zh-->
+## 两条词项读式一致
+<!--/-->
+
+<!--en-->
+A clause reads a term's value off its code, because a clause has only the code;
+the meta-level recursion reads it off the term, because it has the term. The two
+have to say the same thing, and saying so is the only place in this chapter where
+the two tags of a term code are separated: a variable's code is not a constant's,
+because numerals are distinct, and that is what rules out the wrong disjunct.
+<!--zh-->
+子句从词项的**码**读出它的取值，因为子句只有码；元语言的递归从**词项**读出它，因为它有词项。两者必须说同一件事，而把这件事说出来，是本章唯一分开词项码那两个标签的地方：变元的码不是常元的码，因为诸数码两两相异，而正是这一点排除了错的那个析取项。
+<!--/-->
+
+```agda
+module TermAgree {k : ℕ} (γ : S ^ k) (ti ei vi : Fin k) where
+  private
+    Tc = fst (lookup ti γ)
+    Ev = fst (lookup ei γ)
+    Vl = fst (lookup vi γ)
+
+  fromVar : (i : ℕ) → Tc ≡ pr (# 1) (# i)
+          → ⟨ pr (# i) Vl ∈ Ev ⟩ → ⟨ γ ⊨ tmValAt ti ei vi ⟩
+  fromVar i q m = tmValAt-var ti ei vi γ (nn i) q m
+
+  fromCon : (x : V ℓ) → Tc ≡ pr (# 0) x → Vl ≡ x → ⟨ γ ⊨ tmValAt ti ei vi ⟩
+  fromCon x q e = tmValAt-con ti ei vi γ
+    (q ∙ cong (pr (# 0)) (sym e))
+
+  toVar : (i : ℕ) → Tc ≡ pr (# 1) (# i) → ⟨ γ ⊨ tmValAt ti ei vi ⟩
+        → ⟨ pr (# i) Vl ∈ Ev ⟩
+  toVar i q h = PT.rec (snd (pr (# i) Vl ∈ Ev))
+    (λ { (inl (x , (qx , mx))) →
+           subst (λ w → ⟨ pr w Vl ∈ Ev ⟩) (pr-inj (sym qx ∙ q) .snd) mx
+       ; (inr qc) → Empty.rec (snotz (#-inj 1 0 (pr-inj (sym q ∙ qc) .fst))) })
+    (tmValAt-out ti ei vi γ h)
+
+  toCon : (x : V ℓ) → Tc ≡ pr (# 0) x → ⟨ γ ⊨ tmValAt ti ei vi ⟩ → Vl ≡ x
+  toCon x q h = PT.rec (setIsSet Vl x)
+    (λ { (inl (y , (qy , _))) →
+           Empty.rec (znots (#-inj 0 1 (pr-inj (sym q ∙ qy) .fst)))
+       ; (inr qc) → sym (pr-inj (sym q ∙ qc) .snd) })
+    (tmValAt-out ti ei vi γ h)
+```
+
+<!--en-->
+## The environment a clause is read in, continued
+<!--zh-->
+## 子句被读入的那个环境 (续)
 <!--/-->
 
 ```agda
