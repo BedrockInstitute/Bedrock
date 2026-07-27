@@ -254,6 +254,8 @@ the statement as a proposition.
 落在定义域中就是有取值：在上面那条读式上作一个无界存在。定义域本身则是恰以那些东西为成员的集合，用两条蕴含说出，因为对象语言没有自带的双条件，而把它摊开来写比添一个更短。
 
 两者各自只用一个方向，而被取出的也只有那两个方向。一个握着表的消费方，要么问「这个自变量有条目，故它在定义域中」，要么问「这个自变量在定义域中，故它有条目」；没有谁想要那句陈述本身作为命题。
+
+那两条都是消去，而名字没有说出这一点：`domAt-in`{.Agda} 朝「有条目」拆，`domAt-out`{.Agda} 朝「在定义域中」拆。引入 (那才是「必须**满足**这句陈述」的一张表所要的) 来得晚，于是取了第三个名字，而没有占用它们中的任何一个。
 <!--/-->
 
 ```agda
@@ -285,6 +287,15 @@ module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
   domAt-in : ⟨ γ ⊨ domAt f d ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩
            → ∥ (Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
   domAt-in h x m = subst ⟨_⟩ (step x) (h x .snd m)
+
+  domAt-intro : ((x : S)
+                 → (⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst (lookup f γ)) ⟩
+                    → ⟨ fst x ∈ fst (lookup d γ) ⟩)
+                 × (⟨ fst x ∈ fst (lookup d γ) ⟩
+                    → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst (lookup f γ)) ⟩))
+              → ⟨ γ ⊨ domAt f d ⟩
+  domAt-intro g x = (λ h → g x .fst (subst ⟨_⟩ (step x) h))
+                  , (λ m → subst ⟨_⟩ (sym (step x)) (g x .snd m))
 ```
 
 <!--en-->
@@ -741,6 +752,34 @@ module _ {n : ℕ} where
 ```
 
 <!--en-->
+Each frame reads the other way too, and the other way is what an instance uses.
+The elimination takes a clause apart for a consumer who has a code in hand; the
+introduction assembles one for a table that has to *satisfy* it. Both frames
+introduce by a lambda, because a bounded universal over the model is a function
+on members and an implication is a function on the reader's proof, so the two are
+the same substitutions run backwards.
+<!--zh-->
+每个框架也向另一个方向读，而另一个方向才是实例要用的。消去是为「手上握着一个码」的消费方把子句拆开；引入是为「必须**满足**它」的一张表把子句装起来。两个框架都以一个 λ 引入，因为模型上的有界全称就是成员上的函数，而蕴含就是读式证明上的函数，故两者是同样几次代换倒着跑。
+<!--/-->
+
+```agda
+  binClause-in : (C T : Fin n) (k : ℕ) (rel : Formula S (5 + n)) (γ : S ^ n)
+    → ((c ar a b yc : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
+    → ⟨ γ ⊨ binClauseAt C T k rel ⟩
+  binClause-in C T k rel γ g c c∈ ar a b yc sh hc =
+    g c ar a b yc c∈
+      (subst ⟨_⟩ (arityTagPairAtL-adequate c5 n5 k a5 b5 δ) sh)
+      (subst ⟨_⟩ (appAt-adequate (sh5 T) c5 yc5 δ) hc)
+    where
+    δ : S ^ (5 + n)
+    δ = yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
+```
+
+<!--en-->
 Counting the shapes is worth a moment, because it says how much of the twelve is
 really there, and because counting it wrong is easy: this paragraph has been
 wrong twice.
@@ -799,6 +838,23 @@ back the same way.
     h c c∈ ar a yc
       (subst ⟨_⟩ (sym (arityTagAtL-adequate c4 n4 k a4 δ)) shape)
       (subst ⟨_⟩ (sym (appAt-adequate (sh4 T) c4 yc4 δ)) hc)
+    where
+    δ : S ^ (4 + n)
+    δ = yc ∷ a ∷ ar ∷ c ∷ γ
+```
+
+```agda
+  unClause-in : (C T : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
+    → ((c ar a yc : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ (yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
+    → ⟨ γ ⊨ unClauseAt C T k rel ⟩
+  unClause-in C T k rel γ g c c∈ ar a yc sh hc =
+    g c ar a yc c∈
+      (subst ⟨_⟩ (arityTagAtL-adequate c4 n4 k a4 δ) sh)
+      (subst ⟨_⟩ (appAt-adequate (sh4 T) c4 yc4 δ) hc)
     where
     δ : S ^ (4 + n)
     δ = yc ∷ a ∷ ar ∷ c ∷ γ
@@ -874,6 +930,24 @@ module _ {n : ℕ} where
     δ : S ^ (7 + n)
     δ = yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
 
+  propClause-in : (C T : Fin n) (k : ℕ) (op : Formula S (7 + n)) (γ : S ^ n)
+    → ((c ar a b yc ya yb : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
+       → ⟨ pr (pr (fst ar) (fst b)) (fst yb) ∈ fst (lookup T γ) ⟩
+       → ⟨ (yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ op ⟩)
+    → ⟨ γ ⊨ propClauseAt C T k op ⟩
+  propClause-in C T k op γ g =
+    binClause-in C T k (propRel T op) γ
+      (λ c ar a b yc c∈ sh hc ya yb ha hb →
+        g c ar a b yc ya yb c∈ sh hc
+          (subst ⟨_⟩
+            (subValAt-adequate (sh7 T) ar7 a7 ya7 (yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ha)
+          (subst ⟨_⟩
+            (subValAt-adequate (sh7 T) ar7 b7 yb7 (yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) hb))
+
   andClauseAt : Fin n → Fin n → Formula S n
   andClauseAt C T = propClauseAt C T 2 (interAt yc7 ya7 yb7)
 
@@ -946,6 +1020,23 @@ module _ {n : ℕ} where
     where
     δ : S ^ (6 + n)
     δ = E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ
+```
+
+```agda
+  negClause-in : (C T B : Fin n) (γ : S ^ n)
+    → ((c ar a yc ya E : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# 5) (fst a))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
+       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6 ar6 (sh6 B) ⟩
+       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ diffAt yc6 E6 ya6 ⟩)
+    → ⟨ γ ⊨ negClauseAt C T B ⟩
+  negClause-in C T B γ g = unClause-in C T 5 (negRel T B) γ
+    (λ c ar a yc c∈ sh hc ya E ha hE →
+      g c ar a yc ya E c∈ sh hc
+        (subst ⟨_⟩ (subValAt-adequate (sh6 T) ar6 a6 ya6
+          (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ha) hE)
 ```
 
 <!--en-->
@@ -1023,6 +1114,93 @@ module _ {n : ℕ} where
 
   botClauseAt : Fin n → Fin n → Formula S n
   botClauseAt C T = unClauseAt C T 7 (emptyAt zero)
+```
+
+<!--en-->
+Three more pairs of readers, and the pattern does not change: an elimination
+peels the frame and the relation's own binders off, an introduction puts them
+back. The constants are shorter than the connective because their relations bind
+less, not because they are special.
+<!--zh-->
+再三对读式，而套路不变：消去把框架与那条关系自己的诸绑定剥掉，引入再装回去。两个常量比那个联结词短，是因为它们的关系绑得少，不是因为它们特殊。
+<!--/-->
+
+```agda
+  impClause-out : (C T B : Fin n) (γ : S ^ n)
+    → ⟨ γ ⊨ impClauseAt C T B ⟩
+    → (c ar a b yc ya yb E : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# 4) (pr (fst a) (fst b)))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (pr (fst ar) (fst b)) (fst yb) ∈ fst (lookup T γ) ⟩
+    → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E8 ar8 (sh8 B) ⟩
+    → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ implAt yc8 E8 ya8 yb8 ⟩
+  impClause-out C T B γ h c ar a b yc ya yb E c∈ shape hc ha hb hE =
+    binClause-out C T 4 (impRel T B) γ h c ar a b yc c∈ shape hc ya yb E
+      (subst ⟨_⟩ (sym (subValAt-adequate (sh8 T) ar8 a8 ya8 δ)) ha)
+      (subst ⟨_⟩ (sym (subValAt-adequate (sh8 T) ar8 b8 yb8 δ)) hb) hE
+    where
+    δ : S ^ (8 + n)
+    δ = E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
+
+  impClause-in : (C T B : Fin n) (γ : S ^ n)
+    → ((c ar a b yc ya yb E : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# 4) (pr (fst a) (fst b)))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
+       → ⟨ pr (pr (fst ar) (fst b)) (fst yb) ∈ fst (lookup T γ) ⟩
+       → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E8 ar8 (sh8 B) ⟩
+       → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ implAt yc8 E8 ya8 yb8 ⟩)
+    → ⟨ γ ⊨ impClauseAt C T B ⟩
+  impClause-in C T B γ g = binClause-in C T 4 (impRel T B) γ
+    (λ c ar a b yc c∈ sh hc ya yb E ha hb hE →
+      g c ar a b yc ya yb E c∈ sh hc
+        (subst ⟨_⟩ (subValAt-adequate (sh8 T) ar8 a8 ya8
+          (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ha)
+        (subst ⟨_⟩ (subValAt-adequate (sh8 T) ar8 b8 yb8
+          (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) hb) hE)
+
+  topClause-out : (C T B : Fin n) (γ : S ^ n)
+    → ⟨ γ ⊨ topClauseAt C T B ⟩
+    → (c ar a yc E : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# 6) (fst a))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E5 ar5 (sh5 B) ⟩
+    → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ sameAt yc5 E5 ⟩
+  topClause-out C T B γ h c ar a yc E c∈ shape hc hE =
+    unClause-out C T 6 (topRel B) γ h c ar a yc c∈ shape hc E hE
+
+  topClause-in : (C T B : Fin n) (γ : S ^ n)
+    → ((c ar a yc E : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# 6) (fst a))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E5 ar5 (sh5 B) ⟩
+       → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ sameAt yc5 E5 ⟩)
+    → ⟨ γ ⊨ topClauseAt C T B ⟩
+  topClause-in C T B γ g = unClause-in C T 6 (topRel B) γ
+    (λ c ar a yc c∈ sh hc E hE → g c ar a yc E c∈ sh hc hE)
+
+  botClause-out : (C T : Fin n) (γ : S ^ n)
+    → ⟨ γ ⊨ botClauseAt C T ⟩
+    → (c ar a yc : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# 7) (fst a))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ (yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ emptyAt zero ⟩
+  botClause-out C T γ h = unClause-out C T 7 (emptyAt zero) γ h
+
+  botClause-in : (C T : Fin n) (γ : S ^ n)
+    → ((c ar a yc : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# 7) (fst a))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ (yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ emptyAt zero ⟩)
+    → ⟨ γ ⊨ botClauseAt C T ⟩
+  botClause-in C T γ = unClause-in C T 7 (emptyAt zero) γ
 ```
 
 <!--en-->
@@ -1211,18 +1389,18 @@ module _ {n : ℕ} where
     E6'  = zero
 
     -- at the innermost point: e' = 0, m = 1, e = 2, E = 3, ya = 4
-    body∃ body∀ : Fin n → Formula S (7 + n)
-    body∃ B = (var zero ∈̇ var (suc zero))
+  body∃ body∀ : Fin n → Formula S (7 + n)
+  body∃ B = (var zero ∈̇ var (suc zero))
             ∧̇ ∃̇∈ (var (sh7' B)) (∃̇
                 ( consAtL zero (suc zero) (suc (suc zero))
                 ∧̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))) ))
-    body∀ B = (var zero ∈̇ var (suc zero))
+  body∀ B = (var zero ∈̇ var (suc zero))
             ∧̇ ∀̇∈ (var (sh7' B)) (∀̇
                 ( consAtL zero (suc zero) (suc (suc zero))
                 ⇒̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))) ))
 
-    quantRel : Fin n → Fin n → Formula S (7 + n) → Formula S (4 + n)
-    quantRel T B body =
+  quantRel : Fin n → Fin n → Formula S (7 + n) → Formula S (4 + n)
+  quantRel T B body =
       ∀̇ (∀̇ ( subValSuccAt (sh6' T) ar6' a6' ya6'
            ⇒̇ ( envSetAt E6' ar6' (sh6' B)
            ⇒̇ extAt yc6' body )))
@@ -1232,6 +1410,47 @@ module _ {n : ℕ} where
 
   forallClauseAt : Fin n → Fin n → Fin n → Formula S n
   forallClauseAt C T B = unClauseAt C T 9 (quantRel T B (body∀ B))
+```
+
+<!--en-->
+The quantifier clauses read the same way, and the tag and the body are what a
+caller supplies, so one pair of readers serves both. The subvalue sits an arity
+up, which is the only difference from negation.
+<!--zh-->
+两条量词子句读法相同，而标签与主体由调用方提供，故一对读式服务两者。子取值高一个元数，这也是它与否定唯一的差别。
+<!--/-->
+
+```agda
+  quantClause-out : (C T B : Fin n) (k : ℕ) (body : Formula S (7 + n)) (γ : S ^ n)
+    → ⟨ γ ⊨ unClauseAt C T k (quantRel T B body) ⟩
+    → (c ar a yc ya E : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (pr (sucV (fst ar)) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
+    → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6' ar6' (sh6' B) ⟩
+    → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc6' body ⟩
+  quantClause-out C T B k body γ h c ar a yc ya E c∈ sh hc ha hE =
+    unClause-out C T k (quantRel T B body) γ h c ar a yc c∈ sh hc ya E
+      (subst ⟨_⟩ (sym (subValSuccAt-adequate (sh6' T) ar6' a6' ya6' δ)) ha) hE
+    where
+    δ : S ^ (6 + n)
+    δ = E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ
+
+  quantClause-in : (C T B : Fin n) (k : ℕ) (body : Formula S (7 + n)) (γ : S ^ n)
+    → ((c ar a yc ya E : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ pr (pr (sucV (fst ar)) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
+       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6' ar6' (sh6' B) ⟩
+       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc6' body ⟩)
+    → ⟨ γ ⊨ unClauseAt C T k (quantRel T B body) ⟩
+  quantClause-in C T B k body γ g = unClause-in C T k (quantRel T B body) γ
+    (λ c ar a yc c∈ sh hc ya E ha hE →
+      g c ar a yc ya E c∈ sh hc
+        (subst ⟨_⟩ (subValSuccAt-adequate (sh6' T) ar6' a6' ya6'
+          (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ha) hE)
 ```
 
 <!--en-->
@@ -1325,15 +1544,15 @@ module _ {n : ℕ} where
     v9″ = suc zero
     w9″ = zero
 
-    atomBody : Formula S (9 + n) → Formula S (7 + n)
-    atomBody cmp =
+  atomBody : Formula S (9 + n) → Formula S (7 + n)
+  atomBody cmp =
       (var zero ∈̇ var (suc zero))
       ∧̇ ∃̇ (∃̇ ( tmValAt a9″ e9″ v9″
              ∧̇ ( tmValAt b9″ e9″ w9″
              ∧̇ cmp )))
 
-    atomRel : Fin n → Formula S (9 + n) → Formula S (5 + n)
-    atomRel B cmp =
+  atomRel : Fin n → Formula S (9 + n) → Formula S (5 + n)
+  atomRel B cmp =
       ∀̇ ( envSetAt E6″ ar6″ (sh6″ B) ⇒̇ extAt yc6″ (atomBody cmp) )
 
   memClauseAt : Fin n → Fin n → Fin n → Formula S n
@@ -1341,6 +1560,30 @@ module _ {n : ℕ} where
 
   eqClauseAt : Fin n → Fin n → Fin n → Formula S n
   eqClauseAt C T B = binClauseAt C T 1 (atomRel B (var v9″ ≐ var w9″))
+```
+
+```agda
+  atomClause-out : (C T B : Fin n) (k : ℕ) (cmp : Formula S (9 + n)) (γ : S ^ n)
+    → ⟨ γ ⊨ binClauseAt C T k (atomRel B cmp) ⟩
+    → (c ar a b yc E : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6″ ar6″ (sh6″ B) ⟩
+    → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc6″ (atomBody cmp) ⟩
+  atomClause-out C T B k cmp γ h c ar a b yc E c∈ sh hc hE =
+    binClause-out C T k (atomRel B cmp) γ h c ar a b yc c∈ sh hc E hE
+
+  atomClause-in : (C T B : Fin n) (k : ℕ) (cmp : Formula S (9 + n)) (γ : S ^ n)
+    → ((c ar a b yc E : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6″ ar6″ (sh6″ B) ⟩
+       → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc6″ (atomBody cmp) ⟩)
+    → ⟨ γ ⊨ binClauseAt C T k (atomRel B cmp) ⟩
+  atomClause-in C T B k cmp γ g = binClause-in C T k (atomRel B cmp) γ
+    (λ c ar a b yc c∈ sh hc E hE → g c ar a b yc E c∈ sh hc hE)
 ```
 
 <!--en-->
@@ -1404,22 +1647,22 @@ module _ {n : ℕ} where
     sh9B i = suc (suc (suc (suc (suc (suc (suc (suc (suc i))))))))
 
     -- inside the bound's quantifier, at depth 10: m = 0, w = 1
-    bodyAll bodyEx : Fin n → Formula S (8 + n)
-    bodyAll B = (var zero ∈̇ var (suc zero))
+  bodyAll bodyEx : Fin n → Formula S (8 + n)
+  bodyAll B = (var zero ∈̇ var (suc zero))
               ∧̇ ∀̇ ( tmValAt a9B e9B w9B
                   ⇒̇ ∀̇∈ (var (sh9B B))
                       ( (var zero ∈̇ var (suc zero))
                       ⇒̇ ∀̇ ( consAtL e'11 m11 e11
                           ⇒̇ (var e'11 ∈̇ var yb11) )))
-    bodyEx  B = (var zero ∈̇ var (suc zero))
+  bodyEx  B = (var zero ∈̇ var (suc zero))
               ∧̇ ∃̇ ( tmValAt a9B e9B w9B
                   ∧̇ ∃̇∈ (var (sh9B B))
                       ( (var zero ∈̇ var (suc zero))
                       ∧̇ ∃̇ ( consAtL e'11 m11 e11
                           ∧̇ (var e'11 ∈̇ var yb11) )))
 
-    bndRel : Fin n → Fin n → Formula S (8 + n) → Formula S (5 + n)
-    bndRel T B body =
+  bndRel : Fin n → Fin n → Formula S (8 + n) → Formula S (5 + n)
+  bndRel T B body =
       ∀̇ (∀̇ ( subValSuccAt (sh7B T) ar7B b7B yb7B
            ⇒̇ ( envSetAt E7B ar7B (sh7B B)
            ⇒̇ extAt yc7B body )))
@@ -1429,6 +1672,39 @@ module _ {n : ℕ} where
 
   exInClauseAt : Fin n → Fin n → Fin n → Formula S n
   exInClauseAt C T B = binClauseAt C T 11 (bndRel T B (bodyEx B))
+```
+
+```agda
+  bndClause-out : (C T B : Fin n) (k : ℕ) (body : Formula S (8 + n)) (γ : S ^ n)
+    → ⟨ γ ⊨ binClauseAt C T k (bndRel T B body) ⟩
+    → (c ar a b yc yb E : S)
+    → ⟨ fst c ∈ fst (lookup C γ) ⟩
+    → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+    → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+    → ⟨ pr (pr (sucV (fst ar)) (fst b)) (fst yb) ∈ fst (lookup T γ) ⟩
+    → ⟨ (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E7B ar7B (sh7B B) ⟩
+    → ⟨ (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc7B body ⟩
+  bndClause-out C T B k body γ h c ar a b yc yb E c∈ sh hc hb hE =
+    binClause-out C T k (bndRel T B body) γ h c ar a b yc c∈ sh hc yb E
+      (subst ⟨_⟩ (sym (subValSuccAt-adequate (sh7B T) ar7B b7B yb7B δ)) hb) hE
+    where
+    δ : S ^ (7 + n)
+    δ = E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
+
+  bndClause-in : (C T B : Fin n) (k : ℕ) (body : Formula S (8 + n)) (γ : S ^ n)
+    → ((c ar a b yc yb E : S)
+       → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+       → ⟨ pr (pr (sucV (fst ar)) (fst b)) (fst yb) ∈ fst (lookup T γ) ⟩
+       → ⟨ (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E7B ar7B (sh7B B) ⟩
+       → ⟨ (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc7B body ⟩)
+    → ⟨ γ ⊨ binClauseAt C T k (bndRel T B body) ⟩
+  bndClause-in C T B k body γ g = binClause-in C T k (bndRel T B body) γ
+    (λ c ar a b yc c∈ sh hc yb E hb hE →
+      g c ar a b yc yb E c∈ sh hc
+        (subst ⟨_⟩ (subValSuccAt-adequate (sh7B T) ar7B b7B yb7B
+          (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) hb) hE)
 ```
 
 <!--en-->
