@@ -1292,15 +1292,23 @@ module _ {n : ℕ} where
 <!--en-->
 The last two, and they need nothing new. A bounded quantifier's payload is a term
 code paired with a formula code, so the bound is evaluated in the environment and
-the body's value is read one arity higher; then the values from the bound are
-pushed on and the extended environments are looked for in the body's value.
+the body's value is read one arity higher; then the values pushed on are the ones
+lying in **both** the carrier and the bound, and the extended environments are
+looked for in the body's value.
+
+Ranging over the carrier as well as the bound is not redundant. The reference
+semantics quantifies over the carrier and guards by membership in the bound, and
+a bound may perfectly well have members outside the carrier; quantifying over the
+bound alone would then demand entries the table does not have.
 
 Every piece has appeared: the next-arity lookup for the body, the ambient set for
 the extension frame, term evaluation for the bound, and environment extension for
 the step. The two differ, as the unbounded pair did, only in which quantifier
 each of the three innermost binders carries.
 <!--zh-->
-最后两条，而它们不需要任何新东西。有界量词的载荷是「词项码与公式码之对」，故那个界在环境中求值，而主体的取值高一个元数读出；随后把来自界的诸取值推入，并到主体的取值里去找扩展后的环境。
+最后两条，而它们不需要任何新东西。有界量词的载荷是「词项码与公式码之对」，故那个界在环境中求值，而主体的取值高一个元数读出；随后被推入的取值取自**载体与那个界之交**，再到主体的取值里去找扩展后的环境。
+
+同时遍历载体与那个界并非冗余。参照语义是在载体上作量化、再以「属于那个界」设防，而一个界完全可以有落在载体之外的成员；只在那个界上作量化，就会索要表所没有的条目。
 
 每一件都已登场：主体所需的下一元数查表、外延框架所需的周遭集合、界所需的词项求值、以及推入所需的环境扩展。两条之间的差别，与无界的那一对一样，只在最内三个绑定各自带的是哪个量词。
 <!--/-->
@@ -1332,17 +1340,23 @@ module _ {n : ℕ} where
     e11  = suc (suc (suc zero))
     yb11 = suc (suc (suc (suc (suc zero))))
 
-    bodyAll bodyEx : Formula S (8 + n)
-    bodyAll = (var zero ∈̇ var (suc zero))
-            ∧̇ ∀̇ ( tmValAt a9B e9B w9B
-                ⇒̇ ∀̇∈ (var zero) (∀̇
-                    ( consAtL e'11 m11 e11
-                    ⇒̇ (var e'11 ∈̇ var yb11) )))
-    bodyEx  = (var zero ∈̇ var (suc zero))
-            ∧̇ ∃̇ ( tmValAt a9B e9B w9B
-                ∧̇ ∃̇∈ (var zero) (∃̇
-                    ( consAtL e'11 m11 e11
-                    ∧̇ (var e'11 ∈̇ var yb11) )))
+    sh9B : Fin n → Fin (9 + n)
+    sh9B i = suc (suc (suc (suc (suc (suc (suc (suc (suc i))))))))
+
+    -- inside the bound's quantifier, at depth 10: m = 0, w = 1
+    bodyAll bodyEx : Fin n → Formula S (8 + n)
+    bodyAll B = (var zero ∈̇ var (suc zero))
+              ∧̇ ∀̇ ( tmValAt a9B e9B w9B
+                  ⇒̇ ∀̇∈ (var (sh9B B))
+                      ( (var zero ∈̇ var (suc zero))
+                      ⇒̇ ∀̇ ( consAtL e'11 m11 e11
+                          ⇒̇ (var e'11 ∈̇ var yb11) )))
+    bodyEx  B = (var zero ∈̇ var (suc zero))
+              ∧̇ ∃̇ ( tmValAt a9B e9B w9B
+                  ∧̇ ∃̇∈ (var (sh9B B))
+                      ( (var zero ∈̇ var (suc zero))
+                      ∧̇ ∃̇ ( consAtL e'11 m11 e11
+                          ∧̇ (var e'11 ∈̇ var yb11) )))
 
     bndRel : Fin n → Fin n → Formula S (8 + n) → Formula S (5 + n)
     bndRel T B body =
@@ -1351,10 +1365,10 @@ module _ {n : ℕ} where
            ⇒̇ extAt yc7B body )))
 
   allInClauseAt : Fin n → Fin n → Fin n → Formula S n
-  allInClauseAt C T B = binClauseAt C T 10 (bndRel T B bodyAll)
+  allInClauseAt C T B = binClauseAt C T 10 (bndRel T B (bodyAll B))
 
   exInClauseAt : Fin n → Fin n → Fin n → Formula S n
-  exInClauseAt C T B = binClauseAt C T 11 (bndRel T B bodyEx)
+  exInClauseAt C T B = binClauseAt C T 11 (bndRel T B (bodyEx B))
 ```
 
 <!--en-->
