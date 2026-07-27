@@ -34,7 +34,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
@@ -369,6 +369,43 @@ builds, and gets it from whichever disjunct it was handed.
                        (subst ⟨_⟩ (Sat-mem B b' z) zb .fst , ∣ inr zb ∣₁)) })
             hz })
           P))
+
+  module Atom (k : ℕ) (op : ∀ {m} → Term S m → Term S m → Formula S m)
+    (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ
+         → Σ[ t ∈ Term S m ] (Σ[ u ∈ Term S m ] (ψ ≡ op t u)))
+    (payOp : ∀ {m} (t u : Term S m)
+           → LCode.payOf (op t u) ≡ prʟ LCode.⌜ t ⌝ᵗ LCode.⌜ u ⌝ᵗ)
+    where
+    Parts : (ar a b yc : S) → Type (ℓ-suc ℓ)
+    Parts ar a b yc =
+      Σ[ m ∈ ℕ ] (Σ[ t ∈ Term S m ] (Σ[ u ∈ Term S m ]
+        ((# m ≡ fst ar)
+         × ((fst a ≡ fst LCode.⌜ t ⌝ᵗ)
+            × ((fst b ≡ fst LCode.⌜ u ⌝ᵗ)
+               × (fst yc ≡ fst (Sat B (op t u))))))))
+
+    parts : (c ar a b yc : S)
+          → ⟨ fst c ∈ fst (slot B φ) ⟩
+          → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+          → ⟨ pr (fst c) (fst yc) ∈ fst (satTable B φ) ⟩
+          → ∥ Parts ar a b yc ∥₁
+    parts c ar a b yc c∈ sh hc = PT.map
+      (λ { (m , ψ , q) →
+        let r  = keyʟ-shape ψ k (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
+            g  = get ψ (r .fst)
+            t  = g .fst
+            u  = g .snd .fst
+            eψ = g .snd .snd
+            pay = sym (prʟ-fst LCode.⌜ t ⌝ᵗ LCode.⌜ u ⌝ᵗ)
+                ∙ cong fst (sym (payOp t u))
+                ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+        in m , t , u , r .snd .fst
+         , ( sym (pr-inj pay .fst)
+           , ( sym (pr-inj pay .snd)
+             , entry-out B φ (op t u) (fst yc)
+                 (subst (λ w → ⟨ pr w (fst yc) ∈ fst (satTable B φ) ⟩)
+                   (q ∙ cong (λ w → fst (keyʟ w)) eψ) hc) ) ) })
+      (slot-inv B φ (fst c) c∈)
 
   module Const (k : ℕ) (c₀ : ∀ {m} → Formula S m)
     (get : ∀ {m} (ψ : Formula S m) → LCode.Match k ψ → ψ ≡ c₀)
