@@ -35,7 +35,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -47,13 +47,16 @@ open import L.Coding.Model {ℓ}
         ; unSameClosed-out; impClauseAt; impClause-out
         ; memClauseAt; eqClauseAt; memRel; eqRel; atomClause-out
         ; atomBody; atomBody-in; atomBody-out
-        ; extAt-out; extAt-in
+        ; extAt-out; extAt-in; existClauseAt; quantClause-out; body∃
+        ; body∃-in; body∃-out; unSuccClosed-out; consAtL-transport
         ; binSameClosed-out; prʟ-fst; module LCode; numL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem; cond∈-in; cond∈-out; cond≐-in; cond≐-out )
+open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem; cond∈-in; cond∈-out; cond≐-in; cond≐-out
+        ; cond∃-in; cond∃-out )
 open import L.Coding.Table {ℓ} lem using ( keyʟ; keyʟ-shape-in )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
-open import L.Coding.Sound {ℓ} lem using ( module AmbientHolds; termAgree )
+open import L.Coding.Sound {ℓ} lem
+  using ( module AmbientHolds; module Ambient; termAgree )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
@@ -62,9 +65,10 @@ open PT using ( ∣_∣₁ )
 open import Cubical.Data.Sum using ( inl; inr )
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
-open InfinitySet using ( #_ )
+open InfinitySet using ( #_; sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -133,6 +137,9 @@ module Good (B C T : S) where
   Eq : Type (ℓ-suc ℓ)
   Eq = ⟨ γ ⊨ eqClauseAt Ci Ti Bi ⟩
 
+  Ex : Type (ℓ-suc ℓ)
+  Ex = ⟨ γ ⊨ existClauseAt Ci Ti Bi ⟩
+
   ai0 : ∀ {j} → Fin (suc j)
   ai0 = zero
   ai1 : ∀ {j} → Fin (suc (suc j))
@@ -150,6 +157,16 @@ module Good (B C T : S) where
   kkey : ∀ {j} (χ : Formula S j) → pr (# j) (fst LCode.⌜ χ ⌝) ≡ fst (keyʟ χ)
   kkey {j} χ = cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst j))
              ∙ sym (prʟ-fst (numeralL j) LCode.⌜ χ ⌝)
+
+  kkeyS : ∀ {j} (χ : Formula S (suc j))
+        → pr (sucV (# j)) (fst LCode.⌜ χ ⌝) ≡ fst (keyʟ χ)
+  kkeyS {j} χ = cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst (suc j)))
+              ∙ sym (prʟ-fst (numeralL (suc j)) LCode.⌜ χ ⌝)
+
+  upS : ∀ {j} (χ : Formula S (suc j)) (v : S)
+      → ⟨ pr (fst (keyʟ χ)) (fst v) ∈ fst T ⟩
+      → ⟨ pr (pr (sucV (# j)) (fst LCode.⌜ χ ⌝)) (fst v) ∈ fst T ⟩
+  upS χ v h = subst (λ w → ⟨ pr w (fst v) ∈ fst T ⟩) (sym (kkeyS χ)) h
 
   up : ∀ {j} (χ : Formula S j) (v : S)
      → ⟨ pr (fst (keyʟ χ)) (fst v) ∈ fst T ⟩
@@ -555,4 +572,78 @@ bridge says they agree.
 
     e = atomClause-out Ci Ti Bi 1 eqRel γ heq c (nn m) ct cu y (envSet B m)
           c∈ shape hy hE
+```
+
+<!--en-->
+## The unbounded quantifiers
+<!--zh-->
+## 两个无界量词
+<!--/-->
+
+<!--en-->
+The subvalue sits an arity up, which is the only arithmetic; the rest is the
+ambient set supplied, the environment recovered from it so the cons reader means
+something, and that reader carried between the two frames.
+<!--zh-->
+子取值高一个元数，而那是唯一的算术；其余就是递出周遭集合、从它把那个环境恢复出来好让 cons 读式有意义、再把那条读式在两个框架之间搬过去。
+<!--/-->
+
+```agda
+  ex : Closed → Total → Ex
+     → ∀ {m} (a' : Formula S (suc m)) → Pinned a' → Pinned (∃̇ a')
+  ex hcl hdom hex {m} a' ia c y q c∈ hy =
+    PT.rec (setIsSet (fst y) (fst (Sat B (∃̇ a'))))
+      (λ { (ya , hya) →
+        let ea = ia (keyʟ a') ya refl ka hya
+            δ' : S ^ 9
+            δ' = envSet B m ∷ ya ∷ y ∷ ca ∷ nn m ∷ c ∷ γ
+            di = suc (suc (suc (suc zero)))
+            bi = suc (suc (suc (suc (suc (suc Bi)))))
+            hE = AmbientHolds.holds B δ' zero di bi m refl refl refl
+            e  = quantClause-out Ci Ti Bi 8 (body∃ Bi) γ hex c (nn m) ca y ya
+                   (envSet B m) c∈ shape hy (upS a' ya hya) hE
+        in extensionalV (λ w → ⇔toPath
+             (λ hw →
+               let sy = toS y w hw
+                   bo = body∃-out Bi (sy ∷ δ')
+                          (extAt-out (suc (suc zero)) (body∃ Bi) δ' e sy hw)
+                   ae = Ambient.asEnv B δ' zero di bi m refl refl hE sy (bo .fst)
+               in subst ⟨_⟩ (sym (Sat-mem B (∃̇ a') sy))
+                    ( bo .fst
+                    , cond∃-in B a' sy (PT.map
+                        (λ { (x , (x∈ , (e' , (hcs , he)))) → x , x∈ , e'
+                           , ( consAtL-transport (e' ∷ x ∷ sy ∷ δ')
+                                 (e' ∷ x ∷ sy ∷ []) zero (suc zero)
+                                 (suc (suc zero)) zero (suc zero)
+                                 (suc (suc zero))
+                                 (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                                 refl refl refl hcs
+                             , subst (λ v → ⟨ fst e' ∈ v ⟩) ea he ) })
+                        (bo .snd)) ))
+             (λ hw →
+               let sw = toS (Sat B (∃̇ a')) w hw
+                   h  = subst ⟨_⟩ (Sat-mem B (∃̇ a') sw) hw
+                   ae = Ambient.asEnv B δ' zero di bi m refl refl hE sw (h .fst)
+               in extAt-in (suc (suc zero)) (body∃ Bi) δ' e sw
+                    (body∃-in Bi (sw ∷ δ') (h .fst) (PT.map
+                      (λ { (x , (x∈ , (e' , (hcs , he)))) → x , x∈ , e'
+                         , ( consAtL-transport (e' ∷ x ∷ sw ∷ [])
+                               (e' ∷ x ∷ sw ∷ δ') zero (suc zero)
+                               (suc (suc zero)) zero (suc zero) (suc (suc zero))
+                               (λ i → ⟪ fst B ⟫↪ (ae .fst i)) (ae .snd)
+                               refl refl refl hcs
+                           , subst (λ v → ⟨ fst e' ∈ v ⟩) (sym ea) he ) })
+                      (cond∃-out B a' sw (h .snd)))))) })
+      (domAt-in Ti Ci γ hdom (keyʟ a') ka)
+    where
+    ca : S
+    ca = LCode.⌜ a' ⌝
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 8) (fst ca))
+    shape = q ∙ keyʟ-shape-in (∃̇ a')
+
+    ka : ⟨ fst (keyʟ a') ∈ fst C ⟩
+    ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkeyS a')
+           (unSuccClosed-out Ci 8 γ (hcl .snd .snd .snd .snd .fst) c (nn m) ca
+             c∈ shape)
 ```
