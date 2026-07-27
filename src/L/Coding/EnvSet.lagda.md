@@ -28,7 +28,7 @@ module L.Coding.EnvSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; #-inj′ )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
@@ -42,16 +42,20 @@ open import L.Coding.Environment {ℓ} using ( env )
 open import L.Coding.InL {ℓ} using ( envL )
 open import L.Coding.Model {ℓ}
   using ( envOverAt; svAt; domAt; valuesInAt; pairsInAt; inDomAt
-        ; prʟ; prʟ-fst; numL; svAt-in; inDomAt-adequate; prAtL
-        ; appAt-adequate; prAtL-adequate )
+        ; prʟ; prʟ-fst; numL; svAt-in; svAt-out; inDomAt-adequate
+        ; appAt-adequate; domAt-in; valuesInAt-out
+        ; envOver-sv; envOver-dom; envOver-values; envOver-pairs
+        ; pairsIn-in; pairsIn-out )
 
 open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
+open import Cubical.Data.Sigma using ( Σ≡Prop )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈∈ₛ )
+  using ( ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈∈ₛ; ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -197,23 +201,6 @@ the indices below `n` are exactly the numerals below `n`.
 
 ```agda
   private
-    prAt3 : {m : ℕ} (a b c : S) (γ' : S ^ m) → fst a ≡ pr (fst b) (fst c)
-          → ⟨ (c ∷ b ∷ a ∷ γ') ⊨ prAtL (suc (suc zero)) (suc zero) zero ⟩
-    prAt3 a b c γ' e = subst ⟨_⟩
-      (sym (prAtL-adequate (suc (suc zero)) (suc zero) zero (c ∷ b ∷ a ∷ γ'))) e
-
-    pairsIn : {m : ℕ} (γ' : S ^ m) (e d Bv : Fin m)
-            → ((s : S) → ⟨ fst s ∈ fst (lookup e γ') ⟩
-               → ∥ (Σ[ u ∈ S ] (Σ[ v ∈ S ]
-                     (⟨ fst u ∈ fst (lookup d γ') ⟩
-                      × (⟨ fst v ∈ fst (lookup Bv γ') ⟩
-                         × (fst s ≡ pr (fst u) (fst v)))))) ∥₁)
-            → ⟨ γ' ⊨ pairsInAt e d Bv ⟩
-    pairsIn γ' e d Bv k s s∈ = PT.map
-      (λ { (u , (v , (u∈ , (v∈ , eq)))) →
-        u , (u∈ , ∣ v , (v∈ , prAt3 s u v γ' eq) ∣₁) })
-      (k s s∈)
-
     module _ {n : ℕ} (g : Ix n) where
       private
         out : (s : V ℓ) → ⟨ s ∈ fst (envS g) ⟩
@@ -275,7 +262,7 @@ the indices below `n` are exactly the numerals below `n`.
               hp))
 
         pairs : ⟨ δ ⊨ pairsInAt E (suc zero) zero ⟩
-        pairs = pairsIn δ E (suc zero) zero
+        pairs = pairsIn-in E (suc zero) zero δ
           (λ s s∈ → PT.map
             (λ { (i , ei) → nn (toℕ i)
                , ( ix (g i)
@@ -287,6 +274,116 @@ the indices below `n` are exactly the numerals below `n`.
 ```
 
 <!--en-->
+## And every member of it is one
+<!--zh-->
+## 而它的每个成员都是一个环境
+<!--/-->
+
+<!--en-->
+The other direction, which is what four clauses want when they read a bound
+variable off an environment. A set that satisfies the description is the graph of
+a function, and recovering the function is the only place the four conjuncts have
+to work together: the domain conjunct says every index below the length has an
+entry, single-valuedness says at most one, so the entry is a **proposition** and
+the truncation the domain gives comes off. Membership then names the index, which
+is untruncated because the fibers of a set's own indexing are.
+
+Extensionality closes it, one direction from the entries and the other from the
+pairs conjunct, which is the conjunct whose absence would have let junk in.
+<!--zh-->
+另一个方向，也是四条子句在从环境读出被绑变元时所要的。满足那条描述的集合是一个函数的图，而把那个函数恢复出来，是四个合取项唯一必须协同工作的地方：定义域那一条说「长度以下的每个序号都有条目」，单值性说「至多一个」，于是那个条目是**命题**，定义域给的那个截断就掉了下来。隶属关系随后点出索引，而那是不截断的，因为一个集合自身索引的纤维就是不截断的。
+
+外延把它合上，一个方向来自诸条目，另一个来自「由诸对构成」那一条，而正是那一条的缺席会放垃圾进来。
+<!--/-->
+
+```agda
+  module Recover (n : ℕ) (e d b : S) (qd : fst d ≡ # n) (qb : fst b ≡ fst B)
+    (h : ⟨ (b ∷ d ∷ e ∷ []) ⊨ envOverAt (suc (suc zero)) (suc zero) zero ⟩)
+    where
+    private
+      δ : S ^ 3
+      δ = b ∷ d ∷ e ∷ []
+
+      Ei : Fin 3
+      Ei = suc (suc zero)
+
+      Entry : Fin n → Type (ℓ-suc ℓ)
+      Entry i = Σ[ y ∈ S ] ⟨ pr (# (toℕ i)) (fst y) ∈ fst e ⟩
+
+      isPropEntry : (i : Fin n) → isProp (Entry i)
+      isPropEntry i (y , p) (y' , p') =
+        Σ≡Prop (λ w → snd (pr (# (toℕ i)) (fst w) ∈ fst e))
+          (Σ≡Prop (λ v → snd (isL v))
+            (svAt-out Ei δ (envOver-sv Ei (suc zero) zero δ h)
+              (nn (toℕ i)) y y' p p'))
+
+      entry : (i : Fin n) → Entry i
+      entry i = PT.rec (isPropEntry i) (λ z → z)
+        (domAt-in Ei (suc zero) δ (envOver-dom Ei (suc zero) zero δ h)
+          (nn (toℕ i)) (subst (λ z → ⟨ (# (toℕ i)) ∈ z ⟩) (sym qd)
+            (#mono (toℕ i) n (toℕ<n i))))
+
+      fib : (i : Fin n) → Σ[ m ∈ ⟪ fst B ⟫ ] (⟪ fst B ⟫↪ m ≡ fst (entry i .fst))
+      fib i = ∈-asFiber {a = fst (entry i .fst)} {b = fst B}
+        (subst (λ z → ⟨ fst (entry i .fst) ∈ z ⟩) qb
+          (valuesInAt-out Ei zero δ (envOver-values Ei (suc zero) zero δ h)
+            (nn (toℕ i)) (entry i .fst) (entry i .snd)))
+
+    g : Ix n
+    g i = fib i .fst
+
+    private
+      val≡ : (i : Fin n) → fst (ix (g i)) ≡ fst (entry i .fst)
+      val≡ i = fib i .snd
+
+      fwd : (w : V ℓ) → ⟨ w ∈ fst (envS g) ⟩ → ⟨ w ∈ fst e ⟩
+      fwd w = PT.rec (snd (w ∈ fst e))
+        (λ { (li , q) → subst (λ z → ⟨ z ∈ fst e ⟩)
+               (cong (pr (# (toℕ (lower li)))) (sym (val≡ (lower li))) ∙ q)
+               (entry (lower li) .snd) })
+
+      bwd : (w : V ℓ) → ⟨ w ∈ fst e ⟩ → ⟨ w ∈ fst (envS g) ⟩
+      bwd w hw = PT.rec squash₁
+        (λ { (u , (v , (u∈ , (v∈ , eq)))) → PT.rec squash₁
+          (λ { (m , (m<n , um)) →
+            let i = fromℕ' n m m<n
+                iu : # (toℕ i) ≡ fst u
+                iu = cong #_ (toFromId' n m m<n) ∙ sym um
+                hv : ⟨ pr (# (toℕ i)) (fst v) ∈ fst e ⟩
+                hv = subst (λ z → ⟨ z ∈ fst e ⟩)
+                       (eq ∙ cong (λ z → pr z (fst v)) (sym iu)) hw
+                same : fst v ≡ fst (entry i .fst)
+                same = svAt-out Ei δ (envOver-sv Ei (suc zero) zero δ h)
+                         (nn (toℕ i)) v (entry i .fst) hv (entry i .snd)
+            in ∣ lift i , cong (pr (# (toℕ i))) (val≡ i ∙ sym same)
+                        ∙ cong (λ z → pr z (fst v)) iu ∙ sym eq ∣₁ })
+          (∈#-elim n (fst u) (subst (λ z → ⟨ fst u ∈ z ⟩) qd u∈)) })
+        (pairsIn-out Ei (suc zero) zero δ
+          (envOver-pairs Ei (suc zero) zero δ h)
+          (w , isL-trans {x = fst e} {y = w} hw (snd e)) hw)
+
+    recovers : fst e ≡ fst (envS g)
+    recovers = extensionalV (λ w → ⇔toPath (bwd w) (fwd w))
+
+  envSet-mem : (n : ℕ) (x : S)
+             → (x ∈ˢ envSet n) ≡ ((x ∈ˢ amb n) ⊓ ((x ∷ []) ⊨ envFo n))
+  envSet-mem n = hasSeparationL (amb n) (envFo n) .fst .snd
+
+  envSet-in : {n : ℕ} (g : Ix n) → ⟨ envS g ∈ˢ envSet n ⟩
+  envSet-in {n} g = subst ⟨_⟩ (sym (envSet-mem n (envS g)))
+    (sf n .snd .snd g , envSetIn g)
+
+  envSet-out : (n : ℕ) (x : S) → ⟨ x ∈ˢ envSet n ⟩
+             → ∥ (Σ[ g ∈ Ix n ] (fst x ≡ fst (envS g))) ∥₁
+  envSet-out n x hx = PT.rec squash₁
+    (λ { (d , hd) → PT.map
+      (λ { (b , (qd , (qb , hov))) →
+        Recover.g n x d b qd qb hov , Recover.recovers n x d b qd qb hov })
+      hd })
+    (subst ⟨_⟩ (envSet-mem n x) hx .snd)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -294,20 +391,25 @@ the indices below `n` are exactly the numerals below `n`.
 
 <!--en-->
 `envSet`{.Agda} is the ambient set the negative clauses take their complements
-in, and `envSetIn`{.Agda} says every environment over the carrier is in it. What
-is still owed is the other direction, that every member is one, which four
-clauses will want when they read a bound variable off an environment.
+in, and it reads both ways: `envSet-in`{.Agda} puts every environment over the
+carrier into it, `envSet-out`{.Agda} recovers from any member the function whose
+graph it is. The second is what four clauses want when they read a bound variable
+off an environment, and it is the one that needed all four conjuncts of the
+description at once.
 
-One measurement, and it is a sharper form of a rule the development already had.
-Proving the fourth conjunct with the environment written out **did not finish in
-ten minutes**; proving the same thing as a lemma whose environment is a
-*variable*, then applying it, takes no measurable time. A satisfaction
-substitution along an adequacy equation must be discharged where the arguments
-are variables. Written at concrete elements it drags the whole absoluteness
+Two measurements, and the second is a sharper form of a rule the development
+already had. Proving the fourth conjunct with the environment written out **did
+not finish in ten minutes**; proving the same statement as a lemma whose
+environment is a *variable*, then applying it, takes no measurable time. A
+satisfaction substitution along an adequacy equation must be discharged where the
+arguments are variables: at concrete elements it drags the whole absoluteness
 bridge through normalization, and the elements' constructibility certificates
-with it.
+with it. Sealing the certificate at the construction site was necessary and not
+sufficient. The recovery is written the same way, with the description's two
+constant slots left as parameters constrained by equations rather than written in,
+so that nothing substitutes underneath a satisfaction at a concrete environment.
 <!--zh-->
-`envSet`{.Agda} 是诸负子句取补集所在的那个周遭集合，而 `envSetIn`{.Agda} 说载体之上的每个环境都在其中。仍然欠着的是另一个方向，即它的每个成员都是一个环境；有四条子句在从环境读出被绑变元时会要这一条。
+`envSet`{.Agda} 是诸负子句取补集所在的那个周遭集合，而它双向可读：`envSet-in`{.Agda} 把载体之上的每个环境放进去，`envSet-out`{.Agda} 从任一成员恢复出「它是其图」的那个函数。后者正是四条子句在从环境读出被绑变元时所要的，也是唯一需要那条描述的四个合取项协同上阵的一条。
 
-一次测量，而它是本书早已有的一条规矩的更锐形式。把环境写死来证第四个合取项，**十分钟没跑完**；把同一件事证成一条「环境是**变元**」的引理再施用，则快到测不出来。沿适足性等式作的满足关系代换，必须在自变量是变元之处交割。写在具体元素上，它会把整座绝对性之桥拖进归一化，连同那些元素的可构造性证书。
+两次测量，而第二次是本书早已有的一条规矩的更锐形式。把环境写死来证第四个合取项，**十分钟没跑完**；把同一件事证成一条「环境是**变元**」的引理再施用，则快到测不出来。沿适足性等式作的满足关系代换，必须在自变量是变元之处交割：写在具体元素上，它会把整座绝对性之桥拖进归一化，连同那些元素的可构造性证书。在构造点封住证书是必要而不充分的。恢复那一段按同样方式写：把那条描述的两个常元槽留作「由等式约束的参数」，而不写死进去，于是没有任何代换发生在「具体环境上的满足关系」之下。
 <!--/-->
