@@ -35,7 +35,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -45,12 +45,15 @@ open import L.Coding.Model {ℓ}
         ; topClause-out; andClauseAt; orClauseAt; propClause-out
         ; interAt; unionAt; yc7; ya7; yb7; negClauseAt; negClause-out
         ; unSameClosed-out; impClauseAt; impClause-out
+        ; memClauseAt; eqClauseAt; memRel; eqRel; atomClause-out
+        ; atomBody; atomBody-in; atomBody-out
+        ; extAt-out; extAt-in
         ; binSameClosed-out; prʟ-fst; module LCode; numL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
+open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem; cond∈-in; cond∈-out; cond≐-in; cond≐-out )
 open import L.Coding.Table {ℓ} lem using ( keyʟ; keyʟ-shape-in )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
-open import L.Coding.Sound {ℓ} lem using ( module AmbientHolds )
+open import L.Coding.Sound {ℓ} lem using ( module AmbientHolds; termAgree )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
@@ -123,6 +126,23 @@ module Good (B C T : S) where
 
   Imp : Type (ℓ-suc ℓ)
   Imp = ⟨ γ ⊨ impClauseAt Ci Ti Bi ⟩
+
+  Mem : Type (ℓ-suc ℓ)
+  Mem = ⟨ γ ⊨ memClauseAt Ci Ti Bi ⟩
+
+  Eq : Type (ℓ-suc ℓ)
+  Eq = ⟨ γ ⊨ eqClauseAt Ci Ti Bi ⟩
+
+  ai0 : ∀ {j} → Fin (suc j)
+  ai0 = zero
+  ai1 : ∀ {j} → Fin (suc (suc j))
+  ai1 = suc zero
+  ai2 : ∀ {j} → Fin (suc (suc (suc j)))
+  ai2 = suc (suc zero)
+  ai5 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc j))))))
+  ai5 = suc (suc (suc (suc (suc zero))))
+  ai6 : ∀ {j} → Fin (suc (suc (suc (suc (suc (suc (suc j)))))))
+  ai6 = suc (suc (suc (suc (suc (suc zero)))))
 
   toS : (v : S) (w : V ℓ) → ⟨ w ∈ fst v ⟩ → S
   toS v w hw = w , isL-trans hw (snd v)
@@ -426,4 +446,113 @@ need the excluded middle, and neither chapter takes it.
        , subst (λ w → ⟨ w ∈ fst C ⟩) (kkey b') (r .snd)
       where r = binSameClosed-out Ci 4 γ (hcl .snd .snd .fst) c (nn m) ca cb
                   c∈ shape
+```
+
+<!--en-->
+## The atoms
+<!--zh-->
+## 两个原子
+<!--/-->
+
+<!--en-->
+An atom has no subformula, so it needs neither closedness nor the induction
+hypothesis: an ambient set to supply, and the term bridge twice. The clause reads
+the two values off the codes, the recursion reads them off the terms, and the
+bridge says they agree.
+<!--zh-->
+一个原子没有子公式，故它既不要封闭性、也不要归纳假设：递出一个周遭集合，再把词项桥用两次。子句从两个码读出那两个取值，递归从两个词项读出它们，而那座桥说它们一致。
+<!--/-->
+
+```agda
+  mem : Mem → ∀ {m} (t u : Term S m) → Pinned (t ∈̇ u)
+  mem hmem {m} t u c y q c∈ hy = extensionalV (λ w → ⇔toPath
+    (λ hw →
+      let sy = toS y w hw
+          ab = atomBody-out memRel (sy ∷ δ')
+                 (extAt-out (suc zero) (atomBody memRel) δ' e sy hw)
+      in subst ⟨_⟩ (sym (Sat-mem B (t ∈̇ u) sy))
+           ( ab .fst
+           , cond∈-in B t u sy (PT.map
+               (λ { (v , (x , (ht , (hu , hr)))) → v , x
+                  , ( termAgree t (x ∷ v ∷ sy ∷ δ') ai6 ai2 ai1
+                        (x ∷ v ∷ sy ∷ []) ai1 ai2 refl refl refl .fst ht
+                    , ( termAgree u (x ∷ v ∷ sy ∷ δ') ai5 ai2 ai0
+                          (x ∷ v ∷ sy ∷ []) ai0 ai2 refl refl refl .fst hu
+                      , hr ) ) })
+               (ab .snd)) ))
+    (λ hw →
+      let sw = toS (Sat B (t ∈̇ u)) w hw
+          h  = subst ⟨_⟩ (Sat-mem B (t ∈̇ u) sw) hw
+      in extAt-in (suc zero) (atomBody memRel) δ' e sw
+           (atomBody-in memRel (sw ∷ δ') (h .fst) (PT.map
+             (λ { (v , (x , (ht , (hu , hr)))) → v , x
+                , ( termAgree t (x ∷ v ∷ sw ∷ δ') ai6 ai2 ai1
+                      (x ∷ v ∷ sw ∷ []) ai1 ai2 refl refl refl .snd ht
+                  , ( termAgree u (x ∷ v ∷ sw ∷ δ') ai5 ai2 ai0
+                        (x ∷ v ∷ sw ∷ []) ai0 ai2 refl refl refl .snd hu
+                    , hr ) ) })
+             (cond∈-out B t u sw (h .snd))))))
+    where
+    ct cu : S
+    ct = LCode.⌜ t ⌝ᵗ
+    cu = LCode.⌜ u ⌝ᵗ
+
+    δ' : S ^ 9
+    δ' = envSet B m ∷ y ∷ cu ∷ ct ∷ nn m ∷ c ∷ γ
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 0) (pr (fst ct) (fst cu)))
+    shape = q ∙ keyʟ-shape-in (t ∈̇ u)
+          ∙ cong (λ w → pr (# m) (pr (# 0) w)) (prʟ-fst ct cu)
+
+    hE = AmbientHolds.holds B δ' zero (suc (suc (suc (suc zero))))
+           (suc (suc (suc (suc (suc (suc Bi)))))) m refl refl refl
+
+    e = atomClause-out Ci Ti Bi 0 memRel γ hmem c (nn m) ct cu y (envSet B m)
+          c∈ shape hy hE
+
+  eq : Eq → ∀ {m} (t u : Term S m) → Pinned (t ≐ u)
+  eq heq {m} t u c y q c∈ hy = extensionalV (λ w → ⇔toPath
+    (λ hw →
+      let sy = toS y w hw
+          ab = atomBody-out eqRel (sy ∷ δ')
+                 (extAt-out (suc zero) (atomBody eqRel) δ' e sy hw)
+      in subst ⟨_⟩ (sym (Sat-mem B (t ≐ u) sy))
+           ( ab .fst
+           , cond≐-in B t u sy (PT.map
+               (λ { (v , (x , (ht , (hu , hr)))) → v , x
+                  , ( termAgree t (x ∷ v ∷ sy ∷ δ') ai6 ai2 ai1
+                        (x ∷ v ∷ sy ∷ []) ai1 ai2 refl refl refl .fst ht
+                    , ( termAgree u (x ∷ v ∷ sy ∷ δ') ai5 ai2 ai0
+                          (x ∷ v ∷ sy ∷ []) ai0 ai2 refl refl refl .fst hu
+                      , hr ) ) })
+               (ab .snd)) ))
+    (λ hw →
+      let sw = toS (Sat B (t ≐ u)) w hw
+          h  = subst ⟨_⟩ (Sat-mem B (t ≐ u) sw) hw
+      in extAt-in (suc zero) (atomBody eqRel) δ' e sw
+           (atomBody-in eqRel (sw ∷ δ') (h .fst) (PT.map
+             (λ { (v , (x , (ht , (hu , hr)))) → v , x
+                , ( termAgree t (x ∷ v ∷ sw ∷ δ') ai6 ai2 ai1
+                      (x ∷ v ∷ sw ∷ []) ai1 ai2 refl refl refl .snd ht
+                  , ( termAgree u (x ∷ v ∷ sw ∷ δ') ai5 ai2 ai0
+                        (x ∷ v ∷ sw ∷ []) ai0 ai2 refl refl refl .snd hu
+                    , hr ) ) })
+             (cond≐-out B t u sw (h .snd))))))
+    where
+    ct cu : S
+    ct = LCode.⌜ t ⌝ᵗ
+    cu = LCode.⌜ u ⌝ᵗ
+
+    δ' : S ^ 9
+    δ' = envSet B m ∷ y ∷ cu ∷ ct ∷ nn m ∷ c ∷ γ
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 1) (pr (fst ct) (fst cu)))
+    shape = q ∙ keyʟ-shape-in (t ≐ u)
+          ∙ cong (λ w → pr (# m) (pr (# 1) w)) (prʟ-fst ct cu)
+
+    hE = AmbientHolds.holds B δ' zero (suc (suc (suc (suc zero))))
+           (suc (suc (suc (suc (suc (suc Bi)))))) m refl refl refl
+
+    e = atomClause-out Ci Ti Bi 1 eqRel γ heq c (nn m) ct cu y (envSet B m)
+          c∈ shape hy hE
 ```
