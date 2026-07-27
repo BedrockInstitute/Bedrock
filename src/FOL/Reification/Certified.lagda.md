@@ -103,6 +103,29 @@ module Certified {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure �
 ```
 
 <!--en-->
+## Retargeting, with the witness kept
+<!--zh-->
+## 改标，且证书随行
+<!--/-->
+
+<!--en-->
+The same join as in the base chapter, and for the same reason: what a line
+produces is the raw unfolding, and what a reader states is something legible. The
+Δ₀ witness is untouched along with the formula, since neither depends on which
+predicate the certificate is said to be about. That is what makes this cheaper
+than it looks: a `RepΔ₀`{.Agda} signature restates the predicate, never the Δ₀
+witness, so retargeting costs one line and the witness stays derived.
+<!--zh-->
+与基础那一章相同的接缝，理由也相同：流水线产出的是原始展开，而读式陈述的是能读的东西。Δ₀ 见证与公式一同分毫未动，因为两者都不依赖「证书被说成关于哪个谓词」。这正是它比看上去便宜的原因：`RepΔ₀`{.Agda} 的签名重述谓词，从不重述 Δ₀ 见证，故改标只花一行，而见证仍是推导出来的。
+<!--/-->
+
+```agda
+  retarget₀ : ∀ {n} {P Q : S ^ n → Ω} → (∀ γ → P γ ≡ Q γ)
+            → RepΔ₀ n P → RepΔ₀ n Q
+  retarget₀ e (φ , d , a) = φ , d , λ γ → a γ ∙ e γ
+```
+
+<!--en-->
 ## The capstone: transfer
 <!--zh-->
 ## 压轴：transfer
