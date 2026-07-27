@@ -18,13 +18,16 @@ What is deliberately not proved is that the set of *all* codes is an element of
 stage from the small index type, one at a time, and cuts back by separation. The
 set of all codes is a much harder object than any code, and the difference is the
 whole reason it is not here. Whether a later part needs it is a separate question
-with a separate answer, and the answer is not yet in.
+with a separate answer: the answer is not yet in, and the place it is expected to
+turn is the point where definability at a stage is internalized, since the
+definable powerset takes syntax as its index type and an internalized index has
+to be a set.
 <!--zh-->
 一个码是由配对数码造出的遗传有穷集，故它理应是 `L` 的元素，而本章就这么说。证明是沿公式构造子的一次归纳，里面什么也没有；但这条陈述使后续章节能把码当作模型的寻常元素，而非当作恰好躺在那里的层级集合。
 
 它比看上去要紧。一个在 `L` 中内化的递归，其定义域取自 `L` **诸元素**的小族，而此处那个族就是诸码；而一个把码点名为常元的图，需要那个码是模型的元素，因为模型的对象语言没有别种常元。这两项要求都是这一条引理。
 
-刻意不证的是「**全体**码之集是 `L` 的元素」。本部分没有东西需要它：对码的递归从小索引类型出发，把它们逐个放进一个阶段，再由分离切回来。全体码之集是比任何单个码都难得多的对象，而这个差别正是它不在此处的全部理由。后续部分是否需要它，是另一个问题、另一个答案，而那个答案尚未到手。
+刻意不证的是「**全体**码之集是 `L` 的元素」。本部分没有东西需要它：对码的递归从小索引类型出发，把它们逐个放进一个阶段，再由分离切回来。全体码之集是比任何单个码都难得多的对象，而这个差别正是它不在此处的全部理由。后续部分是否需要它，是另一个问题、另一个答案：那个答案尚未到手，而预计会翻盘的地方是「阶段处的可定义性被内化」之时，因为可定义幂集以语法为索引类型，而被内化的索引必须是一个集合。
 <!--/-->
 
 ```agda
