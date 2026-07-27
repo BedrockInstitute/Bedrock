@@ -334,7 +334,7 @@ rows rather than editing old ones):
 | `Models.HITV.Def.Refine.{abs-defSet, module Abs}` | `L.Definability.Refine.{abs-defSet, module Abs}` | `[L2.1]`: un-deferred from the `[L1.6]` row that parked it as condensation-side; its first consumer is the ordinal formula of the collection step. Landing it executes the reading-order re-cut `[L1.4]` promised for `[L2.x]`: `FOL.Manipulation.{Relabelling, Bounding}` move from the tail to the Part 4 doorstep, since `L.Definability` is now their first consumer. `Renaming` and `Relativize` stay at the tail, still unconsumed |
 | `L.{OrdLset, RankLset, OrdLsetSuc, OrdinalFormula}` | `L.Ordinal.Stages` (one chapter) | `[L2.1]`: four source modules merge, since they are one theorem read two ways (`ord∈Lset→∈` and `ord∈Lset-suc`) plus its two comparison lemmas and the Δ₀ predicate. `sucβ∈or≡` → `suc∈or≡`, `φ_ord` → `φ-ord` (kebab, no underscore). The source's per-branch helper discipline is kept verbatim and narrated: the conclusions are heavy membership types and inlining them in a case split normalizes them per branch |
 | `L.ModelACInfinity.{ω∈L', ωₗ'}`, `L.ModelACNum.{ℕ̄ₗ, ω-specₗ', hasInfinityₗ'}` | `L.Axioms.Infinity.{ω∈L, ωʟ, isNumeralL, ω-specL, hasInfinityL}` | `[L2.1]`: the collection step joins the chain chapter rather than getting its own, and the chapter gains the `lem` parameter for it. `ℕ̄` → `isNumeralL` per the `[L1.4]` ruling that retired the invented bar |
-| `ZF.Coding` | `FOL.Coding` | `[L3.3]`: un-deferred as L3 phase B opens. Namespace by subject, `FOL/`: it codes the object language into a structure, and it is generic over that structure (an injective pairing and an injection of the naturals, as module parameters), so it belongs beside `FOL.ZFStructure` rather than under the model chapter. Reads at the Part 4 doorstep with `Relabelling` and `Bounding`. **`⌜⌝-inj` is dropped by consumption audit** (`[L3.1]`, S9): it is the 12-by-12 grid of §10's S8, 132 of whose 144 clauses carry no mathematics, and the `Codes` relation with `codes-canon` is what every consumer was designed around. It returns only if a consumer demands it, and then as `[L3.9]` work |
+| `ZF.Coding` | `FOL.Coding` | `[L3.3]`: un-deferred as L3 phase B opens. Namespace by subject, `FOL/`: it codes the object language into a structure, and it is generic over that structure (an injective pairing and an injection of the naturals, as module parameters), so it belongs beside `FOL.ZFStructure` rather than under the model chapter. Reads at the Part 4 doorstep with `Relabelling` and `Bounding`. **`⌜⌝-inj` is dropped by consumption audit** (`[L3.1]`, S9): it is the 12-by-12 grid of §10's S8, 132 of whose 144 clauses carry no mathematics, and the `Codes` relation with `codes-canon` is what every consumer was designed around. It returns only if a consumer demands it. **A consumer demanded it, 2026-07-27** (`[L3.0.1]`'s satisfaction table), and it returns as `[L3.22]`, not as `[L3.9]` work: that pointer named the wrong goal, and `[L3.9]` is abandoned with "a future need returns as a new code" |
 | `Models.HITV.Coding` | `V.Coding` | `[L3.3]`: un-deferred; discharges `FOL.Coding`'s two parameters (`#-inj` through monotonicity and irreflexivity, `pr-inj` through the classification specifications). Its `A∉A` is dropped, superseded by `V.Hierarchy.∈-irrefl` |
 | `L.Ordinal.∈-irrefl` | `V.Hierarchy.∈-irrefl` | `[L3.3]`: re-homed one chapter earlier, to the chapter that proves regularity, following the `[L1.6]` precedent for `∈-induction`. `V.Coding` needs it and must read before `L/`, so the L-side home was an inversion waiting to happen |
 | `L.ConstructibleOrder.{SWO, IsLeast, isPropLeastOf, leastOf, Tri}` | `L.WellOrder.Base` | `[L3.14]`: un-deferred at owner request, ahead of `[L2.2]` which is its first consumer. `Tri` is re-minted here as a general three-way datatype (the source imports it from `FormulaOrder`, which is instance data and stays deferred). **The `lem` parameter moves from the module to `leastOf` alone**: the bundle and the uniqueness of least elements are constructive, so charging the whole chapter classically would have overstated the price. `ΣSWO` and the pullback stay deferred to `[L2.4]`, where the order they build is defined |
@@ -1112,6 +1112,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L4 | Convergence | PLANNED |
 | L4.0 | Empty Frontier, unconditional root | PLANNED |
 | L3.21 | The code set at a stage, in `L`, with an object predicate | **REGISTERED 2026-07-27** by the `[L3.20]` route audit, which found it unowned. `Def A = sett (Formula ⟪A⟫ 1) defSet` takes **syntax as its index type**; internalized, that index has to be a *set* carrying an object-language membership predicate. `[L3.18]` names the absolute version of this question and defers it ("spike before `[L3.19]`"); the **stage-relative** version was never asked, and `[L3.18]` made the alphabet stage-relative by design, so it is the version that actually arises. `L.Coding.InL`'s standing disclaimer ("the set of all codes is deliberately not proved to be one") is true today and is expected to stop being true exactly here. Route: `smallDom` for the domain, then `hasSeparationL` by "x is a code over `Lset σ`", for which `closedAt` plus a well-formedness predicate is the tool. **This is the same failure mode `[L3.17]` was registered to prevent**, caught the same way. Est. 100 to 250 |
+| L3.22 | `⌜⌝`-injectivity at a fixed arity | **REGISTERED 2026-07-27**, the return of the obligation `[L3.1]` dropped by consumption audit, under a new code because §6.0 rule 3 forbids reviving an abandoned one. **The consumer is `[L3.0.1]`'s satisfaction table, and the demand is unavoidable**: the table is a *set*, so if two subformula occurrences share a key with different values it is genuinely multi-valued and **existence fails**, not merely its proof. Head-versus-tail collisions die to a rank argument; collisions between the two branches of `a ∧̇ b` do not. **Stated at `K = S`, not at an arbitrary alphabet**: under `[L3.18]` codes are taken of `mapFo f χ`, and for non-injective `f` the statement is simply false. Gate: a five-constructor spike, 25 cases, measuring whether the 20 off-diagonal `clash` cases reduce or whether `mkTag` being a function forces normalization of two nested pair values; **this is the one place left where the design can fail rather than merely cost more**. Red verdict routes through `Codes`/`codes-canon` instead, +150 to 250. Est. 150 to 200 plus a 60-to-90 spike |
 | L4.1 | Whole-book harmonization pass | PLANNED |
 | L4.2 | Landmarks/README/Charter updates | PLANNED |
 | L4.3 | Seed the GCH successor plan | PLANNED |
@@ -1804,10 +1805,17 @@ One row per goal code; update the row in the same commit that changes the status
   first instance needed the closedness half, `[L3.17]` (three times its estimate), and
   `[L3.9]`.
 
-  **`[L3.9]` must be un-deferred and `[L3.8]`'s abandonment reversed.** `⌜⌝`-injectivity at a
-  fixed arity is an unavoidable prerequisite of this unit, and the plan records it as dropped
-  by consumption audit with `[L3.8]` abandoned on the ground that "the one real grid
-  (`⌜⌝-inj`, 132 clauses) was dropped". **This unit is the consumer.** The table is a set, so
+  **`⌜⌝`-injectivity returns, and it returns as a new code.** It is an unavoidable
+  prerequisite of this unit, and the plan records it as dropped by consumption audit, with
+  `[L3.8]` abandoned on the ground that "the one real grid (`⌜⌝-inj`, 132 clauses) was
+  dropped". **This unit is the consumer.** *(Correction, same day: an earlier draft of this
+  note said `[L3.9]` must be un-deferred and `[L3.8]`'s abandonment reversed. Both are wrong
+  under §6.0 rule 3, and the second is wrong on its subject as well: `[L3.9]` is the transport
+  and cast solver, a different goal, and its own row already says "a future need returns as a
+  new code"; `[L3.8]` is dispatch-grid generation, whose premise the grid's return does not
+  restore, since one grid is not a generator. The §11 pointer at `FOL.Coding` that sends the
+  obligation to `[L3.9]` is the source of the confusion and is corrected in place. The
+  obligation is registered as `[L3.22]`.)* The table is a set, so
   if two subformula occurrences share a key with different values it is genuinely multi-valued
   and **existence fails**, not merely its proof. Head-versus-tail collisions die to a rank
   argument; collisions between the two branches of `a ∧̇ b` do not. Est. 150 to 200, and it
@@ -1865,3 +1873,33 @@ One row per goal code; update the row in the same commit that changes the status
   written and stopped being true at `[L3.18]`, which widened it. It is the second time in this
   goal that **a prose sentence stating an invariant hid a defect that the code could not
   report**; the chapter now says both cases and says why.
+
+- **The build order's letters retire into codes, 2026-07-27.** The design ruling above came
+  back with a build order labelled `U0` to `U7`. Those letters are not codes and must not
+  become any; §6.0 rule 4 is the reason, and applying it is the whole of the mapping: **a code
+  is a goal with its own success criterion, and individual lemmas and modules are artifacts
+  hanging under one.** Six of the ten units are lemmas inside a single goal whose success
+  criterion is one thing, `Recursion` filled for satisfaction.
+
+  | unit | owner | note |
+  |---|---|---|
+  | `U0` repair `tmValAt` | `[L3.16]` | a defect in delivered code, not a goal. **DONE** |
+  | `U1` the ambient environment set | `[L3.17]` | existing code, two thirds built |
+  | `U2` the introduction half of the twelve clauses | `[L3.16]` | residue: the chapter wrote both halves of the closedness predicate, because the first instance had to *satisfy* it, and only the elimination half of the value clauses |
+  | `U3` the meta value function | `[L3.0.1]` | artifact |
+  | `U4a` `⌜⌝`-injectivity | **`[L3.22]`** | its own success criterion, its own gate, and a consumer outside itself |
+  | `U4b` the table, its constructibility and its inversion | `[L3.0.1]` | artifact |
+  | `U5a` the value-carrying tag dispatch | `[L3.0.1]` | artifact |
+  | `U5b` existence: the twelve clause verifications | `[L3.0.1]` | artifact |
+  | `U6` uniqueness: the coherence lemma | `[L3.0.1]` | artifact |
+  | `U7` the instance chapter | `[L3.0.1]` | artifact |
+
+  Two route rows also resolve rather than needing codes. **"`Def` internalized at a stage" is
+  `[L3.19]`**, not a row beside it: that goal is "the internal definition of `L` off which the
+  internal well-order is read", and internalizing the definable powerset at a stage is how
+  `Lset (α+1)` gets defined internally. And **`hasChoiceL` itself is `[L2.4]`**, whose scope is
+  the well-order and choice trunk together.
+
+  So the route to `hasChoiceL` is **eight codes, not fifteen units**: `[L3.16]` residue,
+  `[L3.17]`, `[L3.22]`, `[L3.0.1]`, `[L3.21]`, `[L3.19]`, `[L2.4]`, with `[L3.20]` closed
+  behind them. Sizes are unchanged; only the bookkeeping is.
