@@ -35,7 +35,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; ¬̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -44,7 +44,7 @@ open import L.Coding.Model {ℓ}
   using ( closedAt; domAt; domAt-in; botClauseAt; botClause-out; topClauseAt
         ; topClause-out; andClauseAt; orClauseAt; propClause-out
         ; interAt; unionAt; yc7; ya7; yb7; negClauseAt; negClause-out
-        ; unSameClosed-out
+        ; unSameClosed-out; impClauseAt; impClause-out
         ; binSameClosed-out; prʟ-fst; module LCode; numL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
@@ -120,6 +120,9 @@ module Good (B C T : S) where
 
   Neg : Type (ℓ-suc ℓ)
   Neg = ⟨ γ ⊨ negClauseAt Ci Ti Bi ⟩
+
+  Imp : Type (ℓ-suc ℓ)
+  Imp = ⟨ γ ⊨ impClauseAt Ci Ti Bi ⟩
 
   toS : (v : S) (w : V ℓ) → ⟨ w ∈ fst v ⟩ → S
   toS v w hw = w , isL-trans hw (snd v)
@@ -360,4 +363,67 @@ different clause, and none needs a fourth ingredient.
     ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkey a')
            (unSameClosed-out Ci 5 γ (hcl .snd .snd .snd .fst) c (nn m) ca
              c∈ shape)
+```
+
+<!--en-->
+## Implication
+<!--zh-->
+## 蕴含
+<!--/-->
+
+<!--en-->
+Two subvalues and an ambient set, which is negation and conjunction at once. The
+identity is the object language's own arrow on both sides, which is the choice
+the chapter that wrote the clauses made and had to make: the joined form would
+need the excluded middle, and neither chapter takes it.
+<!--zh-->
+两个子取值加一个周遭集合，即否定与合取合在一处。两侧的等式都是对象语言自己的箭头，而那是写下诸子句的那一章所作、也不得不作的选择：合并的写法要用排中律，而两章都不取它。
+<!--/-->
+
+```agda
+  imp : Closed → Total → Imp
+      → ∀ {m} (a' b' : Formula S m) → Pinned a' → Pinned b' → Pinned (a' ⇒̇ b')
+  imp hcl hdom himp {m} a' b' ia ib c y q c∈ hy =
+    PT.rec (setIsSet (fst y) (fst (Sat B (a' ⇒̇ b'))))
+      (λ { (ya , hya) → PT.rec (setIsSet (fst y) (fst (Sat B (a' ⇒̇ b'))))
+        (λ { (yb , hyb) →
+          let ea = ia (keyʟ a') ya refl (ka .fst) hya
+              eb = ib (keyʟ b') yb refl (ka .snd) hyb
+              δ' : S ^ 11
+              δ' = envSet B m ∷ yb ∷ ya ∷ y ∷ cb ∷ ca ∷ nn m ∷ c ∷ γ
+              hE = AmbientHolds.holds B δ' zero
+                     (suc (suc (suc (suc (suc (suc zero))))))
+                     (suc (suc (suc (suc (suc (suc (suc (suc Bi))))))))
+                     m refl refl refl
+              e  = impClause-out Ci Ti Bi γ himp c (nn m) ca cb y ya yb
+                     (envSet B m) c∈ shape hy (up a' ya hya) (up b' yb hyb) hE
+          in extensionalV (λ w → ⇔toPath
+               (λ hw → subst ⟨_⟩ (sym (Sat-mem B (a' ⇒̇ b') (toS y w hw)))
+                 ( e .fst (toS y w hw) hw .fst
+                 , (λ h → subst (λ v → ⟨ w ∈ v ⟩) eb
+                     (e .fst (toS y w hw) hw .snd
+                       (subst (λ v → ⟨ w ∈ v ⟩) (sym ea) h))) ))
+               (λ hw →
+                 let r = subst ⟨_⟩
+                           (Sat-mem B (a' ⇒̇ b') (toS (Sat B (a' ⇒̇ b')) w hw)) hw
+                 in e .snd (toS (Sat B (a' ⇒̇ b')) w hw)
+                      ( r .fst
+                      , (λ h → subst (λ v → ⟨ w ∈ v ⟩) (sym eb)
+                          (r .snd (subst (λ v → ⟨ w ∈ v ⟩) ea h))) ))) })
+        (domAt-in Ti Ci γ hdom (keyʟ b') (ka .snd)) })
+      (domAt-in Ti Ci γ hdom (keyʟ a') (ka .fst))
+    where
+    ca cb : S
+    ca = LCode.⌜ a' ⌝
+    cb = LCode.⌜ b' ⌝
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 4) (pr (fst ca) (fst cb)))
+    shape = q ∙ keyʟ-shape-in (a' ⇒̇ b')
+          ∙ cong (λ w → pr (# m) (pr (# 4) w)) (prʟ-fst ca cb)
+
+    ka : ⟨ fst (keyʟ a') ∈ fst C ⟩ × ⟨ fst (keyʟ b') ∈ fst C ⟩
+    ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkey a') (r .fst)
+       , subst (λ w → ⟨ w ∈ fst C ⟩) (kkey b') (r .snd)
+      where r = binSameClosed-out Ci 4 γ (hcl .snd .snd .fst) c (nn m) ca cb
+                  c∈ shape
 ```
