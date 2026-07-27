@@ -40,7 +40,9 @@ open import V.Model {ℓ} using ( pair-singleton )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
 open import L.Coding.Base {ℓ} using ( prAt; Δ₀-prAt; prAt-adequate )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst )
+open import L.Coding.Environment {ℓ} using ( sucAt; Δ₀-sucAt; sucAt-adequate )
+open import L.Axioms.Numerals {ℓ}
+  using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst; sucʟ; sucʟ-fst )
 
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Data.Nat using ( _+_ )
@@ -50,7 +52,7 @@ open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ⁅_,_⁆ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( #_ )
+open InfinitySet using ( #_; sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -986,6 +988,72 @@ module _ {n : ℕ} where
 
   botClauseAt : Fin n → Fin n → Formula S n
   botClauseAt C T = unClauseAt C T 7 (emptyAt zero)
+```
+
+<!--en-->
+## The next arity
+<!--zh-->
+## 下一个元数
+<!--/-->
+
+<!--en-->
+Four of the twelve bind a variable, so their subformula sits one arity higher and
+the table has to be consulted there. The successor reader is already written on
+the hierarchy side and names no constants, so it crosses by quoting, and the
+lookup at the next arity is the lookup at a fresh arity constrained to be the
+successor of the one the frame bound.
+
+The backward direction needs the successor as an element of the model, and the
+numeral chapter supplies it: the model's own successor, read through the
+underlying set, is the hierarchy's.
+<!--zh-->
+十二条里有四条绑定一个变元，故它们的子公式高出一个元数，而表必须在那里被查询。后继读式在层级一侧已经写好，且不点名常元，故它经引用过河；而「下一元数处的查表」，就是「在一个新元数处的查表」加上「该元数是框架所绑元数的后继」这条约束。
+
+反向需要那个后继作为模型的元素，而数码那一章供给它：模型自己的后继，沿底层集合读出来，就是层级的后继。
+<!--/-->
+
+```agda
+sucAtL : ∀ {n} → Fin n → Fin n → Formula S n
+sucAtL i j = liftFo (sucAt i j) _
+
+sucAtL-adequate : ∀ {n} (i j : Fin n) (γ : S ^ n)
+  → (γ ⊨ sucAtL i j) ≡ PairIs (fst (lookup j γ)) (sucV (fst (lookup i γ)))
+sucAtL-adequate i j γ =
+    transferFo (sucAt i j) _ (Δ₀-sucAt i j) γ
+  ∙ sucAt-adequate i j (map fst γ)
+  ∙ cong₂ PairIs (lookup-fst j γ) (cong sucV (lookup-fst i γ))
+
+subValSuccAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+subValSuccAt T ar a y =
+  ∃̇ (sucAtL (suc ar) zero ∧̇ subValAt (suc T) zero (suc a) (suc y))
+
+subValSuccAt-adequate : ∀ {n} (T ar a y : Fin n) (γ : S ^ n)
+  → (γ ⊨ subValSuccAt T ar a y)
+  ≡ (pr (pr (sucV (fst (lookup ar γ))) (fst (lookup a γ))) (fst (lookup y γ))
+      ∈ fst (lookup T γ))
+subValSuccAt-adequate T ar a y γ = ⇔toPath fwd bwd
+  where
+  key : V ℓ → V ℓ
+  key w = pr (pr w (fst (lookup a γ))) (fst (lookup y γ))
+  target = key (sucV (fst (lookup ar γ))) ∈ fst (lookup T γ)
+
+  fwd : ⟨ γ ⊨ subValSuccAt T ar a y ⟩ → ⟨ target ⟩
+  fwd = PT.rec (snd target)
+    (λ { (z , (sz , v)) →
+      subst (λ w → ⟨ key w ∈ fst (lookup T γ) ⟩)
+        (subst ⟨_⟩ (sucAtL-adequate (suc ar) zero (z ∷ γ)) sz)
+        (subst ⟨_⟩ (subValAt-adequate (suc T) zero (suc a) (suc y) (z ∷ γ)) v) })
+
+  bwd : ⟨ target ⟩ → ⟨ γ ⊨ subValSuccAt T ar a y ⟩
+  bwd h = ∣ zS
+    , ( subst ⟨_⟩ (sym (sucAtL-adequate (suc ar) zero (zS ∷ γ))) e
+      , subst ⟨_⟩ (sym (subValAt-adequate (suc T) zero (suc a) (suc y) (zS ∷ γ)))
+          (subst (λ w → ⟨ key w ∈ fst (lookup T γ) ⟩) (sym e) h) ) ∣₁
+    where
+    zS : S
+    zS = sucʟ (lookup ar γ)
+    e : fst zS ≡ sucV (fst (lookup ar γ))
+    e = sucʟ-fst (lookup ar γ)
 ```
 
 <!--en-->
