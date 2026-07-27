@@ -749,10 +749,51 @@ working as designed.
   prose, a macro call is opaque"). **That argument is withdrawn under D13** and must not be
   reintroduced.
 
-  **Next unit, and a scheduling constraint.** Adopt `RepP` for the congruence-shaped
-  predicates of `L.Coding.Model`, and prefer it for every new one. **Not now**, because a
-  forked conversation is finishing the twelve clauses in that file and a refactor would
-  collide; the adoption lands when that file is quiet.
+  **ATTEMPTED AND REJECTED ON MEASUREMENT, 2026-07-27, branch `l3.2-reification`.** The
+  adoption was carried out for real: `retarget`/`retarget₀`/`predOf` added to the framework
+  (step 1), `L.Coding.Base`'s hub reader `prAt` rebuilt through the certified combinators
+  with its three public names kept as projections (step 2), and `L.Coding.Entry` rebuilt on
+  top of it (step 3, the plan's own decisive test). Everything typechecks; `make check` is
+  green on the branch. **Both of D13's tests fail.**
+
+  **Not smaller.** `L.Coding.Entry` 78 → 56, a genuine 22-line saving, exactly the shape the
+  audit predicted. `L.Coding.Base` 187 → **218**, a 31-line cost. Net over the two modules
+  the plan rated best: **265 → 274, +9 lines.** And the hub cost is not deferred: 13 of the
+  31 lines are the three reps' type signatures, which the framework never removes, and the
+  step-6 shim deletion can recover only 3.
+
+  The reason is the discriminating rule, applied where the plan had not applied it. The
+  framework pays where an adequacy lemma already exists stating a nice predicate *and* two
+  or more `subst` sites hang off it. `prAt-adequate` has **zero** `subst` sites: it was
+  already a three-line `⇔toPath` over `prChar-fwd`/`prChar-bwd`. So the hub is the worst
+  possible shape, and the hub is the one module that cannot be skipped.
+
+  **And it degrades a budget for nothing.** `L.Coding.Model`, which was **not** converted,
+  goes 1,720 ms on `main` to 2,144 / 2,186 / 2,211 / 2,291 ms across four cold runs on the
+  branch, a consistent **+25% to +33%**; the tree goes 20.5 s to 21.1–21.8 s. That is not a
+  conversion blowup in D13's sense, and the absolute figures stay far inside §7.5 and §7.6.
+  But it trips the plan's own step-2 abort gate of 2.1 s, and paying it for a negative line
+  delta is a bad trade on both axes. The cause is structural: `prAt` is now
+  `prAt-rep q u v .fst`, so every downstream site that recognised it by its constructor tree
+  reduces through the rep.
+
+  **Would more consumers amortise it?** The plan projects `Tagged` −22 and `Length` −9. Even
+  if both hold exactly, all four chapters land at about −22 lines against a permanent
+  +25–33% on the largest coding module, and the two modules already measured came in 40
+  lines worse than projected. The expected value is break-even at best.
+
+  **Ruling: do not adopt.** The branch is kept as the record and is **not** to be merged;
+  this entry is the deliverable. What survives is the calibration, which is now measured
+  rather than projected: a reification framework of this shape pays only where an adequacy
+  proof carries multiple transports, and a hub whose adequacy is already direct will eat the
+  savings of every leaf that quotes it.
+
+  **What would change the answer.** Not a macro; `reify!` generates the same reps and would
+  inherit the same hub cost. Only a different framework interface would: one where a rep's
+  predicate need not be restated in a signature (the 13 lines), and where `translate` of a
+  built rep is *definitionally* the hand-written formula in the eyes of downstream
+  pattern-matching rather than merely propositionally equal (the 25–33%). Both are framework
+  redesigns, not adoption work, and neither is scheduled.
 
   **Corrections on the record.** One turn before the re-evaluation I called `[L3.2]` "the
   real lever" on the twenty-nine traversals; that was said before measuring. And the
