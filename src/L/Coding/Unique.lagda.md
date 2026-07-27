@@ -35,14 +35,15 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( closedAt; domAt; domAt-in; botClauseAt; botClause-out; topClauseAt
-        ; topClause-out; andClauseAt; propClause-out; interAt; yc7; ya7; yb7
+        ; topClause-out; andClauseAt; orClauseAt; propClause-out
+        ; interAt; unionAt; yc7; ya7; yb7
         ; binSameClosed-out; prʟ-fst; module LCode; numL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
@@ -53,6 +54,8 @@ open import L.Coding.Sound {ℓ} lem using ( module AmbientHolds )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁ )
+open import Cubical.Data.Sum using ( inl; inr )
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -110,6 +113,9 @@ module Good (B C T : S) where
 
   And : Type (ℓ-suc ℓ)
   And = ⟨ γ ⊨ andClauseAt Ci Ti ⟩
+
+  Or : Type (ℓ-suc ℓ)
+  Or = ⟨ γ ⊨ orClauseAt Ci Ti ⟩
 
   Pinned : ∀ {m} → Formula S m → Type (ℓ-suc ℓ)
   Pinned {m} ψ = (c y : S) → fst c ≡ fst (keyʟ ψ)
@@ -255,4 +261,60 @@ because the goal is an equation between sets.
 
     ss : (w : V ℓ) → ⟨ w ∈ fst (Sat B (a' ∧̇ b')) ⟩ → S
     ss w hw = w , isL-trans hw (snd (Sat B (a' ∧̇ b')))
+
+  or : Closed → Total → Or
+      → ∀ {m} (a' b' : Formula S m) → Pinned a' → Pinned b' → Pinned (a' ∨̇ b')
+  or hcl hdom hor {m} a' b' ia ib c y q c∈ hy =
+    PT.rec (setIsSet (fst y) (fst (Sat B (a' ∨̇ b'))))
+      (λ { (ya , hya) → PT.rec (setIsSet (fst y) (fst (Sat B (a' ∨̇ b'))))
+        (λ { (yb , hyb) →
+          let ea = ia (keyʟ a') ya refl (ka .fst) hya
+              eb = ib (keyʟ b') yb refl (ka .snd) hyb
+              e  = propClause-out Ci Ti 3 (unionAt yc7 ya7 yb7) γ hor
+                     c (nn m) ca cb y ya yb c∈ shape hy (up a' ya hya) (up b' yb hyb)
+          in extensionalV (λ w → ⇔toPath
+               (λ hw → PT.rec (snd (w ∈ fst (Sat B (a' ∨̇ b'))))
+                 (λ { (inl h) → subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') (sy w hw)))
+                        ( subst ⟨_⟩ (Sat-mem B a' (sy w hw))
+                            (subst (λ v → ⟨ w ∈ v ⟩) ea h) .fst
+                        , ∣ inl (subst (λ v → ⟨ w ∈ v ⟩) ea h) ∣₁ )
+                    ; (inr h) → subst ⟨_⟩ (sym (Sat-mem B (a' ∨̇ b') (sy w hw)))
+                        ( subst ⟨_⟩ (Sat-mem B b' (sy w hw))
+                            (subst (λ v → ⟨ w ∈ v ⟩) eb h) .fst
+                        , ∣ inr (subst (λ v → ⟨ w ∈ v ⟩) eb h) ∣₁ ) })
+                 (e .fst (sy w hw) hw))
+               (λ hw → e .snd (ss w hw) (PT.map
+                 (λ { (inl h) → inl (subst (λ v → ⟨ w ∈ v ⟩) (sym ea) h)
+                    ; (inr h) → inr (subst (λ v → ⟨ w ∈ v ⟩) (sym eb) h) })
+                 (subst ⟨_⟩ (Sat-mem B (a' ∨̇ b') (ss w hw)) hw .snd)))) })
+        (domAt-in Ti Ci γ hdom (keyʟ b') (ka .snd)) })
+      (domAt-in Ti Ci γ hdom (keyʟ a') (ka .fst))
+    where
+    ca cb : S
+    ca = LCode.⌜ a' ⌝
+    cb = LCode.⌜ b' ⌝
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 3) (pr (fst ca) (fst cb)))
+    shape = q ∙ keyʟ-shape-in (a' ∨̇ b')
+          ∙ cong (λ w → pr (# m) (pr (# 3) w)) (prʟ-fst ca cb)
+
+    kkey : ∀ {j} (χ : Formula S j) → pr (# j) (fst LCode.⌜ χ ⌝) ≡ fst (keyʟ χ)
+    kkey {j} χ = cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst j))
+               ∙ sym (prʟ-fst (numeralL j) LCode.⌜ χ ⌝)
+
+    ka : ⟨ fst (keyʟ a') ∈ fst C ⟩ × ⟨ fst (keyʟ b') ∈ fst C ⟩
+    ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkey a') (r .fst)
+       , subst (λ w → ⟨ w ∈ fst C ⟩) (kkey b') (r .snd)
+      where r = binSameClosed-out Ci 3 γ (hcl .snd .fst) c (nn m) ca cb c∈ shape
+
+    up : ∀ {j} (χ : Formula S j) (v : S)
+       → ⟨ pr (fst (keyʟ χ)) (fst v) ∈ fst T ⟩
+       → ⟨ pr (pr (# j) (fst LCode.⌜ χ ⌝)) (fst v) ∈ fst T ⟩
+    up χ v h = subst (λ w → ⟨ pr w (fst v) ∈ fst T ⟩) (sym (kkey χ)) h
+
+    sy : (w : V ℓ) → ⟨ w ∈ fst y ⟩ → S
+    sy w hw = w , isL-trans hw (snd y)
+
+    ss : (w : V ℓ) → ⟨ w ∈ fst (Sat B (a' ∨̇ b')) ⟩ → S
+    ss w hw = w , isL-trans hw (snd (Sat B (a' ∨̇ b')))
 ```
