@@ -114,12 +114,16 @@ the same choice for the same reason, and the two have to agree.
 
 The quantifiers cons a member of the carrier onto the environment and ask whether
 the result is in the value below, which is one arity up. The two bounded ones do
-the same with the member drawn from the value of their bounding term rather than
-from the carrier.
+the same, and the member is drawn **from the carrier and guarded by the bounding
+term's value**, not from that value alone. Drawing it from the value alone is
+wrong for the same reason it was wrong in the internal clauses, where an audit
+caught it: a member of the bound need not be a member of the carrier, so the
+environment it would be consed onto would not be an environment, and the two
+sides would not agree.
 <!--zh-->
 十二条子句，每条都是在周遭集合上作一次分离。命题的那几条把它们下面的诸取值点名，再用对象语言自己的联结词把它们合起来；蕴含那一条因此是 Heyting 箭头，而非「并的补」：写内部诸子句的那一章出于同样理由作了同样的选择，而两者必须一致。
 
-两个量词把载体的一个成员接到环境头上，再问结果是否落在下面那个取值之中，而后者高一个元数。两个有界量词做同样的事，只是那个成员取自其界项的取值，而非取自载体。
+两个量词把载体的一个成员接到环境头上，再问结果是否落在下面那个取值之中，而后者高一个元数。两个有界量词做同样的事，而那个成员**取自载体、由界项的取值设防**，不是单取自那个取值。单取自那个取值是错的，理由与它在内部诸子句里曾经错的理由相同 (那次由一次审计抓出)：界的成员未必是载体的成员，于是被接上去的环境根本不是环境，两侧也就对不上。
 <!--/-->
 
 ```agda
@@ -162,12 +166,14 @@ module _ (B : S) where
                   ⇒̇ (var zero ∈̇ con (Sat a)) )))
   cond (∀̇∈ t a) =
     (∀̇ ( tmIs t zero (suc zero)
-      ⇒̇ ∀̇∈ (var zero) (∀̇ ( consAtL zero (suc zero) (suc (suc (suc zero)))
-                        ⇒̇ (var zero ∈̇ con (Sat a)) )) ))
+      ⇒̇ ∀̇∈ (con B) ( (var zero ∈̇ var (suc zero))
+                   ⇒̇ ∀̇ ( consAtL zero (suc zero) (suc (suc (suc zero)))
+                       ⇒̇ (var zero ∈̇ con (Sat a)) ) ) ))
   cond (∃̇∈ t a) =
     (∃̇ ( tmIs t zero (suc zero)
-      ∧̇ ∃̇∈ (var zero) (∃̇ ( consAtL zero (suc zero) (suc (suc (suc zero)))
-                        ∧̇ (var zero ∈̇ con (Sat a)) )) ))
+      ∧̇ ∃̇∈ (con B) ( (var zero ∈̇ var (suc zero))
+                   ∧̇ ∃̇ ( consAtL zero (suc zero) (suc (suc (suc zero)))
+                       ∧̇ (var zero ∈̇ con (Sat a)) ) ) ))
 ```
 
 <!--en-->
