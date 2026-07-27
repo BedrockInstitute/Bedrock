@@ -374,6 +374,31 @@ pairsInAt e d B =
   ∀̇∈ (var e) (∃̇∈ (var (suc d)) (∃̇∈ (var (suc (suc B)))
     (prAtL (suc (suc zero)) (suc zero) zero)))
 
+pairsIn-out : ∀ {n} (e d B : Fin n) (γ : S ^ n) → ⟨ γ ⊨ pairsInAt e d B ⟩
+            → (s : S) → ⟨ fst s ∈ fst (lookup e γ) ⟩
+            → ∥ (Σ[ u ∈ S ] (Σ[ v ∈ S ]
+                  (⟨ fst u ∈ fst (lookup d γ) ⟩
+                   × (⟨ fst v ∈ fst (lookup B γ) ⟩
+                      × (fst s ≡ pr (fst u) (fst v)))))) ∥₁
+pairsIn-out e d B γ h s s∈ = PT.rec squash₁
+  (λ { (u , (u∈ , hv)) → PT.map
+    (λ { (v , (v∈ , hp)) → u , (v , (u∈ , (v∈ , subst ⟨_⟩
+      (prAtL-adequate (suc (suc zero)) (suc zero) zero (v ∷ u ∷ s ∷ γ)) hp))) })
+    hv })
+  (h s s∈)
+
+pairsIn-in : ∀ {n} (e d B : Fin n) (γ : S ^ n)
+           → ((s : S) → ⟨ fst s ∈ fst (lookup e γ) ⟩
+              → ∥ (Σ[ u ∈ S ] (Σ[ v ∈ S ]
+                    (⟨ fst u ∈ fst (lookup d γ) ⟩
+                     × (⟨ fst v ∈ fst (lookup B γ) ⟩
+                        × (fst s ≡ pr (fst u) (fst v)))))) ∥₁)
+           → ⟨ γ ⊨ pairsInAt e d B ⟩
+pairsIn-in e d B γ k s s∈ = PT.map
+  (λ { (u , (v , (u∈ , (v∈ , eq)))) → u , (u∈ , ∣ v , (v∈ , subst ⟨_⟩
+    (sym (prAtL-adequate (suc (suc zero)) (suc zero) zero (v ∷ u ∷ s ∷ γ))) eq) ∣₁) })
+  (k s s∈)
+
 envOverAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 envOverAt e d B =
   svAt e ∧̇ (domAt e d ∧̇ (valuesInAt e B ∧̇ pairsInAt e d B))
