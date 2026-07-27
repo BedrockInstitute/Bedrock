@@ -37,12 +37,16 @@ open import FOL.Syntax
         ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Coding.Model {ℓ} using ( appAt; consAtL; numL )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; consAtL; numL )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
 
 open import Cubical.Data.FinData using ( toℕ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -77,6 +81,22 @@ tmIs : ∀ {n m} → Term S n → Fin m → Fin m → Formula S m
 tmIs (var i) v e =
   ∃̇ ((var zero ≐ con (nn (toℕ i))) ∧̇ appAt (suc e) zero (suc v))
 tmIs (con c) v e = var v ≐ con c
+
+tmIs-var-in : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
+            → ⟨ pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩
+            → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
+tmIs-var-in i γ v e h = ∣ nn (toℕ i)
+  , ( refl
+    , subst ⟨_⟩ (sym (appAt-adequate (suc e) zero (suc v) (nn (toℕ i) ∷ γ))) h ) ∣₁
+
+tmIs-var-out : ∀ {n m} (i : Fin n) (γ : S ^ m) (v e : Fin m)
+             → ⟨ γ ⊨ tmIs {n} (var i) v e ⟩
+             → ⟨ pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩
+tmIs-var-out i γ v e = PT.rec
+  (snd (pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ)))
+  (λ { (x , (qx , m)) →
+    subst (λ w → ⟨ pr w (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩) qx
+      (subst ⟨_⟩ (appAt-adequate (suc e) zero (suc v) (x ∷ γ)) m) })
 ```
 
 <!--en-->
