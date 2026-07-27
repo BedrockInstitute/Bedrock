@@ -35,15 +35,16 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; ⊤̇; ⊥̇ )
+open import FOL.Syntax using ( Formula; _∧̇_; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( closedAt; domAt; botClauseAt; botClause-out; topClauseAt
-        ; topClause-out; numL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL )
+  using ( closedAt; domAt; domAt-in; botClauseAt; botClause-out; topClauseAt
+        ; topClause-out; andClauseAt; propClause-out; interAt; yc7; ya7; yb7
+        ; binSameClosed-out; prʟ-fst; module LCode; numL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
 open import L.Coding.Table {ℓ} lem using ( keyʟ; keyʟ-shape-in )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
@@ -51,8 +52,9 @@ open import L.Coding.Sound {ℓ} lem using ( module AmbientHolds )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Data.Unit using ( tt* )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -105,6 +107,9 @@ module Good (B C T : S) where
 
   Top : Type (ℓ-suc ℓ)
   Top = ⟨ γ ⊨ topClauseAt Ci Ti Bi ⟩
+
+  And : Type (ℓ-suc ℓ)
+  And = ⟨ γ ⊨ andClauseAt Ci Ti ⟩
 
   Pinned : ∀ {m} → Formula S m → Type (ℓ-suc ℓ)
   Pinned {m} ψ = (c y : S) → fst c ≡ fst (keyʟ ψ)
@@ -179,4 +184,75 @@ frame put them where the clause looks.
 
     sw' : (w : V ℓ) → ⟨ w ∈ fst (Sat B (⊤̇ {n = m})) ⟩ → S
     sw' w hw = w , isL-trans hw (snd (Sat B (⊤̇ {n = m})))
+```
+
+<!--en-->
+## The first case with an induction hypothesis
+<!--zh-->
+## 第一条用上归纳假设的情形
+<!--/-->
+
+<!--en-->
+Conjunction, and with it the shape the remaining ten follow. Closedness puts the
+subkeys in the index, totality gives the table an entry at each of them, the
+induction hypothesis says those entries are the recursion's values, the clause
+says the value at the key is their intersection, and the recursion cut its value
+out by the same condition. The entries arrive merely, which costs nothing,
+because the goal is an equation between sets.
+<!--zh-->
+合取，以及随之而来、余下十条都要走的那个形状。封闭性把诸子键放进索引，全性使表在每个子键处都有条目，归纳假设说那些条目就是递归的诸取值，子句说键处的取值是它们的交，而递归当初正是用同一个条件把它的取值雕出来的。那些条目是**仅仅**到手的，而这不花分文，因为目标是一条集合之间的等式。
+<!--/-->
+
+```agda
+  and : Closed → Total → And
+      → ∀ {m} (a' b' : Formula S m) → Pinned a' → Pinned b' → Pinned (a' ∧̇ b')
+  and hcl hdom hand {m} a' b' ia ib c y q c∈ hy =
+    PT.rec (setIsSet (fst y) (fst (Sat B (a' ∧̇ b'))))
+      (λ { (ya , hya) → PT.rec (setIsSet (fst y) (fst (Sat B (a' ∧̇ b'))))
+        (λ { (yb , hyb) →
+          let ea = ia (keyʟ a') ya refl (ka .fst) hya
+              eb = ib (keyʟ b') yb refl (ka .snd) hyb
+              e  = propClause-out Ci Ti 2 (interAt yc7 ya7 yb7) γ hand
+                     c (nn m) ca cb y ya yb c∈ shape hy (up a' ya hya) (up b' yb hyb)
+          in extensionalV (λ w → ⇔toPath
+               (λ hw → subst ⟨_⟩ (sym (Sat-mem B (a' ∧̇ b') (sy w hw)))
+                 ( subst ⟨_⟩ (Sat-mem B a' (sy w hw))
+                     (subst (λ v → ⟨ w ∈ v ⟩) ea (e .fst (sy w hw) hw .fst)) .fst
+                 , ( subst (λ v → ⟨ w ∈ v ⟩) ea (e .fst (sy w hw) hw .fst)
+                   , subst (λ v → ⟨ w ∈ v ⟩) eb (e .fst (sy w hw) hw .snd) ) ))
+               (λ hw →
+                 let r = subst ⟨_⟩ (Sat-mem B (a' ∧̇ b') (ss w hw)) hw in
+                 e .snd (ss w hw)
+                   ( subst (λ v → ⟨ w ∈ v ⟩) (sym ea) (r .snd .fst)
+                   , subst (λ v → ⟨ w ∈ v ⟩) (sym eb) (r .snd .snd) ))) })
+        (domAt-in Ti Ci γ hdom (keyʟ b') (ka .snd)) })
+      (domAt-in Ti Ci γ hdom (keyʟ a') (ka .fst))
+    where
+    ca cb : S
+    ca = LCode.⌜ a' ⌝
+    cb = LCode.⌜ b' ⌝
+
+    shape : fst c ≡ pr (fst (nn m)) (pr (# 2) (pr (fst ca) (fst cb)))
+    shape = q ∙ keyʟ-shape-in (a' ∧̇ b')
+          ∙ cong (λ w → pr (# m) (pr (# 2) w)) (prʟ-fst ca cb)
+
+    kkey : ∀ {j} (χ : Formula S j) → pr (# j) (fst LCode.⌜ χ ⌝) ≡ fst (keyʟ χ)
+    kkey {j} χ = cong (λ w → pr w (fst LCode.⌜ χ ⌝)) (sym (numeralL-fst j))
+               ∙ sym (prʟ-fst (numeralL j) LCode.⌜ χ ⌝)
+
+    ka : ⟨ fst (keyʟ a') ∈ fst C ⟩ × ⟨ fst (keyʟ b') ∈ fst C ⟩
+    ka = subst (λ w → ⟨ w ∈ fst C ⟩) (kkey a') (r .fst)
+       , subst (λ w → ⟨ w ∈ fst C ⟩) (kkey b') (r .snd)
+      where r = binSameClosed-out Ci 2 γ (hcl .fst) c (nn m) ca cb c∈ shape
+
+    up : ∀ {j} (χ : Formula S j) (v : S)
+       → ⟨ pr (fst (keyʟ χ)) (fst v) ∈ fst T ⟩
+       → ⟨ pr (pr (# j) (fst LCode.⌜ χ ⌝)) (fst v) ∈ fst T ⟩
+    up χ v h = subst (λ w → ⟨ pr w (fst v) ∈ fst T ⟩) (sym (kkey χ)) h
+
+    sy : (w : V ℓ) → ⟨ w ∈ fst y ⟩ → S
+    sy w hw = w , isL-trans hw (snd y)
+
+    ss : (w : V ℓ) → ⟨ w ∈ fst (Sat B (a' ∧̇ b')) ⟩ → S
+    ss w hw = w , isL-trans hw (snd (Sat B (a' ∧̇ b')))
 ```
