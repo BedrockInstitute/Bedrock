@@ -101,15 +101,12 @@ hypotheses, because the table is now arbitrary.
 <!--/-->
 
 ```agda
-module Good (B C T : S) where
+module Good {k : ℕ} (γ : S ^ k) (Ci Ti Bi : Fin k) where
   private
-    γ : S ^ 3
-    γ = B ∷ T ∷ C ∷ []
-
-  Ci Ti Bi : Fin 3
-  Ci = suc (suc zero)
-  Ti = suc zero
-  Bi = zero
+    B C T : S
+    B = lookup Bi γ
+    C = lookup Ci γ
+    T = lookup Ti γ
 
   Closed : Type (ℓ-suc ℓ)
   Closed = ⟨ γ ⊨ closedAt Ci ⟩
@@ -245,7 +242,6 @@ frame put them where the clause looks.
     (λ hw → e .snd (sw' w hw)
       (subst ⟨_⟩ (Sat-mem B (⊤̇ {n = m}) (sw' w hw)) hw .fst)))
     where
-    δ' : S ^ 8
     δ' = envSet B m ∷ y ∷ numeralL 0 ∷ nn m ∷ c ∷ γ
 
     hE = AmbientHolds.holds B δ' zero (suc (suc (suc zero)))
@@ -385,7 +381,6 @@ different clause, and none needs a fourth ingredient.
     PT.rec (setIsSet (fst y) (fst (Sat B (¬̇ a'))))
       (λ { (ya , hya) →
         let ea = ia (keyʟ a') ya refl ka hya
-            δ' : S ^ 9
             δ' = envSet B m ∷ ya ∷ y ∷ ca ∷ nn m ∷ c ∷ γ
             hE = AmbientHolds.holds B δ' zero (suc (suc (suc (suc zero))))
                    (suc (suc (suc (suc (suc (suc Bi)))))) m refl refl refl
@@ -439,7 +434,6 @@ need the excluded middle, and neither chapter takes it.
         (λ { (yb , hyb) →
           let ea = ia (keyʟ a') ya refl (ka .fst) hya
               eb = ib (keyʟ b') yb refl (ka .snd) hyb
-              δ' : S ^ 11
               δ' = envSet B m ∷ yb ∷ ya ∷ y ∷ cb ∷ ca ∷ nn m ∷ c ∷ γ
               hE = AmbientHolds.holds B δ' zero
                      (suc (suc (suc (suc (suc (suc zero))))))
@@ -527,7 +521,6 @@ bridge says they agree.
     ct = LCode.⌜ t ⌝ᵗ
     cu = LCode.⌜ u ⌝ᵗ
 
-    δ' : S ^ 9
     δ' = envSet B m ∷ y ∷ cu ∷ ct ∷ nn m ∷ c ∷ γ
 
     shape : fst c ≡ pr (fst (nn m)) (pr (# 0) (pr (fst ct) (fst cu)))
@@ -573,7 +566,6 @@ bridge says they agree.
     ct = LCode.⌜ t ⌝ᵗ
     cu = LCode.⌜ u ⌝ᵗ
 
-    δ' : S ^ 9
     δ' = envSet B m ∷ y ∷ cu ∷ ct ∷ nn m ∷ c ∷ γ
 
     shape : fst c ≡ pr (fst (nn m)) (pr (# 1) (pr (fst ct) (fst cu)))
@@ -608,7 +600,6 @@ something, and that reader carried between the two frames.
     PT.rec (setIsSet (fst y) (fst (Sat B (∃̇ a'))))
       (λ { (ya , hya) →
         let ea = ia (keyʟ a') ya refl ka hya
-            δ' : S ^ 9
             δ' = envSet B m ∷ ya ∷ y ∷ ca ∷ nn m ∷ c ∷ γ
             di = suc (suc (suc (suc zero)))
             bi = suc (suc (suc (suc (suc (suc Bi)))))
@@ -666,7 +657,6 @@ something, and that reader carried between the two frames.
     PT.rec (setIsSet (fst y) (fst (Sat B (∀̇ a'))))
       (λ { (ya , hya) →
         let ea = ia (keyʟ a') ya refl ka hya
-            δ' : S ^ 9
             δ' = envSet B m ∷ ya ∷ y ∷ ca ∷ nn m ∷ c ∷ γ
             di = suc (suc (suc (suc zero)))
             bi = suc (suc (suc (suc (suc (suc Bi)))))
@@ -740,7 +730,6 @@ existence half found by trying to prove exactly this.
     PT.rec (setIsSet (fst y) (fst (Sat B (∀̇∈ t a'))))
       (λ { (yb , hyb) →
         let eb = ia (keyʟ a') yb refl ka hyb
-            δ' : S ^ 10
             δ' = envSet B m ∷ yb ∷ y ∷ ca ∷ ct ∷ nn m ∷ c ∷ γ
             di = suc (suc (suc (suc (suc zero))))
             bi = suc (suc (suc (suc (suc (suc (suc Bi))))))
@@ -808,7 +797,6 @@ existence half found by trying to prove exactly this.
     PT.rec (setIsSet (fst y) (fst (Sat B (∃̇∈ t a'))))
       (λ { (yb , hyb) →
         let eb = ia (keyʟ a') yb refl ka hyb
-            δ' : S ^ 10
             δ' = envSet B m ∷ yb ∷ y ∷ ca ∷ ct ∷ nn m ∷ c ∷ γ
             di = suc (suc (suc (suc (suc zero))))
             bi = suc (suc (suc (suc (suc (suc (suc Bi))))))
