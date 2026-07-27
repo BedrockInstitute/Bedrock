@@ -921,6 +921,74 @@ module _ {n : ℕ} where
 ```
 
 <!--en-->
+## Implication, and the two constants
+<!--zh-->
+## 蕴含，与两个常量
+<!--/-->
+
+<!--en-->
+Implication is the complement of the antecedent joined with the consequent, so it
+wants both subvalues, the ambient set, and one temporary to hold the difference:
+four bound values above the frame's five, and the longest relation of the twelve.
+Nothing in it is new.
+
+The constants are the shortest. Truth at an arity is the whole ambient set, and
+falsity is empty, so one binds the ambient set and the other binds nothing. They
+go through the single-component frame, since a constant's payload is a numeral
+and the frame does not look at what a component is; their relations simply ignore
+it.
+<!--zh-->
+蕴含是前件的补集与后件的并，故它要两个子取值、那个周遭集合、以及一个存放差集的临时变元：在框架的五个之上再绑四个取值，是十二条中最长的一条关系。其中没有任何新东西。
+
+两个常量最短。某元数处的「真」就是整个周遭集合，而「假」为空，故一个绑定那个周遭集合，另一个什么也不绑。它们走单分量框架，因为常量的载荷是一个数码，而框架并不看某个分量是什么；它们的关系径直忽略它。
+<!--/-->
+
+```agda
+module _ {n : ℕ} where
+  private
+    sh9 : Fin n → Fin (9 + n)
+    sh9 i = suc (suc (suc (suc (suc (suc (suc (suc (suc i))))))))
+
+    ar9 a9 b9 yc9 ya9 yb9 E9 d9 : Fin (9 + n)
+    ar9 = suc (suc (suc (suc (suc (suc (suc zero))))))
+    a9  = suc (suc (suc (suc (suc (suc zero)))))
+    b9  = suc (suc (suc (suc (suc zero))))
+    yc9 = suc (suc (suc (suc zero)))
+    ya9 = suc (suc (suc zero))
+    yb9 = suc (suc zero)
+    E9  = suc zero
+    d9  = zero
+
+    impRel : Fin n → Fin n → Formula S (5 + n)
+    impRel T B =
+      ∀̇ (∀̇ (∀̇ (∀̇ ( subValAt (sh9 T) ar9 a9 ya9
+                 ⇒̇ ( subValAt (sh9 T) ar9 b9 yb9
+                 ⇒̇ ( envSetAt E9 ar9 (sh9 B)
+                 ⇒̇ ( diffAt d9 E9 ya9
+                 ⇒̇ unionAt yc9 d9 yb9 )))))))
+
+    sh5 : Fin n → Fin (5 + n)
+    sh5 i = suc (suc (suc (suc (suc i))))
+
+    ar5 yc5 E5 : Fin (5 + n)
+    ar5 = suc (suc (suc zero))
+    yc5 = suc zero
+    E5  = zero
+
+    topRel : Fin n → Formula S (4 + n)
+    topRel B = ∀̇ ( envSetAt E5 ar5 (sh5 B) ⇒̇ sameAt yc5 E5 )
+
+  impClauseAt : Fin n → Fin n → Fin n → Formula S n
+  impClauseAt C T B = binClauseAt C T 4 (impRel T B)
+
+  topClauseAt : Fin n → Fin n → Fin n → Formula S n
+  topClauseAt C T B = unClauseAt C T 6 (topRel B)
+
+  botClauseAt : Fin n → Fin n → Formula S n
+  botClauseAt C T = unClauseAt C T 7 (emptyAt zero)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -945,10 +1013,10 @@ constructors whose payload is a pair, `unClauseAt`{.Agda} for the five whose
 payload is a single component, the constants included. Both read the key in two
 layers, arity outside and tag within, and both leave every lookup on a payload
 component to the relation handed to them, which performs it with
-`subValAt`{.Agda}. `andClauseAt`{.Agda}, `orClauseAt`{.Agda} and
-`negClauseAt`{.Agda} are the first three of the twelve written out, and
-`envSetAt`{.Agda} is what negation needed: inside a clause, the ambient set of
-environments is described rather than constructed.
+`subValAt`{.Agda}. Six of the twelve are written out: the five
+connectives and falsity, plus truth. `envSetAt`{.Agda} is what the negative ones
+needed, and it makes the point the chapter turns on: inside a clause, the ambient
+set of environments is described rather than constructed.
 
 Two roads were used and both belong here. A reader with no constants is quoted,
 which costs a four-link chain and no thought. A reader naming a numeral is
@@ -965,7 +1033,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。`andClauseAt`{.Agda}、`orClauseAt`{.Agda} 与 `negClauseAt`{.Agda} 是十二条中最先写出的三条，而 `envSetAt`{.Agda} 正是否定所需的那件：在子句之内，周遭的环境集合是被描述的，而非被构造的。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。十二条中已写出六条：五个联结词与假，再加真。`envSetAt`{.Agda} 正是负的那几条所需的那件，而它道出本章的关节：在子句之内，周遭的环境集合是被描述的，而非被构造的。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
