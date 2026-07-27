@@ -284,6 +284,17 @@ payload read is the formula's.
 <!--/-->
 
 ```agda
+keyʟ-shape-in : ∀ {m} (ψ : Formula S m)
+             → fst (keyʟ ψ)
+             ≡ pr (# m) (pr (# (LCode.tagOf ψ)) (fst (LCode.payOf ψ)))
+keyʟ-shape-in {m} ψ =
+    prʟ-fst (numeralL m) LCode.⌜ ψ ⌝
+  ∙ cong₂ pr (numeralL-fst m)
+      (cong fst (LCode.shape ψ)
+        ∙ prʟ-fst (numeralL (LCode.tagOf ψ)) (LCode.payOf ψ)
+        ∙ cong (λ w → pr w (fst (LCode.payOf ψ)))
+            (numeralL-fst (LCode.tagOf ψ)))
+
 keyʟ-shape : ∀ {m} (ψ : Formula S m) (k : ℕ) (ar p : V ℓ)
            → fst (keyʟ ψ) ≡ pr ar (pr (# k) p)
            → LCode.Match k ψ
