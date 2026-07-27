@@ -177,6 +177,38 @@ between the two constructions, which is the rule that chapter measured.
                (cupʟ-out (tree f a) (tree f b) x e) })
         (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x (out x h))
 
+  module Parts (f : ∀ {m} → Formula S m → S) where
+    self : ∀ {n} (φ : Formula S n) → ⟨ fst (f φ) ∈ fst (tree f φ) ⟩
+    self φ@(t ∈̇ u)  = sglʟ-in (f φ) _ refl
+    self φ@(t ≐ u)  = sglʟ-in (f φ) _ refl
+    self φ@⊤̇        = sglʟ-in (f φ) _ refl
+    self φ@⊥̇        = sglʟ-in (f φ) _ refl
+    self φ@(a ∧̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(a ∨̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(a ⇒̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(¬̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∃̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∀̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+
+    left : ∀ {n} (a b : Formula S n) (z : V ℓ)
+         → ⟨ z ∈ fst (tree f a) ⟩
+         → ⟨ z ∈ fst (cupʟ (sglʟ (f a)) (cupʟ (tree f a) (tree f b))) ⟩
+    left a b z h = cupʟ-inr (sglʟ (f a)) (cupʟ (tree f a) (tree f b)) z
+                     (cupʟ-inl (tree f a) (tree f b) z h)
+
+    right : ∀ {n} (a b : Formula S n) (z : V ℓ)
+          → ⟨ z ∈ fst (tree f b) ⟩
+          → ⟨ z ∈ fst (cupʟ (sglʟ (f a)) (cupʟ (tree f a) (tree f b))) ⟩
+    right a b z h = cupʟ-inr (sglʟ (f a)) (cupʟ (tree f a) (tree f b)) z
+                      (cupʟ-inr (tree f a) (tree f b) z h)
+
+    only : ∀ {n m} (χ : Formula S n) (a : Formula S m) (z : V ℓ)
+         → ⟨ z ∈ fst (tree f a) ⟩
+         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (tree f a)) ⟩
+    only χ a z h = cupʟ-inr (sglʟ (f χ)) (tree f a) z h
+
   tree-inv : (f : ∀ {m} → Formula S m → S) → ∀ {n} (φ : Formula S n) (x : V ℓ)
            → ⟨ x ∈ fst (tree f φ) ⟩ → Of f φ x
   tree-inv f φ@(t ∈̇ u) = one f φ
@@ -260,18 +292,7 @@ which is the only arity at which it is true.
     top φ = sglʟ-in (ent φ) _ (sym (prʟ-fst (keyʟ φ) (Sat B φ)))
 
   slot-in : ∀ {n} (φ : Formula S n) → ⟨ fst (keyʟ φ) ∈ fst (slot φ) ⟩
-  slot-in φ@(t ∈̇ u)  = sglʟ-in (keyʟ φ) _ refl
-  slot-in φ@(t ≐ u)  = sglʟ-in (keyʟ φ) _ refl
-  slot-in φ@⊤̇        = sglʟ-in (keyʟ φ) _ refl
-  slot-in φ@⊥̇        = sglʟ-in (keyʟ φ) _ refl
-  slot-in φ@(a ∧̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
-  slot-in φ@(a ∨̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
-  slot-in φ@(a ⇒̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
-  slot-in φ@(¬̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
-  slot-in φ@(∃̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
-  slot-in φ@(∀̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
-  slot-in φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
-  slot-in φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in = Parts.self keyʟ
 
   entry-in : ∀ {n} (φ : Formula S n)
            → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (satTable φ) ⟩
