@@ -689,16 +689,43 @@ working as designed.
   opens with a drop list naming each dropped module and the audit finding that justifies
   it, so the reduction is visible rather than silent. Standing goal, no single
   completion date; it closes with `[L3.10]`.
-- **[L3.2]** **`reify!` industrialization (S6).** Extend the source's reflection macro
-  (currently deferred with zero consumers, §4 ledger) with the three things the L side
-  needs: Δ₀ witness output, `BoundedFo` witnesses, and L-side environment slices. Then
-  re-derive one hand-built formula group and compare. Measured headroom 4k to 6k against
-  roughly 8k to 10k of hand-built formula / witness / adequacy triples. **Independent of
-  the `[L3.0]` verdict**: both routes still need object formulas. Prerequisite: `[L2.2]`
-  (which lands `BoundedFo` and the reflection vocabulary). Gate: the first re-derived
-  group must be smaller and must not regress §7.6's per-module budget, since macro
-  output that misses the playbook's safe shapes will blow up conversion; land it before
-  `[L3.3]` completes so the coding cluster is its first beneficiary.
+- **[L3.2]** **`reify!` industrialization (S6). DORMANT, re-evaluated 2026-07-27 with
+  measurements rather than inherited figures.** The goal was to extend the source's
+  reflection macro (`FOL.Reification.{Base, Combinators, Certified}`, 133 lines, ported at
+  `[L1.3]` and **still with zero consumers**) so it emits Δ₀ witnesses, `BoundedFo`
+  witnesses and L-side environment slices, then to re-derive the hand-built formula /
+  witness / adequacy triples from it.
+
+  **The headroom did not survive translation.** The inherited figure, 4k to 6k saved
+  against 8k to 10k of hand-built material, was measured on the source. Bedrock's whole
+  equivalent is `FOL.Manipulation.{Relabelling, Renaming, Bounding, Relativize}` = **338
+  lines**, and those four modules are almost entirely twelve-clause traversal. Counting
+  every traversal-dense module in the book (those four plus `FOL.{Coding, Semantics,
+  LevyHierarchy}`, `L.ReflectFo`, `L.Coding.InL`) gives **827 lines, 14% of `src/`**, and
+  the macro could reach only the congruence-shaped part of that. Realistic saving:
+  **200 to 350 lines**, roughly one twentieth of the inherited estimate.
+
+  **And the job has already been done, five times, by ordinary abstraction.** `Ladder`,
+  `Definition`, `extAt`, `binClauseAt`/`unClauseAt`, and `L.ReflectFo`'s
+  `Box`/`joinBox`/`addBox` each collapsed a family of traversals inside Agda, with no
+  metaprogramming: 16 combinator uses in `L.ReflectFo`, 40 in `L.Coding.Model`. Every one
+  was cheaper to write than a macro, legible as prose, and free of conversion risk.
+
+  **Three costs the source never paid.** Bedrock is a *book*: twelve `cong₂` clauses are
+  read as exposition, a macro call is opaque, and the audience is stated to be readers
+  learning the mathematics. Generated proof terms are exactly what the source's own
+  WORKLOG records blowing up conversion, against a §7.5 baseline that currently sits at
+  18.5 s with zero `-- perf:` markers. And the framework it would extend has had no
+  consumer for nine goals, which is itself evidence about demand.
+
+  **Re-open trigger, stated so the decision is not re-litigated by taste.** Open `[L3.2]`
+  when *either* (a) a congruence-shaped traversal family is written out by hand a **third**
+  time and no combinator collapses it, or (b) the traversal-dense share of `src/` passes
+  **20%**. Until one fires, prefer an Agda-level combinator; the record says it wins.
+
+  **Correction on the record:** one turn before this re-evaluation I called `[L3.2]` "the
+  real lever" on the twenty-nine traversals. That was said before measuring and the
+  measurement does not support it.
 - **[L3.3]** SUPERSEDED 2026-07-25 by `[L3.14]`, after a consumption re-measurement
   (§11). The goal was scoped as the source's whole `Code*` / `Formula*` / `VarCoding` /
   `SeqChar` cluster, about 4.9k lines; measuring consumers showed that only the Δ₀ code
@@ -951,7 +978,7 @@ One row per goal code; update the row in the same commit that changes the status
 | L3.0.1 | Two-instance proof of concept | **RE-POINTED 2026-07-26** by the `[L3.0.2]` measurement: the instance to build is **satisfaction**, the largest bucket (34%) and the largest uncertainty at once, not `Depth`, which the same analysis expects to vanish (it is a termination measure and Agda needs none). **Theorem DONE 2026-07-26**: `L.Recursion` complete at 96 lines of Agda: `Recursion`/`Of` over `hasReplacementL`, `smallDom` discharging the domain generically, and `Definition`/`Image` reducing an instance's obligation to a defining formula and its adequacy. Fillability probed at 35 lines (singleton map, uncommitted). **Instance half PLANNED**: `Depth` and `Cmp`, whose graphs talk about coded syntax, are what the kill criteria measure |
 | L3.0.2 | Verdict and rollout ruling | DONE 2026-07-26, memo [memos/L3.0.2-verdict.md](memos/L3.0.2-verdict.md). **Green, for a different reason than D12 expected.** The 43k remaining becomes a projected 3,000 to 6,400; the `L` side lands at 6,500 to 10,000 total, 3,361 already written. L3.5 to L3.7 proceed as instantiations; L3.4 does not open |
 | L3.1 | Transition-layer sweep (S9) | ACTIVE 2026-07-25, standing: first drop recorded at `FOL.Coding` (`⌜⌝-inj`, the 132-clause off-diagonal grid, no consumer) |
-| L3.2 | `reify!` industrialization (S6) | PLANNED, **off L3.0's critical path** (re-evaluated 2026-07-25: stage 7 needed a lemma, not the macro). Opportunistic accelerator for the reader half of the coding chapters |
+| L3.2 | `reify!` industrialization (S6) | **DORMANT 2026-07-27**, re-evaluated with measurements: its headroom shrank about 20x in translation (8k-10k in the source, ~600 lines here), because ordinary abstraction has already done the macro's job five times. Re-open trigger stated in the goal; do not schedule until it fires |
 | L3.3 | Coding cluster (as originally scoped) | SUPERSEDED 2026-07-25 by L3.14; `FOL.Coding` and `V.Coding` landed under it and stand |
 | L3.16 | Readers quoted in the model | ACTIVE 2026-07-26. `L.Coding.Model` (165): the object language's "function" (`prAtL`, `appAt`, `svAt`, `domAt`), the pair on the value side (`prʟ`), and the tag readers. `L.Coding.InL` (43): every code is an element of `L`. **Two roads, both kept**: constant-free readers are quoted through `[L3.15]`; readers naming a numeral are written fresh, since quoting would thread a constructibility witness through the formula's whole shape while writing needs one unbounded existential, and unbounded is now free. Step 1 of the `[L3.0.1]` build order, which the reconnaissance called its largest residual risk, is done at 208 lines against its own 190 estimate |
 | L3.15 | Re-base the coding readers onto `S` | **DONE 2026-07-26, and it is not a re-base.** `L.Absoluteness`, **34 lines**: one instantiation of `Relabel` at the bound "constructible", and a four-step transfer chain with no induction of its own. `[L3.14]`'s 1,065 lines are neither stranded nor rewritten; they stay on the hierarchy side and are quoted |
@@ -1440,6 +1467,31 @@ One row per goal code; update the row in the same commit that changes the status
   data has is silently vacuous rather than ill-typed.** Nothing downstream depended on the
   frames yet, so the cost was zero, and it was zero because the check ran before a consumer
   existed rather than after.
+- **`[L3.2]` re-evaluation, 2026-07-27, and it is a downgrade.** Asked whether the macro
+  should be re-scheduled after the twelve-clause count came up, and measured instead of
+  reasoning from the inherited figure. Three results.
+
+  (a) **The headroom shrank about twentyfold in translation.** 8k to 10k of hand-built
+  material in the source is **338 lines** here (`FOL.Manipulation.{Relabelling, Renaming,
+  Bounding, Relativize}`, almost entirely traversal), or **827 lines, 14% of `src/`**,
+  counting every traversal-dense module. The macro reaches only the congruence-shaped part:
+  **200 to 350 lines**.
+
+  (b) **Ordinary abstraction has already done the job five times**, each time cheaper and
+  more legible than a macro: `Ladder`, `Definition`, `extAt`, the clause frames, and
+  `L.ReflectFo`'s box combinators (16 uses there, 40 in `L.Coding.Model`). The pattern is
+  now well enough established to be the default answer to a repeated traversal.
+
+  (c) **Bedrock pays costs the source did not.** The traversals are *exposition* in a book
+  whose stated audience is readers learning the mathematics; generated proof terms are the
+  documented cause of conversion blowups, against a baseline currently at 18.5 s with zero
+  `-- perf:` markers; and `FOL.Reification` has had **zero consumers for nine goals**.
+
+  Status **DORMANT** with a measurable re-open trigger (a congruence family written by hand
+  a third time with no combinator available, or the traversal-dense share passing 20%), so
+  the decision is not re-litigated by taste. **Correction on the record:** one turn earlier
+  I called `[L3.2]` "the real lever" on the twenty-nine traversals; that was said before
+  measuring and the measurement does not support it.
 
   **Structural correction taken on the way in [L2.1 revisited], 2026-07-26.** Step 1 needs
   numerals as *constants of the object language*, hence `isL (# k)`, and the obvious source
