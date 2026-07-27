@@ -265,3 +265,148 @@ supplies both.
 <!--zh-->
 公式如今是集合了：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上，而常量编码自身。下游的接口是关系 `Codes`{.Agda}，它完备 (`codes-complete`{.Agda}) 且典范 (`codes-canon`{.Agda})，使码值不出现在类型检查器必须归一化的等式里。一切都对结构泛型，只需一个单射的配对与自然数的一个单射；层级把二者都供上。
 <!--/-->
+
+<!--en-->
+## Codes determine formulas
+<!--zh-->
+## 码决定公式
+<!--/-->
+
+<!--en-->
+Two formulas of the same arity with the same code are the same formula. The
+statement was dropped once, on the ground that its natural proof is a grid of
+twelve by twelve of which a hundred and thirty-two clauses carry no mathematics,
+and that the `Codes`{.Agda} relation was what every consumer had been designed
+around. A consumer arrived that wants the equation rather than the relation, and
+it wants it for a reason no relation answers: a recursion's table is a **set**, so
+if two occurrences of different subformulas shared a code the table would be
+genuinely multi-valued, and its existence, not merely its proof, would fail.
+
+The grid does not have to be written. The constructor is recoverable from the
+tag, and the tag is a number, so what a formula's constructor *is* can be
+**computed** from it: one type family over the tag saying what having that tag
+looks like, one function producing it, and the tag equation the pairing's
+injectivity yields carries the second to the first. Twelve clauses each, and
+twelve more for the case analysis, in place of a hundred and forty-four.
+
+That is the same move the constructibility chapter makes to match twelve
+constructors against eight demands, and it is worth saying once in general: **when
+a case analysis is indexed by two things that a tag already relates, compute one
+side from the tag instead of matching both.**
+<!--zh-->
+同一元数、同一码的两条公式是同一条公式。这条陈述曾被丢掉，理由是它的自然证明是一张十二乘十二的网格，其中一百三十二条子句不含数学，而每个消费方当初都是围绕 `Codes`{.Agda} 关系设计的。如今来了一个要等式而非要关系的消费方，而它要的理由是任何关系都答不了的：递归的表是一个**集合**，故若两处不同子公式共用一个码，那张表就真的多值，垮掉的将是它的**存在性**，而不只是它的证明。
+
+那张网格不必写。构造子可从标签还原，而标签是一个数，故一条公式的构造子**是什么**可以从标签**算**出来：一个以标签为索引的类型族，说出「带那个标签」长什么样；一个函数把它造出来；而配对的单射性所给出的那条标签等式把后者搬到前者上。两者各十二条子句，再加十二条作情形分析，取代一百四十四条。
+
+这与可构造性那一章「把十二个构造子对上八项要求」所用的是同一个动作，而它值得一般地说一次：**当一次情形分析由两样东西索引、而某个标签已经把它们关联起来时，就从标签算出一侧，不要两侧都匹配。**
+<!--/-->
+
+```agda
+private
+  tagOf : ∀ {n} → Formula S n → ℕ
+  tagOf (t ∈̇ u)  = 0
+  tagOf (t ≐ u)  = 1
+  tagOf (a ∧̇ b)  = 2
+  tagOf (a ∨̇ b)  = 3
+  tagOf (a ⇒̇ b)  = 4
+  tagOf (¬̇ a)    = 5
+  tagOf ⊤̇        = 6
+  tagOf ⊥̇        = 7
+  tagOf (∃̇ a)    = 8
+  tagOf (∀̇ a)    = 9
+  tagOf (∀̇∈ t a) = 10
+  tagOf (∃̇∈ t a) = 11
+
+  payOf : ∀ {n} → Formula S n → S
+  payOf (t ∈̇ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
+  payOf (t ≐ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
+  payOf (a ∧̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
+  payOf (a ∨̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
+  payOf (a ⇒̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
+  payOf (¬̇ a)    = ⌜ a ⌝
+  payOf ⊤̇        = encℕ 0
+  payOf ⊥̇        = encℕ 0
+  payOf (∃̇ a)    = ⌜ a ⌝
+  payOf (∀̇ a)    = ⌜ a ⌝
+  payOf (∀̇∈ t a) = pr ⌜ t ⌝ᵗ ⌜ a ⌝
+  payOf (∃̇∈ t a) = pr ⌜ t ⌝ᵗ ⌜ a ⌝
+
+  shape : ∀ {n} (φ : Formula S n) → ⌜ φ ⌝ ≡ mkTag (tagOf φ) (payOf φ)
+  shape (t ∈̇ u)  = refl
+  shape (t ≐ u)  = refl
+  shape (a ∧̇ b)  = refl
+  shape (a ∨̇ b)  = refl
+  shape (a ⇒̇ b)  = refl
+  shape (¬̇ a)    = refl
+  shape ⊤̇        = refl
+  shape ⊥̇        = refl
+  shape (∃̇ a)    = refl
+  shape (∀̇ a)    = refl
+  shape (∀̇∈ t a) = refl
+  shape (∃̇∈ t a) = refl
+
+  Match : ∀ {n} → ℕ → Formula S n → Type ℓ
+  Match {n} 0  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ∈̇ u)))
+  Match {n} 1  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ≐ u)))
+  Match {n} 2  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∧̇ b)))
+  Match {n} 3  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∨̇ b)))
+  Match {n} 4  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ⇒̇ b)))
+  Match {n} 5  φ = Σ[ a ∈ Formula S n ] (φ ≡ (¬̇ a))
+  Match     6  φ = φ ≡ ⊤̇
+  Match     7  φ = φ ≡ ⊥̇
+  Match {n} 8  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∃̇ a))
+  Match {n} 9  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∀̇ a))
+  Match {n} 10 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
+  Match {n} 11 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
+  Match     _  _ = Empty.⊥*
+
+  matches : ∀ {n} (φ : Formula S n) → Match (tagOf φ) φ
+  matches (t ∈̇ u)  = t , (u , refl)
+  matches (t ≐ u)  = t , (u , refl)
+  matches (a ∧̇ b)  = a , (b , refl)
+  matches (a ∨̇ b)  = a , (b , refl)
+  matches (a ⇒̇ b)  = a , (b , refl)
+  matches (¬̇ a)    = a , refl
+  matches ⊤̇        = refl
+  matches ⊥̇        = refl
+  matches (∃̇ a)    = a , refl
+  matches (∀̇ a)    = a , refl
+  matches (∀̇∈ t a) = t , (a , refl)
+  matches (∃̇∈ t a) = t , (a , refl)
+
+⌜⌝-inj : ∀ {n} (φ ψ : Formula S n) → ⌜ φ ⌝ ≡ ⌜ ψ ⌝ → φ ≡ ψ
+
+private
+  go : ∀ {n} (φ ψ : Formula S n) → Match (tagOf φ) ψ → payOf φ ≡ payOf ψ → φ ≡ ψ
+  go (t ∈̇ u) ψ (t' , (u' , q)) p =
+    cong₂ _∈̇_ (⌜⌝ᵗ-inj t t' (pr-inj (p ∙ cong payOf q) .fst))
+              (⌜⌝ᵗ-inj u u' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
+  go (t ≐ u) ψ (t' , (u' , q)) p =
+    cong₂ _≐_ (⌜⌝ᵗ-inj t t' (pr-inj (p ∙ cong payOf q) .fst))
+              (⌜⌝ᵗ-inj u u' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
+  go (a ∧̇ b) ψ (a' , (b' , q)) p =
+    cong₂ _∧̇_ (⌜⌝-inj a a' (pr-inj (p ∙ cong payOf q) .fst))
+              (⌜⌝-inj b b' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
+  go (a ∨̇ b) ψ (a' , (b' , q)) p =
+    cong₂ _∨̇_ (⌜⌝-inj a a' (pr-inj (p ∙ cong payOf q) .fst))
+              (⌜⌝-inj b b' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
+  go (a ⇒̇ b) ψ (a' , (b' , q)) p =
+    cong₂ _⇒̇_ (⌜⌝-inj a a' (pr-inj (p ∙ cong payOf q) .fst))
+              (⌜⌝-inj b b' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
+  go (¬̇ a) ψ (a' , q) p = cong ¬̇_ (⌜⌝-inj a a' (p ∙ cong payOf q)) ∙ sym q
+  go ⊤̇ ψ q p = sym q
+  go ⊥̇ ψ q p = sym q
+  go (∃̇ a) ψ (a' , q) p = cong ∃̇_ (⌜⌝-inj a a' (p ∙ cong payOf q)) ∙ sym q
+  go (∀̇ a) ψ (a' , q) p = cong ∀̇_ (⌜⌝-inj a a' (p ∙ cong payOf q)) ∙ sym q
+  go (∀̇∈ t a) ψ (t' , (a' , q)) p =
+    cong₂ ∀̇∈ (⌜⌝ᵗ-inj t t' (pr-inj (p ∙ cong payOf q) .fst))
+             (⌜⌝-inj a a' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
+  go (∃̇∈ t a) ψ (t' , (a' , q)) p =
+    cong₂ ∃̇∈ (⌜⌝ᵗ-inj t t' (pr-inj (p ∙ cong payOf q) .fst))
+             (⌜⌝-inj a a' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
+
+⌜⌝-inj φ ψ e = go φ ψ
+  (subst (λ k → Match k ψ) (sym (tp .fst)) (matches ψ)) (tp .snd)
+  where
+  tp = mkTag-inj (sym (shape φ) ∙ e ∙ shape ψ)
+```
