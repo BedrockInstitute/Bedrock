@@ -318,6 +318,7 @@ import L.Recursion
 import L.Coding.Recursion
 import L.Coding.EnvSet
 import L.Coding.Sat
+import L.Coding.Table
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 ```
@@ -361,6 +362,12 @@ The root, stated today and finished over the remaining parts:
   separation off the ambient set, and the internal clauses become identities
   rather than definitions. Exports the twelve values and their membership
   equations, and nothing else.
+- `L.Coding.Table`{.Agda}: the entries, one per subformula, and the two things a
+  recursion wants of them: every member is an entry, and a key determines its
+  value. The second is where the code equation's injectivity is spent, and the
+  arity is eliminated by path induction so the equation is used at the single
+  arity where it holds. Everything is an element of the model by construction,
+  since the codes are the model's own.
 - `L.Coding.Recursion`{.Agda}: the first instance of the internalization theorem.
   Its graph says "the least closed set containing this key", because an object
   language with no table to hold subvalues cannot say "built from the values at
@@ -397,6 +404,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词，且是满足它的最小者。四个读式的八个实例，再加一次归纳；前者是「对一条公式的诸子码作递归」关于其索引集所需的那条假设，后者是它的取值唯一的理由。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
 - `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
+- `L.Coding.Table`{.Agda}：诸条目，每条子公式一个；以及递归向它们索取的两件事：每个成员都是一个条目，且键决定它的取值。后者正是花掉码等式单射性的地方，而元数由道路归纳消掉，好让那条等式在它唯一成立的那个元数处使用。此处一切按构造都是模型的元素，因为诸码就是模型自己的。
 - `L.Coding.Recursion`{.Agda}：内化定理的第一个实例。它的图说的是「含有此键的最小封闭集」，因为没有一张表托着诸子取值的对象语言说不出「由诸子码处的取值造出」；「最小」经反对称性使取值唯一，故唯一性只花一次外延、不花归纳，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付。
 - `L.Axioms.Power`{.Agda}：幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。**未用凝聚，也不需要**：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
 - `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。`witnessInModel`{.Agda} 记下图必须遵守的那一条规矩：对象语言的存在量词在 `L` 上取值，故一个图不可以靠断言被描述者本身存在来描述它。
