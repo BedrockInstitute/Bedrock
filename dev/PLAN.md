@@ -1775,3 +1775,72 @@ One row per goal code; update the row in the same commit that changes the status
   satisfaction table must be uniform in the **stage** as well as the code is unasked, and
   is the likeliest place step 2's estimate doubles. And `[L2.4]` has never certified its
   assumption bill, where `[L2.3]` did.
+
+- **Design ruling for satisfaction's `funct` [L3.0.1], 2026-07-27.** Four idioms designed
+  independently, three lenses each, then synthesised. **The coherence lemma wins**, and the
+  question `[L3.20]` left open is closed against it.
+
+  **The least-fixed-point rescue does not transfer, and the reason should stop it being
+  reopened.** On a subcode-closed index the twelve clauses already pin every value outright,
+  because formulas are well founded: `⊥̇` pins the empty set, `⊤̇` pins the ambient set, and
+  every compound value is determined by its subvalues through `extAt`. The clause system is a
+  structural definition, not a fixed-point equation, so **"least" has nothing to quantify
+  over**. `[L3.20]`'s antisymmetry shortcut was available because *closedness* is a closure
+  condition; satisfaction's clauses are equations.
+
+  **The graph.** The twelve clauses conjoined, guarded by `closedAt C`, `x ∈ C`, and
+  **`domAt T C`**, with the carrier bound rather than named (`∃̇ (var zero ≐ con B)`, the
+  `tagAtL` idiom). `domAt T C` is load-bearing, not decoration: without "every key in `C` has
+  an entry" the eight compound clauses are vacuous, which is the same finding `closedAt` came
+  from, one level in. `svAt T` is **not** wanted: single-valuedness on `C` falls out of the
+  coherence lemma at `T' := T`, and demanding it in the graph buys an injectivity obligation
+  for the wrong reason.
+
+  **The estimate moves from 500 to 1,000 up to 1,375 to 1,970**, midpoint about 1,650, and the
+  honest split matters. Row `[L3.0.1]`'s own scope (steps 4 to 7) is **900 to 1,320**: the
+  row's top end plus about a third, not double. **The rest of the overrun is in items that
+  belong to other rows and were priced at zero**: a defect in delivered `[L3.16]` code (below),
+  the introduction half of the twelve clauses, which `[L3.16]` never wrote because only the
+  first instance needed the closedness half, `[L3.17]` (three times its estimate), and
+  `[L3.9]`.
+
+  **`[L3.9]` must be un-deferred and `[L3.8]`'s abandonment reversed.** `⌜⌝`-injectivity at a
+  fixed arity is an unavoidable prerequisite of this unit, and the plan records it as dropped
+  by consumption audit with `[L3.8]` abandoned on the ground that "the one real grid
+  (`⌜⌝-inj`, 132 clauses) was dropped". **This unit is the consumer.** The table is a set, so
+  if two subformula occurrences share a key with different values it is genuinely multi-valued
+  and **existence fails**, not merely its proof. Head-versus-tail collisions die to a rank
+  argument; collisions between the two branches of `a ∧̇ b` do not. Est. 150 to 200, and it
+  carries the one genuine failure mode left in the design, so it is the spike to run first
+  (a five-constructor fragment, 25 cases, measuring whether the 20 off-diagonal `clash` cases
+  reduce or whether `mkTag` being a function forces normalization of two nested pair values).
+
+  **`Sat` must be defined on `Formula S n`, not `Formula K n`.** Under `[L3.18]` the alphabet
+  is stage-relative with `f : K → V ℓ`, and if `f` is not injective then
+  `⌜ mapFo f χ ⌝ ≡ ⌜ mapFo f χ' ⌝` does not give `χ ≡ χ'`, so the injectivity the unit needs
+  is **false** over an arbitrary alphabet. Defining it at the model's own carrier costs
+  nothing (`isL` is a proposition, so `Σ≡Prop` recovers element equality) and the `K`-level
+  statement follows by composition. This does not overturn `[L3.18]`; it says where the
+  alphabet may and may not be arbitrary.
+
+  **The blowup hazard was measured, and it is not where anyone put it.** The twelve clauses
+  conjoined are about 8,830 constructor nodes against `closureGraph`'s 2,240, and it costs
+  nothing: a `Recursion` carrying the full satisfaction graph through `Of` cold-checks at
+  1.34 s against 1.33 s with the `Of` application deleted, and inhabiting all twelve clauses
+  vacuously, fully eta-expanded, costs about 0.1 s. `mkReflect` and `relativize` are never
+  normalized at elaboration time. **The predictor is induction count times truncation
+  elimination, not formula size**: the shipped instance's 12.7 s is 25 lines of `holds` and
+  `uniq`. So the items to be careful with are the two twelve-case inductions and the
+  inversion, which every design budgeted as the cheap part.
+
+- **Defect in delivered `[L3.16]` code, found 2026-07-27 and verified independently:
+  `tmValAt` reads one tag of two.** `tmValAt t e v = ∃̇ (tagAtL (suc t) 1 zero ∧̇ …)` matches
+  tag 1, the variable codes, while `⌜ con x ⌝ᵗ = mkTag 0 x`. It sits under `extAt`, which
+  asserts **both** directions, so a term code that is a constant is not left unconstrained:
+  the value is **pinned to the empty set**. **Four clauses, not two**: the two atoms use it on
+  both sides, and `bodyAll`/`bodyEx` use it on the *bound* term of the two bounded quantifiers.
+  And the case is not exotic, it is the normal form: `relativize c (∀̇ φ) = ∀̇∈ (con c) …`, so
+  every relativized bounded quantifier carries a constant bound. Fix: a tag-0 disjunct whose
+  payload is the value, in the `tagAtL` idiom, plus adequacy both ways, then re-read the four
+  clauses. Est. 55 to 80. **Blocking: nothing resting on the atoms or the bounded quantifiers
+  is trustworthy until it lands.**
