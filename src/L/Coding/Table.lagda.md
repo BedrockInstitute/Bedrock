@@ -66,8 +66,16 @@ open hPropStructure 𝒮ʟ using ( S )
 <!--en-->
 A key is the arity paired with the code, which is the shape every clause of the
 internal recursion reads. An entry is a key paired with the value.
+
+The shape both live in is the same, so it is written once. `tree`{.Agda} gathers
+one thing per subformula, and what that thing is is its parameter: with the entry
+it gives the table, with the key it gives the **slot** the table is indexed by.
+The recursion needs both and needs them to agree constructor for constructor,
+which is a reason to build them from one recursion rather than two.
 <!--zh-->
 一个键是元数与码之对，而那正是内部递归每条子句所读的形状。一个条目是键与取值之对。
+
+两者所在的形状相同，故只写一次。`tree`{.Agda} 为每条子公式收集一样东西，而那样东西是什么是它的参数：给它条目，得到那张表；给它键，得到表所索引的那个**槽**。递归两者都要，且要它们逐个构造子地一致，而这正是「用一次递归而非两次造出它们」的理由。
 <!--/-->
 
 ```agda
@@ -78,19 +86,25 @@ module _ (B : S) where
   ent : ∀ {n} → Formula S n → S
   ent φ = prʟ (keyʟ φ) (Sat B φ)
 
+  tree : (∀ {m} → Formula S m → S) → ∀ {n} → Formula S n → S
+  tree f φ@(t ∈̇ u)  = sglʟ (f φ)
+  tree f φ@(t ≐ u)  = sglʟ (f φ)
+  tree f φ@⊤̇        = sglʟ (f φ)
+  tree f φ@⊥̇        = sglʟ (f φ)
+  tree f φ@(a ∧̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
+  tree f φ@(a ∨̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
+  tree f φ@(a ⇒̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
+  tree f φ@(¬̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∃̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∀̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∀̇∈ t a) = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∃̇∈ t a) = cupʟ (sglʟ (f φ)) (tree f a)
+
   satTable : ∀ {n} → Formula S n → S
-  satTable φ@(t ∈̇ u)  = sglʟ (ent φ)
-  satTable φ@(t ≐ u)  = sglʟ (ent φ)
-  satTable φ@⊤̇        = sglʟ (ent φ)
-  satTable φ@⊥̇        = sglʟ (ent φ)
-  satTable φ@(a ∧̇ b)  = cupʟ (sglʟ (ent φ)) (cupʟ (satTable a) (satTable b))
-  satTable φ@(a ∨̇ b)  = cupʟ (sglʟ (ent φ)) (cupʟ (satTable a) (satTable b))
-  satTable φ@(a ⇒̇ b)  = cupʟ (sglʟ (ent φ)) (cupʟ (satTable a) (satTable b))
-  satTable φ@(¬̇ a)    = cupʟ (sglʟ (ent φ)) (satTable a)
-  satTable φ@(∃̇ a)    = cupʟ (sglʟ (ent φ)) (satTable a)
-  satTable φ@(∀̇ a)    = cupʟ (sglʟ (ent φ)) (satTable a)
-  satTable φ@(∀̇∈ t a) = cupʟ (sglʟ (ent φ)) (satTable a)
-  satTable φ@(∃̇∈ t a) = cupʟ (sglʟ (ent φ)) (satTable a)
+  satTable = tree ent
+
+  slot : ∀ {n} → Formula S n → S
+  slot = tree keyʟ
 ```
 
 <!--en-->
@@ -100,55 +114,64 @@ module _ (B : S) where
 <!--/-->
 
 <!--en-->
-Every member is an entry, which is the inversion the closure chapter needed in
-its own shape. The two combinators take the inclusions rather than an equation
+Every member is one of the things gathered, which is the inversion the closure
+chapter needed in its own shape, and it is proved once for both. The two combinators take the inclusions rather than an equation
 between the two constructions, which is the rule that chapter measured.
 <!--zh-->
-每个成员都是一个条目，而这正是闭包那一章以自己的形状所需的那次求逆。两个组合子接受的是诸包含映射、而非两个构造之间的一条等式，那是那一章测量出来的规矩。
+每个成员都是被收集的东西之一，而这正是闭包那一章以自己的形状所需的那次求逆，且为两者只证一次。两个组合子接受的是诸包含映射、而非两个构造之间的一条等式，那是那一章测量出来的规矩。
 <!--/-->
 
 ```agda
-  Ent : V ℓ → Type (ℓ-suc ℓ)
-  Ent x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula S m ] (x ≡ fst (ent χ))) ∥₁
+  Of : (∀ {m} → Formula S m → S) → V ℓ → Type (ℓ-suc ℓ)
+  Of f x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula S m ] (x ≡ fst (f χ))) ∥₁
 
   private
-    one : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (sglʟ (ent φ)) ⟩ → Ent x
-    one {n} φ x h = ∣ n , φ , sglʟ-out (ent φ) x h ∣₁
+    module _ (f : ∀ {m} → Formula S m → S) where
+      one : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f x
+      one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h ∣₁
 
-    un : ∀ {n m} (φ : Formula S n) (a : Formula S m)
-       → ((x : V ℓ) → ⟨ x ∈ fst (satTable a) ⟩ → Ent x)
-       → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (ent φ)) (satTable a)) ⟩ → Ent x
-    un φ a ra x h = PT.rec squash₁
-      (λ { (inl e) → one φ x e ; (inr e) → ra x e })
-      (cupʟ-out (sglʟ (ent φ)) (satTable a) x h)
+      un : ∀ {n m} (φ : Formula S n) (a : Formula S m)
+         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f x)
+         → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f x
+      un φ a ra x h = PT.rec squash₁
+        (λ { (inl e) → one φ x e ; (inr e) → ra x e })
+        (cupʟ-out (sglʟ (f φ)) (tree f a) x h)
 
-    bin : ∀ {n m} (φ : Formula S n) (a b : Formula S m)
-        → ((x : V ℓ) → ⟨ x ∈ fst (satTable a) ⟩ → Ent x)
-        → ((x : V ℓ) → ⟨ x ∈ fst (satTable b) ⟩ → Ent x)
-        → (x : V ℓ)
-        → ⟨ x ∈ fst (cupʟ (sglʟ (ent φ)) (cupʟ (satTable a) (satTable b))) ⟩
-        → Ent x
-    bin φ a b ra rb x h = PT.rec squash₁
-      (λ { (inl e) → one φ x e
-         ; (inr e) → PT.rec squash₁
-             (λ { (inl ea) → ra x ea ; (inr eb) → rb x eb })
-             (cupʟ-out (satTable a) (satTable b) x e) })
-      (cupʟ-out (sglʟ (ent φ)) (cupʟ (satTable a) (satTable b)) x h)
+      bin : ∀ {n m} (φ : Formula S n) (a b : Formula S m)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f x)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f x)
+          → (x : V ℓ)
+          → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
+          → Of f x
+      bin φ a b ra rb x h = PT.rec squash₁
+        (λ { (inl e) → one φ x e
+           ; (inr e) → PT.rec squash₁
+               (λ { (inl ea) → ra x ea ; (inr eb) → rb x eb })
+               (cupʟ-out (tree f a) (tree f b) x e) })
+        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
+
+  tree-inv : (f : ∀ {m} → Formula S m → S) → ∀ {n} (φ : Formula S n) (x : V ℓ)
+           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f x
+  tree-inv f φ@(t ∈̇ u) = one f φ
+  tree-inv f φ@(t ≐ u) = one f φ
+  tree-inv f φ@⊤̇       = one f φ
+  tree-inv f φ@⊥̇       = one f φ
+  tree-inv f φ@(a ∧̇ b) = bin f φ a b (tree-inv f a) (tree-inv f b)
+  tree-inv f φ@(a ∨̇ b) = bin f φ a b (tree-inv f a) (tree-inv f b)
+  tree-inv f φ@(a ⇒̇ b) = bin f φ a b (tree-inv f a) (tree-inv f b)
+  tree-inv f φ@(¬̇ a)    = un f φ a (tree-inv f a)
+  tree-inv f φ@(∃̇ a)    = un f φ a (tree-inv f a)
+  tree-inv f φ@(∀̇ a)    = un f φ a (tree-inv f a)
+  tree-inv f φ@(∀̇∈ t a) = un f φ a (tree-inv f a)
+  tree-inv f φ@(∃̇∈ t a) = un f φ a (tree-inv f a)
 
   satTable-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
-               → ⟨ x ∈ fst (satTable φ) ⟩ → Ent x
-  satTable-inv φ@(t ∈̇ u) = one φ
-  satTable-inv φ@(t ≐ u) = one φ
-  satTable-inv φ@⊤̇       = one φ
-  satTable-inv φ@⊥̇       = one φ
-  satTable-inv φ@(a ∧̇ b) = bin φ a b (satTable-inv a) (satTable-inv b)
-  satTable-inv φ@(a ∨̇ b) = bin φ a b (satTable-inv a) (satTable-inv b)
-  satTable-inv φ@(a ⇒̇ b) = bin φ a b (satTable-inv a) (satTable-inv b)
-  satTable-inv φ@(¬̇ a)    = un φ a (satTable-inv a)
-  satTable-inv φ@(∃̇ a)    = un φ a (satTable-inv a)
-  satTable-inv φ@(∀̇ a)    = un φ a (satTable-inv a)
-  satTable-inv φ@(∀̇∈ t a) = un φ a (satTable-inv a)
-  satTable-inv φ@(∃̇∈ t a) = un φ a (satTable-inv a)
+               → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent x
+  satTable-inv = tree-inv ent
+
+  slot-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
+           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ x
+  slot-inv = tree-inv keyʟ
 ```
 
 <!--en-->
@@ -205,6 +228,20 @@ which is the only arity at which it is true.
     top : ∀ {n} (φ : Formula S n)
         → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (sglʟ (ent φ)) ⟩
     top φ = sglʟ-in (ent φ) _ (sym (prʟ-fst (keyʟ φ) (Sat B φ)))
+
+  slot-in : ∀ {n} (φ : Formula S n) → ⟨ fst (keyʟ φ) ∈ fst (slot φ) ⟩
+  slot-in φ@(t ∈̇ u)  = sglʟ-in (keyʟ φ) _ refl
+  slot-in φ@(t ≐ u)  = sglʟ-in (keyʟ φ) _ refl
+  slot-in φ@⊤̇        = sglʟ-in (keyʟ φ) _ refl
+  slot-in φ@⊥̇        = sglʟ-in (keyʟ φ) _ refl
+  slot-in φ@(a ∧̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in φ@(a ∨̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in φ@(a ⇒̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in φ@(¬̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in φ@(∃̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in φ@(∀̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
+  slot-in φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (keyʟ φ) _ refl)
 
   entry-in : ∀ {n} (φ : Formula S n)
            → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (satTable φ) ⟩
