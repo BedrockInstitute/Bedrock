@@ -35,20 +35,24 @@ open import Base.Classical using ( LEM )
 module L.Coding.Unique {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; ⊥̇ )
+open import FOL.Syntax using ( Formula; ⊤̇; ⊥̇ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( closedAt; domAt; botClauseAt; botClause-out; numL )
+  using ( closedAt; domAt; botClauseAt; botClause-out; topClauseAt
+        ; topClause-out; numL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL )
 open import L.Coding.Sat {ℓ} lem using ( Sat; Sat-mem )
 open import L.Coding.Table {ℓ} lem using ( keyʟ; keyʟ-shape-in )
+open import L.Coding.EnvSet {ℓ} lem using ( envSet )
+open import L.Coding.Sound {ℓ} lem using ( module AmbientHolds )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
+open import Cubical.Data.Unit using ( tt* )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -99,6 +103,9 @@ module Good (B C T : S) where
   Bot : Type (ℓ-suc ℓ)
   Bot = ⟨ γ ⊨ botClauseAt Ci Ti ⟩
 
+  Top : Type (ℓ-suc ℓ)
+  Top = ⟨ γ ⊨ topClauseAt Ci Ti Bi ⟩
+
   Pinned : ∀ {m} → Formula S m → Type (ℓ-suc ℓ)
   Pinned {m} ψ = (c y : S) → fst c ≡ fst (keyʟ ψ)
                → ⟨ fst c ∈ fst C ⟩
@@ -131,4 +138,45 @@ supplied, no subvalue exists to replace, and no induction hypothesis is used.
     where
     empty = botClause-out Ci Ti γ hbot c (nn m) (numeralL 0) y c∈
               (q ∙ keyʟ-shape-in (⊥̇ {n = m})) hy .fst
+```
+
+<!--en-->
+## The constant the ambient set pins
+<!--zh-->
+## 由周遭集合钉住的那个常量
+<!--/-->
+
+<!--en-->
+The second constant, and the first case that has to **supply** an ambient set
+rather than consume one. The clause says the value is the set of environments;
+the recursion cut its value out of that set by a condition everything satisfies,
+so the value is that set again. The supplying is one application of the
+agreement, and the arities and the carrier match by `refl`{.Agda} because the
+frame put them where the clause looks.
+<!--zh-->
+第二个常量，也是第一条必须**递出**一个周遭集合、而非消费一个的情形。子句说那个取值就是诸环境之集；递归当初用「一切都满足的条件」从那个集合把它的取值雕出来，故那个取值又是那个集合。递出只是把那份一致性施用一次，而诸元数与载体由 `refl`{.Agda} 对上，因为框架把它们放在子句所看之处。
+<!--/-->
+
+```agda
+  top : Top → ∀ {m} → Pinned (⊤̇ {n = m})
+  top htop {m} c y q c∈ hy = extensionalV (λ w → ⇔toPath
+    (λ hw → subst ⟨_⟩ (sym (Sat-mem B (⊤̇ {n = m}) (sw w hw)))
+      (e .fst (sw w hw) hw , tt*))
+    (λ hw → e .snd (sw' w hw)
+      (subst ⟨_⟩ (Sat-mem B (⊤̇ {n = m}) (sw' w hw)) hw .fst)))
+    where
+    δ' : S ^ 8
+    δ' = envSet B m ∷ y ∷ numeralL 0 ∷ nn m ∷ c ∷ γ
+
+    hE = AmbientHolds.holds B δ' zero (suc (suc (suc zero)))
+           (suc (suc (suc (suc (suc Bi))))) m refl refl refl
+
+    e = topClause-out Ci Ti Bi γ htop c (nn m) (numeralL 0) y (envSet B m) c∈
+          (q ∙ keyʟ-shape-in (⊤̇ {n = m})) hy hE
+
+    sw : (w : V ℓ) → ⟨ w ∈ fst y ⟩ → S
+    sw w hw = w , isL-trans hw (snd y)
+
+    sw' : (w : V ℓ) → ⟨ w ∈ fst (Sat B (⊤̇ {n = m})) ⟩ → S
+    sw' w hw = w , isL-trans hw (snd (Sat B (⊤̇ {n = m})))
 ```
