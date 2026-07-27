@@ -1129,6 +1129,71 @@ consAtL-adequate e' m e γ g hE =
 ```
 
 <!--en-->
+## The unbounded quantifiers
+<!--zh-->
+## 无界量词
+<!--/-->
+
+<!--en-->
+An environment satisfies an existential exactly when some value from the
+structure, pushed onto the front, gives an environment satisfying the body, and
+the body's value is recorded one arity higher. So the clause binds the value at
+the next arity, binds the ambient set at its own arity, and then describes its
+own value by extension: the environments in the ambient set that can be extended
+into the body's.
+
+Nine things are in scope by the innermost point, which is the deepest the chapter
+goes, and every one of them was needed: the code and its parts from the frame,
+the two values, the environment being classified, the value pushed on, and the
+extended environment. The universal clause is the same with the two innermost
+quantifiers turned around, which is the only place the two differ.
+<!--zh-->
+一个环境满足存在量词，恰当结构中的某个取值被推到它前面后，所得的环境满足主体，而主体的取值记录在高一个元数处。故该子句绑定下一元数处的取值，绑定它自己元数处的周遭集合，然后以外延描述自己的取值：周遭集合中那些能被扩展进主体取值里的环境。
+
+到最内处共有九样在作用域中，那是本章所及的最深处，而每一样都是必需的：来自框架的那个码与它的诸部分、两个取值、被分类的那个环境、被推入的取值、以及扩展后的环境。全称子句与之相同，只把最内两个量词调转，而那是两者唯一的差别。
+<!--/-->
+
+```agda
+module _ {n : ℕ} where
+  private
+    sh6' : Fin n → Fin (6 + n)
+    sh6' i = suc (suc (suc (suc (suc (suc i)))))
+
+    sh7' : Fin n → Fin (7 + n)
+    sh7' i = suc (suc (suc (suc (suc (suc (suc i))))))
+
+    ar6' a6' yc6' ya6' E6' : Fin (6 + n)
+    ar6' = suc (suc (suc (suc zero)))
+    a6'  = suc (suc (suc zero))
+    yc6' = suc (suc zero)
+    ya6' = suc zero
+    E6'  = zero
+
+    -- at the innermost point: e' = 0, m = 1, e = 2, E = 3, ya = 4
+    body∃ body∀ : Fin n → Formula S (7 + n)
+    body∃ B = (var zero ∈̇ var (suc zero))
+            ∧̇ ∃̇∈ (var (sh7' B)) (∃̇
+                ( consAtL zero (suc zero) (suc (suc zero))
+                ∧̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))) ))
+    body∀ B = (var zero ∈̇ var (suc zero))
+            ⇒̇ ∀̇∈ (var (sh7' B)) (∀̇
+                ( consAtL zero (suc zero) (suc (suc zero))
+                ⇒̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))) ))
+
+    quantRel : Fin n → Fin n → Formula S (7 + n) → Formula S (4 + n)
+    quantRel T B body =
+      ∀̇ (∀̇ ( subValSuccAt (sh6' T) ar6' a6' ya6'
+           ⇒̇ ( envSetAt E6' ar6' (sh6' B)
+           ⇒̇ extAt yc6' body )))
+
+  existClauseAt : Fin n → Fin n → Fin n → Formula S n
+  existClauseAt C T B = unClauseAt C T 8 (quantRel T B (body∃ B))
+
+  forallClauseAt : Fin n → Fin n → Fin n → Formula S n
+  forallClauseAt C T B = unClauseAt C T 9 (quantRel T B (body∀ B))
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -1153,8 +1218,8 @@ constructors whose payload is a pair, `unClauseAt`{.Agda} for the five whose
 payload is a single component, the constants included. Both read the key in two
 layers, arity outside and tag within, and both leave every lookup on a payload
 component to the relation handed to them, which performs it with
-`subValAt`{.Agda}. Six of the twelve are written out: the five
-connectives and falsity, plus truth. `envSetAt`{.Agda} is what the negative ones
+`subValAt`{.Agda}. Ten of the twelve are written out: the five
+connectives, the two constants, and the two unbounded quantifiers. `envSetAt`{.Agda} is what the negative ones
 needed, and it makes the point the chapter turns on: inside a clause, the ambient
 set of environments is described rather than constructed.
 
@@ -1173,7 +1238,7 @@ instead, since nothing in the model's comprehension asks them to be bounded.
 <!--zh-->
 `prAtL`{.Agda} 在模型的对象语言里说「这个集合是那两个的有序对」，`appAt`{.Agda} 说「某函数含有某个给定的对」，`svAt`{.Agda} 说「每个自变量至多含一个对」，而 `domAt`{.Agda} 说「某个给定集合恰是它作答的那些自变量」。它们合起来就是对象语言里「函数」的含义，而此后每条递归的图都经它们写出。`prʟ`{.Agda} 是取值一侧的对，使一个构造既能读码也能造码；而 `tagAtL`{.Agda} 与 `tagPairAtL`{.Agda} 读出一个码的构造子，后者匹配每个二元构造子的码所具有的形状。`envOverAt`{.Agda} 随后说出「作为某集合之上的环境」是什么意思。
 
-`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。十二条中已写出六条：五个联结词与假，再加真。`envSetAt`{.Agda} 正是负的那几条所需的那件，而它道出本章的关节：在子句之内，周遭的环境集合是被描述的，而非被构造的。
+`extAt`{.Agda} 是每条集值子句的写作框架，诸集合运算是它最短的实例，而这次递归的诸子句由**两**个框架写出、而非十二条：`binClauseAt`{.Agda} 管载荷为一个对的那七个构造子，`unClauseAt`{.Agda} 管载荷为单个分量的那五个，两个常量包含在内。两者都分两层读那个键，元数在外、标签在内，而两者都把载荷分量上的每一次查表留给交给自己的那条关系，由后者以 `subValAt`{.Agda} 执行。十二条中已写出十条：五个联结词、两个常量，以及两个无界量词。`envSetAt`{.Agda} 正是负的那几条所需的那件，而它道出本章的关节：在子句之内，周遭的环境集合是被描述的，而非被构造的。
 
 用了两条路，而两条都该在此处。无常元的读式被引用，代价是一条四环的链，不必动脑。点名数码的读式则改为直接写，因为引用它要把一份可构造性证书沿公式整个形状穿行，而直接写只需一个无界存在，且无界是免费的。它由引用得来，而非重新证得：读式与它的刻画留在写下它们的地方，而这次过河只花了一次关于环境的归纳。
 
