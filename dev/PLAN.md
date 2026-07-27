@@ -177,6 +177,7 @@ rather than refactoring. D12 rules on which to take, §6.1 orders their executio
 | D11 | Revisability | The plan legislates for known unknowns explicitly: legislation may be added mid-course (standing L0 track), the skeleton below the part level may be re-cut after L3, Frontier fields may be re-cut, and a whole-book harmonization pass runs at L4. Mechanisms in §8. |
 | D12 | L3 reduction strategy | **Outcome 2026-07-26 (`[L3.0.2]`): the decision was right, the analysis was wrong.** The lever was not a large internalization theorem (it is 96 lines) but general-formula comprehension, delivered at `[L2.2]`; the projected 65%-at-3x is now measured-and-projected at 7x to 14x. Original ruling, 2026-07-25: **take the big lever first.** Before the certificate clusters are reduced one by one, attempt a general **internalization theorem for L-recursion** (goal `[L3.0]`). Grounds: the §2.1 measurement shows the certificate mass is 8 to 10 hand-built instantiations of one pipeline, repeating because the source has no rudimentary-function / Σ-recursion absoluteness layer; the syntactic levers cap out at 25% to 40%, the theorem reaches roughly 65%. This is research, not refactoring, so it runs under an explicit paper-level gate and pre-agreed kill criteria (`[L3.0.3]`, `[L3.0.1]`), and D3's per-cluster reduction review stands as the route for whatever the theorem does not absorb. Schedule ruling, same day: the paper-level probe `[L3.0.3]` opens **before** L2, so the route's cheap kill signal arrives before the axiom branches commit to a Frontier cut at the certificate boundary. |
 | D13 | Macros and generated proof | **Ruled 2026-07-27 by the owner.** Opacity is **not** an objection: avoiding macro black boxes is not a project aim. Explain the macro's own logic, cut the code volume, and the reader's burden goes *down*, closer to real mathematical practice. **The single veto is conversion blowup.** So a macro or reification route is judged by exactly two measured questions: is it smaller, and does it keep `src/` inside the §7.5 and §7.6 budgets. If both, pursue it actively. Supersedes the exposition argument that had been recorded against `[L3.2]`, which is withdrawn. |
+| D14 | Retiring a chapter in waiting | **Ruled 2026-07-27.** A chapter is *in waiting* when nothing outside its own namespace imports it (`Everything` never counts; it imports everything). Such a chapter is **retired** (files deleted, `Everything` entries dropped, the commit hash recorded in §11 so it is recoverable, plus one line saying what would bring it back) when **both**: no **open** goal names it in §6.1, and either a goal that did name it has closed without using it, or no goal ever named it. It is **kept** only under a **written warrant**: a named open goal *and* a dated expiry, the goal at whose closure the question is asked again. Warrants live in §11 and expire whether or not anyone looks. **Trigger:** at every goal closure, list the chapters in waiting and check their warrants; it is one grep. Rationale: this book is read, so a chapter with no consumer costs a reader's attention, not just disk; and `FOL.Reification` sat at zero consumers for nine goals precisely because nothing ever forced the question. |
 
 ## 4. Target skeleton (D5)
 
@@ -782,8 +783,12 @@ working as designed.
   +25–33% on the largest coding module, and the two modules already measured came in 40
   lines worse than projected. The expected value is break-even at best.
 
-  **Ruling: do not adopt.** The branch is kept as the record and is **not** to be merged;
-  this entry is the deliverable. What survives is the calibration, which is now measured
+  **Ruling: do not adopt.** The three source commits were **reverted in place** once the
+  measurement was in; this entry is the deliverable. (A first version of this ruling said
+  "the branch is the record and is not to be merged", which is wrong and is corrected the
+  same day:
+  the branch also carries `[L2.3]`, `[L3.18]` and `[L3.20]`, so it merges, and it is the
+  rejected refactor that comes out rather than the branch.) What survives is the calibration, which is now measured
   rather than projected: a reification framework of this shape pays only where an adequacy
   proof carries multiple transports, and a hub whose adequacy is already direct will eat the
   savings of every leaf that quotes it.
@@ -794,6 +799,29 @@ working as designed.
   built rep is *definitionally* the hand-written formula in the eyes of downstream
   pattern-matching rather than merely propositionally equal (the 25–33%). Both are framework
   redesigns, not adoption work, and neither is scheduled.
+
+- **Chapters in waiting, and their warrants (D14), first census 2026-07-27.** Scanned by
+  the D14 rule: nothing outside the namespace imports it, `Everything` excluded.
+
+  | in waiting | warrant: which open goal needs it | expires at |
+  |---|---|---|
+  | `FOL.Reification.{Base, Combinators, Certified}` | the one use `[L3.2]` did **not** test: a graph handed to `L.Recursion.Definition.graph`, which `hasReplacementL` consumes without ever matching on the formula, so the 25–33% cost that sank the coding-chapter adoption cannot arise there | `[L3.0.1]` |
+  | `L.Coding.{Base, Entry, Tagged, Length, InL}` | `[L3.0.1]`, the satisfaction certificate | `[L3.0.1]` |
+  | `L.Recursion` | `[L3.0.1]`, its instance half | `[L3.0.1]` |
+  | `L.WellOrder.Base` | `[L2.4]` | `[L2.4]` |
+
+  **So the answer to "can `FOL.Reification` be deleted now" is: not yet, and for exactly one
+  more goal.** `[L3.2]` measured and rejected it for the coding chapters, where downstream
+  code recognises a formula by its constructor tree. It did not measure the case where a
+  built formula is handed straight to a comprehension field and nobody looks inside, which
+  is what `[L3.0.1]` will do. At `[L3.0.1]`'s closure the warrant expires: if the graph was
+  built by hand there too, the namespace is retired under D14 and the 133 lines go, with the
+  hash recorded.
+
+  Note that most of `L.Coding` is also in waiting. That is not a smell: those chapters were
+  written **for** `[L3.0.1]` and are days old. The warrant mechanism exists to tell that
+  case apart from the one `FOL.Reification` was in, having had no dated expiry for nine
+  goals.
 
   **Corrections on the record.** One turn before the re-evaluation I called `[L3.2]` "the
   real lever" on the twenty-nine traversals; that was said before measuring. And the
