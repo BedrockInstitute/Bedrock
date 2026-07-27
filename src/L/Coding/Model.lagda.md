@@ -1145,12 +1145,22 @@ into the body's.
 Nine things are in scope by the innermost point, which is the deepest the chapter
 goes, and every one of them was needed: the code and its parts from the frame,
 the two values, the environment being classified, the value pushed on, and the
-extended environment. The universal clause is the same with the two innermost
-quantifiers turned around, which is the only place the two differ.
+extended environment. The universal clause turns the two innermost quantifiers
+around, each taking the connective its form asks for: a conjunction under the
+existential, an implication under the universal.
+
+Nothing else moves, and the outermost conjunct in particular does not. The one
+that puts the environment in the ambient set is a conjunction in **both**, as it
+is in every clause written in this frame, and the reason is worth stating because
+getting it wrong is not a wrong clause but an unsatisfiable one. `extAt`{.Agda}
+makes a value the set of exactly what its condition holds of; a condition that
+could hold outside the ambient set would be asking for a value that is not a set.
 <!--zh-->
 一个环境满足存在量词，恰当结构中的某个取值被推到它前面后，所得的环境满足主体，而主体的取值记录在高一个元数处。故该子句绑定下一元数处的取值，绑定它自己元数处的周遭集合，然后以外延描述自己的取值：周遭集合中那些能被扩展进主体取值里的环境。
 
-到最内处共有九样在作用域中，那是本章所及的最深处，而每一样都是必需的：来自框架的那个码与它的诸部分、两个取值、被分类的那个环境、被推入的取值、以及扩展后的环境。全称子句与之相同，只把最内两个量词调转，而那是两者唯一的差别。
+到最内处共有九样在作用域中，那是本章所及的最深处，而每一样都是必需的：来自框架的那个码与它的诸部分、两个取值、被分类的那个环境、被推入的取值、以及扩展后的环境。全称子句把最内两个量词调转，每个都带上其形式所要的联结词：存在之下是合取，全称之下是蕴含。
+
+除此之外别无变动，尤其是最外那个合取项不动。把环境放进周遭集合的那一项，在**两条**里都是合取，一如这个框架下写出的每一条子句；而这个理由值得说出来，因为弄错它得到的不是一条错的子句，而是一条无法满足的子句。`extAt`{.Agda} 使一个取值恰为「其条件所成立于的那些东西」之集；一个可能在周遭集合之外成立的条件，等于在索要一个并非集合的取值。
 <!--/-->
 
 ```agda
@@ -1176,7 +1186,7 @@ module _ {n : ℕ} where
                 ( consAtL zero (suc zero) (suc (suc zero))
                 ∧̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))) ))
     body∀ B = (var zero ∈̇ var (suc zero))
-            ⇒̇ ∀̇∈ (var (sh7' B)) (∀̇
+            ∧̇ ∀̇∈ (var (sh7' B)) (∀̇
                 ( consAtL zero (suc zero) (suc (suc zero))
                 ⇒̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))) ))
 
