@@ -239,13 +239,18 @@ codes-canon (c-∃∈ ct c) =
 <!--en-->
 Canonicity already gives what "the code determines the formula" is usually
 stated for: two derivations over the same code force the two formulas to have
-the same code, and every later argument in the book that needs to recover a
-formula from its code has a derivation in hand. So the direct injectivity of
-`⌜_⌝`{.Agda}, which would require comparing all twelve constructors against all
-twelve, is not proved here; it is not needed by any consumer, and the relation
-above is the interface those consumers were designed around.
+the same code, and an argument that recovers a formula from its code with a
+derivation in hand wants nothing further. That is most of them, and the relation
+above is the interface they were designed around.
+
+It is not all of them. One consumer wants the equation itself, for a reason no
+relation answers, and the last section of this chapter proves it. The objection
+that once kept it out was a cost estimate, and the cost turned out not to be
+what the estimate assumed.
 <!--zh-->
-典范性已经给出了「码决定公式」通常要陈述的内容：同一个码上的两份推导，迫使两条公式拥有相同的码；而本书此后每个需要从码还原公式的论证，手里都有一份推导。故 `⌜_⌝`{.Agda} 的直接单射性，那需要把十二个构造子与十二个逐一相比，此处不予证明；没有任何消费方需要它，而上面那个关系正是那些消费方所围绕设计的接口。
+典范性已经给出了「码决定公式」通常要陈述的内容：同一个码上的两份推导，迫使两条公式拥有相同的码；而一个手里握着推导、据以从码还原公式的论证，不再要求任何更多的东西。它们是绝大多数，而上面那个关系正是它们所围绕设计的接口。
+
+但不是全部。有一个消费方要的是那条等式本身，理由是任何关系都答不了的，而本章最后一节把它证出来。当初把它挡在外面的那条反对意见是一个成本估计，而成本最终并不是那个估计所设想的样子。
 <!--/-->
 
 <!--en-->

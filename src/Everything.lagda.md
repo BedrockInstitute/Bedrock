@@ -211,7 +211,8 @@ import V.Model
   `ord∈Lset-suc`{.Agda} says none appears late.
 - `L.WellOrder.Base`{.Agda}: strict well-orders as a bundle (`SWO`{.Agda}), and
   the least element of a non-empty subset (`leastOf`{.Agda}), unique by
-  trichotomy: the choosing device both reflection and choice will take.
+  trichotomy: the choosing device the axiom of choice will take. Reflection was
+  expected to be a second consumer and is not; nothing imports this chapter yet.
 - `L.Coding.Base`{.Agda}: reading codes from inside: `allCodes`{.Agda} gathers
   every parameter-free formula's code into one nameable set, and
   `prAt`{.Agda} / `tagAt`{.Agda} destructure a Kuratowski pair and a tag in
@@ -271,7 +272,7 @@ import V.Model
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
-- `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：反射与选择都会取用的那件选取装置。
+- `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是；本章目前无人 import。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
 - `L.Coding.Tagged`{.Agda}：携带元数的码，使量词的子句能谈论其子公式的元数；`tagPairAt`{.Agda} 匹配每个二元构造子的码所具有的形状。

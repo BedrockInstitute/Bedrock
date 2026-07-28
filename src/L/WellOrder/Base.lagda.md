@@ -1,11 +1,15 @@
 # Strict well-orders, and least elements
 
 <!--en-->
-Two constructions ahead need to *choose*: the reflection argument has to pick a
-formula out of a set of formulas that would do, and the axiom of choice, at the
-end of the book, has to pick an element out of each cell of a family. Both are
-the same move, and the classical way to make it is to well-order the candidates
-and take the least one that qualifies.
+One construction ahead needs to *choose*: the axiom of choice, at the end of the
+book, has to pick an element out of each cell of a family, and the classical way
+to make that choice is to well-order the candidates and take the least one that
+qualifies.
+
+The reflection argument was expected to be a second consumer and is not. It was
+delivered with no order at all, as a ladder whose limit answers for every matrix
+at once, built jointly rather than selected from. So this vocabulary has one
+consumer ahead of it rather than two, and nothing in the book uses it yet.
 
 This chapter provides the vocabulary. A strict well-order on a type is a
 relation that is trichotomous, irreflexive, transitive and well founded, bundled
@@ -27,7 +31,9 @@ worth doing wherever it can be done: the bundle, the uniqueness of least
 elements, and everything a later chapter needs in order to *state* an order are
 constructive, and only the search is not.
 <!--zh-->
-接下来有两个构造需要**选取**：反射论证要从一堆合用的公式里挑出一条，而本书末尾的选择公理要从一个族的每一格里挑出一个元素。二者是同一个动作，而作出这个动作的经典方式，是把候选者良序化，再取合格者中最小的那个。
+接下来有一个构造需要**选取**：本书末尾的选择公理要从一个族的每一格里挑出一个元素，而作出这个选取的经典方式，是把候选者良序化，再取合格者中最小的那个。
+
+反射论证本来预期是第二个消费方，结果不是。它交付时根本没有用到任何序，而是一道阶梯，其极限一举为每个母式作答，是合起来造出来的、不是从中挑出来的。故这套词汇前方只有一个消费方、不是两个，而本书目前尚无一处用到它。
 
 本章提供相应的词汇。类型上的严格良序，是一个三歧、非自反、传递且良基的关系，打成 record，好让后续章节把它当数据携带。这个束的层级泛型有一点值得说明：载体与关系取**各自独立**的宇宙层级，因为第四部最终造出的那个序比较的是公式 (小的)，而据以比较的数据要提到序数 (不小)。
 
@@ -173,11 +179,11 @@ arbitrary predicate, and that is where the excluded middle enters.
 <!--en-->
 `SWO`{.Agda} bundles a strict well-order, and `leastOf`{.Agda} extracts the least
 element of any non-empty subset, uniquely (`isPropLeastOf`{.Agda}). The bundle
-is the interface the reflection argument and the choice construction both take;
-neither cares which order it is handed, which is why the chapter is generic. The
-excluded middle is spent once, on the decision at each descent step, and the
+is the interface the choice construction takes; it does not care which order it
+is handed, which is why the chapter is generic. The excluded middle is spent
+once, on the decision at each descent step, and the
 level discipline (carrier and relation separately generic) is what will let the
 order of Part 4 compare small things by large data.
 <!--zh-->
-`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是反射论证与选择构造共同取用的接口；二者都不在乎拿到的是哪个序，这正是本章泛型的原因。排中律花在一处，即每一步下降时的那次判定，且只记在那一条定理账上：此处其余一切都是构造性的。而层级纪律 (载体与关系各自泛型) 将使第四部的那个序能以大的数据去比较小的东西。
+`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是选择构造取用的接口；它不在乎拿到的是哪个序，这正是本章泛型的原因。排中律花在一处，即每一步下降时的那次判定，且只记在那一条定理账上：此处其余一切都是构造性的。而层级纪律 (载体与关系各自泛型) 将使第四部的那个序能以大的数据去比较小的东西。
 <!--/-->
