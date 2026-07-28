@@ -323,6 +323,7 @@ import L.Coding.Table
 import L.Coding.Sound
 import L.Coding.Unique
 import L.Coding.Slot
+import L.Coding.Descent
 import L.Coding.Shape
 import L.Coding.Graph
 import L.Coding.Satisfaction
@@ -388,6 +389,11 @@ The root, stated today and finished over the remaining parts:
   the object language's closedness predicate, which is the hypothesis the
   satisfaction graph states about its index set. The closure chapter's theorem
   again, on the model's own coding.
+- `L.Coding.Descent`{.Agda}: how a recursion on codes gets from a code to its
+  parts, which membership will not do: Kuratowski's pair puts a part four
+  membership steps down and the sets in between are not codes. Rank increases
+  strictly along membership, so the four steps compose by transitivity of
+  ordinals and the recursion runs on the rank instead.
 - `L.Coding.Shape`{.Agda}: the half of "is a code" that closedness does not say.
   Closedness is eight implications keyed by tag, so a member with no recognized
   tag satisfies all eight vacuously; `shapedAt`{.Agda} says every member is an
@@ -451,6 +457,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Sound`{.Agda}：那张表满足诸子句，一条一条地。每次验证是四步，其中三步已经造好；剩下的是一条集合等式，而它们便宜，因为元语言的递归当初正是用那条等式所读回的那个条件来定义它的取值的。
 - `L.Coding.Unique`{.Agda}：一张在子码封闭的索引上满足十二条子句的表，在每个键处记录的就是递归在那里造出的取值，而正是这一点使那个图单值。对着典范取值陈述，且索引取作变元，因为把键代进一个满足关系里，在任何合理时间内都不会通过类型检查。
 - `L.Coding.Slot`{.Agda}：一条公式的递归所索引的那个槽，满足对象语言的封闭性谓词，而那正是满足关系那个图对它的索引集所陈述的假设。是闭包那一章的定理再来一遍，落在模型自己的编码上。
+- `L.Coding.Descent`{.Agda}：一场跑在码上的递归如何从一条码走到它的诸部件，而成员关系办不到这件事：Kuratowski 的对把一个部件放在四个成员步之下，而中间那些集合不是码。秩沿成员关系严格增长，故那四步经序数的传递性合成，递归改跑在秩上。
 - `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。`isTmAt-decode`{.Agda} 把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的：词项要么是常元、要么是变元，而变元的序号从元数数码里出来，界正是在那里起作用的。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十二者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。
 - `L.Coding.Satisfaction`{.Agda}：那个实例。槽作定义域、图取自上一章，而两半在 `funct`{.Agda} 处会合：存在性把已经造好的对象递给那个图，唯一性把图所接受的任意一张表对着元语言递归造出的那个钉死。
 - `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。
