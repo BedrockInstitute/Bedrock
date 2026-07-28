@@ -97,6 +97,43 @@ opaque
 ```
 
 <!--en-->
+## Rank strictly increases along membership
+
+<!--zh-->
+## 秩沿成员关系严格增长
+<!--/-->
+
+<!--en-->
+The one fact that makes rank a descent measure. It is the outward half of the
+fixed-point argument below with the ordinality hypothesis dropped: the same union
+witness, no `IsOrd`{.Agda} anywhere. A recursion that must descend into a set
+built by nesting, rather than into a member, has no membership to induct on and
+uses this instead.
+<!--zh-->
+使秩成为一把下降尺的那一条事实。它就是下文不动点论证的向外那一半，去掉了序数假设：同一个并的见证，全程不见 `IsOrd`{.Agda}。一场必须下降进「由嵌套造出的集合」而非下降进某个成员的递归，没有成员关系可供归纳，于是改用这一条。
+<!--/-->
+
+```agda
+rank-mono : (x y : S) → ⟨ x ∈ˢ y ⟩ → ⟨ rank x ∈ˢ rank y ⟩
+rank-mono x y x∈y = subst (λ w → ⟨ rank x ∈ˢ w ⟩) (sym (rank-compute y))
+  (∈∈ₛ {a = rank x} {b = ⋃ (sett ⟪ y ⟫ s)} .snd
+    (union-ax (sett ⟪ y ⟫ s) (rank x) .snd
+      ∣ sucV (rank (⟪ y ⟫↪ m)) , (sm∈ₛsett , x∈ₛsm) ∣₁))
+  where
+  s : ⟪ y ⟫ → S
+  s k = sucV (rank (⟪ y ⟫↪ k))
+  fibx = ∈-asFiber {a = x} {b = y} x∈y
+  m = fibx .fst
+  q : ⟪ y ⟫↪ m ≡ x
+  q = fibx .snd
+  sm∈ₛsett : ⟨ sucV (rank (⟪ y ⟫↪ m)) ∈ₛ sett ⟪ y ⟫ s ⟩
+  sm∈ₛsett = ∈∈ₛ {a = sucV (rank (⟪ y ⟫↪ m))} {b = sett ⟪ y ⟫ s} .fst ∣ m , refl ∣₁
+  x∈ₛsm : ⟨ rank x ∈ₛ sucV (rank (⟪ y ⟫↪ m)) ⟩
+  x∈ₛsm = ∈∈ₛ {a = rank x} {b = sucV (rank (⟪ y ⟫↪ m))} .fst
+    (subst (λ w → ⟨ rank x ∈ˢ sucV (rank w) ⟩) (sym q) (self∈sucV (rank x)))
+```
+
+<!--en-->
 ## Rank is an ordinal
 <!--zh-->
 ## 秩是序数
