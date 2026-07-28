@@ -290,12 +290,12 @@ module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
 <!--/-->
 
 ```agda
-module _ (B : S) {n : ℕ} (φ : Formula S n) where
+module _ (B : S) {n : ℕ} (φ : Formula S n) {k : ℕ} (γ : S ^ k) where
   private
-    δ : S ^ 3
-    δ = B ∷ satTable B φ ∷ slot B φ ∷ []
+    δ : S ^ (suc (suc (suc k)))
+    δ = B ∷ satTable B φ ∷ slot B φ ∷ γ
 
-    Ci Ti Bi : Fin 3
+    Ci Ti Bi : Fin (suc (suc (suc k)))
     Ci = suc (suc zero)
     Ti = suc zero
     Bi = zero
