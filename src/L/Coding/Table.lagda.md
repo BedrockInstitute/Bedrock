@@ -122,60 +122,59 @@ between the two constructions, which is the rule that chapter measured.
 <!--/-->
 
 ```agda
-  Of : (f : ∀ {m} → Formula S m → S) {n : ℕ} → Formula S n → V ℓ
+  Of : (f g : ∀ {m} → Formula S m → S) {n : ℕ} → Formula S n → V ℓ
      → Type (ℓ-suc ℓ)
-  Of f φ x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula S m ]
-                 ((x ≡ fst (f χ))
-                  × ((z : V ℓ) → ⟨ z ∈ fst (tree f χ) ⟩
-                     → ⟨ z ∈ fst (tree f φ) ⟩))) ∥₁
+  Of f g φ x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula S m ]
+                   ((x ≡ fst (f χ))
+                    × ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩
+                       → ⟨ z ∈ fst (tree g φ) ⟩))) ∥₁
 
   private
-    module _ (f : ∀ {m} → Formula S m → S) where
+    module _ (f g : ∀ {m} → Formula S m → S) where
       one : ∀ {n} (φ : Formula S n) (x : V ℓ)
-          → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f φ x
+          → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f g φ x
       one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
 
       wider : ∀ {n m} (φ : Formula S n) (χ : Formula S m) {x : V ℓ}
-            → ((z : V ℓ) → ⟨ z ∈ fst (tree f χ) ⟩ → ⟨ z ∈ fst (tree f φ) ⟩)
-            → Of f χ x → Of f φ x
+            → ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩ → ⟨ z ∈ fst (tree g φ) ⟩)
+            → Of f g χ x → Of f g φ x
       wider _ _ s = PT.map
         (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
 
       un : ∀ {n m} (φ : Formula S n) (a : Formula S m)
-         → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩
-            → ⟨ z ∈ fst (tree f φ) ⟩)
-         → ((z : V ℓ) → ⟨ z ∈ fst (tree f φ) ⟩
-            → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩)
-         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f a x)
-         → (x : V ℓ) → ⟨ x ∈ fst (tree f φ) ⟩ → Of f φ x
-      un φ a into out ra x h = PT.rec squash₁
+         → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (tree g a)) ⟩
+            → ⟨ z ∈ fst (tree g φ) ⟩)
+         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
+         → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f g φ x
+      un φ a into ra x h = PT.rec squash₁
         (λ { (inl e) → one φ x e
            ; (inr e) → wider φ a
-               (λ z hz → into z (cupʟ-inr (sglʟ (f φ)) (tree f a) z hz)) (ra x e) })
-        (cupʟ-out (sglʟ (f φ)) (tree f a) x (out x h))
+               (λ z hz → into z (cupʟ-inr (sglʟ (g φ)) (tree g a) z hz))
+               (ra x e) })
+        (cupʟ-out (sglʟ (f φ)) (tree f a) x h)
 
       bin : ∀ {n m} (φ : Formula S n) (a b : Formula S m)
           → ((z : V ℓ)
-             → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
-             → ⟨ z ∈ fst (tree f φ) ⟩)
-          → ((z : V ℓ) → ⟨ z ∈ fst (tree f φ) ⟩
-             → ⟨ z ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f a x)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f b x)
-          → (x : V ℓ) → ⟨ x ∈ fst (tree f φ) ⟩ → Of f φ x
-      bin φ a b into out ra rb x h = PT.rec squash₁
+             → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (cupʟ (tree g a) (tree g b))) ⟩
+             → ⟨ z ∈ fst (tree g φ) ⟩)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f g b x)
+          → (x : V ℓ)
+          → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
+          → Of f g φ x
+      bin φ a b into ra rb x h = PT.rec squash₁
         (λ { (inl e) → one φ x e
            ; (inr e) → PT.rec squash₁
                (λ { (inl ea) → wider φ a (λ z hz → into z
-                      (cupʟ-inr (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) z
-                        (cupʟ-inl (tree f a) (tree f b) z hz)))
+                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
+                        (cupʟ-inl (tree g a) (tree g b) z hz)))
                       (ra x ea)
                   ; (inr eb) → wider φ b (λ z hz → into z
-                      (cupʟ-inr (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) z
-                        (cupʟ-inr (tree f a) (tree f b) z hz)))
+                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
+                        (cupʟ-inr (tree g a) (tree g b) z hz)))
                       (rb x eb) })
                (cupʟ-out (tree f a) (tree f b) x e) })
-        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x (out x h))
+        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
 
   module Parts (f : ∀ {m} → Formula S m → S) where
     self : ∀ {n} (φ : Formula S n) → ⟨ fst (f φ) ∈ fst (tree f φ) ⟩
@@ -209,31 +208,40 @@ between the two constructions, which is the rule that chapter measured.
          → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (tree f a)) ⟩
     only χ a z h = cupʟ-inr (sglʟ (f χ)) (tree f a) z h
 
-  tree-inv : (f : ∀ {m} → Formula S m → S) → ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f φ x
-  tree-inv f φ@(t ∈̇ u) = one f φ
-  tree-inv f φ@(t ≐ u) = one f φ
-  tree-inv f φ@⊤̇       = one f φ
-  tree-inv f φ@⊥̇       = one f φ
-  tree-inv f φ@(a ∧̇ b) = bin f φ a b (λ _ hz → hz) (λ _ hz → hz)
-                           (tree-inv f a) (tree-inv f b)
-  tree-inv f φ@(a ∨̇ b) = bin f φ a b (λ _ hz → hz) (λ _ hz → hz)
-                           (tree-inv f a) (tree-inv f b)
-  tree-inv f φ@(a ⇒̇ b) = bin f φ a b (λ _ hz → hz) (λ _ hz → hz)
-                           (tree-inv f a) (tree-inv f b)
-  tree-inv f φ@(¬̇ a)    = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
-  tree-inv f φ@(∃̇ a)    = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
-  tree-inv f φ@(∀̇ a)    = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
-  tree-inv f φ@(∀̇∈ t a) = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
-  tree-inv f φ@(∃̇∈ t a) = un f φ a (λ _ hz → hz) (λ _ hz → hz) (tree-inv f a)
+  tree-inv : (f g : ∀ {m} → Formula S m → S)
+           → ∀ {n} (φ : Formula S n) (x : V ℓ)
+           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f g φ x
+  tree-inv f g φ@(t ∈̇ u) = one f g φ
+  tree-inv f g φ@(t ≐ u) = one f g φ
+  tree-inv f g φ@⊤̇       = one f g φ
+  tree-inv f g φ@⊥̇       = one f g φ
+  tree-inv f g φ@(a ∧̇ b) = bin f g φ a b (λ _ hz → hz)
+                             (tree-inv f g a) (tree-inv f g b)
+  tree-inv f g φ@(a ∨̇ b) = bin f g φ a b (λ _ hz → hz)
+                             (tree-inv f g a) (tree-inv f g b)
+  tree-inv f g φ@(a ⇒̇ b) = bin f g φ a b (λ _ hz → hz)
+                             (tree-inv f g a) (tree-inv f g b)
+  tree-inv f g φ@(¬̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∃̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∀̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∀̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∃̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
 
   satTable-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
-               → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent φ x
-  satTable-inv = tree-inv ent
+               → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent ent φ x
+  satTable-inv = tree-inv ent ent
 
   slot-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ φ x
-  slot-inv = tree-inv keyʟ
+           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ keyʟ φ x
+  slot-inv = tree-inv keyʟ keyʟ
+
+  slot-ent : ∀ {n} (φ : Formula S n) (x : V ℓ)
+           → ⟨ x ∈ fst (slot φ) ⟩ → Of keyʟ ent φ x
+  slot-ent = tree-inv keyʟ ent
+
+  ent-slot : ∀ {n} (φ : Formula S n) (x : V ℓ)
+           → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent keyʟ φ x
+  ent-slot = tree-inv ent keyʟ
 ```
 
 <!--en-->
@@ -265,6 +273,25 @@ which is the only arity at which it is true.
       (λ m' p' → (χ' : Formula S m')
                → fst LCode.⌜ ψ ⌝ ≡ fst LCode.⌜ χ' ⌝ → Sat B ψ ≡ Sat B χ')
       (same ψ) p χ
+
+  total : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (slot φ) ⟩
+        → ∥ (Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ fst (satTable φ) ⟩) ∥₁
+  total φ x h = PT.map
+    (λ { (m , χ , (q , incl)) → Sat B χ
+       , subst (λ w → ⟨ pr w (fst (Sat B χ)) ∈ fst (satTable φ) ⟩) (sym q)
+           (incl (pr (fst (keyʟ χ)) (fst (Sat B χ)))
+             (subst (λ w → ⟨ w ∈ fst (tree ent χ) ⟩)
+               (prʟ-fst (keyʟ χ) (Sat B χ)) (Parts.self ent χ))) })
+    (slot-ent φ x h)
+
+  inSlot : ∀ {n} (φ : Formula S n) (x y : V ℓ)
+         → ⟨ pr x y ∈ fst (satTable φ) ⟩ → ⟨ x ∈ fst (slot φ) ⟩
+  inSlot φ x y h = PT.rec (snd (x ∈ fst (slot φ)))
+    (λ { (m , χ , (q , incl)) →
+      subst (λ w → ⟨ w ∈ fst (slot φ) ⟩)
+        (sym (pr-inj (q ∙ prʟ-fst (keyʟ χ) (Sat B χ)) .fst))
+        (incl (fst (keyʟ χ)) (Parts.self keyʟ χ)) })
+    (ent-slot φ (pr x y) h)
 
   key-determines : ∀ {n m} (ψ : Formula S n) (χ : Formula S m)
                  → fst (keyʟ ψ) ≡ fst (keyʟ χ) → Sat B ψ ≡ Sat B χ
