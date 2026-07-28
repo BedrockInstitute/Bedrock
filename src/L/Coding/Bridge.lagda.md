@@ -49,7 +49,8 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; con; var; Formula
         ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.Relabelling using ( mapTm; mapFo; ⊨-map )
+open import FOL.Manipulation.Relabelling
+  using ( mapTm; mapFo; mapFo-comp; ⊨-map )
 import FOL.Absoluteness
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -598,36 +599,20 @@ place absoluteness held: the specification of `defSet`{.Agda}, then the
 relabelling, which moves meaning not at all, then the bridge.
 
 Two pieces of bookkeeping, both syntactic. Relabelling twice in a row is
-relabelling along the composite, one line per constructor and every one a
-congruence; and the one-entry environment named by a member is the graph of the
+relabelling along the composite, which the relabelling chapter proves once for
+every domain; and the one-entry environment named by a member is the graph of the
 one-entry vector, which is the same equation at length one.
 <!--zh-->
 以及本目标为之存在的那条陈述。在世界 `(B, ∈)` 中由一条带 `B` 中参数的公式可定义的子集，收集的恰是那些成员：它们的单条目环境落在「同一条公式重标进元语言后」的递归取值之中。证明就是可定义幂集那一章为绝对性已经跑过的三步链，只是把本章这座桥放在当初绝对性所在的位置：`defSet`{.Agda} 的规格、然后重标 (它分毫不动含义)、然后这座桥。
 
-两处记账，皆属句法。连续重标两次就是沿复合重标，每个构造子一行、条条都是同余；而由一个成员点名的单条目环境，就是单条目向量的图，那是同一条等式落在长度一处。
+两处记账，皆属句法。连续重标两次就是沿复合重标，而那件事重标那一章已为所有常量域一次证清；而由一个成员点名的单条目环境，就是单条目向量的图，那是同一条等式落在长度一处。
 <!--/-->
 
 ```agda
   private
-    mapTm-fuse : ∀ {n} (t : Term ⟪ fst B ⟫ n)
-               → mapTm intoL (mapTm DB.ι t) ≡ mapTm asConst t
-    mapTm-fuse (con c) = refl
-    mapTm-fuse (var i) = refl
-
     mapFo-fuse : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n)
                → mapFo intoL (mapFo DB.ι ψ) ≡ mapFo asConst ψ
-    mapFo-fuse (t ∈̇ u)  = cong₂ _∈̇_ (mapTm-fuse t) (mapTm-fuse u)
-    mapFo-fuse (t ≐ u)  = cong₂ _≐_ (mapTm-fuse t) (mapTm-fuse u)
-    mapFo-fuse (a ∧̇ b)  = cong₂ _∧̇_ (mapFo-fuse a) (mapFo-fuse b)
-    mapFo-fuse (a ∨̇ b)  = cong₂ _∨̇_ (mapFo-fuse a) (mapFo-fuse b)
-    mapFo-fuse (a ⇒̇ b)  = cong₂ _⇒̇_ (mapFo-fuse a) (mapFo-fuse b)
-    mapFo-fuse (¬̇ a)    = cong ¬̇_ (mapFo-fuse a)
-    mapFo-fuse ⊤̇        = refl
-    mapFo-fuse ⊥̇        = refl
-    mapFo-fuse (∃̇ a)    = cong ∃̇_ (mapFo-fuse a)
-    mapFo-fuse (∀̇ a)    = cong ∀̇_ (mapFo-fuse a)
-    mapFo-fuse (∀̇∈ t a) = cong₂ ∀̇∈ (mapTm-fuse t) (mapFo-fuse a)
-    mapFo-fuse (∃̇∈ t a) = cong₂ ∃̇∈ (mapTm-fuse t) (mapFo-fuse a)
+    mapFo-fuse = mapFo-comp DB.ι intoL
 
     graph-single : (m : ⟪ fst B ⟫)
                  → fst (envS B (λ _ → m)) ≡ graph (DB.ι m ∷ [])

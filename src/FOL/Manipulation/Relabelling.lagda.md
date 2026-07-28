@@ -68,6 +68,40 @@ mapFo f (∃̇∈ t φ) = ∃̇∈ (mapTm f t) (mapFo f φ)
 ```
 
 <!--en-->
+Two such maps in a row are one map. The composite is the only thing a chapter
+that migrates a formula through an intermediate domain ever wants, and proving it
+where the syntax is defined costs twelve congruences and stops every later
+chapter from writing its own. Both term cases are `refl`{.Agda}, because a
+variable carries no constant and a constant is relabelled by application.
+<!--zh-->
+连着两次这样的映射就是一次映射。凡经中间域迁徙一条公式的章节，想要的无非是那个复合；而在语法被定义之处证它，代价是十二次同余，却省得此后每一章各写一遍。两个词项情形都是 `refl`{.Agda}，因为变元不携带常量，而常量的变换就是把映射施用上去。
+<!--/-->
+
+```agda
+mapTm-comp : ∀ {ℓ ℓ' ℓ''} {K : Type ℓ} {K' : Type ℓ'} {K'' : Type ℓ''} {n}
+             (f : K → K') (g : K' → K'') (t : Term K n)
+           → mapTm g (mapTm f t) ≡ mapTm (λ k → g (f k)) t
+mapTm-comp f g (con k) = refl
+mapTm-comp f g (var i) = refl
+
+mapFo-comp : ∀ {ℓ ℓ' ℓ''} {K : Type ℓ} {K' : Type ℓ'} {K'' : Type ℓ''} {n}
+             (f : K → K') (g : K' → K'') (φ : Formula K n)
+           → mapFo g (mapFo f φ) ≡ mapFo (λ k → g (f k)) φ
+mapFo-comp f g (t ∈̇ u)  = cong₂ _∈̇_ (mapTm-comp f g t) (mapTm-comp f g u)
+mapFo-comp f g (t ≐ u)  = cong₂ _≐_ (mapTm-comp f g t) (mapTm-comp f g u)
+mapFo-comp f g (φ ∧̇ ψ)  = cong₂ _∧̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
+mapFo-comp f g (φ ∨̇ ψ)  = cong₂ _∨̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
+mapFo-comp f g (φ ⇒̇ ψ)  = cong₂ _⇒̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
+mapFo-comp f g (¬̇ φ)    = cong ¬̇_ (mapFo-comp f g φ)
+mapFo-comp f g ⊤̇        = refl
+mapFo-comp f g ⊥̇        = refl
+mapFo-comp f g (∃̇ φ)    = cong ∃̇_ (mapFo-comp f g φ)
+mapFo-comp f g (∀̇ φ)    = cong ∀̇_ (mapFo-comp f g φ)
+mapFo-comp f g (∀̇∈ t φ) = cong₂ ∀̇∈ (mapTm-comp f g t) (mapFo-comp f g φ)
+mapFo-comp f g (∃̇∈ t φ) = cong₂ ∃̇∈ (mapTm-comp f g t) (mapFo-comp f g φ)
+```
+
+<!--en-->
 The most-travelled instance: entering a constant domain from **no** constants.
 The syntax chapter introduced the **parameter-free formulas**, the data axis
 with the empty type as constant domain; like sentences they bear no separate
