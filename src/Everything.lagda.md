@@ -408,7 +408,11 @@ The root, stated today and finished over the remaining parts:
   its work. `Peel.peel`{.Agda} is the two halves meeting: shapedness says which
   of the twelve a member is and hands back its parts, closedness says those
   parts are members too at the arity the tag calls for, and neither alone is a
-  step of a recursion.
+  step of a recursion. The other direction is owed as well, since a predicate
+  written to be consumed proves nothing until something satisfies it:
+  `shaped-in`{.Agda} builds the twelve-fold disjunction from one choice per
+  member, and `closureShaped`{.Agda} spends it on the closure of a formula,
+  which is the second hypothesis the decode's first caller owes.
 - `L.Coding.Recover`{.Agda}: the decode. In a set that is closed and shaped, a
   member handed over as a key at a stated arity is the key of a formula, and
   `Decode.recover`{.Agda} produces it. That *every* member is such a key is not
@@ -471,7 +475,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Unique`{.Agda}：一张在子码封闭的索引上满足十二条子句的表，在每个键处记录的就是递归在那里造出的取值，而正是这一点使那个图单值。对着典范取值陈述，且索引取作变元，因为把键代进一个满足关系里，在任何合理时间内都不会通过类型检查。
 - `L.Coding.Slot`{.Agda}：一条公式的递归所索引的那个槽，满足对象语言的封闭性谓词，而那正是满足关系那个图对它的索引集所陈述的假设。是闭包那一章的定理再来一遍，落在模型自己的编码上。
 - `L.Coding.Descent`{.Agda}：一场跑在码上的递归如何从一条码走到它的诸部件，而成员关系办不到这件事：Kuratowski 的对把一个部件放在四个成员步之下，而中间那些集合不是码。秩沿成员关系严格增长，故那四步经序数的传递性合成，递归改跑在秩上。
-- `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。`isTmAt-decode`{.Agda} 把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的：词项要么是常元、要么是变元，而变元的序号从元数数码里出来，界正是在那里起作用的。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十二者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。
+- `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。`isTmAt-decode`{.Agda} 把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的：词项要么是常元、要么是变元，而变元的序号从元数数码里出来，界正是在那里起作用的。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十二者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。另一个方向同样欠着，因为一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明：`shaped-in`{.Agda} 由「每个成员一次选择」造出那个十二重析取，而 `closureShaped`{.Agda} 把它花在一条公式的闭包上，那正是解码的第一个调用方所欠的第二条假设。
 - `L.Coding.Recover`{.Agda}：解码。在一个既封闭又成形的集合里，一个以「某个已言明元数处的键」的形式递交过来的成员，就是某条公式的键，而 `Decode.recover`{.Agda} 把它造出来。「**每个**成员都是这样一个键」此处未予证明，欠这笔账的是造那个集合的人，因为形状对它所绑定的元数分量不加任何条件。递归跑在码的秩上，不跑在码上、也不跑在键上：不跑在码上，是因为成员关系不下降进 Kuratowski 的对；不跑在键上，是因为「对的秩的算术」是一条没人证过的事实。元数作为一个自然数在旁边带着，正是这一点让归纳得以在量词把它抬升到的那个更大的元数上回来。六个框架承载那十二个情形，而每个框架都把自己那个构造子的编码等式作为假设收下，因为构造子若是变元，编码函数便不化简，寻找那条等式的代价就是全部代价。
 - `L.Coding.Satisfaction`{.Agda}：那个实例。槽作定义域、图取自上一章，而两半在 `funct`{.Agda} 处会合：存在性把已经造好的对象递给那个图，唯一性把图所接受的任意一张表对着元语言递归造出的那个钉死。
 - `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。

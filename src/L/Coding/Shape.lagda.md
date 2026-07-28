@@ -31,10 +31,13 @@ open import Base.Truth
 module L.Coding.Shape {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ⊤̇; ∃̇_; ∀̇∈ )
+open import FOL.Syntax
+  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+        ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
+open import V.Coding {ℓ} using ( pr; #mono; module VCode )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
@@ -45,17 +48,20 @@ open import L.Coding.Model {ℓ}
         ; binSameClosed-out; unSameClosed-out
         ; unSuccClosed-out; binSuccClosed-out
         ; arityTagAtL; arityTagAtL-adequate
-        ; arityTagPairAtL; arityTagPairAtL-adequate )
+        ; arityTagPairAtL; arityTagPairAtL-adequate; numL )
+open import L.Coding.InL {ℓ} using ( closure-inv; key; codeL; codeTmL )
+open import L.Coding.Closed {ℓ} using ( clo )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Ordinal {ℓ} using ( ∈#-elim )
 
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId' )
+open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId'; toℕ<n )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; squash₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Unit using ( tt* )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -141,13 +147,15 @@ module _ {n : ℕ} where
   zeroPay = var zero ≐ con (numeralL 0)
   noneU   = ⊤̇ {n = 3 + n}
 
+  shapes : Formula S (suc n)
+  shapes = binForm 0 bothTm ∨̇ (binForm 1 bothTm
+         ∨̇ (binForm 2 noneB ∨̇ (binForm 3 noneB ∨̇ (binForm 4 noneB
+         ∨̇ (unForm 5 noneU ∨̇ (unForm 6 zeroPay ∨̇ (unForm 7 zeroPay
+         ∨̇ (unForm 8 noneU ∨̇ (unForm 9 noneU
+         ∨̇ (binForm 10 fstTm ∨̇ binForm 11 fstTm))))))))))
+
   shapedAt : Fin n → Formula S n
-  shapedAt C = ∀̇∈ (var C)
-    ( binForm 0 bothTm ∨̇ (binForm 1 bothTm
-    ∨̇ (binForm 2 noneB ∨̇ (binForm 3 noneB ∨̇ (binForm 4 noneB
-    ∨̇ (unForm 5 noneU ∨̇ (unForm 6 zeroPay ∨̇ (unForm 7 zeroPay
-    ∨̇ (unForm 8 noneU ∨̇ (unForm 9 noneU
-    ∨̇ (binForm 10 fstTm ∨̇ binForm 11 fstTm)))))))))))
+  shapedAt C = ∀̇∈ (var C) shapes
 ```
 
 <!--en-->
@@ -228,6 +236,96 @@ shaped-out C γ h c c∈ = d1 (h c c∈)
 ```
 
 <!--en-->
+## The same twelve, written
+<!--zh-->
+## 同样的十二条，写出来
+<!--/-->
+
+<!--en-->
+A predicate written to be consumed proves nothing until something satisfies it.
+The decode takes a shaped set as a hypothesis, so whoever supplies the set owes
+that hypothesis, and owing it means building: an existential frame has its
+witnesses to produce and a disjunct to choose, where the elimination had only to
+take them apart.
+
+The two frames are introduced once each, generically in the relation, for the
+reason that decided the elimination and for one more. The adequacy equation each
+frame carries is discharged here, with the tag, the relation and the environment
+all still variables. Discharged at a named tag instead, it would be twelve
+unfoldings of a formula three quantifiers deep, and that is the difference
+between a second and an afternoon.
+<!--zh-->
+一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明。解码把「成形的集合」作为假设收下，故供给那个集合的人欠着那条假设，而欠着它意味着要造：存在式的框架有它的诸见证要产出、一个析取支要选定，而消去那边只需把它们拆开。
+
+两个框架各引入一次，且对关系泛型，理由与决定消去的那个相同，另加一个。每个框架所携带的适足等式在此处交付，其时标签、关系与环境都还是变元。若改在一个点了名的标签处交付，那就是把一条嵌套三层量词的公式展开十二遍，而那是一秒与一下午的差别。
+<!--/-->
+
+```agda
+binForm-in : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n) (c : S)
+           → BinWit k rel γ c → ⟨ (c ∷ γ) ⊨ binForm k rel ⟩
+binForm-in k rel γ c (N , (a , (b , (e , hr)))) =
+  ∣ N , ∣ a , ∣ b , (subst ⟨_⟩ (sym (arityTagPairAtL-adequate
+     (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
+     (b ∷ a ∷ N ∷ c ∷ γ))) e , hr) ∣₁ ∣₁ ∣₁
+
+unForm-in : ∀ {n} (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n) (c : S)
+          → UnWit k rel γ c → ⟨ (c ∷ γ) ⊨ unForm k rel ⟩
+unForm-in k rel γ c (N , (a , (e , hr))) =
+  ∣ N , ∣ a , (subst ⟨_⟩ (sym (arityTagAtL-adequate
+     (suc (suc zero)) (suc zero) k zero (a ∷ N ∷ c ∷ γ))) e , hr) ∣₁ ∣₁
+```
+
+<!--en-->
+The walk over the disjunction is the mirror of the walk that reads it: twelve
+injections into a right-nested chain, each level carrying its own truncation
+because a disjunction of the truth algebra is a truncated sum. The injections
+are written out rather than named, because a lemma generic in the two disjuncts
+would have to recover them from a goal that has already been unfolded, and no
+amount of unification recovers a formula from its meaning. What the caller is
+left owing is exactly one thing per member: which of the twelve that member is.
+<!--zh-->
+走过那个析取的路，是读它那趟路的镜像：十二次注入一条右嵌套的链，而每一层各自带一个截断，因为真值代数的析取是一个被截断的和。诸注入是写开的，而不是命名的，因为一条对两个析取支泛型的引理，将不得不从一个已经展开了的目标里把它们找回来，而再多的合一也无法从一条公式的含义里把那条公式找回来。调用者最后欠的，对每个成员恰好是一件事：那个成员是十二者中的哪一个。
+<!--/-->
+
+```agda
+shaped-in : ∀ {n} (C : Fin n) (γ : S ^ n)
+          → ((c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit γ c ∥₁)
+          → ⟨ γ ⊨ shapedAt C ⟩
+shaped-in C γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes)) fill (g c c∈)
+  where
+  fill : ShapeWit γ c → ⟨ (c ∷ γ) ⊨ shapes ⟩
+  fill (inl x) = ∣ inl (binForm-in 0 bothTm γ c x) ∣₁
+  fill (inr (inl x)) = ∣ inr ∣ inl (binForm-in 1 bothTm γ c x) ∣₁ ∣₁
+  fill (inr (inr (inl x))) =
+    ∣ inr ∣ inr ∣ inl (binForm-in 2 noneB γ c x) ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inl x)))) =
+    ∣ inr ∣ inr ∣ inr ∣ inl (binForm-in 3 noneB γ c x) ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inl x))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl (binForm-in 4 noneB γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inr (inl x)))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
+      ∣ inl (unForm-in 5 noneU γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inr (inr (inl x))))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
+      ∣ inl (unForm-in 6 zeroPay γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inr (inr (inr (inl x)))))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
+      ∣ inl (unForm-in 7 zeroPay γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
+      ∣ inl (unForm-in 8 noneU γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x)))))))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
+      ∣ inl (unForm-in 9 noneU γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
+      ∣ inl (binForm-in 10 fstTm γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr x))))))))))) =
+    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
+      ∣ inr (binForm-in 11 fstTm γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+```
+
+<!--en-->
 ## Terms, recovered
 <!--zh-->
 ## 词项，被还原
@@ -268,6 +366,43 @@ isTmAt-decode {m} t N γ n qN = PT.rec squash₁
               (∈#-elim n (fst z)
                 (subst (λ w → ⟨ fst z ∈ w ⟩) qN z∈)) })
          h })
+```
+
+<!--en-->
+## Terms, encoded
+<!--zh-->
+## 词项，被编码
+<!--/-->
+
+<!--en-->
+The same two clauses read backwards, and the only place in the introduction half
+where anything has to be computed rather than repackaged. A constant is its own
+code, so its clause is the tag equation and nothing more. A variable has to put
+its index *inside* the arity numeral, which is the bound working in the direction
+it was designed for: the decode read an index out of a numeral, and here a
+numeral is shown to hold one. That second fact was already on hand, since a
+smaller numeral belonging to a larger one is exactly what made distinct numerals
+distinct.
+<!--zh-->
+同样的两支反过来读，也是引入这一半里唯一需要算点什么、而不只是重新包装的地方。常元就是自己的码，故它那支只有标签等式，别无他物。变元则要把它的序号放**进**元数数码里，这正是那道界朝着它被设计的方向出力：解码从一个数码里读出一个序号，此处则表明一个数码含有一个序号。第二件事早已在手，因为「较小的数码属于较大的」正是使相异的数码成其为相异的那件事。
+<!--/-->
+
+```agda
+isTmAt-in : ∀ {m} (t N : Fin m) (γ : S ^ m) (n : ℕ)
+          → fst (lookup N γ) ≡ # n
+          → TmWit n (fst (lookup t γ)) → ⟨ γ ⊨ isTmAt t N ⟩
+isTmAt-in t N γ n qN (con y , e) = ∣ inl ∣ y , subst ⟨_⟩
+  (sym (tagAtL-adequate (suc t) 0 zero (y ∷ γ)))
+  (sym e ∙ tagBridge 0 y) ∣₁ ∣₁
+isTmAt-in t N γ n qN (var i , e) = ∣ inr ∣ z
+  , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc t) 1 zero (z ∷ γ)))
+        (sym e ∙ tagBridge 1 z)
+    , subst (λ w → ⟨ fst z ∈ w ⟩) (sym qN)
+        (subst (λ w → ⟨ w ∈ (# n) ⟩) (sym (numeralL-fst (toℕ i)))
+          (#mono (toℕ i) n (toℕ<n i))) ) ∣₁ ∣₁
+  where
+  z : S
+  z = numeralL (toℕ i)
 ```
 
 <!--en-->
@@ -370,4 +505,106 @@ module Peel {m : ℕ} (C : Fin m) (γ : S ^ m)
     fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr x))))))))))) =
       inr (inr (inr (inr (inr (inr (inr (inr (inr (inr
         (inr (bz 11 (hcl .snd .snd .snd .snd .snd .snd .snd) x)))))))))))
+```
+
+<!--en-->
+## The closure is shaped
+<!--zh-->
+## 闭包是成形的
+<!--/-->
+
+<!--en-->
+What the predicate is for. A recursion over codes is handed an index set, and
+that set has to be closed or the clauses constrain nothing, and shaped or they
+admit junk. Closedness was discharged for the closure a chapter ago; this is the
+other half, and it is the shorter one, because shapedness asks nothing about
+what a member drags in with it. Half of what the inversion returns is therefore
+dropped on the floor.
+
+The analysis is on the constructor alone. The tag is not a second index to be
+matched against: it is computed from the constructor, exactly as
+`byTag`{.Agda} computes the closedness demand from it, so the table is twelve
+lines and not twelve times twelve. Nothing here recurses either, because the key
+of a named constructor already computes to the arity-tagged pair the witness
+type asks for, and no transport is needed anywhere in the twelve tuples.
+
+The one thing a tuple cannot compute is the term witness: a payload slot holding
+a term code must be certified as one, and the certificate is the encoder above
+applied to the term the constructor carries. Its two clauses are the two clauses
+of a term.
+<!--zh-->
+这条谓词是干什么用的。对码的递归收到一个索引集，而那个集合必须封闭，否则诸子句什么也约束不了；也必须成形，否则它们放垃圾进来。封闭性在一章之前已为闭包交付；这里是另一半，而且是较短的那一半，因为成形性对「一个成员随身拖进什么」不作任何要求。于是那个反演返回的东西有一半被丢在地上。
+
+分情形只对构造子进行。标签不是要与之对上的第二个索引：它由构造子算出，正如 `byTag`{.Agda} 从构造子算出封闭性的要求，故这张表是十二行、而不是十二乘十二。此处也没有任何递归，因为一个点了名的构造子之键，已经算成了见证类型所索取的那个带元数标签的对，而那十二个元组里任何地方都不需要搬运。
+
+元组唯一算不出来的是词项见证：载荷位上放着的词项码必须被认证为词项码，而那份认证就是上面那条编码式施于该构造子所携的词项。它的两支就是词项的两支。
+<!--/-->
+
+```agda
+module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+  private
+    cd : ∀ {n} → Formula K n → S
+    cd φ = VCode.⌜ mapFo f φ ⌝ , codeL f h φ
+
+    ct : ∀ {n} → Term K n → S
+    ct t = VCode.⌜ mapTm f t ⌝ᵗ , codeTmL f h t
+
+    nn : ℕ → S
+    nn n = # n , numL n
+
+    tw : ∀ {n} (t : Term K n) → TmWit n (fst (ct t))
+    tw (con y) = con (f y , h y) , tagBridge 0 (f y , h y)
+    tw (var i) = var i , (tagBridge 1 (numeralL (toℕ i))
+                        ∙ cong (VCode.mkTag 1) (numeralL-fst (toℕ i)))
+
+  closureShaped : ∀ {n m} (φ : Formula K n) (γ : S ^ m)
+                → ⟨ (clo f h φ ∷ γ) ⊨ shapedAt zero ⟩
+  closureShaped φ γ = shaped-in zero (clo f h φ ∷ γ)
+    (λ c c∈ → PT.map (λ { (_ , ψ , q , _) → go ψ c q })
+      (closure-inv f h φ (fst c) c∈))
+    where
+    tm1 : ∀ {k} (t : Term K k) (b c : S)
+        → ⟨ (b ∷ ct t ∷ nn k ∷ c ∷ clo f h φ ∷ γ)
+            ⊨ isTmAt (suc zero) (suc (suc zero)) ⟩
+    tm1 {k} t b c = isTmAt-in (suc zero) (suc (suc zero))
+      (b ∷ ct t ∷ nn k ∷ c ∷ clo f h φ ∷ γ) k refl (tw t)
+
+    tm0 : ∀ {k} (u : Term K k) (a c : S)
+        → ⟨ (ct u ∷ a ∷ nn k ∷ c ∷ clo f h φ ∷ γ)
+            ⊨ isTmAt zero (suc (suc zero)) ⟩
+    tm0 {k} u a c = isTmAt-in zero (suc (suc zero))
+      (ct u ∷ a ∷ nn k ∷ c ∷ clo f h φ ∷ γ) k refl (tw u)
+
+    go : ∀ {k} (ψ : Formula K k) (c : S) → fst c ≡ key f h ψ
+       → ShapeWit (clo f h φ ∷ γ) c
+    go {k} (t ∈̇ u) c q =
+      inl (nn k , (ct t , (ct u , (q , (tm1 t (ct u) c , tm0 u (ct t) c)))))
+    go {k} (t ≐ u) c q =
+      inr (inl
+        (nn k , (ct t , (ct u , (q , (tm1 t (ct u) c , tm0 u (ct t) c))))))
+    go {k} (a ∧̇ b) c q = inr (inr (inl (nn k , (cd a , (cd b , (q , tt*))))))
+    go {k} (a ∨̇ b) c q =
+      inr (inr (inr (inl (nn k , (cd a , (cd b , (q , tt*)))))))
+    go {k} (a ⇒̇ b) c q =
+      inr (inr (inr (inr (inl (nn k , (cd a , (cd b , (q , tt*))))))))
+    go {k} (¬̇ a) c q =
+      inr (inr (inr (inr (inr (inl (nn k , (cd a , (q , tt*))))))))
+    go {k} ⊤̇ c q =
+      inr (inr (inr (inr (inr (inr (inl
+        (nn k , (nn 0 , (q , sym (numeralL-fst 0))))))))))
+    go {k} ⊥̇ c q =
+      inr (inr (inr (inr (inr (inr (inr (inl
+        (nn k , (nn 0 , (q , sym (numeralL-fst 0)))))))))))
+    go {k} (∃̇ a) c q =
+      inr (inr (inr (inr (inr (inr (inr (inr (inl
+        (nn k , (cd a , (q , tt*)))))))))))
+    go {k} (∀̇ a) c q =
+      inr (inr (inr (inr (inr (inr (inr (inr (inr (inl
+        (nn k , (cd a , (q , tt*))))))))))))
+    go {k} (∀̇∈ t a) c q =
+      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl
+        (nn k , (ct t , (cd a , (q , tm1 t (cd a) c))))))))))))))
+    go {k} (∃̇∈ t a) c q =
+      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr
+        (nn k , (ct t , (cd a , (q , tm1 t (cd a) c))))))))))))))
 ```
