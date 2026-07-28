@@ -36,10 +36,14 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( #_ )
+open InfinitySet using ( #_; sucV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
   using ( tagAtL; tagAtL-adequate; tagBridge; module LCode
+        ; closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt
+        ; oneSuccAt; succSndAt
+        ; binSameClosed-out; unSameClosed-out
+        ; unSuccClosed-out; binSuccClosed-out
         ; arityTagAtL; arityTagAtL-adequate
         ; arityTagPairAtL; arityTagPairAtL-adequate )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
@@ -264,4 +268,106 @@ isTmAt-decode {m} t N γ n qN = PT.rec squash₁
               (∈#-elim n (fst z)
                 (subst (λ w → ⟨ fst z ∈ w ⟩) qN z∈)) })
          h })
+```
+
+<!--en-->
+## One layer off
+<!--zh-->
+## 剥掉一层
+<!--/-->
+
+<!--en-->
+The two halves meet. Shapedness says which of the twelve a member is and hands
+back its parts; closedness says those parts are members too, at the arity the
+tag calls for. Neither half alone gives a step of a recursion, and together they
+give exactly one.
+
+The equation shapedness produces is, letter for letter, the one closedness
+consumes, so the two compose with nothing in between. That is not luck: both
+were written against the same reading of an arity-tagged pair.
+<!--zh-->
+两半会合。形状说出一个成员是十二者中的哪一个，并把它的部件交回；封闭性说那些部件也是成员，且在该标签所要求的元数上。两半各自都给不出递归的一步，合起来恰好给出一步。
+
+形状产出的那条等式，正是封闭性所消费的那一条，逐字相同，故二者之间无需任何东西即可复合。这不是运气：两者都是对着「带元数标签的对」的同一条读法写下的。
+<!--/-->
+
+```agda
+module Peel {m : ℕ} (C : Fin m) (γ : S ^ m)
+            (hcl : ⟨ γ ⊨ closedAt C ⟩) (hsh : ⟨ γ ⊨ shapedAt C ⟩) where
+  private
+    D : V ℓ
+    D = fst (lookup C γ)
+
+  BinSame BinSucc : ℕ → S → Type (ℓ-suc ℓ)
+  BinSame k c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
+    ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
+     × (⟨ pr (fst N) (fst a) ∈ D ⟩ × ⟨ pr (fst N) (fst b) ∈ D ⟩))))
+  BinSucc k c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
+    ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
+     × (⟨ (a ∷ N ∷ c ∷ γ) ⊨ isTmAt zero (suc zero) ⟩
+        × ⟨ pr (sucV (fst N)) (fst b) ∈ D ⟩))))
+
+  UnSame UnSucc : ℕ → S → Type (ℓ-suc ℓ)
+  UnSame k c = Σ[ N ∈ S ] (Σ[ a ∈ S ]
+    ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ pr (fst N) (fst a) ∈ D ⟩))
+  UnSucc k c = Σ[ N ∈ S ] (Σ[ a ∈ S ]
+    ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ pr (sucV (fst N)) (fst a) ∈ D ⟩))
+
+  PeelWit : S → Type (ℓ-suc ℓ)
+  PeelWit c =
+      BinWit 0 bothTm γ c ⊎ (BinWit 1 bothTm γ c
+    ⊎ (BinSame 2 c ⊎ (BinSame 3 c ⊎ (BinSame 4 c
+    ⊎ (UnSame 5 c ⊎ (UnWit 6 zeroPay γ c ⊎ (UnWit 7 zeroPay γ c
+    ⊎ (UnSucc 8 c ⊎ (UnSucc 9 c
+    ⊎ (BinSucc 10 c ⊎ BinSucc 11 c))))))))))
+
+  peel : (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ PeelWit c ∥₁
+  peel c c∈ = PT.map fill (shaped-out C γ hsh c c∈)
+    where
+    bs : (k : ℕ) → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩ → BinWit k noneB γ c
+       → BinSame k c
+    bs k h (N , (a , (b , (e , _)))) =
+      N , (a , (b , (e , binSameClosed-out C k γ h c N a b c∈ e)))
+
+    us : (k : ℕ) → ⟨ γ ⊨ unShapeAt C k (oneSameAt C) ⟩ → UnWit k noneU γ c
+       → UnSame k c
+    us k h (N , (a , (e , _))) =
+      N , (a , (e , unSameClosed-out C k γ h c N a c∈ e))
+
+    uz : (k : ℕ) → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩ → UnWit k noneU γ c
+       → UnSucc k c
+    uz k h (N , (a , (e , _))) =
+      N , (a , (e , unSuccClosed-out C k γ h c N a c∈ e))
+
+    bz : (k : ℕ) → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩ → BinWit k fstTm γ c
+       → BinSucc k c
+    bz k h (N , (a , (b , (e , hr)))) =
+      N , (a , (b , (e , (hr , binSuccClosed-out C k γ h c N a b c∈ e))))
+
+    fill : ShapeWit γ c → PeelWit c
+    fill (inl x) = inl x
+    fill (inr (inl x)) = inr (inl x)
+    fill (inr (inr (inl x))) = inr (inr (inl (bs 2 (hcl .fst) x)))
+    fill (inr (inr (inr (inl x)))) =
+      inr (inr (inr (inl (bs 3 (hcl .snd .fst) x))))
+    fill (inr (inr (inr (inr (inl x))))) =
+      inr (inr (inr (inr (inl (bs 4 (hcl .snd .snd .fst) x)))))
+    fill (inr (inr (inr (inr (inr (inl x)))))) =
+      inr (inr (inr (inr (inr (inl (us 5 (hcl .snd .snd .snd .fst) x))))))
+    fill (inr (inr (inr (inr (inr (inr (inl x))))))) =
+      inr (inr (inr (inr (inr (inr (inl x))))))
+    fill (inr (inr (inr (inr (inr (inr (inr (inl x)))))))) =
+      inr (inr (inr (inr (inr (inr (inr (inl x)))))))
+    fill (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))) =
+      inr (inr (inr (inr (inr (inr (inr (inr
+        (inl (uz 8 (hcl .snd .snd .snd .snd .fst) x)))))))))
+    fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x)))))))))) =
+      inr (inr (inr (inr (inr (inr (inr (inr (inr
+        (inl (uz 9 (hcl .snd .snd .snd .snd .snd .fst) x))))))))))
+    fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))))) =
+      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr
+        (inl (bz 10 (hcl .snd .snd .snd .snd .snd .snd .fst) x)))))))))))
+    fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr x))))))))))) =
+      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr
+        (inr (bz 11 (hcl .snd .snd .snd .snd .snd .snd .snd) x)))))))))))
 ```
