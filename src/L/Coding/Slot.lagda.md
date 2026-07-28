@@ -39,7 +39,7 @@ open import L.Coding.Model {ℓ}
         ; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Table {ℓ} lem
-  using ( keyʟ; keyʟ-shape; slot; slot-inv; module Parts )
+  using ( keyʟ; keyʟ-shape; slot; satTable; slot-inv; module Parts )
 
 import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Foundations.HLevels using ( isProp× )
@@ -108,8 +108,11 @@ back, and both are arguments.
 ```agda
   module _ {n : ℕ} (φ : Formula S n) {k : ℕ} (γ : S ^ k) where
     private
-      δ : S ^ (suc k)
-      δ = Sl φ ∷ γ
+      δ : S ^ (suc (suc (suc k)))
+      δ = B ∷ satTable B φ ∷ Sl φ ∷ γ
+
+      Ci : Fin (suc (suc (suc k)))
+      Ci = suc (suc zero)
 
     binSame : (k' : ℕ) (op : ∀ {m} → Formula S m → Formula S m → Formula S m)
             → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
@@ -120,8 +123,8 @@ back, and both are arguments.
                → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a' b')) ⟩)
             → (∀ {m} (a' b' : Formula S m) (z : V ℓ)
                → ⟨ z ∈ fst (Sl b') ⟩ → ⟨ z ∈ fst (Sl (op a' b')) ⟩)
-            → ⟨ δ ⊨ binShapeAt zero k' (bothSameAt zero) ⟩
-    binSame k' op get payOp inL inR = binSameClosed-in zero k' δ
+            → ⟨ δ ⊨ binShapeAt Ci k' (bothSameAt Ci) ⟩
+    binSame k' op get payOp inL inR = binSameClosed-in Ci k' δ
       (λ c ar a b c∈ sh → PT.rec
         (isProp× (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
                  (snd (pr (fst ar) (fst b) ∈ fst (Sl φ))))
@@ -147,17 +150,17 @@ back, and both are arguments.
                  (inR a' b' _ (Parts.self B keyʟ b')))) })
         (slot-inv B φ (fst c) c∈))
 
-    andC : ⟨ δ ⊨ binShapeAt zero 2 (bothSameAt zero) ⟩
+    andC : ⟨ δ ⊨ binShapeAt Ci 2 (bothSameAt Ci) ⟩
     andC = binSame 2 _∧̇_ (λ _ m → m) (λ _ _ → refl)
              (λ a' b' → Parts.left B keyʟ (a' ∧̇ b') a' b')
              (λ a' b' → Parts.right B keyʟ (a' ∧̇ b') a' b')
 
-    orC : ⟨ δ ⊨ binShapeAt zero 3 (bothSameAt zero) ⟩
+    orC : ⟨ δ ⊨ binShapeAt Ci 3 (bothSameAt Ci) ⟩
     orC = binSame 3 _∨̇_ (λ _ m → m) (λ _ _ → refl)
             (λ a' b' → Parts.left B keyʟ (a' ∨̇ b') a' b')
             (λ a' b' → Parts.right B keyʟ (a' ∨̇ b') a' b')
 
-    impC : ⟨ δ ⊨ binShapeAt zero 4 (bothSameAt zero) ⟩
+    impC : ⟨ δ ⊨ binShapeAt Ci 4 (bothSameAt Ci) ⟩
     impC = binSame 4 _⇒̇_ (λ _ m → m) (λ _ _ → refl)
              (λ a' b' → Parts.left B keyʟ (a' ⇒̇ b') a' b')
              (λ a' b' → Parts.right B keyʟ (a' ⇒̇ b') a' b')
@@ -168,8 +171,8 @@ back, and both are arguments.
            → (∀ {m} (a' : Formula S m) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
            → (∀ {m} (a' : Formula S m) (z : V ℓ)
               → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a')) ⟩)
-           → ⟨ δ ⊨ unShapeAt zero k' (oneSameAt zero) ⟩
-    unSame k' op get payOp inA = unSameClosed-in zero k' δ
+           → ⟨ δ ⊨ unShapeAt Ci k' (oneSameAt Ci) ⟩
+    unSame k' op get payOp inA = unSameClosed-in Ci k' δ
       (λ c ar a c∈ sh → PT.rec (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
         (λ { (m , ψ , (q , incl)) →
           let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
@@ -191,8 +194,8 @@ back, and both are arguments.
            → (∀ {m} (a' : Formula S (suc m)) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
            → (∀ {m} (a' : Formula S (suc m)) (z : V ℓ)
               → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a')) ⟩)
-           → ⟨ δ ⊨ unShapeAt zero k' (oneSuccAt zero) ⟩
-    unSucc k' op get payOp inA = unSuccClosed-in zero k' δ
+           → ⟨ δ ⊨ unShapeAt Ci k' (oneSuccAt Ci) ⟩
+    unSucc k' op get payOp inA = unSuccClosed-in Ci k' δ
       (λ c ar a c∈ sh → PT.rec (snd (pr (sucV (fst ar)) (fst a) ∈ fst (Sl φ)))
         (λ { (m , ψ , (q , incl)) →
           let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
@@ -216,8 +219,8 @@ back, and both are arguments.
                → LCode.payOf (op t a') ≡ prʟ LCode.⌜ t ⌝ᵗ LCode.⌜ a' ⌝)
             → (∀ {m} (t : Term S m) (a' : Formula S (suc m)) (z : V ℓ)
                → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op t a')) ⟩)
-            → ⟨ δ ⊨ binShapeAt zero k' (succSndAt zero) ⟩
-    binSucc k' op get payOp inA = binSuccClosed-in zero k' δ
+            → ⟨ δ ⊨ binShapeAt Ci k' (succSndAt Ci) ⟩
+    binSucc k' op get payOp inA = binSuccClosed-in Ci k' δ
       (λ c ar a b c∈ sh → PT.rec (snd (pr (sucV (fst ar)) (fst b) ∈ fst (Sl φ)))
         (λ { (m , ψ , (q , incl)) →
           let r  = keyʟ-shape ψ k' (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
@@ -236,27 +239,27 @@ back, and both are arguments.
                    (inA t a' _ (Parts.self B keyʟ a')))) })
         (slot-inv B φ (fst c) c∈))
 
-    negC : ⟨ δ ⊨ unShapeAt zero 5 (oneSameAt zero) ⟩
+    negC : ⟨ δ ⊨ unShapeAt Ci 5 (oneSameAt Ci) ⟩
     negC = unSame 5 ¬̇_ (λ _ m → m) (λ _ → refl)
              (λ a' → Parts.only B keyʟ (¬̇ a') a')
 
-    exC : ⟨ δ ⊨ unShapeAt zero 8 (oneSuccAt zero) ⟩
+    exC : ⟨ δ ⊨ unShapeAt Ci 8 (oneSuccAt Ci) ⟩
     exC = unSucc 8 ∃̇_ (λ _ m → m) (λ _ → refl)
             (λ a' → Parts.only B keyʟ (∃̇ a') a')
 
-    allC : ⟨ δ ⊨ unShapeAt zero 9 (oneSuccAt zero) ⟩
+    allC : ⟨ δ ⊨ unShapeAt Ci 9 (oneSuccAt Ci) ⟩
     allC = unSucc 9 ∀̇_ (λ _ m → m) (λ _ → refl)
              (λ a' → Parts.only B keyʟ (∀̇ a') a')
 
-    allInC : ⟨ δ ⊨ binShapeAt zero 10 (succSndAt zero) ⟩
+    allInC : ⟨ δ ⊨ binShapeAt Ci 10 (succSndAt Ci) ⟩
     allInC = binSucc 10 ∀̇∈ (λ _ m → m) (λ _ _ → refl)
                (λ t a' → Parts.only B keyʟ (∀̇∈ t a') a')
 
-    exInC : ⟨ δ ⊨ binShapeAt zero 11 (succSndAt zero) ⟩
+    exInC : ⟨ δ ⊨ binShapeAt Ci 11 (succSndAt Ci) ⟩
     exInC = binSucc 11 ∃̇∈ (λ _ m → m) (λ _ _ → refl)
               (λ t a' → Parts.only B keyʟ (∃̇∈ t a') a')
 
-    slotClosed : ⟨ δ ⊨ closedAt zero ⟩
+    slotClosed : ⟨ δ ⊨ closedAt Ci ⟩
     slotClosed = andC , (orC , (impC , (negC
                , (exC , (allC , (allInC , exInC))))))
 ```
