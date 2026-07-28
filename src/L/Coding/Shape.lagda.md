@@ -14,12 +14,21 @@ The four leaf tags are delegated to a parameter. Their payloads mention term
 codes and a numeral, never a formula code, so nothing about them descends and
 nothing about them belongs in the same induction; they are written once,
 elsewhere, and handed in.
+
+Shapedness is stated at two slots, not one: the set, and a carrier the terms
+inside it draw their constants from. The second slot is what makes a member the
+key of a formula **over that carrier** rather than over the whole model, and it
+is the conjunct the code set was caught between two statements without. Written
+at a slot rather than as a constant, it is threaded through everything below and
+re-indexes nothing.
 <!--zh-->
 「是一个码」中封闭性没有说出的那一半。
 
 `closedAt`{.Agda} 是八条以标签为键的蕴含：**若**某个成员带这个标签，**则**它的诸部件也是成员。那里没有任何东西排除掉「压根没有可辨标签」的成员，而这样的成员平凡地满足全部八条。故一个封闭集可以含有垃圾，而说出相反之事的谓词就是这一条：每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷具有该标签所要求的形状。
 
 四个叶子标签交给一个参数。它们的载荷提到的是词项码与一个数码、从不提公式码，故它们身上没有任何东西会下降，也没有任何东西属于同一场归纳；它们在别处写一次，然后递进来。
+
+成形性是在两位上陈述的，不是一位：那个集合，以及其中诸词项从中取常元的一个载体。第二位使一个成员成为**该载体之上**某条公式的键、而非整个模型之上的，而它正是码集当初被两条陈述夹住时所缺的那个合取项。它写作一位、而非一个常元，于是被穿过下面的一切，且不重新索引任何东西。
 <!--/-->
 
 ```agda
@@ -42,7 +51,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module Infini
 open InfinitySet using ( #_; sucV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( tagAtL; tagAtL-adequate; tagBridge; module LCode
+  using ( tagAtL; tagAtL-adequate
         ; closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt
         ; oneSuccAt; succSndAt
         ; binSameClosed-out; unSameClosed-out
@@ -105,17 +114,32 @@ module _ {n : ℕ} where
 <!--en-->
 The four tags whose payloads reach outside the formula codes need one predicate,
 and it is not recursive: a term is a constant or a variable, and neither has a
-part. A variable's index must lie below the arity, which is what makes the
-formula the code of a term *at that arity* rather than at some larger one, and
-that condition is bounded because the arity is a numeral.
+part. Both alternatives are bounded, and by different things.
+
+A variable's index must lie below the arity, which is what makes the formula the
+code of a term *at that arity* rather than at some larger one. A constant must be
+a member of the carrier, which is what makes it the code of a term *over that
+alphabet* rather than over the whole model. This second conjunct is the one the
+code set was caught between two statements without: with no bound on a constant,
+a payload read back as one is an arbitrary element of `L`, and the class the
+decode lands in is wider than the class the introduction starts from.
+
+Both bounds are memberships at a slot, and both slots are named by the caller.
+The carrier is a slot rather than a constant on purpose. A constant would pin
+every predicate below this line to one carrier, and everything indexed by them
+would be re-indexed at the pair; a slot is threaded, and threading is free.
 <!--zh-->
-那四个载荷伸到公式码之外的标签，需要一条谓词，而它不是递归的：词项要么是常元、要么是变元，二者都没有部件。变元的序号必须落在元数之下，正是这一点使那条公式成为**在该元数上**的词项之码、而非在某个更大的元数上，而这个条件是有界的，因为元数是一个数码。
+那四个载荷伸到公式码之外的标签，需要一条谓词，而它不是递归的：词项要么是常元、要么是变元，二者都没有部件。两支都有界，而界住它们的不是同一样东西。
+
+变元的序号必须落在元数之下，正是这一点使那条公式成为**在该元数上**的词项之码、而非在某个更大的元数上。常元则必须是载体的成员，正是这一点使它成为**在该字母表之上**的词项之码、而非在整个模型之上。第二个合取项，正是码集当初被两条陈述夹住时所缺的那一个：常元一旦不受界，一个被读回作常元的载荷就是 `L` 的任意元素，而解码落进的那一类，就比引入出发的那一类更宽。
+
+两道界都是「某一位上的成员关系」，两位都由调用方点名。载体取一位、而不取一个常元，是有意为之。常元会把这条线以下的每条谓词钉死在一个载体上，而以它们为索引的一切都将在那个对上重新索引；一位是被穿过去的，而穿过去不花钱。
 <!--/-->
 
 ```agda
-isTmAt : ∀ {n} → Fin n → Fin n → Formula S n
-isTmAt t N = ∃̇ (tagAtL (suc t) 0 zero)
-          ∨̇ ∃̇ (tagAtL (suc t) 1 zero ∧̇ (var zero ∈̇ var (suc N)))
+isTmAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+isTmAt t N A = ∃̇ (tagAtL (suc t) 0 zero ∧̇ (var zero ∈̇ var (suc A)))
+            ∨̇ ∃̇ (tagAtL (suc t) 1 zero ∧̇ (var zero ∈̇ var (suc N)))
 ```
 
 <!--en-->
@@ -131,31 +155,39 @@ closedness does not: that an atom's two parts are term codes, that a bounded
 quantifier's first part is one, and that a constant's payload is zero. The
 formula parts are left to closedness, which is where they belong, since they are
 the only parts anything descends into.
+
+Being shaped is therefore relative to two slots and not one: the set, and the
+carrier its terms name their constants from. Only the four relations that mention
+a term look at the second, and they are the only four that could.
 <!--zh-->
 每个成员都是一个良构的键：一个带元数标签的对，携带那十二个标签之一，且载荷是该标签所要求的那种。诸关系说出封闭性没有说的事：原子的两个部件是词项码、有界量词的第一个部件是词项码、常元的载荷是零。公式部件留给封闭性，那也正是它们该在的地方，因为它们是唯一有东西会下降进去的部件。
+
+于是「成形」相对的是两位、而非一位：那个集合，以及它的诸词项从中点名常元的那个载体。只有那四条提到词项的关系去看第二位，而它们也是仅有的四条能去看的。
 <!--/-->
 
 ```agda
 module _ {n : ℕ} where
-  bothTm fstTm noneB : Formula S (4 + n)
-  bothTm = isTmAt (suc zero) (suc (suc zero))
-        ∧̇ isTmAt zero (suc (suc zero))
-  fstTm  = isTmAt (suc zero) (suc (suc zero))
-  noneB  = ⊤̇ {n = 4 + n}
+  bothTm fstTm : Fin n → Formula S (4 + n)
+  bothTm A = isTmAt (suc zero) (suc (suc zero)) (suc (suc (suc (suc A))))
+          ∧̇ isTmAt zero (suc (suc zero)) (suc (suc (suc (suc A))))
+  fstTm  A = isTmAt (suc zero) (suc (suc zero)) (suc (suc (suc (suc A))))
+
+  noneB : Formula S (4 + n)
+  noneB = ⊤̇ {n = 4 + n}
 
   zeroPay noneU : Formula S (3 + n)
   zeroPay = var zero ≐ con (numeralL 0)
   noneU   = ⊤̇ {n = 3 + n}
 
-  shapes : Formula S (suc n)
-  shapes = binForm 0 bothTm ∨̇ (binForm 1 bothTm
-         ∨̇ (binForm 2 noneB ∨̇ (binForm 3 noneB ∨̇ (binForm 4 noneB
-         ∨̇ (unForm 5 noneU ∨̇ (unForm 6 zeroPay ∨̇ (unForm 7 zeroPay
-         ∨̇ (unForm 8 noneU ∨̇ (unForm 9 noneU
-         ∨̇ (binForm 10 fstTm ∨̇ binForm 11 fstTm))))))))))
+  shapes : Fin n → Formula S (suc n)
+  shapes A = binForm 0 (bothTm A) ∨̇ (binForm 1 (bothTm A)
+           ∨̇ (binForm 2 noneB ∨̇ (binForm 3 noneB ∨̇ (binForm 4 noneB
+           ∨̇ (unForm 5 noneU ∨̇ (unForm 6 zeroPay ∨̇ (unForm 7 zeroPay
+           ∨̇ (unForm 8 noneU ∨̇ (unForm 9 noneU
+           ∨̇ (binForm 10 (fstTm A) ∨̇ binForm 11 (fstTm A)))))))))))
 
-  shapedAt : Fin n → Formula S n
-  shapedAt C = ∀̇∈ (var C) shapes
+  shapedAt : Fin n → Fin n → Formula S n
+  shapedAt C A = ∀̇∈ (var C) (shapes A)
 ```
 
 <!--en-->
@@ -199,20 +231,21 @@ unForm-out k rel γ c = PT.rec squash₁ (λ { (N , hN) → PT.map
         (a ∷ N ∷ c ∷ γ)) ha , hr)) })
   hN })
 
-ShapeWit : ∀ {n} → S ^ n → S → Type (ℓ-suc ℓ)
-ShapeWit γ c =
-    BinWit 0 bothTm γ c ⊎ (BinWit 1 bothTm γ c
+ShapeWit : ∀ {n} → Fin n → S ^ n → S → Type (ℓ-suc ℓ)
+ShapeWit A γ c =
+    BinWit 0 (bothTm A) γ c ⊎ (BinWit 1 (bothTm A) γ c
   ⊎ (BinWit 2 noneB γ c ⊎ (BinWit 3 noneB γ c ⊎ (BinWit 4 noneB γ c
   ⊎ (UnWit 5 noneU γ c ⊎ (UnWit 6 zeroPay γ c ⊎ (UnWit 7 zeroPay γ c
   ⊎ (UnWit 8 noneU γ c ⊎ (UnWit 9 noneU γ c
-  ⊎ (BinWit 10 fstTm γ c ⊎ BinWit 11 fstTm γ c))))))))))
+  ⊎ (BinWit 10 (fstTm A) γ c ⊎ BinWit 11 (fstTm A) γ c))))))))))
 
-shaped-out : ∀ {n} (C : Fin n) (γ : S ^ n) → ⟨ γ ⊨ shapedAt C ⟩
-           → (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit γ c ∥₁
-shaped-out C γ h c c∈ = d1 (h c c∈)
+shaped-out : ∀ {n} (C A : Fin n) (γ : S ^ n) → ⟨ γ ⊨ shapedAt C A ⟩
+           → (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁
+shaped-out C A γ h c c∈ = d1 (h c c∈)
   where
-  d11 = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 10 fstTm γ c x)
-                          ; (inr x) → PT.map inr (binForm-out 11 fstTm γ c x) })
+  d11 = PT.rec squash₁
+    (λ { (inl x) → PT.map inl (binForm-out 10 (fstTm A) γ c x)
+       ; (inr x) → PT.map inr (binForm-out 11 (fstTm A) γ c x) })
   d10 = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 9 noneU γ c x)
                           ; (inr x) → PT.map inr (d11 x) })
   d9  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 8 noneU γ c x)
@@ -229,10 +262,12 @@ shaped-out C γ h c c∈ = d1 (h c c∈)
                           ; (inr x) → PT.map inr (d5 x) })
   d3  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 2 noneB γ c x)
                           ; (inr x) → PT.map inr (d4 x) })
-  d2  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 1 bothTm γ c x)
-                          ; (inr x) → PT.map inr (d3 x) })
-  d1  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 0 bothTm γ c x)
-                          ; (inr x) → PT.map inr (d2 x) })
+  d2  = PT.rec squash₁
+    (λ { (inl x) → PT.map inl (binForm-out 1 (bothTm A) γ c x)
+       ; (inr x) → PT.map inr (d3 x) })
+  d1  = PT.rec squash₁
+    (λ { (inl x) → PT.map inl (binForm-out 0 (bothTm A) γ c x)
+       ; (inr x) → PT.map inr (d2 x) })
 ```
 
 <!--en-->
@@ -288,14 +323,14 @@ left owing is exactly one thing per member: which of the twelve that member is.
 <!--/-->
 
 ```agda
-shaped-in : ∀ {n} (C : Fin n) (γ : S ^ n)
-          → ((c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit γ c ∥₁)
-          → ⟨ γ ⊨ shapedAt C ⟩
-shaped-in C γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes)) fill (g c c∈)
+shaped-in : ∀ {n} (C A : Fin n) (γ : S ^ n)
+          → ((c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁)
+          → ⟨ γ ⊨ shapedAt C A ⟩
+shaped-in C A γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes A)) fill (g c c∈)
   where
-  fill : ShapeWit γ c → ⟨ (c ∷ γ) ⊨ shapes ⟩
-  fill (inl x) = ∣ inl (binForm-in 0 bothTm γ c x) ∣₁
-  fill (inr (inl x)) = ∣ inr ∣ inl (binForm-in 1 bothTm γ c x) ∣₁ ∣₁
+  fill : ShapeWit A γ c → ⟨ (c ∷ γ) ⊨ shapes A ⟩
+  fill (inl x) = ∣ inl (binForm-in 0 (bothTm A) γ c x) ∣₁
+  fill (inr (inl x)) = ∣ inr ∣ inl (binForm-in 1 (bothTm A) γ c x) ∣₁ ∣₁
   fill (inr (inr (inl x))) =
     ∣ inr ∣ inr ∣ inl (binForm-in 2 noneB γ c x) ∣₁ ∣₁ ∣₁
   fill (inr (inr (inr (inl x)))) =
@@ -319,10 +354,10 @@ shaped-in C γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes)) fill (g c c∈)
       ∣ inl (unForm-in 9 noneU γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
   fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))))) =
     ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inl (binForm-in 10 fstTm γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+      ∣ inl (binForm-in 10 (fstTm A) γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
   fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr x))))))))))) =
     ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inr (binForm-in 11 fstTm γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+      ∣ inr (binForm-in 11 (fstTm A) γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
 ```
 
 <!--en-->
@@ -333,39 +368,74 @@ shaped-in C γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes)) fill (g c c∈)
 
 <!--en-->
 The first decode, and the only one that needs no induction. A term is a constant
-or a variable: the constant case reads its payload back as the constant, and the
-variable case reads an index out of the arity numeral, which is where the bound
-does its work. Nothing here descends, which is why it is separable from the
+or a variable: the constant case reads its payload back as a constant of the
+alphabet, and the variable case reads an index out of the arity numeral. Each
+case spends exactly the bound its disjunct carries, and neither could be written
+without one. Nothing here descends, which is why it is separable from the
 recursion that follows and why it is written first.
+
+What the term is produced *over* is a parameter, and it is what the chapter is
+for. The alphabet is any type with an embedding into the hierarchy, and the
+constant case needs one thing the shape predicate cannot supply: that the
+carrier's members are the alphabet's image. That is a hypothesis, because it is
+a fact about the pair (alphabet, carrier) and not about the code. At the one
+instantiation that matters, the alphabet is the carrier's own member type and
+the hypothesis is the presentation of a set by its members, so it costs a
+discharge rather than a construction.
+
+The two disjuncts are read by two named lemmas and the reader is their case
+split, which is not a matter of taste. Written as two clauses of one function,
+each carrying its own truncation under a disjunction that also carries one, the
+chapter did not finish in ten minutes; with each disjunct's reading given a
+written type of its own it checks in under two seconds. The rule is the
+elaborator's, not the mathematics': a branch whose type is written is solved
+against that type, and a branch whose type is inferred is solved against the
+whole disjunction.
 <!--zh-->
-第一个解码，也是唯一一个不需要归纳的。词项要么是常元、要么是变元：常元那支把载荷原样读回作常元，变元那支从元数数码里读出一个序号，而界正是在那里起作用的。此处没有任何东西下降，这既是它可以从随后那场递归里分离出来的原因，也是它被先写下来的原因。
+第一个解码，也是唯一一个不需要归纳的。词项要么是常元、要么是变元：常元那支把载荷读回作字母表的一个常元，变元那支从元数数码里读出一个序号。每一支恰好花掉它那个析取项所携带的那道界，而两支都不能在没有界的情况下写出来。此处没有任何东西下降，这既是它可以从随后那场递归里分离出来的原因，也是它被先写下来的原因。
+
+词项是**在什么之上**被造出来的，这是一个参数，而这正是本章的用处所在。字母表是任何带有到层级之嵌入的类型，而常元那支需要一样形状谓词供不出的东西：载体的诸成员就是字母表的像。那是一条假设，因为它是关于「字母表与载体」这一对的事实，而不是关于码的事实。在唯一要紧的那个实例处，字母表就是载体自己的成员类型，而这条假设就是「一个集合由其诸成员的呈现」，故它的代价是一次交付、而非一次构造。
+
+两个析取支由两条点了名的引理去读，而那条读式就是它们的分情形，这不是趣味问题。写成一个函数的两条子句时，每支各带一个截断、而它们所在的析取自己也带一个，本章十分钟内没跑完；把每支的读法各给一个写出来的类型之后，两秒不到就查完。这条规矩是归约器的、不是数学的：类型被写出来的分支对着那个类型求解，类型靠推断的分支对着整个析取求解。
 <!--/-->
 
 ```agda
-TmWit : ℕ → V ℓ → Type (ℓ-suc ℓ)
-TmWit n x = Σ[ t ∈ Term S n ] (fst LCode.⌜ t ⌝ᵗ ≡ x)
+module _ {K : Type ℓ} (f : K → V ℓ) where
 
-isTmAt-decode : ∀ {m} (t N : Fin m) (γ : S ^ m) (n : ℕ)
-              → fst (lookup N γ) ≡ # n
-              → ⟨ γ ⊨ isTmAt t N ⟩ → ∥ TmWit n (fst (lookup t γ)) ∥₁
-isTmAt-decode {m} t N γ n qN = PT.rec squash₁
-  (λ { (inl h) → PT.map
-         (λ { (y , hy) → con y , (tagBridge 0 y ∙ sym
-              (subst ⟨_⟩ (tagAtL-adequate (suc t) 0 zero (y ∷ γ)) hy)) })
-         h
-     ; (inr h) → PT.rec squash₁
-         (λ { (z , (hz , z∈)) → PT.map
-              (λ { (j , (j<n , ez)) →
-                var (fromℕ' n j j<n)
-                , ( tagBridge 1 (numeralL (toℕ (fromℕ' n j j<n)))
-                  ∙ cong (λ w → pr (# 1) w)
-                      ( numeralL-fst (toℕ (fromℕ' n j j<n))
-                      ∙ cong #_ (toFromId' n j j<n) ∙ sym ez )
-                  ∙ sym (subst ⟨_⟩
-                      (tagAtL-adequate (suc t) 1 zero (z ∷ γ)) hz) ) })
-              (∈#-elim n (fst z)
-                (subst (λ w → ⟨ fst z ∈ w ⟩) qN z∈)) })
-         h })
+  TmWit : ℕ → V ℓ → Type (ℓ-suc ℓ)
+  TmWit n x = Σ[ t ∈ Term K n ] (VCode.⌜ mapTm f t ⌝ᵗ ≡ x)
+
+  Onto : ∀ {m} → Fin m → S ^ m → Type (ℓ-suc ℓ)
+  Onto A γ = (y : V ℓ) → ⟨ y ∈ fst (lookup A γ) ⟩ → ∥ Σ[ c ∈ K ] (f c ≡ y) ∥₁
+
+  tmCon : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ) → Onto A γ
+        → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 0 zero ∧̇ (var zero ∈̇ var (suc A))) ⟩
+        → ∥ TmWit n (fst (lookup t γ)) ∥₁
+  tmCon t N A γ n onto = PT.rec squash₁
+    (λ { (y , (hy , y∈)) → PT.map
+         (λ { (c , qc) → con c
+            , ( cong (VCode.mkTag 0) qc ∙ sym
+                (subst ⟨_⟩ (tagAtL-adequate (suc t) 0 zero (y ∷ γ)) hy) ) })
+         (onto (fst y) y∈) })
+
+  tmVar : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
+        → fst (lookup N γ) ≡ # n
+        → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 1 zero ∧̇ (var zero ∈̇ var (suc N))) ⟩
+        → ∥ TmWit n (fst (lookup t γ)) ∥₁
+  tmVar t N A γ n qN = PT.rec squash₁
+    (λ { (z , (hz , z∈)) → PT.map
+         (λ { (j , (j<n , ez)) →
+           var (fromℕ' n j j<n)
+           , ( cong (VCode.mkTag 1) (cong #_ (toFromId' n j j<n) ∙ sym ez)
+             ∙ sym (subst ⟨_⟩ (tagAtL-adequate (suc t) 1 zero (z ∷ γ)) hz) ) })
+         (∈#-elim n (fst z) (subst (λ w → ⟨ fst z ∈ w ⟩) qN z∈)) })
+
+  isTmAt-decode : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
+                → fst (lookup N γ) ≡ # n → Onto A γ
+                → ⟨ γ ⊨ isTmAt t N A ⟩ → ∥ TmWit n (fst (lookup t γ)) ∥₁
+  isTmAt-decode t N A γ n qN onto = PT.rec squash₁
+    (λ { (inl h) → tmCon t N A γ n onto h
+       ; (inr h) → tmVar t N A γ n qN h })
 ```
 
 <!--en-->
@@ -376,33 +446,42 @@ isTmAt-decode {m} t N γ n qN = PT.rec squash₁
 
 <!--en-->
 The same two clauses read backwards, and the only place in the introduction half
-where anything has to be computed rather than repackaged. A constant is its own
-code, so its clause is the tag equation and nothing more. A variable has to put
-its index *inside* the arity numeral, which is the bound working in the direction
-it was designed for: the decode read an index out of a numeral, and here a
-numeral is shown to hold one. That second fact was already on hand, since a
-smaller numeral belonging to a larger one is exactly what made distinct numerals
-distinct.
+where anything has to be computed rather than repackaged. Each clause now owes
+its own bound as well as its tag equation, and the two are owed to different
+parties. A constant is its own code, so its tag equation is nothing at all, and
+what it owes is that the constant is a member of the carrier: a hypothesis here,
+because only the caller knows which carrier it meant. A variable has to put its
+index *inside* the arity numeral, which is the other bound working in the
+direction it was designed for: the decode read an index out of a numeral, and
+here a numeral is shown to hold one. That second fact was already on hand, since
+a smaller numeral belonging to a larger one is exactly what made distinct
+numerals distinct.
 <!--zh-->
-同样的两支反过来读，也是引入这一半里唯一需要算点什么、而不只是重新包装的地方。常元就是自己的码，故它那支只有标签等式，别无他物。变元则要把它的序号放**进**元数数码里，这正是那道界朝着它被设计的方向出力：解码从一个数码里读出一个序号，此处则表明一个数码含有一个序号。第二件事早已在手，因为「较小的数码属于较大的」正是使相异的数码成其为相异的那件事。
+同样的两支反过来读，也是引入这一半里唯一需要算点什么、而不只是重新包装的地方。如今每一支除标签等式外还欠着自己那道界，而两笔债欠给不同的人。常元就是自己的码，故它的标签等式什么也不是，它所欠的是「该常元是载体的成员」：此处这是一条假设，因为只有调用方知道它指的是哪个载体。变元则要把它的序号放**进**元数数码里，这是另一道界朝着它被设计的方向出力：解码从一个数码里读出一个序号，此处则表明一个数码含有一个序号。第二件事早已在手，因为「较小的数码属于较大的」正是使相异的数码成其为相异的那件事。
 <!--/-->
 
 ```agda
-isTmAt-in : ∀ {m} (t N : Fin m) (γ : S ^ m) (n : ℕ)
-          → fst (lookup N γ) ≡ # n
-          → TmWit n (fst (lookup t γ)) → ⟨ γ ⊨ isTmAt t N ⟩
-isTmAt-in t N γ n qN (con y , e) = ∣ inl ∣ y , subst ⟨_⟩
-  (sym (tagAtL-adequate (suc t) 0 zero (y ∷ γ)))
-  (sym e ∙ tagBridge 0 y) ∣₁ ∣₁
-isTmAt-in t N γ n qN (var i , e) = ∣ inr ∣ z
-  , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc t) 1 zero (z ∷ γ)))
-        (sym e ∙ tagBridge 1 z)
-    , subst (λ w → ⟨ fst z ∈ w ⟩) (sym qN)
-        (subst (λ w → ⟨ w ∈ (# n) ⟩) (sym (numeralL-fst (toℕ i)))
-          (#mono (toℕ i) n (toℕ<n i))) ) ∣₁ ∣₁
-  where
-  z : S
-  z = numeralL (toℕ i)
+module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+
+  isTmAt-in : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
+            → fst (lookup N γ) ≡ # n
+            → ((c : K) → ⟨ f c ∈ fst (lookup A γ) ⟩)
+            → TmWit f n (fst (lookup t γ)) → ⟨ γ ⊨ isTmAt t N A ⟩
+  isTmAt-in t N A γ n qN into (con c , e) = ∣ inl ∣ y
+    , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc t) 0 zero (y ∷ γ))) (sym e)
+      , into c ) ∣₁ ∣₁
+    where
+    y : S
+    y = f c , h c
+  isTmAt-in t N A γ n qN into (var i , e) = ∣ inr ∣ z
+    , ( subst ⟨_⟩ (sym (tagAtL-adequate (suc t) 1 zero (z ∷ γ)))
+          (sym e ∙ cong (VCode.mkTag 1) (sym (numeralL-fst (toℕ i))))
+      , subst (λ w → ⟨ fst z ∈ w ⟩) (sym qN)
+          (subst (λ w → ⟨ w ∈ (# n) ⟩) (sym (numeralL-fst (toℕ i)))
+            (#mono (toℕ i) n (toℕ<n i))) ) ∣₁ ∣₁
+    where
+    z : S
+    z = numeralL (toℕ i)
 ```
 
 <!--en-->
@@ -427,8 +506,8 @@ were written against the same reading of an arity-tagged pair.
 <!--/-->
 
 ```agda
-module Peel {m : ℕ} (C : Fin m) (γ : S ^ m)
-            (hcl : ⟨ γ ⊨ closedAt C ⟩) (hsh : ⟨ γ ⊨ shapedAt C ⟩) where
+module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
+            (hcl : ⟨ γ ⊨ closedAt C ⟩) (hsh : ⟨ γ ⊨ shapedAt C A ⟩) where
   private
     D : V ℓ
     D = fst (lookup C γ)
@@ -439,7 +518,7 @@ module Peel {m : ℕ} (C : Fin m) (γ : S ^ m)
      × (⟨ pr (fst N) (fst a) ∈ D ⟩ × ⟨ pr (fst N) (fst b) ∈ D ⟩))))
   BinSucc k c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
     ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
-     × (⟨ (a ∷ N ∷ c ∷ γ) ⊨ isTmAt zero (suc zero) ⟩
+     × (⟨ (a ∷ N ∷ c ∷ γ) ⊨ isTmAt zero (suc zero) (suc (suc (suc A))) ⟩
         × ⟨ pr (sucV (fst N)) (fst b) ∈ D ⟩))))
 
   UnSame UnSucc : ℕ → S → Type (ℓ-suc ℓ)
@@ -450,14 +529,14 @@ module Peel {m : ℕ} (C : Fin m) (γ : S ^ m)
 
   PeelWit : S → Type (ℓ-suc ℓ)
   PeelWit c =
-      BinWit 0 bothTm γ c ⊎ (BinWit 1 bothTm γ c
+      BinWit 0 (bothTm A) γ c ⊎ (BinWit 1 (bothTm A) γ c
     ⊎ (BinSame 2 c ⊎ (BinSame 3 c ⊎ (BinSame 4 c
     ⊎ (UnSame 5 c ⊎ (UnWit 6 zeroPay γ c ⊎ (UnWit 7 zeroPay γ c
     ⊎ (UnSucc 8 c ⊎ (UnSucc 9 c
     ⊎ (BinSucc 10 c ⊎ BinSucc 11 c))))))))))
 
   peel : (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ PeelWit c ∥₁
-  peel c c∈ = PT.map fill (shaped-out C γ hsh c c∈)
+  peel c c∈ = PT.map fill (shaped-out C A γ hsh c c∈)
     where
     bs : (k : ℕ) → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩ → BinWit k noneB γ c
        → BinSame k c
@@ -474,12 +553,12 @@ module Peel {m : ℕ} (C : Fin m) (γ : S ^ m)
     uz k h (N , (a , (e , _))) =
       N , (a , (e , unSuccClosed-out C k γ h c N a c∈ e))
 
-    bz : (k : ℕ) → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩ → BinWit k fstTm γ c
+    bz : (k : ℕ) → ⟨ γ ⊨ binShapeAt C k (succSndAt C) ⟩ → BinWit k (fstTm A) γ c
        → BinSucc k c
     bz k h (N , (a , (b , (e , hr)))) =
       N , (a , (b , (e , (hr , binSuccClosed-out C k γ h c N a b c∈ e))))
 
-    fill : ShapeWit γ c → PeelWit c
+    fill : ShapeWit A γ c → PeelWit c
     fill (inl x) = inl x
     fill (inr (inl x)) = inr (inl x)
     fill (inr (inr (inl x))) = inr (inr (inl (bs 2 (hcl .fst) x)))
@@ -530,14 +609,23 @@ type asks for, and no transport is needed anywhere in the twelve tuples.
 
 The one thing a tuple cannot compute is the term witness: a payload slot holding
 a term code must be certified as one, and the certificate is the encoder above
-applied to the term the constructor carries. Its two clauses are the two clauses
-of a term.
+applied to the term the constructor carries. That certificate now has a second
+half, and the caller pays it: every constant of the alphabet is a member of the
+carrier. It is one hypothesis, discharged once per call rather than once per
+constructor, because the alphabet is fixed before the formula is.
+
+The first half, on the other hand, got cheaper. The witness a term owes is that
+its code is the code of *some* term, and over the alphabet the code of a term
+already is that: the encoder is the identity with `refl`{.Agda} beside it. On the
+model's own coding it had to bridge two codings first.
 <!--zh-->
 这条谓词是干什么用的。对码的递归收到一个索引集，而那个集合必须封闭，否则诸子句什么也约束不了；也必须成形，否则它们放垃圾进来。封闭性在一章之前已为闭包交付；这里是另一半，而且是较短的那一半，因为成形性对「一个成员随身拖进什么」不作任何要求。于是那个反演返回的东西有一半被丢在地上。
 
 分情形只对构造子进行。标签不是要与之对上的第二个索引：它由构造子算出，正如 `byTag`{.Agda} 从构造子算出封闭性的要求，故这张表是十二行、而不是十二乘十二。此处也没有任何递归，因为一个点了名的构造子之键，已经算成了见证类型所索取的那个带元数标签的对，而那十二个元组里任何地方都不需要搬运。
 
-元组唯一算不出来的是词项见证：载荷位上放着的词项码必须被认证为词项码，而那份认证就是上面那条编码式施于该构造子所携的词项。它的两支就是词项的两支。
+元组唯一算不出来的是词项见证：载荷位上放着的词项码必须被认证为词项码，而那份认证就是上面那条编码式施于该构造子所携的词项。这份认证如今有了第二半，而由调用方支付：字母表的每个常元都是载体的成员。它是一条假设，每次调用交付一次、而不是每个构造子交付一次，因为字母表是在公式之前就固定下来的。
+
+另一方面，第一半变便宜了。一个词项所欠的见证是「它的码是**某个**词项的码」，而在字母表之上，一个词项的码本来就是这个：编码式就是恒等，旁边配一个 `refl`{.Agda}。在模型自己的编码上，它先得把两套编码搭起桥来。
 <!--/-->
 
 ```agda
@@ -552,31 +640,34 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
     nn : ℕ → S
     nn n = # n , numL n
 
-    tw : ∀ {n} (t : Term K n) → TmWit n (fst (ct t))
-    tw (con y) = con (f y , h y) , tagBridge 0 (f y , h y)
-    tw (var i) = var i , (tagBridge 1 (numeralL (toℕ i))
-                        ∙ cong (VCode.mkTag 1) (numeralL-fst (toℕ i)))
+    tw : ∀ {n} (t : Term K n) → TmWit f n (fst (ct t))
+    tw t = t , refl
 
-  closureShaped : ∀ {n m} (φ : Formula K n) (γ : S ^ m)
-                → ⟨ (clo f h φ ∷ γ) ⊨ shapedAt zero ⟩
-  closureShaped φ γ = shaped-in zero (clo f h φ ∷ γ)
+  closureShaped : ∀ {n m} (φ : Formula K n) (A : Fin m) (γ : S ^ m)
+                → ((k : K) → ⟨ f k ∈ fst (lookup A γ) ⟩)
+                → ⟨ (clo f h φ ∷ γ) ⊨ shapedAt zero (suc A) ⟩
+  closureShaped φ A γ into = shaped-in zero (suc A) (clo f h φ ∷ γ)
     (λ c c∈ → PT.map (λ { (_ , ψ , q , _) → go ψ c q })
       (closure-inv f h φ (fst c) c∈))
     where
     tm1 : ∀ {k} (t : Term K k) (b c : S)
         → ⟨ (b ∷ ct t ∷ nn k ∷ c ∷ clo f h φ ∷ γ)
-            ⊨ isTmAt (suc zero) (suc (suc zero)) ⟩
-    tm1 {k} t b c = isTmAt-in (suc zero) (suc (suc zero))
-      (b ∷ ct t ∷ nn k ∷ c ∷ clo f h φ ∷ γ) k refl (tw t)
+            ⊨ isTmAt (suc zero) (suc (suc zero))
+                (suc (suc (suc (suc (suc A))))) ⟩
+    tm1 {k} t b c = isTmAt-in f h (suc zero) (suc (suc zero))
+      (suc (suc (suc (suc (suc A)))))
+      (b ∷ ct t ∷ nn k ∷ c ∷ clo f h φ ∷ γ) k refl into (tw t)
 
     tm0 : ∀ {k} (u : Term K k) (a c : S)
         → ⟨ (ct u ∷ a ∷ nn k ∷ c ∷ clo f h φ ∷ γ)
-            ⊨ isTmAt zero (suc (suc zero)) ⟩
-    tm0 {k} u a c = isTmAt-in zero (suc (suc zero))
-      (ct u ∷ a ∷ nn k ∷ c ∷ clo f h φ ∷ γ) k refl (tw u)
+            ⊨ isTmAt zero (suc (suc zero))
+                (suc (suc (suc (suc (suc A))))) ⟩
+    tm0 {k} u a c = isTmAt-in f h zero (suc (suc zero))
+      (suc (suc (suc (suc (suc A)))))
+      (ct u ∷ a ∷ nn k ∷ c ∷ clo f h φ ∷ γ) k refl into (tw u)
 
     go : ∀ {k} (ψ : Formula K k) (c : S) → fst c ≡ key f h ψ
-       → ShapeWit (clo f h φ ∷ γ) c
+       → ShapeWit (suc A) (clo f h φ ∷ γ) c
     go {k} (t ∈̇ u) c q =
       inl (nn k , (ct t , (ct u , (q , (tm1 t (ct u) c , tm0 u (ct t) c)))))
     go {k} (t ≐ u) c q =
