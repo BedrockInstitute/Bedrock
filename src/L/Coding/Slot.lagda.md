@@ -27,14 +27,16 @@ open import Base.Classical using ( LEM )
 module L.Coding.Slot {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _∨̇_; _⇒̇_ )
+open import FOL.Syntax
+  using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( module LCode; prʟ; prʟ-fst
-        ; binSameClosed-in; binShapeAt; bothSameAt )
+  using ( module LCode; prʟ; prʟ-fst; closedAt
+        ; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in
+        ; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; keyʟ-shape; slot; slot-inv; module Parts )
@@ -159,4 +161,102 @@ back, and both are arguments.
     impC = binSame 4 _⇒̇_ (λ _ m → m) (λ _ _ → refl)
              (λ a' b' → Parts.left B keyʟ (a' ⇒̇ b') a' b')
              (λ a' b' → Parts.right B keyʟ (a' ⇒̇ b') a' b')
+
+    unSame : (k' : ℕ) (op : ∀ {m} → Formula S m → Formula S m)
+           → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
+              → Σ[ a' ∈ Formula S m ] (ψ ≡ op a'))
+           → (∀ {m} (a' : Formula S m) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
+           → (∀ {m} (a' : Formula S m) (z : V ℓ)
+              → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a')) ⟩)
+           → ⟨ δ ⊨ unShapeAt zero k' (oneSameAt zero) ⟩
+    unSame k' op get payOp inA = unSameClosed-in zero k' δ
+      (λ c ar a c∈ sh → PT.rec (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
+        (λ { (m , ψ , (q , incl)) →
+          let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
+              g  = get ψ (r .fst)
+              a' = g .fst
+              eψ = g .snd
+              pay = cong fst (sym (payOp a'))
+                  ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+          in subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
+               (sym (key≡ a' (fst ar) (fst a) (r .snd .fst) (sym pay)))
+               (incl (fst (keyʟ a'))
+                 (subst (λ w → ⟨ fst (keyʟ a') ∈ fst (Sl w) ⟩) (sym eψ)
+                   (inA a' _ (Parts.self B keyʟ a')))) })
+        (slot-inv B φ (fst c) c∈))
+
+    unSucc : (k' : ℕ) (op : ∀ {m} → Formula S (suc m) → Formula S m)
+           → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
+              → Σ[ a' ∈ Formula S (suc m) ] (ψ ≡ op a'))
+           → (∀ {m} (a' : Formula S (suc m)) → LCode.payOf (op a') ≡ LCode.⌜ a' ⌝)
+           → (∀ {m} (a' : Formula S (suc m)) (z : V ℓ)
+              → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op a')) ⟩)
+           → ⟨ δ ⊨ unShapeAt zero k' (oneSuccAt zero) ⟩
+    unSucc k' op get payOp inA = unSuccClosed-in zero k' δ
+      (λ c ar a c∈ sh → PT.rec (snd (pr (sucV (fst ar)) (fst a) ∈ fst (Sl φ)))
+        (λ { (m , ψ , (q , incl)) →
+          let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
+              g  = get ψ (r .fst)
+              a' = g .fst
+              eψ = g .snd
+              pay = cong fst (sym (payOp a'))
+                  ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+          in subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
+               (sym (keyS≡ a' (fst ar) (fst a) (r .snd .fst) (sym pay)))
+               (incl (fst (keyʟ a'))
+                 (subst (λ w → ⟨ fst (keyʟ a') ∈ fst (Sl w) ⟩) (sym eψ)
+                   (inA a' _ (Parts.self B keyʟ a')))) })
+        (slot-inv B φ (fst c) c∈))
+
+    binSucc : (k' : ℕ)
+            → (op : ∀ {m} → Term S m → Formula S (suc m) → Formula S m)
+            → (∀ {m} (ψ : Formula S m) → LCode.Match k' ψ
+               → Σ[ t ∈ Term S m ] (Σ[ a' ∈ Formula S (suc m) ] (ψ ≡ op t a')))
+            → (∀ {m} (t : Term S m) (a' : Formula S (suc m))
+               → LCode.payOf (op t a') ≡ prʟ LCode.⌜ t ⌝ᵗ LCode.⌜ a' ⌝)
+            → (∀ {m} (t : Term S m) (a' : Formula S (suc m)) (z : V ℓ)
+               → ⟨ z ∈ fst (Sl a') ⟩ → ⟨ z ∈ fst (Sl (op t a')) ⟩)
+            → ⟨ δ ⊨ binShapeAt zero k' (succSndAt zero) ⟩
+    binSucc k' op get payOp inA = binSuccClosed-in zero k' δ
+      (λ c ar a b c∈ sh → PT.rec (snd (pr (sucV (fst ar)) (fst b) ∈ fst (Sl φ)))
+        (λ { (m , ψ , (q , incl)) →
+          let r  = keyʟ-shape ψ k' (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
+              g  = get ψ (r .fst)
+              t  = g .fst
+              a' = g .snd .fst
+              eψ = g .snd .snd
+              pay = sym (prʟ-fst LCode.⌜ t ⌝ᵗ LCode.⌜ a' ⌝)
+                  ∙ cong fst (sym (payOp t a'))
+                  ∙ cong (λ w → fst (LCode.payOf w)) (sym eψ) ∙ r .snd .snd
+          in subst (λ w → ⟨ w ∈ fst (Sl φ) ⟩)
+               (sym (keyS≡ a' (fst ar) (fst b) (r .snd .fst)
+                 (sym (pr-inj pay .snd))))
+               (incl (fst (keyʟ a'))
+                 (subst (λ w → ⟨ fst (keyʟ a') ∈ fst (Sl w) ⟩) (sym eψ)
+                   (inA t a' _ (Parts.self B keyʟ a')))) })
+        (slot-inv B φ (fst c) c∈))
+
+    negC : ⟨ δ ⊨ unShapeAt zero 5 (oneSameAt zero) ⟩
+    negC = unSame 5 ¬̇_ (λ _ m → m) (λ _ → refl)
+             (λ a' → Parts.only B keyʟ (¬̇ a') a')
+
+    exC : ⟨ δ ⊨ unShapeAt zero 8 (oneSuccAt zero) ⟩
+    exC = unSucc 8 ∃̇_ (λ _ m → m) (λ _ → refl)
+            (λ a' → Parts.only B keyʟ (∃̇ a') a')
+
+    allC : ⟨ δ ⊨ unShapeAt zero 9 (oneSuccAt zero) ⟩
+    allC = unSucc 9 ∀̇_ (λ _ m → m) (λ _ → refl)
+             (λ a' → Parts.only B keyʟ (∀̇ a') a')
+
+    allInC : ⟨ δ ⊨ binShapeAt zero 10 (succSndAt zero) ⟩
+    allInC = binSucc 10 ∀̇∈ (λ _ m → m) (λ _ _ → refl)
+               (λ t a' → Parts.only B keyʟ (∀̇∈ t a') a')
+
+    exInC : ⟨ δ ⊨ binShapeAt zero 11 (succSndAt zero) ⟩
+    exInC = binSucc 11 ∃̇∈ (λ _ m → m) (λ _ _ → refl)
+              (λ t a' → Parts.only B keyʟ (∃̇∈ t a') a')
+
+    slotClosed : ⟨ δ ⊨ closedAt zero ⟩
+    slotClosed = andC , (orC , (impC , (negC
+               , (exC , (allC , (allInC , exInC))))))
 ```
