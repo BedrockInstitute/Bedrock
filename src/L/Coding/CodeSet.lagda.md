@@ -2,17 +2,20 @@
 
 <!--en-->
 Every chapter so far has been careful to say that the set of *all* codes is not
-an element of `L`, and that nothing needed it. Something needs it now. The
-definable powerset takes syntax as its index type, `Def A = sett (Formula ⟪A⟫ 1)
-defSet`, so internalizing definability at a stage means naming the arity-one
-formulas over that stage from inside the model, and a formula can only name a
-set.
+an element of `L`, and that nothing needed it. Two things need it now, and they
+want different sets. The definable powerset takes syntax as its index type,
+`Def A = sett (Formula ⟪A⟫ 1) defSet`, so internalizing definability at a stage
+means naming the arity-one formulas over that stage from inside the model, and a
+formula can only name a set. The satisfaction recursion wants an index set closed
+under subcodes, and a quantifier's subformula lives one arity up, so it wants the
+keys at every arity instead.
 
-The set is not built by collecting the codes. It is cut out of a superset:
+Neither set is built by collecting the codes. Each is cut out of a superset:
 `smallDom`{.Agda} contains any small family of elements of `L` in a single stage,
-the arity-one keys are such a family, and separation inside `L` holds for
-formulas of any complexity. So the whole chapter is one object-language
-predicate, and the two directions of its adequacy.
+the keys are such a family, and separation inside `L` holds for formulas of any
+complexity. So the chapter is two object-language predicates that differ in one
+conjunct, the two directions of adequacy for each, and one theorem that only the
+second set can carry.
 
 The predicate has two conjuncts and they are not of equal weight. The second one,
 "there merely is a carrier equal to `A` and a set `C` with `x` a member of it, `C`
@@ -28,7 +31,10 @@ existentially and puts no condition on it, so a set holding a pair whose first
 component is not a numeral at all satisfies both halves, and the decode has
 nothing to say about that pair. That debt was recorded where it was incurred, and
 this is where it is paid: the predicate says, from outside, that `x` is a pair
-whose first component is the numeral one.
+whose first component is a numeral. Which numeral is the only difference between
+the two predicates. The arity-one set names it, the all-arity set binds it and
+requires only that it lie in `ωʟ`{.Agda}, and everything else in the chapter is
+shared verbatim.
 
 The carrier is bound and then pinned, rather than named as a constant where it is
 used. Shapedness takes its carrier as a slot, so something has to occupy that
@@ -40,13 +46,13 @@ Which half is hard, then, is settled. Introduction is three lemmas already
 proved, applied to the subformula closure. Elimination is where the arity
 conjunct is spent, and without it there is no elimination at all.
 <!--zh-->
-至此每一章都小心地说过：**全体**码之集不是 `L` 的元素，而且没有东西需要它。现在有东西需要了。可定义幂集以语法为索引类型，`Def A = sett (Formula ⟪A⟫ 1) defSet`，故在一个阶段处内化可定义性，就意味着从模型内部点名该阶段之上的一元公式，而公式只能点名集合。
+至此每一章都小心地说过：**全体**码之集不是 `L` 的元素，而且没有东西需要它。现在有两样东西需要它了，而它们想要的不是同一个集合。可定义幂集以语法为索引类型，`Def A = sett (Formula ⟪A⟫ 1) defSet`，故在一个阶段处内化可定义性，就意味着从模型内部点名该阶段之上的一元公式，而公式只能点名集合。满足关系那场递归想要一个对诸子码封闭的索引集，而量词的子公式住在高一级的元数上，故它想要的是每个元数处的诸键。
 
-这个集合不是靠把诸码收集起来造出的。它是从一个超集中切出来的：`smallDom`{.Agda} 把 `L` 元素的任意小族装进单一阶段，而诸一元键正是这样一个族，且 `L` 内部的分离对任意复杂度的公式成立。故整章就是一条对象语言的谓词，加上它适足性的两个方向。
+两个集合都不是靠把诸码收集起来造出的。各自都是从一个超集中切出来的：`smallDom`{.Agda} 把 `L` 元素的任意小族装进单一阶段，而诸键正是这样一个族，且 `L` 内部的分离对任意复杂度的公式成立。故本章是两条只差一个合取项的对象语言谓词、各自适足性的两个方向，再加一条只有第二个集合扛得起的定理。
 
 那条谓词有两个合取项，而二者分量不等。第二项「仅仅存在一个等于 `A` 的载体、以及一个集合 `C`，`x` 是它的成员，`C` 封闭且 `C` 在该载体上成形」是若干无界存在，在此处不费分文：满足关系是在类模型处读的，存在量词在 `L` 上取值，无须任何阶段去反射任何东西。
 
-第一个合取项才是承重的那个，而它就是本章的发现。`recover`{.Agda} 收下的不是「封闭且成形之集的一个成员」；它收下的是**以某个已言明元数处的键的形式**递交过来的成员，而 `closedAt`{.Agda} 与 `shapedAt`{.Agda} 都没有约束元数那一位。形状把元数存在量化，且对它不加任何条件，故一个持有「第一分量压根不是数码的对」的集合同样满足两半，而解码对那个对无话可说。这笔债在欠下之处已被记下，而此处正是偿付之处：那条谓词从外面说出，`x` 是一个第一分量为数码一的对。
+第一个合取项才是承重的那个，而它就是本章的发现。`recover`{.Agda} 收下的不是「封闭且成形之集的一个成员」；它收下的是**以某个已言明元数处的键的形式**递交过来的成员，而 `closedAt`{.Agda} 与 `shapedAt`{.Agda} 都没有约束元数那一位。形状把元数存在量化，且对它不加任何条件，故一个持有「第一分量压根不是数码的对」的集合同样满足两半，而解码对那个对无话可说。这笔债在欠下之处已被记下，而此处正是偿付之处：那条谓词从外面说出，`x` 是一个第一分量为数码的对。是哪个数码，正是两条谓词之间唯一的差别。一元那个集合把它点名，全元数那个集合把它绑定、只要求它属于 `ωʟ`{.Agda}，而本章其余一切逐字共享。
 
 载体是先被绑定、再被钉住的，而不是在用到它的地方点名为常元。成形性把它的载体取作一位，故必须有什么东西占住那一位，而一个由 `var zero ≐ con A`{.Agda} 把守的存在量词，用一个可证等于 `A` 的变元占住它。一条等式买下的，是常元本会以「把下面每条谓词重新索引一遍」为代价的东西。
 
@@ -72,9 +78,13 @@ open import V.Coding {ℓ} using ( pr; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Recursion {ℓ} lem using ( smallDom )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Coding.Model {ℓ} using ( tagAtL; tagAtL-adequate; closedAt )
-open import L.Coding.InL {ℓ} using ( key; keyL; codeL; key∈closure )
-open import L.Coding.Closed {ℓ} using ( clo; closureClosed )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
+open import L.Coding.Model {ℓ}
+  using ( prAtL; prAtL-adequate; tagAtL; tagAtL-adequate; closedAt )
+open import L.Coding.InL {ℓ}
+  using ( key; keyL; codeL; key∈closure; closure; closure-inv )
+open import L.Coding.Closed {ℓ} using ( clo; closureClosed; Peel; closedOf )
 open import L.Coding.Shape {ℓ} using ( shapedAt; closureShaped )
 open import L.Coding.Recover {ℓ} using ( keyOf-fst; module Decode )
 
@@ -140,6 +150,65 @@ keyArityAtL-in c k γ z e =
 ```
 
 <!--en-->
+## Is a key at some arity
+<!--zh-->
+## 是某个元数处的键
+<!--/-->
+
+<!--en-->
+The reader above names its arity as a metalevel numeral, which is what pins the
+arity to one; a set that has to hold subcodes cannot do that, because a
+quantifier's subformula lives one arity up. So the arity has to become a bound
+set, and something has to say of that set what `# k`{.Agda} said for free: that
+it is a numeral.
+
+Saying it costs one constant. `ωʟ`{.Agda} is an element of `L` whose members are
+exactly the numerals, so "the arity component lies in `ωʟ`{.Agda}" *is* the
+condition, written with the same unbounded membership the second conjunct already
+uses. Two existentials, one for the arity and one for the payload, the pair reader
+between them, and the membership on the arity.
+
+Reading it back is where the choice pays. `ω-specL`{.Agda} is an equation between
+propositions, not an implication, so a member of `ωʟ`{.Agda} *is* a truncated
+natural number, and one composition with the chain's projection equation turns it
+into the metalevel `# m`{.Agda} that `recover`{.Agda} takes as its arity argument.
+There is no induction in either direction; the numeral chapter did it.
+<!--zh-->
+上面那条读式把元数点名为一个元语言的数码，而正是这一点把元数钉在一上；一个必须持有诸子码的集合做不到这件事，因为量词的子公式住在高一级的元数上。故元数必须变成一个被绑定的集合，而须有什么东西对那个集合说出 `# k`{.Agda} 白送的那句话：它是一个数码。
+
+说出它只花一个常元。`ωʟ`{.Agda} 是 `L` 的元素，其成员恰是诸数码，故「元数分量属于 `ωʟ`{.Agda}」**就是**那个条件，且写法与第二个合取项早已在用的那种无界隶属相同。两个存在量词，一个管元数、一个管载荷，中间是对读式，再加上落在元数上的那条隶属。
+
+读回来的时候，这个选择才见分晓。`ω-specL`{.Agda} 是命题之间的等式，不是蕴含，故 `ωʟ`{.Agda} 的成员**就是**一个被截断的自然数，而与链的投影等式复合一次，就把它变成 `recover`{.Agda} 作为元数实参所收下的那个 `# m`{.Agda}。两个方向里都没有归纳；数码那一章已经做过了。
+<!--/-->
+
+```agda
+arityNumAtL : ∀ {n} → Fin n → Formula S n
+arityNumAtL c = ∃̇ (∃̇ (prAtL (suc (suc c)) (suc zero) zero
+                     ∧̇ (var (suc zero) ∈̇ con ωʟ)))
+
+arityNumAtL-out : ∀ {n} (c : Fin n) (γ : S ^ n)
+                → ⟨ γ ⊨ arityNumAtL c ⟩
+                → ∥ (Σ[ m ∈ ℕ ] Σ[ z ∈ S ]
+                      (fst (lookup c γ) ≡ pr (# m) (fst z))) ∥₁
+arityNumAtL-out c γ = PT.rec squash₁ (λ { (ar , h) →
+  PT.rec squash₁ (λ { (z , (hp , hω)) → PT.map
+    (λ { (m , qm) → lower m , z
+       , ( subst ⟨_⟩
+             (prAtL-adequate (suc (suc c)) (suc zero) zero (z ∷ ar ∷ γ)) hp
+         ∙ cong (λ w → pr w (fst z)) (qm ∙ numeralL-fst (lower m)) ) })
+    (subst ⟨_⟩ (ω-specL ar) hω) }) h })
+
+arityNumAtL-in : ∀ {n} (c : Fin n) (γ : S ^ n) (m : ℕ) (z : S)
+               → fst (lookup c γ) ≡ pr (# m) (fst z)
+               → ⟨ γ ⊨ arityNumAtL c ⟩
+arityNumAtL-in c γ m z e = ∣ numeralL m , ∣ z
+  , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc c)) (suc zero) zero
+        (z ∷ numeralL m ∷ γ)))
+        (e ∙ cong (λ w → pr w (fst z)) (sym (numeralL-fst m)))
+    , subst ⟨_⟩ (sym (ω-specL (numeralL m))) ∣ lift m , refl ∣₁ ) ∣₁ ∣₁
+```
+
+<!--en-->
 ## The predicate
 <!--zh-->
 ## 那条谓词
@@ -154,18 +223,30 @@ Nothing in the second conjunct is bounded, and nothing has to be. The witness is
 produced from a formula's own subformula closure in the introduction, and
 consumed as a set of `L` in the elimination, and the class model is where both
 readings happen.
+
+The second conjunct is written on its own because it is the half that does not
+care about the arity. Both predicates below share it verbatim, and so do both
+halves of both adequacy proofs; what separates the two predicates is one conjunct
+and nothing else.
 <!--zh-->
 两个合取项，落在一个自由变元上。第一项从外面钉住元数，而这正是上一章点名索取的那个合取项。第二项是解码那两条假设的见证：一个装着实参、既封闭又成形的集合。
 
 第二项里没有任何东西是有界的，也不需要有。那个见证在引入这边由一条公式自己的子公式闭包产出，在消去那边作为 `L` 的一个集合被消费，而两种读法都发生在类模型处。
+
+第二个合取项被单独写出，因为它是不关心元数的那一半。下面两条谓词逐字共享它，两条适足性的两半也都共享它；分开这两条谓词的只有一个合取项，别无其他。
 <!--/-->
 
 ```agda
+hasWitness : S → Formula S 1
+hasWitness A = ∃̇ ((var zero ≐ con A)
+                  ∧̇ ∃̇ ((var (suc (suc zero)) ∈̇ var zero)
+                       ∧̇ (closedAt zero ∧̇ shapedAt zero (suc zero))))
+
 isCode : S → Formula S 1
-isCode A = keyArityAtL zero 1
-        ∧̇ ∃̇ ((var zero ≐ con A)
-             ∧̇ ∃̇ ((var (suc (suc zero)) ∈̇ var zero)
-                  ∧̇ (closedAt zero ∧̇ shapedAt zero (suc zero))))
+isCode A = keyArityAtL zero 1 ∧̇ hasWitness A
+
+isCodeAny : S → Formula S 1
+isCodeAny A = arityNumAtL zero ∧̇ hasWitness A
 ```
 
 <!--en-->
@@ -182,23 +263,25 @@ constructible. The second is transitivity of `L` applied once, and the membershi
 it is applied to is named separately, because the shape predicate now asks for it
 in its own right.
 
-Then the superset. `smallDom`{.Agda} asks for a small family of elements of `L`
-and returns a stage containing all of it; the family is the arity-one keys,
-indexed by the arity-one formulas over the alphabet, which is a type of the right
-size because syntax is an inductive type at the alphabet's own level. What comes
-back contains every key and much else, and separation removes the else.
+Then the supersets, one for each set. `smallDom`{.Agda} asks for a small family of
+elements of `L` and returns a stage containing all of it; the arity-one family is
+indexed by the arity-one formulas over the alphabet, and the all-arity family by
+the pairs of an arity and a formula at it. Both are types of the right size
+because syntax is an inductive type at the alphabet's own level, and the arity is
+a natural number, which costs no level at all. What comes back contains every key
+and much else, and separation removes the else.
 
-The set is sealed where it is built. Unsealed, every later type mentioning it
-would carry the separation instrument's unfolding into conversion, and the facts
-exported here are all any consumer needs. Only the two that read the separation
-are inside the seal; the direction back and the equation it composes into are
-outside it, since neither needs to know what the set was cut out of.
+Both sets are sealed where they are built. Unsealed, every later type mentioning
+one would carry the separation instrument's unfolding into conversion, and the
+facts exported here are all any consumer needs. Only the ones that read a
+separation are inside a seal; the directions back and the equations they compose
+into are outside, since none of them needs to know what the set was cut out of.
 <!--zh-->
 载体是固定的，而消费方会把它固定在某个阶段上。它的诸成员就是字母表，恰如诸编码章的两个参数所期待：到层级的嵌入，以及「它落到的东西可构造」这份证书。后者是 `L` 的传递性用一次，而它所施于的那条隶属关系被单独命名，因为形状谓词如今按其自身的名义索取它。
 
-然后是那个超集。`smallDom`{.Agda} 索取 `L` 元素的一个小族，返回一个装下它全部的阶段；这个族就是诸一元键，以字母表之上的一元公式为索引，而那是一个尺寸正确的类型，因为语法是在字母表自身层级上的归纳类型。回来的东西含有每个键，也含有别的许多；而分离把「别的」去掉。
+然后是那两个超集，一集一个。`smallDom`{.Agda} 索取 `L` 元素的一个小族，返回一个装下它全部的阶段；一元那个族以字母表之上的一元公式为索引，全元数那个族则以「一个元数连同该元数处的一条公式」之对为索引。两者都是尺寸正确的类型，因为语法是在字母表自身层级上的归纳类型，而元数是自然数，压根不花层级。回来的东西含有每个键，也含有别的许多；而分离把「别的」去掉。
 
-这个集合在它被造出之处封印。不封印的话，此后每个提到它的类型都会把分离器械的展开带进转换检查，而此处导出的诸事实已是任何消费方所需的全部。封印之内只有读分离的那两条；回来那个方向、以及它们复合成的那条等式在封印之外，因为两者都不需要知道这个集合是从什么里切出来的。
+两个集合都在它们被造出之处封印。不封印的话，此后每个提到其一的类型都会把分离器械的展开带进转换检查，而此处导出的诸事实已是任何消费方所需的全部。封印之内只有读分离的那几条；回来的那些方向、以及它们复合成的那些等式在封印之外，因为它们都不需要知道这个集合是从什么里切出来的。
 <!--/-->
 
 ```agda
@@ -213,10 +296,10 @@ module _ (A : S) where
     ιL : (m : ⟪ fst A ⟫) → ⟨ isL (ι m) ⟩
     ιL m = isL-trans {x = fst A} {y = ι m} (ι∈ m) (A .snd)
 
-    codeS : Formula ⟪ fst A ⟫ 1 → S
+    codeS : ∀ {n} → Formula ⟪ fst A ⟫ n → S
     codeS φ = VCode.⌜ mapFo ι φ ⌝ , codeL ι ιL φ
 
-  keyS : Formula ⟪ fst A ⟫ 1 → S
+  keyS : ∀ {n} → Formula ⟪ fst A ⟫ n → S
   keyS φ = key ι ιL φ , keyL ι ιL φ
 
   private
@@ -225,6 +308,91 @@ module _ (A : S) where
 
     sep : isContr (SetOf (λ x → (x ∈ˢ small .fst) ⊓ ((x ∷ []) ⊨ isCode A)))
     sep = hasSeparationL (small .fst) (isCode A)
+
+    smallAny : Σ[ d ∈ S ] ((p : Σ[ n ∈ ℕ ] Formula ⟪ fst A ⟫ n)
+                          → ⟨ keyS (snd p) ∈ˢ d ⟩)
+    smallAny = smallDom (Σ[ n ∈ ℕ ] Formula ⟪ fst A ⟫ n) (λ p → keyS (snd p))
+
+    sepAny : isContr
+      (SetOf (λ x → (x ∈ˢ smallAny .fst) ⊓ ((x ∷ []) ⊨ isCodeAny A)))
+    sepAny = hasSeparationL (smallAny .fst) (isCodeAny A)
+```
+
+<!--en-->
+## The witness, in and out
+<!--zh-->
+## 那个见证，进与出
+<!--/-->
+
+<!--en-->
+Both halves of the second conjunct are proved here, once, at a variable arity,
+and both sets below simply apply them. That is possible because the conjunct
+never mentions the arity: the introduction produces a closed, shaped set for a
+formula of any arity, and the elimination consumes one and calls the decode,
+which took the arity as an argument from the start.
+
+Introduction is the half with nothing in it. The carrier existential takes `A`
+itself and its equation is `refl`{.Agda}; the inner existential's witness is the
+subformula closure, whose three obligations are `key∈closure`{.Agda},
+`closureClosed`{.Agda} and `closureShaped`{.Agda}, one chapter each and all
+already discharged. The last of them asks for one thing more, that every constant
+is a member of the carrier, and at this alphabet that is the fact the alphabet was
+defined by.
+
+Elimination is the other half, and it starts from the member already in key form
+at a stated arity, which is what `recover`{.Agda} demands and what nothing in the
+second conjunct would supply. Read the carrier existential and its equation turns
+a membership in the bound carrier into a membership in `A`, which is what makes
+the decode's hypothesis dischargeable: `A`'s members are exactly the image of
+`⟪ A ⟫`, by the presentation of a set by its own members. Read the inner
+existential and a closed, shaped set arrives with it. Then the decode runs, and
+its answer is a formula over the carrier, at the arity it was handed.
+<!--zh-->
+第二个合取项的两半都在此处、在变元元数上、一次证完，而下面两个集合只是把它们施用一遍。这之所以可行，是因为那个合取项从不提元数：引入为任意元数的一条公式产出一个既封闭又成形的集合，消去消费一个这样的集合并调用解码，而解码从一开始就把元数取作实参。
+
+引入是里面什么也没有的那一半。载体那个存在量词取 `A` 自身，它的等式是 `refl`{.Agda}；内层存在量词的见证是子公式闭包，其三笔债 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各出一章，且都已偿清。其中最后一条多要一件东西，即每个常元都是载体的成员，而在这个字母表上，那正是字母表当初据以定义的那件事。
+
+消去是另一半，而它从「已以某个已言明元数处的键的形式到场的那个成员」出发，那正是 `recover`{.Agda} 所索取的、也是第二个合取项供不出的。读出载体那个存在量词，它的等式把「属于被绑定的那个载体」变成「属于 `A`」，而这正是解码那条假设得以交付的原因：`A` 的诸成员恰是 `⟪ A ⟫` 的像，凭的是「一个集合由其自身诸成员的呈现」。读出内层存在量词，一个既封闭又成形的集合便随之到场。随后解码开跑，而它的答案是载体之上、落在它被递交的那个元数处的一条公式。
+<!--/-->
+
+```agda
+  private
+    witness-in : ∀ {n} (φ : Formula ⟪ fst A ⟫ n)
+               → ⟨ (keyS φ ∷ []) ⊨ hasWitness A ⟩
+    witness-in φ = ∣ A , ( refl
+      , ∣ clo ι ιL φ
+        , ( key∈closure ι ιL φ
+          , ( closureClosed ι ιL φ (A ∷ keyS φ ∷ [])
+            , closureShaped ι ιL φ zero (A ∷ keyS φ ∷ []) ι∈ ) ) ∣₁ ) ∣₁
+
+    witness-out : (x : S) → ⟨ (x ∷ []) ⊨ hasWitness A ⟩
+                → (k : ℕ) (z : S) → fst x ≡ pr (# k) (fst z)
+                → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
+    witness-out x hw k z qz = PT.rec squash₁ viaCarrier hw
+      where
+      Target : Type (ℓ-suc ℓ)
+      Target = ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
+
+      viaCarrier : Σ[ B ∈ S ] ⟨ (B ∷ x ∷ [])
+                     ⊨ ((var zero ≐ con A)
+                        ∧̇ ∃̇ ((var (suc (suc zero)) ∈̇ var zero)
+                             ∧̇ (closedAt zero ∧̇ shapedAt zero (suc zero)))) ⟩
+                 → Target
+      viaCarrier (B , (qB , hB)) = PT.rec squash₁ viaSlot hB
+        where
+        onto : (y : V ℓ) → ⟨ y ∈ fst B ⟩
+             → ∥ Σ[ c ∈ ⟪ fst A ⟫ ] (ι c ≡ y) ∥₁
+        onto y y∈ = ∣ ∈-asFiber {a = y} {b = fst A}
+          (subst (λ w → ⟨ y ∈ w ⟩) qB y∈) ∣₁
+
+        viaSlot : Σ[ C ∈ S ] ⟨ (C ∷ B ∷ x ∷ [])
+                    ⊨ ((var (suc (suc zero)) ∈̇ var zero)
+                       ∧̇ (closedAt zero ∧̇ shapedAt zero (suc zero))) ⟩
+                → Target
+        viaSlot (C , (x∈C , (hcl , hsh))) = PT.map
+          (λ { (ψ , qψ) → ψ , (qz ∙ cong (pr (# k)) (sym qψ)) })
+          (Decode.recover ι zero (suc zero) (C ∷ B ∷ x ∷ []) onto hcl hsh k z
+            (subst (λ w → ⟨ w ∈ fst C ⟩) (qz ∙ sym (keyOf-fst k z)) x∈C))
 ```
 
 <!--en-->
@@ -239,30 +407,16 @@ the keys, at arity one, of the formulas over the carrier. Introduction says ever
 such key is a member and elimination says every member is such a key, so the two
 are no longer two bounds on the set but one characterization of it.
 
-Introduction is the half with nothing in it. A formula's key is in the superset
-by the family it indexes; the arity conjunct is the key's own shape, so its
-witness is the code and its equation is `refl`{.Agda}; the carrier existential
-takes `A` itself and its equation is `refl`{.Agda} again; and the inner
-existential's witness is the subformula closure, whose three obligations are
-`key∈closure`{.Agda}, `closureClosed`{.Agda} and `closureShaped`{.Agda}, one
-chapter each and all already discharged. The last of them now asks for one thing
-more, that every constant is a member of the carrier, and at this alphabet that
-is the fact the alphabet was defined by.
-
-Elimination is the other half. Read the arity conjunct and the member arrives in
-key form at arity one, which is what `recover`{.Agda} demands and what nothing
-else in the predicate would supply. Read the carrier existential and its equation
-turns a membership in the bound carrier into a membership in `A`, which is what
-makes the decode's hypothesis dischargeable: `A`'s members are exactly the image
-of `⟪ A ⟫`, by the presentation of a set by its own members. Read the inner
-existential and a closed, shaped set arrives with it. Then the decode runs, and
-its answer is a formula over the carrier.
+What is left of each direction, once the witness is factored out, is the arity
+conjunct. Introduction adds two things to `witness-in`{.Agda}: membership in the
+superset, by the family the key indexes, and the arity conjunct, whose witness is
+the code and whose equation is `refl`{.Agda}. Elimination reads the arity conjunct
+first, because without it the member does not arrive in key form at all, and hands
+what it reads to `witness-out`{.Agda}.
 <!--zh-->
 两个方向所谈的那条陈述先写出来，而它是一个类：载体之上诸公式在元数一处的诸键。引入说每个这样的键都是成员，消去说每个成员都是这样一个键，故二者不再是这个集合的两道界，而是它的一条刻画。
 
-引入是里面什么也没有的那一半。一条公式的键属于那个超集，凭它所索引的那个族；元数合取项就是那个键自身的形状，故它的见证是那条码、它的等式是 `refl`{.Agda}；载体那个存在量词取 `A` 自身，它的等式又是 `refl`{.Agda}；而内层存在量词的见证是子公式闭包，其三笔债 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各出一章，且都已偿清。其中最后一条如今多要一件东西，即每个常元都是载体的成员，而在这个字母表上，那正是字母表当初据以定义的那件事。
-
-消去是另一半。读出元数合取项，那个成员就以「元数一处的键」的形式到场，而这正是 `recover`{.Agda} 所索取的、也是谓词里别的东西都供不出的。读出载体那个存在量词，它的等式把「属于被绑定的那个载体」变成「属于 `A`」，而这正是解码那条假设得以交付的原因：`A` 的诸成员恰是 `⟪ A ⟫` 的像，凭的是「一个集合由其自身诸成员的呈现」。读出内层存在量词，一个既封闭又成形的集合便随之到场。随后解码开跑，而它的答案是载体之上的一条公式。
+把那个见证提出去之后，每个方向剩下的就是元数合取项。引入在 `witness-in`{.Agda} 之上添两样：属于那个超集，凭那个键所索引的族；以及元数合取项，其见证是那条码、其等式是 `refl`{.Agda}。消去先读元数合取项，因为没有它那个成员根本不以键的形式到场，再把读到的东西交给 `witness-out`{.Agda}。
 <!--/-->
 
 ```agda
@@ -278,42 +432,15 @@ its answer is a formula over the carrier.
     key∈Codes φ = subst ⟨_⟩ (sym (sep .fst .snd (keyS φ)))
       ( small .snd φ
       , ( keyArityAtL-in zero 1 (keyS φ ∷ []) (codeS φ) refl
-        , ∣ A , ( refl
-          , ∣ clo ι ιL φ
-            , ( key∈closure ι ιL φ
-              , ( closureClosed ι ιL φ (A ∷ keyS φ ∷ [])
-                , closureShaped ι ιL φ zero (A ∷ keyS φ ∷ []) ι∈ ) ) ∣₁ ) ∣₁ ) )
+        , witness-in φ ) )
 
     Codes-out : (x : S) → ⟨ x ∈ˢ Codes ⟩ → ⟨ IsKeyOver x ⟩
-    Codes-out x x∈ = PT.rec squash₁ viaArity
+    Codes-out x x∈ = PT.rec squash₁
+      (λ { (z , qz) → witness-out x (sat .snd) 1 z qz })
       (keyArityAtL-out zero 1 (x ∷ []) (sat .fst))
       where
       sat : ⟨ (x ∷ []) ⊨ isCode A ⟩
       sat = subst ⟨_⟩ (sep .fst .snd x) x∈ .snd
-
-      viaArity : Σ[ z ∈ S ] (fst x ≡ pr (# 1) (fst z)) → ⟨ IsKeyOver x ⟩
-      viaArity (z , qz) = PT.rec squash₁ viaCarrier (sat .snd)
-        where
-        viaCarrier : Σ[ B ∈ S ] ⟨ (B ∷ x ∷ [])
-                       ⊨ ((var zero ≐ con A)
-                          ∧̇ ∃̇ ((var (suc (suc zero)) ∈̇ var zero)
-                               ∧̇ (closedAt zero ∧̇ shapedAt zero (suc zero)))) ⟩
-                   → ⟨ IsKeyOver x ⟩
-        viaCarrier (B , (qB , hB)) = PT.rec squash₁ viaSlot hB
-          where
-          onto : (y : V ℓ) → ⟨ y ∈ fst B ⟩
-               → ∥ Σ[ c ∈ ⟪ fst A ⟫ ] (ι c ≡ y) ∥₁
-          onto y y∈ = ∣ ∈-asFiber {a = y} {b = fst A}
-            (subst (λ w → ⟨ y ∈ w ⟩) qB y∈) ∣₁
-
-          viaSlot : Σ[ C ∈ S ] ⟨ (C ∷ B ∷ x ∷ [])
-                      ⊨ ((var (suc (suc zero)) ∈̇ var zero)
-                         ∧̇ (closedAt zero ∧̇ shapedAt zero (suc zero))) ⟩
-                  → ⟨ IsKeyOver x ⟩
-          viaSlot (C , (x∈C , (hcl , hsh))) = PT.map
-            (λ { (ψ , qψ) → ψ , (qz ∙ cong (pr (# 1)) (sym qψ)) })
-            (Decode.recover ι zero (suc zero) (C ∷ B ∷ x ∷ []) onto hcl hsh 1 z
-              (subst (λ w → ⟨ w ∈ fst C ⟩) (qz ∙ sym (keyOf-fst 1 z)) x∈C))
 
   Codes-in : (x : S) → ⟨ IsKeyOver x ⟩ → ⟨ x ∈ˢ Codes ⟩
   Codes-in x = PT.rec (snd (x ∈ˢ Codes))
@@ -353,16 +480,127 @@ difference.
 <!--/-->
 
 <!--en-->
+## The same set at every arity
+<!--zh-->
+## 同一个集合，落在每个元数上
+<!--/-->
+
+<!--en-->
+The second set differs from the first in one conjunct and one index type, and its
+adequacy is the same two lines with the arity carried along. What comes out is the
+class of keys of formulas over the carrier **at any arity**, which is the class a
+recursion over subcodes has to be indexed by, because a quantifier's subformula
+lives one arity up and the arity-one class does not contain it.
+
+The arity-one set is left exactly as it was, and that is a decision worth stating.
+It could be cut out of the all-arity set by the old arity conjunct, but the
+elimination would then have to turn "a key at some arity `n`, and the arity is
+one" back into a formula at arity one, which means inverting the numeral and
+transporting a formula along the resulting equation. That is more work than the
+separation it would replace, and the two sets share everything that was expensive
+already: one witness introduction, one witness elimination, one decode.
+<!--zh-->
+第二个集合与第一个只差一个合取项和一个索引类型，而它的适足性就是同样两行，只是把元数一路带着。出来的是载体之上诸公式**在任意元数处**的诸键之类，而那正是「对诸子码作递归」必须以之为索引的那一类，因为量词的子公式住在高一级的元数上，而一元那一类装不下它。
+
+一元那个集合原样保留，而这个决定值得说明。它本可由旧的元数合取项从全元数集合里切出，但那样一来消去就得把「某个元数 `n` 处的键，且元数为一」变回元数一处的一条公式，也就是要把数码反过来求解，再沿所得的等式搬运一条公式。那比它所要替换的那次分离更费事，而两个集合早已共享了所有贵的东西：一次见证引入、一次见证消去、一次解码。
+<!--/-->
+
+```agda
+  IsKeyOverAny : S → Ω
+  IsKeyOverAny x =
+    ∥ (Σ[ n ∈ ℕ ] Σ[ ψ ∈ Formula ⟪ fst A ⟫ n ] (fst x ≡ fst (keyS ψ))) ∥₁
+    , squash₁
+
+  opaque
+    AllCodes : S
+    AllCodes = sepAny .fst .fst
+
+    key∈AllCodes : ∀ {n} (φ : Formula ⟪ fst A ⟫ n) → ⟨ keyS φ ∈ˢ AllCodes ⟩
+    key∈AllCodes {n} φ = subst ⟨_⟩ (sym (sepAny .fst .snd (keyS φ)))
+      ( smallAny .snd (n , φ)
+      , ( arityNumAtL-in zero (keyS φ ∷ []) n (codeS φ) refl
+        , witness-in φ ) )
+
+    AllCodes-out : (x : S) → ⟨ x ∈ˢ AllCodes ⟩ → ⟨ IsKeyOverAny x ⟩
+    AllCodes-out x x∈ = PT.rec squash₁
+      (λ { (k , z , qz) → PT.map (λ { (ψ , q) → k , ψ , q })
+        (witness-out x (sat .snd) k z qz) })
+      (arityNumAtL-out zero (x ∷ []) (sat .fst))
+      where
+      sat : ⟨ (x ∷ []) ⊨ isCodeAny A ⟩
+      sat = subst ⟨_⟩ (sepAny .fst .snd x) x∈ .snd
+
+  AllCodes-in : (x : S) → ⟨ IsKeyOverAny x ⟩ → ⟨ x ∈ˢ AllCodes ⟩
+  AllCodes-in x = PT.rec (snd (x ∈ˢ AllCodes))
+    (λ { (n , ψ , q) →
+      subst (λ w → ⟨ w ∈ fst AllCodes ⟩) (sym q) (key∈AllCodes ψ) })
+
+  AllCodes-spec : (x : S) → (x ∈ˢ AllCodes) ≡ IsKeyOverAny x
+  AllCodes-spec x = ⇔toPath (AllCodes-out x) (AllCodes-in x)
+```
+
+<!--en-->
+## Closed under subcodes
+<!--zh-->
+## 对诸子码封闭
+<!--/-->
+
+<!--en-->
+This is what the set was built for, and it is the one thing here that no earlier
+chapter proved. A recursion over codes constrains a table only where a code *and
+all its subcodes* carry entries, so an index set that is not closed downward
+constrains nothing, and `closedAt`{.Agda} is the object-language demand that it be
+closed. The closure of a single formula satisfies that demand, which is what the
+closure chapter proved; this is the same demand for a set of formulas, and it does
+not need a second induction over the twelve constructors.
+
+The reason is that the closure chapter's proof was never about closures. It asks
+of its set only that a member *peel*: that it merely be the key of some formula
+whose own subformula closure sits inside the set. Peeling is exactly what
+`AllCodes-spec`{.Agda} delivers, in two steps. A member is merely a key of some
+formula over the carrier, by the elimination direction. And that formula's closure
+sits inside, because `closure-inv`{.Agda} says every element of it is a key of a
+formula over the same carrier, at some arity, and the introduction direction puts
+every such key back in. The arity is what makes this go through and what the
+arity-one set could not have said: a subformula's arity is not the formula's, and
+the class the set is characterized by has to be indifferent to that.
+<!--zh-->
+这是这个集合当初就是为之而造的东西，也是此处唯一一件前面各章都没证过的东西。对码的递归只在「一个码**及其全部子码**都有条目」之处约束一张表，故一个不向下封闭的索引集什么也约束不了，而 `closedAt`{.Agda} 就是「它须封闭」这项对象语言的要求。单条公式的闭包满足那项要求，那是闭包那一章证的；此处是对一族公式的同一项要求，而它不需要对十二个构造子再作一次归纳。
+
+理由是：闭包那一章的证明从来就不是关于闭包的。它对自己那个集合只索取「成员可**剥开**」：该成员仅仅是某条公式的键，而那条公式自己的子公式闭包坐落于该集合之内。而剥开正是 `AllCodes-spec`{.Agda} 分两步交出的东西。凭消去方向，一个成员仅仅是载体之上某条公式的键。而那条公式的闭包坐落于内，因为 `closure-inv`{.Agda} 说它的每个元素都是同一载体之上、某个元数处的一条公式的键，而引入方向把每个这样的键放了回去。使这一步走得通的正是元数，也正是一元那个集合说不出的：子公式的元数不是原公式的元数，而这个集合据以被刻画的那一类必须对此无所谓。
+<!--/-->
+
+```agda
+  private
+    below : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n) (z : V ℓ)
+          → ⟨ z ∈ closure ι ιL ψ ⟩ → ⟨ z ∈ fst AllCodes ⟩
+    below ψ z hz = PT.rec (snd (z ∈ fst AllCodes))
+      (λ { (m , χ , q , _) →
+        subst (λ w → ⟨ w ∈ fst AllCodes ⟩) (sym q) (key∈AllCodes χ) })
+      (closure-inv ι ιL ψ z hz)
+
+    peelAll : Peel ι ιL (fst AllCodes)
+    peelAll x hx = PT.map (λ { (n , ψ , q) → n , ψ , (q , below ψ) })
+      (AllCodes-out
+        (x , isL-trans {x = fst AllCodes} {y = x} hx (AllCodes .snd)) hx)
+
+  AllCodes-closed : ∀ {m} (γ : S ^ m) → ⟨ (AllCodes ∷ γ) ⊨ closedAt zero ⟩
+  AllCodes-closed γ = closedOf ι ιL AllCodes peelAll γ
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
 <!--/-->
 
 <!--en-->
-`Codes`{.Agda} is an element of `L`, cut out of a stage by one object-language
-predicate, and `Codes-spec`{.Agda} pins it: its members are exactly the arity-one
-keys of the formulas over the carrier. That is the statement the definable
-powerset needs, since `Def A`{.Agda} indexes by that class and no other.
+Two sets, and one predicate apart. `Codes`{.Agda} is an element of `L` whose
+members are exactly the arity-one keys of the formulas over the carrier, by
+`Codes-spec`{.Agda}, which is the statement the definable powerset needs, since
+`Def A`{.Agda} indexes by that class and no other. `AllCodes`{.Agda} is the same
+construction with the arity bound instead of named, and `AllCodes-spec`{.Agda}
+pins it to the keys at *every* arity.
 
 The whole content is in two conjuncts, and both are of the same kind. Closedness
 and shapedness together recognize the *shape* of a code and say nothing about the
@@ -371,15 +609,18 @@ against them has to be handed both, and a set built from them has to state both.
 `smallDom`{.Agda} and general-formula separation do the rest, and neither needed
 anything the earlier chapters had not already paid for.
 
-What the chapter still does not say is anything about arities other than one. The
-predicate names the numeral one twice over, in the arity conjunct and in the
-family the superset is taken of, and a recursion whose domain must be closed under
-subcodes descends through the binders into every arity. That set is a different
-object and is owed elsewhere.
+`AllCodes-closed`{.Agda} is the new theorem and the reason the second set exists.
+A recursion over codes constrains its table only where a code and its subcodes
+carry entries, so the domain has to be closed downward, and closing the arity-one
+set downward leaves arity one. Closing the all-arity set costs nothing beyond the
+characterization, because the closure chapter's eight clauses were already stated
+for any set whose members peel. What the arity conjunct changed, from a metalevel
+numeral to membership in `ωʟ`{.Agda}, is the whole of the difference between a set
+that a recursion can be indexed by and a set that it cannot.
 <!--zh-->
-`Codes`{.Agda} 是 `L` 的元素，由一条对象语言的谓词从一个阶段中切出，而 `Codes-spec`{.Agda} 把它钉死：它的诸成员恰是载体之上诸公式在元数一处的诸键。那正是可定义幂集所需要的那条陈述，因为 `Def A`{.Agda} 以那一类、而非别的任何一类为索引。
+两个集合，只差一条谓词。`Codes`{.Agda} 是 `L` 的元素，凭 `Codes-spec`{.Agda}，它的诸成员恰是载体之上诸公式在元数一处的诸键；那正是可定义幂集所需要的那条陈述，因为 `Def A`{.Agda} 以那一类、而非别的任何一类为索引。`AllCodes`{.Agda} 是同一套构造，只是元数由点名改为绑定，而 `AllCodes-spec`{.Agda} 把它钉在**每个**元数处的诸键上。
 
 全部内容在两个合取项里，而两者同类。封闭性与成形性合起来认出的是码的**形状**，对一个键所携带的元数、以及它的诸常元出自哪个字母表，都只字未提，故一条对着它们写下的解码必须被递交这两样，而一个由它们造出的集合必须把这两样说出来。`smallDom`{.Agda} 与任意公式的分离做掉其余，而两者都没有索取前几章尚未付清的任何东西。
 
-本章仍未说的，是关于元数一以外的任何事。那条谓词两处点了数码一的名，一处在元数合取项、一处在超集所取的那个族；而一个定义域必须对子码封闭的递归，会经诸绑定子下降到每个元数上。那个集合是另一个对象，欠在别处。
+`AllCodes-closed`{.Agda} 是新的那条定理，也是第二个集合存在的理由。对码的递归只在「一个码及其诸子码都有条目」之处约束它的表，故定义域必须向下封闭，而把一元那个集合向下封闭之后剩下的还是元数一。把全元数那个集合封闭起来，除那条刻画之外分文不花，因为闭包那一章的八条子句本就是对「成员可剥开的任意集合」陈述的。元数合取项所改的那件事，即从元语言的数码改为属于 `ωʟ`{.Agda}，就是「递归可以据以索引的集合」与「递归不可据以索引的集合」之间的全部差别。
 <!--/-->
