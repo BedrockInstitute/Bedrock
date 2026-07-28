@@ -323,6 +323,7 @@ import L.Coding.Sound
 import L.Coding.Unique
 import L.Coding.Slot
 import L.Coding.Graph
+import L.Coding.Satisfaction
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 ```
@@ -385,6 +386,10 @@ The root, stated today and finished over the remaining parts:
   the object language's closedness predicate, which is the hypothesis the
   satisfaction graph states about its index set. The closure chapter's theorem
   again, on the model's own coding.
+- `L.Coding.Satisfaction`{.Agda}: the instance. The slot is the domain, the graph
+  is the previous chapter's, and the two halves meet in `funct`{.Agda}: existence
+  hands the graph the objects already built, uniqueness pins any table the graph
+  accepts against the one the meta-level recursion built.
 - `L.Coding.Graph`{.Agda}: what the satisfaction recursion's graph says. Three
   existentials over the index set, the table and the carrier, guarded by
   closedness, totality and the twelve clauses, with the value read off the table.
@@ -430,6 +435,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Sound`{.Agda}：那张表满足诸子句，一条一条地。每次验证是四步，其中三步已经造好；剩下的是一条集合等式，而它们便宜，因为元语言的递归当初正是用那条等式所读回的那个条件来定义它的取值的。
 - `L.Coding.Unique`{.Agda}：一张在子码封闭的索引上满足十二条子句的表，在每个键处记录的就是递归在那里造出的取值，而正是这一点使那个图单值。对着典范取值陈述，且索引取作变元，因为把键代进一个满足关系里，在任何合理时间内都不会通过类型检查。
 - `L.Coding.Slot`{.Agda}：一条公式的递归所索引的那个槽，满足对象语言的封闭性谓词，而那正是满足关系那个图对它的索引集所陈述的假设。是闭包那一章的定理再来一遍，落在模型自己的编码上。
+- `L.Coding.Satisfaction`{.Agda}：那个实例。槽作定义域、图取自上一章，而两半在 `funct`{.Agda} 处会合：存在性把已经造好的对象递给那个图，唯一性把图所接受的任意一张表对着元语言递归造出的那个钉死。
 - `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。
 - `L.Coding.Recursion`{.Agda}：内化定理的第一个实例。它的图说的是「含有此键的最小封闭集」，因为没有一张表托着诸子取值的对象语言说不出「由诸子码处的取值造出」；「最小」经反对称性使取值唯一，故唯一性只花一次外延、不花归纳，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付。
 - `L.Axioms.Power`{.Agda}：幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。**未用凝聚，也不需要**：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
