@@ -1985,12 +1985,27 @@ One row per goal code; update the row in the same commit that changes the status
   giving the payload explicitly and binding the result once per frame still exceeds
   600 s.
 
-  What has not been tried, in the order to try it: bisect by deleting `fill` and
-  keeping one frame, to learn whether the cost is in a frame or in the twelve-way
-  dispatch; then seal `prʟ` and `keyOf`, since `keyOf j z` appears in every goal in
-  the module and `prʟ` is the one construction in the chain with no seal of its own;
-  then check whether `∈-induction`'s eliminator is being dragged through
-  normalization the way `rank`'s was, which would want the motive stated through an
-  opaque wrapper. **Do not write the remaining four cases before this is diagnosed**:
-  the three that exist are enough to measure with, and each new case multiplies
-  whatever the cause turns out to be.
+  **DIAGNOSED AND FIXED the same day: 2,237 s to 1.5 s, and neither seal nor variable
+  restatement was involved.** Bisection, four measurements: the scaffolding alone
+  (motive, `rec`, `split`, `inD`) is 2.4 s; adding one frame is the wall; that frame
+  with its body a hole is 1.3 s; that frame with both recursive calls, both rank
+  substitutions and both membership transports, and only the produced formula left a
+  hole, is **1.35 s**. So every piece anyone would have suspected is free, and the
+  entire cost is the equation that says the produced formula's code is the code that
+  was peeled.
+
+  **The cause is that the frame's constructor is a variable.** A frame is generic in
+  `op`, so the goal mentions `⌜ op φ ψ ⌝`, and quotation is defined by cases on the
+  constructor: with `op` a variable nothing reduces, and the elaborator is left
+  unifying `⌜ op φ ψ ⌝` against `mkTag k (prʟ ⌜ φ ⌝ ⌜ ψ ⌝)` with no case to work
+  from. **The fix is to hand the frame the constructor's coding equation as a
+  hypothesis** and pass `λ _ _ → refl` at each of the twelve call sites, where the
+  constructor is concrete and the equation is immediate. Eight of the twelve cases
+  are done; the six leaf and bounded ones remain and are mechanical.
+
+  **This is a fifth rule and it is not a variant of the four**: those are about
+  *where* an expensive term sits, and this one is about a definition being blocked.
+  When a frame is generic in a constructor, hand it the constructor's defining
+  equation rather than leaving the elaborator to rediscover it under a stuck term.
+  `L.Coding.Slot`'s frames already take `payOp` for exactly this reason, written
+  before anyone could say why; now the reason is measured.
