@@ -31,7 +31,7 @@ open import Base.Truth
 module L.Coding.Shape {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ⊤̇; ∃̇_; ∀̇∈ )
+open import FOL.Syntax using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ⊤̇; ∃̇_; ∀̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -39,16 +39,19 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module Infini
 open InfinitySet using ( #_ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( tagAtL
+  using ( tagAtL; tagAtL-adequate; tagBridge; module LCode
         ; arityTagAtL; arityTagAtL-adequate
         ; arityTagPairAtL; arityTagPairAtL-adequate )
-open import L.Axioms.Numerals {ℓ} using ( numeralL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Ordinal {ℓ} using ( ∈#-elim )
 
 open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId' )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; squash₁ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -218,4 +221,47 @@ shaped-out C γ h c c∈ = d1 (h c c∈)
                           ; (inr x) → PT.map inr (d3 x) })
   d1  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 0 bothTm γ c x)
                           ; (inr x) → PT.map inr (d2 x) })
+```
+
+<!--en-->
+## Terms, recovered
+<!--zh-->
+## 词项，被还原
+<!--/-->
+
+<!--en-->
+The first decode, and the only one that needs no induction. A term is a constant
+or a variable: the constant case reads its payload back as the constant, and the
+variable case reads an index out of the arity numeral, which is where the bound
+does its work. Nothing here descends, which is why it is separable from the
+recursion that follows and why it is written first.
+<!--zh-->
+第一个解码，也是唯一一个不需要归纳的。词项要么是常元、要么是变元：常元那支把载荷原样读回作常元，变元那支从元数数码里读出一个序号，而界正是在那里起作用的。此处没有任何东西下降，这既是它可以从随后那场递归里分离出来的原因，也是它被先写下来的原因。
+<!--/-->
+
+```agda
+TmWit : ℕ → V ℓ → Type (ℓ-suc ℓ)
+TmWit n x = Σ[ t ∈ Term S n ] (fst LCode.⌜ t ⌝ᵗ ≡ x)
+
+isTmAt-decode : ∀ {m} (t N : Fin m) (γ : S ^ m) (n : ℕ)
+              → fst (lookup N γ) ≡ # n
+              → ⟨ γ ⊨ isTmAt t N ⟩ → ∥ TmWit n (fst (lookup t γ)) ∥₁
+isTmAt-decode {m} t N γ n qN = PT.rec squash₁
+  (λ { (inl h) → PT.map
+         (λ { (y , hy) → con y , (tagBridge 0 y ∙ sym
+              (subst ⟨_⟩ (tagAtL-adequate (suc t) 0 zero (y ∷ γ)) hy)) })
+         h
+     ; (inr h) → PT.rec squash₁
+         (λ { (z , (hz , z∈)) → PT.map
+              (λ { (j , (j<n , ez)) →
+                var (fromℕ' n j j<n)
+                , ( tagBridge 1 (numeralL (toℕ (fromℕ' n j j<n)))
+                  ∙ cong (λ w → pr (# 1) w)
+                      ( numeralL-fst (toℕ (fromℕ' n j j<n))
+                      ∙ cong #_ (toFromId' n j j<n) ∙ sym ez )
+                  ∙ sym (subst ⟨_⟩
+                      (tagAtL-adequate (suc t) 1 zero (z ∷ γ)) hz) ) })
+              (∈#-elim n (fst z)
+                (subst (λ w → ⟨ fst z ∈ w ⟩) qN z∈)) })
+         h })
 ```
