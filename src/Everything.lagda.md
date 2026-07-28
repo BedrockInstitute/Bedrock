@@ -392,8 +392,9 @@ The root, stated today and finished over the remaining parts:
   Closedness is eight implications keyed by tag, so a member with no recognized
   tag satisfies all eight vacuously; `shapedAt`{.Agda} says every member is an
   arity-tagged pair whose tag is one of the twelve, with the payload that tag
-  calls for. The four leaf tags are a parameter, since nothing about them
-  descends.
+  calls for. Two frames carry the twelve, because twelve tags have two payload
+  shapes between them; what else a tag demands is a relation the frame carries,
+  and `isTmAt`{.Agda} is the one such demand that is not about a formula code.
 - `L.Coding.Satisfaction`{.Agda}: the instance. The slot is the domain, the graph
   is the previous chapter's, and the two halves meet in `funct`{.Agda}: existence
   hands the graph the objects already built, uniqueness pins any table the graph
@@ -443,7 +444,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Sound`{.Agda}：那张表满足诸子句，一条一条地。每次验证是四步，其中三步已经造好；剩下的是一条集合等式，而它们便宜，因为元语言的递归当初正是用那条等式所读回的那个条件来定义它的取值的。
 - `L.Coding.Unique`{.Agda}：一张在子码封闭的索引上满足十二条子句的表，在每个键处记录的就是递归在那里造出的取值，而正是这一点使那个图单值。对着典范取值陈述，且索引取作变元，因为把键代进一个满足关系里，在任何合理时间内都不会通过类型检查。
 - `L.Coding.Slot`{.Agda}：一条公式的递归所索引的那个槽，满足对象语言的封闭性谓词，而那正是满足关系那个图对它的索引集所陈述的假设。是闭包那一章的定理再来一遍，落在模型自己的编码上。
-- `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。四个叶子标签是一个参数，因为它们身上没有任何东西会下降。
+- `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。
 - `L.Coding.Satisfaction`{.Agda}：那个实例。槽作定义域、图取自上一章，而两半在 `funct`{.Agda} 处会合：存在性把已经造好的对象递给那个图，唯一性把图所接受的任意一张表对着元语言递归造出的那个钉死。
 - `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。
 - `L.Coding.Recursion`{.Agda}：内化定理的第一个实例。它的图说的是「含有此键的最小封闭集」，因为没有一张表托着诸子取值的对象语言说不出「由诸子码处的取值造出」；「最小」经反对称性使取值唯一，故唯一性只花一次外延、不花归纳，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付。
