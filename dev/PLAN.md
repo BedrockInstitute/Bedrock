@@ -2009,3 +2009,32 @@ One row per goal code; update the row in the same commit that changes the status
   equation rather than leaving the elaborator to rediscover it under a stuck term.
   `L.Coding.Slot`'s frames already take `payOp` for exactly this reason, written
   before anyone could say why; now the reason is measured.
+
+- **`[L3.21]` decode complete, and the obligation it hands on, 2026-07-28.**
+  `L.Coding.Recover`, 190 lines, cold-checks in 2.0 s, all twelve cases, no holes and
+  no pragmas. The six frames each take their constructor's coding equation as a
+  hypothesis, which is the fix recorded above; the twelve call sites pass a
+  reflexivity.
+
+  **Verified by perturbation rather than by reading.** A tag is only a number, so a
+  tag paired with the wrong constructor typechecks and is silently wrong, which no
+  review of the source would reliably catch. Eleven deliberate corruptions were
+  compiled one at a time and **every one was rejected**, including the two
+  same-frame swaps that look most plausible (`konst 6 ⊥̇` against `konst 7 ⊤̇`,
+  `bnd 10 ∃̇∈` against `bnd 11 ∀̇∈`) and payload-order swaps within a case. The
+  discrimination is real and mechanical: the numerals reduce, so the reflexivity
+  passed at each call site is what pins the tag to the constructor. The file was
+  restored byte-identical afterwards.
+
+  **One overclaim found and corrected, and it is now an obligation on the next
+  chapter.** The chapter said every member of a closed and shaped set is the key of
+  a formula. It is not: `recover` takes the arity as an argument and the member in
+  key form, and `shapedAt` binds the arity component existentially with **no
+  condition on it**, so a set holding a pair whose first component is not a numeral
+  satisfies both halves and the theorem says nothing about it. **The set is what owes
+  this, not the predicate**, and the route already pays it: the code set at a stage
+  is separated inside a family indexed at one fixed arity, so the arity is pinned
+  from outside. Both languages of the chapter and of the reading order now say so.
+  If a later consumer ever wants the predicate to stand alone, the missing conjunct
+  is "the arity component lies in omega", which the infinity chapter can state and
+  which nothing today needs.

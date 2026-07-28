@@ -325,6 +325,7 @@ import L.Coding.Unique
 import L.Coding.Slot
 import L.Coding.Descent
 import L.Coding.Shape
+import L.Coding.Recover
 import L.Coding.Graph
 import L.Coding.Satisfaction
 import L.Axioms.Numerals
@@ -408,6 +409,18 @@ The root, stated today and finished over the remaining parts:
   of the twelve a member is and hands back its parts, closedness says those
   parts are members too at the arity the tag calls for, and neither alone is a
   step of a recursion.
+- `L.Coding.Recover`{.Agda}: the decode. In a set that is closed and shaped, a
+  member handed over as a key at a stated arity is the key of a formula, and
+  `Decode.recover`{.Agda} produces it. That *every* member is such a key is not
+  proved here and is owed by whoever builds the set, since shapedness puts no
+  condition on the arity component it binds. The recursion runs on the rank of the code, not on the code and not on
+  the key: not on the code because membership does not descend into a
+  Kuratowski pair, not on the key because rank arithmetic on a pair is a fact
+  nobody has proved. The arity rides alongside as a natural number, which is what
+  lets the induction come back at the larger one a quantifier raises it to. Six
+  frames carry the twelve cases, and each takes its constructor's coding equation
+  as a hypothesis, because with the constructor a variable the coding function
+  does not reduce and finding that equation is the whole cost.
 - `L.Coding.Satisfaction`{.Agda}: the instance. The slot is the domain, the graph
   is the previous chapter's, and the two halves meet in `funct`{.Agda}: existence
   hands the graph the objects already built, uniqueness pins any table the graph
@@ -459,6 +472,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Slot`{.Agda}：一条公式的递归所索引的那个槽，满足对象语言的封闭性谓词，而那正是满足关系那个图对它的索引集所陈述的假设。是闭包那一章的定理再来一遍，落在模型自己的编码上。
 - `L.Coding.Descent`{.Agda}：一场跑在码上的递归如何从一条码走到它的诸部件，而成员关系办不到这件事：Kuratowski 的对把一个部件放在四个成员步之下，而中间那些集合不是码。秩沿成员关系严格增长，故那四步经序数的传递性合成，递归改跑在秩上。
 - `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。`isTmAt-decode`{.Agda} 把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的：词项要么是常元、要么是变元，而变元的序号从元数数码里出来，界正是在那里起作用的。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十二者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。
+- `L.Coding.Recover`{.Agda}：解码。在一个既封闭又成形的集合里，一个以「某个已言明元数处的键」的形式递交过来的成员，就是某条公式的键，而 `Decode.recover`{.Agda} 把它造出来。「**每个**成员都是这样一个键」此处未予证明，欠这笔账的是造那个集合的人，因为形状对它所绑定的元数分量不加任何条件。递归跑在码的秩上，不跑在码上、也不跑在键上：不跑在码上，是因为成员关系不下降进 Kuratowski 的对；不跑在键上，是因为「对的秩的算术」是一条没人证过的事实。元数作为一个自然数在旁边带着，正是这一点让归纳得以在量词把它抬升到的那个更大的元数上回来。六个框架承载那十二个情形，而每个框架都把自己那个构造子的编码等式作为假设收下，因为构造子若是变元，编码函数便不化简，寻找那条等式的代价就是全部代价。
 - `L.Coding.Satisfaction`{.Agda}：那个实例。槽作定义域、图取自上一章，而两半在 `funct`{.Agda} 处会合：存在性把已经造好的对象递给那个图，唯一性把图所接受的任意一张表对着元语言递归造出的那个钉死。
 - `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。
 - `L.Coding.Recursion`{.Agda}：内化定理的第一个实例。它的图说的是「含有此键的最小封闭集」，因为没有一张表托着诸子取值的对象语言说不出「由诸子码处的取值造出」；「最小」经反对称性使取值唯一，故唯一性只花一次外延、不花归纳，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付。
