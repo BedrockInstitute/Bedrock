@@ -319,6 +319,7 @@ import L.Recursion
 import L.Coding.Recursion
 import L.Coding.EnvSet
 import L.Coding.Sat
+import L.Coding.Bridge
 import L.Coding.Table
 import L.Coding.Sound
 import L.Coding.Unique
@@ -377,6 +378,18 @@ The root, stated today and finished over the remaining parts:
   separation off the ambient set, and the internal clauses become identities
   rather than definitions. Exports the twelve values and their membership
   equations, and nothing else.
+- `L.Coding.Bridge`{.Agda}: what that value **is**. At every environment over the
+  carrier, membership in it is satisfaction in the world `(B, ∈)`, which is the
+  notion the definable powerset is defined by; without the statement an internal
+  `Def` read off the recursion would provably agree with nothing. The right-hand
+  side is the inner semantics, not the ambient reading of the relativization,
+  because only the inner one guards a bounded quantifier twice, as the condition
+  does. `defSet-Sat`{.Agda} spends it on `L.Definability`{.Agda} directly. The
+  registered coherence risk does not fire: indexing the bridge by the inner
+  environment vector makes a quantifier's extension consing on the underlying
+  family, so the coherence is two `refl`{.Agda} branches shared by all four
+  quantifier clauses, and the truncated recovery is confined to the corollary
+  that a member is nothing but an environment.
 - `L.Coding.Table`{.Agda}: the entries, one per subformula, and the two things a
   recursion wants of them: every member is an entry, and a key determines its
   value. The second is where the code equation's injectivity is spent, and the
@@ -519,6 +532,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词，且是满足它的最小者。四个读式的八个实例，再加一次归纳；前者是「对一条公式的诸子码作递归」关于其索引集所需的那条假设，后者是它的取值唯一的理由。那八条子句从不看一条公式，故只对任意可**剥开**的集合证一次 (`Peel`{.Agda}：一个成员仅仅是某条公式的键，而那条公式自己的闭包坐落于内)，而 `closureClosed`{.Agda} 就是 `closedOf`{.Agda} 落在闭包处、以 `closure-inv`{.Agda} 充当剥开。码集是第二个实例，而它不是任何东西的闭包。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
 - `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
+- `L.Coding.Bridge`{.Agda}：那个取值**是什么**。在载体之上的每个环境处，「属于它」就是「在世界 `(B, ∈)` 中被满足」，而后者正是可定义幂集据以定义的概念；没有这条陈述，从那场递归读出的内部 `Def` 可证地与任何东西都不相符。右端取内层语义，不取相对化在周遭的读法，因为只有内层那种像那个条件一样对有界量词设两道防。`defSet-Sat`{.Agda} 把它直接花在 `L.Definability`{.Agda} 上。登记在案的那份相干性风险没有引爆：把这座桥以内层环境向量为索引之后，量词的扩张就是底族上的前置，于是相干性只剩四条量词子句共享的两条 `refl`{.Agda} 分支，而带截断的那次恢复被关进「一个成员无非就是一个环境」那条推论里。
 - `L.Coding.Table`{.Agda}：诸条目，每条子公式一个；以及递归向它们索取的两件事：每个成员都是一个条目，且键决定它的取值。后者正是花掉码等式单射性的地方，而元数由道路归纳消掉，好让那条等式在它唯一成立的那个元数处使用。此处一切按构造都是模型的元素，因为诸码就是模型自己的。
 - `L.Coding.Sound`{.Agda}：那张表满足诸子句，一条一条地。每次验证是四步，其中三步已经造好；剩下的是一条集合等式，而它们便宜，因为元语言的递归当初正是用那条等式所读回的那个条件来定义它的取值的。
 - `L.Coding.Unique`{.Agda}：一张在子码封闭的索引上满足十二条子句的表，在每个键处记录的就是递归在那里造出的取值，而正是这一点使那个图单值。对着典范取值陈述，且索引取作变元，因为把键代进一个满足关系里，在任何合理时间内都不会通过类型检查。
