@@ -1969,3 +1969,28 @@ One row per goal code; update the row in the same commit that changes the status
   binary case, with the closure certificate as the induction handle, and time it: if it
   walls at concrete codes, restate at variable arguments **before** the other eleven cases
   exist. That lesson cost five walls to buy.
+
+- **`[L3.21]` decode: a fifth wall, measured and not yet diagnosed, 2026-07-28.**
+  `L.Coding.Recover` (untracked, not in `Everything`, so the gate is unaffected)
+  holds the scaffolding and three of the five frames: `binSame` for tags 2, 3 and 4,
+  `unSame` for 5, `unSucc` for 8 and 9. The four leaf and bounded cases are holes.
+  **It typechecks with zero type errors in 2,237 seconds**, so the mathematics is
+  right and the cost is pure conversion.
+
+  Two hypotheses tested and both refuted. The two standing rules do not apply
+  here: `rank` is already sealed (that seal was found by this goal's own probe and
+  is committed), and the descent chain is already stated at variable sets in
+  `L.Coding.Descent`. The first fresh hypothesis, that `split N _ e` re-solving the
+  same metavariable six times per frame was the cost, is **refuted by measurement**:
+  giving the payload explicitly and binding the result once per frame still exceeds
+  600 s.
+
+  What has not been tried, in the order to try it: bisect by deleting `fill` and
+  keeping one frame, to learn whether the cost is in a frame or in the twelve-way
+  dispatch; then seal `prʟ` and `keyOf`, since `keyOf j z` appears in every goal in
+  the module and `prʟ` is the one construction in the chain with no seal of its own;
+  then check whether `∈-induction`'s eliminator is being dragged through
+  normalization the way `rank`'s was, which would want the motive stated through an
+  opaque wrapper. **Do not write the remaining four cases before this is diagnosed**:
+  the three that exist are enough to measure with, and each new case multiplies
+  whatever the cause turns out to be.
