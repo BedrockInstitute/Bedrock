@@ -326,6 +326,7 @@ import L.Coding.Slot
 import L.Coding.Descent
 import L.Coding.Shape
 import L.Coding.Recover
+import L.Coding.CodeSet
 import L.Coding.Graph
 import L.Coding.Satisfaction
 import L.Axioms.Numerals
@@ -425,6 +426,22 @@ The root, stated today and finished over the remaining parts:
   frames carry the twelve cases, and each takes its constructor's coding equation
   as a hypothesis, because with the constructor a variable the coding function
   does not reduce and finding that equation is the whole cost.
+- `L.Coding.CodeSet`{.Agda}: the arity-one codes at a carrier, as one set of `L`.
+  `smallDom`{.Agda} contains the keys in a stage and general-formula separation
+  cuts them back, so the whole chapter is one object-language predicate.
+  `isCode`{.Agda} has two conjuncts and only one of them is hard. The second, "there
+  merely is a closed and shaped set holding this", is an unbounded existential and
+  free here. The first says the member is a pair whose first component is the
+  numeral one, and it exists because `recover`{.Agda} takes its argument **as a key
+  at a stated arity** while neither `closedAt`{.Agda} nor `shapedAt`{.Agda}
+  constrains the arity slot: shapedness binds it existentially with no condition, so
+  the set must pin it from outside. `key∈Codes`{.Agda} is the closure's three
+  discharged obligations reused; `Codes-out`{.Agda} spends the arity conjunct and
+  runs the decode. **The elimination lands at `Formula S 1`, not at
+  `Formula ⟪A⟫ 1`**: `isTmAt`{.Agda} bounds a variable's index by the arity numeral
+  and bounds a constant by nothing, so a recovered formula may name constants
+  outside the carrier. That is the gap the next goal closes, with one more conjunct
+  of the same kind and for the same reason.
 - `L.Coding.Satisfaction`{.Agda}: the instance. The slot is the domain, the graph
   is the previous chapter's, and the two halves meet in `funct`{.Agda}: existence
   hands the graph the objects already built, uniqueness pins any table the graph
@@ -477,6 +494,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Descent`{.Agda}：一场跑在码上的递归如何从一条码走到它的诸部件，而成员关系办不到这件事：Kuratowski 的对把一个部件放在四个成员步之下，而中间那些集合不是码。秩沿成员关系严格增长，故那四步经序数的传递性合成，递归改跑在秩上。
 - `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。`isTmAt-decode`{.Agda} 把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的：词项要么是常元、要么是变元，而变元的序号从元数数码里出来，界正是在那里起作用的。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十二者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。另一个方向同样欠着，因为一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明：`shaped-in`{.Agda} 由「每个成员一次选择」造出那个十二重析取，而 `closureShaped`{.Agda} 把它花在一条公式的闭包上，那正是解码的第一个调用方所欠的第二条假设。
 - `L.Coding.Recover`{.Agda}：解码。在一个既封闭又成形的集合里，一个以「某个已言明元数处的键」的形式递交过来的成员，就是某条公式的键，而 `Decode.recover`{.Agda} 把它造出来。「**每个**成员都是这样一个键」此处未予证明，欠这笔账的是造那个集合的人，因为形状对它所绑定的元数分量不加任何条件。递归跑在码的秩上，不跑在码上、也不跑在键上：不跑在码上，是因为成员关系不下降进 Kuratowski 的对；不跑在键上，是因为「对的秩的算术」是一条没人证过的事实。元数作为一个自然数在旁边带着，正是这一点让归纳得以在量词把它抬升到的那个更大的元数上回来。六个框架承载那十二个情形，而每个框架都把自己那个构造子的编码等式作为假设收下，因为构造子若是变元，编码函数便不化简，寻找那条等式的代价就是全部代价。
+- `L.Coding.CodeSet`{.Agda}：某载体处的一元诸码，作为 `L` 的一个集合。`smallDom`{.Agda} 把诸键装进一个阶段，任意公式的分离再把它们切回来，故整章就是一条对象语言的谓词。`isCode`{.Agda} 有两个合取项，而只有一个难。第二项「仅仅存在一个封闭且成形的集合装着它」是无界存在，在此处免费。第一项说那个成员是第一分量为数码一的对，而它之所以存在，是因为 `recover`{.Agda} 收下实参的形式是**某个已言明元数处的键**，而 `closedAt`{.Agda} 与 `shapedAt`{.Agda} 都不约束元数那一位：形状把它存在量化且不加条件，故那个集合必须从外面把它钉住。`key∈Codes`{.Agda} 是闭包那三笔已偿清的债的复用；`Codes-out`{.Agda} 花掉元数合取项并开跑解码。**消去落在 `Formula S 1`，而非 `Formula ⟪A⟫ 1`**：`isTmAt`{.Agda} 以元数数码界住变元的序号，却不以任何东西界住常元，故还原出的公式可能点名载体之外的常元。那正是下一个目标要补的缺口，办法是再加一个同类的合取项，理由也相同。
 - `L.Coding.Satisfaction`{.Agda}：那个实例。槽作定义域、图取自上一章，而两半在 `funct`{.Agda} 处会合：存在性把已经造好的对象递给那个图，唯一性把图所接受的任意一张表对着元语言递归造出的那个钉死。
 - `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。
 - `L.Coding.Recursion`{.Agda}：内化定理的第一个实例。它的图说的是「含有此键的最小封闭集」，因为没有一张表托着诸子取值的对象语言说不出「由诸子码处的取值造出」；「最小」经反对称性使取值唯一，故唯一性只花一次外延、不花归纳，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付。
