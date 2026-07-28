@@ -31,7 +31,7 @@ open import Base.Truth
 module L.Coding.Shape {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∨̇_; ∃̇_; ∀̇∈ )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ⊤̇; ∃̇_; ∀̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -39,11 +39,14 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module Infini
 open InfinitySet using ( #_ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( arityTagAtL; arityTagAtL-adequate
+  using ( tagAtL
+        ; arityTagAtL; arityTagAtL-adequate
         ; arityTagPairAtL; arityTagPairAtL-adequate )
+open import L.Axioms.Numerals {ℓ} using ( numeralL )
 
+open import Cubical.Data.Nat using ( _+_ )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open PT using ( ∥_∥₁; squash₁ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
@@ -56,33 +59,88 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 
 <!--en-->
 ## The two payload frames
+
 <!--zh-->
 ## 两个载荷框架
 <!--/-->
 
 <!--en-->
-A tag whose payload is a pair, and a tag whose payload is a single code. Each
-binds the arity numeral and the parts, so that the disjunction below quantifies
-once per tag rather than once for all of them: the parts of a conjunction and
-the parts of a bounded quantifier are different things, and a single existential
-over both would have to say so.
+A tag whose payload is a pair, and a tag whose payload is a single code. Twelve
+tags, two shapes: which one a tag takes is the only thing that varies, and the
+rest of what a tag demands of its payload is a relation the frame carries. That
+is the same division the closedness predicate makes, and for the same reason.
 <!--zh-->
-一类标签的载荷是一个对，另一类的载荷是单个码。二者各自绑定元数数码与诸部件，好让下面那个析取**逐标签**量化、而非为全体量化一次：合取的部件与有界量词的部件不是同一种东西，而横跨二者的单个存在量词将不得不把这件事说出来。
+一类标签的载荷是一个对，另一类的载荷是单个码。十二个标签，两种形状：标签取哪一种是唯一变动的东西，而它对载荷的其余要求，是框架所携带的一条关系。这与封闭性谓词所作的划分相同，理由也相同。
 <!--/-->
 
 ```agda
 module _ {n : ℕ} where
-  binForm : ℕ → Formula S (suc n)
-  binForm k = ∃̇ (∃̇ (∃̇ (arityTagPairAtL
-                (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero)))
+  binForm : ℕ → Formula S (4 + n) → Formula S (suc n)
+  binForm k rel = ∃̇ (∃̇ (∃̇ (arityTagPairAtL
+    (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero ∧̇ rel)))
 
-  unForm : ℕ → Formula S (suc n)
-  unForm k = ∃̇ (∃̇ (arityTagAtL (suc (suc zero)) (suc zero) k zero))
+  unForm : ℕ → Formula S (3 + n) → Formula S (suc n)
+  unForm k rel = ∃̇ (∃̇ (arityTagAtL (suc (suc zero)) (suc zero) k zero ∧̇ rel))
+```
 
-  shapedAt : Fin n → Formula S (suc n) → Formula S n
-  shapedAt C leaf = ∀̇∈ (var C)
-    ( binForm 2 ∨̇ (binForm 3 ∨̇ (binForm 4 ∨̇ (unForm 5
-    ∨̇ (unForm 8 ∨̇ (unForm 9 ∨̇ (binForm 10 ∨̇ (binForm 11 ∨̇ leaf))))))))
+<!--en-->
+## Term codes
+<!--zh-->
+## 词项码
+<!--/-->
+
+<!--en-->
+The four tags whose payloads reach outside the formula codes need one predicate,
+and it is not recursive: a term is a constant or a variable, and neither has a
+part. A variable's index must lie below the arity, which is what makes the
+formula the code of a term *at that arity* rather than at some larger one, and
+that condition is bounded because the arity is a numeral.
+<!--zh-->
+那四个载荷伸到公式码之外的标签，需要一条谓词，而它不是递归的：词项要么是常元、要么是变元，二者都没有部件。变元的序号必须落在元数之下，正是这一点使那条公式成为**在该元数上**的词项之码、而非在某个更大的元数上，而这个条件是有界的，因为元数是一个数码。
+<!--/-->
+
+```agda
+isTmAt : ∀ {n} → Fin n → Fin n → Formula S n
+isTmAt t N = ∃̇ (tagAtL (suc t) 0 zero)
+          ∨̇ ∃̇ (tagAtL (suc t) 1 zero ∧̇ (var zero ∈̇ var (suc N)))
+```
+
+<!--en-->
+## The twelve, as one predicate
+<!--zh-->
+## 十二条，作为一条谓词
+<!--/-->
+
+<!--en-->
+Every member is a well-formed key: an arity-tagged pair carrying one of the
+twelve tags, with the payload that tag calls for. The relations say what
+closedness does not: that an atom's two parts are term codes, that a bounded
+quantifier's first part is one, and that a constant's payload is zero. The
+formula parts are left to closedness, which is where they belong, since they are
+the only parts anything descends into.
+<!--zh-->
+每个成员都是一个良构的键：一个带元数标签的对，携带那十二个标签之一，且载荷是该标签所要求的那种。诸关系说出封闭性没有说的事：原子的两个部件是词项码、有界量词的第一个部件是词项码、常元的载荷是零。公式部件留给封闭性，那也正是它们该在的地方，因为它们是唯一有东西会下降进去的部件。
+<!--/-->
+
+```agda
+module _ {n : ℕ} where
+  bothTm fstTm noneB : Formula S (4 + n)
+  bothTm = isTmAt (suc zero) (suc (suc zero))
+        ∧̇ isTmAt zero (suc (suc zero))
+  fstTm  = isTmAt (suc zero) (suc (suc zero))
+  noneB  = ⊤̇ {n = 4 + n}
+
+  zeroPay noneU : Formula S (3 + n)
+  zeroPay = var zero ≐ con (numeralL 0)
+  noneU   = ⊤̇ {n = 3 + n}
+
+  shapedAt : Fin n → Formula S n
+  shapedAt C = ∀̇∈ (var C)
+    ( binForm 0 bothTm ∨̇ (binForm 1 bothTm
+    ∨̇ (binForm 2 noneB ∨̇ (binForm 3 noneB ∨̇ (binForm 4 noneB
+    ∨̇ (unForm 5 noneU ∨̇ (unForm 6 zeroPay ∨̇ (unForm 7 zeroPay
+    ∨̇ (unForm 8 noneU ∨̇ (unForm 9 noneU
+    ∨̇ (binForm 10 fstTm ∨̇ binForm 11 fstTm)))))))))))
 ```
 
 <!--en-->
@@ -92,72 +150,72 @@ module _ {n : ℕ} where
 <!--/-->
 
 <!--en-->
-Nine alternatives, one per tag group, with the leaf case left as whatever the
-parameter says. The two frames are read first and separately, because a frame is
-three nested existentials and a nine-way disjunction of them read in one go
-would be nine copies of the same unnesting.
+Twelve alternatives. The two frames are read once each, generically in the
+relation they carry, so that the walk over the disjunction below is twelve
+applications of two readers rather than twelve copies of the same unnesting.
 <!--zh-->
-九个可能，每个标签组一个，叶子那一支则是参数说什么就是什么。两个框架先各自单独读出，因为一个框架是三层嵌套的存在，而把它们的九路析取一口气读出，将是同一段解嵌套的九份拷贝。
+十二个可能。两个框架各读一次，且对它们所携带的关系泛型，好让下面那趟走过析取的路是两条读式的十二次施用，而不是同一段解嵌套的十二份拷贝。
 <!--/-->
 
 ```agda
-BinWit : ℕ → S → Type (ℓ-suc ℓ)
-BinWit k c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
-  (fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))))
+BinWit : ∀ {n} → ℕ → Formula S (4 + n) → S ^ n → S → Type (ℓ-suc ℓ)
+BinWit k rel γ c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (Σ[ b ∈ S ]
+  ((fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b))))
+   × ⟨ (b ∷ a ∷ N ∷ c ∷ γ) ⊨ rel ⟩)))
 
-UnWit : ℕ → S → Type (ℓ-suc ℓ)
-UnWit k c = Σ[ N ∈ S ] (Σ[ a ∈ S ] (fst c ≡ pr (fst N) (pr (# k) (fst a))))
+UnWit : ∀ {n} → ℕ → Formula S (3 + n) → S ^ n → S → Type (ℓ-suc ℓ)
+UnWit k rel γ c = Σ[ N ∈ S ] (Σ[ a ∈ S ]
+  ((fst c ≡ pr (fst N) (pr (# k) (fst a))) × ⟨ (a ∷ N ∷ c ∷ γ) ⊨ rel ⟩))
 
-binForm-out : ∀ {n} (k : ℕ) (γ : S ^ n) (c : S)
-            → ⟨ (c ∷ γ) ⊨ binForm k ⟩ → ∥ BinWit k c ∥₁
-binForm-out k γ c = PT.rec squash₁ (λ { (N , hN) →
+binForm-out : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n) (c : S)
+            → ⟨ (c ∷ γ) ⊨ binForm k rel ⟩ → ∥ BinWit k rel γ c ∥₁
+binForm-out k rel γ c = PT.rec squash₁ (λ { (N , hN) →
   PT.rec squash₁ (λ { (a , ha) → PT.map
-    (λ { (b , hb) → N , (a , (b , subst ⟨_⟩
+    (λ { (b , (hb , hr)) → N , (a , (b , (subst ⟨_⟩
        (arityTagPairAtL-adequate (suc (suc (suc zero))) (suc (suc zero)) k
-          (suc zero) zero (b ∷ a ∷ N ∷ c ∷ γ)) hb)) })
+          (suc zero) zero (b ∷ a ∷ N ∷ c ∷ γ)) hb , hr))) })
     ha }) hN })
 
-unForm-out : ∀ {n} (k : ℕ) (γ : S ^ n) (c : S)
-           → ⟨ (c ∷ γ) ⊨ unForm k ⟩ → ∥ UnWit k c ∥₁
-unForm-out k γ c = PT.rec squash₁ (λ { (N , hN) → PT.map
-  (λ { (a , ha) → N , (a , subst ⟨_⟩
+unForm-out : ∀ {n} (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n) (c : S)
+           → ⟨ (c ∷ γ) ⊨ unForm k rel ⟩ → ∥ UnWit k rel γ c ∥₁
+unForm-out k rel γ c = PT.rec squash₁ (λ { (N , hN) → PT.map
+  (λ { (a , (ha , hr)) → N , (a , (subst ⟨_⟩
      (arityTagAtL-adequate (suc (suc zero)) (suc zero) k zero
-        (a ∷ N ∷ c ∷ γ)) ha) })
+        (a ∷ N ∷ c ∷ γ)) ha , hr)) })
   hN })
 
-ShapeWit : ∀ {n} → S ^ n → Formula S (suc n) → S → Type (ℓ-suc ℓ)
-ShapeWit γ leaf c =
-    BinWit 2 c ⊎ (BinWit 3 c ⊎ (BinWit 4 c ⊎ (UnWit 5 c
-  ⊎ (UnWit 8 c ⊎ (UnWit 9 c ⊎ (BinWit 10 c ⊎ (BinWit 11 c
-  ⊎ ⟨ (c ∷ γ) ⊨ leaf ⟩)))))))
+ShapeWit : ∀ {n} → S ^ n → S → Type (ℓ-suc ℓ)
+ShapeWit γ c =
+    BinWit 0 bothTm γ c ⊎ (BinWit 1 bothTm γ c
+  ⊎ (BinWit 2 noneB γ c ⊎ (BinWit 3 noneB γ c ⊎ (BinWit 4 noneB γ c
+  ⊎ (UnWit 5 noneU γ c ⊎ (UnWit 6 zeroPay γ c ⊎ (UnWit 7 zeroPay γ c
+  ⊎ (UnWit 8 noneU γ c ⊎ (UnWit 9 noneU γ c
+  ⊎ (BinWit 10 fstTm γ c ⊎ BinWit 11 fstTm γ c))))))))))
 
-shaped-out : ∀ {n} (C : Fin n) (leaf : Formula S (suc n)) (γ : S ^ n)
-           → ⟨ γ ⊨ shapedAt C leaf ⟩
-           → (c : S) → ⟨ c ∈ˢ lookup C γ ⟩
-           → ∥ ShapeWit γ leaf c ∥₁
-shaped-out C leaf γ h c c∈ = d2 (h c c∈)
+shaped-out : ∀ {n} (C : Fin n) (γ : S ^ n) → ⟨ γ ⊨ shapedAt C ⟩
+           → (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit γ c ∥₁
+shaped-out C γ h c c∈ = d1 (h c c∈)
   where
-  B : ℕ → Type (ℓ-suc ℓ)
-  B k = BinWit k c
-  d8 : ⟨ (c ∷ γ) ⊨ (binForm 11 ∨̇ leaf) ⟩ → ∥ (B 11 ⊎ ⟨ (c ∷ γ) ⊨ leaf ⟩) ∥₁
-  d8 = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 11 γ c x)
-                         ; (inr x) → ∣ inr x ∣₁ })
-
-  d7 : ⟨ (c ∷ γ) ⊨ (binForm 10 ∨̇ (binForm 11 ∨̇ leaf)) ⟩
-     → ∥ (B 10 ⊎ (B 11 ⊎ ⟨ (c ∷ γ) ⊨ leaf ⟩)) ∥₁
-  d7 = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 10 γ c x)
-                         ; (inr x) → PT.map inr (d8 x) })
-
-  d6 = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 9 γ c x)
-                         ; (inr x) → PT.map inr (d7 x) })
-  d5 = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 8 γ c x)
-                         ; (inr x) → PT.map inr (d6 x) })
-  d4 = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 5 γ c x)
-                         ; (inr x) → PT.map inr (d5 x) })
-  d3 = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 4 γ c x)
-                         ; (inr x) → PT.map inr (d4 x) })
-  d2' = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 3 γ c x)
+  d11 = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 10 fstTm γ c x)
+                          ; (inr x) → PT.map inr (binForm-out 11 fstTm γ c x) })
+  d10 = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 9 noneU γ c x)
+                          ; (inr x) → PT.map inr (d11 x) })
+  d9  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 8 noneU γ c x)
+                          ; (inr x) → PT.map inr (d10 x) })
+  d8  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 7 zeroPay γ c x)
+                          ; (inr x) → PT.map inr (d9 x) })
+  d7  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 6 zeroPay γ c x)
+                          ; (inr x) → PT.map inr (d8 x) })
+  d6  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 5 noneU γ c x)
+                          ; (inr x) → PT.map inr (d7 x) })
+  d5  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 4 noneB γ c x)
+                          ; (inr x) → PT.map inr (d6 x) })
+  d4  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 3 noneB γ c x)
+                          ; (inr x) → PT.map inr (d5 x) })
+  d3  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 2 noneB γ c x)
+                          ; (inr x) → PT.map inr (d4 x) })
+  d2  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 1 bothTm γ c x)
                           ; (inr x) → PT.map inr (d3 x) })
-  d2 = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 2 γ c x)
-                         ; (inr x) → PT.map inr (d2' x) })
+  d1  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 0 bothTm γ c x)
+                          ; (inr x) → PT.map inr (d2 x) })
 ```
