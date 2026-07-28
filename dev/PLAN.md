@@ -2038,3 +2038,46 @@ One row per goal code; update the row in the same commit that changes the status
   If a later consumer ever wants the predicate to stand alone, the missing conjunct
   is "the arity component lies in omega", which the infinity chapter can state and
   which nothing today needs.
+
+- **`[L3.21]` delivered, and the one thing it does not close, 2026-07-28.** Four chapters,
+  **694 non-blank agda lines**, every one under three seconds, whole `L` tree cold in 57 s:
+  `L.Coding.Descent` 68 (rank descends into a Kuratowski pair), `L.Coding.Shape` 334
+  (the predicate, both readings, the term decode both ways, one step of the recursion,
+  and the closure satisfying it), `L.Coding.Recover` 190 (the twelve-case decode), and
+  `L.Coding.CodeSet` 102 (the set, in `L`, with the predicate and adequacy both ways).
+  Against the row's 100-to-250 estimate that is **2.8x to 7x over**, and the overrun is
+  attributable rather than diffuse: `Descent` exists only because the route assumed the
+  recursion would run on membership, and `Shape` is a half of "is a code" that the row
+  never identified as separate from closedness at all.
+
+  **The predicate's first conjunct is the whole finding.** Closedness and shapedness
+  together recognize the *shape* of a code and say nothing about the arity a key
+  carries, so the decode has to be handed the arity and the set has to state it. The
+  conjunct that states it is one existential over the existing tag reader. Everything
+  else in the chapter is `smallDom` plus general-formula separation, and neither wanted
+  anything the earlier chapters had not paid for.
+
+  **What is NOT closed, and it is the same shape as the arity was.** The elimination
+  lands at `Formula S 1`, not at `Formula ⟪A⟫ 1`: `isTmAt`'s variable disjunct bounds
+  the index by the arity numeral, and its **constant disjunct has no bound at all**, so
+  a payload read back as a constant is an arbitrary element of `L`. Nothing in
+  closedness, shapedness or the present predicate confines the constants to the
+  carrier. So `Codes A` is caught between two statements rather than characterized by
+  one: it holds the key of every formula over the carrier, and every member is the key
+  of a formula over the model. **`[L3.19]` cannot read `Def A` off it until this is
+  closed**, since `Def A = sett (Formula ⟪A⟫ 1) defSet` indexes by the narrower class.
+  The fix is one more conjunct of exactly the arity conjunct's kind, written into the
+  predicate from outside because nothing the decode consumes will supply it, and it is
+  the first thing `[L3.19]` should do. A second consequence, disclosed and not filed as
+  a defect: `Codes A` is separated out of whatever bounding stage `smallDom` picks, so a
+  larger bound gives a strictly larger set satisfying both directions; closing the
+  constants pins it, and the two are co-extensive.
+
+  **Method note worth keeping, since it caught nothing this time and that is the
+  point.** Both halves were checked by perturbation rather than by reading: 17
+  deliberate corruptions of the code set, all rejected, and 3 positive controls, all
+  accepted. The three that mattered first neutralize the introduction so the failure is
+  unambiguously in the elimination, which is how "the conjunct is present" was
+  distinguished from "the conjunct means what it says": replacing the arity conjunct
+  with a tautology keeps the two-conjunct shape and still dies. Reading the source would
+  not have distinguished those.
