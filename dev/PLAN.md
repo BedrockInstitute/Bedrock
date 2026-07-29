@@ -2340,3 +2340,47 @@ One row per goal code; update the row in the same commit that changes the status
   The 120 s blocker is per-module and the worst module is 27.8 s, so nothing is blocked,
   but the whole-tree figure is the one a contributor waits on and it has doubled while
   four chapters were added.
+
+- **`[L3.19]` COMPLETE, 2026-07-29. The `L`-hierarchy is internalized.** `L.Coding.Sequence`
+  135 lines, `L.Hierarchy` 354, plus assembly: **+490** against the re-scoped 370 to 650.
+  `src/` is **11,872** lines. Worst module 24.8 s; whole tree cold 127.5 s.
+
+  `Lset-only` and `Lset-defines` are two implications between the graph and the meta
+  `Lset`, at a slot in a variable environment, with **ordinality the only hypothesis on
+  either side**: no side condition from the powerset chapter leaks into a statement.
+  `hierL` is the internal hierarchy as an element of `L`, and it is **sealed where it is
+  built** with its readings stated at a variable collection reached by its specification.
+
+  **The design rulings were checked against the delivered code and all three held.** The
+  single-valuedness conjunct is genuinely unnecessary: the value lemma's motive quantifies
+  over every recorded value, so agreement is a three-line corollary, and an adversarial
+  probe confirmed two satisfactions at one ordinal are one value. The collection is a
+  membership equivalence and the induction's motive is provably a proposition, so the
+  internal function-extensionality lemma priced at 80 to 150 never arose; making the
+  collection one-directional was perturbed and the uniqueness proof dies exactly where the
+  route predicted. And nothing uses `Definition`.
+
+  **Non-vacuity was settled at concrete ordinals, which is the strongest form this has
+  taken.** Probes derived that `hierL (# 1)` is **exactly** the singleton pairing zero with
+  the first stage, both directions of the equivalence exercised; that the value at one is
+  the definable powerset of the empty stage, routed through `Lset-suc`, which
+  `L.Hierarchy` never imports; that the value there is not empty; and that at the **limit**
+  omega the graph is satisfied by the stage itself and whatever satisfies it there absorbs
+  every earlier stage. Fourteen perturbations were rejected including three *deep* ones
+  that alter the sentence and its payload types together, so the rejection comes from the
+  mathematics rather than from a signature mismatch.
+
+  **RULE 9, and it arrived by correcting rule 8's own chapter.** `L.Coding.Sequence` first
+  measured 129.6 s, blamed **concrete slots**, and recorded that in its prose. The next
+  chapter's isolating probe refuted it: a reading at fully concrete slots is **15 ms**, the
+  same reading against a **named closed-sentence alias** is **51 s**, and a pure identity
+  between the two spellings is 54 s. What costs is deciding a satisfaction of an alias
+  against a satisfaction of its expansion, which Agda answers by normalizing a satisfaction
+  carrying an entire description inside it. Both escapes are traps in opposite directions,
+  measured on one chapter: alias everywhere **108 s**; fully concrete with no alias
+  **586 s**, because replacement and the functionality helper take the formula as an
+  argument and a huge argument is what hurts there; **the sentence as a parameter with its
+  own equation and `refl` at the one call site, 23.5 s.** So **rule 5 generalizes off
+  constructors onto sentences**: a frame generic in a sentence takes that sentence's
+  equation as a hypothesis. `L.Coding.Sequence`'s prose is corrected in both languages,
+  because a wrong law recorded in the source is worse than none.
