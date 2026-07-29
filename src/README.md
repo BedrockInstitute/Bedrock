@@ -67,43 +67,6 @@ entry in the reading catalog**, at the position its first consumer dictates.
   - `FOL/Absoluteness.lagda.md`: `Single` (`abs₀`, `σ₁-up`,
     `π₁-down`). Re-homed likewise; `Transitive` moved to `FOL/ZFStructure`
     2026-07-19.
-  - `FOL/Reification/`, landed with `[L1.3]`, re-cut 2026-07-18 to the
-    representation framework proper (zero consumers today; reads at the tail):
-    - `Base.lagda.md`: representation = formula × adequacy certificate; `RepP`,
-      `RepS`, `translate`, `adequacy`.
-    - `Combinators.lagda.md`: the assembly line, one combinator per constructor,
-      publicly re-exporting Base.
-    - `Certified.lagda.md`: the graded tier: `Certified` (graded representations
-      `RepΔ₀`, graded combinators) and `Transfer.transfer` (adequacy composed
-      with absoluteness).
-- `FOL/ZFModel.lagda.md`: Part 2, what a ZF(C) model is, landed with `[L1.4]`
-  (renamed from `ZF.Model` by owner ruling, then moved into `FOL/` as `ZFModel`
-  2026-07-19; a future `Coding` chapter nests beside it at `[L2.x]`):
-  - `IsSetOf`/`SetOf` (class realization), the description
-    operator `℩`, `_⊆ˢ_`, the `isZFModel` record (extensionality, meta-level
-    `regularity`, unique-existence fields, first-order `hasSeparation`/
-    `hasReplacement`, strong infinity via the `numeral` field pinned by
-    `numeral-zero`/`numeral-suc`), derived operations (`∅ pair ⋃ ∪ ⁺ separate 𝒫 ∩`
-    with `-spec`s), and `isZFCModel` (choice-set form `hasChoice`). The compactness
-    ceiling (why regularity is meta-level) lives here as prose, per the ledger's
-    `Reification.Ceiling` row.
-
-- `V/`: Part 3, the cumulative hierarchy realizes ZF(C), landed with `[L1.5]`
-  (`Definability`/`Coding`/`Satisfaction` deferred to `[L2.x]` by consumption
-  audit; see the ledger):
-  - `V/Hierarchy.lagda.md`: the library HIT `V` introduced; `𝒮ᵥ` assembled as a
-    record literal; `extensionalV` and `regularityV` (the two record fields the
-    HIT gives free).
-  - `V/Smallness.lagda.md`: atomic compressions (`small-∈`,
-    `small-≡`), connective + bounded-quantifier closure, `separateFromSmall`
-    (the one separation pipe), `Δ₀Small.Δ₀-small`, and the flagship
-    `separateΔ₀` (Δ₀ separation is axiom-free).
-  - `V/Model.lagda.md`: stock-set specs, `replaceImage` (free replacement),
-    `numeralV`/`numeralV≡#`/`ω-specV` + the `sucV` case-analysis lemmas,
-    `Power.𝒫V`, `VModel.V⊨ZF-impredicative` (parameterized over
-    `Impredicativity`), `ChoiceLemma.choice`, the classical headline `V⊨ZF`,
-    and `V⊨ZFC` from choice alone (via `Base.Choice`).
-- `L/`: Part 4, the constructible universe, trunk landed with `[L1.6]`/`[L1.7]`:
   - `L/Definability.lagda.md`: the `Def` operator, landed with `[L1.6]` as
     `V.Definability`, re-homed to `L` by owner ruling (the ledger): `DefOf`
     (inner semantics via `InnerSmall`, `smallSat`, `defSet`, `Def`), membership
@@ -123,12 +86,11 @@ entry in the reading catalog**, at the position its first consumer dictates.
     `{ℓ} (lem : ∀ {ℓ'} → LEM ℓ') (F : Frontier {ℓ})`.
 
 Note the **reading order** (the `Everything` import order) is not the namespace
-order: the `FOL.Reification` chapters read after `ZF.Model` (whose separation and
-replacement motivate them), and the zero-consumer trio `FOL.Reification.Combinators`
-+ `FOL.Renaming` + `FOL.Reification.Relativize` reads at the very end, after
-Part 4 (PLAN §5, two-catalog doctrine; re-cuts executed with `[L1.4]` and, by
+order (PLAN §5, two-catalog doctrine; re-cuts executed with `[L1.4]` and, by
 owner ruling 2026-07-18, after the dependency map made the zero-consumer status
-visible).
+visible). The `FOL/Reification/` tree that this note used to route is gone: it
+was retired under `[L3.1]` on 2026-07-29 along with three coding chapters, 529
+lines that no module imported.
 
 ## Reserved namespaces (currently empty, marked with `.gitkeep`)
 
