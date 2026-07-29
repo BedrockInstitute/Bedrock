@@ -2501,3 +2501,51 @@ One row per goal code; update the row in the same commit that changes the status
   itself proving general facts about finite types rather than about the finite stages,
   that is the signal that option (ii) was the cheaper buy after all, and it is worth
   saying so at the time rather than after.
+
+- **`[L2.4]` C0 and C1 landed, 2026-07-29.** `L.Choice.Stage` 155 against 80 to 150,
+  `L.Choice.Finite` **619 against 250 to 450**, plus 17 lines lifted in `L.Axioms.Basic`
+  and 5 elsewhere. `src/` is 12,134. Worst module 8.5 s, whole tree cold 126 s.
+
+  **The lift came out at +17, not the budgeted 30**, because it replaced the buried block
+  rather than duplicating it, and `mkPair`'s statement is unchanged with its body now three
+  lines. All three new pairing lemmas inherit `Lset-suc`'s ordinal-free shape.
+
+  **The finiteness is real and it computes**, which is a stronger check than this route has
+  usually managed: an adversarial probe derived the actual cardinalities of the first six
+  stages by `refl`, 0, 1, 2, 4, 16, 65536, with an explicit enumeration at the fourth, and
+  a deliberate wrong number was rejected. **The well-order is real by a decisive test**:
+  instantiating the search at the naturals under the reversed order, which is trichotomous,
+  irreflexive, transitive and manifestly not well-founded, derives falsity **from the
+  cover**. Under `--safe` that can only elaborate if finiteness is genuinely consumed;
+  were well-foundedness fake the same term would prove the reversed order well-founded and
+  the development would prove falsity outright. The complement was checked too: the
+  well-foundedness lemma exists only inside the finite-cover module.
+
+  **The vocabulary stayed bounded, as the owner's ruling required.** Bought: a covering
+  family with no injectivity and no decidable equality, mask machinery whose lengths are
+  produced by the recursion so nothing is ever counted, and one general fact about finite
+  types, that a covering family plus a strict linear order gives smallest elements. Not
+  bought: any finiteness classifier, decidable equality, cardinality, counting, sorting,
+  list theory, arithmetic on powers of two, or any bijection between finite types.
+
+  **The measurement the owner asked to hear at the time, and it is a decision rather than
+  a defect.** Within option (i), the finiteness half does all the load-bearing work and the
+  **min-difference order is the expensive half**. Once the covering family exists, a
+  well-order of each finite stage is nearly free by another route: the excluded middle
+  makes equality of points decidable, so first-occurrence index is an injection into the
+  naturals and pulling their order back gives all four fields in about 40 lines. That would
+  delete two sections outright, about **150 net lines**. What the 150 buys is
+  **canonicity**: min-difference depends only on the order at the stage below, not on a
+  chosen enumeration. The route as ruled needs the order at a stage to be built from the
+  order below it, so canonicity is what makes the recursion's value independent of how each
+  stage was presented. Recorded rather than acted on, because the ruling said min-difference
+  and because whether the later chapters need canonicity is a question C4 will answer, not
+  this one.
+
+  **A fresh instance of law 2, measured.** Naming a module application in a TYPE re-does it:
+  spelling one lemma with the full application instead of the local alias cost
+  `L.Axioms.Basic` +10.3 s, 8.2 to 18.5. Keeping the alias in the type and packaging the
+  consumer so its goal arrives from the introduction rule, where unification runs in the
+  checking direction, costs zero.
+
+  **Two of eight chapters. The goal is not met and the Frontier still has its field.**

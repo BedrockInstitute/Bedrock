@@ -43,7 +43,9 @@ open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Model {ℓ}
-  using ( empty-spec; pair-spec; union-spec; self∈sucV; ∈sucV-elim )
+  using ( empty-spec; pair-spec; union-spec; self∈sucV; ∈sucV-elim
+        ; pair-singleton )
+open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; Lset-compute
@@ -64,7 +66,8 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; extensionality; _⊆_; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; module InfinitySet )
+  using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; pairing-ax; ⋃_; union-ax
+        ; module InfinitySet )
 open InfinitySet using ( sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -263,10 +266,19 @@ and the induction proving so is the whole content. The construction subsumes
 pairing, which is its two-element case, and it is what puts a recursion's table
 of values at a single stage: a finite table drawn from a stage is a set of `L`
 without any further argument.
+
+The identification of the carved set with the family (`defSet≡`{.Agda}) is stated
+in its own right, and with it the reading a later chapter actually consumes: a
+finite family drawn from a stage spans a **definable subset** of that stage, and
+so a member of the stage above it (`finSet∈𝒟ₒ`{.Agda}). Read from the other side,
+that is the statement that a stage with finitely many members has no subsets
+beyond the definable ones.
 <!--zh-->
 第一个实例是通用的，也是后续诸章用得最多的那个：阶段的任何有穷成员族都是 `L` 的一个集合。公式是「等于这一个」的有穷析取，沿长度递归造出，零处取假；而族的诸成员以常元命名，因为它们是该阶段的成员。
 
 属于刻出的集合与被该族命中，是同一句话，而证明这一点的归纳就是全部内容。这个构造涵盖配对，配对是它的二元情形；它也正是把递归的取值表安置在单一阶段上的东西：取自某阶段的有穷表，无须任何进一步的论证就是 `L` 的集合。
+
+刻出的集合与那个族的认同 (`defSet≡`{.Agda}) 单独陈述，并随之给出后续某章真正消费的那种读法：取自某阶段的有穷族张成该阶段的一个**可定义子集**，从而是它上面那个阶段的成员 (`finSet∈𝒟ₒ`{.Agda})。从另一侧读，这句话说的是：只有有穷多个成员的阶段，除可定义子集之外再无别的子集。
 <!--/-->
 
 ```agda
@@ -282,14 +294,14 @@ finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
 finSet-out n h y = PT.map (λ { (i , q) → lower i , q })
 
 module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
+  module DefC = DefOf (Lset σ)
+
+  finDisj : (n : ℕ) → (Fin n → ⟪ Lset σ ⟫) → Formula ⟪ Lset σ ⟫ 1
+  finDisj zero    g = ⊥̇
+  finDisj (suc n) g =
+    (var zero ≐ con (g zero)) ∨̇ finDisj n (λ i → g (suc i))
+
   private
-    module DefC = DefOf (Lset σ)
-
-    finDisj : (n : ℕ) → (Fin n → ⟪ Lset σ ⟫) → Formula ⟪ Lset σ ⟫ 1
-    finDisj zero    g = ⊥̇
-    finDisj (suc n) g =
-      (var zero ≐ con (g zero)) ∨̇ finDisj n (λ i → g (suc i))
-
     Hits : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫) (y : V ℓ) → Type (ℓ-suc ℓ)
     Hits n g y = ∥ Σ[ i ∈ Fin n ] (⟪ Lset σ ⟫↪ (g i) ≡ y) ∥₁
 
@@ -313,29 +325,33 @@ module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
            ; (suc i , q) →
              ∣ inr (hits→sat n (λ j → g (suc j)) m ∣ i , q ∣₁) ∣₁ })
 
-    defSet≡ : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫)
-            → DefC.defSet (finDisj n g) ≡ finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))
-    defSet≡ n g = extensionality _ _ (sub₁ , sub₂)
-      where
-      F = finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))
-      sub₁ : ⟨ DefC.defSet (finDisj n g) ⊆ F ⟩
-      sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = F} .fst (PT.rec (snd (y ∈ F))
-        (λ { ((m , h) , q) →
-          subst (λ v → ⟨ v ∈ F ⟩) q
-            (finSet-in n (λ i → ⟪ Lset σ ⟫↪ (g i)) (⟪ Lset σ ⟫↪ m)
-              (sat→hits n g m
-                (subst ⟨_⟩ (DefC.defSet-mem (finDisj n g) m)
-                  ∣ (m , h) , refl ∣₁))) })
-        (∈∈ₛ {a = y} {b = DefC.defSet (finDisj n g)} .snd y∈ₛ))
-      sub₂ : ⟨ F ⊆ DefC.defSet (finDisj n g) ⟩
-      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefC.defSet (finDisj n g)))
-        (λ { (i , q) →
-          subst (λ v → ⟨ v ∈ₛ DefC.defSet (finDisj n g) ⟩) q
-            (∈∈ₛ {a = ⟪ Lset σ ⟫↪ (g i)} {b = DefC.defSet (finDisj n g)} .fst
-              (subst ⟨_⟩ (sym (DefC.defSet-mem (finDisj n g) (g i)))
-                (hits→sat n g (g i) ∣ i , refl ∣₁))) })
-        (finSet-out n (λ i → ⟪ Lset σ ⟫↪ (g i)) y
-          (∈∈ₛ {a = y} {b = F} .snd y∈ₛ))
+  defSet≡ : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫)
+          → DefC.defSet (finDisj n g) ≡ finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))
+  defSet≡ n g = extensionality _ _ (sub₁ , sub₂)
+    where
+    F = finSet n (λ i → ⟪ Lset σ ⟫↪ (g i))
+    sub₁ : ⟨ DefC.defSet (finDisj n g) ⊆ F ⟩
+    sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = F} .fst (PT.rec (snd (y ∈ F))
+      (λ { ((m , h) , q) →
+        subst (λ v → ⟨ v ∈ F ⟩) q
+          (finSet-in n (λ i → ⟪ Lset σ ⟫↪ (g i)) (⟪ Lset σ ⟫↪ m)
+            (sat→hits n g m
+              (subst ⟨_⟩ (DefC.defSet-mem (finDisj n g) m)
+                ∣ (m , h) , refl ∣₁))) })
+      (∈∈ₛ {a = y} {b = DefC.defSet (finDisj n g)} .snd y∈ₛ))
+    sub₂ : ⟨ F ⊆ DefC.defSet (finDisj n g) ⟩
+    sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefC.defSet (finDisj n g)))
+      (λ { (i , q) →
+        subst (λ v → ⟨ v ∈ₛ DefC.defSet (finDisj n g) ⟩) q
+          (∈∈ₛ {a = ⟪ Lset σ ⟫↪ (g i)} {b = DefC.defSet (finDisj n g)} .fst
+            (subst ⟨_⟩ (sym (DefC.defSet-mem (finDisj n g) (g i)))
+              (hits→sat n g (g i) ∣ i , refl ∣₁))) })
+      (finSet-out n (λ i → ⟪ Lset σ ⟫↪ (g i)) y
+        (∈∈ₛ {a = y} {b = F} .snd y∈ₛ))
+
+  finSet∈𝒟ₒ : (n : ℕ) (g : Fin n → ⟪ Lset σ ⟫)
+            → ⟨ finSet n (λ i → ⟪ Lset σ ⟫↪ (g i)) ∈ 𝒟ₒ (Lset σ) ⟩
+  finSet∈𝒟ₒ n g = 𝒟ₒ-intro (Lset σ) _ ∣ finDisj n g , defSet≡ n g ∣₁
 
   finSetL : (n : ℕ) (h : Fin n → V ℓ) → ((i : Fin n) → ⟨ h i ∈ Lset σ ⟩)
           → ⟨ isL (finSet n h) ⟩
@@ -496,21 +512,105 @@ hasEmptyL = uniqueL _ (∅ʟ , (λ x → empty-spec (fst x)))
 ```
 
 <!--en-->
+## Pairing, bounded by a stage
+<!--zh-->
+## 受阶段界住的配对
+<!--/-->
+
+<!--en-->
+The unordered pair of two members of a stage is a definable subset of that
+stage: each of them is `⟪ Lset σ ⟫↪` of some index, and the formula naming those
+two indices carves out exactly the pair. Checking that takes one extensionality
+against the hierarchy's own pairing axiom, in both directions: a member of the
+definable subset satisfies the disjunction, hence is one of the two; and each of
+the two satisfies it, hence is a member.
+
+Nothing in the argument concerns the model. What it says is a fact about the
+tower, and it is stated as one, because the constructions that need it most are
+not the pairing axiom: an ordered pair in Kuratowski's encoding is two unordered
+pairs deep, so a graph, a table or a sequence written with ordered pairs lands
+two stages above its entries, and that is the only reason such a thing can be
+placed at a stage at all.
+
+Ordinality is not asked for, exactly as the successor identity does not ask for
+it, and for the same reason: carving is not comparison. The singleton is the
+degenerate pair, and the ordered pair is the pair of a singleton with a pair.
+<!--zh-->
+一个阶段的两个成员，其无序对是该阶段的可定义子集：二者各是某个索引的 `⟪ Lset σ ⟫↪`，而点名那两个索引的公式恰好刻出这个对。验证它要对着层级自己的配对公理做一次双向外延：可定义子集的成员满足那个析取，故是二者之一；而二者各自满足它，故是成员。
+
+论证里没有一处关乎模型。它说的是一件关于塔的事实，因而就照这样陈述，因为最需要它的构造并不是配对公理：Kuratowski 编码下的有序对深达两层无序对，故以有序对写成的图、表或序列，落在其条目之上两个阶段处，而这也是这类东西根本得以安置在某个阶段上的唯一理由。
+
+此处不索取序数性，正如后继恒等式也不索取，理由相同：雕刻不是比较。单点集是退化的对，而有序对是单点集与对所成的对。
+<!--/-->
+
+```agda
+pair∈𝒟ₒ : (σ x y : V ℓ) → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset σ ⟩
+        → ⟨ ⁅ x , y ⁆ ∈ 𝒟ₒ (Lset σ) ⟩
+pair∈𝒟ₒ σ x y x∈ y∈ = 𝒟ₒ-intro (Lset σ) ⁅ x , y ⁆ ∣ φ , defSet≡ ∣₁
+  where
+  module DefC = DefOf (Lset σ)
+  mₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+  qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x
+  qₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
+  mᵧ = ∈-asFiber {a = y} {b = Lset σ} y∈ .fst
+  qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ y
+  qᵧ = ∈-asFiber {a = y} {b = Lset σ} y∈ .snd
+
+  φ : Formula ⟪ Lset σ ⟫ 1
+  φ = (var zero ≐ con mₓ) ∨̇ (var zero ≐ con mᵧ)
+
+  defSet≡ : DefC.defSet φ ≡ ⁅ x , y ⁆
+  defSet≡ =
+      extensionality (DefC.defSet φ) ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆
+        (sub₁ , sub₂)
+    ∙ cong₂ ⁅_,_⁆ qₓ qᵧ
+    where
+    sub₁ : ⟨ DefC.defSet φ ⊆ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩
+    sub₁ w w∈ₛ = PT.rec (snd (w ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆))
+      (λ { ((m , h) , q) →
+        subst (λ v → ⟨ v ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩) q
+          (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) (⟪ Lset σ ⟫↪ m) .snd
+            (subst ⟨_⟩ (DefC.defSet-mem φ m) ∣ (m , h) , refl ∣₁)) })
+      (∈∈ₛ {a = w} {b = DefC.defSet φ} .snd w∈ₛ)
+    sub₂ : ⟨ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⊆ DefC.defSet φ ⟩
+    sub₂ w w∈ₛ = PT.rec (snd (w ∈ₛ DefC.defSet φ))
+      (λ { (inl p) → memOf mₓ ∣ inl refl ∣₁ p
+         ; (inr p) → memOf mᵧ ∣ inr refl ∣₁ p })
+      (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) w .fst w∈ₛ)
+      where
+      memOf : (mᵢ : ⟪ Lset σ ⟫) → ⟨ (DefC.ι mᵢ ∷ []) DefC.⊨ᵐ φ ⟩
+            → w ≡ ⟪ Lset σ ⟫↪ mᵢ → ⟨ w ∈ₛ DefC.defSet φ ⟩
+      memOf mᵢ sat p = subst (λ v → ⟨ v ∈ₛ DefC.defSet φ ⟩) (sym p)
+        (∈∈ₛ {a = ⟪ Lset σ ⟫↪ mᵢ} {b = DefC.defSet φ} .fst
+          (subst ⟨_⟩ (sym (DefC.defSet-mem φ mᵢ)) sat))
+
+pair∈Lset-suc : (σ x y : V ℓ) → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset σ ⟩
+              → ⟨ ⁅ x , y ⁆ ∈ Lset (sucV σ) ⟩
+pair∈Lset-suc σ x y x∈ y∈ =
+  subst (λ w → ⟨ ⁅ x , y ⁆ ∈ w ⟩) (sym (Lset-suc σ)) (pair∈𝒟ₒ σ x y x∈ y∈)
+
+sgl∈Lset-suc : (σ x : V ℓ) → ⟨ x ∈ Lset σ ⟩ → ⟨ ⁅ x ⁆s ∈ Lset (sucV σ) ⟩
+sgl∈Lset-suc σ x x∈ = subst (λ w → ⟨ w ∈ Lset (sucV σ) ⟩) (pair-singleton x)
+  (pair∈Lset-suc σ x x x∈ x∈)
+
+pr∈Lset-suc : (σ x y : V ℓ) → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset σ ⟩
+            → ⟨ pr x y ∈ Lset (sucV (sucV σ)) ⟩
+pr∈Lset-suc σ x y x∈ y∈ = pair∈Lset-suc (sucV σ) ⁅ x ⁆s ⁅ x , y ⁆
+  (sgl∈Lset-suc σ x x∈) (pair∈Lset-suc σ x y x∈ y∈)
+```
+
+<!--en-->
 ## Pairing
 <!--zh-->
 ## 配对
 <!--/-->
 
 <!--en-->
-Given a common stage for the two arguments, each of them is `⟪ Lset σ ⟫↪` of
-some index, and the formula naming those two indices carves out exactly the
-pair. Checking that takes one extensionality against the hierarchy's own pairing
-axiom, in both directions: a member of the definable subset satisfies the
-disjunction, hence is one of the two; and each of the two satisfies it, hence is
-a member. The specification is the hierarchy's, transported along the underlying
-sets.
+The axiom is then the lemma above at a common stage for the two arguments, with
+the closure engine putting the result in `L` and the specification inherited
+from the hierarchy along the underlying sets.
 <!--zh-->
-给定两个实参的公共阶段，二者各是某个索引的 `⟪ Lset σ ⟫↪`，而点名那两个索引的公式恰好刻出这个对。验证它要对着层级自己的配对公理做一次双向外延：可定义子集的成员满足那个析取，故是二者之一；而二者各自满足它，故是成员。规格取层级的，沿底层集合搬运。
+于是这条公理就是上面那条引理落在两个实参的公共阶段上，由收尾引擎把结果放进 `L`，规格则沿底层集合从层级继承。
 <!--/-->
 
 ```agda
@@ -522,47 +622,9 @@ module PairOf (a b : S) where
          → SetOf Q
   mkPair σ oσ fa∈ fb∈ = pairElt , (λ z → pair-spec (fst a) (fst b) (fst z))
     where
-    module DefC = DefOf (Lset σ)
-    mₓ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .fst
-    qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ fst a
-    qₓ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .snd
-    mᵧ = ∈-asFiber {a = fst b} {b = Lset σ} fb∈ .fst
-    qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ fst b
-    qᵧ = ∈-asFiber {a = fst b} {b = Lset σ} fb∈ .snd
-
-    φ : Formula ⟪ Lset σ ⟫ 1
-    φ = (var zero ≐ con mₓ) ∨̇ (var zero ≐ con mᵧ)
-
-    defSet≡ : DefC.defSet φ ≡ ⁅ fst a , fst b ⁆
-    defSet≡ =
-        extensionality (DefC.defSet φ) ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆
-          (sub₁ , sub₂)
-      ∙ cong₂ ⁅_,_⁆ qₓ qᵧ
-      where
-      sub₁ : ⟨ DefC.defSet φ ⊆ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩
-      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆))
-        (λ { ((m , h) , q) →
-          subst (λ v → ⟨ v ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩) q
-            (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) (⟪ Lset σ ⟫↪ m) .snd
-              (subst ⟨_⟩ (DefC.defSet-mem φ m) ∣ (m , h) , refl ∣₁)) })
-        (∈∈ₛ {a = y} {b = DefC.defSet φ} .snd y∈ₛ)
-      sub₂ : ⟨ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⊆ DefC.defSet φ ⟩
-      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefC.defSet φ))
-        (λ { (inl p) → memOf mₓ ∣ inl refl ∣₁ p
-           ; (inr p) → memOf mᵧ ∣ inr refl ∣₁ p })
-        (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) y .fst y∈ₛ)
-        where
-        memOf : (mᵢ : ⟪ Lset σ ⟫) → ⟨ (DefC.ι mᵢ ∷ []) DefC.⊨ᵐ φ ⟩
-              → y ≡ ⟪ Lset σ ⟫↪ mᵢ → ⟨ y ∈ₛ DefC.defSet φ ⟩
-        memOf mᵢ sat p = subst (λ v → ⟨ v ∈ₛ DefC.defSet φ ⟩) (sym p)
-          (∈∈ₛ {a = ⟪ Lset σ ⟫↪ mᵢ} {b = DefC.defSet φ} .fst
-            (subst ⟨_⟩ (sym (DefC.defSet-mem φ mᵢ)) sat))
-
-    pair∈𝒟ₒ : ⟨ ⁅ fst a , fst b ⁆ ∈ 𝒟ₒ (Lset σ) ⟩
-    pair∈𝒟ₒ = 𝒟ₒ-intro (Lset σ) ⁅ fst a , fst b ⁆ ∣ φ , defSet≡ ∣₁
-
     pairElt : S
-    pairElt = ⁅ fst a , fst b ⁆ , 𝒟ₒ→isL σ oσ ⁅ fst a , fst b ⁆ pair∈𝒟ₒ
+    pairElt = ⁅ fst a , fst b ⁆
+            , 𝒟ₒ→isL σ oσ ⁅ fst a , fst b ⁆ (pair∈𝒟ₒ σ (fst a) (fst b) fa∈ fb∈)
 
   build : ∥ SetOf Q ∥₁
   build = PT.rec squash₁
@@ -684,7 +746,12 @@ pairing and union were each carved out of a single stage by a single formula,
 with the bounding ordinal supplying that stage where two arguments had to meet.
 The frontier is three debts lighter, and the pattern established here, one
 stage, one formula, one extensionality, is the pattern the remaining
-constructions follow.
+constructions follow. Pairing's carving is also stated on its own, as a fact
+about the tower rather than about the model: `pair∈Lset-suc`{.Agda} puts the
+unordered pair of two members of a stage in the next stage,
+`sgl∈Lset-suc`{.Agda} the singleton, and `pr∈Lset-suc`{.Agda} the ordered pair
+two stages up, which is what places anything written with ordered pairs at a
+stage at all.
 <!--zh-->
-五个模型字段，无一靠假设。外延与正则沿传递性从层级下降，而有了外延性，日后每个字段只需一个见证，唯一性随之而来。空集、配对与并各由单一公式从单一阶段中刻出，两个实参须会合之处，则由界层序数供应那个阶段。前沿轻了三笔债，而此处立下的套路，一个阶段、一条公式、一次外延，正是余下诸构造所遵循的套路。
+五个模型字段，无一靠假设。外延与正则沿传递性从层级下降，而有了外延性，日后每个字段只需一个见证，唯一性随之而来。空集、配对与并各由单一公式从单一阶段中刻出，两个实参须会合之处，则由界层序数供应那个阶段。前沿轻了三笔债，而此处立下的套路，一个阶段、一条公式、一次外延，正是余下诸构造所遵循的套路。配对那次雕刻也单独陈述一遍，作为关于塔而非关于模型的事实：`pair∈Lset-suc`{.Agda} 把一个阶段的两个成员的无序对放进下一个阶段，`sgl∈Lset-suc`{.Agda} 放单点集，而 `pr∈Lset-suc`{.Agda} 把有序对放到高两个阶段处，而这也正是以有序对写成的任何东西根本得以安置在某个阶段上的原因。
 <!--/-->

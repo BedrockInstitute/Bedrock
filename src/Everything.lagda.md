@@ -232,6 +232,10 @@ import V.Model
   from a stage, which is how a recursion's table of values reaches `L`.
   `Lset-suc`{.Agda} identifies the successor stage with the definable powerset
   of its predecessor, which is what puts that powerset in `L` as `𝒟ₒS`{.Agda}.
+  Pairing's carving is stated on its own as a fact about the tower:
+  `pair∈Lset-suc`{.Agda} puts the unordered pair of two members of a stage in
+  the next stage, and `pr∈Lset-suc`{.Agda} the ordered pair two stages up, which
+  is what places anything written with ordered pairs at a stage at all.
 - `L.Axioms.Separation`{.Agda}: separation and replacement for Δ₀ formulas, at a
   stage holding the argument and the formula's constants; the content is that
   membership in the carved set is satisfaction in the model.
@@ -269,7 +273,7 @@ import V.Model
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
-- `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。`finSetL`{.Agda} 把配对的论证推广到取自某阶段的任意有穷族，递归的取值表正是这样抵达 `L` 的。`Lset-suc`{.Agda} 把后继阶段与前一阶段的可定义幂集认同，正是这一点把那个幂集作为 `𝒟ₒS`{.Agda} 放进 `L`。
+- `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。`finSetL`{.Agda} 把配对的论证推广到取自某阶段的任意有穷族，递归的取值表正是这样抵达 `L` 的。`Lset-suc`{.Agda} 把后继阶段与前一阶段的可定义幂集认同，正是这一点把那个幂集作为 `𝒟ₒS`{.Agda} 放进 `L`。配对那次雕刻也单独陈述为关于塔的事实：`pair∈Lset-suc`{.Agda} 把一个阶段的两个成员的无序对放进下一个阶段，`pr∈Lset-suc`{.Agda} 把有序对放到高两个阶段处，而这也正是以有序对写成的任何东西根本得以安置在某个阶段上的原因。
 - `L.Axioms.Separation`{.Agda}：Δ₀ 公式的分离与替换，在装下实参与公式全部常元的阶段上；其内容是「属于刻出的集合就是在模型中满足」。
 - `L.Reflect`{.Agda}：Montague 的论证，在一个集合之内回答真类大小的存在量词。**梯**是上升的序数链；若每一级的环境其作答阶段都落在下一级上，则它的极限为自己包含的每个参数元组反射那个存在量词。`Single`{.Agda} 是单矩阵的梯。取最小阶段而非最小见证，正是把 L 的良序挡在门外的那一手。
 - `L.ReflectFo`{.Agda}：整条公式的同一件事，经结构归纳。联合造出的梯一举为公式的每个矩阵作答，而 `mkReflect`{.Agda} 随即点名一个阶段，公式在其上与它到该阶段的相对化一致：以 Δ₀ 加一个阶段，换下任意的复杂度。
@@ -322,6 +326,8 @@ import L.Coding.Sequence
 import L.Hierarchy
 import L.Axioms.Numerals
 import L.Axioms.Infinity
+import L.Choice.Stage
+import L.Choice.Finite
 ```
 
 <!--en-->
@@ -596,6 +602,36 @@ The root, stated today and finished over the remaining parts:
   adequacy. `witnessInModel`{.Agda} records the one rule a graph must obey: an
   object-language existential ranges over `L`, so a graph may not describe an
   object by asserting that object's existence.
+- `L.Choice.Stage`{.Agda}: where a set of `L` first has a member, which is what
+  replaces a well-ordering of `L`. `μ`{.Agda} is the earliest stage meeting it,
+  one instance of the least-ordinal operator and sealed like `stage`{.Agda};
+  `meet-suc`{.Agda} makes that stage a **successor**, because a set enters the
+  tower only by being carved out of the stage below, and `defStage`{.Agda} is
+  the stage it succeeds, a function because a successor determines what it
+  succeeds among ordinals (`ord-suc-inj`{.Agda}). `Lset-μ`{.Agda} identifies the
+  stage of first appearance with the definable powerset over the definition
+  stage, so a first member carries a name written over **one fixed stage**, and
+  that is what the choosing device compares. `stageBound`{.Agda} is the ordinal
+  the bookkeeping runs in: above a set's own stage, hence above its members and
+  theirs by transitivity, and above `ω`{.Agda}, where the names themselves live.
+  No relation on `L` is stated here and no recursion is run.
+- `L.Choice.Finite`{.Agda}: the finite stages are finite, and each carries a
+  well-order. `Tally`{.Agda} is the whole finiteness vocabulary, a finite family
+  hitting every member, with neither injectivity nor decidable equality asked
+  for; `powerTally`{.Agda} raises one to the definable powerset by enumerating
+  the bit vectors over it, since every subset of a tallied stage is definable
+  (`finSet∈𝒟ₒ`{.Agda}), and `stageOrder`{.Agda} runs that step along the
+  numerals. `precedes`{.Agda} compares two subsets at the **earliest point where
+  they disagree**: irreflexive for free, transitive by comparing two witnesses,
+  trichotomous by the excluded middle with the base's smallest elements. Its
+  well-foundedness is no property of the comparison at all, and would fail over
+  an infinite base; it is bought from the tally through `Search`{.Agda}, where a
+  scan of a finite family returns a smallest element of any inhabited property
+  and the classical step turns that into accessibility. `limitOrder`{.Agda}
+  assembles `Lset ω`{.Agda} with the **level as the primary key**, because the
+  earliest-disagreement orders do not extend one another and with the level in
+  front they do not have to; it is the first exercise of
+  `L.WellOrder.Base`{.Agda}, twice over, since the levels are ordered there too.
 - `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
   one, the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
@@ -630,6 +666,8 @@ The root, stated today and finished over the remaining parts:
 - `L.Hierarchy`{.Agda}：上一章那个图，被对着本书真正造出的那座塔证明，以及用来证明它的那个**内部层级**。**表**是有序对之集；它在某个集合上正确，指它在该集合以下所记录的每个取值都是元层面的塔在那里的取值；它完备，指它在以下的每个实参处都记录了一个。`step-Lset`{.Agda} 从一张正确的表上读出一个被满足的步进、把塔取回来，`step-table`{.Agda} 则由它写出那一步，而上一章那个旁条件在两者之内一并解除，因为被记录的取值是塔在某个序数处的值，而阶段的可定义幂集可构造。`approx-val`{.Agda} 是在实参上的一次沿成员的归纳，其动机对**一切**被记录的取值作量化，故单值性从不作为假设，而 `approx-uniq`{.Agda} 三行落地。`Lset-only`{.Agda} 与 `Lset-defines`{.Agda} 是那个图的两个方向，而 `hierL`{.Agda} 是后者据以造出的东西：由「序数与塔在它那里的取值」所成之对的集合，经在一个**成对的图**上作替换而收拢，每个索引的序数性取自 `mem-ord`{.Agda} 且不加截断，函数性经 `mereFunct`{.Agda} 偿付。它的规格是一条**隶属等价**，这使它唯一、也使归纳的动机是命题，而它在被造出之处封印。两次测量，都关乎一个名字：成对的那个图以变元身份进场、随身带着它自己的等式，而不是以那个闭句子的身份进场，价值 85 秒；以及 `mem-ord`{.Agda} 的那个集合实参必须在每次使用时显式给出，因为 `IsOrd`{.Agda} 展开成一条带量词的隶属关系、什么也确定不了。本章正是 `L` 的内部定义的材料，而内部良序就从它上面读出。
 - `L.Axioms.Power`{.Agda}：幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。**未用凝聚，也不需要**：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
 - `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。`witnessInModel`{.Agda} 记下图必须遵守的那一条规矩：对象语言的存在量词在 `L` 上取值，故一个图不可以靠断言被描述者本身存在来描述它。
+- `L.Choice.Stage`{.Agda}：`L` 的一个集合最先在何处拥有成员，而这正是取代 `L` 的良序的东西。`μ`{.Agda} 是与它相交的最早阶段，是最小序数算子的一个实例，按 `stage`{.Agda} 那样封印；`meet-suc`{.Agda} 使那个阶段成为**后继**，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出，而 `defStage`{.Agda} 是它所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})。`Lset-μ`{.Agda} 把首次现身的那个阶段与定义阶段之上的可定义幂集认同，于是一个最先成员带着一个写在**单一固定阶段**之上的名字，而那正是选取装置所比较的东西。`stageBound`{.Agda} 是记账所在的序数：在一个集合自身的阶段之上，从而经传递性在它的成员及其成员之上，也在 `ω`{.Agda} 之上，而诸名字自身正住在那里。此处不陈述 `L` 上的任何关系，也不跑任何递归。
+- `L.Choice.Finite`{.Agda}：有穷诸阶段确是有穷的，且各自带有一个良序。`Tally`{.Agda} 就是全部的有穷性词汇，即一个命中每个成员的有穷族，既不要求单射，也不要求可判定的相等；`powerTally`{.Agda} 靠枚举其上的位向量把它抬到可定义幂集上，因为已清点阶段的每个子集都可定义 (`finSet∈𝒟ₒ`{.Agda})，而 `stageOrder`{.Agda} 沿诸数码跑完这一步。`precedes`{.Agda} 在两个子集**最先分歧之处**比较它们：非自反性白得，传递性由比较两个见证得到，三歧由排中律连同基底的最小元得到。它的良基性压根不是这个比较自身的性质，且在无穷基底上会失效；它是经 `Search`{.Agda} 从点名册买来的，即扫过一个有穷族即得任一非空性质的最小元，再由那一步经典推理把它变成可及性。`limitOrder`{.Agda} 以**层号为主键**装配 `Lset ω`{.Agda}，因为按最先分歧处的诸序并不互相延拓，而把层号放在前面就不必延拓；这也是 `L.WellOrder.Base`{.Agda} 头一回被使唤，且一使唤就是两次，因为层号也在那里被排序。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->

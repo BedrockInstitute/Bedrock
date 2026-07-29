@@ -282,7 +282,9 @@ Monotonicity is then a corollary, not a construction: a lower stage sits inside
 `𝒟ₒ` of itself by the previous chapter's refinement bound applied to a transitive
 set, and going in carries it up. Stating the characterization rather than the
 corollary costs nothing here and saves the later chapters from re-deriving the
-union structure each time they need to walk down it.
+union structure each time they need to walk down it. The seal opens once more,
+for the inclusion the other way: what the operator produces are subsets of what
+it was given, so a member of `𝒟ₒ A` never has a member outside `A`.
 <!--zh-->
 关于塔还有两个事实，承载着后续诸章的每一个闭包论证，而只要在对的地方开封，二者都很廉价。
 
@@ -290,7 +292,7 @@ union structure each time they need to walk down it.
 
 第二条把塔展开一次，再把那个并两头都读一遍。一个阶段是沿其索引的成员、对更早诸阶段的 `𝒟ₒ` 取的并；故属于一个阶段，恰是属于某个更早阶段的 `𝒟ₒ`，而这条等价按其两个方向给出，因为消费方正是这样用它的。进去是成为该并的成员，由其索引点名；出来是并公理，随后为纤维命名。
 
-单调性于是是推论，而非构造：低阶段经上一章的精化界线施于传递集而落在自身的 `𝒟ₒ` 里面，再由「进去」抬上去。陈述这条刻画而非那条推论，此处不费分文，却省去后续诸章每次要沿并向下走时重新推导一遍并的结构。
+单调性于是是推论，而非构造：低阶段经上一章的精化界线施于传递集而落在自身的 `𝒟ₒ` 里面，再由「进去」抬上去。陈述这条刻画而非那条推论，此处不费分文，却省去后续诸章每次要沿并向下走时重新推导一遍并的结构。封印再开一次，为的是反向的那条包含：算子产出的都是它所收下者的子集，故 `𝒟ₒ A` 的成员绝不会有 `A` 之外的成员。
 <!--/-->
 
 ```agda
@@ -307,6 +309,9 @@ opaque
 
   Lset⊆𝒟ₒ : (β x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩
   Lset⊆𝒟ₒ β x = DefOf.Refine.A⊆Def (Lset β) (layer-trans (Lset-layer β)) x
+
+  𝒟ₒ∋⊆ : (A x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩ → (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ A ⟩
+  𝒟ₒ∋⊆ A = DefOf.Def∋⊆A A
 
 stageFam : (α : S) → ⟪ α ⟫ → S
 stageFam α m = 𝒟ₒ (Lset (⟪ α ⟫↪ m))
