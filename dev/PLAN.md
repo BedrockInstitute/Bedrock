@@ -2485,3 +2485,19 @@ One row per goal code; update the row in the same commit that changes the status
   blowup, 300 lines cheaper with no `Sound`-plus-`Unique` shape. The two costs are within
   one measurement of each other and the choice buys the repository a new vocabulary axis
   against a new recursion layer, which is why it is stated here rather than decided.
+
+- **The owner ruled the `[L2.4]` fork on 2026-07-29: option (i), the finite base by
+  finiteness.** Prove the finite stages finite and well-order them by min-difference,
+  which is a well-order exactly because the base is finite. No second internalized
+  recursion; the internal step gains one branch guarded by membership in the limit stage.
+
+  **What this obliges, and it is the thing to watch rather than assert**: the route buys a
+  finiteness vocabulary the repository has none of. Every one of `isFinSet`, `Discrete`
+  and `Dec` is absent from `src/` today, and `finSet`/`FinOf` construct finite sets
+  without classifying them. So the chapter's first job is to decide how much of that
+  vocabulary to introduce, and the discipline that applies is the one that decided
+  `[L3.18]` and this fork: take the least that discharges the obligation, and do not
+  import a general theory to serve a bounded and concrete need. If the chapter finds
+  itself proving general facts about finite types rather than about the finite stages,
+  that is the signal that option (ii) was the cheaper buy after all, and it is worth
+  saying so at the time rather than after.
