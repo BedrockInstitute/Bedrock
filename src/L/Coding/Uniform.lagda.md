@@ -161,28 +161,38 @@ The map into the model is not built here either. It is the bridge chapter's own
 `asConst`{.Agda}, the alphabet's embedding followed by the class inclusion, and
 taking that one rather than an equal one is what lets the last section quote the
 adequacy without a translation step.
+
+The bridge takes the alphabet and nothing else. The set the environments range
+over never appears in it, so it is stated one parameter short of the recursion
+below, and a later chapter that needs the two codings to agree at a carrier held
+in a slot can use it without supplying a second carrier it does not have.
 <!--zh-->
 层级编码里的一个键，是元数数码与「沿字母表的嵌入重标之后那条公式的码」之对；模型编码里的一个键，是 `L` 的数码与「在 `L` 里取的码」之对。`codeBridge`{.Agda} 把这两个码等同起来，一构造子一子句。它写在模型那一章，此后一直没有消费方，因为它当初就是为这条陈述而写的。
 
 它供不出的是那次重标。集合那边的公式在字母表 `⟪ A ⟫`{.Agda} 之上，递归这边的公式在 `L` 之上，故两侧经过的是两个不同的映射，而它们的复合必须被认出为一个映射。那是重标的函子性，它归属于重标被定义之处，而如今就在那里；于是整座桥是四次改写，没有归纳。
 
 通往模型的那个映射也不在此处造。它就是桥那一章自己的 `asConst`{.Agda}，即字母表的嵌入接上类包含；而取它、而非取一个与它相等的映射，正是使最后一节能够径直引用那条适足性、无须任何翻译步骤的原因。
+
+这座桥只取字母表，别无其他。诸环境所落之上的那个集合在它里面从未出现，故它比下面那场递归少一个参数；而后面某一章若需要两套编码在「握在一位上的载体」处相符，便可以直接用它，无须供上一个它并不拥有的第二载体。
 <!--/-->
 
 ```agda
+module _ (A : S) where
+  keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
+            → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
+  keyBridge {n} ψ =
+      cong (pr (# n))
+        ( cong (λ χ → VCode.⌜ χ ⌝) (sym (mapFo-comp (asConst A) fst ψ))
+        ∙ sym (codeBridge (mapFo (asConst A) ψ)) )
+    ∙ cong (λ w → pr w (fst LCode.⌜ mapFo (asConst A) ψ ⌝))
+        (sym (numeralL-fst n))
+    ∙ sym (prʟ-fst (numeralL n) LCode.⌜ mapFo (asConst A) ψ ⌝)
+
 module _ (A B : S) where
   private
     toS : ∀ {n} → Formula ⟪ fst A ⟫ n → Formula S n
     toS = mapFo (asConst A)
 
-    keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
-              → fst (keyS A ψ) ≡ fst (keyʟ (toS ψ))
-    keyBridge {n} ψ =
-        cong (pr (# n))
-          ( cong (λ χ → VCode.⌜ χ ⌝) (sym (mapFo-comp (asConst A) fst ψ))
-          ∙ sym (codeBridge (toS ψ)) )
-      ∙ cong (λ w → pr w (fst LCode.⌜ toS ψ ⌝)) (sym (numeralL-fst n))
-      ∙ sym (prʟ-fst (numeralL n) LCode.⌜ toS ψ ⌝)
 ```
 
 <!--en-->
@@ -282,8 +292,8 @@ meaning.
   Recursion.funct satRec x x∈ = mereFunct (satGraph B) x
     (PT.map
       (λ { (n , ψ , q) → Sat B (toS ψ)
-         , ( exists (toS ψ) x (q ∙ keyBridge ψ)
-           , unique (toS ψ) x (q ∙ keyBridge ψ) ) })
+         , ( exists (toS ψ) x (q ∙ keyBridge A ψ)
+           , unique (toS ψ) x (q ∙ keyBridge A ψ) ) })
       (AllCodes-out A x x∈))
 
   module Table = Of satRec
@@ -334,7 +344,7 @@ what the type mentions there does not unfold.
          → fst x ≡ fst (keyS A ψ)
          → Table.val x x∈ ≡ Sat B (toS ψ)
   val-at ψ x x∈ q =
-    Table.val-uniq x x∈ (Sat B (toS ψ)) (exists (toS ψ) x (q ∙ keyBridge ψ))
+    Table.val-uniq x x∈ (Sat B (toS ψ)) (exists (toS ψ) x (q ∙ keyBridge A ψ))
 
   val-key : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
           → Table.val (keyIn A ψ) (keyIn∈ A ψ) ≡ Sat B (toS ψ)
