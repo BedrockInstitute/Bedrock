@@ -221,15 +221,6 @@ import V.Model
   `lookup-spec`{.Agda}; `memPairAt`{.Agda} reads a value, `sucAt`{.Agda}
   recognizes the index shift under a quantifier, and `seqSet`{.Agda} collects
   all finite sequences over a set.
-- `L.Coding.Tagged`{.Agda}: codes carrying their arity, so a clause for a
-  quantifier can speak about its subformula's arity; `tagPairAt`{.Agda} matches
-  the shape every binary constructor's code has.
-- `L.Coding.Length`{.Agda}: the guard tying a certificate's arity component to
-  the length of its environment; `lenAt-len`{.Agda} pins the number that would
-  otherwise be free, which is what keeps junk out of the certificates.
-- `L.Coding.Entry`{.Agda}: the single form `tripleInT`{.Agda} for "this arity,
-  code and environment are recorded in this certificate", which every clause
-  reads and writes its entries through.
 - `L.Stage`{.Agda}: the least ordinal satisfying any property of ordinals, by
   well-founded descent and unique by trichotomy; the earliest stage containing a
   constructible set is its first instance, sealed so the descent never reaches a
@@ -277,9 +268,6 @@ import V.Model
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是；本章目前无人 import。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
-- `L.Coding.Tagged`{.Agda}：携带元数的码，使量词的子句能谈论其子公式的元数；`tagPairAt`{.Agda} 匹配每个二元构造子的码所具有的形状。
-- `L.Coding.Length`{.Agda}：把证书的元数分量与其环境长度系住的守卫；`lenAt-len`{.Agda} 钉死那个本来自由的数，正是它把垃圾挡在诸证书之外。
-- `L.Coding.Entry`{.Agda}：「这个元数、码与环境记录在这份证书里」的唯一形式 `tripleInT`{.Agda}，诸子句都经它读写自己的条目。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
 - `L.Axioms.Basic`{.Agda}：头五个模型字段。外延与正则沿传递性下降；唯一性随即白拿；空集、配对与并则各由一条公式从一个阶段中刻出。`finSetL`{.Agda} 把配对的论证推广到取自某阶段的任意有穷族，递归的取值表正是这样抵达 `L` 的。`Lset-suc`{.Agda} 把后继阶段与前一阶段的可定义幂集认同，正是这一点把那个幂集作为 `𝒟ₒS`{.Agda} 放进 `L`。
 - `L.Axioms.Separation`{.Agda}：Δ₀ 公式的分离与替换，在装下实参与公式全部常元的阶段上；其内容是「属于刻出的集合就是在模型中满足」。
@@ -303,9 +291,6 @@ import L.Ordinal.Stages
 import L.WellOrder.Base
 import L.Coding.Base
 import L.Coding.Environment
-import L.Coding.Tagged
-import L.Coding.Length
-import L.Coding.Entry
 import L.Stage
 import L.Axioms.Basic
 import L.Axioms.Separation
@@ -318,7 +303,6 @@ import L.Coding.Model
 import L.Coding.InL
 import L.Coding.Closed
 import L.Recursion
-import L.Coding.Recursion
 import L.Coding.EnvSet
 import L.Coding.Sat
 import L.Coding.Bridge
@@ -599,12 +583,6 @@ The root, stated today and finished over the remaining parts:
   `IsOrd`{.Agda} unfolds to a quantified membership and determines nothing. This
   chapter is what an internal definition of `L` is made of, and the internal
   well-order is read off it.
-- `L.Coding.Recursion`{.Agda}: the first instance of the internalization theorem.
-  Its graph says "the least closed set containing this key", because an object
-  language with no table to hold subvalues cannot say "built from the values at
-  the subcodes"; least makes the value unique by antisymmetry, so uniqueness
-  costs one extensionality and no induction, and `funct`{.Agda} is filled through
-  `mereFunct`{.Agda}.
 - `L.Axioms.Power`{.Agda}: the power-set field, by bounding the constructible
   subsets and carving one stage. **Condensation is not used and is not needed**:
   the axiom asks that the constructible subsets form a set, not that they appear
@@ -650,7 +628,6 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Powerset`{.Agda}：可定义幂集在对象语言中、落在一个作为**槽位**的载体上的描述，也是整条路线为之存在的那一步。内部层级把自己的阶段绑定起来，故一条点名了自己载体的描述在那里压根说不出口；`DefAt`{.Agda} 什么也不点名。它说的是：`u` 恰是那些 `x` 之集，对它们仅仅存在载体之上的一个码 `c` 与一个取值 `v`，使得 `v` 就是满足关系那场递归在 `c` 处所记录的东西，而 `x` 是「其单条目环境落在 `v` 中」的那些载体成员之集。两个存在量词**相邻**，而这是一次探针逼出的更正：若被一个合取项隔开，码那条假设与满足关系那条假设就落到不同的环境上，于是这条路线会平白背上一条它本来永远用不着的弱化引理。`DefinesAt`{.Agda} 是单拿出来的第三个合取项，`envOneAt`{.Agda} 是单条目环境，只有一行，因为长度为一的图只是一个对。`DefAt-in`{.Agda} 说这个算子满足那条描述，`DefAt-out`{.Agda} 说别的东西都不满足，后者在 `DefOK`{.Agda} 之下：描述里的每个存在量词都在 `L` 上取值，只够得着住在其中的东西，故这条描述恰在「载体的诸可定义子集皆可构造」之处适足。那个旁条件只是消去那一半的假设，因为引入自己的假设已蕴含它；而在一个阶段处，它由后继恒等式一劳永逸地解除，剩下 `DefAt-stage`{.Agda}：一条真值之间的等式，说这条描述对 `𝒟ₒS`{.Agda} 成立、对别的什么都不成立。
 - `L.Coding.Sequence`{.Agda}：把层级说成一条**序列**，而这是为它写图时唯一可取的形状。一个图不可以点名它所定义的对象，而塔在某个阶段处是由该阶段以下的塔造出来的，故写下来的改为「*逼近*是什么」。`StepAt`{.Agda} 是某个实参处的那一步：一次 `extAt`{.Agda} 罩住三个相邻的存在量词，即那个实参、逼近在其处所记录的取值，以及它的可定义幂集；最后一样被绑定而不被点名，因为上一章交付的是关于它的一条描述、而不是指称它的一个词项。用一次 `extAt`{.Agda} 而不用手写的一对包含，因为一对包含会把那三个存在量词复制一份，并把每一种读法拆成互非逆的两半交回来。一个旁条件 `PowOK`{.Agda} 服务两个方向，因为一个「是 `L` 的元素」的可定义幂集，也就是一个「诸成员皆可构造」的可定义幂集。`ApproxAt`{.Agda} 是两个合取项、再无其他：`f` 恰好定义在那个实参的诸成员上，且它所记录的每个取值都是「在那里、由 `f` 自身算出的那一步」。它是一条隶属**等价**、而非一个单向的收集，这使即将到来的那场归纳的动机保持为命题，并把一条内部的函数外延性引理从路线上移除；且它**不带单值性合取项**，因为步进条件已经把「在一个实参处记录的每个取值」钉住了，故单值性是一条推论，而不是三个置于满足关系之下的全称量词。`LsetGraph`{.Agda} 把逼近绑定在两者之上。**本章的全部代价都出在转换上**：两条图读法陈述在具体位上，花掉了 130 秒中的 98 秒；而每一处「假设把环境写开、应用却把它藏在一个缩写背后」，再各花 15 秒。写成两侧是同一个表达式之后，它在两秒之内检查完毕，而这把「变元实参」那条规矩从一次代换推广到一条**陈述**。
 - `L.Hierarchy`{.Agda}：上一章那个图，被对着本书真正造出的那座塔证明，以及用来证明它的那个**内部层级**。**表**是有序对之集；它在某个集合上正确，指它在该集合以下所记录的每个取值都是元层面的塔在那里的取值；它完备，指它在以下的每个实参处都记录了一个。`step-Lset`{.Agda} 从一张正确的表上读出一个被满足的步进、把塔取回来，`step-table`{.Agda} 则由它写出那一步，而上一章那个旁条件在两者之内一并解除，因为被记录的取值是塔在某个序数处的值，而阶段的可定义幂集可构造。`approx-val`{.Agda} 是在实参上的一次沿成员的归纳，其动机对**一切**被记录的取值作量化，故单值性从不作为假设，而 `approx-uniq`{.Agda} 三行落地。`Lset-only`{.Agda} 与 `Lset-defines`{.Agda} 是那个图的两个方向，而 `hierL`{.Agda} 是后者据以造出的东西：由「序数与塔在它那里的取值」所成之对的集合，经在一个**成对的图**上作替换而收拢，每个索引的序数性取自 `mem-ord`{.Agda} 且不加截断，函数性经 `mereFunct`{.Agda} 偿付。它的规格是一条**隶属等价**，这使它唯一、也使归纳的动机是命题，而它在被造出之处封印。两次测量，都关乎一个名字：成对的那个图以变元身份进场、随身带着它自己的等式，而不是以那个闭句子的身份进场，价值 85 秒；以及 `mem-ord`{.Agda} 的那个集合实参必须在每次使用时显式给出，因为 `IsOrd`{.Agda} 展开成一条带量词的隶属关系、什么也确定不了。本章正是 `L` 的内部定义的材料，而内部良序就从它上面读出。
-- `L.Coding.Recursion`{.Agda}：内化定理的第一个实例。它的图说的是「含有此键的最小封闭集」，因为没有一张表托着诸子取值的对象语言说不出「由诸子码处的取值造出」；「最小」经反对称性使取值唯一，故唯一性只花一次外延、不花归纳，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付。
 - `L.Axioms.Power`{.Agda}：幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。**未用凝聚，也不需要**：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
 - `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。`witnessInModel`{.Agda} 记下图必须遵守的那一条规矩：对象语言的存在量词在 `L` 上取值，故一个图不可以靠断言被描述者本身存在来描述它。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
@@ -688,35 +665,4 @@ import FOL.Manipulation.Renaming
 import FOL.Manipulation.Relativize
 ```
 
-<!--en-->
-## The reification framework (in waiting)
-
-The formula factory proper: manufacture, from a host predicate, a formula
-certified to mean it. Nothing in the trunk consumes the line yet; it closes the
-catalog, ready for the chapters that will run it at scale.
-
-- `FOL.Reification.Base`{.Agda}: representation, the bridge: a formula paired with
-  its adequacy certificate; `translate`{.Agda} and `adequacy`{.Agda} as the only
-  exits.
-- `FOL.Reification.Combinators`{.Agda}: the assembly line: one combinator per
-  constructor, every certificate a single congruence.
-- `FOL.Reification.Certified`{.Agda}: the graded tier: representations carrying a
-  Δ₀ witness alongside adequacy (`RepΔ₀`{.Agda}), the graded combinators,
-  and `transfer`{.Agda}, composing adequacy with absoluteness into the
-  framework's working currency.
-<!--zh-->
-## Reification 框架 (候用)
-
-公式工厂本尊：从宿主谓词制造经认证与之同义的公式。主干至今没有消费这条线；它收束全目录，静候将来大规模开动它的章节。
-
-- `FOL.Reification.Base`{.Agda}：表示，即那座桥：公式配上其适足性证书；`translate`{.Agda} 与 `adequacy`{.Agda} 是仅有的出口。
-- `FOL.Reification.Combinators`{.Agda}：流水线：一构造子一组合子，每张证书一次同余。
-- `FOL.Reification.Certified`{.Agda}：分级层：Δ₀ 见证与适足性并肩的表示 (`RepΔ₀`{.Agda})、分级组合子，与把适足性同绝对性复合成框架流通货币的 `transfer`{.Agda}。
-<!--/-->
-
-```agda
-import FOL.Reification.Base
-import FOL.Reification.Combinators
-import FOL.Reification.Certified
-```
 
