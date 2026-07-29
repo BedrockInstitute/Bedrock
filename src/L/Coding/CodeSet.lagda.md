@@ -308,8 +308,8 @@ module _ (A : S) where
     ιL : (m : ⟪ fst A ⟫) → ⟨ isL (ι m) ⟩
     ιL m = isL-trans {x = fst A} {y = ι m} (ι∈ m) (A .snd)
 
-    codeS : ∀ {n} → Formula ⟪ fst A ⟫ n → S
-    codeS φ = VCode.⌜ mapFo ι φ ⌝ , codeL ι ιL φ
+  codeS : ∀ {n} → Formula ⟪ fst A ⟫ n → S
+  codeS φ = VCode.⌜ mapFo ι φ ⌝ , codeL ι ιL φ
 
   keyS : ∀ {n} → Formula ⟪ fst A ⟫ n → S
   keyS φ = key ι ιL φ , keyL ι ιL φ
@@ -337,72 +337,102 @@ module _ (A : S) where
 <!--/-->
 
 <!--en-->
-Both halves of the second conjunct are proved here, once, at a variable arity,
-and both sets below simply apply them. That is possible because the conjunct
-never mentions the arity: the introduction produces a closed, shaped set for a
-formula of any arity, and the elimination consumes one and calls the decode,
-which took the arity as an argument from the start.
+Both halves of the second conjunct are proved here, once, at a variable arity, a
+variable carrier slot and a variable environment, and everything below applies
+them. The arity may be variable because the conjunct never mentions it: the
+introduction produces a closed, shaped set for a formula of any arity, and the
+elimination consumes one and calls the decode, which took the arity as an
+argument from the start. The carrier and the environment may be variable because
+every lemma the two halves are built from already takes them so.
 
-Introduction is the half with nothing in it. The carrier existential takes `A`
-itself and its equation is `refl`{.Agda}; the inner existential's witness is the
-subformula closure, whose three obligations are `key∈closure`{.Agda},
-`closureClosed`{.Agda} and `closureShaped`{.Agda}, one chapter each and all
-already discharged. The last of them asks for one thing more, that every constant
-is a member of the carrier, and at this alphabet that is the fact the alphabet was
-defined by.
+Introduction is the half with nothing in it. The witness is the subformula
+closure, whose three obligations are `key∈closure`{.Agda}, `closureClosed`{.Agda}
+and `closureShaped`{.Agda}, one chapter each and all already discharged. The last
+of them asks for one thing more, that every constant is a member of the carrier,
+and at this alphabet that is the fact the alphabet was defined by, carried across
+the slot's equation.
 
 Elimination is the other half, and it starts from the member already in key form
 at a stated arity, which is what `recover`{.Agda} demands and what nothing in the
-second conjunct would supply. Read the carrier existential and its equation turns
-a membership in the bound carrier into a membership in `A`, which is what makes
-the decode's hypothesis dischargeable: `A`'s members are exactly the image of
-`⟪ A ⟫`, by the presentation of a set by its own members. Read the inner
-existential and a closed, shaped set arrives with it. Then the decode runs, and
-its answer is a formula over the carrier, at the arity it was handed.
+second conjunct would supply. The carrier slot's equation turns a membership in
+whatever that slot holds into a membership in `A`, which is what makes the
+decode's hypothesis dischargeable: `A`'s members are exactly the image of
+`⟪ A ⟫`, by the presentation of a set by its own members. Read the existential
+and a closed, shaped set arrives with it. Then the decode runs, and its answer is
+a formula over the carrier, at the arity it was handed.
+
+The pinned pair is these two at the environment the naming binder makes, and
+that is the whole of what pinning costs: introduction supplies `A` for the binder
+and `refl`{.Agda} for its equation, elimination reads the binder off and hands
+what it holds to the general form. **Reading it off is where the payload has to
+be named.** Left to inference, the truncation's payload at a pinned carrier is a
+metavariable standing for the satisfaction of a formula the elaborator has not
+committed to, and the same two lines that check in two seconds with the type
+written out ran past 140 seconds without it and were killed there. This is the
+law the recursion's totality hypothesis recorded, met again in a different place:
+it is not about the graph, it is about `PT.rec`{.Agda} at a concrete environment.
 <!--zh-->
-第二个合取项的两半都在此处、在变元元数上、一次证完，而下面两个集合只是把它们施用一遍。这之所以可行，是因为那个合取项从不提元数：引入为任意元数的一条公式产出一个既封闭又成形的集合，消去消费一个这样的集合并调用解码，而解码从一开始就把元数取作实参。
+第二个合取项的两半都在此处、在变元元数、变元载体位与变元环境上一次证完，而下面的一切只是把它们施用一遍。元数可以是变元，是因为那个合取项从不提它：引入为任意元数的一条公式产出一个既封闭又成形的集合，消去消费一个这样的集合并调用解码，而解码从一开始就把元数取作实参。载体与环境可以是变元，则是因为两半所倚的每条引理本来就是这样收它们的。
 
-引入是里面什么也没有的那一半。载体那个存在量词取 `A` 自身，它的等式是 `refl`{.Agda}；内层存在量词的见证是子公式闭包，其三笔债 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各出一章，且都已偿清。其中最后一条多要一件东西，即每个常元都是载体的成员，而在这个字母表上，那正是字母表当初据以定义的那件事。
+引入是里面什么也没有的那一半。那个见证是子公式闭包，其三笔债 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各出一章，且都已偿清。其中最后一条多要一件东西，即每个常元都是载体的成员，而在这个字母表上，那正是字母表当初据以定义的那件事，沿那一位的等式搬过去即可。
 
-消去是另一半，而它从「已以某个已言明元数处的键的形式到场的那个成员」出发，那正是 `recover`{.Agda} 所索取的、也是第二个合取项供不出的。读出载体那个存在量词，它的等式把「属于被绑定的那个载体」变成「属于 `A`」，而这正是解码那条假设得以交付的原因：`A` 的诸成员恰是 `⟪ A ⟫` 的像，凭的是「一个集合由其自身诸成员的呈现」。读出内层存在量词，一个既封闭又成形的集合便随之到场。随后解码开跑，而它的答案是载体之上、落在它被递交的那个元数处的一条公式。
+消去是另一半，而它从「已以某个已言明元数处的键的形式到场的那个成员」出发，那正是 `recover`{.Agda} 所索取的、也是第二个合取项供不出的。载体那一位的等式把「属于那一位所持有的东西」变成「属于 `A`」，而这正是解码那条假设得以交付的原因：`A` 的诸成员恰是 `⟪ A ⟫` 的像，凭的是「一个集合由其自身诸成员的呈现」。读出那个存在量词，一个既封闭又成形的集合便随之到场。随后解码开跑，而它的答案是载体之上、落在它被递交的那个元数处的一条公式。
+
+被钉住的那一对，就是这两条落在「点名那层绑定所造出的环境」上，而钉住的全部代价也就在此：引入为那层绑定供上 `A`、为它的等式供上 `refl`{.Agda}，消去把那层绑定读出来、再把它所持有的东西交给一般的形式。**读出来的地方，正是载荷必须被点名之处。** 若交给推断，被钉住的载体处那个截断的载荷就是一个元变元，代表着「一条求解器尚未认定的公式的满足关系」；同样两行，把类型写出来时两秒检查完毕，不写则跑过 140 秒并在那里被杀掉。这就是递归那条全性假设所记下的规矩，在另一处再次遇上：它不关乎那个图，它关乎在具体环境处的 `PT.rec`{.Agda}。
 <!--/-->
 
 ```agda
+  witnessAt-in : ∀ {n k} (b c : Fin n) (γ : S ^ n) (φ : Formula ⟪ fst A ⟫ k)
+               → fst (lookup b γ) ≡ fst A
+               → fst (lookup c γ) ≡ fst (keyS φ)
+               → ⟨ γ ⊨ hasWitnessAt b c ⟩
+  witnessAt-in b c γ φ qb qc = ∣ clo ι ιL φ
+    , ( subst (λ w → ⟨ w ∈ fst (clo ι ιL φ) ⟩) (sym qc) (key∈closure ι ιL φ)
+      , ( closureClosed ι ιL φ γ
+        , closureShaped ι ιL φ b γ
+            (λ m → subst (λ w → ⟨ ι m ∈ w ⟩) (sym qb) (ι∈ m)) ) ) ∣₁
+
+  witnessAt-out : ∀ {n} (b c : Fin n) (γ : S ^ n)
+                → fst (lookup b γ) ≡ fst A
+                → ⟨ γ ⊨ hasWitnessAt b c ⟩
+                → (k : ℕ) (z : S) → fst (lookup c γ) ≡ pr (# k) (fst z)
+                → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ]
+                      (fst (lookup c γ) ≡ fst (keyS ψ))) ∥₁
+  witnessAt-out b c γ qb hw k z qz = PT.rec squash₁ viaSlot hw
+    where
+    Target : Type (ℓ-suc ℓ)
+    Target = ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ]
+                 (fst (lookup c γ) ≡ fst (keyS ψ))) ∥₁
+
+    onto : (y : V ℓ) → ⟨ y ∈ fst (lookup b γ) ⟩
+         → ∥ Σ[ m ∈ ⟪ fst A ⟫ ] (ι m ≡ y) ∥₁
+    onto y y∈ = ∣ ∈-asFiber {a = y} {b = fst A}
+      (subst (λ w → ⟨ y ∈ w ⟩) qb y∈) ∣₁
+
+    viaSlot : Σ[ C ∈ S ] ⟨ (C ∷ γ) ⊨ ((var (suc c) ∈̇ var zero)
+                ∧̇ (closedAt zero ∧̇ shapedAt zero (suc b))) ⟩
+            → Target
+    viaSlot (C , (x∈C , (hcl , hsh))) = PT.map
+      (λ { (ψ , qψ) → ψ , (qz ∙ cong (pr (# k)) (sym qψ)) })
+      (Decode.recover ι zero (suc b) (C ∷ γ) onto hcl hsh k z
+        (subst (λ w → ⟨ w ∈ fst C ⟩) (qz ∙ sym (keyOf-fst k z)) x∈C))
+
   private
     witness-in : ∀ {n} (φ : Formula ⟪ fst A ⟫ n)
                → ⟨ (keyS φ ∷ []) ⊨ hasWitness A ⟩
     witness-in φ = ∣ A , ( refl
-      , ∣ clo ι ιL φ
-        , ( key∈closure ι ιL φ
-          , ( closureClosed ι ιL φ (A ∷ keyS φ ∷ [])
-            , closureShaped ι ιL φ zero (A ∷ keyS φ ∷ []) ι∈ ) ) ∣₁ ) ∣₁
+      , witnessAt-in zero (suc zero) (A ∷ keyS φ ∷ []) φ refl refl ) ∣₁
 
     witness-out : (x : S) → ⟨ (x ∷ []) ⊨ hasWitness A ⟩
                 → (k : ℕ) (z : S) → fst x ≡ pr (# k) (fst z)
                 → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
     witness-out x hw k z qz = PT.rec squash₁ viaCarrier hw
       where
-      Target : Type (ℓ-suc ℓ)
-      Target = ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
-
       viaCarrier : Σ[ B ∈ S ] ⟨ (B ∷ x ∷ [])
                      ⊨ ((var zero ≐ con A) ∧̇ hasWitnessAt zero (suc zero)) ⟩
-                 → Target
-      viaCarrier (B , (qB , hB)) = PT.rec squash₁ viaSlot hB
-        where
-        onto : (y : V ℓ) → ⟨ y ∈ fst B ⟩
-             → ∥ Σ[ c ∈ ⟪ fst A ⟫ ] (ι c ≡ y) ∥₁
-        onto y y∈ = ∣ ∈-asFiber {a = y} {b = fst A}
-          (subst (λ w → ⟨ y ∈ w ⟩) qB y∈) ∣₁
-
-        viaSlot : Σ[ C ∈ S ] ⟨ (C ∷ B ∷ x ∷ [])
-                    ⊨ ((var (suc (suc zero)) ∈̇ var zero)
-                       ∧̇ (closedAt zero ∧̇ shapedAt zero (suc zero))) ⟩
-                → Target
-        viaSlot (C , (x∈C , (hcl , hsh))) = PT.map
-          (λ { (ψ , qψ) → ψ , (qz ∙ cong (pr (# k)) (sym qψ)) })
-          (Decode.recover ι zero (suc zero) (C ∷ B ∷ x ∷ []) onto hcl hsh k z
-            (subst (λ w → ⟨ w ∈ fst C ⟩) (qz ∙ sym (keyOf-fst k z)) x∈C))
+                 → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
+      viaCarrier (B , (qB , hB)) =
+        witnessAt-out zero (suc zero) (B ∷ x ∷ []) qB hB k z qz
 ```
 
 <!--en-->

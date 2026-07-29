@@ -2295,3 +2295,48 @@ One row per goal code; update the row in the same commit that changes the status
   prose past a new section. Attempted, reverted, and recorded here rather than left as a
   silent oversight: it belongs to `[L3.10]`'s re-layering, where moving things is the
   point.
+
+- **`[L3.27]` complete, 2026-07-29.** `L.Coding.Powerset` 400 lines, `L.Coding.CodeSet`
+  186 to 200, `L.Coding.Uniform` 124 to 126. With C1 and C2 the goal totals about **480
+  net**, against its registered 405 to 735. `src/` is now 11,378 lines. Powerset cold
+  27.8 s, whole tree cold 105 to 120 s.
+
+  **The description is right, and that was checked positively rather than by inspection.**
+  A throwaway probe derived, at an arbitrary ordinal, that the described set is pinned to
+  the definable powerset, contains nothing undefinable, omits nothing definable, and is
+  actually satisfied. Two consequences were derived that neither of the two chapters it
+  composes could state: a **closed object-language sentence** in which the carrier is
+  bound by a quantifier and named nowhere, and the fact that the **next stage satisfies
+  the description at the current one**, by `Lset-suc` alone. The second is the shape the
+  internal hierarchy will consume, so the two chapters meet where they were designed to.
+
+  **The side condition is load-bearing**, shown by weakening it to a tautology
+  consistently: the failure lands at precisely the line the prose says it is for,
+  re-entering a member of the powerset as an element of `L`. And the adjacency correction
+  the probe forced was substantive rather than cosmetic, confirmed by building the
+  separated shape and measuring what it costs.
+
+  **RULE 8, measured here and confirmed as new.** Re-deriving one pinned reader as a call
+  to its generalized form took the chapter from 3.2 s to **over 600 s**. Bisected: the
+  general lemma at full generality is 1.4 s, instantiating it at a concrete environment is
+  1.5 s, and the step that costs everything is consuming the resulting existential with a
+  `PT.rec` whose **payload type is left to inference**, over 140 s; the same two lines with
+  the payload written out are 2.1 s. It is neither rule 1 (the general lemma is fine at
+  concrete arguments) nor rule 2 (nothing wanted sealing). **A `PT.rec` over an
+  object-language existential must name its payload type**, because left to inference the
+  payload is a metavariable standing for the satisfaction of a formula the elaborator has
+  not committed to. This is the second sighting: `L.Coding.Uniform` met it at its totality
+  hypothesis and recorded it locally. It is now general.
+
+  **Two corrections to what the brief told the implementer.** `L.Coding.CodeSet` was said
+  to have public readers for the generalized witness conjunct; it had only the pinned
+  private pair, so the public slot forms were written and the pinned pair re-derived on
+  top at its existing types. And rule 2 was predicted to fire on the introduction half and
+  did not: that half supplies sets built in other chapters, already sealed where they are
+  built, so this chapter seals nothing.
+
+  **Watch item for `[L5.1]`, not a defect**: the whole tree cold is now 105 to 120 s
+  against 52 s two days ago, and the same command varies 14% between runs on this machine.
+  The 120 s blocker is per-module and the worst module is 27.8 s, so nothing is blocked,
+  but the whole-tree figure is the one a contributor waits on and it has doubled while
+  four chapters were added.

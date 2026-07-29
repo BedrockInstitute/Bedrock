@@ -333,6 +333,7 @@ import L.Coding.CodeSet
 import L.Coding.Graph
 import L.Coding.Satisfaction
 import L.Coding.Uniform
+import L.Coding.Powerset
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 ```
@@ -525,6 +526,27 @@ The root, stated today and finished over the remaining parts:
   `satGraphAt`{.Agda} takes the carrier as a **slot**, for a consumer whose carrier
   is itself a bound variable, and `satGraph`{.Agda} pins it to a constant, at the
   type and the witness tuple it always had.
+- `L.Coding.Powerset`{.Agda}: the definable powerset described in the object
+  language at a carrier that is a **slot**, and the step the whole route exists
+  for. The internal hierarchy binds its stage, so a description that names its
+  carrier cannot be spoken there at all; `DefAt`{.Agda} names nothing. It says
+  that `u` is the set of exactly those `x` for which there merely are a code `c`
+  over the carrier and a value `v`, with `v` what the satisfaction recursion
+  records at `c` and `x` the set of members of the carrier whose one-entry
+  environment lies in `v`. The two existentials are **adjacent**, which is a
+  correction a probe forced: separated by a conjunct, the code hypothesis and the
+  satisfaction hypothesis land at different environments and the route acquires a
+  weakening lemma it otherwise never needs. `DefinesAt`{.Agda} is the third
+  conjunct alone and `envOneAt`{.Agda} the one-entry environment, one line
+  because a graph of length one is a single pair. `DefAt-in`{.Agda} says the
+  operator satisfies the description and `DefAt-out`{.Agda} that nothing else
+  does, the second under `DefOK`{.Agda}: every existential in the description
+  ranges over `L` and can reach only what lives there, so the description is
+  adequate exactly where the carrier's definable subsets are constructible. That
+  side condition is a hypothesis of the elimination alone, since the
+  introduction's own hypothesis implies it, and at a stage it is discharged for
+  good by the successor identity, leaving `DefAt-stage`{.Agda}: an equation of
+  truth values saying the description holds of `𝒟ₒS`{.Agda} and of nothing else.
 - `L.Coding.Recursion`{.Agda}: the first instance of the internalization theorem.
   Its graph says "the least closed set containing this key", because an object
   language with no table to hold subvalues cannot say "built from the values at
@@ -573,6 +595,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Satisfaction`{.Agda}：那个实例。槽作定义域、图取自上一章，而两半在 `funct`{.Agda} 处会合：存在性把已经造好的对象递给那个图，唯一性把图所接受的任意一张表对着元语言递归造出的那个钉死。
 - `L.Coding.Uniform`{.Agda}：同一个满足关系，跑在**某阶段处的诸码**之上，而那才是每个消费方想要的定义域：以一条公式的槽为索引，就是一条公式一张表，而消费方到场时手里握着的是一个码、而非「它是其子码」的某条公式。`AllCodes`{.Agda} 作定义域，而索引集那笔债由成员自己那条公式的槽偿付，其余一概不动，因为那个图把自己的表**存在**绑定：`funct`{.Agda} 只需拿出**某张**装着该成员的合格的表，而最小的一张就是该成员自己那条公式的子公式槽。故 `Table`{.Agda}、`Slot`{.Agda}、`Sound`{.Agda} 与 `Unique`{.Agda} 都按既有类型施用，而登记在案的那次「在载体与键之对处重新索引」从未发生。唯一新的东西，是把两套编码接起来：层级的编码落在该阶段的字母表之上，模型的编码落在模型的语言之上；用的是 `codeBridge`{.Agda} (为此而写、至今未用) 加上重标的函子性。`val-at`{.Agda} 在一个以键的形式给出的成员处读出取值，`val-sat`{.Agda} 说那个取值**就是**载体之上的满足关系，而 `val-defSet`{.Agda} 把它落到元数一处的可定义幂集上。码载体与环境载体保持为彼此独立的参数，只在满足关系有含义之处被钉在一起。每条读式都把成员取作**变元**、把它的键等式放在旁边，而消费方本会改写的那个名字 `keyIn`{.Agda} 在它被造出之处封印：一旦把键写开，那个构造就落进一个满足关系里面，而无论证明写多长都展开不了。
 - `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。一个框架带两个实例，因为那条用来钉住的子句就是框架的参数：`satGraphAt`{.Agda} 把载体取作**一位**，供载体本身就是被绑定变元的消费方使用；而 `satGraph`{.Agda} 把它钉在一个常元上，按它一贯的类型与见证元组交付。
+- `L.Coding.Powerset`{.Agda}：可定义幂集在对象语言中、落在一个作为**槽位**的载体上的描述，也是整条路线为之存在的那一步。内部层级把自己的阶段绑定起来，故一条点名了自己载体的描述在那里压根说不出口；`DefAt`{.Agda} 什么也不点名。它说的是：`u` 恰是那些 `x` 之集，对它们仅仅存在载体之上的一个码 `c` 与一个取值 `v`，使得 `v` 就是满足关系那场递归在 `c` 处所记录的东西，而 `x` 是「其单条目环境落在 `v` 中」的那些载体成员之集。两个存在量词**相邻**，而这是一次探针逼出的更正：若被一个合取项隔开，码那条假设与满足关系那条假设就落到不同的环境上，于是这条路线会平白背上一条它本来永远用不着的弱化引理。`DefinesAt`{.Agda} 是单拿出来的第三个合取项，`envOneAt`{.Agda} 是单条目环境，只有一行，因为长度为一的图只是一个对。`DefAt-in`{.Agda} 说这个算子满足那条描述，`DefAt-out`{.Agda} 说别的东西都不满足，后者在 `DefOK`{.Agda} 之下：描述里的每个存在量词都在 `L` 上取值，只够得着住在其中的东西，故这条描述恰在「载体的诸可定义子集皆可构造」之处适足。那个旁条件只是消去那一半的假设，因为引入自己的假设已蕴含它；而在一个阶段处，它由后继恒等式一劳永逸地解除，剩下 `DefAt-stage`{.Agda}：一条真值之间的等式，说这条描述对 `𝒟ₒS`{.Agda} 成立、对别的什么都不成立。
 - `L.Coding.Recursion`{.Agda}：内化定理的第一个实例。它的图说的是「含有此键的最小封闭集」，因为没有一张表托着诸子取值的对象语言说不出「由诸子码处的取值造出」；「最小」经反对称性使取值唯一，故唯一性只花一次外延、不花归纳，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付。
 - `L.Axioms.Power`{.Agda}：幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。**未用凝聚，也不需要**：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
 - `L.Recursion`{.Agda}：`L` 的集合上，图可表达的函数，其表在 `L` 中。这是任意公式替换的推论，而非定理：通常那套绝对性纪律是为了让一张表在**某个阶段之内**可读，而此处没有任何东西在阶段之内读。递归留在它被写下的元语言里；`smallDom`{.Agda} 为任意小族供给定义域，而 `Definition`{.Agda} 把一个实例归约为一条定义公式连同它的适足性。`witnessInModel`{.Agda} 记下图必须遵守的那一条规矩：对象语言的存在量词在 `L` 上取值，故一个图不可以靠断言被描述者本身存在来描述它。
