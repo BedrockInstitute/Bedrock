@@ -14,13 +14,13 @@ The domain that answers is the code set at a stage, and the previous goal built
 it. `AllCodes`{.Agda} holds the keys of the formulas over the carrier at *every*
 arity, which is exactly what a consumer arrives holding.
 
-`AllCodes-closed`{.Agda} is **not** what discharges the graph's demand on an index
-set, and it is worth saying so, because it is the theorem the previous goal was
-registered for. The graph binds its table and its index set **existentially**, so
-`funct`{.Agda} owes only *some* qualifying set containing the member, and the
-smallest one is the member's own formula's slot, closed by the chapter that built
-it. So closedness of the whole code set is not consumed here, and at the time of
-writing it is consumed nowhere.
+Closedness of the whole code set is **not** what discharges the graph's demand on
+an index set, and it is worth saying so, because that theorem is what the previous
+goal was registered for. The graph binds its table and its index set
+**existentially**, so `funct`{.Agda} owes only *some* qualifying set containing the
+member, and the smallest one is the member's own formula's slot, closed by the
+chapter that built it. Nothing anywhere consumed it, and it has since been
+retired.
 
 What the change costs is the whole content of this chapter, and it is almost
 nothing, for a reason worth stating before any of it. The graph binds its table
@@ -43,7 +43,7 @@ no theorem connected them.
 
 作答的那个定义域是某阶段处的码集，而上一个目标已经把它造好。`AllCodes`{.Agda} 持有载体之上诸公式在**每个**元数处的诸键，而那恰是消费方到场时手里握着的东西。
 
-`AllCodes-closed`{.Agda} **不是**打发图对索引集之要求的那个东西，而这件事值得说出来，因为它正是上一个目标为之登记的那条定理。图把自己的表与索引集都作**存在**绑定，故 `funct`{.Agda} 只欠「**某个**装着该成员的合格集合」，而最小的那个就是该成员自己那条公式的槽，其封闭性由造出它的那一章给出。故整个码集的封闭性在此处不被消费，而截至撰写之时，它在任何地方都不被消费。
+整个码集的封闭性**不是**打发图对索引集之要求的那个东西，而这件事值得说出来，因为那条定理正是上一个目标为之登记的。图把自己的表与索引集都作**存在**绑定，故 `funct`{.Agda} 只欠「**某个**装着该成员的合格集合」，而最小的那个就是该成员自己那条公式的槽，其封闭性由造出它的那一章给出。它在任何地方都不被消费，故此后已予撤除。
 
 这次更换的代价就是本章的全部内容，而它几乎为零；理由值得在一切之前说明。那个图把自己的表**存在**绑定。故 `funct`{.Agda} 在一个成员处不必拿出一张覆盖整个定义域的表；它只需拿出「某张封闭、全的、满足诸子句的、装着该成员的表」，而最小的这样一张，就是该成员自己那条公式的子公式槽，而它已由前面四章造好并认证。这场递归换掉它的定义域，其余一概不变：`Table`{.Agda}、`Slot`{.Agda}、`Sound`{.Agda} 与 `Unique`{.Agda} 逐条陈述原封不动，而按公式索引的那个实例继续在这一个旁边有效。
 
