@@ -2415,3 +2415,73 @@ One row per goal code; update the row in the same commit that changes the status
   drop list. The pattern is now well enough attested to name: **a row's opening word is
   what a reader takes, and appending a DONE record to the end of a long row does not
   change it.** Every status change from here goes at the front.
+
+- **`[L2.4]` route audit, 2026-07-29, and one fork the owner must rule.** Three designs
+  judged, one probe run green, no goal code written.
+
+  **The registered risk is settled, and the register conflated two objects.** The STEP is
+  a comparison: at a successor stage two new sets are compared by their least names, a
+  name's constants are members of the stage below, and comparing them is answered by the
+  order **at** that stage, which is the recursion's input and never the value being
+  defined. **The stratification closes, and the registered trigger never fires**: two
+  constants at the same substage are compared by an order already built. The FAMILY is a
+  recursion and must be internalized, so the register's expensive branch does happen, but
+  **the cost it was assigned was the cost of that layer being unknown**. It is now
+  templated and measured: `L.Coding.Sequence` 135 plus `L.Hierarchy` 354 is 490 for
+  exactly that shape, delivered today, with the three design rulings that make a clone a
+  clone. Close the risk as: trigger did not fire, the layer materialized at template cost,
+  and the overrun moved elsewhere.
+
+  **The global order is not needed and should be struck, not deferred.** Nothing on the
+  route ever states a relation on all of `L`, proves a global well-order, or proves
+  coherence of a family. The primary key is the stage, so end-extension is automatic
+  rather than a theorem, and the deliverable is **one set `R : S` bounded by one `β`**.
+  `Cmp`, `FormulaOrder`, `CodeOrder`, the general `ΣSWO` and every global order law are
+  **NOT NEEDED**. §4's line deferring `FormulaOrder`, 361 source lines, to this goal by
+  name should say so. The syntactic order goes with them, because a pure code is
+  hereditarily finite and is therefore ordered by the recursion's own previous value, and
+  because parameters enter as an **environment** rather than by substitution, which
+  `L.Coding.Uniform`'s `val-sat` already supports at arbitrary arity and environment.
+  **This is the first demand the every-arity code set has had**, and it is `AllCodes` the
+  route consumes, not `Codes`.
+
+  **Estimate 1,900 to 3,150, point about 2,400**, in eight chapters, against the
+  registered 900 to 2,120 and the risk band's 2,500 to 3,500. The excess over the
+  registered band is not the stratification and not the internalization; it is two
+  chapters no row prices, definability with parameters and the hereditarily finite base.
+
+  **Probe green at 80 lines and 1.2 s**: pure codes are hereditarily finite, at a variable
+  formula across all twelve clauses, plus two concrete skeletons of different depth. Every
+  saving above rests on that one claim and it holds. En route it proved two things no row
+  prices, that the limit stage is closed under Kuratowski pairing and contains every
+  numeral.
+
+  **RULE 10, measured by the probe at 45x.** A case split on ordinal trichotomy whose
+  branches conclude in a membership `hProp` must be a **named helper with its conclusion
+  written down**, never a `with`. Inline, the probe did not finish in 90 s and one whole
+  run was killed at 693 s and 13 GB; the identical three branches in a named helper are
+  2 s. `L.Ordinal.Stages` states this discipline in prose already; it now has a number,
+  and the chapter that builds the order family is made entirely of this shape.
+
+  **A blocker to budget rather than to un-private.** Stage-bounded pairing is proved
+  verbatim in `L.Axioms.Basic` but sits in a `where` block inside another proof, so unlike
+  the two lemmas that only need a `private` deleted it must be lifted to a named public
+  lemma. Budget about 30 lines, not 10, and two chapters consume it.
+
+  **THE FORK, for the owner: how to well-order the hereditarily finite base.** The name
+  device orders skeletons by the recursion's own previous value, which needs them to lie
+  below the stage; they lie in the limit stage, so the device is self-sustaining above it
+  and has no base case below. Two supplies, and the judge checked four alternatives and
+  found each to be one of these in disguise or broken. **(i)** Prove the finite stages
+  finite and well-order them by min-difference, which is a well-order exactly because the
+  base is finite: **250 to 450**, no second recursion, one extra guarded branch in the
+  internal step, but it introduces a **finiteness vocabulary this repository does not have
+  at all**, no `isFinSet`, no `Discrete`, no `Dec` anywhere in `src/`. **(ii)** Internalize
+  a well-order on constant-free syntax as a constant, by a recursion over the code set and
+  the subcode closure, on rails that `[L3.20]` and `[L3.21]` already laid: **550 to 900**,
+  uniform, no branch and no base case, but it is a **second internalized recursion**, and
+  every large overrun this plan has recorded came from a second layer that is one
+  statement written twice. **The judge recommends (i)** on minimize-code-subject-to-no-
+  blowup, 300 lines cheaper with no `Sound`-plus-`Unique` shape. The two costs are within
+  one measurement of each other and the choice buys the repository a new vocabulary axis
+  against a new recursion layer, which is why it is stated here rather than decided.
