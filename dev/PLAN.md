@@ -2549,3 +2549,52 @@ One row per goal code; update the row in the same commit that changes the status
   checking direction, costs zero.
 
   **Two of eight chapters. The goal is not met and the Frontier still has its field.**
+
+- **`[L2.4]` C2 and C3 landed, 2026-07-30.** `FOL.Manipulation.Parameters` 179 against 200
+  to 330, `L.Choice.Name` 410 against 250 to 400. Together 589 against 450 to 730, inside
+  the band. `src/` is 12,725. Cold: Parameters 0.9 s, Name 2.4 s, whole tree 137 s.
+
+  **The occurrence trick is what makes decidable equality unnecessary**, and it is the
+  design point of C2: constants are counted and collected by OCCURRENCE, left to right, so
+  a formula with k constant-occurrences yields a vector of length k and two occurrences of
+  one constant are two entries. The parameter block sits AFTER the variables, which makes
+  the arity arithmetic hold on the nose, so **all four binders cost nothing and capture is
+  impossible by construction** rather than by a side condition. Verified adversarially:
+  seven independent capture and off-by-one perturbations were all rejected, including one
+  that sends every parameter to the bound variable's own slot.
+
+  **C3's order is three keys compared directly**, as the audit ruled, and all four
+  well-order fields landed. Ten perturbations confirm each key is consulted and that
+  well-foundedness genuinely consumes the stage below's well-foundedness rather than
+  anything weaker: removing it from scope, substituting the wrong carrier's, and
+  synthesizing it from irreflexivity alone are all rejected.
+
+  **RULES 11, 12 and 13, and they are one accident seen three ways.** Every one is
+  something forcing the order to unfold, and the order unfolds into a least-ordinal search.
+  - **A `data` declaration whose constructor mentions the order is fatal**: the positivity
+    checker fully normalizes constructor arguments. Over 180 s and killed, even at variable
+    arguments with no codes involved. **Written as a nested sum: 1.3 s.**
+  - **An introduction helper with implicit arguments is fatal**: used in one transitivity
+    clause it cost 84.7 s, because unifying its conclusion against the goal unfolds the
+    order. Writing the injection directly: 1.2 s. This is rule 9's cousin, **a named alias
+    in a unification position**.
+  - **Naming data reached from another module is fatal, and this was the biggest.** Stating
+    anything about a projection defined in a different module cost **221 to 225 s**,
+    concentrated in trichotomy and the accessibility steps. Defining the same projections
+    in the very module whose telescope binds the parameter: **2.4 s.** Four controlled runs
+    separate the cause: local 1.9 s, two different submodule openings 221 and 225 s, and
+    top-level with the parameter implicit over 400 s. **The cure is LOCALITY, not
+    abstraction**: taking the order as a module parameter did not help, measured at over
+    400 s while the data was still non-local. And rule 2's usual cure was tried, measured
+    to make no difference once the data was local, and removed rather than left as a false
+    marker.
+
+  **Three renderings chosen by meaning and surfaced, not committed**, per the rule for a
+  term not yet in the glossary: abstraction of parameters, occurrence, and this chapter's
+  placement. The owner's word registers them in `dev/glossary.toml`; the renderings are
+  quoted in the report rather than here, so that this entry carries no Chinese fragment
+  the linter must reflow. Separately, the chapter did NOT mint a word for a
+  parameter-free formula: that is already 无参 in the glossary and machine-enforced, so the
+  prose uses it.
+
+  **Four of eight chapters. The Frontier still has its field.**
