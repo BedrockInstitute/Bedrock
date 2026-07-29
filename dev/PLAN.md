@@ -2242,3 +2242,21 @@ One row per goal code; update the row in the same commit that changes the status
   closedness obligation therefore always lands at the **witness** and never at the
   recursion's domain. The judge rules retire, 14 lines plus two recap sentences. **Held,
   not executed**, because it is the same decision as the fork.
+
+- **The owner ruled the `[L3.19]` fork on 2026-07-29: option (ii), generalize in place.**
+  The satisfaction graph and the code predicate take the carrier as a **slot**, and the
+  fixed-carrier forms, `Codes` and `AllCodes` are re-derived on top, so the tree carries
+  exactly one code characterization rather than two. Three delivered chapters are edited
+  in place, which is the cost the ruling named and the owner accepted.
+
+  **`AllCodes-closed` is retired with it**, since the retirement was bound to the same
+  decision: nothing consumes it, and the reason it cannot be consumed is structural
+  rather than contingent on `[L2.4]`'s shape.
+
+  **What this obliges, and it is the safety property to check rather than assert**: every
+  fixed-carrier form must be re-derived **at its existing type**, so that no delivered
+  statement becomes weaker or more hypothesis-laden as a consequence of the
+  generalization. `[L3.23]` established that the two largest chapters on the route,
+  `L.Coding.Sound` and `L.Coding.Unique`, need no edits at all; if either acquires one,
+  the generalization has reached further than the ruling predicted and that is the signal
+  to stop and re-measure rather than push through.
