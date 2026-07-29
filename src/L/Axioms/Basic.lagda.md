@@ -42,11 +42,13 @@ open import FOL.Syntax using ( Formula; var; con; _≐_; _∈̇_; _∨̇_; ⊤̇
 open import FOL.ZFStructure using ( ↾-reflects; module hPropStructure )
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
-open import V.Model {ℓ} using ( empty-spec; pair-spec; union-spec; self∈sucV )
+open import V.Model {ℓ}
+  using ( empty-spec; pair-spec; union-spec; self∈sucV; ∈sucV-elim )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; Lset-compute
-        ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-mono; Lset→isL )
+        ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
+        ; Lset-mono; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; boundingOrd )
 
 open import Cubical.Data.Bool using ( Bool; true; false )
@@ -155,6 +157,93 @@ opaque
 LsetS : (β : V ℓ) → IsOrd β → S
 LsetS β oβ = Lset β , isL-Lset β oβ
 ```
+
+<!--en-->
+## The successor stage
+<!--zh-->
+## 后继阶段
+<!--/-->
+
+<!--en-->
+The tower's step is the definable powerset, and at a successor index the step is
+all there is: `Lset (sucV σ)` is `𝒟ₒ (Lset σ)` exactly. Both inclusions read off
+the stage characterization and use nothing else. For one, `σ` is a member of its
+own successor, so the operator applied to `Lset σ` is one branch of the union
+that the next stage is. For the other, a member of `Lset (sucV σ)` lies in
+`𝒟ₒ (Lset δ)` for some `δ` in `sucV σ`; either `δ` is a member of `σ`, and then
+the set is already in `Lset σ` and so among its definable subsets, or `δ` is `σ`
+and there is nothing to do. Neither half relativizes anything, and neither needs
+the operator to be monotone. Ordinality is not needed either, and is carried only
+so that the three statements of this section take the same arguments.
+<!--zh-->
+塔的步进就是可定义幂集，而在后继索引处，步进就是全部：`Lset (sucV σ)` 恰是 `𝒟ₒ (Lset σ)`。两个包含都从阶段刻画上直接读出，此外不用别的。其一，`σ` 是自身后继的成员，故算子作用于 `Lset σ` 所得，是下一阶段那个并的一支。其二，`Lset (sucV σ)` 的成员落在某个 `δ ∈ sucV σ` 的 `𝒟ₒ (Lset δ)` 里；要么 `δ` 是 `σ` 的成员，那么该集合已在 `Lset σ` 中，从而在它的可定义子集之列，要么 `δ` 就是 `σ`，无事可做。两半都不相对化任何东西，也都不需要算子单调。序数性同样不需要，之所以带着它，只为本节三条陈述取同样的参数。
+<!--/-->
+
+The identity asks nothing of `σ`{.Agda}. It was stated with an ordinality
+hypothesis and the hypothesis turned out to be dead: neither inclusion touches
+it, because the one that could have is carried by transitivity of a stage, which
+is ordinal-free. The two statements below do need it, through the successor of an
+ordinal being one.
+
+<!--zh-->
+这条恒等式对 `σ`{.Agda} 一无所求。它当初带着一条序数性假设被陈述出来，而那条假设结果是死的：两个包含关系都不碰它，因为本可以碰它的那一个是由「阶段的传递性」承担的，而后者与序数无关。下面那两条陈述则确实需要它，经由「序数的后继是序数」。
+<!--/-->
+
+```agda
+Lset-suc : (σ : V ℓ) → Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)
+Lset-suc σ = extensionality (Lset (sucV σ)) (𝒟ₒ (Lset σ)) (sub₁ , sub₂)
+  where
+  fromEarlier : (x : V ℓ)
+              → Σ[ δ ∈ V ℓ ] (⟨ δ ∈ sucV σ ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
+              → ⟨ x ∈ 𝒟ₒ (Lset σ) ⟩
+  fromEarlier x (δ , (δ∈suc , x∈𝒟ₒδ)) =
+    ∈sucV-elim {A = σ} {x = δ} (snd (x ∈ 𝒟ₒ (Lset σ))) δ∈suc
+      (λ δ∈σ → Lset⊆𝒟ₒ σ x (Lset-in σ δ x δ∈σ x∈𝒟ₒδ))
+      (λ δ≡σ → subst (λ w → ⟨ x ∈ 𝒟ₒ (Lset w) ⟩) δ≡σ x∈𝒟ₒδ)
+
+  sub₁ : ⟨ Lset (sucV σ) ⊆ 𝒟ₒ (Lset σ) ⟩
+  sub₁ x x∈ₛ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset σ)} .fst
+    (PT.rec (snd (x ∈ 𝒟ₒ (Lset σ))) (fromEarlier x)
+      (Lset-out (sucV σ) x (∈∈ₛ {a = x} {b = Lset (sucV σ)} .snd x∈ₛ)))
+
+  sub₂ : ⟨ 𝒟ₒ (Lset σ) ⊆ Lset (sucV σ) ⟩
+  sub₂ x x∈ₛ = ∈∈ₛ {a = x} {b = Lset (sucV σ)} .fst
+    (Lset-in (sucV σ) σ x (self∈sucV σ)
+      (∈∈ₛ {a = x} {b = 𝒟ₒ (Lset σ)} .snd x∈ₛ))
+```
+
+<!--en-->
+The identity turns a fact about the tower into a fact about the operator. A stage
+is constructible one stage later, so the definable powerset of a stage is
+constructible outright, and it packages as a set of `L`. Its certificate is
+sealed exactly as the stage's was, and for the same reason: it rides inside a
+constant.
+<!--zh-->
+这条等式把关于塔的事实转成关于算子的事实。阶段在下一阶段可构造，故阶段的可定义幂集干脆可构造，并打包成 `L` 的一个集合。它的证书按阶段那份证书同样的方式封印，理由也相同：它坐在一个常元里。
+<!--/-->
+
+```agda
+opaque
+  isL-𝒟ₒ : (σ : V ℓ) → IsOrd σ → ⟨ isL (𝒟ₒ (Lset σ)) ⟩
+  isL-𝒟ₒ σ oσ = subst (λ w → ⟨ isL w ⟩) (Lset-suc σ)
+    (isL-Lset (sucV σ) (suc-ord oσ))
+
+𝒟ₒS : (σ : V ℓ) → IsOrd σ → S
+𝒟ₒS σ oσ = 𝒟ₒ (Lset σ) , isL-𝒟ₒ σ oσ
+```
+
+<!--en-->
+That packaging is what a later chapter spends. A description of the definable
+powerset written at a carrier that is a bound *variable* is adequate only where
+that carrier's definable subsets are constructible, because the description
+quantifies over `L` and can name only what lives there. At a variable carrier
+that is a side condition travelling with every use of the description. At a stage
+it is discharged for good: the definable subsets of a stage are constructible by
+`𝒟ₒ→isL`{.Agda} above, and the set of them is `𝒟ₒS`{.Agda}. The successor
+identity is what makes both hold, at every stage at once.
+<!--zh-->
+这份打包正是后续某章要花掉的东西。若把可定义幂集的描述写在一个作为**约束变元**的载体上，则唯有该载体的可定义子集皆可构造时，那份描述才适足，因为描述对 `L` 量化，只点得出住在其中的东西。在变元载体上，这是一个随描述的每次使用一同旅行的旁条件。在阶段上，它一劳永逸地被解除：阶段的可定义子集经上面的 `𝒟ₒ→isL`{.Agda} 可构造，而它们所成的集合是 `𝒟ₒS`{.Agda}。后继等式正是使这两点在每个阶段同时成立的东西。
+<!--/-->
 
 <!--en-->
 ## Finite families

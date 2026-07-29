@@ -2260,3 +2260,38 @@ One row per goal code; update the row in the same commit that changes the status
   `L.Coding.Sound` and `L.Coding.Unique`, need no edits at all; if either acquires one,
   the generalization has reached further than the ruling predicted and that is the signal
   to stop and re-measure rather than push through.
+
+- **C0 and the in-place generalization landed, 2026-07-29.** `L.Axioms.Basic` +26 agda
+  lines (`Lset-suc`, `isL-𝒟ₒ`, `𝒟ₒS`), `L.Coding.Graph` 67 to 99, `L.Coding.CodeSet` 201
+  to 186 (the retirement), `L.Coding.Uniform` and `Everything` prose only. Whole tree cold
+  80 s, worst single file 20 s, `make check` green.
+
+  **The safety property held and was checked rather than asserted.** A throwaway module
+  re-spelled every pre-change type from `git show HEAD:` and demanded it back: `satGraph`,
+  `GraphWit`, `hasWitness`, `isCode`, `isCodeAny` all come back by **`refl`**, and
+  `graph-in`, `graph-out`, `Codes`, `AllCodes`, both `-spec`s and both `key∈` are accepted
+  at their old spelled-out types. **The only type that changed is `twelveAt`**, which
+  became arity-generic and has no consumer outside its own file. `L.Coding.Sound` (801),
+  `L.Coding.Unique` (630) and `L.Coding.Satisfaction` are absent from the diff, sha256
+  equal to HEAD. So generalizing the carrier to a slot reached exactly as far as the
+  ruling predicted and no further.
+
+  **The generalized code predicate needs one existential FEWER**, which is the audit's
+  finding confirmed: the retired binder existed only to pin the constant, so the fixed
+  carrier is now the *derived* form and the variable one is primitive. That is the right
+  way round and it is why there is one characterization rather than two.
+
+  **One defect found by the adversarial pass and fixed**: `Lset-suc` was delivered with a
+  dead `IsOrd σ` hypothesis. Neither inclusion touches it, because the one that could have
+  is carried by transitivity of a stage, which is ordinal-free. Dropping it is a
+  strictly-stronger one-token change, verified to compile before and after. The chapter
+  now says so, since a hypothesis that turns out to be unnecessary is worth one sentence.
+  Renamed `𝒟ₒ-isL` to `isL-𝒟ₒ` in the same pass: it had landed one glyph from the
+  pre-existing and differently-stated `𝒟ₒ→isL`, and the new name parallels `isL-Lset`.
+
+  **A simplification found and deliberately not taken.** `𝒟ₒ→isL` (18 lines) hand-rolls
+  the union manipulation that `Lset-suc` now packages, and collapses to two lines. It sits
+  earlier in the file than `Lset-suc`, so taking it means moving a delivered proof and its
+  prose past a new section. Attempted, reverted, and recorded here rather than left as a
+  silent oversight: it belongs to `[L3.10]`'s re-layering, where moving things is the
+  point.
