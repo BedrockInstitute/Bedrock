@@ -345,6 +345,7 @@ import L.Choice.Name
 import L.Choice.Step
 import L.Choice.Internal
 import L.Choice.Table
+import L.Choice.Faithful
 ```
 
 <!--en-->
@@ -741,6 +742,40 @@ The root, stated today and finished over the remaining parts:
   order both consume. What is left open is the step condition's own adequacy,
   which is the previous chapter's `StepAt`{.Agda} against the meta step, named
   here as the two hypotheses of `Described`{.Agda}.
+- `L.Choice.Faithful`{.Agda}: the description made faithful, and the frame's two
+  hypotheses discharged down to one. `BirthAt`{.Agda} is the **birth stage** said in
+  the object language, and it names no constant and needs no successor operation:
+  the tower at the slot does not hold the set while the definable powerset of that
+  tower does, which `Lset-suc`{.Agda} makes equivalent to being one below the least
+  stage containing it, spent only on the meta side. `BirthAt-out`{.Agda} and
+  `BirthAt-in`{.Agda} are its two readings at variable slots with ordinality the
+  only hypothesis, soundness being a trichotomy against the least stage written as
+  a named helper. `isCodeAnyAt`{.Agda} is the code predicate at **any** arity over a
+  carrier held in a slot, and it is an **instantiation and not a construction**: the
+  arity-bound conjunct and the witness conjunct both already existed, and only their
+  meeting is new; `CodesAt`{.Agda} is the set they cut out, one `extAt`{.Agda}, whose
+  two readings pin the slot to the code set over the carrier, so the naming
+  description's code-set slot is pinned by description rather than by an outside
+  equation. `order-unfold`{.Agda} is the order family's defining equation at a
+  stage, one `cong`{.Agda} over the recursion's computation rule; `bornIn`{.Agda} is
+  the converse of `birth-in`{.Agda}, and it buys the description one binder less;
+  `stepMoved`{.Agda} carries a step comparison along an equality of carriers, rebuilt
+  locally rather than reached for in another module. `CondCore`{.Agda} is the order
+  at a stage described in full, birth-primary, generic in the step condition: it
+  binds four sets, takes the stage as a **term** so that the constant form costs no
+  binder, and is **sealed where it is built**. `Cond`{.Agda}, `Cond₀`{.Agda},
+  `cond-spec`{.Agda} and `cond₀-spec`{.Agda} are the two forms the previous chapter's
+  frame asked for together with their meanings, so `Described`{.Agda} applies and
+  everything it proves is available, conditional on the step parameter and on
+  nothing else. Four measurements are recorded in the chapter because each is a law
+  and not a preference: the two elements a birth description is satisfied at must be
+  sealed (178 s against 2 s), an environment must be spelled out rather than
+  abbreviated (207 s against 3 s), a two-way split concluding in a satisfaction must
+  be a named helper and never a `with`{.Agda} (past 300 s), and a description read at
+  constants must be sealed where it is built (160 s per reading). What is not here is
+  the step's own adequacy, `L.Choice.Internal`{.Agda}'s `StepAt`{.Agda} against
+  `stepAt`{.Agda}, which enters as the parameter `Stp`{.Agda} with `stp-out`{.Agda}
+  and `stp-in`{.Agda} as its meaning.
 - `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
   one, the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
@@ -781,6 +816,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Choice.Step`{.Agda}：每个阶段一个序，作为一族。`birth`{.Agda} 是一个可构造集据以被雕出的那个序数，比包含它的最早阶段低一级；它之所以存在，理由正是选取阶段那一章为一格给出的那条：集合进入塔的唯一途径是被雕出。`stepAt`{.Agda} 是步进，由 `Lset δ`{.Agda} 上的良序到 `Lset (sucV δ)`{.Agda} 上的良序，只有**一支**：处处按**最小名字**给出，即上一章的三键比较沿一个映射拉回，而那个映射之所以是函数，恰恰是因为下面那个阶段已被良序化。初稿曾在极限阶段以下守着第二支；实测下来它是多余的，而它真正贡献的是一道归一化屏障，`opaque`{.Agda} 封印以更低的代价给出同样的屏障。`pullOrder`{.Agda} 沿一个单射搬运良序，是本章写下的唯一一次搬运：步进用它，`carry`{.Agda} 也用它，即把一个阶段的诸成员表示成命名那一章所取用的那个索引类型。依值和上的序一概未造。`orderAt`{.Agda} 就是那一族本身，`SWO`{.Agda} 的四条定律在每个序数处齐备，沿成员归纳造出，且被封印，因为未封印的序会展开成一场遍历层级的递归。它的比较以**诞生阶段为主键**，而正因如此 `endExtension`{.Agda} 分文不花：一次比较从不提到它是在哪个阶段处被读的，故大阶段处的序限制到小阶段上，与那里的序之间是一条**路径**、而不仅仅是一个等价，唯一要干的活是可构造性与序数性的证明无关性。
 - `L.Choice.Internal`{.Agda}：同一个序，用对象语言描述出来，使模型自家的分离能把它雕出来。`InLimitAt`{.Agda} 是骨架的**阶段**条件，而它是一个「属于极限阶段」的隶属原子，经 `LsetGraphAt`{.Agda} 在常元 `ωʟ`{.Agda} 处说出：无参的码是遗传有穷的，故那场本会从内部判定无参性的递归压根不必写。但它并不是无参性，因为遗传有穷的码可以点名遗传有穷的常量；`FreeAt`{.Agda} 才是，而它同样是一个隶属原子，落在**空字母表处**的码集中，所倚的事实是一条无参公式在两个字母表上有同一个码 (`freeCode-in`{.Agda}、`freeCode-out`{.Agda})。读在诸位上 (`codeFree-out`{.Agda})，骨架那一位所持有的恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式，`codeFree-limit`{.Agda} 则由它推出那条阶段条件。`NameAt`{.Agda} 是落在诸位上的名字，即一个落在极限阶段且不带常量的骨架、一个定义域为元数的载体之上参数序列，以及一个写成**单次** `extAt`{.Agda} 的指称，其条件读的是 `satGraphAt`{.Agda} 在「由元数与骨架造出的键」处所指派的取值；有两个码集以位的身份抵达它：载体处那一个，没有它，图那张作存在绑定的表什么也钉不住；以及空字母表处那一个，没有它，那个骨架就不是元层面某个名字的骨架。`≺At`{.Agda} **不跑自己的递归**：码用一个对着既有之序的隶属原子，元数用一个数码之间的隶属原子，参数用一次有界字典序量化，而那两个序都以位的身份抵达这条描述。`StepAt`{.Agda} 是这一族的一步，按最小名字给出，只有**一**支，故计划当初想要的最小差公式并不需要。`order-in`{.Agda} 与 `order-out`{.Agda} 是那两半适足性，落在变元环境的变元位上：只要每个关系位都带着「它持有的是哪个序」这条假设，那条公式对两个名字的数据成立，当且仅当 `_≺ₙ_`{.Agda} 对那两个名字成立；参数那个键由一次归纳架桥，把首次相异与命名那一章对向量的递归认同起来。
 - `L.Choice.Table`{.Agda}：那个序，由描述变成**对象**，每个序数处一个。`Related`{.Agda} 是所实现的那个类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是截断着携带的，因为严格良序并不已知是命题值的，而 `strict`{.Agda} 一举为每一个这样的序把截断脱下来，办法是在消去任何东西之前先按三歧分情形。`ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，形状取自 `L.Coding.Sequence`{.Agda}，但对那条步进条件保持通用；该条件以参数身份取两种形式、只有一个含义进场：落在诸位上，因为图必须绑定它所查阅的那张表；以及落在常元上，因为分离是用单自由变量的公式去雕的。`approx-val`{.Agda} 靠在实参上的一次沿成员的归纳，把逼近所记录的每个取值钉住，任何地方都没有单值性假设，而 `approx-uniq`{.Agda} 是那条推论。`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且与层级那一章不同，它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来，因为阶段处的序没有可供当场拿出的元语言词项。那个界只花一次诉诸，因为一个阶段的两个成员所成的诸对是 `L` 元素的一个**小**族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL-fill`{.Agda}、`relL-rep`{.Agda}、`ix-fill`{.Agda} 与 `ix-rep`{.Agda} 把它的隶属读在「阶段的成员到场时的两种形状」上，其中第二种正是分离与命名那一章的参数序共同消费的那一种。留待解决的是那条步进条件自身的适足性，即上一章的 `StepAt`{.Agda} 对着元层面那一步，此处以 `Described`{.Agda} 的两条假设之名点出。
+- `L.Choice.Faithful`{.Agda}：把描述做成忠实的，并把那个框架的两条假设解除到只剩一条。`BirthAt`{.Agda} 是**诞生阶段**在对象语言中的说法，它不点名任何常元，也不需要后继运算：那一位处的塔不装这个集合，而那座塔的可定义幂集装它，而 `Lset-suc`{.Agda} 使这两条等价于「比包含它的最小阶段低一级」，且只花在元层面一侧。`BirthAt-out`{.Agda} 与 `BirthAt-in`{.Agda} 是它落在变元位上的两条读式，唯一的假设是序数性，其中可靠性是一次对着最小阶段的三歧分情形，写成一个具名辅助。`isCodeAnyAt`{.Agda} 是**任意**元数处、落在一位所持载体上的码谓词，而它是**实例化、不是构造**：元数绑定那个合取项与见证那个合取项都早已存在，新的只是它们的会合；`CodesAt`{.Agda} 是它们雕出的那个集合，一次 `extAt`{.Agda}，其两条读式把那一位钉在该载体之上的码集上，于是命名描述的码集那一位由描述钉住、而不由外部的一条等式钉住。`order-unfold`{.Agda} 是序之族在一个阶段处的定义方程，即在递归的计算规则上作的一次 `cong`{.Agda}；`bornIn`{.Agda} 是 `birth-in`{.Agda} 的逆，它为这条描述省下一层绑定；`stepMoved`{.Agda} 沿载体之间的一条等式搬运一次步进比较，是就地重建、而不是伸手去另一个模块里够。`CondCore`{.Agda} 是阶段处的序被完整描述出来，以诞生阶段为主键，对步进条件保持通用：它绑定四个集合，把阶段取作**词项**，使得常元那一形式不花绑定，且**在被造出之处封印**。`Cond`{.Agda}、`Cond₀`{.Agda}、`cond-spec`{.Agda} 与 `cond₀-spec`{.Agda} 是上一章那个框架所索取的两种形式连同它们的含义，于是 `Described`{.Agda} 可以施用，它所证的一切都可取用，条件只有那个步进参数、别无其他。本章记下四条实测，因为每一条都是定律、不是偏好：诞生描述所满足于其上的那两个元素必须封印 (178 秒对 2 秒)、环境必须写全而不可缩写 (207 秒对 3 秒)、结论落在满足关系上的两路分情形必须是具名辅助而绝不可用 `with`{.Agda} (超过 300 秒)、以及读在诸常元上的描述必须在被造出之处封印 (每条读式 160 秒)。不在此处的，是那一步自身的适足性，即 `L.Choice.Internal`{.Agda} 的 `StepAt`{.Agda} 对着 `stepAt`{.Agda}，它以参数 `Stp`{.Agda} 的身份进场，`stp-out`{.Agda} 与 `stp-in`{.Agda} 是它的含义。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->

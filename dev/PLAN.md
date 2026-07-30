@@ -2761,3 +2761,52 @@ One row per goal code; update the row in the same commit that changes the status
   **One surplus surfaced and kept**: the limit-stage conjunct is now derivable from the
   constant-freeness one. Deleting it is mechanical, about 55 lines and a prose section, and
   the chapter says it is kept until retired on purpose.
+
+- **`[L2.4]` faithfulness, 2026-07-30: two of the three obligations closed, the third
+  parameterized.** `L.Choice.Faithful` 525 lines, cold 3.5 s. `src/` is 14,861.
+
+  **(b), the birth stage described, is CLOSED both ways**, and the probe that opened it was
+  green on its first typecheck at 70 lines. The design decision worth keeping: **the
+  description never says "the successor of b"**. It says the birth by the carve
+  characterization instead, that the set lies in the definable powerset of the tower at `b`
+  and not in the tower at `b`, and the successor identity is spent only on the meta side.
+  That is why no successor description is needed and why the tower is read at the slot
+  itself. Also first use of object-language negation anywhere in `src/`, and it costs
+  nothing.
+
+  **(c), the code set at a moving carrier, is CLOSED and it is an INSTANTIATION, not a
+  construction**, which is what the question was for: the existing key predicate at a
+  variable carrier with the already-existing arity-bound conjunct swapped in.
+
+  **(a), the step's own adequacy, is NOT attempted and is parameterized honestly.** It
+  enters as a named module parameter with its meaning stated in both directions. Nothing is
+  approximated and nothing weakened. **The frame's two hypotheses are gone; this one
+  remains**, and it is a chapter of bookkeeping against chapters that already exist,
+  measured at 400 to 500 lines by its six pieces.
+
+  **Unlike yesterday's repair, these conditions are load-bearing, and that was checked the
+  same way yesterday's inertness was caught**: every new conjunct replaced by a tautology,
+  consistently, breaks something. Eight such perturbations were rejected, including the
+  parameterized step's own conjunct and the reversal of the birth comparison. Two of the
+  new predicates break only their own readings so far, which is expected while (a) is
+  unwritten and is the thing to re-check when it lands.
+
+  **FOUR MORE LAWS, and one of them corrects law 14 as it was stated.**
+  - **Law 14 was mis-stated**: sealing the underlying set is not enough, because it is
+    **the pair carrying the constructibility proof** that reaches the slot. Unsealed 178 s,
+    sealed 2.0 s; and again at four elements of another reading, past 400 s against 3.5 s.
+  - **An environment must be spelled out, never abbreviated.** A private abbreviation for a
+    four-element environment cost 207 s against 2.84 s. The existing note in the sequence
+    chapter measured the same shape at 15 s per conversion; here it is 73x.
+  - **Law 10 generalizes off trichotomy onto any split into a satisfaction.** A two-way
+    case split was killed at 300 s; as a named helper with its conclusion written down,
+    3.46 s.
+  - **A description read at CONSTANTS must be sealed where it is built.** Transparent, its
+    two readings cost 163 s and 160 s; sealed, the whole chapter is 3.5 s. This is law 9's
+    other side: **the cost is not the alias, it is the reduction of the sentence once its
+    slots are concrete.**
+  - A design finding forced by measurement: the stage must arrive as a **term**, not a
+    slot. Two binders 163 s, one binder 3 s.
+
+  **These four walls are why (a) was not reached**, and the chapter says so rather than
+  reporting a smaller scope.
