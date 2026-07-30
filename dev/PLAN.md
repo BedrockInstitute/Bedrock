@@ -2656,3 +2656,57 @@ One row per goal code; update the row in the same commit that changes the status
   **A rule I broke and the gate caught**: the Chinese I wrote for this correction used two
   em dashes. The linter rejected them, they are rewritten with a colon, and it is worth
   recording that the author of the rule is not exempt from it and did not notice.
+
+- **`[L2.4]` C5 landed, 2026-07-30, with one correction to the audit and one gap named.**
+  `L.Choice.Internal` 700 lines against 450 to 750, cold 9.5 s, whole tree 132.6 s. `src/`
+  is 13,758. **Both adequacy halves for the order landed** at variable slots in a variable
+  environment, giving an equivalence between the described relation and the meta order,
+  which is what a separation needs. **The min-difference formula was not needed**: the
+  step's deletion reached exactly as far as measured, one branch there and one here.
+
+  **THE AUDIT'S AMENDMENT 2 IS WRONG AS STATED, and the chapter caught it by collapse.**
+  The amendment said the internal skeleton condition is not constant-freeness but
+  membership in the limit stage. Membership in the limit stage is necessary and **not
+  sufficient**, and without more the description does not merely weaken, it **collapses**:
+  the satisfaction graph binds its index set and table existentially, and a recursion
+  constrains its graph only on the recursion's domain, so at a key that is nobody's code
+  one may take the index set to be that key alone and the table to be that key paired with
+  any value at all, whereupon closedness and all twelve clauses hold vacuously. Every
+  constructible subset of the carrier would then have a name with the empty skeleton and
+  any parameters, all sets would share a least name, and the step relation would be empty.
+  **The repair is a code-set slot with the key required to lie in it**, which is what makes
+  the graph's value determinate. That is an addition to the amendment, not a substitution:
+  the limit-stage atom still replaces constant-freeness for the job the audit gave it.
+
+  **A RESIDUAL GAP, named loudly by the chapter and confirmed by review, which C6 must not
+  assume away.** Even with the key in the code set, "the code lies in the limit stage"
+  implies its constants lie there, **not that it has none**. Over a carrier containing the
+  limit stage those constants are members of the carrier, so the description admits names
+  whose formula carries hereditarily finite parameters, and the meta `Name` excludes those.
+  **So the least internal name of a set need not be its least meta name**, and the chapter
+  therefore states adequacy for the ORDER and states none for the STEP. The cheap candidate
+  repair, and it is again one membership atom: a second code-set slot at the **empty
+  alphabet**, which is constant-freeness said as a membership, at the cost of a key
+  agreement lemma across two alphabets. **`[L2.4]` C6 must close this or supply
+  faithfulness separately; it may not assume the internal least name is the meta one.**
+
+  **RULES 14 and 15, both measured here.**
+  - **A concrete element at a slot inside a satisfaction must be SEALED: 77 s against
+    1.6 s.** Isolated: forming the type is free, passing a variable of that type is free,
+    and only checking a term at it costs. This is law 1's boundary in the case where the
+    argument cannot be a variable because the description names a fixed object, and the
+    cure is not to use a variable but to seal the object.
+  - **A block of binders must be a FRAME generic in its body.** Packing a six-fold
+    existential directly ran past 120 s, because it puts the whole description under it
+    into normal form; as a frame with the body a variable the two readings are one line
+    each and the file is 7.4 s. This is law 5 met on a block of binders rather than on a
+    constructor or a sentence.
+
+  **A measurement recorded so a later chapter does not spend hours rediscovering it**: the
+  order at a CONCRETE pair of names is not derivable at all. Forming the code of a literal
+  name normalizes the limit-stage machinery and the first key then unfolds the search;
+  probes were killed at 90 and 100 seconds. That is law 11, not a defect here, but it means
+  the abstract statement is the only assurance available and no probe can exhibit the order
+  concretely.
+
+  **Six of eight chapters. The Frontier still has its field.**
