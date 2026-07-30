@@ -344,6 +344,7 @@ import L.Choice.Finite
 import L.Choice.Name
 import L.Choice.Step
 import L.Choice.Internal
+import L.Choice.Table
 ```
 
 <!--en-->
@@ -684,15 +685,25 @@ The root, stated today and finished over the remaining parts:
   the proof-irrelevance of constructibility and of ordinal-hood.
 - `L.Choice.Internal`{.Agda}: the same order, described in the object language,
   so that the model's own separation can carve it out. `InLimitAt`{.Agda} is the
-  **skeleton** condition, and it is one membership atom in the limit stage, said
-  through `LsetGraphAt`{.Agda} at the constant `ωʟ`{.Agda}: a parameter-free code
-  is hereditarily finite, so the recursion that would have decided
-  constant-freeness from inside is never written. `NameAt`{.Agda} is a name at
-  slots, a skeleton, a parameter sequence over the carrier whose domain is the
+  skeleton's **stage** condition, and it is one membership atom in the limit
+  stage, said through `LsetGraphAt`{.Agda} at the constant `ωʟ`{.Agda}: a
+  parameter-free code is hereditarily finite, so the recursion that would have
+  decided constant-freeness from inside is never written. It is not
+  constant-freeness, though, since a hereditarily finite code may name
+  hereditarily finite constants; `FreeAt`{.Agda} is, and it is one membership
+  atom too, in the code set **at the empty alphabet**, resting on the fact that a
+  parameter-free formula has the same code at either alphabet
+  (`freeCode-in`{.Agda}, `freeCode-out`{.Agda}). Read at slots
+  (`codeFree-out`{.Agda}) the skeleton slot holds exactly the codes of the
+  parameter-free formulas of one more variable than the arity, which is exactly a
+  meta name's formula, and `codeFree-limit`{.Agda} derives the stage condition
+  from it. `NameAt`{.Agda} is a name at slots, a skeleton in the limit stage and
+  free of constants, a parameter sequence over the carrier whose domain is the
   arity, and a denotation written as **one** `extAt`{.Agda} whose condition reads
   the value `satGraphAt`{.Agda} assigns at the key the arity and the skeleton
-  make; the key must lie in the **code set**, without which the graph's
-  existentially bound table pins nothing. `≺At`{.Agda} runs **no recursion of its
+  make; two code sets reach it as slots, the one at the carrier, without which
+  the graph's existentially bound table pins nothing, and the one at the empty
+  alphabet, without which the skeleton is not a meta name's. `≺At`{.Agda} runs **no recursion of its
   own**: a membership atom against the order-so-far for the code, a membership
   atom between numerals for the arity, and a bounded lexicographic quantification
   for the parameters, with both orders reaching the description as slots.
@@ -704,6 +715,32 @@ The root, stated today and finished over the remaining parts:
   exactly when `_≺ₙ_`{.Agda} holds of the names, the parameter key bridged by an
   induction identifying a first difference with the naming chapter's recursion on
   vectors.
+- `L.Choice.Table`{.Agda}: that order, turned from a description into an
+  **object**, one at every ordinal. `Related`{.Agda} is the class realized, the
+  pairs of two members of a stage the order there relates, carrying the
+  comparison **truncated** because a strict well-order is not known to be
+  proposition-valued, and `strict`{.Agda} takes the truncation off again for
+  every such order at once by splitting on trichotomy before eliminating
+  anything. `ApproxAt`{.Agda} and `GraphAt`{.Agda} are the approximation and its
+  graph, shaped as in `L.Coding.Sequence`{.Agda} but generic in the step
+  condition, which enters as a parameter in two forms with one meaning, at slots
+  because the graph must bind the table it consults and at constants because
+  separation carves with a formula of one free variable.
+  `approx-val`{.Agda} pins every value an approximation records by one
+  membership induction on the argument, with no single-valuedness hypothesis
+  anywhere, and `approx-uniq`{.Agda} is the corollary. `tableAt`{.Agda} is the
+  construction, sealed where it is built, and it carries **two** things at every
+  ordinal, unlike the hierarchy chapter's: the table of relations below it,
+  collected by replacement through `mereFunct`{.Agda}, and the relation at it,
+  separated out of a bound, because the order at a stage has no meta-language
+  term to exhibit. That bound costs one appeal, since the pairs of two members of
+  a stage are a **small** family of elements of `L`, so `smallDom`{.Agda} confines
+  them all at once. `relL-fill`{.Agda}, `relL-rep`{.Agda}, `ix-fill`{.Agda} and
+  `ix-rep`{.Agda} read its membership at the two shapes a member of a stage comes
+  in, the second of which is what a separation and the naming chapter's parameter
+  order both consume. What is left open is the step condition's own adequacy,
+  which is the previous chapter's `StepAt`{.Agda} against the meta step, named
+  here as the two hypotheses of `Described`{.Agda}.
 - `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
   one, the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
@@ -742,7 +779,8 @@ The root, stated today and finished over the remaining parts:
 - `L.Choice.Finite`{.Agda}：有穷诸阶段确是有穷的，且各自带有一个良序。`Tally`{.Agda} 就是全部的有穷性词汇，即一个命中每个成员的有穷族，既不要求单射，也不要求可判定的相等；`powerTally`{.Agda} 靠枚举其上的位向量把它抬到可定义幂集上，因为已清点阶段的每个子集都可定义 (`finSet∈𝒟ₒ`{.Agda})，而 `stageOrder`{.Agda} 沿诸数码跑完这一步。`precedes`{.Agda} 在两个子集**最先分歧之处**比较它们：非自反性白得，传递性由比较两个见证得到，三歧由排中律连同基底的最小元得到。它的良基性压根不是这个比较自身的性质，且在无穷基底上会失效；它是经 `Search`{.Agda} 从点名册买来的，即扫过一个有穷族即得任一非空性质的最小元，再由那一步经典推理把它变成可及性。`limitOrder`{.Agda} 以**层号为主键**装配 `Lset ω`{.Agda}，因为按最先分歧处的诸序并不互相延拓，而把层号放在前面就不必延拓；这也是 `L.WellOrder.Base`{.Agda} 头一回被使唤，且一使唤就是两次，因为层号也在那里被排序。
 - `L.Choice.Name`{.Agda}：把后继阶段的成员写下来。一个 `Name`{.Agda} 是一个元数、一条多一个变量的无参公式，以及一个取自下面那个阶段的参数向量；`denote`{.Agda} 是它刻出的子集，既读在 `Def`{.Agda} 据以定义的那套内层语义中 (`denote-mem`{.Agda})，也读在已内化的表中 (`denote-table`{.Agda})，而 `names-complete`{.Agda} 说后继阶段的每个成员都有名字。`code∈limit`{.Agda} 把无参的码放进 `Lset ω`{.Agda}，因为它由数码与对造成、别无他物，而 `code-inj`{.Agda} 靠把诸常量抹回去使它忠实。`_≺ₙ_`{.Agda} 是写开了的三键字典序比较，先码、再元数、后参数，连同 `SWO`{.Agda} 的全部四条定律与 `leastName`{.Agda}，即非空族中最小的名字。
 - `L.Choice.Step`{.Agda}：每个阶段一个序，作为一族。`birth`{.Agda} 是一个可构造集据以被雕出的那个序数，比包含它的最早阶段低一级；它之所以存在，理由正是选取阶段那一章为一格给出的那条：集合进入塔的唯一途径是被雕出。`stepAt`{.Agda} 是步进，由 `Lset δ`{.Agda} 上的良序到 `Lset (sucV δ)`{.Agda} 上的良序，只有**一支**：处处按**最小名字**给出，即上一章的三键比较沿一个映射拉回，而那个映射之所以是函数，恰恰是因为下面那个阶段已被良序化。初稿曾在极限阶段以下守着第二支；实测下来它是多余的，而它真正贡献的是一道归一化屏障，`opaque`{.Agda} 封印以更低的代价给出同样的屏障。`pullOrder`{.Agda} 沿一个单射搬运良序，是本章写下的唯一一次搬运：步进用它，`carry`{.Agda} 也用它，即把一个阶段的诸成员表示成命名那一章所取用的那个索引类型。依值和上的序一概未造。`orderAt`{.Agda} 就是那一族本身，`SWO`{.Agda} 的四条定律在每个序数处齐备，沿成员归纳造出，且被封印，因为未封印的序会展开成一场遍历层级的递归。它的比较以**诞生阶段为主键**，而正因如此 `endExtension`{.Agda} 分文不花：一次比较从不提到它是在哪个阶段处被读的，故大阶段处的序限制到小阶段上，与那里的序之间是一条**路径**、而不仅仅是一个等价，唯一要干的活是可构造性与序数性的证明无关性。
-- `L.Choice.Internal`{.Agda}：同一个序，用对象语言描述出来，使模型自家的分离能把它雕出来。`InLimitAt`{.Agda} 是那条**骨架**条件，而它是一个「属于极限阶段」的隶属原子，经 `LsetGraphAt`{.Agda} 在常元 `ωʟ`{.Agda} 处说出：无参的码是遗传有穷的，故那场本会从内部判定无参性的递归压根不必写。`NameAt`{.Agda} 是落在诸位上的名字，即一个骨架、一个定义域为元数的载体之上参数序列，以及一个写成**单次** `extAt`{.Agda} 的指称，其条件读的是 `satGraphAt`{.Agda} 在「由元数与骨架造出的键」处所指派的取值；那个键须落在**码集**中，否则图那张作存在绑定的表什么也钉不住。`≺At`{.Agda} **不跑自己的递归**：码用一个对着既有之序的隶属原子，元数用一个数码之间的隶属原子，参数用一次有界字典序量化，而那两个序都以位的身份抵达这条描述。`StepAt`{.Agda} 是这一族的一步，按最小名字给出，只有**一**支，故计划当初想要的最小差公式并不需要。`order-in`{.Agda} 与 `order-out`{.Agda} 是那两半适足性，落在变元环境的变元位上：只要每个关系位都带着「它持有的是哪个序」这条假设，那条公式对两个名字的数据成立，当且仅当 `_≺ₙ_`{.Agda} 对那两个名字成立；参数那个键由一次归纳架桥，把首次相异与命名那一章对向量的递归认同起来。
+- `L.Choice.Internal`{.Agda}：同一个序，用对象语言描述出来，使模型自家的分离能把它雕出来。`InLimitAt`{.Agda} 是骨架的**阶段**条件，而它是一个「属于极限阶段」的隶属原子，经 `LsetGraphAt`{.Agda} 在常元 `ωʟ`{.Agda} 处说出：无参的码是遗传有穷的，故那场本会从内部判定无参性的递归压根不必写。但它并不是无参性，因为遗传有穷的码可以点名遗传有穷的常量；`FreeAt`{.Agda} 才是，而它同样是一个隶属原子，落在**空字母表处**的码集中，所倚的事实是一条无参公式在两个字母表上有同一个码 (`freeCode-in`{.Agda}、`freeCode-out`{.Agda})。读在诸位上 (`codeFree-out`{.Agda})，骨架那一位所持有的恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式，`codeFree-limit`{.Agda} 则由它推出那条阶段条件。`NameAt`{.Agda} 是落在诸位上的名字，即一个落在极限阶段且不带常量的骨架、一个定义域为元数的载体之上参数序列，以及一个写成**单次** `extAt`{.Agda} 的指称，其条件读的是 `satGraphAt`{.Agda} 在「由元数与骨架造出的键」处所指派的取值；有两个码集以位的身份抵达它：载体处那一个，没有它，图那张作存在绑定的表什么也钉不住；以及空字母表处那一个，没有它，那个骨架就不是元层面某个名字的骨架。`≺At`{.Agda} **不跑自己的递归**：码用一个对着既有之序的隶属原子，元数用一个数码之间的隶属原子，参数用一次有界字典序量化，而那两个序都以位的身份抵达这条描述。`StepAt`{.Agda} 是这一族的一步，按最小名字给出，只有**一**支，故计划当初想要的最小差公式并不需要。`order-in`{.Agda} 与 `order-out`{.Agda} 是那两半适足性，落在变元环境的变元位上：只要每个关系位都带着「它持有的是哪个序」这条假设，那条公式对两个名字的数据成立，当且仅当 `_≺ₙ_`{.Agda} 对那两个名字成立；参数那个键由一次归纳架桥，把首次相异与命名那一章对向量的递归认同起来。
+- `L.Choice.Table`{.Agda}：那个序，由描述变成**对象**，每个序数处一个。`Related`{.Agda} 是所实现的那个类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是截断着携带的，因为严格良序并不已知是命题值的，而 `strict`{.Agda} 一举为每一个这样的序把截断脱下来，办法是在消去任何东西之前先按三歧分情形。`ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，形状取自 `L.Coding.Sequence`{.Agda}，但对那条步进条件保持通用；该条件以参数身份取两种形式、只有一个含义进场：落在诸位上，因为图必须绑定它所查阅的那张表；以及落在常元上，因为分离是用单自由变量的公式去雕的。`approx-val`{.Agda} 靠在实参上的一次沿成员的归纳，把逼近所记录的每个取值钉住，任何地方都没有单值性假设，而 `approx-uniq`{.Agda} 是那条推论。`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且与层级那一章不同，它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来，因为阶段处的序没有可供当场拿出的元语言词项。那个界只花一次诉诸，因为一个阶段的两个成员所成的诸对是 `L` 元素的一个**小**族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL-fill`{.Agda}、`relL-rep`{.Agda}、`ix-fill`{.Agda} 与 `ix-rep`{.Agda} 把它的隶属读在「阶段的成员到场时的两种形状」上，其中第二种正是分离与命名那一章的参数序共同消费的那一种。留待解决的是那条步进条件自身的适足性，即上一章的 `StepAt`{.Agda} 对着元层面那一步，此处以 `Described`{.Agda} 的两条假设之名点出。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->
