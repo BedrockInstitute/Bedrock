@@ -2810,3 +2810,54 @@ One row per goal code; update the row in the same commit that changes the status
 
   **These four walls are why (a) was not reached**, and the chapter says so rather than
   reporting a smaller scope.
+
+- **`[L2.4]` obligation (a): all six pieces closed, and a FOURTH obligation found that
+  nobody had named.** `L.Choice.Adequate` 658 lines, whole tree cold 154 s. `src/` is
+  15,435. **The table is still conditional**, and the chapter did not attempt the
+  instantiation because a cheap check settles it against us. Three findings, in the order
+  they matter.
+
+  **(1) No chapter builds the limit-stage order as an element of `L`.** Grep returns three
+  sites: its definition in the finite chapter and its use as a **meta-language** order in
+  two others. The internal description takes the code order as a SET with its two
+  representation lemmas, and nothing supplies that set. **Until one does, the step's
+  adequacy cannot be applied at any concrete carrier**, the faithfulness parameter cannot
+  be instantiated, and the table stays conditional. That is a chapter of its own: the
+  level-primary order on the limit stage, internalized, with its level, its first
+  divergence and its tally.
+
+  **(2) The other relation slot is already discharged**, which is the good news and worth
+  recording so nobody rebuilds it: the faithfulness chapter's two readings hand over
+  exactly the table's own value, and the table's two pinning lemmas are literally the shape
+  the internal description asks for.
+
+  **(3) A shape mismatch in the parameter, not a meaning mismatch.** The faithfulness
+  chapter's parameter offers four slots; the internal step wants seven. Its stated MEANING
+  is right; its ARITY is not the shape the proof delivers. Discharging it means binding
+  three sets and naming two constants, and three extra binders land exactly where that
+  chapter measured one binder at 3 s against 160 s. Either widen the parameter or budget
+  the binders.
+
+  **RULE 20, and it is a finding about a DELIVERED lemma.** `L.Choice.Name`'s
+  `denote-table` **cannot be discharged at all**: not at concrete arguments, not at sealed
+  ones, not at fully variable ones. Restating its own type and filling it with itself does
+  not finish in 400 s, while each of its two factors checks in 2.4 s. The wall is a
+  conversion in **checking** mode: with the result type inferred the same substitution is
+  2.4 s, with it written down it never returns. **A composite of adequacy equations is
+  consumed factor by factor, never as a composite**, and as it stands `denote-table` is
+  unusable by any consumer that writes its goal down. Law 16 also fired again on a six-deep
+  environment, and a six-fold existential's payload had to be read through the frame's own
+  witness type rather than by hand.
+
+  **The last link of piece 6 is blocked in a DELIVERED module, not here.** The meta step's
+  relation is definitionally the comparison of least names, but the step is sealed with no
+  unfolding lemma and the naming helpers are private. Closing it is a small additive change
+  to that chapter, deliberately not made: with (1) open it buys nothing and it touches
+  delivered code.
+
+  **Where the goal stands.** Delivered on `[L2.4]`: about 3,640 lines across nine chapters.
+  Remaining: the limit order internalized, the parameter widened or its binders paid, the
+  small additive exposure in the step chapter, and C7. **The audit's band was 1,900 to
+  3,150 and the goal has passed it while still owing a chapter.** The overrun is entirely
+  on the internal side, and its cause is now precisely stated: the audit priced it as one
+  adequacy, the delivery found three, and this chapter found a fourth.
