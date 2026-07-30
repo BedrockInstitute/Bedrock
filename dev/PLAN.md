@@ -2638,3 +2638,21 @@ One row per goal code; update the row in the same commit that changes the status
   over, called `birth` in the code. `end extension` was registered, being standard.
 
   **Five of eight chapters. The Frontier still has its field.**
+
+- **The surplus branch is deleted, 2026-07-30, by owner ruling.** `L.Choice.Step` 348 to
+  331 and cold 3.1 s to 1.7 s, which is the part the measurement had not predicted: the
+  seal is not merely as good a barrier as the stuck guard, it is a **faster** one. Gone
+  with the branch: the inclusion transfer whose only consumer it was, the successor lemma
+  for the limit stage, the finite chapter's order from the import list, and the chapter's
+  one direct spend of the excluded middle. The prose that justified the branch is gone
+  too, replaced by the measurement and by the reason kept code needs a better warrant than
+  an argument nobody discharged. The base case needed nothing: the first stage is empty,
+  so its members are well-ordered for want of any.
+
+  **`birth stage` registered as 诞生阶段 / 誕生段階**，the rendering delegated to me. The
+  Chinese and Japanese follow the prose's existing rendering of a stage rather than the
+  hierarchy's, which is reserved.
+
+  **A rule I broke and the gate caught**: the Chinese I wrote for this correction used two
+  em dashes. The linter rejected them, they are rewritten with a colon, and it is worth
+  recording that the author of the rule is not exempt from it and did not notice.
