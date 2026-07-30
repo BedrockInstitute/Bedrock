@@ -335,6 +335,27 @@ notes = "tentative (owner review): zh renders by meaning (drop a universe level)
 
 [[term]]
 category = "Logic and philosophy"
+en = "abstraction"
+zh = "抽象"
+ja = "抽象"
+notes = "of parameters: replacing a formula's constants by fresh variables, so a formula with parameters becomes a parameter-free (无参) formula of higher arity plus a vector of the constants; owner ruling 2026-07-30, first used in FOL.Manipulation.Parameters"
+
+[[term]]
+category = "Logic and philosophy"
+en = "occurrence"
+zh = "出现"
+ja = "出現"
+notes = "of a constant in a formula, counted positionally: two occurrences of one constant are two entries, which is what spares the development a decidable equality on the alphabet; owner ruling 2026-07-30"
+
+[[term]]
+category = "Logic and philosophy"
+en = "placement"
+zh = "安置"
+ja = "配置"
+notes = "the map sending each constant occurrence to the variable slot that will carry it; owner ruling 2026-07-30, FOL.Manipulation.Parameters"
+
+[[term]]
+category = "Logic and philosophy"
 en = "Levy hierarchy"
 zh = "Lévy 层级"
 ja = "Lévy 階層"
