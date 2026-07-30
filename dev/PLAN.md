@@ -2905,3 +2905,49 @@ One row per goal code; update the row in the same commit that changes the status
   instantiations the last three chapters are waiting on, then C7. **This is the second time
   this goal has grown a whole internal recursion that no row priced**, and that is now the
   salient fact about it rather than any single chapter's number.
+
+- **`[L2.4]` the earliest-disagreement family, 2026-07-31: all five pieces closed, the
+  limit order is UNCONDITIONAL, and one fork remains.** `L.Choice.Before` 1,110 lines
+  against 400 to 650, cold 4.6 s, whole tree 156 to 172 s. `src/` is 17,005.
+
+  **`L.Choice.Limit.Described` is instantiated**, verified by importing it from a separate
+  module: the code order, its two representation lemmas, the order description with both
+  readings, and the key bundle are now available **with no hypothesis**. Everything that
+  chapter stated conditionally is stated outright.
+
+  **A NINETY-NINE FOLD WALL, and the remedy that was not enough on its own.** Building the
+  family did not finish, killed past 400 s. The template's parameter-carrying-its-own-
+  equation remedy alone brought it to 376 s and no further. **The cause was law 9 in a new
+  place**: five descriptions were unsealed, so every satisfaction at a concrete environment
+  normalized a formula carrying **two** copies of the whole hierarchy description. Sealed
+  where built, each reading in its own unfolding block: **376 s to 3.79 s**, mathematics
+  untouched. The lesson to carry is that the parameter remedy and the seal are not
+  alternatives; this chapter needed both.
+
+  **Three economies worth keeping.** The approximation below a numeral is finite, so the
+  finite-family constructor spans it directly and the template's replacement-plus-graph is
+  not needed at all; that is where the set-sized index actually pays. The predecessor of a
+  numeral is said as its membership-maximal member, two atoms, with no successor operation
+  and vacuous at zero exactly where the recursion is empty. And one description serves two
+  consumers by existentially binding its slots and pinning them to constants with the object
+  equality, rather than writing a second constant-parameterized copy.
+
+  **THE FORK, and it is the last one on this goal.** `L.Choice.Faithful`'s step parameter is
+  still not discharged, and the obstruction is **structural rather than a missing
+  construction**. Three of the six arguments the step adequacy needs are now supplied by the
+  limit chapter. The remaining three are the order **on the carrier being named**, as an
+  element of `L`, and that is exactly what `L.Choice.Table` produces **at each stage, inside
+  the very recursion that the step parameter is feeding**. So the two chapters each hold
+  what the other needs, one stage apart. Closing it is a **re-cut of where the step
+  adequacy is supplied**, inside the table's induction rather than as a top-level parameter,
+  and that changes the shape of delivered chapters. Not taken.
+
+  **A gate defect found by a positive control, and it is a false-green trap.** The glossary
+  checker's avoid-list keys off the language markers, so a forbidden rendering appended
+  **outside** any marker is silently not a violation. A positive control that appends at end
+  of file therefore reports a false green, and the checker must be exercised **inside** a
+  language block to prove it is live. Belongs with the other two gate defects under
+  `[L5.1]`.
+
+  **`[L2.4]` now stands at about 5,200 lines across eleven chapters**, against an audit band
+  of 1,900 to 3,150, and the remaining work is a fork rather than a quantity.
