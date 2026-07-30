@@ -2710,3 +2710,54 @@ One row per goal code; update the row in the same commit that changes the status
   concretely.
 
   **Six of eight chapters. The Frontier still has its field.**
+
+- **`[L2.4]` C6 landed, 2026-07-30, and the remaining debt is larger than every earlier
+  statement of it.** `L.Choice.Internal` gained about 130 lines for the faithfulness
+  repair, `L.Choice.Table` is 459 new. `src/` is 14,347. Cold: Internal 9.9 s, Table 3.0 s.
+
+  **The faithfulness repair is right and it is inert.** Both worries were checked before
+  writing and both resolved, one against the chapter's own guess: key agreement across the
+  two alphabets holds in four lines each way, because the constant readings are functions
+  out of an empty type and any two agree; and the satisfaction reading at a foreign carrier
+  is not needed at all, since the new conjunct is a membership atom and the code set was
+  already generic in its carrier. `codeFree-out` says the skeleton slot holds exactly the
+  code of a parameter-free formula, which is exactly a meta name's code. **But adversarial
+  review proved the repair is consumed by nothing**: its three lemmas have zero use sites,
+  the name description carries the new conjunct as an opaque hypothesis and never opens it,
+  and replacing the conjunct by a tautology leaves the entire rest of the chapter
+  typechecking. So **the gap the previous chapter named still stands**, exactly as that
+  chapter warned, and the repair is a correct statement waiting for a consumer.
+
+  **The table is a FRAME, not a theorem.** Its members are pinned to the meta order in both
+  directions and untruncated, but under two hypotheses saying what the step condition means.
+  Everything else in the chapter is unconditional.
+
+  **THE DEBT WAS UNDERSTATED IN FOUR PLACES AND IS NOW CORRECTED.** The chapter and the
+  index both said the one outstanding obligation is the step description's adequacy.
+  **It is three obligations, not one**, and adversarial review found it by reading what the
+  hypothesis actually quantifies over: the condition must describe the order family at
+  **every** ordinal, and that family is **birth-primary**, with the step entering only as
+  the secondary key at a shared birth. So filling it needs the step's adequacy, **the birth
+  stage described in the object language, which nothing describes yet**, and the code set at
+  a carrier that moves with the birth. Corrected in both languages in the chapter's
+  introduction and recap.
+
+  **A defect no linter catches, and that is the finding worth keeping.** The table chapter
+  was delivered with two lines of tool-call scaffolding after its final marker. Outside
+  every marker, so the weave emits them into **every** language; `make check`, the prose
+  linter, the glossary checker, the Agda linter and the marker checker are all green with
+  them in place, and the site build would have published them. Deleted. **The gate does not
+  check that a file ends where it should**, and that belongs to `[L5.1]` with the two
+  linters that skip untracked files.
+
+  **Revised remaining scope, and it is above the audit's band.** Delivered on this goal:
+  155 plus 619 plus 179 plus 410 plus 331 plus 830 plus 459, about **2,983**. Remaining: a
+  faithfulness chapter measured at 400 to 500 Agda lines by enumerating its six obligations
+  against named existing lemmas, plus the two newly named obligations, plus C7 at 100 to
+  180. **Total lands at roughly 3,800 to 4,300 against the audit's 1,900 to 3,150.** The
+  overrun is not the stratification and not the internalization; it is that the audit
+  priced the internal side as one adequacy and it is three.
+
+  **One surplus surfaced and kept**: the limit-stage conjunct is now derivable from the
+  constant-freeness one. Deleting it is mechanical, about 55 lines and a prose section, and
+  the chapter says it is kept until retired on purpose.
