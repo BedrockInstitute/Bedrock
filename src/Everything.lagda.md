@@ -342,6 +342,7 @@ import L.Axioms.Infinity
 import L.Choice.Stage
 import L.Choice.Finite
 import L.Choice.Name
+import L.Choice.Step
 ```
 
 <!--en-->
@@ -658,6 +659,28 @@ The root, stated today and finished over the remaining parts:
   `_≺ₙ_`{.Agda} is the three-key lexicographic comparison written out, code then
   arity then parameters, with all four `SWO`{.Agda} laws and `leastName`{.Agda},
   the least name of a non-empty family.
+- `L.Choice.Step`{.Agda}: one order at every stage, as a family. `birth`{.Agda}
+  is the ordinal a constructible set is carved over, one below the earliest stage
+  containing it, and it exists for the reason the choice-stage chapter gave for a
+  cell: a set enters the tower only by being carved out. `stepAt`{.Agda} is the
+  step, from a well-order of `Lset δ`{.Agda} to one of `Lset (sucV δ)`{.Agda}, in
+  **two branches**, because the book must not carry two unrelated well-orders of
+  one set: a name's first key is a code compared by `limitOrder`{.Agda}, so below
+  the limit stage the family takes that order, already there and already the one
+  that first key is compared by, and at or above it the order is by **least name**, the
+  previous chapter's three-key comparison pulled back along a map that is a
+  function precisely because the stage below is well-ordered.
+  `pullOrder`{.Agda} moves a well-order along an injection and is the only
+  transfer written: both branches use it, and so does `carry`{.Agda}, the
+  presentation of a stage's members as the index type the naming chapter takes.
+  No order on dependent sums is built. `orderAt`{.Agda} is the family itself, all
+  four `SWO`{.Agda} laws at every ordinal, by membership induction, and it is
+  sealed, since an unsealed order unfolds into a recursion over the hierarchy.
+  Its comparison takes the **birth as the primary key**, which is why
+  `endExtension`{.Agda} then costs nothing: a comparison never mentions the stage
+  it is read at, so the order at a large stage restricted to a small one is a
+  **path** to the order there, not merely an equivalence, and the only work is
+  the proof-irrelevance of constructibility and of ordinal-hood.
 - `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
   one, the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
@@ -695,6 +718,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Choice.Stage`{.Agda}：`L` 的一个集合最先在何处拥有成员，而这正是取代 `L` 的良序的东西。`μ`{.Agda} 是与它相交的最早阶段，是最小序数算子的一个实例，按 `stage`{.Agda} 那样封印；`meet-suc`{.Agda} 使那个阶段成为**后继**，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出，而 `defStage`{.Agda} 是它所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})。`Lset-μ`{.Agda} 把首次现身的那个阶段与定义阶段之上的可定义幂集认同，于是一个最先成员带着一个写在**单一固定阶段**之上的名字，而那正是选取装置所比较的东西。`stageBound`{.Agda} 是记账所在的序数：在一个集合自身的阶段之上，从而经传递性在它的成员及其成员之上，也在 `ω`{.Agda} 之上，而诸名字自身正住在那里。此处不陈述 `L` 上的任何关系，也不跑任何递归。
 - `L.Choice.Finite`{.Agda}：有穷诸阶段确是有穷的，且各自带有一个良序。`Tally`{.Agda} 就是全部的有穷性词汇，即一个命中每个成员的有穷族，既不要求单射，也不要求可判定的相等；`powerTally`{.Agda} 靠枚举其上的位向量把它抬到可定义幂集上，因为已清点阶段的每个子集都可定义 (`finSet∈𝒟ₒ`{.Agda})，而 `stageOrder`{.Agda} 沿诸数码跑完这一步。`precedes`{.Agda} 在两个子集**最先分歧之处**比较它们：非自反性白得，传递性由比较两个见证得到，三歧由排中律连同基底的最小元得到。它的良基性压根不是这个比较自身的性质，且在无穷基底上会失效；它是经 `Search`{.Agda} 从点名册买来的，即扫过一个有穷族即得任一非空性质的最小元，再由那一步经典推理把它变成可及性。`limitOrder`{.Agda} 以**层号为主键**装配 `Lset ω`{.Agda}，因为按最先分歧处的诸序并不互相延拓，而把层号放在前面就不必延拓；这也是 `L.WellOrder.Base`{.Agda} 头一回被使唤，且一使唤就是两次，因为层号也在那里被排序。
 - `L.Choice.Name`{.Agda}：把后继阶段的成员写下来。一个 `Name`{.Agda} 是一个元数、一条多一个变量的无参公式，以及一个取自下面那个阶段的参数向量；`denote`{.Agda} 是它刻出的子集，既读在 `Def`{.Agda} 据以定义的那套内层语义中 (`denote-mem`{.Agda})，也读在已内化的表中 (`denote-table`{.Agda})，而 `names-complete`{.Agda} 说后继阶段的每个成员都有名字。`code∈limit`{.Agda} 把无参的码放进 `Lset ω`{.Agda}，因为它由数码与对造成、别无他物，而 `code-inj`{.Agda} 靠把诸常量抹回去使它忠实。`_≺ₙ_`{.Agda} 是写开了的三键字典序比较，先码、再元数、后参数，连同 `SWO`{.Agda} 的全部四条定律与 `leastName`{.Agda}，即非空族中最小的名字。
+- `L.Choice.Step`{.Agda}：每个阶段一个序，作为一族。`birth`{.Agda} 是一个可构造集据以被雕出的那个序数，比包含它的最早阶段低一级；它之所以存在，理由正是选取阶段那一章为一格给出的那条：集合进入塔的唯一途径是被雕出。`stepAt`{.Agda} 是步进，由 `Lset δ`{.Agda} 上的良序到 `Lset (sucV δ)`{.Agda} 上的良序，分**两支**，因为本书不可以为同一个集合携带两个互不相干的良序：一个名字的第一个键是由 `limitOrder`{.Agda} 比较的码，故在极限阶段以下，这一族取那个序，它早已在那里，且早已是那第一个键据以比较的那一个；在极限阶段之处或之上，序按**最小名字**给出，即上一章的三键比较沿一个映射拉回，而那个映射之所以是函数，恰恰是因为下面那个阶段已被良序化。`pullOrder`{.Agda} 沿一个单射搬运良序，是本章写下的唯一一次搬运：两支都用它，`carry`{.Agda} 也用它，即把一个阶段的诸成员表示成命名那一章所取用的那个索引类型。依值和上的序一概未造。`orderAt`{.Agda} 就是那一族本身，`SWO`{.Agda} 的四条定律在每个序数处齐备，沿成员归纳造出，且被封印，因为未封印的序会展开成一场遍历层级的递归。它的比较以**诞生阶段为主键**，而正因如此 `endExtension`{.Agda} 分文不花：一次比较从不提到它是在哪个阶段处被读的，故大阶段处的序限制到小阶段上，与那里的序之间是一条**路径**、而不仅仅是一个等价，唯一要干的活是可构造性与序数性的证明无关性。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->

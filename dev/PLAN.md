@@ -2598,3 +2598,43 @@ One row per goal code; update the row in the same commit that changes the status
   prose uses it.
 
   **Four of eight chapters. The Frontier still has its field.**
+
+- **`[L2.4]` C4 landed, 2026-07-30.** `L.Choice.Step` 348 against 250 to 400, cold 3.1 s.
+  `src/` is 13,074. The order family across the stages, all four well-order fields at
+  **every** ordinal, verified at concrete ones and at the limit by a probe that also
+  exhibited an inhabitant of the relation, so it is not vacuously ordered.
+
+  **End extension came out as a PATH, not an implication**, which is the chapter's best
+  economy: thirteen lines of path induction plus one line, and both directions and
+  everything else follow by transport. It is free for a reason worth recording: the
+  comparison never mentions the stage it is read at, only the two births, so all that
+  remains is proof irrelevance of constructibility and of ordinality. A perturbation
+  replacing the key step by reflexivity fails with the two stages unequal, so the lemma has
+  genuine content and that content is exactly the change of stage.
+
+  **Well-foundedness is inherited honestly at both levels**, checked by breaking each: the
+  inner descent cannot reuse the parent's accessibility, the step's accessibility cannot be
+  fabricated (the fabrication is caught as non-terminating), and the outer induction cannot
+  be replaced by direct recursion.
+
+  **A MEASURED REDUNDANCY for the owner to rule, and it is a judgement call rather than a
+  bug.** The step has two branches, finite below the limit stage and by-name at or above
+  it. **The finite branch is logically surplus**: taking the name branch in both cases
+  compiles, and deleting the finite branch outright while sealing the step with `opaque`
+  compiles in 3 s, no slower than the delivered version. What is actually load-bearing is
+  not the second branch but the **normalization barrier**: the guard is stuck because the
+  excluded middle is a module parameter, and that is what stops law 13 from firing. An
+  `opaque` seal is an equally good barrier at the same cost. So about twenty lines plus the
+  chapter's one direct spend of the excluded middle are surplus, and they are justified
+  only by a design argument in the prose, that the book should not carry two unrelated
+  well-orders of the limit stage. **That argument is a coherence claim the chapter never
+  proves**, and its own report says so. **Recommendation: delete the finite branch and the
+  claim together**, on minimize-code-subject-to-no-blowup and because an unproved coherence
+  rationale is the weakest kind of justification for kept code. Not executed, because the
+  audit specified two branches and because whether the book wants that coherence as a
+  design commitment is the owner's call, not a measurement's.
+
+  **One coinage surfaced and not registered**: the ordinal a constructible set is carved
+  over, called `birth` in the code. `end extension` was registered, being standard.
+
+  **Five of eight chapters. The Frontier still has its field.**

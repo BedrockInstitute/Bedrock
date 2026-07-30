@@ -758,6 +758,13 @@ notes = "the Def operator's output; V.Definability"
 
 [[term]]
 category = "Set theory"
+en = "end extension"
+zh = "末端扩张"
+ja = "端拡大"
+notes = "L.Choice.Step: the order at a larger stage restricted to a smaller one is the order there; zh/ja follow the standard set-theoretic rendering"
+
+[[term]]
+category = "Set theory"
 en = "layer"
 zh = "层"
 ja = "層"
