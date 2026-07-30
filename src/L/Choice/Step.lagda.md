@@ -54,7 +54,7 @@ open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem; stage-earliest )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 open import L.Choice.Stage {ℓ} lem using ( IsPredOf; isPropPredOf )
-open import L.Choice.Finite {ℓ} lem using ( limitOrder; Tri-map )
+open import L.Choice.Finite {ℓ} lem using ( Tri-map )
 open import L.Choice.Name {ℓ} lem using ( module Naming )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( Tri; lt; eq; gt; SWO )
 
@@ -71,7 +71,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
-open InfinitySet using ( sucV; ω; ω-next )
+open InfinitySet using ( sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
@@ -285,15 +285,6 @@ carry A w = pullOrder ⟪ A ⟫ (Mem A) w (λ m → ⟪ A ⟫↪ m , memOf A m) 
       → _≡_ {A = Mem A} (⟪ A ⟫↪ u , memOf A u) (⟪ A ⟫↪ v , memOf A v) → u ≡ v
   inj u v q = isEmbedding→Inj isEmb⟪ A ⟫↪ u v (cong fst q)
 
-memInto : (A B : S) → ((x : S) → ⟨ x ∈ˢ A ⟩ → ⟨ x ∈ˢ B ⟩)
-        → SWO (Mem B) → SWO (Mem A)
-memInto A B into w =
-  pullOrder (Mem A) (Mem B) w (λ a → a .fst , into (a .fst) (a .snd)) inj
-  where
-  inj : (u v : Mem A)
-      → _≡_ {A = Mem B} (u .fst , into (u .fst) (u .snd))
-                        (v .fst , into (v .fst) (v .snd)) → u ≡ v
-  inj u v q = Σ≡Prop (λ x → snd (x ∈ˢ A)) (cong fst q)
 ```
 
 <!--en-->
@@ -308,38 +299,34 @@ The step is the chapter's first deliverable: from a well-order of the members of
 `New δ`{.Agda} below, which is to say of the definable subsets of
 `Lset δ`{.Agda}.
 
-It has two branches, and the reason is that the book must not carry two unrelated
-well-orders of one set. A name's first key is a code; a code is a member of the
-limit stage; and codes are compared by `limitOrder`{.Agda}, the finite chapter's
-well-order of `Lset ω`{.Agda}. Below the limit stage, therefore, an order on the
-members is already there, and it is the very order a name's first key is compared
-by, so the family takes it and adds nothing. At or above the limit stage
-`limitOrder`{.Agda} says nothing about the members, and the names are the only
-handle there is.
+It has one branch, and it was written with two. Below the limit stage the
+members are already ordered, by the finite chapter's well-order of
+`Lset ω`{.Agda}, which is also the order a name's first key is compared by; so a
+first draft took that order there and the names only above. **Measured, the
+second branch is surplus**: taking the names everywhere checks in the same three
+seconds. What the guard was actually contributing was not a case distinction but
+a **normalization barrier**, since a decision by the excluded middle is stuck
+while the excluded middle is a module parameter, and being stuck is what stops
+this order from unfolding into the naming chapter's. The `opaque`{.Agda} seal is
+that barrier, said in one word, and it is why the definition below is one line.
 
-The branch is decided by asking whether the stage's own ordinal belongs to `ω`,
-which is to say whether everything about to be compared is already a member of
-the limit stage. The successor of a member of `ω` is a member of `ω`, so in that
-case the members of `Lset (sucV δ)`{.Agda} are members of `Lset ω`{.Agda} and the
-inclusion transfer applies.
+The reason the first draft gave, that the book should not carry two unrelated
+well-orders of one set, was a coherence claim, and this chapter never proved it.
+Kept code needs a better warrant than an argument nobody discharged, so the
+branch is gone and the claim with it. The base case needs nothing either: the
+first stage is empty, so its members are well-ordered for want of any.
 <!--zh-->
 步进是本章的第一件交付物：由 `Lset δ`{.Agda} 诸成员上的一个良序，得出 `Lset (sucV δ)`{.Agda} 诸成员上的一个良序 (下文记作 `New δ`{.Agda})，也就是 `Lset δ`{.Agda} 的诸可定义子集上的良序。
 
-它有两支，理由是本书不可以为同一个集合携带两个互不相干的良序。一个名字的第一个键是码；码是极限阶段的成员；而诸码由 `limitOrder`{.Agda} 比较，那是有穷那一章为 `Lset ω`{.Agda} 造的良序。故在极限阶段以下，诸成员上的序早已在那里，且它恰是一个名字的第一个键据以比较的那个序，于是这一族取它，不再添加什么。在极限阶段之处或之上，`limitOrder`{.Agda} 对那些成员什么也没说，而名字是仅有的把手。
+它只有一支，而当初写成了两支。极限阶段以下诸成员本已有序，即有穷那一章为 `Lset ω`{.Agda} 造的良序，而那也正是一个名字的第一个键据以比较的序；故初稿在那里取那个序，只在极限阶段之上才动用名字。**实测下来，第二支是多余的**：处处取名字，同样三秒检查完毕。那个守卫真正贡献的并不是一次情形区分，而是一道**归一化屏障**：排中律尚是模块参数时，据它作出的判定是卡住的，而正是「卡住」阻止了这个序展开成命名那一章的序。`opaque`{.Agda} 封印就是那道屏障，一个词说完，这也是下面那条定义只有一行的原因。
 
-分支的判定，是问该阶段自己的序数是否属于 `ω`，也就是问「即将被比较的一切是否已经是极限阶段的成员」。`ω` 的成员的后继仍是 `ω` 的成员，故在那种情形下 `Lset (sucV δ)`{.Agda} 的诸成员都是 `Lset ω`{.Agda} 的成员，包含式的搬运随即适用。
+初稿给出的理由，即本书不该为同一个集合携带两个互不相干的良序，是一条相干性主张，而本章从未证明它。留住代码所需的正当理由，要强过一个无人交付的论证，故那一支已删，那条主张随之。基础情形也无须任何东西：第一个阶段是空的，其诸成员因无可比较而良序。
 <!--/-->
 
 ```agda
 New : S → Type (ℓ-suc ℓ)
 New δ = Mem (Lset (sucV δ))
 
-suc∈ω : (δ : S) → ⟨ δ ∈ˢ ω ⟩ → ⟨ sucV δ ∈ˢ ω ⟩
-suc∈ω δ i = ∈∈ₛ {a = sucV δ} {b = ω} .snd (ω-next δ (∈∈ₛ {a = δ} {b = ω} .fst i))
-
-insideLimit : (δ : S) → ⟨ δ ∈ˢ ω ⟩ → SWO (New δ)
-insideLimit δ i = memInto (Lset (sucV δ)) (Lset ω)
-  (λ x h → Lset-mono {α = ω} {β = sucV δ} (suc∈ω δ i) {x = x} h) limitOrder
 ```
 
 <!--en-->
@@ -399,12 +386,9 @@ search for a least name.
 <!--/-->
 
 ```agda
-stepAt : (δ : S) → SWO ⟪ Lset δ ⟫ → SWO (New δ)
-stepAt δ w = branch (lem (δ ∈ˢ ω))
-  where
-  branch : ⟨ δ ∈ˢ ω ⟩ ⊎ (⟨ δ ∈ˢ ω ⟩ → Empty.⊥) → SWO (New δ)
-  branch (inl i) = insideLimit δ i
-  branch (inr _) = byName δ w
+opaque
+  stepAt : (δ : S) → SWO ⟪ Lset δ ⟫ → SWO (New δ)
+  stepAt δ w = byName δ w
 ```
 
 <!--en-->

@@ -758,6 +758,13 @@ notes = "the Def operator's output; V.Definability"
 
 [[term]]
 category = "Set theory"
+en = "birth stage"
+zh = "诞生阶段"
+ja = "誕生段階"
+notes = "L.Choice.Step: the ordinal a constructible set is carved over, one below the least stage containing it; owner delegated the rendering 2026-07-30. zh 阶段 / ja 段階 follow the prose's existing rendering of stage, against 階層 which is reserved for hierarchy"
+
+[[term]]
+category = "Set theory"
 en = "end extension"
 zh = "末端扩张"
 ja = "端拡大"
