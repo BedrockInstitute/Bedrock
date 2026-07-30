@@ -2861,3 +2861,47 @@ One row per goal code; update the row in the same commit that changes the status
   3,150 and the goal has passed it while still owing a chapter.** The overrun is entirely
   on the internal side, and its cause is now precisely stated: the audit priced it as one
   adequacy, the delivery found three, and this chapter found a fourth.
+
+- **`[L2.4]` the limit order, 2026-07-30: three pieces unconditional, the fourth is another
+  recursion, and the probe returned AMBER on SCOPE rather than on feasibility.**
+  `L.Choice.Limit` 458 lines. `src/` is 15,894.
+
+  **Unconditional here**: the level said in the object language, both ways, at variable
+  slots, with the numeral arriving as a variable carrying its defining equation; the
+  earliest-disagreement STEP, both ways, with the base relation and base stage in SLOTS so
+  it can stand where the relation is a recursion value; and the two keys composed, both
+  ways, as a disjunction that binds two levels in one disjunct and one in the other, so no
+  object-language equation between levels is ever needed.
+
+  **Conditional**: the composition and the set sit in a frame parameterized by the
+  earliest-disagreement FAMILY, which is what the probe found and what makes this amber.
+  That family is **a second internal recursion in its own right**, the omega-indexed
+  relation-valued analogue of the three chapters that internalized the tower, and the
+  chapter's own prose closes the escape: **the earliest-disagreement orders do not extend
+  from one stage to the next**, which is exactly why the limit order is level-primary, so
+  there is no rank recursion that collapses the family and no non-recursive description.
+  Estimated 400 to 650 on its own, cheaper than the tower on three counts (the index is a
+  set, so replacement applies directly and the class-collection half disappears; the outer
+  induction is on the naturals, which the finite chapter already runs twice; and no side
+  condition is needed) and dearer on two (the value is a relation, so every step pays a
+  separation, and the previous relation reaches a slot inside the agreement clause, which is
+  the shape that walled at 144 s here).
+
+  **Law 1 measured again at 82x, at a new place**: the level inlined at its six sites cost
+  144.55 s; arriving as a variable with its defining equation, 1.76 s. Localized by a third
+  variant, so the minimality clause is not implicated: the wall is the sealed tower element
+  reaching a slot, and the level is a classical accessibility search, so conversion at the
+  slot forces it.
+
+  **Two things worth keeping that are not laws.** The first universal quantifier used
+  anywhere under `src/L/` appears here, and it is free: the model's conjunction is a genuine
+  product and its implication a function, so a bounded universal is proved by a lambda with
+  no truncation anywhere. And the second key's description needs no equation between levels
+  because the disjunction binds a different number of levels in each disjunct, which is
+  worth remembering the next time an object-language equation looks unavoidable.
+
+  **Where `[L2.4]` stands.** About 4,100 lines across ten chapters, against an audit band of
+  1,900 to 3,150. Remaining: the earliest-disagreement family (400 to 650), then the
+  instantiations the last three chapters are waiting on, then C7. **This is the second time
+  this goal has grown a whole internal recursion that no row priced**, and that is now the
+  salient fact about it rather than any single chapter's number.

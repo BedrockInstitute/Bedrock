@@ -347,6 +347,7 @@ import L.Choice.Internal
 import L.Choice.Table
 import L.Choice.Faithful
 import L.Choice.Adequate
+import L.Choice.Limit
 ```
 
 <!--en-->
@@ -777,6 +778,39 @@ The root, stated today and finished over the remaining parts:
   the step's own adequacy, `L.Choice.Internal`{.Agda}'s `StepAt`{.Agda} against
   `stepAt`{.Agda}, which enters as the parameter `Stp`{.Agda} with `stp-out`{.Agda}
   and `stp-in`{.Agda} as its meaning.
+- `L.Choice.Limit`{.Agda}: the order on the members of the limit stage, as an
+  element of `L`, which is what the internalization frame's **code slot** has been
+  asking for. `LevelAt`{.Agda} is the level said in the object language, three
+  conjuncts and no constant but `ω`: the slot holds a member of `ω`, the tower
+  there holds the set, and no smaller numeral's tower does. Both readings stand at
+  variable slots, with the level arriving as a **variable numeral** carrying its
+  own defining equation, which is the difference between 145 s and 1.8 s, since
+  the level is a classical accessibility recursion and conversion at a slot forces
+  it open. `PrecedesAt`{.Agda} is one step of the earliest-disagreement comparison
+  with nothing concrete in it: the base relation and the base stage are held in
+  slots, so the description can stand where the relation is the value of a
+  recursion, and the base relation's membership is reached by `appAt`{.Agda},
+  since a pair is described and not named. `strictLimit`{.Agda} takes the
+  truncation off a comparison by splitting on trichotomy first.
+  `LimitOrdAt`{.Agda} joins the two keys as a disjunction whose first disjunct
+  binds two levels and compares them by membership and whose second binds
+  **one**, so an equation between levels never enters the object language.
+  `pairsBound`{.Agda} confines every pair the order could relate by
+  `smallDom`{.Agda}, and `codeOrder`{.Agda} is the separation out of it, sealed
+  where it is built; `codeOrder-fill`{.Agda} and `codeOrder-rep`{.Agda} are the
+  two representation lemmas, and `CodeKeys.AtParams`{.Agda} is
+  `Adequacy.Keys`{.Agda} with its code slot filled by them, at the same two
+  arguments and with no adapter. All of it is conditional on **one** hypothesis,
+  `BeforeAt`{.Agda} with its two readings against `before`{.Agda}, which is the
+  earliest-disagreement family along the numerals said inside: a recursion whose
+  values are relations, so an approximation, cheaper than the tower because the
+  index is a member of `ωʟ`{.Agda} and the step is already written. Two
+  measurements, each an old law in a new place: a case split whose scrutinee is a
+  **bundle's** comparison and whose conclusion is a satisfaction does not finish,
+  and written on an explicit sum with named branches it costs nothing (past 300 s
+  against 2.4 s); and the composed description must be **sealed where it is
+  built**, since the separation's condition unfolds it under two binders (past
+  300 s against 2.7 s).
 - `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
   one, the verbatim
   statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
@@ -819,6 +853,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Choice.Table`{.Agda}：那个序，由描述变成**对象**，每个序数处一个。`Related`{.Agda} 是所实现的那个类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是截断着携带的，因为严格良序并不已知是命题值的，而 `strict`{.Agda} 一举为每一个这样的序把截断脱下来，办法是在消去任何东西之前先按三歧分情形。`ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，形状取自 `L.Coding.Sequence`{.Agda}，但对那条步进条件保持通用；该条件以参数身份取两种形式、只有一个含义进场：落在诸位上，因为图必须绑定它所查阅的那张表；以及落在常元上，因为分离是用单自由变量的公式去雕的。`approx-val`{.Agda} 靠在实参上的一次沿成员的归纳，把逼近所记录的每个取值钉住，任何地方都没有单值性假设，而 `approx-uniq`{.Agda} 是那条推论。`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且与层级那一章不同，它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来，因为阶段处的序没有可供当场拿出的元语言词项。那个界只花一次诉诸，因为一个阶段的两个成员所成的诸对是 `L` 元素的一个**小**族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL-fill`{.Agda}、`relL-rep`{.Agda}、`ix-fill`{.Agda} 与 `ix-rep`{.Agda} 把它的隶属读在「阶段的成员到场时的两种形状」上，其中第二种正是分离与命名那一章的参数序共同消费的那一种。留待解决的是那条步进条件自身的适足性，即上一章的 `StepAt`{.Agda} 对着元层面那一步，此处以 `Described`{.Agda} 的两条假设之名点出。
 - `L.Choice.Faithful`{.Agda}：把描述做成忠实的，并把那个框架的两条假设解除到只剩一条。`BirthAt`{.Agda} 是**诞生阶段**在对象语言中的说法，它不点名任何常元，也不需要后继运算：那一位处的塔不装这个集合，而那座塔的可定义幂集装它，而 `Lset-suc`{.Agda} 使这两条等价于「比包含它的最小阶段低一级」，且只花在元层面一侧。`BirthAt-out`{.Agda} 与 `BirthAt-in`{.Agda} 是它落在变元位上的两条读式，唯一的假设是序数性，其中可靠性是一次对着最小阶段的三歧分情形，写成一个具名辅助。`isCodeAnyAt`{.Agda} 是**任意**元数处、落在一位所持载体上的码谓词，而它是**实例化、不是构造**：元数绑定那个合取项与见证那个合取项都早已存在，新的只是它们的会合；`CodesAt`{.Agda} 是它们雕出的那个集合，一次 `extAt`{.Agda}，其两条读式把那一位钉在该载体之上的码集上，于是命名描述的码集那一位由描述钉住、而不由外部的一条等式钉住。`order-unfold`{.Agda} 是序之族在一个阶段处的定义方程，即在递归的计算规则上作的一次 `cong`{.Agda}；`bornIn`{.Agda} 是 `birth-in`{.Agda} 的逆，它为这条描述省下一层绑定；`stepMoved`{.Agda} 沿载体之间的一条等式搬运一次步进比较，是就地重建、而不是伸手去另一个模块里够。`CondCore`{.Agda} 是阶段处的序被完整描述出来，以诞生阶段为主键，对步进条件保持通用：它绑定四个集合，把阶段取作**词项**，使得常元那一形式不花绑定，且**在被造出之处封印**。`Cond`{.Agda}、`Cond₀`{.Agda}、`cond-spec`{.Agda} 与 `cond₀-spec`{.Agda} 是上一章那个框架所索取的两种形式连同它们的含义，于是 `Described`{.Agda} 可以施用，它所证的一切都可取用，条件只有那个步进参数、别无其他。本章记下四条实测，因为每一条都是定律、不是偏好：诞生描述所满足于其上的那两个元素必须封印 (178 秒对 2 秒)、环境必须写全而不可缩写 (207 秒对 3 秒)、结论落在满足关系上的两路分情形必须是具名辅助而绝不可用 `with`{.Agda} (超过 300 秒)、以及读在诸常元上的描述必须在被造出之处封印 (每条读式 160 秒)。不在此处的，是那一步自身的适足性，即 `L.Choice.Internal`{.Agda} 的 `StepAt`{.Agda} 对着 `stepAt`{.Agda}，它以参数 `Stp`{.Agda} 的身份进场，`stp-out`{.Agda} 与 `stp-in`{.Agda} 是它的含义。
 - `L.Choice.Adequate`{.Agda}：那一步自身的适足性，对着命名那一章的比较。`paramSeq-in`{.Agda} 与 `paramSeq-out`{.Agda} 是参数那个合取项的两个方向：载体之上的一个向量，就是它之上一个定义域为元数的环境；而任何这样的环境都能被读回成一个向量，且**不带截断**，因为某个序号处的条目是命题，而一个取值的索引是一条纤维，故一分有穷选择也不花。`envAt`{.Agda}、`numAt`{.Agda}、`keyAt`{.Agda} 与 `valAt`{.Agda} 是指称那个合取项所满足于其上的四个元素，在被造出之处封印；`codeEl`{.Agda} 与 `envEl`{.Agda} 是另外两个，供最小名字描述所携带的那个全称使用。`Named.Body.denote-fill`{.Agda} 与 `Named.Body.denote-read`{.Agda} 是指称的两个方向，长四环：扩张后的环境是被推到诸参数前面的那个成员，它的长度是元数加一，键是那个长度与骨架之对，而图在那里的取值就是载体之上的满足关系。`NameAt-fill`{.Agda} 与 `NameAt-read`{.Agda} 把五个合取项装配成一个元层面名字、又拆回来；`Least.Min.LeastAt-fill`{.Agda} 与 `Least.Min.LeastAt-read`{.Agda} 对最小名字做同样的事，那个全称在「一个名字自己的三样数据」处实例化；而 `Least.Step.StepAt-fill`{.Agda} 与 `Least.Step.StepAt-read`{.Agda} 是那一步，即两个最小名字加一次比较。`leastPin`{.Agda} 靠最小元的唯一性，把「这条描述称作最小」的那个名字与 `leastName`{.Agda} 交回的那个认同起来。这一切都站在上一章留下的那个框架里：每个关系位都带着「它持有的是哪个序」这条假设。三次实测，每一条都是在新地方遇上的旧规矩：适足性等式的**复合**无法由「对着写出来的类型」的一次代换交割，任何实参都不行、变元也不行 (`denote-table`{.Agda} 400 秒跑不完，而它的两个因子 `denote-mem`{.Agda} 与 `val-sat`{.Agda} 各自 2.4 秒交割)，故复合逐因子消费；六层绑定那一块要求它的环境被写开，不可用 `where`{.Agda} 缩写 (超过 400 秒对 20 秒)；而六重存在的载荷经 `StepOf`{.Agda} 读出，绝不经手写的 Σ。在 `L.Choice.Table`{.Agda} 的结果成为无条件之前仍然缺席的东西，本章据实点名：那个框架里为**诸码**所设的关系位，要的是作为 `L` 之元素的 `limitOrder`{.Agda}，而至今无人造出它。
+- `L.Choice.Limit`{.Agda}：极限阶段诸成员上的序，作为 `L` 的一个元素，而这正是内化那个框架里**为诸码所设的位**一直索取的东西。`LevelAt`{.Agda} 是层号在对象语言中的说法，三个合取项，且除 `ω` 外不点名任何常元：那一位持有 `ω` 的一个成员、那里的塔装着这个集合、而没有更小数码的塔装它。两条读式都站在变元位上，而层号以**变元数码**的身份到场、携带它自己的定义等式，这正是 145 秒与 1.8 秒之差，因为层号是一场经典可及性递归，而槽位处的转换检查把它撬开。`PrecedesAt`{.Agda} 是最先分歧处那次比较的单独一步，其中不含任何具体之物：基底关系与基底阶段被握在槽位里，故这条描述能站在「关系是某场递归之取值」的地方；而基底关系的那次隶属经 `appAt`{.Agda} 抵达，因为对是被描述的、不是被点名的。`strictLimit`{.Agda} 先按三歧分情形，把一次比较上的截断脱下来。`LimitOrdAt`{.Agda} 把两个键接成一个析取，第一支绑两个层号并按隶属比较它们，第二支绑**一个**，于是层号之间的等式根本不进对象语言。`pairsBound`{.Agda} 经 `smallDom`{.Agda} 把那个序可能关联的每一个对都禁闭起来，而 `codeOrder`{.Agda} 是从它上面分离出来的、在造出之处封印；`codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda} 是两条表示引理，而 `CodeKeys.AtParams`{.Agda} 就是 `Adequacy.Keys`{.Agda}，其为诸码所设的位由它们填上，实参相同，中间不设转接。这一切都以**一条**假设为条件，即 `BeforeAt`{.Agda} 连同它对着 `before`{.Agda} 的两条读式，也就是沿诸数码的那族最先分歧之序在内部的说法：一场取值为关系的递归，故要说的是逼近；它比塔便宜，因为索引是 `ωʟ`{.Agda} 的成员，而那一步已经写好。两次实测，每一条都是在新地方遇上的旧规矩：一次分情形，若其被检者是某个**束**的比较、而其结论是一个满足关系，就跑不完，而写在一个显式的和上、诸支具名，则不花分文 (超过 300 秒对 2.4 秒)；以及那条接合起来的描述必须**在造出之处封印**，因为分离的那条条件会在两层绑定之下把它展开 (超过 300 秒对 2.7 秒)。
 - `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
 - `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
 <!--/-->
