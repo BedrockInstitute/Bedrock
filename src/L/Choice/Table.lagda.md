@@ -204,6 +204,76 @@ module _ (α : V ℓ) (oα : IsOrd α) (a b : Mem (Lset α)) where
 ```
 
 <!--en-->
+## Whatever realizes the class, read at both shapes
+<!--zh-->
+## 凡实现那个类者，读在两种形状上
+<!--/-->
+
+<!--en-->
+The two readings a consumer wants are membership in **a** set that realizes the
+class, and they are stated of any such set rather than of the one this chapter
+builds. That is not generality for its own sake. The set the naming machinery
+must be handed is the relation at the stage below the one being built, and inside
+the construction that set arrives from the table, as a value with the hypothesis
+that it realizes the class there; whereas the set this chapter finally returns
+exists only after the construction is finished. Stated of any realizing set, the
+two readings are available a stage earlier than the construction, and that is
+exactly where they are wanted.
+
+Both are two lines. A member of a stage reaches the model as a pair with its
+constructibility proof, `Related`{.Agda} is read at the pair the model builds
+rather than at the meta pair, and one congruence along `prʟ-fst`{.Agda} moves
+between them.
+<!--zh-->
+消费方所要的那两条读式，是「隶属于**某个**实现那个类的集合」，而它们陈述的对象是任何这样的集合、而不是本章所造的那一个。这不是为一般性而一般性。命名那套机器必须被交到手上的，是「正在建造的那个阶段之下一级」处的关系，而在构造内部，那个集合是从表上来的，作为一个取值、带着「它在那里实现那个类」这条假设；而本章最终交回的那个集合，要等构造做完才存在。陈述为「任何实现该类的集合」，这两条读式便比构造早一个阶段可用，而那恰是它们被需要之处。
+
+两条各两行。阶段的一个成员抵达模型时是一个对，携带它的可构造性证明；`Related`{.Agda} 读在模型所造的那个对上、而不是元层面那个对上，而沿 `prʟ-fst`{.Agda} 的一次同余在两者之间搬运。
+<!--/-->
+
+```agda
+module _ (α : V ℓ) (oα : IsOrd α) (r : S) (hr : IsRel α r) where
+  private
+    memL : Mem (Lset α) → S
+    memL c = fst c , Lset→isL α oα (fst c) (snd c)
+
+    atRel : (a b : Mem (Lset α))
+          → (fst (prʟ (memL a) (memL b)) ∈ fst r)
+          ≡ (pr (fst a) (fst b) ∈ fst r)
+    atRel a b = cong (λ x → x ∈ fst r) (prʟ-fst (memL a) (memL b))
+
+    atRelated : (a b : Mem (Lset α))
+              → ⟨ Related α (fst (prʟ (memL a) (memL b))) ⟩
+              ≡ ⟨ Related α (pr (fst a) (fst b)) ⟩
+    atRelated a b = cong (λ x → ⟨ Related α x ⟩) (prʟ-fst (memL a) (memL b))
+
+  rel-fill : (a b : Mem (Lset α)) → relOf (orderAt α oα) a b
+           → ⟨ pr (fst a) (fst b) ∈ fst r ⟩
+  rel-fill a b h = subst ⟨_⟩ (atRel a b)
+    (hr (prʟ (memL a) (memL b)) .snd
+      (transport (sym (atRelated a b)) (related-in α oα a b h)))
+
+  rel-rep : (a b : Mem (Lset α))
+          → ⟨ pr (fst a) (fst b) ∈ fst r ⟩ → relOf (orderAt α oα) a b
+  rel-rep a b h = related-out α oα a b
+    (transport (atRelated a b)
+      (hr (prʟ (memL a) (memL b)) .fst (subst ⟨_⟩ (sym (atRel a b)) h)))
+
+  private
+    atIx : ⟪ Lset α ⟫ → Mem (Lset α)
+    atIx m = ⟪ Lset α ⟫↪ m , memOf (Lset α) m
+
+  open SWO (carry (Lset α) (orderAt α oα)) using () renaming ( _<∙_ to _≺ᶜ_ )
+
+  ixRel-fill : (u v : ⟪ Lset α ⟫) → u ≺ᶜ v
+             → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst r ⟩
+  ixRel-fill u v = rel-fill (atIx u) (atIx v)
+
+  ixRel-rep : (u v : ⟪ Lset α ⟫)
+            → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst r ⟩ → u ≺ᶜ v
+  ixRel-rep u v = rel-rep (atIx u) (atIx v)
+```
+
+<!--en-->
 ## What a table records
 <!--zh-->
 ## 一张表记录了什么
@@ -805,67 +875,40 @@ it is built.
 <!--/-->
 
 <!--en-->
-The last two statements are the chapter's deliverable, and they are the
-specification read at the two shapes a member of a stage comes in. At pairs of a
-set with its membership they are `related-in`{.Agda} and `related-out`{.Agda}
-composed with the specification. At the stage's own index type they are the same
-two, with the index map's image supplied as the member, which is exactly the shape
-the naming chapter's parameter order is asked for: a set of the model, with a pair
-of it belonging exactly when the order at the stage puts one index before the
-other.
+The last four statements are the chapter's deliverable, and each is one of the
+readings above at the set this chapter builds: the relation at the stage realizes
+the class, so it is a set the readings apply to. Nothing new is proved here; what
+is fixed is which realizing set is meant.
 
 Nothing here is an approximation to the statement. The membership is an
 equivalence, so a separation that carves with this set carves with the order
 itself, and that is what the last chapter of the part will do.
 <!--zh-->
-最后两条陈述是本章的交付物，而它们就是那条规格读在「阶段的成员到场时的两种形状」上。在「集合连同它的隶属」之对上，它们是 `related-in`{.Agda} 与 `related-out`{.Agda} 复合上那条规格。在阶段自己的索引类型上，它们是同样两条，只是把索引映射的像当作成员供上，而那恰是命名那一章的参数序被索取时的形状：模型的一个集合，其上一个对属于它当且仅当阶段处的序把一个索引排在另一个之前。
+最后四条陈述是本章的交付物，而每一条都是上文那些读式读在本章所造的那个集合上：阶段处的关系实现那个类，故它是那些读式适用的一个集合。此处不证任何新东西；被定下来的是「所指的是哪一个实现该类的集合」。
 
 此处没有任何东西是对那条陈述的近似。隶属是一条等价，故拿这个集合去作的分离，就是拿那个序本身去作的分离，而这正是本部最后一章要做的事。
 <!--/-->
 
 ```agda
   module _ (α : V ℓ) (hα : ⟨ isL α ⟩) (oα : IsOrd α) where
-    private
-      memL : Mem (Lset α) → S
-      memL c = fst c , Lset→isL α oα (fst c) (snd c)
-
-      atRel : (a b : Mem (Lset α))
-            → (fst (prʟ (memL a) (memL b)) ∈ fst (relL α hα oα))
-            ≡ (pr (fst a) (fst b) ∈ fst (relL α hα oα))
-      atRel a b = cong (λ x → x ∈ fst (relL α hα oα)) (prʟ-fst (memL a) (memL b))
-
-      atRelated : (a b : Mem (Lset α))
-                → ⟨ Related α (fst (prʟ (memL a) (memL b))) ⟩
-                ≡ ⟨ Related α (pr (fst a) (fst b)) ⟩
-      atRelated a b = cong (λ x → ⟨ Related α x ⟩) (prʟ-fst (memL a) (memL b))
-
     relL-fill : (a b : Mem (Lset α)) → relOf (orderAt α oα) a b
               → ⟨ pr (fst a) (fst b) ∈ fst (relL α hα oα) ⟩
-    relL-fill a b h = subst ⟨_⟩ (atRel a b)
-      (relL-spec α hα oα (prʟ (memL a) (memL b)) .snd
-        (transport (sym (atRelated a b)) (related-in α oα a b h)))
+    relL-fill = rel-fill α oα (relL α hα oα) (relL-spec α hα oα)
 
     relL-rep : (a b : Mem (Lset α))
              → ⟨ pr (fst a) (fst b) ∈ fst (relL α hα oα) ⟩
              → relOf (orderAt α oα) a b
-    relL-rep a b h = related-out α oα a b
-      (transport (atRelated a b)
-        (relL-spec α hα oα (prʟ (memL a) (memL b)) .fst
-          (subst ⟨_⟩ (sym (atRel a b)) h)))
-
-    private
-      atIx : ⟪ Lset α ⟫ → Mem (Lset α)
-      atIx m = ⟪ Lset α ⟫↪ m , memOf (Lset α) m
+    relL-rep = rel-rep α oα (relL α hα oα) (relL-spec α hα oα)
 
     open SWO (carry (Lset α) (orderAt α oα)) using () renaming ( _<∙_ to _≺ᶜ_ )
 
     ix-fill : (u v : ⟪ Lset α ⟫) → u ≺ᶜ v
             → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst (relL α hα oα) ⟩
-    ix-fill u v = relL-fill (atIx u) (atIx v)
+    ix-fill = ixRel-fill α oα (relL α hα oα) (relL-spec α hα oα)
 
     ix-rep : (u v : ⟪ Lset α ⟫)
            → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst (relL α hα oα) ⟩ → u ≺ᶜ v
-    ix-rep u v = relL-rep (atIx u) (atIx v)
+    ix-rep = ixRel-rep α oα (relL α hα oα) (relL-spec α hα oα)
 ```
 
 <!--en-->
@@ -882,6 +925,13 @@ off again for every strict well-order at once, by splitting on trichotomy before
 eliminating anything. `Realizes`{.Agda} says a set of the model realizes that
 class, written as an indexed conjunction of two implications so that it is a
 proposition of the model rather than an equality one universe up.
+`rel-fill`{.Agda}, `rel-rep`{.Agda}, `ixRel-fill`{.Agda} and `ixRel-rep`{.Agda}
+read the membership of **any** realizing set at the two shapes a member of a
+stage comes in, and they are stated of any such set on purpose: the naming
+machinery has to be handed the relation at the stage below the one being built,
+and inside the construction that set arrives from the table with the hypothesis
+that it realizes the class there, a stage before the set this chapter returns
+exists.
 
 `ApproxAt`{.Agda} and `GraphAt`{.Agda} are the approximation and its graph,
 generic in the step condition, which enters as a parameter in two forms, at slots
@@ -898,9 +948,9 @@ bound. The bound is the one piece with no counterpart in the hierarchy chapter,
 and it costs one appeal: the pairs of two members of a stage form a small family
 of elements of `L`, so `smallDom`{.Agda} confines them all at once. `relL`{.Agda} is
 the second component, and `relL-fill`{.Agda}, `relL-rep`{.Agda},
-`ix-fill`{.Agda} and `ix-rep`{.Agda} are its membership read at the two shapes a
-member of a stage comes in, the second of which is the shape a separation and the
-naming chapter's parameter order both consume.
+`ix-fill`{.Agda} and `ix-rep`{.Agda} are the four readings above instantiated at
+it, the second pair being the shape a separation and the naming chapter's
+parameter order both consume.
 
 What the chapter does not do is prove the step condition's own adequacy, named
 here as the two hypotheses of `Described`{.Agda}. That is not one thing but
@@ -909,11 +959,11 @@ stage described in the object language, which nothing describes yet, and the cod
 set at a carrier that moves with the birth. Together they are what stands between
 this construction and an unconditional theorem.
 <!--zh-->
-`Related`{.Agda} 是本章所实现的类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是截断着携带的，因为它并不已知是命题值的，而 `strict`{.Agda} 一举为每一个严格良序把截断脱下来，办法是在消去任何东西之前先按三歧分情形。`Realizes`{.Agda} 说模型的某个集合实现那个类，写成两条蕴含的指标合取，于是它是模型的一个命题，而不是高出一个宇宙的一条等式。
+`Related`{.Agda} 是本章所实现的类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是截断着携带的，因为它并不已知是命题值的，而 `strict`{.Agda} 一举为每一个严格良序把截断脱下来，办法是在消去任何东西之前先按三歧分情形。`Realizes`{.Agda} 说模型的某个集合实现那个类，写成两条蕴含的指标合取，于是它是模型的一个命题，而不是高出一个宇宙的一条等式。`rel-fill`{.Agda}、`rel-rep`{.Agda}、`ixRel-fill`{.Agda} 与 `ixRel-rep`{.Agda} 把**任何**实现该类的集合的隶属，读在「阶段的成员到场时的两种形状」上；它们陈述为「任何这样的集合」是有意为之：命名那套机器必须被交到手上的，是「正在建造的那个阶段之下一级」处的关系，而在构造内部，那个集合是从表上来的、带着「它在那里实现那个类」这条假设，比本章交回的那个集合的存在早一个阶段。
 
 `ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，对那条步进条件保持通用，而该条件以参数身份取两种形式进场：为图取诸位，为分离取诸常元，各自带着「它是什么意思」那条假设。`approx-val`{.Agda} 靠在实参上的一次沿成员的归纳，把逼近所记录的每个取值钉住，任何地方都没有单值性假设，而 `approx-uniq`{.Agda} 是那条推论。`graph-only`{.Agda} 与 `graph-table`{.Agda} 是图对着一张表的两个方向。
 
-`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来。那个界是层级那一章没有对应物的那一件，而它只花一次诉诸：一个阶段的两个成员所成的诸对构成 `L` 元素的一个小族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL`{.Agda} 是第二个分量，而 `relL-fill`{.Agda}、`relL-rep`{.Agda}、`ix-fill`{.Agda} 与 `ix-rep`{.Agda} 是它的隶属读在「阶段的成员到场时的两种形状」上，其中第二种正是分离与命名那一章的参数序共同消费的形状。
+`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来。那个界是层级那一章没有对应物的那一件，而它只花一次诉诸：一个阶段的两个成员所成的诸对构成 `L` 元素的一个小族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL`{.Agda} 是第二个分量，而 `relL-fill`{.Agda}、`relL-rep`{.Agda}、`ix-fill`{.Agda} 与 `ix-rep`{.Agda} 是上文那四条读式在它处的实例，其中后两条正是分离与命名那一章的参数序共同消费的形状。
 
 本章没有做的，是证明那条步进条件自身的适足性，此处以 `Described`{.Agda} 的两条假设之名点出。那不是一件事而是三件：`StepAt`{.Agda} 对着元层面那一步的适足性、诞生阶段在对象语言里的描述、以及在一个随诞生阶段移动的载体上的码集。它们合起来，是横在这个构造与一条无条件定理之间的东西。
 <!--/-->

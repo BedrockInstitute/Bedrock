@@ -490,6 +490,15 @@ exactly when the step order at that carrier relates them. That parameter is the
 whole of what this chapter still owes, and it is deliberately one thing and not
 three.
 
+The two directions take the table's value at that carrier differently, and the
+difference is not cosmetic. Completeness is handed **a** value, with the
+hypothesis that it realizes the order there, because that is what it has to put
+into the condition. Soundness is handed the hypothesis at **every** value the
+table records there, because the condition it is reading may have bound a value
+of its own, and only a supplier that can realize whatever it finds can say what
+that value is. Either side is what the frame above hands over, `Values`{.Agda}
+read at one argument.
+
 The body binds four sets and no more. Two of them are the compared members, whose
 pair is the argument, and two are their births. Then five conditions: each birth
 is the birth of its member, each birth lies below the stage, and the comparison
@@ -503,6 +512,8 @@ one. Measured, that binder is the difference between 3 s and 160 s.
 
 自此往下的一切都对那条步进条件保持通用，它以参数身份进场，含义两个方向都说清：在一个经一位抵达的载体上，手里握着表在那里的取值时，该条件对两个集合成立，当且仅当那个载体处的步进序把它们关联起来。那个参数就是本章仍然欠着的全部，而它是有意做成一件事、而不是三件。
 
+两个方向取用表在那个载体处的取值的方式不同，而这个不同不是装点。完备性被交到手上的是**某一个**取值，附带「它实现那里的序」这条假设，因为那正是它要塞进那条条件里去的东西。可靠性被交到手上的，是对表在那里所记录的**每一个**取值都成立的那条假设，因为它所读的那条条件可能自己绑定了一个取值，而只有「无论找到哪一个都能证其实现」的供给方，才说得清那个取值是什么。两边都是上面那个框架交出来的东西，即 `Values`{.Agda} 读在单个实参上。
+
 主体只绑定四个集合，不多。其中两个是被比较的成员，它们的对就是那个实参，另外两个是它们的诞生阶段。然后是五条条件：每个诞生阶段都是它那个成员的诞生阶段，每个诞生阶段都落在该阶段以下，以及比较自身，即两个诞生阶段之间的一个隶属原子，或者，在同一诞生阶段处，就是那一步。阶段是以**词项**、而不是以槽位的身份到场的，而这不是装饰：下一章要跑的那次分离，要的是整条条件落在诸常元上，而词项无须绑定就能接住一个常元，槽位则要花掉一层。实测下来，那一层绑定就是 3 秒与 160 秒之差。
 <!--/-->
 
@@ -510,8 +521,9 @@ one. Measured, that binder is the difference between 3 s and 160 s.
 module Ordered
   (Stp : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n)
   (stp-out : ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
-           → (r : S) → ⟨ pr (fst (lookup d γ)) (fst r) ∈ fst (lookup f γ) ⟩
-           → IsRel (fst (lookup d γ)) r → ⟨ γ ⊨ Stp d f u v ⟩
+           → ((r : S) → ⟨ pr (fst (lookup d γ)) (fst r) ∈ fst (lookup f γ) ⟩
+              → IsRel (fst (lookup d γ)) r)
+           → ⟨ γ ⊨ Stp d f u v ⟩
            → ∥ Under (fst (lookup d γ)) (stepOrder (fst (lookup d γ)) od)
                  (fst (lookup u γ)) (fst (lookup v γ)) ∥₁)
   (stp-in : ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
@@ -544,15 +556,17 @@ module Ordered
 ## What the description says, both ways
 
 The reading takes the stage's ordinality and the table's two correctness
-conditions below it, which is exactly what the frame it feeds hands over.
-`value`{.Agda} is the one place they are spent together: at a birth below the
-stage the table has a value, merely, and that value realizes the order there, so
-the step parameter can be applied. Uniqueness is never wanted, because the step
-condition is a proposition and a merely-existing value may be opened into it.
+conditions below it, which is exactly what the frame it feeds hands over. They
+are spent apart. Soundness spends correctness alone, at the birth of the compared
+member, and hands it to the step parameter as it stands. Completeness spends both
+through `value`{.Agda}: at a birth below the stage the table has a value, merely,
+and that value realizes the order there, so the parameter can be filled.
+Uniqueness is never wanted, because the step condition is a proposition and a
+merely-existing value may be opened into it.
 <!--zh-->
 ## 这条描述说了什么，两个方向
 
-这条读式取用阶段的序数性，以及表在它以下的两条正确性条件，而那恰是它所供养的那个框架交出来的东西。`value`{.Agda} 是二者唯一被一并花掉之处：在阶段以下的一个诞生阶段处，表「仅仅」有一个取值，而那个取值实现那里的序，于是步进参数可以施用。单值性自始至终用不上，因为步进条件是命题，而一个「仅仅存在」的取值可以在其中被打开。
+这条读式取用阶段的序数性，以及表在它以下的两条正确性条件，而那恰是它所供养的那个框架交出来的东西。二者是分开花掉的。可靠性只花正确性那一条，花在被比较成员的诞生阶段处，并原样把它递给步进参数。完备性经 `value`{.Agda} 把两条一并花掉：在阶段以下的一个诞生阶段处，表「仅仅」有一个取值，而那个取值实现那里的序，于是那个参数可以被填上。单值性自始至终用不上，因为步进条件是命题，而一个「仅仅存在」的取值可以在其中被打开。
 <!--/-->
 
 ```agda
@@ -660,23 +674,18 @@ nothing in this proof normalizes the sentence it is about.
                 → ⟨ Related α (pr (fst u) (fst v)) ⟩
          atCase (inl h) = fill (transport (sym (order-unfold α oα a c))
            (inl (subst2 (λ p q → ⟨ p ∈ q ⟩) (sym qa) (sym qc) h)))
-         atCase (inr (e , hs)) =
-           value du hmu (Related α (pr (fst u) (fst v))) atValue
+         atCase (inr (e , hs)) = PT.rec
+           (snd (Related α (pr (fst u) (fst v)))) atUnder
+           (stp-out (suc zero) (sh4 f) (sh3 zero) (sh2 zero)
+             ((dv ∷ du ∷ v ∷ u ∷ γ)) odu (λ r hr → vals du r hmu hr) hs)
            where
-           atValue : (r : S) → ⟨ pr (fst du) (fst r) ∈ fst (lookup f γ) ⟩
-                   → IsRel (fst du) r → ⟨ Related α (pr (fst u) (fst v)) ⟩
-           atValue r hr hrel = PT.rec
-             (snd (Related α (pr (fst u) (fst v)))) atUnder
-             (stp-out (suc zero) (sh4 f) (sh3 zero) (sh2 zero)
-               ((dv ∷ du ∷ v ∷ u ∷ γ)) odu r hr hrel hs)
-             where
-             atUnder : Under (fst du) (stepOrder (fst du) odu) (fst u) (fst v)
-                     → ⟨ Related α (pr (fst u) (fst v)) ⟩
-             atUnder und = fill (transport (sym (order-unfold α oα a c))
-               (inr (qc ∙ e ∙ sym qa
-                 , stepMoved (fst du) (bornOf α oα a) (sym qa) odu
-                     (mem-ord {A = α} oα (bornOf α oα a) (bornMem α oα a))
-                     (fst u) (fst v) und)))
+           atUnder : Under (fst du) (stepOrder (fst du) odu) (fst u) (fst v)
+                   → ⟨ Related α (pr (fst u) (fst v)) ⟩
+           atUnder und = fill (transport (sym (order-unfold α oα a c))
+             (inr (qc ∙ e ∙ sym qa
+               , stepMoved (fst du) (bornOf α oα a) (sym qa) odu
+                   (mem-ord {A = α} oα (bornOf α oα a) (bornMem α oα a))
+                   (fst u) (fst v) und)))
 
        atMid : (u v du : S)
              → ⟨ (v ∷ u ∷ γ) ⊨ prAtL (sh2 z) (suc zero) zero ⟩
@@ -927,7 +936,9 @@ applies.
 
 What is not here is the step's own adequacy: `L.Choice.Internal`{.Agda}'s
 `StepAt`{.Agda} against `stepAt`{.Agda}. It enters as the parameter `Stp`{.Agda}
-with `stp-out`{.Agda} and `stp-in`{.Agda} as its meaning, and it is a chapter of
+with `stp-out`{.Agda} and `stp-in`{.Agda} as its meaning, the first taking the
+table's correctness at **every** value recorded at the carrier and the second a
+single value that realizes the order there, and it is a chapter of
 bookkeeping against chapters that exist: the parameter sequence read back as a
 vector, the denotation identified with the meta name's, the least of the
 description's names identified with the least of the meta ones. The frame's two
@@ -944,5 +955,5 @@ unconditional theorem.
 
 `CondCore`{.Agda} 是阶段处的序被完整描述出来，以诞生阶段为主键，对步进条件保持通用。它绑定四个集合，把阶段取作**词项**，使得常元那一形式不花绑定；而它**在被造出之处封印**：不封印，它落在诸常元上的两条读式各跑 160 秒。`CondCore-out`{.Agda} 与 `CondCore-in`{.Agda} 是它的两半，而 `Cond`{.Agda}、`Cond₀`{.Agda}、`cond-spec`{.Agda} 与 `cond₀-spec`{.Agda} 是上一章那个框架所索取的两种形式连同它们的含义。有了它们，`Described`{.Agda} 便可施用。
 
-不在此处的，是那一步自身的适足性，即 `L.Choice.Internal`{.Agda} 的 `StepAt`{.Agda} 对着 `stepAt`{.Agda}。它以参数 `Stp`{.Agda} 的身份进场，`stp-out`{.Agda} 与 `stp-in`{.Agda} 是它的含义；而它是对着早已存在的诸章记账的一整章：把参数序列读回成向量、把指称与元层面名字的指称认同、把这条描述诸名字中的最小者与元层面诸名字中的最小者认同。那个框架的两条假设已经没了；剩下这一条，就是横在这个构造与一条无条件定理之间的东西。
+不在此处的，是那一步自身的适足性，即 `L.Choice.Internal`{.Agda} 的 `StepAt`{.Agda} 对着 `stepAt`{.Agda}。它以参数 `Stp`{.Agda} 的身份进场，`stp-out`{.Agda} 与 `stp-in`{.Agda} 是它的含义，前者取用表在该载体处所记录的**每一个**取值上的正确性，后者取用「实现那里的序」的单个取值；而它是对着早已存在的诸章记账的一整章：把参数序列读回成向量、把指称与元层面名字的指称认同、把这条描述诸名字中的最小者与元层面诸名字中的最小者认同。那个框架的两条假设已经没了；剩下这一条，就是横在这个构造与一条无条件定理之间的东西。
 <!--/-->

@@ -56,7 +56,8 @@ open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 open import L.Choice.Stage {ℓ} lem using ( IsPredOf; isPropPredOf )
 open import L.Choice.Finite {ℓ} lem using ( Tri-map )
 open import L.Choice.Name {ℓ} lem using ( module Naming )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( Tri; lt; eq; gt; SWO )
+open import L.WellOrder.Base {ℓ-suc ℓ}
+  using ( Tri; lt; eq; gt; SWO; IsLeast; isPropLeastOf )
 
 open import Cubical.Foundations.Prelude using ( J; PathP; subst2 )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -354,18 +355,26 @@ module _ (δ : S) (w : SWO ⟪ Lset δ ⟫) where
   private
     module NM = Naming (Lset δ) w
 
+  denotesAt : S → NM.Name → hProp (ℓ-suc ℓ)
+  denotesAt x n = (NM.denote n ≡ x) , setIsSet (NM.denote n) x
+
+  private
     denotes : New δ → NM.Name → hProp (ℓ-suc ℓ)
-    denotes a n = (NM.denote n ≡ a .fst) , setIsSet (NM.denote n) (a .fst)
+    denotes a = denotesAt (a .fst)
 
     hasName : (a : New δ) → ∥ Σ[ n ∈ NM.Name ] ⟨ denotes a n ⟩ ∥₁
     hasName a = NM.names-complete (a .fst)
       (subst (λ v → ⟨ a .fst ∈ˢ v ⟩) (Lset-suc δ) (a .snd))
 
+    leastOfNew : (a : New δ)
+               → Σ[ n ∈ NM.Name ] IsLeast NM.nameOrder (denotes a) n
+    leastOfNew a = NM.leastName (denotes a) (hasName a)
+
     theName : New δ → NM.Name
-    theName a = NM.leastName (denotes a) (hasName a) .fst
+    theName a = leastOfNew a .fst
 
     theName-denote : (a : New δ) → NM.denote (theName a) ≡ a .fst
-    theName-denote a = NM.leastName (denotes a) (hasName a) .snd .fst
+    theName-denote a = leastOfNew a .snd .fst
 
     nameInj : (u v : New δ) → theName u ≡ theName v → u ≡ v
     nameInj u v q = Σ≡Prop (λ x → snd (x ∈ˢ Lset (sucV δ)))
@@ -373,6 +382,46 @@ module _ (δ : S) (w : SWO ⟪ Lset δ ⟫) where
 
   byName : SWO (New δ)
   byName = pullOrder (New δ) NM.Name NM.nameOrder theName nameInj
+```
+
+<!--en-->
+Three definitions leave the module, and they are the least a caller can be given
+and still say what this order is. `denotesAt`{.Agda} is the family the search is
+run at, a set's names; `IsLeastName`{.Agda} is being a least name of a set, and
+it is the well-order chapter's `IsLeast`{.Agda} **at that family**, not a
+re-spelling of it; `leastNameOf`{.Agda} exhibits one for every member of the new
+stage, and it is the search itself, returned.
+
+That `IsLeastName`{.Agda} is a definition and not a re-spelling is a measurement.
+Written out as a pair of a denotation equation and a minimality clause, the
+search would have to be converted into it at a **computed** name, and a
+comparison of names at a computed name unfolds the code order down to the level
+search it is defined by: 16 s for that one line, against nothing when the
+property is the family's own `IsLeast`{.Agda}. The naming data still stay inside;
+what crosses the boundary is a name the caller already holds.
+<!--zh-->
+有三个定义离开本模块，而它们是「要说清这个序是什么，调用方最少须被给予的东西」。`denotesAt`{.Agda} 是那场搜寻所针对的那一族，即一个集合的诸名字；`IsLeastName`{.Agda} 是「是某个集合的一个最小名字」，而它就是良序那一章的 `IsLeast`{.Agda} **架在那一族上**，不是它的另一种写法；`leastNameOf`{.Agda} 为新阶段的每个成员当场拿出一个，而它就是那场搜寻本身，原样交回。
+
+`IsLeastName`{.Agda} 是一个定义、而不是一次重写，这是量出来的。若写成「一条指称等式加一条极小性子句」之对，那场搜寻就得在一个**算出来的**名字处被转换成它，而在算出来的名字处比较名字，会把码之序展开到它据以定义的那场层号搜寻：仅那一行 16 秒，而当那条性质就是那一族自家的 `IsLeast`{.Agda} 时，分文不花。命名数据仍然留在里面；跨过边界的是一个调用方早已持有的名字。
+<!--/-->
+
+```agda
+  IsLeastName : NM.Name → S → Type (ℓ-suc ℓ)
+  IsLeastName t x = IsLeast NM.nameOrder (denotesAt x) t
+
+  leastNameOf : (a : New δ) → Σ[ t ∈ NM.Name ] IsLeastName t (fst a)
+  leastNameOf a = leastOfNew a
+
+  private
+    pin : (c : New δ) (t : NM.Name) → IsLeastName t (fst c) → theName c ≡ t
+    pin c t h = cong fst
+      (isPropLeastOf NM.nameOrder (denotes c) (leastOfNew c) (t , h))
+
+    byName-least : (a b : New δ) (t₁ t₂ : NM.Name)
+                 → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
+                 → relOf byName a b ≡ NM._≺ₙ_ t₁ t₂
+    byName-least a b t₁ t₂ h₁ h₂ = cong₂ NM._≺ₙ_ (pin a t₁ h₁) (pin b t₂ h₂)
+
 ```
 
 <!--en-->
@@ -386,9 +435,44 @@ search for a least name.
 <!--/-->
 
 ```agda
-opaque
-  stepAt : (δ : S) → SWO ⟪ Lset δ ⟫ → SWO (New δ)
-  stepAt δ w = byName δ w
+  opaque
+    stepAt : SWO (New δ)
+    stepAt = byName
+```
+
+<!--en-->
+The seal is a normalization barrier and not a secret, so two readings are let
+through it, one each way: the step relates two members exactly when the name
+order relates any two names the caller has shown least. They are the equation
+above, transported.
+
+They are proved **here**, inside the telescope that binds the stage and its
+order, and that placement is a measurement too. Stated at top level and filled
+with the very lemma above, either reading costs 39 s, which is law 20's shape met
+at a new place: a statement whose type is written down and whose filling is the
+same statement forces a conversion this route cannot afford. Inside, where the
+seal is, both are free.
+<!--zh-->
+那道封印是一道归一化屏障、不是一个秘密，故有两条读式被放行，一个方向一条：那一步关联两个成员，当且仅当名字之序关联「调用方已证为最小的任意两个名字」。它们就是上面那条等式，搬运过来。
+
+它们证在**此处**，即绑定阶段与其序的那条模块序列之内，而这个位置同样是量出来的。若陈述在顶层、再拿上面那条引理去填，任一条读式要花 39 秒，而这正是第 20 条定律在新地方的形状：一条把类型写下来、又用同一条陈述去填的陈述，会逼出一次这条路线付不起的转换。在里面，在封印所在之处，两条都分文不花。
+<!--/-->
+
+```agda
+  opaque
+    unfolding stepAt
+
+    stepAt-fill : (a b : New δ) (t₁ t₂ : NM.Name)
+                → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
+                → NM._≺ₙ_ t₁ t₂ → relOf stepAt a b
+    stepAt-fill a b t₁ t₂ h₁ h₂ =
+      transport (sym (byName-least a b t₁ t₂ h₁ h₂))
+
+    stepAt-read : (a b : New δ) (t₁ t₂ : NM.Name)
+                → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
+                → relOf stepAt a b → NM._≺ₙ_ t₁ t₂
+    stepAt-read a b t₁ t₂ h₁ h₂ =
+      transport (byName-least a b t₁ t₂ h₁ h₂)
 ```
 
 <!--en-->
@@ -775,14 +859,24 @@ below any stage the set belongs to, and `birth-proof`{.Agda} says it does not
 depend on the constructibility proof supplied.
 
 `stepAt`{.Agda} is the step: a well-order of `Lset (sucV δ)`{.Agda} out of one of
-`Lset δ`{.Agda}. Below the limit stage it is the finite chapter's order
-restricted, because that order is already there and is the one a name's first key
-is compared by; at or above it, it is the previous chapter's name order pulled back along
-**least name**, which is a function because the names are well-ordered as soon as
-the stage below is. `pullOrder`{.Agda} moves a well-order along an injection and
-is the only transfer written; both branches use it, and so does
-`carry`{.Agda}, which presents a stage's members as the index type the naming
-chapter takes.
+`Lset δ`{.Agda}, at every stage by the previous chapter's name order pulled back
+along **least name**, which is a function because the names are well-ordered as
+soon as the stage below is. It was written with a second branch below the limit
+stage and that branch was measured surplus and deleted; the body says why.
+`pullOrder`{.Agda} moves a well-order along an injection and is the only transfer
+written; the step uses it, and so does `carry`{.Agda}, which presents a stage's
+members as the index type the naming chapter takes.
+
+Three definitions say what that pulled-back order is, for a caller outside:
+`denotesAt`{.Agda} is a set's names, `IsLeastName`{.Agda} is the well-order
+chapter's `IsLeast`{.Agda} at that family, and `leastNameOf`{.Agda} is the search.
+`stepAt-fill`{.Agda} and `stepAt-read`{.Agda} then read the step both ways
+against the name order, at any two names the caller has shown least. Two
+measurements sit behind those five lines: the property must be the family's own
+`IsLeast`{.Agda} and never a re-spelling of it (16 s against nothing, because a
+comparison at a computed name opens the code order), and both readings must be
+proved inside the telescope the seal lives in and never restated at top level
+(39 s each against nothing, which is law 20 at a new place).
 
 `orderAt`{.Agda} is the family: at every ordinal, a strict well-order of that
 stage's members, all four laws included, built by membership induction from the
@@ -799,7 +893,9 @@ picks the least name.
 <!--zh-->
 `birth`{.Agda} 是一个可构造集据以被雕出的那个序数，比包含它的最早阶段低一级；它之所以存在，是因为集合进入塔的唯一途径就是被雕出 (`theCarve`{.Agda})。`birth-in`{.Agda} 把它安置在该集合所属的任何阶段之下且严格更低，而 `birth-proof`{.Agda} 说它不依赖于所供给的那份可构造性证明。
 
-`stepAt`{.Agda} 就是步进：由 `Lset δ`{.Agda} 上的一个良序造出 `Lset (sucV δ)`{.Agda} 上的一个。在极限阶段以下，它是有穷那一章的序的限制，因为那个序早已在那里，且正是一个名字的第一个键据以比较的那一个；在极限阶段之处或之上，它是上一章的名字序沿**最小名字**拉回，而最小名字之所以是函数，是因为只要下面那个阶段已被良序化，诸名字就已被良序化。`pullOrder`{.Agda} 沿一个单射搬运良序，是本章写下的唯一一次搬运；两支都用它，`carry`{.Agda} 也用它，即把一个阶段的诸成员表示成命名那一章所取用的那个索引类型。
+`stepAt`{.Agda} 就是步进：由 `Lset δ`{.Agda} 上的一个良序造出 `Lset (sucV δ)`{.Agda} 上的一个，在**每一个**阶段处都是上一章的名字序沿**最小名字**拉回，而最小名字之所以是函数，是因为只要下面那个阶段已被良序化，诸名字就已被良序化。它当初写着「极限阶段以下另有一支」，而那一支被实测为多余并删去；正文说了为什么。`pullOrder`{.Agda} 沿一个单射搬运良序，是本章写下的唯一一次搬运；步进用它，`carry`{.Agda} 也用它，后者把一个阶段的诸成员呈现为命名那一章所取的索引类型。
+
+有三个定义为外面的调用方说清那个拉回的序是什么：`denotesAt`{.Agda} 是一个集合的诸名字，`IsLeastName`{.Agda} 是良序那一章的 `IsLeast`{.Agda} 架在那一族上，而 `leastNameOf`{.Agda} 就是那场搜寻。随后 `stepAt-fill`{.Agda} 与 `stepAt-read`{.Agda} 两个方向地把那一步对着名字之序读出来，读在「调用方已证为最小的任意两个名字」处。这五行背后有两次实测：那条性质必须是那一族自家的 `IsLeast`{.Agda}、绝不可另写一遍 (16 秒对分文不花，因为在算出来的名字处的一次比较会把码之序打开)，而两条读式都必须证在封印所在的那条模块序列之内、绝不可在顶层重述 (各 39 秒对分文不花，这是第 20 条定律在新地方)。
 
 `orderAt`{.Agda} 就是那一族：在每个序数处，该阶段诸成员上的一个严格良序，四条定律齐备，由下面诸序沿成员归纳造出。它的比较以**诞生阶段为主键**，以共同诞生阶段处的步进序为次键；`endExtension`{.Agda} 就是这一点换来的东西，而它是一条路径、不是一个蕴含：两个成员的比较从不提到它是在哪个阶段处被读的，故大阶段处的序限制到小阶段上，分毫不差地就是那里的序。
 
