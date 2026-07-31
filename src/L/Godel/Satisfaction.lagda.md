@@ -28,7 +28,10 @@ open import Base.Truth
 
 module L.Godel.Satisfaction {ℓ : Level} where
 
-open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _∨̇_; ¬̇_; ∃̇_; ⊤̇; ⊥̇ )
+open import Base.Classical using ( LEM )
+
+open import FOL.Syntax
+  using ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ⊤̇; ⊥̇ )
 open import V.Hierarchy {ℓ} using ( extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
@@ -37,6 +40,7 @@ open import L.Godel.Operations {ℓ}
   using ( singleton-self; singleton-out
         ; _∪_; ∪-left; ∪-right; ∪-out; _∩_; ∩-in; ∩-out; _∖_; ∖-in; ∖-out
         ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
+        ; selectEqual; selectEqual-in; selectEqual-sub; selectEqual-wit
         ; tailGraph; shiftDown; shiftDown-in; shiftDown-out )
 open import L.Godel.Tuples {ℓ}
   using ( tuple; tupleTail; tuple-entry; allTuples )
@@ -353,17 +357,156 @@ equation each way.
 ```
 
 <!--en-->
+## The equality atom, at two variables
+
+The same selection shape with the relating fact gone: the two keys record
+**one** value, and equality never enters the object side as an equation. The
+inner world's equality delegates to the hierarchy's, which is a path, so the
+conversions are the entry readings composed with two tabulation equations.
+<!--zh-->
+## 等词原子，落在两个变元上
+
+同一个选择形状，只是关联事实消失了：两个键记录**同一个**取值，相等从不以等式的身份进入对象侧。内层世界的等词委托给层级的等词，即一条路径，故转换就是条目读式复合上两条制表等式。
+<!--/-->
+
+```agda
+  sat-≐vv : {n : ℕ} (i j : Fin n)
+          → satSet (var i ≐ var j)
+          ≡ selectEqual (allTuples A n) ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
+  sat-≐vv {n} i j = extensionalV λ w → ⇔toPath (fwdEq w) (bwdEq w)
+    where
+    φ : Formula ⟪ A ⟫ n
+    φ = var i ≐ var j
+    Ki Kj T : V ℓ
+    Ki = ⁅ # (toℕ i) ⁆s
+    Kj = ⁅ # (toℕ j) ⁆s
+    T = selectEqual (allTuples A n) Ki Kj
+    fwdEq : (w : V ℓ) → ⟨ w ∈ satSet φ ⟩ → ⟨ w ∈ T ⟩
+    fwdEq w hw = PT.rec (snd (w ∈ T))
+      (λ { (g , hs , e) →
+        subst (λ z → ⟨ z ∈ T ⟩) e
+          (selectEqual-in {X = allTuples A n} {Ka = Ki} {Kb = Kj}
+            {w = tuple A g}
+            {a = # (toℕ i)} {b = # (toℕ j)} {u = κ (g i)}
+            ∣ g , refl ∣₁
+            (singleton-self (# (toℕ i)))
+            (singleton-self (# (toℕ j)))
+            ∣ lift i , refl ∣₁
+            (subst (λ q → ⟨ pr (# (toℕ j)) q ∈ tuple A g ⟩)
+              (sym (subst2 _≡_ (lk g i) (lk g j) hs))
+              ∣ lift j , refl ∣₁)) })
+      (sat-out φ w hw)
+    bwdEq : (w : V ℓ) → ⟨ w ∈ T ⟩ → ⟨ w ∈ satSet φ ⟩
+    bwdEq w h = PT.rec (snd (w ∈ satSet φ))
+      (λ { (g , eg) → PT.rec (snd (w ∈ satSet φ))
+        (λ { (a , b , u , ha , hb , hau , hbu) →
+          let hau' : ⟨ pr (# (toℕ i)) u ∈ tuple A g ⟩
+              hau' = subst2 (λ p z → ⟨ pr p u ∈ z ⟩)
+                       (singleton-out ha) (sym eg) hau
+              hbu' : ⟨ pr (# (toℕ j)) u ∈ tuple A g ⟩
+              hbu' = subst2 (λ p z → ⟨ pr p u ∈ z ⟩)
+                       (singleton-out hb) (sym eg) hbu
+              eu : u ≡ κ (g i)
+              eu = subst ⟨_⟩ (lookup-spec (λ x → κ (g x)) i u) hau'
+              ev : u ≡ κ (g j)
+              ev = subst ⟨_⟩ (lookup-spec (λ x → κ (g x)) j u) hbu'
+          in subst (λ z → ⟨ z ∈ satSet φ ⟩) eg
+               (sat-in φ g
+                 (subst2 _≡_ (sym (lk g i)) (sym (lk g j))
+                   (sym eu ∙ ev))) })
+        (selectEqual-wit {X = allTuples A n} {Ka = Ki} {Kb = Kj} {w = w} h) })
+      (selectEqual-sub {X = allTuples A n} {Ka = Ki} {Kb = Kj} {w = w} h)
+```
+
+<!--en-->
+## Respect, and the classical cases
+
+Two formulas whose satisfactions agree at every environment have the same
+satisfaction set: `sat-resp`{.Agda} converts a member through the pointwise
+identity and back, and it is what turns a semantic reduction into a case
+equation for free. The implication and the universal are exactly such
+reductions, and they are the chapter's only classical content: material
+implication is the negated conjunction, and the universal is the negated
+existential of the negation, each priced at one instance of the excluded
+middle inside a double negation. Their satisfaction sets then come out as
+compositions of the cases already proved, with not one new extensionality.
+<!--zh-->
+## 换步，与经典诸情形
+
+在每个环境处满足相符的两条公式有相同的满足集：`sat-resp`{.Agda} 把成员经逐点等同转换过去再回来，它使一次语义化归免费变成一条情形等式。蕴含与全称恰是这样的化归，也是本章仅有的经典内容：实质蕴含是被否定的合取，全称是否定之存在式的否定，各花双重否定之内的一份排中律。于是它们的满足集作为已证情形的复合而得，一次新的外延性都不写。
+<!--/-->
+
+```agda
+  sat-resp : {n : ℕ} {φ ψ : Formula ⟪ A ⟫ n}
+           → ((δ : Vec SM n) → (δ ⊨ᵐ φ) ≡ (δ ⊨ᵐ ψ))
+           → satSet φ ≡ satSet ψ
+  sat-resp {n} {φ} {ψ} pt = extensionalV λ w → ⇔toPath (to w) (fro w)
+    where
+    to : (w : V ℓ) → ⟨ w ∈ satSet φ ⟩ → ⟨ w ∈ satSet ψ ⟩
+    to w h = PT.rec (snd (w ∈ satSet ψ))
+      (λ { (g , hg , e) →
+        subst (λ z → ⟨ z ∈ satSet ψ ⟩) e
+          (sat-in ψ g (subst ⟨_⟩ (pt (vec g)) hg)) })
+      (sat-out φ w h)
+    fro : (w : V ℓ) → ⟨ w ∈ satSet ψ ⟩ → ⟨ w ∈ satSet φ ⟩
+    fro w h = PT.rec (snd (w ∈ satSet φ))
+      (λ { (g , hg , e) →
+        subst (λ z → ⟨ z ∈ satSet φ ⟩) e
+          (sat-in φ g (subst ⟨_⟩ (sym (pt (vec g))) hg)) })
+      (sat-out ψ w h)
+
+  module Classical (lem : LEM (ℓ-suc ℓ)) where
+    private
+      dne : (P : hProp (ℓ-suc ℓ))
+          → ((⟨ P ⟩ → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
+      dne P hnn = Sum.rec (λ p → p) (λ np → Empty.rec (hnn np)) (lem P)
+
+      imp-not : {n : ℕ} (φ ψ : Formula ⟪ A ⟫ n) (δ : Vec SM n)
+              → (δ ⊨ᵐ (φ ⇒̇ ψ)) ≡ (δ ⊨ᵐ (¬̇ (φ ∧̇ (¬̇ ψ))))
+      imp-not φ ψ δ = ⇔toPath
+        (λ imp hc → hc .snd (imp (hc .fst)))
+        (λ hn hφ → dne (δ ⊨ᵐ ψ) (λ nψ → hn (hφ , nψ)))
+
+      all-not : {n : ℕ} (ψ : Formula ⟪ A ⟫ (suc n)) (δ : Vec SM n)
+              → (δ ⊨ᵐ (∀̇ ψ)) ≡ (δ ⊨ᵐ (¬̇ (∃̇ (¬̇ ψ))))
+      all-not ψ δ = ⇔toPath
+        (λ hall hex → PT.rec Empty.isProp⊥
+            (λ { (x , hnx) → hnx (hall x) }) hex)
+        (λ hn x → dne ((x ∷ δ) ⊨ᵐ ψ) (λ nx → hn ∣ x , nx ∣₁))
+
+    sat-⇒ : {n : ℕ} (φ ψ : Formula ⟪ A ⟫ n)
+          → satSet (φ ⇒̇ ψ)
+          ≡ allTuples A n ∖ (satSet φ ∩ (allTuples A n ∖ satSet ψ))
+    sat-⇒ {n} φ ψ =
+        sat-resp {φ = φ ⇒̇ ψ} {ψ = ¬̇ (φ ∧̇ (¬̇ ψ))} (imp-not φ ψ)
+      ∙ sat-¬ (φ ∧̇ (¬̇ ψ))
+      ∙ cong (allTuples A n ∖_)
+          (sat-∧ φ (¬̇ ψ) ∙ cong (satSet φ ∩_) (sat-¬ ψ))
+
+    sat-∀ : {n : ℕ} (ψ : Formula ⟪ A ⟫ (suc n))
+          → satSet (∀̇ ψ)
+          ≡ allTuples A n ∖ shiftDown (allTuples A (suc n) ∖ satSet ψ)
+    sat-∀ {n} ψ =
+        sat-resp {φ = ∀̇ ψ} {ψ = ¬̇ (∃̇ (¬̇ ψ))} (all-not ψ)
+      ∙ sat-¬ (∃̇ (¬̇ ψ))
+      ∙ cong (allTuples A n ∖_)
+          (sat-∃ (¬̇ ψ) ∙ cong shiftDown (sat-¬ ψ))
+```
+
+<!--en-->
 ## Recap
 
-The satisfaction set `satSet`{.Agda} with its two readings, and seven case
-equations: `sat-⊥`{.Agda}, `sat-⊤`{.Agda}, `sat-∧`{.Agda}, `sat-∨`{.Agda},
-`sat-¬`{.Agda}, `sat-∈vv`{.Agda} and `sat-∃`{.Agda}, each an extensional
-identity between a satisfaction set and an operation composition, all
-constructive. The remaining constructors, the equality atom, the atoms with
-constants, the implication and the universals, join in later commits; the
+The satisfaction set `satSet`{.Agda} with its two readings; eight
+constructive case equations, `sat-⊥`{.Agda}, `sat-⊤`{.Agda}, `sat-∧`{.Agda},
+`sat-∨`{.Agda}, `sat-¬`{.Agda}, `sat-∈vv`{.Agda}, `sat-≐vv`{.Agda} and
+`sat-∃`{.Agda}; the respect lemma `sat-resp`{.Agda}; and the two classical
+cases `sat-⇒`{.Agda} and `sat-∀`{.Agda}, compositions of the constructive
+ones priced at one excluded middle each. Each equation is an extensional
+identity between a satisfaction set and an operation composition. The atoms
+with constants and the bounded quantifiers join in later commits; the
 normal-form theorem then reads every equation off in one induction.
 <!--zh-->
 ## 小结
 
-满足集 `satSet`{.Agda} 连同它的两条读式，以及七条情形等式：`sat-⊥`{.Agda}、`sat-⊤`{.Agda}、`sat-∧`{.Agda}、`sat-∨`{.Agda}、`sat-¬`{.Agda}、`sat-∈vv`{.Agda} 与 `sat-∃`{.Agda}，每条都是满足集与运算复合之间的外延等同，全部构造性。其余构造子，等词原子、带常元的原子、蕴含与全称，在后续提交中加入；范式定理届时以一次归纳把每条等式读出。
+满足集 `satSet`{.Agda} 连同它的两条读式；八条构造性情形等式 `sat-⊥`{.Agda}、`sat-⊤`{.Agda}、`sat-∧`{.Agda}、`sat-∨`{.Agda}、`sat-¬`{.Agda}、`sat-∈vv`{.Agda}、`sat-≐vv`{.Agda} 与 `sat-∃`{.Agda}；换步引理 `sat-resp`{.Agda}；以及两个经典情形 `sat-⇒`{.Agda} 与 `sat-∀`{.Agda}，即各花一份排中律的构造性情形之复合。每条等式都是满足集与运算复合之间的外延等同。带常元的原子与有界量词在后续提交中加入；范式定理届时以一次归纳把每条等式读出。
 <!--/-->
