@@ -127,7 +127,8 @@ fences of the masters (report-only; prose is `lint-prose.py`'s business):
   through their notation). Usage detection is lexical (mixfix names match by their name
   parts); a name imported from two modules and used once leaves both unflagged.
 - `[forbidden]` no `postulate`, no `TERMINATING`-family pragma, no interaction holes
-  (`{! !}` or a bare `?`): the Frontier record (dev/PLAN.md §5) is the only debt form.
+  (`{! !}` or a bare `?`): no debt form is sanctioned. The Frontier record (dev/PLAN.md
+  §5) was the one exception and is gone, deleted with its last field.
 
 Suppress a genuine exception (e.g. an instance-only import) with a `-- lint-agda: keep`
 comment on the import line or the line above it.

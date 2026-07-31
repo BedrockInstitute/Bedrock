@@ -280,13 +280,13 @@ def lint_file(path):
         if name in FORBIDDEN_PRAGMAS:
             report(ln, "forbidden", f"pragma {name} is banned (STYLE-agda §1)")
     for ln in holes:
-        report(ln, "forbidden", "interaction hole {! ... !} (Frontier is the only debt form)")
+        report(ln, "forbidden", "interaction hole {! ... !} is banned (STYLE-agda §1)")
     for idx, (_, mtext) in enumerate(mlines):
         toks = [t for t in TOKEN_SPLIT.split(mtext) if t]
         if "postulate" in toks:
             report(idx, "forbidden", "postulate is banned (PLAN D2; use a module parameter)")
         if "?" in toks:
-            report(idx, "forbidden", "interaction hole `?` (Frontier is the only debt form)")
+            report(idx, "forbidden", "interaction hole `?` is banned (STYLE-agda §1)")
 
     # Parse statements; collect keep-marks from the raw (unmasked) lines.
     stmts = parse_statements(mlines)

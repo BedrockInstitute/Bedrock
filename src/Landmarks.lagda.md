@@ -26,7 +26,6 @@ open import V.Hierarchy using ( 𝒮ᵥ )
 open import FOL.ZFModel using ( isZFModel; isZFCModel )
 open import L.Constructible using ( 𝒮ʟ )
 import V.Model
-import L.Frontier
 import L.Model
 ```
 
@@ -59,21 +58,21 @@ V⊨ZFC = V.Model.V⊨ZFC
 <!--en-->
 ## The constructible universe models ZFC
 
-The book's main theorem, in its current, honestly conditional form (chapter
-`L.Model`{.Agda}): given one instance of the excluded middle at the model's truth level, and the
-frontier, the registry of statements the remaining parts still owe, the
-constructible structure models ZFC. This landmark upgrades automatically as the frontier
-shrinks, and sheds its second hypothesis the day the registry empties. Read
-with the previous landmark, it is the semantic form of the relative
-consistency of choice: a ZF universe carries a ZFC sub-universe inside it.
+The book's main theorem (chapter `L.Model`{.Agda}): given one instance of the
+excluded middle at the model's truth level, the constructible structure models
+ZFC. One hypothesis, and it is the same one the previous landmark pays. This
+signature carried a second parameter for most of the book's life, a registry of
+statements the remaining parts still owed; the registry is empty and the
+parameter is gone. Read with the previous landmark, it is the semantic form of
+the relative consistency of choice: a ZF universe carries a ZFC sub-universe
+inside it.
 <!--zh-->
 ## 可构造宇宙满足 ZFC
 
-本书的主定理，以其当前的、诚实带条件的形式 (章节 `L.Model`{.Agda})：给定模型真值层上的一份排中律与前沿 (余部尚欠陈述的登记簿)，可构造结构满足 ZFC。此地标随前沿缩减自动升级，登记簿清空之日卸下第二个假设。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
+本书的主定理 (章节 `L.Model`{.Agda})：给定模型真值层上的一份排中律，可构造结构满足 ZFC。一个假设，而它与上一座地标所付的是同一个。这条签名在全书大半光景里还带第二个参数，即余部尚欠陈述的登记簿；如今登记簿已空，那个参数也已消失。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
 <!--/-->
 
 ```agda
-L⊨ZFC : ∀ {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (F : L.Frontier.Frontier {ℓ})
-      → isZFCModel (𝒮ʟ {ℓ})
+L⊨ZFC : ∀ {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) → isZFCModel (𝒮ʟ {ℓ})
 L⊨ZFC = L.Model.L⊨ZFC
 ```

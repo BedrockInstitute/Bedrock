@@ -9,7 +9,9 @@ qualifies.
 The reflection argument was expected to be a second consumer and is not. It was
 delivered with no order at all, as a ladder whose limit answers for every matrix
 at once, built jointly rather than selected from. So this vocabulary has one
-consumer ahead of it rather than two, and nothing in the book uses it yet.
+consumer rather than two, and it is `L.Choice.Transversal`{.Agda}, the last
+chapter of the book: the search below is what picks a point out of each cell of a
+disjoint family.
 
 This chapter provides the vocabulary. A strict well-order on a type is a
 relation that is trichotomous, irreflexive, transitive and well founded, bundled
@@ -33,7 +35,7 @@ constructive, and only the search is not.
 <!--zh-->
 接下来有一个构造需要**选取**：本书末尾的选择公理要从一个族的每一格里挑出一个元素，而作出这个选取的经典方式，是把候选者良序化，再取合格者中最小的那个。
 
-反射论证本来预期是第二个消费方，结果不是。它交付时根本没有用到任何序，而是一道阶梯，其极限一举为每个母式作答，是合起来造出来的、不是从中挑出来的。故这套词汇前方只有一个消费方、不是两个，而本书目前尚无一处用到它。
+反射论证本来预期是第二个消费方，结果不是。它交付时根本没有用到任何序，而是一道阶梯，其极限一举为每个母式作答，是合起来造出来的、不是从中挑出来的。故这套词汇只有一个消费方、不是两个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}：下文那场搜索，正是从不交族的每一格里挑出一个点的那件东西。
 
 本章提供相应的词汇。类型上的严格良序，是一个三歧、非自反、传递且良基的关系，打成 record，好让后续章节把它当数据携带。这个束的层级泛型有一点值得说明：载体与关系取**各自独立**的宇宙层级，因为第四部最终造出的那个序比较的是公式 (小的)，而据以比较的数据要提到序数 (不小)。
 

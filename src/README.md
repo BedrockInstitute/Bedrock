@@ -77,13 +77,12 @@ entry in the reading catalog**, at the position its first consumer dictates.
     (`opaque`-sealed; `Lset-compute` is the official unfolding), `Lset-layer`,
     the class `isL` (the source's `isL'`, primes dropped), `isL-trans`, and
     the structure `𝒮ʟ`.
-  - `L/Frontier.lagda.md`: the debt registry (PLAN §5), landed with `[L1.7]`:
-    `ChoiceStatement` and the `Frontier` record, eleven fields mirroring the
-    model fields at `𝒮ʟ` verbatim. Fields are deleted as they are proven.
   - `L/Model.lagda.md`: the root, landed with `[L1.7]`: the honest D1 framing,
     `extensionalL`/`regularityL` proven from transitivity, and
-    `L⊨ZF`/`L⊨ZFC` assembled from the frontier. Module telescope:
-    `{ℓ} (lem : ∀ {ℓ'} → LEM ℓ') (F : Frontier {ℓ})`.
+    `L⊨ZF`/`L⊨ZFC` assembled. Module telescope: `{ℓ} (lem : LEM (ℓ-suc ℓ))`.
+    The `L/Frontier.lagda.md` debt registry (PLAN §5) that this chapter took as
+    its second parameter was deleted on 2026-07-31 with its last field; the
+    record opened at eleven fields and shrank six times.
 
 Note the **reading order** (the `Everything` import order) is not the namespace
 order (PLAN §5, two-catalog doctrine; re-cuts executed with `[L1.4]` and, by
@@ -100,11 +99,12 @@ per the route tree (`[L1]` onward). By part:
 - `V/`: Part 3, the cumulative hierarchy as a HIT, and `V ⊨ ZF(C)`; later, set-theoretic
   geology (grounds, the mantle).
 - `L/`: Part 4, the constructible universe as an inductive predicate: the capstone
-  `L ⊨ ZFC`, built root-first through the temporary `Frontier` record (PLAN §5).
+  `L ⊨ ZFC`, built root-first through the temporary `Frontier` record (PLAN §5),
+  now discharged and deleted.
 
 `Landmarks.lagda.md` (landed with `[L1.8]`): the trophy case: `V⊨ZF`,
-`V⊨ZF-impredicative`, `V⊨ZFC` (choice alone), and the frontier-conditional
-`L⊨ZFC`, each a self-contained signature naming its proving chapter. By owner
+`V⊨ZF-impredicative`, `V⊨ZFC` (choice alone), and `L⊨ZFC`, each a
+self-contained signature naming its proving chapter. By owner
 ruling it reads **first** in the catalog (the storefront), before Part 0.
 
 ## Symbol master table
