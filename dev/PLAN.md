@@ -2951,3 +2951,49 @@ One row per goal code; update the row in the same commit that changes the status
 
   **`[L2.4]` now stands at about 5,200 lines across eleven chapters**, against an audit band
   of 1,900 to 3,150, and the remaining work is a fork rather than a quantity.
+
+- **`[L2.4]` the re-cut, 2026-07-31: THE FORK'S PREMISE DID NOT HOLD, and the change is
+  about 40 lines rather than a restructure.** `src/` is 17,045.
+
+  **What the reading found before any edit.** The step parameter **already** hypothesised
+  the carrier side: it is handed a set of the model together with the statement that it
+  realizes the class at that stage, which is the order on the carrier with its
+  representation lemmas, one stage below where the frame reads. Nothing had to move into the
+  table's induction. **What blocked the instantiation was the SPELLING of the table's four
+  readings**: they were stated at the constructed set, which lives inside the very frame
+  being discharged, so they were circular at the top level. They never used anything but the
+  realization statement. Restated at "whatever realizes the class", with the constructed
+  versions recovered as instantiations, the circularity is gone. **So the fork was an
+  artefact of where four statements were written, not of where a parameter sat.**
+
+  **The two ends now meet, shown by machine.** A probe supplies **all six** arguments of the
+  step adequacy at a stage: the code side unconditional from the limit and family chapters,
+  the carrier side from the table's new readings, with the step parameter's own hypotheses
+  as the only inputs. A second probe checks the step chapter's new readings apply to that
+  same stage. The small additive exposure that a previous entry named and deliberately did
+  not make was made here: the seal is opened by exactly two readings, and the step moved
+  into a telescope so they can be proved where the seal is.
+
+  **The safety property held completely.** Every delivered statement comes back **accepted
+  at its old spelled-out type, definitionally, with no transport and no rewrite**, checked
+  by re-spelling from `git show HEAD:` into a throwaway module. **One statement changed and
+  it is a WEAKENING of a frame's hypothesis**, so the frame demands strictly less and every
+  conclusion is unchanged: the soundness reading now asks that whatever the description
+  binds be realizing, rather than that one particular value the caller holds be, because the
+  table is not hypothesised single-valued there and realizing whatever it finds is what
+  closes the gap.
+
+  **The table is still conditional, and what remains is assembly with no new idea**: one
+  chapter writing the step description as a sealed formula binding six sets and pinning two
+  constants, its two readings by unpack and pack, and then one line opening the frame, at
+  which point the table's construction and all four readings become unconditional together.
+
+  **Two more laws, both at new places.** A property of a **computed** least name must BE the
+  well-order chapter's least-element predicate at an exported family, never a re-spelling of
+  it: written out it costs 16 s attributed to one definition, and as the predicate it costs
+  nothing, because conversion at a computed name opens the code order down to the level
+  search.
+
+  **Pre-existing drift fixed in passing**: the step chapter's recap still described the
+  second branch that was measured surplus and deleted, contradicting its own body and the
+  reading order. Corrected in both languages.
