@@ -22,26 +22,33 @@ open import Base.Truth
 module L.Godel.InL {ℓ : Level} where
 
 open import FOL.Syntax
-  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∀̇∈; ∃̇∈ )
+  using ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy
-  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈ )
+  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 open import FOL.Manipulation.Relabelling using ( mapFo; ⊨-map )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
-  using ( isL; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono )
-open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd )
+  using ( isL; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono
+        ; Lset-in; 𝒟ₒ-intro )
+open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; boundingOrd )
 open import L.Axioms.Basic {ℓ} using ( isL-directed; defSet→isL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Base {ℓ} using ( prAt-adequate; ∈pair-introR )
+open import L.Coding.Base {ℓ}
+  using ( prAt-adequate; ∈pair-introL; ∈pair-introR; ∈pair-elim )
+open import L.Coding.Environment {ℓ} using ( sucAt-adequate )
 open import L.Coding.InL {ℓ} using ( sglL )
 open import L.Godel.Operations {ℓ}
   using ( _∪_; ∪-left; ∪-right; ∪-out; _∩_; ∩-in; ∩-out; _∖_; ∖-in; ∖-out
         ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
         ; selectEqual; selectEqual-in; selectEqual-sub; selectEqual-wit
-        ; values; values-in; values-wit; singleton-self; singleton-out )
+        ; values; values-in; values-wit
+        ; singleton-self; singleton-in; singleton-out
+        ; tailGraph; tailGraph-in; tailGraph-out
+        ; shiftDown; shiftDown-in; shiftDown-out )
 
 open import Cubical.Foundations.Prelude using ( subst2 )
 import Cubical.Data.Empty as Empty
@@ -55,11 +62,11 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈-asFiber; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
-open InfinitySet using ( #_ )
+open InfinitySet using ( sucV; #_ )
 
 module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open SemV using ( _^_ )
-open SemV.At (V ℓ) id using ( _⊨_ )
+open SemV.At (V ℓ) id using ( _⊨_; ⟦_⟧ )
 ```
 
 <!--en-->
@@ -745,6 +752,538 @@ private
 ```
 
 <!--en-->
+## The climbs
+<!--zh-->
+## 爬升
+<!--/-->
+
+<!--en-->
+The two movers build new pairs instead of selecting old members, so their
+values leave the stage that held the arguments. They do not leave by far: each
+constructor climbs a fixed, argument-independent number of stages, because a
+set whose members sit in a stage and whose description is one formula over
+that stage is a member of the next one. That closing move is `mkUp`{.Agda},
+needing no ordinal witness at all, and the singleton, the unordered pair, the
+Kuratowski pair and the von Neumann successor each climb by it in one or two
+steps.
+<!--zh-->
+两个移位运算制造新的对而非挑选旧的成员，故其取值会离开装着实参的阶段。离开得并不远：每个构造子爬固定的、与实参无关的级数，因为成员落在某阶段中、且有一条该阶段上公式作描述的集合，是下一个阶段的成员。这记收尾就是 `mkUp`{.Agda}，完全不需要序数见证；单点集、无序对、Kuratowski 对与冯·诺伊曼后继各经它爬一到两步。
+<!--/-->
+
+```agda
+private
+  up : {σ x : V ℓ} → ⟨ x ∈ Lset σ ⟩ → ⟨ x ∈ Lset (sucV σ) ⟩
+  up {σ} = Lset-mono {sucV σ} {σ} (self∈sucV σ)
+
+  mkUp : (σ x : V ℓ) (Φ : Formula ⟪ Lset σ ⟫ 1) → DefOf.defSet (Lset σ) Φ ≡ x
+       → ⟨ x ∈ Lset (sucV σ) ⟩
+  mkUp σ x Φ e = Lset-in (sucV σ) σ x (self∈sucV σ) (𝒟ₒ-intro (Lset σ) x ∣ Φ , e ∣₁)
+
+  sglUp : (σ : V ℓ) {x : V ℓ} → ⟨ x ∈ Lset σ ⟩ → ⟨ ⁅ x ⁆s ∈ Lset (sucV σ) ⟩
+  sglUp σ {x} x∈ = mkUp σ ⁅ x ⁆s Φ defSet≡
+    where
+    module DefA = DefOf (Lset σ)
+    module RefA = DefA.Refine (layer-trans (Lset-layer σ))
+    mx = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+    qx : ⟪ Lset σ ⟫↪ mx ≡ x
+    qx = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
+    Φ : Formula ⟪ Lset σ ⟫ 1
+    Φ = var zero ≐ con mx
+    chain : ∀ m → (⟪ Lset σ ⟫↪ m ∈ DefA.defSet Φ)
+                ≡ ((⟪ Lset σ ⟫↪ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ))
+    chain m = RefA.abs-defSet Φ δ-≐ m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Φ) (⟪ Lset σ ⟫↪ m ∷ []))
+    defSet≡ : DefA.defSet Φ ≡ ⁅ x ⁆s
+    defSet≡ = extensionality (DefA.defSet Φ) ⁅ x ⁆s (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Φ ⊆ ⁅ x ⁆s ⟩
+      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⁅ x ⁆s))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ ⁅ x ⁆s ⟩) q
+            (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = ⁅ x ⁆s} .fst
+              (singleton-in
+                (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁ ∙ qx))) })
+        (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
+      sub₂ : ⟨ ⁅ x ⁆s ⊆ DefA.defSet Φ ⟩
+      sub₂ y y∈ₛ =
+        subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) (qx ∙ sym ex)
+          (∈∈ₛ {a = ⟪ Lset σ ⟫↪ mx} {b = DefA.defSet Φ} .fst
+            (subst ⟨_⟩ (sym (chain mx)) refl))
+        where
+        ex : y ≡ x
+        ex = singleton-out (∈∈ₛ {a = y} {b = ⁅ x ⁆s} .snd y∈ₛ)
+
+  pairUp : (σ : V ℓ) {x y : V ℓ} → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset σ ⟩
+         → ⟨ ⁅ x , y ⁆ ∈ Lset (sucV σ) ⟩
+  pairUp σ {x} {y} x∈ y∈ = mkUp σ ⁅ x , y ⁆ Φ defSet≡
+    where
+    module DefA = DefOf (Lset σ)
+    module RefA = DefA.Refine (layer-trans (Lset-layer σ))
+    mx = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+    qx : ⟪ Lset σ ⟫↪ mx ≡ x
+    qx = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
+    my = ∈-asFiber {a = y} {b = Lset σ} y∈ .fst
+    qy : ⟪ Lset σ ⟫↪ my ≡ y
+    qy = ∈-asFiber {a = y} {b = Lset σ} y∈ .snd
+    Φ : Formula ⟪ Lset σ ⟫ 1
+    Φ = (var zero ≐ con mx) ∨̇ (var zero ≐ con my)
+    chain : ∀ m → (⟪ Lset σ ⟫↪ m ∈ DefA.defSet Φ)
+                ≡ ((⟪ Lset σ ⟫↪ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ))
+    chain m = RefA.abs-defSet Φ (δ-∨ δ-≐ δ-≐) m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Φ) (⟪ Lset σ ⟫↪ m ∷ []))
+    defSet≡ : DefA.defSet Φ ≡ ⁅ x , y ⁆
+    defSet≡ = extensionality (DefA.defSet Φ) ⁅ x , y ⁆ (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Φ ⊆ ⁅ x , y ⁆ ⟩
+      sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ ⁅ x , y ⁆))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ ⁅ x , y ⁆ ⟩) q
+            (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = ⁅ x , y ⁆} .fst
+              (mem m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))) })
+        (∈∈ₛ {a = z} {b = DefA.defSet Φ} .snd z∈ₛ)
+        where
+        mem : (m : ⟪ Lset σ ⟫) → ⟨ (⟪ Lset σ ⟫↪ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ) ⟩
+            → ⟨ ⟪ Lset σ ⟫↪ m ∈ ⁅ x , y ⁆ ⟩
+        mem m = PT.rec (snd (⟪ Lset σ ⟫↪ m ∈ ⁅ x , y ⁆))
+          λ { (inl e) → ∈pair-introL (e ∙ qx)
+            ; (inr e) → ∈pair-introR (e ∙ qy) }
+      sub₂ : ⟨ ⁅ x , y ⁆ ⊆ DefA.defSet Φ ⟩
+      sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet Φ))
+        (λ { (inl e) →
+              subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) (qx ∙ sym e)
+                (∈∈ₛ {a = ⟪ Lset σ ⟫↪ mx} {b = DefA.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (chain mx)) ∣ inl refl ∣₁))
+           ; (inr e) →
+              subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) (qy ∙ sym e)
+                (∈∈ₛ {a = ⟪ Lset σ ⟫↪ my} {b = DefA.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (chain my)) ∣ inr refl ∣₁)) })
+        (∈pair-elim (∈∈ₛ {a = z} {b = ⁅ x , y ⁆} .snd z∈ₛ))
+
+  prUp : (σ : V ℓ) {x y : V ℓ} → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset σ ⟩
+       → ⟨ pr x y ∈ Lset (sucV (sucV σ)) ⟩
+  prUp σ {x} {y} x∈ y∈ = pairUp (sucV σ) (sglUp σ x∈) (pairUp σ x∈ y∈)
+
+  sucUp : (σ : V ℓ) {x : V ℓ} → ⟨ x ∈ Lset σ ⟩
+        → ⟨ sucV x ∈ Lset (sucV (sucV σ)) ⟩
+  sucUp σ {x} x∈ = mkUp (sucV σ) (sucV x) Φ defSet≡
+    where
+    Atr = layer-trans (Lset-layer σ)
+    module DefA = DefOf (Lset (sucV σ))
+    module RefA = DefA.Refine (layer-trans (Lset-layer (sucV σ)))
+    x∈¹ : ⟨ x ∈ Lset (sucV σ) ⟩
+    x∈¹ = up x∈
+    mx = ∈-asFiber {a = x} {b = Lset (sucV σ)} x∈¹ .fst
+    qx : ⟪ Lset (sucV σ) ⟫↪ mx ≡ x
+    qx = ∈-asFiber {a = x} {b = Lset (sucV σ)} x∈¹ .snd
+    Φ : Formula ⟪ Lset (sucV σ) ⟫ 1
+    Φ = (var zero ∈̇ con mx) ∨̇ (var zero ≐ con mx)
+    chain : ∀ m → (⟪ Lset (sucV σ) ⟫↪ m ∈ DefA.defSet Φ)
+                ≡ ((⟪ Lset (sucV σ) ⟫↪ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ))
+    chain m = RefA.abs-defSet Φ (δ-∨ δ-∈ δ-≐) m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Φ) (⟪ Lset (sucV σ) ⟫↪ m ∷ []))
+    defSet≡ : DefA.defSet Φ ≡ sucV x
+    defSet≡ = extensionality (DefA.defSet Φ) (sucV x) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Φ ⊆ sucV x ⟩
+      sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ sucV x))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ sucV x ⟩) q
+            (∈∈ₛ {a = ⟪ Lset (sucV σ) ⟫↪ m} {b = sucV x} .fst
+              (mem m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))) })
+        (∈∈ₛ {a = z} {b = DefA.defSet Φ} .snd z∈ₛ)
+        where
+        mem : (m : ⟪ Lset (sucV σ) ⟫)
+            → ⟨ (⟪ Lset (sucV σ) ⟫↪ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ) ⟩
+            → ⟨ ⟪ Lset (sucV σ) ⟫↪ m ∈ sucV x ⟩
+        mem m = PT.rec (snd (⟪ Lset (sucV σ) ⟫↪ m ∈ sucV x))
+          λ { (inl h) → ∈sucV-inl {A = x}
+                (subst (λ w → ⟨ ⟪ Lset (sucV σ) ⟫↪ m ∈ w ⟩) qx h)
+            ; (inr e) → subst (λ w → ⟨ w ∈ sucV x ⟩) (sym (e ∙ qx))
+                (self∈sucV x) }
+      sub₂ : ⟨ sucV x ⊆ DefA.defSet Φ ⟩
+      sub₂ z z∈ₛ = ∈∈ₛ {a = z} {b = DefA.defSet Φ} .fst
+        (∈sucV-elim {A = x} {x = z} (snd (z ∈ DefA.defSet Φ))
+          (∈∈ₛ {a = z} {b = sucV x} .snd z∈ₛ) kMem kEq)
+        where
+        kMem : ⟨ z ∈ x ⟩ → ⟨ z ∈ DefA.defSet Φ ⟩
+        kMem h =
+          subst (λ w → ⟨ w ∈ DefA.defSet Φ ⟩) q'
+            (subst ⟨_⟩ (sym (chain m'))
+              ∣ inl (subst2 (λ u w → ⟨ u ∈ w ⟩) (sym q') (sym qx) h) ∣₁)
+          where
+          z∈¹ : ⟨ z ∈ Lset (sucV σ) ⟩
+          z∈¹ = up (Atr {x = x} {y = z} h x∈)
+          m' = ∈-asFiber {a = z} {b = Lset (sucV σ)} z∈¹ .fst
+          q' : ⟪ Lset (sucV σ) ⟫↪ m' ≡ z
+          q' = ∈-asFiber {a = z} {b = Lset (sucV σ)} z∈¹ .snd
+        kEq : z ≡ x → ⟨ z ∈ DefA.defSet Φ ⟩
+        kEq e =
+          subst (λ w → ⟨ w ∈ DefA.defSet Φ ⟩) (qx ∙ sym e)
+            (subst ⟨_⟩ (sym (chain mx)) ∣ inr refl ∣₁)
+```
+
+<!--en-->
+## The tail chain
+<!--zh-->
+## 尾链
+<!--/-->
+
+<!--en-->
+Both directions of the shift say the same sentence: "the surveyed member is
+`pr a v` for some pair `pr (suc a) v` recorded here". The sentence is written
+once, generically: a body of three clauses (the recorded pair, the successor,
+the surveyed pair) under six bounded quantifiers walking the recorded pair's
+own members, with the bound of the walk a term parameter. The successor reader
+joins the pair reader by the same carrying-over, and the two lemmas `seekOut`{.Agda}
+and `seekIn`{.Agda} read and write the whole sentence at the outer world, each
+used everywhere below.
+<!--zh-->
+移位的两个方向说同一句话：「被检视的成员是某个在此被记录的对 `pr (suc a) v` 的 `pr a v`」。这句话只写一次，并且泛型：三条子句的体 (被记录的对、后继、被检视的对) 置于六个有界量词之下，量词沿被记录的对自身的成员行走，行走的界是一个项参数。后继读式以同样的搬运与对读式会合，而 `seekOut`{.Agda} 与 `seekIn`{.Agda} 两条引理在外层世界读出与写入整句话，下文处处使用。
+<!--/-->
+
+```agda
+private
+  sucAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} → Fin n → Fin n → Formula K n
+  sucAt′ i j = (var i ∈̇ var j)
+            ∧̇ ((∀̇∈ (var i) (var zero ∈̇ var (suc j)))
+            ∧̇ (∀̇∈ (var j) ((var zero ∈̇ var (suc i)) ∨̇ (var zero ≐ var (suc i)))))
+
+  Δ₀-sucAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} (i j : Fin n)
+            → Δ₀ (sucAt′ {K = K} i j)
+  Δ₀-sucAt′ i j = δ-∧ δ-∈ (δ-∧ (δ-∀∈ δ-∈) (δ-∀∈ (δ-∨ δ-∈ δ-≐)))
+
+  tailBody : {ℓ' : Level} {K : Type ℓ'} {m : ℕ}
+           → Formula K (suc (suc (suc (suc (suc (suc (suc m)))))))
+  tailBody = prAt′ f5 f3 f1 ∧̇ (sucAt′ zero f3 ∧̇ prAt′ f6 zero f1)
+
+  tailSeek : {ℓ' : Level} {K : Type ℓ'} {m : ℕ} → Term K (suc m) → Formula K (suc m)
+  tailSeek B = ∃̇∈ B (∃̇∈ (var zero) (∃̇∈ (var zero)
+                 (∃̇∈ (var f2) (∃̇∈ (var zero) (∃̇∈ (var f2) tailBody)))))
+
+  Δ₀-tailSeek : {ℓ' : Level} {K : Type ℓ'} {m : ℕ} (B : Term K (suc m))
+              → Δ₀ (tailSeek B)
+  Δ₀-tailSeek B = δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈
+    (δ-∧ (Δ₀-prAt′ f5 f3 f1)
+         (δ-∧ (Δ₀-sucAt′ zero f3) (Δ₀-prAt′ f6 zero f1))))))))
+
+  seekOut : {n : ℕ} (B : Term (V ℓ) (suc n)) (δ : (V ℓ) ^ (suc n))
+          → ⟨ δ ⊨ tailSeek B ⟩
+          → ∥ Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+              ((⟦ var zero ⟧ δ ≡ pr a v) × ⟨ pr (sucV a) v ∈ ⟦ B ⟧ δ ⟩) ∥₁
+  seekOut B δ =
+    PT.rec PT.squash₁ (λ { (p , hp , w₁) →
+    PT.rec PT.squash₁ (λ { (d₁ , hd₁ , w₂) →
+    PT.rec PT.squash₁ (λ { (s , hs , w₃) →
+    PT.rec PT.squash₁ (λ { (d₂ , hd₂ , w₄) →
+    PT.rec PT.squash₁ (λ { (v , hv , w₅) →
+    PT.rec PT.squash₁ (λ { (a , ha , (e₁ , e₂ , e₃)) →
+      ∣ a , v
+      , subst ⟨_⟩ (prAt-adequate f6 zero f1
+          (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ δ)) e₃
+      , subst (λ w → ⟨ w ∈ ⟦ B ⟧ δ ⟩)
+          (subst ⟨_⟩ (prAt-adequate f5 f3 f1
+            (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ δ)) e₁
+           ∙ cong (λ w → pr w v)
+               (subst ⟨_⟩ (sucAt-adequate zero f3
+                 (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ δ)) e₂))
+          hp ∣₁ })
+    w₅ }) w₄ }) w₃ }) w₂ }) w₁ })
+
+  seekIn : {n : ℕ} (B : Term (V ℓ) (suc n)) (δ : (V ℓ) ^ (suc n)) (a v : V ℓ)
+         → ⟦ var zero ⟧ δ ≡ pr a v → ⟨ pr (sucV a) v ∈ ⟦ B ⟧ δ ⟩
+         → ⟨ δ ⊨ tailSeek B ⟩
+  seekIn B δ a v e h =
+    ∣ pr (sucV a) v , h
+    , ∣ ⁅ sucV a ⁆s , ∈pair-introL refl
+    , ∣ sucV a , singleton-self (sucV a)
+    , ∣ ⁅ sucV a , v ⁆ , ∈pair-introR refl
+    , ∣ v , ∈pair-introR refl
+    , ∣ a , self∈sucV a
+    , ( subst ⟨_⟩ (sym (prAt-adequate f5 f3 f1 env′)) refl
+      , subst ⟨_⟩ (sym (sucAt-adequate zero f3 env′)) refl
+      , subst ⟨_⟩ (sym (prAt-adequate f6 zero f1 env′)) e )
+    ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+    where
+    env′ : (V ℓ) ^ (suc (suc (suc (suc (suc (suc (suc _)))))))
+    env′ = a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s ∷ pr (sucV a) v ∷ δ
+```
+
+<!--en-->
+## The tail graph, staged
+<!--zh-->
+## 尾图，入阶段
+<!--/-->
+
+<!--en-->
+Before the family, the single graph: the tail of a stage member climbs three
+stages. Its members are pairs of things walked out of the argument by
+transitivity, so they sit two climbs up, and the description over that stage
+is precisely the seek sentence with the argument a constant.
+<!--zh-->
+族之前先看单个图：阶段成员的尾图爬三级。其成员是从实参沿传递性走出来的东西组成的对，故住在两次爬升之上，而那个阶段上的描述恰是「寻找句」以实参为常量的实例。
+<!--/-->
+
+```agda
+private
+  tailStage : (σ : V ℓ) {z : V ℓ} → ⟨ z ∈ Lset σ ⟩
+            → ⟨ tailGraph z ∈ Lset (sucV (sucV (sucV σ))) ⟩
+  tailStage σ {z} z∈ = mkUp (sucV (sucV σ)) (tailGraph z) Ψ defSet≡
+    where
+    Atr = layer-trans (Lset-layer σ)
+    module DefA = DefOf (Lset (sucV (sucV σ)))
+    module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV σ))))
+    z∈² : ⟨ z ∈ Lset (sucV (sucV σ)) ⟩
+    z∈² = up (up z∈)
+    mz = ∈-asFiber {a = z} {b = Lset (sucV (sucV σ))} z∈² .fst
+    qz : ⟪ Lset (sucV (sucV σ)) ⟫↪ mz ≡ z
+    qz = ∈-asFiber {a = z} {b = Lset (sucV (sucV σ))} z∈² .snd
+
+    Ψ : Formula ⟪ Lset (sucV (sucV σ)) ⟫ 1
+    Ψ = tailSeek (con mz)
+
+    chain : ∀ m → (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∈ DefA.defSet Ψ)
+                ≡ ((⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Ψ))
+    chain m = RefA.abs-defSet Ψ (Δ₀-tailSeek (con mz)) m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Ψ) (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []))
+
+    defSet≡ : DefA.defSet Ψ ≡ tailGraph z
+    defSet≡ = extensionality (DefA.defSet Ψ) (tailGraph z) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Ψ ⊆ tailGraph z ⟩
+      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ tailGraph z))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ tailGraph z ⟩) q
+            (mem m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁)) })
+        (∈∈ₛ {a = y} {b = DefA.defSet Ψ} .snd y∈ₛ)
+        where
+        mem : (m : ⟪ Lset (sucV (sucV σ)) ⟫)
+            → ⟨ (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Ψ) ⟩
+            → ⟨ ⟪ Lset (sucV (sucV σ)) ⟫↪ m ∈ₛ tailGraph z ⟩
+        mem m sat = PT.rec (snd (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∈ₛ tailGraph z))
+          (λ { (a , v , e , h) →
+            ∈∈ₛ {a = ⟪ Lset (sucV (sucV σ)) ⟫↪ m} {b = tailGraph z} .fst
+              (subst (λ w → ⟨ w ∈ tailGraph z ⟩) (sym e)
+                (tailGraph-in
+                  (subst (λ w → ⟨ pr (sucV a) v ∈ w ⟩) qz h))) })
+          (seekOut (con (⟪ Lset (sucV (sucV σ)) ⟫↪ mz))
+            (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []) sat)
+      sub₂ : ⟨ tailGraph z ⊆ DefA.defSet Ψ ⟩
+      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet Ψ)) build
+        (tailGraph-out {w = z} {z = y} (∈∈ₛ {a = y} {b = tailGraph z} .snd y∈ₛ))
+        where
+        build : Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ pr (sucV a) v ∈ z ⟩ × (y ≡ pr a v))
+              → ⟨ y ∈ₛ DefA.defSet Ψ ⟩
+        build (a , v , h , e) =
+          subst (λ w → ⟨ w ∈ₛ DefA.defSet Ψ ⟩) q'
+            (∈∈ₛ {a = ⟪ Lset (sucV (sucV σ)) ⟫↪ m'} {b = DefA.defSet Ψ} .fst
+              (subst ⟨_⟩ (sym (chain m'))
+                (seekIn (con (⟪ Lset (sucV (sucV σ)) ⟫↪ mz))
+                  (⟪ Lset (sucV (sucV σ)) ⟫↪ m' ∷ []) a v (q' ∙ e)
+                  (subst (λ w → ⟨ pr (sucV a) v ∈ w ⟩) (sym qz) h))))
+          where
+          prz∈ : ⟨ pr (sucV a) v ∈ Lset σ ⟩
+          prz∈ = Atr {x = z} {y = pr (sucV a) v} h z∈
+          a∈ : ⟨ a ∈ Lset σ ⟩
+          a∈ = Atr {x = sucV a} {y = a} (self∈sucV a)
+            (Atr {x = ⁅ sucV a ⁆s} {y = sucV a} (singleton-self (sucV a))
+              (Atr {x = pr (sucV a) v} {y = ⁅ sucV a ⁆s} (∈pair-introL refl) prz∈))
+          v∈ : ⟨ v ∈ Lset σ ⟩
+          v∈ = Atr {x = ⁅ sucV a , v ⁆} {y = v} (∈pair-introR refl)
+            (Atr {x = pr (sucV a) v} {y = ⁅ sucV a , v ⁆} (∈pair-introR refl) prz∈)
+          y∈² : ⟨ y ∈ Lset (sucV (sucV σ)) ⟩
+          y∈² = subst (λ w → ⟨ w ∈ Lset (sucV (sucV σ)) ⟩) (sym e)
+            (prUp σ a∈ v∈)
+          m' = ∈-asFiber {a = y} {b = Lset (sucV (sucV σ))} y∈² .fst
+          q' : ⟪ Lset (sucV (sucV σ)) ⟫↪ m' ≡ y
+          q' = ∈-asFiber {a = y} {b = Lset (sucV (sucV σ))} y∈² .snd
+```
+
+<!--en-->
+## The shift
+<!--zh-->
+## 移位
+<!--/-->
+
+<!--en-->
+The family now. A member of the defined set is, by the formula, some `X`
+member's tail: one clause says every member of the surveyed set satisfies the
+seek sentence against that `X` member, the converse clause says every suitably
+shaped recorded pair reaches the surveyed set, and together they pin the
+surveyed set to the tail graph itself, by one extensionality inside the
+reading. The member-side direction places the tail through the staging lemma
+and writes both clauses back through `seekIn`{.Agda} and the pair reader.
+<!--zh-->
+现在是族。按公式，被定义集的成员是某个 `X` 成员的尾图：一条子句说被检视集合的每个成员对着那个 `X` 成员满足寻找句，逆向子句说每个形状合适的被记录对都到达被检视集合，二者合起来经读出内部的一次外延性把被检视集合钉在尾图自身上。成员侧方向经入阶段引理安置尾图，并经 `seekIn`{.Agda} 与对读式把两条子句写回。
+<!--/-->
+
+```agda
+private
+  module SftD (X σ : V ℓ) (X∈ : ⟨ X ∈ Lset σ ⟩) where
+
+    Atr = layer-trans (Lset-layer σ)
+    module DefA = DefOf (Lset (sucV (sucV (sucV σ))))
+    module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV (sucV σ)))))
+
+    E³ : ⟪ Lset (sucV (sucV (sucV σ))) ⟫ → V ℓ
+    E³ m = ⟪ Lset (sucV (sucV (sucV σ))) ⟫↪ m
+
+    X∈³ : ⟨ X ∈ Lset (sucV (sucV (sucV σ))) ⟩
+    X∈³ = up (up (up X∈))
+    mX = ∈-asFiber {a = X} {b = Lset (sucV (sucV (sucV σ)))} X∈³ .fst
+    qX : E³ mX ≡ X
+    qX = ∈-asFiber {a = X} {b = Lset (sucV (sucV (sucV σ)))} X∈³ .snd
+
+    Φ : Formula ⟪ Lset (sucV (sucV (sucV σ))) ⟫ 1
+    Φ = ∃̇∈ (con mX)
+          ( (∀̇∈ (var f1) (tailSeek (var f1)))
+          ∧̇ (∀̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero)
+               (∀̇∈ (var f2) (∀̇∈ (var zero) (∀̇∈ (var f2)
+                 ((prAt′ f5 f3 f1 ∧̇ sucAt′ zero f3)
+                   ⇒̇ ∃̇∈ (var f7) (prAt′ zero f1 f2)))))))) )
+
+    dΦ : Δ₀ Φ
+    dΦ = δ-∃∈ (δ-∧ (δ-∀∈ (Δ₀-tailSeek (var f1)))
+           (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈
+             (δ-⇒ (δ-∧ (Δ₀-prAt′ f5 f3 f1) (Δ₀-sucAt′ zero f3))
+                  (δ-∃∈ (Δ₀-prAt′ zero f1 f2))))))))))
+
+    chain : ∀ m → (E³ m ∈ DefA.defSet Φ)
+                ≡ ((E³ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ))
+    chain m = RefA.abs-defSet Φ dΦ m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Φ) (E³ m ∷ []))
+
+    defSet≡ : DefA.defSet Φ ≡ shiftDown X
+    defSet≡ = extensionality (DefA.defSet Φ) (shiftDown X) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Φ ⊆ shiftDown X ⟩
+      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ shiftDown X))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ shiftDown X ⟩) q
+            (∈∈ₛ {a = E³ m} {b = shiftDown X} .fst
+              (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))) })
+        (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
+        where
+        fromSat : (m : ⟪ Lset (sucV (sucV (sucV σ))) ⟫)
+                → ⟨ (E³ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ) ⟩
+                → ⟨ E³ m ∈ shiftDown X ⟩
+        fromSat m = PT.rec (snd (E³ m ∈ shiftDown X))
+          (λ { (γ , hγ , membV , imgV) →
+            subst (λ w → ⟨ w ∈ shiftDown X ⟩) (sym (T≡ γ membV imgV))
+              (shiftDown-in {X = X} {z = γ}
+                (subst (λ w → ⟨ γ ∈ w ⟩) qX hγ)) })
+          where
+          T = E³ m
+          T≡ : (γ : V ℓ)
+             → ((z : V ℓ) → ⟨ z ∈ T ⟩ → ⟨ (z ∷ γ ∷ T ∷ []) ⊨ tailSeek (var f1) ⟩)
+             → ((p : V ℓ) → ⟨ p ∈ γ ⟩ → (d₁ : V ℓ) → ⟨ d₁ ∈ p ⟩
+                → (s : V ℓ) → ⟨ s ∈ d₁ ⟩ → (d₂ : V ℓ) → ⟨ d₂ ∈ p ⟩
+                → (v : V ℓ) → ⟨ v ∈ d₂ ⟩ → (a : V ℓ) → ⟨ a ∈ s ⟩
+                → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ γ ∷ T ∷ [])
+                      ⊨ (prAt′ f5 f3 f1 ∧̇ sucAt′ zero f3) ⟩
+                → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ γ ∷ T ∷ [])
+                      ⊨ ∃̇∈ (var f7) (prAt′ zero f1 f2) ⟩)
+             → T ≡ tailGraph γ
+          T≡ γ membV imgV = extensionality T (tailGraph γ) (t₁ , t₂)
+            where
+            t₁ : ⟨ T ⊆ tailGraph γ ⟩
+            t₁ z z∈ₛ = PT.rec (snd (z ∈ₛ tailGraph γ))
+              (λ { (a , v , e , h) →
+                ∈∈ₛ {a = z} {b = tailGraph γ} .fst
+                  (subst (λ w → ⟨ w ∈ tailGraph γ ⟩) (sym e)
+                    (tailGraph-in h)) })
+              (seekOut (var f1) (z ∷ γ ∷ T ∷ [])
+                (membV z (∈∈ₛ {a = z} {b = T} .snd z∈ₛ)))
+            t₂ : ⟨ tailGraph γ ⊆ T ⟩
+            t₂ z z∈ₛ = PT.rec (snd (z ∈ₛ T))
+              (λ { (a , v , h , e) → reach a v h e })
+              (tailGraph-out {w = γ} {z = z}
+                (∈∈ₛ {a = z} {b = tailGraph γ} .snd z∈ₛ))
+              where
+              reach : (a v : V ℓ) → ⟨ pr (sucV a) v ∈ γ ⟩ → z ≡ pr a v
+                    → ⟨ z ∈ₛ T ⟩
+              reach a v h e = PT.rec (snd (z ∈ₛ T))
+                (λ { (z' , hz' , s') →
+                  ∈∈ₛ {a = z} {b = T} .fst
+                    (subst (λ w → ⟨ w ∈ T ⟩)
+                      (subst ⟨_⟩ (prAt-adequate zero f1 f2
+                        (z' ∷ a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s
+                          ∷ pr (sucV a) v ∷ γ ∷ T ∷ [])) s'
+                       ∙ sym e)
+                      hz') })
+                (imgV (pr (sucV a) v) h
+                  ⁅ sucV a ⁆s (∈pair-introL refl)
+                  (sucV a) (singleton-self (sucV a))
+                  ⁅ sucV a , v ⁆ (∈pair-introR refl)
+                  v (∈pair-introR refl)
+                  a (self∈sucV a)
+                  ( subst ⟨_⟩ (sym (prAt-adequate f5 f3 f1
+                      (a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s
+                        ∷ pr (sucV a) v ∷ γ ∷ T ∷ []))) refl
+                  , subst ⟨_⟩ (sym (sucAt-adequate zero f3
+                      (a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s
+                        ∷ pr (sucV a) v ∷ γ ∷ T ∷ []))) refl ))
+      sub₂ : ⟨ shiftDown X ⊆ DefA.defSet Φ ⟩
+      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet Φ)) build
+        (shiftDown-out {X = X} {w = y} (∈∈ₛ {a = y} {b = shiftDown X} .snd y∈ₛ))
+        where
+        build : Σ[ z ∈ V ℓ ] (⟨ z ∈ X ⟩ × (tailGraph z ≡ y))
+              → ⟨ y ∈ₛ DefA.defSet Φ ⟩
+        build (z , hz , e) =
+          subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) q'
+            (∈∈ₛ {a = E³ m'} {b = DefA.defSet Φ} .fst
+              (subst ⟨_⟩ (sym (chain m')) sat))
+          where
+          z∈σ : ⟨ z ∈ Lset σ ⟩
+          z∈σ = Atr {x = X} {y = z} hz X∈
+          y∈³ : ⟨ y ∈ Lset (sucV (sucV (sucV σ))) ⟩
+          y∈³ = subst (λ w → ⟨ w ∈ Lset (sucV (sucV (sucV σ))) ⟩) e
+            (tailStage σ z∈σ)
+          m' = ∈-asFiber {a = y} {b = Lset (sucV (sucV (sucV σ)))} y∈³ .fst
+          q' : E³ m' ≡ y
+          q' = ∈-asFiber {a = y} {b = Lset (sucV (sucV (sucV σ)))} y∈³ .snd
+          tail≡ : tailGraph z ≡ E³ m'
+          tail≡ = e ∙ sym q'
+          membV : (zz : V ℓ) → ⟨ zz ∈ E³ m' ⟩
+                → ⟨ (zz ∷ z ∷ E³ m' ∷ []) ⊨ tailSeek (var f1) ⟩
+          membV zz hzz = PT.rec
+            (snd ((zz ∷ z ∷ E³ m' ∷ []) ⊨ tailSeek (var f1)))
+            (λ { (a , v , h , e'') →
+              seekIn (var f1) (zz ∷ z ∷ E³ m' ∷ []) a v e'' h })
+            (tailGraph-out {w = z} {z = zz}
+              (subst (λ w → ⟨ zz ∈ w ⟩) (sym tail≡) hzz))
+          imgV : (p : V ℓ) → ⟨ p ∈ z ⟩ → (d₁ : V ℓ) → ⟨ d₁ ∈ p ⟩
+               → (s : V ℓ) → ⟨ s ∈ d₁ ⟩ → (d₂ : V ℓ) → ⟨ d₂ ∈ p ⟩
+               → (v : V ℓ) → ⟨ v ∈ d₂ ⟩ → (a : V ℓ) → ⟨ a ∈ s ⟩
+               → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])
+                     ⊨ (prAt′ f5 f3 f1 ∧̇ sucAt′ zero f3) ⟩
+               → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])
+                     ⊨ ∃̇∈ (var f7) (prAt′ zero f1 f2) ⟩
+          imgV p hp d₁ hd₁ s hs d₂ hd₂ v hv a ha (s₁ , s₂) =
+            ∣ pr a v
+            , subst (λ w → ⟨ pr a v ∈ w ⟩) tail≡
+                (tailGraph-in
+                  (subst (λ w → ⟨ w ∈ z ⟩)
+                    (subst ⟨_⟩ (prAt-adequate f5 f3 f1
+                      (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])) s₁
+                     ∙ cong (λ w → pr w v)
+                         (subst ⟨_⟩ (sucAt-adequate zero f3
+                           (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])) s₂))
+                    hp))
+            , subst ⟨_⟩ (sym (prAt-adequate zero f1 f2
+                (pr a v ∷ a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ []))) refl
+            ∣₁
+          sat : ⟨ (E³ m' ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ) ⟩
+          sat = ∣ z , subst (λ w → ⟨ z ∈ w ⟩) (sym qX) hz
+              , membV , imgV ∣₁
+```
+
+<!--en-->
 ## Back into the class
 <!--zh-->
 ## 收回类中
@@ -814,6 +1353,13 @@ selectEqualL {X} {Ka} {Kb} lX lKa lKb =
   famL zero = lX
   famL (suc zero) = lKa
   famL (suc (suc zero)) = lKb
+
+shiftDownL : {X : V ℓ} → ⟨ isL X ⟩ → ⟨ isL (shiftDown X) ⟩
+shiftDownL {X} = PT.rec (snd (isL (shiftDown X)))
+  λ { (σ , oσ , X∈) →
+    defSet→isL (sucV (sucV (sucV σ))) (suc-ord (suc-ord (suc-ord oσ)))
+      (shiftDown X)
+      ∣ SftD.Φ X σ X∈ , SftD.defSet≡ X σ X∈ ∣₁ }
 
 valuesL : {X : V ℓ} → ⟨ isL X ⟩ → ⟨ isL (values X) ⟩
 valuesL {X} lX = PT.rec (snd (isL (values X)))
