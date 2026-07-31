@@ -33,14 +33,14 @@ module Everything where
 
 - `Landmarks`{.Agda}: the trophy case, displayed at the entrance: the milestone
   theorems restated as self-contained signatures with their full assumption
-  bills, `V⊨ZF`{.Agda} (and its classical redemption), `V⊨ZFC`{.Agda}, and the
-  frontier-conditional `L⊨ZFC`{.Agda}, each hypothesis spelled in the name.
+  bills, `V⊨ZF`{.Agda} (and its classical redemption), `V⊨ZFC`{.Agda}, and
+  `L⊨ZFC`{.Agda}, each hypothesis spelled in the name.
   Read it first to see the destination; understanding the signatures is what
   the rest of the book is for.
 <!--zh-->
 ## 地标：本书的终点
 
-- `Landmarks`{.Agda}：奖杯陈列室，摆在入口处：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其精确价格版 `V⊨ZF-impredicative`{.Agda})、单凭选择的 `V⊨ZFC`{.Agda}，与带前沿条件的 `L⊨ZFC`{.Agda}。先读它，看清目的地；至于读懂这些签名，正是全书其余部分的任务。
+- `Landmarks`{.Agda}：奖杯陈列室，摆在入口处：里程碑定理以自足签名重述，假设账单全额陈列：`V⊨ZF`{.Agda} (及其精确价格版 `V⊨ZF-impredicative`{.Agda})、单凭选择的 `V⊨ZFC`{.Agda}，与 `L⊨ZFC`{.Agda}。先读它，看清目的地；至于读懂这些签名，正是全书其余部分的任务。
 <!--/-->
 
 ```agda
@@ -222,8 +222,9 @@ import V.Model
   `ord∈Lset-suc`{.Agda} says none appears late.
 - `L.WellOrder.Base`{.Agda}: strict well-orders as a bundle (`SWO`{.Agda}), and
   the least element of a non-empty subset (`leastOf`{.Agda}), unique by
-  trichotomy: the choosing device the axiom of choice will take. Reflection was
-  expected to be a second consumer and is not; nothing imports this chapter yet.
+  trichotomy: the choosing device the axiom of choice takes. Reflection was
+  expected to be a second consumer and is not, so there is exactly one, and it is
+  `L.Choice.Transversal`{.Agda}, the last chapter of the book.
 - `L.Coding.Base`{.Agda}: reading codes from inside: `allCodes`{.Agda} gathers
   every parameter-free formula's code into one nameable set, and
   `prAt`{.Agda} / `tagAt`{.Agda} destructure a Kuratowski pair and a tag in
@@ -281,7 +282,7 @@ import V.Model
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
-- `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是；本章目前无人 import。
+- `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是，故恰有一个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
@@ -349,6 +350,8 @@ import L.Choice.Faithful
 import L.Choice.Adequate
 import L.Choice.Limit
 import L.Choice.Before
+import L.Choice.Order
+import L.Choice.Transversal
 ```
 
 <!--en-->
@@ -859,13 +862,72 @@ The root, stated today and finished over the remaining parts:
   formula carrying two copies of the whole hierarchy description (376 s against
   3.8 s, ninety-nine fold), and the frame that builds the family obeys the same
   law one level up by handing back a triple in which no formula appears.
-- `L.Frontier`{.Agda}: the debt registry, opened at eleven fields and down to
-  one, the verbatim
-  statement of a model field at `𝒮ʟ`; proven fields get deleted, and the book
-  is done when the record is empty.
+- `L.Choice.Order`{.Agda}: the step described, and the order table made
+  unconditional. `Stp`{.Agda} is that description: a **sealed** formula binding
+  six sets and pinning two constants. The six are the tower at the stage, reached
+  through `L.Coding.Sequence`{.Agda}'s `LsetGraphAt`{.Agda}; its definable subsets
+  through `L.Coding.Powerset`{.Agda}'s `DefAt`{.Agda}, with the two compared sets
+  required to lie in it, which is how the step's two membership components arrive
+  without a lemma nobody has; the table's value at the stage through
+  `appAt`{.Agda}, which is what keeps the description reading against whatever
+  table the caller holds; and the code set over the tower through
+  `L.Choice.Faithful`{.Agda}'s `CodesAt`{.Agda}, written for exactly this slot.
+  The two pinned by an object equality are `L.Choice.Limit`{.Agda}'s
+  `codeOrder`{.Agda} and the code set at the empty alphabet, because a slot holds
+  a variable and those two are particular sets. The body at those seven slots is
+  `L.Choice.Internal`{.Agda}'s `StepAt`{.Agda}. `Slots`{.Agda} supplies all six
+  arguments of the step adequacy, generic in the six sets with their equations as
+  hypotheses: the code side unconditional from the limit and family chapters, the
+  carrier side from `L.Choice.Table`{.Agda}'s readings at the bound value, which
+  is the step parameter's own hypothesis and the only input taken from outside.
+  `stp-out`{.Agda} and `stp-in`{.Agda} are unpack and pack over the six binders,
+  composed with `L.Choice.Adequate`{.Agda}'s step readings and
+  `L.Choice.Step`{.Agda}'s two, and they carry the frame's asymmetry: soundness
+  quantifies over every value the table records there, completeness takes the
+  single value the caller realizes with. One line then opens
+  `L.Choice.Faithful.Ordered`{.Agda}, and with it the whole of the table becomes
+  unconditional: `CondCore`{.Agda}, `Cond`{.Agda}, `Cond₀`{.Agda} and their two
+  specifications, and, from `L.Choice.Table`{.Agda}, `StepAt`{.Agda},
+  `ApproxAt`{.Agda}, `GraphAt`{.Agda}, `approx-val`{.Agda}, `graph-only`{.Agda},
+  `graph-table`{.Agda}, `tableAt`{.Agda}, `relL`{.Agda}, `relL-spec`{.Agda} and
+  all four representation lemmas. One measurement, a law at a new place: **the
+  type a frame concludes in is sealed where it is built**, since instantiating
+  that frame at the concrete elements the description binds normalizes it, and
+  unsealed that does not finish (over 200 s against 7 s for the whole chapter).
+  `Bound`{.Agda} is the shape the last chapter separates with: the bounding
+  ordinal of a set of `L`, the order on the members of the tower there as an
+  element of the model, and its two representation lemmas.
+- `L.Choice.Transversal`{.Agda}: choice, and the frontier emptied. The axiom in
+  the **transversal** form the model record states it: a set whose members are
+  inhabited and pairwise disjoint has a set meeting each member in exactly one
+  point. No well-order of `L` is used, because none exists here; a set is small,
+  so `L.Choice.Stage`{.Agda}'s bounding ordinal holds the family, its members and
+  their members at once, and `L.Choice.Order`{.Agda}'s `Bound`{.Agda} supplies the
+  order on the tower there as an element of the model. `Pick`{.Agda} is the
+  description, one free variable and two constants: some member of the family
+  contains this set and nothing in that member precedes it, with the order pinned
+  to a slot by an object equality because the atom for a pair in a relation reads
+  the relation from a slot. `pick-in`{.Agda} and `pick-out`{.Agda} are its two
+  readings against `L.WellOrder.Base`{.Agda}'s `IsLeast`{.Agda}, every truncation
+  payload named. `transversalSet`{.Agda} is the model's own separation by it over
+  the tower, and `transversal`{.Agda} counts the intersection with each member:
+  existence from `leastOf`{.Agda}, the least-element search that had waited
+  without a consumer since it was written, and uniqueness from pairwise
+  disjointness, which nothing else in the book uses, through
+  `isPropLeastOf`{.Agda}. The dependence on the supplied ZF model is one
+  transport along the intersection's specification. `hasChoiceL`{.Agda} is the
+  model's choice field, so the registry is empty and `L.Frontier` is deleted with
+  the root chapter's second parameter. One measurement, and it is a law declining
+  to bite: a description read at constants is sealed where it is built, worth
+  ninety-nine fold where it was found and nothing here (2.3 s either way), since
+  this description carries no coded syntax; the seal stays and the number is
+  recorded, because the law is about what a description contains.
 - `L.Model`{.Agda}: the root chapter: the honest relative-consistency framing;
   extensionality and regularity descend along transitivity; `L⊨ZF`{.Agda} and
-  `L⊨ZFC`{.Agda} assembled from the frontier.
+  `L⊨ZFC`{.Agda} assembled, with the excluded middle as the only hypothesis. The
+  debt registry `L.Frontier` that this chapter took as its second parameter is
+  gone: it opened at eleven fields, shrank six times, and was deleted with the
+  chapter that emptied it.
 <!--zh-->
 根，今日陈述，余部完成：
 
@@ -903,12 +965,12 @@ The root, stated today and finished over the remaining parts:
 - `L.Choice.Adequate`{.Agda}：那一步自身的适足性，对着命名那一章的比较。`paramSeq-in`{.Agda} 与 `paramSeq-out`{.Agda} 是参数那个合取项的两个方向：载体之上的一个向量，就是它之上一个定义域为元数的环境；而任何这样的环境都能被读回成一个向量，且**不带截断**，因为某个序号处的条目是命题，而一个取值的索引是一条纤维，故一分有穷选择也不花。`envAt`{.Agda}、`numAt`{.Agda}、`keyAt`{.Agda} 与 `valAt`{.Agda} 是指称那个合取项所满足于其上的四个元素，在被造出之处封印；`codeEl`{.Agda} 与 `envEl`{.Agda} 是另外两个，供最小名字描述所携带的那个全称使用。`Named.Body.denote-fill`{.Agda} 与 `Named.Body.denote-read`{.Agda} 是指称的两个方向，长四环：扩张后的环境是被推到诸参数前面的那个成员，它的长度是元数加一，键是那个长度与骨架之对，而图在那里的取值就是载体之上的满足关系。`NameAt-fill`{.Agda} 与 `NameAt-read`{.Agda} 把五个合取项装配成一个元层面名字、又拆回来；`Least.Min.LeastAt-fill`{.Agda} 与 `Least.Min.LeastAt-read`{.Agda} 对最小名字做同样的事，那个全称在「一个名字自己的三样数据」处实例化；而 `Least.Step.StepAt-fill`{.Agda} 与 `Least.Step.StepAt-read`{.Agda} 是那一步，即两个最小名字加一次比较。`leastPin`{.Agda} 靠最小元的唯一性，把「这条描述称作最小」的那个名字与 `leastName`{.Agda} 交回的那个认同起来。这一切都站在上一章留下的那个框架里：每个关系位都带着「它持有的是哪个序」这条假设。三次实测，每一条都是在新地方遇上的旧规矩：适足性等式的**复合**无法由「对着写出来的类型」的一次代换交割，任何实参都不行、变元也不行 (`denote-table`{.Agda} 400 秒跑不完，而它的两个因子 `denote-mem`{.Agda} 与 `val-sat`{.Agda} 各自 2.4 秒交割)，故复合逐因子消费；六层绑定那一块要求它的环境被写开，不可用 `where`{.Agda} 缩写 (超过 400 秒对 20 秒)；而六重存在的载荷经 `StepOf`{.Agda} 读出，绝不经手写的 Σ。在 `L.Choice.Table`{.Agda} 的结果成为无条件之前仍然缺席的东西，本章据实点名：那个框架里为**诸码**所设的关系位，要的是作为 `L` 之元素的 `limitOrder`{.Agda}，而至今无人造出它。
 - `L.Choice.Limit`{.Agda}：极限阶段诸成员上的序，作为 `L` 的一个元素，而这正是内化那个框架里**为诸码所设的位**一直索取的东西。`LevelAt`{.Agda} 是层号在对象语言中的说法，三个合取项，且除 `ω` 外不点名任何常元：那一位持有 `ω` 的一个成员、那里的塔装着这个集合、而没有更小数码的塔装它。两条读式都站在变元位上，而层号以**变元数码**的身份到场、携带它自己的定义等式，这正是 145 秒与 1.8 秒之差，因为层号是一场经典可及性递归，而槽位处的转换检查把它撬开。`PrecedesAt`{.Agda} 是最先分歧处那次比较的单独一步，其中不含任何具体之物：基底关系与基底阶段被握在槽位里，故这条描述能站在「关系是某场递归之取值」的地方；而基底关系的那次隶属经 `appAt`{.Agda} 抵达，因为对是被描述的、不是被点名的。`strictLimit`{.Agda} 先按三歧分情形，把一次比较上的截断脱下来。`LimitOrdAt`{.Agda} 把两个键接成一个析取，第一支绑两个层号并按隶属比较它们，第二支绑**一个**，于是层号之间的等式根本不进对象语言。`pairsBound`{.Agda} 经 `smallDom`{.Agda} 把那个序可能关联的每一个对都禁闭起来，而 `codeOrder`{.Agda} 是从它上面分离出来的、在造出之处封印；`codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda} 是两条表示引理，而 `CodeKeys.AtParams`{.Agda} 就是 `Adequacy.Keys`{.Agda}，其为诸码所设的位由它们填上，实参相同，中间不设转接。这一切都以**一条**假设为条件，即 `BeforeAt`{.Agda} 连同它对着 `before`{.Agda} 的两条读式，也就是沿诸数码的那族最先分歧之序在内部的说法：一场取值为关系的递归，故要说的是逼近；它比塔便宜，因为索引是 `ωʟ`{.Agda} 的成员，而那一步已经写好。两次实测，每一条都是在新地方遇上的旧规矩：一次分情形，若其被检者是某个**束**的比较、而其结论是一个满足关系，就跑不完，而写在一个显式的和上、诸支具名，则不花分文 (超过 300 秒对 2.4 秒)；以及那条接合起来的描述必须**在造出之处封印**，因为分离的那条条件会在两层绑定之下把它展开 (超过 300 秒对 2.7 秒)。
 - `L.Choice.Before`{.Agda}：最先分歧之序的那一族，内化，它兑现了上一章赖以立足的那条唯一假设。`relAt`{.Agda} 是每个数码处的那个关系，作为 `L` 的一个元素，即在那个有穷阶段的诸对之上、用上一章那条步进描述雕出的一次分离，而那条描述的两个槽位被绑定、并**用对象等词钉在诸常元上**，于是一条描述同时服务于那次分离与那个图；`relAt-out`{.Agda} 与 `relAt-in`{.Agda} 是它的两条读式，对数码作归纳一并证出，每个方向都在前趋处花掉另一个，因为上一个关系只在一致性子句内部被查阅，而 `precedes-map`{.Agda} 反变地搬运那次比较。`RelBodyAt`{.Agda} 是那一步，对成员、索引与逼近保持通用，其中前趋说成索引的 `∈`-**极大**成员，故不需要对象等词，而那一步恰好在这场递归为空之处 (零处) 为空。`RelStepAt`{.Agda}、`ApproxAt`{.Agda} 与 `RelGraphAt`{.Agda} 照 `L.Coding.Sequence`{.Agda} 而来，不带单值性合取项；`step-rel`{.Agda} 与 `rel-step`{.Agda} 是通往元语言的那座桥，`approx-val`{.Agda} 靠一次良基归纳把逼近所记录的每个取值钉住、且单值性在任何地方都不是假设，而 `rel-only`{.Agda} 是那个图的确定性。`approxSet`{.Agda} 是当场拿出来的那个逼近，**根本不花任何公式**，因为某个数码以下的逼近是有穷的，只要 `smallStage`{.Agda} 把它的诸成员放进同一个阶段，`finSetL`{.Agda} 就把它张出来；`beforeFam`{.Agda} 是那一族，沿 `ωʟ`{.Agda} 的一次替换，在造出之处封印，而它的两个方向陈述成对着这场递归、不对着任何公式。`BeforeAt`{.Agda} 在某个槽位所持的数码处读出那一族，其中在常元处的应用用 `appAtC`{.Agda}，而被比较的那两个集合**不加禁闭**；有了它，`Described`{.Agda} 便被实例化，于是 `codeOrder`{.Agda} 与 `CodeKeys`{.Agda} 是无条件的。一次实测，本部最大的一次：四条描述必须**在造出之处封印**，因为不封印时，每一次在具体环境上的满足关系都要把一条内部装着两份完整层级描述的公式正规化 (376 秒对 3.8 秒，九十九倍)；而造出那一族的那个框架在高一层遵守同一条定律，办法是交回一个其中不出现任何公式的三元组。
-- `L.Frontier`{.Agda}：债务登记簿，开张十一个字段，如今只剩一个，是模型字段在 `𝒮ʟ` 处的原文陈述；字段证毕即删，簿清则书成。
-- `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 由前沿合龙。
+- `L.Choice.Order`{.Agda}：那一步被描述出来，序之表随之变成无条件的。`Stp`{.Agda} 就是那条描述：一条**被封印**的公式，绑定六个集合并钉住两个常量。六个是：阶段处的塔，经 `L.Coding.Sequence`{.Agda} 的 `LsetGraphAt`{.Agda} 抵达；它的可定义子集，经 `L.Coding.Powerset`{.Agda} 的 `DefAt`{.Agda} 抵达，并要求被比较的那两个集合落在其中，那一步的两个隶属分量就是这样到场的，而不必动用谁也没有的一条引理；表在该阶段的取值，经 `appAt`{.Agda} 抵达，正是这一点使那条描述始终读在调用方所持的任意一张表上；以及塔之上的码集，经 `L.Choice.Faithful`{.Agda} 的 `CodesAt`{.Agda} 抵达，而那条描述当初就是为这个槽位写的。用对象等词钉住的两个是 `L.Choice.Limit`{.Agda} 的 `codeOrder`{.Agda} 与空字母表处的码集，因为槽位持有变元，而那两样是特定的集合。落在那七个槽位上的主体就是 `L.Choice.Internal`{.Agda} 的 `StepAt`{.Agda}。`Slots`{.Agda} 供给那一步的适足性的全部六个实参，对那六个集合保持通用、以它们的等式为假设：码那一侧由极限与族两章无条件给出，载体那一侧由 `L.Choice.Table`{.Agda} 在所绑定取值处的诸读式给出，而那正是步进参数自己的假设，也是从外面取的唯一输入。`stp-out`{.Agda} 与 `stp-in`{.Agda} 是对那六个绑定的拆开与装回，与 `L.Choice.Adequate`{.Agda} 的诸步进读式及 `L.Choice.Step`{.Agda} 的两条复合而成，且它们承接了框架的那份不对称：可靠性对表在那里记录的每一个取值作全称，完备性取的是调用方据以实现的那单个取值。随后一行打开 `L.Choice.Faithful.Ordered`{.Agda}，整张表随之变成无条件的：`CondCore`{.Agda}、`Cond`{.Agda}、`Cond₀`{.Agda} 连同它们的两条规格，以及出自 `L.Choice.Table`{.Agda} 的 `StepAt`{.Agda}、`ApproxAt`{.Agda}、`GraphAt`{.Agda}、`approx-val`{.Agda}、`graph-only`{.Agda}、`graph-table`{.Agda}、`tableAt`{.Agda}、`relL`{.Agda}、`relL-spec`{.Agda} 与全部四条表示引理。一次实测，一条定律在新地方的现身：**一个框架所结论于其中的类型，要在它被造出之处封印**，因为把那个框架实例化到描述所绑定的具体元素上会把它正规化，而不封印时那件事跑不完 (超过 200 秒，对全章的 7 秒)。`Bound`{.Agda} 是最后一章据以分离的那个形状：`L` 的一个集合的界层序数、那里的塔的诸成员上的序作为模型的一个元素，以及它的两条表示引理。
+- `L.Choice.Transversal`{.Agda}：选择，以及前沿清空。公理取模型 record 陈述它时所用的**横截**形式：成员非空且两两不交的集合，有一个与它每个成员恰交于一点的集合。全程不用 `L` 的良序，因为此处根本没有；集合是小的，故 `L.Choice.Stage`{.Agda} 的界层序数一举装下该族、它的成员与它们的成员，而 `L.Choice.Order`{.Agda} 的 `Bound`{.Agda} 供应那里的塔上的序作为模型的一个元素。`Pick`{.Agda} 是那条描述，一个自由变元与两个常量：该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前；那个序用对象等词钉在一个槽位上，因为「一个对属于某个关系」这条原子是从槽位取那个关系的。`pick-in`{.Agda} 与 `pick-out`{.Agda} 是它对着 `L.WellOrder.Base`{.Agda} 的 `IsLeast`{.Agda} 的两条读式，每个截断载荷都有名字。`transversalSet`{.Agda} 是模型自家的分离据它在那座塔之上雕出的东西，而 `transversal`{.Agda} 数清它与每个成员之交：存在性来自 `leastOf`{.Agda}，即那场自写下之日起一直没有消费方的极小元搜索；唯一性来自两两不交，而全书别无他处用到它，经 `isPropLeastOf`{.Agda} 得出。对所供给的那个 ZF 模型的依赖，只是沿交的规格的一次搬运。`hasChoiceL`{.Agda} 就是模型的选择字段，于是登记簿清空，`L.Frontier` 连同根章的第二个参数一并删除。一次实测，且是一条定律偏偏没有咬人：读在常元上的描述要在被造出之处封印，这条定律在被发现之处值九十九倍，在此处则一文不值 (封印与否都是 2.3 秒)，因为这条描述不携带任何已编码的语法；封印仍然保留，而那个数字被记下来，因为这条定律关乎的是一条描述装着什么。
+- `L.Model`{.Agda}：根章：诚实的相对一致性表述；外延与正则沿传递性下降；`L⊨ZF`{.Agda} 与 `L⊨ZFC`{.Agda} 合龙，唯一假设是排中律。本章曾以第二个参数收下的债务登记簿 `L.Frontier` 已不复存在：它开张十一个字段，缩过六次，随着清空它的那一章一并删去。
 <!--/-->
 
 ```agda
-import L.Frontier
 import L.Model
 ```
 

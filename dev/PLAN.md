@@ -2997,3 +2997,52 @@ One row per goal code; update the row in the same commit that changes the status
   **Pre-existing drift fixed in passing**: the step chapter's recap still described the
   second branch that was measured surplus and deleted, contradicting its own body and the
   reading order. Corrected in both languages.
+
+- **`[L2.4]` IS DONE, 2026-07-31. THE FRONTIER IS EMPTY AND DELETED.** `L.Choice.Order` 424
+  and `L.Choice.Transversal` 232 close the chain. `src/L/Frontier.lagda.md` is gone, and
+  `L.Model` now reads
+
+      module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+      L⊨ZFC : isZFCModel
+      L⊨ZFC = record { zf = L⊨ZF ; hasChoice = hasChoiceL L⊨ZF }
+
+  **The constructible universe models ZFC, with the excluded middle as the only assumption
+  besides the universe level.** Verified personally rather than from a report: the module
+  takes no frontier parameter, and a scan of every `agda` fence in `src/` finds no
+  `postulate`, no interaction hole, no `TERMINATING`, no `primTrustMe` and no weakened
+  option pragma anywhere. `make check` green.
+
+  **The transversal typechecked on the first try**, which is worth recording because it is
+  the only chapter on this goal that did. Its route is the one the audit settled and every
+  piece of it was supplied by an earlier chapter: one ordinal bounds the family and its
+  members and their members; the order there is a well-order and an element of the model
+  with two representation lemmas; so the least member of each cell is a formula with the
+  relation as a constant, and the model's own separation cuts out the transversal.
+  Existence comes from the least element and uniqueness from pairwise disjointness, which
+  is used for nothing else and exactly there. The whole dependence on the supplied model is
+  **two transports**, along the intersection's specification and separation's.
+
+  **`L.WellOrder.Base` finally has its consumer.** That chapter was written for this goal,
+  sat with zero importers for the whole development, and had its prose corrected days ago to
+  say so; it now names the chapter that uses it.
+
+  **One more law, measured at the assembly.** **The TYPE a frame concludes in must be
+  sealed where it is built.** Instantiating the frame at the concrete elements the
+  description binds normalizes that type: unsealed it did not finish past 200 s, sealed the
+  chapter is 7 s. The diagnostic chain is worth the record: the same application at variable
+  slots is free, the conclusion type is cheap to form and cheap to check against **behind a
+  name**, and expensive only spelled inline in a signature. So a defined constant already
+  blocks the runaway, and `opaque` is the robust form of that.
+
+  **Knock-on repairs from the deletion**, all consequential and none discretionary: the Agda
+  linter's message no longer calls the frontier the only debt form, the dependency map drops
+  its dashed-chapter legend in three languages, and the style guide, the source README and
+  the landmarks lose their references to it.
+
+  **Final accounting for the goal**: about 5,900 lines across thirteen chapters, against an
+  audit band of 1,900 to 3,150. The cause is stated once and it is not the stratification,
+  which closed as the audit predicted, and not the internalization, which ran at template
+  cost: **the audit priced the internal side as one adequacy; delivery found three, then a
+  fourth, and the last of them was a whole recursion.** Every one of those was found by
+  asking what a hypothesis actually quantified over, and every one was found by review
+  rather than by the chapter that owed it.

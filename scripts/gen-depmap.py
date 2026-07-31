@@ -45,13 +45,10 @@ UI = {
         "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
         "alledges": "all direct imports",
         "lmk": "include Landmarks' references",
-        "legfront": "dashed: temporary chapter (the frontier; deleted once its debts are paid)",
         "hint": "— hover or click any chapter —",
         "hubnote": ("The hubs <span class=mono>Base.Prelude</span> and <span class=mono>"
                     "Base.Truth</span> are imported by every chapter; those edges are "
                     "omitted (the detail card still lists them)."),
-        "frontnote": ("The dashed <span class=mono>L.Frontier</span> is the debt registry: "
-                      "a temporary chapter, deleted once its fields are proven."),
         "reading": "reading position", "imports": "direct imports", "consumers": "direct consumers",
         "footer": ("Reading order (corner numbers) and dependency order differ on purpose: "
                    "this page is the third derived view of the two-catalog doctrine "
@@ -65,12 +62,9 @@ UI = {
         "edgemode": "边：", "skeleton": "骨架 (传递约简)",
         "alledges": "全部直接边",
         "lmk": "包含 Landmarks 的引用边",
-        "legfront": "虚线：临时章节 (前沿登记簿，债务偿清即删)",
         "hint": "— 悬停或点击任一章节 —",
         "hubnote": ("中枢 <span class=mono>Base.Prelude</span> 与 <span class=mono>Base.Truth"
                     "</span> 被每一章导入，图中省略这些边 (详情卡仍列出)。"),
-        "frontnote": ("虚线边框的 <span class=mono>L.Frontier</span> 是债务登记簿：临时章节，"
-                      "字段证毕即删。"),
         "reading": "阅读序号", "imports": "直接导入", "consumers": "直接消费者",
         "footer": ("阅读顺序 (角标数字) 与依赖顺序刻意不同：本页是两目录法条 (PLAN §5) 的第三个"
                    "派生视图。每次站点构建都从 <span class=mono>src/**.lagda.md</span> 的 "
@@ -83,12 +77,9 @@ UI = {
         "edgemode": "辺：", "skeleton": "骨格 (推移簡約)",
         "alledges": "すべての直接 import",
         "lmk": "Landmarks の参照を含める",
-        "legfront": "破線：一時的な章 (フロンティア、完済で削除)",
         "hint": "— 章にホバーまたはクリック —",
         "hubnote": ("ハブ <span class=mono>Base.Prelude</span> と <span class=mono>Base.Truth"
                     "</span> は全章から import されるため、辺は省略 (詳細カードには表示)。"),
-        "frontnote": ("破線の <span class=mono>L.Frontier</span> は負債台帳：一時的な章で、"
-                      "証明され次第削除される。"),
         "reading": "読書順", "imports": "直接 import", "consumers": "直接の消費者",
         "footer": ("読書順 (隅の番号) と依存順は意図的に異なる。本頁はサイトビルドごとに "
                    "<span class=mono>src/**.lagda.md</span> から再生成される。"),
@@ -212,7 +203,6 @@ def main(argv):
             "lanes": [{"key": ln, "light": slot[ln][0], "dark": slot[ln][1]}
                       for ln in lanes],
             "hubs": HUBS,
-            "frontier": "L.Frontier",
             "landmark": "Landmarks",
         }
         page = TEMPLATE
@@ -224,10 +214,8 @@ def main(argv):
         page = page.replace("__SKELETON__", ui["skeleton"])
         page = page.replace("__ALLEDGES__", ui["alledges"])
         page = page.replace("__LMK__", ui["lmk"])
-        page = page.replace("__LEGFRONT__", ui["legfront"])
         page = page.replace("__HINT__", ui["hint"])
         page = page.replace("__HUBNOTE__", ui["hubnote"])
-        page = page.replace("__FRONTNOTE__", ui["frontnote"])
         page = page.replace("__READING__", ui["reading"])
         page = page.replace("__IMPORTS__", ui["imports"])
         page = page.replace("__CONSUMERS__", ui["consumers"])

@@ -45,8 +45,6 @@ h1 {
 .chip { display: inline-flex; align-items: center; gap: .34rem; }
 .chip .mono { font-size: .8em; }
 .dot { width: .62rem; height: .62rem; border-radius: 2px; display: inline-block; }
-.dashbox { width: 1.05rem; height: .66rem; border: 1.5px dashed var(--ink-soft);
-  border-radius: 3px; display: inline-block; }
 .mapwrap { max-width: 1180px; margin: 1rem auto; padding: 0 1.4rem 0.4rem; }
 .mapscroll {
   overflow-x: auto; border: 1px solid var(--panel-edge); border-radius: 10px;
@@ -100,7 +98,7 @@ svg { display: block; }
 <div class="info"><div class="infocard" id="card" style="border-left-color: var(--ruler)">
   <h2 id="c-name">__HINT__</h2>
   <div class="meta" id="c-meta">__HUBNOTE__</div>
-  <p id="c-desc">__FRONTNOTE__</p>
+  <p id="c-desc"></p>
   <div class="deps" id="c-deps"></div>
 </div></div>
 
@@ -225,7 +223,6 @@ function render() {
     r.setAttribute("x", x); r.setAttribute("y", y);
     r.setAttribute("width", NODEW); r.setAttribute("height", NODEH);
     r.setAttribute("fill", "var(--panel)"); r.setAttribute("stroke", laneColor[n.lane]);
-    if (n.id === DATA.frontier) r.setAttribute("stroke-dasharray", "5 3");
     g.appendChild(r);
     const t = document.createElementNS(svgNS, "text");
     t.setAttribute("x", x + 10); t.setAttribute("y", y + NODEH / 2 + 4);
@@ -293,8 +290,7 @@ function showCard(id) {
 }
 
 document.getElementById("legend").innerHTML = DATA.lanes.map((l, i) =>
-  `<span class="chip"><span class="dot" style="background:var(--lc-${i})"></span><span class="mono">${l.key}</span></span>`).join("")
-  + `<span class="chip"><span class="dashbox"></span>__LEGFRONT__</span>`;
+  `<span class="chip"><span class="dot" style="background:var(--lc-${i})"></span><span class="mono">${l.key}</span></span>`).join("");
 
 document.querySelectorAll('input[name="edgemode"]').forEach(el => el.addEventListener("change", render));
 document.getElementById("lmk").addEventListener("change", render);

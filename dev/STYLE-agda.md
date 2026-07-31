@@ -4,7 +4,7 @@ Binding style rules for every master under `src/`. This is a developer doc (Engl
 only). It inherits the source project's finalized code-style spec
 (`../fol-reification/docs/governance/STYLE.md`, finalized 2026-06-12 and proven over
 70k lines) and adapts it to Bedrock's textbook mission; where the two differ, this
-document wins. Process context (goal codes, phases, Frontier) lives in
+document wins. Process context (goal codes, phases) lives in
 [PLAN.md](PLAN.md); the i18n marker grammar lives in [STYLE-i18n.md](STYLE-i18n.md).
 
 Rules marked **(provisional)** are expected to harden after real porting experience
@@ -38,8 +38,10 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
 - Every module's first line is exactly
   `{-# OPTIONS --cubical --safe --guardedness #-}`. No other flag may be added
   without an `[L0.x]` ruling. Library-wide flags live in `bedrock.agda-lib`.
-- **No `postulate`, no holes, no `{-# TERMINATING #-}`, ever.** The Frontier record
-  (PLAN §5) is the only sanctioned form of "not proven yet".
+- **No `postulate`, no holes, no `{-# TERMINATING #-}`, ever.** Nothing is a
+  sanctioned form of "not proven yet". The Frontier record (PLAN §5) was the one
+  sanctioned form while the book was being built root-first; its last field was
+  discharged and the record deleted, so today there is no exception at all.
 - **Classical principles are module parameters, never axioms** (PLAN D2). The
   canonical packaging (validated by the L0.2 spike):
 
@@ -62,7 +64,7 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   **Never** iteration numbers, primes, or provenance flavor (`Foo2`, `FooFinal`,
   `isL'`); PLAN D7.
 - Telescope order: levels first, then assumption parameters, then subject
-  parameters (`module L.Model {ℓ : Level} (lem : ∀ {ℓ'} → LEM ℓ') (F : Frontier ℓ)`).
+  parameters (`module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ))`).
 - Imports needed by the telescope go **before** the module header; everything else
   after it.
 - **Just-in-time introduction** (owner ruling, 2026-07-17): every definition lives in
