@@ -33,16 +33,21 @@ open import FOL.Syntax
 open import FOL.Manipulation.Renaming using ( renameTm )
 open import L.Godel.Operations {ℓ}
   using ( _∪_; _∩_; _∖_; ∖-self
-        ; selectMember; selectEqual; extendFamily; shiftDown )
+        ; selectMember; selectEqual; extendFamily; shiftDown; values )
 open import L.Godel.Tuples {ℓ} using ( allTuples )
+open import L.Definability {ℓ} using ( module DefOf )
 open import L.Godel.Satisfaction {ℓ}
   using ( satSet; sat-⊥; sat-⊤; sat-∧; sat-∨; sat-¬; sat-∈vv; sat-≐vv
-        ; sat-≐vc; sat-∃
+        ; sat-≐vc; sat-∃; sat-defSet
         ; red-∈cv; red-∈vc; red-∈cc; red-≐cv; red-≐cc; red-∃∈; red-∀∈
         ; module Classical )
 
+open import V.Hierarchy {ℓ} using ( extensionalV )
+
 open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
+import Cubical.HITs.PropositionalTruncation as PT
+open import Cubical.Functions.Logic using ( ⇔toPath )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_⁆s; module InfinitySet )
@@ -91,6 +96,8 @@ carries a formula, its mirror image constructor by constructor.
 
 ```agda
 module _ (A : V ℓ) where
+  open DefOf A using ( Def )
+
   private
     κ : ⟪ A ⟫ → V ℓ
     κ = ⟪ A ⟫↪
@@ -150,6 +157,9 @@ for: it says the combinators can never overshoot definability.
     cong (allTuples A _ ∖_) (sound t) ∙ sym (sat-¬ A (toFormula t))
   sound (shiftK t) =
     cong shiftDown (sound t) ∙ sym (sat-∃ A (toFormula t))
+
+  termDef : V ℓ
+  termDef = sett (KT ⟪ A ⟫ 1) (λ t → values ⟦ t ⟧ᴷ)
 ```
 
 <!--en-->
@@ -308,16 +318,48 @@ assumption those two cases already cost.
 ```
 
 <!--en-->
+## The definable powerset, through the terms
+
+The equivalence the tower will spend. The set of values of arity-one terms
+**is** the definable powerset: one inclusion sends a term to its mirror
+formula by soundness and the values bridge, the other sends a formula to its
+mirror term by completeness and the same bridge. From here on, quantifying
+the definable subsets and quantifying the arity-one terms are the same act,
+and only the second one is available to a recursion without binders.
+<!--zh-->
+## 可定义幂集，经由诸项
+
+塔将要花掉的等价。元数一诸项的取值之集**就是**可定义幂集：一个包含把项经可靠性与取值之桥送到其镜像公式，另一个把公式经完备性与同一座桥送到其镜像项。自此，量化诸可定义子集与量化元数一诸项是同一个动作，而只有后者是无绑定子的递归所能企及的。
+<!--/-->
+
+```agda
+    termDef≡Def : termDef ≡ Def
+    termDef≡Def = extensionalV λ w → ⇔toPath (toDef w) (fromDef w)
+      where
+      toDef : (w : V ℓ) → ⟨ w ∈ termDef ⟩ → ⟨ w ∈ Def ⟩
+      toDef w = PT.map λ { (t , e) →
+        toFormula t
+        , sym (sat-defSet A (toFormula t))
+        ∙ cong values (sym (sound t)) ∙ e }
+      fromDef : (w : V ℓ) → ⟨ w ∈ Def ⟩ → ⟨ w ∈ termDef ⟩
+      fromDef w = PT.map λ { (φ , e) →
+        mirror φ .fst
+        , cong values (mirror φ .snd) ∙ sat-defSet A φ ∙ e }
+```
+
+<!--en-->
 ## Recap
 
 The combinator syntax `KT`{.Agda} with its denotation and mirror formula,
 `sound`{.Agda} reading every term back as the satisfaction set of its
-mirror, and `mirror`{.Agda} assigning every formula a term, under the one
-classical assumption. Together they say the terms and the formulas carve
-the same sets, and the terms do it without binders, which is what the
+mirror, `mirror`{.Agda} assigning every formula a term under the one
+classical assumption, and the payoff `termDef≡Def`{.Agda}: the values of
+the arity-one terms `termDef`{.Agda} **are** the definable powerset. From
+here on, quantifying the definable subsets and quantifying the terms are
+the same act, and the terms do it without binders, which is what the
 internal recursion over their codes will spend.
 <!--zh-->
 ## 小结
 
-组合子语法 `KT`{.Agda} 连同指称与镜像公式，`sound`{.Agda} 把每个项读回为其镜像的满足集，`mirror`{.Agda} 给每条公式指派一个项，立于那一份经典假设之下。两者合起来说：项与公式刻出同样的集合，而项不用绑定子就做到了，这正是跑在其码上的内部递归将要花掉的东西。
+组合子语法 `KT`{.Agda} 连同指称与镜像公式，`sound`{.Agda} 把每个项读回为其镜像的满足集，`mirror`{.Agda} 在那一份经典假设下给每条公式指派一个项，以及回报 `termDef≡Def`{.Agda}：元数一诸项的取值之集 `termDef`{.Agda} **就是**可定义幂集。自此，量化诸可定义子集与量化诸项是同一个动作，而项不用绑定子就做到了，这正是跑在其码上的内部递归将要花掉的东西。
 <!--/-->
