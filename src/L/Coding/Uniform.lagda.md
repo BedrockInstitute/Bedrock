@@ -1,8 +1,9 @@
 # Satisfaction over the whole code set
 
 <!--en-->
-The instance of the previous chapter is indexed by `slot B φ`{.Agda}, the keys of
-one formula and its subformulas. Nothing downstream can use it. A consumer
+The first instance of this recursion, since retired, was indexed by
+`slot B φ`{.Agda}, the keys of one formula and its subformulas. Nothing
+downstream can use it. A consumer
 arrives holding a **code**, not the formula the code came from: the internal
 definable powerset ranges over the codes of arity one at a stage, and the
 well-order compares two codes that are subcodes of no common formula. Indexed by
@@ -30,8 +31,7 @@ table holding that member, and the smallest such table is the subformula slot of
 the member's own formula, which four earlier chapters already built and
 certified. The recursion changes its domain and nothing else changes:
 `Table`{.Agda}, `Slot`{.Agda}, `Sound`{.Agda} and `Unique`{.Agda} are untouched
-statement for statement, and the per-formula instance keeps working beside this
-one.
+statement for statement.
 
 One thing here is genuinely new, and it is not about recursion at all. The code
 set's members are keys taken in the **hierarchy's** coding over the stage's own
@@ -39,13 +39,13 @@ alphabet; everything the recursion speaks is keys taken in the **model's** codin
 over the model's language. Those are the same construction at two alphabets, and
 no theorem connected them.
 <!--zh-->
-上一章那个实例以 `slot B φ`{.Agda} 为索引，即一条公式及其诸子公式的诸键。下游没有任何东西用得上它。消费方到场时手里握着的是一个**码**，而不是该码所出自的那条公式：内部可定义幂集在某阶段处元数一的诸码上取值，而良序要比较的两个码并非任何共同公式的子码。以一条公式的槽为索引，就是一条公式一张表，而「这张表在这个码处说什么」在有人拿出「该码是其子码」的某条公式之前，根本没有答案。
+这场递归的第一个实例以 `slot B φ`{.Agda} 为索引，即一条公式及其诸子公式的诸键，此后已予撤除。下游没有任何东西用得上它。消费方到场时手里握着的是一个**码**，而不是该码所出自的那条公式：内部可定义幂集在某阶段处元数一的诸码上取值，而良序要比较的两个码并非任何共同公式的子码。以一条公式的槽为索引，就是一条公式一张表，而「这张表在这个码处说什么」在有人拿出「该码是其子码」的某条公式之前，根本没有答案。
 
 作答的那个定义域是某阶段处的码集，而上一个目标已经把它造好。`AllCodes`{.Agda} 持有载体之上诸公式在**每个**元数处的诸键，而那恰是消费方到场时手里握着的东西。
 
 整个码集的封闭性**不是**打发图对索引集之要求的那个东西，而这件事值得说出来，因为那条定理正是上一个目标为之登记的。图把自己的表与索引集都作**存在**绑定，故 `funct`{.Agda} 只欠「**某个**装着该成员的合格集合」，而最小的那个就是该成员自己那条公式的槽，其封闭性由造出它的那一章给出。它在任何地方都不被消费，故此后已予撤除。
 
-这次更换的代价就是本章的全部内容，而它几乎为零；理由值得在一切之前说明。那个图把自己的表**存在**绑定。故 `funct`{.Agda} 在一个成员处不必拿出一张覆盖整个定义域的表；它只需拿出「某张封闭、全的、满足诸子句的、装着该成员的表」，而最小的这样一张，就是该成员自己那条公式的子公式槽，而它已由前面四章造好并认证。这场递归换掉它的定义域，其余一概不变：`Table`{.Agda}、`Slot`{.Agda}、`Sound`{.Agda} 与 `Unique`{.Agda} 逐条陈述原封不动，而按公式索引的那个实例继续在这一个旁边有效。
+这次更换的代价就是本章的全部内容，而它几乎为零；理由值得在一切之前说明。那个图把自己的表**存在**绑定。故 `funct`{.Agda} 在一个成员处不必拿出一张覆盖整个定义域的表；它只需拿出「某张封闭、全的、满足诸子句的、装着该成员的表」，而最小的这样一张，就是该成员自己那条公式的子公式槽，而它已由前面四章造好并认证。这场递归换掉它的定义域，其余一概不变：`Table`{.Agda}、`Slot`{.Agda}、`Sound`{.Agda} 与 `Unique`{.Agda} 逐条陈述原封不动。
 
 此处确有一件全新的东西，而它压根与递归无关。码集的诸成员是在**层级**的编码里、在该阶段自己的字母表之上取的键；而这场递归所说的一切，是在**模型**的编码里、在模型的语言之上取的键。两者是同一套构造落在两个字母表上，而没有任何定理把它们接上。
 <!--/-->
