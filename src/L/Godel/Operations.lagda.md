@@ -30,6 +30,7 @@ open import Base.Prelude
 
 module L.Godel.Operations {ℓ : Level} where
 
+open import V.Hierarchy {ℓ} using ( extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import V.Model {ℓ} using ( pair-spec; pair-singleton; union-spec; self∈sucV )
 
@@ -40,13 +41,14 @@ import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Data.Unit using ( Unit*; tt* )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; sett; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ⁅_,_⁆; ⁅_⁆s; ⋃_; module InfinitySet )
+  using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; ⋃_; module InfinitySet )
 open InfinitySet using ( sucV )
 ```
 
@@ -267,6 +269,12 @@ X ∖ Y = sett (Σ[ m ∈ ⟪ X ⟫ ] (⟨ ⟪ X ⟫↪ m ∈ₛ Y ⟩ → ⊥* 
     , (λ hxY → lower (nm
         (toSmall (⟪ X ⟫↪ m) Y
           (subst (λ z → ⟨ z ∈ Y ⟩) (sym e) hxY)))) }
+
+∖-self : (X : V ℓ) → X ∖ X ≡ ∅
+∖-self X = extensionalV λ w → ⇔toPath
+  (λ h → Empty.rec (∖-out {X = X} {Y = X} {x = w} h .snd
+                     (∖-out {X = X} {Y = X} {x = w} h .fst)))
+  (λ h → Empty.rec (∅-empty w (toSmall w ∅ h)))
 ```
 
 <!--en-->
