@@ -325,6 +325,7 @@ import L.Godel.Operations
 import L.Godel.Definable
 import L.Godel.Tuples
 import L.Godel.Satisfaction
+import L.Godel.NormalForm
 import L.Coding.EnvSet
 import L.Coding.Sat
 import L.Coding.Bridge
@@ -413,6 +414,11 @@ The root, stated today and finished over the remaining parts:
   operation composition: falsity and truth, conjunction, disjunction and
   negation against the Boolean stock, the two-variable membership atom
   against one selection, and the existential against the shift.
+- `L.Godel.NormalForm`{.Agda}: the normal form. Every satisfaction set over a
+  carrier is denoted by a finite composition term over the carrier and its
+  members: one induction, each case a case equation of the satisfaction
+  chapter read off, the atoms assembled as leaves through the reductions,
+  and the one classical assumption entering only where it already had to.
 - `L.Coding.EnvSet`{.Agda}: the environments over a set of `L` at a fixed length
   form a set of `L`, which is what the clauses that take a complement take it in.
   A small index type, one stage, one separation, and no recursion.
@@ -961,6 +967,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Godel.Definable`{.Agda}：运算，被描述出来。一个框架把一个体与两个语义转换变成「槽位与运算取值之间的等同」；差、并、积与隶属图经它而过，每条描述都在变元槽位与变元环境处双向读出。
 - `L.Godel.Tuples`{.Agda}：赋值作为图集合，及其对着运算的代数：扩张就是图扩张，弃首就是移位，逐条目单射性把一个图对着另一个图的查值规格去读，而载体之上全体赋值的族按族扩张走步。
 - `L.Godel.Satisfaction`{.Agda}：满足关系作为集合，逐情形。公式的满足集是「满足它的诸赋值」上的单个集合形成子，而已交付的每个情形都是与某个运算复合的外延等同：假与真、合取、析取与否定对着布尔存货，两变元隶属原子对着一次选择，存在量词对着移位。
+- `L.Godel.NormalForm`{.Agda}：范式。载体之上的每个满足集，都由载体与其成员之上的一个有穷复合项所指称：一次归纳，每个情形读出满足关系那一章的一条情形等式，原子经诸化归装配为叶子，而那一份经典假设只在它本来就必须进场之处进场。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
 - `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
 - `L.Coding.Bridge`{.Agda}：那个取值**是什么**。在载体之上的每个环境处，「属于它」就是「在世界 `(B, ∈)` 中被满足」，而后者正是可定义幂集据以定义的概念；没有这条陈述，从那场递归读出的内部 `Def` 可证地与任何东西都不相符。右端取内层语义，不取相对化在周遭的读法，因为只有内层那种像那个条件一样对有界量词设两道防。`defSet-Sat`{.Agda} 把它直接花在 `L.Definability`{.Agda} 上。登记在案的那份相干性风险没有引爆：把这座桥以内层环境向量为索引之后，量词的扩张就是底族上的前置，于是相干性只剩四条量词子句共享的两条 `refl`{.Agda} 分支，而带截断的那次恢复被关进「一个成员无非就是一个环境」那条推论里。
