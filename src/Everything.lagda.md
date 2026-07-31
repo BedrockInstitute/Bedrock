@@ -323,6 +323,7 @@ import L.Coding.Closed
 import L.Recursion
 import L.Godel.Operations
 import L.Godel.Definable
+import L.Godel.Tuples
 import L.Coding.EnvSet
 import L.Coding.Sat
 import L.Coding.Bridge
@@ -401,6 +402,12 @@ The root, stated today and finished over the remaining parts:
   operation's value; difference, union, product and the membership graph pass
   through it, each read in both directions at variable slots and a variable
   environment.
+- `L.Godel.Tuples`{.Agda}: assignments as graph sets, and their algebra against
+  the operations: extension is the graph extension, dropping the head is the
+  shift, and the family of all assignments over a carrier steps by the family
+  extension. Every statement values its assignments in the carrier, a
+  measurement, not a taste: bare hierarchy values send the identical shift
+  proof past seven minutes.
 - `L.Coding.EnvSet`{.Agda}: the environments over a set of `L` at a fixed length
   form a set of `L`, which is what the clauses that take a complement take it in.
   A small index type, one stage, one separation, and no recursion.
@@ -947,6 +954,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词，且是满足它的最小者。四个读式的八个实例，再加一次归纳；前者是「对一条公式的诸子码作递归」关于其索引集所需的那条假设，后者是它的取值唯一的理由。那八条子句从不看一条公式，故只对任意可**剥开**的集合证一次 (`Peel`{.Agda}：一个成员仅仅是某条公式的键，而那条公式自己的闭包坐落于内)，而 `closureClosed`{.Agda} 就是 `closedOf`{.Agda} 落在闭包处、以 `closure-inv`{.Agda} 充当剥开。此处的一般性免费，因为 `byTag`{.Agda} 本就是对着任意目标集写的。
 - `L.Godel.Operations`{.Agda}：一批有穷的集合运算，每个都是带两个隶属方向的单个集合形成子，且无一欠排中律：积与隶属图、直接形成子版的并与差、参数键处的两个选择，以及被记录赋值的扩张与移位。后面的章将在本要花公式的地方复合它们。
 - `L.Godel.Definable`{.Agda}：运算，被描述出来。一个框架把一个体与两个语义转换变成「槽位与运算取值之间的等同」；差、并、积与隶属图经它而过，每条描述都在变元槽位与变元环境处双向读出。
+- `L.Godel.Tuples`{.Agda}：赋值作为图集合，及其对着运算的代数：扩张就是图扩张，弃首就是移位，而载体之上全体赋值的族按族扩张走步。每条陈述都把赋值取值于载体，这是测量而非口味：裸层级取值使同一个移位证明跑过七分钟。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
 - `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
 - `L.Coding.Bridge`{.Agda}：那个取值**是什么**。在载体之上的每个环境处，「属于它」就是「在世界 `(B, ∈)` 中被满足」，而后者正是可定义幂集据以定义的概念；没有这条陈述，从那场递归读出的内部 `Def` 可证地与任何东西都不相符。右端取内层语义，不取相对化在周遭的读法，因为只有内层那种像那个条件一样对有界量词设两道防。`defSet-Sat`{.Agda} 把它直接花在 `L.Definability`{.Agda} 上。登记在案的那份相干性风险没有引爆：把这座桥以内层环境向量为索引之后，量词的扩张就是底族上的前置，于是相干性只剩四条量词子句共享的两条 `refl`{.Agda} 分支，而带截断的那次恢复被关进「一个成员无非就是一个环境」那条推论里。
