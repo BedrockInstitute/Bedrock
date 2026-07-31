@@ -49,7 +49,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; ⋃_; module InfinitySet )
-open InfinitySet using ( sucV )
+open InfinitySet using ( sucV; #_ )
 ```
 
 <!--en-->
@@ -560,6 +560,44 @@ opaque
                        (⟨ γ ∈ X ⟩ × ⟨ y ∈ Y ⟩ × (w ≡ extendGraph y γ)) ∥₁
   extendFamily-out {X} {Y} = PT.map λ { ((mγ , my) , e) →
     ⟪ X ⟫↪ mγ , ⟪ Y ⟫↪ my , memb X mγ , memb Y my , sym e }
+
+-- perf: sealed at birth per the pool in its index
+opaque
+  values : V ℓ → V ℓ
+  values X = sett
+    ( Σ[ m ∈ ⟪ X ⟫ ] Σ[ v ∈ ⟪ pool (⟪ X ⟫↪ m) ⟫ ]
+      ⟨ pr (# 0) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v) ∈ₛ ⟪ X ⟫↪ m ⟩ )
+    (λ p → ⟪ pool (⟪ X ⟫↪ (p .fst)) ⟫↪ (p .snd .fst))
+
+opaque
+  unfolding values
+
+  values-in : {X γ v : V ℓ}
+            → ⟨ γ ∈ X ⟩ → ⟨ pr (# 0) v ∈ γ ⟩ → ⟨ v ∈ values X ⟩
+  values-in {X} {γ} {v} hγ hv =
+    ∣ ( fγ .fst , fv .fst
+      , toSmall (pr (# 0) (⟪ pool G ⟫↪ (fv .fst))) G
+          (subst2 (λ p q → ⟨ pr (# 0) p ∈ q ⟩)
+            (sym (fv .snd)) (sym (fγ .snd)) hv) )
+    , fv .snd ∣₁
+    where
+    fγ : Σ[ m ∈ ⟪ X ⟫ ] (⟪ X ⟫↪ m ≡ γ)
+    fγ = ∈-asFiber {a = γ} {b = X} hγ
+    G : V ℓ
+    G = ⟪ X ⟫↪ (fγ .fst)
+    hv' : ⟨ pr (# 0) v ∈ G ⟩
+    hv' = subst (λ q → ⟨ pr (# 0) v ∈ q ⟩) (sym (fγ .snd)) hv
+    fv : Σ[ m ∈ ⟪ pool G ⟫ ] (⟪ pool G ⟫↪ m ≡ v)
+    fv = ∈-asFiber {a = v} {b = pool G}
+           (pool-right {X = G} {a = # 0} {b = v} hv')
+
+  values-wit : {X v : V ℓ} → ⟨ v ∈ values X ⟩
+             → ∥ Σ[ γ ∈ V ℓ ] (⟨ γ ∈ X ⟩ × ⟨ pr (# 0) v ∈ γ ⟩) ∥₁
+  values-wit {X} {v} = PT.map
+    λ { ((m , k , s) , e) →
+        ⟪ X ⟫↪ m , memb X m
+      , subst (λ q → ⟨ pr (# 0) q ∈ ⟪ X ⟫↪ m ⟩) e
+          (toBig (pr (# 0) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ k)) (⟪ X ⟫↪ m) s) }
 
 shiftDown : V ℓ → V ℓ
 shiftDown X = sett ⟪ X ⟫ (λ m → tailGraph (⟪ X ⟫↪ m))

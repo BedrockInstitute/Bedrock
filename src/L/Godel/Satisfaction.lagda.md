@@ -44,7 +44,8 @@ open import L.Godel.Operations {ℓ}
         ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
         ; selectEqual; selectEqual-in; selectEqual-sub; selectEqual-wit
         ; extendGraph; extendFamily; extendFamily-in; extendFamily-out
-        ; tailGraph; shiftDown; shiftDown-in; shiftDown-out )
+        ; tailGraph; shiftDown; shiftDown-in; shiftDown-out
+        ; values; values-in; values-wit )
 open import L.Godel.Tuples {ℓ}
   using ( tuple; tuple-extend; tupleTail; tuple-entry; allTuples )
 
@@ -98,7 +99,7 @@ private
   lookup-tab f (suc i) = lookup-tab (λ j → f (suc j)) i
 
 module _ (A : V ℓ) where
-  open DefOf A using ( ι; SM; _⊨ᵐ_; ⊨ᵐ-small )
+  open DefOf A using ( ι; SM; _⊨ᵐ_; ⊨ᵐ-small; defSet; defSet-mem )
 
   private
     κ : ⟪ A ⟫ → V ℓ
@@ -725,6 +726,48 @@ extensionality.
 ```
 
 <!--en-->
+## The values, and the definable subsets
+
+At arity one a satisfaction set holds graphs of single-entry assignments,
+and the definable subset holds the entries themselves. The values operation
+is the bridge: reading the value at the first key of every member of the
+arity-one satisfaction set yields exactly the definable subset the
+definability chapter means. This is the equation the tower will spend when a
+definable powerset has to be assembled from reachable sets.
+<!--zh-->
+## 取值，与可定义子集
+
+在元数一处，满足集装着单条目赋值的图，而可定义子集装着条目本身。取值运算就是那座桥：对元数一满足集的每个成员读出首键处的取值，恰得可定义性那一章所指的可定义子集。塔在要从可达集合装配可定义幂集时，花的就是这条等式。
+<!--/-->
+
+```agda
+  sat-defSet : (φ : Formula ⟪ A ⟫ 1)
+             → values (satSet φ) ≡ defSet φ
+  sat-defSet φ = extensionalV λ v → ⇔toPath (fwdV v) (bwdV v)
+    where
+    fwdV : (v : V ℓ) → ⟨ v ∈ values (satSet φ) ⟩ → ⟨ v ∈ defSet φ ⟩
+    fwdV v h = PT.rec (snd (v ∈ defSet φ))
+      (λ { (γ , hγ , hv) → PT.rec (snd (v ∈ defSet φ))
+        (λ { (g , hg , e) →
+          let ev : v ≡ κ (g zero)
+              ev = subst ⟨_⟩ (lookup-spec (λ x → κ (g x)) zero v)
+                     (subst (λ q → ⟨ pr (# 0) v ∈ q ⟩) (sym e) hv)
+          in subst (λ q → ⟨ q ∈ defSet φ ⟩) (sym ev)
+               (subst ⟨_⟩ (sym (defSet-mem φ (g zero))) hg) })
+        (sat-out φ γ hγ) })
+      (values-wit {X = satSet φ} {v = v} h)
+    bwdV : (v : V ℓ) → ⟨ v ∈ defSet φ ⟩ → ⟨ v ∈ values (satSet φ) ⟩
+    bwdV v = PT.rec (snd (v ∈ values (satSet φ)))
+      (λ { ((m , s) , e) →
+        subst (λ q → ⟨ q ∈ values (satSet φ) ⟩) e
+          (values-in {X = satSet φ}
+            {γ = tuple A (λ _ → m)} {v = κ m}
+            (sat-in φ (λ _ → m)
+              (invEq (⊨ᵐ-small φ (ι m ∷ []) .snd) s))
+            ∣ lift zero , refl ∣₁) })
+```
+
+<!--en-->
 ## Recap
 
 The satisfaction set `satSet`{.Agda} with its two readings; nine
@@ -736,12 +779,12 @@ it seven constructive reductions, the five remaining atom shapes
 (`red-∈cv`{.Agda}, `red-∈vc`{.Agda}, `red-∈cc`{.Agda}, `red-≐cv`{.Agda},
 `red-≐cc`{.Agda}) and the two bounded quantifiers (`red-∃∈`{.Agda},
 `red-∀∈`{.Agda}); and the two classical cases `sat-⇒`{.Agda} and
-`sat-∀`{.Agda}, priced at one excluded middle each. Every constructor of the
-object language is now covered: what remains for the normal-form theorem is
-the composition-term language and one induction that reads these equations
-off.
+`sat-∀`{.Agda}, priced at one excluded middle each; and the bridge
+`sat-defSet`{.Agda}, reading the arity-one satisfaction set's values into
+the definable subset. Every constructor of the object language is covered,
+and the normal-form chapter reads the equations off in one induction.
 <!--zh-->
 ## 小结
 
-满足集 `satSet`{.Agda} 连同它的两条读式；九条对着运算的构造性等式 `sat-⊥`{.Agda}、`sat-⊤`{.Agda}、`sat-∧`{.Agda}、`sat-∨`{.Agda}、`sat-¬`{.Agda}、`sat-∈vv`{.Agda}、`sat-≐vv`{.Agda}、`sat-≐vc`{.Agda} 与 `sat-∃`{.Agda}；假设为两个逐点方向的换步引理 `sat-resp`{.Agda}，与骑于其上的七条构造性化归，即其余五个原子形状 (`red-∈cv`{.Agda}、`red-∈vc`{.Agda}、`red-∈cc`{.Agda}、`red-≐cv`{.Agda}、`red-≐cc`{.Agda}) 与两个有界量词 (`red-∃∈`{.Agda}、`red-∀∈`{.Agda})；以及各花一份排中律的两个经典情形 `sat-⇒`{.Agda} 与 `sat-∀`{.Agda}。对象语言的每个构造子至此皆有着落：范式定理还欠的只是复合项语言，与把这些等式读出的那一次归纳。
+满足集 `satSet`{.Agda} 连同它的两条读式；九条对着运算的构造性等式 `sat-⊥`{.Agda}、`sat-⊤`{.Agda}、`sat-∧`{.Agda}、`sat-∨`{.Agda}、`sat-¬`{.Agda}、`sat-∈vv`{.Agda}、`sat-≐vv`{.Agda}、`sat-≐vc`{.Agda} 与 `sat-∃`{.Agda}；假设为两个逐点方向的换步引理 `sat-resp`{.Agda}，与骑于其上的七条构造性化归，即其余五个原子形状 (`red-∈cv`{.Agda}、`red-∈vc`{.Agda}、`red-∈cc`{.Agda}、`red-≐cv`{.Agda}、`red-≐cc`{.Agda}) 与两个有界量词 (`red-∃∈`{.Agda}、`red-∀∈`{.Agda})；各花一份排中律的两个经典情形 `sat-⇒`{.Agda} 与 `sat-∀`{.Agda}；以及桥 `sat-defSet`{.Agda}，把元数一满足集的取值读进可定义子集。对象语言的每个构造子皆有着落，而范式那一章以一次归纳把诸等式读出。
 <!--/-->
