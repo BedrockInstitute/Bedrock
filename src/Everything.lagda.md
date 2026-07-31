@@ -325,6 +325,7 @@ import L.Godel.Operations
 import L.Godel.Definable
 import L.Godel.Tuples
 import L.Godel.Satisfaction
+import L.Godel.Terms
 import L.Godel.NormalForm
 import L.Coding.EnvSet
 import L.Coding.Sat
@@ -414,6 +415,12 @@ The root, stated today and finished over the remaining parts:
   operation composition: falsity and truth, conjunction, disjunction and
   negation against the Boolean stock, the two-variable membership atom
   against one selection, and the existential against the shift.
+- `L.Godel.Terms`{.Agda}: the combinator terms, the syntax the tower will
+  quantify. A term mirrors a formula constructor for constructor but means
+  through one set operation per node, with no binders; soundness reads every
+  term back as the satisfaction set of its mirror by the case equations run
+  backward, and completeness assigns every formula a term through the
+  reductions, under the one classical assumption.
 - `L.Godel.NormalForm`{.Agda}: the normal form. Every satisfaction set over a
   carrier is denoted by a finite composition term over the carrier and its
   members: one induction, each case a case equation of the satisfaction
@@ -967,6 +974,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Godel.Definable`{.Agda}：运算，被描述出来。一个框架把一个体与两个语义转换变成「槽位与运算取值之间的等同」；差、并、积与隶属图经它而过，每条描述都在变元槽位与变元环境处双向读出。
 - `L.Godel.Tuples`{.Agda}：赋值作为图集合，及其对着运算的代数：扩张就是图扩张，弃首就是移位，逐条目单射性把一个图对着另一个图的查值规格去读，而载体之上全体赋值的族按族扩张走步。
 - `L.Godel.Satisfaction`{.Agda}：满足关系作为集合，逐情形。公式的满足集是「满足它的诸赋值」上的单个集合形成子，而已交付的每个情形都是与某个运算复合的外延等同：假与真、合取、析取与否定对着布尔存货，两变元隶属原子对着一次选择，存在量词对着移位。
+- `L.Godel.Terms`{.Agda}：组合子项，塔将要量化的语法。项与公式逐构造子镜像对应，却经每节点一个集合运算获得含义，且没有绑定子；可靠性以反向运行的情形等式把每个项读回为其镜像的满足集，完备性经诸化归给每条公式指派一个项，立于那一份经典假设之下。
 - `L.Godel.NormalForm`{.Agda}：范式。载体之上的每个满足集，都由载体与其成员之上的一个有穷复合项所指称：一次归纳，每个情形读出满足关系那一章的一条情形等式，原子经诸化归装配为叶子，而那一份经典假设只在它本来就必须进场之处进场。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
 - `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
