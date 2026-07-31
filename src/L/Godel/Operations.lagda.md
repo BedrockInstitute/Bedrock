@@ -191,20 +191,23 @@ memberGraph-out {X} {Y} = PT.map λ { ((m , k , s) , e) →
 ```
 
 <!--en-->
-## Union and difference
+## Union, intersection, and difference
 
-The Boolean pair. The union here is **not** the library's: the library reaches
-a binary union through the union of a pair of sets, which is a former applied
-to formers, and a membership read against that shape has to normalize the
-outer former before it can see the inner ones. This union is one `sett` over
-the sum of the two index types, so a membership question meets exactly one
-former. The difference indexes the members of `X` by the refutation of their
-membership in `Y`; both of its directions are constructive, because the
-refutation is carried in the fiber rather than decided.
+The Boolean stock. The union here is **not** the library's: the library
+reaches a binary union through the union of a pair of sets, which is a former
+applied to formers, and a membership read against that shape has to normalize
+the outer former before it can see the inner ones. This union is one `sett`
+over the sum of the two index types, so a membership question meets exactly
+one former. The intersection carries the second membership in its fiber, and
+it is primitive rather than derived, because carving it out of two
+differences would trade a membership for a double refutation, which does not
+come back without deciding. The difference indexes the members of `X` by the
+refutation of their membership in `Y`; all directions here are constructive,
+because whatever the fiber owes is carried, never decided.
 <!--zh-->
-## 并与差
+## 并、交、差
 
-布尔那一对。此处的并**不是**库的那一个：库经由「两个集合所成之对的并」抵达二元并，那是形成子套形成子，而对着那个形状的隶属读式必须先把外层形成子正规化才能看见内层。这个并是落在两个索引类型之和上的单个 `sett`，于是一个隶属问题恰好遇到一个形成子。差以「在 `Y` 中隶属的反驳」为索引挑出 `X` 的成员；它的两个方向都是构造性的，因为反驳被携带在纤维里，而不是被判定出来。
+布尔存货。此处的并**不是**库的那一个：库经由「两个集合所成之对的并」抵达二元并，那是形成子套形成子，而对着那个形状的隶属读式必须先把外层形成子正规化才能看见内层。这个并是落在两个索引类型之和上的单个 `sett`，于是一个隶属问题恰好遇到一个形成子。交把第二份隶属携带在纤维里，且是初等的、不是派生的，因为用两层差刻出交，等于把一份隶属换成一份双重反驳，而后者不判定就回不来。差以「在 `Y` 中隶属的反驳」为索引挑出 `X` 的成员；此处所有方向都是构造性的，因为纤维所欠的都被携带，从不被判定。
 <!--/-->
 
 ```agda
@@ -223,6 +226,24 @@ X ∪ Y = sett (⟪ X ⟫ ⊎ ⟪ Y ⟫) (Sum.rec ⟪ X ⟫↪ ⟪ Y ⟫↪)
 ∪-out {X} {Y} {x} = PT.map
   λ { (inl m , e) → inl (subst (λ z → ⟨ z ∈ X ⟩) e (memb X m))
     ; (inr k , e) → inr (subst (λ z → ⟨ z ∈ Y ⟩) e (memb Y k)) }
+
+_∩_ : V ℓ → V ℓ → V ℓ
+X ∩ Y = sett (Σ[ m ∈ ⟪ X ⟫ ] ⟨ ⟪ X ⟫↪ m ∈ₛ Y ⟩) (λ p → ⟪ X ⟫↪ (p .fst))
+
+∩-in : {X Y x : V ℓ} → ⟨ x ∈ X ⟩ → ⟨ x ∈ Y ⟩ → ⟨ x ∈ X ∩ Y ⟩
+∩-in {X} {Y} {x} hx hy =
+  ∣ ( f .fst
+    , toSmall (⟪ X ⟫↪ (f .fst)) Y
+        (subst (λ z → ⟨ z ∈ Y ⟩) (sym (f .snd)) hy) )
+  , f .snd ∣₁
+  where f = ∈-asFiber {a = x} {b = X} hx
+
+∩-out : {X Y x : V ℓ} → ⟨ x ∈ X ∩ Y ⟩ → ⟨ x ∈ X ⟩ × ⟨ x ∈ Y ⟩
+∩-out {X} {Y} {x} = PT.rec
+  (isProp× (snd (x ∈ X)) (snd (x ∈ Y)))
+  λ { ((m , s) , e) →
+      subst (λ z → ⟨ z ∈ X ⟩) e (memb X m)
+    , subst (λ z → ⟨ z ∈ Y ⟩) e (toBig (⟪ X ⟫↪ m) Y s) }
 
 _∖_ : V ℓ → V ℓ → V ℓ
 X ∖ Y = sett (Σ[ m ∈ ⟪ X ⟫ ] (⟨ ⟪ X ⟫↪ m ∈ₛ Y ⟩ → ⊥* {ℓ}))
@@ -433,34 +454,44 @@ extendGraph-out {y} {γ} {z} = PT.map
             , toBig (pr (⟪ pool γ ⟫↪ a) (⟪ pool γ ⟫↪ v)) γ s
             , sym e ) }
 
-tailGraph : V ℓ → V ℓ
-tailGraph w = sett
-  ( Σ[ a ∈ ⟪ ⋃ pool w ⟫ ] Σ[ v ∈ ⟪ pool w ⟫ ]
-    ⟨ pr (sucV (⟪ ⋃ pool w ⟫↪ a)) (⟪ pool w ⟫↪ v) ∈ₛ w ⟩ )
-  (λ p → pr (⟪ ⋃ pool w ⟫↪ (p .fst)) (⟪ pool w ⟫↪ (p .snd .fst)))
+-- perf: sealed at birth; the index's ⋃-tower re-normalizes in every
+-- downstream obligation at a concrete set former when the head is open:
+-- the tuple shift equation 446 s open against 1.0 s sealed, the
+-- existential satisfaction case 250 s open against 3 s sealed
+opaque
+  tailGraph : V ℓ → V ℓ
+  tailGraph w = sett
+    ( Σ[ a ∈ ⟪ ⋃ pool w ⟫ ] Σ[ v ∈ ⟪ pool w ⟫ ]
+      ⟨ pr (sucV (⟪ ⋃ pool w ⟫↪ a)) (⟪ pool w ⟫↪ v) ∈ₛ w ⟩ )
+    (λ p → pr (⟪ ⋃ pool w ⟫↪ (p .fst)) (⟪ pool w ⟫↪ (p .snd .fst)))
 
-tailGraph-in : {w a v : V ℓ}
-             → ⟨ pr (sucV a) v ∈ w ⟩ → ⟨ pr a v ∈ tailGraph w ⟩
-tailGraph-in {w} {a} {v} h =
-  ∣ ( fa .fst , fv .fst
-    , toSmall
-        (pr (sucV (⟪ ⋃ pool w ⟫↪ (fa .fst))) (⟪ pool w ⟫↪ (fv .fst))) w
-        (subst2 (λ p q → ⟨ pr (sucV p) q ∈ w ⟩)
-          (sym (fa .snd)) (sym (fv .snd)) h) )
-  , cong₂ pr (fa .snd) (fv .snd) ∣₁
-  where
-  fa = ∈-asFiber {a = a} {b = ⋃ pool w}
-         (∈⋃-in {a = pool w} {x = a} {y = sucV a}
-           (pool-left {X = w} {a = sucV a} {b = v} h) (self∈sucV a))
-  fv = ∈-asFiber {a = v} {b = pool w}
-         (pool-right {X = w} {a = sucV a} {b = v} h)
+opaque
+  unfolding tailGraph
 
-tailGraph-out : {w z : V ℓ} → ⟨ z ∈ tailGraph w ⟩
-              → ∥ Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
-                  (⟨ pr (sucV a) v ∈ w ⟩ × (z ≡ pr a v)) ∥₁
-tailGraph-out {w} {z} = PT.map λ { ((a , v , s) , e) →
-  ⟪ ⋃ pool w ⟫↪ a , ⟪ pool w ⟫↪ v
-  , toBig (pr (sucV (⟪ ⋃ pool w ⟫↪ a)) (⟪ pool w ⟫↪ v)) w s , sym e }
+  tailGraph-in : {w a v : V ℓ}
+               → ⟨ pr (sucV a) v ∈ w ⟩ → ⟨ pr a v ∈ tailGraph w ⟩
+  tailGraph-in {w} {a} {v} h =
+    ∣ ( fa .fst , fv .fst
+      , toSmall
+          (pr (sucV (⟪ ⋃ pool w ⟫↪ (fa .fst))) (⟪ pool w ⟫↪ (fv .fst))) w
+          (subst2 (λ p q → ⟨ pr (sucV p) q ∈ w ⟩)
+            (sym (fa .snd)) (sym (fv .snd)) h) )
+    , cong₂ pr (fa .snd) (fv .snd) ∣₁
+    where
+    fa : Σ[ m ∈ ⟪ ⋃ pool w ⟫ ] (⟪ ⋃ pool w ⟫↪ m ≡ a)
+    fa = ∈-asFiber {a = a} {b = ⋃ pool w}
+           (∈⋃-in {a = pool w} {x = a} {y = sucV a}
+             (pool-left {X = w} {a = sucV a} {b = v} h) (self∈sucV a))
+    fv : Σ[ m ∈ ⟪ pool w ⟫ ] (⟪ pool w ⟫↪ m ≡ v)
+    fv = ∈-asFiber {a = v} {b = pool w}
+           (pool-right {X = w} {a = sucV a} {b = v} h)
+
+  tailGraph-out : {w z : V ℓ} → ⟨ z ∈ tailGraph w ⟩
+                → ∥ Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                    (⟨ pr (sucV a) v ∈ w ⟩ × (z ≡ pr a v)) ∥₁
+  tailGraph-out {w} {z} = PT.map λ { ((a , v , s) , e) →
+    ⟪ ⋃ pool w ⟫↪ a , ⟪ pool w ⟫↪ v
+    , toBig (pr (sucV (⟪ ⋃ pool w ⟫↪ a)) (⟪ pool w ⟫↪ v)) w s , sym e }
 
 extendFamily : V ℓ → V ℓ → V ℓ
 extendFamily X Y = sett (⟪ X ⟫ × ⟪ Y ⟫)
@@ -495,9 +526,10 @@ shiftDown-out {X} = PT.map λ { (m , e) → ⟪ X ⟫↪ m , memb X m , e }
 <!--en-->
 ## Recap
 
-Nine operations and a bounding helper, each a single set former with its
+Ten operations and a bounding helper, each a single set former with its
 membership laws: `product`{.Agda} and `memberGraph`{.Agda} make relations into
-sets, `_∪_`{.Agda} and `_∖_`{.Agda} are the Boolean pair, `selectMember`{.Agda}
+sets, `_∪_`{.Agda}, `_∩_`{.Agda} and `_∖_`{.Agda} are the Boolean stock,
+`selectMember`{.Agda}
 and `selectEqual`{.Agda} compare two recorded values at parameter keys,
 `extendGraph`{.Agda} and `extendFamily`{.Agda} extend a recorded assignment
 while `tailGraph`{.Agda} under `shiftDown`{.Agda} shifts one away, and
@@ -508,5 +540,5 @@ later chapters do with these is compose them.
 <!--zh-->
 ## 小结
 
-九个运算与一个界定辅助，每个都是带隶属定律的单个集合形成子：`product`{.Agda} 与 `memberGraph`{.Agda} 把关系做成集合，`_∪_`{.Agda} 与 `_∖_`{.Agda} 是布尔那一对，`selectMember`{.Agda} 与 `selectEqual`{.Agda} 在参数键处比较两个被记录的取值，`extendGraph`{.Agda} 与 `extendFamily`{.Agda} 扩张一个被记录的赋值而 `tailGraph`{.Agda} 经 `shiftDown`{.Agda} 移走一个，`pool`{.Agda} 为每个被记录之对的分量设界。此处无一假设排中律。这批存货有意不封口：一个运算在后面某章需要它时进入本章，而后面诸章对它们做的事，就是复合。
+十个运算与一个界定辅助，每个都是带隶属定律的单个集合形成子：`product`{.Agda} 与 `memberGraph`{.Agda} 把关系做成集合，`_∪_`{.Agda}、`_∩_`{.Agda} 与 `_∖_`{.Agda} 是布尔存货，`selectMember`{.Agda} 与 `selectEqual`{.Agda} 在参数键处比较两个被记录的取值，`extendGraph`{.Agda} 与 `extendFamily`{.Agda} 扩张一个被记录的赋值而 `tailGraph`{.Agda} 经 `shiftDown`{.Agda} 移走一个，`pool`{.Agda} 为每个被记录之对的分量设界。此处无一假设排中律。这批存货有意不封口：一个运算在后面某章需要它时进入本章，而后面诸章对它们做的事，就是复合。
 <!--/-->

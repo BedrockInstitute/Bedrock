@@ -12,16 +12,14 @@ carrier steps by the family extension. One numeral lemma funds the whole
 file: the von Neumann successor is injective at a numeral, which is what lets
 a shifted key be read back.
 
-Every statement here holds its assignments **valued in the carrier**, never
-in the bare hierarchy, and the choice is a measurement, not a taste: with the
-values behind the carrier's embedding, each graph equation checks in about a
-second, and with bare hierarchy values the identical proof of the shift
-equation runs past seven minutes, because every membership question then
-normalizes the pair coding of every entry.
+Every statement here holds its assignments **valued in the carrier**, which
+is the form every consumer arrives in: satisfaction sets, the closure, and
+the orders all speak about assignments drawn from a fixed set, never about
+bare hierarchy values.
 <!--zh-->
 运算即将推动的诸赋值，作为集合。取值于载体的长度 `n` 赋值由它的图编码：即「数码键与该键处取值」的 Kuratowski 对之集。这套编码是环境那一章的，此处没有任何新东西；本章要证的是它**对着运算的代数**：把赋值扩张一个取值就是图扩张，弃掉首个取值就是移位，空赋值是空集，而载体之上全体赋值之集按族扩张走步。一条数码引理资助全文：冯·诺伊曼后继在数码处单射，正是它使被移位的键能被读回。
 
-此处每条陈述都把赋值**取值于载体**，绝不取值于裸层级，而这个选择是一次测量、不是口味：值藏在载体的嵌入之后，每条图等式约一秒检查完毕；换成裸层级取值，同一个移位等式的证明跑过七分钟，因为那时每个隶属问题都要把每个条目的配对编码正规化。
+此处每条陈述都把赋值**取值于载体**，而那正是每个消费方到场时的形态：满足集、闭包与诸序谈论的都是取自某个固定集合的赋值，从不谈论裸层级取值。
 <!--/-->
 
 ```agda
@@ -35,7 +33,7 @@ open import V.Hierarchy {ℓ} using ( extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import V.Model {ℓ} using ( pair-spec; self∈sucV; ∈sucV-elim )
 open import L.Ordinal {ℓ} using ( ∈#-elim; #∈#-elim )
-open import L.Coding.Environment {ℓ} using ( env; cons )
+open import L.Coding.Environment {ℓ} using ( env; cons; lookup-spec )
 open import L.Godel.Operations {ℓ}
   using ( extendGraph; extendGraph-zero; extendGraph-suc; extendGraph-out
         ; tailGraph; tailGraph-in; tailGraph-out
@@ -111,10 +109,6 @@ at all.
 <!--/-->
 
 ```agda
--- perf: carrier-valued statements throughout; with bare V-valued
--- assignments the identical proof of tupleTail runs past 7 min (446 s),
--- carrier-valued it is 1 s, because the embedding's neutral head stops
--- ⟪_⟫ from recursing into every entry's pair coding
 module _ (A : V ℓ) where
   private
     κ : ⟪ A ⟫ → V ℓ
@@ -197,6 +191,24 @@ module _ (A : V ℓ) where
 ```
 
 <!--en-->
+Two assignments with the same graph record the same value at every key: the
+entry of the one graph at a key is read against the other graph's lookup
+specification. This is the injectivity every binary case downstream leans on
+when two memberships hand back two assignments for one set.
+<!--zh-->
+图相同的两个赋值在每个键处记录相同的取值：一个图在某键处的条目，对着另一个图的查值规格去读。下游每个二元情形在两份隶属交回同一集合的两个赋值时，倚靠的就是这条单射性。
+<!--/-->
+
+```agda
+  tuple-entry : {n : ℕ} {g h : Fin n → ⟪ A ⟫}
+              → tuple g ≡ tuple h → (i : Fin n) → κ (g i) ≡ κ (h i)
+  tuple-entry {n} {g} {h} e i =
+    subst ⟨_⟩ (lookup-spec (λ x → κ (h x)) i (κ (g i)))
+      (subst (λ q → ⟨ pr (# (toℕ i)) (κ (g i)) ∈ q ⟩) e
+        ∣ lift i , refl ∣₁)
+```
+
+<!--en-->
 ## All assignments over the carrier
 
 The set of graphs of all length-`n` assignments valued in the carrier, and
@@ -258,13 +270,14 @@ will make it reachable.
 One numeral lemma, `suc#-inj`{.Agda}; the carrier-valued tuple coding
 `tuple`{.Agda} with three graph equations, `tuple-extend`{.Agda},
 `tupleTail`{.Agda} and `tuple-empty`{.Agda}, aligning an assignment's graph
-with the extension and shift operations; and the family `allTuples`{.Agda}
-of all assignments over the carrier with its zero and successor equations.
+with the extension and shift operations, plus the entrywise injectivity
+`tuple-entry`{.Agda}; and the family `allTuples`{.Agda} of all assignments
+over the carrier with its zero and successor equations.
 Nothing here mentions a formula: this is the pure algebra of coded tuples,
 and the chapter that relates satisfaction to the operations spends it
 wholesale.
 <!--zh-->
 ## 小结
 
-一条数码引理 `suc#-inj`{.Agda}；载体值的元组编码 `tuple`{.Agda} 与三条图等式 `tuple-extend`{.Agda}、`tupleTail`{.Agda}、`tuple-empty`{.Agda}，把赋值的图与扩张、移位两个运算对齐；以及载体之上全体赋值的族 `allTuples`{.Agda} 连同它的零与后继等式。此处无一提及公式：这是被编码元组的纯代数，而把满足关系与运算联系起来的那一章将整批花掉它。
+一条数码引理 `suc#-inj`{.Agda}；载体值的元组编码 `tuple`{.Agda} 与三条图等式 `tuple-extend`{.Agda}、`tupleTail`{.Agda}、`tuple-empty`{.Agda}，把赋值的图与扩张、移位两个运算对齐，外加逐条目单射性 `tuple-entry`{.Agda}；以及载体之上全体赋值的族 `allTuples`{.Agda} 连同它的零与后继等式。此处无一提及公式：这是被编码元组的纯代数，而把满足关系与运算联系起来的那一章将整批花掉它。
 <!--/-->
