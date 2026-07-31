@@ -287,118 +287,141 @@ family, and the `-wit` reading hands the whole fiber back.
 <!--/-->
 
 ```agda
-selectMember : V ℓ → V ℓ → V ℓ → V ℓ
-selectMember X Ka Kb = sett
-  ( Σ[ m ∈ ⟪ X ⟫ ] Σ[ a ∈ ⟪ Ka ⟫ ] Σ[ b ∈ ⟪ Kb ⟫ ]
-    Σ[ u ∈ ⟪ pool (⟪ X ⟫↪ m) ⟫ ] Σ[ v ∈ ⟪ pool (⟪ X ⟫↪ m) ⟫ ]
-    ( ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ₛ ⟪ X ⟫↪ m ⟩
-    × ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v) ∈ₛ ⟪ X ⟫↪ m ⟩
-    × ⟨ ⟪ pool (⟪ X ⟫↪ m) ⟫↪ u ∈ₛ ⟪ pool (⟪ X ⟫↪ m) ⟫↪ v ⟩ ) )
-  (λ p → ⟪ X ⟫↪ (p .fst))
+-- perf: sealed at birth, like the family; consumers instantiate the
+-- selections at composed concrete set formers
+opaque
+  selectMember : V ℓ → V ℓ → V ℓ → V ℓ
+  selectMember X Ka Kb = sett
+    ( Σ[ m ∈ ⟪ X ⟫ ] Σ[ a ∈ ⟪ Ka ⟫ ] Σ[ b ∈ ⟪ Kb ⟫ ]
+      Σ[ u ∈ ⟪ pool (⟪ X ⟫↪ m) ⟫ ] Σ[ v ∈ ⟪ pool (⟪ X ⟫↪ m) ⟫ ]
+      ( ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ₛ ⟪ X ⟫↪ m ⟩
+      × ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v) ∈ₛ ⟪ X ⟫↪ m ⟩
+      × ⟨ ⟪ pool (⟪ X ⟫↪ m) ⟫↪ u ∈ₛ ⟪ pool (⟪ X ⟫↪ m) ⟫↪ v ⟩ ) )
+    (λ p → ⟪ X ⟫↪ (p .fst))
 
-selectMember-in : {X Ka Kb w a b u v : V ℓ}
-                → ⟨ w ∈ X ⟩ → ⟨ a ∈ Ka ⟩ → ⟨ b ∈ Kb ⟩
-                → ⟨ pr a u ∈ w ⟩ → ⟨ pr b v ∈ w ⟩ → ⟨ u ∈ v ⟩
-                → ⟨ w ∈ selectMember X Ka Kb ⟩
-selectMember-in {X} {Ka} {Kb} {w} {a} {b} {u} {v} hw ha hb hau hbv huv =
-  ∣ ( fw .fst , fa .fst , fb .fst , fu .fst , fv .fst
-    , toSmall (pr (⟪ Ka ⟫↪ (fa .fst)) pu) W
-        (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
-          (sym (fa .snd)) (sym (fu .snd)) hau')
-    , toSmall (pr (⟪ Kb ⟫↪ (fb .fst)) pv) W
-        (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
-          (sym (fb .snd)) (sym (fv .snd)) hbv')
-    , toSmall pu pv
-        (subst2 (λ p q → ⟨ p ∈ q ⟩)
-          (sym (fu .snd)) (sym (fv .snd)) huv) )
-  , fw .snd ∣₁
-  where
-  fw = ∈-asFiber {a = w} {b = X} hw
-  W = ⟪ X ⟫↪ (fw .fst)
-  fa = ∈-asFiber {a = a} {b = Ka} ha
-  fb = ∈-asFiber {a = b} {b = Kb} hb
-  hau' : ⟨ pr a u ∈ W ⟩
-  hau' = subst (λ z → ⟨ pr a u ∈ z ⟩) (sym (fw .snd)) hau
-  hbv' : ⟨ pr b v ∈ W ⟩
-  hbv' = subst (λ z → ⟨ pr b v ∈ z ⟩) (sym (fw .snd)) hbv
-  fu = ∈-asFiber {a = u} {b = pool W}
-         (pool-right {X = W} {a = a} {b = u} hau')
-  fv = ∈-asFiber {a = v} {b = pool W}
-         (pool-right {X = W} {a = b} {b = v} hbv')
-  pu = ⟪ pool W ⟫↪ (fu .fst)
-  pv = ⟪ pool W ⟫↪ (fv .fst)
+opaque
+  unfolding selectMember
 
-selectMember-sub : {X Ka Kb w : V ℓ}
-                 → ⟨ w ∈ selectMember X Ka Kb ⟩ → ⟨ w ∈ X ⟩
-selectMember-sub {X} {Ka} {Kb} {w} = PT.rec (snd (w ∈ X))
-  λ { ((m , _) , e) → subst (λ z → ⟨ z ∈ X ⟩) e (memb X m) }
+  selectMember-in : {X Ka Kb w a b u v : V ℓ}
+                  → ⟨ w ∈ X ⟩ → ⟨ a ∈ Ka ⟩ → ⟨ b ∈ Kb ⟩
+                  → ⟨ pr a u ∈ w ⟩ → ⟨ pr b v ∈ w ⟩ → ⟨ u ∈ v ⟩
+                  → ⟨ w ∈ selectMember X Ka Kb ⟩
+  selectMember-in {X} {Ka} {Kb} {w} {a} {b} {u} {v} hw ha hb hau hbv huv =
+    ∣ ( fw .fst , fa .fst , fb .fst , fu .fst , fv .fst
+      , toSmall (pr (⟪ Ka ⟫↪ (fa .fst)) pu) W
+          (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
+            (sym (fa .snd)) (sym (fu .snd)) hau')
+      , toSmall (pr (⟪ Kb ⟫↪ (fb .fst)) pv) W
+          (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
+            (sym (fb .snd)) (sym (fv .snd)) hbv')
+      , toSmall pu pv
+          (subst2 (λ p q → ⟨ p ∈ q ⟩)
+            (sym (fu .snd)) (sym (fv .snd)) huv) )
+    , fw .snd ∣₁
+    where
+    fw : Σ[ m ∈ ⟪ X ⟫ ] (⟪ X ⟫↪ m ≡ w)
+    fw = ∈-asFiber {a = w} {b = X} hw
+    W : V ℓ
+    W = ⟪ X ⟫↪ (fw .fst)
+    fa : Σ[ m ∈ ⟪ Ka ⟫ ] (⟪ Ka ⟫↪ m ≡ a)
+    fa = ∈-asFiber {a = a} {b = Ka} ha
+    fb : Σ[ m ∈ ⟪ Kb ⟫ ] (⟪ Kb ⟫↪ m ≡ b)
+    fb = ∈-asFiber {a = b} {b = Kb} hb
+    hau' : ⟨ pr a u ∈ W ⟩
+    hau' = subst (λ z → ⟨ pr a u ∈ z ⟩) (sym (fw .snd)) hau
+    hbv' : ⟨ pr b v ∈ W ⟩
+    hbv' = subst (λ z → ⟨ pr b v ∈ z ⟩) (sym (fw .snd)) hbv
+    fu : Σ[ m ∈ ⟪ pool W ⟫ ] (⟪ pool W ⟫↪ m ≡ u)
+    fu = ∈-asFiber {a = u} {b = pool W}
+           (pool-right {X = W} {a = a} {b = u} hau')
+    fv : Σ[ m ∈ ⟪ pool W ⟫ ] (⟪ pool W ⟫↪ m ≡ v)
+    fv = ∈-asFiber {a = v} {b = pool W}
+           (pool-right {X = W} {a = b} {b = v} hbv')
+    pu pv : V ℓ
+    pu = ⟪ pool W ⟫↪ (fu .fst)
+    pv = ⟪ pool W ⟫↪ (fv .fst)
 
-selectMember-wit : {X Ka Kb w : V ℓ} → ⟨ w ∈ selectMember X Ka Kb ⟩
-                 → ∥ Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
-                     ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩
-                     × ⟨ pr a u ∈ w ⟩ × ⟨ pr b v ∈ w ⟩ × ⟨ u ∈ v ⟩ ) ∥₁
-selectMember-wit {X} {Ka} {Kb} {w} = PT.map
-  λ { ((m , a , b , u , v , sau , sbv , suv) , e) →
-      ⟪ Ka ⟫↪ a , ⟪ Kb ⟫↪ b
-    , ⟪ pool (⟪ X ⟫↪ m) ⟫↪ u , ⟪ pool (⟪ X ⟫↪ m) ⟫↪ v
-    , memb Ka a , memb Kb b
-    , subst (λ z → ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ z ⟩)
-        e (toBig (pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u)) (⟪ X ⟫↪ m) sau)
-    , subst (λ z → ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v) ∈ z ⟩)
-        e (toBig (pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v)) (⟪ X ⟫↪ m) sbv)
-    , toBig (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v) suv }
+  selectMember-sub : {X Ka Kb w : V ℓ}
+                   → ⟨ w ∈ selectMember X Ka Kb ⟩ → ⟨ w ∈ X ⟩
+  selectMember-sub {X} {Ka} {Kb} {w} = PT.rec (snd (w ∈ X))
+    λ { ((m , _) , e) → subst (λ z → ⟨ z ∈ X ⟩) e (memb X m) }
 
-selectEqual : V ℓ → V ℓ → V ℓ → V ℓ
-selectEqual X Ka Kb = sett
-  ( Σ[ m ∈ ⟪ X ⟫ ] Σ[ a ∈ ⟪ Ka ⟫ ] Σ[ b ∈ ⟪ Kb ⟫ ]
-    Σ[ u ∈ ⟪ pool (⟪ X ⟫↪ m) ⟫ ]
-    ( ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ₛ ⟪ X ⟫↪ m ⟩
-    × ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ₛ ⟪ X ⟫↪ m ⟩ ) )
-  (λ p → ⟪ X ⟫↪ (p .fst))
+  selectMember-wit : {X Ka Kb w : V ℓ} → ⟨ w ∈ selectMember X Ka Kb ⟩
+                   → ∥ Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                       ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩
+                       × ⟨ pr a u ∈ w ⟩ × ⟨ pr b v ∈ w ⟩ × ⟨ u ∈ v ⟩ ) ∥₁
+  selectMember-wit {X} {Ka} {Kb} {w} = PT.map
+    λ { ((m , a , b , u , v , sau , sbv , suv) , e) →
+        ⟪ Ka ⟫↪ a , ⟪ Kb ⟫↪ b
+      , ⟪ pool (⟪ X ⟫↪ m) ⟫↪ u , ⟪ pool (⟪ X ⟫↪ m) ⟫↪ v
+      , memb Ka a , memb Kb b
+      , subst (λ z → ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ z ⟩)
+          e (toBig (pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u)) (⟪ X ⟫↪ m) sau)
+      , subst (λ z → ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v) ∈ z ⟩)
+          e (toBig (pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v)) (⟪ X ⟫↪ m) sbv)
+      , toBig (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ v) suv }
 
-selectEqual-in : {X Ka Kb w a b u : V ℓ}
-               → ⟨ w ∈ X ⟩ → ⟨ a ∈ Ka ⟩ → ⟨ b ∈ Kb ⟩
-               → ⟨ pr a u ∈ w ⟩ → ⟨ pr b u ∈ w ⟩
-               → ⟨ w ∈ selectEqual X Ka Kb ⟩
-selectEqual-in {X} {Ka} {Kb} {w} {a} {b} {u} hw ha hb hau hbu =
-  ∣ ( fw .fst , fa .fst , fb .fst , fu .fst
-    , toSmall (pr (⟪ Ka ⟫↪ (fa .fst)) pu) W
-        (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
-          (sym (fa .snd)) (sym (fu .snd)) hau')
-    , toSmall (pr (⟪ Kb ⟫↪ (fb .fst)) pu) W
-        (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
-          (sym (fb .snd)) (sym (fu .snd)) hbu') )
-  , fw .snd ∣₁
-  where
-  fw = ∈-asFiber {a = w} {b = X} hw
-  W = ⟪ X ⟫↪ (fw .fst)
-  fa = ∈-asFiber {a = a} {b = Ka} ha
-  fb = ∈-asFiber {a = b} {b = Kb} hb
-  hau' : ⟨ pr a u ∈ W ⟩
-  hau' = subst (λ z → ⟨ pr a u ∈ z ⟩) (sym (fw .snd)) hau
-  hbu' : ⟨ pr b u ∈ W ⟩
-  hbu' = subst (λ z → ⟨ pr b u ∈ z ⟩) (sym (fw .snd)) hbu
-  fu = ∈-asFiber {a = u} {b = pool W}
-         (pool-right {X = W} {a = a} {b = u} hau')
-  pu = ⟪ pool W ⟫↪ (fu .fst)
+opaque
+  selectEqual : V ℓ → V ℓ → V ℓ → V ℓ
+  selectEqual X Ka Kb = sett
+    ( Σ[ m ∈ ⟪ X ⟫ ] Σ[ a ∈ ⟪ Ka ⟫ ] Σ[ b ∈ ⟪ Kb ⟫ ]
+      Σ[ u ∈ ⟪ pool (⟪ X ⟫↪ m) ⟫ ]
+      ( ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ₛ ⟪ X ⟫↪ m ⟩
+      × ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ₛ ⟪ X ⟫↪ m ⟩ ) )
+    (λ p → ⟪ X ⟫↪ (p .fst))
 
-selectEqual-sub : {X Ka Kb w : V ℓ}
-                → ⟨ w ∈ selectEqual X Ka Kb ⟩ → ⟨ w ∈ X ⟩
-selectEqual-sub {X} {Ka} {Kb} {w} = PT.rec (snd (w ∈ X))
-  λ { ((m , _) , e) → subst (λ z → ⟨ z ∈ X ⟩) e (memb X m) }
+opaque
+  unfolding selectEqual
 
-selectEqual-wit : {X Ka Kb w : V ℓ} → ⟨ w ∈ selectEqual X Ka Kb ⟩
-                → ∥ Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ]
-                    ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩
-                    × ⟨ pr a u ∈ w ⟩ × ⟨ pr b u ∈ w ⟩ ) ∥₁
-selectEqual-wit {X} {Ka} {Kb} {w} = PT.map
-  λ { ((m , a , b , u , sau , sbu) , e) →
-      ⟪ Ka ⟫↪ a , ⟪ Kb ⟫↪ b , ⟪ pool (⟪ X ⟫↪ m) ⟫↪ u
-    , memb Ka a , memb Kb b
-    , subst (λ z → ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ z ⟩)
-        e (toBig (pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u)) (⟪ X ⟫↪ m) sau)
-    , subst (λ z → ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ z ⟩)
-        e (toBig (pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u)) (⟪ X ⟫↪ m) sbu) }
+  selectEqual-in : {X Ka Kb w a b u : V ℓ}
+                 → ⟨ w ∈ X ⟩ → ⟨ a ∈ Ka ⟩ → ⟨ b ∈ Kb ⟩
+                 → ⟨ pr a u ∈ w ⟩ → ⟨ pr b u ∈ w ⟩
+                 → ⟨ w ∈ selectEqual X Ka Kb ⟩
+  selectEqual-in {X} {Ka} {Kb} {w} {a} {b} {u} hw ha hb hau hbu =
+    ∣ ( fw .fst , fa .fst , fb .fst , fu .fst
+      , toSmall (pr (⟪ Ka ⟫↪ (fa .fst)) pu) W
+          (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
+            (sym (fa .snd)) (sym (fu .snd)) hau')
+      , toSmall (pr (⟪ Kb ⟫↪ (fb .fst)) pu) W
+          (subst2 (λ p q → ⟨ pr p q ∈ W ⟩)
+            (sym (fb .snd)) (sym (fu .snd)) hbu') )
+    , fw .snd ∣₁
+    where
+    fw : Σ[ m ∈ ⟪ X ⟫ ] (⟪ X ⟫↪ m ≡ w)
+    fw = ∈-asFiber {a = w} {b = X} hw
+    W : V ℓ
+    W = ⟪ X ⟫↪ (fw .fst)
+    fa : Σ[ m ∈ ⟪ Ka ⟫ ] (⟪ Ka ⟫↪ m ≡ a)
+    fa = ∈-asFiber {a = a} {b = Ka} ha
+    fb : Σ[ m ∈ ⟪ Kb ⟫ ] (⟪ Kb ⟫↪ m ≡ b)
+    fb = ∈-asFiber {a = b} {b = Kb} hb
+    hau' : ⟨ pr a u ∈ W ⟩
+    hau' = subst (λ z → ⟨ pr a u ∈ z ⟩) (sym (fw .snd)) hau
+    hbu' : ⟨ pr b u ∈ W ⟩
+    hbu' = subst (λ z → ⟨ pr b u ∈ z ⟩) (sym (fw .snd)) hbu
+    fu : Σ[ m ∈ ⟪ pool W ⟫ ] (⟪ pool W ⟫↪ m ≡ u)
+    fu = ∈-asFiber {a = u} {b = pool W}
+           (pool-right {X = W} {a = a} {b = u} hau')
+    pu : V ℓ
+    pu = ⟪ pool W ⟫↪ (fu .fst)
+
+  selectEqual-sub : {X Ka Kb w : V ℓ}
+                  → ⟨ w ∈ selectEqual X Ka Kb ⟩ → ⟨ w ∈ X ⟩
+  selectEqual-sub {X} {Ka} {Kb} {w} = PT.rec (snd (w ∈ X))
+    λ { ((m , _) , e) → subst (λ z → ⟨ z ∈ X ⟩) e (memb X m) }
+
+  selectEqual-wit : {X Ka Kb w : V ℓ} → ⟨ w ∈ selectEqual X Ka Kb ⟩
+                  → ∥ Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ]
+                      ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩
+                      × ⟨ pr a u ∈ w ⟩ × ⟨ pr b u ∈ w ⟩ ) ∥₁
+  selectEqual-wit {X} {Ka} {Kb} {w} = PT.map
+    λ { ((m , a , b , u , sau , sbu) , e) →
+        ⟪ Ka ⟫↪ a , ⟪ Kb ⟫↪ b , ⟪ pool (⟪ X ⟫↪ m) ⟫↪ u
+      , memb Ka a , memb Kb b
+      , subst (λ z → ⟨ pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ z ⟩)
+          e (toBig (pr (⟪ Ka ⟫↪ a) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u)) (⟪ X ⟫↪ m) sau)
+      , subst (λ z → ⟨ pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u) ∈ z ⟩)
+          e (toBig (pr (⟪ Kb ⟫↪ b) (⟪ pool (⟪ X ⟫↪ m) ⟫↪ u)) (⟪ X ⟫↪ m) sbu) }
 ```
 
 <!--en-->
@@ -419,40 +442,51 @@ the shift of every member.
 <!--/-->
 
 ```agda
-extendGraph : V ℓ → V ℓ → V ℓ
-extendGraph y γ = sett
-  ( Unit* {ℓ}
-  ⊎ ( Σ[ a ∈ ⟪ pool γ ⟫ ] Σ[ v ∈ ⟪ pool γ ⟫ ]
-      ⟨ pr (⟪ pool γ ⟫↪ a) (⟪ pool γ ⟫↪ v) ∈ₛ γ ⟩ ) )
-  (λ { (inl _) → pr ∅ y
-     ; (inr p) → pr (sucV (⟪ pool γ ⟫↪ (p .fst)))
-                    (⟪ pool γ ⟫↪ (p .snd .fst)) })
+-- perf: sealed at birth like the shift; the index's pool is a ⋃-tower
+-- and an open head re-normalizes it at every concrete set former (the
+-- constant-atom case did not finish in eighteen minutes open)
+opaque
+  extendGraph : V ℓ → V ℓ → V ℓ
+  extendGraph y γ = sett
+    ( Unit* {ℓ}
+    ⊎ ( Σ[ a ∈ ⟪ pool γ ⟫ ] Σ[ v ∈ ⟪ pool γ ⟫ ]
+        ⟨ pr (⟪ pool γ ⟫↪ a) (⟪ pool γ ⟫↪ v) ∈ₛ γ ⟩ ) )
+    (λ { (inl _) → pr ∅ y
+       ; (inr p) → pr (sucV (⟪ pool γ ⟫↪ (p .fst)))
+                      (⟪ pool γ ⟫↪ (p .snd .fst)) })
 
-extendGraph-zero : {y γ : V ℓ} → ⟨ pr ∅ y ∈ extendGraph y γ ⟩
-extendGraph-zero {y} {γ} = ∣ inl tt* , refl ∣₁
+opaque
+  unfolding extendGraph
 
-extendGraph-suc : {y γ a v : V ℓ}
-                → ⟨ pr a v ∈ γ ⟩ → ⟨ pr (sucV a) v ∈ extendGraph y γ ⟩
-extendGraph-suc {y} {γ} {a} {v} h =
-  ∣ inr ( fa .fst , fv .fst
-        , toSmall (pr (⟪ pool γ ⟫↪ (fa .fst)) (⟪ pool γ ⟫↪ (fv .fst))) γ
-            (subst2 (λ p q → ⟨ pr p q ∈ γ ⟩)
-              (sym (fa .snd)) (sym (fv .snd)) h) )
-  , cong₂ (λ p q → pr (sucV p) q) (fa .snd) (fv .snd) ∣₁
-  where
-  fa = ∈-asFiber {a = a} {b = pool γ} (pool-left {X = γ} {a = a} {b = v} h)
-  fv = ∈-asFiber {a = v} {b = pool γ} (pool-right {X = γ} {a = a} {b = v} h)
+  extendGraph-zero : {y γ : V ℓ} → ⟨ pr ∅ y ∈ extendGraph y γ ⟩
+  extendGraph-zero {y} {γ} = ∣ inl tt* , refl ∣₁
 
-extendGraph-out : {y γ z : V ℓ} → ⟨ z ∈ extendGraph y γ ⟩
-                → ∥ (z ≡ pr ∅ y)
-                  ⊎ (Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
-                      (⟨ pr a v ∈ γ ⟩ × (z ≡ pr (sucV a) v))) ∥₁
-extendGraph-out {y} {γ} {z} = PT.map
-  λ { (inl _ , e) → inl (sym e)
-    ; (inr (a , v , s) , e) →
-        inr ( ⟪ pool γ ⟫↪ a , ⟪ pool γ ⟫↪ v
-            , toBig (pr (⟪ pool γ ⟫↪ a) (⟪ pool γ ⟫↪ v)) γ s
-            , sym e ) }
+  extendGraph-suc : {y γ a v : V ℓ}
+                  → ⟨ pr a v ∈ γ ⟩ → ⟨ pr (sucV a) v ∈ extendGraph y γ ⟩
+  extendGraph-suc {y} {γ} {a} {v} h =
+    ∣ inr ( fa .fst , fv .fst
+          , toSmall (pr (⟪ pool γ ⟫↪ (fa .fst)) (⟪ pool γ ⟫↪ (fv .fst))) γ
+              (subst2 (λ p q → ⟨ pr p q ∈ γ ⟩)
+                (sym (fa .snd)) (sym (fv .snd)) h) )
+    , cong₂ (λ p q → pr (sucV p) q) (fa .snd) (fv .snd) ∣₁
+    where
+    fa : Σ[ m ∈ ⟪ pool γ ⟫ ] (⟪ pool γ ⟫↪ m ≡ a)
+    fa = ∈-asFiber {a = a} {b = pool γ}
+           (pool-left {X = γ} {a = a} {b = v} h)
+    fv : Σ[ m ∈ ⟪ pool γ ⟫ ] (⟪ pool γ ⟫↪ m ≡ v)
+    fv = ∈-asFiber {a = v} {b = pool γ}
+           (pool-right {X = γ} {a = a} {b = v} h)
+
+  extendGraph-out : {y γ z : V ℓ} → ⟨ z ∈ extendGraph y γ ⟩
+                  → ∥ (z ≡ pr ∅ y)
+                    ⊎ (Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                        (⟨ pr a v ∈ γ ⟩ × (z ≡ pr (sucV a) v))) ∥₁
+  extendGraph-out {y} {γ} {z} = PT.map
+    λ { (inl _ , e) → inl (sym e)
+      ; (inr (a , v , s) , e) →
+          inr ( ⟪ pool γ ⟫↪ a , ⟪ pool γ ⟫↪ v
+              , toBig (pr (⟪ pool γ ⟫↪ a) (⟪ pool γ ⟫↪ v)) γ s
+              , sym e ) }
 
 -- perf: sealed at birth; the index's ⋃-tower re-normalizes in every
 -- downstream obligation at a concrete set former when the head is open:
@@ -493,23 +527,31 @@ opaque
     ⟪ ⋃ pool w ⟫↪ a , ⟪ pool w ⟫↪ v
     , toBig (pr (sucV (⟪ ⋃ pool w ⟫↪ a)) (⟪ pool w ⟫↪ v)) w s , sym e }
 
-extendFamily : V ℓ → V ℓ → V ℓ
-extendFamily X Y = sett (⟪ X ⟫ × ⟪ Y ⟫)
-  (λ p → extendGraph (⟪ Y ⟫↪ (p .snd)) (⟪ X ⟫↪ (p .fst)))
+-- perf: sealed at birth; the family sits over concrete set formers in
+-- every consumer, and an open head re-normalizes their presentations
+opaque
+  extendFamily : V ℓ → V ℓ → V ℓ
+  extendFamily X Y = sett (⟪ X ⟫ × ⟪ Y ⟫)
+    (λ p → extendGraph (⟪ Y ⟫↪ (p .snd)) (⟪ X ⟫↪ (p .fst)))
 
-extendFamily-in : {X Y γ y : V ℓ} → ⟨ γ ∈ X ⟩ → ⟨ y ∈ Y ⟩
-                → ⟨ extendGraph y γ ∈ extendFamily X Y ⟩
-extendFamily-in {X} {Y} {γ} {y} hγ hy =
-  ∣ (fγ .fst , fy .fst) , cong₂ extendGraph (fy .snd) (fγ .snd) ∣₁
-  where
-  fγ = ∈-asFiber {a = γ} {b = X} hγ
-  fy = ∈-asFiber {a = y} {b = Y} hy
+opaque
+  unfolding extendFamily
 
-extendFamily-out : {X Y w : V ℓ} → ⟨ w ∈ extendFamily X Y ⟩
-                 → ∥ Σ[ γ ∈ V ℓ ] Σ[ y ∈ V ℓ ]
-                     (⟨ γ ∈ X ⟩ × ⟨ y ∈ Y ⟩ × (w ≡ extendGraph y γ)) ∥₁
-extendFamily-out {X} {Y} = PT.map λ { ((mγ , my) , e) →
-  ⟪ X ⟫↪ mγ , ⟪ Y ⟫↪ my , memb X mγ , memb Y my , sym e }
+  extendFamily-in : {X Y γ y : V ℓ} → ⟨ γ ∈ X ⟩ → ⟨ y ∈ Y ⟩
+                  → ⟨ extendGraph y γ ∈ extendFamily X Y ⟩
+  extendFamily-in {X} {Y} {γ} {y} hγ hy =
+    ∣ (fγ .fst , fy .fst) , cong₂ extendGraph (fy .snd) (fγ .snd) ∣₁
+    where
+    fγ : Σ[ m ∈ ⟪ X ⟫ ] (⟪ X ⟫↪ m ≡ γ)
+    fγ = ∈-asFiber {a = γ} {b = X} hγ
+    fy : Σ[ m ∈ ⟪ Y ⟫ ] (⟪ Y ⟫↪ m ≡ y)
+    fy = ∈-asFiber {a = y} {b = Y} hy
+
+  extendFamily-out : {X Y w : V ℓ} → ⟨ w ∈ extendFamily X Y ⟩
+                   → ∥ Σ[ γ ∈ V ℓ ] Σ[ y ∈ V ℓ ]
+                       (⟨ γ ∈ X ⟩ × ⟨ y ∈ Y ⟩ × (w ≡ extendGraph y γ)) ∥₁
+  extendFamily-out {X} {Y} = PT.map λ { ((mγ , my) , e) →
+    ⟪ X ⟫↪ mγ , ⟪ Y ⟫↪ my , memb X mγ , memb Y my , sym e }
 
 shiftDown : V ℓ → V ℓ
 shiftDown X = sett ⟪ X ⟫ (λ m → tailGraph (⟪ X ⟫↪ m))

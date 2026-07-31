@@ -31,7 +31,9 @@ module L.Godel.Satisfaction {ℓ : Level} where
 open import Base.Classical using ( LEM )
 
 open import FOL.Syntax
-  using ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ⊤̇; ⊥̇ )
+  using ( Formula; Term; var; con
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈; ⊤̇; ⊥̇ )
+open import FOL.Manipulation.Renaming using ( renameTm )
 open import V.Hierarchy {ℓ} using ( extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
@@ -41,9 +43,10 @@ open import L.Godel.Operations {ℓ}
         ; _∪_; ∪-left; ∪-right; ∪-out; _∩_; ∩-in; ∩-out; _∖_; ∖-in; ∖-out
         ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
         ; selectEqual; selectEqual-in; selectEqual-sub; selectEqual-wit
+        ; extendGraph; extendFamily; extendFamily-in; extendFamily-out
         ; tailGraph; shiftDown; shiftDown-in; shiftDown-out )
 open import L.Godel.Tuples {ℓ}
-  using ( tuple; tupleTail; tuple-entry; allTuples )
+  using ( tuple; tuple-extend; tupleTail; tuple-entry; allTuples )
 
 open import Cubical.Foundations.Equiv using ( equivFun; invEq )
 open import Cubical.Foundations.Prelude using ( subst2 )
@@ -419,66 +422,291 @@ conversions are the entry readings composed with two tabulation equations.
 ```
 
 <!--en-->
-## Respect, and the classical cases
+## The equality atom, a variable against a constant
 
-Two formulas whose satisfactions agree at every environment have the same
-satisfaction set: `sat-resp`{.Agda} converts a member through the pointwise
-identity and back, and it is what turns a semantic reduction into a case
-equation for free. The implication and the universal are exactly such
-reductions, and they are the chapter's only classical content: material
-implication is the negated conjunction, and the universal is the negated
-existential of the negation, each priced at one instance of the excluded
-middle inside a double negation. Their satisfaction sets then come out as
-compositions of the cases already proved, with not one new extensionality.
+The one atom shape no reduction reaches, because every reduction manufactures
+its constants through exactly this atom. Its satisfaction set is a selection
+over the assignments **extended by the constant**: extend every assignment by
+the constant's value at the fresh first key, select equality between the
+variable's shifted key and the fresh key, and shift the survivors back down.
 <!--zh-->
-## 换步，与经典诸情形
+## 等词原子，变元对常元
 
-在每个环境处满足相符的两条公式有相同的满足集：`sat-resp`{.Agda} 把成员经逐点等同转换过去再回来，它使一次语义化归免费变成一条情形等式。蕴含与全称恰是这样的化归，也是本章仅有的经典内容：实质蕴含是被否定的合取，全称是否定之存在式的否定，各花双重否定之内的一份排中律。于是它们的满足集作为已证情形的复合而得，一次新的外延性都不写。
+任何化归都够不着的那一个原子形状，因为每个化归制造常元用的恰是这个原子。它的满足集是**被常元扩张的**诸赋值上的一次选择：把每个赋值在新的首键处用常元的取值扩张，在变元的被移键与新键之间选择相等，再把幸存者移回来。
 <!--/-->
 
 ```agda
+  sat-≐vc : {n : ℕ} (i : Fin n) (a : ⟪ A ⟫)
+          → satSet (var i ≐ con a)
+          ≡ shiftDown (selectEqual (extendFamily (allTuples A n) ⁅ κ a ⁆s)
+                        ⁅ # (suc (toℕ i)) ⁆s ⁅ # 0 ⁆s)
+  sat-≐vc {n} i a = extensionalV λ w → ⇔toPath (fwdC w) (bwdC w)
+    where
+    φ : Formula ⟪ A ⟫ n
+    φ = var i ≐ con a
+    E Sel T : V ℓ
+    E = extendFamily (allTuples A n) ⁅ κ a ⁆s
+    Sel = selectEqual E ⁅ # (suc (toℕ i)) ⁆s ⁅ # 0 ⁆s
+    T = shiftDown Sel
+    fwdC : (w : V ℓ) → ⟨ w ∈ satSet φ ⟩ → ⟨ w ∈ T ⟩
+    fwdC w hw = PT.rec (snd (w ∈ T))
+      (λ { (g , hs , e) →
+        let hp : κ (g i) ≡ κ a
+            hp = sym (lk g i) ∙ hs
+            ext : ⟨ tuple A (cons a g) ∈ E ⟩
+            ext = subst (λ z → ⟨ z ∈ E ⟩)
+                    (sym (tuple-extend A (cons a g)))
+                    (extendFamily-in {X = allTuples A n} {Y = ⁅ κ a ⁆s}
+                      {γ = tuple A g} {y = κ a}
+                      ∣ g , refl ∣₁ (singleton-self (κ a)))
+            sel : ⟨ tuple A (cons a g) ∈ Sel ⟩
+            sel = selectEqual-in {X = E}
+                    {Ka = ⁅ # (suc (toℕ i)) ⁆s} {Kb = ⁅ # 0 ⁆s}
+                    {w = tuple A (cons a g)}
+                    {a = # (suc (toℕ i))} {b = # 0} {u = κ (g i)}
+                    ext
+                    (singleton-self (# (suc (toℕ i))))
+                    (singleton-self (# 0))
+                    ∣ lift (suc i) , refl ∣₁
+                    (subst (λ v → ⟨ pr (# 0) v ∈ tuple A (cons a g) ⟩)
+                      (sym hp) ∣ lift zero , refl ∣₁)
+        in subst (λ z → ⟨ z ∈ T ⟩) (tupleTail A (cons a g) ∙ e)
+             (shiftDown-in {X = Sel} sel) })
+      (sat-out φ w hw)
+    bwdC : (w : V ℓ) → ⟨ w ∈ T ⟩ → ⟨ w ∈ satSet φ ⟩
+    bwdC w h = PT.rec (snd (w ∈ satSet φ))
+      (λ { (z , hz , ez) → PT.rec (snd (w ∈ satSet φ))
+        (λ { (γ' , y , hγ' , hy , eEx) → PT.rec (snd (w ∈ satSet φ))
+          (λ { (g , eg) → PT.rec (snd (w ∈ satSet φ))
+            (λ { (kb , kc , u , hkb , hkc , hbu , hcu) →
+              let zeq : z ≡ tuple A (cons a g)
+                  zeq = eEx
+                      ∙ cong₂ extendGraph (singleton-out hy) (sym eg)
+                      ∙ sym (tuple-extend A (cons a g))
+                  hbu' : ⟨ pr (# (suc (toℕ i))) u ∈ tuple A (cons a g) ⟩
+                  hbu' = subst2 (λ p q → ⟨ pr p u ∈ q ⟩)
+                           (singleton-out hkb) zeq hbu
+                  hcu' : ⟨ pr (# 0) u ∈ tuple A (cons a g) ⟩
+                  hcu' = subst2 (λ p q → ⟨ pr p u ∈ q ⟩)
+                           (singleton-out hkc) zeq hcu
+                  eu : u ≡ κ (g i)
+                  eu = subst ⟨_⟩
+                         (lookup-spec (λ x → κ (cons a g x)) (suc i) u) hbu'
+                  ea : u ≡ κ a
+                  ea = subst ⟨_⟩
+                         (lookup-spec (λ x → κ (cons a g x)) zero u) hcu'
+                  weq : w ≡ tuple A g
+                  weq = sym ez ∙ cong tailGraph zeq ∙ tupleTail A (cons a g)
+              in subst (λ q → ⟨ q ∈ satSet φ ⟩) (sym weq)
+                   (sat-in φ g (lk g i ∙ sym eu ∙ ea)) })
+            (selectEqual-wit {X = E}
+              {Ka = ⁅ # (suc (toℕ i)) ⁆s} {Kb = ⁅ # 0 ⁆s} {w = z} hz) })
+          hγ' })
+        (extendFamily-out {X = allTuples A n} {Y = ⁅ κ a ⁆s}
+          (selectEqual-sub {X = E}
+            {Ka = ⁅ # (suc (toℕ i)) ⁆s} {Kb = ⁅ # 0 ⁆s} {w = z} hz)) })
+      (shiftDown-out {X = Sel} h)
+```
+
+<!--en-->
+## Respect, and the reductions
+
+Two formulas whose satisfactions imply each other at every environment have
+the same satisfaction set: `sat-resp`{.Agda} converts a member through the
+given direction and back. On it ride seven constructive reductions. Each
+remaining atom shape binds a fresh variable, pins it to the constant by the
+exceptional atom, and hands the rest to shapes already closed; the witness
+is the constant's own inner-world element, and reading it back is one named
+continuation per shape. The bounded quantifiers are one weakening away from
+the unbounded ones: on both term constructors the bound's moved value is the
+original one definitionally, so both directions are the identity.
+<!--zh-->
+## 换步，与诸化归
+
+在每个环境处满足互推的两条公式有相同的满足集：`sat-resp`{.Agda} 把成员经给定方向转换过去再回来。骑于其上的是七条构造性化归。其余每个原子形状绑定一个新变元，用例外原子把它钉在常元上，再把剩下的交给已闭合的形状；见证就是常元自己的内层元素，读回它则是一个形状一个具名的 continuation。有界量词距无界的一次弱化之遥：在两个词项构造子上，界的被移取值都定义性地等于原来的，故两个方向都是恒等。
+<!--/-->
+
+```agda
+  -- perf: the hypotheses are the two pointwise directions, never a
+  -- pointwise path; building an hProp path between the satisfactions of
+  -- two fully concrete formulas ran 386 s where the two directions cost
+  -- under two seconds each
   sat-resp : {n : ℕ} {φ ψ : Formula ⟪ A ⟫ n}
-           → ((δ : Vec SM n) → (δ ⊨ᵐ φ) ≡ (δ ⊨ᵐ ψ))
+           → ((δ : Vec SM n) → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ δ ⊨ᵐ ψ ⟩)
+           → ((δ : Vec SM n) → ⟨ δ ⊨ᵐ ψ ⟩ → ⟨ δ ⊨ᵐ φ ⟩)
            → satSet φ ≡ satSet ψ
-  sat-resp {n} {φ} {ψ} pt = extensionalV λ w → ⇔toPath (to w) (fro w)
+  sat-resp {n} {φ} {ψ} into back = extensionalV λ w → ⇔toPath (to w) (fro w)
     where
     to : (w : V ℓ) → ⟨ w ∈ satSet φ ⟩ → ⟨ w ∈ satSet ψ ⟩
     to w h = PT.rec (snd (w ∈ satSet ψ))
       (λ { (g , hg , e) →
         subst (λ z → ⟨ z ∈ satSet ψ ⟩) e
-          (sat-in ψ g (subst ⟨_⟩ (pt (vec g)) hg)) })
+          (sat-in ψ g (into (vec g) hg)) })
       (sat-out φ w h)
     fro : (w : V ℓ) → ⟨ w ∈ satSet ψ ⟩ → ⟨ w ∈ satSet φ ⟩
     fro w h = PT.rec (snd (w ∈ satSet φ))
       (λ { (g , hg , e) →
         subst (λ z → ⟨ z ∈ satSet φ ⟩) e
-          (sat-in φ g (subst ⟨_⟩ (sym (pt (vec g))) hg)) })
+          (sat-in φ g (back (vec g) hg)) })
       (sat-out ψ w h)
 
+  private
+    atomcv : {n : ℕ} (j : Fin n) (a : ⟪ A ⟫) (δ : Vec SM n)
+           → ⟨ δ ⊨ᵐ (∃̇ ((var zero ≐ con a) ∧̇ (var zero ∈̇ var (suc j)))) ⟩
+           → ⟨ δ ⊨ᵐ (con a ∈̇ var j) ⟩
+    atomcv j a δ = PT.rec (snd (δ ⊨ᵐ (con a ∈̇ var j))) go
+      where
+      -- perf: continuations named with their payloads spelled; inline,
+      -- the same case lambda at a concrete formula does not finish
+      go : Σ[ x ∈ SM ]
+             ⟨ (x ∷ δ) ⊨ᵐ ((var zero ≐ con a) ∧̇ (var zero ∈̇ var (suc j))) ⟩
+         → ⟨ δ ⊨ᵐ (con a ∈̇ var j) ⟩
+      go (x , he , hm) = subst (λ v → ⟨ v ∈ fst (lookup j δ) ⟩) he hm
+
+    atomvc : {n : ℕ} (i : Fin n) (a : ⟪ A ⟫) (δ : Vec SM n)
+           → ⟨ δ ⊨ᵐ (∃̇ ((var zero ≐ con a) ∧̇ (var (suc i) ∈̇ var zero))) ⟩
+           → ⟨ δ ⊨ᵐ (var i ∈̇ con a) ⟩
+    atomvc i a δ = PT.rec (snd (δ ⊨ᵐ (var i ∈̇ con a))) go
+      where
+      go : Σ[ x ∈ SM ]
+             ⟨ (x ∷ δ) ⊨ᵐ ((var zero ≐ con a) ∧̇ (var (suc i) ∈̇ var zero)) ⟩
+         → ⟨ δ ⊨ᵐ (var i ∈̇ con a) ⟩
+      go (x , he , hm) = subst (λ v → ⟨ fst (lookup i δ) ∈ v ⟩) he hm
+
+    atomcc : {n : ℕ} (a b : ⟪ A ⟫) (δ : Vec SM n)
+           → ⟨ δ ⊨ᵐ (∃̇ ((var zero ≐ con b) ∧̇ (con a ∈̇ var zero))) ⟩
+           → ⟨ δ ⊨ᵐ (con a ∈̇ con b) ⟩
+    atomcc a b δ = PT.rec (snd (δ ⊨ᵐ (con a ∈̇ con b))) go
+      where
+      go : Σ[ x ∈ SM ]
+             ⟨ (x ∷ δ) ⊨ᵐ ((var zero ≐ con b) ∧̇ (con a ∈̇ var zero)) ⟩
+         → ⟨ δ ⊨ᵐ (con a ∈̇ con b) ⟩
+      go (x , he , hm) = subst (λ v → ⟨ fst (ι a) ∈ v ⟩) he hm
+
+    atomecc : {n : ℕ} (a b : ⟪ A ⟫) (δ : Vec SM n)
+            → ⟨ δ ⊨ᵐ (∃̇ ((var zero ≐ con a) ∧̇ (var zero ≐ con b))) ⟩
+            → ⟨ δ ⊨ᵐ (con a ≐ con b) ⟩
+    atomecc a b δ = PT.rec (snd (δ ⊨ᵐ (con a ≐ con b))) go
+      where
+      go : Σ[ x ∈ SM ]
+             ⟨ (x ∷ δ) ⊨ᵐ ((var zero ≐ con a) ∧̇ (var zero ≐ con b)) ⟩
+         → ⟨ δ ⊨ᵐ (con a ≐ con b) ⟩
+      go (x , he , hb) = sym he ∙ hb
+
+  red-∈cv : {n : ℕ} (j : Fin n) (a : ⟪ A ⟫)
+          → satSet (con a ∈̇ var j)
+          ≡ satSet (∃̇ ((var zero ≐ con a) ∧̇ (var zero ∈̇ var (suc j))))
+  red-∈cv j a = sat-resp
+    {φ = con a ∈̇ var j}
+    {ψ = ∃̇ ((var zero ≐ con a) ∧̇ (var zero ∈̇ var (suc j)))}
+    (λ δ h → ∣ ι a , refl , h ∣₁)
+    (atomcv j a)
+
+  red-∈vc : {n : ℕ} (i : Fin n) (a : ⟪ A ⟫)
+          → satSet (var i ∈̇ con a)
+          ≡ satSet (∃̇ ((var zero ≐ con a) ∧̇ (var (suc i) ∈̇ var zero)))
+  red-∈vc i a = sat-resp
+    {φ = var i ∈̇ con a}
+    {ψ = ∃̇ ((var zero ≐ con a) ∧̇ (var (suc i) ∈̇ var zero))}
+    (λ δ h → ∣ ι a , refl , h ∣₁)
+    (atomvc i a)
+
+  red-∈cc : {n : ℕ} (a b : ⟪ A ⟫)
+          → satSet {n} (con a ∈̇ con b)
+          ≡ satSet (∃̇ ((var zero ≐ con b) ∧̇ (con a ∈̇ var zero)))
+  red-∈cc a b = sat-resp
+    {φ = con a ∈̇ con b}
+    {ψ = ∃̇ ((var zero ≐ con b) ∧̇ (con a ∈̇ var zero))}
+    (λ δ h → ∣ ι b , refl , h ∣₁)
+    (atomcc a b)
+
+  red-≐cv : {n : ℕ} (i : Fin n) (a : ⟪ A ⟫)
+          → satSet (con a ≐ var i) ≡ satSet (var i ≐ con a)
+  red-≐cv i a = sat-resp
+    {φ = con a ≐ var i} {ψ = var i ≐ con a}
+    (λ δ → sym) (λ δ → sym)
+
+  red-≐cc : {n : ℕ} (a b : ⟪ A ⟫)
+          → satSet {n} (con a ≐ con b)
+          ≡ satSet (∃̇ ((var zero ≐ con a) ∧̇ (var zero ≐ con b)))
+  red-≐cc a b = sat-resp
+    {φ = con a ≐ con b}
+    {ψ = ∃̇ ((var zero ≐ con a) ∧̇ (var zero ≐ con b))}
+    (λ δ h → ∣ ι a , refl , h ∣₁)
+    (atomecc a b)
+```
+
+<!--en-->
+## The bounded quantifiers
+
+Both are one weakening away from cases already closed: the bound, a term over
+the ambient variables, moves under the binder along the renaming that inserts
+the fresh slot, and on both term constructors the moved value is the original
+one definitionally, a variable because lookup steps past the new entry and a
+constant because a constant looks nothing up. The bounded existential is then
+the existential of a guarded conjunction, and the bounded universal the
+universal of a guarded implication.
+<!--zh-->
+## 有界量词
+
+两者都距已闭合的情形一次弱化之遥：界是周遭变元上的一个词项，沿「插入新槽位」的变元变换移到束缚元之下，而在两个词项构造子上，被移动的取值都定义性地等于原来的：变元是因为查值迈过新条目，常元是因为常元什么也不查。于是有界存在是受卫合取的存在式，有界全称是受卫蕴含的全称式。
+<!--/-->
+
+```agda
+  red-∃∈ : {n : ℕ} (t : Term ⟪ A ⟫ n) (ψ : Formula ⟪ A ⟫ (suc n))
+         → satSet (∃̇∈ t ψ)
+         ≡ satSet (∃̇ ((var zero ∈̇ renameTm suc t) ∧̇ ψ))
+  red-∃∈ (var i) ψ = sat-resp
+    {φ = ∃̇∈ (var i) ψ}
+    {ψ = ∃̇ ((var zero ∈̇ var (suc i)) ∧̇ ψ)}
+    (λ δ h → h) (λ δ h → h)
+  red-∃∈ (con k) ψ = sat-resp
+    {φ = ∃̇∈ (con k) ψ}
+    {ψ = ∃̇ ((var zero ∈̇ con k) ∧̇ ψ)}
+    (λ δ h → h) (λ δ h → h)
+
+  red-∀∈ : {n : ℕ} (t : Term ⟪ A ⟫ n) (ψ : Formula ⟪ A ⟫ (suc n))
+         → satSet (∀̇∈ t ψ)
+         ≡ satSet (∀̇ ((var zero ∈̇ renameTm suc t) ⇒̇ ψ))
+  red-∀∈ (var i) ψ = sat-resp
+    {φ = ∀̇∈ (var i) ψ}
+    {ψ = ∀̇ ((var zero ∈̇ var (suc i)) ⇒̇ ψ)}
+    (λ δ h → h) (λ δ h → h)
+  red-∀∈ (con k) ψ = sat-resp
+    {φ = ∀̇∈ (con k) ψ}
+    {ψ = ∀̇ ((var zero ∈̇ con k) ⇒̇ ψ)}
+    (λ δ h → h) (λ δ h → h)
+```
+
+<!--en-->
+## The classical cases
+
+The implication and the universal are the chapter's only classical content:
+material implication is the negated conjunction, and the universal is the
+negated existential of the negation, each priced at one instance of the
+excluded middle inside a double negation. Their satisfaction sets then come
+out as compositions of the cases already proved, with not one new
+extensionality.
+<!--zh-->
+## 经典诸情形
+
+蕴含与全称是本章仅有的经典内容：实质蕴含是被否定的合取，全称是否定之存在式的否定，各花双重否定之内的一份排中律。于是它们的满足集作为已证情形的复合而得，一次新的外延性都不写。
+<!--/-->
+
+```agda
   module Classical (lem : LEM (ℓ-suc ℓ)) where
     private
       dne : (P : hProp (ℓ-suc ℓ))
           → ((⟨ P ⟩ → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
       dne P hnn = Sum.rec (λ p → p) (λ np → Empty.rec (hnn np)) (lem P)
 
-      imp-not : {n : ℕ} (φ ψ : Formula ⟪ A ⟫ n) (δ : Vec SM n)
-              → (δ ⊨ᵐ (φ ⇒̇ ψ)) ≡ (δ ⊨ᵐ (¬̇ (φ ∧̇ (¬̇ ψ))))
-      imp-not φ ψ δ = ⇔toPath
-        (λ imp hc → hc .snd (imp (hc .fst)))
-        (λ hn hφ → dne (δ ⊨ᵐ ψ) (λ nψ → hn (hφ , nψ)))
-
-      all-not : {n : ℕ} (ψ : Formula ⟪ A ⟫ (suc n)) (δ : Vec SM n)
-              → (δ ⊨ᵐ (∀̇ ψ)) ≡ (δ ⊨ᵐ (¬̇ (∃̇ (¬̇ ψ))))
-      all-not ψ δ = ⇔toPath
-        (λ hall hex → PT.rec Empty.isProp⊥
-            (λ { (x , hnx) → hnx (hall x) }) hex)
-        (λ hn x → dne ((x ∷ δ) ⊨ᵐ ψ) (λ nx → hn ∣ x , nx ∣₁))
-
     sat-⇒ : {n : ℕ} (φ ψ : Formula ⟪ A ⟫ n)
           → satSet (φ ⇒̇ ψ)
           ≡ allTuples A n ∖ (satSet φ ∩ (allTuples A n ∖ satSet ψ))
     sat-⇒ {n} φ ψ =
-        sat-resp {φ = φ ⇒̇ ψ} {ψ = ¬̇ (φ ∧̇ (¬̇ ψ))} (imp-not φ ψ)
+        sat-resp {φ = φ ⇒̇ ψ} {ψ = ¬̇ (φ ∧̇ (¬̇ ψ))}
+          (λ δ imp hc → hc .snd (imp (hc .fst)))
+          (λ δ hn hφ → dne (δ ⊨ᵐ ψ) (λ nψ → hn (hφ , nψ)))
       ∙ sat-¬ (φ ∧̇ (¬̇ ψ))
       ∙ cong (allTuples A n ∖_)
           (sat-∧ φ (¬̇ ψ) ∙ cong (satSet φ ∩_) (sat-¬ ψ))
@@ -487,7 +715,10 @@ compositions of the cases already proved, with not one new extensionality.
           → satSet (∀̇ ψ)
           ≡ allTuples A n ∖ shiftDown (allTuples A (suc n) ∖ satSet ψ)
     sat-∀ {n} ψ =
-        sat-resp {φ = ∀̇ ψ} {ψ = ¬̇ (∃̇ (¬̇ ψ))} (all-not ψ)
+        sat-resp {φ = ∀̇ ψ} {ψ = ¬̇ (∃̇ (¬̇ ψ))}
+          (λ δ hall hex → PT.rec Empty.isProp⊥
+            (λ { (x , hnx) → hnx (hall x) }) hex)
+          (λ δ hn x → dne ((x ∷ δ) ⊨ᵐ ψ) (λ nx → hn ∣ x , nx ∣₁))
       ∙ sat-¬ (∃̇ (¬̇ ψ))
       ∙ cong (allTuples A n ∖_)
           (sat-∃ (¬̇ ψ) ∙ cong shiftDown (sat-¬ ψ))
@@ -496,17 +727,21 @@ compositions of the cases already proved, with not one new extensionality.
 <!--en-->
 ## Recap
 
-The satisfaction set `satSet`{.Agda} with its two readings; eight
-constructive case equations, `sat-⊥`{.Agda}, `sat-⊤`{.Agda}, `sat-∧`{.Agda},
-`sat-∨`{.Agda}, `sat-¬`{.Agda}, `sat-∈vv`{.Agda}, `sat-≐vv`{.Agda} and
-`sat-∃`{.Agda}; the respect lemma `sat-resp`{.Agda}; and the two classical
-cases `sat-⇒`{.Agda} and `sat-∀`{.Agda}, compositions of the constructive
-ones priced at one excluded middle each. Each equation is an extensional
-identity between a satisfaction set and an operation composition. The atoms
-with constants and the bounded quantifiers join in later commits; the
-normal-form theorem then reads every equation off in one induction.
+The satisfaction set `satSet`{.Agda} with its two readings; nine
+constructive equations against operations, `sat-⊥`{.Agda}, `sat-⊤`{.Agda},
+`sat-∧`{.Agda}, `sat-∨`{.Agda}, `sat-¬`{.Agda}, `sat-∈vv`{.Agda},
+`sat-≐vv`{.Agda}, `sat-≐vc`{.Agda} and `sat-∃`{.Agda}; the respect lemma
+`sat-resp`{.Agda}, whose hypotheses are the two pointwise directions, and on
+it seven constructive reductions, the five remaining atom shapes
+(`red-∈cv`{.Agda}, `red-∈vc`{.Agda}, `red-∈cc`{.Agda}, `red-≐cv`{.Agda},
+`red-≐cc`{.Agda}) and the two bounded quantifiers (`red-∃∈`{.Agda},
+`red-∀∈`{.Agda}); and the two classical cases `sat-⇒`{.Agda} and
+`sat-∀`{.Agda}, priced at one excluded middle each. Every constructor of the
+object language is now covered: what remains for the normal-form theorem is
+the composition-term language and one induction that reads these equations
+off.
 <!--zh-->
 ## 小结
 
-满足集 `satSet`{.Agda} 连同它的两条读式；八条构造性情形等式 `sat-⊥`{.Agda}、`sat-⊤`{.Agda}、`sat-∧`{.Agda}、`sat-∨`{.Agda}、`sat-¬`{.Agda}、`sat-∈vv`{.Agda}、`sat-≐vv`{.Agda} 与 `sat-∃`{.Agda}；换步引理 `sat-resp`{.Agda}；以及两个经典情形 `sat-⇒`{.Agda} 与 `sat-∀`{.Agda}，即各花一份排中律的构造性情形之复合。每条等式都是满足集与运算复合之间的外延等同。带常元的原子与有界量词在后续提交中加入；范式定理届时以一次归纳把每条等式读出。
+满足集 `satSet`{.Agda} 连同它的两条读式；九条对着运算的构造性等式 `sat-⊥`{.Agda}、`sat-⊤`{.Agda}、`sat-∧`{.Agda}、`sat-∨`{.Agda}、`sat-¬`{.Agda}、`sat-∈vv`{.Agda}、`sat-≐vv`{.Agda}、`sat-≐vc`{.Agda} 与 `sat-∃`{.Agda}；假设为两个逐点方向的换步引理 `sat-resp`{.Agda}，与骑于其上的七条构造性化归，即其余五个原子形状 (`red-∈cv`{.Agda}、`red-∈vc`{.Agda}、`red-∈cc`{.Agda}、`red-≐cv`{.Agda}、`red-≐cc`{.Agda}) 与两个有界量词 (`red-∃∈`{.Agda}、`red-∀∈`{.Agda})；以及各花一份排中律的两个经典情形 `sat-⇒`{.Agda} 与 `sat-∀`{.Agda}。对象语言的每个构造子至此皆有着落：范式定理还欠的只是复合项语言，与把这些等式读出的那一次归纳。
 <!--/-->
