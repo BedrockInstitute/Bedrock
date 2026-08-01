@@ -338,6 +338,7 @@ import L.Godel.NormalForm
 import L.Godel.InL
 import L.Godel.Codes
 import L.Godel.Table
+import L.Godel.Name
 import L.Coding.EnvSet
 import L.Coding.Sat
 import L.Coding.Bridge
@@ -455,6 +456,14 @@ The root, stated today and finished over the remaining parts:
   the value is the operation of the children's values, every conjunct read
   through the descriptions and pair readers already in stock. Each clause
   carries a meta shape and both readings; the binary nodes share one frame.
+- `L.Godel.Name`{.Agda}: names for the members of a stage, as arity-one terms.
+  Denotation is evaluation followed by taking values, completeness spends the
+  terms chapter's identification as one transport, and the well-order is
+  assembled rather than invented: a label alphabet by the combinators, trees
+  ordered shortlex, and the tree order pulled back along a picture whose
+  injectivity is a left inverse rather than a discrimination matrix. The
+  exported interface matches the internalized route's chapter member for
+  member.
 - `L.Coding.EnvSet`{.Agda}: the environments over a set of `L` at a fixed length
   form a set of `L`, which is what the clauses that take a complement take it in.
   A small index type, one stage, one separation, and no recursion.
@@ -1008,6 +1017,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Godel.InL`{.Agda}：喂给可构造的实参，诸运算返回可构造的集合，以 `denoteL`{.Agda} 封顶：可构造载体上每个组合子项的每个指称都可构造。全程一台引擎：装下实参的一个阶段、每运算一条经绝对性在外层世界读出的 Δ₀ 定义公式，再经可定义子集之门收回类中；两个移位运算先爬固定级数的阶段。
 - `L.Godel.Codes`{.Agda}：语法成为模型装得下的数据。先是元数打包的子项枚举，然后每项一个遗传有穷的码，即封印数码链上的标签对塔，按构造是 `L` 的元素；每构造子一条展开等式，外加在案定律规定的标签判别件。
 - `L.Godel.Table`{.Agda}：指称表的诸子句，每构造子一条：码带此标签与此载荷、孩子的条目在场、取值是孩子取值上的那个运算，每条合取都经存货中的描述与对读式读出。每条子句携带元层形状与双向读式；二元节点共用一个框架。
+- `L.Godel.Name`{.Agda}：以元数一的项作阶段成员的名字。指称是求值后取值，完备性把项那一章的等同当作一次搬运花掉，良序是组装而非发明的：标签字母表用组合子，树按 shortlex 排序，再沿一幅画拉回，其单射性是一个左逆、而非一张判别矩阵。导出的接口与内化路线那一章逐一对应。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
 - `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
 - `L.Coding.Bridge`{.Agda}：那个取值**是什么**。在载体之上的每个环境处，「属于它」就是「在世界 `(B, ∈)` 中被满足」，而后者正是可定义幂集据以定义的概念；没有这条陈述，从那场递归读出的内部 `Def` 可证地与任何东西都不相符。右端取内层语义，不取相对化在周遭的读法，因为只有内层那种像那个条件一样对有界量词设两道防。`defSet-Sat`{.Agda} 把它直接花在 `L.Definability`{.Agda} 上。登记在案的那份相干性风险没有引爆：把这座桥以内层环境向量为索引之后，量词的扩张就是底族上的前置，于是相干性只剩四条量词子句共享的两条 `refl`{.Agda} 分支，而带截断的那次恢复被关进「一个成员无非就是一个环境」那条推论里。
