@@ -32,29 +32,40 @@ open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset→isL )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
+open import V.Model {ℓ} using ( ∈sucV-inl; self∈sucV )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; Lset→isL; IsOrd; Lset )
+open import L.Axioms.Basic {ℓ} using ( finSet; finSet-in; finSet-out; module FinOf )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
   using ( prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
-        ; sucAtL; sucAtL-adequate )
-open import L.Godel.Table {ℓ} using ( tagPrAt; tagPr-out; tagPr-in )
+        ; sucAtL; sucAtL-adequate; numL )
+open import L.Godel.Table {ℓ} using ( tagPrAt; tagPr-out; tagPr-in; module Denote )
 open import L.Godel.Terms {ℓ}
-  using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK )
-open import L.Godel.Codes {ℓ} using ( module Codes )
-open import L.Ordinal {ℓ} using ( suc-ord; ω-ord; ∈#-elim )
+  using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK
+        ; ⟦_⟧ᴷ )
+open import L.Godel.InL {ℓ} using ( stageFam; denoteL )
+open import L.Godel.Codes {ℓ}
+  using ( module Codes; tagNe; SubK; sizeK; subK; subSplitK; selfIxK; sub-selfK
+        ; interIdxL; interIdxR; unionIdxL; unionIdxR )
+open import L.Ordinal {ℓ} using ( suc-ord; ω-ord; ∈#-elim; #∈ω )
 
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Nat using ( znots; snotz; injSuc; _+_ )
+open import Cubical.Data.Nat.Order using ( _<_ )
 open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId' )
+open import Cubical.Data.FinData.Properties
+  using ( fromℕ'; toFromId'; toℕ<n; module FinSumChar )
 open import Cubical.Data.Bool using ( true; false )
 open import Cubical.Data.Unit using ( tt* )
+import Cubical.Data.Empty as Empty
 open import Cubical.Induction.WellFounded using ( Acc; acc )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )
+  using ( ∈-asFiber; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet; ⁅_,_⁆; ⁅_⁆s )
 open InfinitySet using ( sucV; #_; ω )
@@ -104,6 +115,289 @@ private
   trans⁺ : {u w v : V ℓ} → u ∈⁺ w → w ∈⁺ v → u ∈⁺ v
   trans⁺ p (here h)     = there p h
   trans⁺ p (there q h)  = there (trans⁺ p q) h
+```
+
+<!--en-->
+## The arity of a code
+<!--zh-->
+## 码的元数
+<!--/-->
+
+<!--en-->
+A code determines its arity, and the honest layer of this chapter is built on
+that fact. The proof is one double case split over the eight constructors:
+sixty-four cases in all. The fifty-six off-diagonal cases cannot happen,
+because the two codes carry different tags: both sides rewrite by their code
+equations to a pair with tag `j` on the left and tag `k` on the right, and the
+discrimination helpers reduce the clash to an inequality of natural numbers,
+exactly as the table chapter's twelve clashes do around its own matrix. The
+eight diagonal cases peel the payload with pair injectivity: the leaves and
+the complement read their recorded arity directly, the two binary nodes recurse
+on their first children, and the shift peels its successor with injectivity.
+The recursion is structural on the first argument throughout.
+<!--zh-->
+码决定其元数，本章的诚实层正建立在这一事实上。证明是对八个构造子的一次双重分情形：共六十四个情形。五十六个非对角情形不可能发生，因为两个码携带不同标签：两边都沿各自的码等式重写为左边标签 `j`、右边标签 `k` 的对，判别辅助件把冲突化归为自然数的不等，恰如表章在自己矩阵周围筑起的十二条冲突。八个对角情形以对单射性剥开载荷：诸叶与补直接读出记录的元数，两条二元节点递归于第一个孩子，移位经单射性剥掉后继。递归全程对第一参数结构地缩减。
+<!--/-->
+
+```agda
+module _ (A : V ℓ) (lA : ⟨ isL A ⟩) where
+  private
+    module C = Codes A lA
+
+    neS : {a b : ℕ} → (a ≡ b → Empty.⊥) → suc a ≡ suc b → Empty.⊥
+    neS ne q = ne (injSuc q)
+
+    n1z n2z n3z n4z n5z n6z : {k : ℕ} → _
+    n1z {k} = neS (znots {n = k})
+    n2z {k} = neS (n1z {k})
+    n3z {k} = neS (n2z {k})
+    n4z {k} = neS (n3z {k})
+    n5z {k} = neS (n4z {k})
+    n6z {k} = neS (n5z {k})
+
+    n1s n2s n3s n4s n5s n6s : {k : ℕ} → _
+    n1s {k} = neS (snotz {n = k})
+    n2s {k} = neS (n1s {k})
+    n3s {k} = neS (n2s {k})
+    n4s {k} = neS (n3s {k})
+    n5s {k} = neS (n4s {k})
+    n6s {k} = neS (n5s {k})
+
+  codeArity : {n₁ n₂ : ℕ} (s : KT ⟪ A ⟫ n₁) (s' : KT ⟪ A ⟫ n₂)
+            → C.code s ≡ C.code s' → n₁ ≡ n₂
+  codeArity {n₁} {n₂} allK allK q =
+    #-inj′ (pr-inj (sym (C.code-allK n₁) ∙ q ∙ C.code-allK n₂) .snd)
+  codeArity {n₁} {n₂} allK (selMemK i j) q =
+    Empty.rec (tagNe 0 1 znots (sym (C.code-allK n₁) ∙ q ∙ C.code-selMemK n₂ i j))
+  codeArity {n₁} {n₂} allK (selEqK i j) q =
+    Empty.rec (tagNe 0 2 znots (sym (C.code-allK n₁) ∙ q ∙ C.code-selEqK n₂ i j))
+  codeArity {n₁} {n₂} allK (selEqConK i a) q =
+    Empty.rec (tagNe 0 3 znots (sym (C.code-allK n₁) ∙ q ∙ C.code-selEqConK n₂ i a))
+  codeArity {n₁} {n₂} allK (interK s t) q =
+    Empty.rec (tagNe 0 4 znots (sym (C.code-allK n₁) ∙ q ∙ C.code-interK s t))
+  codeArity {n₁} {n₂} allK (unionK s t) q =
+    Empty.rec (tagNe 0 5 znots (sym (C.code-allK n₁) ∙ q ∙ C.code-unionK s t))
+  codeArity {n₁} {n₂} allK (complK t) q =
+    Empty.rec (tagNe 0 6 znots (sym (C.code-allK n₁) ∙ q ∙ C.code-complK t))
+  codeArity {n₁} {n₂} allK (shiftK t) q =
+    Empty.rec (tagNe 0 7 znots (sym (C.code-allK n₁) ∙ q ∙ C.code-shiftK t))
+  codeArity {n₁} {n₂} (selMemK i j) allK q =
+    Empty.rec (tagNe 1 0 snotz (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-allK n₂))
+  codeArity {n₁} {n₂} (selMemK i j) (selMemK i' j') q =
+    #-inj′ (pr-inj (pr-inj (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-selMemK n₂ i' j') .snd) .fst)
+  codeArity {n₁} {n₂} (selMemK i j) (selEqK i' j') q =
+    Empty.rec (tagNe 1 2 n1z (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-selEqK n₂ i' j'))
+  codeArity {n₁} {n₂} (selMemK i j) (selEqConK i' a') q =
+    Empty.rec (tagNe 1 3 n1z (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-selEqConK n₂ i' a'))
+  codeArity {n₁} {n₂} (selMemK i j) (interK s' t') q =
+    Empty.rec (tagNe 1 4 n1z (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-interK s' t'))
+  codeArity {n₁} {n₂} (selMemK i j) (unionK s' t') q =
+    Empty.rec (tagNe 1 5 n1z (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-unionK s' t'))
+  codeArity {n₁} {n₂} (selMemK i j) (complK t') q =
+    Empty.rec (tagNe 1 6 n1z (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-complK t'))
+  codeArity {n₁} {n₂} (selMemK i j) (shiftK t') q =
+    Empty.rec (tagNe 1 7 n1z (sym (C.code-selMemK n₁ i j) ∙ q ∙ C.code-shiftK t'))
+  codeArity {n₁} {n₂} (selEqK i j) allK q =
+    Empty.rec (tagNe 2 0 snotz (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-allK n₂))
+  codeArity {n₁} {n₂} (selEqK i j) (selMemK i' j') q =
+    Empty.rec (tagNe 2 1 n1s (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-selMemK n₂ i' j'))
+  codeArity {n₁} {n₂} (selEqK i j) (selEqK i' j') q =
+    #-inj′ (pr-inj (pr-inj (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-selEqK n₂ i' j') .snd) .fst)
+  codeArity {n₁} {n₂} (selEqK i j) (selEqConK i' a') q =
+    Empty.rec (tagNe 2 3 n2z (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-selEqConK n₂ i' a'))
+  codeArity {n₁} {n₂} (selEqK i j) (interK s' t') q =
+    Empty.rec (tagNe 2 4 n2z (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-interK s' t'))
+  codeArity {n₁} {n₂} (selEqK i j) (unionK s' t') q =
+    Empty.rec (tagNe 2 5 n2z (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-unionK s' t'))
+  codeArity {n₁} {n₂} (selEqK i j) (complK t') q =
+    Empty.rec (tagNe 2 6 n2z (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-complK t'))
+  codeArity {n₁} {n₂} (selEqK i j) (shiftK t') q =
+    Empty.rec (tagNe 2 7 n2z (sym (C.code-selEqK n₁ i j) ∙ q ∙ C.code-shiftK t'))
+  codeArity {n₁} {n₂} (selEqConK i a) allK q =
+    Empty.rec (tagNe 3 0 snotz (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-allK n₂))
+  codeArity {n₁} {n₂} (selEqConK i a) (selMemK i' j') q =
+    Empty.rec (tagNe 3 1 n1s (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-selMemK n₂ i' j'))
+  codeArity {n₁} {n₂} (selEqConK i a) (selEqK i' j') q =
+    Empty.rec (tagNe 3 2 n2s (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-selEqK n₂ i' j'))
+  codeArity {n₁} {n₂} (selEqConK i a) (selEqConK i' a') q =
+    #-inj′ (pr-inj (pr-inj (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-selEqConK n₂ i' a') .snd) .fst)
+  codeArity {n₁} {n₂} (selEqConK i a) (interK s' t') q =
+    Empty.rec (tagNe 3 4 n3z (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-interK s' t'))
+  codeArity {n₁} {n₂} (selEqConK i a) (unionK s' t') q =
+    Empty.rec (tagNe 3 5 n3z (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-unionK s' t'))
+  codeArity {n₁} {n₂} (selEqConK i a) (complK t') q =
+    Empty.rec (tagNe 3 6 n3z (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-complK t'))
+  codeArity {n₁} {n₂} (selEqConK i a) (shiftK t') q =
+    Empty.rec (tagNe 3 7 n3z (sym (C.code-selEqConK n₁ i a) ∙ q ∙ C.code-shiftK t'))
+  codeArity {n₁} {n₂} (interK s t) allK q =
+    Empty.rec (tagNe 4 0 snotz (sym (C.code-interK s t) ∙ q ∙ C.code-allK n₂))
+  codeArity {n₁} {n₂} (interK s t) (selMemK i' j') q =
+    Empty.rec (tagNe 4 1 n1s (sym (C.code-interK s t) ∙ q ∙ C.code-selMemK n₂ i' j'))
+  codeArity {n₁} {n₂} (interK s t) (selEqK i' j') q =
+    Empty.rec (tagNe 4 2 n2s (sym (C.code-interK s t) ∙ q ∙ C.code-selEqK n₂ i' j'))
+  codeArity {n₁} {n₂} (interK s t) (selEqConK i' a') q =
+    Empty.rec (tagNe 4 3 n3s (sym (C.code-interK s t) ∙ q ∙ C.code-selEqConK n₂ i' a'))
+  codeArity {n₁} {n₂} (interK s t) (interK s' t') q =
+    codeArity s s' (pr-inj (pr-inj (sym (C.code-interK s t) ∙ q ∙ C.code-interK s' t') .snd) .fst)
+  codeArity {n₁} {n₂} (interK s t) (unionK s' t') q =
+    Empty.rec (tagNe 4 5 n4z (sym (C.code-interK s t) ∙ q ∙ C.code-unionK s' t'))
+  codeArity {n₁} {n₂} (interK s t) (complK t') q =
+    Empty.rec (tagNe 4 6 n4z (sym (C.code-interK s t) ∙ q ∙ C.code-complK t'))
+  codeArity {n₁} {n₂} (interK s t) (shiftK t') q =
+    Empty.rec (tagNe 4 7 n4z (sym (C.code-interK s t) ∙ q ∙ C.code-shiftK t'))
+  codeArity {n₁} {n₂} (unionK s t) allK q =
+    Empty.rec (tagNe 5 0 snotz (sym (C.code-unionK s t) ∙ q ∙ C.code-allK n₂))
+  codeArity {n₁} {n₂} (unionK s t) (selMemK i' j') q =
+    Empty.rec (tagNe 5 1 n1s (sym (C.code-unionK s t) ∙ q ∙ C.code-selMemK n₂ i' j'))
+  codeArity {n₁} {n₂} (unionK s t) (selEqK i' j') q =
+    Empty.rec (tagNe 5 2 n2s (sym (C.code-unionK s t) ∙ q ∙ C.code-selEqK n₂ i' j'))
+  codeArity {n₁} {n₂} (unionK s t) (selEqConK i' a') q =
+    Empty.rec (tagNe 5 3 n3s (sym (C.code-unionK s t) ∙ q ∙ C.code-selEqConK n₂ i' a'))
+  codeArity {n₁} {n₂} (unionK s t) (interK s' t') q =
+    Empty.rec (tagNe 5 4 n4s (sym (C.code-unionK s t) ∙ q ∙ C.code-interK s' t'))
+  codeArity {n₁} {n₂} (unionK s t) (unionK s' t') q =
+    codeArity s s' (pr-inj (pr-inj (sym (C.code-unionK s t) ∙ q ∙ C.code-unionK s' t') .snd) .fst)
+  codeArity {n₁} {n₂} (unionK s t) (complK t') q =
+    Empty.rec (tagNe 5 6 n5z (sym (C.code-unionK s t) ∙ q ∙ C.code-complK t'))
+  codeArity {n₁} {n₂} (unionK s t) (shiftK t') q =
+    Empty.rec (tagNe 5 7 n5z (sym (C.code-unionK s t) ∙ q ∙ C.code-shiftK t'))
+  codeArity {n₁} {n₂} (complK t) allK q =
+    Empty.rec (tagNe 6 0 snotz (sym (C.code-complK t) ∙ q ∙ C.code-allK n₂))
+  codeArity {n₁} {n₂} (complK t) (selMemK i' j') q =
+    Empty.rec (tagNe 6 1 n1s (sym (C.code-complK t) ∙ q ∙ C.code-selMemK n₂ i' j'))
+  codeArity {n₁} {n₂} (complK t) (selEqK i' j') q =
+    Empty.rec (tagNe 6 2 n2s (sym (C.code-complK t) ∙ q ∙ C.code-selEqK n₂ i' j'))
+  codeArity {n₁} {n₂} (complK t) (selEqConK i' a') q =
+    Empty.rec (tagNe 6 3 n3s (sym (C.code-complK t) ∙ q ∙ C.code-selEqConK n₂ i' a'))
+  codeArity {n₁} {n₂} (complK t) (interK s' t') q =
+    Empty.rec (tagNe 6 4 n4s (sym (C.code-complK t) ∙ q ∙ C.code-interK s' t'))
+  codeArity {n₁} {n₂} (complK t) (unionK s' t') q =
+    Empty.rec (tagNe 6 5 n5s (sym (C.code-complK t) ∙ q ∙ C.code-unionK s' t'))
+  codeArity {n₁} {n₂} (complK t) (complK t') q =
+    #-inj′ (pr-inj (pr-inj (sym (C.code-complK t) ∙ q ∙ C.code-complK t') .snd) .fst)
+  codeArity {n₁} {n₂} (complK t) (shiftK t') q =
+    Empty.rec (tagNe 6 7 n6z (sym (C.code-complK t) ∙ q ∙ C.code-shiftK t'))
+  codeArity {n₁} {n₂} (shiftK t) allK q =
+    Empty.rec (tagNe 7 0 snotz (sym (C.code-shiftK t) ∙ q ∙ C.code-allK n₂))
+  codeArity {n₁} {n₂} (shiftK t) (selMemK i' j') q =
+    Empty.rec (tagNe 7 1 n1s (sym (C.code-shiftK t) ∙ q ∙ C.code-selMemK n₂ i' j'))
+  codeArity {n₁} {n₂} (shiftK t) (selEqK i' j') q =
+    Empty.rec (tagNe 7 2 n2s (sym (C.code-shiftK t) ∙ q ∙ C.code-selEqK n₂ i' j'))
+  codeArity {n₁} {n₂} (shiftK t) (selEqConK i' a') q =
+    Empty.rec (tagNe 7 3 n3s (sym (C.code-shiftK t) ∙ q ∙ C.code-selEqConK n₂ i' a'))
+  codeArity {n₁} {n₂} (shiftK t) (interK s' t') q =
+    Empty.rec (tagNe 7 4 n4s (sym (C.code-shiftK t) ∙ q ∙ C.code-interK s' t'))
+  codeArity {n₁} {n₂} (shiftK t) (unionK s' t') q =
+    Empty.rec (tagNe 7 5 n5s (sym (C.code-shiftK t) ∙ q ∙ C.code-unionK s' t'))
+  codeArity {n₁} {n₂} (shiftK t) (complK t') q =
+    Empty.rec (tagNe 7 6 n6s (sym (C.code-shiftK t) ∙ q ∙ C.code-complK t'))
+  codeArity {n₁} {n₂} (shiftK t) (shiftK t') q =
+    injSuc (codeArity t t' (pr-inj (sym (C.code-shiftK t) ∙ q ∙ C.code-shiftK t') .snd))
+```
+
+<!--en-->
+## The honest annotation table
+<!--zh-->
+## 诚实注解表
+<!--/-->
+
+<!--en-->
+The honest annotation table writes the arity down, once per subterm. Where the
+approximation records each entry as the sealed pair of a code with its
+denotation, the annotation records the same code paired with the numeral of the
+subterm's arity: the same term enumeration, the same finite set over one stage,
+sealed at birth. The three facts mirror the approximation's three: membership
+at every index, the outward reading back into an index, and self-membership at
+the head. The self-membership proof is the approximation's own, with the
+denotation projection replaced by the numeral's projection.
+<!--zh-->
+诚实注解表把元数写下，每个子项一次。逼近把每个条目记录为码与其指称的封印对，注解则在同一个码上配上该子项元数之数码：同样的项枚举、同样的单阶段有穷集、出生即封印。三条事实镜像逼近的三条：每个索引处的成员、向外读回索引的读式、头处的自身成员。自身成员的证明就是逼近的那条，只是把指称投影换成数码投影。
+<!--/-->
+
+```agda
+  hEntry : SubK ⟪ A ⟫ → S
+  hEntry (m , s) = prʟ (C.codeS s) (numeralL m)
+
+  hEntry-eq : (p : SubK ⟪ A ⟫)
+            → fst (hEntry p) ≡ pr (C.code (p .snd)) (# (p .fst))
+  hEntry-eq (m , s) = prʟ-fst (C.codeS s) (numeralL m)
+    ∙ cong₂ pr refl (numeralL-fst m)
+
+  private
+    hBnd : {n : ℕ} (T : KT ⟪ A ⟫ n)
+         → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ
+           × ((i : Fin (sizeK T)) → ⟨ fst (hEntry (subK T i)) ∈ Lset σ ⟩)) ∥₁
+    hBnd T = stageFam (sizeK T) (λ i → fst (hEntry (subK T i)))
+      (λ i → hEntry (subK T i) .snd)
+
+  opaque
+    hS : {n : ℕ} → KT ⟪ A ⟫ n → S
+    hS T = finSet (sizeK T) (λ i → fst (hEntry (subK T i))) , isl
+      where
+      isl : ⟨ isL (finSet (sizeK T) (λ i → fst (hEntry (subK T i)))) ⟩
+      isl = PT.rec (snd (isL (finSet (sizeK T) (λ i → fst (hEntry (subK T i))))))
+        (λ { (σ , oσ , mem) →
+          FinOf.finSetL σ oσ (sizeK T) (λ i → fst (hEntry (subK T i))) mem })
+        (hBnd T)
+
+    hS-in : {n : ℕ} (T : KT ⟪ A ⟫ n) (i : Fin (sizeK T))
+          → ⟨ fst (hEntry (subK T i)) ∈ fst (hS T) ⟩
+    hS-in T i = finSet-in (sizeK T) (λ j → fst (hEntry (subK T j)))
+      (fst (hEntry (subK T i))) ∣ i , refl ∣₁
+
+    hS-out : {n : ℕ} (T : KT ⟪ A ⟫ n) (z : V ℓ) → ⟨ z ∈ fst (hS T) ⟩
+           → ∥ Σ[ i ∈ Fin (sizeK T) ] (fst (hEntry (subK T i)) ≡ z) ∥₁
+    hS-out T z = finSet-out (sizeK T) (λ j → fst (hEntry (subK T j))) z
+
+  hSelf∈ : {n : ℕ} (t : KT ⟪ A ⟫ n)
+         → ⟨ pr (C.code t) (# n) ∈ fst (hS t) ⟩
+  hSelf∈ {n} t = subst (λ u → ⟨ u ∈ fst (hS t) ⟩)
+    ( hEntry-eq (subK t (selfIxK t))
+    ∙ (λ ι → pr (C.code (sub-selfK t ι .snd)) (# (sub-selfK t ι .fst))) )
+    (hS-in t (selfIxK t))
+```
+
+<!--en-->
+## The functionality of the honest table
+<!--zh-->
+## 诚实表的函数性
+<!--/-->
+
+<!--en-->
+Functionality is exactly the fact that a code determines its arity, read
+through the table: two memberships of the same code force the two recorded
+numerals to agree. The outward reading turns each membership into a subterm
+index, each entry is a code paired with its arity's numeral, pair injectivity
+splits both pairs, the two code components meet through the shared argument,
+and `codeArity` applies. The goal is a path in a set, so both truncations are
+eliminated against set-ness.
+<!--zh-->
+函数性正是「码决定其元数」这一事实经表读出的样子：同一个码的两条成员关系迫使两个被记录的数码一致。向外的读式把每条成员变成子项索引，每个条目都是码与其元数数码的对，对单射性把两个对都拆开，两个码分量经共享的自变量相遇，`codeArity` 随之可用。目标是一条集合中的道路，故两次截断都对着集性消去。
+<!--/-->
+
+```agda
+  hS-fun : {n : ℕ} (T : KT ⟪ A ⟫ n) (u v v' : V ℓ)
+         → ⟨ pr u v ∈ fst (hS T) ⟩ → ⟨ pr u v' ∈ fst (hS T) ⟩ → v ≡ v'
+  hS-fun T u v v' p q = PT.rec (setIsSet v v') step₁ (hS-out T (pr u v) p)
+    where
+    step₁ : Σ[ i ∈ Fin (sizeK T) ] (fst (hEntry (subK T i)) ≡ pr u v) → v ≡ v'
+    step₁ (i , ei) = PT.rec (setIsSet v v') step₂ (hS-out T (pr u v') q)
+      where
+      step₂ : Σ[ j ∈ Fin (sizeK T) ] (fst (hEntry (subK T j)) ≡ pr u v') → v ≡ v'
+      step₂ (j , ej) = vi ∙ cong #_ mi≡mj ∙ vj
+        where
+        qi : pr (C.code (subK T i .snd)) (# (subK T i .fst)) ≡ pr u v
+        qi = sym (hEntry-eq (subK T i)) ∙ ei
+        qj : pr (C.code (subK T j .snd)) (# (subK T j .fst)) ≡ pr u v'
+        qj = sym (hEntry-eq (subK T j)) ∙ ej
+        vi : v ≡ # (subK T i .fst)
+        vi = sym (pr-inj qi .snd)
+        vj : # (subK T j .fst) ≡ v'
+        vj = pr-inj qj .snd
+        ar : C.code (subK T i .snd) ≡ C.code (subK T j .snd)
+        ar = pr-inj qi .fst ∙ sym (pr-inj qj .fst)
+        mi≡mj : subK T i .fst ≡ subK T j .fst
+        mi≡mj = codeArity (subK T i .snd) (subK T j .snd) ar
 ```
 
 <!--en-->
@@ -1215,6 +1509,363 @@ the arity the caller supplied.
 ```
 
 <!--en-->
+## The certificate's fill
+<!--zh-->
+## 证书的填充
+<!--/-->
+
+<!--en-->
+The certificate's fill is the honest side of the bargain: the honest pair of
+tables, the approximation and the annotation over the same term, is certified.
+The route is the approximation family's own structural recursion, now
+recording arities. A pair in the main table is, by the outward reading, the
+entry of some subterm; each constructor case assembles its branch shape from
+the code equation run forwards, the numeral memberships at the recorded arity,
+the index memberships by the numeral-order introduction, the parameter leaf by
+the embedding's membership, and the children's entries and annotations through
+membership functions threaded down the recursion. The thread is grounded at
+the head by the two self-memberships and extended by the approximation's
+monotonicity, now stated twice, once per table. The functionality conjunct is
+the honest table's functionality transported along the h-pin, and the
+per-pair certificates assemble the certificate through the inward reader.
+<!--zh-->
+证书的填充是契约的诚实一侧：诚实的一对表，同一项上的逼近与注解，是受证的。路线是逼近族自己跑的那条结构递归，如今记录元数。主表中的对经向外的读式是某个子项的条目；每个构造子情形以正向运行的码等式、记录元数处的数码成员、经数码序引入的指标成员、嵌入的成员关系的参数叶，以及经递归中穿引的成员函数的孩子条目与孩子注解，装配出分支形状。线头由两条自身成员奠基，并经逼近的单调性延展，而单调性如今陈述两次，每张表一次。函数性合取是诚实表的函数性经 h 钉传输而来，逐对的证书经向内读式组装出整张证书。
+<!--/-->
+
+```agda
+  module CertFill (A : V ℓ) (lA : ⟨ isL A ⟩) where
+    private
+      module C = Codes A lA
+      module D = Denote A lA
+
+      #∈# : (a b : ℕ) → a < b → ⟨ (# a) ∈ˢ (# b) ⟩
+      #∈# a zero (k , p) = Empty.rec (clash k p)
+        where
+        clash : (k : ℕ) → k + suc a ≡ 0 → Empty.⊥
+        clash zero p = snotz p
+        clash (suc k) p = snotz p
+      #∈# a (suc b) (zero , p) =
+        subst (λ w → ⟨ w ∈ˢ sucV (# b) ⟩) (sym (cong #_ (injSuc p))) (self∈sucV (# b))
+      #∈# a (suc b) (suc k , p) =
+        ∈sucV-inl {A = # b} {x = # a} (#∈# a b (k , injSuc p))
+
+      monoInterL : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                 → ⟨ z ∈ fst (D.apxS s) ⟩ → ⟨ z ∈ fst (D.apxS (interK s t)) ⟩
+      monoInterL s t z hz = PT.rec (snd (z ∈ fst (D.apxS (interK s t)))) named
+        (D.apx-out s z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK s) ] (D.entry (subK s i) ≡ z)
+              → ⟨ z ∈ fst (D.apxS (interK s t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (D.apxS (interK s t)) ⟩)
+          (cong D.entry (interIdxL s t i) ∙ q)
+          (D.apx-in (interK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inl i))))
+
+      monoInterR : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                 → ⟨ z ∈ fst (D.apxS t) ⟩ → ⟨ z ∈ fst (D.apxS (interK s t)) ⟩
+      monoInterR s t z hz = PT.rec (snd (z ∈ fst (D.apxS (interK s t)))) named
+        (D.apx-out t z hz)
+        where
+        named : Σ[ j ∈ Fin (sizeK t) ] (D.entry (subK t j) ≡ z)
+              → ⟨ z ∈ fst (D.apxS (interK s t)) ⟩
+        named (j , q) = subst (λ e → ⟨ e ∈ fst (D.apxS (interK s t)) ⟩)
+          (cong D.entry (interIdxR s t j) ∙ q)
+          (D.apx-in (interK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inr j))))
+
+      monoUnionL : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                 → ⟨ z ∈ fst (D.apxS s) ⟩ → ⟨ z ∈ fst (D.apxS (unionK s t)) ⟩
+      monoUnionL s t z hz = PT.rec (snd (z ∈ fst (D.apxS (unionK s t)))) named
+        (D.apx-out s z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK s) ] (D.entry (subK s i) ≡ z)
+              → ⟨ z ∈ fst (D.apxS (unionK s t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (D.apxS (unionK s t)) ⟩)
+          (cong D.entry (unionIdxL s t i) ∙ q)
+          (D.apx-in (unionK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inl i))))
+
+      monoUnionR : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                 → ⟨ z ∈ fst (D.apxS t) ⟩ → ⟨ z ∈ fst (D.apxS (unionK s t)) ⟩
+      monoUnionR s t z hz = PT.rec (snd (z ∈ fst (D.apxS (unionK s t)))) named
+        (D.apx-out t z hz)
+        where
+        named : Σ[ j ∈ Fin (sizeK t) ] (D.entry (subK t j) ≡ z)
+              → ⟨ z ∈ fst (D.apxS (unionK s t)) ⟩
+        named (j , q) = subst (λ e → ⟨ e ∈ fst (D.apxS (unionK s t)) ⟩)
+          (cong D.entry (unionIdxR s t j) ∙ q)
+          (D.apx-in (unionK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inr j))))
+
+      monoCompl : {n : ℕ} (t : KT ⟪ A ⟫ n) (z : V ℓ)
+                → ⟨ z ∈ fst (D.apxS t) ⟩ → ⟨ z ∈ fst (D.apxS (complK t)) ⟩
+      monoCompl t z hz = PT.rec (snd (z ∈ fst (D.apxS (complK t)))) named
+        (D.apx-out t z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK t) ] (D.entry (subK t i) ≡ z)
+              → ⟨ z ∈ fst (D.apxS (complK t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (D.apxS (complK t)) ⟩) q
+          (D.apx-in (complK t) (suc i))
+
+      monoShift : {n : ℕ} (t : KT ⟪ A ⟫ (suc n)) (z : V ℓ)
+                → ⟨ z ∈ fst (D.apxS t) ⟩ → ⟨ z ∈ fst (D.apxS (shiftK t)) ⟩
+      monoShift t z hz = PT.rec (snd (z ∈ fst (D.apxS (shiftK t)))) named
+        (D.apx-out t z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK t) ] (D.entry (subK t i) ≡ z)
+              → ⟨ z ∈ fst (D.apxS (shiftK t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (D.apxS (shiftK t)) ⟩) q
+          (D.apx-in (shiftK t) (suc i))
+
+      hMonoInterL : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                  → ⟨ z ∈ fst (hS A lA s) ⟩ → ⟨ z ∈ fst (hS A lA (interK s t)) ⟩
+      hMonoInterL s t z hz = PT.rec (snd (z ∈ fst (hS A lA (interK s t)))) named
+        (hS-out A lA s z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK s) ] (fst (hEntry A lA (subK s i)) ≡ z)
+              → ⟨ z ∈ fst (hS A lA (interK s t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (hS A lA (interK s t)) ⟩)
+          (cong fst (cong (hEntry A lA) (interIdxL s t i)) ∙ q)
+          (hS-in A lA (interK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inl i))))
+
+      hMonoInterR : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                  → ⟨ z ∈ fst (hS A lA t) ⟩ → ⟨ z ∈ fst (hS A lA (interK s t)) ⟩
+      hMonoInterR s t z hz = PT.rec (snd (z ∈ fst (hS A lA (interK s t)))) named
+        (hS-out A lA t z hz)
+        where
+        named : Σ[ j ∈ Fin (sizeK t) ] (fst (hEntry A lA (subK t j)) ≡ z)
+              → ⟨ z ∈ fst (hS A lA (interK s t)) ⟩
+        named (j , q) = subst (λ e → ⟨ e ∈ fst (hS A lA (interK s t)) ⟩)
+          (cong fst (cong (hEntry A lA) (interIdxR s t j)) ∙ q)
+          (hS-in A lA (interK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inr j))))
+
+      hMonoUnionL : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                  → ⟨ z ∈ fst (hS A lA s) ⟩ → ⟨ z ∈ fst (hS A lA (unionK s t)) ⟩
+      hMonoUnionL s t z hz = PT.rec (snd (z ∈ fst (hS A lA (unionK s t)))) named
+        (hS-out A lA s z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK s) ] (fst (hEntry A lA (subK s i)) ≡ z)
+              → ⟨ z ∈ fst (hS A lA (unionK s t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (hS A lA (unionK s t)) ⟩)
+          (cong fst (cong (hEntry A lA) (unionIdxL s t i)) ∙ q)
+          (hS-in A lA (unionK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inl i))))
+
+      hMonoUnionR : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+                  → ⟨ z ∈ fst (hS A lA t) ⟩ → ⟨ z ∈ fst (hS A lA (unionK s t)) ⟩
+      hMonoUnionR s t z hz = PT.rec (snd (z ∈ fst (hS A lA (unionK s t)))) named
+        (hS-out A lA t z hz)
+        where
+        named : Σ[ j ∈ Fin (sizeK t) ] (fst (hEntry A lA (subK t j)) ≡ z)
+              → ⟨ z ∈ fst (hS A lA (unionK s t)) ⟩
+        named (j , q) = subst (λ e → ⟨ e ∈ fst (hS A lA (unionK s t)) ⟩)
+          (cong fst (cong (hEntry A lA) (unionIdxR s t j)) ∙ q)
+          (hS-in A lA (unionK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inr j))))
+
+      hMonoCompl : {n : ℕ} (t : KT ⟪ A ⟫ n) (z : V ℓ)
+                 → ⟨ z ∈ fst (hS A lA t) ⟩ → ⟨ z ∈ fst (hS A lA (complK t)) ⟩
+      hMonoCompl t z hz = PT.rec (snd (z ∈ fst (hS A lA (complK t)))) named
+        (hS-out A lA t z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK t) ] (fst (hEntry A lA (subK t i)) ≡ z)
+              → ⟨ z ∈ fst (hS A lA (complK t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (hS A lA (complK t)) ⟩) q
+          (hS-in A lA (complK t) (suc i))
+
+      hMonoShift : {n : ℕ} (t : KT ⟪ A ⟫ (suc n)) (z : V ℓ)
+                 → ⟨ z ∈ fst (hS A lA t) ⟩ → ⟨ z ∈ fst (hS A lA (shiftK t)) ⟩
+      hMonoShift t z hz = PT.rec (snd (z ∈ fst (hS A lA (shiftK t)))) named
+        (hS-out A lA t z hz)
+        where
+        named : Σ[ i ∈ Fin (sizeK t) ] (fst (hEntry A lA (subK t i)) ≡ z)
+              → ⟨ z ∈ fst (hS A lA (shiftK t)) ⟩
+        named (i , q) = subst (λ e → ⟨ e ∈ fst (hS A lA (shiftK t)) ⟩) q
+          (hS-in A lA (shiftK t) (suc i))
+
+    certClause : {m : ℕ} (T : KT ⟪ A ⟫ m) (i : Fin (sizeK T)) {n : ℕ}
+               → (g h a : Fin n) (γ : S ^ n)
+               → ((z : V ℓ) → ⟨ z ∈ fst (D.apxS T) ⟩ → ⟨ z ∈ fst (lookup g γ) ⟩)
+               → ((z : V ℓ) → ⟨ z ∈ fst (hS A lA T) ⟩ → ⟨ z ∈ fst (lookup h γ) ⟩)
+               → fst (lookup a γ) ≡ A
+               → CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                   (C.code (subK T i .snd))
+    certClause {m} allK zero g h a γ embG embH qa = all-cont
+      where
+      all-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                   (C.code allK)
+      all-cont = inl ( (# m , numL m)
+        , ( #∈ω m
+          , ( C.code-allK m
+            , embH (pr (C.code allK) (# m)) (hSelf∈ A lA allK) ) ) )
+    certClause {m} (selMemK i j) zero g h a γ embG embH qa = selMem-cont
+      where
+      selMem-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                      (C.code (selMemK i j))
+      selMem-cont = inr (inl
+        ( (# m , numL m) , (# (toℕ i) , numL (toℕ i)) , (# (toℕ j) , numL (toℕ j))
+        , ( #∈ω m
+          , ( #∈# (toℕ i) m (toℕ<n i)
+            , ( #∈# (toℕ j) m (toℕ<n j)
+              , ( C.code-selMemK m i j
+                , embH (pr (C.code (selMemK i j)) (# m)) (hSelf∈ A lA (selMemK i j)) ) ) ) ) ) )
+    certClause {m} (selEqK i j) zero g h a γ embG embH qa = selEq-cont
+      where
+      selEq-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                     (C.code (selEqK i j))
+      selEq-cont = inr (inr (inl
+        ( (# m , numL m) , (# (toℕ i) , numL (toℕ i)) , (# (toℕ j) , numL (toℕ j))
+        , ( #∈ω m
+          , ( #∈# (toℕ i) m (toℕ<n i)
+            , ( #∈# (toℕ j) m (toℕ<n j)
+              , ( C.code-selEqK m i j
+                , embH (pr (C.code (selEqK i j)) (# m)) (hSelf∈ A lA (selEqK i j)) ) ) ) ) ) ) )
+    certClause {m} (selEqConK i a') zero g h a γ embG embH qa = con-cont
+      where
+      con-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                   (C.code (selEqConK i a'))
+      con-cont = inr (inr (inr (inl
+        ( (# m , numL m) , (# (toℕ i) , numL (toℕ i)) , C.paramS a'
+        , ( #∈ω m
+          , ( #∈# (toℕ i) m (toℕ<n i)
+            , ( subst (λ w → ⟨ ⟪ A ⟫↪ a' ∈ˢ w ⟩) (sym qa)
+                  (∈∈ₛ {a = ⟪ A ⟫↪ a'} {b = A} .snd (∈ₛ⟪ A ⟫↪ a'))
+              , ( C.code-selEqConK m i a'
+                , embH (pr (C.code (selEqConK i a')) (# m)) (hSelf∈ A lA (selEqConK i a')) ) ) ) ) ) ) ) )
+    certClause {m} (interK u v) zero g h a γ embG embH qa = inter-cont
+      where
+      inter-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                     (C.code (interK u v))
+      inter-cont = inr (inr (inr (inr (inl
+        ( C.codeS u , C.codeS v , (# m , numL m)
+        , (⟦_⟧ᴷ A u , denoteL A lA u) , (⟦_⟧ᴷ A v , denoteL A lA v)
+        , ( C.code-interK u v
+          , ( #∈ω m
+            , ( embG (pr (C.code u) (⟦_⟧ᴷ A u))
+                  (monoInterL u v (pr (C.code u) (⟦_⟧ᴷ A u)) (D.entrySelf∈ u))
+              , ( embG (pr (C.code v) (⟦_⟧ᴷ A v))
+                    (monoInterR u v (pr (C.code v) (⟦_⟧ᴷ A v)) (D.entrySelf∈ v))
+                , ( embH (pr (C.code (interK u v)) (# m)) (hSelf∈ A lA (interK u v))
+                  , ( embH (pr (C.code u) (# m))
+                        (hMonoInterL u v (pr (C.code u) (# m)) (hSelf∈ A lA u))
+                    , embH (pr (C.code v) (# m))
+                        (hMonoInterR u v (pr (C.code v) (# m)) (hSelf∈ A lA v)) ) ) ) ) ) ) )))))
+    certClause {m} (unionK u v) zero g h a γ embG embH qa = union-cont
+      where
+      union-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                     (C.code (unionK u v))
+      union-cont = inr (inr (inr (inr (inr (inl
+        ( C.codeS u , C.codeS v , (# m , numL m)
+        , (⟦_⟧ᴷ A u , denoteL A lA u) , (⟦_⟧ᴷ A v , denoteL A lA v)
+        , ( C.code-unionK u v
+          , ( #∈ω m
+            , ( embG (pr (C.code u) (⟦_⟧ᴷ A u))
+                  (monoUnionL u v (pr (C.code u) (⟦_⟧ᴷ A u)) (D.entrySelf∈ u))
+              , ( embG (pr (C.code v) (⟦_⟧ᴷ A v))
+                    (monoUnionR u v (pr (C.code v) (⟦_⟧ᴷ A v)) (D.entrySelf∈ v))
+                , ( embH (pr (C.code (unionK u v)) (# m)) (hSelf∈ A lA (unionK u v))
+                  , ( embH (pr (C.code u) (# m))
+                        (hMonoUnionL u v (pr (C.code u) (# m)) (hSelf∈ A lA u))
+                    , embH (pr (C.code v) (# m))
+                        (hMonoUnionR u v (pr (C.code v) (# m)) (hSelf∈ A lA v)) ) ) ) ) ) ) ))))))
+    certClause {m} (complK t) zero g h a γ embG embH qa = compl-cont
+      where
+      compl-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                     (C.code (complK t))
+      compl-cont = inr (inr (inr (inr (inr (inr (inl
+        ( (# m , numL m) , C.codeS t , (⟦_⟧ᴷ A t , denoteL A lA t)
+        , ( #∈ω m
+          , ( C.code-complK t
+            , ( embG (pr (C.code t) (⟦_⟧ᴷ A t))
+                  (monoCompl t (pr (C.code t) (⟦_⟧ᴷ A t)) (D.entrySelf∈ t))
+              , ( embH (pr (C.code (complK t)) (# m)) (hSelf∈ A lA (complK t))
+                , embH (pr (C.code t) (# m))
+                    (hMonoCompl t (pr (C.code t) (# m)) (hSelf∈ A lA t)) ) ) ) ) )))))))
+    certClause {m} (shiftK t) zero g h a γ embG embH qa = shift-cont
+      where
+      shift-cont : CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                     (C.code (shiftK t))
+      shift-cont = inr (inr (inr (inr (inr (inr (inr
+        ( C.codeS t , (# m , numL m) , (# (suc m) , numL (suc m))
+        , (⟦_⟧ᴷ A t , denoteL A lA t)
+        , ( C.code-shiftK t
+          , ( #∈ω m
+            , ( refl
+              , ( embG (pr (C.code t) (⟦_⟧ᴷ A t))
+                    (monoShift t (pr (C.code t) (⟦_⟧ᴷ A t)) (D.entrySelf∈ t))
+                , ( embH (pr (C.code (shiftK t)) (# m)) (hSelf∈ A lA (shiftK t))
+                  , embH (pr (C.code t) (# (suc m)))
+                      (hMonoShift t (pr (C.code t) (# (suc m))) (hSelf∈ A lA t)) ) ) ) ) ))))))))
+    certClause (interK u v) (suc k') g h a γ embG embH qa =
+      goSplit (FinSumChar.inv (sizeK u) (sizeK v) k')
+      where
+      goSplit : (x' : Fin (sizeK u) ⊎ Fin (sizeK v))
+              → CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                  (C.code (subSplitK u v x' .snd))
+      goSplit (inl i') = certClause u i' g h a γ
+        (λ z hz → embG z (monoInterL u v z hz))
+        (λ z hz → embH z (hMonoInterL u v z hz))
+        qa
+      goSplit (inr j') = certClause v j' g h a γ
+        (λ z hz → embG z (monoInterR u v z hz))
+        (λ z hz → embH z (hMonoInterR u v z hz))
+        qa
+    certClause (unionK u v) (suc k') g h a γ embG embH qa =
+      goSplit (FinSumChar.inv (sizeK u) (sizeK v) k')
+      where
+      goSplit : (x' : Fin (sizeK u) ⊎ Fin (sizeK v))
+              → CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                  (C.code (subSplitK u v x' .snd))
+      goSplit (inl i') = certClause u i' g h a γ
+        (λ z hz → embG z (monoUnionL u v z hz))
+        (λ z hz → embH z (hMonoUnionL u v z hz))
+        qa
+      goSplit (inr j') = certClause v j' g h a γ
+        (λ z hz → embG z (monoUnionR u v z hz))
+        (λ z hz → embH z (hMonoUnionR u v z hz))
+        qa
+    certClause (complK t) (suc k') g h a γ embG embH qa =
+      certClause t k' g h a γ
+        (λ z hz → embG z (monoCompl t z hz))
+        (λ z hz → embH z (hMonoCompl t z hz))
+        qa
+    certClause (shiftK t) (suc k') g h a γ embG embH qa =
+      certClause t k' g h a γ
+        (λ z hz → embG z (monoShift t z hz))
+        (λ z hz → embH z (hMonoShift t z hz))
+        qa
+
+    certApx : {n' : ℕ} (T : KT ⟪ A ⟫ n') {n : ℕ} (g h a : Fin n) (γ : S ^ n)
+            → fst (lookup g γ) ≡ fst (D.apxS T)
+            → fst (lookup h γ) ≡ fst (hS A lA T)
+            → fst (lookup a γ) ≡ A
+            → ⟨ γ ⊨ CertAt g h a ⟩
+    certApx T g h a γ qg qh qa = Cert-in g h a γ hstep xstep
+      where
+      hstep : (u v v' : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup h γ) ⟩
+            → ⟨ pr (fst u) (fst v') ∈ fst (lookup h γ) ⟩
+            → fst v ≡ fst v'
+      hstep u v v' p q = hS-fun A lA T (fst u) (fst v) (fst v')
+        (subst (λ w → ⟨ pr (fst u) (fst v) ∈ w ⟩) qh p)
+        (subst (λ w → ⟨ pr (fst u) (fst v') ∈ w ⟩) qh q)
+
+      xstep : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup g γ) ⟩
+            → ∥ CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                  (fst x) ∥₁
+      xstep x y e = PT.rec PT.squash₁ named
+        (D.apx-out T (pr (fst x) (fst y))
+          (subst (λ w → ⟨ pr (fst x) (fst y) ∈ w ⟩) qg e))
+        where
+        named : Σ[ i ∈ Fin (sizeK T) ] (D.entry (subK T i) ≡ pr (fst x) (fst y))
+              → ∥ CertOf (fst (lookup a γ)) (fst (lookup g γ)) (fst (lookup h γ))
+                    (fst x) ∥₁
+        named (i , q) =
+          subst (λ u → ∥ CertOf (fst (lookup a γ)) (fst (lookup g γ))
+                            (fst (lookup h γ)) u ∥₁)
+            (pr-inj (sym (D.entry-eq (subK T i)) ∙ q) .fst)
+            ∣ certClause T i g h a γ embG embH qa ∣₁
+          where
+          embG : (z : V ℓ) → ⟨ z ∈ fst (D.apxS T) ⟩ → ⟨ z ∈ fst (lookup g γ) ⟩
+          embG z hz = subst (λ w → ⟨ z ∈ w ⟩) (sym qg) hz
+          embH : (z : V ℓ) → ⟨ z ∈ fst (hS A lA T) ⟩ → ⟨ z ∈ fst (lookup h γ) ⟩
+          embH z hz = subst (λ w → ⟨ z ∈ w ⟩) (sym qh) hz
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -1226,10 +1877,12 @@ branch pins its tag by a sealed numeral, its payload pieces as members of ω or
 of the carrier, its children in the main table, and its annotations in a
 functional table, so every numeral-shaped leaf is genuinely numeral, every
 index genuinely sits inside its numeral, and every annotation is unique and
-trustworthy. Honesty delivers the payoff: every certified pair is read back,
-at its unique annotation, as the code of an honest term, by running the eight
-code equations backwards on the transitive closure of membership. What
-remains is the step body and its two laws, where this layer pays off.
+trustworthy. The certificate now has both sides: the fill certifies the honest
+pair of tables by the same structural recursion the approximation family runs,
+now recording arities, and honesty reads every certified pair back, at its
+unique annotation, as the code of an honest term, by running the eight code
+equations backwards on the transitive closure of membership. What remains is
+the step body and its two laws, where this layer pays off.
 <!--zh-->
-证书只用局部条件描述塔的一步。每个分支以封印数码钉住标签，以 ω 或载体钉住载荷诸件，以主表钉住孩子，并以函数性的表钉住注解，故每个数码形叶真是数码，每个指标真在其数码之内，每条注解唯一而可信任。诚实性交付了兑现：每个受证的对在唯一注解处读回为诚实项的码，办法是在成员关系的传递闭包上反向运行八条码等式。剩下的工作是步本体及其两条定律，也是这一层兑现之处。
+证书只用局部条件描述塔的一步。每个分支以封印数码钉住标签，以 ω 或载体钉住载荷诸件，以主表钉住孩子，并以函数性的表钉住注解，故每个数码形叶真是数码，每个指标真在其数码之内，每条注解唯一而可信任。证书如今两侧俱全：填充以逼近族同一条结构递归使诚实的一对表受证，如今记录元数；诚实性再把每个受证的对在唯一注解处读回为诚实项的码，办法是在成员关系的传递闭包上反向运行八条码等式。剩下的工作是步本体及其两条定律，也是这一层兑现之处。
 <!--/-->
