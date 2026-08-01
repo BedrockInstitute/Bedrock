@@ -12,10 +12,13 @@ satisfaction set survives a shift of all variables, and the forward pinning
 inclusion, cutting the full extension down to the constant's singleton, the
 two halves of the family-extension equation the kinded invariant's
 constant-atom clause will consume; and the singleton family, the one operation
-the delivered stock is missing, with its membership laws. The closure
-recursion itself is the next chapter's work.
+the delivered stock is missing, with its membership laws, its description, and
+its constructibility. The reverse pinning inclusion completes the pair, and
+the full family-extension equation assembled from the renaming law and the
+two inclusions now stands whole, the shape the kinded invariant's constant-atom
+clause will consume. The closure recursion itself is the next chapter's work.
 <!--zh-->
-选项 B 的闭包塔把内部塔重新奠基在带种类的闭包上：元数索引的表之诸层，每层是一轮运算像，切口在零号切片。本章铺设闭包将要花掉的元层地基。四件物品到场：取值泛化，说元组族的首条目在每个正元数处跑遍整个载体；两条选择等式，把满足集上的一次选择读作与选中原子的一次合取；变量变换律，说满足集经全体变元移位而存活，与正向钉住包含，把整个扩张裁到常元的单点集，即带种类不变量之常元原子子句将要消费的族扩张等式的两半；以及单例族，即已交付存货缺掉的那一个运算，连同它的隶属定律。闭包递归本身是下一章的工作。
+选项 B 的闭包塔把内部塔重新奠基在带种类的闭包上：元数索引的表之诸层，每层是一轮运算像，切口在零号切片。本章铺设闭包将要花掉的元层地基。四件物品到场：取值泛化，说元组族的首条目在每个正元数处跑遍整个载体；两条选择等式，把满足集上的一次选择读作与选中原子的一次合取；变量变换律，说满足集经全体变元移位而存活，与正向钉住包含，把整个扩张裁到常元的单点集，即带种类不变量之常元原子子句将要消费的族扩张等式的两半；以及单例族，即已交付存货缺掉的那一个运算，连同它的隶属定律、描述与可构造性。反向钉住包含补全包含对，而由变量变换律与两条包含装配出的完整族扩张等式现已整体立住，即带种类不变量之常元原子子句将要消费的形状。闭包递归本身是下一章的工作。
 <!--/-->
 
 ```agda
@@ -29,14 +32,22 @@ module L.Godel.Closure {ℓ : Level} where
 
 open import FOL.Syntax
   using ( Formula; var; con
-        ; _∈̇_; _≐_; _∧̇_ )
+        ; _∈̇_; _≐_; _∧̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Renaming using ( renameFo )
 import FOL.Manipulation.Renaming as Renaming
+import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( extensionalV; 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import V.Model {ℓ} using ( self∈sucV; numeralV≡# )
 open import L.Coding.Environment {ℓ} using ( lookup-spec; cons )
 open import L.Definability {ℓ} using ( module DefOf )
+open import L.Constructible {ℓ}
+  using ( isL; isL-trans; Lset; Lset-mono; Lset-layer; layer-trans
+        ; Lset-in; 𝒟ₒ-intro )
+open import L.Ordinal {ℓ} using ( suc-ord )
+open import L.Axioms.Basic {ℓ} using ( defSet→isL; isL-directed )
+open import L.Coding.Model {ℓ} using ( extAt )
+open import L.Coding.InL {ℓ} using ( sglL )
 open import L.Godel.Operations {ℓ}
   using ( _∩_; ∩-in; ∩-out
         ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
@@ -47,6 +58,7 @@ open import L.Godel.Operations {ℓ}
         ; singleton-self; singleton-in; singleton-out )
 open import L.Godel.Tuples {ℓ}
   using ( allTuples; allTuples-suc; tuple; tuple-entry; tuple-extend )
+open import L.Godel.Definable {ℓ} using ( module Describes )
 
 open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Foundations.Prelude using ( subst2 )
@@ -61,7 +73,7 @@ open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; sett; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber )
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
@@ -494,12 +506,17 @@ extended by the constant, so the extension itself must be a satisfaction set.
 The statement pins the shape: extending a satisfaction set by a constant is
 the satisfaction set of the constant-pinned, shifted formula, the formula
 whose fresh first variable records the constant and whose remaining variables
-are the original ones shifted up by one. Two lemmas compose it: the renaming
-law, saying a satisfaction set survives a shift of all variables, and the
-pinning law, saying the equality atom at the fresh variable cuts the full
-extension down to the constant's singleton.
+are the original ones shifted up by one. The equation now stands whole,
+assembled from the renaming law and the pinning inclusion pair: the forward
+direction, saying the equality atom at the fresh variable cuts the full
+extension down to the constant's singleton, and its reverse, saying every
+member of the singleton extension records the constant at the fresh key. The
+kinded invariant's constant-atom clause will consume the equation to trade
+the extended family for the pinned, shifted formula's satisfaction set, and
+then read the selection off the conjunction with the selection equations of
+this chapter.
 <!--zh-->
-常元原子复合体的引擎，形状即带种类不变量的族扩张子句将要消费的样子。把 `Terms.sound` 的 `selEqConK` 情形反向读：该项是「被常元扩张的诸赋值之族」上一次选择之后的移位，故扩张本身必须是满足集。陈述把形状钉死：满足集被常元扩张，就是「钉住常元并移位后的公式」的满足集，即新首变元记录常元、其余变元整体上移一位的那条公式。两条引理把它复合出来：变量变换律，说满足集经全体变元移位而存活；钉住律，说新变元处的等词原子把整个扩张裁到常元的单点集。
+常元原子复合体的引擎，形状即带种类不变量的族扩张子句将要消费的样子。把 `Terms.sound` 的 `selEqConK` 情形反向读：该项是「被常元扩张的诸赋值之族」上一次选择之后的移位，故扩张本身必须是满足集。陈述把形状钉死：满足集被常元扩张，就是「钉住常元并移位后的公式」的满足集，即新首变元记录常元、其余变元整体上移一位的那条公式。等式现已整体立住，由变量变换律与钉住包含对装配而成：正向说新变元处的等词原子把整个扩张裁到常元的单点集，反向说单点扩张的每个成员都在新键处记录常元。带种类不变量之常元原子子句将消费这条等式，把被扩张的族换成「钉住常元并移位后的公式」的满足集，再沿本章的选择等式把选择读下去。
 <!--/-->
 
 ```agda
@@ -571,11 +588,18 @@ carrier's members as the value family the extension consumes, so the closure's
 level table must contain it. The definition follows the operations idiom: one
 direct `sett`, no union, one index telescope, and no `⋃`-tower in the index,
 so no seal is needed at the birth site. Its two membership laws read the
-fiber, and the description reuses the singleton reader from the bridge
-chapter, whose two directions the defining formula at a stage makes
-definitional.
+fiber. Its internal face has two more pieces, both what the closure recursion
+will consume in the next batch. The description `singletonsAt` sits in the
+`Describes` frame: the body exists a member of the carrier slot whose
+singleton the bound member is, and both readers run at variable slots and
+environments. The singleton atom class `sglAt′` is private in the bridge
+chapter, so it is restated locally, exactly as this chapter restated its
+satisfaction machinery. The constructibility `singletonsL` follows the bridge
+chapter's pattern: one stage from directedness, the defining formula over the
+next stage, and `defSet→isL`, with the singleton climb restated locally after
+its precedent there.
 <!--zh-->
-已交付存货缺掉的那一个运算，也是切探针找到的价目项。常元原子复合体需要「载体成员的诸单点集」之族作为扩张所消费的取值族，故闭包的表层必须装下它。定义遵循运算章的行事：一个直接的 `sett`，没有并，一个索引望远镜，索引里没有 `⋃` 塔，故诞生处无需封印。它的两条隶属定律读出纤维，而描述复用桥梁章的单点读式，其两个方向被阶段处的定义公式变得定义性。
+已交付存货缺掉的那一个运算，也是切探针找到的价目项。常元原子复合体需要「载体成员的诸单点集」之族作为扩张所消费的取值族，故闭包的表层必须装下它。定义遵循运算章的行事：一个直接的 `sett`，没有并，一个索引望远镜，索引里没有 `⋃` 塔，故诞生处无需封印。它的两条隶属定律读出纤维。它的内面还有两件，皆为闭包递归下一批将要消费之物。描述 `singletonsAt` 坐进 `Describes` 框架：体存在一个载体槽位的成员，使被描述的成员成为它的单点集，两条读式都立于可变槽位与环境。单点原子类 `sglAt′` 在桥梁章是私有的，故像本章重述满足机制那样在本地重述。可构造性 `singletonsL` 走桥梁章的行事：从有向性取一个阶段，在下一阶段写下定义公式，再经 `defSet→isL` 关门，单点爬升按那里的先例本地重述。
 <!--/-->
 
 ```agda
@@ -592,6 +616,221 @@ definitional.
     ⟪ X ⟫↪ m
     , ∈∈ₛ {a = ⟪ X ⟫↪ m} {b = X} .snd (∈ₛ⟪ X ⟫↪ m)
     , sym e }
+
+  -- The singleton atom class is restated locally: `sglAt′` is private in the
+  -- bridge chapter, and the description needs it as a reader over this
+  -- chapter's carrier, exactly as the satisfaction machinery was restated.
+  private
+    sglAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} → Fin n → Fin n → Formula K n
+    sglAt′ k i = (var i ∈̇ var k) ∧̇ (∀̇∈ (var k) (var zero ≐ var (suc i)))
+
+    module SglDesc where
+      module Abs = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+      SL : Type (ℓ-suc ℓ)
+      SL = Σ[ x ∈ V ℓ ] ⟨ isL x ⟩
+      open Abs using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+
+      singletonsAt : {n : ℕ} → Fin n → Fin n → Formula SL n
+      singletonsAt {n} k i =
+        extAt k (∃̇∈ (var (suc i)) (sglAt′ {n = suc (suc n)} (suc zero) zero))
+
+      module _ {n : ℕ} (k i : Fin n) (γ : SL ^ n) where
+        private
+          X : V ℓ
+          X = fst (lookup i γ)
+
+          Φ : Formula SL (suc n)
+          Φ = ∃̇∈ (var (suc i)) (sglAt′ {n = suc (suc n)} (suc zero) zero)
+
+          memL : (y : V ℓ) → ⟨ y ∈ singletons X ⟩ → ⟨ isL y ⟩
+          memL y hy = PT.rec (snd (isL y))
+            (λ { (x , hx , e) → subst (λ w → ⟨ isL w ⟩) (sym e)
+              (sglL (isL-trans {x = X} {y = x} hx (lookup i γ .snd))) })
+            (singletons-out {X = X} {w = y} hy)
+
+          read : (z : SL) → ⟨ (z ∷ γ) ⊨ Φ ⟩ → ⟨ fst z ∈ singletons X ⟩
+          read z hz = PT.rec (snd (fst z ∈ singletons X)) build hz
+            where
+            build : Σ[ x ∈ SL ] (⟨ fst x ∈ˢ fst (lookup i γ) ⟩
+                     × ⟨ (x ∷ z ∷ γ) ⊨ sglAt′ {n = suc (suc n)} (suc zero) zero ⟩)
+                  → ⟨ fst z ∈ singletons X ⟩
+            build (x , hx , s) =
+              let z≡ : fst z ≡ ⁅ fst x ⁆s
+                  z≡ = extensionality (fst z) ⁅ fst x ⁆s (sub₁ , sub₂)
+              in subst (λ w → ⟨ w ∈ singletons X ⟩) (sym z≡)
+                   (singletons-in {X = X} {x = fst x} hx)
+              where
+              sub₁ : ⟨ fst z ⊆ ⁅ fst x ⁆s ⟩
+              sub₁ v v∈ₛ = ∈∈ₛ {a = v} {b = ⁅ fst x ⁆s} .fst
+                (singleton-in (s₂ v v∈z))
+                where
+                v∈z : ⟨ v ∈ fst z ⟩
+                v∈z = ∈∈ₛ {a = v} {b = fst z} .snd v∈ₛ
+                s₂ : (v : V ℓ) → ⟨ v ∈ fst z ⟩ → v ≡ fst x
+                s₂ v v∈z =
+                  s .snd (v , isL-trans {x = fst z} {y = v} v∈z (z .snd))
+                       v∈z
+              sub₂ : ⟨ ⁅ fst x ⁆s ⊆ fst z ⟩
+              sub₂ v v∈ₛ = ∈∈ₛ {a = v} {b = fst z} .fst
+                (subst (λ w → ⟨ w ∈ fst z ⟩)
+                  (sym (singleton-out (∈∈ₛ {a = v} {b = ⁅ fst x ⁆s} .snd v∈ₛ)))
+                  (s .fst))
+
+          fill : (z : SL) → ⟨ fst z ∈ singletons X ⟩ → ⟨ (z ∷ γ) ⊨ Φ ⟩
+          fill z hz = PT.rec (snd ((z ∷ γ) ⊨ Φ)) build
+            (singletons-out {X = X} {w = fst z} hz)
+            where
+            build : Σ[ v ∈ V ℓ ] (⟨ v ∈ X ⟩ × (fst z ≡ ⁅ v ⁆s))
+                  → ⟨ (z ∷ γ) ⊨ Φ ⟩
+            build (v , hv , e) =
+              ∣ ( v , isL-trans {x = X} {y = v} hv (lookup i γ .snd) )
+              , hv
+              , ( subst (λ w → ⟨ v ∈ w ⟩) (sym e) (singleton-self v)
+                , λ y y∈z →
+                    singleton-out
+                      (subst (λ w → ⟨ fst y ∈ w ⟩) e
+                        y∈z) )
+              ∣₁
+
+          module D = Describes k Φ γ (singletons X) memL read fill
+
+        singletonsAt-out : ⟨ γ ⊨ singletonsAt k i ⟩
+                         → fst (lookup k γ) ≡ singletons X
+        singletonsAt-out = D.describes-out
+
+        singletonsAt-in : fst (lookup k γ) ≡ singletons X
+                        → ⟨ γ ⊨ singletonsAt k i ⟩
+        singletonsAt-in = D.describes-in
+
+    -- The singleton climb restated locally, `sglUp`-class: a member of a
+    -- stage has its singleton in the next stage, proved through the defining
+    -- formula `var zero ≐ con mx` and the definable-subset door.
+    sglUp-mini : (σ : V ℓ) {x : V ℓ} → ⟨ x ∈ Lset σ ⟩ → ⟨ ⁅ x ⁆s ∈ Lset (sucV σ) ⟩
+    sglUp-mini σ {x} x∈ = Lset-in (sucV σ) σ ⁅ x ⁆s (self∈sucV σ)
+      (𝒟ₒ-intro (Lset σ) ⁅ x ⁆s ∣ Φ , defSet≡ ∣₁)
+      where
+      module DefA = DefOf (Lset σ)
+      mx = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+      qx : ⟪ Lset σ ⟫↪ mx ≡ x
+      qx = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
+      Φ : Formula ⟪ Lset σ ⟫ 1
+      Φ = var zero ≐ con mx
+      defSet≡ : DefA.defSet Φ ≡ ⁅ x ⁆s
+      defSet≡ = extensionality (DefA.defSet Φ) ⁅ x ⁆s (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet Φ ⊆ ⁅ x ⁆s ⟩
+        sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⁅ x ⁆s))
+          (λ { ((m , h) , q) →
+            subst (λ w → ⟨ w ∈ₛ ⁅ x ⁆s ⟩) q
+              (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = ⁅ x ⁆s} .fst
+                (singleton-in
+                  (subst ⟨_⟩ (DefA.defSet-mem Φ m) ∣ (m , h) , refl ∣₁ ∙ qx))) })
+          (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
+        sub₂ : ⟨ ⁅ x ⁆s ⊆ DefA.defSet Φ ⟩
+        sub₂ y y∈ₛ = subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) (qx ∙ sym ex)
+          (∈∈ₛ {a = ⟪ Lset σ ⟫↪ mx} {b = DefA.defSet Φ} .fst
+            (subst ⟨_⟩ (sym (DefA.defSet-mem Φ mx)) refl))
+          where
+          ex : y ≡ x
+          ex = singleton-out (∈∈ₛ {a = y} {b = ⁅ x ⁆s} .snd y∈ₛ)
+
+    module SglFam (X σ : V ℓ) (X∈ : ⟨ X ∈ Lset σ ⟩) where
+      module DefA = DefOf (Lset (sucV σ))
+      Atr = layer-trans (Lset-layer σ)
+
+      E : ⟪ Lset (sucV σ) ⟫ → V ℓ
+      E m = ⟪ Lset (sucV σ) ⟫↪ m
+
+      X∈' : ⟨ X ∈ Lset (sucV σ) ⟩
+      X∈' = Lset-mono {sucV σ} {σ} (self∈sucV σ) X∈
+      mX = ∈-asFiber {a = X} {b = Lset (sucV σ)} X∈' .fst
+      qX : E mX ≡ X
+      qX = ∈-asFiber {a = X} {b = Lset (sucV σ)} X∈' .snd
+
+      Φ : Formula ⟪ Lset (sucV σ) ⟫ 1
+      Φ = ∃̇∈ (con mX) (sglAt′ {n = 2} (suc zero) zero)
+
+      defSet≡ : DefA.defSet Φ ≡ singletons X
+      defSet≡ = extensionality (DefA.defSet Φ) (singletons X) (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet Φ ⊆ singletons X ⟩
+        sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ singletons X))
+          (λ { ((m , h) , q) →
+            subst (λ w → ⟨ w ∈ₛ singletons X ⟩) q
+              (∈∈ₛ {a = E m} {b = singletons X} .fst
+                (fromSat m (subst ⟨_⟩ (DefA.defSet-mem Φ m) ∣ (m , h) , refl ∣₁))) })
+          (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
+          where
+          fromSat : (m : ⟪ Lset (sucV σ) ⟫)
+                  → ⟨ (DefA.ι m ∷ []) DefA.⊨ᵐ Φ ⟩
+                  → ⟨ E m ∈ singletons X ⟩
+          fromSat m = PT.rec (snd (E m ∈ singletons X)) (go m)
+            where
+            go : (m : ⟪ Lset (sucV σ) ⟫)
+               → Σ[ x ∈ DefA.SM ]
+                   (⟨ fst x ∈ˢ fst (DefA.ι mX) ⟩
+                  × ⟨ (x ∷ DefA.ι m ∷ []) DefA.⊨ᵐ sglAt′ {n = 2} (suc zero) zero ⟩)
+               → ⟨ E m ∈ singletons X ⟩
+            go m (x , hx , s) =
+              let z≡ : E m ≡ ⁅ fst x ⁆s
+                  z≡ = extensionality (E m) ⁅ fst x ⁆s (t₁ , t₂)
+              in subst (λ w → ⟨ w ∈ singletons X ⟩) (sym z≡)
+                   (singletons-in {X = X} {x = fst x}
+                     (subst (λ w → ⟨ fst x ∈ w ⟩) qX hx))
+              where
+              Atr' = layer-trans (Lset-layer (sucV σ))
+              membL : (m : ⟪ Lset (sucV σ) ⟫)
+                    → ⟨ E m ∈ Lset (sucV σ) ⟩
+              membL m = ∈∈ₛ {a = E m} {b = Lset (sucV σ)} .snd
+                (∈ₛ⟪ Lset (sucV σ) ⟫↪ m)
+              t₁ : ⟨ E m ⊆ ⁅ fst x ⁆s ⟩
+              t₁ v v∈ₛ = ∈∈ₛ {a = v} {b = ⁅ fst x ⁆s} .fst
+                (singleton-in (s₂ v (∈∈ₛ {a = v} {b = E m} .snd v∈ₛ)))
+                where
+                s₂ : (v : V ℓ) → ⟨ v ∈ E m ⟩ → v ≡ fst x
+                s₂ v v∈Em =
+                  s .snd (v , Atr' {x = E m} {y = v} v∈Em (membL m))
+                         v∈Em
+              t₂ : ⟨ ⁅ fst x ⁆s ⊆ E m ⟩
+              t₂ v v∈ₛ = ∈∈ₛ {a = v} {b = E m} .fst
+                (subst (λ w → ⟨ w ∈ E m ⟩)
+                  (sym (singleton-out (∈∈ₛ {a = v} {b = ⁅ fst x ⁆s} .snd v∈ₛ)))
+                  (s .fst))
+        sub₂ : ⟨ singletons X ⊆ DefA.defSet Φ ⟩
+        sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet Φ)) build
+          (singletons-out {X = X} {w = y}
+            (∈∈ₛ {a = y} {b = singletons X} .snd y∈ₛ))
+          where
+          build : Σ[ v ∈ V ℓ ] (⟨ v ∈ X ⟩ × (y ≡ ⁅ v ⁆s))
+                → ⟨ y ∈ₛ DefA.defSet Φ ⟩
+          build (v , hv , e) =
+            let v∈σ : ⟨ v ∈ Lset σ ⟩
+                v∈σ = Atr {x = X} {y = v} hv X∈
+                y∈ⁱ : ⟨ y ∈ Lset (sucV σ) ⟩
+                y∈ⁱ = subst (λ w → ⟨ w ∈ Lset (sucV σ) ⟩) (sym e) (sglUp-mini σ v∈σ)
+                m' = ∈-asFiber {a = y} {b = Lset (sucV σ)} y∈ⁱ .fst
+                q' : E m' ≡ y
+                q' = ∈-asFiber {a = y} {b = Lset (sucV σ)} y∈ⁱ .snd
+                v∈ⁱ' : ⟨ v ∈ Lset (sucV σ) ⟩
+                v∈ⁱ' = Lset-mono {sucV σ} {σ} (self∈sucV σ) v∈σ
+                sat : ⟨ (DefA.ι m' ∷ []) DefA.⊨ᵐ Φ ⟩
+                sat = ∣ ( v , v∈ⁱ' ) , subst (λ w → ⟨ v ∈ w ⟩) (sym qX) hv
+                    , ( subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ e)) (singleton-self v)
+                      , λ y' y'∈ →
+                          singleton-out
+                            (subst (λ w → ⟨ fst y' ∈ w ⟩) (q' ∙ e)
+                              y'∈) )
+                    ∣₁
+            in subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) q'
+                 (∈∈ₛ {a = E m'} {b = DefA.defSet Φ} .fst
+                   (subst ⟨_⟩ (sym (DefA.defSet-mem Φ m')) sat))
+
+  singletonsL : {X : V ℓ} → ⟨ isL X ⟩ → ⟨ isL (singletons X) ⟩
+  singletonsL {X} lX = PT.rec (snd (isL (singletons X)))
+    (λ { (σ , oσ , X∈ , _) →
+      defSet→isL (sucV σ) (suc-ord oσ) (singletons X)
+        ∣ SglFam.Φ X σ X∈ , SglFam.defSet≡ X σ X∈ ∣₁ })
+    (isL-directed X X lX lX)
 ```
 
 
@@ -605,11 +844,18 @@ constant, and the two together cut the family down to the singleton. The proof
 uses the selection reading of the equality atom and the two-entry reading of
 the extension, and the head of a graph held by the equality-satisfying tuple is
 read against the lookup specification, exactly as the satisfaction chapter
-does.
+does. The reverse direction runs the same reading the other way: a member of
+the singleton extension is the graph of an assignment extended by the constant
+itself, so the tuple's head re-assembles the pinned formula's satisfaction
+while the extension membership stays in the full family. With the renaming law
+the two inclusions assemble into the full equation
+`extendFamily (satSet φ) ⁅ κ a ⁆s ≡ satSet ((var zero ≐ con a) ∧̇ renameFo suc φ)`
+delivered as `extendFamily-pin-eq`{.Agda}, the shape the kinded invariant's
+constant-atom clause will consume.
 <!--zh-->
 ## 钉住律
 
-被裁到常元单点集的扩张。全扩张的成员是「被某载体成员扩张的赋值」的图；新键处的等词原子要求被扩张成员恰是常元，两者一起把族裁到单点集。证明使用等词原子的选择读式与扩张的两条目读式，而满足等式之元组的图首，对着查值规格去读，恰如满足关系章所做。
+被裁到常元单点集的扩张。全扩张的成员是「被某载体成员扩张的赋值」的图；新键处的等词原子要求被扩张成员恰是常元，两者一起把族裁到单点集。证明使用等词原子的选择读式与扩张的两条目读式，而满足等式之元组的图首，对着查值规格去读，恰如满足关系章所做。反向读式把同一读法倒着跑：单点扩张的成员就是「被常元本身扩张的赋值」的图，故元组的图首重新装出被钉公式的满足，而扩张隶属留在全族里。与变量变换律一起，两条包含装配出完整的等式 `extendFamily (satSet φ) ⁅ κ a ⁆s ≡ satSet ((var zero ≐ con a) ∧̇ renameFo suc φ)`，即 `extendFamily-pin-eq`{.Agda}，也就是带种类不变量之常元原子子句将要消费的形状。
 <!--/-->
 
 ```agda
@@ -664,6 +910,88 @@ does.
         (∩-out {X = satSet (var zero ≐ con a)}
           {Y = extendFamily (satSet φ) A} h .snd))
 
+  -- The reverse inclusion: every member of the singleton extension records
+  -- the constant at the fresh key, so it satisfies the pinned formula and
+  -- lives in the full extension at the same time.
+  extendFamily-pin-rev : {n : ℕ} (φ : Formula ⟪ A ⟫ n) (a : ⟪ A ⟫)
+                       → (w : V ℓ)
+                       → ⟨ w ∈ extendFamily (satSet φ) ⁅ κ a ⁆s ⟩
+                       → ⟨ w ∈ satSet {n = suc n} (var zero ≐ con a)
+                           ∩ extendFamily (satSet φ) A ⟩
+  extendFamily-pin-rev {n} φ a = λ w h →
+    PT.rec (snd (w ∈ satSet {n = suc n} (var zero ≐ con a)
+                 ∩ extendFamily (satSet φ) A)) (build w)
+      (extendFamily-out {X = satSet φ} {Y = ⁅ κ a ⁆s} {w = w} h)
+    where
+    build : (w : V ℓ)
+          → Σ[ γ ∈ V ℓ ] Σ[ y ∈ V ℓ ]
+              (⟨ γ ∈ satSet φ ⟩ × ⟨ y ∈ ⁅ κ a ⁆s ⟩ × (w ≡ extendGraph y γ))
+          → ⟨ w ∈ satSet {n = suc n} (var zero ≐ con a)
+              ∩ extendFamily (satSet φ) A ⟩
+    build w (γ , y , hγ , hy , eγ) = PT.rec tgt step (sat-out φ γ hγ)
+      where
+      tgt = snd (w ∈ satSet {n = suc n} (var zero ≐ con a)
+                ∩ extendFamily (satSet φ) A)
+      step : Σ[ g ∈ (Fin n → ⟪ A ⟫) ]
+               (⟨ vec g ⊨ᵐ φ ⟩ × (tuple A g ≡ γ))
+           → ⟨ w ∈ satSet {n = suc n} (var zero ≐ con a)
+               ∩ extendFamily (satSet φ) A ⟩
+      step (g , hg , eg) =
+        let y≡ : y ≡ κ a
+            y≡ = singleton-out hy
+            g' : Fin (suc n) → ⟪ A ⟫
+            g' = cons a g
+            w≡ : w ≡ tuple A g'
+            w≡ = eγ
+               ∙ cong₂ extendGraph y≡ (sym eg)
+               ∙ sym (tuple-extend A g')
+            hw : ⟨ tuple A g' ∈ satSet {n = suc n} (var zero ≐ con a) ⟩
+            hw = sat-in (var zero ≐ con a) g' (lk g' zero)
+            w∈S : ⟨ w ∈ satSet {n = suc n} (var zero ≐ con a) ⟩
+            w∈S = subst (λ z → ⟨ z ∈ satSet {n = suc n} (var zero ≐ con a) ⟩)
+                   (sym w≡) hw
+            y∈A : ⟨ y ∈ A ⟩
+            y∈A = subst (λ z → ⟨ z ∈ A ⟩) (sym y≡) (memb a)
+            w∈F : ⟨ w ∈ extendFamily (satSet φ) A ⟩
+            w∈F = subst (λ z → ⟨ z ∈ extendFamily (satSet φ) A ⟩) (sym eγ)
+                    (extendFamily-in {X = satSet φ} {Y = A} hγ y∈A)
+        in ∩-in {X = satSet {n = suc n} (var zero ≐ con a)}
+                {Y = extendFamily (satSet φ) A} w∈S w∈F
+
+  -- The full family-extension equation, assembled from the renaming law and
+  -- the two pinning inclusions.
+  extendFamily-pin-eq : {n : ℕ} (φ : Formula ⟪ A ⟫ n) (a : ⟪ A ⟫)
+                      → extendFamily (satSet φ) ⁅ κ a ⁆s
+                      ≡ satSet ((var zero ≐ con a) ∧̇ renameFo suc φ)
+  extendFamily-pin-eq {n} φ a = extensionalV λ w → ⇔toPath (to w) (fro w)
+    where
+    L T : V ℓ
+    L = extendFamily (satSet φ) ⁅ κ a ⁆s
+    T = satSet ((var zero ≐ con a) ∧̇ renameFo suc φ)
+    to : (w : V ℓ) → ⟨ w ∈ L ⟩ → ⟨ w ∈ T ⟩
+    to w h = subst (λ z → ⟨ w ∈ z ⟩)
+               (sym (sat-∧ (var zero ≐ con a) (renameFo suc φ)))
+               (∩-in {X = satSet {n = suc n} (var zero ≐ con a)}
+                     {Y = satSet (renameFo suc φ)}
+                 (∩-out {X = satSet {n = suc n} (var zero ≐ con a)}
+                   {Y = extendFamily (satSet φ) A} (extendFamily-pin-rev φ a w h) .fst)
+                 (subst (λ z → ⟨ w ∈ z ⟩) (sym (satSet-rename-shift φ))
+                   (∩-out {X = satSet {n = suc n} (var zero ≐ con a)}
+                     {Y = extendFamily (satSet φ) A} (extendFamily-pin-rev φ a w h) .snd)))
+    fro : (w : V ℓ) → ⟨ w ∈ T ⟩ → ⟨ w ∈ L ⟩
+    fro w h = extendFamily-pin φ a w
+      (∩-in {X = satSet {n = suc n} (var zero ≐ con a)}
+            {Y = extendFamily (satSet φ) A}
+        (∩-out {X = satSet {n = suc n} (var zero ≐ con a)}
+               {Y = satSet (renameFo suc φ)}
+           (subst (λ z → ⟨ w ∈ z ⟩)
+             (sat-∧ (var zero ≐ con a) (renameFo suc φ)) h) .fst)
+        (subst (λ z → ⟨ w ∈ z ⟩) (satSet-rename-shift φ)
+           (∩-out {X = satSet {n = suc n} (var zero ≐ con a)}
+                  {Y = satSet (renameFo suc φ)}
+             (subst (λ z → ⟨ w ∈ z ⟩)
+               (sat-∧ (var zero ≐ con a) (renameFo suc φ)) h) .snd)))
+
 ```
 
 
@@ -676,13 +1004,17 @@ reading a selection over a satisfaction set as one more conjunction; the
 renaming law `satSet-rename-shift`{.Agda}, saying a satisfaction set survives
 a shift of all variables; the forward pinning inclusion `extendFamily-pin`{.Agda},
 saying the equality atom at the fresh key cuts the full extension down to the
-constant's singleton; and the singleton family `singletons`{.Agda} with its two
-membership laws, the one operation the delivered stock was missing. The
-reverse pinning inclusion, the full family-extension equation, and the
-singleton family's description and constructibility are the closure chapter's
-own consumption, recorded for the next batch.
+constant's singleton, and the reverse pinning inclusion
+`extendFamily-pin-rev`{.Agda}, saying every member of the singleton extension
+records the constant at the fresh key; the full family-extension equation
+`extendFamily-pin-eq`{.Agda}, assembled from the renaming law and the two
+inclusions in the shape the kinded invariant's constant-atom clause will
+consume; and the singleton family `singletons`{.Agda} with its two membership
+laws, its `At`-description `singletonsAt`{.Agda} with both readers, and its
+constructibility `singletonsL`{.Agda}, the one operation the delivered stock
+was missing together with its internal face. Nothing is deferred.
 <!--zh-->
 ## 小结
 
-取值泛化 `valuesAllTuples`{.Agda}，在每个正元数处；两条选择等式 `sat-∈vv-sel`{.Agda} 与 `sat-≐vv-sel`{.Agda}，把满足集上的一次选择读作一次合取；变量变换律 `satSet-rename-shift`{.Agda}，说满足集经全体变元移位而存活；正向钉住包含 `extendFamily-pin`{.Agda}，说新键处的等词原子把整个扩张裁到常元的单点集；以及单例族 `singletons`{.Agda} 连同它的两条隶属定律，即已交付存货缺掉的那一个运算。反向钉住包含、完整的族扩张等式，与单例族的描述和可构造性，是闭包章自己要消费的东西，留给下一批。
+取值泛化 `valuesAllTuples`{.Agda}，在每个正元数处；两条选择等式 `sat-∈vv-sel`{.Agda} 与 `sat-≐vv-sel`{.Agda}，把满足集上的一次选择读作一次合取；变量变换律 `satSet-rename-shift`{.Agda}，说满足集经全体变元移位而存活；正向钉住包含 `extendFamily-pin`{.Agda}，说新键处的等词原子把整个扩张裁到常元的单点集，与反向钉住包含 `extendFamily-pin-rev`{.Agda}，说单点扩张的每个成员都在新键处记录常元；完整的族扩张等式 `extendFamily-pin-eq`{.Agda}，由变量变换律与两条包含装配而成，形状即带种类不变量之常元原子子句将要消费的样子；以及单例族 `singletons`{.Agda} 连同它的两条隶属定律、`At` 描述 `singletonsAt`{.Agda} 及其两条读式、与可构造性 `singletonsL`{.Agda}，即已交付存货缺掉的那一个运算连同它的内面。本批无遗留。
 <!--/-->
