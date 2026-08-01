@@ -294,30 +294,29 @@ family, and one bounding ordinal joins the head's stage to the tail's.
 <!--/-->
 
 ```agda
-private
-  stageFam : (k : ℕ) (h : Fin k → V ℓ) → ((i : Fin k) → ⟨ isL (h i) ⟩)
-           → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × ((i : Fin k) → ⟨ h i ∈ Lset σ ⟩)) ∥₁
-  stageFam zero h hL = ∣ ∅ , ∅-ord , (λ ()) ∣₁
-  stageFam (suc k) h hL = PT.rec2 PT.squash₁ join
-    (hL zero) (stageFam k (λ i → h (suc i)) (λ i → hL (suc i)))
+stageFam : (k : ℕ) (h : Fin k → V ℓ) → ((i : Fin k) → ⟨ isL (h i) ⟩)
+         → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × ((i : Fin k) → ⟨ h i ∈ Lset σ ⟩)) ∥₁
+stageFam zero h hL = ∣ ∅ , ∅-ord , (λ ()) ∣₁
+stageFam (suc k) h hL = PT.rec2 PT.squash₁ join
+  (hL zero) (stageFam k (λ i → h (suc i)) (λ i → hL (suc i)))
+  where
+  join : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ h zero ∈ Lset α ⟩)
+       → Σ[ τ ∈ V ℓ ] (IsOrd τ × ((i : Fin k) → ⟨ h (suc i) ∈ Lset τ ⟩))
+       → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × ((i : Fin (suc k)) → ⟨ h i ∈ Lset σ ⟩)) ∥₁
+  join (α , oα , h0∈) (τ , oτ , rest∈) = ∣ σ' , oσ' , total ∣₁
     where
-    join : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ h zero ∈ Lset α ⟩)
-         → Σ[ τ ∈ V ℓ ] (IsOrd τ × ((i : Fin k) → ⟨ h (suc i) ∈ Lset τ ⟩))
-         → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × ((i : Fin (suc k)) → ⟨ h i ∈ Lset σ ⟩)) ∥₁
-    join (α , oα , h0∈) (τ , oτ , rest∈) = ∣ σ' , oσ' , total ∣₁
-      where
-      f : Lift {ℓ-zero} {ℓ} Bool → V ℓ
-      f (lift true)  = α
-      f (lift false) = τ
-      hf : (b : Lift {ℓ-zero} {ℓ} Bool) → IsOrd (f b)
-      hf (lift true)  = oα
-      hf (lift false) = oτ
-      bnd = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f hf
-      σ' = bnd .fst
-      oσ' = bnd .snd .fst
-      total : (i : Fin (suc k)) → ⟨ h i ∈ Lset σ' ⟩
-      total zero    = Lset-mono (bnd .snd .snd (lift true)) h0∈
-      total (suc i) = Lset-mono (bnd .snd .snd (lift false)) (rest∈ i)
+    f : Lift {ℓ-zero} {ℓ} Bool → V ℓ
+    f (lift true)  = α
+    f (lift false) = τ
+    hf : (b : Lift {ℓ-zero} {ℓ} Bool) → IsOrd (f b)
+    hf (lift true)  = oα
+    hf (lift false) = oτ
+    bnd = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f hf
+    σ' = bnd .fst
+    oσ' = bnd .snd .fst
+    total : (i : Fin (suc k)) → ⟨ h i ∈ Lset σ' ⟩
+    total zero    = Lset-mono (bnd .snd .snd (lift true)) h0∈
+    total (suc i) = Lset-mono (bnd .snd .snd (lift false)) (rest∈ i)
 ```
 
 <!--en-->
