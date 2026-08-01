@@ -31,21 +31,27 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
 open import V.Model {ℓ} using ( ∈sucV-inl; self∈sucV )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; Lset→isL; IsOrd; Lset )
+  using ( 𝒮ʟ; isL; isL-trans; Lset→isL; IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
 open import L.Axioms.Basic {ℓ} using ( finSet; finSet-in; finSet-out; module FinOf )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
   using ( prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
         ; sucAtL; sucAtL-adequate; numL )
-open import L.Godel.Table {ℓ} using ( tagPrAt; tagPr-out; tagPr-in; module Denote )
+open import L.Godel.Table {ℓ}
+  using ( tagPrAt; tagPr-out; tagPr-in; ApproxAt; Approx-step; ClauseOf; Clause-out
+        ; module Denote )
 open import L.Godel.Terms {ℓ}
   using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK
-        ; ⟦_⟧ᴷ )
-open import L.Godel.InL {ℓ} using ( stageFam; denoteL )
+        ; ⟦_⟧ᴷ; termDef )
+  renaming ( module WithLEM to TermsLEM )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Godel.InL {ℓ} using ( stageFam; denoteL; valuesL )
+open import L.Godel.Definable {ℓ} using ( valuesAt; valuesAt-in; valuesAt-out )
+open import L.Godel.Operations {ℓ} using ( values )
 open import L.Godel.Codes {ℓ}
   using ( module Codes; tagNe; SubK; sizeK; subK; subSplitK; selfIxK; sub-selfK
         ; interIdxL; interIdxR; unionIdxL; unionIdxR )
@@ -59,6 +65,7 @@ open import Cubical.Data.FinData.Properties
   using ( fromℕ'; toFromId'; toℕ<n; module FinSumChar )
 open import Cubical.Data.Bool using ( true; false )
 open import Cubical.Data.Unit using ( tt* )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
 open import Cubical.Induction.WellFounded using ( Acc; acc )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -1866,23 +1873,258 @@ per-pair certificates assemble the certificate through the inward reader.
 ```
 
 <!--en-->
+## The step body, and its two laws
+<!--zh-->
+## 步本体，与它的两条定律
+<!--/-->
+
+<!--en-->
+The step body quantifies a certified, approximated pair of tables and one
+arity-one entry, and cuts the member as the values of that entry. Two binders
+read the main table and the annotation table out of the environment; the
+certificate and the approximation hold over the carrier at its own slot; three
+more binders read an entry (x, y) of the main table whose annotation is the
+numeral one, and the member is pinned to the values of y. The formula mentions
+no carrier, so the family recursion ahead can instantiate it at any stage.
+<!--zh-->
+步本体量化一对受证且被逼近的表与一个元数一的条目，并把成员裁为该条目的取值。两个绑定子从环境中读出主表与注解表；证书与逼近在载体于自己的槽位上成立；再三个绑定子读出主表的一个条目 (x, y)，其注解是数码一，成员则被钉在 y 的取值上。公式不提及载体，故前方的族递归可在任一层处实例化它。
+<!--/-->
+
+```agda
+  private
+    nameBody : ∀ {n} → Fin n → Formula S (suc (suc (suc (suc (suc n)))))
+    nameBody v = (var zero ≐ con (numeralL 1))
+               ∧̇ ( appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc zero)
+                 ∧̇ ( appAt (suc (suc (suc zero))) (suc (suc zero)) zero
+                   ∧̇ valuesAt (sh5 v) (suc zero) ))
+
+    nameAt : ∀ {n} → Fin n → Fin n → Formula S n
+    nameAt v a = ∃̇ (∃̇ ( CertAt (suc zero) zero (sh2 a)
+                      ∧̇ ( ApproxAt (suc zero) (sh2 a)
+                        ∧̇ ∃̇ (∃̇ (∃̇ (nameBody v))) )))
+
+  StepAt : ∀ {n} → Fin n → Fin n → Formula S n
+  StepAt b a = ∀̇ ( ( (var zero ∈̇ var (suc b)) ⇒̇ nameAt zero (suc a) )
+                 ∧̇ ( nameAt zero (suc a) ⇒̇ (var zero ∈̇ var (suc b)) ) )
+```
+
+<!--en-->
+The outward law spends the three facts in sequence. Reading a certified,
+approximated entry back into the definable powerset is honesty at the
+arity-one annotation, then the table chapter's value lemma pins the entry's
+second component to the denotation of the honest term, and the terms chapter's
+banked equivalence, transported forward, lands the member in `𝒟ₒ`. The inward
+law assembles the same entry from the fill side's witnesses, applied at one
+term: a member of `𝒟ₒ` is, by the same equivalence transported backwards, the
+values of some arity-one term, and the approximation, the annotation, the
+certificate, and the membership facts are the honest pair of tables the fill
+already certified. The two laws share one reading and one filling, per member.
+<!--zh-->
+向外定律按顺序花掉三条事实：把受证的被逼近条目读回可定义幂集，先是元数一注解处的诚实性，再是表章的值引理把条目的第二分量钉在诚实项的指称上，最后是项章的入账等价向前搬运，把成员送进 `𝒟ₒ`。向内定律用填充一侧的见证装配同一条目，一次施于一个项：`𝒟ₒ` 的成员经同一等价向后搬运，就是某个元数一项的取值，而逼近、注解、证书与诸成员事实，正是填充已受证的那一对诚实表。两条定律共用一个读式与一个填式，逐成员进行。
+<!--/-->
+
+```agda
+  module StepLaws {n : ℕ} (b a : Fin n) (γ : S ^ n) where
+    private
+      B    = fst (lookup b γ)
+      A₀   = fst (lookup a γ)
+      lA₀  = snd (lookup a γ)
+
+      module C  = Codes A₀ lA₀
+      module D  = Denote A₀ lA₀
+      module CF = CertFill A₀ lA₀
+      module TW = TermsLEM A₀ lem
+
+    read-name : (v : S) → ⟨ (v ∷ γ) ⊨ nameAt zero (suc a) ⟩ → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+    read-name v = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀)) stepG
+      where
+      finish : (g₀ h₀ x y o : S)
+             → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
+             → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+             → ⟨ (o ∷ y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ nameBody zero ⟩
+             → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+      finish g₀ h₀ x y o cert approx (op , (gf , (hf , vf))) =
+        PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀)) land
+          (H.honest (fst x) (wf⁺ (fst x)) (fst y) gF 1 hF)
+        where
+        env : S ^ (suc (suc (suc (suc (suc (suc n))))))
+        env = o ∷ y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ
+
+        module H = Honest (suc zero) zero (sh2 (suc a)) (h₀ ∷ g₀ ∷ v ∷ γ) cert
+
+        gF : ⟨ pr (fst x) (fst y) ∈ fst g₀ ⟩
+        gF = subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc zero))))
+              (suc (suc zero)) (suc zero) env) gf
+
+        hF : ⟨ pr (fst x) (# 1) ∈ fst h₀ ⟩
+        hF = subst (λ w → ⟨ pr (fst x) w ∈ fst h₀ ⟩) (op ∙ numeralL-fst 1)
+          (subst ⟨_⟩ (appAt-adequate (suc (suc (suc zero)))
+            (suc (suc zero)) zero env) hf)
+
+        lx : ⟨ isL (fst x) ⟩
+        lx = isL-trans {x = ⁅ fst x ⁆s} {y = fst x} (∣ tt* , refl ∣₁)
+          (isL-trans {x = pr (fst x) (# 1)} {y = ⁅ fst x ⁆s}
+            (∣ lift false , refl ∣₁)
+            (isL-trans {x = fst h₀} {y = pr (fst x) (# 1)} hF (h₀ .snd)))
+
+        ly : ⟨ isL (fst y) ⟩
+        ly = isL-trans {x = ⁅ fst x , fst y ⁆} {y = fst y} (∣ lift true , refl ∣₁)
+          (isL-trans {x = pr (fst x) (fst y)} {y = ⁅ fst x , fst y ⁆}
+            (∣ lift true , refl ∣₁)
+            (isL-trans {x = fst g₀} {y = pr (fst x) (fst y)} gF (g₀ .snd)))
+
+        land : Σ[ t ∈ KT ⟪ A₀ ⟫ 1 ] (fst x ≡ C.code t) → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+        land (t , codeEq) = 𝒟ₒ-intro A₀ (fst v) inDef
+          where
+          step' : (x' y' : S) → ⟨ pr (fst x') (fst y') ∈ fst g₀ ⟩
+                → ∥ ClauseOf A₀ (fst g₀) (fst x') (fst y') ∥₁
+          step' x' y' e = Clause-out (suc zero) zero (sh2 (suc zero))
+            (sh2 (sh2 (suc a))) (y' ∷ x' ∷ h₀ ∷ g₀ ∷ v ∷ γ)
+            (Approx-step (suc zero) (sh2 (suc a)) (h₀ ∷ g₀ ∷ v ∷ γ)
+              approx x' y' e)
+
+          val : fst y ≡ ⟦_⟧ᴷ A₀ t
+          val = D.approx-val (fst g₀) step' t (fst x , lx) (fst y , ly) codeEq gF
+
+          vEq : fst v ≡ values (fst y)
+          vEq = valuesAt-out (sh5 zero) (suc zero) env vf
+
+          valEq : fst v ≡ values (⟦_⟧ᴷ A₀ t)
+          valEq = vEq ∙ cong values val
+
+          memb : ⟨ fst v ∈ termDef A₀ ⟩
+          memb = ∣ t , sym valEq ∣₁
+
+          inDef : ⟨ fst v ∈ DefOf.Def A₀ ⟩
+          inDef = subst (λ z → ⟨ fst v ∈ z ⟩) TW.termDef≡Def memb
+
+      stepO : (g₀ h₀ x y : S)
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+            → Σ[ o ∈ S ] ⟨ (o ∷ y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ nameBody zero ⟩
+            → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+      stepO g₀ h₀ x y cert approx (o , w₅) = finish g₀ h₀ x y o cert approx w₅
+
+      stepY : (g₀ h₀ x : S)
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+            → Σ[ y ∈ S ] ⟨ (y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ∃̇ nameBody zero ⟩
+            → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+      stepY g₀ h₀ x cert approx (y , w₄) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀))
+        (stepO g₀ h₀ x y cert approx) w₄
+
+      stepX : (g₀ h₀ : S)
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+            → Σ[ x ∈ S ] ⟨ (x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ∃̇ (∃̇ nameBody zero) ⟩
+            → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+      stepX g₀ h₀ cert approx (x , w₃) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀))
+        (stepY g₀ h₀ x cert approx) w₃
+
+      stepH : (g₀ : S) → Σ[ h₀ ∈ S ] ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨
+                  CertAt (suc zero) zero (sh2 (suc a))
+                  ∧̇ ( ApproxAt (suc zero) (sh2 (suc a))
+                    ∧̇ ∃̇ (∃̇ (∃̇ nameBody zero)) ) ⟩
+            → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+      stepH g₀ (h₀ , w₂) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀))
+        (stepX g₀ h₀ (w₂ .fst) (w₂ .snd .fst)) (w₂ .snd .snd)
+
+      stepG : Σ[ g₀ ∈ S ] ⟨ (g₀ ∷ v ∷ γ) ⊨
+                  ∃̇ ( CertAt (suc zero) zero (sh2 (suc a))
+                     ∧̇ ( ApproxAt (suc zero) (sh2 (suc a))
+                       ∧̇ ∃̇ (∃̇ (∃̇ nameBody zero)) )) ⟩
+            → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
+      stepG (g₀ , w₁) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀)) (stepH g₀) w₁
+
+    fill-name : (v : S) → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩ → ⟨ (v ∷ γ) ⊨ nameAt zero (suc a) ⟩
+    fill-name v h = PT.rec (snd ((v ∷ γ) ⊨ nameAt zero (suc a))) build
+      (subst (λ z → ⟨ fst v ∈ z ⟩) (sym TW.termDef≡Def) (𝒟ₒ-inv A₀ (fst v) h))
+      where
+      build : Σ[ t ∈ KT ⟪ A₀ ⟫ 1 ] (values (⟦_⟧ᴷ A₀ t) ≡ fst v)
+            → ⟨ (v ∷ γ) ⊨ nameAt zero (suc a) ⟩
+      build (t , e) = ∣ D.apxS t
+        , ∣ hS A₀ lA₀ t
+          , ( cert
+            , ( approx
+              , ∣ C.codeS t
+                , ∣ (⟦_⟧ᴷ A₀ t , denoteL A₀ lA₀ t)
+                  , ∣ numeralL 1
+                    , ( refl , ( gf , ( hf , vf ) ) ) ∣₁ ∣₁ ∣₁ ) )
+        ∣₁ ∣₁
+        where
+        env : S ^ (suc (suc (suc (suc (suc (suc n))))))
+        env = numeralL 1 ∷ (⟦_⟧ᴷ A₀ t , denoteL A₀ lA₀ t)
+            ∷ C.codeS t ∷ hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ
+
+        cert : ⟨ (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ)
+                  ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
+        cert = CF.certApx t (suc zero) zero (sh2 (suc a))
+          (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ) refl refl refl
+
+        approx : ⟨ (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ)
+                    ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+        approx = D.apx-approx t (suc zero) (sh2 (suc a))
+          (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ) refl refl
+
+        gf : ⟨ env ⊨ appAt (suc (suc (suc (suc zero))))
+                  (suc (suc zero)) (suc zero) ⟩
+        gf = subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc zero))))
+              (suc (suc zero)) (suc zero) env)) (D.entrySelf∈ t)
+
+        hf : ⟨ env ⊨ appAt (suc (suc (suc zero))) (suc (suc zero)) zero ⟩
+        hf = subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc zero)))
+              (suc (suc zero)) zero env))
+          (subst (λ w → ⟨ pr (fst (C.codeS t)) w ∈ fst (hS A₀ lA₀ t) ⟩)
+            (sym (numeralL-fst 1)) (hSelf∈ A₀ lA₀ t))
+
+        vf : ⟨ env ⊨ valuesAt (sh5 zero) (suc zero) ⟩
+        vf = valuesAt-in (sh5 zero) (suc zero) env (sym e)
+
+    step-out : ⟨ γ ⊨ StepAt b a ⟩ → B ≡ 𝒟ₒ A₀
+    step-out h = extensionalV λ v → ⇔toPath (fwdV v) (bwdV v)
+      where
+      fwdV : (v : V ℓ) → ⟨ v ∈ B ⟩ → ⟨ v ∈ 𝒟ₒ A₀ ⟩
+      fwdV v v∈B = read-name (v , lv) (h (v , lv) .fst v∈B)
+        where
+        lv : ⟨ isL v ⟩
+        lv = isL-trans {x = B} {y = v} v∈B (snd (lookup b γ))
+
+      bwdV : (v : V ℓ) → ⟨ v ∈ 𝒟ₒ A₀ ⟩ → ⟨ v ∈ B ⟩
+      bwdV v v∈D = h (v , lv) .snd (fill-name (v , lv) v∈D)
+        where
+        lv : ⟨ isL v ⟩
+        lv = PT.rec (snd (isL v)) land
+          (subst (λ z → ⟨ v ∈ z ⟩) (sym TW.termDef≡Def) (𝒟ₒ-inv A₀ v v∈D))
+          where
+          land : Σ[ t ∈ KT ⟪ A₀ ⟫ 1 ] (values (⟦_⟧ᴷ A₀ t) ≡ v) → ⟨ isL v ⟩
+          land (t , e) = subst (λ w → ⟨ isL w ⟩) e (valuesL (denoteL A₀ lA₀ t))
+
+    step-in : B ≡ 𝒟ₒ A₀ → ⟨ γ ⊨ StepAt b a ⟩
+    step-in eq v =
+      ( (λ v∈B → fill-name v (subst (λ z → ⟨ fst v ∈ z ⟩) eq v∈B))
+      , (λ nameSat → subst (λ z → ⟨ fst v ∈ z ⟩) (sym eq) (read-name v nameSat)) )
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
 <!--/-->
 
 <!--en-->
-The certificate describes the tower's step with local conditions only. Each
-branch pins its tag by a sealed numeral, its payload pieces as members of ω or
-of the carrier, its children in the main table, and its annotations in a
-functional table, so every numeral-shaped leaf is genuinely numeral, every
-index genuinely sits inside its numeral, and every annotation is unique and
-trustworthy. The certificate now has both sides: the fill certifies the honest
-pair of tables by the same structural recursion the approximation family runs,
-now recording arities, and honesty reads every certified pair back, at its
-unique annotation, as the code of an honest term, by running the eight code
-equations backwards on the transitive closure of membership. What remains is
-the step body and its two laws, where this layer pays off.
+The certificate describes the tower's step with local conditions only, and
+this chapter now closes over it. Each branch pins its tag by a sealed numeral,
+its payload pieces as members of ω or of the carrier, its children in the main
+table, and its annotations in a functional table, so every numeral-shaped leaf
+is genuinely numeral and every annotation is unique and trustworthy. The fill
+certifies the honest pair of tables by the same structural recursion the
+approximation family runs, now recording arities, and honesty reads every
+certified pair back, at its unique annotation, as the code of an honest term.
+The step body quantifies that certified, approximated pair of tables and an
+arity-one entry, and its two laws read the entry's values back into `𝒟ₒ` of
+the carrier and fill them in again: the tower's step is now internally
+describable, both ways, over codes and tables, which is exactly what the
+family recursion ahead will quantify.
 <!--zh-->
-证书只用局部条件描述塔的一步。每个分支以封印数码钉住标签，以 ω 或载体钉住载荷诸件，以主表钉住孩子，并以函数性的表钉住注解，故每个数码形叶真是数码，每个指标真在其数码之内，每条注解唯一而可信任。证书如今两侧俱全：填充以逼近族同一条结构递归使诚实的一对表受证，如今记录元数；诚实性再把每个受证的对在唯一注解处读回为诚实项的码，办法是在成员关系的传递闭包上反向运行八条码等式。剩下的工作是步本体及其两条定律，也是这一层兑现之处。
+证书只用局部条件描述塔的一步，而本章现在把它闭合。每个分支以封印数码钉住标签，以 ω 或载体钉住载荷诸件，以主表钉住孩子，并以函数性的表钉住注解，故每个数码形叶真是数码、每条注解唯一而可信任。填充以逼近族同一条结构递归使诚实的一对表受证，如今记录元数；诚实性再把每个受证的对在唯一注解处读回为诚实项的码。步本体量化那一对受证且被逼近的表与一个元数一的条目，两条定律把条目的取值读进载体的 `𝒟ₒ`、又再填回来：塔的一步如今两个方向都可在码与表之上作内部描述，而这正是前方的族递归将要量化的东西。
 <!--/-->
