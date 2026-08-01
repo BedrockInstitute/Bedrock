@@ -31,28 +31,79 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset→isL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
   using ( prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
         ; sucAtL; sucAtL-adequate )
 open import L.Godel.Table {ℓ} using ( tagPrAt; tagPr-out; tagPr-in )
-open import L.Ordinal {ℓ} using ( suc-ord; ω-ord )
+open import L.Godel.Terms {ℓ}
+  using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK )
+open import L.Godel.Codes {ℓ} using ( module Codes )
+open import L.Ordinal {ℓ} using ( suc-ord; ω-ord; ∈#-elim )
 
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId' )
+open import Cubical.Data.Bool using ( true; false )
+open import Cubical.Data.Unit using ( tt* )
+open import Cubical.Induction.WellFounded using ( Acc; acc )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Properties
+  using ( ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet )
+  using ( module InfinitySet; ⁅_,_⁆; ⁅_⁆s )
 open InfinitySet using ( sucV; #_; ω )
 
-open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+open hPropStructure 𝒮ᵥ using ( _∈ˢ_; _∈ᵗ_ )
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
+
+<!--en-->
+One piece of infrastructure is laid down before the classical modules, since
+nothing classical is involved. The honesty proof recurses on the accessibility
+of the transitive closure of membership, not of membership itself: a child code
+sits four membership steps below its node code, and the termination checker
+follows only one step at a time. The closure records the whole descent in a
+single derivation, `_∈⁺_`, built once from the one-step relation `_∈ᵗ_`, with
+its accessibility transported in from regularity, along with the two-step
+chains that reach the components of a Kuratowski pair and the transitivity that
+composes chains to depth four.
+<!--zh-->
+在经典模块之前先铺下一件基础设施，因为它不涉经典。诚实性证明跑在成员关系传递闭包的可及性上，而非成员关系本身的可及性上：孩子码坐在节点码之下四步成员关系处，而终止检查器一次只跟一步。闭包把整段下降记在一条推导 `_∈⁺_` 里，由一步关系 `_∈ᵗ_` 一次建成，其可及性从正则搬运过来，并配上直达 Kuratowski 对两个分量的两步链与把链复合到四层深的传递性。
+<!--/-->
+
+```agda
+private
+  data _∈⁺_ : V ℓ → V ℓ → Type (ℓ-suc ℓ) where
+    here  : {u v : V ℓ} → u ∈ᵗ v → u ∈⁺ v
+    there : {u w v : V ℓ} → u ∈⁺ w → w ∈ᵗ v → u ∈⁺ v
+
+  accTC : (x : V ℓ) → Acc _∈ᵗ_ x → Acc _∈⁺_ x
+  goTC  : (x : V ℓ) → Acc _∈ᵗ_ x → (y : V ℓ) → y ∈⁺ x → Acc _∈⁺_ y
+  accTC x ax = acc (goTC x ax)
+  goTC x (acc r) y (here hy)            = accTC y (r y hy)
+  goTC x (acc r) y (there {w = w} p hw) = goTC w (r w hw) y p
+
+  wf⁺ : (x : V ℓ) → Acc _∈⁺_ x
+  wf⁺ x = accTC x (regularityV x)
+
+  chainFst : (u v : V ℓ) → u ∈⁺ pr u v
+  chainFst u v = there (here ∣ lift false , refl ∣₁) ∣ lift true , refl ∣₁
+
+  chainSnd : (u v : V ℓ) → v ∈⁺ pr u v
+  chainSnd u v = there (here ∣ lift true , refl ∣₁) ∣ lift true , refl ∣₁
+
+  trans⁺ : {u w v : V ℓ} → u ∈⁺ w → w ∈⁺ v → u ∈⁺ v
+  trans⁺ p (here h)     = there p h
+  trans⁺ p (there q h)  = there (trans⁺ p q) h
 ```
 
 <!--en-->
@@ -886,6 +937,284 @@ reassembles the formula from the two.
 ```
 
 <!--en-->
+## Honesty
+<!--zh-->
+## 诚实性
+<!--/-->
+
+<!--en-->
+Honesty is the certificate's payoff: every pair in a certified table, at its
+unique annotation m, is the code of an honest term of arity m. The recursion
+that reads the branches back into terms runs on the accessibility of the
+transitive closure, not of membership itself. A child code sits four
+membership steps below its node code, and the termination checker follows only
+one step, so composing accessibility projections through helper functions
+would be rejected; the closure records the whole descent in one derivation, and
+each recursive call applies the matched accessibility function to a chain.
+The eight branches are the eight code equations run backwards. A branch pins
+its tag, numeral, indices, parameter leaf, and children locally, and each
+continuation assembles a term constructor, rewrites the branch's shape
+equation along the numeral paths, and closes against the constructor's code
+equation. Functionality is what lets the given arity meet the branch's
+recorded one: the annotation table is functional by the certificate's first
+conjunct, so the annotated pair (x, # m) and the pair (x, mv) force
+`fst mv ≡ # m`, and every numeral-shaped datum of the branch is then read at
+the arity the caller supplied.
+<!--zh-->
+诚实性是证书的兑现：受证的表中的每个对，在其唯一注解 m 处，就是元数 m 的诚实项的码。把各分支读回项的递归，跑在传递闭包的可及性上，而非成员关系本身的可及性上。孩子码坐在节点码之下四步成员关系处，而终止检查器只跟一步，故经辅助函数复合可及性投影会被拒绝；闭包把整段下降记在一条推导里，每次递归调用把被匹配的可及性函数施于一条链。八个分支就是把八条码等式反向运行。分支在局部钉住标签、数码、指标、参数叶与孩子，每条续延组装一个项构造子，沿数码路径重写分支的形状等式，再对构造子的码等式反向收口。函数性正是让给定元数与分支记录的元数相遇的地方：注解表由证书第一条合取保证函数性，故被注解的对 (x, # m) 与 (x, mv) 迫使 `fst mv ≡ # m`，分支的每个数码形数据随后都按调用者给出的元数读出。
+<!--/-->
+
+```agda
+  module Honest {n : ℕ} (g h a : Fin n) (γ : S ^ n)
+                (cert : ⟨ γ ⊨ CertAt g h a ⟩) where
+    private
+      G  = fst (lookup g γ)
+      H  = fst (lookup h γ)
+      A₀ = fst (lookup a γ)
+      module C = Codes A₀ (snd (lookup a γ))
+
+    Honest : V ℓ → ℕ → Type (ℓ-suc ℓ)
+    Honest x m = ∥ Σ[ t ∈ KT ⟪ A₀ ⟫ m ] (x ≡ C.code t) ∥₁
+
+    honest : (x : V ℓ) → Acc _∈⁺_ x
+           → (y : V ℓ) → ⟨ pr x y ∈ G ⟩
+           → (m : ℕ) → ⟨ pr x (# m) ∈ H ⟩
+           → Honest x m
+    honest x (acc r) y hy m hm =
+      PT.rec PT.squash₁ fromShape
+        (Cert-step g h a γ cert (x , lx) (y , ly) hy)
+      where
+      lx : ⟨ isL x ⟩
+      lx = isL-trans {x = ⁅ x ⁆s} {y = x}
+             (∣ tt* , refl ∣₁)
+             (isL-trans {x = pr x (# m)} {y = ⁅ x ⁆s}
+               (∣ lift false , refl ∣₁)
+               (isL-trans {x = H} {y = pr x (# m)} hm (snd (lookup h γ))))
+
+      ly : ⟨ isL y ⟩
+      ly = isL-trans {x = ⁅ x , y ⁆} {y = y}
+             (∣ lift true , refl ∣₁)
+             (isL-trans {x = pr x y} {y = ⁅ x , y ⁆}
+               (∣ lift true , refl ∣₁)
+               (isL-trans {x = G} {y = pr x y} hy (snd (lookup g γ))))
+
+      l#m : ⟨ isL (# m) ⟩
+      l#m = subst (λ z → ⟨ isL z ⟩) (numeralL-fst m) (numeralL m .snd)
+
+      mEq : (mv : S) → ⟨ fst mv ∈ˢ ω ⟩ → ⟨ pr x (fst mv) ∈ H ⟩ → fst mv ≡ # m
+      mEq mv mω ann = sym (Cert-fun g h a γ cert (x , lx) (# m , l#m) mv hm ann)
+
+      fromB0 : Cert0Of H x → Honest x m
+      fromB0 (mv , (mω , (qe , ann))) =
+        ∣ allK
+        , ( qe
+          ∙ cong (pr (# 0)) (mEq mv mω ann)
+          ∙ sym (C.code-allK m) ) ∣₁
+
+      fromSel : (tg : ℕ) (mk : (i j : Fin m) → KT ⟪ A₀ ⟫ m)
+              → ((i j : Fin m) → C.code (mk i j)
+                    ≡ pr (# tg) (pr (# m) (pr (# (toℕ i)) (# (toℕ j)))))
+              → Σ[ nv ∈ S ] Σ[ iv ∈ S ] Σ[ jv ∈ S ]
+                  ( ⟨ fst nv ∈ˢ ω ⟩ × ⟨ fst iv ∈ˢ fst nv ⟩
+                  × ⟨ fst jv ∈ˢ fst nv ⟩
+                  × (x ≡ pr (# tg) (pr (fst nv) (pr (fst iv) (fst jv))))
+                  × ⟨ pr x (fst nv) ∈ H ⟩ )
+              → Honest x m
+      fromSel tg mk codeEq (nv , iv , jv , (nω , (i∈n , (j∈n , (qe , ann))))) =
+        PT.rec PT.squash₁
+          (λ { (î , î<m , ivEq) →
+          PT.rec PT.squash₁
+            (λ { (ĵ , ĵ<m , jvEq) →
+              let
+                i : Fin m
+                i = fromℕ' m î î<m
+                j : Fin m
+                j = fromℕ' m ĵ ĵ<m
+                iv→#i : # (toℕ i) ≡ fst iv
+                iv→#i = cong #_ (toFromId' m î î<m) ∙ sym ivEq
+                jv→#j : # (toℕ j) ≡ fst jv
+                jv→#j = cong #_ (toFromId' m ĵ ĵ<m) ∙ sym jvEq
+                eq : x ≡ C.code (mk i j)
+                eq = qe
+                   ∙ cong (pr (# tg))
+                       ( cong (pr (fst nv))
+                           ( cong (pr (fst iv)) (sym jv→#j)
+                           ∙ cong₂ pr (sym iv→#i) refl )
+                       ∙ cong₂ pr nv→m refl )
+                   ∙ sym (codeEq i j)
+              in ∣ mk i j , eq ∣₁ })
+            (∈#-elim m (fst jv) j∈m) })
+          (∈#-elim m (fst iv) i∈m)
+        where
+        nv→m : fst nv ≡ # m
+        nv→m = mEq nv nω ann
+        i∈m : ⟨ fst iv ∈ˢ (# m) ⟩
+        i∈m = subst (λ w → ⟨ fst iv ∈ˢ w ⟩) nv→m i∈n
+        j∈m : ⟨ fst jv ∈ˢ (# m) ⟩
+        j∈m = subst (λ w → ⟨ fst jv ∈ˢ w ⟩) nv→m j∈n
+
+      fromSelMem : CertSelMem.CertSelOf H x → Honest x m
+      fromSelMem = fromSel 1 selMemK (C.code-selMemK m)
+
+      fromSelEq : CertSelEq.CertSelOf H x → Honest x m
+      fromSelEq = fromSel 2 selEqK (C.code-selEqK m)
+
+      fromCon : Cert3Of A₀ H x → Honest x m
+      fromCon (nv , iv , pv , (nω , (i∈n , (p∈a , (qe , ann))))) =
+        PT.rec PT.squash₁
+          (λ { (î , î<m , ivEq) →
+            let
+              i : Fin m
+              i = fromℕ' m î î<m
+              iv→#i : # (toℕ i) ≡ fst iv
+              iv→#i = cong #_ (toFromId' m î î<m) ∙ sym ivEq
+              par : ⟪ A₀ ⟫
+              par = ∈-asFiber {a = fst pv} {b = A₀} p∈a .fst
+              epar : ⟪ A₀ ⟫↪ par ≡ fst pv
+              epar = ∈-asFiber {a = fst pv} {b = A₀} p∈a .snd
+              eq : x ≡ C.code (selEqConK i par)
+              eq = qe
+                 ∙ cong (pr (# 3))
+                     ( cong (pr (fst nv))
+                         ( cong (pr (fst iv)) (sym epar)
+                         ∙ cong₂ pr (sym iv→#i) refl )
+                     ∙ cong₂ pr nv→m refl )
+                 ∙ sym (C.code-selEqConK m i par)
+            in ∣ selEqConK i par , eq ∣₁ })
+          (∈#-elim m (fst iv) i∈m)
+        where
+        nv→m : fst nv ≡ # m
+        nv→m = mEq nv nω ann
+        i∈m : ⟨ fst iv ∈ˢ (# m) ⟩
+        i∈m = subst (λ w → ⟨ fst iv ∈ˢ w ⟩) nv→m i∈n
+
+      fromInter : CertBin4.CertBinOf G H x → Honest x m
+      fromInter (c₁ , c₂ , mv , y₁ , y₂ ,
+                 (qe , (mω , (e1 , (e2 , (ann , (ann₁₀ , ann₂₀))))))) =
+        PT.rec PT.squash₁
+          (λ { (t₁ , e₁) →
+          PT.rec PT.squash₁
+            (λ { (t₂ , e₂) →
+              let
+                eq : x ≡ C.code (interK t₁ t₂)
+                eq = qe
+                   ∙ cong (pr (# 4))
+                       ( cong (pr (fst c₁)) e₂
+                       ∙ cong₂ pr e₁ refl )
+                   ∙ sym (C.code-interK t₁ t₂)
+              in ∣ interK t₁ t₂ , eq ∣₁ })
+            (honest (fst c₂) (r (fst c₂) chain₂) (fst y₂) e2 m ann₂) })
+          (honest (fst c₁) (r (fst c₁) chain₁) (fst y₁) e1 m ann₁)
+        where
+        nv→m : fst mv ≡ # m
+        nv→m = mEq mv mω ann
+        ann₁ : ⟨ pr (fst c₁) (# m) ∈ H ⟩
+        ann₁ = subst (λ w → ⟨ pr (fst c₁) w ∈ H ⟩) nv→m ann₁₀
+        ann₂ : ⟨ pr (fst c₂) (# m) ∈ H ⟩
+        ann₂ = subst (λ w → ⟨ pr (fst c₂) w ∈ H ⟩) nv→m ann₂₀
+        chain₀ : fst c₁ ∈⁺ pr (# 4) (pr (fst c₁) (fst c₂))
+        chain₀ = trans⁺ (chainFst (fst c₁) (fst c₂))
+                         (chainSnd (# 4) (pr (fst c₁) (fst c₂)))
+        chain₁ : fst c₁ ∈⁺ x
+        chain₁ = subst (λ w → fst c₁ ∈⁺ w) (sym qe) chain₀
+        chain₂₀ : fst c₂ ∈⁺ pr (# 4) (pr (fst c₁) (fst c₂))
+        chain₂₀ = trans⁺ (chainSnd (fst c₁) (fst c₂))
+                          (chainSnd (# 4) (pr (fst c₁) (fst c₂)))
+        chain₂ : fst c₂ ∈⁺ x
+        chain₂ = subst (λ w → fst c₂ ∈⁺ w) (sym qe) chain₂₀
+
+      fromUnion : CertBin5.CertBinOf G H x → Honest x m
+      fromUnion (c₁ , c₂ , mv , y₁ , y₂ ,
+                 (qe , (mω , (e1 , (e2 , (ann , (ann₁₀ , ann₂₀))))))) =
+        PT.rec PT.squash₁
+          (λ { (t₁ , e₁) →
+          PT.rec PT.squash₁
+            (λ { (t₂ , e₂) →
+              let
+                eq : x ≡ C.code (unionK t₁ t₂)
+                eq = qe
+                   ∙ cong (pr (# 5))
+                       ( cong (pr (fst c₁)) e₂
+                       ∙ cong₂ pr e₁ refl )
+                   ∙ sym (C.code-unionK t₁ t₂)
+              in ∣ unionK t₁ t₂ , eq ∣₁ })
+            (honest (fst c₂) (r (fst c₂) chain₂) (fst y₂) e2 m ann₂) })
+          (honest (fst c₁) (r (fst c₁) chain₁) (fst y₁) e1 m ann₁)
+        where
+        nv→m : fst mv ≡ # m
+        nv→m = mEq mv mω ann
+        ann₁ : ⟨ pr (fst c₁) (# m) ∈ H ⟩
+        ann₁ = subst (λ w → ⟨ pr (fst c₁) w ∈ H ⟩) nv→m ann₁₀
+        ann₂ : ⟨ pr (fst c₂) (# m) ∈ H ⟩
+        ann₂ = subst (λ w → ⟨ pr (fst c₂) w ∈ H ⟩) nv→m ann₂₀
+        chain₀ : fst c₁ ∈⁺ pr (# 5) (pr (fst c₁) (fst c₂))
+        chain₀ = trans⁺ (chainFst (fst c₁) (fst c₂))
+                         (chainSnd (# 5) (pr (fst c₁) (fst c₂)))
+        chain₁ : fst c₁ ∈⁺ x
+        chain₁ = subst (λ w → fst c₁ ∈⁺ w) (sym qe) chain₀
+        chain₂₀ : fst c₂ ∈⁺ pr (# 5) (pr (fst c₁) (fst c₂))
+        chain₂₀ = trans⁺ (chainSnd (fst c₁) (fst c₂))
+                          (chainSnd (# 5) (pr (fst c₁) (fst c₂)))
+        chain₂ : fst c₂ ∈⁺ x
+        chain₂ = subst (λ w → fst c₂ ∈⁺ w) (sym qe) chain₂₀
+
+      fromCompl : Cert6Of G H x → Honest x m
+      fromCompl (nv , cv , yv , (nω , (qe , (e1 , (ann , ann₀))))) =
+        PT.rec PT.squash₁
+          (λ { (t' , e') →
+            let
+              eq : x ≡ C.code (complK t')
+              eq = qe
+                 ∙ cong (pr (# 6))
+                     ( cong (pr (fst nv)) e'
+                     ∙ cong₂ pr nv→m refl )
+                 ∙ sym (C.code-complK t')
+            in ∣ complK t' , eq ∣₁ })
+          (honest (fst cv) (r (fst cv) chain) (fst yv) e1 m ann₁)
+        where
+        nv→m : fst nv ≡ # m
+        nv→m = mEq nv nω ann
+        ann₁ : ⟨ pr (fst cv) (# m) ∈ H ⟩
+        ann₁ = subst (λ w → ⟨ pr (fst cv) w ∈ H ⟩) nv→m ann₀
+        chain₀ : fst cv ∈⁺ pr (# 6) (pr (fst nv) (fst cv))
+        chain₀ = trans⁺ (chainSnd (fst nv) (fst cv))
+                         (chainSnd (# 6) (pr (fst nv) (fst cv)))
+        chain : fst cv ∈⁺ x
+        chain = subst (λ w → fst cv ∈⁺ w) (sym qe) chain₀
+
+      fromShift : Cert7Of G H x → Honest x m
+      fromShift (cv , mv , mv' , yv , (qe , (mω , (qq , (e1 , (ann , ann₀)))))) =
+        PT.rec PT.squash₁
+          (λ { (t' , e') →
+            let
+              eq : x ≡ C.code (shiftK t')
+              eq = qe ∙ cong (pr (# 7)) e' ∙ sym (C.code-shiftK t')
+            in ∣ shiftK t' , eq ∣₁ })
+          (honest (fst cv) (r (fst cv) chain) (fst yv) e1 (suc m) ann₁)
+        where
+        mv→m : fst mv ≡ # m
+        mv→m = mEq mv mω ann
+        mv'→m' : fst mv' ≡ # (suc m)
+        mv'→m' = qq ∙ cong sucV mv→m
+        ann₁ : ⟨ pr (fst cv) (# (suc m)) ∈ H ⟩
+        ann₁ = subst (λ w → ⟨ pr (fst cv) w ∈ H ⟩) mv'→m' ann₀
+        chain₀ : fst cv ∈⁺ pr (# 7) (fst cv)
+        chain₀ = chainSnd (# 7) (fst cv)
+        chain : fst cv ∈⁺ x
+        chain = subst (λ w → fst cv ∈⁺ w) (sym qe) chain₀
+
+      fromShape : CertOf A₀ G H x → Honest x m
+      fromShape (inl c) = fromB0 c
+      fromShape (inr (inl c)) = fromSelMem c
+      fromShape (inr (inr (inl c))) = fromSelEq c
+      fromShape (inr (inr (inr (inl c)))) = fromCon c
+      fromShape (inr (inr (inr (inr (inl c))))) = fromInter c
+      fromShape (inr (inr (inr (inr (inr (inl c)))))) = fromUnion c
+      fromShape (inr (inr (inr (inr (inr (inr (inl c))))))) = fromCompl c
+      fromShape (inr (inr (inr (inr (inr (inr (inr c))))))) = fromShift c
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -897,9 +1226,10 @@ branch pins its tag by a sealed numeral, its payload pieces as members of ω or
 of the carrier, its children in the main table, and its annotations in a
 functional table, so every numeral-shaped leaf is genuinely numeral, every
 index genuinely sits inside its numeral, and every annotation is unique and
-trustworthy. What the certificate does not yet do is recover an honest term:
-its shapes are sets, and turning them back into the syntax is the next
-section's work, where this layer pays off.
+trustworthy. Honesty delivers the payoff: every certified pair is read back,
+at its unique annotation, as the code of an honest term, by running the eight
+code equations backwards on the transitive closure of membership. What
+remains is the step body and its two laws, where this layer pays off.
 <!--zh-->
-证书只用局部条件描述塔的一步。每个分支以封印数码钉住标签，以 ω 或载体钉住载荷诸件，以主表钉住孩子，并以函数性的表钉住注解，故每个数码形叶真是数码，每个指标真在其数码之内，每条注解唯一而可信任。证书尚未做的是收回诚实的项：它的形状是集合，把形状变回语法正是下一章的工作，也是这一层兑现之处。
+证书只用局部条件描述塔的一步。每个分支以封印数码钉住标签，以 ω 或载体钉住载荷诸件，以主表钉住孩子，并以函数性的表钉住注解，故每个数码形叶真是数码，每个指标真在其数码之内，每条注解唯一而可信任。诚实性交付了兑现：每个受证的对在唯一注解处读回为诚实项的码，办法是在成员关系的传递闭包上反向运行八条码等式。剩下的工作是步本体及其两条定律，也是这一层兑现之处。
 <!--/-->
