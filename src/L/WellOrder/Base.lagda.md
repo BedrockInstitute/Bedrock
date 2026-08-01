@@ -61,6 +61,10 @@ open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 open import Cubical.Relation.Nullary using ( ¬_; isProp¬ )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Unit using ( Unit*; tt* )
+open import Cubical.Data.Nat.Order
+  using ( _<_; <-trans; ¬m<m; <-wellfounded; Trichotomy; _≟_ )
+open Trichotomy
 ```
 
 <!--en-->
@@ -173,6 +177,238 @@ arbitrary predicate, and that is where the excluded middle enters.
 ```
 
 <!--en-->
+## Combinators
+<!--zh-->
+## 组合子
+<!--/-->
+
+<!--en-->
+Later chapters assemble their orders rather than invent them: an order on a
+structured type is built from orders on its ingredients, layer by layer. This
+section is the kit. Its first piece is a consequence of trichotomy: a
+refutation in each direction is already an equality. It is stated once for the
+bundle, because the lexicographic product below leans on it twice.
+<!--zh-->
+后续章节是在组装序，而不是从无到有地发明序：结构化类型上的序由其成分上的序一层层造出。本节就是那套配件。第一件是三歧的一个推论：两个方向各一个反驳，就已经是一个相等。它对束只陈述一次，因为下文的字典积要两次倚仗它。
+<!--/-->
+
+```agda
+connex : {ℓc : Level} {A : Type ℓc} (w : SWO A) (a b : A)
+       → ¬ SWO._<∙_ w a b → ¬ SWO._<∙_ w b a → a ≡ b
+connex w a b ¬ab ¬ba with SWO.tri∙ w a b
+... | lt h = Empty.rec (¬ab h)
+... | eq p = p
+... | gt h = Empty.rec (¬ba h)
+```
+
+<!--en-->
+The ground orders. The numbers carry their usual order, with the relation
+lifted to this chapter's relation level; the one-point type carries the empty
+order. For the former, trichotomy and well-foundedness are library facts,
+lifted; for the latter there is nothing to compare, and the four laws hold
+vacuously.
+<!--zh-->
+两个地面序。自然数带其通常的序，关系提升到本章的关系层级；单点类型带空序。前者的三歧与良基是库中现成的事实，提升即得；后者无物可比，四条定律皆空洞成立。
+<!--/-->
+
+```agda
+natSWO : SWO ℕ
+natSWO = record
+  { _<∙_   = _≺ᴺ_
+  ; tri∙   = triᴺ
+  ; irr∙   = λ m h → ¬m<m (lower h)
+  ; trans∙ = λ m n k h h' → lift (<-trans (lower h) (lower h'))
+  ; wf∙    = wfᴺ }
+  where
+  _≺ᴺ_ : ℕ → ℕ → Type ℓₚ
+  m ≺ᴺ n = Lift {ℓ-zero} {ℓₚ} (m < n)
+
+  triᴺ : (m n : ℕ) → Tri (m ≺ᴺ n) (m ≡ n) (n ≺ᴺ m)
+  triᴺ m n with m ≟ n
+  ... | lt h = lt (lift h)
+  ... | eq p = eq p
+  ... | gt h = gt (lift h)
+
+  wfᴺ : WellFounded _≺ᴺ_
+  wfᴺ n = go n (<-wellfounded n)
+    where
+    go : (m : ℕ) → Acc _<_ m → Acc _≺ᴺ_ m
+    go m (acc r) = acc λ k h → go k (r k (lower h))
+
+unitSWO : {ℓc : Level} → SWO (Unit* {ℓc})
+unitSWO = record
+  { _<∙_   = λ _ _ → ⊥* {ℓₚ}
+  ; tri∙   = λ a b → eq refl
+  ; irr∙   = λ a h → Empty.rec* h
+  ; trans∙ = λ a b c h _ → Empty.rec* h
+  ; wf∙    = λ a → acc (λ b h → Empty.rec* h) }
+```
+
+<!--en-->
+Two ways of stacking. A sum puts everything on the left below everything on the
+right, and each summand keeps its own order. A product compares
+lexicographically, first component first. One point of care: the bundle fixes
+its relation's level, and an equality of first components lives at the
+carrier's level instead, which the statement cannot afford; so the second
+clause of the lexicographic relation carries two refutations rather than the
+equality, and `connex`{.Agda} converts whenever the equality itself is owed.
+Well-foundedness of the product is a nested descent: an outer induction on the
+first accessibility, an inner induction on the second, with the equal-keys case
+transported along the recovered path rather than descended into.
+<!--zh-->
+两种叠放方式。和把左侧的一切放在右侧的一切之下，两个加项各保各的序。积按字典序比较，先比第一分量。有一处要小心：束固定了关系的层级，而第一分量的相等落在载体的层级上，陈述负担不起；于是字典关系的第二支携带两个反驳而非那个相等，等到确实欠下相等时由 `connex`{.Agda} 兑换。积的良基性是一场嵌套下降：外层对第一个可及性归纳，内层对第二个归纳，键相等的情形沿兑换出的道路搬运结果、而不递归进去。
+<!--/-->
+
+```agda
+module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X) (v : SWO Y) where
+  private
+    module U = SWO u
+    module V = SWO v
+
+    _≺⊎_ : X ⊎ Y → X ⊎ Y → Type ℓₚ
+    inl a ≺⊎ inl b = a U.<∙ b
+    inl a ≺⊎ inr b = Unit* {ℓₚ}
+    inr a ≺⊎ inl b = ⊥* {ℓₚ}
+    inr a ≺⊎ inr b = a V.<∙ b
+
+    tri⊎ : (s t : X ⊎ Y) → Tri (s ≺⊎ t) (s ≡ t) (t ≺⊎ s)
+    tri⊎ (inl a) (inl b) with U.tri∙ a b
+    ... | lt h = lt h
+    ... | eq p = eq (cong inl p)
+    ... | gt h = gt h
+    tri⊎ (inl a) (inr b) = lt tt*
+    tri⊎ (inr a) (inl b) = gt tt*
+    tri⊎ (inr a) (inr b) with V.tri∙ a b
+    ... | lt h = lt h
+    ... | eq p = eq (cong inr p)
+    ... | gt h = gt h
+
+    irr⊎ : (s : X ⊎ Y) → ¬ s ≺⊎ s
+    irr⊎ (inl a) h = U.irr∙ a h
+    irr⊎ (inr a) h = V.irr∙ a h
+
+    trans⊎ : (s t r : X ⊎ Y) → s ≺⊎ t → t ≺⊎ r → s ≺⊎ r
+    trans⊎ (inl a) (inl b) (inl c) h h' = U.trans∙ a b c h h'
+    trans⊎ (inl a) (inl b) (inr c) h h' = tt*
+    trans⊎ (inl a) (inr b) (inl c) h h' = Empty.rec* h'
+    trans⊎ (inl a) (inr b) (inr c) h h' = tt*
+    trans⊎ (inr a) (inl b) r h h' = Empty.rec* h
+    trans⊎ (inr a) (inr b) (inl c) h h' = Empty.rec* h'
+    trans⊎ (inr a) (inr b) (inr c) h h' = V.trans∙ a b c h h'
+
+    accInl : (a : X) → Acc U._<∙_ a → Acc _≺⊎_ (inl a)
+    accInl a (acc r) = acc λ where
+      (inl b) h → accInl b (r b h)
+      (inr b) h → Empty.rec* h
+
+    accInr : (b : Y) → Acc V._<∙_ b → Acc _≺⊎_ (inr b)
+    accInr b (acc r) = acc λ where
+      (inl a) h → accInl a (U.wf∙ a)
+      (inr b') h → accInr b' (r b' h)
+
+  sumSWO : SWO (X ⊎ Y)
+  sumSWO = record
+    { _<∙_   = _≺⊎_
+    ; tri∙   = tri⊎
+    ; irr∙   = irr⊎
+    ; trans∙ = trans⊎
+    ; wf∙    = λ where
+        (inl a) → accInl a (U.wf∙ a)
+        (inr b) → accInr b (V.wf∙ b) }
+```
+
+```agda
+  private
+    _≺×_ : X × Y → X × Y → Type ℓₚ
+    (a , x) ≺× (b , y) =
+      (a U.<∙ b) ⊎ ((¬ (a U.<∙ b)) × (¬ (b U.<∙ a)) × (x V.<∙ y))
+
+    stall : {a b : X} → a ≡ b → (¬ (a U.<∙ b)) × (¬ (b U.<∙ a))
+    stall {a} {b} p =
+        (λ h → U.irr∙ b (subst (λ z → z U.<∙ b) p h))
+      , (λ h → U.irr∙ b (subst (λ z → b U.<∙ z) p h))
+
+    tri× : (s t : X × Y) → Tri (s ≺× t) (s ≡ t) (t ≺× s)
+    tri× (a , x) (b , y) with U.tri∙ a b
+    ... | lt h = lt (inl h)
+    ... | gt h = gt (inl h)
+    ... | eq p with V.tri∙ x y
+    ... | lt h = lt (inr (fst (stall p) , snd (stall p) , h))
+    ... | eq q = eq (cong₂ _,_ p q)
+    ... | gt h = gt (inr (fst (stall (sym p)) , snd (stall (sym p)) , h))
+
+    irr× : (s : X × Y) → ¬ s ≺× s
+    irr× (a , x) (inl h) = U.irr∙ a h
+    irr× (a , x) (inr (_ , _ , h)) = V.irr∙ x h
+
+    trans× : (s t r : X × Y) → s ≺× t → t ≺× r → s ≺× r
+    trans× (a , x) (b , y) (c , z) (inl h) (inl h') =
+      inl (U.trans∙ a b c h h')
+    trans× (a , x) (b , y) (c , z) (inl h) (inr (¬bc , ¬cb , _)) =
+      inl (subst (λ z' → a U.<∙ z') (connex u b c ¬bc ¬cb) h)
+    trans× (a , x) (b , y) (c , z) (inr (¬ab , ¬ba , _)) (inl h') =
+      inl (subst (λ z' → z' U.<∙ c) (sym (connex u a b ¬ab ¬ba)) h')
+    trans× (a , x) (b , y) (c , z) (inr (¬ab , ¬ba , h)) (inr (¬bc , ¬cb , h')) =
+      inr ( (λ k → ¬bc (subst (λ z' → z' U.<∙ c) (connex u a b ¬ab ¬ba) k))
+          , (λ k → ¬cb (subst (λ z' → c U.<∙ z') (connex u a b ¬ab ¬ba) k))
+          , V.trans∙ x y z h h' )
+
+    accProd : (a : X) → Acc U._<∙_ a → (x : Y) → Acc V._<∙_ x → Acc _≺×_ (a , x)
+    accProd a (acc ru) = inner
+      where
+      inner : (x : Y) → Acc V._<∙_ x → Acc _≺×_ (a , x)
+      inner x (acc rv) = acc λ where
+        (b , y) (inl h) → accProd b (ru b h) y (V.wf∙ y)
+        (b , y) (inr (¬ba , ¬ab , h)) →
+          subst (λ z → Acc _≺×_ (z , y)) (sym (connex u b a ¬ba ¬ab))
+            (inner y (rv y h))
+
+  prodSWO : SWO (X × Y)
+  prodSWO = record
+    { _<∙_   = _≺×_
+    ; tri∙   = tri×
+    ; irr∙   = irr×
+    ; trans∙ = trans×
+    ; wf∙    = λ where (a , x) → accProd a (U.wf∙ a) x (V.wf∙ x) }
+```
+
+<!--en-->
+And pulling back. An injection into an ordered type induces an order on its
+source: compare the images. Trichotomy's equality case is the one place
+injectivity is spent, and accessibility transports backwards along the map with
+no further argument.
+<!--zh-->
+最后是拉回。一个到带序类型的单射在其源上诱导出一个序：比较像即可。三歧的相等情形是单射性唯一被花费的地方，而可及性沿映射向后搬运，无需更多论证。
+<!--/-->
+
+```agda
+module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy}
+         (v : SWO Y) (f : X → Y) (inj : (a b : X) → f a ≡ f b → a ≡ b) where
+  private
+    module V = SWO v
+
+    _≺ᶠ_ : X → X → Type ℓₚ
+    a ≺ᶠ b = f a V.<∙ f b
+
+    triᶠ : (a b : X) → Tri (a ≺ᶠ b) (a ≡ b) (b ≺ᶠ a)
+    triᶠ a b with V.tri∙ (f a) (f b)
+    ... | lt h = lt h
+    ... | eq p = eq (inj a b p)
+    ... | gt h = gt h
+
+    accPull : (a : X) → Acc V._<∙_ (f a) → Acc _≺ᶠ_ a
+    accPull a (acc r) = acc λ b h → accPull b (r (f b) h)
+
+  pullSWO : SWO X
+  pullSWO = record
+    { _<∙_   = _≺ᶠ_
+    ; tri∙   = triᶠ
+    ; irr∙   = λ a h → V.irr∙ (f a) h
+    ; trans∙ = λ a b c h h' → V.trans∙ (f a) (f b) (f c) h h'
+    ; wf∙    = λ a → accPull a (V.wf∙ (f a)) }
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -185,7 +421,11 @@ is the interface the choice construction takes; it does not care which order it
 is handed, which is why the chapter is generic. The excluded middle is spent
 once, on the decision at each descent step, and the
 level discipline (carrier and relation separately generic) is what will let the
-order of Part 4 compare small things by large data.
+order of Part 4 compare small things by large data. The combinator kit
+(`natSWO`{.Agda}, `unitSWO`{.Agda}, `sumSWO`{.Agda}, `prodSWO`{.Agda},
+`pullSWO`{.Agda}, with `connex`{.Agda} as the exchange lemma) closes the
+chapter: ground orders, two ways of stacking, and pull-back along an injection,
+which is how a later chapter orders one type by picturing it inside another.
 <!--zh-->
-`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是选择构造取用的接口；它不在乎拿到的是哪个序，这正是本章泛型的原因。排中律花在一处，即每一步下降时的那次判定，且只记在那一条定理账上：此处其余一切都是构造性的。而层级纪律 (载体与关系各自泛型) 将使第四部的那个序能以大的数据去比较小的东西。
+`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是选择构造取用的接口；它不在乎拿到的是哪个序，这正是本章泛型的原因。排中律花在一处，即每一步下降时的那次判定，且只记在那一条定理账上：此处其余一切都是构造性的。而层级纪律 (载体与关系各自泛型) 将使第四部的那个序能以大的数据去比较小的东西。组合子配件 (`natSWO`{.Agda}、`unitSWO`{.Agda}、`sumSWO`{.Agda}、`prodSWO`{.Agda}、`pullSWO`{.Agda}，外加兑换引理 `connex`{.Agda}) 为本章收尾：地面序、两种叠放，以及沿单射的拉回，后者正是后面某章「把一个类型画进另一个类型里」为其排序的方式。
 <!--/-->
