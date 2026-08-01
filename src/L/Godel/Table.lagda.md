@@ -20,13 +20,15 @@ since every clause opens with it.
 
 open import Base.Prelude
 open import Base.Truth
+open import Base.Classical using ( LEM )
 
 module L.Godel.Table {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Formula; var; con; _≐_; _∧̇_; _∨̇_; ∃̇_ )
+  using ( Formula; var; con; _≐_; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
+import L.Recursion
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset )
@@ -57,6 +59,8 @@ open import L.Godel.Codes {ℓ}
         ; interIdxL; interIdxR; unionIdxL; unionIdxR )
 open import L.Coding.InL {ℓ} using ( sglL )
 
+open import Cubical.Foundations.Prelude using ( subst2 )
+open import Cubical.Data.Sigma using ( Σ≡Prop )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 import Cubical.Data.Sum as Sum
@@ -72,7 +76,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 open InfinitySet using ( sucV; #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
-open hPropStructure 𝒮ʟ using ( S )
+open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
@@ -813,6 +817,45 @@ module _ {n : ℕ} (s w f a : Fin n) (γ : S ^ n) where
 ```
 
 <!--en-->
+## The approximation formula, and the family satisfying it
+<!--zh-->
+## 逼近公式，与满足它的族
+<!--/-->
+
+<!--en-->
+To be an approximation is to satisfy every entry's clause: two binders, the
+application reader as the guard, the clause as the body, the carrier riding
+at its own slot. The clause consults the family only at the entry's own
+subterms, so no domain conjunct is needed and none is written. The family of
+the previous section satisfies the formula: one structural recursion over
+the term produces the formula-level clause at every index directly through
+the constructors' inward witnesses, with an embedding parameter composing
+down the recursion so the children's clauses land against the ambient
+family, not their own.
+<!--zh-->
+作为逼近就是满足每个条目的子句：两个束缚元、应用读式作卫、子句作体、载体乘在自己的槽位上。子句只在条目自身的子项处咨询族，故不需要也不写定义域合取。上一节的族满足该公式：一次对项的结构递归，经诸构造子的向内见证在每个索引处直接产出公式层的子句，一个嵌入参数沿递归复合下去，使孩子的子句落在周遭的族上而非它们自己的族上。
+<!--/-->
+
+```agda
+ApproxAt : ∀ {n} → Fin n → Fin n → Formula S n
+ApproxAt f a = ∀̇ (∀̇ ( appAt (sh2 f) (suc zero) zero
+                    ⇒̇ ClauseAt (suc zero) zero (sh2 f) (sh2 a) ))
+
+module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+  Approx-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (x y : S)
+              → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+              → ⟨ (y ∷ x ∷ γ) ⊨ ClauseAt (suc zero) zero (sh2 f) (sh2 a) ⟩
+  Approx-step h x y p = h x y
+    (subst ⟨_⟩ (sym (appAt-adequate (sh2 f) (suc zero) zero (y ∷ x ∷ γ))) p)
+
+  Approx-in : ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+               → ⟨ (y ∷ x ∷ γ) ⊨ ClauseAt (suc zero) zero (sh2 f) (sh2 a) ⟩)
+            → ⟨ γ ⊨ ApproxAt f a ⟩
+  Approx-in hs x y p = hs x y
+    (subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (y ∷ x ∷ γ)) p)
+```
+
+<!--en-->
 ## The values are the denotations
 <!--zh-->
 ## 诸取值即诸指称
@@ -1266,4 +1309,254 @@ which only ever touches the entry conjuncts.
   apx-clauseOf (shiftK t) (suc k) =
     clause-mono (fst (apxS t)) (fst (apxS (shiftK t)))
       (monoShift t) (apx-clauseOf t k)
+```
+
+```agda
+  apx-clauseAt : {m : ℕ} (T : KT ⟪ A ⟫ m) (i : Fin (sizeK T)) (F : V ℓ)
+               → ((z : V ℓ) → ⟨ z ∈ fst (apxS T) ⟩ → ⟨ z ∈ F ⟩)
+               → {k : ℕ} (s w f a : Fin k) (γ : S ^ k)
+               → fst (lookup s γ) ≡ C.code (subK T i .snd)
+               → fst (lookup w γ) ≡ ⟦_⟧ᴷ A (subK T i .snd)
+               → fst (lookup f γ) ≡ F
+               → fst (lookup a γ) ≡ A
+               → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  apx-clauseAt {m} allK i F emb s w f a γ qs qw qf qa =
+    clause₀ s w f a γ (allLeaf-in s w a γ m
+      (qs ∙ C.code-allK m)
+      (qw ∙ cong (λ u → allTuples u m) (sym qa)))
+  apx-clauseAt {m} (selMemK i' j') i F emb s w f a γ qs qw qf qa =
+    clause₁ s w f a γ (SelMemLeaf.Leaf-in s w a γ m (toℕ i') (toℕ j')
+      (qs ∙ C.code-selMemK m i' j')
+      (qw ∙ cong (λ u → selectMember (allTuples u m)
+              ⁅ # (toℕ i') ⁆s ⁅ # (toℕ j') ⁆s) (sym qa)))
+  apx-clauseAt {m} (selEqK i' j') i F emb s w f a γ qs qw qf qa =
+    clause₂ s w f a γ (SelEqLeaf.Leaf-in s w a γ m (toℕ i') (toℕ j')
+      (qs ∙ C.code-selEqK m i' j')
+      (qw ∙ cong (λ u → selectEqual (allTuples u m)
+              ⁅ # (toℕ i') ⁆s ⁅ # (toℕ j') ⁆s) (sym qa)))
+  apx-clauseAt {m} (selEqConK i' a') i F emb s w f a γ qs qw qf qa =
+    clause₃ s w f a γ (selEqConLeaf-in s w a γ m (toℕ i') (C.paramS a')
+      (qs ∙ C.code-selEqConK m i' a')
+      (qw ∙ cong (λ u → shiftDown (selectEqual
+              (extendFamily (allTuples u m) ⁅ ⟪ A ⟫↪ a' ⁆s)
+              ⁅ # (suc (toℕ i')) ⁆s ⁅ # 0 ⁆s)) (sym qa)))
+  apx-clauseAt (interK u v) zero F emb s w f a γ qs qw qf qa =
+    clause₄ s w f a γ (InterNode.Node-in s w f γ
+      ( C.codeS u , C.codeS v
+      , (⟦_⟧ᴷ A u , denoteL A lA u) , (⟦_⟧ᴷ A v , denoteL A lA v)
+      , ( subst (λ z → ⟨ pr (C.code u) (⟦_⟧ᴷ A u) ∈ z ⟩) (sym qf)
+            (emb (pr (C.code u) (⟦_⟧ᴷ A u))
+              (monoInterL u v (pr (C.code u) (⟦_⟧ᴷ A u)) (entrySelf∈ u)))
+        , ( subst (λ z → ⟨ pr (C.code v) (⟦_⟧ᴷ A v) ∈ z ⟩) (sym qf)
+              (emb (pr (C.code v) (⟦_⟧ᴷ A v))
+                (monoInterR u v (pr (C.code v) (⟦_⟧ᴷ A v)) (entrySelf∈ v)))
+          , (qs ∙ C.code-interK u v , qw) ) )))
+  apx-clauseAt (interK u v) (suc k') F emb s w f a γ qs qw qf qa =
+    goSplit (FinSumChar.inv (sizeK u) (sizeK v) k') qs qw
+    where
+    goSplit : (x' : Fin (sizeK u) ⊎ Fin (sizeK v))
+            → fst (lookup s γ) ≡ C.code (subSplitK u v x' .snd)
+            → fst (lookup w γ) ≡ ⟦_⟧ᴷ A (subSplitK u v x' .snd)
+            → ⟨ γ ⊨ ClauseAt s w f a ⟩
+    goSplit (inl i') qs' qw' = apx-clauseAt u i' F
+      (λ z hz → emb z (monoInterL u v z hz)) s w f a γ qs' qw' qf qa
+    goSplit (inr j') qs' qw' = apx-clauseAt v j' F
+      (λ z hz → emb z (monoInterR u v z hz)) s w f a γ qs' qw' qf qa
+  apx-clauseAt (unionK u v) zero F emb s w f a γ qs qw qf qa =
+    clause₅ s w f a γ (UnionNode.Node-in s w f γ
+      ( C.codeS u , C.codeS v
+      , (⟦_⟧ᴷ A u , denoteL A lA u) , (⟦_⟧ᴷ A v , denoteL A lA v)
+      , ( subst (λ z → ⟨ pr (C.code u) (⟦_⟧ᴷ A u) ∈ z ⟩) (sym qf)
+            (emb (pr (C.code u) (⟦_⟧ᴷ A u))
+              (monoUnionL u v (pr (C.code u) (⟦_⟧ᴷ A u)) (entrySelf∈ u)))
+        , ( subst (λ z → ⟨ pr (C.code v) (⟦_⟧ᴷ A v) ∈ z ⟩) (sym qf)
+              (emb (pr (C.code v) (⟦_⟧ᴷ A v))
+                (monoUnionR u v (pr (C.code v) (⟦_⟧ᴷ A v)) (entrySelf∈ v)))
+          , (qs ∙ C.code-unionK u v , qw) ) )))
+  apx-clauseAt (unionK u v) (suc k') F emb s w f a γ qs qw qf qa =
+    goSplit (FinSumChar.inv (sizeK u) (sizeK v) k') qs qw
+    where
+    goSplit : (x' : Fin (sizeK u) ⊎ Fin (sizeK v))
+            → fst (lookup s γ) ≡ C.code (subSplitK u v x' .snd)
+            → fst (lookup w γ) ≡ ⟦_⟧ᴷ A (subSplitK u v x' .snd)
+            → ⟨ γ ⊨ ClauseAt s w f a ⟩
+    goSplit (inl i') qs' qw' = apx-clauseAt u i' F
+      (λ z hz → emb z (monoUnionL u v z hz)) s w f a γ qs' qw' qf qa
+    goSplit (inr j') qs' qw' = apx-clauseAt v j' F
+      (λ z hz → emb z (monoUnionR u v z hz)) s w f a γ qs' qw' qf qa
+  apx-clauseAt {m} (complK t) zero F emb s w f a γ qs qw qf qa =
+    clause₆ s w f a γ (complNode-in s w f a γ m (C.codeS t)
+      (⟦_⟧ᴷ A t , denoteL A lA t)
+      (subst (λ z → ⟨ pr (C.code t) (⟦_⟧ᴷ A t) ∈ z ⟩) (sym qf)
+        (emb (pr (C.code t) (⟦_⟧ᴷ A t))
+          (monoCompl t (pr (C.code t) (⟦_⟧ᴷ A t)) (entrySelf∈ t))))
+      (qs ∙ C.code-complK t)
+      (qw ∙ cong (λ u → allTuples u m ∖ ⟦_⟧ᴷ A t) (sym qa)))
+  apx-clauseAt (complK t) (suc k') F emb s w f a γ qs qw qf qa =
+    apx-clauseAt t k' F (λ z hz → emb z (monoCompl t z hz))
+      s w f a γ qs qw qf qa
+  apx-clauseAt (shiftK t) zero F emb s w f a γ qs qw qf qa =
+    clause₇ s w f a γ (shiftNode-in s w f γ
+      ( C.codeS t , (⟦_⟧ᴷ A t , denoteL A lA t)
+      , ( subst (λ z → ⟨ pr (C.code t) (⟦_⟧ᴷ A t) ∈ z ⟩) (sym qf)
+            (emb (pr (C.code t) (⟦_⟧ᴷ A t))
+              (monoShift t (pr (C.code t) (⟦_⟧ᴷ A t)) (entrySelf∈ t)))
+        , (qs ∙ C.code-shiftK t , qw) )))
+  apx-clauseAt (shiftK t) (suc k') F emb s w f a γ qs qw qf qa =
+    apx-clauseAt t k' F (λ z hz → emb z (monoShift t z hz))
+      s w f a γ qs qw qf qa
+
+  apx-approx : {m : ℕ} (T : KT ⟪ A ⟫ m) {k : ℕ} (f a : Fin k) (γ : S ^ k)
+             → fst (lookup f γ) ≡ fst (apxS T)
+             → fst (lookup a γ) ≡ A
+             → ⟨ γ ⊨ ApproxAt f a ⟩
+  apx-approx T f a γ qf qa = Approx-in f a γ onStep
+    where
+    onStep : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+           → ⟨ (y ∷ x ∷ γ) ⊨ ClauseAt (suc zero) zero (sh2 f) (sh2 a) ⟩
+    onStep x y e = PT.rec
+      (snd ((y ∷ x ∷ γ) ⊨ ClauseAt (suc zero) zero (sh2 f) (sh2 a)))
+      named
+      (apx-out T (pr (fst x) (fst y))
+        (subst (λ u → ⟨ pr (fst x) (fst y) ∈ u ⟩) qf e))
+      where
+      named : Σ[ i ∈ Fin (sizeK T) ]
+                (entry (subK T i) ≡ pr (fst x) (fst y))
+            → ⟨ (y ∷ x ∷ γ) ⊨ ClauseAt (suc zero) zero (sh2 f) (sh2 a) ⟩
+      named (i , q) = apx-clauseAt T i (fst (apxS T)) (λ _ h → h)
+        (suc zero) zero (sh2 f) (sh2 a) (y ∷ x ∷ γ)
+        (sym (pr-inj (sym (entry-eq (subK T i)) ∙ q) .fst))
+        (sym (pr-inj (sym (entry-eq (subK T i)) ∙ q) .snd))
+        qf qa
+
+  TmGraph : Formula S 2
+  TmGraph = ∃̇ ( (var zero ≐ con (A , lA))
+             ∧̇ (∃̇ ( ApproxAt zero (suc zero)
+                  ∧̇ appAt zero (suc (suc (suc zero))) (suc (suc zero)) )))
+
+  tm-graph : {n : ℕ} (t : KT ⟪ A ⟫ n) (y x : S)
+           → fst x ≡ C.code t → fst y ≡ ⟦_⟧ᴷ A t
+           → ⟨ (y ∷ x ∷ []) ⊨ TmGraph ⟩
+  tm-graph t y x qx qy =
+    ∣ (A , lA)
+    , ( refl
+      , ∣ apxS t
+        , ( apx-approx t zero (suc zero)
+              (apxS t ∷ (A , lA) ∷ y ∷ x ∷ []) refl refl
+          , subst ⟨_⟩ (sym (appAt-adequate zero (suc (suc (suc zero)))
+              (suc (suc zero)) (apxS t ∷ (A , lA) ∷ y ∷ x ∷ [])))
+              (subst2 (λ u u' → ⟨ pr u u' ∈ fst (apxS t) ⟩)
+                (sym qx) (sym qy) (entrySelf∈ t)) ) ∣₁ ) ∣₁
+
+  tm-only : {n : ℕ} (t : KT ⟪ A ⟫ n) (y x : S)
+          → fst x ≡ C.code t → ⟨ (y ∷ x ∷ []) ⊨ TmGraph ⟩
+          → fst y ≡ ⟦_⟧ᴷ A t
+  tm-only t y x qx h = PT.rec (setIsSet (fst y) (⟦_⟧ᴷ A t)) named h
+    where
+    named : Σ[ aC ∈ S ]
+              ( (fst aC ≡ A)
+              × ⟨ ((aC ∷ y ∷ x ∷ []))
+                    ⊨ (∃̇ ( ApproxAt zero (suc zero)
+                        ∧̇ appAt zero (suc (suc (suc zero)))
+                            (suc (suc zero)) )) ⟩ )
+          → fst y ≡ ⟦_⟧ᴷ A t
+    named (aC , (qaC , rest)) = PT.rec (setIsSet (fst y) (⟦_⟧ᴷ A t))
+      named₂ rest
+      where
+      named₂ : Σ[ g ∈ S ]
+                 ( ⟨ (g ∷ aC ∷ y ∷ x ∷ []) ⊨ ApproxAt zero (suc zero) ⟩
+                 × ⟨ (g ∷ aC ∷ y ∷ x ∷ [])
+                       ⊨ appAt zero (suc (suc (suc zero)))
+                           (suc (suc zero)) ⟩ )
+             → fst y ≡ ⟦_⟧ᴷ A t
+      named₂ (g , (ha , happ)) = approx-val (fst g) step t x y qx
+        (subst ⟨_⟩ (appAt-adequate zero (suc (suc (suc zero)))
+          (suc (suc zero)) (g ∷ aC ∷ y ∷ x ∷ [])) happ)
+        where
+        step : (x' y' : S) → ⟨ pr (fst x') (fst y') ∈ fst g ⟩
+             → ∥ ClauseOf A (fst g) (fst x') (fst y') ∥₁
+        step x' y' e = subst
+          (λ u → ∥ ClauseOf u (fst g) (fst x') (fst y') ∥₁) qaC
+          (Clause-out (suc zero) zero (sh2 zero) (sh2 (suc zero))
+            (y' ∷ x' ∷ g ∷ aC ∷ y ∷ x ∷ [])
+            (Approx-step zero (suc zero) (g ∷ aC ∷ y ∷ x ∷ []) ha x' y' e))
+```
+
+<!--en-->
+## The assembly
+<!--zh-->
+## 装配
+<!--/-->
+
+<!--en-->
+The recursion record, under the one classical assumption the book ever
+spends. The domain is the finite subterm-code set, not a stage, per the
+probe's design fact: a stage carries junk at which the graph is unsatisfiable
+and contractibility fails. Functionality is mere functionality at the code a
+member merely is, existence by the family, uniqueness by the reading, and
+the value function comes off the recursion chapter's interface with its
+value pinned to the denotation.
+<!--zh-->
+递归 record，落在全书唯一花费的那份经典假设之下。定义域取有穷子项码集而非阶段，按探针钉下的设计事实：阶段携带垃圾，图在垃圾处不可满足，可缩性就败了。函数性是「成员仅仅是某个码」处的纯函数性，存在由族、唯一由读式，取值函数从递归章的接口取下，其值钉在指称上。
+<!--/-->
+
+```agda
+  module WithLEM (lem : LEM (ℓ-suc ℓ)) where
+    private
+      module LR = L.Recursion {ℓ} lem
+    open LR using ( Recursion; mereFunct; module Of )
+
+    module TermRec {n : ℕ} (T : KT ⟪ A ⟫ n) where
+      private
+        domBnd : ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ
+               × ((i : Fin (sizeK T)) → ⟨ C.code (subK T i .snd) ∈ Lset σ ⟩)) ∥₁
+        domBnd = stageFam (sizeK T) (λ i → C.code (subK T i .snd))
+          (λ i → C.codeS (subK T i .snd) .snd)
+
+      opaque
+        domS : S
+        domS = finSet (sizeK T) (λ i → C.code (subK T i .snd)) , isl
+          where
+          isl : ⟨ isL (finSet (sizeK T) (λ i → C.code (subK T i .snd))) ⟩
+          isl = PT.rec
+            (snd (isL (finSet (sizeK T) (λ i → C.code (subK T i .snd)))))
+            (λ { (σ , oσ , mem) → FinOf.finSetL σ oσ (sizeK T)
+                (λ i → C.code (subK T i .snd)) mem })
+            domBnd
+
+        dom-in : (i : Fin (sizeK T)) → ⟨ C.code (subK T i .snd) ∈ fst domS ⟩
+        dom-in i = finSet-in (sizeK T) (λ j → C.code (subK T j .snd))
+          (C.code (subK T i .snd)) ∣ i , refl ∣₁
+
+        dom-out : (z : V ℓ) → ⟨ z ∈ fst domS ⟩
+                → ∥ Σ[ i ∈ Fin (sizeK T) ] (C.code (subK T i .snd) ≡ z) ∥₁
+        dom-out z = finSet-out (sizeK T) (λ j → C.code (subK T j .snd)) z
+
+      private
+        fc : (x : S) → ⟨ x ∈ˢ domS ⟩
+           → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ TmGraph ⟩)
+        fc x x∈ = mereFunct TmGraph x (PT.map atI (dom-out (fst x) x∈))
+          where
+          atI : Σ[ i ∈ Fin (sizeK T) ] (C.code (subK T i .snd) ≡ fst x)
+              → Σ[ y ∈ S ] ( ⟨ (y ∷ x ∷ []) ⊨ TmGraph ⟩
+                           × ((y' : S) → ⟨ (y' ∷ x ∷ []) ⊨ TmGraph ⟩
+                              → y' ≡ y) )
+          atI (i , qi) =
+            (⟦_⟧ᴷ A (subK T i .snd) , denoteL A lA (subK T i .snd))
+            , ( tm-graph (subK T i .snd)
+                  (⟦_⟧ᴷ A (subK T i .snd) , denoteL A lA (subK T i .snd))
+                  x (sym qi) refl
+              , (λ y' h' → Σ≡Prop (λ v → snd (isL v))
+                  (tm-only (subK T i .snd) y' x (sym qi) h')) )
+
+      R : Recursion
+      R = record { dom = domS ; graph = TmGraph ; funct = fc }
+
+      module Val = Of R
+
+      val-denote : (x : S) (x∈ : ⟨ x ∈ˢ domS ⟩) {m : ℕ} (t : KT ⟪ A ⟫ m)
+                 → fst x ≡ C.code t
+                 → fst (Val.val x x∈) ≡ ⟦_⟧ᴷ A t
+      val-denote x x∈ t qx = tm-only t (Val.val x x∈) x qx
+        (Val.val-graph x x∈)
 ```
