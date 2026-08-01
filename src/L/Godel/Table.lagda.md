@@ -28,9 +28,10 @@ open import FOL.Syntax
   using ( Formula; var; con; _≐_; _∧̇_; _∨̇_; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Axioms.Basic {ℓ} using ( finSet; finSet-in; finSet-out; module FinOf )
 open import L.Coding.Model {ℓ}
   using ( prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
         ; sucAtL; sucAtL-adequate; numL )
@@ -47,11 +48,13 @@ open import L.Godel.Definable {ℓ}
         ; selectEqualAt; selectEqualAt-out; selectEqualAt-in
         ; extendFamilyAt; extendFamilyAt-out; extendFamilyAt-in )
 open import L.Godel.InL {ℓ}
-  using ( allTuplesL; selectEqualL; extendFamilyL )
+  using ( allTuplesL; selectEqualL; extendFamilyL; denoteL; stageFam )
 open import L.Godel.Terms {ℓ}
   using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK
         ; ⟦_⟧ᴷ )
-open import L.Godel.Codes {ℓ} using ( module Codes; tagNe )
+open import L.Godel.Codes {ℓ}
+  using ( module Codes; tagNe; SubK; sizeK; subK; subSplitK; selfIxK; sub-selfK
+        ; interIdxL; interIdxR; unionIdxL; unionIdxR )
 open import L.Coding.InL {ℓ} using ( sglL )
 
 import Cubical.HITs.PropositionalTruncation as PT
@@ -59,9 +62,11 @@ open PT using ( ∣_∣₁; ∥_∥₁ )
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
 open import Cubical.Data.Nat using ( znots; snotz; injSuc )
+open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.Data.FinData.Properties using ( module FinSumChar )
 import Cubical.Data.Empty as Empty
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
@@ -1025,4 +1030,240 @@ module Denote (A : V ℓ) (lA : ⟨ isL A ⟩) where
     use (shiftK t) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (e1 , (qs , qv)))))))))) =
       qv ∙ cong shiftDown
         (go t ct wt (pr-inj (sym qs ∙ qx ∙ C.code-shiftK t) .snd) e1)
+```
+
+<!--en-->
+## The approximation, exhibited
+<!--zh-->
+## 逼近，被展示出来
+<!--/-->
+
+<!--en-->
+The existence half. A term's approximation is the finite family of its
+subterm entries, each entry the sealed pair of a code with its denotation and
+an element of the model outright, the denotation's constructibility being the
+bridge chapter's capstone. The family is a finite set over one stage found by
+the family lemma, sealed at birth per the recorded law. Every entry then
+satisfies its clause against the family itself: the constructor cases are the
+clause's inward witnesses assembled from self-membership of the children, and
+the child cases are the children's own clauses carried up by monotonicity,
+which only ever touches the entry conjuncts.
+<!--zh-->
+存在性那一半。项的逼近是其子项条目的有穷族，每个条目是码与其指称的封印对、当下就是模型的元素，指称的可构造性正是桥梁章的封顶。族是家族引理找到的一个阶段上的有穷集合，按在案定律出生即封印。族的每个条目随后对着族自身满足其子句：构造子情形是子句的向内见证、由孩子的自身隶属组装，孩子情形是孩子自己的子句经单调性上抬，而单调性只碰条目合取。
+<!--/-->
+
+```agda
+  entryS : SubK ⟪ A ⟫ → S
+  entryS (m , t) = prʟ (C.codeS t) (⟦_⟧ᴷ A t , denoteL A lA t)
+
+  entry : SubK ⟪ A ⟫ → V ℓ
+  entry p = fst (entryS p)
+
+  entry-eq : (p : SubK ⟪ A ⟫)
+           → entry p ≡ pr (C.code (p .snd)) (⟦_⟧ᴷ A (p .snd))
+  entry-eq (m , t) = prʟ-fst (C.codeS t) (⟦_⟧ᴷ A t , denoteL A lA t)
+
+  private
+    apxBnd : {n : ℕ} (T : KT ⟪ A ⟫ n)
+           → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ
+             × ((i : Fin (sizeK T)) → ⟨ entry (subK T i) ∈ Lset σ ⟩)) ∥₁
+    apxBnd T = stageFam (sizeK T) (λ i → entry (subK T i))
+      (λ i → entryS (subK T i) .snd)
+
+  opaque
+    apxS : {n : ℕ} → KT ⟪ A ⟫ n → S
+    apxS T = finSet (sizeK T) (λ i → entry (subK T i)) , isl
+      where
+      isl : ⟨ isL (finSet (sizeK T) (λ i → entry (subK T i))) ⟩
+      isl = PT.rec (snd (isL (finSet (sizeK T) (λ i → entry (subK T i)))))
+        (λ { (σ , oσ , mem) →
+          FinOf.finSetL σ oσ (sizeK T) (λ i → entry (subK T i)) mem })
+        (apxBnd T)
+
+    apx-in : {n : ℕ} (T : KT ⟪ A ⟫ n) (i : Fin (sizeK T))
+           → ⟨ entry (subK T i) ∈ fst (apxS T) ⟩
+    apx-in T i = finSet-in (sizeK T) (λ j → entry (subK T j))
+      (entry (subK T i)) ∣ i , refl ∣₁
+
+    apx-out : {n : ℕ} (T : KT ⟪ A ⟫ n) (z : V ℓ) → ⟨ z ∈ fst (apxS T) ⟩
+            → ∥ Σ[ i ∈ Fin (sizeK T) ] (entry (subK T i) ≡ z) ∥₁
+    apx-out T z = finSet-out (sizeK T) (λ j → entry (subK T j)) z
+
+
+  entrySelf∈ : {n : ℕ} (t : KT ⟪ A ⟫ n)
+             → ⟨ pr (C.code t) (⟦_⟧ᴷ A t) ∈ fst (apxS t) ⟩
+  entrySelf∈ {n} t = subst (λ u → ⟨ u ∈ fst (apxS t) ⟩)
+    ( entry-eq (subK t (selfIxK t))
+    ∙ (λ ι → pr (C.code (sub-selfK t ι .snd)) (⟦_⟧ᴷ A (sub-selfK t ι .snd))) )
+    (apx-in t (selfIxK t))
+```
+
+```agda
+  private
+    monoInterL : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+               → ⟨ z ∈ fst (apxS s) ⟩ → ⟨ z ∈ fst (apxS (interK s t)) ⟩
+    monoInterL s t z hz = PT.rec (snd (z ∈ fst (apxS (interK s t)))) named
+      (apx-out s z hz)
+      where
+      named : Σ[ i ∈ Fin (sizeK s) ] (entry (subK s i) ≡ z)
+            → ⟨ z ∈ fst (apxS (interK s t)) ⟩
+      named (i , q) = subst (λ e → ⟨ e ∈ fst (apxS (interK s t)) ⟩)
+        (cong entry (interIdxL s t i) ∙ q)
+        (apx-in (interK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inl i))))
+
+    monoInterR : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+               → ⟨ z ∈ fst (apxS t) ⟩ → ⟨ z ∈ fst (apxS (interK s t)) ⟩
+    monoInterR s t z hz = PT.rec (snd (z ∈ fst (apxS (interK s t)))) named
+      (apx-out t z hz)
+      where
+      named : Σ[ j ∈ Fin (sizeK t) ] (entry (subK t j) ≡ z)
+            → ⟨ z ∈ fst (apxS (interK s t)) ⟩
+      named (j , q) = subst (λ e → ⟨ e ∈ fst (apxS (interK s t)) ⟩)
+        (cong entry (interIdxR s t j) ∙ q)
+        (apx-in (interK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inr j))))
+
+    monoUnionL : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+               → ⟨ z ∈ fst (apxS s) ⟩ → ⟨ z ∈ fst (apxS (unionK s t)) ⟩
+    monoUnionL s t z hz = PT.rec (snd (z ∈ fst (apxS (unionK s t)))) named
+      (apx-out s z hz)
+      where
+      named : Σ[ i ∈ Fin (sizeK s) ] (entry (subK s i) ≡ z)
+            → ⟨ z ∈ fst (apxS (unionK s t)) ⟩
+      named (i , q) = subst (λ e → ⟨ e ∈ fst (apxS (unionK s t)) ⟩)
+        (cong entry (unionIdxL s t i) ∙ q)
+        (apx-in (unionK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inl i))))
+
+    monoUnionR : {n : ℕ} (s t : KT ⟪ A ⟫ n) (z : V ℓ)
+               → ⟨ z ∈ fst (apxS t) ⟩ → ⟨ z ∈ fst (apxS (unionK s t)) ⟩
+    monoUnionR s t z hz = PT.rec (snd (z ∈ fst (apxS (unionK s t)))) named
+      (apx-out t z hz)
+      where
+      named : Σ[ j ∈ Fin (sizeK t) ] (entry (subK t j) ≡ z)
+            → ⟨ z ∈ fst (apxS (unionK s t)) ⟩
+      named (j , q) = subst (λ e → ⟨ e ∈ fst (apxS (unionK s t)) ⟩)
+        (cong entry (unionIdxR s t j) ∙ q)
+        (apx-in (unionK s t) (suc (FinSumChar.fun (sizeK s) (sizeK t) (inr j))))
+
+    monoCompl : {n : ℕ} (t : KT ⟪ A ⟫ n) (z : V ℓ)
+              → ⟨ z ∈ fst (apxS t) ⟩ → ⟨ z ∈ fst (apxS (complK t)) ⟩
+    monoCompl t z hz = PT.rec (snd (z ∈ fst (apxS (complK t)))) named
+      (apx-out t z hz)
+      where
+      named : Σ[ i ∈ Fin (sizeK t) ] (entry (subK t i) ≡ z)
+            → ⟨ z ∈ fst (apxS (complK t)) ⟩
+      named (i , q) = subst (λ e → ⟨ e ∈ fst (apxS (complK t)) ⟩) q
+        (apx-in (complK t) (suc i))
+
+    monoShift : {n : ℕ} (t : KT ⟪ A ⟫ (suc n)) (z : V ℓ)
+              → ⟨ z ∈ fst (apxS t) ⟩ → ⟨ z ∈ fst (apxS (shiftK t)) ⟩
+    monoShift t z hz = PT.rec (snd (z ∈ fst (apxS (shiftK t)))) named
+      (apx-out t z hz)
+      where
+      named : Σ[ i ∈ Fin (sizeK t) ] (entry (subK t i) ≡ z)
+            → ⟨ z ∈ fst (apxS (shiftK t)) ⟩
+      named (i , q) = subst (λ e → ⟨ e ∈ fst (apxS (shiftK t)) ⟩) q
+        (apx-in (shiftK t) (suc i))
+
+  clause-mono : (F F' : V ℓ) → ((z : V ℓ) → ⟨ z ∈ F ⟩ → ⟨ z ∈ F' ⟩)
+              → {x v : V ℓ} → ClauseOf A F x v → ClauseOf A F' x v
+  clause-mono F F' up (inl c) = inl c
+  clause-mono F F' up (inr (inl c)) = inr (inl c)
+  clause-mono F F' up (inr (inr (inl c))) = inr (inr (inl c))
+  clause-mono F F' up (inr (inr (inr (inl c)))) = inr (inr (inr (inl c)))
+  clause-mono F F' up (inr (inr (inr (inr (inl
+    (cs , ct , ws , wt , (e1 , (e2 , rest)))))))) =
+    inr (inr (inr (inr (inl (cs , ct , ws , wt ,
+      ( up (pr (fst cs) (fst ws)) e1
+      , (up (pr (fst ct) (fst wt)) e2 , rest) ))))))
+  clause-mono F F' up (inr (inr (inr (inr (inr (inl
+    (cs , ct , ws , wt , (e1 , (e2 , rest))))))))) =
+    inr (inr (inr (inr (inr (inl (cs , ct , ws , wt ,
+      ( up (pr (fst cs) (fst ws)) e1
+      , (up (pr (fst ct) (fst wt)) e2 , rest) )))))))
+  clause-mono F F' up (inr (inr (inr (inr (inr (inr (inl
+    (mv , ct , wt , w' , (e2 , rest))))))))) =
+    inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' ,
+      ( up (pr (fst ct) (fst wt)) e2 , rest ))))))))
+  clause-mono F F' up (inr (inr (inr (inr (inr (inr (inr
+    (ct , wt , (e1 , rest))))))))) =
+    inr (inr (inr (inr (inr (inr (inr (ct , wt ,
+      ( up (pr (fst ct) (fst wt)) e1 , rest ))))))))
+
+  apx-clauseOf : {n : ℕ} (T : KT ⟪ A ⟫ n) (i : Fin (sizeK T))
+               → ClauseOf A (fst (apxS T))
+                   (C.code (subK T i .snd)) (⟦_⟧ᴷ A (subK T i .snd))
+  apx-clauseOf {n} allK i =
+    inl ((# n , numL n)
+      , (C.code-allK n , λ m qm → cong (allTuples A) (#-inj′ qm)))
+  apx-clauseOf {n} (selMemK i' j') i =
+    inr (inl ((# n , numL n) , (# (toℕ i') , numL (toℕ i'))
+      , (# (toℕ j') , numL (toℕ j'))
+      , (allTuples A n , allTuplesL A lA n)
+      , (C.code-selMemK n i' j'
+        , ((λ m qm → cong (allTuples A) (#-inj′ qm)) , refl))))
+  apx-clauseOf {n} (selEqK i' j') i =
+    inr (inr (inl ((# n , numL n) , (# (toℕ i') , numL (toℕ i'))
+      , (# (toℕ j') , numL (toℕ j'))
+      , (allTuples A n , allTuplesL A lA n)
+      , (C.code-selEqK n i' j'
+        , ((λ m qm → cong (allTuples A) (#-inj′ qm)) , refl)))))
+  apx-clauseOf {n} (selEqConK i' a') i =
+    inr (inr (inr (inl ((# n , numL n) , (# (toℕ i') , numL (toℕ i'))
+      , C.paramS a'
+      , (allTuples A n , allTuplesL A lA n)
+      , ( extendFamily (allTuples A n) ⁅ ⟪ A ⟫↪ a' ⁆s
+        , extendFamilyL {X = allTuples A n} {Y = ⁅ ⟪ A ⟫↪ a' ⁆s}
+            (allTuplesL A lA n) (sglL (C.paramS a' .snd)) )
+      , (C.code-selEqConK n i' a'
+        , ((λ m qm → cong (allTuples A) (#-inj′ qm)) , (refl , refl)))))))
+  apx-clauseOf (interK s t) zero =
+    inr (inr (inr (inr (inl (C.codeS s , C.codeS t
+      , (⟦_⟧ᴷ A s , denoteL A lA s) , (⟦_⟧ᴷ A t , denoteL A lA t)
+      , ( monoInterL s t (pr (C.code s) (⟦_⟧ᴷ A s)) (entrySelf∈ s)
+        , ( monoInterR s t (pr (C.code t) (⟦_⟧ᴷ A t)) (entrySelf∈ t)
+          , (C.code-interK s t , refl) ) ))))))
+  apx-clauseOf (interK s t) (suc k) =
+    goSplit (FinSumChar.inv (sizeK s) (sizeK t) k)
+    where
+    goSplit : (v : Fin (sizeK s) ⊎ Fin (sizeK t))
+            → ClauseOf A (fst (apxS (interK s t)))
+                (C.code (subSplitK s t v .snd)) (⟦_⟧ᴷ A (subSplitK s t v .snd))
+    goSplit (inl i) = clause-mono (fst (apxS s)) (fst (apxS (interK s t)))
+      (monoInterL s t) (apx-clauseOf s i)
+    goSplit (inr j) = clause-mono (fst (apxS t)) (fst (apxS (interK s t)))
+      (monoInterR s t) (apx-clauseOf t j)
+  apx-clauseOf (unionK s t) zero =
+    inr (inr (inr (inr (inr (inl (C.codeS s , C.codeS t
+      , (⟦_⟧ᴷ A s , denoteL A lA s) , (⟦_⟧ᴷ A t , denoteL A lA t)
+      , ( monoUnionL s t (pr (C.code s) (⟦_⟧ᴷ A s)) (entrySelf∈ s)
+        , ( monoUnionR s t (pr (C.code t) (⟦_⟧ᴷ A t)) (entrySelf∈ t)
+          , (C.code-unionK s t , refl) ) )))))))
+  apx-clauseOf (unionK s t) (suc k) =
+    goSplit (FinSumChar.inv (sizeK s) (sizeK t) k)
+    where
+    goSplit : (v : Fin (sizeK s) ⊎ Fin (sizeK t))
+            → ClauseOf A (fst (apxS (unionK s t)))
+                (C.code (subSplitK s t v .snd)) (⟦_⟧ᴷ A (subSplitK s t v .snd))
+    goSplit (inl i) = clause-mono (fst (apxS s)) (fst (apxS (unionK s t)))
+      (monoUnionL s t) (apx-clauseOf s i)
+    goSplit (inr j) = clause-mono (fst (apxS t)) (fst (apxS (unionK s t)))
+      (monoUnionR s t) (apx-clauseOf t j)
+  apx-clauseOf {n} (complK t) zero =
+    inr (inr (inr (inr (inr (inr (inl ((# n , numL n) , C.codeS t
+      , (⟦_⟧ᴷ A t , denoteL A lA t)
+      , (allTuples A n , allTuplesL A lA n)
+      , ( monoCompl t (pr (C.code t) (⟦_⟧ᴷ A t)) (entrySelf∈ t)
+        , (C.code-complK t
+          , ((λ m qm → cong (allTuples A) (#-inj′ qm)) , refl)) ))))))))
+  apx-clauseOf (complK t) (suc k) =
+    clause-mono (fst (apxS t)) (fst (apxS (complK t)))
+      (monoCompl t) (apx-clauseOf t k)
+  apx-clauseOf (shiftK t) zero =
+    inr (inr (inr (inr (inr (inr (inr (C.codeS t
+      , (⟦_⟧ᴷ A t , denoteL A lA t)
+      , ( monoShift t (pr (C.code t) (⟦_⟧ᴷ A t)) (entrySelf∈ t)
+        , (C.code-shiftK t , refl) ))))))))
+  apx-clauseOf (shiftK t) (suc k) =
+    clause-mono (fst (apxS t)) (fst (apxS (shiftK t)))
+      (monoShift t) (apx-clauseOf t k)
 ```
