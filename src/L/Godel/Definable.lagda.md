@@ -32,23 +32,27 @@ open import Base.Truth
 module L.Godel.Definable {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
+open import FOL.Syntax
+  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Ordinal {ℓ} using ( ∈#-elim )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Base {ℓ} using ( ∈pair-introR )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst; sucʟ; sucʟ-fst )
+open import V.Model {ℓ} using ( self∈sucV )
+open import L.Coding.Base {ℓ} using ( ∈pair-introL; ∈pair-introR )
 open import L.Coding.Model {ℓ}
   using ( extAt; extAt-out; extAt-in; extAt-in-both
         ; prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
+        ; sucAtL; sucAtL-adequate
         ; numL; envOverAt; svAt; domAt; valuesInAt; pairsInAt
         ; inDomAt; inDomAt-adequate; svAt-in; svAt-out; domAt-in
         ; valuesInAt-out; valuesInAt-in; pairsIn-in; pairsIn-out
         ; envOver-sv; envOver-dom; envOver-values; envOver-pairs )
+open import L.Coding.InL {ℓ} using ( sglL )
 open import L.Godel.Tuples {ℓ} using ( tuple; allTuples )
-open import L.Godel.InL {ℓ} using ( allTuplesL )
+open import L.Godel.InL {ℓ} using ( allTuplesL; shiftDownL; extendFamilyL )
 open import L.Godel.Operations {ℓ}
   using ( _∪_; ∪-left; ∪-right; ∪-out; _∖_; ∖-in; ∖-out
         ; _∩_; ∩-in; ∩-out
@@ -56,7 +60,11 @@ open import L.Godel.Operations {ℓ}
         ; memberGraph; memberGraph-in; memberGraph-out
         ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
         ; selectEqual; selectEqual-in; selectEqual-sub; selectEqual-wit
-        ; values; values-in; values-wit; singleton-self; singleton-out )
+        ; values; values-in; values-wit; singleton-self; singleton-out
+        ; tailGraph; tailGraph-in; tailGraph-out
+        ; shiftDown; shiftDown-in; shiftDown-out
+        ; extendGraph; extendGraph-zero; extendGraph-suc; extendGraph-out
+        ; extendFamily; extendFamily-in; extendFamily-out )
 
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
@@ -68,10 +76,10 @@ open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId'
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
-open InfinitySet using ( #_ )
+  using ( ∅; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
+open InfinitySet using ( sucV; #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -231,6 +239,9 @@ private
 
   shiftThree : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
   shiftThree x = suc (suc (suc x))
+
+  shiftFour : ∀ {n} → Fin n → Fin (suc (suc (suc (suc n))))
+  shiftFour x = suc (suc (suc (suc x)))
 
   prIsL : (u v : V ℓ) → ⟨ isL u ⟩ → ⟨ isL v ⟩ → ⟨ isL (pr u v) ⟩
   prIsL u v hu hv =
@@ -834,18 +845,489 @@ module _ {n : ℕ} (k x m : Fin n) (γ : S ^ n) (arity : ℕ)
 ```
 
 <!--en-->
+## The shift
+
+The first mover. A member of the shifted family is some family member's tail,
+and the tail is pinned by the same two clauses the bridge chapter used at
+stages, written here with unbounded binders because the class satisfaction
+owes no bound: every member of the surveyed set is the shift of a recorded
+successor pair, and every recorded successor pair reaches the surveyed set.
+The successor witness travels through the coding part's successor reader, and
+every existential witness is packaged by transitivity walking the pair, so
+the conversions are the bridge chapter's readings with the formula plumbing
+lighter by every waypoint.
+<!--zh-->
+## 移位
+
+第一个移位运算。被移位族的成员是某个族成员的尾图，而尾图由桥梁章在阶段处用过的同样两条子句钉住，此处以无界束缚元写出，因为类满足不欠界：被检视集合的每个成员都是某个被记录后继对的移位，且每个被记录后继对都到达被检视集合。后继见证经编码部分的后继读式旅行，每个存在见证由传递性沿对行走打包，故转换就是桥梁章的读法，公式管线却每个中转站都轻掉。
+<!--/-->
+
+```agda
+shiftDownAt : ∀ {n} → Fin n → Fin n → Formula S n
+shiftDownAt k f = extAt k (∃̇
+  ( (var zero ∈̇ var (shiftTwo f))
+  ∧̇ ( (∀̇ ( (var zero ∈̇ var (suc (suc zero)))
+         ⇒̇ (∃̇ (∃̇ (∃̇
+              ( appAt (suc (suc (suc (suc zero)))) (suc zero) zero
+              ∧̇ ( sucAtL (suc (suc zero)) (suc zero)
+                ∧̇ prAtL (suc (suc (suc zero))) (suc (suc zero)) zero )))))))
+    ∧̇ (∀̇ (∀̇ (∀̇ ( ( appAt (suc (suc (suc zero))) (suc zero) zero
+                  ∧̇ sucAtL (suc (suc zero)) (suc zero) )
+                ⇒̇ appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) zero )))) ) ))
+
+module _ {n : ℕ} (k f : Fin n) (γ : S ^ n) where
+  private
+    Seek : Formula S (suc (suc (suc n)))
+    Seek = ∃̇ (∃̇ (∃̇
+      ( appAt (suc (suc (suc (suc zero)))) (suc zero) zero
+      ∧̇ ( sucAtL (suc (suc zero)) (suc zero)
+        ∧̇ prAtL (suc (suc (suc zero))) (suc (suc zero)) zero ))))
+
+    Ψ : Formula S (suc (suc n))
+    Ψ = (var zero ∈̇ var (shiftTwo f))
+     ∧̇ ( (∀̇ ((var zero ∈̇ var (suc (suc zero))) ⇒̇ Seek))
+       ∧̇ (∀̇ (∀̇ (∀̇ ( ( appAt (suc (suc (suc zero))) (suc zero) zero
+                     ∧̇ sucAtL (suc (suc zero)) (suc zero) )
+                   ⇒̇ appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) zero )))) )
+
+    F' : V ℓ
+    F' = fst (lookup f γ)
+    lF' : ⟨ isL F' ⟩
+    lF' = lookup f γ .snd
+
+    T≡ : (z g : S)
+       → ((w : S) → ⟨ fst w ∈ fst z ⟩ → ⟨ (w ∷ g ∷ z ∷ γ) ⊨ Seek ⟩)
+       → ((a s v : S)
+          → ⟨ (v ∷ s ∷ a ∷ g ∷ z ∷ γ)
+                ⊨ ( appAt (suc (suc (suc zero))) (suc zero) zero
+                  ∧̇ sucAtL (suc (suc zero)) (suc zero) ) ⟩
+          → ⟨ (v ∷ s ∷ a ∷ g ∷ z ∷ γ)
+                ⊨ appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) zero ⟩)
+       → fst z ≡ tailGraph (fst g)
+    T≡ z g membV imgV = extensionality (fst z) (tailGraph (fst g)) (t₁ , t₂)
+      where
+      t₁ : ⟨ fst z ⊆ tailGraph (fst g) ⟩
+      t₁ w w∈ₛ = PT.rec (snd (w ∈ₛ tailGraph (fst g)))
+        (λ { (a , ha) → PT.rec (snd (w ∈ₛ tailGraph (fst g)))
+          (λ { (s , hs) → PT.rec (snd (w ∈ₛ tailGraph (fst g)))
+            (λ { (v , (h1 , (h2 , h3))) → use a s v h1 h2 h3 })
+            hs })
+          ha })
+        (membV wS w∈)
+        where
+        w∈ : ⟨ w ∈ fst z ⟩
+        w∈ = ∈∈ₛ {a = w} {b = fst z} .snd w∈ₛ
+        wS : S
+        wS = w , isL-trans {x = fst z} {y = w} w∈ (z .snd)
+        use : (a s v : S)
+            → ⟨ (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)
+                  ⊨ appAt (suc (suc (suc (suc zero)))) (suc zero) zero ⟩
+            → ⟨ (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)
+                  ⊨ sucAtL (suc (suc zero)) (suc zero) ⟩
+            → ⟨ (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)
+                  ⊨ prAtL (suc (suc (suc zero))) (suc (suc zero)) zero ⟩
+            → ⟨ w ∈ₛ tailGraph (fst g) ⟩
+        use a s v h1 h2 h3 = ∈∈ₛ {a = w} {b = tailGraph (fst g)} .fst
+          (subst (λ u → ⟨ u ∈ tailGraph (fst g) ⟩) (sym e3)
+            (tailGraph-in {w = fst g} {a = fst a} {v = fst v} h1'))
+          where
+          e2 : fst s ≡ sucV (fst a)
+          e2 = subst ⟨_⟩ (sucAtL-adequate (suc (suc zero)) (suc zero)
+            (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)) h2
+          e3 : w ≡ pr (fst a) (fst v)
+          e3 = subst ⟨_⟩ (prAtL-adequate (suc (suc (suc zero)))
+            (suc (suc zero)) zero (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)) h3
+          h1' : ⟨ pr (sucV (fst a)) (fst v) ∈ fst g ⟩
+          h1' = subst (λ u → ⟨ pr u (fst v) ∈ fst g ⟩) e2
+            (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc zero))))
+              (suc zero) zero (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)) h1)
+      t₂ : ⟨ tailGraph (fst g) ⊆ fst z ⟩
+      t₂ w w∈ₛ = PT.rec (snd (w ∈ₛ fst z))
+        (λ { (a , v , h , e) → named a v h e })
+        (tailGraph-out {w = fst g} {z = w}
+          (∈∈ₛ {a = w} {b = tailGraph (fst g)} .snd w∈ₛ))
+        where
+        named : (a v : V ℓ) → ⟨ pr (sucV a) v ∈ fst g ⟩ → w ≡ pr a v
+              → ⟨ w ∈ₛ fst z ⟩
+        named a v h e = ∈∈ₛ {a = w} {b = fst z} .fst
+          (subst (λ u → ⟨ u ∈ fst z ⟩) (sym e)
+            (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc zero))))
+              (suc (suc zero)) zero (vS ∷ sS ∷ aS ∷ g ∷ z ∷ γ))
+              (imgV aS sS vS
+                ( subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc zero)))
+                    (suc zero) zero (vS ∷ sS ∷ aS ∷ g ∷ z ∷ γ))) h
+                , subst ⟨_⟩ (sym (sucAtL-adequate (suc (suc zero)) (suc zero)
+                    (vS ∷ sS ∷ aS ∷ g ∷ z ∷ γ))) refl ))))
+          where
+          pL : ⟨ isL (pr (sucV a) v) ⟩
+          pL = isL-trans {x = fst g} {y = pr (sucV a) v} h (g .snd)
+          sL : ⟨ isL (sucV a) ⟩
+          sL = isL-trans {x = ⁅ sucV a ⁆s} {y = sucV a} (singleton-self (sucV a))
+            (isL-trans {x = pr (sucV a) v} {y = ⁅ sucV a ⁆s}
+              (∈pair-introL refl) pL)
+          aS sS vS : S
+          aS = a , isL-trans {x = sucV a} {y = a} (self∈sucV a) sL
+          sS = sucV a , sL
+          vS = v , isL-trans {x = ⁅ sucV a , v ⁆} {y = v} (∈pair-introR refl)
+            (isL-trans {x = pr (sucV a) v} {y = ⁅ sucV a , v ⁆}
+              (∈pair-introR refl) pL)
+
+    readSh : (z : S) → ⟨ (z ∷ γ) ⊨ ∃̇ Ψ ⟩ → ⟨ fst z ∈ shiftDown F' ⟩
+    readSh z hz = PT.rec (snd (fst z ∈ shiftDown F'))
+      (λ { (g , (hgF , (membV , imgV))) →
+        subst (λ u → ⟨ u ∈ shiftDown F' ⟩) (sym (T≡ z g membV imgV))
+          (shiftDown-in {X = F'} {z = fst g} hgF) })
+      hz
+
+    fillSh : (z : S) → ⟨ fst z ∈ shiftDown F' ⟩ → ⟨ (z ∷ γ) ⊨ ∃̇ Ψ ⟩
+    fillSh z z∈ = PT.rec (snd ((z ∷ γ) ⊨ ∃̇ Ψ)) build
+      (shiftDown-out {X = F'} {w = fst z} z∈)
+      where
+      build : Σ[ g' ∈ V ℓ ] (⟨ g' ∈ F' ⟩ × (tailGraph g' ≡ fst z))
+            → ⟨ (z ∷ γ) ⊨ ∃̇ Ψ ⟩
+      build (g' , hg' , e) = ∣ gS , (hg' , (membV' , imgV')) ∣₁
+        where
+        gS : S
+        gS = g' , isL-trans {x = F'} {y = g'} hg' lF'
+        membV' : (w : S) → ⟨ fst w ∈ fst z ⟩ → ⟨ (w ∷ gS ∷ z ∷ γ) ⊨ Seek ⟩
+        membV' w hw = PT.rec (snd ((w ∷ gS ∷ z ∷ γ) ⊨ Seek)) named
+          (tailGraph-out {w = g'} {z = fst w}
+            (subst (λ u → ⟨ fst w ∈ u ⟩) (sym e) hw))
+          where
+          named : Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                  (⟨ pr (sucV a) v ∈ g' ⟩ × (fst w ≡ pr a v))
+                → ⟨ (w ∷ gS ∷ z ∷ γ) ⊨ Seek ⟩
+          named (a , v , h , ew) =
+            ∣ aS , ∣ sS , ∣ vS ,
+              ( subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc zero))))
+                  (suc zero) zero (vS ∷ sS ∷ aS ∷ w ∷ gS ∷ z ∷ γ))) h
+              , ( subst ⟨_⟩ (sym (sucAtL-adequate (suc (suc zero)) (suc zero)
+                    (vS ∷ sS ∷ aS ∷ w ∷ gS ∷ z ∷ γ))) refl
+                , subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc zero)))
+                    (suc (suc zero)) zero (vS ∷ sS ∷ aS ∷ w ∷ gS ∷ z ∷ γ))) ew ) )
+            ∣₁ ∣₁ ∣₁
+            where
+            pL : ⟨ isL (pr (sucV a) v) ⟩
+            pL = isL-trans {x = g'} {y = pr (sucV a) v} h (gS .snd)
+            sL : ⟨ isL (sucV a) ⟩
+            sL = isL-trans {x = ⁅ sucV a ⁆s} {y = sucV a}
+              (singleton-self (sucV a))
+              (isL-trans {x = pr (sucV a) v} {y = ⁅ sucV a ⁆s}
+                (∈pair-introL refl) pL)
+            aS sS vS : S
+            aS = a , isL-trans {x = sucV a} {y = a} (self∈sucV a) sL
+            sS = sucV a , sL
+            vS = v , isL-trans {x = ⁅ sucV a , v ⁆} {y = v} (∈pair-introR refl)
+              (isL-trans {x = pr (sucV a) v} {y = ⁅ sucV a , v ⁆}
+                (∈pair-introR refl) pL)
+        imgV' : (a s v : S)
+              → ⟨ (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)
+                    ⊨ ( appAt (suc (suc (suc zero))) (suc zero) zero
+                      ∧̇ sucAtL (suc (suc zero)) (suc zero) ) ⟩
+              → ⟨ (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)
+                    ⊨ appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) zero ⟩
+        imgV' a s v (h1 , h2) =
+          subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc zero))))
+            (suc (suc zero)) zero (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)))
+            (subst (λ u → ⟨ pr (fst a) (fst v) ∈ u ⟩) e
+              (tailGraph-in {w = g'} {a = fst a} {v = fst v}
+                (subst (λ u → ⟨ pr u (fst v) ∈ g' ⟩)
+                  (subst ⟨_⟩ (sucAtL-adequate (suc (suc zero)) (suc zero)
+                    (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)) h2)
+                  (subst ⟨_⟩ (appAt-adequate (suc (suc (suc zero)))
+                    (suc zero) zero (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)) h1))))
+
+    module D = Describes k (∃̇ Ψ) γ (shiftDown F')
+      (λ y y∈s → isL-trans {x = shiftDown F'} {y = y} y∈s (shiftDownL lF'))
+      readSh fillSh
+
+  shiftDownAt-out : ⟨ γ ⊨ shiftDownAt k f ⟩
+                  → fst (lookup k γ) ≡ shiftDown (fst (lookup f γ))
+  shiftDownAt-out = D.describes-out
+
+  shiftDownAt-in : fst (lookup k γ) ≡ shiftDown (fst (lookup f γ))
+                 → ⟨ γ ⊨ shiftDownAt k f ⟩
+  shiftDownAt-in = D.describes-in
+```
+
+
+<!--en-->
+## The extension
+<!--zh-->
+## 扩张
+<!--/-->
+
+<!--en-->
+The second mover, at a singleton family like the selections, since that is how
+every denotation applies it: the slot holds the new value itself. Three
+clauses pin a member to the extension of a bound graph: every member is the
+empty-key pair or the shift-up of a recorded pair, the empty-key pair is a
+member, and every recorded pair's shift-up is a member. The empty key is one
+object equality against the sealed zero numeral, and the successor witness on
+the way in is packaged by the sealed successor, whose projection equation
+makes its clause hold by `refl`{.Agda}.
+<!--zh-->
+第二个移位运算，与诸选择一样在单点族处描述，因为每个指称都这样应用它：槽位直接持有新取值。三条子句把成员钉在被绑图的扩张上：每个成员是空键对或某被记录对的上移、空键对是成员、每个被记录对的上移都是成员。空键是一条对着封印零数码的对象等式，而进入方向的后继见证由封印后继打包，其投影等式使那条子句由 `refl`{.Agda} 成立。
+<!--/-->
+
+```agda
+extendFamilyAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+extendFamilyAt k f y = extAt k (∃̇
+  ( (var zero ∈̇ var (shiftTwo f))
+  ∧̇ ( (∀̇ ( (var zero ∈̇ var (suc (suc zero)))
+         ⇒̇ ( (∃̇ ( (var zero ≐ con (numeralL 0))
+                ∧̇ prAtL (suc zero) zero (shiftFour y) ))
+           ∨̇ (∃̇ (∃̇ (∃̇
+                ( appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) zero
+                ∧̇ ( sucAtL (suc (suc zero)) (suc zero)
+                  ∧̇ prAtL (suc (suc (suc zero))) (suc zero) zero ))))) )))
+    ∧̇ ( (∃̇ ( (var zero ∈̇ var (suc (suc zero)))
+           ∧̇ (∃̇ ( (var zero ≐ con (numeralL 0))
+                ∧̇ prAtL (suc zero) zero (shiftFour y) ))))
+      ∧̇ (∀̇ (∀̇ (∀̇ ( ( appAt (suc (suc (suc zero))) (suc (suc zero)) zero
+                    ∧̇ sucAtL (suc (suc zero)) (suc zero) )
+                  ⇒̇ appAt (suc (suc (suc (suc zero)))) (suc zero) zero )))) ) ) ))
+
+module _ {n : ℕ} (k f y : Fin n) (γ : S ^ n) where
+  private
+    Z : Formula S (suc (suc (suc n)))
+    Z = ∃̇ ( (var zero ≐ con (numeralL 0))
+          ∧̇ prAtL (suc zero) zero (shiftFour y) )
+
+    SE : Formula S (suc (suc (suc n)))
+    SE = ∃̇ (∃̇ (∃̇
+      ( appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) zero
+      ∧̇ ( sucAtL (suc (suc zero)) (suc zero)
+        ∧̇ prAtL (suc (suc (suc zero))) (suc zero) zero ))))
+
+    Ψ : Formula S (suc (suc n))
+    Ψ = (var zero ∈̇ var (shiftTwo f))
+     ∧̇ ( (∀̇ ((var zero ∈̇ var (suc (suc zero))) ⇒̇ (Z ∨̇ SE)))
+       ∧̇ ( (∃̇ ((var zero ∈̇ var (suc (suc zero))) ∧̇ Z))
+         ∧̇ (∀̇ (∀̇ (∀̇ ( ( appAt (suc (suc (suc zero))) (suc (suc zero)) zero
+                       ∧̇ sucAtL (suc (suc zero)) (suc zero) )
+                     ⇒̇ appAt (suc (suc (suc (suc zero)))) (suc zero) zero )))) ) )
+
+    F' C : V ℓ
+    F' = fst (lookup f γ)
+    C = fst (lookup y γ)
+    lF' : ⟨ isL F' ⟩
+    lF' = lookup f γ .snd
+    lC : ⟨ isL C ⟩
+    lC = lookup y γ .snd
+
+    e∅ : _≡_ {A = V ℓ} (# 0) ∅
+    e∅ = refl
+
+    zRead : (z g w : S) → ⟨ (w ∷ g ∷ z ∷ γ) ⊨ Z ⟩ → fst w ≡ pr ∅ C
+    zRead z g w = PT.rec (setIsSet (fst w) (pr ∅ C))
+      λ { (eS , (ek , hpr)) →
+          subst ⟨_⟩ (prAtL-adequate (suc zero) zero (shiftFour y)
+            (eS ∷ w ∷ g ∷ z ∷ γ)) hpr
+        ∙ cong (λ u → pr u C) (ek ∙ numeralL-fst 0 ∙ e∅) }
+
+    zBuild : (z g w : S) → fst w ≡ pr ∅ C → ⟨ (w ∷ g ∷ z ∷ γ) ⊨ Z ⟩
+    zBuild z g w ew = ∣ (# 0 , numL 0)
+      , ( sym (numeralL-fst 0)
+        , subst ⟨_⟩ (sym (prAtL-adequate (suc zero) zero (shiftFour y)
+            ((# 0 , numL 0) ∷ w ∷ g ∷ z ∷ γ)))
+            (ew ∙ cong (λ u → pr u C) (sym e∅)) ) ∣₁
+
+    module Pack (g : S) {a v : V ℓ} (h : ⟨ pr a v ∈ fst g ⟩) where
+      pL : ⟨ isL (pr a v) ⟩
+      pL = isL-trans {x = fst g} {y = pr a v} h (g .snd)
+      aS vS sS : S
+      aS = a , isL-trans {x = ⁅ a ⁆s} {y = a} (singleton-self a)
+        (isL-trans {x = pr a v} {y = ⁅ a ⁆s} (∈pair-introL refl) pL)
+      vS = v , isL-trans {x = ⁅ a , v ⁆} {y = v} (∈pair-introR refl)
+        (isL-trans {x = pr a v} {y = ⁅ a , v ⁆} (∈pair-introR refl) pL)
+      sS = sucV a , subst (λ u → ⟨ isL u ⟩) (sucʟ-fst aS) (sucʟ aS .snd)
+
+    E≡ : (z g : S)
+       → ((w : S) → ⟨ fst w ∈ fst z ⟩ → ⟨ (w ∷ g ∷ z ∷ γ) ⊨ (Z ∨̇ SE) ⟩)
+       → ⟨ (g ∷ z ∷ γ) ⊨ ∃̇ ((var zero ∈̇ var (suc (suc zero))) ∧̇ Z) ⟩
+       → ((a s v : S)
+          → ⟨ (v ∷ s ∷ a ∷ g ∷ z ∷ γ)
+                ⊨ ( appAt (suc (suc (suc zero))) (suc (suc zero)) zero
+                  ∧̇ sucAtL (suc (suc zero)) (suc zero) ) ⟩
+          → ⟨ (v ∷ s ∷ a ∷ g ∷ z ∷ γ)
+                ⊨ appAt (suc (suc (suc (suc zero)))) (suc zero) zero ⟩)
+       → fst z ≡ extendGraph C (fst g)
+    E≡ z g membV imgZV imgSV =
+      extensionality (fst z) (extendGraph C (fst g)) (e₁ , e₂)
+      where
+      e₁ : ⟨ fst z ⊆ extendGraph C (fst g) ⟩
+      e₁ w w∈ₛ = PT.rec (snd (w ∈ₛ extendGraph C (fst g)))
+        (λ { (inl zv) → zeroCase zv ; (inr sev) → sucCase sev })
+        (membV wS w∈)
+        where
+        w∈ : ⟨ w ∈ fst z ⟩
+        w∈ = ∈∈ₛ {a = w} {b = fst z} .snd w∈ₛ
+        wS : S
+        wS = w , isL-trans {x = fst z} {y = w} w∈ (z .snd)
+        zeroCase : ⟨ (wS ∷ g ∷ z ∷ γ) ⊨ Z ⟩ → ⟨ w ∈ₛ extendGraph C (fst g) ⟩
+        zeroCase zv = ∈∈ₛ {a = w} {b = extendGraph C (fst g)} .fst
+          (subst (λ u → ⟨ u ∈ extendGraph C (fst g) ⟩)
+            (sym (zRead z g wS zv))
+            (extendGraph-zero {y = C} {γ = fst g}))
+        sucCase : ⟨ (wS ∷ g ∷ z ∷ γ) ⊨ SE ⟩ → ⟨ w ∈ₛ extendGraph C (fst g) ⟩
+        sucCase sev = PT.rec (snd (w ∈ₛ extendGraph C (fst g)))
+          (λ { (a , ha) → PT.rec (snd (w ∈ₛ extendGraph C (fst g)))
+            (λ { (s , hs) → PT.rec (snd (w ∈ₛ extendGraph C (fst g)))
+              (λ { (v , (h1 , (h2 , h3))) → use a s v h1 h2 h3 })
+              hs })
+            ha })
+          sev
+          where
+          use : (a s v : S)
+              → ⟨ (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)
+                    ⊨ appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) zero ⟩
+              → ⟨ (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)
+                    ⊨ sucAtL (suc (suc zero)) (suc zero) ⟩
+              → ⟨ (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)
+                    ⊨ prAtL (suc (suc (suc zero))) (suc zero) zero ⟩
+              → ⟨ w ∈ₛ extendGraph C (fst g) ⟩
+          use a s v h1 h2 h3 = ∈∈ₛ {a = w} {b = extendGraph C (fst g)} .fst
+            (subst (λ u → ⟨ u ∈ extendGraph C (fst g) ⟩)
+              (sym ( subst ⟨_⟩ (prAtL-adequate (suc (suc (suc zero)))
+                       (suc zero) zero (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)) h3
+                   ∙ cong (λ u → pr u (fst v))
+                       (subst ⟨_⟩ (sucAtL-adequate (suc (suc zero)) (suc zero)
+                         (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)) h2) ))
+              (extendGraph-suc {y = C} {γ = fst g} {a = fst a} {v = fst v}
+                (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc zero))))
+                  (suc (suc zero)) zero (v ∷ s ∷ a ∷ wS ∷ g ∷ z ∷ γ)) h1)))
+      e₂ : ⟨ extendGraph C (fst g) ⊆ fst z ⟩
+      e₂ w w∈ₛ = PT.rec (snd (w ∈ₛ fst z))
+        (λ { (inl ez) → zeroCase ez
+           ; (inr (a , v , h , ez)) → sucCase a v h ez })
+        (extendGraph-out {y = C} {γ = fst g} {z = w}
+          (∈∈ₛ {a = w} {b = extendGraph C (fst g)} .snd w∈ₛ))
+        where
+        zeroCase : w ≡ pr ∅ C → ⟨ w ∈ₛ fst z ⟩
+        zeroCase ez = PT.rec (snd (w ∈ₛ fst z))
+          (λ { (w₀ , (hw₀ , zv)) →
+            ∈∈ₛ {a = w} {b = fst z} .fst
+              (subst (λ u → ⟨ u ∈ fst z ⟩)
+                (zRead z g w₀ zv ∙ sym ez) hw₀) })
+          imgZV
+        sucCase : (a v : V ℓ) → ⟨ pr a v ∈ fst g ⟩
+                → w ≡ pr (sucV a) v → ⟨ w ∈ₛ fst z ⟩
+        sucCase a v h ez = ∈∈ₛ {a = w} {b = fst z} .fst
+          (subst (λ u → ⟨ u ∈ fst z ⟩) (sym ez)
+            (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc zero))))
+              (suc zero) zero (P.vS ∷ P.sS ∷ P.aS ∷ g ∷ z ∷ γ))
+              (imgSV P.aS P.sS P.vS
+                ( subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc zero)))
+                    (suc (suc zero)) zero (P.vS ∷ P.sS ∷ P.aS ∷ g ∷ z ∷ γ))) h
+                , subst ⟨_⟩ (sym (sucAtL-adequate (suc (suc zero)) (suc zero)
+                    (P.vS ∷ P.sS ∷ P.aS ∷ g ∷ z ∷ γ))) refl ))))
+          where
+          module P = Pack g {a} {v} h
+
+    readEx : (z : S) → ⟨ (z ∷ γ) ⊨ ∃̇ Ψ ⟩
+           → ⟨ fst z ∈ extendFamily F' ⁅ C ⁆s ⟩
+    readEx z hz = PT.rec (snd (fst z ∈ extendFamily F' ⁅ C ⁆s))
+      (λ { (g , (hgF , (membV , (imgZV , imgSV)))) →
+        subst (λ u → ⟨ u ∈ extendFamily F' ⁅ C ⁆s ⟩)
+          (sym (E≡ z g membV imgZV imgSV))
+          (extendFamily-in {X = F'} {Y = ⁅ C ⁆s} hgF (singleton-self C)) })
+      hz
+
+    fillEx : (z : S) → ⟨ fst z ∈ extendFamily F' ⁅ C ⁆s ⟩
+           → ⟨ (z ∷ γ) ⊨ ∃̇ Ψ ⟩
+    fillEx z z∈ = PT.rec (snd ((z ∷ γ) ⊨ ∃̇ Ψ)) build
+      (extendFamily-out {X = F'} {Y = ⁅ C ⁆s} {w = fst z} z∈)
+      where
+      build : Σ[ g' ∈ V ℓ ] Σ[ y' ∈ V ℓ ]
+              (⟨ g' ∈ F' ⟩ × ⟨ y' ∈ ⁅ C ⁆s ⟩ × (fst z ≡ extendGraph y' g'))
+            → ⟨ (z ∷ γ) ⊨ ∃̇ Ψ ⟩
+      build (g' , y' , hg' , hy' , e0) =
+        ∣ gS , (hg' , (membV' , (imgZV' , imgSV'))) ∣₁
+        where
+        gS : S
+        gS = g' , isL-trans {x = F'} {y = g'} hg' lF'
+        e : fst z ≡ extendGraph C g'
+        e = e0 ∙ cong (λ u → extendGraph u g') (singleton-out hy')
+        membV' : (w : S) → ⟨ fst w ∈ fst z ⟩
+               → ⟨ (w ∷ gS ∷ z ∷ γ) ⊨ (Z ∨̇ SE) ⟩
+        membV' w hw = PT.rec (snd ((w ∷ gS ∷ z ∷ γ) ⊨ (Z ∨̇ SE)))
+          (λ { (inl ez) → ∣ inl (zBuild z gS w ez) ∣₁
+             ; (inr (a , v , h , ez)) → ∣ inr (seBuild a v h ez) ∣₁ })
+          (extendGraph-out {y = C} {γ = g'} {z = fst w}
+            (subst (λ u → ⟨ fst w ∈ u ⟩) e hw))
+          where
+          seBuild : (a v : V ℓ) → ⟨ pr a v ∈ g' ⟩ → fst w ≡ pr (sucV a) v
+                  → ⟨ (w ∷ gS ∷ z ∷ γ) ⊨ SE ⟩
+          seBuild a v h ez =
+            ∣ P.aS , ∣ P.sS , ∣ P.vS ,
+              ( subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc zero))))
+                  (suc (suc zero)) zero
+                  (P.vS ∷ P.sS ∷ P.aS ∷ w ∷ gS ∷ z ∷ γ))) h
+              , ( subst ⟨_⟩ (sym (sucAtL-adequate (suc (suc zero)) (suc zero)
+                    (P.vS ∷ P.sS ∷ P.aS ∷ w ∷ gS ∷ z ∷ γ))) refl
+                , subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc zero)))
+                    (suc zero) zero
+                    (P.vS ∷ P.sS ∷ P.aS ∷ w ∷ gS ∷ z ∷ γ))) ez ) )
+            ∣₁ ∣₁ ∣₁
+            where
+            module P = Pack gS {a} {v} h
+        imgZV' : ⟨ (gS ∷ z ∷ γ) ⊨ ∃̇ ((var zero ∈̇ var (suc (suc zero))) ∧̇ Z) ⟩
+        imgZV' = ∣ w₀S , (hw₀ , zBuild z gS w₀S refl) ∣₁
+          where
+          hw₀' : ⟨ pr ∅ C ∈ fst z ⟩
+          hw₀' = subst (λ u → ⟨ pr ∅ C ∈ u ⟩) (sym e)
+            (extendGraph-zero {y = C} {γ = g'})
+          w₀S : S
+          w₀S = pr ∅ C , isL-trans {x = fst z} {y = pr ∅ C} hw₀' (z .snd)
+          hw₀ : ⟨ fst w₀S ∈ fst z ⟩
+          hw₀ = hw₀'
+        imgSV' : (a s v : S)
+               → ⟨ (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)
+                     ⊨ ( appAt (suc (suc (suc zero))) (suc (suc zero)) zero
+                       ∧̇ sucAtL (suc (suc zero)) (suc zero) ) ⟩
+               → ⟨ (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)
+                     ⊨ appAt (suc (suc (suc (suc zero)))) (suc zero) zero ⟩
+        imgSV' a s v (h1 , h2) =
+          subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc zero))))
+            (suc zero) zero (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)))
+            (subst (λ u → ⟨ pr u (fst v) ∈ fst z ⟩)
+              (sym (subst ⟨_⟩ (sucAtL-adequate (suc (suc zero)) (suc zero)
+                (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)) h2))
+              (subst (λ u → ⟨ pr (sucV (fst a)) (fst v) ∈ u ⟩) (sym e)
+                (extendGraph-suc {y = C} {γ = g'} {a = fst a} {v = fst v}
+                  (subst ⟨_⟩ (appAt-adequate (suc (suc (suc zero)))
+                    (suc (suc zero)) zero (v ∷ s ∷ a ∷ gS ∷ z ∷ γ)) h1))))
+
+    module D = Describes k (∃̇ Ψ) γ (extendFamily F' ⁅ C ⁆s)
+      (λ y' y'∈ → isL-trans {x = extendFamily F' ⁅ C ⁆s} {y = y'} y'∈
+        (extendFamilyL lF' (sglL lC)))
+      readEx fillEx
+
+  extendFamilyAt-out : ⟨ γ ⊨ extendFamilyAt k f y ⟩
+    → fst (lookup k γ) ≡ extendFamily (fst (lookup f γ)) ⁅ fst (lookup y γ) ⁆s
+  extendFamilyAt-out = D.describes-out
+
+  extendFamilyAt-in : fst (lookup k γ)
+    ≡ extendFamily (fst (lookup f γ)) ⁅ fst (lookup y γ) ⁆s
+    → ⟨ γ ⊨ extendFamilyAt k f y ⟩
+  extendFamilyAt-in = D.describes-in
+```
+
+<!--en-->
 ## Recap
 
 One frame, `Describes`{.Agda}, turning a body and two semantic conversions
-into an identity between a slot and an operation's value, and nine
+into an identity between a slot and an operation's value, and eleven
 descriptions through it: `diffAt`{.Agda}, `unionAt`{.Agda}, `productAt`{.Agda}
 and `memberGraphAt`{.Agda}, then `interAt`{.Agda}, the two selections at
-singleton keys, `valuesAt`{.Agda}, and the tuple family at an arity slot,
-each read in both directions at variable slots and a variable environment.
-The two graph movers still owe descriptions, and take them through the same
-frame where the denotation clauses bind them.
+singleton keys, `valuesAt`{.Agda}, the tuple family at an arity slot, and the
+two graph movers, each read in both directions at variable slots and a
+variable environment. Every operation a denotation clause will mention now
+carries its description, and the clauses themselves are the next chapter's
+business.
 <!--zh-->
 ## 小结
 
-一个框架 `Describes`{.Agda}，把一个体与两个语义转换变成「槽位与运算取值之间的等同」，以及经它而得的九条描述：`diffAt`{.Agda}、`unionAt`{.Agda}、`productAt`{.Agda} 与 `memberGraphAt`{.Agda}，继而 `interAt`{.Agda}、单点键处的两个选择、`valuesAt`{.Agda}，与元数槽位处的元组族，每条都在变元槽位与变元环境处双向读出。两个图移位运算尚欠描述，将在指称子句绑定它们之处经同一框架取得。
+一个框架 `Describes`{.Agda}，把一个体与两个语义转换变成「槽位与运算取值之间的等同」，以及经它而得的十一条描述：`diffAt`{.Agda}、`unionAt`{.Agda}、`productAt`{.Agda} 与 `memberGraphAt`{.Agda}，继而 `interAt`{.Agda}、单点键处的两个选择、`valuesAt`{.Agda}、元数槽位处的元组族，与两个图移位运算，每条都在变元槽位与变元环境处双向读出。指称子句将要提到的每个运算如今都带上了自己的描述，而子句本身是下一章的事。
 <!--/-->
