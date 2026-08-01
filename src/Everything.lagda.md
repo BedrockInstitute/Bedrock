@@ -404,9 +404,10 @@ The root, stated today and finished over the remaining parts:
   would otherwise be spent.
 - `L.Godel.Definable`{.Agda}: the operations, described. One frame turns a body
   and two semantic conversions into an identity between a slot and an
-  operation's value; difference, union, product and the membership graph pass
-  through it, each read in both directions at variable slots and a variable
-  environment.
+  operation's value; eleven descriptions pass through it (the Boolean stock,
+  product and the membership graph, the two selections at singleton keys, the
+  values, the tuple family at an arity slot, and the two graph movers), each
+  read in both directions at variable slots and a variable environment.
 - `L.Godel.Tuples`{.Agda}: assignments as graph sets, and their algebra against
   the operations: extension is the graph extension, dropping the head is the
   shift, entrywise injectivity reads one graph against the other's lookup, and
@@ -985,7 +986,7 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，此处也不需要。另有 `closure`{.Agda}，一条公式的诸子公式键构成的有穷集；`closure-inv`{.Agda} 把它读回来；以及 `byTag`{.Agda}，它把十二个构造子与封闭性谓词提出的八项要求对上一次，而非对上十二乘八次。
 - `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词，且是满足它的最小者。四个读式的八个实例，再加一次归纳；前者是「对一条公式的诸子码作递归」关于其索引集所需的那条假设，后者是它的取值唯一的理由。那八条子句从不看一条公式，故只对任意可**剥开**的集合证一次 (`Peel`{.Agda}：一个成员仅仅是某条公式的键，而那条公式自己的闭包坐落于内)，而 `closureClosed`{.Agda} 就是 `closedOf`{.Agda} 落在闭包处、以 `closure-inv`{.Agda} 充当剥开。此处的一般性免费，因为 `byTag`{.Agda} 本就是对着任意目标集写的。
 - `L.Godel.Operations`{.Agda}：一批有穷的集合运算，每个都是带两个隶属方向的单个集合形成子，且无一欠排中律：积与隶属图、直接形成子版的并与差、参数键处的两个选择，以及被记录赋值的扩张与移位。后面的章将在本要花公式的地方复合它们。
-- `L.Godel.Definable`{.Agda}：运算，被描述出来。一个框架把一个体与两个语义转换变成「槽位与运算取值之间的等同」；差、并、积与隶属图经它而过，每条描述都在变元槽位与变元环境处双向读出。
+- `L.Godel.Definable`{.Agda}：运算，被描述出来。一个框架把一个体与两个语义转换变成「槽位与运算取值之间的等同」；十一条描述经它而过 (布尔存货、积与隶属图、单点键处的两个选择、取值集、元数槽位处的元组族、两个图移位运算)，每条都在变元槽位与变元环境处双向读出。
 - `L.Godel.Tuples`{.Agda}：赋值作为图集合，及其对着运算的代数：扩张就是图扩张，弃首就是移位，逐条目单射性把一个图对着另一个图的查值规格去读，而载体之上全体赋值的族按族扩张走步。
 - `L.Godel.Satisfaction`{.Agda}：满足关系作为集合，逐情形。公式的满足集是「满足它的诸赋值」上的单个集合形成子，而已交付的每个情形都是与某个运算复合的外延等同：假与真、合取、析取与否定对着布尔存货，两变元隶属原子对着一次选择，存在量词对着移位。
 - `L.Godel.Terms`{.Agda}：组合子项，塔将要量化的语法。项与公式逐构造子镜像对应，却经每节点一个集合运算获得含义，且没有绑定子；可靠性以反向运行的情形等式把每个项读回为其镜像的满足集，完备性经诸化归给每条公式指派一个项，立于那一份经典假设之下。
