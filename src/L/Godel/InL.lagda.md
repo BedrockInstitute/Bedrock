@@ -22,17 +22,17 @@ open import Base.Truth
 module L.Godel.InL {ℓ : Level} where
 
 open import FOL.Syntax
-  using ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∀̇∈; ∃̇∈ )
+  using ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy
   using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 open import FOL.Manipulation.Relabelling using ( mapFo; ⊨-map )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
-open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl; pair-singleton )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
-  using ( isL; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono
+  using ( isL; isL-trans; IsOrd; Lset; Lset-layer; layer-trans; Lset-mono
         ; Lset-in; 𝒟ₒ-intro )
 open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; boundingOrd )
 open import L.Axioms.Basic {ℓ} using ( isL-directed; defSet→isL )
@@ -48,20 +48,27 @@ open import L.Godel.Operations {ℓ}
         ; values; values-in; values-wit
         ; singleton-self; singleton-in; singleton-out
         ; tailGraph; tailGraph-in; tailGraph-out
-        ; shiftDown; shiftDown-in; shiftDown-out )
+        ; shiftDown; shiftDown-in; shiftDown-out
+        ; extendGraph; extendGraph-zero; extendGraph-suc; extendGraph-out
+        ; extendFamily; extendFamily-in; extendFamily-out )
+open import L.Godel.Tuples {ℓ} using ( allTuples; allTuples-zero; allTuples-suc )
+open import L.Godel.Terms {ℓ}
+  using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK
+        ; ⟦_⟧ᴷ )
 
 open import Cubical.Foundations.Prelude using ( subst2 )
 import Cubical.Data.Empty as Empty
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
 open import Cubical.Data.Bool using ( Bool; true; false )
+open import Cubical.Data.FinData using ( toℕ )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈-asFiber; _⊆_; extensionality )
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
+  using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
 
 module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
@@ -1284,6 +1291,521 @@ private
 ```
 
 <!--en-->
+## The extend chain
+<!--zh-->
+## 扩张链
+<!--/-->
+
+<!--en-->
+The extension is the shift run backwards, plus one new pair at the empty key.
+Its seek sentence mirrors the tail's: the recorded pair now carries the plain
+key and the surveyed pair the successor, so the successor witness is bound
+through the surveyed member instead. The empty key rides as a constant, and
+the empty set enters any next stage by the false formula, whose definable
+subset is empty on both readings.
+<!--zh-->
+扩张就是倒着跑的移位，外加空键处的一个新对。它的寻找句与尾链镜像对应：被记录的对如今携带朴素键，被检视的对携带后继，故后继见证改为经被检视成员约束。空键作为常量随行，而空集经假公式进入任何下一个阶段，其可定义子集在两个读向上都空。
+<!--/-->
+
+```agda
+private
+  emptyDef : (σ : V ℓ) → DefOf.defSet (Lset σ) ⊥̇ ≡ ∅
+  emptyDef σ = extensionality (DefA.defSet ⊥̇) ∅ (sub₁ , sub₂)
+    where
+    module DefA = DefOf (Lset σ)
+    sub₁ : ⟨ DefA.defSet ⊥̇ ⊆ ∅ ⟩
+    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ∅))
+      (λ { ((m , h) , q) →
+        Empty.rec (lower
+          (subst ⟨_⟩ (DefA.defSet-mem ⊥̇ m) ∣ (m , h) , refl ∣₁)) })
+      (∈∈ₛ {a = y} {b = DefA.defSet ⊥̇} .snd y∈ₛ)
+    sub₂ : ⟨ ∅ ⊆ DefA.defSet ⊥̇ ⟩
+    sub₂ y y∈ₛ = Empty.rec (∅-empty y y∈ₛ)
+
+  ∅Up : (σ : V ℓ) → ⟨ ∅ ∈ Lset (sucV σ) ⟩
+  ∅Up σ = mkUp σ ∅ ⊥̇ (emptyDef σ)
+
+  extBody : {ℓ' : Level} {K : Type ℓ'} {m : ℕ}
+          → Formula K (suc (suc (suc (suc (suc (suc (suc (suc m))))))))
+  extBody = prAt′ f6 f4 f2 ∧̇ (sucAt′ f4 zero ∧̇ prAt′ f7 zero f2)
+
+  extSeek : {ℓ' : Level} {K : Type ℓ'} {m : ℕ} → Term K (suc m) → Formula K (suc m)
+  extSeek B = ∃̇∈ B (∃̇∈ (var zero) (∃̇∈ (var zero) (∃̇∈ (var f2)
+                (∃̇∈ (var zero) (∃̇∈ (var f5) (∃̇∈ (var zero) extBody))))))
+
+  Δ₀-extSeek : {ℓ' : Level} {K : Type ℓ'} {m : ℕ} (B : Term K (suc m))
+             → Δ₀ (extSeek B)
+  Δ₀-extSeek B = δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈
+    (δ-∧ (Δ₀-prAt′ f6 f4 f2)
+         (δ-∧ (Δ₀-sucAt′ f4 zero) (Δ₀-prAt′ f7 zero f2)))))))))
+
+  extSeekOut : {n : ℕ} (B : Term (V ℓ) (suc n)) (δ : (V ℓ) ^ (suc n))
+             → ⟨ δ ⊨ extSeek B ⟩
+             → ∥ Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                 ((⟦ var zero ⟧ δ ≡ pr (sucV a) v) × ⟨ pr a v ∈ ⟦ B ⟧ δ ⟩) ∥₁
+  extSeekOut {n} B δ =
+    PT.rec PT.squash₁ (λ { (p , hp , w₁) →
+    PT.rec PT.squash₁ (λ { (d , _ , w₂) →
+    PT.rec PT.squash₁ (λ { (a , _ , w₃) →
+    PT.rec PT.squash₁ (λ { (d′ , _ , w₄) →
+    PT.rec PT.squash₁ (λ { (v , _ , w₅) →
+    PT.rec PT.squash₁ (λ { (dz , _ , w₆) →
+    PT.rec PT.squash₁ (λ { (s , _ , body) →
+      finish p d a d′ v dz s hp body })
+    w₆ }) w₅ }) w₄ }) w₃ }) w₂ }) w₁ })
+    where
+    finish : (p d a d′ v dz s : V ℓ) → ⟨ p ∈ ⟦ B ⟧ δ ⟩
+           → ⟨ (s ∷ dz ∷ v ∷ d′ ∷ a ∷ d ∷ p ∷ δ) ⊨ extBody ⟩
+           → ∥ Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+               ((⟦ var zero ⟧ δ ≡ pr (sucV a) v) × ⟨ pr a v ∈ ⟦ B ⟧ δ ⟩) ∥₁
+    finish p d a d′ v dz s hp (e₁ , e₂ , e₃) =
+      ∣ a , v
+      , ( subst ⟨_⟩ (prAt-adequate f7 zero f2
+            (s ∷ dz ∷ v ∷ d′ ∷ a ∷ d ∷ p ∷ δ)) e₃
+        ∙ cong (λ w → pr w v)
+            (subst ⟨_⟩ (sucAt-adequate f4 zero
+              (s ∷ dz ∷ v ∷ d′ ∷ a ∷ d ∷ p ∷ δ)) e₂) )
+      , subst (λ w → ⟨ w ∈ ⟦ B ⟧ δ ⟩)
+          (subst ⟨_⟩ (prAt-adequate f6 f4 f2
+            (s ∷ dz ∷ v ∷ d′ ∷ a ∷ d ∷ p ∷ δ)) e₁)
+          hp ∣₁
+
+  extSeekIn : {n : ℕ} (B : Term (V ℓ) (suc n)) (δ : (V ℓ) ^ (suc n)) (a v : V ℓ)
+            → ⟦ var zero ⟧ δ ≡ pr (sucV a) v → ⟨ pr a v ∈ ⟦ B ⟧ δ ⟩
+            → ⟨ δ ⊨ extSeek B ⟩
+  extSeekIn B δ a v e h =
+    ∣ pr a v , h
+    , ∣ ⁅ a ⁆s , ∈pair-introL refl
+    , ∣ a , singleton-self a
+    , ∣ ⁅ a , v ⁆ , ∈pair-introR refl
+    , ∣ v , ∈pair-introR refl
+    , ∣ ⁅ sucV a ⁆s , subst (λ w → ⟨ ⁅ sucV a ⁆s ∈ w ⟩) (sym e) (∈pair-introL refl)
+    , ∣ sucV a , singleton-self (sucV a)
+    , ( subst ⟨_⟩ (sym (prAt-adequate f6 f4 f2 env′)) refl
+      , subst ⟨_⟩ (sym (sucAt-adequate f4 zero env′)) refl
+      , subst ⟨_⟩ (sym (prAt-adequate f7 zero f2 env′)) e )
+    ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+    where
+    env′ : (V ℓ) ^ (suc (suc (suc (suc (suc (suc (suc (suc _))))))))
+    env′ = sucV a ∷ ⁅ sucV a ⁆s ∷ v ∷ ⁅ a , v ⁆ ∷ a ∷ ⁅ a ⁆s ∷ pr a v ∷ δ
+```
+
+<!--en-->
+## The extended graph, staged
+<!--zh-->
+## 扩张图，入阶段
+<!--/-->
+
+<!--en-->
+A single extension climbs five stages: keys pick up a successor, so its pairs
+sit two climbs above the successor's two, and the description adds one more.
+With the argument, the singleton of the new value and the empty key's
+singleton as constants, the description is the empty-key clause or the extend
+sentence, and both readings are the two halves of the graph's own reader.
+<!--zh-->
+单次扩张爬五级：键各添一个后继，故其对住在后继两级之上再两级处，描述再加一级。以实参、新取值的单点集与空键的单点集为常量，描述就是「空键子句或扩张句」，而两个读向恰是图自身读式的两半。
+<!--/-->
+
+```agda
+private
+  extStage : (σ : V ℓ) {y γ : V ℓ} → ⟨ y ∈ Lset σ ⟩ → ⟨ γ ∈ Lset σ ⟩
+           → ⟨ extendGraph y γ ∈ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟩
+  extStage σ {y} {γ} y∈ γ∈ =
+    mkUp (sucV (sucV (sucV (sucV σ)))) (extendGraph y γ) Ψ defSet≡
+    where
+    Atr = layer-trans (Lset-layer σ)
+    module DefA = DefOf (Lset (sucV (sucV (sucV (sucV σ)))))
+    module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV (sucV (sucV σ))))))
+
+    E⁴ : ⟪ Lset (sucV (sucV (sucV (sucV σ)))) ⟫ → V ℓ
+    E⁴ m = ⟪ Lset (sucV (sucV (sucV (sucV σ)))) ⟫↪ m
+
+    γ∈⁴ : ⟨ γ ∈ Lset (sucV (sucV (sucV (sucV σ)))) ⟩
+    γ∈⁴ = up (up (up (up γ∈)))
+    mγ = ∈-asFiber {a = γ} {b = Lset (sucV (sucV (sucV (sucV σ))))} γ∈⁴ .fst
+    qγ : E⁴ mγ ≡ γ
+    qγ = ∈-asFiber {a = γ} {b = Lset (sucV (sucV (sucV (sucV σ))))} γ∈⁴ .snd
+    Sy∈⁴ : ⟨ ⁅ y ⁆s ∈ Lset (sucV (sucV (sucV (sucV σ)))) ⟩
+    Sy∈⁴ = up (up (up (sglUp σ y∈)))
+    mSy = ∈-asFiber {a = ⁅ y ⁆s} {b = Lset (sucV (sucV (sucV (sucV σ))))} Sy∈⁴ .fst
+    qSy : E⁴ mSy ≡ ⁅ y ⁆s
+    qSy = ∈-asFiber {a = ⁅ y ⁆s} {b = Lset (sucV (sucV (sucV (sucV σ))))} Sy∈⁴ .snd
+    K0∈⁴ : ⟨ ⁅ ∅ ⁆s ∈ Lset (sucV (sucV (sucV (sucV σ)))) ⟩
+    K0∈⁴ = up (up (sglUp (sucV σ) (∅Up σ)))
+    mK0 = ∈-asFiber {a = ⁅ ∅ ⁆s} {b = Lset (sucV (sucV (sucV (sucV σ))))} K0∈⁴ .fst
+    qK0 : E⁴ mK0 ≡ ⁅ ∅ ⁆s
+    qK0 = ∈-asFiber {a = ⁅ ∅ ⁆s} {b = Lset (sucV (sucV (sucV (sucV σ))))} K0∈⁴ .snd
+
+    Ψ : Formula ⟪ Lset (sucV (sucV (sucV (sucV σ)))) ⟫ 1
+    Ψ = (∃̇∈ (con mK0) (∃̇∈ (con mSy) (prAt′ f2 f1 zero))) ∨̇ extSeek (con mγ)
+
+    dΨ : Δ₀ Ψ
+    dΨ = δ-∨ (δ-∃∈ (δ-∃∈ (Δ₀-prAt′ f2 f1 zero))) (Δ₀-extSeek (con mγ))
+
+    chain : ∀ m → (E⁴ m ∈ DefA.defSet Ψ)
+                ≡ ((E⁴ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Ψ))
+    chain m = RefA.abs-defSet Ψ dΨ m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Ψ) (E⁴ m ∷ []))
+
+    defSet≡ : DefA.defSet Ψ ≡ extendGraph y γ
+    defSet≡ = extensionality (DefA.defSet Ψ) (extendGraph y γ) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Ψ ⊆ extendGraph y γ ⟩
+      sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ extendGraph y γ))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ extendGraph y γ ⟩) q
+            (mem m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁)) })
+        (∈∈ₛ {a = z} {b = DefA.defSet Ψ} .snd z∈ₛ)
+        where
+        mem : (m : ⟪ Lset (sucV (sucV (sucV (sucV σ)))) ⟫)
+            → ⟨ (E⁴ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Ψ) ⟩
+            → ⟨ E⁴ m ∈ₛ extendGraph y γ ⟩
+        mem m = PT.rec (snd (E⁴ m ∈ₛ extendGraph y γ))
+          (λ { (inl zc) → zCase zc ; (inr sk) → sCase sk })
+          where
+          zCase : ⟨ (E⁴ m ∷ []) ⊨ ∃̇∈ (con (E⁴ mK0)) (∃̇∈ (con (E⁴ mSy)) (prAt′ f2 f1 zero)) ⟩
+                → ⟨ E⁴ m ∈ₛ extendGraph y γ ⟩
+          zCase = PT.rec (snd (E⁴ m ∈ₛ extendGraph y γ))
+            (λ { (e′ , he′ , w₁) →
+              PT.rec (snd (E⁴ m ∈ₛ extendGraph y γ))
+                (λ { (y′ , hy′ , sZ) →
+                  ∈∈ₛ {a = E⁴ m} {b = extendGraph y γ} .fst
+                    (subst (λ w → ⟨ w ∈ extendGraph y γ ⟩)
+                      (sym ( subst ⟨_⟩ (prAt-adequate f2 f1 zero
+                               (y′ ∷ e′ ∷ E⁴ m ∷ [])) sZ
+                           ∙ cong₂ pr
+                               (singleton-out (subst (λ w → ⟨ e′ ∈ w ⟩) qK0 he′))
+                               (singleton-out (subst (λ w → ⟨ y′ ∈ w ⟩) qSy hy′)) ))
+                      (extendGraph-zero {y} {γ})) })
+                w₁ })
+          sCase : ⟨ (E⁴ m ∷ []) ⊨ extSeek (con (E⁴ mγ)) ⟩
+                → ⟨ E⁴ m ∈ₛ extendGraph y γ ⟩
+          sCase sk = PT.rec (snd (E⁴ m ∈ₛ extendGraph y γ))
+            (λ { (a , v , e , h) →
+              ∈∈ₛ {a = E⁴ m} {b = extendGraph y γ} .fst
+                (subst (λ w → ⟨ w ∈ extendGraph y γ ⟩) (sym e)
+                  (extendGraph-suc {y} {γ}
+                    (subst (λ w → ⟨ pr a v ∈ w ⟩) qγ h))) })
+            (extSeekOut (con (E⁴ mγ)) (E⁴ m ∷ []) sk)
+      sub₂ : ⟨ extendGraph y γ ⊆ DefA.defSet Ψ ⟩
+      sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet Ψ))
+        (λ { (inl e) → zBuild e ; (inr (a , v , h , e)) → sBuild a v h e })
+        (extendGraph-out {y} {γ} {z}
+          (∈∈ₛ {a = z} {b = extendGraph y γ} .snd z∈ₛ))
+        where
+        zBuild : z ≡ pr ∅ y → ⟨ z ∈ₛ DefA.defSet Ψ ⟩
+        zBuild e =
+          subst (λ w → ⟨ w ∈ₛ DefA.defSet Ψ ⟩) q′
+            (∈∈ₛ {a = E⁴ m′} {b = DefA.defSet Ψ} .fst
+              (subst ⟨_⟩ (sym (chain m′)) sat))
+          where
+          z∈⁴ : ⟨ z ∈ Lset (sucV (sucV (sucV (sucV σ)))) ⟩
+          z∈⁴ = subst (λ w → ⟨ w ∈ Lset (sucV (sucV (sucV (sucV σ)))) ⟩) (sym e)
+            (up (prUp (sucV σ) (∅Up σ) (up y∈)))
+          m′ = ∈-asFiber {a = z} {b = Lset (sucV (sucV (sucV (sucV σ))))} z∈⁴ .fst
+          q′ : E⁴ m′ ≡ z
+          q′ = ∈-asFiber {a = z} {b = Lset (sucV (sucV (sucV (sucV σ))))} z∈⁴ .snd
+          sat : ⟨ (E⁴ m′ ∷ []) ⊨ mapFo fst (mapFo DefA.ι Ψ) ⟩
+          sat = ∣ inl
+            ∣ ∅ , subst (λ w → ⟨ ∅ ∈ w ⟩) (sym qK0) (singleton-self ∅)
+            , ∣ y , subst (λ w → ⟨ y ∈ w ⟩) (sym qSy) (singleton-self y)
+            , subst ⟨_⟩ (sym (prAt-adequate f2 f1 zero
+                (y ∷ ∅ ∷ E⁴ m′ ∷ []))) (q′ ∙ e)
+            ∣₁ ∣₁ ∣₁
+        sBuild : (a v : V ℓ) → ⟨ pr a v ∈ γ ⟩ → z ≡ pr (sucV a) v
+               → ⟨ z ∈ₛ DefA.defSet Ψ ⟩
+        sBuild a v h e =
+          subst (λ w → ⟨ w ∈ₛ DefA.defSet Ψ ⟩) q′
+            (∈∈ₛ {a = E⁴ m′} {b = DefA.defSet Ψ} .fst
+              (subst ⟨_⟩ (sym (chain m′)) sat))
+          where
+          p∈σ : ⟨ pr a v ∈ Lset σ ⟩
+          p∈σ = Atr {x = γ} {y = pr a v} h γ∈
+          a∈σ : ⟨ a ∈ Lset σ ⟩
+          a∈σ = Atr {x = ⁅ a ⁆s} {y = a} (singleton-self a)
+            (Atr {x = pr a v} {y = ⁅ a ⁆s} (∈pair-introL refl) p∈σ)
+          v∈σ : ⟨ v ∈ Lset σ ⟩
+          v∈σ = Atr {x = ⁅ a , v ⁆} {y = v} (∈pair-introR refl)
+            (Atr {x = pr a v} {y = ⁅ a , v ⁆} (∈pair-introR refl) p∈σ)
+          z∈⁴ : ⟨ z ∈ Lset (sucV (sucV (sucV (sucV σ)))) ⟩
+          z∈⁴ = subst (λ w → ⟨ w ∈ Lset (sucV (sucV (sucV (sucV σ)))) ⟩) (sym e)
+            (prUp (sucV (sucV σ)) (sucUp σ a∈σ) (up (up v∈σ)))
+          m′ = ∈-asFiber {a = z} {b = Lset (sucV (sucV (sucV (sucV σ))))} z∈⁴ .fst
+          q′ : E⁴ m′ ≡ z
+          q′ = ∈-asFiber {a = z} {b = Lset (sucV (sucV (sucV (sucV σ))))} z∈⁴ .snd
+          sat : ⟨ (E⁴ m′ ∷ []) ⊨ mapFo fst (mapFo DefA.ι Ψ) ⟩
+          sat = ∣ inr (extSeekIn (con (E⁴ mγ)) (E⁴ m′ ∷ []) a v (q′ ∙ e)
+            (subst (λ w → ⟨ pr a v ∈ w ⟩) (sym qγ) h)) ∣₁
+```
+
+<!--en-->
+## The extension
+<!--zh-->
+## 扩张
+<!--/-->
+
+<!--en-->
+The family formula binds the graph and the new value, then pins the surveyed
+set with three clauses: every member is the empty-key pair or an extend-shaped
+pair, the empty-key pair is a member, and every recorded pair's extension is a
+member. The readings are the staged graph's readings run against a bound
+variable, with the graph's reader supplying every witness.
+<!--zh-->
+族公式先约束图与新取值，再用三条子句钉住被检视集合：每个成员是空键对或扩张形对、空键对是成员、每个被记录对的扩张是成员。读法就是入阶段那节的读法对着约束变元再跑一遍，图自身的读式提供全部见证。
+<!--/-->
+
+```agda
+private
+  module ExtF (X Y σ : V ℓ) (X∈ : ⟨ X ∈ Lset σ ⟩) (Y∈ : ⟨ Y ∈ Lset σ ⟩) where
+
+    Atr = layer-trans (Lset-layer σ)
+    module DefA = DefOf (Lset (sucV (sucV (sucV (sucV (sucV σ))))))
+    module RefA = DefA.Refine
+      (layer-trans (Lset-layer (sucV (sucV (sucV (sucV (sucV σ)))))))
+
+    E⁵ : ⟪ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟫ → V ℓ
+    E⁵ m = ⟪ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟫↪ m
+
+    X∈⁵ : ⟨ X ∈ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟩
+    X∈⁵ = up (up (up (up (up X∈))))
+    mX = ∈-asFiber {a = X} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} X∈⁵ .fst
+    qX : E⁵ mX ≡ X
+    qX = ∈-asFiber {a = X} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} X∈⁵ .snd
+    Y∈⁵ : ⟨ Y ∈ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟩
+    Y∈⁵ = up (up (up (up (up Y∈))))
+    mY = ∈-asFiber {a = Y} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} Y∈⁵ .fst
+    qY : E⁵ mY ≡ Y
+    qY = ∈-asFiber {a = Y} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} Y∈⁵ .snd
+    K0∈⁵ : ⟨ ⁅ ∅ ⁆s ∈ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟩
+    K0∈⁵ = up (up (up (sglUp (sucV σ) (∅Up σ))))
+    mK0 = ∈-asFiber {a = ⁅ ∅ ⁆s} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} K0∈⁵ .fst
+    qK0 : E⁵ mK0 ≡ ⁅ ∅ ⁆s
+    qK0 = ∈-asFiber {a = ⁅ ∅ ⁆s} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} K0∈⁵ .snd
+
+    Φ : Formula ⟪ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟫ 1
+    Φ = ∃̇∈ (con mX) (∃̇∈ (con mY)
+          ( (∀̇∈ (var f2)
+              ((∃̇∈ (con mK0) (prAt′ f1 zero f2)) ∨̇ extSeek (var f2)))
+          ∧̇ ( (∃̇∈ (con mK0) (∃̇∈ (var f3) (prAt′ zero f1 f2)))
+          ∧̇ (∀̇∈ (var f1) (∀̇∈ (var zero) (∀̇∈ (var zero)
+               (∀̇∈ (var f2) (∀̇∈ (var zero)
+                 ((prAt′ f4 f2 zero)
+                   ⇒̇ (∃̇∈ (var f7) (∃̇∈ (var zero) (∃̇∈ (var zero)
+                        (sucAt′ f5 zero ∧̇ prAt′ f2 zero f3)))))))))) ) ))
+
+    dΦ : Δ₀ Φ
+    dΦ = δ-∃∈ (δ-∃∈ (δ-∧
+      (δ-∀∈ (δ-∨ (δ-∃∈ (Δ₀-prAt′ f1 zero f2)) (Δ₀-extSeek (var f2))))
+      (δ-∧ (δ-∃∈ (δ-∃∈ (Δ₀-prAt′ zero f1 f2)))
+           (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈
+             (δ-⇒ (Δ₀-prAt′ f4 f2 zero)
+                  (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∧ (Δ₀-sucAt′ f5 zero)
+                                         (Δ₀-prAt′ f2 zero f3))))))))))))))
+
+    chain : ∀ m → (E⁵ m ∈ DefA.defSet Φ)
+                ≡ ((E⁵ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ))
+    chain m = RefA.abs-defSet Φ dΦ m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Φ) (E⁵ m ∷ []))
+
+    defSet≡ : DefA.defSet Φ ≡ extendFamily X Y
+    defSet≡ = extensionality (DefA.defSet Φ) (extendFamily X Y) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Φ ⊆ extendFamily X Y ⟩
+      sub₁ w w∈ₛ = PT.rec (snd (w ∈ₛ extendFamily X Y))
+        (λ { ((m , h) , q) →
+          subst (λ u → ⟨ u ∈ₛ extendFamily X Y ⟩) q
+            (∈∈ₛ {a = E⁵ m} {b = extendFamily X Y} .fst
+              (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))) })
+        (∈∈ₛ {a = w} {b = DefA.defSet Φ} .snd w∈ₛ)
+        where
+        fromSat : (m : ⟪ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟫)
+                → ⟨ (E⁵ m ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ) ⟩
+                → ⟨ E⁵ m ∈ extendFamily X Y ⟩
+        fromSat m = PT.rec (snd (E⁵ m ∈ extendFamily X Y))
+          (λ { (γ , hγ , big) →
+            PT.rec (snd (E⁵ m ∈ extendFamily X Y))
+              (λ { (y , hy , membV , imgZV , imgSV) →
+                subst (λ u → ⟨ u ∈ extendFamily X Y ⟩)
+                  (sym (G≡ γ y membV imgZV imgSV))
+                  (extendFamily-in {X = X} {Y = Y}
+                    (subst (λ u → ⟨ γ ∈ u ⟩) qX hγ)
+                    (subst (λ u → ⟨ y ∈ u ⟩) qY hy)) })
+              big })
+          where
+          T = E⁵ m
+          G≡ : (γ y : V ℓ)
+             → ((z : V ℓ) → ⟨ z ∈ T ⟩
+                → ⟨ (z ∷ y ∷ γ ∷ T ∷ [])
+                      ⊨ ((∃̇∈ (con (E⁵ mK0)) (prAt′ f1 zero f2)) ∨̇ extSeek (var f2)) ⟩)
+             → ⟨ (y ∷ γ ∷ T ∷ [])
+                   ⊨ ∃̇∈ (con (E⁵ mK0)) (∃̇∈ (var f3) (prAt′ zero f1 f2)) ⟩
+             → ((p : V ℓ) → ⟨ p ∈ γ ⟩ → (d : V ℓ) → ⟨ d ∈ p ⟩
+                → (a : V ℓ) → ⟨ a ∈ d ⟩ → (d′ : V ℓ) → ⟨ d′ ∈ p ⟩
+                → (v : V ℓ) → ⟨ v ∈ d′ ⟩
+                → ⟨ (v ∷ d′ ∷ a ∷ d ∷ p ∷ y ∷ γ ∷ T ∷ []) ⊨ prAt′ f4 f2 zero ⟩
+                → ⟨ (v ∷ d′ ∷ a ∷ d ∷ p ∷ y ∷ γ ∷ T ∷ [])
+                      ⊨ ∃̇∈ (var f7) (∃̇∈ (var zero) (∃̇∈ (var zero)
+                           (sucAt′ f5 zero ∧̇ prAt′ f2 zero f3))) ⟩)
+             → T ≡ extendGraph y γ
+          G≡ γ y membV imgZV imgSV =
+            extensionality T (extendGraph y γ) (g₁ , g₂)
+            where
+            g₁ : ⟨ T ⊆ extendGraph y γ ⟩
+            g₁ z z∈ₛ = PT.rec (snd (z ∈ₛ extendGraph y γ))
+              (λ { (inl zc) → zCase zc ; (inr sk) → sCase sk })
+              (membV z (∈∈ₛ {a = z} {b = T} .snd z∈ₛ))
+              where
+              zCase : ⟨ (z ∷ y ∷ γ ∷ T ∷ []) ⊨ ∃̇∈ (con (E⁵ mK0)) (prAt′ f1 zero f2) ⟩
+                    → ⟨ z ∈ₛ extendGraph y γ ⟩
+              zCase = PT.rec (snd (z ∈ₛ extendGraph y γ))
+                (λ { (e′ , he′ , sZ) →
+                  ∈∈ₛ {a = z} {b = extendGraph y γ} .fst
+                    (subst (λ u → ⟨ u ∈ extendGraph y γ ⟩)
+                      (sym ( subst ⟨_⟩ (prAt-adequate f1 zero f2
+                               (e′ ∷ z ∷ y ∷ γ ∷ T ∷ [])) sZ
+                           ∙ cong (λ u → pr u y)
+                               (singleton-out
+                                 (subst (λ u → ⟨ e′ ∈ u ⟩) qK0 he′)) ))
+                      (extendGraph-zero {y} {γ})) })
+              sCase : ⟨ (z ∷ y ∷ γ ∷ T ∷ []) ⊨ extSeek (var f2) ⟩
+                    → ⟨ z ∈ₛ extendGraph y γ ⟩
+              sCase sk = PT.rec (snd (z ∈ₛ extendGraph y γ))
+                (λ { (a , v , e , h) →
+                  ∈∈ₛ {a = z} {b = extendGraph y γ} .fst
+                    (subst (λ u → ⟨ u ∈ extendGraph y γ ⟩) (sym e)
+                      (extendGraph-suc {y} {γ} h)) })
+                (extSeekOut (var f2) (z ∷ y ∷ γ ∷ T ∷ []) sk)
+            g₂ : ⟨ extendGraph y γ ⊆ T ⟩
+            g₂ z z∈ₛ = PT.rec (snd (z ∈ₛ T))
+              (λ { (inl e) → zRead e ; (inr (a , v , h , e)) → sRead a v h e })
+              (extendGraph-out {y} {γ} {z}
+                (∈∈ₛ {a = z} {b = extendGraph y γ} .snd z∈ₛ))
+              where
+              zRead : z ≡ pr ∅ y → ⟨ z ∈ₛ T ⟩
+              zRead e = PT.rec (snd (z ∈ₛ T))
+                (λ { (e″ , he″ , w₁) →
+                  PT.rec (snd (z ∈ₛ T))
+                    (λ { (z′ , hz′ , sZ′) →
+                      ∈∈ₛ {a = z} {b = T} .fst
+                        (subst (λ u → ⟨ u ∈ T ⟩)
+                          ( ( subst ⟨_⟩ (prAt-adequate zero f1 f2
+                                (z′ ∷ e″ ∷ y ∷ γ ∷ T ∷ [])) sZ′
+                            ∙ cong (λ u → pr u y)
+                                (singleton-out
+                                  (subst (λ u → ⟨ e″ ∈ u ⟩) qK0 he″)) )
+                          ∙ sym e )
+                          hz′) })
+                    w₁ })
+                imgZV
+              sRead : (a v : V ℓ) → ⟨ pr a v ∈ γ ⟩ → z ≡ pr (sucV a) v
+                    → ⟨ z ∈ₛ T ⟩
+              sRead a v h e = PT.rec (snd (z ∈ₛ T))
+                (λ { (z′ , hz′ , w₁) →
+                  PT.rec (snd (z ∈ₛ T))
+                    (λ { (dz , hdz , w₂) →
+                      PT.rec (snd (z ∈ₛ T))
+                        (λ { (s , hs , (sS , sP)) →
+                          ∈∈ₛ {a = z} {b = T} .fst
+                            (subst (λ u → ⟨ u ∈ T ⟩)
+                              ( ( subst ⟨_⟩ (prAt-adequate f2 zero f3
+                                    (s ∷ dz ∷ z′ ∷ v ∷ ⁅ a , v ⁆ ∷ a ∷ ⁅ a ⁆s
+                                      ∷ pr a v ∷ y ∷ γ ∷ T ∷ [])) sP
+                                ∙ cong (λ u → pr u v)
+                                    (subst ⟨_⟩ (sucAt-adequate f5 zero
+                                      (s ∷ dz ∷ z′ ∷ v ∷ ⁅ a , v ⁆ ∷ a ∷ ⁅ a ⁆s
+                                        ∷ pr a v ∷ y ∷ γ ∷ T ∷ [])) sS) )
+                              ∙ sym e )
+                              hz′) })
+                        w₂ })
+                    w₁ })
+                (imgSV (pr a v) h
+                  ⁅ a ⁆s (∈pair-introL refl)
+                  a (singleton-self a)
+                  ⁅ a , v ⁆ (∈pair-introR refl)
+                  v (∈pair-introR refl)
+                  (subst ⟨_⟩ (sym (prAt-adequate f4 f2 zero
+                    (v ∷ ⁅ a , v ⁆ ∷ a ∷ ⁅ a ⁆s ∷ pr a v ∷ y ∷ γ ∷ T ∷ []))) refl))
+      sub₂ : ⟨ extendFamily X Y ⊆ DefA.defSet Φ ⟩
+      sub₂ w w∈ₛ = PT.rec (snd (w ∈ₛ DefA.defSet Φ)) build
+        (extendFamily-out {X = X} {Y = Y} {w = w}
+          (∈∈ₛ {a = w} {b = extendFamily X Y} .snd w∈ₛ))
+        where
+        build : Σ[ γ ∈ V ℓ ] Σ[ y ∈ V ℓ ]
+                (⟨ γ ∈ X ⟩ × ⟨ y ∈ Y ⟩ × (w ≡ extendGraph y γ))
+              → ⟨ w ∈ₛ DefA.defSet Φ ⟩
+        build (γ , y , hγ , hy , e) =
+          subst (λ u → ⟨ u ∈ₛ DefA.defSet Φ ⟩) q′
+            (∈∈ₛ {a = E⁵ m′} {b = DefA.defSet Φ} .fst
+              (subst ⟨_⟩ (sym (chain m′)) sat))
+          where
+          γ∈σ : ⟨ γ ∈ Lset σ ⟩
+          γ∈σ = Atr {x = X} {y = γ} hγ X∈
+          y∈σ : ⟨ y ∈ Lset σ ⟩
+          y∈σ = Atr {x = Y} {y = y} hy Y∈
+          w∈⁵ : ⟨ w ∈ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟩
+          w∈⁵ = subst (λ u → ⟨ u ∈ Lset (sucV (sucV (sucV (sucV (sucV σ))))) ⟩)
+            (sym e) (extStage σ y∈σ γ∈σ)
+          m′ = ∈-asFiber {a = w} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} w∈⁵ .fst
+          q′ : E⁵ m′ ≡ w
+          q′ = ∈-asFiber {a = w} {b = Lset (sucV (sucV (sucV (sucV (sucV σ)))))} w∈⁵ .snd
+          ext≡ : extendGraph y γ ≡ E⁵ m′
+          ext≡ = sym e ∙ sym q′
+          membV : (z : V ℓ) → ⟨ z ∈ E⁵ m′ ⟩
+                → ⟨ (z ∷ y ∷ γ ∷ E⁵ m′ ∷ [])
+                      ⊨ ((∃̇∈ (con (E⁵ mK0)) (prAt′ f1 zero f2)) ∨̇ extSeek (var f2)) ⟩
+          membV z hz = PT.rec
+            (snd ((z ∷ y ∷ γ ∷ E⁵ m′ ∷ [])
+              ⊨ ((∃̇∈ (con (E⁵ mK0)) (prAt′ f1 zero f2)) ∨̇ extSeek (var f2))))
+            (λ { (inl e″) →
+                  ∣ inl ∣ ∅ , subst (λ u → ⟨ ∅ ∈ u ⟩) (sym qK0) (singleton-self ∅)
+                    , subst ⟨_⟩ (sym (prAt-adequate f1 zero f2
+                        (∅ ∷ z ∷ y ∷ γ ∷ E⁵ m′ ∷ []))) e″
+                    ∣₁ ∣₁
+               ; (inr (a , v , h , e″)) →
+                  ∣ inr (extSeekIn (var f2) (z ∷ y ∷ γ ∷ E⁵ m′ ∷ []) a v e″ h) ∣₁ })
+            (extendGraph-out {y} {γ} {z}
+              (subst (λ u → ⟨ z ∈ u ⟩) (sym ext≡) hz))
+          imgZV : ⟨ (y ∷ γ ∷ E⁵ m′ ∷ [])
+                      ⊨ ∃̇∈ (con (E⁵ mK0)) (∃̇∈ (var f3) (prAt′ zero f1 f2)) ⟩
+          imgZV = ∣ ∅ , subst (λ u → ⟨ ∅ ∈ u ⟩) (sym qK0) (singleton-self ∅)
+            , ∣ pr ∅ y
+              , subst (λ u → ⟨ pr ∅ y ∈ u ⟩) ext≡ (extendGraph-zero {y} {γ})
+              , subst ⟨_⟩ (sym (prAt-adequate zero f1 f2
+                  (pr ∅ y ∷ ∅ ∷ y ∷ γ ∷ E⁵ m′ ∷ []))) refl
+            ∣₁ ∣₁
+          imgSV : (p : V ℓ) → ⟨ p ∈ γ ⟩ → (d : V ℓ) → ⟨ d ∈ p ⟩
+                → (a : V ℓ) → ⟨ a ∈ d ⟩ → (d′ : V ℓ) → ⟨ d′ ∈ p ⟩
+                → (v : V ℓ) → ⟨ v ∈ d′ ⟩
+                → ⟨ (v ∷ d′ ∷ a ∷ d ∷ p ∷ y ∷ γ ∷ E⁵ m′ ∷ []) ⊨ prAt′ f4 f2 zero ⟩
+                → ⟨ (v ∷ d′ ∷ a ∷ d ∷ p ∷ y ∷ γ ∷ E⁵ m′ ∷ [])
+                      ⊨ ∃̇∈ (var f7) (∃̇∈ (var zero) (∃̇∈ (var zero)
+                           (sucAt′ f5 zero ∧̇ prAt′ f2 zero f3))) ⟩
+          imgSV p hp d hd a ha d′ hd′ v hv s₁ =
+            ∣ pr (sucV a) v
+            , subst (λ u → ⟨ pr (sucV a) v ∈ u ⟩) ext≡
+                (extendGraph-suc {y} {γ}
+                  (subst (λ u → ⟨ u ∈ γ ⟩)
+                    (subst ⟨_⟩ (prAt-adequate f4 f2 zero
+                      (v ∷ d′ ∷ a ∷ d ∷ p ∷ y ∷ γ ∷ E⁵ m′ ∷ [])) s₁)
+                    hp))
+            , ∣ ⁅ sucV a ⁆s , ∈pair-introL refl
+            , ∣ sucV a , singleton-self (sucV a)
+              , ( subst ⟨_⟩ (sym (sucAt-adequate f5 zero
+                    (sucV a ∷ ⁅ sucV a ⁆s ∷ pr (sucV a) v ∷ v ∷ d′ ∷ a ∷ d
+                      ∷ p ∷ y ∷ γ ∷ E⁵ m′ ∷ []))) refl
+                , subst ⟨_⟩ (sym (prAt-adequate f2 zero f3
+                    (sucV a ∷ ⁅ sucV a ⁆s ∷ pr (sucV a) v ∷ v ∷ d′ ∷ a ∷ d
+                      ∷ p ∷ y ∷ γ ∷ E⁵ m′ ∷ []))) refl )
+            ∣₁ ∣₁ ∣₁
+          sat : ⟨ (E⁵ m′ ∷ []) ⊨ mapFo fst (mapFo DefA.ι Φ) ⟩
+          sat = ∣ γ , subst (λ u → ⟨ γ ∈ u ⟩) (sym qX) hγ
+              , ∣ y , subst (λ u → ⟨ y ∈ u ⟩) (sym qY) hy
+              , membV , imgZV , imgSV ∣₁ ∣₁
+```
+
+<!--en-->
 ## Back into the class
 <!--zh-->
 ## 收回类中
@@ -1361,6 +1883,16 @@ shiftDownL {X} = PT.rec (snd (isL (shiftDown X)))
       (shiftDown X)
       ∣ SftD.Φ X σ X∈ , SftD.defSet≡ X σ X∈ ∣₁ }
 
+extendFamilyL : {X Y : V ℓ} → ⟨ isL X ⟩ → ⟨ isL Y ⟩
+              → ⟨ isL (extendFamily X Y) ⟩
+extendFamilyL {X} {Y} lX lY = PT.rec (snd (isL (extendFamily X Y)))
+  (λ { (σ , (oσ , (X∈ , Y∈))) →
+    defSet→isL (sucV (sucV (sucV (sucV (sucV σ)))))
+      (suc-ord (suc-ord (suc-ord (suc-ord (suc-ord oσ)))))
+      (extendFamily X Y)
+      ∣ ExtF.Φ X Y σ X∈ Y∈ , ExtF.defSet≡ X Y σ X∈ Y∈ ∣₁ })
+  (isL-directed X Y lX lY)
+
 valuesL : {X : V ℓ} → ⟨ isL X ⟩ → ⟨ isL (values X) ⟩
 valuesL {X} lX = PT.rec (snd (isL (values X)))
   (λ { (σ , oσ , mem2) →
@@ -1377,4 +1909,70 @@ valuesL {X} lX = PT.rec (snd (isL (values X)))
   famL : (i : Fin 2) → ⟨ isL (fam i) ⟩
   famL zero = lX
   famL (suc zero) = sglL zeroL
+```
+
+<!--en-->
+## The whole table
+<!--zh-->
+## 整张表
+<!--/-->
+
+<!--en-->
+The capstone. All tuples over a constructible carrier are constructible by
+induction on the arity: the empty case is the singleton of the empty graph,
+and the successor case is exactly the tuple chapter's extension equation read
+through the family lemma. Every numeral is constructible through the numeral
+chain, every member of a constructible set through transitivity, and with
+that, one term induction closes the account: **every denotation of every
+combinator term over a constructible carrier is constructible**. This is the
+statement the internal tower will quantify.
+<!--zh-->
+封顶。可构造载体上的全体元组对元数归纳可构造：空情形是空图的单点集，后继情形恰是元组章的扩张等式经族引理读出。每个数码经数码链可构造，可构造集合的每个成员经传递性可构造，于是一次项归纳合上账本：**可构造载体上每个组合子项的每个指称都可构造**。这就是内部塔将要量化的陈述。
+<!--/-->
+
+```agda
+private
+  numL : (k : ℕ) → ⟨ isL (# k) ⟩
+  numL k = subst (λ z → ⟨ isL z ⟩) (numeralL-fst k) (numeralL k .snd)
+
+  ∅L : ⟨ isL ∅ ⟩
+  ∅L = defSet→isL ∅ ∅-ord ∅ ∣ ⊥̇ , emptyDef ∅ ∣₁
+
+allTuplesL : (A : V ℓ) → ⟨ isL A ⟩ → (n : ℕ) → ⟨ isL (allTuples A n) ⟩
+allTuplesL A lA zero =
+  subst (λ z → ⟨ isL z ⟩) (sym (allTuples-zero A))
+    (subst (λ z → ⟨ isL z ⟩) (sym (pair-singleton ∅)) (sglL ∅L))
+allTuplesL A lA (suc n) =
+  subst (λ z → ⟨ isL z ⟩) (sym (allTuples-suc A n))
+    (extendFamilyL {X = allTuples A n} {Y = A} (allTuplesL A lA n) lA)
+
+denoteL : (A : V ℓ) → ⟨ isL A ⟩ → {n : ℕ} (t : KT ⟪ A ⟫ n)
+        → ⟨ isL (⟦_⟧ᴷ A t) ⟩
+denoteL A lA {n} allK = allTuplesL A lA n
+denoteL A lA {n} (selMemK i j) =
+  selectMemberL {X = allTuples A n} {Ka = ⁅ # (toℕ i) ⁆s} {Kb = ⁅ # (toℕ j) ⁆s}
+    (allTuplesL A lA n) (sglL (numL (toℕ i))) (sglL (numL (toℕ j)))
+denoteL A lA {n} (selEqK i j) =
+  selectEqualL {X = allTuples A n} {Ka = ⁅ # (toℕ i) ⁆s} {Kb = ⁅ # (toℕ j) ⁆s}
+    (allTuplesL A lA n) (sglL (numL (toℕ i))) (sglL (numL (toℕ j)))
+denoteL A lA {n} (selEqConK i a) =
+  shiftDownL
+    {X = selectEqual (extendFamily (allTuples A n) ⁅ ⟪ A ⟫↪ a ⁆s)
+           ⁅ # (suc (toℕ i)) ⁆s ⁅ # 0 ⁆s}
+    (selectEqualL
+      {X = extendFamily (allTuples A n) ⁅ ⟪ A ⟫↪ a ⁆s}
+      {Ka = ⁅ # (suc (toℕ i)) ⁆s} {Kb = ⁅ # 0 ⁆s}
+      (extendFamilyL {X = allTuples A n} {Y = ⁅ ⟪ A ⟫↪ a ⁆s}
+        (allTuplesL A lA n)
+        (sglL (isL-trans {x = A} {y = ⟪ A ⟫↪ a}
+          (∈∈ₛ {a = ⟪ A ⟫↪ a} {b = A} .snd (∈ₛ⟪ A ⟫↪ a)) lA)))
+      (sglL (numL (suc (toℕ i)))) (sglL (numL 0)))
+denoteL A lA (interK s t) =
+  capL {X = ⟦_⟧ᴷ A s} {Y = ⟦_⟧ᴷ A t} (denoteL A lA s) (denoteL A lA t)
+denoteL A lA (unionK s t) =
+  cupL {X = ⟦_⟧ᴷ A s} {Y = ⟦_⟧ᴷ A t} (denoteL A lA s) (denoteL A lA t)
+denoteL A lA {n} (complK t) =
+  diffL {X = allTuples A n} {Y = ⟦_⟧ᴷ A t} (allTuplesL A lA n) (denoteL A lA t)
+denoteL A lA (shiftK t) =
+  shiftDownL {X = ⟦_⟧ᴷ A t} (denoteL A lA t)
 ```
