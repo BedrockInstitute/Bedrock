@@ -11,6 +11,9 @@ the detailed specs it points to.
   `fol-reification`): ratified decisions, target skeleton, rename ledger, the route
   tree of goal codes (`[L0]` to `[L5]`), binding build constraints, and the live
   MASTER status table. Read it before touching `src/`; work carries a goal code.
+- `LESSONS.md`: the **measured lesson book**: every performance law, conversion rule,
+  termination trap, inference trap, and design doctrine with its numbers and
+  provenance, the living home for the substance that PLAN rows used to carry.
 - `STYLE-agda.md`: the **Agda code and literate-chapter style** rules for `src/` masters:
   OPTIONS and assumption policy, naming, the layer-marking system, performance-idiom
   annotations, and the chapter template. Inherits the source project's finalized spec.
