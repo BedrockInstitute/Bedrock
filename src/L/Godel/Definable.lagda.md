@@ -34,14 +34,21 @@ module L.Godel.Definable {ℓ : Level} where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Ordinal {ℓ} using ( ∈#-elim )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Base {ℓ} using ( ∈pair-introR )
 open import L.Coding.Model {ℓ}
   using ( extAt; extAt-out; extAt-in; extAt-in-both
-        ; prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate )
+        ; prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
+        ; numL; envOverAt; svAt; domAt; valuesInAt; pairsInAt
+        ; inDomAt; inDomAt-adequate; svAt-in; svAt-out; domAt-in
+        ; valuesInAt-out; valuesInAt-in; pairsIn-in; pairsIn-out
+        ; envOver-sv; envOver-dom; envOver-values; envOver-pairs )
+open import L.Godel.Tuples {ℓ} using ( tuple; allTuples )
+open import L.Godel.InL {ℓ} using ( allTuplesL )
 open import L.Godel.Operations {ℓ}
   using ( _∪_; ∪-left; ∪-right; ∪-out; _∖_; ∖-in; ∖-out
         ; _∩_; ∩-in; ∩-out
@@ -52,11 +59,16 @@ open import L.Godel.Operations {ℓ}
         ; values; values-in; values-wit; singleton-self; singleton-out )
 
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.Data.Sum using ( inl; inr )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.Data.Sigma using ( Σ≡Prop )
+open import Cubical.Data.Nat.Order using ( _<_ )
+open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
+open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
+open import Cubical.Functions.Logic using ( ⇔toPath )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; _⊆_; extensionality )
+  using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( #_ )
@@ -619,18 +631,221 @@ module _ {n : ℕ} (k f : Fin n) (γ : S ^ n) where
 ```
 
 <!--en-->
+## The tuple family, at an arity slot
+
+The last leaf. A tuple is an environment graph, and the coding part already
+owns the four-conjunct description of being one: single-valued, domain
+pinned to a set, values bounded, and every member a recorded pair, each
+conjunct with both readings. So the family of all tuples is described by one
+extension whose body is that description with the domain slot holding the von
+Neumann numeral of the arity, and what this section adds is only the two
+conversions: recovering the assignment from the four conjuncts (the domain
+gives an entry below every index, single-valuedness makes it a proposition,
+so the truncation comes off), and filling the conjuncts back from a tuple's
+own fibers. The arity enters as a meta number beside a slot equation, which
+is how the denotation clauses will hand it over from a code's payload.
+<!--zh-->
+## 元数槽位处的元组族
+
+最后一个叶。元组就是环境图，而编码部分已拥有「是一个环境图」的四合取描述：单值、定义域钉在某集合、取值有界、每个成员都是被记录的对，每条合取都带双向读式。于是全体元组之族由一个外延描述，其体正是那条描述、定义域槽位持有元数的冯·诺伊曼数码；本节新添的只有两个转换：从四条合取恢复赋值 (定义域给出每个序号以下的条目，单值性使它成为命题，截断便掉下来)，以及从元组自身的纤维把合取填回。元数以元层数字伴随一条槽位等式进场，指称子句将来正是这样从码的载荷把它递交过来。
+<!--/-->
+
+```agda
+allTuplesAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+allTuplesAt k x m = extAt k (envOverAt zero (suc m) (suc x))
+
+module _ {n : ℕ} (k x m : Fin n) (γ : S ^ n) (arity : ℕ)
+  (qm : fst (lookup m γ) ≡ # arity) where
+  private
+    A' : V ℓ
+    A' = fst (lookup x γ)
+    lA' : ⟨ isL A' ⟩
+    lA' = lookup x γ .snd
+    Tup : V ℓ
+    Tup = allTuples A' arity
+
+    nS : ℕ → S
+    nS j = # j , numL j
+
+    valA : (w : ⟪ A' ⟫) → ⟨ ⟪ A' ⟫↪ w ∈ A' ⟩
+    valA w = ∈∈ₛ {a = ⟪ A' ⟫↪ w} {b = A'} .snd (∈ₛ⟪ A' ⟫↪ w)
+
+    module Rec (z : S) (h : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc m) (suc x) ⟩) where
+      Entry : Fin arity → Type (ℓ-suc ℓ)
+      Entry i = Σ[ y ∈ S ] ⟨ pr (# (toℕ i)) (fst y) ∈ fst z ⟩
+
+      isPropEntry : (i : Fin arity) → isProp (Entry i)
+      isPropEntry i (y , p) (y' , p') =
+        Σ≡Prop (λ w → snd (pr (# (toℕ i)) (fst w) ∈ fst z))
+          (Σ≡Prop (λ v → snd (isL v))
+            (svAt-out zero (z ∷ γ)
+              (envOver-sv zero (suc m) (suc x) (z ∷ γ) h)
+              (nS (toℕ i)) y y' p p'))
+
+      entry : (i : Fin arity) → Entry i
+      entry i = PT.rec (isPropEntry i) (λ w → w)
+        (domAt-in zero (suc m) (z ∷ γ)
+          (envOver-dom zero (suc m) (suc x) (z ∷ γ) h)
+          (nS (toℕ i))
+          (subst (λ w → ⟨ # (toℕ i) ∈ w ⟩) (sym qm)
+            (#mono (toℕ i) arity (toℕ<n i))))
+
+      fib : (i : Fin arity) → Σ[ w ∈ ⟪ A' ⟫ ] (⟪ A' ⟫↪ w ≡ fst (entry i .fst))
+      fib i = ∈-asFiber {a = fst (entry i .fst)} {b = A'}
+        (valuesInAt-out zero (suc x) (z ∷ γ)
+          (envOver-values zero (suc m) (suc x) (z ∷ γ) h)
+          (nS (toℕ i)) (entry i .fst) (entry i .snd))
+
+      g : Fin arity → ⟪ A' ⟫
+      g i = fib i .fst
+
+      recovers : fst z ≡ tuple A' g
+      recovers = extensionalV λ w → ⇔toPath (bwd w) (fwd w)
+        where
+        fwd : (w : V ℓ) → ⟨ w ∈ tuple A' g ⟩ → ⟨ w ∈ fst z ⟩
+        fwd w = PT.rec (snd (w ∈ fst z))
+          λ { (li , q) → subst (λ u → ⟨ u ∈ fst z ⟩) q
+                (subst (λ v → ⟨ pr (# (toℕ (lower li))) v ∈ fst z ⟩)
+                  (sym (fib (lower li) .snd))
+                  (entry (lower li) .snd)) }
+        bwd : (w : V ℓ) → ⟨ w ∈ fst z ⟩ → ⟨ w ∈ tuple A' g ⟩
+        bwd w hw = PT.rec PT.squash₁
+          (λ { (u , v , u∈ , v∈ , eq) → PT.rec PT.squash₁
+            (λ { (j , j<a , uj) → named u v eq j j<a uj })
+            (∈#-elim arity (fst u)
+              (subst (λ q' → ⟨ fst u ∈ q' ⟩) qm u∈)) })
+          (pairsIn-out zero (suc m) (suc x) (z ∷ γ)
+            (envOver-pairs zero (suc m) (suc x) (z ∷ γ) h)
+            (w , isL-trans {x = fst z} {y = w} hw (z .snd)) hw)
+          where
+          named : (u v : S) → w ≡ pr (fst u) (fst v)
+                → (j : ℕ) → j < arity → fst u ≡ # j
+                → ⟨ w ∈ tuple A' g ⟩
+          named u v eq j j<a uj =
+            ∣ lift i , cong (pr (# (toℕ i))) (fib i .snd ∙ sym same)
+                     ∙ cong (λ q' → pr q' (fst v)) iu ∙ sym eq ∣₁
+            where
+            i : Fin arity
+            i = fromℕ' arity j j<a
+            iu : # (toℕ i) ≡ fst u
+            iu = cong #_ (toFromId' arity j j<a) ∙ sym uj
+            hv : ⟨ pr (# (toℕ i)) (fst v) ∈ fst z ⟩
+            hv = subst (λ q' → ⟨ q' ∈ fst z ⟩)
+              (eq ∙ cong (λ q' → pr q' (fst v)) (sym iu)) hw
+            same : fst v ≡ fst (entry i .fst)
+            same = svAt-out zero (z ∷ γ)
+              (envOver-sv zero (suc m) (suc x) (z ∷ γ) h)
+              (nS (toℕ i)) v (entry i .fst) hv (entry i .snd)
+
+    fill : (z : S) → ⟨ fst z ∈ Tup ⟩
+         → ⟨ (z ∷ γ) ⊨ envOverAt zero (suc m) (suc x) ⟩
+    fill z z∈ = PT.rec (snd ((z ∷ γ) ⊨ envOverAt zero (suc m) (suc x)))
+      (λ { (g , e) → build g e }) z∈
+      where
+      build : (g : Fin arity → ⟪ A' ⟫) → tuple A' g ≡ fst z
+            → ⟨ (z ∷ γ) ⊨ envOverAt zero (suc m) (suc x) ⟩
+      build g e = sv , (dom , (vals , pairs))
+        where
+        out : (w : V ℓ) → ⟨ w ∈ fst z ⟩
+            → ∥ Σ[ li ∈ Lift {ℓ-zero} {ℓ} (Fin arity) ]
+                (pr (# (toℕ (lower li))) (⟪ A' ⟫↪ (g (lower li))) ≡ w) ∥₁
+        out w hw = subst (λ u → ⟨ w ∈ u ⟩) (sym e) hw
+
+        into : (li : Lift {ℓ-zero} {ℓ} (Fin arity))
+             → ⟨ pr (# (toℕ (lower li))) (⟪ A' ⟫↪ (g (lower li))) ∈ fst z ⟩
+        into li = subst
+          (λ u → ⟨ pr (# (toℕ (lower li))) (⟪ A' ⟫↪ (g (lower li))) ∈ u ⟩)
+          e ∣ li , refl ∣₁
+
+        sv : ⟨ (z ∷ γ) ⊨ svAt zero ⟩
+        sv = svAt-in zero (z ∷ γ) λ x' y y' p q →
+          PT.rec (setIsSet (fst y) (fst y'))
+            (λ { (li , ei) → PT.rec (setIsSet (fst y) (fst y'))
+              (λ { (lj , ej) → sym (pr-inj ei .snd)
+                 ∙ cong (λ kk → ⟪ A' ⟫↪ (g kk))
+                     (inj-toℕ (#-inj′ (pr-inj ei .fst ∙ sym (pr-inj ej .fst))))
+                 ∙ pr-inj ej .snd })
+              (out (pr (fst x') (fst y')) q) })
+            (out (pr (fst x') (fst y)) p)
+
+        dom : ⟨ (z ∷ γ) ⊨ domAt zero (suc m) ⟩
+        dom x' = fwd' , bwd'
+          where
+          fwd' : ⟨ (x' ∷ z ∷ γ) ⊨ inDomAt (suc zero) zero ⟩
+               → ⟨ fst x' ∈ fst (lookup m γ) ⟩
+          fwd' hd = PT.rec (snd (fst x' ∈ fst (lookup m γ)))
+            (λ { (y , p) → PT.rec (snd (fst x' ∈ fst (lookup m γ)))
+              (λ { (li , ei) → subst (λ u → ⟨ u ∈ fst (lookup m γ) ⟩)
+                     (pr-inj ei .fst)
+                     (subst (λ u → ⟨ # (toℕ (lower li)) ∈ u ⟩) (sym qm)
+                       (#mono (toℕ (lower li)) arity (toℕ<n (lower li)))) })
+              (out (pr (fst x') (fst y)) p) })
+            (subst ⟨_⟩ (inDomAt-adequate (suc zero) zero (x' ∷ z ∷ γ)) hd)
+
+          bwd' : ⟨ fst x' ∈ fst (lookup m γ) ⟩
+               → ⟨ (x' ∷ z ∷ γ) ⊨ inDomAt (suc zero) zero ⟩
+          bwd' hx = subst ⟨_⟩
+            (sym (inDomAt-adequate (suc zero) zero (x' ∷ z ∷ γ)))
+            (PT.map
+              (λ { (j , j<a , ex) →
+                ( ⟪ A' ⟫↪ (g (fromℕ' arity j j<a))
+                , isL-trans {x = A'} {y = ⟪ A' ⟫↪ (g (fromℕ' arity j j<a))}
+                    (valA (g (fromℕ' arity j j<a))) lA' )
+                , subst (λ u → ⟨ pr u (⟪ A' ⟫↪ (g (fromℕ' arity j j<a)))
+                                  ∈ fst z ⟩)
+                    (cong #_ (toFromId' arity j j<a) ∙ sym ex)
+                    (into (lift (fromℕ' arity j j<a))) })
+              (∈#-elim arity (fst x')
+                (subst (λ u → ⟨ fst x' ∈ u ⟩) qm hx)))
+
+        vals : ⟨ (z ∷ γ) ⊨ valuesInAt zero (suc x) ⟩
+        vals = valuesInAt-in zero (suc x) (z ∷ γ) λ x' y hp →
+          PT.rec (snd (fst y ∈ fst (lookup x γ)))
+            (λ { (li , ei) → subst (λ u → ⟨ u ∈ fst (lookup x γ) ⟩)
+                   (pr-inj ei .snd) (valA (g (lower li))) })
+            (out (pr (fst x') (fst y)) hp)
+
+        pairs : ⟨ (z ∷ γ) ⊨ pairsInAt zero (suc m) (suc x) ⟩
+        pairs = pairsIn-in zero (suc m) (suc x) (z ∷ γ) λ s s∈ →
+          PT.map
+            (λ { (li , ei) →
+                nS (toℕ (lower li))
+              , ( ( ⟪ A' ⟫↪ (g (lower li))
+                  , isL-trans {x = A'} {y = ⟪ A' ⟫↪ (g (lower li))}
+                      (valA (g (lower li))) lA' )
+                , ( subst (λ u → ⟨ # (toℕ (lower li)) ∈ u ⟩) (sym qm)
+                      (#mono (toℕ (lower li)) arity (toℕ<n (lower li)))
+                  , ( valA (g (lower li))
+                    , sym ei ) ) ) })
+            (out (fst s) s∈)
+
+    module D = Describes k (envOverAt zero (suc m) (suc x)) γ Tup
+      (λ y y∈t → isL-trans {x = Tup} {y = y} y∈t (allTuplesL A' lA' arity))
+      (λ z hz → ∣ Rec.g z hz , sym (Rec.recovers z hz) ∣₁)
+      fill
+
+  allTuplesAt-out : ⟨ γ ⊨ allTuplesAt k x m ⟩
+                  → fst (lookup k γ) ≡ allTuples (fst (lookup x γ)) arity
+  allTuplesAt-out = D.describes-out
+
+  allTuplesAt-in : fst (lookup k γ) ≡ allTuples (fst (lookup x γ)) arity
+                 → ⟨ γ ⊨ allTuplesAt k x m ⟩
+  allTuplesAt-in = D.describes-in
+```
+
+<!--en-->
 ## Recap
 
 One frame, `Describes`{.Agda}, turning a body and two semantic conversions
-into an identity between a slot and an operation's value, and eight
+into an identity between a slot and an operation's value, and nine
 descriptions through it: `diffAt`{.Agda}, `unionAt`{.Agda}, `productAt`{.Agda}
 and `memberGraphAt`{.Agda}, then `interAt`{.Agda}, the two selections at
-singleton keys and `valuesAt`{.Agda}, each read in both directions at variable
-slots and a variable environment. The tuple family at an arity slot and the
-two graph movers still owe descriptions, and take them through the same frame
-where the denotation clauses bind them.
+singleton keys, `valuesAt`{.Agda}, and the tuple family at an arity slot,
+each read in both directions at variable slots and a variable environment.
+The two graph movers still owe descriptions, and take them through the same
+frame where the denotation clauses bind them.
 <!--zh-->
 ## 小结
 
-一个框架 `Describes`{.Agda}，把一个体与两个语义转换变成「槽位与运算取值之间的等同」，以及经它而得的八条描述：`diffAt`{.Agda}、`unionAt`{.Agda}、`productAt`{.Agda} 与 `memberGraphAt`{.Agda}，继而 `interAt`{.Agda}、单点键处的两个选择与 `valuesAt`{.Agda}，每条都在变元槽位与变元环境处双向读出。元数槽位处的元组族与两个图移位运算尚欠描述，将在指称子句绑定它们之处经同一框架取得。
+一个框架 `Describes`{.Agda}，把一个体与两个语义转换变成「槽位与运算取值之间的等同」，以及经它而得的九条描述：`diffAt`{.Agda}、`unionAt`{.Agda}、`productAt`{.Agda} 与 `memberGraphAt`{.Agda}，继而 `interAt`{.Agda}、单点键处的两个选择、`valuesAt`{.Agda}，与元数槽位处的元组族，每条都在变元槽位与变元环境处双向读出。两个图移位运算尚欠描述，将在指称子句绑定它们之处经同一框架取得。
 <!--/-->
