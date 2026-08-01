@@ -32,19 +32,30 @@ open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
-  using ( prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate; numL )
-open import L.Godel.Operations {ℓ} using ( _∪_; _∩_; shiftDown )
+  using ( prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
+        ; sucAtL; sucAtL-adequate; numL )
+open import L.Godel.Operations {ℓ}
+  using ( _∪_; _∩_; _∖_; shiftDown; selectMember; selectEqual; extendFamily )
+open import L.Godel.Tuples {ℓ} using ( allTuples )
 open import L.Godel.Definable {ℓ}
   using ( interAt; interAt-out; interAt-in
         ; unionAt; unionAt-out; unionAt-in
-        ; shiftDownAt; shiftDownAt-out; shiftDownAt-in )
+        ; diffAt; diffAt-out; diffAt-in
+        ; shiftDownAt; shiftDownAt-out; shiftDownAt-in
+        ; allTuplesAt; allTuplesAt-out; allTuplesAt-in
+        ; selectMemberAt; selectMemberAt-out; selectMemberAt-in
+        ; selectEqualAt; selectEqualAt-out; selectEqualAt-in
+        ; extendFamilyAt; extendFamilyAt-out; extendFamilyAt-in )
+open import L.Godel.InL {ℓ}
+  using ( allTuplesL; selectEqualL; extendFamilyL )
+open import L.Coding.InL {ℓ} using ( sglL )
 
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet )
-open InfinitySet using ( #_ )
+  using ( ⁅_⁆s; module InfinitySet )
+open InfinitySet using ( sucV; #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -243,4 +254,419 @@ module _ {n : ℕ} (s w f : Fin n) (γ : S ^ n) where
             (wt ∷ ct ∷ γ))) e1
         , shiftDownAt-in (sh2 w) zero (wt ∷ ct ∷ γ) qw ) )
     ∣₁ ∣₁
+```
+
+<!--en-->
+## The conditional clauses: the complement and the tuple leaf
+<!--zh-->
+## 有条件的子句：补节点与元组叶
+<!--/-->
+
+<!--en-->
+Where a clause reads an arity off a payload, the outward reading cannot know
+the payload is a numeral, so the meta shape carries the fact conditionally:
+whenever the payload equals a numeral, the bound family is the tuple family
+at that arity. The inward reading always has the arity, since it starts from
+a real code, so it takes the number explicitly and every witness package is
+assembled from the constructibility lemmas of the bridge chapter. The
+complement node is the pattern's first instance; the tuple leaf is its
+smallest, one binder and two conjuncts.
+<!--zh-->
+凡子句从载荷读出元数之处，向外的读向无从知道载荷是数码，故元层形状把这件事作为条件式携带：只要载荷等于某数码，被绑的族就是该元数处的元组族。向内的读向总是持有元数，因为它从真实的码出发，故显式接收数字，每个见证包由桥梁章的可构造性引理组装。补节点是该模式的第一个实例；元组叶是最小的一个，一个束缚元两条合取。
+<!--/-->
+
+```agda
+private
+  sh6 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc (suc (suc n))))))
+  sh6 x = suc (suc (suc (suc (suc (suc x)))))
+
+  sh10 : ∀ {n} → Fin n
+       → Fin (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc n))))))))))
+  sh10 x = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc x)))))))))
+
+  nS : ℕ → S
+  nS j = # j , numL j
+
+complNodeAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+complNodeAt s w f a = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇
+  ( tagPrAt 6 (sh5 s) (suc (suc (suc (suc zero))))
+  ∧̇ ( prAtL (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) (suc (suc zero))
+  ∧̇ ( appAt (sh5 f) (suc (suc zero)) (suc zero)
+  ∧̇ ( allTuplesAt zero (sh5 a) (suc (suc (suc zero)))
+  ∧̇ diffAt (sh5 w) zero (suc zero) ))))))))
+
+NodeComplOf : V ℓ → V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
+NodeComplOf A F x v = Σ[ mv ∈ S ] Σ[ ct ∈ S ] Σ[ wt ∈ S ] Σ[ w' ∈ S ]
+  ( ⟨ pr (fst ct) (fst wt) ∈ F ⟩
+  × ( (x ≡ pr (# 6) (pr (fst mv) (fst ct)))
+  × ( ((m : ℕ) → fst mv ≡ # m → fst w' ≡ allTuples A m)
+    × (v ≡ fst w' ∖ fst wt) )))
+
+module _ {n : ℕ} (s w f a : Fin n) (γ : S ^ n) where
+  complNode-out : ⟨ γ ⊨ complNodeAt s w f a ⟩
+                → ∥ NodeComplOf (fst (lookup a γ)) (fst (lookup f γ))
+                      (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+  complNode-out =
+    PT.rec PT.squash₁ (λ { (p₁ , w₁) →
+    PT.rec PT.squash₁ (λ { (mv , w₂) →
+    PT.rec PT.squash₁ (λ { (ct , w₃) →
+    PT.rec PT.squash₁ (λ { (wt , w₄) →
+    PT.rec PT.squash₁ (λ { (w' , body) →
+      finish p₁ mv ct wt w' body })
+    w₄ }) w₃ }) w₂ }) w₁ })
+    where
+    finish : (p₁ mv ct wt w' : S)
+           → ⟨ (w' ∷ wt ∷ ct ∷ mv ∷ p₁ ∷ γ)
+                 ⊨ ( tagPrAt 6 (sh5 s) (suc (suc (suc (suc zero))))
+                   ∧̇ ( prAtL (suc (suc (suc (suc zero))))
+                         (suc (suc (suc zero))) (suc (suc zero))
+                   ∧̇ ( appAt (sh5 f) (suc (suc zero)) (suc zero)
+                   ∧̇ ( allTuplesAt zero (sh5 a) (suc (suc (suc zero)))
+                   ∧̇ diffAt (sh5 w) zero (suc zero) )))) ⟩
+           → ∥ NodeComplOf (fst (lookup a γ)) (fst (lookup f γ))
+                 (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    finish p₁ mv ct wt w' (h1 , (h2 , (h3 , (h4 , h5)))) =
+      ∣ mv , ct , wt , w' ,
+        ( subst ⟨_⟩ (appAt-adequate (sh5 f) (suc (suc zero)) (suc zero)
+            (w' ∷ wt ∷ ct ∷ mv ∷ p₁ ∷ γ)) h3
+        , ( ( tagPr-out 6 (sh5 s) (suc (suc (suc (suc zero))))
+                (w' ∷ wt ∷ ct ∷ mv ∷ p₁ ∷ γ) h1
+            ∙ cong (pr (# 6))
+                (subst ⟨_⟩ (prAtL-adequate (suc (suc (suc (suc zero))))
+                  (suc (suc (suc zero))) (suc (suc zero))
+                  (w' ∷ wt ∷ ct ∷ mv ∷ p₁ ∷ γ)) h2) )
+        , ( (λ m qm → allTuplesAt-out zero (sh5 a) (suc (suc (suc zero)))
+              (w' ∷ wt ∷ ct ∷ mv ∷ p₁ ∷ γ) m qm h4)
+          , diffAt-out (sh5 w) zero (suc zero)
+              (w' ∷ wt ∷ ct ∷ mv ∷ p₁ ∷ γ) h5 ) ) ) ∣₁
+
+  complNode-in : (m : ℕ) (ct wt : S)
+               → ⟨ pr (fst ct) (fst wt) ∈ fst (lookup f γ) ⟩
+               → fst (lookup s γ) ≡ pr (# 6) (pr (# m) (fst ct))
+               → fst (lookup w γ) ≡ allTuples (fst (lookup a γ)) m ∖ fst wt
+               → ⟨ γ ⊨ complNodeAt s w f a ⟩
+  complNode-in m ct wt e1 qs qw =
+    ∣ prʟ (nS m) ct , ∣ nS m , ∣ ct , ∣ wt , ∣ w'S ,
+      ( tagPr-in 6 (sh5 s) (suc (suc (suc (suc zero)))) env₅
+          (qs ∙ cong (pr (# 6)) (sym (prʟ-fst (nS m) ct)))
+      , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc (suc zero))))
+            (suc (suc (suc zero))) (suc (suc zero)) env₅)) (prʟ-fst (nS m) ct)
+      , ( subst ⟨_⟩ (sym (appAt-adequate (sh5 f) (suc (suc zero)) (suc zero)
+            env₅)) e1
+      , ( allTuplesAt-in zero (sh5 a) (suc (suc (suc zero))) env₅ m refl refl
+        , diffAt-in (sh5 w) zero (suc zero) env₅ qw ) ) ) )
+    ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+    where
+    w'S : S
+    w'S = allTuples (fst (lookup a γ)) m
+        , allTuplesL (fst (lookup a γ)) (lookup a γ .snd) m
+    env₅ : S ^ (suc (suc (suc (suc (suc n)))))
+    env₅ = w'S ∷ wt ∷ ct ∷ nS m ∷ prʟ (nS m) ct ∷ γ
+
+allLeafAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+allLeafAt s w a = ∃̇
+  ( tagPrAt 0 (suc s) zero
+  ∧̇ allTuplesAt (suc w) (suc a) zero )
+
+LeafAllOf : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
+LeafAllOf A x v = Σ[ mv ∈ S ]
+  ( (x ≡ pr (# 0) (fst mv))
+  × ((m : ℕ) → fst mv ≡ # m → v ≡ allTuples A m) )
+
+module _ {n : ℕ} (s w a : Fin n) (γ : S ^ n) where
+  allLeaf-out : ⟨ γ ⊨ allLeafAt s w a ⟩
+              → ∥ LeafAllOf (fst (lookup a γ)) (fst (lookup s γ))
+                    (fst (lookup w γ)) ∥₁
+  allLeaf-out = PT.rec PT.squash₁
+    λ { (mv , (h1 , h2)) →
+      ∣ mv
+      , ( tagPr-out 0 (suc s) zero (mv ∷ γ) h1
+        , (λ m qm → allTuplesAt-out (suc w) (suc a) zero (mv ∷ γ) m qm h2) )
+      ∣₁ }
+
+  allLeaf-in : (m : ℕ)
+             → fst (lookup s γ) ≡ pr (# 0) (# m)
+             → fst (lookup w γ) ≡ allTuples (fst (lookup a γ)) m
+             → ⟨ γ ⊨ allLeafAt s w a ⟩
+  allLeaf-in m qs qw =
+    ∣ nS m
+    , ( tagPr-in 0 (suc s) zero (nS m ∷ γ) qs
+      , allTuplesAt-in (suc w) (suc a) zero (nS m ∷ γ) m refl qw )
+    ∣₁
+```
+
+<!--en-->
+## The selection leaves
+<!--zh-->
+## 选择叶
+<!--/-->
+
+<!--en-->
+One frame serves the two plain selection leaves: the payload splits twice
+into an arity and two key numerals, the tuple family is bound at the arity
+conditionally as before, and the selection description pins the value at the
+two keys. The constant selection leaf is the long composite: its payload
+carries a carrier member, the successor key is the sealed numeral one up, so
+its clause holds by `refl`{.Agda} on the way in, and the value chains the
+extension, the selection and the shift through two bound intermediates whose
+witness packages come from the bridge chapter.
+<!--zh-->
+一个框架供两个朴素选择叶共用：载荷两次拆开为元数与两个键数码，元组族照旧有条件地绑在元数处，选择描述在两个键处钉住取值。常量选择叶是那条长复合：其载荷携带载体成员，后继键是高一位的封印数码，故其子句在进入方向由 `refl`{.Agda} 成立，而取值经两个被绑中间件把扩张、选择与移位串起来，见证包来自桥梁章。
+<!--/-->
+
+```agda
+module SelLeaf (tg : ℕ) (sel : V ℓ → V ℓ → V ℓ → V ℓ)
+  (selAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n)
+  (selAt-out : ∀ {n} (k f' a' b' : Fin n) (γ : S ^ n) → ⟨ γ ⊨ selAt k f' a' b' ⟩
+             → fst (lookup k γ)
+             ≡ sel (fst (lookup f' γ)) ⁅ fst (lookup a' γ) ⁆s ⁅ fst (lookup b' γ) ⁆s)
+  (selAt-in : ∀ {n} (k f' a' b' : Fin n) (γ : S ^ n)
+            → fst (lookup k γ)
+            ≡ sel (fst (lookup f' γ)) ⁅ fst (lookup a' γ) ⁆s ⁅ fst (lookup b' γ) ⁆s
+            → ⟨ γ ⊨ selAt k f' a' b' ⟩)
+  where
+
+  LeafAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+  LeafAt s w a = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇
+    ( tagPrAt tg (sh6 s) (suc (suc (suc (suc (suc zero)))))
+    ∧̇ ( prAtL (suc (suc (suc (suc (suc zero))))) (suc (suc (suc zero)))
+          (suc (suc (suc (suc zero))))
+    ∧̇ ( prAtL (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc zero)
+    ∧̇ ( allTuplesAt zero (sh6 a) (suc (suc (suc zero)))
+    ∧̇ selAt (sh6 w) zero (suc (suc zero)) (suc zero) )))))))))
+
+  LeafOf : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
+  LeafOf A x v = Σ[ mv ∈ S ] Σ[ iv ∈ S ] Σ[ jv ∈ S ] Σ[ w' ∈ S ]
+    ( (x ≡ pr (# tg) (pr (fst mv) (pr (fst iv) (fst jv))))
+    × ( ((m : ℕ) → fst mv ≡ # m → fst w' ≡ allTuples A m)
+      × (v ≡ sel (fst w') ⁅ fst iv ⁆s ⁅ fst jv ⁆s) ))
+
+  module _ {n : ℕ} (s w a : Fin n) (γ : S ^ n) where
+    Leaf-out : ⟨ γ ⊨ LeafAt s w a ⟩
+             → ∥ LeafOf (fst (lookup a γ)) (fst (lookup s γ))
+                   (fst (lookup w γ)) ∥₁
+    Leaf-out =
+      PT.rec PT.squash₁ (λ { (p₁ , w₁) →
+      PT.rec PT.squash₁ (λ { (p₂ , w₂) →
+      PT.rec PT.squash₁ (λ { (mv , w₃) →
+      PT.rec PT.squash₁ (λ { (iv , w₄) →
+      PT.rec PT.squash₁ (λ { (jv , w₅) →
+      PT.rec PT.squash₁ (λ { (w' , body) →
+        finish p₁ p₂ mv iv jv w' body })
+      w₅ }) w₄ }) w₃ }) w₂ }) w₁ })
+      where
+      finish : (p₁ p₂ mv iv jv w' : S)
+             → ⟨ (w' ∷ jv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ)
+                   ⊨ ( tagPrAt tg (sh6 s) (suc (suc (suc (suc (suc zero)))))
+                     ∧̇ ( prAtL (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc (suc zero))) (suc (suc (suc (suc zero))))
+                     ∧̇ ( prAtL (suc (suc (suc (suc zero)))) (suc (suc zero))
+                           (suc zero)
+                     ∧̇ ( allTuplesAt zero (sh6 a) (suc (suc (suc zero)))
+                     ∧̇ selAt (sh6 w) zero (suc (suc zero)) (suc zero) )))) ⟩
+             → ∥ LeafOf (fst (lookup a γ)) (fst (lookup s γ))
+                   (fst (lookup w γ)) ∥₁
+      finish p₁ p₂ mv iv jv w' (h1 , (h2 , (h3 , (h4 , h5)))) =
+        ∣ mv , iv , jv , w' ,
+          ( ( tagPr-out tg (sh6 s) (suc (suc (suc (suc (suc zero)))))
+                (w' ∷ jv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ) h1
+            ∙ cong (pr (# tg))
+                ( subst ⟨_⟩ (prAtL-adequate (suc (suc (suc (suc (suc zero)))))
+                    (suc (suc (suc zero))) (suc (suc (suc (suc zero))))
+                    (w' ∷ jv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ)) h2
+                ∙ cong (pr (fst mv))
+                    (subst ⟨_⟩ (prAtL-adequate (suc (suc (suc (suc zero))))
+                      (suc (suc zero)) (suc zero)
+                      (w' ∷ jv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ)) h3) ) )
+          , ( (λ m qm → allTuplesAt-out zero (sh6 a) (suc (suc (suc zero)))
+                (w' ∷ jv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ) m qm h4)
+            , selAt-out (sh6 w) zero (suc (suc zero)) (suc zero)
+                (w' ∷ jv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ) h5 ) ) ∣₁
+
+    Leaf-in : (m i j : ℕ)
+            → fst (lookup s γ) ≡ pr (# tg) (pr (# m) (pr (# i) (# j)))
+            → fst (lookup w γ)
+              ≡ sel (allTuples (fst (lookup a γ)) m) ⁅ # i ⁆s ⁅ # j ⁆s
+            → ⟨ γ ⊨ LeafAt s w a ⟩
+    Leaf-in m i j qs qw =
+      ∣ prʟ (nS m) (prʟ (nS i) (nS j)) , ∣ prʟ (nS i) (nS j)
+      , ∣ nS m , ∣ nS i , ∣ nS j , ∣ w'S ,
+        ( tagPr-in tg (sh6 s) (suc (suc (suc (suc (suc zero))))) env₆
+            (qs ∙ cong (pr (# tg))
+              (sym ( prʟ-fst (nS m) (prʟ (nS i) (nS j))
+                   ∙ cong (pr (# m)) (prʟ-fst (nS i) (nS j)) )))
+        , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc (suc (suc zero)))))
+              (suc (suc (suc zero))) (suc (suc (suc (suc zero)))) env₆))
+              (prʟ-fst (nS m) (prʟ (nS i) (nS j)))
+        , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc (suc zero))))
+              (suc (suc zero)) (suc zero) env₆))
+              (prʟ-fst (nS i) (nS j))
+        , ( allTuplesAt-in zero (sh6 a) (suc (suc (suc zero))) env₆ m refl refl
+          , selAt-in (sh6 w) zero (suc (suc zero)) (suc zero) env₆ qw ) ) ) )
+      ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+      where
+      w'S : S
+      w'S = allTuples (fst (lookup a γ)) m
+          , allTuplesL (fst (lookup a γ)) (lookup a γ .snd) m
+      env₆ : S ^ (suc (suc (suc (suc (suc (suc n))))))
+      env₆ = w'S ∷ nS j ∷ nS i ∷ nS m
+           ∷ prʟ (nS i) (nS j) ∷ prʟ (nS m) (prʟ (nS i) (nS j)) ∷ γ
+
+module SelMemLeaf = SelLeaf 1 selectMember
+  selectMemberAt selectMemberAt-out selectMemberAt-in
+module SelEqLeaf = SelLeaf 2 selectEqual
+  selectEqualAt selectEqualAt-out selectEqualAt-in
+```
+
+```agda
+selEqConLeafAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+selEqConLeafAt s w a = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇
+  ( tagPrAt 3 (sh10 s)
+      (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+  ∧̇ ( prAtL (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+        (suc (suc (suc (suc (suc (suc (suc zero)))))))
+        (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+  ∧̇ ( prAtL (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+        (suc (suc (suc (suc (suc (suc zero))))))
+        (suc (suc (suc (suc (suc zero)))))
+  ∧̇ ( allTuplesAt (suc (suc (suc (suc zero)))) (sh10 a)
+        (suc (suc (suc (suc (suc (suc (suc zero)))))))
+  ∧̇ ( sucAtL (suc (suc (suc (suc (suc (suc zero)))))) (suc (suc (suc zero)))
+  ∧̇ ( (var (suc (suc zero)) ≐ con (numeralL 0))
+  ∧̇ ( extendFamilyAt (suc zero) (suc (suc (suc (suc zero))))
+        (suc (suc (suc (suc (suc zero)))))
+  ∧̇ ( selectEqualAt zero (suc zero) (suc (suc (suc zero))) (suc (suc zero))
+  ∧̇ shiftDownAt (sh10 w) zero )))))))))))))))))
+
+LeafSelEqConOf : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
+LeafSelEqConOf A x v = Σ[ mv ∈ S ] Σ[ iv ∈ S ] Σ[ cv ∈ S ] Σ[ w₁ ∈ S ] Σ[ w₂ ∈ S ]
+  ( (x ≡ pr (# 3) (pr (fst mv) (pr (fst iv) (fst cv))))
+  × ( ((m : ℕ) → fst mv ≡ # m → fst w₁ ≡ allTuples A m)
+  × ( (fst w₂ ≡ extendFamily (fst w₁) ⁅ fst cv ⁆s)
+    × (v ≡ shiftDown (selectEqual (fst w₂) ⁅ sucV (fst iv) ⁆s ⁅ # 0 ⁆s)) )))
+
+module _ {n : ℕ} (s w a : Fin n) (γ : S ^ n) where
+  selEqConLeaf-out : ⟨ γ ⊨ selEqConLeafAt s w a ⟩
+                   → ∥ LeafSelEqConOf (fst (lookup a γ)) (fst (lookup s γ))
+                         (fst (lookup w γ)) ∥₁
+  selEqConLeaf-out =
+    PT.rec PT.squash₁ (λ { (p₁ , u₁) →
+    PT.rec PT.squash₁ (λ { (p₂ , u₂) →
+    PT.rec PT.squash₁ (λ { (mv , u₃) →
+    PT.rec PT.squash₁ (λ { (iv , u₄) →
+    PT.rec PT.squash₁ (λ { (cv , u₅) →
+    PT.rec PT.squash₁ (λ { (w₁ , u₆) →
+    PT.rec PT.squash₁ (λ { (sv , u₇) →
+    PT.rec PT.squash₁ (λ { (zv , u₈) →
+    PT.rec PT.squash₁ (λ { (w₂ , u₉) →
+    PT.rec PT.squash₁ (λ { (w₃ , body) →
+      finish p₁ p₂ mv iv cv w₁ sv zv w₂ w₃ body })
+    u₉ }) u₈ }) u₇ }) u₆ }) u₅ }) u₄ }) u₃ }) u₂ }) u₁ })
+    where
+    finish : (p₁ p₂ mv iv cv w₁ sv zv w₂ w₃ : S)
+           → ⟨ (w₃ ∷ w₂ ∷ zv ∷ sv ∷ w₁ ∷ cv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ)
+                 ⊨ ( tagPrAt 3 (sh10 s)
+                       (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                   ∧̇ ( prAtL (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                         (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                         (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                   ∧̇ ( prAtL (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                         (suc (suc (suc (suc (suc (suc zero))))))
+                         (suc (suc (suc (suc (suc zero)))))
+                   ∧̇ ( allTuplesAt (suc (suc (suc (suc zero)))) (sh10 a)
+                         (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                   ∧̇ ( sucAtL (suc (suc (suc (suc (suc (suc zero))))))
+                         (suc (suc (suc zero)))
+                   ∧̇ ( (var (suc (suc zero)) ≐ con (numeralL 0))
+                   ∧̇ ( extendFamilyAt (suc zero) (suc (suc (suc (suc zero))))
+                         (suc (suc (suc (suc (suc zero)))))
+                   ∧̇ ( selectEqualAt zero (suc zero) (suc (suc (suc zero)))
+                         (suc (suc zero))
+                   ∧̇ shiftDownAt (sh10 w) zero )))))))) ⟩
+           → ∥ LeafSelEqConOf (fst (lookup a γ)) (fst (lookup s γ))
+                 (fst (lookup w γ)) ∥₁
+    finish p₁ p₂ mv iv cv w₁ sv zv w₂ w₃
+      (h1 , (h2 , (h3 , (h4 , (h5 , (h6 , (h7 , (h8 , h9)))))))) =
+      ∣ mv , iv , cv , w₁ , w₂ ,
+        ( ( tagPr-out 3 (sh10 s)
+              (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+              env h1
+          ∙ cong (pr (# 3))
+              ( subst ⟨_⟩ (prAtL-adequate
+                  (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                  (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                  (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                  env) h2
+              ∙ cong (pr (fst mv))
+                  (subst ⟨_⟩ (prAtL-adequate
+                    (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                    (suc (suc (suc (suc (suc (suc zero))))))
+                    (suc (suc (suc (suc (suc zero))))) env) h3) ) )
+        , ( (λ m qm → allTuplesAt-out (suc (suc (suc (suc zero)))) (sh10 a)
+              (suc (suc (suc (suc (suc (suc (suc zero))))))) env m qm h4)
+        , ( extendFamilyAt-out (suc zero) (suc (suc (suc (suc zero))))
+              (suc (suc (suc (suc (suc zero))))) env h7
+          , ( shiftDownAt-out (sh10 w) zero env h9
+            ∙ cong shiftDown
+                ( selectEqualAt-out zero (suc zero) (suc (suc (suc zero)))
+                    (suc (suc zero)) env h8
+                ∙ cong₂ (λ u u' → selectEqual (fst w₂) ⁅ u ⁆s ⁅ u' ⁆s)
+                    (subst ⟨_⟩ (sucAtL-adequate
+                      (suc (suc (suc (suc (suc (suc zero))))))
+                      (suc (suc (suc zero))) env) h5)
+                    (h6 ∙ numeralL-fst 0) ) ) ) ) ) ∣₁
+      where
+      env : S ^ (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc n))))))))))
+      env = w₃ ∷ w₂ ∷ zv ∷ sv ∷ w₁ ∷ cv ∷ iv ∷ mv ∷ p₂ ∷ p₁ ∷ γ
+
+  selEqConLeaf-in : (m i : ℕ) (cv : S)
+    → fst (lookup s γ) ≡ pr (# 3) (pr (# m) (pr (# i) (fst cv)))
+    → fst (lookup w γ)
+      ≡ shiftDown (selectEqual
+          (extendFamily (allTuples (fst (lookup a γ)) m) ⁅ fst cv ⁆s)
+          ⁅ # (suc i) ⁆s ⁅ # 0 ⁆s)
+    → ⟨ γ ⊨ selEqConLeafAt s w a ⟩
+  selEqConLeaf-in m i cv qs qw =
+    ∣ prʟ (nS m) (prʟ (nS i) cv) , ∣ prʟ (nS i) cv
+    , ∣ nS m , ∣ nS i , ∣ cv , ∣ w₁S , ∣ nS (suc i) , ∣ nS 0 , ∣ w₂S , ∣ w₃S ,
+      ( tagPr-in 3 (sh10 s)
+          (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) env
+          (qs ∙ cong (pr (# 3))
+            (sym ( prʟ-fst (nS m) (prʟ (nS i) cv)
+                 ∙ cong (pr (# m)) (prʟ-fst (nS i) cv) )))
+      , ( subst ⟨_⟩ (sym (prAtL-adequate
+            (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+            (suc (suc (suc (suc (suc (suc (suc zero)))))))
+            (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) env))
+            (prʟ-fst (nS m) (prʟ (nS i) cv))
+      , ( subst ⟨_⟩ (sym (prAtL-adequate
+            (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+            (suc (suc (suc (suc (suc (suc zero))))))
+            (suc (suc (suc (suc (suc zero))))) env))
+            (prʟ-fst (nS i) cv)
+      , ( allTuplesAt-in (suc (suc (suc (suc zero)))) (sh10 a)
+            (suc (suc (suc (suc (suc (suc (suc zero))))))) env m refl refl
+      , ( subst ⟨_⟩ (sym (sucAtL-adequate
+            (suc (suc (suc (suc (suc (suc zero))))))
+            (suc (suc (suc zero))) env)) refl
+      , ( sym (numeralL-fst 0)
+      , ( extendFamilyAt-in (suc zero) (suc (suc (suc (suc zero))))
+            (suc (suc (suc (suc (suc zero))))) env refl
+      , ( selectEqualAt-in zero (suc zero) (suc (suc (suc zero)))
+            (suc (suc zero)) env refl
+        , shiftDownAt-in (sh10 w) zero env qw ) ) ) ) ) ) ) )
+    ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+    where
+    w₁S : S
+    w₁S = allTuples (fst (lookup a γ)) m
+        , allTuplesL (fst (lookup a γ)) (lookup a γ .snd) m
+    w₂S : S
+    w₂S = extendFamily (fst w₁S) ⁅ fst cv ⁆s
+        , extendFamilyL (w₁S .snd) (sglL (cv .snd))
+    w₃S : S
+    w₃S = selectEqual (fst w₂S) ⁅ # (suc i) ⁆s ⁅ # 0 ⁆s
+        , selectEqualL (w₂S .snd) (sglL (numL (suc i))) (sglL (numL 0))
+    env : S ^ (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc n))))))))))
+    env = w₃S ∷ w₂S ∷ nS 0 ∷ nS (suc i) ∷ w₁S ∷ cv ∷ nS i ∷ nS m
+        ∷ prʟ (nS i) cv ∷ prʟ (nS m) (prʟ (nS i) cv) ∷ γ
 ```
