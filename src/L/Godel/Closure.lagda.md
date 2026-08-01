@@ -16,9 +16,17 @@ the delivered stock is missing, with its membership laws, its description, and
 its constructibility. The reverse pinning inclusion completes the pair, and
 the full family-extension equation assembled from the renaming law and the
 two inclusions now stands whole, the shape the kinded invariant's constant-atom
-clause will consume. The closure recursion itself is the next chapter's work.
+clause will consume. Four further items arrive: the kinded level family, an
+arity-indexed, level-cumulative family of shelves where every operation shops
+only on its own shelf and whose seed is the singleton family; the kinded
+invariant, every member of a positive-arity slice a satisfaction set, by plain
+induction on the level, replacing the certificate's honesty induction;
+terms-to-levels, every term denotation landing in the levels by one term
+induction with a computable level witness; and the cut theorem, the values-cut
+of the levels equal to the definable powerset. The closure recursion itself is
+the next chapter's work.
 <!--zh-->
-选项 B 的闭包塔把内部塔重新奠基在带种类的闭包上：元数索引的表之诸层，每层是一轮运算像，切口在零号切片。本章铺设闭包将要花掉的元层地基。四件物品到场：取值泛化，说元组族的首条目在每个正元数处跑遍整个载体；两条选择等式，把满足集上的一次选择读作与选中原子的一次合取；变量变换律，说满足集经全体变元移位而存活，与正向钉住包含，把整个扩张裁到常元的单点集，即带种类不变量之常元原子子句将要消费的族扩张等式的两半；以及单例族，即已交付存货缺掉的那一个运算，连同它的隶属定律、描述与可构造性。反向钉住包含补全包含对，而由变量变换律与两条包含装配出的完整族扩张等式现已整体立住，即带种类不变量之常元原子子句将要消费的形状。闭包递归本身是下一章的工作。
+选项 B 的闭包塔把内部塔重新奠基在带种类的闭包上：元数索引的表之诸层，每层是一轮运算像，切口在零号切片。本章铺设闭包将要花掉的元层地基。四件物品到场：取值泛化，说元组族的首条目在每个正元数处跑遍整个载体；两条选择等式，把满足集上的一次选择读作与选中原子的一次合取；变量变换律，说满足集经全体变元移位而存活，与正向钉住包含，把整个扩张裁到常元的单点集，即带种类不变量之常元原子子句将要消费的族扩张等式的两半；以及单例族，即已交付存货缺掉的那一个运算，连同它的隶属定律、描述与可构造性。反向钉住包含补全包含对，而由变量变换律与两条包含装配出的完整族扩张等式现已整体立住，即带种类不变量之常元原子子句将要消费的形状。再四件物品到场：带种类的诸层族，一个元数索引、随层累积的架位族，每个运算只在自己的架位上作业，种子即单例族；带种类的不变量，正元数片的每个成员都是满足集，凭对层级的朴素归纳，取代证书的诚实性归纳；项到诸层，每个项的指称凭一次项归纳、带可计算的层级见证落进诸层；以及切定理，诸层的取值切口等于可定义幂集。闭包递归本身是下一章的工作。
 <!--/-->
 
 ```agda
@@ -30,9 +38,11 @@ open import FOL.ZFStructure using ( module hPropStructure )
 
 module L.Godel.Closure {ℓ : Level} where
 
+open import Base.Classical using ( LEM )
+
 open import FOL.Syntax
   using ( Formula; var; con
-        ; _∈̇_; _≐_; _∧̇_; ∀̇∈; ∃̇∈ )
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_; ⊤̇; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Renaming using ( renameFo )
 import FOL.Manipulation.Renaming as Renaming
 import FOL.Absoluteness
@@ -43,24 +53,33 @@ open import L.Coding.Environment {ℓ} using ( lookup-spec; cons )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
   using ( isL; isL-trans; Lset; Lset-mono; Lset-layer; layer-trans
-        ; Lset-in; 𝒟ₒ-intro )
+        ; Lset-in; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
 open import L.Ordinal {ℓ} using ( suc-ord )
 open import L.Axioms.Basic {ℓ} using ( defSet→isL; isL-directed )
 open import L.Coding.Model {ℓ} using ( extAt )
 open import L.Coding.InL {ℓ} using ( sglL )
 open import L.Godel.Operations {ℓ}
-  using ( _∩_; ∩-in; ∩-out
+  using ( _∩_; ∩-in; ∩-out; _∪_; ∪-left; ∪-right; ∪-out
+        ; _∖_; ∖-in; ∖-out
         ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
         ; selectEqual; selectEqual-in; selectEqual-sub; selectEqual-wit
         ; extendGraph; extendGraph-zero; extendGraph-out
         ; extendFamily; extendFamily-in; extendFamily-out
         ; values; values-in; values-wit
+        ; tailGraph; shiftDown; shiftDown-in; shiftDown-out
         ; singleton-self; singleton-in; singleton-out )
 open import L.Godel.Tuples {ℓ}
-  using ( allTuples; allTuples-suc; tuple; tuple-entry; tuple-extend )
+  using ( allTuples; allTuples-suc; tuple; tuple-entry; tuple-extend
+        ; tupleTail )
 open import L.Godel.Definable {ℓ} using ( module Describes )
+open import L.Godel.Terms {ℓ}
+  using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK
+        ; ⟦_⟧ᴷ )
+import L.Godel.Terms as Terms
 
-open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.Data.FinData using ( Fin; toℕ )
+open import Cubical.Data.Nat using ( _+_; +-zero; +-suc )
+open import Cubical.Data.Unit using ( Unit*; tt* )
 open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.Equiv using ( equivFun; invEq )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -68,7 +87,7 @@ import Cubical.Data.Empty as Empty
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; sett; _∈_; setIsSet )
@@ -98,7 +117,7 @@ this proof, so the statement is at a bare carrier.
 
 ```agda
 module _ (A : V ℓ) where
-  open DefOf A using ( SM; ι; _⊨ᵐ_; ⊨ᵐ-small )
+  open DefOf A using ( SM; ι; _⊨ᵐ_; ⊨ᵐ-small; defSet; defSet-mem )
   open hPropStructure 𝒮ᵥ
 
   module Ren = Renaming.Sat (hPropAlgebra (ℓ-suc ℓ))
@@ -996,6 +1015,703 @@ constant-atom clause will consume.
 
 
 <!--en-->
+## The kinded levels
+
+The closure's level structure now carries the arity as data. `slice A n k` is
+the arity-`k` slice at level `n`: the shelf of arity-`k` families the closure
+has built by level `n`. Different arities live on different shelves, and every
+operation shops only on its own shelf, which is what makes the probe's junk
+impossible by construction: a mixed-arity intersection, a complement across
+arities, or a seed cut drawn from the carrier's raw members cannot arise,
+because no clause of the step applies an operation across two shelves.
+
+The seed is deliberately split. Level zero seeds the arity-zero shelf with the
+singleton family of the carrier: `slice A 0 0 = singletons A`, and every higher
+shelf starts empty. The carrier's own members enter the closure only as their
+singletons, and only on the arity-zero shelf: a raw member of `A` is not
+generally a subset of `A`, so seeding it into a shelf the cut can read would
+let the values-cut escape the definable powerset (the probe's escape case);
+its singleton `⁅ κ a ⁆s` is exactly the argument the constant-atom composite
+feeds to the family extension, which is why the singleton family seeds this
+shelf, entering from the B2 machinery.
+
+Each level is one round of operation images, cumulative in the level:
+`slice A (suc n) k = slice A n k ∪ step A n k`. The step applies each operation
+only inside the arity it respects: intersection, union, difference, and the two
+selections stay within a slice; `allTuples A k` enters slice `k` from nothing
+but the numeral; the family extension moves a slice up by one arity, drawing
+its first argument from a positive-arity slice and its second argument from the
+seeded arity-zero shelf; the shift moves a slice down by one; and `values`
+reads the arity-one slice and writes the arity-zero shelf.
+
+The membership laws are direction-paired. Each clause has its `slice-in` law,
+building the image's fiber from the arguments' memberships; `slice-out` is the
+disjunctive inversion, reading a member of the next level back into an old
+member or one of the step's tagged images with its payload. The cumulative
+level is a union, and its reading is exactly the pair of directions of `_∪_`:
+`slice-old` is the old-member inclusion, and the images enter through the
+step's fiber. The definition follows the operations idiom: each clause image
+is one direct `sett` over a sum of presentations of the previous level,
+union-free at the definition level, and the level union sits at the top of
+`slice`, never under a sealed index, so no seal is needed at the birth site
+(the P-b/P-c reading adopted here: union-free where a membership obligation
+will ever read the clauses, and the one union that is a membership obligation,
+the cumulative level, is direction-paired and unsealed).
+<!--zh-->
+## 带种类的诸层
+
+闭包的层结构如今把元数作为数据携带。`slice A n k` 是第 `n` 层的第 `k` 元数片：到第 `n` 层为止闭包已经搭起的第 `k` 元数诸族所住的架位。不同元数分居不同的架位，每个运算只在自己的架位上作业，这正使探针的垃圾按构造成为不可能：混合元数的交、跨元数的补、或从载体原始成员取出的种子切口无从出现，因为步骤的每条子句都不让运算跨架位。
+
+种子被有意拆分。第零层以载体的单例族播种第零元数片：`slice A 0 0 = singletons A`，其余更高片从空开始。载体的成员只以它们的单例进场，且只进第零元数片：`A` 的原始成员一般不是 `A` 的子集，把它播进切定理可读的片会让取值切口逃出可定义幂集 (探针的逃逸情形)；而它的单例 `⁅ κ a ⁆s` 恰是常元原子复合体喂给族扩张的那个实参，这正是单例族播种这片、自 B2 机制进场的原因。
+
+每层是一轮运算像，随层累积：`slice A (suc n) k = slice A n k ∪ step A n k`。步骤只把每个运算施于它所尊重的元数之内：交、并、差与两个选择都留在片内；`allTuples A k` 除数码外不取任何实参即进入第 `k` 片；族扩张把片向上移一元数，首实参取自正元数片，次实参取自被播种的第零元数片；移位把片向下移一元数；`values` 读第一元数片、写第零元数片。
+
+隶属定律双向配对。每条子句有它的 `slice-in` 律，从诸实参的隶属装出像的纤维；`slice-out` 是析取式的反转，把下一层的成员读回旧成员或某个带标签的步骤像连同其载荷。累积层就是一次并，其读法恰是 `_∪_` 的两个方向：`slice-old` 是旧成员包含，诸像经步骤的纤维进场。定义遵循运算章行事：每条子句的像都是落在上一层诸表示之和一个和上的单个 `sett`，定义层无并；层并坐在 `slice` 的顶端，从不在封印的索引之下，故诞生处无需封印 (此处采用的 P-b/P-c 读法：凡隶属义务将要读到的子句皆无并，而那一次身为隶属义务的并，即累积层，双向配对且不封印)。
+<!--/-->
+
+```agda
+  private
+    data StepTag : ℕ → Type ℓ where
+      tagInter tagUnion tagDiff : {k : ℕ} → StepTag k
+      tagSelM tagSelE : {k : ℕ} → StepTag k
+      tagAll : {k : ℕ} → StepTag k
+      tagExt : {k : ℕ} → StepTag (suc (suc k))
+      tagShift : {k : ℕ} → StepTag k
+      tagValues : StepTag 0
+
+    mutual
+      slice : ℕ → ℕ → V ℓ
+      slice zero zero = singletons A
+      slice zero (suc k) = ∅
+      slice (suc n) k = slice n k ∪ step n k
+
+      step : ℕ → ℕ → V ℓ
+      step n k = sett (Σ[ t ∈ StepTag k ] StepPayload n k t)
+                      (λ { (t , p) → stepImage t p })
+
+      StepPayload : (n k : ℕ) → StepTag k → Type ℓ
+      StepPayload n k tagInter = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
+      StepPayload n k tagUnion = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
+      StepPayload n k tagDiff = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
+      StepPayload n k tagSelM = Σ[ m ∈ ⟪ slice n k ⟫ ] Fin k × Fin k
+      StepPayload n k tagSelE = Σ[ m ∈ ⟪ slice n k ⟫ ] Fin k × Fin k
+      StepPayload n k tagAll = Unit* {ℓ}
+      StepPayload n (suc (suc k)) tagExt = Σ[ m ∈ ⟪ slice n (suc k) ⟫ ] ⟪ A ⟫
+      StepPayload n k tagShift = ⟪ slice n (suc k) ⟫
+      StepPayload n 0 tagValues = ⟪ slice n 1 ⟫
+
+      stepImage : {n k : ℕ} (t : StepTag k) (p : StepPayload n k t) → V ℓ
+      stepImage {n} {k} tagInter (m , q) = ⟪ slice n k ⟫↪ m ∩ ⟪ slice n k ⟫↪ q
+      stepImage {n} {k} tagUnion (m , q) = ⟪ slice n k ⟫↪ m ∪ ⟪ slice n k ⟫↪ q
+      stepImage {n} {k} tagDiff (m , q) = ⟪ slice n k ⟫↪ m ∖ ⟪ slice n k ⟫↪ q
+      stepImage {n} {k} tagSelM (m , i , j) =
+        selectMember (⟪ slice n k ⟫↪ m) ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
+      stepImage {n} {k} tagSelE (m , i , j) =
+        selectEqual (⟪ slice n k ⟫↪ m) ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
+      stepImage {n} {k} tagAll tt* = allTuples A k
+      stepImage {n} {suc (suc k)} tagExt (m , a) =
+        extendFamily (⟪ slice n (suc k) ⟫↪ m) ⁅ κ a ⁆s
+      stepImage {n} {k} tagShift m = shiftDown (⟪ slice n (suc k) ⟫↪ m)
+      stepImage {n} {zero} tagValues m = values (⟪ slice n 1 ⟫↪ m)
+
+  -- The membership laws, one `slice-in` per clause and `slice-out` as the
+  -- disjunctive inversion, direction-paired.
+  slice-∩-in : {n k : ℕ} {X Y : V ℓ}
+             → ⟨ X ∈ slice n k ⟩ → ⟨ Y ∈ slice n k ⟩
+             → ⟨ X ∩ Y ∈ slice (suc n) k ⟩
+  slice-∩-in {n} {k} {X} {Y} hX hY =
+    ∪-right {X = slice n k} {Y = step n k}
+      ∣ (tagInter , (fX .fst , fY .fst))
+      , cong₂ _∩_ (fX .snd) (fY .snd) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n k} hX
+    fY : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ Y)
+    fY = ∈-asFiber {a = Y} {b = slice n k} hY
+
+  slice-∪-in : {n k : ℕ} {X Y : V ℓ}
+             → ⟨ X ∈ slice n k ⟩ → ⟨ Y ∈ slice n k ⟩
+             → ⟨ X ∪ Y ∈ slice (suc n) k ⟩
+  slice-∪-in {n} {k} {X} {Y} hX hY =
+    ∪-right {X = slice n k} {Y = step n k}
+      ∣ (tagUnion , (fX .fst , fY .fst))
+      , cong₂ _∪_ (fX .snd) (fY .snd) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n k} hX
+    fY : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ Y)
+    fY = ∈-asFiber {a = Y} {b = slice n k} hY
+
+  slice-∖-in : {n k : ℕ} {X Y : V ℓ}
+             → ⟨ X ∈ slice n k ⟩ → ⟨ Y ∈ slice n k ⟩
+             → ⟨ X ∖ Y ∈ slice (suc n) k ⟩
+  slice-∖-in {n} {k} {X} {Y} hX hY =
+    ∪-right {X = slice n k} {Y = step n k}
+      ∣ (tagDiff , (fX .fst , fY .fst))
+      , cong₂ _∖_ (fX .snd) (fY .snd) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n k} hX
+    fY : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ Y)
+    fY = ∈-asFiber {a = Y} {b = slice n k} hY
+
+  slice-selM-in : {n k : ℕ} {X : V ℓ} (i j : Fin k)
+                → ⟨ X ∈ slice n k ⟩
+                → ⟨ selectMember X ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
+                     ∈ slice (suc n) k ⟩
+  slice-selM-in {n} {k} {X} i j hX =
+    ∪-right {X = slice n k} {Y = step n k}
+      ∣ (tagSelM , (fX .fst , i , j))
+      , cong (λ W → selectMember W ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s) (fX .snd) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n k} hX
+
+  slice-selE-in : {n k : ℕ} {X : V ℓ} (i j : Fin k)
+                → ⟨ X ∈ slice n k ⟩
+                → ⟨ selectEqual X ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
+                     ∈ slice (suc n) k ⟩
+  slice-selE-in {n} {k} {X} i j hX =
+    ∪-right {X = slice n k} {Y = step n k}
+      ∣ (tagSelE , (fX .fst , i , j))
+      , cong (λ W → selectEqual W ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s) (fX .snd) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n k ⟫ ] (⟪ slice n k ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n k} hX
+
+  slice-allTuples-in : {n k : ℕ} → ⟨ allTuples A k ∈ slice (suc n) k ⟩
+  slice-allTuples-in {n} {k} =
+    ∪-right {X = slice n k} {Y = step n k} ∣ (tagAll , tt*) , refl ∣₁
+
+  slice-extendFamily-in : {n k : ℕ} {X : V ℓ} (a : ⟪ A ⟫)
+                        → ⟨ X ∈ slice n (suc k) ⟩ → ⟨ ⁅ κ a ⁆s ∈ slice n 0 ⟩
+                        → ⟨ extendFamily X ⁅ κ a ⁆s ∈ slice (suc n) (suc (suc k)) ⟩
+  slice-extendFamily-in {n} {k} {X} a hX ha =
+    ∪-right {X = slice n (suc (suc k))} {Y = step n (suc (suc k))}
+      ∣ (tagExt , (fX .fst , fa .fst))
+      , cong₂ extendFamily (fX .snd) (cong ⁅_⁆s (fa .snd)) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n (suc k) ⟫ ] (⟪ slice n (suc k) ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n (suc k)} hX
+    fa : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ κ a)
+    fa = ∈-asFiber {a = κ a} {b = A} (memb a)
+
+  slice-shiftDown-in : {n k : ℕ} {X : V ℓ}
+                     → ⟨ X ∈ slice n (suc k) ⟩ → ⟨ shiftDown X ∈ slice (suc n) k ⟩
+  slice-shiftDown-in {n} {k} {X} hX =
+    ∪-right {X = slice n k} {Y = step n k}
+      ∣ (tagShift , fX .fst) , cong shiftDown (fX .snd) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n (suc k) ⟫ ] (⟪ slice n (suc k) ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n (suc k)} hX
+
+  slice-values-in : {n : ℕ} {X : V ℓ}
+                  → ⟨ X ∈ slice n 1 ⟩ → ⟨ values X ∈ slice (suc n) 0 ⟩
+  slice-values-in {n} {X} hX =
+    ∪-right {X = slice n 0} {Y = step n 0}
+      ∣ (tagValues , fX .fst) , cong values (fX .snd) ∣₁
+    where
+    fX : Σ[ m ∈ ⟪ slice n 1 ⟫ ] (⟪ slice n 1 ⟫↪ m ≡ X)
+    fX = ∈-asFiber {a = X} {b = slice n 1} hX
+
+  slice-step-out : {n k : ℕ} (u : V ℓ) → ⟨ u ∈ step n k ⟩
+                 → ∥ Σ[ t ∈ StepTag k ] Σ[ p ∈ StepPayload n k t ]
+                       (stepImage {n} {k} t p ≡ u) ∥₁
+  slice-step-out {n} {k} u = PT.map
+    λ { ((t , p) , e) → t , p , e }
+
+  slice-out : {n k : ℕ} (u : V ℓ) → ⟨ u ∈ slice (suc n) k ⟩
+            → ∥ ⟨ u ∈ slice n k ⟩
+              ⊎ (Σ[ t ∈ StepTag k ] Σ[ p ∈ StepPayload n k t ]
+                   (stepImage {n} {k} t p ≡ u)) ∥₁
+  slice-out {n} {k} u hu = PT.rec squash₁ go
+    (∪-out {X = slice n k} {Y = step n k} {x = u} hu)
+    where
+    go : ⟨ u ∈ slice n k ⟩ ⊎ ⟨ u ∈ step n k ⟩
+       → ∥ ⟨ u ∈ slice n k ⟩
+         ⊎ (Σ[ t ∈ StepTag k ] Σ[ p ∈ StepPayload n k t ]
+              (stepImage {n} {k} t p ≡ u)) ∥₁
+    go (inl h) = ∣ inl h ∣₁
+    go (inr hs) = PT.map inr (slice-step-out u hs)
+
+  -- The seed's law and the level merge: a member of a lower level sits in
+  -- every higher level, once by the old-member inclusion and then by
+  -- iteration on either side of the addition.
+  slice-singleton-seed : (a : ⟪ A ⟫) → ⟨ ⁅ κ a ⁆s ∈ slice 0 0 ⟩
+  slice-singleton-seed a = singletons-in {X = A} {x = κ a} (memb a)
+
+  slice-old : {n k : ℕ} {X : V ℓ} → ⟨ X ∈ slice n k ⟩ → ⟨ X ∈ slice (suc n) k ⟩
+  slice-old {n} {k} {X} h = ∪-left {X = slice n k} {Y = step n k} {x = X} h
+
+  slice-addR : (n m k : ℕ) (X : V ℓ)
+             → ⟨ X ∈ slice n k ⟩ → ⟨ X ∈ slice (n + m) k ⟩
+  slice-addR n zero k X h = subst (λ z → ⟨ X ∈ slice z k ⟩) (sym (+-zero n)) h
+  slice-addR n (suc m) k X h =
+    subst (λ z → ⟨ X ∈ slice z k ⟩) (sym (+-suc n m))
+      (slice-old {n = n + m} {k} {X} (slice-addR n m k X h))
+
+  slice-addL : (n m k : ℕ) (X : V ℓ)
+             → ⟨ X ∈ slice n k ⟩ → ⟨ X ∈ slice (m + n) k ⟩
+  slice-addL n zero k X h = h
+  slice-addL n (suc m) k X h =
+    slice-old {n = m + n} {k} {X} (slice-addL n m k X h)
+```
+
+
+<!--en-->
+## The kinded invariant
+
+Every member of a positive-arity slice at every level is an arity-`k`
+satisfaction set over the carrier: `slice-inv` states
+`u ∈ slice A n (suc k)` gives `∥ Σ[ φ ∈ Formula ⟪ A ⟫ (suc k) ] (u ≡ satSet φ) ∥₁`,
+by induction on the level. At level zero the higher shelves are empty, so the
+base is vacuous. At a successor level, `slice-out` splits the member into an
+old member, handed to the induction hypothesis, or one of the step's tagged
+images, and each image case is the delivered equation stock run backward: the
+intersection lands by `sat-∧`, the union by `sat-∨`, the difference by the
+conjunction-with-negation equation assembled here from `sat-∧`, `sat-¬`, and
+the bound `satSet⊆` (a satisfaction set never leaves the tuple family it
+describes), the two selections by this chapter's `sat-∈vv-sel` and
+`sat-≐vv-sel`, the tuple family by `sat-⊤`, the family extension by the
+pinning equation `extendFamily-pin-eq`, and the shift by `sat-∃`. This is the
+closure analog of `Terms.sound`, and it replaces the certificate's honesty
+induction: no codes, no annotation table, plain structural induction on the
+level, one case per clause, each discharged by an equation. The arity-zero
+shelf is deliberately outside its scope: it is the value shelf, where `values`
+lands and the singleton family seeds the constant-atom arguments, not a shelf
+of tuple families.
+<!--zh-->
+## 带种类的不变量
+
+每个正元数片在每个层级的每个成员，都是载体上的 `k` 元数满足集：`slice-inv` 说 `u ∈ slice A n (suc k)` 推出 `∥ Σ[ φ ∈ Formula ⟪ A ⟫ (suc k) ] (u ≡ satSet φ) ∥₁`，按层级归纳。在第零层，更高片皆空，基步空然成立。在后继层，`slice-out` 把成员拆成旧成员 (交给归纳假设) 或某个带标签的步骤像，而每个像的情形都是已交付等式存货的反向运行：交经 `sat-∧` 落地，并经 `sat-∨`，差经此处由 `sat-∧`、`sat-¬` 与界 `satSet⊆` (满足集永不离开它所描述的元组族) 装配出的「合取加否定」等式，两个选择经本章的 `sat-∈vv-sel` 与 `sat-≐vv-sel`，元组族经 `sat-⊤`，族扩张经钉住等式 `extendFamily-pin-eq`，移位经 `sat-∃`。这是 `Terms.sound` 的闭包对应物，它取代证书的诚实性归纳：没有码，没有注解表，只是对层级的朴素结构归纳，每个子句一个情形，每个情形由一条等式消去。第零元数片被有意排除在范围之外：它是取值片，`values` 落在那里、单例族在那里播种常元原子的实参，而不是元组族之片。
+<!--/-->
+
+```agda
+  -- The satisfaction equations the invariant consumes, restated locally
+  -- against this chapter's satSet: Satisfaction's tabulation is private, so
+  -- its stock cannot be reused by import, exactly as B1 restated the atoms
+  -- and the conjunction.
+  sat-⊤ : {n : ℕ} → satSet {n} ⊤̇ ≡ allTuples A n
+  sat-⊤ {n} = extensionalV λ w → ⇔toPath
+    (PT.rec (snd (w ∈ allTuples A n)) (λ { ((g , _) , e) → ∣ g , e ∣₁ }))
+    (PT.rec (snd (w ∈ satSet ⊤̇))
+      (λ { (g , e) → subst (λ z → ⟨ z ∈ satSet ⊤̇ ⟩) e (sat-in ⊤̇ g tt*) }))
+
+  sat-∨ : {n : ℕ} (φ ψ : Formula ⟪ A ⟫ n)
+        → satSet (φ ∨̇ ψ) ≡ satSet φ ∪ satSet ψ
+  sat-∨ {n} φ ψ = extensionalV λ w → ⇔toPath (fwdOr w) (bwdOr w)
+    where
+    T : V ℓ
+    T = satSet φ ∪ satSet ψ
+    fwdOr : (w : V ℓ) → ⟨ w ∈ satSet (φ ∨̇ ψ) ⟩ → ⟨ w ∈ T ⟩
+    fwdOr w h = PT.rec (snd (w ∈ T))
+      (λ { (g , hd , e) → PT.rec (snd (w ∈ T))
+        (Sum.rec
+          (λ hφ → subst (λ z → ⟨ z ∈ T ⟩) e
+            (∪-left {X = satSet φ} {Y = satSet ψ} (sat-in φ g hφ)))
+          (λ hψ → subst (λ z → ⟨ z ∈ T ⟩) e
+            (∪-right {X = satSet φ} {Y = satSet ψ} (sat-in ψ g hψ))))
+        hd })
+      (sat-out (φ ∨̇ ψ) w h)
+    bwdOr : (w : V ℓ) → ⟨ w ∈ T ⟩ → ⟨ w ∈ satSet (φ ∨̇ ψ) ⟩
+    bwdOr w h = PT.rec (snd (w ∈ satSet (φ ∨̇ ψ)))
+      (Sum.rec
+        (λ hφ → PT.rec (snd (w ∈ satSet (φ ∨̇ ψ)))
+          (λ { (g , hg , e) →
+            subst (λ z → ⟨ z ∈ satSet (φ ∨̇ ψ) ⟩) e
+              (sat-in (φ ∨̇ ψ) g ∣ Sum.inl hg ∣₁) })
+          (sat-out φ w hφ))
+        (λ hψ → PT.rec (snd (w ∈ satSet (φ ∨̇ ψ)))
+          (λ { (g , hg , e) →
+            subst (λ z → ⟨ z ∈ satSet (φ ∨̇ ψ) ⟩) e
+              (sat-in (φ ∨̇ ψ) g ∣ Sum.inr hg ∣₁) })
+          (sat-out ψ w hψ)))
+      (∪-out {X = satSet φ} {Y = satSet ψ} {x = w} h)
+
+  sat-¬ : {n : ℕ} (φ : Formula ⟪ A ⟫ n)
+        → satSet (¬̇ φ) ≡ allTuples A n ∖ satSet φ
+  sat-¬ {n} φ = extensionalV λ w → ⇔toPath (fwdNeg w) (bwdNeg w)
+    where
+    T : V ℓ
+    T = allTuples A n ∖ satSet φ
+    fwdNeg : (w : V ℓ) → ⟨ w ∈ satSet (¬̇ φ) ⟩ → ⟨ w ∈ T ⟩
+    fwdNeg w h = PT.rec (snd (w ∈ T))
+      (λ { (g , hn , e) →
+        subst (λ z → ⟨ z ∈ T ⟩) e
+          (∖-in {X = allTuples A n} {Y = satSet φ}
+            ∣ g , refl ∣₁
+            (λ hw → PT.rec Empty.isProp⊥
+              (λ { (g' , hg' , e') →
+                hn (subst (λ δ → ⟨ δ ⊨ᵐ φ ⟩) (vec-inj e') hg') })
+              (sat-out φ (tuple A g) hw))) })
+      (sat-out (¬̇ φ) w h)
+    bwdNeg : (w : V ℓ) → ⟨ w ∈ T ⟩ → ⟨ w ∈ satSet (¬̇ φ) ⟩
+    bwdNeg w h = PT.rec (snd (w ∈ satSet (¬̇ φ)))
+      (λ { (g , e) →
+        subst (λ z → ⟨ z ∈ satSet (¬̇ φ) ⟩) e
+          (sat-in (¬̇ φ) g
+            (λ hg → ∖-out {X = allTuples A n} {Y = satSet φ} {x = w} h .snd
+              (subst (λ z → ⟨ z ∈ satSet φ ⟩) e (sat-in φ g hg)))) })
+      (∖-out {X = allTuples A n} {Y = satSet φ} {x = w} h .fst)
+
+  sat-∃ : {n : ℕ} (ψ : Formula ⟪ A ⟫ (suc n))
+        → satSet (∃̇ ψ) ≡ shiftDown (satSet ψ)
+  sat-∃ {n} ψ = extensionalV λ w → ⇔toPath (fwdEx w) (bwdEx w)
+    where
+    T : V ℓ
+    T = shiftDown (satSet ψ)
+    fwdEx : (w : V ℓ) → ⟨ w ∈ satSet (∃̇ ψ) ⟩ → ⟨ w ∈ T ⟩
+    fwdEx w hw = PT.rec (snd (w ∈ T))
+      (λ { (g , hex , e) → PT.rec (snd (w ∈ T))
+        (λ { (x , hx) →
+          let fx = ∈-asFiber {a = fst x} {b = A} (x .snd)
+              m : ⟪ A ⟫
+              m = fx .fst
+              x≡ιm : x ≡ ι m
+              x≡ιm = Σ≡Prop (λ v → snd (v ∈ A)) (sym (fx .snd))
+              hψ : ⟨ vec (cons m g) ⊨ᵐ ψ ⟩
+              hψ = subst (λ z → ⟨ (z ∷ vec g) ⊨ᵐ ψ ⟩) x≡ιm hx
+          in subst (λ z → ⟨ z ∈ T ⟩)
+               (tupleTail A (cons m g) ∙ e)
+               (shiftDown-in {X = satSet ψ} (sat-in ψ (cons m g) hψ)) })
+        hex })
+      (sat-out (∃̇ ψ) w hw)
+    bwdEx : (w : V ℓ) → ⟨ w ∈ T ⟩ → ⟨ w ∈ satSet (∃̇ ψ) ⟩
+    bwdEx w h = PT.rec (snd (w ∈ satSet (∃̇ ψ)))
+      (λ { (z , hz , ez) → PT.rec (snd (w ∈ satSet (∃̇ ψ)))
+        (λ { (f , hf , ef) →
+          subst (λ q → ⟨ q ∈ satSet (∃̇ ψ) ⟩)
+            (sym (tupleTail A f) ∙ cong tailGraph ef ∙ ez)
+            (sat-in (∃̇ ψ) (λ i → f (suc i)) ∣ ι (f zero) , hf ∣₁) })
+        (sat-out ψ z hz) })
+      (shiftDown-out {X = satSet ψ} h)
+
+  sat-defSet : (φ : Formula ⟪ A ⟫ 1)
+             → values (satSet φ) ≡ defSet φ
+  sat-defSet φ = extensionalV λ v → ⇔toPath (fwdVal v) (bwdVal v)
+    where
+    fwdVal : (v : V ℓ) → ⟨ v ∈ values (satSet φ) ⟩ → ⟨ v ∈ defSet φ ⟩
+    fwdVal v h = PT.rec (snd (v ∈ defSet φ))
+      (λ { (γ , hγ , hv) → PT.rec (snd (v ∈ defSet φ))
+        (λ { (g , hg , e) →
+          let ev : v ≡ κ (g zero)
+              ev = subst ⟨_⟩ (lookup-spec (λ x → κ (g x)) zero v)
+                     (subst (λ q → ⟨ pr (# 0) v ∈ q ⟩) (sym e) hv)
+          in subst (λ q → ⟨ q ∈ defSet φ ⟩) (sym ev)
+               (subst ⟨_⟩ (sym (defSet-mem φ (g zero))) hg) })
+        (sat-out φ γ hγ) })
+      (values-wit {X = satSet φ} {v = v} h)
+    bwdVal : (v : V ℓ) → ⟨ v ∈ defSet φ ⟩ → ⟨ v ∈ values (satSet φ) ⟩
+    bwdVal v = PT.rec (snd (v ∈ values (satSet φ)))
+      (λ { ((m , s) , e) →
+        subst (λ q → ⟨ q ∈ values (satSet φ) ⟩) e
+          (values-in {X = satSet φ}
+            {γ = tuple A (λ _ → m)} {v = κ m}
+            (sat-in φ (λ _ → m)
+              (invEq (⊨ᵐ-small φ (ι m ∷ []) .snd) s))
+            ∣ lift zero , refl ∣₁) })
+
+  satSet⊆ : {n : ℕ} (φ : Formula ⟪ A ⟫ n) (x : V ℓ)
+          → ⟨ x ∈ satSet φ ⟩ → ⟨ x ∈ allTuples A n ⟩
+  satSet⊆ {n} φ x hx = PT.rec (snd (x ∈ allTuples A n))
+    (λ { (g , _ , e) → subst (λ z → ⟨ z ∈ allTuples A n ⟩) e ∣ g , refl ∣₁ })
+    (sat-out φ x hx)
+
+  satSet-∖ : {n : ℕ} (φ ψ : Formula ⟪ A ⟫ n)
+           → satSet φ ∖ satSet ψ ≡ satSet (φ ∧̇ ¬̇ ψ)
+  satSet-∖ {n} φ ψ = extensionalV λ w → ⇔toPath (to w) (fro w)
+    where
+    L : V ℓ
+    L = satSet φ ∖ satSet ψ
+    R : V ℓ
+    R = satSet (φ ∧̇ ¬̇ ψ)
+    to : (w : V ℓ) → ⟨ w ∈ L ⟩ → ⟨ w ∈ R ⟩
+    to w h = subst (λ z → ⟨ w ∈ z ⟩) (sym (sat-∧ φ (¬̇ ψ)))
+      (∩-in {X = satSet φ} {Y = satSet (¬̇ ψ)}
+        (∖-out {X = satSet φ} {Y = satSet ψ} {x = w} h .fst)
+        (subst (λ z → ⟨ w ∈ z ⟩) (sym (sat-¬ ψ))
+          (∖-in {X = allTuples A n} {Y = satSet ψ}
+            (satSet⊆ φ w (∖-out {X = satSet φ} {Y = satSet ψ} {x = w} h .fst))
+            (∖-out {X = satSet φ} {Y = satSet ψ} {x = w} h .snd))))
+    fro : (w : V ℓ) → ⟨ w ∈ R ⟩ → ⟨ w ∈ L ⟩
+    fro w h = PT.rec (snd (w ∈ L)) build (sat-out (φ ∧̇ ¬̇ ψ) w h)
+      where
+      build : Σ[ g ∈ (Fin n → ⟪ A ⟫) ]
+                (⟨ vec g ⊨ᵐ (φ ∧̇ ¬̇ ψ) ⟩ × (tuple A g ≡ w))
+            → ⟨ w ∈ L ⟩
+      build (g , hc , e) =
+        let nψ : ⟨ tuple A g ∈ satSet ψ ⟩ → Empty.⊥
+            nψ hψ = ∖-out {X = allTuples A n} {Y = satSet ψ} {x = w}
+              (subst (λ z → ⟨ w ∈ z ⟩) (sat-¬ ψ)
+                (subst (λ z → ⟨ z ∈ satSet (¬̇ ψ) ⟩) e (sat-in (¬̇ ψ) g (hc .snd))))
+              .snd (subst (λ z → ⟨ z ∈ satSet ψ ⟩) e hψ)
+        in subst (λ z → ⟨ z ∈ L ⟩) e
+             (∖-in {X = satSet φ} {Y = satSet ψ}
+               (sat-in φ g (hc .fst)) nψ)
+
+  slice-inv : (n k : ℕ) (u : V ℓ) → ⟨ u ∈ slice n (suc k) ⟩
+            → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ (suc k) ] (u ≡ satSet φ) ∥₁
+  slice-inv zero k u hu = Empty.rec (∅-empty u (∈∈ₛ {a = u} {b = ∅} .fst hu))
+  slice-inv (suc n) k u hu = PT.rec squash₁ split (slice-out u hu)
+    where
+    T : Type (ℓ-suc ℓ)
+    T = Σ[ φ ∈ Formula ⟪ A ⟫ (suc k) ] (u ≡ satSet φ)
+
+    inter-case : (m q : ⟪ slice n (suc k) ⟫)
+               → stepImage {n} {suc k} tagInter (m , q) ≡ u → ∥ T ∥₁
+    inter-case m q e =
+      let X : V ℓ
+          X = ⟪ slice n (suc k) ⟫↪ m
+          hX : ⟨ X ∈ slice n (suc k) ⟩
+          hX = ∈∈ₛ {a = X} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) m)
+          Y : V ℓ
+          Y = ⟪ slice n (suc k) ⟫↪ q
+          hY : ⟨ Y ∈ slice n (suc k) ⟩
+          hY = ∈∈ₛ {a = Y} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) q)
+      in PT.rec squash₁ (λ { (φ , eφ) → PT.rec squash₁
+            (λ { (ψ , eψ) → ∣ φ ∧̇ ψ
+                , sym e ∙ cong₂ _∩_ eφ eψ ∙ sym (sat-∧ φ ψ) ∣₁ })
+            (slice-inv n k Y hY) })
+        (slice-inv n k X hX)
+
+    union-case : (m q : ⟪ slice n (suc k) ⟫)
+               → stepImage {n} {suc k} tagUnion (m , q) ≡ u → ∥ T ∥₁
+    union-case m q e =
+      let X : V ℓ
+          X = ⟪ slice n (suc k) ⟫↪ m
+          hX : ⟨ X ∈ slice n (suc k) ⟩
+          hX = ∈∈ₛ {a = X} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) m)
+          Y : V ℓ
+          Y = ⟪ slice n (suc k) ⟫↪ q
+          hY : ⟨ Y ∈ slice n (suc k) ⟩
+          hY = ∈∈ₛ {a = Y} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) q)
+      in PT.rec squash₁ (λ { (φ , eφ) → PT.rec squash₁
+            (λ { (ψ , eψ) → ∣ φ ∨̇ ψ
+                , sym e ∙ cong₂ _∪_ eφ eψ ∙ sym (sat-∨ φ ψ) ∣₁ })
+            (slice-inv n k Y hY) })
+        (slice-inv n k X hX)
+
+    diff-case : (m q : ⟪ slice n (suc k) ⟫)
+              → stepImage {n} {suc k} tagDiff (m , q) ≡ u → ∥ T ∥₁
+    diff-case m q e =
+      let X : V ℓ
+          X = ⟪ slice n (suc k) ⟫↪ m
+          hX : ⟨ X ∈ slice n (suc k) ⟩
+          hX = ∈∈ₛ {a = X} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) m)
+          Y : V ℓ
+          Y = ⟪ slice n (suc k) ⟫↪ q
+          hY : ⟨ Y ∈ slice n (suc k) ⟩
+          hY = ∈∈ₛ {a = Y} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) q)
+      in PT.rec squash₁ (λ { (φ , eφ) → PT.rec squash₁
+            (λ { (ψ , eψ) → ∣ φ ∧̇ ¬̇ ψ
+                , sym e ∙ cong₂ _∖_ eφ eψ ∙ satSet-∖ φ ψ ∣₁ })
+            (slice-inv n k Y hY) })
+        (slice-inv n k X hX)
+
+    selM-case : (m : ⟪ slice n (suc k) ⟫) (i j : Fin (suc k))
+              → stepImage {n} {suc k} tagSelM (m , i , j) ≡ u → ∥ T ∥₁
+    selM-case m i j e =
+      let X : V ℓ
+          X = ⟪ slice n (suc k) ⟫↪ m
+          hX : ⟨ X ∈ slice n (suc k) ⟩
+          hX = ∈∈ₛ {a = X} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) m)
+      in PT.rec squash₁ (λ { (φ , eφ) → ∣ φ ∧̇ (var i ∈̇ var j)
+            , sym e
+            ∙ cong (λ W → selectMember W ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s) eφ
+            ∙ sat-∈vv-sel φ i j ∣₁ })
+        (slice-inv n k X hX)
+
+    selE-case : (m : ⟪ slice n (suc k) ⟫) (i j : Fin (suc k))
+              → stepImage {n} {suc k} tagSelE (m , i , j) ≡ u → ∥ T ∥₁
+    selE-case m i j e =
+      let X : V ℓ
+          X = ⟪ slice n (suc k) ⟫↪ m
+          hX : ⟨ X ∈ slice n (suc k) ⟩
+          hX = ∈∈ₛ {a = X} {b = slice n (suc k)} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k)) m)
+      in PT.rec squash₁ (λ { (φ , eφ) → ∣ φ ∧̇ (var i ≐ var j)
+            , sym e
+            ∙ cong (λ W → selectEqual W ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s) eφ
+            ∙ sat-≐vv-sel φ i j ∣₁ })
+        (slice-inv n k X hX)
+
+    ext-case : (k' : ℕ) (m : ⟪ slice n (suc k') ⟫) (a : ⟪ A ⟫)
+             → stepImage {n} {suc (suc k')} tagExt (m , a) ≡ u
+             → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ (suc (suc k')) ] (u ≡ satSet φ) ∥₁
+    ext-case k' m a e =
+      let X : V ℓ
+          X = ⟪ slice n (suc k') ⟫↪ m
+          hX : ⟨ X ∈ slice n (suc k') ⟩
+          hX = ∈∈ₛ {a = X} {b = slice n (suc k')} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc k')) m)
+      in PT.rec squash₁ (λ { (φ , eφ) →
+            ∣ (var zero ≐ con a) ∧̇ renameFo suc φ
+            , sym e
+            ∙ cong (λ W → extendFamily W ⁅ κ a ⁆s) eφ
+            ∙ extendFamily-pin-eq φ a ∣₁ })
+        (slice-inv n k' X hX)
+
+    shift-case : (m : ⟪ slice n (suc (suc k)) ⟫)
+               → stepImage {n} {suc k} tagShift m ≡ u → ∥ T ∥₁
+    shift-case m e =
+      let X : V ℓ
+          X = ⟪ slice n (suc (suc k)) ⟫↪ m
+          hX : ⟨ X ∈ slice n (suc (suc k)) ⟩
+          hX = ∈∈ₛ {a = X} {b = slice n (suc (suc k))} .snd
+                 (∈ₛ⟪_⟫↪_ (slice n (suc (suc k))) m)
+      in PT.rec squash₁ (λ { (ψ , eψ) → ∣ ∃̇ ψ
+            , sym e ∙ cong shiftDown eψ ∙ sym (sat-∃ ψ) ∣₁ })
+        (slice-inv n (suc k) X hX)
+
+    step' : Σ[ t ∈ StepTag (suc k) ] Σ[ p ∈ StepPayload n (suc k) t ]
+              (stepImage {n} {suc k} t p ≡ u)
+          → ∥ T ∥₁
+    step' (tagInter , (m , q) , e) = inter-case m q e
+    step' (tagUnion , (m , q) , e) = union-case m q e
+    step' (tagDiff , (m , q) , e) = diff-case m q e
+    step' (tagSelM , (m , i , j) , e) = selM-case m i j e
+    step' (tagSelE , (m , i , j) , e) = selE-case m i j e
+    step' (tagAll , tt* , e) = ∣ ⊤̇ , sym e ∙ sym (sat-⊤ {n = suc k}) ∣₁
+    step' (tagExt {k'} , (m , a) , e) = ext-case k' m a e
+    step' (tagShift , m , e) = shift-case m e
+
+    split : ⟨ u ∈ slice n (suc k) ⟩
+          ⊎ (Σ[ t ∈ StepTag (suc k) ] Σ[ p ∈ StepPayload n (suc k) t ]
+               (stepImage {n} {suc k} t p ≡ u))
+          → ∥ T ∥₁
+    split (inl h) = slice-inv n k u h
+    split (inr pay) = PT.rec squash₁ step' ∣ pay ∣₁
+```
+
+
+<!--en-->
+## Terms to levels
+
+Every term denotation lands in the levels, with a computable level witness.
+`levelOf` computes the level by term induction: the leaves sit at their fixed
+levels (`allTuples` at one, the variable selections at two, the constant-atom
+composite at four), the binary nodes at the sum of the children's levels plus
+one, and the shift at its child's level plus one. Because the witness is
+computable, the statement is untruncated:
+`terms-in-levels : (t : KT ⟪ A ⟫ k) → ⟨ ⟦_⟧ᴷ A t ∈ slice A (levelOf t) k ⟩`,
+one term induction, each constructor's case the corresponding `slice-in` law.
+The binary cases need both children on one shelf, and the two level-merge
+lemmas of the kinded-levels section (`slice-addR` and `slice-addL`) lift a
+member of any lower level to the summed level on either side of the addition,
+so no maximum, no ordering, and no truncation enter the proof: the level
+arithmetic is plain addition of the two computable witnesses.
+<!--zh-->
+## 项到诸层
+
+每个项的指称都落进诸层，且层级见证可计算。`levelOf` 按项归纳计算层级：诸叶坐在各自的固定层级 (元组族在一，变元选择在二，常元原子复合体在四)，二元节点在两个孩子层级之和加一，移位在孩子层级加一。见证可计算，故陈述不截断：`terms-in-levels : (t : KT ⟪ A ⟫ k) → ⟨ ⟦_⟧ᴷ A t ∈ slice A (levelOf t) k ⟩`，一次项归纳，每个构造子的情形就是相应的 `slice-in` 律。二元情形需要两个孩子同处一架，带种类诸层一节的两条层级合并引理 (`slice-addR` 与 `slice-addL`) 把任意低层成员抬到和式层级、落在加号任一侧，故最大、序、截断一概不进证明：层级算术就是两个可计算见证的朴素加法。
+<!--/-->
+
+```agda
+  levelOf : {k : ℕ} → KT ⟪ A ⟫ k → ℕ
+  levelOf allK = 1
+  levelOf (selMemK i j) = 2
+  levelOf (selEqK i j) = 2
+  levelOf (selEqConK i a) = 4
+  levelOf (interK s t) = suc (levelOf s + levelOf t)
+  levelOf (unionK s t) = suc (levelOf s + levelOf t)
+  levelOf (complK t) = suc (1 + levelOf t)
+  levelOf (shiftK t) = suc (levelOf t)
+
+  terms-in-levels : {k : ℕ} (t : KT ⟪ A ⟫ k) → ⟨ ⟦_⟧ᴷ A t ∈ slice (levelOf t) k ⟩
+  terms-in-levels allK = slice-allTuples-in {n = 0}
+  terms-in-levels (selMemK i j) =
+    slice-selM-in i j (slice-allTuples-in {n = 0})
+  terms-in-levels (selEqK i j) =
+    slice-selE-in i j (slice-allTuples-in {n = 0})
+  terms-in-levels (selEqConK {zero} () _)
+  terms-in-levels (selEqConK {suc k} i a) =
+    slice-shiftDown-in
+      (slice-selE-in (suc i) zero
+        (slice-extendFamily-in {n = 1} {k} a
+          (slice-allTuples-in {n = 0})
+          (slice-addR 0 1 0 (⁅ κ a ⁆s) (slice-singleton-seed a))))
+  terms-in-levels {k} (interK s t) =
+    slice-∩-in (slice-addR (levelOf s) (levelOf t) k (⟦_⟧ᴷ A s) (terms-in-levels s))
+               (slice-addL (levelOf t) (levelOf s) k (⟦_⟧ᴷ A t) (terms-in-levels t))
+  terms-in-levels {k} (unionK s t) =
+    slice-∪-in (slice-addR (levelOf s) (levelOf t) k (⟦_⟧ᴷ A s) (terms-in-levels s))
+               (slice-addL (levelOf t) (levelOf s) k (⟦_⟧ᴷ A t) (terms-in-levels t))
+  terms-in-levels {k} (complK t) =
+    slice-∖-in (slice-addR 1 (levelOf t) k (allTuples A k) (slice-allTuples-in {n = 0}))
+               (slice-addL (levelOf t) 1 k (⟦_⟧ᴷ A t) (terms-in-levels t))
+  terms-in-levels (shiftK t) =
+    slice-shiftDown-in (terms-in-levels t)
+```
+
+
+<!--en-->
+## The cut theorem
+
+The values-cut of the levels is the definable powerset. `cut-sound` reads one
+direction: a member of the arity-one slice at any level has its `values` in
+`𝒟ₒ A`, by the invariant (`u ≡ satSet φ`), the values bridge `sat-defSet`
+(`values (satSet φ) ≡ defSet φ`), and the sanctioned opening `𝒟ₒ-intro`.
+`cut-complete` reads the other, under the chapter's `WithLEM` exactly as
+`Terms` scopes its classical half: every `v ∈ 𝒟ₒ A` is `values u` for some
+`u` in the arity-one slice of the level `levelOf t` computed from the mirror
+term `t`, via the sanctioned opening `𝒟ₒ-inv`, the terms chapter's
+`termDef≡Def`, and `terms-in-levels`. The probe's `⊆ allTuples A 1` guard is
+absorbed by the kinded design, not carried as a hypothesis: `slice1⊆allTuples`
+derives it from the invariant and the satisfaction sets' bound, so the cut is
+stated against the slices alone.
+<!--zh-->
+## 切定理
+
+诸层的取值切口就是可定义幂集。`cut-sound` 读一个方向：第一元数片在任何层级的成员，其 `values` 落在 `𝒟ₒ A` 里，经不变量 (`u ≡ satSet φ`)、取值之桥 `sat-defSet` (`values (satSet φ) ≡ defSet φ`) 与钦定开口 `𝒟ₒ-intro`。`cut-complete` 读另一方向，立于本章的 `WithLEM`，与 `Terms` 划出经典半场的方式一致：每个 `v ∈ 𝒟ₒ A` 都是某个 `u` 的 `values`，而 `u` 坐在由镜像项 `t` 算出的 `levelOf t` 层第一元数片里，经钦定开口 `𝒟ₒ-inv`、项章的 `termDef≡Def` 与 `terms-in-levels`。探针的 `⊆ allTuples A 1` 卫式被带种类设计吸收，不再作为假设携带：`slice1⊆allTuples` 从不变量与满足集的界把它推出来，故切定理只对诸片陈述。
+<!--/-->
+
+```agda
+  slice1⊆allTuples : {n : ℕ} {u : V ℓ} → ⟨ u ∈ slice n 1 ⟩ → ⟨ u ⊆ allTuples A 1 ⟩
+  slice1⊆allTuples {n} {u} hu = PT.rec (snd (u ⊆ allTuples A 1)) go
+    (slice-inv n 0 u hu)
+    where
+    go : Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (u ≡ satSet φ) → ⟨ u ⊆ allTuples A 1 ⟩
+    go (φ , e) x hx = ∈∈ₛ {a = x} {b = allTuples A 1} .fst
+      (satSet⊆ φ x (subst (λ z → ⟨ x ∈ z ⟩) e (∈∈ₛ {a = x} {b = u} .snd hx)))
+
+  cut-sound : {n : ℕ} {u : V ℓ} → ⟨ u ∈ slice n 1 ⟩ → ⟨ values u ∈ 𝒟ₒ A ⟩
+  cut-sound {n} {u} hu = PT.rec (snd (values u ∈ 𝒟ₒ A)) go
+    (slice-inv n 0 u hu)
+    where
+    go : Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (u ≡ satSet φ) → ⟨ values u ∈ 𝒟ₒ A ⟩
+    go (φ , e) = 𝒟ₒ-intro A (values u)
+      ∣ φ , sym (cong values e ∙ sat-defSet φ) ∣₁
+
+  module WithLEM (lem : LEM (ℓ-suc ℓ)) where
+    module TW = Terms.WithLEM A lem
+
+    cut-complete : {v : V ℓ} → ⟨ v ∈ 𝒟ₒ A ⟩
+                 → ∥ Σ[ n ∈ ℕ ] Σ[ u ∈ V ℓ ]
+                       (⟨ u ∈ slice n 1 ⟩ × (values u ≡ v)) ∥₁
+    cut-complete {v} hv = PT.rec squash₁ go (𝒟ₒ-inv A v hv)
+      where
+      go : Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ v)
+         → ∥ Σ[ n ∈ ℕ ] Σ[ u ∈ V ℓ ]
+               (⟨ u ∈ slice n 1 ⟩ × (values u ≡ v)) ∥₁
+      go (φ , e) = PT.rec squash₁ build
+        (subst (λ z → ⟨ v ∈ z ⟩) (sym TW.termDef≡Def) ∣ φ , e ∣₁)
+        where
+        build : Σ[ t ∈ KT ⟪ A ⟫ 1 ] (values (⟦_⟧ᴷ A t) ≡ v)
+              → ∥ Σ[ n ∈ ℕ ] Σ[ u ∈ V ℓ ]
+                    (⟨ u ∈ slice n 1 ⟩ × (values u ≡ v)) ∥₁
+        build (t , ev) =
+          ∣ levelOf t , ⟦_⟧ᴷ A t , (terms-in-levels t , ev) ∣₁
+```
+
+
+<!--en-->
 ## Recap
 
 The values generalization `valuesAllTuples`{.Agda}, at every positive arity;
@@ -1012,9 +1728,21 @@ inclusions in the shape the kinded invariant's constant-atom clause will
 consume; and the singleton family `singletons`{.Agda} with its two membership
 laws, its `At`-description `singletonsAt`{.Agda} with both readers, and its
 constructibility `singletonsL`{.Agda}, the one operation the delivered stock
-was missing together with its internal face. Nothing is deferred.
+was missing together with its internal face. Then the meta heart of option B:
+the kinded level family `slice`{.Agda}, cumulative in the level, its seed the
+singleton family on the arity-zero shelf and every higher shelf bare, with the
+`slice-in` law per clause and `slice-out` as the disjunctive inversion, the
+shelf discipline that makes the mixed-arity junk impossible by construction;
+the kinded invariant `slice-inv`{.Agda}, every member of a positive-arity slice
+an arity-`k` satisfaction set by induction on the level, one clause case per
+equation, replacing the certificate's honesty induction; terms-to-levels with
+the computable witness `levelOf`{.Agda} and `terms-in-levels`{.Agda}, one term
+induction against the slice-in laws; and the cut theorem, `cut-sound`{.Agda}
+and `cut-complete`{.Agda} under the chapter's `WithLEM`, the values-cut of the
+levels equal to the definable powerset, with the probe's arity guard absorbed
+by the invariant (`slice1⊆allTuples`{.Agda}). Nothing is deferred.
 <!--zh-->
 ## 小结
 
-取值泛化 `valuesAllTuples`{.Agda}，在每个正元数处；两条选择等式 `sat-∈vv-sel`{.Agda} 与 `sat-≐vv-sel`{.Agda}，把满足集上的一次选择读作一次合取；变量变换律 `satSet-rename-shift`{.Agda}，说满足集经全体变元移位而存活；正向钉住包含 `extendFamily-pin`{.Agda}，说新键处的等词原子把整个扩张裁到常元的单点集，与反向钉住包含 `extendFamily-pin-rev`{.Agda}，说单点扩张的每个成员都在新键处记录常元；完整的族扩张等式 `extendFamily-pin-eq`{.Agda}，由变量变换律与两条包含装配而成，形状即带种类不变量之常元原子子句将要消费的样子；以及单例族 `singletons`{.Agda} 连同它的两条隶属定律、`At` 描述 `singletonsAt`{.Agda} 及其两条读式、与可构造性 `singletonsL`{.Agda}，即已交付存货缺掉的那一个运算连同它的内面。本批无遗留。
+取值泛化 `valuesAllTuples`{.Agda}，在每个正元数处；两条选择等式 `sat-∈vv-sel`{.Agda} 与 `sat-≐vv-sel`{.Agda}，把满足集上的一次选择读作一次合取；变量变换律 `satSet-rename-shift`{.Agda}，说满足集经全体变元移位而存活；正向钉住包含 `extendFamily-pin`{.Agda}，说新键处的等词原子把整个扩张裁到常元的单点集，与反向钉住包含 `extendFamily-pin-rev`{.Agda}，说单点扩张的每个成员都在新键处记录常元；完整的族扩张等式 `extendFamily-pin-eq`{.Agda}，由变量变换律与两条包含装配而成，形状即带种类不变量之常元原子子句将要消费的样子；以及单例族 `singletons`{.Agda} 连同它的两条隶属定律、`At` 描述 `singletonsAt`{.Agda} 及其两条读式、与可构造性 `singletonsL`{.Agda}，即已交付存货缺掉的那一个运算连同它的内面。然后是选项 B 的元层心脏：带种类的诸层族 `slice`{.Agda}，随层累积，种子即在第零元数片上的单例族、更高片皆空，连同每条子句一条 `slice-in` 律与作为析取反转的 `slice-out`，即让混合元数垃圾按构造成为不可能的架位纪律；带种类的不变量 `slice-inv`{.Agda}，正元数片的每个成员凭对层级的归纳都是 `k` 元数满足集，每个子句一个情形、每条等式消去一个情形，取代证书的诚实性归纳；带可计算见证 `levelOf`{.Agda} 与 `terms-in-levels`{.Agda} 的项到诸层，一次项归纳对着诸 `slice-in` 律；以及切定理，`cut-sound`{.Agda} 与立于本章 `WithLEM` 的 `cut-complete`{.Agda}，诸层的取值切口等于可定义幂集，探针的元数卫式被不变量吸收 (`slice1⊆allTuples`{.Agda})。本批无遗留。
 <!--/-->
