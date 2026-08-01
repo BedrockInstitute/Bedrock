@@ -25,10 +25,10 @@ module L.Godel.Table {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Formula; var; con; _≐_; _∧̇_; ∃̇_ )
+  using ( Formula; var; con; _≐_; _∧̇_; _∨̇_; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
+open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
@@ -48,11 +48,20 @@ open import L.Godel.Definable {ℓ}
         ; extendFamilyAt; extendFamilyAt-out; extendFamilyAt-in )
 open import L.Godel.InL {ℓ}
   using ( allTuplesL; selectEqualL; extendFamilyL )
+open import L.Godel.Terms {ℓ}
+  using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK
+        ; ⟦_⟧ᴷ )
+open import L.Godel.Codes {ℓ} using ( module Codes; tagNe )
 open import L.Coding.InL {ℓ} using ( sglL )
 
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
+import Cubical.Data.Sum as Sum
+open Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Nat using ( znots; snotz; injSuc )
+import Cubical.Data.Empty as Empty
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
@@ -669,4 +678,351 @@ module _ {n : ℕ} (s w a : Fin n) (γ : S ^ n) where
     env : S ^ (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc n))))))))))
     env = w₃S ∷ w₂S ∷ nS 0 ∷ nS (suc i) ∷ w₁S ∷ cv ∷ nS i ∷ nS m
         ∷ prʟ (nS i) cv ∷ prʟ (nS m) (prʟ (nS i) cv) ∷ γ
+```
+
+<!--en-->
+## The clause
+<!--zh-->
+## 子句
+<!--/-->
+
+<!--en-->
+Eight constructors, one disjunction, in tag order. The outward reading peels
+the disjunction and hands each branch to its own reader; the eight
+injections are what the approximation family will use, one per constructor,
+since the inward readings take their numerals explicitly and no single
+inverse exists at the disjunction.
+<!--zh-->
+八个构造子，一个析取，按标签排序。向外的读向剥开析取，把每个分支递给自己的读式；八个注入是逼近族将要使用的东西，每构造子一个，因为向内的读式显式接收数码，析取处不存在单一的逆。
+<!--/-->
+
+```agda
+ClauseAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+ClauseAt s w f a =
+  allLeafAt s w a
+  ∨̇ ( SelMemLeaf.LeafAt s w a
+  ∨̇ ( SelEqLeaf.LeafAt s w a
+  ∨̇ ( selEqConLeafAt s w a
+  ∨̇ ( InterNode.NodeAt s w f
+  ∨̇ ( UnionNode.NodeAt s w f
+  ∨̇ ( complNodeAt s w f a
+    ∨̇ shiftNodeAt s w f ))))))
+
+ClauseOf : V ℓ → V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
+ClauseOf A F x v =
+  LeafAllOf A x v
+  ⊎ ( SelMemLeaf.LeafOf A x v
+  ⊎ ( SelEqLeaf.LeafOf A x v
+  ⊎ ( LeafSelEqConOf A x v
+  ⊎ ( InterNode.NodeOf F x v
+  ⊎ ( UnionNode.NodeOf F x v
+  ⊎ ( NodeComplOf A F x v
+    ⊎ NodeShiftOf F x v ))))))
+
+module _ {n : ℕ} (s w f a : Fin n) (γ : S ^ n) where
+  Clause-out : ⟨ γ ⊨ ClauseAt s w f a ⟩
+             → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+                   (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+  Clause-out = PT.rec PT.squash₁ br₁
+    where
+    br₈ : ⟨ γ ⊨ complNodeAt s w f a ⟩ ⊎ ⟨ γ ⊨ shiftNodeAt s w f ⟩
+        → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+              (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    br₈ (inl x) = PT.map (λ c → inr (inr (inr (inr (inr (inr (inl c)))))))
+      (complNode-out s w f a γ x)
+    br₈ (inr x) = PT.map (λ c → inr (inr (inr (inr (inr (inr (inr c)))))))
+      (shiftNode-out s w f γ x)
+    br₇ : ⟨ γ ⊨ UnionNode.NodeAt s w f ⟩
+        ⊎ ⟨ γ ⊨ (complNodeAt s w f a ∨̇ shiftNodeAt s w f) ⟩
+        → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+              (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    br₇ (inl x) = PT.map (λ c → inr (inr (inr (inr (inr (inl c))))))
+      (UnionNode.Node-out s w f γ x)
+    br₇ (inr r) = PT.rec PT.squash₁ br₈ r
+    br₆ : ⟨ γ ⊨ InterNode.NodeAt s w f ⟩
+        ⊎ ⟨ γ ⊨ (UnionNode.NodeAt s w f
+              ∨̇ (complNodeAt s w f a ∨̇ shiftNodeAt s w f)) ⟩
+        → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+              (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    br₆ (inl x) = PT.map (λ c → inr (inr (inr (inr (inl c)))))
+      (InterNode.Node-out s w f γ x)
+    br₆ (inr r) = PT.rec PT.squash₁ br₇ r
+    br₅ : ⟨ γ ⊨ selEqConLeafAt s w a ⟩
+        ⊎ ⟨ γ ⊨ (InterNode.NodeAt s w f
+              ∨̇ (UnionNode.NodeAt s w f
+              ∨̇ (complNodeAt s w f a ∨̇ shiftNodeAt s w f))) ⟩
+        → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+              (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    br₅ (inl x) = PT.map (λ c → inr (inr (inr (inl c))))
+      (selEqConLeaf-out s w a γ x)
+    br₅ (inr r) = PT.rec PT.squash₁ br₆ r
+    br₄ : ⟨ γ ⊨ SelEqLeaf.LeafAt s w a ⟩
+        ⊎ ⟨ γ ⊨ (selEqConLeafAt s w a
+              ∨̇ (InterNode.NodeAt s w f
+              ∨̇ (UnionNode.NodeAt s w f
+              ∨̇ (complNodeAt s w f a ∨̇ shiftNodeAt s w f)))) ⟩
+        → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+              (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    br₄ (inl x) = PT.map (λ c → inr (inr (inl c)))
+      (SelEqLeaf.Leaf-out s w a γ x)
+    br₄ (inr r) = PT.rec PT.squash₁ br₅ r
+    br₃ : ⟨ γ ⊨ SelMemLeaf.LeafAt s w a ⟩
+        ⊎ ⟨ γ ⊨ (SelEqLeaf.LeafAt s w a
+              ∨̇ (selEqConLeafAt s w a
+              ∨̇ (InterNode.NodeAt s w f
+              ∨̇ (UnionNode.NodeAt s w f
+              ∨̇ (complNodeAt s w f a ∨̇ shiftNodeAt s w f))))) ⟩
+        → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+              (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    br₃ (inl x) = PT.map (λ c → inr (inl c))
+      (SelMemLeaf.Leaf-out s w a γ x)
+    br₃ (inr r) = PT.rec PT.squash₁ br₄ r
+    br₁ : ⟨ γ ⊨ allLeafAt s w a ⟩
+        ⊎ ⟨ γ ⊨ (SelMemLeaf.LeafAt s w a
+              ∨̇ (SelEqLeaf.LeafAt s w a
+              ∨̇ (selEqConLeafAt s w a
+              ∨̇ (InterNode.NodeAt s w f
+              ∨̇ (UnionNode.NodeAt s w f
+              ∨̇ (complNodeAt s w f a ∨̇ shiftNodeAt s w f)))))) ⟩
+        → ∥ ClauseOf (fst (lookup a γ)) (fst (lookup f γ))
+              (fst (lookup s γ)) (fst (lookup w γ)) ∥₁
+    br₁ (inl x) = PT.map inl (allLeaf-out s w a γ x)
+    br₁ (inr r) = PT.rec PT.squash₁ br₃ r
+
+  clause₀ : ⟨ γ ⊨ allLeafAt s w a ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₀ x = ∣ inl x ∣₁
+  clause₁ : ⟨ γ ⊨ SelMemLeaf.LeafAt s w a ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₁ x = ∣ inr ∣ inl x ∣₁ ∣₁
+  clause₂ : ⟨ γ ⊨ SelEqLeaf.LeafAt s w a ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₂ x = ∣ inr ∣ inr ∣ inl x ∣₁ ∣₁ ∣₁
+  clause₃ : ⟨ γ ⊨ selEqConLeafAt s w a ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₃ x = ∣ inr ∣ inr ∣ inr ∣ inl x ∣₁ ∣₁ ∣₁ ∣₁
+  clause₄ : ⟨ γ ⊨ InterNode.NodeAt s w f ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₄ x = ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl x ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  clause₅ : ⟨ γ ⊨ UnionNode.NodeAt s w f ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₅ x = ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl x ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  clause₆ : ⟨ γ ⊨ complNodeAt s w f a ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₆ x = ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl x ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  clause₇ : ⟨ γ ⊨ shiftNodeAt s w f ⟩ → ⟨ γ ⊨ ClauseAt s w f a ⟩
+  clause₇ x = ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr x ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+```
+
+<!--en-->
+## The values are the denotations
+<!--zh-->
+## 诸取值即诸指称
+<!--/-->
+
+<!--en-->
+The recursion's uniqueness half, against an abstract step: any family whose
+entries all satisfy the clause records, at any code, exactly the coded term's
+denotation. One structural induction, no well-founded descent; the diagonal
+cases read the clause's equations back through the code equations, with every
+payload path split by pair injectivity and the arity paths feeding the
+conditional facts; the fifty-six off-diagonal cases die by tag
+discrimination, each a one-line arithmetic clash through the recorded law's
+helpers.
+<!--zh-->
+递归的唯一性那一半，对着抽象的步：任何条目全部满足子句的族，在任何码处记录的恰是被编码项的指称。一次结构归纳，无须良基下降；对角情形把子句的等式沿码等式读回，每条载荷道路由对单射性拆开，元数道路喂给条件式事实；五十六个非对角情形死于标签判别，每个都是经在案定律辅助件的一行算术冲突。
+<!--/-->
+
+```agda
+module Denote (A : V ℓ) (lA : ⟨ isL A ⟩) where
+  private
+    module C = Codes A lA
+
+    neS : {a b : ℕ} → (a ≡ b → Empty.⊥) → suc a ≡ suc b → Empty.⊥
+    neS ne q = ne (injSuc q)
+
+    n1z n2z n3z n4z n5z n6z : {k : ℕ} → _
+    n1z {k} = neS (znots {n = k})
+    n2z {k} = neS (n1z {k})
+    n3z {k} = neS (n2z {k})
+    n4z {k} = neS (n3z {k})
+    n5z {k} = neS (n4z {k})
+    n6z {k} = neS (n5z {k})
+
+    n1s n2s n3s n4s n5s n6s : {k : ℕ} → _
+    n1s {k} = neS (snotz {n = k})
+    n2s {k} = neS (n1s {k})
+    n3s {k} = neS (n2s {k})
+    n4s {k} = neS (n3s {k})
+    n5s {k} = neS (n4s {k})
+    n6s {k} = neS (n5s {k})
+
+  approx-val : (F : V ℓ)
+    → ((x y : S) → ⟨ pr (fst x) (fst y) ∈ F ⟩
+       → ∥ ClauseOf A F (fst x) (fst y) ∥₁)
+    → {n : ℕ} (t : KT ⟪ A ⟫ n) (x y : S)
+    → fst x ≡ C.code t
+    → ⟨ pr (fst x) (fst y) ∈ F ⟩
+    → fst y ≡ ⟦_⟧ᴷ A t
+  approx-val F step = go
+    where
+    go : {n : ℕ} (t : KT ⟪ A ⟫ n) (x y : S) → fst x ≡ C.code t
+       → ⟨ pr (fst x) (fst y) ∈ F ⟩ → fst y ≡ ⟦_⟧ᴷ A t
+    use : {n : ℕ} (t : KT ⟪ A ⟫ n) (x y : S) → fst x ≡ C.code t
+        → ClauseOf A F (fst x) (fst y) → fst y ≡ ⟦_⟧ᴷ A t
+
+    go t x y qx e = PT.rec (setIsSet (fst y) (⟦_⟧ᴷ A t)) (use t x y qx)
+      (step x y e)
+
+    use {n} allK x y qx (inl (mv , (qs , cond))) =
+      cond n (pr-inj (sym qs ∙ qx ∙ C.code-allK n) .snd)
+    use {n} allK x y qx (inr (inl (mv , iv , jv , w' , (qs , _)))) =
+      Empty.rec (tagNe 1 0 snotz (sym qs ∙ qx ∙ C.code-allK n))
+    use {n} allK x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , _))))) =
+      Empty.rec (tagNe 2 0 snotz (sym qs ∙ qx ∙ C.code-allK n))
+    use {n} allK x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , _)))))) =
+      Empty.rec (tagNe 3 0 snotz (sym qs ∙ qx ∙ C.code-allK n))
+    use {n} allK x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _))))))))) =
+      Empty.rec (tagNe 4 0 snotz (sym qs ∙ qx ∙ C.code-allK n))
+    use {n} allK x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 5 0 snotz (sym qs ∙ qx ∙ C.code-allK n))
+    use {n} allK x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 6 0 snotz (sym qs ∙ qx ∙ C.code-allK n))
+    use {n} allK x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 7 0 snotz (sym qs ∙ qx ∙ C.code-allK n))
+
+    use {n} (selMemK i j) x y qx (inl (mv , (qs , _))) =
+      Empty.rec (tagNe 0 1 znots (sym qs ∙ qx ∙ C.code-selMemK n i j))
+    use {n} (selMemK i j) x y qx (inr (inl (mv , iv , jv , w' , (qs , (cond , qv))))) =
+      qv ∙ (λ ι → selectMember (cond n (pr-inj pq .fst) ι)
+                    ⁅ pr-inj (pr-inj pq .snd) .fst ι ⁆s
+                    ⁅ pr-inj (pr-inj pq .snd) .snd ι ⁆s)
+      where
+      pq = pr-inj (sym qs ∙ qx ∙ C.code-selMemK n i j) .snd
+    use {n} (selMemK i j) x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , _))))) =
+      Empty.rec (tagNe 2 1 n1s (sym qs ∙ qx ∙ C.code-selMemK n i j))
+    use {n} (selMemK i j) x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , _)))))) =
+      Empty.rec (tagNe 3 1 n1s (sym qs ∙ qx ∙ C.code-selMemK n i j))
+    use {n} (selMemK i j) x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _))))))))) =
+      Empty.rec (tagNe 4 1 n1s (sym qs ∙ qx ∙ C.code-selMemK n i j))
+    use {n} (selMemK i j) x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 5 1 n1s (sym qs ∙ qx ∙ C.code-selMemK n i j))
+    use {n} (selMemK i j) x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 6 1 n1s (sym qs ∙ qx ∙ C.code-selMemK n i j))
+    use {n} (selMemK i j) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 7 1 n1s (sym qs ∙ qx ∙ C.code-selMemK n i j))
+
+    use {n} (selEqK i j) x y qx (inl (mv , (qs , _))) =
+      Empty.rec (tagNe 0 2 znots (sym qs ∙ qx ∙ C.code-selEqK n i j))
+    use {n} (selEqK i j) x y qx (inr (inl (mv , iv , jv , w' , (qs , _)))) =
+      Empty.rec (tagNe 1 2 n1z (sym qs ∙ qx ∙ C.code-selEqK n i j))
+    use {n} (selEqK i j) x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , (cond , qv)))))) =
+      qv ∙ (λ ι → selectEqual (cond n (pr-inj pq .fst) ι)
+                    ⁅ pr-inj (pr-inj pq .snd) .fst ι ⁆s
+                    ⁅ pr-inj (pr-inj pq .snd) .snd ι ⁆s)
+      where
+      pq = pr-inj (sym qs ∙ qx ∙ C.code-selEqK n i j) .snd
+    use {n} (selEqK i j) x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , _)))))) =
+      Empty.rec (tagNe 3 2 n2s (sym qs ∙ qx ∙ C.code-selEqK n i j))
+    use {n} (selEqK i j) x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _))))))))) =
+      Empty.rec (tagNe 4 2 n2s (sym qs ∙ qx ∙ C.code-selEqK n i j))
+    use {n} (selEqK i j) x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 5 2 n2s (sym qs ∙ qx ∙ C.code-selEqK n i j))
+    use {n} (selEqK i j) x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 6 2 n2s (sym qs ∙ qx ∙ C.code-selEqK n i j))
+    use {n} (selEqK i j) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 7 2 n2s (sym qs ∙ qx ∙ C.code-selEqK n i j))
+
+    use {n} (selEqConK i a) x y qx (inl (mv , (qs , _))) =
+      Empty.rec (tagNe 0 3 znots (sym qs ∙ qx ∙ C.code-selEqConK n i a))
+    use {n} (selEqConK i a) x y qx (inr (inl (mv , iv , jv , w' , (qs , _)))) =
+      Empty.rec (tagNe 1 3 n1z (sym qs ∙ qx ∙ C.code-selEqConK n i a))
+    use {n} (selEqConK i a) x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , _))))) =
+      Empty.rec (tagNe 2 3 n2z (sym qs ∙ qx ∙ C.code-selEqConK n i a))
+    use {n} (selEqConK i a) x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , (cond , (qw₂ , qv)))))))) =
+      qv ∙ (λ ι → shiftDown (selectEqual (pw₂ ι) ⁅ sucV (ivq ι) ⁆s ⁅ # 0 ⁆s))
+      where
+      pq = pr-inj (sym qs ∙ qx ∙ C.code-selEqConK n i a) .snd
+      ivq = pr-inj (pr-inj pq .snd) .fst
+      cvq = pr-inj (pr-inj pq .snd) .snd
+      pw₂ = qw₂ ∙ (λ ι → extendFamily (cond n (pr-inj pq .fst) ι) ⁅ cvq ι ⁆s)
+    use {n} (selEqConK i a) x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _))))))))) =
+      Empty.rec (tagNe 4 3 n3s (sym qs ∙ qx ∙ C.code-selEqConK n i a))
+    use {n} (selEqConK i a) x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 5 3 n3s (sym qs ∙ qx ∙ C.code-selEqConK n i a))
+    use {n} (selEqConK i a) x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 6 3 n3s (sym qs ∙ qx ∙ C.code-selEqConK n i a))
+    use {n} (selEqConK i a) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 7 3 n3s (sym qs ∙ qx ∙ C.code-selEqConK n i a))
+
+    use (interK s t) x y qx (inl (mv , (qs , _))) =
+      Empty.rec (tagNe 0 4 znots (sym qs ∙ qx ∙ C.code-interK s t))
+    use (interK s t) x y qx (inr (inl (mv , iv , jv , w' , (qs , _)))) =
+      Empty.rec (tagNe 1 4 n1z (sym qs ∙ qx ∙ C.code-interK s t))
+    use (interK s t) x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , _))))) =
+      Empty.rec (tagNe 2 4 n2z (sym qs ∙ qx ∙ C.code-interK s t))
+    use (interK s t) x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , _)))))) =
+      Empty.rec (tagNe 3 4 n3z (sym qs ∙ qx ∙ C.code-interK s t))
+    use (interK s t) x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (e1 , (e2 , (qs , qv))))))))) =
+      qv ∙ (λ ι → _∩_ (go s cs ws (pr-inj pq .fst) e1 ι)
+                      (go t ct wt (pr-inj pq .snd) e2 ι))
+      where
+      pq = pr-inj (sym qs ∙ qx ∙ C.code-interK s t) .snd
+    use (interK s t) x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 5 4 n4s (sym qs ∙ qx ∙ C.code-interK s t))
+    use (interK s t) x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 6 4 n4s (sym qs ∙ qx ∙ C.code-interK s t))
+    use (interK s t) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 7 4 n4s (sym qs ∙ qx ∙ C.code-interK s t))
+
+    use (unionK s t) x y qx (inl (mv , (qs , _))) =
+      Empty.rec (tagNe 0 5 znots (sym qs ∙ qx ∙ C.code-unionK s t))
+    use (unionK s t) x y qx (inr (inl (mv , iv , jv , w' , (qs , _)))) =
+      Empty.rec (tagNe 1 5 n1z (sym qs ∙ qx ∙ C.code-unionK s t))
+    use (unionK s t) x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , _))))) =
+      Empty.rec (tagNe 2 5 n2z (sym qs ∙ qx ∙ C.code-unionK s t))
+    use (unionK s t) x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , _)))))) =
+      Empty.rec (tagNe 3 5 n3z (sym qs ∙ qx ∙ C.code-unionK s t))
+    use (unionK s t) x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _))))))))) =
+      Empty.rec (tagNe 4 5 n4z (sym qs ∙ qx ∙ C.code-unionK s t))
+    use (unionK s t) x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (e1 , (e2 , (qs , qv)))))))))) =
+      qv ∙ (λ ι → _∪_ (go s cs ws (pr-inj pq .fst) e1 ι)
+                      (go t ct wt (pr-inj pq .snd) e2 ι))
+      where
+      pq = pr-inj (sym qs ∙ qx ∙ C.code-unionK s t) .snd
+    use (unionK s t) x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 6 5 n5s (sym qs ∙ qx ∙ C.code-unionK s t))
+    use (unionK s t) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 7 5 n5s (sym qs ∙ qx ∙ C.code-unionK s t))
+
+    use {n} (complK t) x y qx (inl (mv , (qs , _))) =
+      Empty.rec (tagNe 0 6 znots (sym qs ∙ qx ∙ C.code-complK t))
+    use {n} (complK t) x y qx (inr (inl (mv , iv , jv , w' , (qs , _)))) =
+      Empty.rec (tagNe 1 6 n1z (sym qs ∙ qx ∙ C.code-complK t))
+    use {n} (complK t) x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , _))))) =
+      Empty.rec (tagNe 2 6 n2z (sym qs ∙ qx ∙ C.code-complK t))
+    use {n} (complK t) x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , _)))))) =
+      Empty.rec (tagNe 3 6 n3z (sym qs ∙ qx ∙ C.code-complK t))
+    use {n} (complK t) x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _))))))))) =
+      Empty.rec (tagNe 4 6 n4z (sym qs ∙ qx ∙ C.code-complK t))
+    use {n} (complK t) x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 5 6 n5z (sym qs ∙ qx ∙ C.code-complK t))
+    use {n} (complK t) x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (e2 , (qs , (cond , qv))))))))))) =
+      qv ∙ (λ ι → _∖_ (cond n (pr-inj pq .fst) ι)
+                      (go t ct wt (pr-inj pq .snd) e2 ι))
+      where
+      pq = pr-inj (sym qs ∙ qx ∙ C.code-complK t) .snd
+    use {n} (complK t) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 7 6 n6s (sym qs ∙ qx ∙ C.code-complK t))
+
+    use (shiftK t) x y qx (inl (mv , (qs , _))) =
+      Empty.rec (tagNe 0 7 znots (sym qs ∙ qx ∙ C.code-shiftK t))
+    use (shiftK t) x y qx (inr (inl (mv , iv , jv , w' , (qs , _)))) =
+      Empty.rec (tagNe 1 7 n1z (sym qs ∙ qx ∙ C.code-shiftK t))
+    use (shiftK t) x y qx (inr (inr (inl (mv , iv , jv , w' , (qs , _))))) =
+      Empty.rec (tagNe 2 7 n2z (sym qs ∙ qx ∙ C.code-shiftK t))
+    use (shiftK t) x y qx (inr (inr (inr (inl (mv , iv , cv , w₁ , w₂ , (qs , _)))))) =
+      Empty.rec (tagNe 3 7 n3z (sym qs ∙ qx ∙ C.code-shiftK t))
+    use (shiftK t) x y qx (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _))))))))) =
+      Empty.rec (tagNe 4 7 n4z (sym qs ∙ qx ∙ C.code-shiftK t))
+    use (shiftK t) x y qx (inr (inr (inr (inr (inr (inl (cs , ct , ws , wt , (_ , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 5 7 n5z (sym qs ∙ qx ∙ C.code-shiftK t))
+    use (shiftK t) x y qx (inr (inr (inr (inr (inr (inr (inl (mv , ct , wt , w' , (_ , (qs , _)))))))))) =
+      Empty.rec (tagNe 6 7 n6z (sym qs ∙ qx ∙ C.code-shiftK t))
+    use (shiftK t) x y qx (inr (inr (inr (inr (inr (inr (inr (ct , wt , (e1 , (qs , qv)))))))))) =
+      qv ∙ cong shiftDown
+        (go t ct wt (pr-inj (sym qs ∙ qx ∙ C.code-shiftK t) .snd) e1)
 ```
