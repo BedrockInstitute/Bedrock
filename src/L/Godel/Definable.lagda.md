@@ -32,18 +32,24 @@ open import Base.Truth
 module L.Godel.Definable {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Base {ℓ} using ( ∈pair-introR )
 open import L.Coding.Model {ℓ}
   using ( extAt; extAt-out; extAt-in; extAt-in-both
-        ; prʟ; prʟ-fst; prAtL; prAtL-adequate )
+        ; prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate )
 open import L.Godel.Operations {ℓ}
   using ( _∪_; ∪-left; ∪-right; ∪-out; _∖_; ∖-in; ∖-out
+        ; _∩_; ∩-in; ∩-out
         ; product; product-in; product-out
-        ; memberGraph; memberGraph-in; memberGraph-out )
+        ; memberGraph; memberGraph-in; memberGraph-out
+        ; selectMember; selectMember-in; selectMember-sub; selectMember-wit
+        ; selectEqual; selectEqual-in; selectEqual-sub; selectEqual-wit
+        ; values; values-in; values-wit; singleton-self; singleton-out )
 
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
@@ -51,6 +57,9 @@ open import Cubical.Data.Sum using ( inl; inr )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; _⊆_; extensionality )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
+open InfinitySet using ( #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -205,6 +214,9 @@ sealed pair's own certificate carried across its projection equation.
 
 ```agda
 private
+  shiftTwo : ∀ {n} → Fin n → Fin (suc (suc n))
+  shiftTwo x = suc (suc x)
+
   shiftThree : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
   shiftThree x = suc (suc (suc x))
 
@@ -330,17 +342,295 @@ module _ {n : ℕ} (k i j : Fin n) (γ : S ^ n) where
 ```
 
 <!--en-->
+## Intersection, the selections, and the values
+
+Four more descriptions for the denotation clauses to come. Intersection is
+the cheapest body of all, two atoms under a conjunction. The two selections
+are described at singleton keys, because that is how every denotation applies
+them: the key slots hold the key values themselves, straight off a code's
+payload, and the singleton wrapping stays on the meta side where its two
+one-line laws discharge it. Their bodies bind the recorded values and speak
+through the application reader, "this key records that value here". The
+values operation pins its zero key by one object equality against the sealed
+numeral. Constructibility of a member is transitivity walking the recorded
+pair, exactly the walk the bridge chapter took at stages.
+<!--zh-->
+## 交、诸选择与取值集
+
+为将来的指称子句再备四条描述。交是所有体中最便宜的，合取下两条原子。两个选择在单点键处描述，因为每个指称都这样应用它们：键槽位直接持有键的取值，恰是码的载荷所给，而单点集包装留在元层，由它的两条一行定律兑清。其体绑定被记录的取值，经应用读式说话，即「此键在此记录彼值」。取值集运算以一条对着封印数码的对象等式钉住零号键。成员的可构造性是传递性沿被记录的对行走，恰是桥梁章在阶段处走过的那趟。
+<!--/-->
+
+```agda
+interAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+interAt k i j =
+  extAt k ((var zero ∈̇ var (suc i)) ∧̇ (var zero ∈̇ var (suc j)))
+
+module _ {n : ℕ} (k i j : Fin n) (γ : S ^ n) where
+  private
+    Φ : Formula S (suc n)
+    Φ = (var zero ∈̇ var (suc i)) ∧̇ (var zero ∈̇ var (suc j))
+
+    A B : V ℓ
+    A = fst (lookup i γ)
+    B = fst (lookup j γ)
+
+    module D = Describes k Φ γ (A ∩ B)
+      (λ y y∈c → isL-trans {x = A} {y = y}
+          (∩-out {X = A} {Y = B} {x = y} y∈c .fst) (lookup i γ .snd))
+      (λ z hz → ∩-in {X = A} {Y = B} {x = fst z} (hz .fst) (hz .snd))
+      (λ z z∈c → ∩-out {X = A} {Y = B} {x = fst z} z∈c)
+
+  interAt-out : ⟨ γ ⊨ interAt k i j ⟩
+              → fst (lookup k γ) ≡ fst (lookup i γ) ∩ fst (lookup j γ)
+  interAt-out = D.describes-out
+
+  interAt-in : fst (lookup k γ) ≡ fst (lookup i γ) ∩ fst (lookup j γ)
+             → ⟨ γ ⊨ interAt k i j ⟩
+  interAt-in = D.describes-in
+
+selectMemberAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+selectMemberAt k f a b = extAt k
+  ( (var zero ∈̇ var (suc f))
+  ∧̇ (∃̇ (∃̇ ( appAt (suc (suc zero)) (shiftThree a) (suc zero)
+          ∧̇ ( appAt (suc (suc zero)) (shiftThree b) zero
+            ∧̇ (var (suc zero) ∈̇ var zero) ) ))) )
+
+module _ {n : ℕ} (k f a b : Fin n) (γ : S ^ n) where
+  private
+    Rest : Formula S (suc (suc (suc n)))
+    Rest = appAt (suc (suc zero)) (shiftThree a) (suc zero)
+        ∧̇ ( appAt (suc (suc zero)) (shiftThree b) zero
+          ∧̇ (var (suc zero) ∈̇ var zero) )
+
+    Φ : Formula S (suc n)
+    Φ = (var zero ∈̇ var (suc f)) ∧̇ (∃̇ (∃̇ Rest))
+
+    F Ka Kb : V ℓ
+    F = fst (lookup f γ)
+    Ka = fst (lookup a γ)
+    Kb = fst (lookup b γ)
+
+    Sel : V ℓ
+    Sel = selectMember F ⁅ Ka ⁆s ⁅ Kb ⁆s
+
+    readSel : (z : S) → ⟨ (z ∷ γ) ⊨ Φ ⟩ → ⟨ fst z ∈ Sel ⟩
+    readSel z (hzf , big) = PT.rec (snd (fst z ∈ Sel))
+      (λ { (u , hu) → PT.rec (snd (fst z ∈ Sel))
+        (λ { (v , (h1 , (h2 , huv))) →
+          selectMember-in {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = fst z}
+            {a = Ka} {b = Kb} {u = fst u} {v = fst v}
+            hzf (singleton-self Ka) (singleton-self Kb)
+            (subst ⟨_⟩ (appAt-adequate (suc (suc zero)) (shiftThree a)
+              (suc zero) (v ∷ u ∷ z ∷ γ)) h1)
+            (subst ⟨_⟩ (appAt-adequate (suc (suc zero)) (shiftThree b)
+              zero (v ∷ u ∷ z ∷ γ)) h2)
+            huv })
+        hu })
+      big
+
+    fillSel : (z : S) → ⟨ fst z ∈ Sel ⟩ → ⟨ (z ∷ γ) ⊨ Φ ⟩
+    fillSel z z∈ =
+      selectMember-sub {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = fst z} z∈
+      , PT.rec (snd ((z ∷ γ) ⊨ ∃̇ (∃̇ Rest))) build
+          (selectMember-wit {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = fst z} z∈)
+      where
+      build : Σ[ a' ∈ V ℓ ] Σ[ b' ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+              ( ⟨ a' ∈ ⁅ Ka ⁆s ⟩ × ⟨ b' ∈ ⁅ Kb ⁆s ⟩
+              × ⟨ pr a' u ∈ fst z ⟩ × ⟨ pr b' v ∈ fst z ⟩ × ⟨ u ∈ v ⟩ )
+            → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ Rest) ⟩
+      build (a' , b' , u , v , ha' , hb' , hau , hbv , huv) =
+        ∣ (u , uL) , ∣ (v , vL)
+          , ( subst ⟨_⟩ (sym (appAt-adequate (suc (suc zero)) (shiftThree a)
+                (suc zero) ((v , vL) ∷ (u , uL) ∷ z ∷ γ))) hau'
+            , ( subst ⟨_⟩ (sym (appAt-adequate (suc (suc zero)) (shiftThree b)
+                  zero ((v , vL) ∷ (u , uL) ∷ z ∷ γ))) hbv'
+              , huv ) ) ∣₁ ∣₁
+        where
+        hau' : ⟨ pr Ka u ∈ fst z ⟩
+        hau' = subst (λ w → ⟨ pr w u ∈ fst z ⟩) (singleton-out ha') hau
+        hbv' : ⟨ pr Kb v ∈ fst z ⟩
+        hbv' = subst (λ w → ⟨ pr w v ∈ fst z ⟩) (singleton-out hb') hbv
+        uL : ⟨ isL u ⟩
+        uL = isL-trans {x = ⁅ Ka , u ⁆} {y = u} (∈pair-introR refl)
+          (isL-trans {x = pr Ka u} {y = ⁅ Ka , u ⁆} (∈pair-introR refl)
+            (isL-trans {x = fst z} {y = pr Ka u} hau' (z .snd)))
+        vL : ⟨ isL v ⟩
+        vL = isL-trans {x = ⁅ Kb , v ⁆} {y = v} (∈pair-introR refl)
+          (isL-trans {x = pr Kb v} {y = ⁅ Kb , v ⁆} (∈pair-introR refl)
+            (isL-trans {x = fst z} {y = pr Kb v} hbv' (z .snd)))
+
+    module D = Describes k Φ γ Sel
+      (λ y y∈s → isL-trans {x = F} {y = y}
+          (selectMember-sub {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = y} y∈s)
+          (lookup f γ .snd))
+      readSel fillSel
+
+  selectMemberAt-out : ⟨ γ ⊨ selectMemberAt k f a b ⟩
+    → fst (lookup k γ)
+    ≡ selectMember (fst (lookup f γ)) ⁅ fst (lookup a γ) ⁆s ⁅ fst (lookup b γ) ⁆s
+  selectMemberAt-out = D.describes-out
+
+  selectMemberAt-in : fst (lookup k γ)
+    ≡ selectMember (fst (lookup f γ)) ⁅ fst (lookup a γ) ⁆s ⁅ fst (lookup b γ) ⁆s
+    → ⟨ γ ⊨ selectMemberAt k f a b ⟩
+  selectMemberAt-in = D.describes-in
+
+selectEqualAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+selectEqualAt k f a b = extAt k
+  ( (var zero ∈̇ var (suc f))
+  ∧̇ (∃̇ ( appAt (suc zero) (shiftTwo a) zero
+        ∧̇ appAt (suc zero) (shiftTwo b) zero )) )
+
+module _ {n : ℕ} (k f a b : Fin n) (γ : S ^ n) where
+  private
+    Rest : Formula S (suc (suc n))
+    Rest = appAt (suc zero) (shiftTwo a) zero
+        ∧̇ appAt (suc zero) (shiftTwo b) zero
+
+    Φ : Formula S (suc n)
+    Φ = (var zero ∈̇ var (suc f)) ∧̇ (∃̇ Rest)
+
+    F Ka Kb : V ℓ
+    F = fst (lookup f γ)
+    Ka = fst (lookup a γ)
+    Kb = fst (lookup b γ)
+
+    Sel : V ℓ
+    Sel = selectEqual F ⁅ Ka ⁆s ⁅ Kb ⁆s
+
+    readSel : (z : S) → ⟨ (z ∷ γ) ⊨ Φ ⟩ → ⟨ fst z ∈ Sel ⟩
+    readSel z (hzf , big) = PT.rec (snd (fst z ∈ Sel))
+      (λ { (u , (h1 , h2)) →
+        selectEqual-in {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = fst z}
+          {a = Ka} {b = Kb} {u = fst u}
+          hzf (singleton-self Ka) (singleton-self Kb)
+          (subst ⟨_⟩ (appAt-adequate (suc zero) (shiftTwo a)
+            zero (u ∷ z ∷ γ)) h1)
+          (subst ⟨_⟩ (appAt-adequate (suc zero) (shiftTwo b)
+            zero (u ∷ z ∷ γ)) h2) })
+      big
+
+    fillSel : (z : S) → ⟨ fst z ∈ Sel ⟩ → ⟨ (z ∷ γ) ⊨ Φ ⟩
+    fillSel z z∈ =
+      selectEqual-sub {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = fst z} z∈
+      , PT.rec (snd ((z ∷ γ) ⊨ ∃̇ Rest)) build
+          (selectEqual-wit {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = fst z} z∈)
+      where
+      build : Σ[ a' ∈ V ℓ ] Σ[ b' ∈ V ℓ ] Σ[ u ∈ V ℓ ]
+              ( ⟨ a' ∈ ⁅ Ka ⁆s ⟩ × ⟨ b' ∈ ⁅ Kb ⁆s ⟩
+              × ⟨ pr a' u ∈ fst z ⟩ × ⟨ pr b' u ∈ fst z ⟩ )
+            → ⟨ (z ∷ γ) ⊨ ∃̇ Rest ⟩
+      build (a' , b' , u , ha' , hb' , hau , hbu) =
+        ∣ (u , uL)
+          , ( subst ⟨_⟩ (sym (appAt-adequate (suc zero) (shiftTwo a)
+                zero ((u , uL) ∷ z ∷ γ))) hau'
+            , subst ⟨_⟩ (sym (appAt-adequate (suc zero) (shiftTwo b)
+                zero ((u , uL) ∷ z ∷ γ))) hbu' ) ∣₁
+        where
+        hau' : ⟨ pr Ka u ∈ fst z ⟩
+        hau' = subst (λ w → ⟨ pr w u ∈ fst z ⟩) (singleton-out ha') hau
+        hbu' : ⟨ pr Kb u ∈ fst z ⟩
+        hbu' = subst (λ w → ⟨ pr w u ∈ fst z ⟩) (singleton-out hb') hbu
+        uL : ⟨ isL u ⟩
+        uL = isL-trans {x = ⁅ Ka , u ⁆} {y = u} (∈pair-introR refl)
+          (isL-trans {x = pr Ka u} {y = ⁅ Ka , u ⁆} (∈pair-introR refl)
+            (isL-trans {x = fst z} {y = pr Ka u} hau' (z .snd)))
+
+    module D = Describes k Φ γ Sel
+      (λ y y∈s → isL-trans {x = F} {y = y}
+          (selectEqual-sub {X = F} {Ka = ⁅ Ka ⁆s} {Kb = ⁅ Kb ⁆s} {w = y} y∈s)
+          (lookup f γ .snd))
+      readSel fillSel
+
+  selectEqualAt-out : ⟨ γ ⊨ selectEqualAt k f a b ⟩
+    → fst (lookup k γ)
+    ≡ selectEqual (fst (lookup f γ)) ⁅ fst (lookup a γ) ⁆s ⁅ fst (lookup b γ) ⁆s
+  selectEqualAt-out = D.describes-out
+
+  selectEqualAt-in : fst (lookup k γ)
+    ≡ selectEqual (fst (lookup f γ)) ⁅ fst (lookup a γ) ⁆s ⁅ fst (lookup b γ) ⁆s
+    → ⟨ γ ⊨ selectEqualAt k f a b ⟩
+  selectEqualAt-in = D.describes-in
+
+valuesAt : ∀ {n} → Fin n → Fin n → Formula S n
+valuesAt k f = extAt k (∃̇ (∃̇
+  ( (var (suc zero) ∈̇ var (shiftThree f))
+  ∧̇ ( (var zero ≐ con (numeralL 0))
+    ∧̇ appAt (suc zero) zero (suc (suc zero)) ) )))
+
+module _ {n : ℕ} (k f : Fin n) (γ : S ^ n) where
+  private
+    Body : Formula S (suc (suc (suc n)))
+    Body = (var (suc zero) ∈̇ var (shiftThree f))
+        ∧̇ ( (var zero ≐ con (numeralL 0))
+          ∧̇ appAt (suc zero) zero (suc (suc zero)) )
+
+    F : V ℓ
+    F = fst (lookup f γ)
+
+    readVal : (z : S) → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ Body) ⟩ → ⟨ fst z ∈ values F ⟩
+    readVal z hz = PT.rec (snd (fst z ∈ values F))
+      (λ { (g , hg) → PT.rec (snd (fst z ∈ values F))
+        (λ { (k0 , (hgF , (ek , happ))) →
+          values-in {X = F} {γ = fst g} {v = fst z} hgF
+            (subst (λ w → ⟨ pr w (fst z) ∈ fst g ⟩)
+              (ek ∙ numeralL-fst 0)
+              (subst ⟨_⟩ (appAt-adequate (suc zero) zero
+                (suc (suc zero)) (k0 ∷ g ∷ z ∷ γ)) happ)) })
+        hg })
+      hz
+
+    fillVal : (z : S) → ⟨ fst z ∈ values F ⟩ → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ Body) ⟩
+    fillVal z z∈ = PT.rec (snd ((z ∷ γ) ⊨ ∃̇ (∃̇ Body))) build
+      (values-wit {X = F} {v = fst z} z∈)
+      where
+      build : Σ[ g ∈ V ℓ ] (⟨ g ∈ F ⟩ × ⟨ pr (# 0) (fst z) ∈ g ⟩)
+            → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ Body) ⟩
+      build (g , hgF , hv) =
+        ∣ (g , gL) , ∣ numeralL 0
+          , ( hgF
+            , ( refl
+              , subst ⟨_⟩ (sym (appAt-adequate (suc zero) zero
+                  (suc (suc zero)) (numeralL 0 ∷ (g , gL) ∷ z ∷ γ)))
+                  (subst (λ w → ⟨ pr w (fst z) ∈ g ⟩)
+                    (sym (numeralL-fst 0)) hv) ) ) ∣₁ ∣₁
+        where
+        gL : ⟨ isL g ⟩
+        gL = isL-trans {x = F} {y = g} hgF (lookup f γ .snd)
+
+    memVal : (y : V ℓ) → ⟨ y ∈ values F ⟩ → ⟨ isL y ⟩
+    memVal y y∈ = PT.rec (snd (isL y))
+      (λ { (g , hgF , hv) →
+        isL-trans {x = ⁅ # 0 , y ⁆} {y = y} (∈pair-introR refl)
+          (isL-trans {x = pr (# 0) y} {y = ⁅ # 0 , y ⁆} (∈pair-introR refl)
+            (isL-trans {x = g} {y = pr (# 0) y} hv
+              (isL-trans {x = F} {y = g} hgF (lookup f γ .snd)))) })
+      (values-wit {X = F} {v = y} y∈)
+
+    module D = Describes k (∃̇ (∃̇ Body)) γ (values F) memVal readVal fillVal
+
+  valuesAt-out : ⟨ γ ⊨ valuesAt k f ⟩
+               → fst (lookup k γ) ≡ values (fst (lookup f γ))
+  valuesAt-out = D.describes-out
+
+  valuesAt-in : fst (lookup k γ) ≡ values (fst (lookup f γ))
+              → ⟨ γ ⊨ valuesAt k f ⟩
+  valuesAt-in = D.describes-in
+```
+
+<!--en-->
 ## Recap
 
 One frame, `Describes`{.Agda}, turning a body and two semantic conversions
-into an identity between a slot and an operation's value, and four
+into an identity between a slot and an operation's value, and eight
 descriptions through it: `diffAt`{.Agda}, `unionAt`{.Agda}, `productAt`{.Agda}
-and `memberGraphAt`{.Agda}, each read in both directions at variable slots and
-a variable environment. The remaining operations of the stock, and the closure
-step that disjoins all of them under one extension, take their descriptions
-through the same frame in the chapter that binds them.
+and `memberGraphAt`{.Agda}, then `interAt`{.Agda}, the two selections at
+singleton keys and `valuesAt`{.Agda}, each read in both directions at variable
+slots and a variable environment. The tuple family at an arity slot and the
+two graph movers still owe descriptions, and take them through the same frame
+where the denotation clauses bind them.
 <!--zh-->
 ## 小结
 
-一个框架 `Describes`{.Agda}，把一个体与两个语义转换变成「槽位与运算取值之间的等同」，以及经它而得的四条描述：`diffAt`{.Agda}、`unionAt`{.Agda}、`productAt`{.Agda} 与 `memberGraphAt`{.Agda}，每条都在变元槽位与变元环境处双向读出。存货中其余的运算，以及把它们全体析取在一个外延之下的闭包步，将在绑定它们的那一章经同一框架取得描述。
+一个框架 `Describes`{.Agda}，把一个体与两个语义转换变成「槽位与运算取值之间的等同」，以及经它而得的八条描述：`diffAt`{.Agda}、`unionAt`{.Agda}、`productAt`{.Agda} 与 `memberGraphAt`{.Agda}，继而 `interAt`{.Agda}、单点键处的两个选择与 `valuesAt`{.Agda}，每条都在变元槽位与变元环境处双向读出。元数槽位处的元组族与两个图移位运算尚欠描述，将在指称子句绑定它们之处经同一框架取得。
 <!--/-->
