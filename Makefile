@@ -14,6 +14,10 @@
 
 AGDA      := agda
 VENV      := .venv
+# GHC heap guard for every agda run: a runaway typecheck exits cleanly ("Heap
+# exhausted") instead of OOM-killing the machine. -M caps the heap, -A64m -I0
+# speed GC on big checks. Override per environment (GHCRTS="-M28g" make check).
+export GHCRTS ?= -A64m -I0 -M16g
 # Bootstrap interpreter for `make venv` (must be >= 3.11); override in CI, e.g. PYTHON=python3.
 PYTHON    ?= python3.11
 # Interpreter and tools used by all targets (the venv); override only if needed, e.g. PY=python3.
