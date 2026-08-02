@@ -968,6 +968,27 @@ explicitly, not an oversight to discover mid-build.
 
 **Provenance:** the [L3.30-P1] probe; the p1 report.
 
+### D-8. A self-containing step operator is not subset-monotone; condition on membership
+
+**Rule:** A step operator whose value mentions its own argument (the rud step
+reads u ∪ {u}) cannot be monotone in the subset order; state its
+monotonicity in an abstract telescope conditioned on membership
+(u ⊆ v AND u ∈ v → step u ⊆ step v). The universal form looks harmless and
+is refutable by a two-element counterexample ({u} = F0(u,u) ∈ step u needs
+u ∈ v to survive into step v), while every classical use is at level pairs,
+where the containing structure supplies the membership for free.
+
+**Measured (R2c and the reshape, 2026-08-02):** the universal parameter was
+proved undischargeable for any sixteen-image step (the r2c report's
+counterexample); the reshape then showed the conditioned form is not a
+patch but the native shape: the membership the condition needs falls out of
+the same hypothesis and construction as the inclusion (Sset-mono/Sset-mem
+differ only by step-⊆ versus step-∈, same price), and the whole fix cost
+one added lemma, one call-site insertion, +4 code lines.
+
+**Provenance:** `_build/r2c-report.md` (the no-go trail);
+`_build/reshape-report.md`; commits `0322860` and the reshape commit.
+
 ## 6. Craft and process lessons (C series)
 
 ### C-1. Two conversations must not share a worktree

@@ -30,8 +30,8 @@ module L.Rud.Hierarchy
   (step : V ℓ → V ℓ)
   (step-⊆ : (u x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ step u ⟩)
   (step-∈ : (u : V ℓ) → ⟨ u ∈ step u ⟩)
-  (step-mono : {u v : V ℓ} → ((x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ v ⟩)
-            → ((x : V ℓ) → ⟨ x ∈ step u ⟩ → ⟨ x ∈ step v ⟩))
+  (step-mono∈ : {u v : V ℓ} → ((x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ v ⟩) → ⟨ u ∈ v ⟩
+              → ((x : V ℓ) → ⟨ x ∈ step u ⟩ → ⟨ x ∈ step v ⟩))
   (step-trans : (u : V ℓ)
               → ({x y : V ℓ} → ⟨ y ∈ x ⟩ → ⟨ x ∈ u ⟩ → ⟨ y ∈ u ⟩)
               → ({x y : V ℓ} → ⟨ y ∈ x ⟩ → ⟨ x ∈ step u ⟩ → ⟨ y ∈ step u ⟩))
@@ -236,16 +236,23 @@ Sset-out α x x∈Sα = PT.rec squash₁ uStep
 
 <!--en-->
 Cumulativity is then a corollary, not a construction: a lower level sits inside
-`step` of itself by `step-⊆`{.Agda}, and going in carries it up. Monotonicity
-in the index is even cheaper, since it needs only the single equation and no
-property of `step` at all.
+`step` of itself by `step-⊆`{.Agda}, and going in carries it up. The membership
+half comes at the same price, with `step-∈`{.Agda} in place of `step-⊆`{.Agda}:
+a level lies in its own image, so a member index gives a member level. That
+pair, inclusion and membership at one and the same `β ∈ α`, is exactly what the
+step's monotonicity hypothesis consumes. Monotonicity in the index is even
+cheaper, since it needs only the single equation and no property of `step` at
+all.
 <!--zh-->
-累积性于是是推论，而非构造：较低的层经 `step-⊆`{.Agda} 落进自身的像，再由「进去」抬升。索引上的单调性更便宜，它只用那条单方程，完全不需要 step 的任何性质。
+累积性于是是推论，而非构造：较低的层经 `step-⊆`{.Agda} 落进自身的像，再由「进去」抬升。成员那一半同价，只需把 `step-⊆`{.Agda} 换成 `step-∈`{.Agda}：一个层落在自身的像里，于是成员索引给出成员层。这一对，即在同一个 `β ∈ α` 处的包含与隶属，正是 step 单调性前提所消费的东西。索引上的单调性更便宜，它只用那条单方程，完全不需要 step 的任何性质。
 <!--/-->
 
 ```agda
 Sset-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → Sset β ⊆ Sset α
 Sset-mono {α} {β} β∈α x x∈Sβ = Sset-in α β x β∈α (step-⊆ (Sset β) x x∈Sβ)
+
+Sset-mem : {α β : S} → ⟨ β ∈ˢ α ⟩ → ⟨ Sset β ∈ˢ Sset α ⟩
+Sset-mem {α} {β} β∈α = Sset-in α β (Sset β) β∈α (step-∈ (Sset β))
 
 Sset-index-mono : {α β : S} → α ⊆ β → Sset α ⊆ Sset β
 Sset-index-mono {α} {β} α⊆β x x∈Sα = PT.rec (snd (x ∈ˢ Sset β)) uStep
@@ -265,13 +272,25 @@ Sset-index-mono {α} {β} α⊆β x x∈Sα = PT.rec (snd (x ∈ˢ Sset β)) uSt
 The three case equations are the exports the rest of the route quotes. Zero is
 the union over an empty index, so membership in `Sset ∅` is impossible and the
 set is empty. The successor equation is where cumulativity and
-`step-mono`{.Agda} pay: every member of `sucV β` is `β` itself or a member of
-`β`, and the images of the lower levels sit inside the image of `Sset β`, while
+`step-mono∈`{.Agda} pay: every member of `sucV β` is `β` itself or a member of
+`β`, and the images of the lower levels sit inside the image of `Sset β`, which
+is the one place both halves of cumulativity are handed over together, while
 the reverse inclusion is `β` itself, a member of its own successor. Neither
 direction needs an ordinal hypothesis on `β`, so the equation holds for every
 set, not only ordinals.
+
+The monotonicity hypothesis is conditioned on membership, and not on inclusion
+alone, because inclusion alone is not enough for any step worth having. A step
+that puts its own argument inside its image cannot be monotone in the subset
+order: the singleton of `u` is in `step u`, and `u ⊆ v` gives no reason for it
+to be in `step v`, which asks for `u` to be a member of `v`. The sixteen-image
+step is of that kind, through its pairing operation, so the universal form is
+refutable there; the levels supply the missing membership at exactly the place
+the equation needs it, and nowhere does the engine ask for more.
 <!--zh-->
-三条分情形方程是路线其余部分引用的出口。零是沿空索引的并，故属于 `Sset ∅` 不可能，这个集合就是空集。后继方程是累积性与 `step-mono`{.Agda} 兑现之处：`sucV β` 的每个成员是 `β` 本身或 `β` 的成员，较低诸层的像都落在 `Sset β` 的像内，而反向包含只是 `β` 自身，它是自己后继的成员。两个方向都不需要 `β` 的序数假设，故方程对一切集合成立，不限于序数。
+三条分情形方程是路线其余部分引用的出口。零是沿空索引的并，故属于 `Sset ∅` 不可能，这个集合就是空集。后继方程是累积性与 `step-mono∈`{.Agda} 兑现之处：`sucV β` 的每个成员是 `β` 本身或 `β` 的成员，较低诸层的像都落在 `Sset β` 的像内，这也是累积性两半唯一被一并交出的地方，而反向包含只是 `β` 自身，它是自己后继的成员。两个方向都不需要 `β` 的序数假设，故方程对一切集合成立，不限于序数。
+
+单调性前提以隶属为条件，而不仅以包含为条件，因为仅有包含对任何值得一用的 step 都不够。把自身参数放进像里的 step 不可能对子集序单调：`u` 的单点集属于 `step u`，而 `u ⊆ v` 给不出它属于 `step v` 的任何理由，后者要的是 `u` 为 `v` 的成员。十六像 step 经其配对运算正属此类，故全称形式在那里可被否证；诸层恰在方程所需之处补上这份隶属，而引擎别无所求。
 <!--/-->
 
 ```agda
@@ -296,19 +315,21 @@ Sset-suc β = ext-⊆ sub sup
     uStep : Σ[ γ ∈ S ] (⟨ γ ∈ˢ sucV β ⟩ × ⟨ x ∈ˢ step (Sset γ) ⟩)
           → ⟨ x ∈ˢ step (Sset β) ⟩
     uStep (γ , γ∈suc , x∈stepSγ) = ∈sucV-elim (snd (x ∈ˢ step (Sset β))) γ∈suc
-      (λ γ∈β → step-mono (Sset-mono {α = β} {β = γ} γ∈β) x x∈stepSγ)
+      (λ γ∈β → step-mono∈ (Sset-mono {α = β} {β = γ} γ∈β)
+                 (Sset-mem {α = β} {β = γ} γ∈β) x x∈stepSγ)
       (λ γ≡β → subst (λ w → ⟨ x ∈ˢ step (Sset w) ⟩) γ≡β x∈stepSγ)
   sup : step (Sset β) ⊆ Sset (sucV β)
   sup x x∈stepSβ = Sset-in (sucV β) β x (self∈sucV β) x∈stepSβ
 ```
 
 <!--en-->
-The membership reading of cumulativity follows once the successor equation is
-in hand: `step-∈`{.Agda} places `Sset β` inside `step (Sset β)`, the equation
-identifies that set with `Sset (sucV β)`, and cumulativity carries the level up
-to any index above `sucV β`. This is the one place `step-∈`{.Agda} is spent.
+The successor-index form of the same membership reading follows once the
+successor equation is in hand: `step-∈`{.Agda} places `Sset β` inside
+`step (Sset β)`, the equation identifies that set with `Sset (sucV β)`, and
+cumulativity carries the level up to any index above `sucV β`. Together with
+`Sset-mem`{.Agda} this is the second and last place `step-∈`{.Agda} is spent.
 <!--zh-->
-累积性的成员读式在后继方程到手后随之而来：`step-∈`{.Agda} 把 `Sset β` 放进 `step (Sset β)`，方程把它等同于 `Sset (sucV β)`，累积性再把该层抬到 `sucV β` 之上的任何索引。这是 `step-∈`{.Agda} 唯一被花掉的地方。
+同一成员读式的后继索引形态在后继方程到手后随之而来：`step-∈`{.Agda} 把 `Sset β` 放进 `step (Sset β)`，方程把它等同于 `Sset (sucV β)`，累积性再把该层抬到 `sucV β` 之上的任何索引。连同 `Sset-mem`{.Agda}，这是 `step-∈`{.Agda} 第二处也是最后一处花销。
 <!--/-->
 
 ```agda
