@@ -69,7 +69,7 @@ regularity forbids.
 
 ```agda
 sucV-inj-ord : {β γ : S} → IsOrd β → IsOrd γ → sucV β ≡ sucV γ → β ≡ γ
-sucV-inj-ord {β} {γ} ordβ ordγ eq = go mem₁ mem₂
+sucV-inj-ord {β} {γ} ordβ ordγ eq = go (memOr β γ β∈) (memOr γ β γ∈)
   where
   β∈ : ⟨ β ∈ˢ sucV γ ⟩
   β∈ = subst (λ w → ⟨ β ∈ˢ w ⟩) eq (self∈sucV β)
@@ -77,19 +77,12 @@ sucV-inj-ord {β} {γ} ordβ ordγ eq = go mem₁ mem₂
   γ∈ : ⟨ γ ∈ˢ sucV β ⟩
   γ∈ = subst (λ w → ⟨ γ ∈ˢ w ⟩) (sym eq) (self∈sucV γ)
 
-  excl₁ : ⟨ β ∈ˢ γ ⟩ → β ≡ γ → Empty.⊥
-  excl₁ β∈γ β≡γ = ∈-irrefl β (subst (λ w → ⟨ β ∈ˢ w ⟩) (sym β≡γ) β∈γ)
-
-  excl₂ : ⟨ γ ∈ˢ β ⟩ → γ ≡ β → Empty.⊥
-  excl₂ γ∈β γ≡β = ∈-irrefl γ (subst (λ w → ⟨ γ ∈ˢ w ⟩) (sym γ≡β) γ∈β)
-
-  mem₁ : ⟨ β ∈ˢ γ ⟩ ⊎ (β ≡ γ)
-  mem₁ = ∈sucV-elim {A = γ} {x = β} (isProp⊎ (snd (β ∈ˢ γ)) (isSetS β γ) excl₁)
-    β∈ (λ p → inl p) (λ p → inr p)
-
-  mem₂ : ⟨ γ ∈ˢ β ⟩ ⊎ (γ ≡ β)
-  mem₂ = ∈sucV-elim {A = β} {x = γ} (isProp⊎ (snd (γ ∈ˢ β)) (isSetS γ β) excl₂)
-    γ∈ (λ p → inl p) (λ p → inr p)
+  memOr : (u w : S) → ⟨ u ∈ˢ sucV w ⟩ → ⟨ u ∈ˢ w ⟩ ⊎ (u ≡ w)
+  memOr u w h = ∈sucV-elim {A = w} {x = u}
+    (isProp⊎ (snd (u ∈ˢ w)) (isSetS u w) excl) h inl inr
+    where
+    excl : ⟨ u ∈ˢ w ⟩ → u ≡ w → Empty.⊥
+    excl u∈w u≡w = ∈-irrefl u (subst (λ t → ⟨ u ∈ˢ t ⟩) (sym u≡w) u∈w)
 
   go : (⟨ β ∈ˢ γ ⟩ ⊎ (β ≡ γ)) → (⟨ γ ∈ˢ β ⟩ ⊎ (γ ≡ β)) → β ≡ γ
   go (inl β∈γ) (inl γ∈β) = Empty.rec (∈-irrefl β (ordβ .fst {x = γ} {y = β} β∈γ γ∈β))
@@ -108,10 +101,10 @@ recursion's successor clause will spend.
 
 ```agda
 isSucc : S → hProp (ℓ-suc ℓ)
-isSucc α = (Σ[ β ∈ S ] (IsOrd β × (sucV β ≡ α))) , isPropSucc α
+isSucc α = (Σ[ β ∈ S ] (IsOrd β × (sucV β ≡ α))) , isPropSucc
   where
-  isPropSucc : (α : S) → isProp (Σ[ β ∈ S ] (IsOrd β × (sucV β ≡ α)))
-  isPropSucc α u v = Σ≡Prop (λ β → isProp× (isPropIsOrd β) (isSetS (sucV β) α))
+  isPropSucc : isProp (Σ[ β ∈ S ] (IsOrd β × (sucV β ≡ α)))
+  isPropSucc u v = Σ≡Prop (λ β → isProp× (isPropIsOrd β) (isSetS (sucV β) α))
     (sucV-inj-ord (u .snd .fst) (v .snd .fst) (u .snd .snd ∙ sym (v .snd .snd)))
 ```
 
@@ -142,8 +135,7 @@ successor cases of the trichotomy rest on.
 
 ```agda
 succ-not-zero : (β : S) → sucV β ≡ ∅ → Empty.⊥
-succ-not-zero β eq = ∅-empty β (∈∈ₛ {a = β} {b = ∅} .fst
-  (subst (λ w → ⟨ β ∈ˢ w ⟩) eq (self∈sucV β)))
+succ-not-zero β eq = ∅-empty β (∈∈ₛ {a = β} {b = ∅} .fst (predecessor-mem β ∅ eq))
 ```
 
 <!--en-->
@@ -214,11 +206,8 @@ the union clause.
 ```agda
 ord-case : (α : S) → IsOrd α
          → (α ≡ ∅) ⊎ (⟨ isSucc α ⟩ ⊎ ⟨ isLimit α ⟩)
-ord-case α ordα = decide (lem zero-hp) (lem (isSucc α))
+ord-case α ordα = decide (lem ((α ≡ ∅) , isSetS α ∅)) (lem (isSucc α))
   where
-  zero-hp : hProp (ℓ-suc ℓ)
-  zero-hp = (α ≡ ∅) , isSetS α ∅
-
   decide : (α ≡ ∅) ⊎ ((α ≡ ∅) → Empty.⊥)
          → ⟨ isSucc α ⟩ ⊎ (⟨ isSucc α ⟩ → Empty.⊥)
          → (α ≡ ∅) ⊎ (⟨ isSucc α ⟩ ⊎ ⟨ isLimit α ⟩)

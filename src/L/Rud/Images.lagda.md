@@ -75,6 +75,10 @@ axiom.
 
 ```agda
 private
+  -- the index of a small membership, with the path back to the member
+  fibre : (b a : V ℓ) → ⟨ a ∈ₛ b ⟩ → Σ[ m ∈ ⟪ b ⟫ ] (⟪ b ⟫↪ m ≡ a)
+  fibre b a h = h .fst , equivFun identityPrinciple (h .snd)
+
   ∈singl : {a x : V ℓ} → ⟨ x ∈ₛ ⁅ a ⁆s ⟩ → x ≡ a
   ∈singl {a} {x} = SetPackage.classification (SingletonPackage a) x .fst
 
@@ -120,39 +124,26 @@ private
   ⋂pair : (a b : V ℓ) → ⋂ (pr a b) ≡ ⁅ a ⁆s
   ⋂pair a b = extensionality (⋂ (pr a b)) (⁅ a ⁆s) (sub₁ , sub₂)
     where
+    fs : Σ[ m ∈ ⟪ pr a b ⟫ ] (⟪ pr a b ⟫↪ m ≡ ⁅ a ⁆s)
+    fs = fibre (pr a b) (⁅ a ⁆s) (singl∈pr a b)
     sub₁ : ⟨ ⋂ (pr a b) ⊆ ⁅ a ⁆s ⟩
-    sub₁ w w∈ₛ⋂ = singl∈ w≡a
+    sub₁ w w∈ₛ⋂ = singl∈ (PT.rec (setIsSet w a) go
+      (∈∈ₛ {a = w} {b = ⋂ (pr a b)} .snd w∈ₛ⋂))
       where
-      w≡a : w ≡ a
-      w≡a = PT.rec (setIsSet w a) go w∈⋂
-        where
-        w∈⋂ : ⟨ w ∈ ⋂ (pr a b) ⟩
-        w∈⋂ = ∈∈ₛ {a = w} {b = ⋂ (pr a b)} .snd w∈ₛ⋂
-        go : Σ[ p ∈ (Σ[ m ∈ ⟪ pr a b ⟫ ]
-                       ((k : ⟪ pr a b ⟫) → ⟨ ⋃ (⟪ pr a b ⟫↪ m) ∈ₛ ⟪ pr a b ⟫↪ k ⟩)) ]
-               (⋃ (⟪ pr a b ⟫↪ (p .fst)) ≡ w)
-           → w ≡ a
-        go (p , q) = ∈singl (subst (λ t → ⟨ w ∈ₛ t ⟩) q₀
-          (subst (λ t → ⟨ t ∈ₛ ⟪ pr a b ⟫↪ n₀ ⟩) q (p .snd n₀)))
-          where
-          n₀ : ⟪ pr a b ⟫
-          n₀ = singl∈pr a b .fst
-          q₀ : ⟪ pr a b ⟫↪ n₀ ≡ ⁅ a ⁆s
-          q₀ = equivFun identityPrinciple (singl∈pr a b .snd)
+      go : Σ[ p ∈ (Σ[ m ∈ ⟪ pr a b ⟫ ]
+                     ((k : ⟪ pr a b ⟫) → ⟨ ⋃ (⟪ pr a b ⟫↪ m) ∈ₛ ⟪ pr a b ⟫↪ k ⟩)) ]
+             (⋃ (⟪ pr a b ⟫↪ (p .fst)) ≡ w)
+         → w ≡ a
+      go (p , q) = ∈singl (subst (λ t → ⟨ w ∈ₛ t ⟩) (fs .snd)
+        (subst (λ t → ⟨ t ∈ₛ ⟪ pr a b ⟫↪ (fs .fst) ⟩) q (p .snd (fs .fst))))
     sub₂ : ⟨ ⁅ a ⁆s ⊆ ⋂ (pr a b) ⟩
-    sub₂ w w∈singl = subst (λ t → ⟨ t ∈ₛ ⋂ (pr a b) ⟩) (fp ∙ sym w≡a) (ix∈ₛ x₀)
+    sub₂ w w∈singl = subst (λ t → ⟨ t ∈ₛ ⋂ (pr a b) ⟩)
+      (fp ∙ sym (∈singl w∈singl)) (ix∈ₛ (fs .fst , prop))
       where
-      w≡a : w ≡ a
-      w≡a = ∈singl w∈singl
-      m₀ : ⟪ pr a b ⟫
-      m₀ = singl∈pr a b .fst
-      p₀ : ⟪ pr a b ⟫↪ m₀ ≡ ⁅ a ⁆s
-      p₀ = equivFun identityPrinciple (singl∈pr a b .snd)
-      fp : ⋃ (⟪ pr a b ⟫↪ m₀) ≡ a
-      fp = cong (λ t → ⋃ t) p₀ ∙ ⋃singl a
-      prop : (k : ⟪ pr a b ⟫) → ⟨ ⋃ (⟪ pr a b ⟫↪ m₀) ∈ₛ ⟪ pr a b ⟫↪ k ⟩
+      fp : ⋃ (⟪ pr a b ⟫↪ (fs .fst)) ≡ a
+      fp = cong ⋃_ (fs .snd) ∙ ⋃singl a
+      prop : (k : ⟪ pr a b ⟫) → ⟨ ⋃ (⟪ pr a b ⟫↪ (fs .fst)) ∈ₛ ⟪ pr a b ⟫↪ k ⟩
       prop k = subst (λ t → ⟨ t ∈ₛ ⟪ pr a b ⟫↪ k ⟩) (sym fp) (a∈members a b k)
-      x₀ = m₀ , prop
 ```
 
 <!--en-->
@@ -168,7 +159,7 @@ left : V ℓ → V ℓ
 left z = ⋃ (⋂ z)
 
 left-spec : (a b : V ℓ) → left (pr a b) ≡ a
-left-spec a b = cong (λ s → ⋃ s) (⋂pair a b) ∙ ⋃singl a
+left-spec a b = cong ⋃_ (⋂pair a b) ∙ ⋃singl a
 ```
 
 <!--en-->
@@ -205,8 +196,7 @@ private
     go : (⟨ v ≡ₕ y ⟩ ⊎ ⟨ v ≡ₕ w ⟩) → (⟨ w ≡ₕ y ⟩ ⊎ ⟨ w ≡ₕ v ⟩) → w ≡ v
     go (inl vy) (inl wy) = wy ∙ sym vy
     go (inl vy) (inr wv) = wv
-    go (inr vw) (inl wy) = sym vw
-    go (inr vw) (inr wv) = sym vw
+    go (inr vw) _        = sym vw
 
   sepSet-pair : (y v : V ℓ) → sepSet (⁅ y , v ⁆) y ≡ ⁅ v ⁆s
   sepSet-pair y v = extensionality (sepSet (⁅ y , v ⁆) y) (⁅ v ⁆s) (sub₁ , sub₂)
@@ -216,20 +206,20 @@ private
     sub₁ : ⟨ sepSet (⁅ y , v ⁆) y ⊆ ⁅ v ⁆s ⟩
     sub₁ w w∈ₛ = singl∈ (pair-eq-snd y w v (∈singl ϕw))
       where
-      ϕw : ⟨ ⁅ y , w ⁆ ∈ₛ ⁅ ⁅ y , v ⁆ ⁆s ⟩
-      ϕw = separation-ax (⁅ y , v ⁆) (λ w → ⁅ y , w ⁆ ∈ₛ ⁅ ⁅ y , v ⁆ ⁆s) w .fst w∈ₛ .snd
+      ϕw : ⟨ ϕ w ⟩
+      ϕw = separation-ax (⁅ y , v ⁆) ϕ w .fst w∈ₛ .snd
     sub₂ : ⟨ ⁅ v ⁆s ⊆ sepSet (⁅ y , v ⁆) y ⟩
-    sub₂ w w∈singl = separation-ax (⁅ y , v ⁆) (λ w → ⁅ y , w ⁆ ∈ₛ ⁅ ⁅ y , v ⁆ ⁆s) w .snd (w∈u , ϕw)
+    sub₂ w w∈singl = separation-ax (⁅ y , v ⁆) ϕ w .snd (w∈u , ϕw)
       where
       w≡v : w ≡ v
       w≡v = ∈singl w∈singl
       w∈u : ⟨ w ∈ₛ ⁅ y , v ⁆ ⟩
       w∈u = subst (λ t → ⟨ t ∈ₛ ⁅ y , v ⁆ ⟩) (sym w≡v) (v∈⁅y,v⁆ y v)
-      ϕw : ⟨ ⁅ y , w ⁆ ∈ₛ ⁅ ⁅ y , v ⁆ ⁆s ⟩
+      ϕw : ⟨ ϕ w ⟩
       ϕw = singl∈ (cong (λ t → ⁅ y , t ⁆) w≡v)
 
   sndExtract-pair : (y v : V ℓ) → sndExtract (⁅ y , v ⁆) y ≡ v
-  sndExtract-pair y v = cong (λ t → ⋃ t) (sepSet-pair y v) ∙ ⋃singl v
+  sndExtract-pair y v = cong ⋃_ (sepSet-pair y v) ∙ ⋃singl v
 
   rightSlice : (z : V ℓ) → V ℓ
   rightSlice z = sett (Σ[ m ∈ ⟪ z ⟫ ] ⟨ pr (left z) (sndExtract (⟪ z ⟫↪ m) (left z)) ∈ₛ ⁅ z ⁆s ⟩)
@@ -242,50 +232,40 @@ private
   rightSlice-pair : (a b : V ℓ) → rightSlice (pr a b) ≡ ⁅ b ⁆s
   rightSlice-pair a b = extensionality (rightSlice (pr a b)) (⁅ b ⁆s) (sub₁ , sub₂)
     where
+    fp : Σ[ m ∈ ⟪ pr a b ⟫ ] (⟪ pr a b ⟫↪ m ≡ ⁅ a , b ⁆)
+    fp = fibre (pr a b) (⁅ a , b ⁆) (pair∈pr a b)
     sub₁ : ⟨ rightSlice (pr a b) ⊆ ⁅ b ⁆s ⟩
-    sub₁ w w∈ₛ = singl∈ w≡b
+    sub₁ w w∈ₛ = singl∈ (PT.rec (setIsSet w b) go
+      (∈∈ₛ {a = w} {b = rightSlice (pr a b)} .snd w∈ₛ))
       where
-      w≡b : w ≡ b
-      w≡b = PT.rec (setIsSet w b) go w∈R
+      go : Σ[ p ∈ (Σ[ m ∈ ⟪ pr a b ⟫ ]
+                     ⟨ pr (left (pr a b)) (sndExtract (⟪ pr a b ⟫↪ m) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩) ]
+             (sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b)) ≡ w)
+         → w ≡ b
+      go (p , q) = sym q ∙ snd≡b
         where
-        w∈R : ⟨ w ∈ rightSlice (pr a b) ⟩
-        w∈R = ∈∈ₛ {a = w} {b = rightSlice (pr a b)} .snd w∈ₛ
-        go : Σ[ p ∈ (Σ[ m ∈ ⟪ pr a b ⟫ ]
-                       ⟨ pr (left (pr a b)) (sndExtract (⟪ pr a b ⟫↪ m) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩) ]
-               (sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b)) ≡ w)
-           → w ≡ b
-        go (p , q) = sym q ∙ snd≡b
-          where
-          h1 : ⟨ pr a (sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩
-          h1 = subst (λ l → ⟨ pr l (sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩)
-                (left-spec a b) (p .snd)
-          snd≡b : sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b)) ≡ b
-          snd≡b = pr-inj (∈singl h1) .snd
+        h1 : ⟨ pr a (sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩
+        h1 = subst (λ l → ⟨ pr l (sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩)
+              (left-spec a b) (p .snd)
+        snd≡b : sndExtract (⟪ pr a b ⟫↪ (p .fst)) (left (pr a b)) ≡ b
+        snd≡b = pr-inj (∈singl h1) .snd
     sub₂ : ⟨ ⁅ b ⁆s ⊆ rightSlice (pr a b) ⟩
-    sub₂ w w∈singl = subst (λ t → ⟨ t ∈ₛ rightSlice (pr a b) ⟩) (sym w≡b) b∈ₛR
+    sub₂ w w∈singl = subst (λ t → ⟨ t ∈ₛ rightSlice (pr a b) ⟩)
+      (sym (∈singl w∈singl)) b∈ₛR
       where
-      w≡b : w ≡ b
-      w≡b = ∈singl w∈singl
-      m₀ : ⟪ pr a b ⟫
-      m₀ = pair∈pr a b .fst
-      p₀ : ⟪ pr a b ⟫↪ m₀ ≡ ⁅ a , b ⁆
-      p₀ = equivFun identityPrinciple (pair∈pr a b .snd)
-      se-path : sndExtract (⟪ pr a b ⟫↪ m₀) (left (pr a b)) ≡ b
-      se-path = cong (λ t → sndExtract t (left (pr a b))) p₀
+      se-path : sndExtract (⟪ pr a b ⟫↪ (fp .fst)) (left (pr a b)) ≡ b
+      se-path = cong (λ t → sndExtract t (left (pr a b))) (fp .snd)
               ∙ subst (λ l → sndExtract (⁅ a , b ⁆) l ≡ b) (sym (left-spec a b))
                       (sndExtract-pair a b)
-      h1 : ⟨ pr a b ∈ₛ ⁅ pr a b ⁆s ⟩
-      h1 = singl∈ refl
       h2 : ⟨ pr (left (pr a b)) b ∈ₛ ⁅ pr a b ⁆s ⟩
-      h2 = subst (λ l → ⟨ pr l b ∈ₛ ⁅ pr a b ⁆s ⟩) (sym (left-spec a b)) h1
-      h : ⟨ pr (left (pr a b)) (sndExtract (⟪ pr a b ⟫↪ m₀) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩
+      h2 = subst (λ l → ⟨ pr l b ∈ₛ ⁅ pr a b ⁆s ⟩) (sym (left-spec a b)) (singl∈ refl)
+      h : ⟨ pr (left (pr a b)) (sndExtract (⟪ pr a b ⟫↪ (fp .fst)) (left (pr a b))) ∈ₛ ⁅ pr a b ⁆s ⟩
       h = subst (λ t → ⟨ pr (left (pr a b)) t ∈ₛ ⁅ pr a b ⁆s ⟩) (sym se-path) h2
-      x₀ = m₀ , h
       b∈ₛR : ⟨ b ∈ₛ rightSlice (pr a b) ⟩
-      b∈ₛR = subst (λ t → ⟨ t ∈ₛ rightSlice (pr a b) ⟩) se-path (ix∈ₛ x₀)
+      b∈ₛR = subst (λ t → ⟨ t ∈ₛ rightSlice (pr a b) ⟩) se-path (ix∈ₛ (fp .fst , h))
 
 right-spec : (a b : V ℓ) → right (pr a b) ≡ b
-right-spec a b = cong (λ s → ⋃ s) (rightSlice-pair a b) ∙ ⋃singl b
+right-spec a b = cong ⋃_ (rightSlice-pair a b) ∙ ⋃singl b
 ```
 
 <!--en-->
@@ -316,22 +296,18 @@ F10-spec x y v = ⇔toPath fwd bwd
   where
   fwd : ⟨ v ∈ F10 x y ⟩ → ⟨ pr y v ∈ x ⟩
   fwd = PT.rec (snd (pr y v ∈ x))
-    (λ { (p , q) → ∈∈ₛ {a = pr y v} {b = x} .snd (subst (λ t → ⟨ pr y t ∈ₛ x ⟩) q (p .snd)) })
+    (λ { ((_ , h) , q) → ∈∈ₛ {a = pr y v} {b = x} .snd
+      (subst (λ t → ⟨ pr y t ∈ₛ x ⟩) q h) })
   bwd : ⟨ pr y v ∈ x ⟩ → ⟨ v ∈ F10 x y ⟩
-  bwd pr∈x = ∣ (m , h) , q ∣₁
+  bwd pr∈x = ∣ (f .fst , h) , cong right (f .snd) ∙ right-spec y v ∣₁
     where
     h₀ : ⟨ pr y v ∈ₛ x ⟩
     h₀ = ∈∈ₛ {a = pr y v} {b = x} .fst pr∈x
-    m : ⟪ x ⟫
-    m = h₀ .fst
-    p₀ : ⟪ x ⟫↪ m ≡ pr y v
-    p₀ = equivFun identityPrinciple (h₀ .snd)
-    h' : ⟨ pr y (right (pr y v)) ∈ₛ x ⟩
-    h' = subst (λ u → ⟨ pr y u ∈ₛ x ⟩) (sym (right-spec y v)) h₀
-    h : ⟨ pr y (right (⟪ x ⟫↪ m)) ∈ₛ x ⟩
-    h = subst (λ t → ⟨ pr y (right t) ∈ₛ x ⟩) (sym p₀) h'
-    q : right (⟪ x ⟫↪ m) ≡ v
-    q = cong right p₀ ∙ right-spec y v
+    f : Σ[ m ∈ ⟪ x ⟫ ] (⟪ x ⟫↪ m ≡ pr y v)
+    f = fibre x (pr y v) h₀
+    h : ⟨ pr y (right (⟪ x ⟫↪ (f .fst))) ∈ₛ x ⟩
+    h = subst (λ t → ⟨ pr y (right t) ∈ₛ x ⟩) (sym (f .snd))
+          (subst (λ u → ⟨ pr y u ∈ₛ x ⟩) (sym (right-spec y v)) h₀)
 ```
 
 <!--en-->
@@ -363,10 +339,9 @@ F8-spec : (x y w : V ℓ) → (w ∈ F8 x y) ≡ (∃[ m ] (F10 x (⟪ y ⟫↪ 
 F8-spec x y w = ⇔toPath fwd bwd
   where
   fwd : ⟨ w ∈ F8 x y ⟩ → ⟨ (∃[ m ] (F10 x (⟪ y ⟫↪ m) ≡ₕ w)) ⟩
-  fwd = PT.rec (snd (∃[ m ] (F10 x (⟪ y ⟫↪ m) ≡ₕ w)))
-    (λ { (m , q) → ∣ m , q ∣₁ })
+  fwd = PT.rec (snd (∃[ m ] (F10 x (⟪ y ⟫↪ m) ≡ₕ w))) ∣_∣₁
   bwd : ⟨ (∃[ m ] (F10 x (⟪ y ⟫↪ m) ≡ₕ w)) ⟩ → ⟨ w ∈ F8 x y ⟩
-  bwd = PT.rec (snd (w ∈ F8 x y)) (λ { (m , q) → ∣ m , q ∣₁ })
+  bwd = PT.rec (snd (w ∈ F8 x y)) ∣_∣₁
 ```
 
 <!--en-->
@@ -410,22 +385,16 @@ private
   rightAt {y} {a} {b} y≡ = subst (λ t → right t ≡ b) (sym y≡) (right-spec a b)
 
 F11-spec : (x y a b : V ℓ) → y ≡ pr a b → F11 x y ≡ pr a (pr x b)
-F11-spec x y a b y≡ =
-  cong (λ l → pr l (pr x (right y))) (leftAt y≡)
-  ∙ cong (λ r → pr a (pr x r)) (rightAt y≡)
+F11-spec x y a b y≡ = cong₂ (λ l r → pr l (pr x r)) (leftAt y≡) (rightAt y≡)
 
 F12-spec : (x y a b : V ℓ) → y ≡ pr a b → F12 x y ≡ pr a (pr b x)
-F12-spec x y a b y≡ =
-  cong (λ l → pr l (pr (right y) x)) (leftAt y≡)
-  ∙ cong (λ r → pr a (pr r x)) (rightAt y≡)
+F12-spec x y a b y≡ = cong₂ (λ l r → pr l (pr r x)) (leftAt y≡) (rightAt y≡)
 
 F13-spec : (x y a b : V ℓ) → y ≡ pr a b → F13 x y ≡ ⁅ a , pr b x ⁆
-F13-spec x y a b y≡ =
-  cong₂ ⁅_,_⁆ (leftAt y≡) (cong (λ r → pr r x) (rightAt y≡))
+F13-spec x y a b y≡ = cong₂ (λ l r → ⁅ l , pr r x ⁆) (leftAt y≡) (rightAt y≡)
 
 F14-spec : (x y a b : V ℓ) → y ≡ pr a b → F14 x y ≡ ⁅ a , pr x b ⁆
-F14-spec x y a b y≡ =
-  cong₂ ⁅_,_⁆ (leftAt y≡) (cong (λ r → pr x r) (rightAt y≡))
+F14-spec x y a b y≡ = cong₂ (λ l r → ⁅ l , pr x r ⁆) (leftAt y≡) (rightAt y≡)
 ```
 
 <!--en-->
