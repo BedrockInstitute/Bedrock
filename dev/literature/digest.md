@@ -86,7 +86,14 @@ evidence; what genuinely cannot be settled from the fetched corpus stays OPEN
 
 Rulings on the collection report's six UNVERIFIED marks:
 
-1. *Jensen's verbatim 1972 list*: stays OPEN (not in the fetched corpus).
+1. *Jensen's verbatim 1972 list*: PARTIALLY SETTLED by [L3.30-L2]
+   (primary-sources.md): Jensen's own author manuscript (Bonn archive;
+   manuscript provenance flagged, not the 1972 journal wording) states the
+   Basis Theorem with F0..F8 identical to SZ's F0..F8 (JM 2.2.15, p. 56),
+   so SZ's enlargement is exactly F9..F15; independently, Devlin's Basis
+   Lemma VI.1.11 (p. 236) gives the same nine, with the Extended Basis
+   Lemma VI.1.12 adding F9 = A ∩ x for rud_A. The 1972 journal text itself
+   remains unfetched (open archive but bot-walled).
 2. *Stanley's exact review text*: stays OPEN (paywalled); his role is
    attested secondhand: Mathias credits the review with drawing attention to
    the flaws (WS p. 56), Welch credits Stanley with proposing BS + rud as
@@ -144,8 +151,14 @@ survey clause by clause.
 What it costs: sixteen basis functions to verify as rud_A, and the basis
 completeness lemma ("every rud_A function is generated from this list") is
 asserted with "a little bit more work is necessary" and a citation to
-[3, Lemma 1.8] but NOT proved in the fetched text (SZ p. 10); the
-formalization would prove it from scratch.
+[3, Lemma 1.8] but NOT proved in the fetched SZ text (SZ p. 10). UPDATE
+[L3.30-L2]: the completeness proof now has two fetched blueprints: Jensen's
+manuscript proves the Basis Theorem for F0..F8 (JM 2.2.15, with the simple
+functions 2.2.2-2.2.8 as the engine) and Devlin proves the same as VI.1.11;
+since a superset of a basis whose extra members are themselves rud is again
+a basis, the F0..F8 proof carries the F0..F15 list once each of F9..F15 is
+checked rud, so the from-scratch risk on this leg drops to
+blueprint-following.
 
 ### Option R: the Mathias package (R0..R8 + GJ0 + the T function)
 
@@ -187,7 +200,11 @@ two packages describe the same class of functions (SZ cite Jensen's
 [3, Lemma 1.8] basis theorem; MB/WS bridge through the Gandy-Jensen
 characterization, WS 2.85, and MB 0.3's citation of Jensen [J2]); the fork
 is which generating presentation the formalization commits to, not which
-class it gets.
+class it gets. [L3.30-L2] pins the family tree: Jensen's own basis is
+F0..F8, nine functions (JM 2.2.15; Devlin VI.1.11 verbatim agreement, with
+VI.1.12 adding F9 = A ∩ x for rud_A), Jech's Gödel operations are the ten
+G1..G10 (Def 13.6), Mathias's R0..R8 are nine, and SZ's F0..F15 is the
+S-transitivity enlargement of Jensen's nine.
 
 ## 3. The hierarchy and the order
 
@@ -258,9 +275,14 @@ sources disagree, the source wins and the discrepancy is flagged.
    and as a named theorem, is NOT verbatim anywhere in the fetched corpus;
    the phrase "Gödel operations" occurs in the collection only in
    BIBLIOGRAPHY.md's role line for the cite-only Jech entry, and no fetched
-   text states the theorem under that name. FLAGGED:
-   load-bearing attribution OPEN (settled by fetching Jensen 1972, Devlin
-   ch. I, or Jech's chapter on Gödel operations).
+   text states the theorem under that name. UPDATE [L3.30-L2]: the named
+   pieces are now in hand (Jech's Gödel operations = compositions of
+   G1..G10, Def 13.6 and p. 177, with Cor 13.8 as the Jech-side parallel
+   of SZ 1.4; Devlin's Basis Lemma VI.1.11, rud = compositions of F0..F8),
+   so the note's claim decomposes into the two basis lemmas plus the
+   parallel comprehension statements; the literal iff under the
+   Gandy-Jensen name is still in no fetched text (Gandy's paper remains
+   paywalled). Residual FLAG narrowed to that attribution only.
 2. **The rud family disambiguation** (rud functions / rud closure / rud_A /
    simple functions / S-hierarchy): confirmed as a real and necessary
    distinction. The key lemma the note cites as rud(X) ∩ P(X) = Def(X) is
@@ -273,8 +295,12 @@ sources disagree, the source wins and the discrepancy is flagged.
    fetched text. FLAGGED: partial support; the [L3.30-X1] extraction has
    since checked SZ's later sections with a negative result (no Sigma-n
    role for "simple" there; the Sigma-star machinery is explicitly
-   excluded, SZ p. 5, deferring to Zeman's book and Welch's chapter), so
-   the remainder hangs on Zeman's book (cite-only).
+   excluded, SZ p. 5, deferring to Zeman's book and Welch's chapter), and
+   the [L3.30-L2] fetch of Jensen's manuscript has since CONFIRMED the
+   note's core: simple functions preserve Sigma-0 (JM 2.2.2), every rud
+   function is simple (JM 2.2.3), rud relations are Sigma-0 and rud_A
+   relations Sigma-1 (JM 2.2.4, 2.2.8). Only the "serves the Sigma-star
+   theory" clause still hangs on Zeman's book (paywalled).
 3. **The S-step formula.** The note writes S_{ν+1} = S_ν ∪ {S_ν} ∪
    ⋃_i G_i"(S_ν × S_ν); SZ's actual step is S^A(U) = ⋃_{i≤15} F_i"(U ∪
    {U})² (SZ p. 9-10). The shapes differ (SZ folds U and {U} into the
@@ -286,9 +312,15 @@ sources disagree, the source wins and the discrepancy is flagged.
    over "9 or 10" indices and its table says "10 G_i"; SZ's basis has 16
    functions and the well-order is lexicographic over 16 × S × S (SZ pp.
    10-11); Mathias's list has 9 functions R0..R8, and GJ0 has ten axioms
-   (the nine DB0 axioms plus R8, MB 7.3). So "9 or 10" matches the Mathias
-   R-count or the GJ0 axiom count, not the SZ basis. FLAGGED: if the memo
-   adopts the SZ package, the order steps over 16 indices, not 9 or 10.
+   (the nine DB0 axioms plus R8, MB 7.3). RESOLVED by [L3.30-L2]: the
+   count discrepancy dissolves once the lists are aligned: Jensen's own
+   basis is F0..F8, NINE functions (JM 2.2.15; Devlin VI.1.11 agrees), and
+   Jech's Gödel operations are TEN (G1..G10, Def 13.6), so the note's "9
+   or 10" tracks the classical bases exactly; SZ's SIXTEEN is the
+   S-hierarchy-engineered enlargement (F9..F15 added for S-level
+   transitivity, footnote 5). FLAG retained in one direction only: if the
+   memo adopts the SZ S-step, the order is lexicographic over 16 indices,
+   not 9 or 10.
 5. **The S-hierarchy as the pivot; "y = S_ν" uniformly Sigma-1.**
    Confirmed exactly (SZ Lemma 1.10; the note's emphasis that all
    downstream definability dividends flow from this is borne out by the SZ
@@ -450,15 +482,22 @@ deliberate refutation attempt.
 
 Each with what would settle it.
 
-1. **Jensen's verbatim 1972 basis list** (the [3, Lemma 1.8] list that
-   F0..F15 enlarges): fetch Jensen, "The fine structure of the
-   constructible hierarchy", Ann. Math. Logic 4 (1972).
+1. **Jensen's verbatim 1972 basis list**: PARTIALLY SETTLED by [L3.30-L2]
+   (ruling 1 in section 1: the author manuscript's F0..F8 and Devlin's
+   VI.1.11 agree; SZ's enlargement is exactly F9..F15). Residue: the 1972
+   journal wording itself (open archive, bot-walled; a library copy would
+   close it).
 2. **Stanley's review, full text** (JSL 52(3), 1987, 864-867): library
    access; the role attribution currently rests on WS p. 56 and W p. 1.
-3. **The Gandy-Jensen "Gödel operations" statement** (rud = compositions of
-   Gödel operations, as a named theorem with its home): fetch Jensen 1972,
-   Devlin ch. I (with errata care), or Jech's chapter on Gödel operations;
-   Gandy's paper [G] for his side.
+3. **The Gandy-Jensen "Gödel operations" statement**: LARGELY SETTLED by
+   [L3.30-L2] as a decomposition rather than one named theorem: Jech
+   defines "Gödel operations" as the compositions of G1..G10 (p. 177, Def
+   13.6) with the Normal Form Theorem 13.4 and def(M) = cl(M ∪ {M}) ∩ P(M)
+   (Cor 13.8, the Jech-side parallel of SZ 1.4); Devlin's Basis Lemma
+   VI.1.11 gives rud = compositions of F0..F8. The literal sentence "F is
+   rud iff F is a composite of the Gödel operations" appears in NO fetched
+   text. Residue: Gandy's paper (paywalled) for his side and for any named
+   iff.
 4. **Simple functions' Sigma-n role**: the SZ side is now settled
    negatively by [L3.30-X1] (see section 4, item 2); the residue is Zeman,
    "Inner Models and Large Cardinals" ch. 1 (cite-only in the collection;
@@ -478,6 +517,7 @@ Each with what would settle it.
 8. **Zeman's book chs. 1-2** (the owner's note recommends them as the
    reliable fine-structure blueprint): fetch or library; currently
    cite-only.
-9. **Jensen's original J-indexing convention** (SZ footnote 4 records a
-   contrast without spelling it out): settled by the same Jensen 1972 fetch
-   as item 1.
+9. **Jensen's original J-indexing convention**: SETTLED by [L3.30-L2]: the
+   manuscript states "In [FSC] we indexed by all ordinals, so that our
+   J_{ωα} corresponds to the J_α of [FSC]" (JM p. 49), consistent with SZ
+   footnote 4's contrast; Devlin VI.2 (p. 251) agrees.
