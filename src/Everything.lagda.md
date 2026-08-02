@@ -1146,6 +1146,10 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Realize`{.Agda}: the realization front over the abstract basis: the
   k-ary composite calculus, the DefOf-face satisfaction machinery, and the
   variable plumbing; the two recorded walls await the design pass.
+- `L.Rud.Describe`{.Agda}: the description half for the first nine operations:
+  defining formulas with Delta-0 witnesses, full adequacy and the
+  definable-subset equations for the pair family, the sealed-surface and
+  nested-existential residues recorded.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1157,6 +1161,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Hierarchy`{.Agda}：抽象步进算子上的 S-层级引擎：单方程塔、三条导出情形等式、累积性、传递性、极限指标处的 J。
 - `L.Rud.Step`{.Agda}：具体的十六像步进及其隶属刻画、包含性清偿、首批九个传递性案例 (遥测重塑进行中)。
 - `L.Rud.Realize`{.Agda}：抽象基上的实现前沿：k 元复合演算、DefOf 面的满足机器、变元管道；两面已记录的墙待设计批处理。
+- `L.Rud.Describe`{.Agda}：前九个运算的描述半部：定义公式带 Δ₀ 见证，配对家族的完整 adequacy 与可定义子集等式，封面残余与嵌套存在残余已记录。
 <!--/-->
 
 ```agda
@@ -1166,4 +1171,5 @@ import L.Rud.Images
 import L.Rud.Hierarchy
 import L.Rud.Step
 import L.Rud.Realize
+import L.Rud.Describe
 ```
