@@ -1122,3 +1122,25 @@ line stays unbroken.
 import FOL.Manipulation.Renaming
 import FOL.Manipulation.Relativize
 ```
+
+<!--en-->
+## The rud trunk (under construction)
+
+The `[L3.31]` build: the rudimentary-functions architecture adopted by the
+L3.30 ruling, growing alongside the delivered routes until the coexistence
+measurement. Wired chapter by chapter as the wave batches land.
+
+- `L.Rud.OrdArith`{.Agda}: the ordinal case structure the S-recursion consumes:
+  successor and limit predicates, the classical trichotomy, successor
+  injectivity on ordinals.
+<!--zh-->
+## rud 主干 (在建)
+
+`[L3.31]` 建设：L3.30 裁决采纳的 rud 函数架构，与既有路线并存生长，直至共存测量。各波次批落地时逐章接线。
+
+- `L.Rud.OrdArith`{.Agda}：S-递归所消费的序数分情形结构：后继与极限谓词、经典三分、序数上的后继单射性。
+<!--/-->
+
+```agda
+import L.Rud.OrdArith
+```
