@@ -42,7 +42,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_⁆s; pairing-ax; ⋃_; union-ax )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
@@ -680,3 +680,119 @@ against.
 <!--zh-->
 运算层开张。F0、F5、F9 包装树中已有的机制，其规格即库的配对与并定律改用结构隶属陈述；F1、F2、F3、F4、F6、F7 则作为小索引类型之像新建并封以 opaque，消费者只看见此处证出的规格。F3 与 F4 从第二参数中读出对，把第一参数的成员插入或接续其中，遵循右嵌套的三元组约定；F6 取定义域；F7 收集参数内的隶属关系。此处没有任何经典逻辑，也没有任何展开成编码章所警戒的嵌套花括号表达式之处。
 <!--/-->
+
+<!--en-->
+## The read lemmas (R2c appendix)
+<!--zh-->
+## 读引理 (R2c 附录)
+<!--/-->
+
+<!--en-->
+The five operations sealed `opaque` above state their specifications with
+right-hand sides that sit inside the same opaque blocks, so their fwd
+directions cannot be decomposed from outside. The concrete-step batch adds
+one read lemma per operation, in its own `opaque unfolding` block: the
+operation's body is unfolded inside the block, the decomposition is proved
+exactly as the original fwd direction, and the lemma itself stays opaque, so
+only its type, with the explicit truncated decomposition, is exported.
+Nothing existing is changed, renamed, or unsealed; these are new exports.
+<!--zh-->
+上方封以 `opaque` 的五个运算把规格右端放进同一 opaque 块，其正向方向在块外无从拆解。具体 step 批次为每个运算补一条读引理，置于各自的 `opaque unfolding` 块中：块内展开运算体，按原正向方向证出拆解，引理本身仍封 opaque，只导出带着显式截断拆解的类型。既有内容没有任何改动、改名或解封；这些都是新出口。
+<!--/-->
+
+```agda
+opaque
+  unfolding F2
+  F2-read : (a b x : V ℓ) → ⟨ x ∈ˢ F2 a b ⟩
+          → ∥ Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
+               (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ b ⟩ × ⟨ x ≡ₕ pr p q ⟩) ∥₁
+  F2-read a b x h = PT.rec squash₁ go h
+    where
+    go : Σ[ p ∈ ⟪ a ⟫ × ⟪ b ⟫ ]
+           (pr (⟪ a ⟫↪ (p .fst)) (⟪ b ⟫↪ (p .snd)) ≡ x)
+       → ∥ Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
+            (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ b ⟩ × ⟨ x ≡ₕ pr p q ⟩) ∥₁
+    go (p , q) = ∣ ⟪ a ⟫↪ (p .fst) , ⟪ b ⟫↪ (p .snd)
+      , ( ∈∈ₛ {a = ⟪ a ⟫↪ (p .fst)} {b = a} .snd (∈ₛ⟪ a ⟫↪ (p .fst))
+        , ∈∈ₛ {a = ⟪ b ⟫↪ (p .snd)} {b = b} .snd (∈ₛ⟪ b ⟫↪ (p .snd))
+        , subst (λ w → ⟨ x ≡ₕ w ⟩) (sym q) refl ) ∣₁
+
+opaque
+  unfolding F3
+  F3-read : (a b x : V ℓ) → ⟨ x ∈ˢ F3 a b ⟩
+          → ∥ Σ[ u ∈ V ℓ ] Σ[ z ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+               (⟨ z ∈ˢ a ⟩ × ⟨ pr u v ∈ˢ b ⟩ × ⟨ x ≡ₕ pr u (pr z v) ⟩) ∥₁
+  F3-read a b x h = PT.rec squash₁ go h
+    where
+    go : Σ[ p ∈ Σ[ u ∈ ⟪ ⋃ (⋃ b) ⟫ ] Σ[ z ∈ ⟪ a ⟫ ] Σ[ v ∈ ⟪ ⋃ (⋃ b) ⟫ ]
+            ⟨ pr (⟪ ⋃ (⋃ b) ⟫↪ u) (⟪ ⋃ (⋃ b) ⟫↪ v) ∈ₛ b ⟩ ]
+           (pr (⟪ ⋃ (⋃ b) ⟫↪ (p .fst))
+               (pr (⟪ a ⟫↪ (p .snd .fst))
+                   (⟪ ⋃ (⋃ b) ⟫↪ (p .snd .snd .fst))) ≡ x)
+       → ∥ Σ[ u ∈ V ℓ ] Σ[ z ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+            (⟨ z ∈ˢ a ⟩ × ⟨ pr u v ∈ˢ b ⟩ × ⟨ x ≡ₕ pr u (pr z v) ⟩) ∥₁
+    go (p , q) = ∣ ⟪ ⋃ (⋃ b) ⟫↪ (p .fst)
+      , ⟪ a ⟫↪ (p .snd .fst)
+      , ⟪ ⋃ (⋃ b) ⟫↪ (p .snd .snd .fst)
+      , ( ∈∈ₛ {a = ⟪ a ⟫↪ (p .snd .fst)} {b = a} .snd (∈ₛ⟪ a ⟫↪ (p .snd .fst))
+        , ∈∈ₛ {a = pr (⟪ ⋃ (⋃ b) ⟫↪ (p .fst)) (⟪ ⋃ (⋃ b) ⟫↪ (p .snd .snd .fst))}
+              {b = b} .snd (p .snd .snd .snd)
+        , subst (λ w → ⟨ x ≡ₕ w ⟩) (sym q) refl ) ∣₁
+
+opaque
+  unfolding F4
+  F4-read : (a b x : V ℓ) → ⟨ x ∈ˢ F4 a b ⟩
+          → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ] Σ[ z ∈ V ℓ ]
+               (⟨ z ∈ˢ a ⟩ × ⟨ pr u v ∈ˢ b ⟩ × ⟨ x ≡ₕ pr u (pr v z) ⟩) ∥₁
+  F4-read a b x h = PT.rec squash₁ go h
+    where
+    go : Σ[ p ∈ Σ[ u ∈ ⟪ ⋃ (⋃ b) ⟫ ] Σ[ v ∈ ⟪ ⋃ (⋃ b) ⟫ ] Σ[ z ∈ ⟪ a ⟫ ]
+            ⟨ pr (⟪ ⋃ (⋃ b) ⟫↪ u) (⟪ ⋃ (⋃ b) ⟫↪ v) ∈ₛ b ⟩ ]
+           (pr (⟪ ⋃ (⋃ b) ⟫↪ (p .fst))
+               (pr (⟪ ⋃ (⋃ b) ⟫↪ (p .snd .fst))
+                   (⟪ a ⟫↪ (p .snd .snd .fst))) ≡ x)
+       → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ] Σ[ z ∈ V ℓ ]
+            (⟨ z ∈ˢ a ⟩ × ⟨ pr u v ∈ˢ b ⟩ × ⟨ x ≡ₕ pr u (pr v z) ⟩) ∥₁
+    go (p , q) = ∣ ⟪ ⋃ (⋃ b) ⟫↪ (p .fst)
+      , ⟪ ⋃ (⋃ b) ⟫↪ (p .snd .fst)
+      , ⟪ a ⟫↪ (p .snd .snd .fst)
+      , ( ∈∈ₛ {a = ⟪ a ⟫↪ (p .snd .snd .fst)} {b = a} .snd (∈ₛ⟪ a ⟫↪ (p .snd .snd .fst))
+        , ∈∈ₛ {a = pr (⟪ ⋃ (⋃ b) ⟫↪ (p .fst)) (⟪ ⋃ (⋃ b) ⟫↪ (p .snd .fst))}
+              {b = b} .snd (p .snd .snd .snd)
+        , subst (λ w → ⟨ x ≡ₕ w ⟩) (sym q) refl ) ∣₁
+
+opaque
+  unfolding F6
+  F6-read : (a b x : V ℓ) → ⟨ x ∈ˢ F6 a b ⟩
+          → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+               (⟨ pr u v ∈ˢ a ⟩ × ⟨ x ≡ₕ u ⟩) ∥₁
+  F6-read a b x h = PT.rec squash₁ go h
+    where
+    go : Σ[ p ∈ Σ[ u ∈ ⟪ ⋃ (⋃ a) ⟫ ] Σ[ v ∈ ⟪ ⋃ (⋃ a) ⟫ ]
+            ⟨ pr (⟪ ⋃ (⋃ a) ⟫↪ u) (⟪ ⋃ (⋃ a) ⟫↪ v) ∈ₛ a ⟩ ]
+           (⟪ ⋃ (⋃ a) ⟫↪ (p .fst) ≡ x)
+       → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+            (⟨ pr u v ∈ˢ a ⟩ × ⟨ x ≡ₕ u ⟩) ∥₁
+    go (p , q) = ∣ ⟪ ⋃ (⋃ a) ⟫↪ (p .fst) , ⟪ ⋃ (⋃ a) ⟫↪ (p .snd .fst)
+      , ( ∈∈ₛ {a = pr (⟪ ⋃ (⋃ a) ⟫↪ (p .fst)) (⟪ ⋃ (⋃ a) ⟫↪ (p .snd .fst))}
+              {b = a} .snd (p .snd .snd)
+        , subst (λ w → ⟨ x ≡ₕ w ⟩) (sym q) refl ) ∣₁
+
+opaque
+  unfolding F7
+  F7-read : (a b x : V ℓ) → ⟨ x ∈ˢ F7 a b ⟩
+          → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+               (⟨ u ∈ˢ a ⟩ × ⟨ v ∈ˢ a ⟩ × ⟨ u ∈ˢ v ⟩ × ⟨ x ≡ₕ pr u v ⟩) ∥₁
+  F7-read a b x h = PT.rec squash₁ go h
+    where
+    go : Σ[ p ∈ Σ[ q ∈ ⟪ a ⟫ × ⟪ a ⟫ ]
+            ⟨ ⟪ a ⟫↪ (q .fst) ∈ₛ ⟪ a ⟫↪ (q .snd) ⟩ ]
+           (pr (⟪ a ⟫↪ (p .fst .fst)) (⟪ a ⟫↪ (p .fst .snd)) ≡ x)
+       → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+            (⟨ u ∈ˢ a ⟩ × ⟨ v ∈ˢ a ⟩ × ⟨ u ∈ˢ v ⟩ × ⟨ x ≡ₕ pr u v ⟩) ∥₁
+    go (p , q) = ∣ ⟪ a ⟫↪ (p .fst .fst) , ⟪ a ⟫↪ (p .fst .snd)
+      , ( ∈∈ₛ {a = ⟪ a ⟫↪ (p .fst .fst)} {b = a} .snd (∈ₛ⟪ a ⟫↪ (p .fst .fst))
+        , ∈∈ₛ {a = ⟪ a ⟫↪ (p .fst .snd)} {b = a} .snd (∈ₛ⟪ a ⟫↪ (p .fst .snd))
+        , ∈∈ₛ {a = ⟪ a ⟫↪ (p .fst .fst)} {b = ⟪ a ⟫↪ (p .fst .snd)} .snd (p .snd)
+        , subst (λ w → ⟨ x ≡ₕ w ⟩) (sym q) refl ) ∣₁
+```
