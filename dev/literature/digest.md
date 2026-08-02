@@ -302,12 +302,18 @@ sources disagree, the source wins and the discrepancy is flagged.
    relations Sigma-1 (JM 2.2.4, 2.2.8). Only the "serves the Sigma-star
    theory" clause still hangs on Zeman's book (paywalled).
 3. **The S-step formula.** The note writes S_{ν+1} = S_ν ∪ {S_ν} ∪
-   ⋃_i G_i"(S_ν × S_ν); SZ's actual step is S^A(U) = ⋃_{i≤15} F_i"(U ∪
-   {U})² (SZ p. 9-10). The shapes differ (SZ folds U and {U} into the
-   argument square rather than unioning them in); the collection records no
-   comparison of the two shapes, so no equivalence between them is claimed
-   here. The formalization should pin SZ's exact form. FLAGGED:
-   presentational discrepancy, SZ's form wins.
+   ⋃_i G_i"(S_ν × S_ν); SZ display S^A(U) = ⋃_{i≤15} F_i"(U ∪ {U})² but
+   their PROSE says the operator "adds images of members of U ∪ {U}" (SZ
+   p. 9, the verb is load-bearing). RESOLVED 2026-08-03, reversing this
+   item's earlier flag, by machine evidence plus the collection: the bare
+   union fails its own floor (u ∈ S(U) for an arbitrary member u of U is
+   unprovable from the sixteen values; measured in the [L3.31-R2c] build,
+   where the transitivity obstruction traced back to exactly this), while
+   Mathias's corrected one-step operator is verbatim cumulative
+   (T(u) = u ∪ {u} ∪ ..., WS 2.73, in the collection). The owner note's
+   cumulative shape is the operational form; SZ's displayed formula reads
+   as shorthand under their own "adds". The formalization pins
+   step u = u ∪ {u} ∪ the sixteen images.
 4. **The operation count.** The note says the well-order's index i runs
    over "9 or 10" indices and its table says "10 G_i"; SZ's basis has 16
    functions and the well-order is lexicographic over 16 × S × S (SZ pp.
