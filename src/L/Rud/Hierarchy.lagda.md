@@ -23,6 +23,8 @@ open import Base.Prelude
 open import Base.Truth
 open import Base.Classical using ( LEM )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
+open import Cubical.Data.Sum using ( _⊎_ )
 
 module L.Rud.Hierarchy
   {ℓ : Level}
@@ -32,7 +34,7 @@ module L.Rud.Hierarchy
   (step-∈ : (u : V ℓ) → ⟨ u ∈ step u ⟩)
   (step-mono∈ : {u v : V ℓ} → ((x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ v ⟩) → ⟨ u ∈ v ⟩
               → ((x : V ℓ) → ⟨ x ∈ step u ⟩ → ⟨ x ∈ step v ⟩))
-  (step-trans : (u : V ℓ)
+  (step-trans : (u : V ℓ) → (⟨ ∅ ∈ u ⟩ ⊎ (u ≡ ∅))
               → ({x y : V ℓ} → ⟨ y ∈ x ⟩ → ⟨ x ∈ u ⟩ → ⟨ y ∈ u ⟩)
               → ({x y : V ℓ} → ⟨ y ∈ x ⟩ → ⟨ x ∈ step u ⟩ → ⟨ y ∈ step u ⟩))
   where
@@ -48,11 +50,11 @@ open import L.Ordinal.Linear {ℓ} lem using ( ord-tri; Tri )
 open import L.Rud.OrdArith {ℓ} lem
   using ( isLimit; isLimit-ord; isLimit-not-succ; limit-mem-ord )
 
-open import Cubical.Functions.Logic using ( ⇔toPath )
+open import Cubical.Functions.Logic using ( ⇔toPath; ∃[]-syntax )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.Data.Sum using ( inl; inr )
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -113,10 +115,110 @@ data isLevel : S → Type (ℓ-suc ℓ) where
   union-level    : (x : S) → ((y : S) → ⟨ y ∈ˢ x ⟩ → isLevel y) → isLevel (⋃ x)
   setUnion-level : (X : Type ℓ) (f : X → S)
                  → ((x : X) → isLevel (f x)) → isLevel (⋃ (sett X f))
+```
 
+<!--en-->
+The conditioned step-trans takes the empty-set hypothesis
+`∅ ∈ u` or `u = ∅`; the levels supply it. The empty level is `∅` itself,
+the step of a level inherits the hypothesis through `step-⊆` (a member of
+`u`) or `step-∈` (when `u = ∅`, the step of `∅` contains `∅`), and a union
+of levels contains `∅` as soon as one of its members does, else all its
+members are empty and the union is empty. The union cases split by the
+excluded middle, the one classical step of the lemma.
+<!--zh-->
+带条件的 step-trans 取空集假设 `∅ ∈ u` 或 `u = ∅`；诸层供给它。空层即 `∅` 自身，一层的 step 经 `step-⊆` (u 的成员) 或 `step-∈` (当 `u = ∅` 时，`∅` 的 step 含有 `∅`) 继承该假设，而诸层之并只要其一个成员含 `∅` 就含 `∅`，否则其成员全空、并亦空。并的两情形靠排中律切开，这是该引理唯一经典的一步。
+<!--/-->
+
+```agda
+private
+  union-∅-cond : (x : S) → ((y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ ∅ ∈ y ⟩ ⊎ (y ≡ ∅))
+               → ⟨ ∅ ∈ ⋃ x ⟩ ⊎ (⋃ x ≡ ∅)
+  union-∅-cond x ih = go (lem (∃[ y ] ((y ∈ˢ x) ⊓ (∅ ∈ˢ y))))
+    where
+    go : ⟨ (∃[ y ] ((y ∈ˢ x) ⊓ (∅ ∈ˢ y))) ⟩
+       ⊎ (⟨ (∃[ y ] ((y ∈ˢ x) ⊓ (∅ ∈ˢ y))) ⟩ → Empty.⊥)
+       → ⟨ ∅ ∈ ⋃ x ⟩ ⊎ (⋃ x ≡ ∅)
+    go (inl e) = inl (PT.rec (snd (∅ ∈ ⋃ x)) fwd e)
+      where
+      fwd : Σ[ y ∈ S ] ⟨ (y ∈ˢ x) ⊓ (∅ ∈ˢ y) ⟩ → ⟨ ∅ ∈ ⋃ x ⟩
+      fwd (y , y∈x , ∅∈y) = ∈∈ₛ {a = ∅} {b = ⋃ x} .snd
+        (union-ax x ∅ .snd
+          ∣ y , ( ∈∈ₛ {a = y} {b = x} .fst y∈x
+               , ∈∈ₛ {a = ∅} {b = y} .fst ∅∈y ) ∣₁)
+    go (inr none) = inr (ext-⊆ S∅⊆∅ ∅⊆S∅)
+      where
+      S∅⊆∅ : (⋃ x) ⊆ ∅
+      S∅⊆∅ z z∈⋃x = PT.rec (snd (z ∈ˢ ∅)) uStep
+        (union-ax x z .fst (∈∈ₛ {a = z} {b = ⋃ x} .fst z∈⋃x))
+        where
+        uStep : Σ[ y ∈ S ] (⟨ y ∈ₛ x ⟩ × ⟨ z ∈ₛ y ⟩) → ⟨ z ∈ˢ ∅ ⟩
+        uStep (y , y∈ₛx , z∈ₛy) = goCond (ih y (∈∈ₛ {a = y} {b = x} .snd y∈ₛx))
+          where
+          goCond : ⟨ ∅ ∈ y ⟩ ⊎ (y ≡ ∅) → ⟨ z ∈ˢ ∅ ⟩
+          goCond (inl ∅∈y) = Empty.rec
+            (none ∣ y , (∈∈ₛ {a = y} {b = x} .snd y∈ₛx , ∅∈y) ∣₁)
+          goCond (inr y≡∅) = Empty.rec (∅-empty z
+            (∈∈ₛ {a = z} {b = ∅} .fst
+              (subst (λ t → ⟨ z ∈ˢ t ⟩) y≡∅
+                (∈∈ₛ {a = z} {b = y} .snd z∈ₛy))))
+      ∅⊆S∅ : ∅ ⊆ (⋃ x)
+      ∅⊆S∅ z z∈∅ = Empty.rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst z∈∅))
+
+  family-∅-cond : (X : Type ℓ) (f : X → S)
+                → ((x : X) → ⟨ ∅ ∈ f x ⟩ ⊎ (f x ≡ ∅))
+                → ⟨ ∅ ∈ ⋃ (sett X f) ⟩ ⊎ (⋃ (sett X f) ≡ ∅)
+  family-∅-cond X f ih = go (lem (∃[ x ] (∅ ∈ˢ f x)))
+    where
+    go : ⟨ (∃[ x ] (∅ ∈ˢ f x)) ⟩
+       ⊎ (⟨ (∃[ x ] (∅ ∈ˢ f x)) ⟩ → Empty.⊥)
+       → ⟨ ∅ ∈ ⋃ (sett X f) ⟩ ⊎ (⋃ (sett X f) ≡ ∅)
+    go (inl e) = inl (PT.rec (snd (∅ ∈ ⋃ (sett X f))) fwd e)
+      where
+      fwd : Σ[ x ∈ X ] ⟨ ∅ ∈ˢ f x ⟩ → ⟨ ∅ ∈ ⋃ (sett X f) ⟩
+      fwd (x , ∅∈fx) = ∈∈ₛ {a = ∅} {b = ⋃ (sett X f)} .snd
+        (union-ax (sett X f) ∅ .snd
+          ∣ f x , ( ∈∈ₛ {a = f x} {b = sett X f} .fst ∣ x , refl ∣₁
+                 , ∈∈ₛ {a = ∅} {b = f x} .fst ∅∈fx ) ∣₁)
+    go (inr none) = inr (ext-⊆ S∅⊆∅ ∅⊆S∅)
+      where
+      S∅⊆∅ : (⋃ (sett X f)) ⊆ ∅
+      S∅⊆∅ z z∈⋃ = PT.rec (snd (z ∈ˢ ∅)) uStep
+        (union-ax (sett X f) z .fst
+          (∈∈ₛ {a = z} {b = ⋃ (sett X f)} .fst z∈⋃))
+        where
+        uStep : Σ[ y ∈ S ] (⟨ y ∈ₛ sett X f ⟩ × ⟨ z ∈ₛ y ⟩) → ⟨ z ∈ˢ ∅ ⟩
+        uStep (y , y∈ₛsett , z∈ₛy) = PT.rec (snd (z ∈ˢ ∅)) atFib
+          (∈∈ₛ {a = y} {b = sett X f} .snd y∈ₛsett)
+          where
+          atFib : Σ[ x ∈ X ] (f x ≡ y) → ⟨ z ∈ˢ ∅ ⟩
+          atFib (x , q) = goCond (ih x)
+            where
+            goCond : ⟨ ∅ ∈ f x ⟩ ⊎ (f x ≡ ∅) → ⟨ z ∈ˢ ∅ ⟩
+            goCond (inl ∅∈fx) = Empty.rec (none ∣ x , ∅∈fx ∣₁)
+            goCond (inr fx≡∅) = Empty.rec (∅-empty z
+              (∈∈ₛ {a = z} {b = ∅} .fst
+                (subst (λ t → ⟨ z ∈ˢ t ⟩) (sym q ∙ fx≡∅)
+                  (∈∈ₛ {a = z} {b = y} .snd z∈ₛy))))
+      ∅⊆S∅ : ∅ ⊆ (⋃ (sett X f))
+      ∅⊆S∅ z z∈∅ = Empty.rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst z∈∅))
+
+level-∅-cond : {A : S} → isLevel A → ⟨ ∅ ∈ A ⟩ ⊎ (A ≡ ∅)
+level-∅-cond ∅-level = inr refl
+level-∅-cond (step-level {A} lA) = go (level-∅-cond lA)
+  where
+  go : ⟨ ∅ ∈ A ⟩ ⊎ (A ≡ ∅) → ⟨ ∅ ∈ step A ⟩ ⊎ (step A ≡ ∅)
+  go (inl ∅∈A) = inl (step-⊆ A ∅ ∅∈A)
+  go (inr A≡∅) = inl (subst (λ t → ⟨ ∅ ∈ t ⟩) (sym (cong step A≡∅)) (step-∈ ∅))
+level-∅-cond (union-level x mem) =
+  union-∅-cond x (λ y y∈x → level-∅-cond (mem y y∈x))
+level-∅-cond (setUnion-level X f hf) =
+  family-∅-cond X f (λ x → level-∅-cond (hf x))
+```
+
+```agda
 level-trans : {A : S} → isLevel A → isTransV A
 level-trans ∅-level = ∅-trans
-level-trans (step-level {A} lA) = step-trans A (level-trans lA)
+level-trans (step-level {A} lA) = step-trans A (level-∅-cond lA) (level-trans lA)
 level-trans (union-level x mem) = ⋃-trans x (λ y y∈x → level-trans (mem y y∈x))
 level-trans (setUnion-level X f hf) = setUnion-trans X f (λ x → level-trans (hf x))
 ```
