@@ -172,7 +172,11 @@ presentation type.
 
 **Rule:** A definability walk (the `defSet≡` extensionality of an InL-idiom
 constructibility lemma) takes its set arguments as parameters of a module, not
-of a function.
+of a function, and those parameters stay ABSTRACT through the walk: the
+formulas and the readers never mention a concrete `sett` body (`slice`,
+`satSet`, a stage over them); the instantiation at real sets happens only at
+the lemma-assembly level, where memberships and equations flow but nothing
+unfolds.
 
 **Measured (B4d, 2026-08-02):** the values-image walk formulated as
 `valsWalk : (X : V ℓ) → ...` ran past 4 minutes cold and never finished;
@@ -180,10 +184,18 @@ restating it as `module ValsWalk (X : V ℓ) ... where` dropped the whole file t
 ~13 s. The bridge chapter's Vals/SelMem modules were already
 module-parameterized; the mechanism now has a measurement.
 
-**Provenance:** the B4d batch record (PLAN row L3.29 ledger); the B4d report's
-failure 1. A sibling hypothesis (walk arguments must also be ABSTRACT, so
-nothing normalizes against transparent bodies) is under test by the final B
-batch and enters here if confirmed.
+**Measured (B4e, 2026-08-02):** the abstractness half confirmed: the selection
+walk whose environment reached concrete shelf bodies (B4d's wall) exceeded
+4 minutes cold and never finished; restated over abstract shelves, keys, and
+stage (`SelWalk`/`SelEWalk`), the whole file checks in ~30 s cold and the two
+selection images assemble at the real shelves with nothing unfolding.
+Notably, the isolated machinery did NOT reproduce the wall in any standalone
+parameterization; only the real-file context did, so bisects for this class
+must run in situ (B4e report, sections 1-2 and 7).
+
+**Provenance:** the B4d batch record (PLAN row L3.29 ledger) and the B4d
+report's failure 1; the sibling abstractness hypothesis confirmed by the final
+B batch (B4e report, the headline probe).
 
 ### P-i. The conversion-explosion playbook (imported from the source project)
 
@@ -721,6 +733,20 @@ once the environment was rebuilt from its pieces (`suc-clause`'s design);
 the abstract-env formulation left the shelves untypeable.
 
 **Provenance:** the B4b report (delivered as `suc-clause`); commit `810d9cd`.
+
+### R-34. Pin every implicit universe level a `using`-import leaves open
+
+**Rule:** After `open M using (...)`, a lemma whose type leaves an imported
+name's universe level implicit can send the checker into a type-level meta
+search that walls the whole file; pin the level once through a module alias
+(`module M' = M {ℓ}`) and read the name through the alias.
+
+**Measured (B4e, 2026-08-02):** `num∈num : ⟨ # m ∈ # n ⟩` with `#_`'s level
+left implicit after `open InfinitySet using (…)` walled the whole file; the
+two-line lemma was innocent, the meta search was the cost. `module IS =
+InfinitySet {ℓ}` fixed it with no other change (B4e report, the probe trail).
+
+**Provenance:** the B4e probe trail, section 2.
 
 ## 3. Termination traps (T series)
 

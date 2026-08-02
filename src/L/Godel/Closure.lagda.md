@@ -35,27 +35,35 @@ the next chapter's work.
 open import Base.Prelude
 open import Base.Truth using ( hPropAlgebra )
 open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
 
 module L.Godel.Closure {ℓ : Level} where
 
 open import Base.Classical using ( LEM )
 
 open import FOL.Syntax
-  using ( Formula; var; con
-        ; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_; ⊤̇; ∀̇∈; ∃̇∈ )
+  using ( Formula; Term; var; con
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ⊤̇; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy
+  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-∀∈; δ-∃∈ )
 open import FOL.Manipulation.Renaming using ( renameFo )
 import FOL.Manipulation.Renaming as Renaming
+open import FOL.Manipulation.Relabelling using ( mapFo; ⊨-map )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( extensionalV; 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
-open import V.Model {ℓ} using ( self∈sucV; numeralV≡# )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; numeralV≡# )
 open import L.Coding.Environment {ℓ} using ( lookup-spec; cons )
+open import L.Coding.Environment {ℓ} using ( sucAt-adequate )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
   using ( isL; isL-trans; Lset; Lset-mono; Lset-layer; layer-trans
         ; Lset-in; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
-open import L.Ordinal {ℓ} using ( suc-ord )
+open import L.Ordinal {ℓ} using ( suc-ord; ∈#-elim )
 open import L.Axioms.Basic {ℓ} using ( defSet→isL; isL-directed )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Base {ℓ}
+  using ( prAt-adequate; ∈pair-introL; ∈pair-introR; ∈pair-elim )
 open import L.Coding.Model {ℓ} using ( extAt )
 open import L.Coding.InL {ℓ} using ( sglL )
 open import L.Godel.Operations {ℓ}
@@ -66,11 +74,13 @@ open import L.Godel.Operations {ℓ}
         ; extendGraph; extendGraph-zero; extendGraph-out
         ; extendFamily; extendFamily-in; extendFamily-out
         ; values; values-in; values-wit
-        ; tailGraph; shiftDown; shiftDown-in; shiftDown-out
+        ; tailGraph; tailGraph-in; tailGraph-out
+        ; shiftDown; shiftDown-in; shiftDown-out
         ; singleton-self; singleton-in; singleton-out )
 open import L.Godel.Tuples {ℓ}
   using ( allTuples; allTuples-suc; tuple; tuple-entry; tuple-extend
         ; tupleTail )
+open import L.Godel.InL {ℓ} using ( stageFam; allTuplesL )
 open import L.Godel.Definable {ℓ} using ( module Describes )
 open import L.Godel.Terms {ℓ}
   using ( KT; allK; selMemK; selEqK; selEqConK; interK; unionK; complK; shiftK
@@ -78,6 +88,9 @@ open import L.Godel.Terms {ℓ}
 import L.Godel.Terms as Terms
 
 open import Cubical.Data.FinData using ( Fin; toℕ )
+open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId'; toℕ<n )
+open import Cubical.Data.Nat.Order using ( _<_ )
+open import Cubical.Data.Nat using ( snotz; injSuc )
 open import Cubical.Data.Nat using ( _+_; +-zero; +-suc )
 open import Cubical.Data.Unit using ( Unit*; tt* )
 open import Cubical.Foundations.Prelude using ( subst2 )
@@ -94,9 +107,12 @@ open import Cubical.HITs.CumulativeHierarchy.Base
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ∅-empty; ⁅_⁆s; module InfinitySet )
-open InfinitySet using ( sucV; #_ )
+  using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
+module IS = InfinitySet {ℓ}
+open IS using ( sucV; #_ )
 
+module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+open SemV.At (V ℓ) id renaming ( _⊨_ to _⊨v_ )
 
 ```
 
@@ -642,6 +658,36 @@ its precedent there.
   private
     sglAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} → Fin n → Fin n → Formula K n
     sglAt′ k i = (var i ∈̇ var k) ∧̇ (∀̇∈ (var k) (var zero ≐ var (suc i)))
+
+    -- The pair reader and the application atom, restated over any domain
+    -- exactly as the bridge chapter restates them: `prAt′` is `L.Coding.Base`'s
+    -- `prAt` (definitionally, since the atoms are the same expressions), so its
+    -- adequacy is the delivered `prAt-adequate` at the outer satisfaction.
+    pairAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} → Fin n → Fin n → Fin n → Formula K n
+    pairAt′ k i j = (var i ∈̇ var k) ∧̇ ((var j ∈̇ var k)
+                ∧̇ (∀̇∈ (var k) ((var zero ≐ var (suc i)) ∨̇ (var zero ≐ var (suc j)))))
+
+    prAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} → Fin n → Fin n → Fin n → Formula K n
+    prAt′ q u v = (∃̇∈ (var q) (sglAt′ zero (suc u)))
+               ∧̇ ((∃̇∈ (var q) (pairAt′ zero (suc u) (suc v)))
+               ∧̇ (∀̇∈ (var q) (sglAt′ zero (suc u) ∨̇ pairAt′ zero (suc u) (suc v))))
+
+    appAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} → Fin n → Fin n → Fin n → Formula K n
+    appAt′ f x y = ∃̇∈ (var f) (prAt′ zero (suc x) (suc y))
+
+    Δ₀-sglAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} (k i : Fin n)
+              → Δ₀ (sglAt′ {K = K} k i)
+    Δ₀-sglAt′ k i = δ-∧ δ-∈ (δ-∀∈ δ-≐)
+
+    Δ₀-pairAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} (k i j : Fin n)
+               → Δ₀ (pairAt′ {K = K} k i j)
+    Δ₀-pairAt′ k i j = δ-∧ δ-∈ (δ-∧ δ-∈ (δ-∀∈ (δ-∨ δ-≐ δ-≐)))
+
+    Δ₀-prAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} (q u v : Fin n)
+             → Δ₀ (prAt′ {K = K} q u v)
+    Δ₀-prAt′ q u v = δ-∧ (δ-∃∈ (Δ₀-sglAt′ zero (suc u)))
+      (δ-∧ (δ-∃∈ (Δ₀-pairAt′ zero (suc u) (suc v)))
+           (δ-∀∈ (δ-∨ (Δ₀-sglAt′ zero (suc u)) (Δ₀-pairAt′ zero (suc u) (suc v)))))
 
     module SglDesc where
       module Abs = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -1254,6 +1300,2316 @@ the cumulative level, is direction-paired and unsealed).
   slice-addL n zero k X h = h
   slice-addL n (suc m) k X h =
     slice-old {n = m + n} {k} {X} (slice-addL n m k X h)
+
+```
+
+<!--en-->
+## The closure is constructible
+
+The step's sett splits by tag, and each tag's fiber is a definable image-set of
+the shelves it reads. Seven images are delivered here: the inter image is the
+set of intersections of two members of the shelf, the union image the set of
+unions, the difference image the set of differences, the tuple image the
+singleton of the tuple family, the values image the values of the arity-one
+shelf, and the two selections, the membership selection and the equality
+selection, at the numeral keys the payload records. Each is constructible by
+one `defSet→isL` in the bridge chapter's
+idiom: one stage from `isL-directed` (or `stageFam`, where the values image
+also needs the zero-key singleton) over the shelves involved, a defining
+formula with bounded existentials over the shelf slots and the operation's
+delivered description as the body atom, and the extensionality of the
+described set against the tag's fiber, whose two directions are the
+description's readers. The images live one or two stages above the shelves: a
+member of a shelf sits in the stage, an operation result on such members is a
+definable subset of the stage, hence a member of the next one (`mkUp`{.Agda},
+the bridge chapter's one-step climb restated in the three lines the door
+costs), and the image set, being a set of such results, is definable over the
+next stage again. The two inclusions of each pin are bounded: the first over
+the image itself, the second over the stage (which is a member of the next
+stage by the true formula, so the pin stays Δ₀). The selection walks follow
+the bridge chapter's SelMem/SelEq idiom with the shelves, the keys and the
+stage all abstract module parameters, so the adequacy transfers meet only
+variables and the walks never mention `slice` or any concrete `sett`; the
+frames apply them at the real shelves only in the two directions of the pin,
+with the payload keys read through the numeral memberships. The shift and the
+extension images, the step as the finite union of at most nine such images,
+and the slice induction are not delivered here: the shift image's deep
+seek-sentence satisfaction does not finish within the wall in this
+formulation, and the items behind it are blocked until a ruling on that wall.
+<!--zh-->
+## 闭包可构造
+
+步骤的 `sett` 按标签裂开，而每个标签的纤维都是它所读架位的可定义像集。此处交付七个像：交像是架位两成员之交的集合，并像是两成员之并的集合，差像是两成员之差的集合，元组像是元组族的单点集，取值像是第一元数架位的取值集合，以及两个选择，隶属选择与相等选择，落在载荷所记录的两个数码键处。每个像集凭一次 `defSet→isL` 走桥梁章的行事而可构造：从 `isL-directed` (或在取值像处用 `stageFam`，还需零键单点集) 取一个装下所涉架位的阶段，一条带架位槽上有界存在、以运算已交付描述为体原子的定义公式，再加上被描述集对标签纤维的外延等同，其两个方向正是描述的读式。诸像坐在架位之上的一层或两层：架位成员坐在阶段里，对这种成员施一次运算的结果是阶段的可定义子集，故是下一层的成员 (`mkUp`{.Agda}，桥梁章一步爬升的本地重述，只花那道门的三行)；而像集作为这种结果的集合，又在再下一层上可定义。每条钉子的两个包含皆有界：第一个在像自身上，第二个在阶段上 (阶段经真公式是下一层的成员，故钉子保持 Δ₀)。选择行走桥梁章 SelMem/SelEq 的行事，架位、键与阶段全部作为抽象模块参数，适足搬运只遇到变元，行走从不提 `slice` 或任何具体 `sett`；框架只在钉子的两个方向于真实架位处实例化它们，载荷键经数码隶属读出。移位像与扩张像、作为至多九个像集之有穷并的步骤、以及片归纳此处未交付：移位像的深寻句满足在本表述下越墙而不终，其后的条目被此墙挡住，须待对此墙的裁决。
+<!--/-->
+
+```agda
+  -- The tag images: the step's sett splits by tag, each fiber the sett of the
+  -- tag's own payloads.  The step is their nine-fold union (below).
+  interImg : ℕ → ℕ → V ℓ
+  interImg n k = sett (StepPayload n k tagInter) (λ p → stepImage {n} {k} tagInter p)
+
+  unionImg : ℕ → ℕ → V ℓ
+  unionImg n k = sett (StepPayload n k tagUnion) (λ p → stepImage {n} {k} tagUnion p)
+
+  diffImg : ℕ → ℕ → V ℓ
+  diffImg n k = sett (StepPayload n k tagDiff) (λ p → stepImage {n} {k} tagDiff p)
+
+  selMImg : ℕ → ℕ → V ℓ
+  selMImg n k = sett (StepPayload n k tagSelM) (λ p → stepImage {n} {k} tagSelM p)
+
+  selEImg : ℕ → ℕ → V ℓ
+  selEImg n k = sett (StepPayload n k tagSelE) (λ p → stepImage {n} {k} tagSelE p)
+
+  allImg : ℕ → ℕ → V ℓ
+  allImg n k = sett (StepPayload n k tagAll) (λ p → stepImage {n} {k} tagAll p)
+
+  extImg : ℕ → ℕ → V ℓ
+  extImg n k = sett (StepPayload n (suc (suc k)) tagExt)
+                 (λ p → stepImage {n} {suc (suc k)} tagExt p)
+
+  shiftImg : ℕ → ℕ → V ℓ
+  shiftImg n k = sett (StepPayload n k tagShift) (λ p → stepImage {n} {k} tagShift p)
+
+  valuesImg : ℕ → V ℓ
+  valuesImg n = sett (StepPayload n 0 tagValues)
+                 (λ p → stepImage {n} {0} tagValues p)
+
+  -- The one-step climb, restated after the bridge chapter: a set definable
+  -- over a stage is a member of the next one.
+  mkUp : (σ x : V ℓ) (Φ : Formula ⟪ Lset σ ⟫ 1) → DefOf.defSet (Lset σ) Φ ≡ x
+       → ⟨ x ∈ Lset (sucV σ) ⟩
+  mkUp σ x Φ e = Lset-in (sucV σ) σ x (self∈sucV σ) (𝒟ₒ-intro (Lset σ) x ∣ Φ , e ∣₁)
+
+  -- The binary operation results on stage members are definable subsets of the
+  -- stage, hence members of the next one: the three two-line formulas z ∈ X
+  -- with the connective of the operation, and the membership laws of the
+  -- operations chapter for the two inclusions.
+  private
+    module BinWalk (τ : V ℓ) where
+      module DefAτ = DefOf (Lset τ)
+
+      capW : (X Y : V ℓ) → ⟨ X ∈ Lset τ ⟩ → ⟨ Y ∈ Lset τ ⟩
+           → ⟨ X ∩ Y ∈ Lset (sucV τ) ⟩
+      capW X Y X∈τ Y∈τ = mkUp τ (X ∩ Y) Φ cap≡
+        where
+        mX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .fst
+        qX : ⟪ Lset τ ⟫↪ mX ≡ X
+        qX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .snd
+        mY = ∈-asFiber {a = Y} {b = Lset τ} Y∈τ .fst
+        qY : ⟪ Lset τ ⟫↪ mY ≡ Y
+        qY = ∈-asFiber {a = Y} {b = Lset τ} Y∈τ .snd
+        Φ : Formula ⟪ Lset τ ⟫ 1
+        Φ = (var zero ∈̇ con mX) ∧̇ (var zero ∈̇ con mY)
+        cap≡ : DefAτ.defSet Φ ≡ X ∩ Y
+        cap≡ = extensionality (DefAτ.defSet Φ) (X ∩ Y) (sub₁ , sub₂)
+          where
+          sub₁ : ⟨ DefAτ.defSet Φ ⊆ X ∩ Y ⟩
+          sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ X ∩ Y))
+            (λ { ((m , h) , q) →
+              subst (λ w → ⟨ w ∈ₛ X ∩ Y ⟩) q
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m} {b = X ∩ Y} .fst
+                  (∩-in {X = X} {Y = Y} {x = ⟪ Lset τ ⟫↪ m}
+                    (subst (λ w → ⟨ ⟪ Lset τ ⟫↪ m ∈ w ⟩) qX
+                      ((subst ⟨_⟩ (DefAτ.defSet-mem Φ m) ∣ (m , h) , refl ∣₁) .fst))
+                    (subst (λ w → ⟨ ⟪ Lset τ ⟫↪ m ∈ w ⟩) qY
+                      ((subst ⟨_⟩ (DefAτ.defSet-mem Φ m) ∣ (m , h) , refl ∣₁) .snd)))) })
+            (∈∈ₛ {a = z} {b = DefAτ.defSet Φ} .snd z∈ₛ)
+          sub₂ : ⟨ X ∩ Y ⊆ DefAτ.defSet Φ ⟩
+          sub₂ z z∈ₛ = build
+            (∩-out {X = X} {Y = Y} {x = z} (∈∈ₛ {a = z} {b = X ∩ Y} .snd z∈ₛ))
+            where
+            build : ⟨ z ∈ X ⟩ × ⟨ z ∈ Y ⟩ → ⟨ z ∈ₛ DefAτ.defSet Φ ⟩
+            build (hX , hY) =
+              subst (λ w → ⟨ w ∈ₛ DefAτ.defSet Φ ⟩) q'
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m'} {b = DefAτ.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (DefAτ.defSet-mem Φ m')) sat))
+              where
+              z∈τ : ⟨ z ∈ Lset τ ⟩
+              z∈τ = layer-trans (Lset-layer τ) {x = X} {y = z} hX X∈τ
+              m' = ∈-asFiber {a = z} {b = Lset τ} z∈τ .fst
+              q' : ⟪ Lset τ ⟫↪ m' ≡ z
+              q' = ∈-asFiber {a = z} {b = Lset τ} z∈τ .snd
+              sat : ⟨ (DefAτ.ι m' ∷ []) DefAτ.⊨ᵐ Φ ⟩
+              sat = subst2 (λ u w → ⟨ u ∈ w ⟩) (sym q') (sym qX) hX
+                  , subst2 (λ u w → ⟨ u ∈ w ⟩) (sym q') (sym qY) hY
+
+      unionW : (X Y : V ℓ) → ⟨ X ∈ Lset τ ⟩ → ⟨ Y ∈ Lset τ ⟩
+             → ⟨ X ∪ Y ∈ Lset (sucV τ) ⟩
+      unionW X Y X∈τ Y∈τ = mkUp τ (X ∪ Y) Φ union≡
+        where
+        mX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .fst
+        qX : ⟪ Lset τ ⟫↪ mX ≡ X
+        qX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .snd
+        mY = ∈-asFiber {a = Y} {b = Lset τ} Y∈τ .fst
+        qY : ⟪ Lset τ ⟫↪ mY ≡ Y
+        qY = ∈-asFiber {a = Y} {b = Lset τ} Y∈τ .snd
+        Φ : Formula ⟪ Lset τ ⟫ 1
+        Φ = (var zero ∈̇ con mX) ∨̇ (var zero ∈̇ con mY)
+        union≡ : DefAτ.defSet Φ ≡ X ∪ Y
+        union≡ = extensionality (DefAτ.defSet Φ) (X ∪ Y) (sub₁ , sub₂)
+          where
+          sub₁ : ⟨ DefAτ.defSet Φ ⊆ X ∪ Y ⟩
+          sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ X ∪ Y))
+            (λ { ((m , h) , q) →
+              subst (λ w → ⟨ w ∈ₛ X ∪ Y ⟩) q
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m} {b = X ∪ Y} .fst
+                  (PT.rec (snd (⟪ Lset τ ⟫↪ m ∈ X ∪ Y)) (stepm m)
+                    (subst ⟨_⟩ (DefAτ.defSet-mem Φ m) ∣ (m , h) , refl ∣₁)))
+              })
+            (∈∈ₛ {a = z} {b = DefAτ.defSet Φ} .snd z∈ₛ)
+            where
+            stepm : (m : ⟪ Lset τ ⟫)
+                  → ⟨ (DefAτ.ι m ∷ []) DefAτ.⊨ᵐ
+                        (var zero ∈̇ con mX) ⟩
+                  ⊎ ⟨ (DefAτ.ι m ∷ []) DefAτ.⊨ᵐ
+                        (var zero ∈̇ con mY) ⟩
+                  → ⟨ ⟪ Lset τ ⟫↪ m ∈ X ∪ Y ⟩
+            stepm m (inl hX) = ∪-left {X = X} {Y = Y} {x = ⟪ Lset τ ⟫↪ m}
+              (subst (λ w → ⟨ ⟪ Lset τ ⟫↪ m ∈ w ⟩) qX hX)
+            stepm m (inr hY) = ∪-right {X = X} {Y = Y} {x = ⟪ Lset τ ⟫↪ m}
+              (subst (λ w → ⟨ ⟪ Lset τ ⟫↪ m ∈ w ⟩) qY hY)
+          sub₂ : ⟨ X ∪ Y ⊆ DefAτ.defSet Φ ⟩
+          sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefAτ.defSet Φ)) build
+            (∪-out {X = X} {Y = Y} {x = z} (∈∈ₛ {a = z} {b = X ∪ Y} .snd z∈ₛ))
+            where
+            build : ⟨ z ∈ X ⟩ ⊎ ⟨ z ∈ Y ⟩ → ⟨ z ∈ₛ DefAτ.defSet Φ ⟩
+            build c =
+              subst (λ w → ⟨ w ∈ₛ DefAτ.defSet Φ ⟩) q'
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m'} {b = DefAτ.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (DefAτ.defSet-mem Φ m')) sat))
+              where
+              z∈τ : ⟨ z ∈ Lset τ ⟩
+              z∈τ = Sum.rec (λ hX → layer-trans (Lset-layer τ) {x = X} {y = z} hX X∈τ)
+                             (λ hY → layer-trans (Lset-layer τ) {x = Y} {y = z} hY Y∈τ) c
+              m' = ∈-asFiber {a = z} {b = Lset τ} z∈τ .fst
+              q' : ⟪ Lset τ ⟫↪ m' ≡ z
+              q' = ∈-asFiber {a = z} {b = Lset τ} z∈τ .snd
+              sat : ⟨ (DefAτ.ι m' ∷ []) DefAτ.⊨ᵐ Φ ⟩
+              sat = ∣ Sum.map (subst2 (λ u w → ⟨ u ∈ w ⟩) (sym q') (sym qX))
+                              (subst2 (λ u w → ⟨ u ∈ w ⟩) (sym q') (sym qY)) c ∣₁
+
+      diffW : (X Y : V ℓ) → ⟨ X ∈ Lset τ ⟩ → ⟨ Y ∈ Lset τ ⟩
+            → ⟨ X ∖ Y ∈ Lset (sucV τ) ⟩
+      diffW X Y X∈τ Y∈τ = mkUp τ (X ∖ Y) Φ diff≡
+        where
+        mX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .fst
+        qX : ⟪ Lset τ ⟫↪ mX ≡ X
+        qX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .snd
+        mY = ∈-asFiber {a = Y} {b = Lset τ} Y∈τ .fst
+        qY : ⟪ Lset τ ⟫↪ mY ≡ Y
+        qY = ∈-asFiber {a = Y} {b = Lset τ} Y∈τ .snd
+        Φ : Formula ⟪ Lset τ ⟫ 1
+        Φ = (var zero ∈̇ con mX) ∧̇ (¬̇ (var zero ∈̇ con mY))
+        diff≡ : DefAτ.defSet Φ ≡ X ∖ Y
+        diff≡ = extensionality (DefAτ.defSet Φ) (X ∖ Y) (sub₁ , sub₂)
+          where
+          sub₁ : ⟨ DefAτ.defSet Φ ⊆ X ∖ Y ⟩
+          sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ X ∖ Y))
+            (λ { ((m , h) , q) →
+              subst (λ w → ⟨ w ∈ₛ X ∖ Y ⟩) q
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m} {b = X ∖ Y} .fst
+                  (∖-in {X = X} {Y = Y} {x = ⟪ Lset τ ⟫↪ m}
+                    (subst (λ w → ⟨ ⟪ Lset τ ⟫↪ m ∈ w ⟩) qX
+                      ((subst ⟨_⟩ (DefAτ.defSet-mem Φ m) ∣ (m , h) , refl ∣₁) .fst))
+                    (λ hY → (subst ⟨_⟩ (DefAτ.defSet-mem Φ m) ∣ (m , h) , refl ∣₁) .snd
+                      (subst (λ w → ⟨ ⟪ Lset τ ⟫↪ m ∈ w ⟩) (sym qY) hY)))) })
+            (∈∈ₛ {a = z} {b = DefAτ.defSet Φ} .snd z∈ₛ)
+          sub₂ : ⟨ X ∖ Y ⊆ DefAτ.defSet Φ ⟩
+          sub₂ z z∈ₛ = build
+            (∖-out {X = X} {Y = Y} {x = z} (∈∈ₛ {a = z} {b = X ∖ Y} .snd z∈ₛ))
+            where
+            build : ⟨ z ∈ X ⟩ × (⟨ z ∈ Y ⟩ → Empty.⊥) → ⟨ z ∈ₛ DefAτ.defSet Φ ⟩
+            build (hX , nY) =
+              subst (λ w → ⟨ w ∈ₛ DefAτ.defSet Φ ⟩) q'
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m'} {b = DefAτ.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (DefAτ.defSet-mem Φ m')) sat))
+              where
+              z∈τ : ⟨ z ∈ Lset τ ⟩
+              z∈τ = layer-trans (Lset-layer τ) {x = X} {y = z} hX X∈τ
+              m' = ∈-asFiber {a = z} {b = Lset τ} z∈τ .fst
+              q' : ⟪ Lset τ ⟫↪ m' ≡ z
+              q' = ∈-asFiber {a = z} {b = Lset τ} z∈τ .snd
+              sat : ⟨ (DefAτ.ι m' ∷ []) DefAτ.⊨ᵐ Φ ⟩
+              sat = subst2 (λ u w → ⟨ u ∈ w ⟩) (sym q') (sym qX) hX
+                  , (λ hY → nY (subst2 (λ u w → ⟨ u ∈ w ⟩) q' qY hY))
+
+  -- The binary images.  One shared frame per pair of shelves: the stage one
+  -- step above the shelf stage, the defining formula with two bounded
+  -- existentials over the shelf, the extensionality of the described set
+  -- against the tag's fiber, and the constructibility.
+  private
+    module BinImg (n k : ℕ) (τ : V ℓ) (S∈ : ⟨ slice n k ∈ Lset τ ⟩) where
+      Shelf : V ℓ
+      Shelf = slice n k
+
+      module DefA = DefOf (Lset (sucV τ))
+      module RefA = DefA.Refine (layer-trans (Lset-layer (sucV τ)))
+
+      E : ⟪ Lset (sucV τ) ⟫ → V ℓ
+      E m = ⟪ Lset (sucV τ) ⟫↪ m
+
+      Shelf' : ⟨ Shelf ∈ Lset (sucV τ) ⟩
+      Shelf' = Lset-mono {sucV τ} {τ} (self∈sucV τ) S∈
+      mS = ∈-asFiber {a = Shelf} {b = Lset (sucV τ)} Shelf' .fst
+      qS : E mS ≡ Shelf
+      qS = ∈-asFiber {a = Shelf} {b = Lset (sucV τ)} Shelf' .snd
+
+      fibers : (W : V ℓ) (hW : ⟨ W ∈ Shelf ⟩)
+             → Cubical.Foundations.Equiv.fiber (⟪ Shelf ⟫↪) W
+      fibers W hW = ∈-asFiber {a = W} {b = Shelf} hW
+
+      capΦ : Formula ⟪ Lset (sucV τ) ⟫ 1
+      capΦ = ∃̇∈ (con mS) (∃̇∈ (con mS)
+               ( (∀̇∈ (var (suc (suc zero)))
+                    (var zero ∈̇ var (suc (suc zero))
+                     ∧̇ var zero ∈̇ var (suc zero)))
+               ∧̇ (∀̇∈ (var (suc zero))
+                    (var zero ∈̇ var (suc zero)
+                     ⇒̇ var zero ∈̇ var (suc (suc (suc zero)))))))
+
+      dCap : Δ₀ capΦ
+      dCap = δ-∃∈ (δ-∃∈ (δ-∧ (δ-∀∈ (δ-∧ δ-∈ δ-∈)) (δ-∀∈ (δ-⇒ δ-∈ δ-∈))))
+
+      chain : ∀ m → (E m ∈ DefA.defSet capΦ)
+                  ≡ ((E m ∷ []) ⊨v mapFo fst (mapFo DefA.ι capΦ))
+      chain m = RefA.abs-defSet capΦ dCap m
+              ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                      (mapFo DefA.ι capΦ) (E m ∷ []))
+
+      capOut : (z : V ℓ) → ⟨ z ∈ interImg n k ⟩
+             → ∥ Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ q ∈ ⟪ Shelf ⟫ ]
+                   (stepImage {n} {k} tagInter (m , q) ≡ z) ∥₁
+      capOut z = PT.map λ { ((m , q) , e) → m , q , e }
+
+      capDefSet≡ : DefA.defSet capΦ ≡ interImg n k
+      capDefSet≡ = extensionality (DefA.defSet capΦ) (interImg n k) (sub₁ , sub₂)
+        where
+        fromSat : (m' : ⟪ Lset (sucV τ) ⟫)
+                → ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι capΦ) ⟩
+                → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                      (stepImage {n} {k} tagInter (mX , mY) ≡ E m') ∥₁
+        fromSat m' big = PT.rec squash₁ (λ { (X , hX , w₁) →
+          PT.rec squash₁ (λ { (Y , hY , body) →
+            finish X Y (subst (λ w → ⟨ X ∈ w ⟩) qS hX)
+                   (subst (λ w → ⟨ Y ∈ w ⟩) qS hY)
+                   (λ v hv → body .fst v hv)
+                   (λ v hXv hYv → body .snd v hXv hYv) }) w₁ }) big
+          where
+          finish : (X Y : V ℓ) → ⟨ X ∈ Shelf ⟩ → ⟨ Y ∈ Shelf ⟩
+                 → ((v : V ℓ) → ⟨ v ∈ E m' ⟩ → ⟨ v ∈ X ⟩ × ⟨ v ∈ Y ⟩)
+                 → ((v : V ℓ) → ⟨ v ∈ X ⟩ → ⟨ v ∈ Y ⟩ → ⟨ v ∈ E m' ⟩)
+                 → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                       (stepImage {n} {k} tagInter (mX , mY) ≡ E m') ∥₁
+          finish X Y hX' hY' h₁ h₂ =
+            ∣ pay .fst , pay .snd ∣₁
+            where
+            e : E m' ≡ X ∩ Y
+            e = extensionality (E m') (X ∩ Y) (t₁ , t₂)
+              where
+              t₁ : ⟨ E m' ⊆ X ∩ Y ⟩
+              t₁ v v∈ₛ = ∈∈ₛ {a = v} {b = X ∩ Y} .fst
+                (∩-in {X = X} {Y = Y} {x = v}
+                  (h₁ v (∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ) .fst)
+                  (h₁ v (∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ) .snd))
+              t₂ : ⟨ X ∩ Y ⊆ E m' ⟩
+              t₂ v v∈ₛ = ∈∈ₛ {a = v} {b = E m'} .fst
+                (h₂ v (∩-out {X = X} {Y = Y} {x = v}
+                        (∈∈ₛ {a = v} {b = X ∩ Y} .snd v∈ₛ) .fst)
+                       (∩-out {X = X} {Y = Y} {x = v}
+                        (∈∈ₛ {a = v} {b = X ∩ Y} .snd v∈ₛ) .snd))
+            pay : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                    (stepImage {n} {k} tagInter (mX , mY) ≡ E m')
+            pay = fibers X hX' .fst
+                , (fibers Y hY' .fst
+                  , (cong₂ _∩_ (fibers X hX' .snd) (fibers Y hY' .snd) ∙ sym e))
+
+        sub₁ : ⟨ DefA.defSet capΦ ⊆ interImg n k ⟩
+        sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ interImg n k)) go
+          (∈∈ₛ {a = z} {b = DefA.defSet capΦ} .snd z∈ₛ)
+          where
+          go : Σ[ p ∈ Σ[ m ∈ ⟪ Lset (sucV τ) ⟫ ] ⟨ DefA.smallSat capΦ m ⟩ ]
+                 (E (p .fst) ≡ z)
+             → ⟨ z ∈ₛ interImg n k ⟩
+          go ((m , h) , q) = PT.rec (snd (z ∈ₛ interImg n k)) build
+            (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))
+            where
+            build : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                      (stepImage {n} {k} tagInter (mX , mY) ≡ E m)
+                  → ⟨ z ∈ₛ interImg n k ⟩
+            build (mX , mY , e) = subst (λ w → ⟨ w ∈ₛ interImg n k ⟩) (e ∙ q)
+              (∈∈ₛ {a = stepImage {n} {k} tagInter (mX , mY)} {b = interImg n k} .fst
+                ∣ (mX , mY) , refl ∣₁)
+
+        sub₂ : ⟨ interImg n k ⊆ DefA.defSet capΦ ⟩
+        sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet capΦ)) build (capOut z z∈ₛm)
+          where
+          z∈ₛm : ⟨ z ∈ interImg n k ⟩
+          z∈ₛm = ∈∈ₛ {a = z} {b = interImg n k} .snd z∈ₛ
+          build : Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ q ∈ ⟪ Shelf ⟫ ]
+                    (stepImage {n} {k} tagInter (m , q) ≡ z)
+                → ⟨ z ∈ₛ DefA.defSet capΦ ⟩
+          build (m , q , e) =
+            let X : V ℓ
+                X = ⟪ Shelf ⟫↪ m
+                Y : V ℓ
+                Y = ⟪ Shelf ⟫↪ q
+                hX : ⟨ X ∈ Shelf ⟩
+                hX = ∈∈ₛ {a = X} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ m)
+                hY : ⟨ Y ∈ Shelf ⟩
+                hY = ∈∈ₛ {a = Y} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ q)
+                z≡ : z ≡ X ∩ Y
+                z≡ = sym e
+                X∈τ : ⟨ X ∈ Lset τ ⟩
+                X∈τ = layer-trans (Lset-layer τ) {x = Shelf} {y = X} hX S∈
+                Y∈τ : ⟨ Y ∈ Lset τ ⟩
+                Y∈τ = layer-trans (Lset-layer τ) {x = Shelf} {y = Y} hY S∈
+                z∈ⁱ : ⟨ z ∈ Lset (sucV τ) ⟩
+                z∈ⁱ = subst (λ w → ⟨ w ∈ Lset (sucV τ) ⟩) (sym z≡)
+                        (BinWalk.capW τ X Y X∈τ Y∈τ)
+                m' = ∈-asFiber {a = z} {b = Lset (sucV τ)} z∈ⁱ .fst
+                q' : E m' ≡ z
+                q' = ∈-asFiber {a = z} {b = Lset (sucV τ)} z∈ⁱ .snd
+                hXˢ : ⟨ X ∈ˢ fst (DefA.ι mS) ⟩
+                hXˢ = subst (λ w → ⟨ X ∈ˢ w ⟩) (sym qS) hX
+                hYˢ : ⟨ Y ∈ˢ fst (DefA.ι mS) ⟩
+                hYˢ = subst (λ w → ⟨ Y ∈ˢ w ⟩) (sym qS) hY
+                h₁ : (v : V ℓ) → ⟨ v ∈ E m' ⟩
+                    → ⟨ (v ∷ Y ∷ X ∷ E m' ∷ []) ⊨v
+                          (var zero ∈̇ var (suc (suc zero))
+                           ∧̇ var zero ∈̇ var (suc zero)) ⟩
+                h₁ v hv = ( ∩-out {X = X} {Y = Y} {x = v}
+                              (subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv) .fst
+                          , ∩-out {X = X} {Y = Y} {x = v}
+                              (subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv) .snd )
+                h₂ : (v : V ℓ) → ⟨ v ∈ X ⟩ → ⟨ v ∈ Y ⟩ → ⟨ v ∈ E m' ⟩
+                h₂ v hXv hYv =
+                  subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ z≡))
+                    (∩-in {X = X} {Y = Y} {x = v} hXv hYv)
+                sat : ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι capΦ) ⟩
+                sat = ∣ X , (hXˢ , ∣ Y , (hYˢ , (h₁ , h₂)) ∣₁) ∣₁
+            in subst (λ w → ⟨ w ∈ₛ DefA.defSet capΦ ⟩) q'
+                 (∈∈ₛ {a = E m'} {b = DefA.defSet capΦ} .fst
+                   (subst ⟨_⟩ (sym (chain m')) sat))
+
+      unionΦ : Formula ⟪ Lset (sucV τ) ⟫ 1
+      unionΦ = ∃̇∈ (con mS) (∃̇∈ (con mS)
+               ( (∀̇∈ (var (suc (suc zero)))
+                    (var zero ∈̇ var (suc (suc zero))
+                     ∨̇ var zero ∈̇ var (suc zero)))
+               ∧̇ ( (∀̇∈ (var (suc zero))
+                      (var zero ∈̇ var (suc (suc (suc zero)))))
+                  ∧̇ (∀̇∈ (var zero)
+                      (var zero ∈̇ var (suc (suc (suc zero))))))))
+
+      dUn : Δ₀ unionΦ
+      dUn = δ-∃∈ (δ-∃∈ (δ-∧ (δ-∀∈ (δ-∨ δ-∈ δ-∈))
+                    (δ-∧ (δ-∀∈ δ-∈) (δ-∀∈ δ-∈))))
+
+      unionChain : ∀ m → (E m ∈ DefA.defSet unionΦ)
+                  ≡ ((E m ∷ []) ⊨v mapFo fst (mapFo DefA.ι unionΦ))
+      unionChain m = RefA.abs-defSet unionΦ dUn m
+                   ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                           (mapFo DefA.ι unionΦ) (E m ∷ []))
+
+      unionOut : (z : V ℓ) → ⟨ z ∈ unionImg n k ⟩
+               → ∥ Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ q ∈ ⟪ Shelf ⟫ ]
+                     (stepImage {n} {k} tagUnion (m , q) ≡ z) ∥₁
+      unionOut z = PT.map λ { ((m , q) , e) → m , q , e }
+
+      unionDefSet≡ : DefA.defSet unionΦ ≡ unionImg n k
+      unionDefSet≡ = extensionality (DefA.defSet unionΦ) (unionImg n k) (sub₁ , sub₂)
+        where
+        fromSat : (m' : ⟪ Lset (sucV τ) ⟫)
+                → ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι unionΦ) ⟩
+                → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                      (stepImage {n} {k} tagUnion (mX , mY) ≡ E m') ∥₁
+        fromSat m' big = PT.rec squash₁ (λ { (X , hX , w₁) →
+          PT.rec squash₁ (λ { (Y , hY , body) →
+            finish X Y (subst (λ w → ⟨ X ∈ w ⟩) qS hX)
+                   (subst (λ w → ⟨ Y ∈ w ⟩) qS hY)
+                   (body .fst) (body .snd .fst) (body .snd .snd) }) w₁ }) big
+          where
+          finish : (X Y : V ℓ) → ⟨ X ∈ Shelf ⟩ → ⟨ Y ∈ Shelf ⟩
+                 → ((v : V ℓ) → ⟨ v ∈ E m' ⟩ → ∥ ⟨ v ∈ X ⟩ ⊎ ⟨ v ∈ Y ⟩ ∥₁)
+                 → ((v : V ℓ) → ⟨ v ∈ X ⟩ → ⟨ v ∈ E m' ⟩)
+                 → ((v : V ℓ) → ⟨ v ∈ Y ⟩ → ⟨ v ∈ E m' ⟩)
+                 → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                       (stepImage {n} {k} tagUnion (mX , mY) ≡ E m') ∥₁
+          finish X Y hX' hY' h₁ h₂ h₃ = ∣ pay .fst , pay .snd ∣₁
+            where
+            e : E m' ≡ X ∪ Y
+            e = extensionality (E m') (X ∪ Y) (t₁ , t₂)
+              where
+              t₁ : ⟨ E m' ⊆ X ∪ Y ⟩
+              t₁ v v∈ₛ = ∈∈ₛ {a = v} {b = X ∪ Y} .fst
+                (PT.rec (snd (v ∈ X ∪ Y)) (go₁ v) (h₁ v v∈E))
+                where
+                v∈E : ⟨ v ∈ E m' ⟩
+                v∈E = ∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ
+                go₁ : (v : V ℓ) → ⟨ v ∈ X ⟩ ⊎ ⟨ v ∈ Y ⟩ → ⟨ v ∈ X ∪ Y ⟩
+                go₁ v (inl hXv) = ∪-left {X = X} {Y = Y} {x = v} hXv
+                go₁ v (inr hYv) = ∪-right {X = X} {Y = Y} {x = v} hYv
+              t₂ : ⟨ X ∪ Y ⊆ E m' ⟩
+              t₂ v v∈ₛ = ∈∈ₛ {a = v} {b = E m'} .fst
+                (PT.rec (snd (v ∈ E m')) (go₂ v)
+                  (∪-out {X = X} {Y = Y} {x = v}
+                    (∈∈ₛ {a = v} {b = X ∪ Y} .snd v∈ₛ)))
+                where
+                go₂ : (v : V ℓ) → ⟨ v ∈ X ⟩ ⊎ ⟨ v ∈ Y ⟩ → ⟨ v ∈ E m' ⟩
+                go₂ v (inl hXv) = h₂ v hXv
+                go₂ v (inr hYv) = h₃ v hYv
+            pay : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                    (stepImage {n} {k} tagUnion (mX , mY) ≡ E m')
+            pay = fibers X hX' .fst
+                , (fibers Y hY' .fst
+                  , (cong₂ _∪_ (fibers X hX' .snd) (fibers Y hY' .snd) ∙ sym e))
+
+        sub₁ : ⟨ DefA.defSet unionΦ ⊆ unionImg n k ⟩
+        sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ unionImg n k)) go
+          (∈∈ₛ {a = z} {b = DefA.defSet unionΦ} .snd z∈ₛ)
+          where
+          go : Σ[ p ∈ Σ[ m ∈ ⟪ Lset (sucV τ) ⟫ ] ⟨ DefA.smallSat unionΦ m ⟩ ]
+                 (E (p .fst) ≡ z)
+             → ⟨ z ∈ₛ unionImg n k ⟩
+          go ((m , h) , q) = PT.rec (snd (z ∈ₛ unionImg n k)) build
+            (fromSat m (subst ⟨_⟩ (unionChain m) ∣ (m , h) , refl ∣₁))
+            where
+            build : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                      (stepImage {n} {k} tagUnion (mX , mY) ≡ E m)
+                  → ⟨ z ∈ₛ unionImg n k ⟩
+            build (mX , mY , e) = subst (λ w → ⟨ w ∈ₛ unionImg n k ⟩) (e ∙ q)
+              (∈∈ₛ {a = stepImage {n} {k} tagUnion (mX , mY)} {b = unionImg n k} .fst
+                ∣ (mX , mY) , refl ∣₁)
+
+        sub₂ : ⟨ unionImg n k ⊆ DefA.defSet unionΦ ⟩
+        sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet unionΦ)) build (unionOut z z∈ₛm)
+          where
+          z∈ₛm : ⟨ z ∈ unionImg n k ⟩
+          z∈ₛm = ∈∈ₛ {a = z} {b = unionImg n k} .snd z∈ₛ
+          build : Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ q ∈ ⟪ Shelf ⟫ ]
+                    (stepImage {n} {k} tagUnion (m , q) ≡ z)
+                → ⟨ z ∈ₛ DefA.defSet unionΦ ⟩
+          build (m , q , e) =
+            let X : V ℓ
+                X = ⟪ Shelf ⟫↪ m
+                Y : V ℓ
+                Y = ⟪ Shelf ⟫↪ q
+                hX : ⟨ X ∈ Shelf ⟩
+                hX = ∈∈ₛ {a = X} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ m)
+                hY : ⟨ Y ∈ Shelf ⟩
+                hY = ∈∈ₛ {a = Y} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ q)
+                z≡ : z ≡ X ∪ Y
+                z≡ = sym e
+                X∈τ : ⟨ X ∈ Lset τ ⟩
+                X∈τ = layer-trans (Lset-layer τ) {x = Shelf} {y = X} hX S∈
+                Y∈τ : ⟨ Y ∈ Lset τ ⟩
+                Y∈τ = layer-trans (Lset-layer τ) {x = Shelf} {y = Y} hY S∈
+                z∈ⁱ : ⟨ z ∈ Lset (sucV τ) ⟩
+                z∈ⁱ = subst (λ w → ⟨ w ∈ Lset (sucV τ) ⟩) (sym z≡)
+                        (BinWalk.unionW τ X Y X∈τ Y∈τ)
+                m' = ∈-asFiber {a = z} {b = Lset (sucV τ)} z∈ⁱ .fst
+                q' : E m' ≡ z
+                q' = ∈-asFiber {a = z} {b = Lset (sucV τ)} z∈ⁱ .snd
+                hXˢ : ⟨ X ∈ˢ fst (DefA.ι mS) ⟩
+                hXˢ = subst (λ w → ⟨ X ∈ˢ w ⟩) (sym qS) hX
+                hYˢ : ⟨ Y ∈ˢ fst (DefA.ι mS) ⟩
+                hYˢ = subst (λ w → ⟨ Y ∈ˢ w ⟩) (sym qS) hY
+                h₁ : (v : V ℓ) → ⟨ v ∈ E m' ⟩
+                    → ⟨ (v ∷ Y ∷ X ∷ E m' ∷ []) ⊨v
+                          (var zero ∈̇ var (suc (suc zero))
+                           ∨̇ var zero ∈̇ var (suc zero)) ⟩
+                h₁ v hv = ∪-out {X = X} {Y = Y} {x = v}
+                             (subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv)
+                h₂ : (v : V ℓ) → ⟨ v ∈ X ⟩
+                    → ⟨ (v ∷ Y ∷ X ∷ E m' ∷ []) ⊨v
+                          var zero ∈̇ var (suc (suc (suc zero))) ⟩
+                h₂ v hXv = subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ z≡))
+                  (∪-left {X = X} {Y = Y} {x = v} hXv)
+                h₃ : (v : V ℓ) → ⟨ v ∈ Y ⟩
+                    → ⟨ (v ∷ Y ∷ X ∷ E m' ∷ []) ⊨v
+                          var zero ∈̇ var (suc (suc (suc zero))) ⟩
+                h₃ v hYv = subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ z≡))
+                  (∪-right {X = X} {Y = Y} {x = v} hYv)
+                sat : ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι unionΦ) ⟩
+                sat = ∣ X , (hXˢ , ∣ Y , (hYˢ , (h₁ , (h₂ , h₃))) ∣₁) ∣₁
+            in subst (λ w → ⟨ w ∈ₛ DefA.defSet unionΦ ⟩) q'
+                 (∈∈ₛ {a = E m'} {b = DefA.defSet unionΦ} .fst
+                   (subst ⟨_⟩ (sym (unionChain m')) sat))
+
+      diffΦ : Formula ⟪ Lset (sucV τ) ⟫ 1
+      diffΦ = ∃̇∈ (con mS) (∃̇∈ (con mS)
+               ( (∀̇∈ (var (suc (suc zero)))
+                    (var zero ∈̇ var (suc (suc zero))
+                     ∧̇ ¬̇ (var zero ∈̇ var (suc zero))))
+               ∧̇ (∀̇∈ (var (suc zero))
+                    (¬̇ (var zero ∈̇ var (suc zero))
+                     ⇒̇ var zero ∈̇ var (suc (suc (suc zero)))))))
+
+      dDi : Δ₀ diffΦ
+      dDi = δ-∃∈ (δ-∃∈ (δ-∧ (δ-∀∈ (δ-∧ δ-∈ (δ-¬ δ-∈)))
+                    (δ-∀∈ (δ-⇒ (δ-¬ δ-∈) δ-∈))))
+
+      diffChain : ∀ m → (E m ∈ DefA.defSet diffΦ)
+                  ≡ ((E m ∷ []) ⊨v mapFo fst (mapFo DefA.ι diffΦ))
+      diffChain m = RefA.abs-defSet diffΦ dDi m
+                  ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                          (mapFo DefA.ι diffΦ) (E m ∷ []))
+
+      diffOut : (z : V ℓ) → ⟨ z ∈ diffImg n k ⟩
+              → ∥ Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ q ∈ ⟪ Shelf ⟫ ]
+                    (stepImage {n} {k} tagDiff (m , q) ≡ z) ∥₁
+      diffOut z = PT.map λ { ((m , q) , e) → m , q , e }
+
+      diffDefSet≡ : DefA.defSet diffΦ ≡ diffImg n k
+      diffDefSet≡ = extensionality (DefA.defSet diffΦ) (diffImg n k) (sub₁ , sub₂)
+        where
+        fromSat : (m' : ⟪ Lset (sucV τ) ⟫)
+                → ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι diffΦ) ⟩
+                → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                      (stepImage {n} {k} tagDiff (mX , mY) ≡ E m') ∥₁
+        fromSat m' big = PT.rec squash₁ (λ { (X , hX , w₁) →
+          PT.rec squash₁ (λ { (Y , hY , body) →
+            finish X Y (subst (λ w → ⟨ X ∈ w ⟩) qS hX)
+                   (subst (λ w → ⟨ Y ∈ w ⟩) qS hY)
+                   (body .fst) (body .snd) }) w₁ }) big
+          where
+          finish : (X Y : V ℓ) → ⟨ X ∈ Shelf ⟩ → ⟨ Y ∈ Shelf ⟩
+                 → ((v : V ℓ) → ⟨ v ∈ E m' ⟩ → ⟨ v ∈ X ⟩ × (⟨ v ∈ Y ⟩ → Empty.⊥))
+                 → ((v : V ℓ) → ⟨ v ∈ X ⟩ → (⟨ v ∈ Y ⟩ → Empty.⊥) → ⟨ v ∈ E m' ⟩)
+                 → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                       (stepImage {n} {k} tagDiff (mX , mY) ≡ E m') ∥₁
+          finish X Y hX' hY' h₁ h₂ = ∣ pay .fst , pay .snd ∣₁
+            where
+            e : E m' ≡ X ∖ Y
+            e = extensionality (E m') (X ∖ Y) (t₁ , t₂)
+              where
+              t₁ : ⟨ E m' ⊆ X ∖ Y ⟩
+              t₁ v v∈ₛ = ∈∈ₛ {a = v} {b = X ∖ Y} .fst
+                (∖-in {X = X} {Y = Y} {x = v}
+                  (h₁ v (∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ) .fst)
+                  (h₁ v (∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ) .snd))
+              t₂ : ⟨ X ∖ Y ⊆ E m' ⟩
+              t₂ v v∈ₛ = ∈∈ₛ {a = v} {b = E m'} .fst
+                (h₂ v (∖-out {X = X} {Y = Y} {x = v}
+                        (∈∈ₛ {a = v} {b = X ∖ Y} .snd v∈ₛ) .fst)
+                       (∖-out {X = X} {Y = Y} {x = v}
+                        (∈∈ₛ {a = v} {b = X ∖ Y} .snd v∈ₛ) .snd))
+            pay : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                    (stepImage {n} {k} tagDiff (mX , mY) ≡ E m')
+            pay = fibers X hX' .fst
+                , (fibers Y hY' .fst
+                  , (cong₂ _∖_ (fibers X hX' .snd) (fibers Y hY' .snd) ∙ sym e))
+
+        sub₁ : ⟨ DefA.defSet diffΦ ⊆ diffImg n k ⟩
+        sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ diffImg n k)) go
+          (∈∈ₛ {a = z} {b = DefA.defSet diffΦ} .snd z∈ₛ)
+          where
+          go : Σ[ p ∈ Σ[ m ∈ ⟪ Lset (sucV τ) ⟫ ] ⟨ DefA.smallSat diffΦ m ⟩ ]
+                 (E (p .fst) ≡ z)
+             → ⟨ z ∈ₛ diffImg n k ⟩
+          go ((m , h) , q) = PT.rec (snd (z ∈ₛ diffImg n k)) build
+            (fromSat m (subst ⟨_⟩ (diffChain m) ∣ (m , h) , refl ∣₁))
+            where
+            build : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ mY ∈ ⟪ Shelf ⟫ ]
+                      (stepImage {n} {k} tagDiff (mX , mY) ≡ E m)
+                  → ⟨ z ∈ₛ diffImg n k ⟩
+            build (mX , mY , e) = subst (λ w → ⟨ w ∈ₛ diffImg n k ⟩) (e ∙ q)
+              (∈∈ₛ {a = stepImage {n} {k} tagDiff (mX , mY)} {b = diffImg n k} .fst
+                ∣ (mX , mY) , refl ∣₁)
+
+        sub₂ : ⟨ diffImg n k ⊆ DefA.defSet diffΦ ⟩
+        sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet diffΦ)) build (diffOut z z∈ₛm)
+          where
+          z∈ₛm : ⟨ z ∈ diffImg n k ⟩
+          z∈ₛm = ∈∈ₛ {a = z} {b = diffImg n k} .snd z∈ₛ
+          build : Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ q ∈ ⟪ Shelf ⟫ ]
+                    (stepImage {n} {k} tagDiff (m , q) ≡ z)
+                → ⟨ z ∈ₛ DefA.defSet diffΦ ⟩
+          build (m , q , e) =
+            let X : V ℓ
+                X = ⟪ Shelf ⟫↪ m
+                Y : V ℓ
+                Y = ⟪ Shelf ⟫↪ q
+                hX : ⟨ X ∈ Shelf ⟩
+                hX = ∈∈ₛ {a = X} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ m)
+                hY : ⟨ Y ∈ Shelf ⟩
+                hY = ∈∈ₛ {a = Y} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ q)
+                z≡ : z ≡ X ∖ Y
+                z≡ = sym e
+                X∈τ : ⟨ X ∈ Lset τ ⟩
+                X∈τ = layer-trans (Lset-layer τ) {x = Shelf} {y = X} hX S∈
+                Y∈τ : ⟨ Y ∈ Lset τ ⟩
+                Y∈τ = layer-trans (Lset-layer τ) {x = Shelf} {y = Y} hY S∈
+                z∈ⁱ : ⟨ z ∈ Lset (sucV τ) ⟩
+                z∈ⁱ = subst (λ w → ⟨ w ∈ Lset (sucV τ) ⟩) (sym z≡)
+                        (BinWalk.diffW τ X Y X∈τ Y∈τ)
+                m' = ∈-asFiber {a = z} {b = Lset (sucV τ)} z∈ⁱ .fst
+                q' : E m' ≡ z
+                q' = ∈-asFiber {a = z} {b = Lset (sucV τ)} z∈ⁱ .snd
+                hXˢ : ⟨ X ∈ˢ fst (DefA.ι mS) ⟩
+                hXˢ = subst (λ w → ⟨ X ∈ˢ w ⟩) (sym qS) hX
+                hYˢ : ⟨ Y ∈ˢ fst (DefA.ι mS) ⟩
+                hYˢ = subst (λ w → ⟨ Y ∈ˢ w ⟩) (sym qS) hY
+                h₁ : (v : V ℓ) → ⟨ v ∈ E m' ⟩
+                    → ⟨ (v ∷ Y ∷ X ∷ E m' ∷ []) ⊨v
+                          (var zero ∈̇ var (suc (suc zero))
+                           ∧̇ ¬̇ (var zero ∈̇ var (suc zero))) ⟩
+                h₁ v hv = ( ∖-out {X = X} {Y = Y} {x = v}
+                              (subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv) .fst
+                          , ∖-out {X = X} {Y = Y} {x = v}
+                              (subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv) .snd )
+                h₂ : (v : V ℓ) → ⟨ v ∈ X ⟩ → (⟨ v ∈ Y ⟩ → Empty.⊥)
+                    → ⟨ (v ∷ Y ∷ X ∷ E m' ∷ []) ⊨v
+                          var zero ∈̇ var (suc (suc (suc zero))) ⟩
+                h₂ v hXv nYv = subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ z≡))
+                  (∖-in {X = X} {Y = Y} {x = v} hXv nYv)
+                sat : ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι diffΦ) ⟩
+                sat = ∣ X , (hXˢ , ∣ Y , (hYˢ , (h₁ , h₂)) ∣₁) ∣₁
+            in subst (λ w → ⟨ w ∈ₛ DefA.defSet diffΦ ⟩) q'
+                 (∈∈ₛ {a = E m'} {b = DefA.defSet diffΦ} .fst
+                   (subst ⟨_⟩ (sym (diffChain m')) sat))
+
+  interImgL : (n k : ℕ) → ⟨ isL (slice n k) ⟩ → ⟨ isL (interImg n k) ⟩
+  interImgL n k lS = PT.rec (snd (isL (interImg n k)))
+    (λ { (τ , oτ , S∈ , _) →
+      defSet→isL (sucV τ) (suc-ord oτ) (interImg n k)
+        ∣ BinImg.capΦ n k τ S∈ , BinImg.capDefSet≡ n k τ S∈ ∣₁ })
+    (isL-directed (slice n k) (slice n k) lS lS)
+
+  unionImgL : (n k : ℕ) → ⟨ isL (slice n k) ⟩ → ⟨ isL (unionImg n k) ⟩
+  unionImgL n k lS = PT.rec (snd (isL (unionImg n k)))
+    (λ { (τ , oτ , S∈ , _) →
+      defSet→isL (sucV τ) (suc-ord oτ) (unionImg n k)
+        ∣ BinImg.unionΦ n k τ S∈ , BinImg.unionDefSet≡ n k τ S∈ ∣₁ })
+    (isL-directed (slice n k) (slice n k) lS lS)
+
+  diffImgL : (n k : ℕ) → ⟨ isL (slice n k) ⟩ → ⟨ isL (diffImg n k) ⟩
+  diffImgL n k lS = PT.rec (snd (isL (diffImg n k)))
+    (λ { (τ , oτ , S∈ , _) →
+      defSet→isL (sucV τ) (suc-ord oτ) (diffImg n k)
+        ∣ BinImg.diffΦ n k τ S∈ , BinImg.diffDefSet≡ n k τ S∈ ∣₁ })
+    (isL-directed (slice n k) (slice n k) lS lS)
+
+  -- The tuple image is the singleton of the tuple family: the payload is a
+  -- unit, so the image set is the singleton of the constant image, which is
+  -- constructible by the singleton lemma on the delivered tuple-family
+  -- constructibility.
+  allImg-singleton : (n k : ℕ) → allImg n k ≡ ⁅ allTuples A k ⁆s
+  allImg-singleton n k = extensionality (allImg n k) ⁅ allTuples A k ⁆s (t₁ , t₂)
+    where
+    t₁ : ⟨ allImg n k ⊆ ⁅ allTuples A k ⁆s ⟩
+    t₁ x x∈ₛ = ∈∈ₛ {a = x} {b = ⁅ allTuples A k ⁆s} .fst
+      (PT.rec (snd (x ∈ ⁅ allTuples A k ⁆s))
+        (λ { (u , e) → singleton-in (sym e) })
+        (∈∈ₛ {a = x} {b = allImg n k} .snd x∈ₛ))
+    t₂ : ⟨ ⁅ allTuples A k ⁆s ⊆ allImg n k ⟩
+    t₂ x x∈ₛ = ∈∈ₛ {a = x} {b = allImg n k} .fst
+      (subst (λ w → ⟨ w ∈ allImg n k ⟩) (sym x∈⁅⁆) w∈img)
+      where
+      x∈⁅⁆ : x ≡ allTuples A k
+      x∈⁅⁆ = singleton-out {z = allTuples A k} {x = x}
+               (∈∈ₛ {a = x} {b = ⁅ allTuples A k ⁆s} .snd x∈ₛ)
+      w∈img : ⟨ allTuples A k ∈ allImg n k ⟩
+      w∈img = ∣ tt* , refl ∣₁
+
+  allImgL : (n k : ℕ) → ⟨ isL A ⟩ → ⟨ isL (allImg n k) ⟩
+  allImgL n k lA = subst (λ w → ⟨ isL w ⟩) (sym (allImg-singleton n k))
+    (sglL (allTuplesL A lA k))
+
+  -- The values image: the values of the arity-one shelf.  The stage holds the
+  -- shelf and the zero-key singleton, exactly as the bridge chapter's values
+  -- lemma needs them; the walk places each values set in the next stage by the
+  -- same two-line definability argument, and the image's defining formula pins
+  -- the member by the delivered values description's body, bounded.
+  private
+    module ValImg (n : ℕ) (τ : V ℓ)
+      (S∈ : ⟨ slice n 1 ∈ Lset τ ⟩) (K0∈ : ⟨ ⁅ # 0 ⁆s ∈ Lset τ ⟩) where
+      Shelf : V ℓ
+      Shelf = slice n 1
+
+      module DefA = DefOf (Lset (sucV (sucV τ)))
+      module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV τ))))
+      Atr = layer-trans (Lset-layer τ)
+
+      E : ⟪ Lset (sucV (sucV τ)) ⟫ → V ℓ
+      E m = ⟪ Lset (sucV (sucV τ)) ⟫↪ m
+
+      -- The image formula lives two stages above the shelf stage: the second
+      -- inclusion of the pin ranges over the stage itself, which is a member
+      -- of the next one (`defSet ⊤̇ ≡ Lset (sucV τ)`, the stage named by the
+      -- true formula), so the pin stays bounded and Δ₀.
+      σ∈ : ⟨ Lset (sucV τ) ∈ Lset (sucV (sucV τ)) ⟩
+      σ∈ = mkUp (sucV τ) (Lset (sucV τ)) ⊤̇
+             (DefOf.defSet⊤≡A (Lset (sucV τ)))
+      mσ = ∈-asFiber {a = Lset (sucV τ)} {b = Lset (sucV (sucV τ))} σ∈ .fst
+      qσ : E mσ ≡ Lset (sucV τ)
+      qσ = ∈-asFiber {a = Lset (sucV τ)} {b = Lset (sucV (sucV τ))} σ∈ .snd
+
+      Shelf' : ⟨ Shelf ∈ Lset (sucV (sucV τ)) ⟩
+      Shelf' = Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ))
+                 (Lset-mono {sucV τ} {τ} (self∈sucV τ) S∈)
+      mS = ∈-asFiber {a = Shelf} {b = Lset (sucV (sucV τ))} Shelf' .fst
+      qS : E mS ≡ Shelf
+      qS = ∈-asFiber {a = Shelf} {b = Lset (sucV (sucV τ))} Shelf' .snd
+      K0' : ⟨ ⁅ # 0 ⁆s ∈ Lset (sucV (sucV τ)) ⟩
+      K0' = Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ))
+              (Lset-mono {sucV τ} {τ} (self∈sucV τ) K0∈)
+      mK0' = ∈-asFiber {a = ⁅ # 0 ⁆s} {b = Lset (sucV (sucV τ))} K0' .fst
+      qK0' : E mK0' ≡ ⁅ # 0 ⁆s
+      qK0' = ∈-asFiber {a = ⁅ # 0 ⁆s} {b = Lset (sucV (sucV τ))} K0' .snd
+
+      fibers : (W : V ℓ) (hW : ⟨ W ∈ Shelf ⟩)
+             → Cubical.Foundations.Equiv.fiber (⟪ Shelf ⟫↪) W
+      fibers W hW = ∈-asFiber {a = W} {b = Shelf} hW
+
+      -- The body atom: the delivered values description's body, bounded.  A
+      -- key is taken from the zero-key singleton, a family member from the
+      -- shelf, and the recorded pair is the application atom's witness.
+      shape : Formula ⟪ Lset (sucV (sucV τ)) ⟫ (suc (suc (suc zero)))
+      shape = ∃̇∈ (con mK0')
+                (∃̇∈ (var (suc (suc zero)))
+                   (appAt′ zero (suc zero) (suc (suc zero))))
+
+      dShape : Δ₀ shape
+      dShape = δ-∃∈ (δ-∃∈ (δ-∃∈ (Δ₀-prAt′ zero (suc (suc zero)) (suc (suc (suc zero))))))
+
+      shapeV : Formula (V ℓ) (suc (suc (suc zero)))
+      shapeV = mapFo fst (mapFo DefA.ι shape)
+
+      Φ : Formula ⟪ Lset (sucV (sucV τ)) ⟫ 1
+      Φ = ∃̇∈ (con mS)
+            ( (∀̇∈ (var (suc zero))
+                 (var zero ∈̇ var (suc (suc zero)) ⇒̇ shape))
+            ∧̇ (∀̇∈ (con mσ)
+                 (shape ⇒̇ var zero ∈̇ var (suc (suc zero)))) )
+
+      dΦ : Δ₀ Φ
+      dΦ = δ-∃∈ (δ-∧ (δ-∀∈ (δ-⇒ δ-∈ dShape)) (δ-∀∈ (δ-⇒ dShape δ-∈)))
+
+      chain : ∀ m → (E m ∈ DefA.defSet Φ)
+                  ≡ ((E m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ))
+      chain m = RefA.abs-defSet Φ dΦ m
+              ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                      (mapFo DefA.ι Φ) (E m ∷ []))
+
+      valuesOut : (z : V ℓ) → ⟨ z ∈ valuesImg n ⟩
+                → ∥ Σ[ m ∈ ⟪ Shelf ⟫ ] (values (⟪ Shelf ⟫↪ m) ≡ z) ∥₁
+      valuesOut z = PT.map λ { (m , e) → m , e }
+
+      -- The walk: each values set of a shelf member is definable over the
+      -- stage, hence a member of the next one.
+      module ValsWalk (X : V ℓ) (hX : ⟨ X ∈ Shelf ⟩) where
+        module DefAτ = DefOf (Lset τ)
+        module RefAτ = DefAτ.Refine (layer-trans (Lset-layer τ))
+        Atrans = layer-trans (Lset-layer τ)
+
+        Eτ : ⟪ Lset τ ⟫ → V ℓ
+        Eτ m = ⟪ Lset τ ⟫↪ m
+
+        f2 : Fin (suc (suc (suc (suc zero))))
+        f2 = suc (suc zero)
+        f3 : Fin (suc (suc (suc (suc zero))))
+        f3 = suc (suc (suc zero))
+
+        X∈τ : ⟨ X ∈ Lset τ ⟩
+        X∈τ = Atrans {x = Shelf} {y = X} hX S∈
+        mX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .fst
+        qX : Eτ mX ≡ X
+        qX = ∈-asFiber {a = X} {b = Lset τ} X∈τ .snd
+        mK0 = ∈-asFiber {a = ⁅ # 0 ⁆s} {b = Lset τ} K0∈ .fst
+        qK0 : Eτ mK0 ≡ ⁅ # 0 ⁆s
+        qK0 = ∈-asFiber {a = ⁅ # 0 ⁆s} {b = Lset τ} K0∈ .snd
+
+        ΦVals : Formula ⟪ Lset τ ⟫ 1
+        ΦVals = ∃̇∈ (con mK0) (∃̇∈ (con mX) (∃̇∈ (var zero) (prAt′ zero f2 f3)))
+        dVals : Δ₀ ΦVals
+        dVals = δ-∃∈ (δ-∃∈ (δ-∃∈ (Δ₀-prAt′ zero f2 f3)))
+        chainV : ∀ m → (Eτ m ∈ DefAτ.defSet ΦVals)
+                      ≡ ((Eτ m ∷ []) ⊨v mapFo fst (mapFo DefAτ.ι ΦVals))
+        chainV m = RefAτ.abs-defSet ΦVals dVals m
+                 ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                         (mapFo DefAτ.ι ΦVals) (Eτ m ∷ []))
+        vals≡ : DefAτ.defSet ΦVals ≡ values X
+        vals≡ = extensionality (DefAτ.defSet ΦVals) (values X) (sub₁ , sub₂)
+          where
+          sub₁ : ⟨ DefAτ.defSet ΦVals ⊆ values X ⟩
+          sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ values X))
+            (λ { ((m , h) , q) →
+              subst (λ w → ⟨ w ∈ₛ values X ⟩) q
+                (∈∈ₛ {a = Eτ m} {b = values X} .fst
+                  (fromSat m (subst ⟨_⟩ (chainV m) ∣ (m , h) , refl ∣₁))) })
+            (∈∈ₛ {a = y} {b = DefAτ.defSet ΦVals} .snd y∈ₛ)
+            where
+            fromSat : (m : ⟪ Lset τ ⟫)
+                    → ⟨ (Eτ m ∷ []) ⊨v mapFo fst (mapFo DefAτ.ι ΦVals) ⟩
+                    → ⟨ Eτ m ∈ values X ⟩
+            fromSat m big = PT.rec (snd (Eτ m ∈ values X)) (λ { (k , hk , w₁) →
+              PT.rec (snd (Eτ m ∈ values X)) (λ { (γ , hγ , w₂) →
+                PT.rec (snd (Eτ m ∈ values X)) (λ { (p , hp , s) →
+                  values-in {X = X} {γ = γ} {v = Eτ m}
+                    (subst (λ z → ⟨ γ ∈ z ⟩) qX hγ)
+                    (subst (λ z → ⟨ pr z (Eτ m) ∈ γ ⟩)
+                      (singleton-out (subst (λ z → ⟨ k ∈ z ⟩) qK0 hk))
+                      (subst (λ z → ⟨ z ∈ γ ⟩)
+                        (subst ⟨_⟩ (prAt-adequate zero f2 f3
+                          (p ∷ γ ∷ k ∷ Eτ m ∷ [])) s)
+                        hp)) })
+                w₂ }) w₁ }) big
+          sub₂ : ⟨ values X ⊆ DefAτ.defSet ΦVals ⟩
+          sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefAτ.defSet ΦVals)) build
+            (values-wit {X = X} {v = y} (∈∈ₛ {a = y} {b = values X} .snd y∈ₛ))
+            where
+            build : Σ[ γ ∈ V ℓ ] (⟨ γ ∈ X ⟩ × ⟨ pr (# 0) y ∈ γ ⟩)
+                  → ⟨ y ∈ₛ DefAτ.defSet ΦVals ⟩
+            build (γ , hγ , hv) =
+              subst (λ w → ⟨ w ∈ₛ DefAτ.defSet ΦVals ⟩) q'
+                (∈∈ₛ {a = Eτ m'} {b = DefAτ.defSet ΦVals} .fst
+                  (subst ⟨_⟩ (sym (chainV m')) sat))
+              where
+              y∈A : ⟨ y ∈ Lset τ ⟩
+              y∈A = Atrans {x = ⁅ # 0 , y ⁆} {y = y} (∈pair-introR refl)
+                      (Atrans {x = pr (# 0) y} {y = ⁅ # 0 , y ⁆} (∈pair-introR refl)
+                        (Atrans {x = γ} {y = pr (# 0) y} hv
+                          (Atrans {x = X} {y = γ} hγ X∈τ)))
+              m' = ∈-asFiber {a = y} {b = Lset τ} y∈A .fst
+              q' : Eτ m' ≡ y
+              q' = ∈-asFiber {a = y} {b = Lset τ} y∈A .snd
+              Ew : V ℓ
+              Ew = Eτ m'
+              sat : ⟨ (Ew ∷ []) ⊨v mapFo fst (mapFo DefAτ.ι ΦVals) ⟩
+              sat = ∣ # 0 , subst (λ z → ⟨ (# 0) ∈ z ⟩) (sym qK0) (singleton-self (# 0))
+                  , ∣ γ , subst (λ z → ⟨ γ ∈ z ⟩) (sym qX) hγ
+                  , ∣ pr (# 0) Ew , subst (λ z → ⟨ pr (# 0) z ∈ γ ⟩) (sym q') hv
+                  , subst ⟨_⟩ (sym (prAt-adequate zero f2 f3
+                      (pr (# 0) Ew ∷ γ ∷ # 0 ∷ Ew ∷ []))) refl
+                  ∣₁ ∣₁ ∣₁
+        valsWalk : ⟨ values X ∈ Lset (sucV τ) ⟩
+        valsWalk = mkUp τ (values X) ΦVals vals≡
+
+        valsMember : (v : V ℓ) → ⟨ v ∈ values X ⟩ → ⟨ v ∈ Lset τ ⟩
+        valsMember v hv = PT.rec (snd (v ∈ Lset τ)) go
+          (values-wit {X = X} {v = v} hv)
+          where
+          go : Σ[ γ ∈ V ℓ ] (⟨ γ ∈ X ⟩ × ⟨ pr (# 0) v ∈ γ ⟩) → ⟨ v ∈ Lset τ ⟩
+          go (γ , hγ , hpr) =
+            Atrans {x = ⁅ # 0 , v ⁆} {y = v} (∈pair-introR refl)
+              (Atrans {x = pr (# 0) v} {y = ⁅ # 0 , v ⁆} (∈pair-introR refl)
+                (Atrans {x = γ} {y = pr (# 0) v} hpr
+                  (Atrans {x = X} {y = γ} hγ X∈τ)))
+
+      -- The two directions of the pin: the shape satisfaction reads into the
+      -- values membership by the delivered laws, and fills back from them.
+      shape-read : (X v z : V ℓ) (hX : ⟨ X ∈ Shelf ⟩)
+                 → ⟨ (v ∷ X ∷ z ∷ []) ⊨v shapeV ⟩ → ⟨ v ∈ values X ⟩
+      shape-read X v z hX h = PT.rec (snd (v ∈ values X)) (λ { (k0 , hk0 , w₁) →
+        PT.rec (snd (v ∈ values X)) (λ { (g , hg , w₂) →
+          PT.rec (snd (v ∈ values X)) (λ { (q , hq , r) →
+            let hk0' : ⟨ k0 ∈ ⁅ # 0 ⁆s ⟩
+                hk0' = subst (λ w → ⟨ k0 ∈ w ⟩) qK0' hk0
+                pEq : q ≡ pr (# 0) v
+                pEq = subst ⟨_⟩ (prAt-adequate zero (suc (suc zero)) (suc (suc (suc zero)))
+                        (q ∷ g ∷ k0 ∷ v ∷ X ∷ z ∷ [])) r
+                    ∙ cong (λ w → pr w v) (singleton-out hk0')
+                hv : ⟨ pr (# 0) v ∈ g ⟩
+                hv = subst (λ w → ⟨ w ∈ g ⟩) pEq hq
+            in values-in {X = X} {γ = g} {v = v} hg hv })
+          w₂ }) w₁ }) h
+
+      shape-fill : (X v z : V ℓ) (hX : ⟨ X ∈ Shelf ⟩)
+                 → ⟨ v ∈ values X ⟩ → ⟨ (v ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+      shape-fill X v z hX hv = PT.rec (snd ((v ∷ X ∷ z ∷ []) ⊨v shapeV)) build
+        (values-wit {X = X} {v = v} hv)
+        where
+        build : Σ[ γ ∈ V ℓ ] (⟨ γ ∈ X ⟩ × ⟨ pr (# 0) v ∈ γ ⟩)
+              → ⟨ (v ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+        build (γ , hγ , hpr) =
+          ∣ # 0 , ( k0∈
+                  , ∣ γ , ( hγ
+                          , ∣ pr (# 0) v , ( hpr , prAt-sat ) ∣₁ ) ∣₁ )
+          ∣₁
+          where
+          k0∈ : ⟨ (# 0) ∈ˢ fst (DefA.ι mK0') ⟩
+          k0∈ = subst (λ w → ⟨ (# 0) ∈ˢ w ⟩) (sym qK0') (singleton-self (# 0))
+          prAt-sat : ⟨ (pr (# 0) v ∷ γ ∷ # 0 ∷ v ∷ X ∷ z ∷ []) ⊨v
+                        prAt′ zero (suc (suc zero)) (suc (suc (suc zero))) ⟩
+          prAt-sat = subst ⟨_⟩ (sym (prAt-adequate zero (suc (suc zero)) (suc (suc (suc zero)))
+                        (pr (# 0) v ∷ γ ∷ # 0 ∷ v ∷ X ∷ z ∷ []))) refl
+
+      valDefSet≡ : DefA.defSet Φ ≡ valuesImg n
+      valDefSet≡ = extensionality (DefA.defSet Φ) (valuesImg n) (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet Φ ⊆ valuesImg n ⟩
+        sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ valuesImg n)) go
+          (∈∈ₛ {a = z} {b = DefA.defSet Φ} .snd z∈ₛ)
+          where
+          go : Σ[ p ∈ Σ[ m ∈ ⟪ Lset (sucV (sucV τ)) ⟫ ] ⟨ DefA.smallSat Φ m ⟩ ]
+                 (E (p .fst) ≡ z)
+             → ⟨ z ∈ₛ valuesImg n ⟩
+          go ((m , h) , q) = PT.rec (snd (z ∈ₛ valuesImg n)) build
+            (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))
+            where
+            fromSat : (m' : ⟪ Lset (sucV (sucV τ)) ⟫)
+                    → ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+                    → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] (values (⟪ Shelf ⟫↪ mX) ≡ E m') ∥₁
+            fromSat m' big = PT.rec squash₁ (λ { (X , hX , body) →
+              finish X (subst (λ w → ⟨ X ∈ w ⟩) qS hX)
+                     (λ v hv → body .fst v hv hv)
+                     (λ v vσ hshape → body .snd v vσ hshape) }) big
+              where
+              finish : (X : V ℓ) (hX' : ⟨ X ∈ Shelf ⟩)
+                     → ((v : V ℓ) → ⟨ v ∈ E m' ⟩ → ⟨ (v ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩)
+                     → ((v : V ℓ) → ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                        → ⟨ (v ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩ → ⟨ v ∈ E m' ⟩)
+                     → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] (values (⟪ Shelf ⟫↪ mX) ≡ E m') ∥₁
+              finish X hX' h₁ h₂ =
+                ∣ fibers X hX' .fst , (cong values (fibers X hX' .snd) ∙ sym e) ∣₁
+                where
+                e : E m' ≡ values X
+                e = extensionality (E m') (values X) (t₁ , t₂)
+                  where
+                  t₁ : ⟨ E m' ⊆ values X ⟩
+                  t₁ v v∈ₛ = ∈∈ₛ {a = v} {b = values X} .fst
+                    (shape-read X v (E m') hX' (h₁ v v∈E))
+                    where
+                    v∈E : ⟨ v ∈ E m' ⟩
+                    v∈E = ∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ
+                  t₂ : ⟨ values X ⊆ E m' ⟩
+                  t₂ v v∈ₛ = ∈∈ₛ {a = v} {b = E m'} .fst
+                    (h₂ v (subst (λ w → ⟨ v ∈ˢ w ⟩) (sym qσ)
+                             (Lset-mono {sucV τ} {τ} (self∈sucV τ)
+                               (ValsWalk.valsMember X hX' v v∈X)))
+                           (shape-fill X v (E m') hX' v∈X))
+                    where
+                    v∈X : ⟨ v ∈ values X ⟩
+                    v∈X = ∈∈ₛ {a = v} {b = values X} .snd v∈ₛ
+            build : Σ[ mX ∈ ⟪ Shelf ⟫ ] (values (⟪ Shelf ⟫↪ mX) ≡ E m)
+                  → ⟨ z ∈ₛ valuesImg n ⟩
+            build (mX , e) = subst (λ w → ⟨ w ∈ₛ valuesImg n ⟩) (e ∙ q)
+              (∈∈ₛ {a = values (⟪ Shelf ⟫↪ mX)} {b = valuesImg n} .fst
+                ∣ mX , refl ∣₁)
+
+        sub₂ : ⟨ valuesImg n ⊆ DefA.defSet Φ ⟩
+        sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet Φ)) build (valuesOut z z∈ₛm)
+          where
+          z∈ₛm : ⟨ z ∈ valuesImg n ⟩
+          z∈ₛm = ∈∈ₛ {a = z} {b = valuesImg n} .snd z∈ₛ
+          build : Σ[ m ∈ ⟪ Shelf ⟫ ] (values (⟪ Shelf ⟫↪ m) ≡ z)
+                → ⟨ z ∈ₛ DefA.defSet Φ ⟩
+          build (m , e) =
+            let X : V ℓ
+                X = ⟪ Shelf ⟫↪ m
+                hX : ⟨ X ∈ Shelf ⟩
+                hX = ∈∈ₛ {a = X} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ m)
+                z≡ : z ≡ values X
+                z≡ = sym e
+                z∈ⁱ : ⟨ z ∈ Lset (sucV (sucV τ)) ⟩
+                z∈ⁱ = subst (λ w → ⟨ w ∈ Lset (sucV (sucV τ)) ⟩) (sym z≡)
+                        (Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ))
+                          (ValsWalk.valsWalk X hX))
+                m' = ∈-asFiber {a = z} {b = Lset (sucV (sucV τ))} z∈ⁱ .fst
+                q' : E m' ≡ z
+                q' = ∈-asFiber {a = z} {b = Lset (sucV (sucV τ))} z∈ⁱ .snd
+                hXˢ : ⟨ X ∈ˢ fst (DefA.ι mS) ⟩
+                hXˢ = subst (λ w → ⟨ X ∈ˢ w ⟩) (sym qS) hX
+                h₁ : (v : V ℓ) → ⟨ v ∈ E m' ⟩ → ⟨ v ∈ E m' ⟩
+                    → ⟨ (v ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩
+                h₁ v hv = λ _ → shape-fill X v (E m') hX
+                  (subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv)
+                h₂ : (v : V ℓ) → ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                    → ⟨ (v ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩ → ⟨ v ∈ E m' ⟩
+                h₂ v vσ hshape = subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ z≡))
+                  (shape-read X v (E m') hX hshape)
+                sat : ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+                sat = ∣ X , (hXˢ , (h₁ , h₂)) ∣₁
+            in subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) q'
+                 (∈∈ₛ {a = E m'} {b = DefA.defSet Φ} .fst
+                   (subst ⟨_⟩ (sym (chain m')) sat))
+
+  valuesImgL : (n : ℕ) → ⟨ isL (slice n 1) ⟩ → ⟨ isL (valuesImg n) ⟩
+  valuesImgL n lS = PT.rec (snd (isL (valuesImg n)))
+    (λ { (τ , oτ , mem2) →
+      defSet→isL (sucV (sucV τ)) (suc-ord (suc-ord oτ)) (valuesImg n)
+        ∣ ValImg.Φ n τ (mem2 zero) (mem2 (suc zero))
+        , ValImg.valDefSet≡ n τ (mem2 zero) (mem2 (suc zero)) ∣₁ })
+    (stageFam 2 fam famL)
+    where
+    zeroL : ⟨ isL (# 0) ⟩
+    zeroL = subst (λ w → ⟨ isL w ⟩) (numeralL-fst 0) (numeralL 0 .snd)
+    fam : Fin 2 → V ℓ
+    fam zero = slice n 1
+    fam (suc zero) = ⁅ # 0 ⁆s
+    famL : (i : Fin 2) → ⟨ isL (fam i) ⟩
+    famL zero = lS
+    famL (suc zero) = sglL zeroL
+
+  -- The numerals are von Neumann ordinals: the numeral for m is a member of
+  -- the numeral for n exactly when m < n.  The two directions (this one and
+  -- `∈#-elim`) read the payload indices out of the key memberships.
+  num∈num : (m n : ℕ) → m < n → ⟨ # m ∈ # n ⟩
+  num∈num m zero (k , p) = Empty.rec (snotz (subst (λ w → w ≡ zero) (+-suc k m) p))
+  num∈num m (suc n) (zero , p) =
+    subst (λ w → ⟨ w ∈ # (suc n) ⟩) (sym (cong (λ q → # q) (injSuc p))) (self∈sucV (# n))
+  num∈num m (suc n) (suc k , p) = ∈sucV-inl (num∈num m n (k , injSuc p))
+
+  -- walk places the selection of an abstract family and two abstract key sets
+  -- in the next stage by the one-step climb, and the frame applies it at the
+  -- real shelves only at the lemma-assembly level.
+  private
+    f1 : {n : ℕ} → Fin (suc (suc n))
+    f1 = suc zero
+    f2 : {n : ℕ} → Fin (suc (suc (suc n)))
+    f2 = suc f1
+    f3 : {n : ℕ} → Fin (suc (suc (suc (suc n))))
+    f3 = suc f2
+    f4 : {n : ℕ} → Fin (suc (suc (suc (suc (suc n)))))
+    f4 = suc f3
+    f5 : {n : ℕ} → Fin (suc (suc (suc (suc (suc (suc n))))))
+    f5 = suc f4
+    f6 : {n : ℕ} → Fin (suc (suc (suc (suc (suc (suc (suc n)))))))
+    f6 = suc f5
+    f7 : {n : ℕ} → Fin (suc (suc (suc (suc (suc (suc (suc (suc n))))))))
+    f7 = suc f6
+
+  -- The shift's seek machinery, restated after the bridge chapter: the
+  -- successor atom says one set is the von Neumann successor of another, and
+  -- the seek sentence says a surveyed member is the tail of a recorded pair,
+  -- with the pair chain bound inside the member.  The two readers move the
+  -- sentence between the satisfaction and the pair equation.
+  private
+    sucAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} → Fin n → Fin n → Formula K n
+    sucAt′ i j = (var i ∈̇ var j)
+              ∧̇ ((∀̇∈ (var i) (var zero ∈̇ var (suc j)))
+              ∧̇ (∀̇∈ (var j) ((var zero ∈̇ var (suc i)) ∨̇ (var zero ≐ var (suc i)))))
+
+    Δ₀-sucAt′ : {ℓ' : Level} {K : Type ℓ'} {n : ℕ} (i j : Fin n)
+              → Δ₀ (sucAt′ {K = K} i j)
+    Δ₀-sucAt′ i j = δ-∧ δ-∈ (δ-∧ (δ-∀∈ δ-∈) (δ-∀∈ (δ-∨ δ-∈ δ-≐)))
+
+    tailBody : {ℓ' : Level} {K : Type ℓ'} {m : ℕ}
+             → Formula K (suc (suc (suc (suc (suc (suc (suc m)))))))
+    tailBody = prAt′ f5 f3 f1 ∧̇ (sucAt′ zero f3 ∧̇ prAt′ f6 zero f1)
+
+    tailSeek : {ℓ' : Level} {K : Type ℓ'} {m : ℕ} → Term K (suc m) → Formula K (suc m)
+    tailSeek B = ∃̇∈ B (∃̇∈ (var zero) (∃̇∈ (var zero)
+                   (∃̇∈ (var f2) (∃̇∈ (var zero) (∃̇∈ (var f2) tailBody)))))
+
+    Δ₀-tailSeek : {ℓ' : Level} {K : Type ℓ'} {m : ℕ} (B : Term K (suc m))
+                → Δ₀ (tailSeek B)
+    Δ₀-tailSeek B = δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈
+      (δ-∧ (Δ₀-prAt′ f5 f3 f1)
+           (δ-∧ (Δ₀-sucAt′ zero f3) (Δ₀-prAt′ f6 zero f1))))))))
+
+    seekOut : {n : ℕ} (B : Term (V ℓ) (suc n)) (δ : (V ℓ) SemV.^ (suc n))
+            → ⟨ δ ⊨v tailSeek B ⟩
+            → ∥ Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                ((⟦ var zero ⟧ δ ≡ pr a v) × ⟨ pr (sucV a) v ∈ ⟦ B ⟧ δ ⟩) ∥₁
+    seekOut B δ =
+      PT.rec PT.squash₁ (λ { (p , hp , w₁) →
+      PT.rec PT.squash₁ (λ { (d₁ , hd₁ , w₂) →
+      PT.rec PT.squash₁ (λ { (s , hs , w₃) →
+      PT.rec PT.squash₁ (λ { (d₂ , hd₂ , w₄) →
+      PT.rec PT.squash₁ (λ { (v , hv , w₅) →
+      PT.rec PT.squash₁ (λ { (a , ha , (e₁ , e₂ , e₃)) →
+        ∣ a , v
+        , subst ⟨_⟩ (prAt-adequate f6 zero f1
+            (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ δ)) e₃
+        , subst (λ w → ⟨ w ∈ ⟦ B ⟧ δ ⟩)
+            (subst ⟨_⟩ (prAt-adequate f5 f3 f1
+              (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ δ)) e₁
+             ∙ cong (λ w → pr w v)
+                 (subst ⟨_⟩ (sucAt-adequate zero f3
+                   (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ δ)) e₂))
+            hp ∣₁ })
+      w₅ }) w₄ }) w₃ }) w₂ }) w₁ })
+
+    seekIn : {n : ℕ} (B : Term (V ℓ) (suc n)) (δ : (V ℓ) SemV.^ (suc n)) (a v : V ℓ)
+           → ⟦ var zero ⟧ δ ≡ pr a v → ⟨ pr (sucV a) v ∈ ⟦ B ⟧ δ ⟩
+           → ⟨ δ ⊨v tailSeek B ⟩
+    seekIn B δ a v e h =
+      ∣ pr (sucV a) v , h
+      , ∣ ⁅ sucV a ⁆s , ∈pair-introL refl
+      , ∣ sucV a , singleton-self (sucV a)
+      , ∣ ⁅ sucV a , v ⁆ , ∈pair-introR refl
+      , ∣ v , ∈pair-introR refl
+      , ∣ a , self∈sucV a
+      , ( subst ⟨_⟩ (sym (prAt-adequate f5 f3 f1 env′)) refl
+        , subst ⟨_⟩ (sym (sucAt-adequate zero f3 env′)) refl
+        , subst ⟨_⟩ (sym (prAt-adequate f6 zero f1 env′)) e )
+      ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+      where
+      env′ : (V ℓ) SemV.^ (suc (suc (suc (suc (suc (suc (suc _)))))))
+      env′ = a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s ∷ pr (sucV a) v ∷ δ
+
+  -- The staging moves restated after the bridge chapter: the unordered pair
+  -- of two stage members climbs one stage, the Kuratowski pair climbs two,
+  -- and the tail graph of a stage member climbs three, by its seek sentence.
+  pairUp : (σ : V ℓ) {x y : V ℓ} → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset σ ⟩
+         → ⟨ ⁅ x , y ⁆ ∈ Lset (sucV σ) ⟩
+  pairUp σ {x} {y} x∈ y∈ = mkUp σ ⁅ x , y ⁆ Φ defSet≡
+    where
+    module DefA = DefOf (Lset σ)
+    module RefA = DefA.Refine (layer-trans (Lset-layer σ))
+    mx = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+    qx : ⟪ Lset σ ⟫↪ mx ≡ x
+    qx = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
+    my = ∈-asFiber {a = y} {b = Lset σ} y∈ .fst
+    qy : ⟪ Lset σ ⟫↪ my ≡ y
+    qy = ∈-asFiber {a = y} {b = Lset σ} y∈ .snd
+    Φ : Formula ⟪ Lset σ ⟫ 1
+    Φ = (var zero ≐ con mx) ∨̇ (var zero ≐ con my)
+    defSet≡ : DefA.defSet Φ ≡ ⁅ x , y ⁆
+    defSet≡ = extensionality (DefA.defSet Φ) ⁅ x , y ⁆ (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Φ ⊆ ⁅ x , y ⁆ ⟩
+      sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ ⁅ x , y ⁆))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ ⁅ x , y ⁆ ⟩) q
+            (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = ⁅ x , y ⁆} .fst
+              (mem m (subst ⟨_⟩ (DefA.defSet-mem Φ m) ∣ (m , h) , refl ∣₁))) })
+        (∈∈ₛ {a = z} {b = DefA.defSet Φ} .snd z∈ₛ)
+        where
+        mem : (m : ⟪ Lset σ ⟫)
+            → ⟨ (⟪ Lset σ ⟫↪ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+            → ⟨ ⟪ Lset σ ⟫↪ m ∈ ⁅ x , y ⁆ ⟩
+        mem m = PT.rec (snd (⟪ Lset σ ⟫↪ m ∈ ⁅ x , y ⁆))
+          λ { (inl e) → ∈pair-introL (e ∙ qx)
+            ; (inr e) → ∈pair-introR (e ∙ qy) }
+      sub₂ : ⟨ ⁅ x , y ⁆ ⊆ DefA.defSet Φ ⟩
+      sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet Φ))
+        (λ { (inl e) →
+              subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) (qx ∙ sym e)
+                (∈∈ₛ {a = ⟪ Lset σ ⟫↪ mx} {b = DefA.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (DefA.defSet-mem Φ mx)) ∣ inl refl ∣₁))
+           ; (inr e) →
+              subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) (qy ∙ sym e)
+                (∈∈ₛ {a = ⟪ Lset σ ⟫↪ my} {b = DefA.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (DefA.defSet-mem Φ my)) ∣ inr refl ∣₁)) })
+        (∈pair-elim (∈∈ₛ {a = z} {b = ⁅ x , y ⁆} .snd z∈ₛ))
+
+  prUp : (σ : V ℓ) {x y : V ℓ} → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset σ ⟩
+       → ⟨ pr x y ∈ Lset (sucV (sucV σ)) ⟩
+  prUp σ {x} {y} x∈ y∈ = pairUp (sucV σ) (sglUp-mini σ x∈) (pairUp σ x∈ y∈)
+
+  tailStage : (σ : V ℓ) {z : V ℓ} → ⟨ z ∈ Lset σ ⟩
+            → ⟨ tailGraph z ∈ Lset (sucV (sucV (sucV σ))) ⟩
+  tailStage σ {z} z∈ = mkUp (sucV (sucV σ)) (tailGraph z) Ψ defSet≡
+    where
+    Atr = layer-trans (Lset-layer σ)
+    module DefA = DefOf (Lset (sucV (sucV σ)))
+    module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV σ))))
+    z∈² : ⟨ z ∈ Lset (sucV (sucV σ)) ⟩
+    z∈² = Lset-mono {sucV (sucV σ)} {sucV σ} (self∈sucV (sucV σ))
+            (Lset-mono {sucV σ} {σ} (self∈sucV σ) z∈)
+    mz = ∈-asFiber {a = z} {b = Lset (sucV (sucV σ))} z∈² .fst
+    qz : ⟪ Lset (sucV (sucV σ)) ⟫↪ mz ≡ z
+    qz = ∈-asFiber {a = z} {b = Lset (sucV (sucV σ))} z∈² .snd
+
+    Ψ : Formula ⟪ Lset (sucV (sucV σ)) ⟫ 1
+    Ψ = tailSeek (con mz)
+
+    chain : ∀ m → (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∈ DefA.defSet Ψ)
+                ≡ ((⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Ψ))
+    chain m = RefA.abs-defSet Ψ (Δ₀-tailSeek (con mz)) m
+            ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                    (mapFo DefA.ι Ψ) (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []))
+
+    defSet≡ : DefA.defSet Ψ ≡ tailGraph z
+    defSet≡ = extensionality (DefA.defSet Ψ) (tailGraph z) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet Ψ ⊆ tailGraph z ⟩
+      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ tailGraph z))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ tailGraph z ⟩) q
+            (mem m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁)) })
+        (∈∈ₛ {a = y} {b = DefA.defSet Ψ} .snd y∈ₛ)
+        where
+        mem : (m : ⟪ Lset (sucV (sucV σ)) ⟫)
+            → ⟨ (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Ψ) ⟩
+            → ⟨ ⟪ Lset (sucV (sucV σ)) ⟫↪ m ∈ₛ tailGraph z ⟩
+        mem m sat = PT.rec (snd (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∈ₛ tailGraph z))
+          (λ { (a , v , e , h) →
+            ∈∈ₛ {a = ⟪ Lset (sucV (sucV σ)) ⟫↪ m} {b = tailGraph z} .fst
+              (subst (λ w → ⟨ w ∈ tailGraph z ⟩) (sym e)
+                (tailGraph-in
+                  (subst (λ w → ⟨ pr (sucV a) v ∈ w ⟩) qz h))) })
+          (seekOut (con (⟪ Lset (sucV (sucV σ)) ⟫↪ mz))
+            (⟪ Lset (sucV (sucV σ)) ⟫↪ m ∷ []) sat)
+      sub₂ : ⟨ tailGraph z ⊆ DefA.defSet Ψ ⟩
+      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet Ψ)) build
+        (tailGraph-out {w = z} {z = y} (∈∈ₛ {a = y} {b = tailGraph z} .snd y∈ₛ))
+        where
+        build : Σ[ a ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ pr (sucV a) v ∈ z ⟩ × (y ≡ pr a v))
+              → ⟨ y ∈ₛ DefA.defSet Ψ ⟩
+        build (a , v , h , e) =
+          subst (λ w → ⟨ w ∈ₛ DefA.defSet Ψ ⟩) q'
+            (∈∈ₛ {a = ⟪ Lset (sucV (sucV σ)) ⟫↪ m'} {b = DefA.defSet Ψ} .fst
+              (subst ⟨_⟩ (sym (chain m'))
+                (seekIn (con (⟪ Lset (sucV (sucV σ)) ⟫↪ mz))
+                  (⟪ Lset (sucV (sucV σ)) ⟫↪ m' ∷ []) a v (q' ∙ e)
+                  (subst (λ w → ⟨ pr (sucV a) v ∈ w ⟩) (sym qz) h))))
+          where
+          prz∈ : ⟨ pr (sucV a) v ∈ Lset σ ⟩
+          prz∈ = Atr {x = z} {y = pr (sucV a) v} h z∈
+          a∈ : ⟨ a ∈ Lset σ ⟩
+          a∈ = Atr {x = sucV a} {y = a} (self∈sucV a)
+            (Atr {x = ⁅ sucV a ⁆s} {y = sucV a} (singleton-self (sucV a))
+              (Atr {x = pr (sucV a) v} {y = ⁅ sucV a ⁆s} (∈pair-introL refl) prz∈))
+          v∈ : ⟨ v ∈ Lset σ ⟩
+          v∈ = Atr {x = ⁅ sucV a , v ⁆} {y = v} (∈pair-introR refl)
+            (Atr {x = pr (sucV a) v} {y = ⁅ sucV a , v ⁆} (∈pair-introR refl) prz∈)
+          y∈² : ⟨ y ∈ Lset (sucV (sucV σ)) ⟩
+          y∈² = subst (λ w → ⟨ w ∈ Lset (sucV (sucV σ)) ⟩) (sym e)
+            (prUp σ a∈ v∈)
+          m' = ∈-asFiber {a = y} {b = Lset (sucV (sucV σ))} y∈² .fst
+          q' : ⟪ Lset (sucV (sucV σ)) ⟫↪ m' ≡ y
+          q' = ∈-asFiber {a = y} {b = Lset (sucV (sucV σ))} y∈² .snd
+
+  -- The selection walks, in the bridge chapter's SelMem/SelEq idiom but with
+  -- the shelves, the keys and the stage all abstract module parameters: the
+  -- formulas and the fromSat readers never mention `slice`, `satSet`, or any
+  -- concrete `sett`, so the adequacy transfers meet only variables.  Each
+  private
+    module SelWalk (X Ka Kb τ : V ℓ)
+      (X∈ : ⟨ X ∈ Lset τ ⟩) (Ka∈ : ⟨ Ka ∈ Lset τ ⟩) (Kb∈ : ⟨ Kb ∈ Lset τ ⟩) where
+
+      module DefA = DefOf (Lset τ)
+      Atrans = layer-trans (Lset-layer τ)
+      module RefA = DefA.Refine Atrans
+
+      mX = ∈-asFiber {a = X} {b = Lset τ} X∈ .fst
+      qX : ⟪ Lset τ ⟫↪ mX ≡ X
+      qX = ∈-asFiber {a = X} {b = Lset τ} X∈ .snd
+      mKa = ∈-asFiber {a = Ka} {b = Lset τ} Ka∈ .fst
+      qKa : ⟪ Lset τ ⟫↪ mKa ≡ Ka
+      qKa = ∈-asFiber {a = Ka} {b = Lset τ} Ka∈ .snd
+      mKb = ∈-asFiber {a = Kb} {b = Lset τ} Kb∈ .fst
+      qKb : ⟪ Lset τ ⟫↪ mKb ≡ Kb
+      qKb = ∈-asFiber {a = Kb} {b = Lset τ} Kb∈ .snd
+
+      Φ : Formula ⟪ Lset τ ⟫ 1
+      Φ = (var zero ∈̇ con mX)
+       ∧̇ (∃̇∈ (con mKa) (∃̇∈ (con mKb)
+            (∃̇∈ (var f2) (∃̇∈ (var zero) (∃̇∈ (var zero)
+              (∃̇∈ (var f5) (∃̇∈ (var zero) (∃̇∈ (var zero)
+                (prAt′ f5 f7 f3 ∧̇ (prAt′ f2 f6 zero ∧̇ (var f3 ∈̇ var zero)))))))))))
+
+      dΦ : Δ₀ Φ
+      dΦ = δ-∧ δ-∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈
+             (δ-∧ (Δ₀-prAt′ f5 f7 f3) (δ-∧ (Δ₀-prAt′ f2 f6 zero) δ-∈))))))))))
+
+      chain : ∀ m → (⟪ Lset τ ⟫↪ m ∈ DefA.defSet Φ)
+                  ≡ ((⟪ Lset τ ⟫↪ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ))
+      chain m = RefA.abs-defSet Φ dΦ m
+              ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                      (mapFo DefA.ι Φ) (⟪ Lset τ ⟫↪ m ∷ []))
+
+      defSet≡ : DefA.defSet Φ ≡ selectMember X Ka Kb
+      defSet≡ = extensionality (DefA.defSet Φ) (selectMember X Ka Kb) (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet Φ ⊆ selectMember X Ka Kb ⟩
+        sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ selectMember X Ka Kb))
+          (λ { ((m , h) , q) →
+            subst (λ w → ⟨ w ∈ₛ selectMember X Ka Kb ⟩) q
+              (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m} {b = selectMember X Ka Kb} .fst
+                (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))) })
+          (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
+          where
+          fromSat : (m : ⟪ Lset τ ⟫)
+                  → ⟨ (⟪ Lset τ ⟫↪ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+                  → ⟨ ⟪ Lset τ ⟫↪ m ∈ selectMember X Ka Kb ⟩
+          fromSat m (hXm , big) =
+            PT.rec tgt (λ { (a , ha , w₁) →
+            PT.rec tgt (λ { (b , hb , w₂) →
+            PT.rec tgt (λ { (p , hp , w₃) →
+            PT.rec tgt (λ { (d , hd , w₄) →
+            PT.rec tgt (λ { (u , hu , w₅) →
+            PT.rec tgt (λ { (p' , hp' , w₆) →
+            PT.rec tgt (λ { (d' , hd' , w₇) →
+            PT.rec tgt (λ { (v , hv , (sa , sb , huv)) →
+              selectMember-in {X = X} {Ka = Ka} {Kb = Kb} {w = ⟪ Lset τ ⟫↪ m}
+                {a = a} {b = b} {u = u} {v = v}
+                (subst (λ z → ⟨ ⟪ Lset τ ⟫↪ m ∈ z ⟩) qX hXm)
+                (subst (λ z → ⟨ a ∈ z ⟩) qKa ha)
+                (subst (λ z → ⟨ b ∈ z ⟩) qKb hb)
+                (subst (λ z → ⟨ z ∈ ⟪ Lset τ ⟫↪ m ⟩)
+                  (subst ⟨_⟩ (prAt-adequate f5 f7 f3
+                    (v ∷ d' ∷ p' ∷ u ∷ d ∷ p ∷ b ∷ a ∷ ⟪ Lset τ ⟫↪ m ∷ [])) sa)
+                  hp)
+                (subst (λ z → ⟨ z ∈ ⟪ Lset τ ⟫↪ m ⟩)
+                  (subst ⟨_⟩ (prAt-adequate f2 f6 zero
+                    (v ∷ d' ∷ p' ∷ u ∷ d ∷ p ∷ b ∷ a ∷ ⟪ Lset τ ⟫↪ m ∷ [])) sb)
+                  hp')
+                huv })
+              w₇ }) w₆ }) w₅ }) w₄ }) w₃ }) w₂ }) w₁ }) big
+            where
+            tgt = snd (⟪ Lset τ ⟫↪ m ∈ selectMember X Ka Kb)
+        sub₂ : ⟨ selectMember X Ka Kb ⊆ DefA.defSet Φ ⟩
+        sub₂ y y∈ₛ = mem (∈∈ₛ {a = y} {b = selectMember X Ka Kb} .snd y∈ₛ)
+          where
+          mem : ⟨ y ∈ selectMember X Ka Kb ⟩ → ⟨ y ∈ₛ DefA.defSet Φ ⟩
+          mem hy = PT.rec (snd (y ∈ₛ DefA.defSet Φ)) build
+            (selectMember-wit {X = X} {Ka = Ka} {Kb = Kb} {w = y} hy)
+            where
+            y∈X : ⟨ y ∈ X ⟩
+            y∈X = selectMember-sub {X = X} {Ka = Ka} {Kb = Kb} {w = y} hy
+            y∈A : ⟨ y ∈ Lset τ ⟩
+            y∈A = Atrans {x = X} {y = y} y∈X X∈
+            m' = ∈-asFiber {a = y} {b = Lset τ} y∈A .fst
+            q' : ⟪ Lset τ ⟫↪ m' ≡ y
+            q' = ∈-asFiber {a = y} {b = Lset τ} y∈A .snd
+            build : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                    ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩
+                    × ⟨ pr a u ∈ y ⟩ × ⟨ pr b v ∈ y ⟩ × ⟨ u ∈ v ⟩ )
+                  → ⟨ y ∈ₛ DefA.defSet Φ ⟩
+            build (a , b , u , v , ha , hb , hau , hbv , huv) =
+              subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) q'
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m'} {b = DefA.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (chain m')) sat))
+              where
+              E : V ℓ
+              E = ⟪ Lset τ ⟫↪ m'
+              env : (V ℓ) SemV.^ 9
+              env = v ∷ ⁅ b , v ⁆ ∷ pr b v ∷ u ∷ ⁅ a , u ⁆ ∷ pr a u ∷ b ∷ a ∷ E ∷ []
+              sat : ⟨ (E ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+              sat = subst (λ z → ⟨ E ∈ z ⟩) (sym qX)
+                      (subst (λ z → ⟨ z ∈ X ⟩) (sym q') y∈X)
+                  , ∣ a , subst (λ z → ⟨ a ∈ z ⟩) (sym qKa) ha
+                  , ∣ b , subst (λ z → ⟨ b ∈ z ⟩) (sym qKb) hb
+                  , ∣ pr a u , subst (λ z → ⟨ pr a u ∈ z ⟩) (sym q') hau
+                  , ∣ ⁅ a , u ⁆ , ∈pair-introR refl
+                  , ∣ u , ∈pair-introR refl
+                  , ∣ pr b v , subst (λ z → ⟨ pr b v ∈ z ⟩) (sym q') hbv
+                  , ∣ ⁅ b , v ⁆ , ∈pair-introR refl
+                  , ∣ v , ∈pair-introR refl
+                  , ( subst ⟨_⟩ (sym (prAt-adequate f5 f7 f3 env)) refl
+                    , subst ⟨_⟩ (sym (prAt-adequate f2 f6 zero env)) refl
+                    , huv )
+                  ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+
+      walk : ⟨ selectMember X Ka Kb ∈ Lset (sucV τ) ⟩
+      walk = Lset-in (sucV τ) τ (selectMember X Ka Kb) (self∈sucV τ)
+              (𝒟ₒ-intro (Lset τ) (selectMember X Ka Kb) ∣ Φ , defSet≡ ∣₁)
+
+    module SelEWalk (X Ka Kb τ : V ℓ)
+      (X∈ : ⟨ X ∈ Lset τ ⟩) (Ka∈ : ⟨ Ka ∈ Lset τ ⟩) (Kb∈ : ⟨ Kb ∈ Lset τ ⟩) where
+
+      module DefA = DefOf (Lset τ)
+      Atrans = layer-trans (Lset-layer τ)
+      module RefA = DefA.Refine Atrans
+
+      mX = ∈-asFiber {a = X} {b = Lset τ} X∈ .fst
+      qX : ⟪ Lset τ ⟫↪ mX ≡ X
+      qX = ∈-asFiber {a = X} {b = Lset τ} X∈ .snd
+      mKa = ∈-asFiber {a = Ka} {b = Lset τ} Ka∈ .fst
+      qKa : ⟪ Lset τ ⟫↪ mKa ≡ Ka
+      qKa = ∈-asFiber {a = Ka} {b = Lset τ} Ka∈ .snd
+      mKb = ∈-asFiber {a = Kb} {b = Lset τ} Kb∈ .fst
+      qKb : ⟪ Lset τ ⟫↪ mKb ≡ Kb
+      qKb = ∈-asFiber {a = Kb} {b = Lset τ} Kb∈ .snd
+
+      Φ : Formula ⟪ Lset τ ⟫ 1
+      Φ = (var zero ∈̇ con mX)
+       ∧̇ (∃̇∈ (con mKa) (∃̇∈ (con mKb)
+            (∃̇∈ (var f2) (∃̇∈ (var zero) (∃̇∈ (var zero)
+              (∃̇∈ (var f5) (prAt′ f3 f5 f1 ∧̇ prAt′ zero f4 f1)))))))
+
+      dΦ : Δ₀ Φ
+      dΦ = δ-∧ δ-∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈
+             (δ-∧ (Δ₀-prAt′ f3 f5 f1) (Δ₀-prAt′ zero f4 f1))))))))
+
+      chain : ∀ m → (⟪ Lset τ ⟫↪ m ∈ DefA.defSet Φ)
+                  ≡ ((⟪ Lset τ ⟫↪ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ))
+      chain m = RefA.abs-defSet Φ dΦ m
+              ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                      (mapFo DefA.ι Φ) (⟪ Lset τ ⟫↪ m ∷ []))
+
+      defSet≡ : DefA.defSet Φ ≡ selectEqual X Ka Kb
+      defSet≡ = extensionality (DefA.defSet Φ) (selectEqual X Ka Kb) (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet Φ ⊆ selectEqual X Ka Kb ⟩
+        sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ selectEqual X Ka Kb))
+          (λ { ((m , h) , q) →
+            subst (λ w → ⟨ w ∈ₛ selectEqual X Ka Kb ⟩) q
+              (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m} {b = selectEqual X Ka Kb} .fst
+                (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))) })
+          (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
+          where
+          fromSat : (m : ⟪ Lset τ ⟫)
+                  → ⟨ (⟪ Lset τ ⟫↪ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+                  → ⟨ ⟪ Lset τ ⟫↪ m ∈ selectEqual X Ka Kb ⟩
+          fromSat m (hXm , big) =
+            PT.rec tgt (λ { (a , ha , w₁) →
+            PT.rec tgt (λ { (b , hb , w₂) →
+            PT.rec tgt (λ { (p , hp , w₃) →
+            PT.rec tgt (λ { (d , hd , w₄) →
+            PT.rec tgt (λ { (u , hu , w₅) →
+            PT.rec tgt (λ { (p' , hp' , (sa , sb)) →
+              selectEqual-in {X = X} {Ka = Ka} {Kb = Kb} {w = ⟪ Lset τ ⟫↪ m}
+                {a = a} {b = b} {u = u}
+                (subst (λ z → ⟨ ⟪ Lset τ ⟫↪ m ∈ z ⟩) qX hXm)
+                (subst (λ z → ⟨ a ∈ z ⟩) qKa ha)
+                (subst (λ z → ⟨ b ∈ z ⟩) qKb hb)
+                (subst (λ z → ⟨ z ∈ ⟪ Lset τ ⟫↪ m ⟩)
+                  (subst ⟨_⟩ (prAt-adequate f3 f5 f1
+                    (p' ∷ u ∷ d ∷ p ∷ b ∷ a ∷ ⟪ Lset τ ⟫↪ m ∷ [])) sa)
+                  hp)
+                (subst (λ z → ⟨ z ∈ ⟪ Lset τ ⟫↪ m ⟩)
+                  (subst ⟨_⟩ (prAt-adequate zero f4 f1
+                    (p' ∷ u ∷ d ∷ p ∷ b ∷ a ∷ ⟪ Lset τ ⟫↪ m ∷ [])) sb)
+                  hp') })
+              w₅ }) w₄ }) w₃ }) w₂ }) w₁ }) big
+            where
+            tgt = snd (⟪ Lset τ ⟫↪ m ∈ selectEqual X Ka Kb)
+        sub₂ : ⟨ selectEqual X Ka Kb ⊆ DefA.defSet Φ ⟩
+        sub₂ y y∈ₛ = mem (∈∈ₛ {a = y} {b = selectEqual X Ka Kb} .snd y∈ₛ)
+          where
+          mem : ⟨ y ∈ selectEqual X Ka Kb ⟩ → ⟨ y ∈ₛ DefA.defSet Φ ⟩
+          mem hy = PT.rec (snd (y ∈ₛ DefA.defSet Φ)) build
+            (selectEqual-wit {X = X} {Ka = Ka} {Kb = Kb} {w = y} hy)
+            where
+            y∈X : ⟨ y ∈ X ⟩
+            y∈X = selectEqual-sub {X = X} {Ka = Ka} {Kb = Kb} {w = y} hy
+            y∈A : ⟨ y ∈ Lset τ ⟩
+            y∈A = Atrans {x = X} {y = y} y∈X X∈
+            m' = ∈-asFiber {a = y} {b = Lset τ} y∈A .fst
+            q' : ⟪ Lset τ ⟫↪ m' ≡ y
+            q' = ∈-asFiber {a = y} {b = Lset τ} y∈A .snd
+            build : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ]
+                    ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩
+                    × ⟨ pr a u ∈ y ⟩ × ⟨ pr b u ∈ y ⟩ )
+                  → ⟨ y ∈ₛ DefA.defSet Φ ⟩
+            build (a , b , u , ha , hb , hau , hbu) =
+              subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) q'
+                (∈∈ₛ {a = ⟪ Lset τ ⟫↪ m'} {b = DefA.defSet Φ} .fst
+                  (subst ⟨_⟩ (sym (chain m')) sat))
+              where
+              E : V ℓ
+              E = ⟪ Lset τ ⟫↪ m'
+              env : (V ℓ) SemV.^ 7
+              env = pr b u ∷ u ∷ ⁅ a , u ⁆ ∷ pr a u ∷ b ∷ a ∷ E ∷ []
+              sat : ⟨ (E ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+              sat = subst (λ z → ⟨ E ∈ z ⟩) (sym qX)
+                      (subst (λ z → ⟨ z ∈ X ⟩) (sym q') y∈X)
+                  , ∣ a , subst (λ z → ⟨ a ∈ z ⟩) (sym qKa) ha
+                  , ∣ b , subst (λ z → ⟨ b ∈ z ⟩) (sym qKb) hb
+                  , ∣ pr a u , subst (λ z → ⟨ pr a u ∈ z ⟩) (sym q') hau
+                  , ∣ ⁅ a , u ⁆ , ∈pair-introR refl
+                  , ∣ u , ∈pair-introR refl
+                  , ∣ pr b u , subst (λ z → ⟨ pr b u ∈ z ⟩) (sym q') hbu
+                  , ( subst ⟨_⟩ (sym (prAt-adequate f3 f5 f1 env)) refl
+                    , subst ⟨_⟩ (sym (prAt-adequate zero f4 f1 env)) refl )
+                  ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+
+      walk : ⟨ selectEqual X Ka Kb ∈ Lset (sucV τ) ⟩
+      walk = Lset-in (sucV τ) τ (selectEqual X Ka Kb) (self∈sucV τ)
+              (𝒟ₒ-intro (Lset τ) (selectEqual X Ka Kb) ∣ Φ , defSet≡ ∣₁)
+
+  -- The selection image frame, shared by the two selections.  The stage holds
+  -- the shelf, the numeral (the key set of the arity, whose members are the
+  -- payload keys), and the singletons of those keys.  The defining formula
+  -- ranges over the shelf and over the singletons of the numeral's members,
+  -- with the selection description's membership shape as the body atom and
+  -- the pin's second inclusion bounded over the stage; the walk is applied at
+  -- the real shelves only here, in the two directions of the pin.
+  private
+    module SelMImg (n k : ℕ) (τ : V ℓ)
+      (S∈ : ⟨ slice n k ∈ Lset τ ⟩)
+      (K∈ : ⟨ # k ∈ Lset τ ⟩)
+      (KS∈ : (i : Fin k) → ⟨ ⁅ # (toℕ i) ⁆s ∈ Lset τ ⟩) where
+      Shelf : V ℓ
+      Shelf = slice n k
+
+      module DefA = DefOf (Lset (sucV (sucV τ)))
+      module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV τ))))
+      Atr = layer-trans (Lset-layer τ)
+
+      E : ⟪ Lset (sucV (sucV τ)) ⟫ → V ℓ
+      E m = ⟪ Lset (sucV (sucV τ)) ⟫↪ m
+
+      -- The stage one step above the shelf stage, as a member of the image
+      -- stage: the pin's second inclusion is bounded over it.
+      σ∈ : ⟨ Lset (sucV τ) ∈ Lset (sucV (sucV τ)) ⟩
+      σ∈ = mkUp (sucV τ) (Lset (sucV τ)) ⊤̇ (DefOf.defSet⊤≡A (Lset (sucV τ)))
+      mσ = ∈-asFiber {a = Lset (sucV τ)} {b = Lset (sucV (sucV τ))} σ∈ .fst
+      qσ : E mσ ≡ Lset (sucV τ)
+      qσ = ∈-asFiber {a = Lset (sucV τ)} {b = Lset (sucV (sucV τ))} σ∈ .snd
+
+      -- The shelf and the key family (the singletons of the numeral's
+      -- members) in the image stage.
+      Shelf' : ⟨ Shelf ∈ Lset (sucV (sucV τ)) ⟩
+      Shelf' = Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ))
+                 (Lset-mono {sucV τ} {τ} (self∈sucV τ) S∈)
+      mS = ∈-asFiber {a = Shelf} {b = Lset (sucV (sucV τ))} Shelf' .fst
+      qS : E mS ≡ Shelf
+      qS = ∈-asFiber {a = Shelf} {b = Lset (sucV (sucV τ))} Shelf' .snd
+
+      Keys∈ : ⟨ singletons (# k) ∈ Lset (sucV (sucV τ)) ⟩
+      Keys∈ = Lset-in (sucV (sucV τ)) (sucV τ) (singletons (# k)) (self∈sucV (sucV τ))
+                (𝒟ₒ-intro (Lset (sucV τ)) (singletons (# k))
+                  ∣ SglFam.Φ (# k) τ K∈ , SglFam.defSet≡ (# k) τ K∈ ∣₁)
+      mKeys = ∈-asFiber {a = singletons (# k)} {b = Lset (sucV (sucV τ))} Keys∈ .fst
+      qKeys : E mKeys ≡ singletons (# k)
+      qKeys = ∈-asFiber {a = singletons (# k)} {b = Lset (sucV (sucV τ))} Keys∈ .snd
+
+      -- The membership shape, the delivered selection description's body: a
+      -- member of the selection is a member of the family holding, at the two
+      -- keys, two recorded values in membership, with the pair chain bound
+      -- inside the member.  Over the stage the keys are bound, not constants.
+      shape : Formula ⟪ Lset (sucV (sucV τ)) ⟫ (suc (suc (suc (suc (suc zero)))))
+      shape = (var zero ∈̇ var (suc (suc (suc zero))))
+            ∧̇ (∃̇∈ (var (suc (suc zero)))
+                 (∃̇∈ (var (suc (suc zero)))
+                   (∃̇∈ (var (suc (suc zero)))
+                     (∃̇∈ (var zero)
+                       (∃̇∈ (var zero)
+                         (∃̇∈ (var (suc (suc (suc (suc (suc zero))))))
+                           (∃̇∈ (var zero)
+                             (∃̇∈ (var zero)
+                               ((prAt′ f5 f7 f3)
+                                ∧̇ ((prAt′ f2 f6 zero) ∧̇ (var f3 ∈̇ var zero)))))))))))
+
+      dShape : Δ₀ shape
+      dShape = δ-∧ δ-∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈
+                 (δ-∧ (Δ₀-prAt′ f5 f7 f3) (δ-∧ (Δ₀-prAt′ f2 f6 zero) δ-∈))))))))))
+
+      shapeV : Formula (V ℓ) (suc (suc (suc (suc (suc zero)))))
+      shapeV = mapFo fst (mapFo DefA.ι shape)
+
+      ΦM : Formula ⟪ Lset (sucV (sucV τ)) ⟫ 1
+      ΦM = ∃̇∈ (con mS) (∃̇∈ (con mKeys) (∃̇∈ (con mKeys)
+             ( (∀̇∈ (var (suc (suc (suc zero)))) shape)
+             ∧̇ (∀̇∈ (con mσ)
+                  (shape ⇒̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))))) )))
+
+      dΦM : Δ₀ ΦM
+      dΦM = δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∧ (δ-∀∈ dShape)
+             (δ-∀∈ (δ-⇒ dShape δ-∈)))))
+
+      chain : ∀ m → (E m ∈ DefA.defSet ΦM)
+                  ≡ ((E m ∷ []) ⊨v mapFo fst (mapFo DefA.ι ΦM))
+      chain m = RefA.abs-defSet ΦM dΦM m
+              ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                      (mapFo DefA.ι ΦM) (E m ∷ []))
+
+      -- The two readers of the description, at the stage: the satisfaction of
+      -- the shape is the membership in the selection, and back.
+      shape-read : (X Ka Kb v z : V ℓ)
+                 → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+                 → ⟨ v ∈ selectMember X Ka Kb ⟩
+      shape-read X Ka Kb v z h = PT.rec (snd (v ∈ selectMember X Ka Kb))
+        (λ { (a , ha , w₁) → PT.rec (snd (v ∈ selectMember X Ka Kb))
+          (λ { (b , hb , w₂) → PT.rec (snd (v ∈ selectMember X Ka Kb))
+            (λ { (p , hp , w₃) → PT.rec (snd (v ∈ selectMember X Ka Kb))
+              (λ { (d , hd , w₄) → PT.rec (snd (v ∈ selectMember X Ka Kb))
+                (λ { (u , hu , w₅) → PT.rec (snd (v ∈ selectMember X Ka Kb))
+                  (λ { (p' , hp' , w₆) → PT.rec (snd (v ∈ selectMember X Ka Kb))
+                    (λ { (d' , hd' , w₇) → PT.rec (snd (v ∈ selectMember X Ka Kb))
+                      (λ { (w , hw , (sa , sb , huv)) →
+                        selectMember-in {X = X} {Ka = Ka} {Kb = Kb} {w = v}
+                          {a = a} {b = b} {u = u} {v = w}
+                          (h .fst)
+                          ha hb
+                          (subst (λ q → ⟨ q ∈ v ⟩)
+                            (subst ⟨_⟩ (prAt-adequate f5 f7 f3
+                              (w ∷ d' ∷ p' ∷ u ∷ d ∷ p ∷ b ∷ a
+                                ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ [])) sa)
+                            hp)
+                          (subst (λ q → ⟨ q ∈ v ⟩)
+                            (subst ⟨_⟩ (prAt-adequate f2 f6 zero
+                              (w ∷ d' ∷ p' ∷ u ∷ d ∷ p ∷ b ∷ a
+                                ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ [])) sb)
+                            hp')
+                          huv })
+                      w₇ }) w₆ }) w₅ }) w₄ }) w₃ }) w₂ }) w₁ }) (h .snd)
+
+      shape-fill : (X Ka Kb v z : V ℓ)
+                 → ⟨ v ∈ selectMember X Ka Kb ⟩
+                 → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+      shape-fill X Ka Kb v z hv = PT.rec
+        (snd ((v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV)) build
+        (selectMember-wit {X = X} {Ka = Ka} {Kb = Kb} {w = v} hv)
+        where
+        build : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ w ∈ V ℓ ]
+                ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩
+                × ⟨ pr a u ∈ v ⟩ × ⟨ pr b w ∈ v ⟩ × ⟨ u ∈ w ⟩ )
+              → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+        build (a , b , u , w , ha , hb , hau , hbv , huv) =
+          selectMember-sub {X = X} {Ka = Ka} {Kb = Kb} {w = v} hv
+          , ∣ a , ha
+          , ∣ b , hb
+          , ∣ pr a u , hau
+          , ∣ ⁅ a , u ⁆ , ∈pair-introR refl
+          , ∣ u , ∈pair-introR refl
+          , ∣ pr b w , hbv
+          , ∣ ⁅ b , w ⁆ , ∈pair-introR refl
+          , ∣ w , ∈pair-introR refl
+          , ( subst ⟨_⟩ (sym (prAt-adequate f5 f7 f3
+                (w ∷ ⁅ b , w ⁆ ∷ pr b w ∷ u ∷ ⁅ a , u ⁆ ∷ pr a u ∷ b ∷ a
+                  ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []))) refl
+            , subst ⟨_⟩ (sym (prAt-adequate f2 f6 zero
+                (w ∷ ⁅ b , w ⁆ ∷ pr b w ∷ u ∷ ⁅ a , u ⁆ ∷ pr a u ∷ b ∷ a
+                  ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []))) refl
+            , huv )
+          ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+
+      selMOut : (z : V ℓ) → ⟨ z ∈ selMImg n k ⟩
+              → ∥ Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                   (stepImage {n} {k} tagSelM (m , i , j) ≡ z) ∥₁
+      selMOut z = PT.map λ { ((m , (i , j)) , e) → m , i , j , e }
+
+      selMDefSet≡ : DefA.defSet ΦM ≡ selMImg n k
+      selMDefSet≡ = extensionality (DefA.defSet ΦM) (selMImg n k) (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet ΦM ⊆ selMImg n k ⟩
+        sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ selMImg n k)) go
+          (∈∈ₛ {a = z} {b = DefA.defSet ΦM} .snd z∈ₛ)
+          where
+          go : Σ[ p ∈ Σ[ m ∈ ⟪ Lset (sucV (sucV τ)) ⟫ ] ⟨ DefA.smallSat ΦM m ⟩ ]
+                 (E (p .fst) ≡ z)
+             → ⟨ z ∈ₛ selMImg n k ⟩
+          go ((m , h) , q) = PT.rec (snd (z ∈ₛ selMImg n k)) build
+            (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))
+            where
+            build : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                      (stepImage {n} {k} tagSelM (mX , i , j) ≡ E m)
+                  → ⟨ z ∈ₛ selMImg n k ⟩
+            build (mX , i , j , e) = subst (λ w → ⟨ w ∈ₛ selMImg n k ⟩) (e ∙ q)
+              (∈∈ₛ {a = stepImage {n} {k} tagSelM (mX , i , j)} {b = selMImg n k} .fst
+                ∣ (mX , i , j) , refl ∣₁)
+            fromSat : (m' : ⟪ Lset (sucV (sucV τ)) ⟫)
+                    → ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι ΦM) ⟩
+                    → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                         (stepImage {n} {k} tagSelM (mX , i , j) ≡ E m') ∥₁
+            fromSat m' big = PT.rec squash₁ (λ { (X , hX , w₁) →
+              PT.rec squash₁ (λ { (Ka , hKa , w₂) →
+              PT.rec squash₁ (λ { (Kb , hKb , body) →
+                finish X Ka Kb (subst (λ w → ⟨ X ∈ w ⟩) qS hX)
+                       (subst (λ w → ⟨ Ka ∈ w ⟩) qKeys hKa)
+                       (subst (λ w → ⟨ Kb ∈ w ⟩) qKeys hKb)
+                       (body .fst) (body .snd) }) w₂ }) w₁ }) big
+              where
+              finish : (X Ka Kb : V ℓ) → ⟨ X ∈ Shelf ⟩ → ⟨ Ka ∈ singletons (# k) ⟩
+                     → ⟨ Kb ∈ singletons (# k) ⟩
+                     → ((v : V ℓ) → ⟨ v ∈ E m' ⟩
+                        → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩)
+                     → ((v : V ℓ) → ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                        → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩
+                        → ⟨ v ∈ E m' ⟩)
+                     → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                          (stepImage {n} {k} tagSelM (mX , i , j) ≡ E m') ∥₁
+              finish X Ka Kb hX' hKa' hKb' h₁ h₂ =
+                PT.rec squash₁ (λ { (a , ha , eqa) →
+                PT.rec squash₁ (λ { (b , hb , eqb) →
+                  goKey a ha eqa b hb eqb }) (singletons-out {X = # k} {w = Kb} hKb') })
+                (singletons-out {X = # k} {w = Ka} hKa')
+                where
+                goKey : (a : V ℓ) → ⟨ a ∈ # k ⟩ → Ka ≡ ⁅ a ⁆s
+                      → (b : V ℓ) → ⟨ b ∈ # k ⟩ → Kb ≡ ⁅ b ⁆s
+                      → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                           (stepImage {n} {k} tagSelM (mX , i , j) ≡ E m') ∥₁
+                eSel : E m' ≡ selectMember X Ka Kb
+                eSel = extensionality (E m') (selectMember X Ka Kb) (t₁ , t₂)
+                  where
+                  t₁ : ⟨ E m' ⊆ selectMember X Ka Kb ⟩
+                  t₁ v v∈ₛ = ∈∈ₛ {a = v} {b = selectMember X Ka Kb} .fst
+                    (shape-read X Ka Kb v (E m')
+                      (h₁ v (∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ)))
+                  t₂ : ⟨ selectMember X Ka Kb ⊆ E m' ⟩
+                  t₂ v v∈ₛ = ∈∈ₛ {a = v} {b = E m'} .fst
+                    (h₂ v v∈σ (shape-fill X Ka Kb v (E m') v∈Sel))
+                    where
+                    v∈Sel : ⟨ v ∈ selectMember X Ka Kb ⟩
+                    v∈Sel = ∈∈ₛ {a = v} {b = selectMember X Ka Kb} .snd v∈ₛ
+                    v∈σ : ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                    v∈σ = subst (λ w → ⟨ v ∈ˢ w ⟩) (sym qσ)
+                      (Lset-mono {sucV τ} {τ} (self∈sucV τ)
+                        (Atr {x = X} {y = v}
+                          (selectMember-sub {X = X} {Ka = Ka} {Kb = Kb} {w = v} v∈Sel)
+                          (Atr {x = Shelf} {y = X} hX' S∈)))
+                goKey a ha eqa b hb eqb =
+                  PT.rec squash₁ (λ { (m , hm , eqm) →
+                  PT.rec squash₁ (λ { (l , hl , eql) →
+                    let i : Fin k
+                        i = fromℕ' k m hm
+                        j : Fin k
+                        j = fromℕ' k l hl
+                        eqi : # (toℕ i) ≡ a
+                        eqi = cong (λ q → # q) (toFromId' k m hm) ∙ sym eqm
+                        eqj : # (toℕ j) ≡ b
+                        eqj = cong (λ q → # q) (toFromId' k l hl) ∙ sym eql
+                        eqiKa : ⁅ # (toℕ i) ⁆s ≡ Ka
+                        eqiKa = cong ⁅_⁆s eqi ∙ sym eqa
+                        eqjKb : ⁅ # (toℕ j) ⁆s ≡ Kb
+                        eqjKb = cong ⁅_⁆s eqj ∙ sym eqb
+                    in let fX : Σ[ mX ∈ ⟪ Shelf ⟫ ] (⟪ Shelf ⟫↪ mX ≡ X)
+                           fX = ∈-asFiber {a = X} {b = Shelf} hX'
+                           step≡ : stepImage {n} {k} tagSelM (fX .fst , i , j) ≡ E m'
+                           step≡ =
+                             cong (λ w → selectMember w ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s) (fX .snd)
+                             ∙ cong (λ w → selectMember X w ⁅ # (toℕ j) ⁆s) eqiKa
+                             ∙ cong (λ w → selectMember X Ka w) eqjKb
+                             ∙ sym eSel
+                       in ∣ (fX .fst , (i , (j , step≡))) ∣₁
+                    }) (∈#-elim k b hb) })
+                  (∈#-elim k a ha)
+
+        sub₂ : ⟨ selMImg n k ⊆ DefA.defSet ΦM ⟩
+        sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet ΦM)) build (selMOut z z∈ₛm)
+          where
+          z∈ₛm : ⟨ z ∈ selMImg n k ⟩
+          z∈ₛm = ∈∈ₛ {a = z} {b = selMImg n k} .snd z∈ₛ
+          build : Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                    (stepImage {n} {k} tagSelM (m , i , j) ≡ z)
+                → ⟨ z ∈ₛ DefA.defSet ΦM ⟩
+          build (m , i , j , e) =
+            subst (λ w → ⟨ w ∈ₛ DefA.defSet ΦM ⟩) q'
+              (∈∈ₛ {a = E m'} {b = DefA.defSet ΦM} .fst
+                (subst ⟨_⟩ (sym (chain m')) sat))
+            where
+            X : V ℓ
+            X = ⟪ Shelf ⟫↪ m
+            hX : ⟨ X ∈ Shelf ⟩
+            hX = ∈∈ₛ {a = X} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ m)
+            Ka : V ℓ
+            Ka = ⁅ # (toℕ i) ⁆s
+            Kb : V ℓ
+            Kb = ⁅ # (toℕ j) ⁆s
+            X∈τ : ⟨ X ∈ Lset τ ⟩
+            X∈τ = Atr {x = Shelf} {y = X} hX S∈
+            Ka∈τ : ⟨ Ka ∈ Lset τ ⟩
+            Ka∈τ = KS∈ i
+            Kb∈τ : ⟨ Kb ∈ Lset τ ⟩
+            Kb∈τ = KS∈ j
+            z≡ : z ≡ selectMember X Ka Kb
+            z≡ = sym e
+            z∈τ : ⟨ z ∈ Lset (sucV τ) ⟩
+            z∈τ = subst (λ w → ⟨ w ∈ Lset (sucV τ) ⟩) (sym z≡)
+                    (SelWalk.walk X Ka Kb τ X∈τ Ka∈τ Kb∈τ)
+            z∈ⁱ : ⟨ z ∈ Lset (sucV (sucV τ)) ⟩
+            z∈ⁱ = Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ)) z∈τ
+            m' = ∈-asFiber {a = z} {b = Lset (sucV (sucV τ))} z∈ⁱ .fst
+            q' : E m' ≡ z
+            q' = ∈-asFiber {a = z} {b = Lset (sucV (sucV τ))} z∈ⁱ .snd
+            hXˢ : ⟨ X ∈ˢ fst (DefA.ι mS) ⟩
+            hXˢ = subst (λ w → ⟨ X ∈ˢ w ⟩) (sym qS) hX
+            hKaˢ : ⟨ Ka ∈ˢ fst (DefA.ι mKeys) ⟩
+            hKaˢ = subst (λ w → ⟨ Ka ∈ˢ w ⟩) (sym qKeys)
+                     (singletons-in {X = # k} {x = # (toℕ i)} (num∈num (toℕ i) k (toℕ<n i)))
+            hKbˢ : ⟨ Kb ∈ˢ fst (DefA.ι mKeys) ⟩
+            hKbˢ = subst (λ w → ⟨ Kb ∈ˢ w ⟩) (sym qKeys)
+                     (singletons-in {X = # k} {x = # (toℕ j)} (num∈num (toℕ j) k (toℕ<n j)))
+            h₁ : (v : V ℓ) → ⟨ v ∈ E m' ⟩
+                → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩
+            h₁ v hv = shape-fill X Ka Kb v (E m') v∈Sel
+              where
+              v∈Sel : ⟨ v ∈ selectMember X Ka Kb ⟩
+              v∈Sel = subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv
+            h₂ : (v : V ℓ) → ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩ → ⟨ v ∈ E m' ⟩
+            h₂ v vσ hshape = subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ z≡))
+              (shape-read X Ka Kb v (E m') hshape)
+            sat : ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι ΦM) ⟩
+            sat = ∣ X , (hXˢ , ∣ Ka , (hKaˢ , ∣ Kb , (hKbˢ , (h₁ , h₂)) ∣₁) ∣₁) ∣₁
+
+  private
+    module SelEImg (n k : ℕ) (τ : V ℓ)
+      (S∈ : ⟨ slice n k ∈ Lset τ ⟩)
+      (K∈ : ⟨ # k ∈ Lset τ ⟩)
+      (KS∈ : (i : Fin k) → ⟨ ⁅ # (toℕ i) ⁆s ∈ Lset τ ⟩) where
+      Shelf : V ℓ
+      Shelf = slice n k
+
+      module DefA = DefOf (Lset (sucV (sucV τ)))
+      module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV τ))))
+      Atr = layer-trans (Lset-layer τ)
+
+      E : ⟪ Lset (sucV (sucV τ)) ⟫ → V ℓ
+      E m = ⟪ Lset (sucV (sucV τ)) ⟫↪ m
+
+      -- The stage one step above the shelf stage, as a member of the image
+      -- stage: the pin's second inclusion is bounded over it.
+      σ∈ : ⟨ Lset (sucV τ) ∈ Lset (sucV (sucV τ)) ⟩
+      σ∈ = mkUp (sucV τ) (Lset (sucV τ)) ⊤̇ (DefOf.defSet⊤≡A (Lset (sucV τ)))
+      mσ = ∈-asFiber {a = Lset (sucV τ)} {b = Lset (sucV (sucV τ))} σ∈ .fst
+      qσ : E mσ ≡ Lset (sucV τ)
+      qσ = ∈-asFiber {a = Lset (sucV τ)} {b = Lset (sucV (sucV τ))} σ∈ .snd
+
+      -- The shelf and the key family (the singletons of the numeral's
+      -- members) in the image stage.
+      Shelf' : ⟨ Shelf ∈ Lset (sucV (sucV τ)) ⟩
+      Shelf' = Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ))
+                 (Lset-mono {sucV τ} {τ} (self∈sucV τ) S∈)
+      mS = ∈-asFiber {a = Shelf} {b = Lset (sucV (sucV τ))} Shelf' .fst
+      qS : E mS ≡ Shelf
+      qS = ∈-asFiber {a = Shelf} {b = Lset (sucV (sucV τ))} Shelf' .snd
+
+      Keys∈ : ⟨ singletons (# k) ∈ Lset (sucV (sucV τ)) ⟩
+      Keys∈ = Lset-in (sucV (sucV τ)) (sucV τ) (singletons (# k)) (self∈sucV (sucV τ))
+                (𝒟ₒ-intro (Lset (sucV τ)) (singletons (# k))
+                  ∣ SglFam.Φ (# k) τ K∈ , SglFam.defSet≡ (# k) τ K∈ ∣₁)
+      mKeys = ∈-asFiber {a = singletons (# k)} {b = Lset (sucV (sucV τ))} Keys∈ .fst
+      qKeys : E mKeys ≡ singletons (# k)
+      qKeys = ∈-asFiber {a = singletons (# k)} {b = Lset (sucV (sucV τ))} Keys∈ .snd
+
+      -- The membership shape, the delivered selection description's body: a
+      -- member of the selection is a member of the family holding, at the two
+      -- keys, two recorded values in membership, with the pair chain bound
+      -- inside the member.  Over the stage the keys are bound, not constants.
+      shape : Formula ⟪ Lset (sucV (sucV τ)) ⟫ (suc (suc (suc (suc (suc zero)))))
+      shape = (var zero ∈̇ var (suc (suc (suc zero))))
+            ∧̇ (∃̇∈ (var (suc (suc zero)))
+                 (∃̇∈ (var (suc (suc zero)))
+                   (∃̇∈ (var (suc (suc zero)))
+                     (∃̇∈ (var zero)
+                       (∃̇∈ (var zero)
+                         (∃̇∈ (var (suc (suc (suc (suc (suc zero))))))
+                           ((prAt′ f3 f5 f1) ∧̇ (prAt′ zero f4 f1))))))))
+
+      dShape : Δ₀ shape
+      dShape = δ-∧ δ-∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈
+                 (δ-∧ (Δ₀-prAt′ f3 f5 f1) (Δ₀-prAt′ zero f4 f1))))))))
+
+      shapeV : Formula (V ℓ) (suc (suc (suc (suc (suc zero)))))
+      shapeV = mapFo fst (mapFo DefA.ι shape)
+
+      ΦM : Formula ⟪ Lset (sucV (sucV τ)) ⟫ 1
+      ΦM = ∃̇∈ (con mS) (∃̇∈ (con mKeys) (∃̇∈ (con mKeys)
+             ( (∀̇∈ (var (suc (suc (suc zero)))) shape)
+             ∧̇ (∀̇∈ (con mσ)
+                  (shape ⇒̇ (var zero ∈̇ var (suc (suc (suc (suc zero))))))) )))
+
+      dΦM : Δ₀ ΦM
+      dΦM = δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∧ (δ-∀∈ dShape)
+             (δ-∀∈ (δ-⇒ dShape δ-∈)))))
+
+      chain : ∀ m → (E m ∈ DefA.defSet ΦM)
+                  ≡ ((E m ∷ []) ⊨v mapFo fst (mapFo DefA.ι ΦM))
+      chain m = RefA.abs-defSet ΦM dΦM m
+              ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                      (mapFo DefA.ι ΦM) (E m ∷ []))
+
+      -- The two readers of the description, at the stage: the satisfaction of
+      -- the shape is the membership in the selection, and back.
+      shape-read : (X Ka Kb v z : V ℓ)
+                 → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+                 → ⟨ v ∈ selectEqual X Ka Kb ⟩
+      shape-read X Ka Kb v z h = PT.rec (snd (v ∈ selectEqual X Ka Kb))
+        (λ { (a , ha , w₁) → PT.rec (snd (v ∈ selectEqual X Ka Kb))
+          (λ { (b , hb , w₂) → PT.rec (snd (v ∈ selectEqual X Ka Kb))
+            (λ { (p , hp , w₃) → PT.rec (snd (v ∈ selectEqual X Ka Kb))
+              (λ { (d , hd , w₄) → PT.rec (snd (v ∈ selectEqual X Ka Kb))
+                (λ { (u , hu , w₅) → PT.rec (snd (v ∈ selectEqual X Ka Kb))
+                  (λ { (p' , hp' , (sa , sb)) →
+                    selectEqual-in {X = X} {Ka = Ka} {Kb = Kb} {w = v}
+                      {a = a} {b = b} {u = u}
+                      (h .fst)
+                      ha hb
+                      (subst (λ q → ⟨ q ∈ v ⟩)
+                        (subst ⟨_⟩ (prAt-adequate f3 f5 f1
+                          (p' ∷ u ∷ d ∷ p ∷ b ∷ a ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ [])) sa)
+                        hp)
+                      (subst (λ q → ⟨ q ∈ v ⟩)
+                        (subst ⟨_⟩ (prAt-adequate zero f4 f1
+                          (p' ∷ u ∷ d ∷ p ∷ b ∷ a ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ [])) sb)
+                        hp') })
+                  w₅ }) w₄ }) w₃ }) w₂ }) w₁ }) (h .snd)
+
+      shape-fill : (X Ka Kb v z : V ℓ)
+                 → ⟨ v ∈ selectEqual X Ka Kb ⟩
+                 → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+      shape-fill X Ka Kb v z hv = PT.rec
+        (snd ((v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV)) build
+        (selectEqual-wit {X = X} {Ka = Ka} {Kb = Kb} {w = v} hv)
+        where
+        build : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ u ∈ V ℓ ]
+                ( ⟨ a ∈ Ka ⟩ × ⟨ b ∈ Kb ⟩ × ⟨ pr a u ∈ v ⟩ × ⟨ pr b u ∈ v ⟩ )
+              → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []) ⊨v shapeV ⟩
+        build (a , b , u , ha , hb , hau , hbu) =
+          selectEqual-sub {X = X} {Ka = Ka} {Kb = Kb} {w = v} hv
+          , ∣ a , ha
+          , ∣ b , hb
+          , ∣ pr a u , hau
+          , ∣ ⁅ a , u ⁆ , ∈pair-introR refl
+          , ∣ u , ∈pair-introR refl
+          , ∣ pr b u , hbu
+          , ( subst ⟨_⟩ (sym (prAt-adequate f3 f5 f1
+                (pr b u ∷ u ∷ ⁅ a , u ⁆ ∷ pr a u ∷ b ∷ a ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []))) refl
+            , subst ⟨_⟩ (sym (prAt-adequate zero f4 f1
+                (pr b u ∷ u ∷ ⁅ a , u ⁆ ∷ pr a u ∷ b ∷ a ∷ v ∷ Kb ∷ Ka ∷ X ∷ z ∷ []))) refl )
+          ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+
+      selEOut : (z : V ℓ) → ⟨ z ∈ selEImg n k ⟩
+              → ∥ Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                   (stepImage {n} {k} tagSelE (m , i , j) ≡ z) ∥₁
+      selEOut z = PT.map λ { ((m , (i , j)) , e) → m , i , j , e }
+
+      selEDefSet≡ : DefA.defSet ΦM ≡ selEImg n k
+      selEDefSet≡ = extensionality (DefA.defSet ΦM) (selEImg n k) (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet ΦM ⊆ selEImg n k ⟩
+        sub₁ z z∈ₛ = PT.rec (snd (z ∈ₛ selEImg n k)) go
+          (∈∈ₛ {a = z} {b = DefA.defSet ΦM} .snd z∈ₛ)
+          where
+          go : Σ[ p ∈ Σ[ m ∈ ⟪ Lset (sucV (sucV τ)) ⟫ ] ⟨ DefA.smallSat ΦM m ⟩ ]
+                 (E (p .fst) ≡ z)
+             → ⟨ z ∈ₛ selEImg n k ⟩
+          go ((m , h) , q) = PT.rec (snd (z ∈ₛ selEImg n k)) build
+            (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))
+            where
+            build : Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                      (stepImage {n} {k} tagSelE (mX , i , j) ≡ E m)
+                  → ⟨ z ∈ₛ selEImg n k ⟩
+            build (mX , i , j , e) = subst (λ w → ⟨ w ∈ₛ selEImg n k ⟩) (e ∙ q)
+              (∈∈ₛ {a = stepImage {n} {k} tagSelE (mX , i , j)} {b = selEImg n k} .fst
+                ∣ (mX , i , j) , refl ∣₁)
+            fromSat : (m' : ⟪ Lset (sucV (sucV τ)) ⟫)
+                    → ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι ΦM) ⟩
+                    → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                         (stepImage {n} {k} tagSelE (mX , i , j) ≡ E m') ∥₁
+            fromSat m' big = PT.rec squash₁ (λ { (X , hX , w₁) →
+              PT.rec squash₁ (λ { (Ka , hKa , w₂) →
+              PT.rec squash₁ (λ { (Kb , hKb , body) →
+                finish X Ka Kb (subst (λ w → ⟨ X ∈ w ⟩) qS hX)
+                       (subst (λ w → ⟨ Ka ∈ w ⟩) qKeys hKa)
+                       (subst (λ w → ⟨ Kb ∈ w ⟩) qKeys hKb)
+                       (body .fst) (body .snd) }) w₂ }) w₁ }) big
+              where
+              finish : (X Ka Kb : V ℓ) → ⟨ X ∈ Shelf ⟩ → ⟨ Ka ∈ singletons (# k) ⟩
+                     → ⟨ Kb ∈ singletons (# k) ⟩
+                     → ((v : V ℓ) → ⟨ v ∈ E m' ⟩
+                        → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩)
+                     → ((v : V ℓ) → ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                        → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩
+                        → ⟨ v ∈ E m' ⟩)
+                     → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                          (stepImage {n} {k} tagSelE (mX , i , j) ≡ E m') ∥₁
+              finish X Ka Kb hX' hKa' hKb' h₁ h₂ =
+                PT.rec squash₁ (λ { (a , ha , eqa) →
+                PT.rec squash₁ (λ { (b , hb , eqb) →
+                  goKey a ha eqa b hb eqb }) (singletons-out {X = # k} {w = Kb} hKb') })
+                (singletons-out {X = # k} {w = Ka} hKa')
+                where
+                goKey : (a : V ℓ) → ⟨ a ∈ # k ⟩ → Ka ≡ ⁅ a ⁆s
+                      → (b : V ℓ) → ⟨ b ∈ # k ⟩ → Kb ≡ ⁅ b ⁆s
+                      → ∥ Σ[ mX ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                           (stepImage {n} {k} tagSelE (mX , i , j) ≡ E m') ∥₁
+                eSel : E m' ≡ selectEqual X Ka Kb
+                eSel = extensionality (E m') (selectEqual X Ka Kb) (t₁ , t₂)
+                  where
+                  t₁ : ⟨ E m' ⊆ selectEqual X Ka Kb ⟩
+                  t₁ v v∈ₛ = ∈∈ₛ {a = v} {b = selectEqual X Ka Kb} .fst
+                    (shape-read X Ka Kb v (E m')
+                      (h₁ v (∈∈ₛ {a = v} {b = E m'} .snd v∈ₛ)))
+                  t₂ : ⟨ selectEqual X Ka Kb ⊆ E m' ⟩
+                  t₂ v v∈ₛ = ∈∈ₛ {a = v} {b = E m'} .fst
+                    (h₂ v v∈σ (shape-fill X Ka Kb v (E m') v∈Sel))
+                    where
+                    v∈Sel : ⟨ v ∈ selectEqual X Ka Kb ⟩
+                    v∈Sel = ∈∈ₛ {a = v} {b = selectEqual X Ka Kb} .snd v∈ₛ
+                    v∈σ : ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                    v∈σ = subst (λ w → ⟨ v ∈ˢ w ⟩) (sym qσ)
+                      (Lset-mono {sucV τ} {τ} (self∈sucV τ)
+                        (Atr {x = X} {y = v}
+                          (selectEqual-sub {X = X} {Ka = Ka} {Kb = Kb} {w = v} v∈Sel)
+                          (Atr {x = Shelf} {y = X} hX' S∈)))
+                goKey a ha eqa b hb eqb =
+                  PT.rec squash₁ (λ { (m , hm , eqm) →
+                  PT.rec squash₁ (λ { (l , hl , eql) →
+                    let i : Fin k
+                        i = fromℕ' k m hm
+                        j : Fin k
+                        j = fromℕ' k l hl
+                        eqi : # (toℕ i) ≡ a
+                        eqi = cong (λ q → # q) (toFromId' k m hm) ∙ sym eqm
+                        eqj : # (toℕ j) ≡ b
+                        eqj = cong (λ q → # q) (toFromId' k l hl) ∙ sym eql
+                        eqiKa : ⁅ # (toℕ i) ⁆s ≡ Ka
+                        eqiKa = cong ⁅_⁆s eqi ∙ sym eqa
+                        eqjKb : ⁅ # (toℕ j) ⁆s ≡ Kb
+                        eqjKb = cong ⁅_⁆s eqj ∙ sym eqb
+                    in let fX : Σ[ mX ∈ ⟪ Shelf ⟫ ] (⟪ Shelf ⟫↪ mX ≡ X)
+                           fX = ∈-asFiber {a = X} {b = Shelf} hX'
+                           step≡ : stepImage {n} {k} tagSelE (fX .fst , i , j) ≡ E m'
+                           step≡ =
+                             cong (λ w → selectEqual w ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s) (fX .snd)
+                             ∙ cong (λ w → selectEqual X w ⁅ # (toℕ j) ⁆s) eqiKa
+                             ∙ cong (λ w → selectEqual X Ka w) eqjKb
+                             ∙ sym eSel
+                       in ∣ (fX .fst , (i , (j , step≡))) ∣₁
+                    }) (∈#-elim k b hb) })
+                  (∈#-elim k a ha)
+
+        sub₂ : ⟨ selEImg n k ⊆ DefA.defSet ΦM ⟩
+        sub₂ z z∈ₛ = PT.rec (snd (z ∈ₛ DefA.defSet ΦM)) build (selEOut z z∈ₛm)
+          where
+          z∈ₛm : ⟨ z ∈ selEImg n k ⟩
+          z∈ₛm = ∈∈ₛ {a = z} {b = selEImg n k} .snd z∈ₛ
+          build : Σ[ m ∈ ⟪ Shelf ⟫ ] Σ[ i ∈ Fin k ] Σ[ j ∈ Fin k ]
+                    (stepImage {n} {k} tagSelE (m , i , j) ≡ z)
+                → ⟨ z ∈ₛ DefA.defSet ΦM ⟩
+          build (m , i , j , e) =
+            subst (λ w → ⟨ w ∈ₛ DefA.defSet ΦM ⟩) q'
+              (∈∈ₛ {a = E m'} {b = DefA.defSet ΦM} .fst
+                (subst ⟨_⟩ (sym (chain m')) sat))
+            where
+            X : V ℓ
+            X = ⟪ Shelf ⟫↪ m
+            hX : ⟨ X ∈ Shelf ⟩
+            hX = ∈∈ₛ {a = X} {b = Shelf} .snd (∈ₛ⟪ Shelf ⟫↪ m)
+            Ka : V ℓ
+            Ka = ⁅ # (toℕ i) ⁆s
+            Kb : V ℓ
+            Kb = ⁅ # (toℕ j) ⁆s
+            X∈τ : ⟨ X ∈ Lset τ ⟩
+            X∈τ = Atr {x = Shelf} {y = X} hX S∈
+            Ka∈τ : ⟨ Ka ∈ Lset τ ⟩
+            Ka∈τ = KS∈ i
+            Kb∈τ : ⟨ Kb ∈ Lset τ ⟩
+            Kb∈τ = KS∈ j
+            z≡ : z ≡ selectEqual X Ka Kb
+            z≡ = sym e
+            z∈τ : ⟨ z ∈ Lset (sucV τ) ⟩
+            z∈τ = subst (λ w → ⟨ w ∈ Lset (sucV τ) ⟩) (sym z≡)
+                    (SelEWalk.walk X Ka Kb τ X∈τ Ka∈τ Kb∈τ)
+            z∈ⁱ : ⟨ z ∈ Lset (sucV (sucV τ)) ⟩
+            z∈ⁱ = Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ)) z∈τ
+            m' = ∈-asFiber {a = z} {b = Lset (sucV (sucV τ))} z∈ⁱ .fst
+            q' : E m' ≡ z
+            q' = ∈-asFiber {a = z} {b = Lset (sucV (sucV τ))} z∈ⁱ .snd
+            hXˢ : ⟨ X ∈ˢ fst (DefA.ι mS) ⟩
+            hXˢ = subst (λ w → ⟨ X ∈ˢ w ⟩) (sym qS) hX
+            hKaˢ : ⟨ Ka ∈ˢ fst (DefA.ι mKeys) ⟩
+            hKaˢ = subst (λ w → ⟨ Ka ∈ˢ w ⟩) (sym qKeys)
+                     (singletons-in {X = # k} {x = # (toℕ i)} (num∈num (toℕ i) k (toℕ<n i)))
+            hKbˢ : ⟨ Kb ∈ˢ fst (DefA.ι mKeys) ⟩
+            hKbˢ = subst (λ w → ⟨ Kb ∈ˢ w ⟩) (sym qKeys)
+                     (singletons-in {X = # k} {x = # (toℕ j)} (num∈num (toℕ j) k (toℕ<n j)))
+            h₁ : (v : V ℓ) → ⟨ v ∈ E m' ⟩
+                → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩
+            h₁ v hv = shape-fill X Ka Kb v (E m') v∈Sel
+              where
+              v∈Sel : ⟨ v ∈ selectEqual X Ka Kb ⟩
+              v∈Sel = subst (λ w → ⟨ v ∈ w ⟩) (q' ∙ z≡) hv
+            h₂ : (v : V ℓ) → ⟨ v ∈ˢ fst (DefA.ι mσ) ⟩
+                → ⟨ (v ∷ Kb ∷ Ka ∷ X ∷ E m' ∷ []) ⊨v shapeV ⟩ → ⟨ v ∈ E m' ⟩
+            h₂ v vσ hshape = subst (λ w → ⟨ v ∈ w ⟩) (sym (q' ∙ z≡))
+              (shape-read X Ka Kb v (E m') hshape)
+            sat : ⟨ (E m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι ΦM) ⟩
+            sat = ∣ X , (hXˢ , ∣ Ka , (hKaˢ , ∣ Kb , (hKbˢ , (h₁ , h₂)) ∣₁) ∣₁) ∣₁
+
+  selMImgL : (n k : ℕ) → ⟨ isL (slice n k) ⟩ → ⟨ isL (selMImg n k) ⟩
+  selMImgL n k lS = PT.rec (snd (isL (selMImg n k)))
+    (λ { (τ , oτ , mem) →
+      defSet→isL (sucV (sucV τ)) (suc-ord (suc-ord oτ)) (selMImg n k)
+        ∣ SelMImg.ΦM n k τ (mem zero) (mem (suc zero))
+            (λ i → mem (suc (suc i)))
+        , SelMImg.selMDefSet≡ n k τ (mem zero) (mem (suc zero))
+            (λ i → mem (suc (suc i))) ∣₁ })
+    (stageFam (suc (suc k)) fam famL)
+    where
+    isL-numeral : (m : ℕ) → ⟨ isL (# m) ⟩
+    isL-numeral m = subst (λ w → ⟨ isL w ⟩) (numeralL-fst m) (numeralL m .snd)
+    fam : Fin (suc (suc k)) → V ℓ
+    fam zero = slice n k
+    fam (suc zero) = # k
+    fam (suc (suc i)) = ⁅ # (toℕ i) ⁆s
+    famL : (i : Fin (suc (suc k))) → ⟨ isL (fam i) ⟩
+    famL zero = lS
+    famL (suc zero) = isL-numeral k
+    famL (suc (suc i)) = sglL (isL-numeral (toℕ i))
+
+
+  selEImgL : (n k : ℕ) → ⟨ isL (slice n k) ⟩ → ⟨ isL (selEImg n k) ⟩
+  selEImgL n k lS = PT.rec (snd (isL (selEImg n k)))
+    (λ { (τ , oτ , mem) →
+      defSet→isL (sucV (sucV τ)) (suc-ord (suc-ord oτ)) (selEImg n k)
+        ∣ SelEImg.ΦM n k τ (mem zero) (mem (suc zero))
+            (λ i → mem (suc (suc i)))
+        , SelEImg.selEDefSet≡ n k τ (mem zero) (mem (suc zero))
+            (λ i → mem (suc (suc i))) ∣₁ })
+    (stageFam (suc (suc k)) fam famL)
+    where
+    isL-numeral : (m : ℕ) → ⟨ isL (# m) ⟩
+    isL-numeral m = subst (λ w → ⟨ isL w ⟩) (numeralL-fst m) (numeralL m .snd)
+    fam : Fin (suc (suc k)) → V ℓ
+    fam zero = slice n k
+    fam (suc zero) = # k
+    fam (suc (suc i)) = ⁅ # (toℕ i) ⁆s
+    famL : (i : Fin (suc (suc k))) → ⟨ isL (fam i) ⟩
+    famL zero = lS
+    famL (suc zero) = isL-numeral k
+    famL (suc (suc i)) = sglL (isL-numeral (toℕ i))
+
+  -- The shift walk: shiftDown of an abstract family is definable over the
+  -- third stage above, by the tail's seek sentence with the family a
+  -- constant, exactly the bridge chapter's SftD with abstract arguments.
+  private
+    module ShiftWalk (X τ : V ℓ) (X∈ : ⟨ X ∈ Lset τ ⟩) where
+      Atr = layer-trans (Lset-layer τ)
+      module DefA = DefOf (Lset (sucV (sucV (sucV τ))))
+      module RefA = DefA.Refine (layer-trans (Lset-layer (sucV (sucV (sucV τ)))))
+
+      E³ : ⟪ Lset (sucV (sucV (sucV τ))) ⟫ → V ℓ
+      E³ m = ⟪ Lset (sucV (sucV (sucV τ))) ⟫↪ m
+
+      X∈³ : ⟨ X ∈ Lset (sucV (sucV (sucV τ))) ⟩
+      X∈³ = Lset-mono {sucV (sucV (sucV τ))} {sucV (sucV τ)} (self∈sucV (sucV (sucV τ)))
+              (Lset-mono {sucV (sucV τ)} {sucV τ} (self∈sucV (sucV τ))
+                (Lset-mono {sucV τ} {τ} (self∈sucV τ) X∈))
+      mX = ∈-asFiber {a = X} {b = Lset (sucV (sucV (sucV τ)))} X∈³ .fst
+      qX : E³ mX ≡ X
+      qX = ∈-asFiber {a = X} {b = Lset (sucV (sucV (sucV τ)))} X∈³ .snd
+
+      Φ : Formula ⟪ Lset (sucV (sucV (sucV τ))) ⟫ 1
+      Φ = ∃̇∈ (con mX)
+            ( (∀̇∈ (var f1) (tailSeek (var f1)))
+            ∧̇ (∀̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero)
+                 (∀̇∈ (var f2) (∀̇∈ (var zero) (∀̇∈ (var f2)
+                   ((prAt′ f5 f3 f1 ∧̇ sucAt′ zero f3)
+                     ⇒̇ ∃̇∈ (var f7) (prAt′ zero f1 f2)))))))) )
+
+      dΦ : Δ₀ Φ
+      dΦ = δ-∃∈ (δ-∧ (δ-∀∈ (Δ₀-tailSeek (var f1)))
+             (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∀∈
+               (δ-⇒ (δ-∧ (Δ₀-prAt′ f5 f3 f1) (Δ₀-sucAt′ zero f3))
+                    (δ-∃∈ (Δ₀-prAt′ zero f1 f2))))))))))
+
+      chain : ∀ m → (E³ m ∈ DefA.defSet Φ)
+                  ≡ ((E³ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ))
+      chain m = RefA.abs-defSet Φ dΦ m
+              ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id
+                      (mapFo DefA.ι Φ) (E³ m ∷ []))
+
+      defSet≡ : DefA.defSet Φ ≡ shiftDown X
+      defSet≡ = extensionality (DefA.defSet Φ) (shiftDown X) (sub₁ , sub₂)
+        where
+        sub₁ : ⟨ DefA.defSet Φ ⊆ shiftDown X ⟩
+        sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ shiftDown X))
+          (λ { ((m , h) , q) →
+            subst (λ w → ⟨ w ∈ₛ shiftDown X ⟩) q
+              (∈∈ₛ {a = E³ m} {b = shiftDown X} .fst
+                (fromSat m (subst ⟨_⟩ (chain m) ∣ (m , h) , refl ∣₁))) })
+          (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
+          where
+          fromSat : (m : ⟪ Lset (sucV (sucV (sucV τ))) ⟫)
+                  → ⟨ (E³ m ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+                  → ⟨ E³ m ∈ shiftDown X ⟩
+          fromSat m = PT.rec (snd (E³ m ∈ shiftDown X))
+            (λ { (γ , hγ , membV , imgV) →
+              subst (λ w → ⟨ w ∈ shiftDown X ⟩) (sym (T≡ γ membV imgV))
+                (shiftDown-in {X = X} {z = γ}
+                  (subst (λ w → ⟨ γ ∈ w ⟩) qX hγ)) })
+            where
+            T = E³ m
+            T≡ : (γ : V ℓ)
+               → ((z : V ℓ) → ⟨ z ∈ T ⟩ → ⟨ (z ∷ γ ∷ T ∷ []) ⊨v tailSeek (var f1) ⟩)
+               → ((p : V ℓ) → ⟨ p ∈ γ ⟩ → (d₁ : V ℓ) → ⟨ d₁ ∈ p ⟩
+                  → (s : V ℓ) → ⟨ s ∈ d₁ ⟩ → (d₂ : V ℓ) → ⟨ d₂ ∈ p ⟩
+                  → (v : V ℓ) → ⟨ v ∈ d₂ ⟩ → (a : V ℓ) → ⟨ a ∈ s ⟩
+                  → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ γ ∷ T ∷ [])
+                        ⊨v (prAt′ f5 f3 f1 ∧̇ sucAt′ zero f3) ⟩
+                  → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ γ ∷ T ∷ [])
+                        ⊨v ∃̇∈ (var f7) (prAt′ zero f1 f2) ⟩)
+               → T ≡ tailGraph γ
+            T≡ γ membV imgV = extensionality T (tailGraph γ) (t₁ , t₂)
+              where
+              t₁ : ⟨ T ⊆ tailGraph γ ⟩
+              t₁ z z∈ₛ = PT.rec (snd (z ∈ₛ tailGraph γ))
+                (λ { (a , v , e , h) →
+                  ∈∈ₛ {a = z} {b = tailGraph γ} .fst
+                    (subst (λ w → ⟨ w ∈ tailGraph γ ⟩) (sym e)
+                      (tailGraph-in h)) })
+                (seekOut (var f1) (z ∷ γ ∷ T ∷ [])
+                  (membV z (∈∈ₛ {a = z} {b = T} .snd z∈ₛ)))
+              t₂ : ⟨ tailGraph γ ⊆ T ⟩
+              t₂ z z∈ₛ = PT.rec (snd (z ∈ₛ T))
+                (λ { (a , v , h , e) → reach a v h e })
+                (tailGraph-out {w = γ} {z = z}
+                  (∈∈ₛ {a = z} {b = tailGraph γ} .snd z∈ₛ))
+                where
+                reach : (a v : V ℓ) → ⟨ pr (sucV a) v ∈ γ ⟩ → z ≡ pr a v
+                      → ⟨ z ∈ₛ T ⟩
+                reach a v h e = PT.rec (snd (z ∈ₛ T))
+                  (λ { (z' , hz' , s') →
+                    ∈∈ₛ {a = z} {b = T} .fst
+                      (subst (λ w → ⟨ w ∈ T ⟩)
+                        (subst ⟨_⟩ (prAt-adequate zero f1 f2
+                          (z' ∷ a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s
+                            ∷ pr (sucV a) v ∷ γ ∷ T ∷ [])) s'
+                         ∙ sym e)
+                        hz') })
+                  (imgV (pr (sucV a) v) h
+                    ⁅ sucV a ⁆s (∈pair-introL refl)
+                    (sucV a) (singleton-self (sucV a))
+                    ⁅ sucV a , v ⁆ (∈pair-introR refl)
+                    v (∈pair-introR refl)
+                    a (self∈sucV a)
+                    ( subst ⟨_⟩ (sym (prAt-adequate f5 f3 f1
+                        (a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s
+                          ∷ pr (sucV a) v ∷ γ ∷ T ∷ []))) refl
+                    , subst ⟨_⟩ (sym (sucAt-adequate zero f3
+                        (a ∷ v ∷ ⁅ sucV a , v ⁆ ∷ sucV a ∷ ⁅ sucV a ⁆s
+                          ∷ pr (sucV a) v ∷ γ ∷ T ∷ []))) refl ))
+        sub₂ : ⟨ shiftDown X ⊆ DefA.defSet Φ ⟩
+        sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet Φ)) build
+          (shiftDown-out {X = X} {w = y} (∈∈ₛ {a = y} {b = shiftDown X} .snd y∈ₛ))
+          where
+          build : Σ[ z ∈ V ℓ ] (⟨ z ∈ X ⟩ × (tailGraph z ≡ y))
+                → ⟨ y ∈ₛ DefA.defSet Φ ⟩
+          build (z , hz , e) =
+            subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ ⟩) q'
+              (∈∈ₛ {a = E³ m'} {b = DefA.defSet Φ} .fst
+                (subst ⟨_⟩ (sym (chain m')) sat))
+            where
+            z∈σ : ⟨ z ∈ Lset τ ⟩
+            z∈σ = Atr {x = X} {y = z} hz X∈
+            y∈³ : ⟨ y ∈ Lset (sucV (sucV (sucV τ))) ⟩
+            y∈³ = subst (λ w → ⟨ w ∈ Lset (sucV (sucV (sucV τ))) ⟩) e
+              (tailStage τ z∈σ)
+            m' = ∈-asFiber {a = y} {b = Lset (sucV (sucV (sucV τ)))} y∈³ .fst
+            q' : E³ m' ≡ y
+            q' = ∈-asFiber {a = y} {b = Lset (sucV (sucV (sucV τ)))} y∈³ .snd
+            tail≡ : tailGraph z ≡ E³ m'
+            tail≡ = e ∙ sym q'
+            membV : (zz : V ℓ) → ⟨ zz ∈ E³ m' ⟩
+                  → ⟨ (zz ∷ z ∷ E³ m' ∷ []) ⊨v tailSeek (var f1) ⟩
+            membV zz hzz = PT.rec
+              (snd ((zz ∷ z ∷ E³ m' ∷ []) ⊨v tailSeek (var f1)))
+              (λ { (a , v , h , e'') →
+                seekIn (var f1) (zz ∷ z ∷ E³ m' ∷ []) a v e'' h })
+              (tailGraph-out {w = z} {z = zz}
+                (subst (λ w → ⟨ zz ∈ w ⟩) (sym tail≡) hzz))
+            imgV : (p : V ℓ) → ⟨ p ∈ z ⟩ → (d₁ : V ℓ) → ⟨ d₁ ∈ p ⟩
+                 → (s : V ℓ) → ⟨ s ∈ d₁ ⟩ → (d₂ : V ℓ) → ⟨ d₂ ∈ p ⟩
+                 → (v : V ℓ) → ⟨ v ∈ d₂ ⟩ → (a : V ℓ) → ⟨ a ∈ s ⟩
+                 → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])
+                       ⊨v (prAt′ f5 f3 f1 ∧̇ sucAt′ zero f3) ⟩
+                 → ⟨ (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])
+                       ⊨v ∃̇∈ (var f7) (prAt′ zero f1 f2) ⟩
+            imgV p hp d₁ hd₁ s hs d₂ hd₂ v hv a ha (s₁ , s₂) =
+              ∣ pr a v
+              , subst (λ w → ⟨ pr a v ∈ w ⟩) tail≡
+                  (tailGraph-in
+                    (subst (λ w → ⟨ w ∈ z ⟩)
+                      (subst ⟨_⟩ (prAt-adequate f5 f3 f1
+                        (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])) s₁
+                       ∙ cong (λ w → pr w v)
+                           (subst ⟨_⟩ (sucAt-adequate zero f3
+                             (a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ [])) s₂))
+                      hp))
+              , subst ⟨_⟩ (sym (prAt-adequate zero f1 f2
+                  (pr a v ∷ a ∷ v ∷ d₂ ∷ s ∷ d₁ ∷ p ∷ z ∷ E³ m' ∷ []))) refl
+              ∣₁
+            sat : ⟨ (E³ m' ∷ []) ⊨v mapFo fst (mapFo DefA.ι Φ) ⟩
+            sat = ∣ z , subst (λ w → ⟨ z ∈ w ⟩) (sym qX) hz
+                , membV , imgV ∣₁
+
+      walk : ⟨ shiftDown X ∈ Lset (sucV (sucV (sucV (sucV τ)))) ⟩
+      walk = Lset-in (sucV (sucV (sucV (sucV τ)))) (sucV (sucV (sucV τ)))
+               (shiftDown X) (self∈sucV (sucV (sucV (sucV τ))))
+               (𝒟ₒ-intro (Lset (sucV (sucV (sucV τ)))) (shiftDown X) ∣ Φ , defSet≡ ∣₁)
+
 ```
 
 
@@ -1739,9 +4095,16 @@ the computable witness `levelOf`{.Agda} and `terms-in-levels`{.Agda}, one term
 induction against the slice-in laws; and the cut theorem, `cut-sound`{.Agda}
 and `cut-complete`{.Agda} under the chapter's `WithLEM`, the values-cut of the
 levels equal to the definable powerset, with the probe's arity guard absorbed
-by the invariant (`slice1⊆allTuples`{.Agda}). Nothing is deferred.
+by the invariant (`slice1⊆allTuples`{.Agda}). The closure is constructible
+where this batch reached it: the seven delivered tag images (the binaries, the
+tuple, the values, and the two selections) each sit in the next stage by one
+`defSet→isL`, with the selection walks abstract-parameterized so the adequacy
+transfers meet only variables. The shift and the extension images, the step
+as the union of the images, and the slice induction remain: the shift image's
+deep seek-sentence satisfaction does not finish within the wall in this
+formulation, and the items behind it wait on a ruling.
 <!--zh-->
 ## 小结
 
-取值泛化 `valuesAllTuples`{.Agda}，在每个正元数处；两条选择等式 `sat-∈vv-sel`{.Agda} 与 `sat-≐vv-sel`{.Agda}，把满足集上的一次选择读作一次合取；变量变换律 `satSet-rename-shift`{.Agda}，说满足集经全体变元移位而存活；正向钉住包含 `extendFamily-pin`{.Agda}，说新键处的等词原子把整个扩张裁到常元的单点集，与反向钉住包含 `extendFamily-pin-rev`{.Agda}，说单点扩张的每个成员都在新键处记录常元；完整的族扩张等式 `extendFamily-pin-eq`{.Agda}，由变量变换律与两条包含装配而成，形状即带种类不变量之常元原子子句将要消费的样子；以及单例族 `singletons`{.Agda} 连同它的两条隶属定律、`At` 描述 `singletonsAt`{.Agda} 及其两条读式、与可构造性 `singletonsL`{.Agda}，即已交付存货缺掉的那一个运算连同它的内面。然后是选项 B 的元层心脏：带种类的诸层族 `slice`{.Agda}，随层累积，种子即在第零元数片上的单例族、更高片皆空，连同每条子句一条 `slice-in` 律与作为析取反转的 `slice-out`，即让混合元数垃圾按构造成为不可能的架位纪律；带种类的不变量 `slice-inv`{.Agda}，正元数片的每个成员凭对层级的归纳都是 `k` 元数满足集，每个子句一个情形、每条等式消去一个情形，取代证书的诚实性归纳；带可计算见证 `levelOf`{.Agda} 与 `terms-in-levels`{.Agda} 的项到诸层，一次项归纳对着诸 `slice-in` 律；以及切定理，`cut-sound`{.Agda} 与立于本章 `WithLEM` 的 `cut-complete`{.Agda}，诸层的取值切口等于可定义幂集，探针的元数卫式被不变量吸收 (`slice1⊆allTuples`{.Agda})。本批无遗留。
+取值泛化 `valuesAllTuples`{.Agda}，在每个正元数处；两条选择等式 `sat-∈vv-sel`{.Agda} 与 `sat-≐vv-sel`{.Agda}，把满足集上的一次选择读作一次合取；变量变换律 `satSet-rename-shift`{.Agda}，说满足集经全体变元移位而存活；正向钉住包含 `extendFamily-pin`{.Agda}，说新键处的等词原子把整个扩张裁到常元的单点集，与反向钉住包含 `extendFamily-pin-rev`{.Agda}，说单点扩张的每个成员都在新键处记录常元；完整的族扩张等式 `extendFamily-pin-eq`{.Agda}，由变量变换律与两条包含装配而成，形状即带种类不变量之常元原子子句将要消费的样子；以及单例族 `singletons`{.Agda} 连同它的两条隶属定律、`At` 描述 `singletonsAt`{.Agda} 及其两条读式、与可构造性 `singletonsL`{.Agda}，即已交付存货缺掉的那一个运算连同它的内面。然后是选项 B 的元层心脏：带种类的诸层族 `slice`{.Agda}，随层累积，种子即在第零元数片上的单例族、更高片皆空，连同每条子句一条 `slice-in` 律与作为析取反转的 `slice-out`，即让混合元数垃圾按构造成为不可能的架位纪律；带种类的不变量 `slice-inv`{.Agda}，正元数片的每个成员凭对层级的归纳都是 `k` 元数满足集，每个子句一个情形、每条等式消去一个情形，取代证书的诚实性归纳；带可计算见证 `levelOf`{.Agda} 与 `terms-in-levels`{.Agda} 的项到诸层，一次项归纳对着诸 `slice-in` 律；以及切定理，`cut-sound`{.Agda} 与立于本章 `WithLEM` 的 `cut-complete`{.Agda}，诸层的取值切口等于可定义幂集，探针的元数卫式被不变量吸收 (`slice1⊆allTuples`{.Agda})。闭包的可构造性在本批到达之处交付：七个已交付的标签像 (二元三像、元组像、取值像与两个选择像) 各凭一次 `defSet→isL` 落在下一阶段，选择行走抽象参数化，使适足搬运只遇变元。移位像与扩张像、作为诸像之并的步骤、以及片归纳仍待交付：移位像的深寻句满足在本表述下越墙而不终，其后的条目等待裁决。
 <!--/-->
