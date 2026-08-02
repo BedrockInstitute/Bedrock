@@ -5,10 +5,11 @@ Task `[L3.30-D1]`. Authored by the orchestrator directly (per the owner's
 collection report `_build/l1-report.md`; a codex-drafted version of the same
 document is being reconciled into this one as it returns. Authority order:
 primary sources beat the collection notes, the collection notes beat the
-owner's exploration note (`owner-notes-rud.md`), and nothing here rests on
-model memory: every mathematical claim carries a citation through the
-collection files, and what the fetched corpus cannot settle is an OPEN item,
-not a fact. Source abbreviations (SZ, MB, WS, Fr, W) are those of
+owner's exploration note (`owner-notes-rud.md`), and nothing mathematical
+here rests on model memory: every mathematical claim carries a citation
+through the collection files, project-internal statements (probe history,
+measured prices) are marked as such, and what the fetched corpus cannot
+settle is an OPEN item, not a fact. Source abbreviations (SZ, MB, WS, Fr, W) are those of
 `BIBLIOGRAPHY.md` and the collection files.
 
 Purpose: this document pins the orthodox contemporary form of the rudimentary
@@ -39,9 +40,9 @@ evidence; what genuinely cannot be settled from the fetched corpus stays OPEN
   limits (SZ Definition 1.6, p. 9; footnote 4 marks the indexing as a
   deliberate contrast with Jensen 1972). The auxiliary S-hierarchy steps one
   level at a time via S^A(U) = ⋃_{i≤15} F_i"(U ∪ {U})², and J_α^A = S_α^A at
-  limit α (SZ pp. 9-10, equation I.1). Condensation is at the Sigma-1 level:
-  a transitive Sigma-1 hull of a J-structure is a J-structure (SZ Theorem
-  1.16, p. 14). Acceptability (SZ Definition 1.20, p. 16) is "a strong
+  limit α (SZ pp. 9-10, equation I.1). Condensation is at the Sigma-1
+  level: the transitive domain of a Sigma-1 preserving embedding into a
+  J-structure is itself a J-structure (SZ Theorem 1.16, p. 14). Acceptability (SZ Definition 1.20, p. 16) is "a strong
   version of GCH" (SZ's own remark, p. 16) and is a Q-property (SZ 1.21).
 - **Q3 (the comprehension theorem).** The modern statement is SZ Lemma 1.4
   (p. 8): for transitive U (and A with A ∩ V^{rk(U)+ω} ⊆ U),
@@ -56,8 +57,8 @@ evidence; what genuinely cannot be settled from the fetched corpus stays OPEN
   triple: older S-stages precede, and within a new stage x precedes y iff
   the lexicographically minimal (i, u, v) with x = F_i(u, v) precedes y's
   minimal triple, over 16 × S_{β̄}^A × S_{β̄}^A (SZ p. 11, verbatim in
-  j-hierarchy.md section 3; the orchestrator's audit re-verified the SZ text
-  directly). The order is uniformly Sigma-1 over J_α^A (SZ Lemma 1.11).
+  j-hierarchy.md section 3). The order is uniformly Sigma-1 over J_α^A (SZ
+  Lemma 1.11).
 - **Q5 (relativization).** One added schema, x ∩ A, in the schemata
   presentation (SZ Definition 1.1); equivalently the basis function F15 =
   A ∩ x (SZ p. 10). The unrelativized R0..R8 has no A-function; Welch's
@@ -92,7 +93,8 @@ Rulings on the collection report's six UNVERIFIED marks:
    text; the nearest true statements are Fr slide 28 ("J_ω is provident. The
    next one will be J_{ω²}") and MB 5.9 (rudimentary-functions.md section 3).
 4. *Paulson's GCH scope*: RULED by artifact evidence, GCH not mechanized;
-   see section 6.
+   which reading the contrary section 2.7 sentence intends stays OPEN; see
+   section 6.
 5. *Mizar/Metamath/Naproche*: stays OPEN (not determinable from the fetched
    material).
 6. *Any rud-based formalization*: nothing found in the fetched material;
@@ -157,8 +159,8 @@ R = the closure of R0..R8 under composition; B = the closure of R0..R7
 (MB 2.0). What it buys: nine functions instead of sixteen; a clean axiomatic
 counterpart (a transitive set is rud closed iff it models GJ0, the
 Gandy-Jensen proposition WS 2.85, with GJ0 = DB0 + the single axiom R8, WS
-1.12); the structural theory B = exactly the Delta-0 separators (MB 2.1, WS
-2.63-2.68); and the single unary function T with u ⊆ T(u), u ∈ T(u), T
+1.12); the closure of R0..R7 generates the Delta-0 separators (MB 2.1, WS
+2.61-2.68); and the single unary function T with u ⊆ T(u), u ∈ T(u), T
 preserving transitivity, ⋃_n T^n(u) the rud closure of u ∪ {u} (WS
 2.73-2.82), giving J_ν = T_{ων} (MB 0.3, p. 2) and the whole provident-sets
 theory (MB sections 6-7) on top.
@@ -170,7 +172,8 @@ acceptability rephrasing (I.2) would all need re-derivation against R0..R8
 or against T; and the ordinal bookkeeping around T is delicate (ν -> ων is
 not rud rec, Fr slide 14). Mathias himself flags that no single rud function
 gives the rud closure of u (as opposed to u ∪ {u}) in the same fashion (WS
-2.83, an open problem there).
+2.83, an open problem there); the sharp boundary fact nearby: for any
+α > 0, J_α ∉ rud cl(J_α ∪ {ωα}) (WS 14.5).
 
 ### What the sources say about the relation
 
@@ -178,9 +181,11 @@ R8 is the one function separating the Gandy-Jensen world from the Devlin
 Basic world (WS 1.12; MB 1.49-1.55 gives the history: Gandy's "basic" =
 Jensen's "rudimentary", discovered independently). F0..F15 is an enlargement
 of Jensen's own basis, made for S-level transitivity (SZ footnote 5). The
-two packages describe the same class of functions (both cite Jensen's
-[3, Lemma 1.8] basis theorem as the bridge); the fork is which generating
-presentation the formalization commits to, not which class it gets.
+two packages describe the same class of functions (SZ cite Jensen's
+[3, Lemma 1.8] basis theorem; MB/WS bridge through the Gandy-Jensen
+characterization, WS 2.85, and MB 0.3's citation of Jensen [J2]); the fork
+is which generating presentation the formalization commits to, not which
+class it gets.
 
 ## 3. The hierarchy and the order
 
@@ -222,9 +227,11 @@ appearance first; within a stage, compare the lexicographically minimal
 (operation index, arguments) producer) is, clause for clause, SZ's <^A_β:
 stage comparison is the first two disjuncts, the minimal producer triple is
 the third, and the lexicographic base is the operation-indexed product. The
-probe's candidate was designed before this text was fetched; the verbatim
-match (re-verified against the SZ PDF during the collection audit) means
-candidate 1 is the orthodox order, not merely an admissible one.
+probe's candidate predates the fetch of this text (the project-internal
+record is the order-probe section of dev/memos/L3.29-b-pivot.md; this
+design-history statement is project context, not a literature claim); the
+match with the SZ text quoted in j-hierarchy.md section 3 means candidate 1
+is the orthodox order, not merely an admissible one.
 
 Acceptability (SZ Definition 1.20, p. 16): M = <J_α^A, B> is acceptable iff
 whenever a new subset of some τ < ξ appears at J_{ξ+ω}, there is a
@@ -247,7 +254,9 @@ sources disagree, the source wins and the discrepancy is flagged.
    three equivalent characterizations via companions). But the specific
    statement "rud = compositions of the Gödel operations", under that name
    and as a named theorem, is NOT verbatim anywhere in the fetched corpus;
-   the phrase "Gödel operations" does not occur in the collection. FLAGGED:
+   the phrase "Gödel operations" occurs in the collection only in
+   BIBLIOGRAPHY.md's role line for the cite-only Jech entry, and no fetched
+   text states the theorem under that name. FLAGGED:
    load-bearing attribution OPEN (settled by fetching Jensen 1972, Devlin
    ch. I, or Jech's chapter on Gödel operations).
 2. **The rud family disambiguation** (rud functions / rud closure / rud_A /
@@ -264,10 +273,10 @@ sources disagree, the source wins and the discrepancy is flagged.
 3. **The S-step formula.** The note writes S_{ν+1} = S_ν ∪ {S_ν} ∪
    ⋃_i G_i"(S_ν × S_ν); SZ's actual step is S^A(U) = ⋃_{i≤15} F_i"(U ∪
    {U})² (SZ p. 9-10). The shapes differ (SZ folds U and {U} into the
-   argument square rather than unioning them in). Mathematically the levels
-   agree because the basis contains projection-like producers, but the
-   formalization should pin SZ's exact form. FLAGGED: presentational
-   discrepancy, SZ's form wins.
+   argument square rather than unioning them in); the collection records no
+   comparison of the two shapes, so no equivalence between them is claimed
+   here. The formalization should pin SZ's exact form. FLAGGED:
+   presentational discrepancy, SZ's form wins.
 4. **The operation count.** The note says the well-order's index i runs
    over "9 or 10" indices and its table says "10 G_i"; SZ's basis has 16
    functions and the well-order is lexicographic over 16 × S × S (SZ pp.
@@ -283,8 +292,9 @@ sources disagree, the source wins and the discrepancy is flagged.
    recursion.** Confirmed in substance: the canonical well-order is built
    from the finite basis with no syntax (SZ p. 11), is uniformly Sigma-1
    (SZ 1.11), and yields the Sigma-1 surjection (SZ 1.17). The fetched
-   corpus does not itself state "L ⊨ AC" as a theorem of the chapter, but
-   the well-order construction is the entire content of that argument.
+   corpus does not itself state "L ⊨ AC" as a theorem of the chapter; that
+   the well-order construction is the substance of that argument is this
+   digest's own analysis, not a sourced claim.
 7. **Condensation's three dependencies** (rud closedness; uniform Sigma-1 of
    the hierarchy; Sigma-1 Skolem functions): confirmed, they are visibly
    the three ingredients of SZ's proof (Theorem 1.16 using Lemma 1.10;
@@ -326,17 +336,21 @@ The full inventory is devlin-errata.md; its distilled do-not-repeat
 checklist (section 5 there, eleven items) is the normative artifact. The
 actionable core for this project:
 
-- **Never claim Delta-0-ness for syntax operations.** Concatenation-like
-  operations (Devlin's F∧, Build, Seq, Sat) need an addition mechanism and
-  are Delta-1, not Delta-0, in weak systems (WS 10.3-10.6, Lemma 9.3). If
-  we internalize syntax, its complexity claims must be proved, not assumed.
+- **Never claim Delta-0-ness for syntax operations, and grade the repairs
+  honestly.** F∧ and Build need an addition mechanism and are Delta-1, not
+  Delta-0, in BS (WS 10.3-10.4, Lemma 9.3); Seq is correctly Sigma-1 but
+  its Delta-1 claim is FALSE in BS (WS 10.5, Solovay's forcing argument);
+  Sat has no correct Delta-1 version inside BS at all (Lemma 9.10 false,
+  "no cure in BS"; Sat becomes Delta-1 only in the cure systems DS and GJI,
+  WS 10.18, 10.23). If we internalize syntax, its complexity claims must be
+  proved, not assumed.
 - **Unbounded finite-sequence formation is a theorem, not a triviality**:
   BS proves [ω]¹ and [ω]² exist but not [ω]³ (MB 1.46). Any "set of all
   finite sequences" step in a weak ambient theory must be justified.
 - **Transitive closure is not free**: TCo is unprovable even in Zermelo set
   theory (SZ footnote 3, p. 9; WS section 12's model), and two natural
   definitions of "Sigma-0 function" are equivalent only under TCo (WS
-  10.0-10.1). Our development should make its TCo usage explicit.
+  10.1). Our development should make its TCo usage explicit.
 - **Uniform truth needs S-amenability**, not mere amenability (WS
   10.12); the correct uniformly-Delta-1 truth proof is MB 9.0-9.2, not
   Devlin's I.9.
@@ -363,7 +377,12 @@ P p. 32). Scope: the relative consistency of AC. His own verdict on the
 proof: "unusually long, and not entirely satisfactory: two parts of the
 proof do not fit together" (P abstract, p. 1); the comprehension scheme is
 not proved schematically, with about 35 instances proved separately (P
-p. 65; the slides say 40, a counted discrepancy). GCH: ruled NOT mechanized,
+p. 65; the slides say 40, a counted discrepancy). A second limitation is
+load-bearing for this project's AC goal: "The proof that L satisfies V = L
+cannot be combined with the proof that V = L implies the axiom of choice in
+order to conclude that L satisfies the axiom of choice", because the two
+instances of V = L are formalized differently (P p. 65; formalizations.md
+section 1). GCH: ruled NOT mechanized,
 by artifact evidence: the library outline's theory graph terminates in
 AC_in_L and Internalize with no GCH theory (PI p. 8); the conclusions list
 GCH and diamond as work for "future investigators" (P p. 65); the slides
@@ -371,11 +390,11 @@ list "Prove generalized continuum hypothesis" as a future challenge (PS
 slide 19). One sentence cuts the other way and is quoted in full so the
 ambiguity is on the record: "We prove ZFL ⊢ AC, ZFL ⊢ GCH and ZFL ⊢ ♦, but
 we do not prove ZF ⊢ AC^L, ZF ⊢ GCH^L and ZF ⊢ ♦^L" (P section 2.7, p. 11).
-Two readings: a paper-internal inconsistency (the ruling here, since every
-artifact that can be checked is consistent with GCH not being mechanized),
-or a reference to informal mathematics rather than the formal development.
-The ruling stands on the artifacts; the sentence is flagged, not smoothed
-over (formalizations.md section 1.1).
+Two readings: a paper-internal inconsistency, or a reference to informal
+mathematics rather than the formal development. The ruling here covers only
+the mechanization question and stands on the artifacts; which reading the
+sentence intends stays OPEN, exactly as the collection report marks it
+(formalizations.md section 1.1).
 
 **Flypitch (Lean 3).** The independence of CH, both directions, via
 Boolean-valued models: Cohen forcing for the failure of CH, a sigma-closed
@@ -393,9 +412,9 @@ The Mizar, Metamath, and Naproche landscapes are not determinable from the
 fetched material (OPEN).
 
 **The GCH-in-L virginity claim, worded exactly.** Within the fetched
-corpus: no mechanized proof of GCH in L exists; the two major set-theoretic
-formalization projects that touch this territory both name it as future
-work (P p. 65; PS slide 19; FG README); and no rud-based formalization of
+corpus: no mechanized proof of GCH in L exists; the two formalization
+projects in the fetched corpus that touch this territory both name it as
+future work (P p. 65; PS slide 19; FG README); and no rud-based formalization of
 constructibility appears at all. Absence of mention is not proof of
 absence: the claim is bounded by the fetched material, and a targeted
 search of the Mizar/Metamath/Naproche/AFP landscapes (OPEN item 7) could
@@ -416,14 +435,15 @@ Each with what would settle it.
    Devlin ch. I (with errata care), or Jech's chapter on Gödel operations;
    Gandy's paper [G] for his side.
 4. **Simple functions' Sigma-n role** (the note's claim that they serve the
-   Sigma-star theory): Zeman, "Inner Models and Large Cardinals" chs. 1-2
-   (cite-only in the collection), or SZ's later sections.
+   Sigma-star theory): Zeman, "Inner Models and Large Cardinals" ch. 1
+   (cite-only in the collection; the owner's note names chs. 1-2), or SZ's
+   later sections.
 5. **The master-code reduction** (Sigma-n over J_α to Sigma-1 over the
    standard code): a targeted extraction pass over the fine-structure
    sections of the SZ preprint already in hand (projecta, standard codes,
    standard parameters); this is extraction work, not fetching work.
 6. **A sourced GCH-in-L derivation** for the memo to target: the natural
-   candidates are SZ's own consequences chain (1.20-1.27 with 9.1) plus the
+   candidates are SZ's own consequences chain (1.23-1.27 with 9.1) plus the
    standard hull-and-collapse argument from a full text (Devlin ch. II with
    the errata open, or Jech); the fetched chapter stops short of the
    theorem itself.
