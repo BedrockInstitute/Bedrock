@@ -1135,6 +1135,8 @@ measurement. Wired chapter by chapter as the wave batches land.
   injectivity on ordinals.
 - `L.Rud.Ops`{.Agda}: the basis operations F0-F7 and F9 with their two-direction
   extension specifications, sealed at birth.
+- `L.Rud.Images`{.Agda}: the image half of the basis, F8 and F10-F15, with the
+  pair projections and the relativization slot as a module parameter.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1142,9 +1144,11 @@ measurement. Wired chapter by chapter as the wave batches land.
 
 - `L.Rud.OrdArith`{.Agda}：S-递归所消费的序数分情形结构：后继与极限谓词、经典三分、序数上的后继单射性。
 - `L.Rud.Ops`{.Agda}：基底运算 F0-F7 与 F9，带双向外延规格，出生即封印。
+- `L.Rud.Images`{.Agda}：基底的像半部，F8 与 F10-F15，含配对投影，相对化槽位作模块参数。
 <!--/-->
 
 ```agda
 import L.Rud.OrdArith
 import L.Rud.Ops
+import L.Rud.Images
 ```
