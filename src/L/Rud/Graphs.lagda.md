@@ -19,7 +19,7 @@ basis functions, so everything lands in any level closed under them.
 open import Base.Prelude
 open import Base.Truth
 open import Base.Classical using ( LEM )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; setIsSet )
 
 module L.Rud.Graphs {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (A : V ℓ) where
 
@@ -29,18 +29,25 @@ open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Rud.Ops {ℓ}
   using ( F0; F0-spec; F1; F1-spec; F2; F2-read; F2-write
         ; F3; F3-read; F3-write; F4; F4-read; F4-write
-        ; F5; F5-spec; F6; F6-write; F7; F7-read; F7-write )
-open import L.Rud.Images {ℓ} using ( F8; F8-spec; F10; F10-spec )
+        ; F5; F5-spec; F6; F6-read; F6-write; F7; F7-read; F7-write )
+open import L.Rud.Images {ℓ}
+  using ( F8; F8-spec; F10; F10-spec; left; right; left-spec; right-spec )
 open import L.Rud.Step {ℓ} lem A
   using ( Op16; f3; f4; f8; Fof; Fof-f3; Fof-f4; Fof-f8 )
 open import L.Rud.Switch {ℓ} lem A
-  using ( dne; ∈s; ∈S; evalC; imgOpC; ConIn; AllIn; lookupIn
-        ; interOp; interSpec; unionOp; unionSpec; module Bs; module Closure )
-open Bs using ( Comp; conC; varC; interC; diffC; unionC )
+  using ( dne; ∈s; ∈S; evalC; imgOpC; ConIn; AllIn
+        ; interOp; interSpec; unionOp; unionSpec; colOp; colSpec
+        ; chSepOp; chSepSpec; eqSepOp; eqSepSpec; module Bs; module Closure )
+open Bs using ( Comp; conC; varC; interC; diffC; unionC; pairC; colC
+              ; chSepC; eqSepC; imgC )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+import Cubical.Data.Sum as Sum
+open import Cubical.Data.Unit using ( Unit*; tt* )
+open import Cubical.Foundations.Equiv using ( equivFun; invEquiv )
 import Cubical.Data.Empty as Empty
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; _≡ₕ_; _⊆_; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; extensionality )
+  using ( _∈ₛ_; _≡ₕ_; _∼_; _⊆_; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; extensionality
+        ; identityPrinciple )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 
@@ -712,6 +719,514 @@ opaque
 ```
 
 <!--en-->
+## Composition, and the general read of a join
+
+Two relations keyed on a common first coordinate compose to a relation between
+their values: the join pairs the two values under the key, and the range
+strips the key away. The general read of a join comes with it, since the
+composition has to decompose an arbitrary member rather than one of a known
+shape.
+<!--zh-->
+## 复合，以及接合的通用读取
+
+共享首坐标的两个关系复合为它们的值之间的关系：接合把两个值配在键之下，值域再把键剥去。接合的通用读取随之而来，因为复合要拆解任意成员，而非某个已知形状的成员。
+<!--/-->
+
+```agda
+opaque
+  unfolding joinOp
+  join-out : (R S Wr Ws t : V ℓ) → ⟨ t ∈ˢ joinOp R S Wr Ws ⟩
+           → ∥ Σ[ d ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ pr d u ∈ˢ R ⟩ × ⟨ pr d v ∈ˢ S ⟩ × ⟨ t ≡ₕ pr d (pr u v) ⟩) ∥₁
+  join-out R S Wr Ws t h = PT.rec squash₁ go
+    (F4-read Ws R t (cap-outl (F4 Ws R) (F3 Wr S) t h))
+    where
+    D : Type (ℓ-suc ℓ)
+    D = Σ[ d ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+          (⟨ pr d u ∈ˢ R ⟩ × ⟨ pr d v ∈ˢ S ⟩ × ⟨ t ≡ₕ pr d (pr u v) ⟩)
+    go : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ] Σ[ z ∈ V ℓ ]
+           (⟨ z ∈ˢ Ws ⟩ × ⟨ pr a b ∈ˢ R ⟩ × ⟨ t ≡ₕ pr a (pr b z) ⟩)
+       → ∥ D ∥₁
+    go (a , b , z , _ , ab∈ , e) = ∣ a , b , z
+      , ( ab∈
+        , join-outr R S Wr Ws a b z
+            (subst (λ x → ⟨ x ∈ˢ joinOp R S Wr Ws ⟩) e h)
+        , e ) ∣₁
+
+opaque
+  comp : V ℓ → V ℓ → V ℓ → V ℓ → V ℓ
+  comp R S Wr Ws = ranOp (joinOp R S Wr Ws)
+
+  comp-in : (R S Wr Ws m u v : V ℓ) → ⟨ pr m u ∈ˢ R ⟩ → ⟨ pr m v ∈ˢ S ⟩
+          → ⟨ u ∈ˢ Wr ⟩ → ⟨ v ∈ˢ Ws ⟩ → ⟨ pr u v ∈ˢ comp R S Wr Ws ⟩
+  comp-in R S Wr Ws m u v hu hv u∈ v∈ = ran-in (joinOp R S Wr Ws) m (pr u v)
+    (join-in R S Wr Ws m u v hu hv u∈ v∈)
+
+  comp-out : (R S Wr Ws t : V ℓ) → ⟨ t ∈ˢ comp R S Wr Ws ⟩
+           → ∥ Σ[ m ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ pr m u ∈ˢ R ⟩ × ⟨ pr m v ∈ˢ S ⟩ × ⟨ t ≡ₕ pr u v ⟩) ∥₁
+  comp-out R S Wr Ws t h = PT.rec squash₁ outer (ran-out (joinOp R S Wr Ws) t h)
+    where
+    D : Type (ℓ-suc ℓ)
+    D = Σ[ m ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+          (⟨ pr m u ∈ˢ R ⟩ × ⟨ pr m v ∈ˢ S ⟩ × ⟨ t ≡ₕ pr u v ⟩)
+    outer : Σ[ m ∈ V ℓ ] ⟨ pr m t ∈ˢ joinOp R S Wr Ws ⟩ → ∥ D ∥₁
+    outer (m , h') = PT.rec squash₁ inner (join-out R S Wr Ws (pr m t) h')
+      where
+      inner : Σ[ d ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ pr d u ∈ˢ R ⟩ × ⟨ pr d v ∈ˢ S ⟩
+                 × ⟨ pr m t ≡ₕ pr d (pr u v) ⟩)
+            → ∥ D ∥₁
+      inner (d , u , v , du , dv , e) = ∣ d , u , v
+        , ( du , dv , pr-inj {a = m} {b = t} {c = d} {d = pr u v} e .snd ) ∣₁
+```
+
+<!--en-->
+## The values of a relation
+
+The slices of a relation over an index set are its values, and `F8` collects
+them. Three readings are needed downstream: a slice at a member of the index
+set is a value, a related member lies in the union of the values, and so does
+a member of a value.
+<!--zh-->
+## 关系的值
+
+关系在索引集上的各个切片就是它的值，`F8` 把它们收拢起来。下游需要三条读取：索引集成员处的切片是一个值，被关联的成员落在诸值之并中，值的成员亦然。
+<!--/-->
+
+```agda
+opaque
+  vals : V ℓ → V ℓ → V ℓ
+  vals R D = F8 R D
+
+  vals-slice : (R D d : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ F10 R d ∈ˢ vals R D ⟩
+  vals-slice R D d d∈ = subst ⟨_⟩ (sym (F8-spec R D (F10 R d)))
+    ∣ fib .fst , cong (F10 R) (fib .snd) ∣₁
+    where
+    fib : Σ[ m ∈ ⟪ D ⟫ ] (⟪ D ⟫↪ m ≡ d)
+    fib = ∈-asFiber {a = d} {b = D} d∈
+
+  vals-union : (R D d w : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ pr d w ∈ˢ R ⟩
+             → ⟨ w ∈ˢ F5 (vals R D) (vals R D) ⟩
+  vals-union R D d w d∈ h = F5-spec (vals R D) (vals R D) w .snd
+    ∣ F10 R d , (vals-slice R D d d∈ , subst ⟨_⟩ (sym (F10-spec R d w)) h) ∣₁
+
+  vals-mem : (R D v w : V ℓ) → ⟨ v ∈ˢ vals R D ⟩ → ⟨ w ∈ˢ v ⟩
+           → ⟨ w ∈ˢ F5 (vals R D) (vals R D) ⟩
+  vals-mem R D v w v∈ w∈ = F5-spec (vals R D) (vals R D) w .snd
+    ∣ v , (v∈ , w∈) ∣₁
+```
+
+<!--en-->
+## The slice graph
+
+This is the step from an element relation back to a graph, and it is the
+identity graph's proof shape at one coordinate more. A pair `⟨d, v⟩` is kept
+when no member separates `v` from the slice of `R` at `d`: the two padded
+relations on triples `⟨w, d, v⟩` say `w ∈ v` and `⟨d, w⟩ ∈ R`, their symmetric
+difference is the separator set, and the graph is `D × vals` minus its range.
+Both readings spend excluded middle once, exactly where the identity graph
+does.
+<!--zh-->
+## 切片图
+
+这是从元素关系回到图的一步，也就是恒等图的证明形状多加一个坐标。当没有成员把 `v` 与 `R` 在 `d` 处的切片分开时，对 `⟨d, v⟩` 被保留：三元组 `⟨w, d, v⟩` 上的两个加衬关系分别说 `w ∈ v` 与 `⟨d, w⟩ ∈ R`，其对称差是分离集，图即 `D × vals` 减去它的值域。两条读取各花掉一次排中律，恰在恒等图花掉的同一处。
+<!--/-->
+
+```agda
+opaque
+  sgQ : V ℓ → V ℓ → V ℓ
+  sgQ R D = cup (cup D (F5 (vals R D) (vals R D))) (vals R D)
+
+  q-D : (R D d : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ d ∈ˢ sgQ R D ⟩
+  q-D R D d h = cup-in (cup D (F5 (vals R D) (vals R D))) (vals R D) d
+    ∣ inl (cup-in D (F5 (vals R D) (vals R D)) d ∣ inl h ∣₁) ∣₁
+
+  q-W : (R D w : V ℓ) → ⟨ w ∈ˢ F5 (vals R D) (vals R D) ⟩ → ⟨ w ∈ˢ sgQ R D ⟩
+  q-W R D w h = cup-in (cup D (F5 (vals R D) (vals R D))) (vals R D) w
+    ∣ inl (cup-in D (F5 (vals R D) (vals R D)) w ∣ inr h ∣₁) ∣₁
+
+  q-B : (R D v : V ℓ) → ⟨ v ∈ˢ vals R D ⟩ → ⟨ v ∈ˢ sgQ R D ⟩
+  q-B R D v h = cup-in (cup D (F5 (vals R D) (vals R D))) (vals R D) v
+    ∣ inr h ∣₁
+
+opaque
+  sgT : V ℓ → V ℓ → V ℓ
+  sgT R D = F2 (F5 (vals R D) (vals R D)) (F2 D (vals R D))
+
+  sgT-in : (R D w d v : V ℓ) → ⟨ w ∈ˢ F5 (vals R D) (vals R D) ⟩
+         → ⟨ d ∈ˢ D ⟩ → ⟨ v ∈ˢ vals R D ⟩ → ⟨ pr w (pr d v) ∈ˢ sgT R D ⟩
+  sgT-in R D w d v hw hd hv =
+    F2-write (F5 (vals R D) (vals R D)) (F2 D (vals R D)) (pr w (pr d v))
+      ∣ w , pr d v
+      , ( hw , F2-write D (vals R D) (pr d v) ∣ d , v , (hd , hv , refl) ∣₁
+        , refl ) ∣₁
+
+opaque
+  sgL : V ℓ → V ℓ → V ℓ
+  sgL R D = cap (F3 D (mrel (sgQ R D))) (sgT R D)
+
+  sgR : V ℓ → V ℓ → V ℓ
+  sgR R D = cap (F4 (vals R D) (swp R (sgQ R D))) (sgT R D)
+
+  sgL-in : (R D w d v : V ℓ) → ⟨ w ∈ˢ v ⟩ → ⟨ d ∈ˢ D ⟩ → ⟨ v ∈ˢ vals R D ⟩
+         → ⟨ pr w (pr d v) ∈ˢ sgL R D ⟩
+  sgL-in R D w d v w∈v hd hv =
+    cap-in (F3 D (mrel (sgQ R D))) (sgT R D) (pr w (pr d v))
+      (F3-write D (mrel (sgQ R D)) (pr w (pr d v))
+        ∣ w , d , v
+        , ( hd
+          , mrel-in (sgQ R D) w v (q-W R D w hw) (q-B R D v hv) w∈v
+          , refl ) ∣₁)
+      (sgT-in R D w d v hw hd hv)
+    where
+    hw : ⟨ w ∈ˢ F5 (vals R D) (vals R D) ⟩
+    hw = vals-mem R D v w hv w∈v
+
+  sgR-in : (R D w d v : V ℓ) → ⟨ pr d w ∈ˢ R ⟩ → ⟨ d ∈ˢ D ⟩ → ⟨ v ∈ˢ vals R D ⟩
+         → ⟨ pr w (pr d v) ∈ˢ sgR R D ⟩
+  sgR-in R D w d v dw∈ hd hv =
+    cap-in (F4 (vals R D) (swp R (sgQ R D))) (sgT R D) (pr w (pr d v))
+      (F4-write (vals R D) (swp R (sgQ R D)) (pr w (pr d v))
+        ∣ w , d , v
+        , ( hv
+          , swp-in R (sgQ R D) d w dw∈ (q-D R D d hd) (q-W R D w hw)
+          , refl ) ∣₁)
+      (sgT-in R D w d v hw hd hv)
+    where
+    hw : ⟨ w ∈ˢ F5 (vals R D) (vals R D) ⟩
+    hw = vals-union R D d w hd dw∈
+
+  sgL-out : (R D w d v : V ℓ) → ⟨ pr w (pr d v) ∈ˢ sgL R D ⟩ → ⟨ w ∈ˢ v ⟩
+  sgL-out R D w d v h = PT.rec (snd (w ∈ˢ v)) go
+    (F3-read D (mrel (sgQ R D)) (pr w (pr d v))
+      (cap-outl (F3 D (mrel (sgQ R D))) (sgT R D) (pr w (pr d v)) h))
+    where
+    go : Σ[ u ∈ V ℓ ] Σ[ z ∈ V ℓ ] Σ[ y ∈ V ℓ ]
+           (⟨ z ∈ˢ D ⟩ × ⟨ pr u y ∈ˢ mrel (sgQ R D) ⟩
+            × ⟨ pr w (pr d v) ≡ₕ pr u (pr z y) ⟩)
+       → ⟨ w ∈ˢ v ⟩
+    go (u , z , y , _ , m∈ , e) =
+      subst (λ x → ⟨ x ∈ˢ v ⟩) (sym w≡u)
+        (subst (λ x → ⟨ u ∈ˢ x ⟩) (sym v≡y) (mrel-out (sgQ R D) u y m∈))
+      where
+      w≡u : w ≡ u
+      w≡u = pr-inj {a = w} {b = pr d v} {c = u} {d = pr z y} e .fst
+      v≡y : v ≡ y
+      v≡y = pr-inj {a = d} {b = v} {c = z} {d = y}
+        (pr-inj {a = w} {b = pr d v} {c = u} {d = pr z y} e .snd) .snd
+
+  sgR-out : (R D w d v : V ℓ) → ⟨ pr w (pr d v) ∈ˢ sgR R D ⟩ → ⟨ pr d w ∈ˢ R ⟩
+  sgR-out R D w d v h = PT.rec (snd (pr d w ∈ˢ R)) go
+    (F4-read (vals R D) (swp R (sgQ R D)) (pr w (pr d v))
+      (cap-outl (F4 (vals R D) (swp R (sgQ R D))) (sgT R D) (pr w (pr d v)) h))
+    where
+    go : Σ[ u ∈ V ℓ ] Σ[ y ∈ V ℓ ] Σ[ z ∈ V ℓ ]
+           (⟨ z ∈ˢ vals R D ⟩ × ⟨ pr u y ∈ˢ swp R (sgQ R D) ⟩
+            × ⟨ pr w (pr d v) ≡ₕ pr u (pr y z) ⟩)
+       → ⟨ pr d w ∈ˢ R ⟩
+    go (u , y , z , _ , sw∈ , e) = PT.rec (snd (pr d w ∈ˢ R)) inner
+      (swp-out R (sgQ R D) (pr u y) sw∈)
+      where
+      w≡u : w ≡ u
+      w≡u = pr-inj {a = w} {b = pr d v} {c = u} {d = pr y z} e .fst
+      d≡y : d ≡ y
+      d≡y = pr-inj {a = d} {b = v} {c = y} {d = z}
+        (pr-inj {a = w} {b = pr d v} {c = u} {d = pr y z} e .snd) .fst
+      inner : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
+                (⟨ pr a b ∈ˢ R ⟩ × ⟨ pr u y ≡ₕ pr b a ⟩) → ⟨ pr d w ∈ˢ R ⟩
+      inner (a , b , ab∈ , e₂) = subst (λ x → ⟨ x ∈ˢ R ⟩)
+        (cong₂ pr (sym (d≡y ∙ pr-inj {a = u} {b = y} {c = b} {d = a} e₂ .snd))
+                  (sym (w≡u ∙ pr-inj {a = u} {b = y} {c = b} {d = a} e₂ .fst)))
+        ab∈
+
+opaque
+  sgBad : V ℓ → V ℓ → V ℓ
+  sgBad R D = cup (ranOp (F1 (sgL R D) (sgR R D)))
+                  (ranOp (F1 (sgR R D) (sgL R D)))
+
+  sgBad-inl : (R D w t : V ℓ) → ⟨ pr w t ∈ˢ sgL R D ⟩
+            → (⟨ pr w t ∈ˢ sgR R D ⟩ → Empty.⊥) → ⟨ t ∈ˢ sgBad R D ⟩
+  sgBad-inl R D w t h₁ h₂ =
+    cup-in (ranOp (F1 (sgL R D) (sgR R D))) (ranOp (F1 (sgR R D) (sgL R D))) t
+      ∣ inl (ran-in (F1 (sgL R D) (sgR R D)) w t
+        (F1-spec (sgL R D) (sgR R D) (pr w t) .snd (h₁ , h₂))) ∣₁
+
+  sgBad-inr : (R D w t : V ℓ) → ⟨ pr w t ∈ˢ sgR R D ⟩
+            → (⟨ pr w t ∈ˢ sgL R D ⟩ → Empty.⊥) → ⟨ t ∈ˢ sgBad R D ⟩
+  sgBad-inr R D w t h₁ h₂ =
+    cup-in (ranOp (F1 (sgL R D) (sgR R D))) (ranOp (F1 (sgR R D) (sgL R D))) t
+      ∣ inr (ran-in (F1 (sgR R D) (sgL R D)) w t
+        (F1-spec (sgR R D) (sgL R D) (pr w t) .snd (h₁ , h₂))) ∣₁
+
+  sgBad-out : (R D t : V ℓ) → ⟨ t ∈ˢ sgBad R D ⟩
+            → ∥ Σ[ w ∈ V ℓ ]
+                 ( (⟨ pr w t ∈ˢ sgL R D ⟩ × (⟨ pr w t ∈ˢ sgR R D ⟩ → Empty.⊥))
+                 ⊎ (⟨ pr w t ∈ˢ sgR R D ⟩ × (⟨ pr w t ∈ˢ sgL R D ⟩ → Empty.⊥)) )
+               ∥₁
+  sgBad-out R D t h = PT.rec squash₁ sides
+    (cup-out (ranOp (F1 (sgL R D) (sgR R D)))
+             (ranOp (F1 (sgR R D) (sgL R D))) t h)
+    where
+    E : Type (ℓ-suc ℓ)
+    E = Σ[ w ∈ V ℓ ]
+          ( (⟨ pr w t ∈ˢ sgL R D ⟩ × (⟨ pr w t ∈ˢ sgR R D ⟩ → Empty.⊥))
+          ⊎ (⟨ pr w t ∈ˢ sgR R D ⟩ × (⟨ pr w t ∈ˢ sgL R D ⟩ → Empty.⊥)) )
+    sides : (⟨ t ∈ˢ ranOp (F1 (sgL R D) (sgR R D)) ⟩
+             ⊎ ⟨ t ∈ˢ ranOp (F1 (sgR R D) (sgL R D)) ⟩) → ∥ E ∥₁
+    sides (inl k) = PT.rec squash₁
+      (λ { (w , k') → ∣ w , inl (F1-spec (sgL R D) (sgR R D) (pr w t) .fst k') ∣₁ })
+      (ran-out (F1 (sgL R D) (sgR R D)) t k)
+    sides (inr k) = PT.rec squash₁
+      (λ { (w , k') → ∣ w , inr (F1-spec (sgR R D) (sgL R D) (pr w t) .fst k') ∣₁ })
+      (ran-out (F1 (sgR R D) (sgL R D)) t k)
+
+opaque
+  sgraph : V ℓ → V ℓ → V ℓ
+  sgraph R D = F1 (F2 D (vals R D)) (sgBad R D)
+
+  sgraph-in : (R D d v : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ v ∈ˢ vals R D ⟩
+            → ((w : V ℓ) → ⟨ w ∈ˢ v ⟩ → ⟨ pr d w ∈ˢ R ⟩)
+            → ((w : V ℓ) → ⟨ pr d w ∈ˢ R ⟩ → ⟨ w ∈ˢ v ⟩)
+            → ⟨ pr d v ∈ˢ sgraph R D ⟩
+  sgraph-in R D d v hd hv h₁ h₂ =
+    F1-spec (F2 D (vals R D)) (sgBad R D) (pr d v) .snd
+      ( F2-write D (vals R D) (pr d v) ∣ d , v , (hd , hv , refl) ∣₁ , noBad )
+    where
+    noBad : ⟨ pr d v ∈ˢ sgBad R D ⟩ → Empty.⊥
+    noBad bad = PT.rec Empty.isProp⊥ go (sgBad-out R D (pr d v) bad)
+      where
+      go : Σ[ w ∈ V ℓ ]
+             ( (⟨ pr w (pr d v) ∈ˢ sgL R D ⟩
+                × (⟨ pr w (pr d v) ∈ˢ sgR R D ⟩ → Empty.⊥))
+             ⊎ (⟨ pr w (pr d v) ∈ˢ sgR R D ⟩
+                × (⟨ pr w (pr d v) ∈ˢ sgL R D ⟩ → Empty.⊥)) )
+         → Empty.⊥
+      go (w , inl (k , nk)) = nk
+        (sgR-in R D w d v (h₁ w (sgL-out R D w d v k)) hd hv)
+      go (w , inr (k , nk)) = nk
+        (sgL-in R D w d v (h₂ w (sgR-out R D w d v k)) hd hv)
+
+  sgraph-outl : (R D d v : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ v ∈ˢ vals R D ⟩
+              → ⟨ pr d v ∈ˢ sgraph R D ⟩
+              → (w : V ℓ) → ⟨ w ∈ˢ v ⟩ → ⟨ pr d w ∈ˢ R ⟩
+  sgraph-outl R D d v hd hv h w w∈v = ∈S (pr d w) R
+    (dne (pr d w ∈ₛ R) (λ n →
+      F1-spec (F2 D (vals R D)) (sgBad R D) (pr d v) .fst h .snd
+        (sgBad-inl R D w (pr d v) (sgL-in R D w d v w∈v hd hv)
+          (λ k → n (∈s (pr d w) R (sgR-out R D w d v k))))))
+
+  sgraph-outr : (R D d v : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ v ∈ˢ vals R D ⟩
+              → ⟨ pr d v ∈ˢ sgraph R D ⟩
+              → (w : V ℓ) → ⟨ pr d w ∈ˢ R ⟩ → ⟨ w ∈ˢ v ⟩
+  sgraph-outr R D d v hd hv h w dw∈ = ∈S w v
+    (dne (w ∈ₛ v) (λ n →
+      F1-spec (F2 D (vals R D)) (sgBad R D) (pr d v) .fst h .snd
+        (sgBad-inr R D w (pr d v) (sgR-in R D w d v dw∈ hd hv)
+          (λ k → n (∈s w v (sgL-out R D w d v k))))))
+
+  sgraph-shape : (R D t : V ℓ) → ⟨ t ∈ˢ sgraph R D ⟩
+               → ∥ Σ[ d ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                    (⟨ d ∈ˢ D ⟩ × ⟨ v ∈ˢ vals R D ⟩ × ⟨ t ≡ₕ pr d v ⟩) ∥₁
+  sgraph-shape R D t h = F2-read D (vals R D) t
+    (F1-spec (F2 D (vals R D)) (sgBad R D) t .fst h .fst)
+```
+
+<!--en-->
+## The projection graphs
+
+A set of pairs carries two projections, and the nested image needs both as
+relations. Neither is a padding, but both are one intersection away: the
+triple `⟨d, d, t⟩` whose first two coordinates agree is a padding of the set
+of pairs met with a padding of the identity graph, and read as a pair it is
+`⟨d, ⟨d, t⟩⟩`, the converse of the left projection. The right projection is
+the same construction over the converse of the set. The identity graph pays
+for both, and the converse turns them the right way round.
+<!--zh-->
+## 投影图
+
+一个对集带有两个投影，嵌套的像两个都要，且要它们作为关系。二者都不是加衬，但都只差一次取交：前两个坐标相同的三元组 `⟨d, d, t⟩` 是该对集的一次加衬与恒等图的一次加衬之交，读作对便是 `⟨d, ⟨d, t⟩⟩`，即左投影之逆。右投影是同一构造施于该集之逆。恒等图为二者买单，取逆再把它们转到正确的方向。
+<!--/-->
+
+```agda
+opaque
+  lpg : V ℓ → V ℓ → V ℓ
+  lpg P X = cap (F3 X P) (F4 X (idG X))
+
+  rpg : V ℓ → V ℓ → V ℓ
+  rpg P X = cap (F4 X (swp P X)) (F3 X (idG X))
+
+  lpg-in : (P X d t : V ℓ) → ⟨ pr d t ∈ˢ P ⟩ → ⟨ d ∈ˢ X ⟩ → ⟨ t ∈ˢ X ⟩
+         → ⟨ pr d (pr d t) ∈ˢ lpg P X ⟩
+  lpg-in P X d t dt∈ d∈ t∈ = cap-in (F3 X P) (F4 X (idG X)) (pr d (pr d t))
+    (F3-write X P (pr d (pr d t)) ∣ d , d , t , (d∈ , dt∈ , refl) ∣₁)
+    (F4-write X (idG X) (pr d (pr d t))
+      ∣ d , d , t , (t∈ , idG-in X d d∈ , refl) ∣₁)
+
+  rpg-in : (P X d t : V ℓ) → ⟨ pr d t ∈ˢ P ⟩ → ⟨ d ∈ˢ X ⟩ → ⟨ t ∈ˢ X ⟩
+         → ⟨ pr t (pr d t) ∈ˢ rpg P X ⟩
+  rpg-in P X d t dt∈ d∈ t∈ =
+    cap-in (F4 X (swp P X)) (F3 X (idG X)) (pr t (pr d t))
+      (F4-write X (swp P X) (pr t (pr d t))
+        ∣ t , d , t , (t∈ , swp-in P X d t dt∈ d∈ t∈ , refl) ∣₁)
+      (F3-write X (idG X) (pr t (pr d t))
+        ∣ t , d , t , (d∈ , idG-in X t t∈ , refl) ∣₁)
+
+  lpg-out : (P X a b : V ℓ) → ⟨ pr a b ∈ˢ lpg P X ⟩
+          → ∥ Σ[ t ∈ V ℓ ] (⟨ pr a t ∈ˢ P ⟩ × ⟨ b ≡ₕ pr a t ⟩) ∥₁
+  lpg-out P X a b h = PT.rec squash₁ fromP
+    (F3-read X P (pr a b) (cap-outl (F3 X P) (F4 X (idG X)) (pr a b) h))
+    where
+    E : Type (ℓ-suc ℓ)
+    E = Σ[ t ∈ V ℓ ] (⟨ pr a t ∈ˢ P ⟩ × ⟨ b ≡ₕ pr a t ⟩)
+    fromP : Σ[ u ∈ V ℓ ] Σ[ z ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+              (⟨ z ∈ˢ X ⟩ × ⟨ pr u v ∈ˢ P ⟩ × ⟨ pr a b ≡ₕ pr u (pr z v) ⟩)
+          → ∥ E ∥₁
+    fromP (u , z , v , _ , uv∈ , e₁) = PT.rec squash₁ fromId
+      (F4-read X (idG X) (pr a b)
+        (cap-outr (F3 X P) (F4 X (idG X)) (pr a b) h))
+      where
+      a≡u : a ≡ u
+      a≡u = pr-inj {a = a} {b = b} {c = u} {d = pr z v} e₁ .fst
+      b≡zv : b ≡ pr z v
+      b≡zv = pr-inj {a = a} {b = b} {c = u} {d = pr z v} e₁ .snd
+      fromId : Σ[ u' ∈ V ℓ ] Σ[ v' ∈ V ℓ ] Σ[ z' ∈ V ℓ ]
+                 (⟨ z' ∈ˢ X ⟩ × ⟨ pr u' v' ∈ˢ idG X ⟩
+                  × ⟨ pr a b ≡ₕ pr u' (pr v' z') ⟩)
+             → ∥ E ∥₁
+      fromId (u' , v' , z' , _ , id∈ , e₂) = PT.rec squash₁ same
+        (idG-out X (pr u' v') id∈)
+        where
+        a≡u' : a ≡ u'
+        a≡u' = pr-inj {a = a} {b = b} {c = u'} {d = pr v' z'} e₂ .fst
+        b≡vz : b ≡ pr v' z'
+        b≡vz = pr-inj {a = a} {b = b} {c = u'} {d = pr v' z'} e₂ .snd
+        same : Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ X ⟩ × ⟨ pr u' v' ≡ₕ pr x x ⟩) → ∥ E ∥₁
+        same (x , _ , e₃) = ∣ v , (subst (λ y → ⟨ y ∈ˢ P ⟩) (sym pa) uv∈
+                                 , b≡zv ∙ cong (λ y → pr y v) z≡a) ∣₁
+          where
+          u'≡v' : u' ≡ v'
+          u'≡v' = pr-inj {a = u'} {b = v'} {c = x} {d = x} e₃ .fst
+                ∙ sym (pr-inj {a = u'} {b = v'} {c = x} {d = x} e₃ .snd)
+          z≡a : z ≡ a
+          z≡a = pr-inj {a = z} {b = v} {c = v'} {d = z'} (sym b≡zv ∙ b≡vz) .fst
+              ∙ sym u'≡v' ∙ sym a≡u'
+          pa : pr a v ≡ pr u v
+          pa = cong (λ y → pr y v) a≡u
+
+  rpg-out : (P X a b : V ℓ) → ⟨ pr a b ∈ˢ rpg P X ⟩
+          → ∥ Σ[ d ∈ V ℓ ] (⟨ pr d a ∈ˢ P ⟩ × ⟨ b ≡ₕ pr d a ⟩) ∥₁
+  rpg-out P X a b h = PT.rec squash₁ fromP
+    (F4-read X (swp P X) (pr a b)
+      (cap-outl (F4 X (swp P X)) (F3 X (idG X)) (pr a b) h))
+    where
+    E : Type (ℓ-suc ℓ)
+    E = Σ[ d ∈ V ℓ ] (⟨ pr d a ∈ˢ P ⟩ × ⟨ b ≡ₕ pr d a ⟩)
+    fromP : Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ] Σ[ z ∈ V ℓ ]
+              (⟨ z ∈ˢ X ⟩ × ⟨ pr u v ∈ˢ swp P X ⟩ × ⟨ pr a b ≡ₕ pr u (pr v z) ⟩)
+          → ∥ E ∥₁
+    fromP (u , v , z , _ , sw∈ , e₁) = PT.rec squash₁ fromSwp
+      (swp-out P X (pr u v) sw∈)
+      where
+      a≡u : a ≡ u
+      a≡u = pr-inj {a = a} {b = b} {c = u} {d = pr v z} e₁ .fst
+      b≡vz : b ≡ pr v z
+      b≡vz = pr-inj {a = a} {b = b} {c = u} {d = pr v z} e₁ .snd
+      fromSwp : Σ[ d' ∈ V ℓ ] Σ[ t' ∈ V ℓ ]
+                  (⟨ pr d' t' ∈ˢ P ⟩ × ⟨ pr u v ≡ₕ pr t' d' ⟩) → ∥ E ∥₁
+      fromSwp (d' , t' , dt∈ , e₂) = PT.rec squash₁ fromId
+        (F3-read X (idG X) (pr a b)
+          (cap-outr (F4 X (swp P X)) (F3 X (idG X)) (pr a b) h))
+        where
+        u≡t' : u ≡ t'
+        u≡t' = pr-inj {a = u} {b = v} {c = t'} {d = d'} e₂ .fst
+        v≡d' : v ≡ d'
+        v≡d' = pr-inj {a = u} {b = v} {c = t'} {d = d'} e₂ .snd
+        fromId : Σ[ u' ∈ V ℓ ] Σ[ z' ∈ V ℓ ] Σ[ v' ∈ V ℓ ]
+                   (⟨ z' ∈ˢ X ⟩ × ⟨ pr u' v' ∈ˢ idG X ⟩
+                    × ⟨ pr a b ≡ₕ pr u' (pr z' v') ⟩)
+               → ∥ E ∥₁
+        fromId (u' , z' , v' , _ , id∈ , e₃) = PT.rec squash₁ same
+          (idG-out X (pr u' v') id∈)
+          where
+          a≡u' : a ≡ u'
+          a≡u' = pr-inj {a = a} {b = b} {c = u'} {d = pr z' v'} e₃ .fst
+          b≡zv : b ≡ pr z' v'
+          b≡zv = pr-inj {a = a} {b = b} {c = u'} {d = pr z' v'} e₃ .snd
+          same : Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ X ⟩ × ⟨ pr u' v' ≡ₕ pr x x ⟩) → ∥ E ∥₁
+          same (x , _ , e₄) = ∣ d' , (dt∈' , b≡da) ∣₁
+            where
+            u'≡v' : u' ≡ v'
+            u'≡v' = pr-inj {a = u'} {b = v'} {c = x} {d = x} e₄ .fst
+                  ∙ sym (pr-inj {a = u'} {b = v'} {c = x} {d = x} e₄ .snd)
+            z≡a : z ≡ a
+            z≡a = pr-inj {a = v} {b = z} {c = z'} {d = v'}
+                    (sym b≡vz ∙ b≡zv) .snd
+                ∙ sym u'≡v' ∙ sym a≡u'
+            dt∈' : ⟨ pr d' a ∈ˢ P ⟩
+            dt∈' = subst (λ y → ⟨ pr d' y ∈ˢ P ⟩) (sym u≡t' ∙ sym a≡u) dt∈
+            b≡da : b ≡ pr d' a
+            b≡da = b≡vz ∙ cong₂ pr v≡d' z≡a
+
+opaque
+  lproj : V ℓ → V ℓ → V ℓ
+  lproj P X = swp (lpg P X) (cup X P)
+
+  rproj : V ℓ → V ℓ → V ℓ
+  rproj P X = swp (rpg P X) (cup X P)
+
+  lproj-in : (P X d t : V ℓ) → ⟨ pr d t ∈ˢ P ⟩ → ⟨ d ∈ˢ X ⟩ → ⟨ t ∈ˢ X ⟩
+           → ⟨ pr (pr d t) d ∈ˢ lproj P X ⟩
+  lproj-in P X d t dt∈ d∈ t∈ = swp-in (lpg P X) (cup X P) d (pr d t)
+    (lpg-in P X d t dt∈ d∈ t∈)
+    (cup-in X P d ∣ inl d∈ ∣₁) (cup-in X P (pr d t) ∣ inr dt∈ ∣₁)
+
+  rproj-in : (P X d t : V ℓ) → ⟨ pr d t ∈ˢ P ⟩ → ⟨ d ∈ˢ X ⟩ → ⟨ t ∈ˢ X ⟩
+           → ⟨ pr (pr d t) t ∈ˢ rproj P X ⟩
+  rproj-in P X d t dt∈ d∈ t∈ = swp-in (rpg P X) (cup X P) t (pr d t)
+    (rpg-in P X d t dt∈ d∈ t∈)
+    (cup-in X P t ∣ inl t∈ ∣₁) (cup-in X P (pr d t) ∣ inr dt∈ ∣₁)
+
+  lproj-out : (P X e d : V ℓ) → ⟨ pr e d ∈ˢ lproj P X ⟩
+            → ∥ Σ[ t ∈ V ℓ ] (⟨ pr d t ∈ˢ P ⟩ × ⟨ e ≡ₕ pr d t ⟩) ∥₁
+  lproj-out P X e d h = PT.rec squash₁ go (swp-out (lpg P X) (cup X P) (pr e d) h)
+    where
+    E : Type (ℓ-suc ℓ)
+    E = Σ[ t ∈ V ℓ ] (⟨ pr d t ∈ˢ P ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+    go : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
+           (⟨ pr a b ∈ˢ lpg P X ⟩ × ⟨ pr e d ≡ₕ pr b a ⟩) → ∥ E ∥₁
+    go (a , b , ab∈ , e₁) = PT.rec squash₁ inner (lpg-out P X a b ab∈)
+      where
+      e≡b : e ≡ b
+      e≡b = pr-inj {a = e} {b = d} {c = b} {d = a} e₁ .fst
+      d≡a : d ≡ a
+      d≡a = pr-inj {a = e} {b = d} {c = b} {d = a} e₁ .snd
+      inner : Σ[ t ∈ V ℓ ] (⟨ pr a t ∈ˢ P ⟩ × ⟨ b ≡ₕ pr a t ⟩) → ∥ E ∥₁
+      inner (t , at∈ , e₂) = ∣ t
+        , ( subst (λ y → ⟨ pr y t ∈ˢ P ⟩) (sym d≡a) at∈
+          , e≡b ∙ e₂ ∙ cong (λ y → pr y t) (sym d≡a) ) ∣₁
+
+  rproj-out : (P X e t : V ℓ) → ⟨ pr e t ∈ˢ rproj P X ⟩
+            → ∥ Σ[ d ∈ V ℓ ] (⟨ pr d t ∈ˢ P ⟩ × ⟨ e ≡ₕ pr d t ⟩) ∥₁
+  rproj-out P X e t h = PT.rec squash₁ go (swp-out (rpg P X) (cup X P) (pr e t) h)
+    where
+    E : Type (ℓ-suc ℓ)
+    E = Σ[ d ∈ V ℓ ] (⟨ pr d t ∈ˢ P ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+    go : Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
+           (⟨ pr a b ∈ˢ rpg P X ⟩ × ⟨ pr e t ≡ₕ pr b a ⟩) → ∥ E ∥₁
+    go (a , b , ab∈ , e₁) = PT.rec squash₁ inner (rpg-out P X a b ab∈)
+      where
+      e≡b : e ≡ b
+      e≡b = pr-inj {a = e} {b = t} {c = b} {d = a} e₁ .fst
+      t≡a : t ≡ a
+      t≡a = pr-inj {a = e} {b = t} {c = b} {d = a} e₁ .snd
+      inner : Σ[ d ∈ V ℓ ] (⟨ pr d a ∈ˢ P ⟩ × ⟨ b ≡ₕ pr d a ⟩) → ∥ E ∥₁
+      inner (d , da∈ , e₂) = ∣ d
+        , ( subst (λ y → ⟨ pr d y ∈ˢ P ⟩) (sym t≡a) da∈
+          , e≡b ∙ e₂ ∙ cong (pr d) (sym t≡a) ) ∣₁
+```
+
+<!--en-->
 ## Everything lands in a closed level
 
 The constructions above are chains of basis functions and nothing else, so a
@@ -816,6 +1331,90 @@ module Kit (J : V ℓ)
         (J-F4 q R hq hR) (J-F3 q (idG q) hq (J-idG q hq)))
 
   opaque
+    unfolding comp
+    J-comp : (R S Wr Ws : V ℓ) → InJ R → InJ S → InJ Wr → InJ Ws
+           → InJ (comp R S Wr Ws)
+    J-comp R S Wr Ws hR hS hr hs = J-ran (joinOp R S Wr Ws)
+      (J-join R S Wr Ws hR hS hr hs)
+
+  opaque
+    unfolding vals
+    J-vals : (R D : V ℓ) → InJ R → InJ D → InJ (vals R D)
+    J-vals R D hR hD = J-F8 R D hR hD
+
+  opaque
+    unfolding sgQ
+    J-sgQ : (R D : V ℓ) → InJ R → InJ D → InJ (sgQ R D)
+    J-sgQ R D hR hD = J-cup (cup D (F5 (vals R D) (vals R D))) (vals R D)
+      (J-cup D (F5 (vals R D) (vals R D)) hD (J-F5 (vals R D) (vals R D) hB hB))
+      hB
+      where
+      hB : InJ (vals R D)
+      hB = J-vals R D hR hD
+
+  opaque
+    unfolding sgT
+    J-sgT : (R D : V ℓ) → InJ R → InJ D → InJ (sgT R D)
+    J-sgT R D hR hD = J-F2 (F5 (vals R D) (vals R D)) (F2 D (vals R D))
+      (J-F5 (vals R D) (vals R D) hB hB) (J-F2 D (vals R D) hD hB)
+      where
+      hB : InJ (vals R D)
+      hB = J-vals R D hR hD
+
+  opaque
+    unfolding sgL sgR
+    J-sgL : (R D : V ℓ) → InJ R → InJ D → InJ (sgL R D)
+    J-sgL R D hR hD = J-cap (F3 D (mrel (sgQ R D))) (sgT R D)
+      (J-F3 D (mrel (sgQ R D)) hD (J-mrel (sgQ R D) (J-sgQ R D hR hD)))
+      (J-sgT R D hR hD)
+
+    J-sgR : (R D : V ℓ) → InJ R → InJ D → InJ (sgR R D)
+    J-sgR R D hR hD = J-cap (F4 (vals R D) (swp R (sgQ R D))) (sgT R D)
+      (J-F4 (vals R D) (swp R (sgQ R D)) (J-vals R D hR hD)
+        (J-swp R (sgQ R D) hR (J-sgQ R D hR hD)))
+      (J-sgT R D hR hD)
+
+  opaque
+    unfolding sgBad
+    J-sgBad : (R D : V ℓ) → InJ R → InJ D → InJ (sgBad R D)
+    J-sgBad R D hR hD =
+      J-cup (ranOp (F1 (sgL R D) (sgR R D))) (ranOp (F1 (sgR R D) (sgL R D)))
+        (J-ran (F1 (sgL R D) (sgR R D)) (J-F1 (sgL R D) (sgR R D) hL hRr))
+        (J-ran (F1 (sgR R D) (sgL R D)) (J-F1 (sgR R D) (sgL R D) hRr hL))
+      where
+      hL : InJ (sgL R D)
+      hL = J-sgL R D hR hD
+      hRr : InJ (sgR R D)
+      hRr = J-sgR R D hR hD
+
+  opaque
+    unfolding sgraph
+    J-sgraph : (R D : V ℓ) → InJ R → InJ D → InJ (sgraph R D)
+    J-sgraph R D hR hD = J-F1 (F2 D (vals R D)) (sgBad R D)
+      (J-F2 D (vals R D) hD (J-vals R D hR hD)) (J-sgBad R D hR hD)
+
+  opaque
+    unfolding lpg rpg
+    J-lpg : (P X : V ℓ) → InJ P → InJ X → InJ (lpg P X)
+    J-lpg P X hP hX = J-cap (F3 X P) (F4 X (idG X))
+      (J-F3 X P hX hP) (J-F4 X (idG X) hX (J-idG X hX))
+
+    J-rpg : (P X : V ℓ) → InJ P → InJ X → InJ (rpg P X)
+    J-rpg P X hP hX = J-cap (F4 X (swp P X)) (F3 X (idG X))
+      (J-F4 X (swp P X) hX (J-swp P X hP hX))
+      (J-F3 X (idG X) hX (J-idG X hX))
+
+  opaque
+    unfolding lproj rproj
+    J-lproj : (P X : V ℓ) → InJ P → InJ X → InJ (lproj P X)
+    J-lproj P X hP hX = J-swp (lpg P X) (cup X P) (J-lpg P X hP hX)
+      (J-cup X P hX hP)
+
+    J-rproj : (P X : V ℓ) → InJ P → InJ X → InJ (rproj P X)
+    J-rproj P X hP hX = J-swp (rpg P X) (cup X P) (J-rpg P X hP hX)
+      (J-cup X P hX hP)
+
+  opaque
     unfolding fld
     J-fld : (R : V ℓ) → InJ R → InJ (fld R)
     J-fld R hR = J-amb (cup (F6 R R) (ranOp R))
@@ -837,76 +1436,80 @@ module Kit (J : V ℓ)
       hf = J-fld R hR
 ```
 
+
 <!--en-->
-## What the image residue reduces to
+## Argument records
 
-The switch chapter's one standing hypothesis asks that a closed level absorb
-the image of a composite family. With the extraction equation above, that
-hypothesis reduces to a single principle about element relations: if every
-composite family over a closed level has an element relation inside the
-level, the image is inside the level too, in the hypothesis's own type. The
-reduction is stated first as a lemma at one family, then as the implication
-that discharges the hypothesis verbatim, and finally by instantiating the
-switch chapter's own conditional module with it, which is what checks that
-the two types agree on the nose.
+A composite of arity `k` is evaluated at `k` arguments, and in the induction
+every one of them varies with the index. An argument family is a function of
+the index, and it enters the induction through its graph. The three
+operations below read a family vector at an index, shift one along a left
+projection, and read a constant vector; the shift is what the nested image
+needs, since there the index is a pair whose two components feed different
+slots.
 <!--zh-->
-## 像的存留归约为什么
+## 自变量记录
 
-切换章唯一悬置的假设要求封闭层吸收复合族之像。有了上面的提取方程，该假设归约为关于元素关系的一条原理：若封闭层上的每个复合族都有一个落在层内的元素关系，则像也落在层内，且落在该假设自身的类型中。归约先以单个族上的引理陈述，再以逐字兑付该假设的蕴含式陈述，最后用它实例化切换章自己的条件模块，这一步正是对两个类型严丝合缝的检验。
+元数为 `k` 的复合在 `k` 个自变量处求值，而在归纳中每个自变量都随索引变动。自变量族是索引的函数，它经由自己的图进入归纳。下面三个运算分别是：在索引处读出族向量、沿左投影平移一个族向量、以及读出常值向量；平移正是嵌套的像所需，因为那里索引是一个对，其两个分量喂给不同的槽。
 <!--/-->
 
 ```agda
-  IsElemRel : {k : ℕ} → Comp (suc k) → Vec (V ℓ) k → V ℓ → V ℓ
-            → Type (ℓ-suc ℓ)
-  IsElemRel f vs p R = (y w : V ℓ) → ⟨ y ∈ˢ p ⟩
-    → (⟨ pr y w ∈ˢ R ⟩ → ⟨ w ∈ˢ evalC f (y ∷ vs) ⟩)
-    × (⟨ w ∈ˢ evalC f (y ∷ vs) ⟩ → ⟨ pr y w ∈ˢ R ⟩)
+opaque
+  -- perf: R-38: the Images projections are transparent by delivery and their
+  -- bodies are union towers over setts, so a path endpoint mentioning one
+  -- normalizes the tower; both are sealed here with their pair equations
+  -- inside, and every consumer reads only the sealed equations. Invoking the
+  -- imported right-spec costs 25 s even at variable arguments, and it is paid
+  -- exactly once, here. The cheaper-looking replacement (the slice of the
+  -- singleton at the left projection) is worse: proving its pair equation
+  -- puts its own tower inside extensionality, which walls past 600 s (P-i [A]).
+  prL : V ℓ → V ℓ
+  prL x = left x
 
-  ElemRel : {k : ℕ} → Comp (suc k) → Vec (V ℓ) k → V ℓ → Type (ℓ-suc ℓ)
-  ElemRel f vs p = Σ[ R ∈ V ℓ ] (InJ R × IsElemRel f vs p R)
+  prL-pair : (a b : V ℓ) → prL (pr a b) ≡ a
+  prL-pair a b = left-spec a b
 
-  img-from-rel : {k : ℕ} (f : Comp (suc k)) (vs : Vec (V ℓ) k) (p R : V ℓ)
-               → InJ R → InJ p → IsElemRel f vs p R → InJ (imgOpC f vs p)
-  img-from-rel f vs p R hR hp spec =
-    subst InJ (sym (img-of-rel R p (λ y → evalC f (y ∷ vs))
-      (λ y w y∈ → spec y w y∈ .fst) (λ y w y∈ → spec y w y∈ .snd)))
-      (J-F8 R p hR hp)
+  prR : V ℓ → V ℓ
+  prR x = right x
 
-  ElemRelPrinciple : Type (ℓ-suc ℓ)
-  ElemRelPrinciple = {k : ℕ} (f : Comp (suc k)) (vs : Vec (V ℓ) k) (p : V ℓ)
-                   → ConIn InJ f → AllIn InJ vs → InJ p → ElemRel f vs p
+  prR-pair : (a b : V ℓ) → prR (pr a b) ≡ b
+  prR-pair a b = right-spec a b
 
-  elemRel→Jimg : ElemRelPrinciple
-               → {k : ℕ} (f : Comp (suc k)) (vs : Vec (V ℓ) k) (p : V ℓ)
-               → ConIn InJ f → AllIn InJ vs → InJ p → InJ (imgOpC f vs p)
-  elemRel→Jimg principle f vs p hf hvs hp =
-    img-from-rel f vs p (E .fst) (E .snd .fst) hp (E .snd .snd)
-    where
-    E : ElemRel f vs p
-    E = principle f vs p hf hvs hp
+appAt : {k : ℕ} → Vec (V ℓ → V ℓ) k → V ℓ → Vec (V ℓ) k
+appAt [] d = []
+appAt (g ∷ gs) d = g d ∷ appAt gs d
 
-  module Discharge (principle : ElemRelPrinciple) where
-    open Eval-J (elemRel→Jimg principle) public
-```
+appAt-lookup : {k : ℕ} (i : Fin k) (gs : Vec (V ℓ → V ℓ) k) (d : V ℓ)
+             → lookup i (appAt gs d) ≡ lookup i gs d
+appAt-lookup zero (g ∷ gs) d = refl
+appAt-lookup (suc i) (g ∷ gs) d = appAt-lookup i gs d
 
-<!--en-->
-## The cases that close
+shiftAt : {k : ℕ} → Vec (V ℓ → V ℓ) k → Vec (V ℓ → V ℓ) k
+shiftAt [] = []
+shiftAt (g ∷ gs) = (λ e → g (prL e)) ∷ shiftAt gs
 
-The element-relation principle is an induction over the composite syntax, and
-the calculus above closes five of its ten clauses outright. A constant and a
-witness-stack slot are products, because the value does not depend on the
-argument; the separated variable itself is the converse membership relation,
-which is where the identity graph is spent; and intersection and difference
-are the same operations one level up, because an element relation carries
-members rather than values. The clauses that remain need the graph form and
-are recorded in the batch report.
-<!--zh-->
-## 就此封口的情形
+appAt-shift : {k : ℕ} (gs : Vec (V ℓ → V ℓ) k) (e : V ℓ)
+            → appAt (shiftAt gs) e ≡ appAt gs (prL e)
+appAt-shift [] e = refl
+appAt-shift (g ∷ gs) e = cong (g (prL e) ∷_) (appAt-shift gs e)
 
-元素关系原理是复合语法上的一个归纳，上面的演算径直封住其十条子句中的五条。常量与见证栈的一格是积，因为值不依赖于自变量；被分离的变量自身是逆隶属关系，恒等图正花在此处；交与差则是高一层的同名运算，因为元素关系携带的是成员而非值。其余子句需要图形式，记录在本批次报告中。
-<!--/-->
+appAt-pair : {k : ℕ} (gs : Vec (V ℓ → V ℓ) k) (d t : V ℓ)
+           → appAt (prR ∷ shiftAt gs) (pr d t) ≡ (t ∷ appAt gs d)
+appAt-pair gs d t = cong₂ _∷_ (prR-pair d t)
+  (appAt-shift gs (pr d t) ∙ cong (appAt gs) (prL-pair d t))
 
-```agda
+constFams : {k : ℕ} → Vec (V ℓ) k → Vec (V ℓ → V ℓ) k
+constFams [] = []
+constFams (v ∷ vs) = (λ _ → v) ∷ constFams vs
+
+appAt-const : {k : ℕ} (vs : Vec (V ℓ) k) (d : V ℓ) → appAt (constFams vs) d ≡ vs
+appAt-const [] d = refl
+appAt-const (v ∷ vs) d = cong (v ∷_) (appAt-const vs d)
+
+constGraphs : {k : ℕ} → V ℓ → Vec (V ℓ) k → Vec (V ℓ) k
+constGraphs p [] = []
+constGraphs p (v ∷ vs) = F2 p (F0 v v) ∷ constGraphs p vs
+
 constRel : (p x y w : V ℓ) → ⟨ y ∈ˢ p ⟩
          → (⟨ pr y w ∈ˢ F2 p x ⟩ → ⟨ w ∈ˢ x ⟩)
          × (⟨ w ∈ˢ x ⟩ → ⟨ pr y w ∈ˢ F2 p x ⟩)
@@ -922,29 +1525,24 @@ constRel p x y w y∈ = fwd , bwd
       (sym (pr-inj {a = y} {b = w} {c = u} {d = v} e .snd)) v∈
   bwd : ⟨ w ∈ˢ x ⟩ → ⟨ pr y w ∈ˢ F2 p x ⟩
   bwd h = F2-write p x (pr y w) ∣ y , w , (y∈ , h , refl) ∣₁
-
-selfRel : (p y w : V ℓ) → ⟨ y ∈ˢ p ⟩
-        → (⟨ pr y w ∈ˢ swp (mrel (amb p)) (amb p) ⟩ → ⟨ w ∈ˢ y ⟩)
-        × (⟨ w ∈ˢ y ⟩ → ⟨ pr y w ∈ˢ swp (mrel (amb p)) (amb p) ⟩)
-selfRel p y w y∈ = fwd , bwd
-  where
-  fwd : ⟨ pr y w ∈ˢ swp (mrel (amb p)) (amb p) ⟩ → ⟨ w ∈ˢ y ⟩
-  fwd h = PT.rec (snd (w ∈ˢ y)) go
-    (swp-out (mrel (amb p)) (amb p) (pr y w) h)
-    where
-    go : Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
-           (⟨ pr u v ∈ˢ mrel (amb p) ⟩ × ⟨ pr y w ≡ₕ pr v u ⟩)
-       → ⟨ w ∈ˢ y ⟩
-    go (u , v , uv∈ , e) = subst (λ t → ⟨ t ∈ˢ y ⟩)
-      (sym (pr-inj {a = y} {b = w} {c = v} {d = u} e .snd))
-      (subst (λ t → ⟨ u ∈ˢ t ⟩)
-        (sym (pr-inj {a = y} {b = w} {c = v} {d = u} e .fst))
-        (mrel-out (amb p) u v uv∈))
-  bwd : ⟨ w ∈ˢ y ⟩ → ⟨ pr y w ∈ˢ swp (mrel (amb p)) (amb p) ⟩
-  bwd h = swp-in (mrel (amb p)) (amb p) w y
-    (mrel-in (amb p) w y (amb-mem p y w y∈ h) (amb-self p y y∈) h)
-    (amb-mem p y w y∈ h) (amb-self p y y∈)
 ```
+
+<!--en-->
+## The element-relation principle, restated
+
+The principle indexes by a set `D` of records and a vector of argument
+families given by their graphs. Its instance at a one-slot stack recovers the
+form the switch chapter's hypothesis asks for, but the induction cannot be
+run in that form: the nested image evaluates its inner composite at a stack
+whose head varies with the index, so the hypothesis has to be uniform in the
+record. Six clauses are pointwise in the record and port from the fixed-stack
+form unchanged; the four that were open are proved below with the slice
+graph; the nested image is proved with the projection graphs.
+<!--zh-->
+## 元素关系原理的重述
+
+该原理以记录集 `D` 与一列由各自的图给出的自变量族为索引。它在单槽栈处的实例复现切换章假设所要的形状，但归纳不能在那个形状下运行：嵌套的像在栈首随索引变动的栈上求值其内层复合，故假设必须对记录一致。六条子句对记录是逐点的，从定栈形状原样移植；此前悬置的四条在下面用切片图证出；嵌套的像用投影图证出。
+<!--/-->
 
 ```agda
 module Cases (J : V ℓ)
@@ -953,95 +1551,959 @@ module Cases (J : V ℓ)
 
   open Kit J Jrud public
 
-  elem-conC : {k : ℕ} (x : V ℓ) (vs : Vec (V ℓ) k) (p : V ℓ) → InJ x → InJ p
-            → ElemRel (conC x) vs p
-  elem-conC x vs p hx hp = F2 p x , (J-F2 p x hp hx , λ y w y∈ → constRel p x y w y∈)
+  IsGraph : (V ℓ → V ℓ) → V ℓ → V ℓ → Type (ℓ-suc ℓ)
+  IsGraph g Γ D = (d w : V ℓ) → ⟨ d ∈ˢ D ⟩
+                → (⟨ pr d w ∈ˢ Γ ⟩ → w ≡ g d) × (w ≡ g d → ⟨ pr d w ∈ˢ Γ ⟩)
 
-  elem-varZ : {k : ℕ} (vs : Vec (V ℓ) k) (p : V ℓ) → InJ p
-            → ElemRel (varC zero) vs p
-  elem-varZ vs p hp = swp (mrel (amb p)) (amb p)
-    , ( J-swp (mrel (amb p)) (amb p) (J-mrel (amb p) (J-amb p hp)) (J-amb p hp)
-      , λ y w y∈ → selfRel p y w y∈ )
+  Args : {k : ℕ} → Vec (V ℓ → V ℓ) k → Vec (V ℓ) k → V ℓ → Type (ℓ-suc ℓ)
+  Args [] [] D = Unit*
+  Args (g ∷ gs) (Γ ∷ Γs) D = (InJ Γ × IsGraph g Γ D) × Args gs Γs D
 
-  elem-varS : {k : ℕ} (i : Fin k) (vs : Vec (V ℓ) k) (p : V ℓ)
-            → AllIn InJ vs → InJ p → ElemRel (varC (suc i)) vs p
-  elem-varS i vs p hvs hp = F2 p (lookup i vs)
-    , ( J-F2 p (lookup i vs) hp (lookupIn InJ i vs hvs)
-      , λ y w y∈ → constRel p (lookup i vs) y w y∈ )
+  argAt : {k : ℕ} (i : Fin k) (gs : Vec (V ℓ → V ℓ) k) (Γs : Vec (V ℓ) k)
+          (D : V ℓ) → Args gs Γs D
+        → InJ (lookup i Γs) × IsGraph (lookup i gs) (lookup i Γs) D
+  argAt zero (g ∷ gs) (Γ ∷ Γs) D (a , _) = a
+  argAt (suc i) (g ∷ gs) (Γ ∷ Γs) D (_ , as) = argAt i gs Γs D as
 
-  elem-diffC : {k : ℕ} (a b : Comp (suc k)) (vs : Vec (V ℓ) k) (p : V ℓ)
-             → ElemRel a vs p → ElemRel b vs p → ElemRel (diffC a b) vs p
-  elem-diffC a b vs p (Ra , hRa , sa) (Rb , hRb , sb) =
-    F1 Ra Rb , (J-F1 Ra Rb hRa hRb , spec)
-    where
-    spec : IsElemRel (diffC a b) vs p (F1 Ra Rb)
-    spec y w y∈ = fwd , bwd
-      where
-      X : V ℓ
-      X = evalC a (y ∷ vs)
-      Y : V ℓ
-      Y = evalC b (y ∷ vs)
-      fwd : ⟨ pr y w ∈ˢ F1 Ra Rb ⟩ → ⟨ w ∈ˢ F1 X Y ⟩
-      fwd h = F1-spec X Y w .snd
-        ( sa y w y∈ .fst (F1-spec Ra Rb (pr y w) .fst h .fst)
-        , λ k → F1-spec Ra Rb (pr y w) .fst h .snd (sb y w y∈ .snd k) )
-      bwd : ⟨ w ∈ˢ F1 X Y ⟩ → ⟨ pr y w ∈ˢ F1 Ra Rb ⟩
-      bwd h = F1-spec Ra Rb (pr y w) .snd
-        ( sa y w y∈ .snd (F1-spec X Y w .fst h .fst)
-        , λ k → F1-spec X Y w .fst h .snd (sb y w y∈ .fst k) )
+  IsElemRel : {k : ℕ} → Comp k → Vec (V ℓ → V ℓ) k → V ℓ → V ℓ
+            → Type (ℓ-suc ℓ)
+  IsElemRel f gs D R = (d w : V ℓ) → ⟨ d ∈ˢ D ⟩
+    → (⟨ pr d w ∈ˢ R ⟩ → ⟨ w ∈ˢ evalC f (appAt gs d) ⟩)
+    × (⟨ w ∈ˢ evalC f (appAt gs d) ⟩ → ⟨ pr d w ∈ˢ R ⟩)
 
-  elem-interC : {k : ℕ} (a b : Comp (suc k)) (vs : Vec (V ℓ) k) (p : V ℓ)
-              → ElemRel a vs p → ElemRel b vs p → ElemRel (interC a b) vs p
-  elem-interC a b vs p (Ra , hRa , sa) (Rb , hRb , sb) =
-    cap Ra Rb , (J-cap Ra Rb hRa hRb , spec)
-    where
-    spec : IsElemRel (interC a b) vs p (cap Ra Rb)
-    spec y w y∈ = fwd , bwd
-      where
-      X : V ℓ
-      X = evalC a (y ∷ vs)
-      Y : V ℓ
-      Y = evalC b (y ∷ vs)
-      fwd : ⟨ pr y w ∈ˢ cap Ra Rb ⟩ → ⟨ w ∈ˢ interOp X Y ⟩
-      fwd h = ∈S w (interOp X Y) (interSpec X Y w .snd
-        ( ∈s w X (sa y w y∈ .fst (cap-outl Ra Rb (pr y w) h))
-        , ∈s w Y (sb y w y∈ .fst (cap-outr Ra Rb (pr y w) h)) ))
-      bwd : ⟨ w ∈ˢ interOp X Y ⟩ → ⟨ pr y w ∈ˢ cap Ra Rb ⟩
-      bwd h = cap-in Ra Rb (pr y w)
-        (sa y w y∈ .snd (∈S w X (interSpec X Y w .fst (∈s w (interOp X Y) h) .fst)))
-        (sb y w y∈ .snd (∈S w Y (interSpec X Y w .fst (∈s w (interOp X Y) h) .snd)))
+  ElemRel : {k : ℕ} → Comp k → Vec (V ℓ → V ℓ) k → V ℓ → Type (ℓ-suc ℓ)
+  ElemRel f gs D = Σ[ R ∈ V ℓ ] (InJ R × IsElemRel f gs D R)
 ```
 
+<!--en-->
+The graph of a composite is the slice graph of its element relation. This is
+the conversion the four waiting clauses were waiting for, and it is where the
+slice graph is spent.
+<!--zh-->
+复合之图就是其元素关系的切片图。这正是四条待决子句所等的那次转换，也是切片图花掉之处。
+<!--/-->
+
 ```agda
-  elem-unionC : {k : ℕ} (a : Comp (suc k)) (vs : Vec (V ℓ) k) (p : V ℓ)
-              → ElemRel a vs p → ElemRel (unionC a) vs p
-  elem-unionC a vs p (Ra , hRa , sa) = flat Ra , (J-flat Ra hRa , spec)
+  graphOf : {k : ℕ} (f : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ) → InJ D
+          → ElemRel f gs D
+          → Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC f (appAt gs d)) Γ D)
+  graphOf f gs D hD (R , hR , sp) =
+    sgraph R D , (J-sgraph R D hR hD , spec)
     where
-    spec : IsElemRel (unionC a) vs p (flat Ra)
-    spec y w y∈ = fwd , bwd
+    spec : IsGraph (λ d → evalC f (appAt gs d)) (sgraph R D) D
+    spec d w d∈ = fwd , bwd
+      where
+      val : V ℓ
+      val = evalC f (appAt gs d)
+      val≡ : F10 R d ≡ val
+      val≡ = slice-eq R d val (λ x h → sp d x d∈ .fst h) (λ x h → sp d x d∈ .snd h)
+      val∈ : ⟨ val ∈ˢ vals R D ⟩
+      val∈ = subst (λ y → ⟨ y ∈ˢ vals R D ⟩) val≡ (vals-slice R D d d∈)
+      fwd : ⟨ pr d w ∈ˢ sgraph R D ⟩ → w ≡ val
+      fwd h = PT.rec (setIsSet w val) go (sgraph-shape R D (pr d w) h)
+        where
+        go : Σ[ d' ∈ V ℓ ] Σ[ v' ∈ V ℓ ]
+               (⟨ d' ∈ˢ D ⟩ × ⟨ v' ∈ˢ vals R D ⟩ × ⟨ pr d w ≡ₕ pr d' v' ⟩)
+           → w ≡ val
+        go (d' , v' , _ , v'∈ , e) = extensionality w val (s₁ , s₂)
+          where
+          w∈vals : ⟨ w ∈ˢ vals R D ⟩
+          w∈vals = subst (λ y → ⟨ y ∈ˢ vals R D ⟩)
+            (sym (pr-inj {a = d} {b = w} {c = d'} {d = v'} e .snd)) v'∈
+          s₁ : ⟨ w ⊆ val ⟩
+          s₁ x x∈ = ∈s x val (sp d x d∈ .fst
+            (sgraph-outl R D d w d∈ w∈vals h x (∈S x w x∈)))
+          s₂ : ⟨ val ⊆ w ⟩
+          s₂ x x∈ = ∈s x w (sgraph-outr R D d w d∈ w∈vals h x
+            (sp d x d∈ .snd (∈S x val x∈)))
+      bwd : w ≡ val → ⟨ pr d w ∈ˢ sgraph R D ⟩
+      bwd e = subst (λ y → ⟨ pr d y ∈ˢ sgraph R D ⟩) (sym e)
+        (sgraph-in R D d val d∈ val∈
+          (λ x h → sp d x d∈ .snd h) (λ x h → sp d x d∈ .fst h))
+```
+
+<!--en-->
+The six pointwise clauses. A constant and an argument slot are read off a
+product and a flattened graph; intersection, difference and union are the
+same operations on relations.
+<!--zh-->
+六条逐点子句。常量与自变量槽分别从积与摊平的图读出；交、差、并则是关系上的同名运算。
+<!--/-->
+
+```agda
+  elem-conC : {k : ℕ} (x : V ℓ) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+            → InJ x → InJ D → ElemRel (conC x) gs D
+  elem-conC x gs D hx hD =
+    F2 D x , (J-F2 D x hD hx , λ d w d∈ → constRel D x d w d∈)
+
+  elem-varC : {k : ℕ} (i : Fin k) (gs : Vec (V ℓ → V ℓ) k) (Γs : Vec (V ℓ) k)
+              (D : V ℓ) → Args gs Γs D → InJ D → ElemRel (varC i) gs D
+  elem-varC i gs Γs D args hD = flat Γᵢ , (J-flat Γᵢ hΓ , spec)
+    where
+    Γᵢ : V ℓ
+    Γᵢ = lookup i Γs
+    hΓ : InJ Γᵢ
+    hΓ = argAt i gs Γs D args .fst
+    gr : IsGraph (lookup i gs) Γᵢ D
+    gr = argAt i gs Γs D args .snd
+    spec : IsElemRel (varC i) gs D (flat Γᵢ)
+    spec d w d∈ = fwd , bwd
+      where
+      eq : lookup i (appAt gs d) ≡ lookup i gs d
+      eq = appAt-lookup i gs d
+      fwd : ⟨ pr d w ∈ˢ flat Γᵢ ⟩ → ⟨ w ∈ˢ lookup i (appAt gs d) ⟩
+      fwd h = PT.rec (snd (w ∈ˢ lookup i (appAt gs d))) go (flat-out Γᵢ (pr d w) h)
+        where
+        go : Σ[ d' ∈ V ℓ ] Σ[ v ∈ V ℓ ] Σ[ w' ∈ V ℓ ]
+               (⟨ pr d' v ∈ˢ Γᵢ ⟩ × ⟨ w' ∈ˢ v ⟩ × ⟨ pr d w ≡ₕ pr d' w' ⟩)
+           → ⟨ w ∈ˢ lookup i (appAt gs d) ⟩
+        go (d' , v , w' , dv∈ , w'∈ , e) = subst (λ y → ⟨ w ∈ˢ y ⟩) (sym eq)
+          (subst (λ y → ⟨ w ∈ˢ y ⟩) v≡
+            (subst (λ y → ⟨ y ∈ˢ v ⟩) (sym w≡w') w'∈))
+          where
+          d≡d' : d ≡ d'
+          d≡d' = pr-inj {a = d} {b = w} {c = d'} {d = w'} e .fst
+          w≡w' : w ≡ w'
+          w≡w' = pr-inj {a = d} {b = w} {c = d'} {d = w'} e .snd
+          v≡ : v ≡ lookup i gs d
+          v≡ = gr d v d∈ .fst
+            (subst (λ y → ⟨ pr y v ∈ˢ Γᵢ ⟩) (sym d≡d') dv∈)
+      bwd : ⟨ w ∈ˢ lookup i (appAt gs d) ⟩ → ⟨ pr d w ∈ˢ flat Γᵢ ⟩
+      bwd h = flat-in Γᵢ d (lookup i gs d) w (gr d (lookup i gs d) d∈ .snd refl)
+        (subst (λ y → ⟨ w ∈ˢ y ⟩) eq h)
+
+  elem-interC : {k : ℕ} (a b : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+              → ElemRel a gs D → ElemRel b gs D → ElemRel (interC a b) gs D
+  elem-interC a b gs D (Ra , hRa , sa) (Rb , hRb , sb) =
+    cap Ra Rb , (J-cap Ra Rb hRa hRb , spec)
+    where
+    spec : IsElemRel (interC a b) gs D (cap Ra Rb)
+    spec d w d∈ = fwd , bwd
       where
       X : V ℓ
-      X = evalC a (y ∷ vs)
-      fwd : ⟨ pr y w ∈ˢ flat Ra ⟩ → ⟨ w ∈ˢ unionOp X ⟩
-      fwd h = PT.rec (snd (w ∈ˢ unionOp X)) go (flat-out Ra (pr y w) h)
+      X = evalC a (appAt gs d)
+      Y : V ℓ
+      Y = evalC b (appAt gs d)
+      fwd : ⟨ pr d w ∈ˢ cap Ra Rb ⟩ → ⟨ w ∈ˢ interOp X Y ⟩
+      fwd h = ∈S w (interOp X Y) (interSpec X Y w .snd
+        ( ∈s w X (sa d w d∈ .fst (cap-outl Ra Rb (pr d w) h))
+        , ∈s w Y (sb d w d∈ .fst (cap-outr Ra Rb (pr d w) h)) ))
+      bwd : ⟨ w ∈ˢ interOp X Y ⟩ → ⟨ pr d w ∈ˢ cap Ra Rb ⟩
+      bwd h = cap-in Ra Rb (pr d w)
+        (sa d w d∈ .snd (∈S w X (interSpec X Y w .fst (∈s w (interOp X Y) h) .fst)))
+        (sb d w d∈ .snd (∈S w Y (interSpec X Y w .fst (∈s w (interOp X Y) h) .snd)))
+
+  elem-diffC : {k : ℕ} (a b : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+             → ElemRel a gs D → ElemRel b gs D → ElemRel (diffC a b) gs D
+  elem-diffC a b gs D (Ra , hRa , sa) (Rb , hRb , sb) =
+    F1 Ra Rb , (J-F1 Ra Rb hRa hRb , spec)
+    where
+    spec : IsElemRel (diffC a b) gs D (F1 Ra Rb)
+    spec d w d∈ = fwd , bwd
+      where
+      X : V ℓ
+      X = evalC a (appAt gs d)
+      Y : V ℓ
+      Y = evalC b (appAt gs d)
+      fwd : ⟨ pr d w ∈ˢ F1 Ra Rb ⟩ → ⟨ w ∈ˢ F1 X Y ⟩
+      fwd h = F1-spec X Y w .snd
+        ( sa d w d∈ .fst (F1-spec Ra Rb (pr d w) .fst h .fst)
+        , λ k → F1-spec Ra Rb (pr d w) .fst h .snd (sb d w d∈ .snd k) )
+      bwd : ⟨ w ∈ˢ F1 X Y ⟩ → ⟨ pr d w ∈ˢ F1 Ra Rb ⟩
+      bwd h = F1-spec Ra Rb (pr d w) .snd
+        ( sa d w d∈ .snd (F1-spec X Y w .fst h .fst)
+        , λ k → F1-spec X Y w .fst h .snd (sb d w d∈ .fst k) )
+
+  elem-unionC : {k : ℕ} (a : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+              → ElemRel a gs D → ElemRel (unionC a) gs D
+  elem-unionC a gs D (Ra , hRa , sa) = flat Ra , (J-flat Ra hRa , spec)
+    where
+    spec : IsElemRel (unionC a) gs D (flat Ra)
+    spec d w d∈ = fwd , bwd
+      where
+      X : V ℓ
+      X = evalC a (appAt gs d)
+      fwd : ⟨ pr d w ∈ˢ flat Ra ⟩ → ⟨ w ∈ˢ unionOp X ⟩
+      fwd h = PT.rec (snd (w ∈ˢ unionOp X)) go (flat-out Ra (pr d w) h)
         where
-        go : Σ[ d ∈ V ℓ ] Σ[ v ∈ V ℓ ] Σ[ w' ∈ V ℓ ]
-               (⟨ pr d v ∈ˢ Ra ⟩ × ⟨ w' ∈ˢ v ⟩ × ⟨ pr y w ≡ₕ pr d w' ⟩)
+        go : Σ[ d' ∈ V ℓ ] Σ[ v ∈ V ℓ ] Σ[ w' ∈ V ℓ ]
+               (⟨ pr d' v ∈ˢ Ra ⟩ × ⟨ w' ∈ˢ v ⟩ × ⟨ pr d w ≡ₕ pr d' w' ⟩)
            → ⟨ w ∈ˢ unionOp X ⟩
-        go (d , v , w' , dv∈ , w'∈ , e) = ∈S w (unionOp X)
+        go (d' , v , w' , dv∈ , w'∈ , e) = ∈S w (unionOp X)
           (unionSpec X w .snd ∣ v , (∈s v X v∈X , ∈s w v w∈v) ∣₁)
           where
           v∈X : ⟨ v ∈ˢ X ⟩
-          v∈X = sa y v y∈ .fst (subst (λ s → ⟨ pr s v ∈ˢ Ra ⟩)
-            (sym (pr-inj {a = y} {b = w} {c = d} {d = w'} e .fst)) dv∈)
+          v∈X = sa d v d∈ .fst (subst (λ y → ⟨ pr y v ∈ˢ Ra ⟩)
+            (sym (pr-inj {a = d} {b = w} {c = d'} {d = w'} e .fst)) dv∈)
           w∈v : ⟨ w ∈ˢ v ⟩
-          w∈v = subst (λ s → ⟨ s ∈ˢ v ⟩)
-            (sym (pr-inj {a = y} {b = w} {c = d} {d = w'} e .snd)) w'∈
-      bwd : ⟨ w ∈ˢ unionOp X ⟩ → ⟨ pr y w ∈ˢ flat Ra ⟩
-      bwd h = PT.rec (snd (pr y w ∈ˢ flat Ra)) go
+          w∈v = subst (λ y → ⟨ y ∈ˢ v ⟩)
+            (sym (pr-inj {a = d} {b = w} {c = d'} {d = w'} e .snd)) w'∈
+      bwd : ⟨ w ∈ˢ unionOp X ⟩ → ⟨ pr d w ∈ˢ flat Ra ⟩
+      bwd h = PT.rec (snd (pr d w ∈ˢ flat Ra)) go
         (unionSpec X w .fst (∈s w (unionOp X) h))
         where
-        go : Σ[ v ∈ V ℓ ] (⟨ v ∈ₛ X ⟩ × ⟨ w ∈ₛ v ⟩) → ⟨ pr y w ∈ˢ flat Ra ⟩
-        go (v , v∈ , w∈) = flat-in Ra y v w
-          (sa y v y∈ .snd (∈S v X v∈)) (∈S w v w∈)
+        go : Σ[ v ∈ V ℓ ] (⟨ v ∈ₛ X ⟩ × ⟨ w ∈ₛ v ⟩) → ⟨ pr d w ∈ˢ flat Ra ⟩
+        go (v , v∈ , w∈) = flat-in Ra d v w
+          (sa d v d∈ .snd (∈S v X v∈)) (∈S w v w∈)
+```
+
+<!--en-->
+The four clauses the slice graph unblocks. Pairing is the union of the two
+graphs; collection cuts the second element relation by a membership test read
+off the first graph; the two separations restrict the third element relation
+to the records where the test holds, and the test is the join of the two
+graphs met with a product of the membership relation, or of the identity
+graph.
+<!--zh-->
+切片图解开的四条子句。配对是两个图之并；收集用从第一个图读出的隶属检验切割第二个元素关系；两种分离把第三个元素关系限制到检验成立的那些记录上，而检验是两个图的接合与隶属关系之积、或与恒等图之积，二者取交。
+<!--/-->
+
+```agda
+  elem-pairC : {k : ℕ} (a b : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+             → InJ D → ElemRel a gs D → ElemRel b gs D → ElemRel (pairC a b) gs D
+  elem-pairC a b gs D hD Ea Eb = cup Γa Γb , (J-cup Γa Γb hΓa hΓb , spec)
+    where
+    GA : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC a (appAt gs d)) Γ D)
+    GA = graphOf a gs D hD Ea
+    GB : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC b (appAt gs d)) Γ D)
+    GB = graphOf b gs D hD Eb
+    Γa : V ℓ
+    Γa = GA .fst
+    Γb : V ℓ
+    Γb = GB .fst
+    hΓa : InJ Γa
+    hΓa = GA .snd .fst
+    hΓb : InJ Γb
+    hΓb = GB .snd .fst
+    spec : IsElemRel (pairC a b) gs D (cup Γa Γb)
+    spec d w d∈ = fwd , bwd
+      where
+      X : V ℓ
+      X = evalC a (appAt gs d)
+      Y : V ℓ
+      Y = evalC b (appAt gs d)
+      fwd : ⟨ pr d w ∈ˢ cup Γa Γb ⟩ → ⟨ w ∈ˢ F0 X Y ⟩
+      fwd h = PT.rec (snd (w ∈ˢ F0 X Y)) sides (cup-out Γa Γb (pr d w) h)
+        where
+        sides : (⟨ pr d w ∈ˢ Γa ⟩ ⊎ ⟨ pr d w ∈ˢ Γb ⟩) → ⟨ w ∈ˢ F0 X Y ⟩
+        sides (inl k) = F0-spec X Y w .snd ∣ inl (GA .snd .snd d w d∈ .fst k) ∣₁
+        sides (inr k) = F0-spec X Y w .snd ∣ inr (GB .snd .snd d w d∈ .fst k) ∣₁
+      bwd : ⟨ w ∈ˢ F0 X Y ⟩ → ⟨ pr d w ∈ˢ cup Γa Γb ⟩
+      bwd h = PT.rec (snd (pr d w ∈ˢ cup Γa Γb)) sides (F0-spec X Y w .fst h)
+        where
+        sides : (⟨ w ≡ₕ X ⟩ ⊎ ⟨ w ≡ₕ Y ⟩) → ⟨ pr d w ∈ˢ cup Γa Γb ⟩
+        sides (inl e) = cup-in Γa Γb (pr d w) ∣ inl (GA .snd .snd d w d∈ .snd e) ∣₁
+        sides (inr e) = cup-in Γa Γb (pr d w) ∣ inr (GB .snd .snd d w d∈ .snd e) ∣₁
+
+  elem-colC : {k : ℕ} (a b : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+            → InJ D → ElemRel a gs D → ElemRel b gs D → ElemRel (colC a b) gs D
+  elem-colC a b gs D hD Ea (Rb , hRb , sb) = cap Rb M , (J-cap Rb M hRb hM , spec)
+    where
+    GA : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC a (appAt gs d)) Γ D)
+    GA = graphOf a gs D hD Ea
+    Γa : V ℓ
+    Γa = GA .fst
+    Wt : V ℓ
+    Wt = F5 (vals Rb D) (vals Rb D)
+    WA : V ℓ
+    WA = F5 (vals Γa D) (vals Γa D)
+    Q : V ℓ
+    Q = cup (cup D Wt) WA
+    M : V ℓ
+    M = comp (swp Γa Q) (mrel Q) D Wt
+    hWt : InJ Wt
+    hWt = J-F5 (vals Rb D) (vals Rb D) hv hv
+      where
+      hv : InJ (vals Rb D)
+      hv = J-vals Rb D hRb hD
+    hQ : InJ Q
+    hQ = J-cup (cup D Wt) WA (J-cup D Wt hD hWt)
+      (J-F5 (vals Γa D) (vals Γa D) hv hv)
+      where
+      hv : InJ (vals Γa D)
+      hv = J-vals Γa D (GA .snd .fst) hD
+    hM : InJ M
+    hM = J-comp (swp Γa Q) (mrel Q) D Wt
+      (J-swp Γa Q (GA .snd .fst) hQ) (J-mrel Q hQ) hD hWt
+    spec : IsElemRel (colC a b) gs D (cap Rb M)
+    spec d t d∈ = fwd , bwd
+      where
+      X : V ℓ
+      X = evalC a (appAt gs d)
+      Y : V ℓ
+      Y = evalC b (appAt gs d)
+      dX∈ : ⟨ pr d X ∈ˢ Γa ⟩
+      dX∈ = GA .snd .snd d X d∈ .snd refl
+      X∈Q : ⟨ X ∈ˢ Q ⟩
+      X∈Q = cup-in (cup D Wt) WA X ∣ inr (vals-union Γa D d X d∈ dX∈) ∣₁
+      d∈Q : ⟨ d ∈ˢ Q ⟩
+      d∈Q = cup-in (cup D Wt) WA d ∣ inl (cup-in D Wt d ∣ inl d∈ ∣₁) ∣₁
+      fwd : ⟨ pr d t ∈ˢ cap Rb M ⟩ → ⟨ t ∈ˢ colOp X Y ⟩
+      fwd h = ∈S t (colOp X Y)
+        (colSpec X Y t .snd (∈s t Y t∈Y , ∈s X t X∈t))
+        where
+        t∈Y : ⟨ t ∈ˢ Y ⟩
+        t∈Y = sb d t d∈ .fst (cap-outl Rb M (pr d t) h)
+        X∈t : ⟨ X ∈ˢ t ⟩
+        X∈t = PT.rec (snd (X ∈ˢ t)) go
+          (comp-out (swp Γa Q) (mrel Q) D Wt (pr d t) (cap-outr Rb M (pr d t) h))
+          where
+          go : Σ[ m ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                 (⟨ pr m u ∈ˢ swp Γa Q ⟩ × ⟨ pr m v ∈ˢ mrel Q ⟩
+                  × ⟨ pr d t ≡ₕ pr u v ⟩)
+             → ⟨ X ∈ˢ t ⟩
+          go (m , u , v , su∈ , mv∈ , e) = PT.rec (snd (X ∈ˢ t)) inner
+            (swp-out Γa Q (pr m u) su∈)
+            where
+            d≡u : d ≡ u
+            d≡u = pr-inj {a = d} {b = t} {c = u} {d = v} e .fst
+            t≡v : t ≡ v
+            t≡v = pr-inj {a = d} {b = t} {c = u} {d = v} e .snd
+            inner : Σ[ x ∈ V ℓ ] Σ[ y ∈ V ℓ ]
+                      (⟨ pr x y ∈ˢ Γa ⟩ × ⟨ pr m u ≡ₕ pr y x ⟩) → ⟨ X ∈ˢ t ⟩
+            inner (x , y , xy∈ , e₂) = subst (λ z → ⟨ z ∈ˢ t ⟩) m≡X
+              (subst (λ z → ⟨ m ∈ˢ z ⟩) (sym t≡v) (mrel-out Q m v mv∈))
+              where
+              m≡y : m ≡ y
+              m≡y = pr-inj {a = m} {b = u} {c = y} {d = x} e₂ .fst
+              u≡x : u ≡ x
+              u≡x = pr-inj {a = m} {b = u} {c = y} {d = x} e₂ .snd
+              m≡X : m ≡ X
+              m≡X = GA .snd .snd d m d∈ .fst
+                (subst (λ z → ⟨ pr z m ∈ˢ Γa ⟩) (sym (d≡u ∙ u≡x))
+                  (subst (λ z → ⟨ pr x z ∈ˢ Γa ⟩) (sym m≡y) xy∈))
+      bwd : ⟨ t ∈ˢ colOp X Y ⟩ → ⟨ pr d t ∈ˢ cap Rb M ⟩
+      bwd h = cap-in Rb M (pr d t) inRb
+        (comp-in (swp Γa Q) (mrel Q) D Wt X d t
+          (swp-in Γa Q d X dX∈ d∈Q X∈Q)
+          (mrel-in Q X t X∈Q t∈Q (∈S X t (colSpec X Y t .fst
+            (∈s t (colOp X Y) h) .snd)))
+          d∈ t∈Wt)
+        where
+        t∈Y : ⟨ t ∈ˢ Y ⟩
+        t∈Y = ∈S t Y (colSpec X Y t .fst (∈s t (colOp X Y) h) .fst)
+        inRb : ⟨ pr d t ∈ˢ Rb ⟩
+        inRb = sb d t d∈ .snd t∈Y
+        t∈Wt : ⟨ t ∈ˢ Wt ⟩
+        t∈Wt = vals-union Rb D d t d∈ inRb
+        t∈Q : ⟨ t ∈ˢ Q ⟩
+        t∈Q = cup-in (cup D Wt) WA t ∣ inl (cup-in D Wt t ∣ inr t∈Wt ∣₁) ∣₁
+```
+
+```agda
+  testSet : V ℓ → V ℓ → V ℓ → V ℓ → V ℓ → V ℓ → V ℓ
+  testSet Γa Γb T D WA WB =
+    F6 (cap (joinOp Γa Γb WA WB) (F2 D T)) (cap (joinOp Γa Γb WA WB) (F2 D T))
+
+  J-test : (Γa Γb T D WA WB : V ℓ) → InJ Γa → InJ Γb → InJ T → InJ D
+         → InJ WA → InJ WB → InJ (testSet Γa Γb T D WA WB)
+  J-test Γa Γb T D WA WB ha hb hT hD hA hB = J-F6 C C hC hC
+    where
+    C : V ℓ
+    C = cap (joinOp Γa Γb WA WB) (F2 D T)
+    hC : InJ C
+    hC = J-cap (joinOp Γa Γb WA WB) (F2 D T)
+      (J-join Γa Γb WA WB ha hb hA hB) (J-F2 D T hD hT)
+
+  test-in : (Γa Γb T D WA WB d A B : V ℓ) → ⟨ d ∈ˢ D ⟩
+          → ⟨ pr d A ∈ˢ Γa ⟩ → ⟨ pr d B ∈ˢ Γb ⟩ → ⟨ A ∈ˢ WA ⟩ → ⟨ B ∈ˢ WB ⟩
+          → ⟨ pr A B ∈ˢ T ⟩ → ⟨ d ∈ˢ testSet Γa Γb T D WA WB ⟩
+  test-in Γa Γb T D WA WB d A B d∈ dA∈ dB∈ A∈ B∈ AB∈ =
+    F6-write C C d ∣ d , pr A B , (inC , refl) ∣₁
+    where
+    C : V ℓ
+    C = cap (joinOp Γa Γb WA WB) (F2 D T)
+    inC : ⟨ pr d (pr A B) ∈ˢ C ⟩
+    inC = cap-in (joinOp Γa Γb WA WB) (F2 D T) (pr d (pr A B))
+      (join-in Γa Γb WA WB d A B dA∈ dB∈ A∈ B∈)
+      (F2-write D T (pr d (pr A B)) ∣ d , pr A B , (d∈ , AB∈ , refl) ∣₁)
+
+  test-out : (Γa Γb T D WA WB d : V ℓ) → ⟨ d ∈ˢ testSet Γa Γb T D WA WB ⟩
+           → ∥ Σ[ A ∈ V ℓ ] Σ[ B ∈ V ℓ ]
+                (⟨ pr d A ∈ˢ Γa ⟩ × ⟨ pr d B ∈ˢ Γb ⟩ × ⟨ pr A B ∈ˢ T ⟩) ∥₁
+  test-out Γa Γb T D WA WB d h = PT.rec squash₁ outer (F6-read C C d h)
+    where
+    C : V ℓ
+    C = cap (joinOp Γa Γb WA WB) (F2 D T)
+    E : Type (ℓ-suc ℓ)
+    E = Σ[ A ∈ V ℓ ] Σ[ B ∈ V ℓ ]
+          (⟨ pr d A ∈ˢ Γa ⟩ × ⟨ pr d B ∈ˢ Γb ⟩ × ⟨ pr A B ∈ˢ T ⟩)
+    outer : Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ] (⟨ pr u v ∈ˢ C ⟩ × ⟨ d ≡ₕ u ⟩) → ∥ E ∥₁
+    outer (u , v , uv∈ , d≡u) = PT.rec squash₁ fromJoin
+      (join-out Γa Γb WA WB (pr d v)
+        (cap-outl (joinOp Γa Γb WA WB) (F2 D T) (pr d v) dv∈))
+      where
+      dv∈ : ⟨ pr d v ∈ˢ C ⟩
+      dv∈ = subst (λ y → ⟨ pr y v ∈ˢ C ⟩) (sym d≡u) uv∈
+      fromJoin : Σ[ d₀ ∈ V ℓ ] Σ[ x ∈ V ℓ ] Σ[ y ∈ V ℓ ]
+                   (⟨ pr d₀ x ∈ˢ Γa ⟩ × ⟨ pr d₀ y ∈ˢ Γb ⟩
+                    × ⟨ pr d v ≡ₕ pr d₀ (pr x y) ⟩)
+               → ∥ E ∥₁
+      fromJoin (d₀ , x , y , dx∈ , dy∈ , e) = PT.rec squash₁ fromProd
+        (F2-read D T (pr d v)
+          (cap-outr (joinOp Γa Γb WA WB) (F2 D T) (pr d v) dv∈))
+        where
+        d≡d₀ : d ≡ d₀
+        d≡d₀ = pr-inj {a = d} {b = v} {c = d₀} {d = pr x y} e .fst
+        v≡xy : v ≡ pr x y
+        v≡xy = pr-inj {a = d} {b = v} {c = d₀} {d = pr x y} e .snd
+        fromProd : Σ[ d₁ ∈ V ℓ ] Σ[ v₁ ∈ V ℓ ]
+                     (⟨ d₁ ∈ˢ D ⟩ × ⟨ v₁ ∈ˢ T ⟩ × ⟨ pr d v ≡ₕ pr d₁ v₁ ⟩)
+                 → ∥ E ∥₁
+        fromProd (d₁ , v₁ , _ , v₁∈ , e₁) = ∣ x , y
+          , ( subst (λ z → ⟨ pr z x ∈ˢ Γa ⟩) (sym d≡d₀) dx∈
+            , subst (λ z → ⟨ pr z y ∈ˢ Γb ⟩) (sym d≡d₀) dy∈
+            , subst (λ z → ⟨ z ∈ˢ T ⟩)
+                (sym (pr-inj {a = d} {b = v} {c = d₁} {d = v₁} e₁ .snd ) ∙ v≡xy)
+                v₁∈ ) ∣₁
+
+  elem-chSepC : {k : ℕ} (a b c : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+              → InJ D → ElemRel a gs D → ElemRel b gs D → ElemRel c gs D
+              → ElemRel (chSepC a b c) gs D
+  elem-chSepC a b c gs D hD Ea Eb (Rc , hRc , sc) =
+    cap Rc (F2 P Wc) , (J-cap Rc (F2 P Wc) hRc (J-F2 P Wc hP hWc) , spec)
+    where
+    GA : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC a (appAt gs d)) Γ D)
+    GA = graphOf a gs D hD Ea
+    GB : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC b (appAt gs d)) Γ D)
+    GB = graphOf b gs D hD Eb
+    WA : V ℓ
+    WA = F5 (vals (GA .fst) D) (vals (GA .fst) D)
+    WB : V ℓ
+    WB = F5 (vals (GB .fst) D) (vals (GB .fst) D)
+    Q : V ℓ
+    Q = cup WA WB
+    Wc : V ℓ
+    Wc = F5 (vals Rc D) (vals Rc D)
+    P : V ℓ
+    P = testSet (GA .fst) (GB .fst) (mrel Q) D WA WB
+    hWA : InJ WA
+    hWA = J-F5 (vals (GA .fst) D) (vals (GA .fst) D) hv hv
+      where
+      hv : InJ (vals (GA .fst) D)
+      hv = J-vals (GA .fst) D (GA .snd .fst) hD
+    hWB : InJ WB
+    hWB = J-F5 (vals (GB .fst) D) (vals (GB .fst) D) hv hv
+      where
+      hv : InJ (vals (GB .fst) D)
+      hv = J-vals (GB .fst) D (GB .snd .fst) hD
+    hWc : InJ Wc
+    hWc = J-F5 (vals Rc D) (vals Rc D) hv hv
+      where
+      hv : InJ (vals Rc D)
+      hv = J-vals Rc D hRc hD
+    hP : InJ P
+    hP = J-test (GA .fst) (GB .fst) (mrel Q) D WA WB (GA .snd .fst) (GB .snd .fst)
+      (J-mrel Q (J-cup WA WB hWA hWB)) hD hWA hWB
+    spec : IsElemRel (chSepC a b c) gs D (cap Rc (F2 P Wc))
+    spec d w d∈ = fwd , bwd
+      where
+      X : V ℓ
+      X = evalC a (appAt gs d)
+      Y : V ℓ
+      Y = evalC b (appAt gs d)
+      Z : V ℓ
+      Z = evalC c (appAt gs d)
+      dX∈ : ⟨ pr d X ∈ˢ GA .fst ⟩
+      dX∈ = GA .snd .snd d X d∈ .snd refl
+      dY∈ : ⟨ pr d Y ∈ˢ GB .fst ⟩
+      dY∈ = GB .snd .snd d Y d∈ .snd refl
+      X∈WA : ⟨ X ∈ˢ WA ⟩
+      X∈WA = vals-union (GA .fst) D d X d∈ dX∈
+      Y∈WB : ⟨ Y ∈ˢ WB ⟩
+      Y∈WB = vals-union (GB .fst) D d Y d∈ dY∈
+      fwd : ⟨ pr d w ∈ˢ cap Rc (F2 P Wc) ⟩ → ⟨ w ∈ˢ chSepOp X Y Z ⟩
+      fwd h = ∈S w (chSepOp X Y Z)
+        (chSepSpec X Y Z w .snd (∈s w Z w∈Z , ∈s X Y X∈Y))
+        where
+        w∈Z : ⟨ w ∈ˢ Z ⟩
+        w∈Z = sc d w d∈ .fst (cap-outl Rc (F2 P Wc) (pr d w) h)
+        d∈P : ⟨ d ∈ˢ P ⟩
+        d∈P = PT.rec (snd (d ∈ˢ P)) go
+          (F2-read P Wc (pr d w) (cap-outr Rc (F2 P Wc) (pr d w) h))
+          where
+          go : Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                 (⟨ u ∈ˢ P ⟩ × ⟨ v ∈ˢ Wc ⟩ × ⟨ pr d w ≡ₕ pr u v ⟩) → ⟨ d ∈ˢ P ⟩
+          go (u , v , u∈ , _ , e) = subst (λ z → ⟨ z ∈ˢ P ⟩)
+            (sym (pr-inj {a = d} {b = w} {c = u} {d = v} e .fst)) u∈
+        X∈Y : ⟨ X ∈ˢ Y ⟩
+        X∈Y = PT.rec (snd (X ∈ˢ Y)) go
+          (test-out (GA .fst) (GB .fst) (mrel Q) D WA WB d d∈P)
+          where
+          go : Σ[ A ∈ V ℓ ] Σ[ B ∈ V ℓ ]
+                 (⟨ pr d A ∈ˢ GA .fst ⟩ × ⟨ pr d B ∈ˢ GB .fst ⟩
+                  × ⟨ pr A B ∈ˢ mrel Q ⟩)
+             → ⟨ X ∈ˢ Y ⟩
+          go (A , B , dA∈ , dB∈ , AB∈) =
+            subst (λ z → ⟨ z ∈ˢ Y ⟩) (GA .snd .snd d A d∈ .fst dA∈)
+              (subst (λ z → ⟨ A ∈ˢ z ⟩) (GB .snd .snd d B d∈ .fst dB∈)
+                (mrel-out Q A B AB∈))
+      bwd : ⟨ w ∈ˢ chSepOp X Y Z ⟩ → ⟨ pr d w ∈ˢ cap Rc (F2 P Wc) ⟩
+      bwd h = cap-in Rc (F2 P Wc) (pr d w) inRc
+        (F2-write P Wc (pr d w) ∣ d , w , (d∈P , w∈Wc , refl) ∣₁)
+        where
+        parts : ⟨ w ∈ₛ Z ⟩ × ⟨ X ∈ₛ Y ⟩
+        parts = chSepSpec X Y Z w .fst (∈s w (chSepOp X Y Z) h)
+        inRc : ⟨ pr d w ∈ˢ Rc ⟩
+        inRc = sc d w d∈ .snd (∈S w Z (parts .fst))
+        w∈Wc : ⟨ w ∈ˢ Wc ⟩
+        w∈Wc = vals-union Rc D d w d∈ inRc
+        d∈P : ⟨ d ∈ˢ P ⟩
+        d∈P = test-in (GA .fst) (GB .fst) (mrel Q) D WA WB d X Y d∈ dX∈ dY∈
+          X∈WA Y∈WB
+          (mrel-in Q X Y (cup-in WA WB X ∣ inl X∈WA ∣₁)
+            (cup-in WA WB Y ∣ inr Y∈WB ∣₁) (∈S X Y (parts .snd)))
+```
+
+```agda
+  elem-eqSepC : {k : ℕ} (a b c : Comp k) (gs : Vec (V ℓ → V ℓ) k) (D : V ℓ)
+              → InJ D → ElemRel a gs D → ElemRel b gs D → ElemRel c gs D
+              → ElemRel (eqSepC a b c) gs D
+  elem-eqSepC a b c gs D hD Ea Eb (Rc , hRc , sc) =
+    cap Rc (F2 P Wc) , (J-cap Rc (F2 P Wc) hRc (J-F2 P Wc hP hWc) , spec)
+    where
+    GA : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC a (appAt gs d)) Γ D)
+    GA = graphOf a gs D hD Ea
+    GB : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ d → evalC b (appAt gs d)) Γ D)
+    GB = graphOf b gs D hD Eb
+    WA : V ℓ
+    WA = F5 (vals (GA .fst) D) (vals (GA .fst) D)
+    WB : V ℓ
+    WB = F5 (vals (GB .fst) D) (vals (GB .fst) D)
+    Q : V ℓ
+    Q = cup WA WB
+    Wc : V ℓ
+    Wc = F5 (vals Rc D) (vals Rc D)
+    P : V ℓ
+    P = testSet (GA .fst) (GB .fst) (idG Q) D WA WB
+    hWA : InJ WA
+    hWA = J-F5 (vals (GA .fst) D) (vals (GA .fst) D) hv hv
+      where
+      hv : InJ (vals (GA .fst) D)
+      hv = J-vals (GA .fst) D (GA .snd .fst) hD
+    hWB : InJ WB
+    hWB = J-F5 (vals (GB .fst) D) (vals (GB .fst) D) hv hv
+      where
+      hv : InJ (vals (GB .fst) D)
+      hv = J-vals (GB .fst) D (GB .snd .fst) hD
+    hWc : InJ Wc
+    hWc = J-F5 (vals Rc D) (vals Rc D) hv hv
+      where
+      hv : InJ (vals Rc D)
+      hv = J-vals Rc D hRc hD
+    hP : InJ P
+    hP = J-test (GA .fst) (GB .fst) (idG Q) D WA WB (GA .snd .fst) (GB .snd .fst)
+      (J-idG Q (J-cup WA WB hWA hWB)) hD hWA hWB
+    spec : IsElemRel (eqSepC a b c) gs D (cap Rc (F2 P Wc))
+    spec d w d∈ = fwd , bwd
+      where
+      X : V ℓ
+      X = evalC a (appAt gs d)
+      Y : V ℓ
+      Y = evalC b (appAt gs d)
+      Z : V ℓ
+      Z = evalC c (appAt gs d)
+      dX∈ : ⟨ pr d X ∈ˢ GA .fst ⟩
+      dX∈ = GA .snd .snd d X d∈ .snd refl
+      dY∈ : ⟨ pr d Y ∈ˢ GB .fst ⟩
+      dY∈ = GB .snd .snd d Y d∈ .snd refl
+      X∈WA : ⟨ X ∈ˢ WA ⟩
+      X∈WA = vals-union (GA .fst) D d X d∈ dX∈
+      Y∈WB : ⟨ Y ∈ˢ WB ⟩
+      Y∈WB = vals-union (GB .fst) D d Y d∈ dY∈
+      fwd : ⟨ pr d w ∈ˢ cap Rc (F2 P Wc) ⟩ → ⟨ w ∈ˢ eqSepOp X Y Z ⟩
+      fwd h = ∈S w (eqSepOp X Y Z)
+        (eqSepSpec X Y Z w .snd (∈s w Z w∈Z , X∼Y))
+        where
+        w∈Z : ⟨ w ∈ˢ Z ⟩
+        w∈Z = sc d w d∈ .fst (cap-outl Rc (F2 P Wc) (pr d w) h)
+        d∈P : ⟨ d ∈ˢ P ⟩
+        d∈P = PT.rec (snd (d ∈ˢ P)) go
+          (F2-read P Wc (pr d w) (cap-outr Rc (F2 P Wc) (pr d w) h))
+          where
+          go : Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                 (⟨ u ∈ˢ P ⟩ × ⟨ v ∈ˢ Wc ⟩ × ⟨ pr d w ≡ₕ pr u v ⟩) → ⟨ d ∈ˢ P ⟩
+          go (u , v , u∈ , _ , e) = subst (λ z → ⟨ z ∈ˢ P ⟩)
+            (sym (pr-inj {a = d} {b = w} {c = u} {d = v} e .fst)) u∈
+        X∼Y : ⟨ X ∼ Y ⟩
+        X∼Y = PT.rec (snd (X ∼ Y)) go
+          (test-out (GA .fst) (GB .fst) (idG Q) D WA WB d d∈P)
+          where
+          go : Σ[ A ∈ V ℓ ] Σ[ B ∈ V ℓ ]
+                 (⟨ pr d A ∈ˢ GA .fst ⟩ × ⟨ pr d B ∈ˢ GB .fst ⟩
+                  × ⟨ pr A B ∈ˢ idG Q ⟩)
+             → ⟨ X ∼ Y ⟩
+          go (A , B , dA∈ , dB∈ , AB∈) = PT.rec (snd (X ∼ Y)) inner
+            (idG-out Q (pr A B) AB∈)
+            where
+            A≡X : A ≡ X
+            A≡X = GA .snd .snd d A d∈ .fst dA∈
+            B≡Y : B ≡ Y
+            B≡Y = GB .snd .snd d B d∈ .fst dB∈
+            inner : Σ[ z ∈ V ℓ ] (⟨ z ∈ˢ Q ⟩ × ⟨ pr A B ≡ₕ pr z z ⟩)
+                  → ⟨ X ∼ Y ⟩
+            inner (z , _ , e) = equivFun (invEquiv (identityPrinciple {a = X} {b = Y}))
+              (sym A≡X ∙ pr-inj {a = A} {b = B} {c = z} {d = z} e .fst
+                ∙ sym (pr-inj {a = A} {b = B} {c = z} {d = z} e .snd) ∙ B≡Y)
+      bwd : ⟨ w ∈ˢ eqSepOp X Y Z ⟩ → ⟨ pr d w ∈ˢ cap Rc (F2 P Wc) ⟩
+      bwd h = cap-in Rc (F2 P Wc) (pr d w) inRc
+        (F2-write P Wc (pr d w) ∣ d , w , (d∈P , w∈Wc , refl) ∣₁)
+        where
+        parts : ⟨ w ∈ₛ Z ⟩ × ⟨ X ∼ Y ⟩
+        parts = eqSepSpec X Y Z w .fst (∈s w (eqSepOp X Y Z) h)
+        inRc : ⟨ pr d w ∈ˢ Rc ⟩
+        inRc = sc d w d∈ .snd (∈S w Z (parts .fst))
+        w∈Wc : ⟨ w ∈ˢ Wc ⟩
+        w∈Wc = vals-union Rc D d w d∈ inRc
+        X≡Y : X ≡ Y
+        X≡Y = equivFun (identityPrinciple {a = X} {b = Y}) (parts .snd)
+        d∈P : ⟨ d ∈ˢ P ⟩
+        d∈P = test-in (GA .fst) (GB .fst) (idG Q) D WA WB d X Y d∈ dX∈ dY∈
+          X∈WA Y∈WB
+          (subst (λ z → ⟨ pr X z ∈ˢ idG Q ⟩) X≡Y
+            (idG-in Q X (cup-in WA WB X ∣ inl X∈WA ∣₁)))
+```
+
+<!--en-->
+The nested image is the clause the restatement exists for. Its inner composite
+is evaluated at a stack whose head is the inner argument and whose tail is the
+outer record's, so the induction hypothesis is taken at a new record set: the
+pairs of an outer record with an inner argument. The two projection graphs
+supply the new argument families, and the outer relation is the composition of
+the left projection with the inner graph.
+<!--zh-->
+嵌套的像正是重述为之存在的那条子句。其内层复合在这样的栈上求值：栈首是内层自变量，栈尾是外层记录的那些自变量，故归纳假设取在一个新的记录集上，即外层记录与内层自变量所成的对。两个投影图供应新的自变量族，外层关系则是左投影与内层图之复合。
+<!--/-->
+
+```agda
+  liftGraphs : {k : ℕ} → Vec (V ℓ) k → V ℓ → V ℓ → V ℓ → Vec (V ℓ) k
+  liftGraphs [] L D' D = []
+  liftGraphs (Γ ∷ Γs) L D' D =
+    comp L Γ D' (F5 (vals Γ D) (vals Γ D)) ∷ liftGraphs Γs L D' D
+
+  liftArgs : {k : ℕ} (gs : Vec (V ℓ → V ℓ) k) (Γs : Vec (V ℓ) k) (D D' L : V ℓ)
+           → InJ D → InJ D' → InJ L
+           → ((e : V ℓ) → ⟨ e ∈ˢ D' ⟩
+              → ⟨ pr (prL e) e ∈ˢ L ⟩ × ⟨ prL e ∈ˢ D ⟩)
+           → ((e u t : V ℓ) → ⟨ e ∈ˢ D' ⟩ → ⟨ pr u t ∈ˢ L ⟩ → ⟨ t ≡ₕ e ⟩
+              → u ≡ prL e)
+           → Args gs Γs D → Args (shiftAt gs) (liftGraphs Γs L D' D) D'
+  liftArgs [] [] D D' L hD hD' hL lin lout args = tt*
+  liftArgs (g ∷ gs) (Γ ∷ Γs) D D' L hD hD' hL lin lout ((hΓ , gr) , rest) =
+    ( J-comp L Γ D' Wv hL hΓ hD' hWv , spec )
+    , liftArgs gs Γs D D' L hD hD' hL lin lout rest
+    where
+    Wv : V ℓ
+    Wv = F5 (vals Γ D) (vals Γ D)
+    hWv : InJ Wv
+    hWv = J-F5 (vals Γ D) (vals Γ D) hv hv
+      where
+      hv : InJ (vals Γ D)
+      hv = J-vals Γ D hΓ hD
+    spec : IsGraph (λ e → g (prL e)) (comp L Γ D' Wv) D'
+    spec e w e∈ = fwd , bwd
+      where
+      fwd : ⟨ pr e w ∈ˢ comp L Γ D' Wv ⟩ → w ≡ g (prL e)
+      fwd h = PT.rec (setIsSet w (g (prL e))) go (comp-out L Γ D' Wv (pr e w) h)
+        where
+        go : Σ[ m ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+               (⟨ pr m u ∈ˢ L ⟩ × ⟨ pr m v ∈ˢ Γ ⟩ × ⟨ pr e w ≡ₕ pr u v ⟩)
+           → w ≡ g (prL e)
+        go (m , u , v , mu∈ , mv∈ , eq) =
+          w≡v ∙ gr m v m∈D .fst mv∈ ∙ cong g m≡
+          where
+          e≡u : e ≡ u
+          e≡u = pr-inj {a = e} {b = w} {c = u} {d = v} eq .fst
+          w≡v : w ≡ v
+          w≡v = pr-inj {a = e} {b = w} {c = u} {d = v} eq .snd
+          m≡ : m ≡ prL e
+          m≡ = lout e m u e∈ mu∈ (sym e≡u)
+          m∈D : ⟨ m ∈ˢ D ⟩
+          m∈D = subst (λ y → ⟨ y ∈ˢ D ⟩) (sym m≡) (lin e e∈ .snd)
+      bwd : w ≡ g (prL e) → ⟨ pr e w ∈ˢ comp L Γ D' Wv ⟩
+      bwd eq = comp-in L Γ D' Wv (prL e) e w (lin e e∈ .fst) inΓ e∈
+        (vals-union Γ D (prL e) w (lin e e∈ .snd) inΓ)
+        where
+        inΓ : ⟨ pr (prL e) w ∈ˢ Γ ⟩
+        inΓ = gr (prL e) w (lin e e∈ .snd) .snd eq
+
+  elem-imgC : {k : ℕ} (g : Comp (suc k)) (a : Comp k) (gs : Vec (V ℓ → V ℓ) k)
+              (Γs : Vec (V ℓ) k) (D : V ℓ) → Args gs Γs D → InJ D
+            → ElemRel a gs D
+            → ((D' : V ℓ) (gs' : Vec (V ℓ → V ℓ) (suc k))
+               (Γs' : Vec (V ℓ) (suc k))
+               → Args gs' Γs' D' → InJ D' → ElemRel g gs' D')
+            → ElemRel (imgC g a) gs D
+  elem-imgC {k} g a gs Γs D args hD (Ra , hRa , sa) IHg =
+    comp (lproj D' X) Γ' D Ww , (hR , spec)
+    where
+    Wt : V ℓ
+    Wt = F5 (vals Ra D) (vals Ra D)
+    hWt : InJ Wt
+    hWt = J-F5 (vals Ra D) (vals Ra D) hv hv
+      where
+      hv : InJ (vals Ra D)
+      hv = J-vals Ra D hRa hD
+    D' : V ℓ
+    D' = cap Ra (F2 D Wt)
+    hD' : InJ D'
+    hD' = J-cap Ra (F2 D Wt) hRa (J-F2 D Wt hD hWt)
+    X : V ℓ
+    X = cup D Wt
+    hX : InJ X
+    hX = J-cup D Wt hD hWt
+    D'-in : (d t : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ pr d t ∈ˢ Ra ⟩ → ⟨ pr d t ∈ˢ D' ⟩
+    D'-in d t d∈ h = cap-in Ra (F2 D Wt) (pr d t) h
+      (F2-write D Wt (pr d t)
+        ∣ d , t , (d∈ , vals-union Ra D d t d∈ h , refl) ∣₁)
+    D'-out : (e : V ℓ) → ⟨ e ∈ˢ D' ⟩
+           → ∥ Σ[ d ∈ V ℓ ] Σ[ t ∈ V ℓ ]
+                (⟨ d ∈ˢ D ⟩ × ⟨ t ∈ˢ Wt ⟩ × ⟨ pr d t ∈ˢ Ra ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+              ∥₁
+    D'-out e h = PT.rec squash₁ go (F2-read D Wt e (cap-outr Ra (F2 D Wt) e h))
+      where
+      go : Σ[ d ∈ V ℓ ] Σ[ t ∈ V ℓ ]
+             (⟨ d ∈ˢ D ⟩ × ⟨ t ∈ˢ Wt ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+         → ∥ Σ[ d ∈ V ℓ ] Σ[ t ∈ V ℓ ]
+              (⟨ d ∈ˢ D ⟩ × ⟨ t ∈ˢ Wt ⟩ × ⟨ pr d t ∈ˢ Ra ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+            ∥₁
+      go (d , t , d∈ , t∈ , e≡) = ∣ d , t
+        , ( d∈ , t∈
+          , subst (λ y → ⟨ y ∈ˢ Ra ⟩) e≡ (cap-outl Ra (F2 D Wt) e h)
+          , e≡ ) ∣₁
+    inX-l : (d t : V ℓ) → ⟨ d ∈ˢ D ⟩ → ⟨ d ∈ˢ X ⟩
+    inX-l d t d∈ = cup-in D Wt d ∣ inl d∈ ∣₁
+    inX-r : (t : V ℓ) → ⟨ t ∈ˢ Wt ⟩ → ⟨ t ∈ˢ X ⟩
+    inX-r t t∈ = cup-in D Wt t ∣ inr t∈ ∣₁
+    lin1 : (e : V ℓ) → ⟨ e ∈ˢ D' ⟩ → ⟨ pr (prL e) e ∈ˢ lpg D' X ⟩
+    lin1 e e∈ = PT.rec (snd (pr (prL e) e ∈ˢ lpg D' X)) go (D'-out e e∈)
+      where
+      go : Σ[ d ∈ V ℓ ] Σ[ t ∈ V ℓ ]
+             (⟨ d ∈ˢ D ⟩ × ⟨ t ∈ˢ Wt ⟩ × ⟨ pr d t ∈ˢ Ra ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+         → ⟨ pr (prL e) e ∈ˢ lpg D' X ⟩
+      go (d , t , d∈ , t∈ , dt∈ , e≡) =
+        subst (λ y → ⟨ pr (prL y) y ∈ˢ lpg D' X ⟩) (sym e≡)
+          (subst (λ y → ⟨ pr y (pr d t) ∈ˢ lpg D' X ⟩) (sym (prL-pair d t))
+            (lpg-in D' X d t (D'-in d t d∈ dt∈) (inX-l d t d∈) (inX-r t t∈)))
+
+    lin2 : (e : V ℓ) → ⟨ e ∈ˢ D' ⟩ → ⟨ prL e ∈ˢ D ⟩
+    lin2 e e∈ = PT.rec (snd (prL e ∈ˢ D)) go (D'-out e e∈)
+      where
+      go : Σ[ d ∈ V ℓ ] Σ[ t ∈ V ℓ ]
+             (⟨ d ∈ˢ D ⟩ × ⟨ t ∈ˢ Wt ⟩ × ⟨ pr d t ∈ˢ Ra ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+         → ⟨ prL e ∈ˢ D ⟩
+      go (d , t , d∈ , t∈ , dt∈ , e≡) = subst (λ y → ⟨ y ∈ˢ D ⟩)
+        (sym (cong prL e≡ ∙ prL-pair d t)) d∈
+
+    lin : (e : V ℓ) → ⟨ e ∈ˢ D' ⟩
+        → ⟨ pr (prL e) e ∈ˢ lpg D' X ⟩ × ⟨ prL e ∈ˢ D ⟩
+    lin e e∈ = lin1 e e∈ , lin2 e e∈
+    lout : (e u t : V ℓ) → ⟨ e ∈ˢ D' ⟩ → ⟨ pr u t ∈ˢ lpg D' X ⟩ → ⟨ t ≡ₕ e ⟩
+         → u ≡ prL e
+    lout e u t e∈ ut∈ t≡e = PT.rec (setIsSet u (prL e)) go (lpg-out D' X u t ut∈)
+      where
+      go : Σ[ s ∈ V ℓ ] (⟨ pr u s ∈ˢ D' ⟩ × ⟨ t ≡ₕ pr u s ⟩) → u ≡ prL e
+      go (s , us∈ , t≡) = sym (cong prL (sym t≡e ∙ t≡) ∙ prL-pair u s)
+    gs' : Vec (V ℓ → V ℓ) (suc k)
+    gs' = prR ∷ shiftAt gs
+    Γs' : Vec (V ℓ) (suc k)
+    Γs' = rproj D' X ∷ liftGraphs Γs (lpg D' X) D' D
+    args' : Args gs' Γs' D'
+    args' = ( J-rproj D' X hD' hX , rspec )
+          , liftArgs gs Γs D D' (lpg D' X) hD hD' (J-lpg D' X hD' hX) lin lout args
+      where
+      rspec : IsGraph prR (rproj D' X) D'
+      rspec e w e∈ = fwd , bwd
+        where
+        fwd : ⟨ pr e w ∈ˢ rproj D' X ⟩ → w ≡ prR e
+        fwd h = PT.rec (setIsSet w (prR e)) go (rproj-out D' X e w h)
+          where
+          go : Σ[ d ∈ V ℓ ] (⟨ pr d w ∈ˢ D' ⟩ × ⟨ e ≡ₕ pr d w ⟩) → w ≡ prR e
+          go (d , dw∈ , e≡) = sym (cong prR e≡ ∙ prR-pair d w)
+        bwd : w ≡ prR e → ⟨ pr e w ∈ˢ rproj D' X ⟩
+        bwd eq = PT.rec (snd (pr e w ∈ˢ rproj D' X)) go (D'-out e e∈)
+          where
+          go : Σ[ d ∈ V ℓ ] Σ[ t ∈ V ℓ ]
+                 (⟨ d ∈ˢ D ⟩ × ⟨ t ∈ˢ Wt ⟩ × ⟨ pr d t ∈ˢ Ra ⟩ × ⟨ e ≡ₕ pr d t ⟩)
+             → ⟨ pr e w ∈ˢ rproj D' X ⟩
+          go (d , t , d∈ , t∈ , dt∈ , e≡) =
+            subst (λ y → ⟨ pr y w ∈ˢ rproj D' X ⟩) (sym e≡)
+              (subst (λ y → ⟨ pr (pr d t) y ∈ˢ rproj D' X ⟩) (sym w≡t)
+                (rproj-in D' X d t (D'-in d t d∈ dt∈) (inX-l d t d∈) (inX-r t t∈)))
+            where
+            w≡t : w ≡ t
+            w≡t = eq ∙ cong prR e≡ ∙ prR-pair d t
+    EL' : ElemRel g gs' D'
+    EL' = IHg D' gs' Γs' args' hD'
+    GG : Σ[ Γ ∈ V ℓ ] (InJ Γ × IsGraph (λ e → evalC g (appAt gs' e)) Γ D')
+    GG = graphOf g gs' D' hD' EL'
+    Γ' : V ℓ
+    Γ' = GG .fst
+    Ww : V ℓ
+    Ww = F5 (vals Γ' D') (vals Γ' D')
+    hWw : InJ Ww
+    hWw = J-F5 (vals Γ' D') (vals Γ' D') hv hv
+      where
+      hv : InJ (vals Γ' D')
+      hv = J-vals Γ' D' (GG .snd .fst) hD'
+    hR : InJ (comp (lproj D' X) Γ' D Ww)
+    hR = J-comp (lproj D' X) Γ' D Ww (J-lproj D' X hD' hX) (GG .snd .fst) hD hWw
+    spec : IsElemRel (imgC g a) gs D (comp (lproj D' X) Γ' D Ww)
+    spec d w d∈ = fwd , bwd
+      where
+      Av : V ℓ
+      Av = evalC a (appAt gs d)
+      Goal : Type (ℓ-suc ℓ)
+      Goal = ⟨ w ∈ˢ evalC (imgC g a) (appAt gs d) ⟩
+      fwd : ⟨ pr d w ∈ˢ comp (lproj D' X) Γ' D Ww ⟩ → Goal
+      fwd h = PT.rec (snd (w ∈ˢ evalC (imgC g a) (appAt gs d))) outer
+        (comp-out (lproj D' X) Γ' D Ww (pr d w) h)
+        where
+        outer : Σ[ m ∈ V ℓ ] Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                  (⟨ pr m u ∈ˢ lproj D' X ⟩ × ⟨ pr m v ∈ˢ Γ' ⟩
+                   × ⟨ pr d w ≡ₕ pr u v ⟩)
+              → Goal
+        outer (m , u , v , mu∈ , mv∈ , eq) = PT.rec
+          (snd (w ∈ˢ evalC (imgC g a) (appAt gs d))) inner
+          (lproj-out D' X m u mu∈)
+          where
+          d≡u : d ≡ u
+          d≡u = pr-inj {a = d} {b = w} {c = u} {d = v} eq .fst
+          w≡v : w ≡ v
+          w≡v = pr-inj {a = d} {b = w} {c = u} {d = v} eq .snd
+          inner : Σ[ t ∈ V ℓ ] (⟨ pr u t ∈ˢ D' ⟩ × ⟨ m ≡ₕ pr u t ⟩) → Goal
+          inner (t , ut∈ , m≡) = ∣ fib .fst , path ∣₁
+            where
+            dt∈D' : ⟨ pr d t ∈ˢ D' ⟩
+            dt∈D' = subst (λ y → ⟨ pr y t ∈ˢ D' ⟩) (sym d≡u) ut∈
+            t∈A : ⟨ t ∈ˢ Av ⟩
+            t∈A = sa d t d∈ .fst (cap-outl Ra (F2 D Wt) (pr d t) dt∈D')
+            fib : Σ[ n ∈ ⟪ Av ⟫ ] (⟪ Av ⟫↪ n ≡ t)
+            fib = ∈-asFiber {a = t} {b = Av} t∈A
+            v≡ : v ≡ evalC g (t ∷ appAt gs d)
+            v≡ = GG .snd .snd m v (subst (λ y → ⟨ y ∈ˢ D' ⟩) (sym m≡) ut∈) .fst mv∈
+               ∙ cong (λ y → evalC g (appAt gs' y)) m≡
+               ∙ cong (evalC g) (appAt-pair gs u t)
+               ∙ cong (λ y → evalC g (t ∷ appAt gs y)) (sym d≡u)
+            path : evalC g (⟪ Av ⟫↪ (fib .fst) ∷ appAt gs d) ≡ w
+            path = cong (λ y → evalC g (y ∷ appAt gs d)) (fib .snd)
+                 ∙ sym v≡ ∙ sym w≡v
+      bwd : Goal → ⟨ pr d w ∈ˢ comp (lproj D' X) Γ' D Ww ⟩
+      bwd h = PT.rec (snd (pr d w ∈ˢ comp (lproj D' X) Γ' D Ww)) go h
+        where
+        go : Σ[ n ∈ ⟪ Av ⟫ ] (evalC g (⟪ Av ⟫↪ n ∷ appAt gs d) ≡ w)
+           → ⟨ pr d w ∈ˢ comp (lproj D' X) Γ' D Ww ⟩
+        go (n , path) = comp-in (lproj D' X) Γ' D Ww (pr d t) d w
+          (lproj-in D' X d t dt∈D' (inX-l d t d∈) (inX-r t t∈Wt))
+          inΓ' d∈ (vals-union Γ' D' (pr d t) w dt∈D' inΓ')
+          where
+          t : V ℓ
+          t = ⟪ Av ⟫↪ n
+          t∈A : ⟨ t ∈ˢ Av ⟩
+          t∈A = ∈S t Av (∈ₛ⟪ Av ⟫↪ n)
+          dt∈Ra : ⟨ pr d t ∈ˢ Ra ⟩
+          dt∈Ra = sa d t d∈ .snd t∈A
+          t∈Wt : ⟨ t ∈ˢ Wt ⟩
+          t∈Wt = vals-union Ra D d t d∈ dt∈Ra
+          dt∈D' : ⟨ pr d t ∈ˢ D' ⟩
+          dt∈D' = D'-in d t d∈ dt∈Ra
+          inΓ' : ⟨ pr (pr d t) w ∈ˢ Γ' ⟩
+          inΓ' = GG .snd .snd (pr d t) w dt∈D' .snd
+            (sym path ∙ sym (cong (evalC g) (appAt-pair gs d t)))
+```
+
+<!--en-->
+## The induction, and the discharge
+
+The ten clauses assemble into one structural recursion on the composite. Its
+instance at the one-slot stack is the image principle the switch chapter's
+closure side asks for: take the record set to be the set being ranged over
+itself, the identity graph for the separated variable, and a product for each
+witness-stack constant. With it the switch chapter's conditional module is
+instantiated with nothing left over, so the closure direction of the switch
+theorem is unconditional.
+<!--zh-->
+## 归纳与兑付
+
+十条子句合为复合上的一次结构递归。它在单槽栈处的实例正是切换章闭包一侧所要的像原理：取记录集为被遍历的那个集合自身、被分离变量取恒等图、见证栈的每个常量取一个积。有了它，切换章的条件模块被兑付得一无所剩，于是切换定理的闭包方向是无条件的。
+<!--/-->
+
+```agda
+  elemRel : {k : ℕ} (f : Comp k) (gs : Vec (V ℓ → V ℓ) k) (Γs : Vec (V ℓ) k)
+            (D : V ℓ) → ConIn InJ f → Args gs Γs D → InJ D → ElemRel f gs D
+  elemRel (conC x) gs Γs D hc args hD = elem-conC x gs D hc hD
+  elemRel (varC i) gs Γs D hc args hD = elem-varC i gs Γs D args hD
+  elemRel (interC a b) gs Γs D (ha , hb) args hD = elem-interC a b gs D
+    (elemRel a gs Γs D ha args hD) (elemRel b gs Γs D hb args hD)
+  elemRel (diffC a b) gs Γs D (ha , hb) args hD = elem-diffC a b gs D
+    (elemRel a gs Γs D ha args hD) (elemRel b gs Γs D hb args hD)
+  elemRel (unionC a) gs Γs D ha args hD = elem-unionC a gs D
+    (elemRel a gs Γs D ha args hD)
+  elemRel (pairC a b) gs Γs D (ha , hb) args hD = elem-pairC a b gs D hD
+    (elemRel a gs Γs D ha args hD) (elemRel b gs Γs D hb args hD)
+  elemRel (colC a b) gs Γs D (ha , hb) args hD = elem-colC a b gs D hD
+    (elemRel a gs Γs D ha args hD) (elemRel b gs Γs D hb args hD)
+  elemRel (chSepC a b c) gs Γs D (ha , hb , hc) args hD = elem-chSepC a b c gs D hD
+    (elemRel a gs Γs D ha args hD) (elemRel b gs Γs D hb args hD)
+    (elemRel c gs Γs D hc args hD)
+  elemRel (eqSepC a b c) gs Γs D (ha , hb , hc) args hD = elem-eqSepC a b c gs D hD
+    (elemRel a gs Γs D ha args hD) (elemRel b gs Γs D hb args hD)
+    (elemRel c gs Γs D hc args hD)
+  elemRel (imgC g a) gs Γs D (hg , ha) args hD = elem-imgC g a gs Γs D args hD
+    (elemRel a gs Γs D ha args hD)
+    (λ D' gs' Γs' args' hD' → elemRel g gs' Γs' D' hg args' hD')
+
+  constArgs : {k : ℕ} (vs : Vec (V ℓ) k) (p : V ℓ) → InJ p → AllIn InJ vs
+            → Args (constFams vs) (constGraphs p vs) p
+  constArgs [] p hp hvs = tt*
+  constArgs (v ∷ vs) p hp (hv , hvs) =
+    ( J-F2 p (F0 v v) hp (J-F0 v v hv hv) , spec ) , constArgs vs p hp hvs
+    where
+    spec : IsGraph (λ _ → v) (F2 p (F0 v v)) p
+    spec d w d∈ = fwd , bwd
+      where
+      fwd : ⟨ pr d w ∈ˢ F2 p (F0 v v) ⟩ → w ≡ v
+      fwd h = PT.rec (setIsSet w v) (Sum.rec (λ e → e) (λ e → e))
+        (F0-spec v v w .fst (constRel p (F0 v v) d w d∈ .fst h))
+      bwd : w ≡ v → ⟨ pr d w ∈ˢ F2 p (F0 v v) ⟩
+      bwd e = constRel p (F0 v v) d w d∈ .snd (F0-spec v v w .snd ∣ inl e ∣₁)
+
+  topArgs : {k : ℕ} (p : V ℓ) (vs : Vec (V ℓ) k) → InJ p → AllIn InJ vs
+          → Args ((λ y → y) ∷ constFams vs) (idG p ∷ constGraphs p vs) p
+  topArgs p vs hp hvs = ( J-idG p hp , idSpec ) , constArgs vs p hp hvs
+    where
+    idSpec : IsGraph (λ y → y) (idG p) p
+    idSpec d w d∈ = fwd , bwd
+      where
+      fwd : ⟨ pr d w ∈ˢ idG p ⟩ → w ≡ d
+      fwd h = PT.rec (setIsSet w d) go (idG-out p (pr d w) h)
+        where
+        go : Σ[ z ∈ V ℓ ] (⟨ z ∈ˢ p ⟩ × ⟨ pr d w ≡ₕ pr z z ⟩) → w ≡ d
+        go (z , _ , e) = pr-inj {a = d} {b = w} {c = z} {d = z} e .snd
+                       ∙ sym (pr-inj {a = d} {b = w} {c = z} {d = z} e .fst)
+      bwd : w ≡ d → ⟨ pr d w ∈ˢ idG p ⟩
+      bwd e = subst (λ y → ⟨ pr d y ∈ˢ idG p ⟩) (sym e) (idG-in p d d∈)
+
+  Jimg : {k : ℕ} (f : Comp (suc k)) (vs : Vec (V ℓ) k) (p : V ℓ)
+       → ConIn InJ f → AllIn InJ vs → InJ p → InJ (imgOpC f vs p)
+  Jimg f vs p hf hvs hp = subst InJ (sym eq) (J-F8 R p hR hp)
+    where
+    E : ElemRel f ((λ y → y) ∷ constFams vs) p
+    E = elemRel f ((λ y → y) ∷ constFams vs) (idG p ∷ constGraphs p vs) p hf
+          (topArgs p vs hp hvs) hp
+    R : V ℓ
+    R = E .fst
+    hR : InJ R
+    hR = E .snd .fst
+    ev : (y : V ℓ) → appAt ((λ y → y) ∷ constFams vs) y ≡ (y ∷ vs)
+    ev y = cong (y ∷_) (appAt-const vs y)
+    eq : imgOpC f vs p ≡ F8 R p
+    eq = img-of-rel R p (λ y → evalC f (y ∷ vs))
+      (λ y w y∈ h → subst (λ z → ⟨ w ∈ˢ evalC f z ⟩) (ev y)
+        (E .snd .snd y w y∈ .fst h))
+      (λ y w y∈ h → E .snd .snd y w y∈ .snd
+        (subst (λ z → ⟨ w ∈ˢ evalC f z ⟩) (sym (ev y)) h))
+
+  module Discharge where
+    open Eval-J Jimg public
 ```
