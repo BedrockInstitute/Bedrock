@@ -141,11 +141,12 @@ unfolding, so the recursion machinery is not dragged into later conversions.
 <!--/-->
 
 ```agda
+private
+  ix∈ : (α : S) (m : ⟪ α ⟫) → ⟪ α ⟫↪ m ∈ᵗ α
+  ix∈ α m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+
 Sset-step : (α : S) → (∀ β → β ∈ᵗ α → S) → S
-Sset-step α rec = ⋃ (sett ⟪ α ⟫ (λ m → step (rec (⟪ α ⟫↪ m) (mem m))))
-  where
-  mem : (m : ⟪ α ⟫) → ⟪ α ⟫↪ m ∈ᵗ α
-  mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+Sset-step α rec = ⋃ (sett ⟪ α ⟫ (λ m → step (rec (⟪ α ⟫↪ m) (ix∈ α m))))
 
 opaque
   Sset : S → S
@@ -177,10 +178,7 @@ Sset-level = ∈-induction lvlStep
   lvlStep : (α : S) → (∀ β → β ∈ᵗ α → isLevel (Sset β)) → isLevel (Sset α)
   lvlStep α IH = subst isLevel (sym (Sset-compute α))
     (setUnion-level ⟪ α ⟫ (Sset-stepFam α)
-      (λ m → step-level (IH (⟪ α ⟫↪ m) (mem m))))
-    where
-    mem : (m : ⟪ α ⟫) → ⟪ α ⟫↪ m ∈ᵗ α
-    mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+      (λ m → step-level (IH (⟪ α ⟫↪ m) (ix∈ α m))))
 
 Sset-trans : (α : S) → isTransV (Sset α)
 Sset-trans α = level-trans (Sset-level α)
@@ -211,12 +209,9 @@ Sset-in α δ x δ∈α x∈stepSδ =
         ∣ step (Sset δ) , (stepSδ∈ₛsett , x∈ₛstepSδ) ∣₁))
   where
   fib = ∈-asFiber {a = δ} {b = α} δ∈α
-  m = fib .fst
-  p : ⟪ α ⟫↪ m ≡ δ
-  p = fib .snd
   stepSδ∈ₛsett : ⟨ step (Sset δ) ∈ₛ sett ⟪ α ⟫ (Sset-stepFam α) ⟩
   stepSδ∈ₛsett = ∈∈ₛ {a = step (Sset δ)} {b = sett ⟪ α ⟫ (Sset-stepFam α)} .fst
-    ∣ m , cong (λ b → step (Sset b)) p ∣₁
+    ∣ fib .fst , cong (λ b → step (Sset b)) (fib .snd) ∣₁
   x∈ₛstepSδ : ⟨ x ∈ₛ step (Sset δ) ⟩
   x∈ₛstepSδ = ∈∈ₛ {a = x} {b = step (Sset δ)} .fst x∈stepSδ
 
@@ -229,14 +224,13 @@ Sset-out α x x∈Sα = PT.rec squash₁ uStep
   where
   G : Type (ℓ-suc ℓ)
   G = Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩)
-  atFib : (v : S) → ⟨ x ∈ₛ v ⟩ → (m : ⟪ α ⟫) → Sset-stepFam α m ≡ v → G
-  atFib v x∈ₛv m sm≡v = ⟪ α ⟫↪ m
-    , ( ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+  atFib : (v : S) → ⟨ x ∈ₛ v ⟩ → Σ[ m ∈ ⟪ α ⟫ ] (Sset-stepFam α m ≡ v) → G
+  atFib v x∈ₛv (m , sm≡v) = ⟪ α ⟫↪ m
+    , ( ix∈ α m
       , ∈∈ₛ {a = x} {b = Sset-stepFam α m} .snd
           (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym sm≡v) x∈ₛv) )
   uStep : Σ[ v ∈ S ] (⟨ v ∈ₛ sett ⟪ α ⟫ (Sset-stepFam α) ⟩ × ⟨ x ∈ₛ v ⟩) → ∥ G ∥₁
-  uStep (v , v∈ₛsett , x∈ₛv) = PT.map
-    (λ { (m , sm≡v) → atFib v x∈ₛv m sm≡v })
+  uStep (v , v∈ₛsett , x∈ₛv) = PT.map (atFib v x∈ₛv)
     (∈∈ₛ {a = v} {b = sett ⟪ α ⟫ (Sset-stepFam α)} .snd v∈ₛsett)
 ```
 
@@ -379,12 +373,10 @@ Sset-limit α lim = ext-⊆ S⊆levels levels⊆S
       (∈∈ₛ {a = v} {b = sett ⟪ α ⟫ (Sset-levelFam α)} .snd v∈ₛsett)
       where
       atFib : Σ[ m ∈ ⟪ α ⟫ ] (Sset-levelFam α m ≡ v) → ⟨ x ∈ˢ Sset α ⟩
-      atFib (m , sm≡v) =
-        Sset-in α (⟪ α ⟫↪ m) x
-          (∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m))
-          (step-⊆ (Sset (⟪ α ⟫↪ m)) x
-            (∈∈ₛ {a = x} {b = Sset (⟪ α ⟫↪ m)} .snd
-              (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym sm≡v) x∈ₛv)))
+      atFib (m , sm≡v) = Sset-in α (⟪ α ⟫↪ m) x (ix∈ α m)
+        (step-⊆ (Sset (⟪ α ⟫↪ m)) x
+          (∈∈ₛ {a = x} {b = Sset (⟪ α ⟫↪ m)} .snd
+            (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym sm≡v) x∈ₛv)))
   S⊆levels : Sset α ⊆ U
   S⊆levels x x∈Sα = PT.rec (snd (x ∈ˢ U)) uStep (Sset-out α x x∈Sα)
     where
@@ -400,11 +392,9 @@ Sset-limit α lim = ext-⊆ S⊆levels levels⊆S
           ∣ Sset (sucV δ) , (memₛ , x∈ₛSδ') ∣₁)
         where
         fib = ∈-asFiber {a = sucV δ} {b = α} sucδ∈α
-        p : ⟪ α ⟫↪ (fib .fst) ≡ sucV δ
-        p = fib .snd
         memₛ : ⟨ Sset (sucV δ) ∈ₛ sett ⟪ α ⟫ (Sset-levelFam α) ⟩
         memₛ = ∈∈ₛ {a = Sset (sucV δ)} {b = sett ⟪ α ⟫ (Sset-levelFam α)} .fst
-          ∣ fib .fst , cong Sset p ∣₁
+          ∣ fib .fst , cong Sset (fib .snd) ∣₁
         x∈ₛSδ' : ⟨ x ∈ₛ Sset (sucV δ) ⟩
         x∈ₛSδ' = ∈∈ₛ {a = x} {b = Sset (sucV δ)} .fst x∈Sδ'
 ```

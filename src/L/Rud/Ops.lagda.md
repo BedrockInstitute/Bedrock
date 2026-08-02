@@ -70,6 +70,13 @@ SZ 基全长十六项，F0 至 F15；主干把清单拆给平行模块，本章�
 
 ```agda
 private
+  -- the index of a member, together with the path back to it
+  Fibre : (b a : V ℓ) → Type (ℓ-suc ℓ)
+  Fibre b a = Σ[ m ∈ ⟪ b ⟫ ] (⟪ b ⟫↪ m ≡ a)
+
+  fibre : (b a : V ℓ) → ⟨ a ∈ˢ b ⟩ → Fibre b a
+  fibre b a = ∈-asFiber {a = a} {b = b}
+
   -- the unordered pair {u,v} is the second member of the Kuratowski pair pr u v
   u-v∈pr : (u v : V ℓ) → ⟨ ⁅ u , v ⁆ ∈ₛ pr u v ⟩
   u-v∈pr u v = ∈∈ₛ {a = ⁅ u , v ⁆} {b = pr u v} .fst
@@ -93,6 +100,12 @@ private
   -- the right component likewise
   prR-in-⋃⋃ : (y u v : V ℓ) → ⟨ pr u v ∈ˢ y ⟩ → ⟨ v ∈ˢ (⋃ (⋃ y)) ⟩
   prR-in-⋃⋃ y u v h = pair-member-in-⋃⋃ y v u v h ∣ lift true , refl ∣₁
+
+  -- F3, F4 and F6's index condition, pulled back along the two fibre paths
+  prCond : {u₀ v₀ : V ℓ} (y u v : V ℓ) → u₀ ≡ u → v₀ ≡ v
+         → ⟨ pr u v ∈ˢ y ⟩ → ⟨ pr u₀ v₀ ∈ₛ y ⟩
+  prCond y u v qu qv h = subst (λ w → ⟨ w ∈ₛ y ⟩) (cong₂ pr (sym qu) (sym qv))
+    (∈∈ₛ {a = pr u v} {b = y} .fst h)
 ```
 
 <!--en-->
@@ -158,28 +171,21 @@ opaque
       go : Σ[ p ∈ Σ[ m ∈ ⟪ a ⟫ ] ⟨ Logic.¬_ (⟪ a ⟫↪ m ∈ₛ b) ⟩ ]
              (⟪ a ⟫↪ (p .fst) ≡ x)
          → ⟨ (x ∈ˢ a) ⊓ (¬ (x ∈ˢ b)) ⟩
-      go (p , q) = x∈a , x∉b
+      go ((m , h¬) , q) = x∈a , x∉b
         where
-        m : ⟪ a ⟫
-        m = p .fst
-        h¬ : ⟨ Logic.¬_ (⟪ a ⟫↪ m ∈ₛ b) ⟩
-        h¬ = p .snd
         x∈a : ⟨ x ∈ˢ a ⟩
         x∈a = subst (λ t → ⟨ t ∈ˢ a ⟩) q
               (∈∈ₛ {a = ⟪ a ⟫↪ m} {b = a} .snd (∈ₛ⟪ a ⟫↪ m))
         x∉b : ⟨ ¬ (x ∈ˢ b) ⟩
         x∉b k = h¬ (subst (λ t → ⟨ t ∈ₛ b ⟩) (sym q) (∈∈ₛ {a = x} {b = b} .fst k))
     bwd : ⟨ (x ∈ˢ a) ⊓ (¬ (x ∈ˢ b)) ⟩ → ⟨ x ∈ˢ F1 a b ⟩
-    bwd (x∈a , x∉b) = ∣ ((m , h¬) , q) ∣₁
+    bwd (x∈a , x∉b) = ∣ ((fx .fst , h¬) , fx .snd) ∣₁
       where
-      fx : Σ[ m ∈ ⟪ a ⟫ ] (⟪ a ⟫↪ m ≡ x)
-      fx = ∈-asFiber {a = x} {b = a} x∈a
-      m : ⟪ a ⟫
-      m = fx .fst
-      q : ⟪ a ⟫↪ m ≡ x
-      q = fx .snd
-      h¬ : ⟨ Logic.¬_ (⟪ a ⟫↪ m ∈ₛ b) ⟩
-      h¬ k = x∉b (subst (λ t → ⟨ t ∈ˢ b ⟩) q (∈∈ₛ {a = ⟪ a ⟫↪ m} {b = b} .snd k))
+      fx : Fibre a x
+      fx = fibre a x x∈a
+      h¬ : ⟨ Logic.¬_ (⟪ a ⟫↪ (fx .fst) ∈ₛ b) ⟩
+      h¬ k = x∉b (subst (λ t → ⟨ t ∈ˢ b ⟩) (fx .snd)
+                    (∈∈ₛ {a = ⟪ a ⟫↪ (fx .fst)} {b = b} .snd k))
 ```
 
 <!--en-->
@@ -220,35 +226,29 @@ opaque
       where
       go : Σ[ p ∈ ⟪ x ⟫ × ⟪ y ⟫ ] (pr (⟪ x ⟫↪ (p .fst)) (⟪ y ⟫↪ (p .snd)) ≡ t)
          → ⟨ RHS ⟩
-      go (p , q) = ∣ u , (∣ v , (u∈x , v∈y , t≡) ∣₁) ∣₁
+      go ((mᵤ , mᵥ) , q) = ∣ u , (∣ v , (u∈x , v∈y , sym q) ∣₁) ∣₁
         where
         u : V ℓ
-        u = ⟪ x ⟫↪ (p .fst)
+        u = ⟪ x ⟫↪ mᵤ
         v : V ℓ
-        v = ⟪ y ⟫↪ (p .snd)
+        v = ⟪ y ⟫↪ mᵥ
         u∈x : ⟨ u ∈ˢ x ⟩
-        u∈x = ∈∈ₛ {a = u} {b = x} .snd (∈ₛ⟪ x ⟫↪ (p .fst))
+        u∈x = ∈∈ₛ {a = u} {b = x} .snd (∈ₛ⟪ x ⟫↪ mᵤ)
         v∈y : ⟨ v ∈ˢ y ⟩
-        v∈y = ∈∈ₛ {a = v} {b = y} .snd (∈ₛ⟪ y ⟫↪ (p .snd))
-        t≡ : ⟨ t ≡ₕ pr u v ⟩
-        t≡ = subst (λ w → ⟨ t ≡ₕ w ⟩) (sym q) refl
+        v∈y = ∈∈ₛ {a = v} {b = y} .snd (∈ₛ⟪ y ⟫↪ mᵥ)
     bwd : ⟨ RHS ⟩ → ⟨ t ∈ˢ F2 x y ⟩
     bwd = PT.rec (snd (t ∈ F2 x y)) go₀
       where
       go₁ : (u : V ℓ) → Σ[ v ∈ V ℓ ] ⟨ (u ∈ˢ x) ⊓ (v ∈ˢ y) ⊓ (t ≡ₕ pr u v) ⟩
           → ⟨ t ∈ F2 x y ⟩
-      go₁ u (v , (u∈x , v∈y , t≡)) = ∣ ((m , n) , path) ∣₁
+      go₁ u (v , (u∈x , v∈y , t≡)) = ∣ ((fu .fst , fv .fst) , path) ∣₁
         where
-        m : ⟪ x ⟫
-        m = ∈-asFiber {a = u} {b = x} u∈x .fst
-        qu : ⟪ x ⟫↪ m ≡ u
-        qu = ∈-asFiber {a = u} {b = x} u∈x .snd
-        n : ⟪ y ⟫
-        n = ∈-asFiber {a = v} {b = y} v∈y .fst
-        qv : ⟪ y ⟫↪ n ≡ v
-        qv = ∈-asFiber {a = v} {b = y} v∈y .snd
-        path : pr (⟪ x ⟫↪ m) (⟪ y ⟫↪ n) ≡ t
-        path = cong₂ pr qu qv ∙ sym t≡
+        fu : Fibre x u
+        fu = fibre x u u∈x
+        fv : Fibre y v
+        fv = fibre y v v∈y
+        path : pr (⟪ x ⟫↪ (fu .fst)) (⟪ y ⟫↪ (fv .fst)) ≡ t
+        path = cong₂ pr (fu .snd) (fv .snd) ∙ sym t≡
       go₀ : Σ[ u ∈ V ℓ ] ⟨ ⋁ (V ℓ) (λ v → (u ∈ˢ x) ⊓ (v ∈ˢ y) ⊓ (t ≡ₕ pr u v)) ⟩
           → ⟨ t ∈ F2 x y ⟩
       go₀ (u , h₁) = PT.rec (snd (t ∈ F2 x y)) (go₁ u) h₁
@@ -303,46 +303,38 @@ opaque
                  (pr (⟪ x ⟫↪ (p .snd .fst))
                      (⟪ ⋃ (⋃ y) ⟫↪ (p .snd .snd .fst))) ≡ t)
          → ⟨ RHS ⟩
-      go (p , q) = ∣ u , (∣ z , (∣ v , (z∈x , pr-uv∈y , t≡) ∣₁) ∣₁) ∣₁
+      go ((mᵤ , mz , mᵥ , cond) , q) = ∣ u , (∣ z , (∣ v , (z∈x , pr-uv∈y , sym q) ∣₁) ∣₁) ∣₁
         where
         u : V ℓ
-        u = ⟪ ⋃ (⋃ y) ⟫↪ (p .fst)
+        u = ⟪ ⋃ (⋃ y) ⟫↪ mᵤ
         z : V ℓ
-        z = ⟪ x ⟫↪ (p .snd .fst)
+        z = ⟪ x ⟫↪ mz
         v : V ℓ
-        v = ⟪ ⋃ (⋃ y) ⟫↪ (p .snd .snd .fst)
+        v = ⟪ ⋃ (⋃ y) ⟫↪ mᵥ
         z∈x : ⟨ z ∈ˢ x ⟩
-        z∈x = ∈∈ₛ {a = z} {b = x} .snd (∈ₛ⟪ x ⟫↪ (p .snd .fst))
+        z∈x = ∈∈ₛ {a = z} {b = x} .snd (∈ₛ⟪ x ⟫↪ mz)
         pr-uv∈y : ⟨ pr u v ∈ˢ y ⟩
-        pr-uv∈y = ∈∈ₛ {a = pr u v} {b = y} .snd (p .snd .snd .snd)
-        t≡ : ⟨ t ≡ₕ pr u (pr z v) ⟩
-        t≡ = subst (λ w → ⟨ t ≡ₕ w ⟩) (sym q) refl
+        pr-uv∈y = ∈∈ₛ {a = pr u v} {b = y} .snd cond
     bwd : ⟨ RHS ⟩ → ⟨ t ∈ˢ F3 x y ⟩
     bwd = PT.rec (snd (t ∈ F3 x y)) go₀
       where
       go₂ : (u z : V ℓ) → Σ[ v ∈ V ℓ ]
               ⟨ (z ∈ˢ x) ⊓ (pr u v ∈ˢ y) ⊓ (t ≡ₕ pr u (pr z v)) ⟩
           → ⟨ t ∈ F3 x y ⟩
-      go₂ u z (v , (z∈x , pruv∈y , t≡)) = ∣ ((mᵤ , (m_z , (mᵥ , cond))) , path) ∣₁
+      go₂ u z (v , (z∈x , pruv∈y , t≡)) =
+        ∣ ((fu .fst , (fz .fst , (fv .fst , cond))) , path) ∣₁
         where
-        mᵤ : ⟪ ⋃ (⋃ y) ⟫
-        mᵤ = ∈-asFiber {a = u} {b = ⋃ (⋃ y)} (prL-in-⋃⋃ y u v pruv∈y) .fst
-        qu : ⟪ ⋃ (⋃ y) ⟫↪ mᵤ ≡ u
-        qu = ∈-asFiber {a = u} {b = ⋃ (⋃ y)} (prL-in-⋃⋃ y u v pruv∈y) .snd
-        mᵥ : ⟪ ⋃ (⋃ y) ⟫
-        mᵥ = ∈-asFiber {a = v} {b = ⋃ (⋃ y)} (prR-in-⋃⋃ y u v pruv∈y) .fst
-        qv : ⟪ ⋃ (⋃ y) ⟫↪ mᵥ ≡ v
-        qv = ∈-asFiber {a = v} {b = ⋃ (⋃ y)} (prR-in-⋃⋃ y u v pruv∈y) .snd
-        m_z : ⟪ x ⟫
-        m_z = ∈-asFiber {a = z} {b = x} z∈x .fst
-        qz : ⟪ x ⟫↪ m_z ≡ z
-        qz = ∈-asFiber {a = z} {b = x} z∈x .snd
-        cond : ⟨ pr (⟪ ⋃ (⋃ y) ⟫↪ mᵤ) (⟪ ⋃ (⋃ y) ⟫↪ mᵥ) ∈ₛ y ⟩
-        cond = subst (λ w → ⟨ w ∈ₛ y ⟩) (cong₂ pr (sym qu) (sym qv))
-                 (∈∈ₛ {a = pr u v} {b = y} .fst pruv∈y)
-        path : pr (⟪ ⋃ (⋃ y) ⟫↪ mᵤ)
-                 (pr (⟪ x ⟫↪ m_z) (⟪ ⋃ (⋃ y) ⟫↪ mᵥ)) ≡ t
-        path = cong₂ pr qu (cong₂ pr qz qv) ∙ sym t≡
+        fu : Fibre (⋃ (⋃ y)) u
+        fu = fibre (⋃ (⋃ y)) u (prL-in-⋃⋃ y u v pruv∈y)
+        fv : Fibre (⋃ (⋃ y)) v
+        fv = fibre (⋃ (⋃ y)) v (prR-in-⋃⋃ y u v pruv∈y)
+        fz : Fibre x z
+        fz = fibre x z z∈x
+        cond : ⟨ pr (⟪ ⋃ (⋃ y) ⟫↪ (fu .fst)) (⟪ ⋃ (⋃ y) ⟫↪ (fv .fst)) ∈ₛ y ⟩
+        cond = prCond y u v (fu .snd) (fv .snd) pruv∈y
+        path : pr (⟪ ⋃ (⋃ y) ⟫↪ (fu .fst))
+                 (pr (⟪ x ⟫↪ (fz .fst)) (⟪ ⋃ (⋃ y) ⟫↪ (fv .fst))) ≡ t
+        path = cong₂ pr (fu .snd) (cong₂ pr (fz .snd) (fv .snd)) ∙ sym t≡
       go₁ : (u : V ℓ) → Σ[ z ∈ V ℓ ] ⟨ ⋁ (V ℓ) (λ v →
               (z ∈ˢ x) ⊓ (pr u v ∈ˢ y) ⊓ (t ≡ₕ pr u (pr z v))) ⟩
           → ⟨ t ∈ F3 x y ⟩
@@ -400,46 +392,38 @@ opaque
                  (pr (⟪ ⋃ (⋃ y) ⟫↪ (p .snd .fst))
                      (⟪ x ⟫↪ (p .snd .snd .fst))) ≡ t)
          → ⟨ RHS ⟩
-      go (p , q) = ∣ u , (∣ v , (∣ z , (z∈x , pr-uv∈y , t≡) ∣₁) ∣₁) ∣₁
+      go ((mᵤ , mᵥ , mz , cond) , q) = ∣ u , (∣ v , (∣ z , (z∈x , pr-uv∈y , sym q) ∣₁) ∣₁) ∣₁
         where
         u : V ℓ
-        u = ⟪ ⋃ (⋃ y) ⟫↪ (p .fst)
+        u = ⟪ ⋃ (⋃ y) ⟫↪ mᵤ
         v : V ℓ
-        v = ⟪ ⋃ (⋃ y) ⟫↪ (p .snd .fst)
+        v = ⟪ ⋃ (⋃ y) ⟫↪ mᵥ
         z : V ℓ
-        z = ⟪ x ⟫↪ (p .snd .snd .fst)
+        z = ⟪ x ⟫↪ mz
         z∈x : ⟨ z ∈ˢ x ⟩
-        z∈x = ∈∈ₛ {a = z} {b = x} .snd (∈ₛ⟪ x ⟫↪ (p .snd .snd .fst))
+        z∈x = ∈∈ₛ {a = z} {b = x} .snd (∈ₛ⟪ x ⟫↪ mz)
         pr-uv∈y : ⟨ pr u v ∈ˢ y ⟩
-        pr-uv∈y = ∈∈ₛ {a = pr u v} {b = y} .snd (p .snd .snd .snd)
-        t≡ : ⟨ t ≡ₕ pr u (pr v z) ⟩
-        t≡ = subst (λ w → ⟨ t ≡ₕ w ⟩) (sym q) refl
+        pr-uv∈y = ∈∈ₛ {a = pr u v} {b = y} .snd cond
     bwd : ⟨ RHS ⟩ → ⟨ t ∈ˢ F4 x y ⟩
     bwd = PT.rec (snd (t ∈ F4 x y)) go₀
       where
       go₂ : (u v : V ℓ) → Σ[ z ∈ V ℓ ]
               ⟨ (z ∈ˢ x) ⊓ (pr u v ∈ˢ y) ⊓ (t ≡ₕ pr u (pr v z)) ⟩
           → ⟨ t ∈ F4 x y ⟩
-      go₂ u v (z , (z∈x , pruv∈y , t≡)) = ∣ ((mᵤ , (mᵥ , (m_z , cond))) , path) ∣₁
+      go₂ u v (z , (z∈x , pruv∈y , t≡)) =
+        ∣ ((fu .fst , (fv .fst , (fz .fst , cond))) , path) ∣₁
         where
-        mᵤ : ⟪ ⋃ (⋃ y) ⟫
-        mᵤ = ∈-asFiber {a = u} {b = ⋃ (⋃ y)} (prL-in-⋃⋃ y u v pruv∈y) .fst
-        qu : ⟪ ⋃ (⋃ y) ⟫↪ mᵤ ≡ u
-        qu = ∈-asFiber {a = u} {b = ⋃ (⋃ y)} (prL-in-⋃⋃ y u v pruv∈y) .snd
-        mᵥ : ⟪ ⋃ (⋃ y) ⟫
-        mᵥ = ∈-asFiber {a = v} {b = ⋃ (⋃ y)} (prR-in-⋃⋃ y u v pruv∈y) .fst
-        qv : ⟪ ⋃ (⋃ y) ⟫↪ mᵥ ≡ v
-        qv = ∈-asFiber {a = v} {b = ⋃ (⋃ y)} (prR-in-⋃⋃ y u v pruv∈y) .snd
-        m_z : ⟪ x ⟫
-        m_z = ∈-asFiber {a = z} {b = x} z∈x .fst
-        qz : ⟪ x ⟫↪ m_z ≡ z
-        qz = ∈-asFiber {a = z} {b = x} z∈x .snd
-        cond : ⟨ pr (⟪ ⋃ (⋃ y) ⟫↪ mᵤ) (⟪ ⋃ (⋃ y) ⟫↪ mᵥ) ∈ₛ y ⟩
-        cond = subst (λ w → ⟨ w ∈ₛ y ⟩) (cong₂ pr (sym qu) (sym qv))
-                 (∈∈ₛ {a = pr u v} {b = y} .fst pruv∈y)
-        path : pr (⟪ ⋃ (⋃ y) ⟫↪ mᵤ)
-                 (pr (⟪ ⋃ (⋃ y) ⟫↪ mᵥ) (⟪ x ⟫↪ m_z)) ≡ t
-        path = cong₂ pr qu (cong₂ pr qv qz) ∙ sym t≡
+        fu : Fibre (⋃ (⋃ y)) u
+        fu = fibre (⋃ (⋃ y)) u (prL-in-⋃⋃ y u v pruv∈y)
+        fv : Fibre (⋃ (⋃ y)) v
+        fv = fibre (⋃ (⋃ y)) v (prR-in-⋃⋃ y u v pruv∈y)
+        fz : Fibre x z
+        fz = fibre x z z∈x
+        cond : ⟨ pr (⟪ ⋃ (⋃ y) ⟫↪ (fu .fst)) (⟪ ⋃ (⋃ y) ⟫↪ (fv .fst)) ∈ₛ y ⟩
+        cond = prCond y u v (fu .snd) (fv .snd) pruv∈y
+        path : pr (⟪ ⋃ (⋃ y) ⟫↪ (fu .fst))
+                 (pr (⟪ ⋃ (⋃ y) ⟫↪ (fv .fst)) (⟪ x ⟫↪ (fz .fst))) ≡ t
+        path = cong₂ pr (fu .snd) (cong₂ pr (fv .snd) (fz .snd)) ∙ sym t≡
       go₁ : (u : V ℓ) → Σ[ v ∈ V ℓ ] ⟨ ⋁ (V ℓ) (λ z →
               (z ∈ˢ x) ⊓ (pr u v ∈ˢ y) ⊓ (t ≡ₕ pr u (pr v z))) ⟩
           → ⟨ t ∈ F4 x y ⟩
@@ -536,36 +520,29 @@ opaque
               ⟨ pr (⟪ ⋃ (⋃ x) ⟫↪ u) (⟪ ⋃ (⋃ x) ⟫↪ v) ∈ₛ x ⟩ ]
              (⟪ ⋃ (⋃ x) ⟫↪ (p .fst) ≡ t)
          → ⟨ RHS ⟩
-      go (p , q) = ∣ u , (∣ v , (pr-uv∈x , t≡) ∣₁) ∣₁
+      go ((mᵤ , mᵥ , cond) , q) = ∣ u , (∣ v , (pr-uv∈x , sym q) ∣₁) ∣₁
         where
         u : V ℓ
-        u = ⟪ ⋃ (⋃ x) ⟫↪ (p .fst)
+        u = ⟪ ⋃ (⋃ x) ⟫↪ mᵤ
         v : V ℓ
-        v = ⟪ ⋃ (⋃ x) ⟫↪ (p .snd .fst)
+        v = ⟪ ⋃ (⋃ x) ⟫↪ mᵥ
         pr-uv∈x : ⟨ pr u v ∈ˢ x ⟩
-        pr-uv∈x = ∈∈ₛ {a = pr u v} {b = x} .snd (p .snd .snd)
-        t≡ : ⟨ t ≡ₕ u ⟩
-        t≡ = subst (λ w → ⟨ t ≡ₕ w ⟩) (sym q) refl
+        pr-uv∈x = ∈∈ₛ {a = pr u v} {b = x} .snd cond
     bwd : ⟨ RHS ⟩ → ⟨ t ∈ˢ F6 x y ⟩
     bwd = PT.rec (snd (t ∈ F6 x y)) go₀
       where
       go₁ : (u : V ℓ) → Σ[ v ∈ V ℓ ] ⟨ (pr u v ∈ˢ x) ⊓ (t ≡ₕ u) ⟩
           → ⟨ t ∈ F6 x y ⟩
-      go₁ u (v , (pruv∈x , t≡)) = ∣ ((mᵤ , (mᵥ , cond)) , path) ∣₁
+      go₁ u (v , (pruv∈x , t≡)) = ∣ ((fu .fst , (fv .fst , cond)) , path) ∣₁
         where
-        mᵤ : ⟪ ⋃ (⋃ x) ⟫
-        mᵤ = ∈-asFiber {a = u} {b = ⋃ (⋃ x)} (prL-in-⋃⋃ x u v pruv∈x) .fst
-        qu : ⟪ ⋃ (⋃ x) ⟫↪ mᵤ ≡ u
-        qu = ∈-asFiber {a = u} {b = ⋃ (⋃ x)} (prL-in-⋃⋃ x u v pruv∈x) .snd
-        mᵥ : ⟪ ⋃ (⋃ x) ⟫
-        mᵥ = ∈-asFiber {a = v} {b = ⋃ (⋃ x)} (prR-in-⋃⋃ x u v pruv∈x) .fst
-        qv : ⟪ ⋃ (⋃ x) ⟫↪ mᵥ ≡ v
-        qv = ∈-asFiber {a = v} {b = ⋃ (⋃ x)} (prR-in-⋃⋃ x u v pruv∈x) .snd
-        cond : ⟨ pr (⟪ ⋃ (⋃ x) ⟫↪ mᵤ) (⟪ ⋃ (⋃ x) ⟫↪ mᵥ) ∈ₛ x ⟩
-        cond = subst (λ w → ⟨ w ∈ₛ x ⟩) (cong₂ pr (sym qu) (sym qv))
-                 (∈∈ₛ {a = pr u v} {b = x} .fst pruv∈x)
-        path : ⟪ ⋃ (⋃ x) ⟫↪ mᵤ ≡ t
-        path = qu ∙ sym t≡
+        fu : Fibre (⋃ (⋃ x)) u
+        fu = fibre (⋃ (⋃ x)) u (prL-in-⋃⋃ x u v pruv∈x)
+        fv : Fibre (⋃ (⋃ x)) v
+        fv = fibre (⋃ (⋃ x)) v (prR-in-⋃⋃ x u v pruv∈x)
+        cond : ⟨ pr (⟪ ⋃ (⋃ x) ⟫↪ (fu .fst)) (⟪ ⋃ (⋃ x) ⟫↪ (fv .fst)) ∈ₛ x ⟩
+        cond = prCond x u v (fu .snd) (fv .snd) pruv∈x
+        path : ⟪ ⋃ (⋃ x) ⟫↪ (fu .fst) ≡ t
+        path = fu .snd ∙ sym t≡
       go₀ : Σ[ u ∈ V ℓ ] ⟨ ⋁ (V ℓ) (λ v → (pr u v ∈ˢ x) ⊓ (t ≡ₕ u)) ⟩
           → ⟨ t ∈ F6 x y ⟩
       go₀ (u , h₁) = PT.rec (snd (t ∈ F6 x y)) (go₁ u) h₁
@@ -615,41 +592,36 @@ opaque
               ⟨ ⟪ x ⟫↪ (q .fst) ∈ₛ ⟪ x ⟫↪ (q .snd) ⟩ ]
              (pr (⟪ x ⟫↪ (p .fst .fst)) (⟪ x ⟫↪ (p .fst .snd)) ≡ t)
          → ⟨ RHS ⟩
-      go (p , q) = ∣ u , (∣ v , (u∈x , v∈x , u∈v , t≡) ∣₁) ∣₁
+      go (((mᵤ , mᵥ) , cond) , q) = ∣ u , (∣ v , (u∈x , v∈x , u∈v , sym q) ∣₁) ∣₁
         where
         u : V ℓ
-        u = ⟪ x ⟫↪ (p .fst .fst)
+        u = ⟪ x ⟫↪ mᵤ
         v : V ℓ
-        v = ⟪ x ⟫↪ (p .fst .snd)
+        v = ⟪ x ⟫↪ mᵥ
         u∈x : ⟨ u ∈ˢ x ⟩
-        u∈x = ∈∈ₛ {a = u} {b = x} .snd (∈ₛ⟪ x ⟫↪ (p .fst .fst))
+        u∈x = ∈∈ₛ {a = u} {b = x} .snd (∈ₛ⟪ x ⟫↪ mᵤ)
         v∈x : ⟨ v ∈ˢ x ⟩
-        v∈x = ∈∈ₛ {a = v} {b = x} .snd (∈ₛ⟪ x ⟫↪ (p .fst .snd))
+        v∈x = ∈∈ₛ {a = v} {b = x} .snd (∈ₛ⟪ x ⟫↪ mᵥ)
         u∈v : ⟨ u ∈ˢ v ⟩
-        u∈v = ∈∈ₛ {a = u} {b = v} .snd (p .snd)
-        t≡ : ⟨ t ≡ₕ pr u v ⟩
-        t≡ = subst (λ w → ⟨ t ≡ₕ w ⟩) (sym q) refl
+        u∈v = ∈∈ₛ {a = u} {b = v} .snd cond
     bwd : ⟨ RHS ⟩ → ⟨ t ∈ˢ F7 x y ⟩
     bwd = PT.rec (snd (t ∈ F7 x y)) go₀
       where
       go₁ : (u : V ℓ) → Σ[ v ∈ V ℓ ]
               ⟨ (u ∈ˢ x) ⊓ (v ∈ˢ x) ⊓ (u ∈ˢ v) ⊓ (t ≡ₕ pr u v) ⟩
           → ⟨ t ∈ F7 x y ⟩
-      go₁ u (v , (u∈x , v∈x , u∈v , t≡)) = ∣ (((m , n) , cond) , path) ∣₁
+      go₁ u (v , (u∈x , v∈x , u∈v , t≡)) = ∣ (((fu .fst , fv .fst) , cond) , path) ∣₁
         where
-        m : ⟪ x ⟫
-        m = ∈-asFiber {a = u} {b = x} u∈x .fst
-        qu : ⟪ x ⟫↪ m ≡ u
-        qu = ∈-asFiber {a = u} {b = x} u∈x .snd
-        n : ⟪ x ⟫
-        n = ∈-asFiber {a = v} {b = x} v∈x .fst
-        qv : ⟪ x ⟫↪ n ≡ v
-        qv = ∈-asFiber {a = v} {b = x} v∈x .snd
-        cond : ⟨ ⟪ x ⟫↪ m ∈ₛ ⟪ x ⟫↪ n ⟩
-        cond = subst (λ w → ⟨ w ∈ₛ ⟪ x ⟫↪ n ⟩) (sym qu)
-                 (subst (λ w → ⟨ u ∈ₛ w ⟩) (sym qv) (∈∈ₛ {a = u} {b = v} .fst u∈v))
-        path : pr (⟪ x ⟫↪ m) (⟪ x ⟫↪ n) ≡ t
-        path = cong₂ pr qu qv ∙ sym t≡
+        fu : Fibre x u
+        fu = fibre x u u∈x
+        fv : Fibre x v
+        fv = fibre x v v∈x
+        cond : ⟨ ⟪ x ⟫↪ (fu .fst) ∈ₛ ⟪ x ⟫↪ (fv .fst) ⟩
+        cond = subst (λ w → ⟨ w ∈ₛ ⟪ x ⟫↪ (fv .fst) ⟩) (sym (fu .snd))
+                 (subst (λ w → ⟨ u ∈ₛ w ⟩) (sym (fv .snd))
+                   (∈∈ₛ {a = u} {b = v} .fst u∈v))
+        path : pr (⟪ x ⟫↪ (fu .fst)) (⟪ x ⟫↪ (fv .fst)) ≡ t
+        path = cong₂ pr (fu .snd) (fv .snd) ∙ sym t≡
       go₀ : Σ[ u ∈ V ℓ ] ⟨ ⋁ (V ℓ) (λ v →
               (u ∈ˢ x) ⊓ (v ∈ˢ x) ⊓ (u ∈ˢ v) ⊓ (t ≡ₕ pr u v)) ⟩
           → ⟨ t ∈ F7 x y ⟩
