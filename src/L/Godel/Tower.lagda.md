@@ -496,6 +496,23 @@ transported through the adequacy equation.
 
 ```agda
   private
+    f1 : {n : ℕ} → Fin (suc (suc n))
+    f1 = suc zero
+    f2 : {n : ℕ} → Fin (suc (suc (suc n)))
+    f2 = suc f1
+    f3 : {n : ℕ} → Fin (suc (suc (suc (suc n))))
+    f3 = suc f2
+    f4 : {n : ℕ} → Fin (suc (suc (suc (suc (suc n)))))
+    f4 = suc f3
+    f5 : {n : ℕ} → Fin (suc (suc (suc (suc (suc (suc n))))))
+    f5 = suc f4
+    f6 : {n : ℕ} → Fin (suc (suc (suc (suc (suc (suc (suc n)))))))
+    f6 = suc f5
+    f7 : {n : ℕ} → Fin (suc (suc (suc (suc (suc (suc (suc (suc n))))))))
+    f7 = suc f6
+    f8 : {n : ℕ} → Fin (suc (suc (suc (suc (suc (suc (suc (suc (suc n)))))))))
+    f8 = suc f7
+
     sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
     sh2 x = suc (suc x)
 
@@ -513,9 +530,9 @@ transported through the adequacy equation.
 
   FunAt : ∀ {n} → Fin n → Formula S n
   FunAt h = ∀̇ (∀̇ (∀̇ (
-      ( appAt (sh3 h) (suc (suc zero)) (suc zero)
-      ∧̇ appAt (sh3 h) (suc (suc zero)) zero )
-    ⇒̇ (var (suc zero) ≐ var zero) )))
+      ( appAt (sh3 h) f2 f1
+      ∧̇ appAt (sh3 h) f2 zero )
+    ⇒̇ (var f1 ≐ var zero) )))
 
   module _ {n : ℕ} (h : Fin n) (γ : S ^ n) where
     Fun-out : ⟨ γ ⊨ FunAt h ⟩ → (u v v' : S)
@@ -524,8 +541,8 @@ transported through the adequacy equation.
             → fst v ≡ fst v'
     Fun-out f u v v' p q =
       f u v v'
-        ( appFill (sh3 h) (suc (suc zero)) (suc zero) (v' ∷ v ∷ u ∷ γ) p
-        , appFill (sh3 h) (suc (suc zero)) zero (v' ∷ v ∷ u ∷ γ) q )
+        ( appFill (sh3 h) f2 f1 (v' ∷ v ∷ u ∷ γ) p
+        , appFill (sh3 h) f2 zero (v' ∷ v ∷ u ∷ γ) q )
 
     Fun-in : ((u v v' : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup h γ) ⟩
             → ⟨ pr (fst u) (fst v') ∈ fst (lookup h γ) ⟩
@@ -533,8 +550,8 @@ transported through the adequacy equation.
            → ⟨ γ ⊨ FunAt h ⟩
     Fun-in hstep u v v' p =
       hstep u v v'
-        ( appRead (sh3 h) (suc (suc zero)) (suc zero) (v' ∷ v ∷ u ∷ γ) (p .fst) )
-        ( appRead (sh3 h) (suc (suc zero)) zero (v' ∷ v ∷ u ∷ γ) (p .snd) )
+        ( appRead (sh3 h) f2 f1 (v' ∷ v ∷ u ∷ γ) (p .fst) )
+        ( appRead (sh3 h) f2 zero (v' ∷ v ∷ u ∷ γ) (p .snd) )
 ```
 
 <!--en-->
@@ -617,14 +634,14 @@ walk the same chain in opposite directions.
   module CertSel (tg : ℕ) where
     CertSelAt : ∀ {n} → Fin n → Fin n → Formula S n
     CertSelAt x h = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇
-      ( tagPrAt tg (sh5 x) (suc (suc (suc (suc zero))))
-      ∧̇ ( prAtL (suc (suc (suc (suc zero)))) (suc (suc zero))
-            (suc (suc (suc zero)))
-      ∧̇ ( prAtL (suc (suc (suc zero))) (suc zero) zero
-      ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-      ∧̇ ( (var (suc zero) ∈̇ var (suc (suc zero)))
-      ∧̇ ( (var zero ∈̇ var (suc (suc zero)))
-      ∧̇ appAt (sh5 h) (sh5 x) (suc (suc zero)) ))))))))))
+      ( tagPrAt tg (sh5 x) f4
+      ∧̇ ( prAtL f4 f2
+            f3
+      ∧̇ ( prAtL f3 f1 zero
+      ∧̇ ( (var f2 ∈̇ con ωS)
+      ∧̇ ( (var f1 ∈̇ var f2)
+      ∧̇ ( (var zero ∈̇ var f2)
+      ∧̇ appAt (sh5 h) (sh5 x) f2 ))))))))))
 
     CertSelOf : V ℓ → V ℓ → Type (ℓ-suc ℓ)
     CertSelOf h x = Σ[ nv ∈ S ] Σ[ iv ∈ S ] Σ[ jv ∈ S ]
@@ -645,26 +662,25 @@ walk the same chain in opposite directions.
         where
         finish : (p₁ p₂ nv iv jv : S)
                → ⟨ (jv ∷ iv ∷ nv ∷ p₂ ∷ p₁ ∷ γ)
-                     ⊨ ( tagPrAt tg (sh5 x) (suc (suc (suc (suc zero))))
-                       ∧̇ ( prAtL (suc (suc (suc (suc zero)))) (suc (suc zero))
-                             (suc (suc (suc zero)))
-                       ∧̇ ( prAtL (suc (suc (suc zero))) (suc zero) zero
-                       ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-                       ∧̇ ( (var (suc zero) ∈̇ var (suc (suc zero)))
-                       ∧̇ ( (var zero ∈̇ var (suc (suc zero)))
-                       ∧̇ appAt (sh5 h) (sh5 x) (suc (suc zero)) )))))) ⟩
+                     ⊨ ( tagPrAt tg (sh5 x) f4
+                       ∧̇ ( prAtL f4 f2
+                             f3
+                       ∧̇ ( prAtL f3 f1 zero
+                       ∧̇ ( (var f2 ∈̇ con ωS)
+                       ∧̇ ( (var f1 ∈̇ var f2)
+                       ∧̇ ( (var zero ∈̇ var f2)
+                       ∧̇ appAt (sh5 h) (sh5 x) f2 )))))) ⟩
                → ∥ CertSelOf (fst (lookup h γ)) (fst (lookup x γ)) ∥₁
         finish p₁ p₂ nv iv jv (h1 , (h2 , (h3 , (h4 , (h5 , (h6 , h7)))))) =
           ∣ nv , iv , jv ,
             ( h4
             , ( h5
               , ( h6
-                , ( ( tagPr-out tg (sh5 x) (suc (suc (suc (suc zero)))) env h1
+                , ( ( tagPr-out tg (sh5 x) f4 env h1
                     ∙ cong (pr (# tg))
-                        ( prRead (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env h2
-                        ∙ cong (pr (fst nv))
-                            (prRead (suc (suc (suc zero))) (suc zero) zero env h3) ) )
-                  , appRead (sh5 h) (sh5 x) (suc (suc zero)) env h7 ) ) ) ) ∣₁
+                        ( prRead f4 f2 f3 env h2
+                        ∙ cong (pr (fst nv)) (prRead f3 f1 zero env h3) ) )
+                  , appRead (sh5 h) (sh5 x) f2 env h7 ) ) ) ) ∣₁
           where
           env : S ^ (suc (suc (suc (suc (suc n)))))
           env = jv ∷ iv ∷ nv ∷ p₂ ∷ p₁ ∷ γ
@@ -673,17 +689,16 @@ walk the same chain in opposite directions.
                  → ⟨ γ ⊨ CertSelAt x h ⟩
       CertSel-in (nv , iv , jv , (n∈ω , (i∈n , (j∈n , (qe , eh))))) =
         ∣ prʟ nv (prʟ iv jv) , ∣ prʟ iv jv , ∣ nv , ∣ iv , ∣ jv ,
-          ( tagPr-in tg (sh5 x) (suc (suc (suc (suc zero)))) env
+          ( tagPr-in tg (sh5 x) f4 env
               (qe ∙ cong (pr (# tg))
                 (sym ( prʟ-fst nv (prʟ iv jv)
                      ∙ cong (pr (fst nv)) (prʟ-fst iv jv) )))
-          , ( prFill (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env
-                (prʟ-fst nv (prʟ iv jv))
-          , ( prFill (suc (suc (suc zero))) (suc zero) zero env (prʟ-fst iv jv)
+          , ( prFill f4 f2 f3 env (prʟ-fst nv (prʟ iv jv))
+          , ( prFill f3 f1 zero env (prʟ-fst iv jv)
           , ( n∈ω
             , ( i∈n
               , ( j∈n
-                , appFill (sh5 h) (sh5 x) (suc (suc zero)) env eh ) ) ) ) ) )
+                , appFill (sh5 h) (sh5 x) f2 env eh ) ) ) ) ) )
         ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
         where
         env : S ^ (suc (suc (suc (suc (suc n)))))
@@ -705,14 +720,14 @@ n, and p against the carrier; the annotation still pairs x with n.
 ```agda
   Cert3At : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   Cert3At x h a = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇
-    ( tagPrAt 3 (sh5 x) (suc (suc (suc (suc zero))))
-    ∧̇ ( prAtL (suc (suc (suc (suc zero)))) (suc (suc zero))
-          (suc (suc (suc zero)))
-    ∧̇ ( prAtL (suc (suc (suc zero))) (suc zero) zero
-    ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-    ∧̇ ( (var (suc zero) ∈̇ var (suc (suc zero)))
+    ( tagPrAt 3 (sh5 x) f4
+    ∧̇ ( prAtL f4 f2
+          f3
+    ∧̇ ( prAtL f3 f1 zero
+    ∧̇ ( (var f2 ∈̇ con ωS)
+    ∧̇ ( (var f1 ∈̇ var f2)
     ∧̇ ( (var zero ∈̇ var (sh5 a))
-    ∧̇ appAt (sh5 h) (sh5 x) (suc (suc zero)) ))))))))))
+    ∧̇ appAt (sh5 h) (sh5 x) f2 ))))))))))
 
   Cert3Of : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
   Cert3Of a h x = Σ[ nv ∈ S ] Σ[ iv ∈ S ] Σ[ pv ∈ S ]
@@ -734,14 +749,14 @@ n, and p against the carrier; the annotation still pairs x with n.
       where
       finish : (p₁ p₂ nv iv pv : S)
              → ⟨ (pv ∷ iv ∷ nv ∷ p₂ ∷ p₁ ∷ γ)
-                   ⊨ ( tagPrAt 3 (sh5 x) (suc (suc (suc (suc zero))))
-                     ∧̇ ( prAtL (suc (suc (suc (suc zero)))) (suc (suc zero))
-                           (suc (suc (suc zero)))
-                     ∧̇ ( prAtL (suc (suc (suc zero))) (suc zero) zero
-                     ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-                     ∧̇ ( (var (suc zero) ∈̇ var (suc (suc zero)))
+                   ⊨ ( tagPrAt 3 (sh5 x) f4
+                     ∧̇ ( prAtL f4 f2
+                           f3
+                     ∧̇ ( prAtL f3 f1 zero
+                     ∧̇ ( (var f2 ∈̇ con ωS)
+                     ∧̇ ( (var f1 ∈̇ var f2)
                      ∧̇ ( (var zero ∈̇ var (sh5 a))
-                     ∧̇ appAt (sh5 h) (sh5 x) (suc (suc zero)) )))))) ⟩
+                     ∧̇ appAt (sh5 h) (sh5 x) f2 )))))) ⟩
              → ∥ Cert3Of (fst (lookup a γ)) (fst (lookup h γ))
                    (fst (lookup x γ)) ∥₁
       finish p₁ p₂ nv iv pv (h1 , (h2 , (h3 , (h4 , (h5 , (h6 , h7)))))) =
@@ -749,12 +764,11 @@ n, and p against the carrier; the annotation still pairs x with n.
           ( h4
           , ( h5
             , ( h6
-              , ( ( tagPr-out 3 (sh5 x) (suc (suc (suc (suc zero)))) env h1
+              , ( ( tagPr-out 3 (sh5 x) f4 env h1
                   ∙ cong (pr (# 3))
-                      ( prRead (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env h2
-                      ∙ cong (pr (fst nv))
-                          (prRead (suc (suc (suc zero))) (suc zero) zero env h3) ) )
-                , appRead (sh5 h) (sh5 x) (suc (suc zero)) env h7 ) ) ) ) ∣₁
+                      ( prRead f4 f2 f3 env h2
+                      ∙ cong (pr (fst nv)) (prRead f3 f1 zero env h3) ) )
+                , appRead (sh5 h) (sh5 x) f2 env h7 ) ) ) ) ∣₁
         where
         env : S ^ (suc (suc (suc (suc (suc n)))))
         env = pv ∷ iv ∷ nv ∷ p₂ ∷ p₁ ∷ γ
@@ -764,17 +778,16 @@ n, and p against the carrier; the annotation still pairs x with n.
              → ⟨ γ ⊨ Cert3At x h a ⟩
     Cert3-in (nv , iv , pv , (n∈ω , (i∈n , (p∈a , (qe , eh))))) =
       ∣ prʟ nv (prʟ iv pv) , ∣ prʟ iv pv , ∣ nv , ∣ iv , ∣ pv ,
-        ( tagPr-in 3 (sh5 x) (suc (suc (suc (suc zero)))) env
+        ( tagPr-in 3 (sh5 x) f4 env
             (qe ∙ cong (pr (# 3))
               (sym ( prʟ-fst nv (prʟ iv pv)
                    ∙ cong (pr (fst nv)) (prʟ-fst iv pv) )))
-        , ( prFill (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env
-              (prʟ-fst nv (prʟ iv pv))
-        , ( prFill (suc (suc (suc zero))) (suc zero) zero env (prʟ-fst iv pv)
+        , ( prFill f4 f2 f3 env (prʟ-fst nv (prʟ iv pv))
+        , ( prFill f3 f1 zero env (prʟ-fst iv pv)
         , ( n∈ω
           , ( i∈n
             , ( p∈a
-              , appFill (sh5 h) (sh5 x) (suc (suc zero)) env eh ) ) ) ) ) )
+              , appFill (sh5 h) (sh5 x) f2 env eh ) ) ) ) ) )
       ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
       where
       env : S ^ (suc (suc (suc (suc (suc n)))))
@@ -796,15 +809,15 @@ clause's shape.
   module CertBin (tg : ℕ) where
     CertBinAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
     CertBinAt x g h = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇
-      ( tagPrAt tg (sh6 x) (suc (suc (suc (suc (suc zero)))))
-      ∧̇ ( prAtL (suc (suc (suc (suc (suc zero)))))
-            (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
-      ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-      ∧̇ ( appAt (sh6 g) (suc (suc (suc (suc zero)))) (suc zero)
-      ∧̇ ( appAt (sh6 g) (suc (suc (suc zero))) zero
-      ∧̇ ( appAt (sh6 h) (sh6 x) (suc (suc zero))
-      ∧̇ ( appAt (sh6 h) (suc (suc (suc (suc zero)))) (suc (suc zero))
-      ∧̇ appAt (sh6 h) (suc (suc (suc zero))) (suc (suc zero)) ))))))))))))
+      ( tagPrAt tg (sh6 x) f5
+      ∧̇ ( prAtL f5
+            f4 f3
+      ∧̇ ( (var f2 ∈̇ con ωS)
+      ∧̇ ( appAt (sh6 g) f4 f1
+      ∧̇ ( appAt (sh6 g) f3 zero
+      ∧̇ ( appAt (sh6 h) (sh6 x) f2
+      ∧̇ ( appAt (sh6 h) f4 f2
+      ∧̇ appAt (sh6 h) f3 f2 ))))))))))))
 
     CertBinOf : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
     CertBinOf g h x = Σ[ c₁ ∈ S ] Σ[ c₂ ∈ S ] Σ[ mv ∈ S ] Σ[ y₁ ∈ S ] Σ[ y₂ ∈ S ]
@@ -831,30 +844,29 @@ clause's shape.
         where
         finish : (p₁ c₁ c₂ mv y₁ y₂ : S)
                → ⟨ (y₂ ∷ y₁ ∷ mv ∷ c₂ ∷ c₁ ∷ p₁ ∷ γ)
-                     ⊨ ( tagPrAt tg (sh6 x) (suc (suc (suc (suc (suc zero)))))
-                       ∧̇ ( prAtL (suc (suc (suc (suc (suc zero)))))
-                             (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
-                       ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-                       ∧̇ ( appAt (sh6 g) (suc (suc (suc (suc zero)))) (suc zero)
-                       ∧̇ ( appAt (sh6 g) (suc (suc (suc zero))) zero
-                       ∧̇ ( appAt (sh6 h) (sh6 x) (suc (suc zero))
-                       ∧̇ ( appAt (sh6 h) (suc (suc (suc (suc zero))))
-                             (suc (suc zero))
-                       ∧̇ appAt (sh6 h) (suc (suc (suc zero))) (suc (suc zero))
+                     ⊨ ( tagPrAt tg (sh6 x) f5
+                       ∧̇ ( prAtL f5
+                             f4 f3
+                       ∧̇ ( (var f2 ∈̇ con ωS)
+                       ∧̇ ( appAt (sh6 g) f4 f1
+                       ∧̇ ( appAt (sh6 g) f3 zero
+                       ∧̇ ( appAt (sh6 h) (sh6 x) f2
+                       ∧̇ ( appAt (sh6 h) f4
+                             f2
+                       ∧̇ appAt (sh6 h) f3 f2
                             ))))))) ⟩
                → ∥ CertBinOf (fst (lookup g γ)) (fst (lookup h γ))
                      (fst (lookup x γ)) ∥₁
         finish p₁ c₁ c₂ mv y₁ y₂ (h1 , (h2 , (h3 , (h4 , (h5 , (h6 , (h7 , h8))))))) =
           ∣ c₁ , c₂ , mv , y₁ , y₂ ,
-            ( ( tagPr-out tg (sh6 x) (suc (suc (suc (suc (suc zero))))) env h1
-                ∙ cong (pr (# tg))
-                    (prRead (suc (suc (suc (suc (suc zero))))) (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) env h2) )
+            ( ( tagPr-out tg (sh6 x) f5 env h1
+                ∙ cong (pr (# tg)) (prRead f5 f4 f3 env h2) )
             , ( h3
-              , ( appRead (sh6 g) (suc (suc (suc (suc zero)))) (suc zero) env h4
-                , ( appRead (sh6 g) (suc (suc (suc zero))) zero env h5
-                  , ( appRead (sh6 h) (sh6 x) (suc (suc zero)) env h6
-                    , ( appRead (sh6 h) (suc (suc (suc (suc zero)))) (suc (suc zero)) env h7
-                      , appRead (sh6 h) (suc (suc (suc zero))) (suc (suc zero)) env h8 ) ) ) ) ) ) ∣₁
+              , ( appRead (sh6 g) f4 f1 env h4
+                , ( appRead (sh6 g) f3 zero env h5
+                  , ( appRead (sh6 h) (sh6 x) f2 env h6
+                    , ( appRead (sh6 h) f4 f2 env h7
+                      , appRead (sh6 h) f3 f2 env h8 ) ) ) ) ) ) ∣₁
           where
           env : S ^ (suc (suc (suc (suc (suc (suc n))))))
           env = y₂ ∷ y₁ ∷ mv ∷ c₂ ∷ c₁ ∷ p₁ ∷ γ
@@ -864,16 +876,15 @@ clause's shape.
                  → ⟨ γ ⊨ CertBinAt x g h ⟩
       CertBin-in (c₁ , c₂ , mv , y₁ , y₂ , (qe , (m∈ω , (e1 , (e2 , (e3 , (e4 , e5))))))) =
         ∣ prʟ c₁ c₂ , ∣ c₁ , ∣ c₂ , ∣ mv , ∣ y₁ , ∣ y₂ ,
-          ( tagPr-in tg (sh6 x) (suc (suc (suc (suc (suc zero))))) env
+          ( tagPr-in tg (sh6 x) f5 env
               (qe ∙ cong (pr (# tg)) (sym (prʟ-fst c₁ c₂)))
-          , ( prFill (suc (suc (suc (suc (suc zero))))) (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) env
-                (prʟ-fst c₁ c₂)
+          , ( prFill f5 f4 f3 env (prʟ-fst c₁ c₂)
           , ( m∈ω
-            , ( appFill (sh6 g) (suc (suc (suc (suc zero)))) (suc zero) env e1
-              , ( appFill (sh6 g) (suc (suc (suc zero))) zero env e2
-                , ( appFill (sh6 h) (sh6 x) (suc (suc zero)) env e3
-                  , ( appFill (sh6 h) (suc (suc (suc (suc zero)))) (suc (suc zero)) env e4
-                    , appFill (sh6 h) (suc (suc (suc zero))) (suc (suc zero)) env e5 ) ) ) ) ) ) )
+            , ( appFill (sh6 g) f4 f1 env e1
+              , ( appFill (sh6 g) f3 zero env e2
+                , ( appFill (sh6 h) (sh6 x) f2 env e3
+                  , ( appFill (sh6 h) f4 f2 env e4
+                    , appFill (sh6 h) f3 f2 env e5 ) ) ) ) ) ) )
         ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
         where
         env : S ^ (suc (suc (suc (suc (suc (suc n))))))
@@ -894,12 +905,12 @@ the annotations agree, x with n and the child with the same n.
 ```agda
   Cert6At : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   Cert6At x g h = ∃̇ (∃̇ (∃̇ (∃̇
-    ( tagPrAt 6 (sh4 x) (suc (suc (suc zero)))
-    ∧̇ ( prAtL (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
-    ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-    ∧̇ ( appAt (sh4 g) (suc zero) zero
-    ∧̇ ( appAt (sh4 h) (sh4 x) (suc (suc zero))
-    ∧̇ appAt (sh4 h) (suc zero) (suc (suc zero)) ))))))))
+    ( tagPrAt 6 (sh4 x) f3
+    ∧̇ ( prAtL f3 f2 f1
+    ∧̇ ( (var f2 ∈̇ con ωS)
+    ∧̇ ( appAt (sh4 g) f1 zero
+    ∧̇ ( appAt (sh4 h) (sh4 x) f2
+    ∧̇ appAt (sh4 h) f1 f2 ))))))))
 
   Cert6Of : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
   Cert6Of g h x = Σ[ nv ∈ S ] Σ[ cv ∈ S ] Σ[ yv ∈ S ]
@@ -922,23 +933,22 @@ the annotations agree, x with n and the child with the same n.
       where
       finish : (p₁ nv cv yv : S)
              → ⟨ (yv ∷ cv ∷ nv ∷ p₁ ∷ γ)
-                   ⊨ ( tagPrAt 6 (sh4 x) (suc (suc (suc zero)))
-                     ∧̇ ( prAtL (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
-                     ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-                     ∧̇ ( appAt (sh4 g) (suc zero) zero
-                     ∧̇ ( appAt (sh4 h) (sh4 x) (suc (suc zero))
-                     ∧̇ appAt (sh4 h) (suc zero) (suc (suc zero)) ))))) ⟩
+                   ⊨ ( tagPrAt 6 (sh4 x) f3
+                     ∧̇ ( prAtL f3 f2 f1
+                     ∧̇ ( (var f2 ∈̇ con ωS)
+                     ∧̇ ( appAt (sh4 g) f1 zero
+                     ∧̇ ( appAt (sh4 h) (sh4 x) f2
+                     ∧̇ appAt (sh4 h) f1 f2 ))))) ⟩
              → ∥ Cert6Of (fst (lookup g γ)) (fst (lookup h γ))
                    (fst (lookup x γ)) ∥₁
       finish p₁ nv cv yv (h1 , (h2 , (h3 , (h4 , (h5 , h6))))) =
         ∣ nv , cv , yv ,
           ( h3
-          , ( ( tagPr-out 6 (sh4 x) (suc (suc (suc zero))) env h1
-              ∙ cong (pr (# 6))
-                  (prRead (suc (suc (suc zero))) (suc (suc zero)) (suc zero) env h2) )
-          , ( appRead (sh4 g) (suc zero) zero env h4
-            , ( appRead (sh4 h) (sh4 x) (suc (suc zero)) env h5
-              , appRead (sh4 h) (suc zero) (suc (suc zero)) env h6 ) ) ) ) ∣₁
+          , ( ( tagPr-out 6 (sh4 x) f3 env h1
+              ∙ cong (pr (# 6)) (prRead f3 f2 f1 env h2) )
+          , ( appRead (sh4 g) f1 zero env h4
+            , ( appRead (sh4 h) (sh4 x) f2 env h5
+              , appRead (sh4 h) f1 f2 env h6 ) ) ) ) ∣₁
         where
         env : S ^ (suc (suc (suc (suc n))))
         env = yv ∷ cv ∷ nv ∷ p₁ ∷ γ
@@ -948,13 +958,13 @@ the annotations agree, x with n and the child with the same n.
              → ⟨ γ ⊨ Cert6At x g h ⟩
     Cert6-in (nv , cv , yv , (n∈ω , (qe , (e1 , (e2 , e3))))) =
       ∣ prʟ nv cv , ∣ nv , ∣ cv , ∣ yv ,
-        ( tagPr-in 6 (sh4 x) (suc (suc (suc zero))) env
+        ( tagPr-in 6 (sh4 x) f3 env
             (qe ∙ cong (pr (# 6)) (sym (prʟ-fst nv cv)))
-        , ( prFill (suc (suc (suc zero))) (suc (suc zero)) (suc zero) env (prʟ-fst nv cv)
+        , ( prFill f3 f2 f1 env (prʟ-fst nv cv)
         , ( n∈ω
-          , ( appFill (sh4 g) (suc zero) zero env e1
-            , ( appFill (sh4 h) (sh4 x) (suc (suc zero)) env e2
-              , appFill (sh4 h) (suc zero) (suc (suc zero)) env e3 ) ) ) ) )
+          , ( appFill (sh4 g) f1 zero env e1
+            , ( appFill (sh4 h) (sh4 x) f2 env e2
+              , appFill (sh4 h) f1 f2 env e3 ) ) ) ) )
       ∣₁ ∣₁ ∣₁ ∣₁
       where
       env : S ^ (suc (suc (suc (suc n))))
@@ -974,12 +984,12 @@ records the m'-value as sucV of the m-value.
 ```agda
   Cert7At : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   Cert7At x g h = ∃̇ (∃̇ (∃̇ (∃̇
-    ( tagPrAt 7 (sh4 x) (suc (suc (suc zero)))
-    ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-    ∧̇ ( sucAtL (suc (suc zero)) (suc zero)
-    ∧̇ ( appAt (sh4 g) (suc (suc (suc zero))) zero
-    ∧̇ ( appAt (sh4 h) (sh4 x) (suc (suc zero))
-    ∧̇ appAt (sh4 h) (suc (suc (suc zero))) (suc zero) ))))))))
+    ( tagPrAt 7 (sh4 x) f3
+    ∧̇ ( (var f2 ∈̇ con ωS)
+    ∧̇ ( sucAtL f2 f1
+    ∧̇ ( appAt (sh4 g) f3 zero
+    ∧̇ ( appAt (sh4 h) (sh4 x) f2
+    ∧̇ appAt (sh4 h) f3 f1 ))))))))
 
   Cert7Of : V ℓ → V ℓ → V ℓ → Type (ℓ-suc ℓ)
   Cert7Of g h x = Σ[ cv ∈ S ] Σ[ mv ∈ S ] Σ[ mv' ∈ S ] Σ[ yv ∈ S ]
@@ -1003,22 +1013,22 @@ records the m'-value as sucV of the m-value.
       where
       finish : (cv mv mv' yv : S)
              → ⟨ (yv ∷ mv' ∷ mv ∷ cv ∷ γ)
-                   ⊨ ( tagPrAt 7 (sh4 x) (suc (suc (suc zero)))
-                     ∧̇ ( (var (suc (suc zero)) ∈̇ con ωS)
-                     ∧̇ ( sucAtL (suc (suc zero)) (suc zero)
-                     ∧̇ ( appAt (sh4 g) (suc (suc (suc zero))) zero
-                     ∧̇ ( appAt (sh4 h) (sh4 x) (suc (suc zero))
-                     ∧̇ appAt (sh4 h) (suc (suc (suc zero))) (suc zero) ))))) ⟩
+                   ⊨ ( tagPrAt 7 (sh4 x) f3
+                     ∧̇ ( (var f2 ∈̇ con ωS)
+                     ∧̇ ( sucAtL f2 f1
+                     ∧̇ ( appAt (sh4 g) f3 zero
+                     ∧̇ ( appAt (sh4 h) (sh4 x) f2
+                     ∧̇ appAt (sh4 h) f3 f1 ))))) ⟩
              → ∥ Cert7Of (fst (lookup g γ)) (fst (lookup h γ))
                    (fst (lookup x γ)) ∥₁
       finish cv mv mv' yv (h1 , (h2 , (h3 , (h4 , (h5 , h6))))) =
         ∣ cv , mv , mv' , yv ,
-          ( tagPr-out 7 (sh4 x) (suc (suc (suc zero))) env h1
+          ( tagPr-out 7 (sh4 x) f3 env h1
           , ( h2
-            , ( sucRead (suc (suc zero)) (suc zero) env h3
-              , ( appRead (sh4 g) (suc (suc (suc zero))) zero env h4
-                , ( appRead (sh4 h) (sh4 x) (suc (suc zero)) env h5
-                  , appRead (sh4 h) (suc (suc (suc zero))) (suc zero) env h6 ) ) ) ) ) ∣₁
+            , ( sucRead f2 f1 env h3
+              , ( appRead (sh4 g) f3 zero env h4
+                , ( appRead (sh4 h) (sh4 x) f2 env h5
+                  , appRead (sh4 h) f3 f1 env h6 ) ) ) ) ) ∣₁
         where
         env : S ^ (suc (suc (suc (suc n))))
         env = yv ∷ mv' ∷ mv ∷ cv ∷ γ
@@ -1028,12 +1038,12 @@ records the m'-value as sucV of the m-value.
              → ⟨ γ ⊨ Cert7At x g h ⟩
     Cert7-in (cv , mv , mv' , yv , (qe , (m∈ω , (qq , (e1 , (e2 , e3)))))) =
       ∣ cv , ∣ mv , ∣ mv' , ∣ yv ,
-        ( tagPr-in 7 (sh4 x) (suc (suc (suc zero))) env qe
+        ( tagPr-in 7 (sh4 x) f3 env qe
         , ( m∈ω
-          , ( sucFill (suc (suc zero)) (suc zero) env qq
-            , ( appFill (sh4 g) (suc (suc (suc zero))) zero env e1
-              , ( appFill (sh4 h) (sh4 x) (suc (suc zero)) env e2
-                , appFill (sh4 h) (suc (suc (suc zero))) (suc zero) env e3 ) ) ) ) )
+          , ( sucFill f2 f1 env qq
+            , ( appFill (sh4 g) f3 zero env e1
+              , ( appFill (sh4 h) (sh4 x) f2 env e2
+                , appFill (sh4 h) f3 f1 env e3 ) ) ) ) )
       ∣₁ ∣₁ ∣₁ ∣₁
       where
       env : S ^ (suc (suc (suc (suc n))))
@@ -1204,8 +1214,8 @@ reassembles the formula from the two.
 
 ```agda
   CertAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
-  CertAt g h a = FunAt h ∧̇ ∀̇ (∀̇ ( appAt (sh2 g) (suc zero) zero
-                                ⇒̇ CertShapeAt (suc zero) (sh2 g) (sh2 h) (sh2 a) ))
+  CertAt g h a = FunAt h ∧̇ ∀̇ (∀̇ ( appAt (sh2 g) f1 zero
+                                ⇒̇ CertShapeAt f1 (sh2 g) (sh2 h) (sh2 a) ))
 
   module _ {n : ℕ} (g h a : Fin n) (γ : S ^ n) where
     Cert-fun : ⟨ γ ⊨ CertAt g h a ⟩ → (u v v' : S)
@@ -1219,8 +1229,8 @@ reassembles the formula from the two.
               → ∥ CertOf (fst (lookup a γ)) (fst (lookup g γ))
                     (fst (lookup h γ)) (fst x) ∥₁
     Cert-step cert x y p =
-      CertShape-out (suc zero) (sh2 g) (sh2 h) (sh2 a) (y ∷ x ∷ γ)
-        (cert .snd x y (appFill (sh2 g) (suc zero) zero (y ∷ x ∷ γ) p))
+      CertShape-out f1 (sh2 g) (sh2 h) (sh2 a) (y ∷ x ∷ γ)
+        (cert .snd x y (appFill (sh2 g) f1 zero (y ∷ x ∷ γ) p))
 
     Cert-in : ((u v v' : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup h γ) ⟩
              → ⟨ pr (fst u) (fst v') ∈ fst (lookup h γ) ⟩
@@ -1233,8 +1243,8 @@ reassembles the formula from the two.
       Fun-in h γ hstep
       , (λ x y p →
           PT.rec PT.squash₁
-            (CertShape-in (suc zero) (sh2 g) (sh2 h) (sh2 a) (y ∷ x ∷ γ))
-            (xstep x y (appRead (sh2 g) (suc zero) zero (y ∷ x ∷ γ) p)))
+            (CertShape-in f1 (sh2 g) (sh2 h) (sh2 a) (y ∷ x ∷ γ))
+            (xstep x y (appRead (sh2 g) f1 zero (y ∷ x ∷ γ) p)))
 ```
 
 <!--en-->
@@ -1860,13 +1870,13 @@ no carrier, so the family recursion ahead can instantiate it at any stage.
   private
     nameBody : ∀ {n} → Fin n → Formula S (suc (suc (suc (suc (suc n)))))
     nameBody v = (var zero ≐ con (numeralL 1))
-               ∧̇ ( appAt (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc zero)
-                 ∧̇ ( appAt (suc (suc (suc zero))) (suc (suc zero)) zero
-                   ∧̇ valuesAt (sh5 v) (suc zero) ))
+               ∧̇ ( appAt f4 f2 f1
+                 ∧̇ ( appAt f3 f2 zero
+                   ∧̇ valuesAt (sh5 v) f1 ))
 
     nameAt : ∀ {n} → Fin n → Fin n → Formula S n
-    nameAt v a = ∃̇ (∃̇ ( CertAt (suc zero) zero (sh2 a)
-                      ∧̇ ( ApproxAt (suc zero) (sh2 a)
+    nameAt v a = ∃̇ (∃̇ ( CertAt f1 zero (sh2 a)
+                      ∧̇ ( ApproxAt f1 (sh2 a)
                         ∧̇ ∃̇ (∃̇ (∃̇ (nameBody v))) )))
 
   StepAt : ∀ {n} → Fin n → Fin n → Formula S n
@@ -1905,8 +1915,8 @@ already certified. The two laws share one reading and one filling, per member.
     read-name v = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀)) stepG
       where
       finish : (g₀ h₀ x y o : S)
-             → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
-             → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+             → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt f1 zero (sh2 (suc a)) ⟩
+             → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt f1 (sh2 (suc a)) ⟩
              → ⟨ (o ∷ y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ nameBody zero ⟩
              → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
       finish g₀ h₀ x y o cert approx (op , (gf , (hf , vf))) =
@@ -1916,14 +1926,14 @@ already certified. The two laws share one reading and one filling, per member.
         env : S ^ (suc (suc (suc (suc (suc (suc n))))))
         env = o ∷ y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ
 
-        module H = Honest (suc zero) zero (sh2 (suc a)) (h₀ ∷ g₀ ∷ v ∷ γ) cert
+        module H = Honest f1 zero (sh2 (suc a)) (h₀ ∷ g₀ ∷ v ∷ γ) cert
 
         gF : ⟨ pr (fst x) (fst y) ∈ fst g₀ ⟩
-        gF = appRead (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc zero) env gf
+        gF = appRead f4 f2 f1 env gf
 
         hF : ⟨ pr (fst x) (# 1) ∈ fst h₀ ⟩
         hF = subst (λ w → ⟨ pr (fst x) w ∈ fst h₀ ⟩) (op ∙ numeralL-fst 1)
-          (appRead (suc (suc (suc zero))) (suc (suc zero)) zero env hf)
+          (appRead f3 f2 zero env hf)
 
         lx : ⟨ isL (fst x) ⟩
         lx = prIsL₁ (h₀ .snd) hF
@@ -1936,16 +1946,16 @@ already certified. The two laws share one reading and one filling, per member.
           where
           step' : (x' y' : S) → ⟨ pr (fst x') (fst y') ∈ fst g₀ ⟩
                 → ∥ ClauseOf A₀ (fst g₀) (fst x') (fst y') ∥₁
-          step' x' y' e = Clause-out (suc zero) zero (sh2 (suc zero))
+          step' x' y' e = Clause-out f1 zero (sh2 f1)
             (sh2 (sh2 (suc a))) (y' ∷ x' ∷ h₀ ∷ g₀ ∷ v ∷ γ)
-            (Approx-step (suc zero) (sh2 (suc a)) (h₀ ∷ g₀ ∷ v ∷ γ)
+            (Approx-step f1 (sh2 (suc a)) (h₀ ∷ g₀ ∷ v ∷ γ)
               approx x' y' e)
 
           val : fst y ≡ ⟦_⟧ᴷ A₀ t
           val = D.approx-val (fst g₀) step' t (fst x , lx) (fst y , ly) codeEq gF
 
           vEq : fst v ≡ values (fst y)
-          vEq = valuesAt-out (sh5 zero) (suc zero) env vf
+          vEq = valuesAt-out (sh5 zero) f1 env vf
 
           valEq : fst v ≡ values (⟦_⟧ᴷ A₀ t)
           valEq = vEq ∙ cong values val
@@ -1957,39 +1967,39 @@ already certified. The two laws share one reading and one filling, per member.
           inDef = subst (λ z → ⟨ fst v ∈ z ⟩) TW.termDef≡Def memb
 
       stepO : (g₀ h₀ x y : S)
-            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
-            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt f1 zero (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt f1 (sh2 (suc a)) ⟩
             → Σ[ o ∈ S ] ⟨ (o ∷ y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ nameBody zero ⟩
             → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
       stepO g₀ h₀ x y cert approx (o , w₅) = finish g₀ h₀ x y o cert approx w₅
 
       stepY : (g₀ h₀ x : S)
-            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
-            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt f1 zero (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt f1 (sh2 (suc a)) ⟩
             → Σ[ y ∈ S ] ⟨ (y ∷ x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ∃̇ nameBody zero ⟩
             → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
       stepY g₀ h₀ x cert approx (y , w₄) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀))
         (stepO g₀ h₀ x y cert approx) w₄
 
       stepX : (g₀ h₀ : S)
-            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
-            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ CertAt f1 zero (sh2 (suc a)) ⟩
+            → ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ApproxAt f1 (sh2 (suc a)) ⟩
             → Σ[ x ∈ S ] ⟨ (x ∷ h₀ ∷ g₀ ∷ v ∷ γ) ⊨ ∃̇ (∃̇ nameBody zero) ⟩
             → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
       stepX g₀ h₀ cert approx (x , w₃) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀))
         (stepY g₀ h₀ x cert approx) w₃
 
       stepH : (g₀ : S) → Σ[ h₀ ∈ S ] ⟨ (h₀ ∷ g₀ ∷ v ∷ γ) ⊨
-                  CertAt (suc zero) zero (sh2 (suc a))
-                  ∧̇ ( ApproxAt (suc zero) (sh2 (suc a))
+                  CertAt f1 zero (sh2 (suc a))
+                  ∧̇ ( ApproxAt f1 (sh2 (suc a))
                     ∧̇ ∃̇ (∃̇ (∃̇ nameBody zero)) ) ⟩
             → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
       stepH g₀ (h₀ , w₂) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀))
         (stepX g₀ h₀ (w₂ .fst) (w₂ .snd .fst)) (w₂ .snd .snd)
 
       stepG : Σ[ g₀ ∈ S ] ⟨ (g₀ ∷ v ∷ γ) ⊨
-                  ∃̇ ( CertAt (suc zero) zero (sh2 (suc a))
-                     ∧̇ ( ApproxAt (suc zero) (sh2 (suc a))
+                  ∃̇ ( CertAt f1 zero (sh2 (suc a))
+                     ∧̇ ( ApproxAt f1 (sh2 (suc a))
                        ∧̇ ∃̇ (∃̇ (∃̇ nameBody zero)) )) ⟩
             → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
       stepG (g₀ , w₁) = PT.rec (snd (fst v ∈ˢ 𝒟ₒ A₀)) (stepH g₀) w₁
@@ -2015,27 +2025,26 @@ already certified. The two laws share one reading and one filling, per member.
             ∷ C.codeS t ∷ hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ
 
         cert : ⟨ (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ)
-                  ⊨ CertAt (suc zero) zero (sh2 (suc a)) ⟩
-        cert = CF.certApx t (suc zero) zero (sh2 (suc a))
+                  ⊨ CertAt f1 zero (sh2 (suc a)) ⟩
+        cert = CF.certApx t f1 zero (sh2 (suc a))
           (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ) refl refl refl
 
         approx : ⟨ (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ)
-                    ⊨ ApproxAt (suc zero) (sh2 (suc a)) ⟩
-        approx = D.apx-approx t (suc zero) (sh2 (suc a))
+                    ⊨ ApproxAt f1 (sh2 (suc a)) ⟩
+        approx = D.apx-approx t f1 (sh2 (suc a))
           (hS A₀ lA₀ t ∷ D.apxS t ∷ v ∷ γ) refl refl
 
-        gf : ⟨ env ⊨ appAt (suc (suc (suc (suc zero))))
-                  (suc (suc zero)) (suc zero) ⟩
-        gf = appFill (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc zero) env
-          (D.entrySelf∈ t)
+        gf : ⟨ env ⊨ appAt f4
+                  f2 f1 ⟩
+        gf = appFill f4 f2 f1 env (D.entrySelf∈ t)
 
-        hf : ⟨ env ⊨ appAt (suc (suc (suc zero))) (suc (suc zero)) zero ⟩
-        hf = appFill (suc (suc (suc zero))) (suc (suc zero)) zero env
+        hf : ⟨ env ⊨ appAt f3 f2 zero ⟩
+        hf = appFill f3 f2 zero env
           (subst (λ w → ⟨ pr (fst (C.codeS t)) w ∈ fst (hS A₀ lA₀ t) ⟩)
             (sym (numeralL-fst 1)) (hSelf∈ A₀ lA₀ t))
 
-        vf : ⟨ env ⊨ valuesAt (sh5 zero) (suc zero) ⟩
-        vf = valuesAt-in (sh5 zero) (suc zero) env (sym e)
+        vf : ⟨ env ⊨ valuesAt (sh5 zero) f1 ⟩
+        vf = valuesAt-in (sh5 zero) f1 env (sym e)
 
     step-out : ⟨ γ ⊨ StepAt b a ⟩ → B ≡ 𝒟ₒ A₀
     step-out h = extensionalV λ v → ⇔toPath (fwdV v) (bwdV v)
