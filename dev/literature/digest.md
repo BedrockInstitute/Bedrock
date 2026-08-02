@@ -97,8 +97,8 @@ Rulings on the collection report's six UNVERIFIED marks:
 4. *Paulson's GCH scope*: RULED by artifact evidence, GCH not mechanized;
    which reading the contrary section 2.7 sentence intends stays OPEN; see
    section 6.
-5. *Mizar/Metamath/Naproche*: stays OPEN (not determinable from the fetched
-   material).
+5. *Mizar/Metamath/Naproche*: since SETTLED by the [L3.30-L3] sweep
+   (formalizations-landscape.md); see section 6.
 6. *Any rud-based formalization*: nothing found in the fetched material;
    bounded claim, see section 6.
 
@@ -421,18 +421,30 @@ covers only the negation direction (FI abstract).
 **Everything else.** The only other formalization the fetched corpus
 mentions is Gunther-Pagano-Terraf's first steps toward forcing via generic
 extensions of countable transitive models (FC's related-work line, p. 4).
-The Mizar, Metamath, and Naproche landscapes are not determinable from the
-fetched material (OPEN).
+The wider landscape was swept by [L3.30-L3] (formalizations-landscape.md,
+indices fetched 2026-08-02): Metamath, Mizar, Lean mathlib, Coq/Rocq, and
+Naproche contain no constructible universe as a formal object at all (each
+absence bounded by the index searched); the only formal L found in the six
+systems is Paulson's Isabelle/ZF Constructible session, exporting ZF-in-L
+and AC-in-L and nothing beyond; GCH appears in those libraries only as an
+assumed axiom or as ambient theorems (Metamath's GCH-implies-AC corpus,
+Kirst-Rech's GCH-to-AC in Coq, Naproche's GCH axiom atom), never as
+"L models GCH".
 
 **The GCH-in-L virginity claim, worded exactly.** Within the fetched
 corpus: no mechanized proof of GCH in L exists; the two formalization
 projects in the fetched corpus that touch this territory both name it as
 future work (P p. 65; PS slide 19; FG README); and no rud-based formalization of
-constructibility appears at all. Absence of mention is not proof of
-absence: the claim is bounded by the fetched material, and a targeted
-search of the Mizar/Metamath/Naproche/AFP landscapes (OPEN item 7) could
-still surface prior art. As far as the evidence carries: GCH-in-L via the
-rud route is unclaimed territory.
+constructibility appears at all. The [L3.30-L3] sweep then widened the
+bound from the fetched corpus to the six systems' own indices as of
+2026-08-02, with the same negative result everywhere, so the claim now
+stands as: not found in the fetched corpus NOR via the searched indices of
+Metamath, Mizar, Isabelle AFP + distribution, Lean mathlib, Coq/Rocq, and
+Naproche. Absence of mention is still not proof of absence (unindexed
+personal repositories and post-2022 MML additions are outside the sweep's
+reach, per its own caveats). As far as the evidence carries: GCH-in-L via
+the rud route is unclaimed territory, and the claim has now survived one
+deliberate refutation attempt.
 
 ## 7. Open items
 
@@ -458,8 +470,11 @@ Each with what would settle it.
    standard hull-and-collapse argument from a full text (Devlin ch. II with
    the errata open, or Jech); the fetched chapter stops short of the
    theorem itself.
-7. **The Mizar/Metamath/Naproche/AFP landscape** for constructibility and
-   GCH: targeted searches of those libraries' indices.
+7. **The Mizar/Metamath/Naproche/AFP landscape**: SETTLED-as-hardened by
+   [L3.30-L3] (formalizations-landscape.md): no constructible universe in
+   any of the six systems' indices; the virginity claim survives with its
+   bounds widened (see section 6). Residual reach limits: post-2022 MML
+   additions and unindexed personal repositories.
 8. **Zeman's book chs. 1-2** (the owner's note recommends them as the
    reliable fine-structure blueprint): fetch or library; currently
    cite-only.
