@@ -1136,9 +1136,9 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Ops`{.Agda}: the basis operations F0-F7 and F9 with their two-direction
   extension specifications, sealed at birth.
 <!--zh-->
-## rud 主干 (在建)
+## 初步函数主干 (在建)
 
-`[L3.31]` 建设：L3.30 裁决采纳的 rud 函数架构，与既有路线并存生长，直至共存测量。各波次批落地时逐章接线。
+`[L3.31]` 建设：L3.30 裁决采纳的初步函数 (rudimentary functions) 架构，与既有路线并存生长，直至共存测量。各波次批落地时逐章接线。
 
 - `L.Rud.OrdArith`{.Agda}：S-递归所消费的序数分情形结构：后继与极限谓词、经典三分、序数上的后继单射性。
 - `L.Rud.Ops`{.Agda}：基底运算 F0-F7 与 F9，带双向外延规格，出生即封印。
