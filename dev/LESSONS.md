@@ -768,6 +768,25 @@ unsealing surgery.
 **Provenance:** the r2c report parts 2-4; commits `7c69beb`, `a3c9f80`;
 companion to P-c.
 
+### R-38. A consumer's alias of a transparent imported operation is a birth site
+
+**Rule:** P-c extends one layer up: when a consumer names a composite of a
+TRANSPARENT imported operation (a derived op whose body reaches an imported
+sett/union tower), the consumer's alias is itself a birth site and must be
+sealed opaque with its spec inside, even though the imported operation was
+delivered transparent. Transparent-by-delivery kit operations (the Images
+F10 and the left/right projections are the standing instances) are a hazard
+for every future consumer.
+
+**Measured (R3c, 2026-08-03):** eval-agree hung past 400 s twice; the
+bisect isolated the collection clause, whose transparent colOp unfolds into
+the transparent F10 and its union/intersection tower under a sett index;
+sealing the nine derived operations at birth with specs inside dropped the
+check to 3.7 s.
+
+**Provenance:** `_build/r3c-report.md` (the wall trail); commit `d15c114`;
+companion to P-c and R-36.
+
 ### R-37. A transported membership in a compared statement position re-fires the tower
 
 **Rule:** A hypothesis of the shape ⟨ x ∈ Sset (concrete index) ⟩ whose proof
