@@ -1158,6 +1158,13 @@ measurement. Wired chapter by chapter as the wave batches land.
   the sixteen operations, both directions of the comprehension shape, and
   the limit corollary, with the image principle and the level descriptions
   as named module hypotheses.
+- `L.Rud.Graphs`{.Agda}: the element-relation route to the image principle:
+  six of ten composite clauses, the identity graph and the join, and the
+  verbatim reduction of the image hypothesis to the element-relation
+  principle.
+- `L.Rud.LevelDesc`{.Agda}: the level descriptions discharged in full at rud
+  closed levels, where every description is Delta-0; the tower lift; the
+  improved switch corollaries.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1172,6 +1179,8 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Describe`{.Agda}：前九个运算的描述半部：定义公式带 Δ₀ 见证，配对家族的完整 adequacy 与可定义子集等式，封面残余与嵌套存在残余已记录。
 - `L.Rud.Order`{.Agda}：典范良序：沿最小生成者键回拉扎根生成者树之序，SZ 后继子句机器验证，融贯一行，极限层的外部选择定理。
 - `L.Rud.Switch`{.Agda}：切换定理：抽象基在十六运算处清偿，概括形态双向到手，极限推论在位；像原理与层级描述作为具名模块假设。
+- `L.Rud.Graphs`{.Agda}：像原理的元素关系路线：十子句中的六个、恒等图与联接，以及像假设到元素关系原理的逐字归约。
+- `L.Rud.LevelDesc`{.Agda}：层级描述在 rud 闭层全数清偿，彼处每个描述皆为 Δ₀；塔提升；改进的切换推论。
 <!--/-->
 
 ```agda
@@ -1184,4 +1193,6 @@ import L.Rud.Realize
 import L.Rud.Describe
 import L.Rud.Order
 import L.Rud.Switch
+import L.Rud.Graphs
+import L.Rud.LevelDesc
 ```
