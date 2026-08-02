@@ -768,6 +768,24 @@ unsealing surgery.
 **Provenance:** the r2c report parts 2-4; commits `7c69beb`, `a3c9f80`;
 companion to P-c.
 
+### R-37. A transported membership in a compared statement position re-fires the tower
+
+**Rule:** A hypothesis of the shape ⟨ x ∈ Sset (concrete index) ⟩ whose proof
+arrives by transport, placed in a lemma STATEMENT at a concrete index, puts
+the proof term in conversion position and re-normalizes the union tower
+under it: the P-c mechanism arriving through a statement, not an index.
+The trap is invisible at the definition site (the same lemma at variable
+indices checks in milliseconds) and fires at the consumer. Cure (P-i [E]):
+take the membership as a VARIABLE hypothesis; the statement becomes
+strictly stronger and the mathematics is unchanged.
+
+**Measured (R4, 2026-08-03):** the restriction lemma with
+`Sset-mono ... : ⟨ x ∈ˢ Sset (sucV β) ⟩` in its statement ran past 600 s
+(killed, deletion-bisected to the single lemma); the variable-hypothesis
+restatement checks in 10 s inside a 2.6 s-cold file.
+
+**Provenance:** `_build/r4-report.md` section 6; commit `03f7bc6`.
+
 ### R-34. Pin every implicit universe level a `using`-import leaves open
 
 **Rule:** After `open M using (...)`, a lemma whose type leaves an imported
