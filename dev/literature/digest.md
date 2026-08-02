@@ -2,8 +2,10 @@
 
 Task `[L3.30-D1]`. Authored by the orchestrator directly (per the owner's
 2026-08-02 instruction) from the collection files in this directory and the
-collection report `_build/l1-report.md`; a codex-drafted version of the same
-document is being reconciled into this one as it returns. Authority order:
+collection report `_build/l1-report.md`; an independent adversarial audit
+(codex, read-only) then returned 16 findings, all verified against the
+collection and applied, and later extraction/fetch tasks update the OPEN
+items in place (the git history records each pass). Authority order:
 primary sources beat the collection notes, the collection notes beat the
 owner's exploration note (`owner-notes-rud.md`), and nothing mathematical
 here rests on model memory: every mathematical claim carries a citation
@@ -268,8 +270,11 @@ sources disagree, the source wins and the discrepancy is flagged.
    vs WS 2.83). "Simple functions" are confirmed as the proof device of SZ
    Lemma 1.4's ⊆ direction; the note's further claim that they preserve
    Sigma-n definability and serve the Sigma-star theory is NOT in the
-   fetched text. FLAGGED: partial support, remainder OPEN (Zeman's book or
-   SZ's later sections would settle).
+   fetched text. FLAGGED: partial support; the [L3.30-X1] extraction has
+   since checked SZ's later sections with a negative result (no Sigma-n
+   role for "simple" there; the Sigma-star machinery is explicitly
+   excluded, SZ p. 5, deferring to Zeman's book and Welch's chapter), so
+   the remainder hangs on Zeman's book (cite-only).
 3. **The S-step formula.** The note writes S_{ν+1} = S_ν ∪ {S_ν} ∪
    ⋃_i G_i"(S_ν × S_ν); SZ's actual step is S^A(U) = ⋃_{i≤15} F_i"(U ∪
    {U})² (SZ p. 9-10). The shapes differ (SZ folds U and {U} into the
@@ -307,11 +312,19 @@ sources disagree, the source wins and the discrepancy is flagged.
    supported through the Sigma-1 surjections of SZ 1.17. FLAGGED: the
    GCH-in-L derivation itself is an OPEN item to source for the memo.
 9. **Master codes: Sigma-n over J_α reduced to Sigma-1 over (J_{ρ_n},
-   A_n).** NOT extracted by the collection: the collection files do not
-   cover SZ's standard-code/projectum sections. The claim is plausibly in
-   the SZ chapter's later sections (the PDF is in hand), but per this
-   digest's ground rules it is OPEN until extracted. FLAGGED: settled by a
-   targeted extraction pass over SZ's fine-structure sections.
+   A_n).** SETTLED by the [L3.30-X1] extraction (fine-structure.md): the
+   reduction is in the SZ chapter, in the form of Lemma 5.6 (p. 34: for
+   acceptable M and a very good parameter p, Sigma-{n+1}^M subsets of the
+   n-th reduct M^{n,p} are Sigma-1 over it) with Lemma 5.9's embedding
+   extension, summarized by SZ themselves as "under favourable
+   circumstances Σn over M can be viewed as Σ1 over a 'reduct' of M"
+   (p. 14). Two corrections to the note's shorthand: SZ never use the
+   term "master code" (their term is the standard code A_M^{n,p} over the
+   n-th reduct M^{n,p}), and the reduction is not parameter-free: it needs
+   acceptability plus a very good parameter, and the standard-parameter
+   form additionally needs soundness (Lemma 6.8, p. 37; J_α is sound,
+   Lemma 9.2, p. 52). The formalization dividend the note claims survives
+   in this conditioned form.
 10. **The geology verdict** (rud provides no leverage for set-theoretic
     geology; the syntax burden sits in forcing itself). This is the owner's
     analysis, not literature: no geology source was fetched in L1. Marked
@@ -434,14 +447,12 @@ Each with what would settle it.
    Gödel operations, as a named theorem with its home): fetch Jensen 1972,
    Devlin ch. I (with errata care), or Jech's chapter on Gödel operations;
    Gandy's paper [G] for his side.
-4. **Simple functions' Sigma-n role** (the note's claim that they serve the
-   Sigma-star theory): Zeman, "Inner Models and Large Cardinals" ch. 1
-   (cite-only in the collection; the owner's note names chs. 1-2), or SZ's
-   later sections.
-5. **The master-code reduction** (Sigma-n over J_α to Sigma-1 over the
-   standard code): a targeted extraction pass over the fine-structure
-   sections of the SZ preprint already in hand (projecta, standard codes,
-   standard parameters); this is extraction work, not fetching work.
+4. **Simple functions' Sigma-n role**: the SZ side is now settled
+   negatively by [L3.30-X1] (see section 4, item 2); the residue is Zeman,
+   "Inner Models and Large Cardinals" ch. 1 (cite-only in the collection;
+   the owner's note names chs. 1-2).
+5. **The master-code reduction**: SETTLED by [L3.30-X1]; see
+   fine-structure.md and section 4, item 9 above.
 6. **A sourced GCH-in-L derivation** for the memo to target: the natural
    candidates are SZ's own consequences chain (1.23-1.27 with 9.1) plus the
    standard hull-and-collapse argument from a full text (Devlin ch. II with
