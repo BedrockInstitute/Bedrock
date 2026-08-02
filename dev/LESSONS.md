@@ -1127,12 +1127,17 @@ level cured it with no other change (the p1 report, surprises 1).
 
 **Rule:** Every agda invocation runs under a GHC heap cap (`GHCRTS=-M<n>g`)
 so a runaway typecheck dies with a clean "Heap exhausted" exit instead of
-OOM-killing the machine: sub-agents at `-M10g`, the orchestrator's audits at
-`-M16g`, `make` exports a default. At most TWO Agda-typechecking sub-agents
-run concurrently (a third slot is for non-Agda work only), and a watchdog
-(`_build/tools/agda-watchdog.sh`, restart it each session) backstops at 14 GB
-per process and an 8% system-free floor. A heap-exhausted exit is a WALL
-event: apply the P-i playbook, never simply rerun.
+OOM-killing the machine; the orchestrator's audits run at `-M16g` and `make`
+exports a default. Sub-agent concurrency is TIERED (owner-widened 2026-08-02
+once the caps and the watchdog were live): WIDE mode for routine batches,
+up to FOUR concurrent Agda writers at `-M8g` each; HEAVY mode for assembly
+and close-out batches, at most TWO at `-M12g` each; the tier is chosen at
+dispatch, mixed tiers keep the worst-case heap sum at or under 32 GB, and
+the third and fourth slots are filled only when system free memory reads
+above 25%. A watchdog (`_build/tools/agda-watchdog.sh`, restart it each
+session) backstops at 14 GB per process and an 8% system-free floor. A
+heap-exhausted exit is a WALL event: apply the P-i playbook, never simply
+rerun.
 
 **Measured (2026-08-02):** four concurrent unguarded flash writers; one
 `agda src/L/Rud/Images.lagda.md` climbed past 5.8 GB and the 64 GB machine
