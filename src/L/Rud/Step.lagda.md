@@ -13,18 +13,18 @@ step-out lemmas, and the construction itself is sealed so nothing downstream
 unfolds it.
 
 The chapter also discharges what the telescope's four properties need from
-the concrete operator. Membership of `u` and of its members in the step
-comes from the pairing image, the classical singleton route: `u` is a member
-of `F0 u u = {u}`, and a member `x` of `u` is a member of `F0 x u = {x,u}`,
-both of which are images over the argument square. The transitivity of the
-step for transitive inputs is then analysed operation by operation, sharing
-the frame that the tuple operations catch the intermediate objects of pair
+the concrete operator. Membership of `u` and of its members in the step is
+the definitional floor of the cumulative form: the step contains `u ∪ {u}`,
+as the step-shape ruling pins (SZ's verb "adds images to `U ∪ {U}`" and
+Mathias's `T(u) = u ∪ {u} ∪ ...`, WS 2.73). The transitivity of the step
+for transitive inputs is then analysed operation by operation, sharing the
+frame that the tuple operations catch the intermediate objects of pair
 formation. Monotonicity of the step in its argument is examined and its
 outcome recorded in the batch report.
 <!--zh-->
 初步函数路线的层级引擎是抽象的：它只拿一个单步算子连同四条性质，就别无其他地建起 S-塔。本章供给具体算子：对 Schindler-Zeman 基的十六个运算各取 `u ∪ {u}` 之平方上的像值集 (SZ p. 10，方程 I.1)，作为该平方的小表示上的 `sett`{.Agda} 造出，step 则是这十六个像之并，即初步函数闭包的一步。消费者读取的隶属刻画由 step-in 与 step-out 引理陈述，构造本身被封起，下游无从展开。
 
-本章还清偿望远镜四条性质需要从具体算子得到的那部分。`u` 及其成员在 step 中的隶属来自配对像，即经典的单点路线：`u` 是 `F0 u u = {u}` 的成员，`u` 的成员 `x` 是 `F0 x u = {x,u}` 的成员，两者都是参数平方上的像。接着逐运算分析 step 对传递输入的传递性，共享「三元组运算捕捉对形成的中间对象」这一框架。step 对其自变量的单调性经过考查，其结果记入批次报告。
+本章还清偿望远镜四条性质需要从具体算子得到的那部分。`u` 及其成员在 step 中的隶属是累积形式的定义性地板：step 含有 `u ∪ {u}`，正如 step 形状裁定所定 (SZ 的动词「把像加到 `U ∪ {U}`」，以及 Mathias 的 `T(u) = u ∪ {u} ∪ ...`，WS 2.73)。接着逐运算分析 step 对传递输入的传递性，共享「三元组运算捕捉对形成的中间对象」这一框架。step 对其自变量的单调性经过考查，其结果记入批次报告。
 <!--/-->
 
 ```agda
@@ -42,11 +42,11 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
 open import V.Coding {ℓ} using ( pr )
 open import L.Rud.Ops {ℓ}
   using ( F0; F1; F2; F3; F4; F5; F6; F7; F9
-        ; F0-spec; F1-spec; F5-spec; F9-spec
-        ; F2-read; F6-read; F7-read )
+        ; F0-spec; F1-spec; F5-spec
+        ; F2-read; F3-read; F4-read; F6-read; F7-read )
 open import L.Rud.Images {ℓ}
   using ( F8; F10; F11; F12; F13; F14; left; right; left-spec; right-spec
-        ; F8-spec; F10-spec )
+        ; F8-spec; F10-spec; F11-spec; F12-spec )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Data.Sum.Properties using ( isProp⊎ )
 import Cubical.Data.Empty as Empty
@@ -55,7 +55,7 @@ open import Cubical.Foundations.Equiv using ( fiber )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _≡ₕ_ )
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; _≡ₕ_; _⊆_; extensionality )
 -- lint-agda: keep (used qualified: SetPackage.classification)
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_∶_⁆; separation-ax; pairing-ax; ⋃_; union-ax; ⁅_⁆s
@@ -219,23 +219,41 @@ F15A-spec : (x u : V ℓ) → ⟨ u ∈ˢ F15A x ⟩ → ⟨ u ∈ˢ x ⟩
 F15A-spec x u h = ∈∈ₛ {a = u} {b = x} .snd
   (separation-ax x (λ u → u ∈ₛ A) u .fst (∈∈ₛ {a = u} {b = F15A x} .fst h) .fst)
 
-Fof : Op16 → V ℓ → V ℓ → V ℓ
-Fof op0 a b = F0 a b
-Fof op1 a b = F1 a b
-Fof op2 a b = F2 a b
-Fof op3 a b = F3 a b
-Fof op4 a b = F4 a b
-Fof op5 a b = F5 a b
-Fof op6 a b = F6 a b
-Fof op7 a b = F7 a b
-Fof op8 a b = F8 a b
-Fof op9 a b = F9 a b
-Fof op10 a b = F10 a b
-Fof op11 a b = F11 a b
-Fof op12 a b = F12 a b
-Fof op13 a b = F13 a b
-Fof op14 a b = F14 a b
-Fof op15 a b = F15A a
+opaque
+  Fof : Op16 → V ℓ → V ℓ → V ℓ
+  Fof op0 a b = F0 a b
+  Fof op1 a b = F1 a b
+  Fof op2 a b = F2 a b
+  Fof op3 a b = F3 a b
+  Fof op4 a b = F4 a b
+  Fof op5 a b = F5 a b
+  Fof op6 a b = F6 a b
+  Fof op7 a b = F7 a b
+  Fof op8 a b = F8 a b
+  Fof op9 a b = F9 a b
+  Fof op10 a b = F10 a b
+  Fof op11 a b = F11 a b
+  Fof op12 a b = F12 a b
+  Fof op13 a b = F13 a b
+  Fof op14 a b = F14 a b
+  Fof op15 a b = F15A a
+
+opaque
+  unfolding Fof
+  Fof-f0 : (a b : V ℓ) → Fof f0 a b ≡ F0 a b
+  Fof-f0 a b = refl
+
+  Fof-f9 : (a b : V ℓ) → Fof f9 a b ≡ F9 a b
+  Fof-f9 a b = refl
+
+  Fof-f10 : (a b : V ℓ) → Fof f10 a b ≡ F10 a b
+  Fof-f10 a b = refl
+
+  Fof-f11 : (a b : V ℓ) → Fof f11 a b ≡ F11 a b
+  Fof-f11 a b = refl
+
+  Fof-f12 : (a b : V ℓ) → Fof f12 a b ≡ F12 a b
+  Fof-f12 a b = refl
 
 im : Op16 → V ℓ → V ℓ
 im i u = sett (⟪ u' u ⟫ × ⟪ u' u ⟫)
@@ -249,67 +267,107 @@ im i u = sett (⟪ u' u ⟫ × ⟪ u' u ⟫)
 <!--/-->
 
 <!--en-->
-The step is the union, over the sixteen indices, of the unions of the image
-sets: a member of the step is a member of some value `F_i(a,b)` with
-`a, b ∈ u ∪ {u}`. The construction is sealed `opaque`{.Agda}, and the
-characterization is exported as the two directions `step-in` and
-`step-out`{.Agda}, which are the only surface the rest of the route reads.
+The step is cumulative: it contains the members of `u`, the set `u` itself,
+and every value `F_i(a,b)` with `a, b ∈ u ∪ {u}`. This is the form the
+step-shape ruling pins (SZ's prose verb "adds images to `U ∪ {U}`", and
+Mathias's verbatim cumulative one-step operator `T(u) = u ∪ {u} ∪ ...`,
+WS 2.73). The construction is sealed `opaque`{.Agda}, and the membership
+characterization is exported as the three-armed `step-in` directions
+(a member of `u`, `u` itself, or an image value) and the `step-out`
+direction, which are the only surface the rest of the route reads.
 <!--zh-->
-step 是十六个索引上的并，每个索引再取其像集之并：step 的成员是某个值 `F_i(a,b)` 的成员，其中 `a, b ∈ u ∪ {u}`。构造以 `opaque`{.Agda} 封印，刻画以 `step-in` 与 `step-out`{.Agda} 两个方向导出，这是路线其余部分唯一读取的表面。
+step 是累积的：它含有 `u` 的成员、集合 `u` 本身，以及每个值 `F_i(a,b)`，其中 `a, b ∈ u ∪ {u}`。这正是 step 形状裁定所定的形式 (SZ 行文的动词「把像加到 `U ∪ {U}`」，以及 Mathias 逐字累积的单步算子 `T(u) = u ∪ {u} ∪ ...`，WS 2.73)。构造以 `opaque`{.Agda} 封印，隶属刻画以三臂 `step-in` 方向 (u 的成员、u 本身、或一个像值) 与 `step-out` 方向导出，这是路线其余部分唯一读取的表面。
 <!--/-->
 
 ```agda
+values : V ℓ → V ℓ
+values u = ⋃ (sett Op16 (λ i → im i u))
+
+data StepArm (u x : V ℓ) : Type (ℓ-suc ℓ) where
+  arm-member : ⟨ x ∈ˢ u ⟩ → StepArm u x
+  arm-self   : x ≡ u → StepArm u x
+  arm-image  : (i : Op16) (a b : V ℓ)
+             → (⟨ a ∈ˢ u ⟩ ⊎ (a ≡ u)) → (⟨ b ∈ˢ u ⟩ ⊎ (b ≡ u)) → ⟨ x ≡ₕ Fof i a b ⟩
+             → StepArm u x
+
+image-wit : (u x : V ℓ) → Type (ℓ-suc ℓ)
+image-wit u x = Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
+                  ((⟨ a ∈ˢ u ⟩ ⊎ (a ≡ u)) × (⟨ b ∈ˢ u ⟩ ⊎ (b ≡ u)) × ⟨ x ≡ₕ Fof i a b ⟩)
+
 opaque
   step : V ℓ → V ℓ
-  step u = ⋃ (sett Op16 (λ i → ⋃ (im i u)))
+  step u = ⋃ ⁅ u' u , values u ⁆
 
 opaque
   unfolding step
   step-out : (u x : V ℓ) → ⟨ x ∈ˢ step u ⟩
-           → ∥ Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
-                (⟨ a ∈ˢ u' u ⟩ × ⟨ b ∈ˢ u' u ⟩ × ⟨ x ∈ˢ Fof i a b ⟩) ∥₁
+           → ∥ StepArm u x ∥₁
   step-out u x h = PT.rec squash₁ go₁
-    (union-ax (sett Op16 (λ i → ⋃ (im i u))) x .fst
+    (union-ax ⁅ u' u , values u ⁆ x .fst
       (∈∈ₛ {a = x} {b = step u} .fst h))
     where
-    go₁ : Σ[ v ∈ V ℓ ]
-            (⟨ v ∈ₛ sett Op16 (λ i → ⋃ (im i u)) ⟩ × ⟨ x ∈ₛ v ⟩)
-        → ∥ Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
-             (⟨ a ∈ˢ u' u ⟩ × ⟨ b ∈ˢ u' u ⟩ × ⟨ x ∈ˢ Fof i a b ⟩) ∥₁
-    go₁ (v , v∈ₛS , x∈ₛv) = PT.rec squash₁ go₂
-      (∈∈ₛ {a = v} {b = sett Op16 (λ i → ⋃ (im i u))} .snd v∈ₛS)
+    go₁ : Σ[ v ∈ V ℓ ] (⟨ v ∈ₛ ⁅ u' u , values u ⁆ ⟩ × ⟨ x ∈ₛ v ⟩)
+        → ∥ StepArm u x ∥₁
+    go₁ (v , v∈ₛpair , x∈ₛv) = PT.rec squash₁ go₂
+      (pairing-ax (u' u) (values u) v .fst v∈ₛpair)
       where
-      go₂ : Σ[ j ∈ Op16 ] (⋃ (im j u) ≡ v)
-          → ∥ Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
-               (⟨ a ∈ˢ u' u ⟩ × ⟨ b ∈ˢ u' u ⟩ × ⟨ x ∈ˢ Fof i a b ⟩) ∥₁
-      go₂ (j , q) = PT.rec squash₁ go₃
-        (union-ax (im j u) x .fst
-          (subst (λ t → ⟨ x ∈ₛ t ⟩) (sym q) x∈ₛv))
+      go₂ : (⟨ v ≡ₕ u' u ⟩ ⊎ ⟨ v ≡ₕ values u ⟩)
+          → ∥ StepArm u x ∥₁
+      go₂ (inl v≡u') = go' (u'-cases u x
+        (subst (λ t → ⟨ x ∈ˢ t ⟩) v≡u' (∈∈ₛ {a = x} {b = v} .snd x∈ₛv)))
         where
-        go₃ : Σ[ w ∈ V ℓ ] (⟨ w ∈ₛ im j u ⟩ × ⟨ x ∈ₛ w ⟩)
-            → ∥ Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
-                 (⟨ a ∈ˢ u' u ⟩ × ⟨ b ∈ˢ u' u ⟩ × ⟨ x ∈ˢ Fof i a b ⟩) ∥₁
-        go₃ (w , w∈ₛim , x∈ₛw) = PT.rec squash₁ go₄
-          (∈∈ₛ {a = w} {b = im j u} .snd w∈ₛim)
+        go' : (⟨ x ∈ˢ u ⟩ ⊎ (x ≡ u)) → ∥ StepArm u x ∥₁
+        go' (inl x∈u) = ∣ arm-member x∈u ∣₁
+        go' (inr x≡u) = ∣ arm-self x≡u ∣₁
+      go₂ (inr v≡val) = PT.rec squash₁
+          (λ ((i , a , b , a∈u , b∈u , x≡) : image-wit u x) →
+             ∣ arm-image i a b a∈u b∈u x≡ ∣₁)
+          (go₃ (subst (λ t → ⟨ x ∈ₛ t ⟩) v≡val x∈ₛv))
+        where
+        go₃ : ⟨ x ∈ₛ values u ⟩ → ∥ image-wit u x ∥₁
+        go₃ h' = PT.rec squash₁
+            go₄ (union-ax (sett Op16 (λ i → im i u)) x .fst h')
           where
-          go₄ : Σ[ p ∈ ⟪ u' u ⟫ × ⟪ u' u ⟫ ]
-                  (Fof j (⟪ u' u ⟫↪ (p .fst)) (⟪ u' u ⟫↪ (p .snd)) ≡ w)
-              → ∥ Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
-                   (⟨ a ∈ˢ u' u ⟩ × ⟨ b ∈ˢ u' u ⟩ × ⟨ x ∈ˢ Fof i a b ⟩) ∥₁
-          go₄ (p , r) = ∣ j
-            , ⟪ u' u ⟫↪ (p .fst) , ⟪ u' u ⟫↪ (p .snd)
-            , ( ∈∈ₛ {a = ⟪ u' u ⟫↪ (p .fst)} {b = u' u} .snd (∈ₛ⟪ u' u ⟫↪ (p .fst))
-              , ∈∈ₛ {a = ⟪ u' u ⟫↪ (p .snd)} {b = u' u} .snd (∈ₛ⟪ u' u ⟫↪ (p .snd))
-              , subst (λ t → ⟨ x ∈ˢ t ⟩) (sym r)
-                  (∈∈ₛ {a = x} {b = w} .snd x∈ₛw) ) ∣₁
+          go₄ : Σ[ w ∈ V ℓ ] (⟨ w ∈ₛ sett Op16 (λ i → im i u) ⟩ × ⟨ x ∈ₛ w ⟩)
+              → ∥ image-wit u x ∥₁
+          go₄ (w , w∈ₛS , x∈ₛw) = PT.rec squash₁
+            go₅ (∈∈ₛ {a = w} {b = sett Op16 (λ i → im i u)} .snd w∈ₛS)
+            where
+            go₅ : Σ[ j ∈ Op16 ] (im j u ≡ w) → ∥ image-wit u x ∥₁
+            go₅ (j , q) = PT.rec squash₁
+              go₆ (subst (λ t → ⟨ x ∈ˢ t ⟩) (sym q) (∈∈ₛ {a = x} {b = w} .snd x∈ₛw))
+              where
+              go₆ : Σ[ p ∈ ⟪ u' u ⟫ × ⟪ u' u ⟫ ]
+                      ⟨ Fof j (⟪ u' u ⟫↪ (p .fst)) (⟪ u' u ⟫↪ (p .snd)) ≡ₕ x ⟩
+                  → ∥ image-wit u x ∥₁
+              go₆ (p , r) = ∣ j
+                , ⟪ u' u ⟫↪ (p .fst) , ⟪ u' u ⟫↪ (p .snd)
+                , ( u'-cases u (⟪ u' u ⟫↪ (p .fst))
+                      (∈∈ₛ {a = ⟪ u' u ⟫↪ (p .fst)} {b = u' u} .snd (∈ₛ⟪ u' u ⟫↪ (p .fst)))
+                  , u'-cases u (⟪ u' u ⟫↪ (p .snd))
+                      (∈∈ₛ {a = ⟪ u' u ⟫↪ (p .snd)} {b = u' u} .snd (∈ₛ⟪ u' u ⟫↪ (p .snd)))
+                  , sym r ) ∣₁
 
-  step-in : (u x : V ℓ) (i : Op16) (a b : V ℓ)
-          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ Fof i a b ⟩
-          → ⟨ x ∈ˢ step u ⟩
-  step-in u x i a b a∈u' b∈u' x∈Fab =
+  step-in : (u x : V ℓ) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ step u ⟩
+  step-in u x x∈u = ∈∈ₛ {a = x} {b = step u} .snd
+    (union-ax ⁅ u' u , values u ⁆ x .snd
+      ∣ u' u , ( pairing-ax (u' u) (values u) (u' u) .snd ∣ inl refl ∣₁
+               , ∈∈ₛ {a = x} {b = u' u} .fst (u'-in u x x∈u) ) ∣₁)
+
+  step-in-self : (u : V ℓ) → ⟨ u ∈ˢ step u ⟩
+  step-in-self u = ∈∈ₛ {a = u} {b = step u} .snd
+    (union-ax ⁅ u' u , values u ⁆ u .snd
+      ∣ u' u , ( pairing-ax (u' u) (values u) (u' u) .snd ∣ inl refl ∣₁
+               , ∈∈ₛ {a = u} {b = u' u} .fst (u-self-in u) ) ∣₁)
+
+  step-in-img : (u x : V ℓ) (i : Op16) (a b : V ℓ)
+              → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ Fof i a b ⟩
+              → ⟨ x ∈ˢ step u ⟩
+  step-in-img u x i a b a∈u' b∈u' x≡ =
     ∈∈ₛ {a = x} {b = step u} .snd
-      (union-ax (sett Op16 (λ i → ⋃ (im i u))) x .snd
-        ∣ ⋃ (im i u) , ( im∈ₛS , x∈ₛ⋃im ) ∣₁)
+      (union-ax ⁅ u' u , values u ⁆ x .snd
+        ∣ values u , ( pairing-ax (u' u) (values u) (values u) .snd ∣ inr refl ∣₁
+                     , x∈ₛvalues ) ∣₁)
     where
     fa : fiber (⟪ u' u ⟫↪) a
     fa = ∈-asFiber {a = a} {b = u' u} a∈u'
@@ -319,55 +377,52 @@ opaque
     a' = ⟪ u' u ⟫↪ (fa .fst)
     b' : V ℓ
     b' = ⟪ u' u ⟫↪ (fb .fst)
-    x∈ₛFab' : ⟨ x ∈ₛ Fof i a' b' ⟩
-    x∈ₛFab' = subst (λ t → ⟨ x ∈ₛ t ⟩)
-      (sym (cong₂ (Fof i) (fa .snd) (fb .snd))) (∈∈ₛ {a = x} {b = Fof i a b} .fst x∈Fab)
-    x∈ₛ⋃im : ⟨ x ∈ₛ ⋃ (im i u) ⟩
-    x∈ₛ⋃im = union-ax (im i u) x .snd
-      ∣ Fof i a' b'
-        , ( ∈∈ₛ {a = Fof i a' b'} {b = im i u} .fst
-            ∣ (fa .fst , fb .fst) , refl ∣₁
-        , x∈ₛFab' ) ∣₁
-    im∈ₛS : ⟨ ⋃ (im i u) ∈ₛ sett Op16 (λ i → ⋃ (im i u)) ⟩
-    im∈ₛS = ∈∈ₛ {a = ⋃ (im i u)}
-      {b = sett Op16 (λ i → ⋃ (im i u))} .fst
-      ∣ i , refl ∣₁
+    x≡ₕab' : ⟨ x ≡ₕ Fof i a' b' ⟩
+    x≡ₕab' = subst (λ t → ⟨ x ≡ₕ t ⟩) (sym (cong₂ (Fof i) (fa .snd) (fb .snd))) x≡
+    x∈ₛim : ⟨ x ∈ₛ im i u ⟩
+    x∈ₛim = ∈∈ₛ {a = x} {b = im i u} .fst
+      ∣ (fa .fst , fb .fst)
+      , (cong₂ (Fof i) (fa .snd) (fb .snd) ∙ sym x≡) ∣₁
+    x∈ₛvalues : ⟨ x ∈ₛ values u ⟩
+    x∈ₛvalues = union-ax (sett Op16 (λ i → im i u)) x .snd
+      ∣ im i u , ( ∈∈ₛ {a = im i u} {b = sett Op16 (λ i → im i u)} .fst ∣ i , refl ∣₁
+                 , x∈ₛim ) ∣₁
 ```
 
 <!--en-->
-The two growth properties follow from the pairing image alone. A member `x`
-of `u` lies in `F0 x u = {x,u}`, and `u` itself lies in `F0 u u = {u}`;
-both images take their arguments from the argument square, so the step-in
-direction places them in the step.
+The two growth properties are the definitional floor of the cumulative
+step: `u` and its members are in `u ∪ {u}`, which the step contains. The
+membership-conditioned monotonicity transfers the floor through the subset
+and membership hypotheses and re-enters each image value through its
+original arguments.
 <!--zh-->
-两条增长性质单独从配对像得出。`u` 的成员 `x` 落在 `F0 x u = {x,u}` 中，`u` 本身落在 `F0 u u = {u}` 中；两个像都从参数平方取自变量，于是 step-in 方向把它们放进 step。
+两条增长性质是累积 step 的定义性地板：`u` 及其成员都在 `u ∪ {u}` 中，而 step 含有它。带成员条件的单调性把地板经子集与成员假设传输，再让每个像值经其原自变量重新进入。
 <!--/-->
 
 ```agda
 step-⊆ : (u x : V ℓ) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ step u ⟩
-step-⊆ u x x∈u = step-in u x f0 x u (u'-in u x x∈u) (u-self-in u)
-  (F0-spec x u x .snd ∣ inl refl ∣₁)
+step-⊆ = step-in
 
 step-∈ : (u : V ℓ) → ⟨ u ∈ˢ step u ⟩
-step-∈ u = step-in u u f0 u u (u-self-in u) (u-self-in u)
-  (F0-spec u u u .snd ∣ inl refl ∣₁)
+step-∈ = step-in-self
 
 step-mono∈ : {u v : V ℓ} → ((x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ v ⟩)
            → ⟨ u ∈ v ⟩ → ((x : V ℓ) → ⟨ x ∈ step u ⟩ → ⟨ x ∈ step v ⟩)
 step-mono∈ {u} {v} sub u∈v x x∈stepu = PT.rec (snd (x ∈ˢ step v)) go
   (step-out u x x∈stepu)
   where
-  go : Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
-         (⟨ a ∈ˢ u' u ⟩ × ⟨ b ∈ˢ u' u ⟩ × ⟨ x ∈ˢ Fof i a b ⟩) → ⟨ x ∈ˢ step v ⟩
-  go (i , a , b , a∈u' , b∈u' , x∈Fab) =
-    step-in v x i a b (u'⊆v' a a∈u') (u'⊆v' b b∈u') x∈Fab
+  go : StepArm u x → ⟨ x ∈ˢ step v ⟩
+  go (arm-member x∈u) = step-in v x (sub x x∈u)
+  go (arm-self x≡u) = step-in v x (subst (λ t → ⟨ t ∈ˢ v ⟩) (sym x≡u) u∈v)
+  go (arm-image i a b a∈u b≡u x≡) =
+    step-in-img v x i a b (a-split a∈u) (b-split b≡u) x≡
     where
-    u'⊆v' : (c : V ℓ) → ⟨ c ∈ˢ u' u ⟩ → ⟨ c ∈ˢ u' v ⟩
-    u'⊆v' c h = go' (u'-cases u c h)
-      where
-      go' : (⟨ c ∈ˢ u ⟩ ⊎ (c ≡ u)) → ⟨ c ∈ˢ u' v ⟩
-      go' (inl c∈u) = u'-in v c (sub c c∈u)
-      go' (inr c≡u) = u'-in v c (subst (λ t → ⟨ t ∈ˢ v ⟩) (sym c≡u) u∈v)
+    a-split : (⟨ a ∈ˢ u ⟩ ⊎ (a ≡ u)) → ⟨ a ∈ˢ u' v ⟩
+    a-split (inl a∈u) = u'-in v a (sub a a∈u)
+    a-split (inr a≡u) = u'-in v a (subst (λ t → ⟨ t ∈ˢ v ⟩) (sym a≡u) u∈v)
+    b-split : (⟨ b ∈ˢ u ⟩ ⊎ (b ≡ u)) → ⟨ b ∈ˢ u' v ⟩
+    b-split (inl b∈u) = u'-in v b (sub b b∈u)
+    b-split (inr b≡u) = u'-in v b (subst (λ t → ⟨ t ∈ˢ v ⟩) (sym b≡u) u∈v)
 
 u'-member→step : (u x : V ℓ) → ⟨ x ∈ˢ u' u ⟩ → ⟨ x ∈ˢ step u ⟩
 u'-member→step u x h = go (u'-cases u x h)
@@ -387,12 +442,13 @@ u'-member→step u x h = go (u'-cases u x h)
 The transitivity analysis of the step for a transitive `u` is a case split
 over the sixteen operations. Two frames recur. The first reads the members
 of a Kuratowski pair: a member of `pr u v` is the singleton of `u` or the
-unordered pair of `u` and `v`, and both are members of the pair images
-`F9 u u` and `F9 u v`, so any pair of members of the argument set lands in
-the step. The second reads the members of a singleton: a member of `{a}` is
-`a` itself, a member of the argument set.
+unordered pair of `u` and `v`, and each is itself an image value over the
+argument square: `{u} = F0 u u` and `{u, v} = F0 u v`, so any pair of
+members of the argument set lands in the step. The second reads the members
+of a singleton: a member of `{a}` is `a` itself, a member of the argument
+set.
 <!--zh-->
-对传递的 `u` 分析 step 的传递性，就是对十六个运算分情形。两个框架反复出现。其一是读 Kuratowski 对的成员：`pr u v` 的成员是 `u` 的单点或 `u`、`v` 的无序对，两者都是对像 `F9 u u` 与 `F9 u v` 的成员，故参数集成员之对总落进 step。其二是读单点的成员：`{a}` 的成员就是 `a` 本身，即参数集的成员。
+对传递的 `u` 分析 step 的传递性，就是对十六个运算分情形。两个框架反复出现。其一是读 Kuratowski 对的成员：`pr u v` 的成员是 `u` 的单点或 `u`、`v` 的无序对，而两者各自就是参数平方上的像值：`{u} = F0 u u`，`{u, v} = F0 u v`，故参数集成员之对总落进 step。其二是读单点的成员：`{a}` 的成员就是 `a` 本身，即参数集的成员。
 <!--/-->
 
 ```agda
@@ -405,15 +461,27 @@ singl-member : (a y : V ℓ) → ⟨ y ∈ˢ ⁅ a ⁆s ⟩ → y ≡ a
 singl-member a y h = SetPackage.classification (SingletonPackage a) y .fst
   (∈∈ₛ {a = y} {b = ⁅ a ⁆s} .fst h)
 
-pair→step : (u : V ℓ) (tr : {x y : V ℓ} → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ u ⟩ → ⟨ y ∈ˢ u ⟩)
-          → (a b y : V ℓ)
+singl≡pair : (a : V ℓ) → ⁅ a ⁆s ≡ ⁅ a , a ⁆
+singl≡pair a = extensionality (⁅ a ⁆s) (⁅ a , a ⁆) (sub₁ , sub₂)
+  where
+  sub₁ : ⟨ ⁅ a ⁆s ⊆ ⁅ a , a ⁆ ⟩
+  sub₁ x x∈s = pairing-ax a a x .snd
+    ∣ inl (singl-member a x (∈∈ₛ {a = x} {b = ⁅ a ⁆s} .snd x∈s)) ∣₁
+  sub₂ : ⟨ ⁅ a , a ⁆ ⊆ ⁅ a ⁆s ⟩
+  sub₂ x x∈p = SetPackage.classification (SingletonPackage a) x .snd
+    (PT.rec (isSetS x a) (λ { (inl e) → e ; (inr e) → e })
+      (pairing-ax a a x .fst x∈p))
+
+pair→step : (u : V ℓ) → (a b y : V ℓ)
           → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ y ∈ˢ pr a b ⟩
           → ⟨ y ∈ˢ step u ⟩
-pair→step u tr a b y a∈u' b∈u' h = PT.rec (snd (y ∈ˢ step u)) go (pr-member a b y h)
+pair→step u a b y a∈u' b∈u' h = PT.rec (snd (y ∈ˢ step u)) go (pr-member a b y h)
   where
   go : (⟨ y ≡ₕ ⁅ a ⁆s ⟩ ⊎ ⟨ y ≡ₕ ⁅ a , b ⁆ ⟩) → ⟨ y ∈ˢ step u ⟩
-  go (inl y≡s) = step-in u y f9 a a a∈u' a∈u' (F9-spec a a y .snd ∣ inl y≡s ∣₁)
-  go (inr y≡p) = step-in u y f9 a b a∈u' b∈u' (F9-spec a b y .snd ∣ inr y≡p ∣₁)
+  go (inl y≡s) = step-in-img u y f0 a a a∈u' a∈u'
+    (subst (λ t → ⟨ y ≡ₕ t ⟩) (singl≡pair a ∙ sym (Fof-f0 a a)) y≡s)
+  go (inr y≡p) = step-in-img u y f0 a b a∈u' b∈u'
+    (subst (λ t → ⟨ y ≡ₕ t ⟩) (sym (Fof-f0 a b)) y≡p)
 
 prL-in-doubleUnion : (b u v : V ℓ) → ⟨ pr u v ∈ˢ b ⟩ → ⟨ u ∈ˢ doubleUnion b ⟩
 prL-in-doubleUnion b u v h = ∈∈ₛ {a = u} {b = doubleUnion b} .snd
@@ -444,17 +512,21 @@ case reads a member `x` of the value `F_i(a,b)` with `a, b ∈ u ∪ {u}`, opens
 `y ∈ x` through the operation's specification, and reassembles `y` as a
 member of the step: members of the argument set land directly, and the
 intermediate objects of pair formation are caught by the pair and tuple
-images. Twelve cases close cleanly: `F0`, `F1`, `F2`, `F5`, `F6`, `F7`, `F8`,
-`F9`, `F10`, `F11`, `F12`, and `F15`, the five sealed ones through the read
-lemmas appended to the operations chapter. The `F3` and `F4` cases are
-blocked by a mathematical obstruction recorded in the report: a member of
-their triple values can be `{u, pr z v}` with `pr z v` outside the argument
-set, and no image over the argument square contains it in general. The
-`F13` and `F14` cases close on the pair branch through the excluded middle,
-and the non-pair branch needs the images chapter's private junk facts.
-All trails are recorded in the batch report.
+images. Twelve cases close cleanly: `F0`, `F1`, `F2`, `F3`, `F4`, `F5`,
+`F6`, `F7`, `F8`, `F9`, `F10`, and `F15`, the five sealed ones through the
+read lemmas appended to the operations chapter. The `F3` and `F4` cases are
+the ones the tuple operations were engineered for: a member of their triple
+values is itself a tuple value, `F11 z (pr u v)` and `F12 z (pr u v)`, at
+the existing pair `pr u v ∈ b`, so it lands in the step as a value over the
+argument square. The `F11` to `F14` cases close on the pair branch through
+the excluded middle (`left b` and `right b` are the components, in the
+argument set by transitivity), and their non-pair branches need the images
+chapter's private junk facts: the left and right projections of a non-pair
+are defined through private `⋂`- and `rightSlice`-internals that neither
+reduce nor name from outside this module. That read is recorded as the
+batch's remaining blocker; all trails are in the batch report.
 <!--zh-->
-对传递输入，step 逐运算地传递。每个情形读值 `F_i(a,b)` 的成员 `x`，其中 `a, b ∈ u ∪ {u}`，经该运算的规格拆开 `y ∈ x`，再把 `y` 重组成 step 的成员：参数集的成员直接落下，对形成的中间对象则由对与三元组像捕捉。此处十二个情形干净闭合：`F0`、`F1`、`F2`、`F5`、`F6`、`F7`、`F8`、`F9`、`F10`、`F11`、`F12` 与 `F15`，其中五个被封运算经运算章附录的读引理。`F3` 与 `F4` 的情形被一条数学障碍挡住，记入报告：其三元组值的成员可能是 `{u, pr z v}`，而 `pr z v` 在参数集之外，参数平方上的像一般不含它。`F13` 与 `F14` 的情形在对支经排中律闭合，非对支需要像章的私有垃圾事实。全部轨迹都记入批次报告。
+对传递输入，step 逐运算地传递。每个情形读值 `F_i(a,b)` 的成员 `x`，其中 `a, b ∈ u ∪ {u}`，经该运算的规格拆开 `y ∈ x`，再把 `y` 重组成 step 的成员：参数集的成员直接落下，对形成的中间对象则由对与三元组像捕捉。此处十二个情形干净闭合：`F0`、`F1`、`F2`、`F3`、`F4`、`F5`、`F6`、`F7`、`F8`、`F9`、`F10` 与 `F15`，其中五个被封运算经运算章附录的读引理。`F3` 与 `F4` 的情形正是三元组运算为之而设者：其三元组值的成员本身就是三元组值，即现有对 `pr u v ∈ b` 处的 `F11 z (pr u v)` 与 `F12 z (pr u v)`，于是它作为参数平方上的值落进 step。`F11` 至 `F14` 的情形在对支经排中律闭合 (`left b` 与 `right b` 即两分量，经传递性在参数集中)，其非对支需要像章的私有垃圾事实：非对的左右投影经私有的 `⋂` 与 `rightSlice` 内部定义，在本模块之外既不归约也无从点名。这条缺失的读取记为批次余下的阻碍；全部轨迹都在批次报告中。
 <!--/-->
 
 ```agda
@@ -462,216 +534,137 @@ Trans : V ℓ → Type (ℓ-suc ℓ)
 Trans u = {x y : V ℓ} → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ u ⟩ → ⟨ y ∈ˢ u ⟩
 
 trans-F0 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F0 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F0 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F0 u tr a b x y a∈u' b∈u' x∈F0ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (F0-spec a b x .fst x∈F0ab)
+trans-F0 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F0-spec a b y .fst
+    (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡ y∈x))
   where
-  go : (⟨ x ≡ₕ a ⟩ ⊎ ⟨ x ≡ₕ b ⟩) → ⟨ y ∈ˢ step u ⟩
-  go (inl x≡a) = u'-member→step u y
-    (u'-trans u tr a y (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡a y∈x) a∈u')
-  go (inr x≡b) = u'-member→step u y
-    (u'-trans u tr b y (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡b y∈x) b∈u')
+  go : (⟨ y ≡ₕ a ⟩ ⊎ ⟨ y ≡ₕ b ⟩) → ⟨ y ∈ˢ step u ⟩
+  go (inl y≡a) = u'-member→step u y (subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym y≡a) a∈u')
+  go (inr y≡b) = u'-member→step u y (subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym y≡b) b∈u')
 
 trans-F1 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F1 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F1 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F1 u tr a b x y a∈u' b∈u' x∈F1ab y∈x = u'-member→step u y
-  (u'-trans u tr x y y∈x
-    (u'-trans u tr a x (F1-spec a b x .fst x∈F1ab .fst) a∈u'))
+trans-F1 u tr a b x y a∈u' b∈u' x≡ y∈x = u'-member→step u y
+  (u'-trans u tr a y (F1-spec a b y .fst
+    (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x) .fst) a∈u')
 
 trans-F2 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F2 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F2 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F2 u tr a b x y a∈u' b∈u' x∈F2ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (F2-read a b x x∈F2ab)
+trans-F2 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F2-read a b y (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
   where
   go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
-         (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ b ⟩ × ⟨ x ≡ₕ pr p q ⟩) → ⟨ y ∈ˢ step u ⟩
-  go (p , q , p∈a , q∈b , x≡) = pair→step u tr p q y
+         (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ b ⟩ × ⟨ y ≡ₕ pr p q ⟩) → ⟨ y ∈ˢ step u ⟩
+  go (p , q , p∈a , q∈b , y≡) = step-in-img u y f9 p q
     (u'-trans u tr a p p∈a a∈u') (u'-trans u tr b q q∈b b∈u')
-    (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡ y∈x)
+    (subst (λ t → ⟨ y ≡ₕ t ⟩) (sym (Fof-f9 p q)) y≡)
+
+trans-F3 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F3 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ y ∈ˢ step u ⟩
+trans-F3 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F3-read a b y (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
+  where
+  go : Σ[ p ∈ V ℓ ] Σ[ z ∈ V ℓ ] Σ[ q ∈ V ℓ ]
+         (⟨ z ∈ˢ a ⟩ × ⟨ pr p q ∈ˢ b ⟩ × ⟨ y ≡ₕ pr p (pr z q) ⟩)
+     → ⟨ y ∈ˢ step u ⟩
+  go (p , z , q , z∈a , pruv∈b , y≡) =
+    step-in-img u y f11 z (pr p q)
+      (u'-trans u tr a z z∈a a∈u')
+      (u'-trans u tr b (pr p q) pruv∈b b∈u')
+      (subst (λ t → ⟨ y ≡ₕ t ⟩)
+        (sym (F11-spec z (pr p q) p q refl) ∙ sym (Fof-f11 z (pr p q))) y≡)
+
+trans-F4 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F4 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ y ∈ˢ step u ⟩
+trans-F4 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F4-read a b y (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
+  where
+  go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ] Σ[ z ∈ V ℓ ]
+         (⟨ z ∈ˢ a ⟩ × ⟨ pr p q ∈ˢ b ⟩ × ⟨ y ≡ₕ pr p (pr q z) ⟩)
+     → ⟨ y ∈ˢ step u ⟩
+  go (p , q , z , z∈a , pruv∈b , y≡) =
+    step-in-img u y f12 z (pr p q)
+      (u'-trans u tr a z z∈a a∈u')
+      (u'-trans u tr b (pr p q) pruv∈b b∈u')
+      (subst (λ t → ⟨ y ≡ₕ t ⟩)
+        (sym (F12-spec z (pr p q) p q refl) ∙ sym (Fof-f12 z (pr p q))) y≡)
 
 trans-F5 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F5 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F5 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F5 u tr a b x y a∈u' b∈u' x∈F5ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (F5-spec a b x .fst x∈F5ab)
+trans-F5 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F5-spec a b y .fst (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
   where
-  go : Σ[ v ∈ V ℓ ] ⟨ (v ∈ˢ a) ⊓ (x ∈ˢ v) ⟩ → ⟨ y ∈ˢ step u ⟩
-  go (v , v∈a , x∈v) = u'-member→step u y
-    (u'-trans u tr x y y∈x
-      (u'-trans u tr v x x∈v (u'-trans u tr a v v∈a a∈u')))
+  go : Σ[ v ∈ V ℓ ] ⟨ (v ∈ˢ a) ⊓ (y ∈ˢ v) ⟩ → ⟨ y ∈ˢ step u ⟩
+  go (v , v∈a , y∈v) = u'-member→step u y
+    (u'-trans u tr v y y∈v (u'-trans u tr a v v∈a a∈u'))
 
 trans-F6 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F6 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F6 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F6 u tr a b x y a∈u' b∈u' x∈F6ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (F6-read a b x x∈F6ab)
+trans-F6 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F6-read a b y (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
   where
   go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
-         (⟨ pr p q ∈ˢ a ⟩ × ⟨ x ≡ₕ p ⟩) → ⟨ y ∈ˢ step u ⟩
-  go (p , q , pruv∈a , x≡p) = u'-member→step u y
-    (u'-trans u tr p y (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡p y∈x)
+         (⟨ pr p q ∈ˢ a ⟩ × ⟨ y ≡ₕ p ⟩) → ⟨ y ∈ˢ step u ⟩
+  go (p , q , pruv∈a , y≡p) = u'-member→step u y
+    (subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym y≡p)
       (⋃⋃→u' u tr a p a∈u' (prL-in-doubleUnion a p q pruv∈a)))
 
 trans-F7 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F7 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F7 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F7 u tr a b x y a∈u' b∈u' x∈F7ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (F7-read a b x x∈F7ab)
+trans-F7 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F7-read a b y (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
   where
   go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
-         (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ a ⟩ × ⟨ p ∈ˢ q ⟩ × ⟨ x ≡ₕ pr p q ⟩)
+         (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ a ⟩ × ⟨ p ∈ˢ q ⟩ × ⟨ y ≡ₕ pr p q ⟩)
      → ⟨ y ∈ˢ step u ⟩
-  go (p , q , p∈a , q∈a , p∈q , x≡) = pair→step u tr p q y
+  go (p , q , p∈a , q∈a , p∈q , y≡) = step-in-img u y f9 p q
     (u'-trans u tr a p p∈a a∈u') (u'-trans u tr a q q∈a a∈u')
-    (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡ y∈x)
+    (subst (λ t → ⟨ y ≡ₕ t ⟩) (sym (Fof-f9 p q)) y≡)
 
 trans-F8 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F8 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F8 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F8 u tr a b x y a∈u' b∈u' x∈F8ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (subst ⟨_⟩ (F8-spec a b x) x∈F8ab)
+trans-F8 u tr a b x y a∈u' b∈u' x≡ y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (subst ⟨_⟩ (F8-spec a b y) (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
   where
-  go : Σ[ m ∈ ⟪ b ⟫ ] ⟨ F10 a (⟪ b ⟫↪ m) ≡ₕ x ⟩ → ⟨ y ∈ˢ step u ⟩
-  go (m , x≡F10az) = let z = ⟪ b ⟫↪ m in
-    u'-member→step u y
-      (u'-trans u tr ⁅ z , y ⁆ y (y-in-pair z y)
-        (u'-trans u tr (pr z y) ⁅ z , y ⁆ (pair-in-pr z y)
-          (u'-trans u tr a (pr z y)
-            (subst ⟨_⟩ (F10-spec a z y)
-              (subst (λ t → ⟨ y ∈ˢ t ⟩) (sym x≡F10az) y∈x))
-            a∈u')))
-    where
-    y-in-pair : (z y : V ℓ) → ⟨ y ∈ˢ ⁅ z , y ⁆ ⟩
-    y-in-pair z y = ∈∈ₛ {a = y} {b = ⁅ z , y ⁆} .snd
-      (pairing-ax z y y .snd ∣ inr refl ∣₁)
-    pair-in-pr : (z y : V ℓ) → ⟨ ⁅ z , y ⁆ ∈ˢ pr z y ⟩
-    pair-in-pr z y = ∈∈ₛ {a = ⁅ z , y ⁆} {b = pr z y} .snd
-      (pairing-ax (⁅ z ⁆s) (⁅ z , y ⁆) (⁅ z , y ⁆) .snd ∣ inr refl ∣₁)
+  go : Σ[ m ∈ ⟪ b ⟫ ] ⟨ F10 a (⟪ b ⟫↪ m) ≡ₕ y ⟩ → ⟨ y ∈ˢ step u ⟩
+  go (m , y≡) = step-in-img u y f10 a (⟪ b ⟫↪ m) a∈u'
+    (u'-trans u tr b (⟪ b ⟫↪ m)
+      (∈∈ₛ {a = ⟪ b ⟫↪ m} {b = b} .snd (∈ₛ⟪ b ⟫↪ m)) b∈u')
+    (subst (λ t → ⟨ y ≡ₕ t ⟩) (sym y≡ ∙ sym (Fof-f10 a (⟪ b ⟫↪ m))) refl)
 
 trans-F9 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F9 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F9 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
-trans-F9 u tr a b x y a∈u' b∈u' x∈F9ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (F9-spec a b x .fst x∈F9ab)
-  where
-  go : (⟨ x ≡ₕ ⁅ a ⁆s ⟩ ⊎ ⟨ x ≡ₕ ⁅ a , b ⁆ ⟩) → ⟨ y ∈ˢ step u ⟩
-  go (inl x≡s) = u'-member→step u y
-    (subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym (singl-member a y
-      (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡s y∈x))) a∈u')
-  go (inr x≡p) = PT.rec (snd (y ∈ˢ step u)) go'
-    (pairing-ax a b y .fst (∈∈ₛ {a = y} {b = ⁅ a , b ⁆} .fst
-      (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡p y∈x)))
-    where
-    go' : (⟨ y ≡ₕ a ⟩ ⊎ ⟨ y ≡ₕ b ⟩) → ⟨ y ∈ˢ step u ⟩
-    go' (inl y≡a) = u'-member→step u y (subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym y≡a) a∈u')
-    go' (inr y≡b) = u'-member→step u y (subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym y≡b) b∈u')
+trans-F9 u tr a b x y a∈u' b∈u' x≡ y∈x = pair→step u a b y a∈u' b∈u'
+  (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x)
 
 trans-F10 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F10 a b ⟩ → ⟨ y ∈ˢ x ⟩
+          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F10 a b ⟩ → ⟨ y ∈ˢ x ⟩
           → ⟨ y ∈ˢ step u ⟩
-trans-F10 u tr a b x y a∈u' b∈u' x∈F10ab y∈x = u'-member→step u y
-  (u'-trans u tr x y y∈x
-    (u'-trans u tr ⁅ b , x ⁆ x (x-in-pair b x)
-      (u'-trans u tr (pr b x) ⁅ b , x ⁆ (pair-in-pr b x)
-        (u'-trans u tr a (pr b x) (subst ⟨_⟩ (F10-spec a b x) x∈F10ab) a∈u'))))
+trans-F10 u tr a b x y a∈u' b∈u' x≡ y∈x = u'-member→step u y
+  (u'-trans u tr ⁅ b , y ⁆ y (y-in-pair b y)
+    (u'-trans u tr (pr b y) ⁅ b , y ⁆ (pair-in-pr b y)
+      (u'-trans u tr a (pr b y)
+        (subst ⟨_⟩ (F10-spec a b y) (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x))
+        a∈u')))
   where
-  x-in-pair : (b x : V ℓ) → ⟨ x ∈ˢ ⁅ b , x ⁆ ⟩
-  x-in-pair b x = ∈∈ₛ {a = x} {b = ⁅ b , x ⁆} .snd
-    (pairing-ax b x x .snd ∣ inr refl ∣₁)
-  pair-in-pr : (b x : V ℓ) → ⟨ ⁅ b , x ⁆ ∈ˢ pr b x ⟩
-  pair-in-pr b x = ∈∈ₛ {a = ⁅ b , x ⁆} {b = pr b x} .snd
-    (pairing-ax (⁅ b ⁆s) (⁅ b , x ⁆) (⁅ b , x ⁆) .snd ∣ inr refl ∣₁)
+  y-in-pair : (b y : V ℓ) → ⟨ y ∈ˢ ⁅ b , y ⁆ ⟩
+  y-in-pair b y = ∈∈ₛ {a = y} {b = ⁅ b , y ⁆} .snd
+    (pairing-ax b y y .snd ∣ inr refl ∣₁)
+  pair-in-pr : (b y : V ℓ) → ⟨ ⁅ b , y ⁆ ∈ˢ pr b y ⟩
+  pair-in-pr b y = ∈∈ₛ {a = ⁅ b , y ⁆} {b = pr b y} .snd
+    (pairing-ax (⁅ b ⁆s) (⁅ b , y ⁆) (⁅ b , y ⁆) .snd ∣ inr refl ∣₁)
 
-trans-F11 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F11 a b ⟩ → ⟨ y ∈ˢ x ⟩
-          → ⟨ y ∈ˢ step u ⟩
-trans-F11 u tr a b x y a∈u' b∈u' x∈F11ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (pairing-ax (⁅ left b ⁆s) (⁅ left b , pr a (right b) ⁆) x .fst
-    (∈∈ₛ {a = x} {b = F11 a b} .fst x∈F11ab))
-  where
-  left∈step : ⟨ left b ∈ˢ step u ⟩
-  left∈step = step-in u (left b) f13 b b b∈u' b∈u'
-    (∈∈ₛ {a = left b} {b = F13 b b} .snd
-      (pairing-ax (left b) (pr (right b) b) (left b) .snd ∣ inl refl ∣₁))
-  go : (⟨ x ≡ₕ ⁅ left b ⁆s ⟩ ⊎ ⟨ x ≡ₕ ⁅ left b , pr a (right b) ⁆ ⟩)
-     → ⟨ y ∈ˢ step u ⟩
-  go (inl x≡s) = subst (λ t → ⟨ t ∈ˢ step u ⟩)
-    (sym (singl-member (left b) y
-      (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡s y∈x))) left∈step
-  go (inr x≡p) = PT.rec (snd (y ∈ˢ step u)) go'
-    (pairing-ax (left b) (pr a (right b)) y .fst
-      (∈∈ₛ {a = y} {b = ⁅ left b , pr a (right b) ⁆} .fst
-        (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡p y∈x)))
-    where
-    go' : (⟨ y ≡ₕ left b ⟩ ⊎ ⟨ y ≡ₕ pr a (right b) ⟩) → ⟨ y ∈ˢ step u ⟩
-    go' (inl y≡l) = subst (λ t → ⟨ t ∈ˢ step u ⟩) (sym y≡l) left∈step
-    go' (inr y≡p) = subst (λ t → ⟨ t ∈ˢ step u ⟩) (sym y≡p)
-      (step-in u (pr a (right b)) f14 a b a∈u' b∈u'
-        (∈∈ₛ {a = pr a (right b)} {b = F14 a b} .snd
-          (pairing-ax (left b) (pr a (right b)) (pr a (right b)) .snd ∣ inr refl ∣₁)))
-
-trans-F12 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F12 a b ⟩ → ⟨ y ∈ˢ x ⟩
-          → ⟨ y ∈ˢ step u ⟩
-trans-F12 u tr a b x y a∈u' b∈u' x∈F12ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
-  (pairing-ax (⁅ left b ⁆s) (⁅ left b , pr (right b) a ⁆) x .fst
-    (∈∈ₛ {a = x} {b = F12 a b} .fst x∈F12ab))
-  where
-  left∈step : ⟨ left b ∈ˢ step u ⟩
-  left∈step = step-in u (left b) f13 b b b∈u' b∈u'
-    (∈∈ₛ {a = left b} {b = F13 b b} .snd
-      (pairing-ax (left b) (pr (right b) b) (left b) .snd ∣ inl refl ∣₁))
-  go : (⟨ x ≡ₕ ⁅ left b ⁆s ⟩ ⊎ ⟨ x ≡ₕ ⁅ left b , pr (right b) a ⁆ ⟩)
-     → ⟨ y ∈ˢ step u ⟩
-  go (inl x≡s) = subst (λ t → ⟨ t ∈ˢ step u ⟩)
-    (sym (singl-member (left b) y
-      (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡s y∈x))) left∈step
-  go (inr x≡p) = PT.rec (snd (y ∈ˢ step u)) go'
-    (pairing-ax (left b) (pr (right b) a) y .fst
-      (∈∈ₛ {a = y} {b = ⁅ left b , pr (right b) a ⁆} .fst
-        (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡p y∈x)))
-    where
-    go' : (⟨ y ≡ₕ left b ⟩ ⊎ ⟨ y ≡ₕ pr (right b) a ⟩) → ⟨ y ∈ˢ step u ⟩
-    go' (inl y≡l) = subst (λ t → ⟨ t ∈ˢ step u ⟩) (sym y≡l) left∈step
-    go' (inr y≡p) = subst (λ t → ⟨ t ∈ˢ step u ⟩) (sym y≡p)
-      (step-in u (pr (right b) a) f13 a b a∈u' b∈u'
-        (∈∈ₛ {a = pr (right b) a} {b = F13 a b} .snd
-          (pairing-ax (left b) (pr (right b) a) (pr (right b) a) .snd ∣ inr refl ∣₁)))
-
-trans-F15 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
-          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F15A a ⟩ → ⟨ y ∈ˢ x ⟩
-          → ⟨ y ∈ˢ step u ⟩
-trans-F15 u tr a b x y a∈u' b∈u' x∈F15ab y∈x = u'-member→step u y
-  (u'-trans u tr x y y∈x (u'-trans u tr a x (F15A-spec a x x∈F15ab) a∈u'))
-```
-
-<!--en-->
-## The F13 and F14 cases and the pair classification
-<!--zh-->
-## F13 与 F14 的情形与对分类
-<!--/-->
-
-<!--en-->
-The `F13` and `F14` values read the projections of their second argument:
-`F13 a b = {left b, pr (right b) a}` and `F14 a b = {left b, pr a (right b)}`.
-Their members decompose into the left projection and a pair of the right
-projection with `a`, and the members of those pairs are the singletons and
-unordered pairs of the right projection. The pair frame catches those
-objects only when the right projection lies in the argument set. The pair
-classification spends the excluded middle on "`b` is a Kuratowski pair": in
-the pair case the projections are the pair's components, which transitivity
-places in `u`. The non-pair case needs the junk facts that `left` and
-`right` of a non-pair are the empty set, whose proofs live inside the images
-chapter's private blocks (`⋂` and `rightSlice` are not exportable); that
-branch is recorded as a wall in the batch report.
-<!--zh-->
-`F13` 与 `F14` 的值读取第二参数的投影：`F13 a b = {left b, pr (right b) a}`，`F14 a b = {left b, pr a (right b)}`。其成员拆成左投影与右投影同 `a` 之对，那些对的成员又是右投影的单点与无序对。对框架只有在右投影落进参数集时才能捕捉这些对象。对分类把排中律花在「`b` 是 Kuratowski 对」上：在对的情形，投影即对的分量，传递性把它们放进 `u`。非对情形需要「非对上的 left 与 right 是空集」的垃圾事实，其证明住在像章的私有块 (`⋂` 与 `rightSlice` 不可导出) 之内；该分支作为墙记入批次报告。
-<!--/-->
-
-```agda
 isPair : V ℓ → hProp (ℓ-suc ℓ)
 isPair b = ( ∥ Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ] ⟨ b ≡ₕ pr p q ⟩ ∥₁ , squash₁ )
 
@@ -716,9 +709,14 @@ right-in-u'-pair u tr b b∈u' h = PT.rec (snd (right b ∈ˢ u' u)) go h
     q∈u' : ⟨ q ∈ˢ u' u ⟩
     q∈u' = u'-trans u tr ⁅ p , q ⁆ q q∈⁅p,q⁆
       (u'-trans u tr b ⁅ p , q ⁆ ⁅p,q⁆∈b b∈u')
+
+trans-F15 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
+          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ≡ₕ F15A a ⟩ → ⟨ y ∈ˢ x ⟩
+          → ⟨ y ∈ˢ step u ⟩
+trans-F15 u tr a b x y a∈u' b∈u' x≡ y∈x = u'-member→step u y
+  (u'-trans u tr a y (F15A-spec a y (subst (λ t → ⟨ y ∈ˢ t ⟩) (x≡) y∈x)) a∈u')
 ```
 
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -731,11 +729,11 @@ membership characterization as the only surface. The growth properties
 discharge from the pairing image alone, and the membership-conditioned
 monotonicity discharges from the subset plus membership hypotheses.
 Twelve per-operation transitivity cases close cleanly through the shared
-pair and argument frames; the `F3`/`F4` cases are false for this operator
-shape and the `F13`/`F14` non-pair branches need the images chapter's
-private junk facts, both recorded in the batch report. The instantiation
-of the hierarchy engine and the limit-level closure facts await the
-transitivity question's resolution.
+pair and argument frames, the `F3`/`F4` cases through the tuple values
+`F11`/`F12` at the existing pair; the `F11` to `F14` non-pair branches need
+the images chapter's private junk facts, recorded in the batch report. The
+instantiation of the hierarchy engine and the limit-level closure facts
+await the transitivity question's resolution.
 <!--zh-->
-具体算子就位并已封印：参数平方上的十六个逐运算像集、作为其并的 step，以及作为唯一表面的隶属刻画。增长性质单从配对像清偿，带成员条件的新单调性从子集加成员假设清偿。十二个逐运算传递性情形经共享的对与参数框架干净闭合；`F3`/`F4` 的情形对此算子形状为假，`F13`/`F14` 的非对支需要像章的私有垃圾事实，两者都记入批次报告。层级引擎的实例化与极限层闭包事实等待传递性问题的解决。
+具体算子就位并已封印：参数平方上的十六个逐运算像集、作为其并的 step，以及作为唯一表面的隶属刻画。增长性质单从配对像清偿，带成员条件的新单调性从子集加成员假设清偿。十二个逐运算传递性情形经共享的对与参数框架干净闭合，`F3`/`F4` 的情形经现有对处的三元组值 `F11`/`F12` 闭合；`F11` 至 `F14` 的非对支需要像章的私有垃圾事实，记入批次报告。层级引擎的实例化与极限层闭包事实等待传递性问题的解决。
 <!--/-->
