@@ -122,6 +122,43 @@ private
   trans⁺ : {u w v : V ℓ} → u ∈⁺ w → w ∈⁺ v → u ∈⁺ v
   trans⁺ p (here h)     = there p h
   trans⁺ p (there q h)  = there (trans⁺ p q) h
+
+  appRead : ∀ {n} (f x y : Fin n) (γ : S ^ n) → ⟨ γ ⊨ appAt f x y ⟩
+          → ⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst (lookup f γ) ⟩
+  appRead f x y γ = subst ⟨_⟩ (appAt-adequate f x y γ)
+
+  appFill : ∀ {n} (f x y : Fin n) (γ : S ^ n)
+          → ⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst (lookup f γ) ⟩
+          → ⟨ γ ⊨ appAt f x y ⟩
+  appFill f x y γ = subst ⟨_⟩ (sym (appAt-adequate f x y γ))
+
+  prIsL₁ : {Z x y : V ℓ} → ⟨ isL Z ⟩ → ⟨ pr x y ∈ Z ⟩ → ⟨ isL x ⟩
+  prIsL₁ {Z} {x} {y} lZ h = isL-trans {x = ⁅ x ⁆s} {y = x} (∣ tt* , refl ∣₁)
+    (isL-trans {x = pr x y} {y = ⁅ x ⁆s} (∣ lift false , refl ∣₁)
+      (isL-trans {x = Z} {y = pr x y} h lZ))
+
+  prRead : ∀ {n} (q u v : Fin n) (γ : S ^ n) → ⟨ γ ⊨ prAtL q u v ⟩
+         → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
+  prRead q u v γ = subst ⟨_⟩ (prAtL-adequate q u v γ)
+
+  prFill : ∀ {n} (q u v : Fin n) (γ : S ^ n)
+         → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
+         → ⟨ γ ⊨ prAtL q u v ⟩
+  prFill q u v γ = subst ⟨_⟩ (sym (prAtL-adequate q u v γ))
+
+  sucRead : ∀ {n} (i j : Fin n) (γ : S ^ n) → ⟨ γ ⊨ sucAtL i j ⟩
+          → fst (lookup j γ) ≡ sucV (fst (lookup i γ))
+  sucRead i j γ = subst ⟨_⟩ (sucAtL-adequate i j γ)
+
+  sucFill : ∀ {n} (i j : Fin n) (γ : S ^ n)
+          → fst (lookup j γ) ≡ sucV (fst (lookup i γ))
+          → ⟨ γ ⊨ sucAtL i j ⟩
+  sucFill i j γ = subst ⟨_⟩ (sym (sucAtL-adequate i j γ))
+
+  prIsL₂ : {Z x y : V ℓ} → ⟨ isL Z ⟩ → ⟨ pr x y ∈ Z ⟩ → ⟨ isL y ⟩
+  prIsL₂ {Z} {x} {y} lZ h = isL-trans {x = ⁅ x , y ⁆} {y = y} (∣ lift true , refl ∣₁)
+    (isL-trans {x = pr x y} {y = ⁅ x , y ⁆} (∣ lift true , refl ∣₁)
+      (isL-trans {x = Z} {y = pr x y} h lZ))
 ```
 
 <!--en-->
@@ -487,10 +524,8 @@ transported through the adequacy equation.
             → fst v ≡ fst v'
     Fun-out f u v v' p q =
       f u v v'
-        ( subst ⟨_⟩ (sym (appAt-adequate (sh3 h) (suc (suc zero)) (suc zero)
-            (v' ∷ v ∷ u ∷ γ))) p
-        , subst ⟨_⟩ (sym (appAt-adequate (sh3 h) (suc (suc zero)) zero
-            (v' ∷ v ∷ u ∷ γ))) q )
+        ( appFill (sh3 h) (suc (suc zero)) (suc zero) (v' ∷ v ∷ u ∷ γ) p
+        , appFill (sh3 h) (suc (suc zero)) zero (v' ∷ v ∷ u ∷ γ) q )
 
     Fun-in : ((u v v' : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup h γ) ⟩
             → ⟨ pr (fst u) (fst v') ∈ fst (lookup h γ) ⟩
@@ -498,10 +533,8 @@ transported through the adequacy equation.
            → ⟨ γ ⊨ FunAt h ⟩
     Fun-in hstep u v v' p =
       hstep u v v'
-        ( subst ⟨_⟩ (appAt-adequate (sh3 h) (suc (suc zero)) (suc zero)
-            (v' ∷ v ∷ u ∷ γ)) (p .fst) )
-        ( subst ⟨_⟩ (appAt-adequate (sh3 h) (suc (suc zero)) zero
-            (v' ∷ v ∷ u ∷ γ)) (p .snd) )
+        ( appRead (sh3 h) (suc (suc zero)) (suc zero) (v' ∷ v ∷ u ∷ γ) (p .fst) )
+        ( appRead (sh3 h) (suc (suc zero)) zero (v' ∷ v ∷ u ∷ γ) (p .snd) )
 ```
 
 <!--en-->
@@ -555,7 +588,7 @@ allK 叶是基底：x 是标签零与数码载荷 m 的对，m 是 ω 的成员�
         ∣ mv
         , ( h1
           , ( tagPr-out 0 (suc x) zero (mv ∷ γ) h2
-            , subst ⟨_⟩ (appAt-adequate (suc h) (suc x) zero (mv ∷ γ)) h3 ) )
+            , appRead (suc h) (suc x) zero (mv ∷ γ) h3 ) )
         ∣₁
 
     Cert0-in : Cert0Of (fst (lookup h γ)) (fst (lookup x γ))
@@ -564,7 +597,7 @@ allK 叶是基底：x 是标签零与数码载荷 m 的对，m 是 ω 的成员�
       ∣ mv
       , ( m∈ω
         , ( tagPr-in 0 (suc x) zero (mv ∷ γ) qe
-          , subst ⟨_⟩ (sym (appAt-adequate (suc h) (suc x) zero (mv ∷ γ))) eh ) )
+          , appFill (suc h) (suc x) zero (mv ∷ γ) eh ) )
       ∣₁
 ```
 
@@ -628,13 +661,10 @@ walk the same chain in opposite directions.
               , ( h6
                 , ( ( tagPr-out tg (sh5 x) (suc (suc (suc (suc zero)))) env h1
                     ∙ cong (pr (# tg))
-                        ( subst ⟨_⟩ (prAtL-adequate (suc (suc (suc (suc zero))))
-                            (suc (suc zero)) (suc (suc (suc zero))) env) h2
+                        ( prRead (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env h2
                         ∙ cong (pr (fst nv))
-                            (subst ⟨_⟩ (prAtL-adequate (suc (suc (suc zero)))
-                              (suc zero) zero env) h3) ) )
-                  , subst ⟨_⟩ (appAt-adequate (sh5 h) (sh5 x)
-                      (suc (suc zero)) env) h7 ) ) ) ) ∣₁
+                            (prRead (suc (suc (suc zero))) (suc zero) zero env h3) ) )
+                  , appRead (sh5 h) (sh5 x) (suc (suc zero)) env h7 ) ) ) ) ∣₁
           where
           env : S ^ (suc (suc (suc (suc (suc n)))))
           env = jv ∷ iv ∷ nv ∷ p₂ ∷ p₁ ∷ γ
@@ -647,16 +677,13 @@ walk the same chain in opposite directions.
               (qe ∙ cong (pr (# tg))
                 (sym ( prʟ-fst nv (prʟ iv jv)
                      ∙ cong (pr (fst nv)) (prʟ-fst iv jv) )))
-          , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc (suc zero))))
-                (suc (suc zero)) (suc (suc (suc zero))) env))
+          , ( prFill (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env
                 (prʟ-fst nv (prʟ iv jv))
-          , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc zero)))
-                (suc zero) zero env)) (prʟ-fst iv jv)
+          , ( prFill (suc (suc (suc zero))) (suc zero) zero env (prʟ-fst iv jv)
           , ( n∈ω
             , ( i∈n
               , ( j∈n
-                , subst ⟨_⟩ (sym (appAt-adequate (sh5 h) (sh5 x)
-                    (suc (suc zero)) env)) eh ) ) ) ) ) )
+                , appFill (sh5 h) (sh5 x) (suc (suc zero)) env eh ) ) ) ) ) )
         ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
         where
         env : S ^ (suc (suc (suc (suc (suc n)))))
@@ -724,13 +751,10 @@ n, and p against the carrier; the annotation still pairs x with n.
             , ( h6
               , ( ( tagPr-out 3 (sh5 x) (suc (suc (suc (suc zero)))) env h1
                   ∙ cong (pr (# 3))
-                      ( subst ⟨_⟩ (prAtL-adequate (suc (suc (suc (suc zero))))
-                          (suc (suc zero)) (suc (suc (suc zero))) env) h2
+                      ( prRead (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env h2
                       ∙ cong (pr (fst nv))
-                          (subst ⟨_⟩ (prAtL-adequate (suc (suc (suc zero)))
-                            (suc zero) zero env) h3) ) )
-                , subst ⟨_⟩ (appAt-adequate (sh5 h) (sh5 x)
-                    (suc (suc zero)) env) h7 ) ) ) ) ∣₁
+                          (prRead (suc (suc (suc zero))) (suc zero) zero env h3) ) )
+                , appRead (sh5 h) (sh5 x) (suc (suc zero)) env h7 ) ) ) ) ∣₁
         where
         env : S ^ (suc (suc (suc (suc (suc n)))))
         env = pv ∷ iv ∷ nv ∷ p₂ ∷ p₁ ∷ γ
@@ -744,16 +768,13 @@ n, and p against the carrier; the annotation still pairs x with n.
             (qe ∙ cong (pr (# 3))
               (sym ( prʟ-fst nv (prʟ iv pv)
                    ∙ cong (pr (fst nv)) (prʟ-fst iv pv) )))
-        , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc (suc zero))))
-              (suc (suc zero)) (suc (suc (suc zero))) env))
+        , ( prFill (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc (suc (suc zero))) env
               (prʟ-fst nv (prʟ iv pv))
-        , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc zero)))
-              (suc zero) zero env)) (prʟ-fst iv pv)
+        , ( prFill (suc (suc (suc zero))) (suc zero) zero env (prʟ-fst iv pv)
         , ( n∈ω
           , ( i∈n
             , ( p∈a
-              , subst ⟨_⟩ (sym (appAt-adequate (sh5 h) (sh5 x)
-                  (suc (suc zero)) env)) eh ) ) ) ) ) )
+              , appFill (sh5 h) (sh5 x) (suc (suc zero)) env eh ) ) ) ) ) )
       ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
       where
       env : S ^ (suc (suc (suc (suc (suc n)))))
@@ -827,19 +848,13 @@ clause's shape.
           ∣ c₁ , c₂ , mv , y₁ , y₂ ,
             ( ( tagPr-out tg (sh6 x) (suc (suc (suc (suc (suc zero))))) env h1
                 ∙ cong (pr (# tg))
-                    (subst ⟨_⟩ (prAtL-adequate (suc (suc (suc (suc (suc zero)))))
-                      (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) env) h2) )
+                    (prRead (suc (suc (suc (suc (suc zero))))) (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) env h2) )
             , ( h3
-              , ( subst ⟨_⟩ (appAt-adequate (sh6 g)
-                    (suc (suc (suc (suc zero)))) (suc zero) env) h4
-                , ( subst ⟨_⟩ (appAt-adequate (sh6 g)
-                      (suc (suc (suc zero))) zero env) h5
-                  , ( subst ⟨_⟩ (appAt-adequate (sh6 h) (sh6 x)
-                        (suc (suc zero)) env) h6
-                    , ( subst ⟨_⟩ (appAt-adequate (sh6 h)
-                          (suc (suc (suc (suc zero)))) (suc (suc zero)) env) h7
-                      , subst ⟨_⟩ (appAt-adequate (sh6 h)
-                          (suc (suc (suc zero))) (suc (suc zero)) env) h8 ) ) ) ) ) ) ∣₁
+              , ( appRead (sh6 g) (suc (suc (suc (suc zero)))) (suc zero) env h4
+                , ( appRead (sh6 g) (suc (suc (suc zero))) zero env h5
+                  , ( appRead (sh6 h) (sh6 x) (suc (suc zero)) env h6
+                    , ( appRead (sh6 h) (suc (suc (suc (suc zero)))) (suc (suc zero)) env h7
+                      , appRead (sh6 h) (suc (suc (suc zero))) (suc (suc zero)) env h8 ) ) ) ) ) ) ∣₁
           where
           env : S ^ (suc (suc (suc (suc (suc (suc n))))))
           env = y₂ ∷ y₁ ∷ mv ∷ c₂ ∷ c₁ ∷ p₁ ∷ γ
@@ -851,20 +866,14 @@ clause's shape.
         ∣ prʟ c₁ c₂ , ∣ c₁ , ∣ c₂ , ∣ mv , ∣ y₁ , ∣ y₂ ,
           ( tagPr-in tg (sh6 x) (suc (suc (suc (suc (suc zero))))) env
               (qe ∙ cong (pr (# tg)) (sym (prʟ-fst c₁ c₂)))
-          , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc (suc (suc zero)))))
-                (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) env))
+          , ( prFill (suc (suc (suc (suc (suc zero))))) (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) env
                 (prʟ-fst c₁ c₂)
           , ( m∈ω
-            , ( subst ⟨_⟩ (sym (appAt-adequate (sh6 g)
-                  (suc (suc (suc (suc zero)))) (suc zero) env)) e1
-              , ( subst ⟨_⟩ (sym (appAt-adequate (sh6 g)
-                    (suc (suc (suc zero))) zero env)) e2
-                , ( subst ⟨_⟩ (sym (appAt-adequate (sh6 h) (sh6 x)
-                      (suc (suc zero)) env)) e3
-                  , ( subst ⟨_⟩ (sym (appAt-adequate (sh6 h)
-                        (suc (suc (suc (suc zero)))) (suc (suc zero)) env)) e4
-                    , subst ⟨_⟩ (sym (appAt-adequate (sh6 h)
-                        (suc (suc (suc zero))) (suc (suc zero)) env)) e5 ) ) ) ) ) ) )
+            , ( appFill (sh6 g) (suc (suc (suc (suc zero)))) (suc zero) env e1
+              , ( appFill (sh6 g) (suc (suc (suc zero))) zero env e2
+                , ( appFill (sh6 h) (sh6 x) (suc (suc zero)) env e3
+                  , ( appFill (sh6 h) (suc (suc (suc (suc zero)))) (suc (suc zero)) env e4
+                    , appFill (sh6 h) (suc (suc (suc zero))) (suc (suc zero)) env e5 ) ) ) ) ) ) )
         ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
         where
         env : S ^ (suc (suc (suc (suc (suc (suc n))))))
@@ -926,11 +935,10 @@ the annotations agree, x with n and the child with the same n.
           ( h3
           , ( ( tagPr-out 6 (sh4 x) (suc (suc (suc zero))) env h1
               ∙ cong (pr (# 6))
-                  (subst ⟨_⟩ (prAtL-adequate (suc (suc (suc zero)))
-                    (suc (suc zero)) (suc zero) env) h2) )
-          , ( subst ⟨_⟩ (appAt-adequate (sh4 g) (suc zero) zero env) h4
-            , ( subst ⟨_⟩ (appAt-adequate (sh4 h) (sh4 x) (suc (suc zero)) env) h5
-              , subst ⟨_⟩ (appAt-adequate (sh4 h) (suc zero) (suc (suc zero)) env) h6 ) ) ) ) ∣₁
+                  (prRead (suc (suc (suc zero))) (suc (suc zero)) (suc zero) env h2) )
+          , ( appRead (sh4 g) (suc zero) zero env h4
+            , ( appRead (sh4 h) (sh4 x) (suc (suc zero)) env h5
+              , appRead (sh4 h) (suc zero) (suc (suc zero)) env h6 ) ) ) ) ∣₁
         where
         env : S ^ (suc (suc (suc (suc n))))
         env = yv ∷ cv ∷ nv ∷ p₁ ∷ γ
@@ -942,14 +950,11 @@ the annotations agree, x with n and the child with the same n.
       ∣ prʟ nv cv , ∣ nv , ∣ cv , ∣ yv ,
         ( tagPr-in 6 (sh4 x) (suc (suc (suc zero))) env
             (qe ∙ cong (pr (# 6)) (sym (prʟ-fst nv cv)))
-        , ( subst ⟨_⟩ (sym (prAtL-adequate (suc (suc (suc zero)))
-              (suc (suc zero)) (suc zero) env)) (prʟ-fst nv cv)
+        , ( prFill (suc (suc (suc zero))) (suc (suc zero)) (suc zero) env (prʟ-fst nv cv)
         , ( n∈ω
-          , ( subst ⟨_⟩ (sym (appAt-adequate (sh4 g) (suc zero) zero env)) e1
-            , ( subst ⟨_⟩ (sym (appAt-adequate (sh4 h) (sh4 x)
-                  (suc (suc zero)) env)) e2
-              , subst ⟨_⟩ (sym (appAt-adequate (sh4 h) (suc zero)
-                  (suc (suc zero)) env)) e3 ) ) ) ) )
+          , ( appFill (sh4 g) (suc zero) zero env e1
+            , ( appFill (sh4 h) (sh4 x) (suc (suc zero)) env e2
+              , appFill (sh4 h) (suc zero) (suc (suc zero)) env e3 ) ) ) ) )
       ∣₁ ∣₁ ∣₁ ∣₁
       where
       env : S ^ (suc (suc (suc (suc n))))
@@ -1010,11 +1015,10 @@ records the m'-value as sucV of the m-value.
         ∣ cv , mv , mv' , yv ,
           ( tagPr-out 7 (sh4 x) (suc (suc (suc zero))) env h1
           , ( h2
-            , ( subst ⟨_⟩ (sucAtL-adequate (suc (suc zero)) (suc zero) env) h3
-              , ( subst ⟨_⟩ (appAt-adequate (sh4 g) (suc (suc (suc zero))) zero env) h4
-                , ( subst ⟨_⟩ (appAt-adequate (sh4 h) (sh4 x) (suc (suc zero)) env) h5
-                  , subst ⟨_⟩ (appAt-adequate (sh4 h) (suc (suc (suc zero)))
-                      (suc zero) env) h6 ) ) ) ) ) ∣₁
+            , ( sucRead (suc (suc zero)) (suc zero) env h3
+              , ( appRead (sh4 g) (suc (suc (suc zero))) zero env h4
+                , ( appRead (sh4 h) (sh4 x) (suc (suc zero)) env h5
+                  , appRead (sh4 h) (suc (suc (suc zero))) (suc zero) env h6 ) ) ) ) ) ∣₁
         where
         env : S ^ (suc (suc (suc (suc n))))
         env = yv ∷ mv' ∷ mv ∷ cv ∷ γ
@@ -1026,12 +1030,10 @@ records the m'-value as sucV of the m-value.
       ∣ cv , ∣ mv , ∣ mv' , ∣ yv ,
         ( tagPr-in 7 (sh4 x) (suc (suc (suc zero))) env qe
         , ( m∈ω
-          , ( subst ⟨_⟩ (sym (sucAtL-adequate (suc (suc zero)) (suc zero) env)) qq
-            , ( subst ⟨_⟩ (sym (appAt-adequate (sh4 g) (suc (suc (suc zero))) zero env)) e1
-              , ( subst ⟨_⟩ (sym (appAt-adequate (sh4 h) (sh4 x)
-                    (suc (suc zero)) env)) e2
-                , subst ⟨_⟩ (sym (appAt-adequate (sh4 h) (suc (suc (suc zero)))
-                    (suc zero) env)) e3 ) ) ) ) )
+          , ( sucFill (suc (suc zero)) (suc zero) env qq
+            , ( appFill (sh4 g) (suc (suc (suc zero))) zero env e1
+              , ( appFill (sh4 h) (sh4 x) (suc (suc zero)) env e2
+                , appFill (sh4 h) (suc (suc (suc zero))) (suc zero) env e3 ) ) ) ) )
       ∣₁ ∣₁ ∣₁ ∣₁
       where
       env : S ^ (suc (suc (suc (suc n))))
@@ -1218,8 +1220,7 @@ reassembles the formula from the two.
                     (fst (lookup h γ)) (fst x) ∥₁
     Cert-step cert x y p =
       CertShape-out (suc zero) (sh2 g) (sh2 h) (sh2 a) (y ∷ x ∷ γ)
-        (cert .snd x y (subst ⟨_⟩ (sym (appAt-adequate (sh2 g)
-          (suc zero) zero (y ∷ x ∷ γ))) p))
+        (cert .snd x y (appFill (sh2 g) (suc zero) zero (y ∷ x ∷ γ) p))
 
     Cert-in : ((u v v' : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup h γ) ⟩
              → ⟨ pr (fst u) (fst v') ∈ fst (lookup h γ) ⟩
@@ -1233,8 +1234,7 @@ reassembles the formula from the two.
       , (λ x y p →
           PT.rec PT.squash₁
             (CertShape-in (suc zero) (sh2 g) (sh2 h) (sh2 a) (y ∷ x ∷ γ))
-            (xstep x y (subst ⟨_⟩ (appAt-adequate (sh2 g) (suc zero) zero
-              (y ∷ x ∷ γ)) p)))
+            (xstep x y (appRead (sh2 g) (suc zero) zero (y ∷ x ∷ γ) p)))
 ```
 
 <!--en-->
@@ -1286,18 +1286,10 @@ the arity the caller supplied.
         (Cert-step g h a γ cert (x , lx) (y , ly) hy)
       where
       lx : ⟨ isL x ⟩
-      lx = isL-trans {x = ⁅ x ⁆s} {y = x}
-             (∣ tt* , refl ∣₁)
-             (isL-trans {x = pr x (# m)} {y = ⁅ x ⁆s}
-               (∣ lift false , refl ∣₁)
-               (isL-trans {x = H} {y = pr x (# m)} hm (snd (lookup h γ))))
+      lx = prIsL₁ (snd (lookup h γ)) hm
 
       ly : ⟨ isL y ⟩
-      ly = isL-trans {x = ⁅ x , y ⁆} {y = y}
-             (∣ lift true , refl ∣₁)
-             (isL-trans {x = pr x y} {y = ⁅ x , y ⁆}
-               (∣ lift true , refl ∣₁)
-               (isL-trans {x = G} {y = pr x y} hy (snd (lookup g γ))))
+      ly = prIsL₂ (snd (lookup g γ)) hy
 
       l#m : ⟨ isL (# m) ⟩
       l#m = subst (λ z → ⟨ isL z ⟩) (numeralL-fst m) (numeralL m .snd)
@@ -1389,21 +1381,24 @@ the arity the caller supplied.
         i∈m : ⟨ fst iv ∈ˢ (# m) ⟩
         i∈m = subst (λ w → ⟨ fst iv ∈ˢ w ⟩) nv→m i∈n
 
-      fromInter : CertBin4.CertBinOf G H x → Honest x m
-      fromInter (c₁ , c₂ , mv , y₁ , y₂ ,
+      fromBin : (tg : ℕ) (mk : KT ⟪ A₀ ⟫ m → KT ⟪ A₀ ⟫ m → KT ⟪ A₀ ⟫ m)
+              → ((s' t' : KT ⟪ A₀ ⟫ m) → C.code (mk s' t')
+                    ≡ pr (# tg) (pr (C.code s') (C.code t')))
+              → CertBin.CertBinOf tg G H x → Honest x m
+      fromBin tg mk codeEq (c₁ , c₂ , mv , y₁ , y₂ ,
                  (qe , (mω , (e1 , (e2 , (ann , (ann₁₀ , ann₂₀))))))) =
         PT.rec PT.squash₁
           (λ { (t₁ , e₁) →
           PT.rec PT.squash₁
             (λ { (t₂ , e₂) →
               let
-                eq : x ≡ C.code (interK t₁ t₂)
+                eq : x ≡ C.code (mk t₁ t₂)
                 eq = qe
-                   ∙ cong (pr (# 4))
+                   ∙ cong (pr (# tg))
                        ( cong (pr (fst c₁)) e₂
                        ∙ cong₂ pr e₁ refl )
-                   ∙ sym (C.code-interK t₁ t₂)
-              in ∣ interK t₁ t₂ , eq ∣₁ })
+                   ∙ sym (codeEq t₁ t₂)
+              in ∣ mk t₁ t₂ , eq ∣₁ })
             (honest (fst c₂) (r (fst c₂) chain₂) (fst y₂) e2 m ann₂) })
           (honest (fst c₁) (r (fst c₁) chain₁) (fst y₁) e1 m ann₁)
         where
@@ -1413,51 +1408,22 @@ the arity the caller supplied.
         ann₁ = subst (λ w → ⟨ pr (fst c₁) w ∈ H ⟩) nv→m ann₁₀
         ann₂ : ⟨ pr (fst c₂) (# m) ∈ H ⟩
         ann₂ = subst (λ w → ⟨ pr (fst c₂) w ∈ H ⟩) nv→m ann₂₀
-        chain₀ : fst c₁ ∈⁺ pr (# 4) (pr (fst c₁) (fst c₂))
+        chain₀ : fst c₁ ∈⁺ pr (# tg) (pr (fst c₁) (fst c₂))
         chain₀ = trans⁺ (chainFst (fst c₁) (fst c₂))
-                         (chainSnd (# 4) (pr (fst c₁) (fst c₂)))
+                         (chainSnd (# tg) (pr (fst c₁) (fst c₂)))
         chain₁ : fst c₁ ∈⁺ x
         chain₁ = subst (λ w → fst c₁ ∈⁺ w) (sym qe) chain₀
-        chain₂₀ : fst c₂ ∈⁺ pr (# 4) (pr (fst c₁) (fst c₂))
+        chain₂₀ : fst c₂ ∈⁺ pr (# tg) (pr (fst c₁) (fst c₂))
         chain₂₀ = trans⁺ (chainSnd (fst c₁) (fst c₂))
-                          (chainSnd (# 4) (pr (fst c₁) (fst c₂)))
+                          (chainSnd (# tg) (pr (fst c₁) (fst c₂)))
         chain₂ : fst c₂ ∈⁺ x
         chain₂ = subst (λ w → fst c₂ ∈⁺ w) (sym qe) chain₂₀
 
+      fromInter : CertBin4.CertBinOf G H x → Honest x m
+      fromInter = fromBin 4 interK (λ s' t' → C.code-interK s' t')
+
       fromUnion : CertBin5.CertBinOf G H x → Honest x m
-      fromUnion (c₁ , c₂ , mv , y₁ , y₂ ,
-                 (qe , (mω , (e1 , (e2 , (ann , (ann₁₀ , ann₂₀))))))) =
-        PT.rec PT.squash₁
-          (λ { (t₁ , e₁) →
-          PT.rec PT.squash₁
-            (λ { (t₂ , e₂) →
-              let
-                eq : x ≡ C.code (unionK t₁ t₂)
-                eq = qe
-                   ∙ cong (pr (# 5))
-                       ( cong (pr (fst c₁)) e₂
-                       ∙ cong₂ pr e₁ refl )
-                   ∙ sym (C.code-unionK t₁ t₂)
-              in ∣ unionK t₁ t₂ , eq ∣₁ })
-            (honest (fst c₂) (r (fst c₂) chain₂) (fst y₂) e2 m ann₂) })
-          (honest (fst c₁) (r (fst c₁) chain₁) (fst y₁) e1 m ann₁)
-        where
-        nv→m : fst mv ≡ # m
-        nv→m = mEq mv mω ann
-        ann₁ : ⟨ pr (fst c₁) (# m) ∈ H ⟩
-        ann₁ = subst (λ w → ⟨ pr (fst c₁) w ∈ H ⟩) nv→m ann₁₀
-        ann₂ : ⟨ pr (fst c₂) (# m) ∈ H ⟩
-        ann₂ = subst (λ w → ⟨ pr (fst c₂) w ∈ H ⟩) nv→m ann₂₀
-        chain₀ : fst c₁ ∈⁺ pr (# 5) (pr (fst c₁) (fst c₂))
-        chain₀ = trans⁺ (chainFst (fst c₁) (fst c₂))
-                         (chainSnd (# 5) (pr (fst c₁) (fst c₂)))
-        chain₁ : fst c₁ ∈⁺ x
-        chain₁ = subst (λ w → fst c₁ ∈⁺ w) (sym qe) chain₀
-        chain₂₀ : fst c₂ ∈⁺ pr (# 5) (pr (fst c₁) (fst c₂))
-        chain₂₀ = trans⁺ (chainSnd (fst c₁) (fst c₂))
-                          (chainSnd (# 5) (pr (fst c₁) (fst c₂)))
-        chain₂ : fst c₂ ∈⁺ x
-        chain₂ = subst (λ w → fst c₂ ∈⁺ w) (sym qe) chain₂₀
+      fromUnion = fromBin 5 unionK (λ s' t' → C.code-unionK s' t')
 
       fromCompl : Cert6Of G H x → Honest x m
       fromCompl (nv , cv , yv , (nω , (qe , (e1 , (ann , ann₀))))) =
@@ -1953,25 +1919,17 @@ already certified. The two laws share one reading and one filling, per member.
         module H = Honest (suc zero) zero (sh2 (suc a)) (h₀ ∷ g₀ ∷ v ∷ γ) cert
 
         gF : ⟨ pr (fst x) (fst y) ∈ fst g₀ ⟩
-        gF = subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc zero))))
-              (suc (suc zero)) (suc zero) env) gf
+        gF = appRead (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc zero) env gf
 
         hF : ⟨ pr (fst x) (# 1) ∈ fst h₀ ⟩
         hF = subst (λ w → ⟨ pr (fst x) w ∈ fst h₀ ⟩) (op ∙ numeralL-fst 1)
-          (subst ⟨_⟩ (appAt-adequate (suc (suc (suc zero)))
-            (suc (suc zero)) zero env) hf)
+          (appRead (suc (suc (suc zero))) (suc (suc zero)) zero env hf)
 
         lx : ⟨ isL (fst x) ⟩
-        lx = isL-trans {x = ⁅ fst x ⁆s} {y = fst x} (∣ tt* , refl ∣₁)
-          (isL-trans {x = pr (fst x) (# 1)} {y = ⁅ fst x ⁆s}
-            (∣ lift false , refl ∣₁)
-            (isL-trans {x = fst h₀} {y = pr (fst x) (# 1)} hF (h₀ .snd)))
+        lx = prIsL₁ (h₀ .snd) hF
 
         ly : ⟨ isL (fst y) ⟩
-        ly = isL-trans {x = ⁅ fst x , fst y ⁆} {y = fst y} (∣ lift true , refl ∣₁)
-          (isL-trans {x = pr (fst x) (fst y)} {y = ⁅ fst x , fst y ⁆}
-            (∣ lift true , refl ∣₁)
-            (isL-trans {x = fst g₀} {y = pr (fst x) (fst y)} gF (g₀ .snd)))
+        ly = prIsL₂ (g₀ .snd) gF
 
         land : Σ[ t ∈ KT ⟪ A₀ ⟫ 1 ] (fst x ≡ C.code t) → ⟨ fst v ∈ˢ 𝒟ₒ A₀ ⟩
         land (t , codeEq) = 𝒟ₒ-intro A₀ (fst v) inDef
@@ -2068,12 +2026,11 @@ already certified. The two laws share one reading and one filling, per member.
 
         gf : ⟨ env ⊨ appAt (suc (suc (suc (suc zero))))
                   (suc (suc zero)) (suc zero) ⟩
-        gf = subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc zero))))
-              (suc (suc zero)) (suc zero) env)) (D.entrySelf∈ t)
+        gf = appFill (suc (suc (suc (suc zero)))) (suc (suc zero)) (suc zero) env
+          (D.entrySelf∈ t)
 
         hf : ⟨ env ⊨ appAt (suc (suc (suc zero))) (suc (suc zero)) zero ⟩
-        hf = subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc zero)))
-              (suc (suc zero)) zero env))
+        hf = appFill (suc (suc (suc zero))) (suc (suc zero)) zero env
           (subst (λ w → ⟨ pr (fst (C.codeS t)) w ∈ fst (hS A₀ lA₀ t) ⟩)
             (sym (numeralL-fst 1)) (hSelf∈ A₀ lA₀ t))
 
