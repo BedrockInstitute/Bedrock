@@ -968,6 +968,34 @@ explicitly, not an oversight to discover mid-build.
 
 **Provenance:** the [L3.30-P1] probe; the p1 report.
 
+### I-4. Implicits inverted through content-of never solve; state combinators over carriers
+
+**Rule:** An implicit argument that unification must invert through `⟨_⟩`
+applied to a defined function (`_⇔_`, `_∈ₛ_`, any hProp-valued operator) is
+never solved: Agda blocks the constraint and keeps normalizing the V-side
+presentation machinery underneath it, which reads as a conversion wall in
+situ while the isolated machinery stays fast. State every bidirectional
+combinator and membership transport over the CARRIERS (a `_↔_` on `Type ℓ`
+that is definitionally `⟨ A ⇔ₚ B ⟩`), so every implicit is solved from a
+path or a Π type; state characterizations at a restricted carrier whose
+index carries the certificate (a projection of a variable), never at an
+eliminator application.
+
+**Measured (the Realize walls, 2026-08-03):** the controlled A/B/C on
+byte-identical proof bodies: abstract face with hProp-level implicits 27 s
+FAIL (blocked constraints naming the presentation machinery); the same
+face with carrier-level combinators 18.4 s green; concrete face 14 s
+green. The A/B delta is the cure; the B/C delta also refutes face
+abstraction as the cure of THIS wall class (P-h remains measured law for
+walk arguments over transparent sett bodies, and is kept in Realize as
+insurance, but it is not a cure-all: the mandated-first-formulation
+protocol exists exactly to catch this). The companion reshape (bounded
+quantifier ranging over u itself) dissolved the second wall's obligation
+outright and un-spent the walk's transitivity hypothesis.
+
+**Provenance:** `_build/r3a-walls-report.md` (the A/B/C table and the five
+candidates); commit `6153e58`; sibling of I-2/I-3.
+
 ### D-8. A self-containing step operator is not subset-monotone; condition on membership
 
 **Rule:** A step operator whose value mentions its own argument (the rud step
