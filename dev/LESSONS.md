@@ -815,6 +815,24 @@ the file lands at 339 code lines, 2.9 s cold (the p1 report, surprises 2).
 **Provenance:** the [L3.30-P1] probe (`ProbeRudComp.agda`, preserved in the
 session scratchpad; the p1 report).
 
+### I-3. Inside opaque blocks, every binding carries a type signature
+
+**Rule:** Agda never infers a definition's type inside an `opaque` block
+(`MissingTypeSignatureForOpaque`: inference would leak sealed information),
+so an unascribed `where`-binding there becomes an open meta and the block's
+metas storm the checker. Ascribe every binding inside `opaque`, including
+where-locals whose types feel obvious.
+
+**Measured (the rud polish, 2026-08-02):** dropping noise-only signatures
+from `where` bindings inside `Ops`'s sealed spec blocks ran a 2-second file
+past 600 s (killed); one dropped signature in `F1-spec` sufficed. Bisected
+in four minutes by C-10 staging (three stages, per-swap asserts, typecheck
+per stage, every stage under 4 s); restoring the signatures restored the
+2-second check.
+
+**Provenance:** the polish report `_build/polish-r-report.md` (commit
+`77ac3e0`); sibling of C-11 and I-2.
+
 **When it bites:** any sound/mirror chain where an object-language equation or
 path must determine a formula.
 
