@@ -504,11 +504,14 @@ Each with what would settle it.
    the owner's note names chs. 1-2).
 5. **The master-code reduction**: SETTLED by [L3.30-X1]; see
    fine-structure.md and section 4, item 9 above.
-6. **A sourced GCH-in-L derivation** for the memo to target: the natural
-   candidates are SZ's own consequences chain (1.23-1.27 with 9.1) plus the
-   standard hull-and-collapse argument from a full text (Devlin ch. II with
-   the errata open, or Jech); the fetched chapter stops short of the
-   theorem itself.
+6. **A sourced GCH-in-L derivation**: SETTLED by [L3.30-L2]'s Devlin ch. II
+   fetch: section II.5 "The Condensation Lemma. The GCH in L" is in hand,
+   with Theorem 5.6 (V = L implies GCH) and Corollary 5.7 (orchestrator
+   verified the section in the fetched text; OCR-degraded scan, to be read
+   with the errata list open since WS's inventory covers chs. I and VI,
+   not II.5, but the chapter is Devlin's and caution is cheap). SZ's
+   consequences chain (1.23-1.27 with 9.1) remains the acceptability-side
+   complement.
 7. **The Mizar/Metamath/Naproche/AFP landscape**: SETTLED-as-hardened by
    [L3.30-L3] (formalizations-landscape.md): no constructible universe in
    any of the six systems' indices; the virginity claim survives with its
