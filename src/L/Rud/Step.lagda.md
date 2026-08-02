@@ -32,18 +32,21 @@ outcome recorded in the batch report.
 
 open import Base.Prelude
 open import Base.Truth
+open import Base.Classical using ( LEM )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 
-module L.Rud.Step {ℓ : Level} (A : V ℓ) where
+module L.Rud.Step {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (A : V ℓ) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
 open import V.Coding {ℓ} using ( pr )
 open import L.Rud.Ops {ℓ}
   using ( F0; F1; F2; F3; F4; F5; F6; F7; F9
-        ; F0-spec; F1-spec; F5-spec; F9-spec )
+        ; F0-spec; F1-spec; F5-spec; F9-spec
+        ; F2-read; F6-read; F7-read )
 open import L.Rud.Images {ℓ}
-  using ( F8; F10; F11; F12; F13; F14; left; right; F8-spec; F10-spec )
+  using ( F8; F10; F11; F12; F13; F14; left; right; left-spec; right-spec
+        ; F8-spec; F10-spec )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Data.Sum.Properties using ( isProp⊎ )
 import Cubical.Data.Empty as Empty
@@ -349,6 +352,23 @@ step-∈ : (u : V ℓ) → ⟨ u ∈ˢ step u ⟩
 step-∈ u = step-in u u f0 u u (u-self-in u) (u-self-in u)
   (F0-spec u u u .snd ∣ inl refl ∣₁)
 
+step-mono∈ : {u v : V ℓ} → ((x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ v ⟩)
+           → ⟨ u ∈ v ⟩ → ((x : V ℓ) → ⟨ x ∈ step u ⟩ → ⟨ x ∈ step v ⟩)
+step-mono∈ {u} {v} sub u∈v x x∈stepu = PT.rec (snd (x ∈ˢ step v)) go
+  (step-out u x x∈stepu)
+  where
+  go : Σ[ i ∈ Op16 ] Σ[ a ∈ V ℓ ] Σ[ b ∈ V ℓ ]
+         (⟨ a ∈ˢ u' u ⟩ × ⟨ b ∈ˢ u' u ⟩ × ⟨ x ∈ˢ Fof i a b ⟩) → ⟨ x ∈ˢ step v ⟩
+  go (i , a , b , a∈u' , b∈u' , x∈Fab) =
+    step-in v x i a b (u'⊆v' a a∈u') (u'⊆v' b b∈u') x∈Fab
+    where
+    u'⊆v' : (c : V ℓ) → ⟨ c ∈ˢ u' u ⟩ → ⟨ c ∈ˢ u' v ⟩
+    u'⊆v' c h = go' (u'-cases u c h)
+      where
+      go' : (⟨ c ∈ˢ u ⟩ ⊎ (c ≡ u)) → ⟨ c ∈ˢ u' v ⟩
+      go' (inl c∈u) = u'-in v c (sub c c∈u)
+      go' (inr c≡u) = u'-in v c (subst (λ t → ⟨ t ∈ˢ v ⟩) (sym c≡u) u∈v)
+
 u'-member→step : (u x : V ℓ) → ⟨ x ∈ˢ u' u ⟩ → ⟨ x ∈ˢ step u ⟩
 u'-member→step u x h = go (u'-cases u x h)
   where
@@ -424,15 +444,17 @@ case reads a member `x` of the value `F_i(a,b)` with `a, b ∈ u ∪ {u}`, opens
 `y ∈ x` through the operation's specification, and reassembles `y` as a
 member of the step: members of the argument set land directly, and the
 intermediate objects of pair formation are caught by the pair and tuple
-images. Nine cases close cleanly here: `F0`, `F1`, `F5`, `F8`, `F9`, `F10`,
-`F11`, `F12`, and `F15`. The cases for `F2`-`F4`, `F6`, and `F7` are held
-back because the operations chapter seals their specifications' right-hand
-sides `opaque`{.Agda}, so the membership decompositions are not reachable
-from outside; the cases for `F13` and `F14` carry an open sub-obligation on
-the junk behaviour of the right projection. All three trails are recorded in
-the batch report.
+images. Twelve cases close cleanly: `F0`, `F1`, `F2`, `F5`, `F6`, `F7`, `F8`,
+`F9`, `F10`, `F11`, `F12`, and `F15`, the five sealed ones through the read
+lemmas appended to the operations chapter. The `F3` and `F4` cases are
+blocked by a mathematical obstruction recorded in the report: a member of
+their triple values can be `{u, pr z v}` with `pr z v` outside the argument
+set, and no image over the argument square contains it in general. The
+`F13` and `F14` cases close on the pair branch through the excluded middle,
+and the non-pair branch needs the images chapter's private junk facts.
+All trails are recorded in the batch report.
 <!--zh-->
-对传递输入，step 逐运算地传递。每个情形读值 `F_i(a,b)` 的成员 `x`，其中 `a, b ∈ u ∪ {u}`，经该运算的规格拆开 `y ∈ x`，再把 `y` 重组成 step 的成员：参数集的成员直接落下，对形成的中间对象则由对与三元组像捕捉。此处九个情形干净闭合：`F0`、`F1`、`F5`、`F8`、`F9`、`F10`、`F11`、`F12` 与 `F15`。`F2`-`F4`、`F6`、`F7` 的情形因运算章把规格右侧封以 `opaque`{.Agda}、隶属拆解从外部不可达而搁置；`F13` 与 `F14` 的情形带着右投影垃圾行为的开放子义务。三条轨迹都记入批次报告。
+对传递输入，step 逐运算地传递。每个情形读值 `F_i(a,b)` 的成员 `x`，其中 `a, b ∈ u ∪ {u}`，经该运算的规格拆开 `y ∈ x`，再把 `y` 重组成 step 的成员：参数集的成员直接落下，对形成的中间对象则由对与三元组像捕捉。此处十二个情形干净闭合：`F0`、`F1`、`F2`、`F5`、`F6`、`F7`、`F8`、`F9`、`F10`、`F11`、`F12` 与 `F15`，其中五个被封运算经运算章附录的读引理。`F3` 与 `F4` 的情形被一条数学障碍挡住，记入报告：其三元组值的成员可能是 `{u, pr z v}`，而 `pr z v` 在参数集之外，参数平方上的像一般不含它。`F13` 与 `F14` 的情形在对支经排中律闭合，非对支需要像章的私有垃圾事实。全部轨迹都记入批次报告。
 <!--/-->
 
 ```agda
@@ -458,6 +480,18 @@ trans-F1 u tr a b x y a∈u' b∈u' x∈F1ab y∈x = u'-member→step u y
   (u'-trans u tr x y y∈x
     (u'-trans u tr a x (F1-spec a b x .fst x∈F1ab .fst) a∈u'))
 
+trans-F2 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F2 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ y ∈ˢ step u ⟩
+trans-F2 u tr a b x y a∈u' b∈u' x∈F2ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F2-read a b x x∈F2ab)
+  where
+  go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
+         (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ b ⟩ × ⟨ x ≡ₕ pr p q ⟩) → ⟨ y ∈ˢ step u ⟩
+  go (p , q , p∈a , q∈b , x≡) = pair→step u tr p q y
+    (u'-trans u tr a p p∈a a∈u') (u'-trans u tr b q q∈b b∈u')
+    (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡ y∈x)
+
 trans-F5 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F5 a b ⟩ → ⟨ y ∈ˢ x ⟩
          → ⟨ y ∈ˢ step u ⟩
@@ -468,6 +502,31 @@ trans-F5 u tr a b x y a∈u' b∈u' x∈F5ab y∈x = PT.rec (snd (y ∈ˢ step u
   go (v , v∈a , x∈v) = u'-member→step u y
     (u'-trans u tr x y y∈x
       (u'-trans u tr v x x∈v (u'-trans u tr a v v∈a a∈u')))
+
+trans-F6 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F6 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ y ∈ˢ step u ⟩
+trans-F6 u tr a b x y a∈u' b∈u' x∈F6ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F6-read a b x x∈F6ab)
+  where
+  go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
+         (⟨ pr p q ∈ˢ a ⟩ × ⟨ x ≡ₕ p ⟩) → ⟨ y ∈ˢ step u ⟩
+  go (p , q , pruv∈a , x≡p) = u'-member→step u y
+    (u'-trans u tr p y (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡p y∈x)
+      (⋃⋃→u' u tr a p a∈u' (prL-in-doubleUnion a p q pruv∈a)))
+
+trans-F7 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
+         → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F7 a b ⟩ → ⟨ y ∈ˢ x ⟩
+         → ⟨ y ∈ˢ step u ⟩
+trans-F7 u tr a b x y a∈u' b∈u' x∈F7ab y∈x = PT.rec (snd (y ∈ˢ step u)) go
+  (F7-read a b x x∈F7ab)
+  where
+  go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
+         (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ a ⟩ × ⟨ p ∈ˢ q ⟩ × ⟨ x ≡ₕ pr p q ⟩)
+     → ⟨ y ∈ˢ step u ⟩
+  go (p , q , p∈a , q∈a , p∈q , x≡) = pair→step u tr p q y
+    (u'-trans u tr a p p∈a a∈u') (u'-trans u tr a q q∈a a∈u')
+    (subst (λ t → ⟨ y ∈ˢ t ⟩) x≡ y∈x)
 
 trans-F8 : (u : V ℓ) (tr : Trans u) → (a b x y : V ℓ)
          → ⟨ a ∈ˢ u' u ⟩ → ⟨ b ∈ˢ u' u ⟩ → ⟨ x ∈ˢ F8 a b ⟩ → ⟨ y ∈ˢ x ⟩
@@ -590,6 +649,76 @@ trans-F15 u tr a b x y a∈u' b∈u' x∈F15ab y∈x = u'-member→step u y
 ```
 
 <!--en-->
+## The F13 and F14 cases and the pair classification
+<!--zh-->
+## F13 与 F14 的情形与对分类
+<!--/-->
+
+<!--en-->
+The `F13` and `F14` values read the projections of their second argument:
+`F13 a b = {left b, pr (right b) a}` and `F14 a b = {left b, pr a (right b)}`.
+Their members decompose into the left projection and a pair of the right
+projection with `a`, and the members of those pairs are the singletons and
+unordered pairs of the right projection. The pair frame catches those
+objects only when the right projection lies in the argument set. The pair
+classification spends the excluded middle on "`b` is a Kuratowski pair": in
+the pair case the projections are the pair's components, which transitivity
+places in `u`. The non-pair case needs the junk facts that `left` and
+`right` of a non-pair are the empty set, whose proofs live inside the images
+chapter's private blocks (`⋂` and `rightSlice` are not exportable); that
+branch is recorded as a wall in the batch report.
+<!--zh-->
+`F13` 与 `F14` 的值读取第二参数的投影：`F13 a b = {left b, pr (right b) a}`，`F14 a b = {left b, pr a (right b)}`。其成员拆成左投影与右投影同 `a` 之对，那些对的成员又是右投影的单点与无序对。对框架只有在右投影落进参数集时才能捕捉这些对象。对分类把排中律花在「`b` 是 Kuratowski 对」上：在对的情形，投影即对的分量，传递性把它们放进 `u`。非对情形需要「非对上的 left 与 right 是空集」的垃圾事实，其证明住在像章的私有块 (`⋂` 与 `rightSlice` 不可导出) 之内；该分支作为墙记入批次报告。
+<!--/-->
+
+```agda
+isPair : V ℓ → hProp (ℓ-suc ℓ)
+isPair b = ( ∥ Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ] ⟨ b ≡ₕ pr p q ⟩ ∥₁ , squash₁ )
+
+singl-in : (a : V ℓ) → ⟨ a ∈ₛ ⁅ a ⁆s ⟩
+singl-in a = SetPackage.classification (SingletonPackage a) a .snd refl
+
+left-in-u'-pair : (u : V ℓ) (tr : Trans u) → (b : V ℓ)
+                → ⟨ b ∈ˢ u' u ⟩ → ⟨ isPair b ⟩ → ⟨ left b ∈ˢ u' u ⟩
+left-in-u'-pair u tr b b∈u' h = PT.rec (snd (left b ∈ˢ u' u)) go h
+  where
+  go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ] ⟨ b ≡ₕ pr p q ⟩ → ⟨ left b ∈ˢ u' u ⟩
+  go (p , q , b≡) = subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym left≡p) p∈u'
+    where
+    left≡p : left b ≡ p
+    left≡p = subst (λ t → left t ≡ p) (sym b≡) (left-spec p q)
+    p∈⁅p⁆s : ⟨ p ∈ˢ ⁅ p ⁆s ⟩
+    p∈⁅p⁆s = ∈∈ₛ {a = p} {b = ⁅ p ⁆s} .snd (singl-in p)
+    ⁅p⁆s∈b : ⟨ ⁅ p ⁆s ∈ˢ b ⟩
+    ⁅p⁆s∈b = subst (λ t → ⟨ ⁅ p ⁆s ∈ˢ t ⟩) (sym b≡)
+      (∈∈ₛ {a = ⁅ p ⁆s} {b = pr p q} .snd
+        (pairing-ax (⁅ p ⁆s) (⁅ p , q ⁆) (⁅ p ⁆s) .snd ∣ inl refl ∣₁))
+    p∈u' : ⟨ p ∈ˢ u' u ⟩
+    p∈u' = u'-trans u tr ⁅ p ⁆s p p∈⁅p⁆s
+      (u'-trans u tr b ⁅ p ⁆s ⁅p⁆s∈b b∈u')
+
+right-in-u'-pair : (u : V ℓ) (tr : Trans u) → (b : V ℓ)
+                 → ⟨ b ∈ˢ u' u ⟩ → ⟨ isPair b ⟩ → ⟨ right b ∈ˢ u' u ⟩
+right-in-u'-pair u tr b b∈u' h = PT.rec (snd (right b ∈ˢ u' u)) go h
+  where
+  go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ] ⟨ b ≡ₕ pr p q ⟩ → ⟨ right b ∈ˢ u' u ⟩
+  go (p , q , b≡) = subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym right≡q) q∈u'
+    where
+    right≡q : right b ≡ q
+    right≡q = subst (λ t → right t ≡ q) (sym b≡) (right-spec p q)
+    q∈⁅p,q⁆ : ⟨ q ∈ˢ ⁅ p , q ⁆ ⟩
+    q∈⁅p,q⁆ = ∈∈ₛ {a = q} {b = ⁅ p , q ⁆} .snd
+      (pairing-ax p q q .snd ∣ inr refl ∣₁)
+    ⁅p,q⁆∈b : ⟨ ⁅ p , q ⁆ ∈ˢ b ⟩
+    ⁅p,q⁆∈b = subst (λ t → ⟨ ⁅ p , q ⁆ ∈ˢ t ⟩) (sym b≡)
+      (∈∈ₛ {a = ⁅ p , q ⁆} {b = pr p q} .snd
+        (pairing-ax (⁅ p ⁆s) (⁅ p , q ⁆) (⁅ p , q ⁆) .snd ∣ inr refl ∣₁))
+    q∈u' : ⟨ q ∈ˢ u' u ⟩
+    q∈u' = u'-trans u tr ⁅ p , q ⁆ q q∈⁅p,q⁆
+      (u'-trans u tr b ⁅ p , q ⁆ ⁅p,q⁆∈b b∈u')
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -599,12 +728,14 @@ trans-F15 u tr a b x y a∈u' b∈u' x∈F15ab y∈x = u'-member→step u y
 The concrete operator is in place and sealed: the sixteen per-operation
 image sets over the argument square, the step as their union, and the
 membership characterization as the only surface. The growth properties
-discharge from the pairing image alone. Nine per-operation transitivity
-cases close cleanly through the shared pair and argument frames; the
-remaining seven are recorded as trails, as is the monotonicity obligation,
-whose universal form no sixteen-image step can satisfy. The instantiation
+discharge from the pairing image alone, and the membership-conditioned
+monotonicity discharges from the subset plus membership hypotheses.
+Twelve per-operation transitivity cases close cleanly through the shared
+pair and argument frames; the `F3`/`F4` cases are false for this operator
+shape and the `F13`/`F14` non-pair branches need the images chapter's
+private junk facts, both recorded in the batch report. The instantiation
 of the hierarchy engine and the limit-level closure facts await the
-telescope's reshaping, all trails documented in the batch report.
+transitivity question's resolution.
 <!--zh-->
-具体算子就位并已封印：参数平方上的十六个逐运算像集、作为其并的 step，以及作为唯一表面的隶属刻画。增长性质单从配对像清偿。九个逐运算传递性情形经共享的对与参数框架干净闭合；其余七个连同单调性义务一并记入轨迹，而单调性的全称形式是任何十六像 step 都无法满足的。层级引擎的实例化与极限层闭包事实等待望远镜重塑，全部轨迹记录在批次报告中。
+具体算子就位并已封印：参数平方上的十六个逐运算像集、作为其并的 step，以及作为唯一表面的隶属刻画。增长性质单从配对像清偿，带成员条件的新单调性从子集加成员假设清偿。十二个逐运算传递性情形经共享的对与参数框架干净闭合；`F3`/`F4` 的情形对此算子形状为假，`F13`/`F14` 的非对支需要像章的私有垃圾事实，两者都记入批次报告。层级引擎的实例化与极限层闭包事实等待传递性问题的解决。
 <!--/-->
