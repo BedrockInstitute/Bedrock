@@ -734,6 +734,40 @@ the abstract-env formulation left the shelves untypeable.
 
 **Provenance:** the B4b report (delivered as `suc-clause`); commit `810d9cd`.
 
+### R-35. Union representations are meta-poisoned; state memberships at small indices
+
+**Rule:** Index or path extraction from the representation of a union of an
+open term (`⟪ ⋃ x ⟫`-level fiber extraction, `separation-ax` over a union)
+leaves unsolved metas or churns the presentation machinery; state the
+membership at the SMALL INDEX instead (an existential over `⟪ y ⟫` with the
+inclusion applied), and keep constructions at the stuck-member level.
+
+**Measured (R1b, 2026-08-02):** the original F8-spec backward direction via
+fiber extraction over `⟪ y ⟫` was the OOM runaway that crashed the machine;
+two sibling formulations (separation over a union; index extraction from a
+union representation) walled the same way; the small-index restatement
+checks the whole file in 54.6 s cold and the walls did not return.
+
+**Provenance:** the r1b report (the crash-resumed batch); commit `7c28ce2`.
+
+### R-36. Expose a sealed decomposition with an opaque-unfolding read lemma
+
+**Rule:** When a consumer needs to decompose a value sealed per P-c, do not
+move the definition out of the opaque block and do not unseal it: add a READ
+LEMMA in its own `opaque unfolding X` block, proving the decomposition
+inside the seal and exporting only the truncation-explicit type. The seal
+stays, the surface grows by exactly the needed read.
+
+**Measured (R2c, 2026-08-02/03):** adopted three times in one batch chain:
+the five Ops reads (F2/F3/F4/F6/F7-read, +117 lines, unblocking three
+transitivity cases and the description hops), the four Images junk lemmas
+(constructive, no LEM inside Images), and the Fof equality lemmas; each
+left every existing export and seal untouched. This dissolved a planned
+unsealing surgery.
+
+**Provenance:** the r2c report parts 2-4; commits `7c69beb`, `a3c9f80`;
+companion to P-c.
+
 ### R-34. Pin every implicit universe level a `using`-import leaves open
 
 **Rule:** After `open M using (...)`, a lemma whose type leaves an imported
