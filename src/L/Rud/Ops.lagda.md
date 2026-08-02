@@ -796,3 +796,71 @@ opaque
         , ∈∈ₛ {a = ⟪ a ⟫↪ (p .fst .fst)} {b = ⟪ a ⟫↪ (p .fst .snd)} .snd (p .snd)
         , subst (λ w → ⟨ x ≡ₕ w ⟩) (sym q) refl ) ∣₁
 ```
+
+<!--en-->
+## The write lemmas (R3c appendix)
+<!--zh-->
+## 写引理 (R3c 附录)
+<!--/-->
+
+<!--en-->
+A read lemma travels one way only: from membership to the decomposition. The
+switch theorem needs the other way as well, because it must build a member of
+a sealed image out of the shape a description or a composite hands it. The
+five write lemmas below are the reads' mirrors, in the same pattern: each
+sits in its own `opaque unfolding` block, repacks the flat decomposition into
+the nesting the sealed right-hand side has, and applies the operation's own
+backward direction inside the seal. Nothing existing is changed, renamed or
+unsealed; the surface grows by exactly the five reverse reads, and with them
+the reverse hops the description chapter recorded as walled become available
+to its consumers.
+<!--zh-->
+读引理只走一个方向：从隶属到拆解。切换定理还需要另一个方向，因为它必须从描述或复合交来的形状造出封存像的成员。下面五条写引理是读引理的镜像，取同一模式：各自住在自己的 `opaque unfolding` 块中，把扁平的拆解重新打包成封存右端所具有的嵌套，再在封印内施用该运算自身的反向。既有内容没有任何改动、改名或解封；表面恰好长出这五条反向读取，描述章记为受阻的那些反向跳，也随之向其消费者开放。
+<!--/-->
+
+```agda
+opaque
+  unfolding F2
+  F2-write : (a b x : V ℓ)
+           → ∥ Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ]
+                (⟨ p ∈ˢ a ⟩ × ⟨ q ∈ˢ b ⟩ × ⟨ x ≡ₕ pr p q ⟩) ∥₁
+           → ⟨ x ∈ˢ F2 a b ⟩
+  F2-write a b x h = F2-spec a b x .snd
+    (PT.rec (snd (F2-RHS a b x)) (λ { (p , q , r) → ∣ p , ∣ q , r ∣₁ ∣₁ }) h)
+
+opaque
+  unfolding F3
+  F3-write : (a b x : V ℓ)
+           → ∥ Σ[ u ∈ V ℓ ] Σ[ z ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ z ∈ˢ a ⟩ × ⟨ pr u v ∈ˢ b ⟩ × ⟨ x ≡ₕ pr u (pr z v) ⟩) ∥₁
+           → ⟨ x ∈ˢ F3 a b ⟩
+  F3-write a b x h = F3-spec a b x .snd
+    (PT.rec (snd (F3-RHS a b x)) (λ { (u , z , v , r) → ∣ u , ∣ z , ∣ v , r ∣₁ ∣₁ ∣₁ }) h)
+
+opaque
+  unfolding F4
+  F4-write : (a b x : V ℓ)
+           → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ] Σ[ z ∈ V ℓ ]
+                (⟨ z ∈ˢ a ⟩ × ⟨ pr u v ∈ˢ b ⟩ × ⟨ x ≡ₕ pr u (pr v z) ⟩) ∥₁
+           → ⟨ x ∈ˢ F4 a b ⟩
+  F4-write a b x h = F4-spec a b x .snd
+    (PT.rec (snd (F4-RHS a b x)) (λ { (u , v , z , r) → ∣ u , ∣ v , ∣ z , r ∣₁ ∣₁ ∣₁ }) h)
+
+opaque
+  unfolding F6
+  F6-write : (a b x : V ℓ)
+           → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ pr u v ∈ˢ a ⟩ × ⟨ x ≡ₕ u ⟩) ∥₁
+           → ⟨ x ∈ˢ F6 a b ⟩
+  F6-write a b x h = F6-spec a b x .snd
+    (PT.rec (snd (F6-RHS a x)) (λ { (u , v , r) → ∣ u , ∣ v , r ∣₁ ∣₁ }) h)
+
+opaque
+  unfolding F7
+  F7-write : (a b x : V ℓ)
+           → ∥ Σ[ u ∈ V ℓ ] Σ[ v ∈ V ℓ ]
+                (⟨ u ∈ˢ a ⟩ × ⟨ v ∈ˢ a ⟩ × ⟨ u ∈ˢ v ⟩ × ⟨ x ≡ₕ pr u v ⟩) ∥₁
+           → ⟨ x ∈ˢ F7 a b ⟩
+  F7-write a b x h = F7-spec a b x .snd
+    (PT.rec (snd (F7-RHS a x)) (λ { (u , v , r) → ∣ u , ∣ v , r ∣₁ ∣₁ }) h)
+```
