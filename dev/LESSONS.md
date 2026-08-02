@@ -782,7 +782,10 @@ for every future consumer.
 bisect isolated the collection clause, whose transparent colOp unfolds into
 the transparent F10 and its union/intersection tower under a sett index;
 sealing the nine derived operations at birth with specs inside dropped the
-check to 3.7 s.
+check to 3.7 s. **Prophylactic datum (R5a, 2026-08-03):** the rule applied
+BEFORE any wall kept a 731-line sett-tower chapter at a 2.8 s cold check
+end to end, the first case of the seal discipline preceding a wall instead
+of repairing one.
 
 **Provenance:** `_build/r3c-report.md` (the wall trail); commit `d15c114`;
 companion to P-c and R-36.
@@ -1066,6 +1069,37 @@ outright and un-spent the walk's transitivity hypothesis.
 
 **Provenance:** `_build/r3a-walls-report.md` (the A/B/C table and the five
 candidates); commit `6153e58`; sibling of I-2/I-3.
+
+### D-9. Choose the induction carrier by which operations act homomorphically
+
+**Rule:** Before running a structural induction over a composite calculus,
+choose the carrier object by counting which clauses act homomorphically on
+it; a carrier that absorbs most operations turns their clauses into one-line
+ports, and the wrong carrier hides that as apparent hardness.
+
+**Measured (R5a, 2026-08-03):** the image principle's induction over the
+element relation gives six of ten clauses essentially free (intersection
+and difference are the same operations one level up; the extraction is one
+F8 with no union), against one of ten over the graph form the classical
+gloss suggests.
+
+**Provenance:** `_build/r5a-report.md`; commit `a34907c`.
+
+### D-10. Price the truth of a recorded residue before pricing its proof
+
+**Rule:** A residue recorded under the wall protocol names a TARGET, and a
+target can be false; before dispatching a discharge batch, spend the five
+minutes checking the target's truth at the intended generality (a Tarskian
+or cardinality obstruction is the usual killer), and record the corrected
+target beside the original.
+
+**Measured (R5b, 2026-08-03):** the r3c report's third residue as recorded
+(the tower lift at arbitrary stage spread) is false two limits up by the
+satisfaction predicate; the true one-block form was provable the same day.
+The r2c chain had already shown the mirror case (a correct measurement of a
+wrong target at the step's shape).
+
+**Provenance:** `_build/r5b-report.md`; commits `d15c114`, `a34907c`.
 
 ### D-8. A self-containing step operator is not subset-monotone; condition on membership
 
