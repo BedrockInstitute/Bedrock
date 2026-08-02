@@ -1070,49 +1070,48 @@ the cumulative level, is direction-paired and unsealed).
 <!--/-->
 
 ```agda
-  private
-    data StepTag : ℕ → Type ℓ where
-      tagInter tagUnion tagDiff : {k : ℕ} → StepTag k
-      tagSelM tagSelE : {k : ℕ} → StepTag k
-      tagAll : {k : ℕ} → StepTag k
-      tagExt : {k : ℕ} → StepTag (suc (suc k))
-      tagShift : {k : ℕ} → StepTag k
-      tagValues : StepTag 0
+  data StepTag : ℕ → Type ℓ where
+    tagInter tagUnion tagDiff : {k : ℕ} → StepTag k
+    tagSelM tagSelE : {k : ℕ} → StepTag k
+    tagAll : {k : ℕ} → StepTag k
+    tagExt : {k : ℕ} → StepTag (suc (suc k))
+    tagShift : {k : ℕ} → StepTag k
+    tagValues : StepTag 0
 
-    mutual
-      slice : ℕ → ℕ → V ℓ
-      slice zero zero = singletons A
-      slice zero (suc k) = ∅
-      slice (suc n) k = slice n k ∪ step n k
+  mutual
+    slice : ℕ → ℕ → V ℓ
+    slice zero zero = singletons A
+    slice zero (suc k) = ∅
+    slice (suc n) k = slice n k ∪ step n k
 
-      step : ℕ → ℕ → V ℓ
-      step n k = sett (Σ[ t ∈ StepTag k ] StepPayload n k t)
-                      (λ { (t , p) → stepImage t p })
+    step : ℕ → ℕ → V ℓ
+    step n k = sett (Σ[ t ∈ StepTag k ] StepPayload n k t)
+                    (λ { (t , p) → stepImage t p })
 
-      StepPayload : (n k : ℕ) → StepTag k → Type ℓ
-      StepPayload n k tagInter = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
-      StepPayload n k tagUnion = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
-      StepPayload n k tagDiff = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
-      StepPayload n k tagSelM = Σ[ m ∈ ⟪ slice n k ⟫ ] Fin k × Fin k
-      StepPayload n k tagSelE = Σ[ m ∈ ⟪ slice n k ⟫ ] Fin k × Fin k
-      StepPayload n k tagAll = Unit* {ℓ}
-      StepPayload n (suc (suc k)) tagExt = Σ[ m ∈ ⟪ slice n (suc k) ⟫ ] ⟪ A ⟫
-      StepPayload n k tagShift = ⟪ slice n (suc k) ⟫
-      StepPayload n 0 tagValues = ⟪ slice n 1 ⟫
+    StepPayload : (n k : ℕ) → StepTag k → Type ℓ
+    StepPayload n k tagInter = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
+    StepPayload n k tagUnion = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
+    StepPayload n k tagDiff = ⟪ slice n k ⟫ × ⟪ slice n k ⟫
+    StepPayload n k tagSelM = Σ[ m ∈ ⟪ slice n k ⟫ ] Fin k × Fin k
+    StepPayload n k tagSelE = Σ[ m ∈ ⟪ slice n k ⟫ ] Fin k × Fin k
+    StepPayload n k tagAll = Unit* {ℓ}
+    StepPayload n (suc (suc k)) tagExt = Σ[ m ∈ ⟪ slice n (suc k) ⟫ ] ⟪ A ⟫
+    StepPayload n k tagShift = ⟪ slice n (suc k) ⟫
+    StepPayload n 0 tagValues = ⟪ slice n 1 ⟫
 
-      stepImage : {n k : ℕ} (t : StepTag k) (p : StepPayload n k t) → V ℓ
-      stepImage {n} {k} tagInter (m , q) = ⟪ slice n k ⟫↪ m ∩ ⟪ slice n k ⟫↪ q
-      stepImage {n} {k} tagUnion (m , q) = ⟪ slice n k ⟫↪ m ∪ ⟪ slice n k ⟫↪ q
-      stepImage {n} {k} tagDiff (m , q) = ⟪ slice n k ⟫↪ m ∖ ⟪ slice n k ⟫↪ q
-      stepImage {n} {k} tagSelM (m , i , j) =
-        selectMember (⟪ slice n k ⟫↪ m) ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
-      stepImage {n} {k} tagSelE (m , i , j) =
-        selectEqual (⟪ slice n k ⟫↪ m) ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
-      stepImage {n} {k} tagAll tt* = allTuples A k
-      stepImage {n} {suc (suc k)} tagExt (m , a) =
-        extendFamily (⟪ slice n (suc k) ⟫↪ m) ⁅ κ a ⁆s
-      stepImage {n} {k} tagShift m = shiftDown (⟪ slice n (suc k) ⟫↪ m)
-      stepImage {n} {zero} tagValues m = values (⟪ slice n 1 ⟫↪ m)
+    stepImage : {n k : ℕ} (t : StepTag k) (p : StepPayload n k t) → V ℓ
+    stepImage {n} {k} tagInter (m , q) = ⟪ slice n k ⟫↪ m ∩ ⟪ slice n k ⟫↪ q
+    stepImage {n} {k} tagUnion (m , q) = ⟪ slice n k ⟫↪ m ∪ ⟪ slice n k ⟫↪ q
+    stepImage {n} {k} tagDiff (m , q) = ⟪ slice n k ⟫↪ m ∖ ⟪ slice n k ⟫↪ q
+    stepImage {n} {k} tagSelM (m , i , j) =
+      selectMember (⟪ slice n k ⟫↪ m) ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
+    stepImage {n} {k} tagSelE (m , i , j) =
+      selectEqual (⟪ slice n k ⟫↪ m) ⁅ # (toℕ i) ⁆s ⁅ # (toℕ j) ⁆s
+    stepImage {n} {k} tagAll tt* = allTuples A k
+    stepImage {n} {suc (suc k)} tagExt (m , a) =
+      extendFamily (⟪ slice n (suc k) ⟫↪ m) ⁅ κ a ⁆s
+    stepImage {n} {k} tagShift m = shiftDown (⟪ slice n (suc k) ⟫↪ m)
+    stepImage {n} {zero} tagValues m = values (⟪ slice n 1 ⟫↪ m)
 
   -- The membership laws, one `slice-in` per clause and `slice-out` as the
   -- disjunctive inversion, direction-paired.
