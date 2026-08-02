@@ -1154,6 +1154,10 @@ measurement. Wired chapter by chapter as the wave batches land.
   grounded producer-tree order along the least-producer key, with the SZ
   successor clauses machine-checked, one-line coherence, and the external
   choice theorems at limit levels.
+- `L.Rud.Switch`{.Agda}: the switch theorem: the abstract basis discharged at
+  the sixteen operations, both directions of the comprehension shape, and
+  the limit corollary, with the image principle and the level descriptions
+  as named module hypotheses.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1167,6 +1171,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Realize`{.Agda}：抽象基上的实现前沿：k 元复合演算、DefOf 面的满足机器、变元管道；两面已记录的墙待设计批处理。
 - `L.Rud.Describe`{.Agda}：前九个运算的描述半部：定义公式带 Δ₀ 见证，配对家族的完整 adequacy 与可定义子集等式，封面残余与嵌套存在残余已记录。
 - `L.Rud.Order`{.Agda}：典范良序：沿最小生成者键回拉扎根生成者树之序，SZ 后继子句机器验证，融贯一行，极限层的外部选择定理。
+- `L.Rud.Switch`{.Agda}：切换定理：抽象基在十六运算处清偿，概括形态双向到手，极限推论在位；像原理与层级描述作为具名模块假设。
 <!--/-->
 
 ```agda
@@ -1178,4 +1183,5 @@ import L.Rud.Step
 import L.Rud.Realize
 import L.Rud.Describe
 import L.Rud.Order
+import L.Rud.Switch
 ```
