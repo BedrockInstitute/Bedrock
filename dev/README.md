@@ -11,6 +11,10 @@ the detailed specs it points to.
   `fol-reification`): ratified decisions, target skeleton, rename ledger, the route
   tree of goal codes (`[L0]` to `[L5]`), binding build constraints, and the live
   MASTER status table. Read it before touching `src/`; work carries a goal code.
+- `literature/`: the **rud-route literature collection** (`[L3.30-L1]`): classified,
+  citation-carrying notes on rudimentary functions, the J-hierarchy, the Devlin
+  errata, and the formalization landscape, plus the bibliography, the owner's
+  exploration note, and (once landed) the orthodox-form digest.
 - `LESSONS.md`: the **measured lesson book**: every performance law, conversion rule,
   termination trap, inference trap, and design doctrine with its numbers and
   provenance, the living home for the substance that PLAN rows used to carry.
