@@ -68,8 +68,8 @@ regularity forbids.
 <!--/-->
 
 ```agda
-sucV-inj-ord : {β γ : S} → IsOrd β → IsOrd γ → sucV β ≡ sucV γ → β ≡ γ
-sucV-inj-ord {β} {γ} ordβ ordγ eq = go (memOr β γ β∈) (memOr γ β γ∈)
+sucV-inj-ord : {β γ : S} → IsOrd β → sucV β ≡ sucV γ → β ≡ γ
+sucV-inj-ord {β} {γ} ordβ eq = go (memOr β γ β∈) (memOr γ β γ∈)
   where
   β∈ : ⟨ β ∈ˢ sucV γ ⟩
   β∈ = subst (λ w → ⟨ β ∈ˢ w ⟩) eq (self∈sucV β)
@@ -105,7 +105,7 @@ isSucc α = (Σ[ β ∈ S ] (IsOrd β × (sucV β ≡ α))) , isPropSucc
   where
   isPropSucc : isProp (Σ[ β ∈ S ] (IsOrd β × (sucV β ≡ α)))
   isPropSucc u v = Σ≡Prop (λ β → isProp× (isPropIsOrd β) (isSetS (sucV β) α))
-    (sucV-inj-ord (u .snd .fst) (v .snd .fst) (u .snd .snd ∙ sym (v .snd .snd)))
+    (sucV-inj-ord (u .snd .fst) (u .snd .snd ∙ sym (v .snd .snd)))
 ```
 
 <!--en-->
