@@ -1123,6 +1123,28 @@ level cured it with no other change (the p1 report, surprises 1).
 
 **Provenance:** the [L3.30-P1] probe; the p1 report.
 
+### C-12. Agda runs under a hard heap cap; parallel writers under a quota
+
+**Rule:** Every agda invocation runs under a GHC heap cap (`GHCRTS=-M<n>g`)
+so a runaway typecheck dies with a clean "Heap exhausted" exit instead of
+OOM-killing the machine: sub-agents at `-M10g`, the orchestrator's audits at
+`-M16g`, `make` exports a default. At most TWO Agda-typechecking sub-agents
+run concurrently (a third slot is for non-Agda work only), and a watchdog
+(`_build/tools/agda-watchdog.sh`, restart it each session) backstops at 14 GB
+per process and an 8% system-free floor. A heap-exhausted exit is a WALL
+event: apply the P-i playbook, never simply rerun.
+
+**Measured (2026-08-02):** four concurrent unguarded flash writers; one
+`agda src/L/Rud/Images.lagda.md` climbed past 5.8 GB and the 64 GB machine
+OOM-crashed, killing all four in-flight tasks. The cure imports the sister
+playbook's guard (P-i: `GHCRTS` hard cap, macOS `ulimit -v` is ignored, RTS
+`-M` is the lever; a 36 GB box capped at 20-22 GB for a single check), scaled
+to this machine's concurrency.
+
+**Provenance:** the crash of 2026-08-02 (four L3.31 wave tasks lost mid-
+flight, session-resumed after); P-i's OOM-guard clause; the Makefile GHCRTS
+export added the same day.
+
 ## Adding an entry
 
 Take the next free ID under the series (P-h, R-31, T-3, I-2, D-5, C-10), cite
