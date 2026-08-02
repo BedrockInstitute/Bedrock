@@ -185,6 +185,90 @@ failure 1. A sibling hypothesis (walk arguments must also be ABSTRACT, so
 nothing normalizes against transparent bodies) is under test by the final B
 batch and enters here if confirmed.
 
+### P-i. The conversion-explosion playbook (imported from the source project)
+
+**Rule:** When cubical Agda hangs or exhausts memory on this codebase family,
+the cause is one of three heavy-thing classes forced into normalization, and
+the cure is selected by the decision tree below, not by trial. Imported whole
+from the antecedent development's worklog (`../fol-reification/docs/WORKLOG.md`
+§5, twenty measured cases); read that section before any surgery on a hang.
+
+**The three heavy-thing classes (root cause):** (1) membership in a heavy set
+(`sett`, `Def`/`defSet`, `⋃`, `sucV`, `# n`, `Lset`, `pr`, `⁅⁆`-pairs), value
+equalities between heavy sets, and hProp-pair head shapes; (2) heavy HIT-types
+transported along paths (`Σ≡Prop`/`subst` carrying `⟨isL x⟩`-class types);
+(3) heavy operators welded into a FIELD or obligation TYPE and applied to deep
+recursive terms (stuck `℩(mere→isContr)` heads). Abstract parameters and deep
+recursion multiply all three.
+
+**The repair taxonomy** (letters as in the source; Bedrock correspondences in
+parentheses):
+
+- **[F] Explicit indices first, one line**: a lemma with an implicit formula
+  or code index applied at a concrete huge argument must get the index
+  explicitly; a left metavariable makes the unifier normalize the huge
+  instance under a type-level FUNCTION head, which is not invertible
+  (source case 16: 74 min to 69 s). (Extends P-a, Rule 12, I-1; the sharper
+  mechanism statement is the type-level-function-head unification.)
+- **[A] Keep it neutral**: heavy values never sit inside
+  `extensionalV`/`Σ≡Prop`/conversion positions; use stuck terms or variables
+  and bridge the concrete membership by one `subst`. (Extends Rule 1.)
+- **[B] Seal the operator or the set** `opaque` at its birth site; where the
+  set itself is the heavy thing, seal the SET, not just a bridge. (Extends
+  Rule 2 and P-c.) **Layer cap sub-rule** (source case 12): any tower of two
+  or more `Lset ∘ sucV` layers gets one independent opaque alias PER LAYER,
+  so conversion unfolds at most one; costs multiply per exposed layer.
+  **[B′] Seal terminal exports** (source case 17, NEW here): when a
+  consumer's profile shows OTHER modules' definition names, the consumer is
+  re-normalizing imported proof bodies; seal the terminal theorems at the
+  definition side (consumers need types, not bodies). Measured 662 s to
+  153 s.
+- **[C] Extract helpers with variable parameters**: where-bound heavy heads
+  are inlined past `opaque`; make the heavy datum an explicit helper
+  parameter, `with` becomes `Sum.rec`/`decide`, truncation continuations
+  become named helpers. (Extends Rule 10 and the named-continuation
+  discipline.) **[C′] Grid dispatcher** (source case 19, NEW here): a
+  coverage grid whose every clause carries a huge goal type pays a fixed
+  per-clause elasticity cost regardless of body; move the grid to a cheap
+  codomain (a small inductive view plus a dispatcher on explicit `Tri`
+  arguments, never `with`). Measured 486 s to 120 s.
+- **[D] Lower the dimension** (NEW here as an explicit pattern; P-f is its
+  cousin): when the heavy thing is a HIT-TYPE being transported, `opaque` is
+  useless; construct the path at a lower level whose motive does not mention
+  the heavy type (drop to V-satisfaction, transport along the light
+  `fst`-path, lift back).
+- **[E] Reshape the obligation** (NEW here): when the heavy operator is
+  welded into the TYPE of a field or proof obligation and applied to a deep
+  term, `opaque`/`abstract` cannot help (the type still mentions it) and
+  rewriting is illegal under `--safe`; the only cure is changing the
+  upstream interface so the obligation never applies the heavy operator to
+  the deep term (the von Neumann membership-extensional characterization
+  replacing welded successor equations is the paradigm). Warning from the
+  source: merely rewriting the equation MOVES the explosion; the replacement
+  obligation must not mention the heavy operator at all.
+- **Record discipline** (source cases 13 and 14, NEW here): heavy hypothesis
+  packs go as module Π-parameters, never `record`s (cubical derives
+  transp/hcomp machinery per record, and twelve heavy fields hang the
+  DECLARATION); record field types, especially ∈-families and path
+  endpoints, must not contain any expanding concrete code term, not even one
+  `sucV` layer; alias such heads opaque first. Measured: a six-hour file to
+  20 s.
+
+**Diagnostics** (source §5.2): bisect by `postulate` (faster than holing);
+kill-timers, `pkill` stuck agda; an OOM hard cap `GHCRTS="-M20g"` turns OS
+death into a clean heap-exhausted exit; cold-check attribution inflates 2-4x
+under system-state residue, so isolate-recompile before and after surgery;
+beware false greens from unsolved implicit metas and warm `.agdai` caches
+(extends C-8). Consumer-side versus definition-side disease is read off the
+profile's module names.
+
+**Provenance:** the source project's worklog, `../fol-reification/docs/WORKLOG.md`
+§5 (the playbook, the twenty-case table §5.4, and the decision tree §5.5),
+integrated 2026-08-02 by owner direction. The walk-transparency hypothesis
+under test in the final B batch is this playbook's case-12/case-20 family
+(transparent shared heavy objects at `Lset`-argument positions) meeting the
+B4d walk lesson (P-h).
+
 ## 2. Conversion rules (R series)
 
 Recorded in PLAN as "rules" with the numbers below; the numbering is the
