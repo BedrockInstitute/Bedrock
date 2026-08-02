@@ -799,6 +799,22 @@ was the unsolved-formula-meta churn end to end.
 
 **Provenance:** PLAN §11 row L3.29 (M3, 2026-08-01).
 
+### I-2. hProp expressions cannot sit in type positions; wrap or name them
+
+**Rule:** The library's hProp connectives (`⊔`, `⊓`, `⇔`, `¬`, `∃[_]`) carry a
+result-level meta that Agda cannot solve in a signature codomain ("should be a
+sort"), and an hProp-valued expression in a codomain is rejected even with
+explicit levels; write `⟨ expr ⟩` around signature-level hProp expressions, or
+define explicit-level wrapper connectives, or name the type.
+
+**Measured (the P1 probe, 2026-08-02):** every unwrapped connective in a
+signature codomain failed with the sort error; the probe's explicit-level
+wrappers (`⊔ₚ` and friends) plus `⟨_⟩` at signatures cleared all of them, and
+the file lands at 339 code lines, 2.9 s cold (the p1 report, surprises 2).
+
+**Provenance:** the [L3.30-P1] probe (`ProbeRudComp.agda`, preserved in the
+session scratchpad; the p1 report).
+
 **When it bites:** any sound/mirror chain where an object-language equation or
 path must determine a formula.
 
@@ -916,6 +932,23 @@ both directions, guards, dispatch chains, and environment plumbing per clause.
 
 **Provenance:** PLAN row L3.29 (the tripwire accountings and the B ledger);
 `dev/memos/L3.29-b-pivot.md`; the L3.30 row's calibrated budget clause.
+
+### D-7. A constructive rud basis carries intersection as a primitive
+
+**Rule:** The classical derivation of intersection from difference
+(`a ∩ b = a ∖ (a ∖ b)`, SZ 1.3(c)) is not constructive: the double difference
+realizes `{x ∈ a | ¬¬ (x ∈ b)}`. A rud basis interface meant to run without
+invoking LEM in its algebra carries an intersection operation as a primitive
+(or explicitly spends LEM at that spot and says so).
+
+**Measured (the P1 probe, 2026-08-02):** the probe's abstract basis needed
+`interOp` as its own parameter; the `∖`-derived formulation left the `∧`
+clause unprovable without double-negation elimination (the p1 report,
+surprises 3). Bedrock assumes classical logic globally, so spending LEM here
+is admissible; the lesson is that the choice is a design decision to make
+explicitly, not an oversight to discover mid-build.
+
+**Provenance:** the [L3.30-P1] probe; the p1 report.
 
 ## 6. Craft and process lessons (C series)
 
@@ -1075,6 +1108,20 @@ the assert-or-typecheck step, none escaping to a commit.
 
 **Provenance:** the Tower polish commits `da5a09c`, `e57f2b5` and this row's
 session record.
+
+### C-11. Parameterized module bodies indent deeper than the header
+
+**Rule:** In a `module M (p : ...) where` whose body sits at the same column
+as `M`, only the first declaration sees `p`; later declarations report the
+parameter out of scope (Agda layout). Indent the body deeper than the module
+header; a nested parameterized module additionally needs its `where` indented
+deeper than its telescope.
+
+**Measured (the P1 probe, 2026-08-02):** the probe's `Basis` module lost its
+parameters after the first declaration at column 0; re-indenting the body one
+level cured it with no other change (the p1 report, surprises 1).
+
+**Provenance:** the [L3.30-P1] probe; the p1 report.
 
 ## Adding an entry
 
