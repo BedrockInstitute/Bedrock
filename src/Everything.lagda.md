@@ -1140,6 +1140,9 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Hierarchy`{.Agda}: the S-hierarchy engine over an abstract step
   operator: the single-equation tower, the three derived case equations,
   cumulativity, transitivity, and J at limit indices.
+- `L.Rud.Step`{.Agda}: the concrete sixteen-image step with its membership
+  characterization, the containment discharges, and the first nine
+  transitivity cases (the telescope reshape is in progress).
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1149,6 +1152,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Ops`{.Agda}：基底运算 F0-F7 与 F9，带双向外延规格，出生即封印。
 - `L.Rud.Images`{.Agda}：基底的像半部，F8 与 F10-F15，含配对投影，相对化槽位作模块参数。
 - `L.Rud.Hierarchy`{.Agda}：抽象步进算子上的 S-层级引擎：单方程塔、三条导出情形等式、累积性、传递性、极限指标处的 J。
+- `L.Rud.Step`{.Agda}：具体的十六像步进及其隶属刻画、包含性清偿、首批九个传递性案例 (遥测重塑进行中)。
 <!--/-->
 
 ```agda
@@ -1156,4 +1160,5 @@ import L.Rud.OrdArith
 import L.Rud.Ops
 import L.Rud.Images
 import L.Rud.Hierarchy
+import L.Rud.Step
 ```
