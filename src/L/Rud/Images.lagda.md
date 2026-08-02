@@ -49,7 +49,8 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; pairing-ax; ⋃_; union-ax; ⁅_⁆s; SingletonPackage; SetPackage )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ⁅_∶_⁆; separation-ax )
+  using ( ⁅_∶_⁆; separation-ax; ∅; ∅-empty )
+import Cubical.Data.Empty as Empty
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
@@ -452,3 +453,142 @@ consume these specifications as its one-step images.
 <!--zh-->
 七个运算，全部全函数，全部以外延方式规格化。配对器材贡献了投影 `left`{.Agda} 与 `right`{.Agda} 及其对等式；`F10`{.Agda} 造出单个像片，`F8`{.Agda} 造出片的收集；`F11`-`F14` 经对分解搬运分量；`F15`{.Agda} 是相对化槽，以谓词集 `A` 为参数。运算层的另一半将以同样形状陈述其余九个函数，层级引擎将消费这些规格作为其单步像。
 <!--/-->
+
+<!--en-->
+## The non-pair junk readings
+<!--zh-->
+## 非对的垃圾读取
+<!--/-->
+
+<!--en-->
+The projections are total, so on a non-pair they return junk, and the
+concrete step batch needs the junk characterised. The right projection of
+`b` is built from the right slice, whose every witness would exhibit `b` as
+an ordered pair; under a non-pair hypothesis the slice is empty and
+`right b` is the empty set. The left projection reads the intersection: a
+member `c` of `⋂ b` lies in every member of `b`, and the intersection has at
+most one distinct member, so `left b` either collapses onto such a `c` or is
+the empty set. These are read lemmas in the same shape as the operations
+chapter's appendix: each is sealed `opaque`{.Agda} with an explicit type and
+proved from the private machinery in scope, and nothing existing is
+changed, renamed, or unsealed.
+<!--zh-->
+投影是全函数，在非对上取值即垃圾，具体 step 批次需要这批垃圾的刻画。`b` 的右投影由右片构成，而右片的每个见证都会把 `b` 展成有序对；在非对假设下该片为空，`right b` 即空集。左投影读取交集：`⋂ b` 的成员 `c` 落在 `b` 的每个成员之中，且交集至多有一个互异成员，故 `left b` 或塌缩到这样的 `c`，或为空集。这些是与运算章附录同形的读引理：每条封以 `opaque`{.Agda}、带显式类型，凭作用域内的私有机制证出；既有内容没有任何改动、改名或解封。
+<!--/-->
+
+```agda
+private
+  ⋃∅ : ⋃ ∅ ≡ ∅
+  ⋃∅ = extensionality (⋃ ∅) ∅ (sub₁ , sub₂)
+    where
+    sub₁ : ⟨ ⋃ ∅ ⊆ ∅ ⟩
+    sub₁ x h = PT.rec (snd (x ∈ₛ ∅)) go (union-ax ∅ x .fst h)
+      where
+      go : Σ[ v ∈ V ℓ ] (⟨ v ∈ₛ ∅ ⟩ × ⟨ x ∈ₛ v ⟩) → ⟨ x ∈ₛ ∅ ⟩
+      go (v , v∈∅ , _) = Empty.rec (∅-empty v v∈∅)
+    sub₂ : ⟨ ∅ ⊆ ⋃ ∅ ⟩
+    sub₂ x h = Empty.rec (∅-empty x h)
+
+  ⋂-single : (b c d : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → ⟨ d ∈ₛ ⋂ b ⟩ → c ≡ d
+  ⋂-single b c d c∈⋂ d∈⋂ = extensionality c d (c⊆d , d⊆c)
+    where
+    c⊆d : ⟨ c ⊆ d ⟩
+    c⊆d x x∈c = PT.rec (snd (x ∈ₛ d)) goC (∈∈ₛ {a = c} {b = ⋂ b} .snd c∈⋂)
+      where
+      goC : Σ[ p ∈ Σ[ m ∈ ⟪ b ⟫ ] ((k : ⟪ b ⟫) → ⟨ ⋃ (⟪ b ⟫↪ m) ∈ₛ ⟪ b ⟫↪ k ⟩) ]
+              (⋃ (⟪ b ⟫↪ (p .fst)) ≡ c)
+          → ⟨ x ∈ₛ d ⟩
+      goC (p , q) = PT.rec (snd (x ∈ₛ d)) goD (∈∈ₛ {a = d} {b = ⋂ b} .snd d∈⋂)
+        where
+        goD : Σ[ r ∈ Σ[ m ∈ ⟪ b ⟫ ] ((k : ⟪ b ⟫) → ⟨ ⋃ (⟪ b ⟫↪ m) ∈ₛ ⟪ b ⟫↪ k ⟩) ]
+                (⋃ (⟪ b ⟫↪ (r .fst)) ≡ d)
+            → ⟨ x ∈ₛ d ⟩
+        goD (r , s) = subst (λ t → ⟨ x ∈ₛ t ⟩) s
+          (union-ax (⟪ b ⟫↪ (r .fst)) x .snd
+            ∣ c , ( c∈ₛb₍r₎ , x∈c ) ∣₁)
+          where
+          c∈ₛb₍r₎ : ⟨ c ∈ₛ ⟪ b ⟫↪ (r .fst) ⟩
+          c∈ₛb₍r₎ = subst (λ t → ⟨ t ∈ₛ ⟪ b ⟫↪ (r .fst) ⟩) q
+            (p .snd (r .fst))
+    d⊆c : ⟨ d ⊆ c ⟩
+    d⊆c x x∈d = PT.rec (snd (x ∈ₛ c)) goD' (∈∈ₛ {a = d} {b = ⋂ b} .snd d∈⋂)
+      where
+      goD' : Σ[ r ∈ Σ[ m ∈ ⟪ b ⟫ ] ((k : ⟪ b ⟫) → ⟨ ⋃ (⟪ b ⟫↪ m) ∈ₛ ⟪ b ⟫↪ k ⟩) ]
+               (⋃ (⟪ b ⟫↪ (r .fst)) ≡ d)
+           → ⟨ x ∈ₛ c ⟩
+      goD' (r , s) = PT.rec (snd (x ∈ₛ c)) goC' (∈∈ₛ {a = c} {b = ⋂ b} .snd c∈⋂)
+        where
+        goC' : Σ[ p ∈ Σ[ m ∈ ⟪ b ⟫ ] ((k : ⟪ b ⟫) → ⟨ ⋃ (⟪ b ⟫↪ m) ∈ₛ ⟪ b ⟫↪ k ⟩) ]
+                 (⋃ (⟪ b ⟫↪ (p .fst)) ≡ c)
+             → ⟨ x ∈ₛ c ⟩
+        goC' (p , q) = subst (λ t → ⟨ x ∈ₛ t ⟩) q
+          (union-ax (⟪ b ⟫↪ (p .fst)) x .snd
+            ∣ d , ( d∈ₛb₍p₎ , x∈d ) ∣₁)
+          where
+          d∈ₛb₍p₎ : ⟨ d ∈ₛ ⟪ b ⟫↪ (p .fst) ⟩
+          d∈ₛb₍p₎ = subst (λ t → ⟨ t ∈ₛ ⟪ b ⟫↪ (p .fst) ⟩) s
+            (r .snd (p .fst))
+
+opaque
+  right-nonpair : (b : V ℓ) → ((p q : V ℓ) → ⟨ b ≡ₕ pr p q ⟩ → Empty.⊥) → right b ≡ ∅
+  right-nonpair b nb = cong ⋃_ (rightSlice-nonpair b nb) ∙ ⋃∅
+    where
+    rightSlice-nonpair : (b : V ℓ) → ((p q : V ℓ) → ⟨ b ≡ₕ pr p q ⟩ → Empty.⊥)
+                       → rightSlice b ≡ ∅
+    rightSlice-nonpair b nb = extensionality (rightSlice b) ∅ (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ rightSlice b ⊆ ∅ ⟩
+      sub₁ w h = PT.rec (snd (w ∈ₛ ∅)) go (∈∈ₛ {a = w} {b = rightSlice b} .snd h)
+        where
+        go : Σ[ p ∈ Σ[ m ∈ ⟪ b ⟫ ] ⟨ pr (left b) (sndExtract (⟪ b ⟫↪ m) (left b)) ∈ₛ ⁅ b ⁆s ⟩ ]
+               (sndExtract (⟪ b ⟫↪ (p .fst)) (left b) ≡ w)
+           → ⟨ w ∈ₛ ∅ ⟩
+        go (p , _) = Empty.rec (nb (left b) (sndExtract (⟪ b ⟫↪ (p .fst)) (left b))
+          (subst (λ t → ⟨ b ≡ₕ t ⟩) (sym (pr≡b p)) refl))
+          where
+          pr≡b : (p : Σ[ m ∈ ⟪ b ⟫ ] ⟨ pr (left b) (sndExtract (⟪ b ⟫↪ m) (left b)) ∈ₛ ⁅ b ⁆s ⟩)
+               → pr (left b) (sndExtract (⟪ b ⟫↪ (p .fst)) (left b)) ≡ b
+          pr≡b p = SetPackage.classification (SingletonPackage b)
+            (pr (left b) (sndExtract (⟪ b ⟫↪ (p .fst)) (left b))) .fst (p .snd)
+      sub₂ : ⟨ ∅ ⊆ rightSlice b ⟩
+      sub₂ w h = Empty.rec (∅-empty w h)
+
+opaque
+  ⋂-member-in-all : (b c w : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → ⟨ w ∈ₛ b ⟩ → ⟨ c ∈ₛ w ⟩
+  ⋂-member-in-all b c w c∈⋂ w∈b = PT.rec (snd (c ∈ₛ w)) go
+    (∈∈ₛ {a = c} {b = ⋂ b} .snd c∈⋂)
+    where
+    go : Σ[ p ∈ Σ[ m ∈ ⟪ b ⟫ ] ((k : ⟪ b ⟫) → ⟨ ⋃ (⟪ b ⟫↪ m) ∈ₛ ⟪ b ⟫↪ k ⟩) ]
+           (⋃ (⟪ b ⟫↪ (p .fst)) ≡ c)
+       → ⟨ c ∈ₛ w ⟩
+    go (p , q) = subst (λ t → ⟨ c ∈ₛ t ⟩) (fw .snd)
+      (subst (λ t → ⟨ t ∈ₛ ⟪ b ⟫↪ (fw .fst) ⟩) q (p .snd (fw .fst)))
+      where
+      fw : Σ[ m ∈ ⟪ b ⟫ ] (⟪ b ⟫↪ m ≡ w)
+      fw = fibre b w w∈b
+
+opaque
+  left-⋂-collapse : (b c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → left b ≡ c
+  left-⋂-collapse b c c∈⋂ = cong ⋃_ (⋂-collapse b c c∈⋂) ∙ ⋃singl c
+    where
+    ⋂-collapse : (b c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → ⋂ b ≡ ⁅ c ⁆s
+    ⋂-collapse b c c∈⋂ = extensionality (⋂ b) (⁅ c ⁆s) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ ⋂ b ⊆ ⁅ c ⁆s ⟩
+      sub₁ d d∈⋂ = SetPackage.classification (SingletonPackage c) d .snd
+        (sym (⋂-single b c d c∈⋂ d∈⋂))
+      sub₂ : ⟨ ⁅ c ⁆s ⊆ ⋂ b ⟩
+      sub₂ d d∈singl = subst (λ t → ⟨ t ∈ₛ ⋂ b ⟩) (sym (∈singl d∈singl)) c∈⋂
+
+opaque
+  left-⋂-empty : (b : V ℓ) → ((c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → Empty.⊥) → left b ≡ ∅
+  left-⋂-empty b ne = cong ⋃_ (⋂-empty b ne) ∙ ⋃∅
+    where
+    ⋂-empty : (b : V ℓ) → ((c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → Empty.⊥) → ⋂ b ≡ ∅
+    ⋂-empty b ne = extensionality (⋂ b) ∅ (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ ⋂ b ⊆ ∅ ⟩
+      sub₁ c c∈⋂ = Empty.rec (ne c c∈⋂)
+      sub₂ : ⟨ ∅ ⊆ ⋂ b ⟩
+      sub₂ c c∈∅ = Empty.rec (∅-empty c c∈∅)
+```
