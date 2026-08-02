@@ -168,6 +168,23 @@ data point alongside P-d/P-f: at concrete towers the path former should be
 written directly, not through `cong` with a function whose domain carries the
 presentation type.
 
+### P-h. Definability walks are module-parameterized, never function-parameterized
+
+**Rule:** A definability walk (the `defSet≡` extensionality of an InL-idiom
+constructibility lemma) takes its set arguments as parameters of a module, not
+of a function.
+
+**Measured (B4d, 2026-08-02):** the values-image walk formulated as
+`valsWalk : (X : V ℓ) → ...` ran past 4 minutes cold and never finished;
+restating it as `module ValsWalk (X : V ℓ) ... where` dropped the whole file to
+~13 s. The bridge chapter's Vals/SelMem modules were already
+module-parameterized; the mechanism now has a measurement.
+
+**Provenance:** the B4d batch record (PLAN row L3.29 ledger); the B4d report's
+failure 1. A sibling hypothesis (walk arguments must also be ABSTRACT, so
+nothing normalizes against transparent bodies) is under test by the final B
+batch and enters here if confirmed.
+
 ## 2. Conversion rules (R series)
 
 Recorded in PLAN as "rules" with the numbers below; the numbering is the
@@ -579,6 +596,48 @@ readings and rule 2 for the name a consumer would otherwise write (a three-line
 **When it bites:** any term that sits in a plain equation's type rather than
 inside a proof or a goal.
 
+### R-31. A disjunction whose branches can overlap is a truncated sum
+
+**Rule:** When an internal case split's branches are not provably disjoint, the
+meta-level goal is the truncated sum `∥ A ⊎ B ∥₁`, never the plain `⊎` with
+`isProp⊎` (which demands a disjointness proof).
+
+**Measured (B4a, 2026-08-02):** the layer's per-member goal (old member OR new
+image) admits members that are both; every layer reader, wrapper, and the union
+equation had to be rebuilt against the truncated sum after the plain-sum
+formulation failed on `isProp⊎`'s disjointness obligation.
+
+**Provenance:** the B4a batch record (PLAN row L3.29 ledger, commit `7b6d799`).
+
+### R-32. Pin a cross-reading table at all keys at once, with a combined bound
+
+**Rule:** A pinning theorem over a keyed table whose clauses read OTHER keys'
+entries (shift and extension read neighbouring shelves) must quantify all keys
+in one statement, with the recursion's bound combining the indices (level plus
+arity below the bound); a per-column recursion at the goal level cannot supply
+the other columns, because the environment pins each column's index slot.
+
+**Measured (B4b/B4c, 2026-08-02):** the per-column formulation was
+uncompileable (`# k` at a `Fin` slot; the shift shelf's pin contradicts the
+column equality by numeral injectivity); the all-keys statement with
+`n₀ + suc k₀ < b₀` landed at full strength.
+
+**Provenance:** the B4b report's formulation trail; the B4c pinning
+(commit `810d9cd`).
+
+### R-33. Pass clause environments as pieces, rebuild them concretely
+
+**Rule:** A helper consuming a clause's satisfaction takes the environment's
+PIECES as arguments and rebuilds the concrete environment inside; an opaque
+environment parameter blocks `lookup` from reducing and the slot machinery
+fails.
+
+**Measured (B4b, 2026-08-02):** the clause-level successor reader only checked
+once the environment was rebuilt from its pieces (`suc-clause`'s design);
+the abstract-env formulation left the shelves untypeable.
+
+**Provenance:** the B4b report (delivered as `suc-clause`); commit `810d9cd`.
+
 ## 3. Termination traps (T series)
 
 ### T-1. At-pattern aliases of accessibility constructors; split the nests outer and inner
@@ -713,6 +772,40 @@ end, about 200 to 400 lines for the materialization half of M5c.
 
 **When it bites:** any endgame (the axiom of choice's least-member pick, an
 order read at a bound) where the description threatens to grow coded tables.
+
+### D-5. Readers do not validate a formula; the meta-match table does
+
+**Rule:** A described formula's in/out readers typechecking (and even being
+green in both directions) does not validate the formula against its meta
+semantics; the validator is the clause-by-clause meta-match table, stating for
+every disjunct at every index where it matches the meta step and where it must
+be refuted.
+
+**Measured (B4b/B4c, 2026-08-02):** the layer disjunction shipped green with
+eighteen direction-paired readers and was wrong twice: the values disjunct
+over-described at every positive arity, and the extension disjunct at arity
+one (the second found by the mandated table against the reviewer's own
+eight-already-match claim, then confirmed by instantiating the delivered
+in-reader at the mismatched arity). Both fixed by guards, refuted-not-untypeable.
+
+**Provenance:** the B4b report §2; the B4c report §2 with its table; commit
+`810d9cd`.
+
+### D-6. Probe prices multiply by three
+
+**Rule:** An estimate extrapolated from a shape-validating probe underprices
+the production surface by roughly a factor of three; budget probe-derived
+estimates times three before ruling on them.
+
+**Measured (2026-08-01 to 02):** route C landed at roughly twice its memo
+bucket (5,936 against 2,700-4,900 at the M4 accounting, with the tower bucket
+alone at 4,400 against 250-400); option B's closure side landed at 1.6-2.7
+times the cut probe's 1,220-2,060 while still unfinished. The recurring
+mechanism: probes validate one to three clauses; production pays readers in
+both directions, guards, dispatch chains, and environment plumbing per clause.
+
+**Provenance:** PLAN row L3.29 (the tripwire accountings and the B ledger);
+`dev/memos/L3.29-b-pivot.md`; the L3.30 row's calibrated budget clause.
 
 ## 6. Craft and process lessons (C series)
 
@@ -855,6 +948,23 @@ committed as `9539088` with P-g.
 
 **When it bites:** any retraction or round-trip proof over a pair-valued
 recursion at concrete types; pairs with P-g.
+
+### C-10. Mechanical multi-site edits: script, assert, typecheck, and mind containment
+
+**Rule:** Apply repetitive refactors as a script of exact-string swaps with a
+per-swap occurrence assertion and an immediate typecheck after the batch; order
+swaps so no pattern is a substring of a later one; never let a transformer
+rewrite the helper definitions it just inserted; and re-check helper bodies
+after any pattern-driven pass.
+
+**Measured (the Tower polish, 2026-08-02):** three transformer mishaps in one
+session (the adequacy helpers rewritten into self-references by their own
+pattern; `interK t₁ t₂` matched inside `code-interK t₁ t₂`; a two-space anchor
+substring-matching a four-space line and mangling indentation), all caught at
+the assert-or-typecheck step, none escaping to a commit.
+
+**Provenance:** the Tower polish commits `da5a09c`, `e57f2b5` and this row's
+session record.
 
 ## Adding an entry
 
