@@ -15,6 +15,15 @@
 
 [[term]]
 category = "Set theory"
+en = "rudimentary function"
+zh = "初步函数"
+ja = "初歩的関数"
+avoid = ["zh:初等函数", "zh:初始函数", "zh:rud 函数"]
+presence = true
+notes = "owner-ruled 2026-08-02; zh follows the E-C Math Vocabulary 3rd ed. pattern (rudimentary set = 初步集); ja tentative pending a literature check"
+
+[[term]]
+category = "Set theory"
 en = "forcing"
 zh = "力迫"
 ja = "強制"
