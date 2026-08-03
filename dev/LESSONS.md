@@ -40,10 +40,13 @@ luck: the `znots`-headed siblings happened to solve); through generic
 `tagNe`/`payNe` helpers with explicit indices, the same 16-clause induction sits
 in a 3.5 s module. The M4 build dodged the trap twice more: the membership
 laws' implicits passed explicitly at `L.Godel.InL` (first attempt green, 168
-lines, 1.2 s).
+lines, 1.2 s). Derived operation aliases (`f0..f15`) are not constructors:
+enumerating over them fails with `Op16.op0 != f0`; enumerate over the
+underlying constructors `op0..op15` (K1).
 
 **Provenance:** `dev/memos/L3.28-ac-route.md` §9 (from probe P2);
-`dev/PLAN.md` §11 rows L3.29 (M1, M4) and L3.22.
+`dev/PLAN.md` §11 rows L3.29 (M1, M4) and L3.22; the K1 datum:
+`_build/k1-report.md`.
 
 **When it bites:** clause dispatch, tag matching, and any code equation under a
 literal numeral; the first symptom is unsolved metas whose fate depends on
@@ -222,14 +225,27 @@ parentheses):
   instance under a type-level FUNCTION head, which is not invertible
   (source case 16: 74 min to 69 s). (Extends P-a, Rule 12, I-1; the sharper
   mechanism statement is the type-level-function-head unification.)
+  Sub-case (D2, 2026-08-03): a formula index is a huge argument even when the
+  formula itself is small, once it sits under a satisfaction head (implicit
+  φ ψ cost a 168 s check; explicit indices and fifteen named tails fixed it).
 - **[A] Keep it neutral**: heavy values never sit inside
   `extensionalV`/`Σ≡Prop`/conversion positions; use stuck terms or variables
   and bridge the concrete membership by one `subst`. (Extends Rule 1.)
+  **Measured again (2026-08-03):** prophylactic use before a wall (sixteen
+  heavy modules at abstract carriers, 40 s total, G3G4G5); a 1,200-line
+  abstract-carrier file at 47.8 s (D2); a 1,347-line predicate at a
+  seven-fact telescope, 9.5 s cold (K3); set-level identities at abstract
+  carriers fire none of the machinery, 246 lines at 1.9 s (K4); and the
+  obvious cheaper replacement is worse when extensionality meets a tower
+  built from cheap sealed parts (600 s kill, R5a-2).
 - **[B] Seal the operator or the set** `opaque` at its birth site; where the
   set itself is the heavy thing, seal the SET, not just a bridge. (Extends
   Rule 2 and P-c.) **Layer cap sub-rule** (source case 12): any tower of two
   or more `Lset ∘ sucV` layers gets one independent opaque alias PER LAYER,
   so conversion unfolds at most one; costs multiply per exposed layer.
+  Trigger widened (part M, 2026-08-03): four exposed `Lset ∘ sucV` layers in
+  a module HYPOTHESIS type doubled a file's check (44 s → 90 s) and one
+  18-line seal restored it; the layers need not be in a term.
   **[B′] Seal terminal exports** (source case 17, NEW here): when a
   consumer's profile shows OTHER modules' definition names, the consumer is
   re-normalizing imported proof bodies; seal the terminal theorems at the
@@ -279,7 +295,19 @@ profile's module names.
 integrated 2026-08-02 by owner direction. The walk-transparency hypothesis
 under test in the final B batch is this playbook's case-12/case-20 family
 (transparent shared heavy objects at `Lset`-argument positions) meeting the
-B4d walk lesson (P-h).
+B4d walk lesson (P-h). The same-day datum batch (2026-08-03) is filed from
+`_build/g3g4g5-report.md`, `_build/r5d2-report.md`, `_build/k3-report.md`,
+`_build/k4-report.md`, and `_build/r5a-report.md`.
+
+### P-j. A path lambda is a normalization request
+
+**Rule:** A path lambda is a normalization request: `λ i → op (p i) (q i)`
+forces `op` to whnf at both endpoints.
+
+**Measured (r3c, 2026-08-03):** nine of ten `eval-agree` clauses were free
+and the one fatal differed only in whether `op` was sealed.
+
+**Provenance:** `_build/r3c-report.md`.
 
 ## 2. Conversion rules (R series)
 
@@ -528,9 +556,12 @@ on a block of binders rather than on a constructor or a sentence.
 
 **Measured:** a private abbreviation for a four-element environment cost 207 s
 against 2.84 s (73x); the sequence chapter measured the same shape at 15 s per
-conversion.
+conversion. Datum (K3, 2026-08-03): environments spelled out at fixed
+concrete arities cost ~60 lines in a 1,347-line chapter, and generic arities
+were not the wall source (probe 11 vs 13).
 
-**Provenance:** PLAN §11 row L2.4 (faithfulness).
+**Provenance:** PLAN §11 row L2.4 (faithfulness); the K3 datum:
+`_build/k3-report.md`.
 
 **When it bites:** any reading whose environment is a concrete abbreviation.
 
@@ -746,9 +777,12 @@ inclusion applied), and keep constructions at the stuck-member level.
 fiber extraction over `⟪ y ⟫` was the OOM runaway that crashed the machine;
 two sibling formulations (separation over a union; index extraction from a
 union representation) walled the same way; the small-index restatement
-checks the whole file in 54.6 s cold and the walls did not return.
+checks the whole file in 54.6 s cold and the walls did not return. First
+pre-wall syntax-indexed datum (K2, 2026-08-03): the small-indexed sett over
+external syntax gave both membership directions definitionally in 45 lines.
 
-**Provenance:** the r1b report (the crash-resumed batch); commit `7c28ce2`.
+**Provenance:** the r1b report (the crash-resumed batch); commit `7c28ce2`;
+the K2 datum: `_build/k2-report.md`.
 
 ### R-36. Expose a sealed decomposition with an opaque-unfolding read lemma
 
@@ -763,10 +797,13 @@ the five Ops reads (F2/F3/F4/F6/F7-read, +117 lines, unblocking three
 transitivity cases and the description hops), the four Images junk lemmas
 (constructive, no LEM inside Images), and the Fof equality lemmas; each
 left every existing export and seal untouched. This dissolved a planned
-unsealing surgery.
+unsealing surgery. The read's direction is a public interface choice, and a
+consumer needing both directions must state the reverse read as its
+dependency (r3b2); an opaque index family wants a small block of unfolding
+equalities next to it as its official interface (r2c).
 
 **Provenance:** the r2c report parts 2-4; commits `7c69beb`, `a3c9f80`;
-companion to P-c.
+companion to P-c; the r3b2 read-direction datum: `_build/r3b2-report.md`.
 
 ### R-38. A consumer's alias of a transparent imported operation is a birth site
 
@@ -785,10 +822,17 @@ sealing the nine derived operations at birth with specs inside dropped the
 check to 3.7 s. **Prophylactic datum (R5a, 2026-08-03):** the rule applied
 BEFORE any wall kept a 731-line sett-tower chapter at a 2.8 s cold check
 end to end, the first case of the seal discipline preceding a wall instead
-of repairing one.
+of repairing one. **Measured again (D2, R5a-2, K1, 2026-08-03):** statement
+positions count: naming transparent `left`/`right` in a theorem statement
+cost 170.7 s cold (D2); an imported transparent operation can cost 25.7 s to
+invoke even at variable arguments and sealing only moves the cost, so the
+alias's job is to be the single site that invokes it (R5a-2); second
+prophylactic datum: the base block ran at 1.3 s warm with the discipline
+applied first (K1).
 
 **Provenance:** `_build/r3c-report.md` (the wall trail); commit `d15c114`;
-companion to P-c and R-36.
+companion to P-c and R-36; the D2, R5a-2, and K1 datums:
+`_build/r5d2-report.md`, `_build/r5a-report.md`, `_build/k1-report.md`.
 
 ### R-37. A transported membership in a compared statement position re-fires the tower
 
@@ -821,6 +865,18 @@ two-line lemma was innocent, the meta search was the cost. `module IS =
 InfinitySet {ℓ}` fixed it with no other change (B4e report, the probe trail).
 
 **Provenance:** the B4e probe trail, section 2.
+
+### R-39. State the satisfaction telescope at the fragment that consumes it
+
+**Rule:** Keep a satisfaction telescope honest by the fragment that consumes
+it: the pure atom/negation/existential core is constructive and
+transitivity-free (JU + Jrud only); Utrans enters at parameter atoms and
+bounded quantifiers, UmemInJ at `con c` atoms.
+
+**Measured (G2p, 2026-08-03):** the probe's three clauses plus adequacy in
+286 lines, 1.8 s cold, zero Utrans uses.
+
+**Provenance:** `_build/g2p-report.md`.
 
 ## 3. Termination traps (T series)
 
@@ -1020,10 +1076,14 @@ bucket (5,936 against 2,700-4,900 at the M4 accounting, with the tower bucket
 alone at 4,400 against 250-400); option B's closure side landed at 1.6-2.7
 times the cut probe's 1,220-2,060 while still unfinished. The recurring
 mechanism: probes validate one to three clauses; production pays readers in
-both directions, guards, dispatch chains, and environment plumbing per clause.
+both directions, guards, dispatch chains, and environment plumbing per
+clause. Family calibration datum: graph-style chapters price ambient-set
+bookkeeping at roughly 3:1 over content lines, not zero (R5a-2's clause
+table).
 
 **Provenance:** PLAN row L3.29 (the tripwire accountings and the B ledger);
-`dev/memos/L3.29-b-pivot.md`; the L3.30 row's calibrated budget clause.
+`dev/memos/L3.29-b-pivot.md`; the L3.30 row's calibrated budget clause; the
+R5a-2 family calibration datum: `_build/r5a-report.md`.
 
 ### D-7. A constructive rud basis carries intersection as a primitive
 
@@ -1082,10 +1142,60 @@ walk arguments over transparent sett bodies, and is kept in Realize as
 insurance, but it is not a cure-all: the mandated-first-formulation
 protocol exists exactly to catch this). The companion reshape (bounded
 quantifier ranging over u itself) dissolved the second wall's obligation
-outright and un-spent the walk's transitivity hypothesis.
+outright and un-spent the walk's transitivity hypothesis. The
+mandated-first-formulation protocol then held a 1,285-line chapter: ten
+incremental checks, one scope-level fix, no formulation retry, no wall (G2).
 
 **Provenance:** `_build/r3a-walls-report.md` (the A/B/C table and the five
-candidates); commit `6153e58`; sibling of I-2/I-3.
+candidates); commit `6153e58`; sibling of I-2/I-3; the G2 datum:
+`_build/g2-report.md`.
+
+### I-6. hProp connective carriers come pre-shaped; consume at the carrier level
+
+**Rule:** The library connectives' carriers are not opaque: `⟨ P ⊔ Q ⟩` is
+already `∥ ⟨ P ⟩ ⊎ ⟨ Q ⟩ ∥₁` and an hProp `⊓` codomain is an untruncated
+dependent Σ; consume them at the carrier level (apply the join-valued
+function directly and do the `PT.rec` at the plain-sum level, or project the
+pair), never wrap the result in another `PT.rec`.
+
+**Measured (2026-08-03):** probe LC-2 (no `PT.rec` needed at `⊓`); K1 lost
+three ~10 s checks to the double-truncation confusion.
+
+**Provenance:** `_build/g2p-report.md` (LC-2); `_build/k1-report.md`.
+
+### I-7. Refutations through `∈sucV-elim` land in `⊥*` at `ℓ-suc ℓ`
+
+**Rule:** `∈sucV-elim`'s motive lives at `Type (ℓ-suc ℓ)`, so an ordinal
+no-go eliminated through it must land in `Empty.⊥* {ℓ-suc ℓ}` with
+`Empty.isProp⊥* {ℓ-suc ℓ}`, not `Empty.⊥`; the consumer is `Empty.rec*`.
+
+**Measured (2026-08-02/03):** G6's not-a-successor branches, R2b's refutation
+motive, K4's ordinal contradiction, three occurrences, one of K4's three
+errors.
+
+**Provenance:** `_build/g1g6-report.md`; `_build/r2b-report.md`;
+`_build/k4-report.md`.
+
+### I-8. `dne` is at level ℓ; bridge structure-level memberships before classical steps
+
+**Rule:** `Switch.dne` takes an `hProp ℓ` while `∈ˢ` lands in
+`hProp (ℓ-suc ℓ)`, so every classical step on a structure-level membership
+goes `∈s`, then `dne`, then `∈S`; invisible until the error appears.
+
+**Measured (R5a, 2026-08-03):** `cap-outr` (not `cap-outl`) is the classical
+half, a one-line idiom.
+
+**Provenance:** `_build/r5a-report.md`.
+
+### I-9. Verify at-most-one witnesses before LEM decides a witness-shaped proposition
+
+**Rule:** Before LEM decides a witness-shaped proposition, verify at-most-one
+witnesses; injectivity is often the missing lemma.
+
+**Measured (r2a, 2026-08-02/03):** `isSucc` forced `sucV-inj-ord` (27 lines),
+a gap the brief did not list.
+
+**Provenance:** `_build/r2a-report.md`.
 
 ### D-9. Choose the induction carrier by which operations act homomorphically
 
@@ -1114,9 +1224,21 @@ target beside the original.
 (the tower lift at arbitrary stage spread) is false two limits up by the
 satisfaction predicate; the true one-block form was provable the same day.
 The r2c chain had already shown the mirror case (a correct measurement of a
-wrong target at the step's shape).
+wrong target at the step's shape). Same-day extensions, all measured: price
+the recorded target's index translation (the block-translated
+`Lset α ≡ Jset (b α)` is false at α = 1); price a reduction's hypotheses for
+dischargeability and for nameability of every module parameter they
+implicitly quantify over (`values∈L` was underspecified by two nested pairs;
+`stepSet∈L` is not dischargeable until the telescope names A); price the
+residue against the interface that actually consumes it (Δ₀ was a crossing
+tax, not a wall); price the supplier's INDEX against the consumer's
+quantifier (the two-limit supplier fails at γ = ω·2, ζ = ω+3); and let a
+corrected target delete a chapter (the same-index restatement removed the
+block map and its missing dichotomy).
 
-**Provenance:** `_build/r5b-report.md`; commits `d15c114`, `a34907c`.
+**Provenance:** `_build/r5b-report.md`; commits `d15c114`, `a34907c`; the
+same-day extension datums: `_build/g3g4g5-report.md`, `_build/r5d1-report.md`,
+`_build/r5d2-report.md`, `_build/k4-report.md`.
 
 ### D-8. A self-containing step operator is not subset-monotone; condition on membership
 
@@ -1138,6 +1260,225 @@ one added lemma, one call-site insertion, +4 code lines.
 
 **Provenance:** `_build/r2c-report.md` (the no-go trail);
 `_build/reshape-report.md`; commits `0322860` and the reshape commit.
+
+### D-11. State two-way adequacy at a tuple, not at a member
+
+**Rule:** Quantify adequacy over the environment, never over a member, so the
+equation `m ≡ Tup n δ` never appears in a clause; recover the member-level
+pair once through a subset lemma (`T-sub`).
+
+**Measured (G2, 2026-08-03):** the probe's 56-line negation clause became 7
+lines arity-generic (16x), zero `pr-inj` chases in twelve clauses, total
+adequacy 245 lines both directions. This is the tuple-level restatement of
+"price decode-uniqueness once per arity".
+
+**Provenance:** `_build/g2p-report.md` (LC-1); `_build/g2-report.md`
+(LC-G2-1).
+
+### D-12. The tuple calculus
+
+**Rule:** The tuple calculus has five laws, each measured below: fix the
+convention by the projection (the quantified coordinate is the tuple's
+head); build the diagonal first, the only permutation primitive; recurse on
+the arity, never permute coordinates; instantiate one abstract
+binary-relation interface at a relation and its converse; and the calculus
+has exactly three moves, which are named.
+
+**The five laws** (measured):
+
+- **[A] The quantified coordinate is the tuple's head; fix the convention by
+  the projection**: under de Bruijn binding the quantified coordinate is the
+  tuple's head, so the tuple convention is fixed by which projection the
+  quantifier needs, and the same choice fixes which of F3/F4 does the atom
+  plumbing. Measured: one 41-line range operation amortised over four
+  consumers bought the coordinate families free; the probe's F6-only reading
+  of the fork got the sign backwards (G2, 2026-08-03).
+- **[B] Build the diagonal first; it is the only permutation primitive**: in
+  the tuple calculus F3 inserts after the first coordinate, F4 appends a
+  block at a pair's end, `ranOp` strips the leading coordinate, and none
+  moves a coordinate left past another; the identity graph pays for every
+  such move, so build it first and treat it as the coordinate-permutation
+  primitive. Measured: the equality atom needs no foundation axiom and no
+  `≐`-elimination: diagonal 130 lines, converse 30, self-membership slice
+  30, all from extensionality plus the range (G2); R5a-2 then spent the
+  identity graph five times (2026-08-03).
+- **[C] Recurse on the arity, never permute coordinates**: an atom relating
+  two coordinates of an (n+1)-tuple splits four ways on whether each index
+  is the head: both past the head is a cylinder one arity down; head against
+  a later coordinate is the F3-insertion family; the converse is the same
+  family at the converse relation; both at the head is the diagonal slice.
+  Measured: `LR` 3 clauses, `Bin` 5, `Sel` 3; the whole k-ary plumbing 211
+  lines with no permutation lemma (G2, 2026-08-03).
+- **[D] One abstract binary-relation interface at a relation and its
+  converse**: a module generic in a relation (membership plus in/out) gives
+  the insertion family; instantiating it at a relation, its converse and the
+  diagonal slice covers both atom kinds from one recursion. Measured: 169
+  lines of shared machinery covering 2 atom relations x every index pair,
+  versus a per-relation build that would have doubled it (G2, 2026-08-03).
+- **[E] The calculus has exactly three moves; name them**: F3 inserts a
+  coordinate after the first, F4 appends one at the end of a pair or a whole
+  block with a product argument, `ranOp` strips the leading coordinate;
+  choose the coordinate order in which the quantified variables lead, pad
+  each constraint into the common tuple space, intersect, strip. Measured:
+  `swp` fell from a four-coordinate design to a three-coordinate one, half
+  the code (R5a, 2026-08-03).
+
+**Provenance:** `_build/g2-report.md` (LC-G2-2 through LC-G2-5);
+`_build/r5a-report.md` (the three-moves law).
+
+### D-13. Junk is junk only relative to the tower reading it
+
+**Rule:** A value class is junk or not relative to the tower that reads it:
+the rud step's level-slot junk is irreducible against the rud level (which
+cannot contain itself) and evaporates against the Def tower the moment a
+stage holds the level as a member.
+
+**Measured (G3G4G5, 2026-08-03):** `Ljunk` 11 lines, a two-case split, where
+LevelDesc spends ~700 lines on the same level cases; choose the carrier by
+what it can contain, a sibling of D-9.
+
+**Provenance:** `_build/g3g4g5-report.md`.
+
+### D-14. A closure fragment cannot live inside the block it closes
+
+**Rule:** Any bounding object asked to be closed under the sixteen operations
+is infinite (singletons), so it is never a member of the first rud level
+`Sset ω`, whose members are all finite; the base block of every
+rud-versus-Def statement is a separate theorem with a finiteness proof, and
+no offset engineering merges it with the general case.
+
+**Measured (D1, 2026-08-03):** negatively, it removed a planned 150-line
+layer; the kernel recon registered the base block as its own residue.
+
+**Provenance:** `_build/r5d1-report.md`.
+
+### D-15. Reductions: the equivalence test, and a reduction is a deliverable
+
+**Rule:** Before reporting a residue as a reduction, apply the two-way test;
+when a residue cannot be discharged, the reduction itself is the deliverable
+(two laws, measured below).
+
+**The two laws** (measured):
+
+- **[A] The two-way test before reporting**: before reporting a residue as a
+  reduction, check whether the residue implies the target AND the target
+  implies the residue; a failure means the product is a chain around a
+  weakening, not a reduction. Measured: `DefFragment` passes (one line of
+  reasoning, licensing the trade); K4 ran it on
+  `fragment`/`pow-from-fragment` in 4 lines (r5d1, K4, 2026-08-03).
+- **[B] The extensional standing shape**: when a residue cannot be
+  discharged, deliver the reduction: state the residue for an arbitrary
+  target with an extensional entry point (two containments at a variable
+  member instead of a set equation) and treat it as the standing shape for
+  "named and left standing". Measured: 30 lines; second instance of the
+  `DefFragment`/`Discharge` pattern (K2, 2026-08-03).
+
+**Provenance:** `_build/r5d1-report.md`; `_build/k2-report.md`;
+`_build/k4-report.md`.
+
+### D-16. The inner semantics is the working face; Δ₀ absoluteness is a crossing tax only
+
+**Rule:** Write readers and formulas in the inner semantics at an abstract
+transitive carrier; Δ₀ is needed only when a proof crosses between the
+ambient and the inner reading, and inner-world readers are reusable across
+chapters because they carry no absoluteness obligation.
+
+**Measured (D2, K3, 2026-08-03):** the Graphs-class re-run estimate (~1k
+lines, the G2 wall class) became 2,124 lines of ordinary reading work with
+zero walls; the pair kit imported whole cost zero lines against 187; no Δ₀
+witness was constructed anywhere.
+
+**Provenance:** `_build/r5d2-report.md`; `_build/k3-report.md`.
+
+### D-17. Read the definition, not the case analysis
+
+**Rule:** Describe a total projection (or an operation's junk) through its
+definition, not the case analysis that motivated it: `left b = ⋃ (⋂ b)` has
+one equality frame over the intersection's two-clause membership, and an
+operation whose members are pairs definitionally needs no pairhood split.
+
+**Measured (r5d2, r5b, 2026-08-03):** 30 lines of formula and adequacy
+against an estimated 90, removing two of three junk readings; F11-F14 at
+four operations cost zero case splits.
+
+**Provenance:** `_build/r5d2-report.md`; `_build/r5b-report.md`.
+
+### D-18. Cofinality audits: count rank growth per member, then decide where the ranks come from
+
+**Rule:** Before pricing a "gather the family as one set" residue at a finite
+offset, count the constructor cost per member; if rank grows with the index,
+transitivity refutes every finite offset and the surviving target is a
+satisfaction obligation, not an arm obligation. When the cofinality is then
+recorded as a fact about the target, check whether the ranks come from the
+mathematics or the representation: nested-pair codes are cofinal because one
+Kuratowski pair per formula layer grows rank with depth, and a flat coding
+has bounded rank and no cofinality at all.
+
+**Measured (K2, K4, 2026-08-03):** K2 refuted the finite-offset target in
+five minutes (193 lines for the corrected pair); K4 showed the cofinality is
+the coding's artifact, removable by rank-bounded codes.
+
+**Provenance:** `_build/k2-report.md`; `_build/k4-report.md`.
+
+### D-19. Price a port against the retiring tree's transitive closure, and split both directions
+
+**Rule:** A "port the pattern" estimate is calibrated against the retiring
+chapter's import graph, not its file, and every both-directions adequacy
+estimate is split into elimination and introduction and priced separately,
+because the introduction has been the larger half twice.
+
+**Measured (2026-08-03):** 250-450 became 3-4x against a 616-line chapter
+importing ~1,400 code lines; K3's re-price omitted the 274-line witness-set
+construction.
+
+**Provenance:** `_build/k2-report.md`; `_build/k3-report.md`.
+
+### D-20. A many-way disjunction is a fold over ℕ, not a right-nested injection chain
+
+**Rule:** A twelve-way disjunction should be a fold over ℕ (`orUpto` by
+induction on the bound), not a right-nested chain of injections; no
+truncation nests deeper than one.
+
+**Measured (K3, 2026-08-03):** the twelve-way layer cost 188 lines including
+both meta-level translations, against Shape's 354 for the disjunction alone.
+
+**Provenance:** `_build/k3-report.md`.
+
+### D-21. Check whether the approximation's own target is the witness
+
+**Rule:** Before building the machinery a two-sided approximation needs,
+check whether the approximation's own target is the witness: the identity
+fragment collapses to `λ y k → k`, so the residue is a membership and the
+fragment formulation is an indirection.
+
+**Measured (BaseBlock, K4, 2026-08-03):** both halves of the fragment
+collapse at ω and at general limits (`powFragment`); removed
+`Sep`/`Sstage₂` from the general case.
+
+**Provenance:** `_build/k4-report.md`.
+
+### D-22. A closure hypothesis on the carrier is worth more than a description chapter
+
+**Rule:** Before instantiating a delivered description at a carrier, ask
+whether the carrier's own closure already puts the value inside it: at a
+rud-closed carrier the whole plain-argument half of `ImgArm` is `Jset-rud`
+followed by `memArm`, one line per operation.
+
+**Measured (R5b, 2026-08-03):** 16 dispatch lines plus a 12-line helper vs
+the anticipated several hundred.
+
+**Provenance:** `_build/r5b-report.md`.
+
+### D-23. Transparency of a syntax-directed recursion is an interface asset: seal the heavy values, not the syntax walk
+
+**Rule:** Seal the heavy values, not the syntax walk; the transparency of a
+syntax-directed recursion is an interface asset.
+
+**Measured (r3c, 2026-08-03):** `Realize`'s dropped certificates were
+recoverable from outside in 78 lines only because the walk stayed
+transparent.
+
+**Provenance:** `_build/r3c-report.md`.
 
 ## 6. Craft and process lessons (C series)
 
@@ -1339,9 +1680,134 @@ to this machine's concurrency.
 flight, session-resumed after); P-i's OOM-guard clause; the Makefile GHCRTS
 export added the same day.
 
+### C-13. Direction discipline for rewrites and conversions
+
+**Rule:** Rewrites and conversions have directions; name them before writing
+the step (two laws, measured below).
+
+**The two laws** (measured):
+
+- **[A] subst: spell P and both endpoints, decide element vs level**:
+  `subst P p` moves `P x → P y` along `p : x ≡ y`; in membership rewrites
+  decide whether the path acts on the element or the level, and spell `P`
+  and both endpoints in block equalities. Measured: four early flips in G6,
+  two `sym`-direction errors in R2a, the stable pattern in R2c's twelve
+  trans cases (2026-08-02/03).
+- **[B] The small/big membership conversion has a direction**: the
+  small/big membership equivalence (`a ∈ b ⇔ a ∈ₛ b`) has `.fst`
+  big-to-small and `.snd` small-to-big; check it, the error text is the only
+  witness. Measured: one fibre step in `+ω-out` was written the wrong way
+  and only the error text exposed it (G6, 2026-08-03).
+
+**Provenance:** `_build/g1g6-report.md`; `_build/r2a-report.md`;
+`_build/r2c-report.md`.
+
+### C-14. A restated helper, a missing export, or an unnameable private helper is a delivery defect
+
+**Rule:** A helper written a third time, a case equation the definition site
+fails to export, or a private helper a consumer's proof needs is a delivery
+defect, not a coincidence (two laws, measured below).
+
+**The two laws** (measured):
+
+- **[A] Host once, export the bottom equation at the definition site**:
+  host the arbitrary-domain reader once and export the bottom equation at
+  the definition site. Measured: `prAt′` written three times (57 lines, no
+  risk, the third copy the signal); `Sset-zero` missing from Step's exports
+  cost a 6-line local proof at the base block (r5b, K1, 2026-08-03).
+- **[B] Re-export what a consumer's proof needs**: a private helper a
+  consumer's proof needs must be re-exported as a public lemma; privacy is a
+  name-and-reduction wall, not a hygiene marker. Measured:
+  `rightSlice`/`sndExtract` were unnameable and blocked F11-F14's junk facts
+  (r2c).
+
+**Provenance:** `_build/r5b-report.md`; `_build/k1-report.md`;
+`_build/r2c-report.md`.
+
+### C-15. Close out with a consumer probe; the in-file module beats the probe, then the probe still earns its keep
+
+**Rule:** For any batch that exports into a fixed telescope, apply the
+consuming module inside the exporting chapter (making the telescope match a
+typechecking obligation), then run the scratchpad probe, since it is the
+only place the module parameters get concrete.
+
+**Measured (2026-08-03):** the 25-line `Bridge.Reduce` probe caught
+`f3ad704`'s mid-batch telescope change in 1.7 s; K4's in-file application
+plus probe exercised `slot-empty` at `A := ∅`.
+
+**Provenance:** `_build/r5d1-report.md`; `_build/k4-report.md`.
+
+### C-16. A wall that survives the obvious seal is a mis-diagnosis: stop sealing, start bisecting
+
+**Rule:** After a seal fails to move a wall, stop sealing and start bisecting
+the elaboration; report the failed seal as unmeasured rather than
+retro-fitting credit when the real cause is found.
+
+**Measured (K3, 2026-08-03):** the textbook pr-seal was wrong in K3, costing
+one full rewrite and three wall events before bisection found the
+branch-type cause.
+
+**Provenance:** `_build/k3-report.md`.
+
+### C-17. Record "two routes are circular", never "the base case is circular"
+
+**Rule:** When two routes to a base case are circular, the finding to record
+is "two routes are circular", never "the base case is circular"; the third
+route is often the textbook's.
+
+**Measured (R5a, 2026-08-03):** R3c's recorded circularity was a scoping
+artefact; the classical construction is extensionality relativized to
+`p ∪ ⋃p`, 95 lines with one `dne` per direction.
+
+**Provenance:** `_build/r5a-report.md`.
+
+### C-18. Generalize a working frame from the free variable to an index
+
+**Rule:** When a frame works "at the free variable", generalize it to "at an
+index" (the target term becomes `var k`, shifted by the binders) and keep
+the original as the zero case; the generalization is a mechanical edit that
+buys every deeper binder.
+
+**Measured (R5b, 2026-08-03):** `prDesc` → `prDescAt k` made F3/F4's six
+cases green on the first check; all de Bruijn arithmetic lives in one
+20-line definition.
+
+**Provenance:** `_build/r5b-report.md`.
+
+### C-19. Read the exit code, not the log tail
+
+**Rule:** Read the exit code, not the log tail: unsolved constraints exit 42
+while the tail otherwise looks like a clean check.
+
+**Measured (r1b, 2026-08-02):** UnsolvedConstraints exits 42 while the tail
+looks clean.
+
+**Provenance:** `_build/r1b-report.md`.
+
+### C-20. Never write `∈ˢ ⋃` / `⊆ ⋃` directly; bind the union term
+
+**Rule:** Never write `∈ˢ ⋃` / `⊆ ⋃` directly; bind the union term.
+
+**Measured (r2b):** Agda's mixfix parser rejects an infix operator applied
+to a prefix `⋃` operand.
+
+**Provenance:** `_build/r2b-report.md`.
+
+### C-21. Telescope types may only use level-generic imported names
+
+**Rule:** Telescope types may only use level-generic imported names; inline
+level-parameterized predicates into the header, or take the subject
+parameters in an inner `module _` block.
+
+**Measured (r2b):** a level-specific imported name
+(`L.Constructible.isTransV`, importable only with `{ℓ}` applied) is
+invisible inside the module header.
+
+**Provenance:** `_build/r2b-report.md`.
+
 ## Adding an entry
 
-Take the next free ID under the series (P-h, R-31, T-3, I-2, D-5, C-10), cite
+Take the next free ID under the series (P-k, R-40, T-3, I-10, D-24, C-22), cite
 the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
