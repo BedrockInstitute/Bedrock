@@ -923,12 +923,17 @@ memberStage-ord : (α : S) (ordα : IsOrd α) (m : Member α)
                 → IsOrd (memberStage α ordα m)
 memberStage-ord α ordα m = prod-stage (memberKey α ordα m .fst) .snd
 
+memberStage-least : (α : S) (ordα : IsOrd α) (m : Member α)
+                  → (γ : S) → IsOrd γ → ⟨ m .fst ∈ˢ Sset γ ⟩
+                  → ⟨ memberStage α ordα m ∈ˢ γ ⟩
+memberStage-least α ordα m γ ordγ h = PT.rec (snd (memberStage α ordα m ∈ˢ γ))
+  (λ { (t , st , v) →
+     stage-least (m .fst) (member-trace α ordα m) γ ordγ t v st })
+  (trace-exists γ ordγ (m .fst) h)
+
 memberStage-in : (α : S) (ordα : IsOrd α) (m : Member α)
                → ⟨ memberStage α ordα m ∈ˢ α ⟩
-memberStage-in α ordα m = PT.rec (snd (memberStage α ordα m ∈ˢ α))
-  (λ { (t , st , v) →
-     stage-least (m .fst) (member-trace α ordα m) α ordα t v st })
-  (trace-exists α ordα (m .fst) (m .snd))
+memberStage-in α ordα m = memberStage-least α ordα m α ordα (m .snd)
 
 memberStage-first : (α : S) (ordα : IsOrd α) (m : Member α)
                   → ⟨ m .fst ∈ˢ Sset (sucV (memberStage α ordα m)) ⟩
@@ -939,13 +944,6 @@ memberStage-first α ordα m =
       (memberKey α ordα m .fst) (memberKey α ordα m .snd)
       (self∈sucV (memberStage α ordα m)))
 
-memberStage-least : (α : S) (ordα : IsOrd α) (m : Member α)
-                  → (γ : S) → IsOrd γ → ⟨ m .fst ∈ˢ Sset γ ⟩
-                  → ⟨ memberStage α ordα m ∈ˢ γ ⟩
-memberStage-least α ordα m γ ordγ h = PT.rec (snd (memberStage α ordα m ∈ˢ γ))
-  (λ { (t , st , v) →
-     stage-least (m .fst) (member-trace α ordα m) γ ordγ t v st })
-  (trace-exists γ ordγ (m .fst) h)
 ```
 
 <!--en-->

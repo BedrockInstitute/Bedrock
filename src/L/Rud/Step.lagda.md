@@ -731,15 +731,20 @@ left-in-u'-pair u tr b b∈u' h = PT.rec (snd (left b ∈ˢ u' u)) go h
     p∈u' = u'-trans u tr ⁅ p ⁆s p p∈⁅p⁆s
       (u'-trans u tr b ⁅ p ⁆s ⁅p⁆s∈b b∈u')
 
+opaque
+  -- perf: R-38's invocation half. `right-spec` costs about 26 s to invoke
+  -- (`left-spec` costs 64 ms), so the trunk invokes it exactly ONCE, here,
+  -- and every consumer downstream reads this equation instead.
+  right-at-pair : (b p q : V ℓ) → b ≡ pr p q → right b ≡ q
+  right-at-pair b p q b≡ = subst (λ t → right t ≡ q) (sym b≡) (right-spec p q)
+
 right-in-u'-pair : (u : V ℓ) (tr : Trans u) → (b : V ℓ)
                  → ⟨ b ∈ˢ u' u ⟩ → ⟨ isPair b ⟩ → ⟨ right b ∈ˢ u' u ⟩
 right-in-u'-pair u tr b b∈u' h = PT.rec (snd (right b ∈ˢ u' u)) go h
   where
   go : Σ[ p ∈ V ℓ ] Σ[ q ∈ V ℓ ] ⟨ b ≡ₕ pr p q ⟩ → ⟨ right b ∈ˢ u' u ⟩
-  go (p , q , b≡) = subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym right≡q) q∈u'
+  go (p , q , b≡) = subst (λ t → ⟨ t ∈ˢ u' u ⟩) (sym (right-at-pair b p q b≡)) q∈u'
     where
-    right≡q : right b ≡ q
-    right≡q = subst (λ t → right t ≡ q) (sym b≡) (right-spec p q)
     q∈⁅p,q⁆ : ⟨ q ∈ˢ ⁅ p , q ⁆ ⟩
     q∈⁅p,q⁆ = ∈∈ₛ {a = q} {b = ⁅ p , q ⁆} .snd
       (pairing-ax p q q .snd ∣ inr refl ∣₁)
@@ -930,7 +935,8 @@ step-trans u cond tr {x} {y} y∈x x∈stepu = PT.rec (snd (y ∈ˢ step u)) go
 module ConcreteS = L.Rud.Hierarchy lem step step-⊆ step-∈ step-mono∈ step-trans
 
 open ConcreteS using ( Sset; Sset-compute; Sset-in; Sset-out; Sset-mono
-                      ; Sset-mem; Sset-suc; Sset-limit; Sset-level; Sset-trans
+                      ; Sset-mem; Sset-zero; Sset-suc; Sset-limit; Sset-level
+                      ; Sset-trans
                       ; Jset; Jset-mono; Jset-limit; limit-succ-mem ) public
 
 step-member→u'-suc : (δ x : V ℓ) → ⟨ x ∈ˢ step (Sset δ) ⟩ → ⟨ x ∈ˢ u' (Sset (sucV δ)) ⟩

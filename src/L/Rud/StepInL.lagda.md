@@ -45,7 +45,7 @@ open import L.Rud.Ops {ℓ} using
   ( F0; F0-spec; F1-spec; F2-read; F2-write; F3-read; F3-write; F4-read
   ; F4-write; F5-spec; F6-read; F6-write; F7-read; F7-write )
 open import L.Rud.Images {ℓ} using
-  ( F8; F8-spec; F10; F10-spec; left; left-spec; right; right-spec
+  ( F8; F8-spec; F10; F10-spec; left; left-spec; right
   ; right-nonpair; ⋂; ⋂-member-in-all; left-⋂-collapse; left-⋂-empty
   ; module F15Of )
 open import L.Rud.Describe {ℓ} using ( module F10Desc )
@@ -55,7 +55,8 @@ open import L.Rud.Step {ℓ} lem A using
   ; Fof-f6; Fof-f7; Fof-f8; Fof-f9; Fof-f10; Fof-f11; Fof-f12; Fof-f13
   ; Fof-f14; Fof-f15; singl≡pair; isPair
   ; step; step-out; StepArm; arm-member; arm-self; arm-image
-  ; step-in; step-in-self; step-in-img; u'; u'-in; u-self-in )
+  ; step-in; step-in-self; step-in-img; u'; u'-in; u-self-in
+  ; right-at-pair )
 open import L.Rud.Bridge {ℓ} lem A using
   ( 𝒟ₒ⊆Lsuc; Ltr; Lpair; ValuesInU; suc⁴; empty-⊆; ext-⊆ )
 
@@ -157,11 +158,8 @@ module Reads (C : S) (Ctr : Transitive 𝒮ᵥ (λ x → x ∈ˢ C)) where
     atPair (inl h) = inl (PT.rec (snd (right b ∈ˢ C)) go h)
       where
       go : Σ[ p ∈ S ] Σ[ q ∈ S ] ⟨ b ≡ₕ pr p q ⟩ → ⟨ right b ∈ˢ C ⟩
-      go (p , q , b≡) = subst (λ w → ⟨ w ∈ˢ C ⟩) (sym right≡q)
+      go (p , q , b≡) = subst (λ w → ⟨ w ∈ˢ C ⟩) (sym (right-at-pair b p q b≡))
         (prR∈ p q (subst (λ w → ⟨ w ∈ˢ C ⟩) b≡ b∈))
-        where
-        right≡q : right b ≡ q
-        right≡q = subst (λ w → right w ≡ q) (sym b≡) (right-spec p q)
     atPair (inr nb) = inr (right-nonpair b (λ p q e → nb ∣ p , q , e ∣₁))
 ```
 
@@ -1053,13 +1051,11 @@ decomposition anywhere is a decomposition here.
              ⟨ ((qm ∷ pm ∷ δ) DefC.⊨ᵐ prAt (suc (suc bk)) f1 f0)
                ⊓ (fst (lookup rk δ) ≡ₕ fst qm) ⟩
          → fst (lookup rk δ) ≡ right (fst (lookup bk δ))
-      k1 (qm , (e , r≡q)) = r≡q ∙ sym right≡q
+      k1 (qm , (e , r≡q)) = r≡q ∙ sym
+        (right-at-pair (fst (lookup bk δ)) (fst pm) (fst qm) b≡)
         where
         b≡ : fst (lookup bk δ) ≡ pr (fst pm) (fst qm)
         b≡ = prAt-out (suc (suc bk)) f1 f0 (qm ∷ pm ∷ δ) e
-        right≡q : right (fst (lookup bk δ)) ≡ fst qm
-        right≡q = subst (λ t → right t ≡ fst qm) (sym b≡)
-          (right-spec (fst pm) (fst qm))
     noPair : ⟨ ((¬ (δ DefC.⊨ᵐ isPairF bk))
              ⊓ (δ DefC.⊨ᵐ (∀̇∈ (var rk) ⊥̇))) ⟩
            → fst (lookup rk δ) ≡ right (fst (lookup bk δ))
@@ -1103,7 +1099,7 @@ decomposition anywhere is a decomposition here.
         q∈C : ⟨ q ∈ˢ C ⟩
         q∈C = prR∈ p q pr∈C
         right≡q : right (fst (lookup bk δ)) ≡ q
-        right≡q = subst (λ t → right t ≡ q) (sym b≡) (right-spec p q)
+        right≡q = right-at-pair (fst (lookup bk δ)) p q b≡
     go (inr nb) = ∣ inr (nb' , empty) ∣₁
       where
       nb' : ⟨ δ DefC.⊨ᵐ isPairF bk ⟩ → Empty.⊥
