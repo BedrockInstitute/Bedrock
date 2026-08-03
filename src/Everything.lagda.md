@@ -1184,6 +1184,10 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.StepInL`{.Agda}: one rud step as a definable set over a constructible
   stage: the inner-world reading frame, the sixteen membership formulas, and
   the values reads at the honest offsets.
+- `L.Rud.CodeSet`{.Agda}: the formula codes over a carrier as one sealed
+  family with definitional membership and untruncated decode; each code a
+  closure member unconditionally; the member form reduced to its
+  description entry point.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1206,6 +1210,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、作为唯一具名假设的极限层等式、两个可构成类之间的条件桥及选择推论。
 - `L.Rud.DefInJ`{.Agda}：上升一个 Def 阶段仍为初步函数成员，证于片段假设之上，后继塌缩与分离恒等式直接到手。
 - `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
+- `L.Rud.CodeSet`{.Agda}：载体上的公式码作为一个封印族，成员性定义即得、解码不截断；每个码无条件为闭包成员；成员形归约到其描述入口。
 <!--/-->
 
 ```agda
@@ -1226,4 +1231,5 @@ import L.Rud.SatSets
 import L.Rud.Bridge
 import L.Rud.DefInJ
 import L.Rud.StepInL
+import L.Rud.CodeSet
 ```
