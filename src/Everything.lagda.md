@@ -1171,6 +1171,9 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.OrdBlocks`{.Agda}: the ordinal block map b with its laws: membership
   monotonicity for free from the single-equation form, blocks are limits,
   finite steps absorbed.
+- `L.Rud.SatSets`{.Agda}: the satisfaction sets of arbitrary formulas as
+  closure members, the equality atom through the extensional diagonal, and
+  the unconditional full switch at limit levels.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1189,6 +1192,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.LevelDesc`{.Agda}：层级描述在 rud 闭层全数清偿，彼处每个描述皆为 Δ₀；塔提升；改进的切换推论。
 - `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
 - `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
+- `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
 <!--/-->
 
 ```agda
@@ -1205,4 +1209,5 @@ import L.Rud.Graphs
 import L.Rud.LevelDesc
 import L.Rud.ClassJ
 import L.Rud.OrdBlocks
+import L.Rud.SatSets
 ```
