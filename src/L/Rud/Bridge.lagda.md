@@ -25,7 +25,7 @@ open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _∧̇_; ⊤̇ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧ )
 import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
 open import V.Model {ℓ} using ( self∈sucV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
@@ -43,9 +43,12 @@ open import L.Rud.Step {ℓ} lem A using
   ; op13; op14; op15; Fof; Fof-f0; Fof-f1; Fof-f2; Fof-f3; Fof-f4; Fof-f5
   ; Fof-f6; Fof-f7; Fof-f8; Fof-f9; Fof-f10; Fof-f11; Fof-f12; Fof-f13
   ; Fof-f14; Fof-f15; F15A; singl≡pair
-  ; Sset-trans; Jset; Jset-rud; limit-succ-mem
+  ; Sset; Sset-trans; Sset-out; Sset-mem; Sset-suc
+  ; Jset; Jset-rud; limit-succ-mem
   ; step; step-out; StepArm; arm-member; arm-self; arm-image )
-open import L.Rud.OrdArith {ℓ} lem using ( isLimit; isLimit-ord; limit-mem-ord )
+open import L.Rud.OrdArith {ℓ} lem using
+  ( isLimit; isLimit-ord; limit-mem-ord; isSucc; ord-case )
+open import L.Ordinal {ℓ} using ( suc-ord; mem-ord )
 open import L.Rud.OrdBlocks {ℓ} lem using ( +ω; +ω-mem; +ω-limit )
 open import L.Rud.ClassJ {ℓ} lem A using ( isJ; Jset→isJ )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri; Tri )
@@ -53,12 +56,15 @@ open import L.Rud.Switch {ℓ} lem A using ( module Descr; module Hops )
 open import L.Rud.SatSets {ℓ} lem A using ( module Sat )
 
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ2 )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈-asFiber )
+open import Cubical.Functions.Logic using ( ⇔toPath )
+import Cubical.Data.Empty as Empty
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
+  using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -558,3 +564,272 @@ identification, so that discharging one hypothesis delivers both endpoints.
 
 此处未证的是两塔在极限索引处的认同，而其缘由值得记下。交错的两个方向都要求一塔的诸层是另一塔的**成员**，而这两件事都是关于层级而非关于单步的可定义性陈述：一侧要求初步函数的 step 算子在可构造阶段上可定义 (那需要十六运算的图，而非它们的值)，另一侧要求可构造诸阶段出现在初步函数塔之内。故类的等价打包成认同之上的模块，只要清偿一条假设，两端一并交付。
 <!--/-->
+
+<!--en-->
+## The empty stage, and one rud step at an arbitrary set
+<!--zh-->
+## 空阶段，与任意集合处的一步初步函数
+<!--/-->
+
+<!--en-->
+Two housekeeping facts and one generalization before the reduction. Both towers
+are empty at the zero index, so the empty set is a member of every stage whose
+index has zero below it. And the absorption of a rud step never used the level
+structure of the set it steps over: it holds at any set the constructible stage
+already contains, which is the form the reduction consumes.
+<!--zh-->
+归约之前，两件杂务与一处推广。两塔在零索引处皆空，故空集是每个索引之下有零的阶段的成员。而一步初步函数的吸收从未用到被跨越之集的层结构：它对可构造阶段已经收下的任意集合都成立，而这正是归约所消费的形式。
+<!--/-->
+
+```agda
+ext-⊆ : {u v : S} → ((x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩)
+      → ((x : S) → ⟨ x ∈ˢ v ⟩ → ⟨ x ∈ˢ u ⟩) → u ≡ v
+ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
+
+empty-⊆ : (u : S) → ((x : S) → ⟨ x ∈ˢ u ⟩ → Empty.⊥) → u ≡ ∅
+empty-⊆ u no = ext-⊆ (λ x h → Empty.rec (no x h))
+  (λ x h → Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst h)))
+
+Lset-zero : Lset ∅ ≡ ∅
+Lset-zero = empty-⊆ (Lset ∅) (λ x h → PT.rec Empty.isProp⊥
+  (λ { (δ , δ∈∅ , _) → ∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈∅) })
+  (Lset-out ∅ x h))
+
+Sset-zero : Sset ∅ ≡ ∅
+Sset-zero = empty-⊆ (Sset ∅) (λ x h → PT.rec Empty.isProp⊥
+  (λ { (δ , δ∈∅ , _) → ∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈∅) })
+  (Sset-out ∅ x h))
+
+∅∈Sset : (γ : S) → ⟨ ∅ ∈ˢ γ ⟩ → ⟨ ∅ ∈ˢ Sset γ ⟩
+∅∈Sset γ ∅∈γ = subst (λ w → ⟨ w ∈ˢ Sset γ ⟩) Sset-zero
+  (Sset-mem {α = γ} {β = ∅} ∅∈γ)
+
+∅∈Lset : (γ : S) → ⟨ isLimit γ ⟩ → ⟨ ∅ ∈ˢ γ ⟩ → ⟨ ∅ ∈ˢ Lset γ ⟩
+∅∈Lset γ limγ ∅∈γ = Lset-mono {α = γ} {β = sucV ∅}
+  (limit-succ-mem γ ∅ limγ ∅∈γ)
+  (subst (λ w → ⟨ w ∈ˢ Lset (sucV ∅) ⟩) Lset-zero (Lset∈Lsuc ∅))
+
+ValuesInU : (u ζ : S) → Type (ℓ-suc ℓ)
+ValuesInU u ζ = (i : Op16) (a b : S)
+  → (⟨ a ∈ˢ u ⟩ ⊎ (a ≡ u)) → (⟨ b ∈ˢ u ⟩ ⊎ (b ≡ u))
+  → (v : S) → ⟨ v ∈ˢ Fof i a b ⟩ → ⟨ v ∈ˢ Lset ζ ⟩
+
+Lstep⊆ : (u ζ : S) → ⟨ A ∈ˢ Lset ζ ⟩ → ⟨ u ∈ˢ Lset ζ ⟩ → ValuesInU u ζ
+       → (x : S) → ⟨ x ∈ˢ step u ⟩ → ⟨ x ∈ˢ Lset (sucV ζ) ⟩
+Lstep⊆ u ζ hA u∈L vb x x∈step =
+  PT.rec (snd (x ∈ˢ Lset (sucV ζ))) go (step-out u x x∈step)
+  where
+  up : (y : S) → ⟨ y ∈ˢ Lset ζ ⟩ → ⟨ y ∈ˢ Lset (sucV ζ) ⟩
+  up y h = Lset-mono {α = sucV ζ} {β = ζ} (self∈sucV ζ) h
+  go : StepArm u x → ⟨ x ∈ˢ Lset (sucV ζ) ⟩
+  go (arm-member x∈u) = up x (Ltr ζ {x = u} {y = x} x∈u u∈L)
+  go (arm-self x≡u) = up x (subst (λ w → ⟨ w ∈ˢ Lset ζ ⟩) (sym x≡u) u∈L)
+  go (arm-image i a b sa sb x≡) =
+    subst (λ w → ⟨ w ∈ˢ Lset (sucV ζ) ⟩) (sym x≡)
+      (Ljunk ζ hA u u∈L i a b sa sb (vb i a b sa sb))
+```
+
+<!--en-->
+## The reduction
+
+Everything above is assembled here into a single induction along the membership
+relation, which discharges the identification of the towers from three named
+facts and nothing else. The induction carries three statements at each ordinal
+index: the constructible stage is a **member** of every rud level above it, the
+two towers agree at the index when it is a limit, and the rud level is included
+in and a member of every constructible stage above it. The agreement clause uses
+only the induction hypothesis, so the other two may use it at their own index,
+and no case analysis on the *shape* of the limit is needed: the ordinal case
+split (zero, successor, limit) does all the work, and no ordinal arithmetic
+enters.
+
+The three hypotheses are exactly the two facts the recap named plus the
+member-characterization reads. `defStage∈J` is one Def stage up staying a rud
+member; `stepSet∈L` is one rud step being a *definable set* over a constructible
+stage; `values∈L` is the sixteen reads. `slot∈L` places the relativization slot,
+and is immediate for the trunk instantiation, where the slot is empty.
+<!--zh-->
+## 归约
+
+以上一切在此装配成沿成员关系的单场归纳，它把两塔的认同从三条具名事实、别无其他中兑付出来。归纳在每个序数索引处携带三条陈述：可构造阶段是其上每个初步函数层的**成员**；该索引若为极限，两塔在该处相合；以及初步函数层被其上每个可构造阶段包含并成为其成员。相合子句只用归纳假设，故另外两条可以在自己的索引处使用它，而无须对极限的**形状**做情形分析：序数三分 (零、后继、极限) 承担全部工作，序数算术一步也不进场。
+
+三条假设恰是小结所点名的两条事实加上成员刻画的诸次读取。`defStage∈J` 是「上升一个 Def 阶段仍为初步函数成员」；`stepSet∈L` 是「一步初步函数是可构造阶段上的**可定义集**」；`values∈L` 是那十六次读取。`slot∈L` 安放相对化槽，在主干实例化处立得，因为那里的槽是空集。
+<!--/-->
+
+```agda
+opaque
+  -- perf: P-i layer cap: four exposed Lset ∘ sucV layers doubled the check;
+  -- the alias keeps at most one layer in conversion position.
+  suc⁴ : S → S
+  suc⁴ ζ = sucV (sucV (sucV (sucV ζ)))
+
+opaque
+  unfolding suc⁴
+  suc⁴∈ : (γ ζ : S) → ⟨ isLimit γ ⟩ → ⟨ ζ ∈ˢ γ ⟩ → ⟨ suc⁴ ζ ∈ˢ γ ⟩
+  suc⁴∈ γ ζ limγ ζ∈γ = limit-succ-mem γ _ limγ (limit-succ-mem γ _ limγ
+    (limit-succ-mem γ _ limγ (limit-succ-mem γ ζ limγ ζ∈γ)))
+
+  suc⁴-up : (ζ y : S) → ⟨ y ∈ˢ Lset ζ ⟩ → ⟨ y ∈ˢ Lset (suc⁴ ζ) ⟩
+  suc⁴-up ζ y h = up (sucV (sucV (sucV ζ))) (up (sucV (sucV ζ)) (up (sucV ζ)
+    (up ζ h)))
+    where
+    up : (ξ : S) → ⟨ y ∈ˢ Lset ξ ⟩ → ⟨ y ∈ˢ Lset (sucV ξ) ⟩
+    up ξ k = Lset-mono {α = sucV ξ} {β = ξ} (self∈sucV ξ) k
+```
+
+<!--en-->
+The reduction proper.
+<!--zh-->
+归约本体。
+<!--/-->
+
+```agda
+module Reduce
+  (defStage∈J : (ζ γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ ζ ∈ˢ γ ⟩
+              → ⟨ Lset ζ ∈ˢ Sset γ ⟩ → ⟨ Lset (sucV ζ) ∈ˢ Sset γ ⟩)
+  (stepSet∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
+             → ((v : S) → ⟨ v ∈ˢ step u ⟩ → ⟨ v ∈ˢ Lset ζ ⟩)
+             → ⟨ step u ∈ˢ Lset (sucV ζ) ⟩)
+  (values∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
+            → ValuesInU u (suc⁴ ζ))
+  (slot∈L : (γ : S) → ⟨ isLimit γ ⟩ → ⟨ A ∈ˢ Lset γ ⟩)
+  where
+
+  RudBelow : S → S → Type (ℓ-suc ℓ)
+  RudBelow β γ = ((v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩)
+               × ⟨ Sset β ∈ˢ Lset γ ⟩
+
+  isPropRudBelow : (β γ : S) → isProp (RudBelow β γ)
+  isPropRudBelow β γ = isProp× (isPropΠ2 (λ v _ → snd (v ∈ˢ Lset γ)))
+    (snd (Sset β ∈ˢ Lset γ))
+
+  Joint : S → Type (ℓ-suc ℓ)
+  Joint β = IsOrd β
+    → (((γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → ⟨ Lset β ∈ˢ Sset γ ⟩)
+      × (((limβ : ⟨ isLimit β ⟩) → Lset β ≡ Sset β)
+      × ((γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ)))
+
+  jstep : (β : S) → ((β₀ : S) → β₀ ∈ᵗ β → Joint β₀) → Joint β
+  jstep β IH ordβ = (p2 , (p3 , p4))
+    where
+    ihOrd : (β₀ : S) → ⟨ β₀ ∈ˢ β ⟩ → IsOrd β₀
+    ihOrd β₀ h = mem-ord {A = β} ordβ β₀ h
+    inγ : (γ : S) → ⟨ isLimit γ ⟩ → ⟨ β ∈ˢ γ ⟩ → (δ : S) → ⟨ δ ∈ˢ β ⟩
+        → ⟨ δ ∈ˢ γ ⟩
+    inγ γ limγ β∈γ δ δ∈β = isLimit-ord γ limγ .fst {x = β} {y = δ} δ∈β β∈γ
+
+    p3 : (limβ : ⟨ isLimit β ⟩) → Lset β ≡ Sset β
+    p3 limβ = ext-⊆ sub sup
+      where
+      sub : (x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ Sset β ⟩
+      sub x x∈ = PT.rec (snd (x ∈ˢ Sset β)) go (Lset-out β x x∈)
+        where
+        go : Σ[ β₀ ∈ S ] (⟨ β₀ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset β₀) ⟩) → ⟨ x ∈ˢ Sset β ⟩
+        go (β₀ , β₀∈β , h) = Ldef→J β₀ β limβ
+          (IH β₀ β₀∈β (ihOrd β₀ β₀∈β) .fst β limβ β₀∈β) x h
+      sup : (x : S) → ⟨ x ∈ˢ Sset β ⟩ → ⟨ x ∈ˢ Lset β ⟩
+      sup x x∈ = PT.rec (snd (x ∈ˢ Lset β)) go (Sset-out β x x∈)
+        where
+        go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩) → ⟨ x ∈ˢ Lset β ⟩
+        go (δ , δ∈β , h) =
+          IH (sucV δ) sδ∈β (suc-ord (ihOrd δ δ∈β)) .snd .snd β limβ sδ∈β .fst x
+            (subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Sset-suc δ)) h)
+          where
+          sδ∈β : ⟨ sucV δ ∈ˢ β ⟩
+          sδ∈β = limit-succ-mem β δ limβ δ∈β
+
+    p2 : (γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → ⟨ Lset β ∈ˢ Sset γ ⟩
+    p2 γ limγ β∈γ = go (ord-case β ordβ)
+      where
+      go : (β ≡ ∅) ⊎ (⟨ isSucc β ⟩ ⊎ ⟨ isLimit β ⟩) → ⟨ Lset β ∈ˢ Sset γ ⟩
+      go (inl z) = subst (λ w → ⟨ Lset w ∈ˢ Sset γ ⟩) (sym z)
+        (subst (λ w → ⟨ w ∈ˢ Sset γ ⟩) (sym Lset-zero)
+          (∅∈Sset γ (subst (λ w → ⟨ w ∈ˢ γ ⟩) z β∈γ)))
+      go (inr (inl (ζ , ordζ , sζ≡β))) =
+        subst (λ w → ⟨ Lset w ∈ˢ Sset γ ⟩) sζ≡β
+          (defStage∈J ζ γ limγ ζ∈γ (IH ζ ζ∈β ordζ .fst γ limγ ζ∈γ))
+        where
+        ζ∈β : ⟨ ζ ∈ˢ β ⟩
+        ζ∈β = subst (λ w → ⟨ ζ ∈ˢ w ⟩) sζ≡β (self∈sucV ζ)
+        ζ∈γ : ⟨ ζ ∈ˢ γ ⟩
+        ζ∈γ = inγ γ limγ β∈γ ζ ζ∈β
+      go (inr (inr limβ)) = subst (λ w → ⟨ w ∈ˢ Sset γ ⟩) (sym (p3 limβ))
+        (Sset-mem {α = γ} {β = β} β∈γ)
+
+    p4 : (γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
+    p4 γ limγ β∈γ = go (ord-case β ordβ)
+      where
+      go : (β ≡ ∅) ⊎ (⟨ isSucc β ⟩ ⊎ ⟨ isLimit β ⟩) → RudBelow β γ
+      go (inl z) = subst (λ w → RudBelow w γ) (sym z)
+        ( (λ v h → Empty.rec (∅-empty v (∈∈ₛ {a = v} {b = ∅} .fst
+            (subst (λ w → ⟨ v ∈ˢ w ⟩) Sset-zero h))))
+        , subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (sym Sset-zero)
+            (∅∈Lset γ limγ (subst (λ w → ⟨ w ∈ˢ γ ⟩) z β∈γ)) )
+      go (inr (inl (δ , ordδ , sδ≡β))) =
+        subst (λ w → RudBelow w γ) sδ≡β
+          (PT.rec (isPropRudBelow (sucV δ) γ) atStage
+            (Lstage₂ γ limγ (Sset δ) A
+              (IH δ δ∈β ordδ .snd .snd γ limγ δ∈γ .snd) (slot∈L γ limγ)))
+        where
+        δ∈β : ⟨ δ ∈ˢ β ⟩
+        δ∈β = subst (λ w → ⟨ δ ∈ˢ w ⟩) sδ≡β (self∈sucV δ)
+        δ∈γ : ⟨ δ ∈ˢ γ ⟩
+        δ∈γ = inγ γ limγ β∈γ δ δ∈β
+        atStage : Σ[ ζ ∈ S ] (⟨ ζ ∈ˢ γ ⟩ × ⟨ Sset δ ∈ˢ Lset ζ ⟩ × ⟨ A ∈ˢ Lset ζ ⟩)
+                → RudBelow (sucV δ) γ
+        atStage (ζ , ζ∈γ , u∈ , A∈) = (subFn , memFn)
+          where
+          ζ₄ ζ₅ ζ₆ : S
+          ζ₄ = suc⁴ ζ
+          ζ₅ = sucV ζ₄
+          ζ₆ = sucV ζ₅
+          up₁ : (ξ y : S) → ⟨ y ∈ˢ Lset ξ ⟩ → ⟨ y ∈ˢ Lset (sucV ξ) ⟩
+          up₁ ξ y h = Lset-mono {α = sucV ξ} {β = ξ} (self∈sucV ξ) h
+          ζ₄∈γ : ⟨ ζ₄ ∈ˢ γ ⟩
+          ζ₄∈γ = suc⁴∈ γ ζ limγ ζ∈γ
+          ζ₅∈γ : ⟨ ζ₅ ∈ˢ γ ⟩
+          ζ₅∈γ = limit-succ-mem γ ζ₄ limγ ζ₄∈γ
+          ζ₆∈γ : ⟨ ζ₆ ∈ˢ γ ⟩
+          ζ₆∈γ = limit-succ-mem γ ζ₅ limγ ζ₅∈γ
+          u∈₄ : ⟨ Sset δ ∈ˢ Lset ζ₄ ⟩
+          u∈₄ = suc⁴-up ζ (Sset δ) u∈
+          A∈₄ : ⟨ A ∈ˢ Lset ζ₄ ⟩
+          A∈₄ = suc⁴-up ζ A A∈
+          stepSub : (v : S) → ⟨ v ∈ˢ step (Sset δ) ⟩ → ⟨ v ∈ˢ Lset ζ₅ ⟩
+          stepSub = Lstep⊆ (Sset δ) ζ₄ A∈₄ u∈₄ (values∈L (Sset δ) ζ u∈)
+          u∈₅ : ⟨ Sset δ ∈ˢ Lset ζ₅ ⟩
+          u∈₅ = up₁ ζ₄ (Sset δ) u∈₄
+          subFn : (v : S) → ⟨ v ∈ˢ Sset (sucV δ) ⟩ → ⟨ v ∈ˢ Lset γ ⟩
+          subFn v h = Lset-mono {α = γ} {β = ζ₅} ζ₅∈γ
+            (stepSub v (subst (λ w → ⟨ v ∈ˢ w ⟩) (Sset-suc δ) h))
+          memFn : ⟨ Sset (sucV δ) ∈ˢ Lset γ ⟩
+          memFn = subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (sym (Sset-suc δ))
+            (Lset-mono {α = γ} {β = ζ₆} ζ₆∈γ
+              (stepSet∈L (Sset δ) ζ₅ u∈₅ stepSub))
+      go (inr (inr limβ)) = (subFn , memFn)
+        where
+        subFn : (v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩
+        subFn v h = PT.rec (snd (v ∈ˢ Lset γ)) atEnter (Sset-out β v h)
+          where
+          atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ v ∈ˢ step (Sset δ) ⟩)
+                  → ⟨ v ∈ˢ Lset γ ⟩
+          atEnter (δ , δ∈β , hv) =
+            IH (sucV δ) sδ∈β (suc-ord (ihOrd δ δ∈β)) .snd .snd γ limγ
+              (inγ γ limγ β∈γ (sucV δ) sδ∈β) .fst v
+              (subst (λ w → ⟨ v ∈ˢ w ⟩) (sym (Sset-suc δ)) hv)
+            where
+            sδ∈β : ⟨ sucV δ ∈ˢ β ⟩
+            sδ∈β = limit-succ-mem β δ limβ δ∈β
+        memFn : ⟨ Sset β ∈ˢ Lset γ ⟩
+        memFn = subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (p3 limβ)
+          (Lset-mono {α = γ} {β = sucV β} (limit-succ-mem γ β limγ β∈γ)
+            (Lset∈Lsuc β))
+
+  joint : (β : S) → Joint β
+  joint = ∈-induction jstep
+
+  matching : Matching
+  matching γ limγ = joint γ (isLimit-ord γ limγ) .snd .fst limγ
+
+  open Bridged matching public
+```
