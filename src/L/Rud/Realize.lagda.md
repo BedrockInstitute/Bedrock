@@ -561,15 +561,14 @@ first classical spend.
         chr : ChrP (interC a b) (λ ws x → P ws x ⊓ₚ Q ws x)
         chr ws x = fwd , bwd
           where
-          fwd : ⟨ fst x ∈ₛ interOp (eval a (map fst ws)) (eval b (map fst ws)) ⟩
-              → ⟨ P ws x ⊓ₚ Q ws x ⟩
+          A = eval a (map fst ws)
+          B = eval b (map fst ws)
+          fwd : ⟨ fst x ∈ₛ interOp A B ⟩ → ⟨ P ws x ⊓ₚ Q ws x ⟩
           fwd h = ca ws x .fst (m .fst) , cb ws x .fst (m .snd)
             where
-            m = interSpec (eval a (map fst ws)) (eval b (map fst ws)) (fst x) .fst h
-          bwd : ⟨ P ws x ⊓ₚ Q ws x ⟩
-              → ⟨ fst x ∈ₛ interOp (eval a (map fst ws)) (eval b (map fst ws)) ⟩
-          bwd (p , q) = interSpec (eval a (map fst ws)) (eval b (map fst ws)) (fst x) .snd
-                          (ca ws x .snd p , cb ws x .snd q)
+            m = interSpec A B (fst x) .fst h
+          bwd : ⟨ P ws x ⊓ₚ Q ws x ⟩ → ⟨ fst x ∈ₛ interOp A B ⟩
+          bwd (p , q) = interSpec A B (fst x) .snd (ca ws x .snd p , cb ws x .snd q)
 
       orC : {k : ℕ} (a b : Comp k) (P Q : Vec SM k → SM → hProp ℓ)
           → Sub a → Sub b → ChrP a P → ChrP b Q
@@ -585,26 +584,20 @@ first classical spend.
         chr : ChrP (unionC (pairC a b)) (λ ws x → P ws x ⊔ₚ Q ws x)
         chr ws x = fwd , bwd
           where
-          fwd : ⟨ fst x ∈ₛ unionOp (pairOp (eval a (map fst ws)) (eval b (map fst ws))) ⟩
-              → ⟨ P ws x ⊔ₚ Q ws x ⟩
-          fwd h = PT.rec (snd (P ws x ⊔ₚ Q ws x)) go
-            (binUnion-mem (eval a (map fst ws)) (eval b (map fst ws)) (fst x) .fst h)
+          A = eval a (map fst ws)
+          B = eval b (map fst ws)
+          fwd : ⟨ fst x ∈ₛ unionOp (pairOp A B) ⟩ → ⟨ P ws x ⊔ₚ Q ws x ⟩
+          fwd h = PT.rec (snd (P ws x ⊔ₚ Q ws x)) go (binUnion-mem A B (fst x) .fst h)
             where
-            go : (⟨ fst x ∈ₛ eval a (map fst ws) ⟩ ⊎ ⟨ fst x ∈ₛ eval b (map fst ws) ⟩)
-               → ⟨ P ws x ⊔ₚ Q ws x ⟩
+            go : (⟨ fst x ∈ₛ A ⟩ ⊎ ⟨ fst x ∈ₛ B ⟩) → ⟨ P ws x ⊔ₚ Q ws x ⟩
             go (inl h') = ∣ inl (ca ws x .fst h') ∣₁
             go (inr h') = ∣ inr (cb ws x .fst h') ∣₁
-          bwd : ⟨ P ws x ⊔ₚ Q ws x ⟩
-              → ⟨ fst x ∈ₛ unionOp (pairOp (eval a (map fst ws)) (eval b (map fst ws))) ⟩
-          bwd s = PT.rec (snd (fst x ∈ₛ unionOp (pairOp (eval a (map fst ws))
-                                                        (eval b (map fst ws))))) go s
+          bwd : ⟨ P ws x ⊔ₚ Q ws x ⟩ → ⟨ fst x ∈ₛ unionOp (pairOp A B) ⟩
+          bwd s = PT.rec (snd (fst x ∈ₛ unionOp (pairOp A B))) go s
             where
-            go : (⟨ P ws x ⟩ ⊎ ⟨ Q ws x ⟩)
-               → ⟨ fst x ∈ₛ unionOp (pairOp (eval a (map fst ws)) (eval b (map fst ws))) ⟩
-            go (inl p) = binUnion-mem (eval a (map fst ws)) (eval b (map fst ws)) (fst x) .snd
-                           ∣ inl (ca ws x .snd p) ∣₁
-            go (inr q) = binUnion-mem (eval a (map fst ws)) (eval b (map fst ws)) (fst x) .snd
-                           ∣ inr (cb ws x .snd q) ∣₁
+            go : (⟨ P ws x ⟩ ⊎ ⟨ Q ws x ⟩) → ⟨ fst x ∈ₛ unionOp (pairOp A B) ⟩
+            go (inl p) = binUnion-mem A B (fst x) .snd ∣ inl (ca ws x .snd p) ∣₁
+            go (inr q) = binUnion-mem A B (fst x) .snd ∣ inr (cb ws x .snd q) ∣₁
 
       notC : {k : ℕ} (a : Comp k) (P : Vec SM k → SM → hProp ℓ) → ChrP a P
            → Sub (diffC (conC u) a) × ChrP (diffC (conC u) a) (λ ws x → ¬ₚ (P ws x))
@@ -615,11 +608,11 @@ first classical spend.
         chr : ChrP (diffC (conC u) a) (λ ws x → ¬ₚ (P ws x))
         chr ws x = fwd , bwd
           where
-          fwd : ⟨ fst x ∈ₛ diffOp u (eval a (map fst ws)) ⟩ → ⟨ ¬ₚ (P ws x) ⟩
-          fwd h p = diffSpec u (eval a (map fst ws)) (fst x) .fst h .snd (ca ws x .snd p)
-          bwd : ⟨ ¬ₚ (P ws x) ⟩ → ⟨ fst x ∈ₛ diffOp u (eval a (map fst ws)) ⟩
-          bwd np = diffSpec u (eval a (map fst ws)) (fst x) .snd
-                     (memU x , λ h → np (ca ws x .fst h))
+          A = eval a (map fst ws)
+          fwd : ⟨ fst x ∈ₛ diffOp u A ⟩ → ⟨ ¬ₚ (P ws x) ⟩
+          fwd h p = diffSpec u A (fst x) .fst h .snd (ca ws x .snd p)
+          bwd : ⟨ ¬ₚ (P ws x) ⟩ → ⟨ fst x ∈ₛ diffOp u A ⟩
+          bwd np = diffSpec u A (fst x) .snd (memU x , λ h → np (ca ws x .fst h))
 
       impC : {k : ℕ} (a b : Comp k) (P Q : Vec SM k → SM → hProp ℓ)
            → ChrP a P → ChrP b Q

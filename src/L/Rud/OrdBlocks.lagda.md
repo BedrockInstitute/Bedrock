@@ -153,8 +153,6 @@ sucIter-ord (suc n) ou = suc-ord (sucIter-ord n ou)
 ```
 
 <!--en-->
-
-<!--en-->
 The extension of an ordinal is a limit: it is an ordinal, it holds its own
 base, and it is not a successor, since a successor inside the extension would
 force its predecessor into some finite iterate and close a self-membership

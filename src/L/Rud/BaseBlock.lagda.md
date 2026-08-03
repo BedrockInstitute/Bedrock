@@ -60,7 +60,8 @@ open import L.Choice.Finite {ℓ} lem
   using ( Tally; StageOrder; module PowerStep; stageOrder; maskCount; maskAt; mask-onto )
 open import L.Rud.Ops {ℓ} using ( F0; F5; F0-spec; F5-spec )
 open import L.Rud.Step {ℓ} lem A using
-  ( step; Sset; Sset-in; Sset-out; Sset-suc; Sset-trans; step-in; step-in-self; step-∈
+  ( step; Sset; Sset-in; Sset-zero; Sset-suc; Sset-trans
+  ; step-in; step-in-self; step-∈
   ; step-in-img; step-out; StepArm; arm-member; arm-self; arm-image
   ; u'; u'-in; u-self-in; u'-cases; split→u'
   ; Op16; Fof; Fof-f0; Fof-f5; f0; f5
@@ -319,13 +320,8 @@ sTally zero = record
   { size   = zero
   ; item   = λ ()
   ; inside = λ ()
-  ; onto   = λ x x∈ → Empty.rec (sset0-empty x x∈) }
-  where
-  sset0-empty : (x : S) → ⟨ x ∈ˢ Sset ∅ ⟩ → Empty.⊥
-  sset0-empty x x∈ = PT.rec Empty.isProp⊥ step0 (Sset-out ∅ x x∈)
-    where
-    step0 : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩) → Empty.⊥
-    step0 (δ , δ∈ , _) = ∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈)
+  ; onto   = λ x x∈ → Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst
+      (subst (λ w → ⟨ x ∈ˢ w ⟩) Sset-zero x∈))) }
 sTally (suc n) = record
   { size   = Tally.size st
   ; item   = Tally.item st
@@ -424,20 +420,9 @@ finSetSuc n h = ext-⊆ sub sup
             (λ { (i , q) → finSet-in (suc n) h y ∣ suc i , q ∣₁ })
             (finSet-out n (h ∘ suc) y y∈X)
 
-Sset-zero-∅ : Sset ∅ ≡ ∅
-Sset-zero-∅ = ext-⊆ sub sup
-  where
-  sub : (x : S) → ⟨ x ∈ˢ Sset ∅ ⟩ → ⟨ x ∈ˢ ∅ ⟩
-  sub x x∈ = PT.rec (snd (x ∈ˢ ∅)) step0 (Sset-out ∅ x x∈)
-    where
-    step0 : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩) → ⟨ x ∈ˢ ∅ ⟩
-    step0 (δ , δ∈ , _) = Empty.rec (∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈))
-  sup : (x : S) → ⟨ x ∈ˢ ∅ ⟩ → ⟨ x ∈ˢ Sset ∅ ⟩
-  sup x x∈ = Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈))
-
 ∅∈Ssetω : ⟨ ∅ ∈ˢ Sset IS.ω ⟩
 ∅∈Ssetω = Sset-in IS.ω ∅ ∅ (#∈ω 0)
-  (subst (λ w → ⟨ ∅ ∈ˢ step w ⟩) (sym Sset-zero-∅) (step-∈ ∅))
+  (subst (λ w → ⟨ ∅ ∈ˢ step w ⟩) (sym Sset-zero) (step-∈ ∅))
 
 op-in-J : (i : Op16) → (a b : S) → ⟨ a ∈ˢ Sset IS.ω ⟩ → ⟨ b ∈ˢ Sset IS.ω ⟩
         → ⟨ Fof i a b ∈ˢ Sset IS.ω ⟩

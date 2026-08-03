@@ -305,35 +305,33 @@ infinite chain of singletons while every member of `Sset ω` is finite.
 <!--/-->
 
 ```agda
+private
+  Frag : S → S → Type (ℓ-suc ℓ)
+  Frag ζ γ = Σ[ F ∈ S ] ( ⟨ F ∈ˢ Sset γ ⟩
+    × (((y : S) → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩ → ⟨ y ∈ˢ F ⟩)
+    × ((y : S) → ⟨ y ∈ˢ F ⟩
+      → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ Lset ζ ⟩)
+      → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩)))
+
+  LFrag : S → S → Type (ℓ-suc ℓ)
+  LFrag ζ γ = Σ[ μ ∈ S ] ( ⟨ μ ∈ˢ γ ⟩
+    × (Σ[ limμ ∈ ⟨ isLimit μ ⟩ ] ( ⟨ Lset ζ ∈ˢ Sset μ ⟩
+    × ((y : S) → ⟨ y ∈ˢ Sset μ ⟩
+      → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ Lset ζ ⟩)
+      → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩))))
+
 DefFragment : Type (ℓ-suc ℓ)
 DefFragment = (ζ γ : S) → ⟨ isLimit γ ⟩ → ⟨ ζ ∈ˢ γ ⟩ → ⟨ Lset ζ ∈ˢ Sset γ ⟩
-            → ∥ Σ[ F ∈ S ] ( ⟨ F ∈ˢ Sset γ ⟩
-              × (((y : S) → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩ → ⟨ y ∈ˢ F ⟩)
-              × ((y : S) → ⟨ y ∈ˢ F ⟩
-                → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ Lset ζ ⟩)
-                → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩))) ∥₁
+            → ∥ Frag ζ γ ∥₁
 
 LimitFragment : Type (ℓ-suc ℓ)
 LimitFragment = (ζ γ : S) → ⟨ isLimit γ ⟩ → ⟨ ζ ∈ˢ γ ⟩ → ⟨ Lset ζ ∈ˢ Sset γ ⟩
-              → ∥ Σ[ μ ∈ S ] ( ⟨ μ ∈ˢ γ ⟩
-                × (Σ[ limμ ∈ ⟨ isLimit μ ⟩ ] ( ⟨ Lset ζ ∈ˢ Sset μ ⟩
-                × ((y : S) → ⟨ y ∈ˢ Sset μ ⟩
-                  → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ Lset ζ ⟩)
-                  → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩)))) ∥₁
+              → ∥ LFrag ζ γ ∥₁
 
 fragment-from-limit : LimitFragment → DefFragment
 fragment-from-limit lf ζ γ limγ ζ∈γ L∈ = PT.map go (lf ζ γ limγ ζ∈γ L∈)
   where
-  go : Σ[ μ ∈ S ] ( ⟨ μ ∈ˢ γ ⟩
-       × (Σ[ limμ ∈ ⟨ isLimit μ ⟩ ] ( ⟨ Lset ζ ∈ˢ Sset μ ⟩
-       × ((y : S) → ⟨ y ∈ˢ Sset μ ⟩
-         → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ Lset ζ ⟩)
-         → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩))))
-     → Σ[ F ∈ S ] ( ⟨ F ∈ˢ Sset γ ⟩
-       × (((y : S) → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩ → ⟨ y ∈ˢ F ⟩)
-       × ((y : S) → ⟨ y ∈ˢ F ⟩
-         → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ Lset ζ ⟩)
-         → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩)))
+  go : LFrag ζ γ → Frag ζ γ
   go (μ , μ∈γ , limμ , L∈μ , back) = Sset μ
     , ( Sset-mem {α = γ} {β = μ} μ∈γ
       , (defs-in-limit ζ μ limμ L∈μ , back) )
@@ -346,12 +344,7 @@ module Discharge (frag : DefFragment) where
     subst (λ w → ⟨ w ∈ˢ Sset γ ⟩) (sym (Lsuc≡Def ζ))
       (PT.rec (snd (𝒟ₒ (Lset ζ) ∈ˢ Sset γ)) atFrag (frag ζ γ limγ ζ∈γ L∈))
     where
-    atFrag : Σ[ F ∈ S ] ( ⟨ F ∈ˢ Sset γ ⟩
-             × (((y : S) → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩ → ⟨ y ∈ˢ F ⟩)
-             × ((y : S) → ⟨ y ∈ˢ F ⟩
-               → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ Lset ζ ⟩)
-               → ⟨ y ∈ˢ 𝒟ₒ (Lset ζ) ⟩)))
-           → ⟨ 𝒟ₒ (Lset ζ) ∈ˢ Sset γ ⟩
+    atFrag : Frag ζ γ → ⟨ 𝒟ₒ (Lset ζ) ∈ˢ Sset γ ⟩
     atFrag (F , F∈J , into , outof) =
       PT.rec (snd (𝒟ₒ (Lset ζ) ∈ˢ Sset γ)) atStage
         (Sstage₂ γ limγ (Lset ζ) F L∈ F∈J)

@@ -289,6 +289,32 @@ module Chain (A : V ℓ) (Atrans : Transitive 𝒮ᵥ (λ x → x ∈ˢ A)) wher
   chain φ d m =
       RefA.abs-defSet φ d m
     ∙ ⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ ι fst φ (⟪ A ⟫↪ m ∷ [])
+
+  defSet⊆ : (φ : Formula ⟪ A ⟫ 1) (d : Δ₀ φ) (T : V ℓ)
+          → ((v : V ℓ) → ⟨ (v ∷ []) ⊨ φ ⟩ → ⟨ v ∈ˢ T ⟩)
+          → ⟨ defSet φ ⊆ T ⟩
+  defSet⊆ φ d T out y y∈ₛ = PT.rec (snd (y ∈ₛ T)) (λ { ((m , s) , q) → go m s q })
+    (∈∈ₛ {a = y} {b = defSet φ} .snd y∈ₛ)
+    where
+    go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat φ m ⟩ → ⟪ A ⟫↪ m ≡ y → ⟨ y ∈ₛ T ⟩
+    go m s q = subst (λ t → ⟨ t ∈ₛ T ⟩) q
+      (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = T} .fst
+        (out (⟪ A ⟫↪ m) (subst ⟨_⟩ (chain φ d m) ∣ (m , s) , refl ∣₁)))
+
+  ⊆defSet : (φ : Formula ⟪ A ⟫ 1) (d : Δ₀ φ) (T : V ℓ)
+          → ((v : V ℓ) → ⟨ v ∈ˢ T ⟩ → ⟨ (v ∷ []) ⊨ φ ⟩)
+          → (y : V ℓ) → ⟨ y ∈ˢ A ⟩ → ⟨ y ∈ˢ T ⟩ → ⟨ y ∈ₛ defSet φ ⟩
+  ⊆defSet φ d T inn y y∈A y∈T = subst (λ t → ⟨ t ∈ₛ defSet φ ⟩) q
+    (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = defSet φ} .fst
+      (subst ⟨_⟩ (sym (chain φ d m))
+        (inn (⟪ A ⟫↪ m) (subst (λ t → ⟨ t ∈ˢ T ⟩) (sym q) y∈T))))
+    where
+    fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
+    fib = ∈-asFiber {a = y} {b = A} y∈A
+    m : ⟪ A ⟫
+    m = fib .fst
+    q : ⟪ A ⟫↪ m ≡ y
+    q = fib .snd
 ```
 
 <!--en-->
@@ -397,15 +423,7 @@ module F0Desc (A a b : V ℓ) (a∈ : ⟨ a ∈ˢ A ⟩) (b∈ : ⟨ b ∈ˢ A �
   F0-defSet≡ = extensionality (DefA.defSet Φ₀) (F0 a b) (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefA.defSet Φ₀ ⊆ F0 a b ⟩
-    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ F0 a b)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = y} {b = DefA.defSet Φ₀} .snd y∈ₛ)
-      where
-      go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat Φ₀ m ⟩ → ⟪ A ⟫↪ m ≡ y
-          → ⟨ y ∈ₛ F0 a b ⟩
-      go m s q = subst (λ w → ⟨ w ∈ₛ F0 a b ⟩) q
-        (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = F0 a b} .fst
-          (F0-desc-out (⟪ A ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ₀ dΦ₀ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ₀ dΦ₀ (F0 a b) F0-desc-out
 
     sub₂ : ⟨ F0 a b ⊆ DefA.defSet Φ₀ ⟩
     sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet Φ₀)) step
@@ -482,34 +500,14 @@ module F1Desc (A a b : V ℓ) (a∈ : ⟨ a ∈ˢ A ⟩) (b∈ : ⟨ b ∈ˢ A �
   F1-defSet≡ = extensionality (DefA.defSet Φ₁) (F1 a b) (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefA.defSet Φ₁ ⊆ F1 a b ⟩
-    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ F1 a b)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = y} {b = DefA.defSet Φ₁} .snd y∈ₛ)
-      where
-      go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat Φ₁ m ⟩ → ⟪ A ⟫↪ m ≡ y
-          → ⟨ y ∈ₛ F1 a b ⟩
-      go m s q = subst (λ w → ⟨ w ∈ₛ F1 a b ⟩) q
-        (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = F1 a b} .fst
-          (F1-desc-out (⟪ A ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ₁ dΦ₁ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ₁ dΦ₁ (F1 a b) F1-desc-out
 
     sub₂ : ⟨ F1 a b ⊆ DefA.defSet Φ₁ ⟩
     sub₂ y y∈ₛ = go (F1-spec a b y .fst (∈∈ₛ {a = y} {b = F1 a b} .snd y∈ₛ))
       where
       go : ⟨ (y ∈ˢ a) ⊓ (¬ (y ∈ˢ b)) ⟩ → ⟨ y ∈ₛ DefA.defSet Φ₁ ⟩
-      go (y∈a , y∉b) = let
-          y∈A : ⟨ y ∈ˢ A ⟩
-          y∈A = Atrans {x = a} {y = y} y∈a a∈
-          fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
-          fib = ∈-asFiber {a = y} {b = A} y∈A
-          m : ⟪ A ⟫
-          m = fib .fst
-          q : ⟪ A ⟫↪ m ≡ y
-          q = fib .snd
-          in subst (λ w → ⟨ w ∈ₛ DefA.defSet Φ₁ ⟩) q
-            (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = DefA.defSet Φ₁} .fst
-              (subst ⟨_⟩ (sym (Ch.chain Φ₁ dΦ₁ m))
-                (F1-desc-in (⟪ A ⟫↪ m)
-                  (subst (λ w → ⟨ w ∈ˢ F1 a b ⟩) (sym q) (F1-spec a b y .snd (y∈a , y∉b))))))
+      go (y∈a , y∉b) = Ch.⊆defSet Φ₁ dΦ₁ (F1 a b) F1-desc-in y
+        (Atrans {x = a} {y = y} y∈a a∈) (F1-spec a b y .snd (y∈a , y∉b))
 ```
 <!--en-->
 ## F5, the union
@@ -559,15 +557,7 @@ module F5Desc (A a b : V ℓ) (a∈ : ⟨ a ∈ˢ A ⟩)
   F5-defSet≡ = extensionality (DefA.defSet Φ₅) (F5 a b) (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefA.defSet Φ₅ ⊆ F5 a b ⟩
-    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ F5 a b)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = y} {b = DefA.defSet Φ₅} .snd y∈ₛ)
-      where
-      go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat Φ₅ m ⟩ → ⟪ A ⟫↪ m ≡ y
-          → ⟨ y ∈ₛ F5 a b ⟩
-      go m s q = subst (λ w → ⟨ w ∈ₛ F5 a b ⟩) q
-        (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = F5 a b} .fst
-          (F5-desc-out (⟪ A ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ₅ dΦ₅ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ₅ dΦ₅ (F5 a b) F5-desc-out
 
     sub₂ : ⟨ F5 a b ⊆ DefA.defSet Φ₅ ⟩
     sub₂ y y∈ₛ = go (F5-spec a b y .fst (∈∈ₛ {a = y} {b = F5 a b} .snd y∈ₛ))
@@ -576,23 +566,9 @@ module F5Desc (A a b : V ℓ) (a∈ : ⟨ a ∈ˢ A ⟩)
       go h = PT.rec (snd (y ∈ₛ DefA.defSet Φ₅)) step h
         where
         step : Σ[ w ∈ V ℓ ] (⟨ w ∈ˢ a ⟩ × ⟨ y ∈ˢ w ⟩) → ⟨ y ∈ₛ DefA.defSet Φ₅ ⟩
-        step (w , (w∈a , y∈w)) = let
-          w∈A : ⟨ w ∈ˢ A ⟩
-          w∈A = Atrans {x = a} {y = w} w∈a a∈
-          y∈A : ⟨ y ∈ˢ A ⟩
-          y∈A = Atrans {x = w} {y = y} y∈w w∈A
-          fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
-          fib = ∈-asFiber {a = y} {b = A} y∈A
-          m : ⟪ A ⟫
-          m = fib .fst
-          q : ⟪ A ⟫↪ m ≡ y
-          q = fib .snd
-          in subst (λ z → ⟨ z ∈ₛ DefA.defSet Φ₅ ⟩) q
-            (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = DefA.defSet Φ₅} .fst
-              (subst ⟨_⟩ (sym (Ch.chain Φ₅ dΦ₅ m))
-                (F5-desc-in (⟪ A ⟫↪ m)
-                  (subst (λ z → ⟨ z ∈ˢ F5 a b ⟩) (sym q)
-                    (F5-spec a b y .snd ∣ w , (w∈a , y∈w) ∣₁)))))
+        step (w , (w∈a , y∈w)) = Ch.⊆defSet Φ₅ dΦ₅ (F5 a b) F5-desc-in y
+          (Atrans {x = w} {y = y} y∈w (Atrans {x = a} {y = w} w∈a a∈))
+          (F5-spec a b y .snd ∣ w , (w∈a , y∈w) ∣₁)
 ```
 <!--en-->
 ## F9, the ordered pair
@@ -639,15 +615,7 @@ module F9Desc (A a b : V ℓ) (c₁∈ : ⟨ ⁅ a ⁆s ∈ˢ A ⟩) (c₂∈ : 
   F9-defSet≡ = extensionality (DefA.defSet Φ₉) (F9 a b) (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefA.defSet Φ₉ ⊆ F9 a b ⟩
-    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ F9 a b)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = y} {b = DefA.defSet Φ₉} .snd y∈ₛ)
-      where
-      go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat Φ₉ m ⟩ → ⟪ A ⟫↪ m ≡ y
-          → ⟨ y ∈ₛ F9 a b ⟩
-      go m s q = subst (λ w → ⟨ w ∈ₛ F9 a b ⟩) q
-        (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = F9 a b} .fst
-          (F9-desc-out (⟪ A ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ₉ dΦ₉ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ₉ dΦ₉ (F9 a b) F9-desc-out
 
     sub₂ : ⟨ F9 a b ⊆ DefA.defSet Φ₉ ⟩
     sub₂ y y∈ₛ = go (F9-spec a b y .fst (∈∈ₛ {a = y} {b = F9 a b} .snd y∈ₛ))
@@ -829,24 +797,13 @@ module F6Desc (A a b : V ℓ) (a∈ : ⟨ a ∈ˢ A ⟩)
     step : Σ[ u ∈ V ℓ ] Σ[ w ∈ V ℓ ]
              (⟨ pr u w ∈ˢ a ⟩ × ⟨ y ≡ₕ u ⟩)
          → ⟨ y ∈ₛ DefA.defSet Φ₆ ⟩
-    step (u , w , pruw∈a , y≡) = let
-        u∈A : ⟨ u ∈ˢ A ⟩
-        u∈A = ⋃⋃-in-A A a a∈ Atrans u (prL-in-⋃⋃ a u w pruw∈a)
-        y∈A : ⟨ y ∈ˢ A ⟩
-        y∈A = subst (λ z → ⟨ z ∈ˢ A ⟩) (sym y≡) u∈A
-        fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
-        fib = ∈-asFiber {a = y} {b = A} y∈A
-        m : ⟪ A ⟫
-        m = fib .fst
-        q : ⟪ A ⟫↪ m ≡ y
-        q = fib .snd
-        in subst (λ z → ⟨ z ∈ₛ DefA.defSet Φ₆ ⟩) q
-          (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = DefA.defSet Φ₆} .fst
-            (subst ⟨_⟩ (sym (Ch.chain Φ₆ dΦ₆ m))
-              (F6-sat-in (⟪ A ⟫↪ m)
-                (F6-mem-DRHS (⟪ A ⟫↪ m)
-                  (subst (λ z → ⟨ z ∈ˢ F6 a b ⟩) (sym q)
-                    (∈∈ₛ {a = y} {b = F6 a b} .snd y∈ₛ))))))
+    step (u , w , pruw∈a , y≡) = Ch.⊆defSet Φ₆ dΦ₆ (F6 a b) inn y
+      (subst (λ z → ⟨ z ∈ˢ A ⟩) (sym y≡)
+        (⋃⋃-in-A A a a∈ Atrans u (prL-in-⋃⋃ a u w pruw∈a)))
+      (∈∈ₛ {a = y} {b = F6 a b} .snd y∈ₛ)
+      where
+      inn : (v : V ℓ) → ⟨ v ∈ˢ F6 a b ⟩ → ⟨ (v ∷ []) ⊨ Φ₆ ⟩
+      inn v h = F6-sat-in v (F6-mem-DRHS v h)
 ```
 <!--en-->
 ## F7, the membership relation
@@ -1217,35 +1174,16 @@ module F10Desc (A x y : V ℓ) (x∈ : ⟨ x ∈ˢ A ⟩) (y∈ : ⟨ y ∈ˢ A 
   F10-defSet≡ = extensionality (DefA.defSet Φ₁₀) (F10 x y) (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefA.defSet Φ₁₀ ⊆ F10 x y ⟩
-    sub₁ y' y'∈ₛ = PT.rec (snd (y' ∈ₛ F10 x y)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = y'} {b = DefA.defSet Φ₁₀} .snd y'∈ₛ)
-      where
-      go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat Φ₁₀ m ⟩ → ⟪ A ⟫↪ m ≡ y'
-          → ⟨ y' ∈ₛ F10 x y ⟩
-      go m s q = subst (λ w → ⟨ w ∈ₛ F10 x y ⟩) q
-        (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = F10 x y} .fst
-          (F10-desc-out (⟪ A ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ₁₀ dΦ₁₀ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ₁₀ dΦ₁₀ (F10 x y) F10-desc-out
     sub₂ : ⟨ F10 x y ⊆ DefA.defSet Φ₁₀ ⟩
     sub₂ y' y'∈ₛ = go (∈∈ₛ {a = y'} {b = F10 x y} .snd y'∈ₛ)
       where
       go : ⟨ y' ∈ˢ F10 x y ⟩ → ⟨ y' ∈ₛ DefA.defSet Φ₁₀ ⟩
-      go h = let
-          pr∈x : ⟨ pr y y' ∈ˢ x ⟩
-          pr∈x = subst ⟨_⟩ (F10-spec x y y') h
-          y'∈A : ⟨ y' ∈ˢ A ⟩
-          y'∈A = ⋃⋃-in-A A x x∈ Atrans y' (prR-in-⋃⋃ x y y' pr∈x)
-          fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y')
-          fib = ∈-asFiber {a = y'} {b = A} y'∈A
-          m : ⟪ A ⟫
-          m = fib .fst
-          q : ⟪ A ⟫↪ m ≡ y'
-          q = fib .snd
-          in subst (λ z → ⟨ z ∈ₛ DefA.defSet Φ₁₀ ⟩) q
-            (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = DefA.defSet Φ₁₀} .fst
-              (subst ⟨_⟩ (sym (Ch.chain Φ₁₀ dΦ₁₀ m))
-                (F10-desc-in (⟪ A ⟫↪ m)
-                  (subst (λ z → ⟨ z ∈ˢ F10 x y ⟩) (sym q) h))))
+      go h = Ch.⊆defSet Φ₁₀ dΦ₁₀ (F10 x y) F10-desc-in y'
+        (⋃⋃-in-A A x x∈ Atrans y' (prR-in-⋃⋃ x y y' pr∈x)) h
+        where
+        pr∈x : ⟨ pr y y' ∈ˢ x ⟩
+        pr∈x = subst ⟨_⟩ (F10-spec x y y') h
 ```
 
 <!--en-->
@@ -1394,31 +1332,11 @@ module F8Desc (A x y : V ℓ) (x∈ : ⟨ x ∈ˢ A ⟩) (y∈ : ⟨ y ∈ˢ A �
   F8-defSet≡ cl = extensionality (DefA.defSet Φ₈) (F8 x y) (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefA.defSet Φ₈ ⊆ F8 x y ⟩
-    sub₁ w w∈ₛ = PT.rec (snd (w ∈ₛ F8 x y)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = w} {b = DefA.defSet Φ₈} .snd w∈ₛ)
-      where
-      go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat Φ₈ m ⟩ → ⟪ A ⟫↪ m ≡ w
-          → ⟨ w ∈ₛ F8 x y ⟩
-      go m s q = subst (λ t → ⟨ t ∈ₛ F8 x y ⟩) q
-        (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = F8 x y} .fst
-          (F8-desc-out (⟪ A ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ₈ dΦ₈ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ₈ dΦ₈ (F8 x y) F8-desc-out
     sub₂ : ⟨ F8 x y ⊆ DefA.defSet Φ₈ ⟩
-    sub₂ w w∈ₛ = let
-        w∈A : ⟨ w ∈ˢ A ⟩
-        w∈A = ∈∈ₛ {a = w} {b = A} .snd (cl w w∈ₛ)
-        fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ w)
-        fib = ∈-asFiber {a = w} {b = A} w∈A
-        m : ⟪ A ⟫
-        m = fib .fst
-        q : ⟪ A ⟫↪ m ≡ w
-        q = fib .snd
-        in subst (λ t → ⟨ t ∈ₛ DefA.defSet Φ₈ ⟩) q
-          (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = DefA.defSet Φ₈} .fst
-            (subst ⟨_⟩ (sym (Ch.chain Φ₈ dΦ₈ m))
-              (F8-desc-in (⟪ A ⟫↪ m)
-                (subst (λ t → ⟨ t ∈ˢ F8 x y ⟩) (sym q)
-                  (∈∈ₛ {a = w} {b = F8 x y} .snd w∈ₛ)))))
+    sub₂ w w∈ₛ = Ch.⊆defSet Φ₈ dΦ₈ (F8 x y) F8-desc-in w
+      (∈∈ₛ {a = w} {b = A} .snd (cl w w∈ₛ))
+      (∈∈ₛ {a = w} {b = F8 x y} .snd w∈ₛ)
 ```
 
 <!--en-->
@@ -1469,15 +1387,7 @@ module PairValFrame (A : V ℓ) (val m₁ m₂ : V ℓ)
   defSet≡ = extensionality (DefA.defSet Φ) val (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefA.defSet Φ ⊆ val ⟩
-    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ val)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = y} {b = DefA.defSet Φ} .snd y∈ₛ)
-      where
-      go : (m : ⟪ A ⟫) → ⟨ DefA.smallSat Φ m ⟩ → ⟪ A ⟫↪ m ≡ y
-          → ⟨ y ∈ₛ val ⟩
-      go m s q = subst (λ t → ⟨ t ∈ₛ val ⟩) q
-        (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = val} .fst
-          (desc-out (⟪ A ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ dΦ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ dΦ (val) desc-out
     sub₂ : ⟨ val ⊆ DefA.defSet Φ ⟩
     sub₂ y y∈ₛ = go (F0-spec m₁ m₂ y .fst
       (subst (λ t → ⟨ y ∈ˢ t ⟩) val≡ (∈∈ₛ {a = y} {b = val} .snd y∈ₛ)))
@@ -1486,40 +1396,16 @@ module PairValFrame (A : V ℓ) (val m₁ m₂ : V ℓ)
       go h = PT.rec (snd (y ∈ₛ DefA.defSet Φ)) step h
         where
         step : ⟨ y ≡ₕ m₁ ⟩ ⊎ ⟨ y ≡ₕ m₂ ⟩ → ⟨ y ∈ₛ DefA.defSet Φ ⟩
-        step (inl y≡m₁) = let
-            y∈A : ⟨ y ∈ˢ A ⟩
-            y∈A = subst (λ t → ⟨ t ∈ˢ A ⟩) (sym y≡m₁) m₁∈
-            fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
-            fib = ∈-asFiber {a = y} {b = A} y∈A
-            m : ⟪ A ⟫
-            m = fib .fst
-            q : ⟪ A ⟫↪ m ≡ y
-            q = fib .snd
-            in subst (λ t → ⟨ t ∈ₛ DefA.defSet Φ ⟩) q
-              (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = DefA.defSet Φ} .fst
-                (subst ⟨_⟩ (sym (Ch.chain Φ dΦ m))
-                  (desc-in (⟪ A ⟫↪ m)
-                    (subst (λ t → ⟨ t ∈ˢ val ⟩) (sym q)
-                      (subst (λ t → ⟨ t ∈ˢ val ⟩) (sym y≡m₁)
-                        (subst (λ t → ⟨ m₁ ∈ˢ t ⟩) (sym val≡)
-                          (F0-spec m₁ m₂ m₁ .snd ∣ inl refl ∣₁)))))))
-        step (inr y≡m₂) = let
-            y∈A : ⟨ y ∈ˢ A ⟩
-            y∈A = subst (λ t → ⟨ t ∈ˢ A ⟩) (sym y≡m₂) m₂∈
-            fib : Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
-            fib = ∈-asFiber {a = y} {b = A} y∈A
-            m : ⟪ A ⟫
-            m = fib .fst
-            q : ⟪ A ⟫↪ m ≡ y
-            q = fib .snd
-            in subst (λ t → ⟨ t ∈ₛ DefA.defSet Φ ⟩) q
-              (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = DefA.defSet Φ} .fst
-                (subst ⟨_⟩ (sym (Ch.chain Φ dΦ m))
-                  (desc-in (⟪ A ⟫↪ m)
-                    (subst (λ t → ⟨ t ∈ˢ val ⟩) (sym q)
-                      (subst (λ t → ⟨ t ∈ˢ val ⟩) (sym y≡m₂)
-                        (subst (λ t → ⟨ m₂ ∈ˢ t ⟩) (sym val≡)
-                          (F0-spec m₁ m₂ m₂ .snd ∣ inr refl ∣₁)))))))
+        step (inl y≡m₁) = Ch.⊆defSet Φ dΦ val desc-in y
+          (subst (λ t → ⟨ t ∈ˢ A ⟩) (sym y≡m₁) m₁∈)
+          (subst (λ t → ⟨ t ∈ˢ val ⟩) (sym y≡m₁)
+            (subst (λ t → ⟨ m₁ ∈ˢ t ⟩) (sym val≡)
+              (F0-spec m₁ m₂ m₁ .snd ∣ inl refl ∣₁)))
+        step (inr y≡m₂) = Ch.⊆defSet Φ dΦ val desc-in y
+          (subst (λ t → ⟨ t ∈ˢ A ⟩) (sym y≡m₂) m₂∈)
+          (subst (λ t → ⟨ t ∈ˢ val ⟩) (sym y≡m₂)
+            (subst (λ t → ⟨ m₂ ∈ˢ t ⟩) (sym val≡)
+              (F0-spec m₁ m₂ m₂ .snd ∣ inr refl ∣₁)))
 ```
 
 <!--en-->
@@ -1696,34 +1582,14 @@ module F15Desc (U P x : V ℓ) (P∈ : ⟨ P ∈ˢ U ⟩) (x∈ : ⟨ x ∈ˢ U 
   F15-defSet≡ = extensionality (DefU.defSet Φ₁₅) (F15P.F15 x) (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefU.defSet Φ₁₅ ⊆ F15P.F15 x ⟩
-    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ F15P.F15 x)) (λ { ((m , s) , q) → go m s q })
-      (∈∈ₛ {a = y} {b = DefU.defSet Φ₁₅} .snd y∈ₛ)
-      where
-      go : (m : ⟪ U ⟫) → ⟨ DefU.smallSat Φ₁₅ m ⟩ → ⟪ U ⟫↪ m ≡ y
-          → ⟨ y ∈ₛ F15P.F15 x ⟩
-      go m s q = subst (λ t → ⟨ t ∈ₛ F15P.F15 x ⟩) q
-        (∈∈ₛ {a = ⟪ U ⟫↪ m} {b = F15P.F15 x} .fst
-          (F15-desc-out (⟪ U ⟫↪ m)
-            (subst ⟨_⟩ (Ch.chain Φ₁₅ dΦ₁₅ m) ∣ (m , s) , refl ∣₁)))
+    sub₁ = Ch.defSet⊆ Φ₁₅ dΦ₁₅ (F15P.F15 x) F15-desc-out
     sub₂ : ⟨ F15P.F15 x ⊆ DefU.defSet Φ₁₅ ⟩
-    sub₂ y y∈ₛ = let
-        y∈P : ⟨ y ∈ˢ P ⟩
-        y∈P = subst ⟨_⟩ (F15P.F15-spec x y)
-          (∈∈ₛ {a = y} {b = F15P.F15 x} .snd y∈ₛ) .snd
-        y∈U : ⟨ y ∈ˢ U ⟩
-        y∈U = Atrans {x = P} {y = y} y∈P P∈
-        fib : Σ[ m ∈ ⟪ U ⟫ ] (⟪ U ⟫↪ m ≡ y)
-        fib = ∈-asFiber {a = y} {b = U} y∈U
-        m : ⟪ U ⟫
-        m = fib .fst
-        q : ⟪ U ⟫↪ m ≡ y
-        q = fib .snd
-        in subst (λ t → ⟨ t ∈ₛ DefU.defSet Φ₁₅ ⟩) q
-          (∈∈ₛ {a = ⟪ U ⟫↪ m} {b = DefU.defSet Φ₁₅} .fst
-            (subst ⟨_⟩ (sym (Ch.chain Φ₁₅ dΦ₁₅ m))
-              (F15-desc-in (⟪ U ⟫↪ m)
-                (subst (λ t → ⟨ t ∈ˢ F15P.F15 x ⟩) (sym q)
-                  (∈∈ₛ {a = y} {b = F15P.F15 x} .snd y∈ₛ)))))
+    sub₂ y y∈ₛ = Ch.⊆defSet Φ₁₅ dΦ₁₅ (F15P.F15 x) F15-desc-in y
+      (Atrans {x = P} {y = y} y∈P P∈) (∈∈ₛ {a = y} {b = F15P.F15 x} .snd y∈ₛ)
+      where
+      y∈P : ⟨ y ∈ˢ P ⟩
+      y∈P = subst ⟨_⟩ (F15P.F15-spec x y)
+        (∈∈ₛ {a = y} {b = F15P.F15 x} .snd y∈ₛ) .snd
 ```
 
 <!--en-->
