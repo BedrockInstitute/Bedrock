@@ -1178,6 +1178,12 @@ measurement. Wired chapter by chapter as the wave batches land.
   into the Def tower, the level equality at limits as the one named
   hypothesis, and the conditional bridge between the two constructible
   classes with the choice corollary.
+- `L.Rud.DefInJ`{.Agda}: one Def stage up stays a rud member, proved over the
+  fragment hypothesis, with the successor collapse and the separation
+  identity carried outright.
+- `L.Rud.StepInL`{.Agda}: one rud step as a definable set over a constructible
+  stage: the inner-world reading frame, the sixteen membership formulas, and
+  the values reads at the honest offsets.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1198,6 +1204,8 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
 - `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、作为唯一具名假设的极限层等式、两个可构成类之间的条件桥及选择推论。
+- `L.Rud.DefInJ`{.Agda}：上升一个 Def 阶段仍为初步函数成员，证于片段假设之上，后继塌缩与分离恒等式直接到手。
+- `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
 <!--/-->
 
 ```agda
@@ -1216,4 +1224,6 @@ import L.Rud.ClassJ
 import L.Rud.OrdBlocks
 import L.Rud.SatSets
 import L.Rud.Bridge
+import L.Rud.DefInJ
+import L.Rud.StepInL
 ```
