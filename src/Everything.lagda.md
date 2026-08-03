@@ -1165,6 +1165,12 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.LevelDesc`{.Agda}: the level descriptions discharged in full at rud
   closed levels, where every description is Delta-0; the tower lift; the
   improved switch corollaries.
+- `L.Rud.ClassJ`{.Agda}: the rud-side constructible class isJ with its
+  propositionality and transitivity, and the restricted structure beside
+  the Def-side one.
+- `L.Rud.OrdBlocks`{.Agda}: the ordinal block map b with its laws: membership
+  monotonicity for free from the single-equation form, blocks are limits,
+  finite steps absorbed.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1181,6 +1187,8 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Switch`{.Agda}：切换定理：抽象基在十六运算处清偿，概括形态双向到手，极限推论在位；像原理与层级描述作为具名模块假设。
 - `L.Rud.Graphs`{.Agda}：像原理的元素关系路线：十子句中的六个、恒等图与联接，以及像假设到元素关系原理的逐字归约。
 - `L.Rud.LevelDesc`{.Agda}：层级描述在 rud 闭层全数清偿，彼处每个描述皆为 Δ₀；塔提升；改进的切换推论。
+- `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
+- `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
 <!--/-->
 
 ```agda
@@ -1195,4 +1203,6 @@ import L.Rud.Order
 import L.Rud.Switch
 import L.Rud.Graphs
 import L.Rud.LevelDesc
+import L.Rud.ClassJ
+import L.Rud.OrdBlocks
 ```
