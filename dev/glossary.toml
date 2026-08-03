@@ -15,6 +15,37 @@
 
 [[term]]
 category = "Set theory"
+en = "producer"
+zh = "生产者"
+ja = "生成者"
+avoid = ["zh:生成者"]
+notes = "owner-ruled 2026-08-03; the book's name for SZ p. 11's nameless minimal triple (i, u, v); ja tentative pending a literature check"
+
+[[term]]
+category = "Set theory"
+en = "stage-bounded"
+zh = "循阶的"
+ja = "段階有界"
+avoid = ["zh:扎根的", "grounded"]
+notes = "owner-ruled 2026-08-03; the producer-tree argument bound; renamed from grounded to avoid both the geology ground-family and the logic tradition where grounded means well-founded; ja tentative"
+
+[[term]]
+category = "Set theory"
+en = "coherence"
+zh = "相容"
+ja = "整合"
+avoid = ["zh:融贯"]
+notes = "owner-ruled 2026-08-03; the restriction-compatibility of the level orders; ja tentative"
+
+[[term]]
+category = "Set theory"
+en = "key"
+zh = "键"
+ja = "鍵"
+notes = "owner-ruled 2026-08-03; the least-producer key the order pulls back along"
+
+[[term]]
+category = "Set theory"
 en = "rudimentary function"
 zh = "初步函数"
 ja = "初歩的関数"

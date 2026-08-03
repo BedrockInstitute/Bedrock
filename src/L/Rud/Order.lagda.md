@@ -7,7 +7,8 @@ the classical one (Schindler-Zeman, p. 11). A set that appears earlier precedes
 a set that appears later; two sets that appear at the same stage are compared by
 the *producer* that first makes them, and producers are compared
 lexicographically, by the stage, then by the operation index, then by the two
-arguments in the order already built below.
+arguments in the order already built below. The classical text leaves the
+minimal triple nameless; producer is this book's name for it.
 
 The three-armed membership surface of the concrete step gives the producers
 their shape. A member of `step u` is a member of `u`, or `u` itself, or a value
@@ -39,13 +40,13 @@ every level is well-orderable; at a limit index that is the same statement about
 follows by taking least elements, and no satisfaction, no formula, and no
 internality is asked for anywhere on the path.
 <!--zh-->
-S-塔的每一层都可良序化，且这个序不是逐层发明出来的：它是同一个比较，在所有层上一并读取。配方是经典的 (Schindler-Zeman，p. 11)。较早出现的集合先于较晚出现的集合；同阶段出现的两个集合，按最先造出它们的**生成者**比较，而生成者按字典序比较：先比阶段，再比运算索引，最后按下方已建好的序比两个参数。
+S-塔的每一层都可良序化，且这个序不是逐层发明出来的：它是同一个比较，在所有层上一并读取。配方是经典的 (Schindler-Zeman，p. 11)。较早出现的集合先于较晚出现的集合；同阶段出现的两个集合，按最先造出它们的**生产者**比较，而生产者按字典序比较：先比阶段，再比运算索引，最后按下方已建好的序比两个参数。经典文本未给这个最小三元组命名，生产者是本书起的名。
 
-具体 step 的三臂隶属表面给了生成者以形状。`step u` 的成员或是 `u` 的成员、或是 `u` 自身、或是十六个基底初步函数之一的值 `F_i(a, b)`，其两个参数都在 `u ∪ {u}` 中。第一臂根本不是生成者：那样的集合早已在场，它自己的生成者住在更早的阶段。另两臂才是，且只有像臂携带三元组。于是生成者就是一个阶段，连同自身标记、或一个运算索引加两个参数生成者，这是一棵朴素的树。本章一次性在这些树上建起序，而某一层的序则是树序沿「取此集合的最小生成者」的拉回。
+具体 step 的三臂隶属表面给了生产者以形状。`step u` 的成员或是 `u` 的成员、或是 `u` 自身、或是十六个基底初步函数之一的值 `F_i(a, b)`，其两个参数都在 `u ∪ {u}` 中。第一臂根本不是生产者：那样的集合早已在场，它自己的生产者住在更早的阶段。另两臂才是，且只有像臂携带三元组。于是生产者就是一个阶段，连同自身标记、或一个运算索引加两个参数生产者，这是一棵朴素的树。本章一次性在这些树上建起序，而某一层的序则是树序沿「取此集合的最小生产者」的拉回。
 
 从固定的树上读出序、而非在每个阶段重建它，白白换来了相容引理。经典文献需要它却默不作声地倚仗它：较后层的序限制到较早层上，必须就是那个较早的序，否则极限处所取的并压根不是一个关系。此处一个集合的键不提及它被读取的那一层，故该引理是一行推论，而非一场归纳。
 
-排中律恰好花在两处，且两处都是搜索、不是比较：选取一个集合的最小生成者，以及选取某层的非空部分的极小元。其余一切，即树、树上的序、它的三歧与传递性与良基性，以及把生成者解码回层内，都是构造性的。
+排中律恰好花在两处，且两处都是搜索、不是比较：选取一个集合的最小生产者，以及选取某层的非空部分的极小元。其余一切，即树、树上的序、它的三歧与传递性与良基性，以及把生产者解码回层内，都是构造性的。
 
 终局才是本章的要点。每一层都带一个良序，故每一层可良序化；在极限索引处这就是关于 `J` 的同一句话。由某层的一个良序，取极小元即得该层任一集合上的选择函数，而这条路上处处不问满足、不问公式、不问内部性。
 <!--/-->
@@ -93,7 +94,7 @@ open hPropStructure 𝒮ᵥ
 ```
 
 <!--en-->
-## Two ground orders
+## Two base orders
 
 The producer tree is indexed by two small pieces of data, and each needs an
 order before the tree can have one. The stages are ordinals, ordered by
@@ -101,9 +102,9 @@ membership, and an ordinal is carried with its own proof of ordinality, which is
 a proposition; so the pair type is a set, and its paths are the paths of the
 underlying sets.
 <!--zh-->
-## 两个地面序
+## 两个基座序
 
-生成者树以两小块数据为索引，二者都要先有序，树才谈得上有序。阶段是序数，按隶属排序，而序数随身携带自己的序数性证明，那是一个命题；故这个对类型是集合，其道路即底层集合的道路。
+生产者树以两小块数据为索引，二者都要先有序，树才谈得上有序。阶段是序数，按隶属排序，而序数随身携带自己的序数性证明，那是一个命题；故这个对类型是集合，其道路即底层集合的道路。
 <!--/-->
 
 ```agda
@@ -124,9 +125,9 @@ ordTrans δ γ ε h h' = ε .snd .fst {x = γ .fst} {y = δ .fst} h h'
 <!--en-->
 Trichotomy for ordinals is the comparison chapter's classical theorem, repackaged
 as the bundle's three-way data, and accessibility is the hierarchy's own
-regularity read at the pair type. That gives the first ground order.
+regularity read at the pair type. That gives the first base order.
 <!--zh-->
-序数的三歧是比较一章的经典定理，改装成束所要的三路数据，而可及性就是层级自身的正则性在对类型上的读法。这就给出第一个地面序。
+序数的三歧是比较一章的经典定理，改装成束所要的三路数据，而可及性就是层级自身的正则性在对类型上的读法。这就给出第一个基座序。
 <!--/-->
 
 ```agda
@@ -160,11 +161,11 @@ private
 ```
 
 <!--en-->
-The second ground order is the operation index. Sixteen constructors are
+The second base order is the operation index. Sixteen constructors are
 numbered, the numbering has a left inverse, and the numbers are already ordered;
 so the order is the pull-back of the order on the numbers along the numbering.
 <!--zh-->
-第二个地面序是运算索引。十六个构造子被编号，编号有左逆，而数已经有序；于是这个序就是数上的序沿编号的拉回。
+第二个基座序是运算索引。十六个构造子被编号，编号有左逆，而数已经有序；于是这个序就是数上的序沿编号的拉回。
 <!--/-->
 
 ```agda
@@ -241,9 +242,9 @@ producers, which produces the value of that operation. The membership arm of the
 step surface leaves no trace here, because a set that is merely carried up from
 an earlier level is produced at that earlier level, by its own producer.
 <!--zh-->
-## 生成者
+## 生产者
 
-一个生成者是一个阶段，连同两个产出臂之一：自身标记，产出该层自身；或者一个运算索引加两个参数生成者，产出该运算的值。step 表面的成员臂在此不留痕迹，因为仅仅从更早的层被带上来的集合，是在那个更早的层由它自己的生成者产出的。
+一个生产者是一个阶段，连同两个产出臂之一：自身标记，产出该层自身；或者一个运算索引加两个参数生产者，产出该运算的值。step 表面的成员臂在此不留痕迹，因为仅仅从更早的层被带上来的集合，是在那个更早的层由它自己的生产者产出的。
 <!--/-->
 
 ```agda
@@ -264,11 +265,11 @@ prod-value (prod-image δ i p q) = Fof i (prod-value p) (prod-value q)
 Not every tree describes a production. The arguments of an image at stage `δ`
 come from `S_δ ∪ {S_δ}`, so each of them is either produced strictly before `δ`
 or is the self producer of `δ` itself. A tree whose every image node satisfies
-that bound is *grounded*, and grounding is a proposition, since the two
+that bound is *stage-bounded*, and stage-boundedness is a proposition, since the two
 alternatives exclude each other: a stage cannot be both a member of `δ` and
 `δ`.
 <!--zh-->
-并非每棵树都描述一次产出。阶段 `δ` 处一个像的参数来自 `S_δ ∪ {S_δ}`，故它们各自或是严格早于 `δ` 被产出、或就是 `δ` 自身的自身生成者。每个像节点都满足这条界的树称为**扎根的**，而扎根性是一个命题，因为两个可能互斥：一个阶段不能既是 `δ` 的成员又是 `δ`。
+并非每棵树都描述一次产出。阶段 `δ` 处一个像的参数来自 `S_δ ∪ {S_δ}`，故它们各自或是严格早于 `δ` 被产出、或就是 `δ` 自身的自身生产者。每个像节点都满足这条界的树称为**循阶的**，而循阶性是一个命题，因为两个可能互斥：一个阶段不能既是 `δ` 的成员又是 `δ`。
 <!--/-->
 
 ```agda
@@ -279,9 +280,9 @@ SelfAt δ (prod-image _ _ _ _) = ⊥* {ℓ-suc ℓ}
 Earlier : Ord → Producer → Type (ℓ-suc ℓ)
 Earlier δ p = ⟨ prod-stage p .fst ∈ˢ δ .fst ⟩ ⊎ SelfAt δ p
 
-Grounded : Producer → Type (ℓ-suc ℓ)
-Grounded (prod-self _) = Unit* {ℓ-suc ℓ}
-Grounded (prod-image δ _ p q) = (Grounded p × Earlier δ p) × (Grounded q × Earlier δ q)
+StageBounded : Producer → Type (ℓ-suc ℓ)
+StageBounded (prod-self _) = Unit* {ℓ-suc ℓ}
+StageBounded (prod-image δ _ p q) = (StageBounded p × Earlier δ p) × (StageBounded q × Earlier δ q)
 
 isPropSelfAt : (δ : Ord) (p : Producer) → isProp (SelfAt δ p)
 isPropSelfAt δ (prod-self γ) = isSetOrd γ δ
@@ -296,11 +297,11 @@ isPropEarlier δ p =
     ∈-irrefl (δ .fst) (subst (λ z → ⟨ z .fst ∈ˢ δ .fst ⟩) e h)
   disj (prod-image _ _ _ _) h e = Empty.rec* e
 
-isPropGrounded : (p : Producer) → isProp (Grounded p)
-isPropGrounded (prod-self _) = isPropUnit*
-isPropGrounded (prod-image δ _ p q) =
-  isProp× (isProp× (isPropGrounded p) (isPropEarlier δ p))
-          (isProp× (isPropGrounded q) (isPropEarlier δ q))
+isPropStageBounded : (p : Producer) → isProp (StageBounded p)
+isPropStageBounded (prod-self _) = isPropUnit*
+isPropStageBounded (prod-image δ _ p q) =
+  isProp× (isProp× (isPropStageBounded p) (isPropEarlier δ p))
+          (isProp× (isPropStageBounded q) (isPropEarlier δ q))
 ```
 
 <!--en-->
@@ -315,7 +316,7 @@ the comparison is a definition and not a construction.
 <!--zh-->
 ## 比较
 
-`≺` 读作「先于」。两个生成者先比阶段。在公共阶段上，自身生成者先于每个像，这是该序对 step 自身形状的读法：层是 step 添加的第一件新东西。公共阶段上的两个像先比运算索引，再比第一参数，最后比第二参数。递归在两个自变量上都是结构性的，故这个比较是一个定义，而非一次构造。
+`≺` 读作「先于」。两个生产者先比阶段。在公共阶段上，自身生产者先于每个像，这是该序对 step 自身形状的读法：层是 step 添加的第一件新东西。公共阶段上的两个像先比运算索引，再比第一参数，最后比第二参数。递归在两个自变量上都是结构性的，故这个比较是一个定义，而非一次构造。
 <!--/-->
 
 ```agda
@@ -338,7 +339,7 @@ reading is what makes the well-foundedness argument below able to work one stage
 at a time; the second is what makes the order's first clause say what the
 classical construction says.
 <!--zh-->
-无论这个比较还做了什么，它从不抬高阶段：较小生成者的阶段是较大者阶段的成员，或与之相等；反过来，严格更小的阶段已经判定了比较。第一条读式使下方的良基性论证得以一次只处理一个阶段；第二条则使该序的第一条子句说出经典构造所说的话。
+无论这个比较还做了什么，它从不抬高阶段：较小生产者的阶段是较大者阶段的成员，或与之相等；反过来，严格更小的阶段已经判定了比较。第一条读式使下方的良基性论证得以一次只处理一个阶段；第二条则使该序的第一条子句说出经典构造所说的话。
 <!--/-->
 
 ```agda
@@ -420,7 +421,7 @@ comparison against a self producer carries nothing but the stage; the eighth is
 the lexicographic stack again, where each layer either wins outright or hands
 its equality to the layer below.
 <!--zh-->
-传递性是唯一一条要同时看三棵树的定律。八种形状组合中的七种坍缩为阶段算术，因为与自身生成者的比较除阶段外一无所载；第八种又是那道字典栈，其中每层或径直取胜、或把自己的相等交给下一层。
+传递性是唯一一条要同时看三棵树的定律。八种形状组合中的七种坍缩为阶段算术，因为与自身生产者的比较除阶段外一无所载；第八种又是那道字典栈，其中每层或径直取胜、或把自己的相等交给下一层。
 <!--/-->
 
 ```agda
@@ -479,23 +480,23 @@ prod-trans (prod-image δ i p q) (prod-image γ j r s) (prod-image ε k t v) h h
 ```
 
 <!--en-->
-## Grounded producers, and the descent
+## StageBounded producers, and the descent
 
-The order lives on grounded producers, not on all trees. It has to: an image
+The order lives on stage-bounded producers, not on all trees. It has to: an image
 node whose arguments may come from anywhere is comparable to images whose
 arguments are arbitrarily complicated, and a lexicographic order with an
-unbounded innermost slot has no well-foundedness to give. Grounding is exactly
+unbounded innermost slot has no well-foundedness to give. Stage-boundedness is exactly
 the bound the step supplies, and it is what turns the descent into an induction
 on the stage.
 <!--zh-->
-## 扎根的生成者，与下降
+## 循阶的生产者，与下降
 
-序住在扎根的生成者上，而非住在所有树上。它不得不如此：一个参数可以来自任何地方的像节点，要与参数任意复杂的诸像相比较，而最内层槽位无界的字典序给不出任何良基性。扎根性恰是 step 供给的那条界，也正是它把下降变成一场对阶段的归纳。
+序住在循阶的生产者上，而非住在所有树上。它不得不如此：一个参数可以来自任何地方的像节点，要与参数任意复杂的诸像相比较，而最内层槽位无界的字典序给不出任何良基性。循阶性恰是 step 供给的那条界，也正是它把下降变成一场对阶段的归纳。
 <!--/-->
 
 ```agda
 Trace : Type (ℓ-suc ℓ)
-Trace = Σ[ p ∈ Producer ] Grounded p
+Trace = Σ[ p ∈ Producer ] StageBounded p
 
 infix 4 _⊰_
 
@@ -503,7 +504,7 @@ _⊰_ : Trace → Trace → Type (ℓ-suc ℓ)
 t ⊰ s = t .fst ≺ s .fst
 
 trace-path : (t s : Trace) → t .fst ≡ s .fst → t ≡ s
-trace-path t s = Σ≡Prop isPropGrounded
+trace-path t s = Σ≡Prop isPropStageBounded
 
 accMove : (a b : Trace) → a .fst ≡ b .fst → Acc _⊰_ b → Acc _⊰_ a
 accMove a b e = subst (Acc _⊰_) (sym (trace-path a b e))
@@ -519,13 +520,13 @@ traceTri t s = go (prod-tri (t .fst) (s .fst))
 ```
 
 <!--en-->
-The induction hypothesis of the descent is that every grounded producer of a
+The induction hypothesis of the descent is that every stage-bounded producer of a
 stage strictly below `γ` is accessible. Under it, the self producer of `γ` is
 accessible outright, because everything it dominates lies strictly below `γ`;
 and an argument at `γ` is accessible either by the hypothesis or by being that
-self producer, which is the only thing grounding allows at the current stage.
+self producer, which is the only thing stage-boundedness allows at the current stage.
 <!--zh-->
-下降的归纳假设是：阶段严格低于 `γ` 的每个扎根生成者都可及。在它之下，`γ` 的自身生成者径直可及，因为它所支配的一切都严格低于 `γ`；而 `γ` 处的参数或经该假设可及、或就是那个自身生成者，那也是扎根性在当前阶段唯一允许的东西。
+下降的归纳假设是：阶段严格低于 `γ` 的每个循阶生产者都可及。在它之下，`γ` 的自身生产者径直可及，因为它所支配的一切都严格低于 `γ`；而 `γ` 处的参数或经该假设可及、或就是那个自身生产者，那也是循阶性在当前阶段唯一允许的东西。
 <!--/-->
 
 ```agda
@@ -549,34 +550,34 @@ founded. Every predecessor either drops the stage, and is handed to the
 hypothesis, or keeps it, and is met by one of the three inner steps after the
 stage path is transported away.
 <!--zh-->
-像的情形是三层嵌套的下降。最外是运算索引，其序有穷；其内是第一参数，再内是第二参数，各自在已知良基的生成者序中下降。每个前驱或降低阶段，交给归纳假设；或保持阶段，在把阶段道路搬走之后由三个内层步骤之一接住。
+像的情形是三层嵌套的下降。最外是运算索引，其序有穷；其内是第一参数，再内是第二参数，各自在已知良基的生产者序中下降。每个前驱或降低阶段，交给归纳假设；或保持阶段，在把阶段道路搬走之后由三个内层步骤之一接住。
 <!--/-->
 
 ```agda
 accImg : (γ : Ord) → StageAcc γ → (i : Op16) (p q : Producer)
-       → (v : Grounded (prod-image γ i p q))
+       → (v : StageBounded (prod-image γ i p q))
        → Acc _⊰_ (prod-image γ i p q , v)
 accImg γ H i p q ((vp , ep) , (vq , eqq)) =
   outer i (Op.wf∙ i) p vp ep (accArg p vp ep) q vq eqq (accArg q vq eqq)
   where
-  accArg : (r : Producer) (w : Grounded r) → Earlier γ r → Acc _⊰_ (r , w)
+  accArg : (r : Producer) (w : StageBounded r) → Earlier γ r → Acc _⊰_ (r , w)
   accArg r w (inl h) = H (r , w) h
   accArg (prod-self δ) w (inr e) =
     accMove (prod-self δ , w) (prod-self γ , tt*) (cong prod-self e) (accSelf γ H)
   accArg (prod-image _ _ _ _) _ (inr e) = Empty.rec* e
 
   outer : (j : Op16) → Acc Op._<∙_ j
-        → (r : Producer) (vr : Grounded r) (er : Earlier γ r) → Acc _⊰_ (r , vr)
-        → (t : Producer) (vt : Grounded t) (et : Earlier γ t) → Acc _⊰_ (t , vt)
+        → (r : Producer) (vr : StageBounded r) (er : Earlier γ r) → Acc _⊰_ (r , vr)
+        → (t : Producer) (vt : StageBounded t) (et : Earlier γ t) → Acc _⊰_ (t , vt)
         → Acc _⊰_ (prod-image γ j r t , ((vr , er) , (vt , et)))
   outer j (acc rj) = midP
     where
-    midP : (r : Producer) (vr : Grounded r) (er : Earlier γ r) → Acc _⊰_ (r , vr)
-         → (t : Producer) (vt : Grounded t) (et : Earlier γ t) → Acc _⊰_ (t , vt)
+    midP : (r : Producer) (vr : StageBounded r) (er : Earlier γ r) → Acc _⊰_ (r , vr)
+         → (t : Producer) (vt : StageBounded t) (et : Earlier γ t) → Acc _⊰_ (t , vt)
          → Acc _⊰_ (prod-image γ j r t , ((vr , er) , (vt , et)))
     midP r vr er (acc rr) = midQ
       where
-      midQ : (t : Producer) (vt : Grounded t) (et : Earlier γ t) → Acc _⊰_ (t , vt)
+      midQ : (t : Producer) (vt : StageBounded t) (et : Earlier γ t) → Acc _⊰_ (t , vt)
            → Acc _⊰_ (prod-image γ j r t , ((vr , er) , (vt , et)))
       midQ t vt et (acc rt) = acc descend
         where
@@ -624,7 +625,7 @@ The two cases together are one transfinite induction on the stage, and the
 well-order of a producer follows by reading it at the successor of its own
 stage. That closes the bundle.
 <!--zh-->
-两种情形合起来就是对阶段的一场超穷归纳，而一个生成者的良基性只需在它自己阶段的后继处读取即得。束就此收拢。
+两种情形合起来就是对阶段的一场超穷归纳，而一个生产者的良基性只需在它自己阶段的后继处读取即得。束就此收拢。
 <!--/-->
 
 ```agda
@@ -657,19 +658,19 @@ traceSWO = record
 A producer describes a set: the self producer of `δ` describes the level `S_δ`,
 and an image producer describes the value of its operation on the two sets its
 arguments describe. The first direction of the view says that description lands
-where it should. A grounded producer whose stage belongs to an ordinal `α`
+where it should. A stage-bounded producer whose stage belongs to an ordinal `α`
 describes a member of `S_α`: the arguments of an image sit in `S_δ ∪ {S_δ}` by
-grounding, so the step admits the value, and the level admits the step. This is
+stage-boundedness, so the step admits the value, and the level admits the step. This is
 `step-in` realizing every producer, read through the sealed surface and nothing
 else.
 <!--zh-->
-## 生成者视角的两个方向
+## 生产者视角的两个方向
 
-一个生成者描述一个集合：`δ` 的自身生成者描述层 `S_δ`，而一个像生成者描述其运算施于两个参数所描述之集的值。视角的第一个方向说：描述落在它该落的地方。阶段属于序数 `α` 的扎根生成者描述 `S_α` 的一个成员：由扎根性，像的参数落在 `S_δ ∪ {S_δ}` 中，故 step 接纳该值，而层接纳 step。这就是 `step-in` 实现每个生成者，且只经封印的表面读出。
+一个生产者描述一个集合：`δ` 的自身生产者描述层 `S_δ`，而一个像生产者描述其运算施于两个参数所描述之集的值。视角的第一个方向说：描述落在它该落的地方。阶段属于序数 `α` 的循阶生产者描述 `S_α` 的一个成员：由循阶性，像的参数落在 `S_δ ∪ {S_δ}` 中，故 step 接纳该值，而层接纳 step。这就是 `step-in` 实现每个生产者，且只经封印的表面读出。
 <!--/-->
 
 ```agda
-prod-mem : (α : S) → IsOrd α → (p : Producer) → Grounded p
+prod-mem : (α : S) → IsOrd α → (p : Producer) → StageBounded p
          → ⟨ prod-stage p .fst ∈ˢ α ⟩ → ⟨ prod-value p ∈ˢ Sset α ⟩
 prod-mem α _ (prod-self δ) _ h = Sset-mem {α = α} {β = δ .fst} h
 prod-mem α _ (prod-image δ i p q) ((vp , ep) , (vq , eqq)) h =
@@ -680,7 +681,7 @@ prod-mem α _ (prod-image δ i p q) ((vp , ep) , (vq , eqq)) h =
       (toArg q vq eqq (prod-mem (δ .fst) (δ .snd) q vq))
       refl)
   where
-  toArg : (r : Producer) (w : Grounded r) → Earlier δ r
+  toArg : (r : Producer) (w : StageBounded r) → Earlier δ r
         → (⟨ prod-stage r .fst ∈ˢ δ .fst ⟩ → ⟨ prod-value r ∈ˢ Sset (δ .fst) ⟩)
         → ⟨ prod-value r ∈ˢ u' (Sset (δ .fst)) ⟩
   toArg r _ (inl h') f = u'-in (Sset (δ .fst)) (prod-value r) (f h')
@@ -697,9 +698,9 @@ giving every member an arm, run along the tower's own recursion. The membership
 arm defers to the earlier level, where the induction hypothesis supplies a
 producer of a strictly smaller stage; the self arm and the image arm build one on
 the spot, and in the image arm the two arguments are handled by the same split,
-which is precisely where grounding is discharged.
+which is precisely where stage-boundedness is discharged.
 <!--zh-->
-第二个方向说这个视角是完全的：层的每个成员都有生成者，且其阶段已在索引之内。这就是 `step-out` 给每个成员一条臂，沿塔自身的递归跑一遍。成员臂推给更早的层，那里的归纳假设供给一个阶段严格更小的生成者；自身臂与像臂就地造一个，而像臂中两个参数由同一次切分处理，扎根性正是在那里被清偿的。
+第二个方向说这个视角是完全的：层的每个成员都有生产者，且其阶段已在索引之内。这就是 `step-out` 给每个成员一条臂，沿塔自身的递归跑一遍。成员臂推给更早的层，那里的归纳假设供给一个阶段严格更小的生产者；自身臂与像臂就地造一个，而像臂中两个参数由同一次切分处理，循阶性正是在那里被清偿的。
 <!--/-->
 
 ```agda
@@ -764,11 +765,11 @@ having a producer is handed in, since that hypothesis is a proposition; and the
 least producer determines the set it describes, so a set is recoverable from its
 least producer. The second reading is the injectivity the pull-back needs.
 <!--zh-->
-## 最小生成者
+## 最小生产者
 
-一个集合有许多生成者，而序挑出一个：最小的那个。这是本章两场搜索的第一场，也是排中律的第一处花销，经良序词汇的极小元定理支出。取回的是一个生成者，它描述该集合，且描述同一集合者无一先于它。
+一个集合有许多生产者，而序挑出一个：最小的那个。这是本章两场搜索的第一场，也是排中律的第一处花销，经良序词汇的极小元定理支出。取回的是一个生产者，它描述该集合，且描述同一集合者无一先于它。
 
-有两条读式在下游要紧。这个选取不取决于交进来的是「有生成者」的**哪一个**证明，因为该前提是命题；而最小生成者决定了它所描述的集合，故集合可从其最小生成者复原。第二条读式正是拉回所需的单射性。
+有两条读式在下游要紧。这个选取不取决于交进来的是「有生产者」的**哪一个**证明，因为该前提是命题；而最小生产者决定了它所描述的集合，故集合可从其最小生产者复原。第二条读式正是拉回所需的单射性。
 <!--/-->
 
 ```agda
@@ -811,7 +812,7 @@ none of them is proved again here.
 <!--zh-->
 ## 一层的序
 
-某层一个成员的键是它的最小生成者，而该层的序就是经键读出的树序。键的单射性即上文第二条读式，其余由拉回组合子完成：三歧、非自反、传递与良基全部自树而来，此处一条也不重证。
+某层一个成员的键是它的最小生产者，而该层的序就是经键读出的树序。键的单射性即上文第二条读式，其余由拉回组合子完成：三歧、非自反、传递与良基全部自树而来，此处一条也不重证。
 <!--/-->
 
 ```agda
@@ -853,7 +854,7 @@ unrelated ones.
 <!--zh-->
 ## 相容
 
-这就是经典构造需要却从不陈述的那条引理。一个集合的键不提及该集合被读取的那一层：它就是这个集合的最小生成者，仅此而已。故同时含有某集合的两层给它同一个键，而这样两个集合的比较在两层上是字面相同的类型。文献所用的形式，即某层的序限制到更早一层，是其特例：当 `β` 是 `α` 的成员时，累积性补上缺的那份隶属，下面这句就是那个限制。故极限索引处所取的并，是同一个关系诸限制之并，不是互不相干者之并。
+这就是经典构造需要却从不陈述的那条引理。一个集合的键不提及该集合被读取的那一层：它就是这个集合的最小生产者，仅此而已。故同时含有某集合的两层给它同一个键，而这样两个集合的比较在两层上是字面相同的类型。文献所用的形式，即某层的序限制到更早一层，是其特例：当 `β` 是 `α` 的成员时，累积性补上缺的那份隶属，下面这句就是那个限制。故极限索引处所取的并，是同一个关系诸限制之并，不是互不相干者之并。
 <!--/-->
 
 ```agda
@@ -891,9 +892,9 @@ one cannot exceed.
 <!--zh-->
 ## 诞生阶段
 
-序先比阶段，故一个集合的最小生成者携带该集合被产出的最小阶段。那就是该集合的诞生阶段，而它出自键的极小性、而非另一场搜索：生成者的阶段沿序从不上升，故最小的生成者在阶段上也最小。
+序先比阶段，故一个集合的最小生产者携带该集合被产出的最小阶段。那就是该集合的诞生阶段，而它出自键的极小性、而非另一场搜索：生产者的阶段沿序从不上升，故最小的生产者在阶段上也最小。
 
-由此得三条读式。层的成员的阶段是索引的成员；该成员在其阶段之后一步的层中已经在场；且更早的层都不含它，因为任何含它的层都供出一个生成者，最小者的阶段不可能超过它。
+由此得三条读式。层的成员的阶段是索引的成员；该成员在其阶段之后一步的层中已经在场；且更早的层都不含它，因为任何含它的层都供出一个生产者，最小者的阶段不可能超过它。
 <!--/-->
 
 ```agda
@@ -1074,7 +1075,7 @@ Jset-choice α lim = Sset-choice α (isLimit-ord α lim)
 The canonical well-order is in place. A producer is a stage with either the self
 mark or an operation index and two argument producers, mirroring the three arms
 of the sealed step surface, with the membership arm deferring to an earlier
-stage. Grounding is the bound the step supplies, and it is what makes the
+stage. Stage-boundedness is the bound the step supplies, and it is what makes the
 lexicographic comparison well founded: the descent is an induction on the stage
 with a three-deep nested accessibility inside it. The order of a level is the
 tree order pulled back along "least producer", which makes coherence
@@ -1087,5 +1088,5 @@ every level, and every `J` at a limit, carries a well-order, and
 The excluded middle is spent twice, both times on a search, and the internal
 reading of the order sequence is left to a later chapter.
 <!--zh-->
-典范良序就位。生成者是一个阶段，配以自身标记、或一个运算索引加两个参数生成者，映照封印的 step 表面的三条臂，而成员臂推给更早的阶段。扎根性是 step 供给的那条界，也正是它使字典比较良基：下降是对阶段的一场归纳，其内嵌着三层可及性。层的序是树序沿「最小生成者」的拉回，这使相容 (`order-coherent`{.Agda}、`order-agrees`{.Agda}) 成为「键不提及层」的推论，也使诞生阶段 (`memberStage-first`{.Agda}、`memberStage-least`{.Agda}) 成为键的极小性的推论。终局是 `Sset-order`{.Agda} 与 `Jset-order`{.Agda}：每一层、以及极限处的每个 `J`，都带一个良序，而 `Sset-choice`{.Agda} 把它变成层中任一集合上的选择函数。排中律花掉两次，两次都花在搜索上，而序列的内部读法留给后面的章节。
+典范良序就位。生产者是一个阶段，配以自身标记、或一个运算索引加两个参数生产者，映照封印的 step 表面的三条臂，而成员臂推给更早的阶段。循阶性是 step 供给的那条界，也正是它使字典比较良基：下降是对阶段的一场归纳，其内嵌着三层可及性。层的序是树序沿「最小生产者」的拉回，这使相容 (`order-coherent`{.Agda}、`order-agrees`{.Agda}) 成为「键不提及层」的推论，也使诞生阶段 (`memberStage-first`{.Agda}、`memberStage-least`{.Agda}) 成为键的极小性的推论。终局是 `Sset-order`{.Agda} 与 `Jset-order`{.Agda}：每一层、以及极限处的每个 `J`，都带一个良序，而 `Sset-choice`{.Agda} 把它变成层中任一集合上的选择函数。排中律花掉两次，两次都花在搜索上，而序列的内部读法留给后面的章节。
 <!--/-->
