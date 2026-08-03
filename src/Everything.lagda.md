@@ -1195,6 +1195,9 @@ measurement. Wired chapter by chapter as the wave batches land.
   inner world of a level: the fused twelve-clause node, both adequacy
   directions by rank descent and construction, and the code set discharged
   as a level member at every arity by the description equation.
+- `L.Rud.SatTable`{.Agda}: the fragment identity at an abstract code map,
+  the index-free corrected target for the block power fact, and the landing
+  module assembling the whole bridge over that one hypothesis.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1220,6 +1223,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.CodeSet`{.Agda}：载体上的公式码作为一个封印族，成员性定义即得、解码不截断；每个码无条件为闭包成员；成员形归约到其描述入口。
 - `L.Rud.BaseBlock`{.Agda}：基极限处的遗传有限性：S-侧计数、有限成员引理、幂义务，及带恒等片段见证的阶段事实基例。
 - `L.Rud.CodePred`{.Agda}：对象语言的码谓词，读于层的内层世界：十二子句融合节点、秩下降与构造给出的双向 adequacy、码集经描述等式在每个元数清偿为层成员。
+- `L.Rud.SatTable`{.Agda}：抽象码映射下的片段恒等式、块幂事实的免指标修正目标，以及在这唯一假设上装配全桥的落地模块。
 <!--/-->
 
 ```agda
@@ -1243,4 +1247,5 @@ import L.Rud.StepInL
 import L.Rud.CodeSet
 import L.Rud.BaseBlock
 import L.Rud.CodePred
+import L.Rud.SatTable
 ```
