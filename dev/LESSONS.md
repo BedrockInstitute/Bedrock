@@ -1240,6 +1240,18 @@ block map and its missing dichotomy).
 same-day extension datums: `_build/g3g4g5-report.md`, `_build/r5d1-report.md`,
 `_build/r5d2-report.md`, `_build/k4-report.md`.
 
+**Appended (the P1 stop, 2026-08-03):** when a residue is stated as a named
+classical lemma, the truth check INCLUDES a delegated dossier against the
+in-repo corpus; a target stronger than the literature's theorem means the
+repairing batch is repairing the wrong object, and the check costs twenty
+minutes (`BlockPow` without the limit hypothesis appears in no text; Devlin
+VI.2.3 is one hypothesis stronger). A stop report also measures the rejected
+plan's improvement anyway (the flat coding's offset: linear to logarithmic,
+against a required constant), and always tries the delivered machinery at the
+corrected target before concluding the machinery is the problem (two of the
+five stop theorems took eight lines and moved the residue to a satisfiable
+index). Provenance: `_build/l3.31-p1-report.md`.
+
 ### D-8. A self-containing step operator is not subset-monotone; condition on membership
 
 **Rule:** A step operator whose value mentions its own argument (the rud step
@@ -1420,6 +1432,14 @@ the coding's artifact, removable by rank-bounded codes.
 
 **Provenance:** `_build/k2-report.md`; `_build/k4-report.md`.
 
+**Appended (the P1 stop, 2026-08-03):** the check has two halves and both are
+cheap: whether the ranks come from the representation, AND whether the
+obstruction blamed on the cofinality is a fact about the tower's own step. K4
+ran only the first half: the codes' cofinality is representational (the flat
+coding really cuts it to logarithmic), but the obstruction to the block target
+is `Sset`'s single-application successor, which no representation touches.
+Provenance: `_build/l3.31-p1-report.md`.
+
 ### D-19. Price a port against the retiring tree's transitive closure, and split both directions
 
 **Rule:** A "port the pattern" estimate is calibrated against the retiring
@@ -1481,6 +1501,23 @@ transparent.
 **Provenance:** `_build/r3c-report.md`.
 
 ## 6. Craft and process lessons (C series)
+
+### D-24. A transitive tower converts block absorption into a uniform bound
+
+**Rule:** In a cumulative tower whose levels are transitive, membership of a
+set in a limit or block level is never weaker than a UNIFORM finite bound on
+its members' offsets: what the block buys for containment it cannot buy for
+membership. A plan of the form "the members sit at unbounded-but-finite
+offsets and the block absorbs that" is always false for membership and always
+true for containment, and the two must be separated before any coding or
+family design is committed.
+
+**Measured (2026-08-03):** the claim fell to three chained delivered lemmas
+(`Sset-out`, `+ω-out`, `Sset-trans`) in 16 probe lines before any chapter was
+opened; the build it removed was priced at 1,400 lines. The general form of
+K2's cofinality finding, and a sibling of D-10.
+
+**Provenance:** `_build/l3.31-p1-report.md`; `src/ProbeD10.agda` (untracked).
 
 ### C-1. Two conversations must not share a worktree
 
@@ -1604,6 +1641,14 @@ its final marker with every gate green.
 (earliest-disagreement family).
 
 **When it bites:** every new file and every end-of-file edit.
+
+**Appended (2026-08-03):** `_build` report filenames collide across goal
+codes: `_build/p1-report.md` named both the [L3.30-P1] probe report (the
+cited provenance of I-2, D-7, C-11) and the [L3.31-P1] batch's directed
+output; a brief-directed overwrite of law-book provenance is a blind spot no
+linter covers. Convention adopted: `_build` reports carry the goal code
+(`_build/l3.31-p1-report.md`), and a batch finding its path occupied writes
+beside it and says so. Provenance: `_build/l3.31-p1-report.md`.
 
 ### C-9. The graft entry: graft retractions as explicit projections
 
@@ -1807,7 +1852,7 @@ invisible inside the module header.
 
 ## Adding an entry
 
-Take the next free ID under the series (P-k, R-40, T-3, I-10, D-24, C-22), cite
+Take the next free ID under the series (P-k, R-40, T-3, I-10, D-25, C-22), cite
 the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
