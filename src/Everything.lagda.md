@@ -1191,6 +1191,10 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.BaseBlock`{.Agda}: hereditary finiteness at the base limit: the
   S-side tally, the finite-member lemma, the power obligation, and the
   base instance of the stage fact with its identity-fragment witness.
+- `L.Rud.CodePred`{.Agda}: the object-language code predicate, read in the
+  inner world of a level: the fused twelve-clause node, both adequacy
+  directions by rank descent and construction, and the code set discharged
+  as a level member at every arity by the description equation.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1215,6 +1219,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
 - `L.Rud.CodeSet`{.Agda}：载体上的公式码作为一个封印族，成员性定义即得、解码不截断；每个码无条件为闭包成员；成员形归约到其描述入口。
 - `L.Rud.BaseBlock`{.Agda}：基极限处的遗传有限性：S-侧计数、有限成员引理、幂义务，及带恒等片段见证的阶段事实基例。
+- `L.Rud.CodePred`{.Agda}：对象语言的码谓词，读于层的内层世界：十二子句融合节点、秩下降与构造给出的双向 adequacy、码集经描述等式在每个元数清偿为层成员。
 <!--/-->
 
 ```agda
@@ -1237,4 +1242,5 @@ import L.Rud.DefInJ
 import L.Rud.StepInL
 import L.Rud.CodeSet
 import L.Rud.BaseBlock
+import L.Rud.CodePred
 ```

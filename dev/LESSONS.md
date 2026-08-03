@@ -1042,6 +1042,23 @@ explicitly, not an oversight to discover mid-build.
 
 **Provenance:** the [L3.30-P1] probe; the p1 report.
 
+### I-5. Inner-world truncation branches carry written types
+
+**Rule:** In the inner world, every `PT.rec`/`PT.map` branch gets a named
+`where` function with a WRITTEN type; a branch whose type is left to
+inference re-elaborates the inner satisfaction machinery per constraint and
+reads as a conversion wall. The trap's target class is wider than the
+retiring stack recorded: it fires on equations between iterated Kuratowski
+pairs, not only on disjunctions of readings, and the textbook pr-seal is
+NOT the cure (reported unmeasured in the source batch, honestly).
+
+**Measured (K3, 2026-08-03):** six 180 s+ wall events, one root cause; the
+isolating pair: the identical application checks in 1.8 s against a written
+type and does not finish in 180 s inside a `PT.map` lambda with the branch
+type inferred.
+
+**Provenance:** `_build/k3-report.md`; commit recorded with the K3 chapter.
+
 ### I-4. Implicits inverted through content-of never solve; state combinators over carriers
 
 **Rule:** An implicit argument that unification must invert through `⟨_⟩`
