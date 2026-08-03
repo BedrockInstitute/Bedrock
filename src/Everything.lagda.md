@@ -1188,6 +1188,9 @@ measurement. Wired chapter by chapter as the wave batches land.
   family with definitional membership and untruncated decode; each code a
   closure member unconditionally; the member form reduced to its
   description entry point.
+- `L.Rud.BaseBlock`{.Agda}: hereditary finiteness at the base limit: the
+  S-side tally, the finite-member lemma, the power obligation, and the
+  base instance of the stage fact with its identity-fragment witness.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1211,6 +1214,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.DefInJ`{.Agda}：上升一个 Def 阶段仍为初步函数成员，证于片段假设之上，后继塌缩与分离恒等式直接到手。
 - `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
 - `L.Rud.CodeSet`{.Agda}：载体上的公式码作为一个封印族，成员性定义即得、解码不截断；每个码无条件为闭包成员；成员形归约到其描述入口。
+- `L.Rud.BaseBlock`{.Agda}：基极限处的遗传有限性：S-侧计数、有限成员引理、幂义务，及带恒等片段见证的阶段事实基例。
 <!--/-->
 
 ```agda
@@ -1232,4 +1236,5 @@ import L.Rud.Bridge
 import L.Rud.DefInJ
 import L.Rud.StepInL
 import L.Rud.CodeSet
+import L.Rud.BaseBlock
 ```
