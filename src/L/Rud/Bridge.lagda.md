@@ -688,6 +688,7 @@ module Reduce
   (defStage∈J : (ζ γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ ζ ∈ˢ γ ⟩
               → ⟨ Lset ζ ∈ˢ Sset γ ⟩ → ⟨ Lset (sucV ζ) ∈ˢ Sset γ ⟩)
   (stepSet∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
+             → ⟨ A ∈ˢ Lset ζ ⟩
              → ((v : S) → ⟨ v ∈ˢ step u ⟩ → ⟨ v ∈ˢ Lset ζ ⟩)
              → ⟨ step u ∈ˢ Lset (sucV ζ) ⟩)
   (values∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
@@ -805,7 +806,7 @@ module Reduce
           memFn : ⟨ Sset (sucV δ) ∈ˢ Lset γ ⟩
           memFn = subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (sym (Sset-suc δ))
             (Lset-mono {α = γ} {β = ζ₆} ζ₆∈γ
-              (stepSet∈L (Sset δ) ζ₅ u∈₅ stepSub))
+              (stepSet∈L (Sset δ) ζ₅ u∈₅ (up₁ ζ₄ A A∈₄) stepSub))
       go (inr (inr limβ)) = (subFn , memFn)
         where
         subFn : (v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩
