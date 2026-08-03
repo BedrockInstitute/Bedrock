@@ -834,6 +834,16 @@ applied first (K1).
 companion to P-c and R-36; the D2, R5a-2, and K1 datums:
 `_build/r5d2-report.md`, `_build/r5a-report.md`, `_build/k1-report.md`.
 
+**Appended (the PZ polish, 2026-08-03):** when an expensive imported
+invocation has consumers in more than one chapter, the single sealed
+invocation belongs in the EARLIEST consumer, trunk-wide, not once per file
+(`right-at-pair` sealed in Step took the Step+StepInL pair from 202.2 s to
+118.2 s; sealing in StepInL alone would have left ~144 s). And profile before
+applying a transferred perf datum even when it is trusted: the same 175 s
+profile that confirmed the r5a figure (26-29 s per site) also exposed a
+larger unattributed cost in the same file (`Slot.k1` 31.7 s, `Slot.tupleIn`
+24.9 s). Provenance: `_build/polish2-report.md`.
+
 ### R-37. A transported membership in a compared statement position re-fires the tower
 
 **Rule:** A hypothesis of the shape ⟨ x ∈ Sset (concrete index) ⟩ whose proof
@@ -1251,6 +1261,14 @@ against a required constant), and always tries the delivered machinery at the
 corrected target before concluding the machinery is the problem (two of the
 five stop theorems took eight lines and moved the residue to a satisfiable
 index). Provenance: `_build/l3.31-p1-report.md`.
+
+**Appended (the P2R fork recon, 2026-08-03):** a route that keeps failing to
+supply an index should be suspected of aiming at a false statement. K2, K3,
+K4 and P1 each failed to supply an index for a consumer nobody had
+truth-checked at the top; the top target (`Matching`) was classically false
+(Devlin names and refutes it), and the "named hypothesis" framing has no
+defence when the hypothesis is false. The truth check now runs on the
+CHAIN'S ROOT before any link is priced. Provenance: `_build/p2-fork-recon.md`.
 
 ### D-8. A self-containing step operator is not subset-monotone; condition on membership
 
@@ -1768,6 +1786,12 @@ defect, not a coincidence (two laws, measured below).
 
 **Provenance:** `_build/r5b-report.md`; `_build/k1-report.md`;
 `_build/r2c-report.md`.
+
+**Appended (2026-08-03):** a missing export breeds MORE than one re-proof:
+`Sset-zero`'s absence from Step's exports produced two independent local
+derivations in BaseBlock (only one of which any report had spotted) and a
+third in Bridge. When filing a missing export, grep the FACT, not the name.
+Provenance: `_build/polish2-report.md`.
 
 ### C-15. Close out with a consumer probe; the in-file module beats the probe, then the probe still earns its keep
 
