@@ -45,6 +45,7 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Model {ℓ}
   using ( empty-spec; pair-spec; union-spec; self∈sucV; ∈sucV-elim
         ; pair-singleton )
+open import V.Presentation {ℓ} using ( fiber )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
@@ -64,7 +65,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; extensionality; _⊆_; ⟪_⟫; ⟪_⟫↪ )
+  using ( _∈ₛ_; ∈∈ₛ; extensionality; _⊆_; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; pairing-ax; ⋃_; union-ax
         ; module InfinitySet )
@@ -100,10 +101,9 @@ because successors of ordinals are ordinals.
   where
   s : ⟪ sucV σ ⟫ → V ℓ
   s m = 𝒟ₒ (Lset (⟪ sucV σ ⟫↪ m))
-  fib = ∈-asFiber {a = σ} {b = sucV σ} (self∈sucV σ)
-  m = fib .fst
+  m = fiber (sucV σ) (self∈sucV σ) .fst
   p : ⟪ sucV σ ⟫↪ m ≡ σ
-  p = fib .snd
+  p = fiber (sucV σ) (self∈sucV σ) .snd
   𝒟ₒLσ∈ₛsett : ⟨ 𝒟ₒ (Lset σ) ∈ₛ sett ⟪ sucV σ ⟫ s ⟩
   𝒟ₒLσ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset σ)} {b = sett ⟪ sucV σ ⟫ s} .fst
     ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
@@ -359,9 +359,9 @@ module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
     ∣ finDisj n g , (defSet≡ n g ∙ cong (finSet n) (funExt qg)) ∣₁
     where
     g : Fin n → ⟪ Lset σ ⟫
-    g i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .fst
+    g i = fiber (Lset σ) (hσ i) .fst
     qg : (i : Fin n) → ⟪ Lset σ ⟫↪ (g i) ≡ h i
-    qg i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .snd
+    qg i = fiber (Lset σ) (hσ i) .snd
 ```
 
 <!--en-->
@@ -549,12 +549,12 @@ pair∈𝒟ₒ : (σ x y : V ℓ) → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset �
 pair∈𝒟ₒ σ x y x∈ y∈ = 𝒟ₒ-intro (Lset σ) ⁅ x , y ⁆ ∣ φ , defSet≡ ∣₁
   where
   module DefC = DefOf (Lset σ)
-  mₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+  mₓ = fiber (Lset σ) x∈ .fst
   qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x
-  qₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
-  mᵧ = ∈-asFiber {a = y} {b = Lset σ} y∈ .fst
+  qₓ = fiber (Lset σ) x∈ .snd
+  mᵧ = fiber (Lset σ) y∈ .fst
   qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ y
-  qᵧ = ∈-asFiber {a = y} {b = Lset σ} y∈ .snd
+  qᵧ = fiber (Lset σ) y∈ .snd
 
   φ : Formula ⟪ Lset σ ⟫ 1
   φ = (var zero ≐ con mₓ) ∨̇ (var zero ≐ con mᵧ)
@@ -663,9 +663,9 @@ module UnionOf (a : S) where
     where
     module DefA = DefOf (Lset σ)
     Atrans = layer-trans (Lset-layer σ)
-    mₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .fst
+    mₐ = fiber (Lset σ) fa∈ .fst
     qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a
-    qₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .snd
+    qₐ = fiber (Lset σ) fa∈ .snd
 
     φ : Formula ⟪ Lset σ ⟫ 1
     φ = ∃̇∈ (con mₐ) (var (suc zero) ∈̇ var zero)
@@ -688,12 +688,12 @@ module UnionOf (a : S) where
         (∈∈ₛ {a = y} {b = DefA.defSet φ} .snd y∈ₛ)
       sub₂ : ⟨ ⋃ (fst a) ⊆ DefA.defSet φ ⟩
       sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet φ))
-        (λ { (v , (v∈ₛfa , y∈ₛv)) → member v v∈ₛfa y∈ₛv })
+        (λ { (v , (v∈ₛfa , y∈ₛv)) → memOf v v∈ₛfa y∈ₛv })
         (union-ax (fst a) y .fst y∈ₛ)
         where
-        member : (v : V ℓ) → ⟨ v ∈ₛ fst a ⟩ → ⟨ y ∈ₛ v ⟩
+        memOf : (v : V ℓ) → ⟨ v ∈ₛ fst a ⟩ → ⟨ y ∈ₛ v ⟩
                → ⟨ y ∈ₛ DefA.defSet φ ⟩
-        member v v∈ₛfa y∈ₛv =
+        memOf v v∈ₛfa y∈ₛv =
           subst (λ w → ⟨ w ∈ₛ DefA.defSet φ ⟩) q'
             (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m'} {b = DefA.defSet φ} .fst
               (subst ⟨_⟩ (sym (DefA.defSet-mem φ m')) sat))
@@ -702,9 +702,8 @@ module UnionOf (a : S) where
           y∈v = ∈∈ₛ {a = y} {b = v} .snd y∈ₛv
           v∈A = Atrans {x = fst a} {y = v} v∈fa fa∈
           y∈A = Atrans {x = v} {y = y} y∈v v∈A
-          fib = ∈-asFiber {a = y} {b = Lset σ} y∈A
-          m' = fib .fst
-          q' = fib .snd
+          m' = fiber (Lset σ) y∈A .fst
+          q' = fiber (Lset σ) y∈A .snd
           sat : ⟨ (DefA.ι m' ∷ []) DefA.⊨ᵐ φ ⟩
           sat = ∣ (v , v∈A)
                 , ( subst (λ w → ⟨ v ∈ w ⟩) (sym qₐ) v∈fa

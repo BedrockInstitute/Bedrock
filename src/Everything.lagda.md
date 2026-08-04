@@ -146,6 +146,10 @@ import FOL.ZFModel
   images of small families, extensional equality as a path constructor; the
   structure `𝒮ᵥ`{.Agda} assembled directly, with extensionality and regularity
   banked free.
+- `V.Presentation`{.Agda}: four one-line facts about the small presentation,
+  collected once so no chapter re-derives them: the embedding's value read back
+  into membership, a member's index recovered, the embedding's injectivity, and
+  the small membership.
 - `V.Smallness`{.Agda}: the smallness toolkit: atoms compress through the
   library, connectives and bounded quantifiers pass smallness witnesses along,
   `separateFromSmall`{.Agda} is the one pipe to sets; `Δ₀-small`{.Agda} makes Δ₀
@@ -159,12 +163,14 @@ import FOL.ZFModel
 ## 第三部：累积层级实现 ZF(C)
 
 - `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 径直装配，外延与正则免费入账。
+- `V.Presentation`{.Agda}：小呈现的四条一行事实，一次收齐，让各章不再各自重推：把嵌入的取值读回隶属、还原成员的索引、嵌入的单射性，以及小隶属。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递小性见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
 - `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，第零部的 `Impredicativity`{.Agda} 为全分离与幂集标价；`V⊨ZF-impredicative`{.Agda} 以此精确价格合龙，主打的 `V⊨ZF`{.Agda} 由排中律赎回，经 Diaconescu 的 `V⊨ZFC`{.Agda} 则单凭选择。
 <!--/-->
 
 ```agda
 import V.Hierarchy
+import V.Presentation
 import V.Smallness
 import V.Model
 ```
