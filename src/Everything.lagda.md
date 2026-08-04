@@ -150,6 +150,11 @@ import FOL.ZFModel
   collected once so no chapter re-derives them: the embedding's value read back
   into membership, a member's index recovered, the embedding's injectivity, and
   the small membership.
+- `V.Collapse`{.Agda}: the transitive collapse, by membership recursion filtered
+  through a carrier: the map with its computation law sealed behind a read
+  lemma, the range as a set and its transitivity with no hypothesis at all, and,
+  over a transitive carrier, extensional injectivity and the membership iso both
+  ways, with uniqueness. Condensation instantiates it verbatim.
 - `V.Smallness`{.Agda}: the smallness toolkit: atoms compress through the
   library, connectives and bounded quantifiers pass smallness witnesses along,
   `separateFromSmall`{.Agda} is the one pipe to sets; `Δ₀-small`{.Agda} makes Δ₀
@@ -164,6 +169,7 @@ import FOL.ZFModel
 
 - `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 径直装配，外延与正则免费入账。
 - `V.Presentation`{.Agda}：小呈现的四条一行事实，一次收齐，让各章不再各自重推：把嵌入的取值读回隶属、还原成员的索引、嵌入的单射性，以及小隶属。
+- `V.Collapse`{.Agda}：传递坍缩，沿成员递归并经载体过滤：映射连同封在读引理之后的计算律、作为集合的像及其传递性 (不需任何假设)，以及在传递载体之上的外延单射性与双向的隶属同构，附唯一性。凝聚章逐字实例化它。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递小性见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
 - `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，第零部的 `Impredicativity`{.Agda} 为全分离与幂集标价；`V⊨ZF-impredicative`{.Agda} 以此精确价格合龙，主打的 `V⊨ZF`{.Agda} 由排中律赎回，经 Diaconescu 的 `V⊨ZFC`{.Agda} 则单凭选择。
 <!--/-->
@@ -171,6 +177,7 @@ import FOL.ZFModel
 ```agda
 import V.Hierarchy
 import V.Presentation
+import V.Collapse
 import V.Smallness
 import V.Model
 ```
