@@ -1227,6 +1227,11 @@ measurement. Wired chapter by chapter as the wave batches land.
   the sixteen operations, both directions of the comprehension shape, and
   the limit corollary, with the image principle and the level descriptions
   as named module hypotheses.
+- `L.OrderFamily`{.Agda}: the order family and its table, over a per-level
+  order-as-an-element interface: the table as a set indexed by the level, the
+  successor's agreement with the order below on old members, and the order at a
+  limit as the union of the table, which is the element-level reading of the
+  classical limit clause.
 - `L.Rud.ClassJ`{.Agda}: the rud-side constructible class isJ with its
   propositionality and transitivity, and the restricted structure beside
   the Def-side one.
@@ -1280,6 +1285,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Describe`{.Agda}：前九个运算的描述半部：定义公式带 Δ₀ 见证，配对家族的完整 adequacy 与可定义子集等式，封面残余与嵌套存在残余已记录。
 - `L.Rud.Order`{.Agda}：典范良序：沿最小生产者键回拉循阶生产者树之序，SZ 后继子句机器验证，相容一行，极限层的外部选择定理。
 - `L.Rud.Switch`{.Agda}：切换定理：抽象基在十六运算处清偿，概括形态双向到手，极限推论在位；像原理与层级描述作为具名模块假设。
+- `L.OrderFamily`{.Agda}：序族及其表，建于「逐层的序作为元素」这一接口之上：表是以层为索引的集合，后继处的序与下方之序在旧成员上一致，而极限处的序是表的并，即经典极限子句的元素级读法。
 - `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
 - `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
 - `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
@@ -1302,6 +1308,7 @@ import L.Rud.Step
 import L.Rud.LevelSigma
 import L.Rud.Describe
 import L.Rud.Order
+import L.OrderFamily
 import L.Rud.Switch
 import L.Rud.ClassJ
 import L.Rud.OrdBlocks

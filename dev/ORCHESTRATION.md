@@ -85,7 +85,12 @@ writes it, the sweep writes back its own version, and the agent's work is gone
 with no diff to show for it.
 
 *Enforcement:* before a sweep, list the write territories of every running
-agent and exclude them; after it, confirm each excluded file is untouched.
+agent and exclude them; after it, confirm each excluded file is untouched. **And the
+exclusion creates a debt: an agent dispatched before a sweep returns work
+written to the old convention, so every excluded territory is re-swept when it
+lands.** That debt came due within the hour: a chapter dispatched before a
+terminology sweep landed carrying a rendering the sweep had just retired, and
+the pre-commit hook caught it.
 On 2026-08-05 a seven-term sweep ran across 43 files with four agents holding
 territories and escaped only because none of their files contained a swept
 term. That is luck, not method.
