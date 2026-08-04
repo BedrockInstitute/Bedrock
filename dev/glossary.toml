@@ -861,3 +861,110 @@ zh = "常量变换"
 ja = "定数変換"
 avoid = ["zh:重标记", "zh:改换"]
 notes = "of constants, along a map of constant domains (mapFo; chapter FOL.Relabelling); paired with renaming = 变量变换, which moves variables (owner ruling 2026-07-18)"
+
+# ---- Added 2026-08-05 by owner ruling on the terminology dossier ----
+# Dossier with sources, candidates and the explicit guessing list:
+# dev/literature/terms-2026-08.md
+
+[[term]]
+category = "Logic"
+en = "face"
+zh = "面孔"
+ja = "顔"
+notes = "The side an object presents to a consumer, as in the satisfaction face of Def. Metaphor: no Chinese or Japanese source found (terms-2026-08 section 1), adopted on use in seven sites. 接口 collides with interface, 面 alone with a polytope's face."
+
+[[term]]
+category = "Set theory"
+en = "initial segment"
+zh = "初始段"
+ja = "始切片"
+avoid = ["zh:初段"]
+notes = "Established: 数学辞海 vol. 1 p. 624; the Chinese translation of Natanson's real-analysis text. 初段 is REJECTED: it was the drift minority here and it is the Go rank."
+
+[[term]]
+category = "Type theory"
+en = "presentation"
+zh = "呈现"
+ja = "提示"
+notes = "A set given as an index type plus an indexing map, the HIT sense. No source for that sense (terms-2026-08 section 3); 表示 is rejected because the glossary already spends it on representation."
+
+[[term]]
+category = "Logic"
+en = "crossing"
+zh = "跨越"
+ja = "越境"
+notes = "Moving a statement between an ambient reading and an inner one, as in Delta-0 is a crossing tax. Metaphor, no source; 横断 collides with transversal."
+
+[[term]]
+category = "Logic"
+en = "decode"
+zh = "解码"
+ja = "復号"
+notes = "解码 and 译码 are both attested and the prose does not drift; 解码 is fixed here to keep it that way."
+
+[[term]]
+category = "Set theory"
+en = "order type"
+zh = "序型"
+ja = "順序型"
+avoid = ["zh:序类型"]
+notes = "Established: 数学辞海 vol. 1 p. 624; 点集拓扑学. 序类型 is the encyclopedic long form, not wrong but not ours."
+
+[[term]]
+category = "Set theory"
+en = "canonical well-ordering"
+zh = "典范良序"
+ja = "正準整列順序"
+notes = "Composes the glossary's own 典范 and 良序; attested in 代数学方法 and university set-theory notes."
+
+[[term]]
+category = "Set theory"
+en = "square law"
+zh = "平方律"
+ja = "平方律"
+avoid = ["zh:平方定理"]
+notes = "The cardinal identity that an infinite ordinal's product is equinumerous with it. No Chinese source names it; the fact is stated as 无穷基数的平方等于自身. Cited here as a bound rather than proved, so 律 rather than 定理. Distinct by one character from 平方配对, deliberately."
+
+[[term]]
+category = "Set theory"
+en = "equinumerous"
+zh = "等势"
+ja = "対等"
+avoid = ["zh:等数"]
+notes = "Established: 数学辞海 vol. 4. 等数 is REJECTED: it was live drift in the cardinal predicates chapter and has no source."
+
+[[term]]
+category = "Set theory"
+en = "initial ordinal"
+zh = "初始序数"
+ja = "始順序数"
+notes = "Established: 数学辞海 vol. 1 p. 626."
+
+[[term]]
+category = "Logic"
+en = "count"
+zh = "计数"
+ja = "数え上げ"
+notes = "Ordinary established mathematical vocabulary (组合计数, 计数原理), used here as the subject of how many formulas there are."
+
+[[term]]
+category = "Logic"
+en = "shape count"
+zh = "形状计数"
+ja = "形状の数え上げ"
+notes = "The count of constant-free formulas per arity. No source; compounds 形状 and 计数."
+
+[[term]]
+category = "Logic"
+en = "square pairing"
+zh = "平方配对"
+ja = "平方対関数"
+notes = "The pairing function on the naturals used by the shape count. No source for the scheme; 配对函数 is the established generic. One character from 平方律, and the two must stay visibly distinct: one is a function, the other a cardinal law."
+
+[[term]]
+category = "Logic"
+en = "pair atom"
+zh = "对原子"
+ja = "対原子"
+avoid = ["zh:对子原子"]
+notes = "The singleton, pair and ordered-pair atoms of a formula over a carrier. 原子公式 is established; 对原子 is unanimous in the chapters. 对子原子 is REJECTED: it appeared only in the catalog, written by the orchestrator."

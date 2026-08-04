@@ -561,7 +561,7 @@ source: compare the images. Trichotomy's equality case is the one place
 injectivity is spent, and accessibility transports backwards along the map with
 no further argument.
 <!--zh-->
-最后是拉回。一个到带序类型的单射在其源上诱导出一个序：比较像即可。三歧的相等情形是单射性唯一被花费的地方，而可及性沿映射向后搬运，无需更多论证。
+最后是拉回。一个到带序型的单射在其源上诱导出一个序：比较像即可。三歧的相等情形是单射性唯一被花费的地方，而可及性沿映射向后搬运，无需更多论证。
 <!--/-->
 
 ```agda
