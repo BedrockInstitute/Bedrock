@@ -106,6 +106,14 @@ only while it is the template for a chapter about to be written from it, and goe
 chapter lands. A pattern worth keeping belongs in `dev/LESSONS.md` or in the chapter it seeded,
 never in a stray file.
 
+**Every block is gated before it is funded.** No block is built at the coarse (3x) estimate
+class without first trying to measure it: each carries a paired probe aimed at its widest
+unmeasured term, run before or alongside the build, and is funded at the band the probe leaves
+rather than the band the survey guessed. This is arithmetic, not caution: a green gate moves its
+term from the 3x class to about 1.3x and narrows the band's TOP, which is the edge that decides
+whether a projection fits. A build brief that cannot name its block's widest term and the probe
+that would measure it is not ready to be sent.
+
 ## Estimates carry two calibers
 
 Size figures are non-blank lines inside ` ```agda ` fences. Any projection is stated twice:
