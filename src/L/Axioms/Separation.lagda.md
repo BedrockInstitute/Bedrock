@@ -58,6 +58,7 @@ open import L.Constructible {ℓ}
 open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2 )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; uniqueL )
+open import V.Presentation {ℓ} using ( member; fiber )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -65,7 +66,7 @@ open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
+  using ( ⟪_⟫; ⟪_⟫↪ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -130,8 +131,8 @@ module AtStage (σ : V ℓ) (oσ : IsOrd σ) where
 
   module RL = Relabel {K = S} {K' = ⟪ Lset σ ⟫} {W = V ℓ}
                 fst ⟪ Lset σ ⟫↪ Below
-                (λ c p → ∈-asFiber {a = fst c} {b = Lset σ} p .fst)
-                (λ c p → ∈-asFiber {a = fst c} {b = Lset σ} p .snd)
+                (λ c p → fiber (Lset σ) p .fst)
+                (λ c p → fiber (Lset σ) p .snd)
 ```
 
 <!--en-->
@@ -275,8 +276,7 @@ member of the stage and the same set carrying its own constructibility proof.
 ```agda
   private
     memberIsL : (m : ⟪ Lset σ ⟫) → ⟨ isL (⟪ Lset σ ⟫↪ m) ⟩
-    memberIsL m = Lset→isL σ oσ (⟪ Lset σ ⟫↪ m)
-      (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = Lset σ} .snd (∈ₛ⟪ Lset σ ⟫↪ m))
+    memberIsL m = Lset→isL σ oσ (⟪ Lset σ ⟫↪ m) (member (Lset σ) m)
 
   separateAt : (a : S) (fa∈σ : ⟨ fst a ∈ Lset σ ⟩)
                (φ : Formula S 1) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
@@ -285,9 +285,9 @@ member of the stage and the same set carrying its own constructibility proof.
     where
     Q : S → Ω
     Q x = (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)
-    mₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈σ .fst
+    mₐ = fiber (Lset σ) fa∈σ .fst
     qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a
-    qₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈σ .snd
+    qₐ = fiber (Lset σ) fa∈σ .snd
     ψ : Formula ⟪ Lset σ ⟫ 1
     ψ = (var zero ∈̇ con mₐ) ∧̇ RL.liftFo φ h
     sepElt : S
@@ -300,9 +300,9 @@ member of the stage and the same set carrying its own constructibility proof.
       fwd z∈ = fz∈fa , zφ
         where
         fz∈Lσ = carve⊆ ψ (fst z) z∈
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
+        m = fiber (Lset σ) fz∈Lσ .fst
         q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
+        q = fiber (Lset σ) fz∈Lσ .snd
         xL = memberIsL m
         m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve ψ ⟩
         m∈ = subst (λ w → ⟨ w ∈ carve ψ ⟩) (sym q) z∈
@@ -315,9 +315,9 @@ member of the stage and the same set carrying its own constructibility proof.
       bwd (fz∈fa , zφ) = subst (λ w → ⟨ w ∈ carve ψ ⟩) q m∈
         where
         fz∈Lσ = layer-trans (Lset-layer σ) {x = fst a} {y = fst z} fz∈fa fa∈σ
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
+        m = fiber (Lset σ) fz∈Lσ .fst
         q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
+        q = fiber (Lset σ) fz∈Lσ .snd
         xL = memberIsL m
         p₁ : ⟨ ⟪ Lset σ ⟫↪ m ∈ ⟪ Lset σ ⟫↪ mₐ ⟩
         p₁ = subst (λ w → ⟨ w ∈ ⟪ Lset σ ⟫↪ mₐ ⟩) (sym q)
@@ -369,9 +369,9 @@ images.
       fwd z∈ = ⊨-transport χ dχ (⟪ Lset σ ⟫↪ m , xL) z q (imageOut χ hχ dχ m xL m∈)
         where
         fz∈Lσ = carve⊆ (RL.liftFo χ hχ) (fst z) z∈
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
+        m = fiber (Lset σ) fz∈Lσ .fst
         q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
+        q = fiber (Lset σ) fz∈Lσ .snd
         xL = memberIsL m
         m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve (RL.liftFo χ hχ) ⟩
         m∈ = subst (λ w → ⟨ w ∈ carve (RL.liftFo χ hχ) ⟩) (sym q) z∈
@@ -380,9 +380,9 @@ images.
       bwd qz = subst (λ w → ⟨ w ∈ carve (RL.liftFo χ hχ) ⟩) q m∈
         where
         fz∈Lσ = cover z qz
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
+        m = fiber (Lset σ) fz∈Lσ .fst
         q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
+        q = fiber (Lset σ) fz∈Lσ .snd
         xL = memberIsL m
         satz : ⟨ ((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ χ ⟩
         satz = ⊨-transport χ dχ z (⟪ Lset σ ⟫↪ m , xL) (sym q) qz
@@ -556,7 +556,7 @@ replaceΔ₀ a φ dφ fc = AtStage.replaceAt σ oσ a fa∈σ φ h dφ cover
   memS m = xₘ , fm∈fa
     where
     fm∈fa : ⟨ ⟪ fst a ⟫↪ m ∈ fst a ⟩
-    fm∈fa = ∈∈ₛ {a = ⟪ fst a ⟫↪ m} {b = fst a} .snd (∈ₛ⟪ fst a ⟫↪ m)
+    fm∈fa = member (fst a) m
     xₘ : S
     xₘ = ⟪ fst a ⟫↪ m , isL-trans {x = fst a} {y = ⟪ fst a ⟫↪ m} fm∈fa (a .snd)
   imgElt : (m : ⟪ fst a ⟫) → S
@@ -591,9 +591,9 @@ replaceΔ₀ a φ dφ fc = AtStage.replaceAt σ oσ a fa∈σ φ h dφ cover
     step : Σ[ x ∈ S ] (⟨ x ∈ˢ a ⟩ × ⟨ (x ∷ z ∷ []) ⊨ φ ⟩) → ⟨ fst z ∈ Lset σ ⟩
     step (x , x∈a , φxz) = Lset-mono {α = σ} {β = βimg} βimg∈σ fz∈Lβimg
       where
-      m = ∈-asFiber {a = fst x} {b = fst a} x∈a .fst
+      m = fiber (fst a) x∈a .fst
       qx : ⟪ fst a ⟫↪ m ≡ fst x
-      qx = ∈-asFiber {a = fst x} {b = fst a} x∈a .snd
+      qx = fiber (fst a) x∈a .snd
       φxₘz : ⟨ (memS m .fst ∷ z ∷ []) ⊨ φ ⟩
       φxₘz = AtStage.⊨-transport₂ σ oσ φ dφ x (memS m .fst) z (sym qx) φxz
       img≡z : imgElt m ≡ z
