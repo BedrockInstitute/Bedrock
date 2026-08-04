@@ -199,6 +199,11 @@ import V.Model
   `⊨-abs₁`{.Agda} with `asPure₁`{.Agda} spend it at the arity a subset is carved
   by: a definable subset is carved by a parameter-free formula at a parameter
   vector, read in the inner semantics the definable powerset is defined by.
+- `FOL.Count`{.Agda}: how many formulas there are. Every formula over a carrier
+  splits into a constant-free shape and the finite tuple of constants it used,
+  injectively; and the constant-free shapes of each arity inject into the
+  naturals, through a tagged tree code and the square pairing. The cardinal
+  argument stands on both.
 - `FOL.Coding`{.Agda}: syntax as sets: `⌜_⌝`{.Agda} tags a constructor index
   onto the codes of the parts (constants coding themselves), and the inductive
   relation `Codes`{.Agda} is the interface, keeping code values out of the
@@ -303,6 +308,7 @@ import V.Model
 - `FOL.Manipulation.Relabelling`{.Agda}：常量变换，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式的入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，Lévy 见证随行 (`mapΔ₀`{.Agda} 及其塔)。
 - `FOL.Manipulation.Bounding`{.Agda}：映射只是部分函数时的重标：`BoundedFo`{.Agda} 逐次出现地证明公式的常元满足某谓词，`BoundedFo-mono`{.Agda} 放宽它，而 `Relabel`{.Agda} 花掉它：证书就是沿部分映射重标的许可，含义与 Lévy 见证一并带过。
 - `FOL.Manipulation.Parameters`{.Agda}：把常量请出语法、请进环境。它们**按出现而非按取值**计数 (`countFo`{.Agda}) 并收集 (`constantsFo`{.Agda})，这正是常量域上的可判定相等变得不必要的原因；`placeFo`{.Agda} 把每次出现放到安置所点名的变量处，只走一趟，也不需要弱化引理，而 `absFo`{.Agda} 把它实例化为名副其实的抽象：按出现次数抬高元数，交出一条无参公式。`⊨-abs`{.Agda} 认证这笔交易不花含义，`⊨-abs₁`{.Agda} 与 `asPure₁`{.Agda} 则在「子集被刻出时所用的元数」处把它花掉：可定义子集由一条无参公式在一个参数向量处刻出，且读在可定义幂集据以定义的那套内层语义中。
+- `FOL.Count`{.Agda}：公式有多少条。载体之上的每条公式都单射地拆成一个无常量的形状与它用到的那个有穷常量元组；而每个元数的无常量形状又经带标记的树码与平方配对单射地进入自然数。基数论证正立于这二者之上。
 - `FOL.Coding`{.Agda}：语法作为集合：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上 (常量编码自身)，而归纳关系 `Codes`{.Agda} 是接口，使码值不出现在类型检查器必须归一化的等式里。
 - `V.Coding`{.Agda}：层级兑现编码的两组参数：数码单射 (`#-inj`{.Agda})、Kuratowski 对单射 (`pr-inj`{.Agda})，于是 `V` 上的公式成为 `V` 的集合。
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
@@ -331,6 +337,7 @@ import V.Model
 import FOL.Manipulation.Relabelling
 import FOL.Manipulation.Bounding
 import FOL.Manipulation.Parameters
+import FOL.Count
 import FOL.Coding
 import V.Coding
 import L.Definability
