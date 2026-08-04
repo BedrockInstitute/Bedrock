@@ -5,9 +5,11 @@ Gödel's definition and Jensen's definition meet here. The constructible tower
 takes definable subsets at every stage; the rud tower takes one closure step at
 every stage and collects at limits. This chapter connects the two surfaces at
 the level of single steps, in both directions, and records exactly what a
-per-level identification of the towers still costs.
+per-level identification of the towers costs: the identification is false,
+the classical sandwich stands in its place, and the direction from the rud
+tower into `L` survives.
 <!--zh-->
-哥德尔的定义与 Jensen 的定义在此相遇。可构造塔在每个阶段取可定义子集，初步函数塔在每个阶段走一步闭包、在极限处收拢。本章在单步的层面双向连接两个表面，并如实记下逐层认同两塔仍需付出的代价。
+哥德尔的定义与 Jensen 的定义在此相遇。可构造塔在每个阶段取可定义子集，初步函数塔在每个阶段走一步闭包、在极限处收拢。本章在单步的层面双向连接两个表面，并如实记下逐层认同两塔的代价：认同是假的，经典的三明治取而代之，而自初步函数塔进入 `L` 的那个方向得以保留。
 <!--/-->
 
 ```agda
@@ -49,8 +51,7 @@ open import L.Rud.Step {ℓ} lem A using
 open import L.Rud.OrdArith {ℓ} lem using
   ( isLimit; isLimit-ord; limit-mem-ord; isSucc; ord-case )
 open import L.Ordinal {ℓ} using ( suc-ord; mem-ord )
-open import L.Rud.OrdBlocks {ℓ} lem using ( +ω; +ω-mem; +ω-limit )
-open import L.Rud.ClassJ {ℓ} lem A using ( isJ; Jset→isJ )
+open import L.Rud.ClassJ {ℓ} lem A using ( isJ )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri; Tri )
 open import L.Rud.Switch {ℓ} lem A using ( module Descr; module Hops )
 open import L.Rud.SatSets {ℓ} lem A using ( module Sat )
@@ -429,52 +430,47 @@ Ljunk ζ hA U U∈ i a b sa sb sub =
 <!--en-->
 ## The bridge
 
-The two towers are identified where both are read at the same limit index. That
-identification is the one thing this chapter does not prove: it is taken here as
-a hypothesis, named once, and everything the next chapters want follows from it
-in a few lines. The endpoints are the two class predicates: constructible in
-Gödel's sense, and constructible in Jensen's. Going right, a constructible set
-sits in an ordinal stage, the `ω`-extension of that ordinal is a limit above it,
-and the identification reads the stage as a rud level. Going left, a rud level
-is an ordinal stage on the nose, and the limit certificate already carries the
-ordinality the constructible predicate asks for.
+The two towers are identified where both are read at the same limit index. The
+identification was recorded in this chapter as the statement
+`Matching`{.Agda}, the one hypothesis the chapter would not prove. It is not
+merely unproved: it is **false**. Devlin's *Constructibility*, VI.2.4, names
+the general equality `J_α = L_{ω·α}` as the tempting error and refutes it;
+equality holds exactly at the ω-fixed points. The failure is visible at the
+second block. At `ζ = ω`, `γ = ω·2`, the level `L_ω` is a member of
+`S_{ω·2}`: `L_ω = S_ω`, and `S_ω ∈ step (S_ω) ⊆ S_{ω·2}`. Yet no limit stage
+below `ω·2` holds `L_ω`: the only limit below is `ω`, and a stage never holds
+itself. The classical refutation is the arithmetic truth set: the codes
+`T ⊆ ω` of the sentences true in `(L_ω , ∈)` lie in `L_{ω+2}` but not in
+`S_{ω·2}`, since `S_{ω·2} ∩ 𝒫(L_ω) = Def(L_ω)` and Tarski's theorem says a
+structure's full satisfaction relation is not definable over it. So
+`Matching` at `γ = ω·2` would assert `L_{ω·2} = S_{ω·2}`, which is false.
+
+What is true, classically, is the sandwich of VI.2.4(i): for every ordinal
+`α`, `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)`, with equality on both sides exactly
+at the ω-fixed points, `ω·α = α`. The sandwich is recorded here as a
+classical fact in prose: it is neither proved in this chapter nor assumed as a
+postulate.
+
+The deliverable is therefore the one direction that needs no identification. A
+member of a rud level is a member of the corresponding constructible stage:
+`bridge-isJ→isL`{.Agda} is proved inside the reduction, unconditionally, from
+`p4`{.Agda}. `p4` is Devlin's `P(α)`: for `β ∈ γ` at a limit `γ`, the rud
+level `Sset β` is included in `Lset γ` and is a member of it. The module
+`Bridged`{.Agda}, which packaged both directions over the false hypothesis, is
+retired, and the reverse direction `isL → isJ` is not delivered here.
 <!--zh-->
 ## 桥
 
-两塔在同一极限索引处被同时读出之处认同。这项认同正是本章唯一未证之事：此处取作假设，一次具名，而后续诸章所要的一切都由它数行导出。两端是两个类谓词：哥德尔意义下的可构造，与 Jensen 意义下的可构造。向右走，可构造集落在某个序数阶段里，该序数的 `ω` 延拓是其上的极限，认同把该阶段读作初步函数层。向左走，初步函数层原样就是序数阶段，而极限证书早已带着可构造谓词所要的序数性。
+两塔在同一极限索引处被同时读出之处认同。认同在本章中记作陈述 `Matching`{.Agda}，即本章唯一不证的那条假设。它不只是未证：它是**假的**。Devlin 的 *Constructibility* VI.2.4 把一般等式 `J_α = L_{ω·α}` 点名为诱人的错误并加以驳斥；等式恰好在 ω 不动点处成立。失败在第二个块就看得见。在 `ζ = ω`、`γ = ω·2` 处，层 `L_ω` 是 `S_{ω·2}` 的成员：`L_ω = S_ω`，且 `S_ω ∈ step (S_ω) ⊆ S_{ω·2}`。然而 `ω·2` 之下没有任何极限阶段持有 `L_ω`：其下唯一的极限是 `ω`，而阶段从不持有自身。经典的驳斥是算术真值集：在 `(L_ω , ∈)` 中为真的诸句子的码集 `T ⊆ ω` 落在 `L_{ω+2}` 里，却不在 `S_{ω·2}` 里，因为 `S_{ω·2} ∩ 𝒫(L_ω) = Def(L_ω)`，而 Tarski 定理说一个结构的完全满足关系不在它自身之上可定义。故 `Matching` 在 `γ = ω·2` 处会断言 `L_{ω·2} = S_{ω·2}`，那是假的。
+
+经典地为真的是 VI.2.4 (i) 的三明治：对每个序数 `α`，有 `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)`，两侧等号恰在 ω 不动点 `ω·α = α` 处成立。三明治在此作为经典事实记于文稿：本章不证明它，也绝不把它立为公设。
+
+交付物因而是完全不需要认同的那个方向。初步函数层的成员就是对应可构造阶段的成员：`bridge-isJ→isL`{.Agda} 在归约内部无条件地由 `p4`{.Agda} 证出。`p4` 就是 Devlin 的 `P(α)`：在极限 `γ` 处，只要 `β ∈ γ`，初步函数层 `Sset β` 就被 `Lset γ` 包含并成为其成员。曾把两个方向打包在假假设之上的模块 `Bridged`{.Agda} 已经退休，反方向 `isL → isJ` 本章不予交付。
 <!--/-->
 
 ```agda
 Matching : Type (ℓ-suc ℓ)
 Matching = (γ : S) → (limγ : ⟨ isLimit γ ⟩) → Lset γ ≡ Jset γ limγ
-
-module Bridged (match : Matching) where
-
-  bridge-isL→isJ : (x : S) → ⟨ isL x ⟩ → ⟨ isJ x ⟩
-  bridge-isL→isJ x = PT.rec (snd (isJ x)) go
-    where
-    go : Σ[ α ∈ S ] (IsOrd α × ⟨ x ∈ˢ Lset α ⟩) → ⟨ isJ x ⟩
-    go (α , ordα , x∈L) = Jset→isJ (+ω α) limγ x
-      (subst (λ w → ⟨ x ∈ˢ w ⟩) (match (+ω α) limγ)
-        (Lset-mono {α = +ω α} {β = α} (+ω-mem α) x∈L))
-      where
-      limγ : ⟨ isLimit (+ω α) ⟩
-      limγ = +ω-limit α ordα
-
-  bridge-isJ→isL : (x : S) → ⟨ isJ x ⟩ → ⟨ isL x ⟩
-  bridge-isJ→isL x = PT.rec (snd (isL x)) go
-    where
-    go : Σ[ γ ∈ S ] (Σ[ lim ∈ ⟨ isLimit γ ⟩ ] ⟨ x ∈ˢ Jset γ lim ⟩) → ⟨ isL x ⟩
-    go (γ , lim , x∈J) = Lset→isL γ (isLimit-ord γ lim) x
-      (subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (match γ lim)) x∈J)
-
-  bridge-level : (x : S) → ⟨ isL x ⟩
-               → ∥ Σ[ γ ∈ S ] (Σ[ lim ∈ ⟨ isLimit γ ⟩ ] ⟨ x ∈ˢ Jset γ lim ⟩) ∥₁
-  bridge-level x x∈L = bridge-isL→isJ x x∈L
-
-  level-bridge : (γ : S) → (lim : ⟨ isLimit γ ⟩) → (x : S)
-               → ⟨ x ∈ˢ Jset γ lim ⟩ → ⟨ isL x ⟩
-  level-bridge γ lim x x∈J = bridge-isJ→isL x (Jset→isJ γ lim x x∈J)
 ```
 
 <!--en-->
@@ -494,12 +490,13 @@ side, that each value's members are already in the stage; it is stated here as a
 hypothesis, since discharging it means reading the member characterization of
 each of the sixteen operations once. The pair-valued ones cost one stage more
 than the flat ones, because their members are pairs, and pairing closes only
-inside a limit. The matching below supplies the membership hypothesis at the
-successor of the matched index, so the whole absorption sits two stages above a
-matched limit, three for the pair-valued values, and all of it is absorbed by
-the next limit stage.
+inside a limit. The lemma below takes the equality of the two towers at a limit
+index as a hypothesis and supplies the membership hypothesis at the successor
+of that index; the whole absorption then sits two stages above such an index,
+three for the pair-valued values, and all of it is absorbed by the next limit
+stage.
 <!--zh-->
-吸收如何被消费，看这里，而它所索取的比预想的更少：不需要两塔的认同，只需要某个可构造阶段把初步函数层作为**成员**收下。那么该层之上一步初步函数便可逐臂对着下一个阶段读出：层的成员由传递性成为阶段的成员，层自身径直就是成员，而每个像值由吸收而可定义。这一步仍要索取的是子集一侧，即每个值的诸成员早已在该阶段之内；此处取作假设，因为清偿它意味着把十六个运算的成员刻画各读一遍。对值的那几个比平坦的那几个多花一个阶段，因为它们的成员是对，而配对只在极限内部封闭。下方的认同在已认同索引的后继处供应那条隶属假设，故整场吸收坐在已认同极限之上两个阶段，对值者三个，而这一切都被下一个极限阶段吸收。
+吸收如何被消费，看这里，而它所索取的比预想的更少：不需要两塔的认同，只需要某个可构造阶段把初步函数层作为**成员**收下。那么该层之上一步初步函数便可逐臂对着下一个阶段读出：层的成员由传递性成为阶段的成员，层自身径直就是成员，而每个像值由吸收而可定义。这一步仍要索取的是子集一侧，即每个值的诸成员早已在该阶段之内；此处取作假设，因为清偿它意味着把十六个运算的成员刻画各读一遍。对值的那几个比平坦的那几个多花一个阶段，因为它们的成员是对，而配对只在极限内部封闭。下方的引理把两塔在某极限索引处的等式取作假设，在该索引的后继处供应那条隶属假设；整场吸收于是坐在这样的极限之上两个阶段，对值者三个，而这一切都被下一个极限阶段吸收。
 <!--/-->
 
 ```agda
@@ -546,23 +543,30 @@ a level. In the other direction, the sixteen operations are described over an
 arbitrary transitive carrier, so a value whose arguments and members the carrier
 holds is definable there, and the junk of a rud step, the values with the level
 itself in an argument slot, is ordinary once a stage holds that level as a
-member. The verified offset is therefore **two** stages above a matched limit
-index: one to hold the level, one to define the value. Pairing is closed inside
-a limit stage, which is the subset condition for the pair-valued operations.
+member. The verified offset is therefore **two** stages above a limit index at
+which the equality of the two towers is assumed: one to hold the level, one to
+define the value. Pairing is closed inside a limit stage, which is the subset
+condition for the pair-valued operations.
 
-What is not proved here is the identification of the two towers at limit
-indices, and the reason is worth recording. Both directions of an interleaving
-ask for the levels of one tower to be **members** of the other's, and each of
-those is a definability statement about a hierarchy rather than about a single
-step: on one side the rud step operator would have to be definable over a
-constructible stage (which needs the graphs of the sixteen operations, not their
-values), on the other the constructible stages would have to appear inside the
-rud tower. The class equivalence is therefore packaged as a module over the
-identification, so that discharging one hypothesis delivers both endpoints.
+What is not delivered here is the identification of the two towers at limit
+indices, and the reason is worth recording: the identification is **false**
+(Devlin VI.2.4; the bridge section records the counter-instance at `ζ = ω`,
+`γ = ω·2`), not merely unproved. Both directions of an interleaving ask for
+the levels of one tower to be **members** of the other's, and each of those is
+a definability statement about a hierarchy rather than about a single step: on
+one side the rud step operator would have to be definable over a constructible
+stage (which needs the graphs of the sixteen operations, not their values), on
+the other the constructible stages would have to appear inside the rud tower.
+The class equivalence is therefore not packaged here: the module that carried
+it over the false hypothesis is retired, and the one direction that needs no
+identification, `bridge-isJ→isL`{.Agda}, is delivered unconditionally from
+`p4`{.Agda}, Devlin's `P(α)`. The true relationship between the levels, the
+classical sandwich `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)` of VI.2.4(i), is
+recorded as a fact in prose at the bridge.
 <!--zh-->
-两个单步都已造出。可构造阶段的一个可定义子集，只要该阶段是初步函数塔某极限层的**成员**，就落进那个极限层，这是把满足集引擎读在一个自身并非层的载体上。反方向，十六个运算在任意传递载体上都有描述，故载体既收下实参又收下诸成员的那个值在其上可定义；而一步初步函数的垃圾，即实参槽里坐着层自身的那些值，一旦某个阶段把该层作为成员收下便成了寻常之物。故经核实的偏移是已认同的极限索引之上**两**个阶段：一个用来收下层，一个用来定义值。配对在极限阶段内部封闭，这正是对值运算所需的子集条件。
+两个单步都已造出。可构造阶段的一个可定义子集，只要该阶段是初步函数塔某极限层的**成员**，就落进那个极限层，这是把满足集引擎读在一个自身并非层的载体上。反方向，十六个运算在任意传递载体上都有描述，故载体既收下实参又收下诸成员的那个值在其上可定义；而一步初步函数的垃圾，即实参槽里坐着层自身的那些值，一旦某个阶段把该层作为成员收下便成了寻常之物。故经核实的偏移是两塔等式被假设处的极限索引之上**两**个阶段：一个用来收下层，一个用来定义值。配对在极限阶段内部封闭，这正是对值运算所需的子集条件。
 
-此处未证的是两塔在极限索引处的认同，而其缘由值得记下。交错的两个方向都要求一塔的诸层是另一塔的**成员**，而这两件事都是关于层级而非关于单步的可定义性陈述：一侧要求初步函数的 step 算子在可构造阶段上可定义 (那需要十六运算的图，而非它们的值)，另一侧要求可构造诸阶段出现在初步函数塔之内。故类的等价打包成认同之上的模块，只要清偿一条假设，两端一并交付。
+此处不交付的是两塔在极限索引处的认同，而其缘由值得记下：认同是**假的** (Devlin VI.2.4，桥一节记下了 `ζ = ω`、`γ = ω·2` 处的反例)，并非仅仅未证。交错的两个方向都要求一塔的诸层是另一塔的**成员**，而这两件事都是关于层级而非关于单步的可定义性陈述：一侧要求初步函数的 step 算子在可构造阶段上可定义 (那需要十六运算的图，而非它们的值)，另一侧要求可构造诸阶段出现在初步函数塔之内。故类的等价不再打包于此：曾把等价打包在假假设之上的模块已经退休，而那个完全不需要认同的方向 `bridge-isJ→isL`{.Agda} 由 `p4`{.Agda} (Devlin 的 `P(α)`) 无条件交付。诸层之间的真实关系，即 VI.2.4 (i) 的经典三明治 `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)`，作为事实记于桥一节的文稿。
 <!--/-->
 
 <!--en-->
@@ -633,27 +637,34 @@ Lstep⊆ u ζ hA u∈L vb x x∈step =
 ## The reduction
 
 Everything above is assembled here into a single induction along the membership
-relation, which discharges the identification of the towers from three named
-facts and nothing else. The induction carries three statements at each ordinal
-index: the constructible stage is a **member** of every rud level above it, the
-two towers agree at the index when it is a limit, and the rud level is included
-in and a member of every constructible stage above it. The agreement clause uses
-only the induction hypothesis, so the other two may use it at their own index,
-and no case analysis on the *shape* of the limit is needed: the ordinal case
-split (zero, successor, limit) does all the work, and no ordinal arithmetic
-enters.
+relation. The induction carries three statements at each ordinal index: the
+constructible stage is a **member** of every rud level above it, the two towers
+agree at the index when it is a limit, and the rud level is included in and a
+member of every constructible stage above it. The agreement clause uses only
+the induction hypothesis, so the other two may use it at their own index, and
+no case analysis on the *shape* of the limit is needed: the ordinal case split
+(zero, successor, limit) does all the work, and no ordinal arithmetic enters.
 
-The three hypotheses are exactly the two facts the recap named plus the
-member-characterization reads. `defStage∈J` is one Def stage up staying a rud
-member; `stepSet∈L` is one rud step being a *definable set* over a constructible
-stage; `values∈L` is the sixteen reads. `slot∈L` places the relativization slot,
-and is immediate for the trunk instantiation, where the slot is empty.
+The middle clause is the false one, and the reduction does not discharge it:
+nothing here claims `Matching`{.Agda}. What is delivered is the third clause,
+`p4`{.Agda}, Devlin's `P(α)`: for `β ∈ γ` at a limit `γ`, `Sset β ⊆ Lset γ`
+and `Sset β ∈ Lset γ`. `bridge-isJ→isL`{.Agda} is read off the inclusion half
+of `p4`, and that half needs no agreement clause, so the delivered direction
+is independent of the false identification.
+
+The four hypotheses are the named facts the two recaps recorded. `defStage∈J`
+is one Def stage up staying a rud member; `stepSet∈L` is one rud step being a
+*definable set* over a constructible stage; `values∈L` is the sixteen reads.
+`slot∈L` places the relativization slot, and is immediate for the trunk
+instantiation, where the slot is empty.
 <!--zh-->
 ## 归约
 
-以上一切在此装配成沿成员关系的单场归纳，它把两塔的认同从三条具名事实、别无其他中兑付出来。归纳在每个序数索引处携带三条陈述：可构造阶段是其上每个初步函数层的**成员**；该索引若为极限，两塔在该处相合；以及初步函数层被其上每个可构造阶段包含并成为其成员。相合子句只用归纳假设，故另外两条可以在自己的索引处使用它，而无须对极限的**形状**做情形分析：序数三分 (零、后继、极限) 承担全部工作，序数算术一步也不进场。
+以上一切在此装配成沿成员关系的单场归纳。归纳在每个序数索引处携带三条陈述：可构造阶段是其上每个初步函数层的**成员**；该索引若为极限，两塔在该处相合；以及初步函数层被其上每个可构造阶段包含并成为其成员。相合子句只用归纳假设，故另外两条可以在自己的索引处使用它，而无须对极限的**形状**做情形分析：序数三分 (零、后继、极限) 承担全部工作，序数算术一步也不进场。
 
-三条假设恰是小结所点名的两条事实加上成员刻画的诸次读取。`defStage∈J` 是「上升一个 Def 阶段仍为初步函数成员」；`stepSet∈L` 是「一步初步函数是可构造阶段上的**可定义集**」；`values∈L` 是那十六次读取。`slot∈L` 安放相对化槽，在主干实例化处立得，因为那里的槽是空集。
+中间的子句是假的那条，归约不再把它导出：这里没有任何东西声称 `Matching`{.Agda}。交付的是第三条子句 `p4`{.Agda}，即 Devlin 的 `P(α)`：在极限 `γ` 处，只要 `β ∈ γ`，就有 `Sset β ⊆ Lset γ` 且 `Sset β ∈ Lset γ`。`bridge-isJ→isL`{.Agda} 从 `p4` 的包含那一半读出，而那一半不需要相合子句，故交付的方向独立于那条假的认同。
+
+四条假设正是两处小结记下的具名事实。`defStage∈J` 是「上升一个 Def 阶段仍为初步函数成员」；`stepSet∈L` 是「一步初步函数是可构造阶段上的**可定义集**」；`values∈L` 是那十六次读取。`slot∈L` 安放相对化槽，在主干实例化处立得，因为那里的槽是空集。
 <!--/-->
 
 ```agda
@@ -829,8 +840,19 @@ module Reduce
   joint : (β : S) → Joint β
   joint = ∈-induction jstep
 
-  matching : Matching
-  matching γ limγ = joint γ (isLimit-ord γ limγ) .snd .fst limγ
-
-  open Bridged matching public
+  bridge-isJ→isL : (x : S) → ⟨ isJ x ⟩ → ⟨ isL x ⟩
+  bridge-isJ→isL x = PT.rec (snd (isL x)) go
+    where
+    go : Σ[ γ ∈ S ] (Σ[ lim ∈ ⟨ isLimit γ ⟩ ] ⟨ x ∈ˢ Jset γ lim ⟩) → ⟨ isL x ⟩
+    go (γ , lim , x∈J) = Lset→isL γ (isLimit-ord γ lim) x x∈L
+      where
+      x∈L : ⟨ x ∈ˢ Lset γ ⟩
+      x∈L = PT.rec (snd (x ∈ˢ Lset γ)) atEnter (Sset-out γ x x∈J)
+        where
+        atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ γ ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩)
+                → ⟨ x ∈ˢ Lset γ ⟩
+        atEnter (δ , δ∈γ , hx) =
+          joint (sucV δ) (suc-ord (limit-mem-ord γ lim δ δ∈γ)) .snd .snd
+            γ lim (limit-succ-mem γ δ lim δ∈γ) .fst x
+            (subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Sset-suc δ)) hx)
 ```
