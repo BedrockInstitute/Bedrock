@@ -79,6 +79,13 @@ section onward.
 as D16 and D17 in §3): route decisions ignore sunk cost, and retirement is
 planned from the rewrite side rather than the survivor side.
 
+**The closing protocol is already ruled** (D20, executing as `[L7]`): when the
+endpoint lands, `main` is archived and the working branch promoted the same
+day, the retired chapters move into an archive namespace that is unwired from
+the catalogs and excluded from every gate (it is NOT required to be green), and
+a registry under `dev/` records what was archived, why, and under what future
+condition it would be worth consulting again.
+
 ## 1. The theorem, stated honestly (D1)
 
 The delivered claim, and the framing every chapter keeps, is:
@@ -263,6 +270,7 @@ D12 rules on which to take, §6.1 orders their execution.
 | D17 | Retirement is planned from the rewrite side | **Ruled 2026-08-04 by the owner, at EQUAL standing with D16.** A partial retirement scoped to keep a surviving consumer working is the wrong shape by default. First price what the ideal-form version of the needed content costs written fresh today, then retire the old chapter WHOLESALE. Any finding of the form "X must stay because Y consumes it" is INCOMPLETE until the ideal-form rewrite of what Y actually needs has been priced, and the pair (keep-cost versus rewrite-cost-plus-wholesale-retirement) goes to the owner. D-19 of `dev/LESSONS.md` prices PORTS and must not be quoted at a rewrite question. First application, same day: a 1,989-line chapter kept on a survivor-consumes warrant converted to a 0.65-1.25k rewrite, and the sweep it triggered found a second dead cone of about 1,076 lines. |
 | D18 | The trophy configuration | **Ruled 2026-08-04 by the owner on the measured comparison (`_build/l3.31-lt-report.md`).** The trophy stays on the Def tower; there is no re-founding onto the rud/J tower. The wing rides a fresh-generic Sigma-1 face; the reindexed bridge lands at wing tail as a corollary; choice re-homes through it; the internalization cone, the choice tree and the coded cluster retire. The deciding fact was that keeping the trophy on L is a WASH against re-founding at the naive caliber, so the tie broke on the non-line dimensions (steady-state weight, parallelizability, shippability, and the fine-structure literature's J-native form arriving only at the horizon). Executes as `[L3.32]`. |
 | D19 | The bridge is two-directional | **Ruled 2026-08-04 by the owner.** The bridge delivers BOTH directions of the two-definition identification; the one-way variant (mechanizing `isL → isJ` and demoting `isJ → isL` to a recorded classical fact) is rejected, because un-formalizing a delivered true theorem to buy ledger margin is not what the ruling bought. Consequence recorded at the time: the step-into-L content stays in the tree, which under D17 means it is rewritten in ideal form rather than kept at its delivered size. |
+| D20 | Post-trophy archival and promotion | **Ruled 2026-08-04 by the owner, binding on the endpoint's closing work.** When the endpoint (`L ⊨ ZFC ∧ L ⊨ GCH`) is reached: (1) `main` is archived IMMEDIATELY and the working branch becomes `main`; (2) a new archive namespace is created under `src/`, every retired chapter moves into it, and it is unwired from `Landmarks` and from `Everything`; (3) **the archive is not required to typecheck** and is excluded from `make check`, the linters and every other gate; (4) the archive carries its own `README.md` stating these constraints in full; (5) a new archive registry under `dev/` records what is archived, why it was archived, and under what future condition each archived module would be worth consulting again. Rationale: the campaign retires more code than it keeps, and the retired code is the record of routes that were tried and priced. Deleting it destroys evidence a future reader (or a future route) may want; keeping it in the gated tree taxes every build forever. The archive is the third option: preserved, unwired, ungated, and indexed. Executes as `[L7]`. |
 
 ## 4. Target skeleton (D5)
 
@@ -845,6 +853,36 @@ asset valuations execute.
   claim is re-verified at Phase 3 kickoff before being printed anywhere
   public.
 
+**[L7] Post-trophy archival and promotion (D20).** The endpoint's closing
+work. Opens when `L ⊨ ZFC ∧ L ⊨ GCH` lands and the retirement surgery of
+`[L3.32]` has identified what retires; the sub-goals below may run in any order
+except that `[L7.1]` precedes `[L7.2]` and `[L7.3]`.
+
+- **[L7.0]** Archive `main` and promote the working branch. The current `main`
+  (the internalization archive) is tagged and archived; the branch carrying the
+  delivered endpoint becomes `main`. Done immediately on the endpoint, before
+  the archival tidying below, so that what the world sees is the delivered
+  book. **PLANNED.**
+- **[L7.1]** Create the archive namespace under `src/` and move every retired
+  chapter into it, unchanged. Unwire it from `Landmarks` and from
+  `Everything.lagda.md`, so no gated module imports anything inside it.
+  **PLANNED.**
+- **[L7.2]** Exclude the archive from every gate: `make check`, the Agda
+  typecheck, the prose and Agda linters, the marker and glossary checkers, and
+  the site build. **The archive is not required to be green**, and a red
+  archive is not a defect. The exclusion is implemented once, in the tooling,
+  and named in `scripts/README.md`. **PLANNED.**
+- **[L7.3]** Write the archive's own `README.md`: what the namespace is, that
+  it is unwired and ungated and why, that nothing outside it may import it,
+  what a reader should expect (code that was correct when it was written,
+  against interfaces that have since moved), and how to revive a module if one
+  is ever wanted. **PLANNED.**
+- **[L7.4]** Create the archive registry under `dev/`: one entry per archived
+  module recording what it is, WHY it was archived (the ruling and its date),
+  and the CONDITION under which it would be worth consulting again (the future
+  route, question or wing that would want it). The registry is the archive's
+  index and the reason the code is kept rather than deleted. **PLANNED.**
+
 ### 6.2 Caliber and the two-caliber discipline
 
 Every size figure in this registry, unless it says otherwise, is **non-blank
@@ -1065,6 +1103,12 @@ status (§6.0 rule 6). Bookkeeping lines follow the table.
 | L5.2 | CI strategy | PLANNED |
 | L5.3 | Site pipeline load test | PLANNED |
 | L6 | The narrative master plan (the meeting at bedrock) | **REGISTERED 2026-08-04 by owner direction.** The standing narrative frame: geology and inner model theory meet at the bedrock, with `L is a bedrock` as the second trophy; every asset is valued against both trophies from this row onward. Phases and the asset re-coloring rule are in §6.1; the geology entry fee and the two mandatory corpus gates are measured in `_build/l3.31-glprobe-report.md` |
+| L7 | Post-trophy archival and promotion | **PLANNED**, ruled by D20 2026-08-04; opens at the endpoint |
+| L7.0 | Archive `main`, promote the working branch | PLANNED (immediate on the endpoint) |
+| L7.1 | Archive namespace under `src/`, retired chapters moved and unwired | PLANNED |
+| L7.2 | Exclude the archive from every gate (not required to be green) | PLANNED |
+| L7.3 | The archive's README (the constraints, stated in full) | PLANNED |
+| L7.4 | The archive registry under `dev/` (what, why, and when it would matter again) | PLANNED |
 
 ### Bookkeeping
 
