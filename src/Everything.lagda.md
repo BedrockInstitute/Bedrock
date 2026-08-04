@@ -210,6 +210,12 @@ import V.Model
   `A` with parameters from `A`: syntax as index set, inner satisfaction for
   meaning, essential smallness footing the bill; `A ∈ Def A` always, and
   `A ⊆ Def A` under transitivity.
+- `L.InitialSegment`{.Agda}: the constructible tower's own story, told inside a
+  carrier and generic in it: one formula saying that some initial segment of
+  the tower approximates it, applies the definable step at each stage, and
+  ranges over the member being read; with its two readings and its two-way
+  adequacy against the `Def`{.Agda} face. The wing, the bridge and the
+  condensation chapter each instantiate it rather than rebuild it.
 - `L.Constructible`{.Agda}: the tower `Lset`{.Agda} by membership recursion,
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
@@ -289,6 +295,7 @@ import V.Model
 - `FOL.Coding`{.Agda}：语法作为集合：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上 (常量编码自身)，而归纳关系 `Codes`{.Agda} 是接口，使码值不出现在类型检查器必须归一化的等式里。
 - `V.Coding`{.Agda}：层级兑现编码的两组参数：数码单射 (`#-inj`{.Agda})、Kuratowski 对单射 (`pr-inj`{.Agda})，于是 `V` 上的公式成为 `V` 的集合。
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
+- `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
@@ -314,6 +321,7 @@ import FOL.Manipulation.Parameters
 import FOL.Coding
 import V.Coding
 import L.Definability
+import L.InitialSegment
 import L.Constructible
 import L.Ordinal
 import L.Rank
