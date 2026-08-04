@@ -27,19 +27,23 @@ open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _∧̇_; ⊤̇ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧ )
 import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
-open import V.Model {ℓ} using ( self∈sucV )
+open import V.Hierarchy {ℓ} using
+  ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute; extensionalV )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ} using
   ( IsOrd; Lset; Lset-in; Lset-out; Lset-mono; Lset-layer; layer-trans
   ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; isL; Lset→isL )
+open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 open import L.Rud.Ops {ℓ} using ( F0; F0-spec; F1; F2; F3; F4; F5; F6; F7 )
 open import L.Rud.Images {ℓ} using ( F8; F10; left; right; module F15Of )
 open import L.Rud.Describe {ℓ} using
   ( module F0Desc; module F1Desc; module F2Desc; module F3Desc; module F4Desc
   ; module F5Desc; module F6Desc; module F7Desc; module F8Desc
   ; module F10Desc )
+open import L.Rud.OrdBlocks {ℓ} lem using
+  ( sucIter; sucIter-ord; +ω; +ω-in; +ω-out; +ω-mem; +ω-ord; +ω-limit )
 open import L.Rud.Step {ℓ} lem A using
   ( Op16; op0; op1; op2; op3; op4; op5; op6; op7; op8; op9; op10; op11; op12
   ; op13; op14; op15; Fof; Fof-f0; Fof-f1; Fof-f2; Fof-f3; Fof-f4; Fof-f5
@@ -50,22 +54,24 @@ open import L.Rud.Step {ℓ} lem A using
   ; step; step-out; StepArm; arm-member; arm-self; arm-image )
 open import L.Rud.OrdArith {ℓ} lem using
   ( isLimit; isLimit-ord; limit-mem-ord; isSucc; ord-case )
-open import L.Ordinal {ℓ} using ( suc-ord; mem-ord )
-open import L.Rud.ClassJ {ℓ} lem A using ( isJ )
+open import L.Ordinal {ℓ} using ( suc-ord; mem-ord; setUnion-ord )
+open import L.Rud.ClassJ {ℓ} lem A using ( isJ; Jset→isJ )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri; Tri )
 open import L.Rud.Switch {ℓ} lem A using ( module Descr; module Hops )
 open import L.Rud.SatSets {ℓ} lem A using ( module Sat )
 
+open import Cubical.Data.Nat using ( ℕ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ2 )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈-asFiber )
+  using ( _∈ₛ_; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ⟪_⟫; ⟪_⟫↪; ∈-asFiber )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
+  using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; ⋃_; union-ax; module InfinitySet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open InfinitySet using ( sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -451,13 +457,15 @@ at the ω-fixed points, `ω·α = α`. The sandwich is recorded here as a
 classical fact in prose: it is neither proved in this chapter nor assumed as a
 postulate.
 
-The deliverable is therefore the one direction that needs no identification. A
-member of a rud level is a member of the corresponding constructible stage:
-`bridge-isJ→isL`{.Agda} is proved inside the reduction, unconditionally, from
-`p4`{.Agda}. `p4` is Devlin's `P(α)`: for `β ∈ γ` at a limit `γ`, the rud
-level `Sset β` is included in `Lset γ` and is a member of it. The module
-`Bridged`{.Agda}, which packaged both directions over the false hypothesis, is
-retired, and the reverse direction `isL → isJ` is not delivered here.
+The deliverable is therefore the direction that needs no identification. A
+member of a rud level is a member of a constructible stage:
+`bridge-isJ→isL`{.Agda} is proved inside the reshaped reduction, read off the
+surviving half of Devlin's `P(α)` (for `β ∈ γ` at a limit `γ`, the rud level
+`Sset β` is included in `Lset γ`), re-proved without the per-level
+identification. The reverse class direction is delivered at the tower:
+`bridge-isL→isJ`{.Agda} lands each `L`-member in the rud level the reshaped
+induction `Q` supplies. The module `Bridged`{.Agda}, which packaged both
+directions over the false hypothesis, is retired.
 <!--zh-->
 ## 桥
 
@@ -465,7 +473,7 @@ retired, and the reverse direction `isL → isJ` is not delivered here.
 
 经典地为真的是 VI.2.4 (i) 的三明治：对每个序数 `α`，有 `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)`，两侧等号恰在 ω 不动点 `ω·α = α` 处成立。三明治在此作为经典事实记于文稿：本章不证明它，也绝不把它立为公设。
 
-交付物因而是完全不需要认同的那个方向。初步函数层的成员就是对应可构造阶段的成员：`bridge-isJ→isL`{.Agda} 在归约内部无条件地由 `p4`{.Agda} 证出。`p4` 就是 Devlin 的 `P(α)`：在极限 `γ` 处，只要 `β ∈ γ`，初步函数层 `Sset β` 就被 `Lset γ` 包含并成为其成员。曾把两个方向打包在假假设之上的模块 `Bridged`{.Agda} 已经退休，反方向 `isL → isJ` 本章不予交付。
+交付物因而是完全不需要认同的那个方向。初步函数层的成员就是可构造阶段的成员：`bridge-isJ→isL`{.Agda} 在重塑后的归约内部，从 Devlin 的 `P(α)` 的存活半边 (在极限 `γ` 处、`β ∈ γ` 时，初步函数层 `Sset β` 被 `Lset γ` 包含) 读出，且不倚靠分层认同。反方向的类陈述如今在塔处交付：`bridge-isL→isJ`{.Agda} 把每个 `L` 成员落进重塑后的归纳 `Q` 供应的初步函数层。曾把两个方向打包在假假设之上的模块 `Bridged`{.Agda} 已经退休。
 <!--/-->
 
 ```agda
@@ -557,16 +565,19 @@ a definability statement about a hierarchy rather than about a single step: on
 one side the rud step operator would have to be definable over a constructible
 stage (which needs the graphs of the sixteen operations, not their values), on
 the other the constructible stages would have to appear inside the rud tower.
-The class equivalence is therefore not packaged here: the module that carried
-it over the false hypothesis is retired, and the one direction that needs no
-identification, `bridge-isJ→isL`{.Agda}, is delivered unconditionally from
-`p4`{.Agda}, Devlin's `P(α)`. The true relationship between the levels, the
+The class equivalence is packaged at the tower: `bridge-isL→isJ`{.Agda} is
+delivered from the reshaped induction `Q`, and
+`bridge-isJ→isL`{.Agda} is read off the surviving half of Devlin's `P(α)`,
+re-proved without the per-level identification, with the limit membership of
+that half carried as the named residue `below-lim` beside the induction's own
+limit residue `Q-lim`. The module that carried both directions over the false
+hypothesis is retired, and the true relationship between the levels, the
 classical sandwich `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)` of VI.2.4(i), is
 recorded as a fact in prose at the bridge.
 <!--zh-->
 两个单步都已造出。可构造阶段的一个可定义子集，只要该阶段是初步函数塔某极限层的**成员**，就落进那个极限层，这是把满足集引擎读在一个自身并非层的载体上。反方向，十六个运算在任意传递载体上都有描述，故载体既收下实参又收下诸成员的那个值在其上可定义；而一步初步函数的垃圾，即实参槽里坐着层自身的那些值，一旦某个阶段把该层作为成员收下便成了寻常之物。故经核实的偏移是两塔等式被假设处的极限索引之上**两**个阶段：一个用来收下层，一个用来定义值。配对在极限阶段内部封闭，这正是对值运算所需的子集条件。
 
-此处不交付的是两塔在极限索引处的认同，而其缘由值得记下：认同是**假的** (Devlin VI.2.4，桥一节记下了 `ζ = ω`、`γ = ω·2` 处的反例)，并非仅仅未证。交错的两个方向都要求一塔的诸层是另一塔的**成员**，而这两件事都是关于层级而非关于单步的可定义性陈述：一侧要求初步函数的 step 算子在可构造阶段上可定义 (那需要十六运算的图，而非它们的值)，另一侧要求可构造诸阶段出现在初步函数塔之内。故类的等价不再打包于此：曾把等价打包在假假设之上的模块已经退休，而那个完全不需要认同的方向 `bridge-isJ→isL`{.Agda} 由 `p4`{.Agda} (Devlin 的 `P(α)`) 无条件交付。诸层之间的真实关系，即 VI.2.4 (i) 的经典三明治 `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)`，作为事实记于桥一节的文稿。
+此处不交付的是两塔在极限索引处的认同，而其缘由值得记下：认同是**假的** (Devlin VI.2.4，桥一节记下了 `ζ = ω`、`γ = ω·2` 处的反例)，并非仅仅未证。交错的两个方向都要求一塔的诸层是另一塔的**成员**，而这两件事都是关于层级而非关于单步的可定义性陈述：一侧要求初步函数的 step 算子在可构造阶段上可定义 (那需要十六运算的图，而非它们的值)，另一侧要求可构造诸阶段出现在初步函数塔之内。类的等价如今在塔处打包：`bridge-isL→isJ`{.Agda} 由重塑后的归纳 `Q` 交付，`bridge-isJ→isL`{.Agda} 从 Devlin 的 `P(α)` 的存活半边读出、在分层认同之外重证，其极限成员隶属与归纳自己的极限残项 `Q-lim` 一并作为具名残项 `below-lim` 携带。曾把等价打包在假假设之上的模块已经退休；诸层之间的真实关系，即 VI.2.4 (i) 的经典三明治 `Lset α ⊆ Sset (ω·α) ⊆ Lset (ω·α)`，作为事实记于桥一节的文稿。
 <!--/-->
 
 <!--en-->
@@ -634,38 +645,307 @@ Lstep⊆ u ζ hA u∈L vb x x∈step =
 ```
 
 <!--en-->
-## The reduction
+## The index tower
 
-Everything above is assembled here into a single induction along the membership
-relation. The induction carries three statements at each ordinal index: the
-constructible stage is a **member** of every rud level above it, the two towers
-agree at the index when it is a limit, and the rud level is included in and a
-member of every constructible stage above it. The agreement clause uses only
-the induction hypothesis, so the other two may use it at their own index, and
-no case analysis on the *shape* of the limit is needed: the ordinal case split
-(zero, successor, limit) does all the work, and no ordinal arithmetic enters.
+Everything above is assembled here into a reshaped reduction, and the
+reduction's index arithmetic is now a tower of its own. The old induction
+carried the arithmetic by hand: the membership clause ran over every limit
+above the index and collapsed the first limit, and no ordinal arithmetic
+entered. The replacement tower is the closed form the classical index needs:
+`γ β = +ω (⋃_{δ<β} γ δ)`, Devlin's `γ(β) = ω·(β+1)`, one recursion covering
+zero (the union over the empty index is empty, so `γ ∅ = +ω ∅ = ω`),
+successors (the running sup collapses to `γ β`, so `γ (sucV β) = +ω (γ β)`,
+the next ω-block) and limits (the brief's `γ(λ) := +ω (⋃_{β<λ} γ β)`
+verbatim). The tower is sealed opaque at birth with `γ-compute` as its only
+unfolding, and it carries the two facts the reshaped induction needs of it:
+every value is a limit, unconditionally (`γ-lim`), and the successor step is
+the ω-block (`γ-suc`).
 
-The middle clause is the false one, and the reduction does not discharge it:
-nothing here claims `Matching`{.Agda}. What is delivered is the third clause,
-`p4`{.Agda}, Devlin's `P(α)`: for `β ∈ γ` at a limit `γ`, `Sset β ⊆ Lset γ`
-and `Sset β ∈ Lset γ`. `bridge-isJ→isL`{.Agda} is read off the inclusion half
-of `p4`, and that half needs no agreement clause, so the delivered direction
-is independent of the false identification.
-
-The four hypotheses are the named facts the two recaps recorded. `defStage∈J`
-is one Def stage up staying a rud member; `stepSet∈L` is one rud step being a
-*definable set* over a constructible stage; `values∈L` is the sixteen reads.
-`slot∈L` places the relativization slot, and is immediate for the trunk
-instantiation, where the slot is empty.
+The tower is monotone in its index, and the monotonicity is the one wall this
+design fires. The step operator `sucV` is not subset-monotone: `sucV u =
+u ∪ {u}` needs `u ∈ v`, which `u ⊆ v` never gives (D-8). The conditioned kit
+is the native shape, not a patch: the step is monotone under `u ⊆ v` together
+with `u ∈ v`, the trichotomy of ordinals supplies the membership at each
+finite iterate, and both the tower's monotonicity and its successor equation
+run on it.
 <!--zh-->
-## 归约
+## 索引塔
 
-以上一切在此装配成沿成员关系的单场归纳。归纳在每个序数索引处携带三条陈述：可构造阶段是其上每个初步函数层的**成员**；该索引若为极限，两塔在该处相合；以及初步函数层被其上每个可构造阶段包含并成为其成员。相合子句只用归纳假设，故另外两条可以在自己的索引处使用它，而无须对极限的**形状**做情形分析：序数三分 (零、后继、极限) 承担全部工作，序数算术一步也不进场。
+以上一切在此装配成重塑后的归约，而归约的索引算术如今自成一座塔。旧归纳亲手搬运这段算术：成员子句跑过索引之上的每个极限、并在第一个极限处坍缩，序数算术一步也不进场。替换它的塔正是经典索引所需的闭式：`γ β = +ω (⋃_{δ<β} γ δ)`，即 Devlin 的 `γ(β) = ω·(β+1)`，一场递归同时覆盖零 (空索引上的并是空的，故 `γ ∅ = +ω ∅ = ω`)、后继 (运行中的上确界坍缩为 `γ β`，故 `γ (sucV β) = +ω (γ β)`，即下一个 ω 块) 与极限 (`γ(λ) := +ω (⋃_{β<λ} γ β)` 原样照抄)。塔一出生即不透明封印，`γ-compute` 是它唯一的展开，而它携带重塑后的归纳所需的两个事实：每个值都是极限，无条件成立 (`γ-lim`)；后继步就是 ω 块 (`γ-suc`)。
 
-中间的子句是假的那条，归约不再把它导出：这里没有任何东西声称 `Matching`{.Agda}。交付的是第三条子句 `p4`{.Agda}，即 Devlin 的 `P(α)`：在极限 `γ` 处，只要 `β ∈ γ`，就有 `Sset β ⊆ Lset γ` 且 `Sset β ∈ Lset γ`。`bridge-isJ→isL`{.Agda} 从 `p4` 的包含那一半读出，而那一半不需要相合子句，故交付的方向独立于那条假的认同。
-
-四条假设正是两处小结记下的具名事实。`defStage∈J` 是「上升一个 Def 阶段仍为初步函数成员」；`stepSet∈L` 是「一步初步函数是可构造阶段上的**可定义集**」；`values∈L` 是那十六次读取。`slot∈L` 安放相对化槽，在主干实例化处立得，因为那里的槽是空集。
+塔在索引上单调，而这条单调性正是本设计打出的那面墙。step 算子 `sucV` 不在子集序上单调：`sucV u = u ∪ {u}` 需要 `u ∈ v`，而 `u ⊆ v` 永远给不出这一点 (D-8)。带条件的套件是原生形状，不是补丁：step 在 `u ⊆ v` 连同 `u ∈ v` 下单调，序数三歧在每个有限迭代处供给隶属，塔的单调性与后继方程都跑在它上面。
 <!--/-->
+
+```agda
+-- The tower's own index arithmetic, closed form (the probe's measured shape).
+_⊆_ : S → S → Type (ℓ-suc ℓ)
+u ⊆ v = (x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩
+
+towerStep : (α : S) → (∀ δ → δ ∈ᵗ α → S) → S
+towerStep α rec = +ω (⋃ (sett ⟪ α ⟫ (λ m → rec (⟪ α ⟫↪ m) (mem m))))
+  where
+  mem : (m : ⟪ α ⟫) → ⟪ α ⟫↪ m ∈ᵗ α
+  mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+
+opaque
+  γ : S → S
+  γ = ∈-induction towerStep
+
+opaque
+  unfolding γ
+  γ-compute : (α : S) → γ α ≡ towerStep α (λ δ _ → γ δ)
+  γ-compute = ∈-induction-compute towerStep
+
+-- The tower read as a family, and its bound union (the union term is bound,
+-- C-20: no inline `∈ˢ ⋃`).
+fam : (α : S) → ⟪ α ⟫ → S
+fam α m = γ (⟪ α ⟫↪ m)
+
+U : S → S
+U α = ⋃ (sett ⟪ α ⟫ (fam α))
+
+-- The base: the union over the empty index is empty, so γ ∅ = +ω ∅ = ω.
+U-zero : U ∅ ≡ ∅
+U-zero = ext-⊆ (λ x x∈ → Empty.rec {A = ⟨ x ∈ˢ ∅ ⟩}
+  (PT.rec Empty.isProp⊥ (go x)
+    (union-ax (sett ⟪ ∅ ⟫ (fam ∅)) x .fst (∈∈ₛ {a = x} {b = U ∅} .fst x∈))))
+  (λ x x∈∅ → Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅)))
+  where
+  go : (x : S) → Σ[ v ∈ S ] (⟨ v ∈ₛ sett ⟪ ∅ ⟫ (fam ∅) ⟩ × ⟨ x ∈ₛ v ⟩)
+     → Empty.⊥
+  go x (v , v∈ , _) = PT.rec Empty.isProp⊥ atFib
+    (∈∈ₛ {a = v} {b = sett ⟪ ∅ ⟫ (fam ∅)} .snd v∈)
+    where
+    atFib : Σ[ m ∈ ⟪ ∅ ⟫ ] (fam ∅ m ≡ v) → Empty.⊥
+    atFib (m , _) = ∅-empty (⟪ ∅ ⟫↪ m) (∈ₛ⟪ ∅ ⟫↪ m)
+
+-- The tower is ordinal-valued, unconditionally: every value is +ω of the
+-- running sup, and the sup is an ordinal over ordinal family members.
+γ-ord : (α : S) → IsOrd (γ α)
+γ-ord = ∈-induction ordStep
+  where
+  ordStep : (α : S) → (∀ δ → δ ∈ᵗ α → IsOrd (γ δ)) → IsOrd (γ α)
+  ordStep α IH = subst IsOrd (sym (γ-compute α))
+    (+ω-ord (U α) (setUnion-ord ⟪ α ⟫ (fam α) hfam))
+    where
+    mem : (m : ⟪ α ⟫) → ⟪ α ⟫↪ m ∈ᵗ α
+    mem m = ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+    hfam : (m : ⟪ α ⟫) → IsOrd (fam α m)
+    hfam m = IH (⟪ α ⟫↪ m) (mem m)
+
+ordU : (β : S) → IsOrd (U β)
+ordU β = setUnion-ord ⟪ β ⟫ (fam β) (λ m → γ-ord (⟪ β ⟫↪ m))
+
+-- Fact one: every value of the tower is a limit, unconditionally.  This is
+-- what makes Sset (γ β) a J-level, so BlockPowLim and the full switch apply
+-- at the tower's own index.
+γ-lim : (α : S) → ⟨ isLimit (γ α) ⟩
+γ-lim α = subst (λ w → ⟨ isLimit w ⟩) (sym (γ-compute α))
+  (+ω-limit (U α) (ordU α))
+
+-- The monotonicity kit (D-8's conditioned form): the step operator is not
+-- subset-monotone, so the block map is monotone only at ordinal arguments,
+-- where the trichotomy supplies the membership.
+sucV-mono-cond : {u v : S} → u ⊆ v → ⟨ u ∈ˢ v ⟩ → sucV u ⊆ sucV v
+sucV-mono-cond {u} {v} sub u∈v x x∈ = ∈sucV-elim (snd (x ∈ˢ sucV v)) x∈
+  (λ x∈u → ∈sucV-inl (sub x x∈u))
+  (λ x≡u → ∈sucV-inl (subst (λ w → ⟨ w ∈ˢ v ⟩) (sym x≡u) u∈v))
+
+sucIter-mono-ord : (u v : S) → IsOrd u → IsOrd v → u ⊆ v → (n : ℕ)
+                 → sucIter n u ⊆ sucIter n v
+sucIter-mono-ord u v ou ov sub zero x x∈ = sub x x∈
+sucIter-mono-ord u v ou ov sub (suc n) x x∈ =
+  go (sucIter-ord n ou) (sucIter-ord n ov)
+     (ord-tri (sucIter n u) (sucIter-ord n ou) (sucIter n v) (sucIter-ord n ov))
+     x x∈
+  where
+  go : IsOrd (sucIter n u) → IsOrd (sucIter n v)
+     → Tri (sucIter n u) (sucIter n v)
+     → (x : S) → ⟨ x ∈ˢ sucV (sucIter n u) ⟩ → ⟨ x ∈ˢ sucV (sucIter n v) ⟩
+  go ou' ov' (inl u∈v) x x∈ =
+    sucV-mono-cond (sucIter-mono-ord u v ou ov sub n) u∈v x x∈
+  go ou' ov' (inr (inl e)) x x∈ =
+    subst (λ w → ⟨ x ∈ˢ w ⟩) (cong sucV e) x∈
+  go ou' ov' (inr (inr v∈u)) x x∈ = Empty.rec (∈-irrefl (sucIter n v)
+    (sucIter-mono-ord u v ou ov sub n (sucIter n v) v∈u))
+
++ω-mono-ord : (u v : S) → IsOrd u → IsOrd v → u ⊆ v → +ω u ⊆ +ω v
++ω-mono-ord u v ou ov sub x x∈ = PT.rec (snd (x ∈ˢ +ω v)) go (+ω-out u x x∈)
+  where
+  go : Σ[ n ∈ ℕ ] ⟨ x ∈ˢ sucIter (suc n) u ⟩ → ⟨ x ∈ˢ +ω v ⟩
+  go (n , x∈n) = +ω-in v x n (sucIter-mono-ord u v ou ov sub (suc n) x x∈n)
+
+-- The tower is monotone in the index: δ ∈ α gives γ δ ⊆ γ α.
+γ-mono : (α δ : S) → IsOrd α → ⟨ δ ∈ˢ α ⟩ → γ δ ⊆ γ α
+γ-mono α δ ordα δ∈α x x∈γδ =
+  subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (γ-compute α))
+    (+ω-mono-ord (U δ) (U α) (ordU δ) (ordU α) (Uδ⊆Uα) x
+      (subst (λ w → ⟨ x ∈ˢ w ⟩) (γ-compute δ) x∈γδ))
+  where
+  Uδ⊆Uα : U δ ⊆ U α
+  Uδ⊆Uα y y∈Uδ = PT.rec (snd (y ∈ˢ U α)) atFib0
+    (union-ax (sett ⟪ δ ⟫ (fam δ)) y .fst (∈∈ₛ {a = y} {b = U δ} .fst y∈Uδ))
+    where
+    atFib0 : Σ[ w ∈ S ] (⟨ w ∈ₛ sett ⟪ δ ⟫ (fam δ) ⟩ × ⟨ y ∈ₛ w ⟩)
+           → ⟨ y ∈ˢ U α ⟩
+    atFib0 (w , w∈ , y∈w) = PT.rec (snd (y ∈ˢ U α)) atFib
+      (∈∈ₛ {a = w} {b = sett ⟪ δ ⟫ (fam δ)} .snd w∈)
+      where
+      atFib : Σ[ m ∈ ⟪ δ ⟫ ] (fam δ m ≡ w) → ⟨ y ∈ˢ U α ⟩
+      atFib (m , mw) = ∈∈ₛ {a = y} {b = U α} .snd
+        (union-ax (sett ⟪ α ⟫ (fam α)) y .snd
+          ∣ γ ε , (memb , y∈ₛ) ∣₁)
+        where
+        ε : S
+        ε = ⟪ δ ⟫↪ m
+        ε∈δ : ⟨ ε ∈ˢ δ ⟩
+        ε∈δ = ∈∈ₛ {a = ε} {b = δ} .snd (∈ₛ⟪ δ ⟫↪ m)
+        ε∈α : ⟨ ε ∈ˢ α ⟩
+        ε∈α = ordα .fst {x = δ} {y = ε} ε∈δ δ∈α
+        fib = ∈-asFiber {a = ε} {b = α} ε∈α
+        memb : ⟨ γ ε ∈ₛ sett ⟪ α ⟫ (fam α) ⟩
+        memb = ∈∈ₛ {a = γ ε} {b = sett ⟪ α ⟫ (fam α)} .fst
+          ∣ fib .fst , cong γ (fib .snd) ∣₁
+        y∈ₛ : ⟨ y ∈ₛ γ ε ⟩
+        y∈ₛ = subst (λ w → ⟨ y ∈ₛ w ⟩) (sym mw) y∈w
+
+-- Fact two: the successor step of the tower IS the ω-block, γ (sucV β) =
+-- +ω (γ β).  The union over sucV β collapses to γ β: below by γ-mono, at
+-- the top by the union's own family membership.
+γ-suc : (β : S) → IsOrd β → γ (sucV β) ≡ +ω (γ β)
+γ-suc β ordβ = ext-⊆ sub sup
+  where
+  U-suc⊆ : (β : S) → IsOrd β → U (sucV β) ⊆ γ β
+  U-suc⊆ β ordβ x x∈U = PT.rec (snd (x ∈ˢ γ β)) atFib0
+    (union-ax (sett ⟪ sucV β ⟫ (fam (sucV β))) x .fst
+      (∈∈ₛ {a = x} {b = U (sucV β)} .fst x∈U))
+    where
+    atFib0 : Σ[ w ∈ S ] (⟨ w ∈ₛ sett ⟪ sucV β ⟫ (fam (sucV β)) ⟩ × ⟨ x ∈ₛ w ⟩)
+           → ⟨ x ∈ˢ γ β ⟩
+    atFib0 (w , w∈ , x∈w) = PT.rec (snd (x ∈ˢ γ β)) atFib
+      (∈∈ₛ {a = w} {b = sett ⟪ sucV β ⟫ (fam (sucV β))} .snd w∈)
+      where
+      atFib : Σ[ m ∈ ⟪ sucV β ⟫ ] (fam (sucV β) m ≡ w) → ⟨ x ∈ˢ γ β ⟩
+      atFib (m , mw) = ∈sucV-elim (snd (x ∈ˢ γ β)) δ∈sucβ
+        (λ δ∈β → γ-mono β δ ordβ δ∈β x x∈γδ)
+        (λ δ≡β → subst (λ t → ⟨ x ∈ˢ γ t ⟩) δ≡β x∈γδ)
+        where
+        δ : S
+        δ = ⟪ sucV β ⟫↪ m
+        δ∈sucβ : ⟨ δ ∈ˢ sucV β ⟩
+        δ∈sucβ = ∈∈ₛ {a = δ} {b = sucV β} .snd (∈ₛ⟪ sucV β ⟫↪ m)
+        x∈γδ : ⟨ x ∈ˢ γ δ ⟩
+        x∈γδ = subst (λ t → ⟨ x ∈ˢ t ⟩) (sym mw)
+          (∈∈ₛ {a = x} {b = w} .snd x∈w)
+  γβ⊆U-suc : (β : S) → γ β ⊆ U (sucV β)
+  γβ⊆U-suc β x x∈γβ = ∈∈ₛ {a = x} {b = U (sucV β)} .snd
+    (union-ax (sett ⟪ sucV β ⟫ (fam (sucV β))) x .snd
+      ∣ γ β , (memb , x∈ₛ) ∣₁)
+    where
+    fib = ∈-asFiber {a = β} {b = sucV β} (self∈sucV β)
+    memb : ⟨ γ β ∈ₛ sett ⟪ sucV β ⟫ (fam (sucV β)) ⟩
+    memb = ∈∈ₛ {a = γ β} {b = sett ⟪ sucV β ⟫ (fam (sucV β))} .fst
+      ∣ fib .fst , cong γ (fib .snd) ∣₁
+    x∈ₛ : ⟨ x ∈ₛ γ β ⟩
+    x∈ₛ = ∈∈ₛ {a = x} {b = γ β} .fst x∈γβ
+  sub : γ (sucV β) ⊆ +ω (γ β)
+  sub x x∈ = +ω-mono-ord (U (sucV β)) (γ β) (ordU (sucV β)) (γ-ord β)
+    (U-suc⊆ β ordβ) x
+    (subst (λ w → ⟨ x ∈ˢ w ⟩) (γ-compute (sucV β)) x∈)
+  sup : +ω (γ β) ⊆ γ (sucV β)
+  sup x x∈ = subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (γ-compute (sucV β)))
+    (+ω-mono-ord (γ β) (U (sucV β)) (γ-ord β) (ordU (sucV β))
+      (γβ⊆U-suc β) x x∈)
+```
+
+<!--en-->
+## The reshaped reduction
+
+The reduction itself is now one statement at the tower's own index. The old
+induction carried three clauses at each index, and the middle one, the
+agreement of the two towers at a limit, is the per-level identification this
+campaign proved false; no clause of the reshaped reduction claims
+`Matching`{.Agda}. The induction proves `Q β`, that the constructible stage
+`Lset β` is a **member** of the rud level `Sset (γ β)` at the tower's index,
+Devlin VI.2.3's `L_α ∈ J_{α+1}` read at the closed form. The zero clause is
+the base, `Lset ∅ = Sset ∅ = ∅` and `∅ ∈ γ ∅ = +ω ∅`. The successor clause
+is the six-line composition T23 measured: `BlockPowLim` (P1's corrected
+target, which SatTable's re-stated relation discharges) lands `𝒟ₒ (Lset β)`
+one ω-block up at the limit index `δ = γ β`; `Lset-suc` identifies
+`Lset (sucV β)` with `𝒟ₒ (Lset β)`; and `γ-suc` identifies `+ω (γ β)` with
+the tower's next value. The limit clause is the expensive one, stated here
+and left as the first named residue: at a limit `l`, the tower hypothesis
+supplies `Lset δ ∈ Sset (γ δ)` for every `δ ∈ l`, and the clause concludes
+`Lset l ∈ Sset (γ l)`. Its proof needs the initial-segment face at the rud
+carrier `Sset (⋃_{δ<l} γ δ)` (the level-sigma chapter), the full switch
+`full-switch-⊇` one ω-block up, a sup-is-a-limit fact for that carrier, and
+`Lset`'s own union structure.
+
+The surviving half of the old reduction is re-proved without the
+identification. Devlin's `P(α)` says the rud level `Sset β` is included in,
+and a member of, every constructible stage above it, and
+`bridge-isJ→isL`{.Agda} is read off the inclusion half. The old proof of the
+membership at a limit index leaned on the per-level identification, which is
+gone; its identification-free form needs the S-hierarchy's sequence as a
+member of the right constructible stage, the same definability family as the
+limit clause's residue. The induction below therefore proves the inclusion
+and the successor memberships from the three named hypotheses, and carries
+the limit membership as the second named residue (`below-lim`). The reverse
+class direction is delivered too: `bridge-isL→isJ`{.Agda} lands an
+`L`-member through `Lset-out` and `Ldef→J` at the level `Q` supplies,
+`Sset (γ δ)`.
+
+The hypotheses are the named facts the recaps recorded. `stepSet∈L` is one
+rud step being a *definable set* over a constructible stage; `values∈L` is
+the sixteen reads; `slot∈L` places the relativization slot, immediate for the
+trunk instantiation where the slot is empty. `blockPowLim` is the successor
+step's supply, and the two residues, `Q-lim` and `below-lim`, are the
+sequence facts the last funding round must close.
+<!--zh-->
+## 重塑后的归约
+
+归约本身现在是塔自己索引处的一条陈述。旧归纳在每个索引处携带三条子句，中间那条，即两塔在某极限处的相合，正是本战役证明为假的分层认同；重塑后的归约没有任何子句声称 `Matching`{.Agda}。归纳证明 `Q β`：可构造阶段 `Lset β` 是塔索引处初步函数层 `Sset (γ β)` 的**成员**，即 Devlin VI.2.3 的 `L_α ∈ J_{α+1}` 在闭式上的读法。零子句是基底，`Lset ∅ = Sset ∅ = ∅` 且 `∅ ∈ γ ∅ = +ω ∅`。后继子句是 T23 测过的六行复合：`BlockPowLim` (P1 的修正目标，由 SatTable 重述后的关系兑付) 在极限索引 `δ = γ β` 处把 `𝒟ₒ (Lset β)` 送到一个 ω 块之上；`Lset-suc` 把 `Lset (sucV β)` 认同为 `𝒟ₒ (Lset β)`；`γ-suc` 把 `+ω (γ β)` 认同为塔的下一个值。极限子句是昂贵的那条，此处陈述并留下，作为第一个具名残项：在极限 `l` 处，塔假设为每个 `δ ∈ l` 供应 `Lset δ ∈ Sset (γ δ)`，子句要推出 `Lset l ∈ Sset (γ l)`。它的证明需要 rud 载体 `Sset (⋃_{δ<l} γ δ)` 处的初始段面孔 (层 sigma 章)、高一个 ω 块处的完全切换 `full-switch-⊇`、该载体的「上确界是极限」事实，以及 `Lset` 自身的并结构。
+
+旧归约的存活半边在认同之外重证。Devlin 的 `P(α)` 说初步函数层 `Sset β` 被其上每个可构造阶段包含并成为其成员，`bridge-isJ→isL`{.Agda} 从包含那一半读出。旧证在极限索引处的成员隶属倚靠分层认同，而它已经不在；其免认同形式需要 S 塔的序列作为正确可构造阶段的成员，与极限子句的残项同属一个可定义性家族。故下面的归纳用三条具名假设证包含与后继成员隶属，把极限成员隶属作为第二个具名残项 (`below-lim`) 携带。反方向的类陈述如今也交付：`bridge-isL→isJ`{.Agda} 经 `Lset-out` 与 `Ldef→J`，把 `L` 成员落进 `Q` 供应的层 `Sset (γ δ)`。
+
+假设正是两处小结记下的具名事实。`stepSet∈L` 是「一步初步函数是可构造阶段上的**可定义集**」；`values∈L` 是那十六次读取；`slot∈L` 安放相对化槽，在主干实例化处立得，因为那里的槽是空集。`blockPowLim` 是后继步的供应，两个残项 `Q-lim` 与 `below-lim` 则是最后一段资金要闭合的序列事实。
+<!--/-->
+
+```agda
+-- The successor step's supply, the P2 residue re-stated by SatTable's
+-- chapter (the same type expression, so the landing's discharge is
+-- definitionally usable here).
+BlockPowLim : Type (ℓ-suc ℓ)
+BlockPowLim = (ζ δ : S) → (ordδ : IsOrd δ) → (limδ : ⟨ isLimit δ ⟩)
+            → ⟨ Lset ζ ∈ˢ Sset δ ⟩ → ⟨ 𝒟ₒ (Lset ζ) ∈ˢ Sset (+ω δ) ⟩
+
+-- The reshaped induction's limit clause, stated and left: at a limit l, from
+-- the tower hypothesis that every stage below is a member at its own index,
+-- conclude that Lset l is a member at γ l.
+Q-lim-statement : Type (ℓ-suc ℓ)
+Q-lim-statement = (l : S) → IsOrd l → ⟨ isLimit l ⟩
+  → ((δ : S) → ⟨ δ ∈ˢ l ⟩ → ⟨ Lset δ ∈ˢ Sset (γ δ) ⟩)
+  → ⟨ Lset l ∈ˢ Sset (γ l) ⟩
+
+-- The surviving half's residue: the rud level at a limit index as a member of
+-- the constructible stage above it.  The old proof leaned on the per-level
+-- identification here; the identification-free form needs the S-sequence in
+-- the right constructible stage, the same definability family as Q-lim.
+BelowLim : Type (ℓ-suc ℓ)
+BelowLim = (γ : S) → (limγ : ⟨ isLimit γ ⟩) → (β : S) → IsOrd β
+         → ⟨ isLimit β ⟩ → ⟨ β ∈ˢ γ ⟩ → ⟨ Sset β ∈ˢ Lset γ ⟩
+
+-- The base of the reshaped induction: Lset ∅ = Sset ∅ = ∅, and the first
+-- ω-block holds the empty set.
+∅∈γ∅ : ⟨ ∅ ∈ˢ γ ∅ ⟩
+∅∈γ∅ = subst (λ w → ⟨ ∅ ∈ˢ w ⟩) (sym (γ-compute ∅))
+  (subst (λ w → ⟨ ∅ ∈ˢ +ω w ⟩) (sym U-zero) (+ω-mem ∅))
+
+Q-zero : ⟨ Lset ∅ ∈ˢ Sset (γ ∅) ⟩
+Q-zero = subst (λ w → ⟨ w ∈ˢ Sset (γ ∅) ⟩) (sym Lset-zero)
+  (subst (λ w → ⟨ w ∈ˢ Sset (γ ∅) ⟩) Sset-zero
+    (Sset-mem {α = γ ∅} {β = ∅} ∅∈γ∅))
+```
 
 ```agda
 opaque
@@ -689,15 +969,13 @@ opaque
 ```
 
 <!--en-->
-The reduction proper.
+The reshaped reduction proper.
 <!--zh-->
-归约本体。
+重塑后的归约本体。
 <!--/-->
 
 ```agda
 module Reduce
-  (defStage∈J : (ζ γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ ζ ∈ˢ γ ⟩
-              → ⟨ Lset ζ ∈ˢ Sset γ ⟩ → ⟨ Lset (sucV ζ) ∈ˢ Sset γ ⟩)
   (stepSet∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
              → ⟨ A ∈ˢ Lset ζ ⟩
              → ((v : S) → ⟨ v ∈ˢ step u ⟩ → ⟨ v ∈ˢ Lset ζ ⟩)
@@ -705,8 +983,57 @@ module Reduce
   (values∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
             → ValuesInU u (suc⁴ ζ))
   (slot∈L : (γ : S) → ⟨ isLimit γ ⟩ → ⟨ A ∈ˢ Lset γ ⟩)
+  (blockPowLim : BlockPowLim)
+  (Q-lim : Q-lim-statement)
+  (below-lim : BelowLim)
   where
 
+  -- The reshaped induction's successor clause, the six-line composition T23
+  -- measured end to end: BlockPowLim at the limit index δ = γ β, Lset-suc,
+  -- and γ-suc.  Nothing else enters.
+  Q-suc : (β : S) → IsOrd β → ⟨ Lset β ∈ˢ Sset (γ β) ⟩
+        → ⟨ Lset (sucV β) ∈ˢ Sset (γ (sucV β)) ⟩
+  Q-suc β ordβ L∈ =
+    subst (λ w → ⟨ Lset (sucV β) ∈ˢ Sset w ⟩) (sym (γ-suc β ordβ))
+      (subst (λ w → ⟨ w ∈ˢ Sset (+ω (γ β)) ⟩) (sym (Lset-suc β))
+        (blockPowLim β (γ β) (isLimit-ord (γ β) (γ-lim β)) (γ-lim β) L∈))
+
+  -- The reshaped induction: zero via Q-zero, successor via Q-suc at the
+  -- predecessor, limit via the stated residue, endpoint Q = ∈-induction.
+  qstep : (β : S) → ((β₀ : S) → β₀ ∈ᵗ β → IsOrd β₀ → ⟨ Lset β₀ ∈ˢ Sset (γ β₀) ⟩)
+        → IsOrd β → ⟨ Lset β ∈ˢ Sset (γ β) ⟩
+  qstep β IH ordβ = go (ord-case β ordβ)
+    where
+    go : (β ≡ ∅) ⊎ (⟨ isSucc β ⟩ ⊎ ⟨ isLimit β ⟩) → ⟨ Lset β ∈ˢ Sset (γ β) ⟩
+    go (inl z) = subst (λ w → ⟨ Lset w ∈ˢ Sset (γ w) ⟩) (sym z) Q-zero
+    go (inr (inl (δ , ordδ , sδ≡β))) =
+      subst (λ w → ⟨ Lset w ∈ˢ Sset (γ w) ⟩) sδ≡β
+        (Q-suc δ ordδ
+          (IH δ (subst (λ w → ⟨ δ ∈ˢ w ⟩) sδ≡β (self∈sucV δ)) ordδ))
+    go (inr (inr limβ)) = Q-lim β ordβ limβ
+      (λ δ (δ∈β : ⟨ δ ∈ˢ β ⟩) → IH δ δ∈β (mem-ord {A = β} ordβ δ δ∈β))
+
+  Q : (β : S) → IsOrd β → ⟨ Lset β ∈ˢ Sset (γ β) ⟩
+  Q = ∈-induction qstep
+
+  -- The class-level L into J direction, delivered at the tower: an L-member
+  -- lies in some 𝒟ₒ (Lset δ), and Q supplies the rud level Sset (γ δ) that
+  -- Ldef→J then receives it into.
+  bridge-isL→isJ : (x : S) → ⟨ isL x ⟩ → ⟨ isJ x ⟩
+  bridge-isL→isJ x = PT.rec (snd (isJ x)) go
+    where
+    go : Σ[ β ∈ S ] (IsOrd β × ⟨ x ∈ˢ Lset β ⟩) → ⟨ isJ x ⟩
+    go (β , ordβ , x∈L) = PT.rec (snd (isJ x)) atEnter (Lset-out β x x∈L)
+      where
+      atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → ⟨ isJ x ⟩
+      atEnter (δ , δ∈β , h) =
+        Jset→isJ (γ δ) (γ-lim δ) x
+          (Ldef→J δ (γ δ) (γ-lim δ) (Q δ (mem-ord {A = β} ordβ δ δ∈β)) x h)
+
+  -- The surviving half, Devlin's P(α): for β ∈ γ at a limit γ, the rud level
+  -- Sset β is included in Lset γ and is a member of it.  The limit membership
+  -- is the second named residue (below-lim); the identification-free proof of
+  -- it is the S-sequence definability, the same family as Q-lim.
   RudBelow : S → S → Type (ℓ-suc ℓ)
   RudBelow β γ = ((v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩)
                × ⟨ Sset β ∈ˢ Lset γ ⟩
@@ -715,62 +1042,18 @@ module Reduce
   isPropRudBelow β γ = isProp× (isPropΠ2 (λ v _ → snd (v ∈ˢ Lset γ)))
     (snd (Sset β ∈ˢ Lset γ))
 
-  Joint : S → Type (ℓ-suc ℓ)
-  Joint β = IsOrd β
-    → (((γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → ⟨ Lset β ∈ˢ Sset γ ⟩)
-      × (((limβ : ⟨ isLimit β ⟩) → Lset β ≡ Sset β)
-      × ((γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ)))
+  module Below (γ : S) (limγ : ⟨ isLimit γ ⟩) where
 
-  jstep : (β : S) → ((β₀ : S) → β₀ ∈ᵗ β → Joint β₀) → Joint β
-  jstep β IH ordβ = (p2 , (p3 , p4))
-    where
-    ihOrd : (β₀ : S) → ⟨ β₀ ∈ˢ β ⟩ → IsOrd β₀
-    ihOrd β₀ h = mem-ord {A = β} ordβ β₀ h
-    inγ : (γ : S) → ⟨ isLimit γ ⟩ → ⟨ β ∈ˢ γ ⟩ → (δ : S) → ⟨ δ ∈ˢ β ⟩
-        → ⟨ δ ∈ˢ γ ⟩
-    inγ γ limγ β∈γ δ δ∈β = isLimit-ord γ limγ .fst {x = β} {y = δ} δ∈β β∈γ
+    R : S → Type (ℓ-suc ℓ)
+    R β = IsOrd β → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
 
-    p3 : (limβ : ⟨ isLimit β ⟩) → Lset β ≡ Sset β
-    p3 limβ = ext-⊆ sub sup
+    rstep : (β : S) → ((β₀ : S) → β₀ ∈ᵗ β → R β₀) → R β
+    rstep β IH ordβ β∈γ = go (ord-case β ordβ)
       where
-      sub : (x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ Sset β ⟩
-      sub x x∈ = PT.rec (snd (x ∈ˢ Sset β)) go (Lset-out β x x∈)
-        where
-        go : Σ[ β₀ ∈ S ] (⟨ β₀ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset β₀) ⟩) → ⟨ x ∈ˢ Sset β ⟩
-        go (β₀ , β₀∈β , h) = Ldef→J β₀ β limβ
-          (IH β₀ β₀∈β (ihOrd β₀ β₀∈β) .fst β limβ β₀∈β) x h
-      sup : (x : S) → ⟨ x ∈ˢ Sset β ⟩ → ⟨ x ∈ˢ Lset β ⟩
-      sup x x∈ = PT.rec (snd (x ∈ˢ Lset β)) go (Sset-out β x x∈)
-        where
-        go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩) → ⟨ x ∈ˢ Lset β ⟩
-        go (δ , δ∈β , h) =
-          IH (sucV δ) sδ∈β (suc-ord (ihOrd δ δ∈β)) .snd .snd β limβ sδ∈β .fst x
-            (subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Sset-suc δ)) h)
-          where
-          sδ∈β : ⟨ sucV δ ∈ˢ β ⟩
-          sδ∈β = limit-succ-mem β δ limβ δ∈β
-
-    p2 : (γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → ⟨ Lset β ∈ˢ Sset γ ⟩
-    p2 γ limγ β∈γ = go (ord-case β ordβ)
-      where
-      go : (β ≡ ∅) ⊎ (⟨ isSucc β ⟩ ⊎ ⟨ isLimit β ⟩) → ⟨ Lset β ∈ˢ Sset γ ⟩
-      go (inl z) = subst (λ w → ⟨ Lset w ∈ˢ Sset γ ⟩) (sym z)
-        (subst (λ w → ⟨ w ∈ˢ Sset γ ⟩) (sym Lset-zero)
-          (∅∈Sset γ (subst (λ w → ⟨ w ∈ˢ γ ⟩) z β∈γ)))
-      go (inr (inl (ζ , ordζ , sζ≡β))) =
-        subst (λ w → ⟨ Lset w ∈ˢ Sset γ ⟩) sζ≡β
-          (defStage∈J ζ γ limγ ζ∈γ (IH ζ ζ∈β ordζ .fst γ limγ ζ∈γ))
-        where
-        ζ∈β : ⟨ ζ ∈ˢ β ⟩
-        ζ∈β = subst (λ w → ⟨ ζ ∈ˢ w ⟩) sζ≡β (self∈sucV ζ)
-        ζ∈γ : ⟨ ζ ∈ˢ γ ⟩
-        ζ∈γ = inγ γ limγ β∈γ ζ ζ∈β
-      go (inr (inr limβ)) = subst (λ w → ⟨ w ∈ˢ Sset γ ⟩) (sym (p3 limβ))
-        (Sset-mem {α = γ} {β = β} β∈γ)
-
-    p4 : (γ : S) → (limγ : ⟨ isLimit γ ⟩) → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
-    p4 γ limγ β∈γ = go (ord-case β ordβ)
-      where
+      ihOrd : (β₀ : S) → ⟨ β₀ ∈ˢ β ⟩ → IsOrd β₀
+      ihOrd β₀ h = mem-ord {A = β} ordβ β₀ h
+      inγ : (δ : S) → ⟨ δ ∈ˢ β ⟩ → ⟨ δ ∈ˢ γ ⟩
+      inγ δ δ∈β = isLimit-ord γ limγ .fst {x = β} {y = δ} δ∈β β∈γ
       go : (β ≡ ∅) ⊎ (⟨ isSucc β ⟩ ⊎ ⟨ isLimit β ⟩) → RudBelow β γ
       go (inl z) = subst (λ w → RudBelow w γ) (sym z)
         ( (λ v h → Empty.rec (∅-empty v (∈∈ₛ {a = v} {b = ∅} .fst
@@ -781,12 +1064,10 @@ module Reduce
         subst (λ w → RudBelow w γ) sδ≡β
           (PT.rec (isPropRudBelow (sucV δ) γ) atStage
             (Lstage₂ γ limγ (Sset δ) A
-              (IH δ δ∈β ordδ .snd .snd γ limγ δ∈γ .snd) (slot∈L γ limγ)))
+              (IH δ δ∈β ordδ (inγ δ δ∈β) .snd) (slot∈L γ limγ)))
         where
         δ∈β : ⟨ δ ∈ˢ β ⟩
         δ∈β = subst (λ w → ⟨ δ ∈ˢ w ⟩) sδ≡β (self∈sucV δ)
-        δ∈γ : ⟨ δ ∈ˢ γ ⟩
-        δ∈γ = inγ γ limγ β∈γ δ δ∈β
         atStage : Σ[ ζ ∈ S ] (⟨ ζ ∈ˢ γ ⟩ × ⟨ Sset δ ∈ˢ Lset ζ ⟩ × ⟨ A ∈ˢ Lset ζ ⟩)
                 → RudBelow (sucV δ) γ
         atStage (ζ , ζ∈γ , u∈ , A∈) = (subFn , memFn)
@@ -826,20 +1107,20 @@ module Reduce
           atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ v ∈ˢ step (Sset δ) ⟩)
                   → ⟨ v ∈ˢ Lset γ ⟩
           atEnter (δ , δ∈β , hv) =
-            IH (sucV δ) sδ∈β (suc-ord (ihOrd δ δ∈β)) .snd .snd γ limγ
-              (inγ γ limγ β∈γ (sucV δ) sδ∈β) .fst v
+            IH (sucV δ) sδ∈β (suc-ord (ihOrd δ δ∈β)) (inγ (sucV δ) sδ∈β) .fst v
               (subst (λ w → ⟨ v ∈ˢ w ⟩) (sym (Sset-suc δ)) hv)
             where
             sδ∈β : ⟨ sucV δ ∈ˢ β ⟩
             sδ∈β = limit-succ-mem β δ limβ δ∈β
         memFn : ⟨ Sset β ∈ˢ Lset γ ⟩
-        memFn = subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (p3 limβ)
-          (Lset-mono {α = γ} {β = sucV β} (limit-succ-mem γ β limγ β∈γ)
-            (Lset∈Lsuc β))
+        memFn = below-lim γ limγ β ordβ limβ β∈γ
 
-  joint : (β : S) → Joint β
-  joint = ∈-induction jstep
+    rudBelow : (β : S) → IsOrd β → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
+    rudBelow = ∈-induction rstep
 
+  -- The surviving unconditional direction: a member of a rud level is a
+  -- member of a constructible stage, read off the inclusion half of P(α) at
+  -- the successor index the step decomposition supplies.
   bridge-isJ→isL : (x : S) → ⟨ isJ x ⟩ → ⟨ isL x ⟩
   bridge-isJ→isL x = PT.rec (snd (isL x)) go
     where
@@ -852,7 +1133,8 @@ module Reduce
         atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ γ ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩)
                 → ⟨ x ∈ˢ Lset γ ⟩
         atEnter (δ , δ∈γ , hx) =
-          joint (sucV δ) (suc-ord (limit-mem-ord γ lim δ δ∈γ)) .snd .snd
-            γ lim (limit-succ-mem γ δ lim δ∈γ) .fst x
+          Below.rudBelow γ lim (sucV δ)
+            (suc-ord (limit-mem-ord γ lim δ δ∈γ))
+            (limit-succ-mem γ δ lim δ∈γ) .fst x
             (subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Sset-suc δ)) hx)
 ```
