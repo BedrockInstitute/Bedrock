@@ -14,12 +14,14 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
 ## Commands
 
 - **`make check`** is the gate before any commit. It typechecks the masters
-  (`agda src/Everything.lagda.md`), validates i18n markers, runs the prose linter, runs the
-  Agda code linter (`scripts/lint-agda.py` against the [dev/STYLE-agda.md](dev/STYLE-agda.md)
-  rules: OPTIONS header, import necessity, no forbidden constructs), runs the
-  glossary checker (`scripts/check-glossary.py` against the term data in
+  (`agda src/Everything.lagda.md`, the single trusted invocation), validates i18n markers, runs
+  the prose linter, runs the Agda code linter (`scripts/lint-agda.py` against the
+  [dev/STYLE-agda.md](dev/STYLE-agda.md) rules: OPTIONS header, import necessity, no forbidden
+  constructs), runs the glossary checker (`scripts/check-glossary.py` against the term data in
   [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)), and
-  runs `reuse lint` for per-file licensing.
+  runs `reuse lint` for per-file licensing. It is expensive: run the individual checks while you
+  work (`agda <file>`, `python3 scripts/lint-prose.py <files>`) and the full gate before the
+  commit.
 - **`make venv`** creates the project virtual environment (`.venv`) from Python 3.11+ and
   installs the pinned tooling in [requirements-dev.txt](requirements-dev.txt). Run it once per
   clone before `make check`.
@@ -39,18 +41,94 @@ build also uses Node only at deploy time (KaTeX and fonts load from a CDN). Tool
 
 ## Boundaries
 
-- **Always:** run `make check` before committing; author each document in English first, then
+- **Always:** read the `dev/LESSONS.md` entries relevant to what you are about to write, before
+  you write it; run `make check` before committing; author each document in English first, then
   translate; verify a load-bearing assumption cheaply before committing to heavy or
-  hard-to-reverse work (large installs, forks, multi-hour builds, framework choices); install
-  Python tooling with `make venv` and pin any new dependency in `requirements-dev.txt`.
+  hard-to-reverse work (large installs, forks, multi-hour builds, framework choices); state any
+  size projection in both calibers; install Python tooling with `make venv` and pin any new
+  dependency in `requirements-dev.txt`.
 - **Ask first:** genuine architecture forks (surface them to the owner with a recommendation
   rather than charging ahead on one interpretation); adding a top-level directory (then add its
   `README.md`); a translation term not yet in [dev/glossary.toml](dev/glossary.toml) (choose by
   meaning and surface the choice).
 - **Never:** commit generated files (anything under `_build/`, or woven mono-lingual
-  `.lagda.md`); translate developer docs; use an em dash in any language; use half-width
-  sentence punctuation in CJK prose; commit or print deployment secrets; add an unpinned or
-  globally-installed dependency (pin it in `requirements-dev.txt`, installed into `.venv`).
+  `.lagda.md`) or probe files (`src/Probe*.agda`); DELETE retired code (archive it, see below);
+  translate developer docs; use an em dash in any language; use half-width sentence punctuation
+  in CJK prose; commit or print deployment secrets; add an unpinned or globally-installed
+  dependency (pin it in `requirements-dev.txt`, installed into `.venv`).
+
+## The developer documents, and which of them bind
+
+- **`dev/LESSONS.md` BINDS NEW CODE.** About a hundred measured entries in six series (P
+  performance, R conversion and reduction, T termination, I inference, D design, C craft and
+  process). They are measurements, not opinions, and each one exists because something cost
+  time or died. Read the relevant entries before writing, not after a wall. When your work
+  discovers a new law, propose it with its measurement; the owner assigns the ID.
+- **`dev/PLAN.md` is the goal registry.** Section 0 says where the work stands today, section 3
+  holds the ratified decisions, section 6 holds the goal tree and the coding rules, section 11
+  is the master status table. Work is managed by goal codes and every commit carries one in
+  brackets (`[L3.32-T8]`).
+- **`dev/JOURNAL.md` is the execution record**: how each goal actually went, dispatch by
+  dispatch, with the measurements and the refutations.
+- **`dev/STYLE-agda.md`** is code and chapter style law (`scripts/lint-agda.py` enforces a
+  subset). **`dev/STYLE-i18n.md`** is the marker grammar. **`dev/glossary.toml`** is the
+  canonical term data, machine-checked, explained by `dev/GLOSSARY.md`.
+- **`dev/memos/`** holds route memos; **`dev/literature/`** holds the digested sources.
+  Reconnaissance and probe reports live in `_build/*.md`, with the briefs that produced them
+  archived in `_build/briefs/`.
+
+A fact belongs in exactly one of them: a **ruling** is a PLAN row, an **episode** is a JOURNAL
+entry, a **law** is a LESSONS entry.
+
+## Working rules for dispatched agents
+
+- **Never touch `src/Everything.lagda.md`.** The orchestrator wires it after auditing your work.
+- **Never commit, never push.** Leave the working tree as your report describes it.
+- **Run Agda under a heap cap and one process at a time**: `GHCRTS=-M8g agda <file>`. Several
+  concurrent typechecks will thrash the machine, and a heap exhaustion is treated as a wall
+  event, not a hiccup.
+- **Write your deliverable incrementally.** If your output is a file, create it early and fill
+  it as answers land. Research held only in your head dies with your budget.
+- **Evidence is `file:line`.** A report that cannot be checked can only be believed.
+- **A stop is a deliverable.** If the target turns out to be false, or the price wrong, or the
+  plan built on a bad premise, say so with the evidence and stop. Two of this project's most
+  valuable results were a refutation and a stop.
+
+## Probes and gates
+
+Before heavy or hard-to-reverse work, verify the load-bearing assumption cheaply: build the
+smallest decisive miniature, report GO or NO-GO with a price extrapolation, and throw it away.
+A probe prices only what THIS setting costs us; it never re-establishes what the literature or
+the delivered tree already settles.
+
+Probes are never committed. The verdict lives in a report under `_build/`; the file survives
+only while it is the template for a chapter about to be written from it, and goes when that
+chapter lands. A pattern worth keeping belongs in `dev/LESSONS.md` or in the chapter it seeded,
+never in a stray file.
+
+## Estimates carry two calibers
+
+Size figures are non-blank lines inside ` ```agda ` fences. Any projection is stated twice:
+**naive**, the component sum with each part anchored on a delivered comparable, and
+**calibrated**, the naive figure with this project's measured underestimation applied (a part
+anchored by a probe or a delivered comparable carries about 1.3x, a part that only a survey
+could reach carries 3x). The split prices ignorance rather than pessimism, which is why a probe
+converts money: every gate that goes green moves its part from the 3x class to the 1.3x class
+and narrows the band.
+
+## Retiring code
+
+Retirement is planned from the **rewrite side**, not the survivor side. Before concluding that
+a chapter must stay because something still consumes it, price what the ideal form of the
+needed content would cost written fresh today; only then compare. "We already paid for it" is
+never a deciding argument, in either direction.
+
+Retired code is **archived, never deleted**. The archive is `archive/` at the repository root,
+outside `src/`, so every gate is structurally blind to it: it is not required to typecheck and
+a red archive is not a defect. Archived files are frozen (a revival copies out, it never edits
+in place) and nothing imports across the boundary. A registry under `dev/` records for each
+archived module what it is, why it went, the commit where it was last green, and what would
+make it worth consulting again. The archive and its registry are created at the first archival.
 
 ## Documentation taxonomy (user docs vs developer docs)
 
