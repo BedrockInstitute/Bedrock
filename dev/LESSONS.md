@@ -1316,6 +1316,19 @@ truth-checked at the top; the top target (`Matching`) was classically false
 defence when the hypothesis is false. The truth check now runs on the
 CHAIN'S ROOT before any link is priced. Provenance: `_build/p2-fork-recon.md`.
 
+**Appended (the reshaped reduction, 2026-08-05, and this is the sharpest form
+of the rule yet):** truth-checking a TARGET is not enough. When a target is
+found false, every DELIVERED theorem must be re-checked for whether its proof
+passes through it. A direction of the two-tower bridge was reported as
+unconditionally delivered through four separate reports and as many rulings;
+the reshaped reduction then found that its proof ran through a limit-membership
+lemma, which used the per-level identification, whose own proof used the
+residue that had been refuted. The theorem was true, but it was not proved, and
+nobody had looked because the falsity was assessed at the residue and never
+propagated backwards through the consumers. **A refutation is not complete until
+the consumers of the refuted object have been walked.** Provenance:
+`_build/l3.32-t35-report.md`.
+
 ### D-8. A self-containing step operator is not subset-monotone; condition on membership
 
 **Rule:** A step operator whose value mentions its own argument (the rud step
