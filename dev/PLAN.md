@@ -677,6 +677,58 @@ first ported module regardless.
   interface caching. **PLANNED.**
 - **[L5.3]** Site pipeline load test at about 200 pages. **PLANNED.**
 
+**[L6] The narrative master plan (owner-ordered 2026-08-04: the "L5+" outline;
+the meeting at bedrock).** The book's title concept is its terminus, declared
+here as the standing narrative frame under which all later milestones and all
+asset valuations execute.
+
+- **The arc.** The AC/GCH trophy is not a warm-up: it is the construction of
+  the future bedrock object. Set-theoretic geology and inner model theory are
+  one mountain seen from two faces, and the book walks from the first face to
+  the meeting point: geology supplies the equivalence structure and its
+  invariants over the generic multiverse (grounds, the mantle, the bedrock);
+  inner model theory supplies the canonical representatives (the normal
+  forms). The meeting theorems all share one sentence shape: the abstract
+  invariant, computed, EQUALS the canonical object.
+- **The meeting map, three levels.** Level 1, in this book's reach: **"L is a
+  bedrock"**, the second trophy: L has no proper ground (constructibility is
+  absolute between transitive class models with the same ordinals, so a
+  ground W of L satisfies L = L-of-W contained in W contained in L), hence
+  the mantle of every set-generic extension of L is L. Its ingredients are
+  exactly: the trophy's L; the GCH wing's W2 + W5 (the uniform level formula
+  and condensation, double-consumed as the absoluteness kit); the forcing
+  entry over the HIT V (names, evaluation, genericity); the geology
+  definitions with Laver-Woodin ground-model definability (whose technical
+  core, the approximation and cover properties, is the first appearance of
+  inner-model-style arguments inside geology). Level 2, mid-range: the
+  invariants dictionary: forcing-invariance of the mantle, the Ground Axiom,
+  and HOD as the second dig. Level 3, the far horizon, named and not
+  planned: Usuba's bedrock theorem (strongly compact implies the mantle is a
+  ground), the HOD dichotomy, and the Varsovian program (the mantle of a
+  canonical mouse is again fine-structural): every time geology's invariant
+  is computed in a canonical situation, the answer speaks fine structure,
+  which is the rud trunk's deep legacy.
+- **The phase spine.** Phase 1: the trophy, under whichever fork ruling the
+  owner issues; the fork table is read with the added criterion of what
+  feeds W2/W5 and the forcing-facing satisfaction machinery. Phase 2: the
+  forcing entry ticket over the HIT V (the `[GLp]` POC prices it). Phase 3:
+  the geology kit (grounds, Laver-Woodin, the mantle, invariance). Phase 4:
+  the meeting theorem "L is a bedrock" as the second trophy. The far horizon
+  stays named in prose and out of the budget.
+- **The asset re-coloring rule.** From this section on, every asset is
+  valued against BOTH trophies, not one: the internalization cone's future
+  is the forcing semantics (the forcing relation's definability is a
+  satisfaction-internalization problem in a new costume); the rud trunk's
+  future is condensation/GCH now and fine structure at the horizon; W2/W5
+  are double-consumed. The owner-ordered re-valuation of all standing assets
+  under this frame executes when `[GLp]` returns, followed by the balanced
+  route candidates (long-term economics of the frame against short-term
+  economics of the trophy).
+- **The novelty claim.** Per the L3.30 formalization landscape sweep,
+  set-theoretic geology exists in no major proof assistant's library; the
+  claim is re-verified at Phase 3 kickoff before being printed anywhere
+  public.
+
 ## 7. Build constraints (D10, binding)
 
 Imported from the source's Makefile trust model (`../fol-reification/Makefile`,
