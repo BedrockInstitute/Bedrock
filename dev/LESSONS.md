@@ -851,6 +851,23 @@ profile that confirmed the r5a figure (26-29 s per site) also exposed a
 larger unattributed cost in the same file (`Slot.k1` 31.7 s, `Slot.tupleIn`
 24.9 s). Provenance: `_build/polish2-report.md`.
 
+**Appended (the W3 sealing probe, 2026-08-04, measured at 60x):** never `with`
+on a transparent least-witness term. The construction RE-ELABORATES the search
+in every branch, so the cost is in the `with`, not in the search: the same case
+analysis aborted at 60 s with RSS climbing through 8 GB (a 150 s run reached
+10.5 GB), at the ABSTRACT carrier as well as the concrete one, and checks in
+0.91 s once the branch is a named helper whose written type carries the
+equation. Two other cures work equally: sealing the consumer alias opaque at
+its birth site with an unfolding read lemma beside it (0.93 s), which then
+lets even the `with` on the sealed key check, and absorbing the truncated
+search result into a proposition-valued goal (0.96 s). The same run found that
+two sibling walls (a heap exhaustion at a concrete presentation and a hang on
+comparison types carrying a concrete ordinal) did not reproduce at all under
+pinned implicits and warm caches, so an elaboration-context artifact can look
+exactly like a statement-level wall: re-measure a recorded wall before pricing
+a design around it. Provenance: `_build/l3.32-t22-report.md`,
+`_build/l3.32-t19-report.md`.
+
 ### R-37. A transported membership in a compared statement position re-fires the tower
 
 **Rule:** A hypothesis of the shape ⟨ x ∈ Sset (concrete index) ⟩ whose proof
