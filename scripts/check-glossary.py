@@ -20,6 +20,7 @@ on a line to suppress it, or `<!-- glossary-ignore: charter -->` to suppress one
 Usage:
   check-glossary.py [--check] [--staged] [FILE ...]
   default mode is --check; with no FILE and no --staged, scans git-tracked *.md/*.lagda.md.
+  The archive (archive/) is never scanned: it is outside every gate (D20).
 Exit status: 0 clean, 1 violations, 2 usage error.
 """
 
@@ -286,7 +287,8 @@ def target_files(explicit, staged):
     return [f for f in files
             if (f.endswith(".md") or f.endswith(".lagda.md"))
             and os.path.normpath(f) not in excluded
-            and os.path.basename(f).lower() not in EXCLUDE_BASENAMES]
+            and os.path.basename(f).lower() not in EXCLUDE_BASENAMES
+            and not f.startswith("archive/")]   # the archive is outside every gate (D20)
 
 
 def main(argv):

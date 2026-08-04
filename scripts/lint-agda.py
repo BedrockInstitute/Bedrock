@@ -365,8 +365,14 @@ def tracked_masters():
 
 
 def main(argv):
-    files = [a for a in argv if not a.startswith("--")]
-    files = [f for f in files if f.endswith(".lagda.md")] or tracked_masters()
+    given = [a for a in argv if not a.startswith("--")]
+    files = [f for f in given if f.endswith(".lagda.md")]
+    if not given:
+        # No explicit FILE: scan all masters (src/ only; a new file must not
+        # escape the gate merely by not being committed yet).
+        files = tracked_masters()
+    # The archive is outside every gate (D20): explicit archive paths are dropped.
+    files = [f for f in files if not f.startswith("archive/")]
     total = 0
     for path in files:
         for lineno, rule, msg in lint_file(path):

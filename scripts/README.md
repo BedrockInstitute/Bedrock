@@ -138,6 +138,16 @@ python3 scripts/lint-agda.py --check           # scan tracked src masters; exit 
 python3 scripts/lint-agda.py <files>           # specific masters (used by the hook)
 ```
 
+## The archive
+
+Archived modules live in `archive/` at the repository root, outside `src/`, so
+every gate is structurally blind to them (D20, `dev/PLAN.md` section 3).
+`lint-agda.py` and `weave-i18n.py` scan `src/` only, and `lint-prose.py` and
+`check-glossary.py` drop `archive/` paths from their file lists, so neither
+`make check` nor the pre-commit hook inspects the archive; `reuse lint` still
+covers it through the `archive/**` carve-out in `REUSE.toml`. The rules are
+stated in full in `archive/README.md`; the registry is `dev/ARCHIVE.md`.
+
 ## Pre-commit hook
 
 `git-hooks/pre-commit` runs fast source checks on staged Markdown (the prose linter, marker
