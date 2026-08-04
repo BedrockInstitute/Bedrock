@@ -26,6 +26,7 @@ Code spans, fenced code blocks, markdown link/image destinations and URLs are pr
 Usage:
   lint-prose.py [--check | --fix] [--staged] [FILE ...]
   default mode is --check; with no FILE and no --staged, scans git-tracked *.md/*.lagda.md.
+  The archive (archive/) is never scanned: it is outside every gate (D20).
 Exit status is non-zero if any violation remains (in --fix, only the report-only ones).
 """
 
@@ -432,7 +433,8 @@ def target_files(explicit, staged):
     return [f for f in files
             if (f.endswith(".md") or f.endswith(".lagda.md"))
             and os.path.basename(f).lower() not in EXCLUDE_BASENAMES
-            and not f.startswith(".claude/")]   # Claude skill/config, not prose docs
+            and not f.startswith(".claude/")    # Claude skill/config, not prose docs
+            and not f.startswith("archive/")]   # the archive is outside every gate (D20)
 
 
 def main(argv):
