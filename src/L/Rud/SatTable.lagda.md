@@ -54,7 +54,7 @@ open import L.Ordinal {ℓ} using ( numeral-ord; ω-ord; #∈ω )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Rud.Images {ℓ} using ( F8; F8-spec; F10 )
 open import L.Rud.Step {ℓ} lem A using
-  ( f8; Fof-f8; Sset; Sset-trans; Sset-mem; Jset; Jset-rud )
+  ( f8; Fof-f8; Sset; Sset-trans; Sset-mem; Jset-rud )
 open import L.Rud.OrdArith {ℓ} lem using
   ( isLimit; isLimit-ord; isLimit-not-zero; isLimit-not-succ; limit-mem-ord )
 open import L.Rud.OrdBlocks {ℓ} lem using
@@ -65,7 +65,7 @@ open import L.Rud.ClassJ {ℓ} lem A using ( isJ )
 open import L.Rud.DefInJ {ℓ} lem A using
   ( DefFragment; Sstage; Lsuc≡Def; module Discharge )
 open import L.Rud.BaseBlock {ℓ} lem A using ( baseDefPow )
-open import L.Rud.Bridge {ℓ} lem A using ( Matching; module Reduce; ∅∈Lset )
+open import L.Rud.Bridge {ℓ} lem A using ( module Reduce; ∅∈Lset )
 open import L.Rud.StepInL {ℓ} lem A using ( stepSet∈L; values∈L )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
@@ -399,8 +399,8 @@ Everything the bridge's reduction wants is now one hypothesis away. The
 discharge of the Def-stage chapter turns the fragment into the reduction's first
 hypothesis; the other three are delivered, the two rud-step readings by the
 step-in-L chapter and the relativization slot by the empty set at the plain
-trunk. The reduction then produces the identification of the two towers, and the
-class equivalence follows in the three lines the bridge already wrote.
+trunk. The reduction then delivers the direction that needs no identification,
+`bridge-isJ→isL`{.Agda}, in the lines the bridge already wrote.
 
 The module below is the close-out check as well as the export: it applies the
 reduction to the four hypotheses in place, so the typechecker verifies that the
@@ -426,18 +426,8 @@ module Landing (gp : GeneralPow)
 
   module R = Reduce defStage∈J stepSet∈L values∈L slot∈L
 
-  matching : Matching
-  matching = R.matching
-
-  bridge-isL→isJ : (x : S) → ⟨ isL x ⟩ → ⟨ isJ x ⟩
-  bridge-isL→isJ = R.bridge-isL→isJ
-
   bridge-isJ→isL : (x : S) → ⟨ isJ x ⟩ → ⟨ isL x ⟩
   bridge-isJ→isL = R.bridge-isJ→isL
-
-  bridge-level : (x : S) → ⟨ isL x ⟩
-               → ∥ Σ[ γ ∈ S ] (Σ[ lim ∈ ⟨ isLimit γ ⟩ ] ⟨ x ∈ˢ Jset γ lim ⟩) ∥₁
-  bridge-level = R.bridge-level
 ```
 
 <!--en-->
@@ -459,12 +449,12 @@ block's (`defPow`{.Agda}), and what remains is `GeneralPow`{.Agda}: the definabl
 power of a stage is a member of every limit level above the first one that holds
 the stage. That in turn follows from one uniform ω-block statement
 (`BlockPow`{.Agda}, `block→general`{.Agda}), which quantifies over no level at
-all. Given either, the bridge's reduction runs at its exact telescope and the two
-towers are identified (`Landing`{.Agda}).
+all. Given either, the bridge's reduction runs at its exact telescope and
+delivers its unconditional direction (`Landing`{.Agda}).
 <!--zh-->
 ## 小结
 
 载体的可定义幂是第八个基底运算施于一条编码满足关系与一个覆盖诸码的集合之值 (`pow≡`{.Agda})，故同时持有二者的极限层不带任何偏移地持有可定义幂 (`pow∈J`{.Agda})；在已交付的编码处，覆盖那一半就是码集自己的两个隶属方向，而唯一缺失的对象是那条关系 (`SatRelation`{.Agda}、`coded-pow`{.Agda})，而编码诸章自身的索引只在高出两个极限之处供给它 (`TwoLimit`{.Agda})。
 
-可定义幂就是它自己的定界片段 (`powFragment`{.Agda})，故 Def 阶段那一章的存留是那条隶属陈述、而非一个片段，且二者可以互换 (`fragment`{.Agda}、`pow-from-fragment`{.Agda})。按第一个极限切分，基本情形归基块所有 (`defPow`{.Agda})，余下的是 `GeneralPow`{.Agda}：某阶段的可定义幂，是持有该阶段、且高于第一个极限的每个极限层的成员。它又由单独一条一致的 ω 块陈述推出 (`BlockPow`{.Agda}、`block→general`{.Agda})，而后者完全不对层量化。有了其中任一条，桥的归约便在它那条确切的望远镜上跑起来，两塔得以认同 (`Landing`{.Agda})。
+可定义幂就是它自己的定界片段 (`powFragment`{.Agda})，故 Def 阶段那一章的存留是那条隶属陈述、而非一个片段，且二者可以互换 (`fragment`{.Agda}、`pow-from-fragment`{.Agda})。按第一个极限切分，基本情形归基块所有 (`defPow`{.Agda})，余下的是 `GeneralPow`{.Agda}：某阶段的可定义幂，是持有该阶段、且高于第一个极限的每个极限层的成员。它又由单独一条一致的 ω 块陈述推出 (`BlockPow`{.Agda}、`block→general`{.Agda})，而后者完全不对层量化。有了其中任一条，桥的归约便在它那条确切的望远镜上跑起来，交付它那个无条件的方向 (`Landing`{.Agda})。
 <!--/-->

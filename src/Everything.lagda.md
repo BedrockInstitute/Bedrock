@@ -1168,9 +1168,10 @@ measurement. Wired chapter by chapter as the wave batches land.
   closure members, the equality atom through the extensional diagonal, and
   the unconditional full switch at limit levels.
 - `L.Rud.Bridge`{.Agda}: where the two definitions meet: the junk absorption
-  into the Def tower, the level equality at limits as the one named
-  hypothesis, and the conditional bridge between the two constructible
-  classes with the choice corollary.
+  into the Def tower, the limit-level equality recorded as the classically
+  FALSE statement it is (Devlin VI.2.4, with the counter-instance and the
+  true sandwich), and the direction that needs no identification, delivered
+  unconditionally from the reduction's own third clause.
 - `L.Rud.DefInJ`{.Agda}: one Def stage up stays a rud member, proved over the
   fragment hypothesis, with the successor collapse and the separation
   identity carried outright.
@@ -1208,7 +1209,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
 - `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
 - `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
-- `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、作为唯一具名假设的极限层等式、两个可构成类之间的条件桥及选择推论。
+- `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
 - `L.Rud.DefInJ`{.Agda}：上升一个 Def 阶段仍为初步函数成员，证于片段假设之上，后继塌缩与分离恒等式直接到手。
 - `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
 - `L.Rud.CodeSet`{.Agda}：载体上的公式码作为一个封印族，成员性定义即得、解码不截断；每个码无条件为闭包成员；成员形归约到其描述入口。
