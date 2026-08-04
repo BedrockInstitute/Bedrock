@@ -1212,9 +1212,9 @@ measurement. Wired chapter by chapter as the wave batches land.
   FALSE statement it is (Devlin VI.2.4, with the counter-instance and the
   true sandwich), and the direction that needs no identification, delivered
   unconditionally from the reduction's own third clause.
-- `L.Rud.DefInJ`{.Agda}: one Def stage up stays a rud member, proved over the
-  fragment hypothesis, with the successor collapse and the separation
-  identity carried outright.
+- `L.Rud.DefInJ`{.Agda}: the successor collapse, one Def stage up read as the
+  definable power of the stage below, with the empty relativization slot every
+  limit level supplies.
 - `L.Rud.StepInL`{.Agda}: one rud step as a definable set over a constructible
   stage: the inner-world reading frame, the sixteen membership formulas, and
   the values reads at the honest offsets.
@@ -1229,9 +1229,11 @@ measurement. Wired chapter by chapter as the wave batches land.
   inner world of a level: the fused twelve-clause node, both adequacy
   directions by rank descent and construction, and the code set discharged
   as a level member at every arity by the description equation.
-- `L.Rud.SatTable`{.Agda}: the fragment identity at an abstract code map,
-  the index-free corrected target for the block power fact, and the landing
-  module assembling the whole bridge over that one hypothesis.
+- `L.Rud.SatTable`{.Agda}: the definable power as the eighth basis operation
+  applied to a relation and a covering set, so a level holding both holds the
+  power with no offset; the corrected block statement discharged at the
+  successor step's own pair of levels, over the one re-stated relation the step
+  still assumes.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1249,12 +1251,12 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
 - `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
-- `L.Rud.DefInJ`{.Agda}：上升一个 Def 阶段仍为初步函数成员，证于片段假设之上，后继塌缩与分离恒等式直接到手。
+- `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
 - `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
 - `L.Rud.CodeSet`{.Agda}：载体上的公式码作为一个封印族，成员性定义即得、解码不截断；每个码无条件为闭包成员；成员形归约到其描述入口。
 - `L.Rud.BaseBlock`{.Agda}：基极限处的遗传有限性：S-侧计数、有限成员引理、幂义务，及带恒等片段见证的阶段事实基例。
 - `L.Rud.CodePred`{.Agda}：对象语言的码谓词，读于层的内层世界：十二子句融合节点、秩下降与构造给出的双向 adequacy、码集经描述等式在每个元数清偿为层成员。
-- `L.Rud.SatTable`{.Agda}：抽象码映射下的片段恒等式、块幂事实的免指标修正目标，以及在这唯一假设上装配全桥的落地模块。
+- `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
 <!--/-->
 
 ```agda
