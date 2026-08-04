@@ -1002,6 +1002,28 @@ L3.24, L3.28, L3.29.
 **When it bites:** architecture forks, unpriced risk items, and any "measure
 before estimating" claim.
 
+**The probe's lifecycle (standing rule, owner-ruled 2026-08-04):** a probe's
+value is its VERDICT, and the verdict lives in a report under `_build/`; the
+file is scaffolding.
+
+1. **A probe is never committed.** Its home is the working tree, ignored by
+   `.gitignore`. (Thirteen were swept into a commit by a `git add -A src/` on
+   2026-08-04 and had to be untracked: 3,274 lines of scaffolding the
+   repository would otherwise have carried forever.)
+2. **The report is written before the probe is deleted, always.** A probe whose
+   verdict is not yet in a report is not finished, however green it is.
+3. **The file survives only while it is a TEMPLATE for imminent work**, that
+   is, while the chapter it seeds is about to be written from it. When that
+   chapter lands, the probe goes. Three of the fourteen live probes were kept
+   on this ground alone (the face, the re-home, and the generic-reading
+   precedent); the other ten were pure history the moment their reports landed.
+4. **A pattern worth keeping is not kept by keeping the file.** If a probe
+   taught a reusable shape, that shape belongs in this law book or in the
+   chapter it seeded. A stray file is not a home for a lesson.
+
+**Provenance of the lifecycle rule:** owner ruling 2026-08-04, after the
+accidental commit; the probe inventory of that day is in `dev/JOURNAL.md`.
+
 ### D-2. The junk-table lesson
 
 **Rule:** Naked existentials over tables admit junk: conditional clause shapes
@@ -1885,9 +1907,26 @@ invisible inside the module header.
 
 **Provenance:** `_build/r2b-report.md`.
 
+### C-22. A dispatched agent writes its deliverable incrementally, never at the end
+
+**Rule:** When an agent's deliverable is a file, the brief must require it
+WRITTEN EARLY as a skeleton and filled incrementally, saving after each answer
+lands. An agent that researches for its whole budget and leaves the writing to
+the end returns nothing when the budget runs out, and its research dies with
+it. A partial dossier is a real deliverable; an unwritten perfect one is not.
+
+**Measured (2026-08-04):** a literature-fetch agent spent its entire run
+locating its sources correctly (it identified the right arXiv identifiers,
+corrected a wrong title carried in its own brief, and established that shell
+network was blocked while the search tools had access), then died before
+writing a line. Zero output. The re-dispatch carried those findings forward in
+its brief and made incremental writing a binding constraint.
+
+**Provenance:** `dev/JOURNAL.md`, the `[L3.32-T12]` entry.
+
 ## Adding an entry
 
-Take the next free ID under the series (P-k, R-40, T-3, I-10, D-25, C-22), cite
+Take the next free ID under the series (P-k, R-40, T-3, I-10, D-25, C-23), cite
 the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
