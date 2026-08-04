@@ -229,6 +229,12 @@ import V.Model
 - `L.Ordinal.Linear`{.Agda}: trichotomy `ord-tri`{.Agda}, and with it the L
   side's classical boundary: closure never had to decide anything, comparison
   does, so this chapter takes the excluded middle as a module parameter.
+- `L.Ordinal.Pairing`{.Agda}: the canonical well-ordering of a product of
+  ordinals, due to Goedel: compare the larger coordinate, then the first, then
+  the second; with the order-type reading that collapses each pair to the
+  ordinal of its predecessors, bijectively. The cardinal step's pairing follows
+  from it and one named bound, the square law, which the chapter states rather
+  than assumes.
 - `L.Ordinal.Stages`{.Agda}: the ordinals of `Lset α` are exactly the members of
   `α`: `rank-Lset`{.Agda} and `ord∈Lset→∈`{.Agda} say none appears early,
   `ord∈Lset-suc`{.Agda} says none appears late.
@@ -300,6 +306,7 @@ import V.Model
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
+- `L.Ordinal.Pairing`{.Agda}：序数之积的典范良序，归功于 Godel：先比较较大的坐标，再比第一坐标，再比第二坐标；连同把每对坍缩为其前驱之序数的序型读法，且该读法是双射。基数步骤所需的配对由它加一条具名的界 (平方律) 推出，而该界由本章陈述而非假定。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是，故恰有一个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}。
 - `L.WellOrder.Tree`{.Agda}：一个经典良序，且泛型：良序字母表上的有穷带标签树，按 shortlex。尺寸门与长度门是承重的，因为变长表上的纯逐点序容许无穷下降；良基性对尺寸作强归纳，每个尺寸类内部再嵌可及性归纳。
@@ -326,6 +333,7 @@ import L.Constructible
 import L.Ordinal
 import L.Rank
 import L.Ordinal.Linear
+import L.Ordinal.Pairing
 import L.Ordinal.Stages
 import L.WellOrder.Base
 import L.WellOrder.Tree
