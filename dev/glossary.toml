@@ -69,10 +69,19 @@ ja = "強制拡大"
 
 [[term]]
 category = "Set theory"
+en = "ground"
+zh = "基模型"
+ja = "基礎モデル"
+avoid = ["zh:基底模型", "zh:基础模型"]
+notes = "Owner ruling 2026-08-05: geology's \"ground\" and forcing's \"ground model\" are one concept and take ONE rendering, so a reader never meets two names for the same thing. 地基 is NOT on the avoid list even though it is the tempting geological metaphor: it is the canonical rendering of \"neutral ground\" (中立的地基) and reads naturally as ordinary groundwork, so banning it machine-wide produced five false positives on prose that never meant a ground model. The discipline here is a review matter, not a linter one."
+
+[[term]]
+category = "Set theory"
 en = "ground model"
 zh = "基模型"
 ja = "基礎モデル"
-notes = "\"grounds\" also renders 基模型"
+avoid = ["zh:基底模型", "zh:基础模型"]
+notes = "Same rendering as \"ground\" by the owner ruling of 2026-08-05; \"grounds\" also renders 基模型"
 
 [[term]]
 category = "Set theory"
