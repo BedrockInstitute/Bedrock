@@ -1176,7 +1176,7 @@ projections. Each is the operations chapter's read in one direction and its
 write in the other, with the quantifier witnesses placed in the carrier by
 transitivity.
 <!--zh-->
-其值无须投影即可读出的十二个运算的适足性。每条都是运算章的读引理走一个方向、写引理走另一个方向，而量词的见证由传递性安放进载体。
+其值无须投影即可读出的十二个运算的充分性。每条都是运算章的读引理走一个方向、写引理走另一个方向，而量词的见证由传递性安放进载体。
 <!--/-->
 
 ```agda

@@ -346,7 +346,7 @@ tagAt s k x = (∃̇∈ (var s) (sglConAt zero (# k)))
 <!--en-->
 ## Adequacy
 <!--zh-->
-## 适足性
+## 充分性
 <!--/-->
 
 <!--en-->

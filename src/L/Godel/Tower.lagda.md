@@ -491,7 +491,7 @@ the hypothesis read through the conjunction; per the recorded law they travel
 as two directions, never as a path, and each direction's application facts are
 transported through the adequacy equation.
 <!--zh-->
-注解把码与数码配成对，而证书将要信任它，故同一个码至多有一条注解。证书的第一条合取说的恰是这一点：h 槽位是一个函数性的有序对之集。三个绑定子挑出自变量与两个被记录的取值，两条应用读式从 h 中读出两个对，一条对象等式迫使两个取值一致。两个读式是模型章的单值性那一对，假设改经合取读出；按在案定律，它们以两个方向行走，绝不以一条路径，每个方向的应用事实都经适足性等式传输。
+注解把码与数码配成对，而证书将要信任它，故同一个码至多有一条注解。证书的第一条合取说的恰是这一点：h 槽位是一个函数性的有序对之集。三个绑定子挑出自变量与两个被记录的取值，两条应用读式从 h 中读出两个对，一条对象等式迫使两个取值一致。两个读式是模型章的单值性那一对，假设改经合取读出；按在案定律，它们以两个方向行走，绝不以一条路径，每个方向的应用事实都经充分性等式传输。
 <!--/-->
 
 ```agda

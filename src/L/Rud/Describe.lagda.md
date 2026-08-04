@@ -95,7 +95,7 @@ constants, so it is restated here over an arbitrary domain with the same
 adequacy, clause for clause, exactly as the InL chapter restated it. Fixed
 de Bruijn indices are named once at each arity.
 <!--zh-->
-造对运算的描述谈论 Kuratowski 对，故需要对读式。编码章在自己常量域上把它写了一次，并配了适足性；读式不用常量，故此处对任意域重述，适足性逐子句照抄，与 InL 章的重述方式相同。固定的 de Bruijn 序号在每个元数处命名一次。
+造对运算的描述谈论 Kuratowski 对，故需要对读式。编码章在自己常量域上把它写了一次，并配了充分性；读式不用常量，故此处对任意域重述，充分性逐子句照抄，与 InL 章的重述方式相同。固定的 de Bruijn 序号在每个元数处命名一次。
 <!--/-->
 
 ```agda
@@ -893,7 +893,7 @@ direction toward the satisfaction closes through the operations chapter's
 read lemma; the direction out of the specification remains walled by the
 seal on the right-hand side, as it is for F2, F6, and F7.
 <!--zh-->
-F3 把 `x` 的成员夹进 `y` 中对的两个分量之间，F4 把它接在右端；二者只差中间对的一次坐标交换。一个框架承载两者，以两个中间槽位与像形为参数：塔为每个分量爬第二实参的二重并，实参里的一个中转站记录对本身，候选里的两个中转站见证中间对。两个适足方向在重构后的形状中收束：中间子句经对读式的适足性以显式位置读出再重建，中转见证经具名消去逐一穿线，恰如塔读式穿线那样；满足到像形方向把十条有界存在逐条剥开。通向满足的隶属方向经运算章的读引理收束；出自规格的方向与 F2、F6、F7 一样仍被右端的封印挡着。
+F3 把 `x` 的成员夹进 `y` 中对的两个分量之间，F4 把它接在右端；二者只差中间对的一次坐标交换。一个框架承载两者，以两个中间槽位与像形为参数：塔为每个分量爬第二实参的二重并，实参里的一个中转站记录对本身，候选里的两个中转站见证中间对。两个适足方向在重构后的形状中收束：中间子句经对读式的充分性以显式位置读出再重建，中转见证经具名消去逐一穿线，恰如塔读式穿线那样；满足到像形方向把十条有界存在逐条剥开。通向满足的隶属方向经运算章的读引理收束；出自规格的方向与 F2、F6、F7 一样仍被右端的封印挡着。
 <!--/-->
 
 ```agda
@@ -1114,7 +1114,7 @@ what the pair reader's adequacy turns into the path. The equation closes
 because a component of a pair in `x` lies in the double union of `x`,
 hence in the carrier by transitivity.
 <!--zh-->
-像的半场以切片构造子开张：`F10 x y` 的成员就是与 `y` 成对后落在 `x` 中的那个值，规格把这条等价陈述为一条道路。定义公式在对象语言中把对条件逐字拼出：`x` 的某个成员读作「与 `y` 相等的集合」和候选自身之对，正是对读式的适足性把它变成道路的那一形状。等式收束靠的是：`x` 中对的一个分量落在 `x` 的二重并内，再经传递性落入载体。
+像的半场以切片构造子开张：`F10 x y` 的成员就是与 `y` 成对后落在 `x` 中的那个值，规格把这条等价陈述为一条道路。定义公式在对象语言中把对条件逐字拼出：`x` 的某个成员读作「与 `y` 相等的集合」和候选自身之对，正是对读式的充分性把它变成道路的那一形状。等式收束靠的是：`x` 中对的一个分量落在 `x` 的二重并内，再经传递性落入载体。
 <!--/-->
 
 ```agda

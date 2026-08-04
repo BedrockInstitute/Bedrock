@@ -1114,7 +1114,7 @@ takes its constructor's coding equation as an argument rather than leaving the
 elaborator to find it; with the constructor a variable nothing reduces, and the
 unification would be the whole cost.
 <!--zh-->
-适足性的头一半。持有某个集合在某元数上的键的见证集，产出该元数上的一条公式，其码就是那个集合。递归跑在码的秩上，把元数作为一个数在旁边带着，好让量词能在高一级的元数上回来，而不必有任何东西被下降两次。
+充分性的头一半。持有某个集合在某元数上的键的见证集，产出该元数上的一条公式，其码就是那个集合。递归跑在码的秩上，把元数作为一个数在旁边带着，好让量词能在高一级的元数上回来，而不必有任何东西被下降两次。
 
 十二个标签收拢为六个框架，因为框架由载荷的形状决定，而一个框架之内变动的只是一个标签与一个构造子。每个框架把它那个构造子的编码等式取作实参，而不留给归约器去找；构造子既是变元，就没有东西会化简，而那次合一将是全部代价。
 <!--/-->
@@ -1633,7 +1633,7 @@ branch.
 <!--en-->
 ## Adequacy, and the code set described
 <!--zh-->
-## 适足性，与被描述的码集
+## 充分性，与被描述的码集
 <!--/-->
 
 <!--en-->
@@ -1775,7 +1775,7 @@ a member of any limit level above the one the predicate is read in
 finite offset, which the previous chapter refuted, but the next limit for the
 codes and one more limit for the set.
 <!--zh-->
-对象语言谓词 `Φ`{.Agda} 在任意元数上说出：某个集合是载体之上该元数的某条公式的码，即有一个见证集持有它的键，且该见证集的每个成员都是良构的键，凭十二条以标签为键的子句 (`clause`{.Agda}、`Shape`{.Agda})。它整个在层内读出，故没有哪条子句有界，绝对性也分文未花。适足性的两个方向都证出：从见证经一场跑在码的秩上的递归还原出公式 (`recover`{.Agda})，而从公式则把它诸子公式之键所成的有限收集造成见证 (`clo`{.Agda}、`Well-clo`{.Agda})。于是该谓词从持有载体的某个极限层中刻出的可定义子集，恰是该元数上的码集 (`codeSet-desc`{.Agda})。
+对象语言谓词 `Φ`{.Agda} 在任意元数上说出：某个集合是载体之上该元数的某条公式的码，即有一个见证集持有它的键，且该见证集的每个成员都是良构的键，凭十二条以标签为键的子句 (`clause`{.Agda}、`Shape`{.Agda})。它整个在层内读出，故没有哪条子句有界，绝对性也分文未花。充分性的两个方向都证出：从见证经一场跑在码的秩上的递归还原出公式 (`recover`{.Agda})，而从公式则把它诸子公式之键所成的有限收集造成见证 (`clo`{.Agda}、`Well-clo`{.Agda})。于是该谓词从持有载体的某个极限层中刻出的可定义子集，恰是该元数上的码集 (`codeSet-desc`{.Agda})。
 
 那条等式正是码集那一章留在那里的对象，而它在此兑付 (`codeSet-Description`{.Agda})，故每个元数上的码集都是该谓词所读之层之上任何极限层的成员 (`codeSet∈J`{.Agda})。这个索引在那一章自己的意义上是诚实的：不是有限偏移，那已被上一章反驳，而是诸码所需的下一个极限，再加为那个集合多取的一个极限。
 <!--/-->

@@ -410,7 +410,7 @@ paid, internalizing a recursion is not a theorem but a corollary, and the
 per-clause absoluteness discipline that the bounded setting forces never has to
 be entered.
 <!--zh-->
-`Definition`{.Agda} 是实例在「手上有一个定义于整个模型的函数」时要填的表格：`L` 中的定义域、那个函数，以及一条按两个方向定义其图的公式。索引为编码的实例没有那样的函数，除非另配一个它本不需要的解码器；这类实例改经 `mereFunct`{.Agda} 直接填 `Recursion`{.Agda}，而那是可靠的，因为可缩性是命题。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的适足性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
+`Definition`{.Agda} 是实例在「手上有一个定义于整个模型的函数」时要填的表格：`L` 中的定义域、那个函数，以及一条按两个方向定义其图的公式。索引为编码的实例没有那样的函数，除非另配一个它本不需要的解码器；这类实例改经 `mereFunct`{.Agda} 直接填 `Recursion`{.Agda}，而那是可靠的，因为可缩性是命题。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的充分性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
 
 本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是要点。任意公式的概括字段才是贵的东西；一旦付清，内化一个递归就不是定理而是推论，而有界情形所强加的逐子句绝对性纪律，压根无须踏入。
 <!--/-->

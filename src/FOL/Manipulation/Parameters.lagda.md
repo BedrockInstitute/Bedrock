@@ -264,7 +264,7 @@ absFo {n = n} φ = placeFo φ (padLeft n)
 <!--en-->
 ## Adequacy
 <!--zh-->
-## 适足性
+## 充分性
 <!--/-->
 
 <!--en-->
@@ -414,7 +414,7 @@ interpreted. Its hypothesis is then the two pad laws in sequence, and the theore
 reads exactly as promised. Satisfaction of the original at `γ` is satisfaction of
 the abstraction at `γ` extended by the collected constants.
 <!--zh-->
-名副其实的适足性随之而来：安置取抽象所取的那一件，参数环境取收集所规定的那一个，即诸常量自身经解释之后的样子。它的假设便是两条补位定律的接续，而定理读起来一如所许：原公式在 `γ` 处的满足，就是抽象在「`γ` 被收集来的诸常量扩张之后」的满足。
+名副其实的充分性随之而来：安置取抽象所取的那一件，参数环境取收集所规定的那一个，即诸常量自身经解释之后的样子。它的假设便是两条补位定律的接续，而定理读起来一如所许：原公式在 `γ` 处的满足，就是抽象在「`γ` 被收集来的诸常量扩张之后」的满足。
 <!--/-->
 
 ```agda

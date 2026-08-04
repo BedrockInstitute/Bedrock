@@ -93,7 +93,7 @@ of `a`. Here the source variable is at index zero and the image at index one; th
 model record states it the other way round, and the chapter that assembles the
 field applies a renaming to match.
 <!--zh-->
-先命名一次，因为下面的引擎产出它而模型 record 消费它：`a` 在 `φ` 下的像，是 `φ` 与 `a` 的某个成员相关联的那些东西构成的类。此处源变元在索引零、像在索引一；模型 record 的陈述次序相反，而装配那个字段的章节以变量变换调整次序以相符。
+先命名一次，因为下面的引擎产出它而模型 record 消费它：`a` 在 `φ` 下的像，是 `φ` 与 `a` 的某个成员相关联的那些东西构成的类。此处源变元在索引零、像在索引一；模型 record 的陈述次序相反，而装配那个字段的章节以改名调整次序以相符。
 <!--/-->
 
 ```agda
