@@ -106,6 +106,14 @@ only while it is the template for a chapter about to be written from it, and goe
 chapter lands. A pattern worth keeping belongs in `dev/LESSONS.md` or in the chapter it seeded,
 never in a stray file.
 
+**An idle agent slot is a defect.** Whenever a slot is free, check for
+parallelizable work and fill it. A slot stays empty only when every remaining
+task is genuinely blocked: waiting on a ruling, on a sibling's write territory,
+on a measurement that would make the work fundable, or on the concurrency and
+heap ceilings. Auditing a return is not a reason to leave slots idle. At every
+return, name what is unblocked, name what blocks the rest, and dispatch before
+writing the report.
+
 **Every block is gated before it is funded.** No block is built at the coarse (3x) estimate
 class without first trying to measure it: each carries a paired probe aimed at its widest
 unmeasured term, run before or alongside the build, and is funded at the band the probe leaves
