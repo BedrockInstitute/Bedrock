@@ -101,7 +101,25 @@ In this order, every time:
 7. **Record** in PLAN (the ruling and the number) and, if a law was learned, in
    `dev/LESSONS.md`.
 
-## 6. Research and translation
+## 6. The owner's instructions
+
+An instruction from the owner is executed or explicitly deferred with a reason,
+never silently dropped. A single message often carries more than one; the
+second is the one that gets lost, especially when the first opens a topic
+interesting enough to absorb the turn.
+
+*Enforcement:* before writing the closing report of any turn, re-read the
+owner's last message and account for EVERY instruction in it: done, dispatched,
+or deferred-with-a-reason. This rule exists because on 2026-08-05 a message
+carried a terminology ruling and a dispatch instruction, the ruling was
+executed, the dispatch was dropped, and the owner had to ask three times.
+
+**Committing.** The orchestrator commits; dispatched agents never do. Commit
+after the audit and the gate, with the goal code in brackets, recording what
+was measured and what was refuted. **Never push** without the owner's word: one
+push is one CI run and one deploy.
+
+## 7. Research and translation
 
 **Web research always goes to a sub-agent** and comes back as a dossier with
 sources, never inline in the orchestrator's loop; the owner rules on the
@@ -115,7 +133,7 @@ machine-enforced, and nowhere else.
 
 *Enforcement:* section 5 step 7, and `check-glossary.py` in `make check`.
 
-## 7. What stays out of the repository
+## 8. What stays out of the repository
 
 Owner-private context (private sibling repositories, local machine paths,
 anything the owner marked private) lives only in the orchestrator's session

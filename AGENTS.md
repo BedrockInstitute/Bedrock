@@ -107,8 +107,16 @@ entry, a **law** is a LESSONS entry.
 
 ## Working rules for dispatched agents
 
+These bind an agent working against a pinned brief. The ORCHESTRATING agent,
+which writes the briefs, audits the returns, wires the catalog and commits,
+works to `dev/ORCHESTRATION.md` instead; where the two differ, the difference
+is called out below.
+
 - **Never touch `src/Everything.lagda.md`.** The orchestrator wires it after auditing your work.
-- **Never commit, never push.** Leave the working tree as your report describes it.
+- **Never commit, never push.** Leave the working tree as your report describes
+  it. (This applies to DISPATCHED agents. The orchestrating agent does commit,
+  with the goal code, after auditing and gating the return; nobody pushes
+  without the owner's word.)
 - **Run Agda under a heap cap and one process at a time**: `GHCRTS=-M8g agda <file>`. Several
   concurrent typechecks will thrash the machine, and a heap exhaustion is treated as a wall
   event, not a hiccup.
