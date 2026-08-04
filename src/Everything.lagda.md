@@ -210,6 +210,11 @@ import V.Model
   `A` with parameters from `A`: syntax as index set, inner satisfaction for
   meaning, essential smallness footing the bill; `A ∈ Def A` always, and
   `A ⊆ Def A` under transitivity.
+- `L.PairAtoms`{.Agda}: the pair atoms for formulas over a carrier, delivered
+  once and generic in the carrier and its transitivity: singleton, pair and
+  ordered-pair atoms at any arity, the characterization, and the six decodes
+  reading each atom's satisfaction back to the meta-level equality of the
+  looked-up values. The face's three consumers reuse it verbatim.
 - `L.InitialSegment`{.Agda}: the constructible tower's own story, told inside a
   carrier and generic in it: one formula saying that some initial segment of
   the tower approximates it, applies the definable step at each stage, and
@@ -301,6 +306,7 @@ import V.Model
 - `FOL.Coding`{.Agda}：语法作为集合：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上 (常量编码自身)，而归纳关系 `Codes`{.Agda} 是接口，使码值不出现在类型检查器必须归一化的等式里。
 - `V.Coding`{.Agda}：层级兑现编码的两组参数：数码单射 (`#-inj`{.Agda})、Kuratowski 对单射 (`pr-inj`{.Agda})，于是 `V` 上的公式成为 `V` 的集合。
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
+- `L.PairAtoms`{.Agda}：载体之上诸公式的对子原子，一次交付且对载体及其传递性通用：任意元数处的单点、无序对与有序对原子，刻画，以及六条解码，把每个原子的满足读回所查取值的元层相等。面孔的三个消费方逐字复用它。
 - `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
@@ -328,6 +334,7 @@ import FOL.Manipulation.Parameters
 import FOL.Coding
 import V.Coding
 import L.Definability
+import L.PairAtoms
 import L.InitialSegment
 import L.Constructible
 import L.Ordinal
