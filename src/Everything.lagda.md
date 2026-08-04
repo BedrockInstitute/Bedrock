@@ -268,6 +268,13 @@ import V.Model
   ordinal of its predecessors, bijectively. The cardinal step's pairing follows
   from it and one named bound, the square law, which the chapter states rather
   than assumes.
+- `L.Ordinal.SquareLaw`{.Agda}: the square law by the initial-segment route,
+  which needs no ordinal arithmetic: the finite base with its counting, the
+  least equinumerous member and its minimality, the shift, and the successor
+  step, with the base at the first limit discharging all four hypotheses of the
+  order core. The law at the higher limits stays named, for a reason the
+  chapter states: the least-of search returns its witness only up to
+  truncation, and no canonical bijection exists to make it honest.
 - `L.CardinalPredicates`{.Agda}: equinumerosity, cardinal and successor
   cardinal as parameter-free internal formulas, generic in the carrier and the
   arity, each with its certificate matching satisfaction to the host notion.
@@ -350,6 +357,7 @@ import V.Model
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
 - `L.Ordinal.Pairing`{.Agda}：序数之积的典范良序，归功于 Godel：先比较较大的坐标，再比第一坐标，再比第二坐标；连同把每对坍缩为其前驱之序数的序型读法，且该读法是双射。基数步骤所需的配对由它加一条具名的界 (平方律) 推出，而该界由本章陈述而非假定。
+- `L.Ordinal.SquareLaw`{.Agda}：经初始段路线的平方律，全程不需要序数算术：有限基及其计数、最小等势成员及其最小性、移位，以及后继步；在第一个极限处的基把序核心的四条假设悉数兑付。更高极限处的该律仍作具名事实留下，缘由本章写明：最小者搜索只在截断意义下交出见证，而没有典范双射能把它做实。
 - `L.CardinalPredicates`{.Agda}：等势、基数与后继基数作为无参的内部公式，对载体与元数皆通用，各带把满足关系对上宿主概念的证书。等势就是双射的存在，一步到位，故任何消费方都不欠一次 Cantor-Bernstein 论证。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是，故恰有一个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}。
@@ -381,6 +389,7 @@ import L.Ordinal
 import L.Rank
 import L.Ordinal.Linear
 import L.Ordinal.Pairing
+import L.Ordinal.SquareLaw
 import L.CardinalPredicates
 import L.Ordinal.Stages
 import L.WellOrder.Base
