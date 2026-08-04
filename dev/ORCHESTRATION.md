@@ -99,7 +99,9 @@ In this order, every time:
 6. **Commit** with the goal code, recording what was measured and what was
    refuted. Never push.
 7. **Record** in PLAN (the ruling and the number) and, if a law was learned, in
-   `dev/LESSONS.md`.
+   `dev/LESSONS.md`. **If the chapter introduced a load-bearing term the
+   glossary does not carry, dispatch the terminology dossier (section 7) before
+   the chapter counts as landed.**
 
 ## 6. The owner's instructions
 
@@ -125,13 +127,26 @@ push is one CI run and one deploy.
 sources, never inline in the orchestrator's loop; the owner rules on the
 presented evidence.
 
-**A term not in `dev/glossary.toml` is not invented.** Search the Chinese
-literature for the established rendering first; if there is none, draft
-multiple candidates by analogy, present them with the reasoning, and let the
-owner rule. Confirmed renderings are added to `dev/glossary.toml`, which is
-machine-enforced, and nowhere else.
+**A term not in `dev/glossary.toml` is not invented, and settling it is a
+DISPATCH, not a judgement call.** When a delivered chapter uses a load-bearing
+term that the glossary does not carry, the orchestrator sends a sub-agent to
+produce a terminology dossier: search the Chinese literature for the
+established rendering FIRST, with sources; only where the literature is silent,
+draft two or three candidates by analogy, each with the analogy it rests on and
+the collision it avoids; mark every guess as a guess; and give the Japanese
+rendering where a source supplies one. The owner rules on the dossier. The
+orchestrator does not choose, and does not settle a term inline: an inline
+choice is unsourced by construction, and the owner cannot audit it.
 
-*Enforcement:* section 5 step 7, and `check-glossary.py` in `make check`.
+Confirmed renderings then go into `dev/glossary.toml`, with an `avoid` list for
+renderings that are actively wrong, and nowhere else. **An `avoid` entry that
+bans a common word will fire on its innocent uses**, so ban a rendering only
+when it is wrong in every context; otherwise leave it to review and say so in
+the term's notes.
+
+*Enforcement:* section 5 step 7 (the return-handling checklist: a chapter that
+introduces a term the glossary lacks is not fully landed until the dossier is
+dispatched), and `check-glossary.py` in `make check`.
 
 ## 8. What stays out of the repository
 

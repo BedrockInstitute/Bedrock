@@ -259,9 +259,17 @@ for mistranslation, omission, addition, and term drift, and fix before finalizin
 Confirmed term renderings live in the **canonical glossary data
 [dev/glossary.toml](dev/glossary.toml)** (explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)), which
 `scripts/check-glossary.py` machine-enforces via `make check` (so a wrong rendering is caught in
-CI, not review). Consult it before translating, and when you confirm a new load-bearing term,
-**add a `[[term]]` entry there** rather than recording it anywhere else. For a term not yet in the
-glossary, choose by meaning and surface the choice to the owner.
+CI, not review). Consult it before translating.
+
+**A term the glossary does not carry is NOT settled by choosing.** It is settled
+by a terminology dossier: the literature is searched for the established
+rendering first, candidates are drafted only where the literature is silent,
+every guess is marked as a guess, and the owner rules. The full protocol,
+including who dispatches it and when, is canonical in
+[dev/ORCHESTRATION.md](dev/ORCHESTRATION.md) section 7. If you are a dispatched
+agent and your chapter needs such a term, **use it consistently and NAME it in
+your report** so the dossier can be dispatched; do not add a glossary entry
+yourself.
 
 ## Licensing
 
