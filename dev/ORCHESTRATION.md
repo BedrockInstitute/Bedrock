@@ -38,7 +38,7 @@ the free slots. Blocked means waiting on an owner ruling, on a sibling's write
 territory, on a measurement that would make the work fundable, or on the
 ceilings above. Auditing a return is not a reason to idle.
 
-*Enforcement:* the return-handling checklist in section 5.
+*Enforcement:* the return-handling checklist in section 6.
 
 ## 3. The brief
 
@@ -75,7 +75,22 @@ Standing clauses that go in every build or probe brief:
 *Enforcement:* the brief is written to `_build/briefs/` and re-read before the
 dispatch command is issued.
 
-## 4. Registration
+## 4. Tree-wide sweeps
+
+A sweep that rewrites many files at once (a terminology change, a mechanical
+refactor) **must not run while dispatched agents hold write territories**,
+unless it excludes those files explicitly. The danger is not a merge conflict,
+which git would show, but a SILENT CLOBBER: the sweep reads a file, the agent
+writes it, the sweep writes back its own version, and the agent's work is gone
+with no diff to show for it.
+
+*Enforcement:* before a sweep, list the write territories of every running
+agent and exclude them; after it, confirm each excluded file is untouched.
+On 2026-08-05 a seven-term sweep ran across 43 files with four agents holding
+territories and escaped only because none of their files contained a swept
+term. That is luck, not method.
+
+## 5. Registration
 
 A task is registered in `dev/PLAN.md` **before** the work starts, never
 backfilled (PLAN section 6.0 rule 6). This was breached once, for four tasks,
@@ -83,7 +98,7 @@ and the breach is recorded in the row rather than tidied away.
 
 *Enforcement:* the PLAN commit precedes the dispatch command in the same turn.
 
-## 5. Handling a return
+## 6. Handling a return
 
 In this order, every time:
 
@@ -103,7 +118,7 @@ In this order, every time:
    glossary does not carry, dispatch the terminology dossier (section 7) before
    the chapter counts as landed.**
 
-## 6. The owner's instructions
+## 7. The owner's instructions
 
 An instruction from the owner is executed or explicitly deferred with a reason,
 never silently dropped. A single message often carries more than one; the
@@ -121,7 +136,7 @@ after the audit and the gate, with the goal code in brackets, recording what
 was measured and what was refuted. **Never push** without the owner's word: one
 push is one CI run and one deploy.
 
-## 7. Research and translation
+## 8. Research and translation
 
 **Web research always goes to a sub-agent** and comes back as a dossier with
 sources, never inline in the orchestrator's loop; the owner rules on the
@@ -144,11 +159,11 @@ bans a common word will fire on its innocent uses**, so ban a rendering only
 when it is wrong in every context; otherwise leave it to review and say so in
 the term's notes.
 
-*Enforcement:* section 5 step 7 (the return-handling checklist: a chapter that
+*Enforcement:* section 6 step 7 (the return-handling checklist: a chapter that
 introduces a term the glossary lacks is not fully landed until the dossier is
 dispatched), and `check-glossary.py` in `make check`.
 
-## 8. What stays out of the repository
+## 9. What stays out of the repository
 
 Owner-private context (private sibling repositories, local machine paths,
 anything the owner marked private) lives only in the orchestrator's session

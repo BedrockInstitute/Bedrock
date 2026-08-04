@@ -49,7 +49,7 @@ category = "Set theory"
 en = "rudimentary function"
 zh = "初步函数"
 ja = "初歩的関数"
-avoid = ["zh:初等函数", "zh:初始函数", "zh:rud 函数"]
+avoid = ["zh:初始函数", "zh:rud 函数"]
 presence = true
 notes = "owner-ruled 2026-08-02; zh follows the E-C Math Vocabulary 3rd ed. pattern (rudimentary set = 初步集); ja tentative pending a literature check"
 
@@ -72,7 +72,7 @@ category = "Set theory"
 en = "ground"
 zh = "基模型"
 ja = "基礎モデル"
-avoid = ["zh:基底模型", "zh:基础模型"]
+avoid = ["zh:基底模型"]
 notes = "Owner ruling 2026-08-05: geology's \"ground\" and forcing's \"ground model\" are one concept and take ONE rendering, so a reader never meets two names for the same thing. 地基 is NOT on the avoid list even though it is the tempting geological metaphor: it is the canonical rendering of \"neutral ground\" (中立的地基) and reads naturally as ordinary groundwork, so banning it machine-wide produced five false positives on prose that never meant a ground model. The discipline here is a review matter, not a linter one."
 
 [[term]]
@@ -80,7 +80,7 @@ category = "Set theory"
 en = "ground model"
 zh = "基模型"
 ja = "基礎モデル"
-avoid = ["zh:基底模型", "zh:基础模型"]
+avoid = ["zh:基底模型"]
 notes = "Same rendering as \"ground\" by the owner ruling of 2026-08-05; \"grounds\" also renders 基模型"
 
 [[term]]
@@ -339,10 +339,11 @@ notes = "keep the English word in all languages; do not translate"
 [[term]]
 category = "Type theory"
 en = "adequacy"
-zh = "适足性"
+zh = "充分性"
 ja = "妥当性"
 presence = true
-notes = "zh 适足性 vs ja 妥当性 (deliberate)"
+avoid = ["zh:适足性"]
+notes = "Owner ruling 2026-08-05 on the glossary review. 适足性 appears in Chinese only as the finance term 资本适足性; PLFA's Chinese edition titles the chapter 充分性. The sufficiency homonym is accepted."
 
 [[term]]
 category = "Type theory"
@@ -434,8 +435,10 @@ notes = "of syntax"
 [[term]]
 category = "Logic and philosophy"
 en = "Gödel numbering"
-zh = "哥德尔数"
+zh = "哥德尔配数"
 ja = "ゲーデル数化"
+avoid = ["zh:哥德尔数"]
+notes = "Owner ruling 2026-08-05. 哥德尔数 is the number, 哥德尔配数 the scheme, which is what this term means."
 
 [[term]]
 category = "Logic and philosophy"
@@ -550,7 +553,6 @@ category = "Logic and philosophy"
 en = "sentence"
 zh = "句子"
 ja = "文"
-avoid = ["zh:语句"]
 notes = "a formula with no free variables; zh 句子 per the owner's math-logic convention"
 
 [[term]]
@@ -558,7 +560,6 @@ category = "Logic and philosophy"
 en = "parameter-free"
 zh = "无参"
 ja = "無パラメータ"
-avoid = ["zh:无参数"]
 notes = "无参公式, formulas with constant domain ⊥*; like sentences, no named definition (owner ruling 2026-07-19), spelt Formula ⊥* n; ja tentative"
 
 [[term]]
@@ -598,10 +599,10 @@ notes = "of a structure; ja 台 as in 台集合"
 [[term]]
 category = "Logic and philosophy"
 en = "renaming"
-zh = "变量变换"
-ja = "変数変換"
-avoid = ["zh:重命名"]
-notes = "the variable calculus of FOL.Renaming; the zh/ja pair 变量变换/変数変換 mirrors relabelling = 常量变换/定数変換 (owner ruling 2026-07-18)"
+zh = "改名"
+ja = "改名"
+avoid = ["zh:变量变换"]
+notes = "Owner ruling 2026-08-05. Chinese logic renames bound variables with 改名, 换名 or 更名; 变量变换 reads as change of variables, as did the Japanese 変数変換."
 
 [[term]]
 category = "Set theory"
@@ -646,17 +647,18 @@ notes = "written body text, not the literary essay genre"
 [[term]]
 category = "Other"
 en = "proof assistant"
-zh = "证明助理"
+zh = "证明助手"
 ja = "証明支援系"
 presence = true
-notes = "zh 证明助理 vs ja 証明支援系 (deliberate)"
+avoid = ["zh:证明助理"]
+notes = "Owner ruling 2026-08-05. 助手 is what the Coq, Lean and Isabelle Chinese materials use; 助理 reads as an office assistant."
 
 [[term]]
 category = "Other"
 en = "machine-checked development"
 zh = "机器验证工作"
 ja = "機械検証の開発"
-avoid = ["zh:机器验证开发", "zh:机械验证", "ja:機械検査の開発"]
+avoid = ["zh:机器验证开发", "ja:機械検査の開発"]
 presence = true
 notes = "the README tagline; \"machine-checked\" is zh 机器 / ja 機械 and \"development\" is zh 工作 / ja 開発 (deliberate); the certificate/ground phrasings (机器可检的证书 / 经机器检验的地基 etc.) are separate and not covered here"
 
@@ -794,9 +796,10 @@ notes = "IsOrd: a transitive set whose members are all transitive (von Neumann)"
 [[term]]
 category = "Set theory"
 en = "bounding ordinal"
-zh = "界层序数"
+zh = "上界序数"
 ja = "上界順序数"
-notes = "boundingOrd: a single ordinal containing every member of a small family"
+avoid = ["zh:界层序数"]
+notes = "Owner ruling 2026-08-05. 界层 is not a Chinese mathematical word and reads as boundary layer; 上界序数 is attested for the ordinal bound of a family."
 
 [[term]]
 category = "Set theory"
@@ -815,9 +818,10 @@ notes = "L.Choice.Step: the ordinal a constructible set is carved over, one belo
 [[term]]
 category = "Set theory"
 en = "end extension"
-zh = "末端扩张"
+zh = "尾节扩张"
 ja = "端拡大"
-notes = "L.Choice.Step: the order at a larger stage restricted to a smaller one is the order there; zh/ja follow the standard set-theoretic rendering"
+avoid = ["zh:末端扩张"]
+notes = "Owner ruling 2026-08-05. 尾节扩张 is the rendering of this project's own school (郝兆宽 et al., 递归论); 末端扩张 has no model-theoretic attestation."
 
 [[term]]
 category = "Set theory"
@@ -857,10 +861,10 @@ notes = "the Impredicativity packing (Resizing + HPropSmallness); impredicative 
 [[term]]
 category = "Logic and philosophy"
 en = "relabelling"
-zh = "常量变换"
-ja = "定数変換"
-avoid = ["zh:重标记", "zh:改换"]
-notes = "of constants, along a map of constant domains (mapFo; chapter FOL.Relabelling); paired with renaming = 变量变换, which moves variables (owner ruling 2026-07-18)"
+zh = "常量改名"
+ja = "定数の改名"
+avoid = ["zh:常量变换"]
+notes = "Owner ruling 2026-08-05. No literature either way; paired with renaming by analogy so the 2026-07-18 pairing stays visible."
 
 # ---- Added 2026-08-05 by owner ruling on the terminology dossier ----
 # Dossier with sources, candidates and the explicit guessing list:

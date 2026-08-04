@@ -393,7 +393,7 @@ name's denotation reads it inside the constant domain `⟪ A ⟫`{.Agda}, throug
 domain. The two interpretations are functions out of the empty type, so they
 agree, and saying so is the only bookkeeping the identification costs.
 <!--zh-->
-它的适足性就是上一章的那一条，在此花掉。场上有两种读一条无参公式的方式，必须先把它们认同：名字的指称经 `embed`{.Agda} 在常量域 `⟪ A ⟫`{.Agda} 之内读它，而抽象定理在空常量域处读它。两个解释都是从空类型出发的函数，故它们相符，而把这句话说出来就是这次认同的全部记账。
+它的充分性就是上一章的那一条，在此花掉。场上有两种读一条无参公式的方式，必须先把它们认同：名字的指称经 `embed`{.Agda} 在常量域 `⟪ A ⟫`{.Agda} 之内读它，而抽象定理在空常量域处读它。两个解释都是从空类型出发的函数，故它们相符，而把这句话说出来就是这次认同的全部记账。
 <!--/-->
 
 ```agda

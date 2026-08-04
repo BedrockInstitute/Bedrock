@@ -135,7 +135,7 @@ The object-language form: some member of the environment is the pair of these
 two. One bounded existential over the previous chapter's Kuratowski reader, so Δ₀
 and adequate at once.
 <!--zh-->
-对象语言的形式：环境的某个成员是这两者的对。上一章 Kuratowski 读式之上的一个有界存在，故 Δ₀ 与适足性一并到手。
+对象语言的形式：环境的某个成员是这两者的对。上一章 Kuratowski 读式之上的一个有界存在，故 Δ₀ 与充分性一并到手。
 <!--/-->
 
 ```agda
@@ -413,7 +413,7 @@ consing shifts indices by exactly that.
 <!--zh-->
 然后是量词子句所需的那条公式：扩张后的环境就是旧环境在索引零处添上一个新值。三条子句。键零处的条目持有新值；旧环境的每个条目在新环境中移位出现；而新环境的每个条目，或是那第一个条目、或是某个旧条目的移位。
 
-适足性是对**编码后的**环境陈述的，因为那是诸证书所持有的形式。给定旧环境是 `g` 的图，该公式的满足恰好说新环境是 `g` 前置一个值之后的图。两侧逐键相符，而在索引上这个相符是定义性的：`suc k` 的数码就是 `k` 的数码的后继，而前置恰好把索引移那么多。
+充分性是对**编码后的**环境陈述的，因为那是诸证书所持有的形式。给定旧环境是 `g` 的图，该公式的满足恰好说新环境是 `g` 前置一个值之后的图。两侧逐键相符，而在索引上这个相符是定义性的：`suc k` 的数码就是 `k` 的数码的后继，而前置恰好把索引移那么多。
 <!--/-->
 
 ```agda

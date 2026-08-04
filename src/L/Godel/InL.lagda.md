@@ -290,7 +290,7 @@ The selections carry parameters, so their chapters need more than two sets in
 one stage. The two-set argument iterates: the empty stage handles the empty
 family, and one bounding ordinal joins the head's stage to the tail's.
 <!--zh-->
-选择带参数，故其章节需要两个以上的集合共处一个阶段。两集合的论证迭代即可：空阶段处理空族，一个界层序数把头的阶段与尾的阶段并起来。
+选择带参数，故其章节需要两个以上的集合共处一个阶段。两集合的论证迭代即可：空阶段处理空族，一个上界序数把头的阶段与尾的阶段并起来。
 <!--/-->
 
 ```agda
@@ -336,7 +336,7 @@ membership question has been carried to the outer world (`abs-defSet`{.Agda}
 and one relabelling), the original adequacy lemma applies unchanged. A few
 fixed variable indices are named once; de Bruijn arithmetic stays in one place.
 <!--zh-->
-读图的运算谈论 Kuratowski 对，故其定义公式也必须谈论。本书编码部分已把对读式写过一次，无常量，并配了外层满足处的适足性；唯一的错位在常量域，彼处固定而此处自由。于是把读式一字不差地重述一遍，让域成为参数；而适足性完全不必重述：无常量公式被每次重标固定，故一旦隶属问题被搬到外层世界 (`abs-defSet`{.Agda} 加一次重标)，原来的适足性引理原样适用。几个固定的变元序号一次命名，de Bruijn 算术只住在一处。
+读图的运算谈论 Kuratowski 对，故其定义公式也必须谈论。本书编码部分已把对读式写过一次，无常量，并配了外层满足处的充分性；唯一的错位在常量域，彼处固定而此处自由。于是把读式一字不差地重述一遍，让域成为参数；而充分性完全不必重述：无常量公式被每次重标固定，故一旦隶属问题被搬到外层世界 (`abs-defSet`{.Agda} 加一次重标)，原来的充分性引理原样适用。几个固定的变元序号一次命名，de Bruijn 算术只住在一处。
 <!--/-->
 
 ```agda
@@ -401,7 +401,7 @@ and the pair reader's adequacy turns each pair clause into an equation the
 membership law consumes; inward, the operation's witness reader supplies the
 values, and the waypoints are the pair's own two members.
 <!--zh-->
-第一个图运算。`selectMember X Ka Kb`{.Agda} 的成员是 `X` 的这样一个成员：在各键集的某个键处，记录着两个成隶属关系的取值。定义公式用八个有界量词说出它：各键集取一个键，然后每个被记录的对经成员自身内部的成员链到达，链上两个中转站恰在对提供它们的地方约束。外延等同的两个方向读同一条链：向外，满足逐层剥开截断，对读式的适足性把每条对子句变成隶属定律要消费的等式；向内，运算的见证读式提供取值，中转站就是对自身的两个成员。
+第一个图运算。`selectMember X Ka Kb`{.Agda} 的成员是 `X` 的这样一个成员：在各键集的某个键处，记录着两个成隶属关系的取值。定义公式用八个有界量词说出它：各键集取一个键，然后每个被记录的对经成员自身内部的成员链到达，链上两个中转站恰在对提供它们的地方约束。外延等同的两个方向读同一条链：向外，满足逐层剥开截断，对读式的充分性把每条对子句变成隶属定律要消费的等式；向内，运算的见证读式提供取值，中转站就是对自身的两个成员。
 <!--/-->
 
 ```agda
