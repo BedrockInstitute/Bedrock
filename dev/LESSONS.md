@@ -784,6 +784,13 @@ external syntax gave both membership directions definitionally in 45 lines.
 **Provenance:** the r1b report (the crash-resumed batch); commit `7c28ce2`;
 the K2 datum: `_build/k2-report.md`.
 
+**Appended (the GLp probe, 2026-08-04):** a nested small-index type
+(`⟪ ⟪ τ ⟫↪ m ⟫`) is free inline but hit a 12 GB heap wall at 4:37 when stored
+in a RECORD FIELD; three distinct cures failed, including I-4's prescribed
+carrier-level restatement, and the only measured cure is to inline the
+decomposition at each use site. Storage position, not expression size, was
+the trigger. Provenance: `_build/l3.31-glprobe-report.md`.
+
 ### R-36. Expose a sealed decomposition with an opaque-unfolding read lemma
 
 **Rule:** When a consumer needs to decompose a value sealed per P-c, do not
@@ -1792,6 +1799,10 @@ defect, not a coincidence (two laws, measured below).
 derivations in BaseBlock (only one of which any report had spotted) and a
 third in Bridge. When filing a missing export, grep the FACT, not the name.
 Provenance: `_build/polish2-report.md`.
+
+**Appended (2026-08-04):** third instance class: four `V.Coding`
+pair/singleton helpers are `private` and were re-derived a third time by the
+GLp probe. Provenance: `_build/l3.31-glprobe-report.md`.
 
 ### C-15. Close out with a consumer probe; the in-file module beats the probe, then the probe still earns its keep
 
