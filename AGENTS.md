@@ -57,6 +57,30 @@ build also uses Node only at deploy time (KaTeX and fonts load from a CDN). Tool
   in CJK prose; commit or print deployment secrets; add an unpinned or globally-installed
   dependency (pin it in `requirements-dev.txt`, installed into `.venv`).
 
+## Where the rules live
+
+Every rule has ONE canonical home, chosen by who enforces it. If you are
+looking for a rule, this table says where it is; if you are adding one, it says
+where it goes. **A rule that is not machine-enforced must name its enforcement
+point** (which gate, which brief section, which review step): a rule with no
+enforcement point is a wish.
+
+| Kind of rule | Canonical home | Enforced by |
+|---|---|---|
+| Term renderings | `dev/glossary.toml` | `check-glossary.py` in `make check` |
+| Code and chapter style | `dev/STYLE-agda.md` | `lint-agda.py` (a subset) plus review |
+| Prose, CJK, i18n markers | `dev/STYLE-i18n.md` and the rules below | `lint-prose.py`, the marker checker |
+| Licensing | `REUSE.toml` | `reuse lint` |
+| Measured engineering law | `dev/LESSONS.md` | briefs point at it; review |
+| Project ruling (architecture, process, retirement) | `dev/PLAN.md` section 3, as a numbered decision | the orchestrator; briefs |
+| What every contributing agent must know | this file | loaded at session start |
+| Dispatch, slots, briefs, audits | `dev/ORCHESTRATION.md` | the orchestrator, at the points it names |
+| Goal status and history | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | the registration rule |
+
+Nothing is canonical in two places. Where this file restates a rule from
+`dev/LESSONS.md` or `dev/PLAN.md`, the other document is canonical and this one
+is the summary an agent reads first.
+
 ## The developer documents, and which of them bind
 
 - **`dev/LESSONS.md` BINDS NEW CODE.** About a hundred measured entries in six series (P
@@ -73,6 +97,7 @@ build also uses Node only at deploy time (KaTeX and fonts load from a CDN). Tool
 - **`dev/STYLE-agda.md`** is code and chapter style law (`scripts/lint-agda.py` enforces a
   subset). **`dev/STYLE-i18n.md`** is the marker grammar. **`dev/glossary.toml`** is the
   canonical term data, machine-checked, explained by `dev/GLOSSARY.md`.
+- **`dev/ORCHESTRATION.md`** holds the dispatch, slot, brief and audit rules.
 - **`dev/memos/`** holds route memos; **`dev/literature/`** holds the digested sources.
   Reconnaissance and probe reports live in `_build/*.md`, with the briefs that produced them
   archived in `_build/briefs/`.
