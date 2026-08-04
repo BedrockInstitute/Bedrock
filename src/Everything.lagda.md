@@ -231,6 +231,12 @@ import V.Model
   the two-way read-off, so the levels are internally described and not merely
   describable. Two clauses of the tower story, the ordinal domain bound and the
   limit case, are measured and designed but not yet delivered.
+- `L.Condensation`{.Agda}: the crossing, at a transitive set carrier: the whole
+  absoluteness apparatus instantiated in one line, the level sentence there, the
+  successor case with its two companions, the meaning-preserving transport, and
+  the reduction of condensation to ONE absoluteness obligation about one formula
+  at two carriers. The obligation itself, the level formula's Levy content, and
+  the limit case remain.
 - `L.Constructible`{.Agda}: the tower `Lset`{.Agda} by membership recursion,
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
@@ -320,6 +326,7 @@ import V.Model
 - `L.PairAtoms`{.Agda}：载体之上诸公式的对子原子，一次交付且对载体及其传递性通用：任意元数处的单点、无序对与有序对原子，刻画，以及六条解码，把每个原子的满足读回所查取值的元层相等。面孔的三个消费方逐字复用它。
 - `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
 - `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
+- `L.Condensation`{.Agda}：传递集载体处的跨越：整套绝对性装置一行实例化、彼处的层句、后继情形及其两条伴生事实、保义的迁移，以及把凝聚化归为「关于一条公式、在两个载体处的一条绝对性义务」。义务本身、层公式的 Lévy 内容与极限情形仍待交付。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
@@ -402,6 +409,7 @@ import L.Coding.Uniform
 import L.Coding.Powerset
 import L.Coding.Sequence
 import L.Hierarchy
+import L.Condensation
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 import L.Choice.Stage
@@ -1207,6 +1215,10 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.SatSets`{.Agda}: the satisfaction sets of arbitrary formulas as
   closure members, the equality atom through the extensional diagonal, and
   the unconditional full switch at limit levels.
+- `L.Rud.LevelSigma`{.Agda}: the face at a rud carrier, the bridge's own
+  consumer: the same three clause formulas and decodes as the tower's, at the
+  rud levels, with the definable step's collapse read through the delivered
+  atom-naming lemma rather than through any per-operation description.
 - `L.Rud.Bridge`{.Agda}: where the two definitions meet: the junk absorption
   into the Def tower, the limit-level equality recorded as the classically
   FALSE statement it is (Devlin VI.2.4, with the counter-instance and the
@@ -1250,6 +1262,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
 - `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
 - `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
+- `L.Rud.LevelSigma`{.Agda}：初步函数载体处的面孔，桥自己的消费方：与塔处相同的三条子句公式与解码，落在初步函数诸层上，而可定义步的坍缩经已交付的「原子命名」引理读出，不经任何逐运算的描述。
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
 - `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
@@ -1265,6 +1278,7 @@ import L.Rud.Ops
 import L.Rud.Images
 import L.Rud.Hierarchy
 import L.Rud.Step
+import L.Rud.LevelSigma
 import L.Rud.Describe
 import L.Rud.Order
 import L.Rud.Switch
