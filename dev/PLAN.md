@@ -79,12 +79,16 @@ section onward.
 as D16 and D17 in §3): route decisions ignore sunk cost, and retirement is
 planned from the rewrite side rather than the survivor side.
 
-**The closing protocol is already ruled** (D20, executing as `[L7]`): when the
-endpoint lands, `main` is archived and the working branch promoted the same
-day, the retired chapters move into an archive namespace that is unwired from
-the catalogs and excluded from every gate (it is NOT required to be green), and
-a registry under `dev/` records what was archived, why, and under what future
-condition it would be worth consulting again.
+**The closing sequence is already ruled**, and it is NOT the order the L4 rows
+suggest. D20 (`[L7]`): when the endpoint lands, `main` is archived and the
+working branch promoted the same day, the retired chapters move into an archive
+namespace that is unwired from the catalogs and excluded from every gate (it is
+NOT required to be green), and a registry under `dev/` records what was
+archived, why, and under what future condition it would be worth consulting
+again. Then D21 (`[L8]`): a foundation refactor on the post-archival tree, a
+line-by-line polish over the whole tree, and **a report that GATES the prose
+phase** (the owner adds further code-shaping work at that point). Only after
+that gate does `[L4]`'s whole-book harmonization open.
 
 ## 1. The theorem, stated honestly (D1)
 
@@ -271,6 +275,7 @@ D12 rules on which to take, §6.1 orders their execution.
 | D18 | The trophy configuration | **Ruled 2026-08-04 by the owner on the measured comparison (`_build/l3.31-lt-report.md`).** The trophy stays on the Def tower; there is no re-founding onto the rud/J tower. The wing rides a fresh-generic Sigma-1 face; the reindexed bridge lands at wing tail as a corollary; choice re-homes through it; the internalization cone, the choice tree and the coded cluster retire. The deciding fact was that keeping the trophy on L is a WASH against re-founding at the naive caliber, so the tie broke on the non-line dimensions (steady-state weight, parallelizability, shippability, and the fine-structure literature's J-native form arriving only at the horizon). Executes as `[L3.32]`. |
 | D19 | The bridge is two-directional | **Ruled 2026-08-04 by the owner.** The bridge delivers BOTH directions of the two-definition identification; the one-way variant (mechanizing `isL → isJ` and demoting `isJ → isL` to a recorded classical fact) is rejected, because un-formalizing a delivered true theorem to buy ledger margin is not what the ruling bought. Consequence recorded at the time: the step-into-L content stays in the tree, which under D17 means it is rewritten in ideal form rather than kept at its delivered size. |
 | D20 | Post-trophy archival and promotion | **Ruled 2026-08-04 by the owner, binding on the endpoint's closing work.** When the endpoint (`L ⊨ ZFC ∧ L ⊨ GCH`) is reached: (1) `main` is archived IMMEDIATELY and the working branch becomes `main`; (2) a new archive namespace is created under `src/`, every retired chapter moves into it, and it is unwired from `Landmarks` and from `Everything`; (3) **the archive is not required to typecheck** and is excluded from `make check`, the linters and every other gate; (4) the archive carries its own `README.md` stating these constraints in full; (5) a new archive registry under `dev/` records what is archived, why it was archived, and under what future condition each archived module would be worth consulting again. Rationale: the campaign retires more code than it keeps, and the retired code is the record of routes that were tried and priced. Deleting it destroys evidence a future reader (or a future route) may want; keeping it in the gated tree taxes every build forever. The archive is the third option: preserved, unwired, ungated, and indexed. Executes as `[L7]`. |
+| D21 | The consolidation phase, and the gate before prose | **Ruled 2026-08-04 by the owner, binding on what follows D20.** After the archival protocol completes, the tree gets a consolidation phase BEFORE any whole-book prose work: (1) a foundation refactor at the scale and character of the 2026-08-04 foundation audit and kit batch, re-run against the post-archival tree (audit first, priced candidates with named consumers and stop-lines, then one batch); (2) a line-by-line polish pass over the WHOLE tree, not a sample; (3) **a report to the owner, which is a GATE: the prose polish phase does not open until the owner has read it and ruled**, and the owner will add further code-shaping work at that point. The sequencing consequence is recorded explicitly: `[L4.1]`'s whole-book harmonization and everything downstream of it wait behind this gate, so the registry's L4 rows are not next-after-L3 in time. Rationale: prose written against code that is about to be reshaped is prose written twice, and the campaign has already measured how much a late reshape moves (the polish batches ran at -7.2 percent and -1.9 percent, and the foundation audit found compression that no prose pass could have anticipated). Executes as `[L8]`. |
 
 ## 4. Target skeleton (D5)
 
@@ -775,7 +780,9 @@ surgery land, on the tree that survives them.
   record of a goal delivered under another code.
 - **[L4.1]** Whole-book **harmonization pass** (T4): re-read end to end, fix
   foreshadowing and cross-references, run the zh/ja cross-check for term drift,
-  reconcile prose with the `[L3.32]` interface changes. **PLANNED**, and its
+  reconcile prose with the `[L3.32]` interface changes. **PLANNED, and GATED
+  BEHIND `[L8.2]` by D21**: this is the prose phase, and it does not open until
+  the owner has ruled on the consolidation report. Its
   scope has grown with the campaign: the retirement surgery deletes whole
   chapters, so the pass now includes re-reading the book's spine for the
   chapters that vanish and for the corrected identification story (`Matching`
@@ -882,6 +889,28 @@ except that `[L7.1]` precedes `[L7.2]` and `[L7.3]`.
   and the CONDITION under which it would be worth consulting again (the future
   route, question or wing that would want it). The registry is the archive's
   index and the reason the code is kept rather than deleted. **PLANNED.**
+
+**[L8] Consolidation, and the gate before prose (D21).** Opens when `[L7]`
+closes. Nothing in `[L4]` runs before `[L8.2]` has been ruled.
+
+- **[L8.0]** The foundation refactor, at `[L3.32-T8]`'s scale and character,
+  re-run against the post-archival tree: an audit that prices candidates in
+  both calibers with a named future consumer and a stop-line each, a rejected
+  list with reasons, then one batch executing what the owner accepts. The
+  post-archival tree is a different subject from today's: the retirements will
+  have removed most of the consumers whose existence justified parts of the
+  base, so candidates rejected in 2026-08-04 may qualify then and must be
+  re-examined rather than inherited. **PLANNED.**
+- **[L8.1]** A line-by-line polish pass over the **whole** tree, not a sample.
+  Exports frozen, the law book binding, the measured polish classes as the
+  starting catalog, and per-file before-and-after measurement. The two polish
+  batches this campaign ran are the rate anchors, and their residues (the named
+  perf hotspots that survived them) are inputs, not leftovers. **PLANNED.**
+- **[L8.2]** **THE GATE.** Report to the owner: what the refactor changed, what
+  the polish measured, what the tree now weighs, and what remains. The prose
+  polish phase does not open until the owner has ruled on this report, and the
+  owner will add further code-shaping work at that point. Nothing downstream
+  may be started in anticipation. **PLANNED.**
 
 ### 6.2 Caliber and the two-caliber discipline
 
@@ -1109,6 +1138,10 @@ status (§6.0 rule 6). Bookkeeping lines follow the table.
 | L7.2 | Exclude the archive from every gate (not required to be green) | PLANNED |
 | L7.3 | The archive's README (the constraints, stated in full) | PLANNED |
 | L7.4 | The archive registry under `dev/` (what, why, and when it would matter again) | PLANNED |
+| L8 | Consolidation, and the gate before prose | **PLANNED**, ruled by D21 2026-08-04; opens when `[L7]` closes |
+| L8.0 | Foundation refactor at T8 scale, on the post-archival tree | PLANNED (candidates re-examined, not inherited) |
+| L8.1 | Line-by-line polish over the whole tree | PLANNED |
+| L8.2 | **THE GATE**: report to the owner before any prose phase | PLANNED (the owner adds further code-shaping work here; `[L4.1]` waits on it) |
 
 ### Bookkeeping
 
