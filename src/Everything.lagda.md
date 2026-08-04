@@ -226,6 +226,11 @@ import V.Model
   ranges over the member being read; with its two readings and its two-way
   adequacy against the `Def`{.Agda} face. The wing, the bridge and the
   condensation chapter each instantiate it rather than rebuild it.
+- `L.LevelFormula`{.Agda}: the face's first consumer, at the real tower: the
+  clause formulas and their decodes, the collapse of the definable step, and
+  the two-way read-off, so the levels are internally described and not merely
+  describable. Two clauses of the tower story, the ordinal domain bound and the
+  limit case, are measured and designed but not yet delivered.
 - `L.Constructible`{.Agda}: the tower `Lset`{.Agda} by membership recursion,
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
@@ -314,6 +319,7 @@ import V.Model
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.PairAtoms`{.Agda}：载体之上诸公式的对子原子，一次交付且对载体及其传递性通用：任意元数处的单点、无序对与有序对原子，刻画，以及六条解码，把每个原子的满足读回所查取值的元层相等。面孔的三个消费方逐字复用它。
 - `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
+- `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
@@ -343,6 +349,7 @@ import V.Coding
 import L.Definability
 import L.PairAtoms
 import L.InitialSegment
+import L.LevelFormula
 import L.Constructible
 import L.Ordinal
 import L.Rank
