@@ -244,6 +244,11 @@ import V.Model
   the reduction of condensation to ONE absoluteness obligation about one formula
   at two carriers. The obligation itself, the level formula's Levy content, and
   the limit case remain.
+- `L.Hull`{.Agda}: elementarity and the Tarski-Vaught criterion, equivalent by
+  one formula induction over the full syntax, with the universal case the
+  classical step and the bounded quantifiers consuming transitivity; then the
+  definable hull of a set as the set of least witnesses of the formulas with
+  parameters from it, closed under the criterion at its own parameters.
 - `L.Constructible`{.Agda}: the tower `Lset`{.Agda} by membership recursion,
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
@@ -339,6 +344,7 @@ import V.Model
 - `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初始段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
 - `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
 - `L.Condensation`{.Agda}：传递集载体处的跨越：整套绝对性装置一行实例化、彼处的层句、后继情形及其两条伴生事实、保义的迁移，以及把凝聚化归为「关于一条公式、在两个载体处的一条绝对性义务」。义务本身、层公式的 Lévy 内容与极限情形仍待交付。
+- `L.Hull`{.Agda}：初等性与 Tarski-Vaught 判据，经一次跨完整语法的公式归纳而等价，其中全称情形是那笔经典支出，有界量词消费传递性；随后是一个集合的可定义外壳，即以其为参数的诸公式之最小见证所成之集，且在自己的参数处对该判据封闭。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
@@ -424,6 +430,7 @@ import L.Coding.Powerset
 import L.Coding.Sequence
 import L.Hierarchy
 import L.Condensation
+import L.Hull
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 import L.Choice.Stage
