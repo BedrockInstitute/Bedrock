@@ -77,6 +77,17 @@ LEDGER = ROOT / "dev" / "ledger.toml"
 # a reader, but nothing fails on them.
 SHARE_REQUIRING_PROFILE = 0.02
 
+# The rewrite exit condition, RULED 2026-08-06 by the owner: the retiring
+# subtree's MEASURED rate, 0.063 s per obligation over 26,479 lines. It is not
+# an aspiration and not a round number; it is what one delivered tree in this
+# repository actually achieves, which is why it can be asked of another.
+#
+# This is checked per module and only for modules inside a ruled rewrite scope
+# ([L3.32-F5] and [L3.32-F6]). A module outside those scopes is reported
+# against it for orientation and never failed on it.
+BENCHMARK_SECONDS_PER_OBLIGATION = 0.063
+REWRITE_SCOPES = ("L.Ordinal.SquareLaw", "L.Rud.")
+
 # A module may drift a little between runs on a loaded machine. Only a rise
 # past this multiple of the recorded baseline is called a regression.
 REGRESSION_FACTOR = 1.25
@@ -101,6 +112,23 @@ def code_lines(path: Path) -> int:
 def module_name(path: Path) -> str:
     rel = path.relative_to(ROOT / "src")
     return str(rel).removesuffix(".lagda.md").removesuffix(".agda").replace("/", ".")
+
+
+def obligations(path: Path) -> int:
+    """The settled caliber, imported rather than restated.
+
+    [L3.32-F0] got this wrong twice by re-deriving it. There is one counter,
+    `scripts/obligations.py`, and every consumer calls it.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "obligations", Path(__file__).parent / "obligations.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    counts = mod.scan(path)
+    return counts["obligations"] + counts["locals"]
 
 
 def tree_seconds() -> float | None:
@@ -189,6 +217,8 @@ def main() -> int:
             continue
 
         rate = seconds / lines
+        obs = obligations(path)
+        per_ob = seconds / obs if obs else 0.0
         share = f"{seconds / tree_total:5.1%}" if tree_total else "    -"
         recorded = base.get(name)
         note = ""
@@ -201,7 +231,17 @@ def main() -> int:
                     f"a {seconds / was:.1f}x regression"
                 )
         print(f"  {name:34s} {seconds:7.1f}s  {lines:5d}L  "
-              f"{rate:5.2f} s/line  {share} of tree{note}")
+              f"{rate:5.2f} s/line  {per_ob:5.3f} s/oblig  "
+              f"{share} of tree{note}")
+
+        if name.startswith(REWRITE_SCOPES) and per_ob > BENCHMARK_SECONDS_PER_OBLIGATION:
+            findings.append(
+                f"{name}: {per_ob:.3f} s/obligation, over the ruled rewrite "
+                f"exit condition of {BENCHMARK_SECONDS_PER_OBLIGATION} "
+                f"({per_ob / BENCHMARK_SECONDS_PER_OBLIGATION:.0f}x). That "
+                f"number is the retiring subtree's MEASURED rate, so it is "
+                f"known reachable. Batch this module into [L3.32-F6]."
+            )
 
         if tree_total and seconds / tree_total >= SHARE_REQUIRING_PROFILE:
             findings.append(
