@@ -135,12 +135,12 @@ provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52
 [[remaining]]
 id = "stepinl-rewrite"
 title = "StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17)"
-naive_low = 1200
-naive_high = 1700
-calibrated_low = 1560
-calibrated_high = 2210
-klass = "x1.3 after T10's green gate for the content T10 scoped; the newly discovered op-graph content is UNPRICED at this band and is the row's named risk"
-gate = "T10 (green) for the original scope. SCOPE GREW 2026-08-05: T63 found that StepInL carries the sixteen-operation variable-form op-graph W3 needs, which T10's rewrite scope never included. Under D17 the rewrite must price the ideal form of what its consumers ACTUALLY need, and W3 is now one of them. Needs a re-scope before it is funded"
+naive_low = 1240
+naive_high = 1730
+calibrated_low = 1610
+calibrated_high = 2250
+klass = "x1.3 throughout, and the op-graph content is INSIDE the band, not extra: T78 verified that T7's per-part table, which T10 re-priced, already itemizes graphOf/graph-out/graph-in at 25-40 fresh and the memOf dispatch at 30-50, so this row's earlier UNPRICED warning was wrong"
+gate = "T10 (green), RE-SCOPED and confirmed by T78 2026-08-05: the price is essentially unchanged because the content was already inside T10's scope under its own names. W3's consumer status adds three OBLIGATIONS rather than content: the mem11-mem14 arms re-anchored at the measured rate (they are the load-bearing non-pair content and the only W3-critical arms T10 extrapolated rather than measured), the graph statements' shapes pinned so W3's wiring re-points cleanly, and the sixteen-operation lex ruled OUT of this row because it is W3-row content and booking it here would double-count"
 provenance = "_build/l3.32-t10-report.md; PLAN register T10 entry"
 
 [[remaining]]
@@ -290,9 +290,9 @@ evidence = "_build/l3.32-t44-report.md; _build/l3.32-t48-report.md; _build/l3.32
 id = "stepinl-rewrite-owed"
 trophy = "GCH"
 title = "Re-scope and rewrite StepInL so W3's op-graph content survives the retirement"
-status = "blocked"
-detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so the rewrite must be re-scoped under D17 before it is funded, or W3 loses the content at the retirement."
-blocked_by = "a re-scope, which is a recon and not yet dispatched"
+status = "ready"
+detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content."
+blocked_by = ""
 evidence = "_build/l3.32-t63-report.md; src/L/Rud/StepInL.lagda.md:2139-2160; the stepinl-rewrite row above"
 
 [[owed]]

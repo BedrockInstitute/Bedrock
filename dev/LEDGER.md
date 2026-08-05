@@ -29,9 +29,9 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (125 files) | 48,339 |
+| tracked masters (125 files) | 48,624 |
 | booked retirements, D18 (51 files) | 30,648 |
-| **standing** | **17,691** |
+| **standing** | **17,976** |
 
 ### Remaining work
 
@@ -40,11 +40,11 @@ two disagree.*
 | W3 face route: the general order formula over the fresh generic face | 1,000-2,700 | 3,000-7,900 | mostly x3, one x1.3 row (the B statement layer) | T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. BUT StepInL is in the D18 retirement set, so this content must be carried by its ideal-form rewrite or W3 loses it: see the stepinl-rewrite row |
 | W1': the condensation crossing's transfers | 700-1,720 | 1,900-5,000 | row (b) now x1.3 and measured tiny (the Def-step clause collapses at every carrier, so its bounded rewrite is the trivial formula); rows (a) and (c) still x3 | T54 SPLIT, T64 re-priced and was itself corrected by T66: the Def-step clause is UNCONDITIONALLY true at any carrier, witnessed by the carrier member itself with the true formula, so the collapse T54 assumed is legitimate everywhere and row (b) is about 0.14-0.17k rather than 0.34-1.00k. What T64 called the unmeasured Def-step class is the description's object-level content, which row (c) consumes, not the face's clause |
 | The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing | 980-1,720 | 2,000-3,900 | mixed x1.3 / x3 | T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound, a corollary of what is delivered, +180-330 lines, one to two dispatches |
-| StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate for the content T10 scoped; the newly discovered op-graph content is UNPRICED at this band and is the row's named risk | T10 (green) for the original scope. SCOPE GREW 2026-08-05: T63 found that StepInL carries the sixteen-operation variable-form op-graph W3 needs, which T10's rewrite scope never included. Under D17 the rewrite must price the ideal form of what its consumers ACTUALLY need, and W3 is now one of them. Needs a re-scope before it is funded |
+| StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,240-1,730 | 1,610-2,250 | x1.3 throughout, and the op-graph content is INSIDE the band, not extra: T78 verified that T7's per-part table, which T10 re-priced, already itemizes graphOf/graph-out/graph-in at 25-40 fresh and the memOf dispatch at 30-50, so this row's earlier UNPRICED warning was wrong | T10 (green), RE-SCOPED and confirmed by T78 2026-08-05: the price is essentially unchanged because the content was already inside T10's scope under its own names. W3's consumer status adds three OBLIGATIONS rather than content: the mem11-mem14 arms re-anchored at the measured rate (they are the load-bearing non-pair content and the only W3-critical arms T10 extrapolated rather than measured), the graph statements' shapes pinned so W3's wiring re-points cleanly, and the sixteen-operation lex ruled OUT of this row because it is W3-row content and booking it here would double-count |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
 | The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20) | 620-1,170 | 810-1,520 | x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part | T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint |
 | W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
-| **total** | **5,450-10,980** | **11,870-26,100** | | |
+| **total** | **5,490-11,010** | **11,920-26,140** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 23.14-28.67k | 25.91k |
-| calibrated | 29.56-43.79k | 36.68k |
+| naive | 23.47-28.99k | 26.23k |
+| calibrated | 29.90-44.12k | 37.01k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +3.67k from the line, and the calibrated
-band sits +4.56k to +18.79k from it.
+the naive band's pessimistic corner sits +3.99k from the line, and the calibrated
+band sits +4.90k to +19.12k from it.
 
 ### Deliberately not in the sum
 
@@ -90,9 +90,9 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 
 | item | status | blocked by | what it is |
 |---|---|---|---|
-| Re-scope and rewrite StepInL so W3's op-graph content survives the retirement | **blocked** | a re-scope, which is a recon and not yet dispatched | The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so the rewrite must be re-scoped under D17 before it is funded, or W3 loses the content at the retirement. |
 | W1': the condensation crossing's transfers | **in-flight** | - | The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier. |
 | W3: the internal definable well-ordering, at a general level | **ready** | - | The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. |
+| Re-scope and rewrite StepInL so W3's op-graph content survives the retirement | **ready** | - | The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. |
 | W7's residue: the last mile to the GCH sentence | **ready** | - | The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. |
 | W5: the collapse and the condensation | **delivered** | - | The Mostowski collapse and the crossing's reduction are both in the tree. What the crossing still leaves is the transfers, tracked separately as W1'. |
 | W2: the level formula | **delivered** | - | The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier. |
