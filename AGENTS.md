@@ -165,6 +165,14 @@ could reach carries 3x). The split prices ignorance rather than pessimism, which
 converts money: every gate that goes green moves its part from the 3x class to the 1.3x class
 and narrows the band.
 
+**An estimate is a measurement, not a decision procedure.** The project's route is settled; the
+canonical statement is `dev/PLAN.md` decision D26. A projection that exceeds the target line is
+recorded in both calibers, stated plainly as an overage, and worked down wherever real
+compression exists. It is never, by itself, a reason to change route, and a report that reasons
+from an overage to a route change is rejected at review. This does not weaken the gates above:
+a probe now asks WHICH TECHNIQUE the ruled route uses rather than whether to take the route,
+and it converts money exactly as before.
+
 ## Retiring code
 
 Retirement is planned from the **rewrite side**, not the survivor side. Before concluding that
