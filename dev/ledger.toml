@@ -299,18 +299,38 @@ note = "The controlled per-module experiment is the instrument; the cross-tree r
 # the measurement re-targets it away from where it was aimed.
 [[lever]]
 id = "rewrite-worst"
-status = "priced, not funded"
-proposal = "rewrite the rud route wholesale on the surviving trunk, or start with the worst part"
-finding = "L.Rud is the BEST large body in the trunk at 0.132 s/obligation against a 0.241 trunk average and a 0.063 retiring benchmark. The worst is one module, L.Ordinal.SquareLaw, at 3.14 s/obligation, 50x the benchmark and 44 percent of tree check time."
+status = "RULED 2026-08-06, sequenced behind [T88]"
 target = "L.Ordinal.SquareLaw"
 target_lines = 907
 target_obligations = 273
-target_seconds_now = 856
-rewrite_side_seconds_naive = 17
-rewrite_side_seconds_calibrated = 52
-net_seconds = "about 800, the largest single lever measured in this project"
-precondition = "MET as of [T93], and not met before it: a rewrite is only worth paying for once we know what to do differently, and T93 measured that (abstract carriers, variable indices, module-parameterized blocks, zero opaque)."
-decided_by = "[T88]'s return. If the 60-line seal reaches, this lever is moot; if it does not, the answer is a rewrite of this one module, not a bigger seal."
+seconds_now = 856
+rate_now = 3.14
+rate_exit = 0.063
+seconds_naive = 17
+seconds_calibrated = 52
+prize_seconds = 800
+precedent = "Bridge was already sealed, 939 s to 199 s. Per obligation that is 2.88 to 0.61 against a 0.063 benchmark: the seal captured 80 percent and PLATEAUED at 10x. The residual is not reachable by more sealing, it needs the statement discipline. Measured, not predicted, and the best forecast of what T88's seal will do here."
+risk = "T47 recorded five heap exhaustions building this chapter and T31 one more. GHCRTS=-M8g, one process, a heap event is a measurement not a reason to raise the cap."
+decided_by = "[T88]'s return: if the seal reaches the benchmark this closes unspent, if it plateaus the rewrite is dispatched and is also F6's method gate."
+
+# [L3.32-F6], ruled 2026-08-06: the L.Rud rewrite, batched, with the retiring
+# subtree's measured rate as the exit condition. The exit condition selects the
+# batches by itself: 16 of 22 modules are already at or below it.
+[[lever]]
+id = "rud-rewrite"
+status = "RULED 2026-08-06, batched, B1 gates the rest"
+scope = "L.Rud, 22 modules, 12147 lines, 3230 obligations, 458 s"
+rate_now = 0.142
+rate_exit = 0.063
+seconds_at_exit = 203
+prize_seconds = 255
+batch_1 = "Bridge: 178 s, 70 percent of the whole prize, 833 lines. ALSO THE METHOD GATE, because it is already sealed and so isolates what a rewrite buys beyond sealing."
+batch_2 = "StepInL: 58 s, 1989 lines. Nearly free: the ledger already owes a re-scope of this module for W3 and the two merge."
+batch_3 = "Images, CodeSet, Step: about 74 s, 1289 lines."
+batch_4 = "NONE. Twelve of 22 modules are already at or below 0.063. Of the ten above it, five (DefInJ, BaseBlock, SatTable, HF, Finite) are worth 11 seconds COMBINED over 1792 lines and are left alone: a rewrite there costs more than it buys in both dimensions. Recorded as above the line, not funded."
+line_dimension = "L.Rud writes 3.8 lines per obligation against the benchmark's 4.9, so it is already DENSER than the tree it is measured against. This is a seconds programme, not a lines programme, and each batch is gated on not inflating lines."
+funding_rule = "B1 is dispatched on its own merit and gates B2 and B3. No batch is funded at the 3x class once B1 has measured the real rate."
+
 
 [[owed]]
 id = "ac-leg"
