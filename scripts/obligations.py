@@ -20,16 +20,23 @@ The fair unit is the OBLIGATION: one named result that has to be discharged.
 That is what a formalization actually produces, and it is invariant to how
 verbosely the discharge is written.
 
-WHAT COUNTS AS ONE OBLIGATION. A top-level type signature in the module body:
-`name : Type`, including operators (`_∈ˢ_ : ...`) and multi-name signatures
-(`f g : A` counts as two, since each is separately discharged).
+WHAT COUNTS AS ONE OBLIGATION. Any type signature, `name : Type`, at ANY
+depth: including operators (`_∈ˢ_ : ...`) and multi-name signatures (`f g : A`
+counts as two, since each is separately discharged).
 
-WHAT DOES NOT. Everything that is structure rather than a discharged claim:
-`data`, `record`, and `module` headers, `open`/`import`, `variable`, fixity,
-`syntax`, `pattern`, pragmas, and anything indented, which is a `where`-local
-helper rather than a stated result. Locals are counted separately and reported,
-because a module that hides forty helpers under one export is doing real work
-that the export count alone would miss.
+DEPTH IS NOT PART OF THE CALIBER, AND A FIRST VERSION OF THIS FILE GOT THAT
+WRONG. It counted only column-0 signatures and reported `where`-locals
+separately, which produced a cross-tree ratio of 2.1x that was WITHDRAWN the
+same day. The reason is worth keeping: the cheap tree writes everything inside
+`module _ (A : V ℓ) where` blocks, so every one of its results is indented and
+`L.Godel.Closure` scores ZERO top-level obligations over 3,490 lines. A
+top-level-only count therefore measures module-parameterization STYLE, and it
+punishes the exact discipline that makes the code cheap. Depth is still
+reported, as a diagnostic; it decides nothing.
+
+WHAT DOES NOT COUNT. Structure rather than a discharged claim: `data`,
+`record`, and `module` headers, `open`/`import`, `variable`, fixity, `syntax`,
+`pattern`, and pragmas.
 
 THE LIMIT OF THIS TOOL, STATED PLAINLY. It counts obligations; it cannot weigh
 them. One `Σ₁`-absoluteness theorem is not one `refl` lemma. So the per-
@@ -168,8 +175,8 @@ def main() -> int:
             lo = sum(r["locals"] for r in sel)
             ln = sum(r["lines"] for r in sel)
             print(f"{label:22s} {len(sel):3d} modules  {ln:6d} lines  "
-                  f"{ob:5d} obligations  {lo:5d} locals   "
-                  f"{ln / ob:5.1f} lines/obligation")
+                  f"{ob + lo:5d} obligations  ({ob} at top level)   "
+                  f"{ln / (ob + lo):5.1f} lines/obligation")
         return 0
 
     print(f"{'module':38s} {'lines':>6} {'oblig':>6} {'local':>6} {'L/ob':>6} {'s/ob':>7}")

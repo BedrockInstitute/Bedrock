@@ -262,20 +262,29 @@ tax is known to be removable at a rate of a hundred seconds per line.
 made silently. `[L3.32-F0]` settled it: the unit is the **obligation**, counted
 mechanically by `scripts/obligations.py`, not the line.
 
-It matters more than it sounds. At three calibers the same two trees compare as
-**5.3x per line, 4.2x per named result, 2.1x per top-level obligation**. The
-retiring subtree writes **56.5 lines per exported obligation against the
-trunk's 22.4**, so it is not cheap because it is efficient; it is cheap because
-its lines are long mechanical bodies discharging few exported results, and a
-per-line caliber rewards precisely that.
+**The first answer was wrong, and the correction reversed the conclusion.** It
+counted only column-0 signatures, reported 2.1x, and concluded the gap was
+largely an artifact of verbose mechanical bodies. But the cheap tree writes
+everything inside `module _ (A : V ℓ) where` blocks, so all of its results are
+indented: `L.Godel.Closure` scores **zero** top-level obligations over 3,490
+lines. A top-level-only count measures module-parameterization STYLE, and
+punishes exactly the discipline that makes the code cheap.
 
-And the consequence is that **the cross-tree comparison is retired as an
-instrument.** `[T87]`'s controlled fix on `Bridge` was **4.7x with the
-mathematics held fixed**, so one engineering fix on one module exceeds the
-entire cross-tree gap at the fairest simple caliber. A ratio with less
-resolving power than the effect it is measuring cannot settle anything. What
-replaces it is the **controlled per-module before-and-after**, where the
-caliber cancels because the obligations on both sides are identical.
+Counting obligations at any depth, the honest figures are:
+
+| | lines/obligation | s/obligation |
+|---|---|---|
+| retiring subtree | 4.9 | **0.063** |
+| surviving trunk | 3.9 | **0.277** |
+
+The two trees write at nearly the same density, and the cost gap is a real
+**4.2x**. So the per-line reading was not unfair after all, and the fair
+caliber confirms the gap rather than dissolving it.
+
+The controlled per-module experiment stays the sharper instrument, because no
+caliber has to be agreed on for it to mean anything: `[T87]`'s `Bridge` fix was
+**4.7x with the mathematics held fixed**. But the cross-tree ratio is a real
+signal and is not dropped.
 
 So the freeze's exit condition carries **no projected number**. The first
 version set 1,100 s and a 0.25 s/line cap; both are withdrawn. The 1,100 rested
