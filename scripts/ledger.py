@@ -59,9 +59,21 @@ def tracked_masters() -> list[str]:
     return sorted(f for f in out if f.endswith(".lagda.md"))
 
 
-def count(path: str) -> int:
-    """Non-blank lines inside ```agda fences: the one pinned caliber."""
-    text = (ROOT / path).read_text(encoding="utf-8")
+def count(path: str, at_head: bool = True) -> int:
+    """Non-blank lines inside ```agda fences: the one pinned caliber.
+
+    Read from HEAD, not the working tree. A ledger records the REPOSITORY, and reading the
+    working tree meant an agent's half-written chapter was counted as standing: it happened
+    twice on 2026-08-05 and once got committed. Pass at_head=False for a live view."""
+    if at_head:
+        out = subprocess.run(["git", "show", f"HEAD:{path}"], cwd=ROOT,
+                             capture_output=True, text=True)
+        if out.returncode == 0:
+            text = out.stdout
+        else:
+            return 0  # staged-but-never-committed: not yet part of the repository
+    else:
+        text = (ROOT / path).read_text(encoding="utf-8")
     return sum(
         1
         for block in FENCE.findall(text)
