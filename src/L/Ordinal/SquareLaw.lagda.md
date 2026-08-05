@@ -520,20 +520,21 @@ module Core (α : S) (oα : IsOrd α)
         (λ x∈p → oα .fst x∈p (col∈α p))
         (λ x≡p → subst (λ w → ⟨ w ∈ˢ α ⟩) (sym x≡p) (col∈α p))
 
-  bound : ⟪ τA ⟫ → ⟪ α ⟫
-  bound m = fiber α (τ⊆α (⟪ τA ⟫↪ m)
-    (∈∈ₛ {a = ⟪ τA ⟫↪ m} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ m))) .fst
+  opaque
+    bound : ⟪ τA ⟫ → ⟪ α ⟫
+    bound m = fiber α (τ⊆α (⟪ τA ⟫↪ m)
+      (∈∈ₛ {a = ⟪ τA ⟫↪ m} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ m))) .fst
 
-  bound-inj : {m n : ⟪ τA ⟫} → bound m ≡ bound n → m ≡ n
-  bound-inj {m} {n} e =
-    ↪-inj {a = τA} (sym eq1 ∙ cong (⟪ α ⟫↪) e ∙ eq2)
-    where
-    eq1 : ⟪ α ⟫↪ (bound m) ≡ ⟪ τA ⟫↪ m
-    eq1 = fiber α (τ⊆α (⟪ τA ⟫↪ m)
-      (∈∈ₛ {a = ⟪ τA ⟫↪ m} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ m))) .snd
-    eq2 : ⟪ α ⟫↪ (bound n) ≡ ⟪ τA ⟫↪ n
-    eq2 = fiber α (τ⊆α (⟪ τA ⟫↪ n)
-      (∈∈ₛ {a = ⟪ τA ⟫↪ n} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ n))) .snd
+    bound-inj : {m n : ⟪ τA ⟫} → bound m ≡ bound n → m ≡ n
+    bound-inj {m} {n} e =
+      ↪-inj {a = τA} (sym eq1 ∙ cong (⟪ α ⟫↪) e ∙ eq2)
+      where
+      eq1 : ⟪ α ⟫↪ (bound m) ≡ ⟪ τA ⟫↪ m
+      eq1 = fiber α (τ⊆α (⟪ τA ⟫↪ m)
+        (∈∈ₛ {a = ⟪ τA ⟫↪ m} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ m))) .snd
+      eq2 : ⟪ α ⟫↪ (bound n) ≡ ⟪ τA ⟫↪ n
+      eq2 = fiber α (τ⊆α (⟪ τA ⟫↪ n)
+        (∈∈ₛ {a = ⟪ τA ⟫↪ n} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ n))) .snd
 ```
 
 <!--en-->
@@ -891,3 +892,389 @@ remains named until the witness is carried through the reduction.
 <!--zh-->
 序核心在四条假设下交付：后继封闭、无穷成员处的平方律、不单射注入无穷成员、以及有穷排除。有穷基底供给末一条，平移供给平方律的后继步，而核心在 `ω` 处闭合基底。序数的基数被诚实地建为与之等势的最小成员，连同其极小性；搜索不诚实返回的是等势见证，它是截断的。这正是配对一章的报告所标记的提取风险，也是一般转移 (从任意无穷序数到其基数) 所需要的件：`ω` 及其后继之外的平方律仍保持具名，直到见证被携带穿过归约。
 <!--/-->
+
+<!--en-->
+## The initial ordinals, and the truncated law
+<!--zh-->
+## 初始序数与截断律
+<!--/-->
+
+<!--en-->
+The counting calls the square law at ordinals beyond `ω`. The honest
+equivalence remains unavailable where the transfer bites: the least-of search
+returns only the truncation `∥ ⟪ α ⟫ ≃ ⟪ κ ⟫ ∥₁`, so the law at the
+non-initial ordinals stays named. The bound itself, however, never needs the
+law at a member, and this section delivers it at every initial ordinal. An
+ordinal is initial here when it contains `ω`, is closed under successors, and
+its index injects into no infinite member's square. The third clause is the
+order core's exclusion hypothesis in its sharpest form: the exclusion case
+only refutes an injection of the index into the square of a member, so the
+square law at that member, which the honest transfer cannot supply, is never
+called for. The core's remaining hypotheses are discharged where they stand,
+and the honest bound, the pairing chapter's exact hypothesis, is delivered at
+every initial ordinal, with the truncated square law as its projection.
+<!--zh-->
+计数会在 `ω` 之外的序数处调用平方律。诚实的等价在转移咬住的地方仍不可得：极小元搜索只返回截断 `∥ ⟪ α ⟫ ≃ ⟪ κ ⟫ ∥₁`，故非初始序数处的律仍保持具名。然而界本身从不曾需要成员处的律，本节就在每个初始序数处交付它。本章中，序数称为初始，当它包含 `ω`、闭于后继、且其索引不单射注入任何无穷成员的平方。第三条正是序核心排除假设最锐利的形式：排除情形只须反驳索引对某成员之平方的单射，于是诚实转移无法供给的该成员处平方律，永远不被调用。核心余下的假设就地解除，而诚实的界，即配对一章的确切假设，在每个初始序数处交付，截断平方律作为它的投影。
+<!--/-->
+
+<!--en-->
+What the truncated form gives and does not give. At every initial ordinal it
+gives the honest injection of the order type into the ordinal, the pairing
+chapter's `bound` hypothesis in the exact shape the counting consumes, and
+the truncated square law `∥ sq α ∥₁` as its projection. It does not give the
+honest equivalence between the ordinal and its square: that bijection is
+exactly what the extraction wall blocks, and no proposition-valued consumer
+needs it. It does not give the law at the non-initial ordinals such as
+`ω + ω`: the reduction of such a site to its cardinal is the least-of
+transfer, which is the counting's own plumbing (its input, the truncated
+equinumerosity witness of `Card.least`, is delivered here), and at the
+cardinals themselves the counting must still verify the three initiality
+clauses, or take them as its cardinal notion.
+<!--zh-->
+截断形式给出什么、不给什么。在每个初始序数处，它给出序型到该序数的诚实单射，即配对一章的 `bound` 假设，恰为计数消费的确切形状，并以其投影给出截断平方律 `∥ sq α ∥₁`。它不给出序数与其平方之间的诚实等价：那正是提取之墙阻断的双射，而任何命题值的消费方都不需要它。它也不给出 `ω + ω` 这类非初始序数处的律：此类站点归约到其基数所靠的极小元转移，是计数自己的管道 (其输入，即 `Card.least` 的截断等势见证，已在本书交付)，而在基数本身处，计数仍须验证三条初始性条款，或径取之为其基数概念。
+<!--/-->
+
+```agda
+open import L.Ordinal.Pairing {ℓ} lem using ( col→τ; col→τ-inj )
+
+-- The square law, and its truncated form.
+sq : S → Type ℓ
+sq α = Σ[ f ∈ (⟪ α ⟫ × ⟪ α ⟫ → ⟪ α ⟫) ]
+         ((x y : ⟪ α ⟫ × ⟪ α ⟫) → f x ≡ f y → x ≡ y)
+
+-- An ordinal is initial in this chapter: it contains omega, is closed under
+-- successors, and its index injects into no infinite member's square.
+Init : S → Type (ℓ-suc ℓ)
+Init α = IsOrd α
+       × ⟨ ω ∈ˢ α ⟩
+       × ((γ : S) → ⟨ γ ∈ˢ α ⟩ → ⟨ sucV γ ∈ˢ α ⟩)
+       × ((β : S) → IsOrd β → ⟨ β ∈ˢ α ⟩ → ⟨ ω ∈ˢ β ⟩
+          → (f : ⟪ α ⟫ → ⟪ β ⟫ × ⟪ β ⟫)
+          → ((m n : ⟪ α ⟫) → f m ≡ f n → m ≡ n) → Empty.⊥)
+
+-- The order core with the no-injection hypothesis in its square form: the
+-- law at members is never needed, since the exclusion case refutes an
+-- injection of the index into the square of a member directly.
+module InitialCore (α : S) (oα : IsOrd α)
+  (α-limit : (γ : S) → ⟨ γ ∈ˢ α ⟩ → ⟨ sucV γ ∈ˢ α ⟩)
+  (noinj² : (β : S) → IsOrd β → ⟨ β ∈ˢ α ⟩ → ⟨ ω ∈ˢ β ⟩
+          → (f : ⟪ α ⟫ → ⟪ β ⟫ × ⟪ β ⟫)
+          → ((m n : ⟪ α ⟫) → f m ≡ f n → m ≡ n) → Empty.⊥)
+  (finite-excl : (β : S) → IsOrd β → ⟨ β ∈ˢ ω ⟩
+               → (f : ⟪ α ⟫ → ⟪ β ⟫ × ⟪ β ⟫)
+               → ((m n : ⟪ α ⟫) → f m ≡ f n → m ≡ n) → Empty.⊥) where
+
+  PairA : Type ℓ
+  PairA = Pair α oα
+
+  colA : PairA → S
+  colA = col α oα
+
+  _≺'_ : PairA → PairA → Type (ℓ-suc ℓ)
+  _≺'_ = _≺_ α oα
+
+  prec1 : ⟪ α ⟫ → ⟪ α ⟫ → Type (ℓ-suc ℓ)
+  prec1 = _≺₁_ α oα
+
+  leq : ⟪ α ⟫ → ⟪ α ⟫ → Type (ℓ-suc ℓ)
+  leq = _≤₁_ α oα
+
+  max' : ⟪ α ⟫ → ⟪ α ⟫ → ⟪ α ⟫
+  max' = maxOrd α oα
+
+  trans1 : (m n k : ⟪ α ⟫) → prec1 m n → prec1 n k → prec1 m k
+  trans1 = trans₁ α oα
+
+  tri' : (p q : PairA) → Tri (p ≺' q) (p ≡ q) (q ≺' p)
+  tri' = tri≺ α oα
+
+  cm : {p q : PairA} → p ≺' q → ⟨ colA p ∈ˢ colA q ⟩
+  cm = col-mono α oα
+
+  ci : {p q : PairA} → colA p ≡ colA q → p ≡ q
+  ci = col-inj α oα
+
+  cimg : (q : PairA) (b : S) → ⟨ b ∈ˢ colA q ⟩
+       → ∥ Σ[ r ∈ PairA ] (colA r ≡ b) ∥₁
+  cimg = col-img α oα
+
+  colo : (p : PairA) → IsOrd (colA p)
+  colo = col-ord α oα
+
+  cc : (p : PairA) → colA p ≡ colStep α oα p (λ r _ → colA r)
+  cc = col-compute α oα
+
+  wf : WellFounded _≺'_
+  wf = wf≺ α oα
+
+  god : SWO PairA
+  god = godSWO α oα
+
+  ≺dec : (p q : PairA) → (p ≺' q) ⊎ ((p ≺' q) → Empty.⊥)
+  ≺dec = ≺-dec α oα
+
+  τA : S
+  τA = τ α oα
+
+  ≤₁→≺₁ : (m n k : ⟪ α ⟫) → leq m n → prec1 n k → prec1 m k
+  ≤₁→≺₁ m n k (inl h) h' = trans1 m n k h h'
+  ≤₁→≺₁ m n k (inr e) h' = subst (λ w → prec1 w k) (sym e) h'
+
+  ≤₁-subst : (m n n' : ⟪ α ⟫) → leq m n → n ≡ n' → leq m n'
+  ≤₁-subst m n n' (inl h) e = inl (subst (λ w → prec1 m w) e h)
+  ≤₁-subst m n n' (inr q) e = inr (q ∙ e)
+
+  ≤₁-into-suc : (m n : ⟪ α ⟫) → leq m n → ⟨ ⟪ α ⟫↪ m ∈ˢ sucV (⟪ α ⟫↪ n) ⟩
+  ≤₁-into-suc m n (inl h) = ∈sucV-inl h
+  ≤₁-into-suc m n (inr e) =
+    subst (λ w → ⟨ ⟪ α ⟫↪ w ∈ˢ sucV (⟪ α ⟫↪ n) ⟩) (sym e) (self∈sucV (⟪ α ⟫↪ n))
+
+  fst∈sucmax : {p q : PairA} → p ≺' q
+             → ⟨ ⟪ α ⟫↪ (fst p) ∈ˢ sucV (⟪ α ⟫↪ (max' (fst q) (snd q))) ⟩
+  fst∈sucmax {a , b} {c , d} (inl h) =
+    ∈sucV-inl (≤₁→≺₁ a (max' a b) (max' c d) (max-spec α oα a b .fst) h)
+  fst∈sucmax {a , b} {c , d} (inr (e , _)) =
+    ≤₁-into-suc a (max' c d)
+      (≤₁-subst a (max' a b) (max' c d) (max-spec α oα a b .fst) e)
+
+  snd∈sucmax : {p q : PairA} → p ≺' q
+             → ⟨ ⟪ α ⟫↪ (snd p) ∈ˢ sucV (⟪ α ⟫↪ (max' (fst q) (snd q))) ⟩
+  snd∈sucmax {a , b} {c , d} (inl h) =
+    ∈sucV-inl (≤₁→≺₁ b (max' a b) (max' c d) (max-spec α oα a b .snd) h)
+  snd∈sucmax {a , b} {c , d} (inr (e , _)) =
+    ≤₁-into-suc b (max' c d)
+      (≤₁-subst b (max' a b) (max' c d) (max-spec α oα a b .snd) e)
+
+  Pb : (b : S) → PairA → hProp (ℓ-suc ℓ)
+  Pb b r = (colA r ≡ b) , isSetS (colA r) b
+
+  colr≺ : {p : PairA} (b : S) → ⟨ b ∈ˢ colA p ⟩ → (r : PairA)
+        → colA r ≡ b → r ≺' p
+  colr≺ {p} b b∈ r e = go (tri' r p)
+    where
+    go : Tri (r ≺' p) (r ≡ p) (p ≺' r) → r ≺' p
+    go (lt h) = h
+    go (eq q) = Empty.rec
+      (∈-irrefl (colA p)
+        (subst (λ w → ⟨ w ∈ˢ colA p ⟩) (sym (cong colA (sym q) ∙ e)) b∈))
+    go (gt h) = Empty.rec
+      (∈-irrefl (colA p)
+        (colo p .fst (cm h) (subst (λ w → ⟨ w ∈ˢ colA p ⟩) (sym e) b∈)))
+
+  module WF = WFI wf
+
+  opaque
+    descent : (p : PairA) (b : S) → ⟨ b ∈ˢ colA p ⟩
+            → Σ[ r ∈ PairA ] ((r ≺' p) × (colA r ≡ b))
+    descent p b b∈ = fst s , (colr≺ b b∈ (fst s) (fst (snd s)) , fst (snd s))
+      where
+      s : Σ[ m ∈ PairA ] IsLeast god (Pb b) m
+      s = leastOf god lem (Pb b) (cimg p b b∈)
+
+    g : (p : PairA) (b : S) → ⟨ b ∈ˢ colA p ⟩ → PairA
+    g p b b∈ = fst (descent p b b∈)
+
+    g-inj : (p : PairA) {b b' : S} (hb : ⟨ b ∈ˢ colA p ⟩) (hb' : ⟨ b' ∈ˢ colA p ⟩)
+          → g p b hb ≡ g p b' hb' → b ≡ b'
+    g-inj p {b} {b'} hb hb' e =
+      sym (snd (descent p b hb) .snd) ∙ cong colA e ∙ snd (descent p b' hb') .snd
+
+    γp : PairA → S
+    γp p = ⟪ α ⟫↪ (max' (fst p) (snd p))
+
+    h₀ : (p : PairA) → (r : PairA) → r ≺' p → ⟪ sucV (γp p) ⟫ × ⟪ sucV (γp p) ⟫
+    h₀ p r pr = (fiber β (fst∈sucmax {r} {p} pr) .fst
+               , fiber β (snd∈sucmax {r} {p} pr) .fst)
+      where
+      β : S
+      β = sucV (γp p)
+
+    h₀-inj : (p : PairA) {r r' : PairA} (pr : r ≺' p) (pr' : r' ≺' p)
+           → h₀ p r pr ≡ h₀ p r' pr' → r ≡ r'
+    h₀-inj p {a , b} {a' , b'} pr pr' e = cong₂ _,_ ea eb
+      where
+      β : S
+      β = sucV (γp p)
+      ea : a ≡ a'
+      ea = ↪-inj {a = α} (sym (fiber β (fst∈sucmax {a , b} {p} pr) .snd)
+        ∙ cong (⟪ β ⟫↪) (cong fst e) ∙ fiber β (fst∈sucmax {a' , b'} {p} pr') .snd)
+      eb : b ≡ b'
+      eb = ↪-inj {a = α} (sym (fiber β (snd∈sucmax {a , b} {p} pr) .snd)
+        ∙ cong (⟪ β ⟫↪) (cong snd e) ∙ fiber β (snd∈sucmax {a' , b'} {p} pr') .snd)
+
+    comp₀ : (p : PairA) (e : colA p ≡ α) → ⟪ α ⟫ → ⟪ sucV (γp p) ⟫ × ⟪ sucV (γp p) ⟫
+    comp₀ p e m = h₀ p (g p (⟪ α ⟫↪ m) (b∈ m))
+                      (snd (descent p (⟪ α ⟫↪ m) (b∈ m)) .fst)
+      where
+      b∈ : (m : ⟪ α ⟫) → ⟨ ⟪ α ⟫↪ m ∈ˢ colA p ⟩
+      b∈ m = subst (λ w → ⟨ ⟪ α ⟫↪ m ∈ˢ w ⟩) (sym e)
+        (∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m))
+
+    comp₀-inj : (p : PairA) (e : colA p ≡ α) (m n : ⟪ α ⟫)
+              → comp₀ p e m ≡ comp₀ p e n → m ≡ n
+    comp₀-inj p e m n e' = ↪-inj {a = α}
+      (g-inj p (b∈ m) (b∈ n)
+        (h₀-inj p (snd (descent p (⟪ α ⟫↪ m) (b∈ m)) .fst)
+                  (snd (descent p (⟪ α ⟫↪ n) (b∈ n)) .fst) e'))
+      where
+      b∈ : (m : ⟪ α ⟫) → ⟨ ⟪ α ⟫↪ m ∈ˢ colA p ⟩
+      b∈ m = subst (λ w → ⟨ ⟪ α ⟫↪ m ∈ˢ w ⟩) (sym e)
+        (∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m))
+
+    β≠ω : (p : PairA) → sucV (γp p) ≡ ω → Empty.⊥
+    β≠ω p e = PT.rec Empty.isProp⊥ go (ω-mem→numeral (γp p) γp∈ω)
+      where
+      γp∈ω : ⟨ γp p ∈ˢ ω ⟩
+      γp∈ω = subst (λ w → ⟨ γp p ∈ˢ w ⟩) e (self∈sucV (γp p))
+      go : Σ[ n ∈ ℕ ] (γp p ≡ # n) → Empty.⊥
+      go (n , q) = ∈-irrefl ω
+        (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (cong sucV q) ∙ e) (#∈ω (suc n)))
+
+    exclude : (p : PairA) → colA p ≡ α → Empty.⊥
+    exclude p e = go (ord-tri β ordβ ω ω-ord)
+      where
+      γp∈α : ⟨ γp p ∈ˢ α ⟩
+      γp∈α = ∈∈ₛ {a = γp p} {b = α} .snd (∈ₛ⟪ α ⟫↪ (max' (fst p) (snd p)))
+      β : S
+      β = sucV (γp p)
+      ordβ : IsOrd β
+      ordβ = suc-ord (mem-ord {A = α} oα (γp p) γp∈α)
+      β∈α : ⟨ β ∈ˢ α ⟩
+      β∈α = α-limit (γp p) γp∈α
+      go : (⟨ β ∈ˢ ω ⟩ ⊎ ((β ≡ ω) ⊎ ⟨ ω ∈ˢ β ⟩)) → Empty.⊥
+      go (inl β∈ω) = finite-excl β ordβ β∈ω (comp₀ p e) (comp₀-inj p e)
+      go (inr (inl β≡ω)) = β≠ω p β≡ω
+      go (inr (inr ω∈β)) = noinj² β ordβ β∈α ω∈β (comp₀ p e) (comp₀-inj p e)
+
+    gₚ : (p : PairA) → PairA → S
+    gₚ p r = colPick α oα p (λ r _ → colA r) r (≺dec r p)
+
+    gₚ-inl : (p r : PairA) → (rp : r ≺' p) → gₚ p r ≡ sucV (colA r)
+    gₚ-inl p r rp = go (≺dec r p)
+      where
+      go : (d : (r ≺' p) ⊎ ((r ≺' p) → Empty.⊥))
+         → colPick α oα p (λ r _ → colA r) r d ≡ sucV (colA r)
+      go (inl _) = refl
+      go (inr ¬rp) = Empty.rec (¬rp rp)
+
+    gₚ-inr : (p r : PairA) → ((r ≺' p) → Empty.⊥) → gₚ p r ≡ ∅
+    gₚ-inr p r ¬rp = go (≺dec r p)
+      where
+      go : (d : (r ≺' p) ⊎ ((r ≺' p) → Empty.⊥))
+         → colPick α oα p (λ r _ → colA r) r d ≡ ∅
+      go (inl rp) = Empty.rec (¬rp rp)
+      go (inr _) = refl
+
+    colp⊆α : (p : PairA) → ((r : PairA) → r ≺' p → ⟨ colA r ∈ˢ α ⟩)
+           → (x : S) → ⟨ x ∈ˢ colA p ⟩ → ⟨ x ∈ˢ α ⟩
+    colp⊆α p rec x x∈ = PT.rec (snd (x ∈ˢ α)) viaUnion
+      (union-ax (sett PairA (gₚ p)) x .fst
+        (∈∈ₛ {a = x} {b = ⋃ (sett PairA (gₚ p))} .fst
+          (subst (λ w → ⟨ x ∈ˢ w ⟩) (cc p) x∈)))
+      where
+      viaUnion : Σ[ v ∈ S ] (⟨ v ∈ₛ sett PairA (gₚ p) ⟩ × ⟨ x ∈ₛ v ⟩) → ⟨ x ∈ˢ α ⟩
+      viaUnion (v , (v∈ₛsett , x∈ₛv)) = PT.rec (snd (x ∈ˢ α)) viaFiber
+        (∈∈ₛ {a = v} {b = sett PairA (gₚ p)} .snd v∈ₛsett)
+        where
+        viaFiber : Σ[ r ∈ PairA ] (gₚ p r ≡ v) → ⟨ x ∈ˢ α ⟩
+        viaFiber (r , gr≡v) = decide (≺dec r p)
+          where
+          x∈gr : ⟨ x ∈ₛ gₚ p r ⟩
+          x∈gr = subst (λ w → ⟨ x ∈ₛ w ⟩) (sym gr≡v) x∈ₛv
+          decide : (r ≺' p) ⊎ ((r ≺' p) → Empty.⊥) → ⟨ x ∈ˢ α ⟩
+          decide (inl rp) = ∈sucV-elim {A = colA r} {x = x} (snd (x ∈ˢ α))
+            (∈∈ₛ {a = x} {b = sucV (colA r)} .snd
+              (subst (λ w → ⟨ x ∈ₛ w ⟩) (gₚ-inl p r rp) x∈gr))
+            (λ x∈r → oα .fst x∈r (rec r rp))
+            (λ x≡r → subst (λ w → ⟨ w ∈ˢ α ⟩) (sym x≡r) (rec r rp))
+          decide (inr ¬rp) = Empty.rec
+            (∅-empty x (subst (λ w → ⟨ x ∈ₛ w ⟩) (gₚ-inr p r ¬rp) x∈gr))
+
+    col≤α : (p : PairA) → ((r : PairA) → r ≺' p → ⟨ colA r ∈ˢ α ⟩)
+          → ⟨ colA p ∈ˢ α ⟩
+    col≤α p rec = go (ord-tri (colA p) (colo p) α oα)
+      where
+      go : (⟨ colA p ∈ˢ α ⟩ ⊎ ((colA p ≡ α) ⊎ ⟨ α ∈ˢ colA p ⟩)) → ⟨ colA p ∈ˢ α ⟩
+      go (inl h) = h
+      go (inr (inl e)) = Empty.rec (exclude p e)
+      go (inr (inr h)) = Empty.rec (∈-irrefl α (colp⊆α p rec α h))
+
+    col∈α : (p : PairA) → ⟨ colA p ∈ˢ α ⟩
+    col∈α = WF.induction {P = λ p → ⟨ colA p ∈ˢ α ⟩} step
+      where
+      step : (p : PairA) → ((r : PairA) → r ≺' p → ⟨ colA r ∈ˢ α ⟩)
+           → ⟨ colA p ∈ˢ α ⟩
+      step p rec = col≤α p (λ r rp → rec r rp)
+
+    τ⊆α : (x : S) → ⟨ x ∈ˢ τA ⟩ → ⟨ x ∈ˢ α ⟩
+    τ⊆α x x∈τ = PT.rec (snd (x ∈ˢ α)) viaUnion
+      (union-ax (sett PairA fτ) x .fst
+        (∈∈ₛ {a = x} {b = τA} .fst x∈τ))
+      where
+      fτ : PairA → S
+      fτ p = sucV (colA p)
+      viaUnion : Σ[ v ∈ S ] (⟨ v ∈ₛ sett PairA fτ ⟩ × ⟨ x ∈ₛ v ⟩) → ⟨ x ∈ˢ α ⟩
+      viaUnion (v , (v∈ₛsett , x∈ₛv)) = PT.rec (snd (x ∈ˢ α)) viaFiber
+        (∈∈ₛ {a = v} {b = sett PairA fτ} .snd v∈ₛsett)
+        where
+        viaFiber : Σ[ p ∈ PairA ] (fτ p ≡ v) → ⟨ x ∈ˢ α ⟩
+        viaFiber (p , fp≡v) = ∈sucV-elim {A = colA p} {x = x} (snd (x ∈ˢ α))
+          (∈∈ₛ {a = x} {b = sucV (colA p)} .snd
+            (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym fp≡v) x∈ₛv))
+          (λ x∈p → oα .fst x∈p (col∈α p))
+          (λ x≡p → subst (λ w → ⟨ w ∈ˢ α ⟩) (sym x≡p) (col∈α p))
+
+  bound : ⟪ τA ⟫ → ⟪ α ⟫
+  bound m = fiber α (τ⊆α (⟪ τA ⟫↪ m)
+    (∈∈ₛ {a = ⟪ τA ⟫↪ m} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ m))) .fst
+
+  bound-inj : {m n : ⟪ τA ⟫} → bound m ≡ bound n → m ≡ n
+  bound-inj {m} {n} e =
+    ↪-inj {a = τA} (sym eq1 ∙ cong (⟪ α ⟫↪) e ∙ eq2)
+    where
+    eq1 : ⟪ α ⟫↪ (bound m) ≡ ⟪ τA ⟫↪ m
+    eq1 = fiber α (τ⊆α (⟪ τA ⟫↪ m)
+      (∈∈ₛ {a = ⟪ τA ⟫↪ m} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ m))) .snd
+    eq2 : ⟪ α ⟫↪ (bound n) ≡ ⟪ τA ⟫↪ n
+    eq2 = fiber α (τ⊆α (⟪ τA ⟫↪ n)
+      (∈∈ₛ {a = ⟪ τA ⟫↪ n} {b = τA} .snd (∈ₛ⟪ τA ⟫↪ n))) .snd
+
+module Initial (α : S) (iα : Init α) where
+  opaque
+    bound₀ : ⟪ τ α (iα .fst) ⟫ → ⟪ α ⟫
+    bound₀ = InitialCore.bound α (iα .fst) (iα .snd .snd .fst) (iα .snd .snd .snd)
+              (FiniteBase.finite-excl α (iα .fst) (iα .snd .fst))
+
+    bound₀-inj : {m n : ⟪ τ α (iα .fst) ⟫} → bound₀ m ≡ bound₀ n → m ≡ n
+    bound₀-inj = InitialCore.bound-inj α (iα .fst) (iα .snd .snd .fst) (iα .snd .snd .snd)
+                   (FiniteBase.finite-excl α (iα .fst) (iα .snd .fst))
+
+    pair : ⟪ α ⟫ → ⟪ α ⟫ → ⟪ α ⟫
+    pair a b = bound₀ (col→τ α (iα .fst) (a , b))
+
+    pair-inj : {a b c d : ⟪ α ⟫} → pair a b ≡ pair c d → (a ≡ c) × (b ≡ d)
+    pair-inj {a} {b} {c} {d} e =
+      cong fst (col→τ-inj α (iα .fst) {p = a , b} {q = c , d} (bound₀-inj e)) ,
+      cong snd (col→τ-inj α (iα .fst) {p = a , b} {q = c , d} (bound₀-inj e))
+
+    square : sq α
+    square = (λ p → pair (fst p) (snd p)) , square-inj
+      where
+      square-inj : (p q : ⟪ α ⟫ × ⟪ α ⟫)
+                 → pair (fst p) (snd p) ≡ pair (fst q) (snd q) → p ≡ q
+      square-inj (a , b) (c , d) e = ΣPathP (pair-inj {a} {b} {c} {d} e)
+
+    truncated : ∥ sq α ∥₁
+    truncated = ∣ square ∣₁
+
+opaque
+  initial-bound : (α : S) (iα : Init α) → ⟪ τ α (iα .fst) ⟫ → ⟪ α ⟫
+  initial-bound α iα = Initial.bound₀ α iα
+
+  initial-bound-inj : (α : S) (iα : Init α) {m n : ⟪ τ α (iα .fst) ⟫}
+                    → initial-bound α iα m ≡ initial-bound α iα n → m ≡ n
+  initial-bound-inj α iα = Initial.bound₀-inj α iα
+
+  initial-square-law : (α : S) → Init α → ∥ sq α ∥₁
+  initial-square-law α iα = Initial.truncated α iα
+```
