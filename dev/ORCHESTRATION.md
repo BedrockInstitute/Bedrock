@@ -132,7 +132,11 @@ In this order, every time:
    Agda slot, saying which was run. **A full cold typecheck is launched as a
    harness-tracked background job and never in the foreground** (D28): it runs
    about twelve minutes, it must not hold the turn, and its result is read from
-   the completion notification. Do not report a wiring as verified before that
+   the completion notification. **Do not arm it while any agent is live**: it
+   would read masters they are mid-write on, which produced a spurious failure
+   the first time and could as easily produce a spurious green. Section 4's
+   rule against tree-wide writes during dispatch has this read-side twin;
+   `dispatch.py gate-ready` checks it. Do not report a wiring as verified before that
    notification lands; a turn may close with the check still running as long as
    it says so and names what is not yet known.
 6. **Commit** with the goal code, recording what was measured and what was

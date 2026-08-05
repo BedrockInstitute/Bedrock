@@ -20,7 +20,7 @@ open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Ordinal.Pairing {ℓ} lem
   using ( ordSWO; _≺₁_; _≤₁_; maxOrd; max-spec; Pair; _≺_; tri≺; wf≺
         ; trans₁; godSWO; ≺-dec; colPick; colStep; col; col-compute; col-ord
-        ; col-mono; col-inj; col-img; τ )
+        ; col-mono; col-inj; col-img; τ; module Pairing )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( SWO; Tri; lt; eq; gt; IsLeast; leastOf; natSWO; module SWO )
 
@@ -913,8 +913,18 @@ square law at that member, which the honest transfer cannot supply, is never
 called for. The core's remaining hypotheses are discharged where they stand,
 and the honest bound, the pairing chapter's exact hypothesis, is delivered at
 every initial ordinal, with the truncated square law as its projection.
+The boundary, verified against the delivered definition. "Contains `ω`" is
+strict membership, `⟨ ω ∈ˢ α ⟩`, so `ω` itself is not initial in this
+chapter's sense: `Init ω` would need `ω ∈ ω`, which `∈-irrefl` refutes. The
+law is therefore delivered at every ordinal strictly above `ω` that
+satisfies the three clauses, and at no other ordinal. The original account
+of this section read the boundary as "from `ω` up", as though `ω` were
+included; that reading is corrected here, and the correction is recorded
+beside the original rather than silently rewording it, per D-10.
 <!--zh-->
 计数会在 `ω` 之外的序数处调用平方律。诚实的等价在转移咬住的地方仍不可得：极小元搜索只返回截断 `∥ ⟪ α ⟫ ≃ ⟪ κ ⟫ ∥₁`，故非初始序数处的律仍保持具名。然而界本身从不曾需要成员处的律，本节就在每个初始序数处交付它。本章中，序数称为初始，当它包含 `ω`、闭于后继、且其索引不单射注入任何无穷成员的平方。第三条正是序核心排除假设最锐利的形式：排除情形只须反驳索引对某成员之平方的单射，于是诚实转移无法供给的该成员处平方律，永远不被调用。核心余下的假设就地解除，而诚实的界，即配对一章的确切假设，在每个初始序数处交付，截断平方律作为它的投影。
+
+边界，对照交付的定义核实过。「包含 `ω`」是严格成员关系 `⟨ ω ∈ˢ α ⟩`，故 `ω` 自身在本章的意义下并非初始：`Init ω` 将需要 `ω ∈ ω`，而这被 `∈-irrefl` 反驳。因此律交付于严格高于 `ω` 且满足三条条款的每个序数，此外再无别的序数。本节原先的叙述把边界读作「从 `ω` 起」，仿佛把 `ω` 算在内；这个读法在此更正，并按 D-10 把更正记录在原文旁，而不是悄然改写。
 <!--/-->
 
 <!--en-->
@@ -935,15 +945,14 @@ clauses, or take them as its cardinal notion.
 <!--/-->
 
 ```agda
-open import L.Ordinal.Pairing {ℓ} lem using ( col→τ; col→τ-inj )
-
 -- The square law, and its truncated form.
 sq : S → Type ℓ
 sq α = Σ[ f ∈ (⟪ α ⟫ × ⟪ α ⟫ → ⟪ α ⟫) ]
          ((x y : ⟪ α ⟫ × ⟪ α ⟫) → f x ≡ f y → x ≡ y)
 
--- An ordinal is initial in this chapter: it contains omega, is closed under
--- successors, and its index injects into no infinite member's square.
+-- An ordinal is initial in this chapter: it has omega as a member (so omega
+-- itself is not initial), is closed under successors, and its index injects
+-- into no infinite member's square.
 Init : S → Type (ℓ-suc ℓ)
 Init α = IsOrd α
        × ⟨ ω ∈ˢ α ⟩
@@ -1249,13 +1258,15 @@ module Initial (α : S) (iα : Init α) where
     bound₀-inj = InitialCore.bound-inj α (iα .fst) (iα .snd .snd .fst) (iα .snd .snd .snd)
                    (FiniteBase.finite-excl α (iα .fst) (iα .snd .fst))
 
+    -- The pairing chapter's module, fed its exact hypotheses at this
+    -- initial ordinal: the bound is discharged, not assumed.
+    module P = Pairing α (iα .fst) bound₀ bound₀-inj
+
     pair : ⟪ α ⟫ → ⟪ α ⟫ → ⟪ α ⟫
-    pair a b = bound₀ (col→τ α (iα .fst) (a , b))
+    pair = P.pair
 
     pair-inj : {a b c d : ⟪ α ⟫} → pair a b ≡ pair c d → (a ≡ c) × (b ≡ d)
-    pair-inj {a} {b} {c} {d} e =
-      cong fst (col→τ-inj α (iα .fst) {p = a , b} {q = c , d} (bound₀-inj e)) ,
-      cong snd (col→τ-inj α (iα .fst) {p = a , b} {q = c , d} (bound₀-inj e))
+    pair-inj = P.pair-inj
 
     square : sq α
     square = (λ p → pair (fst p) (snd p)) , square-inj

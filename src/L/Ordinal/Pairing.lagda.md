@@ -579,11 +579,15 @@ of `τ` into `α` itself. The classical theorem that supplies it is the square
 law of infinite ordinals, that the product of an infinite ordinal's members is
 equinumerous to the ordinal, whose proof in the textbook route runs through
 ordinal arithmetic that the tree does not yet carry; the chapter states it as
-the bound hypothesis below rather than postulating it. Given the bound, the
-pairing and its injectivity in the exact shape the cardinal probe consumes
-fall out by composition.
+the bound hypothesis below rather than postulating it. The square law chapter
+now delivers exactly that hypothesis, `initial-bound` and `initial-bound-inj`,
+at every ordinal that is initial in its sense, so the pairing below is
+discharged there rather than assumed; the hypothesis form is kept for the
+ordinals the square law does not reach. Given the bound, the pairing and its
+injectivity in the exact shape the cardinal probe consumes fall out by
+composition.
 <!--zh-->
-积现已双射到序数 `τ`，即典范良序的序型。基数步骤消费的配对还需要一条单射，把 `τ` 注入 `α` 自身。供给它的经典定理是无穷序数的平方律，即无穷序数之成员的积与该序数等势，教科书路线中它的证明要穿过本书尚未拥有的序数算术；本章把它陈述为下面的界假设，而不是 postulate 它。给定这个界，配对及其单射性便以基数探针消费的确切形状经复合得到。
+积现已双射到序数 `τ`，即典范良序的序型。基数步骤消费的配对还需要一条单射，把 `τ` 注入 `α` 自身。供给它的经典定理是无穷序数的平方律，即无穷序数之成员的积与该序数等势，教科书路线中它的证明要穿过本书尚未拥有的序数算术；本章把它陈述为下面的界假设，而不是 postulate 它。平方律一章现已在每个按该章意义为初始的序数处，恰好交付这条假设 `initial-bound` 与 `initial-bound-inj`，故那里的配对是被解除假设而得到的，而不是被假设的；假设形式则保留给平方律够不到的序数。给定这个界，配对及其单射性便以基数探针消费的确切形状经复合得到。
 <!--/-->
 
 ```agda
