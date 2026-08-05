@@ -201,3 +201,117 @@ id = "iso-invariance"
 title = "Isomorphism-invariance of satisfaction, 0.08-0.14k at x3"
 why = "priced by T51 and NOT bought: it would buy the wrong leg, since the transfers are inner-to-ambient at one carrier rather than between isomorphic carriers"
 provenance = "_build/l3.32-t51-report.md"
+
+# ---------------------------------------------------------------------------
+# WHAT IS STILL OWED TO EACH TROPHY, in work rather than in lines.
+#
+# The two endpoints are `L ⊨ ZFC` (whose open half is AC) and `L ⊨ GCH`. This
+# table answers "what is actually left", which the line rows above deliberately
+# do not: a row can be large and unblocking, or small and on the critical path,
+# and the difference is not visible in a band.
+#
+# It exists because the technical route keeps moving. Every refutation in this
+# campaign has changed what one of the two trophies still needs, and a reader
+# who only had the line rows would not have seen that.
+#
+# Fields. `trophy` is AC, GCH, or BOTH. `status` is one of:
+#   delivered   done and standing
+#   ready       nothing blocks it; it can be dispatched now
+#   in-flight   an agent holds it
+#   blocked     something named in `blocked_by` must land first
+#   at-risk     delivered, but on machinery that is scheduled to retire
+# `evidence` cites the report or file that establishes the claim. An item with
+# no evidence is a guess and must say so in its title.
+#
+# Updated with the ledger, at every return that could move it (D27).
+# ---------------------------------------------------------------------------
+
+[[owed]]
+id = "ac-leg"
+trophy = "AC"
+title = "The choice leg itself: L satisfies AC, proved"
+status = "at-risk"
+detail = "Delivered and standing on the Def tower, but the current leg runs through the satisfaction-internalization cone, which D18 retires. It is proved; it is not yet proved on machinery that survives."
+blocked_by = ""
+evidence = "dev/PLAN.md section 0, 'what is delivered and standing'"
+
+[[owed]]
+id = "ac-rehome"
+trophy = "AC"
+title = "Re-home the choice leg onto the rud-side well-order"
+status = "blocked"
+detail = "The replacement leg. It rides the bridge onto the delivered producer well-order, so it cannot land before the bridge does. This is the single item between AC-as-proved-today and AC-as-proved-on-surviving-machinery."
+blocked_by = "bridge-landing"
+evidence = "_build/l3.31-lt-report.md H2 and row 10; the choice-rehome row above"
+
+[[owed]]
+id = "bridge-landing"
+trophy = "BOTH"
+title = "The bridge's landing: Q-lim and below-lim"
+status = "in-flight"
+detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit is in flight; below-lim is untouched and needs its own per-tower build over an L-stage. AC needs this for the re-home; GCH needs it because the wing rides the same bridge."
+blocked_by = ""
+evidence = "_build/l3.32-t45-report.md; _build/l3.32-t52-report.md; _build/l3.32-t53-report.md; _build/l3.32-t61-report.md section 7"
+
+[[owed]]
+id = "retirement"
+trophy = "BOTH"
+title = "The retirement surgery, and the archival"
+status = "blocked"
+detail = "Until it runs, both trophies stand on a tree that still contains the machinery they were supposed to stop depending on. It cannot run before the re-home and the bridge land."
+blocked_by = "ac-rehome, bridge-landing, stepinl-rewrite-owed"
+evidence = "PLAN D18 and D20; the retirement-surgery row above"
+
+[[owed]]
+id = "gch-w1p"
+trophy = "GCH"
+title = "W1': the condensation crossing's transfers"
+status = "in-flight"
+detail = "The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier."
+blocked_by = ""
+evidence = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md dispatch list"
+
+[[owed]]
+id = "gch-w3"
+trophy = "GCH"
+title = "W3: the internal definable well-ordering, at a general level"
+status = "ready"
+detail = "The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs."
+blocked_by = ""
+evidence = "_build/l3.32-t44-report.md; _build/l3.32-t48-report.md; _build/l3.32-t50-report.md; _build/l3.32-t63-report.md"
+
+[[owed]]
+id = "stepinl-rewrite-owed"
+trophy = "GCH"
+title = "Re-scope and rewrite StepInL so W3's op-graph content survives the retirement"
+status = "blocked"
+detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so the rewrite must be re-scoped under D17 before it is funded, or W3 loses the content at the retirement."
+blocked_by = "a re-scope, which is a recon and not yet dispatched"
+evidence = "_build/l3.32-t63-report.md; src/L/Rud/StepInL.lagda.md:2139-2160; the stepinl-rewrite row above"
+
+[[owed]]
+id = "gch-w7"
+trophy = "GCH"
+title = "W7's residue: the last mile to the GCH sentence"
+status = "ready"
+detail = "The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly."
+blocked_by = ""
+evidence = "_build/l3.32-t57-report.md section 3; _build/l3.32-t59-report.md; the w7-residue row above"
+
+[[owed]]
+id = "gch-w5"
+trophy = "GCH"
+title = "W5: the collapse and the condensation"
+status = "delivered"
+detail = "The Mostowski collapse and the crossing's reduction are both in the tree. What the crossing still leaves is the transfers, tracked separately as W1'."
+blocked_by = ""
+evidence = "src/V/Collapse.lagda.md; src/L/Condensation.lagda.md"
+
+[[owed]]
+id = "gch-w2"
+trophy = "GCH"
+title = "W2: the level formula"
+status = "delivered"
+detail = "The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier."
+blocked_by = ""
+evidence = "src/L/LevelFormula.lagda.md; src/L/Rud/LevelSigma.lagda.md"

@@ -72,6 +72,38 @@ An absence recorded here is a decision; an absence recorded nowhere is an oversi
 | Trilingual prose, +0.3-0.8k prose-equivalent | outside the code-line convention entirely; prose is not counted by this ledger's basis |
 | Isomorphism-invariance of satisfaction, 0.08-0.14k at x3 | priced by T51 and NOT bought: it would buy the wrong leg, since the transfers are inner-to-ambient at one carrier rather than between isomorphic carriers |
 
+### What is still owed to each trophy
+
+In work, not in lines. A row above can be large and unblocking, or small and on
+the critical path, and a band does not show the difference. Status is one of
+**delivered**, **ready** (dispatchable now), **in-flight**, **blocked** (with what
+it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
+
+**L satisfies AC**
+
+| item | status | blocked by | what it is |
+|---|---|---|---|
+| The choice leg itself: L satisfies AC, proved | **at-risk** | - | Delivered and standing on the Def tower, but the current leg runs through the satisfaction-internalization cone, which D18 retires. It is proved; it is not yet proved on machinery that survives. |
+| Re-home the choice leg onto the rud-side well-order | **blocked** | bridge-landing | The replacement leg. It rides the bridge onto the delivered producer well-order, so it cannot land before the bridge does. This is the single item between AC-as-proved-today and AC-as-proved-on-surviving-machinery. |
+
+**L satisfies GCH**
+
+| item | status | blocked by | what it is |
+|---|---|---|---|
+| Re-scope and rewrite StepInL so W3's op-graph content survives the retirement | **blocked** | a re-scope, which is a recon and not yet dispatched | The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so the rewrite must be re-scoped under D17 before it is funded, or W3 loses the content at the retirement. |
+| W1': the condensation crossing's transfers | **in-flight** | - | The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier. |
+| W3: the internal definable well-ordering, at a general level | **ready** | - | The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. |
+| W7's residue: the last mile to the GCH sentence | **ready** | - | The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. |
+| W5: the collapse and the condensation | **delivered** | - | The Mostowski collapse and the crossing's reduction are both in the tree. What the crossing still leaves is the transfers, tracked separately as W1'. |
+| W2: the level formula | **delivered** | - | The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier. |
+
+**Owed to both**
+
+| item | status | blocked by | what it is |
+|---|---|---|---|
+| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | Until it runs, both trophies stand on a tree that still contains the machinery they were supposed to stop depending on. It cannot run before the re-home and the bridge land. |
+| The bridge's landing: Q-lim and below-lim | **in-flight** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit is in flight; below-lim is untouched and needs its own per-tower build over an L-stage. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
+
 <!-- ledger:end -->
 
 ## Why this exists at all
@@ -159,6 +191,32 @@ Two rules the checker enforces:
 
 Rows deliberately kept **out** of the sum live in the `[[excluded]]` table with the reason. An
 absence recorded there is a decision; an absence not recorded anywhere is an oversight.
+
+## What is still owed to each trophy
+
+The section above the fold answers "how big"; this one answers **"what is left"**, which is a
+different question and the one that actually moves. Every refutation in this campaign has
+changed what one of the two trophies still needs, and a reader with only the line rows would
+not have seen any of it: a row can be large and unblocking, or small and squarely on the
+critical path, and a band does not show the difference.
+
+The two endpoints are `L ⊨ ZFC`, whose open half is AC, and `L ⊨ GCH`. Each owed item carries:
+
+- its **trophy**, AC, GCH, or BOTH;
+- its **status**: `delivered`, `ready` (nothing blocks it, it can be dispatched now),
+  `in-flight`, `blocked` (with what it waits on), or **`at-risk`**, which is the interesting
+  one: delivered, but standing on machinery that is scheduled to retire. AC is `at-risk` today,
+  and that is the honest reading of "L satisfies AC" in this tree;
+- its **blocked_by**, naming other owed items, which `ledger.py --check` verifies actually
+  exist. That check has already caught one dangling dependency;
+- its **evidence**. An item with no evidence is a guess and must say so in its own title.
+
+**Keep it current with the numbers.** D27 requires the ledger to be brought current at every
+return that could move it, and this table is part of the ledger: a return that unblocks
+something, or discovers a new blocker, changes a status here even when it changes no line
+count. The `[T63]` return is the worked example: it moved no band at all, and it changed two
+statuses, because the machinery W3 needs turned out to exist inside a chapter booked for the
+archive.
 
 ## Derived rows
 

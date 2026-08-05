@@ -114,13 +114,35 @@ def validate_rows(data: dict) -> list[str]:
             defects.append(f"remaining row {rid} has an inverted naive band")
         if row.get("calibrated_low", 0) < row.get("naive_low", 0):
             defects.append(f"remaining row {rid} is calibrated below naive, which the two-caliber discipline forbids")
+    VALID = {"delivered", "ready", "in-flight", "blocked", "at-risk"}
+    seen_owed: set[str] = set()
+    for row in data.get("owed", []):
+        rid = row.get("id", "<no id>")
+        if rid in seen_owed:
+            defects.append(f"duplicate owed id: {rid}")
+        seen_owed.add(rid)
+        if row.get("trophy") not in {"AC", "GCH", "BOTH"}:
+            defects.append(f"owed {rid}: trophy must be AC, GCH or BOTH")
+        if row.get("status") not in VALID:
+            defects.append(f"owed {rid}: status must be one of {', '.join(sorted(VALID))}")
+        if not row.get("evidence"):
+            defects.append(f"owed {rid}: no evidence. An item with no evidence is a guess "
+                           f"and must say so in its title")
+        if row.get("status") == "blocked" and not row.get("blocked_by"):
+            defects.append(f"owed {rid}: status is blocked but blocked_by is empty; say what "
+                           f"it waits on or the item cannot be scheduled")
+    for row in data.get("owed", []):
+        for dep in [d.strip() for d in row.get("blocked_by", "").split(",") if d.strip()]:
+            if dep not in seen_owed and " " not in dep:
+                defects.append(f"owed {row.get('id')}: blocked_by names {dep!r}, which is not "
+                               f"an owed id")
     for row in data.get("excluded", []):
         if not row.get("why"):
             defects.append(f"excluded row {row.get('id', '<no id>')} does not say why it is excluded")
     return defects
 
 
-def render(total, files, buckets, sizes, standing, rows, sums, line, excluded) -> str:
+def render(total, files, buckets, sizes, standing, rows, sums, line, excluded, owed) -> str:
     """The generated block for dev/LEDGER.md. Verified by --check, so it can never go stale."""
     nl, nh, cl, ch = sums
     k = lambda v: f"{v/1000:.2f}k"
@@ -158,6 +180,24 @@ def render(total, files, buckets, sizes, standing, rows, sums, line, excluded) -
                 "| item | why it is out |", "|---|---|"]
         out += [f"| {r['title']} | {r['why']} |" for r in excluded]
         out.append("")
+    if owed:
+        out += ["### What is still owed to each trophy", "",
+                "In work, not in lines. A row above can be large and unblocking, or small and on",
+                "the critical path, and a band does not show the difference. Status is one of",
+                "**delivered**, **ready** (dispatchable now), **in-flight**, **blocked** (with what",
+                "it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).", ""]
+        for trophy, heading in (("AC", "L satisfies AC"), ("GCH", "L satisfies GCH"),
+                                ("BOTH", "Owed to both")):
+            rows_t = [r for r in owed if r.get("trophy") == trophy]
+            if not rows_t:
+                continue
+            out += [f"**{heading}**", "", "| item | status | blocked by | what it is |",
+                    "|---|---|---|---|"]
+            order = {"at-risk": 0, "blocked": 1, "in-flight": 2, "ready": 3, "delivered": 4}
+            for r in sorted(rows_t, key=lambda r: order.get(r.get("status"), 9)):
+                out.append(f"| {r.get('title','')} | **{r.get('status','')}** | "
+                           f"{r.get('blocked_by','') or '-'} | {r.get('detail','')} |")
+            out.append("")
     out.append(END)
     return "\n".join(out)
 
@@ -197,7 +237,8 @@ def main(argv: list[str]) -> int:
     ch = sum(r.get("calibrated_high", 0) for r in rows)
     line = data["basis"]["reference_line"]
 
-    block = render(total, files, buckets, sizes, standing, rows, (nl, nh, cl, ch), line, data.get("excluded", []))
+    block = render(total, files, buckets, sizes, standing, rows, (nl, nh, cl, ch), line,
+                   data.get("excluded", []), data.get("owed", []))
     doc = DOC.read_text(encoding="utf-8")
     if BEGIN in doc and END in doc:
         pre, _, restdoc = doc.partition(BEGIN)
