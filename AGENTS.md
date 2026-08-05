@@ -48,8 +48,11 @@ build also uses Node only at deploy time (KaTeX and fonts load from a CDN). Tool
 
 ## Boundaries
 
-- **Always:** read the `dev/LESSONS.md` entries relevant to what you are about to write, before
-  you write it; run `make check` before committing; author each document in English first, then
+- **Always:** **write it generic** (structure-generic at full strength, so re-instantiation is
+  nearly free: `dev/LESSONS.md` P-h is the law, `dev/PLAN.md` D29 makes it a first-class
+  discipline asked at three moments, and a stop-line is never a reason to write fixed: say so
+  and stop for a re-price instead); read the `dev/LESSONS.md` entries relevant to what you are
+  about to write, before you write it; run `make check` before committing; author each document in English first, then
   translate; verify a load-bearing assumption cheaply before committing to heavy or
   hard-to-reverse work (large installs, forks, multi-hour builds, framework choices); state any
   size projection in both calibers; install Python tooling with `make venv` and pin any new
@@ -71,6 +74,12 @@ looking for a rule, this table says where it is; if you are adding one, it says
 where it goes. **A rule that is not machine-enforced must name its enforcement
 point** (which gate, which brief section, which review step): a rule with no
 enforcement point is a wish.
+
+**The one rule to carry into every task, because it is the one that has cost this project
+most:** write content structure-generic rather than fixed to a carrier. It is more expensive
+on the first instance and cheaper from the second onward, which is exactly why it gets skipped
+under a deadline. `dev/PLAN.md` D29 requires the question to be asked when a recon is
+dispatched, when a build is dispatched, and when a route is planned.
 
 | Kind of rule | Canonical home | Enforced by |
 |---|---|---|
