@@ -42,11 +42,12 @@ module L.Rud.LevelSigma {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (A : V ℓ) wher
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; var; _∈̇_; _≐_; _∧̇_; _⇒̇_; ¬̇_; ⊤̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import V.Presentation {ℓ} using ( fiber )
-open import L.Constructible {ℓ} using ( isTransV )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl )
+open import L.Constructible {ℓ} using ( isTransV; IsOrd; isPropIsOrd )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.PairAtoms {ℓ} using ( isPair; module PairMem; module PairKit )
 open import L.InitialSegment {ℓ} using ( _⟷_; _∈ran_; DefStep; module Face )
@@ -56,7 +57,10 @@ open import L.Rud.Step {ℓ} lem A using
   ; step-∈ )
 
 import Cubical.Data.Empty as Empty
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Data.Unit using ( tt* )
+open import Cubical.Foundations.HLevels using ( isProp× )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -516,4 +520,441 @@ condensation crossing, reuses the same shared kit and the same recipe at its
 own carrier. The orchestrator wires this chapter into `Everything`.
 <!--zh-->
 本章在 rud 载体处交付桥的 sigma：初始段面孔的近似条目如今就是塔故事本身，函数性 (成对性与单值性) 与零子句，连同 Def 步坍缩与像的读式补全四项，以及对照已交付 `defSet` 面孔的双向充分性 `read-off`。共享的对套件被消费，而非重推，Def 步坍缩倚靠可定义性章的 Refine 引理，而非塔的可定义幂下行。经典塔故事所余的两条子句，极限子句与序数定义域界，在此作为缺项被测度并在报告中定价；它们各关于塔故事本身，与载体无关，故塔章的价格直接平移。面孔的第三个消费方，凝聚跨越，在自己的载体处复用同一套共享套件与同一条配方。编排者把本章接入 `Everything`。
+<!--/-->
+
+<!--en-->
+## The strengthened story: the successor value and the domain bound
+<!--zh-->
+## 加锐的塔故事：后继值与定义域界
+<!--/-->
+
+<!--en-->
+The three-clause story pins the graph's functionhood and its start, but not
+its continuation: an honest-ish witness may map a successor numeral to an
+arbitrary carrier member, so the range carve overshoots. The classical story
+closes the gap with two more clauses. The successor-value clause says the
+value at a successor is the set of definable subsets of the value at the
+predecessor; at a rud carrier this reads as the carrier-internal powerset
+relation, `b` lying in the graph at the successor exactly when `b` is the
+carrier's own set of subsets of the predecessor's value, written with bounded
+quantifiers. The strengthened domain bound says every first component lies
+in the bound itself (at the first limit, in `ω`), not merely in the carrier.
+Both are built here as meta-level clauses, object-language formulas and
+two-way decodes. The domain bound is read per component: the totality
+direction of the classical exactness is redundant for the family carve,
+because the successor-value clause's own two-way shape forces the value
+chain, so a segment's range is a set of stages regardless. The limit clause
+stays omitted, since below the first limit there is no limit ordinal for it
+to speak about. The strengthened bound's object-language form is a
+consumer's choice: the bound is a member of the carrier only above the first
+limit (the bound-nameability fact), so the chapter records the bound as a
+parameter of the meta clause and discharges it wherever the carrier names it.
+The re-assembly of the approximation entry (the five-clause `Ap` with its
+adequacy) is the face-instantiation seam: every clause now has its formula
+and its two-way decode, so the adequacy walks the delivered conjuncts
+verbatim.
+<!--zh-->
+三子句故事钉死了图的函数性与起点，却没有钉死续行：一个近似诚实的见证可以把后继数码映到任意的载体成员，于是像的刻划会越界。经典故事用两条子句补上缺口。后继值子句说后继处的值是前驱值的可定义子集之集；在 rud 载体处这读作载体内幂集关系，`b` 恰好是载体自身的前驱值子集之集时，后继处的图才含有 `b`，用有界量词写出。加锐的定义域界说每个首分量都落在界本身里 (在第一个极限处即落在 `ω` 里)，而不只是落在载体里。两条都作为元层子句、对象语言公式与双向解码在此建造。定义域界按分量读出：经典精确性的完全方向对族刻划是多余的，因为后继值子句自身的双向形状已经逼出值链，故一段的范围无论如何都是若干阶段的集合。极限子句仍然缺位，因为第一个极限之下没有极限序数供它谈论。加锐界在对象语言里的形式由消费方选择：界只在第一个极限之上才是载体的成员 (界可命名事实)，故本章把界记为元层子句的参数，并在载体能命名它的地方兑付。近似条目的重新装配 (五合取 `Ap` 连同其充分性) 是面孔实例化的接缝：每条子句如今都有自己的公式与双向解码，故充分性逐字走过已交付的合取项。
+<!--/-->
+
+```agda
+  _⊆_ : S → S → Type (ℓ-suc ℓ)
+  u ⊆ v = (x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩
+
+  ext-⊆ : {u v : S} → u ⊆ v → v ⊆ u → u ≡ v
+  ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
+
+  -- b is exactly the carrier's set of subsets of c.
+  powRel : S → S → Type (ℓ-suc ℓ)
+  powRel c b = ( ⟨ b ∈ˢ u ⟩
+               × ((z : S) → ⟨ z ∈ˢ b ⟩ → z ⊆ c)
+               × ((z : S) → ⟨ z ∈ˢ u ⟩ → z ⊆ c → ⟨ z ∈ˢ b ⟩) )
+
+  -- The successor-value clause: the graph's value at suc a is powRel of
+  -- the value at a.
+  succValClause : S → Type (ℓ-suc ℓ)
+  succValClause f = (a c b : S) → ⟨ pr a c ∈ˢ f ⟩
+    → (⟨ pr (sucV a) b ∈ˢ f ⟩ ⟷ powRel c b)
+
+  -- The domain bound (per-component read): every first component of f is
+  -- an ordinal of the carrier.
+  ordDom : S → Type (ℓ-suc ℓ)
+  ordDom f = (a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁ → (IsOrd a × ⟨ a ∈ˢ u ⟩)
+
+  -- The strengthened bound: every first component lies in the bound β.
+  strongDomOrd : S → S → Type (ℓ-suc ℓ)
+  strongDomOrd β f = (a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁ → (IsOrd a × ⟨ a ∈ˢ β ⟩)
+
+  -- The discharge: wherever every ordinal of the carrier lies in the bound.
+  strong-discharge : (β : S) (f : S)
+    → ((a : S) → IsOrd a → ⟨ a ∈ˢ u ⟩ → ⟨ a ∈ˢ β ⟩)
+    → ordDom f → strongDomOrd β f
+  strong-discharge β f dis ord a h =
+    PT.rec (isProp× (isPropIsOrd a) (snd (a ∈ˢ β))) go h
+    where
+    go : Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ → IsOrd a × ⟨ a ∈ˢ β ⟩
+    go (b , ab∈f) = ( ord-a .fst , dis a (ord-a .fst) (ord-a .snd) )
+      where
+      ord-a : IsOrd a × ⟨ a ∈ˢ u ⟩
+      ord-a = ord a (∣ b , ab∈f ∣₁)
+
+```
+
+<!--en-->
+Each new clause gets an object-language formula in the chapter's standing de
+Bruijn shape. The successor of a set is not a term of the object language, so
+the successor pair `pr (suc a) b` is read through a bounded atom `sucAt`: the
+set at `k` is the successor of the set at `a` exactly when `a` lies in `k`,
+`a` is a subset of `k`, and every member of `k` is a member of `a` or `a`
+itself, all bounded. The internal powerset atom `powAt` reads "the set at `b`
+is the carrier-internal powerset of the set at `c`": every member of `b` is a
+subset of `c`, and every subset of `c` in the carrier lies in `b`. The
+ordinal predicate `isOrdAt` and the domain formula `domForm` are the tower
+chapter's pieces ported by carrier substitution, and the successor-value
+clause `succValForm` assembles its three quantifiers around the two new atoms.
+<!--zh-->
+每条新子句都配一条对象语言公式，沿用本章一贯的 de Bruijn 形状。集合的后继不是对象语言的词项，故后继对 `pr (suc a) b` 经有界原子 `sucAt` 读出：`k` 处的集合是 `a` 处集合的后继，当且仅当 `a` 落在 `k` 里、`a` 是 `k` 的子集、且 `k` 的每个成员都是 `a` 的成员或 `a` 本身，全部有界。载体内幂集原子 `powAt` 读作「`b` 处的集合是 `c` 处集合的载体内幂集」：`b` 的每个成员都是 `c` 的子集，而载体中 `c` 的每个子集都落在 `b` 里。序数谓词 `isOrdAt` 与定义域公式 `domForm` 是塔章按载体替换搬来的件，后继值子句 `succValForm` 把三个量词绕两条新原子装配起来。
+<!--/-->
+
+```agda
+  -- The successor atom's coverage body: a member of k is a member of a
+  sucKcov : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ (suc n)
+  sucKcov k a = (var zero ∈̇ var (suc a)) ∨̇ (var zero ≐ var (suc a))
+
+  -- The bounded successor atom: k = suc a.
+  sucAt : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ n
+  sucAt k a =
+    (var a ∈̇ var k)
+    ∧̇ (∀̇∈ (var a) (var zero ∈̇ var (suc k)))
+    ∧̇ (∀̇∈ (var k) (sucKcov k a))
+
+  isOrdAt : {n : ℕ} → Fin n → Formula ⟪ u ⟫ n
+  isOrdAt k = (∀̇∈ (var k) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc k)))))
+           ∧̇ (∀̇∈ (var k) (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
+
+  powAt : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ n
+  powAt b c = (∀̇∈ (var b) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc c)))))
+           ∧̇ (∀̇ ( (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc c))))
+                 ⇒̇ (var zero ∈̇ var (suc b)) ))
+
+  domForm : Formula ⟪ u ⟫ 2
+  domForm = ∀̇ ( (∃̇ (∃̇∈ (var (suc (suc zero)))
+                      (PK.prAt zero (suc (suc zero)) (suc zero))))
+             ⇒̇ isOrdAt zero )
+
+  succPairAt : Formula ⟪ u ⟫ 6
+  succPairAt = (sucAt zero (suc (suc (suc zero))))
+             ∧̇ (∃̇∈ (var (suc (suc (suc (suc zero)))))
+                    (PK.prAt zero (suc zero) (suc (suc zero))))
+
+  succConc : Formula ⟪ u ⟫ 5
+  succConc = (∃̇ succPairAt ⇒̇ (powAt zero (suc zero)))
+          ∧̇ ((powAt zero (suc zero)) ⇒̇ ∃̇ succPairAt)
+
+  succAnt : Formula ⟪ u ⟫ 5
+  succAnt = ∃̇∈ (var (suc (suc (suc zero))))
+               (PK.prAt zero (suc (suc (suc zero))) (suc (suc zero)))
+
+  succBody : Formula ⟪ u ⟫ 5
+  succBody = succAnt ⇒̇ succConc
+
+  succValForm : Formula ⟪ u ⟫ 2
+  succValForm = ∀̇ (∀̇ (∀̇ succBody))
+
+```
+
+<!--en-->
+The two new atoms decode first, and everything else consumes them. `sucAt-ok`
+reads the bounded successor atom back to successor equality: the forward
+direction splits a member of `k` through the successor's case analysis, and
+the reverse direction rebuilds the three conjuncts from the equality. `powAt-ok`
+reads the internal-powerset atom back to `powRel`: the two bounded quantifiers
+are exactly the relation's two inclusions, with the carrier's transitivity
+supplying the certificates the inner quantifiers ask for. The successor-value
+clause's decode then walks its three quantifiers: the pair memberships are the
+shared `pair∈` read, the successor pair is read through `sucAt-ok`, and the
+two directions of the clause's bi-implication are the two directions of
+`powAt-ok`. The ordinal decode `isOrd-out`/`isOrd-in` is the tower chapter's
+shared piece ported verbatim, and the domain decode `dom-out`/`dom-in` reads
+the per-component bound, each truncated branch a named `where` function with a
+written type. The successor-value clause's two-way decode is one lemma
+`succVal-ok`, and the successor pair at the graph is decoded once by
+`succPair-ok`, consumed by both directions.
+<!--zh-->
+两条新原子先解码，其余全部消费它们。`sucAt-ok` 把有界后继原子读回后继等式：前进方向沿后继的分情形装置拆开 `k` 的成员，反向从等式重建三条合取项。`powAt-ok` 把载体内幂集原子读回 `powRel`：两条有界量词恰是关系的两条包含，载体传递性供给内层量词索要的证书。后继值子句的解码随之走过它的三个量词：对隶属用共享的 `pair∈` 读式，后继对经 `sucAt-ok` 读出，子句双向蕴含的两头正是 `powAt-ok` 的两个方向。序数解码 `isOrd-out`/`isOrd-in` 是塔章的共享件逐字搬来，定义域解码 `dom-out`/`dom-in` 读出按分量的界，每条截断分支都是带书面类型的具名 `where` 函数。后继值子句的双向解码是一条引理 `succVal-ok`，图处的后继对由 `succPair-ok` 解码一次，两个方向都消费它。
+<!--/-->
+
+```agda
+  -- The successor atom decodes to successor equality.
+  sucAt-ok : {n : ℕ} (k a : Fin n) (δ : Vec SM n)
+           → ⟨ δ ⊨ᵐ sucAt k a ⟩ ⟷ (fst (lookup k δ) ≡ sucV (fst (lookup a δ)))
+  sucAt-ok k a δ = (out , bwd)
+    where
+    valK valA : S
+    valK = fst (lookup k δ)
+    valA = fst (lookup a δ)
+    out : ⟨ δ ⊨ᵐ sucAt k a ⟩ → valK ≡ sucV valA
+    out (k∈ , (A⊆K , Kcov)) = ext-⊆ K⊆suc suc⊆K
+      where
+      K⊆suc : valK ⊆ sucV valA
+      K⊆suc z z∈K = PT.rec (snd (z ∈ˢ sucV valA)) go (Kcov zm z∈K)
+        where
+        zm : SM
+        zm = PK.pt z (utr {x = valK} {y = z} z∈K (snd (lookup k δ)))
+        go : (⟨ z ∈ˢ valA ⟩ ⊎ (z ≡ valA))
+           → ⟨ z ∈ˢ sucV valA ⟩
+        go (inl z∈A) = ∈sucV-inl {A = valA} {x = z} z∈A
+        go (inr z≡A) = subst (λ w → ⟨ w ∈ˢ sucV valA ⟩) (sym z≡A) (self∈sucV valA)
+      suc⊆K : sucV valA ⊆ valK
+      suc⊆K z z∈suc = ∈sucV-elim (snd (z ∈ˢ valK)) z∈suc
+        (λ z∈A → A⊆K (PK.pt z (utr {x = valA} {y = z} z∈A (snd (lookup a δ)))) z∈A)
+        (λ z≡A → subst (λ w → ⟨ w ∈ˢ valK ⟩) (sym z≡A) k∈)
+    bwd : valK ≡ sucV valA → ⟨ δ ⊨ᵐ sucAt k a ⟩
+    bwd q = ( k∈q , (A⊆Kq , Kcovq) )
+      where
+      k∈q : ⟨ valA ∈ˢ valK ⟩
+      k∈q = subst (λ w → ⟨ valA ∈ˢ w ⟩) (sym q) (self∈sucV valA)
+      A⊆Kq : ⟨ δ ⊨ᵐ ∀̇∈ (var a) (var zero ∈̇ var (suc k)) ⟩
+      A⊆Kq zm z∈A = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) (sym q) (∈sucV-inl {A = valA} {x = fst zm} z∈A)
+      Kcovq : ⟨ δ ⊨ᵐ ∀̇∈ (var k) (sucKcov k a) ⟩
+      Kcovq zm z∈K = ∈sucV-elim (snd sat) z∈suc inA eqA
+        where
+        sat = (zm ∷ δ) ⊨ᵐ sucKcov k a
+        z∈suc : ⟨ fst zm ∈ˢ sucV valA ⟩
+        z∈suc = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) q z∈K
+        inA : ⟨ fst zm ∈ˢ valA ⟩ → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
+        inA h = ∣ inl h ∣₁
+        eqA : fst zm ≡ valA → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
+        eqA e = ∣ inr e ∣₁
+
+  -- The internal-powerset atom decodes to the powerset relation.
+  powAt-ok : {n : ℕ} (b c : Fin n) (δ : Vec SM n)
+           → ⟨ δ ⊨ᵐ powAt b c ⟩ ⟷ powRel (fst (lookup c δ)) (fst (lookup b δ))
+  powAt-ok b c δ = (out , bwd)
+    where
+    B C : S
+    B = fst (lookup b δ)
+    C = fst (lookup c δ)
+    out : ⟨ δ ⊨ᵐ powAt b c ⟩ → powRel C B
+    out (subs , closed) = ( snd (lookup b δ)
+                          , (λ z z∈B → z⊆C z z∈B)
+                          , (λ z z∈u z⊆C → closed (PK.pt z z∈u) (λ w w∈z → z⊆C (fst w) w∈z)) )
+      where
+      z⊆C : (z : S) → ⟨ z ∈ˢ B ⟩ → z ⊆ C
+      z⊆C z z∈B w w∈z = subs zm z∈B wm w∈z
+        where
+        zm : SM
+        zm = PK.pt z (utr {x = B} {y = z} z∈B (snd (lookup b δ)))
+        wm : SM
+        wm = PK.pt w (utr {x = z} {y = w} w∈z (snd zm))
+    bwd : powRel C B → ⟨ δ ⊨ᵐ powAt b c ⟩
+    bwd (B∈u , memb , closed) = ( subs , closedSat )
+      where
+      subs : ⟨ δ ⊨ᵐ ∀̇∈ (var b) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc c)))) ⟩
+      subs zm z∈B w w∈z = memb (fst zm) z∈B (fst w) w∈z
+      closedSat : ⟨ δ ⊨ᵐ ∀̇ ( (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc c))))
+                           ⇒̇ (var zero ∈̇ var (suc b)) ) ⟩
+      closedSat zm z⊆C = closed (fst zm) (snd zm)
+        (λ w w∈z → z⊆C (PK.pt w (utr {x = fst zm} {y = w} w∈z (snd zm))) w∈z)
+
+  -- The successor pair at the graph decodes to the meta pair membership.
+  succPair-ok : (f : SM) (x : ⟪ u ⟫) (am cm bm : SM)
+    → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
+    ⟷ ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+  succPair-ok f x am cm bm = (out , bwd)
+    where
+    out : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
+        → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+    out = PT.rec (snd (pr (sucV (fst am)) (fst bm) ∈ˢ fst f)) go
+      where
+      go : Σ[ xm ∈ SM ] ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩
+         → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+      go (xm , (suc-sat , p-sat)) =
+        subst (λ w → ⟨ pr w (fst bm) ∈ˢ fst f ⟩)
+          (sucAt-ok zero (suc (suc (suc zero)))
+            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst suc-sat)
+          (pair∈ (suc (suc (suc (suc zero)))) zero (suc zero)
+            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst p-sat)
+    bwd : ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+        → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
+    bwd ab∈f = ∣ xm , ( suc-sat , p-sat ) ∣₁
+      where
+      x∈u : ⟨ sucV (fst am) ∈ˢ u ⟩
+      x∈u = PM.pair-left {a = sucV (fst am)} {b = fst bm}
+        (utr {x = fst f} {y = pr (sucV (fst am)) (fst bm)} ab∈f (snd f))
+      xm : SM
+      xm = PK.pt (sucV (fst am)) x∈u
+      suc-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ [])
+                  ⊨ᵐ sucAt zero (suc (suc (suc zero))) ⟩
+      suc-sat = sucAt-ok zero (suc (suc (suc zero)))
+        (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd refl
+      p-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
+                (∃̇∈ (var (suc (suc (suc (suc zero)))))
+                     (PK.prAt zero (suc zero) (suc (suc zero)))) ⟩
+      p-sat = pair∈ (suc (suc (suc (suc zero)))) zero (suc zero)
+        (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ab∈f
+
+  -- The successor-value clause decodes both ways: a satisfied clause is
+  -- the meta story, and the meta story builds the satisfaction.
+  succVal-ok : (f : SM) (x : ⟪ u ⟫)
+             → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm ⟩ ⟷ succValClause (fst f)
+  succVal-ok f x = (out , bwd)
+    where
+    out : ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm ⟩ → succValClause (fst f)
+    out h a c b ac∈f = (o1 , o2)
+      where
+      pr∈u : ⟨ pr a c ∈ˢ u ⟩
+      pr∈u = utr {x = fst f} {y = pr a c} ac∈f (snd f)
+      am cm : SM
+      am = PK.pt a (PM.pair-left {a = a} {b = c} pr∈u)
+      cm = PK.pt c (PM.pair-right {a = a} {b = c} pr∈u)
+      ant : (bm : SM) → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succAnt ⟩
+      ant bm = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
+        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ac∈f
+      o1 : ⟨ pr (sucV a) b ∈ˢ fst f ⟩ → powRel c b
+      o1 ab∈f = powAt-ok zero (suc zero)
+          (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst
+        ((h am cm bm (ant bm)) .fst (succPair-ok f x am cm bm .snd ab∈f))
+        where
+        b∈u : ⟨ b ∈ˢ u ⟩
+        b∈u = PM.pair-right {a = sucV a} {b = b}
+          (utr {x = fst f} {y = pr (sucV a) b} ab∈f (snd f))
+        bm : SM
+        bm = PK.pt b b∈u
+      o2 : powRel c b → ⟨ pr (sucV a) b ∈ˢ fst f ⟩
+      o2 pb = succPair-ok f x am cm bm .fst pr-sat
+        where
+        bm : SM
+        bm = PK.pt b (pb .fst)
+        powAt-sat : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ powAt zero (suc zero) ⟩
+        powAt-sat = powAt-ok zero (suc zero)
+          (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd pb
+        pr-sat : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
+        pr-sat = (h am cm bm (ant bm)) .snd powAt-sat
+    bwd : succValClause (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm ⟩
+    bwd sc am cm bm ant-sat = (d1 , d2)
+      where
+      ac∈f : ⟨ pr (fst am) (fst cm) ∈ˢ fst f ⟩
+      ac∈f = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
+        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst ant-sat
+      d1 : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
+             (∃̇ succPairAt ⇒̇ (powAt zero (suc zero))) ⟩
+      d1 = PT.rec (snd ((bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ powAt zero (suc zero))) go
+        where
+        go : Σ[ xm ∈ SM ]
+               ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ [])
+                 ⊨ᵐ succPairAt ⟩
+           → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ powAt zero (suc zero) ⟩
+        go (xm , sat) =
+          powAt-ok zero (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd
+            (sc (fst am) (fst cm) (fst bm) ac∈f .fst
+              (succPair-ok f x am cm bm .fst (∣ xm , sat ∣₁)))
+      d2 : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
+             ((powAt zero (suc zero)) ⇒̇ ∃̇ succPairAt) ⟩
+      d2 powAt-sat = succPair-ok f x am cm bm .snd ab∈f
+        where
+        ab∈f : ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+        ab∈f = sc (fst am) (fst cm) (fst bm) ac∈f .snd
+          (powAt-ok zero (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst powAt-sat)
+
+  -- The ordinal predicate decodes to being an ordinal (the tower
+  -- chapter's shared decode, ported by carrier substitution).
+  isOrd-out : {n : ℕ} (k : Fin n) (δ : Vec SM n)
+            → ⟨ δ ⊨ᵐ isOrdAt k ⟩ → IsOrd (fst (lookup k δ))
+  isOrd-out k δ (h₁ , h₂) = (trans , memTr)
+    where
+    valA = fst (lookup k δ)
+    trans : isTransV valA
+    trans {x} {y} y∈x x∈A = h₁ xm x∈A ym y∈x
+      where
+      x∈u : ⟨ x ∈ˢ u ⟩
+      x∈u = utr {x = valA} {y = x} x∈A (snd (lookup k δ))
+      xm : SM
+      xm = PK.pt x x∈u
+      ym : SM
+      ym = PK.pt y (utr {x = x} {y = y} y∈x x∈u)
+    memTr : (x : S) → ⟨ x ∈ˢ valA ⟩ → isTransV x
+    memTr x x∈A {y} {z} z∈y y∈x = h₂ xm x∈A ym y∈x zm z∈y
+      where
+      x∈u : ⟨ x ∈ˢ u ⟩
+      x∈u = utr {x = valA} {y = x} x∈A (snd (lookup k δ))
+      xm : SM
+      xm = PK.pt x x∈u
+      y∈u : ⟨ y ∈ˢ u ⟩
+      y∈u = utr {x = x} {y = y} y∈x x∈u
+      ym : SM
+      ym = PK.pt y (utr {x = x} {y = y} y∈x x∈u)
+      zm : SM
+      zm = PK.pt z (utr {x = y} {y = z} z∈y y∈u)
+
+  isOrd-in : {n : ℕ} (k : Fin n) (δ : Vec SM n) → IsOrd (fst (lookup k δ))
+           → ⟨ δ ⊨ᵐ isOrdAt k ⟩
+  isOrd-in k δ (Atr , Amem) = (c1 , c2)
+    where
+    c1 : ⟨ δ ⊨ᵐ ∀̇∈ (var k) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc k)))) ⟩
+    c1 xm x∈A ym y∈x = Atr {x = fst xm} {y = fst ym} y∈x x∈A
+    c2 : ⟨ δ ⊨ᵐ
+           ∀̇∈ (var k) (∀̇∈ (var zero) (∀̇∈ (var zero)
+             (var zero ∈̇ var (suc (suc zero))))) ⟩
+    c2 xm x∈A ym y∈x zm z∈y =
+      Amem (fst xm) x∈A {x = fst ym} {y = fst zm} z∈y y∈x
+
+  -- The domain bound decodes to the per-component read.
+  dom-out : (f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ domForm ⟩ → ordDom (fst f)
+  dom-out f x h a = PT.rec (isProp× (isPropIsOrd a) (snd (a ∈ˢ u))) go
+    where
+    go : Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ → IsOrd a × ⟨ a ∈ˢ u ⟩
+    go (b , ab∈f) = ( isOrd-out zero (am ∷ f ∷ ι x ∷ []) sat-ord , a∈u )
+      where
+      pr∈u : ⟨ pr a b ∈ˢ u ⟩
+      pr∈u = utr {x = fst f} {y = pr a b} ab∈f (snd f)
+      a∈u : ⟨ a ∈ˢ u ⟩
+      a∈u = PM.pair-left {a = a} {b = b} pr∈u
+      b∈u : ⟨ b ∈ˢ u ⟩
+      b∈u = PM.pair-right {a = a} {b = b} pr∈u
+      am bm : SM
+      am = PK.pt a a∈u
+      bm = PK.pt b b∈u
+      sat : ⟨ (bm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
+              (∃̇∈ (var (suc (suc zero)))
+                   (PK.prAt zero (suc (suc zero)) (suc zero))) ⟩
+      sat = pair∈ (suc (suc zero)) (suc zero) zero
+        (bm ∷ am ∷ f ∷ ι x ∷ []) .snd ab∈f
+      sat-ord : ⟨ (am ∷ f ∷ ι x ∷ []) ⊨ᵐ isOrdAt zero ⟩
+      sat-ord = h am (∣ bm , sat ∣₁)
+
+  dom-in : (f : SM) (x : ⟪ u ⟫) → ordDom (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ domForm ⟩
+  dom-in f x ord am = PT.rec (snd ((am ∷ f ∷ ι x ∷ []) ⊨ᵐ isOrdAt zero)) go
+    where
+    go : Σ[ bm ∈ SM ]
+           ⟨ (bm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
+             (∃̇∈ (var (suc (suc zero)))
+                  (PK.prAt zero (suc (suc zero)) (suc zero))) ⟩
+       → ⟨ (am ∷ f ∷ ι x ∷ []) ⊨ᵐ isOrdAt zero ⟩
+    go (bm , sat) = isOrd-in zero (am ∷ f ∷ ι x ∷ [])
+      (ord (fst am) (∣ fst bm ,
+        pair∈ (suc (suc zero)) (suc zero) zero
+          (bm ∷ am ∷ f ∷ ι x ∷ []) .fst sat ∣₁) .fst)
+
+```
+
+<!--en-->
+## Recap
+<!--zh-->
+## 小结
+<!--/-->
+
+<!--en-->
+The strengthened story at a rud carrier now carries the successor-value
+clause and the strengthened domain bound: the two new atoms `sucAt` and
+`powAt` are decoded once each, the successor-value clause is decoded both
+ways by `succVal-ok` with the successor pair read by `succPair-ok`, and the
+domain bound is read per component, with the strengthened bound stated on it
+and discharged wherever the carrier names the bound. The limit clause stays
+omitted, vacuous below the first limit. The face's approximation entry
+re-assembles over the delivered clause decodes; the carve's remaining steps
+are the over-HF identification of the carrier-internal powerset with the
+definable power and the family equality itself.
+<!--zh-->
+rud 载体处的加锐故事如今带有后继值子句与加锐的定义域界：两条新原子 `sucAt` 与 `powAt` 各解码一次，后继值子句由 `succVal-ok` 双向解码、后继对由 `succPair-ok` 读出，定义域界按分量读出，加锐界立在它上面，并在载体能命名界的地方兑付。极限子句仍然缺位，第一个极限之下它是空的。面孔的近似条目在已交付的子句解码之上重新装配；族刻划所余的步骤是「载体内幂集与可定义幂在 HF 上相合」的认同，以及族等式本身。
 <!--/-->
