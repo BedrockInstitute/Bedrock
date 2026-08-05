@@ -45,8 +45,16 @@ DELIBERATELY NOT CHECKED, decided 2026-08-05 after [L3.32-T60] proposed them:
   belongs to one candidate inside a survey, which is a false positive, and a status gate that
   cries wolf on the status register is worse than none.
 
+GATE DEBT. The expensive part of a full `agda src/Everything.lagda.md` is not its twelve
+minutes, which run in the background, but the QUIET TREE it needs for all of them: no agent may
+write a master while it runs, so every full gate costs one dispatch window. `--gate-debt`
+measures what has accumulated since the last green one, so the decision to spend a window is
+made on a number instead of a feeling.
+
 Usage:
   check-tree.py --check         run every invariant over the working tree (what make check runs)
+  check-tree.py --gate-debt     in-fence lines and commits since the last recorded green gate
+  check-tree.py --gate-passed   record HEAD as the last green full gate
   check-tree.py --check NAME    run one: closure, archive, shared-cjk, spdx, module-body
 Exit status: 0 clean, 1 a FAIL-class violation, 2 usage error.
 """
@@ -185,6 +193,33 @@ def check_module_body() -> list[str]:
     return warn
 
 
+LAST_GATE = ROOT / "_build" / ".last-gate"
+
+
+def gate_debt() -> tuple[int, int, str]:
+    """(commits, in-fence lines added, base sha) since the last recorded green gate."""
+    import subprocess
+    base = LAST_GATE.read_text().strip() if LAST_GATE.exists() else ""
+    if not base:
+        return -1, -1, ""
+    n = subprocess.run(["git", "rev-list", "--count", f"{base}..HEAD"], cwd=ROOT,
+                       capture_output=True, text=True).stdout.strip()
+    added = 0
+    diff = subprocess.run(["git", "diff", "-U0", f"{base}..HEAD", "--", "src/"],
+                          cwd=ROOT, capture_output=True, text=True).stdout
+    in_fence = False
+    for line in diff.split("\n"):
+        if line.startswith("+```agda"):
+            in_fence = True
+            continue
+        if in_fence and line.startswith("+```"):
+            in_fence = False
+            continue
+        if line.startswith("+") and not line.startswith("+++") and line[1:].strip():
+            added += 1
+    return int(n or 0), added, base
+
+
 CHECKS = {
     "closure": (check_closure, "FAIL"),
     "archive": (check_archive, "FAIL"),
@@ -197,9 +232,28 @@ CHECKS = {
 def main(argv: list[str]) -> int:
     names = [a for a in argv[1:] if not a.startswith("-")]
     flags = [a for a in argv[1:] if a.startswith("-")]
-    if any(f not in {"--check"} for f in flags):
+    if any(f not in {"--check", "--gate-debt", "--gate-passed"} for f in flags):
         print(__doc__, file=sys.stderr)
         return 2
+    if "--gate-passed" in flags:
+        import subprocess
+        sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
+                             capture_output=True, text=True).stdout.strip()
+        LAST_GATE.parent.mkdir(parents=True, exist_ok=True)
+        LAST_GATE.write_text(sha + "\n")
+        print(f"check-tree: recorded {sha[:9]} as the last green full gate")
+        return 0
+    if "--gate-debt" in flags:
+        n, added, base = gate_debt()
+        if n < 0:
+            print("check-tree: no green gate recorded yet; run one and then --gate-passed")
+            return 0
+        print(f"check-tree: since {base[:9]}, {n} commit(s) and about {added} added lines "
+              f"under src/.")
+        print("  Batch trigger (D28): a full gate is due at 3 to 4 returns or about 1,000 "
+              "added lines, whichever comes first, because each gate costs one quiet "
+              f"dispatch window. Currently {'DUE' if (n >= 4 or added >= 1000) else 'not yet due'}.")
+        return 0
     selected = names or list(CHECKS)
     if any(n not in CHECKS for n in selected):
         print(f"check-tree: unknown check; pick from {', '.join(CHECKS)}", file=sys.stderr)
