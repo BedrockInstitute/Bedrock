@@ -66,6 +66,13 @@ Standing clauses that go in every build or probe brief:
   it, and record any correction beside the original.
 - **D22**: name the block's widest unmeasured term and the probe that would
   measure it; a brief that cannot is not ready to send.
+- **D29, generic writing, in EVERY brief.** For a recon: ask explicitly whether
+  the content can be written once at a generic carrier and instantiated, and
+  require the report to price BOTH shapes. For a build: state which shape is to
+  be written and why, with generic as the default. **Add the attitude clause
+  verbatim, because it is the part agents drop:** a stop-line is not a reason to
+  write fixed; if the generic shape does not fit the budget, say so and stop for
+  a re-price rather than delivering the fixed shape inside the cap.
 - **D17 at a retirement question.** If the brief touches what retires, quote
   D17 into it: "X must stay because Y consumes it" is not an answer, the
   ideal-form rewrite of what Y actually needs is priced first, and the old
@@ -109,7 +116,14 @@ On 2026-08-05 a seven-term sweep ran across 43 files with four agents holding
 territories and escaped only because none of their files contained a swept
 term. That is luck, not method.
 
-## 5. Registration
+## 5. Registration, and the shape question before it
+
+**Before a route is planned, ask the generic question of the route itself**
+(D29): can the content be written once at a generic carrier and instantiated,
+rather than written per carrier and unified later? The cheapest generic decision
+is the one made before two chapters exist to unify, and this campaign has twice
+paid for making it late. Record the answer in the registration, so the briefs
+that follow inherit a decision rather than re-opening one.
 
 A task is registered in `dev/PLAN.md` **before** the work starts, never
 backfilled (PLAN section 6.0 rule 6). This was breached once, for four tasks,
@@ -129,6 +143,8 @@ In this order, every time:
    (D26): the campaign route is ruled, the number is recorded, and the report
    is sent back for the next technique. A report that changes a TECHNIQUE on a
    measured obligation is doing its job and is not caught by this.
+   **A build that wrote fixed where generic was possible, without saying so,
+   is returned** (D29): the choice is legitimate, hiding it is not.
    **A cold-check regression is a defect**, not a cost of doing business; if a
    chapter's cold check has grown, say by how much and why before wiring it.
 3. **Fill the free slots** (section 2) before writing anything up.
