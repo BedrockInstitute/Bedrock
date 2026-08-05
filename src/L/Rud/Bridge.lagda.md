@@ -49,11 +49,11 @@ open import L.Rud.Step {ℓ} lem A using
   ; op13; op14; op15; Fof; Fof-f0; Fof-f1; Fof-f2; Fof-f3; Fof-f4; Fof-f5
   ; Fof-f6; Fof-f7; Fof-f8; Fof-f9; Fof-f10; Fof-f11; Fof-f12; Fof-f13
   ; Fof-f14; Fof-f15; F15A; singl≡pair
-  ; Sset; Sset-trans; Sset-out; Sset-mem; Sset-suc
+  ; Sset; Sset-trans; Sset-out; Sset-mem; Sset-suc; Sset-in; Sset-mono
   ; Jset; Jset-rud; limit-succ-mem
   ; step; step-out; StepArm; arm-member; arm-self; arm-image )
 open import L.Rud.OrdArith {ℓ} lem using
-  ( isLimit; isLimit-ord; limit-mem-ord; isSucc; ord-case )
+  ( isLimit; isLimit-ord; isLimit-not-zero; limit-mem-ord; isSucc; ord-case )
 open import L.Ordinal {ℓ} using ( suc-ord; mem-ord; setUnion-ord )
 open import L.Rud.ClassJ {ℓ} lem A using ( isJ; Jset→isJ )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri; Tri )
@@ -856,6 +856,173 @@ sucIter-mono-ord u v ou ov sub (suc n) x x∈ =
   sup x x∈ = subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (γ-compute (sucV β)))
     (+ω-mono-ord (γ β) (U (sucV β)) (γ-ord β) (ordU (sucV β))
       (γβ⊆U-suc β) x x∈)
+```
+
+<!--en-->
+## The residues' reachable ingredients
+
+The two sequence residues, `Q-lim` and `below-lim`, are definability
+statements about the towers' sequences: the L-stage at a limit inside the
+rud level one ω-block above the running sup, and the rud level at a limit
+inside the constructible stage above it. Both consume the same carrier
+geometry, and this section records the reachable half of it, every fact
+provable from delivered theorems: the running sup `U l = ⋃_{δ<l} γ δ` is
+itself a limit ordinal (the certificate the full switch needs at the
+carrier), the carrier sits one ω-block below the landing (`U l ∈ γ l`),
+each family member is a subset of the bound union (`γ δ ⊆ U l`), the rud
+tower is monotone in index inclusion, the tower hypothesis moves the whole
+stage `Lset l` into the carrier as a subset, and both towers' limit union
+structures read at the element level. What is not reachable here is the
+two-way composition `Lset l ≡ defSet (Sset (U l)) σ` at the carrier and
+the S-sequence membership in an L-stage; the missing object is the carried
+sequence of one tower inside the other tower's level, Devlin's
+`(L_β | β < α) ∈ J_{α+1}`, which no delivered chapter supplies, and the
+obstruction is measured in the report.
+<!--zh-->
+## 残项的可得成分
+
+两个序列残项 `Q-lim` 与 `below-lim` 都是关于两塔序列的可定义性陈述：极限处的 L 阶段落在「运行上确界之上一个 ω 块」的 rud 层里，极限处的 rud 层落在其上可构造阶段里。二者消费同一套载体几何，本节记录其中可得的那半边，每条事实都可由已交付定理证得：运行上确界 `U l = ⋃_{δ<l} γ δ` 本身是极限序数 (完全切换在载体处所需的证书)，载体比落点低一个 ω 块 (`U l ∈ γ l`)，每个族成员都是界并的子集 (`γ δ ⊆ U l`)，rud 塔在索引包含上单调，塔假设把整个阶段 `Lset l` 作为子集搬进载体，而两塔在极限处的并结构都在元素层面读出。此处不可得的是载体处 `Lset l ≡ defSet (Sset (U l)) σ` 的双向复合，以及 S 序列在 L 阶段里的成员隶属；所缺对象正是「一塔的序列作为另一塔某层的成员」这条被携带的序列，即 Devlin 的 `(L_β | β < α) ∈ J_{α+1}`，已交付的各章没有供应它，阻碍的度量记在报告中。
+<!--/-->
+
+```agda
+-- Every value of the tower holds its own running sup: γ δ = +ω (U δ) and
+-- the extension holds its base.
+γ-mem : (δ : S) → ⟨ U δ ∈ˢ γ δ ⟩
+γ-mem δ = subst (λ w → ⟨ U δ ∈ˢ w ⟩) (sym (γ-compute δ)) (+ω-mem (U δ))
+
+-- A family member is a subset of the bound union: δ ∈ l gives γ δ ⊆ U l.
+γδ⊆U : (l δ : S) → ⟨ δ ∈ˢ l ⟩ → γ δ ⊆ U l
+γδ⊆U l δ δ∈l x x∈γδ = ∈∈ₛ {a = x} {b = U l} .snd
+  (union-ax (sett ⟪ l ⟫ (fam l)) x .snd ∣ γ δ , (memb , x∈ₛ) ∣₁)
+  where
+  fib = ∈-asFiber {a = δ} {b = l} δ∈l
+  memb : ⟨ γ δ ∈ₛ sett ⟪ l ⟫ (fam l) ⟩
+  memb = ∈∈ₛ {a = γ δ} {b = sett ⟪ l ⟫ (fam l)} .fst
+    ∣ fib .fst , cong γ (fib .snd) ∣₁
+  x∈ₛ : ⟨ x ∈ₛ γ δ ⟩
+  x∈ₛ = ∈∈ₛ {a = x} {b = γ δ} .fst x∈γδ
+
+-- The rud tower is monotone in the index inclusion (the small-index read,
+-- R-35: memberships are stated at the small index, never through a union).
+Sset-⊆-mono : {α β : S} → α ⊆ β → Sset α ⊆ Sset β
+Sset-⊆-mono {α} {β} α⊆β x x∈Sα = PT.rec (snd (x ∈ˢ Sset β)) uStep
+  (Sset-out α x x∈Sα)
+  where
+  uStep : Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩) → ⟨ x ∈ˢ Sset β ⟩
+  uStep (δ , δ∈α , x∈stepSδ) = Sset-in β δ x (α⊆β δ δ∈α) x∈stepSδ
+
+-- The bound union U l is a limit: it is an ordinal (ordU), non-zero (every
+-- family member is non-empty, so an empty union would empty the index),
+-- and not a successor (a successor would close into self-membership
+-- through the limit's successor-closure).
+U-nonzero : (l : S) → ⟨ isLimit l ⟩ → (U l ≡ ∅) → Empty.⊥
+U-nonzero l lim Ul∅ = isLimit-not-zero l lim (ext-⊆ sub sup)
+  where
+  sub : l ⊆ ∅
+  sub δ δ∈l = Empty.rec (γδ⊆∅ δ δ∈l)
+    where
+    γδ⊆∅ : (δ : S) → ⟨ δ ∈ˢ l ⟩ → Empty.⊥
+    γδ⊆∅ δ δ∈l = ∅-empty (U δ) (∈∈ₛ {a = U δ} {b = ∅} .fst
+      (subst (λ w → ⟨ U δ ∈ˢ w ⟩) γδ∅ (γ-mem δ)))
+      where
+      γδ∅ : γ δ ≡ ∅
+      γδ∅ = ext-⊆ (subst (λ w → γ δ ⊆ w) Ul∅ (γδ⊆U l δ δ∈l))
+        (λ x x∈∅ → Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅)))
+  sup : ∅ ⊆ l
+  sup x x∈∅ = Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅))
+
+U-not-succ : (l : S) → ⟨ isLimit l ⟩ → ⟨ isSucc (U l) ⟩ → Empty.⊥
+U-not-succ l lim s = ∈-irrefl (U l) Ul∈Ul
+  where
+  β : S
+  β = s .fst
+  β∈Ul : ⟨ β ∈ˢ U l ⟩
+  β∈Ul = subst (λ w → ⟨ β ∈ˢ w ⟩) (s .snd .snd) (self∈sucV β)
+  atFib : (v : S) → ⟨ β ∈ₛ v ⟩
+        → Σ[ m ∈ ⟪ l ⟫ ] (fam l m ≡ v) → ⟨ U l ∈ˢ U l ⟩
+  atFib v β∈ₛv (m , mw) = γδ⊆U l δ δ∈l (U l)
+    (subst (λ w → ⟨ w ∈ˢ γ δ ⟩) (s .snd .snd)
+      (limit-succ-mem (γ δ) β (γ-lim δ) β∈γδ))
+    where
+    δ : S
+    δ = ⟪ l ⟫↪ m
+    δ∈l : ⟨ δ ∈ˢ l ⟩
+    δ∈l = ∈∈ₛ {a = δ} {b = l} .snd (∈ₛ⟪ l ⟫↪ m)
+    β∈γδ : ⟨ β ∈ˢ γ δ ⟩
+    β∈γδ = subst (λ w → ⟨ β ∈ˢ w ⟩) (sym mw) (∈∈ₛ {a = β} {b = v} .snd β∈ₛv)
+  Ul∈Ul : ⟨ U l ∈ˢ U l ⟩
+  Ul∈Ul = PT.rec (snd (U l ∈ˢ U l)) uStep
+    (union-ax (sett ⟪ l ⟫ (fam l)) β .fst (∈∈ₛ {a = β} {b = U l} .fst β∈Ul))
+    where
+    uStep : Σ[ v ∈ S ] (⟨ v ∈ₛ sett ⟪ l ⟫ (fam l) ⟩ × ⟨ β ∈ₛ v ⟩)
+          → ⟨ U l ∈ˢ U l ⟩
+    uStep (v , v∈ , β∈ₛv) = PT.rec (snd (U l ∈ˢ U l)) (atFib v β∈ₛv)
+      (∈∈ₛ {a = v} {b = sett ⟪ l ⟫ (fam l)} .snd v∈)
+
+U-lim : (l : S) → ⟨ isLimit l ⟩ → ⟨ isLimit (U l) ⟩
+U-lim l lim = ( ordU l
+             , (λ e → U-nonzero l lim e)
+             , (λ s → U-not-succ l lim s) )
+
+-- The carrier sits one ω-block below the landing: U l ∈ γ l = +ω (U l).
+Ul∈γl : (l : S) → ⟨ U l ∈ˢ γ l ⟩
+Ul∈γl l = subst (λ w → ⟨ U l ∈ˢ w ⟩) (sym (γ-compute l)) (+ω-mem (U l))
+
+-- The subset side of the limit clause: every member of Lset l lies in the
+-- rud carrier, through the tower hypothesis at the successor index and the
+-- rud tower's index monotonicity.
+Lset-l⊆carrier : (l : S) → ⟨ isLimit l ⟩
+  → ((δ : S) → ⟨ δ ∈ˢ l ⟩ → ⟨ Lset δ ∈ˢ Sset (γ δ) ⟩)
+  → Lset l ⊆ Sset (U l)
+Lset-l⊆carrier l lim tower x x∈L = PT.rec (snd (x ∈ˢ Sset (U l))) go
+  (Lset-out l x x∈L)
+  where
+  go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ l ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → ⟨ x ∈ˢ Sset (U l) ⟩
+  go (δ , δ∈l , x∈𝒟) = Sset-trans (U l) {x = Lset (sucV δ)} {y = x}
+    x∈Lsuc stage∈
+    where
+    x∈Lsuc : ⟨ x ∈ˢ Lset (sucV δ) ⟩
+    x∈Lsuc = subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Lset-suc δ)) x∈𝒟
+    sδ∈l : ⟨ sucV δ ∈ˢ l ⟩
+    sδ∈l = limit-succ-mem l δ lim δ∈l
+    stage∈ : ⟨ Lset (sucV δ) ∈ˢ Sset (U l) ⟩
+    stage∈ = Sset-⊆-mono (γδ⊆U l (sucV δ) sδ∈l) (Lset (sucV δ))
+      (tower (sucV δ) sδ∈l)
+
+-- Lset's own union structure at a limit, both directions: membership in
+-- Lset l is membership in some successor stage below l.
+Lset-union-limit : (l : S) → ⟨ isLimit l ⟩ → (x : S)
+  → ⟨ x ∈ˢ Lset l ⟩
+  → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ l ⟩ × ⟨ x ∈ˢ Lset (sucV δ) ⟩) ∥₁
+Lset-union-limit l lim x x∈L = PT.map go (Lset-out l x x∈L)
+  where
+  go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ l ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+     → Σ[ δ ∈ S ] (⟨ δ ∈ˢ l ⟩ × ⟨ x ∈ˢ Lset (sucV δ) ⟩)
+  go (δ , δ∈l , x∈𝒟) = δ
+    , (δ∈l , subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Lset-suc δ)) x∈𝒟)
+
+Lset-union-in : (l : S) → ⟨ isLimit l ⟩ → (δ x : S)
+  → ⟨ δ ∈ˢ l ⟩ → ⟨ x ∈ˢ Lset (sucV δ) ⟩ → ⟨ x ∈ˢ Lset l ⟩
+Lset-union-in l lim δ x δ∈l x∈ = Lset-mono {α = l} {β = sucV δ}
+  (limit-succ-mem l δ lim δ∈l) x∈
+
+-- The rud tower's union structure at a limit, the S-side read, both
+-- directions: membership in Sset β is membership in a successor level
+-- below β.
+Sset-union-limit : (β : S) → ⟨ isLimit β ⟩ → (x : S)
+  → ⟨ x ∈ˢ Sset β ⟩
+  → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ Sset (sucV δ) ⟩) ∥₁
+Sset-union-limit β limβ x x∈S = PT.map go (Sset-out β x x∈S)
+  where
+  go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩)
+     → Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ Sset (sucV δ) ⟩)
+  go (δ , δ∈β , x∈step) = δ
+    , (δ∈β , subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Sset-suc δ)) x∈step)
+
+Sset-union-in : (β : S) → ⟨ isLimit β ⟩ → (δ x : S)
+  → ⟨ δ ∈ˢ β ⟩ → ⟨ x ∈ˢ Sset (sucV δ) ⟩ → ⟨ x ∈ˢ Sset β ⟩
+Sset-union-in β limβ δ x δ∈β x∈ = Sset-mono {α = β} {β = sucV δ}
+  (limit-succ-mem β δ limβ δ∈β) x x∈
 ```
 
 <!--en-->
