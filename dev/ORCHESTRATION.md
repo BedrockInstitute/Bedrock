@@ -136,7 +136,13 @@ In this order, every time:
    would read masters they are mid-write on, which produced a spurious failure
    the first time and could as easily produce a spurious green. Section 4's
    rule against tree-wide writes during dispatch has this read-side twin;
-   `dispatch.py gate-ready` checks it. Do not report a wiring as verified before that
+   `dispatch.py gate-ready` checks it. **And because each full gate costs one
+   quiet dispatch window, full gates are BATCHED**: after an ordinary return
+   run the warm check, which is seconds when the change is shallow and still
+   catches a broken consumer, and spend a window only when
+   `scripts/check-tree.py --gate-debt` says one is due (about three to four
+   returns, or roughly 1,000 added in-fence lines under `src/`). Record a
+   green one with `--gate-passed`. Do not report a wiring as verified before that
    notification lands; a turn may close with the check still running as long as
    it says so and names what is not yet known.
 6. **Commit** with the goal code, recording what was measured and what was
