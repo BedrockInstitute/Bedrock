@@ -158,9 +158,9 @@ naive_low = 100
 naive_high = 250
 calibrated_low = 150
 calibrated_high = 500
-klass = "x1.5 to x2 (prose plus import surgery)"
-gate = "none needed"
-provenance = "_build/l3.31-lt-report.md row 11; PLAN register T13 and T29 entries"
+klass = "UNDER RE-PRICE: the booked figure assumed prose plus import surgery, but seven surviving masters cross the retirement boundary at nine import sites, three of them on the GCH critical path and one of them the AC leg. Re-homing content is not import surgery"
+gate = "T67 (dispatched 2026-08-05): itemize the nine crossings, price each under D17 from the rewrite side, and return a measured row"
+provenance = "_build/l3.31-lt-report.md row 11 (the booked figure, now suspect); scripts/check-tree.py --check retiring (the measurement that provoked the re-price)"
 
 [[remaining]]
 id = "w7-residue"
@@ -258,7 +258,7 @@ id = "retirement"
 trophy = "BOTH"
 title = "The retirement surgery, and the archival"
 status = "blocked"
-detail = "Until it runs, both trophies stand on a tree that still contains the machinery they were supposed to stop depending on. It cannot run before the re-home and the bridge land."
+detail = "Until it runs, both trophies stand on a tree that still contains the machinery they were supposed to stop depending on. It cannot run before the re-home and the bridge land. MEASURED 2026-08-05: this is bigger than booked. Seven SURVIVING masters import retiring modules at nine sites, including Condensation, Hull and OrderFormula on the GCH path, the bridge itself, and L.Model on L.Choice.Transversal, which is precisely why AC reads at-risk. Each crossing is content to re-home, not an import to rewrite."
 blocked_by = "ac-rehome, bridge-landing, stepinl-rewrite-owed"
 evidence = "PLAN D18 and D20; the retirement-surgery row above"
 
