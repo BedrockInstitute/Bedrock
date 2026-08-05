@@ -18,8 +18,10 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
   the prose linter, runs the Agda code linter (`scripts/lint-agda.py` against the
   [dev/STYLE-agda.md](dev/STYLE-agda.md) rules: OPTIONS header, import necessity, no forbidden
   constructs), runs the glossary checker (`scripts/check-glossary.py` against the term data in
-  [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)), and
-  runs `reuse lint` for per-file licensing. It is expensive: run the individual checks while you
+  [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)),
+  validates the size-ledger declaration (`scripts/ledger.py --check` against
+  [dev/ledger.toml](dev/ledger.toml), explained in [dev/LEDGER.md](dev/LEDGER.md)), and runs
+  `reuse lint` for per-file licensing. It is expensive: run the individual checks while you
   work (`agda <file>`, `python3 scripts/lint-prose.py <files>`) and the full gate before the
   commit.
 - **`make venv`** creates the project virtual environment (`.venv`) from Python 3.11+ and
@@ -72,6 +74,7 @@ enforcement point is a wish.
 | Prose, CJK, i18n markers | `dev/STYLE-i18n.md` and the rules below | `lint-prose.py`, the marker checker |
 | Licensing | `REUSE.toml` | `reuse lint` |
 | Measured engineering law | `dev/LESSONS.md` | briefs point at it; review |
+| Size ledger (standing, remaining, endpoint) | `dev/ledger.toml`, explained by `dev/LEDGER.md` | `scripts/ledger.py --check` in `make check` |
 | Project ruling (architecture, process, retirement) | `dev/PLAN.md` section 3, as a numbered decision | the orchestrator; briefs |
 | What every contributing agent must know | this file | loaded at session start |
 | Dispatch, slots, briefs, audits | `dev/ORCHESTRATION.md` | the orchestrator, at the points it names |
@@ -164,6 +167,12 @@ anchored by a probe or a delivered comparable carries about 1.3x, a part that on
 could reach carries 3x). The split prices ignorance rather than pessimism, which is why a probe
 converts money: every gate that goes green moves its part from the 3x class to the 1.3x class
 and narrows the band.
+
+The ledger that holds these figures is `dev/ledger.toml`, explained by
+[dev/LEDGER.md](dev/LEDGER.md) and computed by `scripts/ledger.py`. **Standing is measured from
+the tree and written down nowhere**, because a standing figure once written in prose was
+re-quoted unchecked for nine dispatches while the tree moved under it. Quote
+`python3 scripts/ledger.py --brief`, never a number you found in a paragraph.
 
 **An estimate is a measurement, not a decision procedure.** The project's campaign route is
 settled; how to walk it is not, and results decide that. The canonical statement is
@@ -275,7 +284,7 @@ by a terminology dossier: the literature is searched for the established
 rendering first, candidates are drafted only where the literature is silent,
 every guess is marked as a guess, and the owner rules. The full protocol,
 including who dispatches it and when, is canonical in
-[dev/ORCHESTRATION.md](dev/ORCHESTRATION.md) section 7. If you are a dispatched
+[dev/ORCHESTRATION.md](dev/ORCHESTRATION.md) section 8. If you are a dispatched
 agent and your chapter needs such a term, **use it consistently and NAME it in
 your report** so the dossier can be dispatched; do not add a glossary entry
 yourself.

@@ -123,6 +123,8 @@ In this order, every time:
    (D26): the campaign route is ruled, the number is recorded, and the report
    is sent back for the next technique. A report that changes a TECHNIQUE on a
    measured obligation is doing its job and is not caught by this.
+   **A cold-check regression is a defect**, not a cost of doing business; if a
+   chapter's cold check has grown, say by how much and why before wiring it.
 3. **Fill the free slots** (section 2) before writing anything up.
 4. **Wire** `src/Everything.lagda.md` (agents never touch it) and any catalog
    prose the change makes stale.
@@ -131,22 +133,16 @@ In this order, every time:
 6. **Commit** with the goal code, recording what was measured and what was
    refuted. Never push.
 7. **Record** in PLAN (the ruling and the number) and, if a law was learned, in
-   `dev/LESSONS.md`. **If the chapter introduced a load-bearing term the
-   glossary does not carry, dispatch the terminology dossier (section 7) before
+   `dev/LESSONS.md`. **If the return could move the size ledger, bring
+   `dev/ledger.toml` current in the same turn** (D27): narrow or close the
+   remaining row the work landed against, say whether it came in inside its
+   band, and move a gated row's class from x3 toward x1.3 when its gate goes
+   green. Standing needs no edit: `scripts/ledger.py` measures it from the tree
+   and it is written down nowhere. **If the chapter introduced a load-bearing term the
+   glossary does not carry, dispatch the terminology dossier (section 8) before
    the chapter counts as landed.**
 
-## 7. The owner's instructions
-
-An instruction from the owner is executed or explicitly deferred with a reason,
-never silently dropped. A single message often carries more than one; the
-second is the one that gets lost, especially when the first opens a topic
-interesting enough to absorb the turn.
-
-*Enforcement:* before writing the closing report of any turn, re-read the
-owner's last message and account for EVERY instruction in it: done, dispatched,
-or deferred-with-a-reason. This rule exists because on 2026-08-05 a message
-carried a terminology ruling and a dispatch instruction, the ruling was
-executed, the dispatch was dropped, and the owner had to ask three times.
+## 7. Committing
 
 **Committing.** The orchestrator commits; dispatched agents never do. Commit
 after the audit and the gate, with the goal code in brackets, recording what

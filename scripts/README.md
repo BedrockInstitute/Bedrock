@@ -110,6 +110,27 @@ python3 scripts/check-glossary.py --check          # scan tracked files; exit 1 
 python3 scripts/check-glossary.py --check --staged # only staged files (used by the hook)
 ```
 
+## `ledger.py`
+
+Computes the size ledger. Its data source is [dev/ledger.toml](../dev/ledger.toml), read via
+`tomllib`; the human-readable explanation is [dev/LEDGER.md](../dev/LEDGER.md). It measures
+**standing** from the tree (non-blank lines inside ` ```agda ` fences, over git-tracked
+`*.lagda.md` under `src/`, minus the D18-booked retirement set), then sums the remaining rows
+into an endpoint in both calibers.
+
+**Standing appears in no file and never will.** The script exists because a standing figure
+written in prose was fixed as a projection and then re-quoted unchecked for nine dispatches
+while the tree moved under it; the cure is that the number is computed and never stored. The
+`--check` mode is what `make check` runs: it fails on a retirement entry naming a file no longer
+in the tree, a remaining row missing a band or its provenance, an inverted band, or a calibrated
+band below its naive one.
+
+```sh
+python3 scripts/ledger.py           # the full ledger
+python3 scripts/ledger.py --brief   # one line: standing, endpoint, overage
+python3 scripts/ledger.py --check   # validate the declaration; exit 1 on a defect
+```
+
 ## `lint-agda.py`
 
 Enforces the code-side rules of [dev/STYLE-agda.md](../dev/STYLE-agda.md) on the ```agda
