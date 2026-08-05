@@ -66,6 +66,12 @@ Standing clauses that go in every build or probe brief:
   it, and record any correction beside the original.
 - **D22**: name the block's widest unmeasured term and the probe that would
   measure it; a brief that cannot is not ready to send.
+- **D17 at a retirement question.** If the brief touches what retires, quote
+  D17 into it: "X must stay because Y consumes it" is not an answer, the
+  ideal-form rewrite of what Y actually needs is priced first, and the old
+  chapter then retires WHOLESALE. Say explicitly that D-19's port rates must
+  not be quoted at a rewrite question, because that substitution is the
+  specific error D17 names and an agent will make it unprompted.
 - **D26, what is ruled and what is open.** State BOTH in the brief's header.
   Ruled: the campaign route, R2' with the trophy stated in L, which the return
   may not reopen or re-table. Open: how to walk it, which results decide, so
