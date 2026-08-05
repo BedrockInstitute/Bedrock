@@ -318,7 +318,7 @@ decided_by = "[T88]'s return: if the seal reaches the benchmark this closes unsp
 # batches by itself: 16 of 22 modules are already at or below it.
 [[lever]]
 id = "rud-rewrite"
-status = "RULED 2026-08-06, batched, B1 gates the rest"
+status = "RULED 2026-08-06; the exit condition and funding rule stand, the BATCH ORDER is superseded by rud-architecture below"
 scope = "L.Rud, 22 modules, 12147 lines, 3230 obligations, 458 s"
 rate_now = 0.142
 rate_exit = 0.063
@@ -331,6 +331,24 @@ batch_4 = "NONE. Twelve of 22 modules are already at or below 0.063. Of the ten 
 line_dimension = "L.Rud writes 3.8 lines per obligation against the benchmark's 4.9, so it is already DENSER than the tree it is measured against. This is a seconds programme, not a lines programme, and each batch is gated on not inflating lines."
 funding_rule = "B1 is dispatched on its own merit and gates B2 and B3. No batch is funded at the 3x class once B1 has measured the real rate."
 
+
+# [L3.32-F6.0], ruled 2026-08-06 by the owner: do not rewrite item by item.
+# Ask what the items ARE first, and start from the top-level module design.
+# This row GATES rud-rewrite's B1.
+[[lever]]
+id = "rud-architecture"
+status = "IN FLIGHT as [T94]"
+question = "what should the rud route contain at all, designed backward from its deliverables"
+obligations_now = 3230
+lines_now = 12147
+modules_now = 22
+external_names_consumed = 38
+external_consumer_modules = 5
+ratio = "about 85 obligations standing behind each exported name"
+unconsumed_anywhere = "BaseBlock, CodePred, HF, OpGraph, SatTable: imported by nobody, inside the route or outside it"
+caveat = "UNCONSUMED IS NOT UNNEEDED. The route is mid-campaign: Bridge, HF and Finite have no external consumer YET because their consumer is the bridge landing that D30 froze. The specification is the 38 names PLUS what the frozen and planned consumers will need."
+precedent = "[T80]'s L.LevelKit did this move once: the level story's shared clauses written once at a generic carrier cut LevelFormula 613 to 258 and LevelSigma 788 to 456, net -321 lines. [T79] separately measured 700 to 850 standing lines written twice."
+discipline = "The decomposition must be one that can be WRITTEN at abstract carriers with variable indices, per [T93]'s measurement of the cheap tree. Sealing is not a substitute: Bridge was sealed and plateaued at 0.61 s/obligation, 10x the 0.063 benchmark."
 
 [[owed]]
 id = "ac-leg"
