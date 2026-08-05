@@ -78,17 +78,27 @@ LEDGER = ROOT / "dev" / "ledger.toml"
 SHARE_REQUIRING_PROFILE = 0.02
 
 # The rewrite exit condition, RULED 2026-08-06 by the owner: the retiring
-# subtree's MEASURED rate, 0.074 s per obligation over 26,479 lines. It was
-# ruled as 0.063 and corrected the same day: that figure came from a signature
-# count inflated 10.3 percent by comment lines read as signatures. It is not
-# an aspiration and not a round number; it is what one delivered tree in this
-# repository actually achieves, which is why it can be asked of another.
+# subtree's MEASURED rate. It is not an aspiration and not a round number; it
+# is what one delivered tree in this repository actually achieves, which is why
+# it can be asked of another.
 #
-# This is checked per module and only for modules inside a ruled rewrite scope
-# ([L3.32-F5] and [L3.32-F6]). A module outside those scopes is reported
-# against it for orientation and never failed on it.
-BENCHMARK_SECONDS_PER_OBLIGATION = 0.074
+# IT IS READ FROM THE LEDGER, NEVER HARDCODED. [L3.32-T95] found it living in
+# two homes, and it had already moved once (0.063 to 0.074 when a parser defect
+# was fixed) with nothing keeping the copies in sync. AGENTS.md requires one
+# canonical home per rule, and for this number that home is dev/ledger.toml.
+#
+# Checked per module, and only inside a ruled rewrite scope. A module outside
+# is reported against it for orientation and never failed on it.
 REWRITE_SCOPES = ("L.Ordinal.SquareLaw", "L.Rud.")
+
+# Modules ABOVE the line that the ruling deliberately leaves alone, because a
+# rewrite there costs more than it buys in both dimensions (dev/PLAN.md
+# [L3.32-F6]: four modules worth fourteen seconds combined over 1,223 lines).
+# [T95] found the gate would fail exactly the modules the ruling keeps, which
+# would have made the tool argue with the decision it exists to serve.
+REWRITE_EXEMPT = {
+    "L.Rud.HF", "L.Rud.DefInJ", "L.Rud.BaseBlock", "L.Rud.SatTable",
+}
 
 # A module may drift a little between runs on a loaded machine. Only a rise
 # past this multiple of the recorded baseline is called a regression.
@@ -132,6 +142,14 @@ def obligations(path: Path) -> int:
     return mod.scan(path)["signatures"]
 
 
+def benchmark() -> float | None:
+    """The ruled exit condition, from its one canonical home."""
+    if not LEDGER.exists():
+        return None
+    data = tomllib.loads(LEDGER.read_text(encoding="utf-8"))
+    return data.get("caliber", {}).get("retiring_seconds_per_signature")
+
+
 def tree_seconds() -> float | None:
     """The whole tree's measured check cost, for the share test."""
     if not LEDGER.exists():
@@ -148,12 +166,19 @@ def baselines() -> dict[str, dict]:
 
 
 def changed_masters(base: str) -> list[Path]:
-    out = subprocess.run(
+    # `git diff` cannot see an untracked file, so a brand new module would
+    # evade the gate entirely until someone added it ([T95] D6.5). Untracked
+    # masters are exactly the ones nobody has measured yet.
+    changed = subprocess.run(
         ["git", "diff", "--name-only", base, "--", "src/"],
         cwd=ROOT, capture_output=True, text=True,
-    ).stdout
+    ).stdout.split()
+    untracked = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard", "--", "src/"],
+        cwd=ROOT, capture_output=True, text=True,
+    ).stdout.split()
     paths = []
-    for name in out.split():
+    for name in changed + untracked:
         p = ROOT / name
         # Everything.lagda.md is a catalog, not content; timing it measures the
         # whole tree and tells you nothing about the commit.
@@ -204,6 +229,12 @@ def main() -> int:
 
     base = baselines()
     tree_total = tree_seconds()
+    bench = benchmark()
+    if bench is None:
+        print("check-timing: dev/ledger.toml carries no "
+              "caliber.retiring_seconds_per_signature; the rewrite gate is "
+              "DISABLED. This is the [T95] D1 failure mode: the ledger lost "
+              "its data blocks and both gates went silently dead.")
     findings: list[str] = []
 
     print(f"check-timing: {len(targets)} module(s), warm, one process at a time")
@@ -235,13 +266,27 @@ def main() -> int:
               f"{rate:5.2f} s/line  {per_ob:5.3f} s/oblig  "
               f"{share} of tree{note}")
 
-        if name.startswith(REWRITE_SCOPES) and per_ob > BENCHMARK_SECONDS_PER_OBLIGATION:
+        if obs == 0:
+            # [T95] D3/D6: a module whose results are all written without
+            # signatures counts zero obligations, and a zero denominator used
+            # to read as 0.000 s/obligation and PASS regardless of cost. An
+            # uncountable module is a finding, not a pass.
+            findings.append(
+                f"{name}: zero obligations counted over {lines} lines, so no "
+                f"per-obligation rate exists and this module cannot be gated. "
+                f"Its results are probably written without signatures, which "
+                f"scripts/obligations.py cannot see."
+            )
+        elif (bench and name.startswith(REWRITE_SCOPES)
+              and name not in REWRITE_EXEMPT and per_ob > bench):
             findings.append(
                 f"{name}: {per_ob:.3f} s/obligation, over the ruled rewrite "
-                f"exit condition of {BENCHMARK_SECONDS_PER_OBLIGATION} "
-                f"({per_ob / BENCHMARK_SECONDS_PER_OBLIGATION:.0f}x). That "
+                f"exit condition of {bench:.3f} ({per_ob / bench:.0f}x). That "
                 f"number is the retiring subtree's MEASURED rate, so it is "
-                f"known reachable. Batch this module into [L3.32-F6]."
+                f"known reachable by SOME tree. It is not known reachable for "
+                f"any given theorem: [L3.32-T88] measured the abstract-carrier "
+                f"restatement of SquareLaw's counting chase and it heap "
+                f"exhausted at -M8g, twice. Batch into [L3.32-F6] and price it."
             )
 
         if tree_total and seconds / tree_total >= SHARE_REQUIRING_PROFILE:
@@ -249,7 +294,9 @@ def main() -> int:
                 f"{name}: {seconds / tree_total:.0%} of the whole tree's check "
                 f"time. D30 exit condition (1) requires a per-definition "
                 f"profile on record for any module at or above "
-                f"{SHARE_REQUIRING_PROFILE:.0%}: run "
+                f"{SHARE_REQUIRING_PROFILE:.0%} (UNDERSTATED: this is a warm "
+                f"single-module time over a full COLD tree total, so the real "
+                f"share is higher): run "
                 f"`agda --profile=definitions` and record the removable "
                 f"fraction, or record why none is removable."
             )
