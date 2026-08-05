@@ -164,15 +164,14 @@ provenance = "_build/l3.31-lt-report.md row 11; PLAN register T13 and T29 entrie
 
 [[remaining]]
 id = "w7-residue"
-title = "W7's remaining residue (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification, the truncated transfer, the pairing re-pointing)"
-naive_low = 200
-naive_high = 700
-calibrated_low = 600
-calibrated_high = 2100
-klass = "x3 (the C-row remainder is unprobed survey class)"
-gate = "none yet"
-provenance = "DERIVED by subtraction from T18's W7 band A-E minus what is delivered inside W7; the register never gave the residue a standalone band, so the derivation is shown in _build/l3.32-t55-report.md rather than a citation quoted"
-derived = true
+title = "W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly)"
+naive_low = 650
+naive_high = 1320
+calibrated_low = 1700
+calibrated_high = 3620
+klass = "x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow)"
+gate = "T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250"
+provenance = "_build/l3.32-t57-report.md section 3 table (ITEMIZED, no longer a subtraction); named rows at _build/l3.32-t46-report.md:61-65, :177-178; _build/l3.32-t47-report.md section 6; _build/l3.32-t37-report.md:147-158; _build/l3.32-t18-report.md:93-107, :121-128, :205-209"
 
 # ---------------------------------------------------------------------------
 # Known open items that are deliberately NOT in the endpoint sum. Listed so
