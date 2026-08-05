@@ -110,23 +110,23 @@ provenance = "_build/l3.32-t48-report.md face-route table; PLAN [L3.32] register
 [[remaining]]
 id = "W1p"
 title = "W1': the condensation crossing's transfers"
-naive_low = 1040
-naive_high = 2550
-calibrated_low = 2900
-calibrated_high = 7400
-klass = "row (b) split: the six structural clauses x1.3 (T54's measured rate), the Def-step / satisfaction-recursion remainder x3 (unmeasured, gated); rows (a) and (c) x3"
-gate = "T54 returned SPLIT (all six bounded rewrites close at the generic carrier, bimodal rate, no new carrier fact); T64 then found T54's re-price did NOT stand, because the probe certified the Def-step clause as trivially true, which is legitimate only where that step collapses; the Def-step entry at an arbitrary transitive carrier stays x3 with a named next gate"
-provenance = "_build/l3.32-t51-report.md W1' table; _build/l3.32-t54-report.md per-clause table; _build/l3.32-t64-report.md census split and dispatch list"
+naive_low = 700
+naive_high = 1720
+calibrated_low = 1900
+calibrated_high = 5000
+klass = "row (b) now x1.3 and measured tiny (the Def-step clause collapses at every carrier, so its bounded rewrite is the trivial formula); rows (a) and (c) still x3"
+gate = "T54 SPLIT, T64 re-priced and was itself corrected by T66: the Def-step clause is UNCONDITIONALLY true at any carrier, witnessed by the carrier member itself with the true formula, so the collapse T54 assumed is legitimate everywhere and row (b) is about 0.14-0.17k rather than 0.34-1.00k. What T64 called the unmeasured Def-step class is the description's object-level content, which row (c) consumes, not the face's clause"
+provenance = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md; _build/l3.32-t66-report.md, orchestrator-verified at src/L/Definability.lagda.md:177-190"
 
 [[remaining]]
 id = "carried-sequence"
 title = "The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing"
-naive_low = 800
-naive_high = 1390
-calibrated_low = 1700
-calibrated_high = 3200
+naive_low = 980
+naive_high = 1720
+calibrated_low = 2000
+calibrated_high = 3900
 klass = "mixed x1.3 / x3"
-gate = "T53 (running): the bound arm and the crux family at l = omega, stop-line 350"
+gate = "T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound, a corollary of what is delivered, +180-330 lines, one to two dispatches"
 provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52 entries"
 
 [[remaining]]
@@ -248,8 +248,8 @@ evidence = "_build/l3.31-lt-report.md H2 and row 10; the choice-rehome row above
 id = "bridge-landing"
 trophy = "BOTH"
 title = "The bridge's landing: Q-lim and below-lim"
-status = "in-flight"
-detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit is in flight; below-lim is untouched and needs its own per-tower build over an L-stage. AC needs this for the re-home; GCH needs it because the wing rides the same bridge."
+status = "ready"
+detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. The route survives with the classical one-way clause plus the exact domain bound, +180-330 lines. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge."
 blocked_by = ""
 evidence = "_build/l3.32-t45-report.md; _build/l3.32-t52-report.md; _build/l3.32-t53-report.md; _build/l3.32-t61-report.md section 7"
 

@@ -29,22 +29,22 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (124 files) | 47,527 |
+| tracked masters (125 files) | 47,826 |
 | booked retirements, D18 (52 files) | 31,937 |
-| **standing** | **15,590** |
+| **standing** | **15,889** |
 
 ### Remaining work
 
 | row | naive | calibrated | class | gate |
 |---|---:|---:|---|---|
 | W3 face route: the general order formula over the fresh generic face | 1,000-2,700 | 3,000-7,900 | mostly x3, one x1.3 row (the B statement layer) | T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. BUT StepInL is in the D18 retirement set, so this content must be carried by its ideal-form rewrite or W3 loses it: see the stepinl-rewrite row |
-| W1': the condensation crossing's transfers | 1,040-2,550 | 2,900-7,400 | row (b) split: the six structural clauses x1.3 (T54's measured rate), the Def-step / satisfaction-recursion remainder x3 (unmeasured, gated); rows (a) and (c) x3 | T54 returned SPLIT (all six bounded rewrites close at the generic carrier, bimodal rate, no new carrier fact); T64 then found T54's re-price did NOT stand, because the probe certified the Def-step clause as trivially true, which is legitimate only where that step collapses; the Def-step entry at an arbitrary transitive carrier stays x3 with a named next gate |
-| The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing | 800-1,390 | 1,700-3,200 | mixed x1.3 / x3 | T53 (running): the bound arm and the crux family at l = omega, stop-line 350 |
+| W1': the condensation crossing's transfers | 700-1,720 | 1,900-5,000 | row (b) now x1.3 and measured tiny (the Def-step clause collapses at every carrier, so its bounded rewrite is the trivial formula); rows (a) and (c) still x3 | T54 SPLIT, T64 re-priced and was itself corrected by T66: the Def-step clause is UNCONDITIONALLY true at any carrier, witnessed by the carrier member itself with the true formula, so the collapse T54 assumed is legitimate everywhere and row (b) is about 0.14-0.17k rather than 0.34-1.00k. What T64 called the unmeasured Def-step class is the description's object-level content, which row (c) consumes, not the face's clause |
+| The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing | 980-1,720 | 2,000-3,900 | mixed x1.3 / x3 | T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound, a corollary of what is delivered, +180-330 lines, one to two dispatches |
 | StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate for the content T10 scoped; the newly discovered op-graph content is UNPRICED at this band and is the row's named risk | T10 (green) for the original scope. SCOPE GREW 2026-08-05: T63 found that StepInL carries the sixteen-operation variable-form op-graph W3 needs, which T10's rewrite scope never included. Under D17 the rewrite must price the ideal form of what its consumers ACTUALLY need, and W3 is now one of them. Needs a re-scope before it is funded |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
 | The retirement surgery and the Everything rewiring (archival per D20) | 100-250 | 150-500 | x1.5 to x2 (prose plus import surgery) | none needed |
 | W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
-| **total** | **5,090-10,560** | **11,910-26,780** | | |
+| **total** | **4,930-10,060** | **11,210-25,080** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 20.68-26.15k | 23.41k |
-| calibrated | 27.50-42.37k | 34.94k |
+| naive | 20.82-25.95k | 23.38k |
+| calibrated | 27.10-40.97k | 34.03k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +1.15k from the line, and the calibrated
-band sits +2.50k to +17.37k from it.
+the naive band's pessimistic corner sits +0.95k from the line, and the calibrated
+band sits +2.10k to +15.97k from it.
 
 ### Deliberately not in the sum
 
@@ -102,7 +102,7 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 | item | status | blocked by | what it is |
 |---|---|---|---|
 | The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | Until it runs, both trophies stand on a tree that still contains the machinery they were supposed to stop depending on. It cannot run before the re-home and the bridge land. |
-| The bridge's landing: Q-lim and below-lim | **in-flight** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit is in flight; below-lim is untouched and needs its own per-tower build over an L-stage. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
+| The bridge's landing: Q-lim and below-lim | **ready** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. The route survives with the classical one-way clause plus the exact domain bound, +180-330 lines. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
 
 <!-- ledger:end -->
 
