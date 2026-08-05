@@ -1006,3 +1006,260 @@ definable power and the family equality itself.
 <!--zh-->
 rud 载体处的加锐故事如今带有后继值子句与加锐的定义域界：两条新原子 `sucAt` 与 `powAt` 各解码一次，后继值子句由 `succVal-ok` 双向解码、后继对由 `succPair-ok` 读出，定义域界按分量读出，加锐界立在它上面，并在载体能命名界的地方兑付。极限子句仍然缺位，第一个极限之下它是空的。面孔的近似条目在已交付的子句解码之上重新装配；族刻划所余的步骤是「载体内幂集与可定义幂在 HF 上相合」的认同，以及族等式本身。
 <!--/-->
+
+<!--en-->
+## The one-way successor clause and the exact domain bound
+<!--zh-->
+## 单向后继值子句与精确定义域界
+<!--/-->
+
+<!--en-->
+The strengthened story is stronger than its consumer can use: over a
+powerset-closed carrier the two-way successor clause forces the successor
+pair's presence from its powerset reading, and over the hereditarily finite
+carrier that forcing is infinite, so the recorded five-clause story has no
+finite witness. The classical carve needs only the forward direction, values
+for present pairs only, and the exact domain bound, the tower chapter's
+`domOrd` shape: some ordinal `δ` of the carrier has exactly the first
+components of the witness as its members, read both ways. Both pieces are
+delivered here. The one-way clause is the forward half of the delivered
+`succValClause`, so its formula and decode machinery survive: the new formula
+`succValForm1` keeps the antecedent and drops the reverse implication of the
+clause's conclusion, and `succVal1-ok` decodes it through the delivered atoms
+exactly as `succVal-ok` decodes its two-way parent. The exact domain bound is
+the tower's `domForm` and its two-way decode ported by carrier substitution;
+the per-component bound of the strengthened section is a different object, it
+names no domain and reads no totality direction. The approximation entry
+re-assembles once more over the delivered conjuncts, with the exact bound and
+the one-way clause in place of the per-component bound and the two-way clause.
+<!--zh-->
+加锐故事比消费方所能用的更强：在幂集封闭的载体上，双向后继值子句从幂集读法逼出后继对的存在，而在遗传有穷载体上那种逼迫是无穷的，故所记五合取故事没有有穷见证。经典刻划只需要前进方向，即只为已现之对给值，以及精确定义域界，即塔章的 `domOrd` 形状：载体中的某个序数 `δ` 恰好以见证的首分量全体为成员，两头都读。两件都在此交付。单向子句是已交付 `succValClause` 的前进半边，故其公式与解码机器幸存：新公式 `succValForm1` 保留前件、删去子句结论中的反向蕴含，而 `succVal1-ok` 经已交付原子把它解码，恰如 `succVal-ok` 解码其双向母本。精确定义域界是塔的 `domForm` 连同其双向解码按载体替换搬来；加锐节的按分量界是另一件东西，它不点名任何定义域、也不读完全方向。近似条目再次在已交付合取项上装配，以精确界与单向子句替下按分量界与双向子句。
+<!--/-->
+
+```agda
+  -- The one-way successor-value clause: values for present pairs only.
+  succValClause1 : S → Type (ℓ-suc ℓ)
+  succValClause1 f = (a c b : S) → ⟨ pr a c ∈ˢ f ⟩ → ⟨ pr (sucV a) b ∈ˢ f ⟩ → powRel c b
+
+  -- The delivered two-way clause gives the one-way clause.
+  succVal1-of : (f : S) → succValClause f → succValClause1 f
+  succVal1-of f sc a c b ac∈f = sc a c b ac∈f .fst
+
+  -- The exact domain bound: the first components of f are exactly the
+  -- members of some ordinal δ of the carrier, read both ways.
+  exactDom : S → Type (ℓ-suc ℓ)
+  exactDom f = ∥ Σ[ δ ∈ S ] ( ⟨ δ ∈ˢ u ⟩ × IsOrd δ
+    × ((a : S) → ⟨ a ∈ˢ δ ⟩ → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁)
+    × ((a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁ → ⟨ a ∈ˢ δ ⟩) ) ∥₁
+```
+
+<!--en-->
+The exact domain gets the tower chapter's object formula verbatim: an
+existential ordinal with the two inclusions of the exactness, one direction
+membership-to-pair, the other pair-to-membership. The one-way successor
+clause's formula is the delivered clause's body with the conclusion's reverse
+implication deleted, everything else untouched, so the delivered atoms
+`succPairAt`, `succAnt` and `powAt` still carry the reading.
+<!--zh-->
+精确界逐字采用塔章的对象公式：一个存在序数连同精确性的两条包含，一头成员到对、另一头对到成员。单向子句的公式就是已交付子句的体、删去结论中的反向蕴含，其余原封不动，故已交付原子 `succPairAt`、`succAnt` 与 `powAt` 仍承载读数。
+<!--/-->
+
+```agda
+  -- The pair membership inside the exactness inclusions, at the arity-5
+  -- environment (b, a, δ, f, x): the pair pr a b lies in the bound member.
+  prInForm : Formula ⟪ u ⟫ 5
+  prInForm = ∃̇∈ (var (suc (suc (suc zero))))
+              (PK.prAt zero (suc (suc zero)) (suc zero))
+
+  -- The totality inclusion: a ∈ δ ⇒ some pair pr a b lies in f.
+  domInForm : Formula ⟪ u ⟫ 3
+  domInForm = ∀̇ ((var zero ∈̇ var (suc zero)) ⇒̇ ∃̇ prInForm)
+
+  -- The converse inclusion: a pair pr a b in f forces a ∈ δ.
+  domOutForm : Formula ⟪ u ⟫ 3
+  domOutForm = ∀̇ (∃̇ prInForm ⇒̇ (var zero ∈̇ var (suc zero)))
+
+  -- The exact domain formula: some ordinal δ has exactly the first
+  -- components of f as its members, both directions.
+  exactDomForm : Formula ⟪ u ⟫ 2
+  exactDomForm = ∃̇ (isOrdAt zero ∧̇ domInForm ∧̇ domOutForm)
+
+  -- The one-way clause's conclusion: a successor pair present gives the
+  -- powerset reading (no converse).
+  succConc1 : Formula ⟪ u ⟫ 5
+  succConc1 = ∃̇ succPairAt ⇒̇ (powAt zero (suc zero))
+
+  succBody1 : Formula ⟪ u ⟫ 5
+  succBody1 = succAnt ⇒̇ succConc1
+
+  succValForm1 : Formula ⟪ u ⟫ 2
+  succValForm1 = ∀̇ (∀̇ (∀̇ succBody1))
+```
+
+<!--en-->
+The exact domain's decode is the tower chapter's ported walk: the outer
+existential unpacks to the bound `δ`, the ordinal conjunct decodes through
+the ported `isOrd-out`/`isOrd-in`, and the two inclusions walk the pair
+membership `pair∈` in their respective directions, each truncated branch a
+named `where` function with a written type. The one-way clause decodes by the
+same three quantifiers as its parent: the forward direction applies the
+satisfied clause to the successor pair's membership and reads `powAt` back
+through `powAt-ok`, and the reverse direction rebuilds the satisfaction from
+the meta one-way clause, the delivered `succPair-ok` supplying the successor
+pair's membership in both directions.
+<!--zh-->
+精确界的解码是塔章的搬移之走：外层存在拆出界 `δ`，序数合取项经搬来的 `isOrd-out`/`isOrd-in` 解码，两条包含各沿对隶属 `pair∈` 按各自方向行走，每条截断分支都是带书面类型的具名 `where` 函数。单向子句沿与其母本相同的三个量词解码：前进方向把被满足的子句施于后继对的隶属、再经 `powAt-ok` 把 `powAt` 读回，反向从元层单向子句重建满足，已交付的 `succPair-ok` 双向供给后继对的隶属。
+<!--/-->
+
+```agda
+  -- The exact domain decodes to the exactness read, both directions.
+  exactDom-out : (f : SM) (x : ⟪ u ⟫)
+               → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ exactDomForm ⟩ → exactDom (fst f)
+  exactDom-out f x h = PT.rec squash₁ uStep h
+    where
+    uStep : Σ[ δm ∈ SM ]
+             ⟨ (δm ∷ f ∷ ι x ∷ []) ⊨ᵐ (isOrdAt zero ∧̇ domInForm ∧̇ domOutForm) ⟩
+         → exactDom (fst f)
+    uStep (δm , (ord , (in-sat , out-sat))) =
+      ∣ fst δm , (snd δm , isOrd-out zero (δm ∷ f ∷ ι x ∷ []) ord
+        , in-part , out-part) ∣₁
+      where
+      in-part : (a : S) → ⟨ a ∈ˢ fst δm ⟩ → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ ∥₁
+      in-part a a∈δ = PT.rec squash₁ go (in-sat am a∈δ)
+        where
+        am : SM
+        am = PK.pt a (utr {x = fst δm} {y = a} a∈δ (snd δm))
+        go : Σ[ bm ∈ SM ] ⟨ (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) ⊨ᵐ prInForm ⟩
+           → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ ∥₁
+        go (bm , sat) = ∣ fst bm ,
+          pair∈ (suc (suc (suc zero))) (suc zero) zero
+            (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) .fst sat ∣₁
+      out-part : (a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ ∥₁ → ⟨ a ∈ˢ fst δm ⟩
+      out-part a = PT.rec (snd (a ∈ˢ fst δm)) go
+        where
+        go : Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ → ⟨ a ∈ˢ fst δm ⟩
+        go (b , ab∈f) = out-sat am (∣ bm , sat ∣₁)
+          where
+          pr∈u : ⟨ pr a b ∈ˢ u ⟩
+          pr∈u = utr {x = fst f} {y = pr a b} ab∈f (snd f)
+          am : SM
+          am = PK.pt a (PM.pair-left {a = a} {b = b} pr∈u)
+          bm : SM
+          bm = PK.pt b (PM.pair-right {a = a} {b = b} pr∈u)
+          sat : ⟨ (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) ⊨ᵐ prInForm ⟩
+          sat = pair∈ (suc (suc (suc zero))) (suc zero) zero
+                  (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) .snd ab∈f
+
+  exactDom-in : (f : SM) (x : ⟪ u ⟫) → exactDom (fst f)
+              → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ exactDomForm ⟩
+  exactDom-in f x = PT.rec squash₁ uStep
+    where
+    uStep : Σ[ δ ∈ S ] ( ⟨ δ ∈ˢ u ⟩ × IsOrd δ
+             × ((a : S) → ⟨ a ∈ˢ δ ⟩ → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ ∥₁)
+             × ((a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ ∥₁ → ⟨ a ∈ˢ δ ⟩) )
+         → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ exactDomForm ⟩
+    uStep (δ , (δ∈u , ordδ , inM , outM)) =
+      ∣ δm , (isOrd-in zero (δm ∷ f ∷ ι x ∷ []) ordδ , (in-sat , out-sat)) ∣₁
+      where
+      δm : SM
+      δm = PK.pt δ δ∈u
+      in-sat : ⟨ (δm ∷ f ∷ ι x ∷ []) ⊨ᵐ domInForm ⟩
+      in-sat am a∈δ = PT.rec squash₁ go (inM (fst am) a∈δ)
+        where
+        go : Σ[ b ∈ S ] ⟨ pr (fst am) b ∈ˢ fst f ⟩
+           → ⟨ (am ∷ δm ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ prInForm ⟩
+        go (b , ab∈f) = ∣ bm , sat ∣₁
+          where
+          pr∈u : ⟨ pr (fst am) b ∈ˢ u ⟩
+          pr∈u = utr {x = fst f} {y = pr (fst am) b} ab∈f (snd f)
+          bm : SM
+          bm = PK.pt b (PM.pair-right {a = fst am} {b = b} pr∈u)
+          sat : ⟨ (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) ⊨ᵐ prInForm ⟩
+          sat = pair∈ (suc (suc (suc zero))) (suc zero) zero
+                  (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) .snd ab∈f
+      out-sat : ⟨ (δm ∷ f ∷ ι x ∷ []) ⊨ᵐ domOutForm ⟩
+      out-sat am = PT.rec (snd (fst am ∈ˢ fst δm)) go
+        where
+        go : Σ[ bm ∈ SM ] ⟨ (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) ⊨ᵐ prInForm ⟩
+           → ⟨ fst am ∈ˢ fst δm ⟩
+        go (bm , sat) = outM (fst am)
+          ∣ fst bm ,
+            pair∈ (suc (suc (suc zero))) (suc zero) zero
+              (bm ∷ am ∷ δm ∷ f ∷ ι x ∷ []) .fst sat ∣₁
+
+  -- The one-way successor-value clause decodes both ways.
+  succVal1-ok : (f : SM) (x : ⟪ u ⟫)
+              → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm1 ⟩ ⟷ succValClause1 (fst f)
+  succVal1-ok f x = (out , bwd)
+    where
+    out : ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm1 ⟩ → succValClause1 (fst f)
+    out h a c b ac∈f ab∈f = powAt-ok zero (suc zero)
+        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst
+      ((h am cm bm (ant bm)) (succPair-ok f x am cm bm .snd ab∈f))
+      where
+      pr∈u : ⟨ pr a c ∈ˢ u ⟩
+      pr∈u = utr {x = fst f} {y = pr a c} ac∈f (snd f)
+      am cm : SM
+      am = PK.pt a (PM.pair-left {a = a} {b = c} pr∈u)
+      cm = PK.pt c (PM.pair-right {a = a} {b = c} pr∈u)
+      ant : (bm : SM) → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succAnt ⟩
+      ant bm = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
+        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ac∈f
+      b∈u : ⟨ b ∈ˢ u ⟩
+      b∈u = PM.pair-right {a = sucV a} {b = b}
+        (utr {x = fst f} {y = pr (sucV a) b} ab∈f (snd f))
+      bm : SM
+      bm = PK.pt b b∈u
+    bwd : succValClause1 (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm1 ⟩
+    bwd sc1 am cm bm ant-sat =
+      PT.rec (snd ((bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ powAt zero (suc zero))) go
+      where
+      ac∈f : ⟨ pr (fst am) (fst cm) ∈ˢ fst f ⟩
+      ac∈f = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
+        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst ant-sat
+      go : Σ[ xm ∈ SM ]
+             ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩
+         → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ powAt zero (suc zero) ⟩
+      go (xm , sat) = powAt-ok zero (suc zero)
+        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd
+        (sc1 (fst am) (fst cm) (fst bm) ac∈f
+          (succPair-ok f x am cm bm .fst (∣ xm , sat ∣₁)))
+```
+
+<!--en-->
+The approximation entry reassembles once more, verbatim over the delivered
+conjuncts: the five-clause formula `aStForm1` and its two-way adequacy
+`aSt1-ok` walk the three delivered decodes, the exact domain decode and the
+one-way successor decode. This is the story the first-limit carve instantiates.
+<!--zh-->
+近似条目再次装配，逐合取项走过已交付件：五合取公式 `aStForm1` 及其双向充分性 `aSt1-ok` 走过三条已交付解码、精确界解码与单向后继解码。这正是第一个极限刻划所要实例化的故事。
+<!--/-->
+
+```agda
+  -- The one-way approximation entry: the five-clause story with the exact
+  -- domain bound and the one-way successor clause.
+  aSt1 : S → Type (ℓ-suc ℓ)
+  aSt1 f = pairhood f × singleValued f × zeroClause f × exactDom f × succValClause1 f
+
+  -- The one-way object story, at the standing arity.
+  aStForm1 : Formula ⟪ u ⟫ 2
+  aStForm1 = pairForm ∧̇ singleForm ∧̇ zeroForm ∧̇ exactDomForm ∧̇ succValForm1
+
+  -- The one-way adequacy, both directions, walking the clause decodes.
+  aSt1-out : (f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm1 ⟩ → aSt1 (fst f)
+  aSt1-out f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
+    ( pairhood-out f x h₁
+    , ( single-out f x h₂
+      , ( zero-out f x h₃ , ( exactDom-out f x h₄ , succVal1-ok f x .fst h₅ ) ) ) )
+
+  aSt1-in : (f : SM) (x : ⟪ u ⟫) → aSt1 (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm1 ⟩
+  aSt1-in f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
+    ( pairhood-in f x h₁
+    , ( single-in f x h₂
+      , ( zero-in f x h₃ , ( exactDom-in f x h₄ , succVal1-ok f x .snd h₅ ) ) ) )
+
+  -- The one-way seam, closed.
+  aSt1-ok : (f : SM) (x : ⟪ u ⟫)
+          → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm1 ⟩ ⟷ aSt1 (fst f)
+  aSt1-ok f x = aSt1-out f x , aSt1-in f x
+```
