@@ -69,7 +69,13 @@ fi
 # Whole-tree invariants the per-file checks cannot see. Cheap enough for the hook: it
 # reads the masters' fences, it does not typecheck. The closure check is the one that
 # matters here, because an unwired master is invisible to the single trusted gate.
-if ! $PY scripts/check-tree.py --check; then
+#
+# Run it ONLY when the commit touches src/. The check is whole-tree, so a concurrent
+# agent's half-finished new master would otherwise block an unrelated docs commit, which
+# it did the first day it existed. A commit that stages no master cannot break closure,
+# and `make check` still runs the whole thing before the gate.
+srcstaged=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^src/' || true)
+if [ -n "$srcstaged" ] && ! $PY scripts/check-tree.py --check; then
 	echo ""
 	echo "Whole-tree check failed. The closure case is the important one: a master that is"
 	echo "not imported by src/Everything.lagda.md is never typechecked, and make check still"
