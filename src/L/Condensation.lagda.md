@@ -40,11 +40,15 @@ open import Base.Classical using ( LEM )
 module L.Condensation {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula )
+open import FOL.Syntax using
+  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ∃̇∈; ∀̇∈ )
 import FOL.Absoluteness
 import FOL.Semantics
 open import FOL.Manipulation.Bounding using ( BoundedFo; module Relabel )
-open import FOL.Manipulation.Relabelling using ( ⊨-map )
+open import FOL.Manipulation.Relabelling using ( ⊨-map; mapFo; mapΔ₀; embed )
+open import FOL.LevyHierarchy using
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-∀∈; δ-∃∈
+  ; Σ₁; σ-Δ₀; σ-∃ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using
   ( isL; isL-trans; isTransV; IsOrd; 𝒟ₒ; Lset; Lset→isL )
@@ -55,6 +59,8 @@ open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Hierarchy {ℓ} lem using ( Lset-only )
 
 open import Cubical.Data.Sigma using ( _×_; _,_ )
+open import Cubical.Data.Vec using ( map )
+import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -282,6 +288,327 @@ to be fought at the crossing site.
 ```
 
 <!--en-->
+## The level story at the set carrier
+<!--zh-->
+## 集合载体处的层故事
+<!--/-->
+
+<!--en-->
+The crossing reads the level story at the set carrier, and the story now
+lives there in its Levy form. This section transports the six measured
+clauses, the collapsed Def-step entry and the range read down to `Sᴹ`,
+assembles them into one Sigma-1 formula, and certifies the two readings the
+crossing distinguishes: the inner reading in `𝒮 ↾ M` and the ambient reading
+in `𝒮`. The transport is the relabelling kit: the story is written once on
+the parameter-free axis, where it carries no constants, and `embed`{.Agda}
+moves it to any constant domain, with `mapΔ₀`{.Agda} and the Sigma-1
+transport carrying the witnesses. No carrier fact about `Sᴹ` enters: the
+story never mentions a constant, and the witness `f` ranges over `Sᴹ` by the
+type, never by a formula bound (the D-16 working face).
+<!--zh-->
+跨越在集合载体处读层故事，而故事如今也以 Lévy 形态住在那里。本节把六条测得子句、坍缩后的 Def 步条目与像读式迁移到 `Sᴹ`，装配成一条 Σ₁ 公式，并认证跨越所区分的两条读式：`𝒮 ↾ M` 中的内层读式与 `𝒮` 中的环境读式。迁移借助重标工具组：故事在无参轴上只写一次，那里它不带任何常元，`embed`{.Agda} 把它送到任意常量域，`mapΔ₀`{.Agda} 与 Σ₁ 运输携带见证。`Sᴹ` 的载体事实一项也未进入：故事从不点名常元，见证 `f` 以类型、而非公式绑定，被携带在 `Sᴹ` 上 (D-16 工作面)。
+<!--/-->
+
+<!--en-->
+The story is told with structural predicates, each bounded and each carrying
+its Delta-0 witness: singletons, unordered pairs of two distinct sets,
+Kuratowski pairs, the first-component relations, and the ordinal,
+limit-ordinal and limit-of predicates, the shapes the level story's clauses
+quantify over. Written once at the empty constant domain `⊥*`, they carry no
+constants, so they mean the same at every carrier.
+<!--zh-->
+故事用一组结构谓词讲出，每条都有界、各带 Δ₀ 见证：单点集、两个相异集合的无序对、库拉托夫斯基对、首分量诸关系，以及序数、极限序数与「首分量为极限序数」诸谓词，正是层故事各子句所量化的形状。它们在空常量域 `⊥*` 处只写一次；因不带常元，它们在每一载体处意思相同。
+<!--/-->
+
+```agda
+  f0 : {n : ℕ} → Fin (suc n)
+  f0 = zero
+
+  -- "var k is a singleton": inhabited, all members equal.
+  sgl : {n : ℕ} → Fin n → Formula (⊥* {ℓ}) n
+  sgl k = ∃̇∈ (var k) (∀̇∈ (var (suc k)) (var f0 ≐ var (suc zero)))
+
+  sglΔ₀ : {n : ℕ} (k : Fin n) → Δ₀ (sgl k)
+  sglΔ₀ k = δ-∃∈ (δ-∀∈ δ-≐)
+
+  -- "var k is an unordered pair of two distinct sets".
+  pair2 : {n : ℕ} → Fin n → Formula (⊥* {ℓ}) n
+  pair2 k = ∃̇∈ (var k) (∃̇∈ (var (suc k))
+             ( ¬̇ (var f0 ≐ var (suc zero))
+             ∧̇ ∀̇∈ (var (suc (suc k)))
+                  ((var f0 ≐ var (suc zero)) ∨̇ (var f0 ≐ var (suc (suc zero))))))
+
+  pair2Δ₀ : {n : ℕ} (k : Fin n) → Δ₀ (pair2 k)
+  pair2Δ₀ k = δ-∃∈ (δ-∃∈ (δ-∧ (δ-¬ δ-≐) (δ-∀∈ (δ-∨ δ-≐ δ-≐))))
+
+  -- "var k is a Kuratowski pair", degenerate pairs allowed: a singleton
+  -- member x; every other member is a two-element set containing x's
+  -- element; at most two members.
+  kpair : {n : ℕ} → Fin n → Formula (⊥* {ℓ}) n
+  kpair k = ∃̇∈ (var k)
+             ( sgl f0
+             ∧̇ ∀̇∈ (var (suc k))
+                  ((var f0 ≐ var (suc zero))
+                ∨̇ (pair2 f0 ∧̇ ∀̇∈ (var (suc zero)) (var f0 ∈̇ var (suc zero))))
+             ∧̇ ∀̇∈ (var (suc k)) (∀̇∈ (var (suc (suc k))) (∀̇∈ (var (suc (suc (suc k))))
+                  ((var (suc zero) ≐ var (suc (suc zero)))
+                ∨̇ (var f0 ≐ var (suc (suc zero)))
+                ∨̇ (var f0 ≐ var (suc zero))))))
+
+  kpairΔ₀ : {n : ℕ} (k : Fin n) → Δ₀ (kpair k)
+  kpairΔ₀ k = δ-∃∈ (δ-∧ (sglΔ₀ f0)
+                 (δ-∧ (δ-∀∈ (δ-∨ δ-≐ (δ-∧ (pair2Δ₀ f0) (δ-∀∈ δ-∈))))
+                      (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∨ δ-≐ (δ-∨ δ-≐ δ-≐)))))))
+
+  -- "the first component of var k equals var a" (var k a Kuratowski pair).
+  fstEqTo : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  fstEqTo k a = ∃̇∈ (var k) (sgl f0 ∧̇ ∀̇∈ (var zero) (var f0 ≐ var (suc (suc a))))
+
+  fstEqToΔ₀ : {n : ℕ} (k a : Fin n) → Δ₀ (fstEqTo k a)
+  fstEqToΔ₀ k a = δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ δ-≐))
+
+  -- "the first component of var k is a member of the first component of
+  -- var l" (both Kuratowski pairs).
+  fstLt : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  fstLt k l = ∃̇∈ (var k) (sgl f0 ∧̇ ∃̇∈ (var (suc l))
+               (sgl f0 ∧̇ ∃̇∈ (var zero)
+                 (∀̇∈ (var (suc (suc zero))) (var f0 ∈̇ var (suc zero)))))
+
+  fstLtΔ₀ : {n : ℕ} (k l : Fin n) → Δ₀ (fstLt k l)
+  fstLtΔ₀ k l = δ-∃∈ (δ-∧ (sglΔ₀ f0)
+                (δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∃∈ (δ-∀∈ δ-∈)))))
+
+  -- "var k is a member of the second component of var l".
+  sndIn : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  sndIn ku kw = ∃̇∈ (var kw) (sgl f0 ∧̇
+                ∃̇∈ (var (suc kw)) (pair2 f0 ∧̇
+                  ∀̇∈ (var (suc zero)) (var f0 ∈̇ var (suc zero)) ∧̇
+                  var (suc (suc ku)) ∈̇ var (suc zero) ∧̇
+                  ∀̇∈ (var (suc (suc kw))) (¬̇ (var f0 ≐ var (suc (suc (suc ku)))))))
+
+  sndInΔ₀ : {n : ℕ} (ku kw : Fin n) → Δ₀ (sndIn ku kw)
+  sndInΔ₀ ku kw = δ-∃∈ (δ-∧ (sglΔ₀ f0)
+                  (δ-∃∈ (δ-∧ (pair2Δ₀ f0)
+                    (δ-∧ (δ-∀∈ δ-∈) (δ-∧ δ-∈ (δ-∀∈ (δ-¬ δ-≐)))))))
+
+  -- "the second component of var k is a member of the second component of
+  -- var l".
+  snd∈Snd : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  snd∈Snd k l = ∃̇∈ (var k) (sgl f0 ∧̇
+                ∃̇∈ (var (suc k)) (pair2 f0 ∧̇
+                  ∀̇∈ (var (suc zero)) (var f0 ∈̇ var (suc zero)) ∧̇
+                  ∃̇∈ (var zero) (∀̇∈ (var (suc (suc zero))) (¬̇ (var f0 ≐ var (suc zero)))
+                                ∧̇ sndIn f0 (suc (suc (suc l))))))
+
+  snd∈SndΔ₀ : {n : ℕ} (k l : Fin n) → Δ₀ (snd∈Snd k l)
+  snd∈SndΔ₀ k l = δ-∃∈ (δ-∧ (sglΔ₀ f0)
+                  (δ-∃∈ (δ-∧ (pair2Δ₀ f0)
+                    (δ-∧ (δ-∀∈ δ-∈) (δ-∃∈ (δ-∧ (δ-∀∈ (δ-¬ δ-≐)) (sndInΔ₀ f0 (suc (suc (suc l))))))))))
+
+  -- The ordinal predicate (delivered shape, already bounded).
+  isOrdAt : {n : ℕ} → Fin n → Formula (⊥* {ℓ}) n
+  isOrdAt k = (∀̇∈ (var k) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc k)))))
+            ∧̇ (∀̇∈ (var k) (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
+
+  isOrdAtΔ₀ : {n : ℕ} (k : Fin n) → Δ₀ (isOrdAt k)
+  isOrdAtΔ₀ k = δ-∧ (δ-∀∈ (δ-∀∈ δ-∈)) (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
+
+  -- The limit-ordinal predicate, bounded: ordinal, nonempty, no greatest.
+  isLimitAt : {n : ℕ} → Fin n → Formula (⊥* {ℓ}) n
+  isLimitAt k = isOrdAt k ∧̇ (∃̇∈ (var k) ⊤̇)
+              ∧̇ (∀̇∈ (var k) (∃̇∈ (var (suc k)) (var (suc zero) ∈̇ var zero)))
+
+  isLimitAtΔ₀ : {n : ℕ} (k : Fin n) → Δ₀ (isLimitAt k)
+  isLimitAtΔ₀ k = δ-∧ (isOrdAtΔ₀ k) (δ-∧ (δ-∃∈ δ-⊤) (δ-∀∈ (δ-∃∈ δ-∈)))
+
+  -- "the first component of var k is a limit ordinal".
+  isLimitOf : {n : ℕ} → Fin n → Formula (⊥* {ℓ}) n
+  isLimitOf k = ∃̇∈ (var k) (sgl f0 ∧̇ ∀̇∈ (var zero) (isLimitAt f0))
+
+  isLimitOfΔ₀ : {n : ℕ} (k : Fin n) → Δ₀ (isLimitOf k)
+  isLimitOfΔ₀ k = δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ (isLimitAtΔ₀ f0)))
+
+  -- "the first components of var k and var l are equal" (both pairs).
+  fstEq : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  fstEq k l = ∃̇∈ (var k) (sgl f0 ∧̇ ∃̇∈ (var (suc l))
+              (sgl f0 ∧̇ ∀̇∈ (var (suc zero)) (∀̇∈ (var zero) (var f0 ≐ var (suc zero)))))
+
+  fstEqΔ₀ : {n : ℕ} (k l : Fin n) → Δ₀ (fstEq k l)
+  fstEqΔ₀ k l = δ-∃∈ (δ-∧ (sglΔ₀ f0)
+                (δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ (δ-∀∈ δ-≐)))))
+```
+
+<!--en-->
+Over these predicates the six clauses of the level story close:
+`pairForm`, `singleForm`, `zeroForm`, `domForm`, `limitForm` and the range
+read `Rg`. Each is bounded throughout and carries its witness. The Def-step
+entry `Cl` collapses to `⊤̇` at every carrier, since every set is definable
+in itself (`defSet⊤≡A`), so it is the trivial formula, and the level story
+is the conjunction of the approximation, the collapsed step and the range
+read.
+<!--zh-->
+在这组谓词之上，层故事的六条子句闭合：`pairForm`、`singleForm`、`zeroForm`、`domForm`、`limitForm` 与像读式 `Rg`。每条都有界、各带见证。Def 步条目 `Cl` 在每一载体处坍缩为 `⊤̇`，因为每个集合都在自身处可定义 (`defSet⊤≡A`)，故它是平凡公式，而层故事就是近似、坍缩步与像读式的合取。
+<!--/-->
+
+```agda
+  -- (1) pairForm: every member of f is a Kuratowski pair.
+  pairForm : Formula (⊥* {ℓ}) 2
+  pairForm = ∀̇∈ (var zero) (kpair f0)
+
+  pairFormΔ₀ : Δ₀ pairForm
+  pairFormΔ₀ = δ-∀∈ (kpairΔ₀ f0)
+
+  -- (4) domForm: the first components of the pairs of f form an ordinal,
+  -- i.e. a transitive set with transitive members.
+  domForm : Formula (⊥* {ℓ}) 2
+  domForm = (∀̇∈ (var zero) (kpair f0 ⇒̇
+               ∀̇∈ (var zero) (sgl f0 ⇒̇
+                 ∀̇∈ (var zero) (∀̇∈ (var zero)
+                   (∃̇∈ (var (suc (suc (suc (suc zero)))))
+                      (kpair f0 ∧̇ fstEqTo f0 (suc (suc (suc zero)))))))))
+           ∧̇
+             (∀̇∈ (var zero) (kpair f0 ⇒̇
+               ∀̇∈ (var zero) (sgl f0 ⇒̇
+                 ∀̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero)
+                   (∃̇∈ (var (suc (suc (suc zero)))) (var (suc zero) ∈̇ var zero)))))))
+
+  domFormΔ₀ : Δ₀ domForm
+  domFormΔ₀ = δ-∧
+    (δ-∀∈ (δ-⇒ (kpairΔ₀ f0)
+       (δ-∀∈ (δ-⇒ (sglΔ₀ f0)
+         (δ-∀∈ (δ-∀∈ (δ-∃∈ (δ-∧ (kpairΔ₀ f0) (fstEqToΔ₀ f0 (suc (suc (suc zero))))))))))))
+    (δ-∀∈ (δ-⇒ (kpairΔ₀ f0)
+       (δ-∀∈ (δ-⇒ (sglΔ₀ f0)
+         (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∃∈ δ-∈))))))))
+
+  -- (2) singleForm: two pairs of f with equal first components are equal.
+  singleForm : Formula (⊥* {ℓ}) 2
+  singleForm = ∀̇∈ (var zero) (∀̇∈ (var (suc zero))
+                 (fstEq f0 (suc zero) ⇒̇ var (suc zero) ≐ var zero))
+
+  singleFormΔ₀ : Δ₀ singleForm
+  singleFormΔ₀ = δ-∀∈ (δ-∀∈ (δ-⇒ (fstEqΔ₀ f0 (suc zero)) δ-≐))
+
+  -- (3) zeroForm: some memberless a has pr a a in f, i.e. f has a member
+  -- that is the singleton of a singleton of a memberless set.
+  zeroForm : Formula (⊥* {ℓ}) 2
+  zeroForm = ∃̇∈ (var zero) (sgl f0 ∧̇ ∀̇∈ (var zero)
+                (sgl f0 ∧̇ ∀̇∈ (var zero) (¬̇ (∃̇∈ (var f0) ⊤̇))))
+
+  zeroFormΔ₀ : Δ₀ zeroForm
+  zeroFormΔ₀ = δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ (δ-¬ (δ-∃∈ δ-⊤))))))
+
+  -- (5) limitForm: at a limit point (a, y) of the graph, y is the union of
+  -- the values below a, as two inclusions over the pairs of f.
+  limIn : Formula (⊥* {ℓ}) 3
+  limIn = ∃̇∈ (var zero) (sgl f0 ∧̇
+          ∃̇∈ (var zero) (pair2 f0 ∧̇
+            ∀̇∈ (var (suc zero)) (var f0 ∈̇ var (suc zero)) ∧̇
+            ∀̇∈ (var (suc zero)) (∀̇∈ (var (suc (suc zero))) (¬̇ (var f0 ≐ var (suc zero)))
+              ⇒̇ ∃̇∈ (var (suc (suc (suc (suc zero)))))
+                   (kpair f0 ∧̇ fstLt f0 (suc (suc (suc (suc zero))))
+                         ∧̇ sndIn (suc zero) f0))))
+
+  limInΔ₀ : Δ₀ limIn
+  limInΔ₀ = δ-∃∈ (δ-∧ (sglΔ₀ f0)
+            (δ-∃∈ (δ-∧ (pair2Δ₀ f0)
+              (δ-∧ (δ-∀∈ δ-∈)
+                  (δ-∀∈ (δ-⇒ (δ-∀∈ (δ-¬ δ-≐))
+                    (δ-∃∈ (δ-∧ (kpairΔ₀ f0)
+                      (δ-∧ (fstLtΔ₀ f0 (suc (suc (suc (suc zero)))))
+                            (sndInΔ₀ (suc zero) f0))))))))))
+
+  limOut : Formula (⊥* {ℓ}) 3
+  limOut = ∀̇∈ (var (suc zero)) (kpair f0 ⇒̇ fstLt f0 (suc zero) ⇒̇ snd∈Snd f0 (suc zero))
+
+  limOutΔ₀ : Δ₀ limOut
+  limOutΔ₀ = δ-∀∈ (δ-⇒ (kpairΔ₀ f0) (δ-⇒ (fstLtΔ₀ f0 (suc zero)) (snd∈SndΔ₀ f0 (suc zero))))
+
+  limitForm : Formula (⊥* {ℓ}) 2
+  limitForm = ∀̇∈ (var zero) (kpair f0 ⇒̇ isLimitOf f0 ⇒̇ (limIn ∧̇ limOut))
+
+  limitFormΔ₀ : Δ₀ limitForm
+  limitFormΔ₀ = δ-∀∈ (δ-⇒ (kpairΔ₀ f0) (δ-⇒ (isLimitOfΔ₀ f0) (δ-∧ limInΔ₀ limOutΔ₀)))
+
+  -- (6) rangeForm: the read member x is the second component of a pair of f.
+  Rg : Formula (⊥* {ℓ}) 2
+  Rg = ∃̇∈ (var zero) (kpair f0 ∧̇ sndIn (suc (suc zero)) f0)
+
+  RgΔ₀ : Δ₀ Rg
+  RgΔ₀ = δ-∃∈ (δ-∧ (kpairΔ₀ f0) (sndInΔ₀ (suc (suc zero)) f0))
+
+  -- The approximation, the collapsed Def-step entry and the range read.
+  Ap : Formula (⊥* {ℓ}) 2
+  Ap = pairForm ∧̇ singleForm ∧̇ zeroForm ∧̇ domForm ∧̇ limitForm
+
+  ApΔ₀ : Δ₀ Ap
+  ApΔ₀ = δ-∧ pairFormΔ₀
+           (δ-∧ singleFormΔ₀ (δ-∧ zeroFormΔ₀ (δ-∧ domFormΔ₀ limitFormΔ₀)))
+
+  Cl : Formula (⊥* {ℓ}) 2
+  Cl = ⊤̇
+
+  ClΔ₀ : Δ₀ Cl
+  ClΔ₀ = δ-⊤
+
+  -- The level story, as one formula of arity two: the witness f at variable
+  -- zero, the read member x at variable one.
+  levelStory : Formula (⊥* {ℓ}) 2
+  levelStory = Ap ∧̇ (Cl ∧̇ Rg)
+
+  levelStoryΔ₀ : Δ₀ levelStory
+  levelStoryΔ₀ = δ-∧ ApΔ₀ (δ-∧ ClΔ₀ RgΔ₀)
+
+  levelStoryΣ₁ : Σ₁ levelStory
+  levelStoryΣ₁ = σ-Δ₀ levelStoryΔ₀
+```
+
+<!--en-->
+The story assembles as one Delta-0 formula, hence Sigma-1. At the set carrier
+the transported story is `σᴹ`{.Agda}, the parameter-free story embedded at
+`Sᴹ`. The witnesses ride the same relabelling: `mapΔ₀`{.Agda} carries the
+Delta-0 witness, and the Sigma-1 transport, one clause per constructor as in
+the delivered tower transport, carries `Σ₁ σᴹ`{.Agda}. The two readings then
+agree on the nose: `abs₀`{.Agda} at the restriction `M` makes the inner
+reading equal to the ambient reading of the same formula, spending
+transitivity exactly at the bounded quantifiers, and the crossing's
+`TransferM` follows by `σ₁-up`{.Agda}.
+<!--zh-->
+故事装配成一条 Δ₀ 公式，从而是 Σ₁。在集合载体处，被迁移的故事就是把无参故事经 `embed`{.Agda} 送到 `Sᴹ` 所得，名为 `σᴹ`{.Agda}。见证随同一套重标同行：`mapΔ₀`{.Agda} 携带 Δ₀ 见证，而 Σ₁ 运输逐构造子一如已交付的塔运输，携带 `Σ₁ σᴹ`{.Agda}。两条读式于是分毫不差地一致：限制 `M` 处的 `abs₀`{.Agda} 使同一条公式的内层读式等于环境读式，传递性恰在有界量词处被花掉，而跨越的 `TransferM` 由 `σ₁-up`{.Agda} 得出。
+<!--/-->
+
+```agda
+  -- The Sigma-1 instance of the delivered tower transport: one clause per
+  -- constructor, `mapΔ₀` at the Delta-0 leaf.
+  mapΣ₁ : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K')
+        → {n : ℕ} {φ : Formula K n} → Σ₁ φ → Σ₁ (mapFo f φ)
+  mapΣ₁ f (σ-Δ₀ d) = σ-Δ₀ (mapΔ₀ f d)
+  mapΣ₁ f (σ-∃ s)  = σ-∃ (mapΣ₁ f s)
+
+  -- The set-carrier level story: the parameter-free story embedded at Sᴹ.
+  σᴹ : Formula Sᴹ 2
+  σᴹ = embed levelStory
+
+  -- The two witnesses ride the same relabelling.
+  levelΔ₀ : Δ₀ σᴹ
+  levelΔ₀ = mapΔ₀ Empty.rec* levelStoryΔ₀
+
+  levelΣ₁ : Σ₁ σᴹ
+  levelΣ₁ = mapΣ₁ Empty.rec* levelStoryΣ₁
+
+  -- The two readings agree on the transported story: the delivered
+  -- absoluteness at the restriction M, transitivity spent exactly at the
+  -- bounded quantifiers.
+  level-abs₀ : (δ : Sᴹ ^ 2) → (δ AbsM.⊨ᵐ σᴹ) ≡ ((map fst δ) AbsM.⊨ᵛ σᴹ)
+  level-abs₀ δ = AbsM.abs₀ levelΔ₀ δ
+
+  -- The crossing's transfer for the set-carrier level story: the inner
+  -- reading implies the ambient reading (σ₁-up at M).
+  level-transfer : TransferM σᴹ
+  level-transfer v b = AbsM.σ₁-up levelΣ₁ (v ∷ b ∷ [])
+```
+
+<!--en-->
 ## The crossing, reduced
 <!--zh-->
 ## 跨越，化归之后
@@ -349,17 +676,19 @@ module Crossing (M : S) (Mtr : isTransV M)
 
 <!--en-->
 Neither `TransferM` nor `AmbientOnly` is delivered, and the probe measured why,
-machine-checked: the level formula is neither Δ₀, Σ₁, nor Π₁ in the delivered
-certification, since its quantifier profile carries unbounded quantifiers of
-both kinds, so none of the three delivered transfer theorems applies. Producing
-the Levy form of the formula is the priced residue, and this chapter stops
-there, stating the obligation and the reduction. The limit case is stated as
-the target `Condenses` but not built: it needs the ordinal predicate at the set
-carrier, which the ordinal chapter ships carrier-generic and Δ₀-certified, and
-the two inclusions, `M ⊆ L` (delivered above) and the reverse from `level-in`
-plus one extensionality, priced in the report and left standing.
+machine-checked: the crossing's formula, the delivered description, is neither
+Δ₀, Σ₁, nor Π₁ in the delivered certification, since its quantifier profile
+carries unbounded quantifiers of both kinds, so none of the three delivered
+transfer theorems applies. The Levy form of the level story is delivered above
+at the set carrier; the crossing's application of it, the equivalence with the
+delivered description and the two factors of the ambient form, is the
+obligation stated and reduced here. The limit case is stated as the target
+`Condenses` but not built: it needs the ordinal predicate at the set carrier,
+which the ordinal chapter ships carrier-generic and Δ₀-certified, and the two
+inclusions, `M ⊆ L` (delivered above) and the reverse from `level-in` plus one
+extensionality, priced in the report and left standing.
 <!--zh-->
-`TransferM` 与 `AmbientOnly` 都未交付，而探针机检地量到了原因：层公式在已交付的证书体系中既非 Δ₀、亦非 Σ₁、亦非 Π₁，因为它的量词画像同时携带两种无界量词，于是三条已交付的转移定理没有一条适用。造出公式的 Lévy 形态就是那条被定价的残余，本章在此停下，陈述义务与化归。极限情形被陈述为目标 `Condenses` 而未建造：它需要集合载体处的序数谓词，序数章以载体为参数、带 Δ₀ 证书地交付了它，还需要两条包含，`M ⊆ L` (上文已交付) 与由 `level-in` 加一次外延性得出的反向，在报告中定价并留待后继。
+`TransferM` 与 `AmbientOnly` 都未交付，而探针机检地量到了原因：跨越的公式，即已交付的描述，在已交付的证书体系中既非 Δ₀、亦非 Σ₁、亦非 Π₁，因为它的量词画像同时携带两种无界量词，于是三条已交付的转移定理没有一条适用。层故事的 Lévy 形态已在上文集合载体处交付；跨越对它的施用，即与已交付描述之间的等价连同环境形态的两个因子，是在此陈述并化归的义务。极限情形被陈述为目标 `Condenses` 而未建造：它需要集合载体处的序数谓词，序数章以载体为参数、带 Δ₀ 证书地交付了它，还需要两条包含，`M ⊆ L` (上文已交付) 与由 `level-in` 加一次外延性得出的反向，在报告中定价并留待后继。
 <!--/-->
 
 <!--en-->
@@ -373,10 +702,13 @@ The chapter delivers the condensation crossing's measured core: the level-hood
 sentence at a transitive set carrier, the successor case with its two
 companions, the meaning-preserving transport, and the crossing reduced to one
 absoluteness obligation about one formula at the two carriers, with the
-factorization proved. What remains is the obligation itself, the Levy content
-of the level formula, plus the limit case; the collapse half is separately
-probed green and the hull separately priced. The crossing is the face's third
-consumer, and the orchestrator wires this chapter into `Everything`.
+factorization proved. The Levy content of the level formula is delivered
+above: the set-carrier story `σᴹ` with its Sigma-1 witness and both readings.
+What remains is the crossing's application of it, the equivalence with the
+delivered description, the two factors of the ambient form, plus the limit
+case; the collapse half is separately probed green and the hull separately
+priced. The crossing is the face's third consumer, and the orchestrator wires
+this chapter into `Everything`.
 <!--zh-->
-本章交付凝聚跨越的测得核心：传递集载体处的层句、后继情形及其两条伴生事实、保义的迁移，以及化归为「关于一条公式、在两个载体处的一条绝对性义务」的跨越，分解得证。所余的是义务本身，即层公式的 Lévy 内容，连同极限情形；坍缩半边另有探针测得绿灯，外壳另有定价。跨越是面孔的第三个消费方，编排者把本章接入 `Everything`。
+本章交付凝聚跨越的测得核心：传递集载体处的层句、后继情形及其两条伴生事实、保义的迁移，以及化归为「关于一条公式、在两个载体处的一条绝对性义务」的跨越，分解得证。层公式的 Lévy 内容已在上文交付：集合载体处的层故事 `σᴹ` 连同它的 Σ₁ 见证与两条读式。所余是跨越对它的施用，即与已交付描述之间的等价、环境形态的两个因子，连同极限情形；坍缩半边另有探针测得绿灯，外壳另有定价。跨越是面孔的第三个消费方，编排者把本章接入 `Everything`。
 <!--/-->
