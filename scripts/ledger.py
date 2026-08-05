@@ -311,6 +311,19 @@ def main(argv: list[str]) -> int:
     print(f"  against the {line/1000:.0f}k reference line, recorded and not argued from (D26):")
     print(f"    naive corner      {(standing+nh-line)/1000:+.2f}k")
     print(f"    calibrated band   {(standing+cl-line)/1000:+.2f}k to {(standing+ch-line)/1000:+.2f}k")
+    tim = data.get("timing", {})
+    if tim:
+        print()
+        print(f"  check cost, measured {tim.get('measured','?')[:38]}")
+        print(f"    full cold: {tim.get('full_cold_seconds',0)//60}m{tim.get('full_cold_seconds',0)%60:02d}s "
+              f"(profile-instrumented)")
+        for h in data.get("hot", []):
+            sl = h["seconds"] / h["lines"]
+            print(f"    HOT  {h['module']:<24} {h['seconds']:5d}s over {h['lines']:5d} lines "
+                  f"= {sl:.2f} s/line")
+        for r in data.get("tree_cost", []):
+            print(f"         {r['tree'][:40]:<42} {r['seconds']:5d}s / {r['lines']:6d} lines "
+                  f"= {r['per_line']:.3f} s/line")
     lev = data.get("lever", [])
     if lev:
         nl = sum(r["net_low"] for r in lev if not r.get("gated"))

@@ -414,3 +414,66 @@ klass = "x3"
 provenance = "_build/l3.32-t79-report.md lever B"
 gated = true
 note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a forced rewrite (Condensation:324-562). T79 priced it as optional compression at HIGH risk, but the atoms in that region are DEFECTIVE and the story has to be rebuilt regardless, so the risk is no longer risking a working chapter, it is choosing how to rebuild a broken one. Compare against the structural-story row: in place costs 515-688 naive, as A plus B it NETS positive. Neither agent could see this; they ran concurrently and neither read the other."
+
+# ---------------------------------------------------------------------------
+# CHECK COST, in seconds. Ruled 2026-08-06 by the owner: a lever is judged on
+# BOTH dimensions, lines and seconds, and neither alone.
+#
+# The measurement that forced this: [L3.32-T86] profiled the full cold check at
+# about 45 minutes and found THREE surviving modules carry 73 percent of it,
+# while the entire 26,483-line retiring subtree costs 5:56. The difference is
+# not sealing (the retiring tree's two biggest files use no `opaque` at all):
+# it is that the retiring chapters state at abstract carriers and variable
+# indices, so nothing re-normalizes, while the hot modules state memberships at
+# concrete tower positions. That is the same generic-versus-fixed law as D29,
+# billed in seconds instead of lines.
+#
+# These figures are refreshed when a full `--profile=modules` run is made, which
+# is expensive and rare; each carries the run it came from. A stale row is
+# better than no row PROVIDED it says when it was taken.
+# ---------------------------------------------------------------------------
+
+[timing]
+measured = "2026-08-05, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0"
+full_cold_seconds = 2723
+note = """
+The 2,723 s is profile-instrumented time (2,501 measured plus 222 recovered for
+25 modules a concurrent process had already refreshed). The un-instrumented
+wall for the same tree was recorded at 27:54 on an earlier run; the
+profile-to-wall ratio is about 0.6 to 0.7 and is not pinned.
+"""
+
+[[hot]]
+module = "L.Rud.Bridge"
+seconds = 933
+lines = 827
+why = "95 percent is its own gamma index-tower family: `γ-compute`'s type ends at the tower body, so each of ten subst consumers re-normalizes the union tower, about eight times over"
+fix = "T86 measured a six-line seal that takes it to 170 s; T87 is applying it"
+
+[[hot]]
+module = "L.Ordinal.SquareLaw"
+seconds = 856
+lines = 907
+why = "states memberships at concrete tower positions rather than at variable indices; the I-4/I-5 class cost this project's own reports record as reported-not-cured"
+fix = "unmeasured; assumed to respond like Bridge, which is optimism until probed"
+
+[[hot]]
+module = "L.Condensation"
+seconds = 204
+lines = 391
+why = "the third per-line outlier, 0.52 s/line against a tree average of 0.05"
+fix = "unmeasured"
+
+[[tree_cost]]
+tree = "retiring subtree (L.Coding, L.Godel, L.Choice)"
+modules = 46
+lines = 26483
+seconds = 356
+per_line = 0.013
+
+[[tree_cost]]
+tree = "surviving trunk"
+modules = 82
+lines = 22761
+seconds = 2368
+per_line = 0.104
