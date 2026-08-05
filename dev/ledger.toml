@@ -321,3 +321,83 @@ status = "delivered"
 detail = "The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier."
 blocked_by = ""
 evidence = "src/L/LevelFormula.lagda.md; src/L/Rud/LevelSigma.lagda.md"
+
+# ---------------------------------------------------------------------------
+# Compression levers, measured by [L3.32-T79] on the standing tree. These are
+# NEGATIVE remaining rows: work that removes more than it writes. They are not
+# in the endpoint sum, because none is funded yet; they are here so the endpoint
+# can be re-summed the moment one is ruled.
+# ---------------------------------------------------------------------------
+
+[[lever]]
+id = "A-level-kit"
+title = "The level-story clause kit, written once at a generic carrier"
+scope = "L.LevelFormula (613) and L.Rud.LevelSigma (788); 265 byte-identical lines, orchestrator-remeasured at 257 substantive, and 388 of LevelSigma at 0.85 similarity or better"
+cost_low = 305
+cost_high = 335
+net_low = 230
+net_high = 280
+risk = "medium-low"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever A; the duplication independently remeasured by the orchestrator"
+
+[[lever]]
+id = "D-order-core"
+title = "The SquareLaw order-core mirror, one core parameterized by the exclusion hypothesis"
+scope = "L.Ordinal.SquareLaw Core 244-540 against InitialCore 967-1249; 78 byte-identical, 150-200 near-identical"
+cost_low = 290
+cost_high = 310
+net_low = 150
+net_high = 200
+risk = "medium, two consumers re-point"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever D"
+
+[[lever]]
+id = "E-pair-substrate"
+title = "The pair substrate, hosted once and imported rather than privately restated"
+scope = "L.CardinalPredicates:152-255 against L.Coding.Base:149-278, plus five statements of the pair-atom formulas"
+cost_low = 40
+cost_high = 60
+net_low = 80
+net_high = 100
+risk = "low-medium"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever E"
+
+[[lever]]
+id = "C-describe-shells"
+title = "One generic wrapper for Describe's per-operation boilerplate"
+scope = "L.Rud.Describe, seven per-operation blocks: about 44 lines of repeated carrier-witness blocks plus about 90 of definable-subset shells"
+cost_low = 45
+cost_high = 60
+net_low = 50
+net_high = 90
+risk = "medium-low"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever C"
+
+[[lever]]
+id = "F-small-instances"
+title = "Small known instances: duplicated zero lemmas and uniform indexed families"
+scope = "Bridge Sset-zero against Hierarchy; Step Fof-f0..f15; SatSets JF0..JF10"
+cost_low = 10
+cost_high = 30
+net_low = 10
+net_high = 50
+risk = "low"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever F"
+
+[[lever]]
+id = "B-condensation-story"
+title = "The condensation level story folded into the face, so the parameter-free story is the single source"
+scope = "L.Condensation:324-562, a THIRD encoding of the level story"
+cost_low = 150
+cost_high = 250
+net_low = 100
+net_high = 250
+risk = "HIGH, and priced only at x3: not defensible until gated"
+klass = "x3"
+provenance = "_build/l3.32-t79-report.md lever B"
+gated = true

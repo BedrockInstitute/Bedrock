@@ -311,6 +311,17 @@ def main(argv: list[str]) -> int:
     print(f"  against the {line/1000:.0f}k reference line, recorded and not argued from (D26):")
     print(f"    naive corner      {(standing+nh-line)/1000:+.2f}k")
     print(f"    calibrated band   {(standing+cl-line)/1000:+.2f}k to {(standing+ch-line)/1000:+.2f}k")
+    lev = data.get("lever", [])
+    if lev:
+        nl = sum(r["net_low"] for r in lev if not r.get("gated"))
+        nh = sum(r["net_high"] for r in lev if not r.get("gated"))
+        print()
+        print(f"  compression levers, measured but NOT funded and NOT in the sum above:")
+        for r in sorted(lev, key=lambda r: -r["net_low"]):
+            g = "  GATED" if r.get("gated") else ""
+            print(f"    {r['id']:<20} net +{r['net_low']}-{r['net_high']:<5} "
+                  f"cost {r['cost_low']}-{r['cost_high']:<5} risk {r['risk'][:22]}{g}")
+        print(f"    {'ungated total':<20} net +{nl}-{nh}")
     if data.get("excluded"):
         print()
         print("  deliberately NOT in the sum:")
