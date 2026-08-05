@@ -47,11 +47,10 @@ open import L.Rud.Bridge {ℓ} lem A using
   ; Lset-union-limit )
 open import L.Rud.OrdBlocks {ℓ} lem using ( +ω; +ω-in; +ω-out; +ω-mem; sucIter )
 open import L.Rud.SatSets {ℓ} lem A using ( module LimitFullSwitch )
-open import L.Rud.BaseBlock {ℓ} lem A using
-  ( limω; ∅∈Ssetω; baseStage∈J; op-in-J; finSetMem; sTally; module Power )
 open import L.Rud.LevelSigma {ℓ} lem A using ( module LevelAt )
-open import L.Choice.Finite {ℓ} lem using
-  ( Tally; module PowerStep; maskAt; mask-onto; select; select-in; select-out
+open import L.Rud.Finite {ℓ} lem A using
+  ( limω; ∅∈Ssetω; baseStage∈J; op-in-J; finSetMem; sTally; module Power; ltally
+  ; Tally; module PowerStep; maskAt; mask-onto; select; select-in; select-out
   ; marks; marks-lookup; decideOf; decide-true; decide-sound; module Search )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( Tri; lt; eq; gt )
@@ -331,7 +330,7 @@ powRel-Lset# k = ( next∈ , ( memb , closed ) )
   σ = # k
   L∈ : ⟨ Lset σ ∈ˢ Sset ω ⟩
   L∈ = stage∈HF σ (#∈ω k)
-  module P = Power k L∈
+  module P = Power k L∈ (ltally k)
   next∈ : ⟨ Lset (sucV σ) ∈ˢ Sset ω ⟩
   next∈ = baseStage∈J σ (#∈ω k) L∈
   memb : (z : S) → ⟨ z ∈ˢ Lset (sucV σ) ⟩ → z ⊆ Lset σ
