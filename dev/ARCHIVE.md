@@ -34,6 +34,19 @@ is their archive, so no files are restored.
   its last-green commit, single caliber. This column is a measurement of the
   file as archived, never a projection; projections carry two calibers and do
   not belong here.
+- **What this code did right.** Added 2026-08-06 under `[L3.32-F4]`, and the
+  only column here that is not about retrieval. A retirement removes files; it
+  should not silently remove a PRACTICE. `[L3.32-T86]` measured the retiring
+  internalization subtree at **0.013 s/line over 26,483 lines** against a
+  surviving trunk at 0.104, and found the cause was not sealing but that these
+  chapters state at **abstract carriers and variable indices**, so nothing
+  re-normalizes. Nobody knew that until a profile was run, and by then the
+  newer chapters had already lost the habit. **So if an archived module did
+  something measurably well, record it here in one sentence, with the
+  measurement.** Leave it blank rather than filling it with praise: an
+  unmeasured compliment in this column is worse than an empty cell, because it
+  makes the column unreadable. This is the field the freeze's exit condition
+  (D30 part 3) requires filled before the D18 archival lands.
 - **Revival condition.** The concrete condition under which this module would
   be worth consulting again. A condition that becomes provably moot may be
   closed, and the module's files may then be genuinely deleted, recorded in
@@ -49,10 +62,10 @@ original stays frozen unless and until the condition is closed as moot.
 
 ## Entries
 
-| Module | Original path | Why archived (ruling, date) | Last green (commit) | Measured size | Revival condition |
-|---|---|---|---|---|---|
-| `L.Rud.Realize` | `src/L/Rud/Realize.lagda.md` | The realization induction over an abstract basis: for every Delta-0 formula, a realizing basis composite. It served the comprehension switch through the image-principle route. That route was superseded when the switch was discharged unconditionally in `L.Rud.SatSets` (`full-switch-⊇`), after which nothing in the ruled configuration exercised the import edge that kept this chapter alive. Retired under D17 and D20, 2026-08-04, on `[T7]`'s import analysis and `[T11]`'s compile gate. | `d31b196` | 789 code lines | If a future development needs realization over an ABSTRACT basis (this chapter's whole point was basis-neutrality, validated by a probe before the rud route was adopted), rather than the concrete sixteen-operation discharge the tree now uses. The fine-structure era's rud-A relativizations are the named candidate. |
-| `L.Rud.Switch` (partial, 506 lines cut in place) | `src/L/Rud/Switch.lagda.md`, the Realize-dependent half | Six modules (`Bs`, `Ev`, `Rl`, `Closure` with its nested `Eval-J`, `WalkCon`, `LimitSwitch`) and the notation-and-spec layer consuming Realize's bounded-existential notation. `[T11]` proved by compile gate that the narrow cut (the six modules alone) does NOT compile and the widened cut does, which is why the spec layer travels with them. The surviving chapter is the reverse hops and the description side, which are what the bridge consumes. | `d31b196` | 506 code lines of the chapter's 803; the chapter now stands at 297. The cut regions are not moved to `archive/` as files, since they were interior to a surviving chapter: this commit is their archive, and `git show d31b196:src/L/Rud/Switch.lagda.md` recovers the pre-cut text | Same as `L.Rud.Realize`: these are its consumers. Revive together or not at all. |
+| Module | Original path | Why archived (ruling, date) | Last green (commit) | Measured size | What this code did right | Revival condition |
+|---|---|---|---|---|---|---|
+| `L.Rud.Realize` | `src/L/Rud/Realize.lagda.md` | The realization induction over an abstract basis: for every Delta-0 formula, a realizing basis composite. It served the comprehension switch through the image-principle route. That route was superseded when the switch was discharged unconditionally in `L.Rud.SatSets` (`full-switch-⊇`), after which nothing in the ruled configuration exercised the import edge that kept this chapter alive. Retired under D17 and D20, 2026-08-04, on `[T7]`'s import analysis and `[T11]`'s compile gate. | `d31b196` | 789 code lines | Not yet assessed. `[L3.32-T86]`'s profile covered the internalization subtree, not this chapter; if the basis-neutral statement style is why it was cheap, that belongs here with the number. | If a future development needs realization over an ABSTRACT basis (this chapter's whole point was basis-neutrality, validated by a probe before the rud route was adopted), rather than the concrete sixteen-operation discharge the tree now uses. The fine-structure era's rud-A relativizations are the named candidate. |
+| `L.Rud.Switch` (partial, 506 lines cut in place) | `src/L/Rud/Switch.lagda.md`, the Realize-dependent half | Six modules (`Bs`, `Ev`, `Rl`, `Closure` with its nested `Eval-J`, `WalkCon`, `LimitSwitch`) and the notation-and-spec layer consuming Realize's bounded-existential notation. `[T11]` proved by compile gate that the narrow cut (the six modules alone) does NOT compile and the widened cut does, which is why the spec layer travels with them. The surviving chapter is the reverse hops and the description side, which are what the bridge consumes. | `d31b196` | 506 code lines of the chapter's 803; the chapter now stands at 297. The cut regions are not moved to `archive/` as files, since they were interior to a surviving chapter: this commit is their archive, and `git show d31b196:src/L/Rud/Switch.lagda.md` recovers the pre-cut text | Not yet assessed, same reason as the row above. | Same as `L.Rud.Realize`: these are its consumers. Revive together or not at all. |
 
 ## Verification record
 

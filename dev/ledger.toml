@@ -255,6 +255,27 @@ provenance = "_build/l3.32-t51-report.md"
 # Updated with the ledger, at every return that could move it (D27).
 # ---------------------------------------------------------------------------
 
+# ------------------------------------------------------------------
+# THE FREEZE (D30, ruled 2026-08-06). Read this before reading `owed`.
+#
+# No row below marked `frozen` is blocked on mathematics. They are blocked on
+# a RULING: no new mathematics is dispatched until the tree's check cost comes
+# down. The measurement that produced the ruling is in `[timing]` and `[[hot]]`
+# below; the campaign that lifts it is `[L3.32-F]` in dev/PLAN.md section 11.
+#
+# `frozen` is therefore NOT a synonym for `blocked`. A blocked row needs
+# someone to prove something. A frozen row needs the seconds to come down.
+# ------------------------------------------------------------------
+
+[[freeze]]
+ruled = "2026-08-06"
+decision = "D30"
+exit_profile_seconds = 1100
+exit_per_line_cap = 0.25
+exit_craft_captured = "L3.32-F4: the LESSONS law, the archive registry field, the mechanical guard"
+baseline_profile_seconds = 1956
+detail = "Derived, not chosen. SquareLaw is 44 percent of the remaining tree and Condensation 10; at Bridge's measured rate the two live dispatches leave 1,037 s. The 0.25 s/line cap is where the sealed Bridge actually measures (0.24), so the cap asks every hot master to reach what one measured fix reached."
+
 [[owed]]
 id = "ac-leg"
 trophy = "AC"
@@ -277,8 +298,8 @@ evidence = "_build/l3.31-lt-report.md H2 and row 10; the choice-rehome row above
 id = "bridge-landing"
 trophy = "BOTH"
 title = "The bridge's landing: Q-lim and below-lim"
-status = "in-flight"
-detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge."
+status = "frozen"
+detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. FROZEN 2026-08-06 by D30: below-lim's first gate was briefed as [T92] and STOPPED before it fired, because it is new mathematics and the freeze forbids it. Q-lim's half stands. This row resumes the moment the check-cost exit condition is met; nothing about it is refuted."
 blocked_by = ""
 evidence = "_build/l3.32-t45-report.md; _build/l3.32-t52-report.md; _build/l3.32-t53-report.md; _build/l3.32-t61-report.md section 7"
 
@@ -304,8 +325,8 @@ evidence = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md dispatch list
 id = "gch-w3"
 trophy = "GCH"
 title = "W3: the internal definable well-ordering, at a general level"
-status = "ready"
-detail = "The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs."
+status = "frozen"
+detail = "The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met."
 blocked_by = ""
 evidence = "_build/l3.32-t44-report.md; _build/l3.32-t48-report.md; _build/l3.32-t50-report.md; _build/l3.32-t63-report.md"
 
@@ -313,8 +334,8 @@ evidence = "_build/l3.32-t44-report.md; _build/l3.32-t48-report.md; _build/l3.32
 id = "stepinl-rewrite-owed"
 trophy = "GCH"
 title = "Re-scope and rewrite StepInL so W3's op-graph content survives the retirement"
-status = "ready"
-detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content."
+status = "frozen"
+detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met."
 blocked_by = ""
 evidence = "_build/l3.32-t63-report.md; src/L/Rud/StepInL.lagda.md:2139-2160; the stepinl-rewrite row above"
 
@@ -322,8 +343,8 @@ evidence = "_build/l3.32-t63-report.md; src/L/Rud/StepInL.lagda.md:2139-2160; th
 id = "gch-w7"
 trophy = "GCH"
 title = "W7's residue: the last mile to the GCH sentence"
-status = "ready"
-detail = "The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly."
+status = "frozen"
+detail = "The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met."
 blocked_by = ""
 evidence = "_build/l3.32-t57-report.md section 3; _build/l3.32-t59-report.md; the w7-residue row above"
 

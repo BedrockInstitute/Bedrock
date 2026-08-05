@@ -66,6 +66,22 @@ Standing clauses that go in every build or probe brief:
   it, and record any correction beside the original.
 - **D22**: name the block's widest unmeasured term and the probe that would
   measure it; a brief that cannot is not ready to send.
+- **At every return that touched a master, run
+  `python3 scripts/check-timing.py --changed`.** It is the only gate in the
+  repository that can fail a module for being EXPENSIVE: a slow module
+  typechecks correctly, so `make check`, both linters and the whole gate are
+  structurally blind to it. `SquareLaw` reached 0.94 s/line and 44 percent of
+  the tree's cost without tripping anything. It is deliberately NOT in
+  `make check` (a warm module check costs minutes; the commit gate must stay
+  cheap enough to actually be run), which means if the orchestrator does not
+  run it at the return, nobody does.
+- **D30, the craft freeze, FIRST.** While it stands, **do not write a brief
+  that dispatches new mathematics.** Defect repair, profiling, the fixes a
+  profile licenses, and capturing the retiring tree's craft are the plan and
+  are dispatched normally. If a brief would advance a trophy rather than the
+  check-cost data, it waits. When in doubt the test is: would this dispatch add
+  in-fence lines to a surviving master in order to prove something new? Then it
+  waits.
 - **D29, generic writing, in EVERY brief.** For a recon: ask explicitly whether
   the content can be written once at a generic carrier and instantiated, and
   require the report to price BOTH shapes. For a build: state which shape is to
