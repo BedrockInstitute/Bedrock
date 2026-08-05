@@ -939,6 +939,54 @@ written type. The successor-value clause's two-way decode is one lemma
 ```
 
 <!--en-->
+## The strengthened approximation reassembled
+<!--zh-->
+## 加锐近似条目重新装配
+<!--/-->
+
+<!--en-->
+Every clause of the strengthened story now has its object formula and its
+two-way decode, so the approximation entry reassembles over the delivered
+conjuncts verbatim: the five-clause formula `aStForm` is the conjunction of
+the three delivered clauses, the domain bound and the successor-value
+clause, and the two-way adequacy `aSt-ok` walks the five delivered decodes
+in each direction. This is the seam the strengthened section recorded: the
+reassembly itself, nothing new to prove, and it is what a consumer of the
+strengthened story at a carrier instantiates.
+<!--zh-->
+加锐故事的每条子句如今都有自己的对象公式与双向解码，故近似条目逐合取项在已交付件上重新装配：五合取公式 `aStForm` 是三条已交付子句、定义域界与后继值子句的合取，双向充分性 `aSt-ok` 在每一方向上走过五条已交付解码。这正是加锐节所记录的接缝：装配本身，无可新证，也是载体处加锐故事的消费方所要实例化的对象。
+<!--/-->
+
+```agda
+  -- The strengthened approximation entry: the five-clause story.
+  aSt : S → Type (ℓ-suc ℓ)
+  aSt f = pairhood f × singleValued f × zeroClause f × ordDom f × succValClause f
+
+  -- The five-clause object story, at the standing arity.
+  aStForm : Formula ⟪ u ⟫ 2
+  aStForm = pairForm ∧̇ singleForm ∧̇ zeroForm ∧̇ domForm ∧̇ succValForm
+
+  -- The strengthened adequacy, both directions, walking the delivered
+  -- clause decodes.
+  aSt-out : (f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm ⟩ → aSt (fst f)
+  aSt-out f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
+    ( pairhood-out f x h₁
+    , ( single-out f x h₂
+      , ( zero-out f x h₃ , ( dom-out f x h₄ , succVal-ok f x .fst h₅ ) ) ) )
+
+  aSt-in : (f : SM) (x : ⟪ u ⟫) → aSt (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm ⟩
+  aSt-in f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
+    ( pairhood-in f x h₁
+    , ( single-in f x h₂
+      , ( zero-in f x h₃ , ( dom-in f x h₄ , succVal-ok f x .snd h₅ ) ) ) )
+
+  -- The seam, closed: the five-clause reassembly with its two-way decode.
+  aSt-ok : (f : SM) (x : ⟪ u ⟫)
+         → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm ⟩ ⟷ aSt (fst f)
+  aSt-ok f x = aSt-out f x , aSt-in f x
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
