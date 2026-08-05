@@ -20,8 +20,9 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
   constructs), runs the glossary checker (`scripts/check-glossary.py` against the term data in
   [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)),
   validates the size-ledger declaration (`scripts/ledger.py --check` against
-  [dev/ledger.toml](dev/ledger.toml), explained in [dev/LEDGER.md](dev/LEDGER.md)), and runs
-  `reuse lint` for per-file licensing. It is expensive: run the individual checks while you
+  [dev/ledger.toml](dev/ledger.toml), explained in [dev/LEDGER.md](dev/LEDGER.md)), enforces the
+  never-commit rule (`scripts/check-probes.py --check`: no probe file, nothing generated), and
+  runs `reuse lint` for per-file licensing. It is expensive: run the individual checks while you
   work (`agda <file>`, `python3 scripts/lint-prose.py <files>`) and the full gate before the
   commit.
 - **`make venv`** creates the project virtual environment (`.venv`) from Python 3.11+ and
@@ -137,7 +138,10 @@ smallest decisive miniature, report GO or NO-GO with a price extrapolation, and 
 A probe prices only what THIS setting costs us; it never re-establishes what the literature or
 the delivered tree already settles.
 
-Probes are never committed. The verdict lives in a report under `_build/`; the file survives
+Probes are never committed, and `scripts/check-probes.py` enforces both halves of that: the
+pre-commit hook refuses a staged probe (an ignore rule is a default, not a gate, and `git add
+-f` walks past it), and `--stale` deletes probes whose verdict is recorded and which no live
+agent is still writing. The verdict lives in a report under `_build/`; the file survives
 only while it is the template for a chapter about to be written from it, and goes when that
 chapter lands. A pattern worth keeping belongs in `dev/LESSONS.md` or in the chapter it seeded,
 never in a stray file.

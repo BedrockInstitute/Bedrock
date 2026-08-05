@@ -10,6 +10,16 @@
 PY=python3
 [ -x .venv/bin/python ] && PY=.venv/bin/python
 
+# The never-commit gate runs FIRST and on its own: a probe or a generated file in the
+# index is not a style problem to report alongside others, it is a commit to stop.
+# .gitignore is a default that `git add -f` walks past; this is the gate.
+if ! $PY scripts/check-probes.py --staged; then
+	echo ""
+	echo "Never-commit rule violated (AGENTS.md Never list; dev/LESSONS.md D-1)."
+	echo "(To bypass in a genuine emergency: git commit --no-verify)"
+	exit 1
+fi
+
 md=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(md|lagda\.md)$')
 masters=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.lagda\.md$')
 

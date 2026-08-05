@@ -131,6 +131,32 @@ python3 scripts/ledger.py --brief   # one line: standing, endpoint, overage
 python3 scripts/ledger.py --check   # validate the declaration; exit 1 on a defect
 ```
 
+## `check-probes.py`
+
+The never-commit gate, plus the probe lifecycle. Two standing rules from `AGENTS.md`'s Never
+list: probe files are never committed (`dev/LESSONS.md` D-1), and generated files (anything
+under `_build/`, the woven mono-lingual copies) are never committed.
+
+`.gitignore` already covers both, which is exactly why this exists: **an ignore rule is a
+default, not a gate.** `git add -f` walks past it and a pattern that stops matching a new
+naming shape fails silently. On 2026-08-04 one `git add -A src/` committed 13 probe files,
+3,274 lines. `--staged` runs in the pre-commit hook and stops the commit; `--check` runs in
+`make check` over every tracked file and catches anything that got in historically or past a
+bypass.
+
+`--stale` carries the half an ignore rule cannot express: a probe is **thrown away** once its
+verdict is recorded, and untracked probes otherwise pile up in `src/` where they are mistaken
+for committed ones. A probe is deletable only when its verdict survives (some report under
+`_build/` names it) AND nobody is writing it (untouched for longer than the freshness window,
+default 6 hours). Anything else is listed as PROTECTED with the reason.
+
+```sh
+python3 scripts/check-probes.py --check           # every tracked file (make check)
+python3 scripts/check-probes.py --staged          # staged files only (pre-commit hook)
+python3 scripts/check-probes.py --stale           # what is safe to delete, and why
+python3 scripts/check-probes.py --stale --delete  # delete it
+```
+
 ## `lint-agda.py`
 
 Enforces the code-side rules of [dev/STYLE-agda.md](../dev/STYLE-agda.md) on the ```agda
