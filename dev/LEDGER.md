@@ -37,14 +37,14 @@ two disagree.*
 
 | row | naive | calibrated | class | gate |
 |---|---:|---:|---|---|
-| W3 face route: the general order formula over the fresh generic face | 1,000-2,700 | 3,000-7,900 | mostly x3, one x1.3 row (the B statement layer) | T50 returned SPLIT (the flattening is green, the op-graph frame is a confirmed prerequisite); T56 then DELIVERED the frame at 285 lines, overrunning T48's 80-240 op-graph row, and named F11-F14 as not expressible at the delivered syntax, which stays x3 |
-| W1': the condensation crossing's transfers | 1,000-2,550 | 3,000-7,650 | x3 each of its three sub-rows | T54 (queued): the Levy-certificate rate, stop-line 200 |
+| W3 face route: the general order formula over the fresh generic face | 1,000-2,700 | 3,000-7,900 | mostly x3, one x1.3 row (the B statement layer) | T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. BUT StepInL is in the D18 retirement set, so this content must be carried by its ideal-form rewrite or W3 loses it: see the stepinl-rewrite row |
+| W1': the condensation crossing's transfers | 1,040-2,550 | 2,900-7,400 | row (b) split: the six structural clauses x1.3 (T54's measured rate), the Def-step / satisfaction-recursion remainder x3 (unmeasured, gated); rows (a) and (c) x3 | T54 returned SPLIT (all six bounded rewrites close at the generic carrier, bimodal rate, no new carrier fact); T64 then found T54's re-price did NOT stand, because the probe certified the Def-step clause as trivially true, which is legitimate only where that step collapses; the Def-step entry at an arbitrary transitive carrier stays x3 with a named next gate |
 | The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing | 800-1,390 | 1,700-3,200 | mixed x1.3 / x3 | T53 (running): the bound arm and the crux family at l = omega, stop-line 350 |
-| StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate | T10 (green) |
+| StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate for the content T10 scoped; the newly discovered op-graph content is UNPRICED at this band and is the row's named risk | T10 (green) for the original scope. SCOPE GREW 2026-08-05: T63 found that StepInL carries the sixteen-operation variable-form op-graph W3 needs, which T10's rewrite scope never included. Under D17 the rewrite must price the ideal form of what its consumers ACTUALLY need, and W3 is now one of them. Needs a re-scope before it is funded |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
 | The retirement surgery and the Everything rewiring (archival per D20) | 100-250 | 150-500 | x1.5 to x2 (prose plus import surgery) | none needed |
 | W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
-| **total** | **5,050-10,560** | **12,010-27,030** | | |
+| **total** | **5,090-10,560** | **11,910-26,780** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 20.64-26.15k | 23.39k |
-| calibrated | 27.60-42.62k | 35.11k |
+| naive | 20.68-26.15k | 23.41k |
+| calibrated | 27.50-42.37k | 34.94k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
 the naive band's pessimistic corner sits +1.15k from the line, and the calibrated
-band sits +2.60k to +17.62k from it.
+band sits +2.50k to +17.37k from it.
 
 ### Deliberately not in the sum
 

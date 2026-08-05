@@ -104,19 +104,19 @@ naive_high = 2700
 calibrated_low = 3000
 calibrated_high = 7900
 klass = "mostly x3, one x1.3 row (the B statement layer)"
-gate = "T50 returned SPLIT (the flattening is green, the op-graph frame is a confirmed prerequisite); T56 then DELIVERED the frame at 285 lines, overrunning T48's 80-240 op-graph row, and named F11-F14 as not expressible at the delivered syntax, which stays x3"
+gate = "T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. BUT StepInL is in the D18 retirement set, so this content must be carried by its ideal-form rewrite or W3 loses it: see the stepinl-rewrite row"
 provenance = "_build/l3.32-t48-report.md face-route table; PLAN [L3.32] register T48 and T50 entries"
 
 [[remaining]]
 id = "W1p"
 title = "W1': the condensation crossing's transfers"
-naive_low = 1000
+naive_low = 1040
 naive_high = 2550
-calibrated_low = 3000
-calibrated_high = 7650
-klass = "x3 each of its three sub-rows"
-gate = "T54 (queued): the Levy-certificate rate, stop-line 200"
-provenance = "_build/l3.32-t51-report.md W1' table; _build/l3.31-ivprobe-report.md:478-493"
+calibrated_low = 2900
+calibrated_high = 7400
+klass = "row (b) split: the six structural clauses x1.3 (T54's measured rate), the Def-step / satisfaction-recursion remainder x3 (unmeasured, gated); rows (a) and (c) x3"
+gate = "T54 returned SPLIT (all six bounded rewrites close at the generic carrier, bimodal rate, no new carrier fact); T64 then found T54's re-price did NOT stand, because the probe certified the Def-step clause as trivially true, which is legitimate only where that step collapses; the Def-step entry at an arbitrary transitive carrier stays x3 with a named next gate"
+provenance = "_build/l3.32-t51-report.md W1' table; _build/l3.32-t54-report.md per-clause table; _build/l3.32-t64-report.md census split and dispatch list"
 
 [[remaining]]
 id = "carried-sequence"
@@ -136,8 +136,8 @@ naive_low = 1200
 naive_high = 1700
 calibrated_low = 1560
 calibrated_high = 2210
-klass = "x1.3 after T10's green gate"
-gate = "T10 (green)"
+klass = "x1.3 after T10's green gate for the content T10 scoped; the newly discovered op-graph content is UNPRICED at this band and is the row's named risk"
+gate = "T10 (green) for the original scope. SCOPE GREW 2026-08-05: T63 found that StepInL carries the sixteen-operation variable-form op-graph W3 needs, which T10's rewrite scope never included. Under D17 the rewrite must price the ideal form of what its consumers ACTUALLY need, and W3 is now one of them. Needs a re-scope before it is funded"
 provenance = "_build/l3.32-t10-report.md; PLAN register T10 entry"
 
 [[remaining]]
