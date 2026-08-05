@@ -44,7 +44,8 @@ two disagree.*
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
 | The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20) | 620-1,170 | 810-1,520 | x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part | T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint |
 | W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
-| **total** | **5,490-11,010** | **11,920-26,140** | | |
+| The condensation structural story: rewritten with meaning pinned, because three of its atoms were found to read something other than what they say | 515-688 | 670-895 | x1.3 (T77 priced it from the rewrite side, itemized, against the delivered obligations) | T77 returned STOP AT THE PRICE: both the full decoded form (688 naive) and the minimal form (515) exceed its 400-line stop-line, so nothing was built and the defective atoms stand. THE OWNER MUST RULE, and there are two shapes: rewrite in place at this price, or do it as levers A plus B, which cover the same region and net POSITIVE because they remove the third encoding rather than re-writing it |
+| **total** | **6,005-11,698** | **12,590-27,035** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -54,12 +55,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 23.47-28.99k | 26.23k |
-| calibrated | 29.90-44.12k | 37.01k |
+| naive | 23.98-29.67k | 26.83k |
+| calibrated | 30.57-45.01k | 37.79k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +3.99k from the line, and the calibrated
-band sits +4.90k to +19.12k from it.
+the naive band's pessimistic corner sits +4.67k from the line, and the calibrated
+band sits +5.57k to +20.01k from it.
 
 ### Deliberately not in the sum
 
