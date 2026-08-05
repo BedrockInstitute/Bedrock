@@ -42,9 +42,9 @@ two disagree.*
 | The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing | 980-1,720 | 2,000-3,900 | mixed x1.3 / x3 | T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound, a corollary of what is delivered, +180-330 lines, one to two dispatches |
 | StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate for the content T10 scoped; the newly discovered op-graph content is UNPRICED at this band and is the row's named risk | T10 (green) for the original scope. SCOPE GREW 2026-08-05: T63 found that StepInL carries the sixteen-operation variable-form op-graph W3 needs, which T10's rewrite scope never included. Under D17 the rewrite must price the ideal form of what its consumers ACTUALLY need, and W3 is now one of them. Needs a re-scope before it is funded |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
-| The retirement surgery and the Everything rewiring (archival per D20) | 100-250 | 150-500 | UNDER RE-PRICE: the booked figure assumed prose plus import surgery, but seven surviving masters cross the retirement boundary at nine import sites, three of them on the GCH critical path and one of them the AC leg. Re-homing content is not import surgery | T67 (dispatched 2026-08-05): itemize the nine crossings, price each under D17 from the rewrite side, and return a measured row |
+| The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20) | 1,170-2,070 | 1,520-2,690 | x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part | T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint |
 | W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
-| **total** | **4,930-10,060** | **11,210-25,080** | | |
+| **total** | **6,000-11,880** | **12,580-27,270** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 20.82-25.95k | 23.38k |
-| calibrated | 27.10-40.97k | 34.03k |
+| naive | 21.89-27.77k | 24.83k |
+| calibrated | 28.47-43.16k | 35.81k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +0.95k from the line, and the calibrated
-band sits +2.10k to +15.97k from it.
+the naive band's pessimistic corner sits +2.77k from the line, and the calibrated
+band sits +3.47k to +18.16k from it.
 
 ### Deliberately not in the sum
 
@@ -101,7 +101,7 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 
 | item | status | blocked by | what it is |
 |---|---|---|---|
-| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | Until it runs, both trophies stand on a tree that still contains the machinery they were supposed to stop depending on. It cannot run before the re-home and the bridge land. MEASURED 2026-08-05: this is bigger than booked. Seven SURVIVING masters import retiring modules at nine sites, including Condensation, Hull and OrderFormula on the GCH path, the bridge itself, and L.Model on L.Choice.Transversal, which is precisely why AC reads at-risk. Each crossing is content to re-home, not an import to rewrite. |
+| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | Nine crossings, all verified real. They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing. |
 | The bridge's landing: Q-lim and below-lim | **ready** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. The route survives with the classical one-way clause plus the exact domain bound, +180-330 lines. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
 
 <!-- ledger:end -->

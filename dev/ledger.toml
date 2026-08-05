@@ -153,14 +153,14 @@ provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 
 
 [[remaining]]
 id = "retirement-surgery"
-title = "The retirement surgery and the Everything rewiring (archival per D20)"
-naive_low = 100
-naive_high = 250
-calibrated_low = 150
-calibrated_high = 500
-klass = "UNDER RE-PRICE: the booked figure assumed prose plus import surgery, but seven surviving masters cross the retirement boundary at nine import sites, three of them on the GCH critical path and one of them the AC leg. Re-homing content is not import surgery"
-gate = "T67 (dispatched 2026-08-05): itemize the nine crossings, price each under D17 from the rewrite side, and return a measured row"
-provenance = "_build/l3.31-lt-report.md row 11 (the booked figure, now suspect); scripts/check-tree.py --check retiring (the measurement that provoked the re-price)"
+title = "The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20)"
+naive_low = 1170
+naive_high = 2070
+calibrated_low = 1520
+calibrated_high = 2690
+klass = "x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part"
+gate = "T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint"
+provenance = "_build/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is _build/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
 
 [[remaining]]
 id = "w7-residue"
@@ -258,7 +258,7 @@ id = "retirement"
 trophy = "BOTH"
 title = "The retirement surgery, and the archival"
 status = "blocked"
-detail = "Until it runs, both trophies stand on a tree that still contains the machinery they were supposed to stop depending on. It cannot run before the re-home and the bridge land. MEASURED 2026-08-05: this is bigger than booked. Seven SURVIVING masters import retiring modules at nine sites, including Condensation, Hull and OrderFormula on the GCH path, the bridge itself, and L.Model on L.Choice.Transversal, which is precisely why AC reads at-risk. Each crossing is content to re-home, not an import to rewrite."
+detail = "Nine crossings, all verified real. They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing."
 blocked_by = "ac-rehome, bridge-landing, stepinl-rewrite-owed"
 evidence = "PLAN D18 and D20; the retirement-surgery row above"
 
