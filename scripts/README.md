@@ -177,9 +177,16 @@ proposals were rejected on false-positive grounds: a rule already enforced by Ag
 rule whose only hit is in code booked for retirement, and a rule whose predicate cannot tell a
 goal's status from a sub-item's.
 
+It also carries the **gate-debt** counter. A full `agda src/Everything.lagda.md` costs not its
+twelve background minutes but the **quiet tree** it needs for all of them: no agent may write a
+master while it runs, so every full gate costs one dispatch window. Full gates are therefore
+batched (`dev/PLAN.md` D28), and this reports whether one is due.
+
 ```sh
 python3 scripts/check-tree.py --check            # every invariant (make check and the hook)
 python3 scripts/check-tree.py --check closure    # just one
+python3 scripts/check-tree.py --gate-debt        # commits and added lines since the last gate
+python3 scripts/check-tree.py --gate-passed      # record HEAD after a green full gate
 ```
 
 ## `lint-agda.py`
