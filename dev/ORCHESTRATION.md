@@ -66,12 +66,14 @@ Standing clauses that go in every build or probe brief:
   it, and record any correction beside the original.
 - **D22**: name the block's widest unmeasured term and the probe that would
   measure it; a brief that cannot is not ready to send.
-- **D26, the ruled route.** State the ruled route in the brief's header (R2',
-  the trophy stated in L, W3's internal order by the face route) and forbid
-  route-change proposals in the return. Say that a line count is a measurement:
-  an overage is recorded in both calibers and worked down, never argued from. A
-  gate asks WHICH TECHNIQUE the ruled route uses, so a red must return the next
-  candidate technique inside the route, named and priced.
+- **D26, what is ruled and what is open.** State BOTH in the brief's header.
+  Ruled: the campaign route, R2' with the trophy stated in L, which the return
+  may not reopen or re-table. Open: how to walk it, which results decide, so
+  name the current working direction as a working direction and not as law. Say
+  that a line count is a measurement, recorded in both calibers and worked down
+  as a best-effort target, never argued from. A gate asks which TECHNIQUE to
+  use, so a red must return the next candidate technique, named and priced, on
+  the obligation that defeated the last one.
 - **A stop is a deliverable.** Say so explicitly, so an agent that finds the
   target false reports instead of forcing it.
 - **Adversarial honesty**, named in the direction the brief is biased: if the
@@ -118,8 +120,9 @@ In this order, every time:
    orchestrator's cap. Spot-check the load-bearing claims at `file:line`,
    especially absence claims (grep them) and any claim that a wall is gone.
    **Reject any report that reasons from a line overage to a route change**
-   (D26): the route is ruled, the number is recorded, and the report is sent
-   back for the next technique inside the route.
+   (D26): the campaign route is ruled, the number is recorded, and the report
+   is sent back for the next technique. A report that changes a TECHNIQUE on a
+   measured obligation is doing its job and is not caught by this.
 3. **Fill the free slots** (section 2) before writing anything up.
 4. **Wire** `src/Everything.lagda.md` (agents never touch it) and any catalog
    prose the change makes stale.
