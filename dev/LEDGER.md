@@ -29,9 +29,9 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (127 files) | 48,604 |
+| tracked masters (128 files) | 49,230 |
 | booked retirements, D18 (51 files) | 30,648 |
-| **standing** | **17,956** |
+| **standing** | **18,582** |
 
 ### Remaining work
 
@@ -43,9 +43,9 @@ two disagree.*
 | StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,240-1,730 | 1,610-2,250 | x1.3 throughout, and the op-graph content is INSIDE the band, not extra: T78 verified that T7's per-part table, which T10 re-priced, already itemizes graphOf/graph-out/graph-in at 25-40 fresh and the memOf dispatch at 30-50, so this row's earlier UNPRICED warning was wrong | T10 (green), RE-SCOPED and confirmed by T78 2026-08-05: the price is essentially unchanged because the content was already inside T10's scope under its own names. W3's consumer status adds three OBLIGATIONS rather than content: the mem11-mem14 arms re-anchored at the measured rate (they are the load-bearing non-pair content and the only W3-critical arms T10 extrapolated rather than measured), the graph statements' shapes pinned so W3's wiring re-points cleanly, and the sixteen-operation lex ruled OUT of this row because it is W3-row content and booking it here would double-count |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
 | The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20) | 620-1,170 | 810-1,520 | x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part | T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint |
-| W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
+| W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,250-2,900 | SPLIT after T85's re-designed gate went green: the tower induction's SUCCESSOR half moves to x1.3 (the composition is delivered machinery at a variable carrier and checks in seconds) while its LIMIT half stays x3 (untouched by any probe, in the extraction wall class); Cantor and the 5.4 half are DELIVERED by T71; the remaining x3 items are Init verification and the GCH assembly, and x1.3 covers the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing and Pow | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
 | The condensation structural story: rewritten with meaning pinned, because three of its atoms were found to read something other than what they say | 515-688 | 670-895 | x1.3 (T77 priced it from the rewrite side, itemized, against the delivered obligations) | T77 returned STOP AT THE PRICE: both the full decoded form (688 naive) and the minimal form (515) exceed its 400-line stop-line, so nothing was built and the defective atoms stand. THE OWNER MUST RULE, and there are two shapes: rewrite in place at this price, or do it as levers A plus B, which cover the same region and net POSITIVE because they remove the third encoding rather than re-writing it |
-| **total** | **6,005-11,698** | **12,590-27,035** | | |
+| **total** | **6,005-11,698** | **12,140-26,315** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -55,12 +55,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 23.96-29.65k | 26.81k |
-| calibrated | 30.55-44.99k | 37.77k |
+| naive | 24.59-30.28k | 27.43k |
+| calibrated | 30.72-44.90k | 37.81k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +4.65k from the line, and the calibrated
-band sits +5.55k to +19.99k from it.
+the naive band's pessimistic corner sits +5.28k from the line, and the calibrated
+band sits +5.72k to +19.90k from it.
 
 ### Deliberately not in the sum
 
@@ -102,7 +102,7 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 
 | item | status | blocked by | what it is |
 |---|---|---|---|
-| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | SIX crossings, after T72 removed SatSets from the set and dissolved three at a stroke. They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing. |
+| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | FOUR crossings, after T72 removed SatSets (three dissolved at a stroke) and T82 re-homed the finite-tally content out of HF (two more). They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing. |
 | The bridge's landing: Q-lim and below-lim | **in-flight** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
 
 <!-- ledger:end -->

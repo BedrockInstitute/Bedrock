@@ -173,9 +173,9 @@ id = "w7-residue"
 title = "W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly)"
 naive_low = 650
 naive_high = 1320
-calibrated_low = 1700
-calibrated_high = 3620
-klass = "x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow)"
+calibrated_low = 1250
+calibrated_high = 2900
+klass = "SPLIT after T85's re-designed gate went green: the tower induction's SUCCESSOR half moves to x1.3 (the composition is delivered machinery at a variable carrier and checks in seconds) while its LIMIT half stays x3 (untouched by any probe, in the extraction wall class); Cantor and the 5.4 half are DELIVERED by T71; the remaining x3 items are Init verification and the GCH assembly, and x1.3 covers the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing and Pow"
 gate = "T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250"
 provenance = "_build/l3.32-t57-report.md section 3 table (ITEMIZED, no longer a subtraction); named rows at _build/l3.32-t46-report.md:61-65, :177-178; _build/l3.32-t47-report.md section 6; _build/l3.32-t37-report.md:147-158; _build/l3.32-t18-report.md:93-107, :121-128, :205-209"
 
@@ -276,7 +276,7 @@ id = "retirement"
 trophy = "BOTH"
 title = "The retirement surgery, and the archival"
 status = "blocked"
-detail = "SIX crossings, after T72 removed SatSets from the set and dissolved three at a stroke. They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing."
+detail = "FOUR crossings, after T72 removed SatSets (three dissolved at a stroke) and T82 re-homed the finite-tally content out of HF (two more). They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing."
 blocked_by = "ac-rehome, bridge-landing, stepinl-rewrite-owed"
 evidence = "PLAN D18 and D20; the retirement-surgery row above"
 
