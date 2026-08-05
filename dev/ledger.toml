@@ -175,7 +175,7 @@ naive_low = 650
 naive_high = 1320
 calibrated_low = 1250
 calibrated_high = 2900
-klass = "SPLIT after T85's re-designed gate went green: the tower induction's SUCCESSOR half moves to x1.3 (the composition is delivered machinery at a variable carrier and checks in seconds) while its LIMIT half stays x3 (untouched by any probe, in the extraction wall class); Cantor and the 5.4 half are DELIVERED by T71; the remaining x3 items are Init verification and the GCH assembly, and x1.3 covers the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing and Pow"
+klass = "CORRECTED 2026-08-06 by T91: the earlier note that Cantor and the 5.4 half are DELIVERED is OVERSTATED. The 5.4 half is delivered only as omega-subset-M plus a bijection form with two UNDISCHARGED injection hypotheses, and the raw-index-to-presentation descent is a named unpriced piece now carried by the gch-proof-steps row. SPLIT after T85's re-designed gate went green: the tower induction's SUCCESSOR half moves to x1.3 (the composition is delivered machinery at a variable carrier and checks in seconds) while its LIMIT half stays x3 (untouched by any probe, in the extraction wall class); Cantor and the 5.4 half are DELIVERED by T71; the remaining x3 items are Init verification and the GCH assembly, and x1.3 covers the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing and Pow"
 gate = "T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250"
 provenance = "_build/l3.32-t57-report.md section 3 table (ITEMIZED, no longer a subtraction); named rows at _build/l3.32-t46-report.md:61-65, :177-178; _build/l3.32-t47-report.md section 6; _build/l3.32-t37-report.md:147-158; _build/l3.32-t18-report.md:93-107, :121-128, :205-209"
 
@@ -190,6 +190,17 @@ klass = "x1.3 (T77 priced it from the rewrite side, itemized, against the delive
 gate = "T77 returned STOP AT THE PRICE: both the full decoded form (688 naive) and the minimal form (515) exceed its 400-line stop-line, so nothing was built and the defective atoms stand. THE OWNER MUST RULE, and there are two shapes: rewrite in place at this price, or do it as levers A plus B, which cover the same region and net POSITIVE because they remove the third encoding rather than re-writing it"
 provenance = "_build/l3.32-t77-report.md itemized price; the defects at _build/l3.32-t76-report.md; the alternative shape at _build/l3.32-t79-report.md levers A and B"
 
+
+[[remaining]]
+id = "gch-proof-steps"
+title = "The theorem's own proof steps, which fell off the list: Devlin 5.5 bounded subsets, the 5.6 equality argument, the condensation limit case, the collapse's transitive-fixing clause, the counting bound's descent to the hull's presentation index, the Inf predicate, and the crossing's transport certificate"
+naive_low = 480
+naive_high = 1020
+calibrated_low = 1000
+calibrated_high = 2400
+klass = "x3 (none of these has been probed; several were priced by survey and then dropped rather than discharged)"
+gate = "none yet. Each item needs one, and the bounded-subsets argument is the one to gate first because it is what W3's hull elementarity exists to serve"
+provenance = "_build/l3.32-t91-report.md section 1, the end-to-end walk. Component prices as recorded: 5.5 bounded subsets 0.08-0.15k and 5.6 GCH assembly 0.12-0.25k (T18 rows D and E, DROPPED when T57 itemized and replaced them with two narrower items); the condensation limit case 30-90 lines (T33/T64); the transport certificate 0.15-0.30k (T51, explicitly outside W1'); the collapse's 5.2(ii) clause, the counting descent and the Inf predicate all unpriced"
 
 # ---------------------------------------------------------------------------
 # Known open items that are deliberately NOT in the endpoint sum. Listed so
@@ -320,8 +331,8 @@ evidence = "_build/l3.32-t57-report.md section 3; _build/l3.32-t59-report.md; th
 id = "gch-w5"
 trophy = "GCH"
 title = "W5: the collapse and the condensation"
-status = "delivered"
-detail = "The Mostowski collapse and the crossing's reduction are both in the tree. What the crossing still leaves is the transfers, tracked separately as W1'."
+status = "in-flight"
+detail = "CORRECTED 2026-08-06 by T91: reading this as delivered was overstated in two ways. The crossing's LIMIT case is not built and sits explicitly outside W1'; and the level story the crossing operates on is built on atoms of which at least two read something other than their documentation, which T89 is repairing. The collapse's transitive-fixing clause (Devlin 5.2(ii)) is also undelivered. What is genuinely delivered is the collapse and the crossing's REDUCTION; the transfers are W1' and the rest is the gch-proof-steps row."
 blocked_by = ""
 evidence = "src/V/Collapse.lagda.md; src/L/Condensation.lagda.md"
 
@@ -435,9 +446,10 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 
 [timing]
 measured = "2026-08-05, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0"
-full_cold_seconds = 2723
+full_cold_seconds = 1956
 note = """
-The 2,723 s is profile-instrumented time (2,501 measured plus 222 recovered for
+UPDATED 2026-08-06 after T87: 2,723 minus the measured 767 s Bridge saving.
+The original 2,723 s was profile-instrumented time (2,501 measured plus 222 recovered for
 25 modules a concurrent process had already refreshed). The un-instrumented
 wall for the same tree was recorded at 27:54 on an earlier run; the
 profile-to-wall ratio is about 0.6 to 0.7 and is not pinned.
@@ -445,10 +457,10 @@ profile-to-wall ratio is about 0.6 to 0.7 and is not pinned.
 
 [[hot]]
 module = "L.Rud.Bridge"
-seconds = 933
-lines = 827
-why = "95 percent is its own gamma index-tower family: `γ-compute`'s type ends at the tower body, so each of ten subst consumers re-normalizes the union tower, about eight times over"
-fix = "T86 measured a six-line seal that takes it to 170 s; T87 is applying it"
+seconds = 199
+lines = 833
+why = "FIXED 2026-08-06. Was 933 s: 95 percent was its own gamma index-tower family, because `γ-compute`'s type ended at the tower body and each of ten subst consumers re-normalized the union tower, about eight times over"
+fix = "DONE (T87): a six-line opaque seal restating the read lemma to end where consumers use it. 939 s to 199 s, orchestrator-reproduced at 199.53 s. Every exported type unchanged, no consumer edited. 767 seconds off every cold check for six lines"
 
 [[hot]]
 module = "L.Ordinal.SquareLaw"
