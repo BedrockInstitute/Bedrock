@@ -270,11 +270,27 @@ provenance = "_build/l3.32-t51-report.md"
 [[freeze]]
 ruled = "2026-08-06"
 decision = "D30"
-exit_profile_seconds = 1100
-exit_per_line_cap = 0.25
-exit_craft_captured = "L3.32-F4: the LESSONS law, the archive registry field, the mechanical guard"
 baseline_profile_seconds = 1956
-detail = "Derived, not chosen. SquareLaw is 44 percent of the remaining tree and Condensation 10; at Bridge's measured rate the two live dispatches leave 1,037 s. The 0.25 s/line cap is where the sealed Bridge actually measures (0.24), so the cap asks every hot master to reach what one measured fix reached."
+exit_kind = "measurement-complete"
+exit_1_profiled = "every master holding >= 2 percent of tree check time has a per-definition profile on record"
+exit_2_removed = "for each, the removable fraction is MEASURED in a scratch copy, then removed or refused with a written price here"
+exit_3_craft = "P-k standing, and dev/ARCHIVE.md's practice column filled, both BEFORE the D18 archival"
+detail = "A first version set a projected 1,100 s and a 0.25 s/line cap. Both are RETIRED. The 1,100 rested on SquareLaw being 95 percent removable, which took the share of time IN Bridge's hot family for the share its fix REMOVED (79 percent); at the honest rate the projection is 1,088 to 1,121, bracketing its own threshold, and [T93] found it unreproducible from these rows. The per-line cap is retired by [L3.32-F0]: the caliber is per obligation, and at that caliber the cross-tree gap is 2.1x while one controlled fix on Bridge was 4.7x, so the cross-tree ratio has less resolving power than the effect and no threshold built on it can gate anything."
+
+# The caliber, settled by [L3.32-F0] and measured by scripts/obligations.py.
+# Kept here because every cost comparison in this file depends on which row
+# you divide by, and that choice was doing silent work for weeks.
+[caliber]
+settled = "2026-08-06, L3.32-F0"
+unit = "obligation (top-level type signature), with where-local results counted separately"
+tool = "scripts/obligations.py"
+retiring_lines_per_obligation = 56.5
+surviving_lines_per_obligation = 22.4
+ratio_per_line = 5.3
+ratio_per_named_result = 4.2
+ratio_per_top_level_obligation = 2.1
+controlled_single_module = "L.Rud.Bridge 939 s -> 199 s, 4.7x, mathematics held fixed, caliber cancels"
+note = "The controlled per-module experiment is the instrument; the cross-tree ratio is not, because one engineering fix on one module exceeds the whole cross-tree gap at the fairest simple caliber."
 
 [[owed]]
 id = "ac-leg"
