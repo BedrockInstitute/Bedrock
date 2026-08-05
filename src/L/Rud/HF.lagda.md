@@ -29,9 +29,12 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet )
 module L.Rud.HF {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (A : V ℓ) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; ∃̇_; _∧̇_ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ} using ( IsOrd; Lset; 𝒟ₒ; 𝒟ₒ∋⊆ )
 open import L.Ordinal {ℓ} using ( #∈ω; numeral-ord; ω-ord )
+open import L.InitialSegment {ℓ} using ( _∈ran_ )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc; finSet; finSet-in )
 open import L.Rud.Step {ℓ} lem A using ( Sset; Sset-trans )
 open import L.Rud.Bridge {ℓ} lem A using ( Lset-zero; Sset-union-limit )
@@ -43,10 +46,10 @@ open import L.Choice.Finite {ℓ} lem using
   ; marks; marks-lookup; decideOf; decide-true; decide-sound; module Search )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( Tri; lt; eq; gt )
-open import V.Coding {ℓ} using ( #-inj′ )
+open import V.Coding {ℓ} using ( pr; #-inj′ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Nat using ( ℕ; zero; suc )
@@ -60,9 +63,9 @@ open import Cubical.Data.FinData.Properties
 open import Cubical.Data.Bool using ( Bool; true )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ2; isPropΠ3 )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈-asFiber )
+  using ( ∈-asFiber; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ω; module InfinitySet )
+  using ( ∅; ∅-empty; ω; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -416,3 +419,135 @@ and priced beside the delivered seam.
 <!--zh-->
 遗传有穷载体如今载有刻划在第一个极限处的成分：HF 的序数内容 (`ord∈HF→∈ω`，即硬半边，连同其三条链)、HF 上的认同 (`powRel-Lset-suc` 与 `powRel-Lset-suc-unique`)、以及在 `ω` 处兑付的加锐界 (`strong-discharge-ω`)。本章不建族等式本身：已交付的后继值子句是双向的，而在 HF 上、认同在手，它逼出无穷链，故所记五合取故事没有有穷见证；刻划需要经典的单向后继子句连同精确定义域界，报告在已交付接缝旁记下并定价。
 <!--/-->
+
+<!--en-->
+## The one-way carve at the first limit
+<!--zh-->
+## 第一个极限处的单侧刻划
+<!--/-->
+
+<!--en-->
+The classical story at the carrier is the one-way successor-value clause with
+the exact domain bound, delivered in the level-sigma chapter and instantiated
+here. Two consequences close the carve's non-overshoot side. First the value
+chain: a witness of the one-way story is honest, a present pair's value at an
+index in `ω` is the L-stage at that index, by induction on the numeral, with
+the exact domain supplying the chain's totality, transitivity the descent, and
+the over-HF identification the step. Second the family formula: `ψ` exists a
+carrier member satisfying the one-way story and ranging over `x`, and its
+satisfaction decodes to the meta story through the delivered reassembly.
+Then every member of the carve `defSet (Sset ω) ψ` is an L-stage below `ω`:
+the range membership puts its first component in the exact domain, the
+ordinal content of HF moves the bound into `ω`, transitivity moves the
+component with it, and the value chain identifies the value.
+<!--zh-->
+载体处的经典故事是带精确定义域界的单向后继值子句，由层 sigma 章交付、此处实例化。两个推论关闭刻划的「不越界」侧。先是值链：单向故事的见证是诚实的，`ω` 中索引处已现之对的值就是该索引处的 L 阶段，沿数码归纳，精确界供给链的完全性、传递性供给下行、HF 上的认同供给步。再是族公式：`ψ` 存在一个满足单向故事且以 `x` 为像的载体成员，其满足经已交付的重新装配解码到元层故事。于是刻划 `defSet (Sset ω) ψ` 的每个成员都是 `ω` 之下的 L 阶段：像的隶属把首分量放进精确界，HF 的序数内容把界移进 `ω`，传递性把分量一并带入，值链再把值认同。
+<!--/-->
+
+```agda
+-- The internal-powerset relation is a proposition at any pair.
+powRelProp : (c b : S) → isProp (LA.powRel c b)
+powRelProp c b = isProp× (snd (b ∈ˢ Sset ω))
+  (isProp× (isPropΠ2 (λ z _ → isPropΠ2 (λ w _ → snd (w ∈ˢ c))))
+           (isPropΠ3 (λ z _ _ → snd (z ∈ˢ b))))
+
+-- The value chain: a present pair's value at an index in ω is the L-stage.
+chainValue : (f : S) → LA.aSt1 f → (a x : S) → ⟨ a ∈ˢ ω ⟩
+           → ⟨ pr a x ∈ˢ f ⟩ → x ≡ Lset a
+chainValue f st a x a∈ω ax∈f = PT.rec (setIsSet x (Lset a)) go a∈ω
+  where
+  h4 : LA.exactDom f
+  h4 = st .snd .snd .snd .fst
+  chainNum : (n : ℕ) (x : S) → ⟨ pr (# n) x ∈ˢ f ⟩ → x ≡ Lset (# n)
+  chainNum zero x px = x≡∅ ∙ sym Lset-zero
+    where
+    x≡∅ : x ≡ ∅
+    x≡∅ = PT.rec (setIsSet x ∅) zStep (st .snd .snd .fst)
+      where
+      zStep : Σ[ a ∈ S ]
+               ( ((z : S) → ⟨ z ∈ˢ a ⟩ → Empty.⊥) × ⟨ pr a a ∈ˢ f ⟩ ) → x ≡ ∅
+      zStep (a , (emp , aa∈f)) = st .snd .fst ∅ x ∅ px pr∅∅
+        where
+        a≡∅ : a ≡ ∅
+        a≡∅ = extensionalV (λ z → ⇔toPath
+          (λ z∈a → Empty.rec (emp z z∈a))
+          (λ z∈∅ → Empty.rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst z∈∅))))
+        pr∅∅ : ⟨ pr ∅ ∅ ∈ˢ f ⟩
+        pr∅∅ = subst (λ w → ⟨ pr w w ∈ˢ f ⟩) a≡∅ aa∈f
+  chainNum (suc n) x px = PT.rec (setIsSet x (Lset (# (suc n)))) δStep h4
+    where
+    δStep : Σ[ δ ∈ S ] ( ⟨ δ ∈ˢ Sset ω ⟩ × IsOrd δ
+             × ((a : S) → ⟨ a ∈ˢ δ ⟩ → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁)
+             × ((a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁ → ⟨ a ∈ˢ δ ⟩) )
+          → x ≡ Lset (# (suc n))
+    δStep (δ , (δ∈u , ordδ , in-dir , out-dir)) =
+      powRel-Lset-suc-unique (# n) (#∈ω n) x pb
+      where
+      suc∈δ : ⟨ sucV (# n) ∈ˢ δ ⟩
+      suc∈δ = out-dir (sucV (# n)) ∣ x , px ∣₁
+      n∈δ : ⟨ nk n ∈ˢ δ ⟩
+      n∈δ = ordδ .fst {x = sucV (# n)} {y = # n} (self∈sucV (# n)) suc∈δ
+      pb : LA.powRel (Lset (# n)) x
+      pb = PT.rec (powRelProp (Lset (# n)) x) cStep (in-dir (# n) n∈δ)
+        where
+        cStep : Σ[ c ∈ S ] ⟨ pr (# n) c ∈ˢ f ⟩ → LA.powRel (Lset (# n)) x
+        cStep (c , prnc) = st .snd .snd .snd .snd (# n) (Lset (# n)) x prn px
+          where
+          prn : ⟨ pr (# n) (Lset (# n)) ∈ˢ f ⟩
+          prn = subst (λ w → ⟨ pr (# n) w ∈ˢ f ⟩) (chainNum n c prnc) prnc
+  go : Σ[ m ∈ Lift ℕ ] (# (lower m) ≡ a) → x ≡ Lset a
+  go (m , q) = subst (λ w → x ≡ Lset w) q (chainNum (lower m) x ax∈f')
+    where
+    ax∈f' : ⟨ pr (# (lower m)) x ∈ˢ f ⟩
+    ax∈f' = subst (λ w → ⟨ pr w x ∈ˢ f ⟩) (sym q) ax∈f
+
+-- The family formula: a carrier member satisfies the one-way story and
+-- ranges over x.
+ψ : Formula ⟪ Sset ω ⟫ 1
+ψ = ∃̇ (LA.aStForm1 ∧̇ LA.Rg)
+
+-- Satisfaction of ψ decodes to the meta story, with the range read.
+ψ-out : (x : ⟪ Sset ω ⟫) → ⟨ (LA.U.ι x ∷ []) LA.U.⊨ᵐ ψ ⟩
+      → ∥ Σ[ f ∈ LA.U.SM ] (LA.aSt1 (fst f) × (⟪ Sset ω ⟫↪ x ∈ran fst f)) ∥₁
+ψ-out x = PT.map go
+  where
+  go : Σ[ f ∈ LA.U.SM ] ⟨ (f ∷ LA.U.ι x ∷ []) LA.U.⊨ᵐ (LA.aStForm1 ∧̇ LA.Rg) ⟩
+     → Σ[ f ∈ LA.U.SM ] (LA.aSt1 (fst f) × (⟪ Sset ω ⟫↪ x ∈ran fst f))
+  go (f , (st , rg)) = f , (LA.aSt1-ok f x .fst st , LA.r-ok f x .fst rg)
+
+-- The carve does not overshoot: every carved member is an L-stage below ω.
+carve-⊇ : (y : S) → ⟨ y ∈ˢ LA.U.defSet ψ ⟩
+        → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × (y ≡ Lset δ)) ∥₁
+carve-⊇ y y∈ = fStep
+  (∈-asFiber {a = y} {b = Sset ω} (LA.U.defSet⊆A ψ y y∈))
+  where
+  fStep : Σ[ m ∈ ⟪ Sset ω ⟫ ] (⟪ Sset ω ⟫↪ m ≡ y)
+        → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × (y ≡ Lset δ)) ∥₁
+  fStep (m , q) = PT.rec squash₁ wStep (ψ-out m sat)
+    where
+    sat : ⟨ (LA.U.ι m ∷ []) LA.U.⊨ᵐ ψ ⟩
+    sat = subst ⟨_⟩ (LA.U.defSet-mem ψ m)
+      (subst (λ w → ⟨ w ∈ˢ LA.U.defSet ψ ⟩) (sym q) y∈)
+    wStep : Σ[ f ∈ LA.U.SM ] (LA.aSt1 (fst f) × (⟪ Sset ω ⟫↪ m ∈ran fst f))
+          → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × (y ≡ Lset δ)) ∥₁
+    wStep (f , (st , r)) = PT.rec squash₁ aStep r
+      where
+      aStep : Σ[ a ∈ S ] ⟨ pr a (⟪ Sset ω ⟫↪ m) ∈ˢ fst f ⟩
+            → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × (y ≡ Lset δ)) ∥₁
+      aStep (a , pr∈) = PT.rec squash₁ dStep (st .snd .snd .snd .fst)
+        where
+        dStep : Σ[ δ ∈ S ] ( ⟨ δ ∈ˢ Sset ω ⟩ × IsOrd δ
+                 × ((a : S) → ⟨ a ∈ˢ δ ⟩ → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ ∥₁)
+                 × ((a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ fst f ⟩ ∥₁ → ⟨ a ∈ˢ δ ⟩) )
+              → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × (y ≡ Lset δ)) ∥₁
+        dStep (δ , (δ∈u , ordδ , _ , out-d)) = ∣ a , (a∈ω , y≡Lseta) ∣₁
+          where
+          a∈δ : ⟨ a ∈ˢ δ ⟩
+          a∈δ = out-d a ∣ ⟪ Sset ω ⟫↪ m , pr∈ ∣₁
+          δ∈ω : ⟨ δ ∈ˢ ω ⟩
+          δ∈ω = ord∈HF→∈ω δ ordδ δ∈u
+          a∈ω : ⟨ a ∈ˢ ω ⟩
+          a∈ω = ω-ord .fst {x = δ} {y = a} a∈δ δ∈ω
+          y≡Lseta : y ≡ Lset a
+          y≡Lseta = sym q ∙ chainValue (fst f) st a (⟪ Sset ω ⟫↪ m) a∈ω pr∈
+```
