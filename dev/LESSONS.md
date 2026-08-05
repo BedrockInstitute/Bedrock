@@ -1962,7 +1962,7 @@ a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
 sourced, it is not entered; it is surfaced to the owner instead.
 
-### P-NN (proposed 2026-08-06, awaiting the owner's ID): a read lemma is stated where its consumers use it, not where its proof ends
+### P-k. A read lemma is stated where its consumers use it, not where its proof ends
 
 **The law.** When a lemma exists so that consumers can rewrite with it, its
 stated right-hand side must be **the form the consumers actually need**, not the
@@ -1972,7 +1972,7 @@ consumer instead of once in total. **Absorb the last layer into the lemma and
 seal it**, so the normalization happens exactly once, behind an `opaque`.
 
 **The measurement.** `[L3.32-T86]` profiled `L.Rud.Bridge` at **939 seconds**
-and found **95 percent of it in one family**. `γ-compute`'s stated type ended at
+and found **95 percent of it concentrated in one family**. (That is the share of time IN the family. The share the fix actually REMOVED was 79 percent. Confusing the two cost this project a wrong freeze threshold on 2026-08-06, so the entry states both.) `γ-compute`'s stated type ended at
 the tower body rather than at `+ω (U α)`, the form its consumers use, so each of
 about ten `subst` consumers re-normalized the union tower inside `towerStep`,
 paying the same conversion roughly eight times. The fix was **six lines**: an
@@ -1995,6 +1995,20 @@ difference. `L.Ordinal.SquareLaw` reached **0.94 s/line and 44 percent of the
 entire tree's check time** without tripping anything, and it took a profiler
 months later to find out. `scripts/check-timing.py` exists because of this
 paragraph; it is the only gate here that can fail a module for being expensive.
+
+**What the cheap tree actually does, read out of it by `[L3.32-T93]` before it
+is archived.** Its two largest files, `L.Godel.Closure` (3,490 lines, 102.1 s)
+and `L.Godel.Levels` (2,775 lines, 60.3 s), contain **zero `opaque`, zero
+`postulate`, zero `TERMINATING`**, and still check at a fraction of the hot
+modules' rate. So sealing is not the cause. What they do instead: everything
+lives in a module-parameterized block at an abstract carrier
+(`module _ (A : V ℓ) where`, `src/L/Godel/Closure.lagda.md:135`,
+`src/L/Godel/Levels.lagda.md:133`), statements are at variable indices over
+that carrier, and every `subst` runs along a locally proved equality at that
+same abstract carrier, so **no conversion ever normalizes a concrete
+presentation**. In one sentence: **statements at abstract carriers make sealing
+unnecessary, and sealing is what the trunk reaches for where the statement
+discipline was already broken.**
 
 **The uncomfortable corollary, recorded because it is the real lesson.** The
 subtree that D18 retires costs **0.013 s/line over 26,483 lines**; the surviving

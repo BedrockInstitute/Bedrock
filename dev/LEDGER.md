@@ -256,10 +256,35 @@ tree is 1,956 s, and **`SquareLaw` alone is 44 percent of it**. Writing new
 chapters onto that base makes every future contributor pay the same tax, and the
 tax is known to be removable at a rate of a hundred seconds per line.
 
-The exit condition is in `dev/ledger.toml`'s `[[freeze]]` block and is derived
-rather than chosen. The per-line cap of 0.25 is worth reading twice: **the
-sealed `Bridge` measures 0.24**, so the cap does not ask for an ideal, it asks
-every hot master to reach what one measured fix already reached.
+### The caliber, and why the first exit condition was withdrawn
+
+**Which row you divide by decides the answer**, and for weeks that choice was
+made silently. `[L3.32-F0]` settled it: the unit is the **obligation**, counted
+mechanically by `scripts/obligations.py`, not the line.
+
+It matters more than it sounds. At three calibers the same two trees compare as
+**5.3x per line, 4.2x per named result, 2.1x per top-level obligation**. The
+retiring subtree writes **56.5 lines per exported obligation against the
+trunk's 22.4**, so it is not cheap because it is efficient; it is cheap because
+its lines are long mechanical bodies discharging few exported results, and a
+per-line caliber rewards precisely that.
+
+And the consequence is that **the cross-tree comparison is retired as an
+instrument.** `[T87]`'s controlled fix on `Bridge` was **4.7x with the
+mathematics held fixed**, so one engineering fix on one module exceeds the
+entire cross-tree gap at the fairest simple caliber. A ratio with less
+resolving power than the effect it is measuring cannot settle anything. What
+replaces it is the **controlled per-module before-and-after**, where the
+caliber cancels because the obligations on both sides are identical.
+
+So the freeze's exit condition carries **no projected number**. The first
+version set 1,100 s and a 0.25 s/line cap; both are withdrawn. The 1,100 rested
+on `SquareLaw` being 95 percent removable, which took the share of time IN
+`Bridge`'s hot family for the share its fix REMOVED (79 percent). At the honest
+rate the projection is 1,088 to 1,121, **bracketing its own threshold**, and
+`[T93]` found it unreproducible from these rows independently. The condition is
+measurement-complete instead, and stricter for it: nothing earns a pass by
+sitting under a line.
 
 ### The part of this that cannot be re-run later
 

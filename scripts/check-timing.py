@@ -13,13 +13,15 @@ fail a module for being expensive.
 
 WHAT IT DOES. For each master you name (or each one changed against a base
 ref), it typechecks the module warm, one process at a time, and judges the
-result two ways:
+result two ways, both of them CALIBER-FREE (see the note on
+SHARE_REQUIRING_PROFILE for why that matters):
 
-  1. Against `dev/ledger.toml`'s `[[hot]]` baseline, if the module has one.
-     A module that got slower than its recorded figure is a regression.
-  2. Against D30's cap of 0.25 s/line, which every master must meet. The
-     number is not an ideal: the sealed `L.Rud.Bridge` measures 0.24, so the
-     cap asks a master to reach what one measured fix already reached.
+  1. **Regression.** Against `dev/ledger.toml`'s `[[hot]]` baseline, if the
+     module has one. This compares a module against itself, so no unit of
+     mathematical content has to be agreed on for it to mean something.
+  2. **Share of the tree.** A module at or above 2 percent of total check
+     time must have a per-definition profile on record, which is D30's exit
+     condition (1). Expensive is not a defect; expensive and UNMEASURED is.
 
 WHAT IT DOES NOT DO. It is NOT in `make check` and must not be added to it.
 A warm single-module check costs seconds to minutes; the commit gate has to
@@ -54,14 +56,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "dev" / "ledger.toml"
 
-# D30's cap. Not a round number: the sealed L.Rud.Bridge measures 0.24 s/line,
-# so this asks every master to reach what one measured fix already reached.
-CAP_SECONDS_PER_LINE = 0.25
-
-# Below this a module is too small for the ratio to mean anything: a 12-line
-# module that takes 4 seconds is 0.33 s/line and is not a problem. The cap is
-# about modules whose cost scales with their content.
-MIN_LINES_FOR_CAP = 120
+# WHICH CALIBER THIS FLAGS ON, and why it is not seconds per line.
+#
+# A first version of this file failed a module at 0.25 s/line. [L3.32-F0]
+# retired that: lines are not units of mathematical content, and the retiring
+# subtree writes 56.5 lines per exported obligation against the trunk's 22.4,
+# so a per-line rate mostly measures how verbosely a proof is written. Worse,
+# a fixed rate lets a module off the hook for being small while saying nothing
+# about whether its cost is REMOVABLE, which is the only thing that matters.
+#
+# So this flags on the two things that are caliber-free:
+#
+#   - a REGRESSION against the module's own recorded figure, where the
+#     comparison is the module against itself and no caliber is involved;
+#   - a SHARE of the whole tree's cost above SHARE_REQUIRING_PROFILE, which is
+#     D30 exit condition (1): a module this expensive must have a
+#     per-definition profile on record, whatever its size or rate.
+#
+# The per-line and per-obligation rates are still PRINTED, because they orient
+# a reader, but nothing fails on them.
+SHARE_REQUIRING_PROFILE = 0.02
 
 # A module may drift a little between runs on a loaded machine. Only a rise
 # past this multiple of the recorded baseline is called a regression.
@@ -87,6 +101,14 @@ def code_lines(path: Path) -> int:
 def module_name(path: Path) -> str:
     rel = path.relative_to(ROOT / "src")
     return str(rel).removesuffix(".lagda.md").removesuffix(".agda").replace("/", ".")
+
+
+def tree_seconds() -> float | None:
+    """The whole tree's measured check cost, for the share test."""
+    if not LEDGER.exists():
+        return None
+    data = tomllib.loads(LEDGER.read_text(encoding="utf-8"))
+    return data.get("timing", {}).get("full_cold_seconds")
 
 
 def baselines() -> dict[str, dict]:
@@ -152,6 +174,7 @@ def main() -> int:
         return 0
 
     base = baselines()
+    tree_total = tree_seconds()
     findings: list[str] = []
 
     print(f"check-timing: {len(targets)} module(s), warm, one process at a time")
@@ -166,6 +189,7 @@ def main() -> int:
             continue
 
         rate = seconds / lines
+        share = f"{seconds / tree_total:5.1%}" if tree_total else "    -"
         recorded = base.get(name)
         note = ""
         if recorded:
@@ -176,12 +200,17 @@ def main() -> int:
                     f"{name}: {seconds:.0f}s against a recorded {was}s, "
                     f"a {seconds / was:.1f}x regression"
                 )
-        print(f"  {name:34s} {seconds:7.1f}s  {lines:5d}L  {rate:5.2f} s/line{note}")
+        print(f"  {name:34s} {seconds:7.1f}s  {lines:5d}L  "
+              f"{rate:5.2f} s/line  {share} of tree{note}")
 
-        if lines >= MIN_LINES_FOR_CAP and rate > CAP_SECONDS_PER_LINE:
+        if tree_total and seconds / tree_total >= SHARE_REQUIRING_PROFILE:
             findings.append(
-                f"{name}: {rate:.2f} s/line, over D30's cap of {CAP_SECONDS_PER_LINE}. "
-                f"Profile it with `agda --profile=definitions` before adding to it."
+                f"{name}: {seconds / tree_total:.0%} of the whole tree's check "
+                f"time. D30 exit condition (1) requires a per-definition "
+                f"profile on record for any module at or above "
+                f"{SHARE_REQUIRING_PROFILE:.0%}: run "
+                f"`agda --profile=definitions` and record the removable "
+                f"fraction, or record why none is removable."
             )
 
     if not findings:
