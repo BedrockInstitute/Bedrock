@@ -74,38 +74,6 @@ An absence recorded here is a decision; an absence recorded nowhere is an oversi
 | Trilingual prose, +0.3-0.8k prose-equivalent | outside the code-line convention entirely; prose is not counted by this ledger's basis |
 | Isomorphism-invariance of satisfaction, 0.08-0.14k at x3 | priced by T51 and NOT bought: it would buy the wrong leg, since the transfers are inner-to-ambient at one carrier rather than between isomorphic carriers |
 
-### What is still owed to each trophy
-
-In work, not in lines. A row above can be large and unblocking, or small and on
-the critical path, and a band does not show the difference. Status is one of
-**delivered**, **ready** (dispatchable now), **in-flight**, **blocked** (with what
-it waits on), **frozen** (not blocked on a proof but on D30's ruling: it waits on the check-cost exit condition, not on mathematics), or **at-risk** (delivered, but on machinery scheduled to retire).
-
-**L satisfies AC**
-
-| item | status | blocked by | what it is |
-|---|---|---|---|
-| The choice leg itself: L satisfies AC, proved | **at-risk** | - | Delivered and standing on the Def tower, but the current leg runs through the satisfaction-internalization cone, which D18 retires. It is proved; it is not yet proved on machinery that survives. |
-| Re-home the choice leg onto the rud-side well-order | **blocked** | bridge-landing | The replacement leg. It rides the bridge onto the delivered producer well-order, so it cannot land before the bridge does. This is the single item between AC-as-proved-today and AC-as-proved-on-surviving-machinery. |
-
-**L satisfies GCH**
-
-| item | status | blocked by | what it is |
-|---|---|---|---|
-| W3: the internal definable well-ordering, at a general level | **frozen** | - | The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met. |
-| Re-scope and rewrite StepInL so W3's op-graph content survives the retirement | **frozen** | - | The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met. |
-| W7's residue: the last mile to the GCH sentence | **frozen** | - | The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met. |
-| W1': the condensation crossing's transfers | **in-flight** | - | The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier. |
-| W5: the collapse and the condensation | **in-flight** | - | CORRECTED 2026-08-06 by T91: reading this as delivered was overstated in two ways. The crossing's LIMIT case is not built and sits explicitly outside W1'; and the level story the crossing operates on is built on atoms of which at least two read something other than their documentation, which T89 is repairing. The collapse's transitive-fixing clause (Devlin 5.2(ii)) is also undelivered. What is genuinely delivered is the collapse and the crossing's REDUCTION; the transfers are W1' and the rest is the gch-proof-steps row. |
-| W2: the level formula | **delivered** | - | The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier. |
-
-**Owed to both**
-
-| item | status | blocked by | what it is |
-|---|---|---|---|
-| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | FOUR crossings, after T72 removed SatSets (three dissolved at a stroke) and T82 re-homed the finite-tally content out of HF (two more). They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing. |
-| The bridge's landing: Q-lim and below-lim | **frozen** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. FROZEN 2026-08-06 by D30: below-lim's first gate was briefed as [T92] and STOPPED before it fired, because it is new mathematics and the freeze forbids it. Q-lim's half stands. This row resumes the moment the check-cost exit condition is met; nothing about it is refuted. |
-
 <!-- ledger:end -->
 
 ## Why this exists at all

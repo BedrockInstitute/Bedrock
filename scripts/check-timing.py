@@ -78,14 +78,16 @@ LEDGER = ROOT / "dev" / "ledger.toml"
 SHARE_REQUIRING_PROFILE = 0.02
 
 # The rewrite exit condition, RULED 2026-08-06 by the owner: the retiring
-# subtree's MEASURED rate, 0.063 s per obligation over 26,479 lines. It is not
+# subtree's MEASURED rate, 0.074 s per obligation over 26,479 lines. It was
+# ruled as 0.063 and corrected the same day: that figure came from a signature
+# count inflated 10.3 percent by comment lines read as signatures. It is not
 # an aspiration and not a round number; it is what one delivered tree in this
 # repository actually achieves, which is why it can be asked of another.
 #
 # This is checked per module and only for modules inside a ruled rewrite scope
 # ([L3.32-F5] and [L3.32-F6]). A module outside those scopes is reported
 # against it for orientation and never failed on it.
-BENCHMARK_SECONDS_PER_OBLIGATION = 0.063
+BENCHMARK_SECONDS_PER_OBLIGATION = 0.074
 REWRITE_SCOPES = ("L.Ordinal.SquareLaw", "L.Rud.")
 
 # A module may drift a little between runs on a loaded machine. Only a rise
@@ -127,8 +129,7 @@ def obligations(path: Path) -> int:
     )
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    counts = mod.scan(path)
-    return counts["obligations"] + counts["locals"]
+    return mod.scan(path)["signatures"]
 
 
 def tree_seconds() -> float | None:
