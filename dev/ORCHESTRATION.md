@@ -129,7 +129,12 @@ In this order, every time:
 4. **Wire** `src/Everything.lagda.md` (agents never touch it) and any catalog
    prose the change makes stale.
 5. **Gate**: `make check`, or the individual checks when a sibling holds the
-   Agda slot, saying which was run.
+   Agda slot, saying which was run. **A full cold typecheck is launched as a
+   harness-tracked background job and never in the foreground** (D28): it runs
+   about twelve minutes, it must not hold the turn, and its result is read from
+   the completion notification. Do not report a wiring as verified before that
+   notification lands; a turn may close with the check still running as long as
+   it says so and names what is not yet known.
 6. **Commit** with the goal code, recording what was measured and what was
    refuted. Never push.
 7. **Record** in PLAN (the ruling and the number) and, if a law was learned, in

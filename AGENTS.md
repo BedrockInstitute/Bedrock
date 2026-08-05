@@ -26,7 +26,9 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
   is in `Everything`'s import closure, since one that is not is never typechecked at all), and
   runs `reuse lint` for per-file licensing. It is expensive: run the individual checks while you
   work (`agda <file>`, `python3 scripts/lint-prose.py <files>`) and the full gate before the
-  commit.
+  commit. **Run the full gate in the background, never in the foreground**: a cold
+  `agda src/Everything.lagda.md` takes about twelve minutes and must not block the session
+  (`dev/PLAN.md` decision D28).
 - **`make venv`** creates the project virtual environment (`.venv`) from Python 3.11+ and
   installs the pinned tooling in [requirements-dev.txt](requirements-dev.txt). Run it once per
   clone before `make check`.
