@@ -233,6 +233,13 @@ import V.Model
   ranges over the member being read; with its two readings and its two-way
   adequacy against the `Def`{.Agda} face. The wing, the bridge and the
   condensation chapter each instantiate it rather than rebuild it.
+- `L.LevelKit`{.Agda}: the level story's shared clause content, written ONCE at a generic
+  transitive carrier. Pair membership, pairhood, single-valuedness, the zero clause,
+  ordinality, the exact domain bound and the range decodes live here, and the two chapters
+  that used to state them separately now instantiate. The two together shrank by 687 lines
+  while this kit added 366: content written structure-generic makes every re-instantiation
+  nearly free, which is the law this project has paid for three times before applying it here.
+
 - `L.LevelFormula`{.Agda}: the face's first consumer, at the real tower: the
   clause formulas and their decodes, the collapse of the definable step, and
   the two-way read-off, so the levels are internally described and not merely
@@ -362,6 +369,8 @@ import V.Model
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.PairAtoms`{.Agda}：载体之上诸公式的对原子，一次交付且对载体及其传递性通用：任意元数处的单点、无序对与有序对原子，刻画，以及六条解码，把每个原子的满足读回所查取值的元层相等。面孔的三个消费方逐字复用它。
 - `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初始段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
+- `L.LevelKit`{.Agda}：层故事的共享子句内容，在一个泛型传递载体处**一次写成**。对隶属、成对性、单值性、零子句、序数性、精确定义域界与值域解码都住在这里，而原先各自陈述它们的两章如今只作实例化。两章合计缩掉 687 行，而本套件加了 366 行：结构泛型写就的内容，使每一次重新实例化都近乎免费。这条法则本项目已经付过三次学费，才在此处照做。
+
 - `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
 - `L.Condensation`{.Agda}：传递集载体处的跨越：整套绝对性装置一行实例化、彼处的层句、后继情形及其两条伴生事实、保义的迁移，以及把凝聚化归为「关于一条公式、在两个载体处的一条绝对性义务」。义务本身、层公式的 Lévy 内容与极限情形仍待交付。
 - `L.Hull`{.Agda}：初等性与 Tarski-Vaught 判据，经一次跨完整语法的公式归纳而等价，其中全称情形是那笔经典支出，有界量词消费传递性；随后是一个集合的可定义外壳，即以其为参数的诸公式之最小见证所成之集，且在自己的参数处对该判据封闭。
@@ -399,6 +408,7 @@ import V.Coding
 import L.Definability
 import L.PairAtoms
 import L.InitialSegment
+import L.LevelKit
 import L.LevelFormula
 import L.Constructible
 import L.Ordinal
