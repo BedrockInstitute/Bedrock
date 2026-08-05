@@ -104,7 +104,7 @@ naive_high = 2700
 calibrated_low = 3000
 calibrated_high = 7900
 klass = "mostly x3, one x1.3 row (the B statement layer)"
-gate = "T50 (returned SPLIT: the flattening is green, the op-graph frame is a confirmed prerequisite)"
+gate = "T50 returned SPLIT (the flattening is green, the op-graph frame is a confirmed prerequisite); T56 then DELIVERED the frame at 285 lines, overrunning T48's 80-240 op-graph row, and named F11-F14 as not expressible at the delivered syntax, which stays x3"
 provenance = "_build/l3.32-t48-report.md face-route table; PLAN [L3.32] register T48 and T50 entries"
 
 [[remaining]]

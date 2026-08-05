@@ -29,15 +29,15 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (123 files) | 46,926 |
+| tracked masters (123 files) | 46,927 |
 | booked retirements, D18 (52 files) | 31,937 |
-| **standing** | **14,989** |
+| **standing** | **14,990** |
 
 ### Remaining work
 
 | row | naive | calibrated | class | gate |
 |---|---:|---:|---|---|
-| W3 face route: the general order formula over the fresh generic face | 1,000-2,700 | 3,000-7,900 | mostly x3, one x1.3 row (the B statement layer) | T50 (returned SPLIT: the flattening is green, the op-graph frame is a confirmed prerequisite) |
+| W3 face route: the general order formula over the fresh generic face | 1,000-2,700 | 3,000-7,900 | mostly x3, one x1.3 row (the B statement layer) | T50 returned SPLIT (the flattening is green, the op-graph frame is a confirmed prerequisite); T56 then DELIVERED the frame at 285 lines, overrunning T48's 80-240 op-graph row, and named F11-F14 as not expressible at the delivered syntax, which stays x3 |
 | W1': the condensation crossing's transfers | 1,000-2,550 | 3,000-7,650 | x3 each of its three sub-rows | T54 (queued): the Levy-certificate rate, stop-line 200 |
 | The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing | 800-1,390 | 1,700-3,200 | mixed x1.3 / x3 | T53 (running): the bound arm and the crux family at l = omega, stop-line 350 |
 | StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate | T10 (green) |
@@ -54,7 +54,7 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 20.04-25.55k | 22.79k |
+| naive | 20.04-25.55k | 22.80k |
 | calibrated | 27.00-42.02k | 34.51k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):

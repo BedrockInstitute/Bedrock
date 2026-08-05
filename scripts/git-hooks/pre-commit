@@ -66,5 +66,16 @@ if [ -n "$md" ]; then
 	fi
 fi
 
+# Whole-tree invariants the per-file checks cannot see. Cheap enough for the hook: it
+# reads the masters' fences, it does not typecheck. The closure check is the one that
+# matters here, because an unwired master is invisible to the single trusted gate.
+if ! $PY scripts/check-tree.py --check; then
+	echo ""
+	echo "Whole-tree check failed. The closure case is the important one: a master that is"
+	echo "not imported by src/Everything.lagda.md is never typechecked, and make check still"
+	echo "goes green (dev/PLAN.md section 7 rule 3)."
+	status=1
+fi
+
 [ "$status" -ne 0 ] && echo "(To bypass: git commit --no-verify)"
 exit $status

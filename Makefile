@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes reuse gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes reuse
+check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -65,6 +65,9 @@ ledger:
 
 probes:
 	$(PY) scripts/check-probes.py --check
+
+tree:
+	$(PY) scripts/check-tree.py --check
 
 reuse:
 	$(REUSE) lint

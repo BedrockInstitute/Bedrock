@@ -1244,6 +1244,17 @@ measurement. Wired chapter by chapter as the wave batches land.
   the sixteen operations, both directions of the comprehension shape, and
   the limit corollary, with the image principle and the level descriptions
   as named module hypotheses.
+
+- `L.Rud.OpGraph`{.Agda}: the operation graphs in VARIABLES rather than in
+  constants: the constants-to-variables transfer, the extensional graph
+  closure, and five instantiations. The description chapter says what an
+  operation's image is when its arguments are named by constants; this chapter
+  says it when they are bound variables, which is what an order formula
+  quantifying over arguments needs. The four tuple operations are recorded as
+  NOT expressible here: their totalizations route through projections whose
+  behaviour on non-pair arguments the object language cannot characterize, so
+  the delivered shape is one-way there and the gap is named rather than
+  papered over.
 - `L.OrderFamily`{.Agda}: the order family and its table, over a per-level
   order-as-an-element interface: the table as a set indexed by the level, the
   successor's agreement with the order below on old members, and the order at a
@@ -1308,6 +1319,8 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Describe`{.Agda}：前九个运算的描述半部：定义公式带 Δ₀ 见证，配对家族的完整 adequacy 与可定义子集等式，封面残余与嵌套存在残余已记录。
 - `L.Rud.Order`{.Agda}：典范良序：沿最小生产者键回拉循阶生产者树之序，SZ 后继子句机器验证，相容一行，极限层的外部选择定理。
 - `L.Rud.Switch`{.Agda}：切换定理：抽象基在十六运算处清偿，概括形态双向到手，极限推论在位；像原理与层级描述作为具名模块假设。
+
+- `L.Rud.OpGraph`{.Agda}：以变量而非常量写出的运算图：常量转变量的转移、外延的图封闭，以及五个实例化。描述章说的是「当运算的论元由常量点名时，它的像是什么」；本章说的是「当论元是被约束的变量时，它的像是什么」，而那正是一条对论元作量化的序公式所需要的。四个元组运算在此记为不可表达：它们的全体化取道投影，而投影在非对论元处的行为，对象语言刻画不出来，故此处交付的形状是单向的，缺口照实具名，不作粉饰。
 - `L.OrderFamily`{.Agda}：序族及其表，建于「逐层的序作为元素」这一接口之上：表是以层为索引的集合，后继处的序与下方之序在旧成员上一致，而极限处的序是表的并，即经典极限子句的元素级读法。
 - `L.OrderFormula`{.Agda}：序作为元素，落在后继子句即全部序的那唯一一层：携带有界性见证的键分解、自身在像下子句及其可靠性读法，以及把序元素放进其上某个极限层的刻画。一般层处的一致公式在已交付的面孔上**不可表达**，本章连同它所需的确切类型一并记下。
 - `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
@@ -1335,6 +1348,7 @@ import L.Rud.Order
 import L.OrderFamily
 import L.OrderFormula
 import L.Rud.Switch
+import L.Rud.OpGraph
 import L.Rud.ClassJ
 import L.Rud.OrdBlocks
 import L.Rud.SatSets
