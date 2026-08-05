@@ -29,9 +29,9 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (125 files) | 48,624 |
+| tracked masters (125 files) | 48,339 |
 | booked retirements, D18 (51 files) | 30,648 |
-| **standing** | **17,976** |
+| **standing** | **17,691** |
 
 ### Remaining work
 
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 23.43-28.96k | 26.19k |
-| calibrated | 29.85-44.08k | 36.96k |
+| naive | 23.14-28.67k | 25.91k |
+| calibrated | 29.56-43.79k | 36.68k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +3.96k from the line, and the calibrated
-band sits +4.85k to +19.08k from it.
+the naive band's pessimistic corner sits +3.67k from the line, and the calibrated
+band sits +4.56k to +18.79k from it.
 
 ### Deliberately not in the sum
 
@@ -101,8 +101,8 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 
 | item | status | blocked by | what it is |
 |---|---|---|---|
-| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | Nine crossings, all verified real. They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing. |
-| The bridge's landing: Q-lim and below-lim | **ready** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. The route survives with the classical one-way clause plus the exact domain bound, +180-330 lines. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
+| The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | SIX crossings, after T72 removed SatSets from the set and dissolved three at a stroke. They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing. |
+| The bridge's landing: Q-lim and below-lim | **in-flight** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
 
 <!-- ledger:end -->
 
