@@ -284,37 +284,344 @@ detail = "A first version set a projected 1,100 s and a 0.25 s/line cap. Both ar
 # RULED 2026-08-06 by the owner: do NOT pick one caliber. Report several side
 # by side and read them together. A conclusion that holds at one caliber and
 # collapses at another was never a conclusion, and the only way to know which
-# kind you have is to see them next to each other. This block is the standing
-# record of all of them; scripts/obligations.py computes the static two.
+# kind you have is to see them next to each other.
 settled = "2026-08-06, L3.32-F0, multi-caliber by owner's ruling"
 tool = "scripts/obligations.py"
+measured_from = "the working tree at commit 0d8a1ea; it drifts as agents write, so a figure here is a snapshot and says so"
 
 # 1. LINES. The project's standing unit. Exact, cheap, biased by verbosity.
 retiring_lines = 26479
-surviving_lines = 22790
-retiring_seconds_per_line = 0.013
-surviving_seconds_per_line = 0.070
+surviving_lines = 22797
+retiring_seconds_per_line = 0.0134
+surviving_seconds_per_line = 0.0702
 
 # 2. SIGNATURES. One named thing that must be given a value, at any depth.
 # CORRECTED 2026-08-06: a first count excluded `--` with a trailing word
 # boundary, which never matches, so every English comment containing a colon
 # was read as a signature and counted once per word. That inflated the
 # retiring tree 10.3 percent and the trunk 11.7. `let z : A` also scored 2.
-# Both are fixed and covered by regression tests in the tool.
+# Both fixed, both covered by regression tests in the tool.
 retiring_signatures = 4837
-surviving_signatures = 5145
-retiring_seconds_per_signature = 0.074
-surviving_seconds_per_signature = 0.311
+surviving_signatures = 5147
+retiring_seconds_per_signature = 0.0736
+surviving_seconds_per_signature = 0.3110
 
 # 3. DEFINITIONS, from `agda --profile=definitions`. UNMEASURED. This is the
 # caliber to prefer when dividing SECONDS, because the seconds come from that
 # same profile, so numerator and denominator share one notion of what a
 # definition is and the static parser drops out of the arithmetic entirely.
-# Queued behind the Agda ceiling; absent is recorded as absent, never guessed.
-definitions_status = "UNMEASURED, queued: needs `agda --profile=definitions` over the tree"
+definitions_status = "UNMEASURED, queued: needs `agda --profile=definitions` over the tree, then obligations.py --profile"
 
-ratio_per_line = 5.3
+ratio_per_line = 5.2
 ratio_per_signature = 4.2
-note = "The ratio is stable across both measured calibers, which is the strongest thing that can be said about it. The ABSOLUTE figures are not stable: the comment bug moved the benchmark from 0.063 to 0.074 without moving the ratio at all, because it inflated both trees alike."
-limits = "No static count weighs difficulty: one absoluteness theorem and one refl lemma both score 1. It also conflates construction with proof, which matters here because the rud route builds more and proves less than the rest of the tree, and it cannot see a definition written without a signature."
+note = "The RATIO is stable across both measured calibers, but [L3.32-T95] showed the REASON given for that stability was wrong. The claim was that the parser defects inflated both trees alike; they did not. Comments hit the trunk 1.14x harder, `let` hit the retiring tree about 16x harder, and the two asymmetries happened to cancel to within 0.6 percent. The stability is a coincidence of cancellation, not a theorem, and every new defect class has to be measured for direction rather than assumed neutral. Three measured classes now point in three directions."
+limits = "No static count weighs difficulty: one absoluteness theorem and one refl lemma both score 1. It conflates construction with proof, which matters because the rud route builds more and proves less than the rest of the tree. It cannot see a definition written without a signature, and whether the two trees differ in that habit is UNMEASURED."
+consistency = "retiring: 26479 lines and 4837 signatures both divide 356 s, giving 0.0134 s/line and 0.0736 s/signature. Both derive from the same 356; they are two views of one measurement, not two measurements."
 
+
+# 4. THE MEASURED BIAS, found by [L3.32-T95]'s adversarial pass. The counter
+# cannot see a definition written without a signature, and the two trees do
+# NOT share that habit: 421 such lines in the retiring subtree against 216 in
+# the trunk, 8.7 against 4.2 percent of counted signatures, an asymmetry of
+# 2.1x. Counting them would move the benchmark 0.074 to 0.068 and the ratio
+# 4.20 to 4.38. Whether a signature-less local binding IS an obligation is a
+# caliber CHOICE; that the choice is asymmetric between the trees is a fact,
+# and it is recorded here rather than resolved, because resolving it silently
+# is how this measurement went wrong three times already.
+hidden_definitions_retiring = 421
+hidden_definitions_surviving = 216
+ratio_if_hidden_counted = 4.38
+benchmark_if_hidden_counted = 0.068
+# Two further asymmetric classes [T95] measured, both currently COUNTED:
+# data constructors (20 retiring, 75 surviving) and record fields (7 against
+# 38). Excluding them would move the ratio to about 4.27.
+
+[[lever]]
+id = "rewrite-worst"
+status = "RULED 2026-08-06, sequenced behind [T88]"
+target = "L.Ordinal.SquareLaw"
+target_lines = 907
+target_obligations = 273
+seconds_now = 856
+rate_now = 3.14
+rate_exit = 0.074
+seconds_naive = 17
+seconds_calibrated = 52
+prize_seconds = 800
+precedent = "Bridge was already sealed, 939 s to 199 s. Per obligation that is 2.88 to 0.61 against a 0.063 benchmark: the seal captured 80 percent and PLATEAUED at 10x. The residual is not reachable by more sealing, it needs the statement discipline. Measured, not predicted, and the best forecast of what T88's seal will do here."
+risk = "T47 recorded five heap exhaustions building this chapter and T31 one more. GHCRTS=-M8g, one process, a heap event is a measurement not a reason to raise the cap."
+decided_by = "[T88]'s return: if the seal reaches the benchmark this closes unspent, if it plateaus the rewrite is dispatched and is also F6's method gate."
+
+# [L3.32-F6], ruled 2026-08-06: the L.Rud rewrite, batched, with the retiring
+# subtree's measured rate as the exit condition. The exit condition selects the
+# batches by itself: 16 of 22 modules are already at or below it.
+[[lever]]
+id = "rud-rewrite"
+status = "RULED 2026-08-06; the exit condition and funding rule stand, the BATCH ORDER is superseded by rud-architecture below"
+scope = "L.Rud, 22 modules, 12147 lines, 3230 obligations, 458 s"
+rate_now = 0.159
+rate_exit = 0.074
+seconds_at_exit = 212
+prize_seconds = 246
+batch_1 = "Bridge: 185 s, 70 percent of the whole prize, 833 lines. ALSO THE METHOD GATE, because it is already sealed and so isolates what a rewrite buys beyond sealing."
+batch_2 = "StepInL: 54 s, 1989 lines. Nearly free: the ledger already owes a re-scope of this module for W3 and the two merge."
+batch_3 = "Images, CodeSet, Step: about 74 s, 1289 lines."
+batch_4 = "NONE. Twelve of 22 modules are already at or below 0.063. Of the ten above it, five (DefInJ, BaseBlock, SatTable, HF, Finite) are worth 11 seconds COMBINED over 1792 lines and are left alone: a rewrite there costs more than it buys in both dimensions. Recorded as above the line, not funded."
+line_dimension = "L.Rud writes 3.8 lines per obligation against the benchmark's 4.9, so it is already DENSER than the tree it is measured against. This is a seconds programme, not a lines programme, and each batch is gated on not inflating lines."
+funding_rule = "B1 is dispatched on its own merit and gates B2 and B3. No batch is funded at the 3x class once B1 has measured the real rate."
+
+
+# [L3.32-F6.0], ruled 2026-08-06 by the owner: do not rewrite item by item.
+# Ask what the items ARE first, and start from the top-level module design.
+# This row GATES rud-rewrite's B1.
+[[lever]]
+id = "rud-architecture"
+status = "IN FLIGHT as [T94]"
+question = "what should the rud route contain at all, designed backward from its deliverables"
+obligations_now = 2884
+lines_now = 12147
+modules_now = 22
+external_names_consumed = 38
+external_consumer_modules = 5
+ratio = "about 76 obligations standing behind each exported name"
+unconsumed_anywhere = "BaseBlock, CodePred, HF, OpGraph, SatTable: imported by nobody, inside the route or outside it"
+caveat = "UNCONSUMED IS NOT UNNEEDED. The route is mid-campaign: Bridge, HF and Finite have no external consumer YET because their consumer is the bridge landing that D30 froze. The specification is the 38 names PLUS what the frozen and planned consumers will need."
+precedent = "[T80]'s L.LevelKit did this move once: the level story's shared clauses written once at a generic carrier cut LevelFormula 613 to 258 and LevelSigma 788 to 456, net -321 lines. [T79] separately measured 700 to 850 standing lines written twice."
+discipline = "The decomposition must be one that can be WRITTEN at abstract carriers with variable indices, per [T93]'s measurement of the cheap tree. Sealing is not a substitute: Bridge was sealed and plateaued at 0.61 s/obligation, 10x the 0.063 benchmark."
+
+[[owed]]
+id = "ac-leg"
+trophy = "AC"
+title = "The choice leg itself: L satisfies AC, proved"
+status = "at-risk"
+detail = "Delivered and standing on the Def tower, but the current leg runs through the satisfaction-internalization cone, which D18 retires. It is proved; it is not yet proved on machinery that survives."
+blocked_by = ""
+evidence = "dev/PLAN.md section 0, 'what is delivered and standing'"
+
+[[owed]]
+id = "ac-rehome"
+trophy = "AC"
+title = "Re-home the choice leg onto the rud-side well-order"
+status = "blocked"
+detail = "The replacement leg. It rides the bridge onto the delivered producer well-order, so it cannot land before the bridge does. This is the single item between AC-as-proved-today and AC-as-proved-on-surviving-machinery."
+blocked_by = "bridge-landing"
+evidence = "_build/l3.31-lt-report.md H2 and row 10; the choice-rehome row above"
+
+[[owed]]
+id = "bridge-landing"
+trophy = "BOTH"
+title = "The bridge's landing: Q-lim and below-lim"
+status = "frozen"
+detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. FROZEN 2026-08-06 by D30: below-lim's first gate was briefed as [T92] and STOPPED before it fired, because it is new mathematics and the freeze forbids it. Q-lim's half stands. This row resumes the moment the check-cost exit condition is met; nothing about it is refuted."
+blocked_by = ""
+evidence = "_build/l3.32-t45-report.md; _build/l3.32-t52-report.md; _build/l3.32-t53-report.md; _build/l3.32-t61-report.md section 7"
+
+[[owed]]
+id = "retirement"
+trophy = "BOTH"
+title = "The retirement surgery, and the archival"
+status = "blocked"
+detail = "FOUR crossings, after T72 removed SatSets (three dissolved at a stroke) and T82 re-homed the finite-tally content out of HF (two more). They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing."
+blocked_by = "ac-rehome, bridge-landing, stepinl-rewrite-owed"
+evidence = "PLAN D18 and D20; the retirement-surgery row above"
+
+[[owed]]
+id = "gch-w1p"
+trophy = "GCH"
+title = "W1': the condensation crossing's transfers"
+status = "in-flight"
+detail = "The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier."
+blocked_by = ""
+evidence = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md dispatch list"
+
+[[owed]]
+id = "gch-w3"
+trophy = "GCH"
+title = "W3: the internal definable well-ordering, at a general level"
+status = "frozen"
+detail = "The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met."
+blocked_by = ""
+evidence = "_build/l3.32-t44-report.md; _build/l3.32-t48-report.md; _build/l3.32-t50-report.md; _build/l3.32-t63-report.md"
+
+[[owed]]
+id = "stepinl-rewrite-owed"
+trophy = "GCH"
+title = "Re-scope and rewrite StepInL so W3's op-graph content survives the retirement"
+status = "frozen"
+detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met."
+blocked_by = ""
+evidence = "_build/l3.32-t63-report.md; src/L/Rud/StepInL.lagda.md:2139-2160; the stepinl-rewrite row above"
+
+[[owed]]
+id = "gch-w7"
+trophy = "GCH"
+title = "W7's residue: the last mile to the GCH sentence"
+status = "frozen"
+detail = "The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met."
+blocked_by = ""
+evidence = "_build/l3.32-t57-report.md section 3; _build/l3.32-t59-report.md; the w7-residue row above"
+
+[[owed]]
+id = "gch-w5"
+trophy = "GCH"
+title = "W5: the collapse and the condensation"
+status = "in-flight"
+detail = "CORRECTED 2026-08-06 by T91: reading this as delivered was overstated in two ways. The crossing's LIMIT case is not built and sits explicitly outside W1'; and the level story the crossing operates on is built on atoms of which at least two read something other than their documentation, which T89 is repairing. The collapse's transitive-fixing clause (Devlin 5.2(ii)) is also undelivered. What is genuinely delivered is the collapse and the crossing's REDUCTION; the transfers are W1' and the rest is the gch-proof-steps row."
+blocked_by = ""
+evidence = "src/V/Collapse.lagda.md; src/L/Condensation.lagda.md"
+
+[[owed]]
+id = "gch-w2"
+trophy = "GCH"
+title = "W2: the level formula"
+status = "delivered"
+detail = "The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier."
+blocked_by = ""
+evidence = "src/L/LevelFormula.lagda.md; src/L/Rud/LevelSigma.lagda.md"
+
+# ---------------------------------------------------------------------------
+# Compression levers, measured by [L3.32-T79] on the standing tree. These are
+# NEGATIVE remaining rows: work that removes more than it writes. They are not
+# in the endpoint sum, because none is funded yet; they are here so the endpoint
+# can be re-summed the moment one is ruled.
+# ---------------------------------------------------------------------------
+
+[[lever]]
+id = "A-level-kit"
+title = "The level-story clause kit, written once at a generic carrier"
+scope = "L.LevelFormula (613) and L.Rud.LevelSigma (788); 265 byte-identical lines, orchestrator-remeasured at 257 substantive, and 388 of LevelSigma at 0.85 similarity or better"
+cost_low = 305
+cost_high = 335
+net_low = 230
+net_high = 280
+risk = "medium-low"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever A; the duplication independently remeasured by the orchestrator"
+
+[[lever]]
+id = "D-order-core"
+title = "The SquareLaw order-core mirror, one core parameterized by the exclusion hypothesis"
+scope = "L.Ordinal.SquareLaw Core 244-540 against InitialCore 967-1249; 78 byte-identical, 150-200 near-identical"
+cost_low = 290
+cost_high = 310
+net_low = 150
+net_high = 200
+risk = "medium, two consumers re-point"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever D"
+
+[[lever]]
+id = "E-pair-substrate"
+title = "The pair substrate, hosted once and imported rather than privately restated"
+scope = "L.CardinalPredicates:152-255 against L.Coding.Base:149-278, plus five statements of the pair-atom formulas"
+cost_low = 40
+cost_high = 60
+net_low = 80
+net_high = 100
+risk = "low-medium"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever E"
+
+[[lever]]
+id = "C-describe-shells"
+title = "One generic wrapper for Describe's per-operation boilerplate"
+scope = "L.Rud.Describe, seven per-operation blocks: about 44 lines of repeated carrier-witness blocks plus about 90 of definable-subset shells"
+cost_low = 45
+cost_high = 60
+net_low = 50
+net_high = 90
+risk = "medium-low"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever C"
+
+[[lever]]
+id = "F-small-instances"
+title = "Small known instances: duplicated zero lemmas and uniform indexed families"
+scope = "Bridge Sset-zero against Hierarchy; Step Fof-f0..f15; SatSets JF0..JF10"
+cost_low = 10
+cost_high = 30
+net_low = 10
+net_high = 50
+risk = "low"
+klass = "x1.3"
+provenance = "_build/l3.32-t79-report.md lever F"
+
+[[lever]]
+id = "B-condensation-story"
+title = "The condensation level story folded into the face, so the parameter-free story is the single source"
+scope = "L.Condensation:324-562, a THIRD encoding of the level story"
+cost_low = 150
+cost_high = 250
+net_low = 100
+net_high = 250
+risk = "HIGH, and priced only at x3: not defensible until gated"
+klass = "x3"
+provenance = "_build/l3.32-t79-report.md lever B"
+gated = true
+note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a forced rewrite (Condensation:324-562). T79 priced it as optional compression at HIGH risk, but the atoms in that region are DEFECTIVE and the story has to be rebuilt regardless, so the risk is no longer risking a working chapter, it is choosing how to rebuild a broken one. Compare against the structural-story row: in place costs 515-688 naive, as A plus B it NETS positive. Neither agent could see this; they ran concurrently and neither read the other."
+
+# ---------------------------------------------------------------------------
+# CHECK COST, in seconds. Ruled 2026-08-06 by the owner: a lever is judged on
+# BOTH dimensions, lines and seconds, and neither alone.
+#
+# The measurement that forced this: [L3.32-T86] profiled the full cold check at
+# about 45 minutes and found THREE surviving modules carry 73 percent of it,
+# while the entire 26,483-line retiring subtree costs 5:56. The difference is
+# not sealing (the retiring tree's two biggest files use no `opaque` at all):
+# it is that the retiring chapters state at abstract carriers and variable
+# indices, so nothing re-normalizes, while the hot modules state memberships at
+# concrete tower positions. That is the same generic-versus-fixed law as D29,
+# billed in seconds instead of lines.
+#
+# These figures are refreshed when a full `--profile=modules` run is made, which
+# is expensive and rare; each carries the run it came from. A stale row is
+# better than no row PROVIDED it says when it was taken.
+# ---------------------------------------------------------------------------
+
+[timing]
+measured = "2026-08-05, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0"
+full_cold_seconds = 1956
+note = """
+UPDATED 2026-08-06 after T87: 2,723 minus the measured 767 s Bridge saving.
+The original 2,723 s was profile-instrumented time (2,501 measured plus 222 recovered for
+25 modules a concurrent process had already refreshed). The un-instrumented
+wall for the same tree was recorded at 27:54 on an earlier run; the
+profile-to-wall ratio is about 0.6 to 0.7 and is not pinned.
+"""
+
+[[hot]]
+module = "L.Rud.Bridge"
+seconds = 199
+lines = 833
+why = "FIXED 2026-08-06. Was 933 s: 95 percent was its own gamma index-tower family, because `γ-compute`'s type ended at the tower body and each of ten subst consumers re-normalized the union tower, about eight times over"
+fix = "DONE (T87): a six-line opaque seal restating the read lemma to end where consumers use it. 939 s to 199 s, orchestrator-reproduced at 199.53 s. Every exported type unchanged, no consumer edited. 767 seconds off every cold check for six lines"
+
+[[hot]]
+module = "L.Ordinal.SquareLaw"
+seconds = 856
+lines = 907
+obligations = 250
+why = "measured 2026-08-06 by [T88]: 88 percent is ONE family of four concrete pairing-injectivity proofs (h0-inj and pair-eq, two byte-mirror copies each) whose STATEMENTS carry the sucV and omega towers. The I-4/I-5 class."
+fix = "MEASURED AND REFUTED, three ways. (1) The Bridge read-lemma restatement is NEUTRAL: with the body reduced to a one-line application of a generic lemma that is itself free, h0-inj still pays 190 s (813.7 s against an 810.7 s control), because the cost is in elaborating the statement, not in consumers re-normalizing. (2) Sealing it opaque, the exact Bridge shape, is HARMFUL: past 26:06 clean before interruption, at least 1.9x slower. (3) The abstract-carrier restatement HEAP EXHAUSTED at -M8g twice, 10:26 with instantiations and 26:10 alone. What remains is an R-35 statement reshaping of the h0/comp0 chain, over the seal stop-line, UNPRICED. Measured floor if the four rows vanished: about 100 s."
+consequence = "0.074 is known reachable by ONE TREE, not by any given theorem. This is the campaign's most important negative result and it withdraws F5's 17-52 s rewrite-side price."
+
+[[hot]]
+module = "L.Condensation"
+seconds = 204
+lines = 391
+why = "the third per-line outlier, 0.52 s/line against a tree average of 0.05"
+fix = "unmeasured"
+
+[[tree_cost]]
+tree = "retiring subtree (L.Coding, L.Godel, L.Choice)"
+modules = 46
+lines = 26483
+seconds = 356
+per_line = 0.013
+
+[[tree_cost]]
+tree = "surviving trunk"
+modules = 82
+lines = 22761
+seconds = 2368
+per_line = 0.104
