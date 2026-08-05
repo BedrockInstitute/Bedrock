@@ -43,8 +43,8 @@ two disagree.*
 | StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate | T10 (green) |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
 | The retirement surgery and the Everything rewiring (archival per D20) | 100-250 | 150-500 | x1.5 to x2 (prose plus import surgery) | none needed |
-| W7's remaining residue (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification, the truncated transfer, the pairing re-pointing) (derived) | 200-700 | 600-2,100 | x3 (the C-row remainder is unprobed survey class) | none yet |
-| **total** | **4,600-9,940** | **10,910-25,510** | | |
+| W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
+| **total** | **5,050-10,560** | **12,010-27,030** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 19.59-24.93k | 22.26k |
-| calibrated | 25.90-40.50k | 33.20k |
+| naive | 20.04-25.55k | 22.79k |
+| calibrated | 27.00-42.02k | 34.51k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits -0.07k from the line, and the calibrated
-band sits +0.90k to +15.50k from it.
+the naive band's pessimistic corner sits +0.55k from the line, and the calibrated
+band sits +2.00k to +17.02k from it.
 
 ### Deliberately not in the sum
 
