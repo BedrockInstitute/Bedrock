@@ -383,8 +383,8 @@ constants, so they mean the same at every carrier.
   sndIn ku kw = ∃̇∈ (var kw) (sgl f0 ∧̇
                 ∃̇∈ (var (suc kw)) (pair2 f0 ∧̇
                   ∀̇∈ (var (suc zero)) (var f0 ∈̇ var (suc zero)) ∧̇
-                  var (suc (suc ku)) ∈̇ var (suc zero) ∧̇
-                  ∀̇∈ (var (suc (suc kw))) (¬̇ (var f0 ≐ var (suc (suc (suc ku)))))))
+                  var (suc (suc ku)) ∈̇ var f0 ∧̇
+                  ∀̇∈ (var (suc zero)) (¬̇ (var f0 ≐ var (suc (suc (suc ku)))))))
 
   sndInΔ₀ : {n : ℕ} (ku kw : Fin n) → Δ₀ (sndIn ku kw)
   sndInΔ₀ ku kw = δ-∃∈ (δ-∧ (sglΔ₀ f0)
