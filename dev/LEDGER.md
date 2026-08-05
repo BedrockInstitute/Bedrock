@@ -219,6 +219,27 @@ count. The `[T63]` return is the worked example: it moved no band at all, and it
 statuses, because the machinery W3 needs turned out to exist inside a chapter booked for the
 archive.
 
+## Check cost, in seconds
+
+**A lever is judged on both dimensions** (owner's ruling, 2026-08-06). Lines are
+what the endpoint band counts; **seconds are what a contributor actually waits
+for**, and the two do not move together. The measured Bridge fix is **six lines
+for 769 seconds**; a refactor that saved lines and doubled the check would be a
+bad trade that the line ledger alone would have applauded.
+
+The measurement that forced this: `[L3.32-T86]` profiled the full cold check and
+found **three surviving modules carry 73 percent of it**, while the entire
+26,483-line retiring subtree costs under six minutes. The cause is not sealing,
+since the retiring tree's two largest files use no `opaque` at all. It is that
+the retiring chapters state at **abstract carriers and variable indices**, so
+nothing re-normalizes, while the hot modules state memberships at **concrete
+tower positions**. That is D29's generic-versus-fixed law again, billed in
+seconds instead of lines.
+
+Figures are refreshed only when a full `--profile=modules` run is made, which is
+expensive and rare. Each carries the run it came from, because **a stale number
+that says when it was taken is useful and one that does not is a trap**.
+
 ## Compression levers
 
 The remaining rows say what is still owed. The lever rows say the opposite: **work that removes

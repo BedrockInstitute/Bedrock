@@ -73,6 +73,15 @@ Standing clauses that go in every build or probe brief:
   verbatim, because it is the part agents drop:** a stop-line is not a reason to
   write fixed; if the generic shape does not fit the budget, say so and stop for
   a re-price rather than delivering the fixed shape inside the cap.
+- **Seconds, not only lines** (owner's ruling, 2026-08-06). Every build brief
+  requires the module's own check time BEFORE and AFTER, measured with
+  `GHCRTS=-M8g agda --profile=modules <file>` (or `--profile=definitions` for a
+  breakdown), warm deps, one process, stating which. Every recon that prices a
+  lever prices it in both dimensions. **A change that saves lines and costs
+  seconds is not automatically good, and one that costs lines and saves seconds
+  may be excellent**: the measured Bridge fix is six lines for 769 seconds. The
+  ledger carries the seconds beside the lines (`dev/ledger.toml`'s `[timing]`,
+  `[[hot]]` and `[[tree_cost]]`).
 - **D17 at a retirement question.** If the brief touches what retires, quote
   D17 into it: "X must stay because Y consumes it" is not an answer, the
   ideal-form rewrite of what Y actually needs is priced first, and the old
@@ -147,6 +156,8 @@ In this order, every time:
    is returned** (D29): the choice is legitimate, hiding it is not.
    **A cold-check regression is a defect**, not a cost of doing business; if a
    chapter's cold check has grown, say by how much and why before wiring it.
+   **The return must carry the number**: a build that reports lines without
+   seconds is incomplete, since 2026-08-06.
 3. **Fill the free slots** (section 2) before writing anything up.
 4. **Wire** `src/Everything.lagda.md` (agents never touch it) and any catalog
    prose the change makes stale.
