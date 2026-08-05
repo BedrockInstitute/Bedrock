@@ -79,7 +79,7 @@ An absence recorded here is a decision; an absence recorded nowhere is an oversi
 In work, not in lines. A row above can be large and unblocking, or small and on
 the critical path, and a band does not show the difference. Status is one of
 **delivered**, **ready** (dispatchable now), **in-flight**, **blocked** (with what
-it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
+it waits on), **frozen** (not blocked on a proof but on D30's ruling: it waits on the check-cost exit condition, not on mathematics), or **at-risk** (delivered, but on machinery scheduled to retire).
 
 **L satisfies AC**
 
@@ -92,11 +92,11 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 
 | item | status | blocked by | what it is |
 |---|---|---|---|
+| W3: the internal definable well-ordering, at a general level | **frozen** | - | The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met. |
+| Re-scope and rewrite StepInL so W3's op-graph content survives the retirement | **frozen** | - | The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met. |
+| W7's residue: the last mile to the GCH sentence | **frozen** | - | The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes when the check-cost exit condition is met. |
 | W1': the condensation crossing's transfers | **in-flight** | - | The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier. |
 | W5: the collapse and the condensation | **in-flight** | - | CORRECTED 2026-08-06 by T91: reading this as delivered was overstated in two ways. The crossing's LIMIT case is not built and sits explicitly outside W1'; and the level story the crossing operates on is built on atoms of which at least two read something other than their documentation, which T89 is repairing. The collapse's transitive-fixing clause (Devlin 5.2(ii)) is also undelivered. What is genuinely delivered is the collapse and the crossing's REDUCTION; the transfers are W1' and the rest is the gch-proof-steps row. |
-| W3: the internal definable well-ordering, at a general level | **ready** | - | The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. |
-| Re-scope and rewrite StepInL so W3's op-graph content survives the retirement | **ready** | - | The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. |
-| W7's residue: the last mile to the GCH sentence | **ready** | - | The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. |
 | W2: the level formula | **delivered** | - | The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier. |
 
 **Owed to both**
@@ -104,7 +104,7 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 | item | status | blocked by | what it is |
 |---|---|---|---|
 | The retirement surgery, and the archival | **blocked** | ac-rehome, bridge-landing, stepinl-rewrite-owed | FOUR crossings, after T72 removed SatSets (three dissolved at a stroke) and T82 re-homed the finite-tally content out of HF (two more). They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing. |
-| The bridge's landing: Q-lim and below-lim | **in-flight** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. |
+| The bridge's landing: Q-lim and below-lim | **frozen** | - | Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. FROZEN 2026-08-06 by D30: below-lim's first gate was briefed as [T92] and STOPPED before it fired, because it is new mathematics and the freeze forbids it. Q-lim's half stands. This row resumes the moment the check-cost exit condition is met; nothing about it is refuted. |
 
 <!-- ledger:end -->
 
@@ -240,6 +240,37 @@ seconds instead of lines.
 Figures are refreshed only when a full `--profile=modules` run is made, which is
 expensive and rare. Each carries the run it came from, because **a stale number
 that says when it was taken is useful and one that does not is a trap**.
+
+### The freeze, and why seconds now gate the mathematics
+
+**Ruled 2026-08-06 (D30): no new mathematics is dispatched until this section's
+numbers come down.** The `owed` rows marked `frozen` are not blocked on a proof;
+they are blocked on that ruling, which is why `frozen` is a separate status from
+`blocked`. A blocked row needs someone to prove something. **A frozen row needs
+the seconds to come down.**
+
+The reasoning is arithmetic. `[T87]` removed **767 seconds with six lines** and
+changed no mathematics, which settles that most of the eleven-fold gap between
+the retiring subtree and the surviving trunk is engineering. Post-Bridge the
+tree is 1,956 s, and **`SquareLaw` alone is 44 percent of it**. Writing new
+chapters onto that base makes every future contributor pay the same tax, and the
+tax is known to be removable at a rate of a hundred seconds per line.
+
+The exit condition is in `dev/ledger.toml`'s `[[freeze]]` block and is derived
+rather than chosen. The per-line cap of 0.25 is worth reading twice: **the
+sealed `Bridge` measures 0.24**, so the cap does not ask for an ideal, it asks
+every hot master to reach what one measured fix already reached.
+
+### The part of this that cannot be re-run later
+
+Seconds can be re-measured at any time. **The practice cannot.** The retiring
+subtree is not being archived for being slow, D18 retires it because the route
+changed; but it carries a discipline the newer work lost, and when those files
+go the only remaining record of how they achieved 0.013 s/line is whatever was
+written down first. That is why the freeze's exit condition has a third part
+that is a document rather than a number, and why `[L3.32-F4]` is the one row
+here with a deadline set by something other than the work: it must land before
+the archival, not after.
 
 ## Compression levers
 

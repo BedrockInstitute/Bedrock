@@ -1962,6 +1962,51 @@ a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
 sourced, it is not entered; it is surfaced to the owner instead.
 
+### P-NN (proposed 2026-08-06, awaiting the owner's ID): a read lemma is stated where its consumers use it, not where its proof ends
+
+**The law.** When a lemma exists so that consumers can rewrite with it, its
+stated right-hand side must be **the form the consumers actually need**, not the
+form the proof happened to reach. If it stops one layer early, every consumer
+re-normalizes the missing layer, and the same conversion is paid once per
+consumer instead of once in total. **Absorb the last layer into the lemma and
+seal it**, so the normalization happens exactly once, behind an `opaque`.
+
+**The measurement.** `[L3.32-T86]` profiled `L.Rud.Bridge` at **939 seconds**
+and found **95 percent of it in one family**. `γ-compute`'s stated type ended at
+the tower body rather than at `+ω (U α)`, the form its consumers use, so each of
+about ten `subst` consumers re-normalized the union tower inside `towerStep`,
+paying the same conversion roughly eight times. The fix was **six lines**: an
+`opaque` `towerStep≡+ωU` proved by `refl`, composed into `γ-compute`. Measured
+**939 s to 199 s**, reproduced independently at 199.53 s (`[L3.32-T87]`,
+`src/L/Rud/Bridge.lagda.md`). **767 seconds for six lines, with no mathematical
+content whatsoever.**
+
+**Why this needs its own entry when R-36 and R-38 already exist.** Those two say
+seal an unfolding read lemma, and seal it at birth. Both were followed here:
+`γ-compute` WAS sealed. The seal was in the right place and the **statement was
+in the wrong place**, which neither entry reaches. Sealing the wrong form just
+makes the wrong form cheap to reach and leaves the real cost outside the seal.
+
+**Why no gate can catch this, which is the part that matters.** A module with
+this defect **typechecks correctly**. `make check` goes green, both linters are
+happy, no obligation fails. It is not a wrong proof, it is a proof that costs
+eight times what it should, and the project had no instrument that could see the
+difference. `L.Ordinal.SquareLaw` reached **0.94 s/line and 44 percent of the
+entire tree's check time** without tripping anything, and it took a profiler
+months later to find out. `scripts/check-timing.py` exists because of this
+paragraph; it is the only gate here that can fail a module for being expensive.
+
+**The uncomfortable corollary, recorded because it is the real lesson.** The
+subtree that D18 retires costs **0.013 s/line over 26,483 lines**; the surviving
+trunk cost 0.104. The retiring chapters were not better mathematics, they simply
+**stated at abstract carriers and variable indices so nothing re-normalized**,
+which is P-h's discipline billed in seconds instead of lines. The newer work
+lost that habit and nobody noticed for months. **A discipline that is only
+visible in a measurement nobody takes will be lost, and it will be lost in the
+direction of whatever is quicker to write.** This is the finding that produced
+D30's freeze, and the reason its exit condition includes recording the practice
+before the code that carries it is archived.
+
 ### C-NN (proposed 2026-08-05, awaiting the owner's ID): a shape certificate is not a meaning certificate
 
 **The law.** A proof obligation that certifies a formula's SHAPE (`Δ₀`, `Σ₁`,

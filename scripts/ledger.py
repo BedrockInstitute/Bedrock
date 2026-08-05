@@ -126,7 +126,7 @@ def validate_rows(data: dict) -> list[str]:
             defects.append(f"remaining row {rid} has an inverted naive band")
         if row.get("calibrated_low", 0) < row.get("naive_low", 0):
             defects.append(f"remaining row {rid} is calibrated below naive, which the two-caliber discipline forbids")
-    VALID = {"delivered", "ready", "in-flight", "blocked", "at-risk"}
+    VALID = {"delivered", "ready", "in-flight", "blocked", "at-risk", "frozen"}
     seen_owed: set[str] = set()
     for row in data.get("owed", []):
         rid = row.get("id", "<no id>")
@@ -197,7 +197,9 @@ def render(total, files, buckets, sizes, standing, rows, sums, line, excluded, o
                 "In work, not in lines. A row above can be large and unblocking, or small and on",
                 "the critical path, and a band does not show the difference. Status is one of",
                 "**delivered**, **ready** (dispatchable now), **in-flight**, **blocked** (with what",
-                "it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).", ""]
+                "it waits on), **frozen** (not blocked on a proof but on D30's ruling: it waits on the "
+                "check-cost exit condition, not on mathematics), or **at-risk** (delivered, but on "
+                "machinery scheduled to retire).", ""]
         for trophy, heading in (("AC", "L satisfies AC"), ("GCH", "L satisfies GCH"),
                                 ("BOTH", "Owed to both")):
             rows_t = [r for r in owed if r.get("trophy") == trophy]
@@ -205,7 +207,7 @@ def render(total, files, buckets, sizes, standing, rows, sums, line, excluded, o
                 continue
             out += [f"**{heading}**", "", "| item | status | blocked by | what it is |",
                     "|---|---|---|---|"]
-            order = {"at-risk": 0, "blocked": 1, "in-flight": 2, "ready": 3, "delivered": 4}
+            order = {"at-risk": 0, "blocked": 1, "frozen": 2, "in-flight": 3, "ready": 4, "delivered": 5}
             for r in sorted(rows_t, key=lambda r: order.get(r.get("status"), 9)):
                 out.append(f"| {r.get('title','')} | **{r.get('status','')}** | "
                            f"{r.get('blocked_by','') or '-'} | {r.get('detail','')} |")
