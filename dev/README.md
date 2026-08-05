@@ -29,6 +29,12 @@ the detailed specs it points to.
   load-bearing term.
 - `GLOSSARY.md`: the human-readable **explanation** of the glossary, what the two checks do and how
   to maintain `glossary.toml`.
+- `ledger.toml`: the canonical **size ledger data**, the single source `scripts/ledger.py` reads
+  (via `tomllib`): the booked retirement set and the remaining-work rows with their bands,
+  classes and provenance. It contains **no standing figure**; standing is measured from the tree,
+  never written down.
+- `LEDGER.md`: the **explanation** of the ledger, the caliber convention, what a derived row is,
+  and the rule for keeping it current when a chapter lands or a gate returns.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
   (`L3.0.3-subsumption-probe.md` and so on). The route tree in `PLAN.md` §6.1 says which goals
   produce one; `PLAN.md` §11 records their status. Findings that outlive the goal are promoted

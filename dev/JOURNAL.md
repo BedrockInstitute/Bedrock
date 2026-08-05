@@ -1800,3 +1800,40 @@ times). The substance (measured laws, design narratives) lives in
   the four junk cases, the stratified producer order, the A-versus-B table,
   the B work plan's price tables, and the open risks). The M5a report's
   Surprises 1 supplied law **P-g** and the graft entry in `dev/LESSONS.md`.
+
+---
+
+## Retired decisions
+
+Struck from `dev/PLAN.md` section 3 on 2026-08-05, in a cleanup the owner ruled with an
+explicit reason: **too many disciplines means the important ones stop being executed.** Six of
+the seven were already dead, their own text opening with SUPERSEDED, SPENT or SUCCEEDED, and
+their live residue carried elsewhere; the seventh, D10, was a second home for build constraints
+that `AGENTS.md`, `dev/ORCHESTRATION.md` and `dev/LESSONS.md` already enforce, which D24 forbids.
+
+They are preserved here in full and unedited, so a commit message or report citing a struck code
+still resolves. **Decision numbers are never reused.** A retired decision has no force: if you
+find yourself reasoning from one, the question it answered belongs to whichever live decision
+replaced it.
+
+| # | Where its live residue went |
+|---|---|
+| D3 | D16 (ideal-form pricing) and D21 (the whole-tree polish phase with exports frozen) do the same job by measurement instead of per-cluster review |
+| D8 | Spent: the Frontier is empty and deleted, the root unconditional. The surviving half, foundations-first reading order on the site, moved into D5 |
+| D10 | Heap caps and one-process-at-a-time are in `dev/ORCHESTRATION.md` section 2 and `AGENTS.md`; the single trusted gate is in `AGENTS.md`; the cold-check regression rule moved into the return checklist, `dev/ORCHESTRATION.md` section 6 |
+| D12 | Historical outcome on a route superseded twice over; nothing live |
+| D14 | D17 carries the trigger, D20 the disposal. Its warrant discipline (a kept chapter needs a named open goal and a dated expiry) moved into D20's registry |
+| D15 | D18 carries the route content; D20 completes its branch plan |
+| D25 | Struck by the owner on the cleanup's own logic. Its practice, accounting for every instruction in the owner's message before closing a turn, is competence rather than legislation, and it needed no decision number to be true |
+
+### The struck rows, verbatim
+
+| # | Decision | Ruling |
+|---|----------|--------|
+| D3 | Technical lemma layer | **SUCCEEDED IN PRACTICE 2026-08-04 by D16 and D21's mechanisms**, which do the same job with measurement instead of per-cluster review: ideal-form pricing alongside the continuation, probe-gated levers, the two-caliber discipline, and a whole-tree polish phase with exports frozen. The original ruling stands as history and its intent is unchanged: L3 starts with a **reduction review** per cluster:
+| D8 | Construction order | **SPENT 2026-07-31**: the Frontier is empty and deleted since `[L2.4]` and the root is unconditional, so the mechanism this decision installed has done its work. Original ruling: root-first via the Frontier record (§5), the statement of the theorem typechecks from day one, details land last. Reading order on the site remains foundations-first, and that half still binds. |
+| D10 | Build performance | The build constraints of §7 are binding from the first ported module: single-invocation trusted gate, parallelism outside the trust base, tracked cold-check budget, per-module heap caps. Cold-check regressions are defects. |
+| D12 | L3 reduction strategy | **Outcome 2026-07-26 (`[L3.0.2]`): the decision was right, the analysis was wrong.** The lever was not a large internalization theorem (it is 96 lines) but general-formula comprehension, delivered at `[L2.2]`; the projected 65%-at-3x is now measured-and-projected at 7x to 14x. Original ruling, 2026-07-25: **take the big lever first** (goal `[L3.0]`), under an explicit paper-level gate and pre-agreed kill criteria (`[L3.0.3]`, `[L3.0.1]`); schedule ruling, same day: `[L3.0.3]` opens **before** L2. |
+| D14 | Retiring a chapter in waiting | **SUPERSEDED 2026-08-04 by D17 (the trigger) and D20 (the disposal), on the owner's ruling.** Its passive trigger under-fired: a chapter with any surviving consumer never became *in waiting*, however dead its content, which is exactly how a 1,989-line chapter survived on a survivor-consumes warrant. D17 replaces the trigger with an active one (price the ideal-form rewrite, then retire wholesale) and D20 replaces deletion with archival. The warrant discipline this decision installed carries forward into the archive registry: a kept chapter still needs a named open goal and a dated expiry. Original ruling, 2026-07-27, kept as history: A chapter is *in waiting* when nothing outside its own namespace imports it (`Everything` never counts). Such a chapter is **retired** (files deleted, `Everything` entries dropped, the commit hash recorded in §11, plus one line saying what would bring it back) when **both**: no **open** goal names it in §6.1, and either a goal that did name it has closed without using it, or no goal ever named it. It is **kept** only under a **written warrant**: a named open goal *and* a dated expiry. Warrants live in §11 and expire whether or not anyone looks. **Trigger:** at every goal closure, list the chapters in waiting and check their warrants. |
+| D15 | The AC route | **SUPERSEDED IN ROUTE CONTENT 2026-08-02 by `[L3.30]` and finally by D18**; what survives is its branch plan, which D20 completes (the old `main` becomes the archive, the working branch is promoted). Original ruling, 2026-07-31, by the owner: option C of `dev/memos/L3.28-ac-route.md` is adopted**, on the memo's numbers (ZF-only cone 4,180 lines, AC-only radius 13,217, the swap surface one import list) and on three same-day probes, all PASS (memo §9). `Def` keeps its satisfaction definition and every ZF-cone statement keeps its meaning; the internal tower and the internal well-order rebuild over a binder-free operations calculus; the satisfaction-internalization chapters retire at the cut-over. Execution is the two-step branch plan: build C on `godel-route` with both developments coexisting, judge the pedagogy side by side before deleting, promote on success; old `main` becomes the internalization archive with a wrap-up and a tag. Executes as `[L3.29]`, which carries the milestones and tripwires; the global stop is a landing projection above 11k at any milestone (since amended by the tripwire rulings, §11). **Pivot 2026-08-01: option B of `dev/memos/L3.29-b-pivot.md` is adopted for the build on this branch**, kinded closure tower with the stratified producer order, alongside the delivered route, final measurement then a fresh ruling before retirement.**2026-08-02: the architecture question is reopened as `[L3.30]` (rud re-architecture, exploratory) under the future-extensibility lens; the B build is suspended after its final batch; no retirement of any route occurs until the `[L3.30]` ruling.** |
+| D25 | An owner instruction is executed or explicitly deferred | **Ruled 2026-08-05 by the owner after the orchestrator dropped one.** A message from the owner often carries more than one instruction, and the SECOND is the one that gets lost, especially when the first opens a topic interesting enough to absorb the turn. On 2026-08-05 a single message carried a terminology ruling and a dispatch instruction; the ruling was executed, the dispatch was dropped, and the owner had to ask three times before it was noticed. **Enforcement point, recorded in `dev/ORCHESTRATION.md` section 6: before writing the closing report of any turn, re-read the owner's last message and account for every instruction in it as done, dispatched, or deferred with a stated reason.** The same section also corrects a rule that was wrong as written: `AGENTS.md`'s never-commit-never-push rule binds DISPATCHED agents; the orchestrator commits after auditing and gating, and nobody pushes without the owner's word. |

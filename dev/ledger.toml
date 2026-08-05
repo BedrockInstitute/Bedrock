@@ -1,0 +1,204 @@
+# Bedrock size ledger: the canonical DATA.
+#
+# The prose that explains this file, what each field means and how to keep it
+# current, is dev/LEDGER.md. The tool that reads it is scripts/ledger.py, which
+# MEASURES standing from the tree rather than trusting any number written here.
+# That split exists because of a measured failure: the register carried a
+# standing figure of 12,633 for nine dispatches, and [L3.32-T55] found it had
+# never been a measurement at all, only a projection fixed at [T25] and then
+# re-quoted. Nothing in this file is a standing figure. Standing is measured.
+#
+# Caliber convention (PLAN section 6.2): a size figure is the count of non-blank
+# lines inside ```agda fences, over git-tracked *.lagda.md under src/.
+
+[basis]
+# What the measurement counts, so a figure can never drift basis silently.
+unit = "non-blank lines inside ```agda fences"
+scope = "git-tracked *.lagda.md under src/"
+reference_line = 25000
+reference_line_note = """
+The reference line is a best-effort compression target, NOT a decision
+procedure (PLAN decision D26). An overage is recorded in both calibers and
+worked down where real compression exists. Evidence may move a technique; a
+number alone moves nothing, and it may never put the campaign route back on
+the table.
+"""
+
+# ---------------------------------------------------------------------------
+# The booked retirement set, ruled by D18 and disposed of by D20 (archive,
+# never delete). Standing = tracked total MINUS these. Each entry is a path
+# prefix or an exact path; scripts/ledger.py verifies every one still exists,
+# which is what catches a stale declaration.
+#
+# NOTE: the R5-era census (_build/l3.31-r5census.md) books a DIFFERENT set,
+# because it was written under the J-trophy route. D18 rules the actual set:
+# under it the bridge SURVIVES as the wing's corollary, while the census
+# retires it. When the two disagree, D18 wins and this file follows D18.
+# ---------------------------------------------------------------------------
+
+[[retire]]
+prefix = "src/L/Godel/"
+why = "no surviving chapter imports it; the fine-structure literature is J-only"
+authority = "D18"
+
+[[retire]]
+prefix = "src/L/Coding/"
+except = ["src/L/Coding/Base.lagda.md"]
+why = "the satisfaction-internalization cone; Base survives as the Delta-0 pair/char reads Describe consumes"
+authority = "D18"
+
+[[retire]]
+prefix = "src/L/Choice/"
+why = "the choice tree; choice re-homes through the bridge onto the rud-side well-order"
+authority = "D18"
+
+[[retire]]
+path = "src/L/Hierarchy.lagda.md"
+why = "consumed only by the retiring Choice chapters"
+authority = "D18"
+
+[[retire]]
+path = "src/L/WellOrder/Tree.lagda.md"
+why = "its only consumer (Godel/Name) retires"
+authority = "D18"
+
+[[retire]]
+path = "src/L/Rud/CodeSet.lagda.md"
+why = "the rud coded cluster"
+authority = "D18"
+
+[[retire]]
+path = "src/L/Rud/CodePred.lagda.md"
+why = "the rud coded cluster"
+authority = "D18"
+
+[[retire]]
+path = "src/L/Rud/SatSets.lagda.md"
+why = "the rud coded cluster"
+authority = "D18"
+
+[[retire]]
+path = "src/L/Rud/BaseBlock.lagda.md"
+why = "the rud coded cluster; the Finite tallies were harvested before it retires"
+authority = "D18"
+
+[[retire]]
+path = "src/L/Rud/StepInL.lagda.md"
+why = "rewritten in ideal form and archived wholesale, not kept on a survivor-consumes warrant"
+authority = "D17 + D18"
+
+# ---------------------------------------------------------------------------
+# Remaining work. Every row carries its provenance and its calibration class.
+# Class x1.3 is a row anchored by a probe or a delivered comparable; class x3
+# is a row only a survey could reach (PLAN section 6.2). A row with no
+# provenance is recorded as unpriced, NEVER as zero.
+#
+# Source of the current bands: [L3.32-T55]'s one-basis re-sum, 2026-08-05.
+# ---------------------------------------------------------------------------
+
+[[remaining]]
+id = "W3"
+title = "W3 face route: the general order formula over the fresh generic face"
+naive_low = 1000
+naive_high = 2700
+calibrated_low = 3000
+calibrated_high = 7900
+klass = "mostly x3, one x1.3 row (the B statement layer)"
+gate = "T50 (returned SPLIT: the flattening is green, the op-graph frame is a confirmed prerequisite)"
+provenance = "_build/l3.32-t48-report.md face-route table; PLAN [L3.32] register T48 and T50 entries"
+
+[[remaining]]
+id = "W1p"
+title = "W1': the condensation crossing's transfers"
+naive_low = 1000
+naive_high = 2550
+calibrated_low = 3000
+calibrated_high = 7650
+klass = "x3 each of its three sub-rows"
+gate = "T54 (queued): the Levy-certificate rate, stop-line 200"
+provenance = "_build/l3.32-t51-report.md W1' table; _build/l3.31-ivprobe-report.md:478-493"
+
+[[remaining]]
+id = "carried-sequence"
+title = "The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing"
+naive_low = 800
+naive_high = 1390
+calibrated_low = 1700
+calibrated_high = 3200
+klass = "mixed x1.3 / x3"
+gate = "T53 (running): the bound arm and the crux family at l = omega, stop-line 350"
+provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52 entries"
+
+[[remaining]]
+id = "stepinl-rewrite"
+title = "StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17)"
+naive_low = 1200
+naive_high = 1700
+calibrated_low = 1560
+calibrated_high = 2210
+klass = "x1.3 after T10's green gate"
+gate = "T10 (green)"
+provenance = "_build/l3.32-t10-report.md; PLAN register T10 entry"
+
+[[remaining]]
+id = "choice-rehome"
+title = "The choice re-home onto the rud-side well-order"
+naive_low = 300
+naive_high = 650
+calibrated_low = 900
+calibrated_high = 1950
+klass = "x3 (new chapter); the carve half is measured at 0.18-0.24k"
+gate = "none yet"
+provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 entries"
+
+[[remaining]]
+id = "retirement-surgery"
+title = "The retirement surgery and the Everything rewiring (archival per D20)"
+naive_low = 100
+naive_high = 250
+calibrated_low = 150
+calibrated_high = 500
+klass = "x1.5 to x2 (prose plus import surgery)"
+gate = "none needed"
+provenance = "_build/l3.31-lt-report.md row 11; PLAN register T13 and T29 entries"
+
+[[remaining]]
+id = "w7-residue"
+title = "W7's remaining residue (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification, the truncated transfer, the pairing re-pointing)"
+naive_low = 200
+naive_high = 700
+calibrated_low = 600
+calibrated_high = 2100
+klass = "x3 (the C-row remainder is unprobed survey class)"
+gate = "none yet"
+provenance = "DERIVED by subtraction from T18's W7 band A-E minus what is delivered inside W7; the register never gave the residue a standalone band, so the derivation is shown in _build/l3.32-t55-report.md rather than a citation quoted"
+derived = true
+
+# ---------------------------------------------------------------------------
+# Known open items that are deliberately NOT in the endpoint sum. Listed so
+# their absence is a recorded decision rather than an oversight.
+# ---------------------------------------------------------------------------
+
+[[excluded]]
+id = "S18"
+title = "Collapsing FOL.Coding's double encoding"
+why = "accepted but DEFERRED by owner ruling; waits behind the wing. Net about -10 to -30 when it lands"
+provenance = "PLAN register S18 row"
+
+[[excluded]]
+id = "stepform-rider"
+title = "The StepInL/stepForm rider, +0.1-0.3k"
+why = "conditional on the Def-side W2 needing a stepForm-class engine after all; not named as ahead by the register"
+provenance = "_build/l3.31-lt-report.md, unknown-unknowns"
+
+[[excluded]]
+id = "trilingual-prose"
+title = "Trilingual prose, +0.3-0.8k prose-equivalent"
+why = "outside the code-line convention entirely; prose is not counted by this ledger's basis"
+provenance = "_build/l3.31-lt-report.md, unknown-unknowns"
+
+[[excluded]]
+id = "iso-invariance"
+title = "Isomorphism-invariance of satisfaction, 0.08-0.14k at x3"
+why = "priced by T51 and NOT bought: it would buy the wrong leg, since the transfers are inner-to-ambient at one carrier rather than between isomorphic carriers"
+provenance = "_build/l3.32-t51-report.md"
