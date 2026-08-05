@@ -29,9 +29,9 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (125 files) | 48,339 |
+| tracked masters (125 files) | 48,624 |
 | booked retirements, D18 (51 files) | 30,648 |
-| **standing** | **17,691** |
+| **standing** | **17,976** |
 
 ### Remaining work
 
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 23.14-28.67k | 25.91k |
-| calibrated | 29.56-43.79k | 36.68k |
+| naive | 23.43-28.96k | 26.19k |
+| calibrated | 29.85-44.08k | 36.96k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +3.67k from the line, and the calibrated
-band sits +4.56k to +18.79k from it.
+the naive band's pessimistic corner sits +3.96k from the line, and the calibrated
+band sits +4.85k to +19.08k from it.
 
 ### Deliberately not in the sum
 
