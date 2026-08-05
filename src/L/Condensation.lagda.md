@@ -55,6 +55,9 @@ open import L.Constructible {ℓ} using
 open import L.Ordinal {ℓ} using ( suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc )
+open import V.Coding {ℓ} using
+  ( pr; singl∈; ∈singl; self∈singl )
+open import L.PairAtoms {ℓ} using ( isPair )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Hierarchy {ℓ} lem using ( Lset-only )
 
@@ -62,7 +65,12 @@ open import Cubical.Data.Sigma using ( _×_; _,_ )
 open import Cubical.Data.Vec using ( map )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
+open PT using ( ∥_∥₁; squash₁; ∣_∣₁ )
+open import Cubical.Data.Unit using ( tt* )
+open import Cubical.HITs.CumulativeHierarchy.Properties
+  using ( _∈ₛ_; ∈∈ₛ; extensionality )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ⁅_⁆s )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( sucV )
@@ -367,6 +375,13 @@ constants, so they mean the same at every carrier.
   fstEqToΔ₀ : {n : ℕ} (k a : Fin n) → Δ₀ (fstEqTo k a)
   fstEqToΔ₀ k a = δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ δ-≐))
 
+  -- "the first component of var k is a member of var a".
+  fstIn : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  fstIn k a = ∃̇∈ (var k) (sgl f0 ∧̇ ∃̇∈ (var zero) (var f0 ∈̇ var (suc (suc a))))
+
+  fstInΔ₀ : {n : ℕ} (k a : Fin n) → Δ₀ (fstIn k a)
+  fstInΔ₀ k a = δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∃∈ δ-∈))
+
   -- "the first component of var k is a member of the first component of
   -- var l" (both Kuratowski pairs).
   fstLt : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
@@ -391,19 +406,38 @@ constants, so they mean the same at every carrier.
                   (δ-∃∈ (δ-∧ (pair2Δ₀ f0)
                     (δ-∧ (δ-∀∈ δ-∈) (δ-∧ δ-∈ (δ-∀∈ (δ-¬ δ-≐)))))))
 
-  -- "the second component of var k is a member of the second component of
-  -- var l".
-  snd∈Snd : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
-  snd∈Snd k l = ∃̇∈ (var k) (sgl f0 ∧̇
-                ∃̇∈ (var (suc k)) (pair2 f0 ∧̇
-                  ∀̇∈ (var (suc zero)) (var f0 ∈̇ var (suc zero)) ∧̇
-                  ∃̇∈ (var zero) (∀̇∈ (var (suc (suc zero))) (¬̇ (var f0 ≐ var (suc zero)))
-                                ∧̇ sndIn f0 (suc (suc (suc l))))))
+  -- "var v is the second component of the Kuratowski pair var q", uniform
+  -- over degenerate pairs (where the pair collapses to its singleton
+  -- member): either v lies in a two-element member outside the singleton
+  -- member, or every member of q is a singleton and v lies in one.  This is
+  -- the reading the limit clause's value inclusion needs: it pins v to the
+  -- second component without a second-component equality atom, and it covers
+  -- the degenerate pair pr a a (whose second component is the singleton
+  -- member's element).
+  sndOf : {n : ℕ} → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  sndOf v q = (∃̇∈ (var q) (sgl f0 ∧̇
+                ∃̇∈ (var (suc q)) (pair2 f0 ∧̇
+                  ∀̇∈ (var (suc zero))
+                    (var f0 ∈̇ var (suc zero) ∧̇
+                     (var (suc (suc (suc v))) ∈̇ var (suc zero)) ∧̇
+                     ¬̇ (var (suc (suc (suc v))) ∈̇ var (suc (suc zero)))))))
+           ∨̇ (∀̇∈ (var q)
+                (sgl f0 ∧̇ ∃̇∈ (var (suc q)) (sgl f0 ∧̇ var (suc (suc v)) ∈̇ var zero)))
 
-  snd∈SndΔ₀ : {n : ℕ} (k l : Fin n) → Δ₀ (snd∈Snd k l)
-  snd∈SndΔ₀ k l = δ-∃∈ (δ-∧ (sglΔ₀ f0)
-                  (δ-∃∈ (δ-∧ (pair2Δ₀ f0)
-                    (δ-∧ (δ-∀∈ δ-∈) (δ-∃∈ (δ-∧ (δ-∀∈ (δ-¬ δ-≐)) (sndInΔ₀ f0 (suc (suc (suc l))))))))))
+  sndOfΔ₀ : {n : ℕ} (v q : Fin n) → Δ₀ (sndOf v q)
+  sndOfΔ₀ v q = δ-∨
+    (δ-∃∈ (δ-∧ (sglΔ₀ f0)
+      (δ-∃∈ (δ-∧ (pair2Δ₀ f0)
+        (δ-∀∈ (δ-∧ δ-∈ (δ-∧ δ-∈ (δ-¬ δ-∈))))))))
+    (δ-∀∈ (δ-∧ (sglΔ₀ f0) (δ-∃∈ (δ-∧ (sglΔ₀ f0) δ-∈))))
+
+  -- "var q is the Kuratowski pair pr (var u) (var v)": a pair whose first
+  -- component is u and whose second component is v.
+  pairOf : {n : ℕ} → Fin n → Fin n → Fin n → Formula (⊥* {ℓ}) n
+  pairOf q u v = kpair q ∧̇ fstEqTo q u ∧̇ sndIn v q
+
+  pairOfΔ₀ : {n : ℕ} (q u v : Fin n) → Δ₀ (pairOf q u v)
+  pairOfΔ₀ q u v = δ-∧ (kpairΔ₀ q) (δ-∧ (fstEqToΔ₀ q u) (sndInΔ₀ v q))
 
   -- The ordinal predicate (delivered shape, already bounded).
   isOrdAt : {n : ℕ} → Fin n → Formula (⊥* {ℓ}) n
@@ -459,27 +493,30 @@ read.
   pairFormΔ₀ = δ-∀∈ (kpairΔ₀ f0)
 
   -- (4) domForm: the first components of the pairs of f form an ordinal,
-  -- i.e. a transitive set with transitive members.
+  -- i.e. a transitive set with transitive members.  Conjunct 1 reads the
+  -- transitivity (every member of a first component is again a first
+  -- component); conjunct 2 reads the members' transitivity (every first
+  -- component is a transitive set).
   domForm : Formula (⊥* {ℓ}) 2
   domForm = (∀̇∈ (var zero) (kpair f0 ⇒̇
                ∀̇∈ (var zero) (sgl f0 ⇒̇
-                 ∀̇∈ (var zero) (∀̇∈ (var zero)
+                 ∃̇∈ (var zero) (∀̇∈ (var zero)
                    (∃̇∈ (var (suc (suc (suc (suc zero)))))
-                      (kpair f0 ∧̇ fstEqTo f0 (suc (suc (suc zero)))))))))
+                      (kpair f0 ∧̇ fstEqTo f0 (suc zero)))))))
            ∧̇
              (∀̇∈ (var zero) (kpair f0 ⇒̇
                ∀̇∈ (var zero) (sgl f0 ⇒̇
-                 ∀̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero)
-                   (∃̇∈ (var (suc (suc (suc zero)))) (var (suc zero) ∈̇ var zero)))))))
+                 ∃̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero)
+                   (var f0 ∈̇ var (suc (suc zero))))))))
 
   domFormΔ₀ : Δ₀ domForm
   domFormΔ₀ = δ-∧
     (δ-∀∈ (δ-⇒ (kpairΔ₀ f0)
        (δ-∀∈ (δ-⇒ (sglΔ₀ f0)
-         (δ-∀∈ (δ-∀∈ (δ-∃∈ (δ-∧ (kpairΔ₀ f0) (fstEqToΔ₀ f0 (suc (suc (suc zero))))))))))))
+         (δ-∃∈ (δ-∀∈ (δ-∃∈ (δ-∧ (kpairΔ₀ f0) (fstEqToΔ₀ f0 (suc zero))))))))))
     (δ-∀∈ (δ-⇒ (kpairΔ₀ f0)
        (δ-∀∈ (δ-⇒ (sglΔ₀ f0)
-         (δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-∃∈ δ-∈))))))))
+         (δ-∃∈ (δ-∀∈ (δ-∀∈ δ-∈)))))))
 
   -- (2) singleForm: two pairs of f with equal first components are equal.
   singleForm : Formula (⊥* {ℓ}) 2
@@ -499,36 +536,45 @@ read.
   zeroFormΔ₀ = δ-∃∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ (δ-∧ (sglΔ₀ f0) (δ-∀∈ (δ-¬ (δ-∃∈ δ-⊤))))))
 
   -- (5) limitForm: at a limit point (a, y) of the graph, y is the union of
-  -- the values below a, as two inclusions over the pairs of f.
-  limIn : Formula (⊥* {ℓ}) 3
-  limIn = ∃̇∈ (var zero) (sgl f0 ∧̇
-          ∃̇∈ (var zero) (pair2 f0 ∧̇
-            ∀̇∈ (var (suc zero)) (var f0 ∈̇ var (suc zero)) ∧̇
-            ∀̇∈ (var (suc zero)) (∀̇∈ (var (suc (suc zero))) (¬̇ (var f0 ≐ var (suc zero)))
-              ⇒̇ ∃̇∈ (var (suc (suc (suc (suc zero)))))
-                   (kpair f0 ∧̇ fstLt f0 (suc (suc (suc (suc zero))))
-                         ∧̇ sndIn (suc zero) f0))))
+  -- the values below a, as two inclusions over the pairs of f.  The clause
+  -- walks the pairs p ∈ f, decomposes each into its components a (the
+  -- element of the singleton member) and y (the second component, read by
+  -- the uniform atom `sndOf` so degenerate pairs are covered), and reads the
+  -- two inclusions at the arity-7 environment (y, m, a, x₁, p, f, x).
+  -- `limIn` reads "every member z of y is the second component of some pair
+  -- q ∈ f whose first component lies in a"; `limOut` reads the converse.
+  limIn : Formula (⊥* {ℓ}) 7
+  limIn = ∀̇∈ (var zero)
+            (∃̇∈ (var (suc (suc (suc zero))))
+              (∃̇∈ (var (suc (suc (suc (suc (suc zero))))))
+                (kpair f0 ∧̇ fstEqTo f0 (suc zero) ∧̇ sndIn (suc (suc zero)) f0)))
 
   limInΔ₀ : Δ₀ limIn
-  limInΔ₀ = δ-∃∈ (δ-∧ (sglΔ₀ f0)
-            (δ-∃∈ (δ-∧ (pair2Δ₀ f0)
-              (δ-∧ (δ-∀∈ δ-∈)
-                  (δ-∀∈ (δ-⇒ (δ-∀∈ (δ-¬ δ-≐))
-                    (δ-∃∈ (δ-∧ (kpairΔ₀ f0)
-                      (δ-∧ (fstLtΔ₀ f0 (suc (suc (suc (suc zero)))))
-                            (sndInΔ₀ (suc zero) f0))))))))))
+  limInΔ₀ = δ-∀∈ (δ-∃∈ (δ-∃∈
+    (δ-∧ (kpairΔ₀ f0) (δ-∧ (fstEqToΔ₀ f0 (suc zero)) (sndInΔ₀ (suc (suc zero)) f0)))))
 
-  limOut : Formula (⊥* {ℓ}) 3
-  limOut = ∀̇∈ (var (suc zero)) (kpair f0 ⇒̇ fstLt f0 (suc zero) ⇒̇ snd∈Snd f0 (suc zero))
+  limOut : Formula (⊥* {ℓ}) 7
+  limOut = ∀̇∈ (var (suc (suc (suc (suc (suc zero))))))
+             (kpair f0 ⇒̇ fstIn f0 (suc (suc (suc zero))) ⇒̇
+                ∃̇∈ (var (suc zero)) (sndIn f0 (suc zero)))
 
   limOutΔ₀ : Δ₀ limOut
-  limOutΔ₀ = δ-∀∈ (δ-⇒ (kpairΔ₀ f0) (δ-⇒ (fstLtΔ₀ f0 (suc zero)) (snd∈SndΔ₀ f0 (suc zero))))
+  limOutΔ₀ = δ-∀∈ (δ-⇒ (kpairΔ₀ f0)
+    (δ-⇒ (fstInΔ₀ f0 (suc (suc (suc zero)))) (δ-∃∈ (sndInΔ₀ f0 (suc zero)))))
 
   limitForm : Formula (⊥* {ℓ}) 2
-  limitForm = ∀̇∈ (var zero) (kpair f0 ⇒̇ isLimitOf f0 ⇒̇ (limIn ∧̇ limOut))
+  limitForm = ∀̇∈ (var zero) (kpair f0 ⇒̇ isLimitOf f0 ⇒̇
+                ∃̇∈ (var zero) (sgl f0 ∧̇
+                  ∃̇∈ (var zero) (fstEqTo (suc (suc zero)) f0 ∧̇
+                    ∃̇∈ (var (suc (suc zero))) (∃̇∈ (var zero)
+                      (sndOf f0 (suc (suc (suc zero))) ∧̇ (limIn ∧̇ limOut))))))
 
   limitFormΔ₀ : Δ₀ limitForm
-  limitFormΔ₀ = δ-∀∈ (δ-⇒ (kpairΔ₀ f0) (δ-⇒ (isLimitOfΔ₀ f0) (δ-∧ limInΔ₀ limOutΔ₀)))
+  limitFormΔ₀ = δ-∀∈ (δ-⇒ (kpairΔ₀ f0) (δ-⇒ (isLimitOfΔ₀ f0)
+    (δ-∃∈ (δ-∧ (sglΔ₀ f0)
+      (δ-∃∈ (δ-∧ (fstEqToΔ₀ (suc (suc zero)) f0)
+        (δ-∃∈ (δ-∃∈ (δ-∧ (sndOfΔ₀ f0 (suc (suc (suc zero))))
+           (δ-∧ limInΔ₀ limOutΔ₀))))))))))
 
   -- (6) rangeForm: the read member x is the second component of a pair of f.
   Rg : Formula (⊥* {ℓ}) 2
@@ -561,6 +607,141 @@ read.
 
   levelStoryΣ₁ : Σ₁ levelStory
   levelStoryΣ₁ = σ-Δ₀ levelStoryΔ₀
+
+  -- ----------------------------------------------------------------------
+  -- The clause decodes, at the ambient reading.
+  -- ----------------------------------------------------------------------
+
+  -- The parameter-free story is decoded once, at the ambient universe S,
+  -- against the delivered meta-level reads.  The satisfaction is the
+  -- carrier-free instance of the semantics at the empty constant domain,
+  -- so each two-way decode is written once and reaches both carriers
+  -- through the delivered absoluteness of the transport section.
+  module SemP = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+  open SemP.At (⊥* {ℓ}) Empty.rec* using () renaming ( _⊨_ to _⊨ₚ_ )
+
+  -- The delivered meta reads, at the ambient level (no carrier condition:
+  -- the parameter-free story speaks at S itself).
+  pairhood : S → Type (ℓ-suc ℓ)
+  pairhood f = (z : S) → ⟨ z ∈ˢ f ⟩ → isPair z
+
+  singleValued : S → Type (ℓ-suc ℓ)
+  singleValued f = (a b c : S) → ⟨ pr a b ∈ˢ f ⟩ → ⟨ pr a c ∈ˢ f ⟩ → b ≡ c
+
+  zeroClause : S → Type (ℓ-suc ℓ)
+  zeroClause f = ∥ Σ[ a ∈ S ]
+    ( ((z : S) → ⟨ z ∈ˢ a ⟩ → Empty.⊥) × ⟨ pr a a ∈ˢ f ⟩ ) ∥₁
+
+  exactDom : S → Type (ℓ-suc ℓ)
+  exactDom f = ∥ Σ[ δ ∈ S ] ( IsOrd δ
+    × ((a : S) → ⟨ a ∈ˢ δ ⟩ → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁)
+    × ((a : S) → ∥ Σ[ b ∈ S ] ⟨ pr a b ∈ˢ f ⟩ ∥₁ → ⟨ a ∈ˢ δ ⟩) ) ∥₁
+
+  -- The limit-ordinal premise and the limit clause, at the ambient level.
+  isLimit : S → Type (ℓ-suc ℓ)
+  isLimit a = IsOrd a × ∥ Σ[ z ∈ S ] ⟨ z ∈ˢ a ⟩ ∥₁
+            × ((z : S) → ⟨ z ∈ˢ a ⟩ → ∥ Σ[ w ∈ S ] (⟨ z ∈ˢ w ⟩ × ⟨ w ∈ˢ a ⟩) ∥₁)
+
+  limitClause : S → Type (ℓ-suc ℓ)
+  limitClause f = (a y : S) → ⟨ pr a y ∈ˢ f ⟩ → isLimit a
+                → ( (z : S) → ⟨ z ∈ˢ y ⟩ → ∥ Σ[ b ∈ S ] (⟨ b ∈ˢ a ⟩ × ⟨ pr b z ∈ˢ f ⟩) ∥₁ )
+                × ( (z : S) → ∥ Σ[ b ∈ S ] (⟨ b ∈ˢ a ⟩ × ⟨ pr b z ∈ˢ f ⟩) ∥₁ → ⟨ z ∈ˢ y ⟩ )
+
+  -- The atom decodes.  Each atom's satisfaction at a variable environment
+  -- is read back into the corresponding meta-level statement about the
+  -- looked-up values, and conversely.  The pattern is the kit's: every
+  -- truncated branch is a named where-function with a written type, so the
+  -- inner satisfaction machinery elaborates once per branch.
+
+  -- sgl: "the set at k is a singleton".
+  sgl-out : {n : ℕ} (k : Fin n) (δ : Vec S n)
+          → ⟨ δ ⊨ₚ sgl k ⟩ → ∥ Σ[ a ∈ S ] (lookup k δ ≡ ⁅ a ⁆s) ∥₁
+  sgl-out k δ h = PT.rec squash₁ go h
+    where
+    go : Σ[ m ∈ S ] (⟨ m ∈ˢ lookup k δ ⟩
+           × ((w : S) → ⟨ w ∈ˢ lookup k δ ⟩ → w ≡ m))
+       → ∥ Σ[ a ∈ S ] (lookup k δ ≡ ⁅ a ⁆s) ∥₁
+    go (m , (m∈k , all)) = ∣ m , singleton-eq ∣₁
+      where
+      singleton-eq : lookup k δ ≡ ⁅ m ⁆s
+      singleton-eq = extensionality (lookup k δ) ⁅ m ⁆s (sub , sup)
+        where
+        sub : (x : S) → ⟨ x ∈ₛ lookup k δ ⟩ → ⟨ x ∈ₛ ⁅ m ⁆s ⟩
+        sub x hx = singl∈ (all x (∈∈ₛ {a = x} {b = lookup k δ} .snd hx))
+        sup : (x : S) → ⟨ x ∈ₛ ⁅ m ⁆s ⟩ → ⟨ x ∈ₛ lookup k δ ⟩
+        sup x hx = ∈∈ₛ {a = x} {b = lookup k δ} .fst
+          (subst (λ t → ⟨ t ∈ˢ lookup k δ ⟩) (sym (∈singl hx)) m∈k)
+
+  sgl-in : {n : ℕ} (k : Fin n) (δ : Vec S n)
+         → ∥ Σ[ a ∈ S ] (lookup k δ ≡ ⁅ a ⁆s) ∥₁ → ⟨ δ ⊨ₚ sgl k ⟩
+  sgl-in k δ = PT.rec squash₁ go
+    where
+    go : Σ[ a ∈ S ] (lookup k δ ≡ ⁅ a ⁆s) → ⟨ δ ⊨ₚ sgl k ⟩
+    go (a , e) = ∣ a , (a∈k , all) ∣₁
+      where
+      a∈k : ⟨ a ∈ˢ lookup k δ ⟩
+      a∈k = subst (λ t → ⟨ a ∈ˢ t ⟩) (sym e)
+        (∈∈ₛ {a = a} {b = ⁅ a ⁆s} .snd (self∈singl a))
+      all : (w : S) → ⟨ w ∈ˢ lookup k δ ⟩ → w ≡ a
+      all w hw = ∈singl (subst (λ t → ⟨ w ∈ₛ t ⟩) e (∈∈ₛ {a = w} {b = lookup k δ} .fst hw))
+
+  -- isOrdAt: "the set at k is an ordinal".
+  isOrdAt-out : {n : ℕ} (k : Fin n) (δ : Vec S n)
+              → ⟨ δ ⊨ₚ isOrdAt k ⟩ → IsOrd (lookup k δ)
+  isOrdAt-out k δ (h₁ , h₂) = (trans , memtr)
+    where
+    trans : isTransV (lookup k δ)
+    trans {x} {y} y∈x x∈k = h₁ x x∈k y y∈x
+    memtr : (x : S) → ⟨ x ∈ˢ lookup k δ ⟩ → isTransV x
+    memtr x x∈k {y} {z} z∈y y∈x = h₂ x x∈k y y∈x z z∈y
+
+  isOrdAt-in : {n : ℕ} (k : Fin n) (δ : Vec S n)
+             → IsOrd (lookup k δ) → ⟨ δ ⊨ₚ isOrdAt k ⟩
+  isOrdAt-in k δ (Atr , Amem) = (c1 , c2)
+    where
+    c1 : ⟨ δ ⊨ₚ ∀̇∈ (var k) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc k)))) ⟩
+    c1 x x∈k y y∈x = Atr {x = x} {y = y} y∈x x∈k
+    c2 : ⟨ δ ⊨ₚ ∀̇∈ (var k) (∀̇∈ (var zero) (∀̇∈ (var zero)
+           (var zero ∈̇ var (suc (suc zero))))) ⟩
+    c2 x x∈k y y∈x z z∈y = Amem x x∈k {x = y} {y = z} z∈y y∈x
+
+  -- isLimitAt: "the set at k is a limit ordinal".
+  isLimitAt-out : {n : ℕ} (k : Fin n) (δ : Vec S n)
+                → ⟨ δ ⊨ₚ isLimitAt k ⟩ → isLimit (lookup k δ)
+  isLimitAt-out k δ (ord , (h₂ , h₃)) = (isOrdAt-out k δ ord , nonempty , nogreat)
+    where
+    nonempty : ∥ Σ[ z ∈ S ] ⟨ z ∈ˢ lookup k δ ⟩ ∥₁
+    nonempty = PT.map (λ { (z , hz) → z , (hz .fst) }) h₂
+    nogreat : (z : S) → ⟨ z ∈ˢ lookup k δ ⟩
+            → ∥ Σ[ w ∈ S ] (⟨ z ∈ˢ w ⟩ × ⟨ w ∈ˢ lookup k δ ⟩) ∥₁
+    nogreat z z∈k = PT.map (λ { (w , hw) → w , ((hw .snd) , (hw .fst)) }) (h₃ z z∈k)
+
+  isLimitAt-in : {n : ℕ} (k : Fin n) (δ : Vec S n)
+               → isLimit (lookup k δ) → ⟨ δ ⊨ₚ isLimitAt k ⟩
+  isLimitAt-in k δ (ord , nonempty , nogreat) = (isOrdAt-in k δ ord , ne-sat , ng-sat)
+    where
+    ne-sat : ⟨ δ ⊨ₚ ∃̇∈ (var k) ⊤̇ ⟩
+    ne-sat = PT.map (λ { (z , hz) → z , (hz , tt*) }) nonempty
+    ng-sat : ⟨ δ ⊨ₚ ∀̇∈ (var k) (∃̇∈ (var (suc k)) (var (suc zero) ∈̇ var zero)) ⟩
+    ng-sat z z∈k = PT.map (λ { (w , (hzw , hw)) → w , (hw , hzw) }) (nogreat z z∈k)
+
+  -- isLimitOf: "the first component of the pair at k is a limit ordinal".
+  isLimitOf-out : {n : ℕ} (k : Fin n) (δ : Vec S n)
+                → ⟨ δ ⊨ₚ isLimitOf k ⟩
+                → ∥ Σ[ a ∈ S ] ( isLimit a × ∥ Σ[ s ∈ S ] (⟨ s ∈ˢ lookup k δ ⟩ × (s ≡ ⁅ a ⁆s)) ∥₁ ) ∥₁
+  isLimitOf-out k δ h = PT.rec squash₁ go h
+    where
+    go : Σ[ s ∈ S ] (⟨ s ∈ˢ lookup k δ ⟩ ×
+           ⟨ (s ∷ δ) ⊨ₚ (sgl f0 ∧̇ ∀̇∈ (var zero) (isLimitAt f0)) ⟩)
+       → ∥ Σ[ a ∈ S ] ( isLimit a × ∥ Σ[ s ∈ S ] (⟨ s ∈ˢ lookup k δ ⟩ × (s ≡ ⁅ a ⁆s)) ∥₁ ) ∥₁
+    go (s , (hs , (hsgl , hall))) =
+      PT.rec squash₁ (λ { (a , e) →
+        let a∈s : ⟨ a ∈ˢ s ⟩
+            a∈s = subst (λ t → ⟨ a ∈ˢ t ⟩) (sym e)
+              (∈∈ₛ {a = a} {b = ⁅ a ⁆s} .snd (self∈singl a))
+        in ∣ (a , (isLimitAt-out f0 (a ∷ s ∷ δ) (hall a a∈s) , ∣ (s , (hs , e)) ∣₁)) ∣₁ })
+        (sgl-out f0 (s ∷ δ) hsgl)
+
 ```
 
 <!--en-->

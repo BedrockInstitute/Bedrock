@@ -187,19 +187,64 @@ def changed_masters(base: str) -> list[Path]:
     return paths
 
 
-def time_module(path: Path) -> float | None:
-    """Typecheck one module warm and return wall seconds, or None if it failed.
+def interface_of(path: Path) -> Path | None:
+    """The `.agdai` Agda caches for this master, or None if it is not there.
+
+    The path is version-stamped (`_build/<agda-version>/agda/<src path>`), so
+    it is DISCOVERED rather than assumed: a guessed path that does not exist
+    would silently turn every cold run into a warm one, which is the exact
+    failure this function was added to prevent.
+    """
+    rel = path.relative_to(ROOT).with_suffix("")
+    while rel.suffix:                      # .lagda.md -> .lagda -> bare
+        rel = rel.with_suffix("")
+    hits = sorted((ROOT / "_build").glob(f"*/agda/{rel}.agdai"))
+    return hits[0] if hits else None
+
+
+def time_module(path: Path, cold: bool) -> float | None:
+    """Typecheck one module and return wall seconds, or None if it failed.
+
+    COLD BY DEFAULT, and that is the whole point. The ledger's `[[hot]]`
+    figures are each module's own COLD elaboration with dependencies warm,
+    which is how [T86], [T87], [T88] and [T89] all measured. A warm re-check
+    reads the cached interface and returns in seconds no matter how expensive
+    the module really is: the first version of this tool compared a warm 2.8 s
+    against a cold 204 s baseline and reported OK, so a module could have
+    tripled its real cost and passed. Comparing a measurement against a
+    baseline taken a different way is worse than not comparing at all,
+    because it produces a confident wrong answer.
+
+    So: move the module's own interface aside, time it, put it back.
 
     GHCRTS=-M8g and one process at a time, per C-12: a concurrent typecheck
     both thrashes the machine and corrupts the measurement.
     """
     env = dict(os.environ, GHCRTS="-M8g")
-    start = time.monotonic()
-    proc = subprocess.run(
-        ["agda", str(path.relative_to(ROOT))],
-        cwd=ROOT, capture_output=True, text=True, env=env,
-    )
-    elapsed = time.monotonic() - start
+    iface = interface_of(path)
+    stashed = None
+    if cold and iface is None:
+        sys.stderr.write(
+            f"  note: no cached interface found for {path.name}; this run is "
+            f"cold by construction\n")
+    if cold and iface is not None and iface.exists():
+        stashed = iface.with_suffix(".agdai.check-timing-stash")
+        iface.replace(stashed)
+    try:
+        start = time.monotonic()
+        proc = subprocess.run(
+            ["agda", str(path.relative_to(ROOT))],
+            cwd=ROOT, capture_output=True, text=True, env=env,
+        )
+        elapsed = time.monotonic() - start
+    finally:
+        # Always restore, including on an exception or a heap kill: leaving a
+        # module's interface missing would silently make the NEXT full gate
+        # re-elaborate it and look like a regression somewhere else.
+        if stashed is not None and stashed.exists():
+            if iface.exists():
+                iface.unlink()
+            stashed.replace(iface)
     if proc.returncode != 0:
         sys.stderr.write(f"  agda failed on {path}; timing is meaningless:\n")
         sys.stderr.write("  " + (proc.stderr or proc.stdout)[-500:] + "\n")
@@ -216,6 +261,10 @@ def main() -> int:
     ap.add_argument("--base", default="HEAD")
     ap.add_argument("--warn-only", action="store_true",
                     help="report but exit 0 (use while a fix is in flight)")
+    ap.add_argument("--warm", action="store_true",
+                    help="do NOT clear the interface first. Fast, but the "
+                         "number is not comparable to the ledger's cold "
+                         "baselines, so baseline and share tests are skipped.")
     args = ap.parse_args()
 
     targets = [p if p.is_absolute() else ROOT / p for p in args.paths]
@@ -237,13 +286,15 @@ def main() -> int:
               "its data blocks and both gates went silently dead.")
     findings: list[str] = []
 
-    print(f"check-timing: {len(targets)} module(s), warm, one process at a time")
+    mode = "warm (NOT comparable to the cold baselines)" if args.warm else \
+           "cold, interface cleared, one process at a time"
+    print(f"check-timing: {len(targets)} module(s), {mode}")
     for path in targets:
         lines = code_lines(path)
         if lines == 0:
             continue
         name = module_name(path)
-        seconds = time_module(path)
+        seconds = time_module(path, cold=not args.warm)
         if seconds is None:
             findings.append(f"{name}: does not typecheck; timing not established")
             continue
@@ -252,7 +303,7 @@ def main() -> int:
         obs = obligations(path)
         per_ob = seconds / obs if obs else 0.0
         share = f"{seconds / tree_total:5.1%}" if tree_total else "    -"
-        recorded = base.get(name)
+        recorded = None if args.warm else base.get(name)
         note = ""
         if recorded:
             was = recorded["seconds"]
@@ -289,14 +340,13 @@ def main() -> int:
                 f"exhausted at -M8g, twice. Batch into [L3.32-F6] and price it."
             )
 
-        if tree_total and seconds / tree_total >= SHARE_REQUIRING_PROFILE:
+        if (not args.warm and tree_total
+                and seconds / tree_total >= SHARE_REQUIRING_PROFILE):
             findings.append(
                 f"{name}: {seconds / tree_total:.0%} of the whole tree's check "
                 f"time. D30 exit condition (1) requires a per-definition "
                 f"profile on record for any module at or above "
-                f"{SHARE_REQUIRING_PROFILE:.0%} (UNDERSTATED: this is a warm "
-                f"single-module time over a full COLD tree total, so the real "
-                f"share is higher): run "
+                f"{SHARE_REQUIRING_PROFILE:.0%}: run "
                 f"`agda --profile=definitions` and record the removable "
                 f"fraction, or record why none is removable."
             )
