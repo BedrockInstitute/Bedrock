@@ -249,6 +249,12 @@ import V.Model
   classical step and the bounded quantifiers consuming transitivity; then the
   definable hull of a set as the set of least witnesses of the formulas with
   parameters from it, closed under the criterion at its own parameters.
+- `L.CardinalCount`{.Agda}: the counting side, assembled: the count chapter's
+  two injections composed with the shape kept in the image, any
+  propositionally-witnessed index injected into the formulas, the counting
+  bound at an infinite ordinal, and the classical upper half of the hull's
+  cardinality on the hull's own index. The bound rests on the square law, and
+  the chapter names the one call site where it does.
 - `L.Constructible`{.Agda}: the tower `Lset`{.Agda} by membership recursion,
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
@@ -352,6 +358,7 @@ import V.Model
 - `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
 - `L.Condensation`{.Agda}：传递集载体处的跨越：整套绝对性装置一行实例化、彼处的层句、后继情形及其两条伴生事实、保义的迁移，以及把凝聚化归为「关于一条公式、在两个载体处的一条绝对性义务」。义务本身、层公式的 Lévy 内容与极限情形仍待交付。
 - `L.Hull`{.Agda}：初等性与 Tarski-Vaught 判据，经一次跨完整语法的公式归纳而等价，其中全称情形是那笔经典支出，有界量词消费传递性；随后是一个集合的可定义外壳，即以其为参数的诸公式之最小见证所成之集，且在自己的参数处对该判据封闭。
+- `L.CardinalCount`{.Agda}：装配好的计数一侧：计数章那两条注入的复合 (形状留在像里，故单射性是结构性的)、任何带命题见证的索引注入诸公式、无穷序数处的计数上界，以及外壳基数的经典上半，落在外壳自己的索引上。该上界倚靠平方律，本章点名它唯一的那处调用。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
@@ -440,6 +447,7 @@ import L.Coding.Sequence
 import L.Hierarchy
 import L.Condensation
 import L.Hull
+import L.CardinalCount
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 import L.Choice.Stage
