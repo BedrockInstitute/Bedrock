@@ -170,7 +170,10 @@ audit from the beginning and nothing had implemented it; on its first run it fou
 in-progress chapter sitting outside the gate. The others: **archive** (no live master imports a
 module that lives only in `archive/`, D20), **shared-cjk** (no CJK in marker-free prose, which
 would reach the English book verbatim, C-8), **spdx** (licensing has one source of truth, D4),
-and **module-body**, WARN only (C-11's silently empty parameterized module).
+**retiring**, WARN only (a SURVIVING master importing a chapter D18 retires: legal today
+because both trees coexist, lethal at the surgery, and every crossing is surgery work the
+ledger must carry), and **module-body**, WARN only (C-11's silently empty parameterized
+module).
 
 Its docstring also records what was deliberately NOT made a check and why, since three
 proposals were rejected on false-positive grounds: a rule already enforced by Agda itself, a

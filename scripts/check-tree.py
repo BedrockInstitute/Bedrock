@@ -26,6 +26,14 @@ The checks, each with the rule it enforces and why it is here rather than left t
   SPDX identifier header is a second one. (This paragraph deliberately avoids spelling the
   tag out: the check reads file HEADS, and an earlier draft flagged its own docstring.)
 
+- **retiring** (D18 plus D20), WARN ONLY. A SURVIVING master that imports a module booked for
+  retirement is a debt: at the surgery, that import must be re-homed or the chapter breaks.
+  It warns rather than fails because the whole point of the transition period is that both
+  trees coexist (D15's two-step), so a crossing is legal today and lethal later. Measured on
+  the day it was added: seven surviving masters crossed the boundary, one of them committed
+  that same hour, which is why this had to become a check rather than a note. `Everything` is
+  exempt: it is the catalog and is rewired wholesale at the surgery.
+
 - **module-body** (LESSONS C-11), WARN ONLY. A parameterized module header whose body is not
   indented deeper is an EMPTY module: Agda accepts it, the parameter is out of scope, and the
   declarations meant to be inside it silently are not. It warns rather than fails because
@@ -175,6 +183,39 @@ def check_spdx() -> list[str]:
     return bad
 
 
+def check_retiring() -> list[str]:
+    """WARN class: a surviving master importing a chapter booked for retirement."""
+    try:
+        import tomllib
+        data = tomllib.loads((ROOT / "dev" / "ledger.toml").read_text())
+    except Exception as exc:
+        return [f"could not read dev/ledger.toml ({exc}); the retirement boundary is UNCHECKED"]
+
+    def retires(f: str) -> bool:
+        for e in data.get("retire", []):
+            if "prefix" in e and f.startswith(e["prefix"]) and f not in e.get("except", []):
+                return True
+            if e.get("path") == f:
+                return True
+        return False
+
+    rel = [str(p.relative_to(ROOT)) for p in masters()]
+    doomed = {module_of(ROOT / f): f for f in rel if retires(f)}
+    warn = []
+    for f in rel:
+        if retires(f) or f.endswith("Everything.lagda.md"):
+            continue
+        code = code_of(ROOT / f)
+        hits = sorted({m for m in re.findall(r"^\s*(?:open )?import ([A-Za-z0-9_.]+)", code, re.M)
+                       if m in doomed})
+        for h in hits:
+            warn.append(f"{f} imports `{h}`, which D18 retires. Legal now, lethal at the "
+                        f"surgery: this import must be re-homed or the chapter breaks. "
+                        f"Every crossing is retirement-surgery work that the ledger's "
+                        f"surgery row must carry")
+    return warn
+
+
 def check_module_body() -> list[str]:
     """WARN class: C-11's silent empty parameterized module."""
     warn = []
@@ -225,6 +266,7 @@ CHECKS = {
     "archive": (check_archive, "FAIL"),
     "shared-cjk": (check_shared_cjk, "FAIL"),
     "spdx": (check_spdx, "FAIL"),
+    "retiring": (check_retiring, "WARN"),
     "module-body": (check_module_body, "WARN"),
 }
 
