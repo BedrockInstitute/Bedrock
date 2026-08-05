@@ -179,6 +179,18 @@ klass = "x3 for five survey items (tower induction, the 5.4 half, Cantor, Init v
 gate = "T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250"
 provenance = "_build/l3.32-t57-report.md section 3 table (ITEMIZED, no longer a subtraction); named rows at _build/l3.32-t46-report.md:61-65, :177-178; _build/l3.32-t47-report.md section 6; _build/l3.32-t37-report.md:147-158; _build/l3.32-t18-report.md:93-107, :121-128, :205-209"
 
+[[remaining]]
+id = "structural-story"
+title = "The condensation structural story: rewritten with meaning pinned, because three of its atoms were found to read something other than what they say"
+naive_low = 515
+naive_high = 688
+calibrated_low = 670
+calibrated_high = 895
+klass = "x1.3 (T77 priced it from the rewrite side, itemized, against the delivered obligations)"
+gate = "T77 returned STOP AT THE PRICE: both the full decoded form (688 naive) and the minimal form (515) exceed its 400-line stop-line, so nothing was built and the defective atoms stand. THE OWNER MUST RULE, and there are two shapes: rewrite in place at this price, or do it as levers A plus B, which cover the same region and net POSITIVE because they remove the third encoding rather than re-writing it"
+provenance = "_build/l3.32-t77-report.md itemized price; the defects at _build/l3.32-t76-report.md; the alternative shape at _build/l3.32-t79-report.md levers A and B"
+
+
 # ---------------------------------------------------------------------------
 # Known open items that are deliberately NOT in the endpoint sum. Listed so
 # their absence is a recorded decision rather than an oversight.
@@ -401,3 +413,4 @@ risk = "HIGH, and priced only at x3: not defensible until gated"
 klass = "x3"
 provenance = "_build/l3.32-t79-report.md lever B"
 gated = true
+note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a forced rewrite (Condensation:324-562). T79 priced it as optional compression at HIGH risk, but the atoms in that region are DEFECTIVE and the story has to be rebuilt regardless, so the risk is no longer risking a working chapter, it is choosing how to rebuild a broken one. Compare against the structural-story row: in place costs 515-688 naive, as A plus B it NETS positive. Neither agent could see this; they ran concurrently and neither read the other."
