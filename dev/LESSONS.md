@@ -1961,3 +1961,40 @@ the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
 sourced, it is not entered; it is surfaced to the owner instead.
+
+### C-NN (proposed 2026-08-05, awaiting the owner's ID): a shape certificate is not a meaning certificate
+
+**The law.** A proof obligation that certifies a formula's SHAPE (`Δ₀`, `Σ₁`,
+`Π₁`) says nothing about what the formula MEANS. A wrong de Bruijn index changes
+the meaning and leaves the shape untouched, so it passes every linter, every
+gate and every typecheck. **An object-language atom is not usable until it
+carries a two-way decode against a delivered meta-level reading**, and no
+consumer may be built on an atom that lacks one.
+
+**The measurement.** In `L.Condensation`'s structural story, three defects of
+this kind were found in one day by three different agents:
+
+- `sndIn` read a FIRST component while its name, its comment and all three of
+  its use sites said second, so the range clause `Rg` read a **domain**;
+- the corrected `snd∈Snd` asserts **equality** of second components where the
+  limit clause needs **membership**;
+- `limIn`'s second binder ranges over the singleton member rather than the pair
+  member, making the value inclusion **vacuous**, machine-checked unsatisfiable
+  at a concrete pair.
+
+All three typechecked. Two chapters were built on top of them (`σᴹ` transported
+to the set carrier, `σL` mirrored at the class), plus both story transfers and
+the Levy certificates, and every one of those stayed green. The wrong content
+passed several full-tree gates. It was found only when an agent read the atom
+against its own documentation, by hand.
+
+**Why the discipline is cheap.** The rest of this campaign already pays it: the
+face's `read-off`, `L.Rud.LevelSigma`'s clause decodes and `L.Rud.OpGraph`'s
+two-way graphs all pin meaning as well as shape, and none of them has produced a
+defect of this class. The structural story is the one place it was skipped, and
+it is the one place this happened.
+
+**Provenance.** `[L3.32-T70]` found the first defect while mirroring the story;
+`[L3.32-T75]` settled that the code rather than the comment was wrong;
+`[L3.32-T76]` fixed it and found the other two; the owner ruled the story a
+rewrite rather than a patch on 2026-08-05, executing as `[L3.32-T77]`.
