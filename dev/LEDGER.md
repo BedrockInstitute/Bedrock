@@ -29,9 +29,9 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (128 files) | 49,230 |
+| tracked masters (128 files) | 49,236 |
 | booked retirements, D18 (51 files) | 30,648 |
-| **standing** | **18,582** |
+| **standing** | **18,588** |
 
 ### Remaining work
 
@@ -43,9 +43,10 @@ two disagree.*
 | StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,240-1,730 | 1,610-2,250 | x1.3 throughout, and the op-graph content is INSIDE the band, not extra: T78 verified that T7's per-part table, which T10 re-priced, already itemizes graphOf/graph-out/graph-in at 25-40 fresh and the memOf dispatch at 30-50, so this row's earlier UNPRICED warning was wrong | T10 (green), RE-SCOPED and confirmed by T78 2026-08-05: the price is essentially unchanged because the content was already inside T10's scope under its own names. W3's consumer status adds three OBLIGATIONS rather than content: the mem11-mem14 arms re-anchored at the measured rate (they are the load-bearing non-pair content and the only W3-critical arms T10 extrapolated rather than measured), the graph statements' shapes pinned so W3's wiring re-points cleanly, and the sixteen-operation lex ruled OUT of this row because it is W3-row content and booking it here would double-count |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
 | The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20) | 620-1,170 | 810-1,520 | x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part | T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint |
-| W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,250-2,900 | SPLIT after T85's re-designed gate went green: the tower induction's SUCCESSOR half moves to x1.3 (the composition is delivered machinery at a variable carrier and checks in seconds) while its LIMIT half stays x3 (untouched by any probe, in the extraction wall class); Cantor and the 5.4 half are DELIVERED by T71; the remaining x3 items are Init verification and the GCH assembly, and x1.3 covers the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing and Pow | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
+| W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,250-2,900 | CORRECTED 2026-08-06 by T91: the earlier note that Cantor and the 5.4 half are DELIVERED is OVERSTATED. The 5.4 half is delivered only as omega-subset-M plus a bijection form with two UNDISCHARGED injection hypotheses, and the raw-index-to-presentation descent is a named unpriced piece now carried by the gch-proof-steps row. SPLIT after T85's re-designed gate went green: the tower induction's SUCCESSOR half moves to x1.3 (the composition is delivered machinery at a variable carrier and checks in seconds) while its LIMIT half stays x3 (untouched by any probe, in the extraction wall class); Cantor and the 5.4 half are DELIVERED by T71; the remaining x3 items are Init verification and the GCH assembly, and x1.3 covers the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing and Pow | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
 | The condensation structural story: rewritten with meaning pinned, because three of its atoms were found to read something other than what they say | 515-688 | 670-895 | x1.3 (T77 priced it from the rewrite side, itemized, against the delivered obligations) | T77 returned STOP AT THE PRICE: both the full decoded form (688 naive) and the minimal form (515) exceed its 400-line stop-line, so nothing was built and the defective atoms stand. THE OWNER MUST RULE, and there are two shapes: rewrite in place at this price, or do it as levers A plus B, which cover the same region and net POSITIVE because they remove the third encoding rather than re-writing it |
-| **total** | **6,005-11,698** | **12,140-26,315** | | |
+| The theorem's own proof steps, which fell off the list: Devlin 5.5 bounded subsets, the 5.6 equality argument, the condensation limit case, the collapse's transitive-fixing clause, the counting bound's descent to the hull's presentation index, the Inf predicate, and the crossing's transport certificate | 480-1,020 | 1,000-2,400 | x3 (none of these has been probed; several were priced by survey and then dropped rather than discharged) | none yet. Each item needs one, and the bounded-subsets argument is the one to gate first because it is what W3's hull elementarity exists to serve |
+| **total** | **6,485-12,718** | **13,140-28,715** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -55,12 +56,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 24.59-30.28k | 27.43k |
-| calibrated | 30.72-44.90k | 37.81k |
+| naive | 25.07-31.31k | 28.19k |
+| calibrated | 31.73-47.30k | 39.52k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +5.28k from the line, and the calibrated
-band sits +5.72k to +19.90k from it.
+the naive band's pessimistic corner sits +6.31k from the line, and the calibrated
+band sits +6.73k to +22.30k from it.
 
 ### Deliberately not in the sum
 
@@ -92,10 +93,10 @@ it waits on), or **at-risk** (delivered, but on machinery scheduled to retire).
 | item | status | blocked by | what it is |
 |---|---|---|---|
 | W1': the condensation crossing's transfers | **in-flight** | - | The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier. |
+| W5: the collapse and the condensation | **in-flight** | - | CORRECTED 2026-08-06 by T91: reading this as delivered was overstated in two ways. The crossing's LIMIT case is not built and sits explicitly outside W1'; and the level story the crossing operates on is built on atoms of which at least two read something other than their documentation, which T89 is repairing. The collapse's transitive-fixing clause (Devlin 5.2(ii)) is also undelivered. What is genuinely delivered is the collapse and the crossing's REDUCTION; the transfers are W1' and the rest is the gch-proof-steps row. |
 | W3: the internal definable well-ordering, at a general level | **ready** | - | The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. |
 | Re-scope and rewrite StepInL so W3's op-graph content survives the retirement | **ready** | - | The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. |
 | W7's residue: the last mile to the GCH sentence | **ready** | - | The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. |
-| W5: the collapse and the condensation | **delivered** | - | The Mostowski collapse and the crossing's reduction are both in the tree. What the crossing still leaves is the transfers, tracked separately as W1'. |
 | W2: the level formula | **delivered** | - | The five-clause tower story with its read-off, at the real tower, and a second instantiation at the rud carrier. |
 
 **Owed to both**
@@ -261,6 +262,31 @@ whose net is not clearly positive is not recorded as a lever.
 
 One row, B, is marked `gated`: it is priced only at x3 and is excluded from the total until a
 probe measures it. That exclusion is the two-caliber discipline doing its job on optimism.
+
+## How a row goes missing
+
+`[L3.32-T91]` walked the whole chain from the delivered tree to the sentence
+`L ⊨ GCH` and found that **the theorem's own proof steps were not on this
+list.** Devlin 5.5's bounded-subsets argument and 5.6's equality argument had
+been booked by `[T18]` as rows D and E; when `[T57]` itemized the residue it
+replaced them with two narrower items, a Pow formula and a sentence assembly,
+and **nobody checked that the replacement covered the same ground.** The proof
+content simply stopped being tracked. Four smaller items went the same way, and
+the sentence `L ⊨ GCH` itself turned out to be stated nowhere in the tree, only
+in prose.
+
+Two rows were also reading better than the truth: the 5.4 half was recorded as
+delivered when what is delivered leaves two injection hypotheses undischarged,
+and W5 was recorded as delivered when the crossing's limit case is unbuilt and
+its story sits on atoms that misread.
+
+**The lesson, which is why this section exists rather than a quiet correction:
+a re-itemization is a place where scope leaks.** Replacing two rows with two
+different rows looks like bookkeeping and is actually a scope change. When a
+row is split, merged or restated, the replacement must be checked to cover what
+the original covered, and the check must be recorded. The gate cannot do this
+one: it verifies that every row has a provenance and a band, not that the rows
+together still cover the theorem.
 
 ## Derived rows
 
