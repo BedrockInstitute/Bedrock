@@ -249,6 +249,13 @@ import V.Model
   classical step and the bounded quantifiers consuming transitivity; then the
   definable hull of a set as the set of least witnesses of the formulas with
   parameters from it, closed under the criterion at its own parameters.
+- `L.Cardinal`{.Agda}: two classical facts the cardinal step consumes and the tree did not
+  carry. Cantor's theorem at the delivered carrier, by the direct diagonal, in its
+  no-surjection form. And the equality half of the cardinality argument: the lower bound's
+  new half, the general Cantor-Schroeder-Bernstein (which the installed library does not
+  provide, so it is proved here once for every carrier rather than per consumer), and the
+  bijection form the predicates chapter's equinumerosity expects.
+
 - `L.CardinalCount`{.Agda}: the counting side, assembled: the count chapter's
   two injections composed with the shape kept in the image, any
   propositionally-witnessed index injected into the formulas, the counting
@@ -358,6 +365,8 @@ import V.Model
 - `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
 - `L.Condensation`{.Agda}：传递集载体处的跨越：整套绝对性装置一行实例化、彼处的层句、后继情形及其两条伴生事实、保义的迁移，以及把凝聚化归为「关于一条公式、在两个载体处的一条绝对性义务」。义务本身、层公式的 Lévy 内容与极限情形仍待交付。
 - `L.Hull`{.Agda}：初等性与 Tarski-Vaught 判据，经一次跨完整语法的公式归纳而等价，其中全称情形是那笔经典支出，有界量词消费传递性；随后是一个集合的可定义外壳，即以其为参数的诸公式之最小见证所成之集，且在自己的参数处对该判据封闭。
+- `L.Cardinal`{.Agda}：基数步骤所消费、而树上原本没有的两条经典事实。其一是交付载体处的康托尔定理，由直接对角线给出，取无满射形态。其二是基数论证的等式半边：下界的新一半、一般的 Cantor-Schroeder-Bernstein (装的库并不提供它，故在此对一切载体一次证成，而不是每个消费方各证一遍)，以及谓词章的等势所期待的双射形态。
+
 - `L.CardinalCount`{.Agda}：装配好的计数一侧：计数章那两条注入的复合 (形状留在像里，故单射性是结构性的)、任何带命题见证的索引注入诸公式、无穷序数处的计数上界，以及外壳基数的经典上半，落在外壳自己的索引上。该上界倚靠平方律，本章点名它唯一的那处调用。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
@@ -448,6 +457,7 @@ import L.Hierarchy
 import L.Condensation
 import L.Hull
 import L.CardinalCount
+import L.Cardinal
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 import L.Choice.Stage
