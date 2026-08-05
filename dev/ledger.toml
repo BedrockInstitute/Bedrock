@@ -282,15 +282,35 @@ detail = "A first version set a projected 1,100 s and a 0.25 s/line cap. Both ar
 # you divide by, and that choice was doing silent work for weeks.
 [caliber]
 settled = "2026-08-06, L3.32-F0"
-unit = "obligation (top-level type signature), with where-local results counted separately"
+unit = "obligation (a type signature) at ANY depth; counting only column-0 signatures was WRONG and is withdrawn, because the cheap tree writes everything inside `module _ (A : V l) where` blocks and so scores near zero at top level"
 tool = "scripts/obligations.py"
-retiring_lines_per_obligation = 56.5
-surviving_lines_per_obligation = 22.4
+retiring_lines_per_obligation = 4.9
+surviving_lines_per_obligation = 3.9
+retiring_seconds_per_obligation = 0.063
+surviving_seconds_per_obligation = 0.277
 ratio_per_line = 5.3
-ratio_per_named_result = 4.2
-ratio_per_top_level_obligation = 2.1
+ratio_per_obligation = 4.2
+withdrawn = "A first pass reported 2.1x per top-level obligation and 56.5 against 22.4 lines per obligation, and concluded the gap was largely an artifact. Both figures were artifacts of counting depth. The corrected reading is that the two trees write at nearly the same density and the 4.2x cost gap is REAL."
 controlled_single_module = "L.Rud.Bridge 939 s -> 199 s, 4.7x, mathematics held fixed, caliber cancels"
 note = "The controlled per-module experiment is the instrument; the cross-tree ratio is not, because one engineering fix on one module exceeds the whole cross-tree gap at the fairest simple caliber."
+
+# The full-rewrite option (owner's proposal 2026-08-06, [L3.32-F5]). Recorded
+# as a lever because D17 requires it priced from the REWRITE side, and because
+# the measurement re-targets it away from where it was aimed.
+[[lever]]
+id = "rewrite-worst"
+status = "priced, not funded"
+proposal = "rewrite the rud route wholesale on the surviving trunk, or start with the worst part"
+finding = "L.Rud is the BEST large body in the trunk at 0.132 s/obligation against a 0.241 trunk average and a 0.063 retiring benchmark. The worst is one module, L.Ordinal.SquareLaw, at 3.14 s/obligation, 50x the benchmark and 44 percent of tree check time."
+target = "L.Ordinal.SquareLaw"
+target_lines = 907
+target_obligations = 273
+target_seconds_now = 856
+rewrite_side_seconds_naive = 17
+rewrite_side_seconds_calibrated = 52
+net_seconds = "about 800, the largest single lever measured in this project"
+precondition = "MET as of [T93], and not met before it: a rewrite is only worth paying for once we know what to do differently, and T93 measured that (abstract carriers, variable indices, module-parameterized blocks, zero opaque)."
+decided_by = "[T88]'s return. If the 60-line seal reaches, this lever is moot; if it does not, the answer is a rewrite of this one module, not a bigger seal."
 
 [[owed]]
 id = "ac-leg"
