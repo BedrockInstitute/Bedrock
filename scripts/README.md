@@ -157,6 +157,31 @@ python3 scripts/check-probes.py --stale           # what is safe to delete, and 
 python3 scripts/check-probes.py --stale --delete  # delete it
 ```
 
+## `check-tree.py`
+
+Whole-tree invariants that the per-file linters structurally cannot see, because they read one
+file at a time.
+
+The one that matters most is **closure** (`dev/PLAN.md` section 7 rule 3): every master under
+`src/` must appear in `src/Everything.lagda.md`'s import list. `make check` typechecks exactly
+one file, which is what makes it a trusted single invocation, and the price is that **a master
+nobody imports is never typechecked while the gate still goes green**. PLAN specified this
+audit from the beginning and nothing had implemented it; on its first run it found a real
+in-progress chapter sitting outside the gate. The others: **archive** (no live master imports a
+module that lives only in `archive/`, D20), **shared-cjk** (no CJK in marker-free prose, which
+would reach the English book verbatim, C-8), **spdx** (licensing has one source of truth, D4),
+and **module-body**, WARN only (C-11's silently empty parameterized module).
+
+Its docstring also records what was deliberately NOT made a check and why, since three
+proposals were rejected on false-positive grounds: a rule already enforced by Agda itself, a
+rule whose only hit is in code booked for retirement, and a rule whose predicate cannot tell a
+goal's status from a sub-item's.
+
+```sh
+python3 scripts/check-tree.py --check            # every invariant (make check and the hook)
+python3 scripts/check-tree.py --check closure    # just one
+```
+
 ## `lint-agda.py`
 
 Enforces the code-side rules of [dev/STYLE-agda.md](../dev/STYLE-agda.md) on the ```agda

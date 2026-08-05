@@ -21,7 +21,9 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
   [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)),
   validates the size-ledger declaration (`scripts/ledger.py --check` against
   [dev/ledger.toml](dev/ledger.toml), explained in [dev/LEDGER.md](dev/LEDGER.md)), enforces the
-  never-commit rule (`scripts/check-probes.py --check`: no probe file, nothing generated), and
+  never-commit rule (`scripts/check-probes.py --check`: no probe file, nothing generated),
+  checks the whole-tree invariants (`scripts/check-tree.py --check`, chiefly that every master
+  is in `Everything`'s import closure, since one that is not is never typechecked at all), and
   runs `reuse lint` for per-file licensing. It is expensive: run the individual checks while you
   work (`agda <file>`, `python3 scripts/lint-prose.py <files>`) and the full gate before the
   commit.
