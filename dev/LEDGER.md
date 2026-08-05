@@ -218,6 +218,28 @@ count. The `[T63]` return is the worked example: it moved no band at all, and it
 statuses, because the machinery W3 needs turned out to exist inside a chapter booked for the
 archive.
 
+## Compression levers
+
+The remaining rows say what is still owed. The lever rows say the opposite: **work that removes
+more than it writes.** They are measured but **not funded and not in the endpoint sum**, so the
+endpoint can be re-summed the moment one is ruled, without a lever silently flattering the
+figure before anyone has decided to pay for it.
+
+They exist because `[L3.32-T79]` was sent to answer one question, "is the standing tree tight",
+and the measured answer was **no**: roughly 700 to 850 lines of standing are written twice. The
+duplication is not sloppiness, it is the same failure the project has now paid for three times,
+which `dev/PLAN.md` D29 exists to stop: **content written fixed to one carrier where it could
+have been written once, generic.** The largest lever is a straight instance of it, two chapters
+of the level story with 265 byte-identical lines between them.
+
+Every lever carries: the files and line counts it covers, **measured rather than estimated**;
+what replaces it; the **rewrite-side** price (D17, and D-19's port rates are never quoted at a
+rewrite question); the **net**, which is what makes it a lever at all; and its risk. A lever
+whose net is not clearly positive is not recorded as a lever.
+
+One row, B, is marked `gated`: it is priced only at x3 and is excluded from the total until a
+probe measures it. That exclusion is the two-caliber discipline doing its job on optimism.
+
 ## Derived rows
 
 One row (W7's residue) is **derived by subtraction**: its booked band covers work that is now
