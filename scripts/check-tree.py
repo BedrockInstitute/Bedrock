@@ -70,6 +70,7 @@ Exit status: 0 clean, 1 a FAIL-class violation, 2 usage error.
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -96,18 +97,34 @@ def code_of(p: Path) -> str:
     return "\n".join(FENCE.findall(p.read_text(encoding="utf-8")))
 
 
+def _tracked_or_staged() -> set[str]:
+    """Paths git knows about. An UNTRACKED master is not in the repository yet, so an
+    unwired one is a warning to its author, not a reason to block someone else's commit:
+    that distinction was missing and a concurrent agent's half-written new chapter blocked
+    an unrelated commit twice on 2026-08-05."""
+    out = set()
+    for args in (["git", "ls-files"], ["git", "diff", "--cached", "--name-only"]):
+        out |= set(subprocess.run(args, cwd=ROOT, capture_output=True,
+                                  text=True).stdout.split("\n"))
+    return {f for f in out if f}
+
+
 def check_closure() -> list[str]:
     if not EVERYTHING.exists():
         return ["src/Everything.lagda.md is missing; the trusted gate has no root"]
     imported = set(re.findall(r"^import ([A-Za-z0-9_.]+)", code_of(EVERYTHING), re.M))
+    known = _tracked_or_staged()
     bad = []
     for p in masters():
         if p == EVERYTHING:
             continue
         name = module_of(p)
         if name not in imported:
+            rel = str(p.relative_to(ROOT))
+            if rel not in known:
+                continue  # untracked: reported by the closure-new WARN check instead
             bad.append(
-                f"{p.relative_to(ROOT)}: module `{name}` is not in Everything's import list, "
+                f"{rel}: module `{name}` is not in Everything's import list, "
                 f"so it is NEVER TYPECHECKED and the gate still goes green. "
                 f"Add `import {name}` to src/Everything.lagda.md in reading order.")
     for name in sorted(imported):
@@ -181,6 +198,23 @@ def check_spdx() -> list[str]:
             bad.append(f"{p.relative_to(ROOT)}: in-file SPDX header. Licensing has one source "
                        f"of truth, REUSE.toml (D4); delete the header")
     return bad
+
+
+def check_closure_new() -> list[str]:
+    """WARN: an UNTRACKED master that is not wired. Its author must wire it before
+    committing, but it must not block anyone else."""
+    if not EVERYTHING.exists():
+        return []
+    imported = set(re.findall(r"^import ([A-Za-z0-9_.]+)", code_of(EVERYTHING), re.M))
+    known = _tracked_or_staged()
+    out = []
+    for p in masters():
+        rel = str(p.relative_to(ROOT))
+        if p == EVERYTHING or rel in known or module_of(p) in imported:
+            continue
+        out.append(f"{rel}: a NEW untracked master, not yet in Everything. Wire it before "
+                   f"committing it, or it will never be typechecked")
+    return out
 
 
 def check_retiring() -> list[str]:
@@ -266,6 +300,7 @@ CHECKS = {
     "archive": (check_archive, "FAIL"),
     "shared-cjk": (check_shared_cjk, "FAIL"),
     "spdx": (check_spdx, "FAIL"),
+    "closure-new": (check_closure_new, "WARN"),
     "retiring": (check_retiring, "WARN"),
     "module-body": (check_module_body, "WARN"),
 }

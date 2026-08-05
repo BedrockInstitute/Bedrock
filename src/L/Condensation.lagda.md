@@ -48,7 +48,7 @@ open import FOL.Manipulation.Bounding using ( BoundedFo; module Relabel )
 open import FOL.Manipulation.Relabelling using ( ⊨-map; mapFo; mapΔ₀; embed )
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-∀∈; δ-∃∈
-  ; Σ₁; σ-Δ₀; σ-∃ )
+  ; Σ₁; σ-Δ₀; σ-∃; Π₁; π-Δ₀; π-∀ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using
   ( isL; isL-trans; isTransV; IsOrd; 𝒟ₒ; Lset; Lset→isL )
@@ -609,6 +609,72 @@ transitivity exactly at the bounded quantifiers, and the crossing's
 ```
 
 <!--en-->
+## The level story at the class carrier
+<!--zh-->
+## 类载体处的层故事
+<!--/-->
+
+<!--en-->
+The mirror of the set-carrier story lives at the class carrier: the same
+parameter-free axis, embedded at `Sʟ` instead of `Sᴹ`. The relabelling carries
+the Delta-0 witness and the Sigma-1 witness exactly as before, and the Pi-1
+instance of the tower transport is restated here, because the Pi-1 data
+family, like the Sigma-1 family, has no delivered transport lemma and the
+one-constructor instance is three lines at the Delta-0 leaf. The two readings
+then agree at `L` by the delivered `abs₀` at the restriction, and both
+transfers hold for the story itself: `σ₁-up` at `L` reads the inner story
+into the ambient one, and `π₁-down` at `L` reads it back. The second
+direction is the mechanism the crossing's `TransferL` will spend once the
+story and the delivered description are known to agree; the agreement itself
+is the class-carrier equivalence, stated in the crossing section below and
+left standing with the ambient obligations.
+<!--zh-->
+集合载体故事的镜像住在类载体处：同一条无参轴，只是嵌入到 `Sʟ` 而非 `Sᴹ`。重标如旧携带 Δ₀ 见证与 Σ₁ 见证，而 Π₁ 型的塔运输在此重写，原因与 Σ₁ 数据族相同：Π₁ 数据族没有已交付的运输引理，单构造子实例在 Δ₀ 叶处只有三行。两条读式随后在 `L` 处由限制处的已交付 `abs₀` 一致，而两条转移对故事本身皆成立：`L` 处的 `σ₁-up` 把内层故事读进环境读式，`π₁-down` 把它读回。第二个方向正是跨越的 `TransferL` 将在「故事与已交付描述已知一致」之后消费的机制；那条一致本身，即类载体等价，在下方跨越一节陈述并留待与环境义务一同解决。
+<!--/-->
+
+```agda
+  -- The Pi-1 instance of the delivered tower transport: one clause per
+  -- constructor, `mapΔ₀` at the Delta-0 leaf (the mirror of `mapΣ₁`).
+  mapΠ₁ : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K')
+        → {n : ℕ} {φ : Formula K n} → Π₁ φ → Π₁ (mapFo f φ)
+  mapΠ₁ f (π-Δ₀ d) = π-Δ₀ (mapΔ₀ f d)
+  mapΠ₁ f (π-∀ p)  = π-∀ (mapΠ₁ f p)
+
+  -- The class-carrier level story: the parameter-free story embedded at Sʟ.
+  σL : Formula Sʟ 2
+  σL = embed levelStory
+
+  -- The three witnesses ride the same relabelling.
+  levelΔ₀L : Δ₀ σL
+  levelΔ₀L = mapΔ₀ Empty.rec* levelStoryΔ₀
+
+  levelΣ₁L : Σ₁ σL
+  levelΣ₁L = mapΣ₁ Empty.rec* levelStoryΣ₁
+
+  levelΠ₁L : Π₁ σL
+  levelΠ₁L = mapΠ₁ Empty.rec* (π-Δ₀ levelStoryΔ₀)
+
+  -- The two readings agree at the class carrier: the delivered
+  -- absoluteness at the restriction L, transitivity spent at the bounded
+  -- quantifiers exactly as at M.
+  level-abs₀L : (δ : Sʟ ^ 2) → (δ AbsL.⊨ᵐ σL) ≡ ((map fst δ) AbsL.⊨ᵛ σL)
+  level-abs₀L δ = AbsL.abs₀ levelΔ₀L δ
+
+  -- Both transfers hold for the class-carrier story: inner to ambient by
+  -- σ₁-up at L, and ambient to inner by π₁-down at L, the shape the
+  -- crossing's `TransferL` spends at the description.
+  level-transfer-up : (v b : Sʟ)
+                    → ⟨ (v ∷ b ∷ []) AbsL.⊨ᵐ σL ⟩
+                    → ⟨ (fst v ∷ fst b ∷ []) AbsL.⊨ᵛ σL ⟩
+  level-transfer-up v b = AbsL.σ₁-up levelΣ₁L (v ∷ b ∷ [])
+
+  level-transfer-down : (v b : Sʟ)
+                      → ⟨ (fst v ∷ fst b ∷ []) AbsL.⊨ᵛ σL ⟩
+                      → ⟨ (v ∷ b ∷ []) AbsL.⊨ᵐ σL ⟩
+  level-transfer-down v b = AbsL.π₁-down levelΠ₁L (v ∷ b ∷ [])
+```
+
+<!--en-->
 ## The crossing, reduced
 <!--zh-->
 ## 跨越，化归之后
@@ -680,7 +746,7 @@ machine-checked: the crossing's formula, the delivered description, is neither
 Δ₀, Σ₁, nor Π₁ in the delivered certification, since its quantifier profile
 carries unbounded quantifiers of both kinds, so none of the three delivered
 transfer theorems applies. The Levy form of the level story is delivered above
-at the set carrier; the crossing's application of it, the equivalence with the
+at both carriers; the crossing's application of it, the equivalence with the
 delivered description and the two factors of the ambient form, is the
 obligation stated and reduced here. The limit case is stated as the target
 `Condenses` but not built: it needs the ordinal predicate at the set carrier,
@@ -688,7 +754,7 @@ which the ordinal chapter ships carrier-generic and Δ₀-certified, and the two
 inclusions, `M ⊆ L` (delivered above) and the reverse from `level-in` plus one
 extensionality, priced in the report and left standing.
 <!--zh-->
-`TransferM` 与 `AmbientOnly` 都未交付，而探针机检地量到了原因：跨越的公式，即已交付的描述，在已交付的证书体系中既非 Δ₀、亦非 Σ₁、亦非 Π₁，因为它的量词画像同时携带两种无界量词，于是三条已交付的转移定理没有一条适用。层故事的 Lévy 形态已在上文集合载体处交付；跨越对它的施用，即与已交付描述之间的等价连同环境形态的两个因子，是在此陈述并化归的义务。极限情形被陈述为目标 `Condenses` 而未建造：它需要集合载体处的序数谓词，序数章以载体为参数、带 Δ₀ 证书地交付了它，还需要两条包含，`M ⊆ L` (上文已交付) 与由 `level-in` 加一次外延性得出的反向，在报告中定价并留待后继。
+`TransferM` 与 `AmbientOnly` 都未交付，而探针机检地量到了原因：跨越的公式，即已交付的描述，在已交付的证书体系中既非 Δ₀、亦非 Σ₁、亦非 Π₁，因为它的量词画像同时携带两种无界量词，于是三条已交付的转移定理没有一条适用。层故事的 Lévy 形态已在上文两个载体处交付；跨越对它的施用，即与已交付描述之间的等价连同环境形态的两个因子，是在此陈述并化归的义务。极限情形被陈述为目标 `Condenses` 而未建造：它需要集合载体处的序数谓词，序数章以载体为参数、带 Δ₀ 证书地交付了它，还需要两条包含，`M ⊆ L` (上文已交付) 与由 `level-in` 加一次外延性得出的反向，在报告中定价并留待后继。
 <!--/-->
 
 <!--en-->
@@ -703,12 +769,13 @@ sentence at a transitive set carrier, the successor case with its two
 companions, the meaning-preserving transport, and the crossing reduced to one
 absoluteness obligation about one formula at the two carriers, with the
 factorization proved. The Levy content of the level formula is delivered
-above: the set-carrier story `σᴹ` with its Sigma-1 witness and both readings.
-What remains is the crossing's application of it, the equivalence with the
+above: the set-carrier story `σᴹ` and its class-carrier mirror `σL`, each with
+its Sigma-1 witness and both readings, `σL` additionally Pi-1-certified. What
+remains is the crossing's application of it, the equivalence with the
 delivered description, the two factors of the ambient form, plus the limit
 case; the collapse half is separately probed green and the hull separately
 priced. The crossing is the face's third consumer, and the orchestrator wires
 this chapter into `Everything`.
 <!--zh-->
-本章交付凝聚跨越的测得核心：传递集载体处的层句、后继情形及其两条伴生事实、保义的迁移，以及化归为「关于一条公式、在两个载体处的一条绝对性义务」的跨越，分解得证。层公式的 Lévy 内容已在上文交付：集合载体处的层故事 `σᴹ` 连同它的 Σ₁ 见证与两条读式。所余是跨越对它的施用，即与已交付描述之间的等价、环境形态的两个因子，连同极限情形；坍缩半边另有探针测得绿灯，外壳另有定价。跨越是面孔的第三个消费方，编排者把本章接入 `Everything`。
+本章交付凝聚跨越的测得核心：传递集载体处的层句、后继情形及其两条伴生事实、保义的迁移，以及化归为「关于一条公式、在两个载体处的一条绝对性义务」的跨越，分解得证。层公式的 Lévy 内容已在上文交付：集合载体处的层故事 `σᴹ` 与它的类载体镜像 `σL`，各自连同 Σ₁ 见证与两条读式，`σL` 另带 Π₁ 证书。所余是跨越对它的施用，即与已交付描述之间的等价、环境形态的两个因子，连同极限情形；坍缩半边另有探针测得绿灯，外壳另有定价。跨越是面孔的第三个消费方，编排者把本章接入 `Everything`。
 <!--/-->
