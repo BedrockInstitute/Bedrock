@@ -656,10 +656,11 @@ entered. The replacement tower is the closed form the classical index needs:
 zero (the union over the empty index is empty, so `γ ∅ = +ω ∅ = ω`),
 successors (the running sup collapses to `γ β`, so `γ (sucV β) = +ω (γ β)`,
 the next ω-block) and limits (the brief's `γ(λ) := +ω (⋃_{β<λ} γ β)`
-verbatim). The tower is sealed opaque at birth with `γ-compute` as its only
-unfolding, and it carries the two facts the reshaped induction needs of it:
-every value is a limit, unconditionally (`γ-lim`), and the successor step is
-the ω-block (`γ-suc`).
+verbatim). The tower is sealed opaque at birth with `γ-compute` as its
+unfolding, its endpoint restated to the closed form `+ω (U α)`, and it
+carries the two facts the reshaped induction needs of it: every value is a
+limit, unconditionally (`γ-lim`), and the successor step is the ω-block
+(`γ-suc`).
 
 The tower is monotone in its index, and the monotonicity is the one wall this
 design fires. The step operator `sucV` is not subset-monotone: `sucV u =
@@ -671,7 +672,7 @@ run on it.
 <!--zh-->
 ## 索引塔
 
-以上一切在此装配成重塑后的归约，而归约的索引算术如今自成一座塔。旧归纳亲手搬运这段算术：成员子句跑过索引之上的每个极限、并在第一个极限处坍缩，序数算术一步也不进场。替换它的塔正是经典索引所需的闭式：`γ β = +ω (⋃_{δ<β} γ δ)`，即 Devlin 的 `γ(β) = ω·(β+1)`，一场递归同时覆盖零 (空索引上的并是空的，故 `γ ∅ = +ω ∅ = ω`)、后继 (运行中的上确界坍缩为 `γ β`，故 `γ (sucV β) = +ω (γ β)`，即下一个 ω 块) 与极限 (`γ(λ) := +ω (⋃_{β<λ} γ β)` 原样照抄)。塔一出生即不透明封印，`γ-compute` 是它唯一的展开，而它携带重塑后的归纳所需的两个事实：每个值都是极限，无条件成立 (`γ-lim`)；后继步就是 ω 块 (`γ-suc`)。
+以上一切在此装配成重塑后的归约，而归约的索引算术如今自成一座塔。旧归纳亲手搬运这段算术：成员子句跑过索引之上的每个极限、并在第一个极限处坍缩，序数算术一步也不进场。替换它的塔正是经典索引所需的闭式：`γ β = +ω (⋃_{δ<β} γ δ)`，即 Devlin 的 `γ(β) = ω·(β+1)`，一场递归同时覆盖零 (空索引上的并是空的，故 `γ ∅ = +ω ∅ = ω`)、后继 (运行中的上确界坍缩为 `γ β`，故 `γ (sucV β) = +ω (γ β)`，即下一个 ω 块) 与极限 (`γ(λ) := +ω (⋃_{β<λ} γ β)` 原样照抄)。塔一出生即不透明封印，`γ-compute` 是它的展开，其终点改写为闭式 `+ω (U α)`，而它携带重塑后的归纳所需的两个事实：每个值都是极限，无条件成立 (`γ-lim`)；后继步就是 ω 块 (`γ-suc`)。
 
 塔在索引上单调，而这条单调性正是本设计打出的那面墙。step 算子 `sucV` 不在子集序上单调：`sucV u = u ∪ {u}` 需要 `u ∈ v`，而 `u ⊆ v` 永远给不出这一点 (D-8)。带条件的套件是原生形状，不是补丁：step 在 `u ⊆ v` 连同 `u ∈ v` 下单调，序数三歧在每个有限迭代处供给隶属，塔的单调性与后继方程都跑在它上面。
 <!--/-->
@@ -693,8 +694,8 @@ opaque
 
 opaque
   unfolding γ
-  γ-compute : (α : S) → γ α ≡ towerStep α (λ δ _ → γ δ)
-  γ-compute = ∈-induction-compute towerStep
+  γ-compute-full : (α : S) → γ α ≡ towerStep α (λ δ _ → γ δ)
+  γ-compute-full = ∈-induction-compute towerStep
 
 -- The tower read as a family, and its bound union (the union term is bound,
 -- C-20: no inline `∈ˢ ⋃`).
@@ -703,6 +704,14 @@ fam α m = γ (⟪ α ⟫↪ m)
 
 U : S → S
 U α = ⋃ (sett ⟪ α ⟫ (fam α))
+
+opaque
+  towerStep≡+ωU : (α : S) → towerStep α (λ δ _ → γ δ) ≡ +ω (U α)
+  towerStep≡+ωU α = refl
+
+opaque
+  γ-compute : (α : S) → γ α ≡ +ω (U α)
+  γ-compute α = γ-compute-full α ∙ towerStep≡+ωU α
 
 -- The base: the union over the empty index is empty, so γ ∅ = +ω ∅ = ω.
 U-zero : U ∅ ≡ ∅
