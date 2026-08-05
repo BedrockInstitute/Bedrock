@@ -29,9 +29,9 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (125 files) | 47,826 |
-| booked retirements, D18 (52 files) | 31,937 |
-| **standing** | **15,889** |
+| tracked masters (125 files) | 48,339 |
+| booked retirements, D18 (51 files) | 30,648 |
+| **standing** | **17,691** |
 
 ### Remaining work
 
@@ -42,9 +42,9 @@ two disagree.*
 | The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing | 980-1,720 | 2,000-3,900 | mixed x1.3 / x3 | T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound, a corollary of what is delivered, +180-330 lines, one to two dispatches |
 | StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17) | 1,200-1,700 | 1,560-2,210 | x1.3 after T10's green gate for the content T10 scoped; the newly discovered op-graph content is UNPRICED at this band and is the row's named risk | T10 (green) for the original scope. SCOPE GREW 2026-08-05: T63 found that StepInL carries the sixteen-operation variable-form op-graph W3 needs, which T10's rewrite scope never included. Under D17 the rewrite must price the ideal form of what its consumers ACTUALLY need, and W3 is now one of them. Needs a re-scope before it is funded |
 | The choice re-home onto the rud-side well-order | 300-650 | 900-1,950 | x3 (new chapter); the carve half is measured at 0.18-0.24k | none yet |
-| The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20) | 1,170-2,070 | 1,520-2,690 | x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part | T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint |
+| The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20) | 620-1,170 | 810-1,520 | x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part | T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint |
 | W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly) | 650-1,320 | 1,700-3,620 | x3 for five survey items (tower induction, the 5.4 half, Cantor, Init verification, GCH assembly), x1.3 for four anchored items (the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing, Pow) | T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250 |
-| **total** | **6,000-11,880** | **12,580-27,270** | | |
+| **total** | **5,450-10,980** | **11,870-26,100** | | |
 
 Each row's provenance is in [dev/ledger.toml](ledger.toml); a row marked derived is
 obtained by subtracting what has landed from a booked band, which is weaker evidence
@@ -54,12 +54,12 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 21.89-27.77k | 24.83k |
-| calibrated | 28.47-43.16k | 35.81k |
+| naive | 23.14-28.67k | 25.91k |
+| calibrated | 29.56-43.79k | 36.68k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
-the naive band's pessimistic corner sits +2.77k from the line, and the calibrated
-band sits +3.47k to +18.16k from it.
+the naive band's pessimistic corner sits +3.67k from the line, and the calibrated
+band sits +4.56k to +18.79k from it.
 
 ### Deliberately not in the sum
 

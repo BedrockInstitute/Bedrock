@@ -34,6 +34,14 @@ the table.
 # because it was written under the J-trophy route. D18 rules the actual set:
 # under it the bridge SURVIVES as the wing's corollary, while the census
 # retires it. When the two disagree, D18 wins and this file follows D18.
+#
+# CORRECTED 2026-08-05 by [T72], and the error was this file's: SatSets was listed here
+# under 'the rud coded cluster', copied from the R5 census. The report D18 was actually
+# ruled on (_build/l3.31-lt-report.md:26-27) puts the coded cluster at exactly four files,
+# CodeSet + CodePred + StepInL + BaseBlock, and lists SatSets on the RETAINED row as one of
+# the bridge's suppliers (full-switch at SatSets:1650). It never should have been condemned.
+# Removing it takes 1,289 lines back into standing and dissolves three of the nine
+# retirement crossings at a stroke.
 # ---------------------------------------------------------------------------
 
 [[retire]]
@@ -69,11 +77,6 @@ authority = "D18"
 
 [[retire]]
 path = "src/L/Rud/CodePred.lagda.md"
-why = "the rud coded cluster"
-authority = "D18"
-
-[[retire]]
-path = "src/L/Rud/SatSets.lagda.md"
 why = "the rud coded cluster"
 authority = "D18"
 
@@ -151,13 +154,16 @@ klass = "x3 (new chapter); the carve half is measured at 0.18-0.24k"
 gate = "none yet"
 provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 entries"
 
+# Re-priced downward 2026-08-05 after [T72] removed SatSets from the retirement set:
+# three of the nine crossings (OrderFormula, Bridge, DefInJ, all on SatSets) dissolve
+# without any work at all, because the module they cross to is no longer condemned.
 [[remaining]]
 id = "retirement-surgery"
 title = "The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20)"
-naive_low = 1170
-naive_high = 2070
-calibrated_low = 1520
-calibrated_high = 2690
+naive_low = 620
+naive_high = 1170
+calibrated_low = 810
+calibrated_high = 1520
 klass = "x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part"
 gate = "T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint"
 provenance = "_build/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is _build/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
