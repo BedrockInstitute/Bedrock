@@ -509,6 +509,7 @@ provenance = "_build/l3.32-t79-report.md lever A; the duplication independently 
 
 [[lever]]
 id = "D-order-core"
+status = "PARTLY SUPERSEDED 2026-08-06 by [T103], which collapsed the Core and InitialCore h0 pair into one AbstractH0 module, the move this lever proposed. RE-PRICE before considering: the remaining duplication is whatever [T103] did not reach."
 title = "The SquareLaw order-core mirror, one core parameterized by the exclusion hypothesis"
 scope = "L.Ordinal.SquareLaw Core 244-540 against InitialCore 967-1249; 78 byte-identical, 150-200 near-identical"
 cost_low = 290
@@ -557,6 +558,7 @@ provenance = "_build/l3.32-t79-report.md lever F"
 
 [[lever]]
 id = "B-condensation-story"
+status = "REFUTED 2026-08-06 by [T84]: STOP at the D-10 check, before any build. The kit does not serve this consumer's Levy obligations, its clause layer is not Delta-0 certifiable. NOT A ROUTE; kept as a closed option with its measurement, per the owner's ruling that nothing leaves for being unfunded."
 title = "The condensation level story folded into the face, so the parameter-free story is the single source"
 scope = "L.Condensation:324-562, a THIRD encoding of the level story"
 cost_low = 150
