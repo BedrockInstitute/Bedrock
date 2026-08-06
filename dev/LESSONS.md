@@ -1962,6 +1962,45 @@ a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
 sourced, it is not entered; it is surfaced to the owner instead.
 
+### P-l (proposed 2026-08-06, awaiting the owner's ID): a statement may be ABOUT a concrete stage without dragging that stage's PRESENTATION into its type
+
+**The law.** Being about a concrete position is not what costs. Naming a
+transparent construction in a statement's TYPE is. If the tower's stage values
+are `opaque` upstream, a theorem may quantify over, hypothesize about and
+conclude at `Sset ω` freely, because the stage is an ATOM to the elaborator and
+nothing unfolds. If instead the type mentions a transparent presentation, such
+as `⟪ sucV (γp p) ⟫` where `⟪ a ⟫` unfolds to a kernel-quotient tower, then
+every check of that statement re-normalizes the tower, and no proof-body or
+consumer-side fix can reach it.
+
+**The measurement, and it is a controlled pair inside one repository.**
+`L.Rud.HF` proves content genuinely about the first limit stage at concrete
+positions (`ord∈HF→∈ω`, `src/L/Rud/HF.lagda.md:224`; `stage∈HF`, `:263`) and
+checks at **0.030 s per line with zero `opaque` of its own**, because `Sset` and
+`Lset` are sealed upstream (`src/L/Rud/Hierarchy.lagda.md:219`,
+`src/L/Constructible.lagda.md:221`). `L.Ordinal.SquareLaw` states at concrete
+positions carrying `⟪ ⟫` and checks at **3.424 s per obligation, 46 times the
+benchmark**, with 88 percent of it in four definitions whose STATEMENTS carry
+the tower (`[L3.32-T88]`). Same tree, same era, same kind of subject matter,
+two orders of magnitude apart.
+
+**The diagnostic that tells you which disease you have, from `[L3.32-T97]`.**
+Read the per-definition profile and ask **whose names the hot rows carry.**
+`Bridge`'s hot rows named OTHER modules: a consumer-side disease, cured by
+sealing the read lemma where consumers use it, 939 s to 199 s (P-k).
+`SquareLaw`'s four hot rows are **its own definitions**: a definition-side
+disease, and `[T88]` proved by experiment that the consumer-side cure cannot
+touch it, reducing a hot body to a one-line application of a free generic lemma
+and still paying 190 s. **Applying the wrong cure is not merely useless: the
+sealed variant ran at least 1.9 times SLOWER.**
+
+**The floor this law does not remove.** A tower's computation rule must relate
+a stage to its body at least once, and that once is paid wherever it is stated.
+`Bridge`'s residual 199 s is 149.5 s of exactly this (`γ-compute-full` 94.9 s,
+`towerStep≡+ωU` 54.6 s), which is why its seal converted an eightfold repeat
+into a single payment and then stopped. **Sealing buys the repeats, never the
+once.** Expect a floor and price it rather than chasing it.
+
 ### P-k. A read lemma is stated where its consumers use it, not where its proof ends
 
 **The law.** When a lemma exists so that consumers can rewrite with it, its
