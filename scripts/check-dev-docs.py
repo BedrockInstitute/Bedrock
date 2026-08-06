@@ -6,9 +6,12 @@ accident, none by a gate: AGENTS.md had grown to 3,450 words, a PLAN table
 cell held 12,634 words of episode content, an imported playbook sat in
 LESSONS.md for five days without reaching a brief, a memo's central diagnosis
 was refuted without the memo saying so, and PLAN section 0's "where the work
-stands" date lagged the work it described. AGENTS.md's own rule is that a rule
-that is not machine-enforced must name an enforcement point, and a rule whose
-enforcement point is "the orchestrator, periodically" is exactly what failed.
+stands" date lagged the work it described. The same decay then recurred in the
+section 11 goal rows: the `L3.32-F5` row held 1,119 words of episode content,
+so `[T112]` added a character cap for a goal row, derived from what a register
+row must actually say. AGENTS.md's own rule is that a rule that is not
+machine-enforced must name an enforcement point, and a rule whose enforcement
+point is "the orchestrator, periodically" is exactly what failed.
 
 WHAT THIS CHECKER DOES, AND WHERE. The gate half (`--check`, wired into
 `make check` as the `devdocs` target) is six cheap, pure-Python reads, each
@@ -17,8 +20,10 @@ true-positive-tuned against the tree on 2026-08-06:
   agents-size         AGENTS.md word count is capped (threshold in
                       dev/MAINTENANCE.md). The file is auto-loaded into every
                       session, so its size is a context budget, not a style.
-  plan-cell-size      every table cell in dev/PLAN.md is capped, so a cell can
-                      be a ruling plus a pointer but never a document.
+  plan-cell-size      every table cell in dev/PLAN.md is capped by word count,
+                      and the section 11 goal rows additionally by character
+                      count, so a cell can be a ruling plus a pointer but
+                      never a document.
   lessons-imported-routing
                       a LESSONS entry whose heading marks it as imported must
                       be routed in dev/rules.toml (a bundle or a trigger).
@@ -81,7 +86,11 @@ ROOT = Path(__file__).resolve().parent.parent
 # ---- gate thresholds --------------------------------------------------------
 # Raising one is a ruling, not an edit: see the docstring and dev/MAINTENANCE.md.
 AGENTS_WORD_CAP = 2200   # current green 1,784; the failed state was 3,450
-PLAN_CELL_WORD_CAP = 1600  # current max cell 1,125; the failed state was 12,634
+PLAN_CELL_WORD_CAP = 1600  # largest cell is D28 at 572 words; the failed
+                           # state was 12,634
+PLAN_GOAL_ROW_CHAR_CAP = 1200  # the L3.32 target-form row is 1,001 chars, so
+                               # 1,200 is that exemplar plus one legit edit;
+                               # the failed state was 6,966 (L3.32-F5)
 
 # ---- sweep-only lines -------------------------------------------------------
 EPISODE_SCALE = 600   # largest ruling-class cell (D28) is 572; +5% margin
@@ -89,6 +98,8 @@ EPISODE_SCALE = 600   # largest ruling-class cell (D28) is 572; +5% margin
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 SECTION0 = re.compile(r"^## 0\. (.*)$", re.M)
 PLAN_ROW = re.compile(r"^\| ([^|\n]*) \| (.*) \|\s*$", re.M)
+MASTER_SECTION = re.compile(r"^## 11\.", re.M)
+TASK_INDEX_SECTION = re.compile(r"^### Task index", re.M)
 IMPORTED_MARK = re.compile(r"\bimported\s+(?:from|into)\b")
 STATUS_HEADER = re.compile(r"\*\*STATUS:")
 VERDICT = re.compile(r"\b(WRONG|REFUTED|SUPERSEDED|STANDING|PARTIAL|NOT BUILT)\b", re.I)
@@ -137,6 +148,21 @@ def plan_rows(text: str) -> list[tuple[str, str]]:
     return [(m.group(1).strip(), m.group(2)) for m in PLAN_ROW.finditer(text)]
 
 
+def goal_rows(plan_text: str) -> list[str]:
+    """Whole-row text of every MASTER status table row (section 11, before the
+    task index). These are the goal rows: a ruling, its authority, the current
+    status, the gate and a pointer. The task index below the table has its own
+    200-character cap, enforced by scripts/check-task-index.py.
+    """
+    m = MASTER_SECTION.search(plan_text)
+    if not m:
+        return []
+    rest = plan_text[m.start():]
+    end = TASK_INDEX_SECTION.search(rest)
+    sec = rest[:end.start()] if end else rest
+    return [ln for ln in sec.splitlines() if ln.startswith("| L")]
+
+
 def section0_body(text: str) -> tuple[str | None, str]:
     """(heading date, body) for PLAN section 0. Heading date is None if the
     heading carries no YYYY-MM-DD."""
@@ -167,6 +193,14 @@ def check_plan_cells(plan_text: str) -> list[str]:
                        f"over the {PLAN_CELL_WORD_CAP:,}-word cap. A cell is a "
                        f"ruling plus a pointer; episode content belongs in "
                        f"dev/JOURNAL.md.")
+    for line in goal_rows(plan_text):
+        length = len(line.rstrip())
+        if length > PLAN_GOAL_ROW_CHAR_CAP:
+            rid = line.split("|", 1)[1].split("|", 1)[0].strip()
+            out.append(f"dev/PLAN.md goal row `{rid}` is {length:,} characters, "
+                       f"over the {PLAN_GOAL_ROW_CHAR_CAP:,}-character cap. A "
+                       f"goal row is a ruling plus a status pointer; episode "
+                       f"content belongs in dev/JOURNAL.md.")
     return out
 
 
