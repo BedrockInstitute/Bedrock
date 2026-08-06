@@ -1,0 +1,82 @@
+# Rule routing: which laws are mandatory for which kind of task.
+#
+# WHY THIS FILE EXISTS. `dev/LESSONS.md` is 105 entries and 16,972 words. A
+# brief points at five to nine of them, so an agent honouring the citation
+# loads about four times what it was pointed at, and the ORCHESTRATOR selects
+# that set from memory. On 2026-08-06 the campaign found that sixteen Rules and
+# an imported playbook had entered the corpus on 08-01 and 08-02 and were cited
+# in 10 briefs out of 112, nine of those on the day somebody finally looked.
+#
+# `[L3.32-T105]` refuted the claim that this caused the three expensive
+# modules: the laws that covered THOSE defects (P-k, P-l) did not exist yet.
+# That refutation stands and is recorded in
+# `dev/memos/L3.32-context-layering.md`. This file is built anyway, on a
+# narrower and different justification:
+#
+#   **the alternative is a prose clause in dev/ORCHESTRATION.md whose
+#   enforcement point is "the orchestrator, at brief-writing time", and
+#   AGENTS.md says in as many words that a rule with no enforcement point is a
+#   wish. The orchestrator is exactly the component that drifted for five days.**
+#
+# So the routing is mechanical, it is capped so it cannot become the corpus
+# again, and its IDs are validated against LESSONS headings by
+# `scripts/check-rule-ids.py`, which exists because a document written ABOUT
+# rule hygiene shipped a fake ID.
+#
+# THE CAP IS THE DESIGN. A bundle may hold at most `max_ids` entries. A bundle
+# that cannot fit a new law must EVICT one, which forces the question "is this
+# more important than what it displaces" to be asked out loud. `[T105]` named
+# bundle bloat as the obvious failure mode and it is correct: without a cap
+# every bundle drifts toward the whole corpus and the routing buys nothing.
+
+[config]
+max_ids = 12
+# `kind` is DERIVED from the brief's write scope, never self-declared, because
+# an author who picks the kind picks the bundle ([T105]). See scripts/rules.py.
+
+# ---------------------------------------------------------------------------
+
+[bundle.build]
+detail = "writes a master under src/. The heaviest bundle, because a build is where seconds and lines are actually spent."
+ids = ["P-h", "P-k", "P-l", "R-35", "R-36", "R-38", "I-4", "I-5", "C-12", "D-10", "C-22"]
+
+[bundle.probe]
+detail = "measures something in a scratch copy and throws it away. Gating, heap discipline, and the transplant law, which is what a probe most often gets wrong."
+ids = ["D-1", "P-l", "P-i", "C-12", "D-10", "C-22"]
+
+[bundle.recon]
+detail = "read-only: an audit, a design pass, a history dig. It writes a report and nothing else."
+ids = ["D-10", "C-22", "P-l"]
+
+[bundle.rewrite]
+detail = "replaces delivered content. Priced from the rewrite side, and the port rates are not quotable at it."
+ids = ["P-h", "P-l", "P-k", "R-35", "D-10", "C-22", "C-12"]
+
+[bundle.review]
+detail = "adversarial: the critic is not the author. Its job is to break a claim, not to confirm it."
+ids = ["D-10", "C-22", "P-l"]
+
+# ---------------------------------------------------------------------------
+# Layer 2: the tail, reachable by trigger term rather than carried in context.
+# `scripts/rules.py --grep <term>` resolves these. An entry needs no trigger:
+# absence here means "not routed", which is legal, unlike a dangling ID.
+
+[triggers]
+"opaque" = ["R-36", "R-38", "P-c", "P-k"]
+"seal" = ["R-36", "R-38", "P-c", "P-k"]
+"subst" = ["P-f", "R-35", "P-k"]
+"heap" = ["C-12", "P-i"]
+"memory" = ["C-12", "P-i"]
+"normalis" = ["P-i", "P-l", "P-k"]
+"presentation" = ["P-l", "I-4", "I-5"]
+"tower" = ["P-l", "R-35"]
+"with" = ["Rule 10"]
+"PT.rec" = ["Rule 8"]
+"data" = ["Rule 11"]
+"implicit" = ["Rule 12", "I-4"]
+"environment" = ["Rule 16", "Rule 15"]
+"satisfaction" = ["Rule 14", "Rule 9"]
+"adequacy" = ["Rule 1", "Rule 20"]
+"cong" = ["P-g"]
+"transport" = ["Rule 4", "P-f"]
+"telescope" = ["P-l", "Rule 15"]

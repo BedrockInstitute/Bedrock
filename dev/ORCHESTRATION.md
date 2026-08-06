@@ -82,12 +82,17 @@ Standing clauses that go in every build or probe brief:
   minutes each, on a tree whose check cost the campaign is spending its days
   reducing. The order is: audit the return, update the ledger, run
   `scripts/ledger.py --write`, THEN gate.
-- **Name P-k and P-l in every build brief.** They are the two laws the
-  campaign of 2026-08-06 was written from, they cover the class that made the
-  three expensive modules expensive, and they did not exist before that day.
-  `[L3.32-T105]` established that the earlier failure was MISSING rules rather
-  than unread ones, so the cheapest correct response is to put the new ones in
-  front of every builder immediately rather than wait for a routing layer.
+- **Paste the rule bundle: `python3 scripts/rules.py --for <kind>`.** Do not
+  select the rules by recall. The bundle is declared in `dev/rules.toml`,
+  capped so it cannot become the corpus again, and the dispatch path REFUSES a
+  brief that does not carry it, with the kind DERIVED from the brief's write
+  scope rather than declared by its author. **An earlier version of this clause
+  said "remember to name P-k and P-l", which is a wish by this project's own
+  definition: its enforcement point was the orchestrator's intention, and the
+  orchestrator is the component that let an imported playbook sit uncited in
+  102 of 112 briefs for five days.** The emitted bundle is about 836 words
+  against `dev/LESSONS.md`'s 16,972, so the brief carries the operative
+  statements and the full entry is one grep away when the evidence is needed.
 - **D30, the craft freeze, FIRST.** While it stands, **do not write a brief
   that dispatches new mathematics.** Defect repair, profiling, the fixes a
   profile licenses, and capturing the retiring tree's craft are the plan and

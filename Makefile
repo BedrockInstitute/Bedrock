@@ -73,6 +73,7 @@ tree:
 # document written ABOUT rule hygiene, which is the argument for gating it.
 ruleids:
 	$(PY) scripts/check-rule-ids.py
+	$(PY) scripts/rules.py --check
 
 reuse:
 	$(REUSE) lint
