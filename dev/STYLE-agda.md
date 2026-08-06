@@ -8,7 +8,9 @@ document wins. Process context (goal codes, phases) lives in
 [PLAN.md](PLAN.md); the i18n marker grammar lives in [STYLE-i18n.md](STYLE-i18n.md).
 
 Rules marked **(provisional)** are expected to harden after real porting experience
-(PLAN §8 T1). Changing any rule is legislation: open an `[L0.x]` item, do not
+(PLAN D11; tension T1's register is archived at
+`dev/memos/process-tensions.md`). Changing any rule is legislation: open an
+`[L0.x]` item, do not
 improvise silently.
 
 The mechanical subset of these rules (the OPTIONS header, the import discipline of
@@ -39,9 +41,14 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   `{-# OPTIONS --cubical --safe --guardedness #-}`. No other flag may be added
   without an `[L0.x]` ruling. Library-wide flags live in `bedrock.agda-lib`.
 - **No `postulate`, no holes, no `{-# TERMINATING #-}`, ever.** Nothing is a
-  sanctioned form of "not proven yet". The Frontier record (PLAN §5) was the one
-  sanctioned form while the book was being built root-first; its last field was
-  discharged and the record deleted, so today there is no exception at all.
+  sanctioned form of "not proven yet". The Frontier record (PLAN §5, archived
+  at `dev/memos/working-mechanisms.md`) was the sanctioned debt form while the
+  book was built root-first; its last field was discharged and the record
+  deleted. Its successor is the **named module hypothesis**: when a chapter
+  cannot discharge an obligation, the obligation is stated as a named module
+  hypothesis and the chapter ships conditional on it, with the hypothesis
+  recorded in PLAN §11. The bridge is the live instance (Q-lim and below-lim,
+  `dev/ledger.toml`).
 - **Classical principles are module parameters, never axioms** (PLAN D2). The
   canonical packaging (validated by the L0.2 spike):
 
@@ -59,7 +66,8 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
 ## 2. Modules and files
 
 - One chapter = one master `.lagda.md`; module name = file path; namespaces = the
-  book parts fixed in PLAN §4.
+  book parts fixed by PLAN D5 (the archived part layout is at
+  `dev/memos/target-skeleton-d5.md`).
 - Module names: full English words, PascalCase (`Constructible`, `WellOrder`).
   **Never** iteration numbers, primes, or provenance flavor (`Foo2`, `FooFinal`,
   `isL'`); PLAN D7.
@@ -94,9 +102,14 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   marked `-- lint-agda: keep`.
 - Every module is imported by `Everything` in reading order (enforced by the
   L5-ported audit; a module outside `Everything` is unchecked and unlisted). Its
-  reading position is where its first consumer needs it; thematic grouping is the
-  derived structure catalog's job (PLAN §5), never a reason to move a chapter
-  forward.
+  reading position is where its first consumer needs it. **The book keeps two
+  catalogs** (owner ruling, 2026-07-18, archived from PLAN §5): the **reading
+  catalog** is `Everything.lagda.md`, hand-maintained, with import order =
+  reading order; the **structure catalog** is the namespace tree, derived
+  automatically and never hand-maintained. Namespace membership is decided by
+  subject, reading position by first consumption, and the two are independent.
+  Thematic grouping is the structure catalog's job, never a reason to move a
+  chapter forward.
 
 ## 3. Naming
 
@@ -240,7 +253,8 @@ skippable:
   formula; explicit spelling cuts 74min to 66s`). Narration never explains these;
   the marker is the whole story, and readers are told once (in the Base part) that
   `-- perf:` lines are engineering, not mathematics.
-- When a module exceeds the PLAN §7 budgets (roughly 120 s cold or its heap cap),
+- When a module exceeds the per-module budgets (PLAN §7 rule 6, archived at
+  `dev/memos/build-constraints.md`; roughly 120 s cold or its heap cap),
   triage against the source playbook (`../fol-reification/docs/WORKLOG.md` §5,
   cases 1 to 20) before merging.
 

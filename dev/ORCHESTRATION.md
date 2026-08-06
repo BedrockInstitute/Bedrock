@@ -174,6 +174,33 @@ and the breach is recorded in the row rather than tidied away.
 
 *Enforcement:* the PLAN commit precedes the dispatch command in the same turn.
 
+### 5.1 Route triage: which route, under which condition
+
+**A route awaiting a decision is KEPT** (owner ruling, 2026-08-06). Nothing
+is deleted for being unfunded; a route leaves the board only by being refuted
+or done. The flowchart the owner asked for is rendered on the dashboard
+(`[L3.32-T114]`); the conditions it draws are these prose rules, which were
+moved here from `dev/LEDGER.md` when the ledger was stripped to measurements
+(`[L3.32-T113]`):
+
+- **While D30's freeze stands, the check-cost campaign is the only funded
+  work.** The frozen mathematics resumes in this order when the exit
+  condition is met: the bridge landing (below-lim), then the choice re-home,
+  then AC on surviving machinery; and the StepInL rewrite, then W3, then
+  W7's residue and the GCH sentence.
+- **When a compression lever is considered**, run this order: if it is
+  refuted it is not a route (recorded closed); if ruled work already did part
+  of it, re-price before considering (the delivered part is not still owed);
+  if it is priced at x3 with an unmeasured widest term, probe first (D22);
+  if its region is being touched by ruled work anyway, take it now (marginal
+  cost near zero); if the endpoint projection needs the lines, rank by net
+  lines per unit of risk and take the cheapest first; otherwise keep and
+  wait (D26: a line overage never changes the route).
+
+*Enforcement:* the standing brief clauses in section 3 (D22, D26, D17) and
+the return audit in section 6 step 2; the route board itself is generated
+for the owner by `[L3.32-T114]` from the canonical data.
+
 ## 6. Handling a return
 
 In this order, every time:
@@ -223,6 +250,20 @@ In this order, every time:
    and it is written down nowhere. **If the chapter introduced a load-bearing term the
    glossary does not carry, dispatch the terminology dossier (section 8) before
    the chapter counts as landed.**
+
+8. **Refresh the owner's dashboard, and write its hand-written half.** Run
+   `make dashboard`, which regenerates every measured panel from the canonical
+   data. Then edit `_build/workbench.md` BY HAND: what is dispatched now, what
+   is queued and what releases each, what condition would change the next
+   dispatch, and what is deliberately not being dispatched with the reason.
+   **That half exists nowhere in committed data** (live dispatch state is in
+   `.claude/`, which is never committed), so a generator cannot produce it and
+   must not pretend to. **Owner's ruling, 2026-08-06: this is done by hand at
+   every return**, because doing it forces a review of the whole board that a
+   regeneration does not. `scripts/check-dashboard.py` reports staleness and
+   exits 0 by design: `_build/` is git-ignored, so a gate that failed on a
+   missing dashboard would fail every fresh clone.
+
 
 ## 7. Committing
 

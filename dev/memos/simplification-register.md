@@ -1,0 +1,38 @@
+# Candidate simplification register S1-S18 (archived from dev/PLAN.md section 10)
+
+> **STATUS: SUPERSEDED.** Every row is resolved or deferred as of 2026-08-06: S1-S12 closed or historical by 2026-07-27; S13 (V.Coding exports) SHIPPED and S15 (V.Presentation kit) SHIPPED by [L3.32-T8]; S14 (defSet table) REVERTED and S16 (axiom-frame kit) REVERTED at their D-1 gates; S17 (FOL.Fold) probe RED, additive-only conclusion unchanged; S18 deferred and tracked in dev/ledger.toml's [[excluded]] table. Read this memo when a simplification's verification history is needed; new candidates are proposed in the current era under D16 and D22, not registered here.
+
+---
+
+## 10. Candidate simplification register
+
+Each entry needs its own cheap verification and owner decision before
+deviating; an accepted candidate is executed under the goal code of the cluster
+it affects. S1 to S12 are the port-era register (the default there was a
+faithful port of the source). S13 onward are the current era's, where the
+default is instead D16's: price the ideal form alongside the standing one. The
+foundation-layer candidates below come from the 2026-08-04 audit
+(`_build/l3.32-t6-report.md`), which priced each with three numbers: what the
+rewrite costs, what it compresses immediately, and what it saves the
+CONTINUATION, each with a named future consumer.
+
+| # | Candidate | Verification needed | Status |
+|---|-----------|---------------------|--------|
+| S1 | Specialize the truth-algebra abstraction (`TruthAlg`) to plain hProp | Check whether any non-hProp instance is load-bearing in the source | verified 2026-07-16: **rejected**. The record is a law-free operation signature, definitionally transparent on `hPropAlg` (record ι), and is the designed seam for the forcing-stage Boolean instance; only one instance exists today, but the Charter targets forcing. Ported faithfully in `[L1.1]`. |
+| S2 | Merge `Absoluteness2` into `Absoluteness` | Diff the two modules' roles | resolved 2026-07-18: **deferred entirely** instead of merged; `Absoluteness2` has zero code consumers (its route superseded by the source's RAW reflection breakthrough). Ledger row added. |
+| S3 | Unify the five graph-certificate families under shared combinators | Executes as `[L3.4]` | resolved 2026-07-25: **conditional fallback behind S5.** The §2.1 measurement puts shared combinators at 3k to 5k and shows the families diverge precisely where the mathematics is (soundness segments overlap 4% to 9% after renaming, scaffolding 50% to 86%). Opens only on a red `[L3.0.2]`; a green verdict absorbs it (it did: `[L3.4]` ABANDONED 2026-07-27). |
+| S4 | Fold `ZF.Encoding` / `ZF.Coding` into their consumers | Map their import sites | open |
+| S5 | General internalization theorem for L-recursion | Executes as `[L3.0]`: paper-level subsumption of `Cmp*` and `Depth*` first, then a two-instance proof of concept with kill criteria | **adopted as the primary route** (D12, 2026-07-25); delivered as `L.Recursion` at 99 lines; verdict green 2026-07-26, instance half done 2026-07-28. |
+| S6 | Industrialize the source's `reify!` macro over the L-side formula groups | Executes as `[L3.2]` | **closed, rejected 2026-07-27 on measurement** (§11): net +9 lines over the two modules rated best, +25% to +33% on `L.Coding.Model`; both D13 tests fail; re-open trigger: a congruence family written by hand a third time with no combinator available, or the traversal-dense share passing 20%. |
+| S7 | Tactic-generated transport and cast steps | Executes as `[L3.9]`, spike first | open, lowest priority, as registered; the goal `[L3.9]` itself is ABANDONED 2026-07-27 (Bedrock has 456 `subst`/`cong`/`transport` sites, not 3,300; a future need returns as a new code). |
+| S8 | Generate the mechanical dispatch grids instead of writing their clauses | Executes as `[L3.8]` | open as registered; the goal is ABANDONED 2026-07-27 (premise spent: the grids the lever was for are gone or unneeded). |
+| S9 | Drop the source's superseded transition layers ahead of each cluster port | Executes as `[L3.1]`, standing | open; 2k to 3k. Executed 2026-07-29: −529 lines (§11). |
+| S10 | Declare each of the twelve tags once instead of five times | Executes as `[L3.11]` | registered 2026-07-25; **abandoned 2026-07-27 on a measurement**: the only instance answered no, the clauses factor through two shared frames. |
+| S11 | Stage-indexed internalization theorem for transfinite recursions | Executes as `[L3.12]` | registered 2026-07-25; **abandoned 2026-07-27**: the complexity boundary dissolved. |
+| S12 | Partial-certificate variant for the non-constant tables | Executes as `[L3.13]` | registered 2026-07-25; **abandoned 2026-07-27**: its subject was retired by the `[L3.0.1]` design change. |
+| S13 | Publicize the eight `V.Coding` pair helpers (delete `private`) | none needed beyond a grep for re-derivations by the FACT (C-14) | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Cost 1 line, blast radius zero, deletes a measured third copy and saves 8 to 16 lines in every future pair-consuming consumer (forcing names, geology). |
+| S14 | A `defSet` computation table in `L.Definability`, replacing four `defSet≡` proofs in `L/Axioms/Basic` | its own D-1 gate: the table plus the four re-derivations must stay under 57 lines (60 percent of the 94 replaced), and no entry may need resizing or LEM | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Write about 50, compress 25 to 40 now, save 50 to 110 in the continuation (the axiom re-points, the face's adequacy, W7's formula count, geology's class carriers). The one structural rewrite in the audit with probe support. |
+| S15 | A `V.Presentation` kit (`member`, `fiber`, injectivity, the membership conversion) | the kit must stay under 30 lines and every re-derivation must drop to two lines or fewer, with no change to any existing transport direction | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Write about 20, compress 20 to 35 now (about 25 inline fiber sites become one-liners), save 40 to 60 later (W5's bounding, W7's hull, geology's carriers). |
+| S16 | An axiom-frame kit in `FOL.ZFModel` (the description-elimination equation and uniqueness aliases) | the two named re-derivations must shrink from 14 lines to six or fewer | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Write about 20, compress 20 to 35 now, save 20 to 50 later. |
+| S17 | A syntax-walk calculus (`FOL.Fold`: the formula algebra plus one generic fusion lemma), ADDITIVE only | its D-1 gate: three delivered walk-plus-correctness pairs re-expressed as instances inside 60 probe lines, with definitional behaviour unchanged on a concrete sample | **GATED 2026-08-04, probe running under `[L3.32-T8]`.** Zero immediate compression by design, but the largest continuation number in the audit: 450 to 1,050 lines, aimed at the forcing era's satisfaction recursion collapsing to one algebra. The in-place retrofit of the five existing manipulation modules is REJECTED (26 masters of blast radius, load-bearing reduction behaviour, and a measured counter-instance where a stored decomposition walled at 12 GB while the inline form ran in one second). |
+| S18 | Collapse `FOL.Coding`'s double encoding into one tag-and-payload decomposition | its D-1 gate: the injectivity lemma must not cost more than its current 35 lines, and no export may change name or behaviour | **ACCEPTED BUT DEFERRED 2026-08-04 by owner ruling: it waits behind the wing.** Write about 40, compress 50 to 70, but blast radius 2 and its second master consumer retires under D18, so the standing continuation value is thin. The audit rates it the weakest accepted candidate and notes that dropping it loses nothing. |

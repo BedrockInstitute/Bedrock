@@ -7,7 +7,8 @@ with it. Developer doc, English only, not translated. Work is managed by the
 goal codes of §6; the MASTER status table is §11.
 
 **Read §0 first.** It states where the work stands today in one screen.
-Everything after it is either standing legislation (§3, §6.0, §7) or history:
+Everything after it is either standing legislation (§3), live rules (§6.0,
+§6.2), pointers to the archived planning apparatus (§2, §4, §5, §7-§10), or history:
 every row records what was ruled, when, and with what outcome, and points to
 where the substance lives. A row's opening word is its status; status changes
 go at the front of the row.
@@ -95,7 +96,8 @@ target: evidence may move a technique, a number alone moves nothing, and no
 report may reason from an overage to a change of route. Line calibers
 and the two-caliber discipline are defined in §6.2.
 
-**The narrative frame.** §6.1's `[L6]` declares the terminus: set-theoretic
+**The narrative frame.** The `[L6]` row of the archived route tree
+(`dev/memos/route-tree.md`) declares the terminus: set-theoretic
 geology and inner model theory meeting at the bedrock, with `L is a bedrock` as
 the second trophy. Every asset is valued against BOTH trophies from that
 section onward.
@@ -152,134 +154,9 @@ Assumption budget of the source proof, to be preserved or improved:
 - Bedrock removes even that postulate by parameterization (D2), making the
   whole tree `--safe`.
 
-## 2. Source material survey (condensed)
+## 2. Source material survey (pointer)
 
-*Port-era history, kept for its measurements.* This section surveys the source
-repository as it stood in July 2026 and prices the port that opened this
-registry. Its cost anatomy (§2.1) is still cited as a calibration anchor; its
-scope statements describe the original milestone, not the current campaign
-(§0).
-
-Facts an implementing agent needs before touching the port:
-
-- **Scale:** 172 literate modules, about 70.7k lines. Of these, `L/` holds 142
-  modules and 66.5k lines (94%). The `--safe` core (Prelude, Truth, FOL,
-  Reification, ZF, Models/HITV, Examples) is only about 4k lines and is
-  already clean.
-- **Root module:** `src/L/ModelZFCFinal.lagda.md` defines `L⊨ZFC : ZFCModel`
-  (alias `Con-AC`). The ZF axiom fields live in `src/ZF/Model.lagda.md`
-  (records `ZFModel`, `ZFCModel`); separation and replacement consume the
-  deeply embedded `Formula`, which is where the reification framework is
-  load-bearing.
-- **Difficulty concentration:** the bulk of `L/` is the well-order `<L` and
-  the L-recursion, reified as Δ₀ graph-certificate clusters (`Cmp*`, `Depth*`,
-  `Order*`, `Trace*`, `Coh*`), plus internal satisfaction (`Sat*`, `Tarski*`)
-  and coding (`Code*`, `Formula*`). These clusters are the L3 reduction-review
-  targets.
-- **Prose:** Chinese research-log style throughout (milestone provenance,
-  probe numbers, performance archaeology). It is **construction intelligence
-  for the porting agent, not translation input** (D6).
-- **Performance engineering:** the source carries a documented playbook of
-  conversion-blowup countermeasures (opaque seals, explicit implicit
-  arguments, Π-parameterized assumption bundles); see
-  `../fol-reification/docs/WORKLOG.md` §5. After the upstream M2.7
-  optimization, the full lem-cone cold check runs in about 8.5 minutes at
-  `-j4` with per-module heap caps (down from 157 minutes). The build machinery
-  is portable; its trust model is codified as constraints in §7.
-- **Goal management:** the source runs an append-only route-tree register
-  (`../fol-reification/docs/ROUTE-TREE.md`) with dotted-decimal goal codes.
-  Bedrock adopts a lightened version of the same discipline (D9, rules in
-  §6.0).
-
-### 2.1 Cost anatomy (measured 2026-07-25)
-
-Where the source's mass actually sits, measured by attributing every module to
-the `isZFCModel` field whose proof term reaches it. Method: non-blank lines
-inside ` ```agda ` fences (prose excluded); transitive dependency closure from
-each field's filling term; module granularity, except the six assembly modules
-(`L.ModelAC`, `L.ModelACSep`, `L.ModelACNum`, `L.Condensation`, `L.ModelZFC`,
-`L.ModelZFCFinal`), which are split per definition. The whole `L⊨ZFC` cone is
-150 modules and 48,260 code lines; the other 22 modules (2,521 lines) are
-probes and unwired experiments, which the consumption audit drops at port time.
-
-Field names below are Bedrock's (§4 ledger), source names in parentheses where
-they differ. "Body" is the code that literally fills the field, "cone" includes
-all shared dependencies, "own" is code reachable from this field alone.
-
-| `isZFCModel` field | body | cone | own |
-|---|---:|---:|---:|
-| `extensional` | 13 | 2,279 | 13 |
-| `regularity` (`foundation`) | 7 | 2,273 | 7 |
-| `hasEmpty` | 20 | 2,286 | 0 |
-| `hasPair` | 48 | 2,314 | 0 |
-| `hasUnion` | 65 | 2,331 | 0 |
-| `hasSeparation` (`hasSep`) | 87 | 4,924 | 0 |
-| `hasReplacement` (`hasRepl`) | 167 | 5,004 | 0 |
-| `hasPower` | 33 | 3,038 | 149 |
-| `numeral` | 54 | 2,791 | 0 |
-| `numeral-zero` (`num0`) | 3 | 2,819 | 3 |
-| `numeral-suc` (`numS`) | 18 | 2,834 | 18 |
-| `hasInfinity` | 21 | 2,812 | 21 |
-| `hasChoice` | 68 | 47,839 | **42,354** |
-
-Read as a partition, the twelve ZF fields own 211 lines between them. Their
-real cost is three shared blocks: the framework and carrier trunk (2,266
-lines), the Δ₀ engine with the full-formula reflection machinery (2,571
-lines), and the numeral chain (392 lines). Everything else is `hasChoice`:
-42,354 lines, 88% of the cone, of which 42,258 sit in 106 modules that no other
-field touches.
-
-That mass is not one proof. It is 8 to 10 hand-built instantiations of a single
-pipeline (step function to Δ₀ graph to "the graph is a set of L" to
-certificate to soundness), once each for comparison, depth, the order itself,
-satisfaction, traces, coherence, sequence codes, and the closure families.
-Clone measurement over the twin families, after normalizing names:
-
-| module pair (renaming-normalized) | similarity |
-|---|---:|
-| `CmpCertMatrix` / `DepthCertMatrix` | 86% |
-| `CmpCodeCarrier` / `DepthCodeCarrier` | 67% |
-| `CmpGraphInL` / `DepthGraphInL` | 60% |
-| `CmpGraphInLFinal` / `DepthGraphInLFinal` | 50% |
-| `CmpSound` / `DepthSound` | 8% |
-| `OrderGraph` / `CmpGraph` | 4% |
-
-So the scaffolding repeats and the soundness segments do not: the mathematics
-genuinely differs per instance, but the harness around it is written out once
-per instance. The reason is structural: the source has no general theorem
-saying a recursively defined function is internalizable in L, so every
-function builds its own. Density counts corroborate: 27.9 formula-syntax
-tokens and 8.3 Δ₀ witness tokens per 100 lines, 3,963 explicitly spelled
-implicit arguments and 139 `opaque` seals (the M2.7 performance tax), and 53%
-of all lines sitting inside `where` blocks.
-
-Projected reduction, by lever, each with the goal code that executes it and the
-register entry that tracks it:
-
-| Lever | Headroom | Code | Candidate |
-|---|---|---|---|
-| General internalization theorem | to roughly 8k to 12k total | `[L3.0]` | S5 |
-| `reify!` macro industrialization | 4k to 6k | `[L3.2]` | S6 |
-| Scaffolding parameterization | 3k to 5k | `[L3.4]` | S3 |
-| Transition-layer sweep | 2k to 3k | `[L3.1]` | S9 |
-| Transport and cast solver | 1k to 2k, high risk | `[L3.9]` | S7 |
-| Dispatch-grid generation | 1k to 1.5k, source lines only | `[L3.8]` | S8 |
-
-The five syntactic levers together are 25% to 40%, and every one of them trades
-against cold-check time. The general theorem is the only lever that reaches
-further; it is also the only lever that is research rather than refactoring.
-D12 rules on which to take, §6.1 orders their execution.
-
-> **Correction (2026-07-25, `[L3.0.3]`).** The 8k to 12k figure above is the
-> ceiling of a **three-theorem programme**, not the yield of `[L3.0]`. The
-> probe measured the pipelines directly: the constant-table theorem covers
-> 13,518 of the 42,258 lines, `Order*` (11,386 with its trace machinery) needs
-> a separate stage-indexed theorem, and `Sat*` / `Tarski*` / `Coh*` (10,706)
-> fit only by halves. On tier 1 alone the honest projection is 42.3k to about
-> 36k. The route survives; the probe also found a second abstraction worth as
-> much as the theorem (a per-tag clause bundle). Full tier table and evidence:
-> [memos/L3.0.3-subsumption-probe.md](memos/L3.0.3-subsumption-probe.md) §5
-> and §6.
+The port-era survey of the source repository and its measured cost anatomy moved to [dev/memos/source-material-survey.md](memos/source-material-survey.md) ([L3.32-T113]). Its measurements remain the calibration anchor for the two-caliber discipline (§6.2) and for the simplification history (archived §10). Read it when a recon prices a lever or quotes a source-scale figure; the live plan is §0 and the goal registry is §11.
 
 ## 3. Ratified decisions
 **Retired decisions.** D3, D8, D10, D12, D14, D15 and D25 were struck on 2026-08-05 in a cleanup ruled by the owner: six were dead (their own text said SUPERSEDED, SPENT or SUCCEEDED, with their live residue already carried elsewhere) and one, D10, was a second home for build constraints that `AGENTS.md`, `dev/ORCHESTRATION.md` and `dev/LESSONS.md` already enforce. **The reason for striking them is execution, not tidiness: a rule surface nobody can hold in mind is a rule surface that does not bind.** Their full original text is preserved in `dev/JOURNAL.md` under "Retired decisions", so a commit message citing a struck code still resolves. Numbers are never reused.
@@ -289,11 +166,11 @@ D12 rules on which to take, §6.1 orders their execution.
 | D1 | Statement of the result | As in §1: V=L ⊨ ZFC, relative consistency, relative to the host. Never unqualified "Con(ZFC)". **Extended 2026-08-03 with the campaign's endpoint**: the same L satisfies GCH, stated internally, yielding Con(ZF) → Con(ZFC + GCH) under the same relativization; "Con(GCH)" is likewise never claimed unqualified. |
 | D2 | Classical boundary | **In force, and D20 was shaped around it: the archive lives outside `src/` precisely so this claim stays literally true of the whole checked tree.** No `postulate` anywhere. LEM (and any classical/choice principle) is an explicit parameter; the whole tree is `--safe`. Gated by the L0.2 performance spike; a materially worse projection (over 1.5x the M2.7 full-cone baseline) escalates back to the owner. Documented fallback if re-ruled: one postulate module with an explicit safe boundary. |
 | D4 | Licensing | Ported code enters `src/` under CC BY-NC-SA 4.0 via the existing `REUSE.toml` carve-out (the owner authors both repositories). No in-file SPDX headers. Prose cites Rech (2020) and the source repository where warranted. |
-| D5 | Skeleton | The previously reserved `src/` namespaces are void. The redesigned skeleton in §4 replaces them; `src/README.md` is rewritten in L1. Below the part level the skeleton is **provisional** (D11, tension T2). **Absorbing D8's surviving half on its retirement (2026-08-05): reading order on the site remains foundations-first.** **Amended 2026-08-04**: §4's diagram is the port-era record, not the live tree; the authorities for what `src/` contains today are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog). The part level remains as fixed here: D20's archive lives at the repository root, OUTSIDE `src/`, precisely so that retiring code adds no part and disturbs no gate. |
+| D5 | Skeleton | The previously reserved `src/` namespaces are void. The redesigned skeleton in the archived §4 (dev/memos/target-skeleton-d5.md) replaces them; `src/README.md` is rewritten in L1. Below the part level the skeleton is **provisional** (D11, tension T2). **Absorbing D8's surviving half on its retirement (2026-08-05): reading order on the site remains foundations-first.** **Amended 2026-08-04**: the §4 diagram (dev/memos/target-skeleton-d5.md) is the port-era record, not the live tree; the authorities for what `src/` contains today are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog). The part level remains as fixed here: D20's archive lives at the repository root, OUTSIDE `src/`, precisely so that retiring code adds no part and disturbs no gate. |
 | D6 | Prose | Full rewrite for beginners, English first, then Chinese (Japanese pre-supported). Source research prose is never translated; it serves the porter only. |
-| D7 | Naming hygiene | No iteration-numbered or provenance-flavored names survive the port. The §4 mapping table is the rename ledger; extend it as porting proceeds. |
+| D7 | Naming hygiene | No iteration-numbered or provenance-flavored names survive the port. The §4 mapping table (archived at dev/memos/target-skeleton-d5.md) is the rename ledger; extend it as porting proceeds. |
 | D9 | Goal management | Work is managed by route-tree goal codes rooted at **L**: L0 to L8 as registered so far, sub-goals Lx.0 onward; the range is open at the top and grows by registration, not by amendment. Coding rules in §6.0. Commits and docs carry the code in brackets, for example `[L1.4]`. |
-| D11 | Revisability | The plan legislates for known unknowns explicitly: legislation may be added mid-course (standing L0 track), the skeleton below the part level may be re-cut after L3, Frontier fields may be re-cut, and a whole-book harmonization pass runs at L4. Mechanisms in §8. **Amended 2026-08-04 by D21**: the harmonization still runs at L4, but L4 is no longer next-after-L3 in time. It is gated behind `[L8.2]`, the consolidation report, so the order is endpoint, then `[L7]` archival, then `[L8]` consolidation and its gate, then `[L4]` prose. |
+| D11 | Revisability | The plan legislates for known unknowns explicitly: legislation may be added mid-course (standing L0 track), the skeleton below the part level may be re-cut after L3, Frontier fields may be re-cut, and a whole-book harmonization pass runs at L4. Mechanisms in §8 (tension register archived at dev/memos/process-tensions.md). **Amended 2026-08-04 by D21**: the harmonization still runs at L4, but L4 is no longer next-after-L3 in time. It is gated behind `[L8.2]`, the consolidation report, so the order is endpoint, then `[L7]` archival, then `[L8]` consolidation and its gate, then `[L4]` prose. |
 | D13 | Macros and generated proof | **Ruled 2026-07-27 by the owner.** Opacity is **not** an objection. **The single veto is conversion blowup.** A macro or reification route is judged by exactly two measured questions: is it smaller, and does it keep `src/` inside the §7.5 and §7.6 budgets. Supersedes the exposition argument recorded against `[L3.2]`, which is withdrawn. |
 | D16 | Sunk cost is not decisive | **Ruled 2026-08-04 by the owner, standing.** Route decisions and re-cuts ignore sunk cost; it is reference only. Routes under comparison are priced as FROM-ZERO rebuilds on current experience (the あるべき姿 form) ALONGSIDE their continuation forms, and both are presented for the ruling. Overlap between an ideal form and the standing tree is a discount to report, never an argument to make. The corollary the owner endorsed: **asset durability equals genericity**; what generalizes is promoted into shared foundation, what stays fixed to one carrier awaits retirement. Evidence that produced the rule: the Matching detour (four batches priced links of a chain whose root was classically false) and the monomorphic satisfaction cone (its 134 readings would re-instantiate free at any carrier had they been written structure-generic; the second-carrier tax is sunk form made visible). |
 | D17 | Retirement is planned from the rewrite side | **Ruled 2026-08-04 by the owner, at EQUAL standing with D16.** A partial retirement scoped to keep a surviving consumer working is the wrong shape by default. First price what the ideal-form version of the needed content costs written fresh today, then retire the old chapter WHOLESALE. Any finding of the form "X must stay because Y consumes it" is INCOMPLETE until the ideal-form rewrite of what Y actually needs has been priced, and the pair (keep-cost versus rewrite-cost-plus-wholesale-retirement) goes to the owner. D-19 of `dev/LESSONS.md` prices PORTS and must not be quoted at a rewrite question. First application, same day: a 1,989-line chapter kept on a survivor-consumes warrant converted to a 0.65-1.25k rewrite, and the sweep it triggered found a second dead cone of about 1,076 lines. **Absorbing D14's role (2026-08-04): this decision now carries the retirement TRIGGER as well.** The trigger is active, not passive: at every goal closure, and at every ruling that changes what the tree consumes, ask of each chapter whether the ideal-form version of the content its consumers actually need is cheaper than the chapter; if it is, the chapter is scheduled for rewrite-and-archive. A chapter with surviving consumers is NOT thereby safe, which is the precise failure D14's passive trigger had. Disposal is D20's archive, never deletion. |
@@ -310,241 +187,13 @@ D12 rules on which to take, §6.1 orders their execution.
 | D30 | The craft freeze: no incremental development until the check-cost data improves | **Ruled 2026-08-06 by the owner, standing until the exit condition below is met.** **THE FINDING THAT PRODUCED IT.** `[T86]` profiled the tree and measured the retiring internalization subtree at **0.012 s/line over 30,648 lines** against the surviving trunk's **0.127 s/line over 18,588**, an eleven-fold gap. `[T87]` then removed 767 of those seconds with **six lines**, which settles the question the owner asked: **at least seven of the eleven-fold gap is engineering, not mathematics.** After that measured fix the ratio is 7.4x; if the other two hot modules respond alike it is about 3.4x, and whether the residual is mathematical is unmeasured. **THE UNCOMFORTABLE PART, recorded because it is the real content of the ruling.** The retiring chapters are not being retired for being slow; D18 retires them because the ROUTE changed. But they embody a discipline the newer work lost: they state at abstract carriers and variable indices so nothing re-normalizes, while `Bridge` and `SquareLaw` state memberships at concrete tower positions. **That is a regression in craft that nobody noticed until a profile was run**, and the law it violates, P-h, was already written down and measured. D29 was ruled the day before this measurement, which means the owner saw the regression before the data did. **So the code retires and the practice must not retire with it.** **THE FREEZE.** No new mathematics is dispatched while this stands. Defect repair, profiling, the fixes profiling licenses, and the capture of the retiring tree's craft all continue: they are the plan, not exceptions to it. **THE EXIT CONDITION.** **A first version set a projected total of 1,100 s and it was wrong, in the exact way the owner named: it argued a threshold before the caliber was pinned, and it built that threshold on a guess.** The guess was that `SquareLaw` is 95 percent removable, taken from the profile's finding that 95 percent of `Bridge`'s time sat in one family; but the share the fix actually REMOVED was **79 percent**, and at the honest rate the projection lands at 1,088 to 1,121, **bracketing the very threshold it was meant to clear**. `[T93]` found the figure unreproducible from the ledger independently and from the other direction. A threshold whose pass or fail flips with which of two measurements you use is not a gate. **So the condition carries no projected number at all, and it is STRICTER for it, because nothing now earns a pass by merely sitting under a line.** **(1) No unprofiled cost:** every master holding 2 percent or more of the tree's check time has a per-definition profile on record. **(2) No unremoved removable second:** for each such module the removable fraction is MEASURED in a scratch copy, then either removed, or left in place with a written price and reason in the ledger. A projection does not discharge this; only a measurement does. **(3) The craft recorded** before the D18 archival: P-k standing, and `dev/ARCHIVE.md`'s practice column filled. **The caliber is settled first, which is `[L3.32-F0]`**, because every number above depends on it. |
 | D28 | A full cold typecheck runs in the background, never in the foreground | **Ruled 2026-08-05 by the owner, standing.** `agda src/Everything.lagda.md` over a cold tree takes about twelve minutes and there is no reason for it to hold the conversation for any of them. **Every full-tree typecheck is launched as a HARNESS-TRACKED background job, so it notifies on completion, and the turn continues while it runs.** The same applies to any Agda invocation likely to run past a couple of minutes, and to `make check`, whose typecheck step is the same work. **What must NOT happen is the other failure this replaces:** a foreground run that blocks, times out at the tool's limit, and is then reported as though its result were unknown, when it was merely un-awaited. **Enforcement point:** the return checklist in `dev/ORCHESTRATION.md` section 6 step 5, which now says the gate is armed in the background and its result is read from the notification, and the orchestrator does not report a wiring as verified until that notification has landed. The corollary is that a turn may close with a typecheck still running, PROVIDED the report says so plainly and names what it does not yet know. **AMENDED the same hour, on a measured failure of this very rule's first use:** a full-tree gate **must not be run while any agent is live**, because it reads masters those agents are mid-write on. The first background gate under this decision failed on a name an agent had not finished introducing, which read exactly like a red gate on the change being audited and was nothing of the kind. **The dangerous half is the other one:** had the half-written file happened to parse, the run would have gone GREEN over content nobody had finished writing, and a green is not re-examined. `dev/ORCHESTRATION.md` section 4 already forbids a tree-wide WRITE while agents hold territory; this is the same hazard on the READ side and it needed saying. Enforcement is mechanical: `dispatch.py gate-ready` exits non-zero while any agent is live, and it is run before the gate is armed. **AMENDED AGAIN 2026-08-05 by the owner, on the right diagnosis of the cost: the expensive part of a full gate is NOT its twelve minutes, which run in the background and cost nothing, but the QUIET TREE it demands for all of them.** No agent may write a master while it runs, so **every full gate costs one dispatch window**, and the first turn under this decision spent a window able to dispatch only report-only recons. **So full gates are BATCHED.** After an ordinary return, run the WARM check, which is seconds when the change is shallow and is enough to catch a broken consumer; spend a full quiet-window gate only when the debt has accumulated, at about **three to four returns or roughly 1,000 added in-fence lines under `src/`, whichever comes first**. The trigger is measured rather than felt: `scripts/check-tree.py --gate-debt` reports commits and added lines since the last green gate and says whether one is due, and `--gate-passed` records HEAD after a green one. **The cost this accepts, stated so it is a decision and not an oversight:** a red batched gate does not say which of the batched changes broke it. That is affordable because every return already gets its own file-level typecheck before it is committed, so a batched red is a CONSUMER breakage, which bisects in a few warm runs. |
 
-## 4. Target skeleton (D5)
+## 4. Target skeleton (D5) (pointer)
 
-Top-level parts mirror the book's parts. The part level (Base, FOL, ZF, V, L,
-Landmarks) is fixed; **cluster-internal layout is provisional until the L3.10
-re-layering review** (tension T2), and file splits inside a cluster are
-finalized at port time under the STYLE-agda rules (L0.0).
+The D5 target skeleton, its port-era diagram and the rename ledger moved to [dev/memos/target-skeleton-d5.md](memos/target-skeleton-d5.md). What stays binding from D5: the part level (Base, FOL, ZF, V, L, Landmarks) is fixed, below-part layout is provisional until the [L3.10] re-layering, and the authorities for what `src/` contains are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog), not this section. Read the memo when a rename's history or the port-era layout is needed.
 
-**Reading this section today.** The diagram below is the ratified D5 skeleton
-as designed for the port, and it is kept as that record. The tree has since
-grown past it and is about to shrink back past it: `L/Rud/` (the rudimentary
-function engine and its tower) is a whole cluster the diagram predates, and
-under D18 the satisfaction-internalization cone, the choice tree, the Goedel
-trees and the coded cluster retire. **For what the tree contains right now, the
-authorities are `src/README.md` (the master symbol table) and
-`src/Everything.lagda.md` (the reading catalog), not this diagram.** The rename
-ledger below it stays append-only and remains accurate as history.
+## 5. Working mechanisms (pointer)
 
-```
-src/
-├─ Everything.lagda.md       aggregator; import order = reading order; site landing page
-├─ Landmarks.lagda.md        milestone theorems restated, with pointers into the text
-├─ Base/                     Part 0: host-language groundwork
-│   ├─ Prelude               cubical re-exports, global conventions
-│   ├─ Truth                 truth values (hProp toolkit; see S1 in §10)
-│   └─ Classical             LEM as a parameter interface and its consequences; no postulate
-├─ FOL/                      Part 1: first-order logic as an object of study
-│   ├─ Syntax                Formula (12 constructors, incl. Δ₀ bounded quantifiers)
-│   ├─ Structure             ZFStructure: carrier, equality, membership; ↾, environments
-│   ├─ Semantics             Tarski satisfaction by structural recursion (holds by refl)
-│   ├─ LevyHierarchy         the Levy hierarchy as inductive witnesses
-│   ├─ Absoluteness          transitive classes; Δ₀ absolute, Σ₁ up, Π₁ down
-│   ├─ Manipulation/         syntax manipulation, zero trunk consumers, reads at the tail
-│   │   (Relabelling: the constant-domain kit; Renaming; Relativize)
-│   └─ Reification/          host predicate ↔ object formula, with adequacy certificates
-│       (Base, Combinators, Certified; the rest deferred, see ledger)
-├─ ZF.lagda.md               Part 2: what a ZF(C) model is: isZFModel / isZFCModel records
-│                            (single chapter; Encoding deferred, Coding returns under ZF/ at L2)
-├─ V/                        Part 3: the cumulative hierarchy realizes ZF(C)
-│   ├─ Hierarchy             the HIT V and its ZF structure 𝒮ᵥ
-│   ├─ Smallness             the resizing interface
-│   ├─ Coding, Satisfaction
-│   └─ Model                 V ⊨ ZF; with set choice, V ⊨ ZFC
-└─ L/                        Part 4: the constructible universe (the capstone)
-    ├─ Constructible         isL as an inductive predicate
-    ├─ Model                 ★ root: L ⊨ ZFC (LEM-parameterized; the Frontier is deleted, §11)
-    ├─ Ordinal/, Hierarchy/  ordinals, L-stages
-    ├─ Definability/         the Def operator
-    ├─ Recursion/            the internalization theorem for L-recursion (L.Recursion)
-    ├─ Coding/               formula and sequence coding
-    ├─ Axioms/               per-axiom chapters: Basic, Separation, Replacement, Infinity, Power
-    ├─ Condensation/         condensation and the power-set bound
-    ├─ WellOrder/            the global well-order <L
-    └─ Choice/               the choice set in L
-```
-
-Rationale, briefly: `Base/` collects everything that is about the host rather
-than the mathematics, so the remaining parts read as book parts. Reification
-nests under `FOL/` because it is logic machinery, not a peer subject of V and
-L. The source's `Models/HITV` becomes `V/` because in a textbook V is a
-subject, not "a model instance". `Landmarks` is the trophy case and gives
-stable statement anchors.
-
-Rename ledger (append-only; extend as porting proceeds; a re-cut after L3 adds
-new rows rather than editing old ones):
-
-| Source (fol-reification) | Bedrock | Notes |
-|---|---|---|
-| `Prelude`, `Truth`, `Classical` | `Base.Prelude`, `Base.Truth`, `Base.Classical` | `Classical` loses its postulate (D2); `LEM` stated per level, dividends take it explicitly; `lem→smallΩ` returns `Lift Bool ≃ hProp ℓ` directly (the source's Σ-packaging happens at the V-side `smallΩ` field, `[L1.5]`) |
-| `Classical.lem→VResizing` | lands in `V/` with `[L1.5]` | re-layered: the V-side redemption belongs to Part 3; `Base.Classical` keeps `lem→smallΩ` / `lem→resize` |
-| `Prelude._^_` | `FOL.Structure`, with `[L1.2]` | just-in-time (STYLE-agda §2): environments are assignments into a carrier, and the parameterized `FOL.Semantics` module cannot host a generic definition |
-| `Prelude.absurd` | dropped (owner ruling, 2026-07-17) | the library's `Empty.rec*` serves: `embed = mapFo Empty.rec*`, and `embed-⊨` names it in its statement |
-| `ZF.Structure.Transitive` | lands with `[L1.3]` (owner ruling, 2026-07-17) | just-in-time: its first consumer is the absoluteness chapter; deferred out of `FOL.Structure` |
-| `FOL.Syntax.Closed` | `ParamFree` (owner ruling, 2026-07-17) | "closed" collides with closed formula = sentence; the standard set-theoretic name is parameter-free (constants are how parameters enter); zh 无参 |
-| `FOL.Syntax.Sentence` | dropped (owner question, 2026-07-17) | zero consumers in the entire source development; where closed-ness matters the index says it (`ParamFree 0`), and the concept stays as prose |
-| `FOL.Syntax` / `FOL.Semantics` / `FOL.Rename` | `FOL.Syntax` / `FOL.Semantics` / `FOL.Renaming` | |
-| `Reification.{Base, Combinators, Graded, Absoluteness, Relativize}` | `FOL.Reification.*` | `[L1.3]`; `Absoluteness` restructured: unparameterized top + `Transitive` + inner `module Single`; downstream instantiates `Absoluteness.Single` |
-| `Reification.Absoluteness2` | deferred (zero code consumers) | its route was superseded by the source's RAW reflection breakthrough; revisit at `[L2.2]` only if the reflection engine wants it |
-| `Reification.Graph` | deferred to `[L2.2]` | sole consumer is `L.ModelACSep`; on landing, its private renaming copy is replaced by `FOL.Renaming` |
-| `Reification.Characterization` | deferred (zero consumers) | `charac→/←` unconsumed; `RepPred` and `toFormula` deferred with it |
-| `Reification.Universe` | deferred (zero consumers) | the Code universe scaffolded a coding layer that was built via parameter-free formulas instead |
-| `Reification.Ceiling` | dropped as code | zero consumers; the compactness-ceiling argument becomes prose in the `ZF.Model` chapter (`[L1.4]`), where it explains why strong axioms are model fields |
-| `Reification.Tactic` | deferred (zero consumers) | the source's entire L development hand-builds its representations |
-| `Reification.Base.{ClassOf, Definable}` | deferred | parameterized definable classes; land with the geology part |
-| `ZF.Structure` | `FOL.Structure` | re-cut `[L1.2]`: the bare {∈,≐}-structure is model-theory material and must be read before `FOL.Semantics`, which consumes it as a module parameter; `ZF/` keeps the axioms (`Model`) |
-| `ZF.Model` | same name | |
-| `Models.HITV.{Smallness, ZF, Def, Coding, Sat, Instance}` | `V.{Smallness, Model, Definability, Coding, Satisfaction}` | `Instance` folds into `V.Model`; `V.Hierarchy` introduces the HIT |
-| `Examples.HITV` | folds into `V.Hierarchy` | the structure instance is part of the chapter |
-| `L.Constructible` (`isL'`) | `L.Constructible` (`isL`) | primes dropped (D7) |
-| `L.ModelZFCFinal`, `L.ModelZFC`, `L.ModelAC*` | `L.Model` + `L.Axioms.*` | |
-| `L.{Hierarchy*, Stage*, Lset*, Rank*, OrdLadder}` | `L.Hierarchy.*` | |
-| `L.{Ordinal, OrdinalLinear}` | `L.Ordinal.*` | |
-| `L.{Def*, DefEnv, Defstep, Delta0Local}` | `L.Definability.*` | |
-| `L.{Sat*, Tarski*, Realize, Reflect*}` | `L.Satisfaction.*` | |
-| `L.{Code*, Formula*, VarCoding, SeqChar}` | `L.Coding.*` | |
-| `L.{FFST*, Canon*, SatSetInL, SeqSetInL}` | `L.Closure.*` | |
-| `L.{Condensation, PowerBound, CondReduce}` | `L.Condensation.*`, feeding `L.Axioms.Power` | |
-| `L.{ConstructibleOrder, WellOrder2}` | `L.WellOrder.*` | |
-| `L.{Cmp*, Depth*, Order*, Trace*, Coh*}` | `L.Recursion` + per-function instances | D12, 2026-07-25; delivered as `L.Recursion` and its instances |
-| `L.{ChoiceSetInL2, Choice*}` | `L.Choice.*` | |
-| `ZF.Model.foundation` | `regularity` | `[L1.4]`: aligns with the glossary's canonical term for the axiom; one axiom, one name |
-| `ZF.Model.{hasSep, hasRepl, sep, num0, numS}` | `hasSeparation`, `hasReplacement`, `separate`, `numeral-zero`, `numeral-suc` | `[L1.4]`: registered-abbreviation rule (STYLE-agda §3); `Sep`/`Repl`/`num` are unregistered |
-| `ZF.Model.ℕ̄` | `isNumeral` | `[L1.4]`: no invented symbols (STYLE-agda §0); the bar had no tradition to lean on |
-| `ZF.Model.contrFromExt` | `setOf-unique` | `[L1.4]`: theorem names are kebab phrases; `Contr`/`Ext` unregistered |
-| `ZF.Model.iter` | deferred to `[L1.5]` | just-in-time: zero consumers in this chapter; first consumer is the V-side chain assembly (`numeral = iterate ∅ _⁺` with two `refl` equations); rename to `iterate` on landing |
-| `ZF.Encoding` | deferred (zero consumers) | `Class`/`Encoding` are consumed by nothing outside `Everything` in the source; the class concept appears as prose in `ZF.Model`; revisit if a consumer lands |
-| `ZF.Coding` | deferred to `[L2.x]` | all consumers are the L-side coding stack (`L.{VarCoding, SubBridge, SatCert*, Defstep, CodeOrder, OrderGraph}`) and `V.Coding` |
-| `Models.HITV.ZF.{extensionalV, foundationV}` | `V.Hierarchy.{extensionalV, regularityV}` | `[L1.5]`: structural facts of the HIT itself, re-homed to the chapter that introduces it; `foundationV` renamed per the regularity row |
-| `Models.HITV.ZF.sepΔ₀` | `V.Smallness.separateΔ₀` | `[L1.5]`: the smallness chapter's capstone; `sepFromSmall`→`separateFromSmall` (abbreviation rule) |
-| `Models.HITV.Smallness.{small-⋀, small-⋁, InnerSmall}` | deferred to `[L2.x]` | sole consumer is the Def operator (`Models.HITV.Def`), itself deferred |
-| `Models.HITV.{Def, Sat, Coding}` | deferred to `[L2.x]` | consumers are the L definability/coding stack; the `sucV` lemmas `∈sucV-elim` (from `L.Ordinal`) and `∈sucV-inl`/`self∈sucV` (from `Models.HITV.Coding`) are re-homed to `V.Model` for the numeral pinning |
-| `Models.HITV.ZF.NumeralSpec` | inlined as `V.Model.numeralV≡#` | `[L1.5]`: the field-form `numeral` (L1.4 row) removed the parameterization's purpose; `iter` (deferred at L1.4) is dropped entirely, `numeralV` is direct recursion |
-| `Models.HITV.Instance.{fullSep, replImage, con!}` | `separateFull`, `replaceImage`, `one` | `[L1.5]`: abbreviation rule; `con!` was local and stays local |
-| `V.Model.SetChoice` | `Base.Choice.SetChoice` | `[L1.9]`: re-homed and level-indexed (LEM-style packaging) so Diaconescu can be applied at two levels; owner ruling 2026-07-18: reads in Part 0, right after `Base.Classical` (the boundary's second interface) |
-| `FOL.Reification.{Graded, Absoluteness, Relativize}` | `FOL.{Graded, Absoluteness, Relativize}` | owner ruling 2026-07-18: certificate, absoluteness, and relativization theory is FOL material parallel to `Renaming`; only the representation framework keeps the `Reification` namespace |
-| `FOL.Reification.Graded.Certified`, `FOL.Reification.Absoluteness.Single.{Inner, transfer}` | `FOL.Reification.Certified` | extracted so `FOL.Graded` and `FOL.Absoluteness` genuinely do not inherit the representation line (they no longer import it); the framework's graded tier, zero consumers, closes the catalog |
-| `ZF.Model` | `ZF` | owner ruling 2026-07-18: a one-module namespace read abrupt; the chapter is the part; `ZF.Coding` will nest under it when it returns at `[L2.x]` |
-| `V.Definability` | `L.Definability` | owner ruling 2026-07-18: the Def operator is the L-construction step, matching the fixed skeleton's `L/Definability`; reading position unchanged (head of Part 4) |
-| `TruthAlg`, `hPropAlg` | `TruthAlgebra`, `hPropAlgebra` | owner ruling 2026-07-18: `Alg` reads as "algorithm" and was an unregistered abbreviation (STYLE-agda §3); D7 naming hygiene, repo-wide mechanical rename |
-| `V.Model.{VResizing, lem→VResizing}` | `Base.Classical.{Resizing, lem→Resizing}` | owner ruling 2026-07-18: the record is pure universe-level policy, the `V` was consumer-naming; promoted to the assumption-interface pattern D2/STYLE §1 always anticipated for resizing, level-indexed like `LEM`, minted beside the dividends it bundles |
-| `Base.Classical.{Resizing (record), lem→Resizing, lem→resize, lem→smallΩ}` | `Impredicativity`, `lem→impredicativity`, `lem→resizing : … → Resizing ℓ`, `lem→hPropSmallness : … → HPropSmallness ℓ` | owner ruling 2026-07-18: the two instruments get named types (`Resizing` = the function type, `HPropSmallness` = the Σ), the packing is renamed for what it is, impredicativity |
-| `V.Model.{V⊨ZF, VZFC.V⊨ZFC, V⊨ZFC-fromChoice}` | `VModel.V⊨ZF-impredicative`, (deleted), `V⊨ZFC` | owner ruling 2026-07-18: headline names carry the classical reading (`V⊨ZF` from LEM, `V⊨ZFC` from choice alone via Diaconescu); the exact-price form wears its hypothesis as a suffix; the two-hypothesis ZFC form is retired |
-| `ZF.{ZFModel, ZFCModel}` | `isZFModel`, `isZFCModel` | owner ruling 2026-07-18: the records are predicates on a structure, and the names now read as such (`isZFModel 𝒮` = "𝒮 is a ZF model"), matching the library's is-prefix convention |
-| landmark hypotheses `∀ {ℓ'} → LEM ℓ'` / `∀ {ℓ'} → SetChoice ℓ'` | single instances `LEM (ℓ-suc ℓ)` / `SetChoice (ℓ-suc ℓ)` | owner ruling 2026-07-18: both interfaces transfer downward (`lowerLEM`, `lowerSetChoice`, by lifting), so one instance at the model's truth level suffices; `lem→impredicativity` tightened likewise, and `L.Model`'s telescope takes `LEM (ℓ-suc ℓ)` |
-| `FOL.Syntax.{mapTm, mapFo, ParamFree, embed}`, `FOL.Semantics.{⟦⟧-map, ⊨-map, embed-⊨}`, `FOL.Graded.{mapΔ₀, mapΣₙ, mapΠₙ}` | `FOL.Relabelling` | owner ruling 2026-07-18: the constant-domain toolkit has zero trunk consumers and gathers into one tail chapter, three altitudes (syntax, meaning, certificates); zh rendering re-cut: relabelling = 常量改名 and renaming = 改名 (the pair named by its objects) |
-| `FOL.{Relabelling, Renaming, Relativize}` | `FOL.Manipulation.{Relabelling, Renaming, Relativize}` | owner ruling 2026-07-18: the three syntax-manipulation chapters cluster under one sub-namespace, mirroring `FOL.Reification`; reading order unchanged (the tail's tools section) |
-| `FOL.Graded` | `FOL.LevyHierarchy` | owner ruling 2026-07-18: the term graded certificates (分级证书) collided with the adequacy certificates, so the Levy data are **witnesses** (见证) and the word certificate is reserved for adequacy; the zh rendering keeps the surname in Latin, giving Levy 层级 (with 列维 in the avoid list) |
-| `Classical.lem→VResizing` | `V.Model.lem→VResizing` | `[L1.5]`: as planned in the L1.1 row; consumes `Base.Classical.{lem→resize, lem→smallΩ}` |
-| `Models.HITV.Smallness.{small-⋀, small-⋁, InnerSmall}` | un-deferred into `V.Smallness` | `[L1.6]`: their consumer `Def` un-deferred; supersedes the L1.5 deferral row |
-| `Models.HITV.Def` | `V.Definability` | `[L1.6]`: un-deferred (first consumer is `L.Constructible`); `abs-defSet` + `module Abs` deferred to `[L2.x]` (condensation-side); `DemoEmpty` and `ι-fst` dropped |
-| `L.Rank.{_∈ᵗ_, ∈-induction, ∈-induction-compute}` | `V.Hierarchy.{∈-induction, ∈-induction-compute}` | `[L1.6]`: regularity's dividend, re-homed to the chapter that proves regularity; `_∈ᵗ_` already lives in `FOL.Structure`; `rank` and the rest of `L.Rank` at `[L2.x]` |
-| `L.Ordinal.{IsOrd, isPropIsOrd}` | `L.Constructible` | `[L1.6]`: just-in-time, the class `isL` needs only the predicate; the rest of `L.Ordinal` at `[L2.x]` |
-| `L.Hierarchy.{isTransV, isPropIsTransV, ∅/𝒟/⋃/∪/setUnion-trans, isLayer, layer-trans}` | `L.Constructible` | `[L1.6]`: folded into the one chapter; member-form `isL`, `layer∈L`, `layer⊆L`, `L-trans`, `L-directed`, `Lₙ`/`Lω` deferred to `[L2.x]` |
-| `L.Constructible.{isL', isL'-trans}` | `isL`, `isL-trans` | `[L1.6]`: primes dropped per D7 (the Lset-form predicate IS the book's `isL`); `Lset` gains an `opaque` seal (conversion-blowup countermeasure, measured: `L.Frontier` 5 min → 1 s); `Lset-mono`, `Lset⊆𝒟ₒ`, `𝒟ₒ-inv`, `𝒟ₒ-intro`, `Lset→isL'`, `isL'→isL` deferred to `[L2.x]` |
-| `FOL.Manipulation.Relabelling.ParamFree` | dropped (owner ruling, 2026-07-19) | like `Sentence`, the concept keeps its prose name (parameter-free formulas and zh 无参公式) but no code name: the type `Formula (⊥* {ℓ}) n` says it whole, and the two use sites (`embed`, `embed-⊨`) spell it out |
-| `module V.Hierarchy where` + per-def `∀ {ℓ}` | `module V.Hierarchy {ℓ : Level} where` | owner ruling 2026-07-19, after an implicit-level audit: every one of the 15 downstream `𝒮ᵥ {ℓ}` pins sat inside an already-`{ℓ}`-parameterized chapter, so the level moves to the module telescope, L-side style; consumers import applied (`open import V.Hierarchy {ℓ}`) and use `𝒮ᵥ`, `∈-induction`, `regularityV` bare; `Landmarks` alone imports unapplied and keeps its explicit pins |
-| `hPropAlgebra : ∀ {ℓ} → …` | `hPropAlgebra : ∀ ℓ → …` | owner ruling 2026-07-19, same audit: the implicit was never once inferred (every code use pinned it with braces), so the level becomes an honest explicit argument; ~25 use sites now read `hPropAlgebra ℓ` / `hPropAlgebra (ℓ-suc ℓ)` |
-| `FOL.Structure.pathStructure` | dropped (owner ruling, 2026-07-19) | consumption audit found exactly one consumer (`𝒮ᵥ`; `𝒮ʟ` goes through `↾`), so the convenience constructor dissolves: `V.Hierarchy` writes the four-field record literal in place, and the structure chapter's propositional-side promise now points at the hierarchy chapter |
-| bare witness/见证 as a standalone noun | anchored compounds only (owner ruling, 2026-07-19) | 见证 read like a coined proper name but nothing in the code bears it; the licensed forms are anchored compounds only, the Δ₀ witness with its zh mirror Δ₀ 见证 and the Lévy 见证 and 小性见证 analogues; verbal and anaphoric uses stay; ~17 prose sites re-anchored, and the leftover graded/分级 wording in `V.Smallness` retired with them |
-| `FOL.Structure._∈ᵗ_` (anonymous module, prefix-applied `_∈ᵗ_ 𝒮 y x`) | `module hPropStructure {ℓ} (𝒮 : …)` with `open ZFStructure 𝒮 public` + `_∈ᵗ_` | owner ruling 2026-07-19: call sites should read `y ∈ᵗ x` after opening the structure; the record itself cannot host `∈ᵗ` (it is generic over the truth algebra, `Ω` abstract, no `⟨_⟩`), so the propositional side gets a named opening module that re-exports the fields; consumers swap `open ZFStructure` for `open hPropStructure` (ZF, V.Hierarchy, L.Constructible, L.Model) and `Transitive` opens it in a `where` |
-| prefix application of mixfix operators | banned, STYLE §6 rule (owner ruling, 2026-07-19) | the `_∈ᵗ_ 𝒮 y x` episode generalized: operators are opened and written infix, two coexisting instances get `renaming` marks; repo sweep found the last offenders in `FOL.Manipulation.Relabelling` (`At._⊨_ ι γ φ` and `At.⟦_⟧` in `⟦⟧-map`/`⊨-map`/`embed-⊨`), now inner modules over `(f , ι)` with `_⊨∘_`/`⟦_⟧∘` and `_⊨∅_`; review-enforced (regex cannot tell application from operator-as-value) |
-| `⟨ M x ⟩` (class applied to a point) | `x ∈ᶜ M` (owner ruling, 2026-07-19) | the library's `Cubical.Foundations.Powerset._∈_` re-exported through the Prelude hub, renamed `_∈ᶜ_` so the plain `_∈_` (the HIT membership in `V.Hierarchy`/`L.Model`) never clashes; class sites swept (`↾` carrier, `Transitive`, `SM` twice, `InnerSmall`, `DefOf.e/ι`, `accL`, `isContrΣ-fromCenter`); plain-hProp projections `⟨ P ⟩` are untouched |
-| `FOL.Structure` | `FOL.ZFStructure` (owner ruling, 2026-07-19) | the chapter defines `ZFStructure` and its retinue, and the file now says so; all 15 importers follow |
-| `ZF` (top-level chapter) | `FOL.ZFModel` (owner ruling, 2026-07-19) | the model specification is first-order logic's business, so the chapter joins `FOL/` beside `ZFStructure`; reading order unchanged (Part 2 between Absoluteness and V.Hierarchy); `V.Model`, `L.Frontier`, `L.Model`, `Landmarks`, and the catalog follow |
-| `FOL.Absoluteness.Transitive` | `FOL.ZFStructure.Transitive` (owner ruling, 2026-07-19) | transitive classes are structure-side vocabulary (the definition needs only `∈ᵗ`/`∈ᶜ`), minted beside the memberships; `L.Definability`, `L.Constructible`, and `Certified` import from the new home, and `Certified` keeps only `module Single` from Absoluteness |
-| `FOL.Structure._^_` | `FOL.Semantics._^_` (owner ruling, 2026-07-19) | environments belong to evaluation; the definition now sits inside the parameterized semantics module, so consumers take `_^_` from their applied instance (`open SemV`, `open Sem`, the `using` list of an applied import) and `Single` re-exports it for `Transfer` |
-| `V.Smallness.isSmall` + `Base.Classical.{Resizing, HPropSmallness, Impredicativity}` | `Base.Impredicativity` (new chapter, owner ruling 2026-07-19) | `isSmall` moves to Part 0 so `Resizing ℓ` reads as "every `P : hProp (ℓ-suc ℓ)` is small"; the owner does not want `V.Smallness` to depend on the classical chapter, so the size vocabulary gets its own chapter between Truth and Classical, interfaces only; Classical keeps `LEM`, `lowerLEM`, and the three `lem→` redemptions (`resizeDec` restated over `isSmall`) |
-| identity lambdas (`ι x = x`, `λ m → m`, `λ (x : S) → x`) | `id`, minted in `Base.Prelude` (owner ruling, 2026-07-20) | cubical has only the explicit-argument `idfun`, so per owner instruction the hub defines the book's one home-grown function; the seven canonical-interpretation sites (`ZFModel`, `V.Smallness` twice, `V.Model`, `L.Frontier`, `Absoluteness.Single`, `Certified.Transfer`) now read `open At id`-style |
-| `module At {ℓc} {K} (ι : K → S)` | `module At {ℓc} (K : Type ℓc) (ι : K → S)` (owner ruling, 2026-07-20) | the constant domain is the load-bearing datum of an interpretation and every open now names it (`open At S id`, `SemV.At SM fst`, `open At (⊥* {ℓe}) …`), retiring the `{K = …}` pins at `Renaming` and `Single` |
-| `L.{Cmp*, Depth*}` + `FFST*` / `L.{Order*, Trace*, Canon*, Env*}` / `L.{Sat*, Tarski*, Coh*}` | `L.Recursion` instances / staged/partial variants as once planned | `[L3.0.3]`, 2026-07-25: refined the row above into three tiers; the tier boundaries dissolved with `L.Recursion`, and the staged and partial variants were abandoned (L3.12, L3.13) |
-| `L.Ordinal.{∅-ord, suc-ord, setUnion-ord, boundingOrd}` | `L.Ordinal` (new chapter) | `[L2.0]`: un-deferred from the L1.6 row that kept only `IsOrd`. Consumption-pruned to what the closure axioms need; `mem-ord`, the numeral and ω lemmas, `A∉A` and `ord-antisym` stay deferred to `[L2.1]` and later. **`L.OrdinalLinear` is not ported and may never be**: its `ord-tri` was the source's route to pairing, and `boundingOrd` replaces it constructively |
-| `L.Constructible.{Lset-mono, 𝒟ₒ-intro, Lset⊆𝒟ₒ, Lset→isL}` | same names, back in `L.Constructible` | `[L2.0]`: un-deferred from the L1.6 deferral row, which named them for exactly this moment; `𝒟ₒ-inv` and `isL'→isL` stay deferred |
-| `L.ModelAC.{extensional', foundation', hasEmpty', hasPair', hasUnion', con!, mere→isContr, isL'-directed, 𝒟ₒ→isL', ∅ₗ}` | `L.Axioms.Basic.{extensionalL, regularityL, hasEmptyL, hasPairL, hasUnionL, uniqueL, mere→uniqueL, isL-directed, 𝒟ₒ→isL, ∅ʟ}` | `[L2.0]`: the source's basic-axiom block becomes the first axiom chapter. `extensionalL` and `regularityL` **move here from `L.Model`** (they were proven there at `[L1.7]`): the uniqueness of every existence field flows from extensionality, so the chapter that needs it must own it, and `L.Model` becomes a pure assembly chapter |
-| `L.ModelACNum.{pairₗ, unionₗ, sucₗ, pairₗ-fst, unionₗ-fst, suc-proj, numₗ, num-fst}`, `L.ModelZFC.{num0L, numSL}` | `L.Axioms.Infinity.{pairʟ, unionʟ, sucʟ, pairʟ-fst, unionʟ-fst, sucʟ-fst, numeralL, numeralL-fst, numeralL-zero, numeralL-suc}` | `[L2.1]`: the numeral chain becomes the second axiom chapter. Suffix convention settled here: `ʟ` marks an **object** of L (`∅ʟ`, `pairʟ`, mirroring `𝒮ʟ`), `-L` marks the L-instance of a **named model field** (`numeralL`, `hasEmptyL`), which is why the two coexist. `L.ModelACNum.{NumeralSpecL', ℕ̄ₗ, ω-specₗ', hasInfinityₗ'}` and all of `L.ModelACInfinity` wait for the collection step |
-| `L.Ordinal.{mem-ord, A∉A, numeral-ord, #∈ω, numeral-mem, ω-mem-ord, ω-ord}` | `L.Ordinal.{mem-ord, ∈-irrefl, numeral-ord, #∈ω, numeral-mem, ω-mem-ord, ω-ord}` | `[L2.1]`: un-deferred as the collection step reaches them. `A∉A` renamed `∈-irrefl` (a theorem name is a kebab phrase, not a formula); `ord-antisym` stays deferred (no consumer), and it is asymmetry rather than antisymmetry if it ever lands |
-| `L.Rank.{rank, rank-compute, rank-ord, rank-fix}` | `L.Rank` (new chapter) | `[L2.1]`: `_∈ᵗ_`, `∈-induction` and `∈-induction-compute` already live in `FOL.ZFStructure` / `V.Hierarchy` from `[L1.6]`, so the chapter is just the rank theory; `rank-mono` deferred (no consumer yet) |
-| `L.OrdinalLinear.{⊆ᵇ, ⊆ᵇ-prop, extByBig, ¬sub→wit, ord-tri}` | `L.Ordinal.Linear.{_⊆ᵇ_, ⊆ᵇ-prop, ext-⊆ᵇ, ¬⊆ᵇ→witness, ord-tri}` | `[L2.1]`: **the first Bedrock chapter to take a `lem` parameter**, packaged per the L1.9 ruling as a single instance `LEM (ℓ-suc ℓ)` rather than the source's postulate. `extByBig`/`¬sub→wit` renamed to kebab phrases naming what they do |
-| `L.FormulaBound.{BoundedTm, BoundedFo, BoundedTm-mono, BoundedFo-mono}` | `FOL.Manipulation.Bounding` (new chapter) | `[L3.0.4]`: minimal prerequisite for the theorem statement. Re-homed from `L/` to `FOL.Manipulation`, where it belongs by subject: it is relabelling when the map is only partial, and the source module is already pure syntax with no `Lset`/`defSet`/V dependency. `Relabel` (`liftFo`, `liftFo-correct`, `Δ₀-liftFo`) stays deferred to `[L2.2]`, where its consumer lands |
-| `L.ChoiceSetInL.metaφ⟹isL'` | `L.Axioms.Basic.defSet→isL` | `[L3.0.4]`: the probe's checklist item 4. The source buries the closure engine in the choice chapter though the whole closure tower uses it; in Bedrock it is two lines over `[L2.0]` (`𝒟ₒ→isL` after `𝒟ₒ-intro`) and sits with the axioms that first exhibit the pattern |
-| `Models.HITV.Def.Refine.{abs-defSet, module Abs}` | `L.Definability.Refine.{abs-defSet, module Abs}` | `[L2.1]`: un-deferred from the `[L1.6]` row that parked it as condensation-side; its first consumer is the ordinal formula of the collection step. Landing it executes the reading-order re-cut `[L1.4]` promised for `[L2.x]`: `FOL.Manipulation.{Relabelling, Bounding}` move from the tail to the Part 4 doorstep, since `L.Definability` is now their first consumer. `Renaming` and `Relativize` stay at the tail, still unconsumed |
-| `L.{OrdLset, RankLset, OrdLsetSuc, OrdinalFormula}` | `L.Ordinal.Stages` (one chapter) | `[L2.1]`: four source modules merge, since they are one theorem read two ways (`ord∈Lset→∈` and `ord∈Lset-suc`) plus its two comparison lemmas and the Δ₀ predicate. `sucβ∈or≡` → `suc∈or≡`, `φ_ord` → `φ-ord` (kebab, no underscore). The source's per-branch helper discipline is kept verbatim and narrated: the conclusions are heavy membership types and inlining them in a case split normalizes them per branch |
-| `L.ModelACInfinity.{ω∈L', ωₗ'}`, `L.ModelACNum.{ℕ̄ₗ, ω-specₗ', hasInfinityₗ'}` | `L.Axioms.Infinity.{ω∈L, ωʟ, isNumeralL, ω-specL, hasInfinityL}` | `[L2.1]`: the collection step joins the chain chapter rather than getting its own, and the chapter gains the `lem` parameter for it. `ℕ̄` → `isNumeralL` per the `[L1.4]` ruling that retired the invented bar |
-| `ZF.Coding` | `FOL.Coding` | `[L3.3]`: un-deferred as L3 phase B opens. Namespace by subject, `FOL/`: it codes the object language into a structure, and it is generic over that structure (an injective pairing and an injection of the naturals, as module parameters), so it belongs beside `FOL.ZFStructure` rather than under the model chapter. **`⌜⌝-inj` is dropped by consumption audit** (`[L3.1]`, S9). **A consumer demanded it, 2026-07-27** (`[L3.0.1]`'s satisfaction table), and it returns as `[L3.22]`, not as `[L3.9]` work: that pointer named the wrong goal, and `[L3.9]` is abandoned with "a future need returns as a new code" |
-| `Models.HITV.Coding` | `V.Coding` | `[L3.3]`: un-deferred; discharges `FOL.Coding`'s two parameters (`#-inj` through monotonicity and irreflexivity, `pr-inj` through the classification specifications). Its `A∉A` is dropped, superseded by `V.Hierarchy.∈-irrefl` |
-| `L.Ordinal.∈-irrefl` | `V.Hierarchy.∈-irrefl` | `[L3.3]`: re-homed one chapter earlier, to the chapter that proves regularity, following the `[L1.6]` precedent for `∈-induction`. `V.Coding` needs it and must read before `L/`, so the L-side home was an inversion waiting to happen |
-| `L.ConstructibleOrder.{SWO, IsLeast, isPropLeastOf, leastOf, Tri}` | `L.WellOrder.Base` | `[L3.14]`: un-deferred at owner request, ahead of `[L2.2]` which is its first consumer. `Tri` is re-minted here as a general three-way datatype (the source imports it from `FormulaOrder`, which is instance data and stays deferred). **The `lem` parameter moves from the module to `leastOf` alone**: the bundle and the uniqueness of least elements are constructive, so charging the whole chapter classically would have overstated the price. `ΣSWO` and the pullback stay deferred to `[L2.4]`, where the order they build is defined |
-| `L.SatCertBase.{ClosedΣ, FixedFormulaSetΣ, FFSΣterm, codeΣ-mem, sgl-char, pair-char, prChar-fwd, prChar-bwd, sglAt, sglConAt, pairAt, pairConAt, prAt, tagAt}` | `L.Coding.Base` with `FixedFormulaSetΣ` → `allCodes`, `FFSΣterm` → `allCodesTerm`, `codeΣ-mem` → `code∈allCodes` | `[L3.14]`: the Δ₀ readers, the substrate 68 source modules consume. Names lose the provenance flavour (`FixedFormulaSetΣ` was arity-Σ bookkeeping, not a concept). The source's own lesson is kept as narration: the auxiliary predicates `SglOf`/`PairOf` are written in the shape the readers' satisfaction unfolds to, which is what makes each adequacy lemma one line instead of a second proof |
-| `L.SatCertEnv.{envF, envV, envF-spec, lookupF-spec, memPairAt, sucAt, envA, consF, seqSet}` | `L.Coding.Environment.{env, envOf, env-spec, lookup-spec, memPairAt, sucAt, envIn, cons, seqSet}` | `[L3.14]`: the environment layer. The `F`/`V`/`A` suffixes were argument-shape bookkeeping rather than concepts and are dropped; `lookup-spec` keeps its name because functionality of the graph is the chapter's point |
-| `L.SatCertLen.{∈#-elim, #∈#-elim}` | `L.Ordinal` | `[L3.14]`: the members of a numeral are exactly the smaller numerals. Re-homed from the certificate base to the ordinal chapter, where the numerals are introduced and the companion `numeral-mem` already lives; the source keeps it with its consumer. `mkFin`/`toℕ-mkFin` are **not** ported, having no consumer until `lenAt` lands |
-| `L.SatCertLen.{FixedFormulaSetT, codeT-mem, FFSTterm, pairInAt, tagPairAt}` | `L.Coding.Tagged.{taggedCodes, taggedCode-mem, taggedCodesTerm, pairInAt, tagPairAt}` | `[L3.14]`: the arity-tagged code set and the binary-constructor shape matcher. Split out of `SatCertLen` because it is self-contained; the length guard is the rest of that source module and lands separately. `L.Coding.Base`'s singleton and pair membership lemmas were made public here, since `tagPairAt`'s backward direction has to exhibit the Kuratowski intermediates |
-| `L.SatCertLen.{lenAt, lenAt-intro, lenAt-len, mkFin, toℕ-mkFin}` | `L.Coding.Length` | `[L3.14]`: the length guard, the rest of `SatCertLen` after the tagged-code half. `mkFin`/`toℕ-mkFin` return here, having been dropped by the sweep one goal earlier when `∈#-elim` moved to `L.Ordinal` without them; they are private to this chapter, which is their only consumer |
-| `L.SatCertCons.{shiftPairAt, consAt}` | `L.Coding.Environment` | `[L3.14]`: environment extension, re-homed to the environment chapter whose `sucAt` they consume. `consAt`'s adequacy is stated against the encoded environment, which is the form the certificates hold |
-| `L.SatCertCons.tripleInT` | `L.Coding.Entry` | `[L3.14]`: the certificate-entry form. **The source module is split by subject**: `tripleInT` is about how a certificate records an entry, while `shiftPairAt` and `consAt` are environment extension and belong with `L.Coding.Environment`, whose `sucAt` they consume. The source keeps all three together because they were built in one session |
-| `L.Stage` | same name | `[L2.2]`: the earliest-stage function. `isLeastSt`/`Least`/`leastBelow`/`theLeast` become `isEarliest`/`Earliest`/`earliestBelow`/`theEarliest`, since "least" was ambiguous against `L.WellOrder.Base`'s `IsLeast` for an arbitrary predicate; here the order is fixed and the content is "earliest stage". `lem` is a module parameter per D2, replacing the source's `Classical` import |
-| `L.FormulaBound.Relabel` | `FOL.Manipulation.Bounding.Relabel` | `[L2.2]`: the deferral recorded at `[L3.0.4]` is discharged; the module joins the chapter that defines the certificate it consumes. The source's `V` parameter is renamed `W`, since `V` is the hierarchy everywhere else in Bedrock and the parameter is an arbitrary common codomain |
-| `L.ModelAC.{ReplQ, module SepAt}` | `L.Axioms.Separation.{ReplImage, module AtStage}` | `[L2.2]`: the Δ₀ separation and replacement engine. `φLeg`/`φKey`/`defKey` become `satBridge`/`carveSat`/`carveSatAnd`, `sealedDefSet` becomes `carve`, `sepBuild`/`replBuild` become `separateAt`/`replaceAt`, and `⊨transp` becomes `⊨-transport`: the source's names record how the proof was assembled, the new ones what each step says. The `opaque` seal on the carved set is kept and narrated |
-| `Reification.Tactic` | revisited by S6 (§10) | 2026-07-25: the "deferred (zero consumers)" row above stands for the port itself, but the macro is the second-largest measured lever (4k to 6k); if S6 is taken up, the deferral is reversed under the goal code that takes it |
-
-## 5. Working mechanisms (D2, D8)
-
-**The Frontier record.** Root-first construction without postulates: `L.Frontier`
-held one record whose fields were the *statements* of the not-yet-ported lemmas,
-and the root theorem was proven from it. The record was the cut across the
-dependency tree: each ported branch deleted its fields, the field list was the
-live progress board, and `make check` stayed green at every commit. **The
-Frontier is empty and deleted since `[L2.4]` (2026-07-31)**: `L.Model` takes
-only `(lem : LEM (ℓ-suc ℓ))` and `L⊨ZFC` is unconditional in substance.
-
-**Frontier re-cuts were normal (D11).** A field was not a contract with the
-source's interface: when an L3 reduction changed the natural statement of a
-lemma, the field was replaced (a *re-cut*), provided the root still typechecked
-and `make check` stayed green. Re-cuts were recorded in the §11 field count.
-
-**LEM as a parameter.** `Base.Classical` states the interface and derives its
-consequences; the packaging validated by the L0.2 spike is
-`LEM : ∀ ℓ → Type (ℓ-suc ℓ)` with classical-cone modules taking
-`(lem : ∀ {ℓ} → LEM ℓ)` in their telescopes (STYLE-agda §1). The entire tree,
-`Everything` included, is `--safe`.
-
-**Reading order versus structure order** (owner ruling, 2026-07-18): the book
-keeps two catalogs. The **reading catalog** is `Everything.lagda.md`, the
-landing page: import order = reading order, hand-maintained. The **structure
-catalog** is the namespace tree, derived automatically and never
-hand-maintained. Namespace membership is decided by subject, reading position
-by first consumption; the two are independent.
-
-**Construction order versus reading order.** These are deliberately different.
-The build proceeds root-first (the Frontier shrank over time); the book reads
-foundations-first (`Base → FOL → ZF → V → L → Landmarks`, fixed by the
-`Everything` import order). Neither order constrains the other.
-
-**The named hypothesis, and its limit** (standing since `[L3.31]`). When a
-chapter cannot discharge an obligation, the obligation is stated as a named
-module hypothesis and the chapter ships conditional on it, with the hypothesis
-recorded in §11. This kept the tree green through a long campaign. Its limit
-was learned expensively: **a named hypothesis has no defence when the
-hypothesis is false**, so the truth of a residue's target is now priced before
-its proof, at the chain's ROOT, against the in-repo corpus (LESSONS D-10, and
-the risk row in §9).
-
-**Probes and gates** (standing since `[L3.30]`, sharpened 2026-08-04). Before
-heavy or hard-to-reverse work, the load-bearing assumption is verified cheaply:
-a D-1 probe builds the smallest decisive miniature, reports GO or NO-GO with a
-price extrapolation, and is thrown away. A probe prices only OUR departures
-(what the Cubical HIT setting costs us), never feasibility the literature or
-the delivered tree already settles. Since 2026-08-04 every wide unprobed
-component is expected to name its gate at estimate time (§6.2), and a stop
-report is a full deliverable: the two most valuable results of this campaign
-were a refutation and a stop.
-
-**Orchestration.** Batches are written by delegated agents against pinned
-briefs, archived in `_build/briefs/`; the orchestrator audits every return
-(report, then code, then an independent typecheck and the linters), wires
-`Everything.lagda.md` (agents never touch it), and commits with the goal code.
-Agents never commit and never push. Concurrency and heap caps are governed by
-LESSONS C-12.
+The mechanisms this section carried moved to their enforcers ([L3.32-T113]): the LEM parameterization convention is `dev/STYLE-agda.md` section 1 (the ruling is D2 in §3); the two-catalog doctrine and the named-hypothesis debt form are in `dev/STYLE-agda.md`; probes and gates are `AGENTS.md` and `dev/LESSONS.md` D-1; orchestration is `dev/ORCHESTRATION.md`. The port-era mechanism history (the Frontier record, its re-cuts, construction order) moved to [dev/memos/working-mechanisms.md](memos/working-mechanisms.md); the Frontier's deletion is recorded in the D8 struck row of `dev/JOURNAL.md` and in rows L2.4 and L4.0 of §11.
 
 ## 6. Route tree (D9)
 
@@ -600,372 +249,9 @@ LESSONS C-12.
    the cap means the detail has not moved to `dev/JOURNAL.md` or the report,
    where it belongs.
 
-### 6.1 The tree
+### 6.1 The tree (pointer)
 
-**[L0] Legislation (standing track; never closes, see T1).** The initial set
-L0.0 to L0.2 gates L1; later L0.x items are opened whenever porting uncovers an
-un-legislated situation. Gate for L1: L0.0 to L0.3 DONE and approved by the
-owner.
-
-- **[L0.0]** `dev/STYLE-agda.md`, initial edition: OPTIONS policy
-  (`--cubical --safe --guardedness` everywhere), assumption policy (D2;
-  Frontier as the only debt form while it existed), naming rules (D7), the
-  notation table, record-versus-data and universe-polymorphism conventions,
-  annotation rules for performance idioms (each `opaque` seal or
-  explicitly-spelled implicit carries a marker comment), and the master chapter
-  template. Rules may be marked **provisional** (T1) and hardened later.
-  **DONE 2026-07-16.**
-- **[L0.1]** First glossary batch in `dev/glossary.toml`: constructible
-  universe, cumulative hierarchy, condensation, absoluteness, reification,
-  adequacy, relative consistency, well-order, and companions. **DONE
-  2026-07-16.**
-- **[L0.2]** LEM parameterization spike (gates D2): parameterize one or two
-  representative heavy `L` modules over LEM, measure cold-check time against
-  the source baseline, project the full-cone cost, record the verdict in §11.
-  **DONE 2026-07-16, verdict green** (details in §11).
-- **[L0.3]** `scripts/lint-agda.py`: a code-side linter for the masters, wired
-  into `make check` and the pre-commit hook. Flagship check: **import
-  necessity**; companions: the exact OPTIONS header, the using-list discipline,
-  and the forbidden-construct ban (postulate, TERMINATING pragmas, holes).
-  **DONE 2026-07-16.**
-- **[L0.4]** Two-catalog doctrine (owner ruling, 2026-07-18): legislate the
-  reading-catalog / structure-catalog split of §5. **DONE 2026-07-18.**
-- **[L0.5]** Register `Ord` as an abbreviation in `STYLE-agda` §3 (opened
-  2026-07-25 during `[L2.0]`). **DONE 2026-07-25.**
-- **[L0.6+]** Reserved for mid-course legislation, opened as discovered.
-
-**[L1] Root and trunk skeleton.** All L1 ports carry full textbook prose (en +
-zh). Gate for L2: `make check` green; the owner reads the trunk end to end as a
-book and signs off the tone. `[L3.0.3]`, the paper-level probe of the L3 big
-lever, opens at this same boundary and runs alongside L2; it is
-source-reading only, so it neither blocks nor is blocked by this gate.
-
-- **[L1.0]** Lay the §4 skeleton, rewrite `src/README.md`, add
-  `-WnoUnsupportedIndexedMatch` to `bedrock.agda-lib`, pin the source commit in
-  §11. **DONE 2026-07-16.**
-- **[L1.1]** Port `Base/` (Prelude, Truth, Classical-as-interface). **DONE
-  2026-07-16.**
-- **[L1.2]** Port `FOL/` core (Syntax, Semantics, Renaming). **DONE 2026-07-17.**
-- **[L1.3]** Port `FOL/Reification/`. **DONE 2026-07-18.**
-- **[L1.4]** Port `ZF/` (Model; Encoding/Coding as needed), fold in the Ceiling
-  prose (compactness explains why strong axioms are model fields), and execute
-  the **reading-order re-cut** (owner ruling, 2026-07-18): Part 1 slims to
-  Syntax, Structure, Semantics; the reification chapters move to read right
-  after `ZF.Model`; `Renaming` and `Relativize` move to the Part 4 doorstep at
-  `[L2.x]`. Namespaces stay `FOL.*`; only reading order and ToC placement move.
-  **DONE 2026-07-18.**
-- **[L1.5]** Port `V/` (Hierarchy with the structure instance, Smallness,
-  Definability, Coding, Satisfaction, Model). **DONE 2026-07-18.**
-- **[L1.6]** Port `L.Constructible` (isL and the minimal machinery to define
-  `𝒮ʟ`). **DONE 2026-07-18.**
-- **[L1.7]** Write `L.Frontier` and the root `L.Model` statement. **DONE
-  2026-07-18** (Frontier: 11 fields).
-- **[L1.8]** Create `Landmarks`; set the `Everything` reading order. **DONE
-  2026-07-18** (owner rulings: Landmarks reads **first**; the zero-consumer
-  chapters read **last**; reification namespace re-cut the same day).
-- **[L1.9]** Diaconescu and the single-hypothesis ZFC instance (owner ruling,
-  2026-07-18): `Base.Choice` (`SetChoice` level-indexed like `LEM`;
-  `choice→lem` via set quotients and effectivity), `V.Model.V⊨ZFC-fromChoice`,
-  and a fourth landmark. The "two independent assumptions" prose is corrected
-  to the one-way statement: LEM does not prove choice; choice proves LEM
-  levelwise, but `SetChoice ℓ` cannot reach `LEM (ℓ-suc ℓ)`. **DONE
-  2026-07-18.**
-
-**[L2] The axiom branches, in pedagogical order.** Each branch descends until
-it hits a technical cluster flagged for reduction review. Per-branch exit:
-check green, prose complete (en + zh), glossary updated, the branch's Frontier
-fields deleted or explicitly re-cut.
-
-- **[L2.0]** Basic axioms (extensionality, foundation, empty, pair, union);
-  source `L.ModelAC`. The warm-up. **DONE 2026-07-25** (Frontier 11 → 8; no
-  `lem`, the whole goal is constructive).
-- **[L2.1]** Infinity; source `L.ModelACNum`, `L.ModelACInfinity`, the numeral
-  chain. **DONE 2026-07-25** (Frontier 8 → 4; the chain is constructive, the
-  collection step is not: it needs `ω ∈ L`, hence `ord∈Lset-suc`, hence
-  trichotomy).
-- **[L2.2]** Separation and Replacement; source `L.ModelACSep`,
-  `L.ModelACReduce`, the reflection engine. The methodological core: this is
-  where reification pays off and gets its full narrative. **DONE 2026-07-25**
-  (Frontier 4 → 2; six source chapters became three; `ReflectN` never becomes a
-  chapter).
-- **[L2.3]** Power via Condensation; source `L.Condensation`, `L.CondReduce`,
-  `L.PowerBound`. **Re-scoped 2026-07-27 to "Power by bounding the
-  constructible subsets"; DONE 2026-07-27** (79 lines of Agda against the
-  source's ≈185 across three chapters; Condensation is not used; Frontier 2 →
-  1; LEM (ℓ-suc ℓ) alone).
-- **[L2.4]** Well-order and Choice trunk; source `L.ConstructibleOrder`,
-  `L.WellOrder2`, `L.ChoiceSetInL2`. **DONE 2026-07-31** (Frontier empty and
-  deleted; the global order is not needed and was struck; about 5,900 lines
-  across thirteen chapters against an audit band of 1,900 to 3,150; details in
-  §11).
-
-**[L3] The technical layer, big lever first (D12), then reduction-first (D3).**
-Each measured reduction lever of §2.1 carries its own code. Execution runs in
-four phases; the sequence below is authoritative, the numbers are not (§6.0
-rule 2).
-
-> **A, design** (before and during L2): `[L3.0.3]` subsumption probe, **before
-> L2** (delivered 2026-07-25) → `[L3.0.4]` theorem statement and clause-bundle
-> design, after `[L2.2]`.
->
-> **B, substrate**: `[L3.1]` sweep (standing from here on) → `[L3.2]` `reify!`
-> → `[L3.3]` coding cluster.
->
-> **C, machinery** (re-evaluated 2026-07-25 after `[L2.2]`): `[L3.0.5]` finite
-> families → `[L3.11]` clause bundle → `[L3.0.1]` tier-1 proof of concept →
-> `[L3.0.2]` verdict → green: `[L3.12]` and `[L3.13]` / red: `[L3.4]`. The
-> grounds for the re-evaluation: stage 7 is `[L3.0.5]` and `[L3.2]` leaves the
-> critical path; `[L3.11]`'s de-risk was paid by accident in `[L2.2]`
-> (`L.ReflectFo`'s twelve-clause `Answers` tree checks in about two seconds);
-> and `[L3.0.4]` §3's `reads : List (Σ[ t ∈ S ] ⟨ isL t ⟩)` carries the exact
-> `L.Axioms.Full` hazard, certificates sealed where built.
->
-> **D, ports**: `[L3.5]` `[L3.6]` `[L3.7]`, as instantiations on a green
-> verdict → `[L3.10]` re-layering. `[L3.8]` and `[L3.9]` are opportunistic.
-
-**Schedule change (owner ruling, 2026-07-25): phase B opens before `[L2.2]`.**
-L2 is suspended after `[L2.1]` and L3's substrate starts now; `[L2.2]` to
-`[L2.4]` resume afterwards. Verified before adopting: the coding cluster's
-dependency cone reaches none of `L.ModelACSep`, `L.Reflect*`,
-`L.Condensation` or `L.ChoiceSetInL2`; the cone is 44 modules, of which 17 and
-about 4.9k lines are unported, and its one surprise is `L.ConstructibleOrder`,
-which is the strict well-order vocabulary both branches need.
-
-**Why all of phase C precedes any cluster port.** The measured tier boundaries
-cut *across* the cluster boundaries, so porting a cluster before knowing which
-of its members are theorem instances would re-create the T5 problem the probe
-was run to avoid.
-
-Two cautions on reading the sequence. The `L3.x` numbers ran in execution order
-when the branch was renumbered on 2026-07-25 under the §6.0 rule 3 carve-out
-(map in §11), but the carve-out is spent, so goals registered since take the
-next free number and execute in the middle: read the phases, not the digits.
-
-- **[L3.0]** **Internalization theorem for L-recursion (the big lever, D12;
-  S5).** Target statement, working form: from a *step specification* (a tag
-  alphabet, a Δ₀ clause matrix over coded arguments, and a well-founded
-  measure) derive (i) that the induced recursion's trace is a set of L, (ii) a
-  certificate relation sound and complete against the meta-level recursion,
-  and (iii) uniqueness of the certified value. **DONE 2026-07-28 without
-  exception**: the theorem delivered at 99 lines (`L.Recursion`), verdict
-  green; the instance half (satisfaction) closed the same day. Record in §11.
-  - **[L3.0.0]** SUPERSEDED 2026-07-25 by `[L3.0.3]` and `[L3.0.4]`. Never
-    started; no content lost.
-  - **[L3.0.3]** **Subsumption probe, source-reading only, opens before L2.**
-    Does one step specification subsume `Cmp*` and `Depth*`? Deliverables: the
-    fits table and a **required-interface checklist**. **This is where the
-    cheap kill signal lives.** Owner gate. **DONE 2026-07-25, verdict amber.**
-  - **[L3.0.4]** **Theorem statement in Bedrock's idiom.** Prerequisite:
-    `[L2.2]`. Deliverables: the specification signature, a projected line
-    budget, and the list of §4 chapters it would displace. Owner gate. **DONE
-    2026-07-25.**
-  - **[L3.0.5]** **Finite families at a stage.** DONE 2026-07-25. `finSetL`:
-    a finite family of members of `Lset σ` is a set of `L`, by finite
-    disjunction. 60 lines.
-  - **[L3.0.1]** **Proof of concept (tier 1, the constant-table theorem).**
-    Run the reference instance and the theorem in one loop, then `Cmp` as the
-    stress case. Measure lines and cold-check per §7. **Kill criteria, agreed
-    in advance:** the theorem fails to reach two instances; or an instance is
-    not materially smaller than the source pipeline; or §7.6's budget is
-    breached and the WORKLOG §5 playbook does not clear it. **DONE 2026-07-28**
-    (re-pointed 2026-07-26 to satisfaction as the instance; kill criteria
-    applied to instances only).
-  - **[L3.0.2]** **Verdict and rollout ruling.** Green: `[L3.12]`/`[L3.13]`
-    open and `[L3.5]`-`[L3.7]` are re-stated as instantiation goals. Red:
-    `[L3.12]`/`[L3.13]` stay closed and `[L3.4]` opens. **DONE 2026-07-26,
-    green** (memo `memos/L3.0.2-verdict.md`).
-
-  Scheduling and safety: `[L3.0.3]` opened ahead of L2 because it is the only
-  research-risk item on the critical path; the Frontier is what makes a
-  research gamble affordable, and a red verdict costs the attempt and nothing
-  else. One risk the split does not remove: a memo written before any axiom
-  branch has been ported in Bedrock is written by a porter still fluent mainly
-  in the source's idiom, which is the D6 failure mode; `[L3.0.3]` is scoped to
-  survive it.
-
-- **[L3.1]** **Transition-layer sweep (S9), standing.** Ahead of each cluster
-  port, run the consumption audit over that cluster and drop what the source's
-  own later strata superseded. Measured headroom 2k to 3k. Success criterion:
-  every cluster memo opens with a drop list naming each dropped module and the
-  audit finding that justifies it. Standing goal, no single completion date; it
-  closes with `[L3.10]`. **Drop list EXECUTED 2026-07-29: −529 Agda lines**
-  (§11).
-- **[L3.2]** **`reify!` industrialization (S6). CLOSED, REJECTED 2026-07-27 on
-  measurement** (§11). DORMANT re-open trigger recorded in §11.
-- **[L3.3]** SUPERSEDED 2026-07-25 by `[L3.14]`, after a consumption
-  re-measurement (§11). The goal was scoped as the source's whole `Code*` /
-  `Formula*` / `VarCoding` / `SeqChar` cluster, about 4.9k lines; measuring
-  consumers showed that only the Δ₀ code readers are substrate.
-- **[L3.14]** **Coding substrate: the Δ₀ code readers.** Source `SatCertBase`
-  (68 consumers), `SatCertEnv` (44), `SatCertLen` (46), `SatCertCons` (13);
-  about 910 lines. **DONE 2026-07-25** (seven chapters; §11).
-- **[L3.11]** **Per-tag clause bundle (S10).** Registered 2026-07-25 on the
-  probe's finding that the twelve tags are traversed **five times per
-  instance**. Deliverable: a `ClauseBundle` record. **ABANDONED 2026-07-27 on
-  a measurement** (§11).
-- **[L3.12]** **Stage-indexed internalization theorem (S11), tier 2.**
-  Registered 2026-07-25; covers `Order*`, `Trace*`, `Canon*`, `Env*`, 11,386
-  lines. Gate: green `[L3.0.2]`. **ABANDONED 2026-07-27** (§11).
-- **[L3.13]** **Partial-certificate variant (S12), tier 3.** Registered
-  2026-07-25 for `Sat*` / `Tarski*` / `Coh*` (10,706 lines). Gate: green
-  `[L3.0.2]`. **ABANDONED 2026-07-27** (§11).
-- **[L3.4]** **Scaffolding parameterization (S3), conditional.** Fallback
-  consolidation. Gate: opens only on a red `[L3.0.2]`. **ABANDONED 2026-07-27**
-  (the condition is impossible, not unmet).
-- **[L3.5]** Satisfaction cluster (source `Sat*`, `Tarski*`, `Realize`,
-  `Reflect*` remnants). **DISSOLVED as a cluster 2026-07-27** (§11).
-- **[L3.6]** Closure cluster (source `FFST*`, `Canon*`, `SatSetInL`,
-  `SeqSetInL`). **DISSOLVED 2026-07-27** (§11).
-- **[L3.7]** Well-order certificate cluster (source `Cmp*`, `Depth*`,
-  `Order*`, `Trace*`, `Coh*`); the largest at 42.3k source lines (§2.1).
-  **CLOSED, SCOPE RE-ATTRIBUTED 2026-07-28** (§11).
-- **[L3.8]** **Dispatch-grid generation (S8), opportunistic.** **ABANDONED
-  2026-07-27, premise spent** (§11).
-- **[L3.9]** **Transport and cast solver (S7), lowest priority.** Spike first,
-  roll out only on evidence. A failed shape check closes the goal ABANDONED.
-  **ABANDONED 2026-07-27** (§11).
-- **[L3.10]** Post-reduction **re-layering review** of the whole `L/` subtree
-  (T2). **PLANNED.** Boundary against `[L3.28]` ruled 2026-07-31: split by
-  **purpose, not by file**; `[L3.28]` owns quantity, `[L3.10]` owns
-  arrangement that serves no compression; `[L3.28]` runs first. `[L3.1]`
-  closes with this row.
-
-**[L4] Convergence.** Runs after `[L3.32]`'s wing, bridge and retirement
-surgery land, on the tree that survives them.
-
-- **[L4.0]** Empty the Frontier, delete `L.Frontier`, drop the parameter; the
-  unconditional `L⊨ZFC` lands. **DONE in substance** by `[L2.4]`: the Frontier
-  is empty and deleted and the root is unconditional. The row stays as the
-  record of a goal delivered under another code.
-- **[L4.1]** Whole-book **harmonization pass** (T4): re-read end to end, fix
-  foreshadowing and cross-references, run the zh/ja cross-check for term drift,
-  reconcile prose with the `[L3.32]` interface changes. **PLANNED, and GATED
-  BEHIND `[L8.2]` by D21**: this is the prose phase, and it does not open until
-  the owner has ruled on the consolidation report. Its
-  scope has grown with the campaign: the retirement surgery deletes whole
-  chapters, so the pass now includes re-reading the book's spine for the
-  chapters that vanish and for the corrected identification story (`Matching`
-  is recorded as false, and the delivered direction is `isJ → isL`).
-- **[L4.2]** Update `Landmarks`, the README trio, and the Charter status;
-  retrospective. **PLANNED.** The Charter status line must state the endpoint
-  as `L ⊨ ZFC ∧ L ⊨ GCH`, not the AC-only waypoint.
-- **[L4.3]** ~~Seed a GCH successor plan~~ **ABSORBED 2026-08-03.** The GCH
-  endpoint moved INTO the active campaign (§0), so no successor document is
-  seeded and this row closes. The narrative beyond GCH is `[L6]`, not a
-  successor to this file.
-
-**[L5] Build and site infrastructure (parallel workstream, not a sequential
-phase).** Must be in place before L2 scale-up; constraints in §7 apply from the
-first ported module regardless.
-
-- **[L5.0]** Port the build machinery: dependency-manifest generator, parallel
-  per-module checking, per-module heap caps, shared config; wire into `make
-  check` per the §7 trust model. **PLANNED.**
-- **[L5.1]** Split `make check` into a fast gate (changed cone) and a full
-  gate. **PLANNED** (the three named gate defects belong here, §11).
-- **[L5.2]** CI strategy: affected cone on PRs, full check nightly, `.agdai`
-  interface caching. **PLANNED.**
-- **[L5.3]** Site pipeline load test at about 200 pages. **PLANNED.**
-
-**[L6] The narrative master plan (owner-ordered 2026-08-04: the "L5+" outline;
-the meeting at bedrock).** The book's title concept is its terminus, declared
-here as the standing narrative frame under which all later milestones and all
-asset valuations execute.
-
-- **The arc.** The AC/GCH trophy is not a warm-up: it is the construction of
-  the future bedrock object. Set-theoretic geology and inner model theory are
-  one mountain seen from two faces, and the book walks from the first face to
-  the meeting point: geology supplies the equivalence structure and its
-  invariants over the generic multiverse (grounds, the mantle, the bedrock);
-  inner model theory supplies the canonical representatives (the normal
-  forms). The meeting theorems all share one sentence shape: the abstract
-  invariant, computed, EQUALS the canonical object.
-- **The meeting map, three levels.** Level 1, in this book's reach: **"L is a
-  bedrock"**, the second trophy: L has no proper ground (constructibility is
-  absolute between transitive class models with the same ordinals, so a
-  ground W of L satisfies L = L-of-W contained in W contained in L), hence
-  the mantle of every set-generic extension of L is L. Its ingredients are
-  exactly: the trophy's L; the GCH wing's W2 + W5 (the uniform level formula
-  and condensation, double-consumed as the absoluteness kit); the forcing
-  entry over the HIT V (names, evaluation, genericity); the geology
-  definitions with Laver-Woodin ground-model definability (whose technical
-  core, the approximation and cover properties, is the first appearance of
-  inner-model-style arguments inside geology). Level 2, mid-range: the
-  invariants dictionary: forcing-invariance of the mantle, the Ground Axiom,
-  and HOD as the second dig. Level 3, the far horizon, named and not
-  planned: Usuba's bedrock theorem (strongly compact implies the mantle is a
-  ground), the HOD dichotomy, and the Varsovian program (the mantle of a
-  canonical mouse is again fine-structural): every time geology's invariant
-  is computed in a canonical situation, the answer speaks fine structure,
-  which is the rud trunk's deep legacy.
-- **The phase spine.** Phase 1: the trophy, under whichever fork ruling the
-  owner issues; the fork table is read with the added criterion of what
-  feeds W2/W5 and the forcing-facing satisfaction machinery. Phase 2: the
-  forcing entry ticket over the HIT V (the `[GLp]` POC prices it). Phase 3:
-  the geology kit (grounds, Laver-Woodin, the mantle, invariance). Phase 4:
-  the meeting theorem "L is a bedrock" as the second trophy. The far horizon
-  stays named in prose and out of the budget.
-- **The asset re-coloring rule.** From this section on, every asset is
-  valued against BOTH trophies, not one: the internalization cone's future
-  is the forcing semantics (the forcing relation's definability is a
-  satisfaction-internalization problem in a new costume); the rud trunk's
-  future is condensation/GCH now and fine structure at the horizon; W2/W5
-  are double-consumed. The owner-ordered re-valuation of all standing assets
-  under this frame executes when `[GLp]` returns, followed by the balanced
-  route candidates (long-term economics of the frame against short-term
-  economics of the trophy).
-- **The novelty claim.** Per the L3.30 formalization landscape sweep,
-  set-theoretic geology exists in no major proof assistant's library; the
-  claim is re-verified at Phase 3 kickoff before being printed anywhere
-  public.
-
-**[L7] The endpoint promotion and the archive's completion (D20).** The
-archive REGIME is in force now and its infrastructure is built at the first
-archival, under `[L3.32]`; what waits for the endpoint is the promotion and the
-final sweep.
-
-- **[L7.0]** Archive `main` and promote the working branch. The current `main`
-  (the internalization archive) is tagged and archived; the branch carrying the
-  delivered endpoint becomes `main`. Done the same day the endpoint lands,
-  before any tidying, so what the world sees is the delivered book. **PLANNED.**
-- **[L7.1]** The final archival sweep: every chapter retired during the
-  campaign that has not yet moved is moved, and the pre-regime deletions are
-  entered in the registry against their deletion commits. **PLANNED.**
-- **[L7.2]** Verify the exclusions end to end on the finished tree: the Agda
-  gate, both linters, the marker and glossary checkers and the site build must
-  all be structurally blind to `archive/`, and `reuse lint` must still cover it.
-  A red archive at this point is not a defect; an archive that any gate TRIES to
-  check is. **PLANNED.**
-- **[L7.3]** Final pass on `archive/README.md`: the constraints in full, what a
-  reader should expect (code that was correct when written, against interfaces
-  that have since moved), and how to revive a module (copy out, never edit in
-  place). **PLANNED.**
-- **[L7.4]** Final pass on `dev/ARCHIVE.md`: every entry carries what it is, why
-  it was archived with the ruling and date, its last-green commit, its measured
-  size, and its revival condition; entries whose condition is already moot are
-  closed. **PLANNED.**
-
-**[L8] Consolidation, and the gate before prose (D21).** Opens when `[L7]`
-closes. Nothing in `[L4]` runs before `[L8.2]` has been ruled.
-
-- **[L8.0]** The foundation refactor, at `[L3.32-T8]`'s scale and character,
-  re-run against the post-archival tree: an audit that prices candidates in
-  both calibers with a named future consumer and a stop-line each, a rejected
-  list with reasons, then one batch executing what the owner accepts. The
-  post-archival tree is a different subject from today's: the retirements will
-  have removed most of the consumers whose existence justified parts of the
-  base, so candidates rejected in 2026-08-04 may qualify then and must be
-  re-examined rather than inherited. **PLANNED.**
-- **[L8.1]** A line-by-line polish pass over the **whole** tree, not a sample.
-  Exports frozen, the law book binding, the measured polish classes as the
-  starting catalog, and per-file before-and-after measurement. The two polish
-  batches this campaign ran are the rate anchors, and their residues (the named
-  perf hotspots that survived them) are inputs, not leftovers. **PLANNED.**
-- **[L8.2]** **THE GATE.** Report to the owner: what the refactor changed, what
-  the polish measured, what the tree now weighs, and what remains. The prose
-  polish phase does not open until the owner has ruled on this report, and the
-  owner will add further code-shaping work at that point. Nothing downstream
-  may be started in anticipation. **PLANNED.**
+The goal tree's full statements, gates and the L3 execution phases moved to [dev/memos/route-tree.md](memos/route-tree.md). What stays live: the coding rules (§6.0), the two-caliber discipline (§6.2) and the status registry (§11), which is the authoritative one-row-per-goal index. The L6 narrative frame is summarized in §0 and detailed in the memo. Read the memo when a goal's statement or gate is needed.
 
 ### 6.2 Caliber and the two-caliber discipline
 
@@ -993,117 +279,30 @@ The record to keep in mind when reading any band here: down-corrections in this
 campaign have landed on terms a probe could reach, and up-corrections on terms
 only a census could reach.
 
-## 7. Build constraints (D10, binding)
+## 7. Build constraints (pointer)
 
-Imported from the source's Makefile trust model (`../fol-reification/Makefile`,
-WORKLOG §8.1) and adapted to Bedrock's rules:
+D10, which used to carry these constraints, was struck on 2026-08-05 because each constraint is now enforced where it fires. The numbered rows below are routing rows; the full original text is in [dev/memos/build-constraints.md](memos/build-constraints.md), and the older §7.5/§7.6 budgets cited by D13 are rules 5 and 6:
 
-1. **The trusted gate is one invocation.** `agda src/Everything.lagda.md`
-   remains the single certificate: one call, obviously correct, never
-   parallelized. Since Bedrock's whole tree is `--safe` and `Everything`
-   imports all of it, this one invocation is the entire trust base.
-2. **Parallelism is a warm-up layer, outside the trust base.** The parallel
-   per-module build exists only to populate `.agdai` interfaces fast; the
-   `Everything` invocation then revalidates hashes cheaply. Make's dependency
-   edges are scheduling hints: a wrong edge can cause wasted work or a false
-   red, never a false green.
-3. **The one false-green mode is audited away.** A module missing from
-   `Everything`'s import list is unchecked by the gate. An audit script
-   asserts, on every check, that the import closure of `Everything` equals the
-   set of `src/**/*.lagda.md` files.
-4. **The dependency manifest is generated, never committed.** `gen-deps` runs
-   in under a second, so the manifest is regenerated into `_build/` on every
-   check and consumed from there.
-5. **Cold-check wall-clock is a tracked budget.** Baseline numbers are recorded
-   in §11 at every gate. Working ceiling: full cold check at or under **15
-   minutes at `-j4`** on the reference machine (upstream proves the same
-   mathematics fits in about 8.5). A merge that breaches the ceiling is
-   blocked until triaged.
-6. **Per-module discipline.** Per-module heap caps (the source settled on
-   `-M6g`; revisit against measurements). A module exceeding roughly **120
-   seconds** cold or its heap cap is a conversion blowup: triage with the
-   source's WORKLOG §5 playbook before merging, and annotate any surviving
-   countermeasure per the L0.0 rules.
-7. **Serial fallback stays available.** A serial full-check target (single
-   process, wide heap cap) is kept for dispute arbitration and for reproducing
-   races, as in the source.
-8. **Reference machine and `-jN` defaults are documented in the build
-   config**, so budget numbers are comparable across time.
+1. The trusted gate is one invocation, `agda src/Everything.lagda.md`: the build machinery (`Makefile`, [scripts/README.md](../scripts/README.md)).
+2. Parallelism is a warm-up layer outside the trust base: the build config.
+3. The import-closure audit: `scripts/check-tree.py` closure, [scripts/README.md](../scripts/README.md).
+4. The dependency manifest is generated, never committed: the build config.
+5. The cold-check budget and the seconds dimension: the ledger (`dev/LEDGER.md` check cost, `dev/ledger.toml` [timing]) and the return checklist, `dev/ORCHESTRATION.md` section 6 step 2.
+6. Per-module discipline (heap caps, conversion-blowup triage): `AGENTS.md`, `dev/ORCHESTRATION.md` section 2, `dev/LESSONS.md` C-12, and `scripts/check-timing.py` at every return.
+7. Serial fallback stays available: the build config.
+8. Reference machine and `-jN` defaults are documented in the build config.
 
-## 8. Process tensions and their resolutions (D11)
+## 8. Process tensions and their resolutions (pointer)
 
-Known internal tensions in the L0 to L5 plan, each with its designed relief
-valve. The common principle: **the plan legislates the mechanism of change,
-not the impossibility of change.**
+The T1-T6 tension register and its relief valves moved to [dev/memos/process-tensions.md](memos/process-tensions.md). D11's mechanisms are stated in the D11 row of §3; the live relief valves are the L0 standing track (§6.0), the fixed part level (D5), and the L4.1 harmonization (§11).
 
-- **T1: Legislation is partly hindsight.** Some style rules can only be
-  discovered by porting. Relief: L0 is a standing track; STYLE-agda rules may
-  be marked *provisional*; a porter hitting an un-legislated situation opens a
-  new L0.x item (or asks the owner) rather than improvising silently.
-- **T2: Skeleton finality versus post-reduction insight.** Relief: only the
-  part level of §4 is fixed; everything below is provisional until the
-  dedicated L3.10 re-layering review; renames land as appended ledger rows.
-- **T3: Pedagogical order versus dependency order.** Relief: the Frontier
-  mechanism (§5) decouples them; a branch was portable the moment its cut was
-  stated.
-- **T4: Early prose versus whole-book coherence.** Relief: per-merge prose must
-  be complete and correct, but foreshadowing and cross-references may be
-  deferred; the L4.1 harmonization pass sweeps the whole book.
-- **T5: L3 reduction versus already-narrated interfaces.** Relief: every L3
-  memo carries an impact list on ported chapters; Frontier re-cuts (§5) are
-  the sanctioned mechanism; prose residue is caught by L4.1.
-- **T6: Performance scaffolding versus readability.** Relief: countermeasures
-  stay in the code, annotated per L0.0 so narration can skip them; §7 budgets
-  decide when a countermeasure is load-bearing (measure, do not guess).
+## 9. Risks and mitigations (pointer)
 
-## 9. Risks and mitigations
+The dated risk register moved to [dev/memos/risks-mitigations.md](memos/risks-mitigations.md). Each mitigation is a standing rule with its own home: D1 and D26 in §3, `dev/LESSONS.md` D-1/D-6/D-10, the §6.0 rules, and the return checklist in `dev/ORCHESTRATION.md` section 6.
 
-| Risk | Mitigation |
-|---|---|
-| LEM parameterization regresses check-time badly | L0.2 spike gates D2 before any mass port; documented fallback exists but needs a new owner ruling. |
-| Conversion blowups resurface during rename/refactor | §7 budgets and per-module discipline; the source WORKLOG §5 playbook is the triage reference; countermeasures stay annotated and visible; the measured laws are in `dev/LESSONS.md`. |
-| CI wall-clock grows past budget | §7 ceiling plus L5.1/L5.2 split gates and nightly full check; upstream M2.7 numbers bound the worst case. |
-| Translation debt accumulates | A master merges only with en + zh complete (enforced by the marker checker); ja stays pre-supported. |
-| Simplification scope creep | §10 register: every simplification candidate gets its own verify-then-decide entry; the default is a faithful port. |
-| The thin endpoint margin closes | The naive projection passes the owner's 25k line, but the pass depends on new spend staying inside its band. Every gate that tightens the TOP of a band is margin work, not luxury (§0); the W7 cardinal gate and the two retirement gates run before the chapters they price. |
-| Census-class terms re-price upward | The measured pattern of this campaign: down-corrections land on terms a probe can reach, up-corrections land on terms only a census could reach. Mitigation is the standing probe discipline (LESSONS D-1, D-6, D-10): every wide unprobed term gets its D-1 gate designed with the estimate and run before funding. |
-| A residue's target turns out to be false | Happened once, expensively (the per-level identification, classically false and refuted in the literature). Mitigation now standing: the chain ROOT is truth-checked against the in-repo corpus before any link is priced (LESSONS D-10, appended 2026-08-03), and a delegated corpus dossier is mandatory for any residue stated as a named classical lemma. |
-| Geology is funded before its sources are in hand | The in-repo corpus contains zero geology sources (`_build/l3.31-glprobe-report.md`). Fetching Fuchs-Hamkins-Reitz, Usuba and Laver/Woodin is a mandatory gate before any geology funding, alongside the mantle size-wall design recon. |
-| Statement drift toward unqualified "Con(ZFC)" | D1 fixes the framing; the root chapter and Landmarks are the canonical wording; glossary pins the translated terms. |
-| Process drift (ad-hoc naming, unregistered work) | §6.0 rules: no work without a code, no backfilled registration; §11 updated in the same commit as the status change. |
+## 10. Candidate simplification register (pointer)
 
-## 10. Candidate simplification register
-
-Each entry needs its own cheap verification and owner decision before
-deviating; an accepted candidate is executed under the goal code of the cluster
-it affects. S1 to S12 are the port-era register (the default there was a
-faithful port of the source). S13 onward are the current era's, where the
-default is instead D16's: price the ideal form alongside the standing one. The
-foundation-layer candidates below come from the 2026-08-04 audit
-(`_build/l3.32-t6-report.md`), which priced each with three numbers: what the
-rewrite costs, what it compresses immediately, and what it saves the
-CONTINUATION, each with a named future consumer.
-
-| # | Candidate | Verification needed | Status |
-|---|-----------|---------------------|--------|
-| S1 | Specialize the truth-algebra abstraction (`TruthAlg`) to plain hProp | Check whether any non-hProp instance is load-bearing in the source | verified 2026-07-16: **rejected**. The record is a law-free operation signature, definitionally transparent on `hPropAlg` (record ι), and is the designed seam for the forcing-stage Boolean instance; only one instance exists today, but the Charter targets forcing. Ported faithfully in `[L1.1]`. |
-| S2 | Merge `Absoluteness2` into `Absoluteness` | Diff the two modules' roles | resolved 2026-07-18: **deferred entirely** instead of merged; `Absoluteness2` has zero code consumers (its route superseded by the source's RAW reflection breakthrough). Ledger row added. |
-| S3 | Unify the five graph-certificate families under shared combinators | Executes as `[L3.4]` | resolved 2026-07-25: **conditional fallback behind S5.** The §2.1 measurement puts shared combinators at 3k to 5k and shows the families diverge precisely where the mathematics is (soundness segments overlap 4% to 9% after renaming, scaffolding 50% to 86%). Opens only on a red `[L3.0.2]`; a green verdict absorbs it (it did: `[L3.4]` ABANDONED 2026-07-27). |
-| S4 | Fold `ZF.Encoding` / `ZF.Coding` into their consumers | Map their import sites | open |
-| S5 | General internalization theorem for L-recursion | Executes as `[L3.0]`: paper-level subsumption of `Cmp*` and `Depth*` first, then a two-instance proof of concept with kill criteria | **adopted as the primary route** (D12, 2026-07-25); delivered as `L.Recursion` at 99 lines; verdict green 2026-07-26, instance half done 2026-07-28. |
-| S6 | Industrialize the source's `reify!` macro over the L-side formula groups | Executes as `[L3.2]` | **closed, rejected 2026-07-27 on measurement** (§11): net +9 lines over the two modules rated best, +25% to +33% on `L.Coding.Model`; both D13 tests fail; re-open trigger: a congruence family written by hand a third time with no combinator available, or the traversal-dense share passing 20%. |
-| S7 | Tactic-generated transport and cast steps | Executes as `[L3.9]`, spike first | open, lowest priority, as registered; the goal `[L3.9]` itself is ABANDONED 2026-07-27 (Bedrock has 456 `subst`/`cong`/`transport` sites, not 3,300; a future need returns as a new code). |
-| S8 | Generate the mechanical dispatch grids instead of writing their clauses | Executes as `[L3.8]` | open as registered; the goal is ABANDONED 2026-07-27 (premise spent: the grids the lever was for are gone or unneeded). |
-| S9 | Drop the source's superseded transition layers ahead of each cluster port | Executes as `[L3.1]`, standing | open; 2k to 3k. Executed 2026-07-29: −529 lines (§11). |
-| S10 | Declare each of the twelve tags once instead of five times | Executes as `[L3.11]` | registered 2026-07-25; **abandoned 2026-07-27 on a measurement**: the only instance answered no, the clauses factor through two shared frames. |
-| S11 | Stage-indexed internalization theorem for transfinite recursions | Executes as `[L3.12]` | registered 2026-07-25; **abandoned 2026-07-27**: the complexity boundary dissolved. |
-| S12 | Partial-certificate variant for the non-constant tables | Executes as `[L3.13]` | registered 2026-07-25; **abandoned 2026-07-27**: its subject was retired by the `[L3.0.1]` design change. |
-| S13 | Publicize the eight `V.Coding` pair helpers (delete `private`) | none needed beyond a grep for re-derivations by the FACT (C-14) | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Cost 1 line, blast radius zero, deletes a measured third copy and saves 8 to 16 lines in every future pair-consuming consumer (forcing names, geology). |
-| S14 | A `defSet` computation table in `L.Definability`, replacing four `defSet≡` proofs in `L/Axioms/Basic` | its own D-1 gate: the table plus the four re-derivations must stay under 57 lines (60 percent of the 94 replaced), and no entry may need resizing or LEM | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Write about 50, compress 25 to 40 now, save 50 to 110 in the continuation (the axiom re-points, the face's adequacy, W7's formula count, geology's class carriers). The one structural rewrite in the audit with probe support. |
-| S15 | A `V.Presentation` kit (`member`, `fiber`, injectivity, the membership conversion) | the kit must stay under 30 lines and every re-derivation must drop to two lines or fewer, with no change to any existing transport direction | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Write about 20, compress 20 to 35 now (about 25 inline fiber sites become one-liners), save 40 to 60 later (W5's bounding, W7's hull, geology's carriers). |
-| S16 | An axiom-frame kit in `FOL.ZFModel` (the description-elimination equation and uniqueness aliases) | the two named re-derivations must shrink from 14 lines to six or fewer | **ACCEPTED 2026-08-04, executing under `[L3.32-T8]`.** Write about 20, compress 20 to 35 now, save 20 to 50 later. |
-| S17 | A syntax-walk calculus (`FOL.Fold`: the formula algebra plus one generic fusion lemma), ADDITIVE only | its D-1 gate: three delivered walk-plus-correctness pairs re-expressed as instances inside 60 probe lines, with definitional behaviour unchanged on a concrete sample | **GATED 2026-08-04, probe running under `[L3.32-T8]`.** Zero immediate compression by design, but the largest continuation number in the audit: 450 to 1,050 lines, aimed at the forcing era's satisfaction recursion collapsing to one algebra. The in-place retrofit of the five existing manipulation modules is REJECTED (26 masters of blast radius, load-bearing reduction behaviour, and a measured counter-instance where a stored decomposition walled at 12 GB while the inline form ran in one second). |
-| S18 | Collapse `FOL.Coding`'s double encoding into one tag-and-payload decomposition | its D-1 gate: the injectivity lemma must not cost more than its current 35 lines, and no export may change name or behaviour | **ACCEPTED BUT DEFERRED 2026-08-04 by owner ruling: it waits behind the wing.** Write about 40, compress 50 to 70, but blast radius 2 and its second master consumer retires under D18, so the standing continuation value is thin. The audit rates it the weakest accepted candidate and notes that dropping it loses nothing. |
+The S1-S18 register moved to [dev/memos/simplification-register.md](memos/simplification-register.md), with its statuses brought current to the `[L3.32-T8]` verdicts: S13 and S15 shipped, S14 and S16 reverted at their gates, S17's probe red, S18 deferred. Live tracking of the deferred row is `dev/ledger.toml`'s [[excluded]] table.
 
 ## 11. MASTER status table (live)
 
@@ -1333,6 +532,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T110 | Maintenance mechanism for dev/ docs | IN PROGRESS | `_build/l3.32-t110-report.md` |
 | L3.32-T111 | Task index: one code, one row (this dispatch) | IN PROGRESS | `_build/l3.32-t111-report.md` |
 | L3.32-T112 | Goal table held to the index discipline | DELIVERED | `_build/l3.32-t112-report.md` |
+| L3.32-T113 | Strip dev docs to the agent workflow | IN PROGRESS | `_build/l3.32-t113-report.md` |
+| L3.32-T114 | Build the owner's dashboard, generated from canonical data | IN PROGRESS | `_build/l3.32-t114-report.md` |
 
 ### Bookkeeping
 

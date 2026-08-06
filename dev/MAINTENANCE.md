@@ -15,7 +15,7 @@ found by a gate, not by accident.
 
 | check | what it enforces | threshold | why this number |
 |---|---|---:|---|
-| `agents-size` | AGENTS.md word count (whitespace tokens, the `wc -w` unit) | 2,200 | current green 1,784; the failed state was 3,450, so 2,200 is 23 percent above green and 1,250 words below the failure. The file auto-loads into every session, so the cap is a context budget, and a legitimate single edit is tens of words, not hundreds. |
+| `agents-size` | AGENTS.md word count (whitespace tokens, the `wc -w` unit) | 2,200 | current green 2,004; the failed state was 3,450, so 2,200 is 10 percent above green and 1,250 words below the failure. The file auto-loads into every session, so the cap is a context budget, and a legitimate single edit is tens of words, not hundreds. |
 | `plan-cell-size` | any table cell in dev/PLAN.md | 1,600 | current largest cell 1,125 (`L3.32-F5`); the failed state was 12,634, 11.2x the current maximum. 1,600 is 42 percent above the current maximum and 7.9x below the failure; the largest legitimate ruling cell (`D28`) is 572, so a cell over 1,600 is a document inside a table, which the JOURNAL taxonomy reserves for dev/JOURNAL.md. |
 | `lessons-imported-routing` | a LESSONS entry whose heading says "imported from/into" must appear in a dev/rules.toml bundle or trigger | none (invariant) | imported entries arrive whole from outside, with no local measurement forcing discovery; that is the class that sat uncited for five days. Only the import marker counts: "imported names" and "imported operations" (`R-34`, `R-38`, `C-21`) are code prose. |
 | `plan-section0-date` | the `## 0.` heading date must be no older than the newest date in the section's own body | none (invariant) | the heading is the "as of" contract; a body describing newer work than its heading is the measured decay ("days behind the work it described"). |
@@ -79,11 +79,3 @@ edit:
 - **Episode versus ruling classification below the size caps.** The sweep
   surfaces section 11 cells over 600 words; the extraction itself is the
   JOURNAL surgery that `[T108]` runs.
-
-## Expected red on 2026-08-06
-
-`plan-section0-date` fires on the tree as delivered: the `## 0.` heading is
-dated 2026-08-04 while the section describes work dated 2026-08-06. This is
-the decay the dispatch names, not a threshold artifact. The fix is one line in
-the PLAN rewrite: set the heading date to the newest date the section
-describes.
