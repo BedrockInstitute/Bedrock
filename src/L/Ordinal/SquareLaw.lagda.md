@@ -47,6 +47,36 @@ open import Cubical.Induction.WellFounded using ( WellFounded; module WFI )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
+
+module AbstractH₀ (A : Type ℓ)
+                  (↪A : A → S)
+                  (↪A-inj : {m n : A} → ↪A m ≡ ↪A n → m ≡ n)
+                  (prec : A × A → A × A → Type (ℓ-suc ℓ))
+                  (γp : A × A → S)
+                  (F : S → Type ℓ)
+                  (↪F : (a : S) → F a → S)
+                  (fiberF : (a : S) {x : S} → ⟨ x ∈ˢ a ⟩ → Σ[ m ∈ F a ] (↪F a m ≡ x))
+                  (fst∈sucmaxF : {p q : A × A} → prec p q → ⟨ ↪A (fst p) ∈ˢ sucV (γp q) ⟩)
+                  (snd∈sucmaxF : {p q : A × A} → prec p q → ⟨ ↪A (snd p) ∈ˢ sucV (γp q) ⟩) where
+
+  h₀ : (p : A × A) → (r : A × A) → prec r p → F (sucV (γp p)) × F (sucV (γp p))
+  h₀ p r pr = (fiberF (sucV (γp p)) (fst∈sucmaxF {r} {p} pr) .fst
+             , fiberF (sucV (γp p)) (snd∈sucmaxF {r} {p} pr) .fst)
+
+  h₀-inj : (p : A × A) {r r' : A × A} (pr : prec r p) (pr' : prec r' p)
+         → h₀ p r pr ≡ h₀ p r' pr' → r ≡ r'
+  h₀-inj p {a , b} {a' , b'} pr pr' e = cong₂ _,_ ea eb
+    where
+    β : S
+    β = sucV (γp p)
+    ea : a ≡ a'
+    ea = ↪A-inj (sym (fiberF β (fst∈sucmaxF {a , b} {p} pr) .snd)
+      ∙ cong (↪F β) (cong fst e)
+      ∙ fiberF β (fst∈sucmaxF {a' , b'} {p} pr') .snd)
+    eb : b ≡ b'
+    eb = ↪A-inj (sym (fiberF β (snd∈sucmaxF {a , b} {p} pr) .snd)
+      ∙ cong (↪F β) (cong snd e)
+      ∙ fiberF β (snd∈sucmaxF {a' , b'} {p} pr') .snd)
 ```
 
 <!--en-->
@@ -389,24 +419,11 @@ module Core (α : S) (oα : IsOrd α)
   γp p = ⟪ α ⟫↪ (max' (fst p) (snd p))
 
   h₀ : (p : PairA) → (r : PairA) → r ≺' p → ⟪ sucV (γp p) ⟫ × ⟪ sucV (γp p) ⟫
-  h₀ p r pr = (fiber β (fst∈sucmax {r} {p} pr) .fst
-             , fiber β (snd∈sucmax {r} {p} pr) .fst)
-    where
-    β : S
-    β = sucV (γp p)
+  h₀ = AbstractH₀.h₀ (⟪ α ⟫) (⟪ α ⟫↪) (↪-inj {a = α}) _≺'_ γp (⟪_⟫) (⟪_⟫↪) fiber fst∈sucmax snd∈sucmax
 
   h₀-inj : (p : PairA) {r r' : PairA} (pr : r ≺' p) (pr' : r' ≺' p)
          → h₀ p r pr ≡ h₀ p r' pr' → r ≡ r'
-  h₀-inj p {a , b} {a' , b'} pr pr' e = cong₂ _,_ ea eb
-    where
-    β : S
-    β = sucV (γp p)
-    ea : a ≡ a'
-    ea = ↪-inj {a = α} (sym (fiber β (fst∈sucmax {a , b} {p} pr) .snd)
-      ∙ cong (⟪ β ⟫↪) (cong fst e) ∙ fiber β (fst∈sucmax {a' , b'} {p} pr') .snd)
-    eb : b ≡ b'
-    eb = ↪-inj {a = α} (sym (fiber β (snd∈sucmax {a , b} {p} pr) .snd)
-      ∙ cong (⟪ β ⟫↪) (cong snd e) ∙ fiber β (snd∈sucmax {a' , b'} {p} pr') .snd)
+  h₀-inj = AbstractH₀.h₀-inj (⟪ α ⟫) (⟪ α ⟫↪) (↪-inj {a = α}) _≺'_ γp (⟪_⟫) (⟪_⟫↪) fiber fst∈sucmax snd∈sucmax
 
   comp₀ : (p : PairA) (e : colA p ≡ α) → ⟪ α ⟫ → ⟪ sucV (γp p) ⟫ × ⟪ sucV (γp p) ⟫
   comp₀ p e m = h₀ p (g p (⟪ α ⟫↪ m) (b∈ m))
@@ -1096,24 +1113,11 @@ module InitialCore (α : S) (oα : IsOrd α)
     γp p = ⟪ α ⟫↪ (max' (fst p) (snd p))
 
     h₀ : (p : PairA) → (r : PairA) → r ≺' p → ⟪ sucV (γp p) ⟫ × ⟪ sucV (γp p) ⟫
-    h₀ p r pr = (fiber β (fst∈sucmax {r} {p} pr) .fst
-               , fiber β (snd∈sucmax {r} {p} pr) .fst)
-      where
-      β : S
-      β = sucV (γp p)
+    h₀ = AbstractH₀.h₀ (⟪ α ⟫) (⟪ α ⟫↪) (↪-inj {a = α}) _≺'_ γp (⟪_⟫) (⟪_⟫↪) fiber fst∈sucmax snd∈sucmax
 
     h₀-inj : (p : PairA) {r r' : PairA} (pr : r ≺' p) (pr' : r' ≺' p)
            → h₀ p r pr ≡ h₀ p r' pr' → r ≡ r'
-    h₀-inj p {a , b} {a' , b'} pr pr' e = cong₂ _,_ ea eb
-      where
-      β : S
-      β = sucV (γp p)
-      ea : a ≡ a'
-      ea = ↪-inj {a = α} (sym (fiber β (fst∈sucmax {a , b} {p} pr) .snd)
-        ∙ cong (⟪ β ⟫↪) (cong fst e) ∙ fiber β (fst∈sucmax {a' , b'} {p} pr') .snd)
-      eb : b ≡ b'
-      eb = ↪-inj {a = α} (sym (fiber β (snd∈sucmax {a , b} {p} pr) .snd)
-        ∙ cong (⟪ β ⟫↪) (cong snd e) ∙ fiber β (snd∈sucmax {a' , b'} {p} pr') .snd)
+    h₀-inj = AbstractH₀.h₀-inj (⟪ α ⟫) (⟪ α ⟫↪) (↪-inj {a = α}) _≺'_ γp (⟪_⟫) (⟪_⟫↪) fiber fst∈sucmax snd∈sucmax
 
     comp₀ : (p : PairA) (e : colA p ≡ α) → ⟪ α ⟫ → ⟪ sucV (γp p) ⟫ × ⟪ sucV (γp p) ⟫
     comp₀ p e m = h₀ p (g p (⟪ α ⟫↪ m) (b∈ m))
