@@ -1265,16 +1265,6 @@ measurement. Wired chapter by chapter as the wave batches land.
   the limit corollary, with the image principle and the level descriptions
   as named module hypotheses.
 
-- `L.Rud.OpGraph`{.Agda}: the operation graphs in VARIABLES rather than in
-  constants: the constants-to-variables transfer, the extensional graph
-  closure, and five instantiations. The description chapter says what an
-  operation's image is when its arguments are named by constants; this chapter
-  says it when they are bound variables, which is what an order formula
-  quantifying over arguments needs. The four tuple operations are recorded as
-  NOT expressible here: their totalizations route through projections whose
-  behaviour on non-pair arguments the object language cannot characterize, so
-  the delivered shape is one-way there and the gap is named rather than
-  papered over.
 - `L.OrderFamily`{.Agda}: the order family and its table, over a per-level
   order-as-an-element interface: the table as a set indexed by the level, the
   successor's agreement with the order below on old members, and the order at a
@@ -1323,17 +1313,6 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.StepInL`{.Agda}: one rud step as a definable set over a constructible
   stage: the inner-world reading frame, the sixteen membership formulas, and
   the values reads at the honest offsets.
-- `L.Rud.CodeSet`{.Agda}: the formula codes over a carrier as one sealed
-  family with definitional membership and untruncated decode; each code a
-  closure member unconditionally; the member form reduced to its
-  description entry point.
-- `L.Rud.BaseBlock`{.Agda}: hereditary finiteness at the base limit: the
-  S-side tally, the finite-member lemma, the power obligation, and the
-  base instance of the stage fact with its identity-fragment witness.
-- `L.Rud.CodePred`{.Agda}: the object-language code predicate, read in the
-  inner world of a level: the fused twelve-clause node, both adequacy
-  directions by rank descent and construction, and the code set discharged
-  as a level member at every arity by the description equation.
 - `L.Rud.SatTable`{.Agda}: the definable power as the eighth basis operation
   applied to a relation and a covering set, so a level holding both holds the
   power with no offset; the corrected block statement discharged at the
@@ -1353,7 +1332,6 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Order`{.Agda}：典范良序：沿最小生产者键回拉循阶生产者树之序，SZ 后继子句机器验证，相容一行，极限层的外部选择定理。
 - `L.Rud.Switch`{.Agda}：切换定理：抽象基在十六运算处清偿，概括形态双向到手，极限推论在位；像原理与层级描述作为具名模块假设。
 
-- `L.Rud.OpGraph`{.Agda}：以变量而非常量写出的运算图：常量转变量的转移、外延的图封闭，以及五个实例化。描述章说的是「当运算的论元由常量点名时，它的像是什么」；本章说的是「当论元是被约束的变量时，它的像是什么」，而那正是一条对论元作量化的序公式所需要的。四个元组运算在此记为不可表达：它们的全体化取道投影，而投影在非对论元处的行为，对象语言刻画不出来，故此处交付的形状是单向的，缺口照实具名，不作粉饰。
 - `L.OrderFamily`{.Agda}：序族及其表，建于「逐层的序作为元素」这一接口之上：表是以层为索引的集合，后继处的序与下方之序在旧成员上一致，而极限处的序是表的并，即经典极限子句的元素级读法。
 - `L.OrderFormula`{.Agda}：序作为元素，落在后继子句即全部序的那唯一一层：携带有界性见证的键分解、自身在像下子句及其可靠性读法，以及把序元素放进其上某个极限层的刻画。一般层处的一致公式在已交付的面孔上**不可表达**，本章连同它所需的确切类型一并记下。
 - `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
@@ -1367,9 +1345,6 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
 - `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
-- `L.Rud.CodeSet`{.Agda}：载体上的公式码作为一个封印族，成员性定义即得、解码不截断；每个码无条件为闭包成员；成员形归约到其描述入口。
-- `L.Rud.BaseBlock`{.Agda}：基极限处的遗传有限性：S-侧计数、有限成员引理、幂义务，及带恒等片段见证的阶段事实基例。
-- `L.Rud.CodePred`{.Agda}：对象语言的码谓词，读于层的内层世界：十二子句融合节点、秩下降与构造给出的双向 adequacy、码集经描述等式在每个元数清偿为层成员。
 - `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
 <!--/-->
 
@@ -1387,15 +1362,11 @@ import L.Rud.Order
 import L.OrderFamily
 import L.OrderFormula
 import L.Rud.Switch
-import L.Rud.OpGraph
 import L.Rud.ClassJ
 import L.Rud.OrdBlocks
 import L.Rud.SatSets
 import L.Rud.Bridge
 import L.Rud.DefInJ
 import L.Rud.StepInL
-import L.Rud.CodeSet
-import L.Rud.BaseBlock
-import L.Rud.CodePred
 import L.Rud.SatTable
 ```
