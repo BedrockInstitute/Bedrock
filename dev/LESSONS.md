@@ -1962,7 +1962,7 @@ a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
 sourced, it is not entered; it is surfaced to the owner instead.
 
-### P-l (proposed 2026-08-06, awaiting the owner's ID): a statement may be ABOUT a concrete stage without dragging that stage's PRESENTATION into its type
+### P-l. A statement may be ABOUT a concrete stage without dragging that stage's PRESENTATION into its type
 
 **The law.** Being about a concrete position is not what costs. Naming a
 transparent construction in a statement's TYPE is. If the tower's stage values
@@ -2095,7 +2095,7 @@ direction of whatever is quicker to write.** This is the finding that produced
 D30's freeze, and the reason its exit condition includes recording the practice
 before the code that carries it is archived.
 
-### C-NN (proposed 2026-08-05, awaiting the owner's ID): a shape certificate is not a meaning certificate
+### C-23. A shape certificate is not a meaning certificate
 
 **The law.** A proof obligation that certifies a formula's SHAPE (`Δ₀`, `Σ₁`,
 `Π₁`) says nothing about what the formula MEANS. A wrong de Bruijn index changes

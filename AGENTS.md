@@ -104,7 +104,7 @@ is the summary an agent reads first.
   performance, R conversion and reduction, T termination, I inference, D design, C craft and
   process). They are measurements, not opinions, and each one exists because something cost
   time or died. Read the relevant entries before writing, not after a wall. When your work
-  discovers a new law, propose it with its measurement; the owner assigns the ID.
+  discovers a new law, propose it with its measurement. **The orchestrator assigns the ID** (owner's delegation, 2026-08-06): the P series uses letters, the R, T, I, D and C series use numbers, and the next free one is the ID. A law is not admitted without its measurement, whoever numbers it.
 - **`dev/PLAN.md` is the goal registry.** Section 0 says where the work stands today, section 3
   holds the ratified decisions, section 6 holds the goal tree and the coding rules, section 11
   is the master status table. Work is managed by goal codes and every commit carries one in
