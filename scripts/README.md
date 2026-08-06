@@ -192,6 +192,33 @@ python3 scripts/check-tree.py --gate-debt        # commits and added lines since
 python3 scripts/check-tree.py --gate-passed      # record HEAD after a green full gate
 ```
 
+## `check-dev-docs.py`
+
+The maintenance mechanism for the dev/ documents, built by `[L3.32-T110]`
+after a day in which every decay instance below was found by accident and
+none by a gate. The cadence, the thresholds with their arguments, and what is
+deliberately not automated are recorded in
+[dev/MAINTENANCE.md](../dev/MAINTENANCE.md).
+
+The gate half (`make check`'s `devdocs` target) is six cheap pure-Python
+checks: a word cap on AGENTS.md (2,200), a word cap on every dev/PLAN.md
+table cell (1,600), a requirement that a LESSONS entry marked "imported
+from/into" be routed in dev/rules.toml, a check that PLAN section 0's "as of"
+date is no older than the newest date in its own body, a form check on
+dev/memos/ `**STATUS:` headers, and a check that every `scripts/*.py` named
+in AGENTS.md exists.
+
+The sweep half is informational and exits 0: it lists LESSONS entries that
+are unrouted AND cited nowhere (the "landed and nobody noticed" class), and
+section 11 cells over the 600-word episode-scale line (episode content
+belongs in dev/JOURNAL.md).
+
+```sh
+python3 scripts/check-dev-docs.py            # run every gate subcheck
+python3 scripts/check-dev-docs.py --check NAME  # run one
+python3 scripts/check-dev-docs.py --sweep    # on-demand informational sweep
+```
+
 ## `lint-agda.py`
 
 Enforces the code-side rules of [dev/STYLE-agda.md](../dev/STYLE-agda.md) on the ```agda

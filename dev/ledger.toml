@@ -588,7 +588,7 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 
 [timing]
 measured = "2026-08-05, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0"
-full_cold_seconds = 1162
+full_cold_seconds = 1099
 note = """
 UPDATED 2026-08-06 after T87: 2,723 minus the measured 767 s Bridge saving.
 The original 2,723 s was profile-instrumented time (2,501 measured plus 222 recovered for
@@ -615,12 +615,12 @@ verified = "Core.h0/h0-inj at src/L/Ordinal/SquareLaw.lagda.md:421,:424 and Init
 
 [[hot]]
 module = "L.Condensation"
-seconds = 204
-lines = 551
-obligations = 122
-why = "measured 2026-08-06 by [T96]: BODY-BOUND. The cost is two assembly definitions elaborating delivered machinery at the concrete formula LsetGraphAt {2} zero (suc zero). The gutted-body experiment moved ambientOnly-from from 128.5 s to 0 ms with 131.1 s appearing in the lemma its one-line body then called."
-fix = "PRICED REFUSAL, measured by [T106] and satisfying D30 exit condition (2). [T104] argued from [T102]'s cure that all three pieces were liftable export-preservingly; [T106] measured it and REFUTED that. Piece 1, the 77 s environment conversion: the lift makes the module WORSE, 204.7 to 308.8 s. Piece 3, the 54 s Lset-only application: the cost MOVES to the new telescope row rather than going away, and ambientOnly-from gets worse. Piece 2, the 56 s Crossing: green only in the EXPORT-CHANGING form. So [T96]'s original verdict stands: no export-preserving combination exists."
-open_lever = "[T106] B1, the export-changing Crossing parameterization: module Total 204.7 to 143.4 s, minus 61.3 s, for +5 lines. Crossing's header and crossOut-from's statement change; every other signature is byte-identical and rg confirms ZERO tree consumers of any crossing name. Needs the owner's word because the changed statement is what D5 and W1' will later consume."
+seconds = 142
+lines = 555
+obligations = 123
+why = "BODY-BOUND, measured by [T96]: the cost is assembly definitions elaborating delivered machinery at a concrete formula."
+fix = "[T107] landed [T106]'s B1: the Crossing parameterization, 204.7 s to 142.0 s for +4 lines, by making the concrete formula a module parameter. The Crossing header and crossOut-from's statement changed; every other signature is byte-identical, verified by a full diff, and rg confirmed zero tree consumers."
+refusal = "The remaining 130 s is a PRICED REFUSAL closing D30 exit condition (2). [T106] measured all three export-preserving lifts and they FAILED: the 77 s environment conversion made the module WORSE (204.7 to 308.8 s), the 54 s Lset-only cost MOVED rather than went, and piece 2's export-preserving wrapper was worse than the control. [T96]'s original verdict stands and [T104]'s re-opening was refuted."
 
 [[tree_cost]]
 tree = "retiring subtree (L.Coding, L.Godel, L.Choice)"
