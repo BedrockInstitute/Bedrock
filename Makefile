@@ -33,7 +33,7 @@ CF_PROJECT := bedrock
 
 .PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse
+check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -68,6 +68,11 @@ probes:
 
 tree:
 	$(PY) scripts/check-tree.py --check
+
+# A dangling rule citation reads as authority. [L3.32-T105] found one in a
+# document written ABOUT rule hygiene, which is the argument for gating it.
+ruleids:
+	$(PY) scripts/check-rule-ids.py
 
 reuse:
 	$(REUSE) lint

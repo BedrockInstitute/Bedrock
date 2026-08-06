@@ -95,7 +95,7 @@ never finishing; abstract shelves/keys/stage ~30 s cold; P-h amended to full
 strength, R-34 added), the two selection images `selMImgL`/`selEImgL` delivered
 green plus the shift seek machinery and abstract `ShiftWalk` (+2,372 lines in
 Closure, ~107 s cold, orchestrator re-verified); the shift image WALLED on the
-deep satisfaction construction at the seek sentence's scale (the P-d/R-9 class;
+deep satisfaction construction at the seek sentence's scale (the P-d class, and the source project's R-9;
 `opaque` does not cure it, the third genuinely different failure), extension
 image same class not started, `stepL`/`sliceL` blocked behind them; per the
 wall protocol the batch stopped pending a design ruling, which is MOOT unless
@@ -517,7 +517,7 @@ batches 37; exactly one ever filed, I-5); the orchestrator ruled on all 80
 claims: 28 new entries filed (D-11..D-23 with the tuple-calculus and reduction
 consolidations, R-39, I-6..I-9, C-13..C-21, P-j), 4 rejected (P-D-16's sole
 witness retired with L6b; three below the bar), 11 merge appends (D-10, P-i
-[A]/[B]/[F], R-38, R-35, R-16, P-a, I-4, D-6, R-36); the law book stands at 100
+[A]/[B]/[F], R-38, R-35, the source project's R-16, P-a, I-4, D-6, R-36); the law book stands at 100
 entries. **The W5 D-1 probe: GO, zero walls** (`src/ProbeCollapse.agda`
 untracked, 125 code lines, under 1 s: `∈-induction` carries set-valued
 recursion directly with the computation law an R-36 read lemma, no LEM, the

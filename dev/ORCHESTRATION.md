@@ -82,6 +82,12 @@ Standing clauses that go in every build or probe brief:
   minutes each, on a tree whose check cost the campaign is spending its days
   reducing. The order is: audit the return, update the ledger, run
   `scripts/ledger.py --write`, THEN gate.
+- **Name P-k and P-l in every build brief.** They are the two laws the
+  campaign of 2026-08-06 was written from, they cover the class that made the
+  three expensive modules expensive, and they did not exist before that day.
+  `[L3.32-T105]` established that the earlier failure was MISSING rules rather
+  than unread ones, so the cheapest correct response is to put the new ones in
+  front of every builder immediately rather than wait for a routing layer.
 - **D30, the craft freeze, FIRST.** While it stands, **do not write a brief
   that dispatches new mathematics.** Defect repair, profiling, the fixes a
   profile licenses, and capturing the retiring tree's craft are the plan and
