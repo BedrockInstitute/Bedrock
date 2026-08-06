@@ -588,7 +588,7 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 
 [timing]
 measured = "2026-08-05, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0"
-full_cold_seconds = 1563
+full_cold_seconds = 1162
 note = """
 UPDATED 2026-08-06 after T87: 2,723 minus the measured 767 s Bridge saving.
 The original 2,723 s was profile-instrumented time (2,501 measured plus 222 recovered for
@@ -606,12 +606,12 @@ fix = "DONE (T87): a six-line opaque seal restating the read lemma to end where 
 
 [[hot]]
 module = "L.Ordinal.SquareLaw"
-seconds = 466
-lines = 906
-obligations = 245
-why = "DISPATCH 1 OF THE REWRITE LANDED 2026-08-06 by [T101]: 859.0 s to 465.5 s, minus 393 s, 45.8 percent, for a net MINUS one line. The two pair-eq rows (371.9 s) no longer exist as definitions; the generic chase and both instantiations are each below the profile display threshold. Every exported type unchanged, verified by a full signature diff against HEAD: only the two chases' where-locals moved."
-remaining = "The h0-inj pair is untouched at 389.3 s (InitialCore 207.2 plus Core 182.2), which is now 84 percent of the module. It is statement-bound and is dispatch 2, probed before built."
-mechanism = "The whole saving is P-l: the concrete numeral presentation is kept OUT of the generic telescope, verified by grep at src/L/Ordinal/SquareLaw.lagda.md:135-143. [T88]'s form left it in and exhausted 8 GB twice."
+seconds = 64
+lines = 907
+obligations = 242
+why = "NO LONGER HOT. The burn-the-boats rewrite closed it in two dispatches: [T101] the counting chase 859.0 to 465.5 s, [T103] the h0 reshape 470.6 to 64.4 s. From 856 s at the start of 2026-08-06 to 64.4 s, a 13x reduction on the tree's most expensive module, for NET ZERO LINES across the two."
+mechanism = "Both are P-l. [T101] kept the concrete numeral presentation out of a generic telescope. [T103] lifted the concrete fiber and membership applications out of the bodies into a module telescope, where they are checked once at a neutral position. Neither changed an exported statement: verified by full signature diff, the only movement being where-locals collapsing from two copies to one."
+verified = "Core.h0/h0-inj at src/L/Ordinal/SquareLaw.lagda.md:421,:424 and InitialCore's at :1115,:1118 all still declared with byte-identical concrete types."
 
 [[hot]]
 module = "L.Condensation"

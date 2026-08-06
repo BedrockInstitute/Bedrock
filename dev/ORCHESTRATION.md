@@ -75,6 +75,13 @@ Standing clauses that go in every build or probe brief:
   `make check` (a warm module check costs minutes; the commit gate must stay
   cheap enough to actually be run), which means if the orchestrator does not
   run it at the return, nobody does.
+- **Bring the ledger current BEFORE starting the gate, never during.** The
+  gate reads `dev/ledger.toml` and `dev/LEDGER.md`, so an update landing
+  mid-run fails on a staleness that was true for about one second. This
+  happened twice on 2026-08-06 and cost two full gate runs, roughly thirty
+  minutes each, on a tree whose check cost the campaign is spending its days
+  reducing. The order is: audit the return, update the ledger, run
+  `scripts/ledger.py --write`, THEN gate.
 - **D30, the craft freeze, FIRST.** While it stands, **do not write a brief
   that dispatches new mathematics.** Defect repair, profiling, the fixes a
   profile licenses, and capturing the retiring tree's craft are the plan and
