@@ -14,8 +14,10 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import re
 import sys
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -141,6 +143,239 @@ def test_render_route() -> int:
     fails += check("render_route emits no mermaid and no flowchart",
                    "mermaid" not in html and "flowchart" not in html, True)
     fails += check("render_route emits no script tag", "<script" not in html, True)
+    return fails
+
+
+def test_render_route_with_workbench() -> int:
+    """The [T117] merge: render_route attaches the hand-written workbench to
+    the nodes it belongs to when placed content is passed, and renders a plain
+    graph when it is not."""
+    tree = dashboard.build_route({"owed": [], "lever": []})
+    placed = {
+        "start": [{"text": "nothing. All slots free."}],
+        "freeze": [{"left": "the frozen mathematics", "right": "D30 lifts"}],
+    }
+    html = dashboard.render_route(tree, placed)
+    fails = check("start node carries the position marker",
+                  'class="node start here"' in html
+                  and "where we are now" in html
+                  and "All slots free" in html, True)
+    fails += check("freeze decision carries the queued list",
+                  "Queued now, and what releases each" in html
+                  and "the frozen mathematics" in html, True)
+    fails += check("plain render has no position marker",
+                   'class="node start here"' not in dashboard.render_route(tree), True)
+    return fails
+
+
+def test_remaining_pie_slices() -> int:
+    """A remaining-row distribution: standing first, large rows individual,
+    small rows grouped into a tail that names its members, total equals
+    standing plus the midpoints."""
+    data = {"remaining": [
+        {"id": "A", "title": "alpha", "naive_low": 1000, "naive_high": 2700,
+         "calibrated_low": 3000, "calibrated_high": 7900},
+        {"id": "B", "title": "beta", "naive_low": 100, "naive_high": 200,
+         "calibrated_low": 300, "calibrated_high": 400},
+        {"id": "C", "title": "gamma", "naive_low": 300, "naive_high": 500,
+         "calibrated_low": 900, "calibrated_high": 1100},
+        {"id": "D", "title": "delta", "naive_low": 500, "naive_high": 700,
+         "calibrated_low": 900, "calibrated_high": 1300},
+        {"id": "E", "title": "eps", "naive_low": 800, "naive_high": 1000,
+         "calibrated_low": 1200, "calibrated_high": 1600},
+    ]}
+    slices = dashboard.remaining_pie_slices(data, "naive", 5000)
+    fails = check("pie leads with standing",
+                  slices[0]["label"].startswith("standing"), True)
+    fails += check("standing slice value", slices[0]["value"], 5000)
+    labels = [s["label"] for s in slices]
+    fails += check("large row stays individual",
+                   any(l.startswith("A:") for l in labels)
+                   and any(l.startswith("E:") for l in labels), True)
+    tails = [s for s in slices if s["label"].startswith("tail")]
+    fails += check("small row is grouped into one tail",
+                   len(tails) == 1 and tails[0]["value"] == 150, True)
+    fails += check("tail names its members",
+                   "B 150" in tails[0]["tail_detail"], True)
+    total = sum(s["value"] for s in slices)
+    fails += check("pie total is standing plus remaining midpoints",
+                   total, 5000 + 1850 + 900 + 600 + 400 + 150)
+    return fails
+
+
+def test_pie_svg() -> int:
+    svg = dashboard.pie_svg([
+        {"value": 60, "color": "--pie-1"},
+        {"value": 40, "color": "--pie-2"},
+    ])
+    fails = check("pie_svg emits a path per slice", svg.count("<path"), 2)
+    fails += check("pie colors come from the palette variables",
+                   'fill="var(--pie-1)"' in svg
+                   and 'fill="var(--pie-2)"' in svg, True)
+    fails += check("pie_svg emits no script tag", "<script" not in svg, True)
+    zero = dashboard.pie_svg([
+        {"value": 0, "color": "--pie-1"},
+        {"value": 100, "color": "--pie-2"},
+    ])
+    fails += check("a zero slice draws nothing",
+                   zero.count("<path") + zero.count("<circle"), 1)
+    full = dashboard.pie_svg([{"value": 100, "color": "--pie-1"}])
+    fails += check("a single full slice is a circle", "<circle" in full, True)
+    fails += check("empty slices draw no svg at all",
+                   dashboard.pie_svg([{"value": 0, "color": "--pie-1"}]), "")
+    return fails
+
+
+def test_css_theme_lock() -> int:
+    """The visual pass keeps every colour a :root variable: no hex literal
+    survives outside the theme block, the font stacks are system-only, and
+    the stylesheet carries no script, network or em dash."""
+    css = dashboard.CSS
+    root_start = css.index(":root {")
+    depth = 0
+    root_end = None
+    for i, ch in enumerate(css[root_start:], root_start):
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                root_end = i
+                break
+    assert root_end is not None
+    outside = css[:root_start] + css[root_end + 1:]
+    fails = check("no hex literal outside :root",
+                  re.search(r"#[0-9a-fA-F]{3,8}\b", outside), None)
+    fails += check("system font stacks only",
+                   "font-family: var(--mono)" in css
+                   and "font-family: var(--sans)" in css, True)
+    fails += check("no @import, URL or fetch in the stylesheet",
+                   re.search(r"@import|https?://|fetch\(", css), None)
+    fails += check("no script tag in the stylesheet", "<script" in css, False)
+    fails += check("no em dash in the stylesheet", "\u2014" in css, False)
+    return fails
+
+
+def test_generated_page_stays_self_contained() -> int:
+    """A full generated page keeps zero external references, zero scripts
+    and zero em dashes, with a deterministic clock."""
+    now = datetime(2026, 8, 6, 9, 0, tzinfo=timezone.utc)
+    page = dashboard.render_page(now, Path("/tmp/l3.32-t118-dashboard.html"))
+    fails = check("no external reference in the page",
+                  len(re.findall(r"https?://|src=|@import|fetch\(", page)), 0)
+    fails += check("no script tag in the page", "<script" in page, False)
+    fails += check("no em dash in the page", "\u2014" in page, False)
+    return fails
+
+
+def test_measured_stats_marked() -> int:
+    """The measured numbers (standing, full check) carry the amber marker and
+    numeric table cells carry the tabular-figure class."""
+    lines = dashboard.panel_lines()
+    seconds = dashboard.panel_seconds()
+    fails = check("standing stat carries the measured marker",
+                  'class="stat measured"' in lines, True)
+    fails += check("full-check stat carries the measured marker",
+                   'class="stat measured"' in seconds, True)
+    fails += check("numeric cells are marked for tabular figures",
+                   'class="num"' in lines, True)
+    fails += check("numeric cells are marked in the seconds panel",
+                   'class="num"' in seconds, True)
+    return fails
+
+
+def test_pies_share_one_visual_language() -> int:
+    """Every pie slice is separated by the same background stroke, so all
+    charts read as one instrument."""
+    css = dashboard.CSS
+    fails = check("pie slices share one stroke",
+                  "stroke: var(--bg)" in css, True)
+    fails += check("pie stroke width is pinned",
+                  "stroke-width: 2px" in css, True)
+    return fails
+
+
+def test_render_pie_chart() -> int:
+    slices = [{"label": "a", "value": 75, "color": "--pie-1"},
+              {"label": "b", "value": 25, "color": "--pie-2"}]
+    html = dashboard.render_pie_chart("test chart", slices)
+    fails = check("pie chart labels the total", "total 100" in html, True)
+    fails += check("pie chart labels each slice's absolute value",
+                   "75 (75%)" in html and "25 (25%)" in html, True)
+    fails += check("pie chart emits svg and no script",
+                   "<svg" in html and "<script" not in html, True)
+    return fails
+
+
+def test_place_workbench_merge_reading() -> int:
+    """The [T117] merge reading against a full workbench: each section lands
+    on the graph node it belongs to, and a row that matches nothing stays
+    unplaced verbatim. Nothing is lost either way."""
+    text = """DISPATCHED NOW
+  Bridge's tail, dispatching now.
+
+QUEUED, AND WHAT RELEASES EACH
+  the frozen mathematics         <- D30 lifts, which needs the exit condition.
+
+CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH
+  the tail profiles flat            -> it is the floor and the freeze can lift.
+  a lever's region is opened by ruled work -> take it now, marginal cost is zero.
+
+NOT DISPATCHING, AND WHY
+  the four waiting levers   they wait with their measurements intact, per the
+                            ruling that a route awaiting decision is kept.
+  B-condensation-story      refuted by [T84]: the clause layer is not
+                            Delta-0 certifiable.
+  D-order-core              partly superseded by [T103]: re-price before
+                            considering.
+  something else entirely   this must land in unplaced, verbatim.
+"""
+    secs = dashboard.parse_workbench(text)
+    placed, unplaced = dashboard.place_workbench(secs)
+    fails = check("start anchor holds DISPATCHED NOW",
+                  any("dispatching now" in i.get("text", "").lower()
+                      for i in placed.get("start", [])), True)
+    fails += check("freeze anchor holds QUEUED",
+                   len(placed.get("freeze", [])), 1)
+    fails += check("tail condition lands on exit-condition",
+                   [i["left"] for i in placed.get("exit-condition", [])],
+                   ["the tail profiles flat"])
+    fails += check("lever condition lands on take-now",
+                   [i["left"] for i in placed.get("take-now", [])],
+                   ["a lever's region is opened by ruled work"])
+    fails += check("waiting row lands on waiting",
+                   len(placed.get("waiting", [])), 1)
+    fails += check("refuted row lands on refuted",
+                   len(placed.get("refuted", [])), 1)
+    fails += check("superseded row lands on superseded",
+                   len(placed.get("superseded", [])), 1)
+    fails += check("unmatched row stays unplaced verbatim",
+                   any("something else entirely"
+                       in i["items"][0]["text"] for i in unplaced), True)
+
+    all_text = ""
+    for items in placed.values():
+        for i in items:
+            all_text += (i.get("text") or "") + (i.get("left") or "") \
+                + (i.get("right") or "")
+    for i in unplaced:
+        all_text += "".join(it.get("text", "") for it in i["items"])
+
+    def pieces(line: str) -> list[str]:
+        line = line.strip()
+        for marker in ("<-", "->"):
+            if marker in line:
+                left, right = line.split(marker, 1)
+                return [left.strip(), right.strip()]
+        return [line]
+
+    for ln in text.splitlines():
+        if ln.strip():
+            if dashboard.match_workbench_heading(ln) is not None:
+                continue  # headings are structure, not content
+            for piece in pieces(ln):
+                fails += check(f"no workbench line lost: {piece[:24]}",
+                               piece in all_text, True)
     return fails
 
 
@@ -345,14 +580,118 @@ def test_staleness() -> int:
     return fails
 
 
+def test_merged_panel_fallback() -> int:
+    """When the ledger is unreadable the merged panel still shows the
+    hand-written workbench verbatim instead of crashing, and stays
+    self-contained."""
+    saved_toml = dashboard.LEDGER_TOML
+    saved_wb = dashboard.WORKBENCH_MD
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        dashboard.LEDGER_TOML = tmp / "ledger.toml"  # deliberately missing
+        wb = tmp / "workbench.md"
+        wb.write_text(SAMPLE_WORKBENCH, encoding="utf-8")
+        dashboard.WORKBENCH_MD = wb
+        try:
+            html = dashboard.panel_workbench_route()
+        finally:
+            dashboard.LEDGER_TOML = saved_toml
+            dashboard.WORKBENCH_MD = saved_wb
+    fails = check("merged panel says the route has no data",
+                  "No data behind this panel" in html, True)
+    fails += check("merged panel shows the workbench verbatim",
+                   "All slots free" in html, True)
+    fails += check("merged panel stays self-contained",
+                   "<script" not in html and "http://" not in html
+                   and "https://" not in html, True)
+    return fails
+
+
+def test_merged_panel_places_on_real_ledger() -> int:
+    """The merged panel against the real repository: the position marker, the
+    queue on the freeze decision and the hand-written notes on the lever
+    outcomes all render, with no unplaced block for the current workbench."""
+    html = dashboard.panel_workbench_route()
+    fails = check("merged panel draws the position marker",
+                  'class="node start here"' in html
+                  and "where we are now" in html, True)
+    fails += check("merged panel carries the queue on the freeze decision",
+                  "Queued now, and what releases each" in html
+                  and "the frozen mathematics" in html, True)
+    fails += check("merged panel carries the exit-condition notes",
+                  "the tail profiles flat" in html, True)
+    fails += check("merged panel names its sources",
+                   "dev/ledger.toml (mtime" in html
+                   and "_build/workbench.md (mtime" in html, True)
+    return fails
+
+
+def test_seconds_panel_pies() -> int:
+    """The seconds pies against controlled data: the current check is the hot
+    modules plus the remainder, and the tree-cost split is labelled as the
+    pre-fix profile."""
+    saved = dashboard.LEDGER_TOML
+    with tempfile.TemporaryDirectory() as td:
+        ledger = Path(td) / "ledger.toml"
+        ledger.write_text("""
+[timing]
+full_cold_seconds = 1000
+
+[[hot]]
+module = "A"
+seconds = 100
+
+[[tree_cost]]
+tree = "T1"
+seconds = 300
+""", encoding="utf-8")
+        dashboard.LEDGER_TOML = ledger
+        try:
+            html = dashboard.panel_seconds()
+        finally:
+            dashboard.LEDGER_TOML = saved
+    fails = check("seconds panel draws the current check pie",
+                  "Where the current cold check goes" in html, True)
+    fails += check("remainder slice is the full check minus the hot modules",
+                   "everything else" in html and "900 (90%)" in html, True)
+    fails += check("tree cost pie is labelled as pre-fix",
+                   "PRE-FIX" in html and "300 (100%)" in html, True)
+    fails += check("seconds panel names its source",
+                   "ledger.toml (mtime" in html, True)
+    return fails
+
+
+def test_lines_panel_pies() -> int:
+    """The lines panel on the real ledger draws both caliber pies and labels
+    the standing slice, without hardcoding a total that would rot."""
+    html = dashboard.panel_lines()
+    fails = check("lines panel draws both caliber pies",
+                  html.count('class="pie-card"'), 2)
+    fails += check("lines panel labels the measured standing",
+                   "standing, measured from HEAD" in html, True)
+    fails += check("lines panel labels a pie total",
+                   'class="pie-total">total ' in html, True)
+    fails += check("lines panel names its sources",
+                   "dev/ledger.toml (mtime" in html
+                   and "scripts/ledger.py" in html, True)
+    return fails
+
+
 def main() -> int:
     fails = 0
     for test in (test_brief_parse, test_route_builder, test_route_block_real,
                  test_route_block_no_data, test_render_route,
+                 test_render_route_with_workbench, test_remaining_pie_slices,
+                 test_pie_svg, test_render_pie_chart,
+                 test_css_theme_lock, test_generated_page_stays_self_contained,
+                 test_measured_stats_marked, test_pies_share_one_visual_language,
+                 test_place_workbench_merge_reading,
                  test_plan_parsing, test_remaining_rows, test_brief_naming,
                  test_clean, test_parse_workbench,
                  test_workbench_drift_fallback, test_render_workbench,
-                 test_staleness):
+                 test_staleness, test_merged_panel_fallback,
+                 test_merged_panel_places_on_real_ledger,
+                 test_seconds_panel_pies, test_lines_panel_pies):
         fails += test()
     print(f"\n{'PASS' if fails == 0 else 'FAIL'}: {fails} failing check(s)")
     return 1 if fails else 0

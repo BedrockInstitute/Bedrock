@@ -536,6 +536,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T114 | Build the owner's dashboard, generated from canonical data | IN PROGRESS | `_build/l3.32-t114-report.md` |
 | L3.32-T115 | dev/ doc recon: what the agent workflow needs | DELIVERED | `_build/l3.32-t115-report.md` |
 | L3.32-T116 | Dashboard: render the raw panels, re-order | DELIVERED | `_build/l3.32-t116-report.md` |
+| L3.32-T117 | Dashboard made two-dimensional: merge, graph, pies | DELIVERED | `_build/l3.32-t117-report.md` |
+| L3.32-T118 | Dashboard visual pass against the taste library | DELIVERED | `_build/l3.32-t118-report.md` |
 
 ### Bookkeeping
 
