@@ -48,6 +48,12 @@ rather than a silent defect. A rulebook nobody finishes reading binds nothing.
 - **`make venv`** once per clone, then **`make hooks`**. `make site` / `make serve` / `make gen`
   build the site. `python3 scripts/lint-prose.py --fix <files>` auto-fixes most prose.
 
+**Run every `python3` command below as `.venv/bin/python`**, or run `make venv` first and let
+`make` pick the interpreter. This is not a style note: the scripts need Python 3.11's `tomllib`,
+and a machine whose system `python3` is older fails the FIRST command this file tells you to run
+with `ModuleNotFoundError: tomllib`. `[L3.32-T120]`, a cold-start test, hit exactly that and lost
+two runs to it.
+
 Requirements: Agda 2.8.0 with cubical 0.9, and Python 3.11+. Dependencies are pinned in
 [requirements-dev.txt](requirements-dev.txt) and installed into `.venv` by `make venv`.
 
@@ -82,6 +88,8 @@ draft of this table and they are corrected below.
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
 | **Tooling.** What every script does and when to run it | [scripts/README.md](scripts/README.md) | n/a |
 | **Route memos, digested literature, probe reports** and the briefs that produced them | `dev/memos/`, `dev/literature/`, `_build/` | n/a |
+| **What the project IS**: the theorem, the charter, the licences, who wrote it | [README.md](README.md), trilingual under `docs/` | n/a |
+| **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0, and `make dashboard` for the owner's board | n/a |
 | **What every contributing agent must know** | this file | loaded at session start |
 
 **`dev/LESSONS.md` BINDS NEW CODE.** Its entries are measurements, not opinions. When your work
