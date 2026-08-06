@@ -17,9 +17,10 @@ the root `CLAUDE.md` (`@AGENTS.md`); other agents read this file directly.
   (`agda src/Everything.lagda.md`, the single trusted invocation), validates i18n markers, runs
   the prose linter, runs the Agda code linter (`scripts/lint-agda.py` against the
   [dev/STYLE-agda.md](dev/STYLE-agda.md) rules: OPTIONS header, import necessity, no forbidden
-  constructs), checks that every rule citation resolves (`scripts/check-rule-ids.py`: a rule
-  ID that names no entry reads as authority and is worse than no citation, and
-  the checker caught one in the very line that first described it),
+  constructs), checks that every rule citation resolves and that the rule routing is valid
+  (`scripts/check-rule-ids.py` and `scripts/rules.py --check`: a rule ID that
+  names no entry reads as authority and is worse than no citation, and the
+  checker caught one in the very line that first described it),
   runs the glossary checker (`scripts/check-glossary.py` against the term data in
   [dev/glossary.toml](dev/glossary.toml), explained in [dev/GLOSSARY.md](dev/GLOSSARY.md)),
   validates the size-ledger declaration (`scripts/ledger.py --check` against
