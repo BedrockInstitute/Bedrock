@@ -18,7 +18,7 @@ WHAT THIS CHECKER DOES, AND WHERE. The gate half (`--check`, wired into
 true-positive-tuned against the tree on 2026-08-06:
 
   agents-size         AGENTS.md word count is capped (threshold in
-                      dev/MAINTENANCE.md). The file is auto-loaded into every
+                      this docstring). The file is auto-loaded into every
                       session, so its size is a context budget, not a style.
   plan-cell-size      every table cell in dev/PLAN.md is capped by word count,
                       and the section 11 goal rows additionally by character
@@ -55,13 +55,13 @@ WHY SOME DECAY IS NOT HERE. Struck-decision references and antecedent-project
 rule IDs are already enforced by `scripts/check-rule-ids.py`, which is in the
 gate; duplicating them would split the canonical home. Whether a memo's
 diagnosis was refuted, and whether AGENTS.md text duplicates a checker,
-require reading and are named review steps, recorded in dev/MAINTENANCE.md.
+require reading and are named review steps, recorded below.
 
 HOW A THRESHOLD IS RAISED. A cap that anyone may raise silently is not a cap.
 The gate thresholds are constants below, and raising one is a ruling: only
 the owner may do it, and the change must carry a numbered decision in
 dev/PLAN.md section 3 (with the measured reason) plus an entry in
-dev/MAINTENANCE.md's threshold record. The report `_build/l3.32-t110-report.md`
+the threshold record. The report `_build/l3.32-t110-report.md`
 carries every threshold's original argument.
 
 Usage:
@@ -84,8 +84,25 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 # ---- gate thresholds --------------------------------------------------------
-# Raising one is a ruling, not an edit: see the docstring and dev/MAINTENANCE.md.
-AGENTS_WORD_CAP = 2200   # current green 1,784; the failed state was 3,450
+# Raising one is a ruling, not an edit: see the procedure below.
+# THE CADENCE, AND HOW A THRESHOLD IS RAISED. Both lived in dev/MAINTENANCE.md
+# until 2026-08-06, when [L3.32-T115] measured that no brief had ever pointed an
+# agent at that file: its enforcer is this script, so this docstring is its
+# operative home and the prose copy was a second one that had already drifted
+# (it said the green figure was 2,004 while the constant below said 1,784; the
+# DOC was the correct one, which is worth remembering before assuming code
+# outlives prose).
+#
+# CADENCE. The six subchecks run in `make check`, every commit, and are cheap
+# pure-Python reads. The sweep is on-demand and informational, never gating.
+#
+# RAISING A THRESHOLD. A cap that anyone may raise silently is not a cap. To
+# raise one: say what legitimate content does not fit, show the real row or file
+# that needs the room, and record the new figure with that argument in the
+# commit message. A threshold derived only from the last accident does not catch
+# the next one, which is why these are argued from what a green artefact needs
+# rather than from what the failure measured.
+AGENTS_WORD_CAP = 2200   # current green 2,004; the failed state was 3,450
 PLAN_CELL_WORD_CAP = 1600  # largest cell is D28 at 572 words; the failed
                            # state was 12,634
 PLAN_GOAL_ROW_CHAR_CAP = 1200  # the L3.32 target-form row is 1,001 chars, so
@@ -328,7 +345,7 @@ def sweep_routing(lessons_text: str, rules_data: dict) -> list[str]:
     # The maintenance mechanism's own files are not independent awareness: a
     # sweep that listed an entry and then cited it in its own documentation
     # would clear entries by mentioning them. Everything else counts.
-    own_files = {ROOT / "dev" / "MAINTENANCE.md",
+    own_files = {
                  ROOT / "_build" / "l3.32-t110-report.md"}
     corpus = [p for p in corpus if p.name != "LESSONS.md"
               and p not in own_files and p.exists()]

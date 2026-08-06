@@ -11,6 +11,64 @@
 # Caliber convention (PLAN section 6.2): a size figure is the count of non-blank
 # lines inside ```agda fences, over git-tracked *.lagda.md under src/.
 
+# ---------------------------------------------------------------------------
+# WHAT THIS FILE IS, AND THE THREE THINGS A READER MUST KNOW BEFORE EDITING IT.
+#
+# Moved here 2026-08-06 from dev/LEDGER.md, which is deleted. That document was
+# 44 percent a generated rendering of this file and the rest was prose for the
+# owner, who now reads the dashboard (`make dashboard`). [L3.32-T115] found
+# exactly three passages in it that had no other home; they are below, because
+# a rule with no home is a rule that stops being followed.
+#
+# 1. THE CALIBER, AND ITS CONSEQUENCES.
+#    A size figure is the count of NON-BLANK LINES INSIDE ```agda FENCES, over
+#    git-tracked *.lagda.md under src/. Each consequence below has bitten:
+#      - Prose is NOT counted. A chapter's English and Chinese text costs real
+#        effort and appears nowhere here; the trilingual burden is an excluded
+#        row.
+#      - The archive is NOT counted. archive/ sits outside src/ precisely so
+#        every gate is structurally blind to it (D20). Retired code leaves this
+#        ledger when it is archived.
+#      - Probes are NOT counted, because probe files are never committed (D-1)
+#        and the script reads only git-tracked files. A probe that measured 395
+#        lines contributes nothing to standing, which is correct: it was thrown
+#        away.
+#      - A file being in the tree does not mean it is standing. See `retire`.
+#
+# 2. HOW A ROW GOES MISSING, and it is not by being deleted.
+#    [L3.32-T91] walked the whole chain from the delivered tree to the sentence
+#    L models GCH and found the theorem's own proof steps were not on this
+#    list. Devlin 5.5 and 5.6 had been booked as rows; a later re-itemization
+#    replaced them with two narrower items and NOBODY CHECKED THAT THE
+#    REPLACEMENT COVERED THE SAME GROUND. The proof content simply stopped
+#    being tracked, four smaller items went the same way, and the sentence
+#    itself turned out to be stated nowhere in the tree.
+#    THE LESSON: a re-itemization is a place where scope leaks. Replacing two
+#    rows with two different rows looks like bookkeeping and is a scope change.
+#    When a row is split, merged or restated, the replacement must be checked
+#    to cover what the original covered, and the check must be recorded. The
+#    gate cannot do this one: it verifies that every row has a provenance and a
+#    band, not that the rows together still cover the theorem.
+#
+# 3. STANDING IS MEASURED, NEVER WRITTEN DOWN.
+#    There is no standing figure in this file and there must never be one.
+#    `scripts/ledger.py` measures it from HEAD. A standing figure once written
+#    into prose was re-quoted unchecked for nine dispatches while the tree moved
+#    under it. Quote `python3 scripts/ledger.py --brief`, never a number found
+#    in a paragraph.
+#
+# WHAT THE GATE CANNOT CHECK, AND A CONTRIBUTOR THEREFORE OWES:
+#    - When a chapter lands, its work moves from a `remaining` row to standing.
+#      Standing updates itself; the remaining row does not. Narrow or close the
+#      row in the same commit, and say whether the chapter came in inside its
+#      band. A chapter landing over its band without that being recorded is
+#      exactly how an endpoint rises without anyone deciding it should.
+#    - When a gate returns, move its row's class from x3 toward x1.3 if it went
+#      green, and record what the red left if it did not. That reclassification
+#      is the whole economic point of gating.
+# ---------------------------------------------------------------------------
+
+
 [basis]
 # What the measurement counts, so a figure can never drift basis silently.
 unit = "non-blank lines inside ```agda fences"

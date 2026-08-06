@@ -47,15 +47,203 @@ def test_brief_parse() -> int:
     return fails
 
 
-def test_mermaid() -> int:
-    body = ("flowchart TD\n    A[\"a slot is free\"] --> B{\"freeze?\"}\n")
-    text = "prose\n\n```mermaid\n" + body + "```\n\nmore\n"
-    fails = check("extract_mermaid lifts the flowchart block",
-                  dashboard.extract_mermaid(text), body)
-    fails += check("extract_mermaid None when absent",
-                   dashboard.extract_mermaid("no fence here"), None)
-    fails += check("extract_mermaid ignores a non-flowchart mermaid block",
-                   dashboard.extract_mermaid("```mermaid\ngraph LR\nA --> B\n```"), None)
+def walk_route(node: dict, found=None) -> list[dict]:
+    """Every node of a route tree, depth first."""
+    if found is None:
+        found = []
+    found.append(node)
+    for e in node.get("edges", []):
+        walk_route(e["to"], found)
+    return found
+
+
+def test_route_builder() -> int:
+    """The route tree is built from the ledger: the campaign branch plus the
+    lever branch, each leaf populated from the lever rows, and acyclic."""
+    data = {
+        "owed": [{"id": "bridge-landing", "status": "frozen"}],
+        "lever": [
+            {"id": "B-condensation-story", "status": "REFUTED 2026-08-06"},
+            {"id": "D-order-core", "status": "PARTLY SUPERSEDED 2026-08-06"},
+            {"id": "X-gated", "status": "priced at 3x", "gated": True},
+            {"id": "rewrite-worst", "status": "GATE GREEN 2026-08-06 RULED"},
+            {"id": "A-level-kit", "status": ""},
+        ],
+    }
+    tree = dashboard.build_route(data)
+    fails = check("route tree has both branches",
+                  sorted(tree), ["campaign", "lever"])
+    nodes = walk_route(tree["campaign"]) + walk_route(tree["lever"])
+
+    def leaf_of(head: str):
+        for n in nodes:
+            if (n["kind"] == "outcome" and n["label"]
+                    and n["label"][0].startswith(head)):
+                return n.get("leaves")
+        return None
+
+    fails += check("NOT A ROUTE leaf is the refuted lever",
+                   leaf_of("NOT A ROUTE"), ["B-condensation-story"])
+    fails += check("RE-PRICE FIRST leaf is the superseded lever",
+                   leaf_of("RE-PRICE FIRST"), ["D-order-core"])
+    fails += check("PROBE FIRST leaf is the gated lever",
+                   leaf_of("D22: PROBE FIRST"), ["X-gated"])
+    fails += check("KEEP AND WAIT leaf is the waiting lever",
+                   leaf_of("KEEP AND WAIT"), ["A-level-kit"])
+    fails += check("already-in-route leaf is the ruled lever",
+                   leaf_of("already in the route"), ["rewrite-worst"])
+    freeze = tree["campaign"]["edges"][0]["to"]
+    fails += check("freeze is a decision node", freeze["kind"], "decision")
+    fails += check("freeze splits no/yes",
+                   [e["label"] for e in freeze["edges"]], ["no", "yes"])
+    fails += check("route tree is acyclic",
+                   len(nodes), len({id(n) for n in nodes}))
+    return fails
+
+
+def test_route_block_real() -> int:
+    """route_block() against the real ledger: same shape as the unit tree,
+    with the ledger named as the panel's source."""
+    tree, path, note = dashboard.route_block()
+    fails = check("route_block names dev/ledger.toml as the source",
+                  path, dashboard.LEDGER_TOML)
+    fails += check("route_block tree has both branches",
+                   sorted(tree or {}), ["campaign", "lever"])
+    return fails
+
+
+def test_route_block_no_data() -> int:
+    """A missing ledger must say so on the panel, not crash the generator."""
+    saved = dashboard.LEDGER_TOML
+    dashboard.LEDGER_TOML = Path("/nonexistent/ledger.toml")
+    try:
+        tree, path, note = dashboard.route_block()
+    finally:
+        dashboard.LEDGER_TOML = saved
+    fails = check("route_block reports no data instead of crashing",
+                  tree is None and "unreadable" in note, True)
+    return fails
+
+
+def test_render_route() -> int:
+    tree = dashboard.build_route({"owed": [], "lever": [
+        {"id": "L1", "status": "REFUTED"},
+        {"id": "L2", "status": ""},
+    ]})
+    html = dashboard.render_route(tree)
+    fails = check("render_route styles decisions and outcomes differently",
+                  'class="node decision"' in html
+                  and 'class="node outcome"' in html, True)
+    fails += check("render_route shows real lever leaves as chips",
+                   'class="leaf">L1' in html and 'class="leaf">L2' in html, True)
+    fails += check("render_route shows an empty bucket as none",
+                   'class="leaf none">none' in html, True)
+    fails += check("render_route emits no mermaid and no flowchart",
+                   "mermaid" not in html and "flowchart" not in html, True)
+    fails += check("render_route emits no script tag", "<script" not in html, True)
+    return fails
+
+
+SAMPLE_WORKBENCH = """Last written: 2026-08-06.
+
+DISPATCHED NOW
+  nothing. All slots free.
+
+QUEUED, AND WHAT RELEASES EACH
+  Bridge's 50 s tail, profiled   <- READY. The infrastructure round is closed
+                                    (owner: infrastructure first, then
+                                    development).
+  the frozen mathematics         <- D30 lifts, which needs the line above plus
+                                    exit condition (2) complete.
+
+CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH
+  the tail profiles flat            -> it is the floor. Bridge closes at 199 s.
+  the tail shows a concentrated
+  cause                             -> one more seal dispatch, priced from the
+                                       profile, before the freeze lifts.
+
+NOT DISPATCHING, AND WHY
+  the four waiting levers   the freeze stands and none is check-cost work. They
+                            wait with their measurements intact.
+  B-condensation-story      refuted by [T84]: the clause layer is not
+                            Delta-0 certifiable.
+"""
+
+
+def test_parse_workbench() -> int:
+    secs = dashboard.parse_workbench(SAMPLE_WORKBENCH)
+    fails = check("workbench parse keeps the preamble",
+                  secs[0]["preamble"].startswith("Last written: 2026-08-06"), True)
+    headings = [s.get("heading") for s in secs if "heading" in s]
+    fails += check("workbench parse finds all four headings",
+                   headings, list(dashboard.WORKBENCH_HEADINGS))
+    queued = secs[2]["items"]
+    fails += check("queued item splits on the left arrow",
+                   (queued[0]["left"], queued[0]["right"].startswith("READY.")),
+                   ("Bridge's 50 s tail, profiled", True))
+    fails += check("queued second item is its own split",
+                   queued[1]["left"], "the frozen mathematics")
+    conds = secs[3]["items"]
+    fails += check("wrapped left side stays in one item",
+                   conds[1]["left"], "the tail shows a concentrated cause")
+    fails += check("condition consequence is the right side",
+                   conds[1]["right"].startswith("one more seal dispatch"), True)
+    not_disp = secs[4]["items"]
+    fails += check("arrow-less items stay separate",
+                   len(not_disp), 2)
+    not_disp_text = "\n".join(i["text"] for i in not_disp)
+    fails += check("no-arrow items stay verbatim",
+                   "B-condensation-story" in not_disp_text, True)
+    return fails
+
+
+MALFORMED_WORKBENCH = """Preface line kept verbatim.
+
+DISPATCHED NOW
+  only one line here
+
+QUEUED, AND WHAT RELEASES EACH
+  no arrow in this item, it stays whole
+
+CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH
+  an arrow that points at nothing <-
+
+"""
+
+
+def test_workbench_drift_fallback() -> int:
+    """The fallback for a drifted file: a missing heading gets no block, an
+    item without a split stays whole, a dangling arrow is kept verbatim, and
+    no line the orchestrator wrote is dropped."""
+    secs = dashboard.parse_workbench(MALFORMED_WORKBENCH)
+    fails = check("missing heading yields no section for it",
+                  any(s.get("heading") == "NOT DISPATCHING, AND WHY"
+                      for s in secs), False)
+    queued = [s for s in secs
+              if s.get("heading") == "QUEUED, AND WHAT RELEASES EACH"][0]["items"]
+    fails += check("unsplit queued item stays whole", "left" in queued[0], False)
+    conds = [s for s in secs
+             if s.get("heading") == "CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH"][0]["items"]
+    fails += check("dangling arrow falls back to verbatim",
+                   conds[0]["text"].strip().endswith("<-"), True)
+    rendered = dashboard.render_workbench_sections(secs)
+    for line in MALFORMED_WORKBENCH.splitlines():
+        if line.strip():
+            fails += check(f"no line lost: {line.strip()[:24]}",
+                           dashboard.clean(line.strip()) in rendered, True)
+    return fails
+
+
+def test_render_workbench() -> int:
+    rendered = dashboard.render_workbench_sections(
+        dashboard.parse_workbench(SAMPLE_WORKBENCH))
+    fails = check("render lays split items out side by side",
+                  'class="wb-row"' in rendered and 'class="wb-left"' in rendered
+                  and 'class="wb-right"' in rendered, True)
+    fails += check("render keeps each heading as its own block",
+                   all(f"<h3>{h}</h3>" in rendered
+                       for h in dashboard.WORKBENCH_HEADINGS), True)
+    fails += check("render emits no script tag", "<script" not in rendered, True)
     return fails
 
 
@@ -159,8 +347,12 @@ def test_staleness() -> int:
 
 def main() -> int:
     fails = 0
-    for test in (test_brief_parse, test_mermaid, test_plan_parsing,
-                 test_remaining_rows, test_brief_naming, test_clean, test_staleness):
+    for test in (test_brief_parse, test_route_builder, test_route_block_real,
+                 test_route_block_no_data, test_render_route,
+                 test_plan_parsing, test_remaining_rows, test_brief_naming,
+                 test_clean, test_parse_workbench,
+                 test_workbench_drift_fallback, test_render_workbench,
+                 test_staleness):
         fails += test()
     print(f"\n{'PASS' if fails == 0 else 'FAIL'}: {fails} failing check(s)")
     return 1 if fails else 0

@@ -2,7 +2,7 @@
 """Informational staleness check for the generated owner's dashboard.
 
 The dashboard must be regenerated on every sub-agent return that touched its
-sources (dev/ledger.toml, dev/LEDGER.md, dev/PLAN.md, _build/briefs/*.md, or
+sources (dev/ledger.toml, dev/PLAN.md, _build/briefs/*.md, or
 the generator itself). This checker reports whether _build/dashboard.html is
 older than any of those sources.
 

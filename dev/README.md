@@ -35,7 +35,7 @@ the detailed specs it points to.
   (via `tomllib`): the booked retirement set and the remaining-work rows with their bands,
   classes and provenance. It contains **no standing figure**; standing is measured from the tree,
   never written down.
-- `LEDGER.md`: the **explanation** of the ledger, the caliber convention, what a derived row is,
+- (`LEDGER.md` and `MAINTENANCE.md` were deleted 2026-08-06 by `[T115]`'s audit: no brief ever pointed an agent at either, and their agent-facing content moved into `ledger.toml`'s header comment and `check-dev-docs.py`'s docstring. The owner reads `make dashboard`.) The caliber convention, what a derived row is,
   and the rule for keeping it current when a chapter lands or a gate returns.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
   (`L3.0.3-subsumption-probe.md` and so on), plus the archived planning sections cut from

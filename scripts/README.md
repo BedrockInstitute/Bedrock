@@ -113,7 +113,7 @@ python3 scripts/check-glossary.py --check --staged # only staged files (used by 
 ## `ledger.py`
 
 Computes the size ledger. Its data source is [dev/ledger.toml](../dev/ledger.toml), read via
-`tomllib`; the human-readable explanation is [dev/LEDGER.md](../dev/LEDGER.md). It measures
+`tomllib`; the reasoning lives in that file's own header comment. It measures
 **standing** from the tree (non-blank lines inside ` ```agda ` fences, over git-tracked
 `*.lagda.md` under `src/`, minus the D18-booked retirement set), then sums the remaining rows
 into an endpoint in both calibers.
@@ -198,7 +198,7 @@ The maintenance mechanism for the dev/ documents, built by `[L3.32-T110]`
 after a day in which every decay instance below was found by accident and
 none by a gate. The cadence, the thresholds with their arguments, and what is
 deliberately not automated are recorded in
-[dev/MAINTENANCE.md](../dev/MAINTENANCE.md).
+this script's own docstring, which is its operative home.
 
 The gate half (`make check`'s `devdocs` target) is six cheap pure-Python
 checks: a word cap on AGENTS.md (2,200), a word cap on every dev/PLAN.md
@@ -287,7 +287,7 @@ hand-written. `make dashboard` runs it and writes the self-contained page to
 `_build/dashboard.html`: one HTML file with inline CSS, no JavaScript, no
 external fonts, no network. The page has five panels:
 
-- the current route's flowchart, lifted verbatim from `dev/LEDGER.md`'s mermaid
+- the current route's flowchart, BUILT from `dev/ledger.toml`'s lever rows rather than lifted from any prose
   block (a parallel dispatch may move it; the generator scans `dev/*.md`
   defensively and shows a clear "not found" state instead of crashing);
 - the remaining lines in the ledger: standing (measured by `ledger.py --brief`
@@ -317,7 +317,7 @@ python3 scripts/dashboard.py --out _build/dashboard.html   # what `make dashboar
 
 The informational staleness check for the generated dashboard: `_build/
 dashboard.html` is stale if any of its sources is newer than it. The sources
-are `dev/ledger.toml`, `dev/LEDGER.md`, `dev/PLAN.md`, `scripts/ledger.py`,
+are `dev/ledger.toml`, `dev/PLAN.md`, `scripts/ledger.py`,
 `scripts/dashboard.py` itself, and the newest `_build/briefs/*.md` mtime.
 
 It always exits 0 and is never part of `make check`: `_build/` is git-ignored,

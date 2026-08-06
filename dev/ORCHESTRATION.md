@@ -76,7 +76,7 @@ Standing clauses that go in every build or probe brief:
   cheap enough to actually be run), which means if the orchestrator does not
   run it at the return, nobody does.
 - **Bring the ledger current BEFORE starting the gate, never during.** The
-  gate reads `dev/ledger.toml` and `dev/LEDGER.md`, so an update landing
+  gate reads `dev/ledger.toml`, so an update landing
   mid-run fails on a staleness that was true for about one second. This
   happened twice on 2026-08-06 and cost two full gate runs, roughly thirty
   minutes each, on a tree whose check cost the campaign is spending its days
@@ -180,7 +180,7 @@ and the breach is recorded in the row rather than tidied away.
 is deleted for being unfunded; a route leaves the board only by being refuted
 or done. The flowchart the owner asked for is rendered on the dashboard
 (`[L3.32-T114]`); the conditions it draws are these prose rules, which were
-moved here from `dev/LEDGER.md` when the ledger was stripped to measurements
+moved here when the ledger was stripped to measurements
 (`[L3.32-T113]`):
 
 - **While D30's freeze stands, the check-cost campaign is the only funded
