@@ -2010,14 +2010,26 @@ nothing.**
 | disease | where the cost is | the test that identifies it | measured on | cure |
 |---|---|---|---|---|
 | **consumer-bound** | consumers re-normalize what a read lemma stopped short of | the hot rows carry OTHER modules' names | `Bridge`, 939 s | seal the read lemma where consumers use it. 4.7x, then a floor |
-| **statement-bound** | the hot definition's own TYPE names a transparent construction | gut the body to a one-line application: the cost SURVIVES | `SquareLaw`, `h₀-inj` still paid 190 s | nothing consumer-side reaches it. Sealing made it 1.9x WORSE |
+| ~~**statement-bound**~~ | ~~the hot definition's own TYPE names a transparent construction~~ | **WITHDRAWN 2026-08-06.** The one exemplar was `SquareLaw`'s `h₀-inj`, and `[L3.32-T102]` showed the experiment that classified it was CONFOUNDED: `[T88]`'s "gutted" body still passed four concrete memberships `fst∈sucmax {a , b} {p} pr` at the tower position as ARGUMENTS, so the conversion checks stayed inside the row. Moving those into module parameters removed the term entirely, 374.3 s to 82 ms. **The family is body-bound.** No module in this tree is currently known to be statement-bound, and the category is kept here only as a hypothesis to be re-earned by a properly gutted experiment. | n/a |
 | **body-bound** | a body elaborates delivered machinery at a concrete argument | gut the body: the cost MOVES to wherever the concrete application went, and the total is unchanged | `Condensation`, `ambientOnly-from` 128.5 s to 0 ms with 131.1 s appearing in the lemma it now calls | only an interface change: restate the obligation so the concrete application is not built |
 
-**The gutted-body experiment separates all three in one run**, and it is cheap:
+**The gutted-body experiment separates them in one run**, and it is cheap:
 replace the hottest definition's body with the cheapest thing that still
-typechecks, and watch where the seconds go. Survives the gutting: statement.
-Moves with the application: body. Was never there but in the consumers:
-consumer.
+typechecks, and watch where the seconds go. Moves with the application: body.
+Was never there but in the consumers: consumer. Survives a PROPERLY gutted
+body: statement, and nothing in this tree has yet earned that verdict.
+
+**GUT THE ARGUMENTS, NOT JUST THE SHAPE. This is the whole trap and it cost
+this project a wrong diagnosis that stood for a day.** A one-line body that
+still PASSES concrete applications as arguments has not been gutted: the
+conversion checks are still billed to that row, and the definition reads as
+statement-bound when it is body-bound. `[T88]` reduced `h₀-inj` to a one-line
+application of a free generic lemma and concluded from its surviving 190 s
+that no body-side cure could reach it; `[T102]` then reached it, 374.3 s to 82
+ms, by moving the same four concrete memberships into module parameters where
+they are checked once at a neutral position. **The test is not "is the body
+short" but "does any concrete application remain anywhere in the definition,
+including inside its arguments".**
 
 **The diagnostic that tells you which disease you have, from `[L3.32-T97]`.**
 Read the per-definition profile and ask **whose names the hot rows carry.**
