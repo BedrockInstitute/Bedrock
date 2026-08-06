@@ -4,8 +4,8 @@ Working rules for AI coding agents contributing to Bedrock. This is the canonica
 rulebook, loaded at every session start (Claude Code reaches it through the root `CLAUDE.md`
 `@AGENTS.md` import; other agents read it directly).
 
-**This file is deliberately short.** It holds only what changes what you DO on an arbitrary
-task. Everything else is one row in [Where the rules live](#where-the-rules-live), which is
+**This file is deliberately short**, 1,959 words against the 3,450 it held before 2026-08-06.
+It holds only what changes what you DO on an arbitrary task. Everything else is one row in [Where the rules live](#where-the-rules-live), which is
 both the routing map and the index: it names each topic, its canonical home, and the checker
 that enforces it. Almost all of it IS machine-enforced, so forgetting it costs a red gate
 rather than a silent defect. A rulebook nobody finishes reading binds nothing.
@@ -59,21 +59,24 @@ machine-enforced must name its enforcement point** (which gate, which brief sect
 review step): a rule with no enforcement point is a wish. Nothing is canonical in two places;
 where this file restates a rule, the other document is canonical and this one is the summary.
 
-**The gloss column exists so you can tell WITHOUT OPENING THE FILE whether you need it.** Most
-rows are enforced by a checker in `make check`, which means forgetting them costs you a red
-gate, not a silent defect, and you do not need to hold them in mind.
+**The gloss column exists so you can tell WITHOUT OPENING THE FILE whether you need it.** Many
+rows are enforced by a checker in `make check`, so forgetting them costs a red gate rather than a
+silent defect. **Where enforcement is partial or absent the column says so**, because a row that
+claims more than its checker delivers is worse than no row at all: it converts a stated rule into
+a false sense of safety. `[L3.32-T109]`'s adversarial pass found three such rows in the first
+draft of this table and they are corrected below.
 
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
 | **Project rulings.** Architecture, process, retirement, numbered and dated | `dev/PLAN.md` section 3 | the orchestrator; briefs |
 | **Dispatch, slots, briefs, audits.** How work is sent out and how a return is checked | `dev/ORCHESTRATION.md` | the orchestrator, at the points it names |
-| **Goal status and execution history.** A ruling is a PLAN row, an episode is a JOURNAL entry | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | the registration rule |
+| **Goal status and execution history.** A ruling is a PLAN row, an episode is a JOURNAL entry. **PLAN section 11 is the complete index of goals and of dispatched tasks, one row each; JOURNAL holds what each dispatch actually found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rule 6 (register before starting, update in the same commit); review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, explained by `dev/LEDGER.md` | `scripts/ledger.py --check` |
-| **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | `scripts/lint-agda.py` (a subset); review |
+| **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
 | **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook; `--fix` handles most |
-| **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | `scripts/weave-i18n.py --check` |
-| **Term renderings.** A term the glossary lacks is settled by a dossier, never by choosing: use it consistently and NAME it in your report | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | `scripts/check-glossary.py` |
+| **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers and markers inside fences. It does NOT catch a marker embedded mid-line, and it does NOT catch a code fence inside a language group, which STYLE-i18n forbids: both pass green. One-master-per-module is enforced by Agda itself; woven copies are caught by `check-probes.py`, not by this checker |
+| **Term renderings.** A term the glossary lacks is settled by a dossier, never by choosing: use it consistently and NAME it in your report | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The dossier rule is enforced by review only**: nothing mechanical notices a term settled by choosing |
 | **Documentation taxonomy.** User docs trilingual under `docs/<lang>/`, developer docs English only, `README.md` follows the user rule. Place a new document by audience; give every top-level directory a `README.md` | this row | review |
 | **Licensing.** Three buckets declared centrally; a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
