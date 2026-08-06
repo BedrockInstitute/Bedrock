@@ -131,6 +131,48 @@ module FiniteBase where
     i#j = fst prf
     feq : f i ≡ f j
     feq = snd prf
+
+  module AbstractChase (E : ℕ → Type ℓ)
+                       (toFinE : (n : ℕ) → E n → FB.Fin n)
+                       (toFinE-inj : (n : ℕ) (m₁ m₂ : E n) → toFinE n m₁ ≡ toFinE n m₂ → m₁ ≡ m₂)
+                       (fromFinE : (n : ℕ) → FB.Fin n → E n)
+                       (fromFinE-inj : (n : ℕ) (i₁ i₂ : FB.Fin n) → fromFinE n i₁ ≡ fromFinE n i₂ → i₁ ≡ i₂) where
+
+    module NoInj (A : Type ℓ) (into : (m : ℕ) → E m → A)
+                 (into-inj : (m : ℕ) (i₁ i₂ : E m) → into m i₁ ≡ into m i₂ → i₁ ≡ i₂) where
+
+      no-inj : (n : ℕ) → (f : A → E n × E n)
+             → ((x y : A) → f x ≡ f y → x ≡ y) → Empty.⊥
+      no-inj n f finj = no-inj-Fin (n · n) g g-inj
+        where
+        g : FB.Fin (suc (n · n)) → FB.Fin (n · n)
+        g i = factor n ( toFinE n (fst (f (into (suc (n · n)) (fromFinE (suc (n · n)) i))))
+                       , toFinE n (snd (f (into (suc (n · n)) (fromFinE (suc (n · n)) i)))))
+        g-inj : (x y : FB.Fin (suc (n · n))) → g x ≡ g y → x ≡ y
+        g-inj x y e = fromFinE-inj (suc (n · n)) x y
+          (into-inj (suc (n · n))
+            (fromFinE (suc (n · n)) x) (fromFinE (suc (n · n)) y)
+            (finj Xx Xy pair-eq))
+          where
+          Xx : A
+          Xx = into (suc (n · n)) (fromFinE (suc (n · n)) x)
+          Xy : A
+          Xy = into (suc (n · n)) (fromFinE (suc (n · n)) y)
+          p-eq : (toFinE n (fst (f Xx)) , toFinE n (snd (f Xx)))
+               ≡ (toFinE n (fst (f Xy)) , toFinE n (snd (f Xy)))
+          p-eq = factor-inj n
+                   (toFinE n (fst (f Xx)) , toFinE n (snd (f Xx)))
+                   (toFinE n (fst (f Xy)) , toFinE n (snd (f Xy))) e
+          fst-eq : toFinE n (fst (f Xx)) ≡ toFinE n (fst (f Xy))
+          fst-eq = cong fst p-eq
+          snd-eq : toFinE n (snd (f Xx)) ≡ toFinE n (snd (f Xy))
+          snd-eq = cong snd p-eq
+          fst-eq′ : fst (f Xx) ≡ fst (f Xy)
+          fst-eq′ = toFinE-inj n (fst (f Xx)) (fst (f Xy)) fst-eq
+          snd-eq′ : snd (f Xx) ≡ snd (f Xy)
+          snd-eq′ = toFinE-inj n (snd (f Xx)) (snd (f Xy)) snd-eq
+          pair-eq : f Xx ≡ f Xy
+          pair-eq = ΣPathP (fst-eq′ , snd-eq′)
 ```
 
 <!--en-->
@@ -138,9 +180,11 @@ With the counting in place, the exclusion lemma: an ordinal whose index
 injects into the square of a numeral is a numeral. The infinite ordinals are
 the ones the core will run on, and for them the injection is refuted by
 chasing the injection through the count, the transitivity of `α`, and the
-pigeonhole.
+pigeonhole. The chase itself is stated once, against an abstract family
+`E n` of `n`-element types counted by the library's `Fin n`, and then
+instantiated at the numeral sites.
 <!--zh-->
-计数在手，便是排除引理：索引单射注入数码平方的序数是数码。核心将要跑在上面的恰是无穷序数，对它们，那条单射被如下步骤反驳：穿过计数、`α` 的传递性与鸽巢原理把单射追到底。
+计数在手，便是排除引理：索引单射注入数码平方的序数是数码。核心将要跑在上面的恰是无穷序数，对它们，那条单射被如下步骤反驳：穿过计数、`α` 的传递性与鸽巢原理把单射追到底。追逐本身只陈述一次，对着一族各有 `n` 个元素的抽象类型 `E n`，以库中的 `Fin n` 计数，然后在数码处实例化。
 <!--/-->
 
 ```agda
@@ -161,38 +205,15 @@ pigeonhole.
 
     no-inj-finite : (n : ℕ) → (f : ⟪ α ⟫ → ⟪ # n ⟫ × ⟪ # n ⟫)
                   → ((x y : ⟪ α ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
-    no-inj-finite n f finj = no-inj-Fin (n · n) g g-inj
-      where
-      g : FB.Fin (suc (n · n)) → FB.Fin (n · n)
-      g i = factor n ( toFin n (fst (f (numeral-into-α (suc (n · n))
-                            (fromFin (suc (n · n)) i))))
-                     , toFin n (snd (f (numeral-into-α (suc (n · n))
-                            (fromFin (suc (n · n)) i)))))
-      g-inj : (x y : FB.Fin (suc (n · n))) → g x ≡ g y → x ≡ y
-      g-inj x y e = fromFin-inj (suc (n · n)) x y
-        (numeral-into-α-inj (suc (n · n))
-          (fromFin (suc (n · n)) x) (fromFin (suc (n · n)) y)
-          (finj Xx Xy pair-eq))
-        where
-        Xx : ⟪ α ⟫
-        Xx = numeral-into-α (suc (n · n)) (fromFin (suc (n · n)) x)
-        Xy : ⟪ α ⟫
-        Xy = numeral-into-α (suc (n · n)) (fromFin (suc (n · n)) y)
-        p-eq : (toFin n (fst (f Xx)) , toFin n (snd (f Xx)))
-             ≡ (toFin n (fst (f Xy)) , toFin n (snd (f Xy)))
-        p-eq = factor-inj n
-                 (toFin n (fst (f Xx)) , toFin n (snd (f Xx)))
-                 (toFin n (fst (f Xy)) , toFin n (snd (f Xy))) e
-        fst-eq : toFin n (fst (f Xx)) ≡ toFin n (fst (f Xy))
-        fst-eq = cong fst p-eq
-        snd-eq : toFin n (snd (f Xx)) ≡ toFin n (snd (f Xy))
-        snd-eq = cong snd p-eq
-        fst-eq′ : fst (f Xx) ≡ fst (f Xy)
-        fst-eq′ = toFin-inj n (fst (f Xx)) (fst (f Xy)) fst-eq
-        snd-eq′ : snd (f Xx) ≡ snd (f Xy)
-        snd-eq′ = toFin-inj n (snd (f Xx)) (snd (f Xy)) snd-eq
-        pair-eq : f Xx ≡ f Xy
-        pair-eq = ΣPathP (fst-eq′ , snd-eq′)
+    no-inj-finite n f finj =
+      AbstractChase.NoInj.no-inj
+        (λ n → ⟪ # n ⟫)
+        toFin toFin-inj
+        fromFin fromFin-inj
+        (⟪ α ⟫)
+        (numeral-into-α)
+        (numeral-into-α-inj)
+        n f finj
 
   finite-excl : (α : S) (oα : IsOrd α) (ω∈α : ⟨ ω ∈ˢ α ⟩)
               → (β : S) → IsOrd β → ⟨ β ∈ˢ ω ⟩
@@ -826,32 +847,15 @@ module CoreAtω where
 
   no-inj-finite-ω : (n : ℕ) → (f : ⟪ ω ⟫ → ⟪ # n ⟫ × ⟪ # n ⟫)
                   → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
-  no-inj-finite-ω n f finj = no-inj-Fin (n · n) g g-inj
-    where
-    g : FB.Fin (suc (n · n)) → FB.Fin (n · n)
-    g i = factor n ( toFin n (fst (f (numeral-into-ω (suc (n · n))
-                          (fromFin (suc (n · n)) i))))
-                   , toFin n (snd (f (numeral-into-ω (suc (n · n))
-                          (fromFin (suc (n · n)) i)))))
-    g-inj : (x y : FB.Fin (suc (n · n))) → g x ≡ g y → x ≡ y
-    g-inj x y e = fromFin-inj (suc (n · n)) x y
-      (numeral-into-ω-inj (suc (n · n))
-        (fromFin (suc (n · n)) x) (fromFin (suc (n · n)) y)
-        (finj Xx Xy pair-eq))
-      where
-      Xx : ⟪ ω ⟫
-      Xx = numeral-into-ω (suc (n · n)) (fromFin (suc (n · n)) x)
-      Xy : ⟪ ω ⟫
-      Xy = numeral-into-ω (suc (n · n)) (fromFin (suc (n · n)) y)
-      p-eq : (toFin n (fst (f Xx)) , toFin n (snd (f Xx)))
-           ≡ (toFin n (fst (f Xy)) , toFin n (snd (f Xy)))
-      p-eq = factor-inj n
-               (toFin n (fst (f Xx)) , toFin n (snd (f Xx)))
-               (toFin n (fst (f Xy)) , toFin n (snd (f Xy))) e
-      pair-eq : f Xx ≡ f Xy
-      pair-eq = ΣPathP
-        ( toFin-inj n (fst (f Xx)) (fst (f Xy)) (cong fst p-eq)
-        , toFin-inj n (snd (f Xx)) (snd (f Xy)) (cong snd p-eq))
+  no-inj-finite-ω n f finj =
+    AbstractChase.NoInj.no-inj
+      (λ n → ⟪ # n ⟫)
+      toFin toFin-inj
+      fromFin fromFin-inj
+      (⟪ ω ⟫)
+      (numeral-into-ω)
+      (numeral-into-ω-inj)
+      n f finj
 
   finite-excl-ω : (β : S) → IsOrd β → ⟨ β ∈ˢ ω ⟩
                 → (f : ⟪ ω ⟫ → ⟪ β ⟫ × ⟪ β ⟫)
