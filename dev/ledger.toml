@@ -346,7 +346,7 @@ distribution_caveat = "16 surviving masters have NO timing on record at all: T86
 
 [[lever]]
 id = "rewrite-worst"
-status = "RULED 2026-08-06, sequenced behind [T88]"
+status = "GATE GREEN 2026-08-06 by [T99]; the rewrite is FUNDED at the 1.3x class on its widest term (D22)"
 target = "L.Ordinal.SquareLaw"
 target_lines = 907
 target_obligations = 273
@@ -363,6 +363,11 @@ decided_by = "[T88]'s return: if the seal reaches the benchmark this closes unsp
 # [L3.32-F6], ruled 2026-08-06: the L.Rud rewrite, batched, with the retiring
 # subtree's measured rate as the exit condition. The exit condition selects the
 # batches by itself: 16 of 22 modules are already at or below it.
+gate_result = "GREEN. The abstract finite-enumeration restatement, with the concrete numeral kept OUT of the telescope, passes in 1.28 s where [T88]'s probe 2a heap-exhausted at -M8g after 26:10."
+chase_term = "350.8 s becomes about 1.5 s, a saving of roughly 349 s, for 61 new lines against 77 removed: line-neutral. The prize is seconds, not lines."
+scope_caveat = "The chase is the pair-eq pair only. The h0-inj pair is a SEPARATE hot family at 360.6 s whose statements carry the concrete tower position, not built by T99. This gate lands SquareLaw at about 507 s, not 42; the h0/comp0 chain reshape is the remaining measured term."
+poison = "The rewrite must keep the concrete numeral presentation out of the generic telescope. That is the recorded poison ([T88] probes 2 and 2a), and it is the one thing the seal discipline must not undo."
+
 [[lever]]
 id = "rud-rewrite"
 status = "RULED 2026-08-06; the exit condition and funding rule stand, the BATCH ORDER is superseded by rud-architecture below"
