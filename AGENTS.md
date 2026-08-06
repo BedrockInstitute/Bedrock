@@ -5,9 +5,10 @@ rulebook, loaded at every session start (Claude Code reaches it through the root
 `@AGENTS.md` import; other agents read it directly).
 
 **This file is deliberately short.** It holds only what changes what you DO on an arbitrary
-task. Everything else is one line in [The index](#the-index) pointing at its canonical home,
-and almost all of that is machine-enforced by `make check`, so forgetting it is caught by a
-gate rather than by review. A rulebook nobody finishes reading binds nothing.
+task. Everything else is one row in [Where the rules live](#where-the-rules-live), which is
+both the routing map and the index: it names each topic, its canonical home, and the checker
+that enforces it. Almost all of it IS machine-enforced, so forgetting it costs a red gate
+rather than a silent defect. A rulebook nobody finishes reading binds nothing.
 
 > **This project is very early, and this guide is incomplete.** The absence of a rule here does
 > **not** mean there is no rule. When unsure, do **not** guess: stop and ask the repository
@@ -52,32 +53,39 @@ Requirements: Agda 2.8.0 with cubical 0.9, and Python 3.11+. Dependencies are pi
 
 ## Where the rules live
 
-Every rule has ONE canonical home, chosen by who enforces it. **A rule that is not
+Every rule has ONE canonical home, chosen by who enforces it. If you are looking for a rule,
+this table says where it is; if you are adding one, it says where it goes. **A rule that is not
 machine-enforced must name its enforcement point** (which gate, which brief section, which
 review step): a rule with no enforcement point is a wish. Nothing is canonical in two places;
 where this file restates a rule, the other document is canonical and this one is the summary.
 
-| Kind of rule | Canonical home | Enforced by |
+**The gloss column exists so you can tell WITHOUT OPENING THE FILE whether you need it.** Most
+rows are enforced by a checker in `make check`, which means forgetting them costs you a red
+gate, not a silent defect, and you do not need to hold them in mind.
+
+| What it covers | Canonical home | Enforced by |
 |---|---|---|
-| Measured engineering law | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
-| Project ruling (architecture, process, retirement) | `dev/PLAN.md` section 3, numbered | the orchestrator; briefs |
-| Dispatch, slots, briefs, audits | `dev/ORCHESTRATION.md` | the orchestrator, at the points it names |
-| Goal status and history | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | the registration rule |
-| Size ledger (standing, remaining, endpoint) | `dev/ledger.toml`, explained by `dev/LEDGER.md` | `scripts/ledger.py --check` |
-| Code and chapter style | `dev/STYLE-agda.md` | `scripts/lint-agda.py` (a subset); review |
-| Prose, CJK, i18n markers | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, the marker checker |
-| Term renderings | `dev/glossary.toml`, explained by `dev/GLOSSARY.md` | `scripts/check-glossary.py` |
-| Licensing | `REUSE.toml` | `reuse lint` |
-| What every contributing agent must know | this file | loaded at session start |
+| **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
+| **Project rulings.** Architecture, process, retirement, numbered and dated | `dev/PLAN.md` section 3 | the orchestrator; briefs |
+| **Dispatch, slots, briefs, audits.** How work is sent out and how a return is checked | `dev/ORCHESTRATION.md` | the orchestrator, at the points it names |
+| **Goal status and execution history.** A ruling is a PLAN row, an episode is a JOURNAL entry | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | the registration rule |
+| **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, explained by `dev/LEDGER.md` | `scripts/ledger.py --check` |
+| **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | `scripts/lint-agda.py` (a subset); review |
+| **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook; `--fix` handles most |
+| **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | `scripts/weave-i18n.py --check` |
+| **Term renderings.** A term the glossary lacks is settled by a dossier, never by choosing: use it consistently and NAME it in your report | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | `scripts/check-glossary.py` |
+| **Documentation taxonomy.** User docs trilingual under `docs/<lang>/`, developer docs English only, `README.md` follows the user rule. Place a new document by audience; give every top-level directory a `README.md` | this row | review |
+| **Licensing.** Three buckets declared centrally; a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
+| **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
+| **Tooling.** What every script does and when to run it | [scripts/README.md](scripts/README.md) | n/a |
+| **Route memos, digested literature, probe reports** and the briefs that produced them | `dev/memos/`, `dev/literature/`, `_build/` | n/a |
+| **What every contributing agent must know** | this file | loaded at session start |
 
-A fact belongs in exactly one of them: a **ruling** is a PLAN row, an **episode** is a JOURNAL
-entry, a **law** is a LESSONS entry.
-
-**`dev/LESSONS.md` BINDS NEW CODE.** Its entries are measurements, not opinions, and each one
-exists because something cost time or died. When your work discovers a new law, propose it with
-its measurement; **the orchestrator assigns the ID** (owner's delegation, 2026-08-06): the P
-series uses letters, the R, T, I, D and C series use numbers, and the next free one is the ID.
-A law is not admitted without its measurement, whoever numbers it.
+**`dev/LESSONS.md` BINDS NEW CODE.** Its entries are measurements, not opinions. When your work
+discovers a new law, propose it with its measurement; **the orchestrator assigns the ID**
+(owner's delegation, 2026-08-06): the P series uses letters, the R, T, I, D and C series use
+numbers, and the next free one is the ID. A law is not admitted without its measurement,
+whoever numbers it.
 
 ## The one rule that has cost this project most
 
@@ -144,19 +152,3 @@ Retired code is **archived, never deleted**, into `archive/` at the repository r
 across the boundary. `dev/ARCHIVE.md` records for each module what it is, why it went, where it
 was last green, **what it did right** (from measurement, not praise), and what would make it
 worth consulting again.
-
-## The index
-
-Everything below is real and binding; none of it is needed until you do that particular thing,
-and all of it is enforced by a gate rather than by your memory.
-
-| Topic | Where | Enforced by |
-|---|---|---|
-| Prose rules: the em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook. `--fix` handles most of it |
-| Literate Agda: one master `.lagda.md` per module, `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | `scripts/weave-i18n.py --check` |
-| Translation: English first, then both targets, then cross-check them against each other; meaning over calque. A term the glossary lacks is settled by a dossier, never by choosing: name it in your report | `dev/ORCHESTRATION.md` section 8, `dev/glossary.toml` | `scripts/check-glossary.py`; the dossier protocol |
-| Documentation taxonomy: user docs are trilingual under `docs/<lang>/`, developer docs are English only, `README.md` follows the user rule. Place a new document by audience, and give every top-level directory a `README.md` | this table; `dev/README.md` | review |
-| Licensing: three buckets declared centrally, a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
-| Deployment: automatic on merge to `main`, credentials are org secrets, contributors do nothing | `.github/workflows/` | n/a |
-| Tooling: what every script does and when to run it | [scripts/README.md](scripts/README.md) | n/a |
-| Route memos, digested literature, probe reports and the briefs that produced them | `dev/memos/`, `dev/literature/`, `_build/` | n/a |
