@@ -1984,6 +1984,22 @@ benchmark**, with 88 percent of it in four definitions whose STATEMENTS carry
 the tower (`[L3.32-T88]`). Same tree, same era, same kind of subject matter,
 two orders of magnitude apart.
 
+**THREE DISEASES, NOT ONE, each measured on a different module of this tree,
+and each needing a different cure. Applying the wrong one is worse than doing
+nothing.**
+
+| disease | where the cost is | the test that identifies it | measured on | cure |
+|---|---|---|---|---|
+| **consumer-bound** | consumers re-normalize what a read lemma stopped short of | the hot rows carry OTHER modules' names | `Bridge`, 939 s | seal the read lemma where consumers use it. 4.7x, then a floor |
+| **statement-bound** | the hot definition's own TYPE names a transparent construction | gut the body to a one-line application: the cost SURVIVES | `SquareLaw`, `h₀-inj` still paid 190 s | nothing consumer-side reaches it. Sealing made it 1.9x WORSE |
+| **body-bound** | a body elaborates delivered machinery at a concrete argument | gut the body: the cost MOVES to wherever the concrete application went, and the total is unchanged | `Condensation`, `ambientOnly-from` 128.5 s to 0 ms with 131.1 s appearing in the lemma it now calls | only an interface change: restate the obligation so the concrete application is not built |
+
+**The gutted-body experiment separates all three in one run**, and it is cheap:
+replace the hottest definition's body with the cheapest thing that still
+typechecks, and watch where the seconds go. Survives the gutting: statement.
+Moves with the application: body. Was never there but in the consumers:
+consumer.
+
 **The diagnostic that tells you which disease you have, from `[L3.32-T97]`.**
 Read the per-definition profile and ask **whose names the hot rows carry.**
 `Bridge`'s hot rows named OTHER modules: a consumer-side disease, cured by
