@@ -71,21 +71,6 @@ why = "its only consumer (Godel/Name) retires"
 authority = "D18"
 
 [[retire]]
-path = "src/L/Rud/CodeSet.lagda.md"
-why = "the rud coded cluster"
-authority = "D18"
-
-[[retire]]
-path = "src/L/Rud/CodePred.lagda.md"
-why = "the rud coded cluster"
-authority = "D18"
-
-[[retire]]
-path = "src/L/Rud/BaseBlock.lagda.md"
-why = "the rud coded cluster; the Finite tallies were harvested before it retires"
-authority = "D18"
-
-[[retire]]
 path = "src/L/Rud/StepInL.lagda.md"
 why = "rewritten in ideal form and archived wholesale, not kept on a survivor-consumes warrant"
 authority = "D17 + D18"
@@ -336,6 +321,29 @@ benchmark_if_hidden_counted = 0.068
 # data constructors (20 retiring, 75 surviving) and record fields (7 against
 # 38). Excluding them would move the ratio to about 4.27.
 
+
+# THE DISTRIBUTION, measured 2026-08-06, and it reverses what the aggregate
+# ratio implied. The 4.2x cross-tree figure is a MEAN, and the mean is dragged
+# by three modules. Read this before quoting the ratio as a statement about
+# code quality, because it is not one.
+#
+#   at or below the 0.074 benchmark   48 of 61 measured modules   79 percent
+#   the MEDIAN surviving module       0.012 s/obligation          6x BETTER
+#   the three worst modules           79 percent of all trunk cost
+#   the 48 cheapest modules           2.6 percent of all trunk cost
+#
+# SquareLaw alone is 54 percent, Condensation 12.8, Bridge 12.6. So the
+# surviving trunk is not broadly expensive: it is cheap almost everywhere and
+# ruinous in three places, and a campaign aimed at "code quality" would be
+# aimed at the 79 percent of modules that are already better than the tree it
+# is being compared against.
+distribution_under_benchmark = 48
+distribution_measured_modules = 61
+distribution_median_seconds_per_obligation = 0.012
+distribution_three_worst_share = 0.79
+distribution_unmeasured_modules = 16
+distribution_caveat = "16 surviving masters have NO timing on record at all: T86's profile skipped 25 modules that a concurrent process had already refreshed, and Condensation was one of them despite being the second most expensive module in the tree. The percentages above are of what is MEASURED."
+
 [[lever]]
 id = "rewrite-worst"
 status = "RULED 2026-08-06, sequenced behind [T88]"
@@ -376,10 +384,10 @@ funding_rule = "B1 is dispatched on its own merit and gates B2 and B3. No batch 
 # This row GATES rud-rewrite's B1.
 [[lever]]
 id = "rud-architecture"
-status = "ANSWERED 2026-08-06 by [T94]: a STOP. The current decomposition is close to ideal; the wholesale rewrite is not the move."
+status = "EXECUTED 2026-08-06 by the owner's ruling: the four modules are archived. The rest of the verdict (18 KEEP, 1 REWRITE) stands as recorded."
 verdict = "18 KEEP, 4 RETIRE, 1 REWRITE, against 22 standing modules."
 retire = "BaseBlock (harvested into Finite by T82), CodeSet (consumed only by CodePred), CodePred (the satisfaction-internalization cone died with the route change), OpGraph (the wall it filled was refuted by T63; NEW retirement, needs the owner's ruling)."
-retire_saving = "-440 signatures, -2057 lines, -40 s, at the price of an archival rather than a rewrite"
+retire_saving = "DELIVERED 2026-08-06: -2057 lines, -440 obligations, -40.2 s, four masters (128 to 124). Paid as an archival, not a rewrite."
 rewrite = "StepInL only, which the ledger already owed for W3 at 1.24-1.73k naive. The architecture question adds NO new rewrite work."
 levers_inside_kept = "All three are [T79]'s already-measured duplication: the Describe per-op shells behind one generic wrapper, and the Fof-f0..f15 and JF0..JF10 families collapsed to one indexed lemma."
 finding = "The question paid for itself in the opposite direction from the one expected: asking what the route should CONTAIN found 2,057 lines that should not exist at all, which no per-module seconds ranking would have surfaced, and simultaneously refuted the case for rewriting the other 10,090."
