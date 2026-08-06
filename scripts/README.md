@@ -279,3 +279,52 @@ site's stored theme). Runs as part of `make site`.
 ```sh
 python3 scripts/gen-depmap.py --src src --out _build/site --langs en,zh
 ```
+
+## `dashboard.py`
+
+The owner's dashboard, GENERATED from the canonical data and never
+hand-written. `make dashboard` runs it and writes the self-contained page to
+`_build/dashboard.html`: one HTML file with inline CSS, no JavaScript, no
+external fonts, no network. The page has five panels:
+
+- the current route's flowchart, lifted verbatim from `dev/LEDGER.md`'s mermaid
+  block (a parallel dispatch may move it; the generator scans `dev/*.md`
+  defensively and shows a clear "not found" state instead of crashing);
+- the remaining lines in the ledger: standing (measured by `ledger.py --brief`
+  from HEAD, never written down) plus the endpoint in both calibers from
+  `dev/ledger.toml`'s `[[remaining]]` rows;
+- the current cold-start seconds, current only and with no estimate, from
+  `[timing]`, `[[hot]]` and `[[tree_cost]]`;
+- the code hierarchy and where the project is in it, from `dev/PLAN.md`
+  section 11's MASTER status table (96 rows, dotted-decimal codes give the
+  tree; active/open/standing rows are highlighted);
+- the orchestrator's workbench: the task index's recent rows and verdicts,
+  `_build/briefs/*.md` mtimes and title lines, the ledger's `[[owed]]` queue
+  and the `[[lever]]` rows (the "what condition triggers what" table). Live
+  dispatch state lives in `.claude/`, which is never committed, so the panel
+  says "not available from committed data" rather than guessing.
+
+Every panel names its source and that source's mtime, so staleness is visible
+on the page itself. The mermaid flowchart is shown as its labelled source in a
+`<pre>` block rather than rendered: no renderer is vendored in the repository
+and the page must not fetch one over the network.
+
+```sh
+python3 scripts/dashboard.py --out _build/dashboard.html   # what `make dashboard` runs
+```
+
+## `check-dashboard.py`
+
+The informational staleness check for the generated dashboard: `_build/
+dashboard.html` is stale if any of its sources is newer than it. The sources
+are `dev/ledger.toml`, `dev/LEDGER.md`, `dev/PLAN.md`, `scripts/ledger.py`,
+`scripts/dashboard.py` itself, and the newest `_build/briefs/*.md` mtime.
+
+It always exits 0 and is never part of `make check`: `_build/` is git-ignored,
+so a fresh clone has no dashboard, and a gate that failed on a missing
+generated file would block every new clone. The orchestrator runs it at a
+return (`make dashboard-stale`) after regenerating with `make dashboard`.
+
+```sh
+python3 scripts/check-dashboard.py --out _build/dashboard.html
+```

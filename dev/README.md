@@ -8,9 +8,11 @@ the detailed specs it points to.
 ## Contents
 
 - `PLAN.md`: the **construction plan** for the current milestone (porting L ⊨ ZFC from
-  `fol-reification`): ratified decisions, target skeleton, rename ledger, the route
-  tree of goal codes (`[L0]` to `[L5]`), binding build constraints, and the live
-  MASTER status table. Read it before touching `src/`; work carries a goal code.
+  `fol-reification`): ratified decisions, the goal-coding rules, the two-caliber
+  discipline, and the live MASTER status table, with pointers to the archived
+  planning apparatus (target skeleton, route tree, source survey, build
+  constraints, process tensions, risks, simplification register) in `dev/memos/`.
+  Read it before touching `src/`; work carries a goal code.
 - `literature/`: the **rud-route literature collection** (`[L3.30-L1]`): classified,
   citation-carrying notes on rudimentary functions, the J-hierarchy, the Devlin
   errata, and the formalization landscape, plus the bibliography, the owner's
@@ -36,8 +38,11 @@ the detailed specs it points to.
 - `LEDGER.md`: the **explanation** of the ledger, the caliber convention, what a derived row is,
   and the rule for keeping it current when a chapter lands or a gate returns.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
-  (`L3.0.3-subsumption-probe.md` and so on). The route tree in `PLAN.md` §6.1 says which goals
-  produce one; `PLAN.md` §11 records their status. Findings that outlive the goal are promoted
-  into `PLAN.md` itself, so a memo is evidence and reasoning, never the current plan.
+  (`L3.0.3-subsumption-probe.md` and so on), plus the archived planning sections cut from
+  `PLAN.md` by `[L3.32-T113]` (the target skeleton, route tree, source survey, build
+  constraints, process tensions, risks and simplification register; each carries a status
+  header and a pointer back). `PLAN.md` §11 records the status of the goals. Findings that
+  outlive a goal are promoted into `PLAN.md` itself, so a memo is evidence and reasoning,
+  never the current plan.
 
 See [scripts/README.md](../scripts/README.md) for the tooling that consumes these.

@@ -31,7 +31,7 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs dashboard dashboard-stale gen html types site serve clean hooks test deploy venv venv-check
 
 check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids devdocs taskindex
 
@@ -85,6 +85,19 @@ taskindex:
 
 devdocs:
 	$(PY) scripts/check-dev-docs.py
+
+# The owner's dashboard, GENERATED from the canonical data (dev/ledger.toml,
+# dev/LEDGER.md, dev/PLAN.md, _build/briefs/*.md). Never hand-maintained:
+# rebuild with this target on every sub-agent return that touched a source.
+# The page is self-contained (inline CSS, no network). scripts/check-dashboard.py
+# reports staleness and is informational only, never a gate: _build/ is
+# git-ignored, so a fresh clone has no dashboard and a gate that failed on a
+# missing generated file would block every new clone.
+dashboard:
+	$(PY) scripts/dashboard.py --out _build/dashboard.html
+
+dashboard-stale:
+	$(PY) scripts/check-dashboard.py
 
 reuse:
 	$(REUSE) lint
