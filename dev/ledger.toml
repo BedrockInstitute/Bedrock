@@ -253,18 +253,19 @@ provenance = "_build/l3.32-t51-report.md"
 # ------------------------------------------------------------------
 
 [[freeze]]
-ruled = "2026-08-06"
+# D30, the craft freeze, ruled 2026-08-06. ITS TEXT IS NOT HERE. The ruling,
+# its exit condition in three parts, and the arithmetic that produced it are
+# canonical in dev/PLAN.md section 3, row D30, at 520 words. This block held a
+# restatement of it until 2026-08-06, which violated AGENTS.md's "nothing is
+# canonical in two places" in the file that exists to be the single source for
+# figures. Nothing reads this block programmatically; it is a pointer.
+#
+# What the ledger legitimately owns is the MEASUREMENT the ruling was made on,
+# and that lives in [timing], [[hot]] and [[tree_cost]] below.
 decision = "D30"
+canonical = "dev/PLAN.md section 3, row D30"
 baseline_profile_seconds = 1956
-exit_kind = "measurement-complete"
-exit_1_profiled = "every master holding >= 2 percent of tree check time has a per-definition profile on record"
-exit_2_removed = "for each, the removable fraction is MEASURED in a scratch copy, then removed or refused with a written price here"
-exit_3_craft = "P-k standing, and dev/ARCHIVE.md's practice column filled, both BEFORE the D18 archival"
-detail = "A first version set a projected 1,100 s and a 0.25 s/line cap. Both are RETIRED. The 1,100 rested on SquareLaw being 95 percent removable, which took the share of time IN Bridge's hot family for the share its fix REMOVED (79 percent); at the honest rate the projection is 1,088 to 1,121, bracketing its own threshold, and [T93] found it unreproducible from these rows. The per-line cap is retired by [L3.32-F0]: the caliber is per obligation, and at that caliber the cross-tree gap is 2.1x while one controlled fix on Bridge was 4.7x, so the cross-tree ratio has less resolving power than the effect and no threshold built on it can gate anything."
 
-# The caliber, settled by [L3.32-F0] and measured by scripts/obligations.py.
-# Kept here because every cost comparison in this file depends on which row
-# you divide by, and that choice was doing silent work for weeks.
 [caliber]
 # RULED 2026-08-06 by the owner: do NOT pick one caliber. Report several side
 # by side and read them together. A conclusion that holds at one caliber and
