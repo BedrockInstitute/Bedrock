@@ -93,6 +93,14 @@ Standing clauses that go in every build or probe brief:
   102 of 112 briefs for five days.** The emitted bundle is about 836 words
   against `dev/LESSONS.md`'s 16,972, so the brief carries the operative
   statements and the full entry is one grep away when the evidence is needed.
+- **A timed run gets the machine to itself.** Any brief that measures seconds
+  says "one Agda process, nothing else running", and the orchestrator holds the
+  second slot open while it is live. The dispatcher's ceiling of two cannot
+  enforce this, because it cannot see what an agent profiles: two
+  `--profile=definitions` runs corrupt each other's numbers, and this campaign
+  funds decisions on those numbers. `[L3.32-T88]` had to disclose a contended
+  baseline for exactly this reason. **A wrong measurement is not slow, it is
+  believed.**
 - **D30, the craft freeze, FIRST.** While it stands, **do not write a brief
   that dispatches new mathematics.** Defect repair, profiling, the fixes a
   profile licenses, and capturing the retiring tree's craft are the plan and

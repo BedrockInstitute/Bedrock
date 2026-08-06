@@ -538,6 +538,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T116 | Dashboard: render the raw panels, re-order | DELIVERED | `_build/l3.32-t116-report.md` |
 | L3.32-T117 | Dashboard made two-dimensional: merge, graph, pies | DELIVERED | `_build/l3.32-t117-report.md` |
 | L3.32-T118 | Dashboard visual pass against the taste library | DELIVERED | `_build/l3.32-t118-report.md` |
+| L3.32-T119 | Adversarial review of the dispatch mechanism | DELIVERED | `_build/l3.32-t119-report.md` |
+| L3.32-T120 | Cold start: what AGENTS.md alone conveys | DELIVERED | `_build/l3.32-t120-report.md` |
 
 ### Bookkeeping
 
