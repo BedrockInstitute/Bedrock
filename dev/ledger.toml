@@ -588,7 +588,7 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 
 [timing]
 measured = "2026-08-05, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0"
-full_cold_seconds = 1956
+full_cold_seconds = 1563
 note = """
 UPDATED 2026-08-06 after T87: 2,723 minus the measured 767 s Bridge saving.
 The original 2,723 s was profile-instrumented time (2,501 measured plus 222 recovered for
@@ -606,12 +606,12 @@ fix = "DONE (T87): a six-line opaque seal restating the read lemma to end where 
 
 [[hot]]
 module = "L.Ordinal.SquareLaw"
-seconds = 856
-lines = 907
-obligations = 250
-why = "measured 2026-08-06 by [T88]: 88 percent is ONE family of four concrete pairing-injectivity proofs (h0-inj and pair-eq, two byte-mirror copies each) whose STATEMENTS carry the sucV and omega towers. The I-4/I-5 class."
-fix = "MEASURED AND REFUTED, three ways. (1) The Bridge read-lemma restatement is NEUTRAL: with the body reduced to a one-line application of a generic lemma that is itself free, h0-inj still pays 190 s (813.7 s against an 810.7 s control), because the cost is in elaborating the statement, not in consumers re-normalizing. (2) Sealing it opaque, the exact Bridge shape, is HARMFUL: past 26:06 clean before interruption, at least 1.9x slower. (3) The abstract-carrier restatement HEAP EXHAUSTED at -M8g twice, 10:26 with instantiations and 26:10 alone. What remains is an R-35 statement reshaping of the h0/comp0 chain, over the seal stop-line, UNPRICED. Measured floor if the four rows vanished: about 100 s."
-consequence = "0.074 is known reachable by ONE TREE, not by any given theorem. This is the campaign's most important negative result and it withdraws F5's 17-52 s rewrite-side price."
+seconds = 466
+lines = 906
+obligations = 245
+why = "DISPATCH 1 OF THE REWRITE LANDED 2026-08-06 by [T101]: 859.0 s to 465.5 s, minus 393 s, 45.8 percent, for a net MINUS one line. The two pair-eq rows (371.9 s) no longer exist as definitions; the generic chase and both instantiations are each below the profile display threshold. Every exported type unchanged, verified by a full signature diff against HEAD: only the two chases' where-locals moved."
+remaining = "The h0-inj pair is untouched at 389.3 s (InitialCore 207.2 plus Core 182.2), which is now 84 percent of the module. It is statement-bound and is dispatch 2, probed before built."
+mechanism = "The whole saving is P-l: the concrete numeral presentation is kept OUT of the generic telescope, verified by grep at src/L/Ordinal/SquareLaw.lagda.md:135-143. [T88]'s form left it in and exhausted 8 GB twice."
 
 [[hot]]
 module = "L.Condensation"
