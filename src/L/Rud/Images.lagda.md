@@ -265,8 +265,9 @@ private
       b∈ₛR : ⟨ b ∈ₛ rightSlice (pr a b) ⟩
       b∈ₛR = subst (λ t → ⟨ t ∈ₛ rightSlice (pr a b) ⟩) se-path (ix∈ₛ (fp .fst , h))
 
-right-spec : (a b : V ℓ) → right (pr a b) ≡ b
-right-spec a b = cong ⋃_ (rightSlice-pair a b) ∙ ⋃singl b
+opaque
+  right-spec : (a b : V ℓ) → right (pr a b) ≡ b
+  right-spec a b = cong ⋃_ (rightSlice-pair a b) ∙ ⋃singl b
 ```
 
 <!--en-->

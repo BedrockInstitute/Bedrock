@@ -1984,6 +1984,25 @@ benchmark**, with 88 percent of it in four definitions whose STATEMENTS carry
 the tower (`[L3.32-T88]`). Same tree, same era, same kind of subject matter,
 two orders of magnitude apart.
 
+**A CURE DOES NOT TRANSFER BY ANALOGY. Re-measure it at every new site.**
+This project tried three transplants in one day and all three failed, while the
+one transplant guided by a diagnosed ROOT CAUSE succeeded:
+
+| cure | where it was measured | transplanted to | result |
+|---|---|---|---|
+| the abstract-carrier discipline | the retiring subtree, 0.074 s/obligation | `SquareLaw`'s chase | **heap exhausted at `-M8g`, twice** |
+| the same | the same | `Condensation`'s clauses | **no movement at all**, 203.3 s against 203.5 |
+| the `Bridge` read-lemma seal | `Bridge`, 939 s to 199 s | `SquareLaw`'s `h₀-inj` | **neutral transparent, 1.9x SLOWER sealed** |
+| R-38's seal-at-birth, anchored at 25.7 s per unsealed invocation | `r5a` | `L.Rud.Images`' `right-spec` | **zero**: 52.9 to 53.2 s, and `Step` 28.8 to 28.2 |
+| the abstract restatement, **redirected by root cause** | `[T98]`'s diagnosis, not by analogy | `SquareLaw`'s chase, abstracting the SOURCE rather than the target | **1.28 s where the analogy-guided form had exhausted 8 GB after 26 minutes** |
+
+The last row is the point. `[T88]` abstracted by analogy and left the concrete
+presentation in the telescope; `[T99]` abstracted where the diagnosis said the
+cost was, and the same theorem went from a heap wall to 1.28 seconds. **An
+expected figure anchored on a comparable is a HYPOTHESIS, not a price.** In the
+R-38 case the rule's own text already said "sealing only moves the cost"
+(`dev/LESSONS.md:835`), and the estimate contradicted the rule it cited.
+
 **THREE DISEASES, NOT ONE, each measured on a different module of this tree,
 and each needing a different cure. Applying the wrong one is worse than doing
 nothing.**
