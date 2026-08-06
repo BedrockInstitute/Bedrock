@@ -31,7 +31,7 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 - **Toolchain parity:** both repos use Agda 2.8.0 + cubical 0.9; all source
   modules are `--cubical --guardedness`. No toolchain migration is needed.
 
-## 0. Where the work stands (2026-08-04)
+## 0. Where the work stands (2026-08-06)
 
 **The endpoint.** `L ⊨ ZFC ∧ L ⊨ GCH`, stated on the Def tower (`isL`). The
 AC-only trophy that opened this registry is a waypoint on the way there, not
@@ -565,14 +565,40 @@ LESSONS C-12.
    ruling; the old-to-new map is recorded in §11. Exercised once so far, for
    L3, on the day the reduction levers were registered; the carve-out is spent.
 4. **What gets a code:** a goal with its own success criterion (a chapter
-   cluster, a spike, a review, a piece of legislation). Individual lemmas and
-   modules are artifacts hanging under a code, not codes themselves.
+   cluster, a spike, a review, a piece of legislation), or a dispatched task
+   (a briefed sub-agent assignment under a parent goal). Individual lemmas
+   and modules are artifacts hanging under a code, not codes themselves.
 5. **Status vocabulary:** PLANNED, ACTIVE, DONE, PARKED (viable but shelved,
    revivable), SUPERSEDED (points to successor), ABANDONED (with reason).
    Status changes are dated and updated in place; history lives in git.
 6. **Bookkeeping:** register a code in §11 *before* starting the work; update
    the §11 row in the same commit that changes a goal's status. New codes
    discovered mid-work are registered immediately, not backfilled.
+   **One-time reconciliation (2026-08-06, `[T111]`):** the dispatched-task
+   codes `[T1]` through `[T110]` were created before this section recognized
+   dispatched tasks, so they are backfilled into the task index once, as a
+   closed reconciliation of existing history. This is a single exception
+   with no force as precedent: rule 6's no-backfill requirement binds every
+   future code, and the reconciliation pass is never repeated.
+7. **Dispatched tasks carry extended codes.** A dispatched sub-agent task is
+   coded `L<goal>.<subgoal>-T<n>` under the parent goal it serves, for
+   example `[L3.32-T101]` under `[L3.32]`, with `n` the next free number in
+   the parent's task series. The code is written in brackets wherever the
+   task is named, exactly like a goal code, and obeys rule 3 (immutable and
+   append-only) like any other code.
+8. **The task index: one row per code, rows stay short.** Every dispatched
+   task code occupies exactly ONE row in the task index in §11, added in the
+   same commit that registers the code (rule 6). A row carries the code, a
+   short title, a verdict in a few words, and a pointer to the detail;
+   nothing else. **No row may exceed 200 characters**, measured as the full
+   row line from the leading `|` to the trailing `|`.
+   `scripts/check-task-index.py` enforces both one-row-per-code and the cap.
+   The cap is sized for a one-line scannable entry: code (about 11), short
+   title (about 70), verdict (about 30) and pointer (about 50) fit inside
+   200, while the failure this rule prevents, the 12,633-token cell that hid
+   the T1-T110 verdicts, is far beyond any single line. A row that outgrows
+   the cap means the detail has not moved to `dev/JOURNAL.md` or the report,
+   where it belongs.
 
 ### 6.1 The tree
 
@@ -1082,7 +1108,8 @@ CONTINUATION, each with a named future consumer.
 ## 11. MASTER status table (live)
 
 One row per goal code; update the row in the same commit that changes the
-status (§6.0 rule 6). Bookkeeping lines follow the table.
+status (§6.0 rule 6). Dispatched-task codes are indexed separately below,
+one row per code (§6.0 rules 7 and 8). Bookkeeping lines follow the table.
 
 | Code | Goal | Status |
 |---|---|---|
@@ -1182,6 +1209,129 @@ status (§6.0 rule 6). Bookkeeping lines follow the table.
 | L8.0 | Foundation refactor at T8 scale, on the post-archival tree | PLANNED (candidates re-examined, not inherited) |
 | L8.1 | Line-by-line polish over the whole tree | PLANNED |
 | L8.2 | **THE GATE**: report to the owner before any prose phase | PLANNED (the owner adds further code-shaping work here; `[L4.1]` waits on it) |
+
+### Task index (one row per dispatch, §6.0 rules 7 and 8)
+
+The dispatched tasks under `[L3.32]`, one row per code. The verdict cell is a
+few words; the detail lives in the named report, `dev/JOURNAL.md`, the
+deliverable or the brief. Rows T1-T110 were backfilled once by `[T111]` under
+the one-time reconciliation clause of §6.0 rule 6; `[T111]` is that
+reconciliation task itself and is in progress. `scripts/check-task-index.py`
+enforces one row per code and the 200-character cap (§6.0 rule 8).
+
+| Code | Task | Verdict | Detail |
+|---|---|---|---|
+| L3.32-T1 | The R4 corrective stop | DELIVERED | `dev/JOURNAL.md` |
+| L3.32-T2 | Fresh-generic Sigma-1 face probe (gates 1+2) | GO | `_build/l3.32-t2-report.md` |
+| L3.32-T3 | Choice re-home probe (gate 5) | GO | `_build/l3.32-t3-report.md` |
+| L3.32-T4 | Retirement design recon (gate 6) | PARTIAL | `_build/l3.32-t4-report.md` |
+| L3.32-T5 | W7 scoping recon | COMPLETE | `_build/l3.32-t5-report.md` |
+| L3.32-T6 | Foundation rewrite recon | COMPLETE | `_build/l3.32-t6-report.md` |
+| L3.32-T7 | Wholesale-retirement recon | REWRITE-AND-RETIRE | `_build/l3.32-t7-report.md` |
+| L3.32-T8 | Foundation kit batch (C3,C1,C4,C5; C2 gate) | SPLIT | `_build/l3.32-t8-report.md` |
+| L3.32-T9 | W7 cardinal gate, run | RED | `_build/l3.32-t9-report.md` |
+| L3.32-T10 | StepInL ideal-form gate (T7 gate 1) | NO-GO | `_build/l3.32-t10-report.md` |
+| L3.32-T11 | Realize-strip compile gate | RED | `_build/l3.32-t11-report.md` |
+| L3.32-T12 | Geology corpus fetch | DELIVERED | `dev/literature/geology.md` |
+| L3.32-T13 | Archive infrastructure | DELIVERED | `dev/JOURNAL.md`; `archive/` |
+| L3.32-T14 | W3 recon: internal order, priced | COMPLETE | `_build/l3.32-t14-report.md` |
+| L3.32-T15 | Face chapter batch 1 (W1 core) | DELIVERED | `_build/l3.32-t15-report.md` |
+| L3.32-T16 | Ordinal pairing chapter | DELIVERED | `_build/l3.32-t16-report.md` |
+| L3.32-T17 | Shape-count probe | GO | `_build/l3.32-t17-report.md` |
+| L3.32-T18 | GCH scope gate | NO-GO | `_build/l3.32-t18-report.md` |
+| L3.32-T19 | W3's gate, run | RED | `_build/l3.32-t19-report.md` |
+| L3.32-T20 | Face's first instantiation (W2 gate) | GO | `_build/l3.32-t20-report.md` |
+| L3.32-T21 | Square law's core, probed | GO (re-priced) | `_build/l3.32-t21-report.md` |
+| L3.32-T22 | W3 sealing design probe | SPLIT | `_build/l3.32-t22-report.md` |
+| L3.32-T23 | Bridge's remaining rows, gated | GO | `_build/l3.32-t23-report.md` |
+| L3.32-T24 | Re-home's carve half, gated | CORRECTED | `_build/l3.32-t24-report.md` |
+| L3.32-T25 | Bridge's successor hypothesis, gated | SPLIT | `_build/l3.32-t25-report.md` |
+| L3.32-T26 | Shared pair kit | GO | `_build/l3.32-t26-report.md` |
+| L3.32-T27 | Count layer, productionized | DELIVERED | `_build/l3.32-t27-report.md` |
+| L3.32-T28 | Code-set supplier, ideal form | REFUTED | `_build/l3.32-t28-report.md` |
+| L3.32-T29 | Realize cone's retirement, executed | DELIVERED | `_build/l3.32-t29-report.md` |
+| L3.32-T30 | Level formula (face's first consumer) | DELIVERED | `_build/l3.32-t30-report.md` |
+| L3.32-T31 | Square law, discharged | DELIVERED (transfer blocked) | `_build/l3.32-t31-report.md` |
+| L3.32-T32 | Bridge's sigma at a rud carrier | DELIVERED | `_build/l3.32-t32-report.md` |
+| L3.32-T33 | Condensation crossing | DELIVERED | `_build/l3.32-t33-report.md` |
+| L3.32-T34 | DefInJ and SatTable re-type | DELIVERED | `_build/l3.32-t34-report.md` |
+| L3.32-T35 | Reshaped reduction | DELIVERED | `_build/l3.32-t35-report.md` |
+| L3.32-T36 | Level formula's remaining two clauses | DELIVERED | `_build/l3.32-t36-report.md` |
+| L3.32-T37 | Cardinal predicates, built generally | DELIVERED | `_build/l3.32-t37-report.md` |
+| L3.32-T38 | Terminology dossier (14 renderings) | DELIVERED | `dev/literature/terms-2026-08.md` |
+| L3.32-T39 | Mostowski collapse | DELIVERED | `_build/l3.32-t39-report.md` |
+| L3.32-T40 | Definable hull (W7's other half) | DELIVERED | `_build/l3.32-t40-report.md` |
+| L3.32-T41 | Glossary review (119 entries) | DELIVERED | `dev/literature/glossary-review-2026-08.md` |
+| L3.32-T42 | W3 chapter A: order-family table | DELIVERED | `_build/l3.32-t42-report.md` |
+| L3.32-T43 | Where counting calls the square law | RED (wall confirmed) | `_build/l3.32-t43-report.md` |
+| L3.32-T44 | W3 chapter B: order formula and adequacy | SPLIT | `_build/l3.32-t44-report.md` |
+| L3.32-T45 | Bridge's two sequence residues | STOP | `_build/l3.32-t45-report.md` |
+| L3.32-T46 | Cardinal chapter's counting side | DELIVERED | `_build/l3.32-t46-report.md` |
+| L3.32-T47 | Truncated square law at initial ordinals | DELIVERED | `_build/l3.32-t47-report.md` |
+| L3.32-T48 | Is W3's internal order reachable? | GO (route corrected) | `_build/l3.32-t48-report.md` |
+| L3.32-T49 | Stale-obstruction sweep | COMPLETE (15 stale) | `_build/l3.32-t49-report.md` |
+| L3.32-T50 | W3 gate: sequence-witness order at omega | COMPLETE | `_build/l3.32-t50-report.md` |
+| L3.32-T51 | Condensation crossing's transfers | COMPLETE | `_build/l3.32-t51-report.md` |
+| L3.32-T52 | Carried sequence: one object, two residues | GO (cheaper) | `_build/l3.32-t52-report.md` |
+| L3.32-T53 | Carried-sequence gate at the first limit | SPLIT | `_build/l3.32-t53-report.md` |
+| L3.32-T54 | Levy-certificate gate | SPLIT | `_build/l3.32-t54-report.md` |
+| L3.32-T55 | Ledger re-sum | COMPLETE | `_build/l3.32-t55-report.md` |
+| L3.32-T56 | Variable-form op-graph frame | DELIVERED | `_build/l3.32-t56-report.md` |
+| L3.32-T57 | W7 residue: itemized row with a gate | COMPLETE (band corrected) | `_build/l3.32-t57-report.md` |
+| L3.32-T58 | Adversarial review of the dispatch wrapper | COMPLETE (18 defects) | `_build/l3.32-t58-report.md` |
+| L3.32-T59 | Tower-induction gate at omega | RED (gate) | `_build/l3.32-t59-report.md` |
+| L3.32-T60 | Which disciplines can be tooled | COMPLETE | `_build/l3.32-t60-report.md` |
+| L3.32-T61 | Honest-segment tower story, rud carrier | DELIVERED | `_build/l3.32-t61-report.md` |
+| L3.32-T62 | Init boundary correction, pairing re-pointing | DELIVERED | `_build/l3.32-t62-report.md` |
+| L3.32-T63 | Four inexpressible operations | REFUTED (wall not real) | `_build/l3.32-t63-report.md` |
+| L3.32-T64 | W1' fundability: build plan | SPLIT (fundable) | `_build/l3.32-t64-report.md` |
+| L3.32-T65 | Close Q-lim at the first limit | STOP (refuted step 3) | `_build/l3.32-t65-report.md` |
+| L3.32-T66 | Def-step gate | GO | `_build/l3.32-t66-report.md` |
+| L3.32-T67 | Retirement boundary: nine crossings | COMPLETE | `_build/l3.32-t67-report.md` |
+| L3.32-T68 | One-way successor clause, domain bound | DELIVERED | `_build/l3.32-t68-report.md` |
+| L3.32-T69 | W1' D2: Sigma-1 form at the set carrier | GO | `_build/l3.32-t69-report.md` |
+| L3.32-T70 | W1' D4+D5: class carrier, AmbientOnly | SPLIT | `_build/l3.32-t70-report.md` |
+| L3.32-T71 | W7's cheap residue: Cantor, 5.4 half | DELIVERED | `_build/l3.32-t71-report.md` |
+| L3.32-T72 | Retirement set re-derived, rewrite side | COMPLETE (SatSets out) | `_build/l3.32-t72-report.md` |
+| L3.32-T73 | Adversarial review of the notification path | COMPLETE (defects fixed) | `_build/l3.32-t73-report.md` |
+| L3.32-T74 | The landing: close Q-lim at omega | DELIVERED | `_build/l3.32-t74-report.md` |
+| L3.32-T75 | The sndIn defect: comment or code? | DEFECT CONFIRMED | `_build/l3.32-t75-report.md` |
+| L3.32-T76 | Fix sndIn and audit its consumers | DELIVERED | `_build/l3.32-t76-report.md` |
+| L3.32-T77 | Rewrite the structural story | STOP (price) | `_build/l3.32-t77-report.md` |
+| L3.32-T78 | Re-scope the StepInL rewrite | COMPLETE (re-scope) | `_build/l3.32-t78-report.md` |
+| L3.32-T79 | Standing tree: big compression levers | COMPLETE | `_build/l3.32-t79-report.md` |
+| L3.32-T80 | Lever A: level-story clause kit | DELIVERED | `_build/l3.32-t80-report.md` |
+| L3.32-T81 | CSB literature survey | COMPLETE (keep ours) | `_build/l3.32-t81-report.md` |
+| L3.32-T82 | Finite-tally harvest | DELIVERED | `_build/l3.32-t82-report.md` |
+| L3.32-T83 | Knaster-Tarski or g-point for CSB? | NO RETURN RECORDED | `_build/briefs/l3.32-t83-brief.md` |
+| L3.32-T84 | Lever B: condensation story onto the kit | STOP (D-10) | `_build/l3.32-t84-report.md` |
+| L3.32-T85 | Re-design the tower-induction gate | GREEN (gate re-design) | `_build/l3.32-t85-report.md` |
+| L3.32-T86 | Cold check: can sealing get under five? | COMPLETE | `_build/l3.32-t86-report.md` |
+| L3.32-T87 | Bridge read-lemma fix, in place | DELIVERED | `_build/l3.32-t87-report.md` |
+| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | `_build/l3.32-t88-report.md` |
+| L3.32-T89 | Repair the structural story in place | FIXED; COOLING REFUTED | `_build/l3.32-t89-report.md` |
+| L3.32-T90 | Design the below-lim build | GO (first limit) | `_build/l3.32-t90-report.md` |
+| L3.32-T91 | Walk the whole path to L ⊨ GCH | COMPLETE (owed gaps) | `_build/l3.32-t91-report.md` |
+| L3.32-T92 | Below-lim gate at the first limit | STOPPED (before firing) | `dev/PLAN.md:71` |
+| L3.32-T93 | Find the next Bridge by reading | COMPLETE | `_build/l3.32-t93-report.md` |
+| L3.32-T94 | What the rud route should contain | COMPLETE | `_build/l3.32-t94-report.md` |
+| L3.32-T95 | Adversarial review of the caliber | COMPLETE (7 defects) | `_build/l3.32-t95-report.md` |
+| L3.32-T96 | Last untested lever: Condensation's 203 s | COMPLETE (priced refusal) | `_build/l3.32-t96-report.md` |
+| L3.32-T97 | Archaeology: how the internalization got cheap | COMPLETE | `_build/l3.32-t97-report.md` |
+| L3.32-T98 | Root cause: presentation or mathematics? | COMPLETE | `_build/l3.32-t98-report.md` |
+| L3.32-T99 | Burn-the-boats gate: abstract chase | GREEN | `_build/l3.32-t99-report.md` |
+| L3.32-T100 | Sweep outside the three theorems | COMPLETE (clean bill) | `_build/l3.32-t100-report.md` |
+| L3.32-T101 | Burn the boats, dispatch 1: SquareLaw chase | DELIVERED | `_build/l3.32-t101-report.md` |
+| L3.32-T102 | Dispatch 2 gate: h₀ without the tower | GREEN | `_build/l3.32-t102-report.md` |
+| L3.32-T103 | Burn the boats, dispatch 2b: h₀ reshape | DELIVERED | `_build/l3.32-t103-report.md` |
+| L3.32-T104 | Does T102's cure apply to Condensation? | OVERTURNED (by T106) | `_build/l3.32-t104-report.md` |
+| L3.32-T105 | Adversarial review: context layering | REFUTED (diagnosis) | `_build/l3.32-t105-report.md` |
+| L3.32-T106 | Dispatch 3 gate: measure the lift | NO (gate; refutes T104) | `_build/l3.32-t106-report.md` |
+| L3.32-T107 | Dispatch 3: Crossing parameterization | DELIVERED | `_build/l3.32-t107-report.md` |
+| L3.32-T108 | Move episode content into JOURNAL | DONE | `_build/l3.32-t108-report.md` |
+| L3.32-T109 | Adversarial review of slimmed AGENTS.md | COMPLETE | `_build/l3.32-t109-report.md` |
+| L3.32-T110 | Maintenance mechanism for dev/ docs | IN PROGRESS | `_build/l3.32-t110-report.md` |
+| L3.32-T111 | Task index: one code, one row (this dispatch) | IN PROGRESS | `_build/l3.32-t111-report.md` |
 
 ### Bookkeeping
 

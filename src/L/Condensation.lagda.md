@@ -909,13 +909,18 @@ ambientOnly-from tl vl v b ob h =
 -- The crossing, assembled: at a transitive set carrier, one transfer at M and
 -- the ambient form at L give the crossing obligation for the level formula.
 module Crossing (M : S) (Mtr : isTransV M)
-                (h : BoundedFo (AtCarrier.InM M Mtr)
-                       (LsetGraphAt {2} zero (suc zero))) where
+                (Φ : Formula Sʟ 2) (h : BoundedFo (AtCarrier.InM M Mtr) Φ) where
 
   open AtCarrier M Mtr
-  open Transport (LsetGraphAt {2} zero (suc zero)) h
+  open Transport Φ h
 
-  crossOut-from : TransferM lifted → AmbientOnly → CrossOut lifted
+  -- The ambient-reading form of the module's formula, at the class carrier.
+  AmbientOnly-Φ : Type (ℓ-suc ℓ)
+  AmbientOnly-Φ = (v b : S) → IsOrd b
+                → ⟨ (v ∷ b ∷ []) AbsL.⊨ᵛ Φ ⟩
+                → v ≡ Lset b
+
+  crossOut-from : TransferM lifted → AmbientOnly-Φ → CrossOut lifted
   crossOut-from tm ao v b ob hv =
     ao (fst v) (fst b) ob
       (subst ⟨_⟩ (amb-agree (fst v ∷ fst b ∷ [])) (tm v b hv))

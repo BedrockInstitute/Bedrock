@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids
+check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids devdocs taskindex
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -74,6 +74,17 @@ tree:
 ruleids:
 	$(PY) scripts/check-rule-ids.py
 	$(PY) scripts/rules.py --check
+
+# The dev/ documents decay; [L3.32-T110] built the maintenance mechanism so
+# the decay is found here, not by accident. Six cheap subchecks: size caps on
+# AGENTS.md and PLAN cells, routing of imported LESSONS entries, the section 0
+# "as of" date, memo STATUS form, and that AGENTS.md's named enforcers exist.
+# On-demand sweep (never a gate): scripts/check-dev-docs.py --sweep.
+taskindex:
+	$(PY) scripts/check-task-index.py
+
+devdocs:
+	$(PY) scripts/check-dev-docs.py
 
 reuse:
 	$(REUSE) lint
