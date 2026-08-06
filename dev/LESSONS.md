@@ -1994,7 +1994,17 @@ one transplant guided by a diagnosed ROOT CAUSE succeeded:
 | the same | the same | `Condensation`'s clauses | **no movement at all**, 203.3 s against 203.5 |
 | the `Bridge` read-lemma seal | `Bridge`, 939 s to 199 s | `SquareLaw`'s `h₀-inj` | **neutral transparent, 1.9x SLOWER sealed** |
 | R-38's seal-at-birth, anchored at 25.7 s per unsealed invocation | `r5a` | `L.Rud.Images`' `right-spec` | **zero**: 52.9 to 53.2 s, and `Step` 28.8 to 28.2 |
+| `[T102]`'s telescope lift | `SquareLaw`'s `h₀` pair, 374.3 s to 82 ms | `Condensation`'s three pieces, argued by `[T104]` from resemblance, **unmeasured** | **REFUTED by `[T106]`**: piece 1 made the module WORSE, 204.7 s to 308.8; piece 3's cost MOVED rather than went; piece 2's export-preserving form is worse than the control |
 | the abstract restatement, **redirected by root cause** | `[T98]`'s diagnosis, not by analogy | `SquareLaw`'s chase, abstracting the SOURCE rather than the target | **1.28 s where the analogy-guided form had exhausted 8 GB after 26 minutes** |
+
+**Five transplants on 2026-08-06, four failed, and the four failures share one
+shape: somebody reasoned that a cure should apply and did not measure it.** The
+fourth is the sharpest, because the ORCHESTRATOR endorsed it: `[T104]` argued
+in prose that `[T102]`'s lift would carry to `Condensation`, ran no Agda, and
+said so honestly; the orchestrator recorded the earlier verdict as overturned
+before anything was measured, and `[T106]` then measured it and restored the
+original. **A design recon that runs nothing produces a hypothesis, and writing
+it into the register as a finding is the error, not the recon.**
 
 The last row is the point. `[T88]` abstracted by analogy and left the concrete
 presentation in the telescope; `[T99]` abstracted where the diagnosis said the
