@@ -29,9 +29,9 @@ two disagree.*
 
 | | lines |
 |---|---:|
-| tracked masters (124 files) | 47,336 |
+| tracked masters (124 files) | 47,340 |
 | booked retirements, D18 (48 files) | 28,876 |
-| **standing** | **18,460** |
+| **standing** | **18,464** |
 
 ### Remaining work
 
@@ -56,8 +56,8 @@ than a cited figure and must never be quoted as though a report had measured it.
 
 | caliber | band | centre |
 |---|---:|---:|
-| naive | 24.95-31.18k | 28.06k |
-| calibrated | 31.60-47.17k | 39.39k |
+| naive | 24.95-31.18k | 28.07k |
+| calibrated | 31.60-47.18k | 39.39k |
 
 Against the 25k reference line, **recorded and not argued from** (D26):
 the naive band's pessimistic corner sits +6.18k from the line, and the calibrated
@@ -286,14 +286,15 @@ caliber has to be agreed on for it to mean anything: `[T87]`'s `Bridge` fix was
 **4.7x with the mathematics held fixed**. But the cross-tree ratio is a real
 signal and is not dropped.
 
-So the freeze's exit condition carries **no projected number**. The first
-version set 1,100 s and a 0.25 s/line cap; both are withdrawn. The 1,100 rested
-on `SquareLaw` being 95 percent removable, which took the share of time IN
-`Bridge`'s hot family for the share its fix REMOVED (79 percent). At the honest
-rate the projection is 1,088 to 1,121, **bracketing its own threshold**, and
-`[T93]` found it unreproducible from these rows independently. The condition is
-measurement-complete instead, and stricter for it: nothing earns a pass by
-sitting under a line.
+**The freeze's exit condition is not restated here.** It is canonical in
+`dev/PLAN.md` section 3, row D30, and this document is the wrong home for it:
+the ledger owns the MEASUREMENT a ruling was made on, never the ruling. What
+belongs here is why the withdrawn version of that condition failed on the
+ledger's own arithmetic, because that is a lesson about these figures. It set
+1,100 s from `SquareLaw` being 95 percent removable, which took the share of
+time IN `Bridge`'s hot family for the share its fix REMOVED, 79 percent. At the
+honest rate the projection is 1,088 to 1,121, **bracketing its own threshold**,
+and `[T93]` found it unreproducible from these rows independently.
 
 ### The part of this that cannot be re-run later
 
