@@ -11,19 +11,20 @@ never a gate).
 
 Sources, all machine-readable:
   dev/ledger.toml      [[remaining]] rows, [timing], [[hot]], [[tree_cost]],
-                       [[lever]] rows, [[owed]] rows
-  dev/LEDGER.md        the "Which route, under which condition" mermaid block
+                       [[lever]] rows, [[owed]] rows (the route graph's
+                       decision leaves come from the lever and owed rows)
   dev/PLAN.md          section 11: MASTER status table (96 rows) and the Task
                        index (112 rows)
   _build/briefs/*.md   mtimes and title lines for the workbench panel
   scripts/ledger.py    standing, measured from HEAD (the one number this page
-                       must not compute itself; dev/LEDGER.md explains why)
+                       must not compute itself; ledger.toml's header says why)
 
 The page is self-contained: one HTML file, inline CSS, no JavaScript, no
-external fonts or network. The flowchart is emitted as its labelled mermaid
-source in a <pre> block, not rendered: no mermaid renderer is vendored in the
-repository and the page must not fetch one over the network. The source IS the
-canonical data, so showing it verbatim is the honest choice.
+external fonts or network. The route flowchart is rendered as semantic HTML
+with CSS: the structure is fixed in the generator, so a hand-laid-out diagram
+beats a general layout engine, and the page needs neither mermaid nor a
+network fetch. The workbench's hand-written half is parsed into blocks; a line
+the parser cannot place is shown verbatim, never dropped.
 
 Every panel carries the source path and that source's mtime, so a stale panel
 is visible rather than misleading. A panel whose source is missing or
@@ -50,7 +51,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LEDGER_TOML = ROOT / "dev" / "ledger.toml"
-LEDGER_MD = ROOT / "dev" / "LEDGER.md"
 PLAN_MD = ROOT / "dev" / "PLAN.md"
 LEDGER_PY = ROOT / "scripts" / "ledger.py"
 BRIEFS_DIR = ROOT / "_build" / "briefs"
@@ -59,7 +59,7 @@ DEFAULT_OUT = ROOT / "_build" / "dashboard.html"
 # Sources the generated page derives from, in staleness-check order. The briefs
 # directory is represented by its newest file's mtime, which is what actually
 # matters: an edited brief is newer than the page and must trigger a rebuild.
-SOURCE_FILES = (LEDGER_TOML, LEDGER_MD, PLAN_MD, LEDGER_PY, Path(__file__))
+SOURCE_FILES = (LEDGER_TOML, PLAN_MD, LEDGER_PY, Path(__file__))
 
 EM_DASH = "\u2014"  # banned in every language, including the HTML
 HORIZONTAL_BAR = "\u2015"  # banned too; the prose linter treats it as one
@@ -170,42 +170,24 @@ def lever_what(row: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# The route flowchart (mermaid source, lifted verbatim)
+# The route flowchart: semantic HTML, built from the ledger
 # ---------------------------------------------------------------------------
 
-MERMAID_FENCE = re.compile(r"```mermaid\s*\n(.*?)```", re.S)
 
+def build_route(data: dict) -> dict:
+    """The route decision tree, built from the ledger.
 
-def extract_mermaid(text: str) -> str | None:
-    """The first mermaid block whose first non-empty line starts with
-    'flowchart'. Returns the block body verbatim, or None when the route
-    flowchart is not in this text."""
-    for block in MERMAID_FENCE.findall(text):
-        first = next((ln.strip() for ln in block.splitlines() if ln.strip()), "")
-        if first.lower().startswith("flowchart"):
-            return block
-    return None
-
-
-def route_block() -> tuple[str | None, Path | None, str]:
-    """BUILD the route flowchart from the ledger, do not lift a written one.
-
-    A first version lifted a hand-written mermaid block out of dev/LEDGER.md.
-    That block was correctly deleted the same day: a diagram is orientation for
-    the owner, and the agent documents are being stripped to what changes what
-    an agent DOES. Lifting it also had the defect every hand-written diagram
-    has, which this project has now paid for twice in one day: it goes stale
-    silently, and a flowchart with a stale node is worse than no flowchart.
-
-    So the DECISION STRUCTURE is fixed here, because it is the ruled procedure
+    The DECISION STRUCTURE is fixed here, because it is the ruled procedure
     (D22, D26, D30) and does not drift, while every LEAF is read from
     dev/ledger.toml. A lever that is refuted, superseded or funded shows as
     such the moment its row changes, with no second place to update.
-    """
-    data = load_ledger()
-    if not data:
-        return None, None, "dev/ledger.toml is unreadable"
 
+    The tree is rendered as semantic HTML with CSS (see render_route), so no
+    layout engine is needed: the two branches, every decision and every branch
+    label are known to this code. A node is a dict with a kind (start,
+    decision or outcome), a label (list of lines), optional leaves (lever ids
+    an outcome names) and optional edges (label plus child node).
+    """
     levers = data.get("lever", [])
 
     def bucket(l: dict) -> str:
@@ -228,44 +210,148 @@ def route_block() -> tuple[str | None, Path | None, str]:
     for l in levers:
         groups.setdefault(bucket(l), []).append(l.get("id", "?"))
 
-    def names(key: str) -> str:
-        got = groups.get(key, [])
-        return "<br/>".join(got) if got else "none"
-
     frozen = [o for o in data.get("owed", []) if o.get("status") == "frozen"]
     freeze_note = (f"{len(frozen)} owed row(s) frozen" if frozen
                    else "nothing frozen")
 
-    body = f"""flowchart TD
-    Start["a slot is free"] --> Freeze{{"is D30's freeze lifted?"}}
-    Freeze -- "no" --> Cost["THE CHECK-COST CAMPAIGN<br/>the only funded work<br/>({freeze_note})"]
-    Cost --> Exit["exit condition: every module at or<br/>above 2 percent of tree cost profiled,<br/>every removable second removed or<br/>refused with a written price,<br/>and the craft recorded"]
-    Exit --> Freeze
-    Freeze -- "yes" --> Math["THE FROZEN MATHEMATICS RESUMES"]
-    Math --> Bridge["the bridge landing: below-lim"]
-    Bridge --> Rehome["the choice re-home"]
-    Rehome --> AC["AC on surviving machinery"]
-    Math --> StepInL["the StepInL rewrite"]
-    StepInL --> W3["W3, the internal well-ordering"]
-    W3 --> GCH["W7's residue, then the GCH sentence"]
+    def decision(label: list[str], edges=None) -> dict:
+        return {"kind": "decision", "label": label, "edges": edges or []}
 
-    Start --> Lever{{"is a compression lever<br/>being considered?"}}
-    Lever --> Refuted{{"has it been refuted?"}}
-    Refuted -- "yes" --> Closed["NOT A ROUTE<br/>{names('refuted')}"]
-    Refuted -- "no" --> Superseded{{"has ruled work<br/>already done part of it?"}}
-    Superseded -- "yes" --> Reprice["RE-PRICE FIRST<br/>{names('superseded')}"]
-    Superseded -- "no" --> Gated{{"priced at 3x with an<br/>unmeasured widest term?"}}
-    Gated -- "yes" --> Probe["D22: PROBE FIRST<br/>{names('gated')}"]
-    Gated -- "no" --> Touched{{"is its region being touched<br/>by ruled work anyway?"}}
-    Touched -- "yes" --> Take["TAKE IT NOW<br/>marginal cost is near zero<br/>when the file is already open"]
-    Touched -- "no" --> Need{{"does the endpoint projection<br/>need the lines?"}}
-    Need -- "no" --> Wait["KEEP AND WAIT<br/>{names('waiting')}<br/>D26: a line overage never changes<br/>the ROUTE; a lever is compression<br/>WITHIN it"]
-    Need -- "yes" --> Rank["rank by net lines per unit of risk,<br/>cheapest first"]
+    def outcome(label: list[str], leaves=None, edges=None) -> dict:
+        node = {"kind": "outcome", "label": label, "edges": edges or []}
+        if leaves is not None:
+            node["leaves"] = leaves
+        return node
 
-    Lever --> InRoute["already in the route:<br/>{names('in-route')}"]"""
-    return body, LEDGER_TOML, ("built from dev/ledger.toml's lever rows and owed "
-                               "statuses, not lifted from prose: a leaf changes "
-                               "the moment its row does")
+    def edge(label: str, to: dict) -> dict:
+        return {"label": label, "to": to}
+
+    freeze = decision(["is D30's freeze lifted?"])
+    # The exit condition loops back to the freeze question. It is rendered as
+    # a terminal reference to that question, not as a real cycle, so the tree
+    # stays acyclic and the page generator cannot recurse forever.
+    back_to_freeze = {"kind": "decision",
+                      "label": ["is D30's freeze lifted?"], "edges": []}
+    freeze["edges"] = [
+        edge("no", outcome(
+            ["THE CHECK-COST CAMPAIGN", "the only funded work",
+             f"({freeze_note})"],
+            edges=[edge("until it holds", outcome([
+                "exit condition: every module at or above 2 percent of",
+                "tree cost profiled, every removable second removed or",
+                "refused with a written price, and the craft recorded",
+            ], edges=[edge("repeat", back_to_freeze)]))],
+        )),
+        edge("yes", outcome(["THE FROZEN MATHEMATICS RESUMES"], edges=[
+            edge("", outcome(["the bridge landing: below-lim"], edges=[
+                edge("", outcome(["the choice re-home"], edges=[
+                    edge("", outcome(["AC on surviving machinery"])),
+                ])),
+            ])),
+            edge("", outcome(["the StepInL rewrite"], edges=[
+                edge("", outcome(["W3, the internal well-ordering"], edges=[
+                    edge("", outcome(["W7's residue, then the GCH sentence"])),
+                ])),
+            ])),
+        ])),
+    ]
+    campaign = {"kind": "start", "label": ["a slot is free"],
+                "edges": [edge("", freeze)]}
+
+    lever_chain = decision(["has it been refuted?"], [
+        edge("yes", outcome(["NOT A ROUTE"], leaves=groups.get("refuted", []))),
+        edge("no", decision(["has ruled work already done part of it?"], [
+            edge("yes", outcome(["RE-PRICE FIRST"],
+                                leaves=groups.get("superseded", []))),
+            edge("no", decision(["priced at 3x with an unmeasured widest term?"], [
+                edge("yes", outcome(["D22: PROBE FIRST"],
+                                    leaves=groups.get("gated", []))),
+                edge("no", decision(
+                    ["is its region being touched by ruled work anyway?"], [
+                        edge("yes", outcome([
+                            "TAKE IT NOW", "marginal cost is near zero",
+                            "when the file is already open",
+                        ])),
+                        edge("no", decision(
+                            ["does the endpoint projection need the lines?"], [
+                                edge("no", outcome([
+                                    "KEEP AND WAIT",
+                                    "D26: a line overage never changes the",
+                                    "ROUTE; a lever is compression WITHIN it",
+                                ], leaves=groups.get("waiting", []))),
+                                edge("yes", outcome([
+                                    "rank by net lines per unit of risk,",
+                                    "cheapest first",
+                                ])),
+                            ])),
+                    ])),
+            ])),
+        ])),
+    ])
+    lever = decision(["is a compression lever being considered?"], [
+        edge("already in the route", outcome(["already in the route"],
+                                             leaves=groups.get("in-route", []))),
+        edge("a new lever", lever_chain),
+    ])
+    return {"campaign": campaign, "lever": lever}
+
+
+def route_block() -> tuple[dict | None, Path | None, str]:
+    """Build the route decision tree from the ledger (see build_route)."""
+    try:
+        data = load_ledger()
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        return None, None, f"dev/ledger.toml unreadable: {exc}"
+    if not data:
+        return None, None, "dev/ledger.toml is unreadable"
+    return (build_route(data), LEDGER_TOML,
+            "built from dev/ledger.toml's lever rows and owed statuses, not "
+            "lifted from prose: a leaf changes the moment its row does")
+
+
+def render_route_node(node: dict, depth: int = 0) -> str:
+    """One node of the route tree as semantic HTML. Decision nodes carry the
+    dashed style, outcome nodes the solid one, and an outcome that names real
+    levers shows them as chips; an empty bucket shows a muted 'none'. The depth
+    guard is a last resort against a cyclic tree, not a rendering feature."""
+    if depth > 32:
+        return ('<div class="node outcome"><span class="leaf none">'
+                "loop back to an earlier node</span></div>")
+    cls = {"start": "node start", "decision": "node decision",
+           "outcome": "node outcome"}.get(node["kind"], "node outcome")
+    label = "<br>".join(clean(ln) for ln in node["label"])
+    leaves = ""
+    if node["kind"] == "outcome" and "leaves" in node:
+        if node["leaves"]:
+            chips = "".join(f'<span class="leaf">{clean(l)}</span>'
+                            for l in node["leaves"])
+        else:
+            chips = '<span class="leaf none">none</span>'
+        leaves = f'<div class="leaves">{chips}</div>'
+    out = [f'<div class="{cls}">{label}{leaves}</div>']
+    for e in node.get("edges", []):
+        out.append(
+            '<div class="edge"><span class="edge-label">'
+            f'{clean(e["label"])}</span><span class="edge-line"></span></div>'
+            f'<div class="child">{render_route_node(e["to"], depth + 1)}</div>'
+        )
+    return "".join(out)
+
+
+def render_route(tree: dict) -> str:
+    """The route panel body: two independent branches, one column each."""
+    return (
+        '<div class="route">'
+        '<div class="branch">'
+        '<h3>Campaign: freeze on or off, and what each answer releases</h3>'
+        '<div class="flow">' + render_route_node(tree["campaign"])
+        + "</div></div>"
+        '<div class="branch">'
+        '<h3>Lever branch: five questions in order</h3>'
+        '<div class="flow">' + render_route_node(tree["lever"])
+        + "</div></div>"
+        "</div>"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -478,9 +564,16 @@ def stale_sources(out_path: Path) -> list[str]:
 
 CSS = """
 :root {
-  --bg: #f5f4ef; --card: #ffffff; --ink: #1c1b1a; --muted: #6a675f;
-  --line: #dcd9d0; --accent: #8a5a00; --now: #fff3c4; --done: #e7f2e2;
-  --neutral: #eef0f2; --warn: #b3271d; --ok: #1f6f3d;
+  /* Dark by owner's request, 2026-08-06. Every colour in the stylesheet is a
+     variable so the theme is this block alone: a literal left in a rule below
+     would be a light patch nobody notices until the page is opened at night,
+     which is the whole failure mode of a half-applied theme. */
+  --bg: #16181c; --card: #1e2126; --ink: #e6e3dd; --ink2: #b6b1a8;
+  --muted: #8f8a80; --line: #343941; --line2: #262a30; --sunk: #191c21;
+  --accent: #d9a441; --now: #3a3113; --now-ink: #f0c86a;
+  --done: #16301f; --neutral: #262a30; --warn: #ff8a80; --warn-bg: #2a1a1a;
+  --ok: #7fd39b; --plan-bg: #1b2634; --plan-ink: #8fb8e8;
+  --start-bg: #1b2430; --start-line: #4a6b8f; --decision-line: #b38900;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
@@ -496,26 +589,26 @@ main { display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
 .panel.wide { grid-column: 1 / -1; }
 h2 { margin: 0 0 10px; font-size: 17px; border-bottom: 1px solid var(--line);
   padding-bottom: 6px; }
-h3 { margin: 14px 0 6px; font-size: 13.5px; color: #3f3d38; }
+h3 { margin: 14px 0 6px; font-size: 13.5px; color: var(--ink2); }
 .src { margin-top: 12px; padding-top: 8px; border-top: 1px dashed var(--line);
   color: var(--muted); font-size: 11.5px; font-family: ui-monospace, Menlo, Consolas, monospace; }
 .stats { display: flex; flex-wrap: wrap; gap: 14px; margin: 4px 0 14px; }
 .stat { flex: 1 1 170px; border: 1px solid var(--line); border-radius: 6px;
-  padding: 10px 12px; background: #faf9f5; }
+  padding: 10px 12px; background: var(--sunk); }
 .stat .num { font-size: 34px; font-weight: 700; line-height: 1.1; }
 .stat .lab { font-size: 12px; color: var(--muted); margin-top: 2px; }
 .stat .sub { font-size: 12px; margin-top: 4px; }
 table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
 th { text-align: left; color: var(--muted); font-weight: 600;
   border-bottom: 1px solid var(--line); padding: 5px 8px 5px 0; }
-td { padding: 5px 8px 5px 0; border-bottom: 1px solid #f0ede5; vertical-align: top; }
+td { padding: 5px 8px 5px 0; border-bottom: 1px solid var(--line2); vertical-align: top; }
 tr:last-child td { border-bottom: none; }
 .badge { display: inline-block; padding: 1px 7px; border-radius: 10px;
   font-size: 11px; font-weight: 600; white-space: nowrap; }
-.badge.now { background: var(--now); color: #6b4e00; }
+.badge.now { background: var(--now); color: var(--now-ink); }
 .badge.done { background: var(--done); color: var(--ok); }
-.badge.planned { background: #e3ecf7; color: #1f4e79; }
-.badge.neutral { background: var(--neutral); color: #3f3d38; }
+.badge.planned { background: var(--plan-bg); color: var(--plan-ink); }
+.badge.neutral { background: var(--neutral); color: var(--ink2); }
 .tree { max-height: 560px; overflow: auto; border: 1px solid var(--line);
   border-radius: 6px; padding: 6px 8px; font-size: 12.5px; }
 .tree-row { padding: 2px 4px; border-radius: 4px; display: flex; gap: 8px;
@@ -523,17 +616,43 @@ tr:last-child td { border-bottom: none; }
 .tree-row.here { background: var(--now); }
 .tree-row .code { font-family: ui-monospace, Menlo, Consolas, monospace;
   font-weight: 600; white-space: nowrap; }
-.tree-row .goal { color: #4b4842; overflow: hidden; text-overflow: ellipsis;
+.tree-row .goal { color: var(--ink2); overflow: hidden; text-overflow: ellipsis;
   white-space: nowrap; }
-.pre { background: #f8f7f2; border: 1px solid var(--line); border-radius: 6px;
+.pre { background: var(--sunk); border: 1px solid var(--line); border-radius: 6px;
   padding: 12px; overflow: auto; font-family: ui-monospace, Menlo, Consolas, monospace;
   font-size: 12px; line-height: 1.5; }
 .note { font-size: 12.5px; color: var(--muted); margin: 8px 0; }
 .missing { border: 1px solid var(--warn); color: var(--warn);
-  background: #fdf1f0; border-radius: 6px; padding: 12px; font-size: 13px; }
+  background: var(--warn-bg); border-radius: 6px; padding: 12px; font-size: 13px; }
 footer { padding: 14px 28px 26px; color: var(--muted); font-size: 12px; }
 ul { margin: 6px 0; padding-left: 20px; }
 li { margin: 3px 0; }
+.route { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.branch { min-width: 0; }
+.branch h3 { margin: 0 0 10px; }
+.flow { display: flex; flex-direction: column; }
+.node { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+  background: var(--sunk); font-size: 12.5px; line-height: 1.45; }
+.node.start { background: var(--start-bg); border-color: var(--start-line); }
+.node.decision { border-style: dashed; border-color: var(--decision-line);
+  background: var(--sunk); }
+.node.outcome { border-style: solid; }
+.leaves { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+.leaf { background: var(--plan-bg); color: var(--plan-ink); border-radius: 10px;
+  padding: 1px 7px; font-size: 11px; font-weight: 600; }
+.leaf.none { background: transparent; color: var(--muted); font-weight: 400; }
+.edge { margin: 6px 0 2px 22px; display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.4px; }
+.edge-line { flex: 1; height: 1px; background: var(--line); }
+.child { margin-left: 30px; padding-left: 10px; border-left: 1px solid var(--line); }
+.wb-row { display: grid; grid-template-columns: 1fr auto 1.6fr; gap: 10px;
+  align-items: start; border: 1px solid var(--line); border-radius: 6px;
+  padding: 8px 10px; margin: 6px 0; background: var(--sunk); }
+.wb-left { font-weight: 600; }
+.wb-right { color: var(--ink2); }
+.wb-arrow { color: var(--accent); font-weight: 700; }
+.wb-item { margin: 6px 0; }
 """
 
 
@@ -561,21 +680,16 @@ def no_data(reason: str) -> str:
 # ---------------------------------------------------------------------------
 
 def panel_route() -> str:
-    body, path, note = route_block()
-    if body is None:
+    tree, path, note = route_block()
+    if tree is None:
         return panel("Route: which route, under which condition",
                      no_data(note), "source: none")
-    # The block carries class="mermaid" as well as the page's own class. Opened
-    # from disk this changes nothing, since the page vendors no renderer and
-    # deliberately fetches none; but a viewer that renders mermaid natively will
-    # draw it, and that is free. The source stays readable either way, which is
-    # the point: this file IS the canonical block from dev/LEDGER.md.
-    label = ("Mermaid flowchart source, lifted verbatim. The page is "
-             "self-contained and vendors no renderer, so this shows as source "
-             "here and renders in any Mermaid-capable viewer.")
+    label = ("Rendered as semantic HTML with CSS: no mermaid, no JavaScript, "
+             "no network. The structure is fixed in the generator; the leaves "
+             "are the ledger's lever rows, so they change when the rows do.")
     inner = (
         f'<p class="note">{clean(note)}. {label}</p>\n'
-        f'<pre class="mermaid pre">{clean(body)}</pre>'
+        + render_route(tree)
     )
     src = source_note(path) if path is not None else "source: none"
     return panel("Route: which route, under which condition", inner, src, wide=True)
@@ -736,6 +850,169 @@ def panel_hierarchy() -> str:
 WORKBENCH_MD = ROOT / "_build" / "workbench.md"
 
 
+WORKBENCH_HEADINGS = (
+    "DISPATCHED NOW",
+    "QUEUED, AND WHAT RELEASES EACH",
+    "CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH",
+    "NOT DISPATCHING, AND WHY",
+)
+WORKBENCH_SPLIT_HEADINGS = (
+    "QUEUED, AND WHAT RELEASES EACH",
+    "CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH",
+)
+
+
+def match_workbench_heading(line: str) -> tuple[str, str] | None:
+    """The heading a line starts with, forgivingly (markdown markers, case,
+    extra whitespace), plus whatever follows it on the same line so trailing
+    prose is never lost. Returns None when the line is not a heading."""
+    norm = re.sub(r"\s+", " ", line.strip().strip("#* ").strip()).upper()
+    best = None
+    for h in WORKBENCH_HEADINGS:
+        if norm.startswith(h) and (best is None or len(h) > len(best)):
+            best = h
+    if best is None:
+        return None
+    return best, norm[len(best):].strip()
+
+
+def split_on_arrow(text: str) -> tuple[str, str] | None:
+    """Split an item on the first '<-' or '->'. Both sides must be non-empty;
+    a dangling marker falls back to None so the caller keeps the item whole."""
+    pos, marker = None, None
+    for m in ("<-", "->"):
+        i = text.find(m)
+        if i != -1 and (pos is None or i < pos):
+            pos, marker = i, m
+    if pos is None:
+        return None
+    left = text[:pos].strip()
+    right = text[pos + len(marker):].strip()
+    if not left or not right:
+        return None
+    return left, right
+
+
+def split_workbench_items(body: str, heading: str) -> list[dict]:
+    """Items under one heading, from a scan of the raw lines.
+
+    An item starts at a line indented as little as the section's first line.
+    A line at that indent starts a NEW item only when the previous item has
+    already shown its arrow, or when it follows a deeper-indented continuation
+    (the end of the previous item's text). That keeps a left side that wraps
+    over two lines, like the CONDITIONS sample, in one item, while still
+    separating arrow-less items like the NOT DISPATCHING rows. QUEUED and
+    CONDITIONS items that split on '<-' or '->' become {"left", "right"};
+    every other item stays whole as {"text"} with its original line breaks.
+    A line that cannot be placed is kept verbatim, never dropped."""
+    lines = [ln.rstrip() for ln in body.splitlines() if ln.strip()]
+    if not lines:
+        return []
+    base = len(lines[0]) - len(lines[0].lstrip())
+    items: list[dict] = []
+    current: list[str] = []
+    arrow_seen = False
+    prev_indent = base
+
+    def flush() -> None:
+        nonlocal current
+        if not current:
+            return
+        text = " ".join(ln.strip() for ln in current)
+        if heading in WORKBENCH_SPLIT_HEADINGS:
+            parts = split_on_arrow(text)
+            if parts is not None:
+                items.append({"left": parts[0], "right": parts[1]})
+                current = []
+                return
+        items.append({"text": "\n".join(current)})
+        current = []
+
+    for ln in lines:
+        indent = len(ln) - len(ln.lstrip())
+        if (indent <= base and current
+                and (arrow_seen or prev_indent > base)):
+            flush()
+            arrow_seen = False
+        current.append(ln)
+        if "<-" in ln or "->" in ln:
+            arrow_seen = True
+        prev_indent = indent
+    flush()
+    return items
+
+
+def parse_workbench(text: str) -> list[dict]:
+    """The hand-written workbench file as sections, in file order. Each entry
+    is {"heading", "items"} for a recognized heading or {"preamble"} for text
+    before the first heading. A heading that is missing simply has no section:
+    its content cannot exist, and nothing else is dropped."""
+    sections: list[tuple[str, list[str]]] = []
+    preamble: list[str] = []
+    current: list[str] | None = None
+    for line in text.splitlines():
+        matched = match_workbench_heading(line)
+        if matched is not None:
+            heading, rest = matched
+            if current is not None:
+                sections.append((current[0], current[1]))
+            current = [heading, []]
+            if rest:
+                current[1].append(rest)
+        elif current is not None:
+            current[1].append(line)
+        else:
+            preamble.append(line)
+    if current is not None:
+        sections.append((current[0], current[1]))
+
+    out: list[dict] = []
+    if any(ln.strip() for ln in preamble):
+        out.append({"preamble": "\n".join(preamble)})
+    for heading, body in sections:
+        out.append({"heading": heading,
+                    "items": split_workbench_items("\n".join(body), heading)})
+    return out
+
+
+def render_workbench_sections(sections: list[dict]) -> str:
+    """The parsed workbench as HTML blocks. QUEUED and CONDITIONS items lay
+    the two sides of a split out side by side; everything else is verbatim."""
+    parts: list[str] = []
+    for sec in sections:
+        if "preamble" in sec:
+            parts.append(
+                "<h3>Written before the first heading</h3>"
+                f'<pre class="pre wb-item">{clean(sec["preamble"])}</pre>'
+            )
+            continue
+        heading = sec["heading"]
+        parts.append(f"<h3>{clean(heading)}</h3>")
+        if not sec["items"]:
+            parts.append('<p class="note">Nothing written under this '
+                         "heading.</p>")
+            continue
+        if heading in WORKBENCH_SPLIT_HEADINGS:
+            arrow = "&rarr;"
+            for item in sec["items"]:
+                if "left" in item:
+                    parts.append(
+                        '<div class="wb-row">'
+                        f'<div class="wb-left">{clean(item["left"])}</div>'
+                        f'<div class="wb-arrow" aria-hidden="true">{arrow}</div>'
+                        f'<div class="wb-right">{clean(item["right"])}</div>'
+                        "</div>"
+                    )
+                else:
+                    parts.append(f'<pre class="pre wb-item">'
+                                 f'{clean(item["text"])}</pre>')
+        else:
+            for item in sec["items"]:
+                parts.append(f'<pre class="pre wb-item">'
+                             f'{clean(item["text"])}</pre>')
+    return "".join(parts)
+
+
 def panel_workbench() -> str:
     """The one panel with a HAND-WRITTEN half, by the owner's ruling.
 
@@ -757,11 +1034,12 @@ def panel_workbench() -> str:
 
     if WORKBENCH_MD.exists():
         hand = read(WORKBENCH_MD).strip()
+        sections = parse_workbench(hand)
         parts.append(
             '<h3>Written by the orchestrator at the last return</h3>'
             f'<p class="note">{source_note(WORKBENCH_MD)}. Hand-written, not '
             'generated: no committed data carries it.</p>'
-            f'<pre class="pre">{clean(hand)}</pre>'
+            + render_workbench_sections(sections)
         )
     else:
         parts.append(
@@ -864,11 +1142,11 @@ def panel_workbench() -> str:
 
 def render_page(now: datetime, out_path: Path) -> str:
     panels = [
+        panel_workbench(),
         panel_route(),
         panel_lines(),
         panel_seconds(),
         panel_hierarchy(),
-        panel_workbench(),
     ]
     body = "\n".join(panels)
     # Freshness is judged against the generation instant, not against the
@@ -894,7 +1172,7 @@ def render_page(now: datetime, out_path: Path) -> str:
         "<h1>Bedrock owner's dashboard</h1>\n"
         f'<p class="meta">Generated {clean(now.strftime("%Y-%m-%d %H:%M UTC"))} by '
         "scripts/dashboard.py from the canonical data (dev/ledger.toml, "
-        "dev/LEDGER.md, dev/PLAN.md, _build/briefs). Every panel names its "
+        "dev/PLAN.md, _build/briefs). Every panel names its "
         "source and that source's mtime; a stale panel is visible, never "
         "silent.</p>\n</header>\n<main>\n"
         + body

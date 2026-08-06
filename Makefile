@@ -87,7 +87,7 @@ devdocs:
 	$(PY) scripts/check-dev-docs.py
 
 # The owner's dashboard, GENERATED from the canonical data (dev/ledger.toml,
-# dev/LEDGER.md, dev/PLAN.md, _build/briefs/*.md). Never hand-maintained:
+# dev/PLAN.md, _build/briefs/*.md). Never hand-maintained:
 # rebuild with this target on every sub-agent return that touched a source.
 # The page is self-contained (inline CSS, no network). scripts/check-dashboard.py
 # reports staleness and is informational only, never a gate: _build/ is
