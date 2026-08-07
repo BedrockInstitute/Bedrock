@@ -84,8 +84,7 @@ summarizes.
 **Read the gloss column to decide whether you need the file, without opening it.** A checker in
 `make check` enforces most rows, so you pay for a lapse with a red gate. **The column says so
 where enforcement is partial or absent.** A row that claims more than its checker delivers is
-worse than no row: it turns a rule into false safety. `[L3.32-T109]` found three such rows and
-corrected them below.
+worse than no row: it turns a rule into false safety.
 
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
