@@ -273,6 +273,13 @@ import V.Model
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
   structure `𝒮ʟ`{.Agda}.
+- `L.TowerGraph`{.Agda}: the L-tower graph, internalized, written to survive
+  the retirement. The two-slot description whose slot 0 is the value and slot
+  1 is the index, readable at the ambient and the inner satisfaction alike,
+  plus the shared frame and the first adequacy arm stated against
+  `L.Definability`{.Agda}'s `defSet`{.Agda} rather than the retiring
+  twelve-clause encoding. Ruling D31's first funded block: it imports no
+  retiring module, which is the whole point of writing it fresh.
 - `L.Ordinal`{.Agda}: the supply of ordinals the closure arguments need: zero,
   successors and small unions are ordinals, and `boundingOrd`{.Agda} bounds any
   small family by a single ordinal. No comparison, hence no classical logic.
@@ -372,6 +379,7 @@ import V.Model
 
 - `L.CardinalCount`{.Agda}：装配好的计数一侧：计数章那两条注入的复合 (形状留在像里，故单射性是结构性的)、任何带命题见证的索引注入诸公式、无穷序数处的计数上界，以及外壳基数的经典上半，落在外壳自己的索引上。该上界倚靠平方律，本章点名它唯一的那处调用。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
+- `L.TowerGraph`{.Agda}：L-塔的图，被内化，且为熬过退役而写。两槽位描述 (槽 0 是取值、槽 1 是指标)，在环境读式与内层读式处一样可读；外加共享框架与第一条充分性臂，后者对着 `L.Definability`{.Agda} 的 `defSet`{.Agda} 陈述，而非那套退役中的十二子句编码。这是裁决 D31 的第一个获拨款的块：它不 import 任何退役模块，而这正是重新写它的全部意义。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
@@ -404,6 +412,7 @@ import L.InitialSegment
 import L.LevelKit
 import L.LevelFormula
 import L.Constructible
+import L.TowerGraph
 import L.Ordinal
 import L.Rank
 import L.Ordinal.Linear

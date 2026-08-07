@@ -3,7 +3,7 @@
 
 The owner asked for a visual board (the current route, the ledger's remaining
 lines in both calibers, the current cold-start seconds, the code hierarchy and
-where the project is in it, and the orchestrator's workbench). The design
+where the project is in it). The design
 decision that makes "update it on every sub-agent return" cheap is that this
 page is a generated artifact: `make dashboard` rebuilds it from the canonical
 sources and `scripts/check-dashboard.py` reports staleness (informational,
@@ -15,7 +15,8 @@ Sources, all machine-readable:
                        decision leaves come from the lever and owed rows)
   dev/PLAN.md          section 11: MASTER status table (96 rows) and the Task
                        index (112 rows)
-  _build/briefs/*.md   mtimes and title lines for the workbench panel
+  _build/briefs/*.md   mtimes and title lines, to tell a dispatched brief
+                       from a returned one
   scripts/ledger.py    standing, measured from HEAD (the one number this page
                        must not compute itself; ledger.toml's header says why)
 
@@ -23,12 +24,11 @@ The page is self-contained: one HTML file, inline CSS, no JavaScript, no
 external fonts or network. The route flowchart is rendered as semantic HTML
 with CSS: the structure is fixed in the generator, so a hand-laid-out diagram
 beats a general layout engine, and the page needs neither mermaid nor a
-network fetch. Since [T117] the workbench and the route are ONE panel: the
-route graph carries the current position and the hand-written workbench
-sections attached to the nodes they belong to (DISPATCHED NOW on the start
-node, QUEUED on the freeze decision, CONDITIONS on the exit-condition and
-TAKE IT NOW nodes, NOT DISPATCHING on the lever outcomes). A workbench line
-that cannot be placed is shown verbatim, never dropped. The line and seconds
+network fetch. The workbench was DELETED on 2026-08-07 by the owner's
+ruling, and with it the hand-written half this file used to parse, place onto
+graph anchors and render. The route graph now stands alone on ledger rows, and
+the agent table's `next` column reads the ledger's owed queue. The line and seconds
+
 distributions are drawn as inline SVG pie charts generated in Python: an arc
 is arithmetic, no chart library and no network.
 
@@ -272,46 +272,10 @@ def build_route(data: dict) -> dict:
     campaign = {"kind": "start", "label": ["a slot is free"],
                 "edges": [edge("", freeze)], "anchor": "start"}
 
-    lever_chain = decision(["has it been refuted?"], [
-        edge("yes", outcome(["NOT A ROUTE"],
-                            leaves=groups.get("refuted", []),
-                            anchor="refuted")),
-        edge("no", decision(["has ruled work already done part of it?"], [
-            edge("yes", outcome(["RE-PRICE FIRST"],
-                                leaves=groups.get("superseded", []),
-                                anchor="superseded")),
-            edge("no", decision(["priced at 3x with an unmeasured widest term?"], [
-                edge("yes", outcome(["D22: PROBE FIRST"],
-                                    leaves=groups.get("gated", []))),
-                edge("no", decision(
-                    ["is its region being touched by ruled work anyway?"], [
-                        edge("yes", outcome([
-                            "TAKE IT NOW", "marginal cost is near zero",
-                            "when the file is already open",
-                        ], anchor="take-now")),
-                        edge("no", decision(
-                            ["does the endpoint projection need the lines?"], [
-                                edge("no", outcome([
-                                    "KEEP AND WAIT",
-                                    "D26: a line overage never changes the",
-                                    "ROUTE; a lever is compression WITHIN it",
-                                ], leaves=groups.get("waiting", []),
-                                    anchor="waiting")),
-                                edge("yes", outcome([
-                                    "rank by net lines per unit of risk,",
-                                    "cheapest first",
-                                ])),
-                            ])),
-                    ])),
-            ])),
-        ])),
-    ])
-    lever = decision(["is a compression lever being considered?"], [
-        edge("already in the route", outcome(["already in the route"],
-                                             leaves=groups.get("in-route", []))),
-        edge("a new lever", lever_chain),
-    ])
-    return {"campaign": campaign, "lever": lever}
+    # The lever subtree is gone, 2026-08-07: it went with the lever table, and
+    # the builder went with it once nothing rendered it. `bucket` and the
+    # `groups` classification below existed only to fill its leaves.
+    return {"campaign": campaign}
 
 
 def route_block() -> tuple[dict | None, Path | None, str]:
@@ -323,56 +287,12 @@ def route_block() -> tuple[dict | None, Path | None, str]:
     if not data:
         return None, None, "dev/ledger.toml is unreadable"
     return (build_route(data), LEDGER_TOML,
-            "built from dev/ledger.toml's lever rows and owed statuses, not "
-            "lifted from prose: a leaf changes the moment its row does")
+            "The graph comes from the lever rows and the owed statuses in "
+            "dev/ledger.toml. Nobody copies it from prose. A leaf changes "
+            "when its row changes.")
 
 
-def render_anchor(anchor: str, items: list[dict]) -> str:
-    """The hand-written workbench content attached to one route anchor.
-
-    Anchors are where the workbench's four sections live on the graph:
-    "start" carries the DISPATCHED NOW position marker, "freeze" carries the
-    QUEUED list, "exit-condition" and "take-now" carry CONDITIONS, and the
-    lever outcomes carry NOT DISPATCHING rows. Split items keep their arrow
-    reading (queued or condition on the left, release or consequence on the
-    right); unsplit items stay verbatim in a pre block.
-    """
-    if not items:
-        return ""
-    if anchor == "start":
-        body = "".join(
-            f'<div class="position-text">{clean(i.get("text", ""))}</div>'
-            for i in items if i.get("text"))
-        return ('<div class="position"><span class="position-tag">'
-                "where we are now</span>" + body + "</div>")
-
-    def rows() -> str:
-        out = []
-        for i in items:
-            if i.get("left") and i.get("right"):
-                out.append(
-                    '<div class="wb-row">'
-                    f'<div class="wb-left">{clean(i["left"])}</div>'
-                    '<div class="wb-arrow" aria-hidden="true">&rarr;</div>'
-                    f'<div class="wb-right">{clean(i["right"])}</div>'
-                    "</div>"
-                )
-            elif i.get("text"):
-                out.append(f'<pre class="pre wb-item">{clean(i["text"])}</pre>')
-        return "".join(out)
-
-    if anchor == "freeze":
-        return ('<div class="wb-anchor"><h4>Queued now, and what releases '
-                "each (hand-written)</h4>" + rows() + "</div>")
-    if anchor in ("exit-condition", "take-now"):
-        return ('<div class="wb-anchor"><h4>Condition that would change this '
-                "node (hand-written)</h4>" + rows() + "</div>")
-    return ('<div class="wb-anchor"><h4>Not dispatching, and why '
-            "(hand-written)</h4>" + rows() + "</div>")
-
-
-def render_route_node(node: dict, depth: int = 0,
-                      placed: dict[str, list[dict]] | None = None) -> str:
+def render_route_node(node: dict, depth: int = 0) -> str:
     """One node of the route tree as semantic HTML. Decision nodes carry the
     dashed style, outcome nodes the solid one, and an outcome that names real
     levers shows them as chips; an empty bucket shows a muted 'none'. The depth
@@ -385,8 +305,6 @@ def render_route_node(node: dict, depth: int = 0,
                 "loop back to an earlier node</span></div>")
     cls = {"start": "node start", "decision": "node decision",
            "outcome": "node outcome"}.get(node["kind"], "node outcome")
-    if node.get("anchor") == "start" and placed and placed.get("start"):
-        cls += " here"
     label = "<br>".join(clean(ln) for ln in node["label"])
     leaves = ""
     if node["kind"] == "outcome" and "leaves" in node:
@@ -397,33 +315,33 @@ def render_route_node(node: dict, depth: int = 0,
             chips = '<span class="leaf none">none</span>'
         leaves = f'<div class="leaves">{chips}</div>'
     anchor_html = ""
-    if placed and node.get("anchor"):
-        anchor_html = render_anchor(node["anchor"], placed.get(node["anchor"], []))
     out = [f'<div class="{cls}">{label}{leaves}{anchor_html}</div>']
     for e in node.get("edges", []):
         out.append(
             '<div class="edge"><span class="edge-label">'
             f'{clean(e["label"])}</span><span class="edge-line"></span></div>'
-            f'<div class="child">{render_route_node(e["to"], depth + 1, placed)}</div>'
+            f'<div class="child">{render_route_node(e["to"], depth + 1)}</div>'
         )
     return "".join(out)
 
 
-def render_route(tree: dict,
-                 placed: dict[str, list[dict]] | None = None) -> str:
+def render_route(tree: dict) -> str:
     """The route panel body: two independent branches, one column each, with
     the hand-written workbench content attached to the anchored nodes."""
     return (
         '<div class="route">'
         '<div class="branch">'
         '<h3>Campaign: freeze on or off, and what each answer releases</h3>'
-        '<div class="flow">' + render_route_node(tree["campaign"], placed=placed)
+        '<div class="flow">' + render_route_node(tree["campaign"])
         + "</div></div>"
-        '<div class="branch">'
-        '<h3>Lever branch: five questions in order</h3>'
-        '<div class="flow">' + render_route_node(tree["lever"], placed=placed)
-        + "</div></div>"
-        "</div>"
+        # The lever branch is not drawn, 2026-08-07: it answered "what should
+        # we compress", which is a question for a decision, not for a board.
+        + ("" if "lever" not in tree else
+           '<div class="branch">'
+           '<h3>Lever branch: five questions in order</h3>'
+           '<div class="flow">' + render_route_node(tree["lever"])
+           + "</div></div>")
+        + "</div>"
     )
 
 
@@ -713,6 +631,13 @@ td.num { font-family: var(--mono); white-space: nowrap; }
 .badge.done { background: var(--done); color: var(--ok); }
 .badge.planned { background: var(--plan-bg); color: var(--plan-ink); }
 .badge.neutral { background: var(--neutral); color: var(--ink2); }
+/* The agent table's three states, 2026-08-07: each label its own colour, so
+   the row's state reads before the text does. `next` borrows the planned
+   blue, `flight` the live amber, `returned` the delivered green. */
+.badge.st-next { background: var(--plan-bg); color: var(--plan-ink); }
+.badge.st-flight { background: var(--now); color: var(--now-ink);
+  box-shadow: inset 0 0 0 1px var(--accent); }
+.badge.st-returned { background: var(--done); color: var(--ok); }
 .tree { max-height: 560px; overflow: auto; border: 1px solid var(--line);
   padding: 8px 10px; font-size: 0.78rem; scrollbar-width: thin;
   scrollbar-color: var(--line) var(--bg); }
@@ -740,7 +665,9 @@ footer { padding: 16px 28px 28px; color: var(--muted); font-size: 0.75rem; }
 footer .note { font-family: var(--mono); }
 ul { margin: 6px 0; padding-left: 22px; }
 li { margin: 4px 0; line-height: 1.45; }
-.route { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; }
+.route { display: grid; grid-template-columns: 1fr; gap: 24px; }
+/* One branch since the lever subtree was dropped on 2026-08-07: the
+   two-column grid left the campaign tree in half the width. */
 .branch { min-width: 0; }
 .branch h3 { margin: 0 0 12px; }
 .flow { display: flex; flex-direction: column; }
@@ -764,27 +691,16 @@ li { margin: 4px 0; line-height: 1.45; }
 .edge-line::before { content: ""; position: absolute; left: -4px; top: -3px;
   width: 5px; height: 5px; background: var(--bg); border: 1px solid var(--line); }
 .child { margin-left: 30px; padding-left: 10px; border-left: 1px solid var(--line); }
-.wb-row { display: grid; grid-template-columns: 1fr auto 1.6fr; gap: 10px;
   align-items: start; border: 1px solid var(--line);
   padding: 8px 10px; margin: 6px 0; background: var(--sunk); }
-.wb-left { font-weight: 600; }
-.wb-right { color: var(--ink2); }
-.wb-arrow { color: var(--accent); font-weight: 700; font-family: var(--mono); }
-.wb-item { margin: 6px 0; }
 .position { margin-top: 10px; border: 1px solid var(--decision-line);
   background: var(--now); padding: 10px 12px; }
 .position-tag { display: block; font-family: var(--mono); font-size: 0.62rem;
   font-weight: 700; letter-spacing: 0.12em; color: var(--now-ink);
   text-transform: uppercase; margin-bottom: 5px; }
 .position-text { color: var(--now-ink); }
-.wb-anchor { margin-top: 10px; border-top: 1px dashed var(--line);
   padding-top: 8px; font-size: 0.75rem; }
-.wb-anchor h4 { margin: 0 0 6px; font-family: var(--mono); font-size: 0.62rem;
   letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.wb-anchor .wb-row { margin: 4px 0; padding: 5px 7px; }
-.wb-anchor pre { margin: 4px 0; }
-.unplaced { border: 1px dashed var(--warn); padding: 12px 14px; margin-top: 14px; }
-.unplaced h3 { color: var(--warn); }
 .pie-wrap { display: flex; flex-wrap: wrap; gap: 18px; margin: 12px 0 18px;
   align-items: flex-start; }
 .pie-card { flex: 1 1 290px; border: 1px solid var(--line);
@@ -997,12 +913,13 @@ def panel_lines() -> str:
         cal_total = sum(s["value"] for s in cal_slices)
         pies = (
             "<h3>Line distribution</h3>"
-            '<p class="note">Angles use each remaining row\'s band MIDPOINT: '
-            "the rows are ranges, not points (the bands are in the legend), "
-            "and standing is measured while remaining rows are estimates, so "
-            "these proportions are a reading aid, not an exact statement. "
-            f"Totals are standing ({brief['standing']:,}) plus the remaining "
-            f"midpoints: {naive_total:,} naive, {cal_total:,} calibrated.</p>"
+            '<p class="note">Each angle uses the MIDPOINT of the band of that '
+            "row. Each row is a range and not a point. The legend shows the "
+            "bands. A tool measures the standing lines, but each remaining row "
+            "is an estimate. Thus these parts help you read the data. They are "
+            "not exact. "
+            f"Each total is the standing lines ({brief['standing']:,}) plus the "
+            f"midpoints: {naive_total:,} naive and {cal_total:,} calibrated.</p>"
             '<div class="pie-wrap">'
             + render_pie_chart("Remaining rows, naive caliber", naive_slices)
             + render_pie_chart("Remaining rows, calibrated caliber", cal_slices)
@@ -1012,20 +929,16 @@ def panel_lines() -> str:
         pies = ('<div class="missing">Line pie not drawn: standing is '
                 "unavailable because scripts/ledger.py --brief failed. The "
                 "bands are still shown below.</div>")
-    table = (
-        '<table><thead><tr><th>row</th><th>work</th><th>naive</th>'
-        '<th>calibrated</th><th>class</th></tr></thead><tbody>'
-    )
-    for row in rows:
-        table += (
-            f'<tr><td>{clean(row["id"])}</td>'
-            f'<td title="{clean(row["title"])}">{clean(truncate(row["title"], 90))}</td>'
-            f'<td class="num">{clean(row["naive"])}</td>'
-            f'<td class="num">{clean(row["calibrated"])}</td>'
-            f'<td>{clean(truncate(row["klass"], 48))}</td></tr>'
-        )
-    table += "</tbody></table>"
-    src = source_note(LEDGER_TOML, LEDGER_PY) + "; standing is not written down, it is computed"
+    # The per-row [[remaining]] table is REMOVED, 2026-08-07, for the same
+    # reason as the tree_cost table: the distribution chart above already
+    # draws these rows, and a chart with its own source data printed under it
+    # is the board restating itself.
+    table = ""
+
+    # Standing is MEASURED by scripts/ledger.py, not read from the toml, so
+    # both are named. Dropping the script when the raw table went was a real
+    # loss of provenance and the test suite caught it.
+    src = source_note(LEDGER_TOML) + "; scripts/ledger.py --brief (measures standing)"
     return panel("Remaining lines: standing, bands and distribution",
                  stats + pies + table, src)
 
@@ -1081,11 +994,12 @@ def panel_seconds() -> str:
                       "check, so the measurements are not on one basis and no "
                       "'everything else' slice is invented.</div>")
         pie_html = (
-            "<h3>Where the current cold check goes</h3>"
-            '<p class="note">Profile-instrumented seconds from dev/ledger.toml; '
-            "the profile-to-wall ratio is not pinned (0.6-0.7 per the timing "
-            "note). Slices are the named hot modules plus everything else "
-            f"({full:,} s total).</p>"
+            "<h3>Where the cold check spends its time</h3>"
+            '<p class="note">These seconds come from a profile run recorded in '
+            "dev/ledger.toml. Nobody pinned the ratio of profile time to wall "
+            "time. The timing note gives 0.6 to 0.7. Each part is a named hot "
+            f"module. The last part is all other modules. The total is {full:,} "
+            "seconds.</p>"
             '<div class="pie-wrap">'
             + render_pie_chart("Current full cold check, by module", slices)
             + "</div>" + caveat
@@ -1113,21 +1027,21 @@ def panel_seconds() -> str:
         ]
         cost_total = sum(s["value"] for s in cost_slices)
         cost_pie = (
-            "<h3>Tree cost: the subtree split</h3>"
-            '<p class="note">The tree_cost rows are the PRE-FIX profile: they '
-            f"sum to {cost_total:,} s, the 2,723 s profile the timing note "
-            "records (within rounding), NOT the current check total. The two "
-            "are different measurements and are not added.</p>"
+            "<h3>Tree cost: the subtree split</h3>"  # the table below shares it
+            '<p class="note">The tree_cost rows come from the profile BEFORE '
+            f"the fixes. They sum to {cost_total:,} seconds. The timing note "
+            "records that profile as 2,723 seconds, which agrees after "
+            "rounding. This total is NOT the current check total. The two "
+            "numbers are different measurements. Do not add them.</p>"
             '<div class="pie-wrap">'
             + render_pie_chart("Pre-fix profile seconds, by subtree", cost_slices)
             + "</div>"
         )
-    cost_table = (
-        "<h3>Tree cost</h3>"
-        '<table><thead><tr><th>tree</th><th>modules</th><th>lines</th>'
-        '<th>seconds</th><th>seconds/line</th></tr></thead><tbody>'
-        + cost_rows + "</tbody></table>"
-    )
+    # The raw [[tree_cost]] table under the pie is REMOVED, 2026-08-07, at the
+    # owner's direction: the pie already draws the same rows, and a chart with
+    # its own source data printed underneath is the board restating itself.
+    cost_table = ""
+
     src = source_note(LEDGER_TOML)
     return panel("Cold-start seconds: current check and its distribution",
                  stats + pie_html + cost_pie + hot_table + cost_table, src)
@@ -1187,418 +1101,148 @@ def panel_hierarchy() -> str:
     return panel("Code hierarchy and where we are", stats + "".join(tree_html), src, wide=True)
 
 
-WORKBENCH_MD = ROOT / "_build" / "workbench.md"
+# ---------------------------------------------------------------------------
+# THE WORKBENCH IS GONE, 2026-08-07, by the owner's ruling: _build/workbench.md
+# is deleted and no longer written or maintained.
+#
+# It existed because a board cannot know what the orchestrator intends to do
+# next, and for a day it was the only source for that. What it cost was a
+# hand-edited file at every return, a parser with five heading forms, a
+# placement pass onto graph anchors, and a fallback renderer for everything
+# that did not place. All of that is removed here.
+#
+# What replaces the one thing it uniquely supplied: the agent table's `next`
+# column now reads the ledger's [[owed]] rows in status order. That is weaker
+# in one specific way and the weakness is stated rather than hidden. The owed
+# rows say what is READY, not what will be dispatched first, so the
+# orchestrator's ordering judgement no longer reaches the board. It reaches
+# the ledger, dev/PLAN.md and the commit messages instead, all of which are
+# committed and reviewable, which the workbench never was.
+# ---------------------------------------------------------------------------
 
+def panel_route() -> str:
+    """The route graph, built from the ledger and nothing else.
 
-WORKBENCH_HEADINGS = (
-    "DISPATCHED NOW",
-    "QUEUED, AND WHAT RELEASES EACH",
-    "CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH",
-    "NOT DISPATCHING, AND WHY",
-)
-WORKBENCH_SPLIT_HEADINGS = (
-    "QUEUED, AND WHAT RELEASES EACH",
-    "CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH",
-)
-
-
-def match_workbench_heading(line: str) -> tuple[str, str] | None:
-    """The heading a line starts with, forgivingly (markdown markers, case,
-    extra whitespace), plus whatever follows it on the same line so trailing
-    prose is never lost. Returns None when the line is not a heading."""
-    norm = re.sub(r"\s+", " ", line.strip().strip("#* ").strip()).upper()
-    best = None
-    for h in WORKBENCH_HEADINGS:
-        if norm.startswith(h) and (best is None or len(h) > len(best)):
-            best = h
-    if best is None:
-        return None
-    return best, norm[len(best):].strip()
-
-
-def split_on_arrow(text: str) -> tuple[str, str] | None:
-    """Split an item on the first '<-' or '->'. Both sides must be non-empty;
-    a dangling marker falls back to None so the caller keeps the item whole."""
-    pos, marker = None, None
-    for m in ("<-", "->"):
-        i = text.find(m)
-        if i != -1 and (pos is None or i < pos):
-            pos, marker = i, m
-    if pos is None:
-        return None
-    left = text[:pos].strip()
-    right = text[pos + len(marker):].strip()
-    if not left or not right:
-        return None
-    return left, right
-
-
-def split_workbench_items(body: str, heading: str) -> list[dict]:
-    """Items under one heading, from a scan of the raw lines.
-
-    An item starts at a line indented as little as the section's first line.
-    A line at that indent starts a NEW item only when the previous item has
-    already shown its arrow, or when it follows a deeper-indented continuation
-    (the end of the previous item's text). That keeps a left side that wraps
-    over two lines, like the CONDITIONS sample, in one item, while still
-    separating arrow-less items like the NOT DISPATCHING rows. QUEUED and
-    CONDITIONS items that split on '<-' or '->' become {"left", "right"};
-    every other item stays whole as {"text"} with its original line breaks.
-    A line that cannot be placed is kept verbatim, never dropped."""
-    lines = [ln.rstrip() for ln in body.splitlines() if ln.strip()]
-    if not lines:
-        return []
-    base = len(lines[0]) - len(lines[0].lstrip())
-    items: list[dict] = []
-    current: list[str] = []
-    arrow_seen = False
-    prev_indent = base
-
-    def flush() -> None:
-        nonlocal current
-        if not current:
-            return
-        text = " ".join(ln.strip() for ln in current)
-        if heading in WORKBENCH_SPLIT_HEADINGS:
-            parts = split_on_arrow(text)
-            if parts is not None:
-                items.append({"left": parts[0], "right": parts[1]})
-                current = []
-                return
-        items.append({"text": "\n".join(current)})
-        current = []
-
-    for ln in lines:
-        indent = len(ln) - len(ln.lstrip())
-        if (indent <= base and current
-                and (arrow_seen or prev_indent > base)):
-            flush()
-            arrow_seen = False
-        current.append(ln)
-        if "<-" in ln or "->" in ln:
-            arrow_seen = True
-        prev_indent = indent
-    flush()
-    return items
-
-
-def parse_workbench(text: str) -> list[dict]:
-    """The hand-written workbench file as sections, in file order. Each entry
-    is {"heading", "items"} for a recognized heading or {"preamble"} for text
-    before the first heading. A heading that is missing simply has no section:
-    its content cannot exist, and nothing else is dropped."""
-    sections: list[tuple[str, list[str]]] = []
-    preamble: list[str] = []
-    current: list[str] | None = None
-    for line in text.splitlines():
-        matched = match_workbench_heading(line)
-        if matched is not None:
-            heading, rest = matched
-            if current is not None:
-                sections.append((current[0], current[1]))
-            current = [heading, []]
-            if rest:
-                current[1].append(rest)
-        elif current is not None:
-            current[1].append(line)
-        else:
-            preamble.append(line)
-    if current is not None:
-        sections.append((current[0], current[1]))
-
-    out: list[dict] = []
-    if any(ln.strip() for ln in preamble):
-        out.append({"preamble": "\n".join(preamble)})
-    for heading, body in sections:
-        out.append({"heading": heading,
-                    "items": split_workbench_items("\n".join(body), heading)})
-    return out
-
-
-LAST_WRITTEN_RE = re.compile(r"^\s*last written\b", re.IGNORECASE)
-
-
-def workbench_last_written(sections: list[dict]) -> str | None:
-    """The orchestrator's own as-of stamp from the preamble, if present. It is
-    metadata, not workbench state, so it is shown as a note rather than placed
-    on a graph node."""
-    for sec in sections:
-        if "preamble" in sec:
-            for ln in sec["preamble"].splitlines():
-                if LAST_WRITTEN_RE.match(ln):
-                    return ln.strip()
-    return None
-
-
-CONDITION_TAIL_WORDS = ("tail",)
-CONDITION_LEVER_WORDS = ("lever", "ruled work", "region", "open")
-
-
-def place_workbench(sections: list[dict]) -> tuple[dict[str, list[dict]], list[dict]]:
-    """Map the hand-written workbench sections onto route anchors, and keep
-    everything that does not map in the unplaced list.
-
-    The [T117] merge reading, tested against the real workbench before this
-    was built: DISPATCHED NOW is the position marker on the campaign start
-    node; QUEUED items are what waits on the freeze decision (each carries its
-    own release condition, the same edge-with-a-condition the graph already
-    draws); CONDITIONS are branch conditions on the exit-condition node (the
-    tail profile) and the TAKE IT NOW node (a lever's region opened by ruled
-    work); NOT DISPATCHING rows name the lever outcomes they already sit in
-    (refuted, superseded, waiting).
-
-    The keyword tests are deliberately forgiving and the fallback is absolute:
-    an item that matches nothing is returned unplaced and rendered verbatim,
-    so a drifted workbench loses no line. The "Last written" preamble stamp is
-    metadata, not state, and is not returned here.
-    """
-    placed: dict[str, list[dict]] = defaultdict(list)
-    unplaced: list[dict] = []
-    for sec in sections:
-        if "preamble" in sec:
-            leftover = [ln for ln in sec["preamble"].splitlines()
-                        if ln.strip() and not LAST_WRITTEN_RE.match(ln)]
-            if leftover:
-                unplaced.append({"heading": "Written before the first heading",
-                                 "items": [{"text": "\n".join(leftover)}]})
-            continue
-        heading = sec["heading"]
-        if heading == "DISPATCHED NOW":
-            for item in sec["items"]:
-                placed["start"].append(item)
-        elif heading == "QUEUED, AND WHAT RELEASES EACH":
-            for item in sec["items"]:
-                placed["freeze"].append(item)
-        elif heading == "CONDITIONS THAT WOULD CHANGE WHAT I DISPATCH":
-            for item in sec["items"]:
-                low = (item.get("left") or item.get("text") or "").lower()
-                if any(w in low for w in CONDITION_TAIL_WORDS):
-                    placed["exit-condition"].append(item)
-                elif any(w in low for w in CONDITION_LEVER_WORDS):
-                    placed["take-now"].append(item)
-                else:
-                    unplaced.append({"heading": heading, "items": [item]})
-        elif heading == "NOT DISPATCHING, AND WHY":
-            for item in sec["items"]:
-                low = (item.get("text") or "").lower()
-                if "refut" in low:
-                    placed["refuted"].append(item)
-                elif "supersed" in low:
-                    placed["superseded"].append(item)
-                elif "wait" in low:
-                    placed["waiting"].append(item)
-                else:
-                    unplaced.append({"heading": heading, "items": [item]})
-        else:
-            unplaced.append({"heading": heading, "items": sec["items"]})
-    return dict(placed), unplaced
-
-
-def render_workbench_sections(sections: list[dict]) -> str:
-    """The parsed workbench as HTML blocks. QUEUED and CONDITIONS items lay
-    the two sides of a split out side by side; everything else is verbatim."""
-    parts: list[str] = []
-    for sec in sections:
-        if "preamble" in sec:
-            parts.append(
-                "<h3>Written before the first heading</h3>"
-                f'<pre class="pre wb-item">{clean(sec["preamble"])}</pre>'
-            )
-            continue
-        heading = sec["heading"]
-        parts.append(f"<h3>{clean(heading)}</h3>")
-        if not sec["items"]:
-            parts.append('<p class="note">Nothing written under this '
-                         "heading.</p>")
-            continue
-        if heading in WORKBENCH_SPLIT_HEADINGS:
-            arrow = "&rarr;"
-            for item in sec["items"]:
-                if "left" in item:
-                    parts.append(
-                        '<div class="wb-row">'
-                        f'<div class="wb-left">{clean(item["left"])}</div>'
-                        f'<div class="wb-arrow" aria-hidden="true">{arrow}</div>'
-                        f'<div class="wb-right">{clean(item["right"])}</div>'
-                        "</div>"
-                    )
-                else:
-                    parts.append(f'<pre class="pre wb-item">'
-                                 f'{clean(item["text"])}</pre>')
-        else:
-            for item in sec["items"]:
-                parts.append(f'<pre class="pre wb-item">'
-                             f'{clean(item["text"])}</pre>')
-    return "".join(parts)
-
-
-def panel_workbench_route() -> str:
-    """THE merged panel: the route graph with the hand-written workbench
-    attached to the nodes it belongs to (the [T117] merge).
-
-    The two old panels were one thing seen twice: the route is the decision
-    procedure, and the workbench is where the orchestrator stands inside it.
-    The strong move is a single picture that answers where are we (position
-    marker on the start node), what happens next (the queue on the freeze
-    decision), and what would change it (conditions on the exit-condition and
-    TAKE IT NOW nodes, and the not-dispatching rows on the lever outcomes).
-    The hand-written half still rules: a section that cannot be placed is
-    rendered verbatim below the graph, and the generated corroboration (task
-    index, briefs, owed table, lever rows) stays under the graph, so the merge
-    loses no information the two panels carried.
+    It was a merged panel until 2026-08-07: the graph plus the orchestrator's
+    hand-written workbench attached to the nodes it named. The workbench is
+    gone, so the graph stands alone and every leaf in it is a ledger row that
+    changes the moment its row does.
     """
     tree, _path, note = route_block()
-    sections: list[dict] = []
-    if WORKBENCH_MD.exists():
-        sections = parse_workbench(read(WORKBENCH_MD).strip())
-    placed, unplaced = place_workbench(sections)
     parts: list[str] = []
-    if sections:
-        hand_note = "Hand-written half: " + source_note(WORKBENCH_MD)
-        stamp = workbench_last_written(sections)
-        if stamp:
-            hand_note += "; " + clean(stamp)
-        parts.append(f'<p class="note">{hand_note}</p>')
     if tree is None:
         parts.append(no_data(f"route graph: {note}"))
-        if sections:
-            parts.append(
-                "<h3>Hand-written workbench, shown verbatim</h3>"
-                '<p class="note">The route graph cannot be built from the '
-                "ledger, so no node can carry these sections; every line is "
-                "shown as written instead.</p>"
-                + render_workbench_sections(sections)
-            )
     else:
-        parts.append(
-            '<p class="note">' + clean(note)
-            + ". The hand-written workbench sections are attached to the graph "
-            "nodes they belong to: DISPATCHED NOW marks the current position, "
-            "QUEUED sits on the freeze decision, CONDITIONS sit on the nodes "
-            "they change, NOT DISPATCHING sits on the lever outcomes it names. "
-            "A line that could not be placed is shown verbatim below.</p>"
-        )
-        parts.append(render_route(tree, placed))
-        if unplaced:
-            parts.append(
-                '<div class="unplaced">'
-                "<h3>Hand-written workbench text that could not be placed (verbatim)</h3>"
-                '<p class="note">No line is dropped: if a section does not '
-                "match a graph node, it lands here whole.</p>"
-                + render_workbench_sections(unplaced)
-                + "</div>"
-            )
-    if not WORKBENCH_MD.exists():
-        parts.append(
-            '<h3>Written by the orchestrator at the last return</h3>'
-            '<p class="note">_build/workbench.md is absent, so the hand-written '
-            "half is empty. It is written by hand at every return and "
-            "git-ignored on purpose: it describes a moment, not a state of the "
-            "tree.</p>"
-        )
+        parts.append(f'<p class="note">{clean(note)}</p>')
+        parts.append(render_route(tree))
+    src = source_note(LEDGER_TOML)
+    return panel("The route: where we are, and what each answer releases",
+                 "".join(parts), src, wide=True)
 
-    # Generated corroboration: honest about what committed data can and cannot
-    # say, so the hand-written half is corroborated, never replaced.
-    plan_ok = PLAN_MD.exists()
-    tasks = task_rows(read(PLAN_MD)) if plan_ok else []
-    briefs = recent_briefs()
-    parts.append(
-        "<h3>Dispatched now, from committed evidence</h3>"
-        '<p class="note">Live dispatch state lives in .claude/, which is never '
-        "committed and which agents must not touch. What follows is generated "
-        "from committed data only, so it corroborates the hand-written half "
-        "rather than replacing it.</p>"
-    )
-    in_progress = [t for t in tasks if "IN PROGRESS" in t["verdict"].upper()]
-    if in_progress:
-        parts.append("<ul>")
-        for t in in_progress:
-            parts.append(
-                f'<li>Task index marks <b>{clean(t["code"])}</b> IN PROGRESS: '
-                f'{clean(t["task"])}</li>')
-        parts.append("</ul>")
-    else:
-        parts.append('<p class="note">No task-index row is marked IN PROGRESS.</p>')
-    if briefs:
-        parts.append(
-            "<h3>Newest briefs (by file mtime; no exact-code report means the "
-            "return is not yet recorded under that code)</h3><ul>"
-        )
-        for b in briefs:
-            status = "report exists" if b["returned"] else "no exact-code report"
-            parts.append(
-                f'<li>{clean(b["name"])} ({clean(fmt_mtime(b["mtime"]))}): '
-                f'{clean(truncate(b["title"], 90))} <span class="badge neutral">'
-                f'{clean(status)}</span></li>')
-        parts.append("</ul>")
 
+AGENT_RETURNED_MAX = 10
+AGENT_NEXT_MAX = 10
+
+
+def owed_next(limit: int = AGENT_NEXT_MAX) -> list[dict]:
+    """The work queue, in status order, as the agent table's `next` rows.
+
+    This replaced the orchestrator's hand-written NEXT list when the workbench
+    was deleted. It answers a slightly different question and the difference is
+    stated on the board: these rows are what is READY, not what will be
+    dispatched first. Ordering is a judgement and no longer reaches the board.
+    """
     try:
         data = load_ledger()
     except (OSError, tomllib.TOMLDecodeError):
-        data = {}
-    owed = data.get("owed", [])
-    if owed:
-        order = {"ready": 0, "in-flight": 1, "blocked": 2, "frozen": 3,
-                 "at-risk": 4, "delivered": 5}
-        owed_sorted = sorted(owed, key=lambda r: order.get(r.get("status", ""), 9))
-        rows = "".join(
-            f'<tr><td>{clean(r.get("id", ""))}</td>'
-            f'<td>{clean(r.get("trophy", ""))}</td>'
-            f'<td title="{clean(r.get("detail", ""))}">{clean(truncate(r.get("title", ""), 72))}</td>'
+        return []
+    order = {"ready": 0, "exempt": 1, "in-flight": 2, "blocked": 3,
+             "frozen": 4, "at-risk": 5}
+    rows = [r for r in data.get("owed", []) if r.get("status") != "delivered"]
+    rows.sort(key=lambda r: order.get(r.get("status", ""), 9))
+    return rows[:limit]
+
+
+def panel_agents() -> str:
+    plan_ok = PLAN_MD.exists()
+    tasks = task_rows(read(PLAN_MD)) if plan_ok else []
+    briefs = recent_briefs()
+
+    def is_live(v: str) -> bool:
+        u = v.upper()
+        return "DISPATCHED" in u or "IN PROGRESS" in u
+
+    live = [t for t in tasks if is_live(t["verdict"])]
+    done = [t for t in tasks if not is_live(t["verdict"])][-AGENT_RETURNED_MAX:]
+    unreturned = {b["name"] for b in briefs if not b["returned"]}
+
+    # Order is the owner's, 2026-08-07: next first, then in flight, then
+    # returned. A board is read top down and the question at the top should be
+    # the one being decided, not the one already answered.
+    rows = []
+    nxt = owed_next()
+    for r in nxt:
+        release = r.get("blocked_by") or r.get("status", "")
+        rows.append(
+            '<tr><td><span class="badge st-next">next</span></td>'
+            f'<td>{clean(r.get("id", ""))}</td>'
+            f'<td title="{clean(r.get("detail", ""))}">{clean(truncate(r.get("title", ""), 62))}</td>'
             f'<td><span class="badge {status_class(r.get("status", ""))}">'
-            f'{clean(r.get("status", ""))}</span></td>'
-            f'<td>{clean(r.get("blocked_by", "") or "-")}</td></tr>'
-            for r in owed_sorted
-        )
-        parts.append(
-            "<h3>Queued next: the ledger's owed table (the committed work queue)</h3>"
-            '<table><thead><tr><th>id</th><th>trophy</th><th>work</th>'
-            '<th>status</th><th>blocked by</th></tr></thead><tbody>'
-            + rows + "</tbody></table>"
-        )
+            f'{clean(r.get("status", ""))}</span> {clean(truncate(release, 70))}</td></tr>')
+    if not nxt:
+        rows.append('<tr><td><span class="badge st-next">next</span></td>'
+                    '<td colspan="3" class="note">The ledger has no owed row that is '
+                    "not yet delivered.</td></tr>")
+    if live:
+        for t_ in live:
+            hint = "brief has no report yet" if any(
+                t_["code"].lower().replace("l3.32-", "") in b for b in unreturned) else ""
+            rows.append(
+                '<tr class="live"><td><span class="badge st-flight">in flight</span></td>'
+                f'<td>{clean(t_["code"])}</td>'
+                f'<td title="{clean(t_["task"])}">{clean(truncate(t_["task"], 62))}</td>'
+                f'<td>{clean(t_["verdict"])}{" &middot; " + clean(hint) if hint else ""}</td></tr>')
+    else:
+        rows.append('<tr class="live"><td><span class="badge st-flight">in flight</span></td>'
+                    '<td colspan="3" class="note">Nothing dispatched. The task index '
+                    "shows no row as DISPATCHED or IN PROGRESS.</td></tr>")
+    for t_ in reversed(done):
+        rows.append(
+            '<tr><td><span class="badge st-returned">returned</span></td>'
+            f'<td>{clean(t_["code"])}</td>'
+            f'<td title="{clean(t_["task"])}">{clean(truncate(t_["task"], 62))}</td>'
+            f'<td title="{clean(t_["verdict"])}">{clean(truncate(t_["verdict"], 88))}</td></tr>')
 
-    levers = data.get("lever", [])
-    if levers:
-        lever_rows = "".join(
-            f'<tr><td>{clean(r.get("id", ""))}</td>'
-            f'<td title="{clean(lever_what(r))}">{clean(truncate(lever_what(r), 55))}</td>'
-            f'<td title="{clean(r.get("status", ""))}">{clean(truncate(r.get("status", ""), 60))}</td>'
-            f'<td class="num">{clean(str(r.get("cost_low", "")))}-{clean(str(r.get("cost_high", "")))}</td>'
-            f'<td class="num">{clean(str(r.get("net_low", "")))}-{clean(str(r.get("net_high", "")))}</td>'
-            f'<td class="num">{clean(str(r.get("risk", "")))}</td>'
-            f'<td>{clean(str(r.get("klass", "")))}</td></tr>'
-            for r in levers
-        )
-        parts.append(
-            "<h3>The lever rows: status, cost, net and risk</h3>"
-            '<p class="note">The graph above shows where each lever sits; these '
-            "rows carry the current status, cost, net and risk of each option "
-            "from dev/ledger.toml.</p>"
-            '<table><thead><tr><th>lever</th><th>what</th><th>status</th>'
-            '<th>cost</th><th>net</th><th>risk</th><th>class</th></tr></thead>'
-            "<tbody>" + lever_rows + "</tbody></table>"
-        )
-
+    body = (
+        '<p class="note">This table shows three states. '
+        "<b>Returned</b> and <b>in flight</b> come from the task index in "
+        "dev/PLAN.md. The live agent data stays in .claude/, and nobody "
+        "commits that directory. Thus this table shows only committed data. "
+        "<b>Next</b> comes from the owed rows in the ledger, in status order. "
+        "Those rows show which work is ready. They do not show which work "
+        "goes first. The orchestrator decides the order, and this page does "
+        "not show that decision.</p>"
+        '<table><thead><tr><th>state</th><th>code</th><th>task</th>'
+        "<th>result, or what releases it</th></tr></thead><tbody>"
+        + "".join(rows) + "</tbody></table>"
+    )
     srcs = [PLAN_MD] if plan_ok else []
     src = source_note(*srcs) if srcs else "source: dev/PLAN.md (missing)"
-    brief_note = newest_brief_mtime()
-    if brief_note is not None:
-        src += f"; _build/briefs/ (newest mtime {fmt_mtime(brief_note)})"
-    if WORKBENCH_MD.exists():
-        src += "; _build/workbench.md (mtime " + fmt_mtime(mtime(WORKBENCH_MD)) + ")"
-    if owed or levers or tree is not None:
-        src += "; dev/ledger.toml (mtime " + fmt_mtime(mtime(LEDGER_TOML)) + ")"
-    return panel(
-        "The workbench route: where we are, what happens next, what would change it",
-        "".join(parts), src, wide=True)
+    src += "; dev/ledger.toml (mtime " + fmt_mtime(mtime(LEDGER_TOML)) + ")"
+    return panel("Agents: next, in flight, returned", body, src, wide=True)
 
 
 def render_page(now: datetime, out_path: Path) -> str:
+    # Order is the owner's, 2026-08-07: what is happening first, then why,
+    # then the two measured quantities. `panel_hierarchy` is deliberately not
+    # here: the module tree answered no question the other panels do not, and
+    # a board is judged by what it makes you look at. The function is kept so
+    # restoring it is one line.
     panels = [
-        panel_workbench_route(),
+        panel_agents(),
+        panel_route(),
         panel_lines(),
         panel_seconds(),
-        panel_hierarchy(),
     ]
     body = "\n".join(panels)
     # Freshness is judged against the generation instant, not against the
@@ -1608,25 +1252,26 @@ def render_page(now: datetime, out_path: Path) -> str:
              if when is not None and when > now]
     if stale:
         foot = (
-            '<p class="note"><b>Stale:</b> ' + clean(", ".join(stale))
+            '<p class="note"><b>This page is stale.</b> These sources changed '
+            "after the generator made the page: " + clean(", ".join(stale))
             + ". Run make dashboard.</p>"
         )
     else:
-        foot = ("<p class=\"note\">Fresh: regenerated at "
+        foot = ("<p class=\"note\">This page is fresh. The generator made it at "
                 + clean(now.strftime("%Y-%m-%d %H:%M UTC"))
-                + " from the sources each panel names. Run "
-                + "scripts/check-dashboard.py any time to verify.</p>")
+                + " from the sources that each panel names. "
+                + "Run scripts/check-dashboard.py to check this again.</p>")
     return (
         "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
         "<title>Bedrock owner's dashboard</title>\n<style>\n" + CSS
         + "\n</style>\n</head>\n<body>\n<header>\n"
         "<h1>Bedrock owner's dashboard</h1>\n"
-        f'<p class="meta">Generated {clean(now.strftime("%Y-%m-%d %H:%M UTC"))} by '
-        "scripts/dashboard.py from the canonical data (dev/ledger.toml, "
-        "dev/PLAN.md, _build/briefs). Every panel names its "
-        "source and that source's mtime; a stale panel is visible, never "
-        "silent.</p>\n</header>\n<main>\n"
+        f'<p class="meta">scripts/dashboard.py made this page at '
+        f'{clean(now.strftime("%Y-%m-%d %H:%M UTC"))}. '
+        "It reads dev/ledger.toml, dev/PLAN.md and _build/briefs. "
+        "Each panel names its source and the time of the last change to that "
+        "source. You always see a stale panel.</p>\n</header>\n<main>\n"
         + body
         + "\n</main>\n<footer>"
         + foot

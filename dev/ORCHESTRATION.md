@@ -259,18 +259,23 @@ In this order, every time:
    glossary does not carry, dispatch the terminology dossier (section 8) before
    the chapter counts as landed.**
 
-8. **Refresh the owner's dashboard, and write its hand-written half.** Run
-   `make dashboard`, which regenerates every measured panel from the canonical
-   data. Then edit `_build/workbench.md` BY HAND: what is dispatched now, what
-   is queued and what releases each, what condition would change the next
-   dispatch, and what is deliberately not being dispatched with the reason.
-   **That half exists nowhere in committed data** (live dispatch state is in
-   `.claude/`, which is never committed), so a generator cannot produce it and
-   must not pretend to. **Owner's ruling, 2026-08-06: this is done by hand at
-   every return**, because doing it forces a review of the whole board that a
-   regeneration does not. `scripts/check-dashboard.py` reports staleness and
-   exits 0 by design: `_build/` is git-ignored, so a gate that failed on a
-   missing dashboard would fail every fresh clone.
+8. **Refresh the owner's dashboard.** Run `make dashboard`. Every panel is
+   generated from the canonical data, so this is the whole step.
+   `scripts/check-dashboard.py` reports staleness and exits 0 by design:
+   `_build/` is git-ignored, so a gate that failed on a missing dashboard
+   would fail every fresh clone.
+
+   **There is no hand-written half.** `_build/workbench.md` was deleted on
+   2026-08-07 by the owner's ruling, superseding the 2026-08-06 ruling that
+   had required it be written by hand at every return. It existed because a
+   board cannot know what the orchestrator intends to dispatch next; the cost
+   was a hand-edited file at every return, a parser for it, and a placement
+   pass onto the route graph. The agent table's `next` column now reads the
+   ledger's `[[owed]]` queue instead. **That is weaker in one stated way: the
+   owed rows say what is READY, not what will be dispatched first.** Ordering
+   is a judgement and it now reaches the ledger, `dev/PLAN.md` and the commit
+   messages, all of which are committed and reviewable, rather than a
+   git-ignored scratch file that was neither.
 
 
 ## 7. Committing
