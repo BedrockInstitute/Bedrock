@@ -580,10 +580,10 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T152 | Terminology dossier: the eleven terms StepGraph uses uncovered | DELIVERED. Keep all except 像片 which becomes 切片. Drift at Images:460. Enters D35 | `_build/l3.32-t152-dossier.md` |
 | L3.32-T153 | Opus adversarial review of the T152 dossier (D35 arm 2) | DELIVERED. 4 PASS landed; the 7 escalations ruled under owner delegation, all landed | `_build/l3.32-t153-review.md` |
 | L3.32-T154 | Bisect the below-lim probe: find the second wall | DISPATCHED 2026-08-07 | `_build/l3.32-t154-report.md` |
-| L3.32-T155 | D36 gate G1: the fat audit of the shared part | DISPATCHED 2026-08-07 | `_build/l3.32-t155-report.md` |
+| L3.32-T155 | D36 gate G1: the fat audit of the shared part | DELIVERED. Movable 3,435-3,614 route-seeded; 757-930 save under the current rule; supply cone unseeded | `_build/l3.32-t155-report.md` |
 | L3.32-T156 | D36 gate G2: the carried-sequence AC-necessity re-split | ZERO re-booked. General beta is AC-forced by the choice quantifier; all five terms stay BOTH | `_build/l3.32-t156-report.md` |
 | L3.32-T157 | D36 gate G3: ideal-form pricing of the largest AC masters | Five of seven at ideal form. Delta 490-580 naive; 130-170 on the description fork | `_build/l3.32-t157-report.md` |
-| L3.32-T158 | The description-discharge gate: does AC need the description side? | DISPATCHED 2026-08-07 | `_build/l3.32-t158-report.md` |
+| L3.32-T158 | The description-discharge gate: does AC need the description side? | VERDICT (c): AC-forced. The carve re-enters L through the description side | `_build/l3.32-t158-report.md` |
 
 ### Bookkeeping
 
