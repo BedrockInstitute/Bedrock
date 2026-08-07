@@ -4,9 +4,8 @@ The rulebook for AI coding agents on Bedrock. Every session loads it: Claude Cod
 `@AGENTS.md` import in the root `CLAUDE.md`, other agents directly.
 
 **This file is deliberately short.** It holds only what changes what you DO on a task. For
-everything else, read one row in [Where the rules live](#where-the-rules-live). That table names
-each topic, its canonical home, and the checker that enforces it. A rulebook nobody finishes
-reading binds nothing.
+everything else, read one row in [Where the rules live](#where-the-rules-live). A rulebook
+nobody finishes reading binds nothing.
 
 > **This project is very early and this guide is incomplete.** No rule here does **not** mean no
 > rule. When unsure, do **not** guess. Stop, ask the repository owner, and wait. A question
@@ -38,7 +37,10 @@ reading binds nothing.
   - The full rule set, with worked examples, is the skill at `.claude/skills/asd-ste100/`.
 - **Ask first:** genuine architecture forks (surface them with a recommendation rather than
   charging ahead on one reading); adding a top-level directory (then add its `README.md`); a
-  translation term not yet in `dev/glossary.toml`.
+  translation term not yet in `dev/glossary.toml`; **an edit to `AGENTS.md` itself** (D34):
+  show the owner the diff and the reason, get the ruling, then commit with a dated
+  `AGENTS-diff-approved:` trailer, which `scripts/check-agents-guard.py` refuses to go
+  without.
 - **Never:** commit generated files (anything under `_build/`, woven mono-lingual `.lagda.md`)
   or probe files (`src/Probe*.agda`); DELETE retired code (archive it); translate developer
   docs; use an em dash in any language; use half-width sentence punctuation in CJK prose;
@@ -63,9 +65,9 @@ reading binds nothing.
   build the site. `python3 scripts/lint-prose.py --fix <files>` auto-fixes most prose.
 
 **Run every `python3` command as `.venv/bin/python`**, or run `make venv` first and let `make`
-pick the interpreter. This is not style. The scripts need `tomllib` from Python 3.11. On a
-machine with an older system `python3`, the FIRST command in this file fails with
-`ModuleNotFoundError: tomllib`. The cold-start test `[L3.32-T120]` hit this and lost two runs.
+pick the interpreter. The scripts need `tomllib` from Python 3.11: with an older system
+`python3` the FIRST command in this file dies, and `[L3.32-T120]` lost two runs to exactly
+that.
 
 Requirements: Agda 2.8.0 with cubical 0.9, and Python 3.11 or later.
 [requirements-dev.txt](requirements-dev.txt) pins the dependencies and `make venv` installs
@@ -125,11 +127,10 @@ briefs, audits the returns, wires the catalog and commits; it works to `dev/ORCH
 
 - **Never touch `src/Everything.lagda.md`.** The orchestrator wires it after auditing your work.
 - **Never commit, never push.** Leave the working tree as your report describes it.
-- **Run Agda under a heap cap**: `GHCRTS=-M8g agda <file>`. Run one Agda process per agent.
-  Memory is the machine constraint, not the process count (owner's word, 2026-08-07): the
-  dispatcher's Agda slots bound how many agents typecheck at once. A task that MEASURES check
-  time gets a quiet machine; label a contended time as contended. Report a heap exhaustion as
-  a wall. Never raise the cap.
+- **Run Agda under a heap cap**: `GHCRTS=-M8g agda <file>`, one process per agent. The
+  concurrency quota is C-12's, never one machine-wide process (owner's correction,
+  2026-08-07). A task that measures check time gets a quiet machine. Report a heap
+  exhaustion as a wall. Never raise the cap.
 - **Write your deliverable incrementally.** Create the file early and fill it as answers land.
   Research held only in your head dies with your budget.
 - **Evidence is `file:line`.** A report that cannot be checked can only be believed.

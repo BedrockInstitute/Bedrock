@@ -219,6 +219,25 @@ python3 scripts/check-dev-docs.py --check NAME  # run one
 python3 scripts/check-dev-docs.py --sweep    # on-demand informational sweep
 ```
 
+## `check-agents-guard.py`
+
+The AGENTS.md guard (ruling D34, owner-approved 2026-08-07). AGENTS.md loads
+into every agent session, so a wrong sentence there governs all work
+silently; the one-process incident (see the script's docstring) is why this
+exists. A commit that edits AGENTS.md must carry the owner's dated approval
+trailer, `AGENTS-diff-approved: YYYY-MM-DD`, written only after the owner
+ruled on the presented diff.
+
+Two modes: with no arguments (the `agentsguard` target in `make check`) it
+audits history, judging only commits whose own tree contains the guard;
+with `--msg-file` (the `commit-msg` hook) it refuses a trailerless commit
+that stages the file.
+
+```sh
+python3 scripts/check-agents-guard.py                 # history audit
+python3 scripts/check-agents-guard.py --msg-file MSG  # commit-msg hook mode
+```
+
 ## `lint-agda.py`
 
 Enforces the code-side rules of [dev/STYLE-agda.md](../dev/STYLE-agda.md) on the ```agda

@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs dashboard dashboard-stale gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard dashboard dashboard-stale gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids devdocs taskindex
+check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids devdocs taskindex agentsguard
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -82,6 +82,9 @@ ruleids:
 # On-demand sweep (never a gate): scripts/check-dev-docs.py --sweep.
 taskindex:
 	$(PY) scripts/check-task-index.py
+
+agentsguard:
+	$(PY) scripts/check-agents-guard.py
 
 devdocs:
 	$(PY) scripts/check-dev-docs.py
