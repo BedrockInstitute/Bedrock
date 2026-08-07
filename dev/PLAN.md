@@ -580,7 +580,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T152 | Terminology dossier: the eleven terms StepGraph uses uncovered | DELIVERED. Keep all except 像片 which becomes 切片. Drift at Images:460. Enters D35 | `_build/l3.32-t152-dossier.md` |
 | L3.32-T153 | Opus adversarial review of the T152 dossier (D35 arm 2) | DELIVERED. 4 PASS landed; the 7 escalations ruled under owner delegation, all landed | `_build/l3.32-t153-review.md` |
 | L3.32-T154 | Bisect the below-lim probe: find the second wall | FOUND, one wall: the depth-6 ordinal witness; cured 631 s to 59 s in harness; five tail errors named | `_build/l3.32-t154-report.md` |
-| L3.32-T159 | Close the below-lim probe end to end, first time ever | DISPATCHED 2026-08-08 | `_build/l3.32-t159-report.md` |
+| L3.32-T159 | Close the below-lim probe end to end, first time ever | GREEN. 57.8 s cold, 2.5 s warm, clean; 13 fix lines of 80; the wall count stays one | `_build/l3.32-t159-report.md` |
 | L3.32-T155 | D36 gate G1: the fat audit of the shared part | Corrected movable 2,069-2,248 (HF, StepGraph, StepStory seeded AC); saves-now 757-930 | `_build/l3.32-t155-report.md` |
 | L3.32-T156 | D36 gate G2: the carried-sequence AC-necessity re-split | ZERO re-booked. General beta is AC-forced by the choice quantifier; all five terms stay BOTH | `_build/l3.32-t156-report.md` |
 | L3.32-T157 | D36 gate G3: ideal-form pricing of the largest AC masters | Five of seven at ideal form. Delta 490-580 naive; 130-170 on the description fork | `_build/l3.32-t157-report.md` |
