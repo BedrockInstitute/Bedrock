@@ -218,7 +218,9 @@ def trophy_roots(data: dict, files: list[str]) -> tuple[dict[str, list[str]], li
 
     Every root must exist in the tree. A stale root fails the gate exactly
     like a stale [[retire]] row does."""
-    roots: dict[str, list[str]] = {"ac": [], "gch": []}
+    # "ac-route" rows are DISCLOSURE roots, [T147]: they feed gch_route only
+    # and never move the main split. Promoting them to "ac" is an owner ruling.
+    roots: dict[str, list[str]] = {"ac": [], "gch": [], "ac-route": []}
     defects: list[str] = []
     entries = data.get("trophy_split")
     if entries is None:
@@ -290,6 +292,10 @@ def trophy_split(data: dict, files: list[str],
         elif not in_ac and in_gch:
             parts["gch_only"] += sizes[f]
         else:
+            # NOT a modelling accident, [T147]: the ambiguous set is the rud
+            # engine's own consumers. All ten import a gch_only module
+            # DIRECTLY, so part 3 contains lines that do not compile without
+            # part 4. The board discloses that beside the figure.
             parts["shared"] += sizes[f]
             ambiguous.append(f)
     parts["ac_total"] = parts["base"] + parts["ac_only"] + parts["shared"]
@@ -305,6 +311,14 @@ def trophy_split(data: dict, files: list[str],
     # endpoint's own import closure reaches today. The board shows both,
     # because showing one invites the reader to act on the wrong one.
     parts["ac_delivered"] = parts["ac_total"] - sum(sizes[f] for f in ambiguous)
+    # The GCH side's second reading, [T147]: what stays GCH-alone once the
+    # ruled route's AC suppliers are counted. Machine-verified in a worktree:
+    # deleting the 22 leaves the delivered AC endpoint green, and adding the
+    # route roots moves seven of them, 3,889 lines.
+    route = closure(graph, roots["ac"] + roots.get("ac-route", []))
+    parts["gch_route"] = sum(
+        sizes[f] for f in files
+        if f.startswith("src/L/") and f in gch and f not in ac and f not in route)
     got = sum(parts[k] for k in ("base", "ac_only", "shared", "gch_only"))
     if got != total:
         msg = f"trophy split does not sum to standing: {got} != {total}"
@@ -450,7 +464,8 @@ def main(argv: list[str]) -> int:
             # exclude the retirement set, so naming `tracked` here would invite
             # the same reading that made the first version wrong.
             f"| ac-total {split['ac_total']:,} "
-            f"| ac-delivered {split['ac_delivered']:,} | standing {standing:,}"
+            f"| ac-delivered {split['ac_delivered']:,} "
+            f"| gch-route {split['gch_route']:,} | standing {standing:,}"
         )
         return 1 if defects else 0
 
