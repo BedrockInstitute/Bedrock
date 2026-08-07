@@ -297,14 +297,26 @@ authority = "PLAN task T133; owed row archival-arm-b"
 [[remaining]]
 id = "W3"
 trophy = "GCH"
-title = "W3 face route: the general order formula over the fresh generic face"
-naive_low = 1000
-naive_high = 2700
-calibrated_low = 3000
-calibrated_high = 7900
-klass = "mostly x3, one x1.3 row (the B statement layer)"
+title = "W3 face route, MINUS the AC-forced elimination slice (see w3-ac-slice)"
+naive_low = 760
+naive_high = 1750
+calibrated_low = 2280
+calibrated_high = 5050
+klass = "mostly x3, one x1.3 row (the B statement layer). SPLIT 2026-08-07: the elimination slice moved to w3-ac-slice after [T158] ruled it AC-forced; the two rows' bands sum EXACTLY to the pre-split 1,000-2,700 naive and 3,000-7,900 calibrated, so coverage is preserved by construction. The split POINT is survey-grade and the w3-ac-slice gate re-cuts it on measurement"
 gate = "T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. BUT StepInL is in the D18 retirement set, so this content must be carried by its ideal-form rewrite or W3 loses it: see the stepinl-rewrite row"
 provenance = "_build/l3.32-t48-report.md face-route table; PLAN [L3.32] register T48 and T50 entries"
+
+[[remaining]]
+id = "w3-ac-slice"
+trophy = "BOTH"
+title = "W3's elimination half: the order formula over the level with its two adequacies, AC-forced"
+naive_low = 240
+naive_high = 950
+calibrated_low = 720
+calibrated_high = 2850
+klass = "x3 (survey; carved from the W3 row, coverage-preserving). The low is half of T14's 480 low, the high is T14's whole-chapter 950: the elimination half's true share is UNGATED and this band says so"
+gate = "NONE RUN. [T158] RULED verdict (c) 2026-08-07: the carve's witness must re-enter L through bridge-isJ-to-isL, whose proof body is the description side (Arms consumes Describe and Switch, Bridge:41-44,:60,:164-286), and the description phi can only be discharged by W3's order formula with its two adequacies; the delivered mirror confirms the obligation is real (Transversal names orderL as a constant, the retiring cone supplies it as an element). T19/T22's structural RED was measured on the DELIVERED face before the fresh-face and graph-layer work, so the D22 gate before funding re-prices rather than assumes: state the order-formula slice over the delivered face at the J side and price the two adequacies, stop-line 300"
+provenance = "_build/l3.32-t158-report.md; _build/l3.32-t24-report.md section 5; T14 and T22 register entries"
 
 [[remaining]]
 id = "W1p"
@@ -416,7 +428,7 @@ naive_high = 650
 calibrated_low = 900
 calibrated_high = 1950
 klass = "x3 (new chapter); the carve half is measured at 0.18-0.24k"
-gate = "GATE 5 RAN AS [T3], GO 2026-08-04: the pick over Jset-order is 13 non-blank lines on delivered exports plus ONE module hypothesis, the class-level isL-to-isJ bridge step (probe 158 lines, under the 200 stop). [T24] then D-10-checked T3's residual and found the recorded carve target FALSE (the description must NAME the order internally, which is W3-chapter content, red structurally per T19/T22); the CORRECTED carve is GREEN at 262 probe lines, ~130 of carve machinery, with the description AND the bridge step as module hypotheses. CORRECTION 2026-08-07: [T146]'s claim 5 called this row unmeasured; it read the stale 'none yet' gate text and missed the provenance line's T3 and T24, whose measurements stand. What remains unmeasured is the DISCHARGE of the two hypotheses on the ruled route: the bridge step is the bridge-landing row's content, and the description's status on the AC side is an open question the re-home brief must answer before funding"
+gate = "GATE 5 RAN AS [T3], GO 2026-08-04: the pick over Jset-order is 13 non-blank lines on delivered exports plus ONE module hypothesis, the class-level isL-to-isJ bridge step (probe 158 lines, under the 200 stop). [T24] then D-10-checked T3's residual and found the recorded carve target FALSE (the description must NAME the order internally, which is W3-chapter content, red structurally per T19/T22); the CORRECTED carve is GREEN at 262 probe lines, ~130 of carve machinery, with the description AND the bridge step as module hypotheses. CORRECTION 2026-08-07: [T146]'s claim 5 called this row unmeasured; it read the stale 'none yet' gate text and missed the provenance line's T3 and T24, whose measurements stand. What remains unmeasured is the DISCHARGE of the two hypotheses on the ruled route: the bridge step is the bridge-landing row's content, and the description's status was ruled by [T158] 2026-08-07, verdict (c): only W3's elimination slice discharges it, so the re-home consumes the new w3-ac-slice row, whose D22 gate must run before this row is funded. This row's own band still covers the pick and the carve only"
 provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 entries"
 
 # Re-priced downward 2026-08-05 after [T72] removed SatSets from the retirement set:
