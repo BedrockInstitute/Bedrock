@@ -1001,3 +1001,57 @@ en = "landing site"
 zh = "落点"
 ja = "着地点"
 notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. Project vocabulary: where future content will land."
+
+[[term]]
+category = "Logic"
+en = "graph layer"
+zh = "图层"
+ja = "グラフレイヤー"
+avoid = ["ja:グラフ層"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). ja 層 is the sheaf headword and sheaves on graphs are a live object (T153 section 2), so the katakana layer carries the architecture sense. zh keeps 图层 with a modifier at first use per chapter (运算图层 style), because the bare word is lexicalized for image layers."
+
+[[term]]
+category = "Set theory"
+en = "membership formula"
+zh = "隶属公式"
+ja = "帰属論理式"
+avoid = ["ja:所属式"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). ja per the attested 帰属 (ja Wikipedia 元(数学), six instances) plus the ruled formula = 論理式; 所属 is attested nowhere in the cited pages. zh 隶属 rides the standard 隶属函数 pattern of the fuzzy-set literature."
+
+[[term]]
+category = "Logic"
+en = "equality frame"
+zh = "等词框架"
+ja = "等号フレーム"
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). zh 等词 attested by 张清宇 (12 instances, 带等词的语言) and the BUAA syllabus (等词公理), both found by the T153 review after the dossier's sources broke. The division of labour: 等号 names the sign, 等词 the predicate; this frame argues about the predicate."
+
+[[term]]
+category = "Set theory"
+en = "transitive carrier"
+zh = "传递载体"
+ja = "推移的台"
+avoid = ["ja:推移的な台"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). Composition follows the ruled siblings 推移的集合 and 推移的クラス: no な. The compound is pure composition of ruled heads."
+
+[[term]]
+category = "Logic"
+en = "read lemma"
+zh = "读引理"
+ja = "読み補題"
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). A project coinage pair for P-k's read-lemma concept; the literature is silent. zh has 18 lines in 8 files of standing; ja is coined to match and marked as a coinage."
+
+[[term]]
+category = "Other"
+en = "survivor"
+zh = "存活"
+ja = "存続"
+avoid = ["ja:生存ホーム", "ja:生存モジュール"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). Project vocabulary: what remains after a retirement. ja 生存 rejected: 生存ホーム reads as a care facility (T153 section 9); 存続 carries the institutional-continuation sense. Attributive forms: 存続モジュール, 存続する章."
+
+[[term]]
+category = "Other"
+en = "master"
+zh = "主章"
+ja = "原本"
+avoid = ["ja:主章"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). The canonical trilingual source file of a chapter. ja 主章 rejected: it reads as the principal chapter; マスター rejected as IT register. 原本, the document original, matches one-master-per-module with woven copies."
