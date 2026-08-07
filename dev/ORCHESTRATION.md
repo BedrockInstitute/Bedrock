@@ -292,21 +292,27 @@ sources, never inline in the orchestrator's loop; the owner rules on the
 presented evidence.
 
 **A term not in `dev/glossary.toml` is not invented, and settling it is a
-DISPATCH, not a judgement call.** When a delivered chapter uses a load-bearing
-term that the glossary does not carry, the orchestrator sends a sub-agent to
-produce a terminology dossier: search the Chinese literature for the
-established rendering FIRST, with sources; only where the literature is silent,
-draft two or three candidates by analogy, each with the analogy it rests on and
-the collision it avoids; mark every guess as a guess; and give the Japanese
-rendering where a source supplies one. The owner rules on the dossier. The
-orchestrator does not choose, and does not settle a term inline: an inline
-choice is unsourced by construction, and the owner cannot audit it.
+TWO-AGENT PIPELINE, not a judgement call** (D35, owner-ruled 2026-08-07; it
+replaces the owner's default review). **Arm 1, codex:** search the web for the
+literature provenance of each rendering, with sources; only where the
+literature is silent, draft two or three candidates by analogy FROM terms that
+have provenance, each with the analogy it rests on and the collision it
+avoids; mark every guess as a guess; give the Japanese rendering where a
+source supplies one. **Arm 2, opus tier, adversarial:** verify the sources,
+attack each recommendation's collisions and its in-tree consistency claims,
+and return PASS or FAIL per term. **A term that PASSES lands in the glossary
+without the owner's review**; the commit cites the dossier and the review. A
+term that FAILS, or that the review leaves as a genuine fork, escalates to
+the owner, and only that term does. The owner's veto always stands: any
+ruling they make overrides the pipeline. The orchestrator still never settles
+a term inline: an inline choice is unsourced by construction and nobody can
+audit it.
 
-Confirmed renderings then go into `dev/glossary.toml`, with an `avoid` list for
-renderings that are actively wrong, and nowhere else. **An `avoid` entry that
-bans a common word will fire on its innocent uses**, so ban a rendering only
-when it is wrong in every context; otherwise leave it to review and say so in
-the term's notes.
+Renderings that pass the pipeline or the owner's ruling then go into
+`dev/glossary.toml`, with an `avoid` list for renderings that are actively
+wrong, and nowhere else. **An `avoid` entry that bans a common word will fire
+on its innocent uses**, so ban a rendering only when it is wrong in every
+context; otherwise leave it to review and say so in the term's notes.
 
 *Enforcement:* section 6 step 7 (the return-handling checklist: a chapter that
 introduces a term the glossary lacks is not fully landed until the dossier is
