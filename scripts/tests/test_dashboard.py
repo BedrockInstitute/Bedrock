@@ -429,14 +429,12 @@ def test_lines_panel_matrix() -> int:
                    (round(m["both"]["calibrated"][0] / 1000, 2),
                     round(m["both"]["calibrated"][1] / 1000, 2)),
                    (b["calibrated_low_k"], b["calibrated_high_k"]))
-    # [T139] rated one AC number WEAK: the ambiguous rule adds 4,077 lines, so
-    # the board must carry the route projection AND the delivered closure.
-    fails += check("AC panel shows the route projection",
-                   "route projection" in html, True)
-    fails += check("AC panel shows the delivered closure",
-                   "import closure reaches" in html, True)
-    fails += check("AC panel says which number to plan with",
-                   "Do not read the first number as delivered need" in html, True)
+    # Ruling D33 retired the delivered-endpoint reading: the split follows
+    # the ruled AC route and carries ONE reading. The board must NOT mention
+    # the retired reading; the assertion is the absence.
+    fails += check("the retired delivered reading is absent",
+                   "delivered need" not in html
+                   and "route projection" not in html, True)
     fails += check("lines panel names its sources",
                    "dev/ledger.toml (mtime" in html
                    and "scripts/ledger.py" in html, True)
