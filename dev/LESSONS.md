@@ -912,6 +912,25 @@ bounded quantifiers, UmemInJ at `con c` atoms.
 
 **Provenance:** `_build/g2p-report.md`.
 
+### R-40. A deep successor-chain membership witness normalizes super-linearly; climb by small closures
+
+**Rule:** An ordinal-membership premise stated at a deep iterated successor
+(`+ω-iter n`, a `sucV`-chain) forces the conversion checker to normalize the
+whole chain against the level's union representation, and the cost is
+super-linear in the depth. State the witness at a SHALLOW index and climb by
+the limit-ordinal successor closure (`limit-succ-mem`,
+`L.Rud.Hierarchy:455`), one step per line. R-35's small-index shape is the
+cure; the mechanism differs (no index extraction, pure premise conversion).
+
+**Measured ([L3.32-T154], 2026-08-08):** depth 1 converts in 0.7 s, depth 3
+in 18.9 s, depth 6 never inside 600 s under the 8 GB cap; the nine-line
+climb takes the site from KILLED at 631 s to 59 s, exit 0. Found by prefix
+bisection of the below-lim probe; the wall survived every postulate variant
+except postulating the ordinal witness itself.
+
+**Provenance:** `_build/l3.32-t154-report.md` sections 2 to 4; the harness
+family `/tmp/t154-scratch`.
+
 ## 3. Termination traps (T series)
 
 ### T-1. At-pattern aliases of accessibility constructors; split the nests outer and inner
@@ -2019,7 +2038,7 @@ stalled agent is often recoverable: T131's was.
 
 ## Adding an entry
 
-Take the next free ID under the series (P-k, R-40, T-3, I-10, D-25, C-23), cite
+Take the next free ID under the series (P-k, R-41, T-3, I-10, D-25, C-23), cite
 the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
