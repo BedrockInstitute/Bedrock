@@ -156,11 +156,16 @@ non-pairs it is junk; only the pair equation is ever used.
 <!--/-->
 
 ```agda
-left : V ℓ → V ℓ
-left z = ⋃ (⋂ z)
+-- perf: transparent left re-normalized the ⋂ presentation per consumer
+-- use (rightSlice-pair 16.5s, sub₂ 15.7s, b∈ₛR 9.0s, sub₁ 8.9s)
+opaque
+  left : V ℓ → V ℓ
+  left z = ⋃ (⋂ z)
 
-left-spec : (a b : V ℓ) → left (pr a b) ≡ a
-left-spec a b = cong ⋃_ (⋂pair a b) ∙ ⋃singl a
+  left-spec : (a b : V ℓ) → left (pr a b) ≡ a
+  left-spec a b = cong ⋃_ (⋂pair a b) ∙ ⋃singl a
+  left-compute : (b : V ℓ) → left b ≡ ⋃ (⋂ b)
+  left-compute b = refl
 ```
 
 <!--en-->
@@ -570,7 +575,8 @@ opaque
 
 opaque
   left-⋂-collapse : (b c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → left b ≡ c
-  left-⋂-collapse b c c∈⋂ = cong ⋃_ (⋂-collapse b c c∈⋂) ∙ ⋃singl c
+  left-⋂-collapse b c c∈⋂ = subst (λ t → t ≡ c) (sym (left-compute b))
+    (cong ⋃_ (⋂-collapse b c c∈⋂) ∙ ⋃singl c)
     where
     ⋂-collapse : (b c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → ⋂ b ≡ ⁅ c ⁆s
     ⋂-collapse b c c∈⋂ = extensionality (⋂ b) (⁅ c ⁆s) (sub₁ , sub₂)
@@ -583,7 +589,8 @@ opaque
 
 opaque
   left-⋂-empty : (b : V ℓ) → ((c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → Empty.⊥) → left b ≡ ∅
-  left-⋂-empty b ne = cong ⋃_ (⋂-empty b ne) ∙ ⋃∅
+  left-⋂-empty b ne = subst (λ t → t ≡ ∅) (sym (left-compute b))
+    (cong ⋃_ (⋂-empty b ne) ∙ ⋃∅)
     where
     ⋂-empty : (b : V ℓ) → ((c : V ℓ) → ⟨ c ∈ₛ ⋂ b ⟩ → Empty.⊥) → ⋂ b ≡ ∅
     ⋂-empty b ne = extensionality (⋂ b) ∅ (sub₁ , sub₂)
