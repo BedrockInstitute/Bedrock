@@ -563,13 +563,18 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T138 | Close the limit segment: the four story clauses | GREEN x4 in a 35.7 s harness. T131's segDom-0 is a check-time WALL: one proof walls past 7.5 min | `_build/l3.32-t138-report.md` |
 | L3.32-T139 | Adversarial review of D31's five measurements | 3 HOLD, 2 WEAK. AC has two readings, 10,026 route vs 5,949 delivered; the tail band is unmeasured | `_build/l3.32-t139-report.md` |
 | L3.32-T140 | The tail probe | RED. The readings reduce to the tail's own theorems; no compression path. Build A moves to about 3.2-3.4k naive | `_build/l3.32-t140-report.md` |
-| L3.32-T141 | Write today into the JOURNAL: nineteen dispatches, T121 to T139 | DISPATCHED 2026-08-07 | `_build/l3.32-t141-report.md` |
+| L3.32-T141 | Write today into the JOURNAL: nineteen dispatches, T121 to T139 | DELIVERED. 19 of 19 entries, +1,435 words; seven unsupported claims flagged | `_build/l3.32-t141-report.md` |
 | L3.32-T142 | The code block gate | RED. The readings reduce to the shape machinery's own theorems, 2,378 delivered; the arity pin saves zero | `_build/l3.32-t142-report.md` |
 | L3.32-T143 | Kill the exact-domain wall | CURED, 595 s to 27 ms. The disease was I-5: two inline lambdas at the eliminator; named with written types, 29 lines | `_build/l3.32-t143-report.md` |
 | L3.32-T144 | Execute D32: delete the Crossing section | DELETED, 86 lines, docs shipped. Condensation fell 150.2 to 11.5 s: ambientOnly-from was 92 percent | `_build/l3.32-t144-report.md` |
 | L3.32-T145 | Gate the graph-layer supply | RED, outcome 3: the slice IS the full rewrite. The roles reduce to StepInL's own theorems, ~1,718 delivered lines | `_build/l3.32-t145-report.md` |
 | L3.32-T146 | Opus recon: pin the AC remainder | DELIVERED. The 1.5-2.9k is 3.7-5.6k: a documented leak (the graph layer) plus a band wrong both ways | `_build/l3.32-t146-report.md` |
 | L3.32-T147 | Opus audit: is GCH-alone alone? | HOLDS-WITH-EDGES, worktree-verified; all ten ambiguous modules need the 22. Proposal 2 RULED as D33 | `_build/l3.32-t147-report.md` |
+| L3.32-T148 | StepInL rewrite block 1: the fresh master and the frame layer | LANDED. L.Rud.StepGraph, 504 lines, ~1.6 s warm, survivors only, wired; rate x1.21 | `_build/l3.32-t148-report.md` |
+| L3.32-T149 | JOURNAL entries for the dispatches T140 to T147 | DELIVERED. 8 of 8 entries, +723 words, insertions only; six unsupported claims recorded in place | `_build/l3.32-t149-report.md` |
+| L3.32-T150 | Route memo: the below-lim general build, consolidated | DELIVERED. 1,983 words; sizes tied to the ledger, both calibers; five contradictions pinned | `_build/l3.32-t150-report.md` |
+| L3.32-T151 | Run the cured below-lim probe end to end | DISPATCHED 2026-08-07 | `_build/l3.32-t151-report.md` |
+| L3.32-T152 | Terminology dossier: the eleven terms StepGraph uses uncovered | DISPATCHED 2026-08-07 | `_build/l3.32-t152-dossier.md` |
 
 ### Bookkeeping
 

@@ -385,14 +385,14 @@ provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52
 [[remaining]]
 id = "stepinl-rewrite"
 trophy = "BOTH"
-title = "StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17)"
-naive_low = 1240
-naive_high = 1730
-calibrated_low = 1610
-calibrated_high = 2250
-klass = "x1.3 throughout, and the op-graph content is INSIDE the band, not extra: T78 verified that T7's per-part table, which T10 re-priced, already itemizes graphOf/graph-out/graph-in at 25-40 fresh and the memOf dispatch at 30-50, so this row's earlier UNPRICED warning was wrong"
-gate = "T10 (green), RE-SCOPED and confirmed by T78 2026-08-05: the price is essentially unchanged because the content was already inside T10's scope under its own names. W3's consumer status adds three OBLIGATIONS rather than content: the mem11-mem14 arms re-anchored at the measured rate (they are the load-bearing non-pair content and the only W3-critical arms T10 extrapolated rather than measured), the graph statements' shapes pinned so W3's wiring re-points cleanly, and the sixteen-operation lex ruled OUT of this row because it is W3-row content and booking it here would double-count TROPHY CORRECTED GCH to BOTH, 2026-08-07 by [T146]: the below-lim story consumes the graph layer through StepStory's Clause telescope, bigOr folds all sixteen op graphs, and stepSet-in-L is proved through stepForm, so the AC route cannot avoid this row. The leak's origin is documented: T52's own table flagged the operation-graph formulas as W3's item, not re-priced there, and the row was assigned away from the AC side. T146 counted the below-lim slice at about 85 percent of this row; [T145] is gating the exact split and its measurement supersedes the count. [T145] RETURNED RED, outcome 3, and the split question is CLOSED: the slice IS the full rewrite. The probe (296 lines, green, survivors only) proved each role's assembly closes in a few lines once its obligation is given, and the obligations are StepInL's own theorems at about 1,718 delivered lines, the naive band's top edge. CONSEQUENCE FOR D30(F): the minimal-slice scoping collapses; the WHOLE row rides the bridge-landing exemption ahead of the wing, because below-lim cannot move without it. It is the next funded build on the AC chain"
-provenance = "_build/l3.32-t10-report.md; PLAN register T10 entry"
+title = "StepInL ideal-form rewrite, blocks 2 to 4 (block 1 landed as L.Rud.StepGraph)"
+naive_low = 1301
+naive_high = 1301
+calibrated_low = 1575
+calibrated_high = 1691
+klass = "RE-CUT 2026-08-07 after block 1 landed: the naive figure is [T145]'s measured component sum for blocks 2-4 (the 32 decodes 868 plus dispatchers 36 plus graphs 20, the values role 228, the step role 149). Calibrated low is the block-1 MEASURED rate x1.21 (504 landed on 417 delivered comparables), high is the standing x1.3. The old whole-row band was 1,240-1,730 naive / 1,610-2,250 calibrated; the op-graph content was INSIDE it per T78, and T145 measured the whole at 1,718, the band's top edge"
+gate = "T10 (green), RE-SCOPED and confirmed by T78 2026-08-05: the price is essentially unchanged because the content was already inside T10's scope under its own names. W3's consumer status adds three OBLIGATIONS rather than content: the mem11-mem14 arms re-anchored at the measured rate (they are the load-bearing non-pair content and the only W3-critical arms T10 extrapolated rather than measured), the graph statements' shapes pinned so W3's wiring re-points cleanly, and the sixteen-operation lex ruled OUT of this row because it is W3-row content and booking it here would double-count TROPHY CORRECTED GCH to BOTH, 2026-08-07 by [T146]: the below-lim story consumes the graph layer through StepStory's Clause telescope, bigOr folds all sixteen op graphs, and stepSet-in-L is proved through stepForm, so the AC route cannot avoid this row. The leak's origin is documented: T52's own table flagged the operation-graph formulas as W3's item, not re-priced there, and the row was assigned away from the AC side. T146 counted the below-lim slice at about 85 percent of this row; [T145] is gating the exact split and its measurement supersedes the count. [T145] RETURNED RED, outcome 3, and the split question is CLOSED: the slice IS the full rewrite. The probe (296 lines, green, survivors only) proved each role's assembly closes in a few lines once its obligation is given, and the obligations are StepInL's own theorems at about 1,718 delivered lines, the naive band's top edge. CONSEQUENCE FOR D30(F): the minimal-slice scoping collapses; the WHOLE row rides the bridge-landing exemption ahead of the wing, because below-lim cannot move without it. BLOCK 1 LANDED as [T148] 2026-08-07: L.Rud.StepGraph, 504 lines, warm 1.5-1.8 s, survivors only, wired; the eqFrame, the frames, the sixteen membership formulas and bigOr are standing, and the sixteen graphs stay a BigOr telescope parameter until block 3. Blocks 2 to 4 remain"
+provenance = "_build/l3.32-t10-report.md; PLAN register T10 entry; _build/l3.32-t148-report.md"
 
 [[remaining]]
 id = "choice-rehome"
@@ -403,7 +403,7 @@ naive_high = 650
 calibrated_low = 900
 calibrated_high = 1950
 klass = "x3 (new chapter); the carve half is measured at 0.18-0.24k"
-gate = "NONE RUN. The named D22 probe is gate 5 of _build/l3.31-lt-report.md:39, at 200 lines or fewer: carve the delivered producer well-order at the bridge landing and read one choice value through it. This is the only AC-side row with no measurement of any kind, flagged by [T146]"
+gate = "GATE 5 RAN AS [T3], GO 2026-08-04: the pick over Jset-order is 13 non-blank lines on delivered exports plus ONE module hypothesis, the class-level isL-to-isJ bridge step (probe 158 lines, under the 200 stop). [T24] then D-10-checked T3's residual and found the recorded carve target FALSE (the description must NAME the order internally, which is W3-chapter content, red structurally per T19/T22); the CORRECTED carve is GREEN at 262 probe lines, ~130 of carve machinery, with the description AND the bridge step as module hypotheses. CORRECTION 2026-08-07: [T146]'s claim 5 called this row unmeasured; it read the stale 'none yet' gate text and missed the provenance line's T3 and T24, whose measurements stand. What remains unmeasured is the DISCHARGE of the two hypotheses on the ruled route: the bridge step is the bridge-landing row's content, and the description's status on the AC side is an open question the re-home brief must answer before funding"
 provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 entries"
 
 # Re-priced downward 2026-08-05 after [T72] removed SatSets from the retirement set:
@@ -958,10 +958,10 @@ evidence = "_build/l3.32-t44-report.md; _build/l3.32-t48-report.md; _build/l3.32
 
 [[owed]]
 id = "stepinl-rewrite-owed"
-trophy = "GCH"
-title = "Re-scope and rewrite StepInL so W3's op-graph content survives the retirement"
-status = "frozen"
-detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. T10's ideal-form rewrite was scoped before that consumer existed, so a re-scope was owed. T78 ran it and found the content was already inside T10's scope under its own names: the price is essentially unchanged and the row is FUNDABLE. What W3's consumer status actually adds is three obligations on the rewrite's shape, not new content. ONE SLICE RIDES AHEAD, per D30(F): the objects below-lim consumes (values-in-L, stepSet-in-L, the op graphs) are bridge-landing prerequisites, so their minimal surviving supply is exempted work and is gated as [T145]; only that slice moves before the wing. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes AT THE ARCHIVAL, per D30(F) ruled 2026-08-07: the wall gate is MET at 487.9 s, and the owner chose to resume the wing on the archival's cushion rather than the gate's 10 s margin."
+trophy = "BOTH"
+title = "Rewrite StepInL fresh so the graph layer survives the retirement"
+status = "ready"
+detail = "The sixteen-operation variable-form graph W3 consumes lives in StepInL, which D18 retires. [T145] measured the below-lim slice AS the full rewrite (outcome 3, RED), so per D30(F) the WHOLE row rides the bridge-landing exemption ahead of the wing; [T146] corrected the trophy to BOTH. BLOCK 1 LANDED 2026-08-07 as [T148]: L.Rud.StepGraph, 504 lines, green at 1.5-1.8 s warm, survivors only, wired. READY: block 2 (the decodes mem0-mem7) is the next dispatch on the owner's word; block 3 carries mem8-mem15 with the dispatchers and graphs; block 4 the values lex, AtStep and stepSet-in-L. Remaining 1,301 naive measured, 1,575-1,691 calibrated at the block-1 rate."
 blocked_by = ""
 evidence = "_build/l3.32-t63-report.md; src/L/Rud/StepInL.lagda.md:2139-2160; the stepinl-rewrite row above"
 

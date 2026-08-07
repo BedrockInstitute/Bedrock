@@ -125,9 +125,11 @@ briefs, audits the returns, wires the catalog and commits; it works to `dev/ORCH
 
 - **Never touch `src/Everything.lagda.md`.** The orchestrator wires it after auditing your work.
 - **Never commit, never push.** Leave the working tree as your report describes it.
-- **Run Agda under a heap cap, one process at a time**: `GHCRTS=-M8g agda <file>`. Two
-  typechecks at once overload the machine and spoil each measurement. Report a heap exhaustion
-  as a wall. Never raise the cap.
+- **Run Agda under a heap cap**: `GHCRTS=-M8g agda <file>`. Run one Agda process per agent.
+  Memory is the machine constraint, not the process count (owner's word, 2026-08-07): the
+  dispatcher's Agda slots bound how many agents typecheck at once. A task that MEASURES check
+  time gets a quiet machine; label a contended time as contended. Report a heap exhaustion as
+  a wall. Never raise the cap.
 - **Write your deliverable incrementally.** Create the file early and fill it as answers land.
   Research held only in your head dies with your budget.
 - **Evidence is `file:line`.** A report that cannot be checked can only be believed.

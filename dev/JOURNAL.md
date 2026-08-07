@@ -2317,6 +2317,115 @@ The tree measures 18.0 minutes. The projection multiplied a derived total
 by an unmeasured ratio. The fresh cost of the table tail is the open term
 that decides claim 4.
 
+**`[T140]` THE TAIL PROBE** (2026-08-07,
+`_build/l3.32-t140-report.md`).
+
+The probe is RED at delivered size. It measures 140 non-blank lines. The
+assembly closes in 26 code lines. The two graph readings reduce to forcing
+obligations. `graphAt-holds` needs Table, Slot and Sound (1,236 in-fence
+lines). `graphAt-unique` needs Unique (630).
+
+The method prices each obligation at delivered size. No compression path
+exists. The fresh tail estimate of 620 to 930 lines is refuted
+(`_build/l3.32-t132-report.md:124-131`;
+`_build/l3.32-t139-report.md:138-148`). Build A stands at about 3.2 to 3.4k
+naive. The owner reaffirmed D31 at that price.
+
+**`[T141]` THE JOURNAL TASK** (2026-08-07,
+`_build/l3.32-t141-report.md`).
+
+The dispatch wrote nineteen entries, `[T121]` to `[T139]`. The journal grew
+by 1,435 words. It flagged seven claims the evidence does not support.
+
+**`[T142]` THE CODE BLOCK GATE** (2026-08-07,
+`_build/l3.32-t142-report.md`).
+
+The probe is RED at delivered size. It measures 162 non-blank lines. The
+assembly closes in 6 body lines. Both code readings reduce to the shape
+machinery's own theorems. Their delivered homes total 2,378 in-fence lines.
+The arity-1 pin saves zero.
+
+The remaining total moves to about 5.0 to 5.1k naive. This is D31's third
+upward move. D32 deferred this remainder to the GCH resume. The stop line
+fires at 300 on each delivered home. No compression path exists. The
+fresh-compressed code block estimate is refuted
+(`_build/l3.32-t134-report.md:42`).
+
+**`[T143]` THE EXACT-DOMAIN WALL, CURED** (2026-08-07,
+`_build/l3.32-t143-report.md`).
+
+The wall is CURED. `segDom₀` checks in 27 ms inside a 36.1 s harness. The
+baseline stopped at 595 s. The statement is byte-identical. The restated
+proof is 29 non-blank lines. The disease is the I-5 class.
+
+The eliminator's two branches were untyped inline lambdas. Naming them with
+written types removes the wall. Each branch is cheap alone. The two inline
+branches together wall. R-35 is not the disease at this site. The T138 shape
+still carries a latent type error.
+
+Its `pgo` omits the step from `ξ ∈ a₀` to `ξ ∈ sucV a₀`.
+
+**`[T144]` EXECUTE D32** (2026-08-07,
+`_build/l3.32-t144-report.md`).
+
+The deletion is DELIVERED. The cut removes 86 lines. The chapter falls from
+967 to 885 lines. It checks green after the cut. A 4-line pointer replaces
+the section. The archive row and the rebuild row ship with it.
+
+The check time falls 150.2 s to 11.5 s. `ambientOnly-from` carried 92
+percent of the profile total. The cut removes 138.7 s. The module checks in
+about 13 times less time. Zero consumers use the deleted names outside the
+chapter. The wall gate met at 487.9 s with this cut inside the fall (D30
+(E)).
+
+The D30 narrative sits in the dated record below.
+
+**`[T145]` THE GRAPH-LAYER GATE** (2026-08-07,
+`_build/l3.32-t145-report.md`).
+
+The probe is RED at delivered size. It measures 296 non-blank lines. The
+three roles reduce to StepInL's own theorems. The obligations total about
+1,718 delivered lines. The slice IS the full rewrite. It sits at the top of
+the rewrite band.
+
+This is the third delivered-size RED in a row. The D30(F) consequence
+follows. The minimal supply that rides the D30(B) exemption is the full
+graph layer. The whole `stepinl-rewrite` row moves ahead of the wing.
+T146's 85 percent estimate is superseded
+(`_build/l3.32-t146-report.md:177`). The 868-line decode block is the
+load-bearing term.
+
+**`[T146]` THE AC REMAINDER, RE-PRICED** (2026-08-07,
+`_build/l3.32-t146-report.md`).
+
+The board figure is too low in both calibers. The AC remainder re-cuts from
+1.5 to 2.9k to about 3.7 to 5.6k. The calibrated band is about 5.5 to 9.4k.
+The graph layer is booked in no AC row. The exclusion is deliberate and
+documented (`_build/l3.32-t52-report.md:452`). It is a mis-assignment, not
+a lost row.
+
+The band is also too high by 553 lines. Q-lim at omega delivered after the
+band was set. The largest single cause is measured. Below-lim's first
+instance runs about 1,570 to 1,680 lines. The row allocated it 190 to 400.
+`StepStory` must not book twice.
+
+T145's measurement supersedes this reading.
+
+**`[T147]` THE WORKTREE DELETION TEST** (2026-08-07,
+`_build/l3.32-t147-report.md`).
+
+The verdict is HOLDS-WITH-EDGES. The 22 masters are alone against the
+delivered AC endpoint. `L.Model` checked green with all 22 deleted. Ten more
+modules fall with them. They hold 4,077 lines inside the AC total. The two
+figures are not independent.
+
+Proposal 2 became ruling D33. `L.Rud.Order` and `L.Rud.Bridge` join the AC
+roots. The delivered-endpoint reading is retired. GCH-alone falls from 9,197
+to 5,308 lines. The ambiguous set falls from 4,077 to 1,769 lines. The
+brief's Hull guess is wrong.
+
+Hull is a consumer, not a supplier.
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
