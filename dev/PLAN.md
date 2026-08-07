@@ -554,6 +554,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T131 | The honest segment at a limit index: below-lim's last hypothesis | KILLED 2026-08-07 after looping 1,622x on one scratch file; the probe holds chai | `_build/l3.32-t131-report.md` |
 | L3.32-T132 | D22 gate on Build A's widest term: one adequacy arm | Arm GREEN at 174 lines; the 700-900 ESTIMATE RED. Build A is ~2.0-2.5k naive, not 1.1-1.5k | `_build/l3.32-t132-report.md` |
 | L3.32-T133 | Build A block 1: the fresh home, frame, and T132's arm | LANDED. L.TowerGraph, 304 lines, green, ZERO retiring imports; the arm now 2.7 s vs 21.7 | `_build/l3.32-t133-report.md` |
+| L3.32-T134 | Build A block 2: the four description arms | 6 lines, not 165. The frame makes every arm a PARAMETER, so no arm is provable until the text block lands | `_build/l3.32-t134-report.md` |
+| L3.32-T135 | A per-trophy caliber: what the AC trophy alone costs | DELIVERED. AC alone is 22,680 of 31,733 tracked lines; ledger.py --trophy-split computes it | `_build/l3.32-t135-report.md` |
 
 ### Bookkeeping
 

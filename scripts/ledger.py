@@ -32,6 +32,10 @@ Usage:
   ledger.py --write      a no-op alias for --check, kept so old invocations work
                          move, which D27 says is at every return that could move them
   ledger.py --brief      one line: standing, endpoint band, overage
+  ledger.py --trophy-split
+                         one line: the four parts of the per-trophy caliber,
+                         and the AC total. It measures the SURVIVING tree and
+                         sums to standing, like every other figure here
 Exit status: 0 clean, 1 defect found, 2 usage error.
 """
 
@@ -56,6 +60,13 @@ def tracked_masters() -> list[str]:
     return sorted(f for f in out if f.endswith(".lagda.md"))
 
 
+def head_text(path: str) -> str:
+    """The file's text at HEAD, or empty when the file is not in HEAD yet."""
+    out = subprocess.run(["git", "show", f"HEAD:{path}"], cwd=ROOT,
+                         capture_output=True, text=True)
+    return out.stdout if out.returncode == 0 else ""
+
+
 def count(path: str, at_head: bool = True) -> int:
     """Non-blank lines inside ```agda fences: the one pinned caliber.
 
@@ -63,11 +74,8 @@ def count(path: str, at_head: bool = True) -> int:
     working tree meant an agent's half-written chapter was counted as standing: it happened
     twice on 2026-08-05 and once got committed. Pass at_head=False for a live view."""
     if at_head:
-        out = subprocess.run(["git", "show", f"HEAD:{path}"], cwd=ROOT,
-                             capture_output=True, text=True)
-        if out.returncode == 0:
-            text = out.stdout
-        else:
+        text = head_text(path)
+        if not text:
             return 0  # staged-but-never-committed: not yet part of the repository
     else:
         text = (ROOT / path).read_text(encoding="utf-8")
@@ -169,6 +177,124 @@ def retired_str(buckets, sizes) -> str:
     return f"{sum(sizes[f] for hit in buckets.values() for f in hit):,}"
 
 
+IMPORT_RE = re.compile(r"^\s*(?:open )?import ([A-Za-z0-9_.]+)", re.M)
+
+
+def import_graph(files: list[str]) -> dict[str, set[str]]:
+    """One master's imported masters, from the import lines at HEAD.
+
+    A name that has no tracked master (an archived module, a library module)
+    has no edge, because only tracked masters are counted and classified."""
+    names = {f.removesuffix(".lagda.md").removeprefix("src/").replace("/", "."): f
+             for f in files}
+    graph: dict[str, set[str]] = {}
+    for f in files:
+        text = head_text(f)
+        graph[f] = {names[n] for n in IMPORT_RE.findall(text) if n in names}
+    return graph
+
+
+def closure(graph: dict[str, set[str]], roots: list[str]) -> set[str]:
+    """The transitive import closure of the roots."""
+    seen: set[str] = set()
+    stack = list(roots)
+    while stack:
+        f = stack.pop()
+        if f in seen:
+            continue
+        seen.add(f)
+        stack.extend(graph.get(f, ()))
+    return seen
+
+
+def trophy_roots(data: dict, files: list[str]) -> tuple[dict[str, list[str]], list[str]]:
+    """The declared AC and GCH roots from [[trophy_split]], with defects.
+
+    Every root must exist in the tree. A stale root fails the gate exactly
+    like a stale [[retire]] row does."""
+    roots: dict[str, list[str]] = {"ac": [], "gch": []}
+    defects: list[str] = []
+    entries = data.get("trophy_split")
+    if entries is None:
+        defects.append("trophy_split: no [[trophy_split]] declaration in dev/ledger.toml")
+        return roots, defects
+    for entry in entries:
+        if entry.get("rule"):
+            if entry.get("ambiguous") not in {None, "shared"}:
+                defects.append("trophy_split: ambiguous must be 'shared'")
+            continue
+        side = entry.get("side")
+        path = entry.get("path")
+        if side not in roots:
+            defects.append(f"trophy_split: side must be ac or gch, got {side!r}")
+            continue
+        if not path:
+            defects.append("trophy_split: entry has no path")
+            continue
+        if path not in files:
+            defects.append(f"trophy_split: root is not in the tree: {path}")
+        roots[side].append(path)
+    return roots, defects
+
+
+def trophy_split(data: dict, files: list[str],
+                 sizes: dict[str, int]) -> tuple[dict[str, int], list[str], list[str]]:
+    """The per-trophy caliber, computed from the import graph.
+
+    Part 1 is everything outside L. Part 2 is the L content only AC needs.
+    Part 3 is the L content both trophies need. Part 4 is the L content only
+    GCH needs. The AC total is parts 1 to 3. An L module in neither closure is
+    ambiguous and lands in part 3, which the report lists.
+
+    IT MEASURES THE SURVIVING TREE ONLY, and it sums to standing, not to the
+    tracked total. The owner ruled this on 2026-08-07 and the first version was
+    wrong the other way.
+
+    The first version counted every tracked file. That made the AC total 22,680
+    against a standing figure of 19,079, so the caliber for ONE trophy was
+    larger than the whole project. The cause: all 12,654 retiring lines sat
+    inside the AC total. Part 2 alone held 4,500 retiring lines against 115
+    that survive, because `L models AC` today runs through the choice tree that
+    D18 retires.
+
+    That version answered "what does AC touch today". This one answers "what
+    does AC cost on the route we are building", which is the question the board
+    already answers everywhere else: every other figure on it excludes the
+    retirement set.
+    """
+    roots, defects = trophy_roots(data, files)
+    graph = import_graph(files)
+    ac = closure(graph, roots["ac"])
+    gch = closure(graph, roots["gch"])
+    buckets, _ = retiring(files, data)
+    retired = {f for hit in buckets.values() for f in hit}
+    files = [f for f in files if f not in retired]
+    total = sum(sizes[f] for f in files)
+    parts = {"base": 0, "ac_only": 0, "shared": 0, "gch_only": 0}
+    ambiguous: list[str] = []
+    for f in files:
+        if not f.startswith("src/L/"):
+            parts["base"] += sizes[f]
+            continue
+        in_ac, in_gch = f in ac, f in gch
+        if in_ac and not in_gch:
+            parts["ac_only"] += sizes[f]
+        elif in_ac and in_gch:
+            parts["shared"] += sizes[f]
+        elif not in_ac and in_gch:
+            parts["gch_only"] += sizes[f]
+        else:
+            parts["shared"] += sizes[f]
+            ambiguous.append(f)
+    parts["ac_total"] = parts["base"] + parts["ac_only"] + parts["shared"]
+    got = sum(parts[k] for k in ("base", "ac_only", "shared", "gch_only"))
+    if got != total:
+        msg = f"trophy split does not sum to standing: {got} != {total}"
+        defects.append(msg)
+        raise AssertionError(msg)
+    return parts, ambiguous, defects
+
+
 def main(argv: list[str]) -> int:
     mode = "full"
     for arg in argv[1:]:
@@ -178,6 +304,8 @@ def main(argv: list[str]) -> int:
             mode = "write"
         elif arg == "--brief":
             mode = "brief"
+        elif arg == "--trophy-split":
+            mode = "trophy-split"
         else:
             print(__doc__, file=sys.stderr)
             return 2
@@ -189,6 +317,12 @@ def main(argv: list[str]) -> int:
 
     buckets, defects = retiring(files, data)
     defects += validate_rows(data)
+    try:
+        split, ambiguous, split_defects = trophy_split(data, files, sizes)
+    except AssertionError as exc:
+        split_defects = [str(exc)]
+        split, ambiguous = {}, []
+    defects += split_defects
 
     retired = sum(sizes[f] for hit in buckets.values() for f in hit)
     standing = total - retired
@@ -227,6 +361,21 @@ def main(argv: list[str]) -> int:
         )
         return 1 if defects else 0
 
+    if mode == "trophy-split":
+        if split_defects:
+            for d in split_defects:
+                print(f"ledger: {d}", file=sys.stderr)
+            return 1
+        print(
+            f"trophy split base {split['base']:,} | ac-only {split['ac_only']:,} "
+            f"| shared {split['shared']:,} | gch-only {split['gch_only']:,} "
+            # The denominator is STANDING, not the tracked total. The parts
+            # exclude the retirement set, so naming `tracked` here would invite
+            # the same reading that made the first version wrong.
+            f"| ac-total {split['ac_total']:,} | standing {standing:,}"
+        )
+        return 1 if defects else 0
+
     print("Bedrock size ledger")
     print(f"  basis: {data['basis']['unit']}, {data['basis']['scope']}")
     print()
@@ -250,6 +399,19 @@ def main(argv: list[str]) -> int:
     print()
     print(f"  ENDPOINT   naive       {(standing+nl)/1000:6.2f}-{(standing+nh)/1000:.2f}k   centre {(standing+(nl+nh)/2)/1000:.2f}k")
     print(f"             calibrated  {(standing+cl)/1000:6.2f}-{(standing+ch)/1000:.2f}k   centre {(standing+(cl+ch)/2)/1000:.2f}k")
+    print()
+    if split:
+        print("  PER-TROPHY CALIBER (AC total = parts 1 + 2 + 3):")
+        print(f"    part 1 common base, outside L     {split['base']:8,}")
+        print(f"    part 2 AC alone on L              {split['ac_only']:8,}")
+        print(f"    part 3 shared with GCH            {split['shared']:8,}")
+        print(f"    part 4 GCH alone on L             {split['gch_only']:8,}")
+        print(f"    {'four parts, tracked total':<32} {total:8,}")
+        print(f"    AC total (parts 1 to 3)           {split['ac_total']:8,}")
+        if ambiguous:
+            print(f"    ambiguous -> shared ({len(ambiguous)} modules): "
+                  + ", ".join(f.removeprefix("src/L/").removesuffix(".lagda.md")
+                              for f in ambiguous))
     print()
     print(f"  against the {line/1000:.0f}k reference line, recorded and not argued from (D26):")
     print(f"    naive corner      {(standing+nh-line)/1000:+.2f}k")

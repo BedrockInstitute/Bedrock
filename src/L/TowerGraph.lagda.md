@@ -160,6 +160,16 @@ for the readings.
 内化框架是本章的第二重望远镜，分两层，理由与 `StepStory` 的子句望远镜相同：它所点名的内容只活在冻结的退役集里，而任何东西都不得跨过那条边界进口。描述诸合取项所读的公式文本，即码原子 `tagAtL`/`keyArityAtL`/`hasWitnessAt` 与满足图 `satGraphAt`，排在最前，因为描述自己的文本由它们写就。臂所走读的语义读式，`Sat`/`keyS`/`keyʟ`/`keyBridge`/`defSet-Sat` 与各合取项的方向，排在其次，因为它们的类型点名新鲜描述。每个参数都是具名模块假设，不是公设：后续诸块把它们解除，码块与表块解除文本，桥与各合取项块解除读式。
 <!--/-->
 
+<!--en-->
+The chapter states four arms. Each arm is a reading of one conjunct. All four
+arms are parameters of `Readings`. The arm `envOneAt-in`/`envOneAt-out` is the
+reading of the one-entry environment conjunct. The reading of `DefinesAt`
+uses this arm.
+<!--zh-->
+本章陈述四条臂。每条臂是一个合取项的读式。四条臂都是 `Readings` 的参数。臂
+`envOneAt-in`/`envOneAt-out` 是单条目环境合取项的读式。`DefinesAt` 的读式用到这条臂。
+<!--/-->
+
 ```agda
 module _ (A : S) where
   module DA = DefOf (fst A)
@@ -221,6 +231,12 @@ module _ (A : S) where
       (defSet-Sat : (ψ : Formula ⟪ fst A ⟫ 1) (m : ⟪ fst A ⟫)
                   → (ιA m ∈ DA.defSet ψ)
                   ≡ (envOne (ιA m) ∈ fst (Sat (toS ψ))))
+      (envOneAt-in : ∀ {n} (e y : Fin n) (γ : S ^ n)
+                   → fst (lookup e γ) ≡ envOne (fst (lookup y γ))
+                   → ⟨ γ ⊨ envOneAt e y ⟩)
+      (envOneAt-out : ∀ {n} (e y : Fin n) (γ : S ^ n)
+                    → ⟨ γ ⊨ envOneAt e y ⟩
+                    → fst (lookup e γ) ≡ envOne (fst (lookup y γ)))
       (codeAt-in : ∀ {n} (c w : Fin n) (γ : S ^ n)
                  → fst (lookup w γ) ≡ fst A
                  → (ψ : Formula ⟪ fst A ⟫ 1) → fst (lookup c γ) ≡ fst (keyS ψ)

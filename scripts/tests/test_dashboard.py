@@ -404,14 +404,26 @@ seconds = 300
 
 def test_lines_panel_pies() -> int:
     """The lines panel on the real ledger draws both caliber pies and labels
-    the standing slice, without hardcoding a total that would rot."""
+    the standing slice, plus the four-part AC trophy pie, without hardcoding
+    a total that would rot."""
     html = dashboard.panel_lines()
-    fails = check("lines panel draws both caliber pies",
-                  html.count('class="pie-card"'), 2)
+    fails = check("lines panel draws both caliber pies and the trophy pie",
+                  html.count('class="pie-card"'), 3)
     fails += check("lines panel labels the measured standing",
                    "standing, measured from HEAD" in html, True)
     fails += check("lines panel labels a pie total",
                    'class="pie-total">total ' in html, True)
+    # The board now STATES the AC total as a number, not only as a rule for
+    # adding three slices. The test follows that.
+    fails += check("AC trophy names the AC total as a number",
+                   "lines for the AC trophy alone, parts 1 to 3" in html, True)
+    fails += check("AC trophy note names the check part",
+                   "shown for the check" in html, True)
+    # The caliber measures the surviving tree, so it must sum to standing and
+    # say so. The first version summed to the tracked total, which made one
+    # trophy larger than the whole project.
+    fails += check("AC trophy caliber excludes the retirement set",
+                   "SURVIVING tree" in html and "sum to standing" in html, True)
     fails += check("lines panel names its sources",
                    "dev/ledger.toml (mtime" in html
                    and "scripts/ledger.py" in html, True)

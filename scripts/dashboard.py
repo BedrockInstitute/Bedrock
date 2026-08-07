@@ -134,6 +134,51 @@ BRIEF_RE = re.compile(
 )
 
 
+def ledger_trophy_split_line() -> str | None:
+    """The four-part per-trophy caliber, from scripts/ledger.py --trophy-split.
+    Returns None if the tool cannot run (the panel then says the split is
+    unavailable rather than guessing)."""
+    try:
+        out = subprocess.run(
+            [sys.executable, str(LEDGER_PY), "--trophy-split"],
+            cwd=ROOT, capture_output=True, text=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return out.stdout.strip()
+
+
+TROPHY_SPLIT_RE = re.compile(
+    r"trophy split base ([\d,]+) \| ac-only ([\d,]+) \| shared ([\d,]+) \| "
+    r"gch-only ([\d,]+) \| ac-total ([\d,]+) \| standing ([\d,]+)"
+)
+
+
+def parse_trophy_split(line: str) -> dict:
+    """Parse the trophy-split line into plain numbers.
+
+    The caliber measures the SURVIVING tree, so the last field is standing.
+
+    >>> line = "trophy split base 2,793 | ac-only 115 | shared 7,118 | gch-only 9,053 | ac-total 10,026 | standing 19,079"
+    >>> d = parse_trophy_split(line)
+    >>> (d["base"], d["ac_only"], d["shared"], d["gch_only"], d["ac_total"], d["standing"])
+    (2793, 115, 7118, 9053, 10026, 19079)
+    """
+    m = TROPHY_SPLIT_RE.match(line)
+    if not m:
+        raise ValueError(f"unrecognized trophy-split line: {line}")
+    return {
+        "base": int(m.group(1).replace(",", "")),
+        "ac_only": int(m.group(2).replace(",", "")),
+        "shared": int(m.group(3).replace(",", "")),
+        "gch_only": int(m.group(4).replace(",", "")),
+        "ac_total": int(m.group(5).replace(",", "")),
+        "standing": int(m.group(6).replace(",", "")),
+    }
+
+
 def parse_brief(line: str) -> dict:
     """Parse the ledger brief line into plain numbers.
 
@@ -881,6 +926,8 @@ def render_pie_chart(title: str, slices: list[dict]) -> str:
 def panel_lines() -> str:
     brief_line = ledger_brief_line()
     brief = parse_brief(brief_line) if brief_line else None
+    split_line = ledger_trophy_split_line()
+    split = parse_trophy_split(split_line) if split_line else None
     try:
         data = load_ledger()
     except (OSError, tomllib.TOMLDecodeError) as exc:
@@ -929,6 +976,37 @@ def panel_lines() -> str:
         pies = ('<div class="missing">Line pie not drawn: standing is '
                 "unavailable because scripts/ledger.py --brief failed. The "
                 "bands are still shown below.</div>")
+    if split is not None:
+        split_slices = [
+            {"label": "1. base, outside L", "value": split["base"],
+             "band": None, "color": "--pie-1"},
+            {"label": "2. AC alone on L", "value": split["ac_only"],
+             "band": None, "color": "--pie-2"},
+            {"label": "3. shared with GCH", "value": split["shared"],
+             "band": None, "color": "--pie-3"},
+            {"label": "4. GCH alone on L", "value": split["gch_only"],
+             "band": None, "color": "--pie-4"},
+        ]
+        trophy = (
+            "<h3>The AC trophy, in four parts</h3>"
+            # The owner asked for ONE number: what the AC trophy costs alone.
+            # The pie draws the parts. State the sum too, or the reader has to
+            # add three slices to get the answer they asked the question for.
+            '<p class="stat"><b>' + f"{split['ac_total']:,}"
+            + '</b> lines for the AC trophy alone, parts 1 to 3</p>'
+            '<p class="note">This counts the SURVIVING tree, like every other '
+            "figure on this board. It excludes the retirement set. Part 1 is "
+            "everything outside L. Part 2 is the L content only AC needs. "
+            "Part 3 is the L content both trophies need. Part 4 is the L "
+            "content only GCH needs, and it is shown for the check. The four "
+            f"parts sum to standing, {split['standing']:,}.</p>"
+            '<div class="pie-wrap">'
+            + render_pie_chart("The AC trophy, four parts", split_slices)
+            + "</div>"
+        )
+    else:
+        trophy = ('<div class="missing">Trophy split unavailable: '
+                  'scripts/ledger.py --trophy-split failed.</div>')
     # The per-row [[remaining]] table is REMOVED, 2026-08-07, for the same
     # reason as the tree_cost table: the distribution chart above already
     # draws these rows, and a chart with its own source data printed under it
@@ -938,9 +1016,10 @@ def panel_lines() -> str:
     # Standing is MEASURED by scripts/ledger.py, not read from the toml, so
     # both are named. Dropping the script when the raw table went was a real
     # loss of provenance and the test suite caught it.
-    src = source_note(LEDGER_TOML) + "; scripts/ledger.py --brief (measures standing)"
+    src = (source_note(LEDGER_TOML)
+           + "; scripts/ledger.py --brief and --trophy-split (measure standing)")
     return panel("Remaining lines: standing, bands and distribution",
-                 stats + pies + table, src)
+                 stats + pies + trophy + table, src)
 
 
 def panel_seconds() -> str:
