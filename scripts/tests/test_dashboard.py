@@ -398,8 +398,11 @@ def test_lines_panel_matrix() -> int:
     html = dashboard.panel_lines()
     fails = check("lines panel carries the trophy matrix table",
                   "The trophy matrix" in html and "<table>" in html, True)
-    fails += check("matrix holds nine cells",
-                   html.count('<td class="num'), 9)
+    fails += check("matrix holds nine cells plus the five budget cells",
+                   html.count('<td class="num'), 14)
+    fails += check("the D36 budget strip is present and the tripwire is named",
+                   "The AC budget, ruling D36" in html
+                   and "16,000" in html, True)
     fails += check("lines panel draws one pie only",
                    html.count('class="pie-card"'), 1)
     fails += check("the four-part split pie is the one kept",
