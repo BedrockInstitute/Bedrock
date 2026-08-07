@@ -176,7 +176,7 @@ authority = "D18"
 # `ac-leg` row, whose status is at-risk, stated as a number.
 
 [[trophy_split]]
-rule = "The AC side is the import closure of the delivered AC endpoint. The GCH side is the import closure of the modules the route assigns to the GCH wing. A module in neither closure is ambiguous. It lands in part 3."
+rule = "The AC side is the import closure of the RULED AC route: the endpoint plus its re-home suppliers, per D33. The GCH side is the import closure of the modules the route assigns to the GCH wing. A module in neither closure is ambiguous. It lands in part 3."
 ambiguous = "shared"
 authority = "the brief [L3.32-T135]; PLAN section 0 and section 11; the ledger's GCH owed rows"
 
@@ -186,26 +186,26 @@ path = "src/L/Model.lagda.md"
 why = "the delivered AC endpoint, L⊨ZFC, at Model.lagda.md:99"
 authority = "the brief [L3.32-T135]; PLAN section 0"
 
-# THE ROUTE READING, added 2026-08-07 after [L3.32-T147]'s worktree audit.
-# The two rows below do NOT change the main split. They feed one extra
-# figure, gch-route: what stays GCH-alone once the RULED AC route's suppliers
-# (the re-home runs through Rud/Order and the bridge, per the D18 route
-# report) are counted on the AC side. T147 measured the move: seven of the
-# 22 GCH-alone masters, 3,889 lines, leaving gch-route at 5,308. Promoting
-# these to REAL ac roots is a pending owner ruling; until then they are
-# disclosure only.
+# THE AC SIDE IS THE RULED ROUTE, per ruling D33 (2026-08-07). The two rows
+# below are REAL ac roots: the re-home runs through Rud/Order and the bridge
+# (the D18 route report), so the split follows the route the campaign builds,
+# not the delivered proof that D18 retires. The delivered-endpoint reading is
+# RETIRED from the board and the tooling by the owner's word: it is
+# irrelevant to these tasks and is not mentioned. [T147] measured the
+# promotion's effect in a worktree before the ruling: seven masters and
+# 3,889 lines move, gch-only falls 9,197 to 5,308, ambiguous 4,077 to 1,769.
 
 [[trophy_split]]
-side = "ac-route"
+side = "ac"
 path = "src/L/Rud/Order.lagda.md"
 why = "the choice supplier of the ruled re-home: Sset-order, Jset-order, Sset-choice at Order:838,1026,1042"
-authority = "_build/l3.31-lt-report.md:23,28; [L3.32-T147]"
+authority = "ruling D33; _build/l3.31-lt-report.md:23,28; [L3.32-T147]"
 
 [[trophy_split]]
-side = "ac-route"
+side = "ac"
 path = "src/L/Rud/Bridge.lagda.md"
 why = "the bridge the re-home rides, per the D18 route"
-authority = "_build/l3.31-lt-report.md:23; [L3.32-T147]"
+authority = "ruling D33; _build/l3.31-lt-report.md:23; [L3.32-T147]"
 
 [[trophy_split]]
 side = "gch"
