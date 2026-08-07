@@ -277,26 +277,36 @@ def trophy_split(data: dict, files: list[str],
     files = [f for f in files if f not in retired]
     total = sum(sizes[f] for f in files)
     parts = {"base": 0, "ac_only": 0, "shared": 0, "gch_only": 0}
+    # The per-part FILE LISTS ride along under "_files" for `--trophy-files`
+    # (added for D36's fat audit); every existing consumer reads the sums only.
+    part_files: dict[str, list[str]] = {
+        "base": [], "ac_only": [], "shared": [], "gch_only": []}
     ambiguous: list[str] = []
     for f in files:
         if not f.startswith("src/L/"):
             parts["base"] += sizes[f]
+            part_files["base"].append(f)
             continue
         in_ac, in_gch = f in ac, f in gch
         if in_ac and not in_gch:
             parts["ac_only"] += sizes[f]
+            part_files["ac_only"].append(f)
         elif in_ac and in_gch:
             parts["shared"] += sizes[f]
+            part_files["shared"].append(f)
         elif not in_ac and in_gch:
             parts["gch_only"] += sizes[f]
+            part_files["gch_only"].append(f)
         else:
             # NOT a modelling accident, [T147]: the ambiguous set is the rud
             # engine's own consumers. All ten import a gch_only module
             # DIRECTLY, so part 3 contains lines that do not compile without
             # part 4. The board discloses that beside the figure.
             parts["shared"] += sizes[f]
+            part_files["shared"].append(f)
             ambiguous.append(f)
     parts["ac_total"] = parts["base"] + parts["ac_only"] + parts["shared"]
+    parts["_files"] = part_files
     # THE SAME NUMBER WITHOUT THE AMBIGUOUS MODULES, added 2026-08-07 after
     # [L3.32-T139] rated the single figure WEAK. The rule puts an L module in
     # neither closure into the shared part, which adds 4,077 lines from ten rud
@@ -381,6 +391,10 @@ def main(argv: list[str]) -> int:
             mode = "trophy-split"
         elif arg == "--trophy-matrix":
             mode = "trophy-matrix"
+        elif arg == "--budget":
+            mode = "budget"
+        elif arg == "--trophy-files":
+            mode = "trophy-files"
         else:
             print(__doc__, file=sys.stderr)
             return 2
@@ -418,6 +432,17 @@ def main(argv: list[str]) -> int:
             matrix_defects = [str(exc)]
     defects += matrix_defects
 
+    # THE AC TROPHY BUDGET (D36). The tripwire fires on the MEASURED number
+    # only: a projection never blocks a commit (D26), but a tree whose
+    # measured AC closure reaches the cap may not grow by another commit.
+    budget = data.get("trophy_budget", {})
+    ac_cap = budget.get("ac_cap")
+    if ac_cap and split and split["ac_total"] >= ac_cap:
+        defects.append(
+            f"AC BUDGET TRIPWIRE (D36): measured ac-total {split['ac_total']:,} "
+            f"has reached the cap {ac_cap:,}. No commit may grow the AC closure "
+            f"until compression brings it back under.")
+
     # There is no longer a prose document to render into. That document was
     # deleted on 2026-08-06: 44 percent of it was this generated block, and the
     # rest was orientation for the owner, who now reads `make dashboard`. The
@@ -438,10 +463,47 @@ def main(argv: list[str]) -> int:
         return 0
 
     if mode == "brief":
+        clause = ""
+        if ac_cap and matrix:
+            anlo, anhi = matrix["ac"]["naive"]
+            clause = (f" | AC budget {ac_cap/1000:.0f}k: measured "
+                      f"{split['ac_total']:,}, endpoint "
+                      f"{anlo/1000:.2f}-{anhi/1000:.2f}k naive, headroom "
+                      f"{(ac_cap - anhi)/1000:+.2f}k")
         print(
             f"standing {standing:,} | endpoint {(standing+nl)/1000:.2f}-{(standing+nh)/1000:.2f}k naive, "
             f"{(standing+cl)/1000:.2f}-{(standing+ch)/1000:.2f}k calibrated | "
             f"naive corner {(standing+nh-line)/1000:+.2f}k against the {line/1000:.0f}k reference"
+            + clause
+        )
+        return 1 if defects else 0
+
+    if mode == "trophy-files":
+        if not split:
+            print("ledger: split unavailable", file=sys.stderr)
+            return 1
+        for part, listing in split["_files"].items():
+            for f in sorted(listing):
+                mark = " AMBIGUOUS" if f in ambiguous else ""
+                print(f"{part}\t{sizes[f]:6,}\t{f}{mark}")
+        return 1 if defects else 0
+
+    if mode == "budget":
+        if not (ac_cap and split and matrix):
+            print("ledger: no budget declared or split unavailable", file=sys.stderr)
+            return 1
+        nlo, nhi = matrix["ac"]["naive"]
+        clo, chi = matrix["ac"]["calibrated"]
+        if nlo > ac_cap:
+            status = "RED"
+        elif nhi > ac_cap:
+            status = "AT-RISK"
+        else:
+            status = "GREEN"
+        print(
+            f"ac budget | cap {ac_cap:,} | measured {split['ac_total']:,} "
+            f"| endpoint-naive {nlo:,}-{nhi:,} | endpoint-cal {clo:,}-{chi:,} "
+            f"| headroom-naive {ac_cap - nhi:+,} | status {status}"
         )
         return 1 if defects else 0
 

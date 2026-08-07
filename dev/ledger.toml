@@ -394,6 +394,19 @@ klass = "RE-CUT 2026-08-07 after block 1 landed: the naive figure is [T145]'s me
 gate = "T10 (green), RE-SCOPED and confirmed by T78 2026-08-05: the price is essentially unchanged because the content was already inside T10's scope under its own names. W3's consumer status adds three OBLIGATIONS rather than content: the mem11-mem14 arms re-anchored at the measured rate (they are the load-bearing non-pair content and the only W3-critical arms T10 extrapolated rather than measured), the graph statements' shapes pinned so W3's wiring re-points cleanly, and the sixteen-operation lex ruled OUT of this row because it is W3-row content and booking it here would double-count TROPHY CORRECTED GCH to BOTH, 2026-08-07 by [T146]: the below-lim story consumes the graph layer through StepStory's Clause telescope, bigOr folds all sixteen op graphs, and stepSet-in-L is proved through stepForm, so the AC route cannot avoid this row. The leak's origin is documented: T52's own table flagged the operation-graph formulas as W3's item, not re-priced there, and the row was assigned away from the AC side. T146 counted the below-lim slice at about 85 percent of this row; [T145] is gating the exact split and its measurement supersedes the count. [T145] RETURNED RED, outcome 3, and the split question is CLOSED: the slice IS the full rewrite. The probe (296 lines, green, survivors only) proved each role's assembly closes in a few lines once its obligation is given, and the obligations are StepInL's own theorems at about 1,718 delivered lines, the naive band's top edge. CONSEQUENCE FOR D30(F): the minimal-slice scoping collapses; the WHOLE row rides the bridge-landing exemption ahead of the wing, because below-lim cannot move without it. BLOCK 1 LANDED as [T148] 2026-08-07: L.Rud.StepGraph, 504 lines, warm 1.5-1.8 s, survivors only, wired; the eqFrame, the frames, the sixteen membership formulas and bigOr are standing, and the sixteen graphs stay a BigOr telescope parameter until block 3. Blocks 2 to 4 remain"
 provenance = "_build/l3.32-t10-report.md; PLAN register T10 entry; _build/l3.32-t148-report.md"
 
+# THE AC TROPHY BUDGET (D36, owner-ruled 2026-08-07). The pure-AC closure,
+# measured by the D33 trophy split (base + ac-only + shared, surviving tree,
+# non-blank in-fence lines), must land UNDER this cap. The bar it beats: the
+# internalization route delivered L |= AC at 17,496 lines (measured on main,
+# same fence caliber, 2026-08-07), and its probed compression floor was
+# 16,000. `ledger.py --check` FAILS when the MEASURED ac-total reaches the
+# cap; the endpoint projection goes red earlier and blocks nothing (D26).
+# The GCH wing resumes only when the archival is complete AND this budget is
+# green: D30(G), same ruling.
+[trophy_budget]
+ac_cap = 16000
+authority = "owner ruling D36, 2026-08-07"
+
 [[remaining]]
 id = "choice-rehome"
 trophy = "AC"

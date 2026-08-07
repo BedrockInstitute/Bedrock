@@ -181,6 +181,50 @@ def parse_trophy_split(line: str) -> dict:
     }
 
 
+def ledger_budget_line() -> str | None:
+    """The AC budget strip's numbers, from scripts/ledger.py --budget (D36).
+    Returns None when no budget is declared or the tool cannot run."""
+    try:
+        out = subprocess.run(
+            [sys.executable, str(LEDGER_PY), "--budget"],
+            cwd=ROOT, capture_output=True, text=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return out.stdout.strip()
+
+
+BUDGET_RE = re.compile(
+    r"ac budget \| cap ([\d,]+) \| measured ([\d,]+) "
+    r"\| endpoint-naive ([\d,]+)-([\d,]+) \| endpoint-cal ([\d,]+)-([\d,]+) "
+    r"\| headroom-naive ([+-][\d,]+) \| status (GREEN|AT-RISK|RED)$"
+)
+
+
+def parse_budget(line: str) -> dict:
+    """Parse the budget line into plain numbers.
+
+    >>> line = ("ac budget | cap 16,000 | measured 14,420 "
+    ...         "| endpoint-naive 18,141-19,541 | endpoint-cal 20,115-23,651 "
+    ...         "| headroom-naive -3,541 | status RED")
+    >>> d = parse_budget(line)
+    >>> (d["cap"], d["measured"], d["headroom"], d["status"])
+    (16000, 14420, -3541, 'RED')
+    """
+    m = BUDGET_RE.match(line)
+    if not m:
+        raise ValueError(f"unrecognized budget line: {line}")
+    num = lambda s: int(s.replace(",", "").replace("+", ""))
+    return {
+        "cap": num(m.group(1)), "measured": num(m.group(2)),
+        "naive": (num(m.group(3)), num(m.group(4))),
+        "cal": (num(m.group(5)), num(m.group(6))),
+        "headroom": num(m.group(7)), "status": m.group(8),
+    }
+
+
 def ledger_trophy_matrix_line() -> str | None:
     """The nine cells of the trophy matrix, from scripts/ledger.py
     --trophy-matrix. Returns None if the tool cannot run (the panel then
@@ -739,6 +783,8 @@ td.measured { color: var(--accent); }
 .badge.st-flight { background: var(--now); color: var(--now-ink);
   box-shadow: inset 0 0 0 1px var(--accent); }
 .badge.st-returned { background: var(--done); color: var(--ok); }
+.badge.st-over { background: var(--warn-bg); color: var(--warn); }
+td.over { color: var(--warn); font-weight: 600; }
 .tree { max-height: 560px; overflow: auto; border: 1px solid var(--line);
   padding: 8px 10px; font-size: 0.78rem; scrollbar-width: thin;
   scrollbar-color: var(--line) var(--bg); }
@@ -990,6 +1036,33 @@ def panel_lines() -> str:
                  'computed there, so this board does not guess them.</div>')
     else:
         body += trophy_matrix_table(matrix)
+    budget_line = ledger_budget_line()
+    budget = parse_budget(budget_line) if budget_line else None
+    if budget is not None:
+        # THE AC BUDGET STRIP (D36). The tripwire arms on the MEASURED number;
+        # the endpoint projection goes red first and blocks nothing (D26).
+        badge = {"GREEN": "st-returned", "AT-RISK": "st-flight",
+                 "RED": "st-over"}.get(budget["status"], "st-over")
+        klass = "measured" if budget["status"] == "GREEN" else "over"
+        body += (
+            "<h3>The AC budget, ruling D36</h3>"
+            f'<p class="note">The pure AC closure must land under '
+            f'<b>{budget["cap"]:,}</b> lines. The bar it beats: the '
+            f"internalization route delivered L&nbsp;&#8871;&nbsp;AC at 17,496 "
+            f"lines, and its probed compression floor was 16,000. The tripwire "
+            f"arms on the measured number only.</p>"
+            f'<table><thead><tr><th>cap</th><th>measured now</th>'
+            f"<th>endpoint, naive</th><th>endpoint, calibrated</th>"
+            f"<th>headroom vs naive top</th><th>status</th></tr></thead>"
+            f"<tbody><tr>"
+            f'<td class="num">{budget["cap"]:,}</td>'
+            f'<td class="num measured">{budget["measured"]:,}</td>'
+            f'<td class="num">{budget["naive"][0]:,}-{budget["naive"][1]:,}</td>'
+            f'<td class="num">{budget["cal"][0]:,}-{budget["cal"][1]:,}</td>'
+            f'<td class="num {klass}">{budget["headroom"]:+,}</td>'
+            f'<td><span class="badge {badge}">{budget["status"]}</span></td>'
+            f"</tr></tbody></table>"
+        )
     if split is not None:
         split_slices = [
             {"label": "1. base, outside L", "value": split["base"],
