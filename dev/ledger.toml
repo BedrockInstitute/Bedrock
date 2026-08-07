@@ -11,6 +11,16 @@
 #
 # Caliber convention (PLAN section 6.2): a size figure is the count of non-blank
 # lines inside ```agda fences, over git-tracked *.lagda.md under src/.
+#
+# THE PER-TROPHY CALIBER, added 2026-08-07 by [L3.32-T135].
+# The owner asked how many lines the AC trophy needs alone. The answer has
+# four parts. Part 1 is everything outside L. Part 2 is the L content only AC
+# needs. Part 3 is the L content both trophies need.
+#
+# Part 4 is the L content only GCH needs. The AC total is parts 1 to 3.
+# Part 4 exists for the check only. The four parts sum to the tracked total.
+# scripts/ledger.py computes the parts from the import graph. It writes no
+# part here.
 
 # ---------------------------------------------------------------------------
 # WHAT THIS FILE IS, AND THE THREE THINGS A READER MUST KNOW BEFORE EDITING IT.
@@ -135,6 +145,117 @@ authority = "D18"
 path = "src/L/Hierarchy.lagda.md"
 why = "consumed only by the retiring Choice chapters"
 authority = "D18"
+
+# ---------------------------------------------------------------------------
+# The per-trophy caliber declaration, ruled in shape by the brief
+# [L3.32-T135]. The AC side is the delivered AC endpoint. The GCH side is
+# the import closure of the modules the route assigns to the GCH wing.
+#
+# The computation lives in scripts/ledger.py. It reads this declaration and
+# measures the parts from HEAD. A module in neither closure is ambiguous.
+# It lands in part 3, the shared part.
+# ---------------------------------------------------------------------------
+
+# CORRECTED 2026-08-07 by the owner, within an hour of the first version.
+# The caliber measures the SURVIVING tree and sums to standing. The first
+# version counted every tracked file, so the AC total came to 22,680 against a
+# standing figure of 19,079: one trophy read as larger than the whole project.
+# All 12,654 retiring lines sat inside it. The owner asked for the rud-route
+# figure, like every other number on the board, and this is it.
+#
+# THE ROW THAT THE CORRECTION EXPOSES. Part 2, the content only AC needs, is
+# 115 surviving lines against 4,500 retiring. `L models AC` is proved today
+# almost entirely on the choice tree that D18 retires. That is the ledger's
+# `ac-leg` row, whose status is at-risk, stated as a number.
+
+[[trophy_split]]
+rule = "The AC side is the import closure of the delivered AC endpoint. The GCH side is the import closure of the modules the route assigns to the GCH wing. A module in neither closure is ambiguous. It lands in part 3."
+ambiguous = "shared"
+authority = "the brief [L3.32-T135]; PLAN section 0 and section 11; the ledger's GCH owed rows"
+
+[[trophy_split]]
+side = "ac"
+path = "src/L/Model.lagda.md"
+why = "the delivered AC endpoint, L⊨ZFC, at Model.lagda.md:99"
+authority = "the brief [L3.32-T135]; PLAN section 0"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/InitialSegment.lagda.md"
+why = "W1: the fresh-generic face"
+authority = "PLAN L3.32 rows T15 and T20"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/LevelFormula.lagda.md"
+why = "W2: the level formula"
+authority = "owed row gch-w2"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/Rud/LevelSigma.lagda.md"
+why = "W2: the level formula at a rud carrier"
+authority = "owed row gch-w2"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/Condensation.lagda.md"
+why = "W5: the condensation chapter"
+authority = "owed row gch-w5"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/Hull.lagda.md"
+why = "W7: the hull"
+authority = "owed row gch-w7"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/CardinalPredicates.lagda.md"
+why = "W7: the cardinal predicates"
+authority = "owed row gch-w7"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/CardinalCount.lagda.md"
+why = "W7: the counting side"
+authority = "owed row gch-w7; PLAN task T27"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/Cardinal.lagda.md"
+why = "W7: the cardinal step"
+authority = "PLAN task T9"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/OrderFamily.lagda.md"
+why = "W3: the wing's internal order"
+authority = "module header; owed row gch-w3"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/OrderFormula.lagda.md"
+why = "W3: the order formula"
+authority = "owed row gch-w3; dev/JOURNAL.md"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/Ordinal/Pairing.lagda.md"
+why = "W7: the product well-ordering"
+authority = "module header; PLAN task T16"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/Ordinal/SquareLaw.lagda.md"
+why = "W7: the square law of infinite ordinals"
+authority = "module header; PLAN tasks T88 and T101"
+
+[[trophy_split]]
+side = "gch"
+path = "src/L/TowerGraph.lagda.md"
+why = "retirement-surgery arm B: the L-tower graph"
+authority = "PLAN task T133; owed row archival-arm-b"
 
 # ---------------------------------------------------------------------------
 # Remaining work. Every row carries its provenance and its calibration class.
@@ -284,6 +405,20 @@ provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 
 # where P-k says they belong: normalized exactly once instead of once per arm.
 # The frame does not write the tail, it pins its contract, so the tail's LINE
 # estimate is unchanged at 620-930.
+#
+# THE BLOCK SPLIT WAS WRONG AND [L3.32-T134] FOUND IT. The orchestrator scoped
+# block 2 as "write the four description arms". T134 added 6 lines, not the 165
+# estimated, and gave the reason: block 1's frame makes every arm reading a
+# module PARAMETER, so no arm can be proved yet. The frame also parameterizes
+# the formula TEXT the arms read, and nobody can prove a reading of a formula
+# that is not yet defined. The master now proves 54 definitions, the two-slot
+# description and the whole assembly arm, and assumes 18 parameters. It carries
+# no postulate and no hole, so the tree states the assumption honestly.
+#
+# THE CORRECTED ORDER: first a block that DEFINES the four text atoms and
+# discharges them; then the readings become provable and a second block proves
+# the 18; the table tail rides inside that, and arm 4's proof rides inside the
+# tail. The total does not move. Only the order does.
 #
 # Remaining on T132's own accounting: the other eleven arms ~711, the
 # table/slot/sound/unique tail 620-930 fresh-compressed, the remaining formula
