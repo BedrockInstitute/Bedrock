@@ -457,7 +457,7 @@ the predicate set `A`. The other half of the operations layer states the
 remaining nine functions in the same shape, and the hierarchy engine will
 consume these specifications as its one-step images.
 <!--zh-->
-七个运算，全部全函数，全部以外延方式规格化。配对器材贡献了投影 `left`{.Agda} 与 `right`{.Agda} 及其对等式；`F10`{.Agda} 造出单个像片，`F8`{.Agda} 造出片的收集；`F11`-`F14` 经对分解搬运分量；`F15`{.Agda} 是相对化槽，以谓词集 `A` 为参数。运算层的另一半将以同样形状陈述其余九个函数，层级引擎将消费这些规格作为其单步像。
+七个运算，全部全函数，全部以外延方式规格化。配对器材贡献了投影 `left`{.Agda} 与 `right`{.Agda} 及其对等式；`F10`{.Agda} 造出单个切片，`F8`{.Agda} 造出片的收集；`F11`-`F14` 经对分解搬运分量；`F15`{.Agda} 是相对化槽，以谓词集 `A` 为参数。运算层的另一半将以同样形状陈述其余九个函数，层级引擎将消费这些规格作为其单步像。
 <!--/-->
 
 <!--en-->

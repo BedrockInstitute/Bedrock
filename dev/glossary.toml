@@ -972,3 +972,32 @@ zh = "对原子"
 ja = "対原子"
 avoid = ["zh:对子原子"]
 notes = "The singleton, pair and ordered-pair atoms of a formula over a carrier. 原子公式 is established; 对原子 is unanimous in the chapters. 对子原子 is REJECTED: it appeared only in the catalog, written by the orchestrator."
+
+[[term]]
+category = "Logic"
+en = "frame"
+zh = "框架"
+ja = "フレーム"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. A reusable formula shape in the internal language. ja per the Nagoya TPP2024 slides, not ja Wikipedia (T153 corrected the citation)."
+
+[[term]]
+category = "Logic"
+en = "disjunction"
+zh = "析取"
+ja = "論理和"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. Every cited source held, including kotobank."
+
+[[term]]
+category = "Set theory"
+en = "slice"
+zh = "切片"
+ja = "スライス"
+avoid = ["zh:像片"]
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. 像片 means photograph and is REJECTED; it had drifted into Images:460 and StepGraph while 切片 held 15 sites."
+
+[[term]]
+category = "Other"
+en = "landing site"
+zh = "落点"
+ja = "着地点"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. Project vocabulary: where future content will land."
