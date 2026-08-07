@@ -152,7 +152,7 @@ def ledger_trophy_split_line() -> str | None:
 TROPHY_SPLIT_RE = re.compile(
     r"trophy split base ([\d,]+) \| ac-only ([\d,]+) \| shared ([\d,]+) \| "
     r"gch-only ([\d,]+) \| ac-total ([\d,]+) \| ac-delivered ([\d,]+) "
-    r"\| standing ([\d,]+)"
+    r"\| gch-route ([\d,]+) \| standing ([\d,]+)"
 )
 
 
@@ -162,10 +162,11 @@ def parse_trophy_split(line: str) -> dict:
     The caliber measures the SURVIVING tree, so the last field is standing.
 
     >>> line = ("trophy split base 2,793 | ac-only 115 | shared 7,118 | "
-    ...         "gch-only 9,059 | ac-total 10,026 | ac-delivered 5,949 | standing 19,085")
+    ...         "gch-only 9,197 | ac-total 10,026 | ac-delivered 5,949 | "
+    ...         "gch-route 5,308 | standing 19,223")
     >>> d = parse_trophy_split(line)
-    >>> (d["ac_total"], d["ac_delivered"], d["standing"])
-    (10026, 5949, 19085)
+    >>> (d["ac_total"], d["ac_delivered"], d["gch_route"], d["standing"])
+    (10026, 5949, 5308, 19223)
     """
     m = TROPHY_SPLIT_RE.match(line)
     if not m:
@@ -177,7 +178,8 @@ def parse_trophy_split(line: str) -> dict:
         "gch_only": int(m.group(4).replace(",", "")),
         "ac_total": int(m.group(5).replace(",", "")),
         "ac_delivered": int(m.group(6).replace(",", "")),
-        "standing": int(m.group(7).replace(",", "")),
+        "gch_route": int(m.group(7).replace(",", "")),
+        "standing": int(m.group(8).replace(",", "")),
     }
 
 
@@ -1022,6 +1024,17 @@ def panel_lines() -> str:
             f"import closure reaches <b>{split['ac_delivered']:,}</b> today. "
             "The difference is 4,077 lines. Plan with the first number. Do "
             "not read the first number as delivered need.</p>"
+            # [T147]'s two disclosures: the GCH second reading, and the
+            # part-3-needs-part-4 fact, both machine-verified in a worktree.
+            '<p class="note"><b>The GCH-alone cell also has two honest '
+            "readings.</b> The matrix shows "
+            f"<b>{split['gch_only']:,}</b> against the delivered AC endpoint, "
+            "and a worktree test proved that reading: delete all 22 masters "
+            "and the AC theorem still checks. Once the ruled re-home's "
+            "suppliers (Rud/Order and the bridge) count as AC, the figure is "
+            f"<b>{split['gch_route']:,}</b>. Also read part 3 with care: "
+            "4,077 of its lines are the rud engine's consumers, and they do "
+            "not compile without part 4.</p>"
             '<div class="pie-wrap">'
             + render_pie_chart("The standing tree, four parts", split_slices)
             + "</div>"
