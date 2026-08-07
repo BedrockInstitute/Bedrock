@@ -1077,8 +1077,8 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 # this is the row that decides it, and until 2026-08-06 no wall figure for
 # this tree existed at all: the number below it was derived by subtraction
 # from a profile run and then converted with an unpinned ratio.
-measured_wall = "2026-08-06, interface cache moved aside, GHCRTS=-M8g agda src/Everything.lagda.md (NO --profile), Agda 2.8.0, single process, nothing else running; /usr/bin/time -p reports real 1080.64, user 1072.70, sys 5.95, exit 0"
-full_cold_wall_seconds = 677
+measured_wall = "2026-08-07, interface cache moved aside, GHCRTS=-M8g agda src/Everything.lagda.md (NO --profile), Agda 2.8.0, single process, nothing else running; /usr/bin/time -p reports real 487.90, user 484.12, sys 2.60, exit 0. THE GATE IS MET: 487.9 against 498, margin +10.1 s. The arc, same protocol throughout: 1,080.6 at the first honest measurement, 677.4 at the arm-A checkpoint, 487.9 now. From the D30 ruling's 2,723 profile seconds, the tree fell 82 percent."
+full_cold_wall_seconds = 488
 gate_wall_seconds = 498
 
 checkpoint = """
