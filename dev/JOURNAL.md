@@ -2110,6 +2110,213 @@ It read the surviving trunk against `Bridge`'s defect shape and found no second 
 
 Read the batches below as a floor on the prize under the current architecture, not as the plan. The owner ruled the exit condition to be *the retiring subtree's measured rate*; that rate was then re-measured after two parser defects were found in the counter (comment lines read as signatures, `let z : A` scored twice), and it is 0.074. The ratio between the trees did not move at all, because the defects inflated both alike, which is the clearest evidence available that the RATIO is robust and the ABSOLUTE figures are not. **THE EXIT CONDITION SELECTS THE BATCHES BY ITSELF, WHICH IS THE FINDING: 13 of `L.Rud`'s 22 modules are ALREADY at or below the line and need no rewrite at all, and of the 9 above it, 4 are worth 14 seconds COMBINED.** `L.Rud` stands at 12,147 lines, 2,884 obligations, 458 s, **0.159 s per obligation**; at the exit condition it is 212 s, so the whole programme is worth **246 seconds**, and it concentrates hard. **B1 `Bridge`, 185 s, 75 percent of the entire prize** in one 833-line module, and it doubles as the METHOD GATE: it is already sealed, so it isolates what a rewrite buys BEYOND sealing, and if a rewritten `Bridge` does not approach 21 s then the benchmark is not reachable by rewriting and every batch below re-prices. **B2 `StepInL`, 54 s** over 1,989 lines, and it is nearly free because the ledger already owes a re-scope of this module for W3: the two merge. **B3 `Images`, `CodeSet`, `Step`, about 71 s** over 1,289 lines. **AND THE PROGRAMME STOPS THERE**: the remaining 4 modules above the line (`HF`, `DefInJ`, `BaseBlock`, `SatTable`) are worth **14 seconds combined over 1,223 lines**, which is a rewrite that costs more than it buys in both dimensions. They are recorded as above the line and left alone, and that is the exit condition doing its job rather than being overridden. **THE LINE DIMENSION, which cuts against the programme and is recorded rather than buried:** `L.Rud` already writes **3.8 lines per obligation against the benchmark's 4.9**, so it is denser than the tree it is being measured against. This is a SECONDS programme, not a lines programme, and each batch is gated on not inflating lines.
 
+**The dispatches of 2026-08-07, `[T121]` to `[T139]`, recorded in code order.**
+
+**`[T121]` THE PROFILE OF THE LAST FOUR MASTERS** (2026-08-07,
+`_build/l3.32-t121-report.md`).
+
+The dispatch profiled the last four hot masters. The three cures remove
+about 104 s for about 18 lines. Pairing loses about 40 s at about 10 lines.
+Images loses about 45 s at about 8 lines. Step loses about 23 s for zero
+Step lines. Bridge keeps its 193.5 s floor, so it is NO-GO.
+
+The four modules alone cannot close the 152.1 s gap. The gap closes only
+when the Images cure's spillover into StepInL counts. That spillover
+measures about 49 s. The brief's 175.9 s figure does not reproduce. The
+four rows sum to 329.4 s.
+
+T93's lever for Images was wrong. The profile put the cost in
+`rightSlice-pair`'s declaration.
+
+**`[T122]` THE ARCHIVAL OF ARM A** (2026-08-07,
+`_build/l3.32-t122-report.md`).
+
+The dispatch moved sixteen zero-consumer masters to `archive/`. The set
+measures 320.4 s over 16,222 lines and 2,939 obligations. The tree's
+profile total is 1,072.2 s, not the brief's 1,070.2 s. The top three
+modules carry 79.1 percent of the set, not 82 percent.
+
+The wiring checklist is exact in both languages the file uses. The task
+index records one range defect in the checklist (`dev/PLAN.md:545`). It
+was caught.
+
+**`[T123]` THE PAIRING SEAL LANDS** (2026-08-07,
+`_build/l3.32-t123-report.md`).
+
+Pairing fell from 57,985 ms to 20,195 ms. The seal removes about 37.8 s
+from each cold check. All 72 pre-existing exports stayed byte-identical.
+The file grows by a net 7 lines and two exported names. The residual
+18.8 s is the once-payment, not a failure.
+
+**`[T124]` THE IMAGES SEAL LANDS** (2026-08-07,
+`_build/l3.32-t124-report.md`).
+
+Images fell from 52,879 ms to 6,705 ms. Step fell from 28,769 ms to
+4,640 ms with zero Step edits. The two falls remove about 70.3 s from each
+cold check. A top-level `opaque` seal must sit at column 0. An indented
+seal typechecks but silently drops the exports. Only the consumer re-check
+caught the drop.
+
+**`[T125]` THE BELOW-LIM GATE AT THE FIRST LIMIT** (2026-08-07,
+`_build/l3.32-t125-report.md`).
+
+The gate is RED at the line budget, and the target landed. The probe
+checks green at 269 non-blank lines under the 300 stop-line. It lands
+`Sset ω ∈ Lset (+ω ω)` under the slot hypothesis at the first limit.
+Neither wall T90 named fired. A third wall fired: O4 measures about 200 to
+300 naive lines against T90's 60 to 120 band. The stop-line fired before
+the family equality.
+
+**`[T126]` O4 AS ITS OWN MASTER** (2026-08-07,
+`_build/l3.32-t126-report.md`).
+
+O4 landed as `L.Rud.StepStory`, at 313 non-blank lines. The master checks
+green at 1.25 s wall. It is generic over the carrier and the graph layer
+in two telescopes. The instantiation at `Lset ω` went through unchanged.
+The generic shell costs about 83 lines, so the first-instance center rises
+about 60 naive.
+
+**`[T127]` THE B4 GATE, AND THE REFUTED O7 AND O8** (2026-08-07,
+`_build/l3.32-t127-report.md`).
+
+All three obligations built and checked at the first limit. The probe is
+458 non-blank lines against the 300 stop-line. At general β the recorded
+O7 and O8 are false as stated. The one-way story has no limit clause. A
+witness may put an arbitrary value at a limit index. The chain fails at
+limit indices, so the carve overshoots.
+
+The general transfer needs a sixth clause. O6 measures 206 lines against
+T125's 80. The finite-table closure and the story seam cause the overage.
+
+**`[T128]` THE SIXTH CLAUSE IS EXPRESSIBLE** (2026-08-07,
+`_build/l3.32-t128-report.md`).
+
+The sixth clause is expressible in the kit's language. The probe built the
+clause and its two-way decode at 448 non-blank lines against the 250
+stop-line. The union quantifier is bounded inside the carrier. Δ₀
+certifiability is the T84 obstruction. This consumer does not need it. The
+first-instance remainder rises to about 1,147 to 1,214 naive.
+
+**`[T129]` THE RE-HOME IS THE INTERNALIZATION CONE** (2026-08-07,
+`_build/l3.32-t129-report.md`).
+
+The dispatch stopped at the cone map. The two crossings' cone measures
+2,105 in-fence lines directly. The upper bound is 6,381 lines, against a
+500-line stop. T67's 0.18 to 0.30k band priced only the delivered slice
+as the whole. The slice measured 243 lines, so the slice itself was right.
+
+The re-home is the internalization cone, not a two-name port. The
+ideal-form price is 1.1 to 1.5k naive. The port costs 2.1k or more. The
+retirement-surgery band cannot stand as booked, because Build A alone is
+larger than it.
+
+**`[T130]` THE RUD-SIDE ESCAPE, REFUTED** (2026-08-07,
+`_build/l3.32-t130-report.md`).
+
+The rud-side route cannot serve the two crossings. The rud side delivers
+per-step content at a stage carrier. The crossing needs a two-slot
+value-and-index formula at the class carrier. `StepStory`'s clause
+concludes at the S-tower step, never the L-tower step.
+
+The `defSet` re-statement is not a separate option. The object-versus-meta
+gap is the whole cost. The below-lim spend does not pay twice.
+
+**`[T131]` THE LOOP, THE SALVAGE, AND THE LIMIT-INDEX SEGMENT**
+(2026-08-07, `_build/l3.32-t131-report.md`).
+
+The dispatch looped 1,622 times on one scratch file. It left the skeleton
+at 42 lines with every section empty. The salvage recovered both
+obligations. The chain step at a limit index is green. The limit-index
+work measures about 500 lines against T128's 80 to 120 hypothesis. The
+first-instance total rises to about 1,567 to 1,594 naive.
+
+The probe is 744 non-blank lines against the 250 stop-line. The full story
+check on the segment is partial. C-22 records that the citation is not the
+enforcement.
+
+**`[T132]` THE D31 GATE: ARM GREEN, CLASS WRONG** (2026-08-07,
+`_build/l3.32-t132-report.md`).
+
+The gate's one adequacy arm closed green. It measures 174 non-blank lines
+and checks at 21.7 s cold. The 700 to 900 naive adequacy estimate is red.
+The term measures about 1,630 to 1,940 with the required graph-arm tail.
+Build A rises to about 2.0 to 2.5k naive.
+
+That is 0.5 to 1.0k over D31's 1.1 to 1.5k, in the term the gate measured.
+The owner reaffirmed A on the gated figure.
+
+**`[T133]` BUILD A BLOCK 1: THE FRESH HOME** (2026-08-07,
+`_build/l3.32-t133-report.md`).
+
+The block landed at 304 non-blank lines, under the 600 stop-line.
+`L.TowerGraph` carries zero retiring imports. The arm ports to 164 lines.
+It checks at 2.72 s module-cold, against the probe's 21.7 s. The frame
+moves the tail's conversions into the instantiating blocks. The seconds
+relocate, not vanish.
+
+**`[T134]` THE BLOCK SPLIT, PROVED IMPOSSIBLE** (2026-08-07,
+`_build/l3.32-t134-report.md`).
+
+The block added 6 non-blank lines against a 165 estimate. T133's frame
+already declared three of the four arms as parameters. The block added
+only arm 1's statement. The proofs belong to the discharging blocks.
+
+A frame that parameterizes a formula's text forces every reading of that
+text to stay a parameter. No arm is provable until the text block lands.
+The split cannot exist.
+
+**`[T135]` THE PER-TROPHY CALIBER, AND ITS CORRECTION** (2026-08-07,
+`_build/l3.32-t135-report.md`).
+
+The first version counted every tracked file. The AC total came to 22,680
+against a standing figure of 19,079. All 12,654 retiring lines sat inside
+it. The owner corrected the caliber within the hour.
+
+The corrected caliber measures the surviving tree. The AC total falls to
+10,026 of 19,079 standing lines. `ledger.py --trophy-split` computes the
+split and asserts the sum (`dev/ledger.toml:159-172`).
+
+**`[T136]` THE TEXT BLOCK, PARTIAL** (2026-08-07,
+`_build/l3.32-t136-report.md`).
+
+The text block is PARTIAL. `tagAtL` and `keyArityAtL` land fresh. The
+`envOneAt` and `DefinesAt` readings prove. `hasWitnessAt` stops because
+its text needs the twelve-clause shape machinery. `codeAt` stays a
+parameter.
+
+11 of 18 parameters remain. The block adds 179 non-blank lines. The master
+checks green.
+
+**`[T137]` THE TROPHY MATRIX** (2026-08-07,
+`_build/l3.32-t137-report.md`).
+
+The matrix delivers nine cells from `ledger.py --trophy-matrix`. AC
+standing is 10,026 lines. The AC endpoint is 13.7 to 15.7k naive. Every
+remaining row now carries a trophy. The checker fails a row without one.
+The AC-and-GCH column equals the `--brief` endpoint by assertion.
+
+**`[T138]` THE FOUR LIMIT-SEGMENT CLAUSES** (2026-08-07,
+`_build/l3.32-t138-report.md`).
+
+The dispatch wrote the four story clauses into the copy. The copy adds 173
+non-blank lines under the 220 stop-line. The whole-file check was still
+running when the report closed. The copy fixes a latent type error in
+T131's final state. That state never typechecked as a whole. The
+unmodified copy's check passed 23:33 without finishing.
+
+**`[T139]` THE ADVERSARIAL REVIEW OF D31** (2026-08-07,
+`_build/l3.32-t139-report.md`).
+
+The review found three claims hold and two are weak. The profile-to-wall
+ratio is about 0.99, not 0.615. The old ratio came from a cross-tree
+comparison. The adequacy band 1,630 to 1,940 rests on an unmeasured 620 to
+930 fresh-tail estimate. The AC figure has two readings: 10,026 route and
+5,949 delivered. The 11.3-minute projection used the unmeasured ratio.
+
+The tree measures 18.0 minutes. The projection multiplied a derived total
+by an unmeasured ratio. The fresh cost of the table tail is the open term
+that decides claim 4.
+
 ## Dated records
 
 Each dated record preserves the registry facts: dates, rulings, tripwire

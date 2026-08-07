@@ -27,10 +27,9 @@ beats a general layout engine, and the page needs neither mermaid nor a
 network fetch. The workbench was DELETED on 2026-08-07 by the owner's
 ruling, and with it the hand-written half this file used to parse, place onto
 graph anchors and render. The route graph now stands alone on ledger rows, and
-the agent table's `next` column reads the ledger's owed queue. The line and seconds
-
-distributions are drawn as inline SVG pie charts generated in Python: an arc
-is arithmetic, no chart library and no network.
+the agent table's `next` column reads the ledger's owed queue. The four-part
+trophy split and the seconds distributions are drawn as inline SVG pie charts
+generated in Python: an arc is arithmetic, no chart library and no network.
 
 Every panel carries the source path and that source's mtime, so a stale panel
 is visible rather than misleading. A panel whose source is missing or
@@ -152,7 +151,8 @@ def ledger_trophy_split_line() -> str | None:
 
 TROPHY_SPLIT_RE = re.compile(
     r"trophy split base ([\d,]+) \| ac-only ([\d,]+) \| shared ([\d,]+) \| "
-    r"gch-only ([\d,]+) \| ac-total ([\d,]+) \| standing ([\d,]+)"
+    r"gch-only ([\d,]+) \| ac-total ([\d,]+) \| ac-delivered ([\d,]+) "
+    r"\| standing ([\d,]+)"
 )
 
 
@@ -161,10 +161,11 @@ def parse_trophy_split(line: str) -> dict:
 
     The caliber measures the SURVIVING tree, so the last field is standing.
 
-    >>> line = "trophy split base 2,793 | ac-only 115 | shared 7,118 | gch-only 9,053 | ac-total 10,026 | standing 19,079"
+    >>> line = ("trophy split base 2,793 | ac-only 115 | shared 7,118 | "
+    ...         "gch-only 9,059 | ac-total 10,026 | ac-delivered 5,949 | standing 19,085")
     >>> d = parse_trophy_split(line)
-    >>> (d["base"], d["ac_only"], d["shared"], d["gch_only"], d["ac_total"], d["standing"])
-    (2793, 115, 7118, 9053, 10026, 19079)
+    >>> (d["ac_total"], d["ac_delivered"], d["standing"])
+    (10026, 5949, 19085)
     """
     m = TROPHY_SPLIT_RE.match(line)
     if not m:
@@ -175,7 +176,76 @@ def parse_trophy_split(line: str) -> dict:
         "shared": int(m.group(3).replace(",", "")),
         "gch_only": int(m.group(4).replace(",", "")),
         "ac_total": int(m.group(5).replace(",", "")),
-        "standing": int(m.group(6).replace(",", "")),
+        "ac_delivered": int(m.group(6).replace(",", "")),
+        "standing": int(m.group(7).replace(",", "")),
+    }
+
+
+def ledger_trophy_matrix_line() -> str | None:
+    """The nine cells of the trophy matrix, from scripts/ledger.py
+    --trophy-matrix. Returns None if the tool cannot run (the panel then
+    says the matrix is unavailable rather than guessing)."""
+    try:
+        out = subprocess.run(
+            [sys.executable, str(LEDGER_PY), "--trophy-matrix"],
+            cwd=ROOT, capture_output=True, text=True, timeout=120,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return out.stdout.strip()
+
+
+MATRIX_RE = re.compile(
+    r"trophy matrix \| ac-standing ([\d,]+) \| gch-standing ([\d,]+) "
+    r"\| both-standing ([\d,]+) "
+    r"\| ac-naive ([\d,]+)-([\d,]+) \| gch-naive ([\d,]+)-([\d,]+) "
+    r"\| both-naive ([\d,]+)-([\d,]+) "
+    r"\| ac-calibrated ([\d,]+)-([\d,]+) \| gch-calibrated ([\d,]+)-([\d,]+) "
+    r"\| both-calibrated ([\d,]+)-([\d,]+) \| both-equals-brief (yes|no)"
+)
+
+
+def parse_trophy_matrix(line: str) -> dict:
+    """Parse the trophy-matrix line into plain numbers.
+
+    The both column must equal the --brief endpoint. ledger.py asserts the
+    equality in the same process that prints this line, and the identity
+    field records the result, so a broken identity shows as no.
+
+    >>> line = ("trophy matrix | ac-standing 10,026 | gch-standing 18,970 "
+    ...         "| both-standing 19,085 | ac-naive 13,746-15,716 "
+    ...         "| gch-naive 26,975-33,188 | both-naive 27,390-33,953 "
+    ...         "| ac-calibrated 16,126-20,176 | gch-calibrated 33,600-48,515 "
+    ...         "| both-calibrated 34,615-50,580 | both-equals-brief yes")
+    >>> d = parse_trophy_matrix(line)
+    >>> (d["ac"]["standing"], d["gch"]["standing"], d["both"]["standing"])
+    (10026, 18970, 19085)
+    >>> d["both"]["naive"]
+    (27390, 33953)
+    >>> d["identity_ok"]
+    True
+    """
+    m = MATRIX_RE.match(line)
+    if not m:
+        raise ValueError(f"unrecognized trophy-matrix line: {line}")
+    g = m.groups()
+
+    def band(lo: str, hi: str) -> tuple[int, int]:
+        return (int(lo.replace(",", "")), int(hi.replace(",", "")))
+
+    return {
+        "ac": {"standing": int(g[0].replace(",", "")),
+               "naive": band(g[3], g[4]),
+               "calibrated": band(g[9], g[10])},
+        "gch": {"standing": int(g[1].replace(",", "")),
+                "naive": band(g[5], g[6]),
+                "calibrated": band(g[11], g[12])},
+        "both": {"standing": int(g[2].replace(",", "")),
+                 "naive": band(g[7], g[8]),
+                 "calibrated": band(g[13], g[14])},
+        "identity_ok": g[15] == "yes",
     }
 
 
@@ -198,21 +268,6 @@ def parse_brief(line: str) -> dict:
         "calibrated_high_k": float(m.group(5)),
         "corner": m.group(6),
     }
-
-
-def remaining_rows(data: dict) -> list[dict]:
-    """The [[remaining]] rows, both calibers, as they are declared."""
-    out = []
-    for row in data.get("remaining", []):
-        out.append({
-            "id": row.get("id", ""),
-            "title": row.get("title", ""),
-            "naive": f"{row.get('naive_low', 0):,}-{row.get('naive_high', 0):,}",
-            "calibrated": f"{row.get('calibrated_low', 0):,}-{row.get('calibrated_high', 0):,}",
-            "klass": row.get("klass", ""),
-            "gate": row.get("gate", "none"),
-        })
-    return out
 
 
 def lever_what(row: dict) -> str:
@@ -668,6 +723,7 @@ td { padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line2);
   vertical-align: top; line-height: 1.45; }
 tr:last-child td { border-bottom: none; }
 td.num { font-family: var(--mono); white-space: nowrap; }
+td.measured { color: var(--accent); }
 .badge { display: inline-block; padding: 2px 7px; font-family: var(--mono);
   font-size: 0.64rem; font-weight: 600; letter-spacing: 0.04em;
   white-space: nowrap; }
@@ -799,50 +855,6 @@ def no_data(reason: str) -> str:
 PIE_COLORS = ["--pie-1", "--pie-2", "--pie-3", "--pie-4", "--pie-5", "--pie-6"]
 
 
-def remaining_pie_slices(data: dict, caliber: str, standing: int) -> list[dict]:
-    """One caliber's line distribution: standing first, then each remaining
-    row's band MIDPOINT, tail-grouped.
-
-    A band is a range, not a point: the angles use the midpoint so the pie has
-    a shape at all, the legend carries the band, and the panel says so. The
-    tail rule is explicit: a row stays individual when its midpoint is at
-    least 8 percent of the remaining total, capped at six rows and floored at
-    four, so a pie never degenerates into a list.
-    """
-    low_k = "naive_low" if caliber == "naive" else "calibrated_low"
-    high_k = "naive_high" if caliber == "naive" else "calibrated_high"
-    rows = []
-    for r in data.get("remaining", []):
-        low = r.get(low_k, 0) or 0
-        high = r.get(high_k, 0) or 0
-        rows.append({
-            "id": r.get("id", "?"),
-            "title": r.get("title", ""),
-            "mid": round((low + high) / 2),
-            "band": f"{low:,}-{high:,}",
-        })
-    rem_total = sum(r["mid"] for r in rows)
-    rows.sort(key=lambda r: r["mid"], reverse=True)
-    keep = [r for r in rows if rem_total and r["mid"] >= 0.08 * rem_total][:6]
-    if len(keep) < 4:
-        keep = rows[:4]
-    keep_ids = {r["id"] for r in keep}
-    tail = [r for r in rows if r["id"] not in keep_ids]
-    slices = [{"label": "standing, measured from HEAD",
-               "value": standing, "band": None, "color": "--pie-standing"}]
-    for i, r in enumerate(keep):
-        slices.append({"label": f"{r['id']}: {truncate(r['title'], 42)}",
-                       "value": r["mid"], "band": r["band"],
-                       "color": PIE_COLORS[i % len(PIE_COLORS)]})
-    if tail:
-        tail_val = sum(r["mid"] for r in tail)
-        detail = ", ".join(f"{r['id']} {r['mid']:,}" for r in tail)
-        slices.append({"label": f"tail: {len(tail)} smaller rows",
-                       "value": tail_val, "band": None,
-                       "tail_detail": detail, "color": "--pie-tail"})
-    return slices
-
-
 def pie_svg(slices: list[dict], radius: int = 78, cx: int = 88,
             cy: int = 88) -> str:
     """One pie as an inline SVG. An arc is polar-to-cartesian arithmetic: no
@@ -923,59 +935,61 @@ def render_pie_chart(title: str, slices: list[dict]) -> str:
 # Panels
 # ---------------------------------------------------------------------------
 
+def trophy_matrix_table(matrix: dict) -> str:
+    """The nine cells as one table.
+
+    Standing is a measured point. Each endpoint is a band. The board says the
+    columns do not add up, because AC standing and GCH standing both count the
+    base and the shared parts. Without that note, the first reader reports
+    the correct arithmetic as a bug."""
+    def band(col: str, key: str) -> str:
+        lo, hi = matrix[col][key]
+        return f"{lo:,} to {hi:,}"
+
+    rows = (
+        "<tr><th>standing</th>"
+        + f'<td class="num measured">{matrix["ac"]["standing"]:,}</td>'
+        + f'<td class="num measured">{matrix["gch"]["standing"]:,}</td>'
+        + f'<td class="num measured">{matrix["both"]["standing"]:,}</td></tr>'
+        "<tr><th>endpoint, naive</th>"
+        + f'<td class="num">{band("ac", "naive")}</td>'
+        + f'<td class="num">{band("gch", "naive")}</td>'
+        + f'<td class="num">{band("both", "naive")}</td></tr>'
+        "<tr><th>endpoint, calibrated</th>"
+        + f'<td class="num">{band("ac", "calibrated")}</td>'
+        + f'<td class="num">{band("gch", "calibrated")}</td>'
+        + f'<td class="num">{band("both", "calibrated")}</td></tr>'
+    )
+    return (
+        "<h3>The trophy matrix</h3>"
+        '<p class="note">An endpoint is standing plus the rows the trophy '
+        "needs. The three columns do not add up. That is correct. AC standing "
+        "and GCH standing both count the base and the shared parts. The "
+        "AC-and-GCH column equals the endpoint that scripts/ledger.py --brief "
+        "prints. Standing is measured from HEAD.</p>"
+        '<table><thead><tr><th></th><th>AC trophy</th><th>GCH trophy</th>'
+        '<th>AC and GCH</th></tr></thead><tbody>' + rows + "</tbody></table>"
+    )
+
+
 def panel_lines() -> str:
-    brief_line = ledger_brief_line()
-    brief = parse_brief(brief_line) if brief_line else None
+    matrix_line = ledger_trophy_matrix_line()
+    matrix = parse_trophy_matrix(matrix_line) if matrix_line else None
     split_line = ledger_trophy_split_line()
     split = parse_trophy_split(split_line) if split_line else None
     try:
         data = load_ledger()
     except (OSError, tomllib.TOMLDecodeError) as exc:
-        return panel("Remaining lines, current plus estimate",
+        return panel("The trophy matrix: three calibers by three trophies",
                      no_data(f"dev/ledger.toml unreadable: {exc}"),
                      source_note(LEDGER_TOML))
-    rows = remaining_rows(data)
-    if brief is None:
-        stats = ('<div class="missing">Standing unavailable: '
-                 'scripts/ledger.py --brief failed. The remaining rows below '
-                 'are still shown from dev/ledger.toml.</div>')
+    body = ""
+    if matrix is None:
+        body += ('<div class="missing">Trophy matrix unavailable: '
+                 'scripts/ledger.py --trophy-matrix failed. The cells are '
+                 'computed there, so this board does not guess them.</div>')
     else:
-        stats = (
-            '<div class="stats">'
-            f'<div class="stat measured"><div class="num">{brief["standing"]:,}</div>'
-            '<div class="lab">standing, measured from HEAD</div>'
-            '<div class="sub">non-blank lines in Agda fences, tracked masters minus D18 retirements</div></div>'
-            f'<div class="stat"><div class="num">{brief["naive_low_k"]:.2f}k to {brief["naive_high_k"]:.2f}k</div>'
-            '<div class="lab">endpoint, naive caliber</div>'
-            '<div class="sub">standing plus the remaining rows, summed as priced</div></div>'
-            f'<div class="stat"><div class="num">{brief["calibrated_low_k"]:.2f}k to {brief["calibrated_high_k"]:.2f}k</div>'
-            '<div class="lab">endpoint, calibrated caliber</div>'
-            '<div class="sub">x1.3 rows anchored by a probe or comparable, x3 rows only a survey reaches</div></div>'
-            '</div>'
-        )
-    if brief is not None:
-        naive_slices = remaining_pie_slices(data, "naive", brief["standing"])
-        cal_slices = remaining_pie_slices(data, "calibrated", brief["standing"])
-        naive_total = sum(s["value"] for s in naive_slices)
-        cal_total = sum(s["value"] for s in cal_slices)
-        pies = (
-            "<h3>Line distribution</h3>"
-            '<p class="note">Each angle uses the MIDPOINT of the band of that '
-            "row. Each row is a range and not a point. The legend shows the "
-            "bands. A tool measures the standing lines, but each remaining row "
-            "is an estimate. Thus these parts help you read the data. They are "
-            "not exact. "
-            f"Each total is the standing lines ({brief['standing']:,}) plus the "
-            f"midpoints: {naive_total:,} naive and {cal_total:,} calibrated.</p>"
-            '<div class="pie-wrap">'
-            + render_pie_chart("Remaining rows, naive caliber", naive_slices)
-            + render_pie_chart("Remaining rows, calibrated caliber", cal_slices)
-            + "</div>"
-        )
-    else:
-        pies = ('<div class="missing">Line pie not drawn: standing is '
-                "unavailable because scripts/ledger.py --brief failed. The "
-                "bands are still shown below.</div>")
+        body += trophy_matrix_table(matrix)
     if split is not None:
         split_slices = [
             {"label": "1. base, outside L", "value": split["base"],
@@ -987,39 +1001,44 @@ def panel_lines() -> str:
             {"label": "4. GCH alone on L", "value": split["gch_only"],
              "band": None, "color": "--pie-4"},
         ]
-        trophy = (
-            "<h3>The AC trophy, in four parts</h3>"
-            # The owner asked for ONE number: what the AC trophy costs alone.
-            # The pie draws the parts. State the sum too, or the reader has to
-            # add three slices to get the answer they asked the question for.
-            '<p class="stat"><b>' + f"{split['ac_total']:,}"
-            + '</b> lines for the AC trophy alone, parts 1 to 3</p>'
+        body += (
+            "<h3>How much of the tree both trophies share</h3>"
             '<p class="note">This counts the SURVIVING tree, like every other '
-            "figure on this board. It excludes the retirement set. Part 1 is "
-            "everything outside L. Part 2 is the L content only AC needs. "
+            "figure on this board, and it excludes the retirement set. Part 1 "
+            "is everything outside L. Part 2 is the L content only AC needs. "
             "Part 3 is the L content both trophies need. Part 4 is the L "
             "content only GCH needs, and it is shown for the check. The four "
-            f"parts sum to standing, {split['standing']:,}.</p>"
+            "parts sum to standing.</p>"
+            # BOTH AC figures, added 2026-08-07 after [T139] rated the single
+            # number WEAK. Ten rud modules sit in neither closure. The rule
+            # puts them in the shared part, which adds 4,077 lines to the AC
+            # figure. The two numbers answer different questions and the board
+            # shows both, because showing one invites action on the wrong one.
+            '<p class="note"><b>The AC standing cell has two honest readings.'
+            "</b> The matrix shows "
+            f"<b>{split['ac_total']:,}</b>, the route projection: it counts "
+            "the ten rud modules that no closure reaches today, because the "
+            "bridge landing will make AC need them. The AC endpoint's own "
+            f"import closure reaches <b>{split['ac_delivered']:,}</b> today. "
+            "The difference is 4,077 lines. Plan with the first number. Do "
+            "not read the first number as delivered need.</p>"
             '<div class="pie-wrap">'
-            + render_pie_chart("The AC trophy, four parts", split_slices)
+            + render_pie_chart("The standing tree, four parts", split_slices)
             + "</div>"
         )
     else:
-        trophy = ('<div class="missing">Trophy split unavailable: '
-                  'scripts/ledger.py --trophy-split failed.</div>')
-    # The per-row [[remaining]] table is REMOVED, 2026-08-07, for the same
-    # reason as the tree_cost table: the distribution chart above already
-    # draws these rows, and a chart with its own source data printed under it
-    # is the board restating itself.
-    table = ""
-
-    # Standing is MEASURED by scripts/ledger.py, not read from the toml, so
-    # both are named. Dropping the script when the raw table went was a real
-    # loss of provenance and the test suite caught it.
+        body += ('<div class="missing">Trophy split unavailable: '
+                 'scripts/ledger.py --trophy-split failed. The four-part pie '
+                 "is not drawn.</div>")
+    # Standing is MEASURED by scripts/ledger.py, never read from the toml, so
+    # both the matrix and the split are named as script outputs. Dropping the
+    # script names when the raw table went was a real loss of provenance and
+    # the test suite caught it.
     src = (source_note(LEDGER_TOML)
-           + "; scripts/ledger.py --brief and --trophy-split (measure standing)")
-    return panel("Remaining lines: standing, bands and distribution",
-                 stats + pies + trophy + table, src)
+           + "; scripts/ledger.py --brief, --trophy-split and --trophy-matrix "
+           "(measure standing and compute the cells)")
+    return panel("The trophy matrix: three calibers by three trophies",
+                 body, src, wide=True)
 
 
 def panel_seconds() -> str:
@@ -1028,13 +1047,13 @@ def panel_seconds() -> str:
     except (OSError, tomllib.TOMLDecodeError) as exc:
         return panel("Cold-start seconds (current only)",
                      no_data(f"dev/ledger.toml unreadable: {exc}"),
-                     source_note(LEDGER_TOML))
+                     source_note(LEDGER_TOML), wide=True)
     timing = data.get("timing", {})
     full = timing.get("full_cold_seconds")
     if full is None:
         return panel("Cold-start seconds (current only)",
                      no_data("[timing].full_cold_seconds is absent from dev/ledger.toml"),
-                     source_note(LEDGER_TOML))
+                     source_note(LEDGER_TOML), wide=True)
     note = truncate(str(timing.get("note", "")), 240)
     stats = (
         '<div class="stats">'
@@ -1122,8 +1141,12 @@ def panel_seconds() -> str:
     cost_table = ""
 
     src = source_note(LEDGER_TOML)
+    # Full width, 2026-08-07 at the owner's direction. This panel now carries
+    # three subsections and two pies. Every other panel on the board is wide,
+    # so a half-width one here also broke the column rhythm.
     return panel("Cold-start seconds: current check and its distribution",
-                 stats + pie_html + cost_pie + hot_table + cost_table, src)
+                 stats + pie_html + cost_pie + hot_table + cost_table, src,
+                 wide=True)
 
 
 def panel_hierarchy() -> str:

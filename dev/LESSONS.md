@@ -1175,6 +1175,16 @@ type inferred.
 
 **Provenance:** `_build/k3-report.md`; commit recorded with the K3 chapter.
 
+**Measured again (2026-08-07, the sharpest instance on record):** `[L3.32-T143]`
+bisected a check-time wall in a below-lim probe to ONE call: `∈sucV-elim` at a
+concrete successor index, with its two branches passed as inline lambdas. The
+walled run passed 595 seconds without completing. Naming the two branches as
+top-level functions with written types, 29 lines total, took the proof to
+**27 milliseconds**: a factor of at least 22,000. The rule's cure applies
+beyond `PT.rec`: ANY eliminator whose branches are inline lambdas over
+inner-world content can carry the wall, and `[T138]`'s harness had already
+shown every named-branch clause beside it checking under 45 ms.
+
 ### I-4. Implicits inverted through content-of never solve; state combinators over carriers
 
 **Rule:** An implicit argument that unification must invert through `⟨_⟩`

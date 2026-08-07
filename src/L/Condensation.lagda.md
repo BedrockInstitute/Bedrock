@@ -58,8 +58,6 @@ open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 open import V.Coding {ℓ} using
   ( pr; singl∈; ∈singl; self∈singl )
 open import L.PairAtoms {ℓ} using ( isPair )
-open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
-open import L.Hierarchy {ℓ} lem using ( Lset-only )
 
 open import Cubical.Data.Sigma using ( _×_; _,_ )
 open import Cubical.Data.Vec using ( map )
@@ -856,91 +854,11 @@ left standing with the ambient obligations.
 ```
 
 <!--en-->
-## The crossing, reduced
+The crossing obligations moved to the GCH resume. Ruling D32 (2026-08-07)
+deletes this section. The `L.Condensation` row in `dev/ARCHIVE.md` and the
+`crossing-rebuild` ledger row record the rebuild path.
 <!--zh-->
-## 跨越，化归之后
-<!--/-->
-
-<!--en-->
-The crossing obligation is one absoluteness theorem about one formula at two
-carriers. At the set carrier it needs `TransferM`: the inner reading implies
-the ambient reading of the transported formula, what `σ₁-up` would give. At the
-class carrier it needs the ambient-reading form of the hierarchy chapter's
-`Lset-only`: the delivered theorem is stated at the inner reading only, so the
-ambient form is a second, undelivered obligation, and it factors into exactly
-two pieces: `TransferL`, the ambient reading implies the inner reading at `L`,
-what `π₁-down` would give, and `ValueIsL`, the value named by an ambient
-satisfaction is constructible. The factorization is proved here, and the whole
-crossing assembles from the two transfers: at a transitive set carrier, the
-inner face crosses out through one transfer at `M` and the ambient form at `L`.
-<!--zh-->
-跨越义务是关于一条公式、在两个载体处的一条绝对性定理。在集合载体处它需要 `TransferM`：内层读式蕴含被迁移公式的环境读式，即 `σ₁-up` 会给出的东西。在类载体处它需要层级章 `Lset-only` 的环境读式形态：已交付的定理只陈述在内层读式处，故环境形态是第二条未交付的义务，而它恰好分解成两件：`TransferL`，环境读式蕴含 `L` 处的内层读式，即 `π₁-down` 会给出的东西，以及 `ValueIsL`，被环境满足点名的值可构造。分解在此得证，而整条跨越从两条转移装配：在传递集载体处，内层面孔经 `M` 处的一条转移与 `L` 处的环境形态跨出去。
-<!--/-->
-
-```agda
--- The ambient-reading form of `Lset-only`, at the class carrier.  The
--- delivered theorem is stated at the inner reading only.
-AmbientOnly : Type (ℓ-suc ℓ)
-AmbientOnly = (v b : S) → IsOrd b
-            → ⟨ (v ∷ b ∷ []) AbsL.⊨ᵛ LsetGraphAt {2} zero (suc zero) ⟩
-            → v ≡ Lset b
-
-TransferL : Type (ℓ-suc ℓ)
-TransferL = (v b : Sʟ)
-          → ⟨ (fst v ∷ fst b ∷ []) AbsL.⊨ᵛ LsetGraphAt {2} zero (suc zero) ⟩
-          → ⟨ (v ∷ b ∷ []) AbsL.⊨ᵐ LsetGraphAt {2} zero (suc zero) ⟩
-
-ValueIsL : Type (ℓ-suc ℓ)
-ValueIsL = (v b : S) → IsOrd b
-         → ⟨ (v ∷ b ∷ []) AbsL.⊨ᵛ LsetGraphAt {2} zero (suc zero) ⟩
-         → ⟨ isL v ⟩
-
--- The ambient form factors into the transfer at L and the value's
--- constructibility.
-ambientOnly-from : TransferL → ValueIsL → AmbientOnly
-ambientOnly-from tl vl v b ob h =
-  Lset-only zero (suc zero) (vL ∷ bL ∷ []) (tl vL bL h) ob
-  where
-  bL : Sʟ
-  bL = b , ord-isL b ob
-  vL : Sʟ
-  vL = v , vl v b ob h
-
--- The crossing, assembled: at a transitive set carrier, one transfer at M and
--- the ambient form at L give the crossing obligation for the level formula.
-module Crossing (M : S) (Mtr : isTransV M)
-                (Φ : Formula Sʟ 2) (h : BoundedFo (AtCarrier.InM M Mtr) Φ) where
-
-  open AtCarrier M Mtr
-  open Transport Φ h
-
-  -- The ambient-reading form of the module's formula, at the class carrier.
-  AmbientOnly-Φ : Type (ℓ-suc ℓ)
-  AmbientOnly-Φ = (v b : S) → IsOrd b
-                → ⟨ (v ∷ b ∷ []) AbsL.⊨ᵛ Φ ⟩
-                → v ≡ Lset b
-
-  crossOut-from : TransferM lifted → AmbientOnly-Φ → CrossOut lifted
-  crossOut-from tm ao v b ob hv =
-    ao (fst v) (fst b) ob
-      (subst ⟨_⟩ (amb-agree (fst v ∷ fst b ∷ [])) (tm v b hv))
-```
-
-<!--en-->
-Neither `TransferM` nor `AmbientOnly` is delivered, and the probe measured why,
-machine-checked: the crossing's formula, the delivered description, is neither
-Δ₀, Σ₁, nor Π₁ in the delivered certification, since its quantifier profile
-carries unbounded quantifiers of both kinds, so none of the three delivered
-transfer theorems applies. The Levy form of the level story is delivered above
-at both carriers; the crossing's application of it, the equivalence with the
-delivered description and the two factors of the ambient form, is the
-obligation stated and reduced here. The limit case is stated as the target
-`Condenses` but not built: it needs the ordinal predicate at the set carrier,
-which the ordinal chapter ships carrier-generic and Δ₀-certified, and the two
-inclusions, `M ⊆ L` (delivered above) and the reverse from `level-in` plus one
-extensionality, priced in the report and left standing.
-<!--zh-->
-`TransferM` 与 `AmbientOnly` 都未交付，而探针机检地量到了原因：跨越的公式，即已交付的描述，在已交付的证书体系中既非 Δ₀、亦非 Σ₁、亦非 Π₁，因为它的量词画像同时携带两种无界量词，于是三条已交付的转移定理没有一条适用。层故事的 Lévy 形态已在上文两个载体处交付；跨越对它的施用，即与已交付描述之间的等价连同环境形态的两个因子，是在此陈述并化归的义务。极限情形被陈述为目标 `Condenses` 而未建造：它需要集合载体处的序数谓词，序数章以载体为参数、带 Δ₀ 证书地交付了它，还需要两条包含，`M ⊆ L` (上文已交付) 与由 `level-in` 加一次外延性得出的反向，在报告中定价并留待后继。
+跨越义务已移至 GCH resume。裁定 D32 (2026-08-07) 删除本节。`dev/ARCHIVE.md` 中的 `L.Condensation` 行与 `crossing-rebuild` 行记录重建路径。
 <!--/-->
 
 <!--en-->
