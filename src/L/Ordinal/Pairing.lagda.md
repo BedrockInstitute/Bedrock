@@ -469,14 +469,21 @@ product well-orders canonically, and its order type is exactly `τ`.
     colp∈ₛsuc : ⟨ col p ∈ₛ sucV (col p) ⟩
     colp∈ₛsuc = ∈∈ₛ {a = col p} {b = sucV (col p)} .fst (self∈sucV (col p))
 
-  col→τ : Pair → ⟪ τ ⟫
-  col→τ p = fiber τ (col∈τ p) .fst
+  -- perf: col→τ-inj and hit re-elaborate fiber τ (col∈τ p) at the
+  -- transparent τ; seal the shared fiber and the read
+  opaque
+    cf : (p : Pair) → Σ[ m ∈ ⟪ τ ⟫ ] (⟪ τ ⟫↪ m ≡ col p)
+    cf p = fiber τ (col∈τ p)
 
-  col→τ-inj : {p q : Pair} → col→τ p ≡ col→τ q → p ≡ q
-  col→τ-inj {p} {q} e =
-    col-inj (sym (fiber τ (col∈τ p) .snd)
-              ∙ cong (⟪ τ ⟫↪) e
-              ∙ fiber τ (col∈τ q) .snd)
+    col→τ : Pair → ⟪ τ ⟫
+    col→τ p = cf p .fst
+
+    col→τ-fiber : (p : Pair) → ⟪ τ ⟫↪ (col→τ p) ≡ col p
+    col→τ-fiber p = cf p .snd
+
+    col→τ-inj : {p q : Pair} → col→τ p ≡ col→τ q → p ≡ q
+    col→τ-inj {p} {q} e =
+      col-inj (sym (col→τ-fiber p) ∙ cong (⟪ τ ⟫↪) e ∙ col→τ-fiber q)
 
   col-img : (q : Pair) (b : S) → ⟨ b ∈ˢ col q ⟩
           → ∥ Σ[ p ∈ Pair ] (col p ≡ b) ∥₁
@@ -563,7 +570,7 @@ product well-orders canonically, and its order type is exactly `τ`.
   col→τ-surj m = PT.map hit (col-surj (⟪ τ ⟫↪ m) (member τ m))
     where
     hit : Σ[ p ∈ Pair ] (col p ≡ ⟪ τ ⟫↪ m) → Σ[ p ∈ Pair ] (col→τ p ≡ m)
-    hit (p , e) = p , ↪-inj {a = τ} (fiber τ (col∈τ p) .snd ∙ e)
+    hit (p , e) = p , ↪-inj {a = τ} (col→τ-fiber p ∙ e)
 ```
 
 <!--en-->

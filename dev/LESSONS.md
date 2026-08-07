@@ -1596,6 +1596,38 @@ K2's cofinality finding, and a sibling of D-10.
 
 **Provenance:** `_build/l3.31-p1-report.md`; `src/ProbeD10.agda` (untracked).
 
+### D-25. An archive goes red on its own, and pending work that needs it must be extracted first
+
+**Rule:** An archived module is frozen, so its greenness decays the moment any
+SURVIVOR it imports changes underneath it. That is legal (D20 says a red
+archive is not a defect) and it is harmless, right up until some pending item
+still needs content from the archived chapter: at that moment the cheapest
+route to that content, typechecking the archived file against an explicit
+include path, is gone, and it cannot be repaired because archived files are
+never edited. **Before archiving a chapter, name every unstarted item that
+still consumes it, and extract what they need first.** "Nothing imports it"
+is the test for whether a chapter can leave the tree; it is NOT the test for
+whether the chapter is finished being useful.
+
+**Measured (2026-08-06):** `[L3.32-T122]` archived `L.Rud.StepInL` on the
+correct and verified ground that nothing outside the `Everything` index
+imported it. Twenty-six minutes later `[L3.32-T124]` sealed `left` opaque in
+`L.Rud.Images`, a survivor, which was the whole point of that dispatch and
+removed 70.3 s. `L.Rud.StepInL` unfolds `left`'s body at three sites
+(`archive/src/L/Rud/StepInL.lagda.md:941, :959, :976`), so the archived file
+stopped typechecking: `agda -i archive/src -i src` exits 42 on
+`⟨ v ∈ˢ left (fst (lookup bk δ)) ⟩`. The `below-lim` gate needs exactly three
+objects from that chapter (`values∈L`, `stepSet∈L`, and the op graphs
+`graphOf`/`graph-out`/`graph-in`, recorded in `_build/l3.32-t90-report.md`),
+so a gate that could have run against the archive for free now needs a
+scratch tree carrying `[T121]`'s six-line `left-compute` bridge.
+
+**The cost here was small** because the bridge was already measured and the
+gate is a throwaway probe. It is recorded because the general case is not
+small: the same two dispatches in the same order, with a consumer whose
+repair had NOT been measured, would have left pending work with no route to
+content that is frozen by ruling.
+
 ### C-1. Two conversations must not share a worktree
 
 **Rule:** Two conversations must not share a worktree; give the second one its

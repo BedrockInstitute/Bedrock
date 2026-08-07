@@ -308,12 +308,6 @@ import V.Model
   trichotomy: the choosing device the axiom of choice takes. Reflection was
   expected to be a second consumer and is not, so there is exactly one, and it is
   `L.Choice.Transversal`{.Agda}, the last chapter of the book.
-- `L.WellOrder.Tree`{.Agda}: a classical well-order, generic: the finite
-  labelled trees over a well-ordered alphabet, by shortlex. The size and
-  length gates are load-bearing, since the pure pointwise order on lists of
-  unequal length admits an infinite descent, and well-foundedness runs by
-  strong induction on size with nested accessibility inductions inside each
-  size class.
 - `L.Coding.Base`{.Agda}: reading codes from inside: `allCodes`{.Agda} gathers
   every parameter-free formula's code into one nameable set, and
   `prAt`{.Agda} / `tagAt`{.Agda} destructure a Kuratowski pair and a tag in
@@ -386,7 +380,6 @@ import V.Model
 - `L.CardinalPredicates`{.Agda}：等势、基数与后继基数作为无参的内部公式，对载体与元数皆通用，各带把满足关系对上宿主概念的证书。等势就是双射的存在，一步到位，故任何消费方都不欠一次 Cantor-Bernstein 论证。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是，故恰有一个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}。
-- `L.WellOrder.Tree`{.Agda}：一个经典良序，且泛型：良序字母表上的有穷带标签树，按 shortlex。尺寸门与长度门是承重的，因为变长表上的纯逐点序容许无穷下降；良基性对尺寸作强归纳，每个尺寸类内部再嵌可及性归纳。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
@@ -419,7 +412,6 @@ import L.Ordinal.SquareLaw
 import L.CardinalPredicates
 import L.Ordinal.Stages
 import L.WellOrder.Base
-import L.WellOrder.Tree
 import L.Coding.Base
 import L.Coding.Environment
 import L.Stage
@@ -434,20 +426,6 @@ import L.Coding.Model
 import L.Coding.InL
 import L.Coding.Closed
 import L.Recursion
-import L.Godel.Operations
-import L.Godel.Definable
-import L.Godel.Tuples
-import L.Godel.Satisfaction
-import L.Godel.Terms
-import L.Godel.NormalForm
-import L.Godel.InL
-import L.Godel.Codes
-import L.Godel.Table
-import L.Godel.Name
-import L.Godel.Step
-import L.Godel.Tower
-import L.Godel.Closure
-import L.Godel.Levels
 import L.Coding.EnvSet
 import L.Coding.Sat
 import L.Coding.Bridge
@@ -519,98 +497,6 @@ The root, stated today and finished over the remaining parts:
   closure sits inside), and `closureClosed`{.Agda} is `closedOf`{.Agda} at a
   closure with `closure-inv`{.Agda} as its peeling. Generality is free because
   `byTag`{.Agda} was already written against an arbitrary target set.
-- `L.Godel.Operations`{.Agda}: a finite stock of set operations, each a single
-  set former with its two membership directions, and none of it owing the
-  excluded middle: product and membership graph, the direct-former union and
-  the difference, the two selections at parameter keys, and the extension and
-  shift of recorded assignments. Later chapters compose them where formulas
-  would otherwise be spent.
-- `L.Godel.Definable`{.Agda}: the operations, described. One frame turns a body
-  and two semantic conversions into an identity between a slot and an
-  operation's value; eleven descriptions pass through it (the Boolean stock,
-  product and the membership graph, the two selections at singleton keys, the
-  values, the tuple family at an arity slot, and the two graph movers), each
-  read in both directions at variable slots and a variable environment.
-- `L.Godel.Tuples`{.Agda}: assignments as graph sets, and their algebra against
-  the operations: extension is the graph extension, dropping the head is the
-  shift, entrywise injectivity reads one graph against the other's lookup, and
-  the family of all assignments over a carrier steps by the family extension.
-- `L.Godel.Satisfaction`{.Agda}: satisfaction as a set, case by case. The
-  satisfaction set of a formula is one set former over the assignments
-  satisfying it, and each delivered case is an extensional identity with an
-  operation composition: falsity and truth, conjunction, disjunction and
-  negation against the Boolean stock, the two-variable membership atom
-  against one selection, and the existential against the shift.
-- `L.Godel.Terms`{.Agda}: the combinator terms, the syntax the tower will
-  quantify. A term mirrors a formula constructor for constructor but means
-  through one set operation per node, with no binders; soundness reads every
-  term back as the satisfaction set of its mirror by the case equations run
-  backward, and completeness assigns every formula a term through the
-  reductions, under the one classical assumption.
-- `L.Godel.NormalForm`{.Agda}: the normal form. Every satisfaction set over a
-  carrier is denoted by a finite composition term over the carrier and its
-  members: one induction, each case a case equation of the satisfaction
-  chapter read off, the atoms assembled as leaves through the reductions,
-  and the one classical assumption entering only where it already had to.
-- `L.Godel.InL`{.Agda}: fed constructible arguments, the operations return
-  constructible sets, capped by `denoteL`{.Agda}: every denotation of every
-  combinator term over a constructible carrier is constructible. One engine
-  throughout: a stage holding the arguments, one Δ₀ defining formula per
-  operation read at the outer world through absoluteness, and the
-  definable-subset door back into the class; the two movers first climb a
-  fixed count of stages.
-- `L.Godel.Codes`{.Agda}: the syntax as data the model holds. Subterm
-  enumeration with arities packed in, then a hereditarily finite code per
-  term as a tag-and-pair tower over the sealed numeral chain, an element of
-  `L` by construction, with one unfolding equation per constructor and the
-  tag discrimination helpers the recorded law prescribes.
-- `L.Godel.Table`{.Agda}: the denotation table's clauses, one per constructor:
-  the code has this tag and payload, the children's entries are present, and
-  the value is the operation of the children's values, every conjunct read
-  through the descriptions and pair readers already in stock. Each clause
-  carries a meta shape and both readings; the binary nodes share one frame.
-- `L.Godel.Name`{.Agda}: names for the members of a stage, as arity-one terms.
-  Denotation is evaluation followed by taking values, completeness spends the
-  terms chapter's identification as one transport, and the well-order is
-  assembled rather than invented: a label alphabet by the combinators, trees
-  ordered shortlex, and the tree order pulled back along a picture whose
-  injectivity is a left inverse rather than a discrimination matrix. The
-  exported interface matches the internalized route's chapter member for
-  member.
-- `L.Godel.Step`{.Agda}: deliberate scaffolding, said so in place. The choice
-  step's spine, line for line, with its naming import re-pointed at the term
-  names, so that both routes stay green side by side while the term route's
-  internal side is built against this one; at the final rewire one copy
-  retires.
-- `L.Godel.Tower`{.Agda}: the tower's step, described from the inside. A naked
-  existential over approximation tables admits junk, so the step quantifies
-  certified tables: eight local branch shapes pin tags by sealed numerals,
-  payloads into ω or the carrier, children into the main table, and
-  annotations into one functional table. Honesty reads every certified pair
-  back as the code of an honest term, on the transitive closure of
-  membership; the fill certifies the honest pair of tables by the
-  approximation's own recursion, with functionality exactly the fact that a
-  code determines its arity; and the step body's two laws read the arity-one
-  entries' values into `𝒟ₒ` of the carrier and fill them back, so the tower's
-  step is internally describable, both ways, over codes and tables.
-- `L.Godel.Closure`{.Agda}: the closure, opened. The meta groundwork the
-  kinded closure tower will spend: the values generalization at every positive
-  arity, the two selection equations reading a selection over a satisfaction
-  set as one more conjunction, the renaming law saying a satisfaction set
-  survives a shift of all variables, the forward pinning inclusion cutting the
-  full extension down to the constant's singleton, and the singleton family,
-  the one operation the stock was missing, with its membership laws. The
-  closure recursion itself is the next chapter's work.
-- `L.Godel.Levels`{.Agda}: the levels, internalized. The internal face of the
-  shelves is a finite prefix table: one set of entries `pr (pr #n #k) S` up to
-  a bound, determined shelf by shelf. The layer description spells the step's
-  full nine-clause set over slots, with direction-paired readers; the prefix
-  table description adds functionality, the two base clauses, the successor
-  clause (the entry at `suc n` is the entry at `n` joined with the layer), and
-  domain adequacy. The pinning theorem excludes junk by meta-induction: any
-  satisfying table's entries are the meta `slice` values, so no certificate is
-  needed. The fill packs the meta prefix table as an `L`-set, and the step is
-  describable both ways over the prefix table.
 - `L.Coding.EnvSet`{.Agda}: the environments over a set of `L` at a fixed length
   form a set of `L`, which is what the clauses that take a complement take it in.
   A small index type, one stage, one separation, and no recursion.
@@ -1155,20 +1041,6 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Model`{.Agda}：模型之上的对象语言。「函数」的含义 (`prAtL`{.Agda}、`appAt`{.Agda}、`svAt`{.Agda}、`domAt`{.Agda})、取值一侧的对、标签读式、环境，以及 `extAt`{.Agda}：每条集值子句的写作框架，其两种读法就是它的两个投影。无常元的读式经桥引用；点名数码的读式直接写，因为无界如今免费。
 - `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，此处也不需要。另有 `closure`{.Agda}，一条公式的诸子公式键构成的有穷集；`closure-inv`{.Agda} 把它读回来；以及 `byTag`{.Agda}，它把十二个构造子与封闭性谓词提出的八项要求对上一次，而非对上十二乘八次。
 - `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词，且是满足它的最小者。四个读式的八个实例，再加一次归纳；前者是「对一条公式的诸子码作递归」关于其索引集所需的那条假设，后者是它的取值唯一的理由。那八条子句从不看一条公式，故只对任意可**剥开**的集合证一次 (`Peel`{.Agda}：一个成员仅仅是某条公式的键，而那条公式自己的闭包坐落于内)，而 `closureClosed`{.Agda} 就是 `closedOf`{.Agda} 落在闭包处、以 `closure-inv`{.Agda} 充当剥开。此处的一般性免费，因为 `byTag`{.Agda} 本就是对着任意目标集写的。
-- `L.Godel.Operations`{.Agda}：一批有穷的集合运算，每个都是带两个隶属方向的单个集合形成子，且无一欠排中律：积与隶属图、直接形成子版的并与差、参数键处的两个选择，以及被记录赋值的扩张与移位。后面的章将在本要花公式的地方复合它们。
-- `L.Godel.Definable`{.Agda}：运算，被描述出来。一个框架把一个体与两个语义转换变成「槽位与运算取值之间的等同」；十一条描述经它而过 (布尔存货、积与隶属图、单点键处的两个选择、取值集、元数槽位处的元组族、两个图移位运算)，每条都在变元槽位与变元环境处双向读出。
-- `L.Godel.Tuples`{.Agda}：赋值作为图集合，及其对着运算的代数：扩张就是图扩张，弃首就是移位，逐条目单射性把一个图对着另一个图的查值规格去读，而载体之上全体赋值的族按族扩张走步。
-- `L.Godel.Satisfaction`{.Agda}：满足关系作为集合，逐情形。公式的满足集是「满足它的诸赋值」上的单个集合形成子，而已交付的每个情形都是与某个运算复合的外延等同：假与真、合取、析取与否定对着布尔存货，两变元隶属原子对着一次选择，存在量词对着移位。
-- `L.Godel.Terms`{.Agda}：组合子项，塔将要量化的语法。项与公式逐构造子镜像对应，却经每节点一个集合运算获得含义，且没有绑定子；可靠性以反向运行的情形等式把每个项读回为其镜像的满足集，完备性经诸化归给每条公式指派一个项，立于那一份经典假设之下。
-- `L.Godel.NormalForm`{.Agda}：范式。载体之上的每个满足集，都由载体与其成员之上的一个有穷复合项所指称：一次归纳，每个情形读出满足关系那一章的一条情形等式，原子经诸化归装配为叶子，而那一份经典假设只在它本来就必须进场之处进场。
-- `L.Godel.InL`{.Agda}：喂给可构造的实参，诸运算返回可构造的集合，以 `denoteL`{.Agda} 封顶：可构造载体上每个组合子项的每个指称都可构造。全程一台引擎：装下实参的一个阶段、每运算一条经绝对性在外层世界读出的 Δ₀ 定义公式，再经可定义子集之门收回类中；两个移位运算先爬固定级数的阶段。
-- `L.Godel.Codes`{.Agda}：语法成为模型装得下的数据。先是元数打包的子项枚举，然后每项一个遗传有穷的码，即封印数码链上的标签对塔，按构造是 `L` 的元素；每构造子一条展开等式，外加在案定律规定的标签判别件。
-- `L.Godel.Table`{.Agda}：指称表的诸子句，每构造子一条：码带此标签与此载荷、孩子的条目在场、取值是孩子取值上的那个运算，每条合取都经存货中的描述与对读式读出。每条子句携带元层形状与双向读式；二元节点共用一个框架。
-- `L.Godel.Name`{.Agda}：以元数一的项作阶段成员的名字。指称是求值后取值，完备性把项那一章的等同当作一次搬运花掉，良序是组装而非发明的：标签字母表用组合子，树按 shortlex 排序，再沿一幅画拉回，其单射性是一个左逆、而非一张判别矩阵。导出的接口与内化路线那一章逐一对应。
-- `L.Godel.Step`{.Agda}：有意为之的脚手架，且在原处明说。选取步进的骨架逐行同源，唯把命名导入改指项名字，好让两条路线并排全绿、项路线的内部侧对着这一份陈述；到最终重接线时两份之一退役。
-- `L.Godel.Tower`{.Agda}：塔的一步，从内部描述。对诸逼近表的裸存在量词会接纳垃圾，故步量化受证的表：八个局部分支形状把标签钉进封印数码、载荷钉进 ω 或载体、孩子钉进主表、注解钉进一张函数性的表。诚实性在成员关系的传递闭包上把每个受证的对读回为诚实项的码；填充以逼近族自己的递归使诚实的一对表受证，其函数性恰是「码决定元数」这一事实；步本体的两条定律把元数一条目的取值读进载体的 `𝒟ₒ` 又填回来，于是塔的一步在码与表之上两个方向皆可内部描述。
-- `L.Godel.Closure`{.Agda}：闭包，被开启。带种类闭包塔将要花掉的元层地基：每个正元数处的取值泛化，把满足集上的一次选择读作一次合取的两条选择等式，说满足集经全体变元移位而存活的改名律，把整个扩张裁到常元单点集的正向钉住包含，以及单例族，即存货缺掉的那一个运算，连同它的隶属定律。闭包递归本身是下一章的工作。
-- `L.Godel.Levels`{.Agda}：层级，被内化。架子内部的面孔是一张有限前缀表：直到某个界的一张条目集 `pr (pr #n #k) S`，逐架确定。层描述把步进的整套九子句集写到槽上，配双向读式；前缀表描述补上函数性、两条基子句、后继子句 (在 `suc n` 处的条目是 `n` 处条目并上那一层)，以及定义域充分性。钉住定理以元归纳排除垃圾：任何满足的表，其条目就是元层 `slice` 取值，故无需证书。填充把元前缀表打成 `L` 集，而步进在前缀表之上两个方向皆可描述。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
 - `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
 - `L.Coding.Bridge`{.Agda}：那个取值**是什么**。在载体之上的每个环境处，「属于它」就是「在世界 `(B, ∈)` 中被满足」，而后者正是可定义幂集据以定义的概念；没有这条陈述，从那场递归读出的内部 `Def` 可证地与任何东西都不相符。右端取内层语义，不取相对化在周遭的读法，因为只有内层那种像那个条件一样对有界量词设两道防。`defSet-Sat`{.Agda} 把它直接花在 `L.Definability`{.Agda} 上。登记在案的那份相干性风险没有引爆：把这座桥以内层环境向量为索引之后，量词的扩张就是底族上的前置，于是相干性只剩四条量词子句共享的两条 `refl`{.Agda} 分支，而带截断的那次恢复被关进「一个成员无非就是一个环境」那条推论里。
@@ -1310,14 +1182,20 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.DefInJ`{.Agda}: the successor collapse, one Def stage up read as the
   definable power of the stage below, with the empty relativization slot every
   limit level supplies.
-- `L.Rud.StepInL`{.Agda}: one rud step as a definable set over a constructible
-  stage: the inner-world reading frame, the sixteen membership formulas, and
-  the values reads at the honest offsets.
 - `L.Rud.SatTable`{.Agda}: the definable power as the eighth basis operation
   applied to a relation and a covering set, so a level holding both holds the
   power with no offset; the corrected block statement discharged at the
   successor step's own pair of levels, over the one re-stated relation the step
   still assumes.
+- `L.Rud.StepStory`{.Agda}: the S-story's one-way successor clause as an
+  object formula, generic in both directions at once. The carrier is a module
+  parameter, so the clause is written once and evaluated at every stage the
+  below-lim induction visits; the sixteen-operation graph layer is a SECOND
+  telescope, because that layer is archived and a master may not import across
+  the archive boundary, so the instantiator supplies it. Built to the one-way
+  form: the delivered two-way successor-value clause is too strong and forces
+  an infinite chain inside a finite member. No instance in the tree yet; the
+  StepInL rewrite supplies the first one.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1344,8 +1222,8 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.LevelSigma`{.Agda}：初步函数载体处的面孔，桥自己的消费方：与塔处相同的三条子句公式与解码，落在初步函数诸层上，而可定义步的坍缩经已交付的「原子命名」引理读出，不经任何逐运算的描述。
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
-- `L.Rud.StepInL`{.Agda}：一步初步函数作为可构成阶段上的可定义集：内层世界读法框架、十六条成员公式、诚实偏移处的取值读取。
 - `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
+- `L.Rud.StepStory`{.Agda}：S-故事的单向后继子句，作为对象公式，且一次泛型到底。载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，因为该层已归档而 master 不得跨归档边界 import，故由实例化方供给。按单向形式建造：已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。树中尚无实例，第一个由 StepInL 重写供给。
 <!--/-->
 
 ```agda
@@ -1367,6 +1245,6 @@ import L.Rud.OrdBlocks
 import L.Rud.SatSets
 import L.Rud.Bridge
 import L.Rud.DefInJ
-import L.Rud.StepInL
 import L.Rud.SatTable
+import L.Rud.StepStory
 ```

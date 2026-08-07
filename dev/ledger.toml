@@ -1,7 +1,8 @@
 # Bedrock size ledger: the canonical DATA.
 #
-# The prose that explains this file, what each field means and how to keep it
-# current, is dev/LEDGER.md. The tool that reads it is scripts/ledger.py, which
+# The prose that explains this file lives in the section below, moved here when
+# dev/LEDGER.md was deleted on 2026-08-06; this line pointed at that deleted
+# file until then. The tool that reads it is scripts/ledger.py, which
 # MEASURES standing from the tree rather than trusting any number written here.
 # That split exists because of a measured failure: the register carried a
 # standing figure of 12,633 for nine dispatches, and [L3.32-T55] found it had
@@ -164,6 +165,20 @@ klass = "row (b) now x1.3 and measured tiny (the Def-step clause collapses at ev
 gate = "T54 SPLIT, T64 re-priced and was itself corrected by T66: the Def-step clause is UNCONDITIONALLY true at any carrier, witnessed by the carrier member itself with the true formula, so the collapse T54 assumed is legitimate everywhere and row (b) is about 0.14-0.17k rather than 0.34-1.00k. What T64 called the unmeasured Def-step class is the description's object-level content, which row (c) consumes, not the face's clause"
 provenance = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md; _build/l3.32-t66-report.md, orchestrator-verified at src/L/Definability.lagda.md:177-190"
 
+# O4 IS BUILT AND PINNED, 2026-08-06 by [L3.32-T126]: src/L/Rud/StepStory.lagda.md,
+# 313 non-blank in-fence lines, green, 1.25 s, no postulate and no hole. It is
+# generic in two telescopes at once, the carrier outside and the archived graph
+# layer inside, and the probe instantiated it at Lset omega with the scratch
+# graph layer UNCHANGED, no telescope growth. That is what makes the shell
+# honest: the ~83 lines of generic shell over T125's ~230 content estimate are
+# a P-h purchase paid once and reused at every scale the below-lim induction
+# visits, rather than a carrier-fixed clause rewritten per scale.
+#
+# The remainder after [T125]'s gate and this build is ~553-673 naive centred
+# near 610, against T125's ~450-550, and the up-shift is entirely the shell.
+# B4, the segments/chain/carve, is now the dominant x3 term and the only one
+# left outside its band.
+
 [[remaining]]
 id = "carried-sequence"
 title = "The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing"
@@ -172,7 +187,7 @@ naive_high = 1720
 calibrated_low = 2000
 calibrated_high = 3900
 klass = "mixed x1.3 / x3"
-gate = "T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound, a corollary of what is delivered, +180-330 lines, one to two dispatches"
+gate = "T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound. [T125] GATED below-lim at the first limit 2026-08-06 and returned RED AT THE LINE BUDGET WITH THE TARGET LANDED: Sset-omega in Lset (+omega omega) is PROVEN in 269 probe lines, no postulate, no hole; the kit instantiates at the L-stage carrier RUN rather than read, closing T90's gap; and NEITHER wall T90 named fired. A THIRD wall did, and it is a size wall: O4, the S-story's one-way successor clause as an object formula at the carrier, measures ~200-300 naive against T90's 60-120 band, 2 to 3 times over, and it is the dominant term. First-instance band re-measured at ~450-550 naive, ~115 of it built in the gate."
 provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52 entries"
 
 [[remaining]]
@@ -308,6 +323,18 @@ provenance = "_build/l3.32-t51-report.md"
 #
 # `frozen` is therefore NOT a synonym for `blocked`. A blocked row needs
 # someone to prove something. A frozen row needs the seconds to come down.
+#
+# ONE ROW IS EXEMPT, and exactly one: `bridge-landing`, by the owner's ruling
+# of 2026-08-06 recorded in D30. The reason is a genuine circularity, not an
+# impatience: D30's own exit condition needs the D18 archival, a third of the
+# archival's seconds sit behind `bridge-landing`, and `bridge-landing` is
+# frozen. The freeze was blocking the only work that could lift it. `exempt`
+# is a status the ledger checker validates, and a row carrying it must name
+# `exempt_by` and `exempt_why`, because an exemption that is not named is
+# just an unfrozen row. THE EXEMPTION DOES NOT SPREAD. The other three frozen
+# rows, `gch-w3`, `stepinl-rewrite-owed` and `gch-w7`, stay frozen; and the
+# fact that `bridge-landing` unblocks `ac-rehome` does not make `ac-rehome`
+# exempt, it makes it a normal blocked row whose blocker is now moving.
 # ------------------------------------------------------------------
 
 [[freeze]]
@@ -478,19 +505,86 @@ evidence = "_build/l3.31-lt-report.md H2 and row 10; the choice-rehome row above
 id = "bridge-landing"
 trophy = "BOTH"
 title = "The bridge's landing: Q-lim and below-lim"
-status = "frozen"
-detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. FROZEN 2026-08-06 by D30: below-lim's first gate was briefed as [T92] and STOPPED before it fired, because it is new mathematics and the freeze forbids it. Q-lim's half stands. This row resumes the moment the check-cost exit condition is met; nothing about it is refuted."
+status = "exempt"
+exempt_by = "the owner's ruling of 2026-08-06, recorded in dev/PLAN.md section 3 row D30 under THE NAMED EXEMPTION"
+gate_result = "[T125], 2026-08-06, the first thing the exemption released. RED at the 300-line stop, but productive: the TARGET landed at the first limit by the identification route (the memberships give Sset-omega subset Lset-omega, the delivered Lsetomega-subset-Ssetomega gives the reverse, so the two are equal and Lset-in-Lsuc lands it), which T90 had booked only as a fallback. THE FAMILY CARVE IS STILL UNBUILT and remains the gate's real criterion, because the identification is special to omega and does not generalise. Route (a) was taken for the archived StepInL: copied to /tmp, T121's six-line left-compute bridge applied at :941/:959/:976, typechecks against the sealed Images at exit 0. Nothing postulated."
+exempt_why = "D30's own exit condition cannot be met while this row is frozen. The wall-clock gate needs the D18 archival; the archival's Choice leg needs ac-rehome; ac-rehome needs this row; this row was frozen by D30. The freeze was blocking the only work that could lift it. The exemption is granted for that circularity alone and covers this row only."
+detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. FROZEN 2026-08-06 by D30, then EXEMPTED the same day, see exempt_why: below-lim's first gate was briefed as [T92] and stopped before it fired, and it is that gate which the exemption releases first. Q-lim's half stands. Nothing here is refuted."
 blocked_by = ""
 evidence = "_build/l3.32-t45-report.md; _build/l3.32-t52-report.md; _build/l3.32-t53-report.md; _build/l3.32-t61-report.md section 7"
 
+# THE ARCHIVAL, IN THREE ARMS. It was ONE row until 2026-08-06 and that single
+# row is what produced a false deadlock: its `blocked_by` named three things,
+# so the whole surgery read as gated on the frozen bridge, and the seconds
+# behind it read as unreachable. A grep of the actual import graph says
+# otherwise. The crossings are survivor-imports-retiree edges and there are
+# exactly FOUR of them in the tree today, all four verified by rg:
+#
+#   L/Condensation.lagda.md:61 -> L.Coding.Sequence   } arm B
+#   L/Condensation.lagda.md:62 -> L.Hierarchy         }
+#   L/Hull.lagda.md:44         -> L.Choice.Step       } arm C
+#   L/Model.lagda.md:57        -> L.Choice.Transversal}
+#
+# and L/Rud/Describe.lagda.md:58 -> L.Coding.Base is NOT one, because Base is
+# on the retire block's `except` list and survives.
+#
+# Everything else in the D18 set has NO surviving consumer at all, which is
+# arm A. Splitting the row is not bookkeeping: arm A is 311.8 of the set's
+# 449.1 seconds and it needs no mathematics, no re-home and no exemption.
+# Seconds are [L3.32-T86]'s profile, /private/tmp/t86-fullcheck.log:104-210.
+
 [[owed]]
-id = "retirement"
+id = "archival-arm-a"
 trophy = "BOTH"
-title = "The retirement surgery, and the archival"
+title = "Archival arm A: the zero-consumer set (L.Godel, L.WellOrder.Tree, L.Rud.StepInL)"
+status = "delivered"
+delivered = "2026-08-06 by [L3.32-T122], sixteen masters moved to archive/ with their dev/ARCHIVE.md rows; the orchestrator wired src/Everything.lagda.md, 133 lines deleted and nothing added. THE CHECKLIST CARRIED ONE DEFECT, caught in audit: the English StepInL blurb was reported as line 1313 and is 1313 to 1315, the last two being continuation lines of the same bullet. Deleting the reported range alone would have left two orphan prose lines in the index and a red prose gate. Every range was re-derived and asserted before the edit ran."
+detail = "311.8 s of the tree, consumed by NOTHING outside src/Everything.lagda.md's index. Verified 2026-08-06 by rg over src/: L.Godel's fourteen modules have no importer outside src/L/Godel (227.8 s); L.WellOrder.Tree's only importer is L.Godel.Name, which is in the set (0.3 s); L.Rud.StepInL has no importer at all, only the index entry and its two prose blurbs (83.7 s). No crossing to sever, no content to re-home, no mathematics: move the masters under archive/, drop the index entries, write the ARCHIVE.md rows D20 requires. THE ONE THING IT COSTS is that StepInL's sixteen-operation op-graph content leaves src/ before its ideal-form rewrite exists, which is exactly what D18 already ruled and D20 already made safe; W3 was always going to consume the rewrite, never the original, because nothing may import across the archive boundary."
+blocked_by = ""
+evidence = "rg over src/ 2026-08-06, reported in the L3.32-F row; seconds from _build/l3.32-t86-report.md:60-70 and the raw profile"
+
+# CORRECTED 2026-08-06, before arm B was dispatched. Arms B and C were booked
+# as if each ARCHIVED its own chapters and therefore bought its own seconds.
+# They do not. Verified by rg: the nine L.Choice masters carry 42 imports of
+# L.Coding.* and L.Hierarchy, and L.Hierarchy itself imports L.Coding.Model
+# and L.Coding.Sequence (src/L/Hierarchy.lagda.md:57,:59). So the three
+# remaining retiring chapters are one connected component and ARCHIVE AS ONE
+# UNIT, once all four crossings are severed.
+#
+# THE CONSEQUENCE, which is not bookkeeping: arm B ALONE REMOVES ZERO SECONDS.
+# It severs two crossings; the chapters stay, because L.Choice still imports
+# them. The 147.6 s lands only when arm B and arm C are both done, and arm C
+# needs ac-rehome, which needs bridge-landing, which is the EXEMPTED work.
+#
+#   the tree after [T124]                             607.1 s
+#   arm B alone                                       607.1 s   no change
+#   arm B and arm C together, -147.6                  459.4 s = 7.66 min
+#   THE GATE                                          498.0 s = 8.30 min
+#
+# SO THE EXEMPTION IS ON THE CRITICAL PATH AFTER ALL. The orchestrator told
+# the owner on 2026-08-06 that it was real but not critical; that was true
+# when the gate was 450 s and arm A plus arm B looked sufficient, and it
+# stopped being true when this dependency was checked. Recorded here rather
+# than quietly corrected, because the owner granted the exemption partly on
+# the earlier reading.
+
+[[owed]]
+id = "archival-arm-b"
+trophy = "BOTH"
+title = "Archival arm B: sever the two Condensation crossings (enables, but does not itself achieve, the archival)"
+status = "ready"
+detail = "91.4 s. Two crossings, both out of L.Condensation: LsetGraphAt from L.Coding.Sequence and Lset-only from L.Hierarchy. The content re-homes rather than dissolving, so this arm is a BUILD, not wiring: it is T67's Build A (the L-tower graph content), Build B (the rud satisfaction cone) and Build C (the finite-tally harvest). NO LINE FIGURE IS RESTATED HERE. The band is the `retirement-surgery` remaining row, which covers this arm plus arm C's Hull order plus the wiring, and it is gated green by T67 at the 1.3x class; a number repeated in a paragraph is how two prices for one job get into this file. Nothing gates this arm and nothing about it is frozen: it was never new mathematics."
+blocked_by = ""
+evidence = "src/L/Condensation.lagda.md:61-62; the retirement-surgery remaining row"
+
+[[owed]]
+id = "archival-arm-c"
+trophy = "BOTH"
+title = "Archival arm C: the Hull and Model crossings (L.Choice)"
 status = "blocked"
-detail = "FOUR crossings, after T72 removed SatSets (three dissolved at a stroke) and T82 re-homed the finite-tally content out of HF (two more). They collapse into four re-home builds plus wiring, and the surgery splits into two arms: the INDEPENDENT arm (the L-tower graph content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) is dispatchable NOW and nothing gates it; the GATED arm (the Hull order, and the AC leg) waits on bridge-landing, because both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. Re-priced from 0.10-0.25k to 1.17-2.07k naive: the booked figure assumed import surgery, and this is content re-homing."
-blocked_by = "ac-rehome, bridge-landing, stepinl-rewrite-owed"
-evidence = "PLAN D18 and D20; the retirement-surgery row above"
+detail = "45.9 s, the smallest arm and the only gated one. Two crossings, orderAt into L.Hull and hasChoiceL into L.Model, and both consume the unconditional bridge direction that still sits inside a parameterized module with Q-lim and below-lim undischarged. This is the arm the bridge-landing exemption was granted for."
+blocked_by = "ac-rehome, bridge-landing"
+evidence = "src/L/Hull.lagda.md:44; src/L/Model.lagda.md:57; the choice-rehome remaining row"
 
 [[owed]]
 id = "gch-w1p"
@@ -648,15 +742,184 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 # ---------------------------------------------------------------------------
 
 [timing]
-measured = "2026-08-05, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0"
-full_cold_seconds = 1099
-note = """
-UPDATED 2026-08-06 after T87: 2,723 minus the measured 767 s Bridge saving.
-The original 2,723 s was profile-instrumented time (2,501 measured plus 222 recovered for
-25 modules a concurrent process had already refreshed). The un-instrumented
-wall for the same tree was recorded at 27:54 on an earlier run; the
-profile-to-wall ratio is about 0.6 to 0.7 and is not pinned.
+# THE GATE'S OWN UNIT, MEASURED. D30 part (4) is stated in wall seconds, so
+# this is the row that decides it, and until 2026-08-06 no wall figure for
+# this tree existed at all: the number below it was derived by subtraction
+# from a profile run and then converted with an unpinned ratio.
+measured_wall = "2026-08-06, interface cache moved aside, GHCRTS=-M8g agda src/Everything.lagda.md (NO --profile), Agda 2.8.0, single process, nothing else running; /usr/bin/time -p reports real 1080.64, user 1072.70, sys 5.95, exit 0"
+full_cold_wall_seconds = 677
+gate_wall_seconds = 498
+
+checkpoint = """
+THE SUBTRACTION METHOD IS VALIDATED, AND IT IS CONSERVATIVE. Measured
+2026-08-06 after archival arm A and the Pairing seal landed, same protocol as
+the 1,080.6 s baseline (cache moved aside, un-instrumented, single process):
+
+  measured before                1,080.6 s
+  minus arm A, attributed          320.4
+  minus the Pairing seal, measured  37.8
+  PREDICTED                        722.4 s
+  MEASURED                         677.4 s   exit 0, tree green
+  ERROR                            -45.0 s, or -6.2 percent, in our favour
+
+This is the first end-to-end check of the inference the whole endpoint rests
+on: that seconds attributed to a module by --profile=modules are seconds a
+wall clock loses when the module goes. They are, and the tree came in 45 s
+BETTER than the model rather than worse.
+
+Do not bank the 45 s. One observation does not make a bias, and the honest
+use of it is that the endpoint projection is now made on measured ground with
+a favourable rather than an adverse residual. The endpoint from here:
+
+  now                              677.4 s
+  minus the Images seal   -44.3    633.1     measured by [T121]
+  minus Step, freed by it -22.1    611.0     zero lines in Step
+  minus arm B            -103.1    507.9     T67-gated
+  minus arm C             -44.6    463.3 s = 7.72 min
+  THE GATE                         498.0 s = 8.30 min
+  MARGIN                           +34.7 s
+
+WHICH ANSWERS THE ZERO-MARGIN WARNING RECORDED IN gate_note ABOVE. The gate
+was set at the projection with no room in it. The checkpoint has since put
+34.7 s of room under it, and it did so by measurement rather than by
+re-pricing anything.
 """
+gate_note = """
+RE-RULED 2026-08-06 by the owner, 450 s (7.5 min) to 498 s (8.3 min), after
+[T121] closed the last four unprofiled masters and measurement said 7.5 was
+unreachable. The original figure came from a withdrawn route memo and was
+never derived from a profile; it also spent a 77 s Condensation conversion
+that [T106] had already measured and refuted.
+
+THIS GATE HAS ZERO MARGIN BY CONSTRUCTION, and that is stated here so nobody
+rediscovers it in surprise. 498 s is not an independent target: it is the
+campaign's own projection, 1,070.2 minus the archival's measured 468.1 minus
+[T121]'s three measured cures. The cures are measured in scratch copies and
+the archival is measured attribution, so the number carries their error. If
+the landed tree measures 505 s the gate fails by 7 s on the same arithmetic
+that set it. Judge the gate on the WALL run at landing, and if it misses by a
+margin of that size, the honest reading is that the projection was inside its
+own error bars, not that a new lever is owed.
+"""
+
+measured = "2026-08-06, interface cache moved aside, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0, single process; Total 1,072,178ms over 124 module rows, own wall real 1074.29, exit 0; table saved at _build/l3.32-coldprofile-2026-08-06.txt"
+full_cold_seconds = 1072
+note = """
+MEASURED, not derived. The figure it replaces (1,099) was 2,723 minus three
+recorded savings, and the subtraction turned out to be nearly right, but that
+is luck: the same paragraph also carried a 0.6-to-0.7 profile-to-wall ratio
+which measurement has now refuted outright. See wall_vs_profile.
+"""
+wall_vs_profile = """
+THE RECORDED 0.6-TO-0.7 RATIO IS REFUTED, AND THE TRUE RATIO IS 1.0. Measured
+2026-08-06 by running BOTH on the same tree, both cold, back to back:
+
+  un-instrumented   agda src/Everything.lagda.md               1,080.6 s wall
+  instrumented      agda --profile=modules src/Everything...   1,074.3 s wall,
+                                                        of which 1,072.2 s is
+                                                        the profile's own Total
+
+The instrumented run was 6 s FASTER than the plain one, which is noise. So
+`--profile=modules` costs nothing measurable here, and a profile second IS a
+wall second. Every per-module figure in this file may therefore be read
+directly against the wall gate, which was not true this morning.
+
+THE COST OF NOT KNOWING THIS. The orchestrator projected 11.3 minutes for a
+tree that measures 18.0, by converting a DERIVED total (1,099, obtained by
+subtracting three savings from a two-day-old profile) with the UNMEASURED
+0.615. Two guesses multiplied. D30's own text warns against exactly this in
+the sentence about a threshold whose pass or fail flips with which
+measurement you use. The fix was two cold runs and about forty minutes of
+otherwise idle machine.
+"""
+
+# TODAY'S TREE, from _build/l3.32-coldprofile-2026-08-06.txt (124 module rows,
+# 1,070.2 s attributed, 1.9 s Miscellaneous). Read against gate_wall_seconds.
+#
+#   the D18 archival, all three arms          468.1 s
+#     arm A, zero-consumer                    320.4   (Godel 234.3, StepInL 85.7, Tree 0.3)
+#     arm B, the Condensation crossings       103.1   (Coding 80.4, Hierarchy 22.6)
+#     arm C, the Choice crossings              44.6
+#   what survives it                          602.2 s  = 10.0 min, still 152 s over
+#
+# The survivor total is 88% six modules: Bridge 193.5, Condensation 137.0,
+# SquareLaw 61.9, Pairing 56.7, Images 52.1, Step 27.1. THREE OF THOSE SIX
+# HAD NEVER BEEN PROFILED and each is over D30 exit condition (1)'s own 2%
+# threshold. [T121] profiled all four on 2026-08-06 and the condition now
+# holds tree-wide. The answer it returned:
+#
+#   after the full archival                 602.1 s
+#   minus the Pairing seal        -37.5     564.6
+#   minus the Images left-seal    -44.3     520.3
+#   minus Step, free from that seal -22.1   498.2 s = 8.30 min
+#   THE GATE                                450.0 s = 7.50 min
+#   SHORT BY                                 48.2 s
+#
+# AND THERE IS NO 48 SECONDS LEFT. What remains in the 498.2 s is Bridge at
+# 193.5 (a MEASURED floor: [T121] confirmed [T93], the residue is the once-
+# payment of the tower computation rule and gutting it leaves a flat 43 s),
+# Condensation at 137.0 (a written priced refusal: [T106] measured all three
+# export-preserving lifts and all three failed), SquareLaw at 61.9 (already
+# cut 13x from 856), 32.0 s of residue in the three modules just cured, and
+# about 74 s spread over roughly a hundred modules whose largest single row
+# is 10.6 s. Every large item is closed by measurement or by a priced refusal.
+#
+# SO 7.5 MINUTES IS NOT REACHABLE, and 8.3 is. That is a finding, not a
+# projection: it is the first statement about this gate in the campaign that
+# rests on a per-definition profile of every master above 2 percent.
+
+# ------------------------------------------------------------------
+# UNPROFILED AND OVER THRESHOLD. Found 2026-08-06 by the fresh cold profile,
+# and they are the campaign's blind spot: D30 exit condition (1) requires a
+# per-definition profile of every master at or above 2 percent of the tree,
+# these three are at 5.3, 4.9 and 2.5 percent, and not one has ever been
+# looked at. They were invisible while the tree cost 2,723 s, because at that
+# size 56.7 s was 2.1 percent and sat below three modules costing 200 to 933.
+# The campaign removed 1,653 s from those, and the floor rose underneath it.
+#
+# THEY ARE ALSO WHERE THE REMAINING GAP IS. After the full D18 archival the
+# tree is 602.2 s against a 450 s gate; these three are 135.9 s of the 152.2 s
+# still to find. Nothing here is a projection: the seconds are measured, the
+# removable fraction is entirely unknown, and that is the point.
+# ------------------------------------------------------------------
+
+# RESOLVED 2026-08-06 by [T121], which profiled all three plus Bridge's
+# residue. D30 exit condition (1) now holds for every master over 2 percent.
+# Each cure below is MEASURED in a scratch copy against a renamed control,
+# with a postulate gut separating statement cost from body cost, not
+# transplanted from Bridge or SquareLaw (P-l).
+
+[[unprofiled]]
+module = "L.Ordinal.Pairing"
+seconds = 56.7
+share_percent = 5.3
+status = "PROFILED [T121]. 97% in col->tau-inj (42.1 s) and hit (20.4 s); both bodies re-elaborate `fiber tau (col-in-tau p)` at the transparent union once per occurrence. CURE LANDED 2026-08-06 by [L3.32-T123] and it transplanted cleanly: 57,985 ms to 20,195 ms on the agent's own warm control, 37.8 s off every cold check against T121's ~37.5 s prediction, for net +7 lines. All 72 pre-existing exported signature lines byte-identical; two names added (cf and the col->tau-fiber read lemma). SquareLaw re-checked warm at 25,716 ms with every hot row its own, so no time moved into the consumer. The residual 18.8 s is col->tau-fiber, the once-payment P-l predicts: sealing buys the repeats, never the once."
+
+[[unprofiled]]
+module = "L.Rud.Images"
+seconds = 52.1
+share_percent = 4.9
+status = "CURE LANDED 2026-08-06 by [L3.32-T124], better than scratch: 52,879 ms to 6,705 ms, 46.2 s off, against T121's ~44.3 prediction. Every pre-existing exported signature byte-identical, one new export (left-compute). The ~6-line StepInL bridge T121 priced was NOT written: arm A archived StepInL first, so the cure came in cheaper than quoted. T121's measured StepInL spillover was correctly NOT claimed, being money the archival already took."
+
+[[unprofiled]]
+module = "L.Rud.Step"
+seconds = 27.1
+share_percent = 2.5
+status = "FREED 2026-08-06 by [L3.32-T124]'s Images seal, with ZERO edits in this module: 28,769 ms to 4,640 ms, 24.1 s off against T121's ~22.1 prediction. This is R-38 priced at its own sites: right-at-pair alone was 26,838 ms of the 28,769, and it was paying the concentric-intersection presentation at a concrete pair once per site because `left` was transparent."
+
+# THE DOUBLE COUNT, recorded because it is the kind of arithmetic that gets a
+# campaign to a target on paper and not in the tree. [T121] measured a fourth
+# beneficiary of the Images cure: L.Rud.StepInL drops 88.2 s to 37.8 s, about
+# 49 s cold-equivalent, and reported that crediting it clears the gap. IT MUST
+# NOT BE CREDITED. StepInL is in the D18 retirement set (see [[retire]] above)
+# and its whole 85.7 s is already inside archival arm A. Counting the spillover
+# on top of the archival spends the same seconds twice. The agent could not see
+# this: the brief never told it StepInL was leaving, which is the orchestrator's
+# defect, not the report's.
+#
+# ONE REAL CONSEQUENCE SURVIVES, in the other direction: the Images cure needs a
+# ~6-line consumer bridge in StepInL, and if arm A archives StepInL first that
+# bridge is never written. Sequence arm A before the Images cure.
 
 [[hot]]
 module = "L.Rud.Bridge"

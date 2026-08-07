@@ -123,7 +123,7 @@ def validate_rows(data: dict) -> list[str]:
             defects.append(f"remaining row {rid} has an inverted naive band")
         if row.get("calibrated_low", 0) < row.get("naive_low", 0):
             defects.append(f"remaining row {rid} is calibrated below naive, which the two-caliber discipline forbids")
-    VALID = {"delivered", "ready", "in-flight", "blocked", "at-risk", "frozen"}
+    VALID = {"delivered", "ready", "in-flight", "blocked", "at-risk", "frozen", "exempt"}
     seen_owed: set[str] = set()
     for row in data.get("owed", []):
         rid = row.get("id", "<no id>")
@@ -140,6 +140,19 @@ def validate_rows(data: dict) -> list[str]:
         if row.get("status") == "blocked" and not row.get("blocked_by"):
             defects.append(f"owed {rid}: status is blocked but blocked_by is empty; say what "
                            f"it waits on or the item cannot be scheduled")
+        # An exemption is NAMED or it is not an exemption. A freeze that can be
+        # escaped by editing one word is not a freeze, so a row that leaves
+        # `frozen` this way must carry the authority that released it and the
+        # reason, and both are checked here rather than trusted to prose.
+        if row.get("status") == "exempt":
+            if not row.get("exempt_by"):
+                defects.append(f"owed {rid}: status is exempt but exempt_by is empty. An "
+                               f"exemption names the ruling that granted it, or it is just "
+                               f"an unfrozen row")
+            if not row.get("exempt_why"):
+                defects.append(f"owed {rid}: status is exempt but exempt_why is empty. The "
+                               f"reason is the scope: without it the next reader cannot tell "
+                               f"what the exemption does NOT cover")
     for row in data.get("owed", []):
         for dep in [d.strip() for d in row.get("blocked_by", "").split(",") if d.strip()]:
             if dep not in seen_owed and " " not in dep:
