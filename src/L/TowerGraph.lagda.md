@@ -37,19 +37,27 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇_; ∀̇_ )
 open import FOL.Manipulation.Relabelling using ( mapFo )
+open import FOL.Manipulation.Bounding using ( BoundedTm; BoundedFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
 open import L.Definability {ℓ} using ( module DefOf )
+open import L.Absoluteness {ℓ} using ( InL; liftFo; transferFo )
+open import L.Coding.Base {ℓ}
+  using ( tagAt; Δ₀-tagAt; tagAt-adequate; sglConAt; pairConAt
+        ; ∈pair-elim; ∈pair-introL; sgl-char )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst )
 
 open import Cubical.Data.FinData using ( Fin; zero; suc; toℕ )
-open import Cubical.Data.Vec using ( lookup )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_ )
+open import Cubical.Data.Vec using ( lookup; map )
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Unit using ( tt* )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using
   ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet )
+  using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( #_ )
 open import V.Coding {ℓ} using ( pr )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -127,6 +135,120 @@ DefOK A = (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (fst A) ⟩ → ⟨ isL x ⟩
 ```
 
 <!--en-->
+## The two atoms this chapter writes fresh
+<!--zh-->
+## 本章新写的两个原子
+<!--/-->
+
+<!--en-->
+Two of the four atoms belong to this chapter itself. The tag atom says one
+slot holds a pair of a numeral and the value at another slot. The key atom
+says the same without naming the second component. The hierarchy's tag
+reader already says the first sentence. The lift into the model's language
+carries the reader over, and it asks for one certificate only: the numeral
+is constructible. The key reader is one existential above the tag reader.
+The one-entry environment reading needs the key reader's constructor, so
+the model's own pair stands beside the atoms.
+<!--zh-->
+四个原子中有两个属于本章自己。标签原子说：一个槽位持有「一个数码与另一槽位取值之对」。键原子说同一件事，但不点名第二分量。层级的标签读式已说出第一句。进入模型语言的抬升把读式运过去，且它只索取一份证书：那个数码可构造。键读式就是标签读式之上的一层存在量词。单条目环境读式需要键读式的构造子，故模型自己的对就站在原子旁边。
+<!--/-->
+
+```agda
+private
+  lookup-fst : ∀ {n} (i : Fin n) (γ : S ^ n)
+             → lookup i (map fst γ) ≡ fst (lookup i γ)
+  lookup-fst zero    (m ∷ γ) = refl
+  lookup-fst (suc i) (m ∷ γ) = lookup-fst i γ
+
+  PairIs : V ℓ → V ℓ → Ω
+  PairIs a p = (a ≡ p) , setIsSet a p
+
+  pair-singleton : (a : V ℓ) → ⁅ a , a ⁆ ≡ ⁅ a ⁆s
+  pair-singleton a = sgl-char ⁅ a , a ⁆ a (∈pair-introL {u = a} {v = a} refl) hall
+    where
+    hall : (y : V ℓ) → ⟨ y ∈ ⁅ a , a ⁆ ⟩ → y ≡ a
+    hall y y∈ = PT.rec (setIsSet y a) collapse
+      (∈pair-elim {u = a} {v = a} {y = y} y∈)
+      where
+      collapse : (y ≡ a) ⊎ (y ≡ a) → y ≡ a
+      collapse (inl e) = e
+      collapse (inr e) = e
+
+-- The model's own pair, and the key it builds.
+prʟ : S → S → S
+prʟ a b = pairʟ (pairʟ a a) (pairʟ a b)
+
+prʟ-fst : (a b : S) → fst (prʟ a b) ≡ pr (fst a) (fst b)
+prʟ-fst a b = pairʟ-fst (pairʟ a a) (pairʟ a b)
+  ∙ cong₂ ⁅_,_⁆ (pairʟ-fst a a ∙ pair-singleton (fst a)) (pairʟ-fst a b)
+
+keyOf : ℕ → S → S
+keyOf n x = prʟ (numeralL n) x
+
+keyOf-fst : (n : ℕ) (x : S) → fst (keyOf n x) ≡ pr (# n) (fst x)
+keyOf-fst n x = prʟ-fst (numeralL n) x ∙ cong₂ pr (numeralL-fst n) refl
+
+private
+  numeral-inL : (k : ℕ) → InL (# k)
+  numeral-inL k = subst (λ w → ⟨ isL w ⟩) (numeralL-fst k) (numeralL k .snd)
+
+  certVar : ∀ {n} (i : Fin n) → BoundedTm InL (var i)
+  certVar i = tt*
+
+  certSgl : ∀ {n} (k : ℕ) → BoundedFo InL (sglConAt {n = suc n} zero (# k))
+  certSgl {n} k = (numeral-inL k , certVar {suc n} zero)
+                , (certVar {suc n} zero , (certVar {suc n} zero , numeral-inL k))
+
+  certPair : ∀ {n} (k : ℕ) (x : Fin n)
+           → BoundedFo InL (pairConAt {n = suc n} zero (# k) (suc x))
+  certPair {n} k x = (numeral-inL k , certVar {suc n} zero)
+                   , ( (certVar {suc n} (suc x) , certVar {suc n} zero)
+                     , (certVar {suc n} zero
+                       , ((certVar {suc n} zero , numeral-inL k)
+                        , (certVar {suc n} zero
+                          , certVar {suc (suc n)} (suc (suc x))))) )
+
+  tagBounded : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n)
+             → BoundedFo InL (tagAt s k x)
+  tagBounded {n} s k x = (certVar {n} s , certSgl {n} k)
+                       , ( (certVar {n} s , certPair {n} k x)
+                         , (certVar {n} s , (certSgl {n} k , certPair {n} k x)) )
+
+-- The tag atom, and its reading: slot `s` is a pair of the numeral `k` and
+-- the value at slot `x`.
+tagAtL : ∀ {n} → Fin n → ℕ → Fin n → Formula S n
+tagAtL s k x = liftFo (tagAt s k x) (tagBounded s k x)
+
+tagAtL-adequate : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) (γ : S ^ n)
+  → (γ ⊨ tagAtL s k x)
+  ≡ PairIs (fst (lookup s γ)) (pr (# k) (fst (lookup x γ)))
+tagAtL-adequate s k x γ =
+    transferFo (tagAt s k x) (tagBounded s k x) (Δ₀-tagAt s k x) γ
+  ∙ tagAt-adequate s k x (map fst γ)
+  ∙ cong₂ PairIs (lookup-fst s γ)
+      (cong₂ pr (refl {x = # k}) (lookup-fst x γ))
+
+-- The key atom, one existential above the tag atom.
+keyArityAtL : ∀ {n} → Fin n → ℕ → Formula S n
+keyArityAtL c k = ∃̇ (tagAtL (suc c) k zero)
+
+keyArityAtL-out : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n)
+                → ⟨ γ ⊨ keyArityAtL c k ⟩
+                → ∥ (Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# k) (fst z))) ∥₁
+keyArityAtL-out c k γ = PT.map step
+  where
+  step : Σ[ z ∈ S ] ⟨ (z ∷ γ) ⊨ tagAtL (suc c) k zero ⟩
+       → Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# k) (fst z))
+  step (z , hz) = z , subst ⟨_⟩ (tagAtL-adequate (suc c) k zero (z ∷ γ)) hz
+
+keyArityAtL-in : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n) (z : S)
+               → fst (lookup c γ) ≡ pr (# k) (fst z)
+               → ⟨ γ ⊨ keyArityAtL c k ⟩
+keyArityAtL-in c k γ z e =
+  ∣ z , subst ⟨_⟩ (sym (tagAtL-adequate (suc c) k zero (z ∷ γ))) e ∣₁
+```
+
+<!--en-->
 ## The carrier and the frame
 <!--zh-->
 ## 载体与框架
@@ -145,10 +267,10 @@ over `L`.
 The internalization frame is the chapter's second telescope, in two levels,
 for the same reason `StepStory`'s clause telescope exists: the content it
 names lives only in the frozen retirement set and nothing may import across
-that boundary. The formula texts the description's conjuncts read, the code
-atoms `tagAtL`/`keyArityAtL`/`hasWitnessAt` and the satisfaction graph
-`satGraphAt`, come first, because the description's own text is written from
-them. The semantic readings the arm walks on, `Sat`/`keyS`/`keyʟ`/`keyBridge`/
+that boundary. The tag and key atoms above stand in the chapter, and the
+frame carries the other two texts: the witness atom `hasWitnessAt` and the
+satisfaction graph `satGraphAt`. The description is written from all four.
+The semantic readings the arm walks on, `Sat`/`keyS`/`keyʟ`/`keyBridge`/
 `defSet-Sat` and the per-conjunct directions, come second, because their
 types mention the fresh description. Every parameter is a named module
 hypothesis, not a postulate: the later blocks discharge them, the code block
@@ -157,17 +279,20 @@ for the readings.
 <!--zh-->
 本章对载体 `A` 泛型化，`A` 是一个抽象可构造集，与门探针完全一致：走读从不点名具体的 `sett` 体，只有在消费方供给它时才在真实集合处实例化 (P-h)。载体周围是描述所需的四个派生名：把 `A` 的成员嵌入宇宙、把嵌入证书做成类结构的常元、以及把 `A` 诸成员上的公式重标进 `L` 之上的 `toS`。
 
-内化框架是本章的第二重望远镜，分两层，理由与 `StepStory` 的子句望远镜相同：它所点名的内容只活在冻结的退役集里，而任何东西都不得跨过那条边界进口。描述诸合取项所读的公式文本，即码原子 `tagAtL`/`keyArityAtL`/`hasWitnessAt` 与满足图 `satGraphAt`，排在最前，因为描述自己的文本由它们写就。臂所走读的语义读式，`Sat`/`keyS`/`keyʟ`/`keyBridge`/`defSet-Sat` 与各合取项的方向，排在其次，因为它们的类型点名新鲜描述。每个参数都是具名模块假设，不是公设：后续诸块把它们解除，码块与表块解除文本，桥与各合取项块解除读式。
+上面的标签原子与键原子站在本章里，框架则携带另外两条文本：见证原子 `hasWitnessAt` 与满足图 `satGraphAt`。描述由这四个原子写就。臂所走读的语义读式，`Sat`/`keyS`/`keyʟ`/`keyBridge`/`defSet-Sat` 与各合取项的方向，排在其次，因为它们的类型点名新鲜描述。每个参数都是具名模块假设，不是公设：后续诸块把它们解除，码块与表块解除文本，桥与各合取项块解除读式。
 <!--/-->
 
 <!--en-->
 The chapter states four arms. Each arm is a reading of one conjunct. All four
-arms are parameters of `Readings`. The arm `envOneAt-in`/`envOneAt-out` is the
-reading of the one-entry environment conjunct. The reading of `DefinesAt`
-uses this arm.
+arms were parameters of `Readings`. Two arms are proved in this chapter: the
+reading of the one-entry environment conjunct, `envOneAt-in`/`envOneAt-out`,
+and the reading of `DefinesAt`, `DefinesAt-in`/`DefinesAt-out`/
+`DefinesAt-both`. The reading of `DefinesAt` uses the environment arm. The
+code reading `codeAt-in`/`codeAt-out` and the graph reading
+`graphAt-holds`/`graphAt-unique` stay parameters. The code reading needs the
+witness and shape machinery. The graph reading needs the table.
 <!--zh-->
-本章陈述四条臂。每条臂是一个合取项的读式。四条臂都是 `Readings` 的参数。臂
-`envOneAt-in`/`envOneAt-out` 是单条目环境合取项的读式。`DefinesAt` 的读式用到这条臂。
+本章陈述四条臂。每条臂是一个合取项的读式。四条臂原本都是 `Readings` 的参数。本章证明其中两条：单条目环境合取项的读式 `envOneAt-in`/`envOneAt-out`，以及 `DefinesAt` 的读式 `DefinesAt-in`/`DefinesAt-out`/`DefinesAt-both`。`DefinesAt` 的读式用到环境那条臂。码读式 `codeAt-in`/`codeAt-out` 与图读式 `graphAt-holds`/`graphAt-unique` 仍是参数。码读式需要见证与形状机器。图读式需要那张表。
 <!--/-->
 
 ```agda
@@ -187,8 +312,6 @@ module _ (A : S) where
   toS ψ = mapFo asConst ψ
 
   module Frame
-    (tagAtL : ∀ {n} → Fin n → ℕ → Fin n → Formula S n)
-    (keyArityAtL : ∀ {n} → Fin n → ℕ → Formula S n)
     (hasWitnessAt : ∀ {n} → Fin n → Fin n → Formula S n)
     (satGraphAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n)
     where
@@ -231,12 +354,6 @@ module _ (A : S) where
       (defSet-Sat : (ψ : Formula ⟪ fst A ⟫ 1) (m : ⟪ fst A ⟫)
                   → (ιA m ∈ DA.defSet ψ)
                   ≡ (envOne (ιA m) ∈ fst (Sat (toS ψ))))
-      (envOneAt-in : ∀ {n} (e y : Fin n) (γ : S ^ n)
-                   → fst (lookup e γ) ≡ envOne (fst (lookup y γ))
-                   → ⟨ γ ⊨ envOneAt e y ⟩)
-      (envOneAt-out : ∀ {n} (e y : Fin n) (γ : S ^ n)
-                    → ⟨ γ ⊨ envOneAt e y ⟩
-                    → fst (lookup e γ) ≡ envOne (fst (lookup y γ)))
       (codeAt-in : ∀ {n} (c w : Fin n) (γ : S ^ n)
                  → fst (lookup w γ) ≡ fst A
                  → (ψ : Formula ⟪ fst A ⟫ 1) → fst (lookup c γ) ≡ fst (keyS ψ)
@@ -256,21 +373,164 @@ module _ (A : S) where
                       → fst (lookup c γ) ≡ fst (keyʟ φ)
                       → ⟨ γ ⊨ satGraphAt w c v ⟩
                       → fst (lookup v γ) ≡ fst (Sat φ))
-      (DefinesAt-in : ∀ {n} (x w v : Fin n) (γ : S ^ n)
-                    → ⟨ γ ⊨ DefinesAt x w v ⟩
-                    → (z : S) → HoldsDef w v γ z
-                    → ⟨ fst z ∈ fst (lookup x γ) ⟩)
-      (DefinesAt-out : ∀ {n} (x w v : Fin n) (γ : S ^ n)
-                     → ⟨ γ ⊨ DefinesAt x w v ⟩
-                     → (z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩
-                     → HoldsDef w v γ z)
-      (DefinesAt-both : ∀ {n} (x w v : Fin n) (γ : S ^ n)
-                      → ((z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩
-                                 → HoldsDef w v γ z)
-                      → ((z : S) → HoldsDef w v γ z
-                                 → ⟨ fst z ∈ fst (lookup x γ) ⟩)
-                      → ⟨ γ ⊨ DefinesAt x w v ⟩)
       where
+```
+
+<!--en-->
+## The three readings this chapter proves
+<!--zh-->
+## 本章证明的三条读式
+<!--/-->
+
+<!--en-->
+The environment reading is the one-entry special case of the extension
+reader, and its two directions are the tag atom's adequacy and the model's
+own pair. The defines reading is the extension reader around the
+environment conjunct, and its three directions reuse the environment
+reading. Both follow the delivered proofs, written against the fresh atoms.
+<!--zh-->
+环境读式是外延读式的单条目特例，其两个方向就是标签原子的适足等式与模型自己的对。defines 读式是绕在环境合取项之外的外延读式，其三个方向复用环境读式。两者都循着交付时的证明，对着新鲜原子写就。
+<!--/-->
+
+```agda
+      private
+        module EnvOneReadings {n : ℕ} (e y : Fin n) (γ : S ^ n) where
+          E : S
+          E = lookup e γ
+
+          v : V ℓ
+          v = fst (lookup y γ)
+
+          readEntry : (z : S) → ⟨ fst z ∈ envOne v ⟩ → fst z ≡ pr (# 0) v
+          readEntry z = PT.rec (setIsSet (fst z) (pr (# 0) v)) step
+            where
+            step : Σ[ li ∈ Lift {ℓ-zero} {ℓ} (Fin 1) ]
+                     (pr (# (toℕ (lower li))) v ≡ fst z)
+                 → fst z ≡ pr (# 0) v
+            step (lift zero , q) = sym q
+            step (lift (suc ()) , _)
+
+          entry∈ : (z : S) → fst z ≡ pr (# 0) v → ⟨ fst z ∈ envOne v ⟩
+          entry∈ z q = ∣ lift zero , sym q ∣₁
+
+          envOneAt-in : fst E ≡ envOne v → ⟨ γ ⊨ envOneAt e y ⟩
+          envOneAt-in q = extAt-in-both e (tagAtL zero 0 (suc y)) γ fwd bwd
+            where
+            fwd : (z : S) → ⟨ fst z ∈ fst E ⟩ → ⟨ (z ∷ γ) ⊨ tagAtL zero 0 (suc y) ⟩
+            fwd z z∈ = subst ⟨_⟩ (sym (tagAtL-adequate zero 0 (suc y) (z ∷ γ)))
+              (readEntry z (subst (λ w → ⟨ fst z ∈ w ⟩) q z∈))
+
+            bwd : (z : S) → ⟨ (z ∷ γ) ⊨ tagAtL zero 0 (suc y) ⟩ → ⟨ fst z ∈ fst E ⟩
+            bwd z h = subst (λ w → ⟨ fst z ∈ w ⟩) (sym q)
+              (entry∈ z (subst ⟨_⟩ (tagAtL-adequate zero 0 (suc y) (z ∷ γ)) h))
+
+          envOneAt-out : ⟨ γ ⊨ envOneAt e y ⟩ → fst E ≡ envOne v
+          envOneAt-out h = extensionality (fst E) (envOne v) (sub₁ , sub₂)
+            where
+            sub₁ : ⟨ fst E ⊆ envOne v ⟩
+            sub₁ w w∈ₛ = ∈∈ₛ {a = w} {b = envOne v} .fst
+              (entry∈ wS (subst ⟨_⟩
+                (tagAtL-adequate zero 0 (suc y) (wS ∷ γ))
+                (extAt-out e (tagAtL zero 0 (suc y)) γ h wS w∈)))
+              where
+              w∈ : ⟨ w ∈ fst E ⟩
+              w∈ = ∈∈ₛ {a = w} {b = fst E} .snd w∈ₛ
+
+              wS : S
+              wS = w , isL-trans {x = fst E} {y = w} w∈ (snd E)
+
+            sub₂ : ⟨ envOne v ⊆ fst E ⟩
+            sub₂ w w∈ₛ = ∈∈ₛ {a = w} {b = fst E} .fst
+              (PT.rec (snd (w ∈ fst E)) step₂
+                (∈∈ₛ {a = w} {b = envOne v} .snd w∈ₛ))
+              where
+              hasKey : ⟨ fst (keyOf 0 (lookup y γ)) ∈ fst E ⟩
+              hasKey = extAt-in e (tagAtL zero 0 (suc y)) γ h (keyOf 0 (lookup y γ))
+                (subst ⟨_⟩
+                  (sym (tagAtL-adequate zero 0 (suc y) (keyOf 0 (lookup y γ) ∷ γ)))
+                  (keyOf-fst 0 (lookup y γ)))
+
+              step₂ : Σ[ li ∈ Lift {ℓ-zero} {ℓ} (Fin 1) ]
+                        (pr (# (toℕ (lower li))) v ≡ w)
+                    → ⟨ w ∈ fst E ⟩
+              step₂ (lift zero , q) =
+                subst (λ u → ⟨ u ∈ fst E ⟩) (keyOf-fst 0 (lookup y γ) ∙ q) hasKey
+              step₂ (lift (suc ()) , _)
+
+      envOneAt-in : ∀ {n} (e y : Fin n) (γ : S ^ n)
+                  → fst (lookup e γ) ≡ envOne (fst (lookup y γ))
+                  → ⟨ γ ⊨ envOneAt e y ⟩
+      envOneAt-in {n} e y γ = EnvOneReadings.envOneAt-in {n} e y γ
+
+      envOneAt-out : ∀ {n} (e y : Fin n) (γ : S ^ n)
+                   → ⟨ γ ⊨ envOneAt e y ⟩
+                   → fst (lookup e γ) ≡ envOne (fst (lookup y γ))
+      envOneAt-out {n} e y γ = EnvOneReadings.envOneAt-out {n} e y γ
+
+      private
+        module DefinesReadings {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
+          inner : Formula S (suc n)
+          inner = ∃̇ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc v))))
+
+          body : Formula S (suc n)
+          body = (var zero ∈̇ var (suc w)) ∧̇ inner
+
+          readInner : (z : S) → ⟨ (z ∷ γ) ⊨ inner ⟩
+                    → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
+          readInner z = PT.rec (snd (envOne (fst z) ∈ fst (lookup v γ))) step
+            where
+            step : Σ[ E ∈ S ] ⟨ (E ∷ z ∷ γ)
+                     ⊨ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc v)))) ⟩
+                 → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
+            step (E , (hE , E∈)) = subst (λ u → ⟨ u ∈ fst (lookup v γ) ⟩)
+              (envOneAt-out zero (suc zero) (E ∷ z ∷ γ) hE) E∈
+
+          fillInner : (z : S) → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
+                    → ⟨ (z ∷ γ) ⊨ inner ⟩
+          fillInner z h =
+            ∣ E , (envOneAt-in zero (suc zero) (E ∷ z ∷ γ) refl , h) ∣₁
+            where
+            E : S
+            E = envOne (fst z)
+              , isL-trans {x = fst (lookup v γ)} {y = envOne (fst z)} h
+                  (snd (lookup v γ))
+
+          DefinesAt-out : ⟨ γ ⊨ DefinesAt x w v ⟩
+                        → (z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩ → HoldsDef w v γ z
+          DefinesAt-out h z z∈ = hz .fst , readInner z (hz .snd)
+            where
+            hz : ⟨ (z ∷ γ) ⊨ body ⟩
+            hz = extAt-out x body γ h z z∈
+
+          DefinesAt-in : ⟨ γ ⊨ DefinesAt x w v ⟩
+                       → (z : S) → HoldsDef w v γ z → ⟨ fst z ∈ fst (lookup x γ) ⟩
+          DefinesAt-in h z (hw , hv) =
+            extAt-in x body γ h z (hw , fillInner z hv)
+
+          DefinesAt-both : ((z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩ → HoldsDef w v γ z)
+                         → ((z : S) → HoldsDef w v γ z → ⟨ fst z ∈ fst (lookup x γ) ⟩)
+                         → ⟨ γ ⊨ DefinesAt x w v ⟩
+          DefinesAt-both f g = extAt-in-both x body γ
+            (λ z z∈ → f z z∈ .fst , fillInner z (f z z∈ .snd))
+            (λ z h → g z (h .fst , readInner z (h .snd)))
+
+      DefinesAt-in : ∀ {n} (x w v : Fin n) (γ : S ^ n)
+                   → ⟨ γ ⊨ DefinesAt x w v ⟩
+                   → (z : S) → HoldsDef w v γ z
+                   → ⟨ fst z ∈ fst (lookup x γ) ⟩
+      DefinesAt-in {n} x w v γ = DefinesReadings.DefinesAt-in {n} x w v γ
+
+      DefinesAt-out : ∀ {n} (x w v : Fin n) (γ : S ^ n)
+                    → ⟨ γ ⊨ DefinesAt x w v ⟩
+                    → (z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩
+                    → HoldsDef w v γ z
+      DefinesAt-out {n} x w v γ = DefinesReadings.DefinesAt-out {n} x w v γ
+
+      DefinesAt-both : ∀ {n} (x w v : Fin n) (γ : S ^ n)
+                     → ((z : S) → ⟨ fst z ∈ fst (lookup x γ) ⟩ → HoldsDef w v γ z)
+                     → ((z : S) → HoldsDef w v γ z → ⟨ fst z ∈ fst (lookup x γ) ⟩)
+                     → ⟨ γ ⊨ DefinesAt x w v ⟩
+      DefinesAt-both {n} x w v γ = DefinesReadings.DefinesAt-both {n} x w v γ
 ```
 
 <!--en-->
@@ -520,11 +780,12 @@ not this block: `[T130]` placed `TransferL`/`ValueIsL` in the `W1p` row.
 <!--en-->
 The chapter lands the fresh home: the two-slot description `DefAt₂` and its
 generic `DefAt` text, written against the surviving interface, the
-internalization frame as two named module telescopes (the code atoms and the
-satisfaction graph; then the semantic readings), and the one measured arm,
-`DefAt`'s adequacy in both directions. Nothing imports a retiring master;
-the frame is the interface the remaining blocks instantiate, and the arm is
-the pattern they follow.
+internalization frame as two named module telescopes (the witness atom and
+the satisfaction graph; then the semantic readings), the tag and key atoms
+and the three readings proved from them, and the one measured arm, `DefAt`'s
+adequacy in both directions. Nothing imports a retiring master; the frame is
+the interface the remaining blocks instantiate, and the arm is the pattern
+they follow.
 <!--zh-->
-本章落下新鲜家园：双槽描述 `DefAt₂` 及其泛型 `DefAt` 文本，写在存活接口之上；内化框架作为两个具名模块望远镜 (先是码原子与满足图，再是语义读式)；以及那一条被量过的一条臂，即 `DefAt` 双向的充分性。此处不导入任何退役主章；框架就是其余诸块所实例化的接口，而这条臂是它们所循的模式。
+本章落下新鲜家园：双槽描述 `DefAt₂` 及其泛型 `DefAt` 文本，写在存活接口之上；内化框架作为两个具名模块望远镜 (先是见证原子与满足图，再是语义读式)；标签原子与键原子、以及由它们证出的三条读式；以及那一条被量过的一条臂，即 `DefAt` 双向的充分性。此处不导入任何退役主章；框架就是其余诸块所实例化的接口，而这条臂是它们所循的模式。
 <!--/-->

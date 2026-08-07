@@ -36,6 +36,10 @@ Usage:
                          one line: the four parts of the per-trophy caliber,
                          and the AC total. It measures the SURVIVING tree and
                          sums to standing, like every other figure here
+  ledger.py --trophy-matrix
+                         one line: the nine cells, three calibers by three
+                         trophies. The AC-and-GCH column must equal --brief,
+                         and the gate fails if it does not
 Exit status: 0 clean, 1 defect found, 2 usage error.
 """
 
@@ -127,6 +131,8 @@ def validate_rows(data: dict) -> list[str]:
                 defects.append(f"remaining row {rid} is missing {field}")
         if not row.get("provenance"):
             defects.append(f"remaining row {rid} has no provenance (a row without one is unpriced, not zero)")
+        if row.get("trophy") not in {"AC", "GCH", "BOTH"}:
+            defects.append(f"remaining row {rid} has no trophy (a row without one is unattributed, not shared)")
         if row.get("naive_low", 0) > row.get("naive_high", 0):
             defects.append(f"remaining row {rid} has an inverted naive band")
         if row.get("calibrated_low", 0) < row.get("naive_low", 0):
@@ -287,12 +293,72 @@ def trophy_split(data: dict, files: list[str],
             parts["shared"] += sizes[f]
             ambiguous.append(f)
     parts["ac_total"] = parts["base"] + parts["ac_only"] + parts["shared"]
+    # THE SAME NUMBER WITHOUT THE AMBIGUOUS MODULES, added 2026-08-07 after
+    # [L3.32-T139] rated the single figure WEAK. The rule puts an L module in
+    # neither closure into the shared part, which adds 4,077 lines from ten rud
+    # modules. The reviewer's words: "A reader acting on 10,026 as the
+    # delivered need would over-allocate by 4,077 lines."
+    #
+    # Both numbers are honest and they answer different questions.
+    # `ac_total` is the route projection: it assumes the rud engine serves AC,
+    # which the bridge landing will make true. `ac_delivered` is what the AC
+    # endpoint's own import closure reaches today. The board shows both,
+    # because showing one invites the reader to act on the wrong one.
+    parts["ac_delivered"] = parts["ac_total"] - sum(sizes[f] for f in ambiguous)
     got = sum(parts[k] for k in ("base", "ac_only", "shared", "gch_only"))
     if got != total:
         msg = f"trophy split does not sum to standing: {got} != {total}"
         defects.append(msg)
         raise AssertionError(msg)
     return parts, ambiguous, defects
+
+
+def trophy_matrix(rows: list[dict], split: dict[str, int],
+                  standing: int) -> dict[str, dict]:
+    """The nine cells of the trophy matrix, computed from the declared rows.
+
+    The endpoint for one trophy is its standing plus the rows that trophy
+    needs. A row marked AC serves the AC column. A row marked GCH serves the
+    GCH column. A row marked BOTH serves both columns. The AC-and-GCH column
+    is standing plus EVERY row.
+
+    The three columns do not add up, and they must not. AC standing and GCH
+    standing both count the base and the shared parts. Thus
+    AC + GCH > AC-and-GCH. That is correct, not a bug.
+
+    The identity that must hold: the AC-and-GCH column equals the endpoint
+    that --brief prints. This function builds that column from every row and
+    asserts the equality, so a future edit that filters the column fires the
+    gate instead of silently moving the board.
+    """
+    ac_standing = split["ac_total"]
+    gch_standing = split["base"] + split["shared"] + split["gch_only"]
+
+    def row_sums(wanted: set[str]) -> tuple[int, int, int, int]:
+        return (
+            sum(r.get("naive_low", 0) for r in rows if r.get("trophy") in wanted),
+            sum(r.get("naive_high", 0) for r in rows if r.get("trophy") in wanted),
+            sum(r.get("calibrated_low", 0) for r in rows if r.get("trophy") in wanted),
+            sum(r.get("calibrated_high", 0) for r in rows if r.get("trophy") in wanted),
+        )
+
+    cells: dict[str, dict] = {}
+    for column, wanted, base in (
+        ("ac", {"AC", "BOTH"}, ac_standing),
+        ("gch", {"GCH", "BOTH"}, gch_standing),
+        ("both", {"AC", "GCH", "BOTH"}, standing),
+    ):
+        nl, nh, cl, ch = row_sums(wanted)
+        cells[column] = {
+            "standing": base,
+            "naive": (base + nl, base + nh),
+            "calibrated": (base + cl, base + ch),
+        }
+    all_nl, all_nh, all_cl, all_ch = row_sums({"AC", "GCH", "BOTH"})
+    if (cells["both"]["naive"] != (standing + all_nl, standing + all_nh)
+            or cells["both"]["calibrated"] != (standing + all_cl, standing + all_ch)):
+        raise AssertionError("the AC-and-GCH column does not equal the --brief endpoint")
+    return cells
 
 
 def main(argv: list[str]) -> int:
@@ -306,6 +372,8 @@ def main(argv: list[str]) -> int:
             mode = "brief"
         elif arg == "--trophy-split":
             mode = "trophy-split"
+        elif arg == "--trophy-matrix":
+            mode = "trophy-matrix"
         else:
             print(__doc__, file=sys.stderr)
             return 2
@@ -333,6 +401,15 @@ def main(argv: list[str]) -> int:
     cl = sum(r.get("calibrated_low", 0) for r in rows)
     ch = sum(r.get("calibrated_high", 0) for r in rows)
     line = data["basis"]["reference_line"]
+
+    matrix = None
+    matrix_defects: list[str] = []
+    if split:
+        try:
+            matrix = trophy_matrix(rows, split, standing)
+        except AssertionError as exc:
+            matrix_defects = [str(exc)]
+    defects += matrix_defects
 
     # There is no longer a prose document to render into. That document was
     # deleted on 2026-08-06: 44 percent of it was this generated block, and the
@@ -372,7 +449,30 @@ def main(argv: list[str]) -> int:
             # The denominator is STANDING, not the tracked total. The parts
             # exclude the retirement set, so naming `tracked` here would invite
             # the same reading that made the first version wrong.
-            f"| ac-total {split['ac_total']:,} | standing {standing:,}"
+            f"| ac-total {split['ac_total']:,} "
+            f"| ac-delivered {split['ac_delivered']:,} | standing {standing:,}"
+        )
+        return 1 if defects else 0
+
+    if mode == "trophy-matrix":
+        if matrix is None or split_defects or matrix_defects:
+            for d in split_defects + matrix_defects:
+                print(f"ledger: {d}", file=sys.stderr)
+            return 1
+        ac = matrix["ac"]
+        gch = matrix["gch"]
+        both = matrix["both"]
+        print(
+            "trophy matrix "
+            f"| ac-standing {ac['standing']:,} | gch-standing {gch['standing']:,} "
+            f"| both-standing {both['standing']:,} "
+            f"| ac-naive {ac['naive'][0]:,}-{ac['naive'][1]:,} "
+            f"| gch-naive {gch['naive'][0]:,}-{gch['naive'][1]:,} "
+            f"| both-naive {both['naive'][0]:,}-{both['naive'][1]:,} "
+            f"| ac-calibrated {ac['calibrated'][0]:,}-{ac['calibrated'][1]:,} "
+            f"| gch-calibrated {gch['calibrated'][0]:,}-{gch['calibrated'][1]:,} "
+            f"| both-calibrated {both['calibrated'][0]:,}-{both['calibrated'][1]:,} "
+            "| both-equals-brief yes"
         )
         return 1 if defects else 0
 
@@ -412,6 +512,19 @@ def main(argv: list[str]) -> int:
             print(f"    ambiguous -> shared ({len(ambiguous)} modules): "
                   + ", ".join(f.removeprefix("src/L/").removesuffix(".lagda.md")
                               for f in ambiguous))
+    if matrix:
+        print()
+        print("  TROPHY MATRIX (standing measured, endpoints computed):")
+        for label, key in (("AC trophy", "ac"), ("GCH trophy", "gch"),
+                           ("AC and GCH", "both")):
+            c = matrix[key]
+            print(
+                f"    {label:<12} standing {c['standing']:7,}  "
+                f"naive {c['naive'][0]:6,}-{c['naive'][1]:<6,}  "
+                f"calibrated {c['calibrated'][0]:6,}-{c['calibrated'][1]:<6,}"
+            )
+        print("    the three columns do not add up. That is correct: AC and GCH "
+              "both count the base and the shared parts.")
     print()
     print(f"  against the {line/1000:.0f}k reference line, recorded and not argued from (D26):")
     print(f"    naive corner      {(standing+nh-line)/1000:+.2f}k")
@@ -430,12 +543,17 @@ def main(argv: list[str]) -> int:
             print(f"         {r['tree'][:40]:<42} {r['seconds']:5d}s / {r['lines']:6d} lines "
                   f"= {r['per_line']:.3f} s/line")
     lev = data.get("lever", [])
-    if lev:
-        nl = sum(r["net_low"] for r in lev if not r.get("gated"))
-        nh = sum(r["net_high"] for r in lev if not r.get("gated"))
+    # The lever array also carries decision rows (rewrite-worst, rud-rewrite,
+    # rud-architecture) with no band. They are not compression levers, so the
+    # net block filters them out. Without the filter, full print mode crashed
+    # on a KeyError; the defect predates [L3.32-T137] and this line is the fix.
+    levers = [r for r in lev if "net_low" in r and "net_high" in r]
+    if levers:
+        nl = sum(r["net_low"] for r in levers if not r.get("gated"))
+        nh = sum(r["net_high"] for r in levers if not r.get("gated"))
         print()
         print(f"  compression levers, measured but NOT funded and NOT in the sum above:")
-        for r in sorted(lev, key=lambda r: -r["net_low"]):
+        for r in sorted(levers, key=lambda r: -r["net_low"]):
             g = "  GATED" if r.get("gated") else ""
             print(f"    {r['id']:<20} net +{r['net_low']}-{r['net_high']:<5} "
                   f"cost {r['cost_low']}-{r['cost_high']:<5} risk {r['risk'][:22]}{g}")

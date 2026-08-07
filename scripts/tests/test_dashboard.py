@@ -129,38 +129,18 @@ def test_render_route() -> int:
     return fails
 
 
-def test_remaining_pie_slices() -> int:
-    """A remaining-row distribution: standing first, large rows individual,
-    small rows grouped into a tail that names its members, total equals
-    standing plus the midpoints."""
-    data = {"remaining": [
-        {"id": "A", "title": "alpha", "naive_low": 1000, "naive_high": 2700,
-         "calibrated_low": 3000, "calibrated_high": 7900},
-        {"id": "B", "title": "beta", "naive_low": 100, "naive_high": 200,
-         "calibrated_low": 300, "calibrated_high": 400},
-        {"id": "C", "title": "gamma", "naive_low": 300, "naive_high": 500,
-         "calibrated_low": 900, "calibrated_high": 1100},
-        {"id": "D", "title": "delta", "naive_low": 500, "naive_high": 700,
-         "calibrated_low": 900, "calibrated_high": 1300},
-        {"id": "E", "title": "eps", "naive_low": 800, "naive_high": 1000,
-         "calibrated_low": 1200, "calibrated_high": 1600},
-    ]}
-    slices = dashboard.remaining_pie_slices(data, "naive", 5000)
-    fails = check("pie leads with standing",
-                  slices[0]["label"].startswith("standing"), True)
-    fails += check("standing slice value", slices[0]["value"], 5000)
-    labels = [s["label"] for s in slices]
-    fails += check("large row stays individual",
-                   any(l.startswith("A:") for l in labels)
-                   and any(l.startswith("E:") for l in labels), True)
-    tails = [s for s in slices if s["label"].startswith("tail")]
-    fails += check("small row is grouped into one tail",
-                   len(tails) == 1 and tails[0]["value"] == 150, True)
-    fails += check("tail names its members",
-                   "B 150" in tails[0]["tail_detail"], True)
-    total = sum(s["value"] for s in slices)
-    fails += check("pie total is standing plus remaining midpoints",
-                   total, 5000 + 1850 + 900 + 600 + 400 + 150)
+def test_parse_trophy_matrix() -> int:
+    line = ("trophy matrix | ac-standing 10,026 | gch-standing 18,970 "
+            "| both-standing 19,085 | ac-naive 13,746-15,716 "
+            "| gch-naive 26,975-33,188 | both-naive 27,390-33,953 "
+            "| ac-calibrated 16,126-20,176 | gch-calibrated 33,600-48,515 "
+            "| both-calibrated 34,615-50,580 | both-equals-brief yes")
+    d = dashboard.parse_trophy_matrix(line)
+    fails = check("matrix ac standing", d["ac"]["standing"], 10026)
+    fails += check("matrix gch standing", d["gch"]["standing"], 18970)
+    fails += check("matrix both standing", d["both"]["standing"], 19085)
+    fails += check("matrix both naive band", d["both"]["naive"], (27390, 33953))
+    fails += check("matrix identity flag", d["identity_ok"], True)
     return fails
 
 
@@ -234,8 +214,8 @@ def test_measured_stats_marked() -> int:
     numeric table cells carry the tabular-figure class."""
     lines = dashboard.panel_lines()
     seconds = dashboard.panel_seconds()
-    fails = check("standing stat carries the measured marker",
-                  'class="stat measured"' in lines, True)
+    fails = check("standing cells carry the measured marker",
+                  'class="num measured"' in lines, True)
     fails += check("full-check stat carries the measured marker",
                    'class="stat measured"' in seconds, True)
     fails += check("numeric cells are marked for tabular figures",
@@ -317,19 +297,28 @@ def test_plan_parsing() -> int:
     return fails
 
 
-def test_remaining_rows() -> int:
-    data = {"remaining": [
-        {"id": "W3", "title": "Face route", "naive_low": 1000, "naive_high": 2700,
-         "calibrated_low": 3000, "calibrated_high": 7900, "klass": "x3", "gate": "none"},
-        {"id": "W1p", "title": "Transfers", "naive_low": 700, "naive_high": 1720,
-         "calibrated_low": 1900, "calibrated_high": 5000, "klass": "x1.3", "gate": "T54"},
-    ]}
-    rows = dashboard.remaining_rows(data)
-    return (
-        check("remaining_rows count", len(rows), 2)
-        + check("remaining_rows band text", rows[0]["naive"], "1,000-2,700")
-        + check("remaining_rows calibrated text", rows[1]["calibrated"], "1,900-5,000")
+def test_remaining_trophy_required() -> int:
+    """A remaining row with no trophy fails the ledger checker, exactly as a
+    row with no provenance fails it. A row added later without the field
+    must turn the gate red."""
+    spec = importlib.util.spec_from_file_location(
+        "ledger", ROOT / "scripts" / "ledger.py"
     )
+    ledger = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(ledger)
+    data = {"remaining": [
+        {"id": "no-trophy", "title": "x", "naive_low": 1, "naive_high": 2,
+         "calibrated_low": 3, "calibrated_high": 4, "provenance": "p"},
+    ]}
+    defects = ledger.validate_rows(data)
+    fails = check("missing trophy is a defect",
+                  any("has no trophy" in d for d in defects), True)
+    data["remaining"][0]["trophy"] = "BOTH"
+    defects = ledger.validate_rows(data)
+    fails += check("a declared trophy passes",
+                   not any("has no trophy" in d for d in defects), True)
+    return fails
 
 
 def test_brief_naming() -> int:
@@ -402,28 +391,52 @@ seconds = 300
     return fails
 
 
-def test_lines_panel_pies() -> int:
-    """The lines panel on the real ledger draws both caliber pies and labels
-    the standing slice, plus the four-part AC trophy pie, without hardcoding
-    a total that would rot."""
+def test_lines_panel_matrix() -> int:
+    """The lines panel carries the nine-cell matrix and ONE pie: the
+    four-part split of standing. The AC-and-GCH column equals --brief, and
+    the board says the columns do not add up."""
     html = dashboard.panel_lines()
-    fails = check("lines panel draws both caliber pies and the trophy pie",
-                  html.count('class="pie-card"'), 3)
-    fails += check("lines panel labels the measured standing",
-                   "standing, measured from HEAD" in html, True)
-    fails += check("lines panel labels a pie total",
-                   'class="pie-total">total ' in html, True)
-    # The board now STATES the AC total as a number, not only as a rule for
-    # adding three slices. The test follows that.
-    fails += check("AC trophy names the AC total as a number",
-                   "lines for the AC trophy alone, parts 1 to 3" in html, True)
-    fails += check("AC trophy note names the check part",
-                   "shown for the check" in html, True)
-    # The caliber measures the surviving tree, so it must sum to standing and
-    # say so. The first version summed to the tracked total, which made one
-    # trophy larger than the whole project.
-    fails += check("AC trophy caliber excludes the retirement set",
-                   "SURVIVING tree" in html and "sum to standing" in html, True)
+    fails = check("lines panel carries the trophy matrix table",
+                  "The trophy matrix" in html and "<table>" in html, True)
+    fails += check("matrix holds nine cells",
+                   html.count('<td class="num'), 9)
+    fails += check("lines panel draws one pie only",
+                   html.count('class="pie-card"'), 1)
+    fails += check("the four-part split pie is the one kept",
+                   "The standing tree, four parts" in html, True)
+    fails += check("the line distribution pies are gone",
+                   "Line distribution" not in html
+                   and "Remaining rows, naive caliber" not in html, True)
+    fails += check("the board says the columns do not add up",
+                   "do not add up" in html, True)
+    fails += check("the board names the identity to the brief",
+                   "equals the endpoint that scripts/ledger.py --brief prints"
+                   in html, True)
+    matrix_line = dashboard.ledger_trophy_matrix_line()
+    brief_line = dashboard.ledger_brief_line()
+    if matrix_line is None or brief_line is None:
+        return fails + 1
+    m = dashboard.parse_trophy_matrix(matrix_line)
+    b = dashboard.parse_brief(brief_line)
+    fails += check("matrix identity flag is yes", m["identity_ok"], True)
+    fails += check("both standing equals the brief standing",
+                   m["both"]["standing"], b["standing"])
+    fails += check("both naive band equals the brief naive band",
+                   (round(m["both"]["naive"][0] / 1000, 2),
+                    round(m["both"]["naive"][1] / 1000, 2)),
+                   (b["naive_low_k"], b["naive_high_k"]))
+    fails += check("both calibrated band equals the brief calibrated band",
+                   (round(m["both"]["calibrated"][0] / 1000, 2),
+                    round(m["both"]["calibrated"][1] / 1000, 2)),
+                   (b["calibrated_low_k"], b["calibrated_high_k"]))
+    # [T139] rated one AC number WEAK: the ambiguous rule adds 4,077 lines, so
+    # the board must carry the route projection AND the delivered closure.
+    fails += check("AC panel shows the route projection",
+                   "route projection" in html, True)
+    fails += check("AC panel shows the delivered closure",
+                   "import closure reaches" in html, True)
+    fails += check("AC panel says which number to plan with",
+                   "Do not read the first number as delivered need" in html, True)
     fails += check("lines panel names its sources",
                    "dev/ledger.toml (mtime" in html
                    and "scripts/ledger.py" in html, True)
@@ -437,14 +450,14 @@ def main() -> int:
     # the merged-panel renderings all covered code that no longer exists.
     for test in (test_brief_parse, test_route_builder, 
                  test_route_block_real, test_route_block_no_data, 
-                 test_render_route, test_remaining_pie_slices, 
+                 test_render_route, test_parse_trophy_matrix, 
                  test_pie_svg, test_render_pie_chart, test_css_theme_lock, 
                  test_generated_page_stays_self_contained, 
                  test_measured_stats_marked, 
                  test_pies_share_one_visual_language, test_plan_parsing, 
-                 test_remaining_rows, test_brief_naming, test_clean, 
+                 test_remaining_trophy_required, test_brief_naming, test_clean, 
                  test_staleness, test_seconds_panel_pies, 
-                 test_lines_panel_pies):
+                 test_lines_panel_matrix):
         fails += test()
     print(f"\n{'PASS' if fails == 0 else 'FAIL'}: {fails} failing check(s)")
     return 1 if fails else 0

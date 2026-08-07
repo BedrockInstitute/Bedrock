@@ -21,6 +21,13 @@
 # Part 4 exists for the check only. The four parts sum to the tracked total.
 # scripts/ledger.py computes the parts from the import graph. It writes no
 # part here.
+#
+# THE TROPHY MATRIX, added 2026-08-07 by [L3.32-T137].
+# Every remaining row carries a trophy field: AC, GCH or BOTH.
+# A row is BOTH when it is genuinely shared, and also when it is unsure.
+# The endpoint for one trophy is that trophy's standing plus the rows it needs.
+# The three columns do not add up, and they must not.
+# scripts/ledger.py computes the nine cells. It writes no cell here.
 
 # ---------------------------------------------------------------------------
 # WHAT THIS FILE IS, AND THE THREE THINGS A READER MUST KNOW BEFORE EDITING IT.
@@ -268,6 +275,7 @@ authority = "PLAN task T133; owed row archival-arm-b"
 
 [[remaining]]
 id = "W3"
+trophy = "GCH"
 title = "W3 face route: the general order formula over the fresh generic face"
 naive_low = 1000
 naive_high = 2700
@@ -279,6 +287,7 @@ provenance = "_build/l3.32-t48-report.md face-route table; PLAN [L3.32] register
 
 [[remaining]]
 id = "W1p"
+trophy = "GCH"
 title = "W1': the condensation crossing's transfers"
 naive_low = 700
 naive_high = 1720
@@ -303,6 +312,22 @@ provenance = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md; _build/l3.
 # THEN [T127] GATED B4, 2026-08-07, green at the first limit at 346 content
 # lines against its 200-320 band, and the first-instance remainder moved to
 # ~699-726 naive centred near 712. The up-shift of ~100 has two named causes,
+# THEN [T138] CLOSED THE FIRST INSTANCE, 2026-08-07: all four remaining story
+# clauses on seg-0 are GREEN, verified in a 35.7 s harness with every clause
+# helper under 45 ms. The port matched T127's split prediction and no clause
+# needed new mathematics. First instance now: about 1,717-1,744 naive,
+# 1,873-1,900 calibrated, fully measured, nothing left a hypothesis except
+# the end-to-end file check, and the reason for THAT is the finding:
+#
+# T131's segDom-0, the exact-domain proof, IS A CHECK-TIME WALL: it alone
+# walls past 7.5 minutes, and the 893-line probe cannot finish in 35. The
+# clause proofs are cheap; the inherited proof shape is not. ANY committed
+# below-lim master that ports segDom-0's shape as-is will die at
+# check-timing. The general build must restate it first (P-k/P-l class), and
+# that restatement is the next gate before any below-lim master is written.
+# T138 also found and fixed T131's broken two-layer PT.rec form, which is why
+# T131's state never typechecked whole.
+#
 # THEN [T128] priced the sixth clause and the first-instance remainder moved
 # again, to ~1147-1214 naive and ~1418-1565 calibrated: the clause machinery
 # is +353 measured, the story seam +15 measured, and the general carve's
@@ -326,6 +351,7 @@ provenance = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md; _build/l3.
 
 [[remaining]]
 id = "carried-sequence"
+trophy = "BOTH"
 title = "The carried sequence: the bridge's two residues (Q-lim, below-lim) and its landing"
 naive_low = 980
 naive_high = 1720
@@ -337,6 +363,7 @@ provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52
 
 [[remaining]]
 id = "stepinl-rewrite"
+trophy = "GCH"
 title = "StepInL ideal-form rewrite (fresh chapter, old chapter archived wholesale under D17)"
 naive_low = 1240
 naive_high = 1730
@@ -348,6 +375,7 @@ provenance = "_build/l3.32-t10-report.md; PLAN register T10 entry"
 
 [[remaining]]
 id = "choice-rehome"
+trophy = "AC"
 title = "The choice re-home onto the rud-side well-order"
 naive_low = 300
 naive_high = 650
@@ -420,23 +448,115 @@ provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 
 # the 18; the table tail rides inside that, and arm 4's proof rides inside the
 # tail. The total does not move. Only the order does.
 #
+# THE TAIL IS NOT COMPRESSIBLE, measured 2026-08-07 by [L3.32-T140], and it
+# closes the one term [T139] rated WEAK. The probe stated graphAt-holds and
+# graphAt-unique exactly as L.TowerGraph.Readings declares them, against the
+# surviving interface, without opening Table, Slot, Sound or Unique. The
+# assembly closed in 26 code lines. Each reading then reduces to an obligation
+# that IS the tail's own theorem: the internalized table for holds (delivered
+# homes 1,236 lines), the pinning induction for unique (630 lines). The
+# surviving interface exports no construction that supplies either. The probe
+# found no compression path, and it checked in 1.68 s.
+#
+# CONSEQUENCE: the 620-930 fresh-compressed tail estimate is REFUTED. The
+# adequacy term stands at the tail-at-delivered-size reading: about 2,826 to
+# 2,874 naive, about 3.7k calibrated. Build A's total moves from the gated
+# 2.0-2.5k to about 3.2-3.4k naive. This is the second upward move of D31's
+# price and the owner has not yet seen it: D31 was reaffirmed at 2.0-2.5k.
+# Per D26 this is an overage recorded plainly, not a decision.
+#
+# THE CODE BLOCK IS ALSO AT DELIVERED SIZE, measured 2026-08-07 by
+# [L3.32-T142], the D22 gate on Build A's last unmeasured block. Same shape as
+# T140's red: the assembly closes in 6 body lines, and both code readings
+# reduce to obligations that ARE the shape machinery's own theorems (the
+# closure triple, the concrete keyS, the decode), delivered homes 2,378
+# in-fence lines. The surviving interface supplies none of the three facts.
+# THE ARITY-1 PIN SAVES ZERO: an arity-1 formula still closes over subformulas
+# at every arity, so the pin shrinks the statements only, never the machinery.
+#
+# CONSEQUENCE, the THIRD upward move of D31's price: Build A remaining moves
+# from about 2.7-2.9k to about 5.0-5.1k naive (arms ~711, tail 1,866, code
+# block 2,378, step/approx ~130). With zero compression measured at every
+# gate, THE FRESH REWRITE HAS CONVERGED TO THE PORT SIZE: the A-versus-B
+# distinction is now style and seconds, not lines. The band below carries the
+# gated figure. A fork on how to proceed is before the owner; the fork can
+# re-cut this row sharply downward, so read the band with that pending.
+#
+# THE PORT COMPARISON, RE-BASED 2026-08-07 after the owner asked the right
+# question: how can a fresh rewrite (3.2-3.4k) cost more than the port that
+# option B priced at 2.1k? IT CANNOT, AND IT DOES NOT. The two numbers were
+# never on one basis. T129's 2,105 is its direct-region table, which contains
+# NO row for Table, Slot, Sound or Unique; T129's own port sentence reads
+# "2,105+ ... AND the full adequacy tail", and the tail is 1,866. So the port
+# on the same basis is about 3,971 plus adaptation, not 2.1k. The orchestrator
+# carried the floor into D31's option table as if it were the price. On one
+# basis: A is 3,206-3,404 total with 483 already landed (about 2.7-2.9k left);
+# B is about 3,971 with nothing landed. A stays cheaper and D17's ordering
+# stands. What T140 moved is A's ABSOLUTE price, which is the A-versus-E
+# arithmetic, not the A-versus-B ordering.
+#
+# THE TEXT BLOCK LANDED PARTIAL, 2026-08-07 by [L3.32-T136], and it moved the
+# boundary again. It defined `tagAtL` and `keyArityAtL` fresh and proved
+# `envOneAt-in/out` (63 lines, ratio 1.34 to the delivered 47) and
+# `DefinesAt-in/out/both` (54 lines, ratio 1.10 to 49). It STOPPED on
+# `hasWitnessAt`, because that atom's text needs the twelve-clause shape
+# machinery, which is the unfunded table content. `codeAt-in/out` stay
+# parameters for the same reason. 179 lines added under a 320 stop, master
+# green, zero retiring imports, zero postulates, all verified by the
+# orchestrator.
+#
+# ELEVEN OF THE EIGHTEEN PARAMETERS REMAIN, and that number prices what is
+# left: the code block owns `hasWitnessAt` plus `codeAt-in/out`, the table
+# block owns `satGraphAt` plus `graphAt-holds/unique`, and the semantic
+# readings (Sat, keyS, key-l, keyBridge, defSet-Sat) sit with the table.
+#
+# THE CODE BLOCK IS NOW THE WIDE UNMEASURED TERM, and its price went UP.
+# [T134] priced it at the proof lines only, about 70 fresh for arms 1 and 3.
+# Arm 1 alone landed at 63. Arm 3 cannot land until the block also writes
+# `hasWitnessAt`'s text, whose delivered support is the retiring Closed (171),
+# InL (330), Recover (190), Descent (44), plus the shape side of Model (1,289)
+# and Shape (354). D22 says gate it before funding it.
+#
 # Remaining on T132's own accounting: the other eleven arms ~711, the
 # table/slot/sound/unique tail 620-930 fresh-compressed, the remaining formula
 # text ~145-175, and the step/approx/Lset-only region ~130.
 
+# RE-CUT 2026-08-07 under ruling D32, the orchestrator's move per D27. The
+# owner ruled DEFER: arm B is severed by DELETION, not by the fresh rewrite,
+# because every gate (T132, T140, T142) measured compression at zero and the
+# rewrite converged to the port size. This row now holds only the deletion,
+# the archival wiring at arm-C time, and the Hull order slice. The deferred
+# ~5.0-5.1k moved to the `crossing-rebuild` row below, trophy GCH, where its
+# consumers sit. THE OWNER'S DOCUMENTATION CONDITION binds the deletion: see
+# D32 for the three artifacts it must ship with.
+
 [[remaining]]
 id = "retirement-surgery"
-title = "The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20). Build A is the internalization written fresh, per D31"
-naive_low = 2440
-naive_high = 3320
-calibrated_low = 3200
-calibrated_high = 4300
+trophy = "BOTH"
+title = "The retirement surgery under D32: sever arm B by deletion, the archival wiring at arm-C time, and the Hull order"
+naive_low = 250
+naive_high = 500
+calibrated_low = 350
+calibrated_high = 700
 klass = "x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part"
 gate = "[L3.32-T130] then REFUTED the cheapest hoped-for escape, read-only, 2026-08-07: the two crossings CANNOT ride the rud-side story the campaign is already funding. Two decisive reasons. (1) THE INDEX QUESTION: the rud side delivers per-step and per-family content at a STAGE carrier, while the crossing needs a two-slot Formula whose slot 0 is the value and slot 1 is the index, satisfied at both the ambient and the inner reading at the CLASS carrier; the two-slot wiring and its class-level decode exist nowhere on the rud side. (2) THE TOWER MISMATCH, which is the deeper one: StepStory's successor clause concludes b equals step c, the S-TOWER step, not the L-tower step 𝒟ₒ, and LevelSigma's powRel equals the definable-powerset relation only at a rud carrier, never at the class L. The chain concludes x equals Sset a, not Lset a. So the below-lim spend does NOT pay twice. T130 also priced the defSet re-statement and found THE OBJECT-VERSUS-META GAP IS THE WHOLE COST: a meta-level sett has no satisfaction and no second reading, so it cannot be the object of TransferL or ValueIsL, and the syntax-as-index-set trick that makes defSet cheap at the meta level is unavailable inside an object formula. That option is not an alternative to the ideal form; it IS the natural shape of its 700-900 line adequacy piece, inside the same band. BAND REFUTED 2026-08-07 by [L3.32-T129], which STOPPED at its cone map rather than build. T67 priced crossings 1+2 at 0.18-0.30k naive on a delivered slice of 242 in-fence lines; T129 re-measured that same slice at 243, so the slice was right and WHAT WAS WRONG IS THAT THE SLICE WAS TREATED AS THE WHOLE. LsetGraphAt is a two-line formula, but its definitional cone bottoms out in the twelve satisfaction clauses, closedAt/shapedAt, the code machinery and DefAt, across Model, Graph, CodeSet, Shape and Powerset; Lset-only's proof cone reads StepAt and ApproxAt back through DefAt's adequacy, which IS the satisfaction-internalization bridge (Sat, defSet-Sat, keyBridge, and the table/slot/sound/unique machinery behind them). Every one of those homes is itself in the retirement set, so the content cannot be re-homed by porting two names: THE RE-HOME IS THE INTERNALIZATION CONE. Measured: 2,105 in-fence lines in the directly measured regions, 6,381 as the cluster upper bound, against a 500-line stop. D17 comparison run: the ideal form (formula definitions 250-350, DefAt and graph adequacy 700-900, the step/approx/Lset-only region ~130) is 1.1-1.5k naive and the port is 2.1k+, so the ideal form wins, and BOTH exceed the stop by 2x to 4x. Build A alone is therefore larger than this entire booked row. The three compression levers were priced and refused: the ambient-layer skip is ~20 lines, the Fin specialization at most 60-80, and writing the closed sentence directly does not delete content, it inlines it and recreates the alias-versus-expansion conversion walls the Sequence chapter already measured and avoided. THE BAND BELOW IS STALE AND AWAITS AN OWNER RULING. Prior gate, still true as far as it went: T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint"
 provenance = "_build/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is _build/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
 
 [[remaining]]
+id = "crossing-rebuild"
+trophy = "GCH"
+title = "The internalization rebuilt fresh at the GCH resume: the deferred Build A (D32)"
+naive_low = 5000
+naive_high = 5100
+calibrated_low = 6500
+calibrated_high = 6700
+klass = "x1.3 throughout: every term measured or gated at delivered size (T132 arm 174, T140 tail 1,866, T142 code block 2,378, arms ~711, step/approx ~130)"
+gate = "The full chain is run and every gate is red on compression: T129 mapped the cone, T130 refuted the rud-side escape, T132 closed one arm green at 174 lines and re-classed the estimate, T140 proved the tail reduces to the tail's own theorems, T142 proved the same for the shape machinery and that the arity-1 pin saves zero. 483 lines are already landed in L.TowerGraph and stay. Resumes with the GCH wing when the wall gate is met, per D30 as restated and D32."
+provenance = "_build/l3.32-t129-report.md; _build/l3.32-t130-report.md; _build/l3.32-t132-report.md; _build/l3.32-t140-report.md; _build/l3.32-t142-report.md; PLAN D31 and D32"
+
+[[remaining]]
 id = "w7-residue"
+trophy = "GCH"
 title = "W7's remaining residue, itemized (1.1(vii) tower induction, the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, the pairing re-pointing, Pow plus the GCH sentence assembly)"
 naive_low = 650
 naive_high = 1320
@@ -448,6 +568,7 @@ provenance = "_build/l3.32-t57-report.md section 3 table (ITEMIZED, no longer a 
 
 [[remaining]]
 id = "structural-story"
+trophy = "GCH"
 title = "The condensation structural story: rewritten with meaning pinned, because three of its atoms were found to read something other than what they say"
 naive_low = 515
 naive_high = 688
@@ -460,6 +581,7 @@ provenance = "_build/l3.32-t77-report.md itemized price; the defects at _build/l
 
 [[remaining]]
 id = "gch-proof-steps"
+trophy = "GCH"
 title = "The theorem's own proof steps, which fell off the list: Devlin 5.5 bounded subsets, the 5.6 equality argument, the condensation limit case, the collapse's transitive-fixing clause, the counting bound's descent to the hull's presentation index, the Inf predicate, and the crossing's transport certificate"
 naive_low = 480
 naive_high = 1020
@@ -780,7 +902,7 @@ evidence = "rg over src/ 2026-08-06, reported in the L3.32-F row; seconds from _
 [[owed]]
 id = "archival-arm-b"
 trophy = "BOTH"
-title = "Archival arm B: sever the two Condensation crossings (enables, but does not itself achieve, the archival)"
+title = "Archival arm B under D32: sever the two Condensation crossings by DELETION, with the comprehensive documentation D32 requires"
 status = "ready"
 detail = "91.4 s. Two crossings, both out of L.Condensation: LsetGraphAt from L.Coding.Sequence and Lset-only from L.Hierarchy. The content re-homes rather than dissolving, so this arm is a BUILD, not wiring: it is T67's Build A (the L-tower graph content), Build B (the rud satisfaction cone) and Build C (the finite-tally harvest). NO LINE FIGURE IS RESTATED HERE. The band is the `retirement-surgery` remaining row, which covers this arm plus arm C's Hull order plus the wiring, and it is gated green by T67 at the 1.3x class; a number repeated in a paragraph is how two prices for one job get into this file. Nothing gates this arm and nothing about it is frozen: it was never new mathematics."
 blocked_by = ""
@@ -1148,12 +1270,11 @@ verified = "Core.h0/h0-inj at src/L/Ordinal/SquareLaw.lagda.md:421,:424 and Init
 
 [[hot]]
 module = "L.Condensation"
-seconds = 142
-lines = 555
-obligations = 123
-why = "BODY-BOUND, measured by [T96]: the cost is assembly definitions elaborating delivered machinery at a concrete formula."
-fix = "[T107] landed [T106]'s B1: the Crossing parameterization, 204.7 s to 142.0 s for +4 lines, by making the concrete formula a module parameter. The Crossing header and crossOut-from's statement changed; every other signature is byte-identical, verified by a full diff, and rg confirmed zero tree consumers."
-refusal = "The remaining 130 s is a PRICED REFUSAL closing D30 exit condition (2). [T106] measured all three export-preserving lifts and they FAILED: the 77 s environment conversion made the module WORSE (204.7 to 308.8 s), the 54 s Lset-only cost MOVED rather than went, and piece 2's export-preserving wrapper was worse than the control. [T96]'s original verdict stands and [T104]'s re-opening was refuted."
+seconds = 12
+lines = 469
+why = "NO LONGER HOT, resolved 2026-08-07 by ruling D32's deletion, not by a lift. [T144] profiled both sides: before, ambientOnly-from alone was 138.2 s of the module's 150.2, which is 92 percent. The owner ruled the Crossing section deleted and deferred its rebuild to the GCH resume, so the cost left with the content."
+fix = "[T144]: the two crossing imports and the Crossing section deleted, 86 lines out, a 4-line bilingual pointer in. 150.2 s to 11.5 s. Every signature outside the section byte-identical, verified by diff; every deleted name re-checked for consumers and none found. The comprehensive record is dev/ARCHIVE.md's partial-cut row and the report's name-by-name table; git show 3f5001e recovers the text."
+refusal = "HISTORY, kept because it was true in its frame: [T106] measured all three export-preserving LIFTS and all three failed, so 130 s was a correct refusal for any re-home that keeps the content. [T129] then located the cost in ambientOnly-from and said it moves in no re-home, also correct. Deletion was the one move nobody had priced, and D32 ruled it."
 
 [[tree_cost]]
 tree = "retiring subtree (L.Coding, L.Godel, L.Choice)"
