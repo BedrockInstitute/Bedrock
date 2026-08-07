@@ -298,9 +298,10 @@ external fonts, no network. The page has five panels:
 - the code hierarchy and where the project is in it, from `dev/PLAN.md`
   section 11's MASTER status table (96 rows, dotted-decimal codes give the
   tree; active/open/standing rows are highlighted);
-- the orchestrator's workbench: the task index's recent rows and verdicts,
-  `_build/briefs/*.md` mtimes and title lines, the ledger's `[[owed]]` queue
-  and the `[[lever]]` rows (the "what condition triggers what" table). Live
+- the agent table: the task index's recent rows and verdicts for what has
+  returned and what is in flight, and the ledger's `[[owed]]` queue for what
+  is next; `_build/briefs/*.md` mtimes tell a dispatched brief from a
+  returned one. Live
   dispatch state lives in `.claude/`, which is never committed, so the panel
   says "not available from committed data" rather than guessing.
 

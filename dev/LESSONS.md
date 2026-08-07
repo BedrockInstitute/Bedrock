@@ -1984,7 +1984,28 @@ network was blocked while the search tools had access), then died before
 writing a line. Zero output. The re-dispatch carried those findings forward in
 its brief and made incremental writing a binding constraint.
 
-**Provenance:** `dev/JOURNAL.md`, the `[L3.32-T12]` entry.
+**Measured again (2026-08-07), and this time the rule was IN the brief and
+still failed, which is the part worth having.** `[L3.32-T131]` was briefed
+with C-22 binding and it did create its skeleton first. Then it ran two hours,
+grew a 17 MB log, and left that skeleton at 42 lines with every section empty,
+because it had fallen into a loop: **1,622 file-create diffs for the same
+scratch diagnostic file**, grinding one type puzzle. Meanwhile its probe held
+`chainLimit` and `segLimit₀`, which are both halves of what it had been sent
+for, unreported and one budget-exhaustion away from being lost.
+
+**So the citation is not the enforcement.** A brief that says "write
+incrementally" catches the agent that forgets; it does nothing about the agent
+that stops making progress and therefore has nothing to write. The two look
+identical from outside: a live process and a growing log.
+
+**Enforcement point, added the same day:** `dispatch.py status` now flags a
+live agent on two independent signals, since either alone lies. First, the
+deliverable is untouched for 30 minutes while the log keeps moving. Second,
+the log repeats one file-create diff 40 times or more, which is the signature
+of a loop rather than exploration. It reports and never kills, because a
+stalled agent is often recoverable: T131's was.
+
+**Provenance:** `dev/JOURNAL.md`, the `[L3.32-T12]` and `[L3.32-T131]` entries.
 
 ## Adding an entry
 

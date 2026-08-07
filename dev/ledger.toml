@@ -103,11 +103,23 @@ the table.
 # retirement crossings at a stroke.
 # ---------------------------------------------------------------------------
 
-[[retire]]
-prefix = "src/L/Godel/"
-why = "no surviving chapter imports it; the fine-structure literature is J-only"
-authority = "D18"
-
+# EXECUTED AND REMOVED 2026-08-07: the L.Godel prefix, L.WellOrder.Tree and
+# L.Rud.StepInL. [L3.32-T122] archived all sixteen masters and commit b06822e
+# carried them, so `git ls-files src/` no longer lists them and their
+# declarations pointed at nothing. `ledger.py --check` caught that within
+# minutes of the commit, which is exactly what the "verifies every one still
+# exists" rule is for: a retire row is a PENDING intention, and once it is
+# carried out the row is stale, not historical. The archival's record lives in
+# dev/ARCHIVE.md, where it belongs.
+#
+# THE REMOVAL ITSELF MOVES NOTHING: `tracked_masters()` reads `git ls-files
+# src/`, which stopped listing these paths at the commit, so the matcher had
+# nothing to subtract either way and the rows were failing an existence check,
+# not carrying a number. Standing DID move at that commit, 18,464 to 18,774
+# over 124 masters to 109, and that rise is L.Rud.StepStory entering the
+# tracked total as a new survivor. Two changes at one commit; they are
+# separate and are recorded separately.
+#
 [[retire]]
 prefix = "src/L/Coding/"
 except = ["src/L/Coding/Base.lagda.md"]
@@ -123,16 +135,6 @@ authority = "D18"
 path = "src/L/Hierarchy.lagda.md"
 why = "consumed only by the retiring Choice chapters"
 authority = "D18"
-
-[[retire]]
-path = "src/L/WellOrder/Tree.lagda.md"
-why = "its only consumer (Godel/Name) retires"
-authority = "D18"
-
-[[retire]]
-path = "src/L/Rud/StepInL.lagda.md"
-why = "rewritten in ideal form and archived wholesale, not kept on a survivor-consumes warrant"
-authority = "D17 + D18"
 
 # ---------------------------------------------------------------------------
 # Remaining work. Every row carries its provenance and its calibration class.
@@ -176,8 +178,30 @@ provenance = "_build/l3.32-t51-report.md; _build/l3.32-t64-report.md; _build/l3.
 #
 # The remainder after [T125]'s gate and this build is ~553-673 naive centred
 # near 610, against T125's ~450-550, and the up-shift is entirely the shell.
-# B4, the segments/chain/carve, is now the dominant x3 term and the only one
-# left outside its band.
+#
+# THEN [T127] GATED B4, 2026-08-07, green at the first limit at 346 content
+# lines against its 200-320 band, and the first-instance remainder moved to
+# ~699-726 naive centred near 712. The up-shift of ~100 has two named causes,
+# THEN [T128] priced the sixth clause and the first-instance remainder moved
+# again, to ~1147-1214 naive and ~1418-1565 calibrated: the clause machinery
+# is +353 measured, the story seam +15 measured, and the general carve's
+# limit-index work is +80-120 as a HYPOTHESIS, which is now the widest
+# unmeasured term. The probe that would measure it is the honest segment at
+# beta-0, the graph exercise T128 deliberately did not build.
+#
+# [T127]'s own up-shift of ~100 had two named causes,
+# both deliveries the L-carrier lacks and HF had: O6's finite-table closure
+# (+79, built from Lval since a limit L-stage is not rud-closed by
+# construction, where HF had finSetMem delivered) and the story decode seam
+# (+27, delivered at HF as aSt1-ok).
+#
+# HOW MUCH OF HF TRANSFERRED, which is the number that prices the general
+# build: ~230 of HF's carve-section lines port with at most an Lset/Sset
+# substitution and a decode swap, ~79 are genuinely new and ~27 are the
+# story seam. Two of the three HF proofs port at 85 to 90 percent; the one
+# re-derivation is the PLACEMENT half, exactly where the carriers differ.
+# NOTHING ported line-for-line and surprised green, which is the outcome P-l
+# predicts and the reason the brief forbade quiet porting.
 
 [[remaining]]
 id = "carried-sequence"
@@ -187,7 +211,7 @@ naive_high = 1720
 calibrated_low = 2000
 calibrated_high = 3900
 klass = "mixed x1.3 / x3"
-gate = "T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound. [T125] GATED below-lim at the first limit 2026-08-06 and returned RED AT THE LINE BUDGET WITH THE TARGET LANDED: Sset-omega in Lset (+omega omega) is PROVEN in 269 probe lines, no postulate, no hole; the kit instantiates at the L-stage carrier RUN rather than read, closing T90's gap; and NEITHER wall T90 named fired. A THIRD wall did, and it is a size wall: O4, the S-story's one-way successor clause as an object formula at the carrier, measures ~200-300 naive against T90's 60-120 band, 2 to 3 times over, and it is the dominant term. First-instance band re-measured at ~450-550 naive, ~115 of it built in the gate."
+gate = "T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound. [T128] GATED THE SIXTH CLAUSE 2026-08-07: EXPRESSIBLE. The limit clause is an object formula over the carrier in the kit's language with a two-way decode, built and checked at the first carrier where it has content (beta-0 = +omega a-0, with the limit index a-0 = +omega empty below it, since omega itself has no limit ordinals below and cannot host the test). THE T84 OBSTRUCTION DOES NOT TRANSFER, and the distinction is the finding: the xi-quantifier IS bounded inside the carrier, and Delta-0 certifiability was the CONDENSATION consumer's requirement, not this one's. A future Delta-0 consumer would hit T84's wall; the below-lim consumer does not. It needed no scratch tree at all, because the clause reads the limit predicate through bounded quantifiers and avoids the archived graph layer entirely. Measured at 353 content lines, carrier-generic in effect (nothing in the machinery names the concrete carrier, so it re-instantiates for ~10 lines rather than re-deriving). [T127] GATED B4 2026-08-07 and returned GREEN AT THE FIRST LIMIT WITH A REFUTATION AT GENERAL BETA. All three obligations build at Lset omega (O7 the chain 52 lines, O6 the segments 206, O8 the family equality 88), and the D-10 check found the recorded O7 and O8 are FALSE at general beta: the delivered one-way story carries NO LIMIT CLAUSE (the kit's Def-step clause is true-dot, LevelKit:189; LevelSigma.aSt1 is five clauses without one, :727-728), so below a general limit a witness may put an ARBITRARY value at a limit index without violating pairhood, single-valuedness, the zero clause, the exact domain or the one-way successor clause, which constrains successor indices only. The chain does not force x = Sset a there and the carve overshoots. The first limit is green precisely BECAUSE omega has no limit ordinals below it. The general transfer needs a SIXTH clause, value at a limit index equals the union of the values below: a named, priced addition inside the x3 term, not a rebuild. Same class as T65's refutation, and the second time this route's price has turned on the story's clause shape. [T125] GATED below-lim at the first limit 2026-08-06 and returned RED AT THE LINE BUDGET WITH THE TARGET LANDED: Sset-omega in Lset (+omega omega) is PROVEN in 269 probe lines, no postulate, no hole; the kit instantiates at the L-stage carrier RUN rather than read, closing T90's gap; and NEITHER wall T90 named fired. A THIRD wall did, and it is a size wall: O4, the S-story's one-way successor clause as an object formula at the carrier, measures ~200-300 naive against T90's 60-120 band, 2 to 3 times over, and it is the dominant term. First-instance band re-measured at ~450-550 naive, ~115 of it built in the gate."
 provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52 entries"
 
 [[remaining]]
@@ -215,15 +239,65 @@ provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 
 # Re-priced downward 2026-08-05 after [T72] removed SatSets from the retirement set:
 # three of the nine crossings (OrderFormula, Bridge, DefInJ, all on SatSets) dissolve
 # without any work at all, because the module they cross to is no longer condemned.
+# RE-PRICED 2026-08-07 under ruling D31, after [T129] refuted T67's band and
+# [T130] refuted the cheapest escape. THEN RE-PRICED AGAIN THE SAME DAY, by
+# [L3.32-T132], D31's own D22 gate, which came back RED on the estimate D31
+# was ruled on. THE BAND BELOW CARRIES THE GATED FIGURE, NOT D31's.
+#
+# What the gate measured. It built ONE adequacy arm end to end, the
+# description-level two-directional adequacy of DefAt, re-derived fresh
+# against the surviving defSet/𝒟ₒ interface: 174 non-blank lines, 21.7 s cold,
+# exit 0, no postulate and no hole. THE ARM CLOSED GREEN. What failed is the
+# CLASS of the 700-900 estimate around it: arm plus the eleven other counted
+# arms plus the shared frame is ~1,008 lines on the most favourable reading,
+# ~1,630-1,940 once the graph arm's structurally required tail is priced fresh,
+# and ~2,350 by the brief's own extrapolation model.
+#
+# THE STRUCTURAL REASON, which is why this is not a bad guess but a wrong
+# class. The estimate's arm list includes the graph reading, and
+# graphAt-holds/graphAt-unique are proved THROUGH the table/slot/sound/unique
+# machinery (Powerset:354-400, via Slot:262, Sound:1038, Unique:884). That tail
+# is the formula-level internalization itself: the object formula must say "v
+# is the value at code c over w" as ONE formula, which is the twelve-clause
+# table. No defSet-based formula-level statement avoids it, because the object
+# language's quantifiers range over sets and not over the host-level formula
+# index family. T130 named that obstruction; T132 confirmed it structurally by
+# needing the delivered graph theorems verbatim. A term that requires a
+# ~1.9k-delivered support is not a 700-900 term.
+#
+# Build A therefore stands at ~2.0-2.5k naive, ~2.6-3.2k calibrated, against
+# D31's 1.1-1.5k: over by 0.5 to 1.0k naive, concentrated in the one term the
+# gate was sent to measure. THIS IS NOT A ROUTE CHANGE and makes no claim
+# about the campaign route; it is exactly the arithmetic D22 exists for, and
+# it fired before the block was funded rather than after.
+#
+# BLOCK 1 IS LANDED, 2026-08-07 by [L3.32-T133]: src/L/TowerGraph.lagda.md,
+# 304 non-blank in-fence lines, green, both linters clean, and ZERO retiring
+# imports, verified by the orchestrator import by import. It does not even
+# need L.Coding.Base, which the permitted anchor set allowed.
+#
+# ITS MEASURED SIDE EFFECT IS THE PART WORTH READING. The same arm that cost
+# [T132] 21.7 s cold with the cone imported transparently, 60 percent of it in
+# two truncation branches, re-checks at 2.7 s module-cold behind the abstract
+# frame, with the I-4 spot falling from 5,413 ms to 15 ms. The tail's seconds
+# are not free; they move to the instantiating block's own check, which is
+# where P-k says they belong: normalized exactly once instead of once per arm.
+# The frame does not write the tail, it pins its contract, so the tail's LINE
+# estimate is unchanged at 620-930.
+#
+# Remaining on T132's own accounting: the other eleven arms ~711, the
+# table/slot/sound/unique tail 620-930 fresh-compressed, the remaining formula
+# text ~145-175, and the step/approx/Lset-only region ~130.
+
 [[remaining]]
 id = "retirement-surgery"
-title = "The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20)"
-naive_low = 620
-naive_high = 1170
-calibrated_low = 810
-calibrated_high = 1520
+title = "The retirement surgery: four content re-homes across the boundary, plus the wiring (archival per D20). Build A is the internalization written fresh, per D31"
+naive_low = 2440
+naive_high = 3320
+calibrated_low = 3200
+calibrated_high = 4300
 klass = "x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part"
-gate = "T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint"
+gate = "[L3.32-T130] then REFUTED the cheapest hoped-for escape, read-only, 2026-08-07: the two crossings CANNOT ride the rud-side story the campaign is already funding. Two decisive reasons. (1) THE INDEX QUESTION: the rud side delivers per-step and per-family content at a STAGE carrier, while the crossing needs a two-slot Formula whose slot 0 is the value and slot 1 is the index, satisfied at both the ambient and the inner reading at the CLASS carrier; the two-slot wiring and its class-level decode exist nowhere on the rud side. (2) THE TOWER MISMATCH, which is the deeper one: StepStory's successor clause concludes b equals step c, the S-TOWER step, not the L-tower step 𝒟ₒ, and LevelSigma's powRel equals the definable-powerset relation only at a rud carrier, never at the class L. The chain concludes x equals Sset a, not Lset a. So the below-lim spend does NOT pay twice. T130 also priced the defSet re-statement and found THE OBJECT-VERSUS-META GAP IS THE WHOLE COST: a meta-level sett has no satisfaction and no second reading, so it cannot be the object of TransferL or ValueIsL, and the syntax-as-index-set trick that makes defSet cheap at the meta level is unavailable inside an object formula. That option is not an alternative to the ideal form; it IS the natural shape of its 700-900 line adequacy piece, inside the same band. BAND REFUTED 2026-08-07 by [L3.32-T129], which STOPPED at its cone map rather than build. T67 priced crossings 1+2 at 0.18-0.30k naive on a delivered slice of 242 in-fence lines; T129 re-measured that same slice at 243, so the slice was right and WHAT WAS WRONG IS THAT THE SLICE WAS TREATED AS THE WHOLE. LsetGraphAt is a two-line formula, but its definitional cone bottoms out in the twelve satisfaction clauses, closedAt/shapedAt, the code machinery and DefAt, across Model, Graph, CodeSet, Shape and Powerset; Lset-only's proof cone reads StepAt and ApproxAt back through DefAt's adequacy, which IS the satisfaction-internalization bridge (Sat, defSet-Sat, keyBridge, and the table/slot/sound/unique machinery behind them). Every one of those homes is itself in the retirement set, so the content cannot be re-homed by porting two names: THE RE-HOME IS THE INTERNALIZATION CONE. Measured: 2,105 in-fence lines in the directly measured regions, 6,381 as the cluster upper bound, against a 500-line stop. D17 comparison run: the ideal form (formula definitions 250-350, DefAt and graph adequacy 700-900, the step/approx/Lset-only region ~130) is 1.1-1.5k naive and the port is 2.1k+, so the ideal form wins, and BOTH exceed the stop by 2x to 4x. Build A alone is therefore larger than this entire booked row. The three compression levers were priced and refused: the ambient-layer skip is ~20 lines, the Fin specialization at most 60-80, and writing the closed sentence directly does not delete content, it inlines it and recreates the alias-versus-expansion conversion walls the Sequence chapter already measured and avoided. THE BAND BELOW IS STALE AND AWAITS AN OWNER RULING. Prior gate, still true as far as it went: T67 (returned, measured): the nine crossings are all real, none is a re-export, and they collapse into four re-home builds because they cluster on three shared objects. Build A the L-tower graph content, Build B the rud satisfaction cone, Build C the finite-tally harvest, plus the Hull order (gated on the bridge) and the wiring. The AC leg books ZERO here: it is the Model re-point already inside the choice-rehome row, and counting it twice would inflate the endpoint"
 provenance = "_build/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is _build/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
 
 [[remaining]]
