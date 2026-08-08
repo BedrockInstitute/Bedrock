@@ -1657,6 +1657,34 @@ small: the same two dispatches in the same order, with a consumer whose
 repair had NOT been measured, would have left pending work with no route to
 content that is frozen by ruling.
 
+### D-26. A well-founded key on a tower needs generation data, or it needs syntax
+
+**Rule:** When a route must well-order a cumulative tower's stage, ask first
+what the stage's members CARRY. A stage built as the values of finitely many
+total operations carries its own generation data, so a well-founded key exists
+with NO syntax at all: the operation index, then the arguments, ordered
+recursively. A stage built as a definable power carries nothing: its members
+are sets, not constructions, so the only well-founded key is the DEFINING
+FORMULA, and that single choice drags in codes, an order on codes, and
+satisfaction. **The difference is not a matter of technique or taste, and no
+amount of cleverness moves it**: the syntax-free candidate on the definable
+side, least symmetric difference, is refuted by an explicit descending chain
+(`Xₙ = {n, n+1, ...}`).
+
+**Measured ([L3.32-T203], 2026-08-08):** pricing both shapes from the rewrite
+side, the crossing route costs 5,880-6,860 naive marginal and the
+order-supplier route costs 10,000-11,000. Not crossing costs about +4.1k
+naive. The campaign had carried the question as an open architectural
+preference for four days; it is a structural fact about the two towers.
+
+**When it bites:** any route decision that moves a well-ordering between a
+rud-style tower and a definability-style tower, in either direction. It is
+also the reason `L ⊨ AC` on the rud route pays for a bridge at all.
+
+**Provenance:** `_build/l3.32-t203-route.md` sections 1 to 3;
+`src/L/Rud/Order.lagda.md:329-332`; `src/L/Choice/Order.lagda.md:184-187`.
+
+
 ### C-1. Two conversations must not share a worktree
 
 **Rule:** Two conversations must not share a worktree; give the second one its
@@ -2057,7 +2085,7 @@ landed wrong split would have cost the naturalness condition.
 
 ## Adding an entry
 
-Take the next free ID under the series (P-k, R-41, T-3, I-10, D-25, C-24), cite
+Take the next free ID under the series (P-k, R-41, T-3, I-10, D-27, C-24), cite
 the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
