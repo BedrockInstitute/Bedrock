@@ -599,7 +599,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T177 | Adversarial review: break the F2 finding before it is funded | HOLDS-WITH-EDGES, four edges priced; the net re-derives to -1,018 to -1,184 | `_build/l3.32-t177-report.md` |
 | L3.32-T178 | F2 block 1: the extraction, the pin frame, the sixteen equations | LANDED, 328 of 350: L.TowerKit born; Bridge falls 8.2 s cold; all green | `_build/l3.32-t178-report.md` |
 | L3.32-T179 | D22 probe: the carried order-story's successor clause (F3) | GREEN at 135 of 150: both T161 walls dissolve; the slice re-prices, calibrated top halves | `_build/l3.32-t179-report.md` |
-| L3.32-T180 | F2 block 2: Arms rebuilds over StepGraph | DISPATCHED 2026-08-08 | `_build/l3.32-t180-report.md` |
+| L3.32-T180 | F2 block 2: Arms rebuilds over StepGraph | LANDED, net -83 lines; Bridge cold falls 55 s (-34%); 64 signatures byte-identical | `_build/l3.32-t180-report.md` |
 | L3.32-T181 | JOURNAL entries T163 to T180, the F-series day | DELIVERED. 18 of 18 entries, insertions only, lint green | `_build/l3.32-t181-report.md` |
 | L3.32-T182 | D22 gate: the general-beta transfer at a second limit carrier | DISPATCHED 2026-08-08 | `_build/l3.32-t182-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |

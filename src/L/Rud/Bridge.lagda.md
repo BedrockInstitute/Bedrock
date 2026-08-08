@@ -22,35 +22,29 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
 
 module L.Rud.Bridge {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (A : V ℓ) where
 
-open import FOL.ZFStructure using ( module hPropStructure; Transitive )
+open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; var; con; _∈̇_; _∧̇_; ⊤̇ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧ )
-import FOL.Semantics
+  ( Formula; ⊤̇ )
 open import V.Hierarchy {ℓ} using
   ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ} using
-  ( IsOrd; Lset; Lset-out; Lset-mono; Lset-layer; layer-trans
+  ( IsOrd; isTransV; Lset; Lset-out; Lset-mono; Lset-layer; layer-trans
   ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; isL; Lset→isL )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc )
-open import L.Rud.Ops {ℓ} using ( F0; F0-spec; F1; F2; F3; F4; F5; F6; F7 )
+open import L.Rud.Ops {ℓ} using ( F0 )
 open import L.TowerKit {ℓ} lem A using
   ( ext-⊆; empty-⊆; Ltr; 𝒟ₒ⊆Lsuc; Lpair; ValuesInU; suc⁴ )
-open import L.Rud.Images {ℓ} using ( F8; F10; left; right; module F15Of )
-open import L.Rud.Describe {ℓ} using
-  ( module F0Desc; module F1Desc; module F2Desc; module F3Desc; module F4Desc
-  ; module F5Desc; module F6Desc; module F7Desc; module F8Desc
-  ; module F10Desc )
+open import L.Rud.StepGraph {ℓ} lem A using ( module PinFrame )
+  renaming ( ∅∈Lset to ∅∈Lset-sg )
 open import L.Rud.OrdBlocks {ℓ} lem using
   ( sucIter; sucIter-ord; +ω; +ω-in; +ω-out; +ω-mem; +ω-ord; +ω-limit )
 open import L.Rud.Step {ℓ} lem A using
   ( Op16; op0; op1; op2; op3; op4; op5; op6; op7; op8; op9; op10; op11; op12
-  ; op13; op14; op15; Fof; Fof-f0; Fof-f1; Fof-f2; Fof-f3; Fof-f4; Fof-f5
-  ; Fof-f6; Fof-f7; Fof-f8; Fof-f9; Fof-f10; Fof-f11; Fof-f12; Fof-f13
-  ; Fof-f14; Fof-f15; F15A; singl≡pair
+  ; op13; op14; op15; Fof; Fof-f0; Fof-f1; Fof-f5; Fof-f6; Fof-f10
+  ; Fof-f15; singl≡pair
   ; Sset; Sset-trans; Sset-out; Sset-mem; Sset-suc; Sset-in; Sset-mono
   ; Jset; Jset-rud; limit-succ-mem
   ; step; step-out; StepArm; arm-member; arm-self; arm-image )
@@ -59,7 +53,6 @@ open import L.Rud.OrdArith {ℓ} lem using
 open import L.Ordinal {ℓ} using ( suc-ord; mem-ord; setUnion-ord )
 open import L.Rud.ClassJ {ℓ} lem A using ( isJ; Jset→isJ )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri; Tri )
-open import L.Rud.Switch {ℓ} lem A using ( module Descr; module Hops )
 open import L.Rud.SatSets {ℓ} lem A using ( module Sat )
 
 open import Cubical.Data.Nat using ( ℕ )
@@ -146,139 +139,60 @@ Ldef→J β γ limγ L∈J x x∈𝒟 =
 The junk absorption asks the opposite question to the switch chapter's: not
 whether a value of the sixteen operations sits inside one closed level, but
 whether it is **definable** over a transitive set that already holds both
-arguments. Over a level the description chapter's arms were never needed for
-plain arguments, because the level's own rud closure answered first; here there
-is no such closure to lean on, so every arm is the genuine description. The
-statement is the description chapter's `Arm`{.Agda} shape at an arbitrary
-transitive carrier: given that the value is a subset of the carrier, produce a
-formula whose definable subset is that value. Six of the sixteen are pairs of
-two named sets and go through the pairing arm, and the relativization slot is
-the one side condition, exactly as in the level chapter.
+arguments. Over a level no description arm was ever needed for plain
+arguments, because the level's own rud closure answered first; here there is
+no such closure to lean on, so every arm is the genuine description. The
+statement is the graph layer's `Arm`{.Agda} shape at an arbitrary transitive
+carrier: given that the value is a subset of the carrier, produce a formula
+whose definable subset is that value. The sixteen arms are read off the graph
+layer's pin frame and its sixteen defSet equations at the carrier, pairing
+through the layer-free F0 arm, and the empty set's membership in the carrier
+is the one telescope addition, exactly as the graph layer delivers it.
 <!--zh-->
-垃圾吸收所问与领悟章相反：不是问十六运算的某个值是否落在某个封闭的层里，而是问它在一个已经收下两个实参的传递集上是否**可定义**。在层上，平实参从来用不到描述章的诸臂，因为层自身的初步闭包先一步作答；此处没有那样的闭包可倚，故每条臂都是货真价实的描述。陈述取描述章 `Arm`{.Agda} 的形状，但落在任意传递载体上：给定该值是载体的子集，造出一条公式，其可定义子集恰是该值。十六个中有六个是两个指名集合之对，走配对臂，而相对化槽是唯一的附带条件，与层章完全一致。
+垃圾吸收所问与领悟章相反：不是问十六运算的某个值是否落在某个封闭的层里，而是问它在一个已经收下两个实参的传递集上是否**可定义**。在层上，平实参从来不需要任何描述臂，因为层自身的初步闭包先一步作答；此处没有那样的闭包可倚，故每条臂都是货真价实的描述。陈述取图层 `Arm`{.Agda} 的形状，但落在任意传递载体上：给定该值是载体的子集，造出一条公式，其可定义子集恰是该值。十六条臂在载体处从图层的钉框及其十六条 defSet 等式读出，配对经无图层 F0 臂，而空集在载体中的成员隶属是唯一的望远镜新增，与图层交付时完全一致。
 <!--/-->
 
 ```agda
-module Arms (C : S) (Ctr : Transitive 𝒮ᵥ (λ x → x ∈ˢ C)) where
-
-  module Ds = Descr C Ctr
-  module SemC = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
-  open SemC.At (⟪ C ⟫) (⟪ C ⟫↪) using ( _⊨_ )
+module Arms (C : S) (Ctr : isTransV C) (∅∈C : ⟨ ∅ ∈ˢ C ⟩) where
 
   Arm : S → Type (ℓ-suc ℓ)
   Arm W = ((v : S) → ⟨ v ∈ˢ W ⟩ → ⟨ v ∈ˢ C ⟩)
-        → Σ[ Φ ∈ Formula ⟪ C ⟫ 1 ] (Ds.Defu.defSet Φ ≡ W)
+        → Σ[ Φ ∈ Formula ⟪ C ⟫ 1 ] (DefOf.defSet C Φ ≡ W)
 
   reshape : {W W' : S} → W ≡ W' → Arm W' → Arm W
   reshape {W} {W'} e f sub = r .fst , r .snd ∙ sym e
     where
-    r : Σ[ Φ ∈ Formula ⟪ C ⟫ 1 ] (Ds.Defu.defSet Φ ≡ W')
+    r : Σ[ Φ ∈ Formula ⟪ C ⟫ 1 ] (DefOf.defSet C Φ ≡ W')
     r = f (λ v h → sub v (subst (λ t → ⟨ v ∈ˢ t ⟩) (sym e) h))
-
-  pairArm : (c d : S) → Arm (F0 c d)
-  pairArm c d sub = D.Φ₀ , D.F0-defSet≡
-    where
-    c∈ : ⟨ c ∈ˢ C ⟩
-    c∈ = sub c (F0-spec c d c .snd ∣ inl refl ∣₁)
-    d∈ : ⟨ d ∈ˢ C ⟩
-    d∈ = sub d (F0-spec c d d .snd ∣ inr refl ∣₁)
-    module D = F0Desc C c d c∈ d∈ Ctr
-
-  module F15C = F15Of A
-
-  relArm : (a : S) → ⟨ a ∈ˢ C ⟩ → ⟨ A ∈ˢ C ⟩ → Arm (F15A a)
-  relArm a a∈ A∈C sub = Φ , Ds.described (F15A a) Φ dΦ sub din dout
-    where
-    fibA : Σ[ m ∈ ⟪ C ⟫ ] (⟪ C ⟫↪ m ≡ A)
-    fibA = ∈-asFiber {a = A} {b = C} A∈C
-    fiba : Σ[ m ∈ ⟪ C ⟫ ] (⟪ C ⟫↪ m ≡ a)
-    fiba = ∈-asFiber {a = a} {b = C} a∈
-    Φ : Formula ⟪ C ⟫ 1
-    Φ = (var zero ∈̇ con (fiba .fst)) ∧̇ (var zero ∈̇ con (fibA .fst))
-    dΦ : Δ₀ Φ
-    dΦ = δ-∧ δ-∈ δ-∈
-    din : (v : S) → ⟨ v ∈ˢ F15A a ⟩ → ⟨ (v ∷ []) ⊨ Φ ⟩
-    din v h = ( subst (λ t → ⟨ v ∈ˢ t ⟩) (sym (fiba .snd)) (parts .fst)
-              , subst (λ t → ⟨ v ∈ˢ t ⟩) (sym (fibA .snd)) (parts .snd) )
-      where
-      parts : ⟨ v ∈ˢ a ⟩ × ⟨ v ∈ˢ A ⟩
-      parts = subst ⟨_⟩ (F15C.F15-spec a v) h
-    dout : (v : S) → ⟨ v ∈ˢ C ⟩ → ⟨ (v ∷ []) ⊨ Φ ⟩ → ⟨ v ∈ˢ F15A a ⟩
-    dout v _ (h₁ , h₂) = subst ⟨_⟩ (sym (F15C.F15-spec a v))
-      ( subst (λ t → ⟨ v ∈ˢ t ⟩) (fiba .snd) h₁
-      , subst (λ t → ⟨ v ∈ˢ t ⟩) (fibA .snd) h₂ )
 
   imgArm : ⟨ A ∈ˢ C ⟩ → (i : Op16) (a b : S)
          → ⟨ a ∈ˢ C ⟩ → ⟨ b ∈ˢ C ⟩ → Arm (Fof i a b)
-  imgArm hA op0 a b a∈ b∈ = reshape (Fof-f0 a b) (pairArm a b)
-  imgArm hA op1 a b a∈ b∈ = reshape (Fof-f1 a b) arm
+  imgArm hA i a b a∈ b∈ = go i
     where
-    module D = F1Desc C a b a∈ b∈ Ctr
-    arm : Arm (F1 a b)
-    arm sub = D.Φ₁ , D.F1-defSet≡
-  imgArm hA op2 a b a∈ b∈ = reshape (Fof-f2 a b) arm
-    where
-    module D = F2Desc C a b a∈ b∈
-    module H = Hops C a b a∈ b∈ Ctr
-    arm : Arm (F2 a b)
-    arm sub = D.Φ₂ , Ds.described (F2 a b) D.Φ₂ D.dΦ₂ sub
-      D.F2-desc-in (λ v _ h → H.F2-desc-out v h)
-  imgArm hA op3 a b a∈ b∈ = reshape (Fof-f3 a b) arm
-    where
-    module D = F3Desc C a b a∈ b∈
-    module H = Hops C a b a∈ b∈ Ctr
-    arm : Arm (F3 a b)
-    arm sub = D.Φ₃ , Ds.described (F3 a b) D.Φ₃ D.dΦ₃ sub
-      D.F3-desc-in (λ v _ h → H.F3-desc-out v h)
-  imgArm hA op4 a b a∈ b∈ = reshape (Fof-f4 a b) arm
-    where
-    module D = F4Desc C a b a∈ b∈
-    module H = Hops C a b a∈ b∈ Ctr
-    arm : Arm (F4 a b)
-    arm sub = D.Φ₄ , Ds.described (F4 a b) D.Φ₄ D.dΦ₄ sub
-      D.F4-desc-in (λ v _ h → H.F4-desc-out v h)
-  imgArm hA op5 a b a∈ b∈ = reshape (Fof-f5 a b) arm
-    where
-    module D = F5Desc C a b a∈ Ctr
-    arm : Arm (F5 a b)
-    arm sub = D.Φ₅ , D.F5-defSet≡
-  imgArm hA op6 a b a∈ b∈ = reshape (Fof-f6 a b) arm
-    where
-    module D = F6Desc C a b a∈ Ctr
-    module H = Hops C a b a∈ b∈ Ctr
-    arm : Arm (F6 a b)
-    arm sub = D.Φ₆ , Ds.described (F6 a b) D.Φ₆ D.dΦ₆ sub
-      D.F6-desc-in (λ v _ h → H.F6-desc-out v h)
-  imgArm hA op7 a b a∈ b∈ = reshape (Fof-f7 a b) arm
-    where
-    module D = F7Desc C a b a∈
-    module H = Hops C a b a∈ b∈ Ctr
-    arm : Arm (F7 a b)
-    arm sub = D.Φ₇ , Ds.described (F7 a b) D.Φ₇ D.dΦ₇ sub
-      D.F7-desc-in (λ v _ h → H.F7-desc-out v h)
-  imgArm hA op8 a b a∈ b∈ = reshape (Fof-f8 a b) arm
-    where
-    module D = F8Desc C a b a∈ b∈ Ctr
-    arm : Arm (F8 a b)
-    arm sub = D.Φ₈ , D.F8-defSet≡
-      (λ w w∈ₛ → ∈∈ₛ {a = w} {b = C} .fst
-        (sub w (∈∈ₛ {a = w} {b = F8 a b} .snd w∈ₛ)))
-  imgArm hA op9 a b a∈ b∈ =
-    reshape (Fof-f9 a b) (pairArm (⁅ a ⁆s) (⁅ a , b ⁆))
-  imgArm hA op10 a b a∈ b∈ = reshape (Fof-f10 a b) arm
-    where
-    module D = F10Desc C a b a∈ b∈ Ctr
-    arm : Arm (F10 a b)
-    arm sub = D.Φ₁₀ , D.F10-defSet≡
-  imgArm hA op11 a b a∈ b∈ = reshape (Fof-f11 a b)
-    (pairArm (⁅ left b ⁆s) (⁅ left b , pr a (right b) ⁆))
-  imgArm hA op12 a b a∈ b∈ = reshape (Fof-f12 a b)
-    (pairArm (⁅ left b ⁆s) (⁅ left b , pr (right b) a ⁆))
-  imgArm hA op13 a b a∈ b∈ = reshape (Fof-f13 a b)
-    (pairArm (left b) (pr (right b) a))
-  imgArm hA op14 a b a∈ b∈ = reshape (Fof-f14 a b)
-    (pairArm (left b) (pr a (right b)))
-  imgArm hA op15 a b a∈ b∈ = reshape (Fof-f15 a b) (relArm a a∈ hA)
+    fibA : Σ[ m ∈ ⟪ C ⟫ ] (⟪ C ⟫↪ m ≡ A)
+    fibA = ∈-asFiber {a = A} {b = C} hA
+    mA : ⟪ C ⟫
+    mA = fibA .fst
+    qA : ⟪ C ⟫↪ mA ≡ A
+    qA = fibA .snd
+    module P = PinFrame C Ctr mA qA ∅∈C a b a∈ b∈
+    go : (i : Op16) → Arm (Fof i a b)
+    go op0 = reshape (Fof-f0 a b) (λ _ → P.pinned op0 , P.F0-defSet≡)
+    go op1 = reshape (Fof-f1 a b) (λ _ → P.pinned op1 , P.F1-defSet≡)
+    go op2 = λ sub → P.pinned op2 , P.Fof-defSet≡ op2 sub
+    go op3 = λ sub → P.pinned op3 , P.Fof-defSet≡ op3 sub
+    go op4 = λ sub → P.pinned op4 , P.Fof-defSet≡ op4 sub
+    go op5 = reshape (Fof-f5 a b) (λ _ → P.pinned op5 , P.F5-defSet≡)
+    go op6 = reshape (Fof-f6 a b) (λ _ → P.pinned op6 , P.F6-defSet≡)
+    go op7 = λ sub → P.pinned op7 , P.Fof-defSet≡ op7 sub
+    go op8 = λ sub → P.pinned op8 , P.Fof-defSet≡ op8 sub
+    go op9 = λ sub → P.pinned op9 , P.Fof-defSet≡ op9 sub
+    go op10 = reshape (Fof-f10 a b) (λ _ → P.pinned op10 , P.F10-defSet≡)
+    go op11 = λ sub → P.pinned op11 , P.Fof-defSet≡ op11 sub
+    go op12 = λ sub → P.pinned op12 , P.Fof-defSet≡ op12 sub
+    go op13 = λ sub → P.pinned op13 , P.Fof-defSet≡ op13 sub
+    go op14 = λ sub → P.pinned op14 , P.Fof-defSet≡ op14 sub
+    go op15 = reshape (Fof-f15 a b) (λ _ → P.pinned op15 , P.F15-defSet≡)
 ```
 
 <!--en-->
@@ -307,7 +221,7 @@ Lval : (ζ : S) → ⟨ A ∈ˢ Lset ζ ⟩ → (i : Op16) (a b : S)
 Lval ζ hA i a b a∈ b∈ sub = 𝒟ₒ⊆Lsuc ζ (Fof i a b)
   (𝒟ₒ-intro (Lset ζ) (Fof i a b) ∣ r .fst , r .snd ∣₁)
   where
-  module Aζ = Arms (Lset ζ) (Ltr ζ)
+  module Aζ = Arms (Lset ζ) (Ltr ζ) (∅∈Lset-sg A ζ hA)
   r : Σ[ Φ ∈ Formula ⟪ Lset ζ ⟫ 1 ] (DefOf.defSet (Lset ζ) Φ ≡ Fof i a b)
   r = Aζ.imgArm hA i a b a∈ b∈ sub
 
