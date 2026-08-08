@@ -3236,6 +3236,38 @@ QUEUED for the first free Agda slot (`dev/PLAN.md:630`). The report file is unwr
 
 DISPATCHED, no verdict. The report is a skeleton at this writing (`_build/l3.32-t215-report.md:5-10`). The cure carries the profile in hand: block 2 is PARTIAL, the theorem closes at the first limit, the general STEP stays a parameter, and block 3 owes it (`_build/l3.32-t195-report.md:5-7,65-70`). Both watches fired: 948 lines against 900, and 216 s cold against 90, which projects the tree to about 607 s against the 498 gate (`_build/l3.32-t195-report.md:9-10,140-142,160-163`; `dev/PLAN.md:612`). The master is held out of the tree until the cure lands (`_build/briefs/l3.32-t215.md:8-11`).
 
+**`[T216]` JOURNAL ENTRIES T206 TO T215, THE CAMPAIGN DAY** (2026-08-08, `_build/l3.32-t216-report.md`).
+
+DELIVERED. 10 of 10 entries, insertions only, lint green.
+
+**`[T217]` BLOCK 3'S SCOPE, PRICED BEFORE IT IS FUNDED** (2026-08-08, `_build/l3.32-t217-report.md`).
+
+SPLIT REQUIRED; THE GATE BREAKS AT BOTH RATES. Block 3 prices at 1,011-1,261 naive and 1,314-1,639 calibrated (`_build/l3.32-t217-report.md:3`). Its seconds projection is 231-288 s uncured at 0.228 s per line and 64-80 s cured at the T215 target rate (`_build/l3.32-t217-report.md:23-25`). The tree lands at 836-893 s uncured and 513-529 s cured against the 498 s gate; the cured low end is 512.9 s, over by at least 14.9 (`_build/l3.32-t217-report.md:6-7`, `:125-126`). The split cuts at the pair family, and the halves meet at the `Segment` parameter telescope (`_build/l3.32-t217-report.md:55-57`, `:71-72`). Seconds, not lines, became the binding constraint (`dev/ledger.toml:1148-1149`).
+
+**`[T218]` THE WALL ARITHMETIC: CAN THE AC LANDING FIT 498 S?** (2026-08-08, `_build/l3.32-t218-wall.md`).
+
+The wall is 745-813 s uncured and 422-448 s cured against 498 s: uncured DOES NOT FIT, cured fits and TURNS ON T215's cure (`_build/l3.32-t218-wall.md:3`). The baseline is the measured 395.2 s tree (`dev/ledger.toml:1146`). Four terms carry no seconds figure and are EXCLUDED rather than guessed: the Q-lim residue master, the bridge landing, the W3 elimination slice and the choice re-home (`_build/l3.32-t218-wall.md:16-19`). Their line bands total 1,418-2,598 naive; at 0.063 s per line they add 89-164 s, against a cured headroom of 50-76 s (`_build/l3.32-t218-wall.md:42`). The uncured case is dead before those terms.
+
+**`[T219]` THE SECONDS DOCTRINE: WHAT MAKES A MASTER EXPENSIVE HERE** (2026-08-08, `_build/l3.32-t219-seconds.md`).
+
+Ten measured episodes reduce to five diseases (`_build/l3.32-t219-seconds.md:12`). The answer to the 21-60x gap is a CONTENT CLASS, not a defect: parameterized content checks near 0.01 s per line, instantiation content near 0.22 (`_build/l3.32-t219-seconds.md:85-97`, `:152-153`). Two laws were admitted: P-m, the check-cost rate is a content-class certificate, and P-n, satisfaction content at a concrete carrier is a payable floor (`dev/LESSONS.md:2249`, `:2272`). P-n forbids funding a cure for that floor.
+
+**`[T220]` TIME THE FOUR UNMEASURED LANDING TERMS, IN MASTER SHAPE** (2026-08-08, `_build/l3.32-t220-report.md`).
+
+MEASURED. The four holes total 29.69 s in master shape, three cold runs each, all CLEAN: Q-lim residue 9.12 s, bridge landing 1.84 s, W3 slice 1.80 s, choice re-home 16.93 s (`_build/l3.32-t220-report.md:6-8`). The corrected wall: uncured 775-842 s, dead at every rate against 498 s; cured 452-478 s, fits by 20-46 s on the measurements (`_build/l3.32-t220-report.md:8-10`). At the per-line rates the cured wall reads 465-526 s or 511-612 s, so the verdict turns on the unmeasured bulk's rate (`_build/l3.32-t220-report.md:11-13`). The floor is pinned at 29.69 s (`dev/ledger.toml:1167`).
+
+**`[T221]` THE PARAMETERIZATION QUESTION: CAN THE MASTER NEED LESS INSTANTIATION?** (2026-08-08, `_build/l3.32-t221-report.md`).
+
+RESHAPEABLE. The general STEP at a variable limit, with the induction hypothesis as a parameter, subsumes the first-limit construction (`_build/l3.32-t221-report.md:5-10`). Block 2's 948 lines become an instance of about 15-50 (`_build/l3.32-t221-report.md:8-10`); the master falls 898-933 lines, from 2,563-2,813 to 1,630-1,915 (`_build/l3.32-t221-report.md:112-114`). At the parameterized rate the master is about 20-34 s cold and the tree lands at about 409-423 s against 498 s, a margin of 75-89 (`_build/l3.32-t221-report.md:21`, `:101-103`). The class boundary (P-m) splits the general STEP from the a₀ instance (`_build/l3.32-t221-report.md:92-93`). The projection was a hypothesis: no measured episode states formulas at a bound-variable carrier (`_build/l3.32-t221-report.md:24-26`). The orchestrator STOPPED `[T215]` on this finding: P-n forbids funding a cure for a payable floor, and the reshape deletes the content that cure was working on (`dev/PLAN.md:613`). T215 exited with no final message; its diagnosis lives only in its log (`/tmp/t215-profile-cold.log`).
+
+**`[T222]` THE DECIDING RATE: WHAT DOES A GENERIC STEP COST PER LINE?** (2026-08-08, `_build/l3.32-t222-report.md`).
+
+MEASURED: 0.085 s per line, the mean of three CLEAN cold runs (`_build/l3.32-t222-report.md:4-6`, `:49-50`). The rate selects none of the three named projections: the tree lands at about 484-514 s against 498 s, clearing by 14 at the low end of the line band and failing by 16 at the high end (`_build/l3.32-t222-report.md:4-8`, `:79-80`). The profile puts 70 percent of the check in `storyW-out` and `storyW-in`, both named with written types: P-n's signature at the bound-variable carrier, about 2.6 times cheaper than the instantiation rate (`_build/l3.32-t222-report.md:10-13`, `:93-96`). The reshape buys seconds against the 0.22 s class and not against the 0.010-0.013 s class T221 hoped for (`_build/l3.32-t222-report.md:13-14`).
+
+**`[T223]` THE RESHAPE'S BUILD PLAN, WRITTEN AGAINST THE MEASURED RATES** (2026-08-08, no report on disk).
+
+DISPATCHED, no report. `_build/l3.32-t223-plan.md` is unwritten at this writing; the brief exists (`_build/briefs/l3.32-t223.md`), and the register records the dispatch only (`dev/PLAN.md:621`). The plan settles the order of operations, the class-boundary block split, the lift-or-rewrite sort, the per-block seconds budget and the verification claims (`_build/briefs/l3.32-t223.md:17-47`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
