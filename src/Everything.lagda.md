@@ -1220,8 +1220,13 @@ measurement. Wired chapter by chapter as the wave batches land.
   and the instantiator hands them over (`L.Rud.StepGraph` is the supplier in
   the tree). Built to the one-way
   form: the delivered two-way successor-value clause is too strong and forces
-  an infinite chain inside a finite member. No instance in the tree yet; the
-  StepInL rewrite supplies the first one.
+  an infinite chain inside a finite member.
+- `L.Rud.BelowLim`{.Agda}: the bridge's below-lim residue, stated as an
+  induction over the limit ordinals, so the fact at every smaller limit is
+  the hypothesis rather than a separate obligation. The chapter carries the
+  story predicate with its six clauses at a generic carrier, the carried
+  sequence, and the segment's membership, exact domain and limit clause at a
+  generic limit index.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1251,6 +1256,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
 - `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
 - `L.Rud.StepStory`{.Agda}：S-故事的单向后继子句，作为对象公式，且一次泛型到底。载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，故子句与诸图如何供给无关，由实例化方交出 (树中的供给方是 `L.Rud.StepGraph`{.Agda})。按单向形式建造：已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。
+- `L.Rud.BelowLim`{.Agda}：桥的 below-lim 残差，陈述为对极限序数的归纳，故每个更小极限处的事实是归纳假设而非另一条义务。本章载有通用载体处带六条子句的故事谓词、载运序列，以及段在通用极限索引处的隶属、精确定义域与极限子句。
 <!--/-->
 
 ```agda
@@ -1273,6 +1279,7 @@ import L.Rud.Bridge
 import L.Rud.DefInJ
 import L.Rud.SatTable
 import L.Rud.StepStory
+import L.Rud.BelowLim
 import L.TowerKit
 import L.Rud.StepGraph
 ```

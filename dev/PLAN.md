@@ -614,7 +614,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T189 | Arm C recon: the two surviving crossings into the choice tree | Band re-priced 180-310 naive with two itemized terms; Hull re-homes by the bridge route | `_build/l3.32-t189-report.md` |
 | L3.32-T192 | The naturalness review: do this week's cuts stand on their own? | 4 of 6 stand; 2 needed prose, all applied; five blurbs and the order repaired | `_build/l3.32-t192-report.md` |
 | L3.32-T190 | Build the deletion test: D36's judgment, runnable on demand | DELIVERED. Shadow 14,379, agrees with the split by import; guards exercised | `_build/l3.32-t190-report.md` |
-| L3.32-T191 | The below-lim master, block 1: shell, story, carried sequence | DISPATCHED 2026-08-08 | `_build/l3.32-t191-report.md` |
+| L3.32-T191 | The below-lim master, block 1: shell, story, carried sequence | LANDED. L.Rud.BelowLim, 604 of 650, 6.3 s cold against a 70 s stop, survivors only | `_build/l3.32-t191-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
 | L3.32-T155 | D36 gate G1: the fat audit of the shared part | Movable ~1,471-1,650 after the HF-imports-Finite catch; saves-now 757-930 stands | `_build/l3.32-t155-report.md` |
