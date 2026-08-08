@@ -2319,6 +2319,42 @@ it bundles a predicate with its object formula and its two decode directions,
 which is the shape of every story clause. The nested `Σ` is uglier to read and
 will be "cleaned up" into a record by anyone who does not know the price.
 
+### P-r. A fold-over-a-clause-list assembly costs about 3x the hand-written conjunction
+
+**The law.** Replacing a hand-written right-nested conjunction and its decode
+with a FOLD over a clause list is dearer at the check, by about a factor of
+three, because every consumer must unfold the fold and its list to see the
+type. The abstraction is good for lines and for reading. It is bad for
+seconds, and at a site where seconds bind it must not be used.
+
+**The measurement, 2026-08-09, `[L3.32-T242]`, three shapes at ONE site so the
+comparison is clean.** The carrier is `Lset γ` under the same telescope in each
+case.
+
+| shape | profile ms |
+|---|---:|
+| hand-written decode, five clauses | 7,242 |
+| hand-written decode, six clauses | 7,507 |
+| clause bundle plus kit aliases, six clauses | **22,011** |
+
+**The clause COUNT is not the driver and this is what makes the law usable.**
+The sixth clause adds 0.5 s to the hand-written shape. The SHAPE adds 14.5 s.
+So the cure is not fewer clauses; it is not folding.
+
+**Where it applies.** `[L3.32-T226]` built exactly this assembly as candidate
+C4 and it was kept for naturalness after measuring +72 lines and +0.85 s at
+its own sites. This law does not overturn that judgment, which was made on the
+line meter, but it adds the number C4 did not have: at a site where the
+assembly REPLACES a hand-written decode, it costs about 14.5 s. Do not
+propagate it into content that the wall gate prices.
+
+**The tension with "write it generic" is real and is resolved by threshold.**
+AGENTS.md names generic writing as the rule that has cost this project most,
+and it is right for lines and for re-instantiation. P-r is the exception, and
+it is narrow: a fold whose result type must be UNFOLDED by every consumer.
+`[L3.32-T239]`'s carrier-generic limit clause is not this shape and measured a
+saving; the clause-list assembly is.
+
 ### P-q. A line lever and a seconds lever are different levers; dedup buys lines, not seconds
 
 **The law.** Removing DUPLICATED content removes lines and almost no seconds.
