@@ -612,7 +612,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T195 | The below-lim master, block 2: the STEP, and the theorem closes | DISPATCHED 2026-08-08 | `_build/l3.32-t195-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
-| L3.32-T198 | D22 gate: the blockPowLim relation instance | DISPATCHED 2026-08-08 | `_build/l3.32-t198-report.md` |
+| L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
+| L3.32-T202 | Can the AC route avoid blockPowLim entirely? | DISPATCHED 2026-08-08 | `_build/l3.32-t202-report.md` |
 | L3.32-T199 | The carve-supset repair: is the general family equality feasible? | FEASIBLE at 592-1,052: a bounded family formula, and the false bridge never enters | `_build/l3.32-t199-report.md` |
 | L3.32-T200 | JOURNAL entries T188 to T199 | DISPATCHED 2026-08-08 | `_build/l3.32-t200-report.md` |
 | L3.32-T201 | The D36 decision brief: every term measured, what is the landing? | DISPATCHED 2026-08-08 | `_build/l3.32-t201-decision.md` |
