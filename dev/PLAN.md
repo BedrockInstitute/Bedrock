@@ -638,7 +638,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T240 | Re-measure the carried sequence with the generic clause: lines AND seconds | 589 nbl / 174.62 s / 0.297 per line: the 315 lines transferred, the second | `_build/l3.32-t240-report.md` |
 | L3.32-T241 | Profile the carried sequence's 174.62 s: where does the time go? | CONCENTRATED then NO-GO: top 11 carry 71.4 pct, all decode content at the carrier; g | `_build/l3.32-t241-report.md` |
 | L3.32-T242 | Two decode shapes, both bound-variable, 3.5x apart: why? | ARTIFACT: 0.085 was a slice rate, the content is 0.297; the miss is 303-311 s not 6-14; foun | `_build/l3.32-t242-report.md` |
-| L3.32-T243 | The two profiles nobody ran: Bridge 103.1 s and StepGraph 59.0 s | DISPATCHED 2026-08-09; 162.1 s of unmeasured floor against a 166 s gap | `_build/l3.32-t243-report.md` |
+| L3.32-T243 | The two profiles nobody ran: Bridge 103.1 s and StepGraph 59.0 s | NOT THERE: both CONCENTRATED, both NO-GO; Bridge's once-pair 78.8 s is P-l's floor,  | `_build/l3.32-t243-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
