@@ -1301,6 +1301,36 @@ seconds_miss_reading = "judge at the landing wall run; gate_note covers a miss o
 # that story is the port", is [T237]'s READING and no probe has attacked it. It
 # is the one claim whose refutation would move the picture, by 300 to 900 lines.
 carried_sequence_measured = "904 nbl / 186 s at the limit case alone; block A re-prices to 2,173-2,303"
+# [T238] ATTACKED THE "NO WAY AROUND IT" READING 2026-08-09: PARTLY AVOIDABLE.
+# THREE ESCAPES FAIL, and each failure is now a checked finding rather than an
+# assumption. A five-clause story does not suffice: the delivered five-clause
+# story serves a chain over numerals in omega, where no member is a limit and
+# the case is vacuous, but at a variable limit the indices below xi CAN be
+# limits, so the chain's limit case is real. The carrier cannot move: the
+# exact-domain bound reads at xi only when its ordinal is a member of
+# `Lset xi`, and a family over `Lset gamma` would land above the recursion. A
+# one-way decode does not suffice: the forward direction extracts the meta
+# clause and the backward encodes it, and the chain uses both.
+#
+# THE ESCAPE THAT WORKS IS A REFACTOR, NOT A DISCOVERY. The port's CONTENT
+# stays at the nested carrier; its 309-line RESTATEMENT does not. The probe's
+# port and the landed port at W are the same machinery modulo the carrier, and
+# the successor clause ALREADY solves this exact problem the right way:
+# `L.Rud.StepStory`'s `Clause` telescope is carrier-generic and is instantiated
+# at `src/L/Rud/BelowLim.lagda.md:253` and again at `src/ProbeT237.agda:164`.
+# The limit clause can follow that pattern. The saving is about 250-300 lines.
+# This is AGENTS.md's "write it generic" rule, which the project names as the
+# one that has cost it most, arriving at a site that skipped it.
+#
+# THE CONCLUSION DOES NOT FLIP. Block A moves from 2,173-2,303 to 1,873-2,053.
+# The AC meter would read about 16,308-16,488: still OVER the 16,000 cap by
+# 308-488. The tree still lands over the 498 s gate. The overage is smaller and
+# the route is unchanged.
+#
+# UNMEASURED AND SAID SO: the factored port's check cost at the instantiated
+# nested carrier. The 0.206 s per line is measured at the RESTATED port. P-l
+# forbids transferring it to the factored one. Re-measure at the site.
+port_refactor_saving = "250-300 lines, structurally proven by the successor clause's own telescope"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold

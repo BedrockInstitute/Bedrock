@@ -633,6 +633,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T235 | Hunt seconds in the 388.9 s tree base, not in block A | NOT THERE as a price: only 48-68 pct of the base has current figures; found the D30 screen's st | `_build/l3.32-t235-report.md` |
 | L3.32-T236 | Archive HF and Finite: the ruled removal whose condition is now met | ARCHIVED 1,290 lines (HF 664, Finite 626), byte-identical, catalog rewired by the | `_build/l3.32-t236-report.md` |
 | L3.32-T237 | Finish block A, delete the a-0 module, and measure the landing | STOPPED at the gate: GO but 904 nbl / 186 s for the limit case alone, 4.3x the floor;  | `_build/l3.32-t237-report.md` |
+| L3.32-T238 | Adversarial: is the nested-carrier port really unavoidable? | PARTLY AVOIDABLE: the clause must exist at the nested carrier, but 250-300 lines of resta | `_build/l3.32-t238-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
