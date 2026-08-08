@@ -1381,6 +1381,38 @@ block_a_reprojected = "1,896-2,026; meter 16,124-16,254 against the 16,000 cap"
 # need LESS instantiation, and that is a change of mathematical shape rather
 # than of where the code lives. No such shape is on the table today.
 carried_sequence_remeasured = "589 nbl / 174.62 s / 0.297 s per line; lines transferred, seconds did not"
+# [T241] PROFILED THOSE 174.62 s 2026-08-09 AND CLOSED THE SECONDS QUESTION
+# WITH AN INSTRUMENT. The orchestrator had closed it by assertion first, which
+# was premature: the profile had never been run.
+#
+# CONCENTRATED, not flat: the top 11 definitions carry 71.4 percent of the
+# 172,518 ms and the top 25 carry 74.5. Four families, every one of them
+# satisfaction content at the concrete carrier `Lset xi`: the story decode
+# aliases (36,647 ms), the pair-family decode (48,541), the rename-decode
+# (24,190) and the six-clause bundle (18,353).
+#
+# THE GUT SERIES PRICED THE CEILING, [T121]'s method: control 174.62 s, then
+# 137.62 with the story aliases postulated, 88.08 adding the pair-family
+# decode, 64.82 adding the rename-decode. So 109.80 s is removable IN
+# PRINCIPLE and 64.82 s is the floor that survives any postulate.
+#
+# THE VERDICT IS NO-GO AND IT IS THE HONEST KIND. The decodes ARE the
+# mathematical content; a build cannot postulate them, and the first gut
+# attempt proved the clause bundle load-bearing by failing outright
+# (`Conj (clProject storyWClauses) f !=< Sigma`). Every candidate law was
+# checked at the site and refuted: P-k finds no missing layer, R-38 no
+# unsealed birth site, P-l no unfolding tower (`Lset` is sealed at
+# `src/L/Constructible.lagda.md:221`), P-o no record, R-35 no union
+# extraction, and R-40's deep chains are CHEAP at 100-114 ms because the climb
+# is already in place. [T241] also corrected the orchestrator's brief: the
+# stage arithmetic reaches sucV-6, not sucV-8.
+#
+# SO THE SECONDS THRESHOLD CLOSES ON A MEASUREMENT. 174.62 s is the
+# instantiation price of the decode content at `Lset xi`. The only named
+# alternative is a bound-variable decode shape, which is a change of
+# mathematical shape and, per P-l, a hypothesis rather than a price until
+# somebody measures it.
+seconds_cure_verdict = "NO-GO, [T241]: concentrated in the decode content, ceiling 109.80 s, floor 64.82 s"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
