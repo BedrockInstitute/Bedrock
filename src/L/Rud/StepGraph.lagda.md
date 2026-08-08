@@ -32,7 +32,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
+open import V.Coding {ℓ} using ( pr; self∈singl; inl∈⁅,⁆; inr∈⁅,⁆ )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ} using
   ( isTransV; Lset; Lset-in; Lset-out; Lset-mono; 𝒟ₒ; 𝒟ₒ-intro )
@@ -56,7 +56,6 @@ open import L.Rud.Ops {ℓ} using
   ; F2-write; F3-write; F4-write; F6-write; F7-write )
 open import L.TowerKit {ℓ} lem A using
   ( ext-⊆; empty-⊆; Ltr; 𝒟ₒ⊆Lsuc; Lpair; ValuesInU; suc⁴; module F0Arm )
-open import L.Rud.Describe {ℓ} using ( module F10Desc )
 open import L.InitialSegment {ℓ} using ( _⟷_ )
 open import Cubical.Data.FinData.Base using ( Fin )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -2459,6 +2458,148 @@ module Values (C P T : S)
   valueMem op15 a b a∈ b∈ v h = up v (sub v (mem a v
     (subst ⟨_⟩ (F15C.F15-spec a v)
       (subst (λ w → ⟨ v ∈ˢ w ⟩) (Fof-f15 a b) h) .fst) a∈))
+```
+
+<!--en-->
+## The single-slice description
+
+The one fact this block consumes from the description layer is the slice
+description: the formula that carves `F10 x y` and the equation that closes
+it. It is copied here from `F10Desc` in `L.Rud.Describe`, reshaped onto this
+block's own pair atom and definable-subset frame, so the description layer's
+original can archive wholesale. The double-union tower enters once, only to
+place a slice member back into the carrier, which the tower offset below
+needs.
+<!--zh-->
+## 单切片描述
+
+本块从描述层消费的唯一事实就是切片描述：刻出 `F10 x y` 的公式与收束它的等式。它从 `L.Rud.Describe` 的 `F10Desc` 复制于此，重塑到本块自己的对原子与可定义子集框架上，于是描述层的原本可整体归档。二重并之塔只进入一次，为的是把一个切片成员放回载体，这正是下方塔偏移所需。
+<!--ja-->
+## 単一スライスの記述
+
+このブロックが記述層から消費する唯一の事実は、スライスの記述である。すなわち、`F10 x y` を刻む式と、それを閉じる等式である。それは `L.Rud.Describe` の `F10Desc` からここへコピーされ、このブロック自身のペア原子と可定義部分集合フレームの上に作り直される。これにより、記述層の原本は丸ごとアーカイブできる。二重和集合の塔が入るのは一度だけであり、それはスライスのメンバーを台へ戻すためである。下の塔オフセットがそれを必要とする。
+<!--/-->
+
+```agda
+module F10Desc (A x y : V ℓ) (x∈ : ⟨ x ∈ˢ A ⟩) (y∈ : ⟨ y ∈ˢ A ⟩)
+  (Atr : isTransV A) where
+  module K = LevelKit A Atr
+  open K public
+  module D = Desc A Atr
+
+  private
+    f0 : {n : ℕ} → Fin (suc n)
+    f0 = zero
+    f1 : {n : ℕ} → Fin (suc (suc n))
+    f1 = suc f0
+    f2 : {n : ℕ} → Fin (suc (suc (suc n)))
+    f2 = suc f1
+    f3 : {n : ℕ} → Fin (suc (suc (suc (suc n))))
+    f3 = suc f2
+
+  mₓ : ⟪ A ⟫
+  mₓ = ∈-asFiber {a = x} {b = A} x∈ .fst
+  qₓ : ⟪ A ⟫↪ mₓ ≡ x
+  qₓ = ∈-asFiber {a = x} {b = A} x∈ .snd
+  m_y : ⟪ A ⟫
+  m_y = ∈-asFiber {a = y} {b = A} y∈ .fst
+  q_y : ⟪ A ⟫↪ m_y ≡ y
+  q_y = ∈-asFiber {a = y} {b = A} y∈ .snd
+
+  F10Core : Formula ⟪ A ⟫ 4
+  F10Core = PK.prAt f2 f0 f3 ∧̇ (var f0 ≐ con m_y)
+  Φ₁₀ : Formula ⟪ A ⟫ 1
+  Φ₁₀ = ∃̇∈ (con mₓ) (∃̇∈ (var zero) (∃̇∈ (var zero) F10Core))
+
+  sat-out : (v : S) (v∈ : ⟨ v ∈ˢ A ⟩)
+          → ⟨ (PK.pt v v∈ ∷ []) ⊨ᵐ Φ₁₀ ⟩ → ⟨ v ∈ˢ F10 x y ⟩
+  sat-out v v∈ h = PT.rec (snd (v ∈ˢ F10 x y)) k1 h
+    where
+    k1 : Σ[ p ∈ SM ] (⟨ fst p ∈ˢ ⟪ A ⟫↪ mₓ ⟩
+                    × ⟨ (p ∷ PK.pt v v∈ ∷ []) ⊨ᵐ (∃̇∈ (var zero) (∃̇∈ (var zero) F10Core)) ⟩)
+       → ⟨ v ∈ˢ F10 x y ⟩
+    k1 (p , p∈mₓ , h₁) = PT.rec (snd (v ∈ˢ F10 x y)) k2 h₁
+      where
+      k2 : Σ[ w ∈ SM ] (⟨ fst w ∈ˢ fst p ⟩
+                      × ⟨ (w ∷ p ∷ PK.pt v v∈ ∷ []) ⊨ᵐ (∃̇∈ (var zero) F10Core) ⟩)
+         → ⟨ v ∈ˢ F10 x y ⟩
+      k2 (w , _ , h₂) = PT.rec (snd (v ∈ˢ F10 x y)) k3 h₂
+        where
+        k3 : Σ[ y₀ ∈ SM ] (⟨ fst y₀ ∈ˢ fst w ⟩
+                         × ⟨ (y₀ ∷ w ∷ p ∷ PK.pt v v∈ ∷ []) ⊨ᵐ F10Core ⟩)
+           → ⟨ v ∈ˢ F10 x y ⟩
+        k3 (y₀ , _ , h₃) = subst ⟨_⟩ (sym (F10-spec x y v)) pr∈x
+          where
+          p∈x : ⟨ fst p ∈ˢ x ⟩
+          p∈x = subst (λ X → ⟨ fst p ∈ˢ X ⟩) qₓ p∈mₓ
+          p≡ : fst p ≡ pr (fst y₀) v
+          p≡ = PK.prAt-out f2 f0 f3 (y₀ ∷ w ∷ p ∷ PK.pt v v∈ ∷ []) (h₃ .fst)
+          y₀≡y : fst y₀ ≡ y
+          y₀≡y = (h₃ .snd) ∙ q_y
+          pr∈x : ⟨ pr y v ∈ˢ x ⟩
+          pr∈x = subst (λ t → ⟨ t ∈ˢ x ⟩) (cong₂ pr y₀≡y refl)
+            (subst (λ t → ⟨ t ∈ˢ x ⟩) p≡ p∈x)
+
+  sat-in : (v : S) (v∈ : ⟨ v ∈ˢ A ⟩)
+         → ⟨ v ∈ˢ F10 x y ⟩ → ⟨ (PK.pt v v∈ ∷ []) ⊨ᵐ Φ₁₀ ⟩
+  sat-in v v∈ h = ∣ p , (p∈mₓ , ∣ w , (w∈p , ∣ y₀ , (y₀∈w , (prAt-sat , y₀≐y)) ∣₁) ∣₁) ∣₁
+    where
+    pr∈x : ⟨ pr y v ∈ˢ x ⟩
+    pr∈x = subst ⟨_⟩ (F10-spec x y v) h
+    p∈A : ⟨ pr y v ∈ˢ A ⟩
+    p∈A = Atr {x = x} {y = pr y v} pr∈x x∈
+    p : SM
+    p = PK.pt (pr y v) p∈A
+    p∈mₓ : ⟨ fst p ∈ˢ ⟪ A ⟫↪ mₓ ⟩
+    p∈mₓ = subst (λ X → ⟨ fst p ∈ˢ X ⟩) (sym qₓ) pr∈x
+    w∈p : ⟨ ⁅ y ⁆s ∈ˢ pr y v ⟩
+    w∈p = ∈∈ₛ {a = ⁅ y ⁆s} {b = pr y v} .snd (inl∈⁅,⁆ {a = ⁅ y ⁆s} {b = ⁅ y , v ⁆} refl)
+    w∈A : ⟨ ⁅ y ⁆s ∈ˢ A ⟩
+    w∈A = Atr {x = pr y v} {y = ⁅ y ⁆s} w∈p p∈A
+    w : SM
+    w = PK.pt (⁅ y ⁆s) w∈A
+    y₀ : SM
+    y₀ = PK.pt y y∈
+    y₀∈w : ⟨ y ∈ˢ ⁅ y ⁆s ⟩
+    y₀∈w = ∈∈ₛ {a = y} {b = ⁅ y ⁆s} .snd (self∈singl y)
+    prAt-sat : ⟨ (y₀ ∷ w ∷ p ∷ PK.pt v v∈ ∷ []) ⊨ᵐ PK.prAt f2 f0 f3 ⟩
+    prAt-sat = PK.prAt-in f2 f0 f3 (y₀ ∷ w ∷ p ∷ PK.pt v v∈ ∷ []) refl
+    y₀≐y : ⟨ (y₀ ∷ w ∷ p ∷ PK.pt v v∈ ∷ []) ⊨ᵐ (var f0 ≐ con m_y) ⟩
+    y₀≐y = sym q_y
+
+  private
+    u-v∈pr : (u v : V ℓ) → ⟨ ⁅ u , v ⁆ ∈ₛ pr u v ⟩
+    u-v∈pr u v = inr∈⁅,⁆ {a = ⁅ u ⁆s} {b = ⁅ u , v ⁆} refl
+
+    prR-in-⋃⋃ : (y u v : V ℓ) → ⟨ pr u v ∈ˢ y ⟩ → ⟨ v ∈ˢ (⋃ (⋃ y)) ⟩
+    prR-in-⋃⋃ y u v h = ∈∈ₛ {a = v} {b = ⋃ (⋃ y)} .snd
+      (union-ax (⋃ y) v .snd
+        ∣ ⁅ u , v ⁆ , (uv∈ₛ⋃y , (∈∈ₛ {a = v} {b = ⁅ u , v ⁆} .fst v∈uv)) ∣₁)
+      where
+      uv∈ₛ⋃y : ⟨ ⁅ u , v ⁆ ∈ₛ ⋃ y ⟩
+      uv∈ₛ⋃y = union-ax y (⁅ u , v ⁆) .snd
+        ∣ pr u v , (∈∈ₛ {a = pr u v} {b = y} .fst h) , u-v∈pr u v ∣₁
+      v∈uv : ⟨ v ∈ˢ ⁅ u , v ⁆ ⟩
+      v∈uv = ∈∈ₛ {a = v} {b = ⁅ u , v ⁆} .snd (inr∈⁅,⁆ {a = u} refl)
+
+    ⋃⋃-in-A : (X : V ℓ) → (X∈ : ⟨ X ∈ˢ A ⟩)
+             → (u : V ℓ) → ⟨ u ∈ˢ (⋃ (⋃ X)) ⟩ → ⟨ u ∈ˢ A ⟩
+    ⋃⋃-in-A X X∈ u h = PT.rec (snd (u ∈ˢ A)) step₁
+      (union-ax (⋃ X) u .fst (∈∈ₛ {a = u} {b = ⋃ (⋃ X)} .fst h))
+      where
+      step₁ : Σ[ s ∈ V ℓ ] ⟨ Cubical.Functions.Logic._⊓_ (s ∈ₛ ⋃ X) (u ∈ₛ s) ⟩ → ⟨ u ∈ˢ A ⟩
+      step₁ (s , s∈⋃X , u∈s) = PT.rec (snd (u ∈ˢ A)) step₂ (union-ax X s .fst s∈⋃X)
+        where
+        step₂ : Σ[ r ∈ V ℓ ] ⟨ Cubical.Functions.Logic._⊓_ (r ∈ₛ X) (s ∈ₛ r) ⟩ → ⟨ u ∈ˢ A ⟩
+        step₂ (r , r∈X , s∈r) = Atr {x = s} {y = u} (∈∈ₛ {a = u} {b = s} .snd u∈s)
+          (Atr {x = r} {y = s} (∈∈ₛ {a = s} {b = r} .snd s∈r)
+            (Atr {x = X} {y = r} (∈∈ₛ {a = r} {b = X} .snd r∈X) X∈))
+
+  wsub : (v : S) → ⟨ v ∈ˢ F10 x y ⟩ → ⟨ v ∈ˢ A ⟩
+  wsub v h = ⋃⋃-in-A x x∈ v (prR-in-⋃⋃ x y v (subst ⟨_⟩ (F10-spec x y v) h))
+
+  F10-defSet≡ : DefOf.defSet A Φ₁₀ ≡ F10 x y
+  F10-defSet≡ = D.described Φ₁₀ (F10 x y) wsub sat-in sat-out
 ```
 
 <!--en-->

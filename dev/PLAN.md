@@ -601,8 +601,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T179 | D22 probe: the carried order-story's successor clause (F3) | GREEN at 135 of 150: both T161 walls dissolve; the slice re-prices, calibrated top halves | `_build/l3.32-t179-report.md` |
 | L3.32-T180 | F2 block 2: Arms rebuilds over StepGraph | LANDED, net -83 lines; Bridge cold falls 55 s (-34%); 64 signatures byte-identical | `_build/l3.32-t180-report.md` |
 | L3.32-T181 | JOURNAL entries T163 to T180, the F-series day | DELIVERED. 18 of 18 entries, insertions only, lint green | `_build/l3.32-t181-report.md` |
-| L3.32-T182 | D22 gate: the general-beta transfer at a second limit carrier | DISPATCHED 2026-08-08 | `_build/l3.32-t182-report.md` |
-| L3.32-T183 | F2 block 3a: localize F10Desc, cut the last Describe edge | DISPATCHED 2026-08-08 | `_build/l3.32-t183-report.md` |
+| L3.32-T182 | D22 gate: the general-beta transfer at a second limit carrier | RED at 213 of 150: the transfer needs the row's own residue at the previous limit; band up ~1k | `_build/l3.32-t182-report.md` |
+| L3.32-T183 | F2 block 3a: localize F10Desc, cut the last Describe edge | LANDED, 109 of 130: the edge is gone, StepGraph green; the archival is unblocked | `_build/l3.32-t183-report.md` |
 | L3.32-T184 | Opus max-effort assessment: the F series' side effects on the GCH wing | DISPATCHED 2026-08-08 | `_build/l3.32-t184-gch-impact.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
