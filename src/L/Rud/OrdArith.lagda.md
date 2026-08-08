@@ -32,17 +32,19 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
 open import V.Model {ℓ} using ( ∈sucV-elim; self∈sucV )
 open import L.Constructible {ℓ} using ( IsOrd; isPropIsOrd )
-open import L.Ordinal {ℓ} using ( mem-ord )
+open import L.Ordinal {ℓ} using ( mem-ord; ω-ord; #∈ω )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Data.Sigma.Properties using ( Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Data.Sum.Properties using ( isProp⊎ )
 import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; module InfinitySet )
 open InfinitySet using ( sucV )
+module IS = InfinitySet {ℓ}
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
@@ -184,6 +186,37 @@ its inductive hypothesis an ordinal at each member.
 ```agda
 limit-mem-ord : (α : S) → ⟨ isLimit α ⟩ → (x : S) → ⟨ x ∈ˢ α ⟩ → IsOrd x
 limit-mem-ord α lim x x∈α = mem-ord {A = α} (isLimit-ord α lim) x x∈α
+```
+
+<!--en-->
+## The first limit at ω
+<!--zh-->
+## ω 处的第一个极限
+<!--/-->
+
+<!--en-->
+The limit predicate has one concrete instance in this chapter: `ω` is a
+limit. Zero is not `ω`: the empty set lies in `ω`, and the empty set has
+no members. And `ω` is not a successor: a hypothetical predecessor lies
+in `ω`, so it is a numeral; its successor is a numeral too, hence a
+member of `ω`; but that successor is `ω` itself, and regularity forbids
+self-membership.
+<!--zh-->
+极限谓词在本章有一个具体实例：`ω` 是极限。零不是 `ω`：空集位于 `ω` 中，而空集没有任何成员。`ω` 也不是后继：一个假想的前驱位于 `ω` 中，故它是某个数码；它的后继也是数码，从而是 `ω` 的成员；但那个后继就是 `ω` 自身，而正则性禁止自属。
+<!--/-->
+
+```agda
+limω : ⟨ isLimit IS.ω ⟩
+limω = (ω-ord , (ω-not-zero , ω-not-succ))
+  where
+  ω-not-zero : (IS.ω ≡ ∅) → Empty.⊥
+  ω-not-zero e = ∅-empty ∅ (∈∈ₛ {a = ∅} {b = ∅} .fst (subst (λ w → ⟨ ∅ ∈ˢ w ⟩) e (#∈ω zero)))
+  ω-not-succ : ⟨ isSucc IS.ω ⟩ → Empty.⊥
+  ω-not-succ (β , ordβ , e) = PT.rec Empty.isProp⊥ numeral-of (predecessor-mem β IS.ω e)
+    where
+    numeral-of : Σ[ k ∈ Lift ℕ ] (IS.# (lower k) ≡ β) → Empty.⊥
+    numeral-of (k , q) = ∈-irrefl IS.ω
+      (subst (λ w → ⟨ w ∈ˢ IS.ω ⟩) (cong IS.sucV q ∙ e) (#∈ω (suc (lower k))))
 ```
 
 <!--en-->

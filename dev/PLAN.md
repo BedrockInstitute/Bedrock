@@ -606,12 +606,13 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T183 | F2 block 3a: localize F10Desc, cut the last Describe edge | LANDED, 109 of 130: the edge is gone, StepGraph green; the archival is unblocked | `_build/l3.32-t183-report.md` |
 | L3.32-T184 | Opus assessment: the F series' effect on the GCH wing | NO TAX: costs the wing 41 lines, saves 1,290; the wing endpoint falls ~3.1-3.6k | `_build/l3.32-t184-gch-impact.md` |
 | L3.32-T185 | Statement-shape probe: below-lim as an induction over limits | GREEN at 139 of 150: the induction assembles and the T182 wall IS the hypothesis | `_build/l3.32-t185-report.md` |
-| L3.32-T186 | F1 execution: re-home the five lemmas from HF and Finite | DISPATCHED 2026-08-08 | `_build/l3.32-t186-report.md` |
+| L3.32-T186 | F1 execution: re-home the five lemmas from HF and Finite | LANDED 75 of 140, three homes green; REFUTED its own avoidance: the landing needs more | `_build/l3.32-t186-report.md` |
+| L3.32-T193 | D22 gate: the carve's own landing, without the identification | DISPATCHED 2026-08-08 | `_build/l3.32-t193-report.md` |
 | L3.32-T187 | The coverage audit: did this week's re-cuts lose AC content? | CLEAN, nothing untracked; seven citation and arithmetic defects found and applied | `_build/l3.32-t187-report.md` |
 | L3.32-T188 | JOURNAL entries T181 to T187 and the day's two measurements | DELIVERED. 7 of 7 entries, insertions only, lint green | `_build/l3.32-t188-report.md` |
 | L3.32-T189 | Arm C recon: the two surviving crossings into the choice tree | Band re-priced 180-310 naive with two itemized terms; Hull re-homes by the bridge route | `_build/l3.32-t189-report.md` |
 | L3.32-T192 | The naturalness review: do this week's cuts stand on their own? | DISPATCHED 2026-08-08 | `_build/l3.32-t192-report.md` |
-| L3.32-T190 | Build the deletion test: D36's judgment, runnable on demand | DISPATCHED 2026-08-08 | `_build/l3.32-t190-report.md` |
+| L3.32-T190 | Build the deletion test: D36's judgment, runnable on demand | DELIVERED. Shadow 14,379, agrees with the split by import; guards exercised | `_build/l3.32-t190-report.md` |
 | L3.32-T191 | The below-lim master, block 1: shell, story, carried sequence | DISPATCHED 2026-08-08 | `_build/l3.32-t191-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
