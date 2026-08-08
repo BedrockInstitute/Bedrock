@@ -585,9 +585,12 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T162 | The WellOrder.Base split: the SWO combinators | SPLIT. L.WellOrder.Combinators, 247 lines moved, C-23 clean; natSWO and pullSWO stay, AC reads them | `_build/l3.32-t162-report.md` |
 | L3.32-T163 | JOURNAL entries T148 to T162 and the three rulings | DELIVERED. 15 of 15 entries, +1,211 words, insertions only, lint green | `_build/l3.32-t163-report.md` |
 | L3.32-T164 | StepGraph block 2: the decodes for ops 0-7 | LANDED. 339 lines at rate x0.79, the first under-size block; master 843, ~1.8 s warm | `_build/l3.32-t164-report.md` |
-| L3.32-T165 | StepGraph block 3: the ops 8-15 decodes, dispatchers, graphs | DISPATCHED 2026-08-08 | `_build/l3.32-t165-report.md` |
-| L3.32-T166 | C-23 deep check: the Order and Coding/Base movable subsets | DISPATCHED 2026-08-08 | `_build/l3.32-t166-report.md` |
-| L3.32-T167 | The duplication sweep: content written twice in the AC closure | DISPATCHED 2026-08-08 | `_build/l3.32-t167-report.md` |
+| L3.32-T165 | StepGraph block 3: the ops 8-15 decodes, dispatchers, graphs | LANDED. 609 lines; the BigOr telescope closes; master 1,452, ~1.9 s warm | `_build/l3.32-t165-report.md` |
+| L3.32-T166 | C-23 deep check: the Order and Coding/Base movable subsets | Order MOVABLE 114, ordSWO and opIx stay; Base MOVABLE 46, shared until retirement | `_build/l3.32-t166-report.md` |
+| L3.32-T167 | The duplication sweep: content written twice in the AC closure | 210-430 survey, floor 35-55; nine candidates with carriers; C1 leads | `_build/l3.32-t167-report.md` |
+| L3.32-T169 | D22 probe: the C1 description-scaffold dedup at F1Desc | DISPATCHED 2026-08-08 | `_build/l3.32-t169-report.md` |
+| L3.32-T170 | StepGraph block 4: the values lex and the step description | DISPATCHED 2026-08-08 | `_build/l3.32-t170-report.md` |
+| L3.32-T171 | Split L.Rud.Order: the level readings to their natural home | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t171-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | DISPATCHED 2026-08-08 | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
 | L3.32-T155 | D36 gate G1: the fat audit of the shared part | Movable ~1,471-1,650 after the HF-imports-Finite catch; saves-now 757-930 stands | `_build/l3.32-t155-report.md` |
