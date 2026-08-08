@@ -1502,6 +1502,40 @@ content_rate_measured = "0.297 s per line; the 0.085 figure is a slice rate and 
 # shape of the remaining decision: the re-home BUYS 141 s and COSTS 300-650
 # naive lines against a cap the landing already misses by 126-256.
 archival_still_owed = "140.97 s over 33 live masters, gated by the choice re-home"
+# [T243] RAN THE LAST TWO UNRUN PROFILES 2026-08-09. Both masters are
+# CONCENTRATED, both are NO-GO, and both floors are now measured at the
+# CURRENT site instead of being carried as sentences.
+#
+# BRIDGE, 104.6 s total. The once-payment pair carries 78.8 s, 75 percent:
+# `gamma-compute-full` 57,531 ms and `towerStep-eq-plus-omega-U` 21,262 ms.
+# The gut removes 80.3 s and leaves a flat 24.3 s with no row above 4 s. P-l
+# bites and nothing else does: P-k, R-38, R-40, R-35, P-r, P-h and I-5 were
+# each checked at the hot rows and each is absent. VERDICT NO-GO, removable at
+# a measured price 0 s. It also settles the [T121] comparison: the SAME pair
+# still dominates and F2 halved it, 155.8 s to 78.8 s.
+#
+# STEPGRAPH, 59.2 s total, AND IT IS NOT FLAT, which refutes what [T235] and
+# the brief both expected. One row, `values-in-L` at
+# `src/L/Rud/StepGraph.lagda.md:2608`, carries 26.5 s, 44.7 percent. It
+# instantiates the generic `Values` module at concrete `Lset` stages, which is
+# P-n's signature. The gut ceiling is 30.2 s. Its consumers pay 10-15 ms per
+# site, so there is no repeat to buy. VERDICT NO-GO, removable 0 s.
+#
+# WHY THE SLICES MISSED IT, and this is the reusable part: every StepGraph
+# slice profile came back flat because none covered the final "offsets at the
+# tower" block at `:2605-2689`, which holds the hot row. The 0.027 s per line
+# whole-master rate was misleading in the same way [T222]'s 0.085 was: most of
+# the 2,152 lines are cheap parameterized content and ONE instantiation block
+# carries the seconds. A whole-master rate hides a concentrated block.
+#
+# SO THE SECONDS SEARCH SPACE IS NOW CLOSED, every large site measured:
+#   the carried sequence  NO-GO   ceiling 109.8 s, floor 64.8   [T241]
+#   Bridge                NO-GO   floor 24.3 s after the gut    [T243]
+#   StepGraph             NO-GO   ceiling 30.2 s                [T243]
+#   a 293 s cut in the base   NOT THERE, whole-tree profile
+#   the ruled archival    141 s AVAILABLE, gated by the choice re-home
+# The archival is the ONLY remaining seconds lever in the campaign.
+seconds_search_closed = "[T241] and [T243]: every large site NO-GO at a measured price; only the archival's 141 s remains"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
