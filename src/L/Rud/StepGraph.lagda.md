@@ -41,21 +41,21 @@ open import L.Definability {ℓ} using ( module DefOf )
 open import L.PairAtoms {ℓ} using ( module PairMem )
 open import L.Rud.Images {ℓ} using
   ( left; left-compute; right; ⋂; ⋂-member-in-all; right-nonpair
-  ; F8; F8-spec; F10; F10-spec; left-spec; left-⋂-collapse
+  ; F8; F8-spec; F10; F10-spec; F11; F12; F13; F14; left-spec; left-⋂-collapse
   ; left-⋂-empty; module F15Of )
 open import L.Rud.Step {ℓ} lem A using
   ( Op16; op0; op1; op2; op3; op4; op5; op6; op7; op8; op9; op10; op11; op12
   ; op13; op14; op15; Fof; Fof-f0; Fof-f1; Fof-f2; Fof-f3; Fof-f4; Fof-f5
   ; Fof-f6; Fof-f7; Fof-f8; Fof-f9; Fof-f10; Fof-f11; Fof-f12; Fof-f13
-  ; Fof-f14; Fof-f15; isPair; right-at-pair; singl≡pair
+  ; Fof-f14; Fof-f15; F15A; isPair; right-at-pair; singl≡pair
   ; step; step-out; StepArm; arm-member; arm-self; arm-image
   ; step-in; step-in-self; step-in-img; u'; u'-in; u-self-in )
 open import L.Rud.Ops {ℓ} using
-  ( F0; F0-spec; F1-spec; F5-spec
+  ( F0; F1; F2; F3; F4; F5; F6; F7; F9; F0-spec; F1-spec; F5-spec
   ; F2-read; F3-read; F4-read; F6-read; F7-read
   ; F2-write; F3-write; F4-write; F6-write; F7-write )
-open import L.Rud.Bridge {ℓ} lem A using
-  ( ext-⊆; empty-⊆; Ltr; 𝒟ₒ⊆Lsuc; Lpair; ValuesInU; suc⁴ )
+open import L.TowerKit {ℓ} lem A using
+  ( ext-⊆; empty-⊆; Ltr; 𝒟ₒ⊆Lsuc; Lpair; ValuesInU; suc⁴; module F0Arm )
 open import L.Rud.Describe {ℓ} using ( module F10Desc )
 open import L.InitialSegment {ℓ} using ( _⟷_ )
 open import Cubical.Data.FinData.Base using ( Fin )
@@ -2006,6 +2006,231 @@ member of the stage above it.
 
     stepSet-desc : DefOf.defSet C stepForm ≡ step u
     stepSet-desc = D.described stepForm (step u) stepSub din dout
+```
+
+<!--en-->
+## The description reading of the graph layer
+
+The layer's membership formulas also read as descriptions. Take the formula
+`memOf i` at the four-slot environment; fix its second argument slot to the
+carrier's fiber of `b` and its first argument slot to the carrier's fiber of
+`a`; re-connect the member slot to the free tail variable; and bind the
+member and the two arguments by three existentials. The resulting formula
+carves exactly the value `Fof i a b`, on the premise that every member of
+that value lies in the carrier: the caller's subset certificate is that
+premise, passed through unchanged. The frame is generic in the operation,
+so the sixteen equations are one generic statement and sixteen instances,
+each closing through the operation's own read lemma. The pairing arm is the
+one exception. Its membership formula is an equality disjunction, so its
+equation needs no layer at all; it lives below the layer in `L.TowerKit`,
+where the tower's pairing fact reads it.
+<!--zh-->
+## 图层的描述读法
+
+图层的隶属公式也可以当作描述来读。取四槽环境处的公式 `memOf i`；把第二个实参槽固定到载体中 `b` 的纤维，把第一个实参槽固定到载体中 `a` 的纤维；把成员槽重新接到自由的尾部变量；再用三个存在量词把成员与两个实参绑起。所得公式恰好刻出值 `Fof i a b`，前提是那个值的每个成员都落在载体里：调用方的子集证书就是该前提，原样穿过。框架对运算泛型，故十六条等式是一条泛型陈述加十六条实例，每条都经该运算自己的读引理收口。配对臂是唯一的例外。它的隶属公式是一道等式析取，故其等式完全不需要图层；它住在图层之下的 `L.TowerKit` 里，塔的配对事实在那里读它。
+<!--ja-->
+## グラフレイヤーの記述としての読み
+
+グラフレイヤーの帰属論理式は、記述としても読める。四スロット環境における式 `memOf i` を取り、第二引数スロットを台における `b` のファイバーに固定し、第一引数スロットを台における `a` のファイバーに固定し、メンバースロットを自由な末尾変数に結び直し、三つの存在量化子でメンバーと二つの引数を束縛する。得られる式は値 `Fof i a b` をちょうど刻む。ただし、その値のすべてのメンバーが台にあることを前提とする。呼び出し側の部分集合証明書がその前提であり、そのまま通される。フレームは演算について汎用である。したがって、十六個の等式は一つの汎用ステートメントと十六個のインスタンスからなり、各インスタンスはその演算自身の読み補題で閉じる。対の腕が唯一の例外である。その帰属論理式は等号の論理和なので、その等式はレイヤーをまったく必要としない。それはレイヤーの下の `L.TowerKit` にあり、塔の対の事実がそこでそれを読む。
+<!--/-->
+
+```agda
+module PinFrame (C : S) (Ctr : isTransV C) (mA : ⟪ C ⟫)
+                (qA : ⟪ C ⟫↪ mA ≡ A) (∅∈C : ⟨ ∅ ∈ˢ C ⟩)
+                (a b : S) (a∈ : ⟨ a ∈ˢ C ⟩) (b∈ : ⟨ b ∈ˢ C ⟩) where
+
+  module L = Layer C Ctr mA qA ∅∈C
+  module D = Desc C Ctr
+  open L public
+
+  private
+    f0 : {n : ℕ} → Fin (suc n)
+    f0 = zero
+    f1 : {n : ℕ} → Fin (suc (suc n))
+    f1 = suc f0
+    f2 : {n : ℕ} → Fin (suc (suc (suc n)))
+    f2 = suc f1
+    f3 : {n : ℕ} → Fin (suc (suc (suc (suc n))))
+    f3 = suc f2
+
+  mₐ : ⟪ C ⟫
+  mₐ = ∈-asFiber {a = a} {b = C} a∈ .fst
+  qₐ : ⟪ C ⟫↪ mₐ ≡ a
+  qₐ = ∈-asFiber {a = a} {b = C} a∈ .snd
+  m_b : ⟪ C ⟫
+  m_b = ∈-asFiber {a = b} {b = C} b∈ .fst
+  q_b : ⟪ C ⟫↪ m_b ≡ b
+  q_b = ∈-asFiber {a = b} {b = C} b∈ .snd
+
+  body : (i : Op16) → Formula ⟪ C ⟫ 4
+  body i = (var f0 ≐ var f3) ∧̇
+    ((var f1 ≐ con m_b) ∧̇ ((var f2 ≐ con mₐ) ∧̇ L.memOf i))
+
+  pinned : (i : Op16) → Formula ⟪ C ⟫ 1
+  pinned i = ∃̇ (∃̇ (∃̇ body i))
+
+  pinned-out : (i : Op16) (v : S) (v∈ : ⟨ v ∈ˢ C ⟩)
+             → ⟨ (PK.pt v v∈ ∷ []) ⊨ᵐ pinned i ⟩ → ⟨ v ∈ˢ Fof i a b ⟩
+  pinned-out i v v∈ h = PT.rec (snd (v ∈ˢ Fof i a b)) k2 h
+    where
+    k2 : Σ[ x₂ ∈ SM ] ⟨ (x₂ ∷ PK.pt v v∈ ∷ []) ⊨ᵐ (∃̇ (∃̇ body i)) ⟩
+       → ⟨ v ∈ˢ Fof i a b ⟩
+    k2 (x₂ , h₂) = PT.rec (snd (v ∈ˢ Fof i a b)) k1 h₂
+      where
+      k1 : Σ[ x₁ ∈ SM ] ⟨ (x₁ ∷ x₂ ∷ PK.pt v v∈ ∷ []) ⊨ᵐ (∃̇ body i) ⟩
+         → ⟨ v ∈ˢ Fof i a b ⟩
+      k1 (x₁ , h₁) = PT.rec (snd (v ∈ˢ Fof i a b)) k0 h₁
+        where
+        k0 : Σ[ x₀ ∈ SM ] ⟨ (x₀ ∷ x₁ ∷ x₂ ∷ PK.pt v v∈ ∷ []) ⊨ᵐ body i ⟩
+           → ⟨ v ∈ˢ Fof i a b ⟩
+        k0 (x₀ , h₀) = subst (λ w → ⟨ w ∈ˢ Fof i a b ⟩) p0
+          (subst (λ t → ⟨ fst x₀ ∈ˢ Fof i a t ⟩) (p1 ∙ q_b)
+            (subst (λ t → ⟨ fst x₀ ∈ˢ Fof i t (fst x₁) ⟩) (p2 ∙ qₐ) z∈F))
+          where
+          p0 : fst x₀ ≡ v
+          p0 = h₀ .fst
+          p1 : fst x₁ ≡ ⟪ C ⟫↪ m_b
+          p1 = h₀ .snd .fst
+          p2 : fst x₂ ≡ ⟪ C ⟫↪ mₐ
+          p2 = h₀ .snd .snd .fst
+          ms : ⟨ (x₀ ∷ x₁ ∷ x₂ ∷ PK.pt v v∈ ∷ []) ⊨ᵐ L.memOf i ⟩
+          ms = h₀ .snd .snd .snd
+          z∈F : ⟨ fst x₀ ∈ˢ Fof i (fst x₂) (fst x₁) ⟩
+          z∈F = L.memOut i (fst x₀) (fst x₁) (fst x₂) v
+            (snd x₀) (snd x₁) (snd x₂) v∈ ms
+
+  pinned-in : (i : Op16) (v : S) (v∈ : ⟨ v ∈ˢ C ⟩)
+            → ⟨ v ∈ˢ Fof i a b ⟩ → ⟨ (PK.pt v v∈ ∷ []) ⊨ᵐ pinned i ⟩
+  pinned-in i v v∈ h =
+    ∣ PK.pt a a∈ , (∣ PK.pt b b∈ , (∣ PK.pt v v∈ , (pin₀ , (pin₁ , (pin₂ , ms))) ∣₁) ∣₁) ∣₁
+    where
+    pin₀ : ⟨ (PK.pt v v∈ ∷ PK.pt b b∈ ∷ PK.pt a a∈ ∷ PK.pt v v∈ ∷ [])
+             ⊨ᵐ (var f0 ≐ var f3) ⟩
+    pin₀ = refl
+    pin₁ : ⟨ (PK.pt v v∈ ∷ PK.pt b b∈ ∷ PK.pt a a∈ ∷ PK.pt v v∈ ∷ [])
+             ⊨ᵐ (var f1 ≐ con m_b) ⟩
+    pin₁ = sym q_b
+    pin₂ : ⟨ (PK.pt v v∈ ∷ PK.pt b b∈ ∷ PK.pt a a∈ ∷ PK.pt v v∈ ∷ [])
+             ⊨ᵐ (var f2 ≐ con mₐ) ⟩
+    pin₂ = sym qₐ
+    ms : ⟨ (PK.pt v v∈ ∷ PK.pt b b∈ ∷ PK.pt a a∈ ∷ PK.pt v v∈ ∷ [])
+           ⊨ᵐ L.memOf i ⟩
+    ms = L.memIn i v b a v v∈ b∈ a∈ v∈ h
+
+  -- The generic equation, in Bridge's Arm shape: the caller's subset
+  -- certificate is the wsub input, so no per-op membership analysis enters
+  -- the frame.
+  Fof-defSet≡ : (i : Op16) (sub : (v : S) → ⟨ v ∈ˢ Fof i a b ⟩ → ⟨ v ∈ˢ C ⟩)
+              → L.defSet (pinned i) ≡ Fof i a b
+  Fof-defSet≡ i sub = D.described (pinned i) (Fof i a b) sub
+    (λ v v∈ h → pinned-in i v v∈ h)
+    (λ v v∈ h → pinned-out i v v∈ h)
+
+  -- The pairing arm: layer-free (L.TowerKit), because the pairing fact
+  -- below the layer cannot instantiate Layer.  Its formula matches
+  -- pinned op0 definitionally, so the home's equation is the instance.
+  module FA = F0Arm C Ctr a b a∈ b∈
+  F0-defSet≡ : L.defSet (pinned op0) ≡ F0 a b
+  F0-defSet≡ = FA.F0-defSet≡
+
+  -- The closed arms: the membership analysis reads back through the
+  -- operation's specification, and the carrier's transitivity places the
+  -- member.  F1 and F5 read through their specifications, F6 through its
+  -- read lemma's left projection, F10 through its ordered-pair projection,
+  -- and F15 through the relativization slot's own membership.
+  wsub1 : (v : S) → ⟨ v ∈ˢ Fof op1 a b ⟩ → ⟨ v ∈ˢ C ⟩
+  wsub1 v h = Ctr {x = a} {y = v} v∈a a∈
+    where
+    v∈a : ⟨ v ∈ˢ a ⟩
+    v∈a = F1-spec a b v .fst (subst (λ w → ⟨ v ∈ˢ w ⟩) (Fof-f1 a b) h) .fst
+
+  F1-defSet≡ : L.defSet (pinned op1) ≡ F1 a b
+  F1-defSet≡ = Fof-defSet≡ op1 wsub1 ∙ Fof-f1 a b
+
+  wsub5 : (v : S) → ⟨ v ∈ˢ Fof op5 a b ⟩ → ⟨ v ∈ˢ C ⟩
+  wsub5 v h = PT.rec (snd (v ∈ˢ C)) go
+    (F5-spec a b v .fst (subst (λ w → ⟨ v ∈ˢ w ⟩) (Fof-f5 a b) h))
+    where
+    go : Σ[ w ∈ S ] ⟨ (w ∈ˢ a) ⊓ (v ∈ˢ w) ⟩ → ⟨ v ∈ˢ C ⟩
+    go (w , w∈a , v∈w) = Ctr {x = w} {y = v} v∈w (Ctr {x = a} {y = w} w∈a a∈)
+
+  F5-defSet≡ : L.defSet (pinned op5) ≡ F5 a b
+  F5-defSet≡ = Fof-defSet≡ op5 wsub5 ∙ Fof-f5 a b
+
+  wsub6 : (v : S) → ⟨ v ∈ˢ Fof op6 a b ⟩ → ⟨ v ∈ˢ C ⟩
+  wsub6 v h = PT.rec (snd (v ∈ˢ C)) go
+    (F6-read a b v (subst (λ w → ⟨ v ∈ˢ w ⟩) (Fof-f6 a b) h))
+    where
+    go : Σ[ u ∈ S ] Σ[ w ∈ S ] (⟨ pr u w ∈ˢ a ⟩ × ⟨ v ≡ₕ u ⟩) → ⟨ v ∈ˢ C ⟩
+    go (u , w , pr∈a , e) = subst (λ t → ⟨ t ∈ˢ C ⟩) (sym e)
+      (PM.pair-left {a = u} {b = w} (Ctr {x = a} {y = pr u w} pr∈a a∈))
+
+  F6-defSet≡ : L.defSet (pinned op6) ≡ F6 a b
+  F6-defSet≡ = Fof-defSet≡ op6 wsub6 ∙ Fof-f6 a b
+
+  wsub10 : (v : S) → ⟨ v ∈ˢ Fof op10 a b ⟩ → ⟨ v ∈ˢ C ⟩
+  wsub10 v h = PM.pair-right {a = b} {b = v} (Ctr {x = a} {y = pr b v}
+    (subst ⟨_⟩ (F10-spec a b v)
+      (subst (λ w → ⟨ v ∈ˢ w ⟩) (Fof-f10 a b) h)) a∈)
+
+  F10-defSet≡ : L.defSet (pinned op10) ≡ F10 a b
+  F10-defSet≡ = Fof-defSet≡ op10 wsub10 ∙ Fof-f10 a b
+
+  module F15C = F15Of A
+
+  wsub15 : (v : S) → ⟨ v ∈ˢ Fof op15 a b ⟩ → ⟨ v ∈ˢ C ⟩
+  wsub15 v h = Ctr {x = a} {y = v} v∈a a∈
+    where
+    v∈a : ⟨ v ∈ˢ a ⟩
+    v∈a = subst ⟨_⟩ (F15C.F15-spec a v)
+      (subst (λ w → ⟨ v ∈ˢ w ⟩) (Fof-f15 a b) h) .fst
+
+  F15-defSet≡ : L.defSet (pinned op15) ≡ F15A a
+  F15-defSet≡ = Fof-defSet≡ op15 wsub15 ∙ Fof-f15 a b
+
+  -- The open arms: a member of the value is not in the carrier by the
+  -- specification alone (a pair, a singleton, a projection, a slice, or an
+  -- ordered-pair value needs the carrier's own closure), so the caller's
+  -- subset certificate is an argument of the instance and passes through.
+  F2-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op2 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+             → L.defSet (pinned op2) ≡ F2 a b
+  F2-defSet≡ sub = Fof-defSet≡ op2 sub ∙ Fof-f2 a b
+
+  F3-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op3 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+             → L.defSet (pinned op3) ≡ F3 a b
+  F3-defSet≡ sub = Fof-defSet≡ op3 sub ∙ Fof-f3 a b
+
+  F4-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op4 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+             → L.defSet (pinned op4) ≡ F4 a b
+  F4-defSet≡ sub = Fof-defSet≡ op4 sub ∙ Fof-f4 a b
+
+  F7-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op7 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+             → L.defSet (pinned op7) ≡ F7 a b
+  F7-defSet≡ sub = Fof-defSet≡ op7 sub ∙ Fof-f7 a b
+
+  F8-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op8 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+             → L.defSet (pinned op8) ≡ F8 a b
+  F8-defSet≡ sub = Fof-defSet≡ op8 sub ∙ Fof-f8 a b
+
+  F9-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op9 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+             → L.defSet (pinned op9) ≡ F9 a b
+  F9-defSet≡ sub = Fof-defSet≡ op9 sub ∙ Fof-f9 a b
+
+  F11-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op11 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+              → L.defSet (pinned op11) ≡ F11 a b
+  F11-defSet≡ sub = Fof-defSet≡ op11 sub ∙ Fof-f11 a b
+
+  F12-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op12 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+              → L.defSet (pinned op12) ≡ F12 a b
+  F12-defSet≡ sub = Fof-defSet≡ op12 sub ∙ Fof-f12 a b
+
+  F13-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op13 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+              → L.defSet (pinned op13) ≡ F13 a b
+  F13-defSet≡ sub = Fof-defSet≡ op13 sub ∙ Fof-f13 a b
+
+  F14-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op14 a b ⟩ → ⟨ v ∈ˢ C ⟩)
+              → L.defSet (pinned op14) ≡ F14 a b
+  F14-defSet≡ sub = Fof-defSet≡ op14 sub ∙ Fof-f14 a b
 ```
 
 <!--en-->

@@ -28,15 +28,17 @@ open import FOL.Syntax using
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧ )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using
-  ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute; extensionalV )
+  ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ} using
-  ( IsOrd; Lset; Lset-in; Lset-out; Lset-mono; Lset-layer; layer-trans
+  ( IsOrd; Lset; Lset-out; Lset-mono; Lset-layer; layer-trans
   ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; isL; Lset→isL )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 open import L.Rud.Ops {ℓ} using ( F0; F0-spec; F1; F2; F3; F4; F5; F6; F7 )
+open import L.TowerKit {ℓ} lem A using
+  ( ext-⊆; empty-⊆; Ltr; 𝒟ₒ⊆Lsuc; Lpair; ValuesInU; suc⁴ )
 open import L.Rud.Images {ℓ} using ( F8; F10; left; right; module F15Of )
 open import L.Rud.Describe {ℓ} using
   ( module F0Desc; module F1Desc; module F2Desc; module F3Desc; module F4Desc
@@ -67,7 +69,6 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ⟪_⟫; ⟪_⟫↪; ∈-asFiber )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; ⋃_; union-ax; module InfinitySet )
@@ -94,9 +95,6 @@ members one step later.
 <!--/-->
 
 ```agda
-𝒟ₒ⊆Lsuc : (ξ x : S) → ⟨ x ∈ˢ 𝒟ₒ (Lset ξ) ⟩ → ⟨ x ∈ˢ Lset (sucV ξ) ⟩
-𝒟ₒ⊆Lsuc ξ x h = Lset-in (sucV ξ) ξ x (self∈sucV ξ) h
-
 Lset∈Lsuc : (ξ : S) → ⟨ Lset ξ ∈ˢ Lset (sucV ξ) ⟩
 Lset∈Lsuc ξ = 𝒟ₒ⊆Lsuc ξ (Lset ξ) (𝒟ₒ-intro (Lset ξ) (Lset ξ)
   ∣ ⊤̇ , DefOf.defSet⊤≡A (Lset ξ) ∣₁)
@@ -302,9 +300,6 @@ collapse, which is the reason the bridge reads the tower at limits.
 <!--/-->
 
 ```agda
-Ltr : (ξ : S) → Transitive 𝒮ᵥ (λ x → x ∈ˢ Lset ξ)
-Ltr ξ = layer-trans (Lset-layer ξ)
-
 Lval : (ζ : S) → ⟨ A ∈ˢ Lset ζ ⟩ → (i : Op16) (a b : S)
      → ⟨ a ∈ˢ Lset ζ ⟩ → ⟨ b ∈ˢ Lset ζ ⟩
      → ((v : S) → ⟨ v ∈ˢ Fof i a b ⟩ → ⟨ v ∈ˢ Lset ζ ⟩)
@@ -316,20 +311,6 @@ Lval ζ hA i a b a∈ b∈ sub = 𝒟ₒ⊆Lsuc ζ (Fof i a b)
   r : Σ[ Φ ∈ Formula ⟪ Lset ζ ⟫ 1 ] (DefOf.defSet (Lset ζ) Φ ≡ Fof i a b)
   r = Aζ.imgArm hA i a b a∈ b∈ sub
 
-Lpair : (ζ p q : S) → ⟨ p ∈ˢ Lset ζ ⟩ → ⟨ q ∈ˢ Lset ζ ⟩
-      → ⟨ F0 p q ∈ˢ Lset (sucV ζ) ⟩
-Lpair ζ p q p∈ q∈ = 𝒟ₒ⊆Lsuc ζ (F0 p q)
-  (𝒟ₒ-intro (Lset ζ) (F0 p q) ∣ r .fst , r .snd ∣₁)
-  where
-  module Aζ = Arms (Lset ζ) (Ltr ζ)
-  sub : (v : S) → ⟨ v ∈ˢ F0 p q ⟩ → ⟨ v ∈ˢ Lset ζ ⟩
-  sub v h = PT.rec (snd (v ∈ˢ Lset ζ)) go (F0-spec p q v .fst h)
-    where
-    go : (v ≡ p) ⊎ (v ≡ q) → ⟨ v ∈ˢ Lset ζ ⟩
-    go (inl e) = subst (λ w → ⟨ w ∈ˢ Lset ζ ⟩) (sym e) p∈
-    go (inr e) = subst (λ w → ⟨ w ∈ˢ Lset ζ ⟩) (sym e) q∈
-  r : Σ[ Φ ∈ Formula ⟪ Lset ζ ⟫ 1 ] (DefOf.defSet (Lset ζ) Φ ≡ F0 p q)
-  r = Aζ.pairArm p q sub
 ```
 
 <!--en-->
@@ -597,14 +578,6 @@ already contains, which is the form the reduction consumes.
 <!--/-->
 
 ```agda
-ext-⊆ : {u v : S} → ((x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩)
-      → ((x : S) → ⟨ x ∈ˢ v ⟩ → ⟨ x ∈ˢ u ⟩) → u ≡ v
-ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
-
-empty-⊆ : (u : S) → ((x : S) → ⟨ x ∈ˢ u ⟩ → Empty.⊥) → u ≡ ∅
-empty-⊆ u no = ext-⊆ (λ x h → Empty.rec (no x h))
-  (λ x h → Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst h)))
-
 Lset-zero : Lset ∅ ≡ ∅
 Lset-zero = empty-⊆ (Lset ∅) (λ x h → PT.rec Empty.isProp⊥
   (λ { (δ , δ∈∅ , _) → ∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈∅) })
@@ -623,11 +596,6 @@ Sset-zero = empty-⊆ (Sset ∅) (λ x h → PT.rec Empty.isProp⊥
 ∅∈Lset γ limγ ∅∈γ = Lset-mono {α = γ} {β = sucV ∅}
   (limit-succ-mem γ ∅ limγ ∅∈γ)
   (subst (λ w → ⟨ w ∈ˢ Lset (sucV ∅) ⟩) Lset-zero (Lset∈Lsuc ∅))
-
-ValuesInU : (u ζ : S) → Type (ℓ-suc ℓ)
-ValuesInU u ζ = (i : Op16) (a b : S)
-  → (⟨ a ∈ˢ u ⟩ ⊎ (a ≡ u)) → (⟨ b ∈ˢ u ⟩ ⊎ (b ≡ u))
-  → (v : S) → ⟨ v ∈ˢ Fof i a b ⟩ → ⟨ v ∈ˢ Lset ζ ⟩
 
 Lstep⊆ : (u ζ : S) → ⟨ A ∈ˢ Lset ζ ⟩ → ⟨ u ∈ˢ Lset ζ ⟩ → ValuesInU u ζ
        → (x : S) → ⟨ x ∈ˢ step u ⟩ → ⟨ x ∈ˢ Lset (sucV ζ) ⟩
@@ -1124,12 +1092,6 @@ Q-zero = subst (λ w → ⟨ w ∈ˢ Sset (γ ∅) ⟩) (sym Lset-zero)
 ```
 
 ```agda
-opaque
-  -- perf: P-i layer cap: four exposed Lset ∘ sucV layers doubled the check;
-  -- the alias keeps at most one layer in conversion position.
-  suc⁴ : S → S
-  suc⁴ ζ = sucV (sucV (sucV (sucV ζ)))
-
 opaque
   unfolding suc⁴
   suc⁴∈ : (γ ζ : S) → ⟨ isLimit γ ⟩ → ⟨ ζ ∈ˢ γ ⟩ → ⟨ suc⁴ ζ ∈ˢ γ ⟩
