@@ -620,6 +620,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T206 | JOURNAL entries T200 to T205 | DELIVERED. 6 of 6, insertions only; T204 correctly recorded as dispatched, no verdict | `_build/l3.32-t206-report.md` |
 | L3.32-T207 | The AC endgame execution plan: block 2 to the deletion test | DELIVERED, 2,410 words, eight steps ordered; the blockPowLim ruling is the honesty gate | `_build/l3.32-t207-report.md` |
 | L3.32-T208 | Pin the 16,000: measure the L3.28 survey's seven levers on main | DISPATCHED 2026-08-08 | `_build/l3.32-t208-report.md` |
+| L3.32-T209 | D17 gate: the code predicate's ideal form over the graph layer | DISPATCHED 2026-08-08 | `_build/l3.32-t209-report.md` |
 | L3.32-T199 | The carve-supset repair: is the general family equality feasible? | FEASIBLE at 592-1,052: a bounded family formula, and the false bridge never enters | `_build/l3.32-t199-report.md` |
 | L3.32-T200 | JOURNAL entries T188 to T199 | DELIVERED. 12 of 12, insertions only, lint green; the D37 ruling gets a standing record | `_build/l3.32-t200-report.md` |
 | L3.32-T201 | The D36 decision brief: every term measured, what is the landing? | Landing 17.8-19.4k naive, gap +1.8-3.4k; four options ranked, honesty first | `_build/l3.32-t201-decision.md` |
