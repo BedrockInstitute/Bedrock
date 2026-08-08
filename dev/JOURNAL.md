@@ -2866,6 +2866,90 @@ carries no outcome, no count and no check time
 (`_build/l3.32-t180-report.md:1-10`). The register row records the
 dispatch only (`dev/PLAN.md:602`).
 
+**`[T181]` JOURNAL ENTRIES: T163 TO T180, THE F-SERIES DAY** (2026-08-08,
+`_build/l3.32-t181-report.md`).
+
+DELIVERED. 18 of 18 entries sit in code order, insertions only,
+lint green. The journal gained 1,535 words
+(`_build/l3.32-t181-report.md:9-20`). The entries record four claims
+the reports do not support, each in place: the drift-site count, the
+meter's intermediate 14,695, the unverifiable audit history, and the
+register's six unsupported claims against the report's four
+(`_build/l3.32-t181-report.md:61-85`). The F-series day's arc and
+its current meter reading sit in the journal at the `[T174]` entry.
+
+**`[T182]` THE GENERAL-BETA GATE: A SECOND LIMIT CARRIER** (2026-08-08,
+`_build/l3.32-t182-report.md`).
+
+RED at 213 fresh lines against the 150 stop
+(`_build/l3.32-t182-report.md:7-9`). The reason is structural. The
+second instance's top pair `T' = pr β₀ (Sset β₀)` needs
+`Sset β₀ ∈ Lset (sucV β₀)`, the row's own residue at the previous
+limit (`src/L/Rud/Bridge.lagda.md:1040`). The first instance dodged
+it through the omega identification, which is false at general
+limits (`src/L/Rud/Bridge.lagda.md:475`). The sixth clause is a
+re-instantiated shape; its support is new content. The honest
+transfer measures 1,202-1,533 naive and 2,020-2,588 calibrated
+(`_build/l3.32-t182-report.md:66-75`). The `carried-sequence` row
+carries the re-price at 2,875-3,800 naive and 4,285-6,278 calibrated
+(`dev/ledger.toml:386-395`). One un-gated escape is named: state the
+discharge as an induction over limit ordinals, and probe the shape
+before funding (`dev/ledger.toml:394`).
+
+**`[T183]` F2 BLOCK 3A: THE LAST DESCRIBE EDGE** (2026-08-08,
+`_build/l3.32-t183-report.md`).
+
+LANDED at 109 in-fence lines against the 130 stop
+(`_build/l3.32-t183-report.md:4-5`). The localization cuts
+StepGraph's last import from `L.Rud.Describe`
+(`_build/l3.32-t183-report.md:15-25`). The archival is unblocked:
+Describe and Switch archive with no surviving importer
+(`dev/ARCHIVE.md:90-91`). The description layer now exists once, as
+the pin frame in StepGraph (`dev/ARCHIVE.md:90`). Bridge fell 55.0 s
+user cold, 162.80 to 107.80, when Arms moved off the layer
+(`_build/l3.32-t180-report.md:64`). The register row records the
+block's landing (`dev/PLAN.md:602`).
+
+**`[T184]` THE OPUS WING ASSESSMENT** (2026-08-08,
+`_build/l3.32-t184-gch-impact.md`).
+
+NO TAX. The F series costs the wing 41 lines, the module overhead of
+two splits (`_build/l3.32-t184-gch-impact.md:391`). F1 saves it
+1,290 when HF and Finite leave the tree, and the wing endpoint falls
+3,109-3,599 naive and 3,435-4,669 calibrated on the compression-only
+reading (`_build/l3.32-t184-gch-impact.md:482-486`). One disclosure:
+StepGraph now bills ac-only, so the board understates the wing by
+460-1,912 until a wing master imports it
+(`_build/l3.32-t184-gch-impact.md:148-169`). The rise of 1,005-1,130
+naive in the booked endpoint is T182's re-price, not a compression
+effect (`_build/l3.32-t184-gch-impact.md:482-486`).
+
+**THE DAY'S TWO MEASUREMENTS** (2026-08-08).
+
+The cold wall runs 395.22 s against the 498 s gate, margin +102.8,
+from 487.9 (`dev/ledger.toml:1124`). The AC meter runs 15,578 at
+recon to 14,379 at the F2 landing
+(`_build/l3.32-t174-strategy.md:4`,
+`_build/l3.32-t184-gch-impact.md:56`).
+
+**`[T185]` THE BELOW-LIM INDUCTION SHAPE** (2026-08-08,
+`_build/l3.32-t185-report.md`).
+
+DISPATCHED. No report exists in `_build/` at the time of writing.
+The register row records the dispatch only (`dev/PLAN.md:607`).
+
+**`[T186]` THE F1 EXECUTION: RE-HOME THE FIVE LEMMAS** (2026-08-08,
+`_build/l3.32-t186-report.md`).
+
+DISPATCHED. No report exists in `_build/` at the time of writing.
+The register row records the dispatch only (`dev/PLAN.md:608`).
+
+**`[T187]` THE COVERAGE AUDIT** (2026-08-08,
+`_build/l3.32-t187-report.md`).
+
+DISPATCHED. No report exists in `_build/` at the time of writing.
+The register row records the dispatch only (`dev/PLAN.md:609`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
