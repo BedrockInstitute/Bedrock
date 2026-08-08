@@ -1172,6 +1172,21 @@ full_cold_wall_seconds = 395
 # which is why [T225], [T226] and [T227] were funded as SECONDS levers rather
 # than as line levers. Every line they remove from what block A must write is
 # worth 0.085 s, and the whole margin is 9 s.
+# THE C4 ASSEMBLY DOES NOT MOVE THIS NUMBER, corrected at audit 2026-08-09.
+# [T226]'s report reads as a 53-133 line saving on block A ("the witness story
+# piece becomes a clause list plus five aliases, about 15-17 lines" against
+# [T223]'s 70-150). The orchestrator recorded that figure in a3af602 and it is
+# WRONG. The hand assembly the clause list replaces is
+# `src/L/Rud/BelowLim.lagda.md:929-955`, 24 non-blank lines, and T226's own
+# LevelSigma consumers measured +2 lines EACH. [T223]'s 90-110 and 70-150 rows
+# are mostly CONTENT: `chainValueW` at :958-1013 is 55 lines by itself, and the
+# general `segLimitClause` is [T217] row 9's fresh clause work. The assembly
+# touches neither, and P-n forbids it to.
+#
+# So C4 is a WASH on lines and costs +0.85 s measured. It is kept for
+# naturalness and for not writing a sixth hand assembly, NOT for the gate. The
+# stop-line below stands unchanged at 1,080, and block A must report the
+# assembly's real delta at its own site.
 block_a_breakeven_lines = "1080-1174"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
