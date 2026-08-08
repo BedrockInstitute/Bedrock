@@ -303,7 +303,7 @@ naive_high = 1750
 calibrated_low = 2280
 calibrated_high = 5050
 klass = "mostly x3, one x1.3 row (the B statement layer). SPLIT 2026-08-07: the elimination slice moved to w3-ac-slice after [T158] ruled it AC-forced; the two rows' bands sum EXACTLY to the pre-split 1,000-2,700 naive and 3,000-7,900 calibrated, so coverage is preserved by construction. The split POINT is survey-grade and the w3-ac-slice gate re-cuts it on measurement"
-gate = "T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. BUT StepInL is in the D18 retirement set, so this content must be carried by its ideal-form rewrite or W3 loses it: see the stepinl-rewrite row"
+gate = "T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. The rewrite LANDED as L.Rud.StepGraph 2026-08-08 and carries the full layer. DISCLOSURE, [T184]: since the Arms rebuild reversed the Bridge/StepGraph edge, StepGraph sits in the AC-ONLY bucket, so the GCH column bills ZERO for the 1,912 lines this row names as its survival supplier; the wing's endpoint understates by 460-1,912 until a wing master imports StepGraph"
 provenance = "_build/l3.32-t48-report.md face-route table; PLAN [L3.32] register T48 and T50 entries"
 
 [[remaining]]
@@ -1121,8 +1121,8 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 # this is the row that decides it, and until 2026-08-06 no wall figure for
 # this tree existed at all: the number below it was derived by subtraction
 # from a profile run and then converted with an unpinned ratio.
-measured_wall = "2026-08-07, interface cache moved aside, GHCRTS=-M8g agda src/Everything.lagda.md (NO --profile), Agda 2.8.0, single process, nothing else running; /usr/bin/time -p reports real 487.90, user 484.12, sys 2.60, exit 0. THE GATE IS MET: 487.9 against 498, margin +10.1 s. The arc, same protocol throughout: 1,080.6 at the first honest measurement, 677.4 at the arm-A checkpoint, 487.9 now. From the D30 ruling's 2,723 profile seconds, the tree fell 82 percent."
-full_cold_wall_seconds = 488
+measured_wall = "2026-08-08, interface cache removed, make typecheck (the exported GHCRTS default, NO --profile), Agda 2.8.0, single process, nothing else running; /usr/bin/time -p reports real 395.22, user 392.56, sys 1.55, exit 0. Margin +102.8 against the 498 gate. The delta from 487.9: Bridge minus 63.2 (the F2 blocks), Describe and Switch archived, StepGraph plus its ~59 s, three small masters. The arc, same protocol class throughout: 1,080.6 at the first honest measurement, 677.4 at arm A, 487.9 at the gate ruling, 395.2 now. From the D30 ruling's 2,723 profile seconds the tree fell 85 percent, and the D18 archival's ~148 s is still owed."
+full_cold_wall_seconds = 395
 gate_wall_seconds = 498
 
 checkpoint = """
