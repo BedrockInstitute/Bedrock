@@ -588,7 +588,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T165 | StepGraph block 3: the ops 8-15 decodes, dispatchers, graphs | LANDED. 609 lines; the BigOr telescope closes; master 1,452, ~1.9 s warm | `_build/l3.32-t165-report.md` |
 | L3.32-T166 | C-23 deep check: the Order and Coding/Base movable subsets | Order MOVABLE 114, ordSWO and opIx stay; Base MOVABLE 46, shared until retirement | `_build/l3.32-t166-report.md` |
 | L3.32-T167 | The duplication sweep: content written twice in the AC closure | 210-430 survey, floor 35-55; nine candidates with carriers; C1 leads | `_build/l3.32-t167-report.md` |
-| L3.32-T169 | D22 probe: the C1 description-scaffold dedup at F1Desc | DISPATCHED 2026-08-08 | `_build/l3.32-t169-report.md` |
+| L3.32-T169 | D22 probe: the C1 description-scaffold dedup at F1Desc | GO, but small: measured -6 at one module, -25 to -30 at eight; the 60-140 survey corrects down | `_build/l3.32-t169-report.md` |
 | L3.32-T170 | StepGraph block 4: the values lex and the step description | DISPATCHED 2026-08-08 | `_build/l3.32-t170-report.md` |
 | L3.32-T171 | Split L.Rud.Order: the level readings to their natural home | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t171-report.md` |
 | L3.32-T172 | D22 probe: the C2 formula-coding dedup at Count | QUEUED 2026-08-08 behind T171 | `_build/l3.32-t172-report.md` |
