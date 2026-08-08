@@ -1182,19 +1182,6 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.SatSets`{.Agda}: the satisfaction sets of arbitrary formulas as
   closure members, the equality atom through the extensional diagonal, and
   the unconditional full switch at limit levels.
-- `L.Rud.Finite`{.Agda}: the finite-tally content, harvested into a surviving home. The
-  hereditarily finite chapter used to reach across the retirement boundary for it, into two
-  chapters the configuration retires; the content itself is alive and the home was the only
-  thing wrong with it. Written for what its consumer actually needs rather than ported, per
-  the retirement discipline, and importing only modules that survive.
-
-- `L.Rud.HF`{.Agda}: the hereditarily finite fragment, where the rud tower and the
-  constructible tower first meet. It carries the ordinals of HF (they are exactly the
-  numerals), the constructible stages below the first limit as members of HF, and the
-  over-HF identification that every subset of a finite stage is a member of the next.
-  These are the facts a carve at the first limit rides, and they had lived only in a
-  throwaway probe until this chapter gave them a home.
-
 - `L.Rud.LevelSigma`{.Agda}: the face at a rud carrier, the bridge's own
   consumer: the same three clause formulas and decodes as the tower's, at the
   rud levels, with the definable step's collapse read through the delivered
@@ -1247,10 +1234,6 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
 - `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
 - `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
-- `L.Rud.Finite`{.Agda}：有限计数内容，被收割进一个存活的家。遗传有限那一章原先为它伸手越过退役边界，够到两个本配置要退役的章；内容本身是活的，唯一不对的是它住的地方。按退役纪律，本章不是移植而是照着消费方实际需要写的，并且只导入存活的模块。
-
-- `L.Rud.HF`{.Agda}：遗传有限片段，rud 塔与构造性塔在此第一次相遇。本章载有 HF 的序数 (它们恰是数码)、第一个极限以下的构造性阶段作为 HF 的成员，以及 over-HF 等同：有限阶段的每个子集都是下一阶段的成员。这些正是第一个极限处的刻画所要骑的事实，而在本章给它们一个家之前，它们只住在一个用完即弃的探针里。
-
 - `L.Rud.LevelSigma`{.Agda}：初步函数载体处的面孔，桥自己的消费方：与塔处相同的三条子句公式与解码，落在初步函数诸层上，而可定义步的坍缩经已交付的「原子命名」引理读出，不经任何逐运算的描述。
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
@@ -1265,8 +1248,6 @@ import L.Rud.Ops
 import L.Rud.Images
 import L.Rud.Hierarchy
 import L.Rud.Step
-import L.Rud.Finite
-import L.Rud.HF
 import L.Rud.LevelSigma
 import L.Rud.Order
 import L.Rud.OrderReadings
