@@ -1536,6 +1536,38 @@ archival_still_owed = "140.97 s over 33 live masters, gated by the choice re-hom
 #   the ruled archival    141 s AVAILABLE, gated by the choice re-home
 # The archival is the ONLY remaining seconds lever in the campaign.
 seconds_search_closed = "[T241] and [T243]: every large site NO-GO at a measured price; only the archival's 141 s remains"
+# [T244] GATED THE LAST SURVEY TERM 2026-08-09 and the fork improves on both
+# sides. The re-home's IDEAL FORM, priced from the rewrite side per D17, is
+# 188-248 naive and 244-322 calibrated for the ROW SCOPE, against a booked band
+# of 300-650 and 900-1,950. The whole leg, adding the description slice already
+# booked as `w3-ac-slice`, is 524-804 naive. The re-price saves 112-402 naive
+# against the two rows as booked.
+#
+# ALL TWELVE `L.Choice` MASTERS ARCHIVE FOR FREE, which is stronger than the
+# brief asked. Nothing surviving needs any of them: the pick uses `Jset-order`
+# from `L.Rud.Order`, the carve uses delivered switch and counting, and both
+# [T3]'s and [T24]'s probes import nothing from `L.Choice`. Only two exports
+# have surviving consumers, `hasChoiceL` at `src/L/Model.lagda.md:57` and
+# `orderAt` at `src/L/Hull.lagda.md:44`, and C-23 puts the whole Transversal
+# module in scope because `hasChoiceL` instantiates `Trans` in the same file.
+#
+# THE ORCHESTRATOR'S CORRECTION TO THE FORK'S COST SIDE. The twelve masters
+# hold 6,050 in-fence lines, and it is tempting to read that as a saving. It is
+# NOT: `ledger.py` computes standing as the tracked total MINUS the D18-booked
+# retirement set, so those 6,050 lines are ALREADY excluded from the meter, and
+# 79 of 111 masters are what the trophy split sees. Archiving them removes ZERO
+# from the line meter and 141 s from the wall. The fork's line cost is the
+# re-home alone.
+#
+# SO THE TRADE IS 188-248 LINES FOR 141 SECONDS, a marginal 0.57-0.75 s per
+# line. Every line of block A buys 0.297 s. The re-home is the most
+# seconds-efficient content in the campaign by a factor of about two, and D17's
+# ratio says the ideal form is 24-32x cheaper than the delivered cone.
+#
+# IT IS NOT STARTABLE TODAY. The re-home consumes both directions of the
+# class-level bridge step, whose discharge lives in `bridge-landing`. That
+# dependency, not the price, is what gates it now.
+rehome_gated = "188-248 naive row scope buys 141 s; all twelve Choice masters archive free; blocked on bridge-landing"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
