@@ -1218,6 +1218,30 @@ block_a_breakeven_lines = "1080-1174"
 # block at its floor, or 6 to 14 seconds out of the 388.9 s TREE BASE, which no
 # task has ever hunted. That is 1.5 to 3.6 percent of the base. [T235] hunts it.
 landing_misses_gate_by = "6-14"
+# THE D36 TRIPWIRE FIRED 2026-08-09, on the commit that landed block A's
+# measured content. `ledger.py --check` reports: measured ac-total 16,675
+# against the 16,000 cap, 675 OVER. Under D36 this is the point at which the
+# decision re-opens, and no commit may grow the AC closure until compression
+# brings it back under.
+#
+# THE JUMP IS FULLY DECOMPOSED AND NOTHING WAS RECLASSIFIED. Measured against
+# `868dc20` in a throwaway worktree, which read 15,022:
+#   BelowLim   604 -> 2,139   ac +1,535
+#   LevelKit   366 ->   587   ac   +221
+#   Bridge     718 ->   729   ac    +11
+#   StepStory  313 ->   199   ac   -114
+#   net                        +1,653   ->  16,675
+#
+# BelowLim's +1,535 is block 2's 948 lines PLUS block A's 587. Block 2 was
+# green all week and UNCOMMITTED, so every reading of 15,022 this week,
+# including [T228]'s memo, measured the committed tree and understated the AC
+# closure by 948. The honest position this morning was about 15,970, some 30
+# lines under the cap. Block A crossed it.
+#
+# The ruled offset, stated as pending and not netted: D36 records a removal of
+# 1,290 naive lines, HF and Finite, at the landing. Executed, it would read
+# 15,385. It is not executed, so the measured number is 16,675.
+ac_tripwire_fired = "2026-08-09, measured 16,675 against cap 16,000"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
