@@ -308,8 +308,17 @@ def trophy_split(data: dict, files: list[str],
     ambiguous: list[str] = []
     for f in files:
         if not f.startswith("src/L/"):
-            parts["base"] += sizes[f]
-            part_files["base"].append(f)
+            # F4 (D36 amendment, owner's F-series order 2026-08-08): an
+            # outside-L master may be declared gch-side too. The same two
+            # safeties hold: neither-closure only (the dead-declaration
+            # defect above fires when the AC closure reaches it), and the
+            # deletion test validates the assignment at the landing.
+            if f in assigned:
+                parts["gch_only"] += sizes[f]
+                part_files["gch_only"].append(f)
+            else:
+                parts["base"] += sizes[f]
+                part_files["base"].append(f)
             continue
         in_ac, in_gch = f in ac, f in gch
         if in_ac and not in_gch:

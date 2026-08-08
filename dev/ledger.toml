@@ -1333,3 +1333,17 @@ modules = 82
 lines = 22761
 seconds = 2368
 per_line = 0.104
+
+# THE F4 DECLARATIONS (D36 amendment; the owner's F-series execution order,
+# 2026-08-08). Two outside-L masters whose only consumers are the GCH wing
+# billed into the AC base by the path rule. The dead-declaration defect
+# guards each: the day the AC closure reaches one, the checker fails.
+[[gch_assign]]
+module = "src/FOL/Count.lagda.md"
+wing_consumer = "gch-w7 via L.CardinalCount (CardinalCount.lagda.md:31), its only importer"
+authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174 section 1.4"
+
+[[gch_assign]]
+module = "src/V/Collapse.lagda.md"
+wing_consumer = "gch-w5, the collapse and condensation row; no surviving importer outside the catalog"
+authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174 section 1.4"
