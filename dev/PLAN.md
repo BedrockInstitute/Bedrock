@@ -589,7 +589,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T166 | C-23 deep check: the Order and Coding/Base movable subsets | Order MOVABLE 114, ordSWO and opIx stay; Base MOVABLE 46, shared until retirement | `_build/l3.32-t166-report.md` |
 | L3.32-T167 | The duplication sweep: content written twice in the AC closure | 210-430 survey, floor 35-55; nine candidates with carriers; C1 leads | `_build/l3.32-t167-report.md` |
 | L3.32-T169 | D22 probe: the C1 description-scaffold dedup at F1Desc | GO, but small: measured -6 at one module, -25 to -30 at eight; the 60-140 survey corrects down | `_build/l3.32-t169-report.md` |
-| L3.32-T170 | StepGraph block 4: the values lex and the step description | DISPATCHED 2026-08-08 | `_build/l3.32-t170-report.md` |
+| L3.32-T170 | StepGraph block 4: the values lex and the step description | LANDED, 460 lines: THE REWRITE IS COMPLETE at 1,912, inside the calibrated band | `_build/l3.32-t170-report.md` |
 | L3.32-T171 | Split L.Rud.Order: the level readings to their natural home | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t171-report.md` |
 | L3.32-T172 | D22 probe: the C2 formula-coding dedup at Count | QUEUED 2026-08-08 behind T171 | `_build/l3.32-t172-report.md` |
 | L3.32-T173 | The re-home design memo: one document for the AC endgame | DELIVERED. 1,707 words; every discharge obligation itemized with its supplier | `_build/l3.32-t173-report.md` |
