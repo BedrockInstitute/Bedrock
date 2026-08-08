@@ -1413,6 +1413,34 @@ carried_sequence_remeasured = "589 nbl / 174.62 s / 0.297 s per line; lines tran
 # mathematical shape and, per P-l, a hypothesis rather than a price until
 # somebody measures it.
 seconds_cure_verdict = "NO-GO, [T241]: concentrated in the decode content, ceiling 109.80 s, floor 64.82 s"
+# THE FULL PER-MODULE COLD PROFILE, run by the orchestrator 2026-08-09. This is
+# the probe [T235] named and nobody ran, and it is the first complete
+# distribution since 2026-08-06. Protocol: the WHOLE interface tree moved
+# aside, `GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md`, one
+# process, exit 0. Wall real 700.42 s over 112 module rows. Table saved at
+# `_build/l3.32-coldprofile-2026-08-09.txt`.
+#
+# FOUR STANDING FIGURES CORRECTED, and one badly:
+#   tree base            388.9 -> 420.5   ([T217]'s figure is superseded)
+#   L.Ordinal.SquareLaw   64.4 ->  23.3   ([T103], 2026-08-06, STALE BY 41 s)
+#   L.Rud.Bridge         105.8 -> 103.1   (today's figure agrees)
+#   L.Rud.StepGraph       60.3 ->  59.0   (today's figure agrees)
+#
+# FIVE MASTERS THAT WERE ON NOBODY'S LIST, 101.4 s between them:
+#   L.Coding.Powerset 24.7, L.Hierarchy 21.9, L.Ordinal.Pairing 18.6,
+#   L.Choice.Adequate 18.1, L.Coding.Uniform 18.1.
+# [T235] said 48.2 percent of the base had current figures and it was right;
+# the uncovered half held surprises in BOTH directions.
+#
+# THE QUESTION IT WAS RUN TO ANSWER: is there 293 s in the base? NO, and now
+# measured rather than argued. The base is 420.5 s and its top eight masters
+# are 286.8 s together, so a 293 s cut means deleting essentially all of it.
+# The seconds gate cannot be met by shrinking the base.
+#
+# L.Rud.BelowLim reads 277.7 s here. That is the TRANSITIONAL state, holding
+# both the a-0 Step module and block A's landed 589 lines, and it is not a
+# landing figure.
+full_cold_profile_2026_08_09 = "700.42 s wall, 112 rows; base 420.5 s; base cut of 293 s NOT THERE"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
