@@ -38,7 +38,7 @@ max_ids = 12
 
 [bundle.build]
 detail = "writes a master under src/. The heaviest bundle, because a build is where seconds and lines are actually spent."
-ids = ["P-h", "P-k", "P-l", "R-35", "R-36", "R-38", "R-40", "I-4", "I-5", "C-12", "D-10", "C-22"]
+ids = ["P-h", "P-k", "P-l", "P-m", "P-n", "R-35", "R-38", "R-40", "I-5", "C-12", "D-10", "C-22"]
 
 [bundle.probe]
 detail = "measures something in a scratch copy and throws it away. Gating, heap discipline, and the transplant law, which is what a probe most often gets wrong."
