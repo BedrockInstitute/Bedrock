@@ -317,9 +317,9 @@ import V.Model
   `L.Choice.Transversal`{.Agda}, the last chapter of the book.
 - `L.WellOrder.Combinators`{.Agda}: the stacking kit over `SWO`{.Agda}: the unit
   base case, the sum and product stackings, the length-gated list order, and
-  the exchange lemma they share. Split from the base chapter, whose surviving
-  half is what the choosing device itself reads; these are the constructions
-  that later chapters stack on top.
+  the exchange lemma they share. The base chapter holds the bundle and the
+  least-element search that the choosing device reads; this chapter holds the
+  constructions that later chapters stack on top of them.
 - `L.Coding.Base`{.Agda}: reading codes from inside: `allCodes`{.Agda} gathers
   every parameter-free formula's code into one nameable set, and
   `prAt`{.Agda} / `tagAt`{.Agda} destructure a Kuratowski pair and a tag in
@@ -393,7 +393,7 @@ import V.Model
 - `L.CardinalPredicates`{.Agda}：等势、基数与后继基数作为无参的内部公式，对载体与元数皆通用，各带把满足关系对上宿主概念的证书。等势就是双射的存在，一步到位，故任何消费方都不欠一次 Cantor-Bernstein 论证。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是，故恰有一个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}。
-- `L.WellOrder.Combinators`{.Agda}：`SWO`{.Agda} 之上的叠放装配：单位底案、和与积两种叠放、以长度为门的表序，以及它们共用的兑换引理。从基章切分而来；基章存活的那一半正是选取装置自身所读的，而这里是后面诸章往上叠放的构造。
+- `L.WellOrder.Combinators`{.Agda}：`SWO`{.Agda} 之上的叠放装配：单位底案、和与积两种叠放、以长度为门的表序，以及它们共用的兑换引理。基章持有选取装置所读的束与极小元搜索；本章持有后面诸章在其上叠放的构造。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
@@ -1138,8 +1138,21 @@ measurement. Wired chapter by chapter as the wave batches land.
   operator: the single-equation tower, the three derived case equations,
   cumulativity, transitivity, and J at limit indices.
 - `L.Rud.Step`{.Agda}: the concrete sixteen-image step with its membership
-  characterization, the containment discharges, and the first nine
-  transitivity cases (the telescope reshape is in progress).
+  characterization, the containment discharges, and the transitivity of the
+  step at all sixteen operations.
+- `L.TowerKit`{.Agda}: the L-side interface between the constructible tower
+  and the rud step: the stage extensionality and emptiness reads, the
+  transitivity and definable-power facts, the pairing with its Layer-free
+  membership arm, and the four-step successor. It sits below both the graph
+  layer and the bridge, so either can read the tower on its own.
+- `L.Rud.StepGraph`{.Agda}: the graph layer: one rud step read from inside
+  the object language. The equality and projection frames, the sixteen
+  membership formulas at bound arguments with their two-way decodes, the
+  dispatchers, the sixteen operation graphs and the finite disjunction over
+  them; then the pin frame, which turns any graph into the defining formula
+  of its operation's value, the values lex, and the step's own description.
+  It imports no retiring module, and the description of the operations is
+  read from here.
 - `L.Rud.Order`{.Agda}: the canonical well-order as the pullback of the
   stage-bounded producer-tree order along the least-producer key, with the SZ
   successor clauses machine-checked, one-line coherence, and the external
@@ -1203,23 +1216,12 @@ measurement. Wired chapter by chapter as the wave batches land.
   object formula, generic in both directions at once. The carrier is a module
   parameter, so the clause is written once and evaluated at every stage the
   below-lim induction visits; the sixteen-operation graph layer is a SECOND
-  telescope, because that layer is archived and a master may not import across
-  the archive boundary, so the instantiator supplies it. Built to the one-way
+  telescope, so the clause stays independent of how the graphs are supplied
+  and the instantiator hands them over (`L.Rud.StepGraph` is the supplier in
+  the tree). Built to the one-way
   form: the delivered two-way successor-value clause is too strong and forces
   an infinite chain inside a finite member. No instance in the tree yet; the
   StepInL rewrite supplies the first one.
-- `L.TowerKit`{.Agda}: the L-side interface between the constructible tower
-  and the rud step: the stage extensionality and emptiness reads, the
-  transitivity and definable-power facts, the pairing with its Layer-free
-  membership arm, and the four-step successor. Extracted from the bridge so
-  the graph layer can read the tower without reading the bridge.
-- `L.Rud.StepGraph`{.Agda}: the graph layer's fresh home, block 1 of the
-  StepInL rewrite: the equality and projection frames, the cap and union
-  support, the sixteen membership formulas, and the finite disjunction with
-  its two-way decode. The sixteen graphs themselves stay a telescope
-  parameter until block 3 lands them, so the disjunction is abstract exactly
-  where StepStory consumes it. Zero retiring imports, by construction and by
-  point: this chapter is what survives the archival.
 <!--zh-->
 ## 初步函数主干 (在建)
 
@@ -1229,7 +1231,9 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Ops`{.Agda}：基底运算 F0-F7 与 F9，带双向外延规格，出生即封印。
 - `L.Rud.Images`{.Agda}：基底的像半部，F8 与 F10-F15，含配对投影，相对化槽位作模块参数。
 - `L.Rud.Hierarchy`{.Agda}：抽象步进算子上的 S-层级引擎：单方程塔、三条导出情形等式、累积性、传递性、极限指标处的 J。
-- `L.Rud.Step`{.Agda}：具体的十六像步进及其隶属刻画、包含性清偿、首批九个传递性案例 (遥测重塑进行中)。
+- `L.Rud.Step`{.Agda}：具体的十六像步进及其隶属刻画、包含性清偿，以及步进在全部十六个运算处的传递性。
+- `L.TowerKit`{.Agda}：可构成塔与 rud 步进之间的 L 侧接口：阶段的外延与空性读式、传递性与可定义幂的事实、带 Layer 无关隶属臂的配对，以及四步后继。它坐落在图层与桥二者之下，故任一方都可自行读塔。
+- `L.Rud.StepGraph`{.Agda}：图层：一次 rud 步进，自对象语言内部读出。等词框架与投影框架、束缚实参处的十六条隶属公式及其双向解码、诸分派器、十六个运算图与其上的有穷析取；继而是钉住框架，它把任一个图变成其运算取值的定义公式，还有取值词典序与步进自身的描述。它不导入任何退役模块，而诸运算的描述正是从此处读出。
 - `L.Rud.Order`{.Agda}：典范良序：沿最小生产者键回拉循阶生产者树之序，SZ 后继子句机器验证，相容一行，极限层的外部选择定理。
 - `L.Rud.OrderReadings`{.Agda}：典范良序在层处的诸读式：生产者隶属、与出生阶段的相容，以及后继子句，坐落在它从序章导入的最小生产者机器之上。
 
@@ -1246,9 +1250,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
 - `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
-- `L.Rud.StepStory`{.Agda}：S-故事的单向后继子句，作为对象公式，且一次泛型到底。载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，因为该层已归档而 master 不得跨归档边界 import，故由实例化方供给。按单向形式建造：已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。树中尚无实例，第一个由 StepInL 重写供给。
-- `L.TowerKit`{.Agda}：可构成塔与 rud 步进之间的 L 侧接口：阶段的外延与空性读式、传递性与可定义幂的事实、带 Layer 无关隶属臂的配对，以及四步后继。从桥中析出，使图层读塔而不读桥。
-- `L.Rud.StepGraph`{.Agda}：图层的新家，StepInL 重写的第一块：等词框架与投影框架、交与并的支撑、十六条隶属公式，以及带双向解码的有穷析取。十六个图本身在第三块落地之前保持为望远镜参数，故析取恰在 StepStory 消费它之处保持抽象。不导入任何退役模块，这既是构造方式，也是本章存在的意义。
+- `L.Rud.StepStory`{.Agda}：S-故事的单向后继子句，作为对象公式，且一次泛型到底。载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，故子句与诸图如何供给无关，由实例化方交出 (树中的供给方是 `L.Rud.StepGraph`{.Agda})。按单向形式建造：已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。
 <!--/-->
 
 ```agda
