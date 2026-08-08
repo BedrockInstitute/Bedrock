@@ -315,6 +315,11 @@ import V.Model
   trichotomy: the choosing device the axiom of choice takes. Reflection was
   expected to be a second consumer and is not, so there is exactly one, and it is
   `L.Choice.Transversal`{.Agda}, the last chapter of the book.
+- `L.WellOrder.Combinators`{.Agda}: the stacking kit over `SWO`{.Agda}: the unit
+  base case, the sum and product stackings, the length-gated list order, and
+  the exchange lemma they share. Split from the base chapter, whose surviving
+  half is what the choosing device itself reads; these are the constructions
+  that later chapters stack on top.
 - `L.Coding.Base`{.Agda}: reading codes from inside: `allCodes`{.Agda} gathers
   every parameter-free formula's code into one nameable set, and
   `prAt`{.Agda} / `tagAt`{.Agda} destructure a Kuratowski pair and a tag in
@@ -388,6 +393,7 @@ import V.Model
 - `L.CardinalPredicates`{.Agda}：等势、基数与后继基数作为无参的内部公式，对载体与元数皆通用，各带把满足关系对上宿主概念的证书。等势就是双射的存在，一步到位，故任何消费方都不欠一次 Cantor-Bernstein 论证。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是，故恰有一个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}。
+- `L.WellOrder.Combinators`{.Agda}：`SWO`{.Agda} 之上的叠放装配：单位底案、和与积两种叠放、以长度为门的表序，以及它们共用的兑换引理。从基章切分而来；基章存活的那一半正是选取装置自身所读的，而这里是后面诸章往上叠放的构造。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
@@ -421,6 +427,7 @@ import L.Ordinal.SquareLaw
 import L.CardinalPredicates
 import L.Ordinal.Stages
 import L.WellOrder.Base
+import L.WellOrder.Combinators
 import L.Coding.Base
 import L.Coding.Environment
 import L.Stage

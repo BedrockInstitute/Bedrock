@@ -2426,6 +2426,200 @@ brief's Hull guess is wrong.
 
 Hull is a consumer, not a supplier.
 
+**`[T148]` THE STEPINL REWRITE, BLOCK 1** (2026-08-07,
+`_build/l3.32-t148-report.md`).
+
+The block is LANDED. `L.Rud.StepGraph` holds 504 non-blank in-fence
+lines. The stop-line is 650. The count sits 146 lines under it. The
+master checks green at about 1.6 s warm. Zero retiring imports remain.
+
+The rate is x1.21 against the delivered comparables, 417 lines. The
+brief's `rightMem` does not exist in the archive. The right projection
+is `rightEqF`. `eqFrame-ok` ships with the frame. StepStory's `Clause`
+consumes it (`src/L/Rud/StepStory.lagda.md:79-103`). The `BigOr`
+parameter keeps the graphs' block-3 landing natural.
+
+**`[T149]` THE JOURNAL TASK** (2026-08-07,
+`_build/l3.32-t149-report.md`).
+
+The dispatch wrote 8 of 8 entries, `[T140]` to `[T147]`. The journal
+grew by 723 words. It recorded six claims the evidence does not
+support. No existing line changed.
+
+**`[T150]` THE BELOW-LIM DESIGN MEMO** (2026-08-07,
+`_build/l3.32-t150-report.md`).
+
+The memo is DELIVERED at `dev/memos/L3.32-below-lim-design.md`, at
+1,983 words. Sizes tie to the ledger in both calibers. Five
+contradictions pin the record. The green-state claim does not survive.
+The run of the cured whole file became `[T151]`.
+
+The limit-index price disagrees fourfold. T128 priced it at 80 to 120
+as a hypothesis. T131 measured about 500
+(`_build/l3.32-t128-report.md:182`; `_build/l3.32-t131-report.md:87-88`).
+The memo names the open terms and their cheapest probes. The first
+probe is a run, not a build. The cured whole file has never completed.
+
+**`[T151]` THE CURED PROBE, END TO END** (2026-08-07,
+`_build/l3.32-t151-report.md`).
+
+STOPPED at 46:16 wall, contended. The dependency chain completed. The
+main file did not complete, and no type error surfaced. No profile
+printed. It prints only after a completed run. Zero repairs beyond the
+graft.
+
+The 15-minute new-wall stop-line could not apply. A non-completing run
+names no definition. The outer 45-minute clock took over. A second
+wall exists, and its site is unknown. The next probe must bisect with
+T143's method. T143's 27 ms figure stands for its own harness only.
+
+**`[T152]` THE TERMINOLOGY DOSSIER** (2026-08-07,
+`_build/l3.32-t152-dossier.md`).
+
+The dossier covers eleven terms StepGraph uses uncovered. It searched
+the Chinese literature first. Every guess is marked. Each compound
+reduces to composition over a ruled head. Ten renderings stand. Only
+`slice` changes.
+
+`slice` becomes 切片 instead of 像片. 像片 means photograph. The tree
+majority says 切片 at 15 sites to 3. The drift sits at
+`src/L/Rud/Images.lagda.md:460`. The dossier enters the D35 pipeline.
+
+**`[T153]` THE ADVERSARIAL REVIEW** (2026-08-07,
+`_build/l3.32-t153-review.md`).
+
+The opus review attacks all eleven recommendations. It fetches every
+URL and re-runs every in-tree count. Four PASS and land. Six FAIL on
+sources or broken claims. One ESCALATES as a genuine fork. The seven
+go to the owner's delegation and all land.
+
+The passes are frame, disjunction, slice and landing site. The fork is
+master. Evidence eliminates 主章 on the ja side. `原本` and `マスター`
+stay open.
+
+**`[T154]` THE SECOND WALL, FOUND** (2026-08-08,
+`_build/l3.32-t154-report.md`).
+
+The bisection FOUND one wall. It is the depth-6 ordinal witness
+`+ω-iter 6 a₀` at `src/ProbeT154.agda:667`. The eleven lines of
+`seg₀∈Lβ₀` add it (`:665-675`). The disease is the P-i conversion
+class, in the P-l frame.
+
+The cost scales super-linearly with depth. Depth 1 converts in 0.7 s.
+Depth 3 converts in 18.9 s. Depth 6 never completes inside 600 s. The
+cure climbs by small closures. The harness falls from 631 s to 59 s,
+exit 0.
+
+R-40 is admitted from this dispatch. It keeps R-35's small-index shape
+with a different mechanism. Five latent tail errors keep the whole
+file from completing. T154 refuses a whole-file figure under P-l.
+
+**`[T155]` THE FAT AUDIT** (2026-08-07,
+`_build/l3.32-t155-report.md`).
+
+The audit is D36's gate G1 (`dev/PLAN.md:193`). It classifies 597
+top-level definitions in the shared part, 31 masters, 9,203 lines. The
+D33 route seed prices three Order suppliers as AC-required. Movable
+starts at 3,435 conservative and 3,614 optimistic. Saves-now is 757
+conservative and 930 optimistic. The target headroom is minus 3,541.
+
+The addendum extends the seed to the funded AC chain. StepStory,
+StepGraph and HF join. Movable falls to 2,069-2,248. The
+HF-imports-Finite catch seeds Finite too. Movable falls to about
+1,471-1,650 (`dev/PLAN.md:589`). G1 alone closes no gap under either
+corrected reading.
+
+The scan is text-level, not Agda-verified. A hidden dependency can
+survive it; `[T160]` proves the point.
+
+**`[T156]` THE CARRIED-SEQUENCE RE-SPLIT** (2026-08-07,
+`_build/l3.32-t156-report.md`).
+
+The audit re-books zero lines in either caliber. General beta is
+AC-forced. `ChoiceStatement` quantifies over every family
+(`_build/l3.32-t3-report.md` section 3). The bridge must close at
+every limit ordinal. All five terms stay BOTH. The whole
+`carried-sequence` row stays.
+
+The road to green runs through G1 and G3 alone (`dev/PLAN.md:193`).
+The meter stays red.
+
+**`[T157]` THE IDEAL-FORM PRICING** (2026-08-07,
+`_build/l3.32-t157-report.md`).
+
+Five of seven masters sit at or under the noise line. Compression is
+rarer than it looks. The pricing forks on the AC status of Bridge's
+description side. Reading A prices it at 490-580 naive. Reading B at
+130-170 naive. Only Bridge and Describe contribute.
+
+Bridge's description side is 363-408 naive lines with zero surviving
+consumers. The fork closes in `[T158]`. Reading B holds.
+
+**`[T158]` THE DESCRIPTION-DISCHARGE GATE** (2026-08-07,
+`_build/l3.32-t158-report.md`).
+
+VERDICT (c). The description side is AC-forced. Reading B holds. The
+forcing chain runs `bridge-isJ→isL` through `Below`, `Lstep⊆`,
+`Ljunk`, `Lval` and `Arms`. `Arms` consumes `Describe` and `Switch`
+(`src/L/Rud/Bridge.lagda.md:41-44`). Only W3-class content discharges
+the description `phi`.
+
+The AC route carries W3's elimination slice. The order formula over
+the level is undelivered (`src/L/Rud/Order.lagda.md:1014-1015`). The
+headroom moves from minus 3,541 to about minus 3,370 to minus 3,410.
+The deficit does not move by a third. T157's Reading A is superseded
+(`_build/l3.32-t157-report.md` section 1.3).
+
+**`[T159]` THE FIRST COMPLETE ELABORATION** (2026-08-08,
+`_build/l3.32-t159-report.md`).
+
+GREEN. The below-lim first instance elaborates end to end for the
+first time ever. Cold wall is 57.768 s, exit 0, clean. Warm re-check
+is 2.492 s. Three full elaborations agree within a second. No wall, no
+heap exhaustion, no postulate.
+
+The fix budget consumed 13 lines beyond the cure, against 80. The cure
+is R-40's climb. The five latent repairs are exactly T154's list. No
+new error surfaced. The dominant term is `δ₀∈β₀` at 17.2 s. The
+master's own number re-measures at wiring (P-l).
+
+**`[T160]` THE STEP SPLIT** (2026-08-08,
+`_build/l3.32-t160-report.md`).
+
+STOPPED under the naturalness condition (D36 (2), `dev/PLAN.md:193`).
+The moved set cannot form a coherent chapter. A two-module split
+forces an import cycle. Step's `ConcreteS` consumes all four headline
+names in-file (`src/L/Rud/Step.lagda.md:935`). Its exports feed the AC
+root `L.Rud.Bridge`. T155's scan misses this consumer class
+(`_build/l3.32-t155-report.md:103-108`).
+
+The only cycle-free shape is a telescope of about sixty kept names.
+That is the threshold contortion D36 forbids. Four names have
+out-of-scope consumers and stay. C-23 is admitted from this dispatch.
+The AC total stays 14,420.
+
+**`[T161]` THE W3 ELIMINATION-SLICE GATE** (2026-08-08,
+`_build/l3.32-t161-report.md`).
+
+VERDICT RED. The slice's obligations reduce to W3's own theorems at
+delivered size. The core is the precedes atom over the family's J
+level with two-way adequacy. It is undelivered and structurally open.
+The three named survivors supply none of it. The wiring closes over
+delivered machinery and is measured green.
+
+The row band does not shrink. `w3-ac-slice` stays 240-950 naive and
+720-2850 calibrated. Near-full W3 rides the AC route. The D36
+headroom does not improve on this row. Check times are contended with
+T162's split in the shared tree.
+
+**`[T162]` THE WELLORDER.BASE SPLIT** (2026-08-08,
+`_build/l3.32-t162-report.md`).
+
+DISPATCHED. The report has not returned an outcome by the time of
+writing. The candidate set is `connex`, `unitSWO`, `sumSWO`, `prodSWO`
+and `listSWO` with their private machinery. The baseline check is
+0.87 s warm, exit 0, contended with T161.
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
