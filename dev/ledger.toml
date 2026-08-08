@@ -1242,6 +1242,28 @@ landing_misses_gate_by = "6-14"
 # 1,290 naive lines, HF and Finite, at the landing. Executed, it would read
 # 15,385. It is not executed, so the measured number is 16,675.
 ac_tripwire_fired = "2026-08-09, measured 16,675 against cap 16,000"
+# HOW TO READ THE SECONDS MISS, and the campaign already wrote this down.
+# `gate_note` below, ruled 2026-08-06, says the 498 s gate HAS ZERO MARGIN BY
+# CONSTRUCTION: it is not an independent target but the campaign's own
+# projection, 1,070.2 minus the archival's measured 468.1 minus [T121]'s three
+# measured cures, so it carries their error. Its own words: "If the landed tree
+# measures 505 s the gate fails by 7 s on the same arithmetic that set it.
+# Judge the gate on the WALL run at landing, and if it misses by a margin of
+# that size, the honest reading is that the projection was inside its own error
+# bars, not that a new lever is owed."
+#
+# The projected landing is 504-512 s. The BOTTOM of that range is the case the
+# note names outright. The TOP is twice it, and the note does not cover it. So
+# the seconds threshold is NOT settled as a failure and NOT settled as a pass:
+# it is settled as "judge it on the landing wall run", which does not exist
+# because block A is not finished.
+#
+# THE BINDING THRESHOLD IS THEREFORE LINES AGAIN. The line miss is MEASURED at
+# 675 over. The seconds miss is PROJECTED, and the projection sits inside the
+# error bars the gate was built from. [T217]'s finding that "seconds, not
+# lines, is the binding constraint" was true for the tree it measured and is
+# superseded here.
+seconds_miss_reading = "judge at the landing wall run; gate_note covers a miss of this size"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
