@@ -38,11 +38,12 @@ the free slots. Blocked means waiting on an owner ruling, on a sibling's write
 territory, on a measurement that would make the work fundable, or on the
 ceilings above. Auditing a return is not a reason to idle.
 
-**The emergency tier is PLAN D36's, and this section does not restate it.**
-The short form: a codex return that does not do its task well, AT a critical
-breakthrough, may be re-dispatched to Fable 5 at maximum effort. Both
-conditions bind. A stop, a refutation or a RED is a good return and never a
-trigger. Read D36 before using it; the ruling names what must be recorded.
+**The emergency tier belongs to PLAN D37's standing loop, and this section
+does not restate it.** The short form: a codex return that does not do its
+task well, AT a critical breakthrough, may be re-dispatched to Fable 5 at
+maximum effort. Both conditions bind. A stop, a refutation or a RED is a good
+return and never a trigger. Read D37 before using it; the ruling names what
+must be recorded.
 
 *Enforcement:* the return-handling checklist in section 6.
 
