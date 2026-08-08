@@ -1148,6 +1148,10 @@ measurement. Wired chapter by chapter as the wave batches land.
   stage-bounded producer-tree order along the least-producer key, with the SZ
   successor clauses machine-checked, one-line coherence, and the external
   choice theorems at limit levels.
+- `L.Rud.OrderReadings`{.Agda}: what the canonical order reads at a level:
+  the producer membership, the coherence with the birth stage, and the
+  successor clauses, sitting above the least-producer machinery it imports
+  from the order chapter.
 - `L.Rud.Switch`{.Agda}: the switch theorem: the abstract basis discharged at
   the sixteen operations, both directions of the comprehension shape, and
   the limit corollary, with the image principle and the level descriptions
@@ -1231,6 +1235,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Step`{.Agda}：具体的十六像步进及其隶属刻画、包含性清偿、首批九个传递性案例 (遥测重塑进行中)。
 - `L.Rud.Describe`{.Agda}：前九个运算的描述半部：定义公式带 Δ₀ 见证，配对家族的完整 adequacy 与可定义子集等式，封面残余与嵌套存在残余已记录。
 - `L.Rud.Order`{.Agda}：典范良序：沿最小生产者键回拉循阶生产者树之序，SZ 后继子句机器验证，相容一行，极限层的外部选择定理。
+- `L.Rud.OrderReadings`{.Agda}：典范良序在层处的诸读式：生产者隶属、与出生阶段的相容，以及后继子句，坐落在它从序章导入的最小生产者机器之上。
 - `L.Rud.Switch`{.Agda}：切换定理：抽象基在十六运算处清偿，概括形态双向到手，极限推论在位；像原理与层级描述作为具名模块假设。
 
 - `L.OrderFamily`{.Agda}：序族及其表，建于「逐层的序作为元素」这一接口之上：表是以层为索引的集合，后继处的序与下方之序在旧成员上一致，而极限处的序是表的并，即经典极限子句的元素级读法。
@@ -1261,6 +1266,7 @@ import L.Rud.HF
 import L.Rud.LevelSigma
 import L.Rud.Describe
 import L.Rud.Order
+import L.Rud.OrderReadings
 import L.OrderFamily
 import L.OrderFormula
 import L.Rud.Switch
