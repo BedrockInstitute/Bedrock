@@ -2380,6 +2380,41 @@ it is the one place this happened.
 `[L3.32-T76]` fixed it and found the other two; the owner ruled the story a
 rewrite rather than a patch on 2026-08-05, executing as `[L3.32-T77]`.
 
+### C-26. Signature-identical is not type-identical; verify the CONSUMERS, not the exports
+
+**The law.** When a generalization replaces hand-written content, checking that
+the exported SIGNATURES are byte-identical does not show the exports are
+unchanged. A signature names a type; it does not show that type's internal
+SHAPE, and a consumer that destructures positionally reads the shape. The only
+sufficient check is to typecheck the consumers.
+
+**The measurement, 2026-08-09, `[L3.32-T226]` and `[L3.32-T234]`.** C4 replaced
+five hand-written story assemblies with a fold over a clause list. Its report
+verified, correctly, that "all 20 signature lines are present verbatim,
+diffed against the recorded pre-edit text; the bodies alone changed", and
+concluded the exports were byte-identical. They were not. The fold's base case
+is `Conj [] f = Unit*`, so a five-clause story acquired the type
+`c₁ × (c₂ × (c₃ × (c₄ × (c₅ × Unit*))))` where the hand form was
+`c₁ × (c₂ × (c₃ × (c₄ × c₅)))`. Nothing in any signature mentions that
+difference.
+
+`src/L/Rud/HF.lagda.md` destructures the story positionally at `:502`, so
+`st .snd .snd .snd .snd` changed from the clause FUNCTION to a PAIR. Agda
+reported `[CannotApply]`, exit 42. A delivered master was red, and the lane
+that verified its own exports did not check it. `[T233]`'s A/B, run for an
+unrelated reason, is what surfaced it.
+
+**The cure is at the fold, not the consumer.** Give the fold a one-element
+case, so a non-empty list ends bare. Repairing the consumer treats the symptom,
+leaves every other positional consumer exposed, and keeps the generalization's
+types different from the form it replaced, which is the opposite of what a
+generalization is for.
+
+**The check that would have caught it**, and it is cheap: typecheck the
+consumers. C-23 already says a consumer scan must count same-file
+instantiation bodies. This law says the scan must END in a typecheck, because
+the defect is invisible to reading.
+
 ### C-25. Two parallel writers may not share a file, and "the home you propose" IS a shared file
 
 **The law.** A brief that grants an agent a file it does not NAME, such as "the
