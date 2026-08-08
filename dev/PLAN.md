@@ -613,7 +613,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | DISPATCHED 2026-08-08 | `_build/l3.32-t198-report.md` |
-| L3.32-T199 | The carve-supset repair: is the general family equality feasible? | DISPATCHED 2026-08-08 | `_build/l3.32-t199-report.md` |
+| L3.32-T199 | The carve-supset repair: is the general family equality feasible? | FEASIBLE at 592-1,052: a bounded family formula, and the false bridge never enters | `_build/l3.32-t199-report.md` |
 | L3.32-T187 | The coverage audit: did this week's re-cuts lose AC content? | CLEAN, nothing untracked; seven citation and arithmetic defects found and applied | `_build/l3.32-t187-report.md` |
 | L3.32-T188 | JOURNAL entries T181 to T187 and the day's two measurements | DELIVERED. 7 of 7 entries, insertions only, lint green | `_build/l3.32-t188-report.md` |
 | L3.32-T189 | Arm C recon: the two surviving crossings into the choice tree | Band re-priced 180-310 naive with two itemized terms; Hull re-homes by the bridge route | `_build/l3.32-t189-report.md` |
