@@ -53,10 +53,12 @@ open import L.Constructible {ℓ}
         ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
         ; Lset-mono; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; boundingOrd )
+open import L.Rud.Ops {ℓ} using ( F0; F5; F0-spec; F5-spec )
 
 open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.Data.FinData using ( zero; suc )
-open import Cubical.Data.Sum using ( inl; inr )
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Foundations.Function using ( _∘_ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
@@ -65,7 +67,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; extensionality; _⊆_; ⟪_⟫; ⟪_⟫↪ )
+  using ( _∈ₛ_; ∈∈ₛ; extensionality; _⊆_; _≡ₕ_; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; pairing-ax; ⋃_; union-ax
         ; module InfinitySet )
@@ -293,6 +295,89 @@ finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
            → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁
 finSet-out n h y = PT.map (λ { (i , q) → lower i , q })
 
+```
+
+<!--en-->
+## The finite-set equations
+<!--zh-->
+## 有穷集的等式
+<!--/-->
+
+<!--en-->
+The finite-set constructor has two recursion equations. The empty table
+spans the empty set. A table with a head is the singleton of the head
+united with the tail's set, realized as the union operation applied to
+the unordered pair of the singleton and the tail. Both equations close
+extensionally, by the two-armed membership specifications of the pair
+and the union.
+<!--zh-->
+有穷集构造子有两条递归等式。空表张成空集。带头之表是头的单点集与尾之集合的并，实现为并运算作用于单点集与尾集所成的无序对。两条等式都以双向包含闭合，用对与并的双臂成员规格。
+<!--/-->
+
+```agda
+ext-⊆ : {u v : V ℓ} → ((x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ v ⟩)
+      → ((x : V ℓ) → ⟨ x ∈ v ⟩ → ⟨ x ∈ u ⟩) → u ≡ v
+ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
+
+finSet0∅ : (h : Fin 0 → V ℓ) → finSet 0 h ≡ ∅
+finSet0∅ h = ext-⊆ sub sup
+  where
+  sub : (y : V ℓ) → ⟨ y ∈ finSet 0 h ⟩ → ⟨ y ∈ ∅ ⟩
+  sub y y∈ = PT.rec (snd (y ∈ ∅)) (λ { (() , _) }) (finSet-out 0 h y y∈)
+  sup : (y : V ℓ) → ⟨ y ∈ ∅ ⟩ → ⟨ y ∈ finSet 0 h ⟩
+  sup y y∈ = Empty.rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
+
+finSetSuc : (n : ℕ) (h : Fin (suc n) → V ℓ)
+          → finSet (suc n) h
+          ≡ F5 (F0 (F0 (h zero) (h zero)) (finSet n (h ∘ suc))) (h zero)
+finSetSuc n h = ext-⊆ sub sup
+  where
+  X : V ℓ
+  X = finSet n (h ∘ suc)
+  P : V ℓ
+  P = F0 (F0 (h zero) (h zero)) X
+  sub : (y : V ℓ) → ⟨ y ∈ finSet (suc n) h ⟩ → ⟨ y ∈ F5 P (h zero) ⟩
+  sub y y∈ = PT.rec (snd (y ∈ F5 P (h zero))) go (finSet-out (suc n) h y y∈)
+    where
+    go : Σ[ i ∈ Fin (suc n) ] (h i ≡ y) → ⟨ y ∈ F5 P (h zero) ⟩
+    go (zero , q) = F5-spec P (h zero) y .snd
+      ∣ F0 (h zero) (h zero)
+      , ( F0-spec (F0 (h zero) (h zero)) X (F0 (h zero) (h zero)) .snd ∣ inl refl ∣₁
+        , F0-spec (h zero) (h zero) y .snd ∣ inl (sym q) ∣₁ ) ∣₁
+    go (suc i , q) = F5-spec P (h zero) y .snd
+      ∣ X , ( F0-spec (F0 (h zero) (h zero)) X X .snd ∣ inr refl ∣₁
+            , finSet-in n (h ∘ suc) y ∣ i , q ∣₁ ) ∣₁
+  sup : (y : V ℓ) → ⟨ y ∈ F5 P (h zero) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+  sup y y∈ = PT.rec (snd (y ∈ finSet (suc n) h)) go
+    (F5-spec P (h zero) y .fst y∈)
+    where
+    go : Σ[ v ∈ V ℓ ] ⟨ (v ∈ P) ⊓ (y ∈ v) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+    go (v , v∈P , y∈v) = atV
+      (F0-spec (F0 (h zero) (h zero)) X v .fst v∈P)
+      where
+      atV : ⟨ (v ≡ₕ F0 (h zero) (h zero)) ⊔ (v ≡ₕ X) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+      atV hv = PT.rec (snd (y ∈ finSet (suc n) h)) atCases hv
+        where
+        atCases : (⟨ v ≡ₕ F0 (h zero) (h zero) ⟩ ⊎ ⟨ v ≡ₕ X ⟩) → ⟨ y ∈ finSet (suc n) h ⟩
+        atCases (inl v≡) = atSingl
+          (F0-spec (h zero) (h zero) y .fst (subst (λ w → ⟨ y ∈ w ⟩) v≡ y∈v))
+          where
+          atSingl : ⟨ (y ≡ₕ h zero) ⊔ (y ≡ₕ h zero) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+          atSingl hy = PT.rec (snd (y ∈ finSet (suc n) h)) atEq hy
+            where
+            atEq : (⟨ y ≡ₕ h zero ⟩ ⊎ ⟨ y ≡ₕ h zero ⟩) → ⟨ y ∈ finSet (suc n) h ⟩
+            atEq (inl y≡) = finSet-in (suc n) h y ∣ zero , sym y≡ ∣₁
+            atEq (inr y≡) = finSet-in (suc n) h y ∣ zero , sym y≡ ∣₁
+        atCases (inr v≡) = atX (subst (λ w → ⟨ y ∈ w ⟩) v≡ y∈v)
+          where
+          atX : ⟨ y ∈ X ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+          atX y∈X = PT.rec (snd (y ∈ finSet (suc n) h))
+            (λ { (i , q) → finSet-in (suc n) h y ∣ suc i , q ∣₁ })
+            (finSet-out n (h ∘ suc) y y∈X)
+
+```
+
+```agda
 module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
   module DefC = DefOf (Lset σ)
 

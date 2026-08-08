@@ -131,6 +131,34 @@ python3 scripts/ledger.py --brief   # one line: standing, endpoint, overage
 python3 scripts/ledger.py --check   # validate the declaration; exit 1 on a defect
 ```
 
+## `deletion-test.py`
+
+The deletion test is D36's judgment, runnable on demand. The AC endpoint
+must typecheck, exit 0, in a tree with every gch-side master removed. The
+surviving tree must count under 16,000 non-blank in-fence lines. `[T147]`
+ran that test once by hand. This tool makes it runnable at any time and at
+the AC landing.
+
+The shadow mode is the daily proxy. It reuses `scripts/ledger.py`'s trophy
+split by import, so the two can never drift apart silently. It reports the
+count, the cap, the headroom, and the file list on request. The count is
+file-granular. The board discloses the granularity error `[T155]` measured
+at 2,069-2,248 lines. The `--run` mode is the real test. It creates a git
+worktree and removes every gch-side master. It generates a root module that
+imports every remaining AC-side master. It typechecks the root under
+`GHCRTS=-M8g`. It refuses without `--yes`. It refuses when another Agda
+process is live.
+
+The tool is a MEASUREMENT, not a gate. It is deliberately NOT part of
+`make check`: `--run` costs minutes, and the judgment runs at the landing,
+not at every commit.
+
+```sh
+python3 scripts/deletion-test.py                # shadow: count, cap, headroom
+python3 scripts/deletion-test.py --files        # shadow, with the AC-side file set
+python3 scripts/deletion-test.py --run --yes    # the real test (guarded)
+```
+
 ## `check-probes.py`
 
 The never-commit gate, plus the probe lifecycle. Two standing rules from `AGENTS.md`'s Never
