@@ -1353,6 +1353,34 @@ port_refactor_saving = "250-300 lines, structurally proven by the successor clau
 # s per line across from the restated one. That measurement is the next one
 # the campaign owes.
 block_a_reprojected = "1,896-2,026; meter 16,124-16,254 against the 16,000 cap"
+# [T240] RE-MEASURED THE SAME MINIATURE 2026-08-09, after [T239] landed, and
+# the two thresholds part company. THE LINES TRANSFERRED: 589 non-blank against
+# [T237]'s 904, a saving of 315 where 317 was projected, over three clean cold
+# runs. THE SECONDS DID NOT: 174.62 s mean against 186.43, a saving of 11.80 s.
+# The 315 removed lines were worth 0.037 s per line. The 589 that stayed carry
+# 174.62 s between them, and they are formulas stated and decoded at the
+# concrete carrier, which is P-n's signature.
+#
+# The measured rate ROSE to 0.297 s per line, the top of the instantiation
+# class, because the same cost divides by fewer lines. That is the certificate
+# becoming honest, not a regression, and it is now P-q.
+#
+# THE LINE PICTURE, projections except the measured 589: carried sequence
+# 849-979 naive, block A 1,898-2,028, meter 16,126-16,256 against the 16,000
+# cap, over by 126-256. The route does not move.
+#
+# THE SECONDS PICTURE IS THE HARD ONE AND IT IS NOW MEASURED AT ITS LARGEST
+# TERM. The carried sequence alone costs about 252-291 s: the measured 174.62
+# plus 77-116 for the remaining 260-390 lines at the same class. Every seconds
+# budget in this ledger used a rate at or below 0.22 and the measured rate is
+# 0.297. The wall gate is 498 s with the base at 388.9, so the carried sequence
+# by itself consumes more than the whole remaining margin.
+#
+# P-n AND P-q TOGETHER SAY WHAT IS LEFT. Deduplication is not the seconds
+# lever, however well it reads on the meter. The only admissible move is to
+# need LESS instantiation, and that is a change of mathematical shape rather
+# than of where the code lives. No such shape is on the table today.
+carried_sequence_remeasured = "589 nbl / 174.62 s / 0.297 s per line; lines transferred, seconds did not"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold

@@ -635,7 +635,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T237 | Finish block A, delete the a-0 module, and measure the landing | STOPPED at the gate: GO but 904 nbl / 186 s for the limit case alone, 4.3x the floor;  | `_build/l3.32-t237-report.md` |
 | L3.32-T238 | Adversarial: is the nested-carrier port really unavoidable? | PARTLY AVOIDABLE: the clause must exist at the nested carrier, but 250-300 lines of resta | `_build/l3.32-t238-report.md` |
 | L3.32-T239 | Make the limit clause carrier-generic, as the successor clause already is | GREEN, net +26 at the first site (StepStory +350, BelowLim -324); the neste | `_build/l3.32-t239-report.md` |
-| L3.32-T240 | Re-measure the carried sequence with the generic clause: lines AND seconds | DISPATCHED 2026-08-09; replaces the last measured number in the projection | `_build/l3.32-t240-report.md` |
+| L3.32-T240 | Re-measure the carried sequence with the generic clause: lines AND seconds | 589 nbl / 174.62 s / 0.297 per line: the 315 lines transferred, the second | `_build/l3.32-t240-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
