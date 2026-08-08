@@ -80,3 +80,10 @@ ids = ["D-10", "C-22", "P-l"]
 "cong" = ["P-g"]
 "transport" = ["Rule 4", "P-f"]
 "telescope" = ["P-l", "Rule 15"]
+# C-25 binds the ORCHESTRATOR at brief-writing time, not the dispatched agent,
+# so it belongs to no agent bundle. Its mechanical enforcement is the dispatch
+# write-territory refusal; these triggers make it readable by the human or
+# agent who is about to write two briefs at once.
+"parallel" = ["C-25", "C-12"]
+"shared home" = ["C-25"]
+"write scope" = ["C-25"]

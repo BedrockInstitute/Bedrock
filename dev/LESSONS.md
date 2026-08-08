@@ -2331,3 +2331,35 @@ it is the one place this happened.
 `[L3.32-T75]` settled that the code rather than the comment was wrong;
 `[L3.32-T76]` fixed it and found the other two; the owner ruled the story a
 rewrite rather than a patch on 2026-08-05, executing as `[L3.32-T77]`.
+
+### C-25. Two parallel writers may not share a file, and "the home you propose" IS a shared file
+
+**The law.** A brief that grants an agent a file it does not NAME, such as "the
+shared home you propose", grants an unbounded write. Two such briefs live at
+once will collide, because agents reading the same tree propose the same home:
+it is the correct home, which is exactly why both find it. The collision is
+invisible to a checker that keys on the brief path, and invisible to each
+agent, which sees a file that grew and assumes it wrote it.
+
+**The measurement, 2026-08-09.** `[L3.32-T225]` (dedup) and `[L3.32-T226]`
+(story assembly) were dispatched in parallel. Both scopes said "the shared home
+you propose". Both proposed `src/L/LevelKit.lagda.md`, which was the right
+answer for both. Nothing was overwritten, because they appended to different
+regions, and that is luck rather than a mechanism. What was NOT luck: the file
+went from 366 to 582 in-fence lines and stopped checking. Agda died with `Heap
+exhausted` under the C-12 cap after 195 s, twice, on a master that had been
+green all week. Both lanes then sat with their deliverables untouched for 34
+minutes, each debugging a file whose other half it had not written and could
+not see the reason for. One lane eventually created a probe named
+`ProbeT226Clash.agda`, which is how the orchestrator learned an agent had
+worked out on its own that a sibling was in the file.
+
+**Why the combined check dies.** Neither half priced it, because neither half
+existed at the other's write time. A cost that appears only in the union is a
+cost that no lane can gate, and gating is this project's whole method (D22).
+
+**What to do.** Give each parallel writer a file it does not share, and when a
+shared home is genuinely right, SERIALIZE: one lane lands it, the next is
+briefed against the landed tree. The mechanical form is a write-territory
+refusal at dispatch, comparing named paths across live lanes AND refusing two
+unnamed grants at once, since two unbounded grants always intersect.
