@@ -44,11 +44,10 @@ module L.Rud.LevelSigma {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (A : V ℓ) wher
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+  ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import V.Presentation {ℓ} using ( fiber )
-open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl )
 open import L.Constructible {ℓ} using ( isTransV; IsOrd; isPropIsOrd )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.InitialSegment {ℓ} using ( _⟷_; DefStep; module Face )
@@ -58,10 +57,8 @@ open import L.Rud.Step {ℓ} lem A using
   ( Sset; Sset-trans; Sset-out; Sset-suc; Sset-in; Jset; limit-succ-mem; step
   ; step-∈ )
 
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Foundations.HLevels using ( isProp× )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -124,31 +121,34 @@ module LevelAt (α : S) (lim : ⟨ isLimit α ⟩) (K : ⟪ Jset α lim ⟫) whe
   module Kit = LevelKit u utr
   open Kit public
 
+  -- The three-clause story: the kit's assembly over the delivered clause
+  -- list; the consumer supplies clauses, not proofs.
+  apClauses : StoryClauses
+  apClauses = mkClause pairhood pairForm pairhood-out pairhood-in ∷₊
+              mkClause singleValued singleForm single-out single-in ∷₊
+              mkClause zeroClause zeroForm zero-out zero-in ∷₊ end
+
   -- The approximation entry: the three-clause story.
   Approx : V ℓ → V ℓ → Type (ℓ-suc ℓ)
-  Approx _ f = pairhood f × singleValued f × zeroClause f
+  Approx _ f = storyCl apClauses f
 
   -- The three-clause object story, at the standing arity.
   Ap : Formula ⟪ u ⟫ 2
-  Ap = pairForm ∧̇ singleForm ∧̇ zeroForm
+  Ap = storyForm apClauses
 
   -- The approximation adequacy, both directions, walking the three
   -- delivered clause decodes.
   ap-out : (f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ Ap ⟩
          → Approx u (fst f)
-  ap-out f x (h₁ , (h₂ , h₃)) =
-    ( pairhood-out f x h₁
-    , ( single-out f x h₂ , zero-out f x h₃ ) )
+  ap-out = story-out apClauses
 
   ap-in : (f : SM) (x : ⟪ u ⟫) → Approx u (fst f)
         → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ Ap ⟩
-  ap-in f x (h₁ , (h₂ , h₃)) =
-    ( pairhood-in f x h₁
-    , ( single-in f x h₂ , zero-in f x h₃ ) )
+  ap-in = story-in apClauses
 
   a-ok : (f : SM) (x : ⟪ u ⟫)
        → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ Ap ⟩ ⟷ Approx u (fst f)
-  a-ok f x = ap-out f x , ap-in f x
+  a-ok = story-ok apClauses
 
   -- The Def-step collapses at the rud carrier: every member of a rud
   -- level is definable at a member of it.
@@ -219,9 +219,6 @@ parameter of the meta clause and discharges it wherever the carrier names it.
   _⊆_ : S → S → Type (ℓ-suc ℓ)
   u ⊆ v = (x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩
 
-  ext-⊆ : {u v : S} → u ⊆ v → v ⊆ u → u ≡ v
-  ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
-
   -- b is exactly the carrier's set of subsets of c.
   powRel : S → S → Type (ℓ-suc ℓ)
   powRel c b = ( ⟨ b ∈ˢ u ⟩
@@ -260,33 +257,25 @@ parameter of the meta clause and discharges it wherever the carrier names it.
 <!--en-->
 Each new clause gets an object-language formula in the chapter's standing de
 Bruijn shape. The successor of a set is not a term of the object language, so
-the successor pair `pr (suc a) b` is read through a bounded atom `sucAt`: the
-set at `k` is the successor of the set at `a` exactly when `a` lies in `k`,
-`a` is a subset of `k`, and every member of `k` is a member of `a` or `a`
-itself, all bounded. The internal powerset atom `powAt` reads "the set at `b`
-is the carrier-internal powerset of the set at `c`": every member of `b` is a
-subset of `c`, and every subset of `c` in the carrier lies in `b`. The
-ordinal predicate `isOrdAt` and the exact domain formula `exactDomForm` are
-the kit's pieces, and the per-component domain formula `domForm` is this
-chapter's own weakening of the exactness, reading each first component as an
-ordinal. The successor-value clause `succValForm` assembles its three
-quantifiers around the two new atoms.
+the successor pair `pr (suc a) b` is read through the bounded successor atom
+`sucAt`, now a kit piece: the set at `k` is the successor of the set at `a`
+exactly when `a` lies in `k`, `a` is a subset of `k`, and every member of `k`
+is a member of `a` or `a` itself, all bounded. The kit also hosts the
+successor-pair atom `succPairAt` and the antecedent `succAnt`, with their
+decodes. The internal powerset atom `powAt` is this chapter's carrier-specific
+atom: it reads "the set at `b` is the carrier-internal powerset of the set at
+`c`", every member of `b` is a subset of `c`, and every subset of `c` in the
+carrier lies in `b`. The ordinal predicate `isOrdAt` and the exact domain
+formula `exactDomForm` are the kit's pieces, and the per-component domain
+formula `domForm` is this chapter's own weakening of the exactness, reading
+each first component as an ordinal. The successor-value clause `succValForm`
+assembles its three quantifiers around the successor-pair atom and the
+powerset atom.
 <!--zh-->
-每条新子句都配一条对象语言公式，沿用本章一贯的 de Bruijn 形状。集合的后继不是对象语言的词项，故后继对 `pr (suc a) b` 经有界原子 `sucAt` 读出：`k` 处的集合是 `a` 处集合的后继，当且仅当 `a` 落在 `k` 里、`a` 是 `k` 的子集、且 `k` 的每个成员都是 `a` 的成员或 `a` 本身，全部有界。载体内幂集原子 `powAt` 读作「`b` 处的集合是 `c` 处集合的载体内幂集」：`b` 的每个成员都是 `c` 的子集，而载体中 `c` 的每个子集都落在 `b` 里。序数谓词 `isOrdAt` 与精确定义域公式 `exactDomForm` 是套件的件，按分量定义域公式 `domForm` 是本章对精确性自己的弱化，把每个首分量读作序数。后继值子句 `succValForm` 把三个量词绕两条新原子装配起来。
+每条新子句都配一条对象语言公式，沿用本章一贯的 de Bruijn 形状。集合的后继不是对象语言的词项，故后继对 `pr (suc a) b` 经有界后继原子 `sucAt` 读出，它如今是套件的件：`k` 处的集合是 `a` 处集合的后继，当且仅当 `a` 落在 `k` 里、`a` 是 `k` 的子集、且 `k` 的每个成员都是 `a` 的成员或 `a` 本身，全部有界。套件也托管后继对原子 `succPairAt` 与前件 `succAnt` 连同各自的解码。载体内幂集原子 `powAt` 是本章载体专属的原子：它读作「`b` 处的集合是 `c` 处集合的载体内幂集」，`b` 的每个成员都是 `c` 的子集，而载体中 `c` 的每个子集都落在 `b` 里。序数谓词 `isOrdAt` 与精确定义域公式 `exactDomForm` 是套件的件，按分量定义域公式 `domForm` 是本章对精确性自己的弱化，把每个首分量读作序数。后继值子句 `succValForm` 把三个量词绕后继对原子与幂集原子装配起来。
 <!--/-->
 
 ```agda
-  -- The successor atom's coverage body: a member of k is a member of a
-  sucKcov : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ (suc n)
-  sucKcov k a = (var zero ∈̇ var (suc a)) ∨̇ (var zero ≐ var (suc a))
-
-  -- The bounded successor atom: k = suc a.
-  sucAt : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ n
-  sucAt k a =
-    (var a ∈̇ var k)
-    ∧̇ (∀̇∈ (var a) (var zero ∈̇ var (suc k)))
-    ∧̇ (∀̇∈ (var k) (sucKcov k a))
-
   powAt : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ n
   powAt b c = (∀̇∈ (var b) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc c)))))
            ∧̇ (∀̇ ( (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc c))))
@@ -296,21 +285,12 @@ quantifiers around the two new atoms.
   -- ordinal of the carrier.
   domForm : Formula ⟪ u ⟫ 2
   domForm = ∀̇ ( (∃̇ (∃̇∈ (var (suc (suc zero)))
-                      (PK.prAt zero (suc (suc zero)) (suc zero))))
+                     (PK.prAt zero (suc (suc zero)) (suc zero))))
              ⇒̇ isOrdAt zero )
-
-  succPairAt : Formula ⟪ u ⟫ 6
-  succPairAt = (sucAt zero (suc (suc (suc zero))))
-             ∧̇ (∃̇∈ (var (suc (suc (suc (suc zero)))))
-                    (PK.prAt zero (suc zero) (suc (suc zero))))
 
   succConc : Formula ⟪ u ⟫ 5
   succConc = (∃̇ succPairAt ⇒̇ (powAt zero (suc zero)))
           ∧̇ ((powAt zero (suc zero)) ⇒̇ ∃̇ succPairAt)
-
-  succAnt : Formula ⟪ u ⟫ 5
-  succAnt = ∃̇∈ (var (suc (suc (suc zero))))
-               (PK.prAt zero (suc (suc (suc zero))) (suc (suc zero)))
 
   succBody : Formula ⟪ u ⟫ 5
   succBody = succAnt ⇒̇ succConc
@@ -320,69 +300,26 @@ quantifiers around the two new atoms.
 ```
 
 <!--en-->
-The two new atoms decode first, and everything else consumes them. `sucAt-ok`
-reads the bounded successor atom back to successor equality: the forward
-direction splits a member of `k` through the successor's case analysis, and
-the reverse direction rebuilds the three conjuncts from the equality. `powAt-ok`
-reads the internal-powerset atom back to `powRel`: the two bounded quantifiers
-are exactly the relation's two inclusions, with the carrier's transitivity
-supplying the certificates the inner quantifiers ask for. The successor-value
-clause's decode then walks its three quantifiers: the pair memberships are the
-kit's `pair∈` read, the successor pair is read through `sucAt-ok`, and the
-two directions of the clause's bi-implication are the two directions of
-`powAt-ok`. The ordinal decode `isOrd-out`/`isOrd-in` is the kit's shared
-piece, and the per-component domain decode `dom-out`/`dom-in` reads the bound,
-each truncated branch a named `where` function with a written type. The
-successor-value clause's two-way decode is one lemma `succVal-ok`, and the
-successor pair at the graph is decoded once by `succPair-ok`, consumed by both
-directions.
+The carrier-specific atom decodes first, and everything else consumes it.
+`powAt-ok` reads the internal-powerset atom back to `powRel`: the two bounded
+quantifiers are exactly the relation's two inclusions, with the carrier's
+transitivity supplying the certificates the inner quantifiers ask for. The
+bounded successor atom's decode `sucAt-ok` and the successor pair's decode
+`succPair-ok` are the kit's pieces, consumed by both directions of the
+successor-value clause. The clause's decode then walks its three quantifiers:
+the pair memberships are the kit's `pair∈` read, the successor pair is read
+through `sucAt-ok`, and the two directions of the clause's bi-implication are
+the two directions of `powAt-ok`. The ordinal decode
+`isOrd-out`/`isOrd-in` is the kit's shared piece, and the per-component domain
+decode `dom-out`/`dom-in` reads the bound, each truncated branch a named
+`where` function with a written type. The successor-value clause's two-way
+decode is one lemma `succVal-ok`, and the successor pair at the graph is
+decoded once by `succPair-ok`, consumed by both directions.
 <!--zh-->
-两条新原子先解码，其余全部消费它们。`sucAt-ok` 把有界后继原子读回后继等式：前进方向沿后继的分情形装置拆开 `k` 的成员，反向从等式重建三条合取项。`powAt-ok` 把载体内幂集原子读回 `powRel`：两条有界量词恰是关系的两条包含，载体传递性供给内层量词索要的证书。后继值子句的解码随之走过它的三个量词：对隶属用套件的 `pair∈` 读式，后继对经 `sucAt-ok` 读出，子句双向蕴含的两头正是 `powAt-ok` 的两个方向。序数解码 `isOrd-out`/`isOrd-in` 是套件的共享件，按分量定义域解码 `dom-out`/`dom-in` 读出界，每条截断分支都是带书面类型的具名 `where` 函数。后继值子句的双向解码是一条引理 `succVal-ok`，图处的后继对由 `succPair-ok` 解码一次，两个方向都消费它。
+载体专属的原子先解码，其余全部消费它。`powAt-ok` 把载体内幂集原子读回 `powRel`：两条有界量词恰是关系的两条包含，载体传递性供给内层量词索要的证书。有界后继原子的解码 `sucAt-ok` 与后继对的解码 `succPair-ok` 是套件的件，后继值子句的两个方向都消费它们。子句的解码随之走过它的三个量词：对隶属用套件的 `pair∈` 读式，后继对经 `sucAt-ok` 读出，子句双向蕴含的两头正是 `powAt-ok` 的两个方向。序数解码 `isOrd-out`/`isOrd-in` 是套件的共享件，按分量定义域解码 `dom-out`/`dom-in` 读出界，每条截断分支都是带书面类型的具名 `where` 函数。后继值子句的双向解码是一条引理 `succVal-ok`，图处的后继对由 `succPair-ok` 解码一次，两个方向都消费它。
 <!--/-->
 
 ```agda
-  -- The successor atom decodes to successor equality.
-  sucAt-ok : {n : ℕ} (k a : Fin n) (δ : Vec SM n)
-           → ⟨ δ ⊨ᵐ sucAt k a ⟩ ⟷ (fst (lookup k δ) ≡ sucV (fst (lookup a δ)))
-  sucAt-ok k a δ = (out , bwd)
-    where
-    valK valA : S
-    valK = fst (lookup k δ)
-    valA = fst (lookup a δ)
-    out : ⟨ δ ⊨ᵐ sucAt k a ⟩ → valK ≡ sucV valA
-    out (k∈ , (A⊆K , Kcov)) = ext-⊆ K⊆suc suc⊆K
-      where
-      K⊆suc : valK ⊆ sucV valA
-      K⊆suc z z∈K = PT.rec (snd (z ∈ˢ sucV valA)) go (Kcov zm z∈K)
-        where
-        zm : SM
-        zm = PK.pt z (utr {x = valK} {y = z} z∈K (snd (lookup k δ)))
-        go : (⟨ z ∈ˢ valA ⟩ ⊎ (z ≡ valA))
-           → ⟨ z ∈ˢ sucV valA ⟩
-        go (inl z∈A) = ∈sucV-inl {A = valA} {x = z} z∈A
-        go (inr z≡A) = subst (λ w → ⟨ w ∈ˢ sucV valA ⟩) (sym z≡A) (self∈sucV valA)
-      suc⊆K : sucV valA ⊆ valK
-      suc⊆K z z∈suc = ∈sucV-elim (snd (z ∈ˢ valK)) z∈suc
-        (λ z∈A → A⊆K (PK.pt z (utr {x = valA} {y = z} z∈A (snd (lookup a δ)))) z∈A)
-        (λ z≡A → subst (λ w → ⟨ w ∈ˢ valK ⟩) (sym z≡A) k∈)
-    bwd : valK ≡ sucV valA → ⟨ δ ⊨ᵐ sucAt k a ⟩
-    bwd q = ( k∈q , (A⊆Kq , Kcovq) )
-      where
-      k∈q : ⟨ valA ∈ˢ valK ⟩
-      k∈q = subst (λ w → ⟨ valA ∈ˢ w ⟩) (sym q) (self∈sucV valA)
-      A⊆Kq : ⟨ δ ⊨ᵐ ∀̇∈ (var a) (var zero ∈̇ var (suc k)) ⟩
-      A⊆Kq zm z∈A = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) (sym q) (∈sucV-inl {A = valA} {x = fst zm} z∈A)
-      Kcovq : ⟨ δ ⊨ᵐ ∀̇∈ (var k) (sucKcov k a) ⟩
-      Kcovq zm z∈K = ∈sucV-elim (snd sat) z∈suc inA eqA
-        where
-        sat = (zm ∷ δ) ⊨ᵐ sucKcov k a
-        z∈suc : ⟨ fst zm ∈ˢ sucV valA ⟩
-        z∈suc = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) q z∈K
-        inA : ⟨ fst zm ∈ˢ valA ⟩ → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
-        inA h = ∣ inl h ∣₁
-        eqA : fst zm ≡ valA → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
-        eqA e = ∣ inr e ∣₁
-
   -- The internal-powerset atom decodes to the powerset relation.
   powAt-ok : {n : ℕ} (b c : Fin n) (δ : Vec SM n)
            → ⟨ δ ⊨ᵐ powAt b c ⟩ ⟷ powRel (fst (lookup c δ)) (fst (lookup b δ))
@@ -412,43 +349,6 @@ directions.
                            ⇒̇ (var zero ∈̇ var (suc b)) ) ⟩
       closedSat zm z⊆C = closed (fst zm) (snd zm)
         (λ w w∈z → z⊆C (PK.pt w (utr {x = fst zm} {y = w} w∈z (snd zm))) w∈z)
-
-  -- The successor pair at the graph decodes to the meta pair membership.
-  succPair-ok : (f : SM) (x : ⟪ u ⟫) (am cm bm : SM)
-    → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
-    ⟷ ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
-  succPair-ok f x am cm bm = (out , bwd)
-    where
-    out : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
-        → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
-    out = PT.rec (snd (pr (sucV (fst am)) (fst bm) ∈ˢ fst f)) go
-      where
-      go : Σ[ xm ∈ SM ] ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩
-         → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
-      go (xm , (suc-sat , p-sat)) =
-        subst (λ w → ⟨ pr w (fst bm) ∈ˢ fst f ⟩)
-          (sucAt-ok zero (suc (suc (suc zero)))
-            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst suc-sat)
-          (pair∈ (suc (suc (suc (suc zero)))) zero (suc zero)
-            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst p-sat)
-    bwd : ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
-        → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
-    bwd ab∈f = ∣ xm , ( suc-sat , p-sat ) ∣₁
-      where
-      x∈u : ⟨ sucV (fst am) ∈ˢ u ⟩
-      x∈u = PM.pair-left {a = sucV (fst am)} {b = fst bm}
-        (utr {x = fst f} {y = pr (sucV (fst am)) (fst bm)} ab∈f (snd f))
-      xm : SM
-      xm = PK.pt (sucV (fst am)) x∈u
-      suc-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ [])
-                  ⊨ᵐ sucAt zero (suc (suc (suc zero))) ⟩
-      suc-sat = sucAt-ok zero (suc (suc (suc zero)))
-        (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd refl
-      p-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
-                (∃̇∈ (var (suc (suc (suc (suc zero)))))
-                     (PK.prAt zero (suc zero) (suc (suc zero)))) ⟩
-      p-sat = pair∈ (suc (suc (suc (suc zero)))) zero (suc zero)
-        (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ab∈f
 
   -- The successor-value clause decodes both ways: a satisfied clause is
   -- the meta story, and the meta story builds the satisfaction.
@@ -559,44 +459,47 @@ directions.
 
 <!--en-->
 Every clause of the strengthened story now has its object formula and its
-two-way decode, so the approximation entry reassembles over the delivered
-conjuncts verbatim: the five-clause formula `aStForm` is the conjunction of
-the three kit clauses, the per-component domain bound and the successor-value
-clause, and the two-way adequacy `aSt-ok` walks the five delivered decodes in
-each direction. This is the seam the strengthened section recorded: the
-reassembly itself, nothing new to prove, and it is what a consumer of the
-strengthened story at a carrier instantiates.
+two-way decode, so the approximation entry is the kit's story assembly over
+the delivered clause list: the five-clause formula `aStForm` is the
+conjunction of the three kit clauses, the per-component domain bound and the
+successor-value clause, and the two-way adequacy `aSt-ok` walks the five
+decodes in each direction. This is the seam the strengthened section
+recorded: the assembly itself, nothing new to prove, and it is what a
+consumer of the strengthened story at a carrier instantiates.
 <!--zh-->
-加锐故事的每条子句如今都有自己的对象公式与双向解码，故近似条目逐合取项在已交付件上重新装配：五合取公式 `aStForm` 是三条套件子句、按分量定义域界与后继值子句的合取，双向充分性 `aSt-ok` 在每一方向上走过五条已交付解码。这正是加锐节所记录的接缝：装配本身，无可新证，也是载体处加锐故事的消费方所要实例化的对象。
+加锐故事的每条子句如今都有自己的对象公式与双向解码，故近似条目就是套件在已交付子句表上的故事装配：五合取公式 `aStForm` 是三条套件子句、按分量定义域界与后继值子句的合取，双向充分性 `aSt-ok` 在每一方向上走过五条解码。这正是加锐节所记录的接缝：装配本身，无可新证，也是载体处加锐故事的消费方所要实例化的对象。
 <!--/-->
 
 ```agda
+  -- The strengthened story: the kit's assembly over the delivered clause
+  -- list; the consumer supplies clauses, not proofs.
+  aStClauses : StoryClauses
+  aStClauses = mkClause pairhood pairForm pairhood-out pairhood-in ∷₊
+               mkClause singleValued singleForm single-out single-in ∷₊
+               mkClause zeroClause zeroForm zero-out zero-in ∷₊
+               mkClause ordDom domForm dom-out dom-in ∷₊
+               clauseOk succValClause succValForm succVal-ok ∷₊ end
+
   -- The strengthened approximation entry: the five-clause story.
   aSt : S → Type (ℓ-suc ℓ)
-  aSt f = pairhood f × singleValued f × zeroClause f × ordDom f × succValClause f
+  aSt = storyCl aStClauses
 
   -- The five-clause object story, at the standing arity.
   aStForm : Formula ⟪ u ⟫ 2
-  aStForm = pairForm ∧̇ singleForm ∧̇ zeroForm ∧̇ domForm ∧̇ succValForm
+  aStForm = storyForm aStClauses
 
   -- The strengthened adequacy, both directions, walking the delivered
   -- clause decodes.
   aSt-out : (f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm ⟩ → aSt (fst f)
-  aSt-out f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
-    ( pairhood-out f x h₁
-    , ( single-out f x h₂
-      , ( zero-out f x h₃ , ( dom-out f x h₄ , succVal-ok f x .fst h₅ ) ) ) )
+  aSt-out = story-out aStClauses
 
   aSt-in : (f : SM) (x : ⟪ u ⟫) → aSt (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm ⟩
-  aSt-in f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
-    ( pairhood-in f x h₁
-    , ( single-in f x h₂
-      , ( zero-in f x h₃ , ( dom-in f x h₄ , succVal-ok f x .snd h₅ ) ) ) )
+  aSt-in = story-in aStClauses
 
   -- The seam, closed: the five-clause reassembly with its two-way decode.
   aSt-ok : (f : SM) (x : ⟪ u ⟫)
          → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm ⟩ ⟷ aSt (fst f)
-  aSt-ok f x = aSt-out f x , aSt-in f x
+  aSt-ok = story-ok aStClauses
 ```
 
 <!--en-->
@@ -614,24 +517,28 @@ finite witness. The classical carve needs only the forward direction, values
 for present pairs only, and the exact domain bound, the kit's `exactDom`
 shape: some ordinal `δ` of the carrier has exactly the first components of
 the witness as its members, read both ways. Both pieces are delivered here.
-The one-way clause is the forward half of the delivered `succValClause`, so
-its formula and decode machinery survive: the new formula `succValForm1` keeps
-the antecedent and drops the reverse implication of the clause's conclusion,
-and `succVal1-ok` decodes it through the delivered atoms exactly as
-`succVal-ok` decodes its two-way parent. The exact domain bound is the kit's
-`exactDomForm` with its two-way decode; the per-component bound of the
-strengthened section is a different object, it names no domain and reads no
-totality direction. The approximation entry re-assembles once more over the
-delivered conjuncts, with the exact bound and the one-way clause in place of
-the per-component bound and the two-way clause.
+The one-way clause is the forward half of the delivered `succValClause`, and
+the kit now hosts it once: the module `OneWaySucc` takes the conclusion
+relation, its formula and its decode, and this chapter instantiates it at the
+powerset atom `powAt`. The formula `succValForm1` and the decode `succVal1-ok`
+are that instantiation, and `succVal1-of` derives the one-way clause from the
+delivered two-way clause. The exact domain bound is the kit's `exactDomForm`
+with its two-way decode; the per-component bound of the strengthened section
+is a different object, it names no domain and reads no totality direction.
+The approximation entry re-assembles once more over the delivered conjuncts,
+with the exact bound and the one-way clause in place of the per-component
+bound and the two-way clause.
 <!--zh-->
-加锐故事比消费方所能用的更强：在幂集封闭的载体上，双向后继值子句从幂集读法逼出后继对的存在，而在遗传有穷载体上那种逼迫是无穷的，故所记五合取故事没有有穷见证。经典刻划只需要前进方向，即只为已现之对给值，以及精确定义域界，即套件的 `exactDom` 形状：载体中的某个序数 `δ` 恰好以见证的首分量全体为成员，两头都读。两件都在此交付。单向子句是已交付 `succValClause` 的前进半边，故其公式与解码机器幸存：新公式 `succValForm1` 保留前件、删去子句结论中的反向蕴含，而 `succVal1-ok` 经已交付原子把它解码，恰如 `succVal-ok` 解码其双向母本。精确定义域界是套件的 `exactDomForm` 连同它的双向解码；加锐节的按分量界是另一件东西，它不点名任何定义域、也不读完全方向。近似条目再次在已交付合取项上装配，以精确界与单向子句替下按分量界与双向子句。
+加锐故事比消费方所能用的更强：在幂集封闭的载体上，双向后继值子句从幂集读法逼出后继对的存在，而在遗传有穷载体上那种逼迫是无穷的，故所记五合取故事没有有穷见证。经典刻划只需要前进方向，即只为已现之对给值，以及精确定义域界，即套件的 `exactDom` 形状：载体中的某个序数 `δ` 恰好以见证的首分量全体为成员，两头都读。两件都在此交付。单向子句是已交付 `succValClause` 的前进半边，套件如今一次托管它：模块 `OneWaySucc` 取结论关系、其公式及其解码，本章在幂集原子 `powAt` 处实例化它。公式 `succValForm1` 与解码 `succVal1-ok` 就是这次实例化，而 `succVal1-of` 从已交付的双向子句导出单向子句。精确定义域界是套件的 `exactDomForm` 连同它的双向解码；加锐节的按分量界是另一件东西，它不点名任何定义域、也不读完全方向。近似条目再次在已交付合取项上装配，以精确界与单向子句替下按分量界与双向子句。
 <!--/-->
 
 ```agda
+  -- The shared one-way clause at the powerset conclusion.
+  module OneWay = Kit.OneWaySucc (λ b c → powRel c b) powAt powAt-ok
+
   -- The one-way successor-value clause: values for present pairs only.
   succValClause1 : S → Type (ℓ-suc ℓ)
-  succValClause1 f = (a c b : S) → ⟨ pr a c ∈ˢ f ⟩ → ⟨ pr (sucV a) b ∈ˢ f ⟩ → powRel c b
+  succValClause1 = OneWay.succClause
 
   -- The delivered two-way clause gives the one-way clause.
   succVal1-of : (f : S) → succValClause f → succValClause1 f
@@ -639,115 +546,82 @@ the per-component bound and the two-way clause.
 ```
 
 <!--en-->
-The one-way successor clause's formula is the delivered clause's body with
-the conclusion's reverse implication deleted, everything else untouched, so
-the delivered atoms `succPairAt`, `succAnt` and `powAt` still carry the
-reading.
+The one-way clause's formula is the shared clause's formula, instantiated at
+the powerset atom: the atoms `succPairAt` and `succAnt` are the kit's pieces,
+and `powAt` is this chapter's carrier-specific atom.
 <!--zh-->
-单向子句的公式就是已交付子句的体、删去结论中的反向蕴含，其余原封不动，故已交付原子 `succPairAt`、`succAnt` 与 `powAt` 仍承载读数。
+单向子句的公式就是共享子句的公式，在幂集原子处实例化：原子 `succPairAt` 与 `succAnt` 是套件的件，`powAt` 是本章载体专属的原子。
 <!--/-->
 
 ```agda
   -- The one-way clause's conclusion: a successor pair present gives the
   -- powerset reading (no converse).
   succConc1 : Formula ⟪ u ⟫ 5
-  succConc1 = ∃̇ succPairAt ⇒̇ (powAt zero (suc zero))
+  succConc1 = OneWay.succConc
 
   succBody1 : Formula ⟪ u ⟫ 5
-  succBody1 = succAnt ⇒̇ succConc1
+  succBody1 = OneWay.succBody
 
   succValForm1 : Formula ⟪ u ⟫ 2
-  succValForm1 = ∀̇ (∀̇ (∀̇ succBody1))
+  succValForm1 = OneWay.succForm
 ```
 
 <!--en-->
-The one-way clause decodes by the same three quantifiers as its parent: the
-forward direction applies the satisfied clause to the successor pair's
-membership and reads `powAt` back through `powAt-ok`, and the reverse
-direction rebuilds the satisfaction from the meta one-way clause, the
-delivered `succPair-ok` supplying the successor pair's membership in both
-directions.
+The one-way clause decodes by the shared clause module's three-quantifier
+walk: the forward direction applies the satisfied clause to the successor
+pair's membership and reads `powAt` back through `powAt-ok`, and the reverse
+direction rebuilds the satisfaction from the meta one-way clause, the kit's
+`succPair-ok` supplying the successor pair's membership in both directions.
 <!--zh-->
-单向子句沿与其母本相同的三个量词解码：前进方向把被满足的子句施于后继对的隶属、再经 `powAt-ok` 把 `powAt` 读回，反向从元层单向子句重建满足，已交付的 `succPair-ok` 双向供给后继对的隶属。
+单向子句沿共享子句模块的三个量词走读：前进方向把被满足的子句施于后继对的隶属、再经 `powAt-ok` 把 `powAt` 读回，反向从元层单向子句重建满足，套件的 `succPair-ok` 双向供给后继对的隶属。
 <!--/-->
 
 ```agda
   -- The one-way successor-value clause decodes both ways.
   succVal1-ok : (f : SM) (x : ⟪ u ⟫)
               → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm1 ⟩ ⟷ succValClause1 (fst f)
-  succVal1-ok f x = (out , bwd)
-    where
-    out : ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm1 ⟩ → succValClause1 (fst f)
-    out h a c b ac∈f ab∈f = powAt-ok zero (suc zero)
-        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst
-      ((h am cm bm (ant bm)) (succPair-ok f x am cm bm .snd ab∈f))
-      where
-      pr∈u : ⟨ pr a c ∈ˢ u ⟩
-      pr∈u = utr {x = fst f} {y = pr a c} ac∈f (snd f)
-      am cm : SM
-      am = PK.pt a (PM.pair-left {a = a} {b = c} pr∈u)
-      cm = PK.pt c (PM.pair-right {a = a} {b = c} pr∈u)
-      ant : (bm : SM) → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succAnt ⟩
-      ant bm = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
-        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ac∈f
-      b∈u : ⟨ b ∈ˢ u ⟩
-      b∈u = PM.pair-right {a = sucV a} {b = b}
-        (utr {x = fst f} {y = pr (sucV a) b} ab∈f (snd f))
-      bm : SM
-      bm = PK.pt b b∈u
-    bwd : succValClause1 (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succValForm1 ⟩
-    bwd sc1 am cm bm ant-sat =
-      PT.rec (snd ((bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ powAt zero (suc zero))) go
-      where
-      ac∈f : ⟨ pr (fst am) (fst cm) ∈ˢ fst f ⟩
-      ac∈f = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
-        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst ant-sat
-      go : Σ[ xm ∈ SM ]
-             ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩
-         → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ powAt zero (suc zero) ⟩
-      go (xm , sat) = powAt-ok zero (suc zero)
-        (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd
-        (sc1 (fst am) (fst cm) (fst bm) ac∈f
-          (succPair-ok f x am cm bm .fst (∣ xm , sat ∣₁)))
+  succVal1-ok = OneWay.succ-ok
 ```
 
 <!--en-->
-The approximation entry reassembles once more, verbatim over the delivered
-conjuncts: the five-clause formula `aStForm1` and its two-way adequacy
-`aSt1-ok` walk the three kit decodes, the kit's exact domain decode and the
-one-way successor decode. This is the story the first-limit carve
-instantiates.
+The approximation entry is the kit's story assembly once more: the five-clause
+formula `aStForm1` and its two-way adequacy `aSt1-ok` walk the three kit
+decodes, the kit's exact domain decode and the one-way successor decode. This
+is the story the first-limit carve instantiates.
 <!--zh-->
-近似条目再次装配，逐合取项走过已交付件：五合取公式 `aStForm1` 及其双向充分性 `aSt1-ok` 走过三条套件解码、套件的精确界解码与单向后继解码。这正是第一个极限刻划所要实例化的故事。
+近似条目再次是套件的故事装配：五合取公式 `aStForm1` 及其双向充分性 `aSt1-ok` 走过三条套件解码、套件的精确界解码与单向后继解码。这正是第一个极限刻划所要实例化的故事。
 <!--/-->
 
 ```agda
+  -- The one-way story: the kit's assembly over the delivered clause list;
+  -- the consumer supplies clauses, not proofs.
+  aSt1Clauses : StoryClauses
+  aSt1Clauses = mkClause pairhood pairForm pairhood-out pairhood-in ∷₊
+                mkClause singleValued singleForm single-out single-in ∷₊
+                mkClause zeroClause zeroForm zero-out zero-in ∷₊
+                mkClause exactDom exactDomForm exactDom-out exactDom-in ∷₊
+                clauseOk succValClause1 succValForm1 succVal1-ok ∷₊ end
+
   -- The one-way approximation entry: the five-clause story with the exact
   -- domain bound and the one-way successor clause.
   aSt1 : S → Type (ℓ-suc ℓ)
-  aSt1 f = pairhood f × singleValued f × zeroClause f × exactDom f × succValClause1 f
+  aSt1 = storyCl aSt1Clauses
 
   -- The one-way object story, at the standing arity.
   aStForm1 : Formula ⟪ u ⟫ 2
-  aStForm1 = pairForm ∧̇ singleForm ∧̇ zeroForm ∧̇ exactDomForm ∧̇ succValForm1
+  aStForm1 = storyForm aSt1Clauses
 
   -- The one-way adequacy, both directions, walking the clause decodes.
   aSt1-out : (f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm1 ⟩ → aSt1 (fst f)
-  aSt1-out f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
-    ( pairhood-out f x h₁
-    , ( single-out f x h₂
-      , ( zero-out f x h₃ , ( exactDom-out f x h₄ , succVal1-ok f x .fst h₅ ) ) ) )
+  aSt1-out = story-out aSt1Clauses
 
   aSt1-in : (f : SM) (x : ⟪ u ⟫) → aSt1 (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm1 ⟩
-  aSt1-in f x (h₁ , (h₂ , (h₃ , (h₄ , h₅)))) =
-    ( pairhood-in f x h₁
-    , ( single-in f x h₂
-      , ( zero-in f x h₃ , ( exactDom-in f x h₄ , succVal1-ok f x .snd h₅ ) ) ) )
+  aSt1-in = story-in aSt1Clauses
 
   -- The one-way seam, closed.
   aSt1-ok : (f : SM) (x : ⟪ u ⟫)
           → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ aStForm1 ⟩ ⟷ aSt1 (fst f)
-  aSt1-ok f x = aSt1-out f x , aSt1-in f x
+  aSt1-ok = story-ok aSt1Clauses
 ```
 
 <!--en-->

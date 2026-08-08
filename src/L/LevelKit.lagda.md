@@ -30,18 +30,26 @@ module L.LevelKit {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; var; _∈̇_; _≐_; _∧̇_; _⇒̇_; ¬̇_; ⊤̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( isTransV; IsOrd )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.PairAtoms {ℓ} using ( isPair; module PairMem; module PairKit )
 open import L.InitialSegment {ℓ} using ( _⟷_; _∈ran_ )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl )
 
 import Cubical.Data.Empty as Empty
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet using ( sucV )
+import Cubical.Data.List as List
+import Cubical.Data.Unit as Unit
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 
@@ -519,6 +527,308 @@ once for the pairhood out.
 ```
 
 <!--en-->
+## The bounded successor atom and the one-way successor clause
+<!--zh-->
+## 有界后继原子与单向后继值子句
+<!--/-->
+
+<!--en-->
+The successor of a set is not a term of the object language. The successor
+pair `pr (sucV a) b` is read through the bounded successor atom `sucAt`: the
+set at `k` is the successor of the set at `a` exactly when `a` lies in `k`,
+`a` is a subset of `k`, and every member of `k` is a member of `a` or `a`
+itself, all bounded. Its decode `sucAt-ok` reads the atom back to successor
+equality. The successor pair at the graph is decoded once by `succPair-ok`,
+consumed by every clause that reads the pair.
+
+The one-way successor clause says: `pr a c` lies in `f`, and `pr (sucV a) b`
+lies in `f`, so the conclusion `concl b c` holds. The clause is the same at
+every carrier; only the conclusion atom differs. The module `OneWaySucc`
+takes the conclusion relation, its object formula and its two-way decode,
+and delivers the clause, its formula and its decode once. The level-sigma
+chapter instantiates it at the powerset atom; the S-story chapter
+instantiates it at the step equality.
+<!--zh-->
+集合的后继不是对象语言的词项。后继对 `pr (sucV a) b` 经有界后继原子 `sucAt` 读出：`k` 处的集合是 `a` 处集合的后继，当且仅当 `a` 落在 `k` 里、`a` 是 `k` 的子集、且 `k` 的每个成员都是 `a` 的成员或 `a` 本身，全部有界。解码 `sucAt-ok` 把原子读回后继等式。图处的后继对由 `succPair-ok` 解码一次，读该对的每条子句都消费它。
+
+单向后继值子句说：`pr a c` 落在 `f` 里，且 `pr (sucV a) b` 落在 `f` 里，则结论 `concl b c` 成立。子句在每个载体处相同；只有结论原子不同。模块 `OneWaySucc` 取结论关系、其对象公式及其双向解码，一次交付子句、公式与解码。层 sigma 章在幂集原子处实例化它；S-故事章在步等式处实例化它。
+<!--/-->
+
+```agda
+  -- The successor atom's coverage body: a member of k is a member of a
+  sucKcov : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ (suc n)
+  sucKcov k a = (var zero ∈̇ var (suc a)) ∨̇ (var zero ≐ var (suc a))
+
+  -- The bounded successor atom: k = suc a.
+  sucAt : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ n
+  sucAt k a =
+    (var a ∈̇ var k)
+    ∧̇ (∀̇∈ (var a) (var zero ∈̇ var (suc k)))
+    ∧̇ (∀̇∈ (var k) (sucKcov k a))
+
+  private
+    _⊆_ : S → S → Type (ℓ-suc ℓ)
+    u ⊆ v = (x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩
+
+    ext-⊆ : {u v : S} → u ⊆ v → v ⊆ u → u ≡ v
+    ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
+
+  -- The bounded successor atom decodes to successor equality.
+  sucAt-ok : {n : ℕ} (k a : Fin n) (δ : Vec SM n)
+           → ⟨ δ ⊨ᵐ sucAt k a ⟩ ⟷ (fst (lookup k δ) ≡ sucV (fst (lookup a δ)))
+  sucAt-ok k a δ = (out , bwd)
+    where
+    valK valA : S
+    valK = fst (lookup k δ)
+    valA = fst (lookup a δ)
+    out : ⟨ δ ⊨ᵐ sucAt k a ⟩ → valK ≡ sucV valA
+    out (k∈ , (A⊆K , Kcov)) = ext-⊆ K⊆suc suc⊆K
+      where
+      K⊆suc : valK ⊆ sucV valA
+      K⊆suc z z∈K = PT.rec (snd (z ∈ˢ sucV valA)) go (Kcov zm z∈K)
+        where
+        zm : SM
+        zm = PK.pt z (utr {x = valK} {y = z} z∈K (snd (lookup k δ)))
+        go : (⟨ z ∈ˢ valA ⟩ ⊎ (z ≡ valA)) → ⟨ z ∈ˢ sucV valA ⟩
+        go (inl z∈A) = ∈sucV-inl {A = valA} {x = z} z∈A
+        go (inr z≡A) = subst (λ w → ⟨ w ∈ˢ sucV valA ⟩) (sym z≡A) (self∈sucV valA)
+      suc⊆K : sucV valA ⊆ valK
+      suc⊆K z z∈suc = ∈sucV-elim (snd (z ∈ˢ valK)) z∈suc
+        (λ z∈A → A⊆K (PK.pt z (utr {x = valA} {y = z} z∈A (snd (lookup a δ)))) z∈A)
+        (λ z≡A → subst (λ w → ⟨ w ∈ˢ valK ⟩) (sym z≡A) k∈)
+    bwd : valK ≡ sucV valA → ⟨ δ ⊨ᵐ sucAt k a ⟩
+    bwd q = ( k∈q , (A⊆Kq , Kcovq) )
+      where
+      k∈q : ⟨ valA ∈ˢ valK ⟩
+      k∈q = subst (λ w → ⟨ valA ∈ˢ w ⟩) (sym q) (self∈sucV valA)
+      A⊆Kq : ⟨ δ ⊨ᵐ ∀̇∈ (var a) (var zero ∈̇ var (suc k)) ⟩
+      A⊆Kq zm z∈A = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) (sym q) (∈sucV-inl {A = valA} {x = fst zm} z∈A)
+      Kcovq : ⟨ δ ⊨ᵐ ∀̇∈ (var k) (sucKcov k a) ⟩
+      Kcovq zm z∈K = ∈sucV-elim (snd sat) z∈suc inA eqA
+        where
+        sat = (zm ∷ δ) ⊨ᵐ sucKcov k a
+        z∈suc : ⟨ fst zm ∈ˢ sucV valA ⟩
+        z∈suc = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) q z∈K
+        inA : ⟨ fst zm ∈ˢ valA ⟩ → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
+        inA h = ∣ inl h ∣₁
+        eqA : fst zm ≡ valA → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
+        eqA e = ∣ inr e ∣₁
+
+  -- The successor pair at the graph: pr (sucV a) b lies in f.
+  succPairAt : Formula ⟪ u ⟫ 6
+  succPairAt = (sucAt zero (suc (suc (suc zero))))
+             ∧̇ (∃̇∈ (var (suc (suc (suc (suc zero)))))
+                    (PK.prAt zero (suc zero) (suc (suc zero))))
+
+  succPair-ok : (f : SM) (x : ⟪ u ⟫) (am cm bm : SM)
+    → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
+    ⟷ ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+  succPair-ok f x am cm bm = (out , bwd)
+    where
+    out : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩ → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+    out = PT.rec (snd (pr (sucV (fst am)) (fst bm) ∈ˢ fst f)) go
+      where
+      go : Σ[ xm ∈ SM ] ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩ → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
+      go (xm , (suc-sat , p-sat)) =
+        subst (λ w → ⟨ pr w (fst bm) ∈ˢ fst f ⟩)
+          (sucAt-ok zero (suc (suc (suc zero)))
+            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst suc-sat)
+          (pair∈ (suc (suc (suc (suc zero)))) zero (suc zero)
+            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst p-sat)
+    bwd : ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩ → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
+    bwd ab∈f = ∣ xm , (suc-sat , p-sat) ∣₁
+      where
+      x∈u : ⟨ sucV (fst am) ∈ˢ u ⟩
+      x∈u = PM.pair-left {a = sucV (fst am)} {b = fst bm}
+        (utr {x = fst f} {y = pr (sucV (fst am)) (fst bm)} ab∈f (snd f))
+      xm : SM
+      xm = PK.pt (sucV (fst am)) x∈u
+      suc-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ sucAt zero (suc (suc (suc zero))) ⟩
+      suc-sat = sucAt-ok zero (suc (suc (suc zero))) (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd refl
+      p-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
+                (∃̇∈ (var (suc (suc (suc (suc zero))))) (PK.prAt zero (suc zero) (suc (suc zero)))) ⟩
+      p-sat = pair∈ (suc (suc (suc (suc zero)))) zero (suc zero) (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ab∈f
+
+  -- The antecedent: pr a c lies in f.
+  succAnt : Formula ⟪ u ⟫ 5
+  succAnt = ∃̇∈ (var (suc (suc (suc zero))))
+               (PK.prAt zero (suc (suc (suc zero))) (suc (suc zero)))
+
+  -- The one-way successor clause, parameterized by its conclusion atom.
+  module OneWaySucc
+    (concl : S → S → Type (ℓ-suc ℓ))
+    (Concl : {n : ℕ} → Fin n → Fin n → Formula ⟪ u ⟫ n)
+    (Concl-ok : {n : ℕ} (k c : Fin n) (δ : Vec SM n)
+              → ⟨ δ ⊨ᵐ Concl k c ⟩ ⟷ concl (fst (lookup k δ)) (fst (lookup c δ)))
+    where
+
+    -- Values for present pairs only: pr a c and pr (sucV a) b lie in f,
+    -- so the conclusion holds for b and c.
+    succClause : S → Type (ℓ-suc ℓ)
+    succClause f = (a c b : S) → ⟨ pr a c ∈ˢ f ⟩ → ⟨ pr (sucV a) b ∈ˢ f ⟩
+                 → concl b c
+
+    succConc : Formula ⟪ u ⟫ 5
+    succConc = ∃̇ succPairAt ⇒̇ (Concl zero (suc zero))
+
+    succBody : Formula ⟪ u ⟫ 5
+    succBody = succAnt ⇒̇ succConc
+
+    succForm : Formula ⟪ u ⟫ 2
+    succForm = ∀̇ (∀̇ (∀̇ succBody))
+
+    -- The one-way clause decodes both ways, walking the three quantifiers.
+    succ-ok : (f : SM) (x : ⟪ u ⟫)
+            → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succForm ⟩ ⟷ succClause (fst f)
+    succ-ok f x = (out , bwd)
+      where
+      out : ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succForm ⟩ → succClause (fst f)
+      out h a c b ac∈f ab∈f = Concl-ok zero (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst
+        ((h am cm bm (ant bm)) (succPair-ok f x am cm bm .snd ab∈f))
+        where
+        pr∈u : ⟨ pr a c ∈ˢ u ⟩
+        pr∈u = utr {x = fst f} {y = pr a c} ac∈f (snd f)
+        am cm : SM
+        am = PK.pt a (PM.pair-left {a = a} {b = c} pr∈u)
+        cm = PK.pt c (PM.pair-right {a = a} {b = c} pr∈u)
+        ant : (bm : SM) → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succAnt ⟩
+        ant bm = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
+          (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ac∈f
+        b∈u : ⟨ b ∈ˢ u ⟩
+        b∈u = PM.pair-right {a = sucV a} {b = b}
+          (utr {x = fst f} {y = pr (sucV a) b} ab∈f (snd f))
+        bm : SM
+        bm = PK.pt b b∈u
+      bwd : succClause (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succForm ⟩
+      bwd sc am cm bm ant-sat = PT.rec
+        (snd ((bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ Concl zero (suc zero))) go
+        where
+        ac∈f : ⟨ pr (fst am) (fst cm) ∈ˢ fst f ⟩
+        ac∈f = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero)
+          (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst ant-sat
+        go : Σ[ xm ∈ SM ] ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩
+           → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ Concl zero (suc zero) ⟩
+        go (xm , sat) = Concl-ok zero (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd
+          (sc (fst am) (fst cm) (fst bm) ac∈f
+            (succPair-ok f x am cm bm .fst (∣ xm , sat ∣₁)))
+```
+
+<!--en-->
+## The story assembly
+<!--zh-->
+## 故事装配
+<!--/-->
+
+<!--en-->
+Every consumer assembles the same story: the meta-level conjunction, the
+right-nested product of the clause predicates, the object conjunction, the
+right-nested chain of the clause formulas, and the two-way decode that walks
+the clause decodes in each direction. The assembly is the same at every
+carrier, so the kit hosts it once, parameterized by the clause list. A story
+clause record `StoryClause` carries the predicate, the object formula and the
+two-way decode; `mkClause` builds one from the two directions, and `clauseOk`
+builds one from a delivered `-ok` lemma. The clause list `StoryClauses` is a
+`List` of the records, with the local operators `_∷₊_` and `end` for the
+consumer's list. The fold `Conj` assembles the meta-level conjunction over a
+predicate list, `ConjForm` assembles the object conjunction over the clause
+list, and `conj-out` and `conj-in` walk the decodes in each direction. The
+five names `storyCl`, `storyForm`, `story-out`, `story-in` and `story-ok`
+deliver the assembled story at a consumer's clause list. A consumer supplies
+clauses, not proofs.
+<!--zh-->
+每个消费方都装配同一条故事：元层合取，即子句谓词的右嵌套积；对象合取，即子句公式的右嵌套链；以及双向解码，沿每条子句解码各走一个方向。装配在每个载体处相同，于是套件把它一次写成，以子句表为参数。故事子句记录 `StoryClause` 携带谓词、对象公式与双向解码；`mkClause` 由两个方向构造一条，`clauseOk` 由一条已交付的 `-ok` 引理构造一条。子句表 `StoryClauses` 就是这些记录的 `List`，消费方的表用本地算子 `_∷₊_` 与 `end` 书写。折叠 `Conj` 在谓词表上装配元层合取，`ConjForm` 在子句表上装配对象合取，`conj-out` 与 `conj-in` 各沿一个方向走解码。五个名字 `storyCl`、`storyForm`、`story-out`、`story-in` 与 `story-ok` 在消费方的子句表处交付装配好的故事。消费方只供子句，不供证明。
+<!--/-->
+
+```agda
+  -- One story clause: the predicate, the object formula and the two-way
+  -- decode at the witness environment, as a right-nested pair.
+  StoryClause : Type (ℓ-suc (ℓ-suc ℓ))
+  StoryClause =
+    Σ[ cl ∈ (S → Type (ℓ-suc ℓ)) ]
+    Σ[ form ∈ Formula ⟪ u ⟫ 2 ]
+    Σ[ out ∈ ((f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ form ⟩ → cl (fst f)) ]
+    ((f : SM) (x : ⟪ u ⟫) → cl (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ form ⟩)
+
+  -- One clause, from the two decode directions.
+  mkClause : (cl : S → Type (ℓ-suc ℓ)) (form : Formula ⟪ u ⟫ 2)
+           → ((f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ form ⟩ → cl (fst f))
+           → ((f : SM) (x : ⟪ u ⟫) → cl (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ form ⟩)
+           → StoryClause
+  mkClause cl form out bwd = cl , (form , (out , bwd))
+
+  -- A clause from a delivered two-way `-ok` lemma.
+  clauseOk : (cl : S → Type (ℓ-suc ℓ)) (form : Formula ⟪ u ⟫ 2)
+           → ((f : SM) (x : ⟪ u ⟫) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ form ⟩ ⟷ cl (fst f))
+           → StoryClause
+  clauseOk cl form ok = mkClause cl form (λ f x → ok f x .fst) (λ f x → ok f x .snd)
+
+  -- The clause list at a consumer.
+  StoryClauses : Type (ℓ-suc (ℓ-suc ℓ))
+  StoryClauses = List.List StoryClause
+
+  infixr 5 _∷₊_
+
+  _∷₊_ : StoryClause → StoryClauses → StoryClauses
+  c ∷₊ cs = c List.∷ cs
+
+  end : StoryClauses
+  end = List.[]
+
+  -- The meta-level conjunction over a predicate list.
+  Conj : List.List (S → Type (ℓ-suc ℓ)) → S → Type (ℓ-suc ℓ)
+  Conj List.[] f = Unit.Unit*
+  Conj (c List.∷ List.[]) f = c f
+  Conj (c List.∷ cs) f = c f × Conj cs f
+
+  -- The clause predicates of a clause list.
+  clProject : StoryClauses → List.List (S → Type (ℓ-suc ℓ))
+  clProject List.[] = List.[]
+  clProject ((cl , _) List.∷ cs) = cl List.∷ clProject cs
+
+  -- The object conjunction over the clause list.
+  ConjForm : StoryClauses → Formula ⟪ u ⟫ 2
+  ConjForm List.[] = ⊤̇
+  ConjForm ((_ , (form , _)) List.∷ List.[]) = form
+  ConjForm ((_ , (form , _)) List.∷ cs) = form ∧̇ ConjForm cs
+
+  -- The decode walk, both directions.
+  conj-out : (cs : StoryClauses) (f : SM) (x : ⟪ u ⟫)
+           → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ ConjForm cs ⟩
+           → Conj (clProject cs) (fst f)
+  conj-out List.[] f x h = Unit.tt*
+  conj-out ((_ , (_ , (out , _))) List.∷ List.[]) f x h = out f x h
+  conj-out ((_ , (_ , (out , _))) List.∷ c' List.∷ cs) f x (h₁ , h₂) =
+    out f x h₁ , conj-out (c' List.∷ cs) f x h₂
+
+  conj-in : (cs : StoryClauses) (f : SM) (x : ⟪ u ⟫)
+          → Conj (clProject cs) (fst f)
+          → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ ConjForm cs ⟩
+  conj-in List.[] f x h = Unit.tt*
+  conj-in ((_ , (_ , (_ , bwd))) List.∷ List.[]) f x h = bwd f x h
+  conj-in ((_ , (_ , (_ , bwd))) List.∷ c' List.∷ cs) f x (h₁ , h₂) =
+    bwd f x h₁ , conj-in (c' List.∷ cs) f x h₂
+
+  -- The assembled story at a consumer's clause list.
+  storyCl : StoryClauses → S → Type (ℓ-suc ℓ)
+  storyCl cs = Conj (clProject cs)
+
+  storyForm : StoryClauses → Formula ⟪ u ⟫ 2
+  storyForm = ConjForm
+
+  story-out : (cs : StoryClauses) (f : SM) (x : ⟪ u ⟫)
+            → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ storyForm cs ⟩ → storyCl cs (fst f)
+  story-out cs = conj-out cs
+
+  story-in : (cs : StoryClauses) (f : SM) (x : ⟪ u ⟫)
+           → storyCl cs (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ storyForm cs ⟩
+  story-in cs = conj-in cs
+
+  story-ok : (cs : StoryClauses) (f : SM) (x : ⟪ u ⟫)
+           → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ storyForm cs ⟩ ⟷ storyCl cs (fst f)
+  story-ok cs f x = conj-out cs f x , conj-in cs f x
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -531,11 +841,15 @@ domain bound), their object-language formulas, and the two-way decodes
 (the innermost pair membership, the four clause decodes, the ordinal decode,
 the exactness decode and the range read). Nothing here mentions which tower
 the carrier belongs to: the kit consumes only the carrier's transitivity, the
-pair-atom kit and the inner semantics. The consumers instantiate it at their
-own carrier and keep their carrier-specific clauses and collapses: the level
-formula's limit clause at the real tower, the level sigma's strengthened
-successor story and per-component bound at a rud carrier, and each consumer's
-own Def-step collapse and adequacy assembly.
+pair-atom kit and the inner semantics. The bounded successor atom joins the
+kit as carrier-generic ordinal content, and the one-way successor clause is
+delivered once, parameterized by its conclusion atom; the level-sigma chapter
+instantiates the clause at the powerset atom, and the S-story chapter at the
+step equality. The consumers instantiate the kit at their own carrier and
+keep their carrier-specific clauses and collapses: the level formula's limit
+clause at the real tower, the level sigma's strengthened successor story and
+per-component bound at a rud carrier, and each consumer's own Def-step
+collapse and adequacy assembly.
 <!--zh-->
-本章在通用传递载体处交付共享的子句套件：元层读式 (成对性、单值性、零子句、精确定义域界)、它们的对象语言公式，以及双向解码 (最内层的对隶属、四条子句解码、序数解码、精确性解码与像的读式)。此处没有任何内容提及载体属于哪座塔：套件只消费载体的传递性、对原子套件与内层语义。消费方在自己的载体处实例化它，各自保留载体专属的子句与坍缩：真实塔上层公式的极限子句，rud 载体上层 sigma 的加锐后继故事与按分量界，以及各自的 Def 步坍缩与充分性装配。
+本章在通用传递载体处交付共享的子句套件：元层读式 (成对性、单值性、零子句、精确定义域界)、它们的对象语言公式，以及双向解码 (最内层的对隶属、四条子句解码、序数解码、精确性解码与像的读式)。此处没有任何内容提及载体属于哪座塔：套件只消费载体的传递性、对原子套件与内层语义。有界后继原子作为载体泛型的序数内容加入套件，单向后继值子句以结论原子为参数一次交付；层 sigma 章在幂集原子处实例化该子句，S-故事章在步等式处实例化它。消费方在自己的载体处实例化套件，各自保留载体专属的子句与坍缩：真实塔上层公式的极限子句，rud 载体上层 sigma 的加锐后继故事与按分量界，以及各自的 Def 步坍缩与充分性装配。
 <!--/-->
