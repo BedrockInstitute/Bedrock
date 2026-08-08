@@ -48,9 +48,11 @@ open import L.Rud.Step {ℓ} lem A using
   ; Fof; u-self-in )
 open import L.Rud.Order {ℓ} lem A using
   ( Member; memberKey; member-trace; leastTrace-value; leastTrace-least
-  ; memberStage-new; prod-stage; prod-value; prod-self; prod-image
-  ; Producer; Ord; Trace; Sset-below; _⊰_; _≺_
+  ; prod-stage; prod-value; prod-self; prod-image
+  ; Producer; Ord; Trace; _⊰_; _≺_
   ; StageBounded; isPropStageBounded )
+open import L.Rud.OrderReadings {ℓ} lem A using
+  ( memberStage-new; Sset-below )
 open import L.Definability {ℓ} using ( module DefOf )
 open import Cubical.HITs.CumulativeHierarchy.Properties using
   ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈-asFiber )

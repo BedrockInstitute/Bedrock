@@ -41,7 +41,8 @@ open import L.Rud.Step {ℓ} lem A using
   ; Sset; Sset-mono; Sset-zero; Sset-suc; Sset-limit )
 open import L.Rud.Hierarchy {ℓ} lem step step-⊆ step-∈ step-mono∈ step-trans
   using ( Sset-levelFam; Sset-index-mono )
-open import L.Rud.Order {ℓ} lem A using ( Member; Sset-below; order-agrees )
+open import L.Rud.Order {ℓ} lem A using ( Member )
+open import L.Rud.OrderReadings {ℓ} lem A using ( Sset-below; order-agrees )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
