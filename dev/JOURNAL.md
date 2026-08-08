@@ -3152,6 +3152,50 @@ carrier, and the L-side carried sequence
 the bounded formula at the second limit `l = +ω ω` and proves
 `carve-⊇` only (`_build/l3.32-t199-report.md:218-226`).
 
+**`[T200]` JOURNAL ENTRIES T188 TO T199** (2026-08-08, `_build/l3.32-t200-report.md`).
+
+DELIVERED. 12 of 12 entries, insertions only, lint green.
+
+**`[T201]` THE D36 DECISION BRIEF** (2026-08-08, `_build/l3.32-t201-decision.md`).
+
+DELIVERED. The tool over-counts by 1,894: F1 archivals, 1,290, plus
+block 1's double book, 604 (`_build/l3.32-t201-decision.md:19-25,113`).
+T198 gated blockPowLim RED: the instance needs archived content, 1,379
+lines, cluster 4,414, and a relation never built anywhere, the old
+tree's carried P2 hypothesis (`_build/l3.32-t198-report.md:1-15,130-133`).
+The honest landing is 17,810-19,430 naive, 19,105-22,774 calibrated; no
+measured or gated number puts it under 16,000
+(`_build/l3.32-t201-decision.md:6-8,125-127`). Four options ranked; Rank
+1, continue and re-judge, recommended; Rank 2, the principled re-price,
+prepared as the fallback
+(`_build/l3.32-t201-decision.md:135-136,178-179`).
+
+**`[T202]` DOES THE AC ROUTE NEED BLOCKPOWLIM?** (2026-08-08, `_build/l3.32-t202-report.md`).
+
+NEEDED. The route reaches it through bridge-isL→isJ, Q and Q-suc
+(`_build/l3.32-t202-report.md:3-13`). The mirror: the delivered AC
+proof never crosses the bridge at all (`_build/l3.32-t202-report.md:95-115`).
+
+**`[T203]` THE ROUTE QUESTION: CROSS THE BRIDGE OR NOT** (2026-08-08, `_build/l3.32-t203-route.md`).
+
+CROSS. A syntax-free well-founded key exists on Sset. Lset's members
+carry no generation data; none can exist there
+(`_build/l3.32-t203-route.md:22-31`). Not crossing costs +4.1k naive,
++2.9-4.2k calibrated. Against the verdict: the wash against 17,496, and
+the revival's 147.6 s (`_build/l3.32-t203-route.md:21,42,51-53,231-235`).
+D18 re-read: confirmed twice, REFUTED once; the delivered J-side order
+is external, no formula defines it (`_build/l3.32-t203-route.md:213-215,237`).
+
+**`[T204]` D22 PROBE: THE BOUNDED FAMILY FORMULA** (2026-08-08, `_build/l3.32-t204-report.md`).
+
+DISPATCHED. The report is a placeholder; no verdict (`dev/PLAN.md:618`).
+
+**`[T205]` THE 16,000 FLOOR'S PROVENANCE** (2026-08-08, `_build/l3.32-t205-report.md`).
+
+UNSUPPORTED. The floor is the 2026-07-31 survey's optimistic end, never
+probed, never reached by a delivered tree
+(`_build/l3.32-t205-report.md:8-18`; `dev/PLAN.md:194`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
