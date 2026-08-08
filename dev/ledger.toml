@@ -578,12 +578,12 @@ provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 
 id = "retirement-surgery"
 trophy = "BOTH"
 title = "The retirement surgery under D32: sever arm B by deletion, the archival wiring at arm-C time, and the Hull order"
-naive_low = 250
-naive_high = 500
-calibrated_low = 350
-calibrated_high = 700
+naive_low = 180
+naive_high = 310
+calibrated_low = 250
+calibrated_high = 450
 klass = "x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part"
-gate = "POST-D32 SCOPE, rewritten 2026-08-07 after [T146] found the old field still describing pre-D32 Build A content and an already-decided ruling. What remains here: the archival wiring at arm-C time, and the Hull order slice. The deletion itself is EXECUTED ([T144], 86 lines, the three D32 artifacts shipped). The band 250-500 is an orchestrator judgment with no measurement behind it, flagged by [T146]; the wiring half becomes measurable at arm C"
+gate = "POST-D32 SCOPE, rewritten 2026-08-07 after [T146] found the old field still describing pre-D32 Build A content and an already-decided ruling. What remains here: the archival wiring at arm-C time, and the Hull order slice. The deletion itself is EXECUTED ([T144], 86 lines, the three D32 artifacts shipped). The band 250-500 is an orchestrator judgment with no measurement behind it, flagged by [T146]; the wiring half becomes measurable at arm C [T189] ITEMIZED THE BAND 2026-08-08 and it replaces the judgment numbers with two terms: the Hull order re-home by the BRIDGE route at 0.04-0.12k x1.3 (Hull:44 consumes orderAt from Choice.Step:740-741, used through wL at Hull:96-97 for the least-witness search; the fallback harvest route costs 0.35-0.65k at x3 and keeps a slice of the choice tree alive, against D18), and the arm-C archival wiring at 0.14-0.19k, itemized from arm A's measured anchor at double the unit count (32 masters against 16). The re-home's export spec for Model:57 is pinned: a surviving module must export a term of type (zf : isZFModel) -> ChoiceStatement zf, the delivered hasChoiceL type at Transversal:382-383."
 provenance = "_build/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is _build/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
 
 [[remaining]]
