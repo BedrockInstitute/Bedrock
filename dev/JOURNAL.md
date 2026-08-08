@@ -2950,6 +2950,208 @@ The register row records the dispatch only (`dev/PLAN.md:608`).
 DISPATCHED. No report exists in `_build/` at the time of writing.
 The register row records the dispatch only (`dev/PLAN.md:609`).
 
+**THE STANDING LOOP, AND ITS EMERGENCY BREAKTHROUGH TIER: D37** (2026-08-08).
+
+The owner rules the standing dispatch order: keep the slots loaded
+until `L ⊨ AC` is proved within all thresholds, the wall gate and the
+line cap both green (`dev/PLAN.md:193`). The orchestrator dispatches,
+audits, wires and commits on its own authority. An idle slot is a
+defect. The emergency breakthrough tier belongs to this loop, not to
+the budget: when a codex return fails its task at a critical
+breakthrough, the orchestrator may re-dispatch it to Fable 5 at
+maximum effort, without asking (`dev/ORCHESTRATION.md:41-45`). The
+tier was first recorded under D36 and moved to D37 the same day at
+the owner's correction, because the authorization was meant for the
+dispatch loop, not the budget cap (`dev/PLAN.md:193-194`).
+
+**`[T188]` JOURNAL ENTRIES: T181 TO T187, AND THE DAY'S TWO MEASUREMENTS** (2026-08-08,
+`_build/l3.32-t188-report.md`).
+
+DELIVERED. Seven of seven entries sit in code order, insertions only,
+lint green. The journal gained 488 words (`_build/l3.32-t188-report.md:9-20`).
+The batch records the F-series day's arc and the claims the reports
+do not support, each in place.
+
+The day's two measurements sit in the record above this entry: the
+cold wall at 395.22 s against the 498 s gate, margin +102.8 from
+487.9 (`dev/ledger.toml:1124`), and the AC meter's run 15,578 to
+14,379 (`_build/l3.32-t174-strategy.md:4`,
+`_build/l3.32-t184-gch-impact.md:56`).
+
+The T185, T186 and T187 reports were unwritten at the time; their
+register rows now record the landings (`dev/PLAN.md:608-609`, `:619`).
+One citation stands corrected: the brief's 2,875-3,800 naive figure
+for T182 is the `carried-sequence` row band (`dev/ledger.toml:386-395`),
+not the transfer term's own band of 1,202-1,533 naive
+(`_build/l3.32-t182-report.md:66-75`). The entries record both.
+
+**`[T189]` ARM C RECON: THE TWO SURVIVING CROSSINGS INTO THE CHOICE TREE** (2026-08-08,
+`_build/l3.32-t189-report.md`).
+
+DELIVERED. The surgery band re-prices to 0.18-0.31k naive and
+0.23-0.41k calibrated, with two itemized terms, replacing the
+judgment band of 0.25-0.50k and 0.35-0.70k (`dev/ledger.toml:586`).
+The terms are the Hull order re-home by the bridge route at
+0.04-0.12k x1.3, and the arm-C archival wiring at 0.14-0.19k
+(`_build/l3.32-t189-report.md:11-19`).
+
+Hull re-homes by the bridge route, not with the tree: the wing needs
+the well-order fact, never the `L.Choice.Step` supplier
+(`_build/l3.32-t189-report.md:96-100`). The `Model:57` re-point is not
+arm-C work; it sits inside the `choice-rehome` row at 0.30-0.65k
+naive and 0.90-1.95k calibrated (`dev/ledger.toml:421-429`). The
+order of operations: `bridge-landing` first, then the two re-homes,
+then arm C last, and the `L.Choice` plus `L.Coding` minus `Base` plus
+`L.Hierarchy` component archives as one unit (`dev/ledger.toml:923-927`).
+The 45.9 s check-time share stands as attribution from the T86
+profile; no `L.Choice` module has changed since
+(`_build/l3.32-t189-report.md:158-166`).
+
+**`[T190]` THE DELETION TEST: D36'S JUDGMENT, RUNNABLE ON DEMAND** (2026-08-08,
+`_build/l3.32-t190-report.md`).
+
+DELIVERED. `scripts/deletion-test.py` reports the shadow ac-total at
+14,379 against the D36 cap of 16,000, headroom +1,621
+(`_build/l3.32-t190-report.md:1-4`). The shadow agrees with
+`ledger.py --trophy-split` by import, and the suite pins the
+agreement: 23 checks, 0 failures (`scripts/tests/test_deletion_test.py:54-73`).
+
+Three refusal guards stand before the run: `--yes` is required, a
+live Agda process blocks it, and the tool fails closed when `pgrep`
+cannot verify the process list (`scripts/deletion-test.py:173-238`).
+The `--run` path is reviewed, never executed; the brief forbade its
+first run (`_build/l3.32-t190-report.md:167-171`).
+
+**`[T191]` THE BELOW-LIM MASTER, BLOCK 1: THE SHELL, THE STORY, THE CARRIED SEQUENCE** (2026-08-08,
+`_build/l3.32-t191-report.md`).
+
+LANDED. `src/L/Rud/BelowLim.lagda.md` is born at 604 in-fence lines
+against the 650 stop, 54 over the expected 400-550 band, in
+`[T185]`'s induction shape (`_build/l3.32-t191-report.md:8-14`). The
+cold check is 6.30 s against the 70 s watch, about 9 percent of it
+(`_build/l3.32-t191-report.md:78-85`). The carrier is a module
+parameter; `Assembly` takes the STEP as `stepHyp`, so the shape is a
+delivered input, never a postulate (`src/L/Rud/BelowLim.lagda.md:109`,
+`:135`). The probe's 57.8 s price does not transfer; block 1 drops
+the carrier placement machinery (`_build/l3.32-t191-report.md:78-85`).
+The meter moves with the landing: `scripts/ledger.py --budget` reads
+15,061 against the 16,000 cap at this writing, RED.
+
+**`[T192]` THE NATURALNESS REVIEW** (2026-08-08,
+`_build/l3.32-t192-report.md`).
+
+DELIVERED. Four of the six changes stand on their own:
+WellOrder.Combinators, OrderReadings, TowerKit, and Step
+(`_build/l3.32-t192-report.md:3-5`). Two need prose: the F10Desc
+localization in StepGraph and the Describe-Switch archival prose,
+whose pointers dangle into archived chapters
+(`_build/l3.32-t192-report.md:75-131`). The fixes land: two prose
+passes, five catalog blurbs, and the reading order, with TowerKit and
+StepGraph moved before Bridge (`dev/PLAN.md:622`;
+`src/Everything.lagda.md:1140-1142`, `:1214-1222`). Step's refusal
+re-verifies: a split forces the exact threshold contortion D36
+forbids (`_build/l3.32-t192-report.md:143-146`).
+
+**`[T193]` THE D22 GATE: THE CARVE'S OWN LANDING, WITHOUT THE IDENTIFICATION** (2026-08-08,
+`_build/l3.32-t193-report.md`).
+
+GREEN, outcome 1. The landing is 4 code lines, 15 with the D-10 truth
+check, at `src/ProbeT193.agda:70-88`. The carve clause is a delivered
+parameter, the below-lim master's own content. Nothing is the
+identification `Sset γ ≡ Lset γ` (`_build/l3.32-t193-report.md:13-16`).
+No HF or Finite import enters the probe's dependency closure. The
+identification cone is never re-homed, so HF and Finite archive once
+the master carries the carve clause and the segments' memberships
+(`_build/l3.32-t193-report.md:58-64`). The gate answers the escape
+T186 refuted: transitivity gives the subset, never the membership,
+and `∈-irrefl` forbids the self-membership
+(`_build/l3.32-t186-report.md` section 5; `src/V/Hierarchy.lagda.md:155`).
+
+**`[T194]` THE D22 GATE: THE Q-LIM RESIDUE AT A GENERAL LIMIT** (2026-08-08,
+`_build/l3.32-t194-report.md`).
+
+RED at the transfer, outcome 3. The general Q-lim clause IS its own
+induction: `Q = ∈-induction qstep` with the hypothesis at the smaller
+limits, and the frame re-instantiates at 62 non-blank probe lines
+(`src/ProbeT194.agda:69-137`; `src/L/Rud/Bridge.lagda.md:1055-1078`).
+The wall is the family equality at the carrier `Sset (U l)`, never
+the frame. Its non-overshoot side rests on the bridge `a ∈ U l →
+a < l`, which is FALSE; the machine-checked witness is
+`ω ∈ U ω ∖ ω` (`src/ProbeT194.agda:148-163`). The recorded residue
+53-437 re-prices to 612-1,062 naive and 1,051-1,976 calibrated
+(`_build/l3.32-t194-report.md:112-135`). Two survey terms stay named:
+the general S-side ordinal content and the carve-supset repair. The
+T185 dissolution does not transfer: below-lim's wall was the theorem
+at the previous limit, Q-lim's wall is the family equality
+(`_build/l3.32-t194-report.md:44-48`).
+
+**`[T195]` THE BELOW-LIM MASTER, BLOCK 2: THE STEP, AND THE THEOREM CLOSES** (2026-08-08,
+`_build/l3.32-t195-report.md`).
+
+DISPATCHED. The report is a skeleton at the time of writing; it
+carries no block-2 lines and no verdict (`_build/l3.32-t195-report.md:8-10`).
+The register row records the dispatch only (`dev/PLAN.md:612`). The
+spec restates five owed pieces: the STEP, the first-limit
+instantiation, the carve landing, the bridge wiring, and the object
+formulas (`_build/l3.32-t195-report.md:15-20`). The binding
+economics: the general-beta transfer measures 1,011-1,261 naive and
+1,314-1,639 calibrated, against the block's 900-line stop
+(`_build/l3.32-t195-report.md:26-29`).
+
+**`[T196]` THE BELOW-LIM DESIGN MEMO, REFRESHED TO THE MEASURED STATE** (2026-08-08,
+`_build/l3.32-t196-report.md`).
+
+DELIVERED. The memo moves from 1,983 to 2,530 words
+(`_build/l3.32-t196-report.md:1-3`). Eight of its own claims are
+quoted and refuted with evidence (`dev/memos/L3.32-below-lim-design.md:43-209`;
+`_build/l3.32-t196-report.md:50-89`). The corrections: T182's 213
+fresh lines replace the 10-line rate, the row band is 2,684-3,528
+naive, block 1 is landed, the general-beta transfer is 1,011-1,261,
+the carve landing is T193's, and the supply row is complete. Lint
+passes on both files.
+
+**`[T197]` THE BRIDGE LANDING: WHAT REMAINS ONCE THE TWO RESIDUES LAND** (2026-08-08,
+`_build/l3.32-t197-report.md`).
+
+DELIVERED. The landing maps at 50-150 naive and 65-195 calibrated,
+itemized to 43-108 naive (`_build/l3.32-t197-report.md:128-141`).
+Four of the six `Reduce` hypotheses are delivered; Q-lim and
+below-lim are in flight (`_build/l3.32-t197-report.md:6-21`). One
+un-gated term is found: the re-stated relation instance behind
+`blockPowLim`. SatTable delivers the discharge machinery, never the
+closed instance, so the landing brief must price it before funding
+(`_build/l3.32-t197-report.md:159-165`). StepGraph supplies two of
+the six hypotheses, not three; `∅∈Lset` feeds Bridge's `Lval` and
+`Arms`, not the `Reduce` telescope (`_build/l3.32-t197-report.md:17-31`).
+The landing's home is its own master: `Bridge` cannot host a section
+that imports its importers (`_build/l3.32-t197-report.md:97-108`).
+
+**`[T198]` THE D22 GATE: THE BLOCKPOWLIM RELATION INSTANCE** (2026-08-08,
+`_build/l3.32-t198-report.md`).
+
+DISPATCHED. The report is a skeleton at the time of writing; every
+section is pending (`_build/l3.32-t198-report.md:7-24`). The register
+row records the dispatch only (`dev/PLAN.md:615`). The gate's
+question is the one un-gated term T197 named: whether SatTable's
+discharge machinery closes `blockPowLim` with a re-stated relation
+instance on today's survivors (`_build/l3.32-t197-report.md:160-170`).
+
+**`[T199]` THE CARVE-SUPSET REPAIR: FEASIBILITY AT A GENERAL LIMIT** (2026-08-08,
+`_build/l3.32-t199-report.md`).
+
+FEASIBLE, at 592-1,052 naive and 940-1,793 calibrated, inside T194's
+band (`_build/l3.32-t199-report.md:1-6`). The repair is a bounded
+family formula at the carrier `Sset (U l)`: the formula bounds the
+pair index inside the story, so `carve-⊇` closes through the general
+value chain, and the false bridge `a ∈ U l → a < l` never enters the
+proof. The bound comes from the formula, not the carrier's ordinal
+content (`_build/l3.32-t199-report.md:1-9`). Two survey terms stay
+unmeasured: the general ordinal content and identification at the
+carrier, and the L-side carried sequence
+(`_build/l3.32-t199-report.md:207-215`). The smallest probe builds
+the bounded formula at the second limit `l = +ω ω` and proves
+`carve-⊇` only (`_build/l3.32-t199-report.md:218-226`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
