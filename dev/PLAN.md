@@ -626,7 +626,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T228 | The endgame status memo, for a reader who was not here | DELIVERED `dev/memos/L3.32-endgame-status.md`, 1,808 words; found the C-23 collision too | `_build/l3.32-t228-report.md` |
 | L3.32-T229 | Adversarial: block A's inl case without `member-a0-not-limit` | GREEN, 6 attacks failed: at a general limit it PROVES rather than refutes | `_build/l3.32-t229-report.md` |
 | L3.32-T230 | Block A: the general STEP at a variable limit, written in place | DRAFTED, not dispatched; stop-line 1,080 lines; waits on T225/T226 | `_build/briefs/l3.32-t230-blockA.md` |
-| L3.32-T231 | Adversarial: is the induction hypothesis really vacuous at a-0? | DISPATCHED 2026-08-09; it decides block A's telescope shape | `_build/l3.32-t231-report.md` |
+| L3.32-T231 | Adversarial: is the induction hypothesis really vacuous at a-0? | GREEN, 15-site walk: every limit-reachable site goes through the IH, the rest by the  | `_build/l3.32-t231-report.md` |
+| L3.32-T232 | Adversarial: can block A consume Bridge's `Below` row instead of writing it? | DISPATCHED 2026-08-09; attacks the orchestrator's own claim, worth ~50-9 | `_build/l3.32-t232-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
