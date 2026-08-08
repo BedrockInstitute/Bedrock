@@ -628,7 +628,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T230 | Block A: the general STEP at a variable limit, written in place | DRAFTED, not dispatched; stop-line 1,080 lines; waits on T225/T226 | `_build/briefs/l3.32-t230-blockA.md` |
 | L3.32-T231 | Adversarial: is the induction hypothesis really vacuous at a-0? | GREEN, 15-site walk: every limit-reachable site goes through the IH, the rest by the  | `_build/l3.32-t231-report.md` |
 | L3.32-T232 | Adversarial: can block A consume Bridge's `Below` row instead of writing it? | GREEN: the row falls from 50-90 lines to 10-14 of glue; no circularity;  | `_build/l3.32-t232-report.md` |
-| L3.32-T233 | Lift `Below` out of `Reduce` so block A can consume it | DISPATCHED 2026-08-09; ~12-16 touched lines, runs alone (C-25) | `_build/l3.32-t233-report.md` |
+| L3.32-T233 | Lift `Below` out of `Reduce` so block A can consume it | DONE at 13 semantic lines; Bridge exit 0; its A/B proved the HF failure predates it | `_build/l3.32-t233-report.md` |
+| L3.32-T234 | The fold's last clause must be BARE: the tree is red at HF | DISPATCHED 2026-08-09; C4 changed the conjunction's shape and HF destructures positionally | `_build/l3.32-t234-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
