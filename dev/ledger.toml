@@ -1193,7 +1193,11 @@ full_cold_wall_seconds = 395
 # naturalness and for not writing a sixth hand assembly, NOT for the gate. The
 # stop-line below stands unchanged at 1,080, and block A must report the
 # assembly's real delta at its own site.
-block_a_breakeven_lines = "1080-1174"
+# SUPERSEDED 2026-08-09 by [T242]. At the measured content rate of 0.297 the
+# break-even is about 203-230 lines, against a measured floor of 1,249. There
+# is NO admissible landing: the stop-line cannot be met by any block A that
+# proves the theorem.
+block_a_breakeven_lines = "203-230 at 0.297 (was 1080-1174 at the slice rate 0.085)"
 # [T230] MEASURED BLOCK A AGAINST THAT STOP-LINE 2026-08-09 AND STOPPED RED.
 # The floor is 1,249 in-fence lines, 169 over. 587 lines are landed and green
 # (orchestrator-measured; `Everything` exit 0 at 300 s in the transitional
@@ -1223,7 +1227,11 @@ block_a_breakeven_lines = "1080-1174"
 # So the lever leaves block A. Closing 6 to 14 s means 71 to 165 lines out of a
 # block at its floor, or 6 to 14 seconds out of the 388.9 s TREE BASE, which no
 # task has ever hunted. That is 1.5 to 3.6 percent of the base. [T235] hunts it.
-landing_misses_gate_by = "6-14"
+# SUPERSEDED 2026-08-09 by [T242]. The 6-14 figure below used 0.085 s per line,
+# which [T242] proved is the rate of a 126-line SLICE and not of the content.
+# The real miss is 303-311 s. The old key is kept so a reader who finds it
+# elsewhere lands on this correction instead of on the number.
+landing_misses_gate_by = "303-311 (was 6-14, which used a slice rate)"
 # THE D36 TRIPWIRE FIRED 2026-08-09, on the commit that landed block A's
 # measured content. `ledger.py --check` reports: measured ac-total 16,675
 # against the 16,000 cap, 675 OVER. Under D36 this is the point at which the
@@ -1441,6 +1449,31 @@ seconds_cure_verdict = "NO-GO, [T241]: concentrated in the decode content, ceili
 # both the a-0 Step module and block A's landed 589 lines, and it is not a
 # landing figure.
 full_cold_profile_2026_08_09 = "700.42 s wall, 112 rows; base 420.5 s; base cut of 293 s NOT THERE"
+# [T242] SETTLED THE LAST UNPRICED QUANTITY 2026-08-09: ARTIFACT, not escape.
+# [T222]'s 0.085 s per line is the rate of a 126-line SLICE of the witness
+# layer. That slice contains ONE of the four families the real content has. It
+# lacks the pair-family decode (48,541 ms), the rename decode (24,190) and the
+# clause bundle (18,353), which are 52.8 percent of the real check. A slice
+# that omits half the content cannot price it.
+#
+# THE REAL CONTENT RATE IS 0.297, measured on 589 lines. Every figure derived
+# from 0.085 is wrong in the same direction, and the two worst were the
+# orchestrator's own: the landing miss (6-14 s, really 303-311) and the block A
+# break-even (1,080-1,174 lines, really 203-230 against a measured floor of
+# 1,249, so there is no admissible landing at all).
+#
+# THE LANDING, on measured pieces only: base 420.5 + block 1 at 6.30 + block A
+# at about 371 (1,249 lines x 0.297) + block B at 3-11 = 801-809 s against the
+# 498 s gate.
+#
+# THE ONE ESCAPE IT FOUND IS SMALL AND IS NOW P-r. Three shapes measured at one
+# site: hand-written five-clause decode 7,242 ms, hand-written six-clause
+# 7,507, clause bundle with kit aliases 22,011. The bundle shape is 2.9x the
+# hand-written one and the clause COUNT is not the driver, since the sixth
+# clause adds 0.5 s. So 14.5 s is available by not folding, and the brief's
+# hypothesised 125 s escape does not exist. The pair family and the rename
+# family have no cheaper measured shape.
+content_rate_measured = "0.297 s per line; the 0.085 figure is a slice rate and every projection built on it was low"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
