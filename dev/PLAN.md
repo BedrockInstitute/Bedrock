@@ -614,7 +614,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T216 | JOURNAL entries T206 to T215, the campaign day | DELIVERED, insertions only, lint green | `_build/l3.32-t216-report.md` |
 | L3.32-T217 | Block 3's scope, priced before it is funded | SPLIT REQUIRED and THE GATE BREAKS AT BOTH RATES: 513-529 s cured, 836-893 uncured | `_build/l3.32-t217-report.md` |
 | L3.32-T218 | The wall arithmetic: can the AC landing fit 498 s at all? | 745-813 s uncured DOES NOT FIT; 422-448 cured TURNS ON T215 and four unmeasured terms | `_build/l3.32-t218-wall.md` |
-| L3.32-T219 | The seconds doctrine: what makes a master expensive here | DISPATCHED 2026-08-08 | `_build/l3.32-t219-seconds.md` |
+| L3.32-T219 | The seconds doctrine: what makes a master expensive here | Five diseases; the 21-60x gap is a CONTENT CLASS, not a defect. P-m and P-n admitted | `_build/l3.32-t219-seconds.md` |
 | L3.32-T220 | Time the four unmeasured landing terms, in master shape | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t220-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |

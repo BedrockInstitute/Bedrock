@@ -2085,7 +2085,7 @@ landed wrong split would have cost the naturalness condition.
 
 ## Adding an entry
 
-Take the next free ID under the series (P-k, R-41, T-3, I-10, D-27, C-24), cite
+Take the next free ID under the series (P-o, R-41, T-3, I-10, D-27, C-24), cite
 the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
@@ -2245,6 +2245,55 @@ visible in a measurement nobody takes will be lost, and it will be lost in the
 direction of whatever is quicker to write.** This is the finding that produced
 D30's freeze, and the reason its exit condition includes recording the practice
 before the code that carries it is archived.
+
+### P-m. The check-cost rate is a content-class certificate, and instantiation is the expensive class
+
+**Rule:** Seconds per line identify a block's CONTENT CLASS before any
+profile is run, and line count alone predicts nothing. **Parameterized
+content**, whose definitions check at bound variables under a module
+telescope, checks near **0.01 s per line**. **Instantiation content**, which
+states object-language formulas at a concrete carrier, proves decodes that
+walk the satisfaction relation, and places concrete sets into deep stages,
+checks near **0.22 s per line** at this site. The two classes differ by
+twenty to sixty times, so a build brief that projects seconds from a line
+count without naming the class is projecting nothing. **Plan the split
+between blocks on the class boundary, not on the line count.**
+
+**Measured ([L3.32-T219], 2026-08-08, over ten episodes):** the same master,
+the same author and the same cited laws produced both rates. `L.Rud.BelowLim`
+block 1, 604 lines of parameterized story and segment machinery, checks in
+6.30 s cold, slowest definition 130 ms. Block 2, 948 lines instantiating the
+first limit, costs about 210 s, and 66 percent of the profile sits in ten
+decode and placement definitions.
+
+**Provenance:** `_build/l3.32-t219-seconds.md` sections 1 and 3;
+`_build/l3.32-t191-report.md:78`, `:86`; `_build/l3.32-t195-report.md:149-155`.
+
+### P-n. Satisfaction content at a concrete carrier is a payable floor, not a defect
+
+**Rule:** When a proof states object-language formulas at a CONCRETE carrier
+and proves their two-way decodes, the elaborator normalizes the carrier's
+presentation at every such definition, and **named branches with written
+types do not remove that cost**. I-5's cure applies to a missing type, not to
+this; if every hot branch already carries a written type, the remaining cost
+is the machinery and the profile is telling the truth. **Do not fund a cure
+for it.** The admissible moves are to need less instantiation (keep content
+parameterized and instantiate once), or to accept the floor and price it.
+
+**Measured ([L3.32-T219], 2026-08-08):** `[T195]`'s profile of the below-lim
+master's first-limit instantiation. `seg∈C` 37.2 s, `ψ-in` 27.0 s with its
+`go` branch 17.9 s, the `out`/`bwd`/`δNum` group about 30 s, and the
+`segForm-ok` and `sat` reads about 33 s. Every hot branch is a named helper
+with a written type, which is why `[T143]`'s I-5 cure, worth 595 s to 27 ms
+in the same neighbourhood, has no purchase here.
+
+**When it bites:** any block that instantiates the graph layer, the story or
+the segment machinery at a concrete stage. `[T217]` priced block 3 at this
+rate for exactly that reason.
+
+**Provenance:** `_build/l3.32-t219-seconds.md` sections 1 and 5;
+`_build/l3.32-t195-report.md` section 5.
+
 
 ### C-23. A shape certificate is not a meaning certificate
 
