@@ -418,6 +418,18 @@ ac_cap = 16000
 authority = "owner ruling D36, 2026-08-07"
 
 [[remaining]]
+id = "blockpowlim-instance"
+trophy = "BOTH"
+title = "The blockPowLim relation instance: the covering code set and the satisfaction relation as a member"
+naive_low = 1779
+naive_high = 2179
+calibrated_low = 2993
+calibrated_high = 4193
+klass = "MIXED and the split is the point: the covering code set is a REVIVAL priced at x1.3 (1,379 in-fence lines of archived CodePred and CodeSet, re-pointed onto StepGraph because StepInL is superseded, so it is a rewrite and not a clean un-archive), and the relation as a member is SURVEY at x3 (400-800 naive, T25's band, never built anywhere). The ideal-form re-price of the code predicate over the graph layer is UNRUN and could move the revival half down"
+gate = "BOOKED 2026-08-08 by the orchestrator after [T207]'s plan exposed the leak: [T198] measured this obligation and [T202] proved the AC route reaches it, but NO ROW carried its lines, so the landing projection omitted them. The ledger header's own warning names this class. [T198] RED: the Reduce telescope's blockPowLim needs a relation instance that no surviving chapter can build; the assembly is 3 measured lines of glue, and the instance reduces to two forcing obligations, the covering code set (archived, 1,379, cluster 4,414) and the satisfaction relation as a member of the block (never built, the old tree's carried P2 hypothesis, T25's unbuilt witness). [T202] NEEDED: bridge-isL-to-isJ reaches it through Q and Q-suc, so the AC route pays it. THE OWNER'S RULING IS OWED between two routes, and only one of them is a proof: RE-FORMULATION carries the instance as a hypothesis discharged nowhere, which does not prove the theorem; REVIVAL pays this row. The band assumes REVIVAL for that reason. The unrun gate that would move it: price the code predicate's ideal form over StepGraph's graph layer (D17, from the rewrite side)"
+provenance = "_build/l3.32-t198-report.md; _build/l3.32-t202-report.md; _build/l3.32-t25-report.md; dev/memos/L3.32-ac-endgame.md step 4"
+
+[[remaining]]
 id = "choice-rehome"
 trophy = "AC"
 title = "The choice re-home onto the rud-side well-order"
