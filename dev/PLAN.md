@@ -623,7 +623,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T209 | D17 gate: the code predicate's ideal form over the graph layer | WASH: the ideal form is 1,120-1,275 against 1,379 delivered, 7-19 percent, not half | `_build/l3.32-t209-report.md` |
 | L3.32-T210 | The compression campaign from first principles (fable, max) | -2,333 to -3,575, does NOT close; the cofinality escape closes NEGATIVE | `_build/l3.32-t210-campaign.md` |
 | L3.32-T211 | The seconds gate: does any honest blockPowLim fit the wall? | TOO CLOSE TO CALL: 7.6 s slice projects 68-77 s naive, 88-100 calibrated, 203-231 survey | `_build/l3.32-t211-report.md` |
-| L3.32-T212 | Cut the verified fat: ten wrappers and one unreached export | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t212-report.md` |
+| L3.32-T212 | Cut the verified fat: ten wrappers and one unreached export | CUT 11 of 11, both masters green, exports byte-identical, no prose left stale | `_build/l3.32-t212-report.md` |
 | L3.32-T213 | The mathematical campaign: generalize and restructure | Five candidates; C1 takes the widest survey term; crossing-rebuild verified irreducible | `_build/l3.32-t213-math.md` |
 | L3.32-T214 | D22 gate: satisfaction-as-member on the Sat engine (C1) | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t214-report.md` |
 | L3.32-T199 | The carve-supset repair: is the general family equality feasible? | FEASIBLE at 592-1,052: a bounded family formula, and the false bridge never enters | `_build/l3.32-t199-report.md` |
