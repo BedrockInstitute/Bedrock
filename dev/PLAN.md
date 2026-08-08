@@ -608,7 +608,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T185 | Statement-shape probe: below-lim as an induction over limits | GREEN at 139 of 150: the induction assembles and the T182 wall IS the hypothesis | `_build/l3.32-t185-report.md` |
 | L3.32-T186 | F1 execution: re-home the five lemmas from HF and Finite | LANDED 75 of 140, three homes green; REFUTED its own avoidance: the landing needs more | `_build/l3.32-t186-report.md` |
 | L3.32-T193 | D22 gate: the carve's own landing, without the identification | GREEN at 84 lines: the carve lands itself; HF and Finite archive after block 2 | `_build/l3.32-t193-report.md` |
-| L3.32-T194 | D22 gate: the Q-lim residue at a general limit | DISPATCHED 2026-08-08 | `_build/l3.32-t194-report.md` |
+| L3.32-T194 | D22 gate: the Q-lim residue at a general limit | RED: the frame re-instantiates at 62, but the family equality rests on a FALSE bridge; 612-1,062 | `_build/l3.32-t194-report.md` |
 | L3.32-T195 | The below-lim master, block 2: the STEP, and the theorem closes | DISPATCHED 2026-08-08 | `_build/l3.32-t195-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
