@@ -615,7 +615,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
 | L3.32-T202 | Can the AC route avoid blockPowLim entirely? | DISPATCHED 2026-08-08 | `_build/l3.32-t202-report.md` |
 | L3.32-T199 | The carve-supset repair: is the general family equality feasible? | FEASIBLE at 592-1,052: a bounded family formula, and the false bridge never enters | `_build/l3.32-t199-report.md` |
-| L3.32-T200 | JOURNAL entries T188 to T199 | DISPATCHED 2026-08-08 | `_build/l3.32-t200-report.md` |
+| L3.32-T200 | JOURNAL entries T188 to T199 | DELIVERED. 12 of 12, insertions only, lint green; the D37 ruling gets a standing record | `_build/l3.32-t200-report.md` |
 | L3.32-T201 | The D36 decision brief: every term measured, what is the landing? | DISPATCHED 2026-08-08 | `_build/l3.32-t201-decision.md` |
 | L3.32-T187 | The coverage audit: did this week's re-cuts lose AC content? | CLEAN, nothing untracked; seven citation and arithmetic defects found and applied | `_build/l3.32-t187-report.md` |
 | L3.32-T188 | JOURNAL entries T181 to T187 and the day's two measurements | DELIVERED. 7 of 7 entries, insertions only, lint green | `_build/l3.32-t188-report.md` |
