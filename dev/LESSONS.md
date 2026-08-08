@@ -2295,6 +2295,30 @@ rate for exactly that reason.
 `_build/l3.32-t195-report.md` section 5.
 
 
+### P-o. A record field at a carrier-indexed type hangs the elaborator; use a nested Σ
+
+**The law.** A `record` whose FIELD has a type indexed by the carrier, such as
+`Formula ⟪ u ⟫ 2`, hangs Agda 2.8.0's elaborator. The identical content written
+as a right-nested `Σ` checks immediately. The cost is in the record's
+elaboration, not in the content: the same type as a plain definition is
+instant.
+
+**The measurement, 2026-08-09, `[L3.32-T226]`.** A minimal reproducer carrying
+ONLY that one field timed out at 25 s. The `Σ` form of the same clause type
+checked in seconds. The clause type therefore sits at
+`Type (ℓ-suc (ℓ-suc ℓ))`, one universe above the predicate component, which is
+the price of the shape and is worth paying.
+
+**The companion trap, same measurement.** The fold's empty-list case needs a
+universe-polymorphic unit, `Unit.Unit*`. The cubical `Unit` at `Type ℓ-zero`
+fails the sort check, and the failure reads as a sort error in the FOLD rather
+than in the unit, which is where the time goes.
+
+**Why it is a law and not a note.** This project reaches for a record whenever
+it bundles a predicate with its object formula and its two decode directions,
+which is the shape of every story clause. The nested `Σ` is uglier to read and
+will be "cleaned up" into a record by anyone who does not know the price.
+
 ### C-24. A shape certificate is not a meaning certificate
 
 **The law.** A proof obligation that certifies a formula's SHAPE (`Δ₀`, `Σ₁`,
