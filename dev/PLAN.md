@@ -618,7 +618,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T204 | D22 probe: the bounded family formula at the second limit | DISPATCHED 2026-08-08 | `_build/l3.32-t204-report.md` |
 | L3.32-T205 | Where did the 16,000 compression floor come from? | UNSUPPORTED: a 2026-07-31 survey's optimistic end, never probed; the measured bar is 17,496 | `_build/l3.32-t205-report.md` |
 | L3.32-T206 | JOURNAL entries T200 to T205 | DELIVERED. 6 of 6, insertions only; T204 correctly recorded as dispatched, no verdict | `_build/l3.32-t206-report.md` |
-| L3.32-T207 | The AC endgame execution plan: block 2 to the deletion test | DISPATCHED 2026-08-08 | `_build/l3.32-t207-report.md` |
+| L3.32-T207 | The AC endgame execution plan: block 2 to the deletion test | DELIVERED, 2,410 words, eight steps ordered; the blockPowLim ruling is the honesty gate | `_build/l3.32-t207-report.md` |
 | L3.32-T208 | Pin the 16,000: measure the L3.28 survey's seven levers on main | DISPATCHED 2026-08-08 | `_build/l3.32-t208-report.md` |
 | L3.32-T199 | The carve-supset repair: is the general family equality feasible? | FEASIBLE at 592-1,052: a bounded family formula, and the false bridge never enters | `_build/l3.32-t199-report.md` |
 | L3.32-T200 | JOURNAL entries T188 to T199 | DELIVERED. 12 of 12, insertions only, lint green; the D37 ruling gets a standing record | `_build/l3.32-t200-report.md` |
