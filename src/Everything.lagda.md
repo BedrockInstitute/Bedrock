@@ -1216,6 +1216,11 @@ measurement. Wired chapter by chapter as the wave batches land.
   form: the delivered two-way successor-value clause is too strong and forces
   an infinite chain inside a finite member. No instance in the tree yet; the
   StepInL rewrite supplies the first one.
+- `L.TowerKit`{.Agda}: the L-side interface between the constructible tower
+  and the rud step: the stage extensionality and emptiness reads, the
+  transitivity and definable-power facts, the pairing with its Layer-free
+  membership arm, and the four-step successor. Extracted from the bridge so
+  the graph layer can read the tower without reading the bridge.
 - `L.Rud.StepGraph`{.Agda}: the graph layer's fresh home, block 1 of the
   StepInL rewrite: the equality and projection frames, the cap and union
   support, the sixteen membership formulas, and the finite disjunction with
@@ -1252,6 +1257,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
 - `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
 - `L.Rud.StepStory`{.Agda}：S-故事的单向后继子句，作为对象公式，且一次泛型到底。载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，因为该层已归档而 master 不得跨归档边界 import，故由实例化方供给。按单向形式建造：已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。树中尚无实例，第一个由 StepInL 重写供给。
+- `L.TowerKit`{.Agda}：可构成塔与 rud 步进之间的 L 侧接口：阶段的外延与空性读式、传递性与可定义幂的事实、带 Layer 无关隶属臂的配对，以及四步后继。从桥中析出，使图层读塔而不读桥。
 - `L.Rud.StepGraph`{.Agda}：图层的新家，StepInL 重写的第一块：等词框架与投影框架、交与并的支撑、十六条隶属公式，以及带双向解码的有穷析取。十六个图本身在第三块落地之前保持为望远镜参数，故析取恰在 StepStory 消费它之处保持抽象。不导入任何退役模块，这既是构造方式，也是本章存在的意义。
 <!--/-->
 
@@ -1277,5 +1283,6 @@ import L.Rud.Bridge
 import L.Rud.DefInJ
 import L.Rud.SatTable
 import L.Rud.StepStory
+import L.TowerKit
 import L.Rud.StepGraph
 ```

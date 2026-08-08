@@ -597,7 +597,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T175 | D22 probe: one arm's defSet equation from StepGraph (F2) | GREEN at 133 of 150: the pin frame derives F1's equation; the Arms rebuild is funded | `_build/l3.32-t175-report.md` |
 | L3.32-T176 | The F1 walk: what does AC consume from HF and Finite? | EXIT-AT-COST: five lemmas, re-home 75-95; STAY refuted; net -642 to -1,290 | `_build/l3.32-t176-report.md` |
 | L3.32-T177 | Adversarial review: break the F2 finding before it is funded | HOLDS-WITH-EDGES, four edges priced; the net re-derives to -1,018 to -1,184 | `_build/l3.32-t177-report.md` |
-| L3.32-T178 | F2 block 1: the extraction, the pin frame, the sixteen equations | DISPATCHED 2026-08-08 | `_build/l3.32-t178-report.md` |
+| L3.32-T178 | F2 block 1: the extraction, the pin frame, the sixteen equations | LANDED, 328 of 350: L.TowerKit born; Bridge falls 8.2 s cold; all green | `_build/l3.32-t178-report.md` |
 | L3.32-T179 | D22 probe: the carried order-story's successor clause (F3) | GREEN at 135 of 150: both T161 walls dissolve; the slice re-prices, calibrated top halves | `_build/l3.32-t179-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
