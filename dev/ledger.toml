@@ -1188,6 +1188,36 @@ full_cold_wall_seconds = 395
 # stop-line below stands unchanged at 1,080, and block A must report the
 # assembly's real delta at its own site.
 block_a_breakeven_lines = "1080-1174"
+# [T230] MEASURED BLOCK A AGAINST THAT STOP-LINE 2026-08-09 AND STOPPED RED.
+# The floor is 1,249 in-fence lines, 169 over. 587 lines are landed and green
+# (orchestrator-measured; `Everything` exit 0 at 300 s in the transitional
+# state that holds both the a-0 Step module and Stepgamma).
+#
+# THE LARGEST UNBOOKED TERM: the sixth clause's port, 332 lines, measured.
+# [T226]'s obligation 3 claimed its pieces "exist in the level-formula shape"
+# and the orchestrator put that in block A's brief unchecked. It is FALSE.
+# `src/L/LevelFormula.lagda.md:113-115` is one-way with the inner witness
+# `pr b z in f`, ELEMENT-valued; `src/L/Rud/BelowLim.lagda.md:262-266` is
+# two-way with `pr xi w in f` and `z in w`, SET-valued. The correct pieces are
+# T128's probe content. Neither [T217]'s 1,011 band low nor [T223]'s 1,071
+# block-A low contains this term.
+#
+# Two smaller corrections, same return: the plan's LIFT reading of the decode
+# needs a witness story at every xi in gamma that no row prices; and the C2
+# telescope measured 19 lines against [T213]'s 60-100 (D-26: the measurement
+# is authoritative).
+#
+# THE LANDING, at block A's floor: 388.9 base + 6.30 (block 1) + 106 (1,249 at
+# 0.085) + 3-11 (block B) = 504-512 s against the 498 s gate. THE RESHAPE
+# MISSES THE WALL BY 6 TO 14 SECONDS, and block A has nothing left to give:
+# [T230] states it did not compress by contortion, and every landed piece is
+# the delivered shape at a variable carrier, which is what D36's naturalness
+# condition requires.
+#
+# So the lever leaves block A. Closing 6 to 14 s means 71 to 165 lines out of a
+# block at its floor, or 6 to 14 seconds out of the 388.9 s TREE BASE, which no
+# task has ever hunted. That is 1.5 to 3.6 percent of the base. [T235] hunts it.
+landing_misses_gate_by = "6-14"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
