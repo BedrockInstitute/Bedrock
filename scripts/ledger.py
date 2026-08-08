@@ -274,6 +274,30 @@ def trophy_split(data: dict, files: list[str],
     gch = closure(graph, roots["gch"])
     buckets, _ = retiring(files, data)
     retired = {f for hit in buckets.values() for f in hit}
+
+    # THE COMPANION RE-ASSIGNMENT (D36 amendment, owner-ruled 2026-08-08).
+    # A neither-closure master may be DECLARED gch-side, because the parking
+    # rule below would otherwise bill it to AC forever. Two safety properties:
+    # the declaration applies ONLY while no closure reaches the master (the
+    # closure wins automatically the day an AC-side master imports it), and a
+    # declaration the AC closure overrides is a DEFECT, so it cannot go stale
+    # silently. Each declaration names its wing consumer; an audit attacks one
+    # declaration, not the mechanism.
+    assigned: set[str] = set()
+    for row in data.get("gch_assign", []):
+        mod = row.get("module", "")
+        if not (row.get("wing_consumer") and row.get("authority")):
+            defects.append(f"gch_assign for {mod} lacks wing_consumer or authority")
+            continue
+        if mod not in files:
+            defects.append(f"gch_assign names a module not in the surviving tree: {mod}")
+            continue
+        if mod in ac:
+            defects.append(
+                f"gch_assign for {mod} is DEAD: the AC closure reaches it, so the "
+                f"closure wins and the declaration must be removed")
+            continue
+        assigned.add(mod)
     files = [f for f in files if f not in retired]
     total = sum(sizes[f] for f in files)
     parts = {"base": 0, "ac_only": 0, "shared": 0, "gch_only": 0}
@@ -295,6 +319,11 @@ def trophy_split(data: dict, files: list[str],
             parts["shared"] += sizes[f]
             part_files["shared"].append(f)
         elif not in_ac and in_gch:
+            parts["gch_only"] += sizes[f]
+            part_files["gch_only"].append(f)
+        elif f in assigned:
+            # Declared gch-side under the D36 companion mechanism: a
+            # neither-closure master whose content serves only the wing.
             parts["gch_only"] += sizes[f]
             part_files["gch_only"].append(f)
         else:
