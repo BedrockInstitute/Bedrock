@@ -593,7 +593,9 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T171 | Split L.Rud.Order: the level readings to their natural home | SPLIT. L.Rud.OrderReadings, 115 moved, C-23 re-verified; all four touched masters green | `_build/l3.32-t171-report.md` |
 | L3.32-T172 | D22 probe: the C2 formula-coding dedup at Count | NO-GO at the 120 stop: the carrier needs 143 fresh; the two-sided net is -65 to -70, real but small | `_build/l3.32-t172-report.md` |
 | L3.32-T173 | The re-home design memo: one document for the AC endgame | DELIVERED. 1,707 words; every discharge obligation itemized with its supplier | `_build/l3.32-t173-report.md` |
-| L3.32-T174 | Fable strategy recon: hidden compression broadly, and the cap options | DISPATCHED 2026-08-08 | `_build/l3.32-t174-strategy.md` |
+| L3.32-T174 | Fable strategy recon: hidden compression broadly, and the cap options | DELIVERED. F2 the doubled description layer; F1 HF+Finite exit; the landing can pass 16k | `_build/l3.32-t174-strategy.md` |
+| L3.32-T175 | D22 probe: one arm's defSet equation from StepGraph (F2) | DISPATCHED 2026-08-08 | `_build/l3.32-t175-report.md` |
+| L3.32-T176 | The F1 walk: what does AC consume from HF and Finite? | DISPATCHED 2026-08-08 | `_build/l3.32-t176-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
 | L3.32-T155 | D36 gate G1: the fat audit of the shared part | Movable ~1,471-1,650 after the HF-imports-Finite catch; saves-now 757-930 stands | `_build/l3.32-t155-report.md` |
