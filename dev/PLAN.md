@@ -621,7 +621,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T223 | The reshape's build plan, written against the measured rates | TWO blocks, order fixed; its seconds predate T222, so the orchestrator re-derived them | `_build/l3.32-t223-plan.md` |
 | L3.32-T224 | JOURNAL entries T216 to T223, the seconds day | DELIVERED, 8 of 8, insertions only, lint green | `_build/l3.32-t224-report.md` |
 | L3.32-T225 | C3: dedup the one-way successor clause and its bounded atoms | DISPATCHED 2026-08-08 | `_build/l3.32-t225-report.md` |
-| L3.32-T226 | C4: one story assembly, before the general STEP is written | DISPATCHED 2026-08-08 | `_build/l3.32-t226-report.md` |
+| L3.32-T226 | C4: one story assembly, before the general STEP is written | KEPT: costs +72 naive, +0.85 s now; block A's story piece falls to 15-17 lines; found P-o | `_build/l3.32-t226-report.md` |
 | L3.32-T227 | C5: one induction frame, and whether the four sites unify | DOES NOT UNIFY as a saving: the frame is delivered twice, the clauses are per-site | `_build/l3.32-t227-report.md` |
 | L3.32-T228 | The endgame status memo, for a reader who was not here | DELIVERED `dev/memos/L3.32-endgame-status.md`, 1,808 words; found the C-23 collision too | `_build/l3.32-t228-report.md` |
 | L3.32-T229 | Adversarial: block A's inl case without `member-a0-not-limit` | GREEN, 6 attacks failed: at a general limit it PROVES rather than refutes | `_build/l3.32-t229-report.md` |
