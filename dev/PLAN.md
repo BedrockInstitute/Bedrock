@@ -620,14 +620,15 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T222 | The deciding rate: what does a generic STEP cost per line? | 0.085 s per line, a STRADDLE: the tree lands 484-514 against 498, by plus 14 or minus 16 | `_build/l3.32-t222-report.md` |
 | L3.32-T223 | The reshape's build plan, written against the measured rates | TWO blocks, order fixed; its seconds predate T222, so the orchestrator re-derived them | `_build/l3.32-t223-plan.md` |
 | L3.32-T224 | JOURNAL entries T216 to T223, the seconds day | DELIVERED, 8 of 8, insertions only, lint green | `_build/l3.32-t224-report.md` |
-| L3.32-T225 | C3: dedup the one-way successor clause and its bounded atoms | DISPATCHED 2026-08-08 | `_build/l3.32-t225-report.md` |
+| L3.32-T225 | C3: dedup the one-way successor clause and its bounded atoms | DEDUPED, -92 net in-fence lines, inside the 60-100 band; found P-p, the stale-interface  | `_build/l3.32-t225-report.md` |
 | L3.32-T226 | C4: one story assembly, before the general STEP is written | KEPT: +72 naive, +0.85 s; the block A saving is a WASH at audit; found P-o | `_build/l3.32-t226-report.md` |
 | L3.32-T227 | C5: one induction frame, and whether the four sites unify | DOES NOT UNIFY as a saving: the frame is delivered twice, the clauses are per-site | `_build/l3.32-t227-report.md` |
 | L3.32-T228 | The endgame status memo, for a reader who was not here | DELIVERED `dev/memos/L3.32-endgame-status.md`, 1,808 words; found the C-23 collision too | `_build/l3.32-t228-report.md` |
 | L3.32-T229 | Adversarial: block A's inl case without `member-a0-not-limit` | GREEN, 6 attacks failed: at a general limit it PROVES rather than refutes | `_build/l3.32-t229-report.md` |
 | L3.32-T230 | Block A: the general STEP at a variable limit, written in place | DRAFTED, not dispatched; stop-line 1,080 lines; waits on T225/T226 | `_build/briefs/l3.32-t230-blockA.md` |
 | L3.32-T231 | Adversarial: is the induction hypothesis really vacuous at a-0? | GREEN, 15-site walk: every limit-reachable site goes through the IH, the rest by the  | `_build/l3.32-t231-report.md` |
-| L3.32-T232 | Adversarial: can block A consume Bridge's `Below` row instead of writing it? | DISPATCHED 2026-08-09; attacks the orchestrator's own claim, worth ~50-9 | `_build/l3.32-t232-report.md` |
+| L3.32-T232 | Adversarial: can block A consume Bridge's `Below` row instead of writing it? | GREEN: the row falls from 50-90 lines to 10-14 of glue; no circularity;  | `_build/l3.32-t232-report.md` |
+| L3.32-T233 | Lift `Below` out of `Reduce` so block A can consume it | DISPATCHED 2026-08-09; ~12-16 touched lines, runs alone (C-25) | `_build/l3.32-t233-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |

@@ -2319,6 +2319,30 @@ it bundles a predicate with its object formula and its two decode directions,
 which is the shape of every story clause. The nested `Σ` is uglier to read and
 will be "cleaned up" into a record by anyone who does not know the price.
 
+### P-p. A stale interface masquerades as a heap wall; move the `.agdai` before you believe a price
+
+**The law.** Agda's incremental reuse can produce a STALE `.agdai` whose
+re-elaboration costs orders of magnitude more than checking the module from
+cold. The failure presents as the module's own content being ruinously
+expensive: a long run, then `Heap exhausted` under the C-12 cap. It is not the
+content. Move the interface aside and re-check before you record any price, and
+ALWAYS before you report a heap wall.
+
+**The measurement, 2026-08-09, `[L3.32-T225]`.** A stale `LevelKit.agdai` made
+that module's own check take 191 s and exhaust the 8 g heap, measured twice,
+and made `L.Rud.HF` exhaust 8 g as well. With the stale interface moved aside,
+LevelKit checked in 2.4 s and HF in 2.7 to 13.9 s at the same cap. The
+orchestrator confirmed it independently after the lanes exited: 583 in-fence
+lines, about 2 s, exit 0.
+
+**Why it is worth a law.** AGENTS.md tells every dispatched agent to report a
+heap exhaustion as a wall and never to raise the cap, which is correct and must
+stay. This law says what to do BEFORE that report. A wall attributed to content
+that belongs to a cache gets paid for twice: once when a build is re-planned
+around a cost that does not exist, and once when the real cause resurfaces. The
+orchestrator made exactly that error on the day this was measured, and wrote it
+into a law before `[T225]`'s return corrected it.
+
 ### C-24. A shape certificate is not a meaning certificate
 
 **The law.** A proof obligation that certifies a formula's SHAPE (`Δ₀`, `Σ₁`,
@@ -2369,18 +2393,29 @@ agent, which sees a file that grew and assumes it wrote it.
 (story assembly) were dispatched in parallel. Both scopes said "the shared home
 you propose". Both proposed `src/L/LevelKit.lagda.md`, which was the right
 answer for both. Nothing was overwritten, because they appended to different
-regions, and that is luck rather than a mechanism. What was NOT luck: the file
-went from 366 to 582 in-fence lines and stopped checking. Agda died with `Heap
-exhausted` under the C-12 cap after 195 s, twice, on a master that had been
-green all week. Both lanes then sat with their deliverables untouched for 34
-minutes, each debugging a file whose other half it had not written and could
-not see the reason for. One lane eventually created a probe named
-`ProbeT226Clash.agda`, which is how the orchestrator learned an agent had
-worked out on its own that a sibling was in the file.
+regions, and that is luck rather than a mechanism.
 
-**Why the combined check dies.** Neither half priced it, because neither half
-existed at the other's write time. A cost that appears only in the union is a
-cost that no lane can gate, and gating is this project's whole method (D22).
+What it actually cost, all of it recorded by the lanes themselves. `[T226]` saw
+a `_⊆_` clash appear in LevelSigma while `[T225]` was mid-edit and vanish on
+`[T225]`'s next write, and recorded it so the orchestrator would not chase a
+ghost. `[T225]` had to EXCLUDE the sibling's 66 kit lines and its LevelSigma
+rewrite from its own line counts, and stated that all its checks ran on shared
+state it did not control. Both lanes debugged a file whose other half neither
+had written. One created a probe named `ProbeT226Clash.agda`, which is how the
+orchestrator learned an agent had worked the collision out by itself.
+
+**The auditability is the cost, and it is enough.** Neither lane could report
+its own delta without subtracting work it did not do, and a return whose
+numbers depend on a sibling's timing cannot be audited against its brief. That
+alone justifies the refusal; no dramatic failure is needed.
+
+**A CORRECTION, because the first draft of this law claimed one.** The
+orchestrator originally cited a `Heap exhausted` death at 195 s as this law's
+evidence. That was a misattribution. `[T225]` measured the true cause: a stale
+`LevelKit.agdai`, which is P-p, and it reproduced the cure. LevelKit at 583
+in-fence lines checks in about 2 s, verified independently by the orchestrator
+after both lanes exited. The collision is real; the heap wall was not its
+doing.
 
 **What to do.** Give each parallel writer a file it does not share, and when a
 shared home is genuinely right, SERIALIZE: one lane lands it, the next is
