@@ -28,7 +28,7 @@ module L.Rud.BelowLim {ℓ : Level} (lem : LEM (ℓ-suc ℓ))
 
 open import FOL.ZFStructure using ( module hPropStructure; _↾_ )
 open import FOL.Syntax using
-  ( Formula; _∧̇_; _⇒̇_; _≐_; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈; _∈̇_; var; con )
+  ( Formula; _∧̇_; ∃̇_; ∃̇∈; _∈̇_; var; con )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-irrefl; ∈-induction )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl; pair-singleton )
@@ -39,15 +39,15 @@ open import L.InitialSegment {ℓ} using ( _⟷_ )
 open import L.LevelKit {ℓ} using ( module LevelKit )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Ordinal {ℓ} using
-  ( ∅-ord; numeral-mem; numeral-ord; suc-ord; #∈ω; ω-ord; ∈#-elim; mem-ord )
+  ( ∅-ord; numeral-mem; numeral-ord; suc-ord; #∈ω; ω-ord; ∈#-elim )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc; ord∈Lset→∈ )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri; Tri )
 open import L.PairAtoms {ℓ} using ( isPair )
 open import L.Rud.OrdArith {ℓ} lem using
   ( isLimit; isLimit-ord; isLimit-not-zero; isLimit-not-succ; isSucc
-  ; limit-mem-ord; ord-case; predecessor-mem )
+  ; limit-mem-ord; ord-case )
 open import L.Rud.OrdBlocks {ℓ} lem using
-  ( +ω; +ω-limit; +ω-in; +ω-out; +ω-ord; sucIter; suc-⊆ )
+  ( +ω; +ω-limit; +ω-in; +ω-out; +ω-ord; sucIter )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ω; ⋃_; union-ax; ⁅_,_⁆; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
@@ -259,11 +259,11 @@ module Story
 
   -- The sixth clause, the limit clause: the value at a limit index is the
   -- pointwise union of the values below.  T128's meta statement, ported;
-  -- nothing in it names a concrete carrier (src/ProbeT128.agda:143-147).
+  -- the shared Limit module of L.Rud.StepStory defines it once; nothing
+  -- in it names a concrete carrier (src/ProbeT128.agda:143-147).
+  module Lim = StepStoryA.Limit
   limitClause : S → Type (ℓ-suc ℓ)
-  limitClause f = (a b : S) → ⟨ isLimit a ⟩ → ⟨ pr a b ∈ˢ f ⟩
-    → (z : S) → ⟨ z ∈ˢ b ⟩ ⟷ ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ a ⟩
-         × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ f ⟩ × ⟨ z ∈ˢ w ⟩) ∥₁) ∥₁
+  limitClause = Lim.limitClause
 
   -- The story predicate: the kit's four shared clauses, the one-way
   -- successor clause, and the sixth limit clause.
@@ -1945,360 +1945,14 @@ module Stepγ
 
   module KW = LevelKit W Wtr
 
-  -- The sixth clause, T128's gate ported to W: the value at a limit index
-  -- is the pointwise union of the values below, stated at the small index
-  -- (R-35).  The formula and the two-way decode are T128's, stated at the
-  -- witness carrier; the level-formula tower's limit clause is the
-  -- element-valued form and does not match the set-valued story here.
-  limAt : Formula ⟪ W ⟫ 4
-  limAt = KW.isOrdAt (suc zero)
-       ∧̇ (∃̇∈ (var (suc zero)) (var zero ≐ var zero))
-       ∧̇ (∀̇∈ (var (suc zero))
-             (∃̇∈ (var (suc (suc zero))) (var (suc zero) ∈̇ var zero)))
-
-  pairIn : Formula ⟪ W ⟫ 4
-  pairIn = ∃̇∈ (var (suc (suc zero)))
-             (KW.PK.prAt zero (suc (suc zero)) (suc zero))
-
-  inner7 : Formula ⟪ W ⟫ 7
-  inner7 = ∃̇∈ (var (suc (suc (suc (suc (suc zero))))))
-             (KW.PK.prAt zero (suc (suc zero)) (suc zero)
-                ∧̇ (var (suc (suc (suc zero))) ∈̇ var (suc zero)))
-
-  unionRHS : Formula ⟪ W ⟫ 5
-  unionRHS = ∃̇∈ (var (suc (suc zero))) (∃̇ inner7)
-
-  limitConc : Formula ⟪ W ⟫ 4
-  limitConc = ∀̇ ( (var zero ∈̇ var (suc zero) ⇒̇ unionRHS)
-               ∧̇ (unionRHS ⇒̇ var zero ∈̇ var (suc zero)) )
-
-  limitBody : Formula ⟪ W ⟫ 4
-  limitBody = (limAt ∧̇ pairIn) ⇒̇ limitConc
-
-  limitForm : Formula ⟪ W ⟫ 2
-  limitForm = ∀̇ (∀̇ limitBody)
-
-  _⊆_ : S → S → Type (ℓ-suc ℓ)
-  u ⊆ v = (x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩
-
-  ext-⊆ : {u v : S} → u ⊆ v → v ⊆ u → u ≡ v
-  ext-⊆ {u} {v} sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
-
-  -- The limit characterization the atom decode rests on (T128's, ported):
-  -- for an ordinal a, "every member has a member above it" is the
-  -- not-a-successor half of the delivered limit predicate.
-  noAbove→succ : (a ξ : S) → IsOrd a → ⟨ ξ ∈ˢ a ⟩
-               → ((η : S) → ⟨ η ∈ˢ a ⟩ → ⟨ ξ ∈ˢ η ⟩ → Empty.⊥)
-               → ⟨ isSucc a ⟩
-  noAbove→succ a ξ ordA ξ∈a noAbove = (ξ , (mem-ord {A = a} ordA ξ ξ∈a , a≡sucξ))
-    where
-    a≡sucξ : sucV ξ ≡ a
-    a≡sucξ = sym (ext-⊆ {a} {sucV ξ} a⊆suc sucξ⊆a)
-      where
-      a⊆suc : a ⊆ sucV ξ
-      a⊆suc x x∈a = go (ord-tri x (mem-ord {A = a} ordA x x∈a)
-                         ξ (mem-ord {A = a} ordA ξ ξ∈a))
-        where
-        go : Tri x ξ → ⟨ x ∈ˢ sucV ξ ⟩
-        go (inl x∈ξ) = ∈sucV-inl {A = ξ} {x = x} x∈ξ
-        go (inr (inl x≡ξ)) = subst (λ w → ⟨ w ∈ˢ sucV ξ ⟩) (sym x≡ξ) (self∈sucV ξ)
-        go (inr (inr ξ∈x)) = Empty.rec (noAbove x x∈a ξ∈x)
-      sucξ⊆a : sucV ξ ⊆ a
-      sucξ⊆a = suc-⊆ {A = a} {x = ξ} ordA ξ∈a
-
-  closedFromLim : (a : S) → ⟨ isLimit a ⟩
-                → (ξ : S) → ⟨ ξ ∈ˢ a ⟩
-                → ∥ Σ[ η ∈ S ] (⟨ η ∈ˢ a ⟩ × ⟨ ξ ∈ˢ η ⟩) ∥₁
-  closedFromLim a lim ξ ξ∈a = decide (lem (∥ P ∥₁ , squash₁))
-    where
-    P : Type (ℓ-suc ℓ)
-    P = Σ[ η ∈ S ] (⟨ η ∈ˢ a ⟩ × ⟨ ξ ∈ˢ η ⟩)
-    decide : ∥ P ∥₁ ⊎ (∥ P ∥₁ → Empty.⊥) → ∥ P ∥₁
-    decide (inl h) = h
-    decide (inr np) = Empty.rec
-      (isLimit-not-succ a lim
-        (noAbove→succ a ξ (isLimit-ord a lim) ξ∈a noAbove))
-      where
-      noAbove : (η : S) → ⟨ η ∈ˢ a ⟩ → ⟨ ξ ∈ˢ η ⟩ → Empty.⊥
-      noAbove η η∈a ξ∈η = np ∣ η , (η∈a , ξ∈η) ∣₁
-
-  nonemptyFromLim : (a : S) → ⟨ isLimit a ⟩ → ∥ Σ[ ξ ∈ S ] ⟨ ξ ∈ˢ a ⟩ ∥₁
-  nonemptyFromLim a lim = decide (lem (∥ P ∥₁ , squash₁))
-    where
-    P : Type (ℓ-suc ℓ)
-    P = Σ[ ξ ∈ S ] ⟨ ξ ∈ˢ a ⟩
-    decide : ∥ P ∥₁ ⊎ (∥ P ∥₁ → Empty.⊥) → ∥ P ∥₁
-    decide (inl h) = h
-    decide (inr np) = Empty.rec
-      (isLimit-not-zero a lim (empty→∅ (λ ξ ξ∈a → np ∣ ξ , ξ∈a ∣₁)))
-      where
-      empty→∅ : ((ξ : S) → ⟨ ξ ∈ˢ a ⟩ → Empty.⊥) → a ≡ ∅
-      empty→∅ ne = ext-⊆ {a} {∅} subs sup
-        where
-        subs : (x : S) → ⟨ x ∈ˢ a ⟩ → ⟨ x ∈ˢ ∅ ⟩
-        subs x x∈a = Empty.rec (ne x x∈a)
-        sup : (x : S) → ⟨ x ∈ˢ ∅ ⟩ → ⟨ x ∈ˢ a ⟩
-        sup x x∈∅ = Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅))
-
-  -- The limit atom's two-way decode at the witness carrier.
-  limAt-ok : (δ : Vec KW.SM 4) → ⟨ δ KW.⊨ᵐ limAt ⟩
-           ⟷ ⟨ isLimit (fst (lookup (suc zero) δ)) ⟩
-  limAt-ok δ = (out , bwd)
-    where
-    valA : S
-    valA = fst (lookup (suc zero) δ)
-
-    out : ⟨ δ KW.⊨ᵐ limAt ⟩ → ⟨ isLimit valA ⟩
-    out (ord-sat , (ne-sat , cl-sat)) = ( ordA , nz , ns )
-      where
-      ordA : IsOrd valA
-      ordA = KW.isOrd-out (suc zero) δ ord-sat
-      nz : (valA ≡ ∅) → Empty.⊥
-      nz e = PT.rec Empty.isProp⊥ nzGo ne-sat
-        where
-        nzGo : Σ[ ξm ∈ KW.SM ] (⟨ fst ξm ∈ˢ valA ⟩
-                            × ⟨ (ξm ∷ δ) KW.⊨ᵐ (var zero ≐ var zero) ⟩)
-             → Empty.⊥
-        nzGo (ξm , (ξ∈A , _)) =
-          ∅-empty (fst ξm)
-            (∈∈ₛ {a = fst ξm} {b = ∅} .fst
-              (subst (λ w → ⟨ fst ξm ∈ˢ w ⟩) e ξ∈A))
-      ns : ⟨ isSucc valA ⟩ → Empty.⊥
-      ns (β , ordβ , eq) = PT.rec Empty.isProp⊥ nsGo (cl-sat βm β∈a)
-        where
-        β∈a : ⟨ β ∈ˢ valA ⟩
-        β∈a = predecessor-mem β valA eq
-        β∈W : ⟨ β ∈ˢ W ⟩
-        β∈W = Wtr {x = valA} {y = β} β∈a (snd (lookup (suc zero) δ))
-        βm : KW.SM
-        βm = KW.PK.pt β β∈W
-        nsGo : Σ[ ηm ∈ KW.SM ] (⟨ fst ηm ∈ˢ valA ⟩ × ⟨ β ∈ˢ fst ηm ⟩)
-             → Empty.⊥
-        nsGo (ηm , (η∈a , β∈η)) = Empty.rec* {A = Empty.⊥}
-          (∈sucV-elim {A = β} {x = fst ηm} {P = Empty.⊥* {ℓ-suc ℓ}}
-            (Empty.isProp⊥* {ℓ-suc ℓ})
-            (subst (λ w → ⟨ fst ηm ∈ˢ w ⟩) (sym eq) η∈a) inβ inEq)
-          where
-          inβ : ⟨ fst ηm ∈ˢ β ⟩ → Empty.⊥* {ℓ-suc ℓ}
-          inβ η∈β = lift (∈-irrefl β (ordβ .fst {x = fst ηm} {y = β} β∈η η∈β))
-          inEq : fst ηm ≡ β → Empty.⊥* {ℓ-suc ℓ}
-          inEq e' = lift (∈-irrefl β (subst (λ w → ⟨ β ∈ˢ w ⟩) e' β∈η))
-
-    bwd : ⟨ isLimit valA ⟩ → ⟨ δ KW.⊨ᵐ limAt ⟩
-    bwd lim = ( ord-sat , (ne-sat , cl-sat) )
-      where
-      ordA : IsOrd valA
-      ordA = isLimit-ord valA lim
-      ord-sat : ⟨ δ KW.⊨ᵐ KW.isOrdAt (suc zero) ⟩
-      ord-sat = KW.isOrd-in (suc zero) δ ordA
-      ne-sat : ⟨ δ KW.⊨ᵐ ∃̇∈ (var (suc zero)) (var zero ≐ var zero) ⟩
-      ne-sat = PT.rec (snd (δ KW.⊨ᵐ ∃̇∈ (var (suc zero)) (var zero ≐ var zero)))
-        go (nonemptyFromLim valA lim)
-        where
-        go : Σ[ ξ ∈ S ] ⟨ ξ ∈ˢ valA ⟩
-           → ⟨ δ KW.⊨ᵐ ∃̇∈ (var (suc zero)) (var zero ≐ var zero) ⟩
-        go (ξ , ξ∈a) = ∣ ξm , (ξ∈a , refl) ∣₁
-          where
-          ξm : KW.SM
-          ξm = KW.PK.pt ξ (Wtr {x = valA} {y = ξ} ξ∈a (snd (lookup (suc zero) δ)))
-      cl-sat : ⟨ δ KW.⊨ᵐ ∀̇∈ (var (suc zero))
-                  (∃̇∈ (var (suc (suc zero))) (var (suc zero) ∈̇ var zero)) ⟩
-      cl-sat ξm ξ∈a = PT.rec
-        (snd ((ξm ∷ δ) KW.⊨ᵐ ∃̇∈ (var (suc (suc zero)))
-                   (var (suc zero) ∈̇ var zero)))
-        go (closedFromLim valA lim (fst ξm) ξ∈a)
-        where
-        go : Σ[ η ∈ S ] (⟨ η ∈ˢ valA ⟩ × ⟨ fst ξm ∈ˢ η ⟩)
-           → ⟨ (ξm ∷ δ) KW.⊨ᵐ ∃̇∈ (var (suc (suc zero)))
-                 (var (suc zero) ∈̇ var zero) ⟩
-        go (η , (η∈a , ξ∈η)) = ∣ ηm , (η∈a , ξ∈η) ∣₁
-          where
-          ηm : KW.SM
-          ηm = KW.PK.pt η (Wtr {x = valA} {y = η} η∈a (snd (lookup (suc zero) δ)))
-
-  -- The union reading's two-way decode at arity 5 (T128's, ported).
-  unionRHS-ok : (δ : Vec KW.SM 5) → ⟨ δ KW.⊨ᵐ unionRHS ⟩
-    ⟷ ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ fst (lookup (suc (suc zero)) δ) ⟩
-         × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ fst (lookup (suc (suc (suc zero))) δ) ⟩
-             × ⟨ fst (lookup zero δ) ∈ˢ w ⟩) ∥₁) ∥₁
-  unionRHS-ok δ = (out , bwd)
-    where
-    valZ : S
-    valZ = fst (lookup zero δ)
-    valA : S
-    valA = fst (lookup (suc (suc zero)) δ)
-    valF : S
-    valF = fst (lookup (suc (suc (suc zero))) δ)
-
-    out : ⟨ δ KW.⊨ᵐ unionRHS ⟩
-        → ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ valA ⟩
-             × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ valF ⟩ × ⟨ valZ ∈ˢ w ⟩) ∥₁) ∥₁
-    out sat = PT.rec squash₁ step₁ sat
-      where
-      step₁ : Σ[ ξm ∈ KW.SM ] (⟨ fst ξm ∈ˢ valA ⟩
-            × ⟨ (ξm ∷ δ) KW.⊨ᵐ ∃̇ inner7 ⟩)
-            → ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ valA ⟩
-                 × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ valF ⟩ × ⟨ valZ ∈ˢ w ⟩) ∥₁) ∥₁
-      step₁ (ξm , (ξ∈a , rest)) = PT.rec squash₁ step₂ rest
-        where
-        step₂ : Σ[ wm ∈ KW.SM ] ⟨ (wm ∷ ξm ∷ δ) KW.⊨ᵐ inner7 ⟩
-              → ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ valA ⟩
-                   × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ valF ⟩ × ⟨ valZ ∈ˢ w ⟩) ∥₁) ∥₁
-        step₂ (wm , wm-sat) = PT.rec squash₁ step₃ wm-sat
-          where
-          step₃ : Σ[ pm ∈ KW.SM ] (⟨ fst pm ∈ˢ valF ⟩
-                × ⟨ (pm ∷ wm ∷ ξm ∷ δ) KW.⊨ᵐ
-                     (KW.PK.prAt zero (suc (suc zero)) (suc zero)
-                        ∧̇ (var (suc (suc (suc zero))) ∈̇ var (suc zero))) ⟩)
-                → ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ valA ⟩
-                     × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ valF ⟩ × ⟨ valZ ∈ˢ w ⟩) ∥₁) ∥₁
-          step₃ (pm , (pm∈f , (pr-sat , z∈w-sat))) =
-            ∣ fst ξm , ( ξ∈a , ∣ fst wm , ( prξw∈f , z∈w ) ∣₁ ) ∣₁
-            where
-            p≡prξw : fst pm ≡ pr (fst ξm) (fst wm)
-            p≡prξw = KW.PK.prAt-out zero (suc (suc zero)) (suc zero)
-              (pm ∷ wm ∷ ξm ∷ δ) pr-sat
-            prξw∈f : ⟨ pr (fst ξm) (fst wm) ∈ˢ valF ⟩
-            prξw∈f = subst (λ t → ⟨ t ∈ˢ valF ⟩) p≡prξw pm∈f
-            z∈w : ⟨ valZ ∈ˢ fst wm ⟩
-            z∈w = z∈w-sat
-
-    bwd : ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ valA ⟩
-            × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ valF ⟩ × ⟨ valZ ∈ˢ w ⟩) ∥₁) ∥₁
-        → ⟨ δ KW.⊨ᵐ unionRHS ⟩
-    bwd h = PT.rec (snd (δ KW.⊨ᵐ unionRHS)) step₁ h
-      where
-      step₁ : Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ valA ⟩
-            × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ valF ⟩ × ⟨ valZ ∈ˢ w ⟩) ∥₁)
-            → ⟨ δ KW.⊨ᵐ unionRHS ⟩
-      step₁ (ξ , (ξ∈a , rest)) = PT.rec (snd (δ KW.⊨ᵐ unionRHS)) step₂ rest
-        where
-        ξm : KW.SM
-        ξm = KW.PK.pt ξ (Wtr {x = valA} {y = ξ} ξ∈a
-          (snd (lookup (suc (suc zero)) δ)))
-        step₂ : Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ valF ⟩ × ⟨ valZ ∈ˢ w ⟩)
-              → ⟨ δ KW.⊨ᵐ unionRHS ⟩
-        step₂ (w , (pw∈f , z∈w)) = ∣ ξm , (ξ∈a , inner∃) ∣₁
-          where
-          w∈W : ⟨ w ∈ˢ W ⟩
-          w∈W = KW.PM.pair-right {a = ξ} {b = w}
-            (Wtr {x = valF} {y = pr ξ w} pw∈f
-              (snd (lookup (suc (suc (suc zero))) δ)))
-          wm : KW.SM
-          wm = KW.PK.pt w w∈W
-          pr∈W : ⟨ pr ξ w ∈ˢ W ⟩
-          pr∈W = Wtr {x = valF} {y = pr ξ w} pw∈f
-            (snd (lookup (suc (suc (suc zero))) δ))
-          pm : KW.SM
-          pm = KW.PK.pt (pr ξ w) pr∈W
-          pr-sat : ⟨ (pm ∷ wm ∷ ξm ∷ δ) KW.⊨ᵐ
-                     KW.PK.prAt zero (suc (suc zero)) (suc zero) ⟩
-          pr-sat = KW.PK.prAt-in zero (suc (suc zero)) (suc zero)
-            (pm ∷ wm ∷ ξm ∷ δ) refl
-          z∈w-sat : ⟨ (pm ∷ wm ∷ ξm ∷ δ) KW.⊨ᵐ
-                      (var (suc (suc (suc zero))) ∈̇ var (suc zero)) ⟩
-          z∈w-sat = z∈w
-          inner : ⟨ (wm ∷ ξm ∷ δ) KW.⊨ᵐ inner7 ⟩
-          inner = ∣ pm , (pw∈f , (pr-sat , z∈w-sat)) ∣₁
-          inner∃ : ⟨ (ξm ∷ δ) KW.⊨ᵐ ∃̇ inner7 ⟩
-          inner∃ = ∣ wm , inner ∣₁
-
-  -- The sixth clause's two-way decode at the standing arity (T128's,
-  -- ported): the object formula is satisfied exactly when the meta-level
-  -- limit clause holds at the witness.
-  limit-ok : (f : KW.SM) (x : ⟪ W ⟫) → ⟨ (f ∷ KW.ι x ∷ []) KW.⊨ᵐ limitForm ⟩
-           ⟷ St.limitClause (fst f)
-  limit-ok f x = (out , bwd)
-    where
-    δ₂ : Vec KW.SM 2
-    δ₂ = f ∷ KW.ι x ∷ []
-
-    out : ⟨ δ₂ KW.⊨ᵐ limitForm ⟩ → St.limitClause (fst f)
-    out h a b lim ab∈f z = (fwd , bwd)
-      where
-      a∈W : ⟨ a ∈ˢ W ⟩
-      a∈W = KW.PM.pair-left {a = a} {b = b}
-        (Wtr {x = fst f} {y = pr a b} ab∈f (snd f))
-      b∈W : ⟨ b ∈ˢ W ⟩
-      b∈W = KW.PM.pair-right {a = a} {b = b}
-        (Wtr {x = fst f} {y = pr a b} ab∈f (snd f))
-      am : KW.SM
-      am = KW.PK.pt a a∈W
-      bm : KW.SM
-      bm = KW.PK.pt b b∈W
-      body-sat : ⟨ (bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ limitBody ⟩
-      body-sat = h am bm
-      conc-sat : ⟨ (bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ limitConc ⟩
-      conc-sat = body-sat (limAt-sat , pairIn-sat)
-        where
-        limAt-sat : ⟨ (bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ limAt ⟩
-        limAt-sat = limAt-ok (bm ∷ am ∷ f ∷ KW.ι x ∷ []) .snd lim
-        pairIn-sat : ⟨ (bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ pairIn ⟩
-        pairIn-sat = KW.pair∈ (suc (suc zero)) (suc zero) zero
-          (bm ∷ am ∷ f ∷ KW.ι x ∷ []) .snd ab∈f
-      fwd : ⟨ z ∈ˢ b ⟩
-          → ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ a ⟩
-               × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ fst f ⟩ × ⟨ z ∈ˢ w ⟩) ∥₁) ∥₁
-      fwd z∈b = unionRHS-ok (zm ∷ bm ∷ am ∷ f ∷ KW.ι x ∷ []) .fst
-        (conc-sat zm .fst z∈b)
-        where
-        z∈W : ⟨ z ∈ˢ W ⟩
-        z∈W = Wtr {x = b} {y = z} z∈b b∈W
-        zm : KW.SM
-        zm = KW.PK.pt z z∈W
-      bwd : ∥ Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ a ⟩
-              × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ fst f ⟩ × ⟨ z ∈ˢ w ⟩) ∥₁) ∥₁
-          → ⟨ z ∈ˢ b ⟩
-      bwd hz = conc-sat zm .snd
-        (unionRHS-ok (zm ∷ bm ∷ am ∷ f ∷ KW.ι x ∷ []) .snd hz)
-        where
-        z∈W : ⟨ z ∈ˢ W ⟩
-        z∈W = PT.rec (snd (z ∈ˢ W)) step₁ hz
-          where
-          step₁ : Σ[ ξ ∈ S ] (⟨ ξ ∈ˢ a ⟩
-                × ∥ Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ fst f ⟩ × ⟨ z ∈ˢ w ⟩) ∥₁)
-                → ⟨ z ∈ˢ W ⟩
-          step₁ (ξ , (ξ∈a , rest)) = PT.rec (snd (z ∈ˢ W)) step₂ rest
-            where
-            step₂ : Σ[ w ∈ S ] (⟨ pr ξ w ∈ˢ fst f ⟩ × ⟨ z ∈ˢ w ⟩) → ⟨ z ∈ˢ W ⟩
-            step₂ (w , (pw∈f , z∈w)) = Wtr {x = w} {y = z} z∈w w∈W
-              where
-              w∈W : ⟨ w ∈ˢ W ⟩
-              w∈W = KW.PM.pair-right {a = ξ} {b = w}
-                (Wtr {x = fst f} {y = pr ξ w} pw∈f (snd f))
-        zm : KW.SM
-        zm = KW.PK.pt z z∈W
-
-    bwd : St.limitClause (fst f) → ⟨ δ₂ KW.⊨ᵐ limitForm ⟩
-    bwd lc am bm = body-sat
-      where
-      body-sat : ⟨ (bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ limitBody ⟩
-      body-sat (limAt-sat , pairIn-sat) = conc-sat
-        where
-        lim : ⟨ isLimit (fst am) ⟩
-        lim = limAt-ok (bm ∷ am ∷ f ∷ KW.ι x ∷ []) .fst limAt-sat
-        ab∈f : ⟨ pr (fst am) (fst bm) ∈ˢ fst f ⟩
-        ab∈f = KW.pair∈ (suc (suc zero)) (suc zero) zero
-          (bm ∷ am ∷ f ∷ KW.ι x ∷ []) .fst pairIn-sat
-        conc-sat : ⟨ (bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ limitConc ⟩
-        conc-sat zm = ( fwd , back )
-          where
-          fwd : ⟨ fst zm ∈ˢ fst bm ⟩
-              → ⟨ (zm ∷ bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ unionRHS ⟩
-          fwd z∈b = unionRHS-ok (zm ∷ bm ∷ am ∷ f ∷ KW.ι x ∷ []) .snd
-            (lc (fst am) (fst bm) lim ab∈f (fst zm) .fst z∈b)
-          back : ⟨ (zm ∷ bm ∷ am ∷ f ∷ KW.ι x ∷ []) KW.⊨ᵐ unionRHS ⟩
-               → ⟨ fst zm ∈ˢ fst bm ⟩
-          back rhssat = lc (fst am) (fst bm) lim ab∈f (fst zm) .snd
-            (unionRHS-ok (zm ∷ bm ∷ am ∷ f ∷ KW.ι x ∷ []) .fst rhssat)
-
-  limit-out : (f : KW.SM) (x : ⟪ W ⟫) → ⟨ (f ∷ KW.ι x ∷ []) KW.⊨ᵐ limitForm ⟩
-            → St.limitClause (fst f)
-  limit-out f x = limit-ok f x .fst
-
-  limit-in : (f : KW.SM) (x : ⟪ W ⟫) → St.limitClause (fst f)
-           → ⟨ (f ∷ KW.ι x ∷ []) KW.⊨ᵐ limitForm ⟩
-  limit-in f x = limit-ok f x .snd
+  -- The sixth clause, T128's gate ported to W, instantiated from the
+  -- carrier-generic Limit module of L.Rud.StepStory.  The meta-level
+  -- clause is the shared module's, re-exported by the Story module; the
+  -- formula and the two-way decode are the shared module's, stated at the
+  -- witness carrier.  The open keeps the exported names and shapes the
+  -- hand-written port had.
+  module Lim = StepStoryW.Limit
+  open Lim public
 
   -- The six-clause story at the witness carrier, assembled from the kit,
   -- the step clause and the sixth limit clause (T226's clause list; the
