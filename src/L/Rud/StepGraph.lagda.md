@@ -41,7 +41,7 @@ open import L.Definability {ℓ} using ( module DefOf )
 open import L.PairAtoms {ℓ} using ( module PairMem )
 open import L.Rud.Images {ℓ} using
   ( left; left-compute; right; ⋂; ⋂-member-in-all; right-nonpair
-  ; F8; F8-spec; F10; F10-spec; F11; F12; F13; F14; left-spec; left-⋂-collapse
+  ; F8; F8-spec; F10; F10-spec; left-spec; left-⋂-collapse
   ; left-⋂-empty; module F15Of )
 open import L.Rud.Step {ℓ} lem A using
   ( Op16; op0; op1; op2; op3; op4; op5; op6; op7; op8; op9; op10; op11; op12
@@ -51,7 +51,7 @@ open import L.Rud.Step {ℓ} lem A using
   ; step; step-out; StepArm; arm-member; arm-self; arm-image
   ; step-in; step-in-self; step-in-img; u'; u'-in; u-self-in )
 open import L.Rud.Ops {ℓ} using
-  ( F0; F1; F2; F3; F4; F5; F6; F7; F9; F0-spec; F1-spec; F5-spec
+  ( F0; F1; F5; F6; F0-spec; F1-spec; F5-spec
   ; F2-read; F3-read; F4-read; F6-read; F7-read
   ; F2-write; F3-write; F4-write; F6-write; F7-write )
 open import L.TowerKit {ℓ} lem A using
@@ -2187,49 +2187,6 @@ module PinFrame (C : S) (Ctr : isTransV C) (mA : ⟪ C ⟫)
   F15-defSet≡ : L.defSet (pinned op15) ≡ F15A a
   F15-defSet≡ = Fof-defSet≡ op15 wsub15 ∙ Fof-f15 a b
 
-  -- The open arms: a member of the value is not in the carrier by the
-  -- specification alone (a pair, a singleton, a projection, a slice, or an
-  -- ordered-pair value needs the carrier's own closure), so the caller's
-  -- subset certificate is an argument of the instance and passes through.
-  F2-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op2 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-             → L.defSet (pinned op2) ≡ F2 a b
-  F2-defSet≡ sub = Fof-defSet≡ op2 sub ∙ Fof-f2 a b
-
-  F3-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op3 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-             → L.defSet (pinned op3) ≡ F3 a b
-  F3-defSet≡ sub = Fof-defSet≡ op3 sub ∙ Fof-f3 a b
-
-  F4-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op4 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-             → L.defSet (pinned op4) ≡ F4 a b
-  F4-defSet≡ sub = Fof-defSet≡ op4 sub ∙ Fof-f4 a b
-
-  F7-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op7 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-             → L.defSet (pinned op7) ≡ F7 a b
-  F7-defSet≡ sub = Fof-defSet≡ op7 sub ∙ Fof-f7 a b
-
-  F8-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op8 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-             → L.defSet (pinned op8) ≡ F8 a b
-  F8-defSet≡ sub = Fof-defSet≡ op8 sub ∙ Fof-f8 a b
-
-  F9-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op9 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-             → L.defSet (pinned op9) ≡ F9 a b
-  F9-defSet≡ sub = Fof-defSet≡ op9 sub ∙ Fof-f9 a b
-
-  F11-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op11 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-              → L.defSet (pinned op11) ≡ F11 a b
-  F11-defSet≡ sub = Fof-defSet≡ op11 sub ∙ Fof-f11 a b
-
-  F12-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op12 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-              → L.defSet (pinned op12) ≡ F12 a b
-  F12-defSet≡ sub = Fof-defSet≡ op12 sub ∙ Fof-f12 a b
-
-  F13-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op13 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-              → L.defSet (pinned op13) ≡ F13 a b
-  F13-defSet≡ sub = Fof-defSet≡ op13 sub ∙ Fof-f13 a b
-
-  F14-defSet≡ : ((v : S) → ⟨ v ∈ˢ Fof op14 a b ⟩ → ⟨ v ∈ˢ C ⟩)
-              → L.defSet (pinned op14) ≡ F14 a b
-  F14-defSet≡ sub = Fof-defSet≡ op14 sub ∙ Fof-f14 a b
 ```
 
 <!--en-->

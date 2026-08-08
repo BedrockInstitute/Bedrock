@@ -1551,11 +1551,6 @@ generic step through `Us-in`{.Agda}.
     step (δ , eq) =
       δ , (adeq-mem n φ δ (subst (λ w → ⟨ w ∈ˢ T n φ ⟩) eq h) , eq)
 
-  adeq-out : (n : ℕ) (φ : Formula ⟪ U ⟫ (suc n)) (m : V ℓ)
-           → Dec n φ m → ⟨ m ∈ˢ T n φ ⟩
-  adeq-out n φ m = PT.rec (snd (m ∈ˢ T n φ))
-    (λ { (δ , sat , eq) →
-      subst (λ w → ⟨ w ∈ˢ T n φ ⟩) (sym eq) (adeq-set n φ δ sat) })
 ```
 
 <!--en-->
