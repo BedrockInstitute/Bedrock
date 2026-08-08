@@ -1145,6 +1145,16 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 # from a profile run and then converted with an unpinned ratio.
 measured_wall = "2026-08-08, interface cache removed, make typecheck (the exported GHCRTS default, NO --profile), Agda 2.8.0, single process, nothing else running; /usr/bin/time -p reports real 395.22, user 392.56, sys 1.55, exit 0. Margin +102.8 against the 498 gate. The delta from 487.9: Bridge minus 63.2 (the F2 blocks), Describe and Switch archived, StepGraph plus its ~59 s, three small masters. The arc, same protocol class throughout: 1,080.6 at the first honest measurement, 677.4 at arm A, 487.9 at the gate ruling, 395.2 now. From the D30 ruling's 2,723 profile seconds the tree fell 85 percent, and the D18 archival's ~148 s is still owed."
 full_cold_wall_seconds = 395
+# THE LANDING'S WALL, assembled by [T218] 2026-08-08 because seconds became
+# the binding threshold. Against the 498 gate: 745-813 s UNCURED, which does
+# not fit, and 422-448 s at [T215]'s target cure rate, which fits with 50-76 s
+# to spare. Four terms carry NO seconds figure at all and are excluded from
+# both totals rather than guessed: the Q-lim residue master (the largest, at
+# 592-1,052 naive lines), the bridge landing, the W3 elimination slice and
+# the choice re-home. The cured figure therefore TURNS ON [T215]'s verdict
+# and on those four, and it is an anchor rather than a price.
+landing_wall_uncured = "745-813"
+landing_wall_cured = "422-448"
 gate_wall_seconds = 498
 
 checkpoint = """
