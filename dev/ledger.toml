@@ -1153,6 +1153,26 @@ full_cold_wall_seconds = 395
 # 592-1,052 naive lines), the bridge landing, the W3 elimination slice and
 # the choice re-home. The cured figure therefore TURNS ON [T215]'s verdict
 # and on those four, and it is an anchor rather than a price.
+# BLOCK A'S BREAK-EVEN, derived by the orchestrator 2026-08-09 from three
+# measured numbers and nothing else: the tree base 395.2 s (measured_wall
+# above), [T222]'s 0.085 s per line at the bound-variable carrier (three clean
+# cold runs), and [T223]'s block B at 3-11 s. Solving 395.2 + 0.085*L + B <=
+# 498 gives L <= 1,080 at block B's worst and L <= 1,174 at its best.
+#
+# THIS IS THE STOP-LINE THE BUILD MUST CARRY, and it is a LINE COUNT, not a
+# seconds target. [T223]'s stop-line says the master stays at or below 60 s.
+# That was written before [T222] measured the rate and it is unreachable: at
+# 0.085 the master alone is 92-123 s across the band. A build that honours the
+# stale stop-line stops at 700 lines, having written two thirds of the STEP.
+#
+# WHAT IT MEANS FOR THE BAND. [T217] priced block A at 1,011-1,261 naive. Only
+# the bottom 6 percent of that band clears the gate. The midpoint, 1,136,
+# fails by 2.6 s. So the reshape does not clear the wall by being built; it
+# clears only if block A lands at or near the bottom of its own projection,
+# which is why [T225], [T226] and [T227] were funded as SECONDS levers rather
+# than as line levers. Every line they remove from what block A must write is
+# worth 0.085 s, and the whole margin is 9 s.
+block_a_breakeven_lines = "1080-1174"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
