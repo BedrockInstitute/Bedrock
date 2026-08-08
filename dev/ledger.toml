@@ -1155,6 +1155,16 @@ full_cold_wall_seconds = 395
 # and on those four, and it is an anchor rather than a price.
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
+# [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
+# runs each: the Q-lim residue master 9.12 s, the bridge landing 1.84 s, the
+# W3 elimination slice 1.80 s, the choice re-home 16.93 s. They total 29.69 s,
+# which PINS A FLOOR under the four terms that were excluded from both totals.
+# The corrected wall: uncured 775-842 s, dead at every rate; cured 452-478 s,
+# which fits by 20-46 s ON THE MEASUREMENTS. The four terms' FULL bands, at
+# the ledger's per-line rates, project 43-78 s or 89-164 s, giving a cured
+# wall of 465-526 or 511-612. So the cured verdict still turns on the
+# unmeasured bulk's rate, which is exactly what [T222] is measuring.
+landing_four_terms_measured = 29.69
 gate_wall_seconds = 498
 
 checkpoint = """

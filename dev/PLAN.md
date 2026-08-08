@@ -615,7 +615,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T217 | Block 3's scope, priced before it is funded | SPLIT REQUIRED and THE GATE BREAKS AT BOTH RATES: 513-529 s cured, 836-893 uncured | `_build/l3.32-t217-report.md` |
 | L3.32-T218 | The wall arithmetic: can the AC landing fit 498 s at all? | 745-813 s uncured DOES NOT FIT; 422-448 cured TURNS ON T215 and four unmeasured terms | `_build/l3.32-t218-wall.md` |
 | L3.32-T219 | The seconds doctrine: what makes a master expensive here | Five diseases; the 21-60x gap is a CONTENT CLASS, not a defect. P-m and P-n admitted | `_build/l3.32-t219-seconds.md` |
-| L3.32-T220 | Time the four unmeasured landing terms, in master shape | DISPATCHED 2026-08-08 | `_build/l3.32-t220-report.md` |
+| L3.32-T220 | Time the four unmeasured landing terms, in master shape | Four measured, 29.69 s floor; cured wall 452-478 fits by 20-46 on the measurements | `_build/l3.32-t220-report.md` |
 | L3.32-T221 | The parameterization question: can the master need less instantiation? | RESHAPEABLE: the general STEP subsumes block 2; -898 to -933 lines, 20-34 s | `_build/l3.32-t221-report.md` |
 | L3.32-T222 | The deciding rate: what does a generic STEP cost per line? | DISPATCHED 2026-08-08 | `_build/l3.32-t222-report.md` |
 | L3.32-T223 | The reshape's build plan, written against the measured rates | DISPATCHED 2026-08-08 | `_build/l3.32-t223-plan.md` |
