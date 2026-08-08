@@ -2036,9 +2036,28 @@ stalled agent is often recoverable: T131's was.
 
 **Provenance:** `dev/JOURNAL.md`, the `[L3.32-T12]` and `[L3.32-T131]` entries.
 
+### C-23. A consumer scan counts same-file instantiation bodies, or it lies
+
+**Rule:** A definition-level consumer scan that walks cross-file references
+misses the SAME-FILE instantiation class: a module instantiated later in its
+own file (a tower, a `ConcreteS`) consumes names in its body, and whatever
+that instantiation exports feeds every importer downstream. A name with "no
+external consumer" can still be load-bearing for the file's own exported
+surface. Every movability verdict must check the file's own later bodies
+before the cross-file walk means anything.
+
+**Measured ([L3.32-T160], 2026-08-08):** T155's name-flow scan marked 429
+lines of `L.Rud.Step` movable with "no AC-side consumer"; the split agent
+found `ConcreteS` (Step:935) consumes all four headline names in-file, and
+its exports feed `L.Rud.Bridge`, an AC root. The split would have needed a
+cyclic import or a sixty-name telescope. The stop cost one dispatch; a
+landed wrong split would have cost the naturalness condition.
+
+**Provenance:** `_build/l3.32-t160-report.md` sections 1 and 7.
+
 ## Adding an entry
 
-Take the next free ID under the series (P-k, R-41, T-3, I-10, D-25, C-23), cite
+Take the next free ID under the series (P-k, R-41, T-3, I-10, D-25, C-24), cite
 the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
