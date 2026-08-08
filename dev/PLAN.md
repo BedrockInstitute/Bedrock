@@ -588,6 +588,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T165 | StepGraph block 3: the ops 8-15 decodes, dispatchers, graphs | DISPATCHED 2026-08-08 | `_build/l3.32-t165-report.md` |
 | L3.32-T166 | C-23 deep check: the Order and Coding/Base movable subsets | DISPATCHED 2026-08-08 | `_build/l3.32-t166-report.md` |
 | L3.32-T167 | The duplication sweep: content written twice in the AC closure | DISPATCHED 2026-08-08 | `_build/l3.32-t167-report.md` |
+| L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | DISPATCHED 2026-08-08 | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
 | L3.32-T155 | D36 gate G1: the fat audit of the shared part | Movable ~1,471-1,650 after the HF-imports-Finite catch; saves-now 757-930 stands | `_build/l3.32-t155-report.md` |
 | L3.32-T156 | D36 gate G2: the carried-sequence AC-necessity re-split | ZERO re-booked. General beta is AC-forced by the choice quantifier; all five terms stay BOTH | `_build/l3.32-t156-report.md` |
