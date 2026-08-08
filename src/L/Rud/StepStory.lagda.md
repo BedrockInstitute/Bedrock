@@ -33,20 +33,15 @@ module L.Rud.StepStory {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) (A : V ℓ)
 
 open import FOL.ZFStructure using ( module hPropStructure; _↾_ )
 open import FOL.Syntax using
-  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; ∃̇_ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr )
-open import V.Model {ℓ} using ( self∈sucV; ∈sucV-elim; ∈sucV-inl )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.InitialSegment {ℓ} using ( _⟷_ )
 open import L.LevelKit {ℓ} using ( module LevelKit )
 open import L.Rud.Step {ℓ} lem A using ( Op16; Fof; step; step-out; step-in; step-in-self
   ; step-in-img; StepArm; arm-member; arm-self; arm-image; u'; u'-in; u-self-in )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
-open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( sucV )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 
@@ -103,71 +98,16 @@ module Clause
               → ⟨ δ ⊨ᵐ eqFrame k M ⟩ ⟷ fst (lookup k δ) ≡ W)
   where
 
-  _⊆_ : S → S → Type (ℓ-suc ℓ)
-  u ⊆ v = (x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩
-
-  ext-⊆ : {u v : S} → u ⊆ v → v ⊆ u → u ≡ v
-  ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
 ```
 
 <!--en-->
-The bounded successor atom is carrier-generic ordinal content: `k = sucV a`
+The bounded successor atom is the kit's carrier-generic content: `k = sucV a`
 means that `a` lies in `k`, that `a` is a subset of `k`, and that every
-member of `k` is a member of `a` or `a` itself, all read boundedly. Its
-decode is the three-conjunct walk of the level-sigma chapter, verbatim.
+member of `k` is a member of `a` or `a` itself, all read boundedly. The kit
+hosts the atom and its decode once; this chapter consumes them.
 <!--zh-->
-有界后继原子是载体泛型的序数内容：`k = sucV a` 意为 `a` 落在 `k` 里、`a` 是 `k` 的子集、且 `k` 的每个成员都是 `a` 的成员或 `a` 本身，全部有界地读出。其解码是层 sigma 章的三合取项走读，原样照搬。
+有界后继原子是套件的载体泛型内容：`k = sucV a` 意为 `a` 落在 `k` 里、`a` 是 `k` 的子集、且 `k` 的每个成员都是 `a` 的成员或 `a` 本身，全部有界地读出。套件一次托管该原子及其解码；本章消费它们。
 <!--/-->
-
-```agda
-  sucKcov : {n : ℕ} → Fin n → Fin n → Formula ⟪ C ⟫ (suc n)
-  sucKcov k a = (var zero ∈̇ var (suc a)) ∨̇ (var zero ≐ var (suc a))
-
-  sucAt : {n : ℕ} → Fin n → Fin n → Formula ⟪ C ⟫ n
-  sucAt k a = (var a ∈̇ var k)
-           ∧̇ (∀̇∈ (var a) (var zero ∈̇ var (suc k)))
-           ∧̇ (∀̇∈ (var k) (sucKcov k a))
-
-  sucAt-ok : {n : ℕ} (k a : Fin n) (δ : Vec SM n)
-           → ⟨ δ ⊨ᵐ sucAt k a ⟩ ⟷ (fst (lookup k δ) ≡ sucV (fst (lookup a δ)))
-  sucAt-ok k a δ = (out , bwd)
-    where
-    valK valA : S
-    valK = fst (lookup k δ)
-    valA = fst (lookup a δ)
-    out : ⟨ δ ⊨ᵐ sucAt k a ⟩ → valK ≡ sucV valA
-    out (k∈ , (A⊆K , Kcov)) = ext-⊆ K⊆suc suc⊆K
-      where
-      K⊆suc : valK ⊆ sucV valA
-      K⊆suc z z∈K = PT.rec (snd (z ∈ˢ sucV valA)) go (Kcov zm z∈K)
-        where
-        zm : SM
-        zm = PK.pt z (Ctr {x = valK} {y = z} z∈K (snd (lookup k δ)))
-        go : (⟨ z ∈ˢ valA ⟩ ⊎ (z ≡ valA)) → ⟨ z ∈ˢ sucV valA ⟩
-        go (inl z∈A) = ∈sucV-inl {A = valA} {x = z} z∈A
-        go (inr z≡A) = subst (λ w → ⟨ w ∈ˢ sucV valA ⟩) (sym z≡A) (self∈sucV valA)
-      suc⊆K : sucV valA ⊆ valK
-      suc⊆K z z∈suc = ∈sucV-elim (snd (z ∈ˢ valK)) z∈suc
-        (λ z∈A → A⊆K (PK.pt z (Ctr {x = valA} {y = z} z∈A (snd (lookup a δ)))) z∈A)
-        (λ z≡A → subst (λ w → ⟨ w ∈ˢ valK ⟩) (sym z≡A) k∈)
-    bwd : valK ≡ sucV valA → ⟨ δ ⊨ᵐ sucAt k a ⟩
-    bwd q = ( k∈q , (A⊆Kq , Kcovq) )
-      where
-      k∈q : ⟨ valA ∈ˢ valK ⟩
-      k∈q = subst (λ w → ⟨ valA ∈ˢ w ⟩) (sym q) (self∈sucV valA)
-      A⊆Kq : ⟨ δ ⊨ᵐ ∀̇∈ (var a) (var zero ∈̇ var (suc k)) ⟩
-      A⊆Kq zm z∈A = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) (sym q) (∈sucV-inl {A = valA} {x = fst zm} z∈A)
-      Kcovq : ⟨ δ ⊨ᵐ ∀̇∈ (var k) (sucKcov k a) ⟩
-      Kcovq zm z∈K = ∈sucV-elim (snd sat) z∈suc inA eqA
-        where
-        sat = (zm ∷ δ) ⊨ᵐ sucKcov k a
-        z∈suc : ⟨ fst zm ∈ˢ sucV valA ⟩
-        z∈suc = subst (λ w → ⟨ fst zm ∈ˢ w ⟩) q z∈K
-        inA : ⟨ fst zm ∈ˢ valA ⟩ → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
-        inA h = ∣ inl h ∣₁
-        eqA : fst zm ≡ valA → ⟨ (zm ∷ δ) ⊨ᵐ sucKcov k a ⟩
-        eqA e = ∣ inr e ∣₁
-```
 
 <!--en-->
 The step atom reads membership in the step of a variable: variable zero is a
@@ -344,98 +284,38 @@ ways.
 <!--en-->
 The clause itself is the one-way successor-value clause, values for present
 pairs only: if `pr a c` lies in `f` and `pr (sucV a) b` lies in `f`, then
-`b` is the rud step of `c`. The object formula binds the three quantifiers
-around the antecedent pair read and the conclusion, with the successor pair
-read through the bounded successor atom against the kit's pair atom, exactly
-the shape the level-sigma chapter's one-way clause uses with the powerset
-atom in place of the step equality. The decode walks the three quantifiers
-in each direction.
+`b` is the rud step of `c`. The kit hosts this clause once: the module
+`OneWaySucc` takes the conclusion relation, its object formula and its
+decode, and this chapter instantiates it at the step equality atom. The
+object formula binds the three quantifiers around the antecedent pair read
+and the conclusion, with the successor pair read through the kit's bounded
+successor atom against the kit's pair atom, exactly the shape the level-sigma
+chapter's one-way clause uses with the powerset atom in place of the step
+equality. The decode walks the three quantifiers in each direction.
 <!--zh-->
-子句本身就是单向后继值子句，只为已现之对给值：若 `pr a c` 落在 `f` 里且 `pr (sucV a) b` 落在 `f` 里，则 `b` 是 `c` 的初步函数步。对象公式把三个量词绕前件对读与结论装配起来，后继对经有界后继原子配合套件的对原子读出，恰是层 sigma 章单向子句以幂集原子替下步等式所用的形状。解码在两个方向各走过三个量词。
+子句本身就是单向后继值子句，只为已现之对给值：若 `pr a c` 落在 `f` 里且 `pr (sucV a) b` 落在 `f` 里，则 `b` 是 `c` 的初步函数步。套件一次托管这条子句：模块 `OneWaySucc` 取结论关系、其对象公式及其解码，本章在步等式原子处实例化它。对象公式把三个量词绕前件对读与结论装配起来，后继对经套件的有界后继原子配合套件的对原子读出，恰是层 sigma 章单向子句以幂集原子替下步等式所用的形状。解码在两个方向各走过三个量词。
 <!--/-->
 
 ```agda
+  -- The shared one-way clause at the step equality conclusion.
+  module OneWay = Kit.OneWaySucc (λ b c → b ≡ step c) stepEq stepEq-ok
+
   succClause : S → Type (ℓ-suc ℓ)
-  succClause f = (a c b : S) → ⟨ pr a c ∈ˢ f ⟩ → ⟨ pr (sucV a) b ∈ˢ f ⟩
-               → b ≡ step c
-
-  succPairAt : Formula ⟪ C ⟫ 6
-  succPairAt = (sucAt zero (suc (suc (suc zero))))
-             ∧̇ (∃̇∈ (var (suc (suc (suc (suc zero)))))
-                    (PK.prAt zero (suc zero) (suc (suc zero))))
-
-  succPair-ok : (f : SM) (x : ⟪ C ⟫) (am cm bm : SM)
-    → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
-    ⟷ ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
-  succPair-ok f x am cm bm = (out , bwd)
-    where
-    out : ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩ → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
-    out = PT.rec (snd (pr (sucV (fst am)) (fst bm) ∈ˢ fst f)) go
-      where
-      go : Σ[ xm ∈ SM ] ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩ → ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩
-      go (xm , (suc-sat , p-sat)) =
-        subst (λ w → ⟨ pr w (fst bm) ∈ˢ fst f ⟩)
-          (sucAt-ok zero (suc (suc (suc zero)))
-            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst suc-sat)
-          (pair∈ (suc (suc (suc (suc zero)))) zero (suc zero)
-            (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst p-sat)
-    bwd : ⟨ pr (sucV (fst am)) (fst bm) ∈ˢ fst f ⟩ → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ ∃̇ succPairAt ⟩
-    bwd ab∈f = ∣ xm , (suc-sat , p-sat) ∣₁
-      where
-      x∈u : ⟨ sucV (fst am) ∈ˢ C ⟩
-      x∈u = PM.pair-left {a = sucV (fst am)} {b = fst bm} (Ctr {x = fst f}
-        {y = pr (sucV (fst am)) (fst bm)} ab∈f (snd f))
-      xm : SM
-      xm = PK.pt (sucV (fst am)) x∈u
-      suc-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ sucAt zero (suc (suc (suc zero))) ⟩
-      suc-sat = sucAt-ok zero (suc (suc (suc zero))) (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd refl
-      p-sat : ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ
-                (∃̇∈ (var (suc (suc (suc (suc zero))))) (PK.prAt zero (suc zero) (suc (suc zero)))) ⟩
-      p-sat = pair∈ (suc (suc (suc (suc zero)))) zero (suc zero) (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ab∈f
-
-  succAnt : Formula ⟪ C ⟫ 5
-  succAnt = ∃̇∈ (var (suc (suc (suc zero))))
-               (PK.prAt zero (suc (suc (suc zero))) (suc (suc zero)))
+  succClause = OneWay.succClause
 
   succConc : Formula ⟪ C ⟫ 5
-  succConc = ∃̇ succPairAt ⇒̇ (stepEq zero (suc zero))
+  succConc = OneWay.succConc
 
   succBody : Formula ⟪ C ⟫ 5
-  succBody = succAnt ⇒̇ succConc
+  succBody = OneWay.succBody
 
   succForm : Formula ⟪ C ⟫ 2
-  succForm = ∀̇ (∀̇ (∀̇ succBody))
+  succForm = OneWay.succForm
 
+  -- The one-way clause decodes both ways, through the step equality decode.
   succ-ok : (f : SM) (x : ⟪ C ⟫)
           → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succForm ⟩ ⟷ succClause (fst f)
-  succ-ok f x = (out , bwd)
-    where
-    out : ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succForm ⟩ → succClause (fst f)
-    out h a c b ac∈f ab∈f = stepEq-ok zero (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst
-      ((h am cm bm (ant bm)) (succPair-ok f x am cm bm .snd ab∈f))
-      where
-      pr∈u : ⟨ pr a c ∈ˢ C ⟩
-      pr∈u = Ctr {x = fst f} {y = pr a c} ac∈f (snd f)
-      am cm : SM
-      am = PK.pt a (PM.pair-left {a = a} {b = c} pr∈u)
-      cm = PK.pt c (PM.pair-right {a = a} {b = c} pr∈u)
-      ant : (bm : SM) → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succAnt ⟩
-      ant bm = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd ac∈f
-      b∈u : ⟨ b ∈ˢ C ⟩
-      b∈u = PM.pair-right {a = sucV a} {b = b} (Ctr {x = fst f} {y = pr (sucV a) b} ab∈f (snd f))
-      bm : SM
-      bm = PK.pt b b∈u
-    bwd : succClause (fst f) → ⟨ (f ∷ ι x ∷ []) ⊨ᵐ succForm ⟩
-    bwd sc am cm bm ant-sat = PT.rec
-      (snd ((bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ stepEq zero (suc zero))) go
-      where
-      ac∈f : ⟨ pr (fst am) (fst cm) ∈ˢ fst f ⟩
-      ac∈f = pair∈ (suc (suc (suc zero))) (suc (suc zero)) (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .fst ant-sat
-      go : Σ[ xm ∈ SM ] ⟨ (xm ∷ bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ succPairAt ⟩
-         → ⟨ (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) ⊨ᵐ stepEq zero (suc zero) ⟩
-      go (xm , sat) = stepEq-ok zero (suc zero) (bm ∷ cm ∷ am ∷ f ∷ ι x ∷ []) .snd
-        (sc (fst am) (fst cm) (fst bm) ac∈f
-          (succPair-ok f x am cm bm .fst (∣ xm , sat ∣₁)))
+  succ-ok = OneWay.succ-ok
 ```
 
 <!--en-->
@@ -448,12 +328,12 @@ in each direction.
 The chapter delivers the S-story's successor clause as an object formula
 with its two-way decode, generic over the carrier, its transitivity, the
 step closure and the graph layer. The bounded successor atom is the
-level-sigma chapter's carrier-generic content, the step atom reads the step
-membership through the embedded sixteen-way graph disjunction, and the
-clause reassembles the one-way successor value shape the first-limit carve
-consumes. The instantiator supplies the graphs, their disjunction and the
-equality frame from the surviving step content, and the step closure from
-the values read; nothing here names a concrete stage or graph body.
+kit's carrier-generic content, the step atom reads the step membership
+through the embedded sixteen-way graph disjunction, and the clause
+reassembles the one-way successor value shape the first-limit carve consumes.
+The instantiator supplies the graphs, their disjunction and the equality
+frame from the surviving step content, and the step closure from the values
+read; nothing here names a concrete stage or graph body.
 <!--zh-->
-本章把 S-故事的后继子句作为对象公式连同双向解码交付，对载体、载体传递性、步闭包与图层全部泛型。有界后继原子是层 sigma 章的载体泛型内容，步原子经嵌入的十六路图析取读 step 隶属，子句重新装配成第一个极限刻划所消费的单向后继值形状。实例化者从存活的步内容供给图、图的析取与等词框架，从值读式供给步闭包；此处没有任何内容点名具体的阶段或图体。
+本章把 S-故事的后继子句作为对象公式连同双向解码交付，对载体、载体传递性、步闭包与图层全部泛型。有界后继原子是套件的载体泛型内容，步原子经嵌入的十六路图析取读 step 隶属，子句重新装配成第一个极限刻划所消费的单向后继值形状。实例化者从存活的步内容供给图、图的析取与等词框架，从值读式供给步闭包；此处没有任何内容点名具体的阶段或图体。
 <!--/-->

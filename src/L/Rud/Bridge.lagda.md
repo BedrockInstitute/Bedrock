@@ -1020,6 +1020,107 @@ opaque
     up ξ k = Lset-mono {α = sucV ξ} {β = ξ} (self∈sucV ξ) k
 ```
 
+```agda
+-- The surviving half, Devlin's P(α): for β ∈ γ at a limit γ, the rud level
+-- Sset β is included in Lset γ and is a member of it.  The limit membership
+-- is the second named residue (below-lim); the identification-free proof of
+-- it is the S-sequence definability, the same family as Q-lim.
+RudBelow : S → S → Type (ℓ-suc ℓ)
+RudBelow β γ = ((v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩)
+             × ⟨ Sset β ∈ˢ Lset γ ⟩
+
+isPropRudBelow : (β γ : S) → isProp (RudBelow β γ)
+isPropRudBelow β γ = isProp× (isPropΠ2 (λ v _ → snd (v ∈ˢ Lset γ)))
+  (snd (Sset β ∈ˢ Lset γ))
+
+module Below
+  (γ : S) (limγ : ⟨ isLimit γ ⟩)
+  (stepSet∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
+             → ⟨ A ∈ˢ Lset ζ ⟩
+             → ((v : S) → ⟨ v ∈ˢ step u ⟩ → ⟨ v ∈ˢ Lset ζ ⟩)
+             → ⟨ step u ∈ˢ Lset (sucV ζ) ⟩)
+  (values∈L : (u ζ : S) → ⟨ u ∈ˢ Lset ζ ⟩
+            → ValuesInU u (suc⁴ ζ))
+  (slot∈L : (γ : S) → ⟨ isLimit γ ⟩ → ⟨ A ∈ˢ Lset γ ⟩)
+  (below-lim : (β : S) → IsOrd β → ⟨ isLimit β ⟩ → ⟨ β ∈ˢ γ ⟩
+             → ⟨ Sset β ∈ˢ Lset γ ⟩)
+  where
+
+  R : S → Type (ℓ-suc ℓ)
+  R β = IsOrd β → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
+
+  rstep : (β : S) → ((β₀ : S) → β₀ ∈ᵗ β → R β₀) → R β
+  rstep β IH ordβ β∈γ = go (ord-case β ordβ)
+    where
+    ihOrd : (β₀ : S) → ⟨ β₀ ∈ˢ β ⟩ → IsOrd β₀
+    ihOrd β₀ h = mem-ord {A = β} ordβ β₀ h
+    inγ : (δ : S) → ⟨ δ ∈ˢ β ⟩ → ⟨ δ ∈ˢ γ ⟩
+    inγ δ δ∈β = isLimit-ord γ limγ .fst {x = β} {y = δ} δ∈β β∈γ
+    go : (β ≡ ∅) ⊎ (⟨ isSucc β ⟩ ⊎ ⟨ isLimit β ⟩) → RudBelow β γ
+    go (inl z) = subst (λ w → RudBelow w γ) (sym z)
+      ( (λ v h → Empty.rec (∅-empty v (∈∈ₛ {a = v} {b = ∅} .fst
+          (subst (λ w → ⟨ v ∈ˢ w ⟩) Sset-zero h))))
+      , subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (sym Sset-zero)
+          (∅∈Lset γ limγ (subst (λ w → ⟨ w ∈ˢ γ ⟩) z β∈γ)) )
+    go (inr (inl (δ , ordδ , sδ≡β))) =
+      subst (λ w → RudBelow w γ) sδ≡β
+        (PT.rec (isPropRudBelow (sucV δ) γ) atStage
+          (Lstage₂ γ limγ (Sset δ) A
+            (IH δ δ∈β ordδ (inγ δ δ∈β) .snd) (slot∈L γ limγ)))
+      where
+      δ∈β : ⟨ δ ∈ˢ β ⟩
+      δ∈β = subst (λ w → ⟨ δ ∈ˢ w ⟩) sδ≡β (self∈sucV δ)
+      atStage : Σ[ ζ ∈ S ] (⟨ ζ ∈ˢ γ ⟩ × ⟨ Sset δ ∈ˢ Lset ζ ⟩ × ⟨ A ∈ˢ Lset ζ ⟩)
+              → RudBelow (sucV δ) γ
+      atStage (ζ , ζ∈γ , u∈ , A∈) = (subFn , memFn)
+        where
+        ζ₄ ζ₅ ζ₆ : S
+        ζ₄ = suc⁴ ζ
+        ζ₅ = sucV ζ₄
+        ζ₆ = sucV ζ₅
+        up₁ : (ξ y : S) → ⟨ y ∈ˢ Lset ξ ⟩ → ⟨ y ∈ˢ Lset (sucV ξ) ⟩
+        up₁ ξ y h = Lset-mono {α = sucV ξ} {β = ξ} (self∈sucV ξ) h
+        ζ₄∈γ : ⟨ ζ₄ ∈ˢ γ ⟩
+        ζ₄∈γ = suc⁴∈ γ ζ limγ ζ∈γ
+        ζ₅∈γ : ⟨ ζ₅ ∈ˢ γ ⟩
+        ζ₅∈γ = limit-succ-mem γ ζ₄ limγ ζ₄∈γ
+        ζ₆∈γ : ⟨ ζ₆ ∈ˢ γ ⟩
+        ζ₆∈γ = limit-succ-mem γ ζ₅ limγ ζ₅∈γ
+        u∈₄ : ⟨ Sset δ ∈ˢ Lset ζ₄ ⟩
+        u∈₄ = suc⁴-up ζ (Sset δ) u∈
+        A∈₄ : ⟨ A ∈ˢ Lset ζ₄ ⟩
+        A∈₄ = suc⁴-up ζ A A∈
+        stepSub : (v : S) → ⟨ v ∈ˢ step (Sset δ) ⟩ → ⟨ v ∈ˢ Lset ζ₅ ⟩
+        stepSub = Lstep⊆ (Sset δ) ζ₄ A∈₄ u∈₄ (values∈L (Sset δ) ζ u∈)
+        u∈₅ : ⟨ Sset δ ∈ˢ Lset ζ₅ ⟩
+        u∈₅ = up₁ ζ₄ (Sset δ) u∈₄
+        subFn : (v : S) → ⟨ v ∈ˢ Sset (sucV δ) ⟩ → ⟨ v ∈ˢ Lset γ ⟩
+        subFn v h = Lset-mono {α = γ} {β = ζ₅} ζ₅∈γ
+          (stepSub v (subst (λ w → ⟨ v ∈ˢ w ⟩) (Sset-suc δ) h))
+        memFn : ⟨ Sset (sucV δ) ∈ˢ Lset γ ⟩
+        memFn = subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (sym (Sset-suc δ))
+          (Lset-mono {α = γ} {β = ζ₆} ζ₆∈γ
+            (stepSet∈L (Sset δ) ζ₅ u∈₅ (up₁ ζ₄ A A∈₄) stepSub))
+    go (inr (inr limβ)) = (subFn , memFn)
+      where
+      subFn : (v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩
+      subFn v h = PT.rec (snd (v ∈ˢ Lset γ)) atEnter (Sset-out β v h)
+        where
+        atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ v ∈ˢ step (Sset δ) ⟩)
+                → ⟨ v ∈ˢ Lset γ ⟩
+        atEnter (δ , δ∈β , hv) =
+          IH (sucV δ) sδ∈β (suc-ord (ihOrd δ δ∈β)) (inγ (sucV δ) sδ∈β) .fst v
+            (subst (λ w → ⟨ v ∈ˢ w ⟩) (sym (Sset-suc δ)) hv)
+          where
+          sδ∈β : ⟨ sucV δ ∈ˢ β ⟩
+          sδ∈β = limit-succ-mem β δ limβ δ∈β
+      memFn : ⟨ Sset β ∈ˢ Lset γ ⟩
+      memFn = below-lim β ordβ limβ β∈γ
+
+  rudBelow : (β : S) → IsOrd β → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
+  rudBelow = ∈-induction rstep
+```
+
 <!--en-->
 The reshaped reduction proper.
 <!--zh-->
@@ -1082,94 +1183,6 @@ module Reduce
         Jset→isJ (γ δ) (γ-lim δ) x
           (Ldef→J δ (γ δ) (γ-lim δ) (Q δ (mem-ord {A = β} ordβ δ δ∈β)) x h)
 
-  -- The surviving half, Devlin's P(α): for β ∈ γ at a limit γ, the rud level
-  -- Sset β is included in Lset γ and is a member of it.  The limit membership
-  -- is the second named residue (below-lim); the identification-free proof of
-  -- it is the S-sequence definability, the same family as Q-lim.
-  RudBelow : S → S → Type (ℓ-suc ℓ)
-  RudBelow β γ = ((v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩)
-               × ⟨ Sset β ∈ˢ Lset γ ⟩
-
-  isPropRudBelow : (β γ : S) → isProp (RudBelow β γ)
-  isPropRudBelow β γ = isProp× (isPropΠ2 (λ v _ → snd (v ∈ˢ Lset γ)))
-    (snd (Sset β ∈ˢ Lset γ))
-
-  module Below (γ : S) (limγ : ⟨ isLimit γ ⟩) where
-
-    R : S → Type (ℓ-suc ℓ)
-    R β = IsOrd β → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
-
-    rstep : (β : S) → ((β₀ : S) → β₀ ∈ᵗ β → R β₀) → R β
-    rstep β IH ordβ β∈γ = go (ord-case β ordβ)
-      where
-      ihOrd : (β₀ : S) → ⟨ β₀ ∈ˢ β ⟩ → IsOrd β₀
-      ihOrd β₀ h = mem-ord {A = β} ordβ β₀ h
-      inγ : (δ : S) → ⟨ δ ∈ˢ β ⟩ → ⟨ δ ∈ˢ γ ⟩
-      inγ δ δ∈β = isLimit-ord γ limγ .fst {x = β} {y = δ} δ∈β β∈γ
-      go : (β ≡ ∅) ⊎ (⟨ isSucc β ⟩ ⊎ ⟨ isLimit β ⟩) → RudBelow β γ
-      go (inl z) = subst (λ w → RudBelow w γ) (sym z)
-        ( (λ v h → Empty.rec (∅-empty v (∈∈ₛ {a = v} {b = ∅} .fst
-            (subst (λ w → ⟨ v ∈ˢ w ⟩) Sset-zero h))))
-        , subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (sym Sset-zero)
-            (∅∈Lset γ limγ (subst (λ w → ⟨ w ∈ˢ γ ⟩) z β∈γ)) )
-      go (inr (inl (δ , ordδ , sδ≡β))) =
-        subst (λ w → RudBelow w γ) sδ≡β
-          (PT.rec (isPropRudBelow (sucV δ) γ) atStage
-            (Lstage₂ γ limγ (Sset δ) A
-              (IH δ δ∈β ordδ (inγ δ δ∈β) .snd) (slot∈L γ limγ)))
-        where
-        δ∈β : ⟨ δ ∈ˢ β ⟩
-        δ∈β = subst (λ w → ⟨ δ ∈ˢ w ⟩) sδ≡β (self∈sucV δ)
-        atStage : Σ[ ζ ∈ S ] (⟨ ζ ∈ˢ γ ⟩ × ⟨ Sset δ ∈ˢ Lset ζ ⟩ × ⟨ A ∈ˢ Lset ζ ⟩)
-                → RudBelow (sucV δ) γ
-        atStage (ζ , ζ∈γ , u∈ , A∈) = (subFn , memFn)
-          where
-          ζ₄ ζ₅ ζ₆ : S
-          ζ₄ = suc⁴ ζ
-          ζ₅ = sucV ζ₄
-          ζ₆ = sucV ζ₅
-          up₁ : (ξ y : S) → ⟨ y ∈ˢ Lset ξ ⟩ → ⟨ y ∈ˢ Lset (sucV ξ) ⟩
-          up₁ ξ y h = Lset-mono {α = sucV ξ} {β = ξ} (self∈sucV ξ) h
-          ζ₄∈γ : ⟨ ζ₄ ∈ˢ γ ⟩
-          ζ₄∈γ = suc⁴∈ γ ζ limγ ζ∈γ
-          ζ₅∈γ : ⟨ ζ₅ ∈ˢ γ ⟩
-          ζ₅∈γ = limit-succ-mem γ ζ₄ limγ ζ₄∈γ
-          ζ₆∈γ : ⟨ ζ₆ ∈ˢ γ ⟩
-          ζ₆∈γ = limit-succ-mem γ ζ₅ limγ ζ₅∈γ
-          u∈₄ : ⟨ Sset δ ∈ˢ Lset ζ₄ ⟩
-          u∈₄ = suc⁴-up ζ (Sset δ) u∈
-          A∈₄ : ⟨ A ∈ˢ Lset ζ₄ ⟩
-          A∈₄ = suc⁴-up ζ A A∈
-          stepSub : (v : S) → ⟨ v ∈ˢ step (Sset δ) ⟩ → ⟨ v ∈ˢ Lset ζ₅ ⟩
-          stepSub = Lstep⊆ (Sset δ) ζ₄ A∈₄ u∈₄ (values∈L (Sset δ) ζ u∈)
-          u∈₅ : ⟨ Sset δ ∈ˢ Lset ζ₅ ⟩
-          u∈₅ = up₁ ζ₄ (Sset δ) u∈₄
-          subFn : (v : S) → ⟨ v ∈ˢ Sset (sucV δ) ⟩ → ⟨ v ∈ˢ Lset γ ⟩
-          subFn v h = Lset-mono {α = γ} {β = ζ₅} ζ₅∈γ
-            (stepSub v (subst (λ w → ⟨ v ∈ˢ w ⟩) (Sset-suc δ) h))
-          memFn : ⟨ Sset (sucV δ) ∈ˢ Lset γ ⟩
-          memFn = subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) (sym (Sset-suc δ))
-            (Lset-mono {α = γ} {β = ζ₆} ζ₆∈γ
-              (stepSet∈L (Sset δ) ζ₅ u∈₅ (up₁ ζ₄ A A∈₄) stepSub))
-      go (inr (inr limβ)) = (subFn , memFn)
-        where
-        subFn : (v : S) → ⟨ v ∈ˢ Sset β ⟩ → ⟨ v ∈ˢ Lset γ ⟩
-        subFn v h = PT.rec (snd (v ∈ˢ Lset γ)) atEnter (Sset-out β v h)
-          where
-          atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ v ∈ˢ step (Sset δ) ⟩)
-                  → ⟨ v ∈ˢ Lset γ ⟩
-          atEnter (δ , δ∈β , hv) =
-            IH (sucV δ) sδ∈β (suc-ord (ihOrd δ δ∈β)) (inγ (sucV δ) sδ∈β) .fst v
-              (subst (λ w → ⟨ v ∈ˢ w ⟩) (sym (Sset-suc δ)) hv)
-            where
-            sδ∈β : ⟨ sucV δ ∈ˢ β ⟩
-            sδ∈β = limit-succ-mem β δ limβ δ∈β
-        memFn : ⟨ Sset β ∈ˢ Lset γ ⟩
-        memFn = below-lim γ limγ β ordβ limβ β∈γ
-
-    rudBelow : (β : S) → IsOrd β → ⟨ β ∈ˢ γ ⟩ → RudBelow β γ
-    rudBelow = ∈-induction rstep
-
   -- The surviving unconditional direction: a member of a rud level is a
   -- member of a constructible stage, read off the inclusion half of P(α) at
   -- the successor index the step decomposition supplies.
@@ -1185,7 +1198,7 @@ module Reduce
         atEnter : Σ[ δ ∈ S ] (⟨ δ ∈ˢ γ ⟩ × ⟨ x ∈ˢ step (Sset δ) ⟩)
                 → ⟨ x ∈ˢ Lset γ ⟩
         atEnter (δ , δ∈γ , hx) =
-          Below.rudBelow γ lim (sucV δ)
+          Below.rudBelow γ lim stepSet∈L values∈L slot∈L (below-lim γ lim) (sucV δ)
             (suc-ord (limit-mem-ord γ lim δ δ∈γ))
             (limit-succ-mem γ δ lim δ∈γ) .fst x
             (subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Sset-suc δ)) hx)
