@@ -1474,6 +1474,34 @@ full_cold_profile_2026_08_09 = "700.42 s wall, 112 rows; base 420.5 s; base cut 
 # hypothesised 125 s escape does not exist. The pair family and the rename
 # family have no cheaper measured shape.
 content_rate_measured = "0.297 s per line; the 0.085 figure is a slice rate and every projection built on it was low"
+# THE ARCHIVAL IS STILL WORTH 141 s AND IT IS NOT SPENT. The orchestrator said
+# twice on 2026-08-09 that no measured seconds lever remained. That was wrong
+# both times, and the evidence was printing on every commit: `check-tree`'s
+# retiring WARN. Priced against the 2026-08-09 cold profile, the D18 and D20
+# declarations still match 33 LIVE masters worth 140.97 s:
+#   the whole `src/L/Coding/` tree, 19 masters, about 77 s, with
+#     L.Coding.Powerset 24.66 and L.Coding.Uniform 18.05 the largest;
+#   the whole `src/L/Choice/` tree, 12 masters, about 42 s, with
+#     L.Choice.Adequate 18.07 and L.Choice.Internal 8.16 the largest;
+#   `L.Hierarchy` at 21.91.
+# That confirms the `measured_wall` note's "~148 s still owed" as very nearly
+# exact, and it is the first time anybody has priced it per master.
+#
+# WHAT IT DOES TO THE LANDING: base 420.5 falls to 279.5, so the landing goes
+# 801-809 s to about 664 s and the miss goes 303-311 s to about 166 s. THE
+# ARCHIVAL HALVES THE SECONDS GAP. It does not close it.
+#
+# WHAT GATES IT, and this is why it is not free: the AC statement itself lives
+# in the retiring tree (`ChoiceStatement` at
+# `src/L/Choice/Transversal.lagda.md`), so the `choice-rehome` row must land
+# first, at 300-650 naive and 900-1,950 calibrated as a x3 new chapter. The two
+# live crossings `check-tree` names are the visible edge of it: `src/L/Hull.lagda.md`
+# imports `L.Choice.Step` and `src/L/Model.lagda.md` imports `L.Choice.Transversal`.
+#
+# SO THE SECONDS AND THE LINES PULL AGAINST EACH OTHER HERE, which is the real
+# shape of the remaining decision: the re-home BUYS 141 s and COSTS 300-650
+# naive lines against a cap the landing already misses by 126-256.
+archival_still_owed = "140.97 s over 33 live masters, gated by the choice re-home"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
