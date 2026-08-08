@@ -610,14 +610,14 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T193 | D22 gate: the carve's own landing, without the identification | GREEN at 84 lines: the carve lands itself; HF and Finite archive after block 2 | `_build/l3.32-t193-report.md` |
 | L3.32-T194 | D22 gate: the Q-lim residue at a general limit | RED: the frame re-instantiates at 62, but the family equality rests on a FALSE bridge; 612-1,062 | `_build/l3.32-t194-report.md` |
 | L3.32-T195 | The below-lim master, block 2: the STEP, and the theorem closes | PARTIAL: the first limit closes, 948 of 900; the seconds watch FIRED at 216 s cold | `_build/l3.32-t195-report.md` |
-| L3.32-T215 | Cure the below-lim master's check time: 216 s must come down | DISPATCHED 2026-08-08 | `_build/l3.32-t215-report.md` |
+| L3.32-T215 | Cure the below-lim master's check time: 216 s must come down | STOPPED: T221's reshape deletes the content it was curing, and P-n predicted the floor | `_build/l3.32-t215-report.md` |
 | L3.32-T216 | JOURNAL entries T206 to T215, the campaign day | DELIVERED, insertions only, lint green | `_build/l3.32-t216-report.md` |
 | L3.32-T217 | Block 3's scope, priced before it is funded | SPLIT REQUIRED and THE GATE BREAKS AT BOTH RATES: 513-529 s cured, 836-893 uncured | `_build/l3.32-t217-report.md` |
 | L3.32-T218 | The wall arithmetic: can the AC landing fit 498 s at all? | 745-813 s uncured DOES NOT FIT; 422-448 cured TURNS ON T215 and four unmeasured terms | `_build/l3.32-t218-wall.md` |
 | L3.32-T219 | The seconds doctrine: what makes a master expensive here | Five diseases; the 21-60x gap is a CONTENT CLASS, not a defect. P-m and P-n admitted | `_build/l3.32-t219-seconds.md` |
 | L3.32-T220 | Time the four unmeasured landing terms, in master shape | DISPATCHED 2026-08-08 | `_build/l3.32-t220-report.md` |
 | L3.32-T221 | The parameterization question: can the master need less instantiation? | RESHAPEABLE: the general STEP subsumes block 2; -898 to -933 lines, 20-34 s | `_build/l3.32-t221-report.md` |
-| L3.32-T222 | The deciding rate: what does a generic STEP cost per line? | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t222-report.md` |
+| L3.32-T222 | The deciding rate: what does a generic STEP cost per line? | DISPATCHED 2026-08-08 | `_build/l3.32-t222-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
