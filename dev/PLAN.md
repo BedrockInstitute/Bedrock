@@ -604,6 +604,10 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T182 | D22 gate: the general-beta transfer at a second limit carrier | RED at 213 of 150: it needs its own residue at the previous limit; band up ~1k | `_build/l3.32-t182-report.md` |
 | L3.32-T183 | F2 block 3a: localize F10Desc, cut the last Describe edge | LANDED, 109 of 130: the edge is gone, StepGraph green; the archival is unblocked | `_build/l3.32-t183-report.md` |
 | L3.32-T184 | Opus assessment: the F series' effect on the GCH wing | NO TAX: costs the wing 41 lines, saves 1,290; the wing endpoint falls ~3.1-3.6k | `_build/l3.32-t184-gch-impact.md` |
+| L3.32-T185 | Statement-shape probe: below-lim as an induction over limits | DISPATCHED 2026-08-08 | `_build/l3.32-t185-report.md` |
+| L3.32-T186 | F1 execution: re-home the five lemmas from HF and Finite | DISPATCHED 2026-08-08 | `_build/l3.32-t186-report.md` |
+| L3.32-T187 | The coverage audit: did this week's re-cuts lose AC content? | DISPATCHED 2026-08-08 | `_build/l3.32-t187-report.md` |
+| L3.32-T188 | JOURNAL entries T181 to T187 and the day's two measurements | DISPATCHED 2026-08-08 | `_build/l3.32-t188-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
 | L3.32-T155 | D36 gate G1: the fat audit of the shared part | Movable ~1,471-1,650 after the HF-imports-Finite catch; saves-now 757-930 stands | `_build/l3.32-t155-report.md` |
