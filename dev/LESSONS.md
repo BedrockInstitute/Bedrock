@@ -2319,6 +2319,43 @@ it bundles a predicate with its object formula and its two decode directions,
 which is the shape of every story clause. The nested `Σ` is uglier to read and
 will be "cleaned up" into a record by anyone who does not know the price.
 
+### P-q. A line lever and a seconds lever are different levers; dedup buys lines, not seconds
+
+**The law.** Removing DUPLICATED content removes lines and almost no seconds.
+A restated definition is cheap to CHECK; what costs is the USE of it at a
+concrete carrier. So a deduplication that looks like a big win on the line
+meter can be worth almost nothing at the wall gate, and the two thresholds
+must be priced separately. Never convert a measured line saving into a seconds
+saving with a rate.
+
+**The measurement, 2026-08-09, `[L3.32-T237]` and `[L3.32-T240]`, the same
+miniature before and after.** `[T239]` made the limit clause carrier-generic,
+which deleted a 315-line restatement from the consumer.
+
+| | lines | cold seconds | rate |
+|---|---:|---:|---:|
+| `[T237]`, restated port | 904 | 186.43 | 0.206 |
+| `[T240]`, generic clause | 589 | 174.62 | 0.297 |
+| delta | **-315** | **-11.80** | |
+
+The 315 removed lines were worth **0.037 s per line**, cheaper than the
+parameterized class's own 0.010-0.013 floor would predict for their size, and
+far below the 26.8 s that `[T222]`'s bound-variable rate would have given. The
+589 lines that STAYED carry 174.62 s between them. They state formulas at the
+concrete carrier and prove decodes and placements there, which is P-n's
+signature exactly.
+
+**Note the trap in the rate.** The measured rate ROSE, from 0.206 to 0.297,
+because the same cost now divides by fewer lines. A rate that rises after a
+successful refactor is not a regression: it is the certificate becoming
+honest, since the cheap lines are gone and what remains is the real content.
+Do not read a rising rate as damage.
+
+**What it means for a campaign.** If the wall is the binding threshold,
+deduplication is not the lever, however good it looks on the meter. P-n's only
+admissible move stands: need LESS instantiation, which is a change of
+mathematical shape and not a change of where the code lives.
+
 ### P-p. A stale interface masquerades as a heap wall; move the `.agdai` before you believe a price
 
 **The law.** Agda's incremental reuse can produce a STALE `.agdai` whose
