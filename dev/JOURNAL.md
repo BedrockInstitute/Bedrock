@@ -2620,6 +2620,252 @@ writing. The candidate set is `connex`, `unitSWO`, `sumSWO`, `prodSWO`
 and `listSWO` with their private machinery. The baseline check is
 0.87 s warm, exit 0, contended with T161.
 
+**`[T163]` THE JOURNAL BATCH T148 TO T162** (2026-08-08,
+`_build/l3.32-t163-report.md`).
+
+DELIVERED. 15 of 15 entries sit in code order. The delta is plus
+1,211 words. The lint passes. The claims the evidence does not
+support are recorded in place, with the source of each
+(`_build/l3.32-t163-report.md` section 4). The entry for `[T162]`
+records the dispatch only, because its report returned no outcome.
+
+**`[T164]` STEPGRAPH BLOCK 2: THE DECODES FOR OPS 0-7** (2026-08-08,
+`_build/l3.32-t164-report.md`).
+
+LANDED. The block adds 339 non-blank in-fence lines, the first
+under-size block at rate x0.79 (`dev/PLAN.md:587`). The stop-line is
+650, so the block sits 311 lines under it. The master reads 843.
+
+The sixteen decodes port the archive shapes verbatim, with the
+block-1 renames only (`_build/l3.32-t164-report.md:59-66`). The warm
+check is about 1.7 s. The report names six terms the glossary lacks,
+per the D35 discipline (`_build/l3.32-t164-report.md:103-111`).
+
+**`[T165]` STEPGRAPH BLOCK 3: THE OPS 8-15 DECODES, THE DISPATCHERS, THE GRAPHS** (2026-08-08,
+`_build/l3.32-t165-report.md`).
+
+LANDED. The block adds 609 lines, 91 under the 700 stop-line. The
+master reads 1,452.
+
+The telescope closes: the probe's `Graphs` telescope opens at the
+delivered `memOf`, `memOut` and `memIn`, and the `BigOr` module
+closes at the real `graphOf` (`_build/l3.32-t165-report.md:81-90`).
+The graphs agree definitionally, by `refl`. The warm check is about
+1.9 s. The report names six more terms the glossary lacks
+(`_build/l3.32-t165-report.md:124-131`).
+
+**`[T166]` THE C-23 DEEP CHECK: THE ORDER AND CODING/BASE SUBSETS** (2026-08-08,
+`_build/l3.32-t166-report.md`).
+
+Order is MOVABLE 114 lines. `ordSWO` and `opIx` stay: the pick cone
+reaches both through the `Stage` and `Op` instantiations
+(`_build/l3.32-t166-report.md:20-26`). Base is MOVABLE 46 lines, the
+At cluster. `pair-char` and `sgl-char` stay, because their chain
+feeds the ac-only `Describe` (`_build/l3.32-t166-report.md:55-59`).
+
+The check applies C-23, the same-file instantiation rule
+(`dev/LESSONS.md:2039`). The Base sibling lands shared today and gch
+after the D18 retirement. The split is meter-neutral until the
+archival.
+
+**`[T167]` THE DUPLICATION SWEEP** (2026-08-08,
+`_build/l3.32-t167-report.md`).
+
+SURVEY. The candidate yield is about 210 to 430 lines, with a
+high-confidence floor near 35 to 55
+(`_build/l3.32-t167-report.md:9-13`). Nine candidates each carry a
+carrier and a D22 probe. C1, the description scaffold, leads at 60
+to 140.
+
+The class is real but thin. It is not a two-thousand-line vein.
+Nothing here is measured.
+
+**`[T168]` THE COMPRESSION-CLASS SWEEP** (2026-08-08,
+`_build/l3.32-t168-report.md`).
+
+Dead content at 1,590 AC lines confirms `[T155]` and adds no new
+value (`_build/l3.32-t168-report.md:9-17`). Collapsible generality
+adds 60 to 90, led by the Describe scaffolding at 40 to 60. Library
+re-proofs are zero. Case-bloat adds 30. The new AC value is about
+70 to 105 (`dev/PLAN.md:605`). The gch-only and base dead content is
+3,173 lines, outside the D36 meter.
+
+**`[T169]` THE C1 PROBE, MEASURED AT F1DESC** (2026-08-08,
+`_build/l3.32-t169-report.md`).
+
+GO, but small. F1Desc loses 6 lines. The projection at eight sites
+is minus 27, against the survey's 60 to 140
+(`_build/l3.32-t169-report.md:10-17`). The stop-lines hold: 27 fresh
+lines against 120, and the check time does not move. The carve needs
+a shared home, proposed as `L.Rud.Descr`
+(`_build/l3.32-t169-report.md:42-43`).
+
+**`[T170]` STEPGRAPH BLOCK 4: THE VALUES LEX AND THE STEP DESCRIPTION** (2026-08-08,
+`_build/l3.32-t170-report.md`).
+
+LANDED. The block adds 460 lines, the top of the expected band and
+90 under the 550 stop-line. THE REWRITE IS COMPLETE: the master
+reads 1,912, inside the calibrated band (`dev/PLAN.md:592`). The
+roles close at the real objects: `valuesLex` and `stepDescObl` are
+inhabited, and `lex-agrees` holds by `refl`
+(`_build/l3.32-t170-report.md:51-74`). The warm check is 2 to 3 s.
+
+The meter staged the blocks at wiring, not at audit: the ledger
+reads HEAD, so an audited block is invisible until it is committed
+(`scripts/ledger.py:87-91`). The block reports name their fresh
+terms to the glossary hook (`_build/l3.32-t164-report.md:103-111`,
+`_build/l3.32-t165-report.md:124-131`).
+
+**`[T171]` THE ORDER SPLIT** (2026-08-08,
+`_build/l3.32-t171-report.md`).
+
+SPLIT. `L.Rud.OrderReadings` is born. The moved content is 115
+non-blank fence lines, one more than T166's count: the count missed
+a clause in `memberStage-new` (`_build/l3.32-t171-report.md:134-137`).
+C-23 re-verifies: no kept body references a moved name, and the
+consumers are the two gch roots (`_build/l3.32-t171-report.md:22-34`).
+Order reads 578 to 463, and the sibling reads 144. The AC total
+drops by 115 on wiring. The ledger reads HEAD, so the meter moves
+only at wiring (`_build/l3.32-t171-report.md:149-153`). `Tri`, `lt`,
+`eq` and `gt` come from `L.WellOrder.Base`, because Order does not
+export them.
+
+**`[T172]` THE C2 PROBE, MEASURED AT COUNT** (2026-08-08,
+`_build/l3.32-t172-report.md`).
+
+NO-GO at the stop. The carrier plus the conversion needs 143 fresh
+lines against the 120 limit. The one-side delta is minus 100 at
+Count. The two-side net is minus 65 to minus 70, real but small
+(`_build/l3.32-t172-report.md:9-16`). The stop's rationale fails at
+two sides: the dup is 224 and the mechanism is 155. The fixed budget
+still decides.
+
+The converted block checks about 21 percent faster. The Coding side
+is a projection, not a measurement (P-l).
+
+**`[T173]` THE RE-HOME DESIGN MEMO** (2026-08-08,
+`_build/l3.32-t173-report.md`).
+
+DELIVERED. The memo carries 1,707 words. Five contradictions between
+five reports are pinned, with the current lines authoritative
+(`_build/l3.32-t173-report.md:10-49`). The memo holds the re-home
+design in one place. Five items it could not pin each carry their
+cheapest probe (`_build/l3.32-t173-report.md:51-69`). The lint
+passes on both files.
+
+**`[T174]` THE FABLE STRATEGY RECON** (2026-08-08,
+`_build/l3.32-t174-strategy.md`).
+
+DELIVERED. The F series lands (`_build/l3.32-t174-strategy.md:14-206`).
+
+F1 prices the HF and Finite exit at minus 700 to minus 1,290. F2
+prices the doubled description layer at minus 900 to minus 1,400,
+survey. F3 re-prices the W3-slice as a carried order-sequence. F4
+prices the base part at 769 wing-only lines billed to AC. F5 prices
+the L-side witness, the largest and least certain find.
+
+The decomposition holds. The known levers leave the landing RED by
+1.9 to 4.3k. F1 and F4 pass the low edge. F2 passes the center
+(`_build/l3.32-t174-strategy.md:207-266`). Rank 1 is probe-first
+plus a shadow-metered release plus the F4 caliber fix
+(`_build/l3.32-t174-strategy.md:273-288`).
+
+The meter reads 15,578 at recon (`_build/l3.32-t174-strategy.md:4`).
+F4 lands as two `gch_assign` declarations under the F-series
+execution order, minus 769 at zero code cost
+(`dev/ledger.toml:1337-1358`). The D36 amendment binds the endgame:
+the deletion test, the naturalness condition and the posture
+(`dev/PLAN.md:193`). The meter's arc runs 15,578 to 14,695 to
+15,209; the current reading comes from `scripts/ledger.py --budget`.
+
+**`[T175]` THE F2 PROBE: ONE ARM FROM STEPGRAPH'S DECODES** (2026-08-08,
+`_build/l3.32-t175-report.md`).
+
+GREEN at 133 of 150. The pin frame over the `memOf` family derives
+F1's defSet equation. GREEN funds the Arms rebuild
+(`_build/l3.32-t175-report.md:7-13`). The frame needs a third pin,
+`var f0 ≐ var f3`, beyond the two argument slots
+(`_build/l3.32-t175-report.md:38-39`). The frame is generic at 50
+lines. Sixteen arms project to about 30 to 60 added lines.
+
+The T132, T140 and T142 counter-evidence does not transfer. This
+probe consumes a delivered layer
+(`_build/l3.32-t175-report.md:140-143`).
+
+**`[T176]` THE F1 WALK: HF AND FINITE** (2026-08-08,
+`_build/l3.32-t176-report.md`).
+
+EXIT-AT-COST. The AC route consumes five lemmas: two from HF and
+three from Finite. The re-home is 75 to 95 naive lines, or 250 to
+350 with the identification cone. STAY is refuted
+(`_build/l3.32-t176-report.md:6-14`). The net is minus 642 to minus
+662 at the low end. T174's minus 700 difference is the re-home
+price, and the minus 1,290 high end stands.
+
+T174's one-lemma claim is false at the elaboration level. The
+corrected target is five lemmas
+(`_build/l3.32-t176-report.md:155-158`).
+
+Both masters leave the AC closure at the landing. Archive is the
+honest disposition: a `gch_assign` without a wing consumer is a
+defect.
+
+**`[T177]` THE ADVERSARIAL REVIEW OF F2** (2026-08-08,
+`_build/l3.32-t177-report.md`).
+
+HOLDS-WITH-EDGES. The pin frame is real and the probe is sound. The
+heavy arms measure at one application and one composition each
+(`_build/l3.32-t177-report.md:193-210`).
+
+Four edges are priced. The module-topology extraction costs 30 to
+60. The Layer-free F0 arm costs about 30. The composition correction
+moves the net. The whole-Bridge check stays unmeasured.
+
+The net re-derives to minus 1,018 to minus 1,184, inside T174's band
+at the low end. Two corrections to T174's arithmetic: the Arms trim
+and the Arms rebuild are the same lines. The removed Switch is 297,
+not about 250 (`_build/l3.32-t177-report.md:141-146`).
+
+Two corrections to T174's arithmetic: the Arms trim and the Arms
+rebuild are the same lines. The removed Switch is 297, not about
+250 (`_build/l3.32-t177-report.md:141-146`).
+
+**`[T178]` THE F2 BLOCK 1: THE TOPOLOGY EXTRACTION AND THE FRAME** (2026-08-08,
+`_build/l3.32-t178-report.md`).
+
+LANDED, 328 of 350. `L.TowerKit` is born: the new master carries
+160 lines, and seven names move with byte-identical signatures
+(`_build/l3.32-t178-report.md:11-24`). The StepGraph pin-frame
+section adds 166, and Bridge nets minus 32. Bridge falls 8.2 s user
+cold, 193.16 to 185.01; StepGraph rises 9.9 s on re-elaboration
+(`_build/l3.32-t178-report.md:90-105`). Edge 4's watch answers: no
+regression.
+
+The F0 arm measures about 55 lines, not 30. The home is neither
+`L.LevelKit` nor `L.Constructible`. Wiring is pending: the catalog
+and the ledger are untouched, and the closure check fails until the
+orchestrator wires `L.TowerKit` (`_build/l3.32-t178-report.md:84-86`).
+
+**`[T179]` THE F3 PROBE: THE SUCCESSOR CLAUSE** (2026-08-08,
+`_build/l3.32-t179-report.md`).
+
+GREEN at 135 of 150. The successor clause is expressible over the
+values lex at one carrier, with a two-way decode. Both T161 walls
+dissolve: the stage clause becomes a bounded read from the carried
+story, and the unbounded descent becomes one bounded read per level
+(`_build/l3.32-t179-report.md:106-131`). The `w3-ac-slice` re-prices:
+the calibrated top halves from 720-2850 to about 300-500. The clause
+term moves from x3 to x1.3 at 66 to 86 naive. The carve and the
+order-specific correctness stay survey terms.
+
+**`[T180]` THE F2 BLOCK 2: THE ARMS REBUILD** (2026-08-08,
+`_build/l3.32-t180-report.md`).
+
+DISPATCHED. The report is a skeleton at the time of writing. It
+carries no outcome, no count and no check time
+(`_build/l3.32-t180-report.md:1-10`). The register row records the
+dispatch only (`dev/PLAN.md:602`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
