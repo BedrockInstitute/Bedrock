@@ -83,9 +83,28 @@ HISTORICAL_DIRS = {"memos"}
 FOREIGN = re.compile(r"source project's\s+$")
 
 
+def lesson_headings() -> list[str]:
+    return [m.group(1).replace("  ", " ") for m in HEADING.finditer(
+        LESSONS.read_text(encoding="utf-8"))]
+
+
 def known_lessons() -> set[str]:
-    return {m.group(1).replace("  ", " ") for m in HEADING.finditer(
-        LESSONS.read_text(encoding="utf-8"))}
+    return set(lesson_headings())
+
+
+def duplicate_lessons() -> list[str]:
+    """IDs carried by more than one heading in dev/LESSONS.md.
+
+    [L3.32-T226] 2026-08-08: `C-23` numbered two different laws. Every citation
+    in the tree resolved to the older one, so the newer law was uncitable and
+    nothing noticed, because a citation check only asks whether an ID EXISTS. A
+    duplicate ID passes that question twice. It is caught here instead: the ID
+    is the address, so two laws at one address is a defect at the source.
+    """
+    seen: dict[str, int] = {}
+    for h in lesson_headings():
+        seen[h] = seen.get(h, 0) + 1
+    return sorted(k for k, n in seen.items() if n > 1)
 
 
 def known_decisions() -> set[str]:
@@ -107,6 +126,13 @@ def main() -> int:
     args = ap.parse_args()
 
     lessons, decisions = known_lessons(), known_decisions()
+    if (dupes := duplicate_lessons()):
+        for d in dupes:
+            print(f"check-rule-ids: dev/LESSONS.md: `{d}` numbers more than one law. "
+                  f"An ID is an address: a citation resolves to whichever heading is "
+                  f"found first, and the other law cannot be cited at all. Renumber "
+                  f"the one nothing cites yet.")
+        return 1
     if not lessons:
         print("check-rule-ids: no headings found in dev/LESSONS.md; refusing to "
               "pass a check whose reference set is empty")

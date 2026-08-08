@@ -2295,7 +2295,7 @@ rate for exactly that reason.
 `_build/l3.32-t195-report.md` section 5.
 
 
-### C-23. A shape certificate is not a meaning certificate
+### C-24. A shape certificate is not a meaning certificate
 
 **The law.** A proof obligation that certifies a formula's SHAPE (`Δ₀`, `Σ₁`,
 `Π₁`) says nothing about what the formula MEANS. A wrong de Bruijn index changes
