@@ -617,7 +617,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T219 | The seconds doctrine: what makes a master expensive here | Five diseases; the 21-60x gap is a CONTENT CLASS, not a defect. P-m and P-n admitted | `_build/l3.32-t219-seconds.md` |
 | L3.32-T220 | Time the four unmeasured landing terms, in master shape | Four measured, 29.69 s floor; cured wall 452-478 fits by 20-46 on the measurements | `_build/l3.32-t220-report.md` |
 | L3.32-T221 | The parameterization question: can the master need less instantiation? | RESHAPEABLE: the general STEP subsumes block 2; -898 to -933 lines, 20-34 s | `_build/l3.32-t221-report.md` |
-| L3.32-T222 | The deciding rate: what does a generic STEP cost per line? | DISPATCHED 2026-08-08 | `_build/l3.32-t222-report.md` |
+| L3.32-T222 | The deciding rate: what does a generic STEP cost per line? | 0.085 s per line, a STRADDLE: the tree lands 484-514 against 498, by plus 14 or minus 16 | `_build/l3.32-t222-report.md` |
 | L3.32-T223 | The reshape's build plan, written against the measured rates | DISPATCHED 2026-08-08 | `_build/l3.32-t223-plan.md` |
 | L3.32-T224 | JOURNAL entries T216 to T223, the seconds day | DISPATCHED 2026-08-08 | `_build/l3.32-t224-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
