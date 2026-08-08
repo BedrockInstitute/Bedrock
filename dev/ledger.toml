@@ -1331,6 +1331,28 @@ carried_sequence_measured = "904 nbl / 186 s at the limit case alone; block A re
 # nested carrier. The 0.206 s per line is measured at the RESTATED port. P-l
 # forbids transferring it to the factored one. Re-measure at the site.
 port_refactor_saving = "250-300 lines, structurally proven by the successor clause's own telescope"
+# [T239] EXECUTED IT 2026-08-09 and the measurement is the orchestrator's:
+# StepStory 199 -> 549 (+350), BelowLim 2,139 -> 1,815 (-324), NET PLUS 26. Both
+# masters exit 0 and `src/Everything.lagda.md` exits 0. The nested consumer that
+# [T237] priced now saves about 317 instead of restating 309.
+#
+# THE RE-PROJECTION, and it is a PROJECTION with one measured part. Block A's
+# carried sequence becomes about 847-977 (the measured 904 limit case less the
+# 317 restatement, plus [T237]'s 260-390 for the zero, successor and wrapper
+# cases). Block A is about 1,896-2,026. BelowLim lands at 2,530-2,660 once the
+# a-0 module goes, a delta of +715 to +845 on today's 1,815, so the meter would
+# read 16,124-16,254: OVER the 16,000 cap by 124 to 254. Before [T239] the same
+# arithmetic gave 16,308-16,488.
+#
+# SO THE GAP IS NOW SMALLER THAN ANY SINGLE LEVER FOUND TODAY, which is the
+# first time that has been true. It is still a gap, and it is still a
+# projection: the only measured number in it is the 904-line limit case.
+#
+# THE SECONDS ARE NOT RE-PROJECTED HERE, deliberately. [T239] did not measure
+# the factored port at the nested carrier, and P-l forbids carrying the 0.206
+# s per line across from the restated one. That measurement is the next one
+# the campaign owes.
+block_a_reprojected = "1,896-2,026; meter 16,124-16,254 against the 16,000 cap"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
