@@ -615,7 +615,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
 | L3.32-T202 | Can the AC route avoid blockPowLim entirely? | NEEDED: isL-to-isJ reaches it through Q-suc. The mirror never crosses the bridge at all | `_build/l3.32-t202-report.md` |
 | L3.32-T203 | The route question: must L models AC cross the bridge at all? | CROSS. Not crossing costs +4.1k naive: a syntax-free key exists on Sset, none on Lset | `_build/l3.32-t203-route.md` |
-| L3.32-T204 | D22 probe: the bounded family formula at the second limit | DISPATCHED 2026-08-08 | `_build/l3.32-t204-report.md` |
+| L3.32-T204 | D22 probe: the bounded family formula at the second limit | GREEN at the 200 cap: the chain needs no new ordinal content; one classical gate remains | `_build/l3.32-t204-report.md` |
 | L3.32-T205 | Where did the 16,000 compression floor come from? | UNSUPPORTED: a 2026-07-31 survey's optimistic end, never probed; the measured bar is 17,496 | `_build/l3.32-t205-report.md` |
 | L3.32-T206 | JOURNAL entries T200 to T205 | DELIVERED. 6 of 6, insertions only; T204 correctly recorded as dispatched, no verdict | `_build/l3.32-t206-report.md` |
 | L3.32-T207 | The AC endgame execution plan: block 2 to the deletion test | DELIVERED, 2,410 words, eight steps ordered; the blockPowLim ruling is the honesty gate | `_build/l3.32-t207-report.md` |
