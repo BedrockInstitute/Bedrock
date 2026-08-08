@@ -584,7 +584,9 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T160 | The Step split: the transitivity theory to its natural home | STOPPED, naturalness held: ConcreteS consumes the set in-file and feeds Bridge; C-23 | `_build/l3.32-t160-report.md` |
 | L3.32-T162 | The WellOrder.Base split: the SWO combinators | SPLIT. L.WellOrder.Combinators, 247 lines moved, C-23 clean; natSWO and pullSWO stay, AC reads them | `_build/l3.32-t162-report.md` |
 | L3.32-T163 | JOURNAL entries T148 to T162 and the three rulings | DELIVERED. 15 of 15 entries, +1,211 words, insertions only, lint green | `_build/l3.32-t163-report.md` |
-| L3.32-T164 | StepGraph block 2: the decodes for ops 0-7 | QUEUED 2026-08-08 for the first free Agda slot | `_build/l3.32-t164-report.md` |
+| L3.32-T164 | StepGraph block 2: the decodes for ops 0-7 | LANDED. 339 lines at rate x0.79, the first under-size block; master 843, ~1.8 s warm | `_build/l3.32-t164-report.md` |
+| L3.32-T165 | StepGraph block 3: the ops 8-15 decodes, dispatchers, graphs | DISPATCHED 2026-08-08 | `_build/l3.32-t165-report.md` |
+| L3.32-T166 | C-23 deep check: the Order and Coding/Base movable subsets | DISPATCHED 2026-08-08 | `_build/l3.32-t166-report.md` |
 | L3.32-T161 | D22 gate: price W3's elimination slice on today's face | RED at 193 lines. The wiring closes green; the core is W3's own theorem; the band stands | `_build/l3.32-t161-report.md` |
 | L3.32-T155 | D36 gate G1: the fat audit of the shared part | Movable ~1,471-1,650 after the HF-imports-Finite catch; saves-now 757-930 stands | `_build/l3.32-t155-report.md` |
 | L3.32-T156 | D36 gate G2: the carried-sequence AC-necessity re-split | ZERO re-booked. General beta is AC-forced by the choice quantifier; all five terms stay BOTH | `_build/l3.32-t156-report.md` |
