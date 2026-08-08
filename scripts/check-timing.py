@@ -151,11 +151,23 @@ def benchmark() -> float | None:
 
 
 def tree_seconds() -> float | None:
-    """The whole tree's measured check cost, for the share test."""
+    """The whole tree's measured check cost, for the share test.
+
+    [L3.32-T235] 2026-08-09 found this reading the WRONG figure. It took
+    `full_cold_seconds`, which is the 2026-08-06 profile total of 1,072 s,
+    while the tree's current measured wall is `full_cold_wall_seconds` at
+    395 s. The denominator was therefore 2.7 times too large and the D30
+    share screen was blind to every module between about 7.9 s and 21.4 s: a
+    module at 2 percent of the real tree computed as 0.74 percent and walked
+    past the gate.
+
+    The CURRENT wall wins when it is present, and the stale profile total is
+    the fallback so an older ledger still screens something.
+    """
     if not LEDGER.exists():
         return None
-    data = tomllib.loads(LEDGER.read_text(encoding="utf-8"))
-    return data.get("timing", {}).get("full_cold_seconds")
+    data = tomllib.loads(LEDGER.read_text(encoding="utf-8")).get("timing", {})
+    return data.get("full_cold_wall_seconds") or data.get("full_cold_seconds")
 
 
 def baselines() -> dict[str, dict]:
