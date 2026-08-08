@@ -3196,6 +3196,46 @@ UNSUPPORTED. The floor is the 2026-07-31 survey's optimistic end, never
 probed, never reached by a delivered tree
 (`_build/l3.32-t205-report.md:8-18`; `dev/PLAN.md:194`).
 
+**`[T206]` JOURNAL ENTRIES T200 TO T205** (2026-08-08, `_build/l3.32-t206-report.md`).
+
+DELIVERED. 6 of 6 entries, insertions only, lint green.
+
+**`[T207]` THE AC ENDGAME EXECUTION PLAN: BLOCK 2 TO THE DELETION TEST** (2026-08-08, `_build/l3.32-t207-report.md`).
+
+DELIVERED. The memo is 2,410 words, eight steps ordered (`dev/memos/L3.32-ac-endgame.md`). The blockPowLim ruling is the honesty gate (`_build/l3.32-t207-report.md:13`).
+
+**`[T208]` PIN THE 16,000: THE SEVEN LEVERS ON MAIN** (2026-08-08, `_build/l3.32-t208-report.md`).
+
+MEASURED. The owner's order to pin the floor ran on the survey's own laboratory (`_build/briefs/l3.32-t208.md:8`; `dev/PLAN.md:194`). The levers measure minus 620 to minus 860 lines; the landing is 16,632 to 16,872 against the survey band 16,006 to 16,737 (`_build/l3.32-t208-report.md:7-13`). The optimistic end over-promises 1.7 to 2.4 times; the conservative ratios straddle 1.0 (`_build/l3.32-t208-report.md:258-267`). The per-lever figures do not sum to the recorded totals (`_build/l3.32-t208-report.md:49-52`).
+
+**`[T209]` D17 GATE: THE CODE PREDICATE'S IDEAL FORM OVER THE GRAPH LAYER** (2026-08-08, `_build/l3.32-t209-report.md`).
+
+WASH. The ideal form is 1,120 to 1,275 naive against the delivered 1,379: 7 to 19 percent under, not the half the row needed (`_build/l3.32-t209-report.md:3-6`). The row band does not move (`_build/l3.32-t209-report.md:140-147`).
+
+**`[T210]` THE COMPRESSION CAMPAIGN FROM FIRST PRINCIPLES** (2026-08-08, `_build/l3.32-t210-campaign.md`).
+
+DOES NOT CLOSE. The plan totals -2,333 to -3,575 naive against a gap it also corrected (`_build/l3.32-t210-campaign.md:7-9`). The quoted -6,899 is cap minus the naive HIGH, and the tool double-counts 1,894 measured lines; the reconciled gap is 2,985 to 5,005 (`_build/l3.32-t210-campaign.md:13-19`). The closest honest landing is about 17.3 to 20.6k naive (`_build/l3.32-t210-campaign.md:25-28`). The cofinality escape closes NEGATIVE: Q's successor step IS Def-as-one-set by the carrier's definition, so blockPowLim is forced by mathematics (`_build/l3.32-t210-campaign.md:72-75`). The five rows map one-to-one onto the minimal ingredient list (`_build/l3.32-t210-campaign.md:91-93`).
+
+**`[T211]` THE SECONDS GATE: DOES ANY HONEST BLOCKPOWLIM FIT THE WALL?** (2026-08-08, `_build/l3.32-t211-report.md`).
+
+TOO CLOSE TO CALL. The Part I slice checks in 7.60 s cold at 126 non-blank lines; the whole obligation projects 67.5 to 76.9 s naive against the +102.8 s margin (`_build/l3.32-t211-report.md:5-8`). FITS at naive, FITS at x1.3 by 3 to 15 s, DOES NOT FIT at x3 (`_build/l3.32-t211-report.md:83-85`). The slice's rate transfers to the predicate only by hypothesis (P-l; `dev/LESSONS.md:2066`).
+
+**`[T212]` CUT THE VERIFIED FAT: TEN WRAPPERS AND ONE UNREACHED EXPORT** (2026-08-08, `_build/l3.32-t212-report.md`).
+
+CUT 11 of 11. The ten `F*-defSet≡` wrappers and the export `adeq-out` leave: minus 48 physical lines, minus 39 non-blank in-fence (`_build/l3.32-t212-report.md:8-11`). Every name was the last verified fat; the whole-tree scan found zero live consumers (`_build/l3.32-t212-report.md:32-35`). Both masters green; the other exports are byte-identical (`_build/l3.32-t212-report.md:103-116`).
+
+**`[T213]` THE MATHEMATICAL CAMPAIGN: GENERALIZE AND RESTRUCTURE** (2026-08-08, `_build/l3.32-t213-math.md`).
+
+FIVE CANDIDATES. C1 attacks the widest survey term with the delivered Sat engine; C2 splits BelowLim into a generic machine plus the first-limit instance; C3 is byte-certain duplication (`_build/l3.32-t213-math.md:25-33,54-74`). The crossing-rebuild row's compression chain is complete and all red (`_build/l3.32-t213-math.md:101-109`). The abstract tower engine already exists, but the two towers cannot share it at profit (`_build/l3.32-t213-math.md:111-118`).
+
+**`[T214]` D22 GATE: SATISFACTION-AS-MEMBER ON THE SAT ENGINE (C1)** (2026-08-08, no report on disk).
+
+QUEUED for the first free Agda slot (`dev/PLAN.md:630`). The report file is unwritten; no verdict exists.
+
+**`[T215]` CURE THE BELOW-LIM MASTER'S CHECK TIME: 216 S MUST COME DOWN** (2026-08-08, `_build/l3.32-t215-report.md`).
+
+DISPATCHED, no verdict. The report is a skeleton at this writing (`_build/l3.32-t215-report.md:5-10`). The cure carries the profile in hand: block 2 is PARTIAL, the theorem closes at the first limit, the general STEP stays a parameter, and block 3 owes it (`_build/l3.32-t195-report.md:5-7,65-70`). Both watches fired: 948 lines against 900, and 216 s cold against 90, which projects the tree to about 607 s against the 498 gate (`_build/l3.32-t195-report.md:9-10,140-142,160-163`; `dev/PLAN.md:612`). The master is held out of the tree until the cure lands (`_build/briefs/l3.32-t215.md:8-11`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
