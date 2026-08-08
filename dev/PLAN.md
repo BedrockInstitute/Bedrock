@@ -607,11 +607,12 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T184 | Opus assessment: the F series' effect on the GCH wing | NO TAX: costs the wing 41 lines, saves 1,290; the wing endpoint falls ~3.1-3.6k | `_build/l3.32-t184-gch-impact.md` |
 | L3.32-T185 | Statement-shape probe: below-lim as an induction over limits | GREEN at 139 of 150: the induction assembles and the T182 wall IS the hypothesis | `_build/l3.32-t185-report.md` |
 | L3.32-T186 | F1 execution: re-home the five lemmas from HF and Finite | LANDED 75 of 140, three homes green; REFUTED its own avoidance: the landing needs more | `_build/l3.32-t186-report.md` |
-| L3.32-T193 | D22 gate: the carve's own landing, without the identification | DISPATCHED 2026-08-08 | `_build/l3.32-t193-report.md` |
+| L3.32-T193 | D22 gate: the carve's own landing, without the identification | GREEN at 84 lines: the carve lands itself; HF and Finite archive after block 2 | `_build/l3.32-t193-report.md` |
+| L3.32-T194 | D22 gate: the Q-lim residue at a general limit | DISPATCHED 2026-08-08 | `_build/l3.32-t194-report.md` |
 | L3.32-T187 | The coverage audit: did this week's re-cuts lose AC content? | CLEAN, nothing untracked; seven citation and arithmetic defects found and applied | `_build/l3.32-t187-report.md` |
 | L3.32-T188 | JOURNAL entries T181 to T187 and the day's two measurements | DELIVERED. 7 of 7 entries, insertions only, lint green | `_build/l3.32-t188-report.md` |
 | L3.32-T189 | Arm C recon: the two surviving crossings into the choice tree | Band re-priced 180-310 naive with two itemized terms; Hull re-homes by the bridge route | `_build/l3.32-t189-report.md` |
-| L3.32-T192 | The naturalness review: do this week's cuts stand on their own? | DISPATCHED 2026-08-08 | `_build/l3.32-t192-report.md` |
+| L3.32-T192 | The naturalness review: do this week's cuts stand on their own? | 4 of 6 stand; 2 needed prose, all applied; five blurbs and the order repaired | `_build/l3.32-t192-report.md` |
 | L3.32-T190 | Build the deletion test: D36's judgment, runnable on demand | DELIVERED. Shadow 14,379, agrees with the split by import; guards exercised | `_build/l3.32-t190-report.md` |
 | L3.32-T191 | The below-lim master, block 1: shell, story, carried sequence | DISPATCHED 2026-08-08 | `_build/l3.32-t191-report.md` |
 | L3.32-T168 | The compression-class sweep: dead content, generality, re-proofs, case-bloat | New AC value ~70-105, the Describe scaffolding leads; re-proofs zero | `_build/l3.32-t168-report.md` |

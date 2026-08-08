@@ -7,15 +7,16 @@ story at a rud carrier, with the one-way successor-value clause reading the
 powerset relation. The S-story's own successor clause is different: at an
 S-stage the successor value is not a powerset but the rudimentary step, the
 sixteen-operation closure of the preceding value, and its object formula must
-be written against the sixteen-operation graphs. Those graphs live only in
-the archived step chapter, frozen, so this chapter takes them as module
-parameters: the clause is generic over the carrier, its transitivity, the
-step closure into the carrier, and the graph layer, and any instantiator
+be written against the sixteen-operation graphs. The graph layer is a second
+telescope here, not a fixed import, so the clause is independent of how the
+graphs are supplied: the clause is generic over the carrier, its
+transitivity, the step closure into the carrier, and the graph layer
+(`L.Rud.StepGraph`{.Agda} is the tree's supplier), and any instantiator
 that supplies those four pieces receives the successor clause, its object
 formula, and the two-way decode. This is the shape the first-limit carve
 consumes.
 <!--zh-->
-层故事子句套件在任何传递载体处托管塔故事的共享子句，层 sigma 章则在 rud 载体处交付加锐故事，其中单向后继值子句读的是幂集关系。S-故事自己的后继子句不同：在 S-阶段处，后继值不是幂集，而是初步函数步，即前一个值的十六运算闭包，于是其对象公式必须写在十六运算图之上。那些图只活在已冻结的归档步章里，所以本章把它们取作模块参数：子句对载体、载体传递性、进入载体的步闭包以及图层全部泛型化，任何供齐这四件的实例化者都得到后继子句、其对象公式与双向解码。这正是第一个极限刻划所消费的形状。
+层故事子句套件在任何传递载体处托管塔故事的共享子句，层 sigma 章则在 rud 载体处交付加锐故事，其中单向后继值子句读的是幂集关系。S-故事自己的后继子句不同：在 S-阶段处，后继值不是幂集，而是初步函数步，即前一个值的十六运算闭包，于是其对象公式必须写在十六运算图之上。此处图层是第二重望远镜而非固定 import，故子句与诸图如何供给无关：子句对载体、载体传递性、进入载体的步闭包以及图层全部泛型化 (树中的供给方是 `L.Rud.StepGraph`{.Agda})，任何供齐这四件的实例化者都得到后继子句、其对象公式与双向解码。这正是第一个极限刻划所消费的形状。
 <!--/-->
 
 ```agda

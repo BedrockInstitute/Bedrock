@@ -602,9 +602,9 @@ decomposition here.
 <!--en-->
 ## The sixteen memberships, at bound arguments
 
-Here is the difference between this chapter and the description chapter: there
-the two arguments of an operation were constants, one formula per pair of
-arguments; here they are **variables**, because the step quantifies over them.
+The arguments here are **variables**, not constants, because the step
+quantifies over them: one formula serves an operation at every pair of
+arguments, rather than one formula per pair.
 Each formula below says "the first variable is a member of the value of this
 operation at the third and second variables", with the fourth variable reserved
 for the value itself. The readings of the operations chapter are consumed
@@ -614,11 +614,11 @@ decode reads the same text.
 <!--zh-->
 ## 十六条隶属，在受约束的实参上
 
-本章与描述章的分别在此：那里一个运算的两个实参是常量，一对实参一条公式；此处它们是**变量**，因为 step 对它们量化。以下每条公式都说「第一个变量属于本运算在第三、第二个变量处的值」，第四个变量留给该值自身。运算章的诸读引理逐子句直接消费。三元组与切片体以及四条形状是后续解码所读的公式脚手架，一次写在此处，使每条解码都读同一份文本。
+此处一个运算的两个实参是**变量**而非常量，因为 step 对它们量化：一条公式服务该运算在每一对实参处的情形，而不是一对实参一条公式。以下每条公式都说「第一个变量属于本运算在第三、第二个变量处的值」，第四个变量留给该值自身。运算章的诸读引理逐子句直接消费。三元组与切片体以及四条形状是后续解码所读的公式脚手架，一次写在此处，使每条解码都读同一份文本。
 <!--ja-->
 ## 十六個の帰属論理式、束縛された引数において
 
-本章と記述の章の違いはここにある。あちらでは演算の二つの引数は定数であり、引数の対ごとに一つの式があった。こちらではそれらは**変数**である。step がそれらを量化するからである。以下の各式は「第一の変数は、第三と第二の変数におけるこの演算の値のメンバーである」と言い、第四の変数は値自身のために残される。演算の章の読み補題が節ごとに直接消費される。三つ組とスライスの本体、および四つの形状は、後の復号が読む式の足場であり、すべての復号が同じ文面を読むようにここに一度だけ書かれる。
+ここでは演算の二つの引数は定数ではなく**変数**である。step がそれらを量化するからである。したがって一つの式が、その演算をあらゆる引数の対において受け持つ。引数の対ごとに一つの式を書くのではない。以下の各式は「第一の変数は、第三と第二の変数におけるこの演算の値のメンバーである」と言い、第四の変数は値自身のために残される。演算の章の読み補題が節ごとに直接消費される。三つ組とスライスの本体、および四つの形状は、後の復号が読む式の足場であり、すべての復号が同じ文面を読むようにここに一度だけ書かれる。
 <!--/-->
 
 ```agda
@@ -2463,21 +2463,22 @@ module Values (C P T : S)
 <!--en-->
 ## The single-slice description
 
-The one fact this block consumes from the description layer is the slice
-description: the formula that carves `F10 x y` and the equation that closes
-it. It is copied here from `F10Desc` in `L.Rud.Describe`, reshaped onto this
-block's own pair atom and definable-subset frame, so the description layer's
-original can archive wholesale. The double-union tower enters once, only to
-place a slice member back into the carrier, which the tower offset below
-needs.
+A slice is what `F10 x y` collects: the members of `x` that the pair reaches
+through `y`. This section describes that set inside the object language: the
+formula that carves it, and the equation that closes the carving against the
+operation's own specification. The description reads through this chapter's
+pair atom and its definable-subset frame, so nothing outside the graph layer
+is needed to state or to close it. The double-union tower enters once, and
+only to place a slice member back into the carrier, which the tower offset
+below needs.
 <!--zh-->
 ## 单切片描述
 
-本块从描述层消费的唯一事实就是切片描述：刻出 `F10 x y` 的公式与收束它的等式。它从 `L.Rud.Describe` 的 `F10Desc` 复制于此，重塑到本块自己的对原子与可定义子集框架上，于是描述层的原本可整体归档。二重并之塔只进入一次，为的是把一个切片成员放回载体，这正是下方塔偏移所需。
+切片就是 `F10 x y` 所收集之物：`x` 中经 `y` 被这个对够到的那些成员。本节在对象语言内部描述该集合：刻出它的公式，以及对着该运算自身规格收束这次刻画的等式。该描述经本章的对原子与可定义子集框架读出，故陈述与收束它都不需要图层之外的任何东西。二重并之塔只进入一次，为的是把一个切片成员放回台，这正是下方塔偏移所需。
 <!--ja-->
 ## 単一スライスの記述
 
-このブロックが記述層から消費する唯一の事実は、スライスの記述である。すなわち、`F10 x y` を刻む式と、それを閉じる等式である。それは `L.Rud.Describe` の `F10Desc` からここへコピーされ、このブロック自身のペア原子と可定義部分集合フレームの上に作り直される。これにより、記述層の原本は丸ごとアーカイブできる。二重和集合の塔が入るのは一度だけであり、それはスライスのメンバーを台へ戻すためである。下の塔オフセットがそれを必要とする。
+スライスとは `F10 x y` が集めるものである。すなわち、その対が `y` を通して届く `x` のメンバーである。本節はその集合を対象言語の内部で記述する。すなわち、それを刻む式と、その刻みを演算自身の規格に対して閉じる等式である。記述は本章のペア原子と可定義部分集合フレームを通して読まれる。したがって、それを述べるにも閉じるにも、グラフレイヤーの外は何も要らない。二重和集合の塔が入るのは一度だけであり、それはスライスのメンバーを台へ戻すためである。下の塔オフセットがそれを必要とする。
 <!--/-->
 
 ```agda
