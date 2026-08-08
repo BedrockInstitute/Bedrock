@@ -46,7 +46,7 @@ ids = ["D-1", "P-l", "P-i", "C-12", "D-10", "C-22", "R-40"]
 
 [bundle.recon]
 detail = "read-only: an audit, a design pass, a history dig. It writes a report and nothing else."
-ids = ["D-10", "C-22", "P-l"]
+ids = ["D-10", "C-22", "P-l", "D-26"]
 
 [bundle.rewrite]
 detail = "replaces delivered content. Priced from the rewrite side, and the port rates are not quotable at it."
