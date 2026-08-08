@@ -35,7 +35,9 @@ open import L.Constructible {ℓ} using ( IsOrd )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; setUnion-ord; ∅-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; Tri; lt; eq; gt; prodSWO; module SWO )
+  using ( SWO; Tri; lt; eq; gt; module SWO )
+open import L.WellOrder.Combinators {ℓₚ = ℓ-suc ℓ}
+  using ( prodSWO )
 
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Empty as Empty
