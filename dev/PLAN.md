@@ -650,7 +650,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T252 | The naturalness review of today's four settled masters | StepStory NOT NATURAL, announces one subject and holds two; the other three stand; six repairs | `_build/l3.32-t252-report.md` |
 | L3.32-T253 | The naturalness repair: prose only, four masters | 4 of 4 applied, prose only, every code fence byte-identical; the orchestrator rewrote the two stale  | `_build/l3.32-t253-report.md` |
 | L3.32-T254 | The closure boundary: gch_assign, and a natural split that follows it | ZERO legal gch_assign, ZERO natural splits; the 2,100-2,700 premise is stale at | `_build/l3.32-t254-report.md` |
-| L3.32-T255 | The seconds question: is the interleaving cost mathematics or engineering? | DISPATCHED 2026-08-09 fable max effort; the gap is 294-299 s and every la | `_build/l3.32-t255-seconds.md` |
+| L3.32-T255 | The seconds question: is the interleaving cost mathematics or engineering? | The TWICE is MATHEMATICS, refuting the orchestrator; the gap does not clo | `_build/l3.32-t255-seconds.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
