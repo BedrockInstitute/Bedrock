@@ -1,22 +1,26 @@
-# The S-story's successor clause, generic
+# The S-story's clause content, generic
 
 <!--en-->
 The level-story kit hosts the shared clauses of the tower story at any
 transitive carrier, and the level-sigma chapter supplies the strengthened
 story at a rud carrier, with the one-way successor-value clause reading the
-powerset relation. The S-story's own successor clause is different: at an
+powerset relation. The S-story's own clause content is different: at an
 S-stage the successor value is not a powerset but the rudimentary step, the
 sixteen-operation closure of the preceding value, and its object formula must
-be written against the sixteen-operation graphs. The graph layer is a second
-telescope here, not a fixed import, so the clause is independent of how the
-graphs are supplied: the clause is generic over the carrier, its
-transitivity, the step closure into the carrier, and the graph layer
-(`L.Rud.StepGraph`{.Agda} is the tree's supplier), and any instantiator
-that supplies those four pieces receives the successor clause, its object
-formula, and the two-way decode. This is the shape the first-limit carve
-consumes.
+be written against the sixteen-operation graphs. This chapter holds that
+clause content at a generic transitive carrier, delivered as two sibling
+clauses. The successor clause is generic over the carrier, its transitivity,
+the step closure into the carrier, and the graph layer: the graph layer is a
+second telescope here, not a fixed import, so the clause is independent of
+how the graphs are supplied (`L.Rud.StepGraph`{.Agda} is the tree's
+supplier), and any instantiator that supplies those four pieces receives the
+successor clause, its object formula, and the two-way decode. This is the
+shape the first-limit carve consumes. The limit clause is its sibling, the
+sixth clause of the S-story, and it takes no telescope: the meta-level limit
+clause is defined once here, its statement names no carrier, and the formulas
+and the decodes consume only the carrier, its transitivity and the kit.
 <!--zh-->
-层故事子句套件在任何传递载体处托管塔故事的共享子句，层 sigma 章则在 rud 载体处交付加锐故事，其中单向后继值子句读的是幂集关系。S-故事自己的后继子句不同：在 S-阶段处，后继值不是幂集，而是初步函数步，即前一个值的十六运算闭包，于是其对象公式必须写在十六运算图之上。此处图层是第二重望远镜而非固定 import，故子句与诸图如何供给无关：子句对载体、载体传递性、进入载体的步闭包以及图层全部泛型化 (树中的供给方是 `L.Rud.StepGraph`{.Agda})，任何供齐这四件的实例化者都得到后继子句、其对象公式与双向解码。这正是第一个极限刻划所消费的形状。
+层故事子句套件在任何传递载体处托管塔故事的共享子句，层 sigma 章则在 rud 载体处交付加锐故事，其中单向后继值子句读的是幂集关系。S-故事自己的子句内容不同：在 S-阶段处，后继值不是幂集，而是初步函数步，即前一个值的十六运算闭包，于是其对象公式必须写在十六运算图之上。本章在通用的传递载体处承载 S-故事的子句内容，以两个姊妹子句交付。后继子句对载体、载体传递性、进入载体的步闭包以及图层全部泛型化：此处图层是第二重望远镜而非固定 import，故子句与诸图如何供给无关 (树中的供给方是 `L.Rud.StepGraph`{.Agda})，任何供齐这四件的实例化者都得到后继子句、其对象公式与双向解码。这正是第一个极限刻划所消费的形状。极限子句是它的姊妹，S-故事的第六条子句，不取望远镜：元层极限子句在此只定义一次，其陈述不点名任何载体；公式与解码只消费载体、载体传递性与套件。
 <!--/-->
 
 ```agda
@@ -714,18 +718,19 @@ module Limit
 <!--/-->
 
 <!--en-->
-The chapter delivers the S-story's successor clause as an object formula
-with its two-way decode, generic over the carrier, its transitivity, the
-step closure and the graph layer. The bounded successor atom is the
-kit's carrier-generic content, the step atom reads the step membership
-through the embedded sixteen-way graph disjunction, and the clause
-reassembles the one-way successor value shape the first-limit carve consumes.
-The instantiator supplies the graphs, their disjunction and the equality
-frame from the surviving step content, and the step closure from the values
-read; nothing here names a concrete stage or graph body. The limit clause
-is its sibling: the sixth clause's formula and its two-way decode live in
-the same module shape, generic over the carrier, with the meta-level
-clause defined once inside.
+The chapter delivers the S-story's clause content at a generic transitive
+carrier, in two module shapes. The successor clause is an object formula with
+its two-way decode, generic over the carrier, its transitivity, the step
+closure and the graph layer. The bounded successor atom is the kit's
+carrier-generic content, the step atom reads the step membership through the
+embedded sixteen-way graph disjunction, and the clause reassembles the
+one-way successor value shape the first-limit carve consumes. The
+instantiator supplies the graphs, their disjunction and the equality frame
+from the surviving step content, and the step closure from the values read;
+nothing here names a concrete stage or graph body. The limit clause is its
+sibling, the sixth clause of the S-story, in its own module with no
+telescope: the meta-level clause is defined once inside, and the formulas and
+the decodes consume only the carrier, its transitivity and the kit.
 <!--zh-->
-本章把 S-故事的后继子句作为对象公式连同双向解码交付，对载体、载体传递性、步闭包与图层全部泛型。有界后继原子是套件的载体泛型内容，步原子经嵌入的十六路图析取读 step 隶属，子句重新装配成第一个极限刻划所消费的单向后继值形状。实例化者从存活的步内容供给图、图的析取与等词框架，从值读式供给步闭包；此处没有任何内容点名具体的阶段或图体。极限子句是它的姊妹：第六条子句的公式与双向解码住在同一种模块形状里，对载体泛型，元层子句在模块内部只定义一次。
+本章在通用的传递载体处交付 S-故事的子句内容，分两种模块形状。后继子句是对象公式连同双向解码，对载体、载体传递性、步闭包与图层全部泛型。有界后继原子是套件的载体泛型内容，步原子经嵌入的十六路图析取读 step 隶属，子句重新装配成第一个极限刻划所消费的单向后继值形状。实例化者从存活的步内容供给图、图的析取与等词框架，从值读式供给步闭包；此处没有任何内容点名具体的阶段或图体。极限子句是它的姊妹，S-故事的第六条子句，由自己的模块交付、不取望远镜：元层子句在模块内部只定义一次，公式与解码只消费载体、载体传递性与套件。
 <!--/-->

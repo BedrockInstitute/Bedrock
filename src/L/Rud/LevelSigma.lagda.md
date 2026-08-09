@@ -644,8 +644,7 @@ tower chapter keeps it. On top of the same kit, the strengthened story
 carries the successor-value clause and the domain bounds, and the one-way
 form with the exact domain bound is the story the first-limit carve
 instantiates. The face's third consumer, the condensation crossing, reuses
-the same shared kit and the same recipe at its own carrier. The orchestrator
-wires this chapter into `Everything`.
+the same shared kit and the same recipe at its own carrier.
 <!--zh-->
-本章在 rud 载体处交付桥的 sigma：初始段面孔的近似条目如今就是塔故事本身，套件的三条子句连同它们的共享解码，而 Def 步坍缩与像的读式补全四项，以及对照已交付 `defSet` 面孔的双向充分性 `read-off`。共享套件被消费，而非重推，Def 步坍缩倚靠可定义性章的 Refine 引理，而非塔的可定义幂下行。经典塔故事所余的极限子句，在此作为缺项被测度并在报告中定价；它关于塔故事本身，与载体无关，由塔章保留。在同一个套件之上，加锐故事携带后继值子句与定义域界，而带精确定义域界的单向形式正是第一个极限刻划所要实例化的故事。面孔的第三个消费方，凝聚跨越，在自己的载体处复用同一套共享套件与同一条配方。编排者把本章接入 `Everything`。
+本章在 rud 载体处交付桥的 sigma：初始段面孔的近似条目如今就是塔故事本身，套件的三条子句连同它们的共享解码，而 Def 步坍缩与像的读式补全四项，以及对照已交付 `defSet` 面孔的双向充分性 `read-off`。共享套件被消费，而非重推，Def 步坍缩倚靠可定义性章的 Refine 引理，而非塔的可定义幂下行。经典塔故事所余的极限子句，在此作为缺项被测度并在报告中定价；它关于塔故事本身，与载体无关，由塔章保留。在同一个套件之上，加锐故事携带后继值子句与定义域界，而带精确定义域界的单向形式正是第一个极限刻划所要实例化的故事。面孔的第三个消费方，凝聚跨越，在自己的载体处复用同一套共享套件与同一条配方。
 <!--/-->
