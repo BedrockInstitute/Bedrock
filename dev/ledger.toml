@@ -99,6 +99,15 @@
 # measured something.
 retire_suspended = true
 
+# THE TROPHY SPLIT IS SUSPENDED TOO, same day and same reason. Its roots name
+# rud-route modules that task 4 removed from src/, and its gch side describes
+# a wing that does not exist yet: LJ1-T8 builds it. Seventeen defects fired
+# for files the live plan never expected to be there. The declarations are
+# KEPT, because they record how the retired route partitioned its trophies
+# and LJ1-T12's reuse map has to beat that partition to be worth anything.
+# LJ1-T11 rebuilds the split for the new route.
+trophy_split_suspended = true
+
 # AND THE [[remaining]] ROWS ARE STALE, flagged the same day and NOT yet
 # repaired. Every one of them prices rud-route work: below-lim blocks, the
 # crossing rebuild, the Q-lim residue. src/ is now the internalization tree,
