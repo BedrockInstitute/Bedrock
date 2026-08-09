@@ -108,13 +108,25 @@ retire_suspended = true
 # LJ-2.1 rebuilds the split for the new route.
 trophy_split_suspended = true
 
-# AND THE [[remaining]] ROWS ARE STALE, flagged the same day and NOT yet
-# repaired. Every one of them prices rud-route work: below-lim blocks, the
-# crossing rebuild, the Q-lim residue. src/ is now the internalization tree,
-# so `endpoint` reads 30.82-35.56k naive by adding rud-route work to an
-# internalization base, which is not a projection of anything real. Standing
-# (17,630) is MEASURED and trustworthy. The endpoint is not, until the new
-# route has rows of its own. Do not quote it.
+# AND THE [[remaining]] ROWS ARE STALE. Every one of them prices rud-route
+# work: below-lim blocks, the crossing rebuild, the Q-lim residue. src/ is now
+# the internalization tree, so an endpoint built from them adds rud-route work
+# to an internalization base, which is not a projection of anything real.
+# Standing is MEASURED and trustworthy; the endpoint is not, until the new
+# route has rows of its own.
+#
+# THE FLAG BELOW MAKES THAT MACHINE-READABLE, and it had to. The warning above
+# said "do not quote it" in a comment, and `scripts/ledger.py --brief` went on
+# quoting it: two revoked calibers, an overage against the superseded 25k
+# reference, and a citation of archived D39. DD5 names --brief the ONLY
+# admissible source for a standing figure, so the one tool a reader is told to
+# trust was the one publishing the untrustworthy number. [LJ-0.1] found it.
+# A warning a tool cannot read is a warning that binds nobody.
+#
+# With this true, --brief prints standing and REFUSES the endpoint, naming
+# why. [LJ-2.2] rebuilds the rows for the two-tower route and flips it.
+remaining_stale = true
+remaining_stale_rearm = "LJ-2.2: rebuild the [[remaining]] rows for the two-tower route, then set this false"
 
 [basis]
 # What the measurement counts, so a figure can never drift basis silently.
@@ -142,7 +154,8 @@ That is a coincidence and it is not evidence. It was a target chosen in
 2026-07, and the band was measured a year of work later by another route.
 """
 
-# THE BENCHMARK D39 BINDS AGAINST. Added 2026-08-09.
+# THE BENCHMARK DD5 BINDS AGAINST. Added 2026-08-09 (ruled as D39, which the
+# consolidation renamed DD5 the same day).
 # Two numbers, and the honest state of each. Neither binds until it is clear.
 [basis.internalization_benchmark]
 lines_naive = [25485, 28258]
@@ -155,7 +168,7 @@ GCH wing, worth 4,238-5,218. [T260] supported that pricing on import-graph
 facts, and its own probe never ran. The weak point is one fifth of the
 band, so it can decide the constraint by itself.
 """
-seconds_state = "DOES NOT EXIST"
+seconds_state = "DOES NOT EXIST (this is the DOUBLE-trophy build time; do not confuse it with DD24's measured 133.19 s AC-only baseline in [ratio])"
 seconds_gap = """
 Nobody has measured the internalization route's build time, at either
 trophy. Two pieces are owed and they are different in kind. The AC half is
@@ -525,7 +538,7 @@ authority = "owner ruling D36, 2026-08-07; demoted by D39, 2026-08-09"
 # set this to false and write the two numbers in.
 thresholds_suspended = true
 thresholds_suspended_since = "2026-08-09"
-thresholds_rearm = "owner task 6: measure internalization GCH, set both DD5 benchmarks, then flip this to false"
+thresholds_rearm = "LJ-2.1 measures the internalization double trophy and LJ-2.2 sets both DD5 benchmarks, then this goes false"
 # PENDING REMOVALS. This was 1,290 and it is now ZERO: the removal EXECUTED
 # 2026-08-09 as [T236]. HF (664) and Finite (626) are archived, byte-identical,
 # with `dev/ARCHIVE.md` rows and the catalog rewired. Its condition, "once

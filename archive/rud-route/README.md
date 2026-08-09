@@ -32,8 +32,9 @@ it actually used and what it took from each item.
 3. **What the route could NOT do is as valuable as what it did.** The
    crossing rebuild, the carried sequence, the seconds search that closed
    with only one lever left: all of it is priced in `archive/dev/TASKS-archived.md`
-   and `dev/JOURNAL.md`. A new brief that re-asks a question already answered
-   there has wasted a dispatch.
+   and `archive/dev/JOURNAL-archived.md`. `dev/JOURNAL.md` was archived and
+   reopened empty on 2026-08-09, so it holds none of this. A new brief that
+   re-asks a question already answered there has wasted a dispatch.
 4. **A measured cure does not transfer by analogy** (`dev/LESSONS.md` P-l).
    Everything here was measured at ITS site. Re-measure at yours.
 

@@ -65,6 +65,31 @@ reboot and the owner can read what was actually asked. A brief carries:
 - **RETURN**: the exact deliverable, evidence as `file:line`, and the
   measurements that decide the next ruling.
 
+**DD4 GOES IN EVERY BRIEF, WHATEVER THE KIND, AND THIS CLAUSE IS ITS ONLY
+ENFORCEMENT.** Ruled by the owner 2026-08-09, together with the decision that
+DD4 gets NO hard metric. The two halves are one rule: **maximize the code the
+two proofs share, and write it generic.** There is no shared-line count and no
+checker, because a count would be gamed the moment it gated anything, so the
+principle survives only if it is said out loud every time. Say it in the
+brief, and require the return to answer it:
+
+- **A RECON** asks whether the content can be written once at a generic
+  carrier and instantiated, and prices BOTH shapes. A recon that returns only
+  the fixed shape has not finished.
+- **A BUILD** is told generic or fixed, and why. The default is generic. A
+  build that chose fixed without saying so is rejected at the audit.
+- **A REVIEW, AUDIT OR PROBE** reports what it saw about reuse, even when
+  nobody asked: these are the tasks that read the most code.
+- **A STOP-LINE IS NEVER A REASON TO WRITE FIXED.** Say so and stop for a
+  re-price. Do not deliver the fixed shape quietly inside the cap.
+- The one measured exception is `dev/LESSONS.md` P-r, and it is narrow: a fold
+  over a clause list whose result type every consumer must UNFOLD costs about
+  3x the hand-written conjunction.
+
+*Enforcement:* this clause, the route-planning clause in section 5, and the
+return audit in section 6. Nothing mechanical checks it, which is exactly why
+it is repeated.
+
 Standing clauses that go in every build or probe brief:
 
 - **D-1**: probes are never committed; the verdict goes in a report under
