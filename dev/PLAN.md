@@ -376,7 +376,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | Code | Task | Verdict | Detail |
 |---|---|---|---|
 | LJ-0.1 | Consistency audit of the edits since the branch point | RETURNED | 30 defects, 6 load-bearing: RED gate, dashboard crash, three half-applied suspensions. Repair under way |
-| LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | RETURNED | 3 blocking gaps, 8 more. B1 was the R2' brief clause. N1, a reuse checker, was REFUSED by the owner: DD4 gets no metric |
+| LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | RETURNED | 3 blocking gaps, 8 more. B1 was the R2' brief clause. N1 proposed a reuse checker; the owner refused it |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | planned | Textbook plus archive survey. Deliver a block plan, one best-effort projection with its basis, the widest unmeasured term |
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
