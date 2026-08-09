@@ -13,14 +13,15 @@ nobody finishes reading binds nothing.
 
 ## Boundaries
 
-- **Always:** **write it generic** (structure-generic at full strength, so re-instantiation is
-  nearly free; a stop-line is never a reason to write fixed: say so and stop for a re-price);
-  load the rules for your task with `python3 scripts/rules.py --for <kind>` and read them
-  **before** you write; run `make check` before committing; author every document in English
-  first, then translate, then cross-check the Chinese and Japanese against each other for
-  drift. **Generic is the rule that has cost this project most**, because it gets skipped under
-  a deadline: DD4 makes the question mandatory at three moments, when a recon is dispatched,
-  when a build is dispatched, and when a route is planned.
+- **Always:** **write it generic**, so re-instantiation is nearly free; load the rules for your
+  task with `python3 scripts/rules.py --for <kind>` and read them **before** you write; run
+  `make check` before committing; author every document in English first, then translate, then
+  cross-check the Chinese and Japanese against each other for drift.
+- **Always, DD4, the rule that has cost this project most:** **maximize the code the two proofs
+  share, and write it generic.** One rule, two ends. It has NO metric and no checker by the
+  owner's decision, so it is stated in EVERY brief and answered in every return, and that
+  repetition is its only enforcement. **A stop-line is never a reason to write fixed:** say so
+  and stop for a re-price.
 - **Always, write ASD-STE100 Simplified Technical English.** The rules: one meaning per word;
   one part of speech per word; active voice; simple tenses; one instruction per sentence; 20
   words or fewer for an instruction and 25 for a description; 3 words or fewer in a noun
@@ -28,8 +29,7 @@ nobody finishes reading binds nothing.
   a paragraph.
   - **It applies to:** every message to the repository owner, **in whatever language the owner
     writes to you**; NEW developer documents under `dev/` and NEW per-directory `README.md`
-    files; and all agent-to-agent text, which means each brief this project
-    sends and each report an agent returns.
+    files; and all agent-to-agent text, so every brief sent and every report returned.
   - **It does NOT apply to:** mathematical prose; the documents under `docs/`; or the prose in
     a `.lagda.md` master. There, precision and voice decide the words.
   - **Nobody rewrites an existing document for this rule.** It binds new text only, so the
@@ -127,8 +127,8 @@ audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATIO
 ## Probes, gates and estimates
 
 **Verify the load-bearing assumption cheaply before heavy or hard-to-reverse work.** Build the
-smallest decisive miniature. Report GO or NO-GO with a price. Throw it away. A probe prices what
-THIS setting costs; it never re-proves what the literature or the delivered tree settles. Nobody
+smallest decisive miniature. Report GO or NO-GO with a price. Throw it away. A probe prices THIS
+setting; it never re-proves what the literature or the delivered tree settles. Nobody
 commits a probe (`scripts/check-probes.py` enforces both halves, because `git add -f` walks past
 an ignore rule).
 
@@ -144,8 +144,8 @@ exists. Evidence can move a technique; a number alone cannot.
 
 **THE ROUTE, and the two constraints on it** (`dev/PLAN.md` DD2 and DD5, ruled 2026-08-09). Build
 the L tower and the J tower, J through rud, and the bridge between them; prove `L ⊨ AC` and
-`L ⊨ GCH` on it. **The core constraint is architectural: maximize the code the two proofs
-share.** The total falls out of that, and is never pursued by splitting or re-bucketing. Two
+`L ⊨ GCH` on it. **DD4 above is the core constraint**, and the total falls out of it: it is
+never pursued by splitting or re-bucketing. Two
 quantitative constraints bind the double-trophy endpoint against the internalization route, one
 on lines and one on seconds, and **NEITHER binds until it is measured**: both are suspended
 today and the ledger names the re-arm condition. **DD24** sets the quality bar as cold seconds

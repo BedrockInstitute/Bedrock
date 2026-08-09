@@ -1058,7 +1058,9 @@ file is scaffolding.
    chapter it seeded. A stray file is not a home for a lesson.
 
 **Provenance of the lifecycle rule:** owner ruling 2026-08-04, after the
-accidental commit; the probe inventory of that day is in `dev/JOURNAL.md`.
+accidental commit; the probe inventory of that day is in
+`archive/dev/JOURNAL-archived.md`. The journal was archived on 2026-08-09 and
+reopened empty for the two-tower route, so this pointer moved with it.
 
 ### D-2. The junk-table lesson
 
@@ -2062,7 +2064,10 @@ the log repeats one file-create diff 40 times or more, which is the signature
 of a loop rather than exploration. It reports and never kills, because a
 stalled agent is often recoverable: T131's was.
 
-**Provenance:** `dev/JOURNAL.md`, the `[L3.32-T12]` and `[L3.32-T131]` entries.
+**Provenance:** `archive/dev/JOURNAL-archived.md:2356` for `[T131]`, and
+`archive/dev/TASKS-archived.md:47` and `:166` for both task rows. The journal
+was archived on 2026-08-09; a law whose provenance cannot be opened cannot be
+checked, which is the whole point of recording one.
 
 ### C-23. A consumer scan counts same-file instantiation bodies, or it lies
 

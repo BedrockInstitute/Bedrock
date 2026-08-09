@@ -12,16 +12,18 @@ What it measures: non-blank lines inside ```agda fences, over git-tracked *.lagd
 src/. The archive (archive/) is outside every gate (D20) and is never counted. Probe files
 (src/Probe*.agda) are untracked by standing rule (D-1) and so never appear.
 
-Standing = tracked total MINUS the D18-booked retirement set declared in dev/ledger.toml.
-Endpoint = standing PLUS the remaining rows, in both calibers (PLAN section 6.2): naive is
-the component sum, calibrated applies each row's own class (about x1.3 for a row anchored
-by a probe or a delivered comparable, x3 for a row only a survey could reach).
+Standing = tracked total MINUS the retirement set declared in dev/ledger.toml. That set is
+SUSPENDED today (retire_suspended), so standing is the whole tree.
 
-D39 (2026-08-09) binds the DOUBLE-trophy endpoint against the internalization route, in lines
-and in seconds. Neither benchmark is clear yet, so this script still prints the old 25k
-reference line beside the D39 band. The 25k was a best-effort target, never a decision
-procedure. This script
-prints the overage as a plain number and draws no conclusion from it. Neither should you.
+Endpoint = standing PLUS the [[remaining]] rows. Those rows are STALE: they price the retired
+rud route, so --brief REFUSES the endpoint rather than printing it, and says why. [LJ-2.2]
+rebuilds them. When it does, the endpoint is ONE best-effort band naming its basis, because
+DD7 revoked the two-caliber rule (DD8). The internal machinery still carries both calibers
+for the trophy matrix, which DD5 keeps as a diagnostic.
+
+DD5 (2026-08-09, ruled as D39) binds the DOUBLE-trophy endpoint against the internalization
+route, in lines and in seconds. NEITHER BENCHMARK IS MEASURED, so neither binds, and the old
+25k reference line is superseded and is no longer printed as an overage.
 
 The owner reads these figures from `--brief`. The generated dashboard that used to render
 them was abolished on 2026-08-09. That block is written by --write and verified by --check, so
@@ -34,15 +36,17 @@ Usage:
                          (exit 1 on a defect); this is the mode `make check` runs
   ledger.py --write      a no-op alias for --check, kept so old invocations work
                          move, which D27 says is at every return that could move them
-  ledger.py --brief      one line: standing, endpoint band, overage
+  ledger.py --brief      one line: standing, the endpoint or a refusal, and both
+                         DD5 benchmarks with the honest state of each
   ledger.py --trophy-split
                          one line: the four parts of the per-trophy caliber,
                          and the AC total. It measures the SURVIVING tree and
                          sums to standing, like every other figure here
   ledger.py --trophy-matrix
                          one line: the nine cells, three calibers by three
-                         trophies. The AC-and-GCH column must equal --brief,
-                         and the gate fails if it does not
+                         trophies. DD5 keeps this as a DIAGNOSTIC; its
+                         AC-and-GCH column is self-checked against the row
+                         sums, and the gate fails if a future edit breaks it
 Exit status: 0 clean, 1 defect found, 2 usage error.
 """
 
@@ -101,9 +105,9 @@ def retiring(files: list[str], data: dict) -> tuple[dict[str, list[str]], list[s
     claimed: set[str] = set()
     # SUSPENDED 2026-08-09. The declared retirement set was ruled by D18 for
     # the retired route. DD2 rebuilds on the internalization tree, so NOTHING
-    # in src/ is retiring today and a meter that subtracts the old set reads
-    # 4,976 for a 17,630-line tree. Standing is the whole tree until the new
-    # route rules its own retirements.
+    # in src/ is retiring today and a meter that subtracts the old set read
+    # 4,976 against a measured 17,492. Standing is the whole tree until the
+    # new route rules its own retirements.
     if data.get("retire_suspended"):
         return {}, []
     for entry in data.get("retire", []):
@@ -410,10 +414,12 @@ def trophy_matrix(rows: list[dict], split: dict[str, int],
     standing both count the base and the shared parts. Thus
     AC + GCH > AC-and-GCH. That is correct, not a bug.
 
-    The identity that must hold: the AC-and-GCH column equals the endpoint
-    that --brief prints. This function builds that column from every row and
-    asserts the equality, so a future edit that filters the column fires the
-    gate instead of silently moving the board.
+    The identity that must hold: the AC-and-GCH column is standing plus EVERY
+    row. This function builds that column and asserts the equality, so a
+    future edit that filters the column fires the gate instead of moving the
+    figure silently. It used to be phrased as "equals what --brief prints";
+    --brief now refuses the endpoint while the rows are stale, so the identity
+    is stated against the rows themselves, which is what it always checked.
     """
     ac_standing = split["ac_total"]
     gch_standing = split["base"] + split["shared"] + split["gch_only"]
@@ -488,7 +494,10 @@ def main(argv: list[str]) -> int:
     nh = sum(r.get("naive_high", 0) for r in rows)
     cl = sum(r.get("calibrated_low", 0) for r in rows)
     ch = sum(r.get("calibrated_high", 0) for r in rows)
-    line = data["basis"]["reference_line"]
+    # basis.reference_line (the 25k figure) is NO LONGER READ. DD5 superseded
+    # it and nothing computes an overage against it any more. The key stays in
+    # dev/ledger.toml with its note, because it records what the retired route
+    # aimed at, and deleting the record is not the same as retiring the rule.
 
     matrix = None
     matrix_defects: list[str] = []
@@ -549,20 +558,50 @@ def main(argv: list[str]) -> int:
         return 0
 
     if mode == "brief":
-        clause = ""
+        # DD5 NAMES THIS LINE THE ONLY ADMISSIBLE SOURCE FOR A STANDING FIGURE,
+        # so what it prints is what the project quotes. Until 2026-08-09 it
+        # printed four things it had no right to: an endpoint summed from rows
+        # that price the RETIRED route, that endpoint in TWO calibers after
+        # DD7 revoked the two-caliber rule, an overage against the 25k
+        # reference that DD5 superseded, and a citation of D39, which is
+        # archived. dev/ledger.toml had carried "Do not quote it" in a comment
+        # for the whole day, and a comment cannot stop a print statement.
+        #
+        # STANDING IS THE TRUSTWORTHY HALF and it is always printed: it is
+        # MEASURED from HEAD, never declared. The endpoint is printed only
+        # when the rows describe the live route.
+        parts = [f"standing {standing:,} lines over {len(files)} masters, measured from HEAD"]
+
+        if data.get("remaining_stale"):
+            parts.append(
+                "endpoint REFUSED: the [[remaining]] rows price the retired "
+                "rud route, so summing them onto an internalization base "
+                "projects nothing real. Re-arm: "
+                + data.get("remaining_stale_rearm", "unstated"))
+        else:
+            # ONE best-effort band, per DD8, and it names its basis. The
+            # second caliber is gone with DD7: a projection is stated once
+            # and says what it rests on, a probe, a delivered comparable or
+            # a survey. Each row's `provenance` carries that.
+            parts.append(
+                f"endpoint {(standing+nl)/1000:.2f}-{(standing+nh)/1000:.2f}k, "
+                f"best effort, basis is each row's provenance")
+
+        # BOTH DD5 BENCHMARKS, and the honest word for each is what it is.
+        # Neither binds until measured, and neither is measured.
+        bench = data.get("basis", {}).get("internalization_benchmark", {})
+        parts.append(
+            "DD5 benchmarks NOT MEASURED, so neither binds: lines "
+            f"{bench.get('lines_state', 'unstated')}, seconds "
+            f"{bench.get('seconds_state', 'unstated')}")
+
         if ac_cap and matrix:
             anlo, anhi = matrix["ac"]["naive"]
-            clause = (f" | AC budget {ac_cap/1000:.0f}k: measured "
-                      f"{split['ac_total']:,}, endpoint "
-                      f"{anlo/1000:.2f}-{anhi/1000:.2f}k naive, headroom "
-                      f"{(ac_cap - anhi)/1000:+.2f}k")
-        print(
-            f"standing {standing:,} | endpoint {(standing+nl)/1000:.2f}-{(standing+nh)/1000:.2f}k naive, "
-            f"{(standing+cl)/1000:.2f}-{(standing+ch)/1000:.2f}k calibrated | "
-            f"naive corner {(standing+nh-line)/1000:+.2f}k against the {line/1000:.0f}k reference; "
-            f"D39 benchmark 25.49-28.26k naive, NOT YET CLEAR ENOUGH TO BIND"
-            + clause
-        )
+            parts.append(f"AC budget {ac_cap/1000:.0f}k: measured "
+                         f"{split['ac_total']:,}, headroom "
+                         f"{(ac_cap - anhi)/1000:+.2f}k")
+
+        print(" | ".join(parts))
         return 1 if defects else 0
 
     if mode == "trophy-files":
@@ -681,11 +720,21 @@ def main(argv: list[str]) -> int:
         print("    the three columns do not add up. That is correct: AC and GCH "
               "both count the base and the shared parts.")
     print()
-    print(f"  against the {line/1000:.0f}k reference line, recorded and not argued from:")
-    print("  D39 binds the double trophy against internalization, in lines AND seconds;")
-    print("  both benchmarks must be made clear before they bind (see the ledger).")
-    print(f"    naive corner      {(standing+nh-line)/1000:+.2f}k")
-    print(f"    calibrated band   {(standing+cl-line)/1000:+.2f}k to {(standing+ch-line)/1000:+.2f}k")
+    # THE 25k REFERENCE LINE IS SUPERSEDED (DD5) and the overage against it is
+    # no longer printed. It was an internalization-era target, and an overage
+    # against a retired target is a number with nothing behind it. What binds
+    # instead is DD5's pair of RELATIVE benchmarks, and the honest report is
+    # the state of each.
+    bench = data.get("basis", {}).get("internalization_benchmark", {})
+    print("  DD5 binds the double trophy against the internalization route, in "
+          "lines AND seconds.")
+    print("  NEITHER benchmark is measured, so neither binds today:")
+    print(f"    lines     {bench.get('lines_state', 'unstated')}")
+    print(f"    seconds   {bench.get('seconds_state', 'unstated')[:64]}")
+    if data.get("remaining_stale"):
+        print("  The endpoint above is built from rows that price the RETIRED "
+              "route. Do not quote it;")
+        print(f"  --brief refuses it. Re-arm: {data.get('remaining_stale_rearm', 'unstated')}")
     tim = data.get("timing", {})
     if tim:
         print()
