@@ -98,6 +98,7 @@
 # simply not applied. The new route rules its own retirements when it has
 # measured something.
 retire_suspended = true
+retire_suspended_rearm = "LJ-2.5 rules the architecture; the route then declares its OWN retirements, and only measured ones"
 
 # THE TROPHY SPLIT IS SUSPENDED TOO, same day and same reason. Its roots name
 # rud-route modules that task 4 removed from src/, and its gch side describes
@@ -107,6 +108,7 @@ retire_suspended = true
 # and LJ-3.1's reuse map has to beat that partition to be worth anything.
 # LJ-2.1 rebuilds the split for the new route.
 trophy_split_suspended = true
+trophy_split_suspended_rearm = "LJ-2.1 rebuilds the split for the two-tower route"
 
 # AND THE [[remaining]] ROWS ARE STALE. Every one of them prices rud-route
 # work: below-lim blocks, the crossing rebuild, the Q-lim residue. src/ is now
@@ -933,11 +935,17 @@ provenance = "_build/l3.32-t51-report.md"
 # ---------------------------------------------------------------------------
 
 # ------------------------------------------------------------------
-# THE FREEZE (D30, ruled 2026-08-06). Read this before reading `owed`.
+# THE FREEZE (D30, ruled 2026-08-06). CLOSED WITH THE RETIRED ROUTE, and kept
+# here to explain what the statuses below MEANT. Read it as history.
 #
-# No row below marked `frozen` is blocked on mathematics. They are blocked on
-# a RULING: no new mathematics is dispatched until the tree's check cost comes
-# down. The measurement that produced the ruling is in `[timing]` and `[[hot]]`
+# D30's freeze is over: it was exit-condition-complete on 2026-08-07 and the
+# route it belonged to was replaced on 2026-08-09. **The only freeze standing
+# today is DD23, on mathematical PROSE, and phase 1 is five new-mathematics
+# builds.** The rows below are the retired route's queue (see owed_stale).
+#
+# What it said, for reading the statuses: no row marked `frozen` was blocked
+# on mathematics. They were blocked on a RULING, that no new mathematics is
+# dispatched until the tree's check cost comes down. The measurement that produced the ruling is in `[timing]` and `[[hot]]`
 # below; the campaign that lifts it is `[L3.32-F]` in dev/PLAN.md section 11.
 #
 # `frozen` is therefore NOT a synonym for `blocked`. A blocked row needs

@@ -320,7 +320,7 @@ def reuse_report(data: dict, files: list[str], sizes: dict[str, int]) -> list[st
                    f"{lines(shared) / union:.1%} of {union:,} lines")
     out.append("    A high share won by fattening the shared core is the "
                "failure the no-gate")
-    out.append("    ruling protects against. Read this beside LJ-3.1's reuse "
+    out.append("    ruling protects against. Read this beside LJ-2.3's reuse "
                "map, not instead of it.")
     return out
 

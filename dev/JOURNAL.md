@@ -23,4 +23,93 @@ It is a required survey target for a new brief, together with
 
 ## Entries
 
-*(none yet: the route was ruled 2026-08-09 and no `LJ1` task has returned)*
+### 2026-08-09, `[LJ-0.1]`: the consistency audit, and the gate was RED
+
+**Asked.** Audit every edit since the branch point, `faf02fc..HEAD`, 13
+commits and 98 files, against seven named failure classes. Dispatched before
+phase 1, because six things changed at once and they interact.
+
+**Returned.** NOT consistent. 30 defects, six load-bearing. `make check` was
+RED: the `AGENTS.md` refresh had pushed the file 222 words over its cap and
+nobody ran the checker. `make dashboard` crashed, because a suspension banner
+was printed to a stdout that another tool parses as data. `check-timing.py`
+printed "not enforcing" and then returned 1. `check-ratio.py` measured WARM
+against a COLD baseline, and ran Agda inside the commit gate.
+
+**Cost.** One dispatch. It found the gate broken by the change that was
+supposed to rest on it.
+
+**Changed.** All 30 repaired across commits `2391f05` to `1410e7c`. The audit
+is `_build/lj-0.1-consistency.md`.
+
+**A defect it could not have caught, found while repairing.** `make test` ran
+three of seven suites, and the four it skipped had been red for days. One was
+red because the `LJ` renumbering changed a checker's return shape, and it had
+broken a real behaviour with it: a zero-padded citation `[L3.32-T01]` keyed as
+`T01` and resolved against nothing. **Test suites are not checkers, and
+nothing ran them.** `make test` now runs all seven.
+
+### 2026-08-09, `[LJ-0.2]`: the sufficiency audit, and a brief clause naming the retired route
+
+**Asked.** The complement of `[LJ-0.1]`. Not what contradicts, but what the
+route switch had NOT yet reached. Dispatched to codex through `dispatch.py`.
+
+**Returned.** Three blocking gaps and eight more. The blocking one that
+mattered: `dev/ORCHESTRATION.md` still ordered every brief header to state
+"the campaign route, R2'", which is the RETIRED route. **Every phase-1 brief
+written to the rules would have sent its agent to the wrong route.** It also
+found that DD4, the route's core constraint, had no measure, no declaration
+and no checker, so by the project's own standard it was a wish.
+
+**Cost.** 675 s, one codex agent.
+
+**Changed.** All three blocking gaps and five of the eight closed. The audit
+is `_build/lj-0.2-sufficiency.md`. Its N1, the reuse checker, was REFUSED by
+the owner and then partly adopted: no gate, but a report.
+
+### 2026-08-09, `[LJ-0.3]`: the retrospective, and the ruling moves
+
+**Asked.** Judge the route change itself. Read the struggle first, then the
+four axes, then say what you would have decided with full authority and no
+hindsight. Sent to codex rather than opus for a reason stated in the brief:
+the orchestrator planned and executed the change, so its review would confirm
+its own judgment.
+
+**Returned.** The direction was defensible, the TIMING was not. It did not
+refute the two-tower bridge. The asymmetry it found was exact and both halves
+were verified before acting: archived D26 held that a number alone may never
+put the route back on the table, and D39 changed the route on `[T257]`'s
+figure, which `dev/ledger.toml:172` declares NOT YET CLEAR ENOUGH TO BIND the
+constraints that same figure set.
+
+**Cost.** One codex agent. It read the four archives in full.
+
+**Changed, and the owner adopted all of it.** DD2 now separates the RULED
+endpoint from the CANDIDATE architecture, and the architecture ruling moved to
+`[LJ-2.5]`, after the benchmark and the reuse map exist. Phase 2 gained the
+reuse map, its adversarial review and the ruling; `[LJ-3.1]` and `[LJ-3.2]`
+are SUPERSEDED with pointers, because rule 3 forbids a third renumbering and
+prescribes exactly that instead. DD4 accepts `ledger.py --reuse`, a report and
+never a gate. Two laws were admitted with their measurements, `C-28` and
+`C-29`. The retrospective is `_build/lj-0.3-retrospective.md`.
+
+**Its best finding, which nobody had written down: the benchmark is
+self-set.** Phase 1 builds the wing that `[LJ-2.1]` measures to set the number
+phase 3 must beat, so the project writes its own examination paper. **A first
+repair claimed DD24's ratio was a partial defence and that was backwards**:
+`check-ratio.py` fails only ABOVE the bar, and padding with cheap lines LOWERS
+seconds per line, so a padded wing passes it more easily. There was no defence
+at all. Three measures replaced the wrong one, and the first is mechanical:
+the line benchmark is the SMALLER of `[LJ-1.1]`'s a-priori projection and the
+measurement, enforced by `validate_benchmark()` in `scripts/ledger.py`.
+
+### 2026-08-09, the closeout: what phase 1 starts on
+
+**`src/` is untouched by this whole audit campaign.** Its last change is
+`86c7b66`, the restore to `main`. Everything since has been documents, rulings
+and tooling. The tree is 75 masters and 17,492 in-fence lines, measured.
+
+**Nothing blocks `[LJ-1.1]`.** `[LJ-2.0]`, the owed re-pricing of `[T257]`'s
+weak point and `[T261]`'s probe, gates `[LJ-2.5]` only and is done when it is
+needed.
+
