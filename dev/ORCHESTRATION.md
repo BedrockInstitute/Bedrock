@@ -277,6 +277,20 @@ of them.
 
 ## 6. Handling a return
 
+**THE ORCHESTRATOR'S OWN WORK GETS THIS CHECKLIST TOO, and until 2026-08-09 it
+did not.** `[LJ-0.3]` found that the thirteen commits which changed the route
+were the one piece of work in the campaign that skipped the return audit. It
+was audited afterward, by `[LJ-0.1]`, which found 30 defects, six of them
+load-bearing: the commit gate went RED with the rebuild itself, the document
+that generates every brief named the RETIRED route, and the status screen
+described the retired route for the whole day of the change.
+
+**A change that rewrites the rulebook needs the rulebook's own gate more than
+any other change does.** So: when the orchestrator writes rather than wires,
+it runs steps 2, 5 and 6 against its own diff before the turn closes, and a
+change to the rules themselves is DISPATCHED for audit rather than
+self-reviewed, because the critic must not be the author.
+
 In this order, every time:
 
 1. **Read the final message**, then the report if the finding is load-bearing.
