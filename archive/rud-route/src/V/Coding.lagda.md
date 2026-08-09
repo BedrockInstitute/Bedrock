@@ -133,30 +133,29 @@ that element.
 <!--/-->
 
 ```agda
-private
-  ∈singl : {a x : S} → ⟨ x ∈ₛ ⁅ a ⁆s ⟩ → x ≡ a
-  ∈singl {a} {x} = SetPackage.classification (SingletonPackage a) x .fst
+∈singl : {a x : S} → ⟨ x ∈ₛ ⁅ a ⁆s ⟩ → x ≡ a
+∈singl {a} {x} = SetPackage.classification (SingletonPackage a) x .fst
 
-  singl∈ : {a x : S} → x ≡ a → ⟨ x ∈ₛ ⁅ a ⁆s ⟩
-  singl∈ {a} {x} = SetPackage.classification (SingletonPackage a) x .snd
+singl∈ : {a x : S} → x ≡ a → ⟨ x ∈ₛ ⁅ a ⁆s ⟩
+singl∈ {a} {x} = SetPackage.classification (SingletonPackage a) x .snd
 
-  self∈singl : (a : S) → ⟨ a ∈ₛ ⁅ a ⁆s ⟩
-  self∈singl a = singl∈ refl
+self∈singl : (a : S) → ⟨ a ∈ₛ ⁅ a ⁆s ⟩
+self∈singl a = singl∈ refl
 
-  inl∈⁅,⁆ : {a b x : S} → x ≡ a → ⟨ x ∈ₛ ⁅ a , b ⁆ ⟩
-  inl∈⁅,⁆ {a} {b} {x} e = pairing-ax a b x .snd ∣ inl e ∣₁
+inl∈⁅,⁆ : {a b x : S} → x ≡ a → ⟨ x ∈ₛ ⁅ a , b ⁆ ⟩
+inl∈⁅,⁆ {a} {b} {x} e = pairing-ax a b x .snd ∣ inl e ∣₁
 
-  inr∈⁅,⁆ : {a b x : S} → x ≡ b → ⟨ x ∈ₛ ⁅ a , b ⁆ ⟩
-  inr∈⁅,⁆ {a} {b} {x} e = pairing-ax a b x .snd ∣ inr e ∣₁
+inr∈⁅,⁆ : {a b x : S} → x ≡ b → ⟨ x ∈ₛ ⁅ a , b ⁆ ⟩
+inr∈⁅,⁆ {a} {b} {x} e = pairing-ax a b x .snd ∣ inr e ∣₁
 
-  mem⁅,⁆ : {a b x : S} → ⟨ x ∈ₛ ⁅ a , b ⁆ ⟩ → ∥ (x ≡ a) ⊎ (x ≡ b) ∥₁
-  mem⁅,⁆ {a} {b} {x} = pairing-ax a b x .fst
+mem⁅,⁆ : {a b x : S} → ⟨ x ∈ₛ ⁅ a , b ⁆ ⟩ → ∥ (x ≡ a) ⊎ (x ≡ b) ∥₁
+mem⁅,⁆ {a} {b} {x} = pairing-ax a b x .fst
 
-  singl-inj : {a c : S} → ⁅ a ⁆s ≡ ⁅ c ⁆s → a ≡ c
-  singl-inj {a} {c} q = ∈singl (subst (λ s → ⟨ a ∈ₛ s ⟩) q (self∈singl a))
+singl-inj : {a c : S} → ⁅ a ⁆s ≡ ⁅ c ⁆s → a ≡ c
+singl-inj {a} {c} q = ∈singl (subst (λ s → ⟨ a ∈ₛ s ⟩) q (self∈singl a))
 
-  singl≡pair : {a c d : S} → ⁅ a ⁆s ≡ ⁅ c , d ⁆ → (c ≡ a) × (d ≡ a)
-  singl≡pair {a} {c} {d} q =
+singl≡pair : {a c d : S} → ⁅ a ⁆s ≡ ⁅ c , d ⁆ → (c ≡ a) × (d ≡ a)
+singl≡pair {a} {c} {d} q =
       ∈singl (subst (λ s → ⟨ c ∈ₛ s ⟩) (sym q) (inl∈⁅,⁆ {a = c} {b = d} refl))
     , ∈singl (subst (λ s → ⟨ d ∈ₛ s ⟩) (sym q) (inr∈⁅,⁆ {a = c} {b = d} refl))
 ```

@@ -61,6 +61,9 @@ open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 open import Cubical.Relation.Nullary using ( ¬_; isProp¬ )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Nat.Order
+  using ( _<_; <-trans; ¬m<m; <-wellfounded; Trichotomy; _≟_ )
+open Trichotomy
 ```
 
 <!--en-->
@@ -173,6 +176,85 @@ arbitrary predicate, and that is where the excluded middle enters.
 ```
 
 <!--en-->
+## The ground order and the pullback
+<!--zh-->
+## 地面序与拉回
+<!--/-->
+
+<!--en-->
+The bundle is the interface the choice construction takes, and the two
+order-builders it reads directly stay with it. The numbers carry their usual
+order, with the relation lifted to this chapter's relation level; trichotomy
+and well-foundedness are library facts, lifted. The stacking kit (the unit
+ground order, the sum, the product, the length-gated list order, and the
+`connex`{.Agda} exchange lemma) lives in
+`L.WellOrder.Combinators`{.Agda}.
+<!--zh-->
+束是选择构造取用的接口，它直接读的两个造序器随束留下。自然数带其通常的序，关系提升到本章的关系层级；三歧与良基是库中现成的事实，提升即得。叠放配件 (单位地面序、和、积、以长度为门的表序，以及兑换引理 `connex`{.Agda}) 住在 `L.WellOrder.Combinators`{.Agda} 里。
+<!--/-->
+
+```agda
+natSWO : SWO ℕ
+natSWO = record
+  { _<∙_   = _≺ᴺ_
+  ; tri∙   = triᴺ
+  ; irr∙   = λ m h → ¬m<m (lower h)
+  ; trans∙ = λ m n k h h' → lift (<-trans (lower h) (lower h'))
+  ; wf∙    = wfᴺ }
+  where
+  _≺ᴺ_ : ℕ → ℕ → Type ℓₚ
+  m ≺ᴺ n = Lift {ℓ-zero} {ℓₚ} (m < n)
+
+  triᴺ : (m n : ℕ) → Tri (m ≺ᴺ n) (m ≡ n) (n ≺ᴺ m)
+  triᴺ m n with m ≟ n
+  ... | lt h = lt (lift h)
+  ... | eq p = eq p
+  ... | gt h = gt (lift h)
+
+  wfᴺ : WellFounded _≺ᴺ_
+  wfᴺ n = go n (<-wellfounded n)
+    where
+    go : (m : ℕ) → Acc _<_ m → Acc _≺ᴺ_ m
+    go m (acc r) = acc λ k h → go k (r k (lower h))
+```
+
+<!--en-->
+And pulling back. An injection into an ordered type induces an order on its
+source: compare the images. Trichotomy's equality case is the one place
+injectivity is spent, and accessibility transports backwards along the map with
+no further argument.
+<!--zh-->
+最后是拉回。一个到带序型的单射在其源上诱导出一个序：比较像即可。三歧的相等情形是单射性唯一被花费的地方，而可及性沿映射向后搬运，无需更多论证。
+<!--/-->
+
+```agda
+module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy}
+         (v : SWO Y) (f : X → Y) (inj : (a b : X) → f a ≡ f b → a ≡ b) where
+  private
+    module V = SWO v
+
+    _≺ᶠ_ : X → X → Type ℓₚ
+    a ≺ᶠ b = f a V.<∙ f b
+
+    triᶠ : (a b : X) → Tri (a ≺ᶠ b) (a ≡ b) (b ≺ᶠ a)
+    triᶠ a b with V.tri∙ (f a) (f b)
+    ... | lt h = lt h
+    ... | eq p = eq (inj a b p)
+    ... | gt h = gt h
+
+    accPull : (a : X) → Acc V._<∙_ (f a) → Acc _≺ᶠ_ a
+    accPull a (acc r) = acc λ b h → accPull b (r (f b) h)
+
+  pullSWO : SWO X
+  pullSWO = record
+    { _<∙_   = _≺ᶠ_
+    ; tri∙   = triᶠ
+    ; irr∙   = λ a h → V.irr∙ (f a) h
+    ; trans∙ = λ a b c h h' → V.trans∙ (f a) (f b) (f c) h h'
+    ; wf∙    = λ a → accPull a (V.wf∙ (f a)) }
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -185,7 +267,11 @@ is the interface the choice construction takes; it does not care which order it
 is handed, which is why the chapter is generic. The excluded middle is spent
 once, on the decision at each descent step, and the
 level discipline (carrier and relation separately generic) is what will let the
-order of Part 4 compare small things by large data.
+order of Part 4 compare small things by large data. The natural-number order
+`natSWO`{.Agda} and the pullback `pullSWO`{.Agda} along an injection stay with
+the bundle; the stacking kit (the unit order, the sum, the product, and the
+length-gated list order, with `connex`{.Agda} as the exchange lemma) is now its
+own chapter, `L.WellOrder.Combinators`{.Agda}.
 <!--zh-->
-`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是选择构造取用的接口；它不在乎拿到的是哪个序，这正是本章泛型的原因。排中律花在一处，即每一步下降时的那次判定，且只记在那一条定理账上：此处其余一切都是构造性的。而层级纪律 (载体与关系各自泛型) 将使第四部的那个序能以大的数据去比较小的东西。
+`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是选择构造取用的接口；它不在乎拿到的是哪个序，这正是本章泛型的原因。排中律花在一处，即每一步下降时的那次判定，且只记在那一条定理账上：此处其余一切都是构造性的。而层级纪律 (载体与关系各自泛型) 将使第四部的那个序能以大的数据去比较小的东西。自然数序 `natSWO`{.Agda} 与沿单射的拉回 `pullSWO`{.Agda} 随束留下；叠放配件 (单位序、和、积，以及以长度为门的表序，外加兑换引理 `connex`{.Agda}) 现在自成一章，即 `L.WellOrder.Combinators`{.Agda}。
 <!--/-->

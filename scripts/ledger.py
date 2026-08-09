@@ -99,6 +99,13 @@ def retiring(files: list[str], data: dict) -> tuple[dict[str, list[str]], list[s
     buckets: dict[str, list[str]] = {}
     defects: list[str] = []
     claimed: set[str] = set()
+    # SUSPENDED 2026-08-09. The declared retirement set was ruled by D18 for
+    # the retired route. DD2 rebuilds on the internalization tree, so NOTHING
+    # in src/ is retiring today and a meter that subtracts the old set reads
+    # 4,976 for a 17,630-line tree. Standing is the whole tree until the new
+    # route rules its own retirements.
+    if data.get("retire_suspended"):
+        return {}, []
     for entry in data.get("retire", []):
         label = entry.get("prefix") or entry.get("path")
         excepted = set(entry.get("except", []))

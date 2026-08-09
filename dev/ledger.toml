@@ -87,6 +87,26 @@
 # ---------------------------------------------------------------------------
 
 
+# THE RETIREMENT SET IS SUSPENDED, 2026-08-09.
+# Every [[retire]] entry below was ruled by D18 for the retired route. The
+# owner's task 4 restored src/ to main, the internalization tree, so those
+# declarations describe files whose retirement no longer follows from any
+# live ruling. Left in place, the meter subtracted 12,654 lines and read
+# 4,976 for a 17,630-line tree, which is a wrong answer with a green light.
+# The entries are KEPT, not deleted: they record what the retired route
+# judged and why, and DD13 makes a new route survey exactly that. They are
+# simply not applied. The new route rules its own retirements when it has
+# measured something.
+retire_suspended = true
+
+# AND THE [[remaining]] ROWS ARE STALE, flagged the same day and NOT yet
+# repaired. Every one of them prices rud-route work: below-lim blocks, the
+# crossing rebuild, the Q-lim residue. src/ is now the internalization tree,
+# so `endpoint` reads 30.82-35.56k naive by adding rud-route work to an
+# internalization base, which is not a projection of anything real. Standing
+# (17,630) is MEASURED and trustworthy. The endpoint is not, until the new
+# route has rows of its own. Do not quote it.
+
 [basis]
 # What the measurement counts, so a figure can never drift basis silently.
 unit = "non-blank lines inside ```agda fences"

@@ -146,6 +146,15 @@ import FOL.ZFModel
   images of small families, extensional equality as a path constructor; the
   structure `𝒮ᵥ`{.Agda} assembled directly, with extensionality and regularity
   banked free.
+- `V.Presentation`{.Agda}: four one-line facts about the small presentation,
+  collected once so no chapter re-derives them: the embedding's value read back
+  into membership, a member's index recovered, the embedding's injectivity, and
+  the small membership.
+- `V.Collapse`{.Agda}: the transitive collapse, by membership recursion filtered
+  through a carrier: the map with its computation law sealed behind a read
+  lemma, the range as a set and its transitivity with no hypothesis at all, and,
+  over a transitive carrier, extensional injectivity and the membership iso both
+  ways, with uniqueness. Condensation instantiates it verbatim.
 - `V.Smallness`{.Agda}: the smallness toolkit: atoms compress through the
   library, connectives and bounded quantifiers pass smallness witnesses along,
   `separateFromSmall`{.Agda} is the one pipe to sets; `Δ₀-small`{.Agda} makes Δ₀
@@ -159,12 +168,16 @@ import FOL.ZFModel
 ## 第三部：累积层级实现 ZF(C)
 
 - `V.Hierarchy`{.Agda}：库的高阶归纳类型 `V`{.Agda}：集合是小族的像，外延相等是路径构造子；结构 `𝒮ᵥ`{.Agda} 径直装配，外延与正则免费入账。
+- `V.Presentation`{.Agda}：小呈现的四条一行事实，一次收齐，让各章不再各自重推：把嵌入的取值读回隶属、还原成员的索引、嵌入的单射性，以及小隶属。
+- `V.Collapse`{.Agda}：传递坍缩，沿成员递归并经载体过滤：映射连同封在读引理之后的计算律、作为集合的像及其传递性 (不需任何假设)，以及在传递载体之上的外延单射性与双向的隶属同构，附唯一性。凝聚章逐字实例化它。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递小性见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
 - `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，第零部的 `Impredicativity`{.Agda} 为全分离与幂集标价；`V⊨ZF-impredicative`{.Agda} 以此精确价格合龙，主打的 `V⊨ZF`{.Agda} 由排中律赎回，经 Diaconescu 的 `V⊨ZFC`{.Agda} 则单凭选择。
 <!--/-->
 
 ```agda
 import V.Hierarchy
+import V.Presentation
+import V.Collapse
 import V.Smallness
 import V.Model
 ```
@@ -193,6 +206,11 @@ import V.Model
   `⊨-abs₁`{.Agda} with `asPure₁`{.Agda} spend it at the arity a subset is carved
   by: a definable subset is carved by a parameter-free formula at a parameter
   vector, read in the inner semantics the definable powerset is defined by.
+- `FOL.Count`{.Agda}: how many formulas there are. Every formula over a carrier
+  splits into a constant-free shape and the finite tuple of constants it used,
+  injectively; and the constant-free shapes of each arity inject into the
+  naturals, through a tagged tree code and the square pairing. The cardinal
+  argument stands on both.
 - `FOL.Coding`{.Agda}: syntax as sets: `⌜_⌝`{.Agda} tags a constructor index
   onto the codes of the parts (constants coding themselves), and the inductive
   relation `Codes`{.Agda} is the interface, keeping code values out of the
@@ -204,10 +222,68 @@ import V.Model
   `A` with parameters from `A`: syntax as index set, inner satisfaction for
   meaning, essential smallness footing the bill; `A ∈ Def A` always, and
   `A ⊆ Def A` under transitivity.
+- `L.PairAtoms`{.Agda}: the pair atoms for formulas over a carrier, delivered
+  once and generic in the carrier and its transitivity: singleton, pair and
+  ordered-pair atoms at any arity, the characterization, and the six decodes
+  reading each atom's satisfaction back to the meta-level equality of the
+  looked-up values. The face's three consumers reuse it verbatim.
+- `L.InitialSegment`{.Agda}: the constructible tower's own story, told inside a
+  carrier and generic in it: one formula saying that some initial segment of
+  the tower approximates it, applies the definable step at each stage, and
+  ranges over the member being read; with its two readings and its two-way
+  adequacy against the `Def`{.Agda} face. The wing, the bridge and the
+  condensation chapter each instantiate it rather than rebuild it.
+- `L.LevelKit`{.Agda}: the level story's shared clause content, written ONCE at a generic
+  transitive carrier. Pair membership, pairhood, single-valuedness, the zero clause,
+  ordinality, the exact domain bound and the range decodes live here; so does the
+  one-way successor clause, parameterized by its conclusion atom, and the story
+  assembly, which folds a clause list into the meta conjunction, the object
+  conjunction and the two-way decode. Chapters that used to state any of it separately
+  now instantiate. Content written structure-generic makes every re-instantiation
+  nearly free, which is the law this project has paid for repeatedly before applying it
+  here; the assembly is the one piece that costs at the check rather than saving, and it
+  is kept for the shape of the story rather than for its price.
+
+- `L.LevelFormula`{.Agda}: the face's first consumer, at the real tower: the
+  clause formulas and their decodes, the collapse of the definable step, and
+  the two-way read-off, so the levels are internally described and not merely
+  describable. Two clauses of the tower story, the ordinal domain bound and the
+  limit case, are measured and designed but not yet delivered.
+- `L.Condensation`{.Agda}: the crossing, at a transitive set carrier: the whole
+  absoluteness apparatus instantiated in one line, the level sentence there, the
+  successor case with its two companions, the meaning-preserving transport, and
+  the reduction of condensation to ONE absoluteness obligation about one formula
+  at two carriers. The obligation itself, the level formula's Levy content, and
+  the limit case remain.
+- `L.Hull`{.Agda}: elementarity and the Tarski-Vaught criterion, equivalent by
+  one formula induction over the full syntax, with the universal case the
+  classical step and the bounded quantifiers consuming transitivity; then the
+  definable hull of a set as the set of least witnesses of the formulas with
+  parameters from it, closed under the criterion at its own parameters.
+- `L.Cardinal`{.Agda}: two classical facts the cardinal step consumes and the tree did not
+  carry. Cantor's theorem at the delivered carrier, by the direct diagonal, in its
+  no-surjection form. And the equality half of the cardinality argument: the lower bound's
+  new half, the general Cantor-Schroeder-Bernstein (which the installed library does not
+  provide, so it is proved here once for every carrier rather than per consumer), and the
+  bijection form the predicates chapter's equinumerosity expects.
+
+- `L.CardinalCount`{.Agda}: the counting side, assembled: the count chapter's
+  two injections composed with the shape kept in the image, any
+  propositionally-witnessed index injected into the formulas, the counting
+  bound at an infinite ordinal, and the classical upper half of the hull's
+  cardinality on the hull's own index. The bound rests on the square law, and
+  the chapter names the one call site where it does.
 - `L.Constructible`{.Agda}: the tower `Lset`{.Agda} by membership recursion,
   one equation for zero, successors, and limits; the layer predicate
   `isLayer`{.Agda} with `layer-trans`{.Agda}; the class `isL`{.Agda} and the
   structure `𝒮ʟ`{.Agda}.
+- `L.TowerGraph`{.Agda}: the L-tower graph, internalized, written to survive
+  the retirement. The two-slot description whose slot 0 is the value and slot
+  1 is the index, readable at the ambient and the inner satisfaction alike,
+  plus the shared frame and the first adequacy arm stated against
+  `L.Definability`{.Agda}'s `defSet`{.Agda} rather than the retiring
+  twelve-clause encoding. Ruling D31's first funded block: it imports no
+  retiring module, which is the whole point of writing it fresh.
 - `L.Ordinal`{.Agda}: the supply of ordinals the closure arguments need: zero,
   successors and small unions are ordinals, and `boundingOrd`{.Agda} bounds any
   small family by a single ordinal. No comparison, hence no classical logic.
@@ -217,6 +293,24 @@ import V.Model
 - `L.Ordinal.Linear`{.Agda}: trichotomy `ord-tri`{.Agda}, and with it the L
   side's classical boundary: closure never had to decide anything, comparison
   does, so this chapter takes the excluded middle as a module parameter.
+- `L.Ordinal.Pairing`{.Agda}: the canonical well-ordering of a product of
+  ordinals, due to Goedel: compare the larger coordinate, then the first, then
+  the second; with the order-type reading that collapses each pair to the
+  ordinal of its predecessors, bijectively. The cardinal step's pairing follows
+  from it and one named bound, the square law, which the chapter states rather
+  than assumes.
+- `L.Ordinal.SquareLaw`{.Agda}: the square law by the initial-segment route,
+  which needs no ordinal arithmetic: the finite base with its counting, the
+  least equinumerous member and its minimality, the shift, and the successor
+  step, with the base at the first limit discharging all four hypotheses of the
+  order core. The law at the higher limits stays named, for a reason the
+  chapter states: the least-of search returns its witness only up to
+  truncation, and no canonical bijection exists to make it honest.
+- `L.CardinalPredicates`{.Agda}: equinumerosity, cardinal and successor
+  cardinal as parameter-free internal formulas, generic in the carrier and the
+  arity, each with its certificate matching satisfaction to the host notion.
+  Equinumerosity is the existence of a bijection, on the nose, so no consumer
+  ever owes a Cantor-Bernstein argument.
 - `L.Ordinal.Stages`{.Agda}: the ordinals of `Lset α` are exactly the members of
   `α`: `rank-Lset`{.Agda} and `ord∈Lset→∈`{.Agda} say none appears early,
   `ord∈Lset-suc`{.Agda} says none appears late.
@@ -225,6 +319,11 @@ import V.Model
   trichotomy: the choosing device the axiom of choice takes. Reflection was
   expected to be a second consumer and is not, so there is exactly one, and it is
   `L.Choice.Transversal`{.Agda}, the last chapter of the book.
+- `L.WellOrder.Combinators`{.Agda}: the stacking kit over `SWO`{.Agda}: the unit
+  base case, the sum and product stackings, the length-gated list order, and
+  the exchange lemma they share. The base chapter holds the bundle and the
+  least-element search that the choosing device reads; this chapter holds the
+  constructions that later chapters stack on top of them.
 - `L.Coding.Base`{.Agda}: reading codes from inside: `allCodes`{.Agda} gathers
   every parameter-free formula's code into one nameable set, and
   `prAt`{.Agda} / `tagAt`{.Agda} destructure a Kuratowski pair and a tag in
@@ -274,15 +373,31 @@ import V.Model
 - `FOL.Manipulation.Relabelling`{.Agda}：常量改名，一次三个海拔：函子式 `mapFo`{.Agda}，无参公式的入口 `embed`{.Agda}，含义纹丝不动 (`⊨-map`{.Agda}、`embed-⊨`{.Agda})，Lévy 见证随行 (`mapΔ₀`{.Agda} 及其塔)。
 - `FOL.Manipulation.Bounding`{.Agda}：映射只是部分函数时的重标：`BoundedFo`{.Agda} 逐次出现地证明公式的常元满足某谓词，`BoundedFo-mono`{.Agda} 放宽它，而 `Relabel`{.Agda} 花掉它：证书就是沿部分映射重标的许可，含义与 Lévy 见证一并带过。
 - `FOL.Manipulation.Parameters`{.Agda}：把常量请出语法、请进环境。它们**按出现而非按取值**计数 (`countFo`{.Agda}) 并收集 (`constantsFo`{.Agda})，这正是常量域上的可判定相等变得不必要的原因；`placeFo`{.Agda} 把每次出现放到安置所点名的变量处，只走一趟，也不需要弱化引理，而 `absFo`{.Agda} 把它实例化为名副其实的抽象：按出现次数抬高元数，交出一条无参公式。`⊨-abs`{.Agda} 认证这笔交易不花含义，`⊨-abs₁`{.Agda} 与 `asPure₁`{.Agda} 则在「子集被刻出时所用的元数」处把它花掉：可定义子集由一条无参公式在一个参数向量处刻出，且读在可定义幂集据以定义的那套内层语义中。
+- `FOL.Count`{.Agda}：公式有多少条。载体之上的每条公式都单射地拆成一个无常量的形状与它用到的那个有穷常量元组；而每个元数的无常量形状又经带标记的树码与平方配对单射地进入自然数。基数论证正立于这二者之上。
 - `FOL.Coding`{.Agda}：语法作为集合：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上 (常量编码自身)，而归纳关系 `Codes`{.Agda} 是接口，使码值不出现在类型检查器必须归一化的等式里。
 - `V.Coding`{.Agda}：层级兑现编码的两组参数：数码单射 (`#-inj`{.Agda})、Kuratowski 对单射 (`pr-inj`{.Agda})，于是 `V` 上的公式成为 `V` 的集合。
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
+- `L.PairAtoms`{.Agda}：载体之上诸公式的对原子，一次交付且对载体及其传递性通用：任意元数处的单点、无序对与有序对原子，刻画，以及六条解码，把每个原子的满足读回所查取值的元层相等。面孔的三个消费方逐字复用它。
+- `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初始段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
+- `L.LevelKit`{.Agda}：层故事的共享子句内容，在一个泛型传递载体处**一次写成**。对隶属、成对性、单值性、零子句、序数性、精确定义域界与值域解码都住在这里；由结论原子参数化的单向后继子句，以及把子句表折叠成元层合取、对象合取与双向解码的故事装配，也住在这里。原先各自陈述这些内容的诸章如今只作实例化。以结构泛型写就的内容，使每一次重新实例化都近乎免费；这条法则本项目已反复付过学费才在此处照做。装配是其中唯一在检查处付出代价而非节省的一件，保留它是为了故事的形状，不是为了它的价钱。
+
+- `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
+- `L.Condensation`{.Agda}：传递集载体处的跨越：整套绝对性装置一行实例化、彼处的层句、后继情形及其两条伴生事实、保义的迁移，以及把凝聚化归为「关于一条公式、在两个载体处的一条绝对性义务」。义务本身、层公式的 Lévy 内容与极限情形仍待交付。
+- `L.Hull`{.Agda}：初等性与 Tarski-Vaught 判据，经一次跨完整语法的公式归纳而等价，其中全称情形是那笔经典支出，有界量词消费传递性；随后是一个集合的可定义外壳，即以其为参数的诸公式之最小见证所成之集，且在自己的参数处对该判据封闭。
+- `L.Cardinal`{.Agda}：基数步骤所消费、而树上原本没有的两条经典事实。其一是交付载体处的康托尔定理，由直接对角线给出，取无满射形态。其二是基数论证的等式半边：下界的新一半、一般的 Cantor-Schroeder-Bernstein (装的库并不提供它，故在此对一切载体一次证成，而不是每个消费方各证一遍)，以及谓词章的等势所期待的双射形态。
+
+- `L.CardinalCount`{.Agda}：装配好的计数一侧：计数章那两条注入的复合 (形状留在像里，故单射性是结构性的)、任何带命题见证的索引注入诸公式、无穷序数处的计数上界，以及外壳基数的经典上半，落在外壳自己的索引上。该上界倚靠平方律，本章点名它唯一的那处调用。
 - `L.Constructible`{.Agda}：沿成员递归的塔 `Lset`{.Agda}，一条方程通吃零、后继与极限；层谓词 `isLayer`{.Agda} 与 `layer-trans`{.Agda}；类 `isL`{.Agda} 与结构 `𝒮ʟ`{.Agda}。
+- `L.TowerGraph`{.Agda}：L-塔的图，被内化，且为熬过退役而写。两槽位描述 (槽 0 是取值、槽 1 是指标)，在环境读式与内层读式处一样可读；外加共享框架与第一条充分性臂，后者对着 `L.Definability`{.Agda} 的 `defSet`{.Agda} 陈述，而非那套退役中的十二子句编码。这是裁决 D31 的第一个获拨款的块：它不 import 任何退役模块，而这正是重新写它的全部意义。
 - `L.Ordinal`{.Agda}：闭包论证所需的序数供给：零、后继、小并皆序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。不含比较，故不花费经典逻辑。
 - `L.Rank`{.Agda}：沿成员递归的 von Neumann 秩，取值于层级自身：`rank-ord`{.Agda} 使它成为以序数进行的度量，`rank-fix`{.Agda} 认证它为典范索引。
 - `L.Ordinal.Linear`{.Agda}：三歧 `ord-tri`{.Agda}，以及随之而来的 L 侧经典边界：闭包从不需要判定什么，比较则需要，故本章把排中律取作模块参数。
+- `L.Ordinal.Pairing`{.Agda}：序数之积的典范良序，归功于 Godel：先比较较大的坐标，再比第一坐标，再比第二坐标；连同把每对坍缩为其前驱之序数的序型读法，且该读法是双射。基数步骤所需的配对由它加一条具名的界 (平方律) 推出，而该界由本章陈述而非假定。
+- `L.Ordinal.SquareLaw`{.Agda}：经初始段路线的平方律，全程不需要序数算术：有限基及其计数、最小等势成员及其最小性、移位，以及后继步；在第一个极限处的基把序核心的四条假设悉数兑付。更高极限处的该律仍作具名事实留下，缘由本章写明：最小者搜索只在截断意义下交出见证，而没有典范双射能把它做实。
+- `L.CardinalPredicates`{.Agda}：等势、基数与后继基数作为无参的内部公式，对载体与元数皆通用，各带把满足关系对上宿主概念的证书。等势就是双射的存在，一步到位，故任何消费方都不欠一次 Cantor-Bernstein 论证。
 - `L.Ordinal.Stages`{.Agda}：`Lset α` 中的序数恰是 `α` 的成员：`rank-Lset`{.Agda} 与 `ord∈Lset→∈`{.Agda} 说无一提前现身，`ord∈Lset-suc`{.Agda} 说无一迟到。
 - `L.WellOrder.Base`{.Agda}：作为束的严格良序 (`SWO`{.Agda})，与非空子集的极小元 (`leastOf`{.Agda})，经三歧唯一：选择公理将要取用的那件选取装置。反射本来预期是第二个消费方，结果不是，故恰有一个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}。
+- `L.WellOrder.Combinators`{.Agda}：`SWO`{.Agda} 之上的叠放装配：单位底案、和与积两种叠放、以长度为门的表序，以及它们共用的兑换引理。基章持有选取装置所读的束与极小元搜索；本章持有后面诸章在其上叠放的构造。
 - `L.Coding.Base`{.Agda}：从内部读码：`allCodes`{.Agda} 把每条无参公式的码汇成一个可命名的集合，而 `prAt`{.Agda} / `tagAt`{.Agda} 以有界形式解构 Kuratowski 对与标签，皆 Δ₀ 且适足。
 - `L.Coding.Environment`{.Agda}：环境即其图，经 `lookup-spec`{.Agda} 而函数性；`memPairAt`{.Agda} 查出一个值，`sucAt`{.Agda} 认出量词之下的序号移位，`seqSet`{.Agda} 汇集一个集合上的全部有穷序列。
 - `L.Stage`{.Agda}：满足任意序数性质的最小序数，经良基下降得到、经三歧而唯一；包含可构造集的最早阶段是它的头一个实例，已封印，故那次下降永不抵达日后的转换问题。
@@ -298,15 +413,25 @@ import V.Model
 import FOL.Manipulation.Relabelling
 import FOL.Manipulation.Bounding
 import FOL.Manipulation.Parameters
+import FOL.Count
 import FOL.Coding
 import V.Coding
 import L.Definability
+import L.PairAtoms
+import L.InitialSegment
+import L.LevelKit
+import L.LevelFormula
 import L.Constructible
+import L.TowerGraph
 import L.Ordinal
 import L.Rank
 import L.Ordinal.Linear
+import L.Ordinal.Pairing
+import L.Ordinal.SquareLaw
+import L.CardinalPredicates
 import L.Ordinal.Stages
 import L.WellOrder.Base
+import L.WellOrder.Combinators
 import L.Coding.Base
 import L.Coding.Environment
 import L.Stage
@@ -337,6 +462,10 @@ import L.Coding.Uniform
 import L.Coding.Powerset
 import L.Coding.Sequence
 import L.Hierarchy
+import L.Condensation
+import L.Hull
+import L.CardinalCount
+import L.Cardinal
 import L.Axioms.Numerals
 import L.Axioms.Infinity
 import L.Choice.Stage
@@ -995,4 +1124,150 @@ import FOL.Manipulation.Renaming
 import FOL.Manipulation.Relativize
 ```
 
+<!--en-->
+## The rud trunk (under construction)
 
+The `[L3.31]` build: the rudimentary-functions architecture adopted by the
+L3.30 ruling, growing alongside the delivered routes until the coexistence
+measurement. Wired chapter by chapter as the wave batches land.
+
+- `L.Rud.OrdArith`{.Agda}: the ordinal case structure the S-recursion consumes:
+  successor and limit predicates, the classical trichotomy, successor
+  injectivity on ordinals.
+- `L.Rud.Ops`{.Agda}: the basis operations F0-F7 and F9 with their two-direction
+  extension specifications, sealed at birth.
+- `L.Rud.Images`{.Agda}: the image half of the basis, F8 and F10-F15, with the
+  pair projections and the relativization slot as a module parameter.
+- `L.Rud.Hierarchy`{.Agda}: the S-hierarchy engine over an abstract step
+  operator: the single-equation tower, the three derived case equations,
+  cumulativity, transitivity, and J at limit indices.
+- `L.Rud.Step`{.Agda}: the concrete sixteen-image step with its membership
+  characterization, the containment discharges, and the transitivity of the
+  step at all sixteen operations.
+- `L.TowerKit`{.Agda}: the L-side interface between the constructible tower
+  and the rud step: the stage extensionality and emptiness reads, the
+  transitivity and definable-power facts, the pairing with its Layer-free
+  membership arm, and the four-step successor. It sits below both the graph
+  layer and the bridge, so either can read the tower on its own.
+- `L.Rud.StepGraph`{.Agda}: the graph layer: one rud step read from inside
+  the object language. The equality and projection frames, the sixteen
+  membership formulas at bound arguments with their two-way decodes, the
+  dispatchers, the sixteen operation graphs and the finite disjunction over
+  them; then the pin frame, which turns any graph into the defining formula
+  of its operation's value, the values lex, and the step's own description.
+  It imports no retiring module, and the description of the operations is
+  read from here.
+- `L.Rud.Order`{.Agda}: the canonical well-order as the pullback of the
+  stage-bounded producer-tree order along the least-producer key, with the SZ
+  successor clauses machine-checked, one-line coherence, and the external
+  choice theorems at limit levels.
+- `L.Rud.OrderReadings`{.Agda}: what the canonical order reads at a level:
+  the producer membership, the coherence with the birth stage, and the
+  successor clauses, sitting above the least-producer machinery it imports
+  from the order chapter.
+
+- `L.OrderFamily`{.Agda}: the order family and its table, over a per-level
+  order-as-an-element interface: the table as a set indexed by the level, the
+  successor's agreement with the order below on old members, and the order at a
+  limit as the union of the table, which is the element-level reading of the
+  classical limit clause.
+- `L.OrderFormula`{.Agda}: the order as an element, at the one level where the
+  successor clause is the whole order: the key decomposition carrying its
+  boundedness witness, the self-below-image clause with its soundness reading,
+  and the carve placing the order element in a limit level above. The uniform
+  formula at a general level is NOT expressible at the delivered face, and the
+  chapter records that with the exact types it would need.
+- `L.Rud.ClassJ`{.Agda}: the rud-side constructible class isJ with its
+  propositionality and transitivity, and the restricted structure beside
+  the Def-side one.
+- `L.Rud.OrdBlocks`{.Agda}: the ordinal block map b with its laws: membership
+  monotonicity for free from the single-equation form, blocks are limits,
+  finite steps absorbed.
+- `L.Rud.SatSets`{.Agda}: the satisfaction sets of arbitrary formulas as
+  closure members, the equality atom through the extensional diagonal, and
+  the unconditional full switch at limit levels.
+- `L.Rud.LevelSigma`{.Agda}: the face at a rud carrier, the bridge's own
+  consumer: the same three clause formulas and decodes as the tower's, at the
+  rud levels, with the definable step's collapse read through the delivered
+  atom-naming lemma rather than through any per-operation description.
+- `L.Rud.Bridge`{.Agda}: where the two definitions meet: the junk absorption
+  into the Def tower, the limit-level equality recorded as the classically
+  FALSE statement it is (Devlin VI.2.4, with the counter-instance and the
+  true sandwich), and the direction that needs no identification, delivered
+  unconditionally from the reduction's own third clause.
+- `L.Rud.DefInJ`{.Agda}: the successor collapse, one Def stage up read as the
+  definable power of the stage below, with the empty relativization slot every
+  limit level supplies.
+- `L.Rud.SatTable`{.Agda}: the definable power as the eighth basis operation
+  applied to a relation and a covering set, so a level holding both holds the
+  power with no offset; the corrected block statement discharged at the
+  successor step's own pair of levels, over the one re-stated relation the step
+  still assumes.
+- `L.Rud.StepStory`{.Agda}: the S-story's clause content at a generic transitive
+  carrier, in two modules with different shapes. The SUCCESSOR clause is an object
+  formula generic in both directions at once, with the carrier a module parameter, so
+  it is written once and evaluated at every stage the below-lim induction visits; the
+  sixteen-operation graph layer is a SECOND telescope, so the clause stays independent
+  of how the graphs are supplied and the instantiator hands them over
+  (`L.Rud.StepGraph` is the supplier in the tree). It is built to the one-way form,
+  because the delivered two-way successor-value clause is too strong and forces an
+  infinite chain inside a finite member. The LIMIT clause, the story's sixth, needs no
+  graph telescope at all: it reads the value at a limit index as the union of the values
+  below, over the carrier and its transitivity alone. The two are siblings in subject
+  and not in shape, and the chapter says so rather than implying one telescope.
+- `L.Rud.BelowLim`{.Agda}: the bridge's below-lim residue, stated as an
+  induction over the limit ordinals, so the fact at every smaller limit is
+  the hypothesis rather than a separate obligation. The chapter carries the
+  story predicate with its six clauses at a generic carrier, the carried
+  sequence, and the segment's membership, exact domain and limit clause at a
+  generic limit index.
+<!--zh-->
+## 初步函数主干 (在建)
+
+`[L3.31]` 建设：L3.30 裁决采纳的初步函数 (rudimentary functions) 架构，与既有路线并存生长，直至共存测量。各波次批落地时逐章接线。
+
+- `L.Rud.OrdArith`{.Agda}：S-递归所消费的序数分情形结构：后继与极限谓词、经典三分、序数上的后继单射性。
+- `L.Rud.Ops`{.Agda}：基底运算 F0-F7 与 F9，带双向外延规格，出生即封印。
+- `L.Rud.Images`{.Agda}：基底的像半部，F8 与 F10-F15，含配对投影，相对化槽位作模块参数。
+- `L.Rud.Hierarchy`{.Agda}：抽象步进算子上的 S-层级引擎：单方程塔、三条导出情形等式、累积性、传递性、极限指标处的 J。
+- `L.Rud.Step`{.Agda}：具体的十六像步进及其隶属刻画、包含性清偿，以及步进在全部十六个运算处的传递性。
+- `L.TowerKit`{.Agda}：可构成塔与 rud 步进之间的 L 侧接口：阶段的外延与空性读式、传递性与可定义幂的事实、带 Layer 无关隶属臂的配对，以及四步后继。它坐落在图层与桥二者之下，故任一方都可自行读塔。
+- `L.Rud.StepGraph`{.Agda}：图层：一次 rud 步进，自对象语言内部读出。等词框架与投影框架、束缚实参处的十六条隶属公式及其双向解码、诸分派器、十六个运算图与其上的有穷析取；继而是钉住框架，它把任一个图变成其运算取值的定义公式，还有取值词典序与步进自身的描述。它不导入任何退役模块，而诸运算的描述正是从此处读出。
+- `L.Rud.Order`{.Agda}：典范良序：沿最小生产者键回拉循阶生产者树之序，SZ 后继子句机器验证，相容一行，极限层的外部选择定理。
+- `L.Rud.OrderReadings`{.Agda}：典范良序在层处的诸读式：生产者隶属、与出生阶段的相容，以及后继子句，坐落在它从序章导入的最小生产者机器之上。
+
+- `L.OrderFamily`{.Agda}：序族及其表，建于「逐层的序作为元素」这一接口之上：表是以层为索引的集合，后继处的序与下方之序在旧成员上一致，而极限处的序是表的并，即经典极限子句的元素级读法。
+- `L.OrderFormula`{.Agda}：序作为元素，落在后继子句即全部序的那唯一一层：携带有界性见证的键分解、自身在像下子句及其可靠性读法，以及把序元素放进其上某个极限层的刻画。一般层处的一致公式在已交付的面孔上**不可表达**，本章连同它所需的确切类型一并记下。
+- `L.Rud.ClassJ`{.Agda}：rud 侧可构成类 isJ 及其命题性与传递性，与 Def 侧并肩的限制结构。
+- `L.Rud.OrdBlocks`{.Agda}：序数块映射 b 及其定律：单方程形免费的成员单调性、块恒为极限、有限步吸收。
+- `L.Rud.SatSets`{.Agda}：任意公式的满足集作为闭包成员、经外延对角线的等词原子、极限层处无条件的完全切换。
+- `L.Rud.LevelSigma`{.Agda}：初步函数载体处的面孔，桥自己的消费方：与塔处相同的三条子句公式与解码，落在初步函数诸层上，而可定义步的坍缩经已交付的「原子命名」引理读出，不经任何逐运算的描述。
+- `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
+- `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
+- `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
+- `L.Rud.StepStory`{.Agda}：S-故事在泛型传递载体处的子句内容，分两个形状不同的模块。**后继**子句是对象公式，且一次泛型到底：载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，故子句与诸图如何供给无关，由实例化方交出 (树中的供给方是 `L.Rud.StepGraph`{.Agda})。按单向形式建造，因为已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。**极限**子句，即故事的第六条，完全不需要图望远镜：它只凭载体与其传递性，把极限索引处的值读作其下诸值的并。两者在主题上是兄弟，在形状上不是，本章明说这一点，而不暗示它们共用一重望远镜。
+- `L.Rud.BelowLim`{.Agda}：桥的 below-lim 残差，陈述为对极限序数的归纳，故每个更小极限处的事实是归纳假设而非另一条义务。本章载有通用载体处带六条子句的故事谓词、载运序列，以及段在通用极限索引处的隶属、精确定义域与极限子句。
+<!--/-->
+
+```agda
+import L.Rud.OrdArith
+import L.Rud.Ops
+import L.Rud.Images
+import L.Rud.Hierarchy
+import L.Rud.Step
+import L.Rud.LevelSigma
+import L.Rud.Order
+import L.Rud.OrderReadings
+import L.OrderFamily
+import L.OrderFormula
+import L.Rud.ClassJ
+import L.Rud.OrdBlocks
+import L.Rud.SatSets
+import L.Rud.Bridge
+import L.Rud.DefInJ
+import L.Rud.SatTable
+import L.Rud.StepStory
+import L.Rud.BelowLim
+import L.TowerKit
+import L.Rud.StepGraph
+```

@@ -60,7 +60,8 @@ open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
+  using ( ⟪_⟫; ⟪_⟫↪ )
+open import V.Presentation {ℓ} using ( member; fiber )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -216,7 +217,7 @@ module Images (a : S) (φ : Formula S 2)
          , fm∈fa
     where
     fm∈fa : ⟨ ⟪ fst a ⟫↪ m ∈ fst a ⟩
-    fm∈fa = ∈∈ₛ {a = ⟪ fst a ⟫↪ m} {b = fst a} .snd (∈ₛ⟪ fst a ⟫↪ m)
+    fm∈fa = member (fst a) m
 
   private
     bImg = boundingOrd ⟪ fst a ⟫ (λ m → stage (fst (img (memS m))) (img (memS m) .snd))
@@ -235,10 +236,9 @@ module Images (a : S) (φ : Formula S 2)
       (stage-mem (fst (img (memS m))) (img (memS m) .snd)))
     where
     m : ⟪ fst a ⟫
-    m = ∈-asFiber {a = fst (p .fst)} {b = fst a} (p .snd) .fst
+    m = fiber (fst a) (p .snd) .fst
     fib : memS m .fst ≡ p .fst
-    fib = Σ≡Prop (λ w → (isL w) .snd)
-            (∈-asFiber {a = fst (p .fst)} {b = fst a} (p .snd) .snd)
+    fib = Σ≡Prop (λ w → (isL w) .snd) (fiber (fst a) (p .snd) .snd)
 ```
 
 <!--en-->

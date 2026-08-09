@@ -45,6 +45,7 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Model {ℓ}
   using ( empty-spec; pair-spec; union-spec; self∈sucV; ∈sucV-elim
         ; pair-singleton )
+open import V.Presentation {ℓ} using ( fiber )
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
@@ -52,10 +53,12 @@ open import L.Constructible {ℓ}
         ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
         ; Lset-mono; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; boundingOrd )
+open import L.Rud.Ops {ℓ} using ( F0; F5; F0-spec; F5-spec )
 
 open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.Data.FinData using ( zero; suc )
-open import Cubical.Data.Sum using ( inl; inr )
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Foundations.Function using ( _∘_ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
@@ -64,7 +67,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; extensionality; _⊆_; ⟪_⟫; ⟪_⟫↪ )
+  using ( _∈ₛ_; ∈∈ₛ; extensionality; _⊆_; _≡ₕ_; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; pairing-ax; ⋃_; union-ax
         ; module InfinitySet )
@@ -100,10 +103,9 @@ because successors of ordinals are ordinals.
   where
   s : ⟪ sucV σ ⟫ → V ℓ
   s m = 𝒟ₒ (Lset (⟪ sucV σ ⟫↪ m))
-  fib = ∈-asFiber {a = σ} {b = sucV σ} (self∈sucV σ)
-  m = fib .fst
+  m = fiber (sucV σ) (self∈sucV σ) .fst
   p : ⟪ sucV σ ⟫↪ m ≡ σ
-  p = fib .snd
+  p = fiber (sucV σ) (self∈sucV σ) .snd
   𝒟ₒLσ∈ₛsett : ⟨ 𝒟ₒ (Lset σ) ∈ₛ sett ⟪ sucV σ ⟫ s ⟩
   𝒟ₒLσ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset σ)} {b = sett ⟪ sucV σ ⟫ s} .fst
     ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
@@ -293,6 +295,89 @@ finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
            → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁
 finSet-out n h y = PT.map (λ { (i , q) → lower i , q })
 
+```
+
+<!--en-->
+## The finite-set equations
+<!--zh-->
+## 有穷集的等式
+<!--/-->
+
+<!--en-->
+The finite-set constructor has two recursion equations. The empty table
+spans the empty set. A table with a head is the singleton of the head
+united with the tail's set, realized as the union operation applied to
+the unordered pair of the singleton and the tail. Both equations close
+extensionally, by the two-armed membership specifications of the pair
+and the union.
+<!--zh-->
+有穷集构造子有两条递归等式。空表张成空集。带头之表是头的单点集与尾之集合的并，实现为并运算作用于单点集与尾集所成的无序对。两条等式都以双向包含闭合，用对与并的双臂成员规格。
+<!--/-->
+
+```agda
+ext-⊆ : {u v : V ℓ} → ((x : V ℓ) → ⟨ x ∈ u ⟩ → ⟨ x ∈ v ⟩)
+      → ((x : V ℓ) → ⟨ x ∈ v ⟩ → ⟨ x ∈ u ⟩) → u ≡ v
+ext-⊆ sub sup = extensionalV (λ x → ⇔toPath (sub x) (sup x))
+
+finSet0∅ : (h : Fin 0 → V ℓ) → finSet 0 h ≡ ∅
+finSet0∅ h = ext-⊆ sub sup
+  where
+  sub : (y : V ℓ) → ⟨ y ∈ finSet 0 h ⟩ → ⟨ y ∈ ∅ ⟩
+  sub y y∈ = PT.rec (snd (y ∈ ∅)) (λ { (() , _) }) (finSet-out 0 h y y∈)
+  sup : (y : V ℓ) → ⟨ y ∈ ∅ ⟩ → ⟨ y ∈ finSet 0 h ⟩
+  sup y y∈ = Empty.rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
+
+finSetSuc : (n : ℕ) (h : Fin (suc n) → V ℓ)
+          → finSet (suc n) h
+          ≡ F5 (F0 (F0 (h zero) (h zero)) (finSet n (h ∘ suc))) (h zero)
+finSetSuc n h = ext-⊆ sub sup
+  where
+  X : V ℓ
+  X = finSet n (h ∘ suc)
+  P : V ℓ
+  P = F0 (F0 (h zero) (h zero)) X
+  sub : (y : V ℓ) → ⟨ y ∈ finSet (suc n) h ⟩ → ⟨ y ∈ F5 P (h zero) ⟩
+  sub y y∈ = PT.rec (snd (y ∈ F5 P (h zero))) go (finSet-out (suc n) h y y∈)
+    where
+    go : Σ[ i ∈ Fin (suc n) ] (h i ≡ y) → ⟨ y ∈ F5 P (h zero) ⟩
+    go (zero , q) = F5-spec P (h zero) y .snd
+      ∣ F0 (h zero) (h zero)
+      , ( F0-spec (F0 (h zero) (h zero)) X (F0 (h zero) (h zero)) .snd ∣ inl refl ∣₁
+        , F0-spec (h zero) (h zero) y .snd ∣ inl (sym q) ∣₁ ) ∣₁
+    go (suc i , q) = F5-spec P (h zero) y .snd
+      ∣ X , ( F0-spec (F0 (h zero) (h zero)) X X .snd ∣ inr refl ∣₁
+            , finSet-in n (h ∘ suc) y ∣ i , q ∣₁ ) ∣₁
+  sup : (y : V ℓ) → ⟨ y ∈ F5 P (h zero) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+  sup y y∈ = PT.rec (snd (y ∈ finSet (suc n) h)) go
+    (F5-spec P (h zero) y .fst y∈)
+    where
+    go : Σ[ v ∈ V ℓ ] ⟨ (v ∈ P) ⊓ (y ∈ v) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+    go (v , v∈P , y∈v) = atV
+      (F0-spec (F0 (h zero) (h zero)) X v .fst v∈P)
+      where
+      atV : ⟨ (v ≡ₕ F0 (h zero) (h zero)) ⊔ (v ≡ₕ X) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+      atV hv = PT.rec (snd (y ∈ finSet (suc n) h)) atCases hv
+        where
+        atCases : (⟨ v ≡ₕ F0 (h zero) (h zero) ⟩ ⊎ ⟨ v ≡ₕ X ⟩) → ⟨ y ∈ finSet (suc n) h ⟩
+        atCases (inl v≡) = atSingl
+          (F0-spec (h zero) (h zero) y .fst (subst (λ w → ⟨ y ∈ w ⟩) v≡ y∈v))
+          where
+          atSingl : ⟨ (y ≡ₕ h zero) ⊔ (y ≡ₕ h zero) ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+          atSingl hy = PT.rec (snd (y ∈ finSet (suc n) h)) atEq hy
+            where
+            atEq : (⟨ y ≡ₕ h zero ⟩ ⊎ ⟨ y ≡ₕ h zero ⟩) → ⟨ y ∈ finSet (suc n) h ⟩
+            atEq (inl y≡) = finSet-in (suc n) h y ∣ zero , sym y≡ ∣₁
+            atEq (inr y≡) = finSet-in (suc n) h y ∣ zero , sym y≡ ∣₁
+        atCases (inr v≡) = atX (subst (λ w → ⟨ y ∈ w ⟩) v≡ y∈v)
+          where
+          atX : ⟨ y ∈ X ⟩ → ⟨ y ∈ finSet (suc n) h ⟩
+          atX y∈X = PT.rec (snd (y ∈ finSet (suc n) h))
+            (λ { (i , q) → finSet-in (suc n) h y ∣ suc i , q ∣₁ })
+            (finSet-out n (h ∘ suc) y y∈X)
+
+```
+
+```agda
 module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
   module DefC = DefOf (Lset σ)
 
@@ -359,9 +444,9 @@ module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
     ∣ finDisj n g , (defSet≡ n g ∙ cong (finSet n) (funExt qg)) ∣₁
     where
     g : Fin n → ⟪ Lset σ ⟫
-    g i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .fst
+    g i = fiber (Lset σ) (hσ i) .fst
     qg : (i : Fin n) → ⟪ Lset σ ⟫↪ (g i) ≡ h i
-    qg i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .snd
+    qg i = fiber (Lset σ) (hσ i) .snd
 ```
 
 <!--en-->
@@ -549,12 +634,12 @@ pair∈𝒟ₒ : (σ x y : V ℓ) → ⟨ x ∈ Lset σ ⟩ → ⟨ y ∈ Lset �
 pair∈𝒟ₒ σ x y x∈ y∈ = 𝒟ₒ-intro (Lset σ) ⁅ x , y ⁆ ∣ φ , defSet≡ ∣₁
   where
   module DefC = DefOf (Lset σ)
-  mₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+  mₓ = fiber (Lset σ) x∈ .fst
   qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x
-  qₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
-  mᵧ = ∈-asFiber {a = y} {b = Lset σ} y∈ .fst
+  qₓ = fiber (Lset σ) x∈ .snd
+  mᵧ = fiber (Lset σ) y∈ .fst
   qᵧ : ⟪ Lset σ ⟫↪ mᵧ ≡ y
-  qᵧ = ∈-asFiber {a = y} {b = Lset σ} y∈ .snd
+  qᵧ = fiber (Lset σ) y∈ .snd
 
   φ : Formula ⟪ Lset σ ⟫ 1
   φ = (var zero ≐ con mₓ) ∨̇ (var zero ≐ con mᵧ)
@@ -663,9 +748,9 @@ module UnionOf (a : S) where
     where
     module DefA = DefOf (Lset σ)
     Atrans = layer-trans (Lset-layer σ)
-    mₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .fst
+    mₐ = fiber (Lset σ) fa∈ .fst
     qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a
-    qₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈ .snd
+    qₐ = fiber (Lset σ) fa∈ .snd
 
     φ : Formula ⟪ Lset σ ⟫ 1
     φ = ∃̇∈ (con mₐ) (var (suc zero) ∈̇ var zero)
@@ -688,12 +773,12 @@ module UnionOf (a : S) where
         (∈∈ₛ {a = y} {b = DefA.defSet φ} .snd y∈ₛ)
       sub₂ : ⟨ ⋃ (fst a) ⊆ DefA.defSet φ ⟩
       sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet φ))
-        (λ { (v , (v∈ₛfa , y∈ₛv)) → member v v∈ₛfa y∈ₛv })
+        (λ { (v , (v∈ₛfa , y∈ₛv)) → memOf v v∈ₛfa y∈ₛv })
         (union-ax (fst a) y .fst y∈ₛ)
         where
-        member : (v : V ℓ) → ⟨ v ∈ₛ fst a ⟩ → ⟨ y ∈ₛ v ⟩
+        memOf : (v : V ℓ) → ⟨ v ∈ₛ fst a ⟩ → ⟨ y ∈ₛ v ⟩
                → ⟨ y ∈ₛ DefA.defSet φ ⟩
-        member v v∈ₛfa y∈ₛv =
+        memOf v v∈ₛfa y∈ₛv =
           subst (λ w → ⟨ w ∈ₛ DefA.defSet φ ⟩) q'
             (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m'} {b = DefA.defSet φ} .fst
               (subst ⟨_⟩ (sym (DefA.defSet-mem φ m')) sat))
@@ -702,9 +787,8 @@ module UnionOf (a : S) where
           y∈v = ∈∈ₛ {a = y} {b = v} .snd y∈ₛv
           v∈A = Atrans {x = fst a} {y = v} v∈fa fa∈
           y∈A = Atrans {x = v} {y = y} y∈v v∈A
-          fib = ∈-asFiber {a = y} {b = Lset σ} y∈A
-          m' = fib .fst
-          q' = fib .snd
+          m' = fiber (Lset σ) y∈A .fst
+          q' = fiber (Lset σ) y∈A .snd
           sat : ⟨ (DefA.ι m' ∷ []) DefA.⊨ᵐ φ ⟩
           sat = ∣ (v , v∈A)
                 , ( subst (λ w → ⟨ v ∈ w ⟩) (sym qₐ) v∈fa

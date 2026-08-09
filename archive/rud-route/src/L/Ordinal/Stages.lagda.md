@@ -53,7 +53,7 @@ open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
   using ( IsOrd; isTransV; Lset; Lset-layer; Lset-compute; layer-trans
         ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; Lset-mono )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; numeral-ord; #∈ω )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Rank {ℓ} using ( rank; rank-compute; rank-ord; rank-fix )
 
@@ -66,7 +66,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; extensionality; _⊆_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⋃_; union-ax; module InfinitySet )
-open InfinitySet using ( sucV )
+open InfinitySet using ( sucV; #_; ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
@@ -446,6 +446,31 @@ ord∈Lset-suc = ∈-induction
     α∈𝒟ₒ : ⟨ α ∈ˢ 𝒟ₒ (Lset α) ⟩
     α∈𝒟ₒ = 𝒟ₒ-intro (Lset α) α
       ∣ φ-ord {K = ⟪ Lset α ⟫} , OrdAt.defSet-φ-ord α ordα α⊆A ∣₁
+```
+
+<!--en-->
+## The numerals at ω
+<!--zh-->
+## ω 处的数码
+<!--/-->
+
+<!--en-->
+The stage theorem has one limit instance the next chapter spends: every
+numeral appears in `Lset ω`. The proof climbs the tower's monotonicity
+along the successor chain. The successor stage of a numeral lies inside
+`Lset ω`, since the numeral's successor is a member of `ω`; and the
+numeral appears at that successor stage, by `ord∈Lset-suc`.
+<!--zh-->
+本章的阶段定理有一个下一章将花掉的极限实例：每个数码都现身于 `Lset ω`。证明沿后继链攀爬塔的单调性。数码的后继阶段落在 `Lset ω` 内，因为数码的后继是 `ω` 的成员；而数码现身于那个后继阶段，经由 `ord∈Lset-suc`。
+<!--/-->
+
+```agda
+nk : ℕ → S
+nk k = # k
+
+numeral∈Lsetω : (k : ℕ) → ⟨ nk k ∈ˢ Lset ω ⟩
+numeral∈Lsetω k = Lset-mono {α = ω} {β = sucV (nk k)} (#∈ω (suc k))
+  (ord∈Lset-suc (nk k) (numeral-ord k))
 ```
 
 <!--en-->
