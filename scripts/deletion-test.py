@@ -70,8 +70,16 @@ def shadow_state() -> dict:
 
 
 def ac_cap(st: dict) -> int | None:
-    """The D36 cap from [trophy_budget], or None when undeclared."""
-    return st["data"].get("trophy_budget", {}).get("ac_cap")
+    """The cap from [trophy_budget], or None when undeclared or SUSPENDED.
+
+    Suspended 2026-08-09 by the owner: DD5 replaced the absolute cap with a
+    benchmark that is not quantified yet, so the test still MEASURES and
+    still prints, and it does not fail on a retired number.
+    """
+    budget = st["data"].get("trophy_budget", {})
+    if budget.get("thresholds_suspended"):
+        return "SUSPENDED"
+    return budget.get("ac_cap")
 
 
 def run_root_files(st: dict) -> list[str]:
@@ -148,6 +156,13 @@ def cmd_shadow(args) -> int:
               "trustworthy", file=sys.stderr)
         return 1
     cap = ac_cap(st)
+    if cap == "SUSPENDED":
+        print("deletion-test [thresholds SUSPENDED by the owner, 2026-08-09]: "
+              "DD5 replaced the absolute cap with a benchmark that is not "
+              "quantified yet. The structural test is UNCHANGED and still "
+              "worth running; only the pass-or-fail against a retired number "
+              "is off. Re-arm: measure internalization GCH (owner task 6).")
+        cap = None
     if cap is None:
         print("deletion-test: no ac_cap declared in [trophy_budget]; the "
               "deletion test needs the D36 cap", file=sys.stderr)
@@ -191,9 +206,18 @@ def cmd_run(args) -> int:
         print("deletion-test: split defects; the deletion test will not run",
               file=sys.stderr)
         return 1
-    if cap is None:
+    if cap == "SUSPENDED":
+        # The structural test is the valuable half and it is unchanged: it
+        # deletes the gch side and typechecks the AC side, which is what
+        # keeps the accounting honest. Only the number it compares against
+        # is retired, so the run proceeds and reports without a verdict.
+        print("deletion-test [thresholds SUSPENDED by the owner, 2026-08-09]: "
+              "running the structural test and reporting the count; no "
+              "pass-or-fail, because DD5's benchmark is not quantified yet.")
+        cap = None
+    elif cap is None:
         print("deletion-test: no ac_cap declared; the deletion test needs "
-              "the D36 cap", file=sys.stderr)
+              "a cap", file=sys.stderr)
         return 1
     root_files = run_root_files(st)
     print(f"deletion test: deleting {len(st['gch_files'])} gch-side masters; "

@@ -480,6 +480,23 @@ provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52
 # binds (see [accounting-honesty]).
 ac_cap = 20000
 authority = "owner ruling D36, 2026-08-07; demoted by D39, 2026-08-09"
+
+# THRESHOLDS ARE SUSPENDED, ruled by the owner 2026-08-09.
+# DD5 replaced both absolute thresholds with constraints measured against the
+# internalization route, and NEITHER benchmark is quantified yet. A checker
+# that keeps enforcing a retired number is not a safety net, it is a wrong
+# answer with a green light. So every threshold checker DOWNGRADES to a
+# report while this is true: it still measures, still prints, and does not
+# fail. The affected checkers are scripts/ledger.py (the AC-cap tripwire),
+# scripts/deletion-test.py and scripts/check-timing.py.
+#
+# THE RE-ARM CONDITION, and it is specific rather than "later": the owner's
+# task 6. Build `L ⊨ GCH` on the internalization route, MEASURE its lines and
+# its build seconds, and set both DD5 benchmarks from that measurement. Then
+# set this to false and write the two numbers in.
+thresholds_suspended = true
+thresholds_suspended_since = "2026-08-09"
+thresholds_rearm = "owner task 6: measure internalization GCH, set both DD5 benchmarks, then flip this to false"
 # PENDING REMOVALS. This was 1,290 and it is now ZERO: the removal EXECUTED
 # 2026-08-09 as [T236]. HF (664) and Finite (626) are archived, byte-identical,
 # with `dev/ARCHIVE.md` rows and the catalog rewired. Its condition, "once

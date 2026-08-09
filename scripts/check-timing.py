@@ -265,6 +265,17 @@ def time_module(path: Path, cold: bool) -> float | None:
 
 
 def main() -> int:
+    # SUSPENDED 2026-08-09 by the owner. DD5 replaced the absolute wall with
+    # a benchmark measured against the internalization route, and that
+    # benchmark is not quantified yet. This checker still MEASURES and still
+    # PRINTS; it returns 0 instead of failing on a retired number. Re-arm is
+    # owner task 6: measure internalization GCH, set both DD5 benchmarks.
+    import tomllib as _t
+    with open(ROOT / "dev" / "ledger.toml", "rb") as _f:
+        _susp = _t.load(_f).get("trophy_budget", {}).get("thresholds_suspended")
+    if _susp:
+        print("check-timing [thresholds SUSPENDED by the owner, 2026-08-09]: "
+              "measuring and reporting, not enforcing.")
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("paths", nargs="*", type=Path)
