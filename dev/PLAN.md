@@ -647,7 +647,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T249 | Time the covering code predicate: T211's named gate | GO: 0.0113 s per line whole, not 0.0603 from a slice; the row is 15.2-20.0 s and FITS at every ca | `_build/l3.32-t249-report.md` |
 | L3.32-T250 | The third compression campaign: 500-line levers, from first principles | ONE lever, 285-695 naive UNGATED: recover the witness from a strengthened induct | `_build/l3.32-t250-math.md` |
 | L3.32-T251 | Gate 1: does the strengthened induction actually recover the witness? | DISPATCHED 2026-08-09; decides T250's lever against ProbeT240's 174.62 s contro | `_build/l3.32-t251-report.md` |
-| L3.32-T252 | The naturalness review of today's four settled masters | DISPATCHED 2026-08-09; D36's condition, the one no checker enforces; BelowLim excluded, mid-re | `_build/l3.32-t252-report.md` |
+| L3.32-T252 | The naturalness review of today's four settled masters | StepStory NOT NATURAL, announces one subject and holds two; the other three stand; six repairs | `_build/l3.32-t252-report.md` |
+| L3.32-T253 | The naturalness repair: prose only, four masters | DISPATCHED 2026-08-09; StepStory re-chartered, three intros fixed; the catalog is the orchestrator's | `_build/l3.32-t253-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
