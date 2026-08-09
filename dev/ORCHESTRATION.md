@@ -32,7 +32,7 @@ Concurrency and heap ceilings are LESSONS C-12: agent Agda runs at
 orchestrator's own runs at `-M16g`; one Agda process per agent, always. Agents
 that run no Agda do not consume a slot.
 
-**An idle slot is a defect** (PLAN D23). At every return, before writing the
+**An idle slot is a defect** (PLAN DD17). At every return, before writing the
 report: name what is unblocked, name what blocks the rest, and dispatch into
 the free slots. Blocked means waiting on an owner ruling, on a sibling's write
 territory, on a measurement that would make the work fundable, or on the
@@ -96,7 +96,7 @@ Standing clauses that go in every build or probe brief:
   `_build/`; write the deliverable incrementally, never at the end (C-22).
 - **D-10**: check the target's truth at the intended generality before proving
   it, and record any correction beside the original.
-- **D22**: name the block's widest unmeasured term and the probe that would
+- **DD8**: name the block's widest unmeasured term and the probe that would
   measure it; a brief that cannot is not ready to send.
 - **At every return that touched a master, run
   `python3 scripts/check-timing.py --changed`.** It is the only gate in the
@@ -138,7 +138,7 @@ Standing clauses that go in every build or probe brief:
   **ARCHIVE** section listing what may bear on the task in each of the four
   archives: `archive/` for retired code, with `archive/rud-route/` holding the
   72 files of the retired route and `dev/ARCHIVE.md` describing the modules
-  retired before it; `archive/dev/TASKS-archived.md` for what each of the 264 earlier
+  retired before it; `archive/dev/TASKS-archived.md` for what each of the 265 earlier
   dispatches found; `archive/dev/JOURNAL-archived.md` for why; and
   `archive/dev/DECISIONS-archived.md` for the rulings that route ran on.
   `dev/LESSONS.md` is NOT archived and still binds, so it is cited the usual
@@ -150,14 +150,20 @@ Standing clauses that go in every build or probe brief:
 - **A port is priced against a fresh write, never assumed** (DD13). The
   archive is reference material, not a shortcut, and P-l holds: a measured
   cure does not transfer by analogy.
-- **DD8, the gate, FIRST.** Before you fund a block, **do not write a brief
-  that dispatches new mathematics.** Defect repair, profiling, the fixes a
-  profile licenses, and capturing the retiring tree's craft are the plan and
-  are dispatched normally. If a brief would advance a trophy rather than the
-  check-cost data, it waits. When in doubt the test is: would this dispatch add
-  in-fence lines to a surviving master in order to prove something new? Then it
-  waits.
-- **D29, generic writing, in EVERY brief.** For a recon: ask explicitly whether
+- **DD8, the gate, FIRST.** Before you fund a block, name its widest unmeasured
+  term and the probe that measures it. **A build brief that cannot name both is
+  not ready to send.** A green gate narrows the band and lowers its top, which
+  is what decides whether a projection fits, so this is arithmetic and not
+  caution.
+
+  **The old text here forbade dispatching NEW MATHEMATICS outright**, which was
+  D30's check-cost freeze. **That freeze is CLOSED**: it belonged to the retired
+  route, it was exit-condition-complete, and the two-tower route replaced its
+  wall gate with DD5's relative constraint. Phase 1 of the live plan is five
+  new-mathematics builds, so the clause as written forbade the plan. `[LJ-0.1]`
+  found it and `[LJ-0.2]` ranked it blocking. **The only freeze still standing
+  is DD23, and it covers mathematical PROSE, not mathematics.**
+- **DD4, generic writing and maximum reuse, in EVERY brief.** For a recon: ask explicitly whether
   the content can be written once at a generic carrier and instantiated, and
   require the report to price BOTH shapes. For a build: state which shape is to
   be written and why, with generic as the default. **Add the attitude clause
@@ -173,12 +179,12 @@ Standing clauses that go in every build or probe brief:
   may be excellent**: the measured Bridge fix is six lines for 769 seconds. The
   ledger carries the seconds beside the lines (`dev/ledger.toml`'s `[timing]`,
   `[[hot]]` and `[[tree_cost]]`).
-- **D17 at a retirement question.** If the brief touches what retires, quote
-  D17 into it: "X must stay because Y consumes it" is not an answer, the
+- **DD13 at a retirement question.** If the brief touches what retires, quote
+  DD13 into it: "X must stay because Y consumes it" is not an answer, the
   ideal-form rewrite of what Y actually needs is priced first, and the old
   chapter then retires WHOLESALE. Say explicitly that D-19's port rates must
   not be quoted at a rewrite question, because that substitution is the
-  specific error D17 names and an agent will make it unprompted.
+  specific error DD13 names and an agent will make it unprompted.
 - **DD2 and DD5, what is ruled and what is open.** State BOTH in the brief's header.
   **Ruled (DD2):** the two-tower bridge. Build the L tower and the J tower, J
   through rud, and the bridge between them; prove `L ⊨ AC` and `L ⊨ GCH` on it,
@@ -187,7 +193,8 @@ Standing clauses that go in every build or probe brief:
   reopen or re-table any of that. **Open: how to walk it**, which results
   decide, so name the current working direction as a working direction and not
   as law. This half is load-bearing and is not a courtesy: the technique is
-  empirical, and archived D26(B) has no other home. Say
+  empirical, and archived D26(B), which the DD consolidation did not re-home,
+  has no other home. Say
   that a line count is a measurement, recorded once with its basis and worked down
   as a best-effort target, never argued from. A gate asks which TECHNIQUE to
   use, so a red must return the next candidate technique, named and priced, on
@@ -224,7 +231,7 @@ term. That is luck, not method.
 ## 5. Registration, and the shape question before it
 
 **Before a route is planned, ask the generic question of the route itself**
-(D29): can the content be written once at a generic carrier and instantiated,
+(DD4): can the content be written once at a generic carrier and instantiated,
 rather than written per carrier and unified later? The cheapest generic decision
 is the one made before two chapters exist to unify, and this campaign has twice
 paid for making it late. Record the answer in the registration, so the briefs
@@ -255,7 +262,7 @@ a flowchart on the generated dashboard, which the owner abolished on
 - **When a compression lever is considered**, run this order: if it is
   refuted it is not a route (recorded closed); if ruled work already did part
   of it, re-price before considering (the delivered part is not still owed);
-  if it is priced at x3 with an unmeasured widest term, probe first (D22);
+  if it is priced at x3 with an unmeasured widest term, probe first (DD8);
   if its region is being touched by ruled work anyway, take it now (marginal
   cost near zero); if the endpoint projection needs the lines, rank by net
   lines per unit of risk and take the cheapest first; otherwise keep and
@@ -281,7 +288,7 @@ In this order, every time:
    is sent back for the next technique. A report that changes a TECHNIQUE on a
    measured obligation is doing its job and is not caught by this.
    **A build that wrote fixed where generic was possible, without saying so,
-   is returned** (D29): the choice is legitimate, hiding it is not.
+   is returned** (DD4): the choice is legitimate, hiding it is not.
    **A cold-check regression is a defect**, not a cost of doing business; if a
    chapter's cold check has grown, say by how much and why before wiring it.
    **The return must carry the number**: a build that reports lines without
@@ -291,7 +298,7 @@ In this order, every time:
    prose the change makes stale.
 5. **Gate**: `make check`, or the individual checks when a sibling holds the
    Agda slot, saying which was run. **A full cold typecheck is launched as a
-   harness-tracked background job and never in the foreground** (D28): it runs
+   harness-tracked background job and never in the foreground** (DD15): it runs
    about twelve minutes, it must not hold the turn, and its result is read from
    the completion notification. **Do not arm it while any agent is live**: it
    would read masters they are mid-write on, which produced a spurious failure
@@ -310,7 +317,7 @@ In this order, every time:
    refuted. Never push.
 7. **Record** in PLAN (the ruling and the number) and, if a law was learned, in
    `dev/LESSONS.md`. **If the return could move the size ledger, bring
-   `dev/ledger.toml` current in the same turn** (D27): narrow or close the
+   `dev/ledger.toml` current in the same turn** (DD15): narrow or close the
    remaining row the work landed against, say whether it came in inside its
    band, and move a gated row's class from x3 toward x1.3 when its gate goes
    green. Standing needs no edit: `scripts/ledger.py` measures it from the tree
@@ -350,7 +357,7 @@ sources, never inline in the orchestrator's loop; the owner rules on the
 presented evidence.
 
 **A term not in `dev/glossary.toml` is not invented, and settling it is a
-TWO-AGENT PIPELINE, not a judgement call** (D35, owner-ruled 2026-08-07; it
+TWO-AGENT PIPELINE, not a judgement call** (DD19, ruled as D35 2026-08-07; it
 replaces the owner's default review). **Arm 1, codex:** search the web for the
 literature provenance of each rendering, with sources; only where the
 literature is silent, draft two or three candidates by analogy FROM terms that

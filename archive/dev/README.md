@@ -12,8 +12,8 @@ working documents.** A developer reading `dev/` should see what binds today.
 | File | What it holds | Read it when |
 |---|---|---|
 | `DECISIONS-archived.md` | The whole `D` ruling series, D1 to D39 | You need what the retired route ruled, or what a consolidated `DD` row dropped. `scripts/check-rule-ids.py` reads this file, so a `D` citation still resolves |
-| `TASKS-archived.md` | All 264 `L3.32-T` dispatch rows | You need what a dispatch actually found. `scripts/check-task-index.py` reads this file, so an `L3.32-T` citation still resolves |
-| `JOURNAL-archived.md` | The 4,260-line execution journal | You need WHY, and the other three cannot answer. It is long; do not read it through |
+| `TASKS-archived.md` | All 265 `L3.32-T` dispatch rows | You need what a dispatch actually found. `scripts/check-task-index.py` reads this file, so an `L3.32-T` citation still resolves |
+| `JOURNAL-archived.md` | The 4,280-line execution journal | You need WHY, and the other three cannot answer. It is long; do not read it through |
 | `STATUS-archived.md` | The 96 goal rows of `dev/PLAN.md` section 11 | You need a retired goal's full status text. Section 11 keeps the top level and the route switches only |
 
 ## Nothing here is renumbered or rewritten

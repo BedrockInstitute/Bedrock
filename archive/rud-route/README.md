@@ -39,7 +39,7 @@ it actually used and what it took from each item.
    Everything here was measured at ITS site. Re-measure at yours.
 
 **Where the rest of the record lives.** `archive/dev/TASKS-archived.md` for what each
-of the 264 dispatches found; `archive/dev/DECISIONS-archived.md` for the rulings the
+of the 265 dispatches found; `archive/dev/DECISIONS-archived.md` for the rulings the
 route ran on; `dev/ARCHIVE.md` for the modules retired DURING the route, which
 are under `archive/src/` rather than here; and `dev/LESSONS.md`, which is NOT
 archived and still binds.
