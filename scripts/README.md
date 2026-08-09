@@ -139,6 +139,14 @@ python3 scripts/ledger.py --brief   # one line: standing, endpoint, overage
 python3 scripts/ledger.py --check   # validate the declaration; exit 1 on a defect
 ```
 
+**`--check` enforces DD5's a-priori ceiling.** When `lines_state` says the line benchmark BINDS,
+the declaration must carry `lines_apriori`, `[LJ-1.1]`'s projection recorded before any phase-1
+build, and the binding figure must be the SMALLER of it and the measurement. The gate is silent
+while the state reads unbound, so it costs nothing through phase 1 and fires the day the number
+starts to matter. It exists because the benchmark is measured from a wing this project builds
+itself: a wing larger than it needed to be raises the bar by exactly that much, and no
+dishonesty is required for that to happen.
+
 **`--reuse` is DD4's REPORT and never a gate.** It prints what the AC and GCH endpoints' import
 closures share, in masters and lines, with each side's total and the shared share of the union.
 It exits 0 whatever it finds and is NOT in `make check`, because DD4 has no threshold by ruling:

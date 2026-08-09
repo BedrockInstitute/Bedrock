@@ -209,6 +209,43 @@ GCH wing, worth 4,238-5,218. [T260] supported that pricing on import-graph
 facts, and its own probe never ran. The weak point is one fifth of the
 band, so it can decide the constraint by itself.
 """
+# ---------------------------------------------------------------------------
+# DD5's THREE MEASURES AGAINST A SELF-SET BENCHMARK, given a machine home.
+#
+# THE PROBLEM. The line benchmark does not exist, because the internalization
+# route never proved GCH. Phase 1 BUILDS that wing and [LJ-2.1] measures it,
+# and the measurement becomes the number the two-tower route must beat. The
+# project writes its own examination paper: a wing larger than it needed to
+# be raises the bar by exactly that much, phase 3 clears it, every checker
+# reports green, and nobody learns whether the new architecture is better.
+# No dishonesty is required at any step.
+#
+# DD24 DOES NOT HELP. check-ratio.py fails only ABOVE the bar, and padding
+# with cheap lines LOWERS seconds per line, so a padded wing passes it more
+# easily. The ratio guards the content CLASS and says nothing about SIZE.
+#
+# MEASURE 1, THE A-PRIORI CEILING, is the one that removes the incentive
+# rather than policing it, and `ledger.py --check` enforces it: the benchmark
+# that binds is the SMALLER of the projection below and the measurement.
+# The projection is recorded BEFORE any build, when nobody could gain from
+# inflating it. Building fat then cannot raise the bar. Building tight can
+# still lower it. [LJ-1.1] owes this figure and already owed it: the row
+# always required one best-effort projection with its basis, and nothing was
+# using it for anything.
+lines_apriori = 0            # 0 = not yet recorded; [LJ-1.1] fills it
+lines_apriori_source = "OWED by [LJ-1.1], before any phase-1 build starts"
+
+# MEASURE 3. An independent reader asks what did not need to be there, and
+# [LJ-1.9] reports net removable lines. [LJ-2.1] records measured, projected
+# and removable together, so the benchmark is discounted by what a reviewer
+# says was surplus rather than by anyone's impression.
+lines_removable = 0          # 0 = not yet reported; [LJ-1.9] fills it
+lines_removable_source = "OWED by [LJ-1.9]"
+
+# MEASURE 2 has no field, because it is about what a BRIEF says: a phase-1
+# build brief does not tell the agent its output sets a bar. Enforcement is
+# `dev/ORCHESTRATION.md` section 3 and the return audit, which is review only
+# and is named as review only.
 seconds_state = "DOES NOT EXIST (this is the DOUBLE-trophy build time; do not confuse it with DD24's measured 133.19 s AC-only baseline in [ratio])"
 seconds_gap = """
 Nobody has measured the internalization route's build time, at either
