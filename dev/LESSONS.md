@@ -2355,6 +2355,38 @@ it is narrow: a fold whose result type must be UNFOLDED by every consumer.
 `[L3.32-T239]`'s carrier-generic limit clause is not this shape and measured a
 saving; the clause-list assembly is.
 
+### P-s. A slice rate is not an estimate of the content's rate, in either direction
+
+**The law.** Timing a SLICE and dividing by its lines does not price the
+content the slice came from. The error is not a bias you can correct for: it
+runs both ways, because a slice either omits the expensive families or
+consists of them. **Time the piece whose rate is in doubt, whole, at its own
+carrier.** If the budget will not stretch to that, report the slice as a slice
+and refuse to divide.
+
+**The measurement, 2026-08-09, two probes on the same day, both against
+126-line slices.**
+
+| slice | slice rate | the content, measured whole | error |
+|---|---:|---:|---|
+| `[T222]`'s witness layer | 0.085 s/line | `[T240]`: 0.297 over 589 lines | **3.5x LOW** |
+| `[T211]`'s Part I | 0.0603 s/line | `[T249]`: 0.0113 over 1,343 lines | **5.3x HIGH** |
+
+`[T222]`'s slice lacked three of the four content families, 52.8 percent of
+the check, so it under-priced. `[T211]`'s slice was the instantiation tail of
+a body that is otherwise PARAMETERIZED, so it over-priced: the bulk checks at
+P-m's parameterized rate and the slice did not contain the bulk.
+
+**What this cost and what it bought.** The low error carried a whole campaign's
+block A projections and produced a stop-line no correct build could meet
+(`dev/ledger.toml`, `block_a_breakeven_lines`). The high error held the
+largest remaining AC row at TOO CLOSE TO CALL for a day when it FITS at every
+caliber. Both were repaired by building the piece whole.
+
+**The tell.** Ask which content class the slice belongs to (P-m), and whether
+the WHOLE body belongs to the same one. A slice drawn from a body of mixed
+class prices neither part. Both failures here are that single mistake.
+
 ### P-q. A line lever and a seconds lever are different levers; dedup buys lines, not seconds
 
 **The law.** Removing DUPLICATED content removes lines and almost no seconds.

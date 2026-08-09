@@ -1568,6 +1568,27 @@ seconds_search_closed = "[T241] and [T243]: every large site NO-GO at a measured
 # class-level bridge step, whose discharge lives in `bridge-landing`. That
 # dependency, not the price, is what gates it now.
 rehome_gated = "188-248 naive row scope buys 141 s; all twelve Choice masters archive free; blocked on bridge-landing"
+# [T249] RAN [T211]'s NAMED GATE 2026-08-09 AND THE ROW'S SECONDS FACE CLEARS.
+# [T211] projected the covering code set at 67.5-76.9 s from a 126-line slice
+# and called it TOO CLOSE TO CALL, fitting at naive and x1.3 but not at x3.
+# [T249] built the piece WHOLE, 88-100 percent of Part II at 1,343 code lines,
+# ending on the closed obligation `codeSet∈J`, and measured 15.19 s over three
+# CLEAN cold runs with a 0.51 s spread. The rate is 0.0113 s per line.
+#
+# THE WHOLE ROW RE-PROJECTS TO 15.2-20.0 s NAIVE, against [T211]'s 67.5-76.9.
+# It FITS at every caliber: 15.2-15.5 by the whole-probe proxy, 18.3-20.0 by
+# the line rate plus the engine, 23.8-26.0 at x1.3, and 54.9-60.0 even at the
+# x3 survey caliber. The row's seconds face is no longer in doubt.
+#
+# WHY THE SLICE WAS WRONG, and it is the mirror of [T242]'s finding: the bulk
+# of the ideal form is PARAMETERIZED content at P-m's ~0.01 rate, and [T211]'s
+# slice was the instantiation tail. It over-priced by 5.3x. [T222]'s slice
+# under-priced by 3.5x for the opposite reason. Both errors are one mistake,
+# a slice drawn from a body of mixed class, and both are now P-s.
+#
+# The row's LINE band is untouched: 1,619-1,679 naive stands, and [T209]'s
+# WASH on the ideal form stands. This is a seconds finding only.
+blockpowlim_seconds_measured = "15.2-20.0 s naive, fits at every caliber; [T211]'s 67.5-76.9 came from a slice"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold

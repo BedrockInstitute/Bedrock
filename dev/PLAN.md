@@ -644,7 +644,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T246 | The JOURNAL catch-up: 22 entries for T224 to T245 | DELIVERED 22 of 22, insertions only, lint green; found the word stop-line at 48,245 against 45,000 | `_build/l3.32-t246-report.md` |
 | L3.32-T247 | Tidy the JOURNAL: mark what later measurements superseded, never rewrite | 9 markers on 8 entries, zero tokens lost; 4 more checked and NOT marked with | `_build/l3.32-t247-report.md` |
 | L3.32-T248 | Refresh the endgame status memo: every headline number in it is now wrong | REWRITTEN, 1,455 words; 16 headline figures corrected, each traced to the m | `_build/l3.32-t248-report.md` |
-| L3.32-T249 | Time the covering code predicate: T211's named gate | DISPATCHED 2026-08-09; its 67.5-76.9 s came from a 126-line slice, and slice rates failed twice t | `_build/l3.32-t249-report.md` |
+| L3.32-T249 | Time the covering code predicate: T211's named gate | GO: 0.0113 s per line whole, not 0.0603 from a slice; the row is 15.2-20.0 s and FITS at every ca | `_build/l3.32-t249-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
