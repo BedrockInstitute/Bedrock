@@ -642,7 +642,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T244 | Gate the choice re-home: price its ideal form from the rewrite side | GATED: ideal form 188-248 naive (booked 300-650); all 12 Choice masters archive f | `_build/l3.32-t244-report.md` |
 | L3.32-T245 | Finish block A: the stop-line was wrong and it gates the only lever left | DISPATCHED 2026-08-09; lands bridge-landing, which unblocks the re-home and  | `_build/l3.32-t245-report.md` |
 | L3.32-T246 | The JOURNAL catch-up: 22 entries for T224 to T245 | DELIVERED 22 of 22, insertions only, lint green; found the word stop-line at 48,245 against 45,000 | `_build/l3.32-t246-report.md` |
-| L3.32-T247 | Tidy the JOURNAL: mark what later measurements superseded, never rewrite | QUEUED behind T246 2026-08-09; two lanes on one file is C-25 | `_build/l3.32-t247-report.md` |
+| L3.32-T247 | Tidy the JOURNAL: mark what later measurements superseded, never rewrite | 9 markers on 8 entries, zero tokens lost; 4 more checked and NOT marked with | `_build/l3.32-t247-report.md` |
 | L3.32-T248 | Refresh the endgame status memo: every headline number in it is now wrong | REWRITTEN, 1,455 words; 16 headline figures corrected, each traced to the m | `_build/l3.32-t248-report.md` |
 | L3.32-T249 | Time the covering code predicate: T211's named gate | DISPATCHED 2026-08-09; its 67.5-76.9 s came from a 126-line slice, and slice rates failed twice t | `_build/l3.32-t249-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
