@@ -489,6 +489,13 @@ def main(argv: list[str]) -> int:
     # measured AC closure reaches the cap may not grow by another commit.
     budget = data.get("trophy_budget", {})
     ac_cap = budget.get("ac_cap")
+    # SUSPENDED 2026-08-09: DD5's benchmarks are not quantified, so the
+    # tripwire would enforce a retired number. It reports instead.
+    if budget.get("thresholds_suspended") and ac_cap and split:
+        print(f"ledger [thresholds SUSPENDED]: AC closure {split['ac_total']:,} "
+              f"against the retired {ac_cap:,} cap, reported and NOT enforced; "
+              f"re-arm is {budget.get('thresholds_rearm', 'unstated')}")
+        ac_cap = None
     if ac_cap and split and split["ac_total"] >= ac_cap:
         defects.append(
             f"AC BUDGET TRIPWIRE (D36): measured ac-total {split['ac_total']:,} "
