@@ -657,6 +657,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T258 | The two rows nobody examined: seg-in-C at 61.2 s and psi-in at 35.3 s | DISPATCHED 2026-08-09; seg-in-C is 17 lines at 3.6 s each on a depth-SIX sucV c | `_build/l3.32-t258-report.md` |
 | L3.32-T259 | Adversarial: is the rud-side crossing really refuted, or foreclosed by engineering? | VIABLE, ungated: re-target the description to the S-tower; T130 | `_build/l3.32-t259-crossing.md` |
 | L3.32-T260 | Settle by probe: does the GCH wing actually consume the bridge rows? | NO, D18 wins: the row's sentence has zero support in its own evidence; the gap S | `_build/l3.32-t260-bridge.md` |
+| L3.32-T261 | Run B's probe, and adversarially review B's own conclusion | QUEUED 2026-08-09 for an Agda slot; T260's answer is a reading and the owner asked for it  | `_build/l3.32-t261-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
