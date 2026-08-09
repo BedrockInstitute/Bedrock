@@ -655,7 +655,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T256 | Gate 0: the first per-definition profile of the finished master | DONE by the orchestrator; segma-in-C 61.2 s and psi-in 35.3 s unexamined;  | `_build/l3.32-t256-belowlim-profile.txt` |
 | L3.32-T257 | Price the GCH wing on the internalization route, calibrated to the rud wing | Internalization 25.5-28.3k vs rud 34.9-39.8k naive; the crossing assumpti | `_build/l3.32-t257-routes.md` |
 | L3.32-T258 | The two rows nobody examined: seg-in-C at 61.2 s and psi-in at 35.3 s | DISPATCHED 2026-08-09; seg-in-C is 17 lines at 3.6 s each on a depth-SIX sucV c | `_build/l3.32-t258-report.md` |
-| L3.32-T259 | Adversarial: is the rud-side crossing really refuted, or foreclosed by engineering? | DISPATCHED 2026-08-09 fable; T130 was READ-ONLY and carries 5,0 | `_build/l3.32-t259-crossing.md` |
+| L3.32-T259 | Adversarial: is the rud-side crossing really refuted, or foreclosed by engineering? | VIABLE, ungated: re-target the description to the S-tower; T130 | `_build/l3.32-t259-crossing.md` |
 | L3.32-T260 | Settle by probe: does the GCH wing actually consume the bridge rows? | NO, D18 wins: the row's sentence has zero support in its own evidence; the gap S | `_build/l3.32-t260-bridge.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |

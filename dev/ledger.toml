@@ -1877,6 +1877,45 @@ gate0_profile = "546,708 ms; segγ∈C 61.2 s and ψ-in 35.3 s are unexamined; P
 # 700 is 140 under its own source's 840; and `crossing-rebuild` carries a stale
 # 711, a 113-line double count, and a five-figure klass for a four-term sum.
 route_comparison = "[T257]: internalization 25.5-28.3k vs rud 34.9-39.8k naive; rud amortizes a larger share of a larger base"
+# [T259] ATTACKED [T130]'s REFUTATION 2026-08-09 AND RETURNED **VIABLE**,
+# UNGATED. [T130] answered NO to "can the crossing ride the rud-side story",
+# and that NO has carried `crossing-rebuild`'s 5,047 lines since. Its own
+# status line reads "no probe, no Agda run": it was always a reading.
+#
+# THE MECHANISM: re-target the description from the L-tower to the S-TOWER.
+# The consumer already carries a parameter-free Delta-0 certified class-level
+# story with an EMPTY successor slot, `Cl = top-dot` at
+# `src/L/Condensation.lagda.md:593`, and both transfers are delivered at both
+# carriers (`:768-853`). Fill the slot with a Delta-0 step-equality clause over
+# the sixteen operation graphs. The two-slot form is then Sigma-1 and
+# constant-free, the determination concludes `v = Sset b` at the ambient
+# reading with no TransferL and no ValueIsL, and the trophy still lands in L
+# through the delivered below-lim shape. It is Devlin's own condensation route
+# through the J-hierarchy.
+#
+# WHERE [T130] WENT WRONG, precisely: ground 2, the tower mismatch, is the
+# load-bearing ground and it holds ONLY against the frozen conclusion
+# `v = Lset b`. [T130] rejected the S-story because the per-level
+# identification is false, which CONFLATES the per-level IDENTITY, false and
+# not needed, with the bridge PLACEMENT, delivered in shape and sufficient.
+# Grounds 1 and 3 are presentation facts with delivered counter-instances.
+#
+# D-26 AND [T203]'s DESCENDING CHAIN ARE ANSWERED RATHER THAN WAVED: the design
+# proposes NO key for the L-step at all, and D-26 is its foundation, being the
+# same fact that made AC cross in the first place.
+#
+# THE PRICE: 0.9-1.8k naive of new spend against the rebuild's measured 5,047,
+# so the route gap narrows by about a third. UNGATED. The gate is a desk
+# pre-check of all sixteen `Fof` specs against the classical Delta-0 graph
+# list, then a two-op slice miniature; NO-GO at 150 lines per op block or 0.1 s
+# per line, and STOP on any forced unbounded quantifier, which would make
+# ground 2 mathematical after all.
+#
+# ASK FIRST, and it is the owner's: the archive row binds a revival to
+# "reproduce the factorization" and this design changes it, so it needs a
+# ruling amending the D32 revival condition. IF THE OWNER RULES THE CONCLUSION
+# `v = Lset b` ITSELF FIXED, [T130] STANDS IN FULL and ground 2 carries it.
+t259_crossing = "VIABLE, ungated: re-target the description to the S-tower; 0.9-1.8k against 5,047; needs a D32 amendment"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
