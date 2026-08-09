@@ -410,7 +410,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.1 | Consistency audit of the edits since the branch point | CLOSED | 30 defects, 6 load-bearing. ALL repaired. Also surfaced that make test ran 3 of 7 suites, hiding a real regression |
 | LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | CLOSED | 3 blocking gaps and 8 more, all closed. N1's reuse checker refused as a gate, adopted as ledger.py --reuse |
 | LJ-0.3 | Retrospective: was the route change itself the right call | CLOSED | Timing premature, route not refuted. Moved the architecture ruling to LJ-2.5. Two laws admitted, C-28 and C-29 |
-| LJ-1.1 | Recon: the GCH route on the internalization tower | planned | Its projection BECOMES DD5's a-priori ceiling, so it is recorded before any build. Block plan, basis, widest unmeasured term |
+| LJ-1.1 | Recon: the GCH route on the internalization tower | dispatched | Its projection becomes DD5's a-priori ceiling, recorded before any build. Block plan, basis, widest term |
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
 | LJ-1.4 | Build: the Mostowski collapse | planned | ARCHIVE FIRST: archive/rud-route/src/V/Collapse.lagda.md, 406 delivered lines. Price port against fresh write (DD13) |
