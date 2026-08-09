@@ -38,11 +38,11 @@ the free slots. Blocked means waiting on an owner ruling, on a sibling's write
 territory, on a measurement that would make the work fundable, or on the
 ceilings above. Auditing a return is not a reason to idle.
 
-**The emergency tier belongs to PLAN D37's standing loop, and this section
+**The emergency tier belongs to PLAN DD17's standing loop, and this section
 does not restate it.** The short form: a codex return that does not do its
 task well, AT a critical breakthrough, may be re-dispatched to Fable 5 at
 maximum effort. Both conditions bind. A stop, a refutation or a RED is a good
-return and never a trigger. Read D37 before using it; the ruling names what
+return and never a trigger. Read DD17 before using it; the ruling names what
 must be recorded.
 
 *Enforcement:* the return-handling checklist in section 6.
@@ -108,7 +108,24 @@ Standing clauses that go in every build or probe brief:
   funds decisions on those numbers. `[L3.32-T88]` had to disclose a contended
   baseline for exactly this reason. **A wrong measurement is not slow, it is
   believed.**
-- **D30, the craft freeze, FIRST.** While it stands, **do not write a brief
+- **THE ARCHIVE SURVEY, and it is a section of the brief rather than a hope.**
+  Ruled by the owner 2026-08-09. Before a brief is sent it carries an
+  **ARCHIVE** section listing what may bear on the task in each of the four
+  archives: `archive/` for retired code, with `archive/rud-route/` holding the
+  72 files of the retired route and `dev/ARCHIVE.md` describing the modules
+  retired before it; `dev/TASKS-archived.md` for what each of the 264 earlier
+  dispatches found; `dev/JOURNAL-archived.md` for why; and
+  `dev/DECISIONS-archived.md` for the rulings that route ran on.
+  `dev/LESSONS.md` is NOT archived and still binds, so it is cited the usual
+  way through `scripts/rules.py`.
+- **AND THE RETURN NAMES WHAT IT USED.** A report carries an **ARCHIVE USED**
+  section: what it actually read, and what it took from each item, at
+  `file:line`. "I looked at the archive" is not a return. A brief whose
+  archive section is empty must say why it is empty.
+- **A port is priced against a fresh write, never assumed** (DD13). The
+  archive is reference material, not a shortcut, and P-l holds: a measured
+  cure does not transfer by analogy.
+- **DD8, the gate, FIRST.** Before you fund a block, **do not write a brief
   that dispatches new mathematics.** Defect repair, profiling, the fixes a
   profile licenses, and capturing the retiring tree's craft are the plan and
   are dispatched normally. If a brief would advance a trophy rather than the
@@ -137,7 +154,7 @@ Standing clauses that go in every build or probe brief:
   chapter then retires WHOLESALE. Say explicitly that D-19's port rates must
   not be quoted at a rewrite question, because that substitution is the
   specific error D17 names and an agent will make it unprompted.
-- **D26, what is ruled and what is open.** State BOTH in the brief's header.
+- **DD2 and DD5, what is ruled and what is open.** State BOTH in the brief's header.
   Ruled: the campaign route, R2' with the trophy stated in L, which the return
   may not reopen or re-table. Open: how to walk it, which results decide, so
   name the current working direction as a working direction and not as law. Say
@@ -198,7 +215,7 @@ or done. The flowchart the owner asked for is rendered on the dashboard
 moved here when the ledger was stripped to measurements
 (`[L3.32-T113]`):
 
-- **While D30's freeze stands, the check-cost campaign is the only funded
+- **While DD23's prose freeze stands, mathematical prose is not funded
   work.** The frozen mathematics resumes in this order when the exit
   condition is met: the bridge landing (below-lim), then the choice re-home,
   then AC on surviving machinery; and the StepInL rewrite, then W3, then
@@ -210,9 +227,9 @@ moved here when the ledger was stripped to measurements
   if its region is being touched by ruled work anyway, take it now (marginal
   cost near zero); if the endpoint projection needs the lines, rank by net
   lines per unit of risk and take the cheapest first; otherwise keep and
-  wait (D26: a line overage never changes the route).
+  wait (DD7: an estimate is a measurement, and an overage is recorded rather than argued from).
 
-*Enforcement:* the standing brief clauses in section 3 (D22, D26, D17) and
+*Enforcement:* the standing brief clauses in section 3 (DD8, DD7, DD13) and
 the return audit in section 6 step 2; the route board itself is generated
 for the owner by `[L3.32-T114]` from the canonical data.
 
@@ -225,7 +242,7 @@ In this order, every time:
    orchestrator's cap. Spot-check the load-bearing claims at `file:line`,
    especially absence claims (grep them) and any claim that a wall is gone.
    **Reject any report that reasons from a line overage to a route change**
-   (D26): the campaign route is ruled, the number is recorded, and the report
+   (DD7): the route is ruled, the number is recorded, and the report
    is sent back for the next technique. A report that changes a TECHNIQUE on a
    measured obligation is doing its job and is not caught by this.
    **A build that wrote fixed where generic was possible, without saying so,
