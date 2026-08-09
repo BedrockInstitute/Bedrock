@@ -16,6 +16,20 @@ the text runs chronologically, with rulings and measurements marked in bold.
 Reconnaissance reports, probe reports and batch reports are cited by path under
 `_build/`; the agent briefs that produced them are archived in `_build/briefs/`.
 
+**Entry conventions.** Early L3.32 entries write two records per task: a
+DISPATCHED record and a RETURNED record. `[T7]`, `[T16]` and `[T49]` use that
+form. Later entries write one record per task. A repeated code is a pair, not
+a defect.
+
+**Supersession markers.** An entry records what a dispatch found on its day.
+A later entry may refute it. A marker is a final paragraph that names the
+superseding task, the new figure, and its report line. The marker form is
+**SUPERSEDED** by `[Tnnn]`: the new figure and the report line. A marker
+never changes the original text.
+
+**Size.** The file was 48,245 words on 2026-08-09. The figure is tracked, not
+a limit. The file grows while the campaign runs.
+
 
 ## [L3.29] AC by the operations calculus (route C), then the B pivot
 
@@ -1039,7 +1053,9 @@ from `IsLeast`'s first component; `pickLeast` plus `leastUnique` from
 `Sset-choice`/`Jset-choice` HIDE the `IsLeast` obligation, so the re-home
 re-derives the search in four lines; and one `Sset-trans` call bounds the
 family, its cells and their members at one level, so the J-side bound is two
-lines rather than a booked re-proof. **THE BRIDGE-STEP HYPOTHESIS THE RE-HOME
+lines rather than a booked re-proof.
+
+**THE BRIDGE-STEP HYPOTHESIS THE RE-HOME
 NEEDS, now pinned for the bridge's export design: the class-level corollary of
 `Reduce.p2` (for every constructible x there is a limit gamma with x a member
 of `Jset gamma`), pushed by `+ω` and read through `Sset-trans`; NOT `Matching`
@@ -1050,7 +1066,9 @@ which the probe did not build. **BAND: naive 0.30-0.65k STANDS with the
 measured pieces at its low end; the calibrated composite falls to ≈0.45-1.35k
 (not the flat 0.90-1.95k) because the measured half moves to x1.3 while the
 carve half stays x3.** Named next gate for full x1.3: a D-1 probe of the J-side
-description plus `separate` at the level. **`[T1]` DELIVERED AND COMMITTED
+description plus `separate` at the level.
+
+**`[T1]` DELIVERED AND COMMITTED
 (`0001613`, orchestrator-audited, `make check` green): the R4 corrective
 stop.** `Matching` is recorded in both languages as the classically FALSE
 statement it is (Devlin VI.2.4 names the general equality as the tempting
@@ -1066,7 +1084,9 @@ fixed `Everything`'s blurb (out of the agent's write scope by rule) and one
 glossary rendering. One flagged interpretation, recorded rather than acted on:
 a literal module-scope `p4` export would require hoisting or duplicating `p3`
 (the false clause), so `p4` stays a where-local of the induction and its
-inclusion half is what the unconditional direction consumes. **`[T2]` RETURNED
+inclusion half is what the unconditional direction consumes.
+
+**`[T2]` RETURNED
 GO ON BOTH ARMS (2026-08-04, `_build/l3.32-t2-report.md`, probe
 `src/ProbeFace.agda` orchestrator-reverified green, zero postulates and zero
 holes, NO WALL OF ANY LESSONS CLASS): THE ARCHITECTURE'S CENTRAL BET HOLDS.**
@@ -1081,14 +1101,18 @@ TWO hypotheses, both explicit module parameters (the clause and range formulas
 mean what they should); ARM B needs no rud-closure at all, a recorded
 finding.** C-6 controls: a garbage-formula positive control in file, and three
 deliberate corruptions (swapped conjuncts, dropped K-binding, dropped range
-hypothesis) all rejected by the typechecker. **CALIBRATION EFFECT, honestly
+hypothesis) all rejected by the typechecker.
+
+**CALIBRATION EFFECT, honestly
 partial: the face's statement SHAPE and the bridge's L-sigma CARRIER ADEQUACY
 reclassify to x1.3 (calibrated cuts about 0.2-0.65k and 0.13-0.34k), while the
 clause and range CONTENT behind the two hypotheses keeps x3.** **`[T6]`
 RETURNED (2026-08-04, `_build/l3.32-t6-report.md`): THE FOUNDATION IS NOT A
 REWRITE TARGET THE WAY THE TOWERS WERE.** Its own verdict: the layer is mostly
 right and the campaign's most expensive lesson (D-16) has already been applied
-to it; what is worth doing is small, additive and wave-safe. Six candidates
+to it; what is worth doing is small, additive and wave-safe.
+
+Six candidates
 accepted with three prices each (cost, immediate compression, continuation
 compression with a NAMED consumer): **C3** publicize the eight `V.Coding` pair
 helpers (1 line, deletes a measured third copy, buys 8-16 in forcing and
@@ -1105,12 +1129,16 @@ calculus, ADDITIVE ONLY (write 160, no immediate compression, but continuation
 **450-1,050**, the largest single number in the report, aimed at forcing's
 twelve-clause satisfaction recursion collapsing to one algebra and at geology's
 definability); **C7** the `FOL.Coding` double-encoding collapse (write 40,
-compression 50-70, but blast radius 2 and its second consumer retires). Eight
+compression 50-70, but blast radius 2 and its second consumer retires).
+
+Eight
 candidates were considered and REJECTED on evidence, the in-place merge of the
 five `Manipulation` modules chief among them (26 masters of blast radius,
 load-bearing reduction behaviour, and a measured counter-instance from GLp
 where a stored decomposition walled at 12 GB while the inline form ran in one
-second). **OWNER RULED 2026-08-04: C7 waits behind the wing, the rest execute
+second).
+
+**OWNER RULED 2026-08-04: C7 waits behind the wing, the rest execute
 now; `[T8]` dispatched (tier codex default) to do C3, C1, C4 and C5 as one
 batch (they share edit surfaces, so parallel writers would collide) with T6's
 own per-candidate stop-lines binding and a revert-not-push-through rule, plus
@@ -1125,21 +1153,27 @@ correction: the fresh Sigma-1 face is NOT the supplier for step-into-L content,
 which is exactly why the rewrite is cheap), is **0.65-1.25k fresh, so the
 chapter retires WHOLESALE and the fresh form re-exports the same two names at
 the same types; net saving 0.74-1.34k**, with `Bridge`'s `Reduce` needing NO
-edit because it is already parameterized. **The sweep then found the same error
+edit because it is already parameterized.
+
+**The sweep then found the same error
 class one level up in the retained trunk: `Realize` (789) and `Switch`'s
 Realize-dependent modules (about 287: `Bs`, `Ev`, `Rl`, `Closure`, `WalkCon`,
 `LimitSwitch`) survive on an import edge the ruled configuration never
 exercises.** Verified today: `Realize`'s only importer is `Switch`; `Bridge`
 imports `Switch` for `Descr` and `Hops` alone; those two modules contain ZERO
 references to any Realize machinery; and `LimitSwitch`/`WalkCon` have no
-consumer outside `Switch` and one untracked probe. The D-bucket was re-pointed
+consumer outside `Switch` and one untracked probe.
+
+The D-bucket was re-pointed
 to `SatSets`'s `full-switch-⊇` long ago, so the whole Realize cone is dead
 weight: **retire, net 0.93-1.10k**. Two smaller converts: `DefInJ` plus
 `SatTable` re-type to about 100-160 (net 0.24-0.30k, booked when the reshape
 lands), and `L/Coding/Base` re-homes about 120 lines into `Describe` (net
 0.06-0.08k, low priority; the warrant "Describe:58-59" understated it, since
 Describe consumes the whole pair kit at 72 sites, but the kit is V-level
-machinery triplicated per C-14). **GENUINE KEEPS, with the arithmetic shown:
+machinery triplicated per C-14).
+
+**GENUINE KEEPS, with the arithmetic shown:
 `SatSets` 1,289 (all three warrants re-verified, and its generic closure
 interface IS the ideal supplier shape), `Order` 578 (a real transfinite chapter
 that the H2 re-home consumes and that would cost more than 578 to rebuild),
@@ -1178,6 +1212,7 @@ conditional core, so the missing piece is exactly the pairing chapter, priced at
 against a named delivered comparable. **T3 the payoff is RED as a consequence and adds a piece T5
 never itemized**: a shape-count, an injection from constant-free formulas of each arity into the
 carrier's index, which is a natural-number-valued code where every coding in the tree is set-valued.
+
 **BAND CONSEQUENCE, in T5's own terms: the cardinal row re-prices to 0.75-1.30k naive and W7
 calibrated to roughly 3.90-7.35k**, and the count's formulation needs bijection and initial-ordinal
 theory rather than the surjection theory, which enlarges the definitional layer further. One
@@ -1223,7 +1258,9 @@ were refuted: `prAt′` is not delivered in `FOL.Syntax` but PRIVATE in `Describ
 (orchestrator-verified at Describe:153), an arm is not about twelve lines, and the adequacy layer
 does not delete to 140-340 but lands at 640-800. D-10 again did the decisive work: the gate's own
 transcribed target was FALSE (the environment order carved the pair the wrong way round) and the
-corrected target, the chapter's own convention, is what was measured. Named as required before the
+corrected target, the chapter's own convention, is what was measured.
+
+Named as required before the
 chapter is funded: per-operation probes for the remaining shaped operations and for the values half;
 
 **T11 the Realize-strip compile gate, RETURNED RED-THEN-GREEN, and the correction IMPROVES the
@@ -1314,7 +1351,9 @@ per-consumer Cantor-Bernstein obligation and drags the general theorem into W7 a
 the predicates GENERALLY (equinumerosity, cardinal, successor cardinal, as formulas with their
 certificates) rather than as GCH-specific shims**, because fine structure's own cardinal notion and
 geology's internal cardinality function are EXTENSIONS of exactly these, so the layer is reused
-rather than rewritten. What genuinely defers is named: the aleph sequence, the cardinality function,
+rather than rewritten.
+
+What genuinely defers is named: the aleph sequence, the cardinality function,
 general Cantor-Bernstein, general cardinal arithmetic, and cofinality. **The trap avoided is stated
 plainly: a surjection-only or raw-injection cardinality would have forced every later consumer to
 re-derive the bijection and initial-ordinal facts from scratch, which is the rebuild D16 exists to
@@ -1377,7 +1416,9 @@ chapter's exact bound. **The successor case disappears entirely**, since the red
 initial ordinal lands on a limit. **But the price rises: the order core ALONE measures 308 lines
 against T16's 300-460 estimate for the whole theorem, so the square law funds at 480-610 naive
 (centre about 545) / 0.9-1.2k calibrated**, with its remaining pieces named and separately priced
-(the initial-ordinal layer, the finite base, the wrapper and transfer). Two walls recorded: the
+(the initial-ordinal layer, the finite base, the wrapper and transfer).
+
+Two walls recorded: the
 truncation wall on the naive descent, cured by the least-witness pattern the re-home probe
 established, and the membership-heavy union steps at the opaque seal, which run about four times the
 pairing chapter's per-line cost and are reported rather than cured.
@@ -1413,7 +1454,9 @@ elaboration-context artifact rather than a statement property, which is itself a
 about 3.2-7.8k, because only the clause-content statement layer reclassifies while the leastness
 content, the family table and the confirmed rider all stand.** So the endpoint's naive band is
 unchanged at 18.48-25.49k, centre 21.99k, **and the pessimistic corner still breaches the owner's
-line by 0.49k**. What changed is the KIND of risk, not the amount of money: W3 is now a build with a
+line by 0.49k**.
+
+What changed is the KIND of risk, not the amount of money: W3 is now a build with a
 measured first-formulation prescription (never case on a transparent least-witness term, seal
 consumer aliases at their birth site with unfolding reads beside them, state at the small index with
 presentation implicits pinned, take ordinals as variables, re-home truncated searches into
@@ -1439,7 +1482,9 @@ kit, the one-time 197-line half of the face's batch 2 that all three consumers c
 before any consumer so none of them pays it twice; `[T27]` the count layer, productionizing the two
 green probes (the count with its decode and reconstruction, and the shape-count with the
 natural-number pairing this tree never had) as the cardinal chapter's combinatorial first block,
-under T18's binding design rulings. A THIRD build is queued for the orchestrator rather than
+under T18's binding design rulings.
+
+A THIRD build is queued for the orchestrator rather than
 dispatched: the Realize cone's retirement, which T11 measured green at 1,289 lines and which is the
 first real application of the archive regime, is held until `[T23]` clears, because stripping the
 switch chapter under a probe that reads its consumers would break that probe's typechecks.
@@ -1457,7 +1502,9 @@ class while the limit-case assembly, the re-type and the consumers' tower-specif
 so **the calibrated top falls from about 4.1k to about 3.0k while the naive total barely moves**,
 which is the two-caliber discipline doing exactly what it is for. **D-8 fired and was fixed inside
 the run**: the tower's first monotonicity target is false in the subset order, and the
-ordinal-conditioned kit that replaces it, 26 lines, is a hidden term the recon never priced. One
+ordinal-conditioned kit that replaces it, 26 lines, is a hidden term the recon never priced.
+
+One
 consolation with real value: the square law is now a NAMED bounded item with a delivered comparable
 rather than an unknown, and the ordinal arithmetic it needs has consumers beyond it in both the
 fine-structure and geology eras, so it is substrate on the same argument that justified the pairing
@@ -1507,7 +1554,9 @@ on the delivered engine, so the 1,379 lines retire whole.** Its thesis, to be te
 rather than argued: the incumbent is large because it proves the code set's membership at EVERY
 arity over a two-limit telescope, while the successor step needs it at ONE index, which is a limit
 by construction, at the arity its consumer actually uses; the key that makes this possible is the
-kernel's own finding that at a limit index the codes are ALREADY members. Stop-line 500 lines, with
+kernel's own finding that at a limit index the codes are ALREADY members.
+
+Stop-line 500 lines, with
 the honest alternative named in the brief: if the fresh module cannot supply the consumer inside it,
 the incumbent's size is justified and the keep genuinely wins.
 
@@ -1526,6 +1575,7 @@ stop-line, and the answer is KEEP: justified by content, not by inertia.** The 1
 NOT committed to the tree, since they restate at one arity what the kept chapter proves at every
 arity; they are preserved at `_build/templates/CodeSetBlock.lagda.md` as the template for the
 SatTable re-typing, whose target shape they state precisely, and they go when that re-typing lands.
+
 **The ledger therefore stands where T25 left it: standing 12,633, endpoint 19.85-26.87k naive,
 centre 23.36k, the corner 1.87k over the line.**
 
@@ -1542,7 +1592,9 @@ membership carried as the second named residue beside the induction's own; and *
 for. `SatTable`'s landing can now close structurally, since `Reduce`'s interface no longer exposes
 the refuted residue. One environment datum recorded honestly: the new chapter cold-checks in about
 fifteen minutes against the baseline's forty-eight seconds and re-checks warm in about 1.5 seconds,
-diagnosed as cold elaboration under heavy conversions rather than a wall. **The lesson is filed
+diagnosed as cold elaboration under heavy conversions rather than a wall.
+
+**The lesson is filed
 against D-10 in its sharpest form: a refutation is not complete until the consumers of the refuted
 object have been walked, because a target's falsity does not announce itself to the theorems whose
 proofs pass through it.**
@@ -1575,7 +1627,9 @@ ANY LEVEL WITH A NONTRIVIAL ORDER.** The batch's own question is answered no: th
 residues are not dischargeable here. **The obstruction is not a line count but expressibility: the
 general-level formula needs function symbols, an internalized level predicate, and an internalized
 satisfaction that this campaign RETIRED, so W3's internal order may need the very machinery the
-route was built to avoid. That is an architecture question, not a build question, and it goes to the
+route was built to avoid.
+
+That is an architecture question, not a build question, and it goes to the
 owner.** A feasibility recon is dispatched rather than another build batch.
 
 **`[T45]` THE BRIDGE'S TWO SEQUENCE RESIDUES: A STOP WITH MEASUREMENT, AND D-10'S TEETH WERE IN THE
@@ -1587,7 +1641,9 @@ instance-checked at `l = ω`: `L_ω = J_1 ∈ J_{ω+1} = S_{ω²+ω}`. `below-li
 limit `β < γ`) is true, instance-checked at `β = ω` and `β = ω·2` with the finite pattern `S_2 =
 L_3`, `S_3 ∈ L_5`, and **the naive "one level up" form is FALSE and is recorded as a boundary beside
 it**. What was refuted is `[T35]`'s recorded **route**, which makes this the second time in the wave
-that D-10's teeth were in the route rather than in the target. Three defects, each evidenced: (1)
+that D-10's teeth were in the route rather than in the target.
+
+Three defects, each evidenced: (1)
 the delivered `read-off` decodes the range clause to "x is a VALUE of an initial segment", so the
 definable set is the FAMILY of stages rather than the stage, while membership in `Lset l` needs the
 union-of-range read; (2) the delivered `Approx` at the rud carrier is the three-clause fragment
@@ -1599,7 +1655,9 @@ even NAME the bound, since `l ∉ Sset (U l)` in general (`l = ω²`, `U l = ω�
 FALSE, REFUTED BY `[T52]` THE SAME DAY AND ORCHESTRATOR-VERIFIED AT ALL FOUR CITATIONS: the example
 is inverted and `l ∈ Sset (U l)` holds at every limit, so the route is CHEAPER rather than deader.
 Defect (2)'s counter-instance is separately defective as written, though its conclusion survives
-with a corrected witness. See the T52 entry below.]**. **Both residues bottom out in the same
+with a corrected witness. See the T52 entry below.]**.
+
+**Both residues bottom out in the same
 undelivered object: Devlin's carried sequence of one tower inside the other tower's level, `(L_β | β
 < α) ∈ J_{α+1}`.** Delivered instead, and green: **127 new in-fence lines of the reachable carrier
 geometry** (`U-lim`, the sup-is-a-limit certificate T35 priced as unmeasured, now measured at 43
@@ -1640,7 +1698,9 @@ no infinite member's square (`src/L/Ordinal/SquareLaw.lagda.md:947`, with `initi
 `initial-bound-inj` :1274, `initial-square-law` :1278). **The D-10 record is the valuable half.**
 T43's recorded claim VERIFIES TRUE: the Core's induction hypothesis is eliminated in exactly one
 place, the `exclude` case, whose target is `Empty.⊥`, a proposition, so the truncated hypothesis
-eliminates there exactly as planned. **But the plan carried a SECOND, unrecorded load-bearing claim,
+eliminates there exactly as planned.
+
+**But the plan carried a SECOND, unrecorded load-bearing claim,
 and it is FALSE as priced**: to CONSUME the truncated hypothesis one must still PROVIDE it at every
 infinite member `β` of every cardinal, and where `β` is itself a least-of cardinal that obligation
 is precisely the no-injection-down whose proof T31 recorded as standard-but-blocked and which the
@@ -1668,7 +1728,9 @@ booked band with the corrected placement, **not a discount**, and it carries one
 **(2) The revival route** un-retires the cone (6,254 lines = `L/Coding` 6,441 minus Base 187,
 orchestrator-remeasured) plus the Choice order-side (about 5,860 of 6,046, orchestrator-remeasured):
 about 12.1k lines back, 30-48k calibrated at D-19 port rates, or 2.4-5.1k naive / 7.1-15.4k
-calibrated to rebuild fresh. Either way **it costs the configuration its endpoint**: standing +12.1k
+calibrated to rebuild fresh.
+
+Either way **it costs the configuration its endpoint**: standing +12.1k
 moves the naive endpoint from 19.85-26.87k to roughly 32-39k, a 7-14k breach of the owner's 25k
 line. **(3) The scope route cannot delete W3**, but it narrows it to exactly one GCH-critical
 consumer, the hull's full elementarity at hull parameters, which Devlin 5.5's bounded-subsets
@@ -1680,7 +1742,9 @@ T40's SECOND obstruction is dead.** T40 priced a new syntax operator into the hu
 that face, delivered, green, and shared foundation that survives the retirement,
 orchestrator-verified at `placeFo` (`src/FOL/Manipulation/Parameters.lagda.md:226`), `absFo` (:260),
 `⊨-abs₁` (:461-463) and the `padRight`/`padLeft` weakening (:150-156). The hull residue is gated on
-the order formula alone, not on new syntax machinery. **T48's recommendation, which the orchestrator
+the order formula alone, not on new syntax machinery.
+
+**T48's recommendation, which the orchestrator
 adopts as the gate: before ruling W3 a revival or a reformulation, run the D-1 probe no batch has
 run**, the tower-of-relations (sequence-witness) formulation at `sucV (sucV ∅)`, the first level
 where the argument lex is non-vacuous and where the level membership is a finite enumeration of 17
@@ -1715,7 +1779,9 @@ consumer walk that D-10 owed found **eight** consumers of the refuted claim and 
 on the operator half, with the order formula's adequacy remaining the real gate in each. Standing
 stays 12,633; the naive endpoint stays 19.85-26.87k. **The sweep's product is epistemic, which is
 what it was bought for**: it confirms that every remaining LIVE obstruction is one the register
-already prices, and that no post-obstruction delivery went unbooked. **Two dispatch failures
+already prices, and that no post-obstruction delivery went unbooked.
+
+**Two dispatch failures
 preceded the return and both were orchestrator errors, recorded here rather than tidied away**: the
 first specified `deepseek-v4-pro`, which this backend rejects outright until early August 2026 while
 the model catalog still lists it, and the second ran under a read-only sandbox, which blocked the
@@ -1740,7 +1806,9 @@ brief's own premise, which is what it was put first to do:** T48's "17 values" i
 literal reading, since `Sset (sucV (sucV ∅))` is a 5,202-slot enumeration (17 old members, the level
 itself, and 16 x 18 x 18 images); the 17 is the PREVIOUS level's membership, and it carries
 duplicates (`Fof op1 ∅ ∅ ≡ ∅ ≡ Fof op15 ∅ ∅`). Both readings are finite, so the gate survives with
-the correction recorded beside the original. **The wall is structural rather than budgetary:** the
+the correction recorded beside the original.
+
+**The wall is structural rather than budgetary:** the
 two-image clause's 16-op lex cannot be embedded in this carrier at all, because the ordinals 0 to 2
 are its only transitive members and the 17 slots collapse to about 3 distinct values, so the formula
 statement layer and both satisfaction directions were never reached. **The consequence is an
@@ -1763,7 +1831,9 @@ counter-instance is separately **defective as written** (its range values lie in
 its conclusion survives with a corrected witness. What survives of T45 is the shape: both residues
 do bottom out in one missing object-shape, a collection of one tower's values as a member of the
 other tower's level, with `Q-lim` reading `Lset l = ⋃ F ∈ Sset (γ l)` from `F = {Lset δ : δ < l}`
-and `below-lim` reading `Sset β = ⋃ W ∈ Lset γ` from `W = {Sset (sucV δ) : δ < β}`. **T52 corrects
+and `below-lim` reading `Sset β = ⋃ W ∈ Lset γ` from `W = {Sset (sucV δ) : δ < β}`.
+
+**T52 corrects
 the "one purchase" claim in one direction and confirms it in the other**: the shared machinery (the
 face, the landing lemmas, the assembly pattern) is one purchase, but the two instances are two
 tower-story builds, one per tower, each residue then only about 40 to 100 lines past its instance.
@@ -1792,7 +1862,9 @@ hoped for does not exist and would not help**: the tree carries no isomorphism-i
 satisfaction, its closest delivered object `L.Hull.TV→elem` (`src/L/Hull.lagda.md:175-249`) is
 identity-on-values and inner-inner, and a true iso-invariance theorem (about 0.08-0.14k naive at x3)
 **would buy the wrong leg**, because the transfers are inner-to-ambient at ONE carrier rather than
-between isomorphic carriers. **The widest unmeasured term is therefore named as row (b), the Levy
+between isomorphic carriers.
+
+**The widest unmeasured term is therefore named as row (b), the Levy
 certificates across the cone's combinators, 0.30-1.00k naive at x3 (0.90-3.00k calibrated)**: the
 largest spread and top in the block and the least anchored, resting on a pure "20 to 40 combinators
 times 15 to 25 lines" survey and multiplicative across sites. **Its gate**, stop-line 200: certify
@@ -1818,6 +1890,7 @@ binding set of all finite honest segments is infinite while every HF member is f
 closed, not merely expensive, and a later batch cannot be sent to retry it. What Arm B needs instead
 is the honest-segment tower story at the carrier, the successor-value clause plus the strengthened
 domain bound, priced at 150-300 lines; Arm C was not reached and stays at T52's 40-100 past Arm B.
+
 **The agent was killed mid-Arm-A by an orchestrator error** (a process-group kill, recorded under
 `[T58]`) and was recovered by `codex exec resume` rather than re-dispatched, which is why its 299
 green lines were not paid for twice. Executes as `[T61]`.
@@ -1846,6 +1919,7 @@ W2's level formula at 613 against a 150-250 band (T30's amended 530-580). **Rema
 4.60-9.94k naive / 10.91-25.51k calibrated**, every row carrying provenance and the unpriced ones
 listed as unpriced rather than as zero (W3 gated by `[T50]`, W1' by `[T54]`, the carried sequence by
 `[T53]`, the StepInL rewrite, the choice re-home, the retirement surgery, the derived W7 residue).
+
 **THE ENDPOINT, ON ONE BASIS: 19.60-24.94k naive, centre 22.27k; 25.91-40.51k calibrated, centre
 33.21k.** The overage against the 25k reference figure, recorded as a plain number and nothing else
 per D26: **the naive pessimistic corner sits 0.06k UNDER the line**, and the calibrated band sits
@@ -1879,7 +1953,9 @@ whose survey band had held the delivered 1,153 lines and the residue items toget
 split. **The widest unmeasured term is the 1.1(vii) tower induction**, 0.30-0.55k naive at x3, the
 least anchored item and the widest band, gated by a probe of the successor and limit arms at `ω`
 over the delivered count, square law and tower, stop-line 250. The row is now in `dev/ledger.toml`
-as a CITED row with `derived` removed, which leaves the ledger with no derived row at all. **Ledger
+as a CITED row with `derived` removed, which leaves the ledger with no derived row at all.
+
+**Ledger
 effect, recorded and not argued from (D26):** the naive endpoint moves to 20.04-25.55k and its
 pessimistic corner from 0.07k under the reference line to 0.55k over it; the calibrated band moves
 to 27.00-42.02k.
@@ -1939,7 +2015,9 @@ list, not a limit of the tree, and route 1's "projection-formula chapter" alread
 consumer wiring rather than new machinery. T63 also killed the cheap answer honestly: the
 sequence-witness step clause **does** feed non-pairs to F11-F14, so a graph complete only at pairs
 would not have sufficed, and the delivered graphs are complete at all arguments, which is exactly
-what the row needed. **THE ORCHESTRATOR'S OWN FINDING ON TOP OF T63'S, WHICH T63'S REPORT NEVER
+what the row needed.
+
+**THE ORCHESTRATOR'S OWN FINDING ON TOP OF T63'S, WHICH T63'S REPORT NEVER
 MENTIONS: `L.Rud.StepInL` IS IN THE D18 RETIREMENT SET.** The machinery that unwalls W3 lives in a
 chapter booked to be archived, and `[T10]`'s ideal-form rewrite was scoped without it. Under D17 a
 rewrite is priced against what its consumers ACTUALLY need, and W3 has just become one of those
@@ -2000,7 +2078,9 @@ owed table reads `L ⊨ AC` as at-risk rather than delivered. Orchestrator-verif
 takes exactly `hasChoiceL`, which the chapter's own prose names as `isZFModel`'s choice field. **The
 re-price: 1.17-2.07k naive / 1.52-2.69k calibrated against a booked 0.10-0.25k / 0.15-0.50k.** The
 booked figure described the work as "prose plus import surgery"; **re-homing content is not import
-surgery**, and the old number survives only as the 0.05-0.15k wiring residual. **The structural
+surgery**, and the old number survives only as the 0.05-0.15k wiring residual.
+
+**The structural
 finding is what makes it schedulable**: the nine crossings cluster on three shared objects and
 collapse into FOUR re-home builds, and the surgery splits into an INDEPENDENT arm (the L-tower graph
 content, the rud satisfaction cone, the finite-tally harvest, 1.08-1.80k naive) that is dispatchable
@@ -2045,7 +2125,9 @@ coded cluster at exactly four files, `CodeSet + CodePred + StepInL + BaseBlock`,
 on the **RETAINED** row as one of the bridge's suppliers (`full-switch-⊇` at `SatSets:1650`); `[T7]`
 had separately verified it as a genuine keep on three warrants. **The error was this repository's**:
 the orchestrator wrote `dev/ledger.toml`'s retire table earlier the same day and copied SatSets
-across from the R5 census, which was written for the J-trophy route. **Removing it costs nothing and
+across from the R5 census, which was written for the J-trophy route.
+
+**Removing it costs nothing and
 pays twice**: 1,289 lines return to standing because they were always going to stay in the tree, and
 **three of the nine retirement crossings dissolve outright** (`OrderFormula`, `Bridge` and `DefInJ`
 all crossed to SatSets and now cross to nothing), taking the surgery row down from 1.17-2.07k naive
@@ -2065,7 +2147,9 @@ notifier never fires, the alarm never fires, the slot is held, and `resume` is b
 **unbounded** idle window. Fixed by inverting the test: an unverifiable process is not alive. Also
 fixed: the adopter took only records alive at a poll tick, so an agent that died inside one 15 s
 tick was never seen; `queue` printed no reminder; and the alarm keyed on the year `2026`, a
-scheduled self-destruct for 2027-01-01. **The structural fix the review recommended is adopted**:
+scheduled self-destruct for 2027-01-01.
+
+**The structural fix the review recommended is adopted**:
 `dispatch.py run --wait` launches the agent detached and then blocks until that agent returns, so
 the dispatch command IS the harness-tracked job and its exit IS the notification. One dispatch, one
 signal, no separate step to forget. The review also states honestly what no tool-side design can
@@ -2076,15 +2160,25 @@ names the `status` alarm as the only available guard on that residual.
 
 **`[L3.32-F]` The check-cost campaign: the shape, the caliber, and the three tests of the premise**
 
-**The shape of what is left, post-Bridge:** 1,956 s, of which `SquareLaw` is **44 percent**, `Condensation` 10, and an unattributed tail 36. So the campaign is three measurements and one capture, below. **The caliber was settled first (`[L3.32-F0]`) and it retired the very comparison that opened the campaign**: at the fairest simple caliber the cross-tree gap is 2.1x, while one controlled fix on `Bridge` was 4.7x, so the cross-tree ratio cannot answer the question and the controlled per-module experiment replaces it. **THE CAMPAIGN'S PREMISE HAS NOW BEEN TESTED THREE TIMES AND HOLDS ONCE.** `Bridge` `[T87]`: the read-lemma restatement worked, 740 s for six lines, then **plateaued at ten times the benchmark**. `SquareLaw` `[T88]`: the same restatement is neutral, sealing it is harmful, and the abstract-carrier form **heap exhausted twice**. `Condensation` `[T89]`: the variable-index shape was written and the module **did not move at all**, 203.3 s against 203.5. **So the abstract-carrier discipline is refuted as a GENERAL lever.** It is what one delivered tree does, and it is not a transformation that can be applied to an arbitrary theorem: two of the three attempts to apply it failed, one by exhausting the heap. **This does not end the freeze, it tells us how the freeze ends.** D30's exit condition asks that every measured-removable second be removed OR refused with a written price, and two of the three hot modules have now been measured to have no cheap removal. **Exactly one untested cheap lever remains in the whole tree**: the `Bridge`-style read-lemma restatement of `Condensation`'s `σᴹ`/`σL` transports, named by `[T89]`.   Four dispatches, each gated before it is funded, each with its branches chosen before the result arrives so a return is audited against a decision rather than producing a fresh argument. The arithmetic: **1,956 s today, about 1,093 s when the four land, and 737 s once the D18 archival takes its 356 s with it**, which is roughly seven and a half minutes wall against the five the owner originally asked for and `[T86]` judged unreachable.
+**The shape of what is left, post-Bridge:** 1,956 s, of which `SquareLaw` is **44 percent**, `Condensation` 10, and an unattributed tail 36. So the campaign is three measurements and one capture, below. **The caliber was settled first (`[L3.32-F0]`) and it retired the very comparison that opened the campaign**: at the fairest simple caliber the cross-tree gap is 2.1x, while one controlled fix on `Bridge` was 4.7x, so the cross-tree ratio cannot answer the question and the controlled per-module experiment replaces it. **THE CAMPAIGN'S PREMISE HAS NOW BEEN TESTED THREE TIMES AND HOLDS ONCE.** `Bridge` `[T87]`: the read-lemma restatement worked, 740 s for six lines, then **plateaued at ten times the benchmark**. `SquareLaw` `[T88]`: the same restatement is neutral, sealing it is harmful, and the abstract-carrier form **heap exhausted twice**. `Condensation` `[T89]`: the variable-index shape was written and the module **did not move at all**, 203.3 s against 203.5. **So the abstract-carrier discipline is refuted as a GENERAL lever.** It is what one delivered tree does, and it is not a transformation that can be applied to an arbitrary theorem: two of the three attempts to apply it failed, one by exhausting the heap.
+
+**This does not end the freeze, it tells us how the freeze ends.** D30's exit condition asks that every measured-removable second be removed OR refused with a written price, and two of the three hot modules have now been measured to have no cheap removal. **Exactly one untested cheap lever remains in the whole tree**: the `Bridge`-style read-lemma restatement of `Condensation`'s `σᴹ`/`σL` transports, named by `[T89]`.   Four dispatches, each gated before it is funded, each with its branches chosen before the result arrives so a return is audited against a decision rather than producing a fresh argument. The arithmetic: **1,956 s today, about 1,093 s when the four land, and 737 s once the D18 archival takes its 356 s with it**, which is roughly seven and a half minutes wall against the five the owner originally asked for and `[T86]` judged unreachable.
 
 **`[L3.32-F0]` Settle the caliber: the wrong first answer, the correction, and the defect record**
 
-**THE FIRST ANSWER WAS WRONG AND IS WITHDRAWN.** It counted only column-0 signatures and reported 2.1x per top-level obligation with the retiring tree writing 56.5 lines per obligation against the trunk's 22.4. Both figures are artifacts: **the cheap tree writes everything inside `module _ (A : V ℓ) where` blocks, so every result it has is INDENTED**, and `L.Godel.Closure` scores zero top-level obligations over 3,490 lines. A top-level-only count measures module-parameterization style and punishes the very discipline that makes the code cheap. So the conclusion reverses: the per-line comparison was not unfair and the gap is not an artifact. **It is real, and the fair caliber confirms it rather than dissolving it.** The controlled per-module experiment (`Bridge`, 4.7x, mathematics held fixed) remains the sharper instrument because no caliber has to be agreed on for it to mean something, but the cross-tree ratio is a genuine signal and is NOT dropped. **The lesson, and the reason the owner was right to demand this first: the caliber was wrong twice in one day, in both directions, and each time it silently changed what the plan concluded.** The worst was not in the caliber at all: **an anchored string-slice edit destroyed five data blocks from `dev/ledger.toml`** (`timing`, `hot`, `tree_cost`, `owed`, `lever`), which silently killed BOTH gates in `check-timing.py`, since each reads a block that no longer existed. Restored block-wise from `1194b98`. **The second worst was a false claim in a document**: the ledger said the parser fixes were covered by regression tests and there were none, so they now exist at `scripts/tests/test_obligations.py`, seventeen cases. **And the defence given for the ratio's stability was wrong**: the defects did not inflate both trees alike (comments hit the trunk 1.14x harder, `let` hit the retiring tree about 16x harder), they happened to CANCEL to within 0.6 percent. Stability by coincidence, not by theorem. A fourth asymmetric class was then measured: signature-less definitions, 421 retiring against 216 surviving, which would move the ratio 4.20 to 4.38 and the benchmark 0.074 to 0.068.
+**THE FIRST ANSWER WAS WRONG AND IS WITHDRAWN.** It counted only column-0 signatures and reported 2.1x per top-level obligation with the retiring tree writing 56.5 lines per obligation against the trunk's 22.4. Both figures are artifacts: **the cheap tree writes everything inside `module _ (A : V ℓ) where` blocks, so every result it has is INDENTED**, and `L.Godel.Closure` scores zero top-level obligations over 3,490 lines. A top-level-only count measures module-parameterization style and punishes the very discipline that makes the code cheap. So the conclusion reverses: the per-line comparison was not unfair and the gap is not an artifact. **It is real, and the fair caliber confirms it rather than dissolving it.** The controlled per-module experiment (`Bridge`, 4.7x, mathematics held fixed) remains the sharper instrument because no caliber has to be agreed on for it to mean something, but the cross-tree ratio is a genuine signal and is NOT dropped.
+
+**The lesson, and the reason the owner was right to demand this first: the caliber was wrong twice in one day, in both directions, and each time it silently changed what the plan concluded.** The worst was not in the caliber at all: **an anchored string-slice edit destroyed five data blocks from `dev/ledger.toml`** (`timing`, `hot`, `tree_cost`, `owed`, `lever`), which silently killed BOTH gates in `check-timing.py`, since each reads a block that no longer existed. Restored block-wise from `1194b98`. **The second worst was a false claim in a document**: the ledger said the parser fixes were covered by regression tests and there were none, so they now exist at `scripts/tests/test_obligations.py`, seventeen cases. **And the defence given for the ratio's stability was wrong**: the defects did not inflate both trees alike (comments hit the trunk 1.14x harder, `let` hit the retiring tree about 16x harder), they happened to CANCEL to within 0.6 percent. Stability by coincidence, not by theorem. A fourth asymmetric class was then measured: signature-less definitions, 421 retiring against 216 surviving, which would move the ratio 4.20 to 4.38 and the benchmark 0.074 to 0.068.
 
 **`[L3.32-F2]` Cool Condensation: the repair, the third disease, and the transplant failures**
 
-**The repair landed and is by construction:** the equality-reading atom `snd∈Snd` is DELETED (zero occurrences), so defect 2 cannot be restated; the limit clause has no binder over a singleton member at all, so defect 3 cannot be restated; and **a fourth defect of the same class was found and machine-refuted**, the delivered `domForm` bound its variables in the singleton member and so did not read the delivered `exactDom` at all. +161 lines against a 400 stop-line. The clauses WERE written at variable indices, the exact discipline the campaign rests on, and the module did not move. `[T89]`'s own explanation is the valuable part: **`Condensation`'s heat was never in the structural-story formulas, which were already variable-indexed; it is in the `σᴹ`/`σL` transports and the absoluteness applications at concrete tower positions**, which this dispatch did not touch. **So one untested cheap lever remains on this module and it is named**: the `Bridge`-style read-lemma restatement of the transports, not the story's index shape. D5 is not unblocked, but its content-level obstructions are gone and what remains is the clause decode suite, priced. **`[T96]` MEASURED IT AND FOUND A THIRD DISEASE.** Not `Bridge`'s consumer-bound and not `SquareLaw`'s statement-bound: **body-bound.** The gutted-body experiment settles it in one run: `ambientOnly-from` drops from 128.5 s to **0 ms** and 131.1 s appears in the lemma its one-line body now calls, with the module total unchanged. A statement-bound cost survives gutting, as `SquareLaw`'s 190 s did; this one MOVES. The three type synonyms carrying the concrete formula have **no profile rows at all**, under 20 ms each. **The bill of materials for the 183 s of hot rows, each priced:** ~77 s is an environment conversion between `AmbientOnly`'s unprojected premise and `TransferL`'s projected one, definitionally equal but walking the whole satisfaction tree of the concrete formula; ~54 s is the delivered `Lset-only` application, **the chapter's actual content, with no cheaper body of the same type**; ~56 s is the `Transport`/`amb-agree` instantiation inside `Crossing.crossOut-from`. **So about 133 of the 183 s IS removable and 54 s is content**, but every removal changes an exported statement, which is beyond a seal. **This is a priced refusal, which is exactly what D30's exit condition (2) asks for**, and it notes one cheap fact for later: `Crossing` has no tree consumer today, so parameterizing it on the formula costs nothing outside the module.  **`[T104]` RE-OPENED `[T96]`'s REFUSAL AND OVERTURNED IT IN DIRECTION.** `[T96]` concluded **"no export-preserving combination exists: every lever touches an exported statement"**. But it had priced only one move, RESTATING the exported obligations. `[T102]` then cured `SquareLaw`'s `h₀` family with every signature byte-identical, by **lifting the concrete applications into a module telescope** where they are checked once at a neutral position, and `[T104]` finds **all three `Condensation` pieces liftable the same way**: the ~77 s environment conversion, the ~56 s `Crossing` piece which **was never blocked at all** since `[T96]` itself conceded no tree consumer exists, and even the ~54 s `Lset-only` application that `[T96]` called irreducible content, on the argument from `[T96]`'s own `loLset3` figure that the cost is the concrete-index POSITION rather than the content. **So up to 183 of the module's 203 s may be reachable with no export change.** `[T104]` typechecked nothing and says so; `[T106]` is the gate that measures it before anything is built, per P-l's transplant law, and piece 3 is the one to be sceptical of.  Piece 1's lift makes the module **worse**, 204.7 s to 308.8 s. Piece 3's cost **moves** into the new telescope row rather than going away, and `ambientOnly-from` gets worse with it. Piece 2 is green **only in the export-CHANGING form**: the export-preserving wrapper re-pays the walk at 69.1 s, worse than the control's 55.2. **So no export-preserving combination exists, exactly as `[T96]` said, and the orchestrator backed the wrong reading.** This is the fourth transplant failure of the day and the first the orchestrator personally endorsed: `[T104]` reasoned from `[T102]`'s cure by resemblance and ran nothing, which is precisely what P-l's transplant table forbids.
+**The repair landed and is by construction:** the equality-reading atom `snd∈Snd` is DELETED (zero occurrences), so defect 2 cannot be restated; the limit clause has no binder over a singleton member at all, so defect 3 cannot be restated; and **a fourth defect of the same class was found and machine-refuted**, the delivered `domForm` bound its variables in the singleton member and so did not read the delivered `exactDom` at all. +161 lines against a 400 stop-line. The clauses WERE written at variable indices, the exact discipline the campaign rests on, and the module did not move. `[T89]`'s own explanation is the valuable part: **`Condensation`'s heat was never in the structural-story formulas, which were already variable-indexed; it is in the `σᴹ`/`σL` transports and the absoluteness applications at concrete tower positions**, which this dispatch did not touch. **So one untested cheap lever remains on this module and it is named**: the `Bridge`-style read-lemma restatement of the transports, not the story's index shape. D5 is not unblocked, but its content-level obstructions are gone and what remains is the clause decode suite, priced.
+
+**`[T96]` MEASURED IT AND FOUND A THIRD DISEASE.** Not `Bridge`'s consumer-bound and not `SquareLaw`'s statement-bound: **body-bound.** The gutted-body experiment settles it in one run: `ambientOnly-from` drops from 128.5 s to **0 ms** and 131.1 s appears in the lemma its one-line body now calls, with the module total unchanged. A statement-bound cost survives gutting, as `SquareLaw`'s 190 s did; this one MOVES. The three type synonyms carrying the concrete formula have **no profile rows at all**, under 20 ms each. **The bill of materials for the 183 s of hot rows, each priced:** ~77 s is an environment conversion between `AmbientOnly`'s unprojected premise and `TransferL`'s projected one, definitionally equal but walking the whole satisfaction tree of the concrete formula; ~54 s is the delivered `Lset-only` application, **the chapter's actual content, with no cheaper body of the same type**; ~56 s is the `Transport`/`amb-agree` instantiation inside `Crossing.crossOut-from`. **So about 133 of the 183 s IS removable and 54 s is content**, but every removal changes an exported statement, which is beyond a seal. **This is a priced refusal, which is exactly what D30's exit condition (2) asks for**, and it notes one cheap fact for later: `Crossing` has no tree consumer today, so parameterizing it on the formula costs nothing outside the module.
+
+**`[T104]` RE-OPENED `[T96]`'s REFUSAL AND OVERTURNED IT IN DIRECTION.** `[T96]` concluded **"no export-preserving combination exists: every lever touches an exported statement"**. But it had priced only one move, RESTATING the exported obligations. `[T102]` then cured `SquareLaw`'s `h₀` family with every signature byte-identical, by **lifting the concrete applications into a module telescope** where they are checked once at a neutral position, and `[T104]` finds **all three `Condensation` pieces liftable the same way**: the ~77 s environment conversion, the ~56 s `Crossing` piece which **was never blocked at all** since `[T96]` itself conceded no tree consumer exists, and even the ~54 s `Lset-only` application that `[T96]` called irreducible content, on the argument from `[T96]`'s own `loLset3` figure that the cost is the concrete-index POSITION rather than the content. **So up to 183 of the module's 203 s may be reachable with no export change.** `[T104]` typechecked nothing and says so; `[T106]` is the gate that measures it before anything is built, per P-l's transplant law, and piece 3 is the one to be sceptical of.  Piece 1's lift makes the module **worse**, 204.7 s to 308.8 s. Piece 3's cost **moves** into the new telescope row rather than going away, and `ambientOnly-from` gets worse with it.
+
+Piece 2 is green **only in the export-CHANGING form**: the export-preserving wrapper re-pays the walk at 69.1 s, worse than the control's 55.2. **So no export-preserving combination exists, exactly as `[T96]` said, and the orchestrator backed the wrong reading.** This is the fourth transplant failure of the day and the first the orchestrator personally endorsed: `[T104]` reasoned from `[T102]`'s cure by resemblance and ran nothing, which is precisely what P-l's transplant table forbids.
 
 **`[L3.32-F3.1]` Sweep the tree: the rule-by-rule record and the refuted hit**
 
@@ -2096,19 +2190,37 @@ It read the surviving trunk against `Bridge`'s defect shape and found no second 
 
 **`[L3.32-F5.1]` Root cause: the counter-example and the history-side evidence**
 
-**`[T98]` found the counter-example that kills the orchestrator's own hypothesis.** The hypothesis was that these theorems are expensive because their content is about the tower, so an abstract carrier is unavailable to them by definition. **`L.Rud.HF` refutes it**: it proves content genuinely about the first limit stage at concrete positions (`ord∈HF→∈ω` at `src/L/Rud/HF.lagda.md:224`, `stage∈HF` at `:263`) and checks at **0.030 s per line with zero `opaque` of its own**, because `Sset` and `Lset` are `opaque` UPSTREAM (`src/L/Rud/Hierarchy.lagda.md:219`, `src/L/Constructible.lagda.md:221`), so `Sset ω` is an ATOM in the statement. **Being ABOUT a stage does not force the stage's PRESENTATION into the type.** The three expensive modules drag the transparent presentation functor `⟪_⟫` into their statement types at tower-built positions (`⟪ sucV (γp p) ⟫`, `⟪ ω ⟫`, `⟪ # n ⟫`), and `⟪ a ⟫` unfolds to a kernel-quotient tower. That is the root cause, and it is falsifiable. **`[T97]` settles it from the history side, and this is the finding that ends the argument: THE CHEAP TREE WAS NEVER BORN CHEAP. It hit more than a dozen measured walls and every one was cured**, during construction, which is why the committed forms look effortless: a model that would not finish in ten minutes cured to 0.3 s; 2,237 s to 1.5 s; 693 s and 13 GB to 2 s; a lemma past 30 GB to 7 s; 482 s recorded uncured as the boundary case. **So the surviving trunk's three modules are not facing a new kind of problem. They are facing the problem this project has already solved a dozen times, at exactly this magnitude, and the cures are written down.**
+**`[T98]` found the counter-example that kills the orchestrator's own hypothesis.**
+
+The hypothesis was that these theorems are expensive because their content is about the tower, so an abstract carrier is unavailable to them by definition. **`L.Rud.HF` refutes it**: it proves content genuinely about the first limit stage at concrete positions (`ord∈HF→∈ω` at `src/L/Rud/HF.lagda.md:224`, `stage∈HF` at `:263`) and checks at **0.030 s per line with zero `opaque` of its own**, because `Sset` and `Lset` are `opaque` UPSTREAM (`src/L/Rud/Hierarchy.lagda.md:219`, `src/L/Constructible.lagda.md:221`), so `Sset ω` is an ATOM in the statement. **Being ABOUT a stage does not force the stage's PRESENTATION into the type.** The three expensive modules drag the transparent presentation functor `⟪_⟫` into their statement types at tower-built positions (`⟪ sucV (γp p) ⟫`, `⟪ ω ⟫`, `⟪ # n ⟫`), and `⟪ a ⟫` unfolds to a kernel-quotient tower. That is the root cause, and it is falsifiable.
+
+**`[T97]` settles it from the history side, and this is the finding that ends the argument: THE CHEAP TREE WAS NEVER BORN CHEAP. It hit more than a dozen measured walls and every one was cured**, during construction, which is why the committed forms look effortless: a model that would not finish in ten minutes cured to 0.3 s; 2,237 s to 1.5 s; 693 s and 13 GB to 2 s; a lemma past 30 GB to 7 s; 482 s recorded uncured as the boundary case. **So the surviving trunk's three modules are not facing a new kind of problem. They are facing the problem this project has already solved a dozen times, at exactly this magnitude, and the cures are written down.**
 
 **`[L3.32-F5]` SquareLaw: the measured refutations, the probes, the gate, and both dispatches**
 
-**The cost is one family: four near-duplicate concrete pairing-injectivity proofs carry 88 percent of the module** (`h₀-inj` twice, `pair-eq` twice, two byte-mirror pairs). **But it is NOT `Bridge`'s family.** Bridge's cost sat in consumers re-normalizing a read lemma; **this cost sits in elaborating the STATEMENT itself**, whose type carries `⟪ sucV (γp p) ⟫`, a stuck concrete tower. The decisive probe: with the body reduced to a one-line application of a generic lemma that is itself free, `h₀-inj` **still pays its 190 s** (813.7 s against an 810.7 s control). **Sealing it is actively HARMFUL**: the exact Bridge shape ran past 26:06 clean before interruption, at least 1.9x slower. **And the abstract-carrier restatement, the discipline this whole campaign is built on, HEAP EXHAUSTED at `-M8g` twice** (10:26 with instantiations, 26:10 alone). So `[T93]`'s discipline is measured NOT to transfer to this theorem, which is the most important negative result of the campaign: **0.074 is known reachable by one tree, not by any given theorem.** What remains is an R-35 statement reshaping of the `h₀`/`comp₀` chain, an internal-interface restructure far over the 60-line seal line, **unpriced**; the measured floor if the four rows vanished is about 100 s. **F5's earlier rewrite-side price of 17 to 52 s is WITHDRAWN**: it assumed the benchmark was reachable here, and the one experiment that tested that assumption exhausted the heap. **The module is 250 obligations, not the 191 this row carried** (`[T95]` D5: 191 was `Bridge`'s count, substituted in by error), so the rate is **3.42 s per obligation, 46x**, not 3.14 and 50x. **The probe:** restate `SquareLaw`'s counting chase against an abstract finite-enumeration interface `(E : ℕ → Type ℓ)` with the count's four operations as hypotheses, and no `⟪ # m ⟫` anywhere in the telescope, then instantiate at `E n := ⟪ # n ⟫`. **Green at `-M8g`: burn the boats. Heap-exhausted: the chase is presentation-bound, the root cause flips to mathematics FOR THIS MODULE, and its 856 s is a standing tax until a tower reformulation is separately gated.** `[T97]` adds the discriminating diagnostic that explains why the `Bridge` fix could never have transferred: **`Bridge`'s profile rows named OTHER modules (consumer-side disease); `SquareLaw`'s four hot rows are its own definitions (definition-side disease)**, and the playbook's own rule says the two take different cures. **`Bridge` itself is now understood and mostly closed:** of its residual 199 s, **149.5 s is a ONE-TIME tower computation floor** (`γ-compute-full` 94.9 s plus `towerStep≡+ωU` 54.6 s), irreducible by more sealing because the tower's computation rule must relate `γ α` to its body at least once; the remaining ~50 s is the R-38 alias tail, worth 6 to 12 lines. **THE GATE IS GREEN.** `[T99]` restated `SquareLaw`'s counting chase against an abstract finite-enumeration interface with `⟪ # m ⟫` kept OUT of the telescope. **The exact gate that heap-exhausted `[T88]`'s probe 2a at `-M8g` after 26 minutes 10 seconds now passes in 1.28 seconds, exit 0.** Both instantiations at `E n := ⟪ # n ⟫` land, no postulate, no hole, no termination pragma. **The chase term goes from 350.8 s to about 1.5 s, a saving of roughly 349 seconds, for 61 new lines against 77 removed: line-neutral.** It confirms `[T98]`'s root cause exactly, and P-l's mechanism exactly: the statement is still ABOUT `⟪ # n ⟫`, the instantiation signatures carry the concrete numerals, but the elaboration never sees the presentation because `E` is neutral in the generic body. **SCOPE, STATED BECAUSE IT IS HALF THE MODULE:** the chase is the `pair-eq` pair. The `h₀-inj` pair is a **separate hot family at 360.6 s** whose statements carry `⟪ sucV (γp p) ⟫`, and `[T99]` did not build it. So this gate lands `SquareLaw` at about **507 s, not 42**; the `h₀`/`comp₀` chain reshape is the remaining measured term, priced by `[T98]` and not re-measured. **The rewrite is FUNDED at the 1.3x class on its widest term, per D22.** The one discipline the rewrite must not undo: keep `⟪ # m ⟫` out of the generic telescope, which is the recorded poison. Dispatch 1 is `[T101]`, landing `[T99]`'s measured design in the master: the two concrete counting chases replaced by one generic chase at an abstract finite-enumeration interface plus two one-line instantiations, target **350.8 s to about 1.5 s, line-neutral**, exports frozen. Dispatch 2 is the `h₀`/`comp₀` chain reshape for the remaining 360.6 s, held back deliberately so the two families move separately and each result stays attributable. **The brief's load-bearing constraint, in capitals, is P-l's mechanism: `⟪ # m ⟫` must not appear anywhere in the generic telescope.** That single difference is 8 GB and 26 minutes against 1.28 seconds on the same theorem.  **DISPATCH 1 LANDED, BRANCH A, AND IT BEAT ITS OWN PREDICTION.** `[T101]` measured `SquareLaw` at **859.0 s before and 465.5 s after: minus 393 seconds, 45.8 percent, for a net MINUS ONE LINE.** The route memo predicted 507 s; it landed at 465.5. **The two `pair-eq` rows no longer exist as definitions**: the generic chase and both instantiations each sit below the profile display threshold, exactly as `[T99]`'s scratch measurement said. **Every exported type is unchanged**, verified independently by a full signature diff against HEAD: 250 signatures before, 245 after, and the only movement is the two chases' `where`-locals collapsing into one generic set. **The poison rule held**, verified by grep: zero occurrences of the concrete numeral presentation anywhere in the generic telescope (`src/L/Ordinal/SquareLaw.lagda.md:135-143`). **The tree goes 1,956 s to 1,563 s.** What remains in this module is the `h₀-inj` pair at 389.3 s, now **84 percent of it**, which is dispatch 2 and is probed before it is built.  Verified independently rather than taken on trust: a full signature diff shows **no exported signature lost**, with `Core.h₀`/`h₀-inj` (`:421`, `:424`) and `InitialCore`'s (`:1115`, `:1118`) all still declared at byte-identical concrete types, and the only movement being `where`-locals collapsing from two copies to one (`ea` 2 to 1, `eb` 2 to 1, `β` 6 to 3).
+**The cost is one family: four near-duplicate concrete pairing-injectivity proofs carry 88 percent of the module** (`h₀-inj` twice, `pair-eq` twice, two byte-mirror pairs). **But it is NOT `Bridge`'s family.** Bridge's cost sat in consumers re-normalizing a read lemma; **this cost sits in elaborating the STATEMENT itself**, whose type carries `⟪ sucV (γp p) ⟫`, a stuck concrete tower. The decisive probe: with the body reduced to a one-line application of a generic lemma that is itself free, `h₀-inj` **still pays its 190 s** (813.7 s against an 810.7 s control). **Sealing it is actively HARMFUL**: the exact Bridge shape ran past 26:06 clean before interruption, at least 1.9x slower. **And the abstract-carrier restatement, the discipline this whole campaign is built on, HEAP EXHAUSTED at `-M8g` twice** (10:26 with instantiations, 26:10 alone). So `[T93]`'s discipline is measured NOT to transfer to this theorem, which is the most important negative result of the campaign: **0.074 is known reachable by one tree, not by any given theorem.** What remains is an R-35 statement reshaping of the `h₀`/`comp₀` chain, an internal-interface restructure far over the 60-line seal line, **unpriced**; the measured floor if the four rows vanished is about 100 s.
+
+**F5's earlier rewrite-side price of 17 to 52 s is WITHDRAWN**: it assumed the benchmark was reachable here, and the one experiment that tested that assumption exhausted the heap. **The module is 250 obligations, not the 191 this row carried** (`[T95]` D5: 191 was `Bridge`'s count, substituted in by error), so the rate is **3.42 s per obligation, 46x**, not 3.14 and 50x. **The probe:** restate `SquareLaw`'s counting chase against an abstract finite-enumeration interface `(E : ℕ → Type ℓ)` with the count's four operations as hypotheses, and no `⟪ # m ⟫` anywhere in the telescope, then instantiate at `E n := ⟪ # n ⟫`. **Green at `-M8g`: burn the boats. Heap-exhausted: the chase is presentation-bound, the root cause flips to mathematics FOR THIS MODULE, and its 856 s is a standing tax until a tower reformulation is separately gated.** `[T97]` adds the discriminating diagnostic that explains why the `Bridge` fix could never have transferred: **`Bridge`'s profile rows named OTHER modules (consumer-side disease); `SquareLaw`'s four hot rows are its own definitions (definition-side disease)**, and the playbook's own rule says the two take different cures.
+
+**`Bridge` itself is now understood and mostly closed:** of its residual 199 s, **149.5 s is a ONE-TIME tower computation floor** (`γ-compute-full` 94.9 s plus `towerStep≡+ωU` 54.6 s), irreducible by more sealing because the tower's computation rule must relate `γ α` to its body at least once; the remaining ~50 s is the R-38 alias tail, worth 6 to 12 lines. **THE GATE IS GREEN.** `[T99]` restated `SquareLaw`'s counting chase against an abstract finite-enumeration interface with `⟪ # m ⟫` kept OUT of the telescope. **The exact gate that heap-exhausted `[T88]`'s probe 2a at `-M8g` after 26 minutes 10 seconds now passes in 1.28 seconds, exit 0.** Both instantiations at `E n := ⟪ # n ⟫` land, no postulate, no hole, no termination pragma. **The chase term goes from 350.8 s to about 1.5 s, a saving of roughly 349 seconds, for 61 new lines against 77 removed: line-neutral.** It confirms `[T98]`'s root cause exactly, and P-l's mechanism exactly: the statement is still ABOUT `⟪ # n ⟫`, the instantiation signatures carry the concrete numerals, but the elaboration never sees the presentation because `E` is neutral in the generic body. **SCOPE, STATED BECAUSE IT IS HALF THE MODULE:** the chase is the `pair-eq` pair. The `h₀-inj` pair is a **separate hot family at 360.6 s** whose statements carry `⟪ sucV (γp p) ⟫`, and `[T99]` did not build it.
+
+So this gate lands `SquareLaw` at about **507 s, not 42**; the `h₀`/`comp₀` chain reshape is the remaining measured term, priced by `[T98]` and not re-measured. **The rewrite is FUNDED at the 1.3x class on its widest term, per D22.** The one discipline the rewrite must not undo: keep `⟪ # m ⟫` out of the generic telescope, which is the recorded poison. Dispatch 1 is `[T101]`, landing `[T99]`'s measured design in the master: the two concrete counting chases replaced by one generic chase at an abstract finite-enumeration interface plus two one-line instantiations, target **350.8 s to about 1.5 s, line-neutral**, exports frozen. Dispatch 2 is the `h₀`/`comp₀` chain reshape for the remaining 360.6 s, held back deliberately so the two families move separately and each result stays attributable. **The brief's load-bearing constraint, in capitals, is P-l's mechanism: `⟪ # m ⟫` must not appear anywhere in the generic telescope.** That single difference is 8 GB and 26 minutes against 1.28 seconds on the same theorem.  **DISPATCH 1 LANDED, BRANCH A, AND IT BEAT ITS OWN PREDICTION.** `[T101]` measured `SquareLaw` at **859.0 s before and 465.5 s after: minus 393 seconds, 45.8 percent, for a net MINUS ONE LINE.** The route memo predicted 507 s; it landed at 465.5.
+
+**The two `pair-eq` rows no longer exist as definitions**: the generic chase and both instantiations each sit below the profile display threshold, exactly as `[T99]`'s scratch measurement said. **Every exported type is unchanged**, verified independently by a full signature diff against HEAD: 250 signatures before, 245 after, and the only movement is the two chases' `where`-locals collapsing into one generic set. **The poison rule held**, verified by grep: zero occurrences of the concrete numeral presentation anywhere in the generic telescope (`src/L/Ordinal/SquareLaw.lagda.md:135-143`). **The tree goes 1,956 s to 1,563 s.** What remains in this module is the `h₀-inj` pair at 389.3 s, now **84 percent of it**, which is dispatch 2 and is probed before it is built.  Verified independently rather than taken on trust: a full signature diff shows **no exported signature lost**, with `Core.h₀`/`h₀-inj` (`:421`, `:424`) and `InitialCore`'s (`:1115`, `:1118`) all still declared at byte-identical concrete types, and the only movement being `where`-locals collapsing from two copies to one (`ea` 2 to 1, `eb` 2 to 1, `β` 6 to 3).
 
 **`[L3.32-F6.0]` What L.Rud should contain: the measurement, the caveat, and the stop**
 
-**The row below violated exactly that**: it sorted the existing 22 modules by seconds and funded them in that order, which takes the current decomposition as given and is item-by-item rewriting by another name. **THE MEASUREMENT THAT MAKES THE QUESTION URGENT.** `L.Rud` holds **2,884 obligations over 12,147 lines**, and the rest of the tree consumes **41 imported names from 5 of its 22 modules, and at least 46 actual names**: `[T94]` corrected 38 to 41 (a second `Step` using-block at `src/L/OrderFormula.lagda.md:366`), and `[T95]` then found `module Sat` is not one name but a module instantiated to at least six (`:380-413`), while two imported names (`_⊰_`, `_≺_`) are never used in the body at all. So **imported and consumed are different numbers and this row previously conflated them**: about **63 obligations per consumed name**. Five modules (`BaseBlock`, `CodePred`, `HF`, `OpGraph`, `SatTable`) are imported by nobody at all, inside the route or outside it. **THE CAVEAT THAT DECIDES HOW THAT IS READ, and it must be in the brief:** this route is mid-campaign, so `Bridge`, `HF` and `Finite` have no external consumer YET because their consumer is the bridge landing that D30 froze. **Unconsumed is not unneeded**, and a recon that confuses the two produces a catastrophically wrong answer. **WHAT THIS ROW MUST ANSWER:** what the route must deliver, counting the frozen consumers; how many of the 2,884 obligations are genuinely distinct mathematics against how many are instances of one pattern written repeatedly (D29, and `[T79]` already measured 700 to 850 standing lines written twice); which modules exist for a route that has since changed rather than for their content; and the ideal top-level decomposition designed BACKWARD from the deliverables (D17, priced from the rewrite side, D-19's port rates not quotable). Designing backward from the deliverables it returns **18 KEEP, 4 RETIRE, 1 REWRITE**, against 22 standing. **The four retirements are the real prize and none of them is a rewrite:** `BaseBlock` (content already harvested into `Finite` by `[T82]`, `HF` re-pointed), `CodeSet` (consumed only by `CodePred`, which retires), `CodePred` (the satisfaction-internalization cone died with the route change), and `OpGraph` (**the wall it filled was refuted by `[T63]`; this is a NEW retirement and needs the owner's ruling**). Together **-440 signatures, -2,057 lines, -40 s**, at the price of an archival rather than a rewrite. **The one REWRITE it names is `StepInL`, which the ledger already owed** for W3 at 1.24 to 1.73k naive, so the architecture question adds no new rewrite work at all. It also names three compression levers inside kept modules, all of them `[T79]`'s already-measured duplication rather than new findings: the `Describe` per-op shells behind one generic wrapper, and the `Fof-f0..f15` and `JF0..JF10` families collapsed to one indexed lemma. **So the owner's question has paid for itself in the opposite direction from the one expected**: asking what the route should CONTAIN found 2,057 lines that should not exist at all, which no per-module seconds ranking would ever have surfaced, and simultaneously refuted the case for rewriting the other 10,090.
+**The row below violated exactly that**: it sorted the existing 22 modules by seconds and funded them in that order, which takes the current decomposition as given and is item-by-item rewriting by another name. **THE MEASUREMENT THAT MAKES THE QUESTION URGENT.** `L.Rud` holds **2,884 obligations over 12,147 lines**, and the rest of the tree consumes **41 imported names from 5 of its 22 modules, and at least 46 actual names**: `[T94]` corrected 38 to 41 (a second `Step` using-block at `src/L/OrderFormula.lagda.md:366`), and `[T95]` then found `module Sat` is not one name but a module instantiated to at least six (`:380-413`), while two imported names (`_⊰_`, `_≺_`) are never used in the body at all. So **imported and consumed are different numbers and this row previously conflated them**: about **63 obligations per consumed name**. Five modules (`BaseBlock`, `CodePred`, `HF`, `OpGraph`, `SatTable`) are imported by nobody at all, inside the route or outside it. **THE CAVEAT THAT DECIDES HOW THAT IS READ, and it must be in the brief:** this route is mid-campaign, so `Bridge`, `HF` and `Finite` have no external consumer YET because their consumer is the bridge landing that D30 froze. **Unconsumed is not unneeded**, and a recon that confuses the two produces a catastrophically wrong answer.
+
+**WHAT THIS ROW MUST ANSWER:** what the route must deliver, counting the frozen consumers; how many of the 2,884 obligations are genuinely distinct mathematics against how many are instances of one pattern written repeatedly (D29, and `[T79]` already measured 700 to 850 standing lines written twice); which modules exist for a route that has since changed rather than for their content; and the ideal top-level decomposition designed BACKWARD from the deliverables (D17, priced from the rewrite side, D-19's port rates not quotable). Designing backward from the deliverables it returns **18 KEEP, 4 RETIRE, 1 REWRITE**, against 22 standing. **The four retirements are the real prize and none of them is a rewrite:** `BaseBlock` (content already harvested into `Finite` by `[T82]`, `HF` re-pointed), `CodeSet` (consumed only by `CodePred`, which retires), `CodePred` (the satisfaction-internalization cone died with the route change), and `OpGraph` (**the wall it filled was refuted by `[T63]`; this is a NEW retirement and needs the owner's ruling**). Together **-440 signatures, -2,057 lines, -40 s**, at the price of an archival rather than a rewrite. **The one REWRITE it names is `StepInL`, which the ledger already owed** for W3 at 1.24 to 1.73k naive, so the architecture question adds no new rewrite work at all.
+
+It also names three compression levers inside kept modules, all of them `[T79]`'s already-measured duplication rather than new findings: the `Describe` per-op shells behind one generic wrapper, and the `Fof-f0..f15` and `JF0..JF10` families collapsed to one indexed lemma. **So the owner's question has paid for itself in the opposite direction from the one expected**: asking what the route should CONTAIN found 2,057 lines that should not exist at all, which no per-module seconds ranking would ever have surfaced, and simultaneously refuted the case for rewriting the other 10,090.
 
 **`[L3.32-F6]` The batched rewrite: the re-measured rate, the batch selection, and the line dimension**
 
-Read the batches below as a floor on the prize under the current architecture, not as the plan. The owner ruled the exit condition to be *the retiring subtree's measured rate*; that rate was then re-measured after two parser defects were found in the counter (comment lines read as signatures, `let z : A` scored twice), and it is 0.074. The ratio between the trees did not move at all, because the defects inflated both alike, which is the clearest evidence available that the RATIO is robust and the ABSOLUTE figures are not. **THE EXIT CONDITION SELECTS THE BATCHES BY ITSELF, WHICH IS THE FINDING: 13 of `L.Rud`'s 22 modules are ALREADY at or below the line and need no rewrite at all, and of the 9 above it, 4 are worth 14 seconds COMBINED.** `L.Rud` stands at 12,147 lines, 2,884 obligations, 458 s, **0.159 s per obligation**; at the exit condition it is 212 s, so the whole programme is worth **246 seconds**, and it concentrates hard. **B1 `Bridge`, 185 s, 75 percent of the entire prize** in one 833-line module, and it doubles as the METHOD GATE: it is already sealed, so it isolates what a rewrite buys BEYOND sealing, and if a rewritten `Bridge` does not approach 21 s then the benchmark is not reachable by rewriting and every batch below re-prices. **B2 `StepInL`, 54 s** over 1,989 lines, and it is nearly free because the ledger already owes a re-scope of this module for W3: the two merge. **B3 `Images`, `CodeSet`, `Step`, about 71 s** over 1,289 lines. **AND THE PROGRAMME STOPS THERE**: the remaining 4 modules above the line (`HF`, `DefInJ`, `BaseBlock`, `SatTable`) are worth **14 seconds combined over 1,223 lines**, which is a rewrite that costs more than it buys in both dimensions. They are recorded as above the line and left alone, and that is the exit condition doing its job rather than being overridden. **THE LINE DIMENSION, which cuts against the programme and is recorded rather than buried:** `L.Rud` already writes **3.8 lines per obligation against the benchmark's 4.9**, so it is denser than the tree it is being measured against. This is a SECONDS programme, not a lines programme, and each batch is gated on not inflating lines.
+Read the batches below as a floor on the prize under the current architecture, not as the plan. The owner ruled the exit condition to be *the retiring subtree's measured rate*; that rate was then re-measured after two parser defects were found in the counter (comment lines read as signatures, `let z : A` scored twice), and it is 0.074. The ratio between the trees did not move at all, because the defects inflated both alike, which is the clearest evidence available that the RATIO is robust and the ABSOLUTE figures are not. **THE EXIT CONDITION SELECTS THE BATCHES BY ITSELF, WHICH IS THE FINDING: 13 of `L.Rud`'s 22 modules are ALREADY at or below the line and need no rewrite at all, and of the 9 above it, 4 are worth 14 seconds COMBINED.** `L.Rud` stands at 12,147 lines, 2,884 obligations, 458 s, **0.159 s per obligation**; at the exit condition it is 212 s, so the whole programme is worth **246 seconds**, and it concentrates hard. **B1 `Bridge`, 185 s, 75 percent of the entire prize** in one 833-line module, and it doubles as the METHOD GATE: it is already sealed, so it isolates what a rewrite buys BEYOND sealing, and if a rewritten `Bridge` does not approach 21 s then the benchmark is not reachable by rewriting and every batch below re-prices.
+
+**B2 `StepInL`, 54 s** over 1,989 lines, and it is nearly free because the ledger already owes a re-scope of this module for W3: the two merge. **B3 `Images`, `CodeSet`, `Step`, about 71 s** over 1,289 lines. **AND THE PROGRAMME STOPS THERE**: the remaining 4 modules above the line (`HF`, `DefInJ`, `BaseBlock`, `SatTable`) are worth **14 seconds combined over 1,223 lines**, which is a rewrite that costs more than it buys in both dimensions. They are recorded as above the line and left alone, and that is the exit condition doing its job rather than being overridden. **THE LINE DIMENSION, which cuts against the programme and is recorded rather than buried:** `L.Rud` already writes **3.8 lines per obligation against the benchmark's 4.9**, so it is denser than the tree it is being measured against. This is a SECONDS programme, not a lines programme, and each batch is gated on not inflating lines.
 
 **The dispatches of 2026-08-07, `[T121]` to `[T139]`, recorded in code order.**
 
@@ -3244,9 +3356,13 @@ DELIVERED. 10 of 10 entries, insertions only, lint green.
 
 SPLIT REQUIRED; THE GATE BREAKS AT BOTH RATES. Block 3 prices at 1,011-1,261 naive and 1,314-1,639 calibrated (`_build/l3.32-t217-report.md:3`). Its seconds projection is 231-288 s uncured at 0.228 s per line and 64-80 s cured at the T215 target rate (`_build/l3.32-t217-report.md:23-25`). The tree lands at 836-893 s uncured and 513-529 s cured against the 498 s gate; the cured low end is 512.9 s, over by at least 14.9 (`_build/l3.32-t217-report.md:6-7`, `:125-126`). The split cuts at the pair family, and the halves meet at the `Segment` parameter telescope (`_build/l3.32-t217-report.md:55-57`, `:71-72`). Seconds, not lines, became the binding constraint (`dev/ledger.toml:1148-1149`).
 
+**SUPERSEDED** by `[T242]`: the block-A seconds re-price at the 0.297 content rate, to about 371 s, and the landing miss becomes 303-311 s (`_build/l3.32-t242-report.md:133-147`).
+
 **`[T218]` THE WALL ARITHMETIC: CAN THE AC LANDING FIT 498 S?** (2026-08-08, `_build/l3.32-t218-wall.md`).
 
 The wall is 745-813 s uncured and 422-448 s cured against 498 s: uncured DOES NOT FIT, cured fits and TURNS ON T215's cure (`_build/l3.32-t218-wall.md:3`). The baseline is the measured 395.2 s tree (`dev/ledger.toml:1146`). Four terms carry no seconds figure and are EXCLUDED rather than guessed: the Q-lim residue master, the bridge landing, the W3 elimination slice and the choice re-home (`_build/l3.32-t218-wall.md:16-19`). Their line bands total 1,418-2,598 naive; at 0.063 s per line they add 89-164 s, against a cured headroom of 50-76 s (`_build/l3.32-t218-wall.md:42`). The uncured case is dead before those terms.
+
+**SUPERSEDED** by `[T220]`: the four excluded terms measure 29.69 s. The corrected wall is 775-842 s uncured and 452-478 s cured (`_build/l3.32-t220-report.md:6-10`).
 
 **`[T219]` THE SECONDS DOCTRINE: WHAT MAKES A MASTER EXPENSIVE HERE** (2026-08-08, `_build/l3.32-t219-seconds.md`).
 
@@ -3264,9 +3380,13 @@ RESHAPEABLE. The general STEP at a variable limit, with the induction hypothesis
 
 MEASURED: 0.085 s per line, the mean of three CLEAN cold runs (`_build/l3.32-t222-report.md:4-6`, `:49-50`). The rate selects none of the three named projections: the tree lands at about 484-514 s against 498 s, clearing by 14 at the low end of the line band and failing by 16 at the high end (`_build/l3.32-t222-report.md:4-8`, `:79-80`). The profile puts 70 percent of the check in `storyW-out` and `storyW-in`, both named with written types: P-n's signature at the bound-variable carrier, about 2.6 times cheaper than the instantiation rate (`_build/l3.32-t222-report.md:10-13`, `:93-96`). The reshape buys seconds against the 0.22 s class and not against the 0.010-0.013 s class T221 hoped for (`_build/l3.32-t222-report.md:13-14`).
 
+**SUPERSEDED** by `[T242]`: the 0.085 s per line figure is the rate of a 126-line slice; the content rate is 0.297 (`_build/l3.32-t242-report.md:129-135`).
+
 **`[T223]` THE RESHAPE'S BUILD PLAN, WRITTEN AGAINST THE MEASURED RATES** (2026-08-08, no report on disk).
 
 DISPATCHED, no report. `_build/l3.32-t223-plan.md` is unwritten at this writing; the brief exists (`_build/briefs/l3.32-t223.md`), and the register records the dispatch only (`dev/PLAN.md:621`). The plan settles the order of operations, the class-boundary block split, the lift-or-rewrite sort, the per-block seconds budget and the verification claims (`_build/briefs/l3.32-t223.md:17-47`).
+
+**SUPERSEDED** by `[T242]`: the per-block seconds budget used pre-measurement rates. At the 0.297 content rate, block A re-prices to about 371 s (`_build/l3.32-t242-report.md:133-147`).
 
 **`[T224]` JOURNAL ENTRIES T216 TO T223, THE SECONDS DAY** (2026-08-09, `_build/l3.32-t224-report.md`).
 
@@ -3279,6 +3399,8 @@ DEDUPED. The net is -92 non-blank in-fence lines, 269 removed and 177 added, ins
 **`[T226]` C4: ONE STORY ASSEMBLY, BEFORE THE GENERAL STEP IS WRITTEN** (2026-08-09, `_build/l3.32-t226-report.md`).
 
 KEPT. The assembly lives once in `L.LevelKit` at +66 naive lines, and the three `LevelSigma` consumers grow +2 each, for a measured +72 (`_build/l3.32-t226-report.md:23-25`, `:121`). The seconds direction is opposite to the brief: the two touched masters check +0.85 s slower (`:31-33`). The audit corrected the block A figure: the recorded 53-133 line saving is a WASH, because the replaced hand assembly is 24 lines (`dev/ledger.toml:1182-1193`). The task admitted P-o: a record field at a carrier-indexed type hangs the elaborator, and the nested `Σ` checks instantly (`_build/l3.32-t226-report.md:91-95`, `:246-247`; `dev/LESSONS.md:2298`). It admitted C-25 with T225 and C-26 with T234 (`dev/LESSONS.md:2491`, `:2456`).
+
+**SUPERSEDED** by `[T234]`: the fold changed the story type's shape, so the exports were not byte-identical. The positional consumer at `HF:502` went red (`_build/l3.32-t234-report.md:9-10`, `:76-107`; `dev/LESSONS.md:2456-2489`).
 
 **`[T227]` C5: ONE INDUCTION FRAME, AND WHETHER THE FOUR SITES UNIFY** (2026-08-09, `_build/l3.32-t227-report.md`).
 
@@ -3295,6 +3417,8 @@ GREEN. The inl case at a general limit closes by `Sset-union-limit` at the membe
 **`[T230]` BLOCK A: THE GENERAL STEP AT A VARIABLE LIMIT, WRITTEN IN PLACE** (2026-08-09, `_build/l3.32-t230-report.md`).
 
 STOPPED RED on the stop-line (`_build/l3.32-t230-report.md:3-7`). Block A measures 589 in-fence non-blank lines landed and green, against an honest floor of 1,249, so the gap is at least 169 (`:13-14`, `:41-42`). The master checks at exit 0 in 300 s cold, and the transitional tree reads 688.9 s against the 498 s gate (`:54-60`). The largest unbooked term is the sixth clause's port at 332 lines, because the level-formula limit clause is element-valued and the story is set-valued (`:23`, `:103-107`). The C2 telescope measures 19 lines, not T213's 60-100 (`:121`).
+
+**SUPERSEDED** by `[T237]`: the carried-sequence limit case measures 904 non-blank lines and 186 s cold, 4.3x the 200-line floor. The honest block A rises to 2,173-2,303 naive (`_build/l3.32-t237-report.md:17-26`, `:48-58`).
 
 **`[T231]` ADVERSARIAL: IS THE INDUCTION HYPOTHESIS REALLY VACUOUS AT A-0?** (2026-08-09, `_build/l3.32-t231-report.md`).
 
@@ -3316,6 +3440,8 @@ GREEN. One fold clause makes a non-empty clause list end bare, and every stop-li
 
 NOT THERE as a price (`_build/l3.32-t235-report.md:3`). The recorded distribution covers 48.2 percent of the 388.9 s base, and no recorded figure carries a removable 6-14 s (`:7-13`). The D30 screen uses a stale denominator: `check-timing.py` divides by the 1,072 s profile of 2026-08-06, not by 395 (`:43-48`; `dev/ledger.toml:1258`). SquareLaw's recorded 64.4 s is inherited and unverified, which is P-p's warning (`:24`, `:108`; `dev/LESSONS.md:2395`). The answer is a probe: one cold profile run of the tree, then the top twenty (`:139-144`).
 
+**SUPERSEDED** by `[T242]`: the 2026-08-09 cold profile measures the tree base at 420.5 s, not 388.9, and SquareLaw at 23.3 s, not 64.4 (`_build/l3.32-t242-report.md:143`; `dev/ledger.toml:1432-1433`).
+
 **`[T236]` ARCHIVE HF AND FINITE: THE RULED REMOVAL WHOSE CONDITION IS NOW MET** (2026-08-09, `_build/l3.32-t236-report.md`).
 
 ARCHIVED. HF (664 lines) and Finite (626 lines) move to `archive/` byte-identical, 1,290 lines total, and no surviving master imports either (`_build/l3.32-t236-report.md:1`, `:81`, `:140`). D36's tripwire fired at 16,675 measured lines against the 16,000 cap, and the archival cleared it to 15,383 (`dev/ledger.toml:425-426`). The catalog is the only consumer, and the orchestrator rewires it (`_build/l3.32-t236-report.md:81`, `:93-111`). The scan counted the same-file class per C-23 (`:5-83`).
@@ -3323,6 +3449,10 @@ ARCHIVED. HF (664 lines) and Finite (626 lines) move to `archive/` byte-identica
 **`[T237]` FINISH BLOCK A, DELETE THE A-0 MODULE, AND MEASURE THE LANDING** (2026-08-09, `_build/l3.32-t237-report.md`).
 
 STOPPED at the carried-sequence gate (`_build/l3.32-t237-report.md:3-8`). The gate is GO for feasibility, but the limit case alone measures 904 non-blank lines and 186 s cold, which is 4.3x the 200-line floor (`:17-26`, `:85-87`). The floor is refuted: the honest carried sequence is 1,124-1,254 lines, and the honest block A is about 2,173-2,303 (`:48-58`, `:85-90`). The brief's net -288 is wrong: the honest net is +1,225 to +1,355, and the meter moves up, not down (`:100-104`). The measurement pairs with T240 as P-q's evidence (`dev/LESSONS.md:2358`).
+
+**SUPERSEDED** by `[T238]`: the port is partly avoidable; a carrier-generic limit clause saves 250-300 of the 309 lines, and block A falls to 1,873-2,053 naive (`_build/l3.32-t238-report.md:3-8`, `:90-104`).
+
+**SUPERSEDED** by `[T240]`: with the generic limit clause, the limit case re-measures at 589 non-blank lines and 174.62 s cold, not 904 and 186.43 s (`_build/l3.32-t240-report.md:5-8`, `:32`).
 
 **`[T238]` ADVERSARIAL: IS THE NESTED-CARRIER PORT REALLY UNAVOIDABLE?** (2026-08-09, `_build/l3.32-t238-report.md`).
 
