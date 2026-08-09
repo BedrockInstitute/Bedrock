@@ -52,12 +52,12 @@ CAP = 200
 # cited across JOURNAL, the memos, the briefs and the git history, and the
 # owner's archive-survey mechanism requires a new brief to read them. A number
 # is never reused in either series.
-GOAL = "LJ1"
+GOAL = "LJ"
 ARCHIVED_GOAL = "L3.32"
 ARCHIVED_INDEX = ROOT / "dev" / "TASKS-archived.md"
-FULL = re.compile(r"\[(LJ1|L3\.32)-T(\d+)\]")
+FULL = re.compile(r"\[(?:LJ-(\d+)\.(\d+)|L3\.32-T(\d+))\]")
 SHORT = re.compile(r"\[T(\d+)\]")
-ROW = re.compile(r"^\| ((?:LJ1|L3\.32)-T(\d+)) \|")
+ROW = re.compile(r"^\| ((?:LJ-(?:\d+)\.(?:\d+))|(?:L3\.32-T\d+)) \|")
 
 # dev/ holds .md prose and .toml data (ledger, glossary, rules). Nothing else
 # under dev/ is text worth scanning; `.DS_Store` is binary.
@@ -72,8 +72,10 @@ def extract_codes(text: str) -> set[int]:
     retired one, so a number resolves if EITHER index carries it. The two
     series never reuse a number, which is what makes that safe.
     """
-    codes = {int(n) for _, n in FULL.findall(text)}
-    codes |= {int(n) for n in SHORT.findall(text)}
+    codes = set()
+    for phase, step, old in FULL.findall(text):
+        codes.add(f"LJ-{phase}.{step}" if phase else f"T{old}")
+    codes |= {f"T{n}" for n in SHORT.findall(text)}
     return codes
 
 
@@ -94,9 +96,10 @@ def index_rows(plan_text: str) -> list[tuple[int, str]]:
     # design (neither reuses one WITHIN itself), so LJ1-T1 and L3.32-T1 are
     # different rows and a number-keyed dedup would call them a duplicate.
     rows = []
-    for line in re.findall(r"^\| (?:LJ1|L3\.32)-T\d+ \|.*$", block, re.M):
-        m = ROW.match(line)
-        rows.append((m.group(1), int(m.group(2)), line))
+    for line in re.findall(r"^\| (?:LJ-\d+\.\d+|L3\.32-T\d+) \|.*$", block, re.M):
+        code = ROW.match(line).group(1)
+        key = code if code.startswith("LJ-") else "T" + code.split("-T")[1]
+        rows.append((code, key, line))
     return rows
 
 
@@ -111,10 +114,10 @@ def check_index(plan_text: str, sources_text: str) -> tuple[list[str], int, int]
     if not rows:
         errors.append(f"no task index section (`{SECTION}`) in {PLAN}")
     seen: dict[str, list[str]] = {}
-    numbers: set[int] = set()
-    for code, number, line in rows:
+    numbers: set[str] = set()
+    for code, key, line in rows:
         seen.setdefault(code, []).append(line)
-        numbers.add(number)
+        numbers.add(key)
     for code, lines in sorted(seen.items()):
         if len(lines) > 1:
             errors.append(
