@@ -3268,6 +3268,94 @@ MEASURED: 0.085 s per line, the mean of three CLEAN cold runs (`_build/l3.32-t22
 
 DISPATCHED, no report. `_build/l3.32-t223-plan.md` is unwritten at this writing; the brief exists (`_build/briefs/l3.32-t223.md`), and the register records the dispatch only (`dev/PLAN.md:621`). The plan settles the order of operations, the class-boundary block split, the lift-or-rewrite sort, the per-block seconds budget and the verification claims (`_build/briefs/l3.32-t223.md:17-47`).
 
+**`[T224]` JOURNAL ENTRIES T216 TO T223, THE SECONDS DAY** (2026-08-09, `_build/l3.32-t224-report.md`).
+
+DELIVERED. The task wrote 8 of 8 entries, in code order, with insertions only and lint green (`_build/l3.32-t224-report.md:13-21`, `:101-104`). The stop-line fired: the journal reads 46,318 words against 45,000, an overage of 1,318 (`:22-27`). The overage before this task was already 573 words (`:26-27`). The report records the overage plainly, because the scope forbids touching existing lines (`:106-110`). `[T222]`'s verdict landed during the task, so its entry records MEASURED (`:111-115`).
+
+**`[T225]` C3: DEDUP THE ONE-WAY SUCCESSOR CLAUSE AND ITS BOUNDED ATOMS** (2026-08-09, `_build/l3.32-t225-report.md`).
+
+DEDUPED. The net is -92 non-blank in-fence lines, 269 removed and 177 added, inside the funded 60-100 band (`_build/l3.32-t225-report.md:3-5`). The shared home is `L.LevelKit`, both consumers instantiate it, and the exports are unchanged (`:53-91`, `:92-120`). The task admitted P-p: a stale `LevelKit.agdai` made the module check take 191 s and exhaust the 8 g heap, and the same module checked in 2.4 s with the interface moved aside (`:150-153`; `dev/LESSONS.md:2395`). It also admitted C-25 with T226: both parallel writers proposed the same home, so the dedup counts exclude the sibling's 66 kit lines (`:141-148`; `dev/LESSONS.md:2491`). The `inU` row is not a duplication: the two formulas differ in arity (`:28-40`).
+
+**`[T226]` C4: ONE STORY ASSEMBLY, BEFORE THE GENERAL STEP IS WRITTEN** (2026-08-09, `_build/l3.32-t226-report.md`).
+
+KEPT. The assembly lives once in `L.LevelKit` at +66 naive lines, and the three `LevelSigma` consumers grow +2 each, for a measured +72 (`_build/l3.32-t226-report.md:23-25`, `:121`). The seconds direction is opposite to the brief: the two touched masters check +0.85 s slower (`:31-33`). The audit corrected the block A figure: the recorded 53-133 line saving is a WASH, because the replaced hand assembly is 24 lines (`dev/ledger.toml:1182-1193`). The task admitted P-o: a record field at a carrier-indexed type hangs the elaborator, and the nested `Σ` checks instantly (`_build/l3.32-t226-report.md:91-95`, `:246-247`; `dev/LESSONS.md:2298`). It admitted C-25 with T225 and C-26 with T234 (`dev/LESSONS.md:2491`, `:2456`).
+
+**`[T227]` C5: ONE INDUCTION FRAME, AND WHETHER THE FOUR SITES UNIFY** (2026-08-09, `_build/l3.32-t227-report.md`).
+
+DOES NOT UNIFY as a saving, and C5 closes (`_build/l3.32-t227-report.md:5-8`). The type reading is TRUE: one three-case principle restates in about 20 lines (`:26-50`). The saving reading is FALSE: the frame already exists twice in the tree, and the clauses are per-site content (`:90-108`). The net is +12 to +73 new lines at every caliber (`:110-146`). The four sites are three inductions, because Q-lim is Q's own limit clause (`:184-198`).
+
+**`[T228]` THE ENDGAME STATUS MEMO, FOR A READER WHO WAS NOT HERE** (2026-08-09, `_build/l3.32-t228-report.md`).
+
+DELIVERED. The memo is `dev/memos/L3.32-endgame-status.md` at 1,808 words (`_build/l3.32-t228-report.md:3-4`). The live tool wins every disagreement: the endpoint reads 20.08-21.76k naive, the reshaped landing reads 489-522 s, and T220's wall supersedes T218's (`:6-29`). The task found the C-23 ID collision: `LESSONS.md` carries two entries with that ID (`:31-37`). The memo states no figure for the unmeasured terms (`:46-65`).
+
+**`[T229]` ADVERSARIAL: BLOCK A'S INL CASE WITHOUT `MEMBER-A₀-NOT-LIMIT`** (2026-08-09, `_build/l3.32-t229-report.md`).
+
+GREEN. The inl case at a general limit closes by `Sset-union-limit` at the member `a`, with transitivity and the decode (`_build/l3.32-t229-report.md:5-7`, `:65-97`). The a₀ case refutes, because no member of a₀ is a limit (`:9-39`). No general analogue of `member-a₀-not-limit` exists or is needed (`:131-137`). The extra steps cost zero new lines, and the six attacks failed (`:99-130`).
+
+**`[T230]` BLOCK A: THE GENERAL STEP AT A VARIABLE LIMIT, WRITTEN IN PLACE** (2026-08-09, `_build/l3.32-t230-report.md`).
+
+STOPPED RED on the stop-line (`_build/l3.32-t230-report.md:3-7`). Block A measures 589 in-fence non-blank lines landed and green, against an honest floor of 1,249, so the gap is at least 169 (`:13-14`, `:41-42`). The master checks at exit 0 in 300 s cold, and the transitional tree reads 688.9 s against the 498 s gate (`:54-60`). The largest unbooked term is the sixth clause's port at 332 lines, because the level-formula limit clause is element-valued and the story is set-valued (`:23`, `:103-107`). The C2 telescope measures 19 lines, not T213's 60-100 (`:121`).
+
+**`[T231]` ADVERSARIAL: IS THE INDUCTION HYPOTHESIS REALLY VACUOUS AT A-0?** (2026-08-09, `_build/l3.32-t231-report.md`).
+
+GREEN. The 15-site walk classifies every membership use: the limit-reachable sites go through the IH, and the rest go by the successor climb (`_build/l3.32-t231-report.md:88-97`). The word "vacuous" is exact, because no member of a₀ is a limit, and both discharge routes typecheck (`:133-159`). The telescope is sufficient for every site (`:98-132`). The general chain at γ is real extra content, not an IH site (`:207-217`).
+
+**`[T232]` ADVERSARIAL: CAN BLOCK A CONSUME BRIDGE'S `BELOW` ROW INSTEAD OF WRITING IT?** (2026-08-09, `_build/l3.32-t232-report.md`).
+
+GREEN. After the lift, the row falls from 50-90 lines to about 10-15 lines of glue (`_build/l3.32-t232-report.md:3-4`). The IH stays strictly below γ, so no circularity exists (`:40-71`). The lift needs six parameters, not four, and the scan missed the enclosing `A`; neither changes the verdict (`:5-39`, `:182-186`). The row's only first-component consumer is `Reduce`'s own body at `Bridge:1188` (`:90-102`).
+
+**`[T233]` LIFT `BELOW` OUT OF `REDUCE` SO BLOCK A CAN CONSUME IT** (2026-08-09, `_build/l3.32-t233-report.md`).
+
+DONE. The lift touches 13 semantic lines, and the 88-line relocation is the brief's own mandate (`_build/l3.32-t233-report.md:3-4`). Bridge checks at exit 0 in 105.61 s cold (`:81`). HF and Everything fail at `HF:502.28-50`, and the A/B proves the failure predates the lift (`:89-100`). The only `Below` consumer is the same-file `bridge-isJ→isL` at `Bridge:1201`, which is C-23's class (`:51-57`). Block A holds every supply already (`:101-163`).
+
+**`[T234]` THE FOLD'S LAST CLAUSE MUST BE BARE: THE TREE IS RED AT HF** (2026-08-09, `_build/l3.32-t234-report.md`).
+
+GREEN. One fold clause makes a non-empty clause list end bare, and every stop-line master exits 0, including `Everything` at 3:28.6 (`_build/l3.32-t234-report.md:3-4`, `:56-75`). The failing projection at `HF:502` reads the fifth clause function again, and no consumer needed an edit (`:9-10`, `:76-107`). This fix is C-26's cure: the signatures stayed byte-identical while the fold's shape changed, so only a consumer typecheck could catch it (`dev/LESSONS.md:2456-2489`; `_build/l3.32-t234-report.md:76-107`).
+
+**`[T235]` HUNT SECONDS IN THE 388.9 S TREE BASE, NOT IN BLOCK A** (2026-08-09, `_build/l3.32-t235-report.md`).
+
+NOT THERE as a price (`_build/l3.32-t235-report.md:3`). The recorded distribution covers 48.2 percent of the 388.9 s base, and no recorded figure carries a removable 6-14 s (`:7-13`). The D30 screen uses a stale denominator: `check-timing.py` divides by the 1,072 s profile of 2026-08-06, not by 395 (`:43-48`; `dev/ledger.toml:1258`). SquareLaw's recorded 64.4 s is inherited and unverified, which is P-p's warning (`:24`, `:108`; `dev/LESSONS.md:2395`). The answer is a probe: one cold profile run of the tree, then the top twenty (`:139-144`).
+
+**`[T236]` ARCHIVE HF AND FINITE: THE RULED REMOVAL WHOSE CONDITION IS NOW MET** (2026-08-09, `_build/l3.32-t236-report.md`).
+
+ARCHIVED. HF (664 lines) and Finite (626 lines) move to `archive/` byte-identical, 1,290 lines total, and no surviving master imports either (`_build/l3.32-t236-report.md:1`, `:81`, `:140`). D36's tripwire fired at 16,675 measured lines against the 16,000 cap, and the archival cleared it to 15,383 (`dev/ledger.toml:425-426`). The catalog is the only consumer, and the orchestrator rewires it (`_build/l3.32-t236-report.md:81`, `:93-111`). The scan counted the same-file class per C-23 (`:5-83`).
+
+**`[T237]` FINISH BLOCK A, DELETE THE A-0 MODULE, AND MEASURE THE LANDING** (2026-08-09, `_build/l3.32-t237-report.md`).
+
+STOPPED at the carried-sequence gate (`_build/l3.32-t237-report.md:3-8`). The gate is GO for feasibility, but the limit case alone measures 904 non-blank lines and 186 s cold, which is 4.3x the 200-line floor (`:17-26`, `:85-87`). The floor is refuted: the honest carried sequence is 1,124-1,254 lines, and the honest block A is about 2,173-2,303 (`:48-58`, `:85-90`). The brief's net -288 is wrong: the honest net is +1,225 to +1,355, and the meter moves up, not down (`:100-104`). The measurement pairs with T240 as P-q's evidence (`dev/LESSONS.md:2358`).
+
+**`[T238]` ADVERSARIAL: IS THE NESTED-CARRIER PORT REALLY UNAVOIDABLE?** (2026-08-09, `_build/l3.32-t238-report.md`).
+
+PARTLY AVOIDABLE (`_build/l3.32-t238-report.md:3-8`). The limit clause must exist at the nested carrier, because the chain and the decode consume it (`:9-43`). The restatement is avoidable: a carrier-generic module serves both carriers and saves about 250-300 of the 309 lines (`:50-63`, `:90-96`). Block A falls to 1,873-2,053 naive, still over the 16,000 cap, and the tree still misses the 498 s gate (`:98-104`). T237's "no way around it" is too strong for the cost (`:92-94`).
+
+**`[T239]` MAKE THE LIMIT CLAUSE CARRIER-GENERIC, AS THE SUCCESSOR CLAUSE ALREADY IS** (2026-08-09, `_build/l3.32-t239-report.md`).
+
+GREEN. The net is +26 in-fence lines at the touched masters: `StepStory` gains 350 and `BelowLim` loses 324 (`_build/l3.32-t239-report.md:3-7`). The home is `L.Rud.StepStory`'s new `Limit` module, not `L.LevelKit`, because the kit lacks `lem` (`:15-30`). The meta-level clause is a definition, not a parameter, because a parameter cannot be eliminated (`:51-57`). Every consumer typechecks, including `Everything`, and no catalog change is needed (`:61-79`). The next consumer saves about 317 lines (`:109-110`).
+
+**`[T240]` RE-MEASURE THE CARRIED SEQUENCE WITH THE GENERIC CLAUSE: LINES AND SECONDS** (2026-08-09, `_build/l3.32-t240-report.md`).
+
+MEASURED. The limit case reads 589 non-blank lines and checks in 174.62 s cold, against T237's 904 and 186.43 s (`_build/l3.32-t240-report.md:5-8`, `:32`). The rate is 0.297 s per line, at the top of the instantiation class (`:40-44`). The 315 removed lines were worth only 11.8 s, which is P-q's law: a line lever and a seconds lever are different levers (`:47-52`; `dev/LESSONS.md:2358`). The meter stays over the 16,000 cap by 126-256 naive (`:89`).
+
+**`[T241]` PROFILE THE CARRIED SEQUENCE'S 174.62 S: WHERE DOES THE TIME GO?** (2026-08-09, `_build/l3.32-t241-report.md`).
+
+CONCENTRATED, then NO-GO (`_build/l3.32-t241-report.md:1-2`, `:8-13`). The top 11 definitions carry 71.4 percent of the 172,518 ms check, and four families carry about 74 percent (`:25-26`). Every hot row is decode content at the concrete carrier `Wξ = Lset ξ`, which is P-n's payable floor (`:89-92`; `dev/LESSONS.md:2272`). The gut series prices the ceiling at 109.80 s and the floor at 64.82 s, and there is no cure (`:116-141`). The stage arithmetic reaches `sucV⁶ ξ`, not the brief's `sucV⁸` (`:155-162`).
+
+**`[T242]` TWO DECODE SHAPES, BOTH BOUND-VARIABLE, 3.5X APART: WHY?** (2026-08-09, `_build/l3.32-t242-report.md`).
+
+ARTIFACT, and the orchestrator's figures are corrected (`_build/l3.32-t242-report.md:5-7`). The 0.085 s rate was a slice rate; the real content rate is 0.297, measured on 589 lines (`:129-135`). The landing miss is 303-311 s, not the recorded 6-14 (`:145-146`). The block A break-even is 203-230 lines, not 1,080-1,174 (`:140-141`). The base is 420.5 s, not 388.9, and SquareLaw re-measures at 23.3 s, stale by 41 (`:143`; `dev/ledger.toml:1432-1433`). The task admitted P-r: the clause-bundle shape costs 22,011 ms against 7,507 for the hand-written decode, so the 125 s escape does not exist (`:81-85`, `:155-157`; `dev/LESSONS.md:2322`).
+
+**`[T243]` THE TWO PROFILES NOBODY RAN: BRIDGE 103.1 S AND STEPGRAPH 59.0 S** (2026-08-09, `_build/l3.32-t243-report.md`).
+
+NOT THERE, and both floors are now measured (`_build/l3.32-t243-report.md:6-14`, `:232-258`). Bridge is CONCENTRATED: the once-payment pair carries 78.8 s, 75 percent, which is P-l's floor, and the gut leaves a flat 24.3 s (`:70-82`, `:99-113`). StepGraph is CONCENTRATED, not flat: `values∈L` carries 26.5 s, 44.7 percent, which is P-n's signature, and the gut ceiling is 30.2 s (`:171-190`, `:213-231`). The flat-slice reading of T235 is refuted (`:259-279`). With T241, every large site is NO-GO at a measured price, and the archival's 141 s is the only seconds lever left (`dev/ledger.toml:1536-1538`).
+
+**`[T244]` GATE THE CHOICE RE-HOME: PRICE ITS IDEAL FORM FROM THE REWRITE SIDE** (2026-08-09, `_build/l3.32-t244-report.md`).
+
+GATED. The ideal form prices at 188-248 naive for the row scope against the booked 300-650, and at 524-804 for the whole leg (`_build/l3.32-t244-report.md:3-8`). The endpoint needs none of the twelve `L.Choice` masters (`:37-55`). All 6,050 lines archive for free, which is stronger than the brief's "three of them" (`:89-110`). The re-home buys 141 s and costs 300-650 lines, and it stays blocked on `bridge-landing` (`:127-150`; `dev/ledger.toml:899-904`, `:1490-1504`).
+
+**`[T245]` FINISH BLOCK A: THE STOP-LINE WAS WRONG AND IT GATES THE ONLY LEVER LEFT** (2026-08-09, `_build/l3.32-t245-report.md`).
+
+DISPATCHED, no verdict (`dev/PLAN.md:643`). The report is a pending skeleton: every section reads PENDING, and the theorem status, line count, cold wall and deletions land when the block closes (`_build/l3.32-t245-report.md:3-29`). The entry follows the `[T204]` pattern, exactly as `[T206]` recorded it (`dev/JOURNAL.md:3189-3192`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)
