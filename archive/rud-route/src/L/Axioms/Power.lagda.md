@@ -63,7 +63,8 @@ open import Cubical.Foundations.Equiv using ( _≃_; invEq; equivFun )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )
+  using ( ⟪_⟫; ⟪_⟫↪ )
+open import V.Presentation {ℓ} using ( fiber )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -161,7 +162,7 @@ module Bound (a : S) where
     where
     vsub : ⟨ ModelV._⊆ˢ_ (fst x) A ⟩
     vsub v v∈ = x⊆a (v , isL-trans {x = fst x} {y = v} v∈ (x .snd)) v∈
-    fib = ∈-asFiber {a = fst x} {b = P}
+    fib = fiber P
             (subst ⟨_⟩ (sym (Pow.power-spec A (fst x))) vsub)
     pa : ⟪ P ⟫↪ (fib .fst) ≡ fst x
     pa = fib .snd

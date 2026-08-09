@@ -162,7 +162,14 @@ def cmd_shadow(args) -> int:
               "quantified yet. The structural test is UNCHANGED and still "
               "worth running; only the pass-or-fail against a retired number "
               "is off. Re-arm: measure internalization GCH (owner task 6).")
-        cap = None
+        count = st["ac_total"]
+        print(f"deletion test | shadow (file-granular) | ac-total {count:,} "
+              f"| no cap in force")
+        if args.files:
+            for part in ("base", "ac_only", "shared"):
+                for path in st["split"]["_files"].get(part, []):
+                    print(f"{part}\t{st['sizes'][path]:6,}\t{path}")
+        return 0
     if cap is None:
         print("deletion-test: no ac_cap declared in [trophy_budget]; the "
               "deletion test needs the D36 cap", file=sys.stderr)

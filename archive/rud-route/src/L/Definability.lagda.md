@@ -37,11 +37,11 @@ open import FOL.LevyHierarchy using ( Δ₀ )
 open import FOL.Manipulation.Relabelling using ( mapFo; mapΔ₀; ⊨-map )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import V.Smallness {ℓ} using ( module InnerSmall )
 
 open import Cubical.Foundations.Equiv
   using ( _≃_; equivFun; invEq; invEquiv; compEquiv; propBiimpl→Equiv )
-open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Functions.Logic using ( ⇔toPath )
@@ -49,8 +49,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; presentation
-        ; isEmb⟪_⟫↪; _⊆_; extensionality )
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; presentation; _⊆_; extensionality )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ᵥ
@@ -141,11 +140,7 @@ was only an encoding, and the equivalence carries it back).
   defSet⊆A : (φ : Formula ⟪ A ⟫ 1) (y : S) → ⟨ y ∈ˢ defSet φ ⟩ → ⟨ y ∈ˢ A ⟩
   defSet⊆A φ y = PT.rec (snd (y ∈ˢ A)) λ { ((m , _) , q) →
     subst (λ v → ⟨ v ∈ˢ A ⟩) q
-          (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m)) }
-
-  private
-    ⟪⟫↪-inj : {m' m : ⟪ A ⟫} → ⟪ A ⟫↪ m' ≡ ⟪ A ⟫↪ m → m' ≡ m
-    ⟪⟫↪-inj {m'} {m} = isEmbedding→Inj isEmb⟪ A ⟫↪ m' m
+          (member A m) }
 
   defSet-mem : (φ : Formula ⟪ A ⟫ 1) (m : ⟪ A ⟫)
              → (⟪ A ⟫↪ m ∈ˢ defSet φ) ≡ ((ι m ∷ []) ⊨ᵐ φ)
@@ -154,7 +149,7 @@ was only an encoding, and the equivalence carries it back).
     decode = ⊨ᵐ-small φ (ι m ∷ [])
     fwd : ⟨ ⟪ A ⟫↪ m ∈ˢ defSet φ ⟩ → ⟨ (ι m ∷ []) ⊨ᵐ φ ⟩
     fwd = PT.rec (snd ((ι m ∷ []) ⊨ᵐ φ)) λ { ((m' , h) , q) →
-      invEq (decode .snd) (subst (λ k → ⟨ smallSat φ k ⟩) (⟪⟫↪-inj q) h) }
+      invEq (decode .snd) (subst (λ k → ⟨ smallSat φ k ⟩) (↪-inj {a = A} q) h) }
     bwd : ⟨ (ι m ∷ []) ⊨ᵐ φ ⟩ → ⟨ ⟪ A ⟫↪ m ∈ˢ defSet φ ⟩
     bwd hφ = ∣ (m , equivFun (decode .snd) hφ) , refl ∣₁
 ```
@@ -177,7 +172,7 @@ of `A` as an element and adds only subsets.
 ```agda
   private
     A-mem : (y : S) → ⟨ y ∈ˢ A ⟩ → Σ[ m ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ m ≡ y)
-    A-mem y y∈ = ∈-asFiber {a = y} {b = A} y∈
+    A-mem y y∈ = fiber A y∈
 
   defSet⊤≡A : defSet ⊤̇ ≡ A
   defSet⊤≡A = extensionality (defSet ⊤̇) A (sub₁ , sub₂)
@@ -242,18 +237,18 @@ shape Part 4's tower needs.
       sub₂ y y∈ₛ =
         let y∈a     = ∈∈ₛ {a = y} {b = ⟪ A ⟫↪ mₐ} .snd y∈ₛ
             y∈A     = Atrans {x = ⟪ A ⟫↪ mₐ} {y = y} y∈a mₐ-as
-            (m , q) = ∈-asFiber {a = y} {b = A} y∈A
+            (m , q) = fiber A y∈A
         in subst (λ v → ⟨ v ∈ₛ defSet (atom mₐ) ⟩) q
              (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = defSet (atom mₐ)} .fst
                (subst ⟨_⟩ (sym (atom-mem mₐ m))
                  (subst (λ v → ⟨ v ∈ˢ ⟪ A ⟫↪ mₐ ⟩) (sym q) y∈a)))
         where
         mₐ-as : ⟨ ⟪ A ⟫↪ mₐ ∈ˢ A ⟩
-        mₐ-as = ∈∈ₛ {a = ⟪ A ⟫↪ mₐ} {b = A} .snd (∈ₛ⟪ A ⟫↪ mₐ)
+        mₐ-as = member A mₐ
 
     A⊆Def : (a : S) → ⟨ a ∈ˢ A ⟩ → ⟨ a ∈ˢ Def ⟩
     A⊆Def a a∈ =
-      let (mₐ , q) = ∈-asFiber {a = a} {b = A} a∈
+      let (mₐ , q) = fiber A a∈
       in ∣ atom mₐ , defSet-atom≡ mₐ ∙ q ∣₁
 ```
 
