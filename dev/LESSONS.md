@@ -2586,6 +2586,76 @@ review it ever gets.
 the registry against `dev/PLAN.md` and prints every announced return whose row
 still reads `DISPATCHED`.
 
+### C-28. A threshold set from your own projection carries that projection's error inside it
+
+**The law.** When the number a gate compares against is produced by the same
+work the gate judges, the gate cannot fail in the direction that matters.
+Padding the input raises the bar; the bar is then cleared; every checker
+reports green. **Nobody has to cheat for this to happen**, which is why review
+does not catch it: each step is defensible on its own. The cure is not a
+tighter threshold. It is an INDEPENDENT figure, recorded before the work
+starts, and a rule that the binding number is the SMALLER of the two.
+
+**The measurement, 2026-08-06 to 2026-08-07, D30's wall gate.** The exit
+condition's first version set a projected total of 1,100 s. The projection's
+own error band was 1,088 to 1,121, **bracketing the very threshold it was
+meant to clear**, so the gate's verdict flipped with which of two measurements
+you used. `[L3.32-T93]` found the figure unreproducible from the ledger,
+independently and from the other direction. The condition was withdrawn and
+re-ruled to carry **no projected number at all**, and the owner recorded that
+this was stricter rather than looser, because nothing now earned a pass by
+sitting under a line. The replacement gate, 498 s, was still the campaign's
+own figure and was met at 487.9 s with a margin of +10.1: meeting it proved
+the campaign's arithmetic, not the tree's health.
+
+**Where it binds now, and this is why the law is written and not just the
+history.** DD5's line benchmark is measured from a GCH wing this project
+builds itself (`dev/PLAN.md` DD5). `[LJ-0.3]` found the same shape and the
+same blindness: a wing larger than it needed to be raises the bar by exactly
+that much. **DD24 does not help**, and a first reading of it was backwards:
+`scripts/check-ratio.py` fails only ABOVE the bar, and padding with cheap
+lines LOWERS seconds per line, so a padded wing passes it more easily.
+
+**The enforcement point** is `validate_benchmark()` in `scripts/ledger.py`,
+which refuses a binding line benchmark that has no a-priori projection or one
+larger than it. It is silent while the benchmark reads unbound, so it costs
+nothing until the day the number matters.
+
+### C-29. When the subject matter has not changed, amend; do not rebuild
+
+**The law.** A rulebook rewrite is priced as editing, and it is not: it is a
+migration, and every citation, checker, flag and cross-reference is a call
+site. **Amendment keeps every old reference true by construction.** A rebuild
+makes each one a thing that must be re-derived, and the ones that are missed
+do not announce themselves, because a document that reads well is assumed to
+be right. Ask what actually changed. If the SUBJECT did not, amend.
+
+**The measurement, 2026-08-09.** A route change rebuilt `dev/PLAN.md`,
+`dev/ORCHESTRATION.md`, `AGENTS.md`, the ledger, three archives and the whole
+task-code series in thirteen commits. It consolidated 25 decision rows into
+15. An audit then found **30 defects, six of them load-bearing**
+(`_build/lj-0.1-consistency.md`), and eleven further commits were spent
+repairing them. The defects were of exactly the migration class: dangling
+citations, a dropped rule with a live pointer at it, three suspension flags
+with half-written readers, a commit gate left RED by the rebuild itself, and
+a brief clause still naming the RETIRED route.
+
+**The control is in the same corpus.** D30, over the same documents in the
+same week, was amended seven times, A through G, each recorded and dated and
+none rewriting what came before
+(`archive/dev/DECISIONS-archived.md:50`). It produced no defect of this class.
+
+**What actually changed on 2026-08-09 was the architecture, not the
+rulebook's subject matter.** The rules about gating, pricing, retirement,
+dispatch and prose were the same rules the day after. `[LJ-0.3]` judged the
+full rebuild a choice rather than a necessity, and the defect count is the
+price of that choice.
+
+**The enforcement point** is review: `dev/ORCHESTRATION.md` section 6, which
+since 2026-08-09 puts the orchestrator's own diffs through the return audit
+and sends a change to the rules themselves OUT for audit rather than
+self-reviewing it.
+
 ### C-25. Two parallel writers may not share a file, and "the home you propose" IS a shared file
 
 **The law.** A brief that grants an agent a file it does not NAME, such as "the
