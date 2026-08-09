@@ -1745,6 +1745,28 @@ closure_boundary_measured = "[T254]: 216 lines, not 2,100-2,700; zero legal gch_
 # THE CHEAPEST THING ON THE BOARD is Gate 0: 389 of the master's 570 s were
 # never profiled. The orchestrator is running it.
 seconds_verdict = "[T255]: the gap does not close on this route; the twice is mathematics; P-t explains the rate"
+# GATE 0 RAN 2026-08-09, the orchestrator's own, and it is the first
+# per-definition profile of the finished master. [T255] called it the cheapest
+# dispatch on the board because 389 of the master's 570 s had never been
+# profiled. Protocol: the master's own `.agdai` moved aside (P-p), one process,
+# `GHCRTS=-M8g`, exit 0. Total 546,708 ms. Table at
+# `_build/l3.32-t256-belowlim-profile.txt`.
+#
+# THE TWO BIGGEST NAMED ROWS HAVE NEVER BEEN EXAMINED:
+#   `Stepγ.segγ∈C`   61,240 ms, 11.2 percent, ONE definition, a placement
+#   `Stepγ.ψ-in`     35,307 ms,  6.5 percent
+# Together 96.5 s, 17.7 percent of the master. Neither appears in any report.
+#
+# P-r's LEVER IS VISIBLE IN THE TABLE and can be priced from it. The two
+# clause-list bundles, `storyWClauses` at 17,375 and `Nested.storyWClausesξ` at
+# 19,837, plus the two assembled `-ok` aliases at 17,589 and 18,899, come to
+# 73.7 s. P-r measured the bundle shape at 2.9x the hand-written conjunction at
+# one site, so hand-writing these four projects to about 25 s and frees about
+# 48 s. That is a PROJECTION from a measured ratio, not a measurement, and P-l
+# forbids treating it as a price until a miniature runs.
+#
+# Miscellaneous is 70,581 ms, 12.9 percent, and is not attributable.
+gate0_profile = "546,708 ms; segγ∈C 61.2 s and ψ-in 35.3 s are unexamined; P-r's lever prices at ~48 s"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
