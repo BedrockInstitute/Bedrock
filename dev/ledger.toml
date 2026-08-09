@@ -1767,6 +1767,46 @@ seconds_verdict = "[T255]: the gap does not close on this route; the twice is ma
 #
 # Miscellaneous is 70,581 ms, 12.9 percent, and is not attributable.
 gate0_profile = "546,708 ms; segγ∈C 61.2 s and ψ-in 35.3 s are unexamined; P-r's lever prices at ~48 s"
+# [T257] PRICED THE INTERNALIZATION ROUTE'S DOUBLE TROPHY 2026-08-09, so the
+# two routes finally compare on one caliber. INTERNALIZATION 25,485-28,258
+# naive and 29,909-37,275 calibrated, against RUD 34,940-39,823 and
+# 42,284-54,396. The bands do not overlap at either caliber; the centres differ
+# by about 10.5k naive and 14.7k calibrated.
+#
+# THE ORCHESTRATOR'S CONSTRUCTION DIED, and not where I expected. My crossing
+# assumption is CONFIRMED and hard: `crossing-rebuild`'s four terms re-measure
+# at 676 + 1,866 + 2,378 + 127 = 5,047, they restate `L.Coding.*` and
+# `L.Hierarchy` content that is byte-stable between `main` and HEAD, and the
+# internalization route owns 5,047 of 5,047. What failed was a FLOOR error:
+# `17,496 + remaining rows` never adds the wing content the current tree holds
+# and `main` does not. The two trees differ by 16,917 new lines, 10,629 rud and
+# 6,288 non-rud, and the wing's standing content after the route correction is
+# 5,268. My figure was 4,264-4,884 LOW.
+#
+# THE AMORTIZATION QUESTION ANSWERS AGAINST ITSELF. The rud route shares 44-47
+# percent of its endpoint across both trophies; the internalization route
+# shares 34-38. **Rud amortizes a LARGER share on a LARGER base.** GCH on top
+# of AC costs 13,993-17,486 on rud against 7,993-10,766 on the other route. So
+# the owner's hope is half right and the half that is right does not help.
+#
+# TWO ROW-LEVEL FINDINGS. `W3` COLLAPSES on the internalization route, 760-1,750
+# to 100-300, because `src/L/OrderFormula.lagda.md:425-428` names its blocker as
+# the internalized level story and satisfaction, which `main` delivers; 510-1,500
+# of that row is rud-only. `W1p` stays at FULL price on both, because the
+# pre-cut Condensation imported the live cone and still could not close the
+# crossing: the cone supplies the SUPPLIER, not the TRANSFERS.
+#
+# [T257]'s OWN WEAK POINT, declared: it prices `carried-sequence` and
+# `blockpowlim-instance` at zero for the wing, worth 4,238-5,218. It found no
+# import edge, no wing obligation in T91's Links A-F, and a CIRCULAR citation,
+# Link G citing the ledger while T203 cites Link G. D18's text says the bridge
+# lands at the wing tail as a corollary. Unresolved and material.
+#
+# FOUR LEDGER DEFECTS IT FOUND, recorded here and NOT yet repaired: `main`
+# measures 17,492 at the pinned caliber and not 17,496; `W1p`'s booked low of
+# 700 is 140 under its own source's 840; and `crossing-rebuild` carries a stale
+# 711, a 113-line double count, and a five-figure klass for a four-term sum.
+route_comparison = "[T257]: internalization 25.5-28.3k vs rud 34.9-39.8k naive; rud amortizes a larger share of a larger base"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
