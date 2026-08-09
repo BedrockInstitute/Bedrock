@@ -650,7 +650,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T205 | Where did the 16,000 compression floor come from? | UNSUPPORTED: a 2026-07-31 survey's optimistic end, never probed; the measured bar is 17,496 | `_build/l3.32-t205-report.md` |
 | L3.32-T206 | JOURNAL entries T200 to T205 | DELIVERED. 6 of 6, insertions only; T204 correctly recorded as dispatched, no verdict | `_build/l3.32-t206-report.md` |
 | L3.32-T207 | The AC endgame execution plan: block 2 to the deletion test | DELIVERED, 2,410 words, eight steps ordered; the blockPowLim ruling is the honesty gate | `_build/l3.32-t207-report.md` |
-| L3.32-T208 | Pin the 16,000: measure the L3.28 survey's seven levers on main | DISPATCHED 2026-08-08 | `_build/l3.32-t208-report.md` |
+| L3.32-T208 | Pin the 16,000: measure the L3.28 survey's seven levers on main | MEASURED -620 to -860 (survey said -755 to -1,486): the landing is 16,632-16,872, so  | `_build/l3.32-t208-report.md` |
 | L3.32-T209 | D17 gate: the code predicate's ideal form over the graph layer | WASH: the ideal form is 1,120-1,275 against 1,379 delivered, 7-19 percent, not half | `_build/l3.32-t209-report.md` |
 | L3.32-T210 | The compression campaign from first principles (fable, max) | -2,333 to -3,575, does NOT close; the cofinality escape closes NEGATIVE | `_build/l3.32-t210-campaign.md` |
 | L3.32-T211 | The seconds gate: does any honest blockPowLim fit the wall? | TOO CLOSE TO CALL: 7.6 s slice projects 68-77 s naive, 88-100 calibrated, 203-231 survey | `_build/l3.32-t211-report.md` |
