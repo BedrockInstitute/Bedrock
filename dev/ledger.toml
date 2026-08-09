@@ -1604,6 +1604,49 @@ rehome_gated = "188-248 naive row scope buys 141 s; all twelve Choice masters ar
 # The row's LINE band is untouched: 1,619-1,679 naive stands, and [T209]'s
 # WASH on the ideal form stands. This is a seconds finding only.
 blockpowlim_seconds_measured = "15.2-20.0 s naive, fits at every caliber; [T211]'s 67.5-76.9 came from a slice"
+# [T250] FOUND ONE LEVER AT THE 500 CLASS 2026-08-09, the third compression
+# campaign, and refuted the existence of a second. UNGATED, and the band is a
+# hypothesis until Gate 1 runs (P-l, D-26).
+#
+# THE MECHANISM: strengthen the below-lim induction's CONCLUSION so it carries
+# the pair family, its meta decode and its placement, not just the membership.
+# The current motive is `P g = isLimit g -> Sset g in Lset (sucV g)`
+# (`src/L/Rud/BelowLim.lagda.md:144-145`). Under the strengthened motive every
+# NESTED limit xi in gamma READS the family from the induction hypothesis
+# instead of rebuilding the whole formula stack at `Lset xi`. The stack that
+# dies is `src/L/Rud/BelowLim.lagda.md:2337-2346`, `:2356-2441`, `:2447-2604`
+# and `:3369-3421`, which the orchestrator counted at 286 non-blank lines, and
+# it is exactly [T240]'s measured 589-line miniature at 0.297 s per line, the
+# most expensive content class in the tree.
+#
+# It is P-n's one admissible move executed, and its precedent is [T185]: the
+# T182 wall became an APPLICATION of the theorem rather than separate content.
+# This applies the same trick one level down, to the witness family itself.
+#
+# THE BAND: 285-695 naive, 860-1,925 calibrated. [T250] states plainly that the
+# naive center is about 490, so the naive caliber clears the owner's 500 floor
+# only in the band's upper half, and did not shape the band to clear it. The
+# seconds hypothesis is minus 50-80 s on the carried sequence, stated
+# separately per P-q because a line lever is not a seconds lever.
+#
+# THE SAME SHAPE CLOSES MOST OF Q-LIM's L-SIDE CARRIED SEQUENCE, a surviving
+# survey term inside the 612-1,062 band, because it is the same recursion one
+# tower over. Each residue then pays ONE formula-stack instantiation at its own
+# top carrier and zero at nested carriers.
+#
+# THE WIDEST KILL RISK, named by [T250]: the L-side Def-successor atom over the
+# S-carrier. If it cannot be stated over `Sset (U l)` with a two-way decode,
+# only the below-lim half survives and that half sits under the naive floor.
+# Gate 2 decides it. Gate 1, at a 250-line stop, decides the Sigma-valued
+# motive against a truncation escape.
+#
+# THE PARTIAL REFUTATION IS ALSO A RESULT: no SECOND independent 500-line lever
+# exists on this route. The carried sequence in place, the blockpowlim row, the
+# three small rows, and the base with Bridge and StepGraph are each closed by
+# the existing measured gate record. [T250] also closed the object-language
+# hint in the NEGATIVE: the exploitable content of the P-m contrast is fewer
+# instantiations, not re-expressing code as object language.
+t250_lever = "recover the witness from a strengthened induction: 285-695 naive, UNGATED, two gates named"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
