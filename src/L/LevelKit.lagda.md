@@ -12,12 +12,16 @@ carrier `u` and its transitivity `utr` are the kit's two parameters, the pair
 atoms open at the carrier exactly as in the pair-atom chapter, and every
 clause is written twice, once at the meta level over the graph and once as an
 object-language formula, with the two-way decodes that make the object
-sentence mean the story. The consumers, the level-formula chapter at the real
-tower and the level-sigma chapter at a rud carrier, each keep only their
-carrier-specific clauses and collapses, and instantiate the kit at their
-carrier.
+sentence mean the story. The bounded successor atom joins the kit as
+carrier-generic ordinal content, the one-way successor clause is delivered
+once, parameterized by its conclusion atom, and the story assembly builds the
+tower story's conjunction once over a consumer's clause list. The consumers,
+the level-formula chapter at the real tower, the level-sigma chapter at a rud
+carrier, the S-story chapter at the step equality and the below-lim chapter,
+each keep only their carrier-specific clauses and collapses, and instantiate
+the kit at their carriers.
 <!--zh-->
-塔故事是见证 `f` 为可构造塔初始段所须满足的子句合取，而在每个载体处都以同一方式写出：函数性 (成对性与单值性)、零子句、序数定义域界与像的读式都只谈论落在图关系里的对 `pr a b`、载体的传递性与内层语义，于是没有一条提及载体属于哪座塔。本章把这些共享内容一次写成，落在通用的传递载体处。载体 `u` 与其传递性 `utr` 是套件的两个参数，对原子在载体处打开，与对原子章完全一致；每条子句写两遍，一遍在元层跑在图关系上，一遍是对象语言公式，并配使对象句子意指这个故事的双向解码。消费方，真实塔上的层公式章与 rud 载体上的层 sigma 章，各自只保留载体专属的子句与坍缩，并在自己的载体处实例化本套件。
+塔故事是见证 `f` 为可构造塔初始段所须满足的子句合取，而在每个载体处都以同一方式写出：函数性 (成对性与单值性)、零子句、序数定义域界与像的读式都只谈论落在图关系里的对 `pr a b`、载体的传递性与内层语义，于是没有一条提及载体属于哪座塔。本章把这些共享内容一次写成，落在通用的传递载体处。载体 `u` 与其传递性 `utr` 是套件的两个参数，对原子在载体处打开，与对原子章完全一致；每条子句写两遍，一遍在元层跑在图关系上，一遍是对象语言公式，并配使对象句子意指这个故事的双向解码。有界后继原子作为载体泛型的序数内容加入套件，单向后继值子句以结论原子为参数一次交付，故事装配在消费方的子句表上把塔故事的合取一次建成。消费方，真实塔上的层公式章、rud 载体上的层 sigma 章、步等式处的 S-故事章与 below-lim 章，各自只保留载体专属的子句与坍缩，并在自己的载体处实例化本套件。
 <!--/-->
 
 ```agda

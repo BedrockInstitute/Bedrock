@@ -235,10 +235,14 @@ import V.Model
   condensation chapter each instantiate it rather than rebuild it.
 - `L.LevelKit`{.Agda}: the level story's shared clause content, written ONCE at a generic
   transitive carrier. Pair membership, pairhood, single-valuedness, the zero clause,
-  ordinality, the exact domain bound and the range decodes live here, and the two chapters
-  that used to state them separately now instantiate. The two together shrank by 687 lines
-  while this kit added 366: content written structure-generic makes every re-instantiation
-  nearly free, which is the law this project has paid for three times before applying it here.
+  ordinality, the exact domain bound and the range decodes live here; so does the
+  one-way successor clause, parameterized by its conclusion atom, and the story
+  assembly, which folds a clause list into the meta conjunction, the object
+  conjunction and the two-way decode. Chapters that used to state any of it separately
+  now instantiate. Content written structure-generic makes every re-instantiation
+  nearly free, which is the law this project has paid for repeatedly before applying it
+  here; the assembly is the one piece that costs at the check rather than saving, and it
+  is kept for the shape of the story rather than for its price.
 
 - `L.LevelFormula`{.Agda}: the face's first consumer, at the real tower: the
   clause formulas and their decodes, the collapse of the definable step, and
@@ -375,7 +379,7 @@ import V.Model
 - `L.Definability`{.Agda}：那一步：`Def A`，带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性买单；`A ∈ Def A` 恒成立，传递性下 `A ⊆ Def A`。
 - `L.PairAtoms`{.Agda}：载体之上诸公式的对原子，一次交付且对载体及其传递性通用：任意元数处的单点、无序对与有序对原子，刻画，以及六条解码，把每个原子的满足读回所查取值的元层相等。面孔的三个消费方逐字复用它。
 - `L.InitialSegment`{.Agda}：可构成塔自己的故事，在载体内部讲述且对载体通用：一条公式说「塔的某个初始段逼近它、在每一阶施用可定义步、并覆盖所读的那个成员」，连同它的两条读式与对照 `Def`{.Agda} 面孔的双向充分性。翼、桥与凝聚章各自实例化它，而不是各建一遍。
-- `L.LevelKit`{.Agda}：层故事的共享子句内容，在一个泛型传递载体处**一次写成**。对隶属、成对性、单值性、零子句、序数性、精确定义域界与值域解码都住在这里，而原先各自陈述它们的两章如今只作实例化。两章合计缩掉 687 行，而本套件加了 366 行：结构泛型写就的内容，使每一次重新实例化都近乎免费。这条法则本项目已经付过三次学费，才在此处照做。
+- `L.LevelKit`{.Agda}：层故事的共享子句内容，在一个泛型传递载体处**一次写成**。对隶属、成对性、单值性、零子句、序数性、精确定义域界与值域解码都住在这里；由结论原子参数化的单向后继子句，以及把子句表折叠成元层合取、对象合取与双向解码的故事装配，也住在这里。原先各自陈述这些内容的诸章如今只作实例化。以结构泛型写就的内容，使每一次重新实例化都近乎免费；这条法则本项目已反复付过学费才在此处照做。装配是其中唯一在检查处付出代价而非节省的一件，保留它是为了故事的形状，不是为了它的价钱。
 
 - `L.LevelFormula`{.Agda}：面孔在真塔处的第一个消费方：诸子句公式及其解码、可定义步的坍缩，以及双向读出，于是诸层被内部地描述，而不只是可被描述。塔故事的两条子句，序数定义域界与极限情形，已测已设计但尚未交付。
 - `L.Condensation`{.Agda}：传递集载体处的跨越：整套绝对性装置一行实例化、彼处的层句、后继情形及其两条伴生事实、保义的迁移，以及把凝聚化归为「关于一条公式、在两个载体处的一条绝对性义务」。义务本身、层公式的 Lévy 内容与极限情形仍待交付。
@@ -1199,15 +1203,18 @@ measurement. Wired chapter by chapter as the wave batches land.
   power with no offset; the corrected block statement discharged at the
   successor step's own pair of levels, over the one re-stated relation the step
   still assumes.
-- `L.Rud.StepStory`{.Agda}: the S-story's one-way successor clause as an
-  object formula, generic in both directions at once. The carrier is a module
-  parameter, so the clause is written once and evaluated at every stage the
-  below-lim induction visits; the sixteen-operation graph layer is a SECOND
-  telescope, so the clause stays independent of how the graphs are supplied
-  and the instantiator hands them over (`L.Rud.StepGraph` is the supplier in
-  the tree). Built to the one-way
-  form: the delivered two-way successor-value clause is too strong and forces
-  an infinite chain inside a finite member.
+- `L.Rud.StepStory`{.Agda}: the S-story's clause content at a generic transitive
+  carrier, in two modules with different shapes. The SUCCESSOR clause is an object
+  formula generic in both directions at once, with the carrier a module parameter, so
+  it is written once and evaluated at every stage the below-lim induction visits; the
+  sixteen-operation graph layer is a SECOND telescope, so the clause stays independent
+  of how the graphs are supplied and the instantiator hands them over
+  (`L.Rud.StepGraph` is the supplier in the tree). It is built to the one-way form,
+  because the delivered two-way successor-value clause is too strong and forces an
+  infinite chain inside a finite member. The LIMIT clause, the story's sixth, needs no
+  graph telescope at all: it reads the value at a limit index as the union of the values
+  below, over the carrier and its transitivity alone. The two are siblings in subject
+  and not in shape, and the chapter says so rather than implying one telescope.
 - `L.Rud.BelowLim`{.Agda}: the bridge's below-lim residue, stated as an
   induction over the limit ordinals, so the fact at every smaller limit is
   the hypothesis rather than a separate obligation. The chapter carries the
@@ -1238,7 +1245,7 @@ measurement. Wired chapter by chapter as the wave batches land.
 - `L.Rud.Bridge`{.Agda}：两个定义相会之处：垃圾向 Def 塔的吸收、被记为经典意义下**假命题**的极限层等式 (Devlin VI.2.4，附反例与真正的三明治)、以及那个完全不需要认同的方向，由归约自己的第三条子句无条件交付。
 - `L.Rud.DefInJ`{.Agda}：后继塌缩，把上升一个 Def 阶段读作其下那一阶段的可定义幂，连同每个极限层都供给的那个空的相对化槽。
 - `L.Rud.SatTable`{.Agda}：可定义幂就是第八个基底运算施于一条关系与一个覆盖集之值，故同时持有二者的层不带偏移地持有该幂；修正后的块陈述在后继步自己的那对层处兑付，其上只余那条重述后的关系作为假设。
-- `L.Rud.StepStory`{.Agda}：S-故事的单向后继子句，作为对象公式，且一次泛型到底。载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，故子句与诸图如何供给无关，由实例化方交出 (树中的供给方是 `L.Rud.StepGraph`{.Agda})。按单向形式建造：已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。
+- `L.Rud.StepStory`{.Agda}：S-故事在泛型传递载体处的子句内容，分两个形状不同的模块。**后继**子句是对象公式，且一次泛型到底：载体是模块参数，故子句只写一次而在 below-lim 归纳所访问的每个阶段处求值；十六运算的图层是第二重望远镜，故子句与诸图如何供给无关，由实例化方交出 (树中的供给方是 `L.Rud.StepGraph`{.Agda})。按单向形式建造，因为已交付的双向后继取值子句过强，会在有穷成员内逼出无穷链。**极限**子句，即故事的第六条，完全不需要图望远镜：它只凭载体与其传递性，把极限索引处的值读作其下诸值的并。两者在主题上是兄弟，在形状上不是，本章明说这一点，而不暗示它们共用一重望远镜。
 - `L.Rud.BelowLim`{.Agda}：桥的 below-lim 残差，陈述为对极限序数的归纳，故每个更小极限处的事实是归纳假设而非另一条义务。本章载有通用载体处带六条子句的故事谓词、载运序列，以及段在通用极限索引处的隶属、精确定义域与极限子句。
 <!--/-->
 

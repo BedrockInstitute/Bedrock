@@ -6,10 +6,14 @@ takes definable subsets at every stage; the rud tower takes one closure step at
 every stage and collects at limits. This chapter connects the two surfaces at
 the level of single steps, in both directions, and records exactly what a
 per-level identification of the towers costs: the identification is false,
-the classical sandwich stands in its place, and the direction from the rud
-tower into `L` survives.
+the classical sandwich stands in its place, and the two class directions are
+packaged at the tower. The direction from the rud tower into `L` needs no
+identification: it is read off the surviving half of Devlin's `P(α)`,
+re-proved without the per-level identification. The direction from `L` into
+the rud tower is delivered from the reshaped induction, conditional on the
+induction's limit residue.
 <!--zh-->
-哥德尔的定义与 Jensen 的定义在此相遇。可构造塔在每个阶段取可定义子集，初步函数塔在每个阶段走一步闭包、在极限处收拢。本章在单步的层面双向连接两个表面，并如实记下逐层认同两塔的代价：认同是假的，经典的三明治取而代之，而自初步函数塔进入 `L` 的那个方向得以保留。
+哥德尔的定义与 Jensen 的定义在此相遇。可构造塔在每个阶段取可定义子集，初步函数塔在每个阶段走一步闭包、在极限处收拢。本章在单步的层面双向连接两个表面，并如实记下逐层认同两塔的代价：认同是假的，经典的三明治取而代之，两个类的方向都在塔处打包。自初步函数塔进入 `L` 的那个方向不需要认同：它从 Devlin 的 `P(α)` 的存活半边读出，在分层认同之外重证。自 `L` 进入初步函数塔的那个方向由重塑后的归纳交付，以该归纳的极限残项为条件。
 <!--/-->
 
 ```agda
