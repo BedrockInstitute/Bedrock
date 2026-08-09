@@ -234,8 +234,28 @@ band, so it can decide the constraint by itself.
 # still lower it. [LJ-1.1] owes this figure and already owed it: the row
 # always required one best-effort projection with its basis, and nothing was
 # using it for anything.
-lines_apriori = 0            # 0 = not yet recorded; [LJ-1.1] fills it
-lines_apriori_source = "OWED by [LJ-1.1], before any phase-1 build starts"
+# THE WING'S A-PRIORI PROJECTION, recorded 2026-08-09 by [LJ-1.1] BEFORE any
+# phase-1 build started, which is the whole point of the field. The recon was
+# NOT told its number would become a ceiling (DD5 measure 2), so it had no
+# reason to project high.
+gch_wing_apriori = [7553, 11197]
+gch_wing_apriori_centre = 9400
+gch_wing_apriori_source = """
+[LJ-1.1], _build/lj-1.1-recon.md section 6. Block sum 7,553-11,197; the recon
+reports 8.0-10.8k as its own band because that is [L3.32-T257]'s independent
+survey figure sitting inside the block sum, and it takes the narrower one.
+About 5.1k of the total rests on DELIVERED COMPARABLES, the archived modules
+at their measured in-fence sizes; the rest rests on surveys. No block is
+UNPRICED. Per-block basis is named in the report's table.
+"""
+
+# lines_apriori is the ceiling on the DOUBLE-trophy line benchmark, and it is
+# not this number: it is post-compression standing PLUS the wing. [LJ-0.4]
+# moves standing, so [LJ-2.1] computes it and writes it here. Use the HIGH end
+# of the wing band. Holding a wing to the low end of its own estimate is a
+# hidden line cap, and DD5 and DD24 both refuse one.
+lines_apriori = 0            # 0 = not yet computed; [LJ-2.1] fills it
+lines_apriori_source = "OWED by [LJ-2.1]: post-[LJ-0.4] standing + gch_wing_apriori high end"
 
 # MEASURE 3. An independent reader asks what did not need to be there, and
 # [LJ-1.9] reports net removable lines. [LJ-2.1] records measured, projected
