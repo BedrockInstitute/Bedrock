@@ -33,7 +33,7 @@ CF_PROJECT := bedrock
 
 .PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard dashboard dashboard-stale gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids devdocs taskindex agentsguard
+check: venv-check typecheck markers lint lint-agda glossary ledger ratio probes tree reuse ruleids devdocs taskindex agentsguard
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -62,6 +62,13 @@ glossary:
 
 ledger:
 	$(PY) scripts/ledger.py --check
+
+# DD25 makes the seconds-per-line ratio the ONLY threshold on the GCH wing.
+# Staged: it reports and exits 0 until the wing has a module, so it is safe
+# here from today. It measures warm in the gate; --cold is the honest figure
+# and belongs in the audit, not in every commit.
+ratio:
+	$(PY) scripts/check-ratio.py --check
 
 probes:
 	$(PY) scripts/check-probes.py --check
