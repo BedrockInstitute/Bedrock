@@ -134,6 +134,56 @@ def retiring(files: list[str], data: dict) -> tuple[dict[str, list[str]], list[s
     return buckets, defects
 
 
+def validate_benchmark(data: dict) -> list[str]:
+    """DD5 measure 1, the a-priori ceiling, enforced rather than hoped.
+
+    THE FAILURE THIS PREVENTS. DD5's line benchmark is set by measuring a
+    wing this project builds itself, so a wing larger than it needed to be
+    raises the bar by exactly that much and every downstream threshold then
+    passes on a worse result. Nobody has to cheat for that to happen.
+
+    THE RULE. `[LJ-1.1]` records a projection BEFORE any phase-1 build, when
+    nobody could gain from inflating it. When a line benchmark is finally
+    declared as binding, it must be the SMALLER of that projection and the
+    measurement. Building fat cannot raise the bar; building tight still
+    lowers it.
+
+    WHEN IT FIRES. Only once someone moves `lines_state` off its unbound
+    text, which is the moment the number starts to matter. Until then the
+    fields read 0 and this returns nothing, so it is silent for the whole of
+    phase 1 and loud on the day it is needed. A rule that fires only when it
+    bites is a rule people do not learn to route around.
+    """
+    bench = data.get("basis", {}).get("internalization_benchmark", {})
+    if not bench:
+        return []
+    state = str(bench.get("lines_state", ""))
+    unbound = ("NOT YET" in state.upper() or "DOES NOT EXIST" in state.upper()
+               or not state)
+    if unbound:
+        return []                      # phase 1 is still running; nothing binds
+    defects = []
+    apriori = bench.get("lines_apriori", 0)
+    if not apriori:
+        defects.append(
+            "benchmark: lines_state says the line benchmark BINDS, but "
+            "lines_apriori is 0. DD5 measure 1 requires [LJ-1.1]'s projection, "
+            "recorded before any build, and the binding figure is the SMALLER "
+            "of it and the measurement. A benchmark with no a-priori ceiling "
+            "is a number this project chose for itself.")
+        return defects
+    naive = bench.get("lines_naive") or []
+    measured = max(naive) if naive else 0
+    if measured and measured > apriori:
+        defects.append(
+            f"benchmark: the measured line figure {measured:,} exceeds "
+            f"[LJ-1.1]'s a-priori projection {apriori:,}, so the BINDING "
+            f"benchmark is {apriori:,}, not {measured:,} (DD5 measure 1). "
+            f"Write the smaller figure in, or record why the projection was "
+            f"wrong with evidence that is not the wing itself.")
+    return defects
+
+
 def validate_rows(data: dict) -> list[str]:
     """Every remaining row needs both bands and a provenance. Unpriced is stated, never zero."""
     defects: list[str] = []
@@ -529,6 +579,7 @@ def main(argv: list[str]) -> int:
 
     buckets, defects = retiring(files, data)
     defects += validate_rows(data)
+    defects += validate_benchmark(data)
     try:
         split, ambiguous, split_defects = trophy_split(data, files, sizes)
     except AssertionError as exc:
