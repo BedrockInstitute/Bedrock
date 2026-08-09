@@ -3486,6 +3486,82 @@ GATED. The ideal form prices at 188-248 naive for the row scope against the book
 
 DISPATCHED, no verdict (`dev/PLAN.md:643`). The report is a pending skeleton: every section reads PENDING, and the theorem status, line count, cold wall and deletions land when the block closes (`_build/l3.32-t245-report.md:3-29`). The entry follows the `[T204]` pattern, exactly as `[T206]` recorded it (`dev/JOURNAL.md:3189-3192`).
 
+**`[T246]` THE JOURNAL CATCH-UP: 22 ENTRIES FOR T224 TO T245** (2026-08-09, `_build/l3.32-t246-report.md`).
+
+DELIVERED. 22 of 22 entries written, insertions only, lint green (`_build/l3.32-t246-report.md:3-9`). The diff is 88 added lines and zero deletions on `dev/JOURNAL.md` (`:8-9`). The file reads 48,245 words after the insertion, an overage of 3,245 over the 45,000 stop-line, reported plainly (`:11-15`).
+
+**`[T247]` TIDY THE JOURNAL: MARK WHAT LATER MEASUREMENTS SUPERSEDED, NEVER REWRITE** (2026-08-09, `_build/l3.32-t247-report.md`).
+
+DELIVERED. 9 supersession markers added on 8 entries, each a final paragraph that adds text and never changes the original (`_build/l3.32-t247-report.md:3-9`). Two reversals outside the brief's table were found and marked, T218 by T220 and T237 by T240 (`:73-80`). Four more reversals were checked and NOT marked, with the reason each (`:81-93`). The header gains three paragraphs: entry conventions, the marker form, and size as a tracked figure (`:100-121`).
+
+**`[T248]` REFRESH THE ENDGAME STATUS MEMO: EVERY HEADLINE NUMBER IN IT IS NOW WRONG** (2026-08-09, `_build/l3.32-t248-report.md`).
+
+REWRITTEN. The memo `dev/memos/L3.32-endgame-status.md` is rebuilt at 1,455 words with 16 headline figures corrected, each traced to the measurement that moved it (`_build/l3.32-t248-report.md:3-4`, `:9-42`). The corrected figures include the AC total 15,409, the landing 801-809 s, the seconds miss 303-311 s, and about 166 s with the archival; block A seconds re-price from 91-116 to about 371 at the 0.297 content rate (`:14-31`). The law list grows to 10 plus D-26 and R-40, adding P-o, P-p, P-q, P-r, C-25, C-26 and C-27 (`:34-36`; `dev/LESSONS.md:2555`). The tool wins over the ledger comment: the memo quotes 15,409, not 15,383 (`:70-74`).
+
+**`[T249]` TIME THE COVERING CODE PREDICATE: T211'S NAMED GATE** (2026-08-09, `_build/l3.32-t249-report.md`).
+
+GO. The measured rate is 0.0113 s per line over 1,343 code-only lines, 0.19x T211's slice rate, so the gate holds with a large margin (`_build/l3.32-t249-report.md:3-6`, `:15-18`). The whole obligation re-projects to 15.2-20.0 s naive and FITS the wall at every caliber (`:116-136`). T211's 67.5-76.9 s projection was high by a factor of four to five, because its slice rate was the engine's one-time cost spread over 126 lines (`:136-145`). This is P-s's high direction, 5.3x (`dev/LESSONS.md:2358`).
+
+**`[T250]` THE THIRD COMPRESSION CAMPAIGN: 500-LINE LEVERS, FROM FIRST PRINCIPLES** (2026-08-09, `_build/l3.32-t250-math.md`).
+
+ONE lever, ungated, and no second 500-line lever exists (`_build/l3.32-t250-math.md:3-6`, `:208-211`). The lever recovers the witness from a strengthened induction, so every nested limit reads the pair family, its meta decode and its placement from the hypothesis instead of rebuilding the formula stack (`:19-45`). The band is 285-695 naive and 860-1,925 calibrated, and the naive center 490 clears the 500 floor only in the upper half (`:3-6`). Gate 1 restates T240's miniature with the strengthened IH at a 250-line stop-line, and Gate 2 builds one L-story clause over the S-carrier at a 200-line stop-line (`:191-199`). The engine keeps hand-written decodes; P-r measured the clause-list fold at 2.9x (`:98-101`; `dev/LESSONS.md:2322`).
+
+**`[T251]` GATE 1: DOES THE STRENGTHENED INDUCTION ACTUALLY RECOVER THE WITNESS?** (2026-08-09, `_build/l3.32-t251-report.md`).
+
+STOPPED by the orchestrator at 304 minutes, with zero typechecks in the last 67 (`dev/PLAN.md:650`). The probe is written: `src/ProbeT251.agda` restates the control at 384 non-blank lines against 589, deleting the nested carrier stack, the rename decode and the pair-family defSet, and taking `(Pξ, decode, placement)` from a `Carried` parameter (`_build/l3.32-t251-report.md:5`, `:52-56`, `:62-68`). No cold run completed, so the Σ-motive verdict is not measured (`:21-24`). The task resumes as `[T251r]` behind `[T261]`, keeping the session and the probe (`dev/PLAN.md:651`).
+
+**`[T251r]` GATE 1 RESUMED: WRITE THE NEGATIVE RESULT FIRST, MEASURE SECOND** (2026-08-09, `_build/l3.32-t251-report.md`).
+
+QUEUED, no verdict (`dev/PLAN.md:651`). It keeps T251's session and the 384-line probe, and it waits for an Agda slot behind `[T261]` (`dev/PLAN.md:651`). The resumed report writes the negative result first and the measurement second.
+
+**`[T252]` THE NATURALNESS REVIEW OF TODAY'S FOUR SETTLED MASTERS** (2026-08-09, `_build/l3.32-t252-report.md`).
+
+StepStory is NOT NATURAL: its title and intro announce the successor clause, and the file holds two subjects with different generic shapes (`_build/l3.32-t252-report.md:9-11`, `:69-113`). LevelKit, LevelSigma and Bridge are NATURAL, each section answering its charter (`:13-16`, `:23-207`). Six prose-only repairs are proposed, and the alternative of moving `Limit` to LevelKit is priced and declined (`:208-230`). The four catalog blurbs are stale (`:232-292`). The standard applied is D36's naturalness condition in the owner's words (`:3-6`; `dev/PLAN.md:194`).
+
+**`[T253]` THE NATURALNESS REPAIR: PROSE ONLY, FOUR MASTERS** (2026-08-09, `_build/l3.32-t253-report.md`).
+
+4 of 4 applied, prose only, every code fence byte-identical, and both lints pass (`_build/l3.32-t253-report.md:3-7`). StepStory's title, intro and recap now announce two sibling clauses with their different shapes, and the false sameness claim is gone (`:9-25`). LevelKit's intro names the successor atom, the one-way clause, the story assembly and four consumers; LevelSigma loses the orchestrator line; Bridge's intro names both class directions (`:27-64`). One count from T252 is corrected: the `Clause` telescope has nine parameters, not six, and the verdicts stand (`:78-90`).
+
+**`[T254]` THE CLOSURE BOUNDARY: GCH_ASSIGN, AND A NATURAL SPLIT THAT FOLLOWS IT** (2026-08-09, `_build/l3.32-t254-report.md`).
+
+ZERO legal `gch_assign` declarations and ZERO natural splits (`_build/l3.32-t254-report.md:3-6`). The 2,100-2,700 premise is stale: the consumer test returns 2,661, and the D-10 correction removes `BelowLim` and `StepStory`, the bridge's own residue and funded AC content, leaving 216 GCH-only lines (`:7-11`, `:101-103`). All six candidates fail the substantive safety, and the shared part is AC content the wing reads a few corollaries from, 22 GCH-only lines in 24 masters (`:39-81`, `:130-133`). Two moves are available and neither is a split: a meter defect worth 221 lines and a dead master worth 108, taking the meter from 15,409 to 15,080 (`:156-180`).
+
+**`[T255]` THE SECONDS QUESTION: IS THE INTERLEAVING COST MATHEMATICS OR ENGINEERING?** (2026-08-09, `_build/l3.32-t255-seconds.md`).
+
+The TWICE is MATHEMATICS, refuting the orchestrator's engineering reading, and the gap does not close (`_build/l3.32-t255-seconds.md:1-4`, `:42-85`). One formula stack per residue is the honest floor, because each membership has exactly one instrument and neither residue derives from the other (`:47-65`). P-t is measured here: the content class follows the FORMULA, not the carrier, 0.0104 s per line as telescope hypotheses against 0.297 as a built tree, 28 times (`:87-103`; `dev/LESSONS.md:2390`). The landing is 894-899 against the 600 gate, the 294-299 gap is a floor, and the honest center is 780-800 (`:283-284`, `:298`). The largest seconds lever is the stack-shape family, minus 30-70 s per surviving stack, hypothesis, and 389 s of the master carry no attribution (`:151`, `:196-197`).
+
+**`[T256]` GATE 0: THE FIRST PER-DEFINITION PROFILE OF THE FINISHED MASTER** (2026-08-09, `_build/l3.32-t256-belowlim-profile.txt`).
+
+DONE by the orchestrator, not by a dispatch (`dev/PLAN.md:656`). The profile of `L.Rud.BelowLim` totals 546,708 ms, and two rows carry 96.5 s, 17.7 percent, with neither examined before: `Stepγ.segγ∈C` at 61,240 ms and `Stepγ.ψ-in` at 35,307 ms (`_build/l3.32-t256-belowlim-profile.txt:2-5`; `_build/briefs/l3.32-t258.md:4-6`). The remaining top rows are the known clause-bundle and decode families (`_build/l3.32-t256-belowlim-profile.txt:6-7`). The two unexamined rows become `[T258]` (`dev/PLAN.md:658`).
+
+**`[T257]` PRICE THE GCH WING ON THE INTERNALIZATION ROUTE, CALIBRATED TO THE RUD WING** (2026-08-09, `_build/l3.32-t257-routes.md`).
+
+The two routes compare for the first time on one caliber: internalization 25,485-28,258 naive against rud 34,940-39,823 (`_build/l3.32-t257-routes.md:13-20`). The orchestrator's 20,601-23,994 construction does not survive: it omits the wing's standing content, 5,268 lines measured, and the corrected sum is 4,264-4,884 higher (`:26`, `:356`, `:410`). `crossing-rebuild`'s 5,047 of 5,047 lines are owned by the internalization route, measured term by term (`:263`). The amortization answer goes against the hope: the rud route shares 44-47 percent of a larger base against 34-38 percent (`:456`, `:473`, `:479-481`). The single largest judgment prices the bridge rows at zero, because the `bridge-landing` claim has no import edge, no wing obligation, and a circular citation; that weak point is named (`:288-318`, `:498-517`). `main` measures 17,492, not 17,496 (`:554-560`).
+
+**`[T258]` THE TWO ROWS NOBODY EXAMINED: SEGγ∈C AT 61.2 S AND ψ-IN AT 35.3 S** (2026-08-09, `_build/l3.32-t258-report.md`).
+
+DISPATCHED, no verdict (`dev/PLAN.md:658`). The report is in progress: the base probe reproduces both rows at 48,210 ms and 32,744 ms of a 501,655 ms total, and the depth-six `Ctr` conversion is R-40's signature, 14.5 s per membership type against a free depth-3 site (`_build/l3.32-t258-report.md:39`, `:45-57`). The `UnionClosure` instance is not the cost: the row stays at 51,197 ms with it removed (`:62-63`). The gut ceilings and the `ψ-in` diagnosis stay PENDING (`:12-15`, `:77`).
+
+**`[T259]` ADVERSARIAL: IS THE RUD-SIDE CROSSING REALLY REFUTED, OR FORECLOSED BY ENGINEERING?** (2026-08-09, `_build/l3.32-t259-crossing.md`).
+
+VIABLE, ungated (`_build/l3.32-t259-crossing.md:3-6`). Re-target the crossing description from the L-tower to the S-tower: fill the delivered story's empty successor slot with a Δ₀ step-equality clause over the sixteen operation graphs, and land through `Sset γ ∈ Lset (sucV γ)` (`:3-5`, `:193-238`). `[T130]` is correct for the interface as frozen, but ground 2 conflates the per-level IDENTITY, false, with the bridge PLACEMENT, true and sufficient (`:7-10`, `:97-159`). New content prices at 0.9-1.8k naive against the 5,047 rebuild, about a third of the 9,455-11,565 route gap at the gated calibration (`:243-251`). The desk pre-gate checks all sixteen `Fof` specs for Δ₀, and one unbounded quantifier kills the Σ₁ claim (`:264-297`). D-26 is the design's foundation, not its obstacle: the proposal never orders members of a definable power (`:100-104`).
+
+**`[T260]` SETTLE BY PROBE: DOES THE GCH WING ACTUALLY CONSUME THE BRIDGE ROWS?** (2026-08-09, `_build/l3.32-t260-bridge.md`).
+
+NO. The GCH wing does not consume the bridge rows, on import-graph strength plus obligation-reading strength, and the route gap stands at 9,455-11,565 rather than halving (`_build/l3.32-t260-bridge.md:7-22`, `:279-306`). The `bridge-landing` sentence "the wing rides the bridge" has zero support in its own evidence field: the citation chain closes at the row's own uncited sentence, and D18's rider analysis is the node with independent evidence (`:23-90`). No closure of the 18 `gch_only` masters reaches `BelowLim`, `Bridge` or `SatTable`, and no file in the wing's 87-module closure union names both towers (`:91-150`). The probe the owner asked for was specified and did not run, both Agda slots held, so the answer is not pinned at measured strength (`:230-278`). T257's ZERO pricing stands, now on structural facts rather than three negatives (`:279-306`).
+
+**`[T261]` RUN B'S PROBE, AND ADVERSARIALLY REVIEW B'S OWN CONCLUSION** (2026-08-09, `_build/l3.32-t261-report.md`).
+
+DISPATCHED, no verdict (`dev/PLAN.md:661`). The report is a pending skeleton: every section reads PENDING (`_build/l3.32-t261-report.md:1-8`). It waits for an Agda slot to run the probe `[T260]` specified and to attack `[T260]`'s three legs independently (`_build/briefs/l3.32-t261.md:8-12`). `[T260]`'s answer is a reading, and the owner asked for the number pinned by probe (`:4-7`).
+
+**`[T262]` Q-LIM'S GENERAL TRANSFER: THE OTHER HALF OF BRIDGE-LANDING** (2026-08-09, `_build/l3.32-t262-report.md`).
+
+QUEUED, no verdict (`dev/PLAN.md:662`). It is D38 line one's critical path: the general Q-lim transfer, `below-lim`'s mirror one tower over, which `bridge-landing` needs after `[T245]` delivered the other half (`_build/briefs/l3.32-t262.md:1-10`; `dev/PLAN.md:194`). `[T199]` FEASIBLE and `[T204]` GREEN at the 200-line cap gate the shape, and one classical gate at `Bridge:338-352` is the named kill risk (`_build/briefs/l3.32-t262.md:13-22`). The report is not yet on disk. D38's line-one status carries the deletion test PASS: exit 0, wall 11:38, 16 gch-side masters deleted, 62 AC-side masters imported, ac-total 15,409 against the 20,000 cap, the first run since `[T147]` (`dev/PLAN.md:194-195`; the run log `bymhstvbz.output:27`).
+
+**`[T263]` T259'S DESK PRE-GATE: ARE ALL SIXTEEN FOF SPECS DELTA-0?** (2026-08-09, `_build/l3.32-t263-fof.md`).
+
+DISPATCHED, no verdict (`dev/PLAN.md:663`). The report is not yet on disk. The task runs T259's own desk pre-gate: all sixteen `Fof` specs against the classical Δ₀ list, where one unbounded quantifier kills the Σ₁ claim and confirms `[T130]` on its load-bearing ground (`_build/briefs/l3.32-t263.md:3-12`). The PLAN row records a partial finding, one non-Delta-0 operation, with no report behind it yet (`dev/PLAN.md:663`).
+
 ## Dated records
 
 ### D30 amendments, the full narrative (moved from the PLAN cell 2026-08-07)

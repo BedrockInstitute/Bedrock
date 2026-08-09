@@ -17,7 +17,10 @@ Endpoint = standing PLUS the remaining rows, in both calibers (PLAN section 6.2)
 the component sum, calibrated applies each row's own class (about x1.3 for a row anchored
 by a probe or a delivered comparable, x3 for a row only a survey could reach).
 
-The 25k reference line is a best-effort target, NOT a decision procedure (D26). This script
+D39 (2026-08-09) binds the DOUBLE-trophy endpoint against the internalization route, in lines
+and in seconds. Neither benchmark is clear yet, so this script still prints the old 25k
+reference line beside the D39 band. The 25k was a best-effort target, never a decision
+procedure. This script
 prints the overage as a plain number and draws no conclusion from it. Neither should you.
 
 The owner reads the same figures on the dashboard (`make dashboard`), which sees the
@@ -522,7 +525,8 @@ def main(argv: list[str]) -> int:
         print(
             f"standing {standing:,} | endpoint {(standing+nl)/1000:.2f}-{(standing+nh)/1000:.2f}k naive, "
             f"{(standing+cl)/1000:.2f}-{(standing+ch)/1000:.2f}k calibrated | "
-            f"naive corner {(standing+nh-line)/1000:+.2f}k against the {line/1000:.0f}k reference"
+            f"naive corner {(standing+nh-line)/1000:+.2f}k against the {line/1000:.0f}k reference; "
+            f"D39 benchmark 25.49-28.26k naive, NOT YET CLEAR ENOUGH TO BIND"
             + clause
         )
         return 1 if defects else 0
@@ -643,7 +647,9 @@ def main(argv: list[str]) -> int:
         print("    the three columns do not add up. That is correct: AC and GCH "
               "both count the base and the shared parts.")
     print()
-    print(f"  against the {line/1000:.0f}k reference line, recorded and not argued from (D26):")
+    print(f"  against the {line/1000:.0f}k reference line, recorded and not argued from:")
+    print("  D39 binds the double trophy against internalization, in lines AND seconds;")
+    print("  both benchmarks must be made clear before they bind (see the ledger).")
     print(f"    naive corner      {(standing+nh-line)/1000:+.2f}k")
     print(f"    calibrated band   {(standing+cl-line)/1000:+.2f}k to {(standing+ch-line)/1000:+.2f}k")
     tim = data.get("timing", {})

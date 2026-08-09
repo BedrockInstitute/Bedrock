@@ -56,6 +56,16 @@ CITATION = re.compile(
 # PLAN decisions: `D18`, `D30`, no hyphen.
 PLAN_REF = re.compile(r"(?<![\w-])(D\d{1,2})(?![\w-])")
 PLAN_ROW = re.compile(r"^\|\s*(D\d{1,2})\s*\|", re.M)
+# The LIVE series since 2026-08-09 is `DD`. The whole `D` series was archived
+# to dev/DECISIONS-archived.md when the owner rebuilt the list on the
+# two-tower bridge ruling, and `D` citations still RESOLVE against that file:
+# hundreds of them sit in JOURNAL, the memos, the briefs and the git history,
+# and they are true to what they meant when written. A number is never reused
+# in either series. Note the lookbehind on PLAN_REF: it makes `DD5` fail to
+# match as a `D` reference, which is what keeps the two series apart.
+DD_REF = re.compile(r"(?<![\w-])(DD\d{1,2})(?![\w-])")
+DD_ROW = re.compile(r"^\|\s*(DD\d{1,2})\s*\|", re.M)
+ARCHIVED_DECISIONS = ROOT / "dev" / "DECISIONS-archived.md"
 # Struck decisions still RESOLVE, and PLAN says so in as many words: their full
 # original text is preserved in dev/JOURNAL.md "so a commit message citing a
 # struck code still resolves", and numbers are never reused. A checker that
@@ -109,9 +119,11 @@ def duplicate_lessons() -> list[str]:
 
 def known_decisions() -> set[str]:
     text = PLAN.read_text(encoding="utf-8")
-    live = {m.group(1) for m in PLAN_ROW.finditer(text)}
+    arch = ARCHIVED_DECISIONS.read_text(encoding="utf-8")
+    live = {m.group(1) for m in PLAN_ROW.finditer(arch)}
+    live |= {m.group(1) for m in DD_ROW.finditer(text)}
     struck: set[str] = set()
-    m = PLAN_RETIRED.search(text)
+    m = PLAN_RETIRED.search(arch)
     if m:
         struck = set(re.findall(r"\bD\d{1,2}\b", m.group(1)))
     return live | struck
@@ -159,6 +171,11 @@ def main() -> int:
             if path.name in HISTORICAL or path.parent.name in HISTORICAL_DIRS:
                 continue
             for m in PLAN_REF.finditer(line):
+                if m.group(1) not in decisions:
+                    findings.append(
+                        f"{path.relative_to(ROOT)}:{i}: `{m.group(1)}` is not a "
+                        f"decision in dev/DECISIONS-archived.md")
+            for m in DD_REF.finditer(line):
                 if m.group(1) not in decisions:
                     findings.append(
                         f"{path.relative_to(ROOT)}:{i}: `{m.group(1)}` is not a "

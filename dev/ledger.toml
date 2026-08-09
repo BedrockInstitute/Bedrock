@@ -93,12 +93,51 @@ unit = "non-blank lines inside ```agda fences"
 scope = "git-tracked *.lagda.md under src/"
 reference_line = 25000
 reference_line_note = """
-The reference line is a best-effort compression target, NOT a decision
-procedure (PLAN decision D26). An overage is recorded in both calibers and
-worked down where real compression exists. Evidence may move a technique; a
-number alone moves nothing, and it may never put the campaign route back on
-the table.
+SUPERSEDED AS THE BINDING FIGURE 2026-08-09 by PLAN decision D39, and kept
+because it records where the project aimed before.
+
+The reference line was a best-effort compression target and NOT a decision
+procedure. D39 replaces it with TWO constraints that are RELATIVE and that
+DO decide, both taken at the DOUBLE-trophy endpoint:
+
+  (1) LINES. The two-tower bridge route's double-trophy total must not
+      exceed the internalization route's double-trophy total.
+  (2) TIME.  The two-tower bridge route's double-trophy total build time
+      must not exceed the internalization route's.
+
+BOTH BENCHMARKS MUST BE MADE CLEAR BEFORE THEY BIND, by the owner's ruling.
+Neither is clear today. See `internalization_benchmark` below.
+
+The 25,000 sits inside [T257]'s internalization band, 25,485-28,258 naive.
+That is a coincidence and it is not evidence. It was a target chosen in
+2026-07, and the band was measured a year of work later by another route.
 """
+
+# THE BENCHMARK D39 BINDS AGAINST. Added 2026-08-09.
+# Two numbers, and the honest state of each. Neither binds until it is clear.
+[basis.internalization_benchmark]
+lines_naive = [25485, 28258]
+lines_calibrated = [29909, 37275]
+lines_source = "[L3.32-T257], one pass, one agent"
+lines_state = "NOT YET CLEAR ENOUGH TO BIND"
+lines_weak_point = """
+[T257] prices `carried-sequence` and `blockpowlim-instance` at ZERO for the
+GCH wing, worth 4,238-5,218. [T260] supported that pricing on import-graph
+facts, and its own probe never ran. The weak point is one fifth of the
+band, so it can decide the constraint by itself.
+"""
+seconds_state = "DOES NOT EXIST"
+seconds_gap = """
+Nobody has measured the internalization route's build time, at either
+trophy. Two pieces are owed and they are different in kind. The AC half is
+MEASURABLE: `main` holds the delivered internalization tree at 17,492 lines
+and a cold wall on it is one run. The GCH half was never built, so it can
+only be PROJECTED, and a seconds projection has no measured comparable on
+that route at all. Until both exist, constraint (2) of D39 names a number
+that is not known.
+"""
+# For the near side of both constraints, the tree today: 15,188 metered
+# lines against `endpoint`, and 700.42 s cold (see [timing]).
 
 # ---------------------------------------------------------------------------
 # The booked retirement set, ruled by D18 and disposed of by D20 (archive,
@@ -432,8 +471,15 @@ provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52
 # survey, never probed, and [T208] measured that survey's seven levers on its
 # own laboratory at minus 620 to minus 860 against a claimed minus 1,486, so
 # the survey's own landing was 16,632-16,872 rather than 16,006-16,737.
+# DEMOTED TO A DIAGNOSTIC 2026-08-09 by PLAN decision D39. The binding
+# figures are now joint and relative, and a PER-TROPHY cap can work against a
+# JOINT total: content split to protect this cap may lower the reuse D39's
+# core constraint demands. The cap is kept because it reads where content
+# sits, and the deletion test it feeds is kept unchanged, because that test
+# is the structural check that keeps the accounting honest whichever figure
+# binds (see [accounting-honesty]).
 ac_cap = 20000
-authority = "owner ruling D36, 2026-08-07"
+authority = "owner ruling D36, 2026-08-07; demoted by D39, 2026-08-09"
 # PENDING REMOVALS. This was 1,290 and it is now ZERO: the removal EXECUTED
 # 2026-08-09 as [T236]. HF (664) and Finite (626) are archived, byte-identical,
 # with `dev/ARCHIVE.md` rows and the catalog rewired. Its condition, "once
@@ -1236,6 +1282,13 @@ measured_wall = "2026-08-08, interface cache removed, make typecheck (the export
 # The 395 is kept as the last pre-block-A reading, not as today's tree.
 full_cold_wall_seconds = 395
 full_cold_wall_seconds_2026_08_09 = 700
+# D39, 2026-08-09, replaces D30's ABSOLUTE 600 s wall as the route's time
+# constraint with a RELATIVE one against the internalization route's
+# double-trophy build time. That benchmark DOES NOT EXIST yet; see
+# [basis.internalization_benchmark]. Worth stating plainly while it is being
+# established: today's tree already measures 700.42 s, so it is over the old
+# absolute wall by about 100 s, and the near side of the new constraint will
+# only grow as the second trophy lands.
 # THE LANDING'S WALL, assembled by [T218] 2026-08-08 because seconds became
 # the binding threshold. Against the 498 gate: 745-813 s UNCURED, which does
 # not fit, and 422-448 s at [T215]'s target cure rate, which fits with 50-76 s
