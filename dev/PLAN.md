@@ -445,7 +445,7 @@ dispatch found, `dev/DECISIONS-archived.md` for the rulings, and
 | LJ1-T6 | Build: cardinality of a stage, |L a| = |a| for infinite a | planned | Independent of T3 to T5, so it runs in parallel with them |
 | LJ1-T7 | Build: every subset of a stage appears early | planned | Condensation plus T6. Needs T5 and T6 |
 | LJ1-T8 | Build: assemble L models GCH | planned | The trophy. Needs T7 |
-| LJ1-T9 | Quality audit: seconds per line against the internalization AC wing | planned | DD24 is the bar and DD25 makes it the ONLY one. check-ratio.py --cold is the audit. Read P-m, P-q, P-t first |
+| LJ1-T9 | Quality audit: seconds per line against the internalization AC wing | planned | DD24 is the bar, DD25 the only one. check-ratio.py --cold is the audit. Read P-m, P-q, P-t first |
 | LJ1-T10 | MEASURE the internalization double trophy, lines and cold seconds | planned | Owner task 6. Sets BOTH DD5 benchmarks and re-arms every threshold. Quiet machine, C-12 |
 | LJ1-T11 | Re-arm the thresholds and repair the ledger's remaining rows | planned | Flip thresholds_suspended, write both benchmarks in, rebuild the stale rud-route projection rows |
 | LJ1-T12 | Recon: the two-tower bridge architecture for MAXIMUM shared code | planned | DD4 is the objective and this task decides it. Textbook route, archive survey, and a reuse map |

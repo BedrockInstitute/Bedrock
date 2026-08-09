@@ -1328,6 +1328,12 @@ measured_wall = "2026-08-08, interface cache removed, make typecheck (the export
 # The 395 is kept as the last pre-block-A reading, not as today's tree.
 full_cold_wall_seconds = 395
 full_cold_wall_seconds_2026_08_09 = 700
+# SUPERSEDED AS THE CURRENT TREE, 2026-08-09. Both figures above are the RUD
+# tree. Task 4 restored src/ to the internalization tree and it measures
+# 133.19 s cold over 17,492 lines, exit 0, same protocol. The two rud figures
+# are kept as the retired route's record. See [ratio] for the full provenance
+# and for what the fourfold gap between the two trees means for DD5.
+full_cold_wall_seconds_internalization = 133
 # D39, 2026-08-09, replaces D30's ABSOLUTE 600 s wall as the route's time
 # constraint with a RELATIVE one against the internalization route's
 # double-trophy build time. That benchmark DOES NOT EXIST yet; see
@@ -2288,8 +2294,20 @@ authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
 # /usr/bin/time -p. The same protocol as [timing].measured_wall, so the two
 # figures are comparable.
-ac_baseline_seconds_per_line = 0.0
-ac_baseline_provenance = "PENDING: the cold run is in flight as of 2026-08-09"
+ac_baseline_seconds_per_line = 0.007614
+ac_baseline_provenance = "MEASURED 2026-08-09: 133.19 s real (131.45 user, 0.86 sys), exit 0, over 17,492 in-fence lines across 75 masters. Interface cache moved aside, `make typecheck` at the exported GHCRTS default -A64m -I0 -M16g, Agda 2.8.0, single process, nothing else running, /usr/bin/time -p. This is the WHOLE delivered internalization tree, which today IS the AC wing: no GCH content exists yet, so the endpoint and the wing are the same set."
+
+# WHAT THE NUMBER SAYS, and it is worth reading before anyone plans against it.
+# 0.0076 s/line sits BELOW P-m's parameterized band of 0.010 to 0.013, so the
+# delivered internalization tree is not merely respectable, it is the
+# cheapest content class this project has measured at scale. That makes DD24
+# a TIGHT bar rather than a formality, and LJ1-T1 should plan for it.
+#
+# THE COMPARISON THAT MATTERS FOR DD5. The retired rud tree measured 700.42 s
+# over 21,893 lines, which is 0.0320 s/line, or 4.20x this figure. The two
+# routes were never the same class of content, and no line count showed it.
+# Read this next to DD5: the seconds constraint is the one the retired route
+# was furthest from meeting, and by a wider margin than the line constraint.
 
 # THE TOLERANCE IS A CHOICE, NOT A MEASUREMENT, and it is flagged as one.
 # 1.15 says the GCH wing may run fifteen percent slower per line than the
