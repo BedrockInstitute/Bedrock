@@ -75,11 +75,31 @@ def test_shadow_matches_ledger() -> int:
 
 def test_shadow_reports_cap_and_headroom() -> int:
     """The cap comes from the ledger declaration and the headroom is its
-    arithmetic. A cap that vanished would fail the tool, not just the test."""
+    arithmetic. A cap that vanished would fail the tool, not just the test.
+
+    SUSPENSION-AWARE since 2026-08-09. While `thresholds_suspended` is set
+    there is no cap to print, so asserting one would pin the RETIRED number
+    and fail forever. The test asks the ledger which world it is in, exactly
+    as the cap assertion below already does, and checks the behaviour that
+    world requires. [LJ-0.1] found this suite failing three checks by design,
+    which is the state a suite must never sit in: three permanent reds train
+    a reader to ignore the run."""
+    import tomllib
+    budget = tomllib.loads(
+        (ROOT / "dev" / "ledger.toml").read_text(encoding="utf-8")
+    ).get("trophy_budget", {})
     line, rc = shadow_line()
     fails = check("shadow exits clean", rc, 0)
     mine = AC_TOTAL_RE.search(line)
     band = CAP_HEADROOM_RE.search(line)
+    if budget.get("thresholds_suspended"):
+        fails += check("ac-total still prints while suspended",
+                       mine is not None, True)
+        fails += check("no cap or headroom is printed while suspended",
+                       band is None, True)
+        fails += check("the line says no cap is in force",
+                       "no cap in force" in line, True)
+        return fails
     fails += check("cap and headroom parse",
                    mine is not None and band is not None, True)
     if mine and band:
@@ -117,9 +137,18 @@ def test_ac_set_shape() -> int:
     retired = {f for hit in buckets.values() for f in hit}
     fails += check("no retired master is in the AC-side set", ac & retired,
                    set())
-    fails += check("declared gch-assign masters are gch-side",
-                   "src/FOL/Count.lagda.md" in gch
-                   and "src/V/Collapse.lagda.md" in gch, True)
+    if data.get("trophy_split_suspended"):
+        # The split is empty by declaration, so there is no gch side at all.
+        # That is the condition deletion-test.py now REFUSES to run against,
+        # and the refusal is what this suite pins instead.
+        fails += check("the gch side is empty while the split is suspended",
+                       gch, set())
+        fails += check("the tool reports the split as vacuous",
+                       deletion_test.split_vacuous(st), True)
+    else:
+        fails += check("declared gch-assign masters are gch-side",
+                       "src/FOL/Count.lagda.md" in gch
+                       and "src/V/Collapse.lagda.md" in gch, True)
     fails += check("Everything is counted in the AC side",
                    deletion_test.EVERYTHING in ac, True)
     fails += check("Everything leaves the --run import root",
@@ -138,9 +167,16 @@ def test_shadow_files_lists_ac_side() -> int:
     fails = check("--files exits clean", rc, 0)
     fails += check("--files lists one row per AC-side master",
                    len(rows), len(st["ac_files"]))
-    fails += check("--files lists base, ac-only and shared",
+    # `shared` is empty while the split is suspended, so the printed parts
+    # are whichever parts actually hold files. Asserting all three would pin
+    # the retired partition.
+    fails += check("--files lists only real parts, all of them known",
+                   {row.split("\t")[0] for row in rows}
+                   <= {"base", "ac_only", "shared"}, True)
+    fails += check("--files lists every non-empty part",
                    {row.split("\t")[0] for row in rows},
-                   {"base", "ac_only", "shared"})
+                   {part for part in ("base", "ac_only", "shared")
+                    if st["split"]["_files"].get(part)})
     return fails
 
 

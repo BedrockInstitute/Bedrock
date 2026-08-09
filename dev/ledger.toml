@@ -92,7 +92,7 @@
 # owner's task 4 restored src/ to main, the internalization tree, so those
 # declarations describe files whose retirement no longer follows from any
 # live ruling. Left in place, the meter subtracted 12,654 lines and read
-# 4,976 for a 17,630-line tree, which is a wrong answer with a green light.
+# 4,976 against a measured 17,492, which is a wrong answer with a green light.
 # The entries are KEPT, not deleted: they record what the retired route
 # judged and why, and DD13 makes a new route survey exactly that. They are
 # simply not applied. The new route rules its own retirements when it has
@@ -127,6 +127,14 @@ trophy_split_suspended = true
 # why. [LJ-2.2] rebuilds the rows for the two-tower route and flips it.
 remaining_stale = true
 remaining_stale_rearm = "LJ-2.2: rebuild the [[remaining]] rows for the two-tower route, then set this false"
+
+# AND THE [[owed]] DISPATCH QUEUE IS THE RETIRED ROUTE'S. Its twelve rows
+# price rud-route work and their statuses come from D30's closed freeze; not
+# one is an LJ row. The LIVE dispatch order is dev/PLAN.md section 11. The
+# rows are KEPT for the same reason as the retirement set: DD13 makes a new
+# route survey what the old one judged it still owed.
+owed_stale = true
+owed_stale_rearm = "LJ-2.2: rebuild [[owed]] for the two-tower route, then set this false"
 
 [basis]
 # What the measurement counts, so a figure can never drift basis silently.
@@ -1023,6 +1031,28 @@ retire_saving = "DELIVERED 2026-08-06: -2057 lines, -440 obligations, -40.2 s, f
 rewrite = "StepInL only, which the ledger already owed for W3 at 1.24-1.73k naive. The architecture question adds NO new rewrite work."
 levers_inside_kept = "All three are [T79]'s already-measured duplication: the Describe per-op shells behind one generic wrapper, and the Fof-f0..f15 and JF0..JF10 families collapsed to one indexed lemma."
 finding = "The question paid for itself in the opposite direction from the one expected: asking what the route should CONTAIN found 2,057 lines that should not exist at all, which no per-module seconds ranking would have surfaced, and simultaneously refuted the case for rewriting the other 10,090."
+
+# ============================================================================
+# THE [[owed]] QUEUE IS THE RETIRED ROUTE'S, AND IT IS NOT THE LIVE ORDER.
+# Flagged 2026-08-09 after [LJ-0.2] found it presented as "what is next".
+#
+# All twelve rows below price rud-route work: the AC leg and re-home, the
+# bridge landing, three archival arms, five gch-w* wing rows, and the StepInL
+# rewrite. Their statuses (frozen, exempt, delivered) come from D30's freeze,
+# which closed with the route. NOT ONE of them is an LJ row.
+#
+# THE LIVE DISPATCH ORDER IS dev/PLAN.md SECTION 11, the LJ task index, and
+# no other document states it. The generated board that used to render this
+# queue as the next-work column was abolished the same day, so nothing
+# displays these rows today; scripts/ledger.py only VALIDATES their shape.
+#
+# They are KEPT rather than deleted, like the retirement set and the trophy
+# split: they record what the retired route judged it still owed, and DD13
+# makes a new route survey exactly that before it re-prices the same work.
+# [LJ-2.2] rebuilds the queue for the two-tower route.
+# The FLAG for this lives with the other suspensions, above [basis]:
+# a bare key here would belong to the preceding [[lever]] table, which
+# is exactly the mistake this comment replaces.
 
 [[owed]]
 id = "ac-leg"

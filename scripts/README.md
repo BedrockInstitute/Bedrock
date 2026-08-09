@@ -115,8 +115,16 @@ python3 scripts/check-glossary.py --check --staged # only staged files (used by 
 Computes the size ledger. Its data source is [dev/ledger.toml](../dev/ledger.toml), read via
 `tomllib`; the reasoning lives in that file's own header comment. It measures
 **standing** from the tree (non-blank lines inside ` ```agda ` fences, over git-tracked
-`*.lagda.md` under `src/`, minus the D18-booked retirement set), then sums the remaining rows
-into an endpoint in both calibers.
+`*.lagda.md` under `src/`, minus the declared retirement set), then sums the remaining rows
+into an endpoint.
+
+**Three declarations are SUSPENDED today** and the tool reports rather than enforces each:
+`retire_suspended` (the retirement set was ruled for the retired route, so standing is the
+whole tree), `trophy_split_suspended` (its roots name modules that left `src/`), and
+`remaining_stale` (the `[[remaining]]` rows price the retired route, so `--brief` REFUSES the
+endpoint and says why). Each names its re-arm task in `dev/ledger.toml`. **DD7 revoked the
+two-caliber rule**, so when the rows are rebuilt the endpoint is ONE best-effort band naming
+its basis; the matrix keeps both calibers as a DD5 diagnostic.
 
 **Standing appears in no file and never will.** The script exists because a standing figure
 written in prose was fixed as a projection and then re-quoted unchecked for nine dispatches
@@ -133,11 +141,17 @@ python3 scripts/ledger.py --check   # validate the declaration; exit 1 on a defe
 
 ## `deletion-test.py`
 
-The deletion test is D36's judgment, runnable on demand. The AC endpoint
-must typecheck, exit 0, in a tree with every gch-side master removed. The
-surviving tree must count under 16,000 non-blank in-fence lines. `[T147]`
-ran that test once by hand. This tool makes it runnable at any time and at
-the AC landing.
+The deletion test is a STRUCTURAL judgment, runnable on demand: the AC
+endpoint must typecheck, exit 0, in a tree with every gch-side master
+removed. `[T147]` ran it once by hand and this tool makes it repeatable.
+
+**It is suspended twice over today, and it says so instead of passing.** The
+cap it compared against (D36's, raised to 20,000 on 2026-08-09) is retired by
+DD5, and `trophy_split_suspended` empties the partition, so there is no
+gch side to delete: a run would typecheck the whole tree and print a PASS.
+`--run` therefore REFUSES, and `--shadow` prints `SPLIT VACUOUS`. Re-arm is
+`[LJ-2.1]`. A vacuous pass is worse than a refusal, because a pass gets
+quoted.
 
 The shadow mode is the daily proxy. It reuses `scripts/ledger.py`'s trophy
 split by import, so the two can never drift apart silently. It reports the
@@ -198,10 +212,10 @@ audit from the beginning and nothing had implemented it; on its first run it fou
 in-progress chapter sitting outside the gate. The others: **archive** (no live master imports a
 module that lives only in `archive/`, D20), **shared-cjk** (no CJK in marker-free prose, which
 would reach the English book verbatim, C-8), **spdx** (licensing has one source of truth, D4),
-**retiring**, WARN only (a SURVIVING master importing a chapter D18 retires: legal today
-because both trees coexist, lethal at the surgery, and every crossing is surgery work the
-ledger must carry), and **module-body**, WARN only (C-11's silently empty parameterized
-module).
+**retiring**, WARN only and SILENT today (it flagged a surviving master importing a chapter
+the retired route's D18 was retiring; `retire_suspended` empties that set, so the check returns
+nothing until the new route rules its own retirements), and **module-body**, WARN only (C-11's
+silently empty parameterized module).
 
 Its docstring also records what was deliberately NOT made a check and why, since three
 proposals were rejected on false-positive grounds: a rule already enforced by Agda itself, a
@@ -325,6 +339,32 @@ site's stored theme). Runs as part of `make site`.
 
 ```sh
 python3 scripts/gen-depmap.py --src src --out _build/site --langs en,zh
+```
+
+## `check-ratio.py`
+
+DD24's bar: cold build seconds over in-fence lines, for the internalization GCH wing, matched
+against the delivered AC wing's measured **0.007614 s/line** (133.19 s over 17,492 lines). It
+is the ONLY threshold on that wing: no line cap and no seconds cap, because the wing exists to
+MEASURE what a GCH wing costs and a cap would make the measurement report the cap.
+
+**A ratio is the right single bar** because a total can be met by writing less of a worse
+thing and a ratio cannot. `dev/LESSONS.md` P-m measured a twentyfold spread between content
+classes and P-t a twentyeightfold spread inside one file; no line count sees either.
+
+**It measures COLD by default** (`--warm` is opt-in and labels itself NOT COMPARABLE), because
+the baseline is cold and a warm run against it is not looser but wrong. **It is NOT in
+`make check`**: it runs Agda, which the commit gate forbids, and it fails closed beside a live
+`agda`. It is an on-demand measurement, like `deletion-test.py`. It refuses to invent a
+baseline (P-l), and it EXCLUDES an unmeasurable module from the aggregate rather than
+counting it as zero.
+
+Staged: it reports from the first GCH module onward and exits 0 while `ratio.gch_wing` is
+empty, which is the state until `[LJ-1.3]`.
+
+```sh
+make ratio                                  # the declared wing, cold
+python3 scripts/check-ratio.py --module src/L/Foo.lagda.md   # one master
 ```
 
 ## Retired: `dashboard.py`, `check-dashboard.py`, `test_dashboard.py`

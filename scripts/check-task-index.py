@@ -74,23 +74,36 @@ def extract_codes(text: str) -> set[int]:
     """
     codes = set()
     for phase, step, old in FULL.findall(text):
-        codes.add(f"LJ-{phase}.{step}" if phase else f"T{old}")
-    codes |= {f"T{n}" for n in SHORT.findall(text)}
+        # int() STRIPS ZERO PADDING, and it has to. `[L3.32-T01]` and `[T1]`
+        # are the same task, and keying one as "T01" and the other as "T1"
+        # made a padded citation resolve against nothing. The pre-renumbering
+        # code returned ints, which normalized for free; keying by string
+        # dropped that property silently. The test suite caught it.
+        codes.add(f"LJ-{phase}.{step}" if phase else f"T{int(old)}")
+    codes |= {f"T{int(n)}" for n in SHORT.findall(text)}
     return codes
 
 
-def index_rows(plan_text: str) -> list[tuple[int, str]]:
-    """All `(code, row line)` pairs in PLAN's task index section.
+def index_rows(plan_text: str,
+               archived: bool = True) -> list[tuple[str, str, str]]:
+    """All `(code, key, row line)` triples in PLAN's task index section.
 
     Only the `### Task index` section is read, so a stray `| L3.32-T... |`
     row anywhere else in the document is not mistaken for an index row.
+
+    `archived` controls whether the retired series file is folded in. It is
+    True for every real caller, because a citation of an archived task must
+    still resolve. It exists as a parameter because this function otherwise
+    mixes PARSING a string with READING a file from disk, and a test that
+    passes a two-row fixture then gets 287 rows back. Keeping the I/O
+    switchable is what makes the parser testable.
     """
     m = re.search(rf"^{re.escape(SECTION)}.*?^(?=### |## )", plan_text,
                   re.S | re.M)
     block = m.group(0) if m else ""
     # The retired series lives in its own file, and its rows count as rows:
     # a citation of an archived task must still resolve.
-    if ARCHIVED_INDEX.exists():
+    if archived and ARCHIVED_INDEX.exists():
         block += ARCHIVED_INDEX.read_text(encoding="utf-8")
     # Keyed by the FULL code, not the number. The two series share numbers by
     # design (neither reuses one WITHIN itself), so LJ-1.1 and L3.32-T1 are
@@ -98,19 +111,25 @@ def index_rows(plan_text: str) -> list[tuple[int, str]]:
     rows = []
     for line in re.findall(r"^\| (?:LJ-\d+\.\d+|L3\.32-T\d+) \|.*$", block, re.M):
         code = ROW.match(line).group(1)
-        key = code if code.startswith("LJ-") else "T" + code.split("-T")[1]
+        key = (code if code.startswith("LJ-")
+               else f"T{int(code.split('-T')[1])}")  # same zero-pad rule
         rows.append((code, key, line))
     return rows
 
 
-def check_index(plan_text: str, sources_text: str) -> tuple[list[str], int, int]:
+def check_index(plan_text: str, sources_text: str,
+                archived: bool = True) -> tuple[list[str], int, int]:
     """Enforce one row per cited code and the row-length cap.
 
     Returns (errors, number of distinct cited codes, number of distinct rows).
     An empty error list is a pass.
+
+    `archived` is passed through to index_rows. True for every real caller;
+    False lets a test drive a small fixture without the 265 archived rows
+    resolving its deliberately-missing codes and colliding with its row ids.
     """
     errors: list[str] = []
-    rows = index_rows(plan_text)
+    rows = index_rows(plan_text, archived=archived)
     if not rows:
         errors.append(f"no task index section (`{SECTION}`) in {PLAN}")
     seen: dict[str, list[str]] = {}
@@ -125,8 +144,16 @@ def check_index(plan_text: str, sources_text: str) -> tuple[list[str], int, int]
     cited = extract_codes(sources_text)
     for code in sorted(cited):
         if code not in numbers:
+            # `code` is the series-neutral key, because a short citation
+            # `[T5]` cannot say which series it means and BOTH indexes are
+            # searched. Spell out where it was looked for, so the reader
+            # knows a missing row is missing from both.
+            where = ("LJ series in dev/PLAN.md" if code.startswith("LJ-")
+                     else "L3.32 series in archive/dev/TASKS-archived.md, "
+                          "nor the LJ series in dev/PLAN.md")
             errors.append(
-                f"no index row: task {code} is cited in dev/, briefs or git log")
+                f"no index row: task {code} is cited in dev/, briefs or git "
+                f"log, but has no row in the {where}")
     for code, lines in sorted(seen.items()):
         for line in lines:
             length = len(line.rstrip())

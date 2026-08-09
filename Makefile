@@ -135,10 +135,19 @@ serve:
 deploy: site
 	npx wrangler pages deploy $(SITE_OUT) --project-name=$(CF_PROJECT)
 
+# EVERY suite, not a subset. Until 2026-08-09 this target ran three of seven,
+# and the four it skipped had been red for days: test_task_index.py broke when
+# the LJ renumbering changed the checker's return shape, and it broke a real
+# behaviour with it (a zero-padded citation stopped resolving). A test nobody
+# runs is not a test. Add new suites HERE, in the same commit.
 test:
 	$(PY) scripts/tests/test_i18n.py
 	$(PY) scripts/tests/test_glossary.py
 	$(PY) scripts/tests/test_lint_agda.py
+	$(PY) scripts/tests/test_dev_docs.py
+	$(PY) scripts/tests/test_obligations.py
+	$(PY) scripts/tests/test_task_index.py
+	$(PY) scripts/tests/test_deletion_test.py
 
 clean:
 	rm -rf _build

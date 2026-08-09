@@ -82,6 +82,21 @@ def ac_cap(st: dict) -> int | None:
     return budget.get("ac_cap")
 
 
+def split_vacuous(st: dict) -> bool:
+    """True when there is no gch side to delete, so the test proves nothing.
+
+    THE SECOND SUSPENSION, which this tool did not read until [LJ-0.1] found
+    it. `trophy_split_suspended` empties the partition: shared and gch-only
+    both read 0, so "delete the gch side and typecheck the rest" deletes
+    NOTHING and typechecks the whole tree. That is not a weaker deletion
+    test, it is not a deletion test at all, and the tool used to print
+    "the structural test is UNCHANGED and still worth running" over exactly
+    that state. A vacuous pass is worse than a refusal, because a pass gets
+    quoted.
+    """
+    return bool(st["data"].get("trophy_split_suspended")) or not st["gch_files"]
+
+
 def run_root_files(st: dict) -> list[str]:
     """The import set for --run: every AC-side master except the tree index.
 
@@ -156,15 +171,26 @@ def cmd_shadow(args) -> int:
               "trustworthy", file=sys.stderr)
         return 1
     cap = ac_cap(st)
-    if cap == "SUSPENDED":
-        print("deletion-test [thresholds SUSPENDED by the owner, 2026-08-09]: "
-              "DD5 replaced the absolute cap with a benchmark that is not "
-              "quantified yet. The structural test is UNCHANGED and still "
-              "worth running; only the pass-or-fail against a retired number "
-              "is off. Re-arm: measure internalization GCH (owner task 6).")
+    if cap == "SUSPENDED" or split_vacuous(st):
+        if split_vacuous(st):
+            print("deletion-test: THE TEST IS VACUOUS TODAY, and this is the "
+                  "honest report rather than a pass.\n"
+                  "  trophy_split_suspended empties the partition: shared and "
+                  "gch-only both read 0,\n"
+                  "  so deleting the gch side deletes nothing and the AC total "
+                  "is just the whole tree.\n"
+                  "  Re-arm: LJ-2.1 rebuilds the split for the two-tower "
+                  "route.", file=sys.stderr)
+        if cap == "SUSPENDED":
+            print("deletion-test [thresholds SUSPENDED by the owner, "
+                  "2026-08-09]: DD5 replaced the absolute cap with a benchmark "
+                  "nobody has measured, so there is no pass-or-fail either. "
+                  "Re-arm: LJ-2.1 measures the internalization double trophy.",
+                  file=sys.stderr)
         count = st["ac_total"]
         print(f"deletion test | shadow (file-granular) | ac-total {count:,} "
-              f"| no cap in force")
+              f"| no cap in force | "
+              f"{'SPLIT VACUOUS' if split_vacuous(st) else 'split live'}")
         if args.files:
             for part in ("base", "ac_only", "shared"):
                 for path in st["split"]["_files"].get(part, []):
@@ -213,8 +239,17 @@ def cmd_run(args) -> int:
         print("deletion-test: split defects; the deletion test will not run",
               file=sys.stderr)
         return 1
+    if split_vacuous(st):
+        # REFUSE. A run here would delete zero files, typecheck the whole
+        # tree, and print a PASS. That costs minutes and proves nothing, and
+        # the number it prints would be quoted as if the test had run.
+        print("deletion test: REFUSED. The trophy split is suspended, so "
+              "there is no gch side to delete: this run would typecheck the "
+              "whole tree and call it a pass. Re-arm at LJ-2.1.",
+              file=sys.stderr)
+        return 1
     if cap == "SUSPENDED":
-        # The structural test is the valuable half and it is unchanged: it
+        # The structural half is still valuable when the split is live: it
         # deletes the gch side and typechecks the AC side, which is what
         # keeps the accounting honest. Only the number it compares against
         # is retired, so the run proceeds and reports without a verdict.
