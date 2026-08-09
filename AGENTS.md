@@ -89,7 +89,7 @@ turns a rule into false safety.
 | **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `archive/dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`; the orchestrator; briefs |
 | **Dispatch, slots, briefs, audits.** **Codex is the default for EVERY dispatch** (DD17). An in-harness Opus subagent needs the owner's word for that task, which never carries forward, or a very-very-heavy judgment. The brief header carries a `tier:` line: if the justifying sentence will not write, the tier is codex | `dev/ORCHESTRATION.md` section 1 | the orchestrator, at the points it names |
 | **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
-| **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header comment carries the caliber, how a row goes missing, and why standing is never written down | `scripts/ledger.py --check` |
+| **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `scripts/ledger.py --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
 | **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook; `--fix` handles most |
 | **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers, and markers inside fences. It does NOT catch a mid-line marker, and does NOT catch a code fence inside a language group, which STYLE-i18n forbids: both pass green. Agda itself enforces one master per module; `check-probes.py` catches woven copies |
@@ -153,8 +153,8 @@ over in-fence lines. **DD23 freezes mathematical prose** until both trophies lan
 
 **FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
 left `archive/` for code and `archive/dev/` for the records: `TASKS-archived.md` for what each
-dispatch found, `JOURNAL-archived.md` for why, `DECISIONS-archived.md` for its rulings, and
-`STATUS-archived.md` for its goal table. Every brief
+dispatch found, `JOURNAL-archived.md` for why, `DECISIONS-archived.md` for the rulings,
+`STATUS-archived.md` for the goal table. Every brief
 carries an **ARCHIVE** section naming what may bear on the task; every return carries an
 **ARCHIVE USED** section naming what it read and took, at `file:line`. `dev/LESSONS.md` is NOT
 archived and still binds.
