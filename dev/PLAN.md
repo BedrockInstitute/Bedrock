@@ -435,6 +435,26 @@ dispatch found, `dev/DECISIONS-archived.md` for the rulings, and
 
 | Code | Task | Verdict | Detail |
 |---|---|---|---|
+| LJ1-T1 | Recon: the GCH route on the internalization tower | planned | Textbook route plus archive survey. Deliver a block plan, a two-caliber projection, the widest unmeasured term and its probe |
+| LJ1-T2 | Gate: probe the widest unmeasured term T1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
+| LJ1-T3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
+| LJ1-T4 | Build: the Mostowski collapse | planned | ARCHIVE FIRST: archive/rud-route/src/V/Collapse.lagda.md, 406 delivered lines. Price port against fresh write (DD13) |
+| LJ1-T5 | Build: the condensation lemma | planned | The hull collapses to an L stage. The load-bearing step of the whole wing |
+| LJ1-T6 | Build: cardinality of a stage, |L a| = |a| for infinite a | planned | Independent of T3 to T5, so it runs in parallel with them |
+| LJ1-T7 | Build: every subset of a stage appears early | planned | Condensation plus T6. Needs T5 and T6 |
+| LJ1-T8 | Build: assemble L models GCH | planned | The trophy. Needs T7 |
+| LJ1-T9 | Quality audit: seconds per line against the internalization AC wing | planned | The owner's quality bar for task 5. Remediate what misses it, then re-measure |
+| LJ1-T10 | MEASURE the internalization double trophy, lines and cold seconds | planned | Owner task 6. Sets BOTH DD5 benchmarks and re-arms every threshold. Quiet machine, C-12 |
+| LJ1-T11 | Re-arm the thresholds and repair the ledger's remaining rows | planned | Flip thresholds_suspended, write both benchmarks in, rebuild the stale rud-route projection rows |
+| LJ1-T12 | Recon: the two-tower bridge architecture for MAXIMUM shared code | planned | DD4 is the objective and this task decides it. Textbook route, archive survey, and a reuse map |
+| LJ1-T13 | Adversarial review of T12's reuse map | planned | The critic is never the author. A surviving reuse claim is the architecture; a failing one sends T12 back |
+| LJ1-T14 | Gate: probe the widest unmeasured term in the ruled architecture | planned | DD8. Both constraints are relative now, so an ungated term is a live risk to the endpoint |
+| LJ1-T15 | Build: the J tower through rud | planned | ARCHIVE FIRST: the rud route delivered sixteen operations and a Story layer. Price port against fresh write per module |
+| LJ1-T16 | Build: the two-directional bridge, L to J and J to L | planned | DD3 keeps BOTH directions. ARCHIVE: archive/rud-route/src/L/Rud/Bridge.lagda.md |
+| LJ1-T17 | Build: L models AC on the bridge | planned | The first trophy on the new route. Needs T15 and T16 |
+| LJ1-T18 | Build: L models GCH on the bridge, reusing what T12 mapped | planned | Second trophy. The reuse map is the deliverable's test, not just its plan |
+| LJ1-T19 | MEASURE the double trophy against both DD5 benchmarks | planned | Lines and cold seconds. The pass-or-fail of the whole route |
+| LJ1-T20 | The prose phase opens | planned | DD23. Only after T19 passes. Chapter narrative and the trilingual exposition, nothing before |
 
 ### Bookkeeping
 

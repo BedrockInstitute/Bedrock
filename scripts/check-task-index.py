@@ -57,7 +57,7 @@ ARCHIVED_GOAL = "L3.32"
 ARCHIVED_INDEX = ROOT / "dev" / "TASKS-archived.md"
 FULL = re.compile(r"\[(LJ1|L3\.32)-T(\d+)\]")
 SHORT = re.compile(r"\[T(\d+)\]")
-ROW = re.compile(r"^\| (?:LJ1|L3\.32)-T(\d+) \|")
+ROW = re.compile(r"^\| ((?:LJ1|L3\.32)-T(\d+)) \|")
 
 # dev/ holds .md prose and .toml data (ledger, glossary, rules). Nothing else
 # under dev/ is text worth scanning; `.DS_Store` is binary.
@@ -90,9 +90,13 @@ def index_rows(plan_text: str) -> list[tuple[int, str]]:
     # a citation of an archived task must still resolve.
     if ARCHIVED_INDEX.exists():
         block += ARCHIVED_INDEX.read_text(encoding="utf-8")
+    # Keyed by the FULL code, not the number. The two series share numbers by
+    # design (neither reuses one WITHIN itself), so LJ1-T1 and L3.32-T1 are
+    # different rows and a number-keyed dedup would call them a duplicate.
     rows = []
     for line in re.findall(r"^\| (?:LJ1|L3\.32)-T\d+ \|.*$", block, re.M):
-        rows.append((int(ROW.match(line).group(1)), line))
+        m = ROW.match(line)
+        rows.append((m.group(1), int(m.group(2)), line))
     return rows
 
 
@@ -106,16 +110,18 @@ def check_index(plan_text: str, sources_text: str) -> tuple[list[str], int, int]
     rows = index_rows(plan_text)
     if not rows:
         errors.append(f"no task index section (`{SECTION}`) in {PLAN}")
-    seen: dict[int, list[str]] = {}
-    for code, line in rows:
+    seen: dict[str, list[str]] = {}
+    numbers: set[int] = set()
+    for code, number, line in rows:
         seen.setdefault(code, []).append(line)
+        numbers.add(number)
     for code, lines in sorted(seen.items()):
         if len(lines) > 1:
             errors.append(
                 f"duplicate index row: task {code} appears {len(lines)} times")
     cited = extract_codes(sources_text)
     for code in sorted(cited):
-        if code not in seen:
+        if code not in numbers:
             errors.append(
                 f"no index row: task {code} is cited in dev/, briefs or git log")
     for code, lines in sorted(seen.items()):
@@ -123,7 +129,7 @@ def check_index(plan_text: str, sources_text: str) -> tuple[list[str], int, int]
             length = len(line.rstrip())
             if length > CAP:
                 errors.append(
-                    f"row over cap: L3.32-T{code} is {length} characters "
+                    f"row over cap: {code} is {length} characters "
                     f"(cap {CAP}): {line}")
     return errors, len(cited), len(seen)
 
