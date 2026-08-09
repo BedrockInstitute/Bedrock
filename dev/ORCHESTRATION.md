@@ -150,6 +150,18 @@ Standing clauses that go in every build or probe brief:
 - **A port is priced against a fresh write, never assumed** (DD13). The
   archive is reference material, not a shortcut, and P-l holds: a measured
   cure does not transfer by analogy.
+- **A PHASE-1 BRIEF IS NOT TOLD IT IS SETTING A BAR** (DD5, measure 2). The
+  internalization GCH wing's measured size becomes the benchmark the two-tower
+  route must beat, so the project writes its own examination paper. A brief
+  that says "your output sets the bar phase 3 must clear" hands the agent a
+  reason to write long, and it would be acting rationally. **So the brief says
+  the opposite and means it: write this as the deliverable, as tight as if it
+  shipped.** The defence that does the real work is not this clause but the
+  a-priori ceiling: `[LJ-1.1]`'s projection is recorded before any build, and
+  the benchmark is the SMALLER of that and the measurement, so writing long
+  cannot raise the bar. **Do not confuse this with hiding information.** An
+  agent that asks what the wing is for gets a straight answer. The rule is
+  that the brief does not volunteer an incentive nobody needs to do the work.
 - **DD8, the gate, FIRST.** Before you fund a block, name its widest unmeasured
   term and the probe that measures it. **A build brief that cannot name both is
   not ready to send.** A green gate narrows the band and lowers its top, which
