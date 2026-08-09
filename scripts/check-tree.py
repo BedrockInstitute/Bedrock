@@ -225,6 +225,13 @@ def check_retiring() -> list[str]:
     except Exception as exc:
         return [f"could not read dev/ledger.toml ({exc}); the retirement boundary is UNCHECKED"]
 
+    # SUSPENDED 2026-08-09 with the retirement set itself. Every declaration
+    # was D18's, ruled for the retired route, and src/ is the internalization
+    # tree again. A warning that names an archived ruling and a retirement
+    # nobody plans is noise on every commit.
+    if data.get("retire_suspended"):
+        return []
+
     def retires(f: str) -> bool:
         for e in data.get("retire", []):
             if "prefix" in e and f.startswith(e["prefix"]) and f not in e.get("except", []):
