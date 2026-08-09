@@ -1150,7 +1150,13 @@ note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a 
 # this tree existed at all: the number below it was derived by subtraction
 # from a profile run and then converted with an unpinned ratio.
 measured_wall = "2026-08-08, interface cache removed, make typecheck (the exported GHCRTS default, NO --profile), Agda 2.8.0, single process, nothing else running; /usr/bin/time -p reports real 395.22, user 392.56, sys 1.55, exit 0. Margin +102.8 against the 498 gate. The delta from 487.9: Bridge minus 63.2 (the F2 blocks), Describe and Switch archived, StepGraph plus its ~59 s, three small masters. The arc, same protocol class throughout: 1,080.6 at the first honest measurement, 677.4 at arm A, 487.9 at the gate ruling, 395.2 now. From the D30 ruling's 2,723 profile seconds the tree fell 85 percent, and the D18 archival's ~148 s is still owed."
+# STALE AS A CURRENT FIGURE, flagged 2026-08-09. The 395 was measured on
+# 2026-08-08 when BelowLim held block 1 only, 604 lines at 6.30 s. Block 2's
+# 948 lines and block A's landed content are now committed, BelowLim reads
+# 277.7 s, and the whole-tree cold profile of 2026-08-09 measures 700.42 s.
+# The 395 is kept as the last pre-block-A reading, not as today's tree.
 full_cold_wall_seconds = 395
+full_cold_wall_seconds_2026_08_09 = 700
 # THE LANDING'S WALL, assembled by [T218] 2026-08-08 because seconds became
 # the binding threshold. Against the 498 gate: 745-813 s UNCURED, which does
 # not fit, and 422-448 s at [T215]'s target cure rate, which fits with 50-76 s
