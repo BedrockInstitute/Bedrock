@@ -66,6 +66,13 @@ PLAN_ROW = re.compile(r"^\|\s*(D\d{1,2})\s*\|", re.M)
 DD_REF = re.compile(r"(?<![\w-])(DD\d{1,2})(?![\w-])")
 DD_ROW = re.compile(r"^\|\s*(DD\d{1,2})\s*\|", re.M)
 ARCHIVED_DECISIONS = ROOT / "dev" / "DECISIONS-archived.md"
+# A DD code merged into another row, or revoked, still RESOLVES. PLAN names
+# them in one paragraph and says so, for the same reason the D series does:
+# a commit message or brief that cites a code is a record of what was true
+# when it was written, and a checker that failed it would be arguing with the
+# document it checks.
+DD_CONSOLIDATED = re.compile(
+    r"\*\*Consolidated and revoked codes\.\*\*(.*?)(?=\n\n)", re.S)
 # Struck decisions still RESOLVE, and PLAN says so in as many words: their full
 # original text is preserved in dev/JOURNAL.md "so a commit message citing a
 # struck code still resolves", and numbers are never reused. A checker that
@@ -126,6 +133,9 @@ def known_decisions() -> set[str]:
     m = PLAN_RETIRED.search(arch)
     if m:
         struck = set(re.findall(r"\bD\d{1,2}\b", m.group(1)))
+    m = DD_CONSOLIDATED.search(text)
+    if m:
+        struck |= set(re.findall(r"\bDD\d{1,2}\b", m.group(1)))
     return live | struck
 
 

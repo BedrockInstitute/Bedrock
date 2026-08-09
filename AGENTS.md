@@ -19,7 +19,7 @@ nobody finishes reading binds nothing.
   **before** you write; run `make check` before committing; author every document in English
   first, then translate, then cross-check the Chinese and Japanese against each other for
   drift; verify a load-bearing assumption cheaply before heavy or hard-to-reverse work; state
-  any size projection in both calibers.
+  a size projection ONCE, best effort, and NAME its basis.
 - **Always, write ASD-STE100 Simplified Technical English.** The rules: one meaning per word;
   one part of speech per word; active voice; simple tenses; one instruction per sentence; 20
   words or fewer for an instruction and 25 for a description; 3 words or fewer in a noun
@@ -37,7 +37,7 @@ nobody finishes reading binds nothing.
   - The full rule set, with worked examples, is the skill at `.claude/skills/asd-ste100/`.
 - **Ask first:** genuine architecture forks (surface them with a recommendation rather than
   charging ahead on one reading); adding a top-level directory (then add its `README.md`); a
-  translation term not yet in `dev/glossary.toml`; **an edit to `AGENTS.md` itself** (DD20):
+  translation term not yet in `dev/glossary.toml`; **an edit to `AGENTS.md` itself** (DD19):
   show the owner the diff and the reason, get the ruling, then commit with a dated
   `AGENTS-diff-approved:` trailer, which `scripts/check-agents-guard.py` refuses to go
   without.
@@ -53,7 +53,7 @@ nobody finishes reading binds nothing.
   checker in [scripts/](scripts/README.md): i18n markers, prose, Agda style, rule-citation
   resolution, glossary, size ledger, the never-commit rule, whole-tree invariants, and `reuse
   lint`. **Run it in the background, never in the foreground**: a cold typecheck takes about
-  twelve minutes and must not block the session (`dev/PLAN.md` DD16). While you work, run the
+  twelve minutes and must not block the session (`dev/PLAN.md` DD15). While you work, run the
   individual checks instead (`agda <file>`, `python3 scripts/lint-prose.py <files>`).
 - **`python3 scripts/rules.py --for <kind>`** gives the mandatory rules for a build, probe,
   recon, rewrite or review, with each statement. `--grep <term>` finds the long tail by trigger
@@ -96,7 +96,7 @@ worse than no row: it turns a rule into false safety.
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
 | **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook; `--fix` handles most |
 | **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers and markers inside fences. It does NOT catch a marker embedded mid-line, and it does NOT catch a code fence inside a language group, which STYLE-i18n forbids: both pass green. One-master-per-module is enforced by Agda itself; woven copies are caught by `check-probes.py`, not by this checker |
-| **Term renderings.** A term the glossary lacks is settled by the DD21 pipeline, never by choosing: a codex dossier with literature provenance, then an opus adversarial review; a PASS lands the entry, a FAIL escalates it to the owner. Use it consistently, NAME it in your report, **never add an entry yourself** | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The dossier rule is enforced by review only** (`dev/ORCHESTRATION.md` section 6 step 7 dispatches the dossier): nothing mechanical notices a term settled by choosing |
+| **Term renderings.** A term the glossary lacks is settled by the DD19 pipeline, never by choosing: a codex dossier with literature provenance, then an opus adversarial review; a PASS lands the entry, a FAIL escalates it to the owner. Use it consistently, NAME it in your report, **never add an entry yourself** | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The dossier rule is enforced by review only** (`dev/ORCHESTRATION.md` section 6 step 7 dispatches the dossier): nothing mechanical notices a term settled by choosing |
 | **Documentation taxonomy.** User docs trilingual under `docs/<lang>/`, developer docs English only, `README.md` follows the user rule. Place a new document by audience; give every top-level directory a `README.md` | this row | review |
 | **Licensing.** Three buckets declared centrally; a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
@@ -152,15 +152,12 @@ term from the 3x class to about 1.3x and lowers the top of the band, which decid
 projection fits. **A build brief that cannot name its widest unmeasured term, and the probe that
 measures it, is not ready to send.**
 
-**Every estimate carries two calibers.** A size figure counts non-blank lines inside ` ```agda `
-fences. State each projection twice: **naive**, the component sum on delivered comparables, and
-**calibrated**, with this project's measured underestimation (about 1.3x where a probe or
-comparable reaches, 3x where only a survey does).
-
-**An estimate is a measurement, not a decision procedure** (`dev/PLAN.md` DD7). Record an
-overage in both calibers, say plainly that it is an overage, and work it down where real
-compression exists. Evidence can move a technique. A number alone moves nothing, and it never
-moves a technique on its own.
+**An estimate is ONE best-effort number, and it names its basis** (`dev/PLAN.md` DD8). A size
+figure counts non-blank lines inside ` ```agda ` fences. **The two-caliber rule is REVOKED**
+(owner, 2026-08-09): lines are no longer a hard constraint in their own right, so state a
+projection once and say what it rests on, a probe, a delivered comparable or a survey. The basis
+is what a reader needs; the second decimal never was. Record an overage plainly and work it down
+where real compression exists. Evidence can move a technique; a number alone cannot.
 
 **THE ROUTE, and the two constraints on it** (`dev/PLAN.md` DD2 and DD5, ruled 2026-08-09). Build
 the L tower and the J tower, J through rud, and the bridge between them; prove `L ⊨ AC` and

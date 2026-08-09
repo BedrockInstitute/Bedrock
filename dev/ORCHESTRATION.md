@@ -158,7 +158,7 @@ Standing clauses that go in every build or probe brief:
   Ruled: the campaign route, R2' with the trophy stated in L, which the return
   may not reopen or re-table. Open: how to walk it, which results decide, so
   name the current working direction as a working direction and not as law. Say
-  that a line count is a measurement, recorded in both calibers and worked down
+  that a line count is a measurement, recorded once with its basis and worked down
   as a best-effort target, never argued from. A gate asks which TECHNIQUE to
   use, so a red must return the next candidate technique, named and priced, on
   the obligation that defeated the last one.
@@ -229,7 +229,7 @@ moved here when the ledger was stripped to measurements
   lines per unit of risk and take the cheapest first; otherwise keep and
   wait (DD7: an estimate is a measurement, and an overage is recorded rather than argued from).
 
-*Enforcement:* the standing brief clauses in section 3 (DD8, DD7, DD13) and
+*Enforcement:* the standing brief clauses in section 3 (DD8, DD8, DD13) and
 the return audit in section 6 step 2; the route board itself is generated
 for the owner by `[L3.32-T114]` from the canonical data.
 
@@ -242,7 +242,7 @@ In this order, every time:
    orchestrator's cap. Spot-check the load-bearing claims at `file:line`,
    especially absence claims (grep them) and any claim that a wall is gone.
    **Reject any report that reasons from a line overage to a route change**
-   (DD7): the route is ruled, the number is recorded, and the report
+   (DD8): the route is ruled, the number is recorded, and the report
    is sent back for the next technique. A report that changes a TECHNIQUE on a
    measured obligation is doing its job and is not caught by this.
    **A build that wrote fixed where generic was possible, without saying so,
