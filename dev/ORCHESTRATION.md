@@ -186,13 +186,18 @@ Standing clauses that go in every build or probe brief:
   not be quoted at a rewrite question, because that substitution is the
   specific error DD13 names and an agent will make it unprompted.
 - **DD2 and DD5, what is ruled and what is open.** State BOTH in the brief's header.
-  **Ruled (DD2):** the two-tower bridge. Build the L tower and the J tower, J
-  through rud, and the bridge between them; prove `L ⊨ AC` and `L ⊨ GCH` on it,
-  both stated in L; the bridge delivers BOTH directions. The core constraint is
-  architectural, MAXIMIZE THE CODE THE TWO PROOFS SHARE. A return may not
-  reopen or re-table any of that. **Open: how to walk it**, which results
-  decide, so name the current working direction as a working direction and not
-  as law. This half is load-bearing and is not a courtesy: the technique is
+  **Ruled (DD2), and NOT reopenable:** both trophies, `L ⊨ AC` and `L ⊨ GCH`,
+  both stated in L; and where a bridge is built it delivers BOTH directions of
+  the two-definition identification. The core constraint is architectural,
+  MAXIMIZE THE CODE THE TWO PROOFS SHARE (DD4).
+  **CANDIDATE, not ruled (DD2, amended 2026-08-09):** the two towers and the
+  bridge, L plus J through rud. It is the leading architecture and the plan
+  builds toward it, and **the binding ruling is `[LJ-2.5]`**, after the
+  benchmark and the reuse map exist. Say this in the header exactly this way.
+  An agent told the architecture is ruled will not report evidence against it,
+  which is the whole reason the ruling moved.
+  **Open: how to walk it**, which results decide, so name the current working
+  direction as a working direction and not as law. This half is load-bearing and is not a courtesy: the technique is
   empirical, and archived D26(B), which the DD consolidation did not re-home,
   has no other home. Say
   that a line count is a measurement, recorded once with its basis and worked down

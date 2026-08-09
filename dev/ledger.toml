@@ -136,6 +136,39 @@ remaining_stale_rearm = "LJ-2.2: rebuild the [[remaining]] rows for the two-towe
 owed_stale = true
 owed_stale_rearm = "LJ-2.2: rebuild [[owed]] for the two-tower route, then set this false"
 
+# ============================================================================
+# [reuse] -- DD4'S REPORT. NOT A GATE, AND THERE IS NO THRESHOLD HERE.
+#
+# DD4 makes maximum shared code the route's core constraint and the owner
+# ruled it gets NO hard metric: a shared-line count used as a pass-or-fail
+# would be gamed the moment it gated anything, because code can be moved into
+# a shared module without either proof needing it there, and the number rises
+# while the architecture gets worse.
+#
+# [LJ-0.3] then drew the distinction the first ruling missed: refusing the
+# GATE is right, refusing the REPORT is one step too far. A report cannot be
+# gamed, because nothing passes or fails on it, and the machinery to compute
+# it already exists (scripts/ledger.py's import closures). The owner adopted
+# that on 2026-08-09. So this block declares the two roots and
+# `ledger.py --reuse` prints what the two proofs actually share.
+#
+# WHAT THE NUMBER IS, AND WHAT IT IS NOT. It is the intersection of the two
+# endpoints' import closures, in masters and in lines, with each side's own
+# total. It is evidence for a human judging an architecture. It is NOT a
+# score to maximize: a high share achieved by fattening the shared core is
+# exactly the failure the no-gate ruling protects against. Read it beside the
+# reuse map that [LJ-3.1] produces, never instead of it.
+[reuse]
+ac_root = "src/L/Model.lagda.md"
+ac_root_why = "the delivered AC endpoint, L models ZFC, at Model.lagda.md:99"
+
+# THE GCH ROOT DOES NOT EXIST YET, and the tool says so rather than guessing.
+# No GCH endpoint has been proved on any tower. [LJ-1.8] builds the first one
+# on the internalization tree; [LJ-3.7] builds it on the bridge. Declare the
+# path here when the module lands, and the report starts working that day.
+gch_root = ""
+gch_root_why = "no GCH endpoint exists in src/ yet; LJ-1.8 lands the first"
+
 [basis]
 # What the measurement counts, so a figure can never drift basis silently.
 unit = "non-blank lines inside ```agda fences"

@@ -127,14 +127,14 @@ audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATIO
 ## Probes, gates and estimates
 
 **Verify the load-bearing assumption cheaply before heavy or hard-to-reverse work.** Build the
-smallest decisive miniature. Report GO or NO-GO with a price. Throw it away. A probe prices THIS
-setting; it never re-proves what the literature or the delivered tree settles. Nobody
-commits a probe (`scripts/check-probes.py` enforces both halves, because `git add -f` walks past
-an ignore rule).
+smallest decisive miniature, report GO or NO-GO with a price, throw it away. A probe prices THIS
+setting; it never re-proves what the literature or the delivered tree settles. Nobody commits
+one (`scripts/check-probes.py` enforces both halves, because `git add -f` walks past an ignore
+rule).
 
-**Gate every block before you fund it.** This is arithmetic, not caution: measuring the widest
-unmeasured term is what turns a projection into a price. **A build brief that cannot name that
-term, and the probe that measures it, is not ready to send.**
+**Gate every block before you fund it.** Measuring the widest unmeasured term is what turns a
+projection into a price. **A build brief that cannot name that term, and the probe that measures
+it, is not ready to send.**
 
 **An estimate is ONE best-effort number, and it names its basis** (`dev/PLAN.md` DD8). A size
 figure counts non-blank lines inside ` ```agda ` fences. **The two-caliber rule is REVOKED**
@@ -142,14 +142,15 @@ figure counts non-blank lines inside ` ```agda ` fences. **The two-caliber rule 
 comparable or a survey. Record an overage plainly and work it down where real compression
 exists. Evidence can move a technique; a number alone cannot.
 
-**THE ROUTE, and the two constraints on it** (`dev/PLAN.md` DD2 and DD5, ruled 2026-08-09). Build
-the L tower and the J tower, J through rud, and the bridge between them; prove `L ⊨ AC` and
-`L ⊨ GCH` on it. **DD4 above is the core constraint**, and the total falls out of it: it is
-never pursued by splitting or re-bucketing. Two
-quantitative constraints bind the double-trophy endpoint against the internalization route, one
-on lines and one on seconds, and **NEITHER binds until it is measured**: both are suspended
-today and the ledger names the re-arm condition. **DD24** sets the quality bar as cold seconds
-over in-fence lines. **DD23 freezes mathematical prose** until both trophies land.
+**THE ROUTE** (`dev/PLAN.md` DD2 and DD5). **RULED:** both trophies, `L ⊨ AC` and `L ⊨ GCH`,
+both stated in L, and a bridge goes BOTH ways. **CANDIDATE, ruled at `[LJ-2.5]`:** the L tower,
+the J tower through rud, and the bridge. Say which is which in a brief; an agent told the
+architecture is ruled will not report evidence against it. **DD4 above is the core constraint**,
+and the total falls out of it, never from splitting or re-bucketing. Two quantitative
+constraints bind the double-trophy endpoint against the internalization route, one on lines and
+one on seconds, and **NEITHER binds until it is measured**: both are suspended and the ledger
+names the re-arm. **DD24** sets the quality bar as cold seconds over in-fence lines. **DD23
+freezes mathematical prose** until both trophies land.
 
 **FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
 left `archive/` for code and `archive/dev/` for the records: `TASKS-archived.md` for what each
@@ -168,8 +169,7 @@ Plan a retirement from the **rewrite side**. A consumer does not prove that a ch
 First price the ideal form of the content, written fresh today, then compare. "We already paid
 for it" never decides the question, in either direction.
 
-**Archive retired code. Never delete it.** It goes to `archive/` at the repository root, outside
-`src/`, so every gate is blind to it by structure. Archived files are frozen and nothing imports
-across the boundary. For each module, `dev/ARCHIVE.md` records what it is, why it left, where it
-was last green, **what it did right** (from measurement, not praise), and what would make it
-worth a second look.
+**Archive retired code. Never delete it.** It goes to `archive/`, outside `src/`, so every gate
+is blind to it by structure. Archived files are frozen and nothing imports across the boundary.
+`dev/ARCHIVE.md` records for each module what it is, why it left, where it was last green,
+**what it did right** (from measurement, not praise), and what would reopen it.

@@ -139,6 +139,18 @@ python3 scripts/ledger.py --brief   # one line: standing, endpoint, overage
 python3 scripts/ledger.py --check   # validate the declaration; exit 1 on a defect
 ```
 
+**`--reuse` is DD4's REPORT and never a gate.** It prints what the AC and GCH endpoints' import
+closures share, in masters and lines, with each side's total and the shared share of the union.
+It exits 0 whatever it finds and is NOT in `make check`, because DD4 has no threshold by ruling:
+a shared-line count used as a pass-or-fail is gamed by moving code into a shared module neither
+proof needs. `[LJ-0.3]` separated the gate from the measurement and the owner adopted the split.
+The roots are declared in `dev/ledger.toml`'s `[reuse]` block; with no GCH endpoint in the tree
+the tool says so instead of computing a number.
+
+```sh
+python3 scripts/ledger.py --reuse
+```
+
 ## `deletion-test.py`
 
 The deletion test is a STRUCTURAL judgment, runnable on demand: the AC

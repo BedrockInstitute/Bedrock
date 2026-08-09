@@ -42,6 +42,9 @@ Usage:
                          one line: the four parts of the per-trophy caliber,
                          and the AC total. It measures the SURVIVING tree and
                          sums to standing, like every other figure here
+  ledger.py --reuse      DD4's report: what the AC and GCH closures share, in
+                         masters and lines. A REPORT, never a gate: DD4 has no
+                         threshold by ruling. Exits 0 always
   ledger.py --trophy-matrix
                          one line: the nine cells, three calibers by three
                          trophies. DD5 keeps this as a DIAGNOSTIC; its
@@ -225,6 +228,51 @@ def closure(graph: dict[str, set[str]], roots: list[str]) -> set[str]:
         seen.add(f)
         stack.extend(graph.get(f, ()))
     return seen
+
+
+def reuse_report(data: dict, files: list[str], sizes: dict[str, int]) -> list[str]:
+    """DD4's report: what the two proofs actually share. NEVER a gate.
+
+    DD4 has no threshold and no pass-or-fail, by the owner's ruling: a
+    shared-line count used as a gate is gamed by moving code into a shared
+    module that neither proof needs. [LJ-0.3] separated the gate from the
+    REPORT, and the owner adopted the split on 2026-08-09. A report cannot be
+    gamed, because nothing passes on it.
+
+    Returns printable lines. It computes nothing it cannot measure: with no
+    GCH endpoint in the tree it says so and returns.
+    """
+    cfg = data.get("reuse", {})
+    ac_root, gch_root = cfg.get("ac_root", ""), cfg.get("gch_root", "")
+    out = ["  DD4 REUSE REPORT (evidence for a human, never a gate):"]
+    missing = [r for r in (ac_root, gch_root) if r and r not in files]
+    if missing:
+        return out + [f"    root not in the tree: {', '.join(missing)}"]
+    if not gch_root:
+        return out + [
+            f"    no GCH endpoint in src/ yet, so there is nothing to share "
+            f"WITH.",
+            f"    {cfg.get('gch_root_why', '')}",
+            "    Declare reuse.gch_root when LJ-1.8 lands it; this starts "
+            "working that day."]
+    if not ac_root:
+        return out + ["    reuse.ac_root is not declared."]
+    graph = import_graph(files)
+    ac, gch = closure(graph, [ac_root]), closure(graph, [gch_root])
+    shared = ac & gch
+    def lines(s): return sum(sizes.get(f, 0) for f in s)
+    union = lines(ac | gch)
+    out.append(f"    AC closure      {len(ac):3} masters  {lines(ac):6,} lines")
+    out.append(f"    GCH closure     {len(gch):3} masters  {lines(gch):6,} lines")
+    out.append(f"    SHARED          {len(shared):3} masters  {lines(shared):6,} lines")
+    if union:
+        out.append(f"    shared share of the union: "
+                   f"{lines(shared) / union:.1%} of {union:,} lines")
+    out.append("    A high share won by fattening the shared core is the "
+               "failure the no-gate")
+    out.append("    ruling protects against. Read this beside LJ-3.1's reuse "
+               "map, not instead of it.")
+    return out
 
 
 def trophy_roots(data: dict, files: list[str]) -> tuple[dict[str, list[str]], list[str]]:
@@ -468,6 +516,8 @@ def main(argv: list[str]) -> int:
             mode = "budget"
         elif arg == "--trophy-files":
             mode = "trophy-files"
+        elif arg == "--reuse":
+            mode = "reuse"
         else:
             print(__doc__, file=sys.stderr)
             return 2
@@ -555,6 +605,12 @@ def main(argv: list[str]) -> int:
             print(f"ledger: {len(defects)} defect(s) in dev/ledger.toml", file=sys.stderr)
             return 1
         print(f"ledger: declaration clean; standing {standing:,} lines measured over {len(files)} masters")
+        return 0
+
+    if mode == "reuse":
+        # A REPORT. It exits 0 whatever it finds, because DD4 has no gate.
+        for line in reuse_report(data, files, sizes):
+            print(line)
         return 0
 
     if mode == "brief":
