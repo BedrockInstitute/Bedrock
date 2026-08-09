@@ -439,6 +439,7 @@ dispatch found, `dev/DECISIONS-archived.md` for the rulings, and
 
 | Code | Task | Verdict | Detail |
 |---|---|---|---|
+| LJ-0.1 | Consistency audit of every edit since the branch point | dispatched | 13 commits, faf02fc..HEAD. Rulings, codes, checkers, ledger and archives must agree. Ordered before phase 1 |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | planned | Textbook plus archive survey. Deliver a block plan, one best-effort projection with its basis, the widest unmeasured term |
 | LJ-1.2 | Gate: probe the widest unmeasured term T1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
