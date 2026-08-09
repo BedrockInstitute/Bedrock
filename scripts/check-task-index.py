@@ -46,9 +46,18 @@ CAP = 200
 # Brackets are load-bearing: without them `T88` collides with prose. The
 # full form is unambiguous; the short form is the bracket citation `[T88]`
 # used everywhere in dev/ and the briefs.
-FULL = re.compile(r"\[L3\.32-T(\d+)\]")
+# TWO SERIES since 2026-08-09. The live goal is `LJ1`, the two-tower bridge
+# route. The retired `L3.32` series is archived WHOLE to dev/TASKS-archived.md
+# and its citations still resolve: 264 rows of measured dispatch history are
+# cited across JOURNAL, the memos, the briefs and the git history, and the
+# owner's archive-survey mechanism requires a new brief to read them. A number
+# is never reused in either series.
+GOAL = "LJ1"
+ARCHIVED_GOAL = "L3.32"
+ARCHIVED_INDEX = ROOT / "dev" / "TASKS-archived.md"
+FULL = re.compile(r"\[(LJ1|L3\.32)-T(\d+)\]")
 SHORT = re.compile(r"\[T(\d+)\]")
-ROW = re.compile(r"^\| L3\.32-T(\d+) \|")
+ROW = re.compile(r"^\| (?:LJ1|L3\.32)-T(\d+) \|")
 
 # dev/ holds .md prose and .toml data (ledger, glossary, rules). Nothing else
 # under dev/ is text worth scanning; `.DS_Store` is binary.
@@ -56,8 +65,14 @@ TEXT_SUFFIXES = {".md", ".toml"}
 
 
 def extract_codes(text: str) -> set[int]:
-    """Every dispatched-task code cited in a corpus, full or short form."""
-    codes = {int(n) for n in FULL.findall(text)}
+    """Every dispatched-task NUMBER cited in a corpus, full or short form.
+
+    The number is the key, not the series. The short form `[T101]` cannot say
+    which series it means, and the whole existing corpus uses it for the
+    retired one, so a number resolves if EITHER index carries it. The two
+    series never reuse a number, which is what makes that safe.
+    """
+    codes = {int(n) for _, n in FULL.findall(text)}
     codes |= {int(n) for n in SHORT.findall(text)}
     return codes
 
@@ -70,11 +85,13 @@ def index_rows(plan_text: str) -> list[tuple[int, str]]:
     """
     m = re.search(rf"^{re.escape(SECTION)}.*?^(?=### |## )", plan_text,
                   re.S | re.M)
-    if not m:
-        return []
-    block = m.group(0)
+    block = m.group(0) if m else ""
+    # The retired series lives in its own file, and its rows count as rows:
+    # a citation of an archived task must still resolve.
+    if ARCHIVED_INDEX.exists():
+        block += ARCHIVED_INDEX.read_text(encoding="utf-8")
     rows = []
-    for line in re.findall(r"^\| L3\.32-T\d+ \|.*$", block, re.M):
+    for line in re.findall(r"^\| (?:LJ1|L3\.32)-T\d+ \|.*$", block, re.M):
         rows.append((int(ROW.match(line).group(1)), line))
     return rows
 
@@ -95,12 +112,12 @@ def check_index(plan_text: str, sources_text: str) -> tuple[list[str], int, int]
     for code, lines in sorted(seen.items()):
         if len(lines) > 1:
             errors.append(
-                f"duplicate index row: L3.32-T{code} appears {len(lines)} times")
+                f"duplicate index row: task {code} appears {len(lines)} times")
     cited = extract_codes(sources_text)
     for code in sorted(cited):
         if code not in seen:
             errors.append(
-                f"no index row: L3.32-T{code} is cited in dev/, briefs or git log")
+                f"no index row: task {code} is cited in dev/, briefs or git log")
     for code, lines in sorted(seen.items()):
         for line in lines:
             length = len(line.rstrip())
