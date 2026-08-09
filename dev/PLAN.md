@@ -647,7 +647,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T248 | Refresh the endgame status memo: every headline number in it is now wrong | REWRITTEN, 1,455 words; 16 headline figures corrected, each traced to the m | `_build/l3.32-t248-report.md` |
 | L3.32-T249 | Time the covering code predicate: T211's named gate | GO: 0.0113 s per line whole, not 0.0603 from a slice; the row is 15.2-20.0 s and FITS at every ca | `_build/l3.32-t249-report.md` |
 | L3.32-T250 | The third compression campaign: 500-line levers, from first principles | ONE lever, 285-695 naive UNGATED: recover the witness from a strengthened induct | `_build/l3.32-t250-math.md` |
-| L3.32-T251 | Gate 1: does the strengthened induction actually recover the witness? | DISPATCHED 2026-08-09; decides T250's lever against ProbeT240's 174.62 s contro | `_build/l3.32-t251-report.md` |
+| L3.32-T251 | Gate 1: does the strengthened induction actually recover the witness? | STOPPED at 304 min by the orchestrator: 0 typechecks in 67 min; resumed as T251 | `_build/l3.32-t251-report.md` |
+| L3.32-T251r | Gate 1 resumed: write the negative result first, measure second | QUEUED 2026-08-09 behind T261; keeps T251's session and its 384-line probe | `_build/l3.32-t251-report.md` |
 | L3.32-T252 | The naturalness review of today's four settled masters | StepStory NOT NATURAL, announces one subject and holds two; the other three stand; six repairs | `_build/l3.32-t252-report.md` |
 | L3.32-T253 | The naturalness repair: prose only, four masters | 4 of 4 applied, prose only, every code fence byte-identical; the orchestrator rewrote the two stale  | `_build/l3.32-t253-report.md` |
 | L3.32-T254 | The closure boundary: gch_assign, and a natural split that follows it | ZERO legal gch_assign, ZERO natural splits; the 2,100-2,700 premise is stale at | `_build/l3.32-t254-report.md` |
