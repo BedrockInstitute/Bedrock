@@ -660,6 +660,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T260 | Settle by probe: does the GCH wing actually consume the bridge rows? | NO, D18 wins: the row's sentence has zero support in its own evidence; the gap S | `_build/l3.32-t260-bridge.md` |
 | L3.32-T261 | Run B's probe, and adversarially review B's own conclusion | QUEUED 2026-08-09 for an Agda slot; T260's answer is a reading and the owner asked for it  | `_build/l3.32-t261-report.md` |
 | L3.32-T262 | Q-lim's general transfer: the other half of bridge-landing | QUEUED 2026-08-09; D38 line one's critical path; T199 FEASIBLE, T204 GREEN, one classical  | `_build/l3.32-t262-report.md` |
+| L3.32-T263 | T259's desk pre-gate: are all sixteen Fof specs Delta-0? | DISPATCHED 2026-08-09; one non-Delta-0 operation refutes T259 and confirms T130 | `_build/l3.32-t263-fof.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
