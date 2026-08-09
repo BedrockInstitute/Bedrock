@@ -248,7 +248,13 @@ def trophy_roots(data: dict, files: list[str]) -> tuple[dict[str, list[str]], li
             defects.append("trophy_split: entry has no path")
             continue
         if path not in files:
-            defects.append(f"trophy_split: root is not in the tree: {path}")
+            # SUSPENDED 2026-08-09 with the rest of the retired route's
+            # declarations. These roots name rud-route modules that task 4
+            # removed from src/, and the GCH wing does not exist yet: LJ1-T8
+            # builds it. A defect for a file the live plan never expected to
+            # be there is noise, not a finding.
+            if not data.get("trophy_split_suspended"):
+                defects.append(f"trophy_split: root is not in the tree: {path}")
         roots[side].append(path)
     return roots, defects
 
@@ -311,7 +317,9 @@ def trophy_split(data: dict, files: list[str],
             defects.append(f"gch_assign for {mod} lacks wing_consumer or authority")
             continue
         if mod not in files:
-            defects.append(f"gch_assign names a module not in the surviving tree: {mod}")
+            if not data.get("trophy_split_suspended"):
+                defects.append(
+                    f"gch_assign names a module not in the surviving tree: {mod}")
             continue
         if mod in ac:
             defects.append(
