@@ -1708,6 +1708,43 @@ seconds_residual = "25-68 s after everything measured or proposed; 85-230 lines;
 # The meter goes 15,409 to 15,188 on the defect fix, and to 15,080 if the
 # Recursion archival lands.
 closure_boundary_measured = "[T254]: 216 lines, not 2,100-2,700; zero legal gch_assign; zero natural splits"
+# [T255] ANSWERED THE OWNER'S QUESTION 2026-08-09 AND REFUTED THE
+# ORCHESTRATOR'S SUSPICION. I said the interleaving is "paid at every limit,
+# TWICE" and guessed the "twice" was engineering. It separates into three
+# claims with three different verdicts.
+#
+#   "at every limit"        MATHEMATICS, but it costs ONCE at check time: the
+#                           STEP is written at a variable gamma, so the seconds
+#                           multiplier is written STACKS, not limits.
+#   "rebuilt at every limit" ENGINEERING, and already found: [T250]'s lever.
+#   "TWICE"                 MATHEMATICS at the stack level. The two residues
+#                           land two DIFFERENT memberships through two
+#                           DIFFERENT instruments, `Dₒ`-intro over the
+#                           L-carrier and the covering fact over the S-carrier;
+#                           formulas and satisfaction are carrier-indexed; and
+#                           neither residue derives from the other. One joint
+#                           induction is real but buys LINES, not seconds
+#                           (P-q). The floor is one formula stack per residue.
+#
+# THE ANSWER TO WHY 0.297 AT A VARIABLE CARRIER, which the campaign could not
+# explain for two days, is now P-t: the class certificate follows the FORMULA,
+# not the carrier. Satisfaction is a transparent recursion over the formula's
+# structure, so a BUILT tree unfolds at every use while a sealed carrier never
+# does. Block 1 states the same mathematics with its walks hypothesized in a
+# telescope and checks at 0.0104; the carried sequence builds the tree and
+# checks at 0.297. Twenty-eight times, and [T241] measured three ONE-LINE
+# aliases at 36,647 ms, which is type elaboration rather than proof.
+#
+# THE VERDICT ON THE WALL: the 294-299 s gap DOES NOT CLOSE on this route.
+# All-green arithmetic lands 650-950 against the 600 gate, honest center
+# 780-800, and the landing is biased LOW because the Q-lim residue sits at a
+# 9.12 s shell floor while its content must include a stack. The largest new
+# lever is the stack-shape family, minus 30 to 70 s per surviving stack,
+# hypothesis, gated at a 25 s stop-line. Not gap-sized.
+#
+# THE CHEAPEST THING ON THE BOARD is Gate 0: 389 of the master's 570 s were
+# never profiled. The orchestrator is running it.
+seconds_verdict = "[T255]: the gap does not close on this route; the twice is mathematics; P-t explains the rate"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold

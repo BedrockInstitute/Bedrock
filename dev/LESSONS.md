@@ -2387,6 +2387,38 @@ caliber. Both were repaired by building the piece whole.
 the WHOLE body belongs to the same one. A slice drawn from a body of mixed
 class prices neither part. Both failures here are that single mistake.
 
+### P-t. The content class follows the FORMULA, not the carrier: a built tree unfolds, a sealed carrier does not
+
+**The law.** P-m says the check-cost rate certifies a content class. This
+says what decides the class. **It is not whether the carrier is concrete or
+variable. It is whether the object-language FORMULA is a built tree or a
+telescope hypothesis.** Satisfaction is a transparent recursion over the
+formula's structure, so it unfolds the tree at every use. A sealed carrier
+never unfolds and costs nothing extra, however concrete it looks.
+
+**The measurement, 2026-08-09, `[L3.32-T255]` reading `[T240]`, `[T241]` and
+the delivered block 1.** The same mathematics, stated two ways:
+
+| | rate | the formula |
+|---|---:|---|
+| block 1, `src/L/Rud/BelowLim.lagda.md` | **0.0104 s/line** | the walks are HYPOTHESES in a telescope |
+| the carried sequence, `[T240]` | **0.297 s/line** | the tree is BUILT: the fold, its rename, the decode |
+
+**28 times, for the same content.** And the cost is type elaboration, not
+proof: `[T241]` measured three ONE-LINE decode aliases at 36,647 ms.
+
+**Why it matters more than it sounds.** The campaign spent two days reading
+0.297 as "the carrier is concrete, so this is instantiation content", and
+looked for a cure by moving to a variable carrier. `[T240]` then measured a
+variable carrier at 0.297 anyway and nobody could explain it. This law
+explains it: `Lset ξ` was sealed all along, and the expensive object was the
+formula tree beside it.
+
+**What it licenses.** Seal a BUILT formula opaque wherever its consumers do
+not need to see inside, and prefer stating a walk as a telescope hypothesis
+over building it, when the consumer can supply it. Both are seconds levers
+and neither is a line lever (P-q).
+
 ### P-q. A line lever and a seconds lever are different levers; dedup buys lines, not seconds
 
 **The law.** Removing DUPLICATED content removes lines and almost no seconds.
