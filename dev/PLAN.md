@@ -439,7 +439,7 @@ dispatch found, `dev/DECISIONS-archived.md` for the rulings, and
 
 | Code | Task | Verdict | Detail |
 |---|---|---|---|
-| LJ-1.1 | Recon: the GCH route on the internalization tower | planned | Textbook route plus archive survey. Deliver a block plan, one best-effort projection with its basis, and the widest unmeasured term |
+| LJ-1.1 | Recon: the GCH route on the internalization tower | planned | Textbook route plus archive survey. Deliver a block plan, one best-effort projection with its basis, the widest unmeasured term |
 | LJ-1.2 | Gate: probe the widest unmeasured term T1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
 | LJ-1.4 | Build: the Mostowski collapse | planned | ARCHIVE FIRST: archive/rud-route/src/V/Collapse.lagda.md, 406 delivered lines. Price port against fresh write (DD13) |
