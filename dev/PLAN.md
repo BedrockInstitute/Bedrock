@@ -641,6 +641,8 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T243 | The two profiles nobody ran: Bridge 103.1 s and StepGraph 59.0 s | NOT THERE: both CONCENTRATED, both NO-GO; Bridge's once-pair 78.8 s is P-l's floor,  | `_build/l3.32-t243-report.md` |
 | L3.32-T244 | Gate the choice re-home: price its ideal form from the rewrite side | GATED: ideal form 188-248 naive (booked 300-650); all 12 Choice masters archive f | `_build/l3.32-t244-report.md` |
 | L3.32-T245 | Finish block A: the stop-line was wrong and it gates the only lever left | DISPATCHED 2026-08-09; lands bridge-landing, which unblocks the re-home and  | `_build/l3.32-t245-report.md` |
+| L3.32-T246 | The JOURNAL catch-up: 22 entries for T224 to T245 | DELIVERED 22 of 22, insertions only, lint green; found the word stop-line at 48,245 against 45,000 | `_build/l3.32-t246-report.md` |
+| L3.32-T247 | Tidy the JOURNAL: mark what later measurements superseded, never rewrite | QUEUED behind T246 2026-08-09; two lanes on one file is C-25 | `_build/l3.32-t247-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
 | L3.32-T197 | The bridge landing: what remains once the two residues land | Band 50-150 naive, 4 of 6 hypotheses delivered; found one un-gated term, blockPowLim | `_build/l3.32-t197-report.md` |
 | L3.32-T198 | D22 gate: the blockPowLim relation instance | RED at 114 lines: the instance needs archived content AND a relation nobody ever built | `_build/l3.32-t198-report.md` |
