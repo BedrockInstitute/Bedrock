@@ -1,7 +1,7 @@
 # AGENTS.md
 
 The rulebook for AI coding agents on Bedrock. Every session loads it: Claude Code through the
-`@AGENTS.md` import in the root `CLAUDE.md`, other agents directly.
+root `CLAUDE.md`, other agents directly.
 
 **This file is deliberately short.** It holds only what changes what you DO on a task. For
 everything else, read one row in [Where the rules live](#where-the-rules-live). A rulebook
@@ -18,8 +18,9 @@ nobody finishes reading binds nothing.
   load the rules for your task with `python3 scripts/rules.py --for <kind>` and read them
   **before** you write; run `make check` before committing; author every document in English
   first, then translate, then cross-check the Chinese and Japanese against each other for
-  drift; verify a load-bearing assumption cheaply before heavy or hard-to-reverse work; state
-  a size projection ONCE, best effort, and NAME its basis.
+  drift. **Generic is the rule that has cost this project most**, because it gets skipped under
+  a deadline: DD4 makes the question mandatory at three moments, when a recon is dispatched,
+  when a build is dispatched, and when a route is planned.
 - **Always, write ASD-STE100 Simplified Technical English.** The rules: one meaning per word;
   one part of speech per word; active voice; simple tenses; one instruction per sentence; 20
   words or fewer for an instruction and 25 for a description; 3 words or fewer in a noun
@@ -29,11 +30,10 @@ nobody finishes reading binds nothing.
     writes to you**; NEW developer documents under `dev/` and NEW per-directory `README.md`
     files; the dashboard; and all agent-to-agent text, which means each brief this project
     sends and each report an agent returns.
-  - **It does NOT apply to:** mathematical prose; the reader-facing documents under `docs/`;
-    or the prose in a `.lagda.md` master. In those places precision and voice decide the
-    words.
-  - **Nobody rewrites an existing document for this rule.** It binds new text only. This keeps
-    the cost at zero for the corpus that is already written.
+  - **It does NOT apply to:** mathematical prose; the documents under `docs/`; or the prose in
+    a `.lagda.md` master. There, precision and voice decide the words.
+  - **Nobody rewrites an existing document for this rule.** It binds new text only, so the
+    written corpus costs nothing.
   - The full rule set, with worked examples, is the skill at `.claude/skills/asd-ste100/`.
 - **Ask first:** genuine architecture forks (surface them with a recommendation rather than
   charging ahead on one reading); adding a top-level directory (then add its `README.md`); a
@@ -50,11 +50,11 @@ nobody finishes reading binds nothing.
 ## Commands
 
 - **`make check` is the gate before any commit.** It typechecks the masters, then runs every
-  checker in [scripts/](scripts/README.md): i18n markers, prose, Agda style, rule-citation
-  resolution, glossary, size ledger, the never-commit rule, whole-tree invariants, and `reuse
-  lint`. **Run it in the background, never in the foreground**: a cold typecheck takes about
-  twelve minutes and must not block the session (`dev/PLAN.md` DD15). While you work, run the
-  individual checks instead (`agda <file>`, `python3 scripts/lint-prose.py <files>`).
+  checker in [scripts/](scripts/README.md): i18n markers, prose, Agda style, rule citations,
+  glossary, size ledger, the never-commit rule, whole-tree invariants, and `reuse lint`. **Run
+  it in the background, never in the foreground**: a cold typecheck takes about twelve minutes
+  and must not block the session (`dev/PLAN.md` DD15). While you work, run the individual
+  checks instead (`agda <file>`, `python3 scripts/lint-prose.py <files>`).
 - **`python3 scripts/rules.py --for <kind>`** gives the mandatory rules for a build, probe,
   recon, rewrite or review, with each statement. `--grep <term>` finds the long tail by trigger
   word. **Never pick rules from memory.** Memory drifted for five days while an imported
@@ -75,67 +75,52 @@ them into `.venv`.
 
 ## Where the rules live
 
-Every rule has ONE canonical home, chosen by who enforces it. This table says where a rule is,
-and where a new one goes. **A rule that no machine enforces must name its enforcement point:**
-a gate, a brief section, a review step. A rule with no enforcement point is a wish. Nothing is
-canonical twice: where this file restates a rule, the other document rules and this one
-summarizes.
-
-**Read the gloss column to decide whether you need the file, without opening it.** A checker in
-`make check` enforces most rows, so you pay for a lapse with a red gate. **The column says so
-where enforcement is partial or absent.** A row that claims more than its checker delivers is
-worse than no row: it turns a rule into false safety.
+Every rule has ONE canonical home, chosen by who enforces it. **A rule that no machine enforces
+must name its enforcement point:** a gate, a brief section, a review step. A rule with no
+enforcement point is a wish. Nothing is canonical twice: where this file restates a rule, the
+other document rules and this one summarizes. **Read the gloss column to decide whether you need
+the file, without opening it.** Most rows cost a red gate when broken; **the column says so where
+enforcement is partial or absent**, because a row that claims more than its checker delivers
+turns a rule into false safety.
 
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
 | **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`; the orchestrator; briefs |
-| **Dispatch, slots, briefs, audits.** How work is sent out and how a return is checked | `dev/ORCHESTRATION.md` | the orchestrator, at the points it names |
-| **Goal status and execution history.** A ruling is a PLAN row, an episode is a JOURNAL entry. **PLAN section 11 is the complete index of goals and of dispatched tasks, one row each; JOURNAL holds what each dispatch actually found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
+| **Dispatch, slots, briefs, audits.** **Codex is the default for EVERY dispatch** (DD17). An in-harness Opus subagent needs the owner's word for that task, which never carries forward, or a very-very-heavy judgment. The brief header carries a `tier:` line: if the justifying sentence will not write, the tier is codex | `dev/ORCHESTRATION.md` section 1 | the orchestrator, at the points it names |
+| **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header comment carries the caliber, how a row goes missing, and why standing is never written down | `scripts/ledger.py --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
 | **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook; `--fix` handles most |
-| **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers and markers inside fences. It does NOT catch a marker embedded mid-line, and it does NOT catch a code fence inside a language group, which STYLE-i18n forbids: both pass green. One-master-per-module is enforced by Agda itself; woven copies are caught by `check-probes.py`, not by this checker |
-| **Term renderings.** A term the glossary lacks is settled by the DD19 pipeline, never by choosing: a codex dossier with literature provenance, then an opus adversarial review; a PASS lands the entry, a FAIL escalates it to the owner. Use it consistently, NAME it in your report, **never add an entry yourself** | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The dossier rule is enforced by review only** (`dev/ORCHESTRATION.md` section 6 step 7 dispatches the dossier): nothing mechanical notices a term settled by choosing |
+| **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers, and markers inside fences. It does NOT catch a mid-line marker, and does NOT catch a code fence inside a language group, which STYLE-i18n forbids: both pass green. Agda itself enforces one master per module; `check-probes.py` catches woven copies |
+| **Term renderings.** A term the glossary lacks is settled by DD19's two-agent pipeline, never by choosing: a codex dossier, then an opus adversarial review. **Never add an entry yourself** | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The pipeline is enforced by review only:** nothing mechanical notices a term settled by choosing |
 | **Documentation taxonomy.** User docs trilingual under `docs/<lang>/`, developer docs English only, `README.md` follows the user rule. Place a new document by audience; give every top-level directory a `README.md` | this row | review |
 | **Licensing.** Three buckets declared centrally; a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
-| **Tooling.** What every script does and when to run it | [scripts/README.md](scripts/README.md) | n/a |
 | **Route memos, digested literature, probe reports** and the briefs that produced them | `dev/memos/`, `dev/literature/`, `_build/` | n/a |
 | **What the project IS**: the theorem, the charter, the licences, who wrote it | [README.md](README.md), trilingual under `docs/` | n/a |
 | **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0, and `make dashboard` for the owner's board | n/a |
-| **What every contributing agent must know** | this file | loaded at session start |
 
 **`dev/LESSONS.md` BINDS NEW CODE.** Its entries are measurements, not opinions. When your work
 discovers a new law, propose it with its measurement; **the orchestrator assigns the ID**
-(owner's delegation, 2026-08-06): the P series uses letters, the R, T, I, D and C series use
-numbers, and the next free one is the ID. A law is not admitted without its measurement,
-whoever numbers it.
-
-## The one rule that has cost this project most
-
-**Write content structure-generic rather than fixed to a carrier.** It is more expensive on the
-first instance and cheaper from the second onward, which is exactly why it gets skipped under a
-deadline. `dev/PLAN.md` DD4 requires the question to be asked at three moments: when a recon is
-dispatched, when a build is dispatched, and when a route is planned.
+(owner's delegation, 2026-08-06). **A law is not admitted without its measurement**, whoever
+numbers it.
 
 ## Working rules for dispatched agents
 
-These bind an agent that works against a pinned brief. The ORCHESTRATING agent writes the
-briefs, audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATION.md`.
+These bind an agent working against a pinned brief. The ORCHESTRATING agent writes the briefs,
+audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATION.md`.
 
 - **Never touch `src/Everything.lagda.md`.** The orchestrator wires it after auditing your work.
 - **Never commit, never push.** Leave the working tree as your report describes it.
-- **Run Agda under a heap cap**: `GHCRTS=-M8g agda <file>`, one process per agent. The
-  concurrency quota is C-12's, never one machine-wide process (owner's correction,
-  2026-08-07). A task that measures check time gets a quiet machine. Report a heap
-  exhaustion as a wall. Never raise the cap.
+- **Run Agda under a heap cap**: `GHCRTS=-M8g agda <file>`, one process per agent. The quota is
+  C-12's, never one machine-wide process (owner's correction, 2026-08-07). A task that measures
+  check time gets a quiet machine. Report a heap exhaustion as a wall. Never raise the cap.
 - **Write your deliverable incrementally.** Create the file early and fill it as answers land.
   Research held only in your head dies with your budget.
 - **Evidence is `file:line`.** A report that cannot be checked can only be believed.
-- **A stop is a deliverable.** If the target is false, or the price is wrong, or the plan rests
-  on a bad premise, give the evidence and stop. Refutations gave this project some of its most
-  valuable results.
+- **A stop is a deliverable.** If the target is false, the price wrong, or the plan resting on a
+  bad premise, give the evidence and stop. Refutations gave this project its best results.
 - **A measured cure does not transfer by analogy.** Re-measure it at its own site. An expected
   figure anchored on a comparable elsewhere is a hypothesis, not a price (`dev/LESSONS.md` P-l).
 
@@ -147,46 +132,43 @@ THIS setting costs; it never re-proves what the literature or the delivered tree
 commits a probe (`scripts/check-probes.py` enforces both halves, because `git add -f` walks past
 an ignore rule).
 
-**Gate every block before you fund it.** This is arithmetic, not caution: a green gate moves the
-term from the 3x class to about 1.3x and lowers the top of the band, which decides whether a
-projection fits. **A build brief that cannot name its widest unmeasured term, and the probe that
-measures it, is not ready to send.**
+**Gate every block before you fund it.** This is arithmetic, not caution: measuring the widest
+unmeasured term is what turns a projection into a price. **A build brief that cannot name that
+term, and the probe that measures it, is not ready to send.**
 
 **An estimate is ONE best-effort number, and it names its basis** (`dev/PLAN.md` DD8). A size
 figure counts non-blank lines inside ` ```agda ` fences. **The two-caliber rule is REVOKED**
-(owner, 2026-08-09): lines are no longer a hard constraint in their own right, so state a
-projection once and say what it rests on, a probe, a delivered comparable or a survey. The basis
-is what a reader needs; the second decimal never was. Record an overage plainly and work it down
-where real compression exists. Evidence can move a technique; a number alone cannot.
+(owner, 2026-08-09): state a projection once and say what it rests on, a probe, a delivered
+comparable or a survey. Record an overage plainly and work it down where real compression
+exists. Evidence can move a technique; a number alone cannot.
 
 **THE ROUTE, and the two constraints on it** (`dev/PLAN.md` DD2 and DD5, ruled 2026-08-09). Build
 the L tower and the J tower, J through rud, and the bridge between them; prove `L ⊨ AC` and
-`L ⊨ GCH` on that bridge. **The core constraint is architectural: maximize the code the two
-proofs share.** The total falls out of that and is never pursued by splitting or re-bucketing.
-Two quantitative constraints bind the double-trophy endpoint against the internalization route,
-one on lines and one on build seconds, and **NEITHER binds until it is measured**; both
-thresholds are suspended today and the ledger names the re-arm condition. **DD24** sets the
-quality bar as cold seconds over in-fence lines. **DD23 freezes mathematical prose** until both
-trophies land.
+`L ⊨ GCH` on it. **The core constraint is architectural: maximize the code the two proofs
+share.** The total falls out of that, and is never pursued by splitting or re-bucketing. Two
+quantitative constraints bind the double-trophy endpoint against the internalization route, one
+on lines and one on seconds, and **NEITHER binds until it is measured**: both are suspended
+today and the ledger names the re-arm condition. **DD24** sets the quality bar as cold seconds
+over in-fence lines. **DD23 freezes mathematical prose** until both trophies land.
 
 **FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
-left `archive/` for code, with `archive/rud-route/` holding its 72 files; `dev/TASKS-archived.md`
-for what each of 264 dispatches found; `dev/JOURNAL-archived.md` for why; and
-`dev/DECISIONS-archived.md` for the rulings. Every brief carries an **ARCHIVE** section naming
-what may bear on the task; every return carries an **ARCHIVE USED** section naming what it read
-and took, at `file:line`. `dev/LESSONS.md` is NOT archived and still binds.
+left `archive/` for code, `dev/TASKS-archived.md` for what each dispatch found,
+`dev/JOURNAL-archived.md` for why, and `dev/DECISIONS-archived.md` for its rulings. Every brief
+carries an **ARCHIVE** section naming what may bear on the task; every return carries an
+**ARCHIVE USED** section naming what it read and took, at `file:line`. `dev/LESSONS.md` is NOT
+archived and still binds.
 
 **An idle agent slot is a defect.** A slot stays empty only when a real block stops every
 remaining task. An audit is not a reason to leave a slot idle.
 
 ## Retiring code
 
-Plan a retirement from the **rewrite side**. A consumer does not prove that a chapter must
-stay. First price the ideal form of the content, written fresh today. Then compare. "We already
-paid for it" never decides the question, in either direction.
+Plan a retirement from the **rewrite side**. A consumer does not prove that a chapter must stay.
+First price the ideal form of the content, written fresh today, then compare. "We already paid
+for it" never decides the question, in either direction.
 
-**Archive retired code. Never delete it.** It goes to `archive/` at the repository root,
-outside `src/`, so every gate is blind to it by structure. Archived files are frozen and nothing
-imports across the boundary. For each module, `dev/ARCHIVE.md` records what it is, why it left,
-where it was last green, **what it did right** (from measurement, not praise), and what would
-make it worth a second look.
+**Archive retired code. Never delete it.** It goes to `archive/` at the repository root, outside
+`src/`, so every gate is blind to it by structure. Archived files are frozen and nothing imports
+across the boundary. For each module, `dev/ARCHIVE.md` records what it is, why it left, where it
+was last green, **what it did right** (from measurement, not praise), and what would make it
+worth a second look.
