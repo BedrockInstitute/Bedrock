@@ -939,7 +939,43 @@ status = "blocked"
 # import graph agrees with D18 and no obligation agrees with this row: it
 # found no import edge, no wing obligation in [T91]'s Links A to F, and a
 # CIRCULAR citation, Link G citing this ledger while [T203] cites Link G.
-# NOT REPAIRED IN THE PROSE, because it decides whether the wing pays
+# SETTLED 2026-08-09 BY [T260], and D18 wins. The row's sentence "the wing
+# rides the same bridge" has NO support in its own evidence field: [T45],
+# [T52], [T53] and [T61] contain ZERO occurrences of "wing" or "GCH". [T91]'s
+# Link G quotes this row back, [T203] and [T184] quote Link G, and D31
+# restates the row inside a ruling gated on different measurements. The ONE
+# node with independent evidence is D18: `_build/l3.31-lt-report.md:11` lists
+# the bridge's L-sigma as a RIDER of the wing's face and `:87` puts the
+# bridge's consumer on the AC side. The direction is wing-supplies-bridge and
+# bridge-supplies-AC, which is the opposite of what this row says.
+#
+# THE IMPORT GRAPH AGREES, measured: no transitive closure of any of the 18
+# gch_only masters reaches `L.Rud.BelowLim`, `L.Rud.Bridge` or
+# `L.Rud.SatTable`, and Bridge's only importers are BelowLim, SatTable and the
+# catalog. The structural fact is stronger than the count: NO FILE in the
+# wing's 87-module closure union names BOTH TOWERS, so the wing cannot even
+# STATE a cross-tower obligation like `Sset gamma in Lset (sucV gamma)`. C-23
+# is discharged by a name sweep over every line of every wing file, including
+# instantiation bodies.
+#
+# SO THE WING DOES NOT PAY `carried-sequence` OR `blockpowlim-instance`,
+# 4,238-5,218 naive and 5,537-7,400 calibrated, and the route gap STANDS at
+# 9,455-11,565 naive rather than halving. Its two real contacts with bridge
+# output are booked elsewhere and small: Hull's `orderAt` re-homes inside
+# `retirement-surgery` at 0.04-0.12k, and the order-layer residue rides
+# `w3-ac-slice`.
+#
+# STRENGTH: import-graph FACTS plus obligation READINGS. [T260]'s probe did
+# not run, because both Agda slots stayed held for its whole dispatch, so this
+# is not pinned at measured strength. The probe is specified in its report
+# section 5 for whoever has a slot.
+#
+# A CAUTION FOR THE FUTURE RECORD, and it is the reason the row read as it
+# did: after the choice re-home lands, the GCH closure WILL mechanically reach
+# the bridge through Hull's re-pointed order. That closure SHADOW must not be
+# read as refuting this settlement.
+#
+# The prose below is left standing as the artefact this note corrects.
 # `carried-sequence` and `blockpowlim-instance` at all, worth 4,238-5,218,
 # and that is a ruling rather than a typo. [T257] priced them at ZERO for the
 # wing and declared it as its own weak point.
