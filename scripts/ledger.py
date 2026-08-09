@@ -269,11 +269,22 @@ def trophy_split(data: dict, files: list[str],
     retirement set.
     """
     roots, defects = trophy_roots(data, files)
-    graph = import_graph(files)
-    ac = closure(graph, roots["ac"])
-    gch = closure(graph, roots["gch"])
     buckets, _ = retiring(files, data)
     retired = {f for hit in buckets.values() for f in hit}
+
+    # [L3.32-T254] 2026-08-09: the closures must be computed over the SURVIVING
+    # graph, not over the full tree with the retirement set removed afterwards.
+    # The docstring above has said "IT MEASURES THE SURVIVING TREE ONLY" since
+    # the owner ruled it on 2026-08-07, but the graph was built from every file,
+    # so a master reachable ONLY through a retiring importer still landed in the
+    # AC closure and still counted. `L/Coding/Base` (187) and `L/Absoluteness`
+    # (34) reached the AC total exactly that way: their only surviving importer
+    # is `L.TowerGraph`, a gch_only master. That is 221 lines of AC total that
+    # the route being built does not touch, and no `gch_assign` could fix it,
+    # because the checker would correctly call such a declaration DEAD.
+    graph = import_graph([f for f in files if f not in retired])
+    ac = closure(graph, roots["ac"])
+    gch = closure(graph, roots["gch"])
 
     # THE COMPANION RE-ASSIGNMENT (D36 amendment, owner-ruled 2026-08-08).
     # A neither-closure master may be DECLARED gch-side, because the parking

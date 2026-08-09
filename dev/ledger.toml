@@ -1674,6 +1674,40 @@ t250_lever = "recover the witness from a strengthened induction: 285-695 naive, 
 # residual before the main lever is decided would price against a number that
 # may not exist.
 seconds_residual = "25-68 s after everything measured or proposed; 85-230 lines; waits on [T251]"
+# [T254] MEASURED THE CLOSURE BOUNDARY 2026-08-09 AND CORRECTED THE
+# ORCHESTRATOR'S OWN PREMISE. I told the owner that 2,100-2,700 lines sit in
+# the AC meter that the AC closure does not need, citing [T155] and D36's
+# disclosed granularity error. THE FIGURE IS STALE. The consumer test still
+# returns 2,661, but 1,992 of it is `BelowLim` plus `StepStory`, which are AC
+# content; `HF` (608) and `Finite` (598) were archived at 43ca411 today; and
+# `StepGraph` (473) is now ac_only. **The corrected figure is 216 lines.**
+#
+# gch_assign DECLARATIONS LEGAL TODAY: ZERO. Six masters sit outside the AC
+# closure and could carry one mechanically, and all six fail the substantive
+# safety because none has a wing consumer. Four are the funded AC chain the
+# ledger already books as `ac`; the other two, `Everything` and `Landmarks`,
+# serve both trophies. The mechanism is sound and has run out of targets.
+#
+# NATURAL SPLITS ON THE CLOSURE BOUNDARY: ZERO. No shared master reaches the
+# second of the brief's three questions. Under the route-honest D-10 seed the
+# WHOLE shared part holds 22 GCH-only lines and 194 orphan lines over 15 files,
+# and the largest non-AC definition anywhere is 10 lines. The reason is sharper
+# than the orchestrator's expectation: the shared part is not one subject
+# serving two consumers, it is AC content from which the wing reads a few
+# corollaries. D36's naturalness condition is not the binding constraint here;
+# there is simply nothing to split.
+#
+# WHAT IS REAL, and neither move is a split. A METER DEFECT worth 221 lines,
+# fixed in `scripts/ledger.py` in the same commit: the closures were computed
+# over the FULL tree with the retirement set removed only afterwards, so
+# `L/Coding/Base` (187) and `L/Absoluteness` (34) reached the AC total through
+# retiring importers alone. Their only surviving importer is `L.TowerGraph`, a
+# gch_only master. And `L.Recursion` (108) has ZERO surviving consumers, which
+# is a D20 archival rather than a re-assignment.
+#
+# The meter goes 15,409 to 15,188 on the defect fix, and to 15,080 if the
+# Recursion archival lands.
+closure_boundary_measured = "[T254]: 216 lines, not 2,100-2,700; zero legal gch_assign; zero natural splits"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
