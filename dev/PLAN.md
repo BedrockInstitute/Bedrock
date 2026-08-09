@@ -640,7 +640,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T242 | Two decode shapes, both bound-variable, 3.5x apart: why? | ARTIFACT: 0.085 was a slice rate, the content is 0.297; the miss is 303-311 s not 6-14; foun | `_build/l3.32-t242-report.md` |
 | L3.32-T243 | The two profiles nobody ran: Bridge 103.1 s and StepGraph 59.0 s | NOT THERE: both CONCENTRATED, both NO-GO; Bridge's once-pair 78.8 s is P-l's floor,  | `_build/l3.32-t243-report.md` |
 | L3.32-T244 | Gate the choice re-home: price its ideal form from the rewrite side | GATED: ideal form 188-248 naive (booked 300-650); all 12 Choice masters archive f | `_build/l3.32-t244-report.md` |
-| L3.32-T245 | Finish block A: the stop-line was wrong and it gates the only lever left | DISPATCHED 2026-08-09; lands bridge-landing, which unblocks the re-home and  | `_build/l3.32-t245-report.md` |
+| L3.32-T245 | Finish block A: the stop-line was wrong and it gates the only lever left | COMPLETE: below-lim closes at a GENERAL limit, a-0 module deleted, master 2, | `_build/l3.32-t245-report.md` |
 | L3.32-T246 | The JOURNAL catch-up: 22 entries for T224 to T245 | DELIVERED 22 of 22, insertions only, lint green; found the word stop-line at 48,245 against 45,000 | `_build/l3.32-t246-report.md` |
 | L3.32-T247 | Tidy the JOURNAL: mark what later measurements superseded, never rewrite | 9 markers on 8 entries, zero tokens lost; 4 more checked and NOT marked with | `_build/l3.32-t247-report.md` |
 | L3.32-T248 | Refresh the endgame status memo: every headline number in it is now wrong | REWRITTEN, 1,455 words; 16 headline figures corrected, each traced to the m | `_build/l3.32-t248-report.md` |
