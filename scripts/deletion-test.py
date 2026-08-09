@@ -4,7 +4,7 @@
 WHY THIS EXISTS. Ruling D36 makes the DELETION TEST the cap's pass-or-fail
 judgment. At the AC landing, the AC endpoint must typecheck, exit 0, in a
 tree with every gch-side master removed. The surviving tree must count under
-16,000 non-blank in-fence lines. [T147] ran that test once by hand. This
+20,000 non-blank in-fence lines (raised from 16,000 by the owner, 2026-08-09). [T147] ran that test once by hand. This
 tool makes it runnable at any time and at the landing.
 
 The shadow mode is the daily proxy. It reuses scripts/ledger.py's trophy

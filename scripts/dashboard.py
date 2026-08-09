@@ -1049,7 +1049,9 @@ def panel_lines() -> str:
             f'<p class="note">The pure AC closure must land under '
             f'<b>{budget["cap"]:,}</b> lines. The bar it beats: the '
             f"internalization route delivered L&nbsp;&#8871;&nbsp;AC at 17,496 "
-            f"lines, and its probed compression floor was 16,000. The tripwire "
+            f"lines, and its probed compression floor was 16,000, which [T205] "
+            f"found unsupported and the owner replaced with 20,000 on "
+            f"2026-08-09. The tripwire "
             f"arms on the measured number only.</p>"
             f'<table><thead><tr><th>cap</th><th>measured now</th>'
             f"<th>endpoint, naive</th><th>endpoint, calibrated</th>"

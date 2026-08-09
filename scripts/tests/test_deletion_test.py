@@ -86,7 +86,18 @@ def test_shadow_reports_cap_and_headroom() -> int:
         count = int(mine.group(1).replace(",", ""))
         cap = int(band.group(1).replace(",", ""))
         headroom = int(band.group(2).replace(",", ""))
-        fails += check("cap is the D36 cap", cap, 16000)
+        # Read the cap from the LEDGER, never a literal. This line said 16000
+        # and failed the day the owner raised D36 to 20,000 (2026-08-09). The
+        # tool was right and the test was stale, which is the wrong way round:
+        # a test that pins a RULING as a constant breaks on every re-ruling and
+        # teaches whoever fixes it to edit the number rather than check the
+        # behaviour. What is worth pinning is that the tool AGREES with the
+        # ledger, whatever the ledger says.
+        import tomllib
+        ruled = tomllib.loads(
+            (ROOT / "dev" / "ledger.toml").read_text(encoding="utf-8")
+        )["trophy_budget"]["ac_cap"]
+        fails += check("cap is the ledger's D36 cap", cap, ruled)
         fails += check("headroom is cap minus the count",
                        headroom, cap - count)
     return fails
