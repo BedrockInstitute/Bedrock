@@ -458,11 +458,11 @@ provenance = "_build/l3.32-t198-report.md; _build/l3.32-t202-report.md; _build/l
 id = "choice-rehome"
 trophy = "AC"
 title = "The choice re-home onto the rud-side well-order"
-naive_low = 300
-naive_high = 650
-calibrated_low = 900
-calibrated_high = 1950
-klass = "x3 (new chapter); the carve half is measured at 0.18-0.24k"
+naive_low = 188
+naive_high = 248
+calibrated_low = 244
+calibrated_high = 322
+klass = "x1.3, GATED 2026-08-09 by [T244] from the REWRITE side per D17. Was x3 survey at 300-650 naive / 900-1,950 calibrated. The ideal form over the rud-side well-order is five pieces, four of them measured: the statement moved verbatim at 8, the pick at 30-60 ([T3]: 13 code lines, 46 with scaffolding), the carve machinery at about 130 ([T24]: 262 probe lines, carve-specific about 130), and the wiring at 20-50 ([T3]: one import swap, one field swap). The description with two readings is NOT here: it stays in `w3-ac-slice`, so the whole leg is this row plus that one, 524-804 naive, against a booked 636-1,206. D17 ratio: the ideal form is 24-32x cheaper than the delivered cone it replaces, which holds 6,050 in-fence lines over twelve masters. ALL TWELVE ARCHIVE FOR FREE: nothing surviving needs any of them, since the pick uses `Jset-order` from `L.Rud.Order` and the carve uses the delivered switch and counting, and both [T3]'s and [T24]'s probes import nothing from `L.Choice`. Only two exports have surviving consumers, `hasChoiceL` at `src/L/Model.lagda.md:57` and `orderAt` at `src/L/Hull.lagda.md:44`, and C-23 puts the whole Transversal module in scope because `hasChoiceL` instantiates `Trans` in the same file. STILL BLOCKED on `bridge-landing`: the re-home consumes both directions of the class-level bridge step"
 gate = "GATE 5 RAN AS [T3], GO 2026-08-04: the pick over Jset-order is 13 non-blank lines on delivered exports plus ONE module hypothesis, the class-level isL-to-isJ bridge step (probe 158 lines, under the 200 stop). [T24] then D-10-checked T3's residual and found the recorded carve target FALSE (the description must NAME the order internally, which is W3-chapter content, red structurally per T19/T22); the CORRECTED carve is GREEN at 262 probe lines, ~130 of carve machinery, with the description AND the bridge step as module hypotheses. CORRECTION 2026-08-07: [T146]'s claim 5 called this row unmeasured; it read the stale 'none yet' gate text and missed the provenance line's T3 and T24, whose measurements stand. What remains unmeasured is the DISCHARGE of the two hypotheses on the ruled route: the bridge step is the bridge-landing row's content, and the description's status was ruled by [T158] 2026-08-07, verdict (c): only W3's elimination slice discharges it, so the re-home consumes the new w3-ac-slice row. THAT GATE HAS RUN, twice: [T161] RED on the delivered formulation, then [T179] GREEN on the carried order-story reformulation, and the slice's band is re-priced accordingly. This row's own band still covers the pick and the carve only"
 provenance = "_build/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 entries"
 
