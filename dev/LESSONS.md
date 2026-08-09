@@ -2488,6 +2488,35 @@ consumers. C-23 already says a consumer scan must count same-file
 instantiation bodies. This law says the scan must END in a typecheck, because
 the defect is invisible to reading.
 
+### C-27. An alarm for "never announced" is blind to "announced and dropped"
+
+**The law.** A return can be lost in two different ways, and a check for one
+cannot see the other. A waiter that never announced a return leaves a record
+that says so, and an alarm can read it. A return that WAS announced and then
+dropped at audit leaves a record that says everything went fine. The second
+failure needs its own check, and the check is a cross-reference: **announced,
+but the task index still says DISPATCHED.**
+
+**The measurement, 2026-08-08 to 2026-08-09, `[L3.32-T208]`.** T208 and T209
+returned in the SAME announcement, at the same second
+(`returns.log` lines 124 and 125). T209 was audited and its verdict
+registered. T208 was dropped. Its row read `DISPATCHED` for a day with a
+finished 16 KB report on disk, and it was the OWNER who noticed, not the
+tooling. The registry said `reported = True` throughout, so the existing
+"RETURNS NEVER REPORTED" alarm was blind to it by construction.
+
+**Why it took this long to happen, which is the useful part.** Of 145
+announcements in the log, **140 carried exactly one return.** An audit loop
+keyed on the ANNOUNCEMENT is indistinguishable from one keyed on each TASK
+while that holds. The defect was latent from the first dispatch and only
+became visible the day an announcement carried two. A process that is correct
+on the common case and silently wrong on the rare one will pass every informal
+review it ever gets.
+
+**The enforcement point** is `dispatch.py status`, which now cross-references
+the registry against `dev/PLAN.md` and prints every announced return whose row
+still reads `DISPATCHED`.
+
 ### C-25. Two parallel writers may not share a file, and "the home you propose" IS a shared file
 
 **The law.** A brief that grants an agent a file it does not NAME, such as "the
