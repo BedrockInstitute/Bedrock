@@ -9,10 +9,10 @@ This is the execution history of the retired route: what each dispatch found,
 what was refuted, what was measured and what it cost. **It is one of the four
 archives a new brief must survey** (DD13 and the owner's mechanism of
 2026-08-09), and it is the one that says WHY, where
-`dev/TASKS-archived.md` says only what the verdict was.
+`archive/dev/TASKS-archived.md` says only what the verdict was.
 
 An entry here may cite a `D` ruling or an `L3.32-T` code. Both still resolve,
-against `dev/DECISIONS-archived.md` and `dev/TASKS-archived.md`. An entry
+against `archive/dev/DECISIONS-archived.md` and `archive/dev/TASKS-archived.md`. An entry
 written in July that reasons from a ruling retired in August is CORRECT as
 history and is never rewritten.
 

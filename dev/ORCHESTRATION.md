@@ -113,9 +113,9 @@ Standing clauses that go in every build or probe brief:
   **ARCHIVE** section listing what may bear on the task in each of the four
   archives: `archive/` for retired code, with `archive/rud-route/` holding the
   72 files of the retired route and `dev/ARCHIVE.md` describing the modules
-  retired before it; `dev/TASKS-archived.md` for what each of the 264 earlier
-  dispatches found; `dev/JOURNAL-archived.md` for why; and
-  `dev/DECISIONS-archived.md` for the rulings that route ran on.
+  retired before it; `archive/dev/TASKS-archived.md` for what each of the 264 earlier
+  dispatches found; `archive/dev/JOURNAL-archived.md` for why; and
+  `archive/dev/DECISIONS-archived.md` for the rulings that route ran on.
   `dev/LESSONS.md` is NOT archived and still binds, so it is cited the usual
   way through `scripts/rules.py`.
 - **AND THE RETURN NAMES WHAT IT USED.** A report carries an **ARCHIVE USED**
@@ -155,9 +155,14 @@ Standing clauses that go in every build or probe brief:
   not be quoted at a rewrite question, because that substitution is the
   specific error D17 names and an agent will make it unprompted.
 - **DD2 and DD5, what is ruled and what is open.** State BOTH in the brief's header.
-  Ruled: the campaign route, R2' with the trophy stated in L, which the return
-  may not reopen or re-table. Open: how to walk it, which results decide, so
-  name the current working direction as a working direction and not as law. Say
+  **Ruled (DD2):** the two-tower bridge. Build the L tower and the J tower, J
+  through rud, and the bridge between them; prove `L ⊨ AC` and `L ⊨ GCH` on it,
+  both stated in L; the bridge delivers BOTH directions. The core constraint is
+  architectural, MAXIMIZE THE CODE THE TWO PROOFS SHARE. A return may not
+  reopen or re-table any of that. **Open: how to walk it**, which results
+  decide, so name the current working direction as a working direction and not
+  as law. This half is load-bearing and is not a courtesy: the technique is
+  empirical, and archived D26(B) has no other home. Say
   that a line count is a measurement, recorded once with its basis and worked down
   as a best-effort target, never argued from. A gate asks which TECHNIQUE to
   use, so a red must return the next candidate technique, named and priced, on
@@ -210,16 +215,18 @@ and the breach is recorded in the row rather than tidied away.
 
 **A route awaiting a decision is KEPT** (owner ruling, 2026-08-06). Nothing
 is deleted for being unfunded; a route leaves the board only by being refuted
-or done. The flowchart the owner asked for is rendered on the dashboard
-(`[L3.32-T114]`); the conditions it draws are these prose rules, which were
-moved here when the ledger was stripped to measurements
-(`[L3.32-T113]`):
+or done. The conditions are these prose rules, which were moved here when the
+ledger was stripped to measurements (`[L3.32-T113]`). They were also drawn as
+a flowchart on the generated dashboard, which the owner abolished on
+2026-08-09; the prose below is now the only statement of them:
 
-- **While DD23's prose freeze stands, mathematical prose is not funded
-  work.** The frozen mathematics resumes in this order when the exit
-  condition is met: the bridge landing (below-lim), then the choice re-home,
-  then AC on surviving machinery; and the StepInL rewrite, then W3, then
-  W7's residue and the GCH sentence.
+- **While DD23 stands, mathematical prose is not funded work.** Nothing else
+  is frozen. The retired route's resume order, which named the bridge
+  landing, the choice re-home, the StepInL rewrite, W3 and W7's residue, is
+  SUPERSEDED: every item belonged to code now in `archive/rud-route/`, and
+  the freeze that gated them closed with the route. **The live order is the
+  LJ phase barrier in `dev/PLAN.md` section 11**, and no other document
+  states it.
 - **When a compression lever is considered**, run this order: if it is
   refuted it is not a route (recorded closed); if ruled work already did part
   of it, re-price before considering (the delivered part is not still owed);
@@ -227,11 +234,14 @@ moved here when the ledger was stripped to measurements
   if its region is being touched by ruled work anyway, take it now (marginal
   cost near zero); if the endpoint projection needs the lines, rank by net
   lines per unit of risk and take the cheapest first; otherwise keep and
-  wait (DD7: an estimate is a measurement, and an overage is recorded rather than argued from).
+  wait (DD8: an estimate is ONE best-effort number that names its basis, and
+  an overage is recorded rather than argued from).
 
-*Enforcement:* the standing brief clauses in section 3 (DD8, DD8, DD13) and
-the return audit in section 6 step 2; the route board itself is generated
-for the owner by `[L3.32-T114]` from the canonical data.
+*Enforcement:* the standing brief clauses in section 3 (DD8 for the gate,
+DD13 for pricing a port against a fresh write) and the return audit in
+section 6 step 2. The generated route board that used to draw these
+conditions was abolished on 2026-08-09, so this prose is the only statement
+of them.
 
 ## 6. Handling a return
 
@@ -283,11 +293,10 @@ In this order, every time:
    glossary does not carry, dispatch the terminology dossier (section 8) before
    the chapter counts as landed.**
 
-8. **Refresh the owner's dashboard.** Run `make dashboard`. Every panel is
-   generated from the canonical data, so this is the whole step.
-   `scripts/check-dashboard.py` reports staleness and exits 0 by design:
-   `_build/` is git-ignored, so a gate that failed on a missing dashboard
-   would fail every fresh clone.
+8. **Report the standing figures to the owner in the return.** The generated
+   dashboard was abolished on 2026-08-09, so there is no page to refresh and
+   no step here beyond quoting `python3 scripts/ledger.py --brief`, which is
+   the only admissible source for a standing figure.
 
    **There is no hand-written half.** `_build/workbench.md` was deleted on
    2026-08-07 by the owner's ruling, superseding the 2026-08-06 ruling that

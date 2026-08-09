@@ -57,7 +57,7 @@ CITATION = re.compile(
 PLAN_REF = re.compile(r"(?<![\w-])(D\d{1,2})(?![\w-])")
 PLAN_ROW = re.compile(r"^\|\s*(D\d{1,2})\s*\|", re.M)
 # The LIVE series since 2026-08-09 is `DD`. The whole `D` series was archived
-# to dev/DECISIONS-archived.md when the owner rebuilt the list on the
+# to archive/dev/DECISIONS-archived.md when the owner rebuilt the list on the
 # two-tower bridge ruling, and `D` citations still RESOLVE against that file:
 # hundreds of them sit in JOURNAL, the memos, the briefs and the git history,
 # and they are true to what they meant when written. A number is never reused
@@ -65,7 +65,7 @@ PLAN_ROW = re.compile(r"^\|\s*(D\d{1,2})\s*\|", re.M)
 # match as a `D` reference, which is what keeps the two series apart.
 DD_REF = re.compile(r"(?<![\w-])(DD\d{1,2})(?![\w-])")
 DD_ROW = re.compile(r"^\|\s*(DD\d{1,2})\s*\|", re.M)
-ARCHIVED_DECISIONS = ROOT / "dev" / "DECISIONS-archived.md"
+ARCHIVED_DECISIONS = ROOT / "archive" / "dev" / "DECISIONS-archived.md"
 # A DD code merged into another row, or revoked, still RESOLVES. PLAN names
 # them in one paragraph and says so, for the same reason the D series does:
 # a commit message or brief that cites a code is a record of what was true
@@ -184,7 +184,7 @@ def main() -> int:
                 if m.group(1) not in decisions:
                     findings.append(
                         f"{path.relative_to(ROOT)}:{i}: `{m.group(1)}` is not a "
-                        f"decision in dev/DECISIONS-archived.md")
+                        f"decision in archive/dev/DECISIONS-archived.md")
             for m in DD_REF.finditer(line):
                 if m.group(1) not in decisions:
                     findings.append(

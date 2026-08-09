@@ -379,10 +379,23 @@ def main() -> int:
         return 0
 
     print()
+    label = "REPORT" if _susp else "DEFECT"
     for f in findings:
-        print(f"  DEFECT: {f}")
-    print("\n  D30 (dev/PLAN.md section 3) freezes new mathematics until the tree's")
-    print("  check cost comes down. A module over the cap is how it got there.")
+        print(f"  {label}: {f}")
+    if _susp:
+        # THE DOWNGRADE IS HERE, not only in the banner. Printing "not
+        # enforcing" at the top and then returning 1 at the bottom is worse
+        # than enforcing: it makes `dev/ledger.toml` claim a downgrade the
+        # code never performed, and a reader who trusts the banner reads a
+        # red gate as a green one. [LJ-0.1] found exactly that.
+        print("\n  Thresholds are SUSPENDED (dev/ledger.toml). These rows are "
+              "MEASUREMENTS,\n  not defects: DD5 replaced the absolute caps "
+              "with benchmarks nobody has\n  measured yet. Re-arm at [LJ-2.1]. "
+              "The numbers above are still real.")
+        return 0
+    print("\n  DD5 (dev/PLAN.md section 3) binds the build seconds of the double")
+    print("  trophy against the internalization route. A module over the cap")
+    print("  is how a tree gets there.")
     return 0 if args.warn_only else 1
 
 
