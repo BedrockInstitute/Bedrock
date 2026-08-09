@@ -37,7 +37,7 @@ nobody finishes reading binds nothing.
   - The full rule set, with worked examples, is the skill at `.claude/skills/asd-ste100/`.
 - **Ask first:** genuine architecture forks (surface them with a recommendation rather than
   charging ahead on one reading); adding a top-level directory (then add its `README.md`); a
-  translation term not yet in `dev/glossary.toml`; **an edit to `AGENTS.md` itself** (D34):
+  translation term not yet in `dev/glossary.toml`; **an edit to `AGENTS.md` itself** (DD20):
   show the owner the diff and the reason, get the ruling, then commit with a dated
   `AGENTS-diff-approved:` trailer, which `scripts/check-agents-guard.py` refuses to go
   without.
@@ -53,7 +53,7 @@ nobody finishes reading binds nothing.
   checker in [scripts/](scripts/README.md): i18n markers, prose, Agda style, rule-citation
   resolution, glossary, size ledger, the never-commit rule, whole-tree invariants, and `reuse
   lint`. **Run it in the background, never in the foreground**: a cold typecheck takes about
-  twelve minutes and must not block the session (`dev/PLAN.md` D28). While you work, run the
+  twelve minutes and must not block the session (`dev/PLAN.md` DD16). While you work, run the
   individual checks instead (`agda <file>`, `python3 scripts/lint-prose.py <files>`).
 - **`python3 scripts/rules.py --for <kind>`** gives the mandatory rules for a build, probe,
   recon, rewrite or review, with each statement. `--grep <term>` finds the long tail by trigger
@@ -89,14 +89,14 @@ worse than no row: it turns a rule into false safety.
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
-| **Project rulings.** Architecture, process, retirement, numbered and dated | `dev/PLAN.md` section 3 | the orchestrator; briefs |
+| **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`; the orchestrator; briefs |
 | **Dispatch, slots, briefs, audits.** How work is sent out and how a return is checked | `dev/ORCHESTRATION.md` | the orchestrator, at the points it names |
 | **Goal status and execution history.** A ruling is a PLAN row, an episode is a JOURNAL entry. **PLAN section 11 is the complete index of goals and of dispatched tasks, one row each; JOURNAL holds what each dispatch actually found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header comment carries the caliber, how a row goes missing, and why standing is never written down | `scripts/ledger.py --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
 | **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook; `--fix` handles most |
 | **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers and markers inside fences. It does NOT catch a marker embedded mid-line, and it does NOT catch a code fence inside a language group, which STYLE-i18n forbids: both pass green. One-master-per-module is enforced by Agda itself; woven copies are caught by `check-probes.py`, not by this checker |
-| **Term renderings.** A term the glossary lacks is settled by the D35 pipeline, never by choosing: a codex dossier with literature provenance, then an opus adversarial review; a PASS lands the entry, a FAIL escalates it to the owner. Use it consistently, NAME it in your report, **never add an entry yourself** | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The dossier rule is enforced by review only** (`dev/ORCHESTRATION.md` section 6 step 7 dispatches the dossier): nothing mechanical notices a term settled by choosing |
+| **Term renderings.** A term the glossary lacks is settled by the DD21 pipeline, never by choosing: a codex dossier with literature provenance, then an opus adversarial review; a PASS lands the entry, a FAIL escalates it to the owner. Use it consistently, NAME it in your report, **never add an entry yourself** | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The dossier rule is enforced by review only** (`dev/ORCHESTRATION.md` section 6 step 7 dispatches the dossier): nothing mechanical notices a term settled by choosing |
 | **Documentation taxonomy.** User docs trilingual under `docs/<lang>/`, developer docs English only, `README.md` follows the user rule. Place a new document by audience; give every top-level directory a `README.md` | this row | review |
 | **Licensing.** Three buckets declared centrally; a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
@@ -116,7 +116,7 @@ whoever numbers it.
 
 **Write content structure-generic rather than fixed to a carrier.** It is more expensive on the
 first instance and cheaper from the second onward, which is exactly why it gets skipped under a
-deadline. `dev/PLAN.md` D29 requires the question to be asked at three moments: when a recon is
+deadline. `dev/PLAN.md` DD4 requires the question to be asked at three moments: when a recon is
 dispatched, when a build is dispatched, and when a route is planned.
 
 ## Working rules for dispatched agents
@@ -157,10 +157,27 @@ fences. State each projection twice: **naive**, the component sum on delivered c
 **calibrated**, with this project's measured underestimation (about 1.3x where a probe or
 comparable reaches, 3x where only a survey does).
 
-**An estimate is a measurement, not a decision procedure** (`dev/PLAN.md` D26). Record an
+**An estimate is a measurement, not a decision procedure** (`dev/PLAN.md` DD7). Record an
 overage in both calibers, say plainly that it is an overage, and work it down where real
 compression exists. Evidence can move a technique. A number alone moves nothing, and it never
-puts the campaign route back on the table.
+moves a technique on its own.
+
+**THE ROUTE, and the two constraints on it** (`dev/PLAN.md` DD2 and DD5, ruled 2026-08-09). Build
+the L tower and the J tower, J through rud, and the bridge between them; prove `L ⊨ AC` and
+`L ⊨ GCH` on that bridge. **The core constraint is architectural: maximize the code the two
+proofs share.** The total falls out of that and is never pursued by splitting or re-bucketing.
+Two quantitative constraints bind the double-trophy endpoint against the internalization route,
+one on lines and one on build seconds, and **NEITHER binds until it is measured**; both
+thresholds are suspended today and the ledger names the re-arm condition. **DD24** sets the
+quality bar as cold seconds over in-fence lines. **DD23 freezes mathematical prose** until both
+trophies land.
+
+**FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
+left `archive/` for code, with `archive/rud-route/` holding its 72 files; `dev/TASKS-archived.md`
+for what each of 264 dispatches found; `dev/JOURNAL-archived.md` for why; and
+`dev/DECISIONS-archived.md` for the rulings. Every brief carries an **ARCHIVE** section naming
+what may bear on the task; every return carries an **ARCHIVE USED** section naming what it read
+and took, at `file:line`. `dev/LESSONS.md` is NOT archived and still binds.
 
 **An idle agent slot is a defect.** A slot stays empty only when a real block stops every
 remaining task. An audit is not a reason to leave a slot idle.
