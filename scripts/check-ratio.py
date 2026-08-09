@@ -21,7 +21,14 @@ WHY IT IS STAGED. A bar that can only be read when the wing is finished is a
 bar that is read too late to act on. This tool runs from the first GCH module
 onward: it reports every module it can see, flags each one against the bar,
 and judges the wing on the aggregate. Before any GCH module exists it reports
-that fact and exits 0, so it is safe in the commit gate from today.
+that fact and exits 0.
+
+IT IS NOT IN `make check`, and MEASURES COLD BY DEFAULT. Both were wrong for
+one day and [LJ-0.1] caught both. It runs Agda, so it cannot live in the
+commit gate: `dev/ORCHESTRATION.md` forbids a typecheck there, and this tool
+fails closed beside a live agda process, which would turn a busy machine into
+a red commit. And the baseline is COLD, so a warm run is not a looser
+comparison, it is a meaningless one.
 
 WHAT IT REFUSES. It refuses to invent a baseline. If the ledger has no
 measured AC ratio it says so and fails, because a bar guessed from a
@@ -102,8 +109,9 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--check", action="store_true",
                         help="gate mode: exit non-zero when the wing is over the bar")
-    parser.add_argument("--cold", action="store_true",
-                        help="move each interface aside first; slower and the honest figure")
+    parser.add_argument("--warm", action="store_true",
+                        help="reuse existing interfaces; fast, and NOT comparable "
+                             "to the cold baseline. For a quick look only")
     parser.add_argument("--module", action="append", default=[],
                         help="measure this master instead of the declared wing; repeatable")
     args = parser.parse_args()
@@ -116,7 +124,7 @@ def main() -> int:
     if not targets:
         print("check-ratio: no GCH-wing module declared yet (ratio.gch_wing is "
               "empty), so there is nothing to measure. This is the expected "
-              "state until LJ1-T3 lands its first module.")
+              "state until LJ-1.3 lands its first module.")
         return 0
 
     missing = [t for t in targets if not (ROOT / t).exists()]
@@ -137,7 +145,12 @@ def main() -> int:
         print(f"check-ratio: refusing to measure, {blocker} (C-12).", file=sys.stderr)
         return 1
 
-    rows = measure(targets, cold=args.cold)
+    # COLD IS THE DEFAULT because the baseline is cold. A warm run against a
+    # cold baseline is not a looser check, it is a wrong one: warm is several
+    # times faster, so a wing far over the bar reads as under it. The gate was
+    # wired warm until [LJ-0.1] caught it.
+    cold = not args.warm
+    rows = measure(targets, cold=cold)
     bar = baseline * tolerance if tolerance else baseline
 
     total_lines = 0
@@ -145,7 +158,7 @@ def main() -> int:
     unmeasured = []
     print(f"check-ratio | AC baseline {baseline:.4f} s/line | tolerance "
           f"{tolerance if tolerance else 1.0}x | bar {bar:.4f} s/line "
-          f"| {'cold' if args.cold else 'warm'}")
+          f"| {'cold' if cold else 'WARM, NOT COMPARABLE'}")
     for rel, lines, seconds in rows:
         if seconds is None or not lines:
             unmeasured.append(rel)

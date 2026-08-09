@@ -7,10 +7,11 @@ the detailed specs it points to.
 
 ## Contents
 
-- `PLAN.md`: the **construction plan** for the current milestone (porting L ⊨ ZFC from
-  `fol-reification`): ratified decisions, the goal-coding rules, the two-caliber
-  discipline, and the live MASTER status table, with pointers to the archived
-  planning apparatus (target skeleton, route tree, source survey, build
+- `PLAN.md`: the **construction registry** for the campaign (the two-tower bridge,
+  both trophies): section 0 for where the work stands, the `DD` rulings, the
+  goal-coding rules, DD8's single best-effort projection that named its basis,
+  and the live MASTER status table with the `LJ` task index. Pointers to the
+  archived planning apparatus (target skeleton, route tree, source survey, build
   constraints, process tensions, risks, simplification register) in `dev/memos/`.
   Read it before touching `src/`; work carries a goal code.
 - `literature/`: the **rud-route literature collection** (`[L3.30-L1]`): classified,
@@ -35,7 +36,7 @@ the detailed specs it points to.
   (via `tomllib`): the booked retirement set and the remaining-work rows with their bands,
   classes and provenance. It contains **no standing figure**; standing is measured from the tree,
   never written down.
-- (`LEDGER.md` and `MAINTENANCE.md` were deleted 2026-08-06 by `[T115]`'s audit: no brief ever pointed an agent at either, and their agent-facing content moved into `ledger.toml`'s header comment and `check-dev-docs.py`'s docstring. The owner reads `make dashboard`.) The caliber convention, what a derived row is,
+- (`LEDGER.md` and `MAINTENANCE.md` were deleted 2026-08-06 by `[T115]`'s audit: no brief ever pointed an agent at either, and their agent-facing content moved into `ledger.toml`'s header comment and `check-dev-docs.py`'s docstring. The owner reads `scripts/ledger.py --brief`.) The caliber convention, what a derived row is,
   and the rule for keeping it current when a chapter lands or a gate returns.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
   (`L3.0.3-subsumption-probe.md` and so on), plus the archived planning sections cut from

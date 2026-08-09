@@ -23,8 +23,8 @@ reference line beside the D39 band. The 25k was a best-effort target, never a de
 procedure. This script
 prints the overage as a plain number and draws no conclusion from it. Neither should you.
 
-The owner reads the same figures on the dashboard (`make dashboard`), which sees the
-numbers without running anything. That block is written by --write and verified by --check, so
+The owner reads these figures from `--brief`. The generated dashboard that used to render
+them was abolished on 2026-08-09. That block is written by --write and verified by --check, so
 it fails the commit gate the moment it goes stale. That is the whole trick: the numbers are
 visible AND they cannot rot, because nobody is trusted to retype them.
 
@@ -250,7 +250,7 @@ def trophy_roots(data: dict, files: list[str]) -> tuple[dict[str, list[str]], li
         if path not in files:
             # SUSPENDED 2026-08-09 with the rest of the retired route's
             # declarations. These roots name rud-route modules that task 4
-            # removed from src/, and the GCH wing does not exist yet: LJ1-T8
+            # removed from src/, and the GCH wing does not exist yet: LJ-1.8
             # builds it. A defect for a file the live plan never expected to
             # be there is noise, not a finding.
             if not data.get("trophy_split_suspended"):
@@ -506,10 +506,22 @@ def main(argv: list[str]) -> int:
     ac_cap = budget.get("ac_cap")
     # SUSPENDED 2026-08-09: DD5's benchmarks are not quantified, so the
     # tripwire would enforce a retired number. It reports instead.
+    #
+    # THE BANNER GOES TO STDERR, and that is not cosmetic. `--trophy-matrix`
+    # and `--trophy-split` print ONE machine-read line each. Printing this
+    # diagnostic to stdout prepended a status message to a data stream, and
+    # the then-live dashboard generator, which matched a regex against the
+    # whole of stdout, crashed with a ValueError for a full day until
+    # [LJ-0.1] found it. The dashboard was abolished the same day
+    # (archive/tooling/), so nothing reads these lines today, but the rule
+    # outlives its first victim: any future consumer of --trophy-* parses
+    # stdout. Every diagnostic added here belongs on stderr. Stdout is the
+    # value, stderr is the commentary.
     if budget.get("thresholds_suspended") and ac_cap and split:
         print(f"ledger [thresholds SUSPENDED]: AC closure {split['ac_total']:,} "
               f"against the retired {ac_cap:,} cap, reported and NOT enforced; "
-              f"re-arm is {budget.get('thresholds_rearm', 'unstated')}")
+              f"re-arm is {budget.get('thresholds_rearm', 'unstated')}",
+              file=sys.stderr)
         ac_cap = None
     if ac_cap and split and split["ac_total"] >= ac_cap:
         defects.append(
@@ -519,7 +531,7 @@ def main(argv: list[str]) -> int:
 
     # There is no longer a prose document to render into. That document was
     # deleted on 2026-08-06: 44 percent of it was this generated block, and the
-    # rest was orientation for the owner, who now reads `make dashboard`. The
+    # rest was orientation for the owner, who reads `--brief`. The
     # three passages that had no other home moved into dev/ledger.toml's header
     # comment, which is where a reader editing the declaration will actually be.
     # `--write` is kept as a no-op alias for `--check` so old invocations and

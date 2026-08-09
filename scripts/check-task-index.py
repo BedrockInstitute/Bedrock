@@ -47,14 +47,14 @@ CAP = 200
 # full form is unambiguous; the short form is the bracket citation `[T88]`
 # used everywhere in dev/ and the briefs.
 # TWO SERIES since 2026-08-09. The live goal is `LJ1`, the two-tower bridge
-# route. The retired `L3.32` series is archived WHOLE to dev/TASKS-archived.md
+# route. The retired `L3.32` series is archived WHOLE to archive/dev/TASKS-archived.md
 # and its citations still resolve: 264 rows of measured dispatch history are
 # cited across JOURNAL, the memos, the briefs and the git history, and the
 # owner's archive-survey mechanism requires a new brief to read them. A number
 # is never reused in either series.
 GOAL = "LJ"
 ARCHIVED_GOAL = "L3.32"
-ARCHIVED_INDEX = ROOT / "dev" / "TASKS-archived.md"
+ARCHIVED_INDEX = ROOT / "archive" / "dev" / "TASKS-archived.md"
 FULL = re.compile(r"\[(?:LJ-(\d+)\.(\d+)|L3\.32-T(\d+))\]")
 SHORT = re.compile(r"\[T(\d+)\]")
 ROW = re.compile(r"^\| ((?:LJ-(?:\d+)\.(?:\d+))|(?:L3\.32-T\d+)) \|")
@@ -93,7 +93,7 @@ def index_rows(plan_text: str) -> list[tuple[int, str]]:
     if ARCHIVED_INDEX.exists():
         block += ARCHIVED_INDEX.read_text(encoding="utf-8")
     # Keyed by the FULL code, not the number. The two series share numbers by
-    # design (neither reuses one WITHIN itself), so LJ1-T1 and L3.32-T1 are
+    # design (neither reuses one WITHIN itself), so LJ-1.1 and L3.32-T1 are
     # different rows and a number-keyed dedup would call them a duplicate.
     rows = []
     for line in re.findall(r"^\| (?:LJ-\d+\.\d+|L3\.32-T\d+) \|.*$", block, re.M):

@@ -12,8 +12,8 @@ reader needs today.
 
 ## Why nothing in it is renumbered or rewritten
 
-The same reason `dev/DECISIONS-archived.md` and `dev/TASKS-archived.md` keep
-their originals. Hundreds of citations across `dev/JOURNAL-archived.md`,
+The same reason `archive/dev/DECISIONS-archived.md` and `archive/dev/TASKS-archived.md` keep
+their originals. Hundreds of citations across `archive/dev/JOURNAL-archived.md`,
 `dev/LESSONS.md`, the memos and the commit history point at these codes. A code
 that means one thing in a commit message and another here is a trap. Every row
 below reads as it read on the day it was written.
@@ -27,8 +27,8 @@ unstarted and survive unchanged in the live table: they are route-neutral, and
 they open only when the `LJ` series lands both trophies.
 
 **Read this file when you need to know what the retired route tried and what it
-found.** For what a dispatch actually did, read `dev/TASKS-archived.md`; for
-why, `dev/JOURNAL-archived.md`; for the rulings, `dev/DECISIONS-archived.md`.
+found.** For what a dispatch actually did, read `archive/dev/TASKS-archived.md`; for
+why, `archive/dev/JOURNAL-archived.md`; for the rulings, `archive/dev/DECISIONS-archived.md`.
 
 ## The table, as archived
 

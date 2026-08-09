@@ -4,9 +4,9 @@ The execution record of the two-tower bridge route, `[LJ1]`. One entry per
 episode: what was asked, what came back, what it cost, and what changed as a
 result.
 
-**The retired route's 4,260 lines are `dev/JOURNAL-archived.md`, unedited.**
+**The retired route's 4,260 lines are `archive/dev/JOURNAL-archived.md`, unedited.**
 It is a required survey target for a new brief, together with
-`dev/TASKS-archived.md`, `dev/DECISIONS-archived.md` and `archive/`.
+`archive/dev/TASKS-archived.md`, `archive/dev/DECISIONS-archived.md` and `archive/`.
 
 ## Conventions
 

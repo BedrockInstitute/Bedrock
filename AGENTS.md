@@ -28,7 +28,7 @@ nobody finishes reading binds nothing.
   a paragraph.
   - **It applies to:** every message to the repository owner, **in whatever language the owner
     writes to you**; NEW developer documents under `dev/` and NEW per-directory `README.md`
-    files; the dashboard; and all agent-to-agent text, which means each brief this project
+    files; and all agent-to-agent text, which means each brief this project
     sends and each report an agent returns.
   - **It does NOT apply to:** mathematical prose; the documents under `docs/`; or the prose in
     a `.lagda.md` master. There, precision and voice decide the words.
@@ -86,7 +86,7 @@ turns a rule into false safety.
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
-| **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`; the orchestrator; briefs |
+| **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `archive/dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`; the orchestrator; briefs |
 | **Dispatch, slots, briefs, audits.** **Codex is the default for EVERY dispatch** (DD17). An in-harness Opus subagent needs the owner's word for that task, which never carries forward, or a very-very-heavy judgment. The brief header carries a `tier:` line: if the justifying sentence will not write, the tier is codex | `dev/ORCHESTRATION.md` section 1 | the orchestrator, at the points it names |
 | **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header comment carries the caliber, how a row goes missing, and why standing is never written down | `scripts/ledger.py --check` |
@@ -99,7 +99,7 @@ turns a rule into false safety.
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
 | **Route memos, digested literature, probe reports** and the briefs that produced them | `dev/memos/`, `dev/literature/`, `_build/` | n/a |
 | **What the project IS**: the theorem, the charter, the licences, who wrote it | [README.md](README.md), trilingual under `docs/` | n/a |
-| **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0, and `make dashboard` for the owner's board | n/a |
+| **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0; `scripts/ledger.py --brief` for the standing figures | n/a |
 
 **`dev/LESSONS.md` BINDS NEW CODE.** Its entries are measurements, not opinions. When your work
 discovers a new law, propose it with its measurement; **the orchestrator assigns the ID**
@@ -152,8 +152,9 @@ today and the ledger names the re-arm condition. **DD24** sets the quality bar a
 over in-fence lines. **DD23 freezes mathematical prose** until both trophies land.
 
 **FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
-left `archive/` for code, `dev/TASKS-archived.md` for what each dispatch found,
-`dev/JOURNAL-archived.md` for why, and `dev/DECISIONS-archived.md` for its rulings. Every brief
+left `archive/` for code and `archive/dev/` for the records: `TASKS-archived.md` for what each
+dispatch found, `JOURNAL-archived.md` for why, `DECISIONS-archived.md` for its rulings, and
+`STATUS-archived.md` for its goal table. Every brief
 carries an **ARCHIVE** section naming what may bear on the task; every return carries an
 **ARCHIVE USED** section naming what it read and took, at `file:line`. `dev/LESSONS.md` is NOT
 archived and still binds.

@@ -32,95 +32,78 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 - **Toolchain parity:** both repos use Agda 2.8.0 + cubical 0.9; all source
   modules are `--cubical --guardedness`. No toolchain migration is needed.
 
-## 0. Where the work stands (2026-08-06)
+## 0. Where the work stands (2026-08-09)
 
-**The endpoint.** `L ⊨ ZFC ∧ L ⊨ GCH`, stated on the Def tower (`isL`). The
-AC-only trophy that opened this registry is a waypoint on the way there, not
-the endpoint (ruled 2026-08-03; the successor-document plan `[L4.3]` was
-absorbed into the active campaign rather than deferred).
+**REWRITTEN 2026-08-09 for the route change.** The text this replaces described
+the internalization route and read as current for the whole day the route
+changed. `[LJ-0.1]` caught it. What follows is the two-tower bridge route.
 
-**The architecture (ruled 2026-08-04, `[L3.32]`).** The Def tower keeps the
-trophy: no re-founding onto the rud/J tower. The GCH wing is built on a
-FRESH-GENERIC Sigma-1 face, written carrier-generic from birth, which serves as
-the wing's own W1 and is instantiated by W2, by the bridge, and by the
-condensation chapter. The reindexed bridge (the true form of the two-tower
-identification) lands at wing tail as a corollary rather than as a
-prerequisite. Choice re-homes through the bridge onto the delivered rud-side
-well-order, after which the satisfaction-internalization cone, the choice tree,
-the Goedel trees and the rud coded cluster retire.
+**The endpoint.** BOTH trophies, `L ⊨ AC` and `L ⊨ GCH`, proved on the
+two-tower bridge and both stated in L (DD2). Build the L tower, build the J
+tower through rud, build the bridge between them, and prove both on it. The
+AC-only trophy that opened this registry is a waypoint, not the endpoint.
 
-**What is delivered and standing.** `L ⊨ ZF` and `L ⊨ ZFC` on the Def tower
-(the current choice leg still runs through the internalization cone, which the
-re-home replaces); the rud engine (basis, step, tower, comprehension switch,
-the producer well-order); the bridge's true direction, `isJ → isL`,
-unconditionally; and the corrective stop that records the per-level
-identification as the classically FALSE statement it is (Devlin VI.2.4). The
-tree is `--safe` and postulate-free (LEM is a module parameter, not a
-postulate, per D2), and `make check` was green at the last commit.
+**The core constraint is architectural, and it is the one that matters:
+MAXIMIZE THE CODE THE TWO PROOFS SHARE.** The total falls out of that. It is
+never pursued by splitting a chapter, by re-bucketing lines between the two
+wings, or by any other accounting move; `[LJ-0.1]`'s predecessors caught that
+class of argument twice, and D36's deletion test exists because of it.
 
-**What is in flight** (2026-08-06). **The mathematics is FROZEN and the only
-funded work is the check-cost campaign `[L3.32-F]`.** D30 ruled it on this
-measurement: the subtree D18 retires costs **0.013 s/line over 26,483 lines**
-while the surviving trunk cost 0.104, and `[T87]` then removed **767 of those
-seconds with six lines** that changed no mathematics. Most of the gap is
-therefore engineering, and writing new chapters onto that base makes every
-future contributor pay a tax that is known to be removable.
+**The two quantitative constraints, and NEITHER BINDS TODAY** (DD5). One on
+lines, one on build seconds, both at the DOUBLE-trophy endpoint, both measured
+against what the internalization route costs for the same two trophies. The
+internalization route has never proved GCH, so neither benchmark exists yet.
+Both thresholds are SUSPENDED behind flags in `dev/ledger.toml`, every checker
+that read them now reports instead of failing, and the re-arm condition is
+`[LJ-2.1]`: measure the internalization double trophy, set both benchmarks,
+then flip the flags. **A suspended threshold is not a relaxed one.** Nothing
+may be argued from the absence of a number.
 
-Live: `[T88]` measuring `SquareLaw`, which is **44 percent of the whole
-remaining tree**; `[T89]` repairing `L.Condensation`'s two open defects and
-testing whether the variable-index shape also cools it; `[T93]` reading the
-trunk for more of `Bridge`'s defect by shape. `[T92]`, the `below-lim` gate,
-was briefed and **stopped before it fired** because it is new mathematics.
+**The quality bar that DOES bind, today** (DD24). Cold build seconds over
+in-fence lines. The delivered internalization AC wing measures **0.007614
+s/line**, from 133.19 s cold over 17,492 lines, and `scripts/check-ratio.py`
+holds the GCH wing to it within a declared tolerance. A ratio is the right
+single bar because a total can be met by writing less of a worse thing and a
+ratio cannot: LESSONS P-m measured a twentyfold spread between content classes
+that no line count reveals, and P-t measured a twentyeightfold spread inside
+one file.
 
-Frozen, and not for any mathematical reason: the bridge's landing, W3, the
-StepInL rewrite, W7's residue. Each resumes when the exit condition in
-`dev/ledger.toml`'s `[[freeze]]` block is met. The register with the per-task
-verdicts is in `dev/JOURNAL.md`, together with the execution record; the
-`[L3.32]` row of §11 carries the ruling, the current status and the pointer.
+**What is delivered and standing.** `src/` is the internalization tree,
+restored to match `main`: **75 masters, 17,492 non-blank in-fence lines,
+133.19 s cold, exit 0**. It proves `L ⊨ ZF` and `L ⊨ ZFC` on the Def tower. The
+tree is `--safe` and postulate-free, with LEM a module parameter rather than a
+postulate (DD9). Quote `python3 scripts/ledger.py --brief` for standing, never
+a number found in a paragraph.
 
-**The ledger.** It is no longer written here, and that is the point. The
-canonical data is [dev/ledger.toml](ledger.toml), explained by
-`dev/ledger.toml`'s header comment, and **standing is measured from the tree by
-`scripts/ledger.py` and written down nowhere**. Quote
-`python3 scripts/ledger.py --brief` for the current standing, endpoint in both
-calibers, and overage against the 25k reference figure. This replaces a
-standing number that lived in prose here, was fixed at `[T25]` as a projection
-rather than a measurement, and was then re-quoted unchecked for nine
-dispatches while the tree moved under it (`[T55]`); D27 and the `make check`
-gate now keep it honest. **Under D26 that overage is a
-recorded measurement and nothing more.** The CAMPAIGN ROUTE is settled: R2',
-with the trophy stated in L. How it is walked is not settled and is decided
-by results, so the face route for W3 is a working direction rather than a
-ruling. The 25k figure is a reference line and a best-effort compression
-target: evidence may move a technique, a number alone moves nothing, and no
-report may reason from an overage to a change of route. Line calibers
-and the projection discipline are defined in §6.2.
+**What is in flight.** `[LJ-0.1]` returned 30 defects and its repair is under
+way. `[LJ-0.2]`, the sufficiency audit, is live. Phase 1 (`[LJ-1.1]` to
+`[LJ-1.9]`) then proves GCH on the internalization route with NO prose, to
+measure what a GCH wing costs. Phase 2 sets the benchmarks. Phase 3 builds the
+two towers and the bridge and lands both trophies.
 
-**The narrative frame.** The `[L6]` row of the archived route tree
-(`dev/memos/route-tree.md`) declares the terminus: set-theoretic
-geology and inner model theory meeting at the bedrock, with `L is a bedrock` as
-the second trophy. Every asset is valued against BOTH trophies from that
-section onward.
+**Mathematical prose is FROZEN until both trophies land** (DD23). This is not
+the retired check-cost freeze, which is closed. It is narrower and simpler: the
+code goes first, the prose phase opens after.
 
-**The two standing disciplines** (owner rulings, co-equal, 2026-08-04, recorded
-as D16 and D17 in §3): route decisions ignore sunk cost, and retirement is
-planned from the rewrite side rather than the survivor side.
+**FOUR ARCHIVES, and surveying them is a brief section rather than a hope**
+(DD19). `archive/` holds retired code, with `archive/rud-route/` holding the 72
+files of the retired route; `archive/dev/STATUS-archived.md` holds the 96 goal rows of
+the internalization route; `archive/dev/TASKS-archived.md` holds what each of 264
+dispatches found; `archive/dev/JOURNAL-archived.md` holds why; and
+`archive/dev/DECISIONS-archived.md` holds the rulings that route ran on. Every brief
+names what may bear on its task, and every return names what it used, at
+`file:line`. **`dev/LESSONS.md` is NOT archived and still binds.**
 
-**Retired code is archived, never deleted, starting now** (D20, superseding
-D14). The archive is `archive/` at the repository root, OUTSIDE `src/`, so
-every gate is structurally blind to it and D2's postulate-free `--safe` claim
+**Retired code is archived, never deleted.** The archive sits OUTSIDE `src/`,
+so every gate is structurally blind to it and the postulate-free `--safe` claim
 stays literally true of the whole checked tree. Archived files are frozen and
-nothing imports across the boundary; `dev/ARCHIVE.md` records for each module
-what it is, why it went, the commit where it was last green, and what would
-make it worth consulting again. The infrastructure is built at the first
-archival, which is `[L3.32]`'s retirement surgery.
+nothing imports across the boundary.
 
-**The closing sequence is already ruled**, and it is NOT the order the L4 rows
-suggest: endpoint, then `[L7]` (archive `main`, promote the working branch, and
-complete the archive), then `[L8]` (D21: a foundation refactor on the
-post-archival tree, a line-by-line polish over the whole tree, and **a report
-that GATES the prose phase**, where the owner adds further code-shaping work),
-and only after that gate does `[L4]`'s whole-book harmonization open.
+**The closing sequence.** `[L3]` and its 59 children are superseded wholesale
+by the `LJ` series. `[L4]` through `[L8]` survive because they are
+route-neutral, and none of them opens until both trophies land: endpoint, then
+`[L7]`'s archival promotion, then `[L8]`'s consolidation and its gate, and only
+after that gate does `[L4]`'s whole-book harmonization open.
 
 ## 1. The theorem, stated honestly (DD1)
 
@@ -159,7 +142,7 @@ Assumption budget of the source proof, to be preserved or improved:
 The port-era survey of the source repository and its measured cost anatomy moved to [dev/memos/source-material-survey.md](memos/source-material-survey.md) ([L3.32-T113]). Its measurements remain a calibration anchor for pricing (§6.2) and for the simplification history (archived §10). Read it when a recon prices a lever or quotes a source-scale figure; the live plan is §0 and the goal registry is §11.
 
 ## 3. Ratified decisions
-**The `DD` series, rebuilt 2026-08-09 on the two-tower bridge ruling and CONSOLIDATED the same day.** The owner ruled that the whole `D` series be archived and the list rebuilt, keeping only what does not contradict the new route and what is useful to it. **The retired `D` series lives in `dev/DECISIONS-archived.md`, unedited**, and `scripts/check-rule-ids.py` resolves `D` citations against it, so every old citation still means what it meant. **A number is never reused, in either series.**
+**The `DD` series, rebuilt 2026-08-09 on the two-tower bridge ruling and CONSOLIDATED the same day.** The owner ruled that the whole `D` series be archived and the list rebuilt, keeping only what does not contradict the new route and what is useful to it. **The retired `D` series lives in `archive/dev/DECISIONS-archived.md`, unedited**, and `scripts/check-rule-ids.py` resolves `D` citations against it, so every old citation still means what it meant. **A number is never reused, in either series.**
 
 **Consolidated and revoked codes.** The first cut ran to 25 rows and the owner ruled it down under 20 by merging like with like. **DD3** merged into DD2, **DD6** into DD5, **DD10** into DD9 and DD11, **DD12** and **DD14** into DD13, **DD16** into DD15, **DD20** and **DD21** into DD19, **DD25** into DD24, and the old DD18 content into DD19, freeing DD18 for the archive-survey mechanism. **DD7 is REVOKED outright**, not merged: lines are no longer a hard constraint in their own right, so the two-caliber rule it carried is gone and a projection is now ONE best-effort figure with its basis named, which lives in DD8. These codes still resolve, so a commit message or brief that cites one is not broken. **No pure pointers.** Every row states its own minimum content; a rule you must open another file to read is a rule with a broken home, which DD19 forbids.
 
@@ -172,10 +155,10 @@ The port-era survey of the source repository and its measured cost anatomy moved
 | DD8 | Every block is gated before it is funded, and an estimate is ONE best-effort number | Verify the load-bearing assumption cheaply before heavy or hard-to-reverse work. A green gate narrows the band and lowers its top. **A build brief that cannot name its widest unmeasured term, and the probe that measures it, is not ready to send.** Nobody commits a probe. **THE TWO-CALIBER RULE IS REVOKED** (owner, 2026-08-09, retiring DD7). Lines are no longer a hard constraint in their own right, so a projection is stated ONCE, as a best-effort figure, with its basis named: probe, delivered comparable, or survey. **Say which**, because the basis is what a reader needs and the second decimal never was. An overage is still recorded plainly and worked down where real compression exists. |
 | DD9 | Classical boundary, and generated proof | No `postulate` anywhere. LEM, and any classical or choice principle, is an explicit parameter; the whole tree is `--safe`. The archive lives outside `src/` precisely so this claim stays literally true of the whole checked tree. A materially worse performance projection escalates to the owner. **GENERATED PROOF**, absorbed from DD10: a macro or reflection layer is admissible only where it is cheaper to READ than what it replaces, never merely cheaper to write, and `dev/STYLE-agda.md` names the forbidden constructs that `lint-agda.py` enforces. |
 | DD11 | Code and prose craft | **NAMING**: a name says what the thing IS, not how it was built; an implicit nobody can infer is dissolved; a name with zero or one consumer is inlined. **PROSE**: no em dash in any language, CJK full-width sentence punctuation with half-width parentheses and `「」` quotes, English only inside ` ```agda ` fences, one master `.lagda.md` per module with the `<!--en--> <!--zh--> <!--ja-->` marker grammar. `scripts/lint-prose.py` and `weave-i18n.py` enforce most of this and `dev/STYLE-i18n.md` is the canonical statement. Absorbs DD10's craft half. |
-| DD13 | Retirement is planned from the rewrite side, sunk cost decides nothing, and nothing is deleted | A consumer does not prove that a chapter must stay. **First price the ideal form of the content, written fresh today. Then compare.** "We already paid for it" never decides the question, in either direction, and DD2 is itself an instance: the route changed after a year of work. DD4 now asks the same question of every existing chapter, since content that cannot be shared may be cheaper rewritten than adapted. **ARCHIVE, NEVER DELETE**, absorbed from DD14: retired code goes to `archive/` at the repository root, outside `src/`, so every gate is blind to it by structure; archived files are frozen and nothing imports across the boundary; `dev/ARCHIVE.md` records what each module is, why it left, where it was last green, what it did right from measurement rather than praise, and what would make it worth a second look. This also governs `dev/DECISIONS-archived.md`, `dev/TASKS-archived.md` and `dev/JOURNAL-archived.md`. Absorbs DD12 and DD14. |
+| DD13 | Retirement is planned from the rewrite side, sunk cost decides nothing, and nothing is deleted | A consumer does not prove that a chapter must stay. **First price the ideal form of the content, written fresh today. Then compare.** "We already paid for it" never decides the question, in either direction, and DD2 is itself an instance: the route changed after a year of work. DD4 now asks the same question of every existing chapter, since content that cannot be shared may be cheaper rewritten than adapted. **ARCHIVE, NEVER DELETE**, absorbed from DD14: retired code goes to `archive/` at the repository root, outside `src/`, so every gate is blind to it by structure; archived files are frozen and nothing imports across the boundary; `dev/ARCHIVE.md` records what each module is, why it left, where it was last green, what it did right from measurement rather than praise, and what would make it worth a second look. This also governs `archive/dev/DECISIONS-archived.md`, `archive/dev/TASKS-archived.md` and `archive/dev/JOURNAL-archived.md`. Absorbs DD12 and DD14. |
 | DD15 | Measurement discipline: re-measure at every return, and never in the foreground | The ledger is re-measured at every return that could move it, and no standing figure is ever quoted from a paragraph. **A full cold typecheck runs in the BACKGROUND, never in the foreground**, absorbed from DD16: it costs minutes to tens of minutes and must not block a session. DD5's time constraint makes the measurement more load-bearing, not less, so the protocol is fixed: interface cache moved aside, single process, quiet machine, `/usr/bin/time -p`, and the figure recorded with its protocol beside it. Absorbs DD16. |
 | DD17 | **The standing dispatch order: slots stay full until BOTH trophies are proved inside both constraints, and every dispatch is codex unless a named exception applies** | Amended 2026-08-09 from an AC-only terminus. An idle agent slot is a defect: a slot stays empty only when a real block stops every remaining task, and an audit is not a reason to leave one idle. **THE TIER, restored 2026-08-09 after the D37 consolidation dropped it.** **Codex is the default for every dispatch.** An in-harness Opus subagent is admissible in exactly two cases: the owner names it for THAT task, because a past override never carries forward; or the orchestrator judges the task very-very-heavy, meaning whole-campaign synthesis or wall-class mathematics beyond measured scale. Ordinary recons, probes, audits, reviews, polish passes and implementation batches are codex work. Enforcement is the brief header: `tier: codex (default)` needs no justification, `tier: opus` must name its exception, and **if that sentence will not write, the tier is codex**. **THE EMERGENCY BREAKTHROUGH TIER.** When a codex return does NOT do its task well AND the point is a critical breakthrough, the orchestrator may re-dispatch to Fable 5 at maximum effort without asking. BOTH conditions bind and the second is the scarce one: a critical breakthrough is a point where the loop cannot advance, so a gate whose verdict blocks the next funded build, a wall no measured cure passes, or a refutation that would re-price the route. Ordinary slowness or a task worth redoing at the same tier is NOT one. **A stop, a refutation and a RED are GOOD returns and never a trigger**; this campaign's most valuable results came back as REDs. Each use names its trigger in the brief, records the escalation in the task index row, and reports what the higher tier found that the first return missed, including when the answer is nothing. Operational form: `dev/ORCHESTRATION.md` sections 1 and 2. |
-| DD18 | **THE ARCHIVE SURVEY is a section of the brief and of the return, not a hope.** | **Ruled 2026-08-09 by the owner as a MECHANISM.** Before a brief is sent it carries an **ARCHIVE** section listing what may bear on the task in each archive: `archive/` for retired code, with `archive/rud-route/` holding the retired route's 72 files and `dev/ARCHIVE.md` describing modules retired before it; `dev/TASKS-archived.md` for what each of 264 earlier dispatches FOUND; `dev/JOURNAL-archived.md` for WHY; and `dev/DECISIONS-archived.md` for the rulings that route ran on. **A return carries an ARCHIVE USED section** naming what it actually read and what it took from each item, at `file:line`. "I looked at the archive" is not a return, and a brief whose archive section is empty must say why. `dev/LESSONS.md` is NOT archived and still binds, cited the usual way through `scripts/rules.py`. **A port is priced against a fresh write, never assumed** (DD13), and P-l holds: a measured cure does not transfer by analogy. **ENFORCEMENT IS REVIEW ONLY.** Nothing mechanical reads a brief, so the orchestrator refuses a return whose ARCHIVE USED section is missing. A row that claimed a checker it does not have would be worse than this one. |
+| DD18 | **THE ARCHIVE SURVEY is a section of the brief and of the return, not a hope.** | **Ruled 2026-08-09 by the owner as a MECHANISM.** Before a brief is sent it carries an **ARCHIVE** section listing what may bear on the task in each archive: `archive/` for retired code, with `archive/rud-route/` holding the retired route's 72 files and `dev/ARCHIVE.md` describing modules retired before it; `archive/dev/TASKS-archived.md` for what each of 264 earlier dispatches FOUND; `archive/dev/JOURNAL-archived.md` for WHY; and `archive/dev/DECISIONS-archived.md` for the rulings that route ran on. **A return carries an ARCHIVE USED section** naming what it actually read and what it took from each item, at `file:line`. "I looked at the archive" is not a return, and a brief whose archive section is empty must say why. `dev/LESSONS.md` is NOT archived and still binds, cited the usual way through `scripts/rules.py`. **A port is priced against a fresh write, never assumed** (DD13), and P-l holds: a measured cure does not transfer by analogy. **ENFORCEMENT IS REVIEW ONLY.** Nothing mechanical reads a brief, so the orchestrator refuses a return whose ARCHIVE USED section is missing. A row that claimed a checker it does not have would be worse than this one. |
 | DD19 | Governance: one home per rule, goals registered before they start, and two guarded surfaces | **ONE HOME.** Every rule lives in exactly one canonical place, chosen by who enforces it, and a rule that no machine enforces must NAME its enforcement point: a gate, a brief section, a review step. A rule with no enforcement point is a wish. Nothing is canonical twice. **GOALS**, absorbed from DD18's old content: a ruling is a PLAN row and an episode is a JOURNAL entry; every dispatch is registered in the task index BEFORE it starts, one row per code, 200 characters, enforced by `scripts/check-task-index.py`; a ruling may be revised, and a revision is recorded rather than a row being rewritten. **TWO GUARDED SURFACES.** `AGENTS.md` takes no edit without the owner's ruling on the diff and a dated `AGENTS-diff-approved:` trailer, which `scripts/check-agents-guard.py` refuses to go without. `dev/glossary.toml` takes no entry chosen by an agent: a term it lacks goes through the two-agent pipeline, and the pipeline names its tiers: **arm 1 is codex**, which searches the literature for each rendering's provenance and marks every guess where the literature is silent, and **arm 2 is opus, adversarial**, which verifies the sources and attacks the collisions and PASSes or FAILs per term. A PASS lands the entry without the owner's review and the landing commit cites both; a FAIL, or a genuine fork, escalates that term and only that term. The owner's veto always stands. Absorbs the old DD18, DD20 and DD21. |
 | DD22 | Licensing | Ported code enters `src/` under CC BY-NC-SA 4.0 via the existing `REUSE.toml` carve-out; everything else inherits AGPL-3.0. Three buckets, declared centrally, with no in-file `SPDX-*` headers. `reuse lint` enforces it. |
 | DD23 | **NO MATHEMATICAL PROSE until both trophies land. The prose phase comes AFTER.** | **Ruled 2026-08-09 by the owner.** Until `L ⊨ AC` and `L ⊨ GCH` are both proved on the two-tower bridge inside DD5's constraints, write NO mathematical prose: no chapter narrative, no trilingual exposition of the mathematics, no reader-facing explanation of a construction. Code and its own comments only. **The prose phase opens when the double trophy lands, and not before.** This is not a licence to write badly: DD11 still binds, and so does ASD-STE100 for every brief, report and message, which is working text rather than mathematical prose. **The reason is DD4.** Prose written against an architecture that reuse has not settled is prose written twice, and the retired route paid that bill. **What this does NOT suspend**: the marker grammar where prose already exists, `docs/`, and `dev/JOURNAL.md`, which is a record and not exposition. |
@@ -309,7 +292,7 @@ One row per goal code; update the row in the same commit that changes the
 status (§6.0 rule 6). Dispatched-task codes are indexed separately below,
 one row per code (§6.0 rules 7 and 8). Bookkeeping lines follow the table.
 
-**COMPRESSED 2026-08-09, and the full table is `dev/STATUS-archived.md`.** It
+**COMPRESSED 2026-08-09, and the full table is `archive/dev/STATUS-archived.md`.** It
 held 96 rows of a route that is retired. A live screen that carries a dead
 route's whole history stops being read. So a DONE goal keeps its top-level row
 only, `[L3]` keeps the six rows that were its route switches, and every status
@@ -332,7 +315,7 @@ and `[L8.2]` is the gate that `[L4.1]` waits on.
 | L0 | Legislation (standing track) | **DONE.** Five children: STYLE-agda, the first glossary batch, the LEM spike, the import linter, the two-catalog doctrine. All landed 2026-07-16 to 07-25 |
 | L1 | Root and trunk skeleton | **DONE 2026-07-18**, ten children. Base, FOL, ZF, V and `L.Constructible` ported; Landmarks and the `Everything` reading order ruled the same day |
 | L2 | Axiom branches | **DONE 2026-07-31**, five children. Basic, Infinity, Separation and Replacement, Power at 79 lines without Condensation, then `[L2.4]`: **the Frontier is empty and deleted** |
-| L3 | Technical layer | **SUPERSEDED WHOLESALE 2026-08-09 by the `LJ` series** (DD2). Fifty-nine children ran here, and the six rows below are the route switches among them. Every child, with its full status text, is in `dev/STATUS-archived.md` |
+| L3 | Technical layer | **SUPERSEDED WHOLESALE 2026-08-09 by the `LJ` series** (DD2). Fifty-nine children ran here, and the six rows below are the route switches among them. Every child, with its full status text, is in `archive/dev/STATUS-archived.md` |
 | L3.0 | Internalization theorem for L-recursion | **DONE 2026-07-28**, 99 lines, verdict green. This is the route the `LJ` series now measures against: `src/` today is its tree |
 | L3.29 | AC by the operations calculus (route C), then the B pivot | **SUPERSEDED 2026-08-02.** The first switch. Route C's operations calculus was delivered, then the kinded-closure pivot on top of it, and the `[L3.30]` re-architecture replaced both |
 | L3.30 | The rud re-architecture (exploratory) | **CLOSED 2026-08-02, ADOPTED IN FULL.** The second switch. Posed completion-state-blind, it priced the routes and recommended the rudimentary-function trunk |
@@ -374,7 +357,7 @@ measures what phase 1 built, and phase 3's constraints are the numbers phase
 row says which. The verdict cell is a few words; the detail lives in the named report,
 `dev/JOURNAL.md`, the deliverable or the brief.
 
-**The retired route's 264 rows are `dev/TASKS-archived.md`, unedited**, under
+**The retired route's 264 rows are `archive/dev/TASKS-archived.md`, unedited**, under
 the `L3.32-T` series. Both series resolve and neither reuses a number.
 `scripts/check-task-index.py` enforces one row per code and the 200-character
 cap.
@@ -386,8 +369,8 @@ the archived task rows and the lessons that may bear on the task; a report
 carries an ARCHIVE USED section naming what it actually read and what it took
 from each. The retired route cost a year of measurement and the whole of it
 is still on disk: `archive/` for the code, `dev/ARCHIVE.md` for why each
-module left and what it did right, `dev/TASKS-archived.md` for what every
-dispatch found, `dev/DECISIONS-archived.md` for the rulings, and
+module left and what it did right, `archive/dev/TASKS-archived.md` for what every
+dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 `dev/LESSONS.md`, which is NOT archived and still binds.
 
 | Code | Task | Verdict | Detail |
@@ -395,25 +378,25 @@ dispatch found, `dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.1 | Consistency audit of the edits since the branch point | RETURNED | 30 defects, 6 load-bearing: RED gate, dashboard crash, three half-applied suspensions. Repair under way |
 | LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | dispatched | LJ-0.1's complement. Not what contradicts, but what section must still change for the switch to execute |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | planned | Textbook plus archive survey. Deliver a block plan, one best-effort projection with its basis, the widest unmeasured term |
-| LJ-1.2 | Gate: probe the widest unmeasured term T1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
+| LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
 | LJ-1.4 | Build: the Mostowski collapse | planned | ARCHIVE FIRST: archive/rud-route/src/V/Collapse.lagda.md, 406 delivered lines. Price port against fresh write (DD13) |
 | LJ-1.5 | Build: the condensation lemma | planned | The hull collapses to an L stage. The load-bearing step of the whole wing |
-| LJ-1.6 | Build: cardinality of a stage, |L a| = |a| for infinite a | planned | Independent of T3 to T5, so it runs in parallel with them |
-| LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus T6. Needs T5 and T6 |
-| LJ-1.8 | Build: assemble L models GCH | planned | The trophy. Needs T7 |
-| LJ-1.9 | Quality audit: seconds per line against the internalization AC wing | planned | DD24 is the bar, DD25 the only one. check-ratio.py --cold is the audit. Read P-m, P-q, P-t first |
+| LJ-1.6 | Build: cardinality of a stage, |L a| = |a| for infinite a | planned | ARCHIVE FIRST: archive/rud-route holds L/Cardinal*.lagda.md and FOL/Count.lagda.md. Parallel to LJ-1.3 to LJ-1.5 |
+| LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
+| LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
+| LJ-1.9 | Quality audit: seconds per line against the internalization AC wing | planned | DD24 is the bar and the only one. check-ratio.py is the audit, cold by default. Read P-m, P-q, P-t first |
 | LJ-2.1 | MEASURE the internalization double trophy, lines and cold seconds | planned | Owner task 6. Sets BOTH DD5 benchmarks and re-arms every threshold. Quiet machine, C-12 |
 | LJ-2.2 | Re-arm the thresholds and repair the ledger's remaining rows | planned | Flip thresholds_suspended, write both benchmarks in, rebuild the stale rud-route projection rows |
-| LJ-3.1 | Recon: the two-tower bridge architecture for MAXIMUM shared code | planned | DD4 is the objective and this task decides it. Textbook route, archive survey, and a reuse map |
-| LJ-3.2 | Adversarial review of T12's reuse map | planned | The critic is never the author. A surviving reuse claim is the architecture; a failing one sends T12 back |
+| LJ-3.1 | Recon: the two-tower architecture for MAXIMUM shared code | planned | DD4's objective, decided here. ALSO delivers section 4's owed skeleton. Textbook route, archive survey, reuse map |
+| LJ-3.2 | Adversarial review of LJ-3.1's reuse map | planned | The critic is never the author. A surviving reuse claim is the architecture; a failing one sends LJ-3.1 back |
 | LJ-3.3 | Gate: probe the widest unmeasured term in the ruled architecture | planned | DD8. Both constraints are relative now, so an ungated term is a live risk to the endpoint |
 | LJ-3.4 | Build: the J tower through rud | planned | ARCHIVE FIRST: the rud route delivered sixteen operations and a Story layer. Price port against fresh write per module |
-| LJ-3.5 | Build: the two-directional bridge, L to J and J to L | planned | DD3 keeps BOTH directions. ARCHIVE: archive/rud-route/src/L/Rud/Bridge.lagda.md |
-| LJ-3.6 | Build: L models AC on the bridge | planned | The first trophy on the new route. Needs T15 and T16 |
-| LJ-3.7 | Build: L models GCH on the bridge, reusing what T12 mapped | planned | Second trophy. The reuse map is the deliverable's test, not just its plan |
+| LJ-3.5 | Build: the two-directional bridge, L to J and J to L | planned | DD2 keeps BOTH directions. ARCHIVE: archive/rud-route/src/L/Rud/Bridge.lagda.md |
+| LJ-3.6 | Build: L models AC on the bridge | planned | The first trophy on the new route. Needs LJ-3.4 and LJ-3.5 |
+| LJ-3.7 | Build: L models GCH on the bridge, reusing what LJ-3.1 mapped | planned | Second trophy. The reuse map is the deliverable's test, not just its plan |
 | LJ-3.8 | MEASURE the double trophy against both DD5 benchmarks | planned | Lines and cold seconds. The pass-or-fail of the whole route |
-| LJ-3.9 | The prose phase opens | planned | DD23. Only after T19 passes. Chapter narrative and the trilingual exposition, nothing before |
+| LJ-3.9 | The prose phase opens | planned | DD23. Only after LJ-3.8 passes. Chapter narrative and the trilingual exposition, nothing before |
 
 ### Bookkeeping
 

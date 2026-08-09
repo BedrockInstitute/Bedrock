@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard dashboard dashboard-stale gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger ratio probes tree reuse ruleids devdocs taskindex agentsguard
+check: venv-check typecheck markers lint lint-agda glossary ledger probes tree reuse ruleids devdocs taskindex agentsguard
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -63,10 +63,18 @@ glossary:
 ledger:
 	$(PY) scripts/ledger.py --check
 
-# DD25 makes the seconds-per-line ratio the ONLY threshold on the GCH wing.
-# Staged: it reports and exits 0 until the wing has a module, so it is safe
-# here from today. It measures warm in the gate; --cold is the honest figure
-# and belongs in the audit, not in every commit.
+# DD24 makes the seconds-per-line ratio the ONLY threshold on the GCH wing.
+#
+# IT IS NOT IN `make check`, and that is deliberate. It runs Agda, and
+# dev/ORCHESTRATION.md forbids a typecheck in the commit gate: the gate must
+# stay cheap, and this tool fails closed whenever another agda process is
+# live, so in the gate it would turn a busy machine into a red commit. It is
+# an on-demand MEASUREMENT, in the same class as scripts/deletion-test.py.
+#
+# IT MEASURES COLD, because the baseline it compares against is cold. A warm
+# run against a cold baseline is not a looser check, it is a WRONG one: warm
+# is several times faster, so a wing far over the bar reads as under it.
+# [LJ-0.1] caught the gate wired warm.
 ratio:
 	$(PY) scripts/check-ratio.py --check
 
@@ -96,18 +104,10 @@ agentsguard:
 devdocs:
 	$(PY) scripts/check-dev-docs.py
 
-# The owner's dashboard, GENERATED from the canonical data (dev/ledger.toml,
-# dev/PLAN.md, _build/briefs/*.md). Never hand-maintained:
-# rebuild with this target on every sub-agent return that touched a source.
-# The page is self-contained (inline CSS, no network). scripts/check-dashboard.py
-# reports staleness and is informational only, never a gate: _build/ is
-# git-ignored, so a fresh clone has no dashboard and a gate that failed on a
-# missing generated file would block every new clone.
-dashboard:
-	$(PY) scripts/dashboard.py --out _build/dashboard.html
-
-dashboard-stale:
-	$(PY) scripts/check-dashboard.py
+# The generated dashboard was ABOLISHED by the owner on 2026-08-09. Its three
+# scripts are frozen in archive/tooling/, with what they did right and the one
+# thing they got wrong. The canonical figures are unchanged and are read with
+# `python3 scripts/ledger.py --brief`.
 
 reuse:
 	$(REUSE) lint

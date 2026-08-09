@@ -34,7 +34,7 @@
 #
 # Moved here 2026-08-06 from dev/LEDGER.md, which is deleted. That document was
 # 44 percent a generated rendering of this file and the rest was prose for the
-# owner, who now reads the dashboard (`make dashboard`). [L3.32-T115] found
+# owner, who reads `scripts/ledger.py --brief`. [L3.32-T115] found
 # exactly three passages in it that had no other home; they are below, because
 # a rule with no home is a rule that stops being followed.
 #
@@ -101,11 +101,11 @@ retire_suspended = true
 
 # THE TROPHY SPLIT IS SUSPENDED TOO, same day and same reason. Its roots name
 # rud-route modules that task 4 removed from src/, and its gch side describes
-# a wing that does not exist yet: LJ1-T8 builds it. Seventeen defects fired
+# a wing that does not exist yet: LJ-1.8 builds it. Seventeen defects fired
 # for files the live plan never expected to be there. The declarations are
 # KEPT, because they record how the retired route partitioned its trophies
-# and LJ1-T12's reuse map has to beat that partition to be worth anything.
-# LJ1-T11 rebuilds the split for the new route.
+# and LJ-3.1's reuse map has to beat that partition to be worth anything.
+# LJ-2.1 rebuilds the split for the new route.
 trophy_split_suspended = true
 
 # AND THE [[remaining]] ROWS ARE STALE, flagged the same day and NOT yet
@@ -2301,7 +2301,7 @@ ac_baseline_provenance = "MEASURED 2026-08-09: 133.19 s real (131.45 user, 0.86 
 # 0.0076 s/line sits BELOW P-m's parameterized band of 0.010 to 0.013, so the
 # delivered internalization tree is not merely respectable, it is the
 # cheapest content class this project has measured at scale. That makes DD24
-# a TIGHT bar rather than a formality, and LJ1-T1 should plan for it.
+# a TIGHT bar rather than a formality, and LJ-1.1 should plan for it.
 #
 # THE COMPARISON THAT MATTERS FOR DD5. The retired rud tree measured 700.42 s
 # over 21,893 lines, which is 0.0320 s/line, or 4.20x this figure. The two
@@ -2322,7 +2322,7 @@ ac_baseline_provenance = "MEASURED 2026-08-09: 133.19 s real (131.45 user, 0.86 
 # number is the orchestrator's judgment and the owner may overrule it.
 tolerance = 1.15
 
-# THE DECLARED WING. Empty until LJ1-T3 lands its first module. check-ratio.py
+# THE DECLARED WING. Empty until LJ-1.3 lands its first module. check-ratio.py
 # reports this fact and exits 0 while it is empty, so the tool is safe in the
 # commit gate from today. Each GCH module is added here as it lands.
 gch_wing = []
