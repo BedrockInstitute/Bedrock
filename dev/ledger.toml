@@ -1647,6 +1647,33 @@ blockpowlim_seconds_measured = "15.2-20.0 s naive, fits at every caliber; [T211]
 # hint in the NEGATIVE: the exploitable content of the P-m contrast is fewer
 # instantiations, not re-expressing code as object language.
 t250_lever = "recover the witness from a strengthened induction: 285-695 naive, UNGATED, two gates named"
+# THE SECONDS LANDING WITH EVERY CORRECTION APPLIED, assembled by the
+# orchestrator 2026-08-09 against the owner's new 600 s gate. Each line is
+# measured except the last, which is [T250]'s UNGATED lever.
+#
+#   tree at block A complete           800.8 - 808.8
+#   minus the ruled archival           659.8 - 667.8   (-140.97, [T243])
+#   plus blockPowLim                   675.0 - 687.8   (+15.2-20.0, [T249])
+#   plus [T220]'s four terms           704.7 - 717.5   (+29.69)
+#   = landing WITHOUT the lever        704.7 - 717.5   OVER by 105-118
+#   minus [T250]'s lever, UNGATED      624.7 - 667.5   OVER by 25-68
+#
+# SO THE RESIDUAL AFTER EVERYTHING MEASURED OR PROPOSED IS 25 TO 68 SECONDS.
+# At the measured 0.297 s per line that is 85 to 230 lines, which sits BELOW
+# [T250]'s 500-line floor: the third campaign was told to ignore levers that
+# small and did not look there.
+#
+# THAT SPACE IS GENUINELY UNSEARCHED WITH TODAY'S KNOWLEDGE. [T213] searched it
+# on 2026-08-08 and returned five candidates worth minus 20 net, but that was
+# before P-r, P-s, the 0.297 rate and [T250]'s recover-rather-than-carry
+# principle existed. A small-lever pass informed by those is a different search.
+#
+# IT IS DELIBERATELY NOT DISPATCHED YET, and the reason is sequencing rather
+# than budget: if Gate 1 ([T251]) returns RED on the Sigma motive, the lever
+# dies whole and the residual is 105-118 s again, not 25-68. Hunting the
+# residual before the main lever is decided would price against a number that
+# may not exist.
+seconds_residual = "25-68 s after everything measured or proposed; 85-230 lines; waits on [T251]"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
