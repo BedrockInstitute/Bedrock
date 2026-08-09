@@ -2276,3 +2276,35 @@ authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174
 module = "src/V/Collapse.lagda.md"
 wing_consumer = "gch-w5, the collapse and condensation row; no surviving importer outside the catalog"
 authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174 section 1.4"
+
+
+# ---------------------------------------------------------------------------
+# DD24's QUALITY BAR and DD25's single threshold, added 2026-08-09.
+# The internalization GCH wing carries this ratio and nothing else: no line
+# cap, no seconds cap. scripts/check-ratio.py reads this table.
+[ratio]
+# THE BASELINE IS A MEASUREMENT, and the tool refuses to run without it.
+# Protocol: interface cache moved aside, `make typecheck` at the exported
+# GHCRTS default, Agda 2.8.0, single process, nothing else running,
+# /usr/bin/time -p. The same protocol as [timing].measured_wall, so the two
+# figures are comparable.
+ac_baseline_seconds_per_line = 0.0
+ac_baseline_provenance = "PENDING: the cold run is in flight as of 2026-08-09"
+
+# THE TOLERANCE IS A CHOICE, NOT A MEASUREMENT, and it is flagged as one.
+# 1.15 says the GCH wing may run fifteen percent slower per line than the
+# delivered AC wing before the gate speaks. The reasoning: P-m measured the
+# gap BETWEEN content classes at roughly twentyfold, so anything under about
+# 2x still catches a class change, and the owner asked for the same LEVEL of
+# quality rather than a ceiling that merely rules out disaster. 1.15 is the
+# tightest figure that does not fail on ordinary module-to-module variation.
+# WHAT WOULD MAKE IT A MEASUREMENT: time the delivered AC wing module by
+# module and set the tolerance from its own observed spread. That costs a
+# per-module pass over 75 masters and nobody has paid for it. Until then this
+# number is the orchestrator's judgment and the owner may overrule it.
+tolerance = 1.15
+
+# THE DECLARED WING. Empty until LJ1-T3 lands its first module. check-ratio.py
+# reports this fact and exits 0 while it is empty, so the tool is safe in the
+# commit gate from today. Each GCH module is added here as it lands.
+gch_wing = []
