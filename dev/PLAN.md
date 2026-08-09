@@ -648,7 +648,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T249 | Time the covering code predicate: T211's named gate | GO: 0.0113 s per line whole, not 0.0603 from a slice; the row is 15.2-20.0 s and FITS at every ca | `_build/l3.32-t249-report.md` |
 | L3.32-T250 | The third compression campaign: 500-line levers, from first principles | ONE lever, 285-695 naive UNGATED: recover the witness from a strengthened induct | `_build/l3.32-t250-math.md` |
 | L3.32-T251 | Gate 1: does the strengthened induction actually recover the witness? | STOPPED at 304 min by the orchestrator: 0 typechecks in 67 min; resumed as T251 | `_build/l3.32-t251-report.md` |
-| L3.32-T251r | Gate 1 resumed: write the negative result first, measure second | QUEUED 2026-08-09 behind T261; keeps T251's session and its 384-line probe | `_build/l3.32-t251-report.md` |
+| L3.32-T251r | Gate 1 resumed: write the negative result first, measure second | FROZEN 2026-08-09 by the owner before it launched; its queue waiter was stopped, ses | `_build/l3.32-t251-report.md` |
 | L3.32-T252 | The naturalness review of today's four settled masters | StepStory NOT NATURAL, announces one subject and holds two; the other three stand; six repairs | `_build/l3.32-t252-report.md` |
 | L3.32-T253 | The naturalness repair: prose only, four masters | 4 of 4 applied, prose only, every code fence byte-identical; the orchestrator rewrote the two stale  | `_build/l3.32-t253-report.md` |
 | L3.32-T254 | The closure boundary: gch_assign, and a natural split that follows it | ZERO legal gch_assign, ZERO natural splits; the 2,100-2,700 premise is stale at | `_build/l3.32-t254-report.md` |
@@ -659,7 +659,7 @@ enforces one row per code and the 200-character cap (§6.0 rule 8).
 | L3.32-T259 | Adversarial: is the rud-side crossing really refuted, or foreclosed by engineering? | VIABLE, ungated: re-target the description to the S-tower; T130 | `_build/l3.32-t259-crossing.md` |
 | L3.32-T260 | Settle by probe: does the GCH wing actually consume the bridge rows? | NO, D18 wins: the row's sentence has zero support in its own evidence; the gap S | `_build/l3.32-t260-bridge.md` |
 | L3.32-T261 | Run B's probe, and adversarially review B's own conclusion | QUEUED 2026-08-09 for an Agda slot; T260's answer is a reading and the owner asked for it  | `_build/l3.32-t261-report.md` |
-| L3.32-T262 | Q-lim's general transfer: the other half of bridge-landing | QUEUED 2026-08-09; D38 line one's critical path; T199 FEASIBLE, T204 GREEN, one classical  | `_build/l3.32-t262-report.md` |
+| L3.32-T262 | Q-lim's general transfer: the other half of bridge-landing | FROZEN 2026-08-09 by the owner before it launched; the brief stands and needs no rework to | `_build/l3.32-t262-report.md` |
 | L3.32-T263 | T259's desk pre-gate: are all sixteen Fof specs Delta-0? | FAIL at the delivered formulas, all sixteen; but a set-level conditional PASS. T259 must write  | `_build/l3.32-t263-fof.md` |
 | L3.32-T264 | The JOURNAL catch-up: T246 to T263 | DISPATCHED 2026-08-09; 18 tasks unrecorded, including four laws, the deletion test PASS and the route comparison | `_build/l3.32-t264-report.md` |
 | L3.32-T196 | Refresh the below-lim design memo to the measured state | DELIVERED, 1,983 to 2,530 words; eight stale claims quoted and refuted with evidence | `_build/l3.32-t196-report.md` |
