@@ -1915,7 +1915,32 @@ route_comparison = "[T257]: internalization 25.5-28.3k vs rud 34.9-39.8k naive; 
 # "reproduce the factorization" and this design changes it, so it needs a
 # ruling amending the D32 revival condition. IF THE OWNER RULES THE CONCLUSION
 # `v = Lset b` ITSELF FIXED, [T130] STANDS IN FULL and ground 2 carries it.
-t259_crossing = "VIABLE, ungated: re-target the description to the S-tower; 0.9-1.8k against 5,047; needs a D32 amendment"
+# [T263] RAN [T259]'s OWN DESK PRE-GATE 2026-08-09: FAIL at the delivered
+# formulas, and the distinction it draws is the finding. NONE of the sixteen
+# operation graphs is Delta-0 as delivered: `graphOf i = eqFrame f2 (memOf i)`
+# and the frame's second conjunct is a universal over the whole domain that no
+# term in scope bounds; the Delta-0 witness has no constructor for it
+# (`src/FOL/LevyHierarchy.lagda.md:47-57`). Nine fail again inside their
+# membership bodies. The delivered chapter says it outright: "Nothing below is
+# Delta-0" (`src/L/Rud/StepGraph.lagda.md:80`).
+#
+# THE FAILURE IS AT THE LEVEL OF FORMULAS, NOT SETS. No operation's SET forces
+# an unbounded quantifier; each has a classical Delta-0 graph. So [T259]'s
+# stop-line, "any unbounded quantifier forced into a graph", is NOT triggered
+# at the set level. This is a clean FAIL of the delivered-formula check and a
+# CONDITIONAL PASS of the set-level one.
+#
+# WHAT IT COSTS [T259]: it cannot fill `Cl` by QUOTING the delivered graphs. It
+# must write SIXTEEN FRESH bounded clauses, needing bounding terms the
+# delivered layer does not provide (F3, F4, F6, F8, F10-F14 need the double
+# union of an argument; F15 needs the slot `A` as a variable) on a
+# parameter-free axis with no constants. Its Sigma-1 claim survives only if
+# those clauses land with Delta-0 certificates and their decodes work there.
+# That work is new and unmeasured.
+#
+# SO THE 0.9-1.8k BAND IS UNRELIABLE. It was priced assuming the graphs could
+# be quoted. Treat it as unpriced until the sixteen fresh clauses are costed.
+t259_crossing = "VIABLE but UNPRICED: [T263] fails the delivered-formula gate; sixteen fresh Delta-0 clauses are owed"
 landing_wall_uncured = "745-813"
 landing_wall_cured = "422-448"
 # [T220] MEASURED THE FOUR HOLES 2026-08-08, in master shape, three CLEAN cold
