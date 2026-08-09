@@ -322,7 +322,11 @@ provenance = "_build/l3.32-t158-report.md; _build/l3.32-t24-report.md section 5;
 id = "W1p"
 trophy = "GCH"
 title = "W1': the condensation crossing's transfers"
-naive_low = 700
+# CORRECTED 2026-08-09 by [T257]: the booked low of 700 was 140 UNDER this
+# row's own cited source, which sums to 840. [T257] used the booked band on
+# both sides of its route comparison, so its figures are unaffected and this
+# repair only removes the inconsistency.
+naive_low = 840
 naive_high = 1720
 calibrated_low = 1900
 calibrated_high = 5000
@@ -407,7 +411,12 @@ provenance = "_build/l3.32-t52-report.md combined row; PLAN register T45 and T52
 # THE AC TROPHY BUDGET (D36, owner-ruled 2026-08-07). The pure-AC closure,
 # measured by the D33 trophy split (base + ac-only + shared, surviving tree,
 # non-blank in-fence lines), must land UNDER this cap. The bar it beats: the
-# internalization route delivered L |= AC at 17,496 lines (measured on main,
+# internalization route delivered L |= AC at 17,492 lines (CORRECTED from 17,496
+# by [T257] 2026-08-09: counted with `scripts/ledger.py:56`'s own regex over
+# `git ls-tree -r --name-only main`, 75 masters, with 608 opening and 608
+# closing fence markers and no variants. [T208] recorded 17,496 for the same
+# tree and called the four-line delta a [T205] finding; 17,492 is right at the
+# PINNED caliber. The difference changes no conclusion. Measured on main,
 # same fence caliber, 2026-08-07), and its probed compression floor was
 # 16,000. `ledger.py --check` FAILS when the MEASURED ac-total reaches the
 # cap; the endpoint projection goes red earlier and blocks nothing (D26).
@@ -624,6 +633,21 @@ gate = "POST-D32 SCOPE, rewritten 2026-08-07 after [T146] found the old field st
 provenance = "_build/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is _build/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
 
 [[remaining]]
+# THREE ARITHMETIC DEFECTS IN THIS ROW, found by [T257] 2026-08-09 and recorded
+# here rather than silently re-banded, because the row SURVIVES all three.
+#   (a) the 711 arm figure is STALE by the 96 lines `L.TowerGraph` now proves;
+#   (b) the sum DOUBLE-COUNTS about 113 lines where whole-file terms overlap
+#       slice terms;
+#   (c) the `klass` field names FIVE figures for a FOUR-term sum.
+# [T257]'s re-sum at the measured caliber is 676 + 1,866 + 2,378 + 127 = 5,047,
+# which lands inside the booked 5,000-5,100, so the band stands and no figure
+# below changes. The defects are disclosed because a reader who checks the
+# klass arithmetic will not be able to make it add, and should know why.
+#
+# [T257] ALSO CONFIRMED WHAT THIS ROW IS FOR: its four terms restate
+# `L.Coding.*` and `L.Hierarchy` content that is byte-stable between `main` and
+# HEAD, so the internalization route owns 5,047 of 5,047 of it. That is the
+# single largest structural difference between the two routes.
 id = "crossing-rebuild"
 trophy = "GCH"
 title = "The internalization rebuilt fresh at the GCH resume: the deferred Build A (D32)"
@@ -909,6 +933,16 @@ id = "ac-rehome"
 trophy = "AC"
 title = "Re-home the choice leg onto the rud-side well-order"
 status = "blocked"
+# [T257] 2026-08-09 FOUND THIS PROSE CONTRADICTS D18's OWN RULING TEXT. The
+# detail below says the wing rides the bridge. D18 says the bridge lands at
+# the WING TAIL as a corollary. [T257]'s reading is that D18 wins, because the
+# import graph agrees with D18 and no obligation agrees with this row: it
+# found no import edge, no wing obligation in [T91]'s Links A to F, and a
+# CIRCULAR citation, Link G citing this ledger while [T203] cites Link G.
+# NOT REPAIRED IN THE PROSE, because it decides whether the wing pays
+# `carried-sequence` and `blockpowlim-instance` at all, worth 4,238-5,218,
+# and that is a ruling rather than a typo. [T257] priced them at ZERO for the
+# wing and declared it as its own weak point.
 detail = "The replacement leg. It rides the bridge onto the delivered producer well-order, so it cannot land before the bridge does. This is the single item between AC-as-proved-today and AC-as-proved-on-surviving-machinery."
 blocked_by = "bridge-landing"
 evidence = "_build/l3.31-lt-report.md H2 and row 10; the choice-rehome row above"
