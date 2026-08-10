@@ -411,9 +411,13 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | CLOSED | 3 blocking gaps and 8 more, all closed. N1's reuse checker refused as a gate, adopted as ledger.py --reuse |
 | LJ-0.3 | Retrospective: was the route change itself the right call | CLOSED | Timing premature, route not refuted. Moved the architecture ruling to LJ-2.5. Two laws admitted, C-28 and C-29 |
 | LJ-0.4 | Compress the internalization AC tree toward about 16.4k | RULED, ready to execute | 16,000 refuted by T205 and T208. Owner set ~16.4k 2026-08-10. Recon done, 8 disjoint blocks |
-| LJ-0.4c | Compression block C: the Unique and Sound clause frames | STOPPED by the orchestrator, reverted | It gutted Sound to 7 lines and Unique to 11, moving 1,354 into a new module for a net of -59 |
-| LJ-0.4e | Compression blocks E and G: traversal share, lex kit | REFUSED BOTH on measurement | E nets +19 against -60 to -120, G about -49 against -40 to -80. Kits built, priced, reverted |
+| LJ-0.4c | Compression block C: the Unique and Sound clause frames | STOPPED, and the BRIEF's share is dominant | LJ-0.8: its band floor sat above the real surface, its stop trigger named seconds only, and it never stated the chapter rule |
+| LJ-0.4e | Compression blocks E and G: traversal share, lex kit | REFUSED BOTH on measurement | E nets +19, G nets +49 (its own table reads 146 to 195; the -49 label was a sign error I repeated) |
 | LJ-0.4b | Compression block B: the existential frame across L/Choice | REFUSED on measurement | Kit costs 43, the cleanest site saves 19. Net +24 measured, about -6 fully wired, against -190 to -340 |
+| LJ-0.4d | Compression block D: the Model arity-generic clause frame | SKIP, refuted by class | LJ-0.8: Model has ZERO repeated 4-line blocks over 1,289 lines. Its in/out pairs are decode content |
+| LJ-0.4f | Compression block F: the recursion-assembly triplication | PROBE FIRST | LJ-0.8: send T208's queued bisect probe. GO needs -60 at flat seconds. Never fund the build unprobed |
+| LJ-0.4h | Compression block H: preamble and shift helpers | FOLD OR DROP | LJ-0.8: never alone, -30 to -60 cannot pay for a dispatch. Fold into F's build if F goes |
+| LJ-0.4s | NEW: within-file dedup sweep at measured sites | planned | LJ-0.8 found it: Unique ~54 raw, Sound ~38, Separation ~30, which no survey named. Net -80 to -140, and no kit to pay for |
 | LJ-0.4a | Compression block A: the dead names, and 𝒟ₒ→isL | DELIVERED -240 | 48 names over 18 masters, 17,492 to 17,252. Kept 3 the plan rides and 5 Everything's prose names. 𝒟ₒ→isL refused |
 | LJ-0.6 | Restore the V.Presentation shim the src/ restore deleted | DONE | +19 in-fence, 76 masters. Cold 132.87 s, exit 0. Unblocks the archived Collapse and Hull ports |
 | LJ-0.5 | RE-MEASURE the DD24 seconds-per-line baseline, once per block | STANDING TASK | Now 132.87 s over 17,271 = 0.007693. Block A's 240 lines bought -0.50 s: compression WORSENS the ratio |
