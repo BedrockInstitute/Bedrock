@@ -175,18 +175,46 @@ content was downloaded and read during this pass (2026-08-02).
     function companion to Jensen's rud theory. Cite-only. (Cited in MB p. 40;
     also in the Freiburg slides.)
 
+## Second-round fetch artifacts (recorded by `[LJ-0.7]`)
+
+20. Devlin, Keith J. "Constructibility." Perspectives in Mathematical Logic,
+    Springer, 1984. Chapter II (the Constructible Universe), fetched as the
+    ABBYY OCR scan `_build/literature/dev2.txt` plus `devlin-ch2.pdf`.
+    Access: open scan (Project Euclid "Perspectives in Logic"). Role: the
+    condensation chapter II.5 and its level-story engine II.2; the sourced
+    GCH-in-L derivation (Theorem 5.6).
+    Consumed by: devlin-II5.md (this task), digest.md (record at
+    `digest.md:513-518`), `[LJ-1.11]`.
+
+21. Jech, Thomas. "Set Theory." 3rd millennium ed., Springer, 2003. Chapter
+    13 (Constructible Sets), fetched as the typed PDF extraction
+    `_build/literature/jech13.txt`. Access: open (institutional PDF hosted by
+    TU Delft). Role: the typed cross-check for Devlin II.5: Goedel's
+    Condensation Lemma 13.17, the adequacy sentence 13.13, the GCH theorem
+    13.20.
+    Consumed by: devlin-II5.md (this task).
+
+22. Devlin, Keith J. "Constructibility." Chapter II, printed pages 78-85,
+    re-OCR'd from `_build/literature/devlin-ch2.pdf` with tesseract during
+    `[LJ-0.7]`. Role: resolving OCR-degraded glyphs in II.5 (5.2's part
+    (iii), 5.5's bound, the 2.2 matrix region).
+    Consumed by: devlin-II5.md (this task).
+
 ## Consumption map (which notes file consumes which source)
 
-| Source | rudimentary-functions.md | j-hierarchy.md | devlin-errata.md | formalizations.md |
-| --- | --- | --- | --- | --- |
-| Mathias-Bowler (1) | x | x | x |  |
-| Weak systems (2) | x |  | x |  |
-| Schindler-Zeman (3) | x | x |  |  |
-| Stanley review (4) |  |  | x (metadata + second-hand) |  |
-| Freiburg slides (5) | x | x |  |  |
-| Phil. Trans. A (6) |  |  |  |  |
-| Paulson (7) |  |  |  | x |
-| Flypitch CPP (8) |  |  |  | x |
-| Flypitch ITP (9) |  |  |  | x |
-| Welch draft (10) | x |  | x |  |
-| MathOverflow (11) |  |  | x |  |
+| Source | rudimentary-functions.md | j-hierarchy.md | devlin-errata.md | formalizations.md | devlin-II5.md |
+| --- | --- | --- | --- | --- | --- |
+| Mathias-Bowler (1) | x | x | x |  |  |
+| Weak systems (2) | x |  | x |  |  |
+| Schindler-Zeman (3) | x | x |  |  |  |
+| Stanley review (4) |  |  | x (metadata + second-hand) |  |  |
+| Freiburg slides (5) | x | x |  |  |  |
+| Phil. Trans. A (6) |  |  |  |  |  |
+| Paulson (7) |  |  |  | x |  |
+| Flypitch CPP (8) |  |  |  | x |  |
+| Flypitch ITP (9) |  |  |  | x |  |
+| Welch draft (10) | x |  | x |  |  |
+| MathOverflow (11) |  |  | x |  |  |
+| Devlin ch. II (20) |  |  |  |  | x |
+| Jech ch. 13 (21) |  |  |  |  | x |
+| Devlin ch. II re-OCR (22) |  |  |  |  | x |
