@@ -2544,7 +2544,23 @@ compression_target_ac_lines = 17000
 # EVERY KIT BLOCK MEASURED NET POSITIVE. Only deletion (A, the dead names) and
 # one local helper (I's Separation) measured negative. That is the campaign's
 # whole result in one line.
-compression_target_state = "AC side is 17,166 on the corrected wing basis, or 17,184 on the basis the 17,000 target was set against; the 18-line difference is V.Presentation moving to the wing and it compresses nothing. Either way the gap is 184 lines, and [LJ-0.4f] is the only lever still open"
+# MET 2026-08-10. AC side 17,273 to 16,995, five lines under the owner's
+# 17,000, measured from HEAD by ledger.py and re-counted by hand against HEAD
+# at every landing. The [ratio] half of the goal is NOT settled by this line:
+# [LJ-0.5] re-measures the DD24 baseline cold, and until it lands the seconds
+# claim rests on per-block figures rather than on a tree measurement.
+#
+# HOW IT WAS REACHED, because the shape of the answer matters more than the
+# number. NINE blocks, EIGHT bands tested. Every KIT block measured net
+# POSITIVE until the last one: B +24, E +19, G +49, F +4. What landed was
+# deletion (A -240, the prose-freed names -59, the citation re-test -34) and
+# exactly ONE kit, [LJ-0.4n] at -104, which took ONE parameter where its
+# refused predecessor took eleven. D-28 records that law.
+#
+# THE ONE SYSTEMATIC ERROR, and it survived four surveys: the savings were
+# priced at the call sites and the KIT was never priced. A kit's lines are paid
+# once; its parameters are paid at every site twice.
+compression_target_state = "MET 2026-08-10: AC 16,995 against the owner's 17,000, five under. Nine blocks, eight bands tested, one kit landed. [LJ-0.5] still owes the cold ratio measurement"
 
 # THE HONEST FIGURE, from [LJ-0.8]'s review 2026-08-10. About 17,000, on the
 # basis of 17,273 minus the three measured-class remainders with F at half
