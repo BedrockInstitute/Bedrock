@@ -418,7 +418,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Step clause has no Delta-0 witness at ANY carrier. Crossing 5.0-5.1k, or 1.0-1.7k by the cone fork |
 | LJ-1.10 | RE-PRICE the crossing after LJ-1.2's NO-GO | RETURNED, a THIRD route | Neither candidate. Port the archived structural story: its Def-step is ⊤̇, so no code or table bound enters |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
-| LJ-1.4 | Build: the Mostowski collapse | planned | ARCHIVE: V/Collapse.lagda.md, PORTABLE at 181 in-fence per LJ-1.1. NEEDS LJ-0.6's V.Presentation. Price port vs fresh (DD13) |
+| LJ-1.4 | Build: the Mostowski collapse | dispatched | ARCHIVE: V/Collapse.lagda.md, PORTABLE at 181 in-fence. LJ-0.6 landed its V.Presentation. Price port vs fresh (DD13) |
 | LJ-1.5 | Build: the condensation lemma, via the archived structural story | planned | LJ-1.10's route C. NOT the delivered description: LJ-1.2 refuted certifying that directly |
 | LJ-1.6 | Build: cardinality of a stage, |L a| = |a| for infinite a | planned | ARCHIVE FIRST: archive/rud-route holds L/Cardinal*.lagda.md and FOL/Count.lagda.md. Parallel to LJ-1.3 to LJ-1.5 |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
