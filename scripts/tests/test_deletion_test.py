@@ -141,8 +141,14 @@ def test_ac_set_shape() -> int:
         # The split is empty by declaration, so there is no gch side at all.
         # That is the condition deletion-test.py now REFUSES to run against,
         # and the refusal is what this suite pins instead.
-        fails += check("the gch side is empty while the split is suspended",
-                       gch, set())
+        # WHAT IS ACTUALLY INVARIANT while the split is suspended, and this
+        # took two tries to state. The first version asserted the gch side is
+        # EMPTY. That was true only until [LJ-1.4] landed the first wing
+        # chapter, and it was never the property that matters: the deletion
+        # test is vacuous because the flag is set, not because the set happens
+        # to be empty. Assert the vacuity itself.
+        fails += check("the tool reports the split as vacuous",
+                       deletion_test.split_vacuous(st), True)
         fails += check("the tool reports the split as vacuous",
                        deletion_test.split_vacuous(st), True)
     else:

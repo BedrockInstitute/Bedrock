@@ -147,6 +147,14 @@ def main() -> int:
     declared_lines = cfg.get("ac_baseline_lines")
     if declared_lines:
         standing = sum(ledger_mod.count(f) for f in ledger_mod.tracked_masters())
+        # SUBTRACT THE DECLARED WING, exactly as validate_ratio_baseline in
+        # scripts/ledger.py does. The baseline is a property of the AC TREE.
+        # This guard was duplicated here on purpose, so the measuring
+        # instrument does not trust the commit gate, and the duplicate then
+        # missed the AC-side fix and refused the moment the first wing chapter
+        # landed. A duplicated guard has to be fixed twice; that is its price.
+        wing = sum(ledger_mod.count(f) for f in cfg.get("gch_wing", []))
+        standing -= wing
         slack = cfg.get("ac_baseline_tolerance_lines", 50)
         if abs(standing - declared_lines) > slack:
             print(f"check-ratio: REFUSING. The baseline {baseline:.6f} s/line was "
