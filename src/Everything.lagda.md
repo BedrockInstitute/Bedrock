@@ -366,6 +366,7 @@ import L.Choice.Before
 import L.Choice.Order
 import L.Hull
 import L.StageCardinal
+import L.Condensation
 import L.Choice.Transversal
 ```
 

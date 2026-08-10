@@ -449,7 +449,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.12 | RE-TARGET the crossing | RETURNED: take Route A at 3.3k | All three rest on ONE deep layer, so the choice barely matters and the price does. Sigma-1 re-opened it and did NOT shrink it |
 | LJ-1.13 | Build: the collapse at an EXTENSIONAL carrier | DELIVERED +96 | isExt at :31, InjExt at :220. Trivial Inj kept per D-27. F2 corrected: the induction is the same, Xtr was dead code |
 | LJ-1.14 | Build: Tarski-Vaught at a NON-transitive carrier | DELIVERED +29, seconds FELL | Mtr gone entirely, TV holds at any carrier. Priced 50-70, landed 29. Hull-parameter criterion still owed |
-| LJ-1.5 | Build: the condensation lemma | FUNDED, two routes | Gate probe 0.067 GO; the erase block ProbeDD25E is green at 0.0114, under DD24's bar. I reproduced both cold myself |
+| LJ-1.5 | Build: the condensation lemma, block 1 | DELIVERED | src/L/Condensation.lagda.md, 308 lines at 0.0079, which is 0.60 of DD24's bar. NO placement anywhere; all eleven obligations landed |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
