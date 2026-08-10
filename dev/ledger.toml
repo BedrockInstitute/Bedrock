@@ -2513,7 +2513,27 @@ ac_baseline_lines = 17271
 # percent. At 17,000 it lands at 0.007816, up 1.6 percent. Both sit inside
 # DD24's 1.15 tolerance; the new figure barely moves the bar at all.
 compression_target_ac_lines = 17000
-compression_target_state = "273 lines to remove from 17,273. [LJ-0.4i] is the last kitless lever; [LJ-0.4f] needs a probe first"
+
+# THE MEASURED LEDGER OF THE CAMPAIGN, one row per block, updated 2026-08-10.
+# The band column is the July survey's. The measured column is the tree's.
+# Read it before writing another band: seven of eight bands are now tested.
+#
+#   block                       band            measured   outcome
+#   A  dead names              -226 to -296       -240      landed
+#   B  existential frame       -190 to -340        +24      refused, kit kept
+#   C  clause frames           -180 to -315        -59      stopped, gutted 2 chapters
+#   D  Model arity-generic      -60 to -130         --      skipped on review evidence
+#   E  traversal share          -60 to -120        +19      refused, reverted
+#   G  lex kit                  -40 to  -80        +49      refused, reverted
+#   H  preamble helpers         -30 to  -60         --      never travels alone
+#   I  within-file dedup        -80 to -140        -30      landed 1 file of 7
+#   *  prose-freed dead names   -55 to  -65        -59      landed, orchestrator only
+#   F  recursion assembly      -100 to -200      running    D-10 already cut its premise
+#
+# EVERY KIT BLOCK MEASURED NET POSITIVE. Only deletion (A, the dead names) and
+# one local helper (I's Separation) measured negative. That is the campaign's
+# whole result in one line.
+compression_target_state = "AC side is 17,184, measured from the worktree 2026-08-10 after [LJ-0.4i] and the prose-freed names. 184 lines short of 17,000, and [LJ-0.4f] is the only lever still open"
 
 # THE HONEST FIGURE, from [LJ-0.8]'s review 2026-08-10. About 17,000, on the
 # basis of 17,273 minus the three measured-class remainders with F at half
