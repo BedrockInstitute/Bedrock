@@ -2424,6 +2424,11 @@ module = "src/V/Collapse.lagda.md"
 wing_consumer = "gch-w5, the collapse and condensation row; no surviving importer outside the catalog"
 authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174 section 1.4"
 
+[[gch_assign]]
+module = "src/V/Presentation.lagda.md"
+wing_consumer = "V.Collapse (Collapse.lagda.md:12) and L.Hull (Hull.lagda.md:25), its only two importers, both wing masters"
+authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit outside the Landmarks closure and all three are wing. D36 amendment F4. The declaration DIES automatically the day an AC-side master imports it, and the checker calls it a defect rather than letting it go stale"
+
 
 # ---------------------------------------------------------------------------
 # DD24's QUALITY BAR and DD25's single threshold, added 2026-08-09.
@@ -2533,7 +2538,7 @@ compression_target_ac_lines = 17000
 # EVERY KIT BLOCK MEASURED NET POSITIVE. Only deletion (A, the dead names) and
 # one local helper (I's Separation) measured negative. That is the campaign's
 # whole result in one line.
-compression_target_state = "AC side is 17,184, measured from the worktree 2026-08-10 after [LJ-0.4i] and the prose-freed names. 184 lines short of 17,000, and [LJ-0.4f] is the only lever still open"
+compression_target_state = "AC side is 17,166 on the corrected wing basis, or 17,184 on the basis the 17,000 target was set against; the 18-line difference is V.Presentation moving to the wing and it compresses nothing. Either way the gap is 184 lines, and [LJ-0.4f] is the only lever still open"
 
 # THE HONEST FIGURE, from [LJ-0.8]'s review 2026-08-10. About 17,000, on the
 # basis of 17,273 minus the three measured-class remainders with F at half
@@ -2619,7 +2624,25 @@ tolerance = 1.15
 # that would then fold GCH content into the AC baseline, destroying the
 # comparison DD24 exists to make. Add a module here in the same commit that
 # lands it.
+# CORRECTED 2026-08-10. V.Presentation was missing, and the omission put 18
+# wing lines in the AC denominator of the DD24 ratio. The test is mechanical
+# and it is now recorded so the list can be re-derived rather than remembered:
+# exactly three masters of 78 sit OUTSIDE the import closure of Landmarks,
+# which states both trophies, and all three are these. V.Presentation is
+# imported by V.Collapse and L.Hull and by nothing else.
+#
+# THIS COMPRESSES NOTHING. It moves 18 lines between buckets and removes no
+# code. The compression target was set against a 17,273 figure that included
+# these 18, so the corrected target is 16,982 against the corrected AC side.
+# The gap to close is identical either way, and no progress may be claimed
+# from this row.
+#
+# THE SAME CLOSURE RUN CLOSES A CLASS NOBODY HAD PRICED: 74 of 78 masters are
+# load-bearing for the trophy, so there is no dead MODULE to delete. A dead
+# module would have been a kitless deletion, the only shape that ever worked
+# in this campaign. There are none.
 gch_wing = [
-  "src/V/Collapse.lagda.md",   # [LJ-1.4], 239 in-fence
-  "src/L/Hull.lagda.md",       # [LJ-1.3], 343 in-fence
+  "src/V/Collapse.lagda.md",     # [LJ-1.4], 239 in-fence
+  "src/L/Hull.lagda.md",         # [LJ-1.3], 343 in-fence
+  "src/V/Presentation.lagda.md", # [LJ-0.4], 18 in-fence, consumed only by the two above
 ]
