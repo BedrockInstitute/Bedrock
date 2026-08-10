@@ -433,61 +433,32 @@ mkBoundedTm (con c) = stage (fst c) (c .snd)
                     , (stage-ord (fst c) (c .snd) , stage-mem (fst c) (c .snd))
 mkBoundedTm (var i) = ∅ , (∅-ord , _)
 
+private
+  mkBounded : ∀ {ℓc ℓd} {C : V ℓ → Type ℓc} {D : V ℓ → Type ℓd}
+            → (liftC : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → C σ → C β)
+            → (liftD : {σ β : V ℓ} → ⟨ σ ∈ β ⟩ → D σ → D β)
+            → (r₁ : Σ[ σ ∈ V ℓ ] (IsOrd σ × C σ))
+            → (r₂ : Σ[ σ ∈ V ℓ ] (IsOrd σ × D σ))
+            → Σ[ σ ∈ V ℓ ] (IsOrd σ × (C σ × D σ))
+  mkBounded liftC liftD r₁ r₂ = b .fst , (b .snd .fst ,
+      ( liftC (b .snd .snd .fst) (r₁ .snd .snd)
+      , liftD (b .snd .snd .snd) (r₂ .snd .snd) ))
+    where
+    b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+
 mkBoundedFo : ∀ {n} (φ : Formula S n) → Σ[ σ ∈ V ℓ ] (IsOrd σ × BoundedFo (Below′ σ) φ)
-mkBoundedFo (t ∈̇ u) = b .fst , (b .snd .fst ,
-    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
-    , liftTmTo {β = b .fst} (b .snd .snd .snd) u (r₂ .snd .snd) ))
-  where
-  r₁ = mkBoundedTm t
-  r₂ = mkBoundedTm u
-  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
-mkBoundedFo (t ≐ u) = b .fst , (b .snd .fst ,
-    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
-    , liftTmTo {β = b .fst} (b .snd .snd .snd) u (r₂ .snd .snd) ))
-  where
-  r₁ = mkBoundedTm t
-  r₂ = mkBoundedTm u
-  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
-mkBoundedFo (φ ∧̇ ψ) = b .fst , (b .snd .fst ,
-    ( liftFoTo {β = b .fst} (b .snd .snd .fst) φ (r₁ .snd .snd)
-    , liftFoTo {β = b .fst} (b .snd .snd .snd) ψ (r₂ .snd .snd) ))
-  where
-  r₁ = mkBoundedFo φ
-  r₂ = mkBoundedFo ψ
-  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
-mkBoundedFo (φ ∨̇ ψ) = b .fst , (b .snd .fst ,
-    ( liftFoTo {β = b .fst} (b .snd .snd .fst) φ (r₁ .snd .snd)
-    , liftFoTo {β = b .fst} (b .snd .snd .snd) ψ (r₂ .snd .snd) ))
-  where
-  r₁ = mkBoundedFo φ
-  r₂ = mkBoundedFo ψ
-  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
-mkBoundedFo (φ ⇒̇ ψ) = b .fst , (b .snd .fst ,
-    ( liftFoTo {β = b .fst} (b .snd .snd .fst) φ (r₁ .snd .snd)
-    , liftFoTo {β = b .fst} (b .snd .snd .snd) ψ (r₂ .snd .snd) ))
-  where
-  r₁ = mkBoundedFo φ
-  r₂ = mkBoundedFo ψ
-  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (t ∈̇ u) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ σ∈β → liftTmTo σ∈β u) (mkBoundedTm t) (mkBoundedTm u)
+mkBoundedFo (t ≐ u) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ σ∈β → liftTmTo σ∈β u) (mkBoundedTm t) (mkBoundedTm u)
+mkBoundedFo (φ ∧̇ ψ) = mkBounded (λ σ∈β → liftFoTo σ∈β φ) (λ σ∈β → liftFoTo σ∈β ψ) (mkBoundedFo φ) (mkBoundedFo ψ)
+mkBoundedFo (φ ∨̇ ψ) = mkBounded (λ σ∈β → liftFoTo σ∈β φ) (λ σ∈β → liftFoTo σ∈β ψ) (mkBoundedFo φ) (mkBoundedFo ψ)
+mkBoundedFo (φ ⇒̇ ψ) = mkBounded (λ σ∈β → liftFoTo σ∈β φ) (λ σ∈β → liftFoTo σ∈β ψ) (mkBoundedFo φ) (mkBoundedFo ψ)
 mkBoundedFo (¬̇ φ)    = mkBoundedFo φ
 mkBoundedFo ⊤̇        = ∅ , (∅-ord , _)
 mkBoundedFo ⊥̇        = ∅ , (∅-ord , _)
 mkBoundedFo (∃̇ φ)    = mkBoundedFo φ
 mkBoundedFo (∀̇ φ)    = mkBoundedFo φ
-mkBoundedFo (∀̇∈ t φ) = b .fst , (b .snd .fst ,
-    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
-    , liftFoTo {β = b .fst} (b .snd .snd .snd) φ (r₂ .snd .snd) ))
-  where
-  r₁ = mkBoundedTm t
-  r₂ = mkBoundedFo φ
-  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
-mkBoundedFo (∃̇∈ t φ) = b .fst , (b .snd .fst ,
-    ( liftTmTo {β = b .fst} (b .snd .snd .fst) t (r₁ .snd .snd)
-    , liftFoTo {β = b .fst} (b .snd .snd .snd) φ (r₂ .snd .snd) ))
-  where
-  r₁ = mkBoundedTm t
-  r₂ = mkBoundedFo φ
-  b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
+mkBoundedFo (∀̇∈ t φ) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ σ∈β → liftFoTo σ∈β φ) (mkBoundedTm t) (mkBoundedFo φ)
+mkBoundedFo (∃̇∈ t φ) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ σ∈β → liftFoTo σ∈β φ) (mkBoundedTm t) (mkBoundedFo φ)
 ```
 
 <!--en-->
