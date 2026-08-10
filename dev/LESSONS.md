@@ -1852,6 +1852,47 @@ section 7 items 5 to 7; `_build/briefs/LJ-0.4n.md`, the first brief to carry
 all nine.
 
 
+### C-31. A budget from a PROJECTED size is divided by the projected size, never by today's
+
+**Rule:** When a threshold gives a total budget over a projected size, judge a
+candidate against the PROJECTED denominator. Dividing by what is built today
+reads a partly-built artifact as over budget, and the error grows as the
+fraction built shrinks.
+
+**Measured (`[LJ-1.17-R]`, 2026-08-10):** DD24's bar over a projected GCH wing
+of 7,553 to 11,197 lines gives a seconds budget of 99.6 to 147.7 s. The
+archived square law is 1,283 in-fence at a measured 41.36 s. Divided by the
+wing's line count **that day**, 2,677, it read **0.0177 s/line, 1.34x the bar,
+FAIL**. Divided by the projected count, crediting the residue with 0.0065
+s/line, which is HIGHER than any wing module measured at the caliber:
+
+| wing | seconds | s/line | verdict |
+|---:|---:|---:|---|
+| 7,553 | 82.12 | 0.0109 | 0.82x PASS |
+| 11,197 | 105.80 | 0.0094 | 0.72x PASS |
+
+**The verdict inverted.** The wing fails only if its residue runs above 0.0093
+to 0.0107, which is 1.8x the measured `StageCardinal` and 8.7x the measured
+`FOL.Count`.
+
+**THE SAME ERROR STOOD IN THREE PLACES AT ONCE**, which is why this is a law
+and not a note: in `dev/ledger.toml`, in the brief the orchestrator wrote from
+it, and in the return that propagated it back. A wrong denominator in a ledger
+looks exactly like a measurement.
+
+**The instrument had already said so.** `scripts/check-ratio.py`'s own header:
+"THE PER-MODULE FLAG IS ADVICE; THE AGGREGATE IS THE JUDGMENT. A single module
+may sit above the bar for a reason the wing as a whole pays back." A
+per-module rate was never the verdict.
+
+**When it bites:** every DD24 judgment before the wing is finished, and any
+future budget derived from `gch_wing_apriori` or from a `[[remaining]]` row.
+
+**Provenance:** `_build/lj-1.17-review.md` section 1; `_build/lj-1.17-report.md`;
+`dev/ledger.toml`'s `gch_wing_seconds_budget` block, corrected in the same
+commit.
+
+
 ### C-1. Two conversations must not share a worktree
 
 **Rule:** Two conversations must not share a worktree; give the second one its
