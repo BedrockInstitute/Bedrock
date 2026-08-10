@@ -48,12 +48,12 @@ open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ )
 open import L.Coding.Model {ℓ}
   using ( extAt; extAt-out; extAt-in; extAt-in-both; appAt; appAt-adequate
-        ; domAt; domAt-in; domAt-out )
+        ; domAt; domAt-in; domAt-out; prAtL; prAtL-adequate )
 open import L.Coding.Powerset {ℓ} lem using ( DefAt; DefAt-in; DefAt-out )
 
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -278,34 +278,80 @@ private
   sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
   sh2 i = suc (suc i)
 
-ApproxAt : ∀ {n} → Fin n → Fin n → Formula S n
-ApproxAt f a = domAt f a
-             ∧̇ ∀̇ (∀̇ ( appAt (sh2 f) (suc zero) zero
-                     ⇒̇ StepAt zero (suc zero) (sh2 f) ))
+module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) where
 
-module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
-  ApproxAt-dom : ⟨ γ ⊨ ApproxAt f a ⟩ → (x y : S)
-               → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-               → ⟨ fst x ∈ fst (lookup a γ) ⟩
-  ApproxAt-dom h = domAt-out f a γ (h .fst)
+  Domain₀ : S → V ℓ → Type (ℓ-suc ℓ)
+  Domain₀ h B = (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩ → ⟨ fst c ∈ B ⟩
 
-  ApproxAt-value : ⟨ γ ⊨ ApproxAt f a ⟩ → (x : S)
-                 → ⟨ fst x ∈ fst (lookup a γ) ⟩
-                 → ∥ (Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
-  ApproxAt-value h = domAt-in f a γ (h .fst)
+  ApproxAt : ∀ {n} → Fin n → Fin n → Formula S n
+  ApproxAt f a = domAt f a
+               ∧̇ ∀̇ (∀̇ ( appAt (sh2 f) (suc zero) zero
+                       ⇒̇ Step zero (suc zero) (sh2 f) ))
 
-  ApproxAt-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (x y : S)
-                → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-                → ⟨ (y ∷ x ∷ γ) ⊨ StepAt zero (suc zero) (sh2 f) ⟩
-  ApproxAt-step h x y p = h .snd x y
-    (subst ⟨_⟩ (sym (appAt-adequate (sh2 f) (suc zero) zero (y ∷ x ∷ γ))) p)
+  GraphAt : ∀ {n} → Fin n → Fin n → Formula S n
+  GraphAt w b = ∃̇ (ApproxAt zero (suc b) ∧̇ Step (suc w) (suc b) zero)
 
-  ApproxAt-in : ⟨ γ ⊨ domAt f a ⟩
-              → ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-                 → ⟨ (y ∷ x ∷ γ) ⊨ StepAt zero (suc zero) (sh2 f) ⟩)
-              → ⟨ γ ⊨ ApproxAt f a ⟩
-  ApproxAt-in hd hs = hd , λ x y p → hs x y
-    (subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (y ∷ x ∷ γ)) p)
+  module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+    ApproxAt-dom : ⟨ γ ⊨ ApproxAt f a ⟩ → Domain₀ (lookup f γ) (fst (lookup a γ))
+    ApproxAt-dom h = domAt-out f a γ (h .fst)
+
+    ApproxAt-value : ⟨ γ ⊨ ApproxAt f a ⟩ → (c : S)
+                   → ⟨ fst c ∈ fst (lookup a γ) ⟩
+                   → ∥ (Σ[ z ∈ S ] ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩) ∥₁
+    ApproxAt-value h = domAt-in f a γ (h .fst)
+
+    ApproxAt-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (c z : S)
+                  → ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩
+                  → ⟨ (z ∷ c ∷ γ) ⊨ Step zero (suc zero) (sh2 f) ⟩
+    ApproxAt-step h c z p = h .snd c z
+      (subst ⟨_⟩ (sym (appAt-adequate (sh2 f) (suc zero) zero (z ∷ c ∷ γ))) p)
+
+    ApproxAt-in : ⟨ γ ⊨ domAt f a ⟩
+                → ((c z : S) → ⟨ pr (fst c) (fst z) ∈ fst (lookup f γ) ⟩
+                   → ⟨ (z ∷ c ∷ γ) ⊨ Step zero (suc zero) (sh2 f) ⟩)
+                → ⟨ γ ⊨ ApproxAt f a ⟩
+    ApproxAt-in hd hs = hd , λ c z p → hs c z
+      (subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (z ∷ c ∷ γ)) p)
+
+  module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+    GraphOf : Type (ℓ-suc ℓ)
+    GraphOf = Σ[ f ∈ S ] ( ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
+                         × ⟨ (f ∷ γ) ⊨ Step (suc w) (suc b) zero ⟩ )
+
+    Graph-in : (f : S) → ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
+             → ⟨ (f ∷ γ) ⊨ Step (suc w) (suc b) zero ⟩ → ⟨ γ ⊨ GraphAt w b ⟩
+    Graph-in f ha hs = ∣ f , (ha , hs) ∣₁
+
+    Graph-out : ⟨ γ ⊨ GraphAt w b ⟩ → ∥ GraphOf ∥₁
+    Graph-out h = h
+
+  PairGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
+  PairGraphAt e c = ∃̇ (prAtL (suc e) (suc c) zero ∧̇ GraphAt zero (suc c))
+
+  module _ {n : ℕ} (e c : Fin n) (γ : S ^ n)
+           (φ : Formula S n) (qφ : φ ≡ PairGraphAt e c) where
+    PairOf : Type (ℓ-suc ℓ)
+    PairOf = Σ[ z ∈ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
+                        × ⟨ (z ∷ γ) ⊨ GraphAt zero (suc c) ⟩ )
+
+    PairGraph-in : (z : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z)
+                 → ⟨ (z ∷ γ) ⊨ GraphAt zero (suc c) ⟩ → ⟨ γ ⊨ φ ⟩
+    PairGraph-in z q hg = subst (λ ψ → ⟨ γ ⊨ ψ ⟩) (sym qφ)
+      ∣ z , (subst ⟨_⟩
+        (sym (prAtL-adequate (suc e) (suc c) zero (z ∷ γ))) q , hg) ∣₁
+
+    PairGraph-out : ⟨ γ ⊨ φ ⟩ → ∥ PairOf ∥₁
+    PairGraph-out h = PT.map
+      (λ { (z , (hq , hg)) →
+        z , (subst ⟨_⟩ (prAtL-adequate (suc e) (suc c) zero (z ∷ γ)) hq , hg) })
+      (subst (λ ψ → ⟨ γ ⊨ ψ ⟩) qφ h)
+
+open RecShape StepAt public renaming ( GraphAt to LsetGraphAt
+                                     ; Graph-in to LsetGraph-in
+                                     ; Graph-out to LsetGraph-out )
+
+LsetGraph : Formula S 2
+LsetGraph = LsetGraphAt zero (suc zero)
 ```
 
 <!--en-->
@@ -356,28 +402,6 @@ and the concrete sentence is one unfolding away.
 
 命名就是本节的全部代价，而这个数字值得留存，因为对它的第一次诊断是错的。若把图以它那个闭句别名来称呼，同样两行花掉了本章 130 秒中的 98 秒。当初怪罪的是那两位，而它们是清白的：下一章一次隔离测量把「读式落在完全具体的位上」量到十五毫秒，而把「同一条读式对着一个别名」量到五十一秒。真正花钱的是「判定别名的满足关系与它展开式的满足关系相等」，而 Agda 解决它的办法，是把一个内部装着整条可定义幂集描述的满足关系正规化。落在变元位上，诸读式根本碰不到这个问题，而那个闭句只差一次展开。
 <!--/-->
-
-```agda
-LsetGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
-LsetGraphAt y x = ∃̇ (ApproxAt zero (suc x) ∧̇ StepAt (suc y) (suc x) zero)
-
-LsetGraph : Formula S 2
-LsetGraph = LsetGraphAt zero (suc zero)
-
-module _ {n : ℕ} (y x : Fin n) (γ : S ^ n) where
-  GraphOf : Type (ℓ-suc ℓ)
-  GraphOf = Σ[ f ∈ S ] ( ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc x) ⟩
-                       × ⟨ (f ∷ γ) ⊨ StepAt (suc y) (suc x) zero ⟩ )
-
-  LsetGraph-in : (f : S)
-               → ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc x) ⟩
-               → ⟨ (f ∷ γ) ⊨ StepAt (suc y) (suc x) zero ⟩
-               → ⟨ γ ⊨ LsetGraphAt y x ⟩
-  LsetGraph-in f ha hs = ∣ f , (ha , hs) ∣₁
-
-  LsetGraph-out : ⟨ γ ⊨ LsetGraphAt y x ⟩ → ∥ GraphOf ∥₁
-  LsetGraph-out h = h
-```
 
 <!--en-->
 ## Recap

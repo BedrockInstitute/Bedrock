@@ -46,7 +46,7 @@ module L.Choice.Before {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ¬̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ¬̇_; ∃̇_; ∀̇∈; ∃̇∈ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′ )
 open import L.Constructible {ℓ}
@@ -63,11 +63,11 @@ open import L.Choice.Finite {ℓ} lem
   using ( before; precedes; Agrees; Witness; finiteStage )
 open import L.Choice.Limit {ℓ} lem
   using ( PrecedesAt; module Precedes; module Described )
-open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
+open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt; module RecShape )
 open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
 open import L.Coding.Model {ℓ}
   using ( numL; prAtL; prAtL-adequate; prʟ; prʟ-fst
-        ; appAt; appAt-adequate; domAt; domAt-in; domAt-out; domAt-intro
+        ; appAt; appAt-adequate; domAt-intro
         ; extAt; extAt-out; extAt-in; extAt-in-both )
 
 import FOL.Absoluteness
@@ -666,18 +666,19 @@ step condition already pins every value recorded at an argument, so
 single-valuedness is a corollary. `RelGraphAt`{.Agda} is one existential over the
 approximation with those two conjuncts under it.
 
-All four descriptions are **sealed where they are built**, and this is the
-chapter's own measurement rather than an inherited habit. Unsealed, every
-satisfaction of the graph at a concrete environment normalizes a formula carrying
-two copies of the whole hierarchy description inside it, and the chapter takes
-376 s; sealed, with each reading unfolding its own description and nothing else,
-it takes 3.8 s. That is a factor of ninety-nine, and no mathematics changed.
+Two descriptions are **sealed where they are built**, and this is the chapter's
+own measurement rather than an inherited habit. `RelStepAt`{.Agda} wraps the
+body, and the body carries two copies of the sequence chapter's graph. Unsealed,
+every satisfaction of the graph at a concrete environment normalizes a formula
+carrying two copies of the whole hierarchy description inside it, and the chapter
+takes 376 s; sealed, with each reading unfolding its own description and nothing
+else, it takes 3.8 s. That is a factor of ninety-nine, and no mathematics changed.
 <!--zh-->
 ## 逼近与那个图
 
 照着模板来，且比模板更短，因为定义域那套器械与外延那套器械都按交付时的原样使用。`RelStepAt`{.Agda} 是罩在体上的一次 `extAt`{.Agda}。`ApproxAt`{.Agda} 是两个合取项，即定义域与那条步进条件，且刻意没有单值性合取项：步进条件已经把某个实参处记录的每个取值钉住了，故单值性是一条推论。`RelGraphAt`{.Agda} 是在逼近上的一个存在量词，其下罩着那两个合取项。
 
-四条描述全都**在造出之处封印**，而这是本章自己的实测、不是继承来的习惯。不封印时，图在具体环境上的每一次满足关系，都要把一条内部装着两份完整层级描述的公式正规化，本章要跑 376 秒；封印之后，每条读式只展开它自己那条描述、别无其他，本章跑 3.8 秒。这是九十九倍，而数学分毫未改。
+两条描述**在造出之处封印**，而这是本章自己的实测、不是继承来的习惯。`RelStepAt`{.Agda} 包着那个体，而那个体携带序列那一章图的两份。不封印时，图在具体环境上的每一次满足关系，都要把一条内部装着两份完整层级描述的公式正规化，本章要跑 376 秒；封印之后，每条读式只展开它自己那条描述、别无其他，本章跑 3.8 秒。这是九十九倍，而数学分毫未改。
 <!--/-->
 
 ```agda
@@ -711,58 +712,13 @@ module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n)
      (λ w h → PT.rec (snd (fst w ∈ fst (lookup v γ))) (back w)
        (RelBody-out zero (suc b) (suc f) (w ∷ γ) ob h))
 
-opaque
-  ApproxAt : ∀ {n} → Fin n → Fin n → Formula S n
-  ApproxAt f a = domAt f a
-               ∧̇ ∀̇ (∀̇ ( appAt (sh2 f) (suc zero) zero
-                       ⇒̇ RelStepAt zero (suc zero) (sh2 f) ))
-
-module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
-  opaque
-   unfolding ApproxAt
-
-   ApproxAt-dom : ⟨ γ ⊨ ApproxAt f a ⟩ → (x y : S)
-                → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-                → ⟨ fst x ∈ fst (lookup a γ) ⟩
-   ApproxAt-dom h = domAt-out f a γ (h .fst)
-
-   ApproxAt-value : ⟨ γ ⊨ ApproxAt f a ⟩ → (x : S)
-                  → ⟨ fst x ∈ fst (lookup a γ) ⟩
-                  → ∥ (Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
-   ApproxAt-value h = domAt-in f a γ (h .fst)
-
-   ApproxAt-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (x y : S)
-                 → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-                 → ⟨ (y ∷ x ∷ γ) ⊨ RelStepAt zero (suc zero) (sh2 f) ⟩
-   ApproxAt-step h x y p = h .snd x y
-     (subst ⟨_⟩ (sym (appAt-adequate (sh2 f) (suc zero) zero (y ∷ x ∷ γ))) p)
-
-   ApproxAt-in : ⟨ γ ⊨ domAt f a ⟩
-               → ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-                  → ⟨ (y ∷ x ∷ γ) ⊨ RelStepAt zero (suc zero) (sh2 f) ⟩)
-               → ⟨ γ ⊨ ApproxAt f a ⟩
-   ApproxAt-in hd hs = hd , λ x y p → hs x y
-     (subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (y ∷ x ∷ γ)) p)
-
-opaque
-  RelGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
-  RelGraphAt v b = ∃̇ (ApproxAt zero (suc b) ∧̇ RelStepAt (suc v) (suc b) zero)
-
-module _ {n : ℕ} (v b : Fin n) (γ : S ^ n) where
-  GraphOf : Type (ℓ-suc ℓ)
-  GraphOf = Σ[ g ∈ S ] ( ⟨ (g ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
-                       × ⟨ (g ∷ γ) ⊨ RelStepAt (suc v) (suc b) zero ⟩ )
-
-  opaque
-   unfolding RelGraphAt
-
-   RelGraph-in : (g : S) → ⟨ (g ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
-               → ⟨ (g ∷ γ) ⊨ RelStepAt (suc v) (suc b) zero ⟩
-               → ⟨ γ ⊨ RelGraphAt v b ⟩
-   RelGraph-in g ha hs = ∣ g , (ha , hs) ∣₁
-
-   RelGraph-out : ⟨ γ ⊨ RelGraphAt v b ⟩ → ∥ GraphOf ∥₁
-   RelGraph-out h = h
+module A = RecShape RelStepAt
+open A using ( ApproxAt; ApproxAt-value; ApproxAt-step
+             ; ApproxAt-in; GraphOf; PairOf )
+     renaming ( GraphAt to RelGraphAt; Graph-in to RelGraph-in
+              ; Graph-out to RelGraph-out; PairGraphAt to PairRelGraphAt
+              ; PairGraph-in to PairRelGraph-in
+              ; PairGraph-out to PairRelGraph-out )
  ```
 
  ```agda
@@ -1210,34 +1166,6 @@ decide.
 <!--/-->
 
 ```agda
-opaque
-  PairRelGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
-  PairRelGraphAt e c = ∃̇ (prAtL (suc e) (suc c) zero ∧̇ RelGraphAt zero (suc c))
-
-module _ {n : ℕ} (e c : Fin n) (γ : S ^ n)
-         (φ : Formula S n) (qφ : φ ≡ PairRelGraphAt e c) where
-  PairOf : Type (ℓ-suc ℓ)
-  PairOf = Σ[ z ∈ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
-                      × ⟨ (z ∷ γ) ⊨ RelGraphAt zero (suc c) ⟩ )
-
-  opaque
-   unfolding PairRelGraphAt
-
-   PairRelGraph-in : (z : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z)
-                   → ⟨ (z ∷ γ) ⊨ RelGraphAt zero (suc c) ⟩ → ⟨ γ ⊨ φ ⟩
-   PairRelGraph-in z q hg = subst (λ ψ → ⟨ γ ⊨ ψ ⟩) (sym qφ)
-     ∣ z , ( subst ⟨_⟩ (sym (prAtL-adequate (suc e) (suc c) zero (z ∷ γ))) q
-           , hg ) ∣₁
-
-   PairRelGraph-out : ⟨ γ ⊨ φ ⟩ → ∥ PairOf ∥₁
-   PairRelGraph-out h = PT.map readPair (subst (λ ψ → ⟨ γ ⊨ ψ ⟩) qφ h)
-     where
-     readPair : Σ[ z ∈ S ] ⟨ (z ∷ γ) ⊨
-                  (prAtL (suc e) (suc c) zero ∧̇ RelGraphAt zero (suc c)) ⟩
-              → PairOf
-     readPair (z , (hq , hg)) =
-       z , (subst ⟨_⟩ (prAtL-adequate (suc e) (suc c) zero (z ∷ γ)) hq , hg)
-
 private
   -- perf: the pair graph enters as a variable carrying its own equation, and
   -- nothing the frame hands back mentions a formula at all; with the closed

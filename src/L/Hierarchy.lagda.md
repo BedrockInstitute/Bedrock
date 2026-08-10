@@ -43,7 +43,7 @@ open import Base.Classical using ( LEM )
 module L.Hierarchy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; ∃̇_ )
+open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
@@ -55,11 +55,12 @@ open import L.Axioms.Basic {ℓ} using ( LsetS; isL-𝒟ₒ; extensionalL )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
 open import L.Recursion {ℓ} lem using ( mereFunct )
 open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; domAt-intro )
+  using ( prʟ; prʟ-fst; domAt-intro )
 open import L.Coding.Sequence {ℓ} lem
   using ( StepAt; StepOf; PowOK; StepAt-in; StepAt-out; StepAt-back
         ; ApproxAt; ApproxAt-dom; ApproxAt-value; ApproxAt-step; ApproxAt-in
-        ; LsetGraphAt; LsetGraph-in; LsetGraph-out; GraphOf )
+        ; LsetGraphAt; LsetGraph-in; LsetGraph-out; GraphOf
+        ; PairGraphAt; PairOf; PairGraph-in; PairGraph-out )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Foundations.HLevels using ( isProp× )
@@ -444,34 +445,6 @@ variable there is nothing to normalize.
 
 它的两种读法把那个句子取作**参数**，并把该句子自己的等式取作假设，在唯一的调用处是 `refl`{.Agda}。这就是「对某个构造保持通用的框架」的形状规矩，而本章正是它在一个句子而非一个构造子上被测出来的地方：直接对着那个闭句子写，两条读法花掉 85 秒，因为 Agda 判定「同一条公式的两种写法」是否相等的办法，是把一个内部装着整条可定义幂集描述的满足关系正规化。句子一旦是变元，就没有什么可正规化的了。
 <!--/-->
-
-```agda
-PairGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
-PairGraphAt e c = ∃̇ (prAtL (suc e) (suc c) zero ∧̇ LsetGraphAt zero (suc c))
-
-module _ {n : ℕ} (e c : Fin n) (γ : S ^ n)
-         (φ : Formula S n) (qφ : φ ≡ PairGraphAt e c) where
-  PairOf : Type (ℓ-suc ℓ)
-  PairOf = Σ[ z ∈ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
-                      × ⟨ (z ∷ γ) ⊨ LsetGraphAt zero (suc c) ⟩ )
-
-  private
-    readPair : Σ[ z ∈ S ] ⟨ (z ∷ γ) ⊨
-                 (prAtL (suc e) (suc c) zero ∧̇ LsetGraphAt zero (suc c)) ⟩
-             → PairOf
-    readPair (z , (hq , hg)) =
-      z , (subst ⟨_⟩ (prAtL-adequate (suc e) (suc c) zero (z ∷ γ)) hq , hg)
-
-  PairGraph-in : (z : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z)
-               → ⟨ (z ∷ γ) ⊨ LsetGraphAt zero (suc c) ⟩
-               → ⟨ γ ⊨ φ ⟩
-  PairGraph-in z q hg = subst (λ ψ → ⟨ γ ⊨ ψ ⟩) (sym qφ)
-    ∣ z , (subst ⟨_⟩
-      (sym (prAtL-adequate (suc e) (suc c) zero (z ∷ γ))) q , hg) ∣₁
-
-  PairGraph-out : ⟨ γ ⊨ φ ⟩ → ∥ PairOf ∥₁
-  PairGraph-out h = PT.map readPair (subst (λ ψ → ⟨ γ ⊨ ψ ⟩) qφ h)
-```
 
 <!--en-->
 ## The internal hierarchy
