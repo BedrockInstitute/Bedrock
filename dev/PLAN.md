@@ -410,7 +410,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.1 | Consistency audit of the edits since the branch point | CLOSED | 30 defects, 6 load-bearing. ALL repaired. Also surfaced that make test ran 3 of 7 suites, hiding a real regression |
 | LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | CLOSED | 3 blocking gaps and 8 more, all closed. N1's reuse checker refused as a gate, adopted as ledger.py --reuse |
 | LJ-0.3 | Retrospective: was the route change itself the right call | CLOSED | Timing premature, route not refuted. Moved the architecture ruling to LJ-2.5. Two laws admitted, C-28 and C-29 |
-| LJ-0.4 | Compress the internalization AC tree under 16,000 lines | STOP, owner ruling needed | Not reachable. T205 and T208 measured it already: 16k was an unprobed survey optimum. Floor 16.3-16.6k |
+| LJ-0.4 | Compress the internalization AC tree under 16,000 lines | STOP, owner ruling needed | Not reachable. T205 and T208 measured it: 16k was an unprobed survey optimum. Floor 16.3-16.6k |
 | LJ-0.5 | RE-MEASURE the DD24 seconds-per-line baseline after LJ-0.4 | planned | GATES ALL OF LJ-1. Same protocol, quiet machine. Write the figure and ac_baseline_lines together |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | RETURNED | Wing 8.0-10.8k, centre 9.4k. Widest term is the Levy crossing; probe specified. Corrects 7 of the LJ-1.x rows |
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | planned | DD8. GO or NO-GO with a price. Thrown away after |
