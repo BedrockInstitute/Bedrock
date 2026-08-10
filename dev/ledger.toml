@@ -2454,6 +2454,24 @@ ac_baseline_seconds_per_line = 0.007693
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
 # in scripts/ledger.py and the guard in scripts/check-ratio.py.
 ac_baseline_lines = 17271
+
+# THE COMPRESSION BAR, owner-set 2026-08-10: reach about 16,400 AC lines
+# WITHOUT badly worsening the ratio. Both halves are needed, and the second
+# constrains how the first may be reached.
+#
+# THE ARITHMETIC FLOOR, so nobody reads a predictable rise as a failure.
+# Compression removes lines. If seconds stay flat, the ratio MUST worsen:
+# 132.87 s over 16,400 lines is 0.008102, which is 5.3 percent above today's
+# 0.007693. That is unavoidable and it sits INSIDE DD24's own 1.15 tolerance.
+#
+# SO THE BAR IS ON SECONDS, NOT ON THE RATIO. A block passes when it removes
+# lines and does NOT add wall seconds. The failure to catch is a block that
+# buys lines by paying seconds, which P-r prices at about 3x for a fold whose
+# result type every consumer unfolds, and which S17's probe already walled at
+# 12 GB once. Every compression brief therefore orders seconds measured
+# before and after, per file and per consumer.
+compression_target_ac_lines = 16400
+compression_seconds_ceiling = 133.4   # today's cold wall; no block may exceed it
 ac_baseline_tolerance_lines = 50   # noise, not a licence: a real compression is hundreds
 
 ac_baseline_provenance = """
