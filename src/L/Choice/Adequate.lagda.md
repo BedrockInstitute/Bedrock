@@ -57,7 +57,7 @@ open import L.Choice.Internal {ℓ} lem
         ; FreeAt; codeFree-in; codeFree-out
         ; graphAt-value; graphAt-only
         ; domAt-numeral; domAt-fill; module Adequacy )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; isPropLeastOf )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
 
 open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n )
@@ -154,7 +154,7 @@ module At (A : V ℓ) (pA : ⟨ isL A ⟩) (w : SWO ⟪ A ⟫) where
   open Adequacy A pA w using ( ix; ixL; pfam; module Keys )
   open NM using
     ( Name; arity; formula; params; codeOf; denote; environment
-    ; nameOrder; leastName; _≺ₙ_ )
+    ; _≺ₙ_ )
 ```
 
 <!--en-->
@@ -888,35 +888,6 @@ data and nothing under them unfolded.
 ```
 
 <!--en-->
-## The described least name is the meta least name
-
-The naming chapter picks a least name out of any non-empty family, and the step
-order is that pick composed with the order of names. So the last identification
-is the uniqueness of a least element: two least elements of one predicate are
-equal, by trichotomy and irreflexivity, which is the well-order chapter's
-`isPropLeastOf`{.Agda}. With it, a name the description calls least at a slot
-**is** the name `leastName`{.Agda} returns there, and the step described is the
-step meant.
-<!--zh-->
-## 被描述的最小名字就是元层面的最小名字
-
-命名那一章从任一非空族中挑出一个最小名字，而步进序就是那次挑选与名字之序的复合。故最后一次认同就是「最小元唯一」：一条谓词的两个最小元相等，靠三歧与非自反，而那正是良序那一章的 `isPropLeastOf`{.Agda}。有了它，被这条描述在某一位上称作最小的那个名字，**就是** `leastName`{.Agda} 在那里交回的那个名字，而被描述的那一步就是所指的那一步。
-<!--/-->
-
-```agda
-  denotesAt : V ℓ → Name → hProp (ℓ-suc ℓ)
-  denotesAt v t = (denote t ≡ v) , setIsSet (denote t) v
-
-  leastPin : (v : V ℓ) (hv : ∥ Σ[ t ∈ Name ] ⟨ denotesAt v t ⟩ ∥₁) (t : Name)
-           → v ≡ denote t
-           → ((t' : Name) → v ≡ denote t' → t' ≺ₙ t → Empty.⊥)
-           → leastName (denotesAt v) hv .fst ≡ t
-  leastPin v hv t q mn = cong fst
-    (isPropLeastOf nameOrder (denotesAt v) (leastName (denotesAt v) hv)
-      (t , (sym q , λ t' q' → mn t' (sym q'))))
-```
-
-<!--en-->
 ## Recap
 
 `paramSeq-in`{.Agda} and `paramSeq-out`{.Agda} are the parameter conjunct in both
@@ -935,8 +906,7 @@ meta name and back.
 `Least.Min.LeastAt-fill`{.Agda} and `Least.Min.LeastAt-read`{.Agda} are the same
 for a least name, with the universal instantiated at a name's own three data;
 `Least.Step.StepAt-fill`{.Agda} and `Least.Step.StepAt-read`{.Agda} are the step,
-which is two least names and one comparison. `leastPin`{.Agda} identifies the
-name the description calls least with the one `leastName`{.Agda} returns.
+which is two least names and one comparison.
 
 Three measurements, and all three are laws this route already had, met at new
 places. The composite equation `denote-table`{.Agda} **cannot be discharged by a
@@ -957,7 +927,7 @@ out puts the description under it into normal form.
 
 `envAt`{.Agda}、`numAt`{.Agda}、`keyAt`{.Agda} 与 `valAt`{.Agda} 是指称那个合取项所满足于其上的四个元素，在被造出之处封印；`codeEl`{.Agda} 与 `envEl`{.Agda} 是另外两个，供最小名字描述所携带的那个全称使用。`Named.Body.denote-fill`{.Agda} 与 `Named.Body.denote-read`{.Agda} 是指称的两个方向，而 `NameAt-fill`{.Agda} 与 `NameAt-read`{.Agda} 把五个合取项装配成一个元层面名字、又拆回来。
 
-`Least.Min.LeastAt-fill`{.Agda} 与 `Least.Min.LeastAt-read`{.Agda} 对最小名字做同样的事，那个全称在「一个名字自己的三样数据」处实例化；`Least.Step.StepAt-fill`{.Agda} 与 `Least.Step.StepAt-read`{.Agda} 是那一步，即两个最小名字加一次比较。`leastPin`{.Agda} 把「这条描述称作最小」的那个名字与 `leastName`{.Agda} 交回的那个认同起来。
+`Least.Min.LeastAt-fill`{.Agda} 与 `Least.Min.LeastAt-read`{.Agda} 对最小名字做同样的事，那个全称在「一个名字自己的三样数据」处实例化；`Least.Step.StepAt-fill`{.Agda} 与 `Least.Step.StepAt-read`{.Agda} 是那一步，即两个最小名字加一次比较。
 
 三次测量，三条都是这条路线早已有的规矩，只是在新的地方遇上。复合等式 `denote-table`{.Agda} **无法由「对着写出来的类型」的一次代换交割**，任何实参都不行，变元也不行：它的两个因子 `denote-mem`{.Agda} 与 `val-sat`{.Agda} 各自 2.4 秒交割，而它们的复合 400 秒跑不完。沿两个因子分别代换就是解药，而那条规矩是：充分性等式的复合逐因子消费，绝不整体消费。六层绑定那一块要求它的环境被**写开**，不可用 `where` 缩写：缩写时，仅 `StepAt-fill`{.Agda} 一条 400 秒跑不完；写开后，整个文件 20 秒检查完毕。而六重存在的载荷经本章自己的 `StepOf`{.Agda} 读出，绝不经手写的 Σ，因为把它写开会把它下面那条描述化为正规形。
 <!--/-->

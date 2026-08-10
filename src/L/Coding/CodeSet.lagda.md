@@ -96,7 +96,6 @@ open import L.Coding.Closed {ℓ} using ( clo; closureClosed )
 open import L.Coding.Shape {ℓ} using ( shapedAt; closureShaped )
 open import L.Coding.Recover {ℓ} using ( keyOf-fst; module Decode )
 
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber )
@@ -485,9 +484,6 @@ what it reads to `witness-out`{.Agda}.
   Codes-in : (x : S) → ⟨ IsKeyOver x ⟩ → ⟨ x ∈ˢ Codes ⟩
   Codes-in x = PT.rec (snd (x ∈ˢ Codes))
     (λ { (ψ , q) → subst (λ w → ⟨ w ∈ fst Codes ⟩) (sym q) (key∈Codes ψ) })
-
-  Codes-spec : (x : S) → (x ∈ˢ Codes) ≡ IsKeyOver x
-  Codes-spec x = ⇔toPath (Codes-out x) (Codes-in x)
 ```
 
 <!--en-->
@@ -574,9 +570,6 @@ already: one witness introduction, one witness elimination, one decode.
   AllCodes-in x = PT.rec (snd (x ∈ˢ AllCodes))
     (λ { (n , ψ , q) →
       subst (λ w → ⟨ w ∈ fst AllCodes ⟩) (sym q) (key∈AllCodes ψ) })
-
-  AllCodes-spec : (x : S) → (x ∈ˢ AllCodes) ≡ IsKeyOverAny x
-  AllCodes-spec x = ⇔toPath (AllCodes-out x) (AllCodes-in x)
 ```
 
 <!--en-->
@@ -588,10 +581,10 @@ already: one witness introduction, one witness elimination, one decode.
 <!--en-->
 Two sets, and one predicate apart. `Codes`{.Agda} is an element of `L` whose
 members are exactly the arity-one keys of the formulas over the carrier, by
-`Codes-spec`{.Agda}, which is the statement the definable powerset needs, since
-`Def A`{.Agda} indexes by that class and no other. `AllCodes`{.Agda} is the same
-construction with the arity bound instead of named, and `AllCodes-spec`{.Agda}
-pins it to the keys at *every* arity.
+`Codes-out`{.Agda} and `Codes-in`{.Agda}, which is the statement the definable
+powerset needs, since `Def A`{.Agda} indexes by that class and no other.
+`AllCodes`{.Agda} is the same construction with the arity bound instead of
+named, and its own pair pins it to the keys at *every* arity.
 
 The whole content is in two conjuncts, and both are of the same kind. Closedness
 and shapedness together recognize the *shape* of a code and say nothing about the
@@ -608,7 +601,7 @@ conjunct changed, from a metalevel numeral to membership in `ωʟ`{.Agda}, is th
 whole of the difference between a set a recursion can be indexed by and a set it
 cannot.
 <!--zh-->
-两个集合，只差一条谓词。`Codes`{.Agda} 是 `L` 的元素，凭 `Codes-spec`{.Agda}，它的诸成员恰是载体之上诸公式在元数一处的诸键；那正是可定义幂集所需要的那条陈述，因为 `Def A`{.Agda} 以那一类、而非别的任何一类为索引。`AllCodes`{.Agda} 是同一套构造，只是元数由点名改为绑定，而 `AllCodes-spec`{.Agda} 把它钉在**每个**元数处的诸键上。
+两个集合，只差一条谓词。`Codes`{.Agda} 是 `L` 的元素，凭 `Codes-out`{.Agda} 与 `Codes-in`{.Agda}，它的诸成员恰是载体之上诸公式在元数一处的诸键；那正是可定义幂集所需要的那条陈述，因为 `Def A`{.Agda} 以那一类、而非别的任何一类为索引。`AllCodes`{.Agda} 是同一套构造，只是元数由点名改为绑定，而它自己那一对把它钉在**每个**元数处的诸键上。
 
 全部内容在两个合取项里，而两者同类。封闭性与成形性合起来认出的是码的**形状**，对一个键所携带的元数、以及它的诸常元出自哪个字母表，都只字未提，故一条对着它们写下的解码必须被递交这两样，而一个由它们造出的集合必须把这两样说出来。`smallDom`{.Agda} 与任意公式的分离做掉其余，而两者都没有索取前几章尚未付清的任何东西。
 

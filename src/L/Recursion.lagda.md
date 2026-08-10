@@ -43,7 +43,7 @@ open import Base.Classical using ( LEM )
 module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; ∃̇_ )
+open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -106,39 +106,6 @@ record Recursion : Type (ℓ-suc (ℓ-suc ℓ)) where
     graph : Formula S 2
     funct : (x : S) → ⟨ x ∈ˢ dom ⟩
           → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ graph ⟩)
-```
-
-<!--en-->
-## What a graph may not do
-<!--zh-->
-## 一个图不可以做什么
-<!--/-->
-
-<!--en-->
-One line, stated because it decides a design question that otherwise gets decided
-by wasted work. Satisfaction is read at the model, so an existential quantifier
-of the object language ranges over the model: to satisfy one is to produce an
-element of `L`, not merely a set.
-
-The consequence is a rule about what may appear in a graph. A graph may say
-"there is a `y` such that ..." only when the `y` it needs is *already* known to
-be an element of `L`. In particular a graph may not describe an object by
-asserting the existence of the very object being described: that describes
-nothing, because discharging the assertion is exactly the problem it was meant to
-solve. A table of values may therefore not be reached by writing "there is a
-table satisfying the recursion equations"; it has to be reached by naming
-something smaller that is already in hand, and letting this chapter collect the
-pieces.
-<!--zh-->
-一行，之所以写出来，是因为它决定一个设计问题，而这个问题若不写出来就要靠白做的工来决定。满足关系是在模型处读的，故对象语言的存在量词在模型上取值：满足它就是拿出 `L` 的一个元素，而不只是一个集合。
-
-由此得到一条关于「图里可以出现什么」的规矩。一个图可以说「存在一个 `y` 使得……」，仅当它所需的那个 `y` **已经**知道是 `L` 的元素。特别地，一个图不可以这样描述一个对象：断言被描述者本身存在。那什么也没描述，因为兑现那个断言，恰恰就是它本要解决的问题。取值表因而不能靠写「存在一张满足递归方程的表」来抵达；它必须靠点名某个更小的、已经在手的东西来抵达，再由本章把碎片收拢。
-<!--/-->
-
-```agda
-witnessInModel : ∀ {n} (γ : S ^ n) (φ : Formula S (suc n))
-               → ⟨ γ ⊨ (∃̇ φ) ⟩ → ∥ (Σ[ x ∈ S ] ⟨ (x ∷ γ) ⊨ φ ⟩) ∥₁
-witnessInModel γ φ h = h
 ```
 
 <!--en-->

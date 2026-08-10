@@ -464,21 +464,6 @@ else in the book.
 ```
 
 <!--en-->
-Packaged as an existential, the same fact is the sentence the next chapter will
-quote: **every** formula of one free variable is a parameter-free formula of
-arity `1 + k` at a vector of `k` parameters, agreeing with it at every point.
-<!--zh-->
-打包成一条存在陈述，同一个事实就是下一章要引述的那句话：**每条**单自由变量的公式，都是某个 `k` 之下元数为 `1 + k` 的无参公式配上一个 `k` 元参数向量，且在每个点上与之一致。
-<!--/-->
-
-```agda
-    asPure₁ : (φ : Formula K 1)
-            → Σ[ k ∈ ℕ ] Σ[ χ ∈ Formula (⊥* {ℓz}) (suc k) ] Σ[ p ∈ Vec K k ]
-                ((x : S) → ((x ∷ []) ⊨ φ) ≡ ((x ∷ map ι p) ⊨₀ χ))
-    asPure₁ φ = countFo φ , absFo φ , constantsFo φ , ⊨-abs₁ φ
-```
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -490,10 +475,10 @@ Constants counted by occurrence (`countFo`{.Agda}) and collected in that order
 occurrence wherever a placement says, instantiated as the abstraction
 `absFo`{.Agda}, which raises the arity by the occurrence count and returns a
 parameter-free formula; and `⊨-abs`{.Agda}, which certifies that the trade costs
-no meaning, with `⊨-abs₁`{.Agda} and `asPure₁`{.Agda} spending it at the arity a
+no meaning, with `⊨-abs₁`{.Agda} spending it at the arity a
 subset is carved by. Parameters can now leave the syntax and live in the
 environment, which is the one thing standing between a definable subset and a
 formula that can be counted.
 <!--zh-->
-常量逐次出现地计数 (`countFo`{.Agda})、并按同一次序收集 (`constantsFo`{.Agda})；一趟泛型遍历 `placeFo`{.Agda} 把每次出现放到安置所指之处，实例化为抽象 `absFo`{.Agda}，它按出现次数抬高元数，交出一条无参公式；而 `⊨-abs`{.Agda} 认证这笔交易不花含义，`⊨-abs₁`{.Agda} 与 `asPure₁`{.Agda} 则在「子集被刻出时所用的元数」处把它花掉。参数从此可以离开语法、住进环境，而这正是横在可定义子集与「数得清的公式」之间的唯一一件事。
+常量逐次出现地计数 (`countFo`{.Agda})、并按同一次序收集 (`constantsFo`{.Agda})；一趟泛型遍历 `placeFo`{.Agda} 把每次出现放到安置所指之处，实例化为抽象 `absFo`{.Agda}，它按出现次数抬高元数，交出一条无参公式；而 `⊨-abs`{.Agda} 认证这笔交易不花含义，`⊨-abs₁`{.Agda} 则在「子集被刻出时所用的元数」处把它花掉。参数从此可以离开语法、住进环境，而这正是横在可定义子集与「数得清的公式」之间的唯一一件事。
 <!--/-->

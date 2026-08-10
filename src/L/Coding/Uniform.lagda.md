@@ -70,10 +70,9 @@ open import L.Definability {ℓ} using ( module DefOf )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
   using ( module LCode; prʟ-fst; codeBridge; domAt; domAt-intro; domAt-out )
-open import L.Coding.EnvSet {ℓ} lem using ( envS )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Bridge {ℓ} lem
-  using ( intoL; asConst; Sat-spec; defSet-Sat ) renaming ( graph to envGraph )
+  using ( intoL; asConst; Sat-spec ) renaming ( graph to envGraph )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; slot; satTable; total; inSlot; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
@@ -88,7 +87,7 @@ open import Cubical.Data.Sigma using ( Σ≡Prop )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -383,13 +382,6 @@ module _ (A : S) where
         (val-at A A ψ x x∈ q ∙ cong (Sat A) (sym (mapFo-comp DA.ι (intoL A) ψ)))
     ∙ Sat-spec A (mapFo DA.ι ψ) δ z qz
     ∙ ⊨-map (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M DA.ι id ψ δ
-
-  val-defSet : (ψ : Formula ⟪ fst A ⟫ 1) (m : ⟪ fst A ⟫)
-               (x : S) (x∈ : ⟨ x ∈ˢ AllCodes A ⟩) → fst x ≡ fst (keyS A ψ)
-             → (⟪ fst A ⟫↪ m ∈ DA.defSet ψ)
-             ≡ (envS A (λ _ → m) ∈ˢ Table.val A A x x∈)
-  val-defSet ψ m x x∈ q = defSet-Sat A ψ m
-    ∙ cong (envS A (λ _ → m) ∈ˢ_) (sym (val-at A A ψ x x∈ q))
 ```
 
 <!--en-->
@@ -401,10 +393,8 @@ module _ (A : S) where
 <!--en-->
 `satRec`{.Agda} is satisfaction as an internalized recursion over **the codes at
 a stage**, not over one formula's subformulas, and `Table`{.Agda} is the table it
-yields. `val-at`{.Agda} reads a value out at a member given as a key;
-`val-sat`{.Agda} says that value **is** satisfaction over the carrier; and
-`val-defSet`{.Agda} spends both on the definable powerset at arity one, which is
-the form the internal hierarchy consumes.
+yields. `val-at`{.Agda} reads a value out at a member given as a key, and
+`val-sat`{.Agda} says that value **is** satisfaction over the carrier.
 
 Nothing below was re-indexed and nothing was weakened. The registered risk for
 this goal was that the domain or its well-formedness predicate would need the
@@ -436,7 +426,7 @@ first is the uniqueness chapter's law, met again where nothing is being proved b
 induction; the second is the law about a construction appearing in a goal, met at
 a goal that is a plain equation.
 <!--zh-->
-`satRec`{.Agda} 是作为已内化递归的满足关系，跑在**某阶段处的诸码**之上，而非跑在一条公式的诸子公式之上，而 `Table`{.Agda} 是它产出的那张表。`val-at`{.Agda} 在一个以键的形式给出的成员处读出取值；`val-sat`{.Agda} 说那个取值**就是**载体之上的满足关系；而 `val-defSet`{.Agda} 把两者花在元数一处的可定义幂集上，那正是内部层级所消费的形式。
+`satRec`{.Agda} 是作为已内化递归的满足关系，跑在**某阶段处的诸码**之上，而非跑在一条公式的诸子公式之上，而 `Table`{.Agda} 是它产出的那张表。`val-at`{.Agda} 在一个以键的形式给出的成员处读出取值；`val-sat`{.Agda} 说那个取值**就是**载体之上的满足关系。
 
 底下没有任何东西被重新索引，也没有任何东西被削弱。本目标登记在案的风险是：定义域或它的良构谓词会在某个不能取作槽位之处、把载体当作**常元**来要；那将把槽、表、全性与隶属重新索引在「载体与键」之对上，并为两半的十二个情形各记一笔搬运。它没有引爆，而直接的证据是：`slot`{.Agda}、`satTable`{.Agda}、`total`{.Agda}、`inSlot`{.Agda}、`slotClosed`{.Agda}、`soundness`{.Agda} 与 `Good.pinned`{.Agda} 在上面全都是按它们既有的类型施用的。码载体压根到不了那个图：它在码集自己的谓词里被绑定、被钉住，而出来的是 `L` 的一个元素，而定义域无非就是这个。
 

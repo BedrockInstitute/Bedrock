@@ -54,7 +54,7 @@ open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; sett; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; _⊆_; extensionality; ⟪_⟫; ⟪_⟫↪ )
+  using ( _∈ₛ_; ∈∈ₛ; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
@@ -113,26 +113,6 @@ lookup-spec {n} g i v = ⇔toPath fwd bwd
   fwd = PT.rec (setIsSet v (g i)) (λ { (lj , e) → step lj e })
   bwd : v ≡ g i → ⟨ pr (# (toℕ i)) v ∈ env g ⟩
   bwd e = ∣ lift i , cong (pr (# (toℕ i))) (sym e) ∣₁
-```
-
-<!--en-->
-## Looking a value up
-<!--zh-->
-## 查出一个值
-<!--/-->
-
-<!--en-->
-The object-language form: some member of the environment is the pair of these
-two. One bounded existential over the previous chapter's Kuratowski reader, so Δ₀
-and adequate at once.
-<!--zh-->
-对象语言的形式：环境的某个成员是这两者的对。上一章 Kuratowski 读式之上的一个有界存在，故 Δ₀ 与充分性一并到手。
-<!--/-->
-
-```agda
-memPairAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
-memPairAt e i v = ∃̇∈ (var e) (prAt zero (suc i) (suc v))
-
 ```
 
 <!--en-->
@@ -199,35 +179,6 @@ sucAt-adequate : ∀ {n} (i j : Fin n) (γ : (V ℓ) ^ n)
 sucAt-adequate i j γ = ⇔toPath
   (λ { (h₁ , h₂ , h₃) → suc-char (⟦ var i ⟧ γ) (⟦ var j ⟧ γ) h₁ h₂ h₃ })
   (suc-intro (⟦ var i ⟧ γ) (⟦ var j ⟧ γ))
-```
-
-<!--en-->
-## All sequences over a set
-<!--zh-->
-## 一个集合上的全部序列
-<!--/-->
-
-<!--en-->
-Finally, every finite sequence of members of a given set, encoded and gathered.
-The index is the length paired with a function into the set's small member type,
-which is small again, so this is another harvest of the smallness that has been
-paying for everything since Part 3. A certificate that must quantify over
-environments quantifies over this.
-<!--zh-->
-最后是给定集合的成员构成的全部有穷序列，编码并汇集起来。索引是长度与一个到该集合的小成员类型的函数配成的对，而那又是小的，故这是自第三部起一直在买单的那份小性的又一次收割。必须对环境作量化的证书，量化的就是它。
-<!--/-->
-
-```agda
-envIn : (A : V ℓ) {n : ℕ} → (Fin n → ⟪ A ⟫) → V ℓ
-envIn A g = env (λ i → ⟪ A ⟫↪ (g i))
-
-cons : ∀ {ℓ'} {X : Type ℓ'} {n : ℕ} → X → (Fin n → X) → Fin (suc n) → X
-cons m g zero    = m
-cons m g (suc i) = g i
-
-seqSet : V ℓ → V ℓ
-seqSet A = sett (Σ[ n ∈ ℕ ] (Fin n → ⟪ A ⟫)) (λ p → envIn A (p .snd))
-
 ```
 
 <!--en-->
@@ -380,6 +331,10 @@ consing shifts indices by exactly that.
 <!--/-->
 
 ```agda
+cons : ∀ {ℓ'} {X : Type ℓ'} {n : ℕ} → X → (Fin n → X) → Fin (suc n) → X
+cons m g zero    = m
+cons m g (suc i) = g i
+
 consAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
 consAt e' m e =
   (∃̇∈ (var e') (tagAt zero 0 (suc m)))
@@ -515,15 +470,12 @@ consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
 <!--en-->
 An environment is its graph (`env`{.Agda}), and the graph is functional
 (`lookup-spec`{.Agda}), which is what makes the encoding usable rather than
-merely definable. `memPairAt`{.Agda} reads a value out of it and
-`sucAt`{.Agda} recognizes the index shift that going under a quantifier
-performs. `seqSet`{.Agda} collects all finite sequences over a set, for the
-certificates that quantify over environments instead of naming one.
-`shiftPairAt`{.Agda} recognizes the renumbering that
+merely definable. `sucAt`{.Agda} recognizes the index shift that going under a
+quantifier performs. `shiftPairAt`{.Agda} recognizes the renumbering that
 extension performs, and `consAt`{.Agda} puts it to work: the extended
 environment is the old one with a value consed on, stated against the encoded
 form the certificates actually hold. That is the last formula the coding stack
 owes the certificates.
 <!--zh-->
-环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`memPairAt`{.Agda} 从中查出一个值，`sucAt`{.Agda} 认出进入量词之下所作的序号移位。`seqSet`{.Agda} 汇集一个集合上的全部有穷序列，供那些对环境作量化而非点名某一个的证书使用。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
+环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`sucAt`{.Agda} 认出进入量词之下所作的序号移位。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
 <!--/-->

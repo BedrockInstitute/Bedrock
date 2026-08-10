@@ -46,7 +46,7 @@ open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
+open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; presentation
@@ -134,10 +134,6 @@ was only an encoding, and the equivalence carries it back).
 <!--/-->
 
 ```agda
-  Def-spec : (x : S)
-           → ⟨ x ∈ˢ Def ⟩ ≡ ∥ Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (defSet φ ≡ x) ∥₁
-  Def-spec x = refl
-
   defSet⊆A : (φ : Formula ⟪ A ⟫ 1) (y : S) → ⟨ y ∈ˢ defSet φ ⟩ → ⟨ y ∈ˢ A ⟩
   defSet⊆A φ y = PT.rec (snd (y ∈ˢ A)) λ { ((m , _) , q) →
     subst (λ v → ⟨ v ∈ˢ A ⟩) q
@@ -191,9 +187,6 @@ of `A` as an element and adds only subsets.
       in subst (λ v → ⟨ v ∈ₛ defSet ⊤̇ ⟩) q
            (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = defSet ⊤̇} .fst
              (subst ⟨_⟩ (sym (defSet-mem ⊤̇ m)) tt*))
-
-  A∈Def : ⟨ A ∈ˢ Def ⟩
-  A∈Def = subst (λ x → ⟨ x ∈ˢ Def ⟩) defSet⊤≡A ∣ ⊤̇ , refl ∣₁
 
   Def∋⊆A : (x : S) → ⟨ x ∈ˢ Def ⟩ → (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ A ⟩
   Def∋⊆A x = PT.rec (isPropΠ λ y → isPropΠ λ _ → snd (y ∈ˢ A))
@@ -302,12 +295,11 @@ submodule; every stage of the tower is.
 <!--en-->
 `Def A` is the set of subsets of `A` definable in the inner world `(A, ∈)` with
 parameters from `A`: syntax as index set, inner satisfaction for meaning,
-essential smallness footing the universe bill. Membership is definitional
-(`Def-spec`{.Agda}), the specification `defSet-mem`{.Agda} says "definable"
-literally, and the operator only refines: `A ∈ Def A` always
-(`A∈Def`{.Agda}), `A ⊆ Def A` under transitivity (`A⊆Def`{.Agda}), and members
-of `Def A` never leave `A`'s subsets (`Def∋⊆A`{.Agda}). The next chapter
-iterates this step into a universe.
+essential smallness footing the universe bill. The specification
+`defSet-mem`{.Agda} says "definable" literally, and the operator only refines:
+`A ⊆ Def A` under transitivity (`A⊆Def`{.Agda}), and members of `Def A` never
+leave `A`'s subsets (`Def∋⊆A`{.Agda}). The next chapter iterates this step
+into a universe.
 <!--zh-->
-`Def A` 是内层世界 `(A, ∈)` 中带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性付清宇宙账单。隶属按定义成立 (`Def-spec`{.Agda})，规格 `defSet-mem`{.Agda} 把「可定义」逐字兑现，而算子只精化：`A ∈ Def A` 恒成立 (`A∈Def`{.Agda})，传递性下 `A ⊆ Def A` (`A⊆Def`{.Agda})，且 `Def A` 的成员不出 `A` 的子集 (`Def∋⊆A`{.Agda})。下一章把这一步迭代成一个宇宙。
+`Def A` 是内层世界 `(A, ∈)` 中带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性付清宇宙账单。规格 `defSet-mem`{.Agda} 把「可定义」逐字兑现，而算子只精化：传递性下 `A ⊆ Def A` (`A⊆Def`{.Agda})，且 `Def A` 的成员不出 `A` 的子集 (`Def∋⊆A`{.Agda})。下一章把这一步迭代成一个宇宙。
 <!--/-->

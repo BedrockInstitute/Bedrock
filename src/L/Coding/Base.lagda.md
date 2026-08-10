@@ -46,17 +46,16 @@ module L.Coding.Base {ℓ : Level} where
 open import FOL.Syntax
   using ( con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈ )
-open import FOL.Manipulation.Relabelling using ( embed )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; module VCode )
+open import V.Coding {ℓ} using ( pr )
 
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -69,33 +68,6 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open Sem using ( _^_ )
 open Sem.At (V ℓ) id using ( _⊨_; ⟦_⟧ )
-```
-
-<!--en-->
-## The set of all codes
-<!--zh-->
-## 全部码的集合
-<!--/-->
-
-<!--en-->
-Parameter-free formulas at every arity, indexed by the arity together with the
-formula. That index is an ordinary inductive type at the small level, so it is a
-legitimate index for a set of the hierarchy, and the set is the image of the code
-function along it. Membership is definitional, and every parameter-free formula's
-code is a member by construction. Being independent of any parameter, the set can
-be named by a constant of the object language, which is what lets a certificate
-quantify over codes at all.
-<!--zh-->
-各种元数的无参公式，以元数连同公式为索引。那个索引是小层级上的普通归纳类型，故是层级中一个集合的合法索引，而该集合就是码函数沿它的像。隶属关系按定义成立，而每条无参公式的码按构造都是成员。由于不依赖任何参数，这个集合可以被对象语言的一个常量命名，而这正是使证书能够对码作量化的原因。
-<!--/-->
-
-```agda
-ClosedΣ : Type ℓ
-ClosedΣ = Σ[ n ∈ ℕ ] Formula (⊥* {ℓ}) n
-
-allCodes : V ℓ
-allCodes = sett ClosedΣ (λ p → VCode.⌜ embed (p .snd) ⌝)
-
 ```
 
 <!--en-->
@@ -371,12 +343,11 @@ tagAt-adequate s k x γ = ⇔toPath
 <!--/-->
 
 <!--en-->
-`allCodes`{.Agda} gathers the codes of all parameter-free formulas at all
-arities into one nameable set, and `prAt`{.Agda} and `tagAt`{.Agda} read a
-Kuratowski pair and a tag from inside the object language, both Δ₀ and both
-adequate. Everything a certificate needs in order to destructure a code is now
-available in bounded form, with no recursion and no comparison of code values.
-The chapters that follow build certificates on top of these.
+`prAt`{.Agda} and `tagAt`{.Agda} read a Kuratowski pair and a tag from inside
+the object language, both Δ₀ and both adequate. Everything a certificate needs
+in order to destructure a code is now available in bounded form, with no
+recursion and no comparison of code values. The chapters that follow build
+certificates on top of these.
 <!--zh-->
-`allCodes`{.Agda} 把所有元数的全部无参公式之码汇成一个可命名的集合，而 `prAt`{.Agda} 与 `tagAt`{.Agda} 从对象语言内部读出 Kuratowski 对与标签，二者皆 Δ₀ 且皆适足。证书解构一个码所需的一切，如今都以有界形式就位，无递归，也无码值的比较。随后诸章在这些之上搭建证书。
+`prAt`{.Agda} 与 `tagAt`{.Agda} 从对象语言内部读出 Kuratowski 对与标签，二者皆 Δ₀ 且皆适足。证书解构一个码所需的一切，如今都以有界形式就位，无递归，也无码值的比较。随后诸章在这些之上搭建证书。
 <!--/-->
