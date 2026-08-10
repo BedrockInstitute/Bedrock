@@ -412,7 +412,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.3 | Retrospective: was the route change itself the right call | CLOSED | Timing premature, route not refuted. Moved the architecture ruling to LJ-2.5. Two laws admitted, C-28 and C-29 |
 | LJ-0.4 | Compress the internalization AC tree toward about 16.4k | RULED, ready to execute | 16,000 refuted by T205 and T208. Owner set ~16.4k 2026-08-10. Recon done, 8 disjoint blocks |
 | LJ-0.4c | Compression block C: the Unique and Sound clause frames | dispatched | -180 to -315, the largest block left. P-r decides it: extract the SHELL, never a fold consumers unfold |
-| LJ-0.4b | Compression blocks B, D, E, F, G, H | planned | -480 to -930 together. Queued behind C. Disjoint by file per C-25, so several may run once slots free |
+| LJ-0.4e | Compression blocks E and G: traversal share, lex kit | dispatched | -100 to -200. S17's RED probe bounds E: skeleton only, no stored decomposition, no fusion lemma |
+| LJ-0.4b | Compression blocks B, D, F, H | planned | -380 to -730 together. Disjoint by file per C-25. B is the largest left after C |
 | LJ-0.4a | Compression block A: the dead names, and 𝒟ₒ→isL | DELIVERED -240 | 48 names over 18 masters, 17,492 to 17,252. Kept 3 the plan rides and 5 Everything's prose names. 𝒟ₒ→isL refused |
 | LJ-0.6 | Restore the V.Presentation shim the src/ restore deleted | DONE | +19 in-fence, 76 masters. Cold 132.87 s, exit 0. Unblocks the archived Collapse and Hull ports |
 | LJ-0.5 | RE-MEASURE the DD24 seconds-per-line baseline, once per block | STANDING TASK | Now 132.87 s over 17,271 = 0.007693. Block A's 240 lines bought -0.50 s: compression WORSENS the ratio |
