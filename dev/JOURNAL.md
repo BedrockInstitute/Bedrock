@@ -113,3 +113,55 @@ and tooling. The tree is 75 masters and 17,492 in-fence lines, measured.
 weak point and `[T261]`'s probe, gates `[LJ-2.5]` only and is done when it is
 needed.
 
+
+### 2026-08-10, `[LJ-0.4]`: the compression campaign, and what a tree does when the mass is not there
+
+**Asked.** Bring the AC side under a line prerequisite before phase 1
+continues. The figure moved three times: 16,000, then about 16,400, then
+17,000, each after the previous one failed.
+
+**Came back.** Eight blocks planned, seven bands tested, one result.
+
+| Block | Band | Measured | Outcome |
+|---|---|---|---|
+| A, dead names | -226 to -296 | **-240** | landed |
+| B, existential frame | -190 to -340 | **+24** | refused, kit kept |
+| C, clause frames | -180 to -315 | **-59** | stopped, it gutted two chapters |
+| D, Model arity-generic | -60 to -130 | not run | skipped on review evidence |
+| E, traversal share | -60 to -120 | **+19** | refused, reverted |
+| G, lex kit | -40 to -80 | **+49** | refused, reverted |
+| H, preamble helpers | -30 to -60 | not run | never travels alone |
+| I, within-file dedup | -80 to -140 | **-30** | landed one file of seven |
+| prose-freed names | -55 to -65 | **-59** | landed, orchestrator only |
+
+**EVERY KIT BLOCK MEASURED NET POSITIVE.** Only deletion measured negative:
+block A, the prose-freed names, and one local helper in `Separation`. That is
+the campaign's whole result and it is one sentence.
+
+**The one error, six times.** Every survey priced the SAVINGS at the call
+sites and never priced the KIT. A parameterized kit costs 31, 43 or 111
+lines, and the sites it serves save less. Block A worked because deletion has
+no kit. `[LJ-0.8]` diagnosed it after five blocks and `[LJ-0.4i]` confirmed it
+as the sixth: a measured surface of 170 raw lines yielded a net of 30.
+
+**Two scans bound what is left, and both say the mass is absent rather than
+mispriced.** Tree-wide byte-identical code repeats total 264 RAW lines. The
+identifier-blind structural surface is 1,705 lines and sits exactly where
+three surveys already looked.
+
+**A third scan closed a class nobody had priced.** 74 of 78 masters are in the
+import closure of `Landmarks`, which states both trophies. There is no dead
+MODULE. That matters because a dead module would have been a kitless
+deletion, the only shape that ever paid here. The class is empty. The same run
+found `V.Presentation` mis-declared: 18 wing lines were sitting in the AC
+denominator of the DD24 ratio, and the fix moves buckets without compressing
+anything.
+
+**Cost.** AC side 17,273 to 17,166. Ten dispatches, four of them refusals with
+numbers, and every refusal was worth having.
+
+**Changed.** `dev/ledger.toml` carries the block table so no future survey
+writes a band without reading seven tested ones. The dead-name sweep STOPS at
+`Codes-out` and `Codes-in`: deleting a set's characterization is content
+removal, not compression, and the line where that boundary sits is now
+written down rather than felt.
