@@ -420,6 +420,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.1 | Recon: the GCH route on the internalization tower | RETURNED | Wing 8.0-10.8k, centre 9.4k. Widest term is the Levy crossing; probe specified. Corrects 7 of the LJ-1.x rows |
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Step clause has no Delta-0 witness at ANY carrier. Crossing 5.0-5.1k, or 1.0-1.7k by the cone fork |
 | LJ-1.10 | RE-PRICE the crossing after LJ-1.2's NO-GO | RETURNED, a THIRD route | Neither candidate. Port the archived structural story: its Def-step is ⊤̇, so no code or table bound enters |
+| LJ-1.11 | ADVERSARIAL review of LJ-1 against the literature route | dispatched | tier: fable 5, owner-named. LJ-1 predates DD18's literature half. Deviations need threshold AND DD reasons |
 | LJ-1.3 | Build: the Skolem hull, a least-witness search over the order | DELIVERED 343 lines | Ported from 241 archived. 0.0070 s/line, 0.91x the bar. Does NOT use σ₁-up: LJ-1.5 does |
 | LJ-1.4 | Build: the Mostowski collapse | DELIVERED 239 lines | Ported from the archive's 181, plus Devlin 5.2(ii) which the archive lacked. Carrier-generic. Cold tree 133.39 s, exit 0 |
 | LJ-0.7 | Digest Devlin II.5 into the literature: the condensation lemma and GCH in L | planned | GATES LJ-1.5. digest.md:513 says II.5 is in hand but the derivation is NOT in the corpus |
