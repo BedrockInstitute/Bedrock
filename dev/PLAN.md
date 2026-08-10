@@ -449,12 +449,15 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.13 | Build: the collapse at an EXTENSIONAL carrier | DELIVERED +96 | isExt at :31, InjExt at :220. Trivial Inj kept per D-27. F2 corrected: the induction is the same, Xtr was dead code |
 | LJ-1.14 | Build: Tarski-Vaught at a NON-transitive carrier | DELIVERED +29, seconds FELL | Mtr gone entirely, TV holds at any carrier. Priced 50-70, landed 29. Hull-parameter criterion still owed |
 | LJ-1.5 | Build: the condensation lemma | GATED on LJ-1.15's probe | Route A recommended at 3.3k, band 2.0-4.5k. DD8 forbids funding 3.3k on a survey, so one clause is measured first |
-| LJ-1.15 | PROBE: one bounded table clause at the Sigma-1 shape | dispatched | GATES all three crossing routes and so LJ-1.5. GO needs statement 1 at 40 lines and statement 2 at 100. Throwaway, D-1 |
+| LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
-| LJ-1.16 | Build: the criterion at hull parameters | REFUSED all three; review is LJ-1.16-R | relL has rank alpha+1 and the carrier holds rank below alpha, so the formula cannot be an X-formula |
-| LJ-1.16-R | DD25 review of LJ-1.16 | dispatched, opus max effort | Attacks the rank obstruction, asks whether hull-expressible suffices where X-expressible does not, and hunts a fourth shape |
-| LJ-1.17 | GATE: is the square law affordable at DD24? | dispatched | It eats 28-42 percent of the wing's seconds budget for 11-17 percent of its lines. Price the IDEAL form per D17 |
+| LJ-1.16 | Build: the criterion at hull parameters | REFUSED all three, OVERTURNED by LJ-1.16-R | A fourth shape exists at 150-300 lines and 0.8-3.9 s against the refused 1.0-3.0k and 220-890 s |
+| LJ-1.16-R | DD25 review of LJ-1.16 | OVERTURN the operative clause | The obstruction is the hull's INDEX TYPE, a LJ-1.3 design choice, not the mathematics. Owner's fork; LJ-1.18 prices it |
+| LJ-1.15-R | DD25 review of LJ-1.15's NO-GO | OVERTURN | Crossing FITS the budget: 0.0052 s/line means 15-17 s of 99.6-147.7. Two obstructions, not one: 1.16's is permanent, 1.15's removable |
+| LJ-1.18 | PROBE: the meta term algebra, the fourth shape | dispatched | Prices the owner's index-type fork in 120 throwaway lines. RED falls back to iterating module Hull at 250-450 |
+| LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing applies condensation ONCE, at 5.5, and its free lambda can be +omega-closed at zero cost. No unsealing |
+| LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS, measured | Pairing 0.0485, SquareLaw 0.0255, pair 41.36 s at 0.0322 s/line, 2.44x the bar. Port and ideal form both fail |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
