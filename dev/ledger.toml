@@ -2510,7 +2510,20 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
 # /usr/bin/time -p. The same protocol as [timing].measured_wall, so the two
 # figures are comparable.
-ac_baseline_seconds_per_line = 0.007913
+# RE-MEASURED 2026-08-11, and the trigger was a cure in a file nobody thought
+# was AC-side. [LJ-1.31] made consAtL constant-free in L.Coding.Environment,
+# +110 in-fence lines, and that file sits in the Landmarks cone. The guard
+# below fired on a 109-line drift and REFUSED the old figure, exactly as it was
+# built to. See dev/LESSONS.md C-32, admitted the same day for the other half
+# of this lesson: a cure invalidates every downstream measurement.
+#
+# THE RESULT IS WORTH READING TWICE. The cone gained 109 lines and got FASTER
+# in absolute seconds: 133.71 s implied by the old pair, 133.45 s measured now.
+# The rate fell from 0.007913 to 0.007847. P-q says a line lever is not a
+# seconds lever, and here it moved the two terms in OPPOSITE directions. Do not
+# read the 0.26 s as a saving; it is inside noise. Read it as evidence that
+# 110 lines of constant-free reader cost nothing to check.
+ac_baseline_seconds_per_line = 0.007847
 
 # THE TREE THE BASELINE WAS MEASURED ON, and the reason this field exists.
 # A seconds-per-line baseline is a property of a SPECIFIC tree, not a constant.
@@ -2528,7 +2541,7 @@ ac_baseline_seconds_per_line = 0.007913
 # So the tools REFUSE the baseline when standing has moved away from this
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
 # in scripts/ledger.py and the guard in scripts/check-ratio.py.
-ac_baseline_lines = 16897
+ac_baseline_lines = 17006
 # THE DENOMINATOR AND THE AC BUCKET ARE NOW ONE NUMBER, 16,897, and that is
 # what the owner's 2026-08-10 catalog ruling bought.
 #
@@ -2574,8 +2587,8 @@ ac_baseline_ghcrts = "-A64m -I0 -M16g"
 # The lesson is not about GC or disk. It is that the SIGN of a caliber error
 # is not knowable by reasoning about what the instrument omits. That is why
 # the tool failed closed instead of picking one.
-ac_baseline_module_rate = 0.011472
-ac_baseline_module_lines = 16897
+ac_baseline_module_rate = 0.011057
+ac_baseline_module_lines = 17081
 
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same
@@ -2845,4 +2858,5 @@ gch_wing = [
   "src/V/Presentation.lagda.md",  # [LJ-0.4], 18 in-fence, consumed only by the two above
   "src/FOL/Count.lagda.md",       # [LJ-1.6], 620 in-fence, zero L imports, template
   "src/L/StageCardinal.lagda.md", # [LJ-1.6] then [LJ-1.21] and [LJ-1.25], 491 in-fence
+  "src/L/Condensation.lagda.md",  # [LJ-1.5] block 1 on the erase route, 308 in-fence
 ]
