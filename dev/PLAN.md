@@ -32,9 +32,9 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 - **Toolchain parity:** both repos use Agda 2.8.0 + cubical 0.9; all source
   modules are `--cubical --guardedness`. No toolchain migration is needed.
 
-## 0. Where the work stands (2026-08-09)
+## 0. Where the work stands (2026-08-10)
 
-**REWRITTEN 2026-08-09 for the route change.** The text this replaces described
+**REWRITTEN 2026-08-09 for the route change, and re-measured 2026-08-10 at the `[LJ-0.4]` closeout.** The text this replaces described
 the internalization route and read as current for the whole day the route
 changed. `[LJ-0.1]` caught it. What follows is the two-tower bridge route.
 
@@ -69,25 +69,32 @@ then flip the flags. **A suspended threshold is not a relaxed one.** Nothing
 may be argued from the absence of a number.
 
 **The quality bar that DOES bind, today** (DD24). Cold build seconds over
-in-fence lines. The delivered internalization AC wing measures **0.007614
-s/line**, from 133.19 s cold over 17,492 lines, and `scripts/check-ratio.py`
-holds the GCH wing to it within a declared tolerance. A ratio is the right
+in-fence lines. The delivered AC wing measures **0.007913 s/line**, from a
+133.70 s mean of three cold runs over 16,897 lines, re-measured by `[LJ-0.5]`
+after the compression. `scripts/check-ratio.py` holds the GCH wing to it
+within a declared tolerance, **but it will not render a verdict yet**: it
+times module slices and the bar is a whole-cone rate, so it refuses until
+`--recalibrate` supplies `ac_baseline_module_rate`. A ratio is the right
 single bar because a total can be met by writing less of a worse thing and a
 ratio cannot: LESSONS P-m measured a twentyfold spread between content classes
 that no line count reveals, and P-t measured a twentyeightfold spread inside
 one file.
 
-**What is delivered and standing.** `src/` is the internalization tree,
-restored to match `main`: **75 masters, 17,492 non-blank in-fence lines,
-133.19 s cold, exit 0**. It proves `L ⊨ ZF` and `L ⊨ ZFC` on the Def tower. The
+**What is delivered and standing.** `src/` is the internalization tree plus
+the first GCH wing masters: **78 masters, 16,897 countable in-fence lines on
+the AC side, 133.70 s cold, exit 0**. DD26 excludes the two catalogs,
+`Everything` and `Landmarks`, from every size figure. It proves `L ⊨ ZF` and `L ⊨ ZFC` on the Def tower. The
 tree is `--safe` and postulate-free, with LEM a module parameter rather than a
 postulate (DD9). Quote `python3 scripts/ledger.py --brief` for standing, never
 a number found in a paragraph.
 
-**What is in flight.** `[LJ-0.1]` returned 30 defects and its repair is under
-way. `[LJ-0.2]`, the sufficiency audit, is live. Phase 1 (`[LJ-1.1]` to
-`[LJ-1.9]`) then proves GCH on the internalization route with NO prose, to
-measure what a GCH wing costs. Phase 2 sets the benchmarks. Phase 3 builds the
+**What is in flight: NOTHING, and phase 1 is open.** `[LJ-0.1]` to `[LJ-0.5]`
+are closed. The compression prerequisite DD5 set is DISCHARGED at 16,897, and
+`make check` is green. Phase 1 (`[LJ-1.1]` to `[LJ-1.9]`) proves GCH on the
+internalization route with NO prose, to measure what a GCH wing costs. **Read
+`[LJ-1.2]`'s NO-GO and `[LJ-1.11]`'s refutation before funding any of it:** the
+first planned crossing has no Delta-0 witness, and route C's structural story
+collapses to a step that recognizes no level. Phase 2 sets the benchmarks. Phase 3 builds the
 two towers and the bridge and lands both trophies.
 
 **Mathematical prose is FROZEN until both trophies land** (DD23). This is not
@@ -413,21 +420,21 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | CLOSED | 3 blocking gaps and 8 more, all closed. N1's reuse checker refused as a gate, adopted as ledger.py --reuse |
 | LJ-0.3 | Retrospective: was the route change itself the right call | CLOSED | Timing premature, route not refuted. Moved the architecture ruling to LJ-2.5. Two laws admitted, C-28 and C-29 |
 | LJ-0.4 | Compress the AC tree to 17,000 | MET and DISCHARGED | AC 16,897 under DD26; 16,995 on the target's own caliber. Every KIT block measured net positive; only deletion and one kit paid |
-| LJ-0.4j | The prose-freed dead names, orchestrator only | DELIVERED -59 | LJ-0.8 7.6.1. The 14 names block A found dead but could not touch, because only prose in Everything, src/README or the chapter held them. Sweep STOPS at Codes-out/Codes-in: deleting a set's characterization is content, not compression |
-| LJ-0.4n | The SHAPE half of the recursion assembly, ONE parameter | LANDED -104, and the seconds FELL | Kit 53 lines, ONE parameter, break-even 0.91 over 5 sites, hosted IN Sequence. Tree seconds -0.53; Before SAVED 4.73 to 4.20. D-28 came out of it |
-| LJ-0.4p | Re-test every name kept by a citation, READ ONLY | 34 lines traced, 2 keeps | Ran with no Agda slot beside LJ-0.4n. Confirmed my CodeSet protection was circular prose I wrote hours earlier. Found ten stale names in Everything's CHINESE catalog |
-| LJ-0.4q | Take LJ-0.4p's two DELETE rows | LANDED -34; AC reaches 16,995, then 16,897 under DD26 | The arity-one code set retires, finishing what [L3.27] ruled on 2026-08-05: a set enters a formula only as a CONSTANT, so a slot carrier cannot use one |
-| LJ-0.4m | The dead-name re-scan, after four rounds of deletion | LANDED -17 of -68; I reverted 51 | D-27 came out of it. The agent was right on my criterion and my criterion was wrong for a chapter's stated result and for the readings of a seal | Deletion CASCADES and block A's scan is four rounds stale. Worked case: ab99b23 deleted endExtension, so its private unfoldγ and unfoldβ may now be dead. Kitless, the only shape that pays |
-| LJ-0.4k | Is any whole MODULE dead? | ANSWERED NO | Closure over Landmarks: 74 of 78 masters are load-bearing. Three sit outside and all three are wing. A dead module would have been a kitless deletion, the only shape that ever paid. The class is empty |
-| LJ-0.4c | Compression block C: the Unique and Sound clause frames | STOPPED, and the BRIEF's share is dominant | LJ-0.8: its band floor sat above the real surface, its stop trigger named seconds only, and it never stated the chapter rule |
-| LJ-0.4e | Compression blocks E and G: traversal share, lex kit | REFUSED BOTH on measurement | E nets +19, G nets +49 (its own table reads 146 to 195; the -49 label was a sign error I repeated) |
-| LJ-0.4b | Compression block B: the existential frame across L/Choice | REFUSED on measurement | Kit costs 43, the cleanest site saves 19. Net +24 measured, about -6 fully wired, against -190 to -340 |
-| LJ-0.4d | Compression block D: the Model arity-generic clause frame | SKIP, refuted by class | LJ-0.8: Model has ZERO repeated 4-line blocks over 1,289 lines. Its in/out pairs are decode content |
-| LJ-0.4f | Compression block F: the recursion-assembly triplication | NO-GO, UPHELD by LJ-0.4f-R, and one of its findings was FALSE | Kit 208, one site measured -96, two-site net about +4 and +1.23 cold seconds. Wiring saved at _build/kits/lj-0.4f-hierarchy-wiring.diff |
-| LJ-0.4f-R | DD25 adversarial review of LJ-0.4f's NO-GO | UPHOLD WITH A CONDITION; it paid for itself | Killed a FALSE D-10 claim I had propagated: Before DOES hold a 212-line assembly (Before:684-766, :986-1026, :1213-1241) and its own text says so at :662. Found a -106 cure |
-| LJ-0.4h | Compression block H: preamble and shift helpers | FOLD OR DROP | LJ-0.8: never alone, -30 to -60 cannot pay for a dispatch. Fold into F's build if F goes |
-| LJ-0.4i | The measured dedup sweep, within-file first | LANDED -30 of a -80 to -140 band | One file of seven: Separation 351 to 321 through a local private helper, 11 lines serving 8 sites. Six refused with numbers. The scan's 170 RAW lines were real; the reachable net was 30 |
-| LJ-0.4a | Compression block A: the dead names, and 𝒟ₒ→isL | DELIVERED -240 | 48 names over 18 masters, 17,492 to 17,252. Kept 3 the plan rides and 5 Everything's prose names. 𝒟ₒ→isL refused |
+| LJ-0.4j | The prose-freed dead names, orchestrator only | DELIVERED -59 | The 14 names block A found dead but could not touch, held only by prose in Everything, src/README or the chapter |
+| LJ-0.4n | The SHAPE half of the recursion assembly, ONE parameter | LANDED -104, seconds FELL | Kit 53, ONE parameter, break-even 0.91 over 5 sites, hosted IN Sequence. Tree -0.53 s. D-28 |
+| LJ-0.4p | Re-test every name kept by a citation, READ ONLY | 34 lines traced, 2 keeps | No Agda slot, ran beside LJ-0.4n. Confirmed my CodeSet protection was circular prose I wrote hours earlier |
+| LJ-0.4q | Take LJ-0.4p's two DELETE rows | LANDED -34; AC 16,995, then 16,897 under DD26 | The arity-one code set retires, finishing what [L3.27] ruled on 2026-08-05 |
+| LJ-0.4m | The dead-name re-scan, four rounds on | LANDED -17 of -68; I reverted 51 | D-27 came out of it: the criterion was mine and it was wrong for a stated result and a seal's readings |
+| LJ-0.4k | Is any whole MODULE dead? | ANSWERED NO | Closure over Landmarks: 74 of 78 masters are load-bearing, 3 outside are wing. A dead module would be a kitless deletion. The class is empty |
+| LJ-0.4c | Block C: the Unique and Sound frames | STOPPED; the BRIEF dominates | Its band floor sat above the real surface, its stop trigger named seconds only, and it omitted the chapter rule |
+| LJ-0.4e | Blocks E and G: traversal share, lex kit | REFUSED BOTH on measurement | E +19, G +49; G's table reads 146 to 195 and the -49 label was a sign error I repeated. Kits LOST, S22 |
+| LJ-0.4b | Block B: the existential frame across L/Choice | REFUSED on measurement | Kit 43, cleanest site saves 19. Net +24 measured against a band of -190 to -340. Kit kept, register S19 |
+| LJ-0.4d | Block D: the Model arity-generic clause frame | SKIP, refuted by class | Model has ZERO repeated 4-line blocks over 1,289 lines. Its in/out pairs are two-way decode content |
+| LJ-0.4f | Block F: the recursion-assembly triplication | NO-GO, UPHELD by LJ-0.4f-R | Kit 208 at 11 parameters, one site -96, two-site net about +4 and +1.23 cold seconds. Register S20 |
+| LJ-0.4f-R | DD25 adversarial review of LJ-0.4f's NO-GO | UPHOLD WITH A CONDITION | Killed a FALSE D-10 claim I had propagated: Before DOES hold a third assembly. Found the -106 cure |
+| LJ-0.4h | Block H: preamble and shift helpers | DROPPED, register S23 | Only admissible folded into F, and F was NO-GO. 229 raw preamble lines cannot be shared away; every module keeps its opens |
+| LJ-0.4i | The measured dedup sweep, within-file first | LANDED -30 of a -80 to -140 band | One file of seven: Separation 351 to 321 via a local helper, 11 lines over 8 sites. Six refused |
+| LJ-0.4a | Compression block A: the dead names | DELIVERED -240 | 48 names over 18 masters, 17,492 to 17,252. Kept 3 the plan rides and the ones only Everything's prose held. 𝒟ₒ→isL refused |
 | LJ-0.6 | Restore the V.Presentation shim the src/ restore deleted | DONE | +19 in-fence, 76 masters. Cold 132.87 s, exit 0. Unblocks the archived Collapse and Hull ports |
 | LJ-0.5 | RE-MEASURE the DD24 baseline | DONE: 0.007913 over 16,897 | Three cold Landmarks runs, spread 2.15 s, +2.85% and inside the 1.15 bar. Caught a confound: make typecheck builds the wing too |
 | LJ-0.8 | ADVERSARIAL review of the AC compression, done and planned | dispatched | tier: fable 5, owner-named. The survey missed 2 of 3 measured blocks. Deliverable is brief corrections |

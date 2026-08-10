@@ -2606,7 +2606,7 @@ compression_target_state = "MET 2026-08-10: AC 16,897 against the owner's 17,000
 # it serves save less than the kit costs. The July survey priced the SAVINGS
 # at the call sites and never priced the KIT. One systematic error across six
 # levers, not six independent misses. Block A succeeded because deletion has
-# no kit to pay for, and [LJ-0.4s]'s within-file sweep is the only remaining
+# no kit to pay for, and [LJ-0.4i]'s within-file sweep is the only remaining
 # lever of that same kitless shape.
 compression_honest_floor_ac_lines = 17000   # now equal to the target, by the owner's ruling
 compression_seconds_ceiling = 133.4   # today's cold wall; no block may exceed it
