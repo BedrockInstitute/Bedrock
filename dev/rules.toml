@@ -101,3 +101,13 @@ ids = ["D-10", "C-22", "P-l"]
 "write scope" = ["C-25"]
 "audit" = ["C-27", "C-22"]
 "return" = ["C-27"]
+# D-27 routes on the words a deletion brief actually contains. It cost 51
+# reverted lines on 2026-08-10 because the criterion "no code consumer" was
+# applied to a chapter's stated result and to the readings of a seal. "seal"
+# above already carries R-36 and R-38, so D-27 joins it: a sweep that deletes
+# an unsealing lemma is exactly the case.
+"delete" = ["D-27", "C-23"]
+"dead name" = ["D-27"]
+"dead code" = ["D-27"]
+"unused" = ["D-27", "C-26"]
+"retire" = ["D-27", "D-25"]
