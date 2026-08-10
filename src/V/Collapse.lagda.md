@@ -25,6 +25,15 @@ open hPropStructure 𝒮ᵥ
 isTrans : S → Type (ℓ-suc ℓ)
 isTrans u = Transitive 𝒮ᵥ (λ x → x ∈ˢ u)
 
+-- structure extensionality of a set: equal carrier members have equal
+-- comparisons against the carrier's members. The collapse's injectivity
+-- half holds under this hypothesis, without transitivity of the carrier
+isExt : S → Type (ℓ-suc ℓ)
+isExt X = (x y : S) → x ∈ᵗ X → y ∈ᵗ X
+        → ((z : S) → z ∈ᵗ X → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ y ⟩)
+        → ((z : S) → z ∈ᵗ X → ⟨ z ∈ˢ y ⟩ → ⟨ z ∈ˢ x ⟩)
+        → x ≡ y
+
 -- the collapse is defined by ∈-recursion over the whole hierarchy, one step per
 -- set: π x is the set of the π-images of the members of x that lie in the
 -- carrier X
@@ -185,6 +194,104 @@ module Collapse (X : S) where
         cx = member x (p .fst)
         cu : ⟨ c ∈ˢ X ⟩
         cu = Xtr {x = x} {y = c} cx xu
+        c≡y : c ≡ y
+        c≡y = π-inj c y cu yu q
+
+    -- the iso reading on the carrier, both directions
+    iso : (x y : S) → x ∈ᵗ X → y ∈ᵗ X
+        → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩)
+    iso x y xu yu = (λ yx → π∈-fwd x y yx yu) , π∈-bwd x y xu yu
+
+    -- the Mostowski statement for the carrier: transitive range, injectivity,
+    -- and membership preserved both ways
+    Mostowski : Type (ℓ-suc ℓ)
+    Mostowski = isTrans πX
+              × ((x y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y)
+              × ((x y : S) → x ∈ᵗ X → y ∈ᵗ X
+               → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩))
+
+    mostowski : Mostowski
+    mostowski = πX-trans , π-inj , iso
+
+  -- extensional injectivity on the carrier; the carrier's structure
+  -- extensionality is a module parameter here and only here. The memberships
+  -- the transitive proof took from Xtr are carried by the fibers or by the
+  -- extensionality quantification, so no transitivity is needed
+  module InjExt (Xext : isExt X) where
+
+    P : S → Type (ℓ-suc ℓ)
+    P x = (y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
+
+    -- direction 1: move a member z of x into y; the hypothesis fires at z ∈ x
+    in⊆ : (x y z : S) → x ∈ᵗ X → y ∈ᵗ X → z ∈ᵗ x → z ∈ᵗ X
+        → π x ≡ π y
+        → ((a : S) → a ∈ᵗ x → P a)
+        → ⟨ z ∈ˢ y ⟩
+    in⊆ x y z xu yu zx zu e IH = PT.rec (snd (z ∈ˢ y)) step2
+      (subst (λ w → ⟨ π z ∈ˢ w ⟩) (π-compute y)
+        (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd x z zx zu)))
+      where
+      step2 : Σ[ p ∈ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ π z) → ⟨ z ∈ˢ y ⟩
+      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ y ⟩) (sym z≡b) by
+        where
+        b : S
+        b = ⟪ y ⟫↪ (p .fst)
+        by : ⟨ b ∈ˢ y ⟩
+        by = member y (p .fst)
+        bu : ⟨ b ∈ˢ X ⟩
+        bu = ∈∈ₛ {a = b} {b = X} .snd (p .snd)
+        z≡b : z ≡ b
+        z≡b = IH z zx b zu bu (sym q)
+
+    -- direction 2: move a member z of y into x; the hypothesis fires at the
+    -- witness b ∈ x extracted from the collapsed membership
+    out⊆ : (x y z : S) → x ∈ᵗ X → y ∈ᵗ X → z ∈ᵗ y → z ∈ᵗ X
+         → π y ≡ π x
+         → ((a : S) → a ∈ᵗ x → P a)
+         → ⟨ z ∈ˢ x ⟩
+    out⊆ x y z xu yu zy zu e IH = PT.rec (snd (z ∈ˢ x)) step2
+      (subst (λ w → ⟨ π z ∈ˢ w ⟩) (π-compute x)
+        (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd y z zy zu)))
+      where
+      step2 : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ π z) → ⟨ z ∈ˢ x ⟩
+      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) b≡z bx
+        where
+        b : S
+        b = ⟪ x ⟫↪ (p .fst)
+        bx : ⟨ b ∈ˢ x ⟩
+        bx = member x (p .fst)
+        bu : ⟨ b ∈ˢ X ⟩
+        bu = ∈∈ₛ {a = b} {b = X} .snd (p .snd)
+        b≡z : b ≡ z
+        b≡z = IH b bx z bu zu q
+
+    step-inj : (x : S) → ((a : S) → a ∈ᵗ x → P a) → P x
+    step-inj x IH y xu yu e = Xext x y xu yu to from
+      where
+      to : (z : S) → z ∈ᵗ X → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ y ⟩
+      to z zu zx = in⊆ x y z xu yu zx zu e IH
+      from : (z : S) → z ∈ᵗ X → ⟨ z ∈ˢ y ⟩ → ⟨ z ∈ˢ x ⟩
+      from z zu zy = out⊆ x y z xu yu zy zu (sym e) IH
+
+    -- extensional injectivity on the carrier, by ∈-induction
+    π-inj : (x y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
+    π-inj = ∈-induction step-inj
+
+    -- the backward direction: a collapsed membership names a witness in the
+    -- carrier member, and injectivity identifies it
+    π∈-bwd : (x y : S) → x ∈ᵗ X → y ∈ᵗ X → ⟨ π y ∈ˢ π x ⟩ → y ∈ᵗ x
+    π∈-bwd x y xu yu h =
+      PT.rec (snd (y ∈ˢ x)) step2 (subst (λ w → ⟨ π y ∈ˢ w ⟩) (π-compute x) h)
+      where
+      step2 : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ π y) → ⟨ y ∈ˢ x ⟩
+      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) c≡y cx
+        where
+        c : S
+        c = ⟪ x ⟫↪ (p .fst)
+        cx : ⟨ c ∈ˢ x ⟩
+        cx = member x (p .fst)
+        cu : ⟨ c ∈ˢ X ⟩
+        cu = ∈∈ₛ {a = c} {b = X} .snd (p .snd)
         c≡y : c ≡ y
         c≡y = π-inj c y cu yu q
 
