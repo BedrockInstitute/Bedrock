@@ -92,6 +92,34 @@ must be recorded.
 
 *Enforcement:* the return-handling checklist in section 6.
 
+### 2.1 A quiet machine is the ORCHESTRATOR's to confirm, never the agent's
+
+**Never write "confirm you are alone before you measure" into a brief.** A
+dispatched agent cannot do it. Inside the codex sandbox `os.kill` returns
+EPERM for any pid outside the agent's view and `ps` is blocked, so the
+registry's liveness check reads a long-dead agent as RUNNING and cannot be
+cleared from there.
+
+**Measured, `[LJ-0.5]` 2026-08-10.** The brief ordered exactly that check. The
+agent found a stale RUNNING record for `[T77]`, whose log ended on 2026-08-05,
+fell back to `lsof` as ground truth, proved the pid gone, and measured anyway
+with the reasoning written out. That was the right call and it was not the
+call the brief asked for. **A weaker agent stops forever or skips the check
+in silence, and both are worse than the truth.**
+
+**So the orchestrator confirms quiet from its own side, where the registry is
+truthful, and the brief says so:** "I have confirmed no sibling is live. If
+you see evidence otherwise, report it and stop." That asks for an observation
+the agent CAN make instead of a verdict it cannot reach.
+
+**This matters because timing tasks recur.** DD24 wants the baseline
+re-measured after every compression block, so `[LJ-0.5]` is a standing task
+and this trap is standing with it. A contended cold gate measured 150.09 s
+against 133.69 s quiet, so the check is worth having; it just belongs on the
+other side.
+
+*Enforcement:* brief review, at the point a brief orders a measurement.
+
 ## 3. The brief
 
 Every brief is pinned in `_build/briefs/` before dispatch, so it survives a
