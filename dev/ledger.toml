@@ -2470,7 +2470,18 @@ ac_baseline_lines = 17271
 # result type every consumer unfolds, and which S17's probe already walled at
 # 12 GB once. Every compression brief therefore orders seconds measured
 # before and after, per file and per consumer.
+# MEASURED 2026-08-10, and the target is NOT reachable by the planned blocks.
+# Five of eight blocks have been tested against the July survey and it missed
+# four: A landed at -240 inside its band; B measured PLUS 24 against -190 to
+# -340; C netted -59 against a -180 floor and was stopped for gutting two
+# chapters; E measured PLUS 19; G fell short. Banked: -240 of -873 owed.
+# The three untried blocks are surveyed at -190 to -390 TOTAL, so the best
+# case is 16,883 and the target is short by 483 lines even then.
+#
+# The figure below is KEPT as the owner's stated intent, not as a reachable
+# number. [LJ-0.8] is reviewing what the evidence does support.
 compression_target_ac_lines = 16400
+compression_target_state = "NOT REACHABLE by the eight planned blocks; measured best case 16,883"
 compression_seconds_ceiling = 133.4   # today's cold wall; no block may exceed it
 ac_baseline_tolerance_lines = 50   # noise, not a licence: a real compression is hundreds
 
