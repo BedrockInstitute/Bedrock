@@ -2904,3 +2904,82 @@ shared home is genuinely right, SERIALIZE: one lane lands it, the next is
 briefed against the landed tree. The mechanical form is a write-territory
 refusal at dispatch, comparing named paths across live lanes AND refusing two
 unnamed grants at once, since two unbounded grants always intersect.
+
+### P-u. A Levy witness travels along a relabelling for free and does not travel along a placement at all
+
+**The law.** A `Δ₀` or `Σₙ` certificate transports along a constant
+RELABELLING at zero cost, because the delivered `mapΔ₀` and `mapΣₙ` are
+structural recursions on the certificate. It does NOT transport along a
+parameter PLACEMENT. **So certify the formula BEFORE you place it, then compose
+the absoluteness through the unplaced form.** A statement that asks for the
+certificate of a PLACED formula is a different content class from the same
+statement over the unplaced one.
+
+**Why the asymmetry is structural, not a gap somebody can fill.** Relabelling
+changes the constant type and leaves the formula's shape alone, so the
+certificate maps constructor by constructor. Placement moves constants into
+environment slots, which changes the shape, so no structural map exists.
+`src/FOL/Manipulation/Parameters.lagda.md` never imports `FOL.LevyHierarchy`,
+so no placement analogue can be stated there at all.
+
+**Measured (`[LJ-1.27-R]`, 2026-08-10).** At `[LJ-1.27]`'s hardest condensation
+clause, the placed witness `Δ₀ (embed (absFo φ))` EXHAUSTS 8 GB in 55 s. The
+wall reproduced in two formulations, including one with every placement written
+out by hand so that no meta-solving is involved, and in a probe that never
+mentions `abs₀`. The composed route through the unplaced form checks in 25.6 s
+in the same isolation. The delivered relabelling transport is
+`src/FOL/Manipulation/Relabelling.lagda.md:209-242`.
+
+**It confirms P-t from a new direction.** The class follows the FORMULA, and
+PLACING the formula changes the class.
+
+**The consequence that costs money.** `[LJ-1.27]`'s block is 0.110 to 0.113 s
+per line against a 0.10 gate, and 31.0 s of its 33.3 s sits in the two placed
+obligations. The same content stated directly runs at 0.0053 to 0.0114. **The
+route out is upstream: a formula with NO constants reaches the parameter-free
+axis through the delivered `erase` with no placement anywhere**
+(`src/FOL/Count.lagda.md:598-611`, `:617-637`).
+
+**Provenance:** `_build/lj-1.27-review.md` sections 4 and 5. Probes
+`src/ProbeDD25C.agda`, `src/ProbeDD25D.agda` and `src/ProbeDD25E.agda`, the
+last red by design with its error message as its measurement.
+
+### C-32. A cure invalidates every downstream measurement; RE-RUN THE GATE before you act on the old number
+
+**The law.** When a cure lands anywhere in the import cone, every figure
+measured before it is stale, **including figures in files the cure did not
+touch**. A gate verdict is the first thing to re-run and the last thing anybody
+remembers to re-run, because the gate lives in a different file from the cure
+and nothing links them. **Re-measure the gate on the cured tree BEFORE you
+route around a red gate.**
+
+**Measured (`[LJ-1.32-R]`, 2026-08-11).** `[LJ-1.27]`'s gate probe measured
+0.1135 s per line against a 0.100 NO-GO line, and the phase stopped for a
+re-route. `[LJ-1.31]` then landed a cure in `L.Coding.Environment` and
+`L.Coding.Model`, two files the gate probe does not name. **The unchanged gate
+probe fell from 32.07 to 18.95 s, a 41 percent cut, which is 0.067 s per line
+and a GO.** Nobody re-ran it: not `[LJ-1.32]`, which spent a whole dispatch
+measuring walls to route around a gate that had already opened, and not the
+orchestrator, who held the pre-cure figure and quoted it three times.
+
+**The second half, and it cost the same dispatch.** `[LJ-1.27-R]` had already
+WRITTEN the cured block as `src/ProbeDD25E.agda`, and it failed at exactly one
+line, the `refl` asserting count 0, which is what `[LJ-1.31]` fixed. On the
+cured tree it is green in 2.87 s at 0.0114 s per line. **A finished probe sat
+one command away for a whole dispatch.**
+
+**Why it was missed, stated so the cure is mechanical.** The orchestrator's
+brief scoped the archive read to `_build/lj-1.27-review.md` **section 4**. The
+erase route and the probe's name are in **section 6**. A brief that names a
+SECTION rather than a document hides everything the orchestrator did not
+already know, and that is exactly what an archive survey exists to prevent
+(DD18).
+
+**What to do.** After any cure lands, re-run the gate probe and every measured
+comparable in its cone before dispatching work that depends on them. **Cite
+whole documents in an ARCHIVE section, never a section number**, unless the
+document is large and the section is an ADDITION to it rather than a
+restriction.
+
+**Provenance:** `_build/lj-1.32-review.md` sections 1 and 5;
+`_build/lj-1.32-report.md`; `_build/briefs/LJ-1.32.md:101,131-133`.

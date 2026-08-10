@@ -449,7 +449,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.12 | RE-TARGET the crossing | RETURNED: take Route A at 3.3k | All three rest on ONE deep layer, so the choice barely matters and the price does. Sigma-1 re-opened it and did NOT shrink it |
 | LJ-1.13 | Build: the collapse at an EXTENSIONAL carrier | DELIVERED +96 | isExt at :31, InjExt at :220. Trivial Inj kept per D-27. F2 corrected: the induction is the same, Xtr was dead code |
 | LJ-1.14 | Build: Tarski-Vaught at a NON-transitive carrier | DELIVERED +29, seconds FELL | Mtr gone entirely, TV holds at any carrier. Priced 50-70, landed 29. Hull-parameter criterion still owed |
-| LJ-1.5 | Build: the condensation lemma | GATED on LJ-1.15's probe | Route A recommended at 3.3k, band 2.0-4.5k. DD8 forbids funding 3.3k on a survey, so one clause is measured first |
+| LJ-1.5 | Build: the condensation lemma | FUNDED, two routes | Gate probe 0.067 GO; the erase block ProbeDD25E is green at 0.0114, under DD24's bar. I reproduced both cold myself |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
@@ -465,7 +465,14 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.24 | PROBE: is StageCardinal's limit half curable | ARM 1 WINS | 29.1 s to 2.3 s, 12.8x, for about 6 lines. R-38's class, NOT P-n's floor: the transport over a TRANSPARENT sett index costs |
 | LJ-1.25 | Build: apply LJ-1.24's cure to the master | DELIVERED | 41.21 s to 11.22 s for 7 lines. The limit half went 0.270 to 0.014. stage-card-upper unchanged. Master 0.024, still over the bar |
 | LJ-1.26 | GATE LJ-1.5: price condensation in SECONDS | DELIVERED | About 60 s at route A's 3.3k centre. The archived 0.395 does NOT transfer. One probe decides a 100x spread, 13-17 s or 700-1300 |
-| LJ-1.27 | GATE PROBE: one level-story clause at the concrete carrier | dispatched | LJ-1.26's designed miniature. GO at or below 0.013, NO-GO at or above 0.10. It decides whether LJ-1.5 is funded |
+| LJ-1.27 | GATE PROBE: one level-story clause at the carrier | NO-GO, under DD25 review | 0.12 against a 0.10 gate. But 31 of its 33 s sit in TWO obligations, and its own base variant runs 0.0053 |
+| LJ-1.27-R | DD25 review of LJ-1.27's NO-GO | UPHOLD | Built the Delta-0 lemma: it WALLS at 8 GB. 16 of 17 constants come from consAtL, so the brief did NOT cause it. Route A does not fund |
+| LJ-1.29 | ARCHITECTURE: can the crossing drop the shared formula? | NO | The 0.0053 base variant is NOT the crossing: it omits the transfer. The 31 s is the PLACEMENT price, not the sharing price |
+| LJ-1.30 | PRICE the cure: make consAtL constant-free | GO, ~110 lines | The 16 constants are ALL con (# 0), and # 0 IS the empty set, so the reader goes constant-free IN PLACE. Zero consumer edits |
+| LJ-1.31 | BUILD the constant-free reader in the coding layer | DELIVERED, not sufficient | 109 lines, ZERO consumer edits, rates all GO. consAtL reaches 0, but real clauses count 1 to 5 elsewhere |
+| LJ-1.32 | PROBE: does the placement wall scale with the count? | NO, under DD25 review | It WALLS at count 0 too, flat at 63 s across 0, 1, 2, 5. The cost tracks the TREE, not the constants |
+| LJ-1.32-R | DD25 review of LJ-1.32's wall verdict | OVERTURN | THE GATE WAS ALREADY OPEN. LJ-1.31's cure cut the unchanged gate probe 41 percent, 32.07 to 18.95 s, and nobody re-ran it |
+| LJ-1.28 | Can the equivalence legs ride the delivered graph theorems? | RIDE | Legs A and B delivered at 0 lines. Leg D's rate spans 0.0052 to 0.085, so its residue is 5 s or 68 s, not one number |
 | LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing condenses ONCE, at 5.5, whose free lambda can be +omega-closed at zero cost |
 | LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS, OVERTURNED | The seconds are sound; every conclusion from them was wrong. At the PROJECTED wing it passes at 0.72-0.82x |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
