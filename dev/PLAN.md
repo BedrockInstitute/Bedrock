@@ -411,11 +411,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | CLOSED | 3 blocking gaps and 8 more, all closed. N1's reuse checker refused as a gate, adopted as ledger.py --reuse |
 | LJ-0.3 | Retrospective: was the route change itself the right call | CLOSED | Timing premature, route not refuted. Moved the architecture ruling to LJ-2.5. Two laws admitted, C-28 and C-29 |
 | LJ-0.4 | Compress the internalization AC tree toward about 16.4k | RULED, ready to execute | 16,000 refuted by T205 and T208. Owner set ~16.4k 2026-08-10. Recon done, 8 disjoint blocks |
-| LJ-0.4a | Execute the compression blocks A to H | planned | Block A first, then B to G in parallel, H last. C-25: disjoint by file. Land N1 to N4 for DD4 whatever the total |
+| LJ-0.4a | Compression block A: the 54 dead names, and 𝒟ₒ→isL | dispatched | -226 to -296. Runs ALONE, it touches many files. MUST NOT delete names LJ-1.1's plan rides, e.g. σ₁-up, π₁-down |
 | LJ-0.6 | Restore the V.Presentation shim the src/ restore deleted | planned | NOT compression, it costs +15. A WING PREREQUISITE: archived Collapse imports it and Hull needs it. 18 in-fence |
 | LJ-0.5 | RE-MEASURE the DD24 seconds-per-line baseline after LJ-0.4 | planned | GATES ALL OF LJ-1. Same protocol, quiet machine. Write the figure and ac_baseline_lines together |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | RETURNED | Wing 8.0-10.8k, centre 9.4k. Widest term is the Levy crossing; probe specified. Corrects 7 of the LJ-1.x rows |
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Step clause has no Delta-0 witness at ANY carrier. Crossing 5.0-5.1k, or 1.0-1.7k by the cone fork |
+| LJ-1.10 | RE-PRICE the crossing after LJ-1.2's NO-GO, and gate the cheaper route | dispatched | DD8 stopped the plan here. Substrate 5,047 measured vs cone fork 1.0-1.7k PLUS 21-master re-typing |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
 | LJ-1.4 | Build: the Mostowski collapse | planned | ARCHIVE: V/Collapse.lagda.md, PORTABLE at 181 in-fence per LJ-1.1. NEEDS LJ-0.6's V.Presentation. Price port vs fresh (DD13) |
 | LJ-1.5 | Build: the condensation lemma | planned | The hull collapses to an L stage. The load-bearing step of the whole wing |
