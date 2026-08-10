@@ -46,14 +46,11 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; module VCode )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; Lset; Lset-mono; 𝒟ₒ; 𝒟ₒ-inv )
+  using ( Lset; Lset-mono; 𝒟ₒ; 𝒟ₒ-inv )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Ordinal {ℓ} using ( numeral-ord; #∈ω )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Axioms.Basic {ℓ} using ( pr∈Lset-suc )
-open import L.Coding.Bridge {ℓ} lem using () renaming ( graph to envGraph )
-open import L.Coding.CodeSet {ℓ} lem using ( keyS; AllCodes )
-open import L.Coding.Uniform {ℓ} lem using ( val-sat; module Table )
 open import L.Choice.Finite {ℓ} lem using ( Limit; inSome; limitOrder; Tri-map )
 open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf )
@@ -83,7 +80,6 @@ open InfinitySet using ( #_; ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
-open hPropStructure 𝒮ʟ using () renaming ( S to Sʟ ; _∈ˢ_ to _∈ʟ_ )
 ```
 
 <!--en-->
@@ -449,39 +445,6 @@ formula in the first place.
     named : Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DA.defSet φ ≡ x)
           → Σ[ a ∈ Name ] (denote a ≡ x)
     named (φ , q) = nameOf φ , (denote-defSet φ ∙ q)
-```
-
-<!--en-->
-### The denotation, read from inside
-<!--zh-->
-### 从内部读指称
-<!--/-->
-
-<!--en-->
-When the stage is an element of `L`, the denotation is also what the internalized
-satisfaction table says. The uniform-satisfaction chapter stated its reading at
-an arbitrary arity and an arbitrary environment, so the table's value at the key
-of the name's formula is satisfaction over the carrier at that very environment;
-composing that with the specification above identifies membership in the
-denotation with membership in the table's value. The name is data of the
-meta-language, and this is the sentence that makes it readable inside.
-<!--zh-->
-当那个阶段是 `L` 的元素时，指称也就是已内化的满足表所说的东西。一致满足那一章把它的读式陈述在任意元数与任意环境处，故表在「该名字的公式之键」处的取值，就是在那个环境处、载体之上的满足；把它与上面那条规格复合，便把「属于指称」与「属于表的取值」认同。名字是元语言的数据，而这就是使它在内部可读的那句话。
-<!--/-->
-
-```agda
-  module Internal (pA : ⟨ isL A ⟩) where
-    private
-      Aʟ : Sʟ
-      Aʟ = A , pA
-
-    denote-table : (a : Name) (m : ⟪ A ⟫)
-                   (x : Sʟ) (x∈ : ⟨ x ∈ʟ AllCodes Aʟ ⟩)
-                 → fst x ≡ fst (keyS Aʟ (embed (formula a)))
-                 → (z : Sʟ) → fst z ≡ envGraph Aʟ (environment a m)
-                 → (⟪ A ⟫↪ m ∈ˢ denote a) ≡ (z ∈ʟ Table.val Aʟ Aʟ x x∈)
-    denote-table a m x x∈ q z qz = denote-mem a m
-      ∙ sym (val-sat Aʟ (embed (formula a)) x x∈ q (environment a m) z qz)
 ```
 
 <!--en-->
@@ -861,8 +824,7 @@ member.
 A `Name`{.Agda} is an arity, a parameter-free formula of one more variable, and a
 vector of parameters from the stage; `denote`{.Agda} is the subset it carves, and
 `denote-mem`{.Agda} says so in the inner semantics the definable powerset is
-defined by, with `denote-table`{.Agda} identifying it with what the internalized
-table reads. `names-complete`{.Agda} says every member of the successor stage is
+defined by. `names-complete`{.Agda} says every member of the successor stage is
 denoted, truncated, which is how the definable powerset gives up its formula.
 
 `code∈limit`{.Agda} puts the first key where the previous chapter's order can
@@ -880,7 +842,7 @@ forces it at every comparison of codes, which was the largest of the three.
 Written as a sum, stated at names throughout, and with the data defined where it
 is used, the chapter costs nothing.
 <!--zh-->
-一个 `Name`{.Agda} 是一个元数、一条多一个变量的无参公式，以及一个取自该阶段的参数向量；`denote`{.Agda} 是它刻出的子集，而 `denote-mem`{.Agda} 在可定义幂集据以定义的那套内层语义中把这件事说出来，`denote-table`{.Agda} 则把它与已内化的表所读出的东西认同。`names-complete`{.Agda} 说后继阶段的每个成员都被指称，且是截断的，因为可定义幂集本来就是这样交出它的公式的。
+一个 `Name`{.Agda} 是一个元数、一条多一个变量的无参公式，以及一个取自该阶段的参数向量；`denote`{.Agda} 是它刻出的子集，而 `denote-mem`{.Agda} 在可定义幂集据以定义的那套内层语义中把这件事说出来。`names-complete`{.Agda} 说后继阶段的每个成员都被指称，且是截断的，因为可定义幂集本来就是这样交出它的公式的。
 
 `code∈limit`{.Agda} 把第一个键放到上一章那个序够得着的地方，而 `code-inj`{.Agda} 使那个键忠实；`_≺ᵥ_`{.Agda} 跨长度地给第三个键排序，而 `_≺ₙ_`{.Agda} 就是那次三键比较本身，连同四条定律与 `leastName`{.Agda}，即非空族中最小的名字。
 

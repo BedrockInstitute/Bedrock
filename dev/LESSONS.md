@@ -576,7 +576,18 @@ its own type and filling it with itself does not finish in 400 s, while each of
 its two factors checks in 2.4 s. With the result type inferred the same
 substitution is 2.4 s; with it written down it never returns.
 
-**Provenance:** PLAN §11 row L2.4 (obligation (a), RULE 20).
+**The subject was deleted 2026-08-10 and the measurement is unaffected.**
+`denote-table` was dead in code and it was removed. **Last green with it:
+commit `35cb762`**, at `src/L/Choice/Name.lagda.md:478-484`, inside
+`Naming.Internal`. Restore with `git show 35cb762:src/L/Choice/Name.lagda.md`
+to re-run the measurement. **The law never depended on the lemma being live.**
+It binds any consumer that writes a composite adequacy goal down, and the wing
+will write several. Keeping the code would also have re-verified only the
+cheap half: the tree holds the factor-by-factor form, so `make check` confirms
+the 2.4 s factors and never exercises the 400 s wall at all.
+
+**Provenance:** PLAN §11 row L2.4 (obligation (a), RULE 20); commit `35cb762`
+for the deleted subject.
 
 **When it bites:** any consumer that writes a composite adequacy goal down.
 
@@ -685,7 +696,10 @@ very object; discharging the assertion is the problem it was meant to solve.
 
 **Measured:** pinned by the typechecker at `L.Recursion.witnessInModel` rather
 than left as an argument; the false mechanism (circularity of existence or
-uniqueness) would have cost five build steps.
+uniqueness) would have cost five build steps. **`witnessInModel` was dead in
+code and was deleted 2026-08-10; last green with it is commit `35cb762`, at
+`src/L/Recursion.lagda.md:139-141`.** D-27 class 3: a citation is repointed at
+a commit, never paid for by keeping the code in `src/`.
 
 **Provenance:** PLAN §11 bookkeeping, reconnaissance and adjudication [L3.0.1].
 
@@ -1698,8 +1712,16 @@ kept, whatever the grep says.
 2. **The readings of a seal.** An `opaque` definition plus its unsealing
    lemmas are ONE unit. Delete the readings and the definition survives as a
    seal nobody can open, which is strictly worse than deleting both.
-3. **A name a recorded MEASUREMENT cites.** Deleting it orphans the evidence
-   for a law at its own site, and no checker notices.
+3. ~~**A name a recorded MEASUREMENT cites.**~~ **CLASS 3 IS WITHDRAWN, same
+   day, by the owner's argument.** Repoint the citation at the commit where
+   the name was last green and delete the code. `dev/ARCHIVE.md` already
+   accepts a commit as provenance, and `git show <sha>:<path>` re-runs the
+   measurement. **Live code buys one thing here and it is less than it
+   looks:** `make check` re-verifies it continuously, so a compiler upgrade
+   that invalidated the figure would surface. But a tree holds the CHEAP form
+   of a measured trap, never the expensive one, so the continuous check
+   confirms the half nobody doubts and never exercises the wall. Preserving a
+   measurement is not a reason to keep code in `src/`.
 
 **The operational test, which is cheap:** before deleting, read the chapter's
 first paragraph and its recap. If either names the result, stop.
@@ -1711,10 +1733,14 @@ machinery while keeping prose that both ASSERTS the property and MEASURES what
 it cost, "one path-induction lemma of a dozen lines, one line for the
 agreement". The chapter's own opening calls that property the one "the rest of
 the part needs". `src/L/Choice/Stage.lagda.md` lost `defStage-ord` and
-`defStage-suc`, the only two openings of `defStage`'s seal. A fourth name,
-`L.Choice.Name.denote-table`, was caught BEFORE deletion by class 3: it is
-dead in code and `dev/LESSONS.md` Rule 20 cites it by fully qualified name as
-that law's measurement.
+`defStage-suc`, the only two openings of `defStage`'s seal.
+
+**Class 3 was proposed on a fourth name and then REFUTED on it the same day.**
+`L.Choice.Name.denote-table` was held back because Rule 20 cites it as that
+law's measurement. The owner asked why a law that is MORE GENERAL than its
+instance needs the instance alive. It does not: Rule 20 now carries the
+commit, and the lemma is deleted. **Keep the two classes that survived and
+distrust any argument of the form "a document mentions it".**
 
 **The cost of the wrong direction is asymmetric, which is why this is a rule
 and not a preference.** Deleting a live helper fails the typecheck in seconds.
