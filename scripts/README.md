@@ -328,6 +328,77 @@ python3 scripts/lint-agda.py --check           # scan tracked src masters; exit 
 python3 scripts/lint-agda.py <files>           # specific masters (used by the hook)
 ```
 
+## `rules.py`
+
+**The first command AGENTS.md gives an agent**, and until 2026-08-10 it was
+absent from this index. It prints the MANDATORY laws for a task kind out of
+`dev/LESSONS.md`, routed by `dev/rules.toml`, so a brief cites the routing
+rather than the corpus. `--grep <term>` resolves the long tail by trigger
+word.
+
+It exists because memory drifted: sixteen laws entered the corpus over two
+days and were cited in 10 briefs out of 112. **Never pick rules from memory.**
+The kind is DERIVED from the brief's write scope, never self-declared, because
+an author who picks the kind picks the bundle.
+
+```sh
+python3 scripts/rules.py --for build     # build, probe, recon, rewrite, review
+python3 scripts/rules.py --grep seal     # the long tail, by trigger word
+```
+
+## `check-rule-ids.py`
+
+Runs in `make check`. Every `[LJ-x.y]`, `DD<n>` and LESSONS id cited anywhere
+under `dev/` must resolve to a real entry, and a struck decision still
+resolves against the archive. It exists because a document written ABOUT rule
+hygiene shipped a fake id.
+
+## `check-task-index.py`
+
+Runs in `make check`. Every cited task code has exactly one row in PLAN
+section 11, and no row exceeds 200 characters. The cap stops a verdict
+paragraph sneaking back into a row. **Widened 2026-08-10** to see lettered
+codes: `LJ-\d+\.\d+` matched none of `LJ-0.4a` to `LJ-0.4q`, so fifteen rows
+were invisible and twelve of them were over the cap, one at 438 characters.
+
+## `check-timing.py`
+
+The repository's ONLY module timer, and it stays that way; a second
+implementation drifts (C-26). It moves a module's own interface aside, times
+the check, and puts it back. **The caliber is a parameter:** the default is a
+bare `-M8g`, which is what the ledger's `[[hot]]` rows were measured at, and a
+caller comparing against a different baseline passes its own. Suspended as a
+gate by DD5; it reports.
+
+## `check-sources-read.py`
+
+**An audit aid, not a gate; exit 0 always.** DD18 makes a brief name what in
+`archive/` and `dev/literature/` may bear on the task, and `dispatch.py`
+refuses a brief that omits either section. The RETURN half is review-only, and
+that gap cost a day on 2026-08-10: `[LJ-1.6]` filed a filled ARCHIVE USED
+section while the cure it needed sat unread in the archive file its own brief
+named.
+
+This diffs the sources a brief NAMED against the paths the agent actually
+OPENED in a tool call, using the session log the dispatcher already keeps. It
+separates three things a naive grep conflates: the brief's text, the report's
+text, and a real read.
+
+**It proves a path was opened, never that the right part was read.** It would
+have passed `[LJ-1.6]`. What to DO with a miss is `dev/ORCHESTRATION.md`
+section 6, step 2.
+
+```sh
+python3 scripts/check-sources-read.py LJ-1.6      # one or more task codes
+python3 scripts/check-sources-read.py --all
+```
+
+## `obligations.py` and `link-check.py`
+
+Helpers rather than gates. `obligations.py` counts a module's proof
+obligations, which is the denominator of the per-obligation rates
+`dev/ARCHIVE.md` records. `link-check.py` checks the site's internal links.
+
 ## The archive
 
 Archived modules live in `archive/` at the repository root, outside `src/`, so
