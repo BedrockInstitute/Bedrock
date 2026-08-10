@@ -150,8 +150,21 @@ test:
 	$(PY) scripts/tests/test_deletion_test.py
 	$(PY) scripts/tests/test_ratio_baseline.py
 
+# THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the
+# [LJ-0.4] closeout. _build/literature/ holds the OCR text and PDFs of Devlin,
+# Jensen and Jech. They cannot be committed, because they are copyrighted, and
+# `rm -rf _build` destroyed them along with the generated site.
+#
+# THE CITATIONS ARE WHAT BREAKS. [LJ-1.11] cites dev2.txt by LINE NUMBER 29
+# times, and dev/literature/ cites it throughout. A re-fetch restores the
+# text but not necessarily the same line numbers, because the files are OCR
+# output; primary-sources.md records that the load-bearing pages needed a
+# second OCR pass with a different engine. So a clean would silently turn every
+# line citation in the corpus into a number pointing at nothing.
+#
+# Provenance for re-fetching is dev/literature/primary-sources.md.
 clean:
-	rm -rf _build
+	find _build -mindepth 1 -maxdepth 1 ! -name literature -exec rm -rf {} +
 
 hooks:
 	git config --local core.hooksPath scripts/git-hooks
