@@ -137,6 +137,7 @@ import FOL.Absoluteness
 
 ```agda
 import FOL.ZFModel
+import FOL.Count
 ```
 
 <!--en-->
@@ -363,6 +364,7 @@ import L.Choice.Limit
 import L.Choice.Before
 import L.Choice.Order
 import L.Hull
+import L.StageCardinal
 import L.Choice.Transversal
 ```
 
