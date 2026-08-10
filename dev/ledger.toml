@@ -239,6 +239,38 @@ band, so it can decide the constraint by itself.
 # NOT told its number would become a ceiling (DD5 measure 2), so it had no
 # reason to project high.
 gch_wing_apriori = [7553, 11197]
+# A SECONDS BUDGET FALLS OUT OF THIS, and [LJ-1.6-R] was the first to compute
+# it. DD24's bar of 0.013193 s/line over the a-priori wing sets the wing's
+# WHOLE seconds budget at 99.6 to 147.7 s. That number is the one to price a
+# candidate chapter against, and nobody had it until 2026-08-10.
+#
+# THE SQUARE LAW FAILS AGAINST IT, and this is a route-level constraint rather
+# than a chapter's problem. The archived L.Ordinal.SquareLaw and
+# L.Ordinal.Pairing are 1,283 in-fence together, and at the ledger's own
+# superseded figures they cost 41.9 s. Ported as they stand, the wing reads
+# 47.36 s over 2,677 lines, 0.0177 s/line, which is 1.34x the bar. At the
+# figures [LJ-1.6]'s report quoted it is 0.0321, 2.43x.
+#
+# THE FAIL DOES NOT DEPEND ON TODAY'S WING RATE. Even crediting the delivered
+# wing with ZERO seconds, 47.36 over 2,677 is still over. So it cannot be
+# absorbed by building the rest cheaply.
+#
+# In budget terms the square law consumes 28 to 42 percent of the wing's whole
+# seconds allowance for 11 to 17 percent of its lines. THAT is the argument
+# against porting it, and it is stronger than any line count.
+#
+# TWO NUMBERS WERE WRONG IN THE ROUTE'S OWN RECORD, both found by [LJ-1.6-R].
+# The 1,540-line figure in [LJ-1.6] and in _build/lj-1.1-recon.md:251 is a
+# CALIBER ERROR: it adds SquareLaw's in-fence 907 to Pairing's FILE count 633,
+# whose in-fence is 376. True sum 1,283, so the record ran 20 percent high.
+# And the 61.9 s figure is stale by two supersessions; this file at :1765 and
+# :1769 records SquareLaw 64.4 to 23.3 and Pairing 18.6.
+#
+# ONE GAP NEITHER DOCUMENT NAMED: the archived square law holds at INITIAL
+# ordinals only, by its own prose, and Init ω is uninhabited. The chain needs
+# the level size at arbitrary infinite ordinals, and the non-initial transfer
+# is unpriced. Re-arm: price it before any square-law port is funded.
+gch_wing_seconds_budget = [99.6, 147.7]
 gch_wing_apriori_centre = 9400
 gch_wing_apriori_source = """
 [LJ-1.1], _build/lj-1.1-recon.md section 6. Block sum 7,553-11,197; the recon
