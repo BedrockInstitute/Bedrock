@@ -238,13 +238,23 @@ def main() -> int:
     # wired warm until [LJ-0.1] caught it.
     cold = not args.warm
     rows = measure(targets, cold=cold, ghcrts=cfg.get("ac_baseline_ghcrts"))
-    bar = baseline * tolerance if tolerance else baseline
+
+    # THE HEADER MUST ADVERTISE THE BAR THAT IS ACTUALLY APPLIED. It printed
+    # the whole-cone rate while the verdict used the module rate, so a reader
+    # comparing a flagged row against the header's number compared it against
+    # the wrong caliber. That is the same defect this whole section exists to
+    # stop, reproduced in the display.
+    module_rate = cfg.get("ac_baseline_module_rate")
+    judged = module_rate or baseline
+    bar = judged * tolerance if tolerance else judged
+    caliber = ("module-cold, warm dependencies" if module_rate
+               else "WHOLE-CONE, and NOT the caliber these rows are measured at")
 
     total_lines = 0
     total_seconds = 0.0
     unmeasured = []
-    print(f"check-ratio | AC baseline {baseline:.4f} s/line | tolerance "
-          f"{tolerance if tolerance else 1.0}x | bar {bar:.4f} s/line "
+    print(f"check-ratio | AC baseline {judged:.4f} s/line ({caliber}) | "
+          f"tolerance {tolerance if tolerance else 1.0}x | bar {bar:.4f} s/line "
           f"| {'cold' if cold else 'WARM, NOT COMPARABLE'}")
     for rel, lines, seconds in rows:
         if seconds is None or not lines:
@@ -281,19 +291,30 @@ def main() -> int:
     # The aggregate above is a SUM OF SLICES: each module timed cold with its
     # dependencies WARM, so no line carries any dependency cost at all.
     #
-    # P-s says a slice rate does not extrapolate to a tree, and the bias here
-    # has a direction: a slice is systematically CHEAPER than a whole-cone
-    # share, so judging the wing this way is systematically TOO LENIENT. The
-    # old bare `-M8g` pushed the other way by up to 22.3 percent, so the tool
-    # was wrong twice and the errors partly hid each other.
+    # P-s says a slice rate does not extrapolate to a tree. I PREDICTED THE
+    # DIRECTION AND THE MEASUREMENT REFUTED ME, so the prediction is struck and
+    # the number stands in its place.
+    #
+    # I wrote here that a slice must be CHEAPER than a whole-cone share,
+    # because it carries no dependency cost, and that the wing was therefore
+    # judged too leniently. `--recalibrate` measured the opposite: the 73 AC
+    # masters timed one at a time sum to 193.85 s against the same tree's
+    # 133.70 s cold, which is 1.45x, 45 percent MORE. Timing modules
+    # separately re-pays a fixed cost 73 times over, chiefly loading each
+    # module's dependency interfaces from disk on every invocation, and that
+    # dwarfs the dependency-share effect I reasoned from.
+    #
+    # So the slice caliber is systematically STRICTER, not more lenient, and a
+    # wing judged against the whole-cone rate would have been judged too
+    # HARSHLY. Which is why the tool refused to judge at all rather than pick a
+    # caliber: the sign of the error was not knowable without measuring it.
     #
     # SO THE VERDICT NEEDS A MODULE-CALIBER BASELINE: the AC side measured the
     # same way, per module, cold with warm dependencies, at the same GHCRTS.
     # `--recalibrate` produces it. Until it is declared this tool REPORTS and
     # refuses to judge, because a confident wrong verdict is worse than none.
-    module_rate = cfg.get("ac_baseline_module_rate")
     if module_rate:
-        module_bar = module_rate * tolerance if tolerance else module_rate
+        module_bar = bar
         verdict = "OVER THE BAR" if aggregate > module_bar else "within the bar"
         print(f"check-ratio: wing aggregate {aggregate:.4f} s/line over "
               f"{total_lines:,} lines and {total_seconds:.2f} s, {verdict} "
