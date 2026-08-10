@@ -457,7 +457,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.15-R | DD25 review of LJ-1.15's NO-GO | OVERTURN | Crossing FITS the budget: 0.0052 s/line means 15-17 s of 99.6-147.7. Two obstructions, not one: 1.16's is permanent, 1.15's removable |
 | LJ-1.18 | PROBE: the meta term algebra, the fourth shape | GO at 116 lines | Plain inductive, strictly positive, 0.0103 s/line under the bar. Corrected the review on four details. OWNER'S FORK |
 | LJ-1.17-R | DD25 review of LJ-1.17, fired late | dispatched | Asks whether the IDEAL form was priced or the port twice, and whether a shared square law should be billed to the wing at all |
-| LJ-1.20 | Build: the stage-arithmetic kit, +omega and its bounds | dispatched | LJ-1.19 proved it GREEN at probe scale. Template content: the tree has no +omega in any master and both towers want it |
+| LJ-1.20 | Build: the stage-arithmetic kit, +omega and its bounds | dispatched | LJ-1.19 proved it GREEN at probe scale. Template: the tree has no +omega in any master and both towers want it |
 | LJ-1.21 | Build: the carrier-level descent for the level size | dispatched | T85 cured this on 2026-08-05 and the cure is still green. 52 MEASURED lines, not the 250-450 priced fresh |
 | LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing condenses ONCE, at 5.5, whose free lambda can be +omega-closed at zero cost |
 | LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS; review is LJ-1.17-R | Pairing 0.0485, SquareLaw 0.0255, pair 0.0322, 2.44x the bar. I recorded it and MISSED firing DD25 |
