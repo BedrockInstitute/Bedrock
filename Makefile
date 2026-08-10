@@ -148,6 +148,7 @@ test:
 	$(PY) scripts/tests/test_obligations.py
 	$(PY) scripts/tests/test_task_index.py
 	$(PY) scripts/tests/test_deletion_test.py
+	$(PY) scripts/tests/test_ratio_baseline.py
 
 clean:
 	rm -rf _build
