@@ -116,6 +116,13 @@ needed.
 
 ### 2026-08-10, `[LJ-0.4]`: the compression campaign, and what a tree does when the mass is not there
 
+> **SUPERSEDED, same day, by the closing entry below.** This entry was written
+> while the campaign still read as exhausted at 17,166, and it was true then:
+> eight bands had been tested and every kit had failed. `[LJ-0.4f-R]` then
+> found that the KIT'S PARAMETER COUNT was the defect and not the idea, and
+> the ninth block landed minus 104. The block table here is incomplete and its
+> conclusion is too pessimistic. It stays as written.
+
 **Asked.** Bring the AC side under a line prerequisite before phase 1
 continues. The figure moved three times: 16,000, then about 16,400, then
 17,000, each after the previous one failed.
@@ -165,3 +172,106 @@ writes a band without reading seven tested ones. The dead-name sweep STOPS at
 `Codes-out` and `Codes-in`: deleting a set's characterization is content
 removal, not compression, and the line where that boundary sits is now
 written down rather than felt.
+
+### 2026-08-10, `[LJ-0.4]` closing: the loop that hit its number by finding a law
+
+**Asked.** Compress the AC side to 17,000 in-fence lines and do not badly
+worsen the seconds-per-line ratio. The owner had already moved the figure
+twice, from 16,000 and then from about 16,400, each time after the previous
+one was refuted rather than missed.
+
+**Result.** Both halves met. AC **16,897** under DD26's caliber, or **16,995**
+on the caliber the target was set with. Ratio **0.007913** s per line, plus
+2.85 percent, inside DD24's 1.15 bar of 0.008847. Tree green, every gate
+green, the ratio guard clear for the first time in a day.
+
+#### The nine blocks, and the one sentence they add up to
+
+| Block | Band | Measured | Outcome |
+|---|---|---|---|
+| A, dead names | -226 to -296 | **-240** | landed |
+| B, existential frame | -190 to -340 | **+24** | refused, kit kept |
+| C, clause frames | -180 to -315 | **-59** | stopped, it gutted two chapters |
+| D, Model arity-generic | -60 to -130 | not run | skipped on review evidence |
+| E, traversal share | -60 to -120 | **+19** | refused, kit lost |
+| G, lex kit | -40 to -80 | **+49** | refused, kit lost |
+| H, preamble helpers | -30 to -60 | not run | never travels alone |
+| I, within-file dedup | -80 to -140 | **-30** | landed one file of seven |
+| prose-freed dead names | -55 to -65 | **-59** | landed, orchestrator only |
+| F, recursion assembly | -100 to -200 | **+4** | refused, and then superseded |
+| citation re-test | traced | **-34** | landed |
+| **N, the shape half** | **-106 est.** | **-104** | **landed, and seconds FELL** |
+
+**EVERY KIT BLOCK MEASURED NET POSITIVE UNTIL THE LAST ONE.** What paid was
+deletion, three times, and exactly one kit.
+
+#### The turn
+
+`[LJ-0.4f]` refused an eleven-parameter kit of 208 lines at plus 4 over two
+sites. DD25 fired on that refusal, and `[LJ-0.4f-R]` UPHELD it, corrected it
+to a wider margin, and then found what the refusal had missed: **the
+parameters were the defect, not the idea.** Split the assembly where the
+parameter count drops, share only the low-parameter half, and host it where a
+copy already lives. `[LJ-0.4n]` measured minus 104 with ONE parameter over
+five sites, and the tree got **0.53 s faster**. That is the only compression
+in the campaign that improved the ratio instead of trading against it.
+
+It also killed a false finding I had already propagated. `[LJ-0.4f]` reported
+that `L.Choice.Before` held no third copy. It holds a full assembly at
+`src/L/Choice/Before.lagda.md:685,715,747-766,1213-1241`, and the file says
+"follow the template" at `:662`. I had written the false claim into
+`dev/PLAN.md` and repeated it to the owner. Before was the largest site at
+minus 58.
+
+#### What the loop wrote down
+
+- **DD25.** A negative codex return is attacked by Opus at maximum effort
+  before it is believed, and the two are read together. It fired once and paid
+  for itself the same hour.
+- **D-27.** "No code consumer" identifies a dead HELPER, never a dead RESULT.
+  It cost 51 reverted lines to learn. Its class 3 was struck the same day on
+  the owner's argument: a law more general than its instance does not need the
+  instance alive, so a citation is repointed at a commit.
+- **D-28.** A kit's break-even is set by its PARAMETER count, not its line
+  count. Eleven parameters over two sites, plus 4; one parameter over five
+  sites, minus 104. Same material, same day.
+- **C-30.** The nine compression gates, listed once. Two were new and both had
+  cost money by their absence: grep the sites tree-wide, and sum the seconds
+  including the kit's own.
+- **DD26.** The catalogs leave every line count, because a catalog grows with
+  the project and drags a threshold away from the mathematics it bounds.
+
+#### The measurement nearly lied twice
+
+**A confound.** `make typecheck` builds `src/Everything.lagda.md` and so the
+GCH wing too, while the denominator excluded the wing by declaration. It read
+plus 3.98 percent against a true plus 2.74. `src/Landmarks.lagda.md`'s import
+cone IS the AC side by structure, so it became the root.
+
+**A caliber.** `scripts/check-ratio.py` timed wing modules at a bare `-M8g`
+while the bar was measured at `-A64m -I0 -M16g`, worth 22.3 percent, and it
+compared module SLICES to a WHOLE-CONE rate, which is too lenient by
+construction. Two errors in opposite directions, partly hiding each other. It
+now refuses to judge without a caliber-matched baseline.
+
+#### My own defects, recorded because they are the reusable part
+
+1. **An implementation batch done in person**, against DD17, on a review
+   sentence I never tested. A slot sat idle while I typed.
+2. **A commit that did not contain what it claimed.** `git add` refused a
+   whole pathspec on one bad path, stderr went to `/dev/null`, and `;` carried
+   on. Found by running `git diff --cached --stat`.
+3. **Ten dead names left in the CHINESE catalog** while the English half was
+   rewired. `AGENTS.md` requires that cross-check.
+4. **A brief that ordered a check the agent's sandbox cannot perform.** Moved
+   to the side that can make it, `dev/ORCHESTRATION.md` 2.1.
+5. **A false residue claim propagated** into PLAN and to the owner, which D-10
+   exists to stop.
+
+**Cost.** Fourteen dispatches, five of them refusals with numbers, one
+adversarial review, one read-only scan that took no slot. Every refusal was
+worth having and two of them changed the plan.
+
+**Owed.** `ac_baseline_module_rate` from `check-ratio.py --recalibrate`,
+before the first GCH wing module is judged. Until it exists that tool reports
+and refuses to render a verdict.
