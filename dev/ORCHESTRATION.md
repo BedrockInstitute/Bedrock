@@ -144,9 +144,15 @@ Standing clauses that go in every build or probe brief:
   carries **LITERATURE USED**, saying what it read, what it took, and WHY NOT
   for anything skipped. **The why-not earns its keep:** a note that a source
   is OCR-degraded, or covers the wrong chapter, stops the next agent paying
-  the same reading twice. **This one is enforced at dispatch**, not by review:
-  `dispatch.py` refuses a master-writing brief with no LITERATURE section, and
-  one honest line saying nothing applies satisfies it.
+  the same reading twice. **BOTH SURVEYS ARE ENFORCED AT DISPATCH, identically
+  and on every brief** (owner, 2026-08-10): `dispatch.py` refuses a brief with
+  no ARCHIVE section and one with no LITERATURE section, whatever its kind. One
+  honest line naming the corpus satisfies either. **The scope is every brief
+  because a recon needs the literature most:** `[LJ-1.1]` planned the whole GCH
+  wing and wrote only a report, so a build-only gate would have exempted it.
+  **The limit: this binds the CODEX path.** An in-harness dispatch skips
+  `dispatch.py` entirely, so the orchestrator applies both surveys by hand
+  there and sends back a return that lacks either USED section.
 - **THE ARCHIVE SURVEY, and it is a section of the brief rather than a hope.**
   Ruled by the owner 2026-08-09. Before a brief is sent it carries an
   **ARCHIVE** section listing what may bear on the task in each of the four
