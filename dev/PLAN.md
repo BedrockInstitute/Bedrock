@@ -415,7 +415,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.6 | Restore the V.Presentation shim the src/ restore deleted | planned | NOT compression, it costs +15. A WING PREREQUISITE: archived Collapse imports it and Hull needs it. 18 in-fence |
 | LJ-0.5 | RE-MEASURE the DD24 seconds-per-line baseline after LJ-0.4 | planned | GATES ALL OF LJ-1. Same protocol, quiet machine. Write the figure and ac_baseline_lines together |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | RETURNED | Wing 8.0-10.8k, centre 9.4k. Widest term is the Levy crossing; probe specified. Corrects 7 of the LJ-1.x rows |
-| LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | dispatched | DD8. GO or NO-GO with a price. Thrown away after |
+| LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Step clause has no Delta-0 witness at ANY carrier. Crossing 5.0-5.1k, or 1.0-1.7k by the cone fork |
 | LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
 | LJ-1.4 | Build: the Mostowski collapse | planned | ARCHIVE: V/Collapse.lagda.md, PORTABLE at 181 in-fence per LJ-1.1. NEEDS LJ-0.6's V.Presentation. Price port vs fresh (DD13) |
 | LJ-1.5 | Build: the condensation lemma | planned | The hull collapses to an L stage. The load-bearing step of the whole wing |
