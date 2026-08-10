@@ -149,7 +149,6 @@ module At (A : V ℓ) (pA : ⟨ isL A ⟩) (w : SWO ⟪ A ⟫) where
     Aʟ = A , pA
 
     module NM = Naming A w
-    module NI = NM.Internal pA
 
   open Adequacy A pA w using ( ix; ixL; pfam; module Keys )
   open NM using
@@ -368,8 +367,8 @@ the set the meta name denotes. Both directions are the same chain read forwards
 and backwards, and the chain has four links: the extended environment is the
 member pushed onto the parameters, its length is the arity plus one, the key is
 that length paired with the skeleton, and the value the graph assigns at that key
-is satisfaction over the carrier. The naming chapter's `denote-table`{.Agda} is
-the last link, and it is the only one with mathematics in it.
+is satisfaction over the carrier. The naming chapter's composite denotation
+equation is the last link, and it is the only one with mathematics in it.
 
 Two of the links are stated at the carrier the module is written over and reached
 at the carrier a slot holds, so the formula travels along an equality of
@@ -378,7 +377,7 @@ the value, and it is the whole cost of letting the carrier be a slot.
 <!--zh-->
 ## 指称，两个方向
 
-一条描述在它的指称位上忠实，是指那一位所持有的集合就是元层面那个名字所指称的集合。两个方向是同一条链正着读与反着读，而这条链有四环：扩张后的环境是被推到诸参数前面的那个成员，它的长度是元数加一，键是那个长度与骨架之对，而图在那个键处所指派的取值就是载体之上的满足关系。命名那一章的 `denote-table`{.Agda} 是最后一环，也是唯一装着数学的一环。
+一条描述在它的指称位上忠实，是指那一位所持有的集合就是元层面那个名字所指称的集合。两个方向是同一条链正着读与反着读，而这条链有四环：扩张后的环境是被推到诸参数前面的那个成员，它的长度是元数加一，键是那个长度与骨架之对，而图在那个键处所指派的取值就是载体之上的满足关系。命名那一章的复合指称等式是最后一环，也是唯一装着数学的一环。
 
 其中两环陈述在本模块据以写出的那个载体上，却在「一位所持有的载体」处被取用，故那条公式要沿载体之间的一条等式旅行。那次旅行是一次路径归纳，为键写一遍、为取值写一遍，而这就是「让载体成为一位」所花的全部。
 <!--/-->
@@ -909,7 +908,7 @@ for a least name, with the universal instantiated at a name's own three data;
 which is two least names and one comparison.
 
 Three measurements, and all three are laws this route already had, met at new
-places. The composite equation `denote-table`{.Agda} **cannot be discharged by a
+places. The composite denotation equation **cannot be discharged by a
 substitution against a written type**, at any arguments, variable ones included:
 its two factors `denote-mem`{.Agda} and `val-sat`{.Agda} each discharge in 2.4 s,
 and their composite does not finish in 400 s. Substituting along the factors
@@ -929,5 +928,5 @@ out puts the description under it into normal form.
 
 `Least.Min.LeastAt-fill`{.Agda} 与 `Least.Min.LeastAt-read`{.Agda} 对最小名字做同样的事，那个全称在「一个名字自己的三样数据」处实例化；`Least.Step.StepAt-fill`{.Agda} 与 `Least.Step.StepAt-read`{.Agda} 是那一步，即两个最小名字加一次比较。
 
-三次测量，三条都是这条路线早已有的规矩，只是在新的地方遇上。复合等式 `denote-table`{.Agda} **无法由「对着写出来的类型」的一次代换交割**，任何实参都不行，变元也不行：它的两个因子 `denote-mem`{.Agda} 与 `val-sat`{.Agda} 各自 2.4 秒交割，而它们的复合 400 秒跑不完。沿两个因子分别代换就是解药，而那条规矩是：充分性等式的复合逐因子消费，绝不整体消费。六层绑定那一块要求它的环境被**写开**，不可用 `where` 缩写：缩写时，仅 `StepAt-fill`{.Agda} 一条 400 秒跑不完；写开后，整个文件 20 秒检查完毕。而六重存在的载荷经本章自己的 `StepOf`{.Agda} 读出，绝不经手写的 Σ，因为把它写开会把它下面那条描述化为正规形。
+三次测量，三条都是这条路线早已有的规矩，只是在新的地方遇上。复合指称等式**无法由「对着写出来的类型」的一次代换交割**，任何实参都不行，变元也不行：它的两个因子 `denote-mem`{.Agda} 与 `val-sat`{.Agda} 各自 2.4 秒交割，而它们的复合 400 秒跑不完。沿两个因子分别代换就是解药，而那条规矩是：充分性等式的复合逐因子消费，绝不整体消费。六层绑定那一块要求它的环境被**写开**，不可用 `where` 缩写：缩写时，仅 `StepAt-fill`{.Agda} 一条 400 秒跑不完；写开后，整个文件 20 秒检查完毕。而六重存在的载荷经本章自己的 `StepOf`{.Agda} 读出，绝不经手写的 Σ，因为把它写开会把它下面那条描述化为正规形。
 <!--/-->
