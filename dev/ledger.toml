@@ -2446,7 +2446,7 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
 # /usr/bin/time -p. The same protocol as [timing].measured_wall, so the two
 # figures are comparable.
-ac_baseline_seconds_per_line = 0.007693
+ac_baseline_seconds_per_line = 0.007904
 
 # THE TREE THE BASELINE WAS MEASURED ON, and the reason this field exists.
 # A seconds-per-line baseline is a property of a SPECIFIC tree, not a constant.
@@ -2464,7 +2464,16 @@ ac_baseline_seconds_per_line = 0.007693
 # So the tools REFUSE the baseline when standing has moved away from this
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
 # in scripts/ledger.py and the guard in scripts/check-ratio.py.
-ac_baseline_lines = 17271
+ac_baseline_lines = 16916
+# THE DENOMINATOR IS THE COLD-BUILD CONE, not the AC bucket, and the two are
+# different numbers on purpose. A Landmarks build compiles 74 masters and
+# 16,916 lines. The AC BUCKET is 16,995: it adds src/Everything.lagda.md's own
+# 79 in-fence lines, which are imports rather than mathematics and which no
+# Landmarks build compiles. The owner's 17,000 target is measured on the
+# BUCKET and is met at 16,995; this row measures the RATIO's tree. Never swap
+# them to make a number look better.
+ac_baseline_root = "src/Landmarks.lagda.md"
+
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same
 # day; see the block below for why. Reach the target WITHOUT badly worsening
@@ -2585,7 +2594,51 @@ compression_seconds_ceiling = 133.4   # today's cold wall; no block may exceed i
 ac_baseline_tolerance_lines = 50   # noise, not a licence: a real compression is hundreds
 
 ac_baseline_provenance = """
-RE-MEASURED 2026-08-10 by [LJ-0.5], twice. Current figure: 132.87 s real
+RE-MEASURED 2026-08-10 by [LJ-0.5], AFTER the compression campaign closed.
+Current figure: 133.70 s mean over 16,916 in-fence lines across 74 masters,
+the cold-build cone of src/Landmarks.lagda.md. Ratio 0.007904. Three cold
+runs, 134.66 / 132.51 / 133.94, spread 2.15 s, each exit 0. Protocol: cache
+moved aside per run, `GHCRTS=-A64m -I0 -M16g` as the Makefile exports it, one
+process, /usr/bin/time -p.
+
+AGAINST THE OLD 0.007693 THIS IS PLUS 2.74 PERCENT, inside DD24's 1.15
+tolerance, whose bar is 0.008847. The rise is arithmetic and not damage: the
+tree lost 278 lines at roughly flat seconds, so a ratio must rise. P-q.
+
+THE CONFOUND THAT WAS CAUGHT, and it would have been reported as a regression.
+The first three runs used `make typecheck`, which builds src/Everything.lagda.md
+and therefore all 78 masters INCLUDING the GCH wing. They read 138.75 / 135.82
+/ 133.25, mean 135.94, ratio 0.007999, plus 3.98 percent. That numerator
+carried 582 lines of wing seconds (V/Collapse 239, L/Hull 343) that the old
+baseline never built, while the denominator excluded those lines by
+declaration. Unlike compared with unlike, inflating the rise by about 1.2
+percentage points. The old baseline was taken over 76 masters, before either
+wing master existed, so `make typecheck` stopped being the right root the day
+the wing landed.
+
+WHY LANDMARKS IS THE ROOT. It states both trophies and its import closure IS
+the AC side by structure: 74 masters, with the three wing masters outside it
+and no declaration needed. Numerator and denominator then describe one tree.
+scripts/ledger.py computes the cone rather than trusting this comment.
+
+THE SPREAD IS THE OTHER FINDING. The Everything series fell monotonically,
+138.75 to 133.25, a spread of 5.50 s, about 4 percent, which reads as a
+warm-up artifact rather than noise around a centre. The Landmarks series did
+NOT repeat that shape, spreading 2.15 s and rising on run 3 with a load spike.
+[LJ-0.5] RECOMMENDS AGAINST discarding run 1 by protocol: run 1 is the slowest
+in both series, but discarding it would define the bar as page-cache-warm and
+bias it LOW, which is the wrong direction for a gate. Report all three and
+take the mean, per DD8.
+
+A CALIBER MISMATCH IS OPEN AND FLAGGED, not resolved. scripts/check-ratio.py
+times each wing module cold with WARM dependencies at -M8g. This baseline is
+whole-cone cold at -M16g. Those are different calibers and P-s says a slice
+rate does not extrapolate to a tree. RE-ARM: before the first GCH wing module
+is judged against this number, either re-measure the baseline at the checker's
+caliber or change the checker to this one. Until then check-ratio.py reports
+rather than gates, which is what it already does by [LJ-0.1]'s downgrade.
+
+THE PREVIOUS FIGURE, superseded: 132.87 s real
 (131.07 user, 0.94 sys), exit 0, over 17,271 in-fence lines across 76
 masters, after [LJ-0.6] wired the V.Presentation shim.
 

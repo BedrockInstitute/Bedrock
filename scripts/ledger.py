@@ -206,21 +206,50 @@ def validate_ratio_baseline(data: dict, standing: int) -> list[str]:
     if not ratio.get("ac_baseline_seconds_per_line") or not declared:
         return []
     slack = ratio.get("ac_baseline_tolerance_lines", 50)
-    # THE BASELINE IS A PROPERTY OF THE AC TREE, so declared wing content is
-    # subtracted before the comparison. Without this the guard fires on every
-    # GCH chapter and demands a re-measure, and that re-measure would fold GCH
-    # lines into the AC baseline, destroying the comparison DD24 exists to
-    # make. ratio.gch_wing therefore does double duty; its comment says so.
-    wing = sum(count(f) for f in ratio.get("gch_wing", []))
-    ac_side = standing - wing
+    # THE GUARD MEASURES THE RATIO'S OWN TREE, which is the tree the NUMERATOR
+    # builds, and that is not the AC bucket.
+    #
+    # [LJ-0.5] 2026-08-10 caught the difference by measuring both. `make
+    # typecheck` builds src/Everything.lagda.md, hence all 78 masters INCLUDING
+    # the GCH wing, so its seconds carried 582 wing lines while this
+    # denominator excluded them: the ratio read 0.007999 against a true
+    # 0.007904, inflating the rise by 1.2 percentage points. Unlike compared
+    # with unlike, which is the exact error DD24's baseline exists to prevent.
+    #
+    # THE ROOT IS THE FIX. src/Landmarks.lagda.md states both trophies and its
+    # import closure IS the AC side by structure: 74 masters, and the three
+    # wing masters fall outside it without being declared. So the numerator is
+    # a cold build of Landmarks and the denominator is Landmarks' cone.
+    #
+    # WHY NOT standing MINUS wing, which is what this used to compute. That
+    # figure, 16,995, additionally counts src/Everything.lagda.md's own 79
+    # in-fence lines, and a Landmarks build never compiles them: the catalog is
+    # imports, not mathematics. Keeping the old form would have forced the
+    # baseline to be written against a denominator its numerator did not build.
+    #
+    # THE AC BUCKET IS UNCHANGED AND STILL 16,995. This function answers "has
+    # the RATIO's tree moved", not "how big is the AC side". The owner's
+    # compression target is measured on the bucket and must not be rebased
+    # here; that would be the [LJ-0.4] wing-reclassification trap again, where
+    # moving lines between buckets looks like progress and is not.
+    root = ratio.get("ac_baseline_root", "src/Landmarks.lagda.md")
+    files = [f for f in tracked_masters() if f not in set(data.get("retired", []))]
+    if root in files:
+        cone = closure(import_graph(files), [root])
+        ac_side = sum(count(f) for f in cone)
+        basis = f"the cold-build cone of {root}, {len(cone)} masters"
+    else:
+        wing = sum(count(f) for f in ratio.get("gch_wing", []))
+        ac_side = standing - wing
+        basis = f"standing {standing:,} minus a declared wing of {wing:,}"
     drift = abs(ac_side - declared)
     if drift <= slack:
         return []
     return [
         f"RATIO BASELINE IS STALE: DD24's {ratio['ac_baseline_seconds_per_line']:.6f} "
-        f"s/line was measured over {declared:,} in-fence lines and the AC side "
-        f"now stands at {ac_side:,} (standing {standing:,} minus a declared wing "
-        f"of {wing:,}), a drift of {drift:,}. Both terms of the ratio "
+        f"s/line was measured over {declared:,} in-fence lines and the ratio's "
+        f"own tree now stands at {ac_side:,} ({basis}), a drift of {drift:,}. "
+        f"Both terms of the ratio "
         f"moved and neither moved predictably (P-q). RE-MEASURE at [LJ-0.5], "
         f"then write the new figure and ac_baseline_lines together. Until then "
         f"the bar is a number from a tree that no longer exists."]
