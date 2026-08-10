@@ -635,8 +635,8 @@ hypothesis beyond this part's standing one, excluded middle:
   `PairGraphAt`{.Agda}; `Recorded`{.Agda}, `IsTable`{.Agda}, `Bundle`{.Agda},
   `table-out`{.Agda}, `table-in`{.Agda} and `bound`{.Agda}; the construction
   `tableAt`{.Agda} itself; and the relation it carries at every ordinal,
-  `relL`{.Agda} and `relL-spec`{.Agda}, with all four representation lemmas
-  `relL-fill`{.Agda}, `relL-rep`{.Agda}, `ix-fill`{.Agda} and `ix-rep`{.Agda}.
+  `relL`{.Agda} and `relL-spec`{.Agda}, with the representation lemmas
+  `relL-fill`{.Agda} and `relL-rep`{.Agda}.
 
 This was checked the way the re-cut checked its own claim: the results were
 imported into a throwaway module assuming nothing but excluded middle, each
@@ -649,7 +649,7 @@ probe was then deleted.
 一行。它供给那个框架的最后一个参数，随之，整张序之表变成无条件的。说白了，以下诸条如今在本部那条常设假设 (排中律) 之外不带任何假设即成立：
 
 - 出自 `L.Choice.Faithful`{.Agda}：`CondCore`{.Agda} 连同它的两条读式、`Cond`{.Agda}、`Cond₀`{.Agda}、`cond-spec`{.Agda} 与 `cond₀-spec`{.Agda}，亦即阶段处的序被完整描述出来，且以表的构造所索取的两种形式给出；
-- 出自 `L.Choice.Table`{.Agda}：步进条件 `StepAt`{.Agda} 连同 `step-rel`{.Agda} 与 `step-table`{.Agda}；逼近 `ApproxAt`{.Agda} 与图 `GraphAt`{.Agda} 连同它们的诸读式、`approx-val`{.Agda} 与 `approx-uniq`{.Agda}、`graph-only`{.Agda} 与 `graph-table`{.Agda}；`PairGraphAt`{.Agda}；`Recorded`{.Agda}、`IsTable`{.Agda}、`Bundle`{.Agda}、`table-out`{.Agda}、`table-in`{.Agda} 与 `bound`{.Agda}；构造 `tableAt`{.Agda} 自身；以及它在每个序数处所携带的那个关系，即 `relL`{.Agda} 与 `relL-spec`{.Agda}，连同全部四条表示引理 `relL-fill`{.Agda}、`relL-rep`{.Agda}、`ix-fill`{.Agda} 与 `ix-rep`{.Agda}。
+- 出自 `L.Choice.Table`{.Agda}：步进条件 `StepAt`{.Agda} 连同 `step-rel`{.Agda} 与 `step-table`{.Agda}；逼近 `ApproxAt`{.Agda} 与图 `GraphAt`{.Agda} 连同它们的诸读式、`approx-val`{.Agda} 与 `approx-uniq`{.Agda}、`graph-only`{.Agda} 与 `graph-table`{.Agda}；`PairGraphAt`{.Agda}；`Recorded`{.Agda}、`IsTable`{.Agda}、`Bundle`{.Agda}、`table-out`{.Agda}、`table-in`{.Agda} 与 `bound`{.Agda}；构造 `tableAt`{.Agda} 自身；以及它在每个序数处所携带的那个关系，即 `relL`{.Agda} 与 `relL-spec`{.Agda}，连同表示引理 `relL-fill`{.Agda} 与 `relL-rep`{.Agda}。
 
 这一点是按重切验证它自己那条主张的办法验证的：把诸结果引入一个除排中律外不假设任何东西的临时模块，逐条按手写出来的类型重述，再用它们推出「上界序数处的序是模型的一个元素，且其隶属是非自反的」。那个探针随后被删除。
 <!--/-->

@@ -694,15 +694,14 @@ just proved, at the same two arguments and with no adapter in between.
 
 The parameter slot stays open, and that is not an omission. It is the order on the
 carrier the naming is being done over, which is a parameter of the whole
-construction, and the previous part supplies it at every stage through
-`ix-fill`{.Agda} and `ix-rep`{.Agda}. What is filled here is exactly the half that
-had no supplier.
+construction, and the previous part supplies it at every stage. What is filled
+here is exactly the half that had no supplier.
 <!--zh-->
 ## 那个为诸码所设的位，已填上
 
 内化命名比较的那个框架取两个关系位，一个为诸码、一个为诸参数，各自带着「它持有什么」的两个方向。为诸码所设的那一位正是本章为之而写的东西，而它在此处被填上：集合是 `codeOrder`{.Agda}，两个方向就是刚证完的那两条引理，实参相同，中间不设任何转接。
 
-为诸参数所设的那一位仍然敞着，而这不是遗漏。它是「命名所依托的那个载体上的序」，是整个构造的一个参数，而上一部经 `ix-fill`{.Agda} 与 `ix-rep`{.Agda} 在每个阶段处供给它。此处填上的，恰是那没有供给方的一半。
+为诸参数所设的那一位仍然敞着，而这不是遗漏。它是「命名所依托的那个载体上的序」，是整个构造的一个参数，而上一部在每个阶段处供给它。此处填上的，恰是那没有供给方的一半。
 <!--/-->
 
 ```agda

@@ -806,7 +806,7 @@ it is built.
 <!--/-->
 
 <!--en-->
-The last four statements are the chapter's deliverable, and each is one of the
+The last two statements are the chapter's deliverable, and each is one of the
 readings above at the set this chapter builds: the relation at the stage realizes
 the class, so it is a set the readings apply to. Nothing new is proved here; what
 is fixed is which realizing set is meant.
@@ -815,7 +815,7 @@ Nothing here is an approximation to the statement. The membership is an
 equivalence, so a separation that carves with this set carves with the order
 itself, and that is what the last chapter of the part will do.
 <!--zh-->
-最后四条陈述是本章的交付物，而每一条都是上文那些读式读在本章所造的那个集合上：阶段处的关系实现那个类，故它是那些读式适用的一个集合。此处不证任何新东西；被定下来的是「所指的是哪一个实现该类的集合」。
+最后两条陈述是本章的交付物，而每一条都是上文那些读式读在本章所造的那个集合上：阶段处的关系实现那个类，故它是那些读式适用的一个集合。此处不证任何新东西；被定下来的是「所指的是哪一个实现该类的集合」。
 
 此处没有任何东西是对那条陈述的近似。隶属是一条等价，故拿这个集合去作的分离，就是拿那个序本身去作的分离，而这正是本部最后一章要做的事。
 <!--/-->
@@ -830,16 +830,6 @@ itself, and that is what the last chapter of the part will do.
              → ⟨ pr (fst a) (fst b) ∈ fst (relL α hα oα) ⟩
              → relOf (orderAt α oα) a b
     relL-rep = rel-rep α oα (relL α hα oα) (relL-spec α hα oα)
-
-    open SWO (carry (Lset α) (orderAt α oα)) using () renaming ( _<∙_ to _≺ᶜ_ )
-
-    ix-fill : (u v : ⟪ Lset α ⟫) → u ≺ᶜ v
-            → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst (relL α hα oα) ⟩
-    ix-fill = ixRel-fill α oα (relL α hα oα) (relL-spec α hα oα)
-
-    ix-rep : (u v : ⟪ Lset α ⟫)
-           → ⟨ pr (⟪ Lset α ⟫↪ u) (⟪ Lset α ⟫↪ v) ∈ fst (relL α hα oα) ⟩ → u ≺ᶜ v
-    ix-rep = ixRel-rep α oα (relL α hα oα) (relL-spec α hα oα)
 ```
 
 <!--en-->
@@ -878,10 +868,8 @@ replacement through `mereFunct`{.Agda}, and the relation at it, separated out of
 bound. The bound is the one piece with no counterpart in the hierarchy chapter,
 and it costs one appeal: the pairs of two members of a stage form a small family
 of elements of `L`, so `smallDom`{.Agda} confines them all at once. `relL`{.Agda} is
-the second component, and `relL-fill`{.Agda}, `relL-rep`{.Agda},
-`ix-fill`{.Agda} and `ix-rep`{.Agda} are the four readings above instantiated at
-it, the second pair being the shape a separation and the naming chapter's
-parameter order both consume.
+the second component, and `relL-fill`{.Agda} and `relL-rep`{.Agda} are
+`rel-fill`{.Agda} and `rel-rep`{.Agda} instantiated at it.
 
 What the chapter does not do is prove the step condition's own adequacy, named
 here as the two hypotheses of `Described`{.Agda}. That is not one thing but
@@ -894,7 +882,7 @@ this construction and an unconditional theorem.
 
 `ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，对那条步进条件保持通用，而该条件以参数身份取两种形式进场：为图取诸位，为分离取诸常元，各自带着「它是什么意思」那条假设。`approx-val`{.Agda} 靠在实参上的一次沿成员的归纳，把逼近所记录的每个取值钉住，任何地方都没有单值性假设，而 `approx-uniq`{.Agda} 是那条推论。`graph-only`{.Agda} 与 `graph-table`{.Agda} 是图对着一张表的两个方向。
 
-`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来。那个界是层级那一章没有对应物的那一件，而它只花一次诉诸：一个阶段的两个成员所成的诸对构成 `L` 元素的一个小族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL`{.Agda} 是第二个分量，而 `relL-fill`{.Agda}、`relL-rep`{.Agda}、`ix-fill`{.Agda} 与 `ix-rep`{.Agda} 是上文那四条读式在它处的实例，其中后两条正是分离与命名那一章的参数序共同消费的形状。
+`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来。那个界是层级那一章没有对应物的那一件，而它只花一次诉诸：一个阶段的两个成员所成的诸对构成 `L` 元素的一个小族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL`{.Agda} 是第二个分量，而 `relL-fill`{.Agda} 与 `relL-rep`{.Agda} 是 `rel-fill`{.Agda} 与 `rel-rep`{.Agda} 在它处的实例。
 
 本章没有做的，是证明那条步进条件自身的充分性，此处以 `Described`{.Agda} 的两条假设之名点出。那不是一件事而是三件：`StepAt`{.Agda} 对着元层面那一步的充分性、诞生阶段在对象语言里的描述、以及在一个随诞生阶段移动的载体上的码集。它们合起来，是横在这个构造与一条无条件定理之间的东西。
 <!--/-->
