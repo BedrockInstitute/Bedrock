@@ -204,7 +204,7 @@ import V.Model
   weakening lemma, and `absFo`{.Agda} instantiates it to the abstraction proper,
   raising the arity by the occurrence count and returning a parameter-free
   formula. `⊨-abs`{.Agda} certifies that the trade costs no meaning, and
-  `⊨-abs₁`{.Agda} with `asPure₁`{.Agda} spend it at the arity a subset is carved
+  `⊨-abs₁`{.Agda} spends it at the arity a subset is carved
   by: a definable subset is carved by a parameter-free formula at a parameter
   vector, read in the inner semantics the definable powerset is defined by.
 - `FOL.Coding`{.Agda}: syntax as sets: `⌜_⌝`{.Agda} tags a constructor index
@@ -239,14 +239,12 @@ import V.Model
   trichotomy: the choosing device the axiom of choice takes. Reflection was
   expected to be a second consumer and is not, so there is exactly one, and it is
   `L.Choice.Transversal`{.Agda}, the last chapter of the book.
-- `L.Coding.Base`{.Agda}: reading codes from inside: `allCodes`{.Agda} gathers
-  every parameter-free formula's code into one nameable set, and
+- `L.Coding.Base`{.Agda}: reading codes from inside:
   `prAt`{.Agda} / `tagAt`{.Agda} destructure a Kuratowski pair and a tag in
   bounded form, Δ₀ and adequate.
 - `L.Coding.Environment`{.Agda}: environments as their graphs, functional by
-  `lookup-spec`{.Agda}; `memPairAt`{.Agda} reads a value, `sucAt`{.Agda}
-  recognizes the index shift under a quantifier, and `seqSet`{.Agda} collects
-  all finite sequences over a set.
+  `lookup-spec`{.Agda}; `sucAt`{.Agda}
+  recognizes the index shift under a quantifier.
 - `L.Stage`{.Agda}: the least ordinal satisfying any property of ordinals, by
   well-founded descent and unique by trichotomy; the earliest stage containing a
   constructible set is its first instance, sealed so the descent never reaches a
@@ -516,7 +514,7 @@ The root, stated today and finished over the remaining parts:
   outside. `isCode`{.Agda} names the numeral one; `isCodeAny`{.Agda} binds the
   arity and asks only that it lie in `ωʟ`{.Agda}, which reads back without an
   induction because `ω-specL`{.Agda} is an equation and the numeral chain projects.
-  **`Codes-spec`{.Agda} and `AllCodes-spec`{.Agda} close both round trips**: a
+  **Each set's in and out pair closes its round trip**: a
   member is *exactly* a key of a formula over the carrier, at arity one and at some
   arity respectively, so both sets are characterized rather than caught between two
   statements. The all-arity set exists for the class it characterizes: a recursion
@@ -536,9 +534,8 @@ The root, stated today and finished over the remaining parts:
   hierarchy's over the stage's alphabet and the model's over the model's
   language: `codeBridge`{.Agda}, written for this and unused until now, plus
   functoriality of relabelling. `val-at`{.Agda} reads the value out at a member
-  given as a key, `val-sat`{.Agda} says that value **is** satisfaction over the
-  carrier, and `val-defSet`{.Agda} lands it on the definable powerset at arity
-  one. The code carrier and the environment carrier stay independent parameters,
+  given as a key, and `val-sat`{.Agda} says that value **is** satisfaction over
+  the carrier. The code carrier and the environment carrier stay independent parameters,
   and are pinned together only where satisfaction has a meaning. Every reading
   takes the member as a **variable** with its key equation beside it, and the
   name a consumer would write instead, `keyIn`{.Agda}, is sealed where it is
@@ -634,7 +631,7 @@ The root, stated today and finished over the remaining parts:
   and nothing here reads inside a stage. The recursion stays in the meta-language
   where it was written; `smallDom`{.Agda} supplies the domain for any small family,
   and `Definition`{.Agda} reduces an instance to a defining formula with its
-  adequacy. `witnessInModel`{.Agda} records the one rule a graph must obey: an
+  adequacy. One rule governs a graph: an
   object-language existential ranges over `L`, so a graph may not describe an
   object by asserting that object's existence.
 - `L.Choice.Stage`{.Agda}: where a set of `L` first has a member, which is what
@@ -643,9 +640,8 @@ The root, stated today and finished over the remaining parts:
   `meet-suc`{.Agda} makes that stage a **successor**, because a set enters the
   tower only by being carved out of the stage below, and `defStage`{.Agda} is
   the stage it succeeds, a function because a successor determines what it
-  succeeds among ordinals (`ord-suc-inj`{.Agda}). `Lset-μ`{.Agda} identifies the
-  stage of first appearance with the definable powerset over the definition
-  stage, so a first member carries a name written over **one fixed stage**, and
+  succeeds among ordinals (`ord-suc-inj`{.Agda}). A first member therefore
+  carries a name written over **one fixed stage**, and
   that is what the choosing device compares. `stageBound`{.Agda} is the ordinal
   the bookkeeping runs in: above a set's own stage, hence above its members and
   theirs by transitivity, and above `ω`{.Agda}, where the names themselves live.
@@ -703,8 +699,8 @@ The root, stated today and finished over the remaining parts:
   No order on dependent sums is built. `orderAt`{.Agda} is the family itself, all
   four `SWO`{.Agda} laws at every ordinal, by membership induction, and it is
   sealed, since an unsealed order unfolds into a recursion over the hierarchy.
-  Its comparison takes the **birth as the primary key**, which is why
-  `endExtension`{.Agda} then costs nothing: a comparison never mentions the stage
+  Its comparison takes the **birth as the primary key**, so end extension then
+  costs nothing: a comparison never mentions the stage
   it is read at, so the order at a large stage restricted to a small one is a
   **path** to the order there, not merely an equivalence, and the only work is
   the proof-irrelevance of constructibility and of ordinal-hood.
@@ -721,7 +717,7 @@ The root, stated today and finished over the remaining parts:
   (`freeCode-in`{.Agda}, `freeCode-out`{.Agda}). Read at slots
   (`codeFree-out`{.Agda}) the skeleton slot holds exactly the codes of the
   parameter-free formulas of one more variable than the arity, which is exactly a
-  meta name's formula, and `codeFree-limit`{.Agda} derives the stage condition
+  meta name's formula, and the stage condition follows
   from it. `NameAt`{.Agda} is a name at slots, a skeleton in the limit stage and
   free of constants, a parameter sequence over the carrier whose domain is the
   arity, and a denotation written as **one** `extAt`{.Agda} whose condition reads

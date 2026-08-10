@@ -68,7 +68,7 @@ open import L.Coding.Uniform {ℓ} lem using ( keyBridge )
 open import L.Coding.Graph {ℓ} lem using ( satGraphAt; graphAt-in; graphAt-out )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
-open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode; code∈limit )
+open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )
 open import L.Choice.Finite {ℓ} lem using ( Limit; limitOrder )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
 
@@ -310,15 +310,14 @@ statement the gap asked for: the skeleton slot holds exactly the codes of the
 parameter-free formulas of one more variable than the arity, which is exactly
 what a meta name's formula is. The membership in the limit stage falls out of it
 for free, since a parameter-free code is hereditarily finite, so the skeleton
-condition of the previous section is now derivable rather than assumed;
-`codeFree-limit`{.Agda} is that warrant, and the description keeps both
-conjuncts until the derivable one is retired on purpose.
+condition of the previous section is derivable rather than assumed, and the
+description keeps both conjuncts until the derivable one is retired on purpose.
 <!--zh-->
 ## 无参性，说成一个原子
 
 那个原子本身在能被说出之前，先要绑定两个取值。元数那一位持有名字的元数，而一条公式被归档所用的键携带的是**多一个**的元数，因为那条公式正是子集据以被雕出的那一条；故那个原子先绑定元数的后继，这一点序列那一章的读式早已说清，再绑定那个后继与骨架之对，然后断言那个对是第二个码集的成员。
 
-两条读法都落在经一条等式抵达的**变元**元数上，而两条都是把诸绑定装起来、又拆开来，两条读式的适足等式在里面交付。那一位一经填上，两半便复合成那道缝所索取的陈述：骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。「属于极限阶段」由它白得，因为无参的码是遗传有穷的，故上一节那条骨架条件如今是可推出的、而非假设的；`codeFree-limit`{.Agda} 就是那份凭据，而在那条可推出的合取项被有意退役之前，这条描述两个合取项都留着。
+两条读法都落在经一条等式抵达的**变元**元数上，而两条都是把诸绑定装起来、又拆开来，两条读式的适足等式在里面交付。那一位一经填上，两半便复合成那道缝所索取的陈述：骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。「属于极限阶段」由它白得，因为无参的码是遗传有穷的，故上一节那条骨架条件如今是可推出的、而非假设的，而在那条可推出的合取项被有意退役之前，这条描述两个合取项都留着。
 <!--/-->
 
 ```agda
@@ -389,14 +388,6 @@ module _ {n : ℕ} (C₀ s a : Fin n) (γ : S ^ n) (k : ℕ)
       (subst (λ u → ⟨ pr (# (suc k)) u ∈ fst (AllCodes ∅ʟ) ⟩) (sym q)
         (freeCode-in (suc k) χ)))
 
-  codeFree-limit : ⟨ γ ⊨ FreeAt C₀ s a ⟩ → ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-  codeFree-limit h =
-    PT.rec (snd (fst (lookup s γ) ∈ Lset ω)) atCode (codeFree-out h)
-    where
-    atCode : Σ[ χ ∈ Formula (⊥* {ℓ}) (suc k) ]
-               (fst (lookup s γ) ≡ fst (limitCode χ))
-           → ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-    atCode (χ , q) = subst (λ u → ⟨ u ∈ Lset ω ⟩) (sym q) (code∈limit χ)
 ```
 
 <!--en-->
@@ -1251,8 +1242,8 @@ directions at that alphabet, resting on the fact that a parameter-free formula
 has the same code at either alphabet; `codeFree-in`{.Agda} and
 `codeFree-out`{.Agda} read them at slots, so the skeleton slot holds exactly the
 codes of the parameter-free formulas of one more variable than the arity, which
-is exactly a meta name's formula. `codeFree-limit`{.Agda} derives the stage
-condition from it. `domAt-numeral`{.Agda} says how long a sequence is, and
+is exactly a meta name's formula. `domAt-numeral`{.Agda} says how long a
+sequence is, and
 `graphAt-value`{.Agda}/`graphAt-only`{.Agda} are the satisfaction table's two
 halves at a carrier held in a slot.
 
@@ -1292,7 +1283,7 @@ chapter's first job.
 
 `InLimitAt`{.Agda} 是骨架的**阶段**条件，即经序列那一章的图在常元 `ωʟ`{.Agda} 处说出的、一个「属于极限阶段」的隶属原子。它不是无参性，而把这句话说出来正是本章对自己的更正：遗传有穷的码可以点名遗传有穷的常量，而在一个含有极限阶段的载体之上，那些常量正是载体的成员。
 
-`FreeAt`{.Agda} 才是无参性，而它同样是一个隶属原子：由元数与骨架造出的那个键，落在**空字母表处**的码集中。`freeCode-in`{.Agda} 与 `freeCode-out`{.Agda} 是那个集合在那个字母表处的两个方向，所倚的事实是一条无参公式在两个字母表上有同一个码；`codeFree-in`{.Agda} 与 `codeFree-out`{.Agda} 把它们读在诸位上，于是骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。`codeFree-limit`{.Agda} 由它推出那条阶段条件。`domAt-numeral`{.Agda} 说清一个序列有多长，而 `graphAt-value`{.Agda} 与 `graphAt-only`{.Agda} 是满足关系表的两半，落在握于一位上的载体处。
+`FreeAt`{.Agda} 才是无参性，而它同样是一个隶属原子：由元数与骨架造出的那个键，落在**空字母表处**的码集中。`freeCode-in`{.Agda} 与 `freeCode-out`{.Agda} 是那个集合在那个字母表处的两个方向，所倚的事实是一条无参公式在两个字母表上有同一个码；`codeFree-in`{.Agda} 与 `codeFree-out`{.Agda} 把它们读在诸位上，于是骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。`domAt-numeral`{.Agda} 说清一个序列有多长，而 `graphAt-value`{.Agda} 与 `graphAt-only`{.Agda} 是满足关系表的两半，落在握于一位上的载体处。
 
 `NameAt`{.Agda} 是描述在诸位上的名字：一个落在极限阶段且不带常量的骨架、一个定义域为元数的载体之上参数序列，以及一个写成单次 `extAt`{.Agda} 的指称，其条件读的是 `satGraphAt`{.Agda} 在「由元数与骨架造出的键」处所指派的取值。有两个码集以位的身份抵达它：载体处那一个，没有它，图那张作存在绑定的表什么也钉不住；以及空字母表处那一个，没有它，那个骨架就不是元层面某个名字的骨架。
 
