@@ -2431,9 +2431,15 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 
 
 # ---------------------------------------------------------------------------
-# DD24's QUALITY BAR and DD25's single threshold, added 2026-08-09.
-# The internalization GCH wing carries this ratio and nothing else: no line
-# cap, no seconds cap. scripts/check-ratio.py reads this table.
+# DD24's QUALITY BAR, added 2026-08-09. The internalization GCH wing carries
+# this ratio and nothing else: no line cap, no seconds cap.
+# scripts/check-ratio.py reads this table.
+#
+# CITATION FIXED 2026-08-10. This header used to read "DD24's QUALITY BAR and
+# DD25's single threshold". There was no DD25: the single-threshold rule was
+# ABSORBED INTO DD24 when the DD series was consolidated, and DD24's own row
+# says so. The stale citation would now collide with the real DD25, which the
+# owner ruled on 2026-08-10 about escalating a negative codex return.
 [ratio]
 # THE BASELINE IS A MEASUREMENT, and the tool refuses to run without it.
 # Protocol: interface cache moved aside, `make typecheck` at the exported

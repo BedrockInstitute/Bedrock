@@ -25,6 +25,51 @@ of those green.
 exception applies and, for the second, why codex cannot carry it. **If that
 sentence will not write, the tier is codex.**
 
+### 1.1 A negative codex return escalates to Opus (PLAN DD25)
+
+**Ruled by the owner 2026-08-10.** When a codex return's headline verdict is
+negative, dispatch an in-harness Opus 5 subagent at maximum effort to attack
+that return. Do it **before** auditing the return and before acting on it.
+Then read the two together.
+
+**This is the owner naming Opus, standing, for one class.** It is the first
+exception in section 1 above, made permanent for this trigger only. Every
+other dispatch stays codex.
+
+**The trigger.** A refusal, a NO-GO, a RED gate, a stop taken as the
+deliverable, a refutation of the brief's premise, or a landed result that
+misses its band floor. **If the verdict line would disappoint the person who
+wrote the brief, it is negative.**
+
+**What the reviewer attacks is the NEGATIVE, not the task.** Not a re-run and
+not a second attempt. Four questions: is the refusal correct on its own
+numbers; is the measurement sound; did the BRIEF cause the outcome; is there a
+cure the return missed. **A review that agrees is a real result.**
+
+**Then both are read together.** Audit the codex return and the Opus review as
+one pair, and report both to the owner, including where they disagree. Neither
+is accepted alone.
+
+**Write DD4, ARCHIVE and LITERATURE into the prompt by hand.** An in-harness
+dispatch never passes through `.claude/skills/codex-dispatch/dispatch.py`, so
+those three refusals do not fire. `[LJ-1.11]` went out short two mandatory
+rules through exactly this gap.
+
+**This does not contradict DD17's "a RED is never a trigger".** That clause
+forbids re-dispatching the TASK on a RED and it still binds. This dispatches a
+REVIEW of the RED, which is the opposite move.
+
+*Why, from measurement.* Four blocks refused on measurement in `[LJ-0.4]` and
+the orchestrator accepted all four. `[LJ-0.8]` then found a propagated sign
+error standing in five places and a refusal blamed on the wrong party. **A
+negative return closes a line of work, so a wrong one is the most expensive
+kind there is, and it is the kind nobody re-checks.**
+
+*Enforcement:* the audit, and the PLAN section 11 row for a negative return
+names its review's code. **No machine enforces the trigger**, because reading
+a verdict as negative is a judgment. The honest enforcement is that the row is
+empty and visible.
+
 ## 2. Slots
 
 Concurrency and heap ceilings are LESSONS C-12: agent Agda runs at
