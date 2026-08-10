@@ -41,7 +41,7 @@ open import Base.Classical using ( LEM )
 module L.Choice.Table {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; _⇒̇_; ∃̇_; ∀̇_ )
+open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
@@ -53,9 +53,8 @@ open import L.Axioms.Basic {ℓ} using ( extensionalL )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL; hasSeparationL )
 open import L.Recursion {ℓ} lem using ( mereFunct; smallDom )
 open import L.Coding.Model {ℓ}
-  using ( extAt; extAt-in; extAt-out; extAt-in-both; appAt; appAt-adequate
-        ; domAt; domAt-in; domAt-out; domAt-intro
-        ; prAtL; prAtL-adequate; prʟ; prʟ-fst )
+  using ( extAt; extAt-in; extAt-out; extAt-in-both; domAt-intro; prʟ; prʟ-fst )
+open import L.Coding.Sequence {ℓ} lem using ( module RecShape )
 open import L.Choice.Step {ℓ} lem using ( Mem; relOf; orderAt; memOf; carry )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
 
@@ -404,45 +403,10 @@ field reads a graph in.
 <!--/-->
 
 ```agda
-  ApproxAt : ∀ {n} → Fin n → Fin n → Formula S n
-  ApproxAt f a = domAt f a
-               ∧̇ ∀̇ (∀̇ ( appAt (sh2 f) (suc zero) zero
-                       ⇒̇ StepAt zero (suc zero) (sh2 f) ))
-
-  GraphAt : ∀ {n} → Fin n → Fin n → Formula S n
-  GraphAt w b = ∃̇ (ApproxAt zero (suc b) ∧̇ StepAt (suc w) (suc b) zero)
-
-  module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
-    ApproxAt-dom : ⟨ γ ⊨ ApproxAt f a ⟩ → Domain (lookup f γ) (fst (lookup a γ))
-    ApproxAt-dom h = domAt-out f a γ (h .fst)
-
-    ApproxAt-value : ⟨ γ ⊨ ApproxAt f a ⟩ → Entries (lookup f γ) (fst (lookup a γ))
-    ApproxAt-value h = domAt-in f a γ (h .fst)
-
-    ApproxAt-step : ⟨ γ ⊨ ApproxAt f a ⟩ → (c r : S)
-                  → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
-                  → ⟨ (r ∷ c ∷ γ) ⊨ StepAt zero (suc zero) (sh2 f) ⟩
-    ApproxAt-step h c r p = h .snd c r
-      (subst ⟨_⟩ (sym (appAt-adequate (sh2 f) (suc zero) zero (r ∷ c ∷ γ))) p)
-
-    ApproxAt-in : ⟨ γ ⊨ domAt f a ⟩
-                → ((c r : S) → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
-                   → ⟨ (r ∷ c ∷ γ) ⊨ StepAt zero (suc zero) (sh2 f) ⟩)
-                → ⟨ γ ⊨ ApproxAt f a ⟩
-    ApproxAt-in hd hs = hd , λ c r p → hs c r
-      (subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (r ∷ c ∷ γ)) p)
-
-  module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
-    GraphOf : Type (ℓ-suc ℓ)
-    GraphOf = Σ[ f ∈ S ] ( ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
-                         × ⟨ (f ∷ γ) ⊨ StepAt (suc w) (suc b) zero ⟩ )
-
-    Graph-in : (f : S) → ⟨ (f ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
-             → ⟨ (f ∷ γ) ⊨ StepAt (suc w) (suc b) zero ⟩ → ⟨ γ ⊨ GraphAt w b ⟩
-    Graph-in f ha hs = ∣ f , (ha , hs) ∣₁
-
-    Graph-out : ⟨ γ ⊨ GraphAt w b ⟩ → ∥ GraphOf ∥₁
-    Graph-out h = h
+  module A = RecShape StepAt
+  open A using ( ApproxAt; GraphAt; ApproxAt-dom; ApproxAt-value; ApproxAt-step
+               ; ApproxAt-in; GraphOf; Graph-in; Graph-out
+               ; PairGraphAt; PairOf; PairGraph-in; PairGraph-out )
 ```
 
 <!--en-->
@@ -597,29 +561,6 @@ satisfaction that carries the entire description inside it.
 <!--zh-->
 表必须被造出来，而唯一的建造者是替换，而替换索要一个图。这就是那个图的打包版：某个实参处的取值，是「该实参与那里的关系」所成的有序对。它的两种读法把那个句子取作**参数**，并把该句子自己的等式取作假设，在唯一的调用处是 `refl`{.Agda}。这就是层级那一章量到八十五秒的那条形状规矩，此处再度遇上：直接对着那个闭句子写，Agda 判定「同一条公式的两种写法」是否相等的办法，是把一个内部装着整条描述的满足关系正规化。
 <!--/-->
-
-```agda
-  PairGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
-  PairGraphAt e c = ∃̇ (prAtL (suc e) (suc c) zero ∧̇ GraphAt zero (suc c))
-
-  module _ {n : ℕ} (e c : Fin n) (γ : S ^ n)
-           (φ : Formula S n) (qφ : φ ≡ PairGraphAt e c) where
-    PairOf : Type (ℓ-suc ℓ)
-    PairOf = Σ[ r ∈ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst r))
-                        × ⟨ (r ∷ γ) ⊨ GraphAt zero (suc c) ⟩ )
-
-    PairGraph-in : (r : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst r)
-                 → ⟨ (r ∷ γ) ⊨ GraphAt zero (suc c) ⟩ → ⟨ γ ⊨ φ ⟩
-    PairGraph-in r q hg = subst (λ ψ → ⟨ γ ⊨ ψ ⟩) (sym qφ)
-      ∣ r , (subst ⟨_⟩
-        (sym (prAtL-adequate (suc e) (suc c) zero (r ∷ γ))) q , hg) ∣₁
-
-    PairGraph-out : ⟨ γ ⊨ φ ⟩ → ∥ PairOf ∥₁
-    PairGraph-out h = PT.map
-      (λ { (r , (hq , hg)) →
-        r , (subst ⟨_⟩ (prAtL-adequate (suc e) (suc c) zero (r ∷ γ)) hq , hg) })
-      (subst (λ ψ → ⟨ γ ⊨ ψ ⟩) qφ h)
-```
 
 <!--en-->
 ## The table, and the relation at the bound
