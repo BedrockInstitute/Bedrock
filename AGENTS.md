@@ -22,33 +22,24 @@ nobody finishes reading binds nothing.
   owner's decision, so it is stated in EVERY brief and answered in every return, and that
   repetition is its only enforcement. **A stop-line is never a reason to write fixed:** say so
   and stop for a re-price.
-- **Always, write a controlled style. The AUDIENCE picks which one**, and there are two.
-  - **To the repository owner, write Chinese in the Chinese Tech Doc Style.** The rules:
-    accuracy before rhetoric; one main point per paragraph; one clear main clause per sentence;
-    the same term for the same concept, never a synonym for variety; a specific name instead of
-    `该`, `其`, `此` or `上述`; conditions and risks before the action they govern; full-width
-    Chinese punctuation and `「」` quotes. **Never add a number, a date, a time limit or a
-    certainty the evidence does not give**, and never drop a condition, an exception or a
-    limit. The full rule set is the skill at `.claude/skills/tech-doc-style-chinese/`.
-  - **To everyone else, write ASD-STE100 Simplified Technical English.** The rules: one meaning
-    per word; one part of speech per word; active voice; simple tenses; one instruction per
-    sentence; 20 words or fewer for an instruction and 25 for a description; 3 words or fewer
-    in a noun cluster; no ellipsis, so keep the subject, the verb and the article; 6 sentences
-    or fewer in a paragraph. The full rule set, with worked examples, is the skill at
-    `.claude/skills/asd-ste100/`.
+- **Always, write a controlled style, and the AUDIENCE picks it.** Each skill holds its full
+  rule set; **Bedrock's own prose rules win over both.**
+  - **To the repository owner: Chinese, in the Chinese Tech Doc Style.** Accuracy before
+    rhetoric, one point per paragraph, one term per concept, conditions before the action they
+    govern. **Never add a number, a date or a certainty the evidence does not give.** Skill:
+    `.claude/skills/tech-doc-style-chinese/`, which is not a Chinese ASD-STE100.
+  - **To everyone else: ASD-STE100 Simplified Technical English.** One meaning per word; one
+    part of speech per word; active voice; simple tenses; one instruction per sentence; 20
+    words or fewer for an instruction and 25 for a description; 3 words or fewer in a noun
+    cluster; no ellipsis, so keep the subject, the verb and the article; 6 sentences or fewer
+    in a paragraph. Skill: `.claude/skills/asd-ste100/`.
   - **ASD-STE100 applies to:** NEW developer documents under `dev/` and NEW per-directory
-    `README.md` files; and all agent-to-agent text, so every brief sent and every report
-    returned. **A dispatched agent writes ASD-STE100, never Chinese**, because its reader is
-    the orchestrator.
+    `README.md` files; and all agent-to-agent text, so every brief and every report. **A
+    dispatched agent writes ASD-STE100, never Chinese:** its reader is the orchestrator.
   - **Neither applies to:** mathematical prose; the documents under `docs/`; or the prose in
     a `.lagda.md` master. There, precision and voice decide the words.
   - **Nobody rewrites an existing document for this rule.** It binds new text only, so the
     written corpus costs nothing.
-  - **BEDROCK'S OWN PROSE RULES WIN over either skill**, and both skills defer to the target
-    project. The em-dash ban below holds in every language, and `dev/STYLE-i18n.md` decides
-    punctuation, quotes and CJK spacing. **The Chinese style is NOT a translation of
-    ASD-STE100 and claims no compliance with it**; its own text says so at
-    `references/controlled-technical-chinese.md`.
 - **Ask first:** genuine architecture forks (surface them with a recommendation rather than
   charging ahead on one reading); adding a top-level directory (then add its `README.md`); a
   translation term not yet in `dev/glossary.toml`; **an edit to `AGENTS.md` itself** (DD19):

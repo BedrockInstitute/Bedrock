@@ -102,7 +102,20 @@ ROOT = Path(__file__).resolve().parent.parent
 # commit message. A threshold derived only from the last accident does not catch
 # the next one, which is why these are argued from what a green artefact needs
 # rather than from what the failure measured.
-AGENTS_WORD_CAP = 2200   # current green 2,004; the failed state was 3,450
+AGENTS_WORD_CAP = 2300   # raised from 2,200 by the owner 2026-08-10. WHAT DID
+                         # NOT FIT: the controlled-style rule became AUDIENCE
+                         # SPLIT that day (Chinese to the owner, ASD-STE100 to
+                         # every other reader), so one rule block became two
+                         # plus the boundary that a dispatched agent never
+                         # writes Chinese. THE ROW THAT NEEDS THE ROOM: the
+                         # "Always, write a controlled style" bullet in
+                         # Boundaries. The file measured 2,199 against the
+                         # 2,200 cap BEFORE that rule, so the headroom the cap
+                         # was set with (it was 2,004 then) was already spent
+                         # and no genuine new rule could land. The orchestrator
+                         # first cut its own new text from 2,368 to 2,257; the
+                         # residue is the irreducible cost of a second
+                         # audience. The failed state was 3,450
 PLAN_CELL_WORD_CAP = 1600  # largest cell is D28 at 572 words; the failed
                            # state was 12,634
 PLAN_GOAL_ROW_CHAR_CAP = 1200  # the L3.32 target-form row is 1,001 chars, so
