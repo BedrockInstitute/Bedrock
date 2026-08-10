@@ -456,7 +456,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.16-R | DD25 review of LJ-1.16 | OVERTURN the operative clause | The obstruction is the hull's INDEX TYPE, a LJ-1.3 design choice, not the mathematics. Owner's fork; LJ-1.18 prices it |
 | LJ-1.15-R | DD25 review of LJ-1.15's NO-GO | OVERTURN | Crossing FITS the budget: 0.0052 s/line means 15-17 s of 99.6-147.7. Two obstructions, not one: 1.16's is permanent, 1.15's removable |
 | LJ-1.18 | PROBE: the meta term algebra, the fourth shape | dispatched | Prices the owner's index-type fork in 120 throwaway lines. RED falls back to iterating module Hull at 250-450 |
-| LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing applies condensation ONCE, at 5.5, whose free lambda can be +omega-closed at zero cost |
+| LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing condenses ONCE, at 5.5, whose free lambda can be +omega-closed at zero cost |
 | LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS, measured | Pairing 0.0485, SquareLaw 0.0255, pair 41.36 s at 0.0322 s/line, 2.44x the bar. Port and ideal form both fail |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
