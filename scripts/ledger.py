@@ -206,13 +206,21 @@ def validate_ratio_baseline(data: dict, standing: int) -> list[str]:
     if not ratio.get("ac_baseline_seconds_per_line") or not declared:
         return []
     slack = ratio.get("ac_baseline_tolerance_lines", 50)
-    drift = abs(standing - declared)
+    # THE BASELINE IS A PROPERTY OF THE AC TREE, so declared wing content is
+    # subtracted before the comparison. Without this the guard fires on every
+    # GCH chapter and demands a re-measure, and that re-measure would fold GCH
+    # lines into the AC baseline, destroying the comparison DD24 exists to
+    # make. ratio.gch_wing therefore does double duty; its comment says so.
+    wing = sum(count(f) for f in ratio.get("gch_wing", []))
+    ac_side = standing - wing
+    drift = abs(ac_side - declared)
     if drift <= slack:
         return []
     return [
         f"RATIO BASELINE IS STALE: DD24's {ratio['ac_baseline_seconds_per_line']:.6f} "
-        f"s/line was measured over {declared:,} in-fence lines and the tree now "
-        f"stands at {standing:,}, a drift of {drift:,}. Both terms of the ratio "
+        f"s/line was measured over {declared:,} in-fence lines and the AC side "
+        f"now stands at {ac_side:,} (standing {standing:,} minus a declared wing "
+        f"of {wing:,}), a drift of {drift:,}. Both terms of the ratio "
         f"moved and neither moved predictably (P-q). RE-MEASURE at [LJ-0.5], "
         f"then write the new figure and ac_baseline_lines together. Until then "
         f"the bar is a number from a tree that no longer exists."]

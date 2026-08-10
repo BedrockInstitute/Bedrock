@@ -1,0 +1,274 @@
+# The Mostowski collapse
+
+```agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+
+module V.Collapse {ℓ : Level} where
+
+open import FOL.ZFStructure using ( module hPropStructure; Transitive )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
+open import V.Presentation {ℓ} using ( member; fiber; ∈ₛ↪ )
+
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁; ∥_∥₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( sett; seteq )
+open import Cubical.HITs.CumulativeHierarchy.Properties
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; extensionality; _⊆_ )
+
+open hPropStructure 𝒮ᵥ
+
+-- transitivity of a set, in the absoluteness-chapter shape; definitionally the
+-- same predicate as the constructible chapter's isTransV, so a consumer's
+-- transitivity witness passes through unchanged
+isTrans : S → Type (ℓ-suc ℓ)
+isTrans u = Transitive 𝒮ᵥ (λ x → x ∈ˢ u)
+
+-- the collapse is defined by ∈-recursion over the whole hierarchy, one step per
+-- set: π x is the set of the π-images of the members of x that lie in the
+-- carrier X
+module Collapse (X : S) where
+
+  -- the filtered small index: the small members of x that are small members
+  -- of the carrier. The filter uses the small membership, so Fiber x is small
+  Fiber : S → Type ℓ
+  Fiber x = Σ[ m ∈ ⟪ x ⟫ ] ⟨ ⟪ x ⟫↪ m ∈ₛ X ⟩
+
+  step : (x : S) → (∀ y → y ∈ᵗ x → S) → S
+  step x rec = sett (Fiber x) (λ p → rec (⟪ x ⟫↪ (p .fst)) (member x (p .fst)))
+
+  -- perf: the recursion unfolds to an accessibility eliminator; seal at
+  -- birth, computation law as the read lemma (R-36)
+  opaque
+    π : S → S
+    π = ∈-induction step
+
+  opaque
+    unfolding π
+    π-compute : (x : S) → π x ≡ step x (λ y _ → π y)
+    π-compute = ∈-induction-compute step
+
+  -- every member of a collapse value is a collapse value of a member of the
+  -- carrier; the filter carries the carrier-membership witness
+  π-member : (x z : S) → ⟨ z ∈ˢ π x ⟩
+           → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
+  π-member x z z∈ = PT.map mk (subst (λ w → ⟨ z ∈ˢ w ⟩) (π-compute x) z∈)
+    where
+    mk : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ z)
+       → Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z))
+    mk (p , q) = ⟪ x ⟫↪ (p .fst)
+               , ( ∈∈ₛ {a = ⟪ x ⟫↪ (p .fst)} {b = X} .snd (p .snd)
+                 , q )
+
+  -- the range as a set: the small members of the carrier, their collapse
+  -- values collected
+  πX : S
+  πX = sett ⟪ X ⟫ (λ m → π (⟪ X ⟫↪ m))
+
+  πX-member : (z : S) → ⟨ z ∈ˢ πX ⟩
+            → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
+  πX-member z z∈ = PT.map mk z∈
+    where
+    mk : Σ[ m ∈ ⟪ X ⟫ ] (π (⟪ X ⟫↪ m) ≡ z)
+       → Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z))
+    mk (m , q) = ⟪ X ⟫↪ m , ( member X m , q )
+
+  πX-intro : (y : S) → ⟨ y ∈ˢ X ⟩ → ⟨ π y ∈ˢ πX ⟩
+  πX-intro y y∈X = ∣ fiber X y∈X .fst , cong π (fiber X y∈X .snd) ∣₁
+
+  πX-trans : isTrans πX
+  πX-trans {x} {y} y∈x x∈πX = PT.rec (snd (y ∈ˢ πX)) go (πX-member x x∈πX)
+    where
+    go : Σ[ z ∈ S ] (⟨ z ∈ˢ X ⟩ × (π z ≡ x)) → ⟨ y ∈ˢ πX ⟩
+    go (z , z∈X , pzx) = PT.rec (snd (y ∈ˢ πX)) go₂ (π-member z y y∈πz)
+      where
+      y∈πz : y ∈ᵗ π z
+      y∈πz = subst (λ w → y ∈ᵗ w) (sym pzx) y∈x
+      go₂ : Σ[ w ∈ S ] (⟨ w ∈ˢ X ⟩ × (π w ≡ y)) → ⟨ y ∈ˢ πX ⟩
+      go₂ (w , w∈X , pwy) = subst (λ v → ⟨ v ∈ˢ πX ⟩) pwy (πX-intro w w∈X)
+
+  -- membership forward: a member of a carrier member collapses into the
+  -- collapsed carrier member
+  π∈-fwd : (x y : S) → y ∈ᵗ x → y ∈ᵗ X → ⟨ π y ∈ˢ π x ⟩
+  π∈-fwd x y yx yu = subst (λ w → ⟨ π y ∈ˢ w ⟩) (sym (π-compute x)) wit
+    where
+    fib : Σ[ m ∈ ⟪ x ⟫ ] (⟪ x ⟫↪ m ≡ y)
+    fib = fiber x yx
+    m : ⟪ x ⟫
+    m = fib .fst
+    p : ⟪ x ⟫↪ m ≡ y
+    p = fib .snd
+    sm : ⟨ ⟪ x ⟫↪ m ∈ₛ X ⟩
+    sm = ∈∈ₛ {a = ⟪ x ⟫↪ m} {b = X} .fst (subst (λ w → ⟨ w ∈ˢ X ⟩) (sym p) yu)
+    wit : ⟨ π y ∈ˢ sett (Fiber x) (λ q → π (⟪ x ⟫↪ (q .fst))) ⟩
+    wit = ∣ (m , sm) , cong π p ∣₁
+
+  -- extensional injectivity on the carrier; the carrier's transitivity is a
+  -- module parameter here and only here
+  module Inj (Xtr : isTrans X) where
+
+    P : S → Type (ℓ-suc ℓ)
+    P x = (y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
+
+    -- direction 1: move a member z of x into y; the hypothesis fires at z ∈ x
+    in⊆ : (x y z : S) → x ∈ᵗ X → y ∈ᵗ X → z ∈ᵗ x → z ∈ᵗ X
+        → π x ≡ π y
+        → ((a : S) → a ∈ᵗ x → (b : S) → b ∈ᵗ X → π a ≡ π b → a ≡ b)
+        → ⟨ z ∈ₛ y ⟩
+    in⊆ x y z xu yu zx zu e ih = ∈∈ₛ {a = z} {b = y} .fst
+      (PT.rec (snd (z ∈ˢ y)) step2 (subst (λ w → ⟨ π z ∈ˢ w ⟩) (π-compute y)
+        (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd x z zx zu))))
+      where
+      step2 : Σ[ p ∈ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ π z) → ⟨ z ∈ˢ y ⟩
+      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ y ⟩) (sym z≡b) by
+        where
+        b : S
+        b = ⟪ y ⟫↪ (p .fst)
+        by : ⟨ b ∈ˢ y ⟩
+        by = member y (p .fst)
+        bu : ⟨ b ∈ˢ X ⟩
+        bu = Xtr {x = y} {y = b} by yu
+        z≡b : z ≡ b
+        z≡b = ih z zx b bu (sym q)
+
+    -- direction 2: move a member z of y into x; the hypothesis fires at the
+    -- witness b ∈ x extracted from the collapsed membership
+    out⊆ : (x y z : S) → x ∈ᵗ X → y ∈ᵗ X → z ∈ᵗ y → z ∈ᵗ X
+         → π y ≡ π x
+         → ((a : S) → a ∈ᵗ x → (b : S) → b ∈ᵗ X → π a ≡ π b → a ≡ b)
+         → ⟨ z ∈ₛ x ⟩
+    out⊆ x y z xu yu zy zu e ih = ∈∈ₛ {a = z} {b = x} .fst
+      (PT.rec (snd (z ∈ˢ x)) step2 (subst (λ w → ⟨ π z ∈ˢ w ⟩) (π-compute x)
+        (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd y z zy zu))))
+      where
+      step2 : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ π z) → ⟨ z ∈ˢ x ⟩
+      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) b≡z bx
+        where
+        b : S
+        b = ⟪ x ⟫↪ (p .fst)
+        bx : ⟨ b ∈ˢ x ⟩
+        bx = member x (p .fst)
+        bu : ⟨ b ∈ˢ X ⟩
+        bu = Xtr {x = x} {y = b} bx xu
+        b≡z : b ≡ z
+        b≡z = ih b bx z zu q
+
+    step-inj : (x : S) → ((a : S) → a ∈ᵗ x → P a) → P x
+    step-inj x IH y xu yu e = extensionality x y (⊆xy , ⊆yx)
+      where
+      ih4 : (a : S) → a ∈ᵗ x → (b : S) → b ∈ᵗ X → π a ≡ π b → a ≡ b
+      ih4 a ax b bu eq = IH a ax b (Xtr {x = x} {y = a} ax xu) bu eq
+      ⊆xy : ⟨ x ⊆ y ⟩
+      ⊆xy z z∈ₛx = let zx = ∈∈ₛ {a = z} {b = x} .snd z∈ₛx
+                   in in⊆ x y z xu yu zx (Xtr {x = x} {y = z} zx xu) e ih4
+      ⊆yx : ⟨ y ⊆ x ⟩
+      ⊆yx z z∈ₛy = let zy = ∈∈ₛ {a = z} {b = y} .snd z∈ₛy
+                   in out⊆ x y z xu yu zy (Xtr {x = y} {y = z} zy yu) (sym e) ih4
+
+    -- extensional injectivity on the carrier, by ∈-induction
+    π-inj : (x y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
+    π-inj = ∈-induction step-inj
+
+    -- the backward direction: a collapsed membership names a witness in the
+    -- carrier member, and injectivity identifies it
+    π∈-bwd : (x y : S) → x ∈ᵗ X → y ∈ᵗ X → ⟨ π y ∈ˢ π x ⟩ → y ∈ᵗ x
+    π∈-bwd x y xu yu h =
+      PT.rec (snd (y ∈ˢ x)) step2 (subst (λ w → ⟨ π y ∈ˢ w ⟩) (π-compute x) h)
+      where
+      step2 : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ π y) → ⟨ y ∈ˢ x ⟩
+      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) c≡y cx
+        where
+        c : S
+        c = ⟪ x ⟫↪ (p .fst)
+        cx : ⟨ c ∈ˢ x ⟩
+        cx = member x (p .fst)
+        cu : ⟨ c ∈ˢ X ⟩
+        cu = Xtr {x = x} {y = c} cx xu
+        c≡y : c ≡ y
+        c≡y = π-inj c y cu yu q
+
+    -- the iso reading on the carrier, both directions
+    iso : (x y : S) → x ∈ᵗ X → y ∈ᵗ X
+        → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩)
+    iso x y xu yu = (λ yx → π∈-fwd x y yx yu) , π∈-bwd x y xu yu
+
+    -- the Mostowski statement for the carrier: transitive range, injectivity,
+    -- and membership preserved both ways
+    Mostowski : Type (ℓ-suc ℓ)
+    Mostowski = isTrans πX
+              × ((x y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y)
+              × ((x y : S) → x ∈ᵗ X → y ∈ᵗ X
+               → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩))
+
+    mostowski : Mostowski
+    mostowski = πX-trans , π-inj , iso
+
+  -- the collapse is the unique solution of its recursion equation
+  unique : (f : S → S)
+         → ((x : S) → f x ≡ sett (Fiber x) (λ p → f (⟪ x ⟫↪ (p .fst))))
+         → (x : S) → π x ≡ f x
+  unique f h = ∈-induction stepU
+    where
+    stepU : (x : S) → ((y : S) → y ∈ᵗ x → π y ≡ f y) → π x ≡ f x
+    stepU x IH = π-compute x ∙ step-eq ∙ sym (h x)
+      where
+      step-eq : sett (Fiber x) (λ p → π (⟪ x ⟫↪ (p .fst)))
+              ≡ sett (Fiber x) (λ p → f (⟪ x ⟫↪ (p .fst)))
+      step-eq = seteq (Fiber x) (Fiber x)
+                  (λ p → π (⟪ x ⟫↪ (p .fst)))
+                  (λ p → f (⟪ x ⟫↪ (p .fst)))
+                  ( (λ p → ∣ p , sym (ih' p) ∣₁)
+                  , (λ p → ∣ p , ih' p ∣₁) )
+        where
+        ih' : (p : Fiber x) → π (⟪ x ⟫↪ (p .fst)) ≡ f (⟪ x ⟫↪ (p .fst))
+        ih' p = IH (⟪ x ⟫↪ (p .fst)) (member x (p .fst))
+
+  -- Devlin 5.2(ii): if Y ⊆ X is transitive, the collapse fixes Y pointwise.
+  -- The filter on a member y of Y is full, because Y is transitive and
+  -- Y ⊆ X, so every member of y lies in X
+  fixes : (Y : S) → ⟨ Y ⊆ X ⟩ → isTrans Y → (y : S) → y ∈ᵗ Y → π y ≡ y
+  fixes Y YX Ytr = ∈-induction stepF
+    where
+    stepF : (y : S) → ((m : S) → m ∈ᵗ y → m ∈ᵗ Y → π m ≡ m)
+          → y ∈ᵗ Y → π y ≡ y
+    stepF y IH yY = π-compute y ∙ step-eq
+      where
+      step-eq : sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst))) ≡ y
+      step-eq = extensionality
+                  (sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst)))) y (to , from)
+        where
+        to : ⟨ sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst))) ⊆ y ⟩
+        to x xπ = PT.rec (snd (x ∈ₛ y)) go
+          (∈∈ₛ {a = x} {b = sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst)))} .snd xπ)
+          where
+          go : Σ[ p ∈ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ x) → ⟨ x ∈ₛ y ⟩
+          go (p , q) = subst (λ w → ⟨ w ∈ₛ y ⟩) (sym ih' ∙ q) (∈ₛ↪ y (p .fst))
+            where
+            ih' : π (⟪ y ⟫↪ (p .fst)) ≡ ⟪ y ⟫↪ (p .fst)
+            ih' = IH (⟪ y ⟫↪ (p .fst)) (member y (p .fst))
+                    (Ytr {x = y} {y = ⟪ y ⟫↪ (p .fst)} (member y (p .fst)) yY)
+
+        from : ⟨ y ⊆ sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst))) ⟩
+        from x xy = ∈∈ₛ {a = x} {b = sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst)))} .fst
+          ∣ (p , ihq) ∣₁
+          where
+          x∈y : x ∈ᵗ y
+          x∈y = ∈∈ₛ {a = x} {b = y} .snd xy
+          x∈Y : x ∈ᵗ Y
+          x∈Y = Ytr {x = y} {y = x} x∈y yY
+          x∈X : ⟨ x ∈ₛ X ⟩
+          x∈X = YX x (∈∈ₛ {a = x} {b = Y} .fst x∈Y)
+          fp : Σ[ m ∈ ⟪ y ⟫ ] (⟪ y ⟫↪ m ≡ x)
+          fp = fiber y x∈y
+          p : Fiber y
+          p = fp .fst , subst (λ w → ⟨ w ∈ₛ X ⟩) (sym (fp .snd)) x∈X
+          ihq : π (⟪ y ⟫↪ (p .fst)) ≡ x
+          ihq = IH (⟪ y ⟫↪ (p .fst)) (member y (p .fst))
+                  (Ytr {x = y} {y = ⟪ y ⟫↪ (p .fst)} (member y (p .fst)) yY)
+                ∙ fp .snd
+
+  -- Devlin 5.2(ii) at the carrier itself
+  fixes-X : isTrans X → (y : S) → y ∈ᵗ X → π y ≡ y
+  fixes-X Xtr = fixes X (λ x xx → xx) Xtr
+```
