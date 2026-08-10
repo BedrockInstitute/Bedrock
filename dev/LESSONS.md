@@ -1686,6 +1686,48 @@ also the reason `L ⊨ AC` on the rud route pays for a bridge at all.
 **Provenance:** `_build/l3.32-t203-route.md` sections 1 to 3;
 `src/L/Rud/Order.lagda.md:329-332`; `src/L/Choice/Order.lagda.md:184-187`.
 
+### D-27. "No code consumer" identifies a dead helper, never a dead result
+
+**Rule:** A deletion sweep may use "no code consumer" to find a dead HELPER. It
+may not use it to find a dead RESULT. Three classes fail the test and must be
+kept, whatever the grep says.
+
+1. **A chapter's stated result.** If the chapter's opening or its recap
+   advertises the property, deleting the proof leaves the chapter asserting
+   what it no longer proves.
+2. **The readings of a seal.** An `opaque` definition plus its unsealing
+   lemmas are ONE unit. Delete the readings and the definition survives as a
+   seal nobody can open, which is strictly worse than deleting both.
+3. **A name a recorded MEASUREMENT cites.** Deleting it orphans the evidence
+   for a law at its own site, and no checker notices.
+
+**The operational test, which is cheap:** before deleting, read the chapter's
+first paragraph and its recap. If either names the result, stop.
+
+**Measured (`[LJ-0.4m]`, 2026-08-10):** a re-scan deleted 68 lines on the
+no-consumer criterion, correctly by that criterion, and 51 of them were
+reverted. `src/L/Choice/Step.lagda.md` lost 36 lines of end-extension
+machinery while keeping prose that both ASSERTS the property and MEASURES what
+it cost, "one path-induction lemma of a dozen lines, one line for the
+agreement". The chapter's own opening calls that property the one "the rest of
+the part needs". `src/L/Choice/Stage.lagda.md` lost `defStage-ord` and
+`defStage-suc`, the only two openings of `defStage`'s seal. A fourth name,
+`L.Choice.Name.denote-table`, was caught BEFORE deletion by class 3: it is
+dead in code and `dev/LESSONS.md` Rule 20 cites it by fully qualified name as
+that law's measurement.
+
+**The cost of the wrong direction is asymmetric, which is why this is a rule
+and not a preference.** Deleting a live helper fails the typecheck in seconds.
+Deleting a dead result typechecks green and is found only by reading prose.
+
+**When it bites:** any compression campaign under a line target. The pressure
+runs one way, and the criterion that produced the campaign's best result
+(`[LJ-0.4a]`, minus 240) is the same one that over-reaches here.
+
+**Provenance:** `_build/lj-0.4m-report.md` sections 2 and 3;
+`_build/briefs/LJ-0.4m.md` rule 2, which named class 1 and missed class 2;
+commits `ab99b23` and `9c6d036`; `dev/LESSONS.md:568-581` for Rule 20.
+
 
 ### C-1. Two conversations must not share a worktree
 
