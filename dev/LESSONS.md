@@ -2983,3 +2983,110 @@ restriction.
 
 **Provenance:** `_build/lj-1.32-review.md` sections 1 and 5;
 `_build/lj-1.32-report.md`; `_build/briefs/LJ-1.32.md:101,131-133`.
+
+### C-33. Name the OBLIGATION in a brief, never one delivered entry point: the agent will use the one you named
+
+**The law.** When a brief names a specific delivered API for a job, the agent
+uses THAT one, even when a cheaper delivered entry point exists beside it and
+would prove the same theorem. **A brief that names an entry point has made a
+design decision without measuring it.** State the obligation and let the agent
+survey the delivered surface; name an API only to FORBID one, or when the
+choice has been measured.
+
+**The same failure has a twin: naming a STYLE.** Telling an agent to follow a
+delivered chapter's shape copies that chapter's decisions, including ones that
+were right there and wrong here.
+
+**Measured (`[LJ-1.33-R]`, 2026-08-11), and the two causes separate cleanly.**
+The task was condensation's leg D, the story-to-machine agreement. A 2x2, each
+cell a cold pair at one process, on ONE theorem with ONE set of hypotheses:
+
+| route \ body | hand-written body | delivered body reused |
+|---|---:|---:|
+| machine CONTENT projections (`StepAt-out`/`-in`) | **50.13 s, 0.334** | 13.34 s, 0.092 |
+| machine FORMULA readings (`extAt-out`/`-in`/`-in-both`) | 30.00 s, 0.297 | **1.32 s, 0.0108** |
+
+**Neither cure alone passes DD24's 0.013193 bar. Together they pass with
+room: 38x in seconds, 31x in rate.** The orchestrator reproduced the endpoints
+independently at 49.79 s and 1.41 s.
+
+**Both cells on the expensive diagonal were the brief's doing.** It named
+`src/L/Coding/Sequence.lagda.md:217-229` for the machine side, which are the
+CONTENT projections; the FORMULA readings at
+`src/L/Coding/Model.lagda.md:667-678` are equally delivered and the brief never
+named them. It then told the agent to take block 1's `Clause` shapes as its
+source; block 1 hand-writes every formula, correctly, because those are new
+bounded content, but the step body is DELIVERED and copying the style copied
+the re-typing.
+
+**The finding underneath, which is why the cheap cell exists.** The story
+clause and the delivered machine clause carry the SAME body and differ only by
+three bounds, proved by `refl`. So the row is a bound-drop over an abstract
+body, and the layer that does it is 37 lines, generic in the body, costing
+34 ms. Six instantiations cost 1.72 s, so each extra clause is 0.08 s and the
+rate FALLS to 0.0054. **The expensive-looking half is template and the J tower
+gets it free** (DD4).
+
+**One correction it also forced.** The return placed 0.334 in P-n's
+concrete-carrier floor band. It is not there: a control at 0.297 sits inside
+that band with no carrier at all, so the band does not diagnose this cost.
+
+**Provenance:** `_build/lj-1.33-review.md`; `_build/lj-1.33-report.md`;
+`_build/briefs/LJ-1.33.md:42-43,55-60`.
+
+### P-v. Never force a satisfaction-level conversion between two spellings of one formula
+
+**The law.** A formula-level identity is free: two spellings of one formula are
+equal by `refl` or by a one-line `cong`. **The SAME identity under
+`⟨ γ ⊨ - ⟩` costs seconds, and it costs them inside the type of every lemma
+that carries it.** So prove the spelling identity ONCE at the formula level,
+then state everything downstream in ONE spelling. **Where the story is yours to
+write, write it in the machine's spelling from the start.**
+
+**Measured (`[LJ-1.34-R]`, 2026-08-11): 59 ms against 29,415 ms for the
+IDENTICAL theorem, a factor of 499.** The site was condensation's leg D. The
+story spelled the definable-powerset leaf `DefAtB` and the delivered machine
+spelled it `DefAt`. Every agreement lemma's type then carried a
+satisfaction-level conversion between the two, and two endpoint conversions
+alone held 29.4 s of a 73 s block.
+
+**It is P-l's mechanism seen from a new side.** P-l says naming a transparent
+or built construction in a statement's TYPE is what costs. Here the type names
+the same built construction TWICE, in two spellings, and the elaborator pays to
+reconcile them at every use.
+
+**The whole-block effect at the same site**: 0.436 s per line against 0.0079,
+a factor of 55, for the same theorem with the same hypotheses. The orchestrator
+reproduced both endpoints at 72.21 s and 1.57 s.
+
+**Provenance:** `_build/lj-1.34-review.md` sections 1 and 2;
+`src/ProbeDD25D5.agda` against `src/ProbeLJ134.agda`.
+
+### C-34. A return that names a cure PRICES it, or reports the wall that stops it
+
+**The law.** A cure named in a return and left unpriced is not a caveat. **It
+is an unmeasured term inside the verdict, and it decides the verdict.** A
+return that names one either builds it and measures it, or reports the wall
+that stopped it. **P-l forbids pricing a cure by ANALOGY; it never forbids
+building the cure and MEASURING it.** A brief that says "measure it, do not
+argue it" is asking for exactly this and must be obeyed.
+
+**Measured twice in one lineage, on consecutive dispatches, both overturned by
+`[DD25]` reviews that built the named cure:**
+
+| return | the cure it named and did not price | verdict | after the review built it |
+|---|---|---:|---:|
+| `[LJ-1.33]` | a shared machine-reading layer | NO-GO at 0.334 | **0.0108, a factor of 38** |
+| `[LJ-1.34]` | a generic leaf layer with the body abstract | NO-GO at 0.436 | **0.0072, a factor of 61** |
+
+**Both returns cited P-l as their reason not to measure.** That is a misreading
+of P-l, and it cost two dispatches and two adversarial reviews. Each NO-GO
+would have stopped the phase.
+
+**The orchestrator's half of the fix.** Say in the brief that a named cure must
+be built or walled, not deferred. **Both of these briefs did say "measure it,
+do not argue it" and were still read as permission to defer**, so the sentence
+must name P-l explicitly and say what it does not forbid.
+
+**Provenance:** `_build/lj-1.33-review.md`, `_build/lj-1.34-review.md`,
+`_build/lj-1.33-report.md` section 6, `_build/lj-1.34-report.md` section 6.

@@ -450,6 +450,11 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.13 | Build: the collapse at an EXTENSIONAL carrier | DELIVERED +96 | isExt at :31, InjExt at :220. Trivial Inj kept per D-27. F2 corrected: the induction is the same, Xtr was dead code |
 | LJ-1.14 | Build: Tarski-Vaught at a NON-transitive carrier | DELIVERED +29, seconds FELL | Mtr gone entirely, TV holds at any carrier. Priced 50-70, landed 29. Hull-parameter criterion still owed |
 | LJ-1.5 | Build: the condensation lemma, block 1 | DELIVERED | src/L/Condensation.lagda.md, 308 lines at 0.0079, which is 0.60 of DD24's bar. NO placement anywhere; all eleven obligations landed |
+| LJ-1.33 | GATE the next block: measure leg D | NO-GO, under DD25 review | 0.34 per line, 25.7x the bar. Leg D alone is 102 to 272 s against a 99.6 to 147.7 s budget. The machine side is what costs |
+| LJ-1.33-R | DD25 review of LJ-1.33's NO-GO | OVERTURN | Same theorem, same hypotheses: 0.334 to 0.0108, 38x. BOTH causes were my brief. But it prices a PROXY, not the real leg D |
+| LJ-1.34 | GATE leg D: the certificate story vs the machine | NO-GO, under DD25 review | 0.436 per line, and the Delta-0 certificate does NOT close: the delivered leaves carry unbounded quantifiers |
+| LJ-1.34-R | DD25 review of LJ-1.34's NO-GO | OVERTURN | Same theorem: 0.436 to 0.0079, 46x on my own re-runs. Spell the story ONCE. Delta-0 IS the target and my brief was right |
+| LJ-1.35 | GATE: price the bound-fact construction | dispatched | LJ-1.34-R names it the new widest unmeasured term: every probe in this lineage takes the bound facts as hypotheses |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
