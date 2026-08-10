@@ -2487,6 +2487,32 @@ ac_baseline_root = "src/Landmarks.lagda.md"
 # reads this row and passes it through.
 ac_baseline_ghcrts = "-A64m -I0 -M16g"
 
+# THE SECOND CALIBER, measured 2026-08-10 by `check-ratio.py --recalibrate`.
+# 0.011472 s per line over 16,897 lines and 193.85 s, across 73 AC masters,
+# each timed COLD with its dependencies WARM, at the GHCRTS above. Nothing was
+# skipped. This is the caliber check-ratio.py itself measures a wing module
+# with, so it is the only figure a per-module verdict may be compared against.
+#
+# IT IS NOT A SECOND OPINION ON THE SAME QUANTITY. The whole-cone rate above
+# is one build's seconds over the lines it compiles. This is the SUM of 73
+# separate builds. They answer different questions and both are needed: the
+# cone rate says what the tree costs, this says what a module costs to check
+# on its own.
+#
+# THE SLICE SUM IS 1.45x THE CONE, 193.85 s against 133.70 s, and that refutes
+# what I predicted in check-ratio.py before measuring. I argued a slice must be
+# CHEAPER because it carries no dependency share, and that the wing was being
+# judged too leniently. The opposite is true: timing modules one at a time
+# re-pays a fixed per-invocation cost 73 times, chiefly re-reading dependency
+# interfaces, and that dominates. The slice caliber is STRICTER, so a wing
+# judged against the cone rate would have been judged too HARSHLY.
+#
+# The lesson is not about GC or disk. It is that the SIGN of a caliber error
+# is not knowable by reasoning about what the instrument omits. That is why
+# the tool failed closed instead of picking one.
+ac_baseline_module_rate = 0.011472
+ac_baseline_module_lines = 16897
+
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same
 # day; see the block below for why. Reach the target WITHOUT badly worsening
