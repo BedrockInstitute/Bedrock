@@ -2825,8 +2825,24 @@ tolerance = 1.15
 # load-bearing for the trophy, so there is no dead MODULE to delete. A dead
 # module would have been a kitless deletion, the only shape that ever worked
 # in this campaign. There are none.
+# THE MEMBERSHIP CRITERION, stated because the answer is not obvious and the
+# orchestrator's preferred answer and the structural answer had to be checked
+# against each other: a master is wing when the wing caused it to exist AND its
+# consumers are wing modules. Counts are in-fence, measured 2026-08-10.
+#
+# `FOL.Count` IS wing by that criterion: `[LJ-1.6]` built it for the GCH
+# counting and `src/L/StageCardinal.lagda.md` is its only master consumer.
+# SAY THE UNCOMFORTABLE HALF: including it LOWERS the reported rate, because at
+# 0.0011 it is the cheapest master in the tree. It is included because the
+# criterion puts it here, not because the number improves. Excluding it gives
+# 1,275 lines at 0.0116; including it gives 1,895 at 0.0082. Both pass.
+#
+# `src/L/Ordinal/StageArith.lagda.md` is NOT wing: it has no consumer yet, and
+# ordinal arithmetic is template content both towers want (`[LJ-1.20]`).
 gch_wing = [
-  "src/V/Collapse.lagda.md",     # [LJ-1.4], 239 in-fence
-  "src/L/Hull.lagda.md",         # [LJ-1.3], 343 in-fence
-  "src/V/Presentation.lagda.md", # [LJ-0.4], 18 in-fence, consumed only by the two above
+  "src/V/Collapse.lagda.md",      # [LJ-1.4], 335 in-fence
+  "src/L/Hull.lagda.md",          # [LJ-1.3] then DD27's re-index by [LJ-1.23], 431 in-fence
+  "src/V/Presentation.lagda.md",  # [LJ-0.4], 18 in-fence, consumed only by the two above
+  "src/FOL/Count.lagda.md",       # [LJ-1.6], 620 in-fence, zero L imports, template
+  "src/L/StageCardinal.lagda.md", # [LJ-1.6] then [LJ-1.21] and [LJ-1.25], 491 in-fence
 ]

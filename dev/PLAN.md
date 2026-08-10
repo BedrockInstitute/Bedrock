@@ -459,9 +459,13 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.18 | PROBE: the meta term algebra, the fourth shape | GO at 116 lines | Plain inductive, strictly positive, 0.0103 s/line under the bar. Corrected the review on four details. OWNER'S FORK |
 | LJ-1.17-R | DD25 review of LJ-1.17, fired late | OVERTURN; keep the measurement | My budget arithmetic divided by TODAY's wing, not the projection. C-31 records it. The transfer is NOT owed |
 | LJ-1.22 | PRICE the counting interaction the fork creates | NEUTRAL | Code needs the SAME cardinal law as Formula K 1: ~120 lines, ~2 s, 20x below the pair. The objection dies |
-| LJ-1.23 | Build: the hull on the meta term algebra (DD27) | planned, NEXT | Owner ruled B. 116 measured probe lines, ~30 follow-on, ~120 counting; retires LJ-1.3's piece one |
-| LJ-1.20 | Build: the stage-arithmetic kit, +omega and its bounds | dispatched | LJ-1.19 proved it GREEN at probe scale. Template: the tree has no +omega in any master and both towers want it |
-| LJ-1.21 | Build: the carrier-level descent for the level size | dispatched | T85 cured this on 2026-08-05 and the cure is still green. 52 MEASURED lines, not the 250-450 priced fresh |
+| LJ-1.23 | Build: the hull on the meta term algebra (DD27) | DELIVERED | Hull 372 to 431 lines at 0.0039, under the bar. hull-closed now gives the criterion at HULL parameters. Piece one retired |
+| LJ-1.20 | Build: the stage-arithmetic kit, +omega and its bounds | DELIVERED | StageArith.lagda.md, 75 lines at 0.0100, under the AC baseline. Omitted +omega-out and +omega-limit, both priced |
+| LJ-1.21 | Build: the carrier-level descent for the level size | DELIVERED, and it cost | StageCardinal 174 to 484 lines, 0.90 to 42.03 s. Init dropped, so every infinite alpha. LJ-1.25 cured it |
+| LJ-1.24 | PROBE: is StageCardinal's limit half curable | ARM 1 WINS | 29.1 s to 2.3 s, 12.8x, for about 6 lines. R-38's class, NOT P-n's floor: the transport over a TRANSPARENT sett index costs |
+| LJ-1.25 | Build: apply LJ-1.24's cure to the master | DELIVERED | 41.21 s to 11.22 s for 7 lines. The limit half went 0.270 to 0.014. stage-card-upper unchanged. Master 0.024, still over the bar |
+| LJ-1.26 | GATE LJ-1.5: price condensation in SECONDS | DELIVERED | About 60 s at route A's 3.3k centre. The archived 0.395 does NOT transfer. One probe decides a 100x spread, 13-17 s or 700-1300 |
+| LJ-1.27 | GATE PROBE: one level-story clause at the concrete carrier | dispatched | LJ-1.26's designed miniature. GO at or below 0.013, NO-GO at or above 0.10. It decides whether LJ-1.5 is funded |
 | LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing condenses ONCE, at 5.5, whose free lambda can be +omega-closed at zero cost |
 | LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS, OVERTURNED | The seconds are sound; every conclusion from them was wrong. At the PROJECTED wing it passes at 0.72-0.82x |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
