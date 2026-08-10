@@ -413,6 +413,35 @@ In this order, every time:
    measured obligation is doing its job and is not caught by this.
    **A build that wrote fixed where generic was possible, without saying so,
    is returned** (DD4): the choice is legitimate, hiding it is not.
+
+   **Run `python3 scripts/check-sources-read.py <task>`** (DD18). It diffs the
+   sources the brief NAMED against the paths the agent actually OPENED in a
+   tool call. **A miss is a question, never a verdict**, and it is answered in
+   this order.
+
+   - **Did the return say WHY NOT?** DD18 asks for a reason, not for
+     compliance. A reasoned skip that holds is the end of it. `[LJ-1.16]`
+     skipped `devlin-errata.md` because the brief itself said the errata do
+     not reach Chapter II section 5.
+   - **On a POSITIVE return, read the missed source yourself.** It is usually
+     one grep, and it is cheap insurance against a delivered result that a
+     named source contradicts. Do NOT re-dispatch for the miss alone.
+   - **On a NEGATIVE return, put the miss into the DD25 review as a NAMED
+     question.** This is the expensive case and the reason the checker exists:
+     `[LJ-1.6]` refused, and the cure had been sitting in the archive file its
+     brief named and it never opened. DD25 already escalates every negative
+     return, so the miss costs nothing extra to chase and it is exactly what
+     an adversarial reviewer can settle.
+   - **Then ask whether the BRIEF caused it.** A brief that names a FILE
+     invites a topic-shaped grep; a brief that names the ROW, or demands an
+     artifact only reading produces, gets the read. The controlled comparison
+     is one day old: `[LJ-1.6]`'s brief said "`archive/dev/TASKS-archived.md`
+     for what the dispatches found" and the agent grepped by topic and missed
+     the row it needed; `[LJ-1.19]`'s said "FIND IT and cite it at
+     `file:line`" and the agent returned `LevelSigma.lagda.md:203`.
+
+   **The checker proves a path was OPENED, never that the right part was
+   read.** It would have passed `[LJ-1.6]`. Its own docstring says so.
    **A cold-check regression is a defect**, not a cost of doing business; if a
    chapter's cold check has grown, say by how much and why before wiring it.
    **The return must carry the number**: a build that reports lines without
