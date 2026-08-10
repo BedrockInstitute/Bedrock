@@ -288,12 +288,6 @@ Lset-μ : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
 Lset-μ u pu h =
   cong Lset (sym (defStage-suc u pu h)) ∙ Lset-suc (defStage u pu h)
 
-defStage-misses : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
-                → ⟨ meets u (defStage u pu h) ⟩ → Empty.⊥
-defStage-misses u pu h m = μ-earliest u pu h (defStage u pu h)
-  (defStage-ord u pu h) m
-  (subst (λ w → ⟨ defStage u pu h ∈ˢ w ⟩) (defStage-suc u pu h)
-    (self∈sucV (defStage u pu h)))
 ```
 
 <!--en-->
@@ -334,18 +328,6 @@ stage-below₂ a p x y y∈x x∈a =
 stageBound : (a : S) (p : ⟨ isL a ⟩)
            → Σ[ β ∈ S ] (IsOrd β × ⟨ ω ∈ˢ β ⟩ × ⟨ stage a p ∈ˢ β ⟩)
 stageBound a p = bound2 ω (stage a p) ω-ord (stage-ord a p)
-
-bound-limit : (a : S) (p : ⟨ isL a ⟩) (x : S) → ⟨ x ∈ˢ Lset ω ⟩
-            → ⟨ x ∈ˢ Lset (stageBound a p .fst) ⟩
-bound-limit a p x x∈ = Lset-mono (stageBound a p .snd .snd .fst) x∈
-
-bound-self : (a : S) (p : ⟨ isL a ⟩) → ⟨ a ∈ˢ Lset (stageBound a p .fst) ⟩
-bound-self a p = Lset-mono (stageBound a p .snd .snd .snd) (stage-mem a p)
-
-bound-below : (a : S) (p : ⟨ isL a ⟩) (x : S) → ⟨ x ∈ˢ a ⟩
-            → ⟨ x ∈ˢ Lset (stageBound a p .fst) ⟩
-bound-below a p x x∈a =
-  Lset-mono (stageBound a p .snd .snd .snd) (stage-below a p x x∈a)
 
 bound-below₂ : (a : S) (p : ⟨ isL a ⟩) (x y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ a ⟩
              → ⟨ y ∈ˢ Lset (stageBound a p .fst) ⟩

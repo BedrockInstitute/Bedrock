@@ -50,7 +50,6 @@ open Sum using ( _⊎_; inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Data.Vec using ( lookup )
 open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; sett; setIsSet; _∈_ )
@@ -85,14 +84,6 @@ env : ∀ {n} → (Fin n → V ℓ) → V ℓ
 env {n} g = sett (Lift {ℓ-zero} {ℓ} (Fin n))
                  (λ li → pr (# (toℕ (lower li))) (g (lower li)))
 
-envOf : ∀ {n} → (V ℓ) ^ n → V ℓ
-envOf γ = env (λ i → lookup i γ)
-
-env-spec : ∀ {n} (g : Fin n → V ℓ) (s : V ℓ)
-  → ⟨ s ∈ env g ⟩
-  ≡ ∥ Σ[ li ∈ Lift {ℓ-zero} {ℓ} (Fin n) ]
-      (pr (# (toℕ (lower li))) (g (lower li)) ≡ s) ∥₁
-env-spec g s = refl
 ```
 
 <!--en-->
@@ -142,25 +133,6 @@ and adequate at once.
 memPairAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
 memPairAt e i v = ∃̇∈ (var e) (prAt zero (suc i) (suc v))
 
-Δ₀-memPairAt : ∀ {n} (e i v : Fin n) → Δ₀ (memPairAt e i v)
-Δ₀-memPairAt e i v = δ-∃∈ (Δ₀-prAt zero (suc i) (suc v))
-
-memPairAt-adequate : ∀ {n} (e i v : Fin n) (γ : (V ℓ) ^ n)
-  → (γ ⊨ memPairAt e i v) ≡ (pr (⟦ var i ⟧ γ) (⟦ var v ⟧ γ) ∈ ⟦ var e ⟧ γ)
-memPairAt-adequate e i v γ = ⇔toPath fwd bwd
-  where
-  I = ⟦ var i ⟧ γ
-  Vv = ⟦ var v ⟧ γ
-  E = ⟦ var e ⟧ γ
-  fwd : ⟨ γ ⊨ memPairAt e i v ⟩ → ⟨ pr I Vv ∈ E ⟩
-  fwd = PT.rec ((pr I Vv ∈ E) .snd)
-    (λ { (q , q∈E , sat) →
-      subst (λ z → ⟨ z ∈ E ⟩)
-            (subst ⟨_⟩ (prAt-adequate zero (suc i) (suc v) (q ∷ γ)) sat)
-            q∈E })
-  bwd : ⟨ pr I Vv ∈ E ⟩ → ⟨ γ ⊨ memPairAt e i v ⟩
-  bwd h = ∣ pr I Vv , h
-          , subst ⟨_⟩ (sym (prAt-adequate zero (suc i) (suc v) (pr I Vv ∷ γ))) refl ∣₁
 ```
 
 <!--en-->
@@ -256,15 +228,6 @@ cons m g (suc i) = g i
 seqSet : V ℓ → V ℓ
 seqSet A = sett (Σ[ n ∈ ℕ ] (Fin n → ⟪ A ⟫)) (λ p → envIn A (p .snd))
 
-seqSet-spec : (A s : V ℓ)
-  → ⟨ s ∈ seqSet A ⟩
-  ≡ ∥ Σ[ p ∈ (Σ[ n ∈ ℕ ] (Fin n → ⟪ A ⟫)) ]
-      (env (λ i → ⟪ A ⟫↪ (p .snd i)) ≡ s) ∥₁
-seqSet-spec A s = refl
-
-seqSet-mem : {A : V ℓ} {n : ℕ} (f : Fin n → ⟪ A ⟫)
-           → ⟨ env (λ i → ⟪ A ⟫↪ (f i)) ∈ seqSet A ⟩
-seqSet-mem {A} {n} f = ∣ (n , f) , refl ∣₁
 ```
 
 <!--en-->
@@ -554,13 +517,13 @@ An environment is its graph (`env`{.Agda}), and the graph is functional
 (`lookup-spec`{.Agda}), which is what makes the encoding usable rather than
 merely definable. `memPairAt`{.Agda} reads a value out of it and
 `sucAt`{.Agda} recognizes the index shift that going under a quantifier
-performs, both Δ₀ and adequate. `seqSet`{.Agda} collects all finite sequences
-over a set, for the certificates that quantify over environments instead of
-naming one. `shiftPairAt`{.Agda} recognizes the renumbering that
+performs. `seqSet`{.Agda} collects all finite sequences over a set, for the
+certificates that quantify over environments instead of naming one.
+`shiftPairAt`{.Agda} recognizes the renumbering that
 extension performs, and `consAt`{.Agda} puts it to work: the extended
 environment is the old one with a value consed on, stated against the encoded
 form the certificates actually hold. That is the last formula the coding stack
 owes the certificates.
 <!--zh-->
-环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`memPairAt`{.Agda} 从中查出一个值，`sucAt`{.Agda} 认出进入量词之下所作的序号移位，二者皆 Δ₀ 且适足。`seqSet`{.Agda} 汇集一个集合上的全部有穷序列，供那些对环境作量化而非点名某一个的证书使用。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
+环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`memPairAt`{.Agda} 从中查出一个值，`sucAt`{.Agda} 认出进入量词之下所作的序号移位。`seqSet`{.Agda} 汇集一个集合上的全部有穷序列，供那些对环境作量化而非点名某一个的证书使用。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
 <!--/-->

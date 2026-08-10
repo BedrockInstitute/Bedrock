@@ -2435,7 +2435,7 @@ authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
 # /usr/bin/time -p. The same protocol as [timing].measured_wall, so the two
 # figures are comparable.
-ac_baseline_seconds_per_line = 0.007614
+ac_baseline_seconds_per_line = 0.007749
 
 # THE TREE THE BASELINE WAS MEASURED ON, and the reason this field exists.
 # A seconds-per-line baseline is a property of a SPECIFIC tree, not a constant.
@@ -2453,10 +2453,30 @@ ac_baseline_seconds_per_line = 0.007614
 # So the tools REFUSE the baseline when standing has moved away from this
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
 # in scripts/ledger.py and the guard in scripts/check-ratio.py.
-ac_baseline_lines = 17492
+ac_baseline_lines = 17252
 ac_baseline_tolerance_lines = 50   # noise, not a licence: a real compression is hundreds
 
-ac_baseline_provenance = "MEASURED 2026-08-09: 133.19 s real (131.45 user, 0.86 sys), exit 0, over 17,492 in-fence lines across 75 masters. Interface cache moved aside, `make typecheck` at the exported GHCRTS default -A64m -I0 -M16g, Agda 2.8.0, single process, nothing else running, /usr/bin/time -p. This is the WHOLE delivered internalization tree, which today IS the AC wing: no GCH content exists yet, so the endpoint and the wing are the same set."
+ac_baseline_provenance = """
+RE-MEASURED 2026-08-10 by [LJ-0.5], after [LJ-0.4a] removed 240 dead-name
+lines. 133.69 s real (131.87 user, 0.93 sys), exit 0, over 17,252 in-fence
+lines across 75 masters. Cache cleared, `make typecheck` at the exported
+GHCRTS default -A64m -I0 -M16g, Agda 2.8.0, single process, /usr/bin/time -p.
+
+WHAT THE RE-MEASUREMENT TAUGHT, and it is P-q again at a new site. Removing
+240 lines bought MINUS 0.50 seconds, which is noise: 133.19 before, 133.69
+after. So the ratio got 1.8 percent WORSE, because dead names cost lines and
+cost no seconds. **Compression of this class always worsens the ratio**, and
+DD24's bar must be re-measured after every such block rather than assumed to
+improve. That is why ac_baseline_lines exists.
+
+A PROTOCOL TRAP, recorded because it nearly became a false regression. The
+first cold run used `GHCRTS=-M16g agda` directly and returned 163.49 s, which
+reads as a 30-second regression from deleting dead code. It is an artifact:
+the Makefile exports `-A64m -I0 -M16g`, and dropping the two GC flags costs
+22.3 percent. Compare only runs made by `make typecheck`.
+
+THE SUPERSEDED FIGURE, kept for the record: MEASURED 2026-08-09: 133.19 s real (131.45 user, 0.86 sys), exit 0, over 17,492 in-fence lines across 75 masters. Interface cache moved aside, `make typecheck` at the exported GHCRTS default -A64m -I0 -M16g, Agda 2.8.0, single process, nothing else running, /usr/bin/time -p. This is the WHOLE delivered internalization tree, which today IS the AC wing: no GCH content exists yet, so the endpoint and the wing are the same set.
+"""
 
 # WHAT THE NUMBER SAYS, and it is worth reading before anyone plans against it.
 # 0.0076 s/line sits BELOW P-m's parameterized band of 0.010 to 0.013, so the

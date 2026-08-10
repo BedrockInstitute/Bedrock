@@ -485,9 +485,6 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
   βω : V ℓ
   βω = L.top
 
-  βω-ord : IsOrd βω
-  βω-ord = L.top-ord
-
   answers : (n : ℕ) (ms : ⟪ Lset (βₙ n) ⟫ ^ k)
           → ⟨ pickStage ψ (LsetEnv (βₙ n) (βₙ-ord n) ms) ∈ βₙ (suc n) ⟩
   answers n = pickLand (βₙ n) (βₙ-ord n)

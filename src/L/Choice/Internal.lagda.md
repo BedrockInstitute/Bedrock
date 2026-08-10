@@ -51,7 +51,7 @@ open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
 open import L.Coding.Model {ℓ}
-  using ( extAt; extAt-out; extAt-in-both
+  using ( extAt; extAt-in-both
         ; prAtL; prAtL-adequate; appAt; appAt-adequate
         ; domAt; domAt-in; domAt-out; domAt-intro; numL
         ; sucAtL; sucAtL-adequate; envOverAt; consAtL )
@@ -711,18 +711,6 @@ module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
                  (back z (DenoteBody-out B C s e γ z h .fst))
                  (DenoteBody-out B C s e γ z h .snd)))))
 
-  NameAt-out : ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩
-             → ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-             × ( ⟨ γ ⊨ FreeAt C₀ s a ⟩
-               × ( ⟨ fst (lookup a γ) ∈ ω ⟩
-                 × ( ⟨ γ ⊨ envOverAt e a B ⟩
-                   × ((z : S) → ⟨ fst z ∈ fst (lookup d γ) ⟩
-                      → ⟨ fst z ∈ fst (lookup B γ) ⟩
-                      × ∥ DenoteOf B C s e γ z ∥₁) ) ) )
-  NameAt-out (hl , (hf , (ha , (he , hd)))) =
-    InLimitAt-out s γ hl , (hf , (ha , (he
-    , λ z hz → DenoteBody-out B C s e γ z
-                 (extAt-out d (DenoteBody B C s e) γ hd z hz))))
 ```
 
 <!--en-->

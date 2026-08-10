@@ -60,7 +60,7 @@ open import L.Choice.Step {ℓ} lem using ( Mem; relOf; orderAt; memOf; carry )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop; _×_ )
-open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
+open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
@@ -672,16 +672,6 @@ it is built.
 
   Bundle : V ℓ → Type (ℓ-suc (ℓ-suc ℓ))
   Bundle α = Σ[ h ∈ S ] Σ[ r ∈ S ] (IsTable α h × IsRel α r)
-
-  isPropBundle : (α : V ℓ) → isProp (Bundle α)
-  isPropBundle α (h , u) (h' , u') = Σ≡Prop inner
-    (extensionalL (λ z → u .snd .fst z ∙ sym (u' .snd .fst z)))
-    where
-    inner : (k : S) → isProp (Σ[ r ∈ S ] (IsTable α k × IsRel α r))
-    inner k (r , t) (r' , t') = Σ≡Prop
-      (λ s → isProp× (isPropΠ (λ z → isSetHProp (fst z ∈ fst k) (Recorded α (fst z))))
-                     (snd (Realizes α s)))
-      (rel-unique α r r' (t .snd) (t' .snd))
 
   module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsTable B h) where
     private

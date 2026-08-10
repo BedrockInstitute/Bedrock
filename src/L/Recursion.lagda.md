@@ -233,8 +233,6 @@ module Of (R : Recursion) where
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → val x x∈ ≡ y
   val-uniq x x∈ y h = cong fst (funct x x∈ .snd (y , h))
 
-  val∈table : (x : S) (x∈ : ⟨ x ∈ˢ dom ⟩) → ⟨ val x x∈ ∈ˢ table ⟩
-  val∈table x x∈ = table-in x (val x x∈) x∈ (val-graph x x∈)
 ```
 
 <!--en-->
@@ -346,13 +344,6 @@ module Image (D : Definition) where
   table : S
   table = R.table
 
-  fn∈table : (x : S) → ⟨ x ∈ˢ dom ⟩ → ⟨ fn x ∈ˢ table ⟩
-  fn∈table x x∈ = R.table-in x (fn x) x∈ (defines x x∈)
-
-  table→fn : (y : S) → ⟨ y ∈ˢ table ⟩
-           → ∥ (Σ[ x ∈ S ] (⟨ x ∈ˢ dom ⟩ × (y ≡ fn x))) ∥₁
-  table→fn y h = PT.map (λ { (x , (x∈ , sat)) → x , (x∈ , only x x∈ y sat) })
-    (R.table-out y h)
 ```
 
 <!--en-->

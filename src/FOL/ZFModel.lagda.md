@@ -39,9 +39,8 @@ chapter: the constant domain is the carrier itself and the interpretation is
 ```agda
 open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
 open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At )
-open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Induction.WellFounded using ( WellFounded; wf→x≮x )
+open import Cubical.Induction.WellFounded using ( WellFounded )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
@@ -267,9 +266,6 @@ from a set to the next, the ladder the axiom of infinity will climb.
   ∅ : S
   ∅ = ℩ hasEmpty
 
-  ∅-spec : IsSetOf (λ _ → ⊥) ∅
-  ∅-spec = ℩-spec hasEmpty
-
   pair : S → S → S
   pair a b = ℩ (hasPair a b)
 
@@ -279,14 +275,8 @@ from a set to the next, the ladder the axiom of infinity will climb.
   ⋃ : S → S
   ⋃ a = ℩ (hasUnion a)
 
-  ⋃-spec : ∀ a → IsSetOf (λ x → ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))) (⋃ a)
-  ⋃-spec a = ℩-spec (hasUnion a)
-
   _∪_ : S → S → S
   a ∪ b = ⋃ (pair a b)
-
-  _⁺ : S → S
-  a ⁺ = a ∪ pair a a
 
   separate : (a : S) → Formula S 1 → S
   separate a φ = ℩ (hasSeparation a φ)
@@ -297,8 +287,6 @@ from a set to the next, the ladder the axiom of infinity will climb.
   𝒫 : S → S
   𝒫 a = ℩ (hasPower a)
 
-  𝒫-spec : ∀ a → IsSetOf (λ x → x ⊆ˢ a) (𝒫 a)
-  𝒫-spec a = ℩-spec (hasPower a)
 ```
 
 <!--en-->
@@ -352,11 +340,11 @@ members, and the members of a successor numeral are exactly the previous numeral
 and its members. By extensionality the two equations say precisely
 `numeral zero ≡ ∅` and `numeral (suc n) ≡ numeral n ⁺`, so nothing is weaker than
 defining the chain outright. What is gained is room: the equations never mention
-the derived `∅`{.Agda} and `_⁺`{.Agda}, so a concrete model may present the chain
-in whatever form its carrier computes best and discharge them without ever
-unfolding the description operator.
+the derived `∅`{.Agda}, so a concrete model may present the chain in whatever
+form its carrier computes best and discharge them without ever unfolding the
+description operator.
 <!--zh-->
-只剩一条公理了，正是那条强迫一个真正无穷的集合存在的公理。**数码**就是冯·诺伊曼自然数：`∅`、`∅ ⁺`、`(∅ ⁺) ⁺`，如此下去。record 把这条链本身收作字段，用两条以裸成员与裸等词措辞的命题方程钉死：第零个数码没有成员，后继数码的成员恰是前一个数码及其成员。经外延公理，这两条方程说的正是 `numeral zero ≡ ∅` 与 `numeral (suc n) ≡ numeral n ⁺`，所以比起直接定义这条链，强度分毫未减。换来的是余地：方程从不提及派生的 `∅`{.Agda} 与 `_⁺`{.Agda}，于是具体模型可以用其载体算得最顺手的形式给出这条链，兑现方程时完全不必展开摹状词算子。
+只剩一条公理了，正是那条强迫一个真正无穷的集合存在的公理。**数码**就是冯·诺伊曼自然数：`∅`、`∅ ⁺`、`(∅ ⁺) ⁺`，如此下去。record 把这条链本身收作字段，用两条以裸成员与裸等词措辞的命题方程钉死：第零个数码没有成员，后继数码的成员恰是前一个数码及其成员。经外延公理，这两条方程说的正是 `numeral zero ≡ ∅` 与 `numeral (suc n) ≡ numeral n ⁺`，所以比起直接定义这条链，强度分毫未减。换来的是余地：方程从不提及派生的 `∅`{.Agda}，于是具体模型可以用其载体算得最顺手的形式给出这条链，兑现方程时完全不必展开摹状词算子。
 <!--/-->
 
 ```agda
@@ -390,8 +378,6 @@ naturals: every member of `ω` is a numeral, not merely every numeral a member.
   ω : S
   ω = ℩ hasInfinity
 
-  ω-spec : IsSetOf isNumeral ω
-  ω-spec = ℩-spec hasInfinity
 ```
 
 <!--en-->
@@ -402,25 +388,15 @@ naturals: every member of `ω` is a numeral, not merely every numeral a member.
 
 <!--en-->
 Extensionality upgrades the whole existence apparatus once and for all. Any
-realizer is the unique realizer (`uniqueSetOf`{.Agda}); and even a *merely*
-existing realizer, hidden under propositional truncation, reproduces unique
-existence (`mereSetOf→isContr`{.Agda}). The pattern of the classical description
-axiom recurs here as a theorem: to build "the set of the `Q`s" it will always
-suffice to show some set of the `Q`s merely exists. Regularity draws first blood
-too: no set is a member of itself.
+realizer is the unique realizer (`uniqueSetOf`{.Agda}).
 <!--zh-->
-外延公理把整套存在装置一次性升级。任何实现者都是唯一实现者 (`uniqueSetOf`{.Agda})；哪怕只是**仅仅**存在、藏在命题截断之下的实现者，也能复现唯一存在 (`mereSetOf→isContr`{.Agda})。经典描述公理的模式在此以定理身份重现：今后要造「由 `Q` 者组成的那个集合」，永远只需证明这样的集合仅仅存在。正则公理也开了第一刀：没有集合是自己的成员。
+外延公理把整套存在装置一次性升级。任何实现者都是唯一实现者 (`uniqueSetOf`{.Agda})。
 <!--/-->
 
 ```agda
   uniqueSetOf : (Q : S → Ω) → SetOf Q → isContr (SetOf Q)
   uniqueSetOf = setOf-unique extensional
 
-  mereSetOf→isContr : (Q : S → Ω) → ∥ SetOf Q ∥₁ → isContr (SetOf Q)
-  mereSetOf→isContr Q = PT.rec isPropIsContr (uniqueSetOf Q)
-
-  x∉x : (x : S) → ⟨ x ∈ˢ x ⟩ → Empty.⊥
-  x∉x x h = wf→x≮x regularity h
 ```
 
 <!--en-->
