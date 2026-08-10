@@ -140,6 +140,23 @@ def main() -> int:
               "tool will not invent one from a comparable (P-l).", file=sys.stderr)
         return 1
 
+    # THE BASELINE BELONGS TO ONE TREE. Refuse it on another, and refuse HERE
+    # as well as in ledger.py --check, because this is the tool that actually
+    # renders a verdict. A guard that lives only in the commit gate leaves the
+    # measuring instrument free to print a wrong number when run by hand.
+    declared_lines = cfg.get("ac_baseline_lines")
+    if declared_lines:
+        standing = sum(ledger_mod.count(f) for f in ledger_mod.tracked_masters())
+        slack = cfg.get("ac_baseline_tolerance_lines", 50)
+        if abs(standing - declared_lines) > slack:
+            print(f"check-ratio: REFUSING. The baseline {baseline:.6f} s/line was "
+                  f"measured over {declared_lines:,} in-fence lines; the tree now "
+                  f"stands at {standing:,}. Both terms of the ratio moved and "
+                  f"neither moved predictably (P-q: 315 lines removed bought "
+                  f"11.8 s). Re-measure at [LJ-0.5] and write the new figure and "
+                  f"ac_baseline_lines TOGETHER.", file=sys.stderr)
+            return 1
+
     blocker = agda_blocker()
     if blocker:
         print(f"check-ratio: refusing to measure, {blocker} (C-12).", file=sys.stderr)
