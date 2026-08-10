@@ -184,6 +184,40 @@ def validate_benchmark(data: dict) -> list[str]:
     return defects
 
 
+def validate_ratio_baseline(data: dict, standing: int) -> list[str]:
+    """DD24's baseline is a property of ONE tree. Refuse it on another.
+
+    A seconds-per-line figure is not a constant. It was measured over a
+    specific set of masters, and both of its terms move when the tree moves.
+    [LJ-0.4] compresses this tree by roughly 1,500 lines, and P-q measured
+    that a line lever is not a seconds lever, so neither term moves
+    predictably and the ratio cannot be rescaled on paper.
+
+    THE FAILURE THIS CATCHES is silent by construction: after a compression
+    the old baseline is still declared, still parses, and still produces a
+    verdict. A stale threshold reports exactly like a live one. This is the
+    C-28 class, a threshold that outlives the thing it was measured on.
+
+    The owner asked for the re-measurement to be remembered. A task row is a
+    wish; this is the enforcement point.
+    """
+    ratio = data.get("ratio", {})
+    declared = ratio.get("ac_baseline_lines")
+    if not ratio.get("ac_baseline_seconds_per_line") or not declared:
+        return []
+    slack = ratio.get("ac_baseline_tolerance_lines", 50)
+    drift = abs(standing - declared)
+    if drift <= slack:
+        return []
+    return [
+        f"RATIO BASELINE IS STALE: DD24's {ratio['ac_baseline_seconds_per_line']:.6f} "
+        f"s/line was measured over {declared:,} in-fence lines and the tree now "
+        f"stands at {standing:,}, a drift of {drift:,}. Both terms of the ratio "
+        f"moved and neither moved predictably (P-q). RE-MEASURE at [LJ-0.5], "
+        f"then write the new figure and ac_baseline_lines together. Until then "
+        f"the bar is a number from a tree that no longer exists."]
+
+
 def validate_rows(data: dict) -> list[str]:
     """Every remaining row needs both bands and a provenance. Unpriced is stated, never zero."""
     defects: list[str] = []
@@ -589,6 +623,8 @@ def main(argv: list[str]) -> int:
 
     retired = sum(sizes[f] for hit in buckets.values() for f in hit)
     standing = total - retired
+    # AFTER standing exists, not before: the baseline guard compares against it.
+    defects += validate_ratio_baseline(data, standing)
 
     rows = data.get("remaining", [])
     nl = sum(r.get("naive_low", 0) for r in rows)
