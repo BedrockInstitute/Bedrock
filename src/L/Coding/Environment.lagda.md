@@ -35,18 +35,19 @@ open import Base.Truth
 
 module L.Coding.Environment {ℓ : Level} where
 
-open import FOL.Syntax using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈ )
+open import FOL.Syntax using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈; ⊥̇ )
+open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈; δ-⊥ )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
 open import L.Coding.Base {ℓ}
-  using ( prAt; Δ₀-prAt; prAt-adequate; tagAt; Δ₀-tagAt; tagAt-adequate
+  using ( prAt; Δ₀-prAt; prAt-adequate; prChar-fwd; prChar-bwd
         ; ∈pair-introL; ∈pair-introR )
 
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
+import Cubical.Data.Empty as E hiding ( elim )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
@@ -56,7 +57,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
+  using ( ⁅_,_⁆; ⁅_⁆s; ∅; ∅-empty; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -307,6 +308,155 @@ shiftPairAt-adequate p' p γ = ⇔toPath fwd bwd
 ```
 
 <!--en-->
+## The empty tag
+<!--zh-->
+## 空标签
+<!--/-->
+
+<!--en-->
+The tag this chapter's extension reader uses is `# 0`, and `# 0` is the empty
+set by definition. So the tag is said without a constant: a member is empty. The
+readers below are the empty versions of the tagged ones. The meta machinery
+proves that a set satisfying the empty tag is the Kuratowski pair with the empty
+set as first component.
+<!--zh-->
+本章扩展读式所用的标签是 `# 0`，而 `# 0` 按定义就是空集。于是标签可以不借常量说出：一个成员是空的。下面几条读式就是带标签版本的空版。元层机制证明：满足空标签读式的集合，恰是以空集为第一分量的 Kuratowski 对。
+<!--/-->
+
+```agda
+sgl0At : ∀ {n} → Fin n → Formula (V ℓ) n
+sgl0At k = (∃̇∈ (var k) (∀̇∈ (var zero) ⊥̇))
+        ∧̇ (∀̇∈ (var k) (∀̇∈ (var zero) ⊥̇))
+
+pair0At : ∀ {n} → Fin n → Fin n → Formula (V ℓ) n
+pair0At k j = (∃̇∈ (var k) (∀̇∈ (var zero) ⊥̇))
+           ∧̇ ((var j ∈̇ var k)
+           ∧̇ (∀̇∈ (var k) ((∀̇∈ (var zero) ⊥̇) ∨̇ (var zero ≐ var (suc j)))))
+
+tag0At : ∀ {n} → Fin n → Fin n → Formula (V ℓ) n
+tag0At s x = (∃̇∈ (var s) (sgl0At zero))
+          ∧̇ ((∃̇∈ (var s) (pair0At zero (suc x)))
+          ∧̇ (∀̇∈ (var s) (sgl0At zero ∨̇ pair0At zero (suc x))))
+
+Δ₀-sgl0At : ∀ {n} (k : Fin n) → Δ₀ (sgl0At k)
+Δ₀-sgl0At k = δ-∧ (δ-∃∈ (δ-∀∈ δ-⊥)) (δ-∀∈ (δ-∀∈ δ-⊥))
+
+Δ₀-pair0At : ∀ {n} (k j : Fin n) → Δ₀ (pair0At k j)
+Δ₀-pair0At k j = δ-∧ (δ-∃∈ (δ-∀∈ δ-⊥))
+  (δ-∧ δ-∈ (δ-∀∈ (δ-∨ (δ-∀∈ δ-⊥) δ-≐)))
+
+Δ₀-tag0At : ∀ {n} (s x : Fin n) → Δ₀ (tag0At s x)
+Δ₀-tag0At s x = δ-∧ (δ-∃∈ (Δ₀-sgl0At zero))
+  (δ-∧ (δ-∃∈ (Δ₀-pair0At zero (suc x)))
+       (δ-∀∈ (δ-∨ (Δ₀-sgl0At zero) (Δ₀-pair0At zero (suc x)))))
+
+private
+  Emptyₛ : V ℓ → Type (ℓ-suc ℓ)
+  Emptyₛ z = (y : V ℓ) → ⟨ y ∈ₛ z ⟩ → E.⊥
+
+  ∅-uniq : (z : V ℓ) → Emptyₛ z → z ≡ ∅
+  ∅-uniq z hz = extensionality z ∅ (sub₁ , sub₂)
+    where
+    sub₁ : ⟨ z ⊆ ∅ ⟩
+    sub₁ y y∈z = E.rec (hz y y∈z)
+    sub₂ : ⟨ ∅ ⊆ z ⟩
+    sub₂ y y∈∅ = E.rec (∅-empty y y∈∅)
+
+  Empty' : V ℓ → Type (ℓ-suc ℓ)
+  Empty' z = (y : V ℓ) → ⟨ y ∈ z ⟩ → E.⊥* {ℓ-suc ℓ}
+
+  empty'→∅ : (z : V ℓ) → Empty' z → z ≡ ∅
+  empty'→∅ z hz = ∅-uniq z (λ y y∈ₛz → lower (hz y (∈∈ₛ {a = y} {b = z} .snd y∈ₛz)))
+
+  ∅→empty' : (z : V ℓ) → z ≡ ∅ → Empty' z
+  ∅→empty' z e y y∈z = lift (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst (subst (λ w → ⟨ y ∈ w ⟩) e y∈z)))
+
+  EmptySgl : V ℓ → Type (ℓ-suc ℓ)
+  EmptySgl w = ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁
+            × ((z : V ℓ) → ⟨ z ∈ w ⟩ → Empty' z)
+
+  EmptyPair : V ℓ → V ℓ → Type (ℓ-suc ℓ)
+  EmptyPair W w = ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁
+               × (⟨ W ∈ w ⟩ × ((z : V ℓ) → ⟨ z ∈ w ⟩ → ∥ Empty' z ⊎ (z ≡ W) ∥₁))
+
+  SglOf∅ : V ℓ → Type (ℓ-suc ℓ)
+  SglOf∅ w = ⟨ ∅ ∈ w ⟩ × ((z : V ℓ) → ⟨ z ∈ w ⟩ → z ≡ ∅)
+
+  PairOf∅ : V ℓ → V ℓ → Type (ℓ-suc ℓ)
+  PairOf∅ W w = ⟨ ∅ ∈ w ⟩ × (⟨ W ∈ w ⟩ × ((z : V ℓ) → ⟨ z ∈ w ⟩ → ∥ (z ≡ ∅) ⊎ (z ≡ W) ∥₁))
+
+  EmptySgl→SglOf∅ : (w : V ℓ) → EmptySgl w → SglOf∅ w
+  EmptySgl→SglOf∅ w (h₁ , hall) = hu , hall'
+    where
+    hu : ⟨ ∅ ∈ w ⟩
+    hu = PT.rec ((∅ ∈ w) .snd)
+      (λ { (z , z∈w , ez) → subst (λ u → ⟨ u ∈ w ⟩) (empty'→∅ z ez) z∈w })
+      h₁
+    hall' : (z : V ℓ) → ⟨ z ∈ w ⟩ → z ≡ ∅
+    hall' z z∈w = empty'→∅ z (hall z z∈w)
+
+  EmptyPair→PairOf∅ : (W w : V ℓ) → EmptyPair W w → PairOf∅ W w
+  EmptyPair→PairOf∅ W w (h₁ , hW , hall) = hu , hW , hall'
+    where
+    hu : ⟨ ∅ ∈ w ⟩
+    hu = PT.rec ((∅ ∈ w) .snd)
+      (λ { (z , z∈w , ez) → subst (λ u → ⟨ u ∈ w ⟩) (empty'→∅ z ez) z∈w })
+      h₁
+    hall' : (z : V ℓ) → ⟨ z ∈ w ⟩ → ∥ (z ≡ ∅) ⊎ (z ≡ W) ∥₁
+    hall' z z∈w = PT.map (Sum.rec (λ ez → inl (empty'→∅ z ez)) (λ e → inr e))
+      (hall z z∈w)
+
+  SglOf∅→EmptySgl : (w : V ℓ) → SglOf∅ w → EmptySgl w
+  SglOf∅→EmptySgl w (h∅ , hall) =
+      (∣ ∅ , (h∅ , ∅→empty' ∅ refl) ∣₁)
+    , (λ z z∈w → ∅→empty' z (hall z z∈w))
+
+  PairOf∅→EmptyPair : (W w : V ℓ) → PairOf∅ W w → EmptyPair W w
+  PairOf∅→EmptyPair W w (h∅ , hW , hall) =
+      (∣ ∅ , (h∅ , ∅→empty' ∅ refl) ∣₁)
+    , (hW , λ z z∈w → PT.map (Sum.rec (λ e → inl (∅→empty' z e)) (λ e → inr e))
+        (hall z z∈w))
+
+prChar∅-fwd : (Q W : V ℓ)
+  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
+  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
+  → ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ EmptySgl y ⊎ EmptyPair W y ∥₁)
+  → Q ≡ pr ∅ W
+prChar∅-fwd Q W h₁ h₂ h₃ =
+  prChar-fwd Q ∅ W
+    (PT.map (λ { (w , w∈Q , s) → w , w∈Q , EmptySgl→SglOf∅ w s }) h₁)
+    (PT.map (λ { (w , w∈Q , p) → w , w∈Q , EmptyPair→PairOf∅ W w p }) h₂)
+    (λ y y∈Q → PT.map (Sum.rec (λ s → inl (EmptySgl→SglOf∅ y s))
+                               (λ p → inr (EmptyPair→PairOf∅ W y p)))
+      (h₃ y y∈Q))
+
+prChar∅-bwd : (Q W : V ℓ) → Q ≡ pr ∅ W
+  → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
+  × (∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
+  × ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ EmptySgl y ⊎ EmptyPair W y ∥₁))
+prChar∅-bwd Q W e = h₁' , (h₂' , h₃')
+  where
+  h : ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf∅ w) ∥₁
+    × (∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf∅ W w) ∥₁
+    × ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ SglOf∅ y ⊎ PairOf∅ W y ∥₁))
+  h = prChar-bwd Q ∅ W e
+  h₁' : ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
+  h₁' = PT.map (λ { (w , w∈Q , s) → w , w∈Q , SglOf∅→EmptySgl w s }) (fst h)
+  h₂' : ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptyPair W w) ∥₁
+  h₂' = PT.map (λ { (w , w∈Q , p) → w , w∈Q , PairOf∅→EmptyPair W w p }) (fst (snd h))
+  h₃' : (y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ EmptySgl y ⊎ EmptyPair W y ∥₁
+  h₃' y y∈Q = PT.map (Sum.rec (λ s → inl (SglOf∅→EmptySgl y s))
+                              (λ p → inr (PairOf∅→EmptyPair W y p)))
+    (snd (snd h) y y∈Q)
+
+tag0At-adequate : ∀ {n} (s x : Fin n) (γ : (V ℓ) ^ n)
+                → (γ ⊨ tag0At s x) ≡ ((⟦ var s ⟧ γ ≡ pr ∅ (⟦ var x ⟧ γ)) , setIsSet _ _)
+tag0At-adequate s x γ = ⇔toPath
+  (λ { (h₁ , h₂ , h₃) → prChar∅-fwd _ _ h₁ h₂ h₃ })
+  (λ e → prChar∅-bwd _ _ e)
+```
+
+<!--en-->
 ## Extending an environment
 <!--zh-->
 ## 扩张环境
@@ -337,16 +487,16 @@ cons m g (suc i) = g i
 
 consAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
 consAt e' m e =
-  (∃̇∈ (var e') (tagAt zero 0 (suc m)))
+  (∃̇∈ (var e') (tag0At zero (suc m)))
   ∧̇ ((∀̇∈ (var e) (∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero))))
-  ∧̇ (∀̇∈ (var e') ((tagAt zero 0 (suc m))
+  ∧̇ (∀̇∈ (var e') ((tag0At zero (suc m))
                    ∨̇ (∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero)))))
 
 Δ₀-consAt : ∀ {n} (e' m e : Fin n) → Δ₀ (consAt e' m e)
 Δ₀-consAt e' m e =
-  δ-∧ (δ-∃∈ (Δ₀-tagAt zero 0 (suc m)))
+  δ-∧ (δ-∃∈ (Δ₀-tag0At zero (suc m)))
       (δ-∧ (δ-∀∈ (δ-∃∈ (Δ₀-shiftPairAt zero (suc zero))))
-           (δ-∀∈ (δ-∨ (Δ₀-tagAt zero 0 (suc m))
+           (δ-∀∈ (δ-∨ (Δ₀-tag0At zero (suc m))
                       (δ-∃∈ (Δ₀-shiftPairAt (suc zero) zero)))))
 
 consAt-adequate : ∀ {n} (e' m e : Fin n) (γ : (V ℓ) ^ n)
@@ -363,14 +513,14 @@ consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
   G' = cons M g
 
   classify : ((y : V ℓ) → ⟨ y ∈ E' ⟩
-               → ∥ ⟨ (y ∷ γ) ⊨ tagAt zero 0 (suc m) ⟩
+               → ∥ ⟨ (y ∷ γ) ⊨ tag0At zero (suc m) ⟩
                  ⊎ ⟨ (y ∷ γ) ⊨ ∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero) ⟩ ∥₁)
            → (y : V ℓ) → ⟨ y ∈ₛ E' ⟩ → ⟨ y ∈ₛ env G' ⟩
   classify h₃ y y∈ₛE' = PT.rec ((y ∈ₛ env G') .snd)
     (Sum.rec
       (λ tsat → ∈∈ₛ {a = y} {b = env G'} .fst
         ∣ lift zero
-        , sym (subst ⟨_⟩ (tagAt-adequate zero 0 (suc m) (y ∷ γ)) tsat) ∣₁)
+        , sym (subst ⟨_⟩ (tag0At-adequate zero (suc m) (y ∷ γ)) tsat) ∣₁)
       (λ ssat → PT.rec ((y ∈ₛ env G') .snd)
         (λ { (p , p∈E , sh) → PT.rec ((y ∈ₛ env G') .snd)
           (λ { (li , peq) → PT.rec ((y ∈ₛ env G') .snd)
@@ -390,7 +540,7 @@ consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
         ssat))
     (h₃ y (∈∈ₛ {a = y} {b = E'} .snd y∈ₛE'))
 
-  covered : ⟨ γ ⊨ ∃̇∈ (var e') (tagAt zero 0 (suc m)) ⟩
+  covered : ⟨ γ ⊨ ∃̇∈ (var e') (tag0At zero (suc m)) ⟩
           → ((p : V ℓ) → ⟨ p ∈ E ⟩
               → ⟨ (p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero)) ⟩)
           → (y : V ℓ) → ⟨ y ∈ₛ env G' ⟩ → ⟨ y ∈ₛ E' ⟩
@@ -402,7 +552,7 @@ consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
     byKey zero eq = PT.rec ((y ∈ₛ E') .snd)
       (λ { (q , q∈E' , tsat) →
         subst (λ z → ⟨ z ∈ₛ E' ⟩)
-          (subst ⟨_⟩ (tagAt-adequate zero 0 (suc m) (q ∷ γ)) tsat ∙ eq)
+          (subst ⟨_⟩ (tag0At-adequate zero (suc m) (q ∷ γ)) tsat ∙ eq)
           (∈∈ₛ {a = q} {b = E'} .fst q∈E') })
       h₁
     byKey (suc i₀) eq = PT.rec ((y ∈ₛ E') .snd)
@@ -429,7 +579,7 @@ consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
   bwd e'eq =
       ∣ pr (# 0) M
       , subst (λ z → ⟨ pr (# 0) M ∈ z ⟩) (sym e'eq) ∣ lift zero , refl ∣₁
-      , subst ⟨_⟩ (sym (tagAt-adequate zero 0 (suc m) (pr (# 0) M ∷ γ))) refl ∣₁
+      , subst ⟨_⟩ (sym (tag0At-adequate zero (suc m) (pr (# 0) M ∷ γ))) refl ∣₁
     , (λ p p∈E → PT.rec
         (((p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero))) .snd)
         (λ { (li , peq) →
@@ -447,10 +597,10 @@ consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
     where
     byKey' : (p' : V ℓ) (j : Fin (suc k))
            → pr (# (toℕ j)) (G' j) ≡ p'
-           → ∥ ⟨ (p' ∷ γ) ⊨ tagAt zero 0 (suc m) ⟩
+           → ∥ ⟨ (p' ∷ γ) ⊨ tag0At zero (suc m) ⟩
              ⊎ ⟨ (p' ∷ γ) ⊨ ∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero) ⟩ ∥₁
     byKey' p' zero eq =
-      ∣ inl (subst ⟨_⟩ (sym (tagAt-adequate zero 0 (suc m) (p' ∷ γ))) (sym eq)) ∣₁
+      ∣ inl (subst ⟨_⟩ (sym (tag0At-adequate zero (suc m) (p' ∷ γ))) (sym eq)) ∣₁
     byKey' p' (suc i₀) eq =
       ∣ inr ∣ pr (# (toℕ i₀)) (g i₀)
             , subst (λ z → ⟨ pr (# (toℕ i₀)) (g i₀) ∈ z ⟩) (sym hE)

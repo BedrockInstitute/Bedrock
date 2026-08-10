@@ -1055,3 +1055,11 @@ zh = "主章"
 ja = "原本"
 avoid = ["ja:主章"]
 notes = "Owner-delegated ruling 2026-08-07 (T152/T153). The canonical trilingual source file of a chapter. ja 主章 rejected: it reads as the principal chapter; マスター rejected as IT register. 原本, the document original, matches one-master-per-module with woven copies."
+
+[[term]]
+category = "Other"
+en = "wing"
+zh = "GCH 侧"
+ja = "GCH 側"
+avoid = ["zh:机翼"]
+notes = "Owner-ruled DIRECTLY 2026-08-10, so it did NOT go through DD19's two-agent pipeline; the pipeline settles terms nobody has ruled. Project vocabulary: the GCH half of the double-trophy endpoint. THE ENGLISH IS UNCHANGED and stays wing, by the same ruling: about 160 occurrences across dev/ and scripts/ stand, and the ledger key gch_wing is NOT renamed. So this entry records a RENDERING, not a rename. zh 机翼 is banned and the ban is safe: the word had never entered the repo, so it can never fire on an innocent use. ja tentative, formed on the zh by the same 側 reading, pending a literature check."
