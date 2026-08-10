@@ -1754,6 +1754,99 @@ runs one way, and the criterion that produced the campaign's best result
 `_build/briefs/LJ-0.4m.md` rule 2, which named class 1 and missed class 2;
 commits `ab99b23` and `9c6d036`; `dev/LESSONS.md:568-581` for Rule 20.
 
+### D-28. A kit's break-even is set by its PARAMETER count, not its line count
+
+**Rule:** Price a shared kit by how many parameters it takes, not by how many
+lines it holds. **Before building, find the boundary where the parameter count
+drops, and share only the low-parameter side.** The high-parameter side stays
+at its sites, however much of it there is.
+
+**Why the line count misleads.** A kit's lines are paid once. Its parameters
+are paid at EVERY site, twice over: once in the declaration and again in the
+per-site glue that supplies them. So a kit's true cost grows with parameters
+times sites, and its saving grows with sites alone. **Past a small parameter
+count the arithmetic can never close, and adding sites makes it worse rather
+than better.**
+
+**Measured (`[LJ-0.4f]` and `[LJ-0.4n]`, 2026-08-10, the same material on the
+same day):**
+
+| | parameters | kit lines | sites | net |
+|---|---:|---:|---:|---:|
+| whole assembly | 11 | 208 | 2 | **+4** |
+| shape half only | **1** | 53 | 5 | **-104** |
+
+The bigger kit lost. The smaller kit, over MORE sites, won by 108 lines.
+`[LJ-0.4f]`'s own report named the cause without drawing the rule from it:
+"the parameter declarations plus per-site glue absorbed the savings".
+
+**The split is found by asking what each half MENTIONS.** Here the shape half
+mentions only the step; the induction half mentions the recursion's value, its
+uniqueness and its motive, which is the whole eleven-parameter telescope. The
+literature drew the same line first: Sacks and Zeman state their Lemma 1.10 and
+1.11 as two objects with one FORM, so sharing the form captures what the
+sources state twice, and sharing the value would unify what they keep apart.
+
+**The corollary that saved this block: host the kit where a copy already
+lives.** A new master costs about 26 lines of preamble before it saves
+anything. `[LJ-0.4n]` put its kit INSIDE `L.Coding.Sequence`, which already
+held one of the five copies and already paid that preamble.
+
+**When it bites:** every extraction. Five kit blocks in this campaign measured
+net POSITIVE (B +24, E +19, G +49, F +4) and the only one that paid took one
+parameter.
+
+**Provenance:** `_build/lj-0.4f-report.md`; `_build/lj-0.4f-review.md` section
+6; `_build/lj-0.4n-report.md`; commits `3269da5` and `dd59127`.
+
+### C-30. A compression block is gated, and the gates have a home
+
+**Rule:** Every compression or extraction block carries the same gates. They
+are listed here ONCE so a brief cites them instead of re-deriving them.
+
+1. **Count the sites by grepping the MECHANISM tree-wide, before writing the
+   kit.** Report the grep and the per-site line counts. Never trust a survey's
+   line range.
+2. **The break-even gate, before wiring the SECOND site.** Build the kit,
+   typecheck it, convert one site, measure the saving, and compute break-even
+   as kit lines over that saving. If break-even exceeds the site count, stop
+   and report the three numbers.
+3. **The staging gate.** Write the projection into the report BEFORE the
+   second site, never after.
+4. **Sum the seconds, including the kit's own**, at tree level. A new module's
+   check time is a cost the tree pays forever.
+5. **The stop trigger, three cases.** Seconds rise, a consumer must unfold
+   what it did not before, or the measured net cannot reach the floor. The
+   third is a refusal with a number and it is a full deliverable.
+6. **A chapter must remain a chapter.** A file left as a re-export stub is a
+   failed block, not a compressed one.
+7. **The twice-today rule.** A shared home may hold only lines that exist at
+   least twice in TODAY's tree. Moving a once-occurring line is relocation.
+8. **The noise rule.** A per-file delta under 0.5 s or under 5 percent,
+   whichever is larger, is noise: report it flat. Never report a verdict word
+   where a number fits.
+9. **Kit preservation.** A refused kit moves to `_build/kits/`, never to
+   `/tmp` and never to deletion.
+
+**Measured:** nine blocks ran in `[LJ-0.4]` and eight bands were tested. Gates
+1 and 4 did not exist for the first eight and both cost real money: `[T208]`'s
+survey misread `L.Choice.Before` and never counted `L.Coding.Sequence`, and
+`[LJ-0.4f]` measured plus 1.50 s for its kit and never entered it in the
+decision. Gate 2 was worded "before any wiring" until `[LJ-0.4f-R]` observed
+that it cannot be run, because it needs a measured per-site saving.
+
+**Why it is here rather than in a brief.** These gates lived only in
+`_build/lj-0.8-review.md` 7.1 and in whichever brief last pasted them. A rule
+whose only home is a report is found by the person who already knows it. The
+GCH wing will compress too.
+
+**When it bites:** any brief that proposes to share, extract, fold or
+de-duplicate. Cite this entry; do not re-derive the list.
+
+**Provenance:** `_build/lj-0.8-review.md` 7.1; `_build/lj-0.4f-review.md`
+section 7 items 5 to 7; `_build/briefs/LJ-0.4n.md`, the first brief to carry
+all nine.
+
 
 ### C-1. Two conversations must not share a worktree
 
