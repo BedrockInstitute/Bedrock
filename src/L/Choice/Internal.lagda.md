@@ -67,7 +67,7 @@ open import L.Coding.CodeSet {ℓ} lem
 open import L.Coding.Uniform {ℓ} lem using ( keyBridge )
 open import L.Coding.Graph {ℓ} lem using ( satGraphAt; graphAt-in; graphAt-out )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
-open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
+open import L.Hierarchy {ℓ} lem using ( Lset-defines )
 open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )
 open import L.Choice.Finite {ℓ} lem using ( Limit; limitOrder )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
@@ -169,12 +169,6 @@ InLimitAt s = ∃̇ (∃̇ ( (var zero ≐ con ωʟ)
                       ∧̇ (var (sh2 s) ∈̇ var (suc zero)) ) ))
 
 module _ {n : ℕ} (s : Fin n) (γ : S ^ n) where
-  private
-    Held : S → Type (ℓ-suc ℓ)
-    Held v = Σ[ o ∈ S ] ( (fst o ≡ ω)
-                        × ( ⟨ (o ∷ v ∷ γ) ⊨ LsetGraphAt (suc zero) zero ⟩
-                          × ⟨ fst (lookup s γ) ∈ fst v ⟩ ) )
-
   InLimitAt-in : ⟨ fst (lookup s γ) ∈ Lset ω ⟩ → ⟨ γ ⊨ InLimitAt s ⟩
   InLimitAt-in h = ∣ ωStage , ∣ ωAt , (ωAt-fst , (gr , held)) ∣₁ ∣₁
     where
@@ -182,20 +176,6 @@ module _ {n : ℕ} (s : Fin n) (γ : S ^ n) where
     gr = limitGraph (suc zero) zero (ωAt ∷ ωStage ∷ γ) ωAt-fst ωStage-fst
     held : ⟨ fst (lookup s γ) ∈ fst ωStage ⟩
     held = subst (λ u → ⟨ fst (lookup s γ) ∈ u ⟩) (sym ωStage-fst) h
-
-  InLimitAt-out : ⟨ γ ⊨ InLimitAt s ⟩ → ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-  InLimitAt-out = PT.rec (snd (fst (lookup s γ) ∈ Lset ω)) atValue
-    where
-    read : (v : S) → Held v → ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-    read v (o , (qo , (hg , hs))) =
-      subst (λ u → ⟨ fst (lookup s γ) ∈ u ⟩)
-        (Lset-only (suc zero) zero (o ∷ v ∷ γ) hg oo ∙ cong Lset qo) hs
-      where
-      oo : IsOrd (fst o)
-      oo = subst IsOrd (sym qo) ω-ord
-
-    atValue : Σ[ v ∈ S ] ∥ Held v ∥₁ → ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-    atValue (v , hv) = PT.rec (snd (fst (lookup s γ) ∈ Lset ω)) (read v) hv
 ```
 
 <!--en-->
