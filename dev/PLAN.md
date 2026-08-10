@@ -417,6 +417,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.4a | Compression block A: the dead names, and 𝒟ₒ→isL | DELIVERED -240 | 48 names over 18 masters, 17,492 to 17,252. Kept 3 the plan rides and 5 Everything's prose names. 𝒟ₒ→isL refused |
 | LJ-0.6 | Restore the V.Presentation shim the src/ restore deleted | DONE | +19 in-fence, 76 masters. Cold 132.87 s, exit 0. Unblocks the archived Collapse and Hull ports |
 | LJ-0.5 | RE-MEASURE the DD24 seconds-per-line baseline, once per block | STANDING TASK | Now 132.87 s over 17,271 = 0.007693. Block A's 240 lines bought -0.50 s: compression WORSENS the ratio |
+| LJ-0.8 | ADVERSARIAL review of the AC compression, done and planned | dispatched | tier: fable 5, owner-named. The survey missed 2 of 3 measured blocks. Deliverable is brief corrections |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | RETURNED, one mis-cite | Wing 8.0-10.8k. LJ-1.11 F5: its warrant cites Devlin VI.4.1, a projectum lemma. The true one is II.5.2 |
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Step clause has no Delta-0 witness at ANY carrier. Crossing 5.0-5.1k, or 1.0-1.7k by the cone fork |
 | LJ-1.10 | RE-PRICE the crossing after LJ-1.2's NO-GO | RETURNED, but REFUTED by LJ-1.11 | It read the ⊤̇ Def-step as a saving. T130 had recorded the same fact as the MISSING content |
