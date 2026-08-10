@@ -403,9 +403,6 @@ other two cases have absurdity for a goal, where the truncation may be opened.
 ```agda
 -- perf: the limit stage and its members, sealed where they are built
 opaque
-  limitS : S
-  limitS = LsetS ω ω-ord
-
   limitEl : Limit → S
   limitEl a = fst a , Lset→isL ω ω-ord (fst a) (snd a)
 

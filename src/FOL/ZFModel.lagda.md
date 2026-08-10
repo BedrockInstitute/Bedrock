@@ -388,16 +388,10 @@ naturals: every member of `ω` is a numeral, not merely every numeral a member.
 
 <!--en-->
 Extensionality upgrades the whole existence apparatus once and for all. Any
-realizer is the unique realizer (`uniqueSetOf`{.Agda}).
+realizer is the unique realizer.
 <!--zh-->
-外延公理把整套存在装置一次性升级。任何实现者都是唯一实现者 (`uniqueSetOf`{.Agda})。
+外延公理把整套存在装置一次性升级。任何实现者都是唯一实现者。
 <!--/-->
-
-```agda
-  uniqueSetOf : (Q : S → Ω) → SetOf Q → isContr (SetOf Q)
-  uniqueSetOf = setOf-unique extensional
-
-```
 
 <!--en-->
 ## ZFC: choice as an extension
