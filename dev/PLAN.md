@@ -452,7 +452,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.15 | PROBE: one bounded table clause at the Sigma-1 shape | dispatched | GATES all three crossing routes and so LJ-1.5. GO needs statement 1 at 40 lines and statement 2 at 100. Throwaway, D-1 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
-| LJ-1.17 | GATE: is the square law affordable at DD24? | planned, NEXT | It eats 28-42 percent of the wing's seconds budget for 11-17 percent of its lines. Price the IDEAL form per D17 |
+| LJ-1.16 | Build: the criterion at hull parameters | REFUSED all three; review is LJ-1.16-R | relL has rank alpha+1 and the carrier holds rank below alpha, so the formula cannot be an X-formula |
+| LJ-1.16-R | DD25 review of LJ-1.16 | dispatched, opus max effort | Attacks the rank obstruction, asks whether hull-expressible suffices where X-expressible does not, and hunts a fourth shape |
+| LJ-1.17 | GATE: is the square law affordable at DD24? | dispatched | It eats 28-42 percent of the wing's seconds budget for 11-17 percent of its lines. Price the IDEAL form per D17 |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
