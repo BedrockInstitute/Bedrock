@@ -155,14 +155,14 @@ rather than by a theorem, and its membership specification is the field's own
 output. The two directions of that specification are what instances use: a value
 at an index is in the table, and a member of the table is a value at some index.
 
-The value function comes off the single-valuedness, together with the two facts
-an instance wants about it: it satisfies the graph, and it is the *only* thing
-that does. Uniqueness is what lets an instance identify the value it computed by
-hand with the one the table records.
+The value function comes off the single-valuedness, with the fact an instance
+wants about it: it is the *only* thing that satisfies the graph. Uniqueness is
+what lets an instance identify the value it computed by hand with the one the
+table records.
 <!--zh-->
 这张表就是替换的像，故它是 `L` 的元素乃出于构造而非出于定理，而它的隶属规格就是那条字段自己的输出。规格的两个方向正是诸实例所用：某索引处的值属于该表，而该表的成员是某索引处的值。
 
-值函数从单值性中读出，连同实例想要的两条事实：它满足那个图，而且它是**唯一**满足的东西。唯一性正是使实例能把它手算出的值与表所记录的值认同起来的东西。
+值函数从单值性中读出，连同实例想要的那条事实：它是**唯一**满足那个图的东西。唯一性正是使实例能把它手算出的值与表所记录的值认同起来的东西。
 <!--/-->
 
 ```agda
@@ -191,10 +191,6 @@ module Of (R : Recursion) where
 
   val : (x : S) → ⟨ x ∈ˢ dom ⟩ → S
   val x x∈ = funct x x∈ .fst .fst
-
-  val-graph : (x : S) (x∈ : ⟨ x ∈ˢ dom ⟩)
-            → ⟨ (val x x∈ ∷ x ∷ []) ⊨ graph ⟩
-  val-graph x x∈ = funct x x∈ .fst .snd
 
   val-uniq : (x : S) (x∈ : ⟨ x ∈ˢ dom ⟩) (y : S)
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → val x x∈ ≡ y

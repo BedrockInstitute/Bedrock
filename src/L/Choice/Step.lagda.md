@@ -839,6 +839,10 @@ module _ (γ β : S) (oγ : IsOrd γ) (oβ : IsOrd β) (i : ⟨ γ ∈ˢ β ⟩)
 
     unfoldβ : (a b : Mem (Lset β)) → relOf (orderAt β oβ) a b ≡ (a ≺ᵇ b)
     unfoldβ a b = cong (λ z → relOf (z oβ) a b) (orderAt-step β)
+
+  endExtension : (a b : Mem (Lset γ))
+               → relOf (orderAt γ oγ) a b ≡ relOf (orderAt β oβ) (up a) (up b)
+  endExtension a b = unfoldγ a b ∙ agree a b ∙ sym (unfoldβ (up a) (up b))
 ```
 
 <!--en-->
@@ -877,7 +881,8 @@ proved inside the telescope the seal lives in and never restated at top level
 `orderAt`{.Agda} is the family: at every ordinal, a strict well-order of that
 stage's members, all four laws included, built by membership induction from the
 orders below. Its comparison has the **birth as the primary key** and the step
-order at a common birth as the secondary: the comparison of two members never
+order at a common birth as the secondary; `endExtension`{.Agda} is what that
+buys, and it is a path, not an implication: the comparison of two members never
 mentions the stage it is read at, so the order at a large stage, restricted to a
 small one, is the order there on the nose.
 
@@ -892,7 +897,7 @@ picks the least name.
 
 有三个定义为外面的调用方说清那个拉回的序是什么：`denotesAt`{.Agda} 是一个集合的诸名字，`IsLeastName`{.Agda} 是良序那一章的 `IsLeast`{.Agda} 架在那一族上，而 `leastNameOf`{.Agda} 就是那场搜寻。随后 `stepAt-fill`{.Agda} 与 `stepAt-read`{.Agda} 两个方向地把那一步对着名字之序读出来，读在「调用方已证为最小的任意两个名字」处。这五行背后有两次实测：那条性质必须是那一族自家的 `IsLeast`{.Agda}、绝不可另写一遍 (16 秒对分文不花，因为在算出来的名字处的一次比较会把码之序打开)，而两条读式都必须证在封印所在的那条模块序列之内、绝不可在顶层重述 (各 39 秒对分文不花，这是第 20 条定律在新地方)。
 
-`orderAt`{.Agda} 就是那一族：在每个序数处，该阶段诸成员上的一个严格良序，四条定律齐备，由下面诸序沿成员归纳造出。它的比较以**诞生阶段为主键**，以共同诞生阶段处的步进序为次键：两个成员的比较从不提到它是在哪个阶段处被读的，故大阶段处的序限制到小阶段上，分毫不差地就是那里的序。
+`orderAt`{.Agda} 就是那一族：在每个序数处，该阶段诸成员上的一个严格良序，四条定律齐备，由下面诸序沿成员归纳造出。它的比较以**诞生阶段为主键**，以共同诞生阶段处的步进序为次键；`endExtension`{.Agda} 就是这一点换来的东西，而它是一条路径、不是一个蕴含：两个成员的比较从不提到它是在哪个阶段处被读的，故大阶段处的序限制到小阶段上，分毫不差地就是那里的序。
 
 现在到手的，恰是上一章所缺的那个前提，且一举在每个阶段处到手。后续论证取选取阶段那一章单挑出来的那一个阶段，把 `stageOrder`{.Agda} 递给写在其上的诸名字，再挑出最小的名字。
 <!--/-->

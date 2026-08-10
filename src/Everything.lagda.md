@@ -640,8 +640,9 @@ The root, stated today and finished over the remaining parts:
   `meet-suc`{.Agda} makes that stage a **successor**, because a set enters the
   tower only by being carved out of the stage below, and `defStage`{.Agda} is
   the stage it succeeds, a function because a successor determines what it
-  succeeds among ordinals (`ord-suc-inj`{.Agda}). A first member therefore
-  carries a name written over **one fixed stage**, and
+  succeeds among ordinals (`ord-suc-inj`{.Agda}). `Lset-μ`{.Agda} identifies the
+  stage of first appearance with the definable powerset over the definition
+  stage, so a first member carries a name written over **one fixed stage**, and
   that is what the choosing device compares. `stageBound`{.Agda} is the ordinal
   the bookkeeping runs in: above a set's own stage, hence above its members and
   theirs by transitivity, and above `ω`{.Agda}, where the names themselves live.
@@ -699,8 +700,8 @@ The root, stated today and finished over the remaining parts:
   No order on dependent sums is built. `orderAt`{.Agda} is the family itself, all
   four `SWO`{.Agda} laws at every ordinal, by membership induction, and it is
   sealed, since an unsealed order unfolds into a recursion over the hierarchy.
-  Its comparison takes the **birth as the primary key**, so end extension then
-  costs nothing: a comparison never mentions the stage
+  Its comparison takes the **birth as the primary key**, which is why
+  `endExtension`{.Agda} then costs nothing: a comparison never mentions the stage
   it is read at, so the order at a large stage restricted to a small one is a
   **path** to the order there, not merely an equivalence, and the only work is
   the proof-irrelevance of constructibility and of ordinal-hood.

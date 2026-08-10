@@ -273,6 +273,24 @@ opaque
 ```
 
 <!--en-->
+Two readings of that equation, and they are the two the construction ahead uses.
+The stage where the cell is first met is the definable powerset of the
+definition stage, so a first member of the cell *is* a definable subset there
+and has a name. And the definition stage misses the cell outright, since it
+belongs to the least stage that does not.
+<!--zh-->
+那条等式的两种读法，也正是后续构造所用的两种。该格首次被相交的那个阶段，是定义阶段的可定义幂集，故该格的一个最先成员**就是**那里的一个可定义子集，从而有名字。而定义阶段则干脆与该格不相交，因为它属于那个相交的最小阶段。
+<!--/-->
+
+```agda
+Lset-μ : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
+       → Lset (μ u pu h) ≡ 𝒟ₒ (Lset (defStage u pu h))
+Lset-μ u pu h =
+  cong Lset (sym (defStage-suc u pu h)) ∙ Lset-suc (defStage u pu h)
+
+```
+
+<!--en-->
 ## One stage for everything below a set
 <!--zh-->
 ## 一个阶段装下一个集合以下的一切
@@ -328,7 +346,8 @@ bound-below₂ a p x y y∈x x∈a =
 `meet-suc`{.Agda} says that stage is a successor, because a set enters the tower
 only by being carved out of the stage below. `defStage`{.Agda} is the stage it
 succeeds, a function because a successor determines what it succeeds among
-ordinals (`ord-suc-inj`{.Agda}). So every set that first
+ordinals (`ord-suc-inj`{.Agda}), and `Lset-μ`{.Agda} identifies the stage of
+first appearance with the definable powerset over it. So every set that first
 appears there carries a name written over one fixed stage, which is what the
 choosing device will compare. `stageBound`{.Agda} supplies the ordinal the
 bookkeeping runs in: above a set's own stage, hence above its members and
@@ -338,7 +357,7 @@ Nothing here states a relation on `L`, and nothing here is a recursion. The
 comparison and the recursion both arrive in the next chapters, and both are
 confined to the material this one has located.
 <!--zh-->
-`μ`{.Agda} 是 `L` 的一个集合拥有成员的最早阶段，而 `meet-suc`{.Agda} 说那个阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。`defStage`{.Agda} 是它所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})。于是每个首次现身于该处的集合，都带着一个写在单一固定阶段之上的名字，而那正是选取装置将要比较的东西。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
+`μ`{.Agda} 是 `L` 的一个集合拥有成员的最早阶段，而 `meet-suc`{.Agda} 说那个阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。`defStage`{.Agda} 是它所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})；而 `Lset-μ`{.Agda} 把首次现身的那个阶段与其上的可定义幂集认同。于是每个首次现身于该处的集合，都带着一个写在单一固定阶段之上的名字，而那正是选取装置将要比较的东西。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
 
 此处没有一条陈述涉及 `L` 上的关系，也没有一处是递归。比较与递归都在后面几章到场，而两者都被限制在本章所定位的材料之内。
 <!--/-->
