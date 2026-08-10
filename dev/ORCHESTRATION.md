@@ -133,6 +133,20 @@ Standing clauses that go in every build or probe brief:
   funds decisions on those numbers. `[L3.32-T88]` had to disclose a contended
   baseline for exactly this reason. **A wrong measurement is not slow, it is
   believed.**
+- **THE LITERATURE SURVEY, for any brief that writes a master** (DD18,
+  extended by the owner 2026-08-10). `dev/literature/` holds the digested
+  mathematics: `digest.md` for the orthodox route, `j-hierarchy.md` for
+  condensation, `fine-structure.md`, `rudimentary-functions.md`,
+  `devlin-errata.md` for the known errors in the primary text,
+  `primary-sources.md` and `BIBLIOGRAPHY.md` for what was fetched and what
+  consumed it, `formalizations-landscape.md` for prior art. The brief carries
+  a **LITERATURE** section naming what may bear on the task; the return
+  carries **LITERATURE USED**, saying what it read, what it took, and WHY NOT
+  for anything skipped. **The why-not earns its keep:** a note that a source
+  is OCR-degraded, or covers the wrong chapter, stops the next agent paying
+  the same reading twice. **This one is enforced at dispatch**, not by review:
+  `dispatch.py` refuses a master-writing brief with no LITERATURE section, and
+  one honest line saying nothing applies satisfies it.
 - **THE ARCHIVE SURVEY, and it is a section of the brief rather than a hope.**
   Ruled by the owner 2026-08-09. Before a brief is sent it carries an
   **ARCHIVE** section listing what may bear on the task in each of the four
