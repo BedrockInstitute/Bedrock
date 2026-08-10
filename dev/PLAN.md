@@ -444,12 +444,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.11 | ADVERSARIAL review of LJ-1 vs the literature | RETURNED, 2 math defects | F1: route C's story is trivial in the Def-step, so its target is FALSE. F2: the collapse is trivial where used |
 | LJ-1.3 | Build: the Skolem hull, a least-witness search over the order | DELIVERED 343 lines | Ported from 241 archived. 0.0070 s/line, 0.91x the bar. Does NOT use σ₁-up: LJ-1.5 does |
 | LJ-1.4 | Build: the Mostowski collapse | DELIVERED 239 lines | Ported from the archive's 181, plus Devlin 5.2(ii) which the archive lacked. Carrier-generic. Cold tree 133.39 s, exit 0 |
-| LJ-0.7 | Digest Devlin II.5 and its engine into the literature | dispatched | GATES LJ-1.12. Widened by LJ-1.11 to II.2.4-2.7, II.1.1(vii), 5.9-5.11. Cross-check OCR against Jech 13. No Agda slot |
-| LJ-1.12 | RE-TARGET the crossing: price the candidates that survive F1 | planned | GATES LJ-1.5. Route A's substrate 1.7-3.8k vs the unpriced π-commutation route. Both carry the successor content |
-| LJ-1.13 | Build: the collapse at an EXTENSIONAL carrier (LJ-1.11 F2) | dispatched | GATES LJ-1.5. Inj assumes isTrans, where fixes-X makes π the identity, so the package holds only where trivial |
-| LJ-1.14 | Build: Tarski-Vaught at a NON-transitive carrier (LJ-1.11 F3) | dispatched | GATES LJ-1.5. TV-thm spends Mtr and the hull is not transitive. Price route 1 against Devlin 5.3 first |
+| LJ-0.7 | Digest Devlin II.5 into the literature | DELIVERED 626 lines | Level-hood is SIGMA-1 with a Sigma-0 matrix, not Delta-0. Template 5.1-5.6 is SHARED; per-tower content is two objects |
+| LJ-1.12 | RE-TARGET the crossing | dispatched | GATES LJ-1.5. LJ-0.7 moved the target: Delta-0 was never required, so route A's 1.7-3.8k was priced against the wrong bar |
+| LJ-1.13 | Build: the collapse at an EXTENSIONAL carrier | DELIVERED +96 | isExt at :31, InjExt at :220. Trivial Inj kept per D-27. F2 corrected: the induction is the same, Xtr was dead code |
+| LJ-1.14 | Build: Tarski-Vaught at a NON-transitive carrier | DELIVERED +29, seconds FELL | Mtr gone entirely, TV holds at any carrier. Priced 50-70, landed 29. Hull-parameter criterion still owed |
 | LJ-1.5 | Build: the condensation lemma | BLOCKED, route C refuted | LJ-1.11 F1: the archived story's Def-step is ⊤̇, so it cannot recognize levels. Re-target before any funding |
-| LJ-1.6 | Build: cardinality of a stage, |L a| = |a| for infinite a | planned | ARCHIVE FIRST: archive/rud-route holds L/Cardinal*.lagda.md and FOL/Count.lagda.md. Parallel to LJ-1.3 to LJ-1.5 |
+| LJ-1.6 | Build: cardinality of a stage | dispatched | Independent of the re-targeting. 1,452 archived lines in 4 rud-route modules; DD13 prices the port against a fresh write |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
