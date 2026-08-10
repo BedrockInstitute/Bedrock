@@ -411,8 +411,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.2 | Sufficiency audit: what the route switch has NOT reached | CLOSED | 3 blocking gaps and 8 more, all closed. N1's reuse checker refused as a gate, adopted as ledger.py --reuse |
 | LJ-0.3 | Retrospective: was the route change itself the right call | CLOSED | Timing premature, route not refuted. Moved the architecture ruling to LJ-2.5. Two laws admitted, C-28 and C-29 |
 | LJ-0.4 | Compress the internalization AC tree toward about 16.4k | RULED, ready to execute | 16,000 refuted by T205 and T208. Owner set ~16.4k 2026-08-10. Recon done, 8 disjoint blocks |
-| LJ-0.4c | Compression block C: the Unique and Sound clause frames | dispatched | -180 to -315, the largest block left. P-r decides it: extract the SHELL, never a fold consumers unfold |
-| LJ-0.4e | Compression blocks E and G: traversal share, lex kit | dispatched | -100 to -200. S17's RED probe bounds E: skeleton only, no stored decomposition, no fusion lemma |
+| LJ-0.4c | Compression block C: the Unique and Sound clause frames | STOPPED by the orchestrator, reverted | It gutted Sound to 7 lines and Unique to 11, moving 1,354 into a new module for a net of -59 |
+| LJ-0.4e | Compression blocks E and G: traversal share, lex kit | REFUSED BOTH on measurement | E nets +19 against -60 to -120, G about -49 against -40 to -80. Kits built, priced, reverted |
 | LJ-0.4b | Compression blocks B, D, F, H | planned | -380 to -730 together. Disjoint by file per C-25. B is the largest left after C |
 | LJ-0.4a | Compression block A: the dead names, and 𝒟ₒ→isL | DELIVERED -240 | 48 names over 18 masters, 17,492 to 17,252. Kept 3 the plan rides and 5 Everything's prose names. 𝒟ₒ→isL refused |
 | LJ-0.6 | Restore the V.Presentation shim the src/ restore deleted | DONE | +19 in-fence, 76 masters. Cold 132.87 s, exit 0. Unblocks the archived Collapse and Hull ports |
