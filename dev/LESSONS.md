@@ -1825,8 +1825,12 @@ are listed here ONCE so a brief cites them instead of re-deriving them.
 8. **The noise rule.** A per-file delta under 0.5 s or under 5 percent,
    whichever is larger, is noise: report it flat. Never report a verdict word
    where a number fits.
-9. **Kit preservation.** A refused kit moves to `_build/kits/`, never to
-   `/tmp` and never to deletion.
+9. **Kit preservation.** A refused kit moves to `archive/kits/`, never to
+   `/tmp`, never to `_build/`, and never to deletion. **`_build/` was this
+   gate's own answer until the `[LJ-0.4]` closeout found it wrong:** the path
+   is in `.gitignore` and `make clean` runs `rm -rf _build`, so four kits sat
+   one command from the fate that already took E's `Walk` and G's `Lex`. An
+   artifact a routine command destroys is not preserved.
 
 **Measured:** nine blocks ran in `[LJ-0.4]` and eight bands were tested. Gates
 1 and 4 did not exist for the first eight and both cost real money: `[T208]`'s

@@ -1,0 +1,285 @@
+diff --git a/src/L/Hierarchy.lagda.md b/src/L/Hierarchy.lagda.md
+index 437ce56..14871c2 100644
+--- a/src/L/Hierarchy.lagda.md
++++ b/src/L/Hierarchy.lagda.md
+@@ -43,7 +43,7 @@ open import Base.Classical using ( LEM )
+ module L.Hierarchy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+ 
+ open import FOL.ZFStructure using ( module hPropStructure )
+-open import FOL.Syntax using ( Formula; _∧̇_; ∃̇_ )
++open import FOL.Syntax using ( Formula )
+ import FOL.Absoluteness
+ import FOL.ZFModel
+ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
+@@ -54,12 +54,11 @@ open import L.Ordinal {ℓ} using ( mem-ord )
+ open import L.Axioms.Basic {ℓ} using ( LsetS; isL-𝒟ₒ; extensionalL )
+ open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
+ open import L.Recursion {ℓ} lem using ( mereFunct )
+-open import L.Coding.Model {ℓ}
+-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; domAt-intro )
++open import L.RecAssembly {ℓ} lem using ( module Assembly )
++open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; domAt-in )
+ open import L.Coding.Sequence {ℓ} lem
+   using ( StepAt; StepOf; PowOK; StepAt-in; StepAt-out; StepAt-back
+-        ; ApproxAt; ApproxAt-dom; ApproxAt-value; ApproxAt-step; ApproxAt-in
+-        ; LsetGraphAt; LsetGraph-in; LsetGraph-out; GraphOf )
++        ; LsetGraphAt )
+ 
+ open import Cubical.Data.Sigma using ( Σ≡Prop )
+ open import Cubical.Foundations.HLevels using ( isProp× )
+@@ -233,6 +232,36 @@ module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
+     back z s = subst (λ u → ⟨ fst z ∈ u ⟩) (sym q) (above vals z s)
+ ```
+ 
++<!--en-->
++The assembly is the same shape the recursion chapters share. The site
++instantiates the value property, the entries predicate, and the step pair.
++<!--zh-->
++这个装配就是两部递归章共享的那个形状。此处在值性质、条目谓词与步进对上实例化它。
++<!--/-->
++
++```agda
++module A = Assembly
++  (λ c z → fst z ≡ Lset c)
++  (λ c z → setIsSet (fst z) (Lset c))
++  (λ h B c c∈ → ⟨ pr (fst c) (Lset (fst c)) ∈ fst h ⟩)
++  (λ h B C e e∈B e∈C x → x)
++  (λ c x y p q → Σ≡Prop (λ t → snd (isL t)) (p ∙ sym q))
++  StepAt
++  (λ v b f γ ob vals ents h → step-Lset v b f γ h ob vals ents)
++  (λ v b f γ ob vals ents sp → step-table v b f γ ob vals ents sp)
++  (λ f a γ h oa u hu ou u∈a IH c c∈ →
++     PT.rec (snd (pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ)))
++       (λ { (y , q) → subst (λ t → ⟨ pr (fst c) t ∈ fst (lookup f γ) ⟩)
++           (IH (fst c) c∈ (snd c) (mem-ord {A = u} ou (fst c) c∈) y q) q })
++       (domAt-in f a γ (h .fst) c (oa .fst {x = u} {y = fst c} c∈ u∈a)))
++  (λ w b γ f ha ob vals c c∈ →
++     PT.rec (snd (pr (fst c) (Lset (fst c)) ∈ fst f))
++       (λ { (y , q) → subst (λ t → ⟨ pr (fst c) t ∈ fst f ⟩) (vals c y c∈ q) q })
++       (domAt-in zero (suc b) (f ∷ γ) (ha .fst) c c∈))
++  (λ w b γ h ob ents c c∈ → ∣ LsetS (fst c)
++     (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈) , ents c c∈ ∣₁)
++```
++
+ <!--en-->
+ ## Every value an approximation records
+ <!--zh-->
+@@ -263,47 +292,6 @@ it is a membership.
+ 归纳的步进就是 `step-Lset`{.Agda} 施于被记录的那个取值。实参以下的正确性**就是**归纳假设，一字不差。实参以下的完备性则是那条定义域假设被花掉之处：比这个实参更低的实参落在逼近的定义域以下，因为定义域是序数、而序数传递；逼近于是在那里有取值；而归纳假设把它与塔的取值认同。那个取值只是「仅仅」被拿出来的，而这已经够了，因为要对它证的是一条隶属关系。
+ <!--/-->
+ 
+-```agda
+-module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+-  private
+-    Value : V ℓ → Type (ℓ-suc ℓ)
+-    Value u = ⟨ isL u ⟩ → (z : S)
+-            → ⟨ pr u (fst z) ∈ fst (lookup f γ) ⟩ → fst z ≡ Lset u
+-
+-  approx-val : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd (fst (lookup a γ))
+-             → (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst (lookup f γ) ⟩
+-             → fst z ≡ Lset (fst x)
+-  approx-val h oa x = ∈-induction {P = Value} go (fst x) (snd x)
+-    where
+-    go : (u : V ℓ) → ((t : V ℓ) → ⟨ t ∈ u ⟩ → Value t) → Value u
+-    go u IH hu z p = step-Lset zero (suc zero) (sh2 f) (z ∷ d ∷ γ)
+-      (ApproxAt-step f a γ h d z p) ou vals ents
+-      where
+-      d : S
+-      d = u , hu
+-      u∈a : ⟨ u ∈ fst (lookup a γ) ⟩
+-      u∈a = ApproxAt-dom f a γ h d z p
+-      ou : IsOrd u
+-      ou = mem-ord {A = fst (lookup a γ)} oa u u∈a
+-      vals : Values (lookup f γ) u
+-      vals c y c∈ q = IH (fst c) c∈ (snd c) y q
+-      ents : Entries (lookup f γ) u
+-      ents c c∈ = PT.rec
+-        (snd (pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ))) named
+-        (ApproxAt-value f a γ h c (oa .fst {x = u} {y = fst c} c∈ u∈a))
+-        where
+-        named : Σ[ y ∈ S ] ⟨ pr (fst c) (fst y) ∈ fst (lookup f γ) ⟩
+-              → ⟨ pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ) ⟩
+-        named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst (lookup f γ) ⟩)
+-          (IH (fst c) c∈ (snd c) y q) q
+-
+-  approx-uniq : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd (fst (lookup a γ))
+-              → (x y z : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+-              → ⟨ pr (fst x) (fst z) ∈ fst (lookup f γ) ⟩ → y ≡ z
+-  approx-uniq h oa x y z p q = Σ≡Prop (λ u → snd (isL u))
+-    (approx-val h oa x y p ∙ sym (approx-val h oa x z q))
+-```
+-
+ <!--en-->
+ ## The graph holds of nothing else
+ <!--zh-->
+@@ -328,30 +316,6 @@ carrying the whole tower description inside it.
+ 这条读式站在变元位上，而这不是装饰。它的两个消费方在两个不同的具体环境上把它实例化，而陈述在其中任一处，都得经由一个内部装着整条塔描述的满足关系，转换到另一处去。
+ <!--/-->
+ 
+-```agda
+-module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+-  Lset-only : ⟨ γ ⊨ LsetGraphAt w b ⟩ → IsOrd (fst (lookup b γ))
+-            → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+-  Lset-only h ob = PT.rec
+-    (setIsSet (fst (lookup w γ)) (Lset (fst (lookup b γ)))) read
+-    (LsetGraph-out w b γ h)
+-    where
+-    read : GraphOf w b γ → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+-    read (f , (ha , hs)) =
+-      step-Lset (suc w) (suc b) zero (f ∷ γ) hs ob vals ents
+-      where
+-      vals : Values f (fst (lookup b γ))
+-      vals c z _ p = approx-val zero (suc b) (f ∷ γ) ha ob c z p
+-      ents : Entries f (fst (lookup b γ))
+-      ents c c∈ = PT.rec (snd (pr (fst c) (Lset (fst c)) ∈ fst f)) named
+-        (ApproxAt-value zero (suc b) (f ∷ γ) ha c c∈)
+-        where
+-        named : Σ[ y ∈ S ] ⟨ pr (fst c) (fst y) ∈ fst f ⟩
+-              → ⟨ pr (fst c) (Lset (fst c)) ∈ fst f ⟩
+-        named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst f ⟩)
+-          (approx-val zero (suc b) (f ∷ γ) ha ob c y q) q
+-```
+-
+ <!--en-->
+ ## A table is an approximation
+ <!--zh-->
+@@ -376,48 +340,6 @@ approximation" and the outer step as well.
+ 定义域那个合取项，一个方向是 `Domain`{.Agda}、另一个方向是 `Entries`{.Agda}。在某个被记录的对上，步进那个合取项是 `step-table`{.Agda} 施于那个实参，其正确性与完备性就是这张表自身在它以下的限制；那次限制正是序数的传递性第二次、也是最后一次被花掉之处。图所问的那个取值，是整个实参处的那一步，那又是一次 `step-table`{.Agda}。故一张表同时服务于「是一个逼近」的两个合取项，以及外层的那一步。
+ <!--/-->
+ 
+-```agda
+-module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+-  graph-table : (h : S) → IsOrd (fst (lookup b γ))
+-              → Values h (fst (lookup b γ)) → Entries h (fst (lookup b γ))
+-              → Domain h (fst (lookup b γ))
+-              → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+-              → ⟨ γ ⊨ LsetGraphAt w b ⟩
+-  graph-table h ob vals ents dom q = LsetGraph-in w b γ h approx
+-    (step-table (suc w) (suc b) zero (h ∷ γ) ob vals ents q)
+-    where
+-    onDom : (c : S)
+-          → (⟨ ⋁ S (λ y → pr (fst c) (fst y) ∈ fst h) ⟩
+-             → ⟨ fst c ∈ fst (lookup b γ) ⟩)
+-          × (⟨ fst c ∈ fst (lookup b γ) ⟩
+-             → ⟨ ⋁ S (λ y → pr (fst c) (fst y) ∈ fst h) ⟩)
+-    onDom c = (λ hy → PT.rec (snd (fst c ∈ fst (lookup b γ))) named hy)
+-            , (λ c∈ → ∣ LsetS (fst c) (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈)
+-                     , ents c c∈ ∣₁)
+-      where
+-      named : Σ[ y ∈ S ] ⟨ pr (fst c) (fst y) ∈ fst h ⟩
+-            → ⟨ fst c ∈ fst (lookup b γ) ⟩
+-      named (y , p) = dom c y p
+-
+-    onStep : (c y : S) → ⟨ pr (fst c) (fst y) ∈ fst h ⟩
+-           → ⟨ (y ∷ c ∷ h ∷ γ) ⊨ StepAt zero (suc zero) (suc (suc zero)) ⟩
+-    onStep c y p = step-table zero (suc zero) (suc (suc zero)) (y ∷ c ∷ h ∷ γ)
+-      oc vals' ents' (vals c y c∈ p)
+-      where
+-      c∈ : ⟨ fst c ∈ fst (lookup b γ) ⟩
+-      c∈ = dom c y p
+-      oc : IsOrd (fst c)
+-      oc = mem-ord {A = fst (lookup b γ)} ob (fst c) c∈
+-      vals' : Values h (fst c)
+-      vals' e t _ r = vals e t (dom e t r) r
+-      ents' : Entries h (fst c)
+-      ents' e e∈ = ents e (ob .fst {x = fst c} {y = fst e} e∈ c∈)
+-
+-    approx : ⟨ (h ∷ γ) ⊨ ApproxAt zero (suc b) ⟩
+-    approx = ApproxAt-in zero (suc b) (h ∷ γ)
+-      (domAt-intro zero (suc b) (h ∷ γ) onDom) onStep
+-```
+-
+ <!--en-->
+ ## The pair graph
+ <!--zh-->
+@@ -445,34 +367,6 @@ variable there is nothing to normalize.
+ 它的两种读法把那个句子取作**参数**，并把该句子自己的等式取作假设，在唯一的调用处是 `refl`{.Agda}。这就是「对某个构造保持通用的框架」的形状规矩，而本章正是它在一个句子而非一个构造子上被测出来的地方：直接对着那个闭句子写，两条读法花掉 85 秒，因为 Agda 判定「同一条公式的两种写法」是否相等的办法，是把一个内部装着整条可定义幂集描述的满足关系正规化。句子一旦是变元，就没有什么可正规化的了。
+ <!--/-->
+ 
+-```agda
+-PairGraphAt : ∀ {n} → Fin n → Fin n → Formula S n
+-PairGraphAt e c = ∃̇ (prAtL (suc e) (suc c) zero ∧̇ LsetGraphAt zero (suc c))
+-
+-module _ {n : ℕ} (e c : Fin n) (γ : S ^ n)
+-         (φ : Formula S n) (qφ : φ ≡ PairGraphAt e c) where
+-  PairOf : Type (ℓ-suc ℓ)
+-  PairOf = Σ[ z ∈ S ] ( (fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z))
+-                      × ⟨ (z ∷ γ) ⊨ LsetGraphAt zero (suc c) ⟩ )
+-
+-  private
+-    readPair : Σ[ z ∈ S ] ⟨ (z ∷ γ) ⊨
+-                 (prAtL (suc e) (suc c) zero ∧̇ LsetGraphAt zero (suc c)) ⟩
+-             → PairOf
+-    readPair (z , (hq , hg)) =
+-      z , (subst ⟨_⟩ (prAtL-adequate (suc e) (suc c) zero (z ∷ γ)) hq , hg)
+-
+-  PairGraph-in : (z : S) → fst (lookup e γ) ≡ pr (fst (lookup c γ)) (fst z)
+-               → ⟨ (z ∷ γ) ⊨ LsetGraphAt zero (suc c) ⟩
+-               → ⟨ γ ⊨ φ ⟩
+-  PairGraph-in z q hg = subst (λ ψ → ⟨ γ ⊨ ψ ⟩) (sym qφ)
+-    ∣ z , (subst ⟨_⟩
+-      (sym (prAtL-adequate (suc e) (suc c) zero (z ∷ γ))) q , hg) ∣₁
+-
+-  PairGraph-out : ⟨ γ ⊨ φ ⟩ → ∥ PairOf ∥₁
+-  PairGraph-out h = PT.map readPair (subst (λ ψ → ⟨ γ ⊨ ψ ⟩) qφ h)
+-```
+-
+ <!--en-->
+ ## The internal hierarchy
+ <!--zh-->
+@@ -563,11 +457,11 @@ module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsHier B h) where
+ opaque
+   hierAt : (α : V ℓ) → ⟨ isL α ⟩ → IsOrd α → HierOf α
+   hierAt = ∈-induction {P = λ α → ⟨ isL α ⟩ → IsOrd α → HierOf α}
+-    (build (PairGraphAt zero (suc zero)) refl)
++    (build (A.PairGraphAt zero (suc zero)) refl)
+     where
+     -- perf: the pair graph enters as a variable with its own equation; spelled
+     -- out as the closed sentence, three conversions cost 85 s between them
+-    build : (φ : Formula S 2) → φ ≡ PairGraphAt zero (suc zero)
++    build : (φ : Formula S 2) → φ ≡ A.PairGraphAt zero (suc zero)
+           → (α : V ℓ)
+           → ((δ : V ℓ) → ⟨ δ ∈ α ⟩ → ⟨ isL δ ⟩ → IsOrd δ → HierOf δ)
+           → ⟨ isL α ⟩ → IsOrd α → HierOf α
+@@ -584,7 +478,7 @@ opaque
+ 
+       below : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
+             → ⟨ (value c c∈ ∷ k ∷ c ∷ []) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
+-      below c c∈ k = graph-table zero (suc (suc zero)) (value c c∈ ∷ k ∷ c ∷ [])
++      below c c∈ k = A.graph-table zero (suc (suc zero)) (value c c∈ ∷ k ∷ c ∷ [])
+         (hc .fst) oc
+         (λ d z _ p → hier-out (fst c) oc (hc .fst) (hc .snd) d z p .snd)
+         (hier-in (fst c) oc (hc .fst) (hc .snd))
+@@ -598,19 +492,19 @@ opaque
+ 
+       holds : (c : S) (c∈ : ⟨ fst c ∈ α ⟩)
+             → ⟨ (entry c c∈ ∷ c ∷ []) ⊨ φ ⟩
+-      holds c c∈ = PairGraph-in zero (suc zero) (entry c c∈ ∷ c ∷ []) φ qφ
++      holds c c∈ = A.PairGraph-in zero (suc zero) (entry c c∈ ∷ c ∷ []) φ qφ
+         (value c c∈) (prʟ-fst c (value c c∈)) (below c c∈ (entry c c∈))
+ 
+       only : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
+            → ⟨ (k ∷ c ∷ []) ⊨ φ ⟩ → k ≡ entry c c∈
+       only c c∈ k h = PT.rec (isSetS k (entry c c∈)) read
+-        (PairGraph-out zero (suc zero) (k ∷ c ∷ []) φ qφ h)
++        (A.PairGraph-out zero (suc zero) (k ∷ c ∷ []) φ qφ h)
+         where
+-        read : PairOf zero (suc zero) (k ∷ c ∷ []) φ qφ → k ≡ entry c c∈
++        read : A.PairOf zero (suc zero) (k ∷ c ∷ []) φ qφ → k ≡ entry c c∈
+         read (z , (q , hg)) = Σ≡Prop (λ t → snd (isL t))
+           ( q
+           ∙ cong (pr (fst c))
+-              (Lset-only zero (suc (suc zero)) (z ∷ k ∷ c ∷ []) hg
++              (A.graph-only zero (suc (suc zero)) (z ∷ k ∷ c ∷ []) hg
+                 (mem-ord {A = α} oα (fst c) c∈))
+           ∙ sym (prʟ-fst c (value c c∈)) )
+ 
+@@ -673,7 +567,7 @@ module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+   Lset-defines : IsOrd (fst (lookup b γ))
+                → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
+                → ⟨ γ ⊨ LsetGraphAt w b ⟩
+-  Lset-defines ob q = graph-table w b γ H ob
++  Lset-defines ob q = A.graph-table w b γ H ob
+     (λ c z _ p → hier-out (fst (lookup b γ)) ob H sp c z p .snd)
+     (hier-in (fst (lookup b γ)) ob H sp)
+     (λ c z p → hier-out (fst (lookup b γ)) ob H sp c z p .fst)
