@@ -2435,7 +2435,7 @@ authority = "owner's F-series execution order 2026-08-08; D36 amendment F4; T174
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
 # /usr/bin/time -p. The same protocol as [timing].measured_wall, so the two
 # figures are comparable.
-ac_baseline_seconds_per_line = 0.007749
+ac_baseline_seconds_per_line = 0.007693
 
 # THE TREE THE BASELINE WAS MEASURED ON, and the reason this field exists.
 # A seconds-per-line baseline is a property of a SPECIFIC tree, not a constant.
@@ -2453,13 +2453,16 @@ ac_baseline_seconds_per_line = 0.007749
 # So the tools REFUSE the baseline when standing has moved away from this
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
 # in scripts/ledger.py and the guard in scripts/check-ratio.py.
-ac_baseline_lines = 17252
+ac_baseline_lines = 17271
 ac_baseline_tolerance_lines = 50   # noise, not a licence: a real compression is hundreds
 
 ac_baseline_provenance = """
-RE-MEASURED 2026-08-10 by [LJ-0.5], after [LJ-0.4a] removed 240 dead-name
-lines. 133.69 s real (131.87 user, 0.93 sys), exit 0, over 17,252 in-fence
-lines across 75 masters. Cache cleared, `make typecheck` at the exported
+RE-MEASURED 2026-08-10 by [LJ-0.5], twice. Current figure: 132.87 s real
+(131.07 user, 0.94 sys), exit 0, over 17,271 in-fence lines across 76
+masters, after [LJ-0.6] wired the V.Presentation shim.
+
+The previous re-measure, after [LJ-0.4a] removed 240 dead-name lines, was
+133.69 s over 17,252 lines across 75 masters. Cache cleared, `make typecheck` at the exported
 GHCRTS default -A64m -I0 -M16g, Agda 2.8.0, single process, /usr/bin/time -p.
 
 WHAT THE RE-MEASUREMENT TAUGHT, and it is P-q again at a new site. Removing
