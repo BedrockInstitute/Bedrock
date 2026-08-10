@@ -275,3 +275,78 @@ worth having and two of them changed the plan.
 **Owed.** `ac_baseline_module_rate` from `check-ratio.py --recalibrate`,
 before the first GCH wing module is judged. Until it exists that tool reports
 and refuses to render a verdict.
+
+### 2026-08-10, `[LJ-1.20]` to `[LJ-1.27]`: the index moves, and one edit takes 30 seconds off the wing
+
+**The chain that mattered ran through a defect in a good delivery.**
+
+`[LJ-1.21]` delivered the level size and it reached further than the archive
+promised. The archived cure took `Init`, so initial ordinals only, and `Init ω`
+is uninhabited. The agent replaced `Init` with a module parameter. The delivery
+covers every infinite ordinal. It owes `fin-inj` at 50 to 100 lines and it said
+so.
+
+**It also cost 42.03 s over 484 lines.** One block held 31.0 s over 115 lines,
+a rate of 0.270. That single block held about two thirds of every second the
+GCH wing had spent.
+
+`[LJ-1.24]` measured the cause. The return had called it R-38's class, a
+transparent operation in statement position. **The profile said something
+narrower: a TRANSPORT ACROSS A TRANSPARENT `sett` INDEX.** `defSet` is born
+transparent at `src/L/Definability.lagda.md:111-112`. A transport across that
+index unfolds the satisfaction tower. The control sat in the same file: the
+descent runs at 0.061 because it is parameterized.
+
+**The three cures were ranked by this tree's own history, not by intuition.**
+`dev/LESSONS.md:2330-2348` records five transplants and four failures, and
+R-38's seal transplanted at exactly zero. The only cure that ever worked was
+redirected by root cause. It abstracts the SOURCE, not the target. It went
+first and it won: 29.1 s to 2.3 s, 12.8x.
+
+`[LJ-1.25]` landed it for 7 lines. `StageCardinal` went 41.21 s to 11.22 s. The
+limit half went 0.270 to 0.014. No exported type changed. It left
+`Successor.go₂`'s 4.5 s alone with a reason: that site names `defSet` at a
+fixed stage with no transport, so the same abstraction is a new shape.
+
+**DD27 landed.** `[LJ-1.23]` re-indexed the hull by `Code`, 372 to 431 lines at
+0.0039. `hull-closed` gives the criterion at HULL parameters, which is what
+`[LJ-1.16]` named as the blocker. `[LJ-1.3]`'s piece one retired and nothing
+delivered was deleted.
+
+**`[LJ-1.26]` built the gate `[LJ-1.5]` never had.** The row priced condensation
+in LINES. DD24 gates SECONDS. The archived module's 0.395 rate does not
+transfer as a price, because that module served a route whose target
+`[LJ-1.11]` showed is classically false. It transfers only as a warning about
+the floor class. The report separated two diseases: a body-bound cost MOVES
+when the body is gutted, and a transport cost VANISHES when the statement stops
+naming the transparent construction. The archived cures attacked the wrong one.
+`[LJ-1.27]` now measures one clause at the concrete carrier. GO is 0.013 or
+below. NO-GO is 0.10 or above.
+
+**The wing's arithmetic.** 1,895 in-fence lines at 15.5 s, a rate of 0.0082,
+from 46.3 s and 0.0244 which was 1.85x the bar.
+
+#### My own defects, recorded because they are the reusable part
+
+1. **A pipeline hid a red gate.** `make check | tail -60` returned `tail`'s exit
+   code. The gate had failed and the summary read green. Capture the exit code
+   before reading the output.
+2. **Six PLAN rows over the 200-character cap**, all written by me the same day.
+   `scripts/check-task-index.py` caught every one. I had widened its regexes
+   that morning, so the checker found its author first.
+3. **Two briefs refused by the dispatch gate** for missing mandatory rules,
+   D-26 on one and R-35 with R-40 on the other. Memory dropped them. The gate
+   was right both times.
+4. **The AGENTS word cap broke on my own edit.** The file measured 2,199 against
+   a 2,200 cap before the new rule, so the cap was already saturated. I cut my
+   text from 2,368 to 2,257 first, then took the raise to the owner rather than
+   raising it myself.
+5. **A brief's stop rule cost two measurements.** `[LJ-1.24]` stopped at arm 1
+   because I told it to. Arms 2 and 3 stay unmeasured, and the archive's zero
+   result is still untested at this site.
+
+**Cost.** Eight dispatches. Two returns corrected a claim I had written into a
+brief. No refusals this round, which is itself a change from `[LJ-0.4]`.
+
+**Owed.** `fin-inj` at 50 to 100 lines. `Successor.go₂`'s 4.5 s. `[LJ-1.17-R]`'s
+definition profile on the two square-law probes.
