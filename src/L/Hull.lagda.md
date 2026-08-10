@@ -9,7 +9,7 @@ open import Base.Classical using ( LEM )
 
 module L.Hull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
-open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.ZFStructure using ( module hPropStructure; _↾_ )
 open import FOL.Syntax
   using ( Formula; Term; con; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
@@ -18,6 +18,7 @@ open import FOL.LevyHierarchy
 import FOL.Absoluteness
 import FOL.Semantics
 open import FOL.Manipulation.Relabelling using ( mapFo; mapTm )
+open import FOL.Manipulation.Renaming using ( renameTm )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open SemV using ( _^_ )
@@ -51,7 +52,7 @@ open hPropStructure 𝒮ᵥ
 module AtS = SemV.At S id
 ```
 
-## Elementarity at a transitive set carrier inside a stage
+## Elementarity at a set carrier inside a stage
 
 ```agda
 module AtStage (α : S) (ordα : IsOrd α) where
@@ -67,19 +68,22 @@ module AtStage (α : S) (ordα : IsOrd α) where
   wL : SWO SL
   wL = orderAt α ordα
 
-  module AtM (M : S) (Mtr : isTransV M) (M⊆L : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ x ∈ˢ Lset α ⟩) where
-
-    module AbsM = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ M) Mtr
+  -- the equivalence holds at any carrier: the inner world is the restricted
+  -- structure, and the bounded cases route through the criterion (Devlin 5.1)
+  module AtM (M : S) (M⊆L : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ x ∈ˢ Lset α ⟩) where
 
     SM : Type (ℓ-suc ℓ)
-    SM = AbsM.SM
+    SM = Σ[ x ∈ S ] ⟨ x ∈ˢ M ⟩
+
+    module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
+    open SemM.At SM id renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
 
     inL : SM → SL
     inL c = fst c , M⊆L (fst c) (snd c)
 
     Elementary : Type (ℓ-suc (ℓ-suc ℓ))
     Elementary = (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
-               → (δ AbsM.⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
+               → (δ ⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
 
     TarskiVaught : Type (ℓ-suc ℓ)
     TarskiVaught = (n : ℕ) (φ : Formula SM (suc n)) (δ : SM ^ n)
@@ -93,9 +97,44 @@ module AtStage (α : S) (ordα : IsOrd α) where
       lookup-inL (suc i) (c ∷ δ) = lookup-inL i δ
 
       tm-agree : (n : ℕ) (t : Term SM n) (δ : SM ^ n)
-               → fst (AbsM.⟦ t ⟧ᵐ δ) ≡ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ))
+               → fst (⟦ t ⟧ᵐ δ) ≡ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ))
       tm-agree n (con c) δ = refl
       tm-agree n (var i) δ = sym (cong fst (lookup-inL i δ))
+
+      -- weakening one variable is meaning-preserving at the stage
+      renL : {n : ℕ} (t : Term SL n) (x : SL) (δ : SL ^ n)
+           → AbsL.⟦ renameTm suc t ⟧ᵐ (x ∷ δ) ≡ AbsL.⟦ t ⟧ᵐ δ
+      renL (con c) x δ = refl
+      renL (var i) x δ = refl
+
+      -- relabelling and renaming commute on terms
+      mapTm-rename : {n m : ℕ} (f : SM → SL) (ρ : Fin n → Fin m) (t : Term SM n)
+                   → mapTm f (renameTm ρ t) ≡ renameTm ρ (mapTm f t)
+      mapTm-rename f ρ (con c) = refl
+      mapTm-rename f ρ (var i) = refl
+
+      -- the outer membership of x in t survives the weakening of t
+      mem-ren : {n : ℕ} (t : Term SM n) (x : SL) (δ : SM ^ n)
+              → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
+              → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL (renameTm suc t) ⟧ᵐ (x ∷ map inL δ)) ⟩
+      mem-ren t x δ hx =
+        subst (λ s → ⟨ fst x ∈ˢ s ⟩)
+          (sym (cong fst
+            (cong (λ u → AbsL.⟦ u ⟧ᵐ (x ∷ map inL δ)) (mapTm-rename inL suc t)
+               ∙ renL (mapTm inL t) x (map inL δ))))
+          hx
+
+      -- the criterion's outer witness q reads back into the inner membership
+      mem-inner : {n : ℕ} (t : Term SM n) (q : SM) (δ : SM ^ n)
+                → ⟨ fst q ∈ˢ fst (AbsL.⟦ mapTm inL (renameTm suc t) ⟧ᵐ (inL q ∷ map inL δ)) ⟩
+                → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩
+      mem-inner {n} t q δ hq =
+        subst (λ s → ⟨ fst q ∈ˢ s ⟩) (sym (tm-agree n t δ))
+          (subst (λ s → ⟨ fst q ∈ˢ s ⟩)
+            (cong fst
+              (cong (λ u → AbsL.⟦ u ⟧ᵐ (inL q ∷ map inL δ)) (mapTm-rename inL suc t)
+                 ∙ renL (mapTm inL t) (inL q) (map inL δ)))
+            hq)
 
       dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
       dne P h = Sum.rec (λ p → p)
@@ -111,7 +150,7 @@ module AtStage (α : S) (ordα : IsOrd α) where
     TV→elem tv n φ δ = go n φ δ
       where
       go : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
-         → (δ AbsM.⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
+         → (δ ⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
       go n (t ∈̇ u) δ = cong₂ _∈ˢ_ (tm-agree n t δ) (tm-agree n u δ)
       go n (t ≐ u) δ = cong₂ _≈ˢ_ (tm-agree n t δ) (tm-agree n u δ)
       go n (φ ∧̇ ψ) δ = cong₂ _⊓_ (go n φ δ) (go n ψ δ)
@@ -122,45 +161,46 @@ module AtStage (α : S) (ordα : IsOrd α) where
       go n ⊥̇ δ = refl
       go n (∃̇ ψ) δ = ⇔toPath fwd bwd
         where
-        fwd : ⟨ δ AbsM.⊨ᵐ (∃̇ ψ) ⟩ → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩
+        fwd : ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩ → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩
         fwd = PT.rec (snd (map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ))))
           (λ { (q , hq) → ∣ inL q , subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) hq ∣₁ })
-        bwd : ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩ → ⟨ δ AbsM.⊨ᵐ (∃̇ ψ) ⟩
+        bwd : ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩ → ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩
         bwd h = PT.map (λ { (q , hq) → q , subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) hq })
           (tv n ψ δ h)
       go n (∀̇ ψ) δ = ⇔toPath fwd bwd
         where
-        fwd : ((q : SM) → ⟨ (q ∷ δ) AbsM.⊨ᵐ ψ ⟩)
+        fwd : ((q : SM) → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩)
             → (x : SL) → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩
         fwd h x = dne ((x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ)) λ nx →
           PT.rec isProp⊥ (λ { (q , hq) →
             hq (subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) (h q)) })
             (tv n (¬̇ ψ) δ ∣ x , nx ∣₁)
         bwd : ((x : SL) → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
-            → (q : SM) → ⟨ (q ∷ δ) AbsM.⊨ᵐ ψ ⟩
+            → (q : SM) → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
         bwd h q = subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) (h (inL q))
       go n (∀̇∈ t ψ) δ = ⇔toPath fwd bwd
         where
-        fwd : ((q : SM) → ⟨ fst q ∈ˢ fst (AbsM.⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) AbsM.⊨ᵐ ψ ⟩)
+        mat : Formula SM (suc n)
+        mat = (var zero ∈̇ renameTm suc t) ∧̇ ¬̇ ψ
+        fwd : ((q : SM) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩)
             → (x : SL) → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
             → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩
         fwd h x hx =
-          let hxL : ⟨ fst x ∈ˢ fst (AbsM.⟦ t ⟧ᵐ δ) ⟩
-              hxL = subst (λ s → ⟨ fst x ∈ˢ s ⟩) (sym (tm-agree n t δ)) hx
-              xM : SM
-              xM = fst x , Mtr {x = fst (AbsM.⟦ t ⟧ᵐ δ)} {y = fst x} hxL (snd (AbsM.⟦ t ⟧ᵐ δ))
-          in subst (λ e → ⟨ (e ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
-                   (Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) refl)
-                   (subst ⟨_⟩ (go (suc n) ψ (xM ∷ δ)) (h xM hxL))
+          dne ((x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ)) λ nx →
+          PT.rec isProp⊥ (λ { (q , hq) →
+            hq .snd (subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) (h q (mem-inner t q δ (hq .fst)))) })
+            (tv n mat δ ∣ x , (mem-ren t x δ hx , nx) ∣₁)
         bwd : ((x : SL) → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
                      → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
-            → (q : SM) → ⟨ fst q ∈ˢ fst (AbsM.⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) AbsM.⊨ᵐ ψ ⟩
+            → (q : SM) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
         bwd h q hq =
           subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ)))
             (h (inL q) (subst (λ s → ⟨ fst q ∈ˢ s ⟩) (tm-agree n t δ) hq))
       go n (∃̇∈ t ψ) δ = ⇔toPath fwd bwd
         where
-        fwd : ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (AbsM.⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) AbsM.⊨ᵐ ψ ⟩) ∥₁
+        mat : Formula SM (suc n)
+        mat = (var zero ∈̇ renameTm suc t) ∧̇ ψ
+        fwd : ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩) ∥₁
             → ∥ Σ[ x ∈ SL ] (⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
                           × ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩) ∥₁
         fwd = PT.map (λ { (q , hq , hψ) →
@@ -168,17 +208,10 @@ module AtStage (α : S) (ordα : IsOrd α) where
                    subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) hψ) })
         bwd : ∥ Σ[ x ∈ SL ] (⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
                           × ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩) ∥₁
-            → ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (AbsM.⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) AbsM.⊨ᵐ ψ ⟩) ∥₁
-        bwd = PT.map (λ { (x , hx , hψ) →
-          let hxL : ⟨ fst x ∈ˢ fst (AbsM.⟦ t ⟧ᵐ δ) ⟩
-              hxL = subst (λ s → ⟨ fst x ∈ˢ s ⟩) (sym (tm-agree n t δ)) hx
-              xM : SM
-              xM = fst x , Mtr {x = fst (AbsM.⟦ t ⟧ᵐ δ)} {y = fst x} hxL (snd (AbsM.⟦ t ⟧ᵐ δ))
-          in xM , hxL ,
-             subst ⟨_⟩ (sym (go (suc n) ψ (xM ∷ δ)))
-               (subst (λ e → ⟨ (e ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
-                      (Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) refl)
-                      hψ) })
+            → ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩) ∥₁
+        bwd h = PT.map (λ { (q , hq) →
+          q , (mem-inner t q δ (hq .fst) , subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) (hq .snd)) })
+          (tv n mat δ (PT.map (λ { (x , hx , hψ) → x , (mem-ren t x δ hx , hψ) }) h))
 
     TV-thm : (Elementary → TarskiVaught) × (TarskiVaught → Elementary)
     TV-thm = elem→TV , TV→elem
