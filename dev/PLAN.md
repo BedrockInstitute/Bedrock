@@ -417,7 +417,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.1 | Recon: the GCH route on the internalization tower | RETURNED | Wing 8.0-10.8k, centre 9.4k. Widest term is the Levy crossing; probe specified. Corrects 7 of the LJ-1.x rows |
 | LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Step clause has no Delta-0 witness at ANY carrier. Crossing 5.0-5.1k, or 1.0-1.7k by the cone fork |
 | LJ-1.10 | RE-PRICE the crossing after LJ-1.2's NO-GO | RETURNED, a THIRD route | Neither candidate. Port the archived structural story: its Def-step is ⊤̇, so no code or table bound enters |
-| LJ-1.3 | Build: Skolem hull, a Sigma-1 elementary submodel over the coded satisfaction | planned | Rides the delivered coding tower. No prose (DD23) |
+| LJ-1.3 | Build: the Skolem hull, a least-witness search over the order | dispatched | NOT reflection, NOT fresh Sigma-1 machinery (LJ-1.1 disagreement 2). ARCHIVE: L/Hull, ADAPTABLE 241 |
 | LJ-1.4 | Build: the Mostowski collapse | DELIVERED 239 lines | Ported from the archive's 181, plus Devlin 5.2(ii) which the archive lacked. Carrier-generic. Cold tree 133.39 s, exit 0 |
 | LJ-1.5 | Build: the condensation lemma, via the archived structural story | planned | LJ-1.10's route C. NOT the delivered description: LJ-1.2 refuted certifying that directly |
 | LJ-1.6 | Build: cardinality of a stage, |L a| = |a| for infinite a | planned | ARCHIVE FIRST: archive/rud-route holds L/Cardinal*.lagda.md and FOL/Count.lagda.md. Parallel to LJ-1.3 to LJ-1.5 |
