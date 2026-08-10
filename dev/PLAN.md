@@ -455,9 +455,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.16 | Build: the criterion at hull parameters | REFUSED all three, OVERTURNED by LJ-1.16-R | A fourth shape exists at 150-300 lines and 0.8-3.9 s against the refused 1.0-3.0k and 220-890 s |
 | LJ-1.16-R | DD25 review of LJ-1.16 | OVERTURN the operative clause | The obstruction is the hull's INDEX TYPE, a LJ-1.3 design choice, not the mathematics. Owner's fork; LJ-1.18 prices it |
 | LJ-1.15-R | DD25 review of LJ-1.15's NO-GO | OVERTURN | Crossing FITS the budget: 0.0052 s/line means 15-17 s of 99.6-147.7. Two obstructions, not one: 1.16's is permanent, 1.15's removable |
-| LJ-1.18 | PROBE: the meta term algebra, the fourth shape | dispatched | Prices the owner's index-type fork in 120 throwaway lines. RED falls back to iterating module Hull at 250-450 |
+| LJ-1.18 | PROBE: the meta term algebra, the fourth shape | GO at 116 lines | Plain inductive, strictly positive, 0.0103 s/line under the bar. Corrected the review on four details. OWNER'S FORK |
+| LJ-1.17-R | DD25 review of LJ-1.17, fired late | dispatched | Asks whether the IDEAL form was priced or the port twice, and whether a shared square law should be billed to the wing at all |
+| LJ-1.20 | Build: the stage-arithmetic kit, +omega and its bounds | dispatched | LJ-1.19 proved it GREEN at probe scale. Template content: the tree has no +omega in any master and both towers want it |
+| LJ-1.21 | Build: the carrier-level descent for the level size | dispatched | T85 cured this on 2026-08-05 and the cure is still green. 52 MEASURED lines, not the 250-450 priced fresh |
 | LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing condenses ONCE, at 5.5, whose free lambda can be +omega-closed at zero cost |
-| LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS, measured | Pairing 0.0485, SquareLaw 0.0255, pair 41.36 s at 0.0322 s/line, 2.44x the bar. Port and ideal form both fail |
+| LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS; review is LJ-1.17-R | Pairing 0.0485, SquareLaw 0.0255, pair 0.0322, 2.44x the bar. I recorded it and MISSED firing DD25 |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
