@@ -183,77 +183,6 @@ data Codes : {n : ℕ} → S → Formula S n → Type ℓ where
 ```
 
 <!--en-->
-Two facts tie the relation to the function. Every formula is coded by its own
-code, so the relation is inhabited wherever it should be; and any code for a
-formula is *the* code of that formula, so the relation adds nothing beyond the
-function. Both are one structural recursion, and the second is the one later
-chapters lean on: it converts a derivation, which is cheap to match on, into the
-equation, which is expensive to normalize, at exactly the point where the
-equation is finally needed.
-<!--zh-->
-两个事实把关系与函数系在一起。每条公式都被它自己的码所编码，故该关系在该有的地方都有居民；而公式的任何一个码都**就是**那条公式的码，故该关系并不比函数多出什么。两者都是一次结构递归，而后者是后续诸章倚重的：它把推导 (匹配起来廉价) 换成等式 (归一化起来昂贵)，恰在等式终于被需要的那一点上。
-<!--/-->
-
-```agda
-codesT-complete : ∀ {n} (t : Term S n) → CodesT ⌜ t ⌝ᵗ t
-codesT-complete (con x) = c-con x
-codesT-complete (var i) = c-var i
-
-codes-complete : ∀ {n} (φ : Formula S n) → Codes ⌜ φ ⌝ φ
-codes-complete (t ∈̇ u)  = c-∈  (codesT-complete t) (codesT-complete u)
-codes-complete (t ≐ u)  = c-≐  (codesT-complete t) (codesT-complete u)
-codes-complete (φ ∧̇ ψ)  = c-∧  (codes-complete φ)  (codes-complete ψ)
-codes-complete (φ ∨̇ ψ)  = c-∨  (codes-complete φ)  (codes-complete ψ)
-codes-complete (φ ⇒̇ ψ)  = c-⇒  (codes-complete φ)  (codes-complete ψ)
-codes-complete (¬̇ φ)    = c-¬  (codes-complete φ)
-codes-complete ⊤̇        = c-⊤
-codes-complete ⊥̇        = c-⊥
-codes-complete (∃̇ φ)    = c-∃  (codes-complete φ)
-codes-complete (∀̇ φ)    = c-∀  (codes-complete φ)
-codes-complete (∀̇∈ t φ) = c-∀∈ (codesT-complete t) (codes-complete φ)
-codes-complete (∃̇∈ t φ) = c-∃∈ (codesT-complete t) (codes-complete φ)
-
-codesT-canon : ∀ {n s} {t : Term S n} → CodesT s t → s ≡ ⌜ t ⌝ᵗ
-codesT-canon (c-con x) = refl
-codesT-canon (c-var i) = refl
-
-codes-canon : ∀ {n s} {φ : Formula S n} → Codes s φ → s ≡ ⌜ φ ⌝
-codes-canon (c-∈ ct cu) =
-  cong (mkTag 0)  (cong₂ pr (codesT-canon ct) (codesT-canon cu))
-codes-canon (c-≐ ct cu) =
-  cong (mkTag 1)  (cong₂ pr (codesT-canon ct) (codesT-canon cu))
-codes-canon (c-∧ c d)   = cong (mkTag 2)  (cong₂ pr (codes-canon c) (codes-canon d))
-codes-canon (c-∨ c d)   = cong (mkTag 3)  (cong₂ pr (codes-canon c) (codes-canon d))
-codes-canon (c-⇒ c d)   = cong (mkTag 4)  (cong₂ pr (codes-canon c) (codes-canon d))
-codes-canon (c-¬ c)     = cong (mkTag 5)  (codes-canon c)
-codes-canon c-⊤         = refl
-codes-canon c-⊥         = refl
-codes-canon (c-∃ c)     = cong (mkTag 8)  (codes-canon c)
-codes-canon (c-∀ c)     = cong (mkTag 9)  (codes-canon c)
-codes-canon (c-∀∈ ct c) =
-  cong (mkTag 10) (cong₂ pr (codesT-canon ct) (codes-canon c))
-codes-canon (c-∃∈ ct c) =
-  cong (mkTag 11) (cong₂ pr (codesT-canon ct) (codes-canon c))
-```
-
-<!--en-->
-Canonicity already gives what "the code determines the formula" is usually
-stated for: two derivations over the same code force the two formulas to have
-the same code, and an argument that recovers a formula from its code with a
-derivation in hand wants nothing further. That is most of them, and the relation
-above is the interface they were designed around.
-
-It is not all of them. One consumer wants the equation itself, for a reason no
-relation answers, and the last section of this chapter proves it. The objection
-that once kept it out was a cost estimate, and the cost turned out not to be
-what the estimate assumed.
-<!--zh-->
-典范性已经给出了「码决定公式」通常要陈述的内容：同一个码上的两份推导，迫使两条公式拥有相同的码；而一个手里握着推导、据以从码还原公式的论证，不再要求任何更多的东西。它们是绝大多数，而上面那个关系正是它们所围绕设计的接口。
-
-但不是全部。有一个消费方要的是那条等式本身，理由是任何关系都答不了的，而本章最后一节把它证出来。当初把它挡在外面的那条反对意见是一个成本估计，而成本最终并不是那个估计所设想的样子。
-<!--/-->
-
-<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -262,13 +191,11 @@ what the estimate assumed.
 <!--en-->
 Formulas are now sets: `⌜_⌝`{.Agda} tags a constructor index onto the codes of
 the parts, constants coding themselves. The interface downstream is the relation
-`Codes`{.Agda}, complete (`codes-complete`{.Agda}) and canonical
-(`codes-canon`{.Agda}), which keeps code values out of the equations a
-typechecker has to normalize. Everything is generic in the structure, needing
-only an injective pairing and an injection of the naturals; the hierarchy
-supplies both.
+`Codes`{.Agda}, which keeps code values out of the equations a typechecker has
+to normalize. Everything is generic in the structure, needing only an injective
+pairing and an injection of the naturals; the hierarchy supplies both.
 <!--zh-->
-公式如今是集合了：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上，而常量编码自身。下游的接口是关系 `Codes`{.Agda}，它完备 (`codes-complete`{.Agda}) 且典范 (`codes-canon`{.Agda})，使码值不出现在类型检查器必须归一化的等式里。一切都对结构泛型，只需一个单射的配对与自然数的一个单射；层级把二者都供上。
+公式如今是集合了：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上，而常量编码自身。下游的接口是关系 `Codes`{.Agda}，它使码值不出现在类型检查器必须归一化的等式里。一切都对结构泛型，只需一个单射的配对与自然数的一个单射；层级把二者都供上。
 <!--/-->
 
 <!--en-->

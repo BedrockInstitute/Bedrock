@@ -406,9 +406,6 @@ opaque
   limitS : S
   limitS = LsetS ω ω-ord
 
-  limitS-fst : fst limitS ≡ Lset ω
-  limitS-fst = refl
-
   limitEl : Limit → S
   limitEl a = fst a , Lset→isL ω ω-ord (fst a) (snd a)
 

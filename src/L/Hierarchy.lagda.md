@@ -534,11 +534,6 @@ HierOf B = Σ[ h ∈ S ] IsHier B h
 hier-unique : (B : V ℓ) (h k : S) → IsHier B h → IsHier B k → h ≡ k
 hier-unique B h k sp sq = extensionalL (λ z → sp z ∙ sym (sq z))
 
-isPropHierOf : (B : V ℓ) → isProp (HierOf B)
-isPropHierOf B (h , sp) (k , sq) = Σ≡Prop
-  (λ m → isPropΠ (λ z → isSetHProp (fst z ∈ fst m) (Recorded B (fst z))))
-  (hier-unique B h k sp sq)
-
 module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsHier B h) where
   hier-out : (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩
            → ⟨ fst c ∈ B ⟩ × (fst z ≡ Lset (fst c))

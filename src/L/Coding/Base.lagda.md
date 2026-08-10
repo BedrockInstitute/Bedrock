@@ -44,7 +44,7 @@ open import Base.Truth
 module L.Coding.Base {ℓ : Level} where
 
 open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
+  using ( con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈ )
 open import FOL.Manipulation.Relabelling using ( embed )
 import FOL.Semantics
@@ -96,18 +96,6 @@ ClosedΣ = Σ[ n ∈ ℕ ] Formula (⊥* {ℓ}) n
 allCodes : V ℓ
 allCodes = sett ClosedΣ (λ p → VCode.⌜ embed (p .snd) ⌝)
 
-allCodes-spec : (s : V ℓ)
-  → ⟨ s ∈ allCodes ⟩ ≡ ∥ Σ[ p ∈ ClosedΣ ] (VCode.⌜ embed (p .snd) ⌝ ≡ s) ∥₁
-allCodes-spec s = refl
-
-code∈allCodes : ∀ {n} (φ : Formula (⊥* {ℓ}) n) → ⟨ VCode.⌜ embed φ ⌝ ∈ allCodes ⟩
-code∈allCodes {n} φ = ∣ (n , φ) , refl ∣₁
-
-allCodesTerm : ∀ {n} → Term (V ℓ) n
-allCodesTerm = con allCodes
-
-allCodesTerm-eval : ∀ {n} (γ : (V ℓ) ^ n) → ⟦ allCodesTerm {n} ⟧ γ ≡ allCodes
-allCodesTerm-eval γ = refl
 ```
 
 <!--en-->

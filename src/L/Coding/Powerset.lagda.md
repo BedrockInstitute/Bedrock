@@ -49,7 +49,7 @@ open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
 open import L.Definability {ℓ} using ( module DefOf )
-open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; 𝒟ₒS; LsetS )
+open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; LsetS )
 open import L.Coding.Model {ℓ}
   using ( extAt; extAt-out; extAt-in; extAt-in-both; tagAtL; tagAtL-adequate
         ; domAt; domAt-intro; domAt-out )
@@ -726,11 +726,6 @@ DefAt-stage β oβ u w γ qw = ⇔toPath
   (DefAt-out (LsetS β oβ) u w γ (𝒟ₒ→isL β oβ) qw)
   (DefAt-in (LsetS β oβ) u w γ qw)
 
-DefAt-𝒟ₒS : (β : V ℓ) (oβ : IsOrd β) → ∀ {n} (u w : Fin n) (γ : S ^ n)
-          → lookup w γ ≡ LsetS β oβ → lookup u γ ≡ 𝒟ₒS β oβ
-          → ⟨ γ ⊨ DefAt u w ⟩
-DefAt-𝒟ₒS β oβ u w γ qw qu =
-  DefAt-in (LsetS β oβ) u w γ (cong fst qw) (cong fst qu)
 ```
 
 <!--en-->

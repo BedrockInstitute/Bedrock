@@ -429,9 +429,6 @@ module _ (α : V ℓ) (oα : IsOrd α) where
   bornOf : (a : Mem (Lset α)) → V ℓ
   bornOf a = birth (fst a) (memberL a)
 
-  bornOrd : (a : Mem (Lset α)) → IsOrd (bornOf a)
-  bornOrd a = birth-ord (fst a) (memberL a)
-
   bornMem : (a : Mem (Lset α)) → ⟨ bornOf a ∈ α ⟩
   bornMem a = Fam.bornAt a .snd
 

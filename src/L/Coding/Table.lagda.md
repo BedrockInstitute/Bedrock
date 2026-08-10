@@ -318,9 +318,6 @@ which is the only arity at which it is true.
         → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (sglʟ (ent φ)) ⟩
     top φ = sglʟ-in (ent φ) _ (sym (prʟ-fst (keyʟ φ) (Sat B φ)))
 
-  slot-in : ∀ {n} (φ : Formula S n) → ⟨ fst (keyʟ φ) ∈ fst (slot φ) ⟩
-  slot-in = Parts.self keyʟ
-
   entry-in : ∀ {n} (φ : Formula S n)
            → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (satTable φ) ⟩
   entry-in φ@(t ∈̇ u)  = top φ

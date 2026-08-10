@@ -98,8 +98,6 @@ defined.
 subFo : S → Formula S 1
 subFo a = ∀̇∈ (var zero) (var zero ∈̇ con a)
 
-subFo-is-⊆ : (a x : S) → ((x ∷ []) ⊨ subFo a) ≡ (x ⊆ˢ a)
-subFo-is-⊆ a x = refl
 ```
 
 <!--en-->

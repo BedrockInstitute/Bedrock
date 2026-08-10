@@ -51,7 +51,6 @@ open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )
 
-import Cubical.Data.Empty as Empty
 open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -149,10 +148,6 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
   codeL (∀̇ φ)    = tagL 9  (codeL φ)
   codeL (∀̇∈ t φ) = tagL 10 (prL (codeTmL t) (codeL φ))
   codeL (∃̇∈ t φ) = tagL 11 (prL (codeTmL t) (codeL φ))
-
-codeFreeL : ∀ {n} (φ : Formula (⊥* {ℓ}) n)
-          → ⟨ isL VCode.⌜ mapFo Empty.rec* φ ⌝ ⟩
-codeFreeL = codeL Empty.rec* (λ ())
 ```
 
 <!--en-->
