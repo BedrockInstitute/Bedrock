@@ -450,7 +450,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.14 | Build: Tarski-Vaught at a NON-transitive carrier | DELIVERED +29, seconds FELL | Mtr gone entirely, TV holds at any carrier. Priced 50-70, landed 29. Hull-parameter criterion still owed |
 | LJ-1.5 | Build: the condensation lemma | GATED on LJ-1.15's probe | Route A recommended at 3.3k, band 2.0-4.5k. DD8 forbids funding 3.3k on a survey, so one clause is measured first |
 | LJ-1.15 | PROBE: one bounded table clause at the Sigma-1 shape | dispatched | GATES all three crossing routes and so LJ-1.5. GO needs statement 1 at 40 lines and statement 2 at 100. Throwaway, D-1 |
-| LJ-1.6 | Build: cardinality of a stage | dispatched | Independent of the re-targeting. 1,452 archived lines in 4 rud-route modules; DD13 prices the port against a fresh write |
+| LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
+| LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
+| LJ-1.17 | GATE: is the square law affordable at DD24? | planned, NEXT | It eats 28-42 percent of the wing's seconds budget for 11-17 percent of its lines. Price the IDEAL form per D17 |
 | LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
