@@ -454,7 +454,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.33-R | DD25 review of LJ-1.33's NO-GO | OVERTURN | Same theorem, same hypotheses: 0.334 to 0.0108, 38x. BOTH causes were my brief. But it prices a PROXY, not the real leg D |
 | LJ-1.34 | GATE leg D: the certificate story vs the machine | NO-GO, under DD25 review | 0.436 per line, and the Delta-0 certificate does NOT close: the delivered leaves carry unbounded quantifiers |
 | LJ-1.34-R | DD25 review of LJ-1.34's NO-GO | OVERTURN | Same theorem: 0.436 to 0.0079, 46x on my own re-runs. Spell the story ONCE. Delta-0 IS the target and my brief was right |
-| LJ-1.35 | GATE: price the bound-fact construction | dispatched | LJ-1.34-R names it the new widest unmeasured term: every probe in this lineage takes the bound facts as hypotheses |
+| LJ-1.35 | GATE: price the bound-fact construction | BETWEEN, leans GO | 0.0241 per line, 0.48 of the NO-GO bar. The block funds. But the per-clause figure rests on ONE measured clause |
+| LJ-1.36 | GATE: is the leaf reading really 2 s PER CLAUSE? | GO | NO. The 2 s is ONE deep leaf; eleven rows read under 0.12 s TOTAL. The 22-31 s projection was wrong by about 12x |
+| LJ-1.37 | BUILD: the eleven table clauses and the code-set description | dispatched | Every seconds term is now measured. The code-set description is the last SURVEY row, 0.2-0.5k lines, 1.6-4.0 s |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
