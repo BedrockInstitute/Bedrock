@@ -66,12 +66,48 @@ LEDGER = ROOT / "dev" / "ledger.toml"
 FENCE = re.compile(r"```agda\n(.*?)```", re.S)
 
 
+# THE CATALOGS ARE NOT COUNTED. Owner's ruling, 2026-08-10.
+#
+# `src/Everything.lagda.md` and `src/Landmarks.lagda.md` are indexes, not
+# mathematics: one is the import catalog with its per-chapter prose, the other
+# states the two trophies and imports the modules that prove them. Their
+# in-fence lines are import lines and statement aliases.
+#
+# THE REASON IS DRIFT, and the owner stated it: a catalog GROWS WITH THE
+# PROJECT. Every chapter added puts more lines into Everything, so any
+# threshold measured against a total that includes it drifts further from the
+# mathematics it is supposed to bound, and drifts in the direction that
+# flatters the tree.
+#
+# IT ALSO COLLAPSED A REAL DISCREPANCY. Before the ruling the AC BUCKET was
+# 16,995 (standing minus the declared wing) and the DD24 ratio's own tree was
+# 16,916 (the cold-build cone of Landmarks). The 79-line gap was exactly
+# Everything, which no build of Landmarks compiles, and it forced two
+# different "AC side" numbers to be carried and never confused. Excluding both
+# catalogs makes them ONE number, 16,897.
+#
+# This is the caliber AGENTS.md points at when it says the ledger's header
+# carries it. Nothing else changes: the fence rule and the non-blank rule are
+# DD8's and are untouched.
+UNCOUNTED = ("src/Everything.lagda.md", "src/Landmarks.lagda.md")
+
+
 def tracked_masters() -> list[str]:
-    """Git-tracked .lagda.md under src/. Untracked probes never appear here (D-1)."""
+    """Git-tracked .lagda.md under src/. Untracked probes never appear here (D-1).
+
+    THIS IS THE STRUCTURAL LIST and it still holds the catalogs, because the
+    import graph, the closure and the i18n checks all need them. Use
+    `countable_masters()` for anything that adds up LINES.
+    """
     out = subprocess.run(
         ["git", "ls-files", "src/"], cwd=ROOT, capture_output=True, text=True, check=True
     ).stdout.split()
     return sorted(f for f in out if f.endswith(".lagda.md"))
+
+
+def countable_masters() -> list[str]:
+    """Every master whose lines count toward a size figure or a threshold."""
+    return [f for f in tracked_masters() if f not in UNCOUNTED]
 
 
 def head_text(path: str) -> str:
@@ -233,11 +269,19 @@ def validate_ratio_baseline(data: dict, standing: int) -> list[str]:
     # here; that would be the [LJ-0.4] wing-reclassification trap again, where
     # moving lines between buckets looks like progress and is not.
     root = ratio.get("ac_baseline_root", "src/Landmarks.lagda.md")
-    files = [f for f in tracked_masters() if f not in set(data.get("retired", []))]
-    if root in files:
-        cone = closure(import_graph(files), [root])
-        ac_side = sum(count(f) for f in cone)
-        basis = f"the cold-build cone of {root}, {len(cone)} masters"
+    # THE GRAPH IS STRUCTURAL, THE SUM IS COUNTABLE. The cone must be built
+    # over every master, catalogs included, or the root itself is missing and
+    # the cone collapses to nothing. The LINES then exclude the catalogs, per
+    # the owner's 2026-08-10 ruling, and that is exactly what makes this figure
+    # EQUAL the AC bucket instead of exceeding it by the catalogs' size. Before
+    # the ruling the two differed by 79 and both had to be carried.
+    structural = [f for f in tracked_masters() if f not in set(data.get("retired", []))]
+    if root in structural:
+        cone = closure(import_graph(structural), [root])
+        counted = [f for f in cone if f not in UNCOUNTED]
+        ac_side = sum(count(f) for f in counted)
+        basis = (f"the cold-build cone of {root}, {len(cone)} masters, "
+                 f"{len(counted)} of them counted")
     else:
         wing = sum(count(f) for f in ratio.get("gch_wing", []))
         ac_side = standing - wing
@@ -644,7 +688,9 @@ def main(argv: list[str]) -> int:
             return 2
 
     data = tomllib.loads(LEDGER.read_text(encoding="utf-8"))
-    files = tracked_masters()
+    # COUNTABLE, not tracked: the two catalogs are excluded from every size
+    # figure by the owner's 2026-08-10 ruling. See UNCOUNTED at the top.
+    files = countable_masters()
     sizes = {f: count(f) for f in files}
     total = sum(sizes.values())
 

@@ -47,7 +47,7 @@ AC_TOTAL_RE = re.compile(r"ac-total ([0-9,]+)")
 def shadow_state() -> dict:
     """The trophy split, the AC-side file set, and the count, by import."""
     data = tomllib.loads(ledger.LEDGER.read_text(encoding="utf-8"))
-    files = ledger.tracked_masters()
+    files = ledger.countable_masters()
     sizes = {f: ledger.count(f) for f in files}
     try:
         split, ambiguous, defects = ledger.trophy_split(data, files, sizes)
@@ -102,9 +102,15 @@ def run_root_files(st: dict) -> list[str]:
 
     Everything imports every gch-side master by construction. A root that
     imported it would fail before it checked anything, so [T147] excluded it
-    and this tool does the same. Its lines stay in the count, because the
-    ledger split books it in the base part and the judgment counts the
-    surviving tree, not the imported root."""
+    and this tool does the same.
+
+    ITS LINES NO LONGER STAY IN THE COUNT. They did until 2026-08-10, when the
+    owner ruled both catalogs, Everything and Landmarks, out of every size
+    figure: a catalog grows with the project, so a threshold measured against
+    a total containing one drifts away from the mathematics it bounds. The
+    file list here now comes from `ledger.countable_masters()`, so the index
+    is absent from the count AND from the root, which is one rule instead of
+    two."""
     return [f for f in st["ac_files"] if f != EVERYTHING]
 
 

@@ -155,8 +155,14 @@ def test_ac_set_shape() -> int:
         fails += check("declared gch-assign masters are gch-side",
                        "src/FOL/Count.lagda.md" in gch
                        and "src/V/Collapse.lagda.md" in gch, True)
-    fails += check("Everything is counted in the AC side",
-                   deletion_test.EVERYTHING in ac, True)
+    # FLIPPED 2026-08-10 by the owner's catalog ruling. Everything and
+    # Landmarks are excluded from every size figure, because a catalog grows
+    # with the project and drags a threshold away from the mathematics it
+    # bounds. This assertion pinned the OLD caliber and now pins the new one.
+    fails += check("Everything is NOT counted in the AC side",
+                   deletion_test.EVERYTHING in ac, False)
+    fails += check("Landmarks is NOT counted in the AC side",
+                   "src/Landmarks.lagda.md" in ac, False)
     fails += check("Everything leaves the --run import root",
                    deletion_test.run_root_files(st),
                    [f for f in st["ac_files"] if f != deletion_test.EVERYTHING])

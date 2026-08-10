@@ -61,10 +61,10 @@ def main() -> int:
     check_true("a root is declared", bool(root))
     check_true("the root is a tracked master", root in ledger.tracked_masters())
 
-    files = [f for f in ledger.tracked_masters()
+    files = [f for f in ledger.countable_masters()
              if f not in set(data.get("retired", []))]
-    cone = ledger.closure(ledger.import_graph(files), [root])
-    cone_lines = sum(ledger.count(f) for f in cone)
+    cone = ledger.closure(ledger.import_graph(ledger.tracked_masters()), [root])
+    cone_lines = sum(ledger.count(f) for f in cone if f not in ledger.UNCOUNTED)
     check("ac_baseline_lines IS the cone, not a nearby number",
           ratio.get("ac_baseline_lines"), cone_lines)
 
@@ -72,15 +72,17 @@ def main() -> int:
     for wing in ratio.get("gch_wing", []):
         check_true(f"{wing} is outside the cone", wing not in cone)
 
-    print("the cone is NOT the AC bucket, and the gap is the catalog")
+    print("the cone and the AC bucket are ONE number, after the catalog ruling")
     standing = sum(ledger.count(f) for f in files)
     wing_lines = sum(ledger.count(f) for f in ratio.get("gch_wing", []))
     bucket = standing - wing_lines
-    check_true("the bucket exceeds the cone", bucket > cone_lines)
-    check("the whole gap is Everything's own lines",
-          bucket - cone_lines, ledger.count("src/Everything.lagda.md"))
-    check_true("Everything is outside the cone",
-               "src/Everything.lagda.md" not in cone)
+    # BEFORE 2026-08-10 these differed by 79, exactly Everything's own lines,
+    # and both numbers had to be carried under one name. The owner's ruling
+    # excludes both catalogs from every size figure and collapses them.
+    check("the bucket EQUALS the cone", bucket, cone_lines)
+    for cat in ledger.UNCOUNTED:
+        check_true(f"{cat} is not in the countable list",
+                   cat not in ledger.countable_masters())
 
     print("the guard is quiet on the declared tree")
     check("no defect at the declared baseline",
