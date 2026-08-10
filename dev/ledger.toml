@@ -244,7 +244,32 @@ gch_wing_apriori = [7553, 11197]
 # WHOLE seconds budget at 99.6 to 147.7 s. That number is the one to price a
 # candidate chapter against, and nobody had it until 2026-08-10.
 #
-# THE SQUARE LAW FAILS AGAINST IT, and this is a route-level constraint rather
+# THE SQUARE LAW PASSES, AND MY FIRST ARITHMETIC HERE WAS WRONG.
+#
+# WITHDRAWN 2026-08-10 by [LJ-1.17-R], and the error was mine. I divided the
+# budget by the wing's line count TODAY, 2,677, when the wing is 12 to 18
+# percent built, and read the result as a route-level FAIL. A budget derived
+# from a PROJECTED line count must be divided by the PROJECTED count.
+#
+# CORRECTED, and I recomputed it myself rather than take the review's word.
+# The pair is 1,283 in-fence at a MEASURED 41.36 s. Credit the rest of the
+# wing with 0.0065 s/line, which is HIGHER than any wing module measured at
+# the caliber:
+#     7,553 lines  ->  82.12 s  ->  0.0109 s/line  ->  0.82x the bar, PASS
+#    11,197 lines  -> 105.80 s  ->  0.0094 s/line  ->  0.72x the bar, PASS
+# The wing fails only if its residue runs above 0.0093 to 0.0107, which is
+# 1.8x StageCardinal's measured 0.0052 and 8.7x FOL.Count's 0.0011.
+#
+# THE INSTRUMENT SAID SO TOO and I did not listen. check-ratio.py's own
+# header: "THE PER-MODULE FLAG IS ADVICE; THE AGGREGATE IS THE JUDGMENT. A
+# single module may sit above the bar for a reason the wing as a whole pays
+# back." A per-module rate was never the verdict.
+#
+# The three MEASURED seconds stand and are the day's best result. Only the
+# conclusions drawn from them were wrong. The superseded text follows, kept
+# because a record that hides its errors teaches nothing.
+#
+# SUPERSEDED: the square law FAILS against it, a route-level constraint rather
 # than a chapter's problem. The archived L.Ordinal.SquareLaw and
 # L.Ordinal.Pairing are 1,283 in-fence together, and at the ledger's own
 # superseded figures they cost 41.9 s. Ported as they stand, the wing reads
@@ -266,10 +291,17 @@ gch_wing_apriori = [7553, 11197]
 # And the 61.9 s figure is stale by two supersessions; this file at :1765 and
 # :1769 records SquareLaw 64.4 to 23.3 and Pairing 18.6.
 #
-# ONE GAP NEITHER DOCUMENT NAMED: the archived square law holds at INITIAL
-# ordinals only, by its own prose, and Init ω is uninhabited. The chain needs
-# the level size at arbitrary infinite ordinals, and the non-initial transfer
-# is unpriced. Re-arm: price it before any square-law port is funded.
+# THE NON-INITIAL TRANSFER IS NOT OWED, and this re-arm is WITHDRAWN.
+# [LJ-1.17-R] read six lines further than [LJ-1.17] did. The wing's single
+# condensation application is at kappa-plus with alpha = kappa, and BOTH are
+# cardinals: dev/literature/devlin-II5.md:164-166, with step F at :282 saying
+# "initial ordinals". Bound's beta is the TARGET, not the level, and
+# src/ProbeTowerInd2.agda:155-159 already runs the fixed-initial-target shape.
+# So the archived law's restriction to initial ordinals reaches the consumer.
+# Two smaller residuals replace the transfer: the square law at omega, since
+# Init omega is uninhabited, and either verifying Init kappa or adopting Init
+# as the cardinal notion, a choice the archive names itself at
+# SquareLaw.lagda.md:961-963.
 gch_wing_seconds_budget = [99.6, 147.7]
 gch_wing_apriori_centre = 9400
 gch_wing_apriori_source = """
