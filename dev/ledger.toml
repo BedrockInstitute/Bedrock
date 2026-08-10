@@ -2446,7 +2446,7 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
 # /usr/bin/time -p. The same protocol as [timing].measured_wall, so the two
 # figures are comparable.
-ac_baseline_seconds_per_line = 0.007904
+ac_baseline_seconds_per_line = 0.007913
 
 # THE TREE THE BASELINE WAS MEASURED ON, and the reason this field exists.
 # A seconds-per-line baseline is a property of a SPECIFIC tree, not a constant.
@@ -2464,15 +2464,28 @@ ac_baseline_seconds_per_line = 0.007904
 # So the tools REFUSE the baseline when standing has moved away from this
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
 # in scripts/ledger.py and the guard in scripts/check-ratio.py.
-ac_baseline_lines = 16916
-# THE DENOMINATOR IS THE COLD-BUILD CONE, not the AC bucket, and the two are
-# different numbers on purpose. A Landmarks build compiles 74 masters and
-# 16,916 lines. The AC BUCKET is 16,995: it adds src/Everything.lagda.md's own
-# 79 in-fence lines, which are imports rather than mathematics and which no
-# Landmarks build compiles. The owner's 17,000 target is measured on the
-# BUCKET and is met at 16,995; this row measures the RATIO's tree. Never swap
-# them to make a number look better.
+ac_baseline_lines = 16897
+# THE DENOMINATOR AND THE AC BUCKET ARE NOW ONE NUMBER, 16,897, and that is
+# what the owner's 2026-08-10 catalog ruling bought.
+#
+# BEFORE IT they differed and both had to be carried: the cold-build cone of
+# Landmarks was 16,916, the AC bucket was 16,995, and the 79-line gap was
+# src/Everything.lagda.md, which no Landmarks build compiles. Two numbers with
+# one name is how a figure gets quoted in the wrong place.
+#
+# The ruling excludes both catalogs, Everything and Landmarks, from every size
+# figure, because a catalog GROWS WITH THE PROJECT and drifts a threshold away
+# from the mathematics it bounds. The cone still BUILDS them; it just does not
+# count them.
 ac_baseline_root = "src/Landmarks.lagda.md"
+# THE CALIBER, declared so the checker cannot drift from the bar it enforces.
+# scripts/check-timing.py defaults to a bare -M8g, which is what the [[hot]]
+# rows were measured at and which must stay their default. This baseline was
+# measured at the Makefile's exported setting, and the two are NOT the same
+# instrument: the ledger's own provenance measured 163.49 s against 133.69 s on
+# one tree, so the missing -A64m -I0 is worth 22.3 percent. check-ratio.py
+# reads this row and passes it through.
+ac_baseline_ghcrts = "-A64m -I0 -M16g"
 
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same
@@ -2553,9 +2566,15 @@ compression_target_ac_lines = 17000
 # EVERY KIT BLOCK MEASURED NET POSITIVE. Only deletion (A, the dead names) and
 # one local helper (I's Separation) measured negative. That is the campaign's
 # whole result in one line.
-# MET 2026-08-10. AC side 17,273 to 16,995, five lines under the owner's
-# 17,000, measured from HEAD by ledger.py and re-counted by hand against HEAD
-# at every landing. The [ratio] half of the goal is NOT settled by this line:
+# MET 2026-08-10. AC side 17,273 to 16,897, measured from HEAD by ledger.py
+# and re-counted by hand against HEAD at every landing.
+#
+# TWO CALIBERS, BOTH MET, and the difference is recorded rather than chosen.
+# On the caliber the target was SET with, the AC side is 16,995 and the target
+# is met by five. On DD26's caliber, ruled the same day, the two catalogs come
+# out and it is 16,897, met by 103. The 98-line difference is Everything (79)
+# and Landmarks (19), and it is a change of instrument, not of tree: no line
+# of mathematics moved when the ruling landed. The [ratio] half of the goal is NOT settled by this line:
 # [LJ-0.5] re-measures the DD24 baseline cold, and until it lands the seconds
 # claim rests on per-block figures rather than on a tree measurement.
 #
@@ -2569,7 +2588,7 @@ compression_target_ac_lines = 17000
 # THE ONE SYSTEMATIC ERROR, and it survived four surveys: the savings were
 # priced at the call sites and the KIT was never priced. A kit's lines are paid
 # once; its parameters are paid at every site twice.
-compression_target_state = "MET 2026-08-10: AC 16,995 against the owner's 17,000, five under. Nine blocks, eight bands tested, one kit landed. [LJ-0.5] still owes the cold ratio measurement"
+compression_target_state = "MET 2026-08-10: AC 16,897 against the owner's 17,000, 103 under on DD26's caliber, or 16,995 and five under on the caliber the target was set with. Both are met"
 
 # THE HONEST FIGURE, from [LJ-0.8]'s review 2026-08-10. About 17,000, on the
 # basis of 17,273 minus the three measured-class remainders with F at half

@@ -214,7 +214,7 @@ def interface_of(path: Path) -> Path | None:
     return hits[0] if hits else None
 
 
-def time_module(path: Path, cold: bool) -> float | None:
+def time_module(path: Path, cold: bool, ghcrts: str | None = None) -> float | None:
     """Typecheck one module and return wall seconds, or None if it failed.
 
     COLD BY DEFAULT, and that is the whole point. The ledger's `[[hot]]`
@@ -231,8 +231,20 @@ def time_module(path: Path, cold: bool) -> float | None:
 
     GHCRTS=-M8g and one process at a time, per C-12: a concurrent typecheck
     both thrashes the machine and corrupts the measurement.
+
+    THE CALIBER IS A PARAMETER, added 2026-08-10, and the default is the
+    HISTORICAL one so no existing figure silently changes meaning. The ledger's
+    `[[hot]]` rows were all measured at a bare `-M8g`, so that stays the
+    default and those rows remain comparable to new runs.
+
+    A CALLER THAT COMPARES AGAINST A DIFFERENT CALIBER MUST PASS ITS OWN, and
+    `scripts/check-ratio.py` now does. The bare cap omits `-A64m -I0`, and the
+    ledger's own provenance measured what those two GC flags are worth: 163.49 s
+    against 133.69 s on the same tree, a 22.3 percent artifact. Timing a wing
+    module without them and comparing it to a baseline measured WITH them
+    inflates the wing by up to a fifth and reads as a content-class failure.
     """
-    env = dict(os.environ, GHCRTS="-M8g")
+    env = dict(os.environ, GHCRTS=ghcrts or "-M8g")
     iface = interface_of(path)
     stashed = None
     if cold and iface is None:

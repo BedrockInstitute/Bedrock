@@ -92,15 +92,73 @@ def agda_blocker() -> str | None:
     return "pgrep cannot verify the process list; the guard fails closed"
 
 
-def measure(paths: list[str], cold: bool) -> list[tuple[str, int, float | None]]:
-    """(path, in-fence lines, seconds) for each module, in declaration order."""
+def measure(paths: list[str], cold: bool,
+            ghcrts: str | None = None) -> list[tuple[str, int, float | None]]:
+    """(path, in-fence lines, seconds) for each module, in declaration order.
+
+    THE CALIBER COMES FROM THE LEDGER, never from this file's memory. The timer
+    defaults to a bare `-M8g`, which is right for the `[[hot]]` rows and wrong
+    here: the baseline was taken at the Makefile's exported setting, and the
+    two GC flags it adds are worth 22.3 percent (163.49 s against 133.69 s on
+    one tree). Timing a wing module without them and judging it against a
+    baseline measured with them inflates the wing by up to a fifth.
+    """
     timing = _timing()
     out = []
     for rel in paths:
         lines = ledger_mod.count(rel)
-        seconds = timing.time_module(ROOT / rel, cold=cold)
+        seconds = timing.time_module(ROOT / rel, cold=cold, ghcrts=ghcrts)
         out.append((rel, lines, seconds))
     return out
+
+
+def recalibrate(cfg: dict) -> int:
+    """Measure the AC side at THIS tool's caliber, so the verdict compares like.
+
+    WHY IT EXISTS. `ac_baseline_seconds_per_line` is a WHOLE-CONE rate: one
+    cold build, its seconds spread over every line it compiles, so each line
+    carries a share of its dependencies. This tool sums module SLICES, each
+    timed cold with dependencies WARM, so no line carries any dependency cost.
+    P-s says a slice rate does not extrapolate to a tree, and the bias has a
+    direction: slices are cheaper, so judging a wing against a cone rate is
+    systematically too lenient.
+
+    So the wing needs the AC side measured the SAME way. That is this.
+
+    IT WRITES NOTHING. The orchestrator writes the ledger, because the figure
+    and the line count it was taken over must land in one commit or the guard
+    goes stale, which is the failure `[LJ-0.5]` spent a day clearing.
+    """
+    blocker = agda_blocker()
+    if blocker:
+        print(f"check-ratio: refusing to measure, {blocker} (C-12).", file=sys.stderr)
+        return 1
+    wing = set(cfg.get("gch_wing", []))
+    targets = [f for f in ledger_mod.countable_masters() if f not in wing]
+    if not targets:
+        print("check-ratio: nothing to recalibrate against.", file=sys.stderr)
+        return 1
+    ghcrts = cfg.get("ac_baseline_ghcrts")
+    print(f"check-ratio --recalibrate | {len(targets)} AC masters | cold, warm "
+          f"dependencies | GHCRTS={ghcrts or '-M8g (timer default)'}")
+    rows = measure(targets, cold=True, ghcrts=ghcrts)
+    lines = sum(n for _, n, s in rows if s is not None and n)
+    seconds = sum(s for _, n, s in rows if s is not None and n)
+    skipped = [r for r, n, s in rows if s is None or not n]
+    if skipped:
+        print(f"check-ratio: {len(skipped)} master(s) not measured and EXCLUDED, "
+              f"never counted as zero: {', '.join(skipped)}", file=sys.stderr)
+    if not lines:
+        print("check-ratio: nothing measurable.", file=sys.stderr)
+        return 1
+    rate = seconds / lines
+    print(f"check-ratio: AC side at the module caliber is {rate:.6f} s/line "
+          f"over {lines:,} lines and {seconds:.2f} s.")
+    print(f"check-ratio: write this into dev/ledger.toml [ratio], WITH the line "
+          f"count, in one commit:\n"
+          f"    ac_baseline_module_rate = {rate:.6f}\n"
+          f"    ac_baseline_module_lines = {lines}")
+    return 0
 
 
 def main() -> int:
@@ -114,11 +172,18 @@ def main() -> int:
                              "to the cold baseline. For a quick look only")
     parser.add_argument("--module", action="append", default=[],
                         help="measure this master instead of the declared wing; repeatable")
+    parser.add_argument("--recalibrate", action="store_true",
+                        help="measure the AC side at THIS tool's caliber and print "
+                             "ratio.ac_baseline_module_rate for the ledger. Slow: it "
+                             "times every AC master cold. It writes nothing")
     args = parser.parse_args()
 
     cfg = config()
     baseline = cfg.get("ac_baseline_seconds_per_line")
     tolerance = cfg.get("tolerance")
+
+    if args.recalibrate:
+        return recalibrate(cfg)
 
     targets = args.module or cfg.get("gch_wing", [])
     if not targets:
@@ -144,26 +209,23 @@ def main() -> int:
     # as well as in ledger.py --check, because this is the tool that actually
     # renders a verdict. A guard that lives only in the commit gate leaves the
     # measuring instrument free to print a wrong number when run by hand.
-    declared_lines = cfg.get("ac_baseline_lines")
-    if declared_lines:
-        standing = sum(ledger_mod.count(f) for f in ledger_mod.tracked_masters())
-        # SUBTRACT THE DECLARED WING, exactly as validate_ratio_baseline in
-        # scripts/ledger.py does. The baseline is a property of the AC TREE.
-        # This guard was duplicated here on purpose, so the measuring
-        # instrument does not trust the commit gate, and the duplicate then
-        # missed the AC-side fix and refused the moment the first wing chapter
-        # landed. A duplicated guard has to be fixed twice; that is its price.
-        wing = sum(ledger_mod.count(f) for f in cfg.get("gch_wing", []))
-        standing -= wing
-        slack = cfg.get("ac_baseline_tolerance_lines", 50)
-        if abs(standing - declared_lines) > slack:
-            print(f"check-ratio: REFUSING. The baseline {baseline:.6f} s/line was "
-                  f"measured over {declared_lines:,} in-fence lines; the tree now "
-                  f"stands at {standing:,}. Both terms of the ratio moved and "
-                  f"neither moved predictably (P-q: 315 lines removed bought "
-                  f"11.8 s). Re-measure at [LJ-0.5] and write the new figure and "
-                  f"ac_baseline_lines TOGETHER.", file=sys.stderr)
-            return 1
+    # THE STALENESS GUARD IS CALLED, NOT COPIED, and this is the third time the
+    # copy cost something. It was duplicated here on purpose, so the measuring
+    # instrument would not trust the commit gate. The duplicate then missed the
+    # AC-side fix and refused the moment the first wing chapter landed; its own
+    # comment recorded the price, "a duplicated guard has to be fixed twice";
+    # and on 2026-08-10 it went stale a second time when [LJ-0.5] moved the
+    # baseline onto the Landmarks cone, refusing every run until it was found.
+    #
+    # C-26 is the lesson and the fix is to share the FUNCTION, not the file.
+    # The instrument still renders its own verdict; it just stops carrying its
+    # own copy of a rule that lives somewhere else.
+    with open(LEDGER, "rb") as handle:
+        full = tomllib.load(handle)
+    standing = sum(ledger_mod.count(f) for f in ledger_mod.countable_masters())
+    for defect in ledger_mod.validate_ratio_baseline(full, standing):
+        print(f"check-ratio: REFUSING. {defect}", file=sys.stderr)
+        return 1
 
     blocker = agda_blocker()
     if blocker:
@@ -175,7 +237,7 @@ def main() -> int:
     # times faster, so a wing far over the bar reads as under it. The gate was
     # wired warm until [LJ-0.1] caught it.
     cold = not args.warm
-    rows = measure(targets, cold=cold)
+    rows = measure(targets, cold=cold, ghcrts=cfg.get("ac_baseline_ghcrts"))
     bar = baseline * tolerance if tolerance else baseline
 
     total_lines = 0
@@ -208,12 +270,54 @@ def main() -> int:
         return 1
 
     aggregate = total_seconds / total_lines
-    verdict = "OVER THE BAR" if aggregate > bar else "within the bar"
-    print(f"check-ratio: wing aggregate {aggregate:.4f} s/line over "
-          f"{total_lines:,} lines and {total_seconds:.2f} s, {verdict} "
-          f"({aggregate / baseline:.2f}x the AC wing)")
 
-    if aggregate > bar and args.check:
+    # THE TWO RATES ARE DIFFERENT INSTRUMENTS, and comparing them was this
+    # tool's deepest defect. [LJ-0.5] flagged it on 2026-08-10.
+    #
+    # `ac_baseline_seconds_per_line` is a WHOLE-CONE rate: one cold build of
+    # src/Landmarks.lagda.md, its seconds over every line the build compiles.
+    # Each line therefore carries a share of its dependencies' elaboration.
+    #
+    # The aggregate above is a SUM OF SLICES: each module timed cold with its
+    # dependencies WARM, so no line carries any dependency cost at all.
+    #
+    # P-s says a slice rate does not extrapolate to a tree, and the bias here
+    # has a direction: a slice is systematically CHEAPER than a whole-cone
+    # share, so judging the wing this way is systematically TOO LENIENT. The
+    # old bare `-M8g` pushed the other way by up to 22.3 percent, so the tool
+    # was wrong twice and the errors partly hid each other.
+    #
+    # SO THE VERDICT NEEDS A MODULE-CALIBER BASELINE: the AC side measured the
+    # same way, per module, cold with warm dependencies, at the same GHCRTS.
+    # `--recalibrate` produces it. Until it is declared this tool REPORTS and
+    # refuses to judge, because a confident wrong verdict is worse than none.
+    module_rate = cfg.get("ac_baseline_module_rate")
+    if module_rate:
+        module_bar = module_rate * tolerance if tolerance else module_rate
+        verdict = "OVER THE BAR" if aggregate > module_bar else "within the bar"
+        print(f"check-ratio: wing aggregate {aggregate:.4f} s/line over "
+              f"{total_lines:,} lines and {total_seconds:.2f} s, {verdict} "
+              f"({aggregate / module_rate:.2f}x the AC side at the SAME "
+              f"caliber, module-cold with warm dependencies)")
+    else:
+        print(f"check-ratio: wing aggregate {aggregate:.4f} s/line over "
+              f"{total_lines:,} lines and {total_seconds:.2f} s. "
+              f"NO VERDICT: this is a sum of module SLICES and the declared "
+              f"baseline {baseline:.4f} is a WHOLE-CONE rate. A slice carries "
+              f"no dependency cost, so the comparison is systematically too "
+              f"lenient (P-s). Run --recalibrate and declare "
+              f"ratio.ac_baseline_module_rate.")
+        print(f"check-ratio: for scale only, NOT a judgment, the whole-cone "
+              f"baseline is {baseline:.4f} s/line and this aggregate is "
+              f"{aggregate / baseline:.2f}x it.")
+        if args.check:
+            print("check-ratio: --check cannot render a verdict without a "
+                  "module-caliber baseline, and fails closed rather than "
+                  "judge at the wrong caliber.", file=sys.stderr)
+            return 1
+        return 0
+
+    if aggregate > module_bar and args.check:
         print("check-ratio: DD24 is the only threshold on this wing and the "
               "wing is over it. There is no line cap and no seconds cap to "
               "trade against; the content class has to change. Read P-m, P-q "
