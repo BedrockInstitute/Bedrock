@@ -3090,3 +3090,45 @@ must name P-l explicitly and say what it does not forbid.
 
 **Provenance:** `_build/lj-1.33-review.md`, `_build/lj-1.34-review.md`,
 `_build/lj-1.33-report.md` section 6, `_build/lj-1.34-report.md` section 6.
+
+### C-35. A delivered block with no consumer is UNTESTED: its first consumer is its first real audit
+
+**The law.** A green typecheck, a `--safe` header, a clean rate and a verified
+line count say the code COMPILES and is CHEAP. **They say nothing about whether
+the statements are the right statements.** A block that nothing imports has
+never been asked to mean anything. **So a block delivered without a consumer is
+not delivered; it is staged.** Do not record it as complete, and do not build a
+size or ratio figure on it, until something consumes it.
+
+**The orchestrator's audit must include one mathematical question**, not only
+the mechanical ones: **pick the block's least obvious statement and ask what
+would be false if it were wrong.** If the answer is "nothing yet", the block is
+untested and the report must say so.
+
+**Measured (`[LJ-1.37]` and `[LJ-1.38-R]`, 2026-08-11).** `[LJ-1.37]` delivered
+1,723 in-fence lines, the twelve-clause condensation table. The orchestrator
+verified 2,031 in-fence lines, ZERO placement constructs, `--safe`, no
+`postulate`, no hole, and 9.00 s cold at 0.0046 s per line, then committed it as
+DELIVERED and quoted its ratio to the owner. **Every one of those checks was
+mechanical and every one passed.**
+
+**The next block's first attempt to CONSUME it found the rows defective.** Each
+story frame ended in `∀̇∈ (var yc) body`, which is vacuous at an empty value,
+where the machine's `extAt yc body` constrains it. Worse, at a NONEMPTY value
+one index made the defining condition never mention the element it defines, so
+the row is FALSE of the true satisfaction table, not merely weak.
+`src/ProbeDD25E1.agda` proves the countermodel, `src/ProbeDD25E3.agda` is the
+control that fails with `fst e != fst z` when the index is corrected, and both
+were re-run by the orchestrator.
+
+**968 of 2,141 in-fence lines re-open.** The defect survived one delivery, one
+orchestrator audit and one commit, and it cost a build dispatch and a
+maximum-effort review to surface.
+
+**The tell was on the record and unheeded.** The orchestrator wrote to the
+owner, before the defect was known, that the block had "zero consumers" and
+that its delivered-and-unconsumed state "should not be treated as redeemed".
+**Naming a risk is not acting on it.** The gate is: no consumer, no DELIVERED.
+
+**Provenance:** `_build/lj-1.38-review.md`; `_build/lj-1.38-report.md`;
+`_build/lj-1.37-report.md`; commit `92e8b8b`.
