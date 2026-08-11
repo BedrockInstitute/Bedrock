@@ -460,7 +460,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.38 | BUILD: the step and graph stack, and leg D | REFUSED, under DD25 review | Matrices land at 110 lines. The agreement does NOT: it says LJ-1.37's story rows are VACUOUS at empty values |
 | LJ-1.38-R | DD25 review of LJ-1.38's refusal | UPHOLD, and worse | Not merely vacuous: the rows are FALSE of the satisfaction table. 968 of 2,141 lines re-open. The nonemptiness cure is refuted |
 | LJ-1.39 | PROBE: compress the de Bruijn index padding | GO, -318 lines and FASTER | 2,031 to 1,713, and 9.26 to 8.9 s. The rate RISES 0.00456 to 0.00520: de-padding costs the ratio, as it should |
-| LJ-1.40 | REPAIR: re-index the rows TRUE, and close the agreement | dispatched | 968 lines re-open, 1,021 survive: a re-index, not a rebuild. C-35: not done until leg D consumes it |
+| LJ-1.40 | REPAIR: re-index the rows TRUE, close the agreement | REPAIRED, agreement PARTIAL | 2,498 lines at 0.00512, zero placement. Bot row and the shared machinery close. Eleven rows still owe theirs |
+| LJ-1.41 | Close the eleven remaining row agreements | dispatched | The Bot row is the worked pattern and nine of eleven were mechanical re-indexes, so D-29 says the frame should carry them |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |

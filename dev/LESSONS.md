@@ -3132,3 +3132,45 @@ that its delivered-and-unconsumed state "should not be treated as redeemed".
 
 **Provenance:** `_build/lj-1.38-review.md`; `_build/lj-1.38-report.md`;
 `_build/lj-1.37-report.md`; commit `92e8b8b`.
+
+### D-29. A shared layer propagates a FIX and a DEFECT at the same rate; sharing concentrates risk as well as saving lines
+
+**The law.** DD4 says maximize what the two proofs share. **This is DD4's other
+face, and it is not an argument against DD4.** A shared definition that is
+WRONG is wrong at every site at once, and no site's own test catches it,
+because every site inherits the same mistake. **So the audit that a shared
+layer needs is not proportional to its size; it is proportional to the number
+of sites that depend on it.**
+
+**The operational consequence, which is cheap.** When a block's design is
+"one frame, N instantiations", **audit the FRAME against an external
+reference before instantiating it N times.** Instantiating first and auditing
+after buys N copies of any frame defect at the price of one.
+
+**Measured (`[LJ-1.37]`, `[LJ-1.38-R]` and `[LJ-1.40]`, 2026-08-11).** The
+condensation table is one frame family instantiated twelve times, one row per
+`Formula` constructor.
+
+**The saving side is real.** After the frame repair, **nine of eleven rows were
+pure mechanical re-indexing**. Only `Forall` needed an individual slot fix, and
+`Exist` and block 1's `Clause` needed an `extAtB` wrap. **So one frame change
+repaired nine rows.**
+
+**The risk side is the same mechanism.** The defect was IN the shared layer:
+the two shapes and their numeral twins, the term value and the environment
+condition were shared and defective, so **all twelve rows were false of the
+satisfaction table at once**. 968 of 2,141 in-fence lines re-opened.
+
+**And the scope estimate was optimistic in the same way.** A maximum-effort
+adversarial review computed which regions survived, by index arithmetic. **The
+first consumer audit found six more definitions that had to be re-laid or
+corrected**, including `arTagB`, `arTagPairB`, `arTagBnum`, `arTagPairBnum`,
+`tmValB` and `envBndGen`. **Index arithmetic that is not machine-checked is a
+residue** (D-10), even when a careful reviewer produces it.
+
+**Read this beside C-35.** C-35 says a block with no consumer is untested. This
+says a shared layer is untested at N sites simultaneously, so the first
+consumer's audit is worth N times what a single site's audit is worth.
+
+**Provenance:** `_build/lj-1.40-report.md` sections 4 and 5;
+`_build/lj-1.38-review.md` section 6; `_build/lj-1.37-report.md`.
