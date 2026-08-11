@@ -3059,6 +3059,35 @@ reconcile them at every use.
 a factor of 55, for the same theorem with the same hypotheses. The orchestrator
 reproduced both endpoints at 72.21 s and 1.57 s.
 
+**THE SECOND SPELLING ALSO HIDES IN A PROOF ARGUMENT, and there it is worth
+681x.** The law above names two spellings of a FORMULA. The same mechanism runs
+one level up: when a proof argument is written inline as `refl` in BOTH a type
+and a body, the elaborator must decide a conversion between two elaborations of
+one proof, and it unfolds the built tree to do it. **Give the proof a NAME and
+pass the name.**
+
+**Measured (`[LJ-1.50-R]`, 2026-08-11), and the isolation is exact.** The probe
+is one file with ONE change: the count proof `countFo defb ≡ 0` gets a name
+instead of being written `refl` inline in both positions. Agda's own attribution
+for the identical `erase-Δ₀` call on the identical leaf:
+
+| spelling | ms |
+|---|---:|
+| `refl` inline in the type AND the body | **150,133** |
+| the proof NAMED and passed | **220** |
+| named in the type, `refl` in the body | 151,402 |
+
+**The third row isolates the mechanism**: one named side is not enough, because
+the conversion is still between two elaborations. The orchestrator re-ran the
+ends at 154.92 s against 2.20 s whole-file.
+
+**What it cost before it was found.** `[LJ-1.49]` measured 150.13 s and called
+it the instantiation-class cost. `[LJ-1.50]` then measured three spellings,
+concluded the number stood, and reported that one step exceeded the GCH side's
+WHOLE seconds budget of 99.6 to 147.7 s. **The route looked infeasible and the
+150 s was a probe artefact.**
+
+
 **Provenance:** `_build/lj-1.34-review.md` sections 1 and 2;
 `src/ProbeDD25D5.agda` against `src/ProbeLJ134.agda`.
 
