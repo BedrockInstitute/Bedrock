@@ -5259,7 +5259,9 @@ module BinShapeClosed {m : ℕ} (tag K : Fin m) (k : ℕ) (γ : S ^ (4 + m))
 module TmBranch {m : ℕ} (t : Fin (4 + m)) (tag : Fin m) (k : ℕ)
   (x : Fin (4 + m)) (K : Fin m) (γ : S ^ (4 + m))
   (tagEq : fst (lookup (suc (suc (suc (suc tag)))) γ) ≡ fst (numeralL k))
-  (numK : ⟨ fst (numeralL k) ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩) where
+  (numK : ⟨ fst (numeralL k) ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩)
+  (inK : (v : S) → ⟨ fst v ∈ fst (lookup x γ) ⟩
+         → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩) where
 
   story : Formula S (4 + m)
   story = ∃̇∈ (var (suc (suc (suc (suc K)))))
@@ -5293,16 +5295,41 @@ module TmBranch {m : ℕ} (t : Fin (4 + m)) (tag : Fin m) (k : ℕ)
                          (ze ∙ tagEq ∙ numeralL-fst k) })
           hTag)
 
+  in' : ⟨ γ ⊨ machine ⟩ → ⟨ γ ⊨ story ⟩
+  in' h = PT.rec squash₁ go h
+    where
+    go : Σ[ v ∈ S ] ⟨ (v ∷ γ) ⊨ tagAtL (suc t) k zero
+                         ∧̇ (var zero ∈̇ var (suc x)) ⟩
+       → ⟨ γ ⊨ story ⟩
+    go (v , (hTag , vx)) = ∣ v , ( inK v vx-raw , ( hTagB , vx ) ) ∣₁
+      where
+      vx-raw : ⟨ fst v ∈ fst (lookup x γ) ⟩
+      vx-raw = vx
+      hTagB : ⟨ (v ∷ γ) ⊨ tagBS (suc t) (suc (suc (suc (suc (suc tag))))) zero
+                                  (suc (suc (suc (suc (suc K))))) ⟩
+      hTagB = ∣ numeralL k , ( numK , ( sym tagEq , tagPart ) ) ∣₁
+        where
+        tz' : fst (lookup (suc t) (v ∷ γ)) ≡ pr (# k) (fst (lookup zero (v ∷ γ)))
+        tz' = subst ⟨_⟩ (tagAtL-adequate (suc t) k zero (v ∷ γ)) hTag
+        tagPart : ⟨ (numeralL k ∷ v ∷ γ) ⊨ prAtL (suc (suc t)) zero (suc zero) ⟩
+        tagPart = transport (cong fst (sym (prAtL-adequate (suc (suc t)) zero
+                    (suc zero) (numeralL k ∷ v ∷ γ))))
+          (tz' ∙ cong₂ pr (sym (numeralL-fst k)) refl)
+
 module TmAgree {m : ℕ} (t : Fin (4 + m)) (A K N0 N1 : Fin m) (γ : S ^ (4 + m))
   (tagEq0 : fst (lookup (suc (suc (suc (suc N0)))) γ) ≡ fst (numeralL 0))
   (tagEq1 : fst (lookup (suc (suc (suc (suc N1)))) γ) ≡ fst (numeralL 1))
   (numK0 : ⟨ fst (numeralL 0) ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩)
-  (numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩) where
+  (numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩)
+  (carrierK : (v : S) → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc A)))) γ) ⟩
+             → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩)
+  (arityK : (v : S) → ⟨ fst v ∈ fst (lookup (suc (suc zero)) γ) ⟩
+             → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩) where
 
   module B0 = TmBranch {m} t N0 0 (suc (suc (suc (suc A)))) K γ
-               tagEq0 numK0
+               tagEq0 numK0 carrierK
   module B1 = TmBranch {m} t N1 1 (suc (suc zero)) K γ
-               tagEq1 numK1
+               tagEq1 numK1 arityK
 
   out : ⟨ γ ⊨ isTmBS t A K N0 N1 ⟩ → ⟨ γ ⊨ isTmAt t (suc (suc zero)) (suc (suc (suc (suc A)))) ⟩
   out h = PT.rec squash₁
@@ -5310,43 +5337,82 @@ module TmAgree {m : ℕ} (t : Fin (4 + m)) (A K N0 N1 : Fin m) (γ : S ^ (4 + m)
        ; (inr h1) → ∣ inr (B1.out h1) ∣₁ })
     h
 
+  in' : ⟨ γ ⊨ isTmAt t (suc (suc zero)) (suc (suc (suc (suc A)))) ⟩
+      → ⟨ γ ⊨ isTmBS t A K N0 N1 ⟩
+  in' h = PT.rec squash₁
+    (λ { (inl h0) → ∣ inl (B0.in' h0) ∣₁
+       ; (inr h1) → ∣ inr (B1.in' h1) ∣₁ })
+    h
+
 module BothTmRel {n : ℕ} (A K N0 N1 : Fin n) (γ : S ^ (1 + n))
   (tagEq0 : fst (lookup (suc N0) γ) ≡ fst (numeralL 0))
   (tagEq1 : fst (lookup (suc N1) γ) ≡ fst (numeralL 1))
   (numK0 : ⟨ fst (numeralL 0) ∈ fst (lookup (suc K) γ) ⟩)
-  (numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc K) γ) ⟩) where
+  (numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc K) γ) ⟩)
+  (carrierK : (v : S) → ⟨ fst v ∈ fst (lookup (suc A) γ) ⟩
+             → ⟨ fst v ∈ fst (lookup (suc K) γ) ⟩)
+  (arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+           → ⟨ fst v ∈ fst (lookup (suc K) γ) ⟩) where
 
   out : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ bothTmBS A K N0 N1 ⟩
                     → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ bothTm A ⟩
   out b a N (h0 , h1) = (B0.out h0 , B1.out h1)
     where
     module B0 = TmAgree {n} (suc zero) A K N0 N1 (b ∷ a ∷ N ∷ γ)
-                   tagEq0 tagEq1 numK0 numK1
+                   tagEq0 tagEq1 numK0 numK1 carrierK (arityK N)
     module B1 = TmAgree {n} zero A K N0 N1 (b ∷ a ∷ N ∷ γ)
-                   tagEq0 tagEq1 numK0 numK1
+                   tagEq0 tagEq1 numK0 numK1 carrierK (arityK N)
+
+  back : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ bothTm A ⟩
+                     → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ bothTmBS A K N0 N1 ⟩
+  back b a N (h0 , h1) = (B0.in' h0 , B1.in' h1)
+    where
+    module B0 = TmAgree {n} (suc zero) A K N0 N1 (b ∷ a ∷ N ∷ γ)
+                   tagEq0 tagEq1 numK0 numK1 carrierK (arityK N)
+    module B1 = TmAgree {n} zero A K N0 N1 (b ∷ a ∷ N ∷ γ)
+                   tagEq0 tagEq1 numK0 numK1 carrierK (arityK N)
 
 module FstTmRel {n : ℕ} (A K N0 N1 : Fin n) (γ : S ^ (1 + n))
   (tagEq0 : fst (lookup (suc N0) γ) ≡ fst (numeralL 0))
   (tagEq1 : fst (lookup (suc N1) γ) ≡ fst (numeralL 1))
   (numK0 : ⟨ fst (numeralL 0) ∈ fst (lookup (suc K) γ) ⟩)
-  (numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc K) γ) ⟩) where
+  (numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc K) γ) ⟩)
+  (carrierK : (v : S) → ⟨ fst v ∈ fst (lookup (suc A) γ) ⟩
+             → ⟨ fst v ∈ fst (lookup (suc K) γ) ⟩)
+  (arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+           → ⟨ fst v ∈ fst (lookup (suc K) γ) ⟩) where
 
   out : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ fstTmBS A K N0 N1 ⟩
                     → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ fstTm A ⟩
   out b a N = B.out
     where
     module B = TmAgree {n} (suc zero) A K N0 N1 (b ∷ a ∷ N ∷ γ)
-                  tagEq0 tagEq1 numK0 numK1
+                  tagEq0 tagEq1 numK0 numK1 carrierK (arityK N)
+
+  back : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ fstTm A ⟩
+                     → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ fstTmBS A K N0 N1 ⟩
+  back b a N = B.in'
+    where
+    module B = TmAgree {n} (suc zero) A K N0 N1 (b ∷ a ∷ N ∷ γ)
+                  tagEq0 tagEq1 numK0 numK1 carrierK (arityK N)
 
 module TopBinRel {n : ℕ} (γ : S ^ (1 + n)) where
   out : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ ⊤̇ {n = 4 + n} ⟩
                     → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ ⊤̇ {n = 4 + n} ⟩
   out b a N h = h
 
+  back : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ ⊤̇ {n = 4 + n} ⟩
+                     → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ ⊤̇ {n = 4 + n} ⟩
+  back b a N h = h
+
 module TopUnRel {n : ℕ} (γ : S ^ (1 + n)) where
   out : (a N : S) → ⟨ (a ∷ N ∷ γ) ⊨ ⊤̇ {n = 3 + n} ⟩
                   → ⟨ (a ∷ N ∷ γ) ⊨ ⊤̇ {n = 3 + n} ⟩
   out a N h = h
+
+  back : (a N : S) → ⟨ (a ∷ N ∷ γ) ⊨ ⊤̇ {n = 3 + n} ⟩
+                   → ⟨ (a ∷ N ∷ γ) ⊨ ⊤̇ {n = 3 + n} ⟩
+  back a N h = h
 
 module ZeroPayRel {n : ℕ} (N0 : Fin n) (γ : S ^ (1 + n))
   (tagEq0 : fst (lookup (suc N0) γ) ≡ fst (numeralL 0)) where
@@ -5355,15 +5421,66 @@ module ZeroPayRel {n : ℕ} (N0 : Fin n) (γ : S ^ (1 + n))
                   → ⟨ (a ∷ N ∷ γ) ⊨ (var zero ≐ con (numeralL 0)) ⟩
   out a N h = h ∙ tagEq0
 
-module BinFormAgree {n : ℕ} (tag K : Fin n) (k : ℕ)
+  back : (a N : S) → ⟨ (a ∷ N ∷ γ) ⊨ (var zero ≐ con (numeralL 0)) ⟩
+                   → ⟨ (a ∷ N ∷ γ) ⊨ (var zero ≐ var (suc (suc (suc N0)))) ⟩
+  back a N h = h ∙ sym tagEq0
+
+module BinFormAgree {n : ℕ} (C : S) (tag K : Fin n) (k : ℕ)
   (γ : S ^ (1 + n))
   (tagEq : fst (lookup (suc tag) γ) ≡ fst (numeralL k))
   (numK : ⟨ fst (numeralL k) ∈ fst (lookup (suc K) γ) ⟩)
   (innerK : (a b : S) → ⟨ fst (prʟ (numeralL k) (prʟ a b)) ∈ fst (lookup (suc K) γ) ⟩)
   (pairK : (a b : S) → ⟨ fst (prʟ a b) ∈ fst (lookup (suc K) γ) ⟩)
+  (compK : (c N a b : S) → ⟨ fst c ∈ fst C ⟩
+          → fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b)))
+          → ⟨ fst N ∈ fst (lookup (suc K) γ) ⟩
+            × ⟨ fst a ∈ fst (lookup (suc K) γ) ⟩
+            × ⟨ fst b ∈ fst (lookup (suc K) γ) ⟩)
   (relB relM : Formula S (4 + n))
   (relOut : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ relB ⟩
-          → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ relM ⟩) where
+          → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ relM ⟩)
+  (relBack : (b a N : S) → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ relM ⟩
+           → ⟨ (b ∷ a ∷ N ∷ γ) ⊨ relB ⟩) where
+
+  out : ⟨ fst (lookup zero γ) ∈ fst C ⟩
+      → ⟨ γ ⊨ binForm k relM ⟩
+      → ⟨ γ ⊨ binFormBS tag K relB ⟩
+  out c∈C h = PT.rec squash₁ go h
+    where
+    go : Σ[ N ∈ S ] ⟨ (N ∷ γ) ⊨ ∃̇ (∃̇ (arityTagPairAtL
+           (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
+           ∧̇ relM)) ⟩
+       → ⟨ γ ⊨ binFormBS tag K relB ⟩
+    go (N , hN) = PT.rec squash₁ go₂ hN
+      where
+      go₂ : Σ[ a ∈ S ] ⟨ (a ∷ N ∷ γ) ⊨ ∃̇ (arityTagPairAtL
+              (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
+              ∧̇ relM) ⟩
+          → ⟨ γ ⊨ binFormBS tag K relB ⟩
+      go₂ (a , ha) = PT.rec squash₁ go₃ ha
+        where
+        go₃ : Σ[ b ∈ S ] ⟨ (b ∷ a ∷ N ∷ γ) ⊨ arityTagPairAtL
+                (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
+                ∧̇ relM ⟩
+            → ⟨ γ ⊨ binFormBS tag K relB ⟩
+        go₃ (b , (hTag , hRel)) =
+          ∣ N , ( ks .fst
+                , ∣ a , ( ks .snd .fst
+                        , ∣ b , ( ks .snd .snd
+                                , ( S.in' hTag , relBack b a N hRel ) ) ∣₁ )
+                  ∣₁ ) ∣₁
+          where
+          module S = BinShapeClosed {n} tag K k (b ∷ a ∷ N ∷ γ)
+                       tagEq numK innerK pairK
+          shape : fst (lookup zero γ)
+                ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b)))
+          shape = transport (cong fst (arityTagPairAtL-adequate
+                    (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
+                    (b ∷ a ∷ N ∷ γ))) hTag
+          ks : ⟨ fst N ∈ fst (lookup (suc K) γ) ⟩
+             × ⟨ fst a ∈ fst (lookup (suc K) γ) ⟩
+             × ⟨ fst b ∈ fst (lookup (suc K) γ) ⟩
+          ks = compK (lookup zero γ) N a b c∈C shape
 
   back : ⟨ γ ⊨ binFormBS tag K relB ⟩
        → ⟨ γ ⊨ binForm k relM ⟩
@@ -5391,14 +5508,46 @@ module BinFormAgree {n : ℕ} (tag K : Fin n) (k : ℕ)
           module S = BinShapeClosed {n} tag K k (b ∷ a ∷ N ∷ γ)
                        tagEq numK innerK pairK
 
-module UnFormAgree {n : ℕ} (tag K : Fin n) (k : ℕ)
+module UnFormAgree {n : ℕ} (C : S) (tag K : Fin n) (k : ℕ)
   (γ : S ^ (1 + n))
   (tagEq : fst (lookup (suc tag) γ) ≡ fst (numeralL k))
   (numK : ⟨ fst (numeralL k) ∈ fst (lookup (suc K) γ) ⟩)
   (innerK : (a : S) → ⟨ fst (prʟ (numeralL k) a) ∈ fst (lookup (suc K) γ) ⟩)
+  (unCompK : (c N a : S) → ⟨ fst c ∈ fst C ⟩
+            → fst c ≡ pr (fst N) (pr (# k) (fst a))
+            → ⟨ fst N ∈ fst (lookup (suc K) γ) ⟩
+              × ⟨ fst a ∈ fst (lookup (suc K) γ) ⟩)
   (relB relM : Formula S (3 + n))
   (relOut : (a N : S) → ⟨ (a ∷ N ∷ γ) ⊨ relB ⟩
-          → ⟨ (a ∷ N ∷ γ) ⊨ relM ⟩) where
+          → ⟨ (a ∷ N ∷ γ) ⊨ relM ⟩)
+  (relBack : (a N : S) → ⟨ (a ∷ N ∷ γ) ⊨ relM ⟩
+           → ⟨ (a ∷ N ∷ γ) ⊨ relB ⟩) where
+
+  out : ⟨ fst (lookup zero γ) ∈ fst C ⟩
+      → ⟨ γ ⊨ unForm k relM ⟩
+      → ⟨ γ ⊨ unFormBS tag K relB ⟩
+  out c∈C h = PT.rec squash₁ go h
+    where
+    go : Σ[ N ∈ S ] ⟨ (N ∷ γ) ⊨ ∃̇ (arityTagAtL
+           (suc (suc zero)) (suc zero) k zero ∧̇ relM) ⟩
+       → ⟨ γ ⊨ unFormBS tag K relB ⟩
+    go (N , hN) = PT.rec squash₁ go₂ hN
+      where
+      go₂ : Σ[ a ∈ S ] ⟨ (a ∷ N ∷ γ) ⊨ arityTagAtL
+              (suc (suc zero)) (suc zero) k zero ∧̇ relM ⟩
+          → ⟨ γ ⊨ unFormBS tag K relB ⟩
+      go₂ (a , (hTag , hRel)) =
+        ∣ N , ( ks .fst
+              , ∣ a , ( ks .snd , ( S.in' hTag , relBack a N hRel ) ) ∣₁ ) ∣₁
+        where
+        module S = UnShapeClosed {n} tag K k (a ∷ N ∷ γ)
+                     tagEq numK innerK
+        shape : fst (lookup zero γ) ≡ pr (fst N) (pr (# k) (fst a))
+        shape = transport (cong fst (arityTagAtL-adequate
+                  (suc (suc zero)) (suc zero) k zero (a ∷ N ∷ γ))) hTag
+        ks : ⟨ fst N ∈ fst (lookup (suc K) γ) ⟩
+           × ⟨ fst a ∈ fst (lookup (suc K) γ) ⟩
+        ks = unCompK (lookup zero γ) N a c∈C shape
 
   back : ⟨ γ ⊨ unFormBS tag K relB ⟩
        → ⟨ γ ⊨ unForm k relM ⟩
@@ -5490,8 +5639,31 @@ module Lift12Back {n : ℕ} (γ : S ^ (1 + n))
     (λ { (inl x) → ∣ inl (r₀ x) ∣₁
        ; (inr x) → ∣ inr (s₁ x) ∣₁ })
 
+-- The forward-facing name of the same generic disjunction walk.
+-- Lift12Out shares Lift12Back's whole body (DD4): the twelve-row
+-- assembly at abstract propositions is direction-agnostic, so the
+-- machine -> story walk is the same telescope with the roles of the
+-- source and target propositions unchanged and the row functions
+-- pointing the other way.  The name exists for P-v: a proof gets a
+-- name and the consumers pass the name.
+module Lift12Out {n : ℕ} (γ : S ^ (1 + n))
+  (P₀ P₁ P₂ P₃ P₄ P₅ P₆ P₇ P₈ P₉ P₁₀ P₁₁ : Type (ℓ-suc ℓ))
+  (Q₀ Q₁ Q₂ Q₃ Q₄ Q₅ Q₆ Q₇ Q₈ Q₉ Q₁₀ Q₁₁ : Type (ℓ-suc ℓ))
+  (r₀ : P₀ → Q₀) (r₁ : P₁ → Q₁) (r₂ : P₂ → Q₂) (r₃ : P₃ → Q₃)
+  (r₄ : P₄ → Q₄) (r₅ : P₅ → Q₅) (r₆ : P₆ → Q₆) (r₇ : P₇ → Q₇)
+  (r₈ : P₈ → Q₈) (r₉ : P₉ → Q₉) (r₁₀ : P₁₀ → Q₁₀) (r₁₁ : P₁₁ → Q₁₁) where
+
+  module L = Lift12Back {n} γ
+    P₀ P₁ P₂ P₃ P₄ P₅ P₆ P₇ P₈ P₉ P₁₀ P₁₁
+    Q₀ Q₁ Q₂ Q₃ Q₄ Q₅ Q₆ Q₇ Q₈ Q₉ Q₁₀ Q₁₁
+    r₀ r₁ r₂ r₃ r₄ r₅ r₆ r₇ r₈ r₉ r₁₀ r₁₁
+
+  out : ∥ P₀ ⊎ ∥ P₁ ⊎ ∥ P₂ ⊎ ∥ P₃ ⊎ ∥ P₄ ⊎ ∥ P₅ ⊎ ∥ P₆ ⊎ ∥ P₇ ⊎ ∥ P₈ ⊎ ∥ P₉ ⊎ ∥ P₁₀ ⊎ P₁₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁
+      → ∥ Q₀ ⊎ ∥ Q₁ ⊎ ∥ Q₂ ⊎ ∥ Q₃ ⊎ ∥ Q₄ ⊎ ∥ Q₅ ⊎ ∥ Q₆ ⊎ ∥ Q₇ ⊎ ∥ Q₈ ⊎ ∥ Q₉ ⊎ ∥ Q₁₀ ⊎ Q₁₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁
+  out = L.back
+
 module ShapesAgree {n : ℕ}
-  (A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin n)
+  (C : S) (A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin n)
   (γ : S ^ (1 + n))
   (tagEq0 : fst (lookup (suc N0) γ) ≡ fst (numeralL 0))
   (tagEq1 : fst (lookup (suc N1) γ) ≡ fst (numeralL 1))
@@ -5519,43 +5691,56 @@ module ShapesAgree {n : ℕ}
   (numK11 : ⟨ fst (numeralL 11) ∈ fst (lookup (suc K) γ) ⟩)
   (innerK : (k : ℕ) (a : S) → ⟨ fst (prʟ (numeralL k) a) ∈ fst (lookup (suc K) γ) ⟩)
   (innerPairK : (k : ℕ) (a b : S) → ⟨ fst (prʟ (numeralL k) (prʟ a b)) ∈ fst (lookup (suc K) γ) ⟩)
-  (pairK : (a b : S) → ⟨ fst (prʟ a b) ∈ fst (lookup (suc K) γ) ⟩) where
+  (pairK : (a b : S) → ⟨ fst (prʟ a b) ∈ fst (lookup (suc K) γ) ⟩)
+  (carrierK : (v : S) → ⟨ fst v ∈ fst (lookup (suc A) γ) ⟩
+             → ⟨ fst v ∈ fst (lookup (suc K) γ) ⟩)
+  (arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+           → ⟨ fst v ∈ fst (lookup (suc K) γ) ⟩)
+  (compK : (k : ℕ) (c N a b : S) → ⟨ fst c ∈ fst C ⟩
+          → fst c ≡ pr (fst N) (pr (# k) (pr (fst a) (fst b)))
+          → ⟨ fst N ∈ fst (lookup (suc K) γ) ⟩
+            × ⟨ fst a ∈ fst (lookup (suc K) γ) ⟩
+            × ⟨ fst b ∈ fst (lookup (suc K) γ) ⟩)
+  (unCompK : (k : ℕ) (c N a : S) → ⟨ fst c ∈ fst C ⟩
+            → fst c ≡ pr (fst N) (pr (# k) (fst a))
+            → ⟨ fst N ∈ fst (lookup (suc K) γ) ⟩
+              × ⟨ fst a ∈ fst (lookup (suc K) γ) ⟩) where
 
-  module R0 = BothTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1
-  module R1 = BothTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1
-  module R10 = FstTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1
-  module R11 = FstTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1
+  module R0 = BothTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1 carrierK arityK
+  module R1 = BothTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1 carrierK arityK
+  module R10 = FstTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1 carrierK arityK
+  module R11 = FstTmRel {n} A K N0 N1 γ tagEq0 tagEq1 numK0 numK1 carrierK arityK
   module RT = TopBinRel {n} γ
   module RU = TopUnRel {n} γ
   module R6 = ZeroPayRel {n} N0 γ tagEq0
   module R7 = ZeroPayRel {n} N0 γ tagEq0
 
-  module B0 = BinFormAgree {n} N0 K 0 γ tagEq0 numK0 (innerPairK 0) pairK
-               (bothTmBS A K N0 N1) (bothTm A) R0.out
-  module B1 = BinFormAgree {n} N1 K 1 γ tagEq1 numK1 (innerPairK 1) pairK
-               (bothTmBS A K N0 N1) (bothTm A) R1.out
-  module B2 = BinFormAgree {n} N2 K 2 γ tagEq2 numK2 (innerPairK 2) pairK
-               (⊤̇ {n = 4 + n}) (⊤̇ {n = 4 + n}) RT.out
-  module B3 = BinFormAgree {n} N3 K 3 γ tagEq3 numK3 (innerPairK 3) pairK
-               (⊤̇ {n = 4 + n}) (⊤̇ {n = 4 + n}) RT.out
-  module B4 = BinFormAgree {n} N4 K 4 γ tagEq4 numK4 (innerPairK 4) pairK
-               (⊤̇ {n = 4 + n}) (⊤̇ {n = 4 + n}) RT.out
-  module U5 = UnFormAgree {n} N5 K 5 γ tagEq5 numK5 (innerK 5)
-               (⊤̇ {n = 3 + n}) (⊤̇ {n = 3 + n}) RU.out
-  module U6 = UnFormAgree {n} N6 K 6 γ tagEq6 numK6 (innerK 6)
+  module B0 = BinFormAgree {n} C N0 K 0 γ tagEq0 numK0 (innerPairK 0) pairK (compK 0)
+               (bothTmBS A K N0 N1) (bothTm A) R0.out R0.back
+  module B1 = BinFormAgree {n} C N1 K 1 γ tagEq1 numK1 (innerPairK 1) pairK (compK 1)
+               (bothTmBS A K N0 N1) (bothTm A) R1.out R1.back
+  module B2 = BinFormAgree {n} C N2 K 2 γ tagEq2 numK2 (innerPairK 2) pairK (compK 2)
+               (⊤̇ {n = 4 + n}) (⊤̇ {n = 4 + n}) RT.out RT.back
+  module B3 = BinFormAgree {n} C N3 K 3 γ tagEq3 numK3 (innerPairK 3) pairK (compK 3)
+               (⊤̇ {n = 4 + n}) (⊤̇ {n = 4 + n}) RT.out RT.back
+  module B4 = BinFormAgree {n} C N4 K 4 γ tagEq4 numK4 (innerPairK 4) pairK (compK 4)
+               (⊤̇ {n = 4 + n}) (⊤̇ {n = 4 + n}) RT.out RT.back
+  module U5 = UnFormAgree {n} C N5 K 5 γ tagEq5 numK5 (innerK 5) (unCompK 5)
+               (⊤̇ {n = 3 + n}) (⊤̇ {n = 3 + n}) RU.out RU.back
+  module U6 = UnFormAgree {n} C N6 K 6 γ tagEq6 numK6 (innerK 6) (unCompK 6)
                (var zero ≐ var (suc (suc (suc N0)))) (var zero ≐ con (numeralL 0))
-               R6.out
-  module U7 = UnFormAgree {n} N7 K 7 γ tagEq7 numK7 (innerK 7)
+               R6.out R6.back
+  module U7 = UnFormAgree {n} C N7 K 7 γ tagEq7 numK7 (innerK 7) (unCompK 7)
                (var zero ≐ var (suc (suc (suc N0)))) (var zero ≐ con (numeralL 0))
-               R7.out
-  module U8 = UnFormAgree {n} N8 K 8 γ tagEq8 numK8 (innerK 8)
-               (⊤̇ {n = 3 + n}) (⊤̇ {n = 3 + n}) RU.out
-  module U9 = UnFormAgree {n} N9 K 9 γ tagEq9 numK9 (innerK 9)
-               (⊤̇ {n = 3 + n}) (⊤̇ {n = 3 + n}) RU.out
-  module B10 = BinFormAgree {n} N10 K 10 γ tagEq10 numK10 (innerPairK 10) pairK
-                (fstTmBS A K N0 N1) (fstTm A) R10.out
-  module B11 = BinFormAgree {n} N11 K 11 γ tagEq11 numK11 (innerPairK 11) pairK
-                (fstTmBS A K N0 N1) (fstTm A) R11.out
+               R7.out R7.back
+  module U8 = UnFormAgree {n} C N8 K 8 γ tagEq8 numK8 (innerK 8) (unCompK 8)
+               (⊤̇ {n = 3 + n}) (⊤̇ {n = 3 + n}) RU.out RU.back
+  module U9 = UnFormAgree {n} C N9 K 9 γ tagEq9 numK9 (innerK 9) (unCompK 9)
+               (⊤̇ {n = 3 + n}) (⊤̇ {n = 3 + n}) RU.out RU.back
+  module B10 = BinFormAgree {n} C N10 K 10 γ tagEq10 numK10 (innerPairK 10) pairK (compK 10)
+                (fstTmBS A K N0 N1) (fstTm A) R10.out R10.back
+  module B11 = BinFormAgree {n} C N11 K 11 γ tagEq11 numK11 (innerPairK 11) pairK (compK 11)
+                (fstTmBS A K N0 N1) (fstTm A) R11.out R11.back
 
   module L = Lift12Back {n} γ
     (⟨ γ ⊨ binFormBS N0 K (bothTmBS A K N0 N1) ⟩)
@@ -5588,6 +5773,41 @@ module ShapesAgree {n : ℕ}
   back : ⟨ γ ⊨ shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 ⟩
        → ⟨ γ ⊨ shapes A ⟩
   back = L.back
+
+  out : ⟨ fst (lookup zero γ) ∈ fst C ⟩
+      → ⟨ γ ⊨ shapes A ⟩
+      → ⟨ γ ⊨ shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 ⟩
+  out c∈C = L'.out
+    where
+    module L' = Lift12Out {n} γ
+      (⟨ γ ⊨ binForm 0 (bothTm A) ⟩)
+      (⟨ γ ⊨ binForm 1 (bothTm A) ⟩)
+      (⟨ γ ⊨ binForm 2 noneB ⟩)
+      (⟨ γ ⊨ binForm 3 noneB ⟩)
+      (⟨ γ ⊨ binForm 4 noneB ⟩)
+      (⟨ γ ⊨ unForm 5 noneU ⟩)
+      (⟨ γ ⊨ unForm 6 zeroPay ⟩)
+      (⟨ γ ⊨ unForm 7 zeroPay ⟩)
+      (⟨ γ ⊨ unForm 8 noneU ⟩)
+      (⟨ γ ⊨ unForm 9 noneU ⟩)
+      (⟨ γ ⊨ binForm 10 (fstTm A) ⟩)
+      (⟨ γ ⊨ binForm 11 (fstTm A) ⟩)
+      (⟨ γ ⊨ binFormBS N0 K (bothTmBS A K N0 N1) ⟩)
+      (⟨ γ ⊨ binFormBS N1 K (bothTmBS A K N0 N1) ⟩)
+      (⟨ γ ⊨ binFormBS N2 K (⊤̇ {n = 4 + n}) ⟩)
+      (⟨ γ ⊨ binFormBS N3 K (⊤̇ {n = 4 + n}) ⟩)
+      (⟨ γ ⊨ binFormBS N4 K (⊤̇ {n = 4 + n}) ⟩)
+      (⟨ γ ⊨ unFormBS N5 K (⊤̇ {n = 3 + n}) ⟩)
+      (⟨ γ ⊨ unFormBS N6 K (var zero ≐ var (suc (suc (suc N0)))) ⟩)
+      (⟨ γ ⊨ unFormBS N7 K (var zero ≐ var (suc (suc (suc N0)))) ⟩)
+      (⟨ γ ⊨ unFormBS N8 K (⊤̇ {n = 3 + n}) ⟩)
+      (⟨ γ ⊨ unFormBS N9 K (⊤̇ {n = 3 + n}) ⟩)
+      (⟨ γ ⊨ binFormBS N10 K (fstTmBS A K N0 N1) ⟩)
+      (⟨ γ ⊨ binFormBS N11 K (fstTmBS A K N0 N1) ⟩)
+      (λ x → B0.out c∈C x) (λ x → B1.out c∈C x) (λ x → B2.out c∈C x)
+      (λ x → B3.out c∈C x) (λ x → B4.out c∈C x) (λ x → U5.out c∈C x)
+      (λ x → U6.out c∈C x) (λ x → U7.out c∈C x) (λ x → U8.out c∈C x)
+      (λ x → U9.out c∈C x) (λ x → B10.out c∈C x) (λ x → B11.out c∈C x)
 
 -- =====================================================================
 -- THE CLOSEDNESS AND DOMAIN TRANSFERS, BOTH DIRECTIONS.  The generic

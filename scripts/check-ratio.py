@@ -102,11 +102,23 @@ def measure(paths: list[str], cold: bool,
     two GC flags it adds are worth 22.3 percent (163.49 s against 133.69 s on
     one tree). Timing a wing module without them and judging it against a
     baseline measured with them inflates the wing by up to a fifth.
+
+    THE LINES COME FROM THE WORKING TREE, because the SECONDS do. `ledger.count`
+    reads HEAD by default, and that default is right for the ledger and wrong
+    here: this tool runs Agda on the files as they sit on disk, so counting HEAD
+    pairs a committed numerator's line count with an uncommitted denominator's
+    cost. MEASURED 2026-08-12 on [LJ-1.60]: the tool reported
+    `0.0136  5,355 lines  73.07 s` for `L.Condensation`, pairing HEAD's 5,355
+    lines with the working tree's 207 placed lines' cost. The reading was void
+    in the safe direction that time (the corrected aggregate was 0.01214 against
+    the printed 0.01248, both within the bar), but a void reading is void in
+    whichever direction the tree happens to lean, and this one was being read as
+    a gate verdict on whether a placement could proceed.
     """
     timing = _timing()
     out = []
     for rel in paths:
-        lines = ledger_mod.count(rel)
+        lines = ledger_mod.count(rel, at_head=False)
         seconds = timing.time_module(ROOT / rel, cold=cold, ghcrts=ghcrts)
         out.append((rel, lines, seconds))
     return out
