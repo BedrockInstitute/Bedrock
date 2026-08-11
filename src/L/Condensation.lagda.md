@@ -2886,11 +2886,25 @@ module TmVal {m : ℕ} (t e v K t0 t1 : Fin m) (γ : S ^ m) where
 -- =====================================================================
 
 -- The subvalue transfer: subValB (bounded witness in K) against
--- subValAt (unbounded witness).  The machine-to-story direction needs
--- the key pr ar a in K.
+-- subValAt (unbounded witness).  Restated in ONE spelling per P-v:
+-- the statements carry only the machine's subValAt and the meta-level
+-- bounded parts (the witness z, its K-membership, and the shared core
+-- formula).  The bounded satisfaction is definitionally the truncated
+-- Sigma of those parts, so the row agreements consume the parts
+-- directly and the machine-to-story direction returns them.  The
+-- machine-to-story direction needs the key pr ar a in K.
 module SubValB2T {m : ℕ} (T ar a y K : Fin m) (γ : S ^ m)
   (keyK : ⟨ pr (fst (lookup ar γ)) (fst (lookup a γ)) ∈ fst (lookup K γ) ⟩) where
-  out : ⟨ γ ⊨ subValAt T ar a y ⟩ → ⟨ γ ⊨ subValB T ar a y K ⟩
+
+  -- The shared core of the bounded and the unbounded subvalue
+  -- formulas, stated once in the machine's spelling.
+  core : Formula S (suc m)
+  core = prAtL zero (suc ar) (suc a) ∧̇ appAt (suc T) zero (suc y)
+
+  -- MACHINE TO STORY: the machine witness plus the key fact gives the
+  -- bounded parts, which are definitionally the bounded satisfaction.
+  out : ⟨ γ ⊨ subValAt T ar a y ⟩
+      → ∥ Σ S (λ z → ⟨ fst z ∈ fst (lookup K γ) ⟩ × ⟨ (z ∷ γ) ⊨ core ⟩) ∥₁
   out = PT.rec squash₁
     (λ { (z , (p , a₁)) →
       let zK : ⟨ fst z ∈ fst (lookup K γ) ⟩
@@ -2899,18 +2913,42 @@ module SubValB2T {m : ℕ} (T ar a y K : Fin m) (γ : S ^ m)
                  keyK
       in ∣ z , (zK , (p , a₁)) ∣₁ })
 
+  -- STORY TO MACHINE.  The parts-input shape checks fastest at a
+  -- single call site; this transfer has two row consumers, and each
+  -- consumer-side destructure re-elaborates the bounded satisfaction
+  -- at its own concrete indices (P-m's instantiation class).  The
+  -- measured whole-file effect of the parts-input shape was negative
+  -- for this family too, so the truncated-input form stays (reverted
+  -- 2026-08-11, [LJ-1.45], reported in the return).
   back : ⟨ γ ⊨ subValB T ar a y K ⟩ → ⟨ γ ⊨ subValAt T ar a y ⟩
   back = PT.rec squash₁
     (λ { (z , (zK , (p , a₁))) → ∣ z , (p , a₁) ∣₁ })
 
 -- The successor-subvalue transfer: subValSuccB against subValSuccAt.
--- The machine reads the subformula's value at the successor arity;
--- the story's witnesses are the successor and the successor key, both
--- in K.
+-- Restated in ONE spelling per P-v: the statements carry only the
+-- machine's subValSuccAt and the meta-level bounded parts.  The
+-- machine reads the subformula's value at the successor arity; the
+-- story's witnesses are the successor and the successor key, both in
+-- K.
 module SubValSuccB2T {m : ℕ} (T ar a y K : Fin m) (γ : S ^ m)
   (succK : ⟨ sucV (fst (lookup ar γ)) ∈ fst (lookup K γ) ⟩)
   (keyK : ⟨ pr (sucV (fst (lookup ar γ))) (fst (lookup a γ)) ∈ fst (lookup K γ) ⟩) where
-  out : ⟨ γ ⊨ subValSuccAt T ar a y ⟩ → ⟨ γ ⊨ subValSuccB T ar a y K ⟩
+
+  -- The shared cores in ONE spelling, used by the restated out.
+  core₁ : Formula S (suc m)
+  core₁ = sucAtL (suc ar) zero
+
+  core₂ : Formula S (suc (suc m))
+  core₂ = prAtL zero (suc zero) (suc (suc a)) ∧̇ appAt (suc (suc T)) zero (suc (suc y))
+
+  -- MACHINE TO STORY: the machine witness plus the site facts gives
+  -- the bounded parts, which are definitionally the bounded
+  -- satisfaction.
+  out : ⟨ γ ⊨ subValSuccAt T ar a y ⟩
+      → ∥ Σ S (λ z₁ → ⟨ fst z₁ ∈ fst (lookup K γ) ⟩
+          × ⟨ (z₁ ∷ γ) ⊨ core₁ ⟩
+          × ∥ Σ S (λ z₂ → ⟨ fst z₂ ∈ fst (lookup (suc K) (z₁ ∷ γ)) ⟩
+              × ⟨ (z₂ ∷ z₁ ∷ γ) ⊨ core₂ ⟩) ∥₁) ∥₁
   out h = PT.rec squash₁
     (λ { (z₁ , (sz₁ , hz₁)) → PT.rec squash₁
       (λ { (z₂ , (p₂ , a₂)) →
@@ -2926,6 +2964,13 @@ module SubValSuccB2T {m : ℕ} (T ar a y K : Fin m) (γ : S ^ m)
         in ∣ z₁ , (z₁K , (sz₁ , ∣ z₂ , (z₂K , (p₂ , a₂)) ∣₁)) ∣₁ }) hz₁ })
     h
 
+  -- STORY TO MACHINE.  The parts-input shape checks fastest at a
+  -- single call site; this transfer has four row consumers, and each
+  -- consumer-side destructure re-elaborates the bounded satisfaction
+  -- at its own concrete indices (P-m's instantiation class).  The
+  -- measured whole-file effect of the parts-input shape was negative
+  -- for this family, so the truncated-input form stays (reverted
+  -- 2026-08-11, [LJ-1.45], reported in the return).
   back : ⟨ γ ⊨ subValSuccB T ar a y K ⟩ → ⟨ γ ⊨ subValSuccAt T ar a y ⟩
   back = PT.rec squash₁
     (λ { (z₁ , (z₁K , (sz₁ , hz₁))) → PT.rec squash₁
@@ -3026,46 +3071,51 @@ module PropAgree {n : ℕ} (C T B N : Fin n) (γ : S ^ suc n) (k : ℕ)
 
   -- The second subvalue crosses the E extension: the story's bounded
   -- form is at yb ∷ E ∷ ... (8 + m), the machine's unbounded form at
-  -- yb ∷ ya ∷ ... (7 + m).  The reads shift by one, and the adequate
-  -- targets are the same pairs, so the transfer is two transports.
-  subB2T : (yb E ya yc b a ar c : S)
-    → ⟨ (yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-         subValB (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                 (suc (suc (suc (suc (suc (suc zero))))))
-                 (suc (suc (suc (suc zero))))
-                 zero
-                 (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
+  -- yb ∷ ya ∷ ... (7 + m).  Restated in ONE spelling per P-v: the
+  -- statements carry the machine's subValAt, the witness z, its
+  -- K-membership, and the shared core at the extended env.  The reads
+  -- shift by one, and the adequate targets are the same pairs, so the
+  -- transfer is two transports.
+  coreS : Formula S (10 + n)
+  coreS =
+    prAtL zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+              (suc (suc (suc (suc (suc zero)))))
+    ∧̇ appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+            zero (suc zero)
+
+  subB2T : (yb E ya yc b a ar c : S) (z : S)
+    → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                      (yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
+    → ⟨ (z ∷ yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ coreS ⟩
     → ⟨ (yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
          subValAt {7 + suc n} (suc (suc (suc (suc (suc (suc (suc (suc T))))))))
                   (suc (suc (suc (suc (suc zero)))))
                   (suc (suc (suc zero)))
                   zero ⟩
-  subB2T yb E ya yc b a ar c h = PT.rec squash₁
-    (λ { (z , (zK , (p , a₁))) →
-      let p' : ⟨ (z ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                   prAtL zero (suc (suc (suc (suc (suc (suc zero))))))
-                            (suc (suc (suc (suc zero)))) ⟩
-          p' = subst ⟨_⟩
-            (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
-                              (suc (suc (suc (suc (suc zero)))))
-                              (z ∷ yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
-             ∙ sym (prAtL-adequate zero (suc (suc (suc (suc (suc (suc zero))))))
-                              (suc (suc (suc (suc zero))))
-                              (z ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
-            p
-          a₁' : ⟨ (z ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                   appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                         zero (suc zero) ⟩
-          a₁' = subst ⟨_⟩
-            (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
-                            zero (suc zero)
+  subB2T yb E ya yc b a ar c z zK (p , a₁) =
+    let p' : ⟨ (z ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                 prAtL zero (suc (suc (suc (suc (suc (suc zero))))))
+                          (suc (suc (suc (suc zero)))) ⟩
+        p' = subst ⟨_⟩
+          (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                            (suc (suc (suc (suc (suc zero)))))
                             (z ∷ yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
-             ∙ sym (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                            zero (suc zero)
+           ∙ sym (prAtL-adequate zero (suc (suc (suc (suc (suc (suc zero))))))
+                            (suc (suc (suc (suc zero))))
                             (z ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
-            a₁
-      in ∣ z , (p' , a₁') ∣₁ })
-    h
+          p
+        a₁' : ⟨ (z ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                 appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
+                       zero (suc zero) ⟩
+        a₁' = subst ⟨_⟩
+          (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+                          zero (suc zero)
+                          (z ∷ yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
+           ∙ sym (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
+                          zero (suc zero)
+                          (z ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
+          a₁
+    in ∣ z , (p' , a₁') ∣₁
 
   subB2T-back : (yb E ya yc b a ar c : S)
     → ⟨ fst (prʟ ar b) ∈ fst (lookup zero γ) ⟩
@@ -3074,12 +3124,9 @@ module PropAgree {n : ℕ} (C T B N : Fin n) (γ : S ^ suc n) (k : ℕ)
                   (suc (suc (suc (suc (suc zero)))))
                   (suc (suc (suc zero)))
                   zero ⟩
-    → ⟨ (yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-         subValB (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                 (suc (suc (suc (suc (suc (suc zero))))))
-                 (suc (suc (suc (suc zero))))
-                 zero
-                 (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
+    → ∥ Σ S (λ z → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                                  (yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
+                × ⟨ (z ∷ yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ coreS ⟩) ∥₁
   subB2T-back yb E ya yc b a ar c keyK₀ h = PT.rec squash₁
     (λ { (z , (p , a₁)) →
       let p' : ⟨ (z ∷ yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
@@ -3158,7 +3205,10 @@ module PropAgree {n : ℕ} (C T B N : Fin n) (γ : S ^ suc n) (k : ℕ)
                    (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                    (keyK₀ ar a)
                    (subst (λ ψ → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ ψ ⟩) subAEq hsubA)
-          hyb' = subB2T yb E ya yc b a ar c hsubB
+          hyb' = PT.rec squash₁
+            (λ { (z , (zK , (p , a₁))) →
+              subB2T yb E ya yc b a ar c z zK (p , a₁) })
+            hsubB
           hop = h c c∈ ar a b yc shD hc ya yb hya' hyb'
       in subst (λ ψ → ⟨ (yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ ψ ⟩) (sym opEq₂)
            (opOut yb E ya yc b a ar c
@@ -4093,50 +4143,62 @@ module ImpLeaf {n : ℕ} (T B : Fin n) (E yb ya yc b a ar c : S) (γ : S ^ suc n
   γb : S ^ (8 + suc n)
   γb = yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
 
-  -- The machine's ya-subvalue at γm against the story's subI at γs.
-  yaBack : ⟨ γs ⊨ subValB (suc (suc (suc (suc (suc (suc (suc (suc T))))))))
-                          (suc (suc (suc (suc (suc zero)))))
-                          (suc (suc (suc (suc zero))))
-                          (suc zero)
-                          (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
-         → ⟨ γm ⊨ subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                            (suc (suc (suc (suc (suc (suc zero))))))
-                            (suc (suc (suc (suc (suc zero)))))
-                            (suc (suc zero)) ⟩
-  yaBack h = PT.rec squash₁
-    (λ { (z , (zK , (p , a₁))) →
-      let p' : ⟨ (z ∷ γm) ⊨ prAtL zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
-                                        (suc (suc (suc (suc (suc (suc zero)))))) ⟩
-          p' = subst ⟨_⟩
-            (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
-                              (suc (suc (suc (suc (suc (suc zero))))))
-                              (z ∷ γm)
-             ∙ sym (prAtL-adequate zero (suc (suc (suc (suc (suc (suc zero))))))
-                              (suc (suc (suc (suc (suc zero)))))
-                              (z ∷ γs)))
-            p
-          a₁' : ⟨ (z ∷ γm) ⊨ appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
-                                    zero (suc (suc (suc zero))) ⟩
-          a₁' = subst ⟨_⟩
-            (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
-                            zero (suc (suc (suc zero)))
-                            (z ∷ γm)
-             ∙ sym (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                            zero (suc (suc zero))
-                            (z ∷ γs)))
-            a₁
-      in ∣ z , (p' , a₁') ∣₁ })
-    h
+  -- The shared cores of the two subvalue formulas at the story envs,
+  -- stated once in the machine's spelling (P-v).
+  yaCore : Formula S (suc (7 + suc n))
+  yaCore =
+    prAtL zero (suc (suc (suc (suc (suc (suc zero))))))
+              (suc (suc (suc (suc (suc zero)))))
+    ∧̇ appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
+            zero (suc (suc zero))
 
+  ybCore : Formula S (suc (8 + suc n))
+  ybCore =
+    prAtL zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+              (suc (suc (suc (suc (suc zero)))))
+    ∧̇ appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+            zero (suc zero)
+
+  -- The machine's ya-subvalue at γm against the story's subI at γs.
+  -- STORY TO MACHINE: the bounded parts give the machine witness.
+  yaBack : (z : S)
+    → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc zero))))))) γs) ⟩
+    → ⟨ (z ∷ γs) ⊨ yaCore ⟩
+    → ⟨ γm ⊨ subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
+                       (suc (suc (suc (suc (suc (suc zero))))))
+                       (suc (suc (suc (suc (suc zero)))))
+                       (suc (suc zero)) ⟩
+  yaBack z zK (p , a₁) =
+    let p' : ⟨ (z ∷ γm) ⊨ prAtL zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                                      (suc (suc (suc (suc (suc (suc zero)))))) ⟩
+        p' = subst ⟨_⟩
+          (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                            (suc (suc (suc (suc (suc (suc zero))))))
+                            (z ∷ γm)
+           ∙ sym (prAtL-adequate zero (suc (suc (suc (suc (suc (suc zero))))))
+                            (suc (suc (suc (suc (suc zero)))))
+                            (z ∷ γs)))
+          p
+        a₁' : ⟨ (z ∷ γm) ⊨ appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+                                  zero (suc (suc (suc zero))) ⟩
+        a₁' = subst ⟨_⟩
+          (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+                          zero (suc (suc (suc zero)))
+                          (z ∷ γm)
+           ∙ sym (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
+                          zero (suc (suc zero))
+                          (z ∷ γs)))
+          a₁
+    in ∣ z , (p' , a₁') ∣₁
+
+  -- MACHINE TO STORY: the machine witness gives the bounded parts,
+  -- which are definitionally the bounded satisfaction.
   yaOut : ⟨ γm ⊨ subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
                           (suc (suc (suc (suc (suc (suc zero))))))
                           (suc (suc (suc (suc (suc zero)))))
                           (suc (suc zero)) ⟩
-         → ⟨ γs ⊨ subValB (suc (suc (suc (suc (suc (suc (suc (suc T))))))))
-                          (suc (suc (suc (suc (suc zero)))))
-                          (suc (suc (suc (suc zero))))
-                          (suc zero)
-                          (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
+         → ∥ Σ S (λ z → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc zero))))))) γs) ⟩
+                       × ⟨ (z ∷ γs) ⊨ yaCore ⟩) ∥₁
   yaOut h = PT.rec squash₁
     (λ { (z , (p , a₁)) →
       let p' : ⟨ (z ∷ γs) ⊨ prAtL zero (suc (suc (suc (suc (suc (suc zero))))))
@@ -4180,50 +4242,46 @@ module ImpLeaf {n : ℕ} (T B : Fin n) (E yb ya yc b a ar c : S) (γ : S ^ suc n
     h
 
   -- The machine's yb-subvalue at γm against the story's bounded
-  -- yb-subvalue at γb.
-  ybBack : ⟨ γb ⊨ subValB (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                          (suc (suc (suc (suc (suc (suc zero))))))
-                          (suc (suc (suc (suc zero))))
-                          zero
-                          (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
-         → ⟨ γm ⊨ subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                            (suc (suc (suc (suc (suc (suc zero))))))
-                            (suc (suc (suc (suc zero))))
-                            (suc zero) ⟩
-  ybBack h = PT.rec squash₁
-    (λ { (z , (zK , (p , a₁))) →
-      let p' : ⟨ (z ∷ γm) ⊨ prAtL zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
-                                        (suc (suc (suc (suc (suc zero))))) ⟩
-          p' = subst ⟨_⟩
-            (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
-                              (suc (suc (suc (suc (suc zero)))))
-                              (z ∷ γm)
-             ∙ sym (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
-                              (suc (suc (suc (suc (suc zero)))))
-                              (z ∷ γb)))
-            p
-          a₁' : ⟨ (z ∷ γm) ⊨ appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
-                                    zero (suc (suc zero)) ⟩
-          a₁' = subst ⟨_⟩
-            (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
-                            zero (suc (suc zero))
+  -- yb-subvalue at γb.  STORY TO MACHINE: the bounded parts give the
+  -- machine witness.
+  ybBack : (z : S)
+    → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) γb) ⟩
+    → ⟨ (z ∷ γb) ⊨ ybCore ⟩
+    → ⟨ γm ⊨ subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
+                       (suc (suc (suc (suc (suc (suc zero))))))
+                       (suc (suc (suc (suc zero))))
+                       (suc zero) ⟩
+  ybBack z zK (p , a₁) =
+    let p' : ⟨ (z ∷ γm) ⊨ prAtL zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                                      (suc (suc (suc (suc (suc zero))))) ⟩
+        p' = subst ⟨_⟩
+          (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                            (suc (suc (suc (suc (suc zero)))))
                             (z ∷ γm)
-              ∙ sym (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
-                             zero (suc zero)
-                             (z ∷ γb)))
-            a₁
-      in ∣ z , (p' , a₁') ∣₁ })
-    h
+           ∙ sym (prAtL-adequate zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                            (suc (suc (suc (suc (suc zero)))))
+                            (z ∷ γb)))
+          p
+        a₁' : ⟨ (z ∷ γm) ⊨ appAt (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+                                  zero (suc (suc zero)) ⟩
+        a₁' = subst ⟨_⟩
+          (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+                          zero (suc (suc zero))
+                          (z ∷ γm)
+           ∙ sym (appAt-adequate (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc T))))))))))
+                          zero (suc zero)
+                          (z ∷ γb)))
+          a₁
+    in ∣ z , (p' , a₁') ∣₁
 
+  -- MACHINE TO STORY: the machine witness gives the bounded parts,
+  -- which are definitionally the bounded satisfaction.
   ybOut : ⟨ γm ⊨ subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
                           (suc (suc (suc (suc (suc (suc zero))))))
                           (suc (suc (suc (suc zero))))
                           (suc zero) ⟩
-         → ⟨ γb ⊨ subValB (suc (suc (suc (suc (suc (suc (suc (suc (suc T)))))))))
-                          (suc (suc (suc (suc (suc (suc zero))))))
-                          (suc (suc (suc (suc zero))))
-                          zero
-                          (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
+         → ∥ Σ S (λ z → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) γb) ⟩
+                       × ⟨ (z ∷ γb) ⊨ ybCore ⟩) ∥₁
   ybOut h = PT.rec squash₁
     (λ { (z , (p , a₁)) →
       let p' : ⟨ (z ∷ γb) ⊨ prAtL zero (suc (suc (suc (suc (suc (suc (suc zero)))))))
@@ -4819,8 +4877,10 @@ module ImpAgree {n : ℕ} (C T B N : Fin n) (γ : S ^ suc n)
           module L = ImpLeaf T B E yb ya yc b a ar c γ keyK
           hE' = E'.out henv
           hE'' = L.envSet-back hE'
-          hya' = L.yaBack hsubA
-          hyb' = L.ybBack hsubB
+          hya' = PT.rec squash₁
+            (λ { (z , (zK , (p , a₁))) → L.yaBack z zK (p , a₁) }) hsubA
+          hyb' = PT.rec squash₁
+            (λ { (z , (zK , (p , a₁))) → L.ybBack z zK (p , a₁) }) hsubB
           hopM = h c c∈ ar a b yc shD hc ya yb E hya' hyb' hE''
       in L.opOut hopM
 
