@@ -27,7 +27,7 @@ open import L.Coding.Base {ℓ} using ( Δ₀-prAt )
 open import L.Coding.Environment {ℓ} using ( Δ₀-consAt; Δ₀-sucAt )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
-  using ( prAtL; appAt; appAt-adequate; consAtL; sucAtL
+  using ( prAtL; appAt; appAt-adequate; consAtL; sucAtL; closedAt; domAt
         ; sucAtL-adequate
         ; extAt; extAt-in-both
         ; interAt; unionAt
@@ -35,6 +35,8 @@ open import L.Coding.Model {ℓ}
         ; arityTagAtL-adequate; arityTagPairAtL-adequate
         ; tagAtL; tagAtL-adequate; tagPairAtL-adequate; prAtL-adequate
         ; prʟ; prʟ-fst
+        ; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt
+        ; binShape-out; binShape-in; unShape-out; unShape-in
         ; emptyAt; botClauseAt
         ; subValAt; subValSuccAt; binClauseAt; propRel
         ; negClauseAt; topClauseAt; forallClauseAt; existClauseAt
@@ -5129,6 +5131,39 @@ module UnShapeClosed {m : ℕ} (tag K : Fin m) (k : ℕ) (γ : S ^ (3 + m))
         kz })
       h
 
+  in' : ⟨ γ ⊨ arityTagAtL (suc (suc zero)) (suc zero) k zero ⟩
+      → ⟨ γ ⊨ arTagBS tag K ⟩
+  in' h = PT.rec squash₁
+    (λ { (z , (p , tz)) →
+      let p' : fst (lookup (suc (suc (suc zero))) (z ∷ γ))
+              ≡ pr (fst (lookup (suc (suc zero)) (z ∷ γ)))
+                   (fst (lookup zero (z ∷ γ)))
+          p' = transport (cong fst (prAtL-adequate (suc (suc (suc zero)))
+                (suc (suc zero)) zero (z ∷ γ))) p
+          tz' : fst (lookup zero (z ∷ γ))
+               ≡ pr (# k) (fst (lookup (suc zero) (z ∷ γ)))
+          tz' = transport (cong fst (tagAtL-adequate zero k (suc zero) (z ∷ γ))) tz
+          a₀ : S
+          a₀ = lookup zero γ
+          zK : ⟨ fst z ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+          zK = subst (λ w → ⟨ w ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
+                 (sym tz')
+                 (subst (λ w → ⟨ w ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
+                   (prʟ-fst (numeralL k) a₀ ∙ cong₂ pr (numeralL-fst k) refl)
+                   (innerK a₀))
+          zt : ⟨ (numeralL k ∷ z ∷ γ) ⊨ prAtL (suc zero) zero (suc (suc zero)) ⟩
+          zt = transport (cong fst (sym (prAtL-adequate (suc zero) zero
+                 (suc (suc zero)) (numeralL k ∷ z ∷ γ))))
+               (tz' ∙ cong₂ pr (sym (numeralL-fst k)) refl)
+      in ∣ z , ( zK
+               , ( p
+                 , ∣ numeralL k
+                   , ( numK
+                     , ( sym tagEq
+                       , zt ) )
+                   ∣₁ ) ) ∣₁ })
+    h
+
 module BinShapeClosed {m : ℕ} (tag K : Fin m) (k : ℕ) (γ : S ^ (4 + m))
   (tagEq : fst (lookup (suc (suc (suc (suc tag)))) γ) ≡ fst (numeralL k))
   (numK : ⟨ fst (numeralL k) ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩)
@@ -5172,6 +5207,54 @@ module BinShapeClosed {m : ℕ} (tag K : Fin m) (k : ℕ) (γ : S ^ (4 + m))
           kt })
         kz })
       h
+
+  in' : ⟨ γ ⊨ arityTagPairAtL (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero ⟩
+      → ⟨ γ ⊨ arTagPairBS tag K ⟩
+  in' h = PT.rec squash₁
+    (λ { (z , (p , tz)) →
+      let p' : fst (lookup (suc (suc (suc (suc zero)))) (z ∷ γ))
+              ≡ pr (fst (lookup (suc (suc (suc zero))) (z ∷ γ)))
+                   (fst (lookup zero (z ∷ γ)))
+          p' = transport (cong fst (prAtL-adequate (suc (suc (suc (suc zero))))
+                (suc (suc (suc zero))) zero (z ∷ γ))) p
+          tz' : fst (lookup zero (z ∷ γ))
+               ≡ pr (# k) (pr (fst (lookup (suc (suc zero)) (z ∷ γ)))
+                              (fst (lookup (suc zero) (z ∷ γ))))
+          tz' = transport (cong fst (tagPairAtL-adequate zero k (suc (suc zero))
+                (suc zero) (z ∷ γ))) tz
+          a₀ : S
+          a₀ = lookup (suc zero) γ
+          b₀ : S
+          b₀ = lookup zero γ
+          zK : ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩
+          zK = subst (λ w → ⟨ w ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩)
+                 (sym tz')
+                 (subst (λ w → ⟨ w ∈ fst (lookup (suc (suc (suc (suc K)))) γ) ⟩)
+                   (prʟ-fst (numeralL k) (prʟ a₀ b₀)
+                    ∙ cong₂ pr (numeralL-fst k) (prʟ-fst a₀ b₀))
+                   (innerK a₀ b₀))
+          zt : ⟨ (prʟ a₀ b₀ ∷ numeralL k ∷ z ∷ γ)
+                  ⊨ prAtL (suc (suc zero)) (suc zero) zero ⟩
+          zt = transport (cong fst (sym (prAtL-adequate (suc (suc zero)) (suc zero) zero
+                 (prʟ a₀ b₀ ∷ numeralL k ∷ z ∷ γ))))
+               (tz' ∙ cong₂ pr (sym (numeralL-fst k)) (sym (prʟ-fst a₀ b₀)))
+          wb : ⟨ (prʟ a₀ b₀ ∷ numeralL k ∷ z ∷ γ)
+                  ⊨ prAtL zero (suc (suc (suc (suc zero))))
+                            (suc (suc (suc zero))) ⟩
+          wb = transport (cong fst (sym (prAtL-adequate zero (suc (suc (suc (suc zero))))
+                 (suc (suc (suc zero)))
+                 (prʟ a₀ b₀ ∷ numeralL k ∷ z ∷ γ))))
+               (prʟ-fst a₀ b₀)
+      in ∣ z , ( zK
+               , ( p
+                 , ∣ numeralL k
+                   , ( numK
+                     , ∣ prʟ a₀ b₀
+                       , ( pairK a₀ b₀
+                         , ( sym tagEq , ( zt , wb ) ) )
+                       ∣₁ )
+                   ∣₁ ) ) ∣₁ })
+    h
 
 module TmBranch {m : ℕ} (t : Fin (4 + m)) (tag : Fin m) (k : ℕ)
   (x : Fin (4 + m)) (K : Fin m) (γ : S ^ (4 + m))
@@ -5505,5 +5588,275 @@ module ShapesAgree {n : ℕ}
   back : ⟨ γ ⊨ shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 ⟩
        → ⟨ γ ⊨ shapes A ⟩
   back = L.back
+
+-- =====================================================================
+-- THE CLOSEDNESS AND DOMAIN TRANSFERS, BOTH DIRECTIONS.  The generic
+-- frame agreements (binShapeBS/unShapeBS against binShapeAt/unShapeAt
+-- under a pointwise rel transfer), the closedness relations, the
+-- eight-frame ClosedAgree (closedBS against closedAt) and the domain
+-- transfer (domB against domAt).  The machine -> story directions
+-- (`out`) are placed because producing `Adeq m` needs them; the
+-- story -> machine directions (`back`) serve the decode consumers.
+-- Ported from ProbeLJ156A sections 2 to 5.
+-- =====================================================================
+module BinFrameAgree {n : ℕ} (C tag K : Fin n) (k : ℕ) (γ : S ^ n)
+  (tagEq : fst (lookup tag γ) ≡ fst (numeralL k))
+  (numK : ⟨ fst (numeralL k) ∈ fst (lookup K γ) ⟩)
+  (innerK : (a b : S) → ⟨ fst (prʟ (numeralL k) (prʟ a b)) ∈ fst (lookup K γ) ⟩)
+  (pairK : (a b : S) → ⟨ fst (prʟ a b) ∈ fst (lookup K γ) ⟩)
+  (codesK : (c ar a b : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
+           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+           → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+             × ⟨ fst a ∈ fst (lookup K γ) ⟩ × ⟨ fst b ∈ fst (lookup K γ) ⟩)
+  (relB relM : Formula S (4 + n))
+  (relOut : (b a ar c : S) → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ relB ⟩
+           → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ relM ⟩)
+  (relBack : (b a ar c : S) → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ relM ⟩
+           → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ relB ⟩) where
+
+  out : ⟨ γ ⊨ binShapeAt C k relM ⟩ → ⟨ γ ⊨ binShapeBS C tag K relB ⟩
+  out h = λ c c∈ ar arK a aK b bK shapeB →
+    let module S = BinShapeClosed {n} tag K k (b ∷ a ∷ ar ∷ c ∷ γ)
+                     tagEq numK innerK pairK
+    in relBack b a ar c
+         (binShape-out C k relM γ h c ar a b c∈
+           (subst fst (arityTagPairAtL-adequate
+              (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
+              (b ∷ a ∷ ar ∷ c ∷ γ)) (S.out shapeB)))
+
+  back : ⟨ γ ⊨ binShapeBS C tag K relB ⟩ → ⟨ γ ⊨ binShapeAt C k relM ⟩
+  back h = binShape-in C k relM γ go
+    where
+    go : (c ar a b : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+       → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ relM ⟩
+    go c ar a b c∈ shapeM =
+      relOut b a ar c (h c c∈ ar arK a aK b bK
+        (S.in' (subst ⟨_⟩ (sym (arityTagPairAtL-adequate
+           (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero
+           (b ∷ a ∷ ar ∷ c ∷ γ))) shapeM)))
+      where
+      module S = BinShapeClosed {n} tag K k (b ∷ a ∷ ar ∷ c ∷ γ)
+                   tagEq numK innerK pairK
+      ks : ⟨ fst ar ∈ fst (lookup K γ) ⟩
+         × ⟨ fst a ∈ fst (lookup K γ) ⟩ × ⟨ fst b ∈ fst (lookup K γ) ⟩
+      ks = codesK c ar a b c∈ shapeM
+      arK = ks .fst
+      aK = ks .snd .fst
+      bK = ks .snd .snd
+
+module UnFrameAgree {n : ℕ} (C tag K : Fin n) (k : ℕ) (γ : S ^ n)
+  (tagEq : fst (lookup tag γ) ≡ fst (numeralL k))
+  (numK : ⟨ fst (numeralL k) ∈ fst (lookup K γ) ⟩)
+  (innerK : (a : S) → ⟨ fst (prʟ (numeralL k) a) ∈ fst (lookup K γ) ⟩)
+  (unCodesK : (c ar a : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
+             → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+             → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
+  (relB relM : Formula S (3 + n))
+  (relOut : (a ar c : S) → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ relB ⟩
+           → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ relM ⟩)
+  (relBack : (a ar c : S) → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ relM ⟩
+           → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ relB ⟩) where
+
+  out : ⟨ γ ⊨ unShapeAt C k relM ⟩ → ⟨ γ ⊨ unShapeBS C tag K relB ⟩
+  out h = λ c c∈ ar arK a aK shapeB →
+    let module S = UnShapeClosed {n} tag K k (a ∷ ar ∷ c ∷ γ)
+                     tagEq numK innerK
+    in relBack a ar c
+         (unShape-out C k relM γ h c ar a c∈
+           (subst fst (arityTagAtL-adequate
+              (suc (suc zero)) (suc zero) k zero
+              (a ∷ ar ∷ c ∷ γ)) (S.out shapeB)))
+
+  back : ⟨ γ ⊨ unShapeBS C tag K relB ⟩ → ⟨ γ ⊨ unShapeAt C k relM ⟩
+  back h = unShape-in C k relM γ go
+    where
+    go : (c ar a : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
+       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+       → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ relM ⟩
+    go c ar a c∈ shapeM =
+      relOut a ar c (h c c∈ ar arK a aK
+        (S.in' (subst ⟨_⟩ (sym (arityTagAtL-adequate
+           (suc (suc zero)) (suc zero) k zero
+           (a ∷ ar ∷ c ∷ γ))) shapeM)))
+      where
+      module S = UnShapeClosed {n} tag K k (a ∷ ar ∷ c ∷ γ)
+                   tagEq numK innerK
+      ks : ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩
+      ks = unCodesK c ar a c∈ shapeM
+      arK = ks .fst
+      aK = ks .snd
+
+module BothSameRel {n : ℕ} (C : Fin n) (γ : S ^ n) where
+  out : (b a ar c : S) → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ bothSameB C ⟩
+                       → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ bothSameAt C ⟩
+  out b a ar c h = h
+  back : (b a ar c : S) → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ bothSameAt C ⟩
+                        → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ bothSameB C ⟩
+  back b a ar c h = h
+
+module OneSameRel {n : ℕ} (C : Fin n) (γ : S ^ n) where
+  out : (a ar c : S) → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSameB C ⟩
+                     → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSameAt C ⟩
+  out a ar c h = h
+  back : (a ar c : S) → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSameAt C ⟩
+                      → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSameB C ⟩
+  back a ar c h = h
+
+module OneSuccRel {n : ℕ} (C K : Fin n) (γ : S ^ n)
+  (entryK : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup C γ) ⟩
+           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩) where
+
+  out : (a ar c : S) → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSuccAt C ⟩
+                     → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSuccB C K ⟩
+  out a ar c h = PT.rec squash₁ go h
+    where
+    go : Σ[ z ∈ S ]
+         ⟨ (z ∷ a ∷ ar ∷ c ∷ γ) ⊨ (sucAtL (suc (suc zero)) zero
+                                   ∧̇ appAt (suc (suc (suc (suc C)))) zero (suc zero)) ⟩
+       → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSuccB C K ⟩
+    go (z , (sz , ap)) = ∣ z , ( zK , ( sz , ap ) ) ∣₁
+      where
+      zK : ⟨ fst z ∈ fst (lookup (suc (suc (suc K))) (a ∷ ar ∷ c ∷ γ)) ⟩
+      zK = entryK z a
+             (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc C)))) zero (suc zero)
+                (z ∷ a ∷ ar ∷ c ∷ γ)) ap) .fst
+
+  back : (a ar c : S) → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSuccB C K ⟩
+                      → ⟨ (a ∷ ar ∷ c ∷ γ) ⊨ oneSuccAt C ⟩
+  back a ar c = PT.map (λ { (z , _ , (sz , ap)) → z , (sz , ap) })
+
+module SuccSndRel {n : ℕ} (C K : Fin n) (γ : S ^ n)
+  (entryK : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup C γ) ⟩
+           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩) where
+
+  out : (b a ar c : S) → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ succSndAt C ⟩
+                       → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ succSndB C K ⟩
+  out b a ar c h = PT.rec squash₁ go h
+    where
+    go : Σ[ z ∈ S ]
+         ⟨ (z ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ (sucAtL (suc (suc (suc zero))) zero
+                                   ∧̇ appAt (suc (suc (suc (suc (suc C))))) zero (suc zero)) ⟩
+       → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ succSndB C K ⟩
+    go (z , (sz , ap)) = ∣ z , ( zK , ( sz , ap ) ) ∣₁
+      where
+      zK : ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc K)))) (b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
+      zK = entryK z b
+             (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc (suc C))))) zero (suc zero)
+                (z ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ap) .fst
+
+  back : (b a ar c : S) → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ succSndB C K ⟩
+                        → ⟨ (b ∷ a ∷ ar ∷ c ∷ γ) ⊨ succSndAt C ⟩
+  back b a ar c = PT.map (λ { (z , _ , (sz , ap)) → z , (sz , ap) })
+
+module ClosedAgree {n : ℕ} (C K N2 N3 N4 N5 N8 N9 N10 N11 : Fin n)
+  (γ : S ^ n)
+  (tagEq2 : fst (lookup N2 γ) ≡ fst (numeralL 2))
+  (tagEq3 : fst (lookup N3 γ) ≡ fst (numeralL 3))
+  (tagEq4 : fst (lookup N4 γ) ≡ fst (numeralL 4))
+  (tagEq5 : fst (lookup N5 γ) ≡ fst (numeralL 5))
+  (tagEq8 : fst (lookup N8 γ) ≡ fst (numeralL 8))
+  (tagEq9 : fst (lookup N9 γ) ≡ fst (numeralL 9))
+  (tagEq10 : fst (lookup N10 γ) ≡ fst (numeralL 10))
+  (tagEq11 : fst (lookup N11 γ) ≡ fst (numeralL 11))
+  (numK2 : ⟨ fst (numeralL 2) ∈ fst (lookup K γ) ⟩)
+  (numK3 : ⟨ fst (numeralL 3) ∈ fst (lookup K γ) ⟩)
+  (numK4 : ⟨ fst (numeralL 4) ∈ fst (lookup K γ) ⟩)
+  (numK5 : ⟨ fst (numeralL 5) ∈ fst (lookup K γ) ⟩)
+  (numK8 : ⟨ fst (numeralL 8) ∈ fst (lookup K γ) ⟩)
+  (numK9 : ⟨ fst (numeralL 9) ∈ fst (lookup K γ) ⟩)
+  (numK10 : ⟨ fst (numeralL 10) ∈ fst (lookup K γ) ⟩)
+  (numK11 : ⟨ fst (numeralL 11) ∈ fst (lookup K γ) ⟩)
+  (innerK : (k : ℕ) (a : S) → ⟨ fst (prʟ (numeralL k) a) ∈ fst (lookup K γ) ⟩)
+  (innerPairK : (k : ℕ) (a b : S) → ⟨ fst (prʟ (numeralL k) (prʟ a b)) ∈ fst (lookup K γ) ⟩)
+  (pairK : (a b : S) → ⟨ fst (prʟ a b) ∈ fst (lookup K γ) ⟩)
+  (codesK : (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
+           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+           → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+             × ⟨ fst a ∈ fst (lookup K γ) ⟩ × ⟨ fst b ∈ fst (lookup K γ) ⟩)
+  (unCodesK : (k : ℕ) → (c ar a : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
+             → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+             → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
+  (entryK : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup C γ) ⟩
+           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩) where
+
+  module R2 = BothSameRel {n} C γ
+  module R3 = BothSameRel {n} C γ
+  module R4 = BothSameRel {n} C γ
+  module R5 = OneSameRel {n} C γ
+  module R8 = OneSuccRel {n} C K γ entryK
+  module R9 = OneSuccRel {n} C K γ entryK
+  module R10 = SuccSndRel {n} C K γ entryK
+  module R11 = SuccSndRel {n} C K γ entryK
+
+  module C2 = BinFrameAgree {n} C N2 K 2 γ tagEq2 numK2 (innerPairK 2) pairK
+                (codesK 2) (bothSameB C) (bothSameAt C) R2.out R2.back
+  module C3 = BinFrameAgree {n} C N3 K 3 γ tagEq3 numK3 (innerPairK 3) pairK
+                (codesK 3) (bothSameB C) (bothSameAt C) R3.out R3.back
+  module C4 = BinFrameAgree {n} C N4 K 4 γ tagEq4 numK4 (innerPairK 4) pairK
+                (codesK 4) (bothSameB C) (bothSameAt C) R4.out R4.back
+  module C5 = UnFrameAgree {n} C N5 K 5 γ tagEq5 numK5 (innerK 5)
+                (unCodesK 5) (oneSameB C) (oneSameAt C) R5.out R5.back
+  module C8 = UnFrameAgree {n} C N8 K 8 γ tagEq8 numK8 (innerK 8)
+                (unCodesK 8) (oneSuccB C K) (oneSuccAt C) R8.back R8.out
+  module C9 = UnFrameAgree {n} C N9 K 9 γ tagEq9 numK9 (innerK 9)
+                (unCodesK 9) (oneSuccB C K) (oneSuccAt C) R9.back R9.out
+  module C10 = BinFrameAgree {n} C N10 K 10 γ tagEq10 numK10 (innerPairK 10) pairK
+                 (codesK 10) (succSndB C K) (succSndAt C) R10.back R10.out
+  module C11 = BinFrameAgree {n} C N11 K 11 γ tagEq11 numK11 (innerPairK 11) pairK
+                 (codesK 11) (succSndB C K) (succSndAt C) R11.back R11.out
+
+  out : ⟨ γ ⊨ closedAt C ⟩ → ⟨ γ ⊨ closedBS C K N2 N3 N4 N5 N8 N9 N10 N11 ⟩
+  out h =
+    ( C2.out (h .fst)
+    , ( C3.out (h .snd .fst)
+      , ( C4.out (h .snd .snd .fst)
+        , ( C5.out (h .snd .snd .snd .fst)
+          , ( C8.out (h .snd .snd .snd .snd .fst)
+            , ( C9.out (h .snd .snd .snd .snd .snd .fst)
+              , ( C10.out (h .snd .snd .snd .snd .snd .snd .fst)
+                , C11.out (h .snd .snd .snd .snd .snd .snd .snd) )))))))
+
+  back : ⟨ γ ⊨ closedBS C K N2 N3 N4 N5 N8 N9 N10 N11 ⟩ → ⟨ γ ⊨ closedAt C ⟩
+  back h =
+    ( C2.back (h .fst)
+    , ( C3.back (h .snd .fst)
+      , ( C4.back (h .snd .snd .fst)
+        , ( C5.back (h .snd .snd .snd .fst)
+          , ( C8.back (h .snd .snd .snd .snd .fst)
+            , ( C9.back (h .snd .snd .snd .snd .snd .fst)
+              , ( C10.back (h .snd .snd .snd .snd .snd .snd .fst)
+                , C11.back (h .snd .snd .snd .snd .snd .snd .snd) )))))))
+
+module DomainAgree {n : ℕ} (f d K : Fin n) (γ : S ^ n)
+  (entryK : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
+  (domK : (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩ → ⟨ fst x ∈ fst (lookup K γ) ⟩) where
+
+  mem : (x y : S) → ⟨ (y ∷ x ∷ γ) ⊨ appAt (suc (suc f)) (suc zero) zero ⟩
+      → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
+  mem x y ap = subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero
+                 (y ∷ x ∷ γ)) ap
+
+  out : ⟨ γ ⊨ domAt f d ⟩ → ⟨ γ ⊨ domB f d K ⟩
+  out h = λ x xK →
+      ( λ hx → h x .fst
+          (PT.rec squash₁ (λ { (y , (_ , ap)) → ∣ y , ap ∣₁ }) hx) )
+    , ( λ hx → PT.rec squash₁
+          (λ { (y , ap) →
+            ∣ y , ( entryK x y (mem x y ap) .snd , ap ) ∣₁ })
+          (h x .snd hx) )
+
+  back : ⟨ γ ⊨ domB f d K ⟩ → ⟨ γ ⊨ domAt f d ⟩
+  back h x =
+      ( λ hx → PT.rec (snd (fst x ∈ fst (lookup d γ))) go hx )
+    , ( λ m → PT.rec squash₁
+          (λ { (y , (yK , p)) → ∣ y , p ∣₁ })
+          (h x (domK x m) .snd m) )
+    where
+    go : Σ[ y ∈ S ] ⟨ (y ∷ x ∷ γ) ⊨ appAt (suc (suc f)) (suc zero) zero ⟩
+       → ⟨ fst x ∈ fst (lookup d γ) ⟩
+    go (y , ap) = h x (entryK x y (mem x y ap) .fst) .fst
+      ∣ y , ( entryK x y (mem x y ap) .snd , ap ) ∣₁
 
 ```
