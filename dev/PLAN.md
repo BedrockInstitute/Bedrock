@@ -501,6 +501,11 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.50 | Attack the 150 s transfer, then price the unpriced step | NO, overturned by 1.50-R | The variable-slot move is SLOWER, measured. But the 150 s itself was a probe artefact |
 | LJ-1.50-R | DD25 review of LJ-1.50's stand | OVERTURN, 681x | Naming ONE count proof takes 150,133 ms to 220. The EraseTransfer exit is built and green at 1.56 s. The route FITS |
 | LJ-1.51 | Discharge the five hypotheses | 2 of 5, plus the sq master | fin-inj and Mext DISCHARGED. SquareLaw lands as a 775-line master. cover and levelIn survive on the hull adequacy |
+| LJ-1.52 | The level-hood adequacy at the hull | PINNED, not discharged | The chain is assembled and machine-checked. Three named leaves remain, each written as the term not written |
+| LJ-1.53 | The three walls of the hull adequacy | 1 of 3 fell, 1 dissolved | Wall 2 FELL, built and machine-checked. Wall 3 is NOT a wall: the collapse serves. Wall 1 half green at 1.617 s |
+| LJ-1.54 | The last unbuilt term, then the hypotheses | 4 atoms, plus a blocker | Four leaf atoms green. FOUND: the twelve agreements do not instantiate at their consumer's frame |
+| LJ-1.55 | The agreements' slot convention | PARTIAL, half closing | Fix is every slot, not K alone. Master green, line-neutral. TwelveAgree composes. WitnessAgree blocked on oneSameB |
+| LJ-1.55-C | Orchestrator cure of the oneSameB defect | CURED, verified | The story read (c, ar) where the machine reads (ar, a). Two lines. oneSameB = oneSameAt now holds by refl, machine-checked |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
