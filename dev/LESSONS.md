@@ -3174,3 +3174,51 @@ consumer's audit is worth N times what a single site's audit is worth.
 
 **Provenance:** `_build/lj-1.40-report.md` sections 4 and 5;
 `_build/lj-1.38-review.md` section 6; `_build/lj-1.37-report.md`.
+
+### C-36. A failed substitution is not a proof of impossibility: a type error says the types differ, never that no term connects them
+
+**The law.** When a probe writes the identity coercion between two statements
+and Agda rejects it, the message is **"these two types are not the same"**. It
+is NOT "no term inhabits the implication". **A refusal built on a bare coercion
+failure has measured a spelling, not a mathematics.** Before reporting an
+impossibility, write the term you think cannot exist, or state which
+constructor is missing and show that nothing supplies it.
+
+**The brief-craft half, and the orchestrator owes it.** A brief that says
+**"do not WEAKEN a statement to make it close"** and says nothing about
+strengthening is one-sided. **A cure is often a STRENGTHENING**, and an agent
+holding only the first half can read the whole direction as closed. Write both
+halves: **do not weaken, and you MAY strengthen, provided the stronger form is
+still true and still Δ₀-compatible.**
+
+**Measured (`[LJ-1.41]` and `[LJ-1.41-R]`, 2026-08-11).** `[LJ-1.41]` closed two
+of eleven row agreements and declared the other nine unclosable, on a stated
+Δ₀ IMPOSSIBILITY: the machine's `envSetAt` is unbounded, the story's condition
+is K-bounded, `Δ₀` has no `δ-∀` and no `δ-∃`, so no witness exists.
+
+**Every part of that reasoning was refuted by four probes.** The unbounded
+witness is never needed, because every leaf is a K-bounded Δ₀ restatement
+transferred under site facts; `src/ProbeDD25F41A.agda` builds the supposedly
+missing witness in ONE line from the delivered `Δ₀-extAtB` and `Δ₀-envBndGen`,
+GREEN in 1.45 s. `src/ProbeDD25F41B.agda` then builds BOTH directions between
+the bounded condition and `envSetAt` in 98 lines, GREEN, marginal cost 0.22 s.
+
+**The real defect was ONE MISSING CONJUNCT.** The machine's `extAt` is a pair
+of implications and the story wrote the first and stopped.
+`src/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
+PLUS all three site facts and Agda still refuses, so the conjunct is what is
+missing and not the facts.
+
+**The tell was in the failing probe itself.** `src/ProbeLJ141C.agda`'s body is a
+bare `henv`, an identity coercion, and its error shows a Π on one side against
+a Σ of two Π on the other. **The shape of the error named the missing conjunct
+and the return read it as impossibility.**
+
+**And the same defect had been in block 1 since `[LJ-1.5]`.** That report
+recorded the symptom in its own words, "the matrix-to-clause link is unproven",
+and nobody read it as this. **Read beside C-35**: a block with no consumer is
+untested, and its own report may already contain the finding nobody has
+consumed.
+
+**Provenance:** `_build/lj-1.41-review.md`; `_build/lj-1.41-report.md`;
+probes `src/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
