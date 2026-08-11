@@ -467,6 +467,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.43 | Close the six row agreements and block 1 | ALL SEVEN CLOSED | The twelve-row table is complete and machine-checked. LJ-1.42's wall was inferred and wrong. Module rate 1.07x |
 | LJ-1.44 | Locate the class that costs 65 s in Condensation | THE AGREEMENT LAYER | 79 percent of the seconds. Two spellings per leaf, the P-v family. One spelling measured 10.1x at the hottest row |
 | LJ-1.45 | Restate the agreement layer in ONE spelling | LANDED where positive | 62.07 to 59.6 s on my own three runs, 0.0131. Leaves gained 10-15x; two shapes measured NET LOSS and were reverted |
+| LJ-1.46 | GATE LJ-1.7: price Devlin 5.5 | 1,675 lines, 36 s | And it found LJ-1.8 hides ~2,500 lines: no cardinal chapter at all, and the square law is an UNBUILT module parameter |
+| LJ-1.47 | PROBE: can the square law's 41.36 s come down? | dispatched | One module flips the wing from 0.0124 inside to 0.0157, 1.23x. Also asks what the CONSUMER needs, not the general law |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
