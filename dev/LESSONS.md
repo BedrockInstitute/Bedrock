@@ -3271,3 +3271,49 @@ same rate, and that generality is invisible until somebody reads the consumers.
 **Provenance:** `_build/lj-1.47-report.md`; `_build/lj-1.46-report.md`;
 probes `src/ProbeLJ147PairingSealed.agda` against
 `src/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.
+
+### C-37. State a law with the ACTION it prescribes, never only the prohibition: a law written as a wall hides its own cure
+
+**The law.** Most laws in this book have two halves: a thing that costs, and the
+move that avoids it. **A brief that transmits only the prohibition turns the
+law into a dead end**, and the agent stops exactly where the law would have told
+it what to do. **Write both halves, and put the action first.**
+
+**The two shapes that keep failing.** A law quoted as "if you see X, STOP"
+suppresses the cure X has. A law introduced as a COST law ("this shape is
+expensive") reads as a diagnosis rather than an instruction, so nobody applies
+it as a fix.
+
+**Measured (`[LJ-1.7]` and `[LJ-1.7-R]`, 2026-08-11).** The brief stated P-u as
+"if you need `absFo` or a placed `Δ₀`, STOP and report it: the wall is flat at
+8 GB". P-u's actual content is **certify BEFORE you place**, and its cure is to
+make the formula constant-free so that no placement is needed at all. Two lines
+later the brief introduced P-v as a cost law, "this file paid 10 to 15x for the
+two-spelling shape", rather than as the cure it is.
+
+**The return then stopped on a constant count and called it a wall.** It
+reported `countFo matrix = 328` and concluded the level-hood instantiation was
+blocked. The count is TRUE and machine-checked; the conclusion is an inference
+and it is wrong.
+
+**The review built the cure the laws prescribe.** The 328 decomposes as eight
+copies of one 41-constant leaf, and every constant is `con (numeralL k)`, an
+arity tag. **The file already documents the cure as its own house style**
+(`src/L/Condensation.lagda.md:1111-1114`, "the tag numerals are slots, so every
+formula is constant-free") **and its twelve delivered rows already run it.** The
+`*Bnum` family is simply a SECOND SPELLING, which is P-v's defect. The slot
+spelling of the whole chain gives `countFo ≡ 0` by `refl`, `erase` then applies,
+Δ₀ survives, and it costs 256 lines at 0.0113 s per line with **ZERO consumer
+edits**, because the signature already carries the slots.
+
+**So the cure was documented in the file the agent was editing, and the brief's
+framing walked it past.**
+
+**Read beside C-33 and C-36.** C-33 says name the obligation, not an entry
+point. C-36 says a failed substitution is not a proof of impossibility, and you
+may strengthen. This says the same failure enters one step earlier: **the brief
+can remove the cure from the agent's reach before any substitution is tried.**
+
+**Provenance:** `_build/lj-1.7-review.md`; `_build/lj-1.7-report.md`;
+`_build/briefs/LJ-1.7.md`; probe `src/ProbeDD25G1.agda`, re-run by the
+orchestrator.
