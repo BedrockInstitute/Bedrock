@@ -1504,14 +1504,13 @@ arTagBS tag K =
   ∃̇∈ (var (suc (suc (suc K))))
   (prAtL (suc (suc (suc zero))) (suc (suc zero)) zero
   ∧̇ ∃̇∈ (var (suc (suc (suc (suc K)))))
-        (∃̇∈ (var (suc (suc (suc (suc (suc K))))))
-          ((var zero ≐ var (suc (suc (suc (suc (suc (suc tag)))))))
-          ∧̇ prAtL (suc zero) zero (suc (suc zero)))))
+        ((var zero ≐ var (suc (suc (suc (suc (suc tag))))))
+        ∧̇ prAtL (suc zero) zero (suc (suc zero))))
 
 Δ₀-arTagBS : ∀ {m} (tag K : Fin m) → Δ₀ (arTagBS tag K)
 Δ₀-arTagBS tag K =
   δ-∃∈ (δ-∧ (Δ₀-prAtL (suc (suc (suc zero))) (suc (suc zero)) zero)
-            (δ-∃∈ (δ-∃∈ (δ-∧ δ-≐ (Δ₀-prAtL (suc zero) zero (suc (suc zero)))))))
+            (δ-∃∈ (δ-∧ δ-≐ (Δ₀-prAtL (suc zero) zero (suc (suc zero))))))
 
 -- The bounded shape frames for closedness.
 binShapeBS : ∀ {m} → Fin m → Fin m → Fin m → Formula S (4 + m) → Formula S m
@@ -1619,38 +1618,47 @@ unFormBS tag K rel =
 Δ₀-unFormBS tag K rel drel =
   δ-∃∈ (δ-∃∈ (δ-∧ (Δ₀-arTagBS tag K) drel))
 
-isTmBS : ∀ {m} → Fin (4 + m) → Fin m → Fin m → Fin m → Formula S (4 + m)
-isTmBS t A K N0 =
-  ∃̇∈ (var (suc (suc (suc (suc K)))))
-  (tagBS (suc t) (suc (suc (suc (suc (suc N0))))) zero
-             (suc (suc (suc (suc (suc K)))))
-  ∧̇ (var zero ∈̇ var (suc (suc (suc (suc (suc A)))))))
+isTmBS : ∀ {m} → Fin (4 + m) → Fin m → Fin m → Fin m → Fin m
+       → Formula S (4 + m)
+isTmBS t A K N0 N1 =
+    (∃̇∈ (var (suc (suc (suc (suc K)))))
+       (tagBS (suc t) (suc (suc (suc (suc (suc N0))))) zero
+              (suc (suc (suc (suc (suc K)))))
+       ∧̇ (var zero ∈̇ var (suc (suc (suc (suc (suc A))))))))
+  ∨̇ (∃̇∈ (var (suc (suc (suc (suc K)))))
+       (tagBS (suc t) (suc (suc (suc (suc (suc N1))))) zero
+              (suc (suc (suc (suc (suc K)))))
+       ∧̇ (var zero ∈̇ var (suc (suc (suc zero))))))
 
-Δ₀-isTmBS : ∀ {m} (t : Fin (4 + m)) (A K N0 : Fin m) → Δ₀ (isTmBS t A K N0)
-Δ₀-isTmBS t A K N0 =
-  δ-∃∈ (δ-∧ (Δ₀-tagBS (suc t) (suc (suc (suc (suc (suc N0))))) zero
-                          (suc (suc (suc (suc (suc K)))))) δ-∈)
+Δ₀-isTmBS : ∀ {m} (t : Fin (4 + m)) (A K N0 N1 : Fin m)
+          → Δ₀ (isTmBS t A K N0 N1)
+Δ₀-isTmBS t A K N0 N1 =
+  δ-∨ (δ-∃∈ (δ-∧ (Δ₀-tagBS (suc t) (suc (suc (suc (suc (suc N0))))) zero
+                          (suc (suc (suc (suc (suc K)))))) δ-∈))
+      (δ-∃∈ (δ-∧ (Δ₀-tagBS (suc t) (suc (suc (suc (suc (suc N1))))) zero
+                          (suc (suc (suc (suc (suc K)))))) δ-∈))
 
-bothTmBS : ∀ {m} → Fin m → Fin m → Fin m → Formula S (4 + m)
-bothTmBS A K N0 = isTmBS (suc zero) A K N0 ∧̇ isTmBS zero A K N0
+bothTmBS : ∀ {m} → Fin m → Fin m → Fin m → Fin m → Formula S (4 + m)
+bothTmBS A K N0 N1 =
+  isTmBS (suc zero) A K N0 N1 ∧̇ isTmBS zero A K N0 N1
 
-Δ₀-bothTmBS : ∀ {m} (A K N0 : Fin m) → Δ₀ (bothTmBS A K N0)
-Δ₀-bothTmBS A K N0 =
-  δ-∧ (Δ₀-isTmBS (suc zero) A K N0) (Δ₀-isTmBS zero A K N0)
+Δ₀-bothTmBS : ∀ {m} (A K N0 N1 : Fin m) → Δ₀ (bothTmBS A K N0 N1)
+Δ₀-bothTmBS A K N0 N1 =
+  δ-∧ (Δ₀-isTmBS (suc zero) A K N0 N1) (Δ₀-isTmBS zero A K N0 N1)
 
-fstTmBS : ∀ {m} → Fin m → Fin m → Fin m → Formula S (4 + m)
-fstTmBS A K N0 = isTmBS (suc zero) A K N0
+fstTmBS : ∀ {m} → Fin m → Fin m → Fin m → Fin m → Formula S (4 + m)
+fstTmBS A K N0 N1 = isTmBS (suc zero) A K N0 N1
 
-Δ₀-fstTmBS : ∀ {m} (A K N0 : Fin m) → Δ₀ (fstTmBS A K N0)
-Δ₀-fstTmBS A K N0 = Δ₀-isTmBS (suc zero) A K N0
+Δ₀-fstTmBS : ∀ {m} (A K N0 N1 : Fin m) → Δ₀ (fstTmBS A K N0 N1)
+Δ₀-fstTmBS A K N0 N1 = Δ₀-isTmBS (suc zero) A K N0 N1
 
 shapesBS : ∀ {m} → Fin m → Fin m
          → Fin m → Fin m → Fin m → Fin m → Fin m → Fin m
          → Fin m → Fin m → Fin m → Fin m → Fin m → Fin m
          → Formula S (1 + m)
 shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 =
-  binFormBS N0 K (bothTmBS A K N0)
-  ∨̇ (binFormBS N1 K (bothTmBS A K N0)
+  binFormBS N0 K (bothTmBS A K N0 N1)
+  ∨̇ (binFormBS N1 K (bothTmBS A K N0 N1)
   ∨̇ (binFormBS N2 K ⊤̇
   ∨̇ (binFormBS N3 K ⊤̇
   ∨̇ (binFormBS N4 K ⊤̇
@@ -1659,14 +1667,14 @@ shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 =
   ∨̇ (unFormBS N7 K (var zero ≐ var (suc (suc (suc N0))))
   ∨̇ (unFormBS N8 K ⊤̇
   ∨̇ (unFormBS N9 K ⊤̇
-  ∨̇ (binFormBS N10 K (fstTmBS A K N0)
-  ∨̇ binFormBS N11 K (fstTmBS A K N0)))))))))))
+  ∨̇ (binFormBS N10 K (fstTmBS A K N0 N1)
+  ∨̇ binFormBS N11 K (fstTmBS A K N0 N1)))))))))))
 
 Δ₀-shapesBS : ∀ {m} (A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
             → Δ₀ (shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11)
 Δ₀-shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 =
-  δ-∨ (Δ₀-binFormBS N0 K (bothTmBS A K N0) (Δ₀-bothTmBS A K N0))
-      (δ-∨ (Δ₀-binFormBS N1 K (bothTmBS A K N0) (Δ₀-bothTmBS A K N0))
+  δ-∨ (Δ₀-binFormBS N0 K (bothTmBS A K N0 N1) (Δ₀-bothTmBS A K N0 N1))
+      (δ-∨ (Δ₀-binFormBS N1 K (bothTmBS A K N0 N1) (Δ₀-bothTmBS A K N0 N1))
       (δ-∨ (Δ₀-binFormBS N2 K ⊤̇ δ-⊤)
       (δ-∨ (Δ₀-binFormBS N3 K ⊤̇ δ-⊤)
       (δ-∨ (Δ₀-binFormBS N4 K ⊤̇ δ-⊤)
@@ -1675,8 +1683,8 @@ shapesBS A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 =
       (δ-∨ (Δ₀-unFormBS N7 K (var zero ≐ var (suc (suc (suc N0)))) δ-≐)
       (δ-∨ (Δ₀-unFormBS N8 K ⊤̇ δ-⊤)
       (δ-∨ (Δ₀-unFormBS N9 K ⊤̇ δ-⊤)
-      (δ-∨ (Δ₀-binFormBS N10 K (fstTmBS A K N0) (Δ₀-fstTmBS A K N0))
-           (Δ₀-binFormBS N11 K (fstTmBS A K N0) (Δ₀-fstTmBS A K N0))))))))))))
+      (δ-∨ (Δ₀-binFormBS N10 K (fstTmBS A K N0 N1) (Δ₀-fstTmBS A K N0 N1))
+           (Δ₀-binFormBS N11 K (fstTmBS A K N0 N1) (Δ₀-fstTmBS A K N0 N1))))))))))))
 
 shapedBS : ∀ {m} → Fin m → Fin m → Fin m
          → Fin m → Fin m → Fin m → Fin m → Fin m → Fin m
@@ -2278,7 +2286,7 @@ module SatGraphB {n : ℕ} (w K : Fin (5 + n))
       (∃̇∈ (var (suc (suc (suc (suc K)))))
         (∃̇∈ (var (suc (suc (suc (suc (suc K))))))
           ((var zero ≐ var (suc (suc (suc (suc (suc (suc w)))))))
-          ∧̇ (closedBS zero (suc (suc (suc (suc (suc (suc K))))))
+          ∧̇ (closedBS (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
                 (suc (suc (suc (suc (suc (suc N2))))))
                 (suc (suc (suc (suc (suc (suc N3))))))
                 (suc (suc (suc (suc (suc (suc N4))))))
@@ -2296,7 +2304,7 @@ module SatGraphB {n : ℕ} (w K : Fin (5 + n))
   Δ₀-satGraphB : Δ₀ satGraphB
   Δ₀-satGraphB =
     δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∧ δ-≐
-      (δ-∧ (Δ₀-closedBS zero (suc (suc (suc (suc (suc (suc K))))))
+      (δ-∧ (Δ₀-closedBS (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
                (suc (suc (suc (suc (suc (suc N2))))))
                (suc (suc (suc (suc (suc (suc N3))))))
                (suc (suc (suc (suc (suc (suc N4))))))
