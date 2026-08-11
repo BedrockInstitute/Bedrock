@@ -498,7 +498,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.7 | Build: the condensation theorem, then Devlin 5.5 | STRUCTURE only, under DD25 | 888 lines at 0.0111, under the bar. But levelIn and cover are HYPOTHESES: the semantic transfer is assumed |
 | LJ-1.7-R | DD25 review of LJ-1.7's transfer residue | OVERTURN both | The 328 wall is a P-v second spelling and the file documents the cure itself. collapseCode dies on a fibre conflation |
 | LJ-1.49 | Discharge levelIn and collapseCode, price the rest | BOTH CURES LANDED | collapseCode DELETED. levelIn and cover survive, Mext enters. One leaf transfer measures 150.13 s |
-| LJ-1.50 | Attack the 150 s transfer, then price the unpriced step | dispatched | One step exceeds the whole 99.6-147.7 s budget. The matrix variant was INTERRUPTED, not walled |
+| LJ-1.50 | Attack the 150 s transfer, then price the unpriced step | NO, overturned by 1.50-R | The variable-slot move is SLOWER, measured. But the 150 s itself was a probe artefact |
+| LJ-1.50-R | DD25 review of LJ-1.50's stand | OVERTURN, 681x | Naming ONE count proof takes 150,133 ms to 220. The EraseTransfer exit is built and green at 1.56 s. The route FITS |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
