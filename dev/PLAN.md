@@ -510,6 +510,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.56-C | The three cures audited: arTagBS, isTmBS, satGraphB | UPHELD, each consumer-tested | isTmAt is a disjunction and the story had one branch. Each cure is proved two-way against the machine's imported definition |
 | LJ-1.57 | The shapedness walk, WitnessAgree, LeafAgree | ALL THREE BUILT | The leaf adequacy is proved both ways against the machine's DefBody. No fifth defect. levelIn and cover still survive |
 | LJ-1.57-A | Orchestrator audit: the leaf proof is not in the tree | GATE OWED, priced | A probe is never committed. Placing 884 lines at the measured 0.0755 puts Condensation at 0.0220, 1.73x over DD24's bar |
+| LJ-1.58 | The placement gate for the leaf adequacy | AMBER, 0.01765 marginal | The walk places 4.28x cheaper than the probe spelling. Whole file 0.01202, under the bar. Narrowed one-way |
+| LJ-1.58-A | Orchestrator audit: is the dropped direction owed? | RISK FLAGGED | Every consumer that EXISTS is one-way, verified at file:line. But nothing produces Adeq m, and its production is the dropped direction |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
