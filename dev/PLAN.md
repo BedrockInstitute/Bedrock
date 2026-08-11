@@ -517,6 +517,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.60 | Build Lift12Out | NO-GO on a criterion I wrote wrong | Lift12Out is 3.5x fewer lines and 2.6x fewer seconds than the hand-written chain. The file is over the bar; the wing is not |
 | LJ-1.60-A | Orchestrator audit: DD24 judges the wing, not a file | GATE PASSES | check-ratio: wing aggregate 0.0125 over 7,323 lines, within the bar. My briefs since LJ-1.58 set the criterion on the file |
 | LJ-1.60-B | Fix check-ratio's mixed caliber | FIXED, second occurrence | It paired HEAD line counts with worktree seconds. ledger.count already took at_head=False; measure() now passes it |
+| LJ-1.61 | Place the rest of the leaf chain | NO-GO, wing 1.38x | 165 lines cost 27.6 s. The wing had 5.74 s of headroom. 63 pc of the cost was module-header elaboration, not any definition |
+| LJ-1.62 | Change the content class, or price the wall | BUNDLE WORKS; chain over | KFacts cuts Miscellaneous by 34 s and takes the wing to 1.02x. The whole leaf chain then places, at wing 1.28x |
+| LJ-1.62-A | Orchestrator audit: the gate re-run, and where the seconds are | VERIFIED, 1.28x | 11.83 s must come off the WING, not the chain. StageCardinal holds 4.34 s and Presentation 0.42 s of it |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
