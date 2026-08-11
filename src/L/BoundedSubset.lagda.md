@@ -22,7 +22,7 @@ open import FOL.Manipulation.Parameters using ( countFo; padRight )
 import FOL.Count
 import FOL.Absoluteness
 import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; 𝒟ₒ; Lset-out; Lset-mono
         ; layer-trans; Lset-layer )
@@ -36,6 +36,8 @@ open import V.Collapse {ℓ} using ( module Collapse; isExt )
 open import Cubical.Data.Nat using ( _+_ )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+import Cubical.Data.Sum as Sum
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Data.Vec using ( Vec; map; lookup; _∷_; [] )
 open import Cubical.Data.Sigma using ( _×_; _,_; Σ≡Prop )
@@ -564,7 +566,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
         ; SetPackage; SingletonPackage )  -- lint-agda: keep (SetPackage via record projection)
 open InfinitySet using ( ω; sucV )
 open import Cubical.Data.Sum using ( _⊎_ )
-import Cubical.Data.Sum as Sum
 open import Cubical.Data.Sigma.Properties using ( ΣPathP )
 open import Cubical.Foundations.Transport using ( substSubst⁻ )
 open import Cubical.Foundations.Prelude using ( toPathP; PathP; transportRefl; J )
@@ -901,18 +902,154 @@ module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
   ∅∈λ = subst (λ w → ⟨ w ∈ˢ lam ⟩) (rank-fix ∅ ∅-ord)
     (rank-Lset lam ordλ ∅ ∅∈Lλ)
 
+-- =====================================================================
+-- THE HULL IS EXTENSIONAL (discharges the `Mext` hypothesis of `Co`).
+-- Two hull members that agree on the hull's memberships differ nowhere:
+-- a global difference witness z ∈ x \ y would satisfy the difference
+-- formula "v ∈ x ∧ v ∉ y" over the codes of x and y in the stage, so
+-- hull-closed produces a hull member with the same property, and the
+-- agreement hypothesis refutes it.  The codes come from the truncated
+-- hull membership, eliminated into the proposition x ≡ y; no least-code
+-- selection is needed.  The classical steps are the two directions of
+-- extensionality contrapositive and the difference-witness extraction,
+-- each one LEM on a proposition.
+-- =====================================================================
+module HullExt (α : S) (ordα : IsOrd α)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩)
+  (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
+
+  module ASt = AtStage α ordα
+  module H = ASt.Hull X X⊆L ∅∈α
+
+  M : S
+  M = H.T.Hull
+
+  -- the inclusion with the truncated membership, at the levels the hull
+  -- speaks
+  testP : S → S → Type (ℓ-suc ℓ)
+  testP x y = (z : S) → fst (z ∈ˢ x) → fst (z ∈ˢ y)
+
+  subF : S → S → hProp (ℓ-suc ℓ)
+  subF x y = ( testP x y
+             , isPropΠ (λ z → isPropΠ (λ _ → snd (z ∈ˢ y))) )
+
+  -- a global difference witness in one direction, classically: from
+  -- ¬ (x ⊆ y) extract a member of x that is not a member of y
+  diff-witness : (x y : S) → ((⟨ subF x y ⟩) → Empty.⊥)
+               → ∥ Σ[ z ∈ S ] ((z ∈ᵗ x) × ((z ∈ᵗ y) → Empty.⊥)) ∥₁
+  diff-witness x y ¬xy = go (lem P)
+    where
+    P : hProp (ℓ-suc ℓ)
+    P = ( ∥ Σ[ z ∈ S ] ((z ∈ᵗ x) × ((z ∈ᵗ y) → Empty.⊥)) ∥₁ , squash₁ )
+    go : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥) → ⟨ P ⟩
+    go (inl p) = p
+    go (inr ¬p) = Empty.rec (¬xy (x⊆y))
+      where
+      x⊆y : ⟨ subF x y ⟩
+      x⊆y z z∈x = Sum.rec (λ q → q)
+        (λ nzy → Empty.rec (¬p ∣ z , (z∈x , nzy) ∣₁))
+        (lem (z ∈ˢ y))
+
+  -- extensionality contrapositive, in the two directions
+  ext-contra : (x y : S) → (x ≡ y → Empty.⊥)
+             → ((⟨ subF x y ⟩) → Empty.⊥) ⊎ ((⟨ subF y x ⟩) → Empty.⊥)
+  ext-contra x y nxy = Sum.rec
+    (λ hxy → inr (λ hyx → nxy (extensionalV (λ z → ⇔toPath (hxy z) (hyx z)))))
+    (λ ¬hxy → inl ¬hxy)
+    (lem (subF x y))
+
+  -- the outer difference formula over the codes of the two hull members
+  φ : (c d : H.T.Code) → Formula H.T.Code 1
+  φ c d = (var zero ∈̇ con c) ∧̇ (¬̇ (var zero ∈̇ con d))
+
+  -- the outer satisfaction from a global difference witness
+  outer : (u v : S) (u∈M : u ∈ᵗ M)
+        → (c d : H.T.Code) (ec : fst (H.T.val c) ≡ u) (ed : fst (H.T.val d) ≡ v)
+        → (z : S) → (z ∈ᵗ u) → ((z ∈ᵗ v) → Empty.⊥)
+        → ∥ Σ[ a ∈ ASt.SL ] ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val (φ c d)) ⟩ ∥₁
+  outer u v u∈M c d ec ed z zx nzy = ∣ a , sat ∣₁
+    where
+    z∈L : ⟨ z ∈ˢ Lset α ⟩
+    z∈L = layer-trans (Lset-layer α) zx (H.Hull⊆L u u∈M)
+    a : ASt.SL
+    a = z , z∈L
+    sat : ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val (φ c d)) ⟩
+    sat = ( subst (λ w → z ∈ᵗ w) (sym ec) zx
+         , λ h → nzy (subst (λ w → z ∈ᵗ w) ed h) )
+
+  -- the difference argument: hull-closed turns the outer witness into a
+  -- hull member, and the agreement hypothesis refutes it
+  refute : (x y : S) (x∈M : x ∈ᵗ M) (y∈M : y ∈ᵗ M)
+         → (ag1 : (z : S) → z ∈ᵗ M → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ y ⟩)
+         → (c d : H.T.Code) (ec : fst (H.T.val c) ≡ x) (ed : fst (H.T.val d) ≡ y)
+         → ((⟨ subF x y ⟩) → Empty.⊥) → Empty.⊥
+  refute x y x∈M y∈M ag1 c d ec ed ¬xy = PT.rec Empty.isProp⊥ diff (diff-witness x y ¬xy)
+    where
+    diff : Σ[ z ∈ S ] ((z ∈ᵗ x) × ((z ∈ᵗ y) → Empty.⊥)) → Empty.⊥
+    diff (z , zx , nzy) = PT.rec Empty.isProp⊥ go2 (H.hull-closed (φ c d) h)
+      where
+      h : ⟨ [] ASt.AbsL.⊨ᵐ (∃̇ (mapFo H.T.val (φ c d))) ⟩
+      h = outer x y x∈M c d ec ed z zx nzy
+      go2 : Σ[ b ∈ ASt.SL ] (⟨ fst b ∈ˢ M ⟩
+                          × ⟨ (b ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val (φ c d)) ⟩)
+          → Empty.⊥
+      go2 (b , b∈M , bsat) =
+        nzy' (ag1 (fst b) b∈M (subst (λ w → ⟨ fst b ∈ˢ w ⟩) ec (fst bsat)))
+        where
+        nzy' : (fst b ∈ᵗ y → Empty.⊥)
+        nzy' hy = snd bsat (subst (λ w → fst b ∈ᵗ w) (sym ed) hy)
+
+  refute2 : (x y : S) (x∈M : x ∈ᵗ M) (y∈M : y ∈ᵗ M)
+          → (ag2 : (z : S) → z ∈ᵗ M → ⟨ z ∈ˢ y ⟩ → ⟨ z ∈ˢ x ⟩)
+          → (c d : H.T.Code) (ec : fst (H.T.val c) ≡ x) (ed : fst (H.T.val d) ≡ y)
+          → ((⟨ subF y x ⟩) → Empty.⊥) → Empty.⊥
+  refute2 x y x∈M y∈M ag2 c d ec ed ¬yx = PT.rec Empty.isProp⊥ diff (diff-witness y x ¬yx)
+    where
+    diff : Σ[ z ∈ S ] ((z ∈ᵗ y) × ((z ∈ᵗ x) → Empty.⊥)) → Empty.⊥
+    diff (z , zy , nzx) = PT.rec Empty.isProp⊥ go2 (H.hull-closed (φ d c) h)
+      where
+      h : ⟨ [] ASt.AbsL.⊨ᵐ (∃̇ (mapFo H.T.val (φ d c))) ⟩
+      h = outer y x y∈M d c ed ec z zy nzx
+      go2 : Σ[ b ∈ ASt.SL ] (⟨ fst b ∈ˢ M ⟩
+                          × ⟨ (b ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val (φ d c)) ⟩)
+          → Empty.⊥
+      go2 (b , b∈M , bsat) =
+        nzx' (ag2 (fst b) b∈M (subst (λ w → ⟨ fst b ∈ˢ w ⟩) ed (fst bsat)))
+        where
+        nzx' : (fst b ∈ᵗ x → Empty.⊥)
+        nzx' hx = snd bsat (subst (λ w → fst b ∈ᵗ w) (sym ec) hx)
+
+  hullExt : isExt M
+  hullExt x y x∈M y∈M ag1 ag2 =
+    PT.rec (isSetS x y) (λ cx → PT.rec (isSetS x y) (go cx) (H.hull-member y y∈M))
+      (H.hull-member x x∈M)
+    where
+    go : Σ[ c ∈ H.T.Code ] (fst (H.T.val c) ≡ x)
+       → Σ[ d ∈ H.T.Code ] (fst (H.T.val d) ≡ y) → x ≡ y
+    go (c , ec) (d , ed) = Sum.rec (λ p → p) (λ np → Empty.rec (bad np))
+      (lem ((x ≡ y) , isSetS x y))
+      where
+      bad : (x ≡ y → Empty.⊥) → Empty.⊥
+      bad nxy = dir2 (dir1 nxy)
+        where
+        dir1 : (x ≡ y → Empty.⊥)
+             → ((⟨ subF x y ⟩) → Empty.⊥) ⊎ ((⟨ subF y x ⟩) → Empty.⊥)
+        dir1 = ext-contra x y
+        dir2 : ((⟨ subF x y ⟩) → Empty.⊥) ⊎ ((⟨ subF y x ⟩) → Empty.⊥) → Empty.⊥
+        dir2 (inl ¬xy) = refute x y x∈M y∈M ag1 c d ec ed ¬xy
+        dir2 (inr ¬yx) = refute2 x y x∈M y∈M ag2 c d ec ed ¬yx
+
 open import Cubical.Data.Nat.Properties using ( znots; snotz; injSuc )
 
 module Devlin55
   (sq : (α : S) → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
       → Σ[ f ∈ (⟪ α ⟫ × ⟪ α ⟫ → ⟪ α ⟫) ] ((x y : ⟪ α ⟫ × ⟪ α ⟫) → f x ≡ f y → x ≡ y))
-  (fin-inj : (δ : S) → ⟨ δ ∈ˢ ω ⟩ → ⟪ Lset δ ⟫ ↪ ⟪ ω ⟫)
   (hotel : (α : S) → (x : S) → (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
          → ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
   where
 
   module SC = L.StageCardinal {ℓ} lem sq
-  module Up = SC.Upper fin-inj
+  module Up = SC.Upper
 
   stage-card-upper : (α : S) → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
                    → ⟪ Lset α ⟫ ↪ ⟪ α ⟫
@@ -948,12 +1085,12 @@ module Devlin55
 
     module UK = UnionKit α lam x ordα ordλ α∈λ x⊆Lα x∈Lλ α∉ω
     module HS = HullStage lam ordλ succλ UK.X UK.X⊆Lλ UK.∅∈λ
+    module HE = HullExt lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
 
     module Co
       (levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.C.πX ⟩ → ⟨ Lset δ ∈ˢ HS.C.πX ⟩)
       (cover : (y : S) → ⟨ y ∈ˢ HS.M ⟩
              → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ HS.C.π y ∈ˢ Lset γ ⟩) ∥₁)
-      (Mext : isExt HS.M)
       where
 
       module Cn = HS.Condense levelIn cover
@@ -1076,7 +1213,7 @@ module Devlin55
 
       module CC = CodeCount code-inj
 
-      module IC = InvColl HS.M Mext
+      module IC = InvColl HS.M HE.hullExt
       module CSel = CodeSelect α ordα (SC.OrdSWO.ordSWO α ordα)
         HS.M HS.H.T.Code (λ c → fst (HS.H.T.val c))
         HS.H.hull-member CC.count CC.count-inj

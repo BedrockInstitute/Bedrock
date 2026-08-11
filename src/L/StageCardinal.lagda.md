@@ -26,6 +26,8 @@ open import V.Coding {ℓ} using ( #-inj′ )
 open import L.Constructible {ℓ} using ( IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-inv; Lset-out )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc )
+open import L.Choice.Finite {ℓ} lem
+  using ( Tally; StageOrder; stageOrder; finiteStage; natOrder )  -- lint-agda: keep (StageOrder used as the projection qualifier)
 open import L.Ordinal {ℓ}
   using ( #∈ω; numeral-ord; numeral-mem; mem-ord; ω-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
@@ -38,9 +40,12 @@ open InfinitySet using ( ω; #_; sucV )
 
 open import Cubical.Foundations.Prelude using ( J; transportRefl; substRefl; PathP; toPathP )
 open import Cubical.Foundations.Transport using ( substSubst⁻ )
-open import Cubical.Data.Sigma.Properties using ( ΣPathP )
+open import Cubical.Data.Sigma.Properties using ( ΣPathP; Σ≡Prop )
 open import Cubical.Data.Vec using ( Vec )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+import Cubical.Data.Sum as Sum
+open import Cubical.Data.FinData.Base using ( Fin; toℕ )
+open import Cubical.Data.FinData.Properties using ( inj-toℕ )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
@@ -498,14 +503,100 @@ limit-step α oα infα ih =
     , LimitStep.h-inj α oα infα (λ δ φ → DefOf.defSet (Lset δ) φ)
         (λ δ x h → 𝒟ₒ-inv (Lset δ) x h) ih
 
+-- The finite-stage injections into omega, the ω-base of the assembly.
+-- Route: a member of ω is merely a numeral # n (the ω membership
+-- eliminates to a numeral witness), so Lset δ is the finite stage
+-- Lset (# n); Choice/Finite delivers a Tally of that stage; the least
+-- index of a member in the tally is a natural number; the numeral
+-- injection maps the index into ω.  Injectivity uses the tally witness
+-- and the injectivity of the index and the numeral.  The least index is
+-- chosen by leastOf over the natural order; minimality is never used,
+-- any deterministic index would do.  P-h: the extraction from the
+-- truncated ω membership is a module-local definition, and the tally is
+-- a module parameter, not a function argument.
+dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
+dne P h = Sum.rec (λ p → p) (λ np → Empty.rec (h np)) (lem P)
+
+extract : {A : Type (ℓ-suc ℓ)} (pA : isProp A) → ∥ A ∥₁ → A
+extract {A} pA h = dne (A , pA) λ nA → PT.rec Empty.isProp⊥ nA h
+
+ω-mem→numeral : (δ : S) → ⟨ δ ∈ˢ ω ⟩ → ∥ Σ[ n ∈ ℕ ] (# n ≡ δ) ∥₁
+ω-mem→numeral δ δ∈ω = PT.map (λ { (k , q) → lower k , q }) δ∈ω
+
+isPropNumeralWit : (δ : S) → isProp (Σ[ n ∈ ℕ ] (# n ≡ δ))
+isPropNumeralWit δ (n , p) (n' , p') =
+  Σ≡Prop (λ k → isSetS (# k) δ) (#-inj′ (p ∙ sym p'))
+
+numeral-wit : (δ : S) → ⟨ δ ∈ˢ ω ⟩ → Σ[ n ∈ ℕ ] (# n ≡ δ)
+numeral-wit δ δ∈ω = extract (isPropNumeralWit δ) (ω-mem→numeral δ δ∈ω)
+
+numeralω : ℕ → ⟪ ω ⟫
+numeralω k = fiber ω {x = # k} (#∈ω k) .fst
+
+numeralω-inj : (k k' : ℕ) → numeralω k ≡ numeralω k' → k ≡ k'
+numeralω-inj k k' e = #-inj′ (sym (fiber ω {x = # k} (#∈ω k) .snd)
+  ∙ cong (⟪ ω ⟫↪) e ∙ fiber ω {x = # k'} (#∈ω k') .snd)
+
+module FinInj (n : ℕ) (t : Tally (finiteStage n)) where
+
+  open Tally t
+
+  P : S → ℕ → hProp (ℓ-suc ℓ)
+  P x k = ( ∥ Σ[ i ∈ Fin size ] ((toℕ i ≡ k) × (item i ≡ x)) ∥₁
+          , squash₁ )
+
+  nonempty : (x : S) → ⟨ x ∈ˢ finiteStage n ⟩
+           → ∥ Σ[ k ∈ ℕ ] ⟨ P x k ⟩ ∥₁
+  nonempty x x∈ = PT.map (λ { (i , q) → toℕ i , ∣ i , (refl , q) ∣₁ })
+                          (onto x x∈)
+
+  least : (x : S) → ⟨ x ∈ˢ finiteStage n ⟩ → ℕ
+  least x x∈ = fst (leastOf natOrder lem (P x) (nonempty x x∈))
+
+  least-wit : (x : S) (x∈ : ⟨ x ∈ˢ finiteStage n ⟩) → ⟨ P x (least x x∈) ⟩
+  least-wit x x∈ = leastOf natOrder lem (P x) (nonempty x x∈) .snd .fst
+
+  h : (x : S) → ⟨ x ∈ˢ finiteStage n ⟩ → ⟪ ω ⟫
+  h x x∈ = numeralω (least x x∈)
+
+  h-inj : (x y : S) (x∈ : ⟨ x ∈ˢ finiteStage n ⟩) (y∈ : ⟨ y ∈ˢ finiteStage n ⟩)
+        → h x x∈ ≡ h y y∈ → x ≡ y
+  h-inj x y x∈ y∈ e =
+    PT.rec (isSetS x y) (λ wx → PT.rec (isSetS x y) (go wx) (least-wit y y∈))
+      (least-wit x x∈)
+    where
+    ek : least x x∈ ≡ least y y∈
+    ek = numeralω-inj (least x x∈) (least y y∈) e
+    go : Σ[ i ∈ Fin size ] ((toℕ i ≡ least x x∈) × (item i ≡ x))
+       → Σ[ j ∈ Fin size ] ((toℕ j ≡ least y y∈) × (item j ≡ y))
+       → x ≡ y
+    go (i , pi , qi) (j , pj , qj) =
+      sym qi ∙ cong item (inj-toℕ (pi ∙ ek ∙ sym pj)) ∙ qj
+
+  stage-inj : ⟪ finiteStage n ⟫ ↪ ⟪ ω ⟫
+  stage-inj = f , inj
+    where
+    f : ⟪ finiteStage n ⟫ → ⟪ ω ⟫
+    f m = h (⟪ finiteStage n ⟫↪ m) (member (finiteStage n) m)
+    inj : (m m' : ⟪ finiteStage n ⟫) → f m ≡ f m' → m ≡ m'
+    inj m m' e = ↪-inj {a = finiteStage n}
+      (h-inj (⟪ finiteStage n ⟫↪ m) (⟪ finiteStage n ⟫↪ m')
+        (member (finiteStage n) m) (member (finiteStage n) m') e)
+
+finite-stage-inj : (n : ℕ) → ⟪ Lset (# n) ⟫ ↪ ⟪ ω ⟫
+finite-stage-inj n = FinInj.stage-inj n (StageOrder.tally (stageOrder n))
+
+fin-inj : (δ : S) → ⟨ δ ∈ˢ ω ⟩ → ⟪ Lset δ ⟫ ↪ ⟪ ω ⟫
+fin-inj δ δ∈ω = subst (λ w → ⟪ Lset w ⟫ ↪ ⟪ ω ⟫)
+  (numeral-wit δ δ∈ω .snd) (finite-stage-inj (numeral-wit δ δ∈ω .fst))
+
 -- The assembly: the upper half of |Lset α| = |α| at every infinite ordinal
 -- α, by ∈-induction. The union step is generic, so one step serves both
 -- successor and limit ordinals. The induction hypothesis supplies the
 -- branch injection at every member δ ∈ α: at an infinite δ the composed
--- IH, at δ = ω the IH at ω itself, and at a finite δ the parameter fin-inj
--- (the ω-base, priced separately). The only genuinely missing piece for
--- the chain is fin-inj: the finite stages' injections into ω.
-module Upper (fin-inj : (δ : S) → ⟨ δ ∈ˢ ω ⟩ → ⟪ Lset δ ⟫ ↪ ⟪ ω ⟫) where
+-- IH, at δ = ω the IH at ω itself, and at a finite δ the delivered fin-inj
+-- (the ω-base).
+module Upper where
 
   comp-inj : {A B C : Type ℓ} → A ↪ B → B ↪ C → A ↪ C
   comp-inj (f , injf) (g , injg) =
