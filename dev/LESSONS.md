@@ -3222,3 +3222,52 @@ consumed.
 
 **Provenance:** `_build/lj-1.41-review.md`; `_build/lj-1.41-report.md`;
 probes `src/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
+
+### D-30. Price what the CONSUMER needs, never the general law: generality nobody asked for is the cheapest thing to delete and the most expensive thing to keep
+
+**The law.** When a block takes a lemma at its most general form because that
+was convenient to state, the generality is not free: it is paid in every second
+the elaborator spends on the parts no consumer reaches. **Before pricing a
+construction, read its consumers and write down what they actually demand.**
+Then price THAT. A general law is a decision, and a decision made for
+convenience is one nobody measured.
+
+**The corollary that finds the money: look for sections with NO consumer at
+all.** They cost their full check time and return nothing, and they are the
+cheapest possible cure because deleting them cannot break anything.
+
+**Measured (`[LJ-1.47]`, 2026-08-11), 5.45x on seconds.** `src/L/StageCardinal`
+takes the square law at EVERY infinite set as the module parameter `sq`, and
+`[LJ-1.21]` chose that form because it was convenient. The GCH chain uses it at
+two sites only, the initial ordinals κ and κ⁺ of Devlin 5.5 and 5.6.
+
+| form | lines | cold s | rate |
+|---|---:|---:|---:|
+| the archived general law | 1,278 | 43.26 | 0.0338 |
+| **what the consumer needs** | **744** | **7.94** | **0.0107** |
+
+The rate falls from 2.7x DD24's bar into P-m's parameterized band, and the GCH
+side flips from **1.25x OVER to 0.96x UNDER**. One module decided the wing.
+
+**Both levers were DELETIONS, not rewrites, and that is the pattern to look
+for.** Four of the five general-law sections had no consumer at all: the
+archive's own deliverable never used them and nothing outside imported them.
+And one definition, `col→τ-fiber`, held **18,363 ms of a 19,481 ms module
+profile, 94.3 percent**, because it built an order type as a V-set when the
+collapse already landed inside the target: the consumer wanted an injection,
+not an order type. The orchestrator re-measured the two ends at 19.35 s against
+1.32 s, a factor of 14.7.
+
+**What it does NOT promise.** The residue after both deletions is
+`comp₀-inj`'s exclusion chase at a variable carrier, 4,752 ms of 6,272 ms. That
+is body-bound machinery paid once, and no consumer question reduces it. **A
+consumer audit finds unreached generality; it does not make required content
+cheaper.**
+
+**Read beside D-29.** D-29 says a shared layer propagates a fix and a defect at
+the same rate. This says the same layer propagates unreached GENERALITY at the
+same rate, and that generality is invisible until somebody reads the consumers.
+
+**Provenance:** `_build/lj-1.47-report.md`; `_build/lj-1.46-report.md`;
+probes `src/ProbeLJ147PairingSealed.agda` against
+`src/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.

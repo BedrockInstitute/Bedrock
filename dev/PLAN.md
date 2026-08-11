@@ -468,7 +468,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.44 | Locate the class that costs 65 s in Condensation | THE AGREEMENT LAYER | 79 percent of the seconds. Two spellings per leaf, the P-v family. One spelling measured 10.1x at the hottest row |
 | LJ-1.45 | Restate the agreement layer in ONE spelling | LANDED where positive | 62.07 to 59.6 s on my own three runs, 0.0131. Leaves gained 10-15x; two shapes measured NET LOSS and were reverted |
 | LJ-1.46 | GATE LJ-1.7: price Devlin 5.5 | 1,675 lines, 36 s | And it found LJ-1.8 hides ~2,500 lines: no cardinal chapter at all, and the square law is an UNBUILT module parameter |
-| LJ-1.47 | PROBE: can the square law's 41.36 s come down? | dispatched | One module flips the wing from 0.0124 inside to 0.0157, 1.23x. Also asks what the CONSUMER needs, not the general law |
+| LJ-1.47 | PROBE: can the square law's 41.36 s come down? | YES, 5.45x | 43.26 s to 7.94 s. Both levers were DELETIONS of content with no consumer. The wing flips 1.25x over to 0.96x under. D-30 |
+| LJ-1.48 | GATE LJ-1.7: measure the condensation theorem assembly | GO | 0.0087 to 0.0099 on my own three runs against a 0.0127 GO line. Transfer statements at 0.003, the parameterized end |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
@@ -494,7 +495,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.28 | Can the equivalence legs ride the delivered graph theorems? | RIDE | Legs A and B delivered at 0 lines. Leg D's rate spans 0.0052 to 0.085, so its residue is 5 s or 68 s, not one number |
 | LJ-1.19 | PROBE: Cure A, limits closed under plus omega | GO at 30 body lines | The consumer survives: the wing condenses ONCE, at 5.5, whose free lambda can be +omega-closed at zero cost |
 | LJ-1.17 | GATE: is the square law affordable at DD24? | NO SHAPE FITS, OVERTURNED | The seconds are sound; every conclusion from them was wrong. At the PROJECTED wing it passes at 0.72-0.82x |
-| LJ-1.7 | Build: every subset of a stage appears early | planned | Condensation plus cardinality. Needs LJ-1.5 and LJ-1.6 |
+| LJ-1.7 | Build: the condensation theorem, then Devlin 5.5 | dispatched | GATED GO by LJ-1.48. The theorem does not exist in the tree; the substrate for it is complete and verified |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
