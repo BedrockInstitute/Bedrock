@@ -456,8 +456,11 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.34-R | DD25 review of LJ-1.34's NO-GO | OVERTURN | Same theorem: 0.436 to 0.0079, 46x on my own re-runs. Spell the story ONCE. Delta-0 IS the target and my brief was right |
 | LJ-1.35 | GATE: price the bound-fact construction | BETWEEN, leans GO | 0.0241 per line, 0.48 of the NO-GO bar. The block funds. But the per-clause figure rests on ONE measured clause |
 | LJ-1.36 | GATE: is the leaf reading really 2 s PER CLAUSE? | GO | NO. The 2 s is ONE deep leaf; eleven rows read under 0.12 s TOTAL. The 22-31 s projection was wrong by about 12x |
-| LJ-1.37 | BUILD: the eleven table clauses and the code-set description | DELIVERED | Condensation 308 to 2,031 lines at 0.0046, 0.34 of the bar. NO placement. The description held its survey |
-| LJ-1.38 | BUILD: the step and graph stack, and leg D at the master | dispatched | Surveyed 0.3-0.8k lines at about 0.005, so 1.5-4 s. Carries the atom-row quirk LJ-1.37 found by building |
+| LJ-1.37 | BUILD: the eleven table clauses and the description | DEFECTIVE, see LJ-1.38-R | Landed 1,723 lines and passed every MECHANICAL check. The rows are false of the satisfaction table. C-35 |
+| LJ-1.38 | BUILD: the step and graph stack, and leg D | REFUSED, under DD25 review | Matrices land at 110 lines. The agreement does NOT: it says LJ-1.37's story rows are VACUOUS at empty values |
+| LJ-1.38-R | DD25 review of LJ-1.38's refusal | UPHOLD, and worse | Not merely vacuous: the rows are FALSE of the satisfaction table. 968 of 2,141 lines re-open. The nonemptiness cure is refuted |
+| LJ-1.39 | PROBE: compress the de Bruijn index padding | GO, -318 lines and FASTER | 2,031 to 1,713, and 9.26 to 8.9 s. The rate RISES 0.00456 to 0.00520: de-padding costs the ratio, as it should |
+| LJ-1.40 | REPAIR: re-index the rows TRUE, and close the agreement | dispatched | 968 lines re-open, 1,021 survive: a re-index, not a rebuild. C-35: not done until leg D consumes it |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
