@@ -461,7 +461,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.38-R | DD25 review of LJ-1.38's refusal | UPHOLD, and worse | Not merely vacuous: the rows are FALSE of the satisfaction table. 968 of 2,141 lines re-open. The nonemptiness cure is refuted |
 | LJ-1.39 | PROBE: compress the de Bruijn index padding | GO, -318 lines and FASTER | 2,031 to 1,713, and 9.26 to 8.9 s. The rate RISES 0.00456 to 0.00520: de-padding costs the ratio, as it should |
 | LJ-1.40 | REPAIR: re-index the rows TRUE, close the agreement | REPAIRED, agreement PARTIAL | 2,498 lines at 0.00512, zero placement. Bot row and the shared machinery close. Eleven rows owe theirs |
-| LJ-1.41 | Close the eleven remaining row agreements | dispatched | The Bot row is the worked pattern and nine of eleven were mechanical re-indexes, so D-29 says the frame should carry them |
+| LJ-1.41 | Close the eleven row agreements | 2 of 11, under DD25 review | And and Or close. Nine share ONE blocker: envHyp is K-bounded, envSetAt is unbounded, and Delta-0 has no unbounded witness |
+| LJ-1.41-R | DD25 review of LJ-1.41's envSetAt blocker | OVERTURN | The impossibility is refuted by four probes. The real defect is ONE missing conjunct, about 100 lines and 0.22 s |
+| LJ-1.42 | Add the conjunct, close nine rows, price PropAgree | 3 of 9, cure right | Closed Top, Neg, Forall. It found LJ-1.41's And and Or sat OUTSIDE the fence, as prose, with four defects |
+| LJ-1.43 | Close the six row agreements and block 1 | ALL SEVEN CLOSED | The twelve-row table is complete and machine-checked. LJ-1.42's wall was inferred and wrong. Module rate 1.07x |
 | LJ-1.15 | PROBE: one bounded table clause | NO-GO, OVERTURNED by LJ-1.15-R | My 40-line gate sat below the band it tested: the booked row allows 133 lines per clause and the hardest measured 155 |
 | LJ-1.6 | Build: cardinality of a stage | DELIVERED half; the refusal's REASON overturned | The quotient objection is true but was CURED at T85, and the descent is 52 measured lines, not 250-450 |
 | LJ-1.6-R | DD25 review of LJ-1.6 | UPHOLD the stop, OVERTURN reason and price | Found the cure already GREEN, a 20 percent caliber error in the route's own figure, and the wing's seconds budget |
