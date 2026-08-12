@@ -572,7 +572,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.93 | Be the first consumer of the three split masters | NOT DISCHARGED | The twelve conjuncts match and the association bridge is green, but 39 of the composer's 69 facts have no supplier |
 | LJ-1.94 | Build the ambient Hartogs cardinal and end at the consumer | DISPATCHED | Five steps as a probe chain, ending where cardk receives a value at the LJ-1.90 site |
 | LJ-1.95 | Refute tmKeyK, or show it inhabitable | REFUTED, MEASURED | Applied at the K slot's own element, closed by delivered in-irrefl. All three split masters state it, so all three are empty |
-| LJ-1.96 | Price the ideal form of the three split masters | DISPATCHED | DD13 from the rewrite side: restate at the consumer's frame, repair in place, or retire. Do not build |
+| LJ-1.96 | Price the ideal form of the three split masters | RETIRE, NOT RULED | Its no-home table is mostly INFERRED rows, so the verdict rests on inference. LJ-1.97 tests the family first |
+| LJ-1.97 | Are the satisfier-in-K facts TRUE? | DISPATCHED | Refute what is false first. Unstated, underivable and false are three findings and only one was measured |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
