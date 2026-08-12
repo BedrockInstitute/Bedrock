@@ -3552,3 +3552,41 @@ dispatch each time.
 section 0, probe re-run by the orchestrator at 1.85 s;
 `_build/lj-1.102-report.md` sections 0 and 2; briefs
 `_build/briefs/LJ-1.98.md`, `LJ-1.102.md`, whose stop lines are quoted above.
+
+### P-x. A transparent construction in a RECORD FIELD type is paid by every elaboration of the record: state it as a telescope fact instead
+
+**The law.** P-l says a statement may be about a concrete position without
+dragging that position's PRESENTATION into its type. **A record field is the
+worst place to break that rule.** A telescope hypothesis is elaborated where
+it is stated; a record field's type is forced into every elaboration of the
+record, at every instantiation and every projection, whether or not anything
+consumes the field. **So a transparent term in a field type is multiplied by
+the record's whole use surface.**
+
+**The action.** When a frame needs a closure fact whose statement names a
+transparent construction, **state it as a telescope fact of the frame, the
+shape the other closure facts already take. Do not add it to the record.**
+The test is cheap and it is two lines: add the field, check, remove the
+field, check.
+
+**The measurement, 2026-08-13, a controlled pair in one master.** The tied
+key-fact family needs a successor closure,
+`sucK : (a : S) → a ∈ K → sucV a ∈ K`. Adding it as a field of the `KFacts`
+record (`src/L/Condensation.lagda.md`) **exhausted the C-12 heap cap in every
+configuration that carried it**: with the derivations inside the transfers,
+walled at about 247 s; with them hoisted to module level, walled at about
+247 s; with plain tied telescopes and no derivations at all, walled at about
+256 s. **Removing exactly the two lines, the field and its `KFactsCons`
+line, returns the master to GREEN at 154 to 155 s.** The rows never consume
+the field. The transparent `sucV (fst a)` in the field TYPE is what the
+record's elaborations carry.
+
+**The supply is unaffected and was measured separately.** All three tied
+shapes derive from `sucK` plus the existing `pairK` at the generic frame:
+`src/ProbeLJ1109A.agda`, module `TiesSupplied`, GREEN. **The wall is about
+where the fact is STATED, never about whether it is true or useful.**
+
+**Provenance:** `_build/lj-1.109-report.md` section 2; `src/ProbeLJ1109A.agda`;
+the green master at commit `c728e8b` plus the tie landing. Related: [[P-l]],
+[[P-o]], [[P-i]] class 3, and [[P-w]], which measures the same multiplication
+for module applications rather than record fields.
