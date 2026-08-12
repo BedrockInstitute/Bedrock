@@ -9,12 +9,14 @@ open import Base.Classical using ( LEM )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
+open import L.Constructible using ( IsOrd )
 import Cubical.Data.Empty as Empty
 
 module L.StageCardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ))
-  (sq : (α : V ℓ) → (⟨ α ∈ InfinitySet.ω {ℓ} ⟩ → Empty.⊥)
-      → Σ[ f ∈ (⟪ α ⟫ × ⟪ α ⟫ → ⟪ α ⟫) ]
-          ((x y : ⟪ α ⟫ × ⟪ α ⟫) → f x ≡ f y → x ≡ y)) where
+  (α₀ : V ℓ) (oα₀ : IsOrd α₀)
+  (sq : (δ : V ℓ) → ⟨ δ ∈ InfinitySet.sucV α₀ ⟩ → (⟨ δ ∈ InfinitySet.ω {ℓ} ⟩ → Empty.⊥)
+      → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
+          ((x y : ⟪ δ ⟫ × ⟪ δ ⟫) → f x ≡ f y → x ≡ y)) where
 
 open import FOL.Syntax using ( Formula )
 open import FOL.Count {ℓ} using ( composed-count; code; shape-count-inj )
@@ -22,19 +24,19 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; ∈-induction; regularityV )
 open import V.Presentation {ℓ} using ( fiber; member; ↪-inj )
 open import V.Coding {ℓ} using ( #-inj′ )
-open import L.Constructible {ℓ} using ( IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-inv; Lset-out )
+open import L.Constructible {ℓ} using ( Lset; 𝒟ₒ; 𝒟ₒ-inv; Lset-out )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Choice.Finite {ℓ} lem
   using ( Tally; StageOrder; stageOrder; finiteStage; natOrder )  -- lint-agda: keep (StageOrder used as the projection qualifier)
 open import L.Ordinal {ℓ}
-  using ( #∈ω; numeral-ord; numeral-mem; mem-ord; ω-ord )
+  using ( #∈ω; numeral-ord; numeral-mem; mem-ord; ω-ord; suc-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc; Lset-cumul )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( SWO; Tri; lt; eq; gt; leastOf )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( ω; #_ )
+open InfinitySet using ( ω; sucV; #_ )
 
 open import Cubical.Foundations.Prelude using ( J; transportRefl; substRefl; PathP; toPathP )
 open import Cubical.Foundations.Transport using ( substSubst⁻ )
@@ -272,13 +274,13 @@ module OrdSWO (α : S) (oα : IsOrd α) where
 -- class. Injectivity: equal packed values split by pair-inj, the stage
 -- paths are eliminated by J, so no transport-coherence of the branch family
 -- is needed, and count-injectivity with defSet-stability close the loop.
-module LimitStep (α : S) (oα : IsOrd α) (infα : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+module LimitStep (α : S) (α∈suc : ⟨ α ∈ˢ sucV α₀ ⟩) (oα : IsOrd α) (infα : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
                  (D : (δ : S) → Formula ⟪ Lset δ ⟫ 1 → S)
                  (inv : (δ : S) (y : S) → ⟨ y ∈ˢ 𝒟ₒ (Lset δ) ⟩
                       → ∥ Σ[ φ₀ ∈ Formula ⟪ Lset δ ⟫ 1 ] (D δ φ₀ ≡ y) ∥₁)
                  (ih : (m : ⟪ α ⟫) → ⟪ Lset (⟪ α ⟫↪ m) ⟫ ↪ ⟪ α ⟫) where
 
-  module B = Bound α oα infα (sq α infα)
+  module B = Bound α oα infα (sq α α∈suc infα)
 
   F : ⟪ α ⟫ → Type ℓ
   F m = Formula ⟪ Lset (⟪ α ⟫↪ m) ⟫ 1
@@ -391,13 +393,13 @@ module LimitStep (α : S) (oα : IsOrd α) (infα : ⟨ α ∈ˢ ω ⟩ → Empt
           eq-defset = cong (D (⟪ α ⟫↪ m₁)) eφ
                     ∙ defset-stable m₁ m₂ (sym qm) φ₂
 
-limit-step : (α : S) → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+limit-step : (α : S) → ⟨ α ∈ˢ sucV α₀ ⟩ → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
            → ((m : ⟪ α ⟫) → ⟪ Lset (⟪ α ⟫↪ m) ⟫ ↪ ⟪ α ⟫)
            → ⟪ Lset α ⟫ ↪ ⟪ α ⟫
-limit-step α oα infα ih =
-  LimitStep.h α oα infα (λ δ φ → DefOf.defSet (Lset δ) φ)
+limit-step α α∈suc oα infα ih =
+  LimitStep.h α α∈suc oα infα (λ δ φ → DefOf.defSet (Lset δ) φ)
     (λ δ x h → 𝒟ₒ-inv (Lset δ) x h) ih
-    , LimitStep.h-inj α oα infα (λ δ φ → DefOf.defSet (Lset δ) φ)
+    , LimitStep.h-inj α α∈suc oα infα (λ δ φ → DefOf.defSet (Lset δ) φ)
         (λ δ x h → 𝒟ₒ-inv (Lset δ) x h) ih
 
 -- The finite-stage injections into omega, the ω-base of the assembly.
@@ -526,13 +528,13 @@ module Upper where
       go (inr (inr α∈ω)) = Empty.rec (infα α∈ω)
 
   P : S → Type (ℓ-suc ℓ)
-  P α = IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+  P α = IsOrd α → ⟨ α ∈ˢ sucV α₀ ⟩ → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
       → Σ[ f ∈ (⟪ Lset α ⟫ → ⟪ α ⟫) ] ((x y : ⟪ Lset α ⟫) → f x ≡ f y → x ≡ y)
 
-  branch : (α : S) (oα : IsOrd α) (infα : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+  branch : (α : S) (oα : IsOrd α) (α∈suc : ⟨ α ∈ˢ sucV α₀ ⟩) (infα : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
          → ((δ : S) → ⟨ δ ∈ˢ α ⟩ → P δ)
          → (m : ⟪ α ⟫) → ⟪ Lset (⟪ α ⟫↪ m) ⟫ ↪ ⟪ α ⟫
-  branch α oα infα IH m = go (ord-tri δ oδ ω ω-ord)
+  branch α oα α∈suc infα IH m = go (ord-tri δ oδ ω ω-ord)
     where
     δ : S
     δ = ⟪ α ⟫↪ m
@@ -540,21 +542,26 @@ module Upper where
     δ∈α = member α m
     oδ : IsOrd δ
     oδ = mem-ord {A = α} oα δ δ∈α
+    δ∈suc : ⟨ δ ∈ˢ sucV α₀ ⟩
+    δ∈suc = suc-ord oα₀ .fst {x = α} {y = δ} δ∈α α∈suc
     go : ⟨ δ ∈ˢ ω ⟩ ⊎ ((δ ≡ ω) ⊎ ⟨ ω ∈ˢ δ ⟩) → ⟪ Lset δ ⟫ ↪ ⟪ α ⟫
     go (inl δ∈ω) = comp-inj (fin-inj δ δ∈ω) (WOEmb.ω-inj α oα infα)
     go (inr (inl e)) = subst (λ w → ⟪ Lset w ⟫ ↪ ⟪ α ⟫) (sym e)
-      (comp-inj (IH ω (subst (λ w → ⟨ w ∈ˢ α ⟩) e δ∈α) ω-ord (∈-irrefl ω))
+      (comp-inj (IH ω (subst (λ w → ⟨ w ∈ˢ α ⟩) e δ∈α) ω-ord ω∈suc (∈-irrefl ω))
                 (WOEmb.ω-inj α oα infα))
+      where
+      ω∈suc : ⟨ ω ∈ˢ sucV α₀ ⟩
+      ω∈suc = subst (λ w → ⟨ w ∈ˢ sucV α₀ ⟩) e δ∈suc
     go (inr (inr ω∈δ)) =
-      comp-inj (IH δ δ∈α oδ infδ) (Emb.emb α oα δ δ∈α)
+      comp-inj (IH δ δ∈α oδ δ∈suc infδ) (Emb.emb α oα δ δ∈α)
       where
       infδ : ⟨ δ ∈ˢ ω ⟩ → Empty.⊥
       infδ h = ∈-irrefl ω (ω-ord .fst ω∈δ h)
 
   step : (α : S) → ((δ : S) → ⟨ δ ∈ˢ α ⟩ → P δ) → P α
-  step α IH oα infα = limit-step α oα infα (branch α oα infα IH)
+  step α IH oα α∈suc infα = limit-step α α∈suc oα infα (branch α oα α∈suc infα IH)
 
-  stage-card-upper : (α : S) → IsOrd α
+  stage-card-upper : (α : S) → IsOrd α → ⟨ α ∈ˢ sucV α₀ ⟩
                    → (⟨ α ∈ˢ ω ⟩ → Empty.⊥) → ⟪ Lset α ⟫ ↪ ⟪ α ⟫
   stage-card-upper = ∈-induction step
 ```

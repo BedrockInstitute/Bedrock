@@ -874,6 +874,7 @@ module LevelHood0
 
 open import V.Smallness {ℓ} using ( separateFromSmall; module Δ₀Small )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
+open import V.Model {ℓ} using ( self∈sucV )
 open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡; rank-Lset )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Rank {ℓ} using ( rank-fix )
@@ -1359,19 +1360,10 @@ module HullExt (α : S) (ordα : IsOrd α)
 open import Cubical.Data.Nat.Properties using ( znots; snotz; injSuc )
 
 module Devlin55
-  (sq : (α : S) → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-      → Σ[ f ∈ (⟪ α ⟫ × ⟪ α ⟫ → ⟪ α ⟫) ] ((x y : ⟪ α ⟫ × ⟪ α ⟫) → f x ≡ f y → x ≡ y))
   (absorbs-subset : (α : S) → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
                   → (x : S) → (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
                   → ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
   where
-
-  module SC = L.StageCardinal {ℓ} lem sq
-  module Up = SC.Upper
-
-  stage-card-upper : (α : S) → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-                   → ⟪ Lset α ⟫ ↪ ⟪ α ⟫
-  stage-card-upper = Up.stage-card-upper
 
   comp-inj : {A B C : Type ℓ} → A ↪ B → B ↪ C → A ↪ C
   comp-inj (f , injf) (g , injg) =
@@ -1396,10 +1388,20 @@ module Devlin55
   module BoundedSubsetAt
     (κ : S) (ordκ : IsOrd κ) (cardκ : IsCardinal κ) (κ∉ω : ⟨ κ ∈ˢ ω ⟩ → Empty.⊥)
     (α : S) (ordα : IsOrd α) (α∈κ : ⟨ α ∈ˢ κ ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+    (sq : (δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥)
+        → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
+            ((x y : ⟪ δ ⟫ × ⟪ δ ⟫) → f x ≡ f y → x ≡ y))
     (x : S) (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
     (lam : S) (ordλ : IsOrd lam) (α∈λ : ⟨ α ∈ˢ lam ⟩)
     (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
     (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩) where
+
+    module SC = L.StageCardinal {ℓ} lem α ordα sq
+    module Up = SC.Upper
+
+    stage-card-upper : (γ : S) → IsOrd γ → ⟨ γ ∈ˢ sucV α ⟩
+                     → (⟨ γ ∈ˢ ω ⟩ → Empty.⊥) → ⟪ Lset γ ⟫ ↪ ⟪ γ ⟫
+    stage-card-upper = Up.stage-card-upper
 
     module UK = UnionKit α lam x ordα ordλ α∈λ x⊆Lα x∈Lλ α∉ω
     module HS = HullStage lam ordλ succλ UK.X UK.X⊆Lλ UK.∅∈λ
@@ -1424,7 +1426,7 @@ module Devlin55
 
       -- The code count: the hull's term algebra injects into alpha.
       module CodeCount (g : ⟪ UK.X ⟫ ↪ ⟪ α ⟫) where
-        module B = SC.Bound α ordα α∉ω (sq α α∉ω)
+        module B = SC.Bound α ordα α∉ω (sq α (self∈sucV α) α∉ω)
 
         code-stable-suc : (k k' : ℕ) (p : k' ≡ k) (ψ : Formula (⊥* {ℓ}) (suc k'))
                         → FOL.Count.code (subst (λ j → Formula (⊥* {ℓ}) (suc j)) p ψ)
@@ -1527,7 +1529,7 @@ module Devlin55
                                     (qψ , qcs)))
 
       code-inj : ⟪ UK.X ⟫ ↪ ⟪ α ⟫
-      code-inj = comp-inj (absorbs-subset α α∉ω x x⊆Lα) (stage-card-upper α ordα α∉ω)
+      code-inj = comp-inj (absorbs-subset α α∉ω x x⊆Lα) (stage-card-upper α ordα (self∈sucV α) α∉ω)
 
       module CC = CodeCount code-inj
 
