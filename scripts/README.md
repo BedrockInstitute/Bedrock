@@ -346,6 +346,39 @@ python3 scripts/rules.py --for build     # build, probe, recon, rewrite, review
 python3 scripts/rules.py --grep seal     # the long tail, by trigger word
 ```
 
+## `check-unbound-hyp.py`
+
+**ADVISORY, and deliberately NOT in `make check`.** It finds telescope
+hypotheses that are refutable by regularity: the shape that cost phase LJ-1
+about a thousand delivered lines across seven statement-level defects. A
+flag is a QUESTION, never a verdict, so it must not fail a build; the cure
+is a refutation probe, and `src/ProbeLJ197A.agda` is that probe's shape at
+one line of real content per fact.
+
+Three rules. Rule 1: the conclusion asserts `⟨ A ∈ B ⟩` and a set-typed
+variable free in `A` appears in no premise. Rule 2: a membership premise's
+object is built only from variables this telescope binds, none of which
+reaches the conclusion, so the premise is satisfiable at a set the author
+never intended. Rule 3: a set-typed telescope with no premise at all.
+
+**Measured recall, 2026-08-13.** On `src/L/Condensation/TwelveAgree.lagda.md`
+before its repair it flags **all eleven** hypotheses that `[LJ-1.95]` and
+`[LJ-1.97]` machine-refuted, plus `valK` and `valK-un`, which `[LJ-1.97]`
+found to be the same shape and could not refute at the abstract frame. It
+does NOT flag the sound conditionals in the same file: `carrierK`,
+`arityK`, `pairK`, `innerK` and the `tagEq`/`numK` families.
+
+Two precision rules earn that. Only SET-typed binders count, because
+regularity refutes a membership claim about a set and not about an index at
+`ℕ`; that alone removed the `innerK` false positive. And
+`lookup (suc^n zero) (v0 ∷ … ∷ γ)` is resolved to `vn` before free variables
+are read, because otherwise a repaired hypothesis reads as unconstrained:
+`succK` after its tie carries the premise `ar ∈ K` and concludes about a
+lookup that names six other variables it never uses.
+
+Run it on a frame before you fund a build against it. See `dev/LESSONS.md`
+C-38.
+
 ## `check-rule-ids.py`
 
 Runs in `make check`. Every `[LJ-x.y]`, `DD<n>` and LESSONS id cited anywhere

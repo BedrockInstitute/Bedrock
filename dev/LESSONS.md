@@ -3498,7 +3498,15 @@ row-agreement band. **All of them are uninstantiable as stated, including
 the leaf adequacy the orchestrator had reported as the phase's completed
 mathematics.**
 
-**THE SHAPE IS MECHANIZABLE AND NO CHECKER EXISTS.** A closure hypothesis
+**THE CHECKER NOW EXISTS: `scripts/check-unbound-hyp.py`, written
+2026-08-13.** On the unrepaired frame it flags **all eleven** hypotheses this
+phase machine-refuted, plus the two of the same shape that resisted
+refutation, and it does NOT flag `carrierK`, `arityK`, `pairK` or `innerK`.
+It is ADVISORY and not in `make check`, because a flag is a question and the
+cure is a refutation probe. **Run it on a frame before you fund a build
+against it.**
+
+**THE SHAPE IS MECHANIZABLE.** A closure hypothesis
 about a bounding set `K` must be CONDITIONAL:
 `(a : S) → a ∈ <bound> → a ∈ K`. One quantified over arbitrary sets with no
 membership premise is refuted by regularity, always. **A grep is not enough
