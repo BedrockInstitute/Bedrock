@@ -533,6 +533,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.68-A | Orchestrator audit: my export count was wrong | CORRECTED | I read 2761-2900 and swept in TmVal's exports. EnvSet ends at 2873. I stated 15 and 12-unused as verified |
 | LJ-1.69 | Price one discharge | 3.6 s per row; x13 is about 47 s | The discharge alone exceeds the wing's whole budget. But the copy is LAZY: unused applications cost 0.089 s |
 | LJ-1.69-A | Orchestrator audit: P-w amended the day it was admitted | AMENDED | The copy is paid at USE. The cost is the frame telescope, not the copy. A generic frame swings 47 s to 5 s |
+| LJ-1.70 | The generic frame and the discharge | 24 DISCHARGED, 14.7 s | TwelveAgree takes 47 facts once and instantiates the twelve rows. The record shape heap-walled; the telescope is green |
+| LJ-1.70-A | Orchestrator audit: I conflated two multiples | CORRECTED | check-ratio prints x the BASELINE 0.011057, not x the bar 0.012716. My 1.28x and 1.39x were baseline multiples |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
