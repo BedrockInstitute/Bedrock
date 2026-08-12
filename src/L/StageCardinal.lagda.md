@@ -20,12 +20,10 @@ open import FOL.Syntax using ( Formula )
 open import FOL.Count {ℓ} using ( composed-count; code; shape-count-inj )
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; ∈-induction; regularityV )
-open import V.Model {ℓ} using ( ∈sucV-inl )
 open import V.Presentation {ℓ} using ( fiber; member; ↪-inj )
 open import V.Coding {ℓ} using ( #-inj′ )
 open import L.Constructible {ℓ} using ( IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-inv; Lset-out )
 open import L.Definability {ℓ} using ( module DefOf )
-open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 open import L.Choice.Finite {ℓ} lem
   using ( Tally; StageOrder; stageOrder; finiteStage; natOrder )  -- lint-agda: keep (StageOrder used as the projection qualifier)
 open import L.Ordinal {ℓ}
@@ -36,7 +34,7 @@ open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( SWO; Tri; lt; eq; gt; leastOf )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( ω; #_; sucV )
+open InfinitySet using ( ω; #_ )
 
 open import Cubical.Foundations.Prelude using ( J; transportRefl; substRefl; PathP; toPathP )
 open import Cubical.Foundations.Transport using ( substSubst⁻ )
@@ -262,107 +260,6 @@ module OrdSWO (α : S) (oα : IsOrd α) where
     ; irr∙   = irr₁
     ; trans∙ = trans₁
     ; wf∙    = wf₁ }
-
--- The generic successor step, re-derived from the T85 cure. At every
--- infinite ordinal α, the next stage's index injects into ⟪ α ⟫, given the
--- induction hypothesis at α. Route: Bound.formula-bound at β = α bounds
--- Formula ⟪ Lset α ⟫ 1 by ⟪ α ⟫ (pairing = sq α infα); each member of
--- 𝒟ₒ (Lset α) is merely some defSet φ (𝒟ₒ-inv); leastOf over ordSWO picks
--- the least count value in the class. Injectivity uses count-injectivity
--- and ↪-inj only. The only ordinal hypotheses are IsOrd and infinity: sq
--- is parameterized over every infinite ordinal, so Init's limit clause is
--- never needed here.
-module Successor (α : S) (oα : IsOrd α)
-                 (infα : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-                 (g : ⟪ Lset α ⟫ ↪ ⟪ α ⟫) where
-
-  module B = Bound α oα infα (sq α infα)
-
-  count : Formula ⟪ Lset α ⟫ 1 ↪ ⟪ α ⟫
-  count = B.formula-bound {K = ⟪ Lset α ⟫} g
-
-  class-pred : (m : ⟪ 𝒟ₒ (Lset α) ⟫) → ⟪ α ⟫ → hProp (ℓ-suc ℓ)
-  class-pred m y = ( ∥ Σ[ φ ∈ Formula ⟪ Lset α ⟫ 1 ]
-                        ( ( DefOf.defSet (Lset α) φ ≡ ⟪ 𝒟ₒ (Lset α) ⟫↪ m )
-                        × ( fst count φ ≡ y ) ) ∥₁
-                   , squash₁ )
-
-  nonempty : (m : ⟪ 𝒟ₒ (Lset α) ⟫)
-           → ∥ Σ[ y ∈ ⟪ α ⟫ ] ⟨ class-pred m y ⟩ ∥₁
-  nonempty m = PT.map
-    (λ { (φ , e) → fst count φ , ∣ φ , (e , refl) ∣₁ })
-    (𝒟ₒ-inv (Lset α) (⟪ 𝒟ₒ (Lset α) ⟫↪ m) (member (𝒟ₒ (Lset α)) m))
-
-  h : ⟪ 𝒟ₒ (Lset α) ⟫ → ⟪ α ⟫
-  h m = fst (leastOf (OrdSWO.ordSWO α oα) lem (class-pred m) (nonempty m))
-
-  h-inj : (m n : ⟪ 𝒟ₒ (Lset α) ⟫) → h m ≡ h n → m ≡ n
-  h-inj m n e = ↪-inj {a = 𝒟ₒ (Lset α)} (go pm)
-    where
-    lm = leastOf (OrdSWO.ordSWO α oα) lem (class-pred m) (nonempty m)
-    ln = leastOf (OrdSWO.ordSWO α oα) lem (class-pred n) (nonempty n)
-    pm : ⟨ class-pred m (fst ln) ⟩
-    pm = subst (λ y → ⟨ class-pred m y ⟩) e (fst (snd lm))
-    pn : ⟨ class-pred n (fst ln) ⟩
-    pn = fst (snd ln)
-    go : ⟨ class-pred m (fst ln) ⟩
-       → ⟪ 𝒟ₒ (Lset α) ⟫↪ m ≡ ⟪ 𝒟ₒ (Lset α) ⟫↪ n
-    go = PT.rec (isSetS (⟪ 𝒟ₒ (Lset α) ⟫↪ m) (⟪ 𝒟ₒ (Lset α) ⟫↪ n)) go₁
-      where
-      go₁ : Σ[ φ ∈ Formula ⟪ Lset α ⟫ 1 ]
-              ( ( DefOf.defSet (Lset α) φ ≡ ⟪ 𝒟ₒ (Lset α) ⟫↪ m )
-              × ( fst count φ ≡ fst ln ) )
-          → ⟪ 𝒟ₒ (Lset α) ⟫↪ m ≡ ⟪ 𝒟ₒ (Lset α) ⟫↪ n
-      go₁ (φ , (eφ , ec)) =
-        PT.rec (isSetS (⟪ 𝒟ₒ (Lset α) ⟫↪ m) (⟪ 𝒟ₒ (Lset α) ⟫↪ n)) go₂ pn
-        where
-        go₂ : Σ[ ψ ∈ Formula ⟪ Lset α ⟫ 1 ]
-                ( ( DefOf.defSet (Lset α) ψ ≡ ⟪ 𝒟ₒ (Lset α) ⟫↪ n )
-                × ( fst count ψ ≡ fst ln ) )
-            → ⟪ 𝒟ₒ (Lset α) ⟫↪ m ≡ ⟪ 𝒟ₒ (Lset α) ⟫↪ n
-        go₂ (ψ , (eψ , ec')) =
-          sym eφ ∙ cong (DefOf.defSet (Lset α)) (snd count φ ψ (ec ∙ sym ec')) ∙ eψ
-
-op-step : (α : S) → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-        → ⟪ Lset α ⟫ ↪ ⟪ α ⟫ → ⟪ 𝒟ₒ (Lset α) ⟫ ↪ ⟪ α ⟫
-op-step α oα infα g = Successor.h α oα infα g , Successor.h-inj α oα infα g
-
-successor-step : (α : S) → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-              → ⟪ Lset α ⟫ ↪ ⟪ α ⟫ → ⟪ Lset (sucV α) ⟫ ↪ ⟪ α ⟫
-successor-step α oα infα g = subst
-  (λ A → Σ[ f ∈ (⟪ A ⟫ → ⟪ α ⟫) ] ((x y : ⟪ A ⟫) → f x ≡ f y → x ≡ y))
-  (sym (Lset-suc α)) (op-step α oα infα g)
-
--- The upper half at a successor ordinal: the next stage's index injects
--- into the successor's own index, by composing the step's injection into
--- ⟪ α ⟫ with the embedding of ⟪ α ⟫ into ⟪ sucV α ⟫ (a member of α is a
--- member of sucV α, ∈sucV-inl).
-module SucUpper (α : S) (oα : IsOrd α) (infα : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-                (g : ⟪ Lset α ⟫ ↪ ⟪ α ⟫) where
-
-  idx-suc : ⟪ α ⟫ → ⟪ sucV α ⟫
-  idx-suc m = fiber (sucV α) {x = ⟪ α ⟫↪ m} (∈sucV-inl (member α m)) .fst
-
-  idx-suc-inj : (m n : ⟪ α ⟫) → idx-suc m ≡ idx-suc n → m ≡ n
-  idx-suc-inj m n e = ↪-inj {a = α}
-    (sym (fiber (sucV α) {x = ⟪ α ⟫↪ m} (∈sucV-inl (member α m)) .snd)
-      ∙ cong (⟪ sucV α ⟫↪) e
-      ∙ fiber (sucV α) {x = ⟪ α ⟫↪ n} (∈sucV-inl (member α n)) .snd)
-
-  stage-card-suc : ⟪ Lset (sucV α) ⟫ ↪ ⟪ sucV α ⟫
-  stage-card-suc = f , inj
-    where
-    f : ⟪ Lset (sucV α) ⟫ → ⟪ sucV α ⟫
-    f x = idx-suc (fst (successor-step α oα infα g) x)
-    inj : (x y : ⟪ Lset (sucV α) ⟫) → f x ≡ f y → x ≡ y
-    inj x y e =
-      snd (successor-step α oα infα g) x y
-        (idx-suc-inj (fst (successor-step α oα infα g) x)
-                     (fst (successor-step α oα infα g) y) e)
-
-stage-card-suc : (α : S) → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-               → ⟪ Lset α ⟫ ↪ ⟪ α ⟫ → ⟪ Lset (sucV α) ⟫ ↪ ⟪ sucV α ⟫
-stage-card-suc α oα infα g = SucUpper.stage-card-suc α oα infα g
 
 -- The union (limit) step at every infinite ordinal α: the stage's index
 -- injects into ⟪ α ⟫, given an injection of every member stage's index into
