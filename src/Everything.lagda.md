@@ -368,6 +368,9 @@ import L.Choice.Order
 import L.Hull
 import L.StageCardinal
 import L.Condensation
+import L.Condensation.LowerAgree
+import L.Condensation.UpperAgree
+import L.Condensation.TwelveAgree
 import L.BoundedSubset
 import L.Choice.Transversal
 ```
