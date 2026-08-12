@@ -579,8 +579,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.100 | Extend the consumer's frame and re-measure the 39 | 39 BECAME 11, MEASURED | The 11 are exactly the refuted facts, whose types are empty. No frame extension can supply an empty type |
 | LJ-1.101 | Close the cardk type gap, then price sq | GAP CLOSED, GREEN | cardk checks at the master's IsCardinal, no transport. And absorbs-subset is REFUTED, so Devlin55 is vacuous |
 | LJ-1.102 | Restate ONE row in tied form and re-prove it | NO, MEASURED | Two components need two different premises, one arityK step apart. The row's telescope has neither arityK nor transK |
-| LJ-1.103 | Restate absorbs-subset and re-check Devlin55 | DISPATCHED | A false hypothesis in a delivered master. BoundedSubsetAt sits inside Devlin55, so 266 lines are vacuous |
-| LJ-1.104 | Give the row arityK and re-prove it in tied form | DISPATCHED | My prohibition on adding a hypothesis blocked a delivered KFacts field. Second brief-level correction this session |
+| LJ-1.103 | Restate absorbs-subset and re-check Devlin55 | REPAIRED, MASTER GREEN | The premise is alpha not in omega, matching sq. My suggested premise was too strong: the site runs at omega |
+| LJ-1.104 | Give the row arityK and re-prove it in tied form | YES, BOTH DIRECTIONS | Telescope 44 to 51 lines. tmKeyK becomes a derivation costing zero hypotheses; its tied form was itself refuted |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |

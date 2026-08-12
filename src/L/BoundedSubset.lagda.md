@@ -1361,8 +1361,8 @@ open import Cubical.Data.Nat.Properties using ( znots; snotz; injSuc )
 module Devlin55
   (sq : (α : S) → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
       → Σ[ f ∈ (⟪ α ⟫ × ⟪ α ⟫ → ⟪ α ⟫) ] ((x y : ⟪ α ⟫ × ⟪ α ⟫) → f x ≡ f y → x ≡ y))
-  (absorbs-subset : (α : S) → (x : S)
-                  → (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
+  (absorbs-subset : (α : S) → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+                  → (x : S) → (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
                   → ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
   where
 
@@ -1527,7 +1527,7 @@ module Devlin55
                                     (qψ , qcs)))
 
       code-inj : ⟪ UK.X ⟫ ↪ ⟪ α ⟫
-      code-inj = comp-inj (absorbs-subset α x x⊆Lα) (stage-card-upper α ordα α∉ω)
+      code-inj = comp-inj (absorbs-subset α α∉ω x x⊆Lα) (stage-card-upper α ordα α∉ω)
 
       module CC = CodeCount code-inj
 
