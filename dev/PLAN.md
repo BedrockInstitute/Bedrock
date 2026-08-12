@@ -540,6 +540,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.72 | Repair TwelveAgree, then consume it | STATEMENT FIXED, APPLICATION WALLS | The per-row telescope and the union frame both check green. The application heap-walls at the 8 GB cap |
 | LJ-1.72-A | Orchestrator audit: the tree was left non-compiling | REVERTED | Backed the repair up, removed five .lagda.md probes check-fences counted as masters, restored HEAD green |
 | LJ-1.73 | Does TwelveAgree apply at an ABSTRACT frame | NO, WALLS AT 265 s | Worse than the concrete env's 210 s. The where-block is unaffordable at ANY frame; the abstract env is not the lever |
+| LJ-1.74 | Split the twelve across modules | PEAK PER PROCESS | 3 and 6 rows green, 9 and 12 wall. A one-file split walls too. Separate invocations are green: 4 partials plus a composer |
+| LJ-1.74-A | Orchestrator audit: the measured split is not the cheapest | REFINED | Six is the largest green rung, so 2 partials beat 4. Each re-pays the 105 s floor. 449 s against 699 s |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
