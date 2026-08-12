@@ -554,6 +554,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.80 | Build a KFacts value at the hull | VALUE EXISTS, at the STAGE | 27 fields all supplied at K = Lset lam. Killed mid-transplant after a six-process Agda pileup; master reverted |
 | LJ-1.80-A | Orchestrator audit: the C-12 pileup | STOPPED, DETECTOR ADDED | Six agda under one wrapper, 48 GB worst case on 64 GB. The owner saw it, no tool did. status now counts children |
 | LJ-1.81 | Is the stage enough, or is the hull needed | THE STAGE IS THE SITE | K' in Adeq is existentially quantified, so the proof picks the bound. No isL certificate for M or πX is needed |
+| LJ-1.82 | Supply KFacts to the chain, at the stage | REACHES ShapesAgree, blocks there | The value extends to the 15 and 17 frames by KFactsCons, both green. The chain also needs a CODE SET C |
+| LJ-1.82-A | Orchestrator audit: the field count | CORRECTED | KFacts has 29 fields, not the 27 my brief said. The return caught it. Association mismatch is real but not the first blocker |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
