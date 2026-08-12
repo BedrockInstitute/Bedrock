@@ -592,7 +592,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.113 | Who supplies the twenty nine? | PROVABLE 1, NEW CONTENT 28 | None is refutable. Twenty five are one pattern, K closed under a machine construction; someEnv is the odd one |
 | LJ-1.114 | Thread the truncation from StageCardinal to Devlin55 | WALL, ROUTE-LEVEL | Upper's h-inj needs ONE honest injection; two truncation eliminations collide. Reverted; the cause is proved |
 | LJ-1.115 | Probe someEnv, the K-closure family's widest term | DISPATCHED | The only one of the 28 whose supplier is a construction, not a closure. DD8 gate before the family is funded |
-| LJ-1.116 | At which alpha does Upper actually need sq? | DISPATCHED | D-30 instead of the general price. If the demand is only at cardinals, the truncation question dissolves |
+| LJ-1.116 | At which alpha does Upper need sq? | ONLY AT OMEGA, AT THE SITE | Generic demand is every infinite ordinal below alpha; the site is omega. Init is false at omega and at successors |
+| LJ-1.117 | Restrict sq to the ordinals the consumer reaches | DISPATCHED | Move the hypothesis to where the consumer can supply it, so the unconstructible case never arises |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
