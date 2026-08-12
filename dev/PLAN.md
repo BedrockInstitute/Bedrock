@@ -573,7 +573,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.94 | Build the ambient Hartogs cardinal and end at the consumer | DISPATCHED | Five steps as a probe chain, ending where cardk receives a value at the LJ-1.90 site |
 | LJ-1.95 | Refute tmKeyK, or show it inhabitable | REFUTED, MEASURED | Applied at the K slot's own element, closed by delivered in-irrefl. All three split masters state it, so all three are empty |
 | LJ-1.96 | Price the ideal form of the three split masters | RETIRE, NOT RULED | Its no-home table is mostly INFERRED rows, so the verdict rests on inference. LJ-1.97 tests the family first |
-| LJ-1.97 | Are the satisfier-in-K facts TRUE? | DISPATCHED | Refute what is false first. Unstated, underivable and false are three findings and only one was measured |
+| LJ-1.97 | Are the satisfier-in-K facts TRUE? | TEN REFUTED, MEASURED | Every one quantifies over a set nothing binds. With tmKeyK that is eleven facts of the shared frame |
+| LJ-1.98 | Can the eleven refuted facts be TIED, and does the tie hold at the use site? | DISPATCHED | This decides repair against retirement by measurement rather than by inference |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
