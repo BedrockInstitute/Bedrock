@@ -587,9 +587,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.108 | Delete the unused refuted hypotheses from the rows | ALL NINE ROWS, GREEN | Six of the eleven names are out of the master. Net -12 lines; +8.1 to +8.6 s against a +2 to +4 s projection |
 | LJ-1.109 | Tie the key-fact family, the last five | ALL FIVE TIED, GREEN | All eleven refuted names are now tied or gone. A KFacts FIELD for the successor closure walls the master: P-x |
 | LJ-1.110 | Restate the three split frames | ALL THREE GREEN, make check PASSES | Frames 43/43/69 facts to 37/36/59. The eleven names are gone from all three; sucK is a telescope fact per P-x |
-| LJ-1.111 | Can Devlin55 take the TRUNCATED sq? | DISPATCHED | The conclusion is a proposition and Devlin55 already eliminates a truncation against it. Cheapest cure asked first |
+| LJ-1.111 | Can Devlin55 take the TRUNCATED sq? | TRUNCATED CHAIN GREEN | Truncated sq holds at EVERY infinite ordinal, no choice. The cheap cure is NO; threading costs about 350 lines |
 | LJ-1.112 | Instantiate the repaired composer | ZERO METAS, GREEN | 39 to 11 to 0. Every one of the 59 frame facts is supplied, but 29 come from consumer hypotheses that are NOT discharged |
 | LJ-1.113 | Who supplies the twenty nine? | DISPATCHED | The distance from instantiable to proved. Classify each PROVABLE, NEEDS NEW CONTENT or UNKNOWN, and machine-check three |
+| LJ-1.114 | Thread the truncation from StageCardinal to Devlin55 | DISPATCHED | Cash the proved truncated square law. C-40 is written into the brief: name every consumer you checked |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
