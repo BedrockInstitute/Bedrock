@@ -45,12 +45,15 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import os
 import subprocess
 import sys
 import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# Set once in main(); recalibrate() has no args to read.
+ASSUME_QUIET = False
 LEDGER = ROOT / "dev" / "ledger.toml"
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -80,16 +83,35 @@ def config() -> dict:
 def agda_blocker() -> str | None:
     """The reason a run is refused, or None when no Agda process is live.
 
-    pgrep exits 0 on a match, 1 on no match, 3 on a fatal error. The guard
-    fails closed: a guard that cannot see the process list refuses, because
-    its one job is to not run beside another typecheck (C-12).
+    pgrep exits 0 on a match, 1 on no match, 3 on a fatal error. On a fatal
+    error the guard tries `ps` before refusing, because failing closed on an
+    unreadable process list made every agent bypass the guard by hand.
     """
     probe = subprocess.run(["pgrep", "-x", "agda"], capture_output=True, text=True)
     if probe.returncode == 0:
         return "another Agda process is live"
     if probe.returncode == 1:
         return None
-    return "pgrep cannot verify the process list; the guard fails closed"
+
+    # FALLBACK, added 2026-08-12 because failing closed here bought NOTHING.
+    # Agent sandboxes have no `sysmond`, so pgrep exits 3 and this guard refused
+    # every time. Six consecutive dispatches then neutralised the guard by hand
+    # and measured anyway, which is the worst of both: no protection AND, in the
+    # returns that did not bypass it, no aggregate at all. A guard that is always
+    # bypassed is not a guard. So try a second enumerator before giving up.
+    for argv in (["ps", "-eo", "comm="], ["ps", "-A", "-o", "comm="]):
+        alt = subprocess.run(argv, capture_output=True, text=True)
+        if alt.returncode == 0 and alt.stdout:
+            for line in alt.stdout.splitlines():
+                if os.path.basename(line.strip()) == "agda":
+                    return "another Agda process is live"
+            return None
+
+    # Neither enumerator works. Refuse, but say which switch makes the caller
+    # take C-12's responsibility deliberately instead of editing the guard out.
+    return ("no process enumerator works here (pgrep and ps both failed), so the "
+            "guard cannot see a live typecheck. Confirm the machine is quiet and "
+            "re-run with --assume-quiet, which records that you took C-12's call")
 
 
 def measure(paths: list[str], cold: bool,
@@ -142,6 +164,10 @@ def recalibrate(cfg: dict) -> int:
     goes stale, which is the failure `[LJ-0.5]` spent a day clearing.
     """
     blocker = agda_blocker()
+    if blocker and ASSUME_QUIET and "no process enumerator" in blocker:
+        print("check-ratio: NO PROCESS ENUMERATOR; proceeding on --assume-quiet. "
+              "C-12's call was the caller's, not this tool's.", file=sys.stderr)
+        blocker = None
     if blocker:
         print(f"check-ratio: refusing to measure, {blocker} (C-12).", file=sys.stderr)
         return 1
@@ -184,11 +210,16 @@ def main() -> int:
                              "to the cold baseline. For a quick look only")
     parser.add_argument("--module", action="append", default=[],
                         help="measure this master instead of the declared wing; repeatable")
+    parser.add_argument("--assume-quiet", action="store_true",
+                        help="proceed when no process enumerator works, taking C-12's "
+                             "call yourself; the run says so in its output")
     parser.add_argument("--recalibrate", action="store_true",
                         help="measure the AC side at THIS tool's caliber and print "
                              "ratio.ac_baseline_module_rate for the ledger. Slow: it "
                              "times every AC master cold. It writes nothing")
     args = parser.parse_args()
+    global ASSUME_QUIET
+    ASSUME_QUIET = args.assume_quiet
 
     cfg = config()
     baseline = cfg.get("ac_baseline_seconds_per_line")
@@ -240,6 +271,10 @@ def main() -> int:
         return 1
 
     blocker = agda_blocker()
+    if blocker and ASSUME_QUIET and "no process enumerator" in blocker:
+        print("check-ratio: NO PROCESS ENUMERATOR; proceeding on --assume-quiet. "
+              "C-12's call was the caller's, not this tool's.", file=sys.stderr)
+        blocker = None
     if blocker:
         print(f"check-ratio: refusing to measure, {blocker} (C-12).", file=sys.stderr)
         return 1
