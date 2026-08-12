@@ -29,8 +29,9 @@ open import L.Coding.Model {ℓ}
 open import L.Coding.Graph {ℓ} lem using ( twelveAt )
 open import L.Condensation {ℓ} lem using ( succU; keyU )
 open import L.Condensation.LowerAgree {ℓ} lem using
-  ( module LowerAgree; someEnvDef )
-open import L.Condensation.UpperAgree {ℓ} lem using ( module UpperAgree )
+  ( module LowerAgree; module KeyNegTies; someEnvDef )
+open import L.Condensation.UpperAgree {ℓ} lem using
+  ( module UpperAgree; module SuccKeyTies )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
@@ -93,7 +94,6 @@ module AbstractFrame {n : ℕ}
   (t1eq : fst (lookup (suc (suc (suc (suc (suc (suc t1)))))) γ') ≡ fst (numeralL 1))
   (t0K : ⟨ fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ')
            ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
-  (tmKeyK : (k : S) → ⟨ fst k ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (envK-mem : (yc b a ar c E : S) → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
                 envSetAt zero (suc (suc (suc (suc zero))))
@@ -115,21 +115,6 @@ module AbstractFrame {n : ℕ}
                   envSetAt zero (suc (suc (suc (suc (suc zero)))))
                             (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
                → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-            → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
-              × ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
-  (arSubK-mem : (yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                          (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
-  (arSubK-neg : (ya yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                          (ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
-  (arSubK-top : (yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc zero))
-                                        (yc ∷ a ∷ ar ∷ c ∷ γ')) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
-  (arSubK-imp : (ya yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc zero))))
-                                          (ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (envInK-mem : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
@@ -198,14 +183,8 @@ module AbstractFrame {n : ℕ}
                          (suc (suc (suc zero)))
                          (suc zero) ⟩
               → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
-  (keyK-neg : (E ya yc a ar c : S) → ⟨
-                pr (fst (lookup (suc (suc (suc (suc zero)))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')))
-                   (fst (lookup (suc (suc (suc zero))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')))
-                ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')) ⟩)
-  (succK : (N : Fin (11 + n)) (E ya yc a ar c : S) →
-             succU {11 + n} (suc (suc zero)) (suc zero) zero N (suc (suc (suc (suc (suc (suc K)))))) γ' E ya yc a ar c)
-  (keyK-un : (N : Fin (11 + n)) (E ya yc a ar c : S) →
-               keyU {11 + n} (suc (suc zero)) (suc zero) zero N (suc (suc (suc (suc (suc (suc K)))))) γ' E ya yc a ar c)
+  (sucK : (a : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+          → ⟨ sucV (fst a) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (subK-un : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
                subValSuccAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
                             (suc (suc (suc (suc zero))))
@@ -221,18 +200,6 @@ module AbstractFrame {n : ℕ}
                     consAtL zero (suc zero) (suc (suc zero)) ⟩
                   → ⟨ fst e' ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K))))))))))))))
                                     (x ∷ z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')) ⟩)
-  (succK-allin : (E ya yc b a ar c : S) → ⟨
-                   sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
-                                (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')))
-                   ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))))
-                             (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')) ⟩)
-  (keyK-allin : (E ya yc b a ar c : S) → ⟨
-                  pr (sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
-                                   (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ'))))
-                     (fst (lookup (suc (suc (suc zero)))
-                             (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')))
-                  ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))))
-                            (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')) ⟩)
   (subK-allin : (E ya yc b a ar c : S) → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
                   subValSuccAt (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
                                (suc (suc (suc (suc (suc zero)))))
@@ -245,27 +212,75 @@ module AbstractFrame {n : ℕ}
                                    (x ∷ w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')) ⟩)
   where
 
+  -- The rows' arityK is the frame's transK with the binder roles
+  -- swapped: transK x a closes x ∈ a, the row's arityK N v closes
+  -- v ∈ N.  One derivation, reused at every application ([LJ-1.93]).
+  arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+         → ⟨ fst N ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+         → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+  arityK N v hv hNK = transK v N hv hNK
+
+  -- The five tied key facts, derived once from sucK and pairK
+  -- ([LJ-1.109] TiesSupplied).  The site memberships (arK, aK, bK)
+  -- are the rows' binders; the facts are derivations, not hypotheses
+  -- (C-38).
+  module KN = KeyNegTies {11 + n} (suc (suc (suc (suc (suc (suc K)))))) γ' pairK
+  module KT = SuccKeyTies {11 + n} (suc (suc (suc (suc (suc (suc K)))))) γ' sucK pairK
+
+  keyK-neg-tied : (E ya yc a ar c : S)
+                → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+                → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+                → ⟨ pr (fst ar) (fst a)
+                     ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+  keyK-neg-tied E ya yc a ar c arK aK = KN.key-neg-tied ar a arK aK
+
+  succK-tied : (N : Fin (11 + n)) (E ya yc a ar c : S)
+             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+             → succU {11 + n} (suc (suc zero)) (suc zero) zero N
+                      (suc (suc (suc (suc (suc (suc K)))))) γ' E ya yc a ar c
+  succK-tied N E ya yc a ar c arK = KT.succ-tied ar arK
+
+  keyK-un-tied : (N : Fin (11 + n)) (E ya yc a ar c : S)
+               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+               → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+               → keyU {11 + n} (suc (suc zero)) (suc zero) zero N
+                        (suc (suc (suc (suc (suc (suc K)))))) γ' E ya yc a ar c
+  keyK-un-tied N E ya yc a ar c arK aK = KT.key-un-tied ar a arK aK
+
+  succK-allin-tied : (E ya yc b a ar c : S)
+                   → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+                   → ⟨ sucV (fst ar)
+                        ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+  succK-allin-tied E ya yc b a ar c arK = KT.succ-tied ar arK
+
+  keyK-allin-tied : (E ya yc b a ar c : S)
+                  → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+                  → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+                  → ⟨ pr (sucV (fst ar)) (fst b)
+                       ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+  keyK-allin-tied E ya yc b a ar c arK bK = KT.key-un-tied ar b arK bK
+
   p0b : Formula S (11 + n)
   p0b = LowerAgree.sixB {n} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K γ'
         tagEq0 tagEq1 tagEq2 tagEq3 tagEq4 tagEq5
         numK0 numK1 numK2 numK3 numK4 numK5
         innerK pairK codesK codesK-un valK valK-un
-        t0eq t1eq t0K tmKeyK num1K
-        envK-mem envK-neg envK-imp entryK arSubK-mem arSubK-neg arSubK-imp
+        t0eq t1eq t0K num1K
+        envK-mem envK-neg envK-imp
         envInK-mem envInK-neg envInK-imp valV valW
         transK subK₁-and subK₀-and subK₁-imp subK₀-imp
-        someEnv subK-neg keyK-neg
+        someEnv subK-neg
 
   p1b : Formula S (11 + n)
   p1b = UpperAgree.sixB {n} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K γ'
         tagEq6 tagEq7 tagEq8 tagEq9 tagEq10 tagEq11
         numK6 numK7 numK8 numK9 numK10 numK11
-        innerK pairK codesK codesK-un valK valK-un
-        t0eq t1eq t0K tmKeyK num1K
-        envK-neg envK-top envK-allin entryK arSubK-neg arSubK-top arSubK-imp
+        innerK pairK arityK codesK codesK-un valK valK-un
+        t0eq t1eq t0K num1K
+        envK-neg envK-top envK-allin
         envInK-neg envInK-top envInK-imp wKfact
-        succK keyK-un subK-un consK-exist consK-forall
-        succK-allin keyK-allin subK-allin consK-allin
+        sucK subK-un consK-exist consK-forall
+        subK-allin consK-allin
 
   twelveB : Formula S (11 + n)
   twelveB = p0b ∧̇ p1b
@@ -276,20 +291,20 @@ module AbstractFrame {n : ℕ}
         tagEq0 tagEq1 tagEq2 tagEq3 tagEq4 tagEq5
         numK0 numK1 numK2 numK3 numK4 numK5
         innerK pairK codesK codesK-un valK valK-un
-        t0eq t1eq t0K tmKeyK num1K
-        envK-mem envK-neg envK-imp entryK arSubK-mem arSubK-neg arSubK-imp
+        t0eq t1eq t0K num1K
+        envK-mem envK-neg envK-imp
         envInK-mem envInK-neg envInK-imp valV valW
         transK subK₁-and subK₀-and subK₁-imp subK₀-imp
-        someEnv subK-neg keyK-neg h
+        someEnv subK-neg h
     , UpperAgree.out {n} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K γ'
         tagEq6 tagEq7 tagEq8 tagEq9 tagEq10 tagEq11
         numK6 numK7 numK8 numK9 numK10 numK11
-        innerK pairK codesK codesK-un valK valK-un
-        t0eq t1eq t0K tmKeyK num1K
-        envK-neg envK-top envK-allin entryK arSubK-neg arSubK-top arSubK-imp
+        innerK pairK arityK codesK codesK-un valK valK-un
+        t0eq t1eq t0K num1K
+        envK-neg envK-top envK-allin
         envInK-neg envInK-top envInK-imp wKfact
-        succK keyK-un subK-un consK-exist consK-forall
-        succK-allin keyK-allin subK-allin consK-allin h )
+        sucK subK-un consK-exist consK-forall
+        subK-allin consK-allin h )
 
   back : ⟨ γ' ⊨ twelveB ⟩ → ⟨ γ' ⊨ twelveAt (suc (suc zero)) (suc zero) zero ⟩
   back h =
@@ -297,20 +312,20 @@ module AbstractFrame {n : ℕ}
               tagEq0 tagEq1 tagEq2 tagEq3 tagEq4 tagEq5
               numK0 numK1 numK2 numK3 numK4 numK5
               innerK pairK codesK codesK-un valK valK-un
-              t0eq t1eq t0K tmKeyK num1K
-              envK-mem envK-neg envK-imp entryK arSubK-mem arSubK-neg arSubK-imp
+              t0eq t1eq t0K num1K
+              envK-mem envK-neg envK-imp
               envInK-mem envInK-neg envInK-imp valV valW
               transK subK₁-and subK₀-and subK₁-imp subK₀-imp
-              someEnv subK-neg keyK-neg (h .fst)
+              someEnv subK-neg (h .fst)
         b = UpperAgree.back {n} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K γ'
               tagEq6 tagEq7 tagEq8 tagEq9 tagEq10 tagEq11
               numK6 numK7 numK8 numK9 numK10 numK11
-              innerK pairK codesK codesK-un valK valK-un
-              t0eq t1eq t0K tmKeyK num1K
-              envK-neg envK-top envK-allin entryK arSubK-neg arSubK-top arSubK-imp
+              innerK pairK arityK codesK codesK-un valK valK-un
+              t0eq t1eq t0K num1K
+              envK-neg envK-top envK-allin
               envInK-neg envInK-top envInK-imp wKfact
-              succK keyK-un subK-un consK-exist consK-forall
-              succK-allin keyK-allin subK-allin consK-allin (h .snd)
+              sucK subK-un consK-exist consK-forall
+              subK-allin consK-allin (h .snd)
     in ( a .fst , ( a .snd .fst , ( a .snd .snd .fst , ( a .snd .snd .snd .fst
        , ( a .snd .snd .snd .snd .fst , ( a .snd .snd .snd .snd .snd
        , ( b .fst , ( b .snd .fst , ( b .snd .snd .fst , ( b .snd .snd .snd .fst

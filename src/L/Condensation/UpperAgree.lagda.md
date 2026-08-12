@@ -24,9 +24,9 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Axioms.Numerals {ℓ} using ( numeralL )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; sucʟ; sucʟ-fst )
 open import L.Coding.Model {ℓ}
-  using ( prʟ; envSetAt; envOverAt; tmValAt; consAtL; subValSuccAt
+  using ( prʟ; prʟ-fst; envSetAt; envOverAt; tmValAt; consAtL; subValSuccAt
         ; topClauseAt; botClauseAt; existClauseAt; forallClauseAt
         ; allInClauseAt; exInClauseAt )
 open import L.Coding.Graph {ℓ} lem using ( twelveAt )
@@ -45,6 +45,34 @@ open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- THE TIED SUCCESSOR-KEY FACTS, derived once from sucK and pairK
+-- ([LJ-1.109] TiesSupplied).  sucK is the successor closure, a
+-- telescope fact of the frame, never a KFacts record field (P-x).
+-- key-un-tied transports the L-pair of the L-successor along
+-- sucʟ-fst and prʟ-fst.  Generic in the K slot and gamma, so
+-- UpperAgree and TwelveAgree instantiate the same derivation (DD4).
+module SuccKeyTies {m : ℕ} (K : Fin m) (γ : S ^ m)
+  (sucK : (a : S) → ⟨ fst a ∈ fst (lookup K γ) ⟩
+          → ⟨ sucV (fst a) ∈ fst (lookup K γ) ⟩)
+  (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup K γ) ⟩
+           → ⟨ fst b ∈ fst (lookup K γ) ⟩
+           → ⟨ fst (prʟ a b) ∈ fst (lookup K γ) ⟩) where
+
+  succ-tied : (ar : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+            → ⟨ sucV (fst ar) ∈ fst (lookup K γ) ⟩
+  succ-tied ar arK = sucK ar arK
+
+  key-un-tied : (ar a : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+              → ⟨ fst a ∈ fst (lookup K γ) ⟩
+              → ⟨ pr (sucV (fst ar)) (fst a) ∈ fst (lookup K γ) ⟩
+  key-un-tied ar a arK aK =
+    subst (λ w → ⟨ w ∈ fst (lookup K γ) ⟩)
+      (prʟ-fst (sucʟ ar) a ∙ cong₂ pr (sucʟ-fst ar) refl)
+      (pairK (sucʟ ar) a
+        (transport (sym (cong (λ w → ⟨ w ∈ fst (lookup K γ) ⟩) (sucʟ-fst ar)))
+          (sucK ar arK))
+        aK)
 
 module UpperAgree {n : ℕ}
   (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K : Fin (5 + n))
@@ -66,6 +94,9 @@ module UpperAgree {n : ℕ}
   (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
              → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
              → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
+  (arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+             → ⟨ fst N ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (codesK : (k : ℕ) (c ar a b : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
             → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
@@ -85,7 +116,6 @@ module UpperAgree {n : ℕ}
   (t1eq : fst (lookup (suc (suc (suc (suc (suc (suc t1)))))) γ) ≡ fst (numeralL 1))
   (t0K : ⟨ fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ)
            ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (tmKeyK : (k : S) → ⟨ fst k ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (envK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                 envSetAt zero (suc (suc (suc (suc zero))))
@@ -99,18 +129,6 @@ module UpperAgree {n : ℕ}
                   envSetAt zero (suc (suc (suc (suc (suc zero)))))
                             (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
                → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-            → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-              × ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (arSubK-neg : (ya yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                          (ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (arSubK-top : (yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc zero))
-                                        (yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (arSubK-imp : (ya yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc zero))))
-                                          (ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (envInK-neg : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
@@ -129,10 +147,8 @@ module UpperAgree {n : ℕ}
                       zero ⟩
             → ⟨ fst w ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K))))))))))))))
                               (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
-  (succK : (N : Fin (11 + n)) (E ya yc a ar c : S) →
-             succU {11 + n} (suc (suc zero)) (suc zero) zero N (suc (suc (suc (suc (suc (suc K)))))) γ E ya yc a ar c)
-  (keyK-un : (N : Fin (11 + n)) (E ya yc a ar c : S) →
-               keyU {11 + n} (suc (suc zero)) (suc zero) zero N (suc (suc (suc (suc (suc (suc K)))))) γ E ya yc a ar c)
+  (sucK : (a : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+          → ⟨ sucV (fst a) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (subK-un : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                subValSuccAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
                             (suc (suc (suc (suc zero))))
@@ -148,18 +164,6 @@ module UpperAgree {n : ℕ}
                     consAtL zero (suc zero) (suc (suc zero)) ⟩
                   → ⟨ fst e' ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K))))))))))))))
                                     (x ∷ z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
-  (succK-allin : (E ya yc b a ar c : S) → ⟨
-                   sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
-                                (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
-                   ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))))
-                             (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
-  (keyK-allin : (E ya yc b a ar c : S) → ⟨
-                  pr (sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
-                                   (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))))
-                     (fst (lookup (suc (suc (suc zero)))
-                             (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
-                  ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))))
-                            (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
   (subK-allin : (E ya yc b a ar c : S) → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                   subValSuccAt (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
                                (suc (suc (suc (suc (suc zero)))))
@@ -172,11 +176,43 @@ module UpperAgree {n : ℕ}
                                    (x ∷ w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
   where
 
+  -- The four tied key facts of the upper rows, derived once from sucK
+  -- and pairK ([LJ-1.109] TiesSupplied).  The site memberships (arK,
+  -- aK, bK) are the rows' binders; the facts are derivations, not
+  -- hypotheses (C-38).
+  module KT = SuccKeyTies {11 + n} (suc (suc (suc (suc (suc (suc K)))))) γ sucK pairK
+
+  succK-tied : (N : Fin (11 + n)) (E ya yc a ar c : S)
+             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → succU {11 + n} (suc (suc zero)) (suc zero) zero N
+                      (suc (suc (suc (suc (suc (suc K)))))) γ E ya yc a ar c
+  succK-tied N E ya yc a ar c arK = KT.succ-tied ar arK
+
+  keyK-un-tied : (N : Fin (11 + n)) (E ya yc a ar c : S)
+               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+               → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+               → keyU {11 + n} (suc (suc zero)) (suc zero) zero N
+                        (suc (suc (suc (suc (suc (suc K)))))) γ E ya yc a ar c
+  keyK-un-tied N E ya yc a ar c arK aK = KT.key-un-tied ar a arK aK
+
+  succK-allin-tied : (E ya yc b a ar c : S)
+                   → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                   → ⟨ sucV (fst ar)
+                        ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+  succK-allin-tied E ya yc b a ar c arK = KT.succ-tied ar arK
+
+  keyK-allin-tied : (E ya yc b a ar c : S)
+                  → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                  → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                  → ⟨ pr (sucV (fst ar)) (fst b)
+                       ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+  keyK-allin-tied E ya yc b a ar c arK bK = KT.key-un-tied ar b arK bK
+
   module T = TopAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N6)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq6 numK6
-               (λ a aK → innerK 6 a aK) (codesK-un 6) (valK-un 6)
-               envK-top entryK arSubK-top envInK-top
+               (λ a aK → innerK 6 a aK) arityK (codesK-un 6) (valK-un 6)
+               envK-top envInK-top
 
   module B = BotAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N7)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
@@ -186,32 +222,32 @@ module UpperAgree {n : ℕ}
   module X = ExistAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N8)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq8 numK8
-               (λ a aK → innerK 8 a aK) (codesK-un 8) (valK-un 8)
-               (succK (suc (suc (suc (suc (suc (suc N8)))))))
-               (keyK-un (suc (suc (suc (suc (suc (suc N8))))))) subK-un
-               envK-neg entryK arSubK-neg envInK-neg consK-exist
+               (λ a aK → innerK 8 a aK) arityK (codesK-un 8) (valK-un 8)
+               (succK-tied (suc (suc (suc (suc (suc (suc N8)))))))
+               (keyK-un-tied (suc (suc (suc (suc (suc (suc N8))))))) subK-un
+               envK-neg envInK-neg consK-exist
 
   module F = ForallAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N9)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq9 numK9
-               (λ a aK → innerK 9 a aK) (codesK-un 9) (valK-un 9)
-               (succK (suc (suc (suc (suc (suc (suc N9)))))))
-               (keyK-un (suc (suc (suc (suc (suc (suc N9))))))) subK-un
-               envK-neg entryK arSubK-neg envInK-neg consK-forall
+               (λ a aK → innerK 9 a aK) arityK (codesK-un 9) (valK-un 9)
+               (succK-tied (suc (suc (suc (suc (suc (suc N9)))))))
+               (keyK-un-tied (suc (suc (suc (suc (suc (suc N9))))))) subK-un
+               envK-neg envInK-neg consK-forall
 
   module AI = AllInAgree {11 + n} (suc (suc zero)) (suc zero) zero
                 (suc (suc (suc (suc (suc (suc N10)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                 tagEq10 numK10
-                (λ a b aK bK → innerK 10 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 10) (valK 10)
-                succK-allin keyK-allin subK-allin envK-allin entryK arSubK-imp envInK-imp
-                t0eq t1eq t0K tmKeyK num1K wKfact consK-allin
+                (λ a b aK bK → innerK 10 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) arityK (codesK 10) (valK 10)
+                succK-allin-tied keyK-allin-tied subK-allin envK-allin envInK-imp
+                t0eq t1eq t0K num1K wKfact consK-allin
 
   module EI = ExInAgree {11 + n} (suc (suc zero)) (suc zero) zero
                 (suc (suc (suc (suc (suc (suc N11)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                 tagEq11 numK11
-                (λ a b aK bK → innerK 11 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 11) (valK 11)
-                succK-allin keyK-allin subK-allin envK-allin entryK arSubK-imp envInK-imp
-                t0eq t1eq t0K tmKeyK num1K wKfact consK-allin
+                (λ a b aK bK → innerK 11 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) arityK (codesK 11) (valK 11)
+                succK-allin-tied keyK-allin-tied subK-allin envK-allin envInK-imp
+                t0eq t1eq t0K num1K wKfact consK-allin
 
   sixB : Formula S (11 + n)
   sixB =

@@ -26,7 +26,7 @@ open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Axioms.Numerals {ℓ} using ( numeralL )
 open import L.Coding.Model {ℓ}
-  using ( prʟ; envSetAt; envOverAt; tmValAt; subValAt
+  using ( prʟ; prʟ-fst; envSetAt; envOverAt; tmValAt; subValAt
         ; memClauseAt; eqClauseAt; andClauseAt; orClauseAt
         ; impClauseAt; negClauseAt )
 open import L.Coding.Graph {ℓ} lem using ( twelveAt )
@@ -55,6 +55,23 @@ someEnvDef {n} K γ =
   → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
   → Σ S (λ E → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
     × ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envHypB2 {11 + n} zero (suc (suc (suc (suc (suc (suc K)))))) ⟩)
+
+-- THE TIED KEY-NEG FACT, derived once from pairK ([LJ-1.109]
+-- TiesSupplied).  The Neg row's keyK conclusion is the hierarchy pair
+-- pr (fst ar) (fst a); pairK gives the L-pair prʟ ar a, and prʟ-fst
+-- transports.  Generic in the K slot and gamma, so LowerAgree and
+-- TwelveAgree instantiate the same derivation (DD4).
+module KeyNegTies {m : ℕ} (K : Fin m) (γ : S ^ m)
+  (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup K γ) ⟩
+           → ⟨ fst b ∈ fst (lookup K γ) ⟩
+           → ⟨ fst (prʟ a b) ∈ fst (lookup K γ) ⟩) where
+
+  key-neg-tied : (ar a : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+               → ⟨ fst a ∈ fst (lookup K γ) ⟩
+               → ⟨ pr (fst ar) (fst a) ∈ fst (lookup K γ) ⟩
+  key-neg-tied ar a arK aK =
+    subst (λ w → ⟨ w ∈ fst (lookup K γ) ⟩) (prʟ-fst ar a)
+      (pairK ar a arK aK)
 
 module LowerAgree {n : ℕ}
   (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K : Fin (5 + n))
@@ -95,7 +112,6 @@ module LowerAgree {n : ℕ}
   (t1eq : fst (lookup (suc (suc (suc (suc (suc (suc t1)))))) γ) ≡ fst (numeralL 1))
   (t0K : ⟨ fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ)
            ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (tmKeyK : (k : S) → ⟨ fst k ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (envK-mem : (yc b a ar c E : S) → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                 envSetAt zero (suc (suc (suc (suc zero))))
@@ -109,18 +125,6 @@ module LowerAgree {n : ℕ}
                 envSetAt zero (suc (suc (suc (suc (suc (suc zero))))))
                           (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-            → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-              × ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (arSubK-mem : (yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                          (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (arSubK-neg : (ya yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                          (ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (arSubK-imp : (ya yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc zero))))
-                                          (ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-                → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (envInK-mem : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
@@ -179,24 +183,41 @@ module LowerAgree {n : ℕ}
                          (suc (suc (suc zero)))
                          (suc zero) ⟩
               → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (keyK-neg : (E ya yc a ar c : S) → ⟨
-                pr (fst (lookup (suc (suc (suc (suc zero)))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)))
-                   (fst (lookup (suc (suc (suc zero))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)))
-                ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
   where
+
+  -- The tied keyK-neg, derived once from pairK ([LJ-1.109]
+  -- TiesSupplied): pr (fst ar) (fst a) is the hierarchy pair of the
+  -- L-pair prʟ ar a, which pairK closes.  The Neg row's site binds
+  -- arK and aK; this derivation is not a hypothesis (C-38).
+  module KN = KeyNegTies {11 + n} (suc (suc (suc (suc (suc (suc K)))))) γ pairK
+
+  keyK-neg-tied : (E ya yc a ar c : S)
+                → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                → ⟨ pr (fst ar) (fst a)
+                     ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+  keyK-neg-tied E ya yc a ar c arK aK = KN.key-neg-tied ar a arK aK
+
+  -- The rows' arityK is the frame's transK with the binder roles
+  -- swapped: transK x a closes x ∈ a, the row's arityK N v closes
+  -- v ∈ N.  One derivation, reused at every application ([LJ-1.93]).
+  arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+         → ⟨ fst N ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+         → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+  arityK N v hv hNK = transK v N hv hNK
 
   module M = MemAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N0)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                tagEq0 numK0
-               (λ a b aK bK → innerK 0 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 0) (valK 0)
-               t0eq t1eq t0K tmKeyK num1K envK-mem entryK arSubK-mem envInK-mem
+               (λ a b aK bK → innerK 0 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) arityK (codesK 0) (valK 0)
+               t0eq t1eq t0K num1K envK-mem envInK-mem
                valV valW
 
   module E = EqAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N1)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                tagEq1 numK1
-               (λ a b aK bK → innerK 1 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 1) (valK 1)
-               t0eq t1eq t0K tmKeyK num1K envK-mem entryK arSubK-mem envInK-mem
+               (λ a b aK bK → innerK 1 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) arityK (codesK 1) (valK 1)
+               t0eq t1eq t0K num1K envK-mem envInK-mem
                valV valW
 
   module A = AndAgree {11 + n} (suc (suc zero)) (suc zero) zero
@@ -214,14 +235,14 @@ module LowerAgree {n : ℕ}
   module I = ImpAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N4)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq4 numK4
-               (λ a b aK bK → innerK 4 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 4) (valK 4)
-               (λ x y xK yK → pairK x y xK yK) subK₁-imp subK₀-imp envK-imp entryK arSubK-imp envInK-imp
+               (λ a b aK bK → innerK 4 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) arityK (codesK 4) (valK 4)
+               (λ x y xK yK → pairK x y xK yK) subK₁-imp subK₀-imp envK-imp envInK-imp
 
   module N = NegAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N5)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq5 numK5
-               (λ a aK → innerK 5 a aK) (codesK-un 5) (valK-un 5)
-               keyK-neg subK-neg envK-neg entryK arSubK-neg envInK-neg
+               (λ a aK → innerK 5 a aK) arityK (codesK-un 5) (valK-un 5)
+               keyK-neg-tied subK-neg envK-neg envInK-neg
 
   sixB : Formula S (11 + n)
   sixB =

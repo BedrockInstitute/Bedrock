@@ -586,7 +586,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.107 | sq at every infinite ordinal | PARTIAL: initial ordinals only | The non-initial case needs an injection the truncated least-of witness cannot give: the inject type is not a prop |
 | LJ-1.108 | Delete the unused refuted hypotheses from the rows | ALL NINE ROWS, GREEN | Six of the eleven names are out of the master. Net -12 lines; +8.1 to +8.6 s against a +2 to +4 s projection |
 | LJ-1.109 | Tie the key-fact family, the last five | ALL FIVE TIED, GREEN | All eleven refuted names are now tied or gone. A KFacts FIELD for the successor closure walls the master: P-x |
-| LJ-1.110 | Restate the three split frames and make the tree green | DISPATCHED | The row repair left all three RED, exit 42, and make check fails. I verified the changed file, not the gate |
+| LJ-1.110 | Restate the three split frames | ALL THREE GREEN, make check PASSES | Frames 43/43/69 facts to 37/36/59. The eleven names are gone from all three; sucK is a telescope fact per P-x |
 | LJ-1.111 | Can Devlin55 take the TRUNCATED sq? | DISPATCHED | The conclusion is a proposition and Devlin55 already eliminates a truncation against it. Cheapest cure asked first |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
