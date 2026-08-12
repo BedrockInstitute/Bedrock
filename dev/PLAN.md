@@ -545,6 +545,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.75 | Give each partial only the facts its rows use | 43 of 69; 122.45 s | Better than proportional: 41.6 pc cheaper for a 37.7 pc smaller telescope. Two partials plus composer, 273.88 s |
 | LJ-1.76 | Build the split composition as masters | THREE MASTERS GREEN, 53.20 s | Five times cheaper than the probe price: the probes re-copied the row machinery, the masters import it |
 | LJ-1.76-A | Orchestrator audit: the composer re-associates | BRIDGE OWED | SatGraphB.twelveB is one right-nested chain of twelve; the composer proves sixB and sixB. Different Formula terms |
+| LJ-1.76-D | Fable 5 adversarial review of the MATHEMATICS | RIGHT THEOREM, WRONG HYPOTHESES | TwelveAgree is Devlin II.2.4 unrolled and faithful. But KFacts self-refutes against regularity |
+| LJ-1.77 | Machine-check whether KFacts is uninhabitable | CONFIRMED, one step | arityK gives X in X through the singleton; ∈-irrefl refutes it. 6 masters take KFacts, 20 take a field |
+| LJ-1.77-A | Orchestrator retraction | THE MATHEMATICS IS NOT DONE | I reported the leaf adequacy as the phase's completed mathematics. It typechecks and proves nothing as stated |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |

@@ -3472,6 +3472,40 @@ obligation into a hypothesis nothing can satisfy, and he did not.
 says what the untested thing usually is: not the proofs, which typecheck, but
 the assumption that the hypotheses mean anything.
 
+**THE WIDEST INSTANCE, 2026-08-12, and it was not found by any audit of
+mine.** The owner asked for an adversarial review of the mathematics rather
+than the seconds. It found that `KFacts`, the record `[LJ-1.62]` measured as
+a minus-thirty-second win and the orchestrator committed, has an
+uninhabitable field:
+
+```agda
+arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩ → ⟨ fst v ∈ fst (lookup K γ) ⟩
+```
+
+**It reads as conditional and is not.** Every set belongs to its own
+singleton, so it asserts that EVERY set belongs to `K`, including `K`.
+`[LJ-1.77]` machine-checked the refutation in one step through the delivered
+`∈-irrefl`: `arityK ⁅X⁆ X (X ∈ ⁅X⁆)` gives `X ∈ X`
+(`src/ProbeLJ177A.agda:75-78`, green at 2.47 s). `innerK`, `innerPairK` and
+`pairK` are the same shape without any premise at all, refuted by a
+membership cycle rather than by irreflexivity, and they stay INFERRED
+because the tree delivers no no-cycle lemma.
+
+**The blast radius, MEASURED**: six masters take `KFacts` (`ShapesAgree`,
+`ClosedAgree`, `ShapedAgree`, `WitnessAgree`, `SatGraphAgree`, `LeafAgree`)
+and twenty more take a suspect field type directly, which is the whole
+row-agreement band. **All of them are uninstantiable as stated, including
+the leaf adequacy the orchestrator had reported as the phase's completed
+mathematics.**
+
+**THE SHAPE IS MECHANIZABLE AND NO CHECKER EXISTS.** A closure hypothesis
+about a bounding set `K` must be CONDITIONAL:
+`(a : S) → a ∈ <bound> → a ∈ K`. One quantified over arbitrary sets with no
+membership premise is refuted by regularity, always. **A grep is not enough
+to find these**: the orchestrator's one-line regex over-matched and flagged
+`carrierK`, which is sound. A real checker needs the parse, and it is worth
+writing.
+
 **Provenance:** `_build/lj-1.71-report.md` sections 0 to 2;
 `src/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
 claim that the twenty-four hypotheses were discharged is false.
