@@ -589,8 +589,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.110 | Restate the three split frames | ALL THREE GREEN, make check PASSES | Frames 43/43/69 facts to 37/36/59. The eleven names are gone from all three; sucK is a telescope fact per P-x |
 | LJ-1.111 | Can Devlin55 take the TRUNCATED sq? | TRUNCATED CHAIN GREEN | Truncated sq holds at EVERY infinite ordinal, no choice. The cheap cure is NO; threading costs about 350 lines |
 | LJ-1.112 | Instantiate the repaired composer | ZERO METAS, GREEN | 39 to 11 to 0. Every one of the 59 frame facts is supplied, but 29 come from consumer hypotheses that are NOT discharged |
-| LJ-1.113 | Who supplies the twenty nine? | DISPATCHED | The distance from instantiable to proved. Classify each PROVABLE, NEEDS NEW CONTENT or UNKNOWN, and machine-check three |
+| LJ-1.113 | Who supplies the twenty nine? | PROVABLE 1, NEW CONTENT 28 | None is refutable. Twenty five are one pattern, K closed under a machine construction; someEnv is the odd one |
 | LJ-1.114 | Thread the truncation from StageCardinal to Devlin55 | DISPATCHED | Cash the proved truncated square law. C-40 is written into the brief: name every consumer you checked |
+| LJ-1.115 | Probe someEnv, the K-closure family's widest term | DISPATCHED | The only one of the 28 whose supplier is a construction, not a closure. DD8 gate before the family is funded |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
