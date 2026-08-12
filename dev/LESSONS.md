@@ -3136,10 +3136,37 @@ analogy the brief leaned on fails at the one joint that made the original
 work: there the transparent index never appeared again, and here the concrete
 stack still appears at every site (P-l).
 
+**AMENDED THE SAME DAY, and the amendment is the useful half. THE COPY IS
+PAID AT USE, NOT AT WRITING.** `[LJ-1.69]` measured that a module-level
+`module X = M ...` binding that nothing uses costs **0.089 s**, inside the
+noise, and `agda --profile=definitions` shows **no elaborated copy at all**.
+A let-bound application inside a proof body is the eager shape: `[LJ-1.66]`
+measured that one at **1.016 s**. So "an application copies" is right about
+WHAT is paid and wrong about WHEN, and an instrument that counts unused
+module-level applications measures nothing. **Price an application by what
+USES it.** That the difference is the binding site rather than the two
+different modules is INFERRED; only one shape was measured at each site.
+
+**AND THE COST IS USUALLY NOT THE COPY.** At the discharge frame `[LJ-1.69]`
+measured one row module at **3.6 s**, of which the used surface is about
+**0.12 s**: the `row` formula and the `out`/`back` aliases. The other 3.5 s
+is the FRAME TELESCOPE, seventeen site facts of which four state satisfaction
+over the built trees `envSetAt`, `envOverAt` and `tmValAt`. That is P-t
+content. **So class (c), cheaper types on what is copied, is where the money
+is, and classes (a) and (b) were always going to return little.**
+
+**THE SWING THIS OPENS, measured in parts and composed:** writing one frame
+per row pays the 3.6 s telescope thirteen times, about **47 s**. Writing ONE
+generic frame whose seventeen facts are parameterized by the row tag pays it
+once plus thirteen used surfaces, about **5 s**. **Nine to one, and it is the
+same shape `KFacts` took for the other fact family at `-30 s`.** The generic
+frame is the DD4 move and the cheap one at the same time.
+
 **Provenance:** `_build/lj-1.66-review.md` section E.1, a DD25 review that
 read the four regressions as one mechanism rather than four failures;
 `_build/lj-1.63-report.md` section 5, `_build/lj-1.66-report.md:94`,
-`_build/lj-1.67-report.md:32`, `_build/lj-1.62-report.md:85-112`.
+`_build/lj-1.67-report.md:32`, `_build/lj-1.62-report.md:85-112`. The
+amendment is `_build/lj-1.69-report.md` sections 2 to 4.
 
 ### C-34. A return that names a cure PRICES it, or reports the wall that stops it
 
