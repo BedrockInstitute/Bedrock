@@ -570,13 +570,14 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.91 | Gate the cardinal chapter | AMBIENT HARTOGS, 490 to 890 lines | IsCardinal is ambient, so the internal omega-1-L does not provably satisfy it. Order types are the widest term |
 | LJ-1.92 | Probe the order-type module | 365 LINES, 18.4 s, GREEN | The image block is 17 of the 18.4 s. V/Collapse does NOT carry it. The inferred seconds were 4.7x low |
 | LJ-1.93 | Be the first consumer of the three split masters | NOT DISCHARGED | The twelve conjuncts match and the association bridge is green, but 39 of the composer's 69 facts have no supplier |
-| LJ-1.94 | Build the ambient Hartogs cardinal and end at the consumer | DISPATCHED | Five steps as a probe chain, ending where cardk receives a value at the LJ-1.90 site |
+| LJ-1.94 | Build the ambient Hartogs cardinal and end at the consumer | CARDK SUPPLIED, GREEN | 1058 lines, 27 s, no choice. But IsCardinal is stated locally, and the next blocker is Devlin55's sq |
 | LJ-1.95 | Refute tmKeyK, or show it inhabitable | REFUTED, MEASURED | Applied at the K slot's own element, closed by delivered in-irrefl. All three split masters state it, so all three are empty |
 | LJ-1.96 | Price the ideal form of the three split masters | RETIRE, NOT RULED | Its no-home table is mostly INFERRED rows, so the verdict rests on inference. LJ-1.97 tests the family first |
 | LJ-1.97 | Are the satisfier-in-K facts TRUE? | TEN REFUTED, MEASURED | Every one quantifies over a set nothing binds. With tmKeyK that is eleven facts of the shared frame |
 | LJ-1.98 | Can the eleven refuted facts be TIED? | ONE TIE MEASURED NOT SUPPLIED | The T-slot tie fails at the EnvSet site. My abort criterion then stopped it, and it hid a second candidate |
 | LJ-1.99 | Does transitivity of K close entryK? | YES, MEASURED GREEN | Four arityK steps close entryK; arSubK is one step. The rows supply every tie; EnvSet's own telescope does not |
 | LJ-1.100 | Extend the consumer's frame and re-measure the 39 | DISPATCHED | One number decides repair against retirement. Every addition must be refutation-tested before it is added |
+| LJ-1.101 | Close the cardk type gap, then price sq for every infinite ordinal | DISPATCHED | A value at a copy of the type is one step short. And SquareLaw:960 already delivers sq from Init |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
