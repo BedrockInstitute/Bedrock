@@ -3509,3 +3509,46 @@ writing.
 **Provenance:** `_build/lj-1.71-report.md` sections 0 to 2;
 `src/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
 claim that the twenty-four hypotheses were discharged is false.
+
+### C-39. A brief's prohibition binds harder than its goal: an agent stops at the wall and never reports the door behind it
+
+**The law.** A dispatched agent cannot contradict its brief. So a prohibition
+written to prevent one known failure also forbids every legitimate move that
+looks like it, and the return reads as a clean negative rather than as a
+blocked search. **The orchestrator then believes a route is dead when only
+the brief was.**
+
+**The action.** Write a prohibition with its TEST, never with its shape.
+"Do not add a hypothesis" is a shape. "Do not add a hypothesis the consumer
+cannot supply, and name what supplies each one you add" is a test, and it
+admits the delivered fact while still refusing the invented one. The same
+for an abort criterion: "stop at the first negative" is right only when the
+question has one candidate answer. **Count the candidates before you write
+the stop.**
+
+**The measurement, 2026-08-13, two dispatches in one session.**
+
+`[LJ-1.98]` was told "STOP at that one" on the first tie measured not
+supplied. It measured the T-slot tie for `entryK` absent at the site, which
+was true, and stopped with ten facts unattempted. `[LJ-1.99]` then measured a
+second tie GREEN: four applications of the delivered `KFacts.arityK`
+(`src/L/Condensation.lagda.md:5769-5770`), `src/ProbeLJ199A.agda:65-204`. The
+question had at least two candidate ties and the criterion admitted one.
+
+`[LJ-1.102]` was told "Do not add a hypothesis to the row to make the tie
+available". It measured both tie forms failing, each on one component of the
+same transfer, the two premises exactly one `arityK` step apart, and reported
+that the row's telescope holds neither `arityK` nor `transK`
+(`src/L/Condensation.lagda.md:4142-4185`). **`arityK` is a field of the
+consumer's own `KFacts` and `transK` is already a fact of the composer's
+frame** (`src/L/Condensation/TwelveAgree.lagda.md:167-169`). The prohibition
+was written against invented facts and it blocked a held one.
+
+**Both returns were correct measurements of what they were asked.** Neither
+was wrong. The defect is upstream of them, in the brief, and it cost one
+dispatch each time.
+
+**Provenance:** `_build/lj-1.98-report.md` section 0; `_build/lj-1.99-report.md`
+section 0, probe re-run by the orchestrator at 1.85 s;
+`_build/lj-1.102-report.md` sections 0 and 2; briefs
+`_build/briefs/LJ-1.98.md`, `LJ-1.102.md`, whose stop lines are quoted above.
