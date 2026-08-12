@@ -71,8 +71,11 @@ module LowerAgree {n : ℕ}
   (numK3 : ⟨ fst (numeralL 3) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (numK4 : ⟨ fst (numeralL 4) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (numK5 : ⟨ fst (numeralL 5) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (innerK : (k : ℕ) (p : S) → ⟨ fst (prʟ (numeralL k) p) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (pairK : (a b : S) → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
+  (innerK : (k : ℕ) (p : S) → ⟨ fst p ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst (prʟ (numeralL k) p) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
+  (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (codesK : (k : ℕ) (c ar a b : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
             → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
@@ -185,39 +188,39 @@ module LowerAgree {n : ℕ}
   module M = MemAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N0)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                tagEq0 numK0
-               (λ a b → innerK 0 (prʟ a b)) pairK (codesK 0) (valK 0)
+               (λ a b aK bK → innerK 0 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 0) (valK 0)
                t0eq t1eq t0K tmKeyK num1K envK-mem entryK arSubK-mem envInK-mem
                valV valW
 
   module E = EqAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N1)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                tagEq1 numK1
-               (λ a b → innerK 1 (prʟ a b)) pairK (codesK 1) (valK 1)
+               (λ a b aK bK → innerK 1 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 1) (valK 1)
                t0eq t1eq t0K tmKeyK num1K envK-mem entryK arSubK-mem envInK-mem
                valV valW
 
   module A = AndAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N2)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq2 numK2
-               (λ a b → innerK 2 (prʟ a b)) pairK (codesK 2) (valK 2)
-               pairK transK subK₁-and subK₀-and someEnv
+               (λ a b aK bK → innerK 2 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 2) (valK 2)
+               (λ x y xK yK → pairK x y xK yK) transK subK₁-and subK₀-and someEnv
 
   module O = OrAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N3)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq3 numK3
-               (λ a b → innerK 3 (prʟ a b)) pairK (codesK 3) (valK 3)
-               pairK transK subK₁-and subK₀-and someEnv
+               (λ a b aK bK → innerK 3 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 3) (valK 3)
+               (λ x y xK yK → pairK x y xK yK) transK subK₁-and subK₀-and someEnv
 
   module I = ImpAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N4)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq4 numK4
-               (λ a b → innerK 4 (prʟ a b)) pairK (codesK 4) (valK 4)
-               pairK subK₁-imp subK₀-imp envK-imp entryK arSubK-imp envInK-imp
+               (λ a b aK bK → innerK 4 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 4) (valK 4)
+               (λ x y xK yK → pairK x y xK yK) subK₁-imp subK₀-imp envK-imp entryK arSubK-imp envInK-imp
 
   module N = NegAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N5)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq5 numK5
-               (λ a → innerK 5 a) (codesK-un 5) (valK-un 5)
+               (λ a aK → innerK 5 a aK) (codesK-un 5) (valK-un 5)
                keyK-neg subK-neg envK-neg entryK arSubK-neg envInK-neg
 
   sixB : Formula S (11 + n)
