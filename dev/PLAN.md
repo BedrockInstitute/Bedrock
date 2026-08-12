@@ -568,6 +568,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.90 | Instantiate BoundedSubsetAt for the first time | REACHES cardκ | Every other hypothesis takes a value, including AllCodes A in Lset lam. Nothing in the tree proves any set is a cardinal |
 | LJ-1.90-A | Orchestrator audit: IsCardinal is never inhabited | CONFIRMED | Two hits in src: the definition and the hypothesis. The probe's own kappa, sucV omega, is not a cardinal either |
 | LJ-1.91 | Gate the cardinal chapter | AMBIENT HARTOGS, 490 to 890 lines | IsCardinal is ambient, so the internal omega-1-L does not provably satisfy it. Order types are the widest term |
+| LJ-1.92 | Probe the order-type module | 365 LINES, 18.4 s, GREEN | The image block is 17 of the 18.4 s. V/Collapse does NOT carry it. The inferred seconds were 4.7x low |
+| LJ-1.93 | Be the first consumer of the three split masters | NOT DISCHARGED | The twelve conjuncts match and the association bridge is green, but 39 of the composer's 69 facts have no supplier |
+| LJ-1.94 | Build the ambient Hartogs cardinal and end at the consumer | DISPATCHED | Five steps as a probe chain, ending where cardk receives a value at the LJ-1.90 site |
+| LJ-1.95 | Refute tmKeyK, or show it inhabitable | DISPATCHED | Adversarial review of LJ-1.93's negative per DD25. tmKeyK has no premise, so unsuppliable may understate it |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
