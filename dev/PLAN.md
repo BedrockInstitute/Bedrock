@@ -577,8 +577,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.98 | Can the eleven refuted facts be TIED? | ONE TIE MEASURED NOT SUPPLIED | The T-slot tie fails at the EnvSet site. My abort criterion then stopped it, and it hid a second candidate |
 | LJ-1.99 | Does transitivity of K close entryK? | YES, MEASURED GREEN | Four arityK steps close entryK; arSubK is one step. The rows supply every tie; EnvSet's own telescope does not |
 | LJ-1.100 | Extend the consumer's frame and re-measure the 39 | 39 BECAME 11, MEASURED | The 11 are exactly the refuted facts, whose types are empty. No frame extension can supply an empty type |
-| LJ-1.101 | Close the cardk type gap, then price sq for every infinite ordinal | DISPATCHED | A value at a copy of the type is one step short. And SquareLaw:960 already delivers sq from Init |
+| LJ-1.101 | Close the cardk type gap, then price sq | GAP CLOSED, GREEN | cardk checks at the master's IsCardinal, no transport. And absorbs-subset is REFUTED, so Devlin55 is vacuous |
 | LJ-1.102 | Restate ONE row in tied form and re-prove it | DISPATCHED | The last unmeasured step of the repair: does the row's PROOF survive the tie, or did it use the over-generality? |
+| LJ-1.103 | Restate absorbs-subset and re-check Devlin55 | DISPATCHED | A false hypothesis in a delivered master. BoundedSubsetAt sits inside Devlin55, so 266 lines are vacuous |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
