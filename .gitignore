@@ -19,6 +19,11 @@ __pycache__/
 .claude/
 
 # Probes are throwaway by doctrine: never committed (see dev/LESSONS.md D-1)
+# EVERY .agda under src/ is a probe by construction: masters are .lagda.md,
+# and `git ls-files` finds zero tracked .agda there. A probe named anything
+# else slipped past the Probe* pattern once (src/MetaTest.agda, 2026-08-13).
+src/**/*.agda
+src/**/*.agdai
 src/Probe*.agda
 src/Probe*.agdai
 # [LJ-1.72] wrote its probes as .lagda.md, which this list did not cover, so

@@ -3689,8 +3689,9 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 5) (fst a))
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
-  (keyK : (E ya yc a ar c : S) → ⟨
-             pr (fst (lookup (suc (suc (suc (suc zero)))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)))
+  (keyK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+         → ⟨ fst a ∈ fst (lookup K γ) ⟩
+         → ⟨ pr (fst (lookup (suc (suc (suc (suc zero)))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)))
                 (fst (lookup (suc (suc (suc zero))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)))
              ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
   (subK : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
@@ -3729,7 +3730,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                  (suc (suc (suc zero)))
                  (suc zero)
                  (suc (suc (suc (suc (suc (suc K))))))
-                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (keyK E ya yc a ar c) hsub
+                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (keyK E ya yc a ar c arK aK) hsub
         hbM = h c c∈ ar a yc shD hc ya E hya' hE'
     in extAt→extAtB (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
          body body (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (λ z x → x) (λ z x → x) hbM
@@ -3756,7 +3757,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                  (suc (suc (suc zero)))
                  (suc zero)
                  (suc (suc (suc (suc (suc (suc K))))))
-                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (keyK E ya yc a ar c) hya
+                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (keyK E ya yc a ar c arK aK) hya
         hb = h c c∈ ar arK a aK yc ycK shB hc ya yaK E EK hsub henv
     in extAtB→extAt (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
          body body (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (λ z x → x) (λ z x → x)
@@ -3793,8 +3794,11 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 9) (fst a))
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
-  (succK : (E ya yc a ar c : S) → succU {m} C T B N K γ E ya yc a ar c)
-  (keyK : (E ya yc a ar c : S) → keyU {m} C T B N K γ E ya yc a ar c)
+  (succK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+          → succU {m} C T B N K γ E ya yc a ar c)
+  (keyK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+          → ⟨ fst a ∈ fst (lookup K γ) ⟩
+          → keyU {m} C T B N K γ E ya yc a ar c)
   (subK : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
              subValSuccAt (suc (suc (suc (suc (suc (suc T))))))
                           (suc (suc (suc (suc zero))))
@@ -3835,8 +3839,8 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                  (suc (suc (suc zero)))
                  (suc zero)
                  (suc (suc (suc (suc (suc (suc K))))))
-                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c)
-                 (keyK E ya yc a ar c) hsub
+                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c arK)
+                 (keyK E ya yc a ar c arK aK) hsub
         hbM = h c c∈ ar a yc shD hc ya E hya' hE'
     in extAt→extAtB (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
          bodyFφ (body∀ B) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)
@@ -3868,8 +3872,8 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                  (suc (suc (suc zero)))
                  (suc zero)
                  (suc (suc (suc (suc (suc (suc K))))))
-                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c)
-                 (keyK E ya yc a ar c) hya
+                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c arK)
+                 (keyK E ya yc a ar c arK aK) hya
         hb = h c c∈ ar arK a aK yc ycK shB hc ya yaK E EK hsub henv
     in extAtB→extAt (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
          bodyFφ (body∀ B) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)
@@ -3894,8 +3898,11 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 8) (fst a))
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
-  (succK : (E ya yc a ar c : S) → succU {m} C T B N K γ E ya yc a ar c)
-  (keyK : (E ya yc a ar c : S) → keyU {m} C T B N K γ E ya yc a ar c)
+  (succK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+          → succU {m} C T B N K γ E ya yc a ar c)
+  (keyK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+          → ⟨ fst a ∈ fst (lookup K γ) ⟩
+          → keyU {m} C T B N K γ E ya yc a ar c)
   (subK : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
              subValSuccAt (suc (suc (suc (suc (suc (suc T))))))
                           (suc (suc (suc (suc zero))))
@@ -4008,8 +4015,8 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                  (suc (suc (suc zero)))
                  (suc zero)
                  (suc (suc (suc (suc (suc (suc K))))))
-                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c)
-                 (keyK E ya yc a ar c) hsub
+                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c arK)
+                 (keyK E ya yc a ar c arK aK) hsub
         hbM = h c c∈ ar a yc shD hc ya E hya' hE'
     in extAt→extAtB (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
          bodyE (body∃ B) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) L.fwd L.bwd hbM
@@ -4037,8 +4044,8 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                  (suc (suc (suc zero)))
                  (suc zero)
                  (suc (suc (suc (suc (suc (suc K))))))
-                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c)
-                 (keyK E ya yc a ar c) hya
+                 (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc a ar c arK)
+                 (keyK E ya yc a ar c arK aK) hya
         hb = h c c∈ ar arK a aK yc ycK shB hc ya yaK E EK hsub henv
     in extAtB→extAt (suc (suc zero)) (suc (suc (suc (suc (suc (suc K))))))
          bodyE (body∃ B) (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) L.fwd L.bwd
@@ -4065,8 +4072,11 @@ module ClauseAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 8) (fst a))
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
-  (succK : (E ya yc a ar c : S) → succU {m} C T B N K γ E ya yc a ar c)
-  (keyK : (E ya yc a ar c : S) → keyU {m} C T B N K γ E ya yc a ar c)
+  (succK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+          → succU {m} C T B N K γ E ya yc a ar c)
+  (keyK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+          → ⟨ fst a ∈ fst (lookup K γ) ⟩
+          → keyU {m} C T B N K γ E ya yc a ar c)
   (subK : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
              subValSuccAt (suc (suc (suc (suc (suc (suc T))))))
                           (suc (suc (suc (suc zero))))
@@ -4917,12 +4927,13 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 10) (pr (fst a) (fst b)))
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
-  (succK : (E ya yc b a ar c : S) → ⟨
+  (succK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩ → ⟨
              sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
                         (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
              ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
-  (keyK : (E ya yc b a ar c : S) → ⟨
+  (keyK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+         → ⟨ fst b ∈ fst (lookup K γ) ⟩ → ⟨
              pr (sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
                             (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))))
                 (fst (lookup (suc (suc (suc zero)))
@@ -4979,8 +4990,8 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                    (suc (suc (suc zero)))
                    (suc zero)
                    (suc (suc (suc (suc (suc (suc (suc K)))))))
-                   (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc b a ar c)
-                   (keyK E ya yc b a ar c) hsubA
+                   (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc b a ar c arK)
+                   (keyK E ya yc b a ar c arK bK) hsubA
           hbM = h c c∈ ar a b yc shD hc ya E hya' hE'
       in extAt→extAtB (suc (suc zero)) (suc (suc (suc (suc (suc (suc (suc K)))))))
            L.bodyS L.bodyM (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) L.all-fwd L.all-bwd hbM
@@ -5010,8 +5021,8 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                   (suc (suc (suc zero)))
                   (suc zero)
                   (suc (suc (suc (suc (suc (suc (suc K)))))))
-                  (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E yb yc b a ar c)
-                  (keyK E yb yc b a ar c) hb
+                  (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E yb yc b a ar c arK)
+                  (keyK E yb yc b a ar c arK bK) hb
         hb' = h c c∈ ar arK a aK b bK yc ycK shB hc yb yaK E EK hsubA henv
     in extAtB→extAt (suc (suc zero)) (suc (suc (suc (suc (suc (suc (suc K)))))))
          L.bodyS L.bodyM (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) L.all-fwd L.all-bwd
@@ -5036,12 +5047,13 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 11) (pr (fst a) (fst b)))
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
-  (succK : (E ya yc b a ar c : S) → ⟨
+  (succK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩ → ⟨
              sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
                         (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)))
              ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
-  (keyK : (E ya yc b a ar c : S) → ⟨
+  (keyK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+         → ⟨ fst b ∈ fst (lookup K γ) ⟩ → ⟨
              pr (sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
                             (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))))
                 (fst (lookup (suc (suc (suc zero)))
@@ -5098,8 +5110,8 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                    (suc (suc (suc zero)))
                    (suc zero)
                    (suc (suc (suc (suc (suc (suc (suc K)))))))
-                   (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc b a ar c)
-                   (keyK E ya yc b a ar c) hsubA
+                   (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E ya yc b a ar c arK)
+                   (keyK E ya yc b a ar c arK bK) hsubA
           hbM = h c c∈ ar a b yc shD hc ya E hya' hE'
       in extAt→extAtB (suc (suc zero)) (suc (suc (suc (suc (suc (suc (suc K)))))))
            L.bodySx L.bodyMx (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) L.ex-fwd L.ex-bwd hbM
@@ -5129,8 +5141,8 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                   (suc (suc (suc zero)))
                   (suc zero)
                   (suc (suc (suc (suc (suc (suc (suc K)))))))
-                  (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E yb yc b a ar c)
-                  (keyK E yb yc b a ar c) hb
+                  (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) (succK E yb yc b a ar c arK)
+                  (keyK E yb yc b a ar c arK bK) hb
         hb' = h c c∈ ar arK a aK b bK yc ycK shB hc yb yaK E EK hsubA henv
     in extAtB→extAt (suc (suc zero)) (suc (suc (suc (suc (suc (suc (suc K)))))))
          L.bodySx L.bodyMx (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) L.ex-fwd L.ex-bwd
