@@ -3628,10 +3628,6 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc zero)))
                        (suc (suc (suc (suc (suc B))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-  (arSubK : (yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc zero)) (yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (yc a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc zero))))
                           (suc (suc (suc (suc (suc (suc B)))))) ⟩
@@ -3706,11 +3702,6 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-  (arSubK : (ya yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                       (ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -3813,11 +3804,6 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-  (arSubK : (ya yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                       (ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -3919,11 +3905,6 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-  (arSubK : (ya yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                       (ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -4095,11 +4076,6 @@ module ClauseAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-  (arSubK : (ya yc a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                       (ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -4111,7 +4087,7 @@ module ClauseAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                             (x ∷ z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
   where
   module E = ExistAgree {m} C T B N K γ
-    tagEq numK innerK arityK codesK valK succK keyK subK envK entryK arSubK envInK consK
+    tagEq numK innerK arityK codesK valK succK keyK subK envK envInK consK
 
   out : ⟨ γ ⊨ existClauseAt C T B ⟩
       → ⟨ γ ⊨ Exist.existBndAt C T B N K ⟩
@@ -4718,7 +4694,10 @@ module BndLeaf {m : ℕ} (B t0 t1 K : Fin m) (E ya yc b a ar c : S) (γ : S ^ m)
   (t0eq : fst (lookup t0 γ) ≡ fst (numeralL 0))
   (t1eq : fst (lookup t1 γ) ≡ fst (numeralL 1))
   (t0K : ⟨ fst (lookup t0 γ) ∈ fst (lookup K γ) ⟩)
-  (tmKeyK : (k : S) → ⟨ fst k ∈ fst (lookup K γ) ⟩)
+  (arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+          → ⟨ fst N ∈ fst (lookup K γ) ⟩
+          → ⟨ fst v ∈ fst (lookup K γ) ⟩)
+  (aK : ⟨ fst a ∈ fst (lookup K γ) ⟩)
   (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup K γ) ⟩)
   (wK : (z w : S) → ⟨ (w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                       tmValAt (suc (suc (suc (suc (suc (suc zero))))))
@@ -4750,6 +4729,40 @@ module BndLeaf {m : ℕ} (B t0 t1 K : Fin m) (E ya yc b a ar c : S) (γ : S ^ m)
 
   bodyM : Formula S (8 + m)
   bodyM = bodyAll B
+
+  module Z = ChainZ {m} K γ arityK
+
+  -- THE DERIVATION, ported from AtomLeaf: from the code slot's
+  -- membership (aK at the allin layout), arityK, and the tag
+  -- satisfaction, the key's membership k ∈ K follows by the pair
+  -- chain.  tmKeyK is not a telescope hypothesis: its tied form
+  -- keyValK is refuted at the abstract frame ([LJ-1.104],
+  -- ProbeLJ1104A:118-120).
+  keyK-of : (z w : S) (c₀ : Fin (9 + m))
+          → ⟨ fst (lookup c₀ (w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))
+              ∈ fst (lookup K γ) ⟩
+          → (k : S)
+          → ⟨ (k ∷ w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+               tagAtL (suc c₀) 1 zero ⟩
+          → ⟨ fst k ∈ fst (lookup K γ) ⟩
+  keyK-of z w c₀ cK k ht =
+    let γ' : S ^ (9 + m)
+        γ' = w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
+        tagEq : fst (lookup c₀ γ') ≡ pr (# 1) (fst k)
+        tagEq = transport (cong fst (tagAtL-adequate (suc c₀) 1 zero (k ∷ γ'))) ht
+        pʟ : fst (prʟ (numeralL 1) k) ≡ pr (# 1) (fst k)
+        pʟ = prʟ-fst (numeralL 1) k ∙ cong₂ pr (numeralL-fst 1) refl
+        pℓ : fst (pairʟ (numeralL 1) k) ≡ ⁅ # 1 , fst k ⁆
+        pℓ = pairʟ-fst (numeralL 1) k ∙ cong₂ ⁅_,_⁆ (numeralL-fst 1) refl
+        pair∈K : ⟨ fst (prʟ (numeralL 1) k) ∈ fst (lookup K γ) ⟩
+        pair∈K = subst (λ w → ⟨ w ∈ fst (lookup K γ) ⟩) (tagEq ∙ sym pʟ) cK
+    in arityK (pairʟ (numeralL 1) k) k
+         (subst (λ w → ⟨ fst k ∈ w ⟩) (sym pℓ) (Z.b∈pair (# 1) (fst k)))
+         (arityK (prʟ (numeralL 1) k) (pairʟ (numeralL 1) k)
+           (subst (λ w → ⟨ fst (pairʟ (numeralL 1) k) ∈ w ⟩) (sym pʟ)
+             (subst (λ w → ⟨ w ∈ pr (# 1) (fst k) ⟩) (sym pℓ)
+               (Z.pair∈pr (# 1) (fst k))))
+           pair∈K)
 
   -- The innermost satisfaction types at the frame.
   wK' : (z w : S) → Type (ℓ-suc ℓ)
@@ -4818,7 +4831,7 @@ module BndLeaf {m : ℕ} (B t0 t1 K : Fin m) (E ya yc b a ar c : S) (γ : S ^ m)
       (suc (suc (suc (suc (suc (suc (suc (suc (suc t0)))))))))
       (suc (suc (suc (suc (suc (suc (suc (suc (suc t1)))))))))
       (w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) t0eq t1eq t0K
-      (λ k ht → tmKeyK k) num1K
+      (λ k ht → keyK-of z w (suc (suc (suc (suc (suc (suc zero)))))) aK k ht) num1K
 
   -- THE UNIVERSAL SHAPE (AllIn): no truncation.
   all-fwd : (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ bodyS ⟩
@@ -4925,11 +4938,6 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc (suc zero)))))
                        (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-    (arSubK : (ya yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc zero))))
-                                        (ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                            (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
@@ -4937,7 +4945,6 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   (t0eq : fst (lookup t0 γ) ≡ fst (numeralL 0))
   (t1eq : fst (lookup t1 γ) ≡ fst (numeralL 1))
   (t0K : ⟨ fst (lookup t0 γ) ∈ fst (lookup K γ) ⟩)
-  (tmKeyK : (k : S) → ⟨ fst k ∈ fst (lookup K γ) ⟩)
   (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup K γ) ⟩)
   (wKfact : (E ya yc b a ar c z w : S) → ⟨ (w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
               tmValAt (suc (suc (suc (suc (suc (suc zero))))))
@@ -4964,7 +4971,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
                          (envInK E ya yc b a ar c)
           module L = BndLeaf B t0 t1 K E ya yc b a ar c γ
-                       t0eq t1eq t0K tmKeyK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
+                       t0eq t1eq t0K arityK aK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
           hE' = E'.out henv
           hya' = SubValSuccB2T.back {m = 7 + m}
                    (suc (suc (suc (suc (suc (suc (suc T)))))))
@@ -4995,7 +5002,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
                        (envInK E yb yc b a ar c)
         module L = BndLeaf B t0 t1 K E yb yc b a ar c γ
-                     t0eq t1eq t0K tmKeyK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
+                     t0eq t1eq t0K arityK aK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
         henv = E'.back hE
         hsubA = SubValSuccB2T.out {m = 7 + m}
                   (suc (suc (suc (suc (suc (suc (suc T)))))))
@@ -5050,11 +5057,6 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc (suc zero)))))
                        (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-    (arSubK : (ya yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc zero))))
-                                        (ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                            (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
@@ -5062,7 +5064,6 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   (t0eq : fst (lookup t0 γ) ≡ fst (numeralL 0))
   (t1eq : fst (lookup t1 γ) ≡ fst (numeralL 1))
   (t0K : ⟨ fst (lookup t0 γ) ∈ fst (lookup K γ) ⟩)
-  (tmKeyK : (k : S) → ⟨ fst k ∈ fst (lookup K γ) ⟩)
   (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup K γ) ⟩)
   (wKfact : (E ya yc b a ar c z w : S) → ⟨ (w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
               tmValAt (suc (suc (suc (suc (suc (suc zero))))))
@@ -5089,7 +5090,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
                          (envInK E ya yc b a ar c)
           module L = BndLeaf B t0 t1 K E ya yc b a ar c γ
-                       t0eq t1eq t0K tmKeyK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
+                       t0eq t1eq t0K arityK aK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
           hE' = E'.out henv
           hya' = SubValSuccB2T.back {m = 7 + m}
                    (suc (suc (suc (suc (suc (suc (suc T)))))))
@@ -5120,7 +5121,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
                        (envInK E yb yc b a ar c)
         module L = BndLeaf B t0 t1 K E yb yc b a ar c γ
-                     t0eq t1eq t0K tmKeyK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
+                     t0eq t1eq t0K arityK aK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
         henv = E'.back hE
         hsubA = SubValSuccB2T.out {m = 7 + m}
                   (suc (suc (suc (suc (suc (suc (suc T)))))))
@@ -5169,11 +5170,6 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc (suc (suc zero))))))
                        (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-   (arSubK : (ya yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc zero))))
-                                        (ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                           (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
@@ -5253,17 +5249,11 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   (t0eq : fst (lookup t0 γ) ≡ fst (numeralL 0))
   (t1eq : fst (lookup t1 γ) ≡ fst (numeralL 1))
   (t0K : ⟨ fst (lookup t0 γ) ∈ fst (lookup K γ) ⟩)
-  (tmKeyK : (k : S) → ⟨ fst k ∈ fst (lookup K γ) ⟩)
   (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup K γ) ⟩)
   (envK : (yc b a ar c E : S) → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (entryK : (z x y : S) → ⟨ pr (fst x) (fst y) ∈ fst z ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩)
-  (arSubK : (yc b a ar c x : S) → ⟨ fst x ∈ fst (lookup (suc (suc (suc zero)))
-                                       (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
-           → ⟨ fst x ∈ fst (lookup K γ) ⟩)
   (envInK : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
