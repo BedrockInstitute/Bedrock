@@ -565,6 +565,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.88 | Is the witness step circular | NOT CIRCULAR; finiteness | w is a finite union of key singletons, so finSet in the definable power set puts it one level up. Wiring, not redesign |
 | LJ-1.88-A | Orchestrator retraction of the LJ-1.87 framing | REVERSED | I called it a design question needing the owner. It is wiring, and I should have tested my inference first |
 | LJ-1.89 | Prove witK by the finite-family route | PROVED, staged not discharged | One open premise, the frame's stage hypothesis. Assembly green at 0.98 s user, verified by the orchestrator |
+| LJ-1.90 | Instantiate BoundedSubsetAt for the first time | REACHES cardκ | Every other hypothesis takes a value, including AllCodes A in Lset lam. Nothing in the tree proves any set is a cardinal |
+| LJ-1.90-A | Orchestrator audit: IsCardinal is never inhabited | CONFIRMED | Two hits in src: the definition and the hypothesis. The probe's own kappa, sucV omega, is not a cardinal either |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
