@@ -1050,7 +1050,8 @@ IsCardinal κ = (δ : S) → ⟨ δ ∈ˢ κ ⟩ → (⟪ κ ⟫ ↪ ⟪ δ ⟫ 
 -- The witness of a collapse value is a member of M, and THAT fibre is a
 -- proposition because π is injective on M; only the code fibre is not a
 -- proposition, and the least-of-the-class pattern over the ordinal's own
--- well-order (L.StageCardinal.Successor) picks a canonical code.  The
+-- well-order (leastOf over L.StageCardinal.OrdSWO.ordSWO) picks a
+-- canonical code.  The
 -- composite replaces the `collapseCode` hypothesis outright.
 -- =====================================================================
 

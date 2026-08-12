@@ -520,6 +520,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.61 | Place the rest of the leaf chain | NO-GO, wing 1.38x | 165 lines cost 27.6 s. The wing had 5.74 s of headroom. 63 pc of the cost was module-header elaboration, not any definition |
 | LJ-1.62 | Change the content class, or price the wall | BUNDLE WORKS; chain over | KFacts cuts Miscellaneous by 34 s and takes the wing to 1.02x. The whole leaf chain then places, at wing 1.28x |
 | LJ-1.62-A | Orchestrator audit: the gate re-run, and where the seconds are | VERIFIED, 1.28x | 11.83 s must come off the WING, not the chain. StageCardinal holds 4.34 s and Presentation 0.42 s of it |
+| LJ-1.63 | Find 11.83 seconds in the wing | 9.85 s found, 1.28x to 1.18x | StageCardinal's Successor cluster had no consumer and cost 83 pc of it. Sealing, frames and aliasing all regressed |
+| LJ-1.63-A | Orchestrator audit of the Successor removal | UPHELD | No master takes a stage-card-suc shaped hypothesis and the two master hits are a comment and a substring. Removal is sound |
+| LJ-1.64 | The last 2.33 seconds | REJECTED by audit | It passed the gate by removing the row-agreement band, which is what discharges TwelveAgree's 24 hypotheses. Restored |
+| LJ-1.64-A | Orchestrator audit: the gate passed by moving the obligation | REVERTED, C-35 again | TwelveAgree takes mem-out..exin-back as parameters; the removed MemAgree proves exactly mem-out and mem-back |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
