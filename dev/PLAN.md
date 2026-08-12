@@ -584,7 +584,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.105 | Land the tie repair in EnvSet and the Mem row | MASTER GREEN | 122.3 s to 140.5 s cold, +184 lines. The other eight rows keep the refuted names UNUSED, so they are still vacuous |
 | LJ-1.106 | Build Init at the Hartogs cardinal | YES, NO HYPOTHESIS LEFT | 507 lines, 31.2 s, choice-free and LEM-free. sq at the Hartogs cardinal follows from the delivered via-col-square |
 | LJ-1.107 | sq at every infinite ordinal | DISPATCHED | Devlin55's first parameter. The generic pullback and the presentation bijection are already delivered by LJ-1.106 |
-| LJ-1.108 | Delete the unused refuted hypotheses from the remaining rows | DISPATCHED | An unused hypothesis of an empty type is still an empty telescope. Projection: net +18 lines, mostly deletion |
+| LJ-1.108 | Delete the unused refuted hypotheses from the rows | ALL NINE ROWS, GREEN | Six of the eleven names are out of the master. Net -12 lines; +8.1 to +8.6 s against a +2 to +4 s projection |
+| LJ-1.109 | Tie the key-fact family, the last five of the eleven | DISPATCHED | succK, keyK-un, keyK-neg, succK-allin, keyK-allin are still stated and USED. KFacts may lack a successor closure |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
