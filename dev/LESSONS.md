@@ -3423,3 +3423,55 @@ can remove the cure from the agent's reach before any substitution is tried.**
 **Provenance:** `_build/lj-1.7-review.md`; `_build/lj-1.7-report.md`;
 `_build/briefs/LJ-1.7.md`; probe `src/ProbeDD25G1.agda`, re-run by the
 orchestrator.
+
+### C-38. A hypothesis is discharged when something SUPPLIES it, never when it is restated
+
+**The law.** Counting a module's hypothesis parameters down to zero is not a
+discharge. A telescope that replaces them must be SATISFIABLE, and the only
+proof of that is an instantiation. **Until something instantiates the module,
+"discharged" means "restated", and a restatement that nothing can satisfy
+makes the module vacuously true: it typechecks, it is fast, and it proves
+nothing.**
+
+**The action.** When a return says hypotheses are discharged, do not audit the
+parameter count. **Audit the instantiation.** If none exists, the correct word
+is "restated", and the acceptance test is the next dispatch that consumes it.
+
+**The measurement, 2026-08-12.** `[LJ-1.70]` replaced `TwelveAgree`'s
+twenty-four hypotheses with a forty-seven fact telescope and reported them
+discharged. The orchestrator verified three things, all true and all about
+shape: the parameter count was zero where it had been twenty-four, the twelve
+row modules were instantiated inside, and `out`/`back` still stated both
+directions. He committed it as `c21b417` saying the debt was paid.
+
+`[LJ-1.71]`, dispatched under C-35 precisely because the module had no
+consumer, found the telescope's first fact:
+
+```agda
+(tagEq : (k : ℕ) (N : Fin (11 + n)) → fst (lookup N γ) ≡ fst (numeralL k))
+```
+
+**Every slot equals every numeral.** Taking `k = 0` and `k = 1` at one slot
+gives `numeralL 0 ≡ numeralL 1`, refuted by the delivered `numeralL-inj`.
+The type is uninhabited at every frame, not merely at the consumer's, so the
+module could never be instantiated by anything. Machine-checked at
+`src/ProbeLJ171A.agda:170-173` (`tagEq-refutes`), re-run by the orchestrator.
+
+**The same audit found the slot fix of `[LJ-1.55]` HOLDS**: the frame's row
+facts land at the telescope's slots definitionally. The defect is the
+over-general statement, not the slot convention.
+
+**This is the third time the shape has been paid for.** `[LJ-1.37]` shipped
+1,723 lines whose rows were false of the satisfaction table, past an audit
+that checked line counts, placement, safety flags and timing. `[LJ-1.64]`
+passed the DD24 gate by deleting the band that discharges these same
+hypotheses, and the orchestrator caught that one. `[LJ-1.70]` moved the
+obligation into a hypothesis nothing can satisfy, and he did not.
+
+**Read beside C-35.** C-35 says a block with no consumer is untested. This
+says what the untested thing usually is: not the proofs, which typecheck, but
+the assumption that the hypotheses mean anything.
+
+**Provenance:** `_build/lj-1.71-report.md` sections 0 to 2;
+`src/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
+claim that the twenty-four hypotheses were discharged is false.
