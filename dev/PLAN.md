@@ -543,6 +543,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.74 | Split the twelve across modules | PEAK PER PROCESS | 3 and 6 rows green, 9 and 12 wall. A one-file split walls too. Separate invocations are green: 4 partials plus a composer |
 | LJ-1.74-A | Orchestrator audit: the measured split is not the cheapest | REFINED | Six is the largest green rung, so 2 partials beat 4. Each re-pays the 105 s floor. 449 s against 699 s |
 | LJ-1.75 | Give each partial only the facts its rows use | 43 of 69; 122.45 s | Better than proportional: 41.6 pc cheaper for a 37.7 pc smaller telescope. Two partials plus composer, 273.88 s |
+| LJ-1.76 | Build the split composition as masters | THREE MASTERS GREEN, 53.20 s | Five times cheaper than the probe price: the probes re-copied the row machinery, the masters import it |
+| LJ-1.76-A | Orchestrator audit: the composer re-associates | BRIDGE OWED | SatGraphB.twelveB is one right-nested chain of twelve; the composer proves sixB and sixB. Different Formula terms |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
