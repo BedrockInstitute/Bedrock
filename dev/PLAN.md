@@ -581,6 +581,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.102 | Restate ONE row in tied form and re-prove it | NO, MEASURED | Two components need two different premises, one arityK step apart. The row's telescope has neither arityK nor transK |
 | LJ-1.103 | Restate absorbs-subset and re-check Devlin55 | REPAIRED, MASTER GREEN | The premise is alpha not in omega, matching sq. My suggested premise was too strong: the site runs at omega |
 | LJ-1.104 | Give the row arityK and re-prove it in tied form | YES, BOTH DIRECTIONS | Telescope 44 to 51 lines. tmKeyK becomes a derivation costing zero hypotheses; its tied form was itself refuted |
+| LJ-1.105 | Land the tie repair in EnvSet and the Mem row | DISPATCHED | EnvSet carries arityK and derives the ties once, instead of nine rows each stating them. DD4 move |
+| LJ-1.106 | Build Init at the Hartogs cardinal | DISPATCHED | Two hypotheses left: the omega pairing and the successor closure. The assembly already checks under both |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
