@@ -581,9 +581,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.102 | Restate ONE row in tied form and re-prove it | NO, MEASURED | Two components need two different premises, one arityK step apart. The row's telescope has neither arityK nor transK |
 | LJ-1.103 | Restate absorbs-subset and re-check Devlin55 | REPAIRED, MASTER GREEN | The premise is alpha not in omega, matching sq. My suggested premise was too strong: the site runs at omega |
 | LJ-1.104 | Give the row arityK and re-prove it in tied form | YES, BOTH DIRECTIONS | Telescope 44 to 51 lines. tmKeyK becomes a derivation costing zero hypotheses; its tied form was itself refuted |
-| LJ-1.105 | Land the tie repair in EnvSet and the Mem row | DISPATCHED | EnvSet carries arityK and derives the ties once, instead of nine rows each stating them. DD4 move |
+| LJ-1.105 | Land the tie repair in EnvSet and the Mem row | MASTER GREEN | 122.3 s to 140.5 s cold, +184 lines. The other eight rows keep the refuted names UNUSED, so they are still vacuous |
 | LJ-1.106 | Build Init at the Hartogs cardinal | YES, NO HYPOTHESIS LEFT | 507 lines, 31.2 s, choice-free and LEM-free. sq at the Hartogs cardinal follows from the delivered via-col-square |
 | LJ-1.107 | sq at every infinite ordinal | DISPATCHED | Devlin55's first parameter. The generic pullback and the presentation bijection are already delivered by LJ-1.106 |
+| LJ-1.108 | Delete the unused refuted hypotheses from the remaining rows | DISPATCHED | An unused hypothesis of an empty type is still an empty telescope. Projection: net +18 lines, mostly deletion |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
