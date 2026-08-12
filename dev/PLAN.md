@@ -560,6 +560,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.83-A | Orchestrator audit: C = K is a probe convenience | OWED, RECORDED | The real C is AllCodes, needing AllCodes in K, unproved. The stop at witK is independent of the choice |
 | LJ-1.84 | Is witK satisfiable at all | REFUTABLE, machine-checked | Shapedness leaves the arity slot free, so a junk member pr K (pr #6 0) keeps w closed and shaped and lifts its rank past K |
 | LJ-1.85 | Repair witK with a suppliable premise | PREMISE FOUND, both halves checked | w in AllCodes A kills the refutation and the closure supplies it. Truth still needs AllCodes A in Lset lam |
+| LJ-1.86 | Is there a stage containing AllCodes A | EXISTS; proof cannot choose it | AllCodes-stage is green. But lam is a module parameter at every frame, so the obligation moves to the frame |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
