@@ -2855,7 +2855,7 @@ tolerance = 1.15
 gch_wing = [
   "src/V/Collapse.lagda.md",      # [LJ-1.4], 335 in-fence
   "src/L/Hull.lagda.md",          # [LJ-1.3] then DD27's re-index by [LJ-1.23], 431 in-fence
-  "src/V/Presentation.lagda.md",  # [LJ-0.4], 18 in-fence, consumed only by the two above
+  "src/V/Presentation.lagda.md",  # [LJ-0.4], 18 in-fence; five masters import it, not two
   "src/FOL/Count.lagda.md",       # [LJ-1.6], 620 in-fence, zero L imports, template
   "src/L/StageCardinal.lagda.md", # [LJ-1.6] then [LJ-1.21] and [LJ-1.25], 491 in-fence
   "src/L/Condensation.lagda.md",  # [LJ-1.5] block 1 on the erase route, 308 in-fence
