@@ -526,6 +526,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.64-A | Orchestrator audit: the gate passed by moving the obligation | REVERTED, C-35 again | TwelveAgree takes mem-out..exin-back as parameters; the removed MemAgree proves exactly mem-out and mem-back |
 | LJ-1.64-D | Fable 5 max-effort diagnosis of the DD24 residual | BAND, NOT ROWS | The residual is a net: Condensation +18.19 s against 15.88 s under-run elsewhere. Recommends a band-wide record bundle |
 | LJ-1.65 | The band bundle, one family, probe-gated | NO-GO, 0.06 to 0.34 s | Under the 0.5 s line, inside a 1.5 s spread. P-o did NOT fire. The band's mass is not the restated telescopes |
+| LJ-1.66 | Price one module application, then hoist | 1.016 s each; hoist +10.88 s | 18 applications are worth 18.29 s. Hoisting to three frames regressed, and is now false at two sites |
+| LJ-1.66-R | DD25 review of LJ-1.66's NO-GO | dispatched | Opus 5 at max effort. The first DD25 fire of this phase, and it is seven returns late |
+| DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
