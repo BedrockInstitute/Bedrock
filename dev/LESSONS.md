@@ -3091,6 +3091,56 @@ WHOLE seconds budget of 99.6 to 147.7 s. **The route looked infeasible and the
 **Provenance:** `_build/lj-1.34-review.md` sections 1 and 2;
 `src/ProbeDD25D5.agda` against `src/ProbeLJ134.agda`.
 
+### P-w. A module application COPIES; an interposed module cannot amortize one
+
+**The law.** A module application copies its target's definitions; it never
+references them. So interposing a module that RE-EXPORTS its target strictly
+ADDS one set of copies, and it cannot amortize anything, however the
+parameters are spelled. **Only three moves reduce instantiation cost: (a)
+fewer applications, (b) fewer definitions copied per application, (c) cheaper
+types on the definitions that are copied.** Interposition is none of them.
+
+**The action.** Before funding a move against an instantiation wall, classify
+it. If it interposes a module that re-exports its target, refuse it without
+measuring. If it narrows, count what the target exports against what its
+consumers reach, and price the difference.
+
+**The measurement, 2026-08-12, four regressions and no success in class.**
+
+| move | interposes | measured |
+|---|---|---:|
+| shared frames in the chain wrappers, abstract arguments | yes | **+17.23 s** |
+| three depth frames over `EnvSet`, concrete slots | yes | **+10.88 s** |
+| `TwelveAgree.twelveB` aliased to `SatGraphB.twelveB` | yes | **+3.29 s** |
+| abstract-stack module inside `NegAgree` | yes | **+2.82 s** |
+| `KFacts` record bundle, fewer parameters per application | no, (c) | **-30 s** |
+| `Lift12Back` telescope kit, fewer statements | no, (a) | **4.28x** |
+| `StageCardinal`'s un-consumed `Successor` cluster removed | no, (a) | **-9.85 s** |
+
+Four interpositions, four regressions. Three moves in classes (a) and (c),
+three wins. **The law would have refused four dispatches before they were
+funded, and checking it costs one count of the interposed module's exports.**
+
+**The exception it names, and the exception is the useful half.**
+Interposition WINS when the interposed module narrows: when it exports fewer
+definitions than its target, it is class (b) wearing an interposition's shape.
+`EnvSet` exports fifteen definitions and its eighteen application sites reach
+exactly three, `out`, `back` and `memE-bnd`.
+
+**How the orchestrator broke it.** `[LJ-1.67]`'s brief argued that abstracting
+the stack removes the concrete argument, then prescribed "the row's `out` and
+`back` instantiate it at their own stacks", which puts the concrete argument
+back at every site. **The mechanism claim and the prescribed shape contradicted
+each other on the page**, and the agent built what it was told. The `[LJ-1.25]`
+analogy the brief leaned on fails at the one joint that made the original
+work: there the transparent index never appeared again, and here the concrete
+stack still appears at every site (P-l).
+
+**Provenance:** `_build/lj-1.66-review.md` section E.1, a DD25 review that
+read the four regressions as one mechanism rather than four failures;
+`_build/lj-1.63-report.md` section 5, `_build/lj-1.66-report.md:94`,
+`_build/lj-1.67-report.md:32`, `_build/lj-1.62-report.md:85-112`.
+
 ### C-34. A return that names a cure PRICES it, or reports the wall that stops it
 
 **The law.** A cure named in a return and left unpriced is not a caveat. **It
