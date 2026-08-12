@@ -549,6 +549,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.77 | Machine-check whether KFacts is uninhabitable | CONFIRMED, one step | arityK gives X in X through the singleton; ∈-irrefl refutes it. 6 masters take KFacts, 20 take a field |
 | LJ-1.77-A | Orchestrator retraction | THE MATHEMATICS IS NOT DONE | I reported the leaf adequacy as the phase's completed mathematics. It typechecks and proves nothing as stated |
 | LJ-1.78 | Conditional closure facts, on one row | MEMAGREE SURVIVES, mechanical | The premises come from the row's own codesK, already in the telescope. No new hypothesis. Probe green |
+| LJ-1.79 | Guard the closure facts across the band | WHOLE BAND REPAIRED, GREEN | KFacts and every row guarded; arityK bound by transitivity. The LJ-1.77 refutation no longer typechecks |
+| LJ-1.79-A | Orchestrator audit: refuted is not inhabited | GAP KEPT OPEN | Showing the refutation fails is not exhibiting an inhabitant. KFacts is still unconsumed, so C-35 still applies |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |

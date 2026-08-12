@@ -61,8 +61,11 @@ module UpperAgree {n : ℕ}
   (numK9 : ⟨ fst (numeralL 9) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (numK10 : ⟨ fst (numeralL 10) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (numK11 : ⟨ fst (numeralL 11) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (innerK : (k : ℕ) (p : S) → ⟨ fst (prʟ (numeralL k) p) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (pairK : (a b : S) → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
+  (innerK : (k : ℕ) (p : S) → ⟨ fst p ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst (prʟ (numeralL k) p) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
+  (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
   (codesK : (k : ℕ) (c ar a b : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
             → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
@@ -172,18 +175,18 @@ module UpperAgree {n : ℕ}
   module T = TopAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N6)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq6 numK6
-               (λ a → innerK 6 a) (codesK-un 6) (valK-un 6)
+               (λ a aK → innerK 6 a aK) (codesK-un 6) (valK-un 6)
                envK-top entryK arSubK-top envInK-top
 
   module B = BotAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N7)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq7 numK7
-               (λ a → innerK 7 a) (codesK-un 7) (valK-un 7)
+               (λ a aK → innerK 7 a aK) (codesK-un 7) (valK-un 7)
 
   module X = ExistAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N8)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq8 numK8
-               (λ a → innerK 8 a) (codesK-un 8) (valK-un 8)
+               (λ a aK → innerK 8 a aK) (codesK-un 8) (valK-un 8)
                (succK (suc (suc (suc (suc (suc (suc N8)))))))
                (keyK-un (suc (suc (suc (suc (suc (suc N8))))))) subK-un
                envK-neg entryK arSubK-neg envInK-neg consK-exist
@@ -191,7 +194,7 @@ module UpperAgree {n : ℕ}
   module F = ForallAgree {11 + n} (suc (suc zero)) (suc zero) zero
                (suc (suc (suc (suc (suc (suc N9)))))) (suc (suc (suc (suc (suc (suc K)))))) γ
                tagEq9 numK9
-               (λ a → innerK 9 a) (codesK-un 9) (valK-un 9)
+               (λ a aK → innerK 9 a aK) (codesK-un 9) (valK-un 9)
                (succK (suc (suc (suc (suc (suc (suc N9)))))))
                (keyK-un (suc (suc (suc (suc (suc (suc N9))))))) subK-un
                envK-neg entryK arSubK-neg envInK-neg consK-forall
@@ -199,14 +202,14 @@ module UpperAgree {n : ℕ}
   module AI = AllInAgree {11 + n} (suc (suc zero)) (suc zero) zero
                 (suc (suc (suc (suc (suc (suc N10)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                 tagEq10 numK10
-                (λ a b → innerK 10 (prʟ a b)) pairK (codesK 10) (valK 10)
+                (λ a b aK bK → innerK 10 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 10) (valK 10)
                 succK-allin keyK-allin subK-allin envK-allin entryK arSubK-imp envInK-imp
                 t0eq t1eq t0K tmKeyK num1K wKfact consK-allin
 
   module EI = ExInAgree {11 + n} (suc (suc zero)) (suc zero) zero
                 (suc (suc (suc (suc (suc (suc N11)))))) (suc (suc (suc (suc (suc (suc K)))))) (suc (suc (suc (suc (suc (suc t0)))))) (suc (suc (suc (suc (suc (suc t1)))))) γ
                 tagEq11 numK11
-                (λ a b → innerK 11 (prʟ a b)) pairK (codesK 11) (valK 11)
+                (λ a b aK bK → innerK 11 (prʟ a b) (pairK a b aK bK)) (λ a b aK bK → pairK a b aK bK) (codesK 11) (valK 11)
                 succK-allin keyK-allin subK-allin envK-allin entryK arSubK-imp envInK-imp
                 t0eq t1eq t0K tmKeyK num1K wKfact consK-allin
 
