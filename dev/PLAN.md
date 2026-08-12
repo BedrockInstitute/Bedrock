@@ -588,6 +588,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.109 | Tie the key-fact family, the last five | ALL FIVE TIED, GREEN | All eleven refuted names are now tied or gone. A KFacts FIELD for the successor closure walls the master: P-x |
 | LJ-1.110 | Restate the three split frames | ALL THREE GREEN, make check PASSES | Frames 43/43/69 facts to 37/36/59. The eleven names are gone from all three; sucK is a telescope fact per P-x |
 | LJ-1.111 | Can Devlin55 take the TRUNCATED sq? | DISPATCHED | The conclusion is a proposition and Devlin55 already eliminates a truncation against it. Cheapest cure asked first |
+| LJ-1.112 | Instantiate the repaired composer | DISPATCHED | 39 became 11 and the 11 were the refuted names. They are gone from all three frames; re-run and report the count |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
