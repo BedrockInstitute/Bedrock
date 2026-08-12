@@ -3590,3 +3590,40 @@ where the fact is STATED, never about whether it is true or useful.**
 the green master at commit `c728e8b` plus the tie landing. Related: [[P-l]],
 [[P-o]], [[P-i]] class 3, and [[P-w]], which measures the same multiplication
 for module applications rather than record fields.
+
+### C-40. Verify the CONSUMERS of a changed master, never the master alone: the gate exists because the author's own check is blind by construction
+
+**The law.** A master's own check answers "does this file still elaborate",
+never "does anything that uses it still elaborate". A change to a telescope
+is invisible to the file that states it and fatal to the file that applies
+it. **So an author who checks the file they edited has measured the one
+thing that cannot fail.**
+
+**The action.** After any change to a module's telescope or signature,
+**check a consumer before you believe the green, and run `make check` in the
+background** so the whole import closure answers. It is `dev/PLAN.md` DD15
+that says background, never foreground, and the reason it is background is
+so there is no excuse to skip it.
+
+**The measurement, 2026-08-13.** The row repair changed every row telescope
+in `src/L/Condensation.lagda.md`: `entryK`, `arSubK` and `tmKeyK` deleted,
+`arityK` added, five key facts restated in tied form. The orchestrator ran
+that master's own cold check three times, twice to completion, and committed
+three times on the strength of it: `20f5704`, `c728e8b`, `3f8301f`.
+
+**All three commits left the tree RED.** The three masters under
+`src/L/Condensation/` instantiate those rows and still passed the deleted
+arguments. Measured: `agda` exit 42 on `LowerAgree`, `UpperAgree` and
+`TwelveAgree`, all three, and `make check` fails at `typecheck` with the
+same `Error 42` inside the `MemAgree` module application.
+
+**`make check` was never run once during the session that made those five
+master edits.** It found the break in four seconds when it was finally run.
+The rule that says run it in the background exists so that its cost is never
+a reason, and the cost was never the reason: it was simply skipped.
+
+**Provenance:** commits `20f5704`, `c728e8b`, `3f8301f`, each green on
+`src/L/Condensation.lagda.md` alone; the three exit-42 measurements and the
+`make check` output, 2026-08-13. Related: [[C-35]], which says a block with
+no consumer is untested, and this is its mirror: a CHANGE with no consumer
+check is unverified.
