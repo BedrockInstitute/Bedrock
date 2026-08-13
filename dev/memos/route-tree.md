@@ -1,6 +1,6 @@
 # The route tree (archived from dev/PLAN.md section 6.1)
 
-> **STATUS: SUPERSEDED.** The one-row-per-goal statuses are live in dev/PLAN.md section 11 (MASTER status table and task index); the coding rules are dev/PLAN.md section 6.0 and the two-caliber discipline is section 6.2. Read this memo when a goal's full statement, its gates, or the L3 execution phases are needed. Moved out of dev/PLAN.md by [L3.32-T113] because it updates rarely.
+> **STATUS: SUPERSEDED.** The one-row-per-goal statuses are live in dev/PLAN.md section 11 (MASTER status table and task index); the coding rules are dev/PLAN.md section 6.0. **Section 6.2 is now caliber and the single best-effort projection, and it REVOKED the two-caliber discipline this header used to name** (owner 2026-08-09, retiring DD7). DD8 carries the replacement rule. Read this memo when a goal's full statement, its gates, or the L3 execution phases are needed. **The L3 route is itself retired**, and the live route is the two-tower bridge (dev/PLAN.md DD2), so read this memo as a record of the earlier route. Moved out of dev/PLAN.md by [L3.32-T113] because it updates rarely.
 
 ---
 

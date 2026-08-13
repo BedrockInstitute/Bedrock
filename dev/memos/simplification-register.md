@@ -1,6 +1,6 @@
 # Candidate simplification register S1-S18 (archived from dev/PLAN.md section 10)
 
-> **STATUS: SUPERSEDED.** Every row is resolved or deferred as of 2026-08-06: S1-S12 closed or historical by 2026-07-27; S13 (V.Coding exports) SHIPPED and S15 (V.Presentation kit) SHIPPED by [L3.32-T8]; S14 (defSet table) REVERTED and S16 (axiom-frame kit) REVERTED at their D-1 gates; S17 (FOL.Fold) probe RED, additive-only conclusion unchanged; S18 deferred and tracked in dev/ledger.toml's [[excluded]] table. Read this memo when a simplification's verification history is needed; new candidates are proposed in the current era under D16 and D22, not registered here.
+> **STATUS: SUPERSEDED.** Every row is resolved or deferred as of 2026-08-06: S1-S12 closed or historical by 2026-07-27; S13 (V.Coding exports) SHIPPED and S15 (V.Presentation kit) SHIPPED by [L3.32-T8]; S14 (defSet table) REVERTED and S16 (axiom-frame kit) REVERTED at their D-1 gates; S17 (FOL.Fold) probe RED, additive-only conclusion unchanged; S18 deferred and tracked in dev/ledger.toml's [[excluded]] table. Read this memo when a simplification's verification history is needed; new candidates are proposed under the live rulings DD8 (every block is gated before it is funded) and DD13 (retirement is priced from the rewrite side, and sunk cost decides nothing), not registered here. **The D16 and D22 this header used to name are archived**, in archive/dev/DECISIONS-archived.md. They still resolve, but the D and DD numbers do not correspond.
 
 ---
 

@@ -1,6 +1,6 @@
 # Risks and mitigations (archived from dev/PLAN.md section 9)
 
-> **STATUS: SUPERSEDED.** Each mitigation is a standing rule with its own home (D1, D26, dev/LESSONS.md D-1/D-6/D-10, dev/PLAN.md section 6.0, the return checklist in dev/ORCHESTRATION.md section 6). Read this memo when the dated reasoning behind a mitigation is needed. Moved out of dev/PLAN.md by [L3.32-T113] because the table is orientation, not instruction.
+> **STATUS: SUPERSEDED.** Each mitigation is a standing rule with its own home. **The live homes are DD1 and DD5 in dev/PLAN.md section 3**, dev/LESSONS.md D-1/D-6/D-10, dev/PLAN.md section 6.0, and the return checklist in dev/ORCHESTRATION.md section 6. **The D1 and D26 this header used to name are archived**, in archive/dev/DECISIONS-archived.md. They still resolve, but section 3 no longer holds them, and the D and DD numbers do not correspond. Read this memo when the dated reasoning behind a mitigation is needed. Moved out of dev/PLAN.md by [L3.32-T113] because the table is orientation, not instruction.
 
 ---
 
