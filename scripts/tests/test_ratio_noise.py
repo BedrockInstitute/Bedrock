@@ -99,8 +99,14 @@ def main() -> int:
     check_true("the StageArith series reads above 100 percent",
                cr.spread_of(measured) > 1.0)
 
-    print("the tool never invents a band it has not measured")
-    check("no declared spread until one is measured", cr.INSTRUMENT_SPREAD, None)
+    print("the declared band is the MEASURED between-series figure")
+    # 12.8 percent: eight separate warmed series on StageArith, spanning about
+    # forty minutes, 0.0104 to 0.0118 s per line. The band is
+    # BETWEEN-series on purpose: a verdict is one series on one occasion, and
+    # a series cannot see how far its own mean sits from the module's cost.
+    check("the declared band is the measured one", cr.INSTRUMENT_SPREAD, 0.128)
+    check_true("and it says where it came from",
+               "MEASURED" in cr.INSTRUMENT_SPREAD_SOURCE)
     check("an unmeasured band cannot flag a row",
           cr.flips_verdict(0.0124, 0.0136, None), False)
     check("a zero band cannot flag a row",
@@ -185,11 +191,22 @@ def main() -> int:
     check_true("a fragile OVER row is named NOISE", "NOISE" in out)
     check("a fragile row over the bar still exits 1", code, 1)
 
+    print("a tight series NEVER shrinks the band below the measured floor")
+    # THE DEFECT THIS PINS: five series spreading 0.6 to 4.0 percent each
+    # landed 9.3 percent apart. A row 5 percent from the bar with a 1 percent
+    # own-spread is NOT established, and reporting only the own-spread would
+    # have called it solid.
+    tight = [("src/Landmarks.lagda.md", 100, [1.30, 1.31], None)]
+    code, out = run_main(["--module", "src/Landmarks.lagda.md", "--runs", "2"],
+                         tight)
+    check_true("a tight series near the bar is still NOISE", "NOISE" in out)
+    check("and it still exits 0", code, 0)
+
     print("one run says so, and does not pretend to know its own swing")
     code, out = run_main(["--module", "src/Landmarks.lagda.md",
                           "--runs", "1"], on_bar[:1])
     check_true("a single run advertises n=1", "n=1" in out)
-    check_true("and reports the band as unknown", "UNKNOWN" in out)
+    check_true("and prints the declared floor", "at least" in out)
 
     print()
     if FAILED:
