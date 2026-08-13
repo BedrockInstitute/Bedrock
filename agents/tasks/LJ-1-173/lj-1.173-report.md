@@ -455,3 +455,249 @@ result.**
 sequence in `K(u)` is finite, and the only power is of a fixed countable
 variable set. **So restricting `envSetK` to a numeral arity is HIS FORM. The
 general arity is the departure, and it entered with this tree's `envSetGen`.**
+
+---
+
+# PART TWO: the coordinator funded the join
+
+**Appended after the coordinator committed the NO-GO at `0f12d16` and ruled
+option one.** Same probe file, same process discipline, same incremental
+landing.
+
+## 16. PART TWO: CRITERIA, FIXED IN WRITING BEFORE THE FIRST RUN (D-1)
+
+**The coordinator's grades, copied here so that nothing moves after a number
+appears.**
+
+| outcome | line count of the ADEQUACY, on top of the 45 already green |
+|---|---|
+| **continue, then apply the restriction** | within 50 percent of 120, so **180 or fewer** |
+| **STOP, keep what typechecks, report the overage with its cause** | **above 180** |
+| **STOP AND SAY SO FIRST** | the adequacy is FALSE, that is, the bounded description does not define `envSet B n` |
+| **STOP with the wall clock** | anything walls |
+
+**Wall clock: 20 minutes per agda invocation. ONE process.
+`GHCRTS="-A64m -I0 -M8g"`. The cap is NEVER raised.**
+
+**The count is the same caliber as PART ONE**: non-blank, non-comment lines of
+Agda inside the probe, module header and imports excluded.
+
+## 17. PART TWO: THE ROUTE, chosen before the first run
+
+**Both directions pass through the delivered unbounded description at ONE
+environment**, `δ x = x ∷ d ∷ B ∷ []`, and that is what keeps the price near
+the survey.
+
+1. `unbound`: the bounded `envFoB` gives `envOverAt` at `δ x`. **This is the
+   only direction that needs an argument.** The pairs conjunct plus `pr-inj`
+   (`src/V/Coding.lagda.md:178`) shows that any recorded pair has its index in
+   `d` and its value in `B`, which is exactly what releases the three unbounded
+   quantifiers.
+2. `rebound`: `envOverAt` gives `envFoB`. **Restriction, and it costs the four
+   delivered readers.**
+3. `intoSet`: `envOverAt` at `δ x` gives `x ∈ˢ envSet B n`, through the
+   delivered `Recover` (`src/L/Coding/EnvSet.lagda.md:315-381`) and
+   `envSet-in` (`:381-383`). **Delivered, reused, not rewritten.**
+4. `outSet`: `x ∈ˢ envSet B n` gives `envOverAt` at `δ x`, through the
+   delivered `envSet-mem` (`:192-194`) and `envOverAt-transport`
+   (`src/L/Coding/Model.lagda.md:517-560`). **Delivered, reused, not
+   rewritten.**
+5. the carve identification, and then the one declaration the gate asked for.
+
+## 18. PART TWO: THE ADEQUACY HOLDS, at 155 lines
+
+**MEASURED. `agents/tasks/LJ-1-173/ProbeLJ1173A.agda`, exit 0, 3 s, no
+`postulate`, no hole, no unsolved meta.**
+
+| block | what | lines |
+|---|---|---:|
+| 3 | the adequacy: `slots`, `unbound`, `rebound`, `intoSet`, `outSet`, `adequate` | **102** |
+| 4 | the identification `carved ≡ fst (envSet B n)`, and `envSetNumeral∈` | **53** |
+| | **the adequacy** | **155** |
+| | against the abort at | 180 |
+| | against my own survey of | 120 |
+
+**The survey was low by 29 percent and inside the grade.** **It closed on the
+FIRST agda run**, which I record because it is evidence that the route chosen in
+section 17 was the right one, not evidence that the work was small.
+
+**The declaration the gate asked for, now green:**
+
+```agda
+envSetNumeral∈ : (σ : V ℓ) → IsOrd σ → ⟨ ω ∈ σ ⟩ → (B : S) (n : ℕ)
+               → ⟨ fst B ∈ Lset σ ⟩
+               → ⟨ fst (envSet B n) ∈ Lset (sucIter 4 σ) ⟩
+```
+
+**The iterate is 4 and it does not mention `n`. The bound is uniform in `n`,
+which is what the brief asked for.**
+
+**Where the JOIN actually sat, and it is one line of the probe.**
+`carvedEq : carved ≡ fst (envSet B n)`. Before it, BLOCK 1 spoke about a
+containment and BLOCK 2 about a different set. **After it, both speak about
+`envSet B n`, and `landed` is one `subst`.**
+
+**What the adequacy needed that the survey did not name: `slots`.** One fact,
+that a recorded pair has its index in `d` and its value in `B`, from the pairs
+conjunct and `pr-inj`. **It is what releases the three unbounded quantifiers,
+and it is why the bounded description is not weaker than the delivered one.**
+
+**And what the survey over-counted: `Recover` and `envSet-mem` are REUSED, not
+rewritten.** `intoSet` is 4 lines and `outSet` is 8.
+
+## 19. PART TWO: WALL CLOCK FOR THE C-40 RUNS, fixed before them
+
+**40 minutes for `src/L/Condensation/TwelveAgree.lagda.md`**, which is the
+criterion `[LJ-1.172]` measured for the three `*Agree` masters
+(`agents/tasks/LJ-1-172/lj-1.172-report.md:678-681`). **A run past it is a wall
+and the step STOPS.** ONE process, `GHCRTS="-A64m -I0 -M8g"`, cap never raised.
+
+## 20. PART TWO: THE RESTRICTION IS APPLIED
+
+**`envSetK` is now numeral-arity.** `src/L/Condensation/TwelveAgree.lagda.md:281-285`:
+
+```agda
+    envSetK : (B ar : S) (n : ℕ) → fst ar ≡ # n
+            → ⟨ fst B ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+            → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+            → ⟨ fst (Generic.envSetGen B ar)
+                 ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+```
+
+**The shape chosen, and why it is that shape and not another.** The field keeps
+its `ar` and gains ONE hypothesis, `fst ar ≡ # n`. **It does not swap `ar` for a
+numeral**, because a consumer applies it at the `ar` its own row holds, and a
+field stated in a form the consumer must translate into is the trap P-k names.
+**So the consumer supplies the numeral equation and reads the same conclusion at
+the same `ar`.**
+
+**This is not a weakening into something true because it says nothing.** The
+conclusion is unchanged: the same set, at the same arity, in the same `K`.
+**Only the arity is pinned, and section 4 measures that every consuming site can
+pin it.**
+
+The change is **+11 lines, -1 line**, all inside the `agda` fence, so standing
+moves by **+10**. Ten of the eleven are the comment that records the refutation
+and its cure; **one is the signature.**
+
+## 21. PART TWO: CONSUMER VERDICTS (C-40)
+
+| item | verdict |
+|---|---|
+| `src/L/Condensation/TwelveAgree.lagda.md` | **GREEN**, exit 0, 9 s at the first run and 9 s after the comment trim |
+| consumers of `TwelveAgree` in `src/` | **NONE.** `grep -rn "L.Condensation.TwelveAgree" src/` returns its own module line and `src/Everything.lagda.md:376`. `LowerAgree`, `UpperAgree` and `Condensation` are its DEPENDENCIES, not its consumers |
+| consumers of `envSetK` | **NONE**, re-measured after the edit. The field is a hypothesis nothing supplies yet |
+| `src/Everything.lagda.md` | **NEVER OPENED.** The coordinator's `make check` covers it |
+| any other master | **NOT EDITED** |
+
+**So the C-40 obligation is discharged in full: the edited master and every
+consumer of it typecheck, and the consumer set is the master itself.**
+
+## 22. PART TWO: CHECKER COUNTS
+
+| checker | result |
+|---|---|
+| `agda src/L/Condensation/TwelveAgree.lagda.md` | **exit 0**, 9 s, well inside the 40-minute criterion |
+| `agda agents/tasks/LJ-1-173/ProbeLJ1173A.agda` | **exit 0**, 3 s, re-run after the master edit |
+| `postulate`, hole, unsolved meta | **all three ABSENT** in both. Agda printed no warning |
+| `scripts/lint-agda.py --check` | **exit 0** |
+| `scripts/lint-prose.py --check` on the edited master and this report | **exit 0** |
+| `scripts/weave-i18n.py --check` | **exit 0** |
+| `scripts/check-unbound-hyp.py` | **2**, unchanged |
+| `scripts/check-probes.py` | **clean**, 1804 tracked files |
+| `make check` | **NOT RUN.** The coordinator runs it |
+
+**Four agda invocations in PART TWO, ONE process at a time,
+`GHCRTS="-A64m -I0 -M8g"`, the cap NEVER raised, no heap wall and nothing near
+its wall clock.** The interfaces were warm; **these are not cold figures and
+DD24 is untouched.**
+
+## 23. PART TWO: DD4
+
+**MEASURED over the 155 adequacy lines: 133 name NO L-tower token, 22 do.**
+**BLOCK 3, the adequacy proper, is 101 of 102 tower-free.**
+
+**Where the 22 sit.** Twenty-one are in BLOCK 4, which is the identification at
+a CONCRETE level and cannot avoid naming it: `Lset α`, `⟪ Lset α ⟫↪`,
+`Lset→isL`, `Lset-mono`. **That is the one place the argument is genuinely about
+the L tower, because the carve is the L tower's definability operator.**
+
+**BLOCK 3 names one L token in 102 lines**, and that one is `isL-trans` in
+`slots`, a class-transitivity step every tower has. **`slots`, `unbound`,
+`rebound`, `intoSet`, `outSet` and `adequate` are about a `Formula S 1` and the
+delivered coding readers, and they re-instantiate at the J tower unchanged.**
+
+**So the DD4 answer for the whole probe: 205 body lines, of which 170 name no
+tower**, 50 in BLOCKS 1 and 2 and 155 in the adequacy. **I wrote nothing fixed
+to L that could have been written generic**, and the one block that is
+L-specific is L-specific by subject matter.
+
+## 24. WHERE `envSetNumeral∈` SHOULD LAND, offered not taken
+
+**I did NOT put the lemma into `src/`. The coordinator asked for the
+restriction, and a placement is a route decision.** Here is what it costs,
+measured, so that whoever takes it does not have to re-find it.
+
+- **There is NO import cycle. MEASURED.** `L.Condensation` does not import
+  `L.Coding.Key` (`grep -rn "L.Coding.Key" src/` returns only
+  `src/Everything.lagda.md:351` and the module's own line).
+- **But the direction is inverted.** `src/Everything.lagda.md` orders
+  `L.Coding.Key` at `:351` and `L.Condensation` at `:373`. **The probe imports
+  `L.Condensation` for `Δ₀-appAt` and `Δ₀-prAtL` only.**
+- **Those two are 2-line derivations** (`src/L/Condensation.lagda.md:88-89`,
+  `:94-95`) from `L.Absoluteness.Δ₀-liftFo` and `L.Coding.Base.Δ₀-prAt`, **both
+  of which sit BELOW `L.Coding.Key`.** **So the lemma lands in `Key.lagda.md`
+  at the cost of re-deriving four lines, or it lands in a new module above
+  `L.Condensation`.**
+- **`L.Coding.Key` itself has NO consumer in `src/` today** beyond
+  `Everything`, which I mark because it bears on where a new supply chapter
+  should sit.
+
+## 25. PART TWO: EVERY NEGATIVE, CLASSIFIED
+
+| statement | class |
+|---|---|
+| **the adequacy is FALSE** | **MEASURED FALSE.** It is green Agda. `adequate` at `ProbeLJ1173A.agda:305-309` |
+| **the adequacy exceeds 180** | **MEASURED FALSE. 155** |
+| my survey of 120 was accurate | **MEASURED FALSE. It was 29 percent low**, and I record that rather than round it away |
+| the bound depends on `n` | **MEASURED FALSE.** The iterate is 4 for every `n` |
+| `envSetK` is still general-arity | **MEASURED FALSE.** It now carries `fst ar ≡ # n` |
+| the restriction broke a consumer | **MEASURED FALSE.** `TwelveAgree` is green and the field has no consumer |
+| the restriction weakened the field into vacuity | **MEASURED FALSE.** Same set, same arity, same `K`; one hypothesis added, and section 4 measures that every site can discharge it |
+| **`envSetK` is now SUPPLIED** | **MEASURED FALSE, and I say it plainly. It is still a hypothesis.** The probe proves the fact that would supply it; nothing in `src/` supplies it, because step 6 is unbuilt |
+| landing the lemma in `Key.lagda.md` needs a cycle broken | **MEASURED FALSE.** There is no cycle. It needs four re-derived lines or a different home |
+| I edited a second master | **MEASURED FALSE.** One master, `TwelveAgree`, 11 lines added and 1 removed |
+| I ran `make check` | **MEASURED FALSE** |
+| the 155 is a cold figure | **NOT CLAIMED.** The interfaces were warm |
+| a shorter adequacy exists | **NOT CLAIMED. C-36.** I wrote one route and it closed on the first run |
+
+## 26. PART TWO: PROHIBITIONS, ANSWERED ONE BY ONE
+
+| prohibition | answer |
+|---|---|
+| the fourth `HullStage` hypothesis | **NOT ADDED.** The numeral case did not need it |
+| `src/L/Choice/Name.lagda.md` | **NOT EDITED.** The probe IMPORTS `numeral∈limit` from it, exactly as `src/L/Coding/Key.lagda.md:23` already does. **Reading is not touching, and I flag the import so the coordinator can rule** |
+| `src/L/Coding/Graph.lagda.md`, `[LJ-1.164]`'s move | **NEVER OPENED** |
+| `src/Everything.lagda.md` | **NEVER OPENED. No new module exists to wire**: the probe stays a probe |
+| the probe outside `agents/tasks/LJ-1-173/` | **NO.** `check-probes.py` clean |
+| commit, push, `git checkout .`, `stash`, `reset --hard`, `clean` | **NONE of them** |
+| the heap cap | **`-M8g` throughout, never raised** |
+
+## 27. WHAT THIS LEAVES, and what it does not
+
+**Landed:** the numeral restriction, green, with its reason in the master's own
+comment.
+
+**Proved but not landed:** `envSetNumeral∈`. **It is in a probe, and a probe is
+evidence rather than proof.** Section 24 prices its home.
+
+**Still open, and unchanged by this task:** step 6 is unbuilt, and
+`[LJ-1.172]:873-906` measured that `hasLevels` and `covered` have no supplier
+either. **This task removed one refutation from the path. It did not build the
+path.**
+
+**One line for the brief writer.** The gate fired at 45 and stopped a build
+that would have run three times over; the join it refused to fund then closed
+at 155 on the first agda run once it was named as the work. **A gate that names
+the two ENDS measures the parts. Naming the JOIN is what turned this from a
+refutation into a build.**
