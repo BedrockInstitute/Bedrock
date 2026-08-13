@@ -594,7 +594,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.115 | Probe someEnv, the K-closure family's widest term | DISPATCHED | The only one of the 28 whose supplier is a construction, not a closure. DD8 gate before the family is funded |
 | LJ-1.116 | At which alpha does Upper need sq? | ONLY AT OMEGA, AT THE SITE | Generic demand is every infinite ordinal below alpha; the site is omega. Init is false at omega and at successors |
 | LJ-1.117 | Restrict sq to the ordinals the consumer reaches | LANDED, make check PASSES | sq is bounded by sucV alpha0; the site at omega supplies it honestly. No conclusion changed |
-| LJ-1.118 | Enter Devlin55 at the site | DISPATCHED | Supply absorbs-subset at alpha = omega, instantiate the module, then enter BoundedSubsetAt and report the first blocker |
+| LJ-1.118 | Enter Devlin55 at the site | SITE VALUE BUILT, NOT ENTERED | The site instance is green at 13 lines against an inferred 20 to 30. The module still demands the whole function |
+| LJ-1.119 | Restrict absorbs-subset the way sq was restricted | DISPATCHED | LJ-1.117's move one parameter over: the body applies it only at BoundedSubsetAt's own alpha and x |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
