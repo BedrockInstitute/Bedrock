@@ -6,7 +6,7 @@ directory holds the records whose only citing documents are historical, so the
 citation still resolves.
 
 Live records, cited by `dev/ledger.toml` or another live document, live in
-[dev/measurements](../../dev/measurements/README.md). A record moves here when
+[dev/measurements](../../../dev/measurements/README.md). A record moves here when
 every document that cites it has become historical.
 
 ## Why they are not under `_build/`
@@ -29,9 +29,9 @@ that no longer exists cannot be regenerated, so it is evidence, not exhaust.
 
 | File | The record | Cited by |
 |---|---|---|
-| `t129-baseline.log` | `[L3.32-T129]` baseline check | `agents/reports/archive/l3.32-t129-report.md` |
-| `t132-check.log` | `[L3.32-T132]` check log | `agents/reports/archive/l3.32-t132-report.md`, `l3.32-t139-report.md` |
-| `l3.32-t242-profile.txt` | `[L3.32-T242]` profile | `agents/reports/archive/l3.32-t242-report.md` |
+| `t129-baseline.log` | `[L3.32-T129]` baseline check | `agents/tasks/archive/L3-32-T129/l3.32-t129-report.md` |
+| `t132-check.log` | `[L3.32-T132]` check log | `agents/tasks/archive/L3-32-T132/l3.32-t132-report.md`, `l3.32-t139-report.md` |
+| `l3.32-t242-profile.txt` | `[L3.32-T242]` profile | `agents/tasks/archive/L3-32-T242/l3.32-t242-report.md` |
 | `l3.32-t242-run3.txt` | `[L3.32-T242]` run 3 | same |
 | `l3.32-t242-t222-profile.txt` | `[L3.32-T242]` profile over `[T222]` | same |
 | `l3.32-t242b-run1.txt` | `[L3.32-T242b]` run 1 | same |
@@ -43,7 +43,7 @@ that no longer exists cannot be regenerated, so it is evidence, not exhaust.
 Every citing document above is a frozen record. A brief and a report are never
 rewritten; they are corrected in the next one. So each cites the old
 `_build/` path. **Find the file by its basename**, which is unique in this
-directory. The move is recorded in `agents/reports/lj-1.132-report.md`.
+directory. The move is recorded in `agents/tasks/LJ-1-132/lj-1.132-report.md`.
 
 ## The same archive rules apply
 

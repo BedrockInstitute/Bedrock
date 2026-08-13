@@ -277,7 +277,7 @@ Standing clauses that go in every build or probe brief:
 - **THE ARCHIVE SURVEY, and it is a section of the brief rather than a hope.**
   Ruled by the owner 2026-08-09. Before a brief is sent it carries an
   **ARCHIVE** section listing what may bear on the task in each of the four
-  archives: `archive/` for retired code, with `archive/rud-route/` holding the
+  archives: `archive/` for retired code, with `archive/src/2026-08-09-rud-route/` holding the
   72 files of the retired route and `dev/ARCHIVE.md` describing the modules
   retired before it; `archive/dev/TASKS-archived.md` for what each of the 265 earlier
   dispatches found; `archive/dev/JOURNAL-archived.md` for why; and
@@ -415,7 +415,7 @@ a flowchart on the generated dashboard, which the owner abolished on
 - **While DD23 stands, mathematical prose is not funded work.** Nothing else
   is frozen. The retired route's resume order, which named the bridge
   landing, the choice re-home, the StepInL rewrite, W3 and W7's residue, is
-  SUPERSEDED: every item belonged to code now in `archive/rud-route/`, and
+  SUPERSEDED: every item belonged to code now in `archive/src/2026-08-09-rud-route/`, and
   the freeze that gated them closed with the route. **The live order is the
   LJ phase barrier in `dev/PLAN.md` section 11**, and no other document
   states it.

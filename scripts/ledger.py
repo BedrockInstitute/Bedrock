@@ -748,7 +748,7 @@ def main(argv: list[str]) -> int:
     # the then-live dashboard generator, which matched a regex against the
     # whole of stdout, crashed with a ValueError for a full day until
     # [LJ-0.1] found it. The dashboard was abolished the same day
-    # (archive/tooling/), so nothing reads these lines today, but the rule
+    # (archive/scripts/), so nothing reads these lines today, but the rule
     # outlives its first victim: any future consumer of --trophy-* parses
     # stdout. Every diagnostic added here belongs on stderr. Stdout is the
     # value, stderr is the commentary.

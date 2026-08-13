@@ -7,18 +7,47 @@ registry that indexes it is [dev/ARCHIVE.md](../dev/ARCHIVE.md).
 
 ## What the namespace is
 
-The archive holds retired modules, each at its ORIGINAL path under `archive/`,
-so provenance is self-evident and `git log --follow` keeps working. A module
-retired from `src/L/Coding/Sequence.lagda.md` lives at
-`archive/src/L/Coding/Sequence.lagda.md`. No live code, no generated files, no
-half-maintained second tree.
+**`archive/` MIRRORS THE ROOT.** An archived thing sits at the same path under
+`archive/` that it had under the repository root. Something archived from
+`dev/measurements/` goes to `archive/dev/measurements/`. Something archived
+from `scripts/` goes to `archive/scripts/`. Provenance is then self-evident and
+`git log --follow` keeps working. **The owner ruled this on 2026-08-13**, and
+the reason is drift: a flat bucket with no structural rule fills up, and then
+nobody can tell where anything came from.
+
+**ONE ROOT PATH CAN BE ARCHIVED MORE THAN ONCE, so `archive/src/` adds one
+level: the ARCHIVAL EVENT.** `src/` has been archived six times. Each archival
+gets a directory named `<date>-<slug>`, and the slug comes from that archival's
+own commit subject. Inside the event directory the path mirrors `src/` exactly.
+So `L/Godel/Closure.lagda.md`, archived on 2026-08-07, lives at
+`archive/src/2026-08-07-arm-a/L/Godel/Closure.lagda.md`.
+
+| Event directory | Archival commit | Files | What went |
+|---|---|---:|---|
+| `2026-08-05-realize-cone` | `93bf246`, `[L3.32-T29]` | 1 | `L.Rud.Realize` |
+| `2026-08-06-four-dead-modules` | `e33a4ce`, `[L3.32-F6.0]` | 4 | `BaseBlock`, `CodePred`, `CodeSet`, `OpGraph` |
+| `2026-08-07-arm-a` | `b06822e`, `[L3.32-F]` | 16 | the `L.Godel` cone, `StepInL`, `WellOrder.Tree` |
+| `2026-08-08-describe-switch` | `9b15509`, `[L3.32-F]` | 2 | `L.Rud.Describe`, `L.Rud.Switch` |
+| `2026-08-09-hf-finite` | `43ca411`, `[L3.32-F]` | 2 | `L.Rud.HF`, `L.Rud.Finite` |
+| `2026-08-09-rud-route` | `86c7b66`, `[L3.32-F]` | 74 | the whole retired route's `src/`, plus its patch and its README |
+| `2026-08-13-probe-sweep` | `[LJ-1.141]`, `[LJ-1.143]` | 1 | **empty of code.** The tombstone only |
+
+**WHY THE EVENT LEVEL EXISTS, and it is not decoration.** Two archivals both
+took files out of `src/L/Rud/` and `src/L/WellOrder/`. A flat merge would put
+them in one directory and lose which archival each came from, which is the
+exact fact the owner asked the layout to keep.
 
 **PROBES ARE NO LONGER HERE.** `archive/probes/` held 257 of them for one day.
 The owner ruled on 2026-08-13, later the same day, that a probe pairs
 one-to-one with its report and lives beside it, so all 257 moved to
-`agents/reports/<TASK>/` and nothing arrives here again.
-`archive/probes/README.md` is the tombstone and it maps the old path to the
-new one; `dev/LESSONS.md` **D-1** is the live rule.
+`agents/tasks/<TASK>/` and nothing arrives here again.
+`archive/src/2026-08-13-probe-sweep/README.md` is the tombstone and it maps the
+old path to the current one; `dev/LESSONS.md` **D-1** is the live rule.
+
+**ONE DIRECTORY DOES NOT MIRROR THE ROOT, and it says why.** `archive/kits/`
+holds code that was written, measured and never landed. **A refused kit has no
+original path** (`archive/kits/README.md:35-40`), so the mirror rule has
+nothing to mirror. `[LJ-1.143]` left it rather than invent a home for it.
 
 **A probe under `src/` is still refused absolutely**, by
 `scripts/check-probes.py`. That rule was bought on 2026-08-04, when one

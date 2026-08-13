@@ -302,7 +302,7 @@ gch_wing_apriori = [7553, 11197]
 # condensation application is at kappa-plus with alpha = kappa, and BOTH are
 # cardinals: dev/literature/devlin-II5.md:164-166, with step F at :282 saying
 # "initial ordinals". Bound's beta is the TARGET, not the level, and
-# agents/tasks/Unpaired/ProbeTowerInd2.agda:155-159 already runs the fixed-initial-target shape.
+# agents/tasks/archive/Unpaired/ProbeTowerInd2.agda:155-159 already runs the fixed-initial-target shape.
 # So the archived law's restriction to initial ordinals reaches the consumer.
 # Two smaller residuals replace the transfer: the square law at omega, since
 # Init omega is uninhabited, and either verifying Init kappa or adopting Init

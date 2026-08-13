@@ -36,9 +36,9 @@ This script is the gate. It runs in two places:
 2026-08-13: `--gate`, `--stale`, `--sweep`, `--index`, a live-task trigger read off
 `dev/PLAN.md`, a four-verdict classifier and a 24-hour deletion floor. The owner retired all of
 it the same afternoon, because a probe that is never deleted needs no rule for when to delete it.
-The frozen code is `archive/tooling/check-probes-lifecycle.py` with its suite
-`archive/tooling/test_probe_lifecycle.py`, and `archive/tooling/README.md` records what it got
-right and what would reopen it.
+The frozen code is `archive/scripts/check-probes-lifecycle.py` with its suite
+`archive/scripts/tests/test_probe_lifecycle.py`, and `archive/scripts/README.md` records what
+it got right and what would reopen it.
 
 Exit status: 0 clean, 1 violations found, 2 usage error.
 """
@@ -57,8 +57,8 @@ ROOT = Path(__file__).resolve().parent.parent
 #: so `src/` stays absolutely protected; that rule was bought on 2026-08-04 with 13 committed
 #: probe files and it is not weakened here.
 #:
-#: It is a PREFIX, not a word: `archive/src/L/Probe.agda` is still refused, and so is
-#: `agents/ProbeX.agda`, because the exemption is the tasks tree and not the word `agents`.
+#: It is a PREFIX, not a word: `archive/src/2026-08-07-arm-a/L/Probe.agda` is still refused, and
+#: so is `agents/ProbeX.agda`, because the exemption is the tasks tree and not the word `agents`.
 #: [LJ-1.142] merged the briefs into this tree, so a probe now sits beside BOTH halves of
 #: its task record: the brief that ordered it and the report that reads it.
 PROBE_HOME = "agents/tasks/"

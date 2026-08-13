@@ -51,7 +51,7 @@ THIS CLASS HAS NO RESTING PLACE IN `_build/`. It is the class that produced the
 delete_when = "Never."
 promote_when = """
 IMMEDIATELY, as soon as any document cites it. To `dev/measurements/` while a
-live document cites it; to `archive/measurements/` once every citing document is
+live document cites it; to `archive/dev/measurements/` once every citing document is
 historical (`dev/memos/`, `agents/tasks/`, `agents/tasks/archive/`,
 `dev/JOURNAL.md`)."""
 

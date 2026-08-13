@@ -118,10 +118,16 @@ check(T.task_dir("L3.32-T126") is not None, "task_dir('L3.32-T126') does not res
 check(T.brief_for("nonexistent-task-code") is None, "brief_for invented a brief")
 check(T.normalise("LJ-1.142") == "LJ-1-142", "normalise does not turn `.` into `-`")
 
-# A probe lives with its task, and the two non-task buckets keep their names.
-for bucket in ("DD25", "Unpaired"):
-    check((T.TASKS / bucket).is_dir(), f"the {bucket} probe bucket is gone")
-    check(bucket in T.NON_TASK_DIRS, f"{bucket} is not declared a non-task directory")
+# A probe lives with its task. ONE non-task bucket is left and it keeps its name.
+check((T.ARCHIVE / "Unpaired").is_dir(), "the Unpaired probe bucket is gone")
+check("Unpaired" in T.NON_TASK_DIRS, "Unpaired is not declared a non-task directory")
+
+# `[LJ-1.143]` emptied the DD25 bucket on the evidence inside the DD25 reviews, so a DD25
+# directory coming BACK is the drift the owner's ruling removes, not a neutral event.
+# The name stays in NON_TASK_DIRS so no reader ever takes it for a task code.
+check(not (T.TASKS / "DD25").exists(),
+      "agents/tasks/DD25/ is back: a probe bucket that is not a task has returned")
+check("DD25" in T.NON_TASK_DIRS, "DD25 is not declared a non-task directory")
 check(all(d.name not in T.NON_TASK_DIRS for d in T.task_dirs()),
       "a non-task bucket is being reported as a task")
 

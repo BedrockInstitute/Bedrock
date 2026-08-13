@@ -1,5 +1,11 @@
 # The rud route's `src/`, archived 2026-08-09
 
+**THE OLD PATH OF THIS DIRECTORY WAS `archive/rud-route/`.** `[LJ-1.143]` moved it under
+the owner's ruling of 2026-08-13: `archive/` mirrors the root, so archived `src/` content
+lives under `archive/src/`, and the directory name says which archival it was. The files
+below kept their path inside `src/`; only the `src/` level itself was replaced by this
+directory's name.
+
 **What this is.** Every `src/` file that differed from `main` when the owner
 ruled the two-tower bridge route and ordered `src/` restored to the
 internalization tree. 72 files: 36 that existed only on the rud route, and 36
@@ -41,5 +47,5 @@ it actually used and what it took from each item.
 **Where the rest of the record lives.** `archive/dev/TASKS-archived.md` for what each
 of the 265 dispatches found; `archive/dev/DECISIONS-archived.md` for the rulings the
 route ran on; `dev/ARCHIVE.md` for the modules retired DURING the route, which
-are under `archive/src/` rather than here; and `dev/LESSONS.md`, which is NOT
-archived and still binds.
+are in the five OTHER event directories under `archive/src/` rather than here;
+and `dev/LESSONS.md`, which is NOT archived and still binds.

@@ -82,7 +82,7 @@ ratio:
 # home? The owner ruled on 2026-08-13 that a probe lives in agents/tasks/
 # beside its report, is tracked, and is never deleted, so there is no lifecycle
 # left to run. `make probes-sweep` and `--gate` are RETIRED with the rest of
-# [LJ-1.138]'s sweep; the frozen code is archive/tooling/check-probes-lifecycle.py.
+# [LJ-1.138]'s sweep; the frozen code is archive/scripts/check-probes-lifecycle.py.
 # src/ is still forbidden absolutely: that rule was bought on 2026-08-04 when
 # one `git add -A src/` committed 13 probe files. Cost: 0.24 s, measured
 # 2026-08-13 over 1,586 tracked files.
@@ -126,7 +126,7 @@ devdocs:
 	$(PY) scripts/check-dev-docs.py
 
 # The generated dashboard was ABOLISHED by the owner on 2026-08-09. Its three
-# scripts are frozen in archive/tooling/, with what they did right and the one
+# scripts are frozen in archive/scripts/, with what they did right and the one
 # thing they got wrong. The canonical figures are unchanged and are read with
 # `python3 scripts/ledger.py --brief`.
 
@@ -173,6 +173,7 @@ test:
 	$(PY) scripts/tests/test_ratio_baseline.py
 	$(PY) scripts/tests/test_rule_series.py
 	$(PY) scripts/tests/test_agents_tree.py
+	$(PY) scripts/tests/test_archive_layout.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the
 # [LJ-0.4] closeout. _build/literature/ holds the OCR text and PDFs of Devlin,

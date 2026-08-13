@@ -1,4 +1,4 @@
-# archive/tooling: retired scripts
+# archive/scripts: retired scripts
 
 Retired tooling, frozen. Nothing in the live tree imports across this
 boundary, and no gate reads it. The rules of the archive are
@@ -11,12 +11,12 @@ boundary, and no gate reads it. The rules of the archive are
 lifecycle: `--stale` gave every probe under `src/` one of four verdicts (HELD,
 EVIDENCE, NAMED, ORPHAN), `--sweep` archived and deleted by those verdicts,
 `--gate` failed `make check` while a finished probe waited, `--index`
-regenerated the evidence table in `archive/probes/README.md`, and a 24 hour
+regenerated the evidence table in `archive/src/2026-08-13-probe-sweep/README.md`, and a 24 hour
 floor delayed the one irreversible operation. `test_probe_lifecycle.py`, 55
 checks, was its suite.
 
 **Why it went.** The owner ruled on 2026-08-13 that a probe pairs one-to-one
-with its report, lives beside it in `agents/reports/<TASK>/`, is tracked, and is
+with its report, lives beside it in `agents/tasks/<TASK>/`, is tracked, and is
 never deleted. **A rule for when to delete a probe has nothing left to decide.**
 It is retired as a mechanism whose problem was dissolved, not as a failure.
 

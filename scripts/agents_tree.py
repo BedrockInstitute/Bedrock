@@ -13,8 +13,11 @@ THE LAYOUT
 
     agents/tasks/<CODE>/            a live task
     agents/tasks/archive/<CODE>/    a task of the retired route
-    agents/tasks/DD25/              probes of a RULING, which is not a task
-    agents/tasks/Unpaired/          probes no report claims by name
+    agents/tasks/archive/Unpaired/  probes no report claims by name
+
+`agents/tasks/DD25/` is GONE. It held the 55 probes of a RULING, which is not a task.
+`[LJ-1.143]` placed all 55 in the task directory of the DD25 review that BUILT each one,
+on the review's own "THE PROBES" table, so no probe now sits outside a task.
 
 `<CODE>` is the task code with `.` written `-` and the whole name upper case, because
 `bedrock.agda-lib` reads `include: src agents/tasks` and **a directory under an include root is
@@ -53,9 +56,11 @@ ROOT = Path(__file__).resolve().parent.parent
 TASKS = ROOT / "agents" / "tasks"
 ARCHIVE = TASKS / "archive"
 
-#: Directories under `agents/tasks/` that are not tasks. `DD25` holds the probes of a RULING and
-#: `Unpaired` holds probes whose task no report names; both were named by `[LJ-1.141]` and
-#: `[LJ-1.142]` kept them rather than invent a task for them.
+#: Directories under `agents/tasks/` that are not tasks. `Unpaired` holds probes whose task no
+#: report names; `[LJ-1.141]` named it and `[LJ-1.142]` kept it rather than invent a task for it.
+#: `DD25` was the second such bucket and is gone: `[LJ-1.143]` placed all 55 of its probes on the
+#: evidence inside the DD25 reviews. The name stays in this set because the tree is read by path
+#: and a stale directory must never be read as a task code.
 NON_TASK_DIRS = {"DD25", "Unpaired", "archive"}
 
 REPORT_SUFFIXES = ("-report", "-review")
@@ -78,11 +83,18 @@ def normalise(code: str) -> str:
 
 
 def task_dirs(include_archive: bool = True) -> list[Path]:
-    """Every task directory, live first, then the retired route."""
+    """Every task directory, live first, then the retired route.
+
+    **BOTH levels are filtered by `NON_TASK_DIRS`, and the archive half was not.** The
+    `Unpaired` bucket moved from `agents/tasks/` to `agents/tasks/archive/` on 2026-08-13,
+    where the filter did not reach it, so twelve probes with no task were reported to five
+    checkers as a task named `Unpaired`. Caught by `test_agents_tree.py`.
+    """
     out = sorted(p for p in TASKS.iterdir()
                  if p.is_dir() and p.name not in NON_TASK_DIRS)
     if include_archive and ARCHIVE.is_dir():
-        out += sorted(p for p in ARCHIVE.iterdir() if p.is_dir())
+        out += sorted(p for p in ARCHIVE.iterdir()
+                      if p.is_dir() and p.name not in NON_TASK_DIRS)
     return out
 
 

@@ -214,7 +214,7 @@ now, so it can be `git mv`-ed straight into `src/`, and the old filter would hav
 with its report, lives in `agents/tasks/<TASK>/`, is tracked, and is never deleted, so there
 is nothing to sweep and no verdict to compute. `--gate`, `--stale`, `--sweep`, `--index`, the
 live-task trigger and the 24 hour deletion floor are gone; the frozen code is
-`archive/tooling/check-probes-lifecycle.py` with its suite. Every retired flag now exits 2.
+`archive/scripts/check-probes-lifecycle.py` with its suite. Every retired flag now exits 2.
 
 ```sh
 python3 scripts/check-probes.py --check   # every tracked file (make check, make probes)
@@ -442,6 +442,23 @@ defect. The docstring states this with its measurements.
 `scripts/tests/test_agents_tree.py` pins the layout, the census floors and the
 Agda-safe directory name, which nothing else enforces.
 
+## `tests/test_archive_layout.py`
+
+**Not a checker, and nothing else notices what it notices.** The owner ruled on
+2026-08-13 that `archive/` MIRRORS the repository root: something archived from
+`dev/measurements/` goes to `archive/dev/measurements/`, and something archived
+from `scripts/` goes to `archive/scripts/`. This suite derives the legal set of
+top-level archive directories from the root itself, so it needs no hand-written
+list, and it refuses any other name unless the name is a declared exception with
+a reason. It also pins the archival-event directories under `archive/src/` to the
+`<date>-<slug>` shape, which is what makes a directory name say WHICH archival it
+was rather than merely what the files are.
+
+**The archive is outside every gate by construction**, which is what makes it
+free to keep and also what makes a layout defect invisible there. Three
+directories drifted in eight days before anyone measured it. `[LJ-1.143]` moved
+them and wrote this suite so the next one fails a test instead of accumulating.
+
 ## `check-task-index.py`
 
 Runs in `make check`. Every cited task code has exactly one row in PLAN
@@ -585,7 +602,7 @@ python3 scripts/check-ratio.py --module src/L/Foo.lagda.md   # one master
 ## Retired: `dashboard.py`, `check-dashboard.py`, `test_dashboard.py`
 
 The generated dashboard was ABOLISHED by the owner on 2026-08-09. The three
-scripts are frozen in `archive/tooling/`, and
-[archive/tooling/README.md](../archive/tooling/README.md) records what they
+scripts are frozen in `archive/scripts/`, and
+[archive/scripts/README.md](../archive/scripts/README.md) records what they
 did right and the one thing they got wrong. Standing figures now come from
 `python3 scripts/ledger.py --brief`, which was always their source.

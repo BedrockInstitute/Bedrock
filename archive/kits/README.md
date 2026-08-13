@@ -39,6 +39,17 @@ path, so provenance is self-evident and `git log --follow` keeps working. A
 refused kit has no original path: it never landed in `src/`, and the tree was
 reverted to HEAD. There is nothing to preserve provenance of.
 
+**THIS IS ALSO WHY THIS DIRECTORY DOES NOT MIRROR THE ROOT.** The owner ruled
+on 2026-08-13 that `archive/` mirrors the repository root, and `[LJ-1.143]`
+moved five directories to obey it. **`archive/kits/` is the one it left**, and
+the reason is the paragraph above rather than an oversight: the mirror rule
+maps an original path to an archived path, and a refused kit has no original
+path to map. `[LJ-1.143]` refused to invent one. **What would decide it** is
+the owner's word on where a thing that never had a root path belongs. The two
+candidates it names are `archive/src/kits/`, because a kit was written for
+`src/`, and `archive/_build/kits/`, because `_build/kits/` is the path these
+files actually came from (the paragraph below records that move).
+
 So the filename carries the provenance instead: `<task>-<name>`. The task code
 resolves in `dev/PLAN.md` section 11 and in `dev/JOURNAL.md`, and the
 measurement and the revival trigger for each kit are rows S19 to S22 in
