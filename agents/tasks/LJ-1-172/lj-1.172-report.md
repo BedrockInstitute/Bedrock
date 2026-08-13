@@ -662,3 +662,374 @@ figures: **row 4's claim that steps 1 to 3 supply `powIter`, and the assumption
 that step 1's drop-in was a code question.** **A gated chain protects the
 figures. It does not protect the sentences between them**, and both errors were
 in a sentence rather than in a number.
+
+---
+
+# PART TWO: steps 6, 7 and 8
+
+**Appended after the coordinator committed steps 1 to 5 and wired
+`src/Everything.lagda.md`.** Same brief, same criteria, same order, same
+incremental landing.
+
+## 13. WALL-CLOCK AND LINE CRITERIA, FIXED IN WRITING BEFORE THE FIRST RUN OF PART TWO (D-1)
+
+- ONE agda process at a time. `GHCRTS="-A64m -I0 -M8g"`. **The cap is NEVER
+  raised.**
+- Per-invocation wall clock: **20 minutes** for a new or small master;
+  **40 minutes** for `src/L/Condensation.lagda.md`, the three `*Agree` masters
+  and `src/L/BoundedSubset.lagda.md`. **A wall is reported with its wall clock
+  and the step STOPS.**
+- `[LJ-1.165]` measured TWO walls in this exact cluster at 20 minutes and about
+  9 GB, one cured by P-i repair **[F]** and one not (`σ₁-up` at the level-hood
+  certificate). **I treat any run past 20 minutes as that wall and I stop.**
+
+| step | gated | abort at (+50 percent) |
+|---|---:|---:|
+| 6, the satisfaction layer, 28 fields | 270 | 405 |
+| 7, `CrossOut`, three legs | 163 | 245 |
+| 8, the assembly, `levelIn` and `cover` | 17 | 26 |
+
+**The decisive gate BEFORE any of the three, and it is `[LJ-1.168]`'s own named
+probe.** `[LJ-1.168]` priced `envSetK` at 45 lines through `mkReflect` and
+marked the load-bearing half INFERRED: "I did not check that `envFoGen` is in
+`mkReflect`'s form. That is the probe's real question"
+(`agents/tasks/LJ-1-168/lj-1.168-report.md:405-408`). **Ten of the 28 fields
+hang on it.** **GO if `envSetGen B ar ∈ˢ Lset lam` closes at a `lam` that
+`mkReflect` builds; NO-GO if `envFoGen` cannot be put in `mkReflect`'s form,
+and then I stop and re-price rather than write the other 18 fields on a false
+premise.**
+
+## 14. LEAD FOR PART TWO
+
+**`levelIn` and `cover` are NOT DISCHARGED. `theorem` does not derive. I STOP,
+and the stop is at STEP 6, before step 7 and step 8.**
+
+**Three findings, in the order that matters.**
+
+1. **STEP 6's load-bearing field is FALSE at `K = Lset lam` for the `lam` that
+   `HullStage` gives.** `envSetK` (`src/L/Condensation/TwelveAgree.lagda.md:271-275`)
+   quantifies over ALL `B ar : S`, and at an unrestricted `ar` it demands that
+   `Lset lam` contain the FULL L-function space `B^ar`. **An arbitrary
+   successor-closed limit does not.** Section 15.
+2. **`[LJ-1.168]`'s cure does not cure it, and I give the exact reason.**
+   `mkReflect` reflects a FORMULA. `envSetK` needs a MEMBERSHIP. Reflection of
+   the description does not put the described set in the stage. Section 16.
+3. **Even with steps 6 and 7 built, step 8 would still not discharge its face.**
+   **MEASURED: step 7 supplies ONE of the assembly's THREE hypotheses.**
+   `hasLevels` and `covered` need something in `src/` to CONCLUDE the bounded
+   graph, and nothing does. Section 18.
+
+**What I did NOT do, said plainly: I wrote no new master and no new line of
+`src/` in Part Two.** Sections 15 to 18 are measurements, and section 19 is the
+cure with its gate. **The tree is exactly as the coordinator committed it.**
+
+## 15. STEP 6: THE STOP, AND ITS EVIDENCE
+
+### 15.1 What `envSetK` demands, MEASURED at `file:line`
+
+```agda
+    envSetK : (B ar : S)
+            → ⟨ fst B ∈ fst (lookup ... K ... γ') ⟩
+            → ⟨ fst ar ∈ fst (lookup ... K ... γ') ⟩
+            → ⟨ fst (Generic.envSetGen B ar) ∈ fst (lookup ... K ... γ') ⟩
+```
+
+`src/L/Condensation/TwelveAgree.lagda.md:271-275`. **MEASURED: `ar` is
+quantified over ALL of `S`. The only restriction on it is `∈ K`. Nothing pins
+it to a numeral, and nothing pins it to `ωʟ`.**
+
+### 15.2 What `envSetGen B ar` IS, MEASURED in three steps
+
+| step | `file:line` | what it says |
+|---|---|---|
+| the set is carved from the FULL L-power | `src/L/Coding/EnvSet.lagda.md:441-442`, `:456-457` | `powamb = hasPowerL amb .fst .fst`, and `envSetGen = hasSeparationL powamb envFoGen` |
+| the members are functions with domain EXACTLY `ar` | `src/L/Coding/Model.lagda.md:278-280`, and both directions at `:289-296` | `domAt f d = ∀̇ ((inDomAt ⇒̇ ∈ d) ∧̇ (∈ d ⇒̇ inDomAt))`. **It is an equivalence, so the domain is `ar` and not a subset of it** |
+| the description asks for exactly that | `src/L/Coding/EnvSet.lagda.md:450-453`, `src/L/Coding/Model.lagda.md:483-485` | `envFoGen` is `envOverAt` at `ar` and `B`, which is single-valued, domain `ar`, values in `B`, pairs in `ar × B` |
+
+**So `envSetGen B ar` is the set of ALL constructible functions from `ar` to
+`B`.** MEASURED, three reads, no inference.
+
+### 15.3 Why `Lset lam` cannot hold it at an arbitrary limit
+
+**INFERRED, and I mark it because I did NOT build the counterexample in Agda
+(C-36).** It is classical rank accounting and nothing more.
+
+`HullStage`'s telescope is `lam, ordλ, succλ, X, X⊆L, ∅∈λ`
+(`src/L/BoundedSubset.lagda.md:903-905`), which makes `lam` a
+successor-closed limit ordinal and nothing stronger. Take `lam = +ω ω`, the tree's own
+ω-block above `ω` (`src/L/Ordinal/StageArith.lagda.md:41`), which is an ordinal
+by `+ω-ord` (`:76-78`) and successor-closed by `+ω-in` (`:48`). Take `B = ar = Lset ω`, which lies in
+`Lset (sucV ω)` and therefore in `Lset lam`. Then `envSetGen B ar` is the set of
+all constructible functions `L_ω → L_ω`, whose L-cardinality is the L-continuum,
+so its L-rank is at least `(ω₁)^L`. **`(ω₁)^L` is not below `+ω ω`, so
+`envSetGen B ar ∉ Lset lam` and `envSetK` FAILS.** **The witness is
+constructible in this tree's own vocabulary, which is why section 19's second
+item is a hypothesis on `lam` and not a repair of the proof.**
+
+**What is MEASURED here rather than inferred: nothing in `src/` bounds
+`envSetGen` in any stage.** `grep -rn "envSetGen" src/` returns FOUR hits
+outside its own master, and none of them is a stage bound:
+`src/L/Condensation/TwelveAgree.lagda.md:274` (this field),
+`src/L/Coding/Sound.lagda.md:288` and `:300` and `:304`.
+
+### 15.4 The measurement that makes the cure obvious, and it is the lead
+
+**MEASURED, and I state it exactly rather than more strongly than it is:
+`envSetK` is the ONLY place in `src/` that asks for `envSetGen` to be a MEMBER
+of anything.** The other three hits take an IDENTIFICATION as a hypothesis and
+conclude a satisfaction:
+`AmbientHoldsGen` (`src/L/Coding/Sound.lagda.md:287-293`) carries
+`qE : lookup Ei γ ≡ Generic.envSetGen B ar` in its telescope, and
+`NumeralFromGeneric` (`:298-300`) proves an equation. **Neither needs the set to
+lie anywhere.**
+
+**And the tree's own bridge to the numeral case is already proved:**
+
+```agda
+  derived : fst (envSet B n) ≡ fst (Generic.envSetGen B (nn n))
+```
+
+`src/L/Coding/Sound.lagda.md:300`, in `module NumeralFromGeneric (B : S) (n : ℕ)`.
+**`nn n = # n , numL n` (`src/L/Coding/EnvSet.lagda.md:173-174`) is a
+NUMERAL.** And the tree carries a SEPARATE numeral-arity set for exactly this
+reason: `envSet : (n : ℕ) → S` at `src/L/Coding/EnvSet.lagda.md:189`, with its
+own `envSet-mem` at `:192-194`.
+
+**So the tree already distinguishes the two, and the only place that needs the
+general one to LIE somewhere is the field that cannot be supplied.** MEASURED.
+
+**One C-35 note, raised against the tree and not against a dispatch.**
+`AmbientHoldsGen` and `NumeralFromGeneric` both have **ZERO consumers** in
+`src/` (`grep -rn`, this task). **They are the two lemmas the cure of section 19
+would consume, so the cure spends delivered code rather than writing new
+code.**
+
+**And the numeral case is TRUE and reachable, by this task's own step 2.** For
+`ar = # n` the members of `envSetGen B (nn n)` are the environments
+`env g` for `g : Fin n → ⟪B⟫`, and `src/L/Coding/Key.lagda.md:71-81` proves
+every one of them lies in `Lset (sucIter 3 σ)` when `B ⊆ Lset σ`, **uniformly in
+`n`**. **The whole family is bounded by a FIXED iterate, which is exactly the
+property the general `ar` destroys.** MEASURED, green, committed.
+
+## 16. THE CORRECTION TO `[LJ-1.168]`, AND IT IS THE REASON THIS GATE WAS NOT SEEN
+
+`[LJ-1.168]` measured the blocker correctly and then named a cure that does not
+close it. Its own words, `agents/tasks/LJ-1-168/lj-1.168-report.md:387-393`:
+
+> The site does not need `Lset λ` closed under the power for every `λ`. It needs
+> ONE `λ` at which the environment-set description reflects, and `mkReflect`
+> builds it.
+
+**MEASURED FALSE, and the reason is a type, not a judgement.** `mkReflect`
+(`src/L/ReflectFo.lagda.md:525-531`) returns
+
+```agda
+  ((γ : S ^ n) → Below β γ → (γ ⊨ φ) ≡ (γ ⊨ relativize (LsetS β oβ) φ))
+```
+
+**That is an equality of SATISFACTIONS. `envSetK` asks for a MEMBERSHIP.** The
+carved set `{ x ∈ Lset β | x ⊨ relativize (LsetS β) envFoGen }` does lie in
+`Lset (sucV β)`, by `carve∈𝒟ₒ` (`src/L/Axioms/Separation.lagda.md:198-199`).
+**But it equals `envSetGen B ar` only if every real environment over `ar` into
+`B` ALREADY lies in `Lset β`, and `Below β γ` is a hypothesis on the
+environment, not a conclusion about the set** (`src/L/Reflect.lagda.md:112-114`).
+**That missing step IS the closure fact. Reflection assumes it; it does not
+supply it.**
+
+**`[LJ-1.168]`'s own fallback is the route that survives**, and it says so at
+`:410-412`: "add the closure as a fourth hypothesis to `HullStage` and discharge
+it where `λ` is chosen". **Section 19 prices that.**
+
+**And I mark what `[LJ-1.168]` got right, because most of it is right.** Its
+section 1.1's delivered decode table, its section 1.2's `envSetGen` apparatus,
+its correction of the field counts to 59 and 28, and its measurement that ZERO
+of the 59 fields conclude a satisfaction: **all MEASURED and all confirmed by
+this task.** The 270 is not refuted. **What is refuted is that the layer can be
+supplied at `HullStage`'s `lam`.**
+
+## 17. WHY THIS IS THE SAME FACT AS `powIter`, AND THE PHASE HAS NOW MET IT FOUR TIMES
+
+**MEASURED, by putting the four statements side by side.**
+
+| named by | the fact | `file:line` |
+|---|---|---|
+| `[LJ-1.162]`, `[LJ-1.165]` | `powK`: the definable power of the recorded value lies in `K` | `agents/tasks/LJ-1-162/ProbeLJ1162A.agda:140-141` |
+| `[LJ-1.167]` | `powIter`: `𝒟ₒ` of a stage member lands a bounded number of stages above | `agents/tasks/LJ-1-167/lj-1.167-report.md:141-144` |
+| `[LJ-1.168]` | `envSetK`: the environment set lies in `K` | `src/L/Condensation/TwelveAgree.lagda.md:271-275` |
+| **this task, step 4** | the same, as a module parameter with no supplier | `src/L/Coding/Bound.lagda.md:105-107` |
+
+**All four are one obligation: `Lset lam` is closed under a power-like
+operation, and `HullStage`'s three hypotheses do not give it.** `src/` states it
+under two further names, `DefOK` (`src/L/Coding/Powerset.lagda.md:445-446`) and
+`PowOK` (`src/L/Coding/Sequence.lagda.md:131`). **Six names, one fact, zero
+suppliers.**
+
+**And Devlin leaves exactly this one unproved.** `_build/literature/dev2.txt:632-635`:
+the closure of `L_α` under `Def` at limit `α > ω` is a parenthetical inside a
+lemma whose whole proof is "As in 2.2 and 2.3. (The details are left as an
+exercise for the reader.)" **The one fact the source skips is the one the tree
+has now met six times.**
+
+## 18. STEPS 7 AND 8: WHAT WOULD STILL BE MISSING IF STEP 6 LANDED
+
+**I did not build them. These are measurements of what they would need, and
+they answer the coordinator's lead question.**
+
+### 18.1 Step 7 supplies ONE of the assembly's THREE hypotheses
+
+The face `[LJ-1.165]` measured takes `crossOut`, `hasLevels` and `covered`
+(`agents/tasks/LJ-1-165/lj-1.165-report.md:349-359`). **`CrossOut` is
+`crossOut`. It is one of three.**
+
+### 18.2 Nothing in `src/` concludes the bounded graph, and that is what the other two need
+
+**MEASURED, re-run at this task's date and unchanged from `[LJ-1.165]`:**
+
+| what | measurement |
+|---|---|
+| consumers of `GraphB.graphBndAt` | **ONE**, `src/L/BoundedSubset.lagda.md:111`, and it only STATES it inside `levelHoodB`. `src/L/Condensation.lagda.md:2489-2493` is the definition and its `Δ₀` witness |
+| consumers of `LevelHood0` | **NONE.** `src/L/BoundedSubset.lagda.md:840` is its own declaration and the only hit in `src/` |
+| any declaration concluding `⟨ γ ⊨ GraphB.graphBndAt ... ⟩` | **NONE** |
+
+**So `hasLevels` and `covered` have no supplier, and the supply they need is the
+level-hood certificate at the hull, which `src/L/BoundedSubset.lagda.md:899-902`
+calls "the priced residue" in the master's own words.** `[LJ-1.165]` measured
+that its transfer hits an UNCURED wall at `σ₁-up`, 20 min 1 s and 9.14 GB, and I
+did not re-approach it.
+
+### 18.3 So the answer to the lead question is NO, and it is structural
+
+**Even with step 6 supplied and step 7 built, `levelIn` and `cover` would take a
+face with TWO undischarged hypotheses, and `theorem` would not derive.**
+MEASURED. **The gated chain 6-7-8 is not a chain to a discharge; it is a chain
+to one third of one.**
+
+## 19. THE CURE, AND ITS GATE
+
+**Offered, not assumed. TWO items and the first is small.**
+
+1. **Restrict `envSetK` to a numeral arity.** The field becomes
+   `(B : S) (n : ℕ) → B ∈ K → Generic.envSetGen B (nn n) ∈ K`, and
+   `src/L/Coding/Sound.lagda.md:300` already proves it equal to
+   `envSet B n`. **MEASURED: every live consumer already uses a numeral**
+   (section 15.4), so no consumer changes. **This is a one-line edit to
+   `src/L/Condensation/TwelveAgree.lagda.md`, which my brief forbids me to
+   touch, so I report it instead of doing it.**
+   **Its gate, and it is one declaration in an already-green file:** add to
+   `src/L/Coding/Key.lagda.md`'s `KeyOver`
+   ```agda
+   envSet∈ : (σ : S) → IsOrd σ → ⟨ ω ∈ˢ σ ⟩ (B : S) (n : ℕ)
+           → ⟨ fst B ∈ˢ T σ ⟩ → ⟨ fst (envSet B n) ∈ˢ T (sucIter 5 σ) ⟩
+   ```
+   **GO if it closes through `paramEnv∈` and `carve∈𝒟ₒ`; NO-GO if the carved
+   set cannot be identified with `envSet B n` without a further closure.**
+2. **The fourth `HullStage` hypothesis, if the restriction is refused.**
+   `[LJ-1.168]:410-412` names it and calls it a move rather than a wall. **It is
+   the SAME hypothesis `powK`, `powIter`, `DefOK` and `PowOK` need**, so it
+   should be added ONCE, as a closure of `lam`, and discharged where `lam` is
+   chosen. **Section 17 is the argument for adding one hypothesis rather than
+   six.**
+
+**And one line for the brief writer.** The gated chain for Part Two was three
+figures, 270, 163 and 17, each measured at its own site and each correct.
+**None of them was wrong. What was wrong was the sentence joining them: that
+supplying the 28 fields at `K = Lset lam` is possible.** **A chain of green
+gates measures the parts. It does not measure the premise that the parts
+compose**, and this is the second time in one task that the error was in a
+sentence between the numbers rather than in a number.
+
+## 20. PART TWO: CHECKERS, RUNS AND PROHIBITIONS
+
+| item | result |
+|---|---|
+| agda invocations in Part Two | **ZERO.** I stopped at a measurement, so nothing needed a run |
+| masters edited in Part Two | **NONE.** `src/` is exactly as the coordinator committed it |
+| new masters | **NONE**, so there is nothing for the coordinator to wire |
+| probes written | **NONE.** Section 19 names one and does not run it |
+| `postulate`, hole, unsolved meta | **all three ABSENT**, unchanged from Part One |
+| `.venv/bin/python scripts/lint-prose.py --check` on this report | **exit 0** |
+| `git status --porcelain` | one untracked file, this report. **Nothing else changed** |
+
+**Prohibitions, answered.** `src/Everything.lagda.md` never opened. The three
+`*Agree` masters read by `sed` and `grep` only, **never edited** — section 19
+names the edit one of them needs and leaves it to the owner.
+`src/L/Coding/Graph.lagda.md` never opened. `[LJ-1.164]`'s move untouched.
+`src/L/Choice/Name.lagda.md` left alone, as the coordinator directed. **No
+commit, no push, no `git checkout .`, no `stash`, no `reset`, no `clean`.**
+
+**Why no probe, and I say it rather than let it look like budget.** D-1 says
+build the smallest decisive miniature. **The decisive question here was settled
+by reading three declarations**, and a probe that re-proved a false statement
+false would have cost a run and added nothing. **The probe that IS worth running
+is section 19's, and it gates the CURE rather than the refutation.**
+
+## 21. PART TWO: EVERY NEGATIVE, CLASSIFIED
+
+| statement | class |
+|---|---|
+| **`levelIn` and `cover` are discharged** | **MEASURED FALSE.** Two of the face's three hypotheses have no supplier, and step 7 supplies only the third |
+| **`theorem` derives** | **MEASURED FALSE**, for the same reason |
+| step 6 can be supplied at `K = Lset lam` from `HullStage`'s telescope | **FALSE.** The structural half is MEASURED (sections 15.1, 15.2); the cardinality half is **INFERRED** and I built no Agda counterexample |
+| `envSetK` restricts `ar` | **MEASURED FALSE.** `(B ar : S)`, `TwelveAgree:271-275` |
+| `envSetGen B ar` is a set of finite sequences | **MEASURED FALSE at a general `ar`.** `domAt` is an equivalence, so the domain is exactly `ar` |
+| the tree bounds `envSetGen` in a stage anywhere | **MEASURED FALSE.** Four hits outside its master, none a bound |
+| every live use of `envSetGen` needs a general `ar` | **MEASURED FALSE.** All are at `nn n`; `envSetK` is the sole exception |
+| the numeral-arity case is also blocked | **MEASURED FALSE.** `src/L/Coding/Key.lagda.md:71-81`, this task's step 2, bounds the whole family at a FIXED iterate |
+| `mkReflect` discharges `envSetK` | **MEASURED FALSE.** It returns an equality of satisfactions; `envSetK` asks for a membership. `Below β γ` is a hypothesis on the environment, not a conclusion about the set |
+| `[LJ-1.168]`'s 270 is refuted | **NOT CLAIMED.** Its price, its decode table and its field counts stand. What is refuted is the site at which the layer can be supplied |
+| `[LJ-1.168]` was careless | **MEASURED FALSE.** It marked the load-bearing half INFERRED in its own words at `:405-408` and named its own fallback at `:410-412`. **The gate it named was the right gate; the phase did not run it** |
+| `powK`, `powIter`, `envSetK`, `DefOK` and `PowOK` are different facts | **MEASURED FALSE.** One closure of `lam`, six names, zero suppliers. Section 17 |
+| `graphBndAt` has a supplier | **MEASURED FALSE.** One consumer, and it only states it |
+| `LevelHood0` has a consumer | **MEASURED FALSE**, unchanged from `[LJ-1.165]` |
+| I built steps 6, 7 or 8 | **MEASURED FALSE. None of them.** `src/` is byte-identical to the coordinator's commit |
+| anything walled in Part Two | **NOT APPLICABLE. I ran no Agda process** |
+| a cheaper route to step 6 exists | **NOT CLAIMED. C-36.** I measured one blocker and named one cure |
+
+## 22. PART TWO: ARCHIVE USED (DD18)
+
+- **`agents/tasks/LJ-1-168/lj-1.168-report.md`, READ WHOLE.** TOOK the delivered
+  decode table (`:34-41`), the `envSetGen` apparatus (`:48-62`), the corrected
+  field counts (`:206-214`), the measurement that zero of 59 fields conclude a
+  satisfaction (`:216-230`), the nine-lemma build (`:338-351`) and the
+  `envSetK` risk (`:373-412`). **Section 16 corrects its `mkReflect` route and
+  confirms everything else.**
+- **`agents/tasks/LJ-1-165/lj-1.165-report.md`, READ WHOLE.** TOOK the assembly
+  code verbatim (`:349-379`), the seven K-adequacy facts (`:190-199`), the
+  measurement that nothing concludes the bounded graph (`:225-233`), and the two
+  walls (`:288-324`). **Section 18 re-runs its two `grep` measurements at this
+  date and both are unchanged.**
+- **`agents/tasks/LJ-1-162/lj-1.162-report.md` and `ProbeLJ1162A.agda`, READ the
+  load-bearing blocks.** TOOK leg 3's telescope, hypothesis by hypothesis
+  (`:80-110`, `:130-150`, `:190-205`), and the 125-line figure with its
+  52-line telescope (`report:60-70`). **The seven K-facts are why section 18.1
+  says step 7 supplies one of three.**
+- `agents/tasks/LJ-1-161/`: taken through `[LJ-1.165]`'s report. **NOT read
+  whole, and I mark it.**
+- **`dev/LESSONS.md`: C-38 as extended, C-35, C-36, C-39, C-40, D-1, D-10, P-l
+  read whole in Part One and re-applied here.** **D-10 is the rule this stop
+  turns on: price the TRUTH of a recorded residue before pricing its proof.**
+  The residue was `envSetK`, the target was false at the intended generality,
+  and D-10 says spend the five minutes.
+- `archive/`: **NOT read in Part Two.** The blocker is a statement in a LIVE
+  master, so no archived route bears on it, and I mark the omission rather than
+  imply a survey.
+
+## 23. PART TWO: LITERATURE USED (DD18)
+
+**`_build/literature/dev2.txt:593-645`, already read verbatim in Part One and
+re-applied here.**
+
+**Devlin's `K(u)` is built by `Seq` and `Pow` from `𝓕 ∪ d ∪ e` (`:614-617`), so
+his bound is closed under the finite-sequence and power operations BY
+CONSTRUCTION.** `Lset lam` at an arbitrary limit is not, and that is the whole
+of section 15. **The tree took a LEVEL where Devlin took a CONSTRUCTED set, and
+the level is transitive, numeral-holding and pair-closed but not
+power-closed.**
+
+**MEASURED against Part One's own table: the substitution works for every one of
+`KFacts`' four closure classes and fails for the one class `TFacts` adds.** The
+four classes correspond to Devlin's `d`, `e`, the `Seq` and the transitivity;
+**`envSetK` corresponds to his `Pow`, and `Pow` is the one operation a level
+does not carry.** **That is the sharpest statement of the blocker I can make,
+and it is why section 19 recommends restricting the field rather than enlarging
+the bound.**
