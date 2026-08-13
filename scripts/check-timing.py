@@ -179,7 +179,7 @@ def baselines() -> dict[str, dict]:
 
 def changed_masters(base: str) -> list[Path]:
     # `git diff` cannot see an untracked file, so a brand new module would
-    # evade the gate entirely until someone added it ([T95] D6.5). Untracked
+    # evade the gate entirely until added ([T95]'s defect 6.5). Untracked
     # masters are exactly the ones nobody has measured yet.
     changed = subprocess.run(
         ["git", "diff", "--name-only", base, "--", "src/"],
@@ -317,7 +317,7 @@ def main() -> int:
     if bench is None:
         print("check-timing: dev/ledger.toml carries no "
               "caliber.retiring_seconds_per_signature; the rewrite gate is "
-              "DISABLED. This is the [T95] D1 failure mode: the ledger lost "
+              "DISABLED. This is [T95]'s defect 1: the ledger lost "
               "its data blocks and both gates went silently dead.")
     findings: list[str] = []
 
@@ -353,7 +353,7 @@ def main() -> int:
               f"{share} of tree{note}")
 
         if obs == 0:
-            # [T95] D3/D6: a module whose results are all written without
+            # [T95]'s defects 3 and 6: a module whose results are written without
             # signatures counts zero obligations, and a zero denominator used
             # to read as 0.000 s/obligation and PASS regardless of cost. An
             # uncountable module is a finding, not a pass.

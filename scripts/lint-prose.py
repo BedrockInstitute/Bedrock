@@ -26,7 +26,8 @@ Code spans, fenced code blocks, markdown link/image destinations and URLs are pr
 Usage:
   lint-prose.py [--check | --fix] [--staged] [FILE ...]
   default mode is --check; with no FILE and no --staged, scans git-tracked *.md/*.lagda.md.
-  The archive (archive/) is never scanned: it is outside every gate (D20).
+  The archive (archive/) is never scanned: it is outside every gate
+  (archived D20; the live home of that rule is DD13).
 Exit status is non-zero if any violation remains (in --fix, only the report-only ones).
 """
 
@@ -434,7 +435,7 @@ def target_files(explicit, staged):
             if (f.endswith(".md") or f.endswith(".lagda.md"))
             and os.path.basename(f).lower() not in EXCLUDE_BASENAMES
             and not f.startswith(".claude/")    # Claude skill/config, not prose docs
-            and not f.startswith("archive/")    # the archive is outside every gate (D20)
+            and not f.startswith("archive/")    # outside every gate (archived D20, live DD13)
             # A brief and a report are FROZEN RECORDS. A brief says what an agent was told
             # on a date; a report says what it found. Neither is live guidance, and neither
             # is ever rewritten, so a style gate over them can only force an edit to a

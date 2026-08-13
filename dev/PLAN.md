@@ -151,8 +151,8 @@ Assumption budget of the source proof, to be preserved or improved:
 - The L development rides **exactly one postulate**, excluded middle
   (`Classical.lem`). No holes, no `TERMINATING`, no `--allow-unsolved-metas`
   anywhere in the source `src/`.
-- Bedrock removes even that postulate by parameterization (D2), making the
-  whole tree `--safe`.
+- Bedrock removes even that postulate by parameterization (archived D2; the
+  live ruling is DD9 in §3), making the whole tree `--safe`.
 
 ## 2. Source material survey (pointer)
 
@@ -186,11 +186,11 @@ The port-era survey of the source repository and its measured cost anatomy moved
 | DD27 | **THE HULL IS INDEXED BY A META TERM ALGEBRA, not by object-language formulas.** | **Ruled 2026-08-10 by the owner**, on a measured fork. `[LJ-1.3]` built the hull as `sett (Σ[ φ ∈ Formula ⟪X⟫ 1 ] Witnessed-small φ)`, so every membership certificate is an X-formula. That choice, not the mathematics, is what blocked condensation: the criterion at HULL parameters needs the order named inside the model, `relL α` sits at rank at least α while `Lset α` holds only rank below α, and the index type leaves no room to widen, because a hull-expressible order yields a hull-formula and the index demands an X-formula. **THE PRICES, and this is why it is a ruling and not a preference.** Keeping the index type costs **1.0 to 3.0k lines and 220 to 890 s, 17 to 23x DD24's bar** (`[LJ-1.16]`). Moving costs about **270 lines under 6 s**: 116 MEASURED by `[LJ-1.18]`'s probe at 0.0103 s/line, about 30 named follow-on, and about 120 for the counting priced by `[LJ-1.22]`. **THE COUNTING OBJECTION DIED ON MEASUREMENT.** `Code` needs the SAME cardinal law as `Formula K 1`, pairing at β, not a stronger one, so the fork neither cures nor worsens `[LJ-1.17]`'s square-law wall; the union over the naturals is internal to the constructor, since `wit` carries its arity. **DD4 IS THE REASON IT IS RIGHT AND NOT MERELY CHEAP.** The obstruction hits BOTH towers, so the blocked shape buys the definable well-order twice; the term algebra needs only a META well-order both towers already have, so it is template content bought once. `[LJ-0.7]` found the definable well-order appears on the whole GCH chain at exactly ONE place, Devlin's own proof of the hull. **WHAT IT REVISES:** `[LJ-1.3]`'s delivered hull, its index, and the statements over that index; it also RETIRES `[LJ-1.3]`'s booked residue piece one, 30 to 80 lines. **TWO CAVEATS STAND AND ARE NOT BURIED:** the 120-line and 2-second counting figures are ESTIMATES from same-class module rates, not measurements, and the mutual `enc`/`encs` termination is unchecked at that site, though the probe's `val`/`vals` passed the analogous shape. |
 ## 4. Target skeleton (OWED a re-derivation for DD2)
 
-The D5 target skeleton, its port-era diagram and the rename ledger moved to [dev/memos/target-skeleton-d5.md](memos/target-skeleton-d5.md). What stays binding from D5: the part level (Base, FOL, ZF, V, L, Landmarks) is fixed, below-part layout is provisional until the [L3.10] re-layering, and the authorities for what `src/` contains are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog), not this section. Read the memo when a rename's history or the port-era layout is needed.
+The archived D5 target skeleton, its port-era diagram and the rename ledger moved to [dev/memos/target-skeleton-d5.md](memos/target-skeleton-d5.md). Note that DD5 in §3 is a DIFFERENT rule, the two quantitative constraints: the D and DD numbers do not correspond. What stays binding from archived D5: the part level (Base, FOL, ZF, V, L, Landmarks) is fixed, below-part layout is provisional until the [L3.10] re-layering, and the authorities for what `src/` contains are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog), not this section. Read the memo when a rename's history or the port-era layout is needed.
 
 ## 5. Working mechanisms (pointer)
 
-The mechanisms this section carried moved to their enforcers ([L3.32-T113]): the LEM parameterization convention is `dev/STYLE-agda.md` section 1 (the ruling is DD9 in §3); the two-catalog doctrine and the named-hypothesis debt form are in `dev/STYLE-agda.md`; probes and gates are `AGENTS.md` and `dev/LESSONS.md` D-1; orchestration is `dev/ORCHESTRATION.md`. The port-era mechanism history (the Frontier record, its re-cuts, construction order) moved to [dev/memos/working-mechanisms.md](memos/working-mechanisms.md); the Frontier's deletion is recorded in the struck D8 row of `archive/dev/DECISIONS-archived.md` and in rows L2.4 and L4.0 of `archive/dev/STATUS-archived.md`.
+The mechanisms this section carried moved to their enforcers ([L3.32-T113]): the LEM parameterization convention is `dev/STYLE-agda.md` section 1 (the ruling is DD9 in §3); the two-catalog doctrine and the named-hypothesis debt form are in `dev/STYLE-agda.md`; probes and gates are `AGENTS.md` and `dev/LESSONS.md` D-1; orchestration is `dev/ORCHESTRATION.md`. The port-era mechanism history (the Frontier record, its re-cuts, construction order) moved to [dev/memos/working-mechanisms.md](memos/working-mechanisms.md); the Frontier's deletion is recorded in the struck D8 row, whose text is at `archive/dev/JOURNAL-archived.md:4275`, and in rows L2.4 and L4.0 of `archive/dev/STATUS-archived.md`. `archive/dev/DECISIONS-archived.md` names struck D8 only in its retired-decisions paragraph and does not carry the row.
 
 ## 6. Route tree (DD19)
 
@@ -291,7 +291,7 @@ exists.** Evidence can move a technique. A number alone cannot.
 
 ## 7. Build constraints (pointer)
 
-D10, which used to carry these constraints, was struck on 2026-08-05 because each constraint is now enforced where it fires. The numbered rows below are routing rows; the full original text is in [dev/memos/build-constraints.md](memos/build-constraints.md), and the older §7.5/§7.6 budgets cited by D13 are rules 5 and 6:
+Struck D10, which used to carry these constraints, went on 2026-08-05 because each constraint is now enforced where it fires. The numbered rows below are routing rows; the full original text is in [dev/memos/build-constraints.md](memos/build-constraints.md), and the older §7.5/§7.6 budgets cited by archived D13 are rules 5 and 6:
 
 1. The trusted gate is one invocation, `agda src/Everything.lagda.md`: the build machinery (`Makefile`, [scripts/README.md](../scripts/README.md)).
 2. Parallelism is a warm-up layer outside the trust base: the build config.
@@ -304,7 +304,7 @@ D10, which used to carry these constraints, was struck on 2026-08-05 because eac
 
 ## 8. Process tensions and their resolutions (pointer)
 
-The T1-T6 tension register and its relief valves moved to [dev/memos/process-tensions.md](memos/process-tensions.md). Archived D11's mechanisms are in `archive/dev/DECISIONS-archived.md`; the live relief valves are the L0 standing track (§6.0) and the L4.1 harmonization (§11). Note that `DD11` is a DIFFERENT rule, code and prose craft: the D and DD numbers do not correspond.
+The T1-T6 tension register and its relief valves moved to [dev/memos/process-tensions.md](memos/process-tensions.md). Archived D11's mechanisms are in `archive/dev/DECISIONS-archived.md`; the live relief valves are the L0 standing track (the L0 row of §11) and the L4.1 harmonization (§11). Note that `DD11` is a DIFFERENT rule, code and prose craft: the D and DD numbers do not correspond.
 
 ## 9. Risks and mitigations (pointer)
 
@@ -361,13 +361,13 @@ and `[L8.2]` is the gate that `[L4.1]` waits on.
 | L5.2 | CI strategy | PLANNED |
 | L5.3 | Site pipeline load test | PLANNED |
 | L6 | The narrative master plan (the meeting at bedrock) | **REGISTERED 2026-08-04 by owner direction.** The standing narrative frame: geology and inner model theory meet at the bedrock, with `L is a bedrock` as the second trophy; every asset is valued against both trophies from this row onward. Phases and the asset re-coloring rule are in §6.1; the geology entry fee and the two mandatory corpus gates are measured in `agents/reports/archive/l3.31-glprobe-report.md` |
-| L7 | The endpoint promotion and the archive's completion | **PLANNED**, ruled by D20 2026-08-04; the archive REGIME is in force now, this row is the endpoint work |
+| L7 | The endpoint promotion and the archive's completion | **PLANNED**, ruled by archived D20 2026-08-04; the archive REGIME is in force now, this row is the endpoint work |
 | L7.0 | Archive `main`, promote the working branch | PLANNED (same day as the endpoint, before any tidying) |
 | L7.1 | Final archival sweep, pre-regime deletions entered | PLANNED |
 | L7.2 | Verify the exclusions end to end; REUSE still covers `archive/` | PLANNED |
 | L7.3 | Final pass on `archive/README.md` | PLANNED |
 | L7.4 | Final pass on `dev/ARCHIVE.md` | PLANNED |
-| L8 | Consolidation, and the gate before prose | **PLANNED**, ruled by D21 2026-08-04; opens when `[L7]` closes |
+| L8 | Consolidation, and the gate before prose | **PLANNED**, ruled by archived D21 2026-08-04; opens when `[L7]` closes |
 | L8.0 | Foundation refactor at T8 scale, on the post-archival tree | PLANNED (candidates re-examined, not inherited) |
 | L8.1 | Line-by-line polish over the whole tree | PLANNED |
 | L8.2 | **THE GATE**: report to the owner before any prose phase | PLANNED (the owner adds further code-shaping work here; `[L4.1]` waits on it) |
@@ -602,7 +602,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.121 | Supply levelIn and cover at the site | NEITHER REFUTABLE, NEITHER SUPPLIED | The wall is the LJ-1.12 crossing, the level-hood certificate, priced 2.8k to 3.3k lines and not built |
 | LJ-1.123 | Re-price the level-hood certificate | 2.8k TO 3.3k BECAME 0.6k | The LJ-1 series built the substrate under it; only the hull transfer remains. Read evidence, no probe |
 | LJ-1.125 | Give envSetK a home in the frame | NOT REFUTED, FRAME GREEN | Stated at the frame telescope per P-x, not as a KFacts field. The instantiation re-measures at 0 metas |
-| LJ-1.127 | Codify DD17's two versions and enforce them | DISPATCHED | AGENTS.md, PLAN, memory and a checker. The AGENTS.md half needs DD19: the owner rules on the diff |
+| LJ-1.127 | Codify DD17's two versions and enforce them | SWITCH LANDED, DIFF APPROVED | scripts/dispatch_policy.py is the one switch; the AGENTS.md half landed in cfe2b5a under DD19 |
 | LJ-1.128 | Re-measure the DD24 ratio baseline | DISPATCHED | make check is red: the baseline was measured over 17,006 lines and the tree stands at 17,185. Quiet machine |
 | LJ-1.124 | Probe the bounded level-graph decode | GO, 147 LINES | Both directions close under the 150-line gate. The LJ-1.123 assembly claim holds; three delivered layers compose |
 | LJ-1.126 | Wire pi streaming and resume into the dispatcher | BOTH DONE, PROVEN | pi --mode json streams per event; resume by --session. It also found that every resume ran on the codex path |
@@ -613,10 +613,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.133 | Give the probes a lifecycle and settle where evidence lives | 284 TO 1, 257 ARCHIVED | the stale rule was backwards and would have deleted 234 |
 | LJ-1.134 | Probe block A2, the A-prime route's widest term | GO, 207 LINES | The fibre extraction and the composite elaborate. A-prime's 760 to 1,320 price stands; a carrier crossing is new |
 | LJ-1.135 | Re-measure ac_baseline_module_rate | 0.014367, UP 29.9 PERCENT | The sign was opposite to the brief: the bar gets LOOSER. Control run says 6.9 percent machine, 21.6 percent content |
-| LJ-1.136 | Gate the remaining A-prime blocks | 705 PLUS A5 UNPRICED | A2 and A3 are measured; A1, A4, A5, A6, A7 are bands. No block gets funded on a band centre |
+| LJ-1.136 | Gate the remaining A-prime blocks | GO, BOTH PROBES | pick-canonical elaborates, so LJ-1.114's wall falls. A5's risk is seconds, not lines: 2.594 s per line |
 | LJ-1.137 | Apply the four ruled AGENTS blocks and pay for them by trimming | 2,244 WORDS, 56 FREE | Two sentences are false today. The blocks cost 129 words and 43 are free, so the file funds them |
 | LJ-1.138 | Give the probe lifecycle a correct trigger and a real execution point | TRIGGER IS A TASK, GATED | The clock is mtime and nothing runs the sweep, so 284 probes accumulated |
 | LJ-1.139 | Repair the memo STATUS headers | 7 OF 9 REPAIRED, 8 RESOLVED WRONG | A D code cited with no home resolves against a DD row of the same number that means something else |
+| LJ-1.140 | Close the D against DD retarget and give it a checker | 87 LINES, ALL RESOLVE | Six numbering series write D<n>, not two. A checker refuses a bare code when a DD row shares its number |
+| LJ-1.141 | Rehome the probes beside their reports, tracked | 258 PROBES REHOMED, TRACKED | include: src agents/reports works. A staged rename walked past --diff-filter=ACM into src/ |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |

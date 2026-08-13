@@ -8,7 +8,8 @@ document wins. Process context (goal codes, phases) lives in
 [PLAN.md](PLAN.md); the i18n marker grammar lives in [STYLE-i18n.md](STYLE-i18n.md).
 
 Rules marked **(provisional)** are expected to harden after real porting experience
-(PLAN D11; tension T1's register is archived at
+(archived D11, in `archive/dev/DECISIONS-archived.md`; DD11 in PLAN §3 is a
+DIFFERENT rule, code and prose craft. Tension T1's register is at
 `dev/memos/process-tensions.md`). Changing any rule is legislation: open an
 `[L0.x]` item, do not
 improvise silently.
@@ -49,7 +50,8 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   hypothesis and the chapter ships conditional on it, with the hypothesis
   recorded in PLAN §11. The bridge is the live instance (Q-lim and below-lim,
   `dev/ledger.toml`).
-- **Classical principles are module parameters, never axioms** (PLAN D2). The
+- **Classical principles are module parameters, never axioms** (archived D2;
+  the live ruling is DD9 in PLAN §3, and DD2 there is the endpoint). The
   canonical packaging (validated by the L0.2 spike):
 
   ```agda
@@ -66,11 +68,14 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
 ## 2. Modules and files
 
 - One chapter = one master `.lagda.md`; module name = file path; namespaces = the
-  book parts fixed by PLAN D5 (the archived part layout is at
-  `dev/memos/target-skeleton-d5.md`).
+  book parts fixed by archived D5, whose live statement is PLAN §4 (the
+  archived part layout is at `dev/memos/target-skeleton-d5.md`; DD5 in PLAN §3
+  is a DIFFERENT rule, the two quantitative constraints).
 - Module names: full English words, PascalCase (`Constructible`, `WellOrder`).
   **Never** iteration numbers, primes, or provenance flavor (`Foo2`, `FooFinal`,
-  `isL'`); PLAN D7.
+  `isL'`); archived D7, in `archive/dev/DECISIONS-archived.md`. **This naming
+  rule is LIVE. DD7 is a different code and it is revoked**, so do not read the
+  revocation in PLAN §3 as a repeal of this line.
 - Telescope order: levels first, then assumption parameters, then subject
   parameters (`module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ))`).
 - Imports needed by the telescope go **before** the module header; everything else
@@ -149,7 +154,8 @@ may accompany `x` when the two appear **as a pair within eyeshot**, in the same
 telescope or the same `where`/`let` block (an updated value derived from `x`, the
 level pair `ℓ ℓ'`). A prime never crosses the definition boundary; a primed name
 with no unprimed partner in sight is a naming failure even locally. Ported source
-names like `isL'` are renamed on entry (PLAN D7).
+names like `isL'` are renamed on entry (archived D7, and it is still live here;
+DD7 is a different code and it is revoked).
 
 Record fields: **operation fields are symbols** (`_∈ˢ_`, `_≈ˢ_`, `⊓`, `⋁`),
 **property/axiom fields are words**; property-shaped fields are bare
@@ -281,7 +287,8 @@ STYLE-i18n; code fences are language-neutral and English-only):
 4. Inline code references use `` `name`{.Agda} ``; section headings are stable
    anchors for cross-references.
 5. New symbols follow §5; new terms enter `dev/glossary.toml` in the same change.
-6. Authoring order per PLAN D6: English first, then Chinese, cross-checked; the
+6. Authoring order per archived D6, whose live statement is `AGENTS.md`
+   Boundaries: English first, then Chinese, cross-checked; the
    Japanese block may be added later without touching code.
 
 ## 9. Commits

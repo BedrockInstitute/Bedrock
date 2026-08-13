@@ -26,7 +26,7 @@ hypotheses.
   the `arSubK-*` family are this shape.
 
 WHAT IT DOES NOT CLAIM. A flag is a question, never a verdict: the cure is a
-refutation probe (`src/ProbeLJ197A.agda` is the shape, and it is one line of
+refutation probe (`agents/reports/LJ-1-97/ProbeLJ197A.agda` is the shape, and it is one line of
 real content per fact). A clean run is not a proof that the telescopes are
 inhabited, because inhabitation is not decidable here. Read the report as
 "these are worth a refutation attempt", which is exactly what C-38 asks.
@@ -355,7 +355,7 @@ def main() -> int:
     if total:
         print(f"\ncheck-unbound-hyp: {total} hypothesis/hypotheses worth a "
               f"refutation attempt (see dev/LESSONS.md C-38, and "
-              f"src/ProbeLJ197A.agda for the probe shape)")
+              f"agents/reports/LJ-1-97/ProbeLJ197A.agda for the probe shape)")
         return 1 if args.check else 0
     print(f"check-unbound-hyp: clean ({len(targets)} file(s))")
     return 0

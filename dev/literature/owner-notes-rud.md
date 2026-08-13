@@ -4,7 +4,7 @@ Provenance: the owner's own exploration in a separate Claude chat, recorded
 2026-08-02 as reference input to `[L3.30-D1]` (the digestion document) and
 `[L3.30-M]` (the design memo). Recorded verbatim except for repository-mandated
 punctuation fixes (em dashes and full-width parentheses are banned repo-wide).
-D1 must verify the mathematical claims here against the primary sources like
+`[L3.30-D1]` must verify the mathematical claims here against the primary sources like
 any other input; where this note and a primary source disagree, the source
 wins and the discrepancy is reported.
 

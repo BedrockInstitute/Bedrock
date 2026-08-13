@@ -9,8 +9,13 @@ then re-quoted by every report that followed. The cure is not a tidier document.
 is that standing is COMPUTED here and written nowhere.
 
 What it measures: non-blank lines inside ```agda fences, over git-tracked *.lagda.md under
-src/. The archive (archive/) is outside every gate (D20) and is never counted. Probe files
-(src/Probe*.agda) are untracked by standing rule (D-1) and so never appear.
+src/. The archive (archive/) is outside every gate (archived D20, live DD13) and is never
+counted. Probe files never appear
+either: since the owner's ruling of 2026-08-13 they are TRACKED, in
+agents/reports/<TASK>/, but this scan is scoped to src/*.lagda.md, so agents/ is
+outside it by construction. The reason is not the old one (a probe used to be
+untracked): this ledger counts the DELIVERED PROOF, and a probe is evidence,
+exactly as a report is evidence. Neither is proof.
 
 Standing = tracked total MINUS the retirement set declared in dev/ledger.toml. That set is
 SUSPENDED today (retire_suspended), so standing is the whole tree.
@@ -35,7 +40,7 @@ Usage:
   ledger.py --check      validate the declaration against the tree
                          (exit 1 on a defect); this is the mode `make check` runs
   ledger.py --write      a no-op alias for --check, kept so old invocations work
-                         move, which D27 says is at every return that could move them
+                         move, which archived D27 (live DD15) puts at every return
   ledger.py --brief      one line: standing, the endpoint or a refusal, and both
                          DD5 benchmarks with the honest state of each
   ledger.py --trophy-split
@@ -93,7 +98,8 @@ UNCOUNTED = ("src/Everything.lagda.md", "src/Landmarks.lagda.md")
 
 
 def tracked_masters() -> list[str]:
-    """Git-tracked .lagda.md under src/. Untracked probes never appear here (D-1).
+    """Git-tracked .lagda.md under src/. A probe never appears here: it lives in
+    agents/reports/<TASK>/, outside this glob (D-1, owner's ruling 2026-08-13).
 
     THIS IS THE STRUCTURAL LIST and it still holds the catalogs, because the
     import graph, the closure and the i18n checks all need them. Use
@@ -142,7 +148,7 @@ def retiring(files: list[str], data: dict) -> tuple[dict[str, list[str]], list[s
     buckets: dict[str, list[str]] = {}
     defects: list[str] = []
     claimed: set[str] = set()
-    # SUSPENDED 2026-08-09. The declared retirement set was ruled by D18 for
+    # SUSPENDED 2026-08-09. The retirement set was ruled by archived D18 for
     # the retired route. DD2 rebuilds on the internalization tree, so NOTHING
     # in src/ is retiring today and a meter that subtracts the old set read
     # 4,976 against a measured 17,492. Standing is the whole tree until the
@@ -494,7 +500,7 @@ def trophy_split(data: dict, files: list[str],
     larger than the whole project. The cause: all 12,654 retiring lines sat
     inside the AC total. Part 2 alone held 4,500 retiring lines against 115
     that survive, because `L models AC` today runs through the choice tree that
-    D18 retires.
+    archived D18 retires.
 
     That version answered "what does AC touch today". This one answers "what
     does AC cost on the route we are building", which is the question the board
@@ -729,7 +735,7 @@ def main(argv: list[str]) -> int:
     defects += matrix_defects
 
     # THE AC TROPHY BUDGET (D36). The tripwire fires on the MEASURED number
-    # only: a projection never blocks a commit (D26), but a tree whose
+    # only: a projection never blocks a commit (archived D26), but a tree whose
     # measured AC closure reaches the cap may not grow by another commit.
     budget = data.get("trophy_budget", {})
     ac_cap = budget.get("ac_cap")
@@ -900,7 +906,7 @@ def main(argv: list[str]) -> int:
     print(f"  basis: {data['basis']['unit']}, {data['basis']['scope']}")
     print()
     print(f"  tracked masters                  {total:8,}  ({len(files)} files)")
-    print("  booked retirements (D18):")
+    print("  booked retirements (archived D18):")
     for label, hit in buckets.items():
         if hit:
             print(f"    {label:<34} {sum(sizes[f] for f in hit):8,}  ({len(hit)} files)")

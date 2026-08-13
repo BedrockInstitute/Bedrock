@@ -14,10 +14,43 @@ deletion. They are now tracked.
 |---|---|---|
 | `reports/` | The reports of the current arc, `LJ-1.90` and later | 41 |
 | `reports/archive/` | Every earlier report, back to the first dispatch | 452 |
+| `reports/<TASK>/` | **The probes of one task**, added 2026-08-13 | 258 files in 118 directories |
 | `briefs/` | Every brief, the instruction each agent was dispatched with | 406 |
 
 The split at `LJ-1.90` is not a date. `[LJ-1.90]` is where the first real consumer landed and
 the current arc began.
+
+## Probes live here
+
+**A probe pairs one-to-one with its report, lives beside it, is tracked, and is never
+deleted.** The owner ruled that on 2026-08-13. `dev/LESSONS.md` **D-1** is the canonical rule
+and everything below is how to obey it.
+
+**Write your probe in `agents/reports/<TASK>/`, and nowhere else.**
+`agents/reports/LJ-1-141/ProbeLJ1141A.agda` sits beside `agents/reports/lj-1.141-report.md`.
+`src/` is forbidden absolutely; `scripts/check-probes.py` refuses a commit that carries a probe
+there, and that rule was bought on 2026-08-04 when one `git add -A src/` committed 13 probe
+files.
+
+**The directory name is the module qualifier, so declare `module LJ-1-141.ProbeLJ1141A`.**
+`bedrock.agda-lib` lists `agents/reports` as an include root, so your probe imports `L.Choice.Step`
+exactly as a master does, and you run it where you wrote it. It never moves.
+
+**Write the directory as `LJ-1-141`, not `lj-1.141`.** A directory under an include root must
+parse as an Agda name. MEASURED 2026-08-13: `LJ-1-141` works; `lj-1.141`, `LJ-1_141` and
+`LJ_1_141` are all `[ParseError]`, because `.` splits the qualifier, `_` splits a mixfix name,
+and the trailing digits are then a literal.
+
+**Nothing typechecks your probe once your task closes.** It becomes text, exactly like your
+report, and its claim is true of the tree at its date. That is why you run it yourself, while
+you still can, and why the verdict still goes in the report.
+
+**Do not name a probe after the module it probes.** Two include roots make a shared module name
+an `[AmbiguousTopLevelModuleName]` error.
+
+**The 258 probes moved here on 2026-08-13 keep their old flat module lines**, so
+`agda` refuses them with `[ModuleNameDoesntMatchFileName]`. They are frozen records and nothing
+typechecks them. `archive/probes/README.md` maps every old path to its new one.
 
 ## These files are frozen records
 
@@ -37,8 +70,6 @@ tree resolves like any other.
 
 ## What is NOT here
 
-- **Probes.** A probe is thrown away by doctrine (`dev/LESSONS.md` D-1). Its verdict survives
-  in a report here; the probe file never does.
 - **Run logs, profiles and scratch data.** These stay in `_build/`, which is where volatile
   build output belongs.
 - **The primary sources.** `_build/literature/` holds copyrighted OCR text and PDFs, which

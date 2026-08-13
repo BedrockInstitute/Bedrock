@@ -225,7 +225,7 @@ parentheses):
   instance under a type-level FUNCTION head, which is not invertible
   (source case 16: 74 min to 69 s). (Extends P-a, Rule 12, I-1; the sharper
   mechanism statement is the type-level-function-head unification.)
-  Sub-case (D2, 2026-08-03): a formula index is a huge argument even when the
+  Sub-case (R5-D2, 2026-08-03): a formula index is a huge argument even when the
   formula itself is small, once it sits under a satisfaction head (implicit
   φ ψ cost a 168 s check; explicit indices and fifteen named tails fixed it).
 - **[A] Keep it neutral**: heavy values never sit inside
@@ -233,7 +233,7 @@ parentheses):
   and bridge the concrete membership by one `subst`. (Extends Rule 1.)
   **Measured again (2026-08-03):** prophylactic use before a wall (sixteen
   heavy modules at abstract carriers, 40 s total, G3G4G5); a 1,200-line
-  abstract-carrier file at 47.8 s (D2); a 1,347-line predicate at a
+  abstract-carrier file at 47.8 s (R5-D2); a 1,347-line predicate at a
   seven-fact telescope, 9.5 s cold (K3); set-level identities at abstract
   carriers fire none of the machinery, 246 lines at 1.9 s (K4); and the
   obvious cheaper replacement is worse when extensionality meets a tower
@@ -843,16 +843,16 @@ sealing the nine derived operations at birth with specs inside dropped the
 check to 3.7 s. **Prophylactic datum (R5a, 2026-08-03):** the rule applied
 BEFORE any wall kept a 731-line sett-tower chapter at a 2.8 s cold check
 end to end, the first case of the seal discipline preceding a wall instead
-of repairing one. **Measured again (D2, R5a-2, K1, 2026-08-03):** statement
+of repairing one. **Measured again (R5-D2, R5a-2, K1, 2026-08-03):** statement
 positions count: naming transparent `left`/`right` in a theorem statement
-cost 170.7 s cold (D2); an imported transparent operation can cost 25.7 s to
+cost 170.7 s cold (R5-D2); an imported transparent operation can cost 25.7 s to
 invoke even at variable arguments and sealing only moves the cost, so the
 alias's job is to be the single site that invokes it (R5a-2); second
 prophylactic datum: the base block ran at 1.3 s warm with the discipline
 applied first (K1).
 
 **Provenance:** `agents/reports/archive/r3c-report.md` (the wall trail); commit `d15c114`;
-companion to P-c and R-36; the D2, R5a-2, and K1 datums:
+companion to P-c and R-36; the R5-D2, R5a-2, and K1 datums:
 `agents/reports/archive/r5d2-report.md`, `agents/reports/archive/r5a-report.md`, `agents/reports/archive/k1-report.md`.
 
 **Appended (the PZ polish, 2026-08-03):** when an expensive imported
@@ -1052,29 +1052,46 @@ L3.24, L3.28, L3.29.
 **When it bites:** architecture forks, unpriced risk items, and any "measure
 before estimating" claim.
 
-**The probe's lifecycle (standing rule, owner-ruled 2026-08-04):** a probe's
-value is its VERDICT, and the verdict lives in a report under `agents/reports/`; the
-file is scaffolding.
+**Where a probe lives (standing rule, owner-ruled 2026-08-13, replacing the
+lifecycle of 2026-08-04):** a probe is the REPORT'S OTHER HALF. The report
+carries the verdict; the probe carries the term, which no prose copies without
+loss. Both are evidence and both are kept.
 
-1. **A probe is never committed.** Its home is the working tree, ignored by
-   `.gitignore`. (Thirteen were swept into a commit by a `git add -A src/` on
-   2026-08-04 and had to be untracked: 3,274 lines of scaffolding the
-   repository would otherwise have carried forever.)
-2. **The report is written before the probe is deleted, always.** A probe whose
-   verdict is not yet in a report is not finished, however green it is.
-3. **The file survives only while it is a TEMPLATE for imminent work**, that
-   is, while the chapter it seeds is about to be written from it. When that
-   chapter lands, the probe goes. Three of the fourteen live probes were kept
-   on this ground alone (the face, the re-home, and the generic-reading
-   precedent); the other ten were pure history the moment their reports landed.
-4. **A pattern worth keeping is not kept by keeping the file.** If a probe
+1. **Write the probe in `agents/reports/<TASK>/`, beside the report.** One
+   directory per task, because a task often writes several probes. The
+   directory is the module qualifier, so the file declares
+   `module LJ-1-141.ProbeLJ1141A`. `bedrock.agda-lib` lists `agents/reports` as
+   an include root, so the probe imports the tower exactly as a master does and
+   **you run it where you wrote it. It never moves, so no citation into it is
+   ever rewritten.**
+2. **NEVER under `src/`.** Thirteen probes were swept into a commit by a
+   `git add -A src/` on 2026-08-04, 3,274 lines, and had to be untracked.
+   `scripts/check-probes.py` is the gate, in `make check` and in the pre-commit
+   hook, because an ignore rule is a default that `git add -f` walks past.
+3. **The probe is TRACKED and is NEVER deleted.** Nothing sweeps it, nothing
+   archives it, and there is no clock on it.
+4. **The report is still written, and it is still written first** (C-22). A
+   probe whose verdict is not in a report is not finished, however green it is.
+5. **Nothing typechecks a probe once its task closes.** It becomes text, like
+   the report, and its claim is true of the tree at its date. **So run it
+   yourself while your task is live: that is the only check it will ever get.**
+6. **A pattern worth keeping is not kept by keeping the file.** If a probe
    taught a reusable shape, that shape belongs in this law book or in the
-   chapter it seeded. A stray file is not a home for a lesson.
+   chapter it seeded. A tracked file is still not a home for a lesson.
 
-**Provenance of the lifecycle rule:** owner ruling 2026-08-04, after the
-accidental commit; the probe inventory of that day is in
-`archive/dev/JOURNAL-archived.md`. The journal was archived on 2026-08-09 and
-reopened empty for the two-tower route, so this pointer moved with it.
+**Enforcement points, because a rule with none is a wish.** Rule 2 is the only
+mechanical one: `scripts/check-probes.py --check` in `make check` and `--staged`
+in `scripts/git-hooks/pre-commit`, pinned by `scripts/tests/test_probe_gate.py`.
+**Rules 1, 3, 4, 5 and 6 are enforced by the brief and by the return audit**
+(`dev/ORCHESTRATION.md` section 1's standing clauses), and by nothing else.
+
+**Provenance.** Owner ruling 2026-08-13, which replaced the ruling of
+2026-08-04 after `[LJ-1.133]`, `[LJ-1.138]` and `[LJ-1.141]` measured what the
+throwaway rule actually cost: 284 probes accumulated untracked in `src/` with
+986 line-number citations pointing into them, one `git clean -xdf` from gone.
+The lifecycle machinery of 2026-08-13 is frozen at
+`archive/tooling/check-probes-lifecycle.py`; `archive/probes/README.md` maps
+every pre-ruling path to its new one.
 
 ### D-2. The junk-table lesson
 
@@ -1481,7 +1498,7 @@ is infinite (singletons), so it is never a member of the first rud level
 rud-versus-Def statement is a separate theorem with a finiteness proof, and
 no offset engineering merges it with the general case.
 
-**Measured (D1, 2026-08-03):** negatively, it removed a planned 150-line
+**Measured (R5-D1, 2026-08-03):** negatively, it removed a planned 150-line
 layer; the kernel recon registered the base block as its own residue.
 
 **Provenance:** `agents/reports/archive/r5d1-report.md`.
@@ -1517,7 +1534,7 @@ transitive carrier; Δ₀ is needed only when a proof crosses between the
 ambient and the inner reading, and inner-world readers are reusable across
 chapters because they carry no absoluteness obligation.
 
-**Measured (D2, K3, 2026-08-03):** the Graphs-class re-run estimate (~1k
+**Measured (R5-D2, K3, 2026-08-03):** the Graphs-class re-run estimate (~1k
 lines, the G2 wall class) became 2,124 lines of ordinary reading work with
 zero walls; the pair kit imported whole cost zero lines against 187; no Δ₀
 witness was constructed anywhere.
@@ -1644,7 +1661,7 @@ K2's cofinality finding, and a sibling of D-10.
 ### D-25. An archive goes red on its own, and pending work that needs it must be extracted first
 
 **Rule:** An archived module is frozen, so its greenness decays the moment any
-SURVIVOR it imports changes underneath it. That is legal (D20 says a red
+SURVIVOR it imports changes underneath it. That is legal (archived D20 says a red
 archive is not a defect) and it is harmless, right up until some pending item
 still needs content from the archived chapter: at that moment the cheapest
 route to that content, typechecking the archived file against an explicit
@@ -2447,7 +2464,7 @@ unnecessary, and sealing is what the trunk reaches for where the statement
 discipline was already broken.**
 
 **The uncomfortable corollary, recorded because it is the real lesson.** The
-subtree that D18 retires costs **0.013 s/line over 26,483 lines**; the surviving
+subtree that archived D18 retires costs **0.013 s/line over 26,483 lines**; the surviving
 trunk cost 0.104. The retiring chapters were not better mathematics, they simply
 **stated at abstract carriers and variable indices so nothing re-normalized**,
 which is P-h's discipline billed in seconds instead of lines. The newer work
@@ -2941,7 +2958,7 @@ axis through the delivered `erase` with no placement anywhere**
 (`src/FOL/Count.lagda.md:598-611`, `:617-637`).
 
 **Provenance:** `agents/reports/archive/lj-1.27-review.md` sections 4 and 5. Probes
-`archive/probes/ProbeDD25C.agda`, `archive/probes/ProbeDD25D.agda` and `archive/probes/ProbeDD25E.agda`, the
+`agents/reports/DD25/ProbeDD25C.agda`, `agents/reports/DD25/ProbeDD25D.agda` and `agents/reports/DD25/ProbeDD25E.agda`, the
 last red by design with its error message as its measurement.
 
 ### C-32. A cure invalidates every downstream measurement; RE-RUN THE GATE before you act on the old number
@@ -2963,7 +2980,7 @@ measuring walls to route around a gate that had already opened, and not the
 orchestrator, who held the pre-cure figure and quoted it three times.
 
 **The second half, and it cost the same dispatch.** `[LJ-1.27-R]` had already
-WRITTEN the cured block as `archive/probes/ProbeDD25E.agda`, and it failed at exactly one
+WRITTEN the cured block as `agents/reports/DD25/ProbeDD25E.agda`, and it failed at exactly one
 line, the `refl` asserting count 0, which is what `[LJ-1.31]` fixed. On the
 cured tree it is green in 2.87 s at 0.0114 s per line. **A finished probe sat
 one command away for a whole dispatch.**
@@ -3089,7 +3106,7 @@ WHOLE seconds budget of 99.6 to 147.7 s. **The route looked infeasible and the
 
 
 **Provenance:** `agents/reports/archive/lj-1.34-review.md` sections 1 and 2;
-`archive/probes/ProbeDD25D5.agda` against `archive/probes/ProbeLJ134.agda`.
+`agents/reports/DD25/ProbeDD25D5.agda` against `agents/reports/LJ-1-34/ProbeLJ134.agda`.
 
 ### P-w. A module application COPIES; an interposed module cannot amortize one
 
@@ -3223,7 +3240,7 @@ story frame ended in `∀̇∈ (var yc) body`, which is vacuous at an empty valu
 where the machine's `extAt yc body` constrains it. Worse, at a NONEMPTY value
 one index made the defining condition never mention the element it defines, so
 the row is FALSE of the true satisfaction table, not merely weak.
-`archive/probes/ProbeDD25E1.agda` proves the countermodel, `archive/probes/ProbeDD25E3.agda` is the
+`agents/reports/DD25/ProbeDD25E1.agda` proves the countermodel, `agents/reports/DD25/ProbeDD25E3.agda` is the
 control that fails with `fst e != fst z` when the index is corrected, and both
 were re-run by the orchestrator.
 
@@ -3304,18 +3321,18 @@ is K-bounded, `Δ₀` has no `δ-∀` and no `δ-∃`, so no witness exists.
 
 **Every part of that reasoning was refuted by four probes.** The unbounded
 witness is never needed, because every leaf is a K-bounded Δ₀ restatement
-transferred under site facts; `archive/probes/ProbeDD25F41A.agda` builds the supposedly
+transferred under site facts; `agents/reports/DD25/ProbeDD25F41A.agda` builds the supposedly
 missing witness in ONE line from the delivered `Δ₀-extAtB` and `Δ₀-envBndGen`,
-GREEN in 1.45 s. `archive/probes/ProbeDD25F41B.agda` then builds BOTH directions between
+GREEN in 1.45 s. `agents/reports/DD25/ProbeDD25F41B.agda` then builds BOTH directions between
 the bounded condition and `envSetAt` in 98 lines, GREEN, marginal cost 0.22 s.
 
 **The real defect was ONE MISSING CONJUNCT.** The machine's `extAt` is a pair
 of implications and the story wrote the first and stopped.
-`archive/probes/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
+`agents/reports/DD25/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
 PLUS all three site facts and Agda still refuses, so the conjunct is what is
 missing and not the facts.
 
-**The tell was in the failing probe itself.** `archive/probes/ProbeLJ141C.agda`'s body is a
+**The tell was in the failing probe itself.** `agents/reports/LJ-1-41/ProbeLJ141C.agda`'s body is a
 bare `henv`, an identity coercion, and its error shows a Π on one side against
 a Σ of two Π on the other. **The shape of the error named the missing conjunct
 and the return read it as impossibility.**
@@ -3327,7 +3344,7 @@ untested, and its own report may already contain the finding nobody has
 consumed.
 
 **Provenance:** `agents/reports/archive/lj-1.41-review.md`; `agents/reports/archive/lj-1.41-report.md`;
-probes `archive/probes/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
+probes `agents/reports/DD25/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
 
 ### D-30. Price what the CONSUMER needs, never the general law: generality nobody asked for is the cheapest thing to delete and the most expensive thing to keep
 
@@ -3375,8 +3392,8 @@ the same rate. This says the same layer propagates unreached GENERALITY at the
 same rate, and that generality is invisible until somebody reads the consumers.
 
 **Provenance:** `agents/reports/archive/lj-1.47-report.md`; `agents/reports/archive/lj-1.46-report.md`;
-probes `archive/probes/ProbeLJ147PairingSealed.agda` against
-`archive/probes/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.
+probes `agents/reports/LJ-1-47/ProbeLJ147PairingSealed.agda` against
+`agents/reports/LJ-1-47/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.
 
 ### C-37. State a law with the ACTION it prescribes, never only the prohibition: a law written as a wall hides its own cure
 
@@ -3421,7 +3438,7 @@ may strengthen. This says the same failure enters one step earlier: **the brief
 can remove the cure from the agent's reach before any substitution is tried.**
 
 **Provenance:** `agents/reports/archive/lj-1.7-review.md`; `agents/reports/archive/lj-1.7-report.md`;
-`agents/briefs/LJ-1.7.md`; probe `archive/probes/ProbeDD25G1.agda`, re-run by the
+`agents/briefs/LJ-1.7.md`; probe `agents/reports/DD25/ProbeDD25G1.agda`, re-run by the
 orchestrator.
 
 ### C-38. A hypothesis is discharged when something SUPPLIES it, never when it is restated
@@ -3455,7 +3472,7 @@ consumer, found the telescope's first fact:
 gives `numeralL 0 ≡ numeralL 1`, refuted by the delivered `numeralL-inj`.
 The type is uninhabited at every frame, not merely at the consumer's, so the
 module could never be instantiated by anything. Machine-checked at
-`archive/probes/ProbeLJ171A.agda:170-173` (`tagEq-refutes`), re-run by the orchestrator.
+`agents/reports/LJ-1-71/ProbeLJ171A.agda:170-173` (`tagEq-refutes`), re-run by the orchestrator.
 
 **The same audit found the slot fix of `[LJ-1.55]` HOLDS**: the frame's row
 facts land at the telescope's slots definitionally. The defect is the
@@ -3486,7 +3503,7 @@ arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩ → ⟨ fst v ∈ fst (lookup K �
 singleton, so it asserts that EVERY set belongs to `K`, including `K`.
 `[LJ-1.77]` machine-checked the refutation in one step through the delivered
 `∈-irrefl`: `arityK ⁅X⁆ X (X ∈ ⁅X⁆)` gives `X ∈ X`
-(`archive/probes/ProbeLJ177A.agda:75-78`, green at 2.47 s). `innerK`, `innerPairK` and
+(`agents/reports/LJ-1-77/ProbeLJ177A.agda:75-78`, green at 2.47 s). `innerK`, `innerPairK` and
 `pairK` are the same shape without any premise at all, refuted by a
 membership cycle rather than by irreflexivity, and they stay INFERRED
 because the tree delivers no no-cycle lemma.
@@ -3515,7 +3532,7 @@ to find these**: the orchestrator's one-line regex over-matched and flagged
 writing.
 
 **Provenance:** `agents/reports/archive/lj-1.71-report.md` sections 0 to 2;
-`archive/probes/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
+`agents/reports/LJ-1-71/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
 claim that the twenty-four hypotheses were discharged is false.
 
 ### C-39. A brief's prohibition binds harder than its goal: an agent stops at the wall and never reports the door behind it
@@ -3540,7 +3557,7 @@ the stop.**
 supplied. It measured the T-slot tie for `entryK` absent at the site, which
 was true, and stopped with ten facts unattempted. `[LJ-1.99]` then measured a
 second tie GREEN: four applications of the delivered `KFacts.arityK`
-(`src/L/Condensation.lagda.md:5769-5770`), `archive/probes/ProbeLJ199A.agda:65-204`. The
+(`src/L/Condensation.lagda.md:5769-5770`), `agents/reports/LJ-1-99/ProbeLJ199A.agda:65-204`. The
 question had at least two candidate ties and the criterion admitted one.
 
 `[LJ-1.102]` was told "Do not add a hypothesis to the row to make the tie
@@ -3591,10 +3608,10 @@ record's elaborations carry.
 
 **The supply is unaffected and was measured separately.** All three tied
 shapes derive from `sucK` plus the existing `pairK` at the generic frame:
-`archive/probes/ProbeLJ1109A.agda`, module `TiesSupplied`, GREEN. **The wall is about
+`agents/reports/LJ-1-109/ProbeLJ1109A.agda`, module `TiesSupplied`, GREEN. **The wall is about
 where the fact is STATED, never about whether it is true or useful.**
 
-**Provenance:** `agents/reports/lj-1.109-report.md` section 2; `archive/probes/ProbeLJ1109A.agda`;
+**Provenance:** `agents/reports/lj-1.109-report.md` section 2; `agents/reports/LJ-1-109/ProbeLJ1109A.agda`;
 the green master at commit `c728e8b` plus the tie landing. Related: [[P-l]],
 [[P-o]], [[P-i]] class 3, and [[P-w]], which measures the same multiplication
 for module applications rather than record fields.

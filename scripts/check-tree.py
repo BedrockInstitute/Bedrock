@@ -14,7 +14,8 @@ The checks, each with the rule it enforces and why it is here rather than left t
   beginning and nothing implemented it. Measured on the tree the day it was written: 123
   masters, 122 imported, one gap, and that gap was a real in-progress chapter.
 
-- **archive** (D20). No live master may import a module whose only home is `archive/`. The
+- **archive** (archived D20; the live home is DD13). No live master may import a module whose
+  only home is `archive/`. The
   archive is unwired and ungated by design, so an import across the boundary would drag
   unchecked code into the checked tree. Matters from the retirement surgery onward.
 
@@ -22,14 +23,17 @@ The checks, each with the rule it enforces and why it is here rather than left t
   is copied verbatim into every language's page, so a CJK sentence written there appears
   untranslated in the English book. No linter looked for this.
 
-- **spdx** (D4, AGENTS.md). Licensing has one source of truth, `REUSE.toml`. An in-file
+- **spdx** (archived D4; the live home is DD22, AGENTS.md). Licensing has one source of
+  truth, `REUSE.toml`. An in-file
   SPDX identifier header is a second one. (This paragraph deliberately avoids spelling the
   tag out: the check reads file HEADS, and an earlier draft flagged its own docstring.)
 
-- **retiring** (D18 plus D20), WARN ONLY. A SURVIVING master that imports a module booked for
+- **retiring** (archived D18 plus archived D20), WARN ONLY. A SURVIVING master that imports a
+  module booked for
   retirement is a debt: at the surgery, that import must be re-homed or the chapter breaks.
   It warns rather than fails because the whole point of the transition period is that both
-  trees coexist (D15's two-step), so a crossing is legal today and lethal later. Measured on
+  trees coexist (archived D15's two-step), so a crossing is legal today and lethal later.
+  Measured on
   the day it was added: seven surviving masters crossed the boundary, one of them committed
   that same hour, which is why this had to become a check rather than a note. `Everything` is
   exempt: it is the catalog and is rewired wholesale at the surgery.
@@ -142,14 +146,14 @@ def check_archive() -> list[str]:
         if m:
             archived.add(m.group(1))
     live = {module_of(p) for p in masters()}
-    # A module re-created under src/ is a revival and is legal (D20 allows copy-out).
+    # A module re-created under src/ is a revival and is legal (archived D20 allows copy-out).
     only_archived = archived - live
     bad = []
     for p in masters():
         for name in re.findall(r"^\s*(?:open )?import ([A-Za-z0-9_.]+)", code_of(p), re.M):
             if name in only_archived:
                 bad.append(f"{p.relative_to(ROOT)} imports `{name}`, which lives only in "
-                           f"archive/. D20: nothing imports across the archive boundary; "
+                           f"archive/. Archived D20: nothing imports across the boundary; "
                            f"copy it out into src/ if it is genuinely needed again")
     return bad
 
@@ -196,7 +200,7 @@ def check_spdx() -> list[str]:
             continue
         if "SPDX-License" + "-Identifier" in head:
             bad.append(f"{p.relative_to(ROOT)}: in-file SPDX header. Licensing has one source "
-                       f"of truth, REUSE.toml (D4); delete the header")
+                       f"of truth, REUSE.toml (archived D4, live DD22); delete the header")
     return bad
 
 
@@ -226,7 +230,7 @@ def check_retiring() -> list[str]:
         return [f"could not read dev/ledger.toml ({exc}); the retirement boundary is UNCHECKED"]
 
     # SUSPENDED 2026-08-09 with the retirement set itself. Every declaration
-    # was D18's, ruled for the retired route, and src/ is the internalization
+    # was archived D18's, ruled for the retired route, and src/ is the
     # tree again. A warning that names an archived ruling and a retirement
     # nobody plans is noise on every commit.
     if data.get("retire_suspended"):
@@ -250,7 +254,7 @@ def check_retiring() -> list[str]:
         hits = sorted({m for m in re.findall(r"^\s*(?:open )?import ([A-Za-z0-9_.]+)", code, re.M)
                        if m in doomed})
         for h in hits:
-            warn.append(f"{f} imports `{h}`, which D18 retires. Legal now, lethal at the "
+            warn.append(f"{f} imports `{h}`, which archived D18 retires. Legal now, lethal at "
                         f"surgery: this import must be re-homed or the chapter breaks. "
                         f"Every crossing is retirement-surgery work that the ledger's "
                         f"surgery row must carry")
