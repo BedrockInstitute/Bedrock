@@ -84,7 +84,7 @@ a `README.md` in the subtree:
 | Subtree | What it holds | Its record |
 |---|---|---|
 | `archive/scripts/` | Retired scripts | `archive/scripts/README.md`, one section per script, with what it did right and what would reopen it |
-| `archive/kits/` | Code or prose written, measured, not landed | `archive/kits/README.md` |
+| the task's own directory | Code or prose written, measured, not landed | `agents/tasks/<TASK>/`, indexed by `archive/kits/README.md` |
 | `archive/dev/measurements/` | Measurements only historical documents cite | `archive/dev/measurements/README.md` |
 | `archive/src/2026-08-13-probe-sweep/` | **Empty since 2026-08-13.** A tombstone that maps 257 pre-ruling probe paths to their homes in `agents/tasks/<TASK>/` | `archive/src/2026-08-13-probe-sweep/README.md` |
 
