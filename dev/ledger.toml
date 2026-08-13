@@ -2625,31 +2625,65 @@ ac_baseline_root = "src/Landmarks.lagda.md"
 # below prices their absence at 22.3 percent.
 ac_baseline_ghcrts = "-A64m -I0 -M8g"
 
-# THE SECOND CALIBER, measured 2026-08-10 by `check-ratio.py --recalibrate`.
-# 0.011472 s per line over 16,897 lines and 193.85 s, across 73 AC masters,
-# each timed COLD with its dependencies WARM, at the GHCRTS above. Nothing was
-# skipped. This is the caliber check-ratio.py itself measures a wing module
-# with, so it is the only figure a per-module verdict may be compared against.
+# THE SECOND CALIBER. RE-MEASURED 2026-08-13 by [LJ-1.135]:
+# 0.014367 s per line, 291.44 s over 20,286 lines, across 79 AC masters, each
+# timed COLD with its dependencies WARM, at the GHCRTS above. Nothing was
+# skipped. Four runs: 300.28 / 286.26 / 295.08 / 284.14, spread 16.14 s or 5.5
+# percent, every exit 0, nothing discarded. This is the caliber check-ratio.py
+# itself measures a wing module with, so it is the only figure a per-module
+# verdict may be compared against. Tree at 8f55b4b, src/ clean against HEAD.
 #
 # IT IS NOT A SECOND OPINION ON THE SAME QUANTITY. The whole-cone rate above
-# is one build's seconds over the lines it compiles. This is the SUM of 73
+# is one build's seconds over the lines it compiles. This is the SUM of 79
 # separate builds. They answer different questions and both are needed: the
 # cone rate says what the tree costs, this says what a module costs to check
 # on its own.
 #
-# THE SLICE SUM IS 1.45x THE CONE, 193.85 s against 133.70 s, and that refutes
-# what I predicted in check-ratio.py before measuring. I argued a slice must be
-# CHEAPER because it carries no dependency share, and that the wing was being
-# judged too leniently. The opposite is true: timing modules one at a time
-# re-pays a fixed per-invocation cost 73 times, chiefly re-reading dependency
-# interfaces, and that dominates. The slice caliber is STRICTER, so a wing
-# judged against the cone rate would have been judged too HARSHLY.
+# THE SLICE SUM IS STILL THE STRICTER INSTRUMENT, and that refutes what
+# check-ratio.py predicted before anybody measured it. The argument was that a
+# slice must be CHEAPER because it carries no dependency share. The opposite
+# holds: timing modules one at a time re-pays a fixed per-invocation cost once
+# per module, chiefly re-reading dependency interfaces, and that dominates.
+# [LJ-0.5] measured 1.45x on one tree. The same comparison today, restricted to
+# the cone so that both sides cover ONE set of masters, is about 197.45 s of
+# slices against 151.11 s of cone build over the same 17,185 lines, or 1.31x.
+# The lesson is not about GC or disk. It is that the SIGN of a caliber error is
+# not knowable by reasoning about what the instrument omits. That is why the
+# tool failed closed instead of picking one.
 #
-# The lesson is not about GC or disk. It is that the SIGN of a caliber error
-# is not knowable by reasoning about what the instrument omits. That is why
-# the tool failed closed instead of picking one.
-ac_baseline_module_rate = 0.011057
-ac_baseline_module_lines = 17081
+# THE RISE FROM 0.011057 IS 29.9 PERCENT AND A CONTROL SPLITS IT IN TWO.
+# [LJ-1.135] rebuilt the OLD tree, commit f48ffd7, in a worktree on this
+# machine on this day, at this cap, with that commit's own check-ratio.py:
+# 201.14 and 202.48 s, mean 201.81, over its own 17,081 lines, against the
+# 188.86 s on record. So the IDENTICAL tree costs 6.9 percent more today. The
+# machine carries plus 6.9 and the content carries plus 21.6, and 1.069 times
+# 1.216 is the whole 1.299.
+#
+# THE CONTENT HALF IS NOT THE AC SIDE GETTING WORSE. Cone against cone, today
+# against today, the tree gained 179 lines and cost about the same seconds:
+# roughly 197.45 s over 17,185 lines now against roughly 200.73 s over 17,006
+# lines then. P-q, in the good direction, and it repeats what [LJ-1.128]
+# measured on the same 179 lines.
+#
+# THE TARGET SET IS BUILT BY SUBTRACTION AND IT HAS DRIFTED OFF THE AC SIDE.
+# check-ratio.py takes every countable master that is not in gch_wing
+# (scripts/check-ratio.py:176-177). [LJ-0.5] replaced exactly that construction
+# for the whole-cone denominator above, and the module rate never got the fix.
+# MEASURED 2026-08-13: six targets, 3,101 lines or 15.3 percent of this
+# denominator, sit OUTSIDE the Landmarks cone and are reachable only through
+# src/Everything.lagda.md, so no trophy statement imports them. They cost
+# 93.99 s, which is 32.3 percent of the seconds: L/BoundedSubset 0.0121,
+# L/Ordinal/SquareLaw 0.0111, L/Ordinal/StageArith 0.0144, and the three
+# L/Condensation/*Agree masters at 0.0993, 0.0899 and 0.0478 over 842 lines.
+# The cone alone is about 0.011490 s per line.
+#
+# SO THE FIGURE BELOW IS WRITTEN AS MEASURED, because it is what the instrument
+# said and because a paper rescale is what these guards refuse. It is the right
+# number for the tool as the tool is written today. Whether the tool should
+# select its masters by the cone instead of by subtraction is an OWNER RULING,
+# not a measurement, and [LJ-1.135] did not take it.
+ac_baseline_module_rate = 0.014367
+ac_baseline_module_lines = 20286
 
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same
@@ -2802,13 +2836,19 @@ an implied 3.57 for the 2026-08-11 figure, which assumes that day's clock was
 the same. RE-ARM: re-measure on a quiet machine before DD24 judges a wing
 module, because a loaded baseline loosens the bar.
 
-THE MODULE-RATE CALIBER BELOW IS STALE BY THE SAME 11 PERCENT and was NOT
-re-measured. `ac_baseline_module_rate` was taken 2026-08-10 by `check-ratio.py
---recalibrate`, which is 73 separate builds, and it is a property of that day's
-machine as much as this figure is of today's. check-ratio.py prefers it for a
-per-module verdict, so a wing module judged today reads about 11 percent worse
-than it is. [LJ-1.128] measured the whole-cone rate only, which is what the
-guard demands and what the brief funded.
+THE MODULE-RATE CALIBER ABOVE WAS RE-MEASURED the same day by [LJ-1.135], and
+three things [LJ-1.128] wrote here were wrong. It wrote BELOW, and that row
+sits above this string in the file. It said the figure was taken
+2026-08-10; git says the live 0.011057 was written by f48ffd7 on 2026-08-11, so
+the 2026-08-10 figure it described, 0.011472 over 16,897 lines, had already
+been superseded. It said 73 builds; the set was 74 masters and is 79 today.
+The staleness claim itself held: the figure was 29.9 percent low, of which a
+control attributes 6.9 percent to the machine and 21.6 percent to content. The
+new figure is 0.014367 over 20,286 lines, and the DD24 bar moves from 0.012716
+to 0.016522, so the correction makes the bar LOOSER and not stricter. READ THE
+BLOCK ABOVE THE FIGURE BEFORE USING IT: 15.3 percent of that denominator is
+outside the trophy cone, and three of those masters are Condensation work of
+the same class as a declared wing master.
 
 THE PREVIOUS FIGURE, superseded: 133.45 s over 17,006 lines, ratio 0.007847,
 measured 2026-08-11 by [LJ-1.31].
