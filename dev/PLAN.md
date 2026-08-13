@@ -599,7 +599,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.120 | Build the generic environment-set | BUILDS, someEnv CLOSES | Tower-free coding machinery, so the J tower gets the family unchanged. Only envSetK is still a hypothesis |
 | LJ-1.122 | Land the generic environment-set by ADDING | BOTH MASTERS GREEN | The numeral version is DERIVED from the generic one, byte-identical type. Adding cost 179 lines |
 | LJ-1.121 | Supply levelIn and cover at the site | NEITHER REFUTABLE, NEITHER SUPPLIED | The wall is the LJ-1.12 crossing, the level-hood certificate, priced 2.8k to 3.3k lines and not built |
-| LJ-1.123 | Re-price the level-hood certificate | DISPATCHED | The phase's last wall, priced 2.8k to 3.3k by inheritance. HERDR TRIAL: first dispatch started in a herdr pane |
+| LJ-1.123 | Re-price the level-hood certificate | 2.8k TO 3.3k BECAME 0.6k | The LJ-1 series built the substrate under it; only the hull transfer remains. Read evidence, no probe |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
