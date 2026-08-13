@@ -268,7 +268,17 @@ record TFacts {n : ℕ}
                           (suc (suc (suc zero)))
                           (suc zero) ⟩
                → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
-    envSetK : (B ar : S)
+    -- RESTRICTED to a NUMERAL arity by [LJ-1.173].  At an unrestricted
+    -- `ar` this field asks a LEVEL to hold the full constructible
+    -- function space, and a successor-closed limit does not, so the
+    -- general form is FALSE at the bound `HullStage` gives ([LJ-1.172]).
+    -- The numeral case is TRUE and [LJ-1.173] closes it: the set lands
+    -- at a FIXED iterate above the stage that holds `B`, uniform in `n`.
+    -- The restriction costs the consumers nothing, because the arity at
+    -- every consuming site IS a numeral: `codesK` gives the code's
+    -- shape, `arityNumAtL` (L.Coding.CodeSet) says its arity component
+    -- is a numeral, and `pr-inj` closes both into `fst ar ≡ # n`.
+    envSetK : (B ar : S) (n : ℕ) → fst ar ≡ # n
             → ⟨ fst B ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
             → ⟨ fst (Generic.envSetGen B ar)
