@@ -1,0 +1,20 @@
+Checking ProbeT132 (/Users/alsg/Agentic/Bedrock/src/ProbeT132.agda).
+Total                   21,358ms 
+Miscellaneous            1,853ms 
+ProbeT132._._.step       6,838ms 
+ProbeT132._.fill         6,064ms 
+ProbeT132._._._.qv       5,413ms 
+ProbeT132._.read           904ms 
+ProbeT132._._._._.place    111ms 
+ProbeT132._._._._.cond      53ms 
+ProbeT132._._._.sub₂        24ms 
+ProbeT132._._.back          18ms 
+ProbeT132._._._.step        17ms 
+ProbeT132._._.into          14ms 
+ProbeT132._._.step          11ms 
+ProbeT132._._._.sub₁        10ms 
+ProbeT132._._.g             10ms 
+ProbeT132._._.f             10ms 
+real 21.69
+user 21.34
+sys 0.23

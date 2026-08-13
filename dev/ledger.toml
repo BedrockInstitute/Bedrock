@@ -1821,7 +1821,7 @@ seconds_cure_verdict = "NO-GO, [T241]: concentrated in the decode content, ceili
 # distribution since 2026-08-06. Protocol: the WHOLE interface tree moved
 # aside, `GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md`, one
 # process, exit 0. Wall real 700.42 s over 112 module rows. Table saved at
-# `_build/l3.32-coldprofile-2026-08-09.txt`.
+# `dev/measurements/l3.32-coldprofile-2026-08-09.txt`.
 #
 # FOUR STANDING FIGURES CORRECTED, and one badly:
 #   tree base            388.9 -> 420.5   ([T217]'s figure is superseded)
@@ -2130,7 +2130,7 @@ seconds_verdict = "[T255]: the gap does not close on this route; the twice is ma
 # dispatch on the board because 389 of the master's 570 s had never been
 # profiled. Protocol: the master's own `.agdai` moved aside (P-p), one process,
 # `GHCRTS=-M8g`, exit 0. Total 546,708 ms. Table at
-# `_build/l3.32-t256-belowlim-profile.txt`.
+# `dev/measurements/l3.32-t256-belowlim-profile.txt`.
 #
 # THE TWO BIGGEST NAMED ROWS HAVE NEVER BEEN EXAMINED:
 #   `Stepγ.segγ∈C`   61,240 ms, 11.2 percent, ONE definition, a placement
@@ -2317,7 +2317,7 @@ margin of that size, the honest reading is that the projection was inside its
 own error bars, not that a new lever is owed.
 """
 
-measured = "2026-08-06, interface cache moved aside, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0, single process; Total 1,072,178ms over 124 module rows, own wall real 1074.29, exit 0; table saved at _build/l3.32-coldprofile-2026-08-06.txt"
+measured = "2026-08-06, interface cache moved aside, GHCRTS=-M8g agda --profile=modules src/Everything.lagda.md, Agda 2.8.0, single process; Total 1,072,178ms over 124 module rows, own wall real 1074.29, exit 0; table saved at dev/measurements/l3.32-coldprofile-2026-08-06.txt"
 full_cold_seconds = 1072
 note = """
 MEASURED, not derived. The figure it replaces (1,099) was 2,723 minus three
@@ -2348,7 +2348,7 @@ measurement you use. The fix was two cold runs and about forty minutes of
 otherwise idle machine.
 """
 
-# TODAY'S TREE, from _build/l3.32-coldprofile-2026-08-06.txt (124 module rows,
+# TODAY'S TREE, from dev/measurements/l3.32-coldprofile-2026-08-06.txt (124 module rows,
 # 1,070.2 s attributed, 1.9 s Miscellaneous). Read against gate_wall_seconds.
 #
 #   the D18 archival, all three arms          468.1 s

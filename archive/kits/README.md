@@ -4,6 +4,21 @@ A **refused kit** is code that was written, typechecked, measured, and then
 NOT landed because its arithmetic did not pay. This directory holds those
 kits, so a later task can revive one instead of rebuilding it.
 
+## The second kind: a written chapter that never landed
+
+`[LJ-1.132]` added `l3.32-t28-CodeSetBlock.lagda.md`, and it is not a refused
+kit. It is `[L3.32-T28]`'s template for the arity-one code set: a full
+trilingual chapter, prose and code, that states the successor obligation
+precisely. It never landed, and later tasks re-typed toward its shape rather
+than reviving it (`agents/reports/archive/l3.32-t34-report.md:195` calls it
+"the target shape the surviving chain re-types toward").
+
+So this directory holds two kinds, and one rule covers both: **code or prose
+that was written and measured, and then not landed.** The naming and the
+freezing rules below apply to both. A template carries no arithmetic, so it
+has no register row and nothing to re-price; read it as a specification, not
+as a candidate to land.
+
 ## Why they are here and not under `_build/`
 
 `[LJ-0.4]` preserved four kits under `_build/kits/`, and `dev/LESSONS.md`

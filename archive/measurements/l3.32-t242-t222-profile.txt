@@ -1,0 +1,13 @@
+Checking ProbeT222 (/Users/alsg/Agentic/Bedrock/src/ProbeT222.agda).
+Total                        11,070ms 
+Miscellaneous                 3,399ms 
+ProbeT222.StepAt.storyW-in    3,776ms 
+ProbeT222.StepAt.storyW-out   3,731ms 
+ProbeT222.StepAt._._.both        54ms 
+ProbeT222.StepAt._._._.argIn     45ms 
+ProbeT222.StepAt._.go            32ms 
+ProbeT222.StepAt._.go            22ms 
+ProbeT222.StepAt.stepInW         10ms 
+real 12.09
+user 10.98
+sys 0.26

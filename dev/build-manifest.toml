@@ -1,0 +1,146 @@
+# dev/build-manifest.toml: the lifecycle regime for `_build/`
+#
+# THE OWNER'S RULING, 2026-08-13: `_build` must not be a temporary folder and a
+# rubbish bin at the same time. EVERY temporary file declares its lifecycle when
+# it is created: under what condition it may be deleted, and under what condition
+# it moves somewhere permanent.
+#
+# This file is that declaration, machine-readable. `scripts/check-build-manifest.py`
+# reads it, lists any file in `_build/` that matches no entry, and regenerates
+# `_build/README.md` from it.
+#
+# WHY THIS FILE LIVES IN `dev/` AND NOT IN `_build/`.
+# `.gitignore:2` ignores `_build/`, and `scripts/check-probes.py:60-61` fails the
+# gate on any TRACKED file under `_build/`. A manifest kept inside `_build/` would
+# be untracked, would not survive `make clean` (`Makefile:180`), and would not
+# survive a fresh clone. A regime that a routine command destroys is not a regime.
+# `archive/kits/README.md` records the same finding for refused kits.
+# `_build/README.md` is therefore GENERATED from this file, never hand-written.
+#
+# HOW THE CLASSES WERE CHOSEN.
+# They were read off the 73 files `[LJ-1.132]` inventoried, not designed first.
+# Two classes exist only because real files had no home in the four-class guess:
+# `protected`, for material that can be neither tracked nor deleted, and
+# `foreign`, for material that is not the project's to touch. The class that
+# produced the whole backlog is `evidence`: it has NO resting place in `_build/`.
+
+# ---------------------------------------------------------------------------
+# The classes. Each names its delete condition and its promote condition.
+# ---------------------------------------------------------------------------
+
+[classes.toolchain]
+what = "Owned by an external tool, which rebuilds it. Never touched by hand."
+delete_when = "Never by hand. The owning tool decides."
+promote_when = "Never. It is not the project's content."
+
+[classes.protected]
+what = """
+Cannot be tracked and cannot be deleted. Third-party copyrighted material, or a
+record whose regeneration would not reproduce it. It stays in `_build/` because
+`_build/` is the only place in the tree that is outside git by construction."""
+delete_when = "Never. `Makefile:180` exempts it from `make clean` by name."
+promote_when = "Never. Promotion would commit it, which is the thing forbidden."
+
+[classes.evidence]
+what = """
+A measurement that re-running the command would NOT reproduce: a profile of a
+tree state that no longer exists, a timing on a machine that has moved.
+THIS CLASS HAS NO RESTING PLACE IN `_build/`. It is the class that produced the
+[LJ-1.132] backlog: three cold profiles sat one `make clean` from deletion while
+`dev/ledger.toml` cited them as the provenance of standing figures."""
+delete_when = "Never."
+promote_when = """
+IMMEDIATELY, as soon as any document cites it. To `dev/measurements/` while a
+live document cites it; to `archive/measurements/` once every citing document is
+historical (`dev/memos/`, `agents/briefs/`, `agents/reports/archive/`,
+`dev/JOURNAL.md`)."""
+
+[classes.working]
+what = """
+Alive only while ONE task runs. Named with that task's code, so the owner is
+readable from the filename."""
+delete_when = "When that task's report lands, UNLESS the report cites it."
+promote_when = "If the report cites it, it is `evidence`. Promote it, do not delete it."
+
+[classes.runtime]
+what = "State a live tool writes and reads while it runs."
+delete_when = "When the owning tool is not running. The tool recreates it."
+promote_when = "Never on its own. Quote a load-bearing line into a report instead."
+
+[classes.exhaust]
+what = "Reproducible by re-running one named command. Not evidence; output."
+delete_when = "At any time, by anyone."
+promote_when = "Never. If it cannot be reproduced, it was misclassified: it is evidence."
+
+[classes.foreign]
+what = """
+Not the project's content. Owner-private data, or a third party's export. An
+agent must neither delete it nor move it."""
+delete_when = "Only by the owner."
+promote_when = "Never. Promotion would commit private data to a public repository."
+
+# ---------------------------------------------------------------------------
+# The entries. `glob` is matched against the path relative to `_build/`.
+# ---------------------------------------------------------------------------
+
+[[entries]]
+glob = "2.8.0/**"
+class = "toolchain"
+note = "The Agda interface store, 163 MB. Deleting it costs a twelve minute cold build."
+
+[[entries]]
+glob = "literature/**"
+class = "protected"
+note = """
+The fetched OCR text and PDFs of Devlin, Jensen, Jech and Schindler-Zeman.
+Copyrighted, so they cannot be committed; `dev/literature/BIBLIOGRAPHY.md:182,191,198`
+and `[LJ-1.11]` cite them BY LINE NUMBER, and a re-fetch would not reproduce the
+line numbers because they are OCR output. Ruled at `Makefile:166-179`, which
+exempts this directory from `make clean` by name. Provenance for a re-fetch is
+`dev/literature/primary-sources.md:317-334`."""
+
+[[entries]]
+glob = ".last-gate"
+class = "runtime"
+note = "The commit hash of the last green gate. Written and read by `scripts/check-tree.py:278`."
+
+[[entries]]
+glob = "tools/agda-watchdog.log"
+class = "runtime"
+note = """
+The kill log of `scripts/agda-watchdog.sh`, the C-12 backstop. Its two kill
+lines are the only field record that the backstop has ever fired; they are
+quoted in `agents/reports/lj-1.132-report.md` so the evidence survives a clean."""
+
+[[entries]]
+glob = "usage_data_*/**"
+class = "foreign"
+note = """
+The owner's own billing export, mode 0600, carrying a user id. Not cited by
+anything (MEASURED, [LJ-1.132]). An agent must not delete it and must not move
+it: archiving it would commit private data to a public repository."""
+
+[[entries]]
+glob = "site/**"
+class = "exhaust"
+note = "Reproduced by `make site`."
+
+[[entries]]
+glob = "html/**"
+class = "exhaust"
+note = "Reproduced by `make site`."
+
+[[entries]]
+glob = "woven/**"
+class = "exhaust"
+note = "Reproduced by `scripts/weave-i18n.py --gen --out _build/woven` (`Makefile:129`)."
+
+[[entries]]
+glob = "types.json"
+class = "exhaust"
+note = "Reproduced by `scripts/extract-types.py --out _build/types.json` (`Makefile:135`)."
+
+[[entries]]
+glob = "tools/*.pid"
+class = "runtime"
+note = "A running tool's process id. Stale once the tool exits."
