@@ -1,0 +1,21 @@
+# module src/L/Condensation/LowerAgree.lagda.md
+# in-fence lines 267
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=definitions src/L/Condensation/LowerAgree.lagda.md
+# load before 6.79 / 6.09 / 10.32
+# load after  6.09 / 5.99 / 10.18
+# wall seconds 20.52
+# exit 0
+Checking L.Condensation.LowerAgree (/Users/alsg/Agentic/Bedrock/src/L/Condensation/LowerAgree.lagda.md).
+Total                                              20,202ms 
+Miscellaneous                                      17,409ms 
+L.Condensation.LowerAgree.LowerAgree.out            1,003ms 
+L.Condensation.LowerAgree.LowerAgree.back             963ms 
+L.Condensation.LowerAgree.LowerAgree.keyK-neg-tied    317ms 
+L.Condensation.LowerAgree.LowerAgree.sixB             198ms 
+L.Condensation.LowerAgree.LowerAgree.arityK           150ms 
+L.Condensation.LowerAgree.LowerAgree.sixAt            145ms 
+L.Condensation.LowerAgree.someEnvDef                   15ms 
+
+----- stderr -----
+

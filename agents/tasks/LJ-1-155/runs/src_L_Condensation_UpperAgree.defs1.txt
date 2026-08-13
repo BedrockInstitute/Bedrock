@@ -1,0 +1,23 @@
+# module src/L/Condensation/UpperAgree.lagda.md
+# in-fence lines 270
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=definitions src/L/Condensation/UpperAgree.lagda.md
+# load before 6.09 / 5.99 / 10.18
+# load after  5.46 / 5.85 / 10.09
+# wall seconds 11.97
+# exit 0
+Checking L.Condensation.UpperAgree (/Users/alsg/Agentic/Bedrock/src/L/Condensation/UpperAgree.lagda.md).
+Total                                                 11,780ms 
+Miscellaneous                                          9,885ms 
+L.Condensation.UpperAgree.UpperAgree.out                 520ms 
+L.Condensation.UpperAgree.UpperAgree.back                431ms 
+L.Condensation.UpperAgree.UpperAgree.sixB                290ms 
+L.Condensation.UpperAgree.UpperAgree.keyK-un-tied        156ms 
+L.Condensation.UpperAgree.UpperAgree.succK-tied          145ms 
+L.Condensation.UpperAgree.UpperAgree.sixAt               135ms 
+L.Condensation.UpperAgree.UpperAgree.keyK-allin-tied     107ms 
+L.Condensation.UpperAgree.UpperAgree.succK-allin-tied     91ms 
+L.Condensation.UpperAgree.SuccKeyTies.key-un-tied         17ms 
+
+----- stderr -----
+

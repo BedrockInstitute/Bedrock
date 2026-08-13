@@ -1,0 +1,29 @@
+# module src/L/Condensation/TwelveAgree.lagda.md
+# in-fence lines 399
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=definitions src/L/Condensation/TwelveAgree.lagda.md
+# load before 5.46 / 5.77 / 10.39
+# load after  6.79 / 6.09 / 10.32
+# wall seconds 30.43
+# exit 0
+Checking L.Condensation.TwelveAgree (/Users/alsg/Agentic/Bedrock/src/L/Condensation/TwelveAgree.lagda.md).
+Total                                                     29,372ms 
+Miscellaneous                                             22,547ms 
+L.Condensation.TwelveAgree.AbstractFrame.twelve-back         820ms 
+L.Condensation.TwelveAgree.AbstractFrame.succK-tied          654ms 
+L.Condensation.TwelveAgree.AbstractFrame.back                648ms 
+L.Condensation.TwelveAgree.AbstractFrame.out                 620ms 
+L.Condensation.TwelveAgree.AbstractFrame.twelve-out          617ms 
+L.Condensation.TwelveAgree.AbstractFrame.keyK-neg-tied       592ms 
+L.Condensation.TwelveAgree.AbstractFrame.keyK-un-tied        572ms 
+L.Condensation.TwelveAgree.AbstractFrame.keyK-allin-tied     450ms 
+L.Condensation.TwelveAgree.AbstractFrame.p0b                 406ms 
+L.Condensation.TwelveAgree.AbstractFrame.p1b                 401ms 
+L.Condensation.TwelveAgree.AbstractFrame.twelveB             337ms 
+L.Condensation.TwelveAgree.AbstractFrame.arityK              301ms 
+L.Condensation.TwelveAgree.AbstractFrame.succK-allin-tied    296ms 
+L.Condensation.TwelveAgree._.twelve→sixes                     58ms 
+L.Condensation.TwelveAgree._.sixes→twelve                     45ms 
+
+----- stderr -----
+

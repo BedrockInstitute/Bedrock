@@ -1,0 +1,15 @@
+# module agents/tasks/LJ-1-155/ProbeLJ1155B2.agda
+# in-fence lines 0
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=internal agents/tasks/LJ-1-155/ProbeLJ1155B2.agda
+# load before 5.36 / 5.56 / 8.05
+# load after  7.05 / 6.05 / 7.92
+# wall seconds 115.17
+# exit 251
+Checking LJ-1-155.ProbeLJ1155B2 (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-155/ProbeLJ1155B2.agda).
+
+----- stderr -----
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
+
