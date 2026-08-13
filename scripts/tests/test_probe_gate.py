@@ -7,7 +7,7 @@ WHY THIS FILE EXISTS. The rule was bought with an incident: on 2026-08-04 a sing
 `git add -f` walks past it. **The gate is the only thing that refuses.**
 
 WHAT CHANGED, and it is why this file replaces `test_probe_lifecycle.py`. The owner ruled on
-2026-08-13 that a probe pairs one-to-one with its report, lives beside it in `agents/reports/`,
+2026-08-13 that a probe pairs one-to-one with its report, lives beside it in `agents/tasks/`,
 is tracked, and is never deleted. `[LJ-1.138]`'s lifecycle (`--gate`, `--stale`, `--sweep`,
 `--index`, the live-task trigger, the deletion floor) is RETIRED, frozen at
 `archive/tooling/check-probes-lifecycle.py` with its suite. Nothing here tests a lifecycle.
@@ -15,7 +15,7 @@ is tracked, and is never deleted. `[LJ-1.138]`'s lifecycle (`--gate`, `--stale`,
 The tests below pin the four things that must never silently invert:
 
 1. **`src/` is refused absolutely.** Every shape, every depth.
-2. **`agents/reports/` is accepted**, or every commit fails.
+2. **`agents/tasks/` is accepted**, or every commit fails.
 3. **An `.agdai` is refused everywhere**, exempt directory or not. It is a build output.
 4. **A staged RENAME is seen.** MEASURED 2026-08-13 at `[LJ-1.141]`: 257 probe renames were
    staged and `--diff-filter=ACM` reported ZERO of them. A tracked probe can now be
@@ -68,17 +68,17 @@ check("the src/ message names the incident's rule",
       "src/ is forbidden absolutely" in (check_probes.classify("src/ProbeX.agda") or ""))
 
 # ---------------------------------------------------------------------------
-# 2. agents/reports/ is the ONE home, and it is a prefix rather than a word
+# 2. agents/tasks/ is the ONE home, and it is a prefix rather than a word
 # ---------------------------------------------------------------------------
-print("agents/reports/ is accepted; every neighbouring path is not")
+print("agents/tasks/ is accepted; every neighbouring path is not")
 
-check("agents/reports/ProbeX.agda is accepted",
-      check_probes.classify("agents/reports/ProbeX.agda") is None)
-check("agents/reports/ProbeX.lagda.md is accepted",
-      check_probes.classify("agents/reports/ProbeX.lagda.md") is None)
-check("agents/reports/archive/ProbeX.agda is accepted (it is under the prefix)",
-      check_probes.classify("agents/reports/archive/ProbeX.agda") is None)
-for path in ("agents/briefs/ProbeX.agda", "agents/ProbeX.agda", "ProbeX.agda",
+check("agents/tasks/ProbeX.agda is accepted",
+      check_probes.classify("agents/tasks/ProbeX.agda") is None)
+check("agents/tasks/ProbeX.lagda.md is accepted",
+      check_probes.classify("agents/tasks/ProbeX.lagda.md") is None)
+check("agents/tasks/archive/ProbeX.agda is accepted (it is under the prefix)",
+      check_probes.classify("agents/tasks/archive/ProbeX.agda") is None)
+for path in ("agents/ProbeX.agda", "agents/task/ProbeX.agda", "ProbeX.agda",
              "archive/src/L/ProbeX.agda", "archive/probes/ProbeX.agda",
              "probes/ProbeX.agda", "dev/ProbeX.agda"):
     check(f"{path} is refused", check_probes.classify(path) is not None)
@@ -88,8 +88,8 @@ for path in ("agents/briefs/ProbeX.agda", "agents/ProbeX.agda", "ProbeX.agda",
 # ---------------------------------------------------------------------------
 print("an .agdai is refused everywhere, exemption or not")
 
-for path in ("agents/reports/ProbeX.agdai", "src/ProbeX.agdai",
-             "agents/reports/L/Anything.agdai", "agents/reports/NotAProbe.agdai"):
+for path in ("agents/tasks/ProbeX.agdai", "src/ProbeX.agdai",
+             "agents/tasks/L/Anything.agdai", "agents/tasks/NotAProbe.agdai"):
     check(f"{path} is refused", check_probes.classify(path) is not None)
 check("_build/anything is refused", check_probes.classify("_build/x.json") is not None)
 check("a woven copy is refused", check_probes.classify("x/woven/L/Stage.lagda.md") is not None)
@@ -99,8 +99,8 @@ check("a woven copy is refused", check_probes.classify("x/woven/L/Stage.lagda.md
 # ---------------------------------------------------------------------------
 print("the gate reads the basename shape and touches nothing else")
 
-for path in ("agents/reports/lj-1.141-report.md", "src/L/Stage.lagda.md",
-             "scripts/check-probes.py", "agents/briefs/LJ-1.141.md"):
+for path in ("agents/tasks/LJ-1-141/lj-1.141-report.md", "src/L/Stage.lagda.md",
+             "scripts/check-probes.py", "agents/tasks/LJ-1-141/LJ-1.141.md"):
     check(f"{path} is clean", check_probes.classify(path) is None)
 
 # ---------------------------------------------------------------------------
@@ -124,13 +124,13 @@ with tempfile.TemporaryDirectory() as td:
     env = {"GIT_INDEX_FILE": str(ix)}
     # A probe that MOVES from its home into src/ is a rename, and git reports it as `R`.
     subprocess.run(["git", "update-index", "--add", "--cacheinfo",
-                    f"100644,{blob},agents/reports/ProbeGateTest.agda"],
+                    f"100644,{blob},agents/tasks/ProbeGateTest.agda"],
                    cwd=ROOT, env={**os.environ, **env}, check=True, capture_output=True)
     r = run(["--staged"], env)
     check("a probe staged in its home passes", r.returncode == 0, r.stderr)
 
     subprocess.run(["git", "update-index", "--force-remove",
-                    "agents/reports/ProbeGateTest.agda"],
+                    "agents/tasks/ProbeGateTest.agda"],
                    cwd=ROOT, env={**os.environ, **env}, check=True, capture_output=True)
     subprocess.run(["git", "update-index", "--add", "--cacheinfo",
                     f"100644,{blob},src/ProbeGateTest.agda"],
@@ -167,9 +167,9 @@ print("the live tree agrees with the rule")
 tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True,
                          text=True, check=True).stdout.split("\n")
 probes = [f for f in tracked if Path(f).name.startswith("Probe") and f.endswith(".agda")]
-check(f"{len(probes)} tracked probe(s), all under agents/reports/",
-      probes and all(f.startswith("agents/reports/") for f in probes),
-      str([f for f in probes if not f.startswith("agents/reports/")][:5]))
+check(f"{len(probes)} tracked probe(s), all under agents/tasks/",
+      probes and all(f.startswith("agents/tasks/") for f in probes),
+      str([f for f in probes if not f.startswith("agents/tasks/")][:5]))
 check("no probe is tracked under src/",
       not any(f.startswith("src/") for f in tracked
               if Path(f).name.startswith("Probe")))

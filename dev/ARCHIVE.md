@@ -80,7 +80,7 @@ a `README.md` in the subtree:
 | `archive/tooling/` | Retired scripts | `archive/tooling/README.md`, one section per script, with what it did right and what would reopen it |
 | `archive/kits/` | Code or prose written, measured, not landed | `archive/kits/README.md` |
 | `archive/measurements/` | Measurements only historical documents cite | `archive/measurements/README.md` |
-| `archive/probes/` | **Empty since 2026-08-13.** A tombstone that maps 257 pre-ruling probe paths to their homes in `agents/reports/<TASK>/` | `archive/probes/README.md` |
+| `archive/probes/` | **Empty since 2026-08-13.** A tombstone that maps 257 pre-ruling probe paths to their homes in `agents/tasks/<TASK>/` | `archive/probes/README.md` |
 
 `[LJ-1.132]` and `[LJ-1.133]` both reached this conclusion and added no row;
 `[LJ-1.141]` follows them and says so here rather than leaving the registry

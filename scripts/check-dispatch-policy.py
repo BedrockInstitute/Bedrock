@@ -32,7 +32,7 @@ WHAT IT CANNOT DO, AND THE LIST IS NOT SHORT.
   * IT CANNOT DATE A BRIEF RELIABLY. This checker reads mtime, so an edited
     old brief looks new and a copied new brief can look old. The REASON for
     the limit changed on 2026-08-13, when the briefs moved from `_build/` to
-    `agents/briefs/` and became tracked: git can now date them, so the limit
+    `agents/tasks/` and became tracked: git can now date them, so the limit
     is this checker's implementation and no longer a fact about the tree.
   * IT CANNOT TELL AN ADVERSARIAL REVIEW FROM A BRIEF THAT DISCUSSES ONE. The
     classifier reads the GOAL section and the tier line for the word
@@ -72,7 +72,9 @@ except Exception as exc:                                   # pragma: no cover
           file=sys.stderr)
     raise SystemExit(2)
 
-BRIEFS = ROOT / "agents" / "briefs"
+# [LJ-1.142] merged the briefs into `agents/tasks/<TASK>/`. The DIRECTORY no longer says
+# which file is a brief, so the predicate lives in `agents_tree` and every reader shares it.
+import agents_tree as T
 
 # The hour the policy was codified, by [LJ-1.127]. Briefs older than this
 # predate checks 4 and 5 and are noted, never failed.
@@ -166,11 +168,19 @@ def check_briefs(version: str) -> tuple[list[str], list[str]]:
     """(errors, notes) over every brief."""
     errors: list[str] = []
     notes: list[str] = []
-    if not BRIEFS.is_dir():
-        return [f"no brief directory at {BRIEFS}"], notes
+    if not T.TASKS.is_dir():
+        return [f"no task tree at {T.TASKS}"], notes
+    # candidate_briefs(), NOT briefs(): this check looks for a MISSING `tier:` line, and the
+    # content predicate finds a brief partly BY that line. See `agents_tree`'s docstring.
+    found = T.candidate_briefs()
+    if not found:
+        # C-40: a checker that reads nothing prints green. A layout change that
+        # emptied this list would otherwise pass silently, which is how a census
+        # drops to zero unnoticed.
+        return [f"no brief found under {T.TASKS}: the census is ZERO"], notes
     legal = set(P.LEGAL_TOKENS)
     adversarial_ok = P.expected_tier_tokens("adversarial", version)
-    for path in sorted(BRIEFS.glob("*.md")):
+    for path in found:
         rel = path.relative_to(ROOT)
         try:
             text = path.read_text(encoding="utf-8", errors="replace")
@@ -179,7 +189,10 @@ def check_briefs(version: str) -> tuple[list[str], list[str]]:
             continue
         recent = (_dt.datetime.fromtimestamp(path.stat().st_mtime)
                   >= POLICY_EPOCH)
-        sink = errors if recent else notes
+        # The retired route's records are never FAILED. They predate the policy, and the brief
+        # predicate reads about 27 bare-stem archived reports as briefs (`agents_tree`), every
+        # one of them under `archive/`. Judging them would fail the gate on a frozen record.
+        sink = errors if (recent and not T.is_archived(path)) else notes
         line = tier_line(text)
         if line is None:
             sink.append(f"{rel}: no `tier:` line (ORCHESTRATION section 1)")
@@ -251,7 +264,7 @@ def main() -> int:
         print(f"{len(errors)} defect(s) against the `{version}` policy")
         return 1
     print(f"dispatch policy OK: `{version}` in force, "
-          f"{len(list(BRIEFS.glob('*.md')))} brief(s) read, "
+          f"{len(T.candidate_briefs())} brief(s) read, "
           f"{len(notes)} pre-epoch note(s) not judged "
           f"(run with --notes to see them)")
     return 0

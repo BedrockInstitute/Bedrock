@@ -2,7 +2,7 @@
 
 Task `[L3.30-D1]`. Authored by the orchestrator directly (per the owner's
 2026-08-02 instruction) from the collection files in this directory and the
-collection report `agents/reports/archive/l1-report.md`; an independent adversarial audit
+collection report `agents/tasks/archive/L1/l1-report.md`; an independent adversarial audit
 (codex, read-only) then returned 16 findings, all verified against the
 collection and applied, and later extraction/fetch tasks update the OPEN
 items in place (the git history records each pass). Authority order:

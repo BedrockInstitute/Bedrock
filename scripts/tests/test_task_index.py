@@ -34,7 +34,7 @@ PLAN = """## 11. MASTER status table (live)
 | Code | Task | Verdict | Detail |
 |---|---|---|---|
 | L3.32-T1 | The R4 corrective stop | DELIVERED | dev/JOURNAL.md |
-| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/reports/archive/l3.32-t88-report.md |
+| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/tasks/archive/L3-32-T88/l3.32-t88-report.md |
 
 ### Bookkeeping
 """
@@ -96,7 +96,7 @@ def fails():
           any("TASKS-archived" in e and "PLAN.md" in e for e in errs), True)
 
     duplicate_plan = PLAN.replace(
-        "| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/reports/archive/l3.32-t88-report.md |",
+        "| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/tasks/archive/L3-32-T88/l3.32-t88-report.md |",
         "| L3.32-T88 | first copy | A | x |\n| L3.32-T88 | second copy | B | y |")
     errs, _, _ = check_task_index.check_index(duplicate_plan, "[T88]", archived=False)
     check("duplicate rows fail",
@@ -107,7 +107,7 @@ def fails():
 
     over = "x" * (check_task_index.CAP - len(make_row("")) + 1)
     long_plan = PLAN.replace(
-        "| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/reports/archive/l3.32-t88-report.md |",
+        "| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/tasks/archive/L3-32-T88/l3.32-t88-report.md |",
         make_row(over))
     errs, _, _ = check_task_index.check_index(long_plan, "[T88]", archived=False)
     check("row over cap fails",
@@ -115,7 +115,7 @@ def fails():
 
     at_cap = "x" * (check_task_index.CAP - len(make_row("")))
     cap_plan = PLAN.replace(
-        "| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/reports/archive/l3.32-t88-report.md |",
+        "| L3.32-T88 | Measure SquareLaw's 856 s | COMPLETE | agents/tasks/archive/L3-32-T88/l3.32-t88-report.md |",
         make_row(at_cap))
     errs, _, _ = check_task_index.check_index(cap_plan, "[T88]", archived=False)
     check("row at exactly the cap passes", errs == [], True)

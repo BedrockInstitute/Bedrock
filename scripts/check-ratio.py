@@ -171,10 +171,36 @@ def recalibrate(cfg: dict) -> int:
     if blocker:
         print(f"check-ratio: refusing to measure, {blocker} (C-12).", file=sys.stderr)
         return 1
-    wing = set(cfg.get("gch_wing", []))
-    targets = [f for f in ledger_mod.countable_masters() if f not in wing]
+    # THE AC SIDE IS THE LANDMARKS CONE, NOT "EVERYTHING MINUS THE WING".
+    #
+    # This selected by SUBTRACTION until 2026-08-13, and `[LJ-0.5]` had already
+    # replaced exactly that construction for the whole-cone denominator on
+    # 2026-08-10 without reaching this half. The two halves then disagreed by
+    # 3,101 lines, every one of them GCH-campaign code that no hand-maintained
+    # list had been updated to name, and `check-ratio.py` PREFERS this half for
+    # a per-module verdict. So the wing's own most expensive masters were in
+    # the baseline that judged the wing, and the bar was too lenient.
+    #
+    # The cure is the owner's rule, 2026-08-13: the AC side was FIXED when its
+    # trophy landed and nothing written afterwards joins it. The cone states
+    # that structurally rather than by declaration, and it holds: MEASURED the
+    # same day, the cone gained ZERO members in the three days of wing work
+    # that added 3,101 lines, because Landmarks imports none of them.
+    #
+    # `gch_wing` keeps its OTHER job below, naming what the bar judges.
+    targets = sorted(f for f in ledger_mod.closure(
+        ledger_mod.import_graph(ledger_mod.tracked_masters()),
+        [cfg.get("ac_baseline_root", "src/Landmarks.lagda.md")])
+        if f not in ledger_mod.UNCOUNTED)
     if not targets:
         print("check-ratio: nothing to recalibrate against.", file=sys.stderr)
+        return 1
+    wing = set(cfg.get("gch_wing", []))
+    overlap = sorted(set(targets) & wing)
+    if overlap:
+        print(f"check-ratio: {len(overlap)} master(s) are in the cone AND "
+              f"declared wing, so the baseline judges them against themselves: "
+              f"{', '.join(overlap)}", file=sys.stderr)
         return 1
     ghcrts = cfg.get("ac_baseline_ghcrts")
     print(f"check-ratio --recalibrate | {len(targets)} AC masters | cold, warm "

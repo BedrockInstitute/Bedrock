@@ -42,7 +42,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BRIEFS = ROOT / "agents" / "briefs"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import agents_tree as T   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
 LOGS = ROOT / ".claude" / "skills" / "codex-dispatch" / ".state" / "logs"
 
 # A path the brief names inside its ARCHIVE or LITERATURE section.
@@ -56,8 +57,8 @@ TOOLCALL_RE = re.compile(r"^/bin/\w*sh -lc .*$", re.M)
 
 
 def named_sources(task: str) -> list[str]:
-    brief = BRIEFS / f"{task}.md"
-    if not brief.exists():
+    brief = T.brief_for(task)
+    if brief is None:
         return []
     text = brief.read_text(encoding="utf-8")
     out: list[str] = []
@@ -118,7 +119,7 @@ def main(argv: list[str]) -> int:
         print(__doc__)
         return 0
     if tasks == ["--all"]:
-        tasks = sorted({p.stem for p in BRIEFS.glob("*.md")})
+        tasks = sorted({p.stem for p in T.briefs()})
     for t in tasks:
         report(t)
     return 0

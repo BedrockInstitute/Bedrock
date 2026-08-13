@@ -49,7 +49,7 @@
 #        ledger when it is archived.
 #      - Probes are NOT counted, and the OLD REASON DIED on 2026-08-13. It used
 #        to be that a probe is never committed, so the tracked-files scan could
-#        not see one. Probes are tracked now, in agents/reports/<TASK>/. The
+#        not see one. Probes are tracked now, in agents/tasks/<TASK>/. The
 #        reason that survives is the one that was always doing the work: this
 #        ledger counts the DELIVERED PROOF, which is the in-fence code of a
 #        tracked master under src/. A probe is EVIDENCE, exactly as a report is
@@ -291,7 +291,7 @@ gch_wing_apriori = [7553, 11197]
 # against porting it, and it is stronger than any line count.
 #
 # TWO NUMBERS WERE WRONG IN THE ROUTE'S OWN RECORD, both found by [LJ-1.6-R].
-# The 1,540-line figure in [LJ-1.6] and in agents/reports/archive/lj-1.1-recon.md:251 is a
+# The 1,540-line figure in [LJ-1.6] and in agents/tasks/archive/LJ-1-1/lj-1.1-recon.md:251 is a
 # CALIBER ERROR: it adds SquareLaw's in-fence 907 to Pairing's FILE count 633,
 # whose in-fence is 376. True sum 1,283, so the record ran 20 percent high.
 # And the 61.9 s figure is stale by two supersessions; this file at :1765 and
@@ -302,7 +302,7 @@ gch_wing_apriori = [7553, 11197]
 # condensation application is at kappa-plus with alpha = kappa, and BOTH are
 # cardinals: dev/literature/devlin-II5.md:164-166, with step F at :282 saying
 # "initial ordinals". Bound's beta is the TARGET, not the level, and
-# agents/reports/Unpaired/ProbeTowerInd2.agda:155-159 already runs the fixed-initial-target shape.
+# agents/tasks/Unpaired/ProbeTowerInd2.agda:155-159 already runs the fixed-initial-target shape.
 # So the archived law's restriction to initial ordinals reaches the consumer.
 # Two smaller residuals replace the transfer: the square law at omega, since
 # Init omega is uninhabited, and either verifying Init kappa or adopting Init
@@ -311,7 +311,7 @@ gch_wing_apriori = [7553, 11197]
 gch_wing_seconds_budget = [99.6, 147.7]
 gch_wing_apriori_centre = 9400
 gch_wing_apriori_source = """
-[LJ-1.1], agents/reports/archive/lj-1.1-recon.md section 6. Block sum 7,553-11,197; the recon
+[LJ-1.1], agents/tasks/archive/LJ-1-1/lj-1.1-recon.md section 6. Block sum 7,553-11,197; the recon
 reports 8.0-10.8k as its own band because that is [L3.32-T257]'s independent
 survey figure sitting inside the block sum, and it takes the narrower one.
 About 5.1k of the total rests on DELIVERED COMPARABLES, the archived modules
@@ -357,14 +357,14 @@ that is not known.
 # prefix or an exact path; scripts/ledger.py verifies every one still exists,
 # which is what catches a stale declaration.
 #
-# NOTE: the R5-era census (agents/reports/archive/l3.31-r5census.md) books a DIFFERENT set,
+# NOTE: the R5-era census (agents/tasks/archive/L3-31-R5CENSUS/l3.31-r5census.md) books a DIFFERENT set,
 # because it was written under the J-trophy route. D18 rules the actual set:
 # under it the bridge SURVIVES as the wing's corollary, while the census
 # retires it. When the two disagree, D18 wins and this file follows D18.
 #
 # CORRECTED 2026-08-05 by [T72], and the error was this file's: SatSets was listed here
 # under 'the rud coded cluster', copied from the R5 census. The report D18 was actually
-# ruled on (agents/reports/archive/l3.31-lt-report.md:26-27) puts the coded cluster at exactly four files,
+# ruled on (agents/tasks/archive/L3-31-LT/l3.31-lt-report.md:26-27) puts the coded cluster at exactly four files,
 # CodeSet + CodePred + StepInL + BaseBlock, and lists SatSets on the RETAINED row as one of
 # the bridge's suppliers (full-switch at SatSets:1650). It never should have been condemned.
 # Removing it takes 1,289 lines back into standing and dissolves three of the nine
@@ -450,13 +450,13 @@ authority = "the brief [L3.32-T135]; PLAN section 0"
 side = "ac"
 path = "src/L/Rud/Order.lagda.md"
 why = "the choice supplier of the ruled re-home: Sset-order at Order:802-803, Jset-order at :822-824, Sset-choice at :838 (lines re-pinned by [T187] after the T171 split moved them)"
-authority = "ruling D33; agents/reports/archive/l3.31-lt-report.md:23,28; [L3.32-T147]"
+authority = "ruling D33; agents/tasks/archive/L3-31-LT/l3.31-lt-report.md:23,28; [L3.32-T147]"
 
 [[trophy_split]]
 side = "ac"
 path = "src/L/Rud/Bridge.lagda.md"
 why = "the bridge the re-home rides, per the D18 route"
-authority = "ruling D33; agents/reports/archive/l3.31-lt-report.md:23; [L3.32-T147]"
+authority = "ruling D33; agents/tasks/archive/L3-31-LT/l3.31-lt-report.md:23; [L3.32-T147]"
 
 [[trophy_split]]
 side = "gch"
@@ -555,7 +555,7 @@ calibrated_low = 2280
 calibrated_high = 5050
 klass = "mostly x3, one x1.3 row (the B statement layer). SPLIT 2026-08-07: the elimination slice moved to w3-ac-slice after [T158] ruled it AC-forced; at the split the two rows' bands summed EXACTLY to the pre-split 1,000-2,700 naive and 3,000-7,900 calibrated. COVERAGE AFTER THE RE-PRICE, checked by [T187] 2026-08-08: the sum is now 1,096-2,306 naive and 3,040-6,436 calibrated, INSIDE the pre-split band on both calibers, because [T179] measured the slice's dominant term down; coverage is preserved and the exactness is spent, which is what a measurement is for"
 gate = "T50 returned SPLIT; T56 DELIVERED the frame at 285 lines and named F11-F14 as inexpressible; T63 REFUTED that, orchestrator-verified: L.Rud.StepInL already carries the full two-way variable-form graph for ALL sixteen operations (graphOf/graph-out/graph-in at :2139-2160), so the row is not walled and the remaining price is consumer wiring. The rewrite LANDED as L.Rud.StepGraph 2026-08-08 and carries the full layer. DISCLOSURE, [T184]: since the Arms rebuild reversed the Bridge/StepGraph edge, StepGraph sits in the AC-ONLY bucket, so the GCH column bills ZERO for the 1,912 lines this row names as its survival supplier; the wing's endpoint understates by 460-1,912 until a wing master imports StepGraph"
-provenance = "agents/reports/archive/l3.32-t48-report.md face-route table; PLAN [L3.32] register T48 and T50 entries"
+provenance = "agents/tasks/archive/L3-32-T48/l3.32-t48-report.md face-route table; PLAN [L3.32] register T48 and T50 entries"
 
 [[remaining]]
 id = "w3-ac-slice"
@@ -567,7 +567,7 @@ calibrated_low = 760
 calibrated_high = 1386
 klass = "RE-PRICED 2026-08-08 by [T179]'s GREEN, coverage checked against T161's obligation set: the successor clause 66-86 MEASURED x1.3 (135 probe lines, both T161 walls dissolved), the shell ~80 measured x1.3, the carve ~90 survey x3, order-specific correctness 100-300 survey x3. The old survey band was 240-950 naive / 720-2,850 calibrated; the dominant x3 clause term is now measured and the calibrated top halves. CALIBRATED LOW CORRECTED 760 (was 490) by [T187]'s audit: the named terms at their own declared classes sum to 760-1,386, and the 490 had dropped the carve's x3 share from the low only; T179's own section-4 prose said 300-500 and contradicted its own table, so the table rules. T161's 84 measured WIRING lines (the description assembly, the landing, PickIn and PickOut) sit inside the shell and carve terms, which is where its report itemizes them"
 gate = "[T158] RULED verdict (c) 2026-08-07: only W3's elimination half discharges the description phi; the delivered mirror confirms the obligation is real. THE GATE RAN 2026-08-08 as [T161], RED at 193 probe lines: the WIRING around the core (description assembly, landing, PickIn/PickOut) closes over delivered machinery, measured green at 84 lines, and the statement is expressible; the CORE, the precedes atom over the J level with two-way adequacy against Jset-order at arbitrary limit, is W3's own elimination-half theorem at delivered size, supplied by none of the fresh-face survivors. The band STOOD at 240-950; near-full W3 rides the AC route. The fourth delivered-size RED of the campaign's gate pattern. THEN [T179] ran F3's reformulation gate 2026-08-08, GREEN at 135 probe lines: the carried order-story's successor clause is expressible over the values lex with a two-way decode, both T161 walls dissolve (no stage predicate in the clause; bounded per-level argument reads), and the row re-priced onto story comparables"
-provenance = "agents/reports/archive/l3.32-t158-report.md; agents/reports/archive/l3.32-t24-report.md section 5; T14 and T22 register entries"
+provenance = "agents/tasks/archive/L3-32-T158/l3.32-t158-report.md; agents/tasks/archive/L3-32-T24/l3.32-t24-report.md section 5; T14 and T22 register entries"
 
 [[remaining]]
 id = "W1p"
@@ -583,7 +583,7 @@ calibrated_low = 1900
 calibrated_high = 5000
 klass = "row (b) now x1.3 and measured tiny (the Def-step clause collapses at every carrier, so its bounded rewrite is the trivial formula); rows (a) and (c) still x3"
 gate = "T54 SPLIT, T64 re-priced and was itself corrected by T66: the Def-step clause is UNCONDITIONALLY true at any carrier, witnessed by the carrier member itself with the true formula, so the collapse T54 assumed is legitimate everywhere and row (b) is about 0.14-0.17k rather than 0.34-1.00k. What T64 called the unmeasured Def-step class is the description's object-level content, which row (c) consumes, not the face's clause"
-provenance = "agents/reports/archive/l3.32-t51-report.md; agents/reports/archive/l3.32-t64-report.md; agents/reports/archive/l3.32-t66-report.md, orchestrator-verified at src/L/Definability.lagda.md:177-190"
+provenance = "agents/tasks/archive/L3-32-T51/l3.32-t51-report.md; agents/tasks/archive/L3-32-T64/l3.32-t64-report.md; agents/tasks/archive/L3-32-T66/l3.32-t66-report.md, orchestrator-verified at src/L/Definability.lagda.md:177-190"
 
 # O4 IS BUILT AND PINNED, 2026-08-06 by [L3.32-T126]: src/L/Rud/StepStory.lagda.md,
 # 313 non-blank in-fence lines, green, 1.25 s, no postulate and no hole. It is
@@ -647,14 +647,14 @@ calibrated_low = 3424
 calibrated_high = 5217
 klass = "mixed x1.3 / x3"
 gate = "T53 SPLIT (Arm A green and built, Arm B structurally impossible by the K-collection route); T61 built the strengthened story; T65 then REFUTED the recorded step 3: the delivered two-way successor-value clause forces an infinite chain of distinct pairs inside a finite HF member, so the family equality is false as set up. The carve needs the classical ONE-WAY clause with the exact domain bound. [T128] GATED THE SIXTH CLAUSE 2026-08-07: EXPRESSIBLE. The limit clause is an object formula over the carrier in the kit's language with a two-way decode, built and checked at the first carrier where it has content (beta-0 = +omega a-0, with the limit index a-0 = +omega empty below it, since omega itself has no limit ordinals below and cannot host the test). THE T84 OBSTRUCTION DOES NOT TRANSFER, and the distinction is the finding: the xi-quantifier IS bounded inside the carrier, and Delta-0 certifiability was the CONDENSATION consumer's requirement, not this one's. A future Delta-0 consumer would hit T84's wall; the below-lim consumer does not. It needed no scratch tree at all, because the clause reads the limit predicate through bounded quantifiers and avoids the archived graph layer entirely. Measured at 353 content lines, carrier-generic in effect (nothing in the machinery names the concrete carrier, so it re-instantiates for ~10 lines rather than re-deriving). [T127] GATED B4 2026-08-07 and returned GREEN AT THE FIRST LIMIT WITH A REFUTATION AT GENERAL BETA. All three obligations build at Lset omega (O7 the chain 52 lines, O6 the segments 206, O8 the family equality 88), and the D-10 check found the recorded O7 and O8 are FALSE at general beta: the delivered one-way story carries NO LIMIT CLAUSE (the kit's Def-step clause is true-dot, LevelKit:189; LevelSigma.aSt1 is five clauses without one, :727-728), so below a general limit a witness may put an ARBITRARY value at a limit index without violating pairhood, single-valuedness, the zero clause, the exact domain or the one-way successor clause, which constrains successor indices only. The chain does not force x = Sset a there and the carve overshoots. The first limit is green precisely BECAUSE omega has no limit ordinals below it. The general transfer needs a SIXTH clause, value at a limit index equals the union of the values below: a named, priced addition inside the x3 term, not a rebuild. Same class as T65's refutation, and the second time this route's price has turned on the story's clause shape. [T125] GATED below-lim at the first limit 2026-08-06 and returned RED AT THE LINE BUDGET WITH THE TARGET LANDED: Sset-omega in Lset (+omega omega) is PROVEN in 269 probe lines, no postulate, no hole; the kit instantiates at the L-stage carrier RUN rather than read, closing T90's gap; and NEITHER wall T90 named fired. A THIRD wall did, and it is a size wall: O4, the S-story's one-way successor clause as an object formula at the carrier, measures ~200-300 naive against T90's 60-120 band, 2 to 3 times over, and it is the dominant term. First-instance band re-measured at ~450-550 naive, ~115 of it built in the gate. RE-PRICED 2026-08-07 by [L3.32-T146], the owner-ordered opus audit, applied by the orchestrator under D27. The old band was wrong in BOTH directions: it still carried Q-lim's first limit, which T68 (268 lines) and T74 (285) closed AFTER the band was set; and it allocated 190-400 to below-lim while the measured first instance alone is about 1,570-1,680 master lines, 4 to 8 times the allocation. The new band is the measured decomposition: below-lim first instance still to write 1,404-1,431 (measured, minus the 313 StepStory lines already standing), master shell 166-249, the general-beta transfer 200-400 (survey), the Q-lim general transfer residue 53-437, landing and wiring 50-150. The graph-layer supply is NOT here: it was the stepinl-rewrite row, which left this ledger COMPLETE on 2026-08-08 with its coverage note recorded in place, and its content stands as L.Rud.StepGraph. [T156] G2 AUDIT 2026-08-07: all five terms stay BOTH. The re-home's ChoiceStatement quantifies over every family (T3:164-167), so the bridge is consumed at arbitrary limit levels. General beta is AC-forced. Re-booked total zero. [T159] CLOSED THE FIRST INSTANCE END TO END 2026-08-08, first complete elaboration ever: 57.8 s cold and 2.5 s warm at the probe site, clean, no wall, after [T154] found and R-40 cured the depth-6 ordinal witness (631 s to 59 s) and five latent tail errors were repaired in 13 lines. The first-instance content is now VERIFIED WHOLE at probe granularity; the master's own number re-measures at wiring (P-l). [T182] RAN THE GENERAL-BETA GATE 2026-08-08, RED at 213 fresh lines against the 150 stop: the transfer does NOT go at the re-instantiation rate. The blocker is structural: the second instance's top pair needs Sset beta-0 in Lset (sucV beta-0), the row's own residue at the PREVIOUS limit, which the first instance dodged through the omega identification that is FALSE at general limits (Bridge:475). The band above carries T182's re-price: the old 200-400 transfer term becomes 1,202-1,533 naive / 2,020-2,588 calibrated, itemized in its report section 4. ONE UNGATED ESCAPE, named for the next gate: stated as an induction over limit ordinals, the discharge IS the induction hypothesis, and the 269-350 survey term may vanish into the frame; the build brief must state the theorem in that shape and a cheap statement-shape probe decides before funding. [T185] RAN THAT PROBE 2026-08-08, GREEN at 139 lines: the induction assembles over the delivered ordinal induction, and the T182 wall IS below-lim at the previous limit, an application of the theorem rather than separate content. The 269-350 naive / 807-1,050 calibrated discharge term is replaced by the 78-line assembly frame at x1.3, and the band above carries the result. THE BUILD BRIEF MUST STATE THE THEOREM IN THE INDUCTION SHAPE; stating it per-carrier re-creates the term the probe removed [T194] GATED THE Q-LIM RESIDUE 2026-08-08, RED at the transfer with the frame measured: the general Q-lim clause IS its own induction and that frame is DELIVERED (Bridge:1055-1078), re-instantiating at 62 lines, so no T182-style wall exists here. The cost is the FAMILY EQUALITY at the carrier Sset (U l), whose non-overshoot side is structurally blocked: the first-limit carve moved the exact bound into omega through the carrier's ordinal content at the FIRST limit, and at a general limit the bridge a in U l implies a < l is FALSE, machine-checked by the witness omega in U omega minus omega. The recorded 53-437 rested on that false bridge. The residue re-prices to 612-1,062 naive / 1,051-1,976 calibrated, itemized in the report, and the band above carries it. TWO SURVEY TERMS REMAIN NAMED: the general S-side ordinal content at the carrier, and the carve-supset repair whose feasibility is open [T199] SETTLED THAT FEASIBILITY 2026-08-08: FEASIBLE. The repair is a bounded family formula at the carrier that bounds the pair index inside the story, so the non-overshoot side closes through the general value chain and the FALSE bridge never enters the proof; the bound comes from the formula, not from the carrier's ordinal content. Its band, 592-1,052 naive / 940-1,793 calibrated, refines T194's and sits inside it, and the band above carries the refinement. Two terms stay survey and unmeasured: the general ordinal content at the carrier and the L-side carried sequence. The named next probe builds the bounded formula at the SECOND limit and proves carve-supset only. [T204] RAN IT 2026-08-08, GREEN at the 200-line cap: the bounded carve-supset closes at the second limit through the general value chain, the limit case proved and the chain consuming NO new ordinal content beyond delivered facts (the measured chain is ~105 against T199's 100-200, the repair ~20 against 20-50). The successor case reduces to ONE classical gate, the general identification that a carrier member below Lset b is definable over it, which Bridge:338-352 records as classical prose and undelivered. T199's band stands, with one survey row now evidenced as a single gate rather than an open field [T198] GATED THE LANDING'S LAST HOLE 2026-08-08, RED: the Reduce telescope's blockPowLim needs a relation INSTANCE that no surviving chapter can build. The assembly is in-band (3 lines of glue, measured), but the instance reduces to two forcing obligations: the covering code set, which is the archived CodePred and CodeSet at 1,379 in-fence lines whose transitive cluster reaches 4,414 and includes the superseded StepInL; and the satisfaction relation as a member of the block, which was NEVER BUILT anywhere, the old tree's carried P2 hypothesis that T25 already named as the unbuilt witness and priced at 0.40-0.80k naive / 1.20-2.40k calibrated, survey. Two routes and the owner sees both: RE-FORMULATION keeps the landing band at 50-150 but leaves the step's hypothesis discharged nowhere, which is not a proof; REVIVAL costs 1,379 plus the construction. [T202] asks the question that decides the price: does the AC route's own use of the two class-level steps need blockPowLim at all ANSWERED by [T202]: NEEDED, through isL-to-isJ, Q and Q-suc. THE ROUTE ITSELF WAS THEN RE-PRICED by [T203] 2026-08-08, and the ruling stands: CROSS. Not crossing costs about +4.1k naive, because the two towers differ structurally. Sset (alpha+1) holds values of sixteen finitary operations, so a well-founded key exists with NO syntax (op index, then the two arguments); Lset (alpha+1) is the definable power, whose members carry no generation data, so its only well-founded key is the defining formula, which forces codes, a code order and satisfaction, the whole internalization cone. The one syntax-free candidate, least symmetric difference, is refuted by a descending chain. Two facts recorded against the verdict: crossing does not win the D36 cap (the delivered no-cross tree measured 17,496 against a crossing projection of 17,810-19,430, a wash), and the revival shape costs zero new lines but 147.6 s against the wall gate's margin. DOUBLE-BOOK CORRECTED 2026-08-08, found by [T210]: [T191]'s block 1 landed 604 in-fence lines that are now STANDING and measured, and this row was still booking them as work to do. The bands above drop 604 naive and 785 calibrated. The row now covers block 2 onward only. [T217] PRICED BLOCK 3 BEFORE FUNDING 2026-08-08 and returned a THRESHOLD finding, not a line finding: block 3 is 1,011-1,261 naive, which needs a split at the Segment telescope's own boundary (P, P-in, sucdelta-in-C), and its SECONDS break the wall gate at BOTH rates. The tree lands at 836-893 s uncured and 513-529 s even at T215's 60 s target rate, against 498. The below-lim master's check cost, not its line count, is now the binding constraint on the AC chain, and no funding decision can be made before T215's verdict lands. [T221] THEN ANSWERED P-n's ONLY ADMISSIBLE MOVE 2026-08-08: RESHAPEABLE. The general STEP at a variable limit, with the induction hypothesis as a parameter, SUBSUMES the first-limit construction: block 2's 948 concrete lines become an instance of 15-50, so the master goes 604 + (1,011-1,261) + (15-50) = 1,630-1,915 against the current plan's 2,563-2,813, a saving of 898-933 lines. At the parameterized rate the master costs 20-34 s and the tree lands at 409-423 s against 498. THE VERDICT TURNS ON ONE UNMEASURED RATE: whether a generic STEP that states formulas and proves decodes at a BOUND-VARIABLE carrier checks at the parameterized rate or the instantiation rate. No measured episode covers that shape. At the cured rate the tree lands 462-486; at the instantiation rate it lands 630-694 and the gate fails. [T222] MEASURED THAT SHAPE 2026-08-08: 0.085 s per line, three CLEAN cold runs, and it selects NONE of the named projections. The tree lands 484-514 s against 498: the low end of the STEP's line band clears by 14 s and the high end fails by 16. The cost appears at the bound-variable carrier after all, with 70 percent of the check in two named, written-type decode definitions, which is P-n's signature at a neutral carrier and about 2.6 times cheaper than the instantiation rate. THE RESHAPE THEREFORE BUYS SECONDS AGAINST THE 0.22 CLASS BUT NOT THE 0.010 CLASS, and the wall's outcome now turns on the general STEP's real line count rather than on any rate. [T223] PLANNED THE RESHAPE as two blocks with the order fixed (write block A, the general STEP, IN PLACE and delete block 2's concrete content as each general piece lands, never delete first; then block B, the a-0 instance at 15-50 lines). ITS SECONDS BUDGET PREDATES [T222] and the orchestrator re-derived it at the measured rate: block A at 1,071-1,361 lines times 0.085 is 91-116 s, block B at 0.22 is 3-11 s, so the master is 100-133 s and the tree lands 489-522 s against 498, clearing by 9 or failing by 24. The plan's own 409-424 figure used the pre-measurement rate and is superseded. EVERY LINE REMOVED FROM BLOCK A IS NOW WORTH 0.085 s OF GATE MARGIN, which is why the remaining generalizations are funded as seconds levers"
-provenance = "agents/reports/archive/l3.32-t52-report.md combined row; PLAN register T45 and T52 entries"
+provenance = "agents/tasks/archive/L3-32-T52/l3.32-t52-report.md combined row; PLAN register T45 and T52 entries"
 
 # THE STEPINL-REWRITE ROW LEFT THIS LEDGER 2026-08-08, COMPLETE, and the
 # coverage check the header demands is recorded here: the row's content was
 # the four blocks of L.Rud.StepGraph, all landed ([T148] 504, [T164] 339,
 # [T165] 609, [T170] 460, master 1,912 in-fence lines, ~2 s warm), and the
 # scratch alignments prove the probe's obligation types (Graphs, ValuesLex,
-# StepDescObl, agents/reports/T145/ProbeT145.agda) are inhabited by the delivered objects.
+# StepDescObl, agents/tasks/archive/L3-32-T145/ProbeT145.agda) are inhabited by the delivered objects.
 # Nothing the row priced is untracked: it is standing, measured by the tool.
 # Against the original band 1,240-1,730 naive / 1,610-2,250 calibrated the
 # landing is 1,912: inside the calibrated band, 11 percent over the naive top.
@@ -736,7 +736,7 @@ calibrated_low = 2113
 calibrated_high = 2183
 klass = "MIXED and the split is the point: the covering code set is a REVIVAL priced at x1.3 (1,379 in-fence lines of archived CodePred and CodeSet, re-pointed onto StepGraph because StepInL is superseded, so it is a rewrite and not a clean un-archive), and the relation as a member is SURVEY at x3 (400-800 naive, T25's band, never built anywhere). The ideal-form re-price of the code predicate over the graph layer is UNRUN and could move the revival half down"
 gate = "BOOKED 2026-08-08 by the orchestrator after [T207]'s plan exposed the leak: [T198] measured this obligation and [T202] proved the AC route reaches it, but NO ROW carried its lines, so the landing projection omitted them. The ledger header's own warning names this class. [T198] RED: the Reduce telescope's blockPowLim needs a relation instance that no surviving chapter can build; the assembly is 3 measured lines of glue, and the instance reduces to two forcing obligations, the covering code set (archived, 1,379, cluster 4,414) and the satisfaction relation as a member of the block (never built, the old tree's carried P2 hypothesis, T25's unbuilt witness). [T202] NEEDED: bridge-isL-to-isJ reaches it through Q and Q-suc, so the AC route pays it. THE OWNER'S RULING IS OWED between two routes, and only one of them is a proof: RE-FORMULATION carries the instance as a hypothesis discharged nowhere, which does not prove the theorem; REVIVAL pays this row. The band assumes REVIVAL for that reason. The unrun gate that would move it: price the code predicate's ideal form over StepGraph's graph layer (D17, from the rewrite side). THAT GATE RAN as [T209]: WASH, the ideal form is 1,120-1,275 against 1,379 delivered, 7-19 percent cheaper and not the half the row needed, so the band above stands. THE ROW ALSO HAS A SECONDS FACE, and [T211] measured it 2026-08-08: the Part I slice checks in 7.60 s cold over three CLEAN runs at 126 lines, projecting the whole ideal form at 67.5-76.9 s naive against the wall gate's +102.8 s margin. TOO CLOSE TO CALL: it FITS at the naive caliber with 26-35 s to spare, FITS at x1.3 with 3-15 s, and DOES NOT FIT at x3. The two thresholds hold together only if the predicate's own rate stays within 1.34-1.52 times the slice's rate, and no probe has timed the predicate. That single number is now the gate. [T214] THEN GATED THE OTHER HALF 2026-08-08, GREEN: the satisfaction-as-member term builds on the DELIVERED Sat engine by code recursion, measured at 13 lines and 0.19 s per constructor over three clauses, so the whole twelve-constructor recursion projects to 243-303 naive and 3.6-4.5 s. The never-built survey half re-prices from 0.40-0.80k naive / 1.20-2.40k calibrated to 0.24-0.30k / 0.32-0.39k, and the seconds fit the remaining margin at EVERY caliber. The row's bands above carry it. The covering half stands at T209's ideal-form figure; T211's projection governs its seconds"
-provenance = "agents/reports/archive/l3.32-t198-report.md; agents/reports/archive/l3.32-t202-report.md; agents/reports/archive/l3.32-t25-report.md; dev/memos/L3.32-ac-endgame.md step 4; agents/reports/archive/l3.32-t209-report.md; agents/reports/archive/l3.32-t211-report.md"
+provenance = "agents/tasks/archive/L3-32-T198/l3.32-t198-report.md; agents/tasks/archive/L3-32-T202/l3.32-t202-report.md; agents/tasks/archive/L3-32-T25/l3.32-t25-report.md; dev/memos/L3.32-ac-endgame.md step 4; agents/tasks/archive/L3-32-T209/l3.32-t209-report.md; agents/tasks/archive/L3-32-T211/l3.32-t211-report.md"
 
 [[remaining]]
 id = "choice-rehome"
@@ -748,7 +748,7 @@ calibrated_low = 244
 calibrated_high = 322
 klass = "x1.3, GATED 2026-08-09 by [T244] from the REWRITE side per D17. Was x3 survey at 300-650 naive / 900-1,950 calibrated. The ideal form over the rud-side well-order is five pieces, four of them measured: the statement moved verbatim at 8, the pick at 30-60 ([T3]: 13 code lines, 46 with scaffolding), the carve machinery at about 130 ([T24]: 262 probe lines, carve-specific about 130), and the wiring at 20-50 ([T3]: one import swap, one field swap). The description with two readings is NOT here: it stays in `w3-ac-slice`, so the whole leg is this row plus that one, 524-804 naive, against a booked 636-1,206. D17 ratio: the ideal form is 24-32x cheaper than the delivered cone it replaces, which holds 6,050 in-fence lines over twelve masters. ALL TWELVE ARCHIVE FOR FREE: nothing surviving needs any of them, since the pick uses `Jset-order` from `L.Rud.Order` and the carve uses the delivered switch and counting, and both [T3]'s and [T24]'s probes import nothing from `L.Choice`. Only two exports have surviving consumers, `hasChoiceL` at `src/L/Model.lagda.md:57` and `orderAt` at `src/L/Hull.lagda.md:44`, and C-23 puts the whole Transversal module in scope because `hasChoiceL` instantiates `Trans` in the same file. STILL BLOCKED on `bridge-landing`: the re-home consumes both directions of the class-level bridge step"
 gate = "GATE 5 RAN AS [T3], GO 2026-08-04: the pick over Jset-order is 13 non-blank lines on delivered exports plus ONE module hypothesis, the class-level isL-to-isJ bridge step (probe 158 lines, under the 200 stop). [T24] then D-10-checked T3's residual and found the recorded carve target FALSE (the description must NAME the order internally, which is W3-chapter content, red structurally per T19/T22); the CORRECTED carve is GREEN at 262 probe lines, ~130 of carve machinery, with the description AND the bridge step as module hypotheses. CORRECTION 2026-08-07: [T146]'s claim 5 called this row unmeasured; it read the stale 'none yet' gate text and missed the provenance line's T3 and T24, whose measurements stand. What remains unmeasured is the DISCHARGE of the two hypotheses on the ruled route: the bridge step is the bridge-landing row's content, and the description's status was ruled by [T158] 2026-08-07, verdict (c): only W3's elimination slice discharges it, so the re-home consumes the new w3-ac-slice row. THAT GATE HAS RUN, twice: [T161] RED on the delivered formulation, then [T179] GREEN on the carried order-story reformulation, and the slice's band is re-priced accordingly. This row's own band still covers the pick and the carve only"
-provenance = "agents/reports/archive/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 entries"
+provenance = "agents/tasks/archive/L3-31-LT/l3.31-lt-report.md H2 and row 10; PLAN register T3 and T24 entries"
 
 # Re-priced downward 2026-08-05 after [T72] removed SatSets from the retirement set:
 # three of the nine crossings (OrderFormula, Bridge, DefInJ, all on SatSets) dissolve
@@ -905,7 +905,7 @@ calibrated_low = 250
 calibrated_high = 450
 klass = "x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part"
 gate = "POST-D32 SCOPE, rewritten 2026-08-07 after [T146] found the old field still describing pre-D32 Build A content and an already-decided ruling. What remains here: the archival wiring at arm-C time, and the Hull order slice. The deletion itself is EXECUTED ([T144], 86 lines, the three D32 artifacts shipped). The band 250-500 is an orchestrator judgment with no measurement behind it, flagged by [T146]; the wiring half becomes measurable at arm C [T189] ITEMIZED THE BAND 2026-08-08 and it replaces the judgment numbers with two terms: the Hull order re-home by the BRIDGE route at 0.04-0.12k x1.3 (Hull:44 consumes orderAt from Choice.Step:740-741, used through wL at Hull:96-97 for the least-witness search; the fallback harvest route costs 0.35-0.65k at x3 and keeps a slice of the choice tree alive, against D18), and the arm-C archival wiring at 0.14-0.19k, itemized from arm A's measured anchor at double the unit count (32 masters against 16). The re-home's export spec for Model:57 is pinned: a surviving module must export a term of type (zf : isZFModel) -> ChoiceStatement zf, the delivered hasChoiceL type at Transversal:382-383."
-provenance = "agents/reports/archive/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is agents/reports/archive/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
+provenance = "agents/tasks/archive/L3-32-T67/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is agents/tasks/archive/L3-31-LT/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
 
 [[remaining]]
 # THREE ARITHMETIC DEFECTS IN THIS ROW, found by [T257] 2026-08-09 and recorded
@@ -932,7 +932,7 @@ calibrated_low = 6500
 calibrated_high = 6700
 klass = "x1.3 throughout: every term measured or gated at delivered size (T132 arm 174, T140 tail 1,866, T142 code block 2,378, arms ~711, step/approx ~130)"
 gate = "The full chain is run and every gate is red on compression: T129 mapped the cone, T130 refuted the rud-side escape, T132 closed one arm green at 174 lines and re-classed the estimate, T140 proved the tail reduces to the tail's own theorems, T142 proved the same for the shape machinery and that the arity-1 pin saves zero. 483 lines are already landed in L.TowerGraph and stay. Resumes with the GCH wing AT THE ARCHIVAL, per D30(F) and D32."
-provenance = "agents/reports/archive/l3.32-t129-report.md; agents/reports/archive/l3.32-t130-report.md; agents/reports/archive/l3.32-t132-report.md; agents/reports/archive/l3.32-t140-report.md; agents/reports/archive/l3.32-t142-report.md; PLAN D31 and D32"
+provenance = "agents/tasks/archive/L3-32-T129/l3.32-t129-report.md; agents/tasks/archive/L3-32-T130/l3.32-t130-report.md; agents/tasks/archive/L3-32-T132/l3.32-t132-report.md; agents/tasks/archive/L3-32-T140/l3.32-t140-report.md; agents/tasks/archive/L3-32-T142/l3.32-t142-report.md; PLAN D31 and D32"
 
 [[remaining]]
 id = "w7-residue"
@@ -944,7 +944,7 @@ calibrated_low = 1250
 calibrated_high = 2900
 klass = "CORRECTED 2026-08-06 by T91: the earlier note that Cantor and the 5.4 half are DELIVERED is OVERSTATED. The 5.4 half is delivered only as omega-subset-M plus a bijection form with two UNDISCHARGED injection hypotheses, and the raw-index-to-presentation descent is a named unpriced piece now carried by the gch-proof-steps row. SPLIT after T85's re-designed gate went green: the tower induction's SUCCESSOR half moves to x1.3 (the composition is delivered machinery at a variable carrier and checks in seconds) while its LIMIT half stays x3 (untouched by any probe, in the extraction wall class); Cantor and the 5.4 half are DELIVERED by T71; the remaining x3 items are Init verification and the GCH assembly, and x1.3 covers the S_L certificates, the truncated transfer at a measured 18 lines, the pairing re-pointing and Pow"
 gate = "T59 (to dispatch): the 1.1(vii) tower induction at omega, successor and limit arms plus the negative control, stop-line 250"
-provenance = "agents/reports/archive/l3.32-t57-report.md section 3 table (ITEMIZED, no longer a subtraction); named rows at agents/reports/archive/l3.32-t46-report.md:61-65, :177-178; agents/reports/archive/l3.32-t47-report.md section 6; agents/reports/archive/l3.32-t37-report.md:147-158; agents/reports/archive/l3.32-t18-report.md:93-107, :121-128, :205-209"
+provenance = "agents/tasks/archive/L3-32-T57/l3.32-t57-report.md section 3 table (ITEMIZED, no longer a subtraction); named rows at agents/tasks/archive/L3-32-T46/l3.32-t46-report.md:61-65, :177-178; agents/tasks/archive/L3-32-T47/l3.32-t47-report.md section 6; agents/tasks/archive/L3-32-T37/l3.32-t37-report.md:147-158; agents/tasks/archive/L3-32-T18/l3.32-t18-report.md:93-107, :121-128, :205-209"
 
 [[remaining]]
 id = "structural-story"
@@ -956,7 +956,7 @@ calibrated_low = 670
 calibrated_high = 895
 klass = "x1.3 (T77 priced it from the rewrite side, itemized, against the delivered obligations)"
 gate = "T77 returned STOP AT THE PRICE: both the full decoded form (688 naive) and the minimal form (515) exceed its 400-line stop-line, so nothing was built and the defective atoms stand. THE OWNER MUST RULE, and there are two shapes: rewrite in place at this price, or do it as levers A plus B, which cover the same region and net POSITIVE because they remove the third encoding rather than re-writing it"
-provenance = "agents/reports/archive/l3.32-t77-report.md itemized price; the defects at agents/reports/archive/l3.32-t76-report.md; the alternative shape at agents/reports/archive/l3.32-t79-report.md levers A and B"
+provenance = "agents/tasks/archive/L3-32-T77/l3.32-t77-report.md itemized price; the defects at agents/tasks/archive/L3-32-T76/l3.32-t76-report.md; the alternative shape at agents/tasks/archive/L3-32-T79/l3.32-t79-report.md levers A and B"
 
 
 [[remaining]]
@@ -969,7 +969,7 @@ calibrated_low = 1000
 calibrated_high = 2400
 klass = "x3 (none of these has been probed; several were priced by survey and then dropped rather than discharged)"
 gate = "none yet. Each item needs one, and the bounded-subsets argument is the one to gate first because it is what W3's hull elementarity exists to serve"
-provenance = "agents/reports/archive/l3.32-t91-report.md section 1, the end-to-end walk. Component prices as recorded: 5.5 bounded subsets 0.08-0.15k and 5.6 GCH assembly 0.12-0.25k (T18 rows D and E, DROPPED when T57 itemized and replaced them with two narrower items); the condensation limit case 30-90 lines (T33/T64); the transport certificate 0.15-0.30k (T51, explicitly outside W1'); the collapse's 5.2(ii) clause, the counting descent and the Inf predicate all unpriced"
+provenance = "agents/tasks/archive/L3-32-T91/l3.32-t91-report.md section 1, the end-to-end walk. Component prices as recorded: 5.5 bounded subsets 0.08-0.15k and 5.6 GCH assembly 0.12-0.25k (T18 rows D and E, DROPPED when T57 itemized and replaced them with two narrower items); the condensation limit case 30-90 lines (T33/T64); the transport certificate 0.15-0.30k (T51, explicitly outside W1'); the collapse's 5.2(ii) clause, the counting descent and the Inf predicate all unpriced"
 
 # ---------------------------------------------------------------------------
 # Known open items that are deliberately NOT in the endpoint sum. Listed so
@@ -986,19 +986,19 @@ provenance = "PLAN register S18 row"
 id = "stepform-rider"
 title = "The StepInL/stepForm rider, +0.1-0.3k"
 why = "conditional on the Def-side W2 needing a stepForm-class engine after all; not named as ahead by the register"
-provenance = "agents/reports/archive/l3.31-lt-report.md, unknown-unknowns"
+provenance = "agents/tasks/archive/L3-31-LT/l3.31-lt-report.md, unknown-unknowns"
 
 [[excluded]]
 id = "trilingual-prose"
 title = "Trilingual prose, +0.3-0.8k prose-equivalent"
 why = "outside the code-line convention entirely; prose is not counted by this ledger's basis"
-provenance = "agents/reports/archive/l3.31-lt-report.md, unknown-unknowns"
+provenance = "agents/tasks/archive/L3-31-LT/l3.31-lt-report.md, unknown-unknowns"
 
 [[excluded]]
 id = "iso-invariance"
 title = "Isomorphism-invariance of satisfaction, 0.08-0.14k at x3"
 why = "priced by T51 and NOT bought: it would buy the wrong leg, since the transfers are inner-to-ambient at one carrier rather than between isomorphic carriers"
-provenance = "agents/reports/archive/l3.32-t51-report.md"
+provenance = "agents/tasks/archive/L3-32-T51/l3.32-t51-report.md"
 
 # ---------------------------------------------------------------------------
 # WHAT IS STILL OWED TO EACH TROPHY, in work rather than in lines.
@@ -1247,7 +1247,7 @@ status = "blocked"
 # [T52], [T53] and [T61] contain ZERO occurrences of "wing" or "GCH". [T91]'s
 # Link G quotes this row back, [T203] and [T184] quote Link G, and D31
 # restates the row inside a ruling gated on different measurements. The ONE
-# node with independent evidence is D18: `agents/reports/archive/l3.31-lt-report.md:11` lists
+# node with independent evidence is D18: `agents/tasks/archive/L3-31-LT/l3.31-lt-report.md:11` lists
 # the bridge's L-sigma as a RIDER of the wing's face and `:87` puts the
 # bridge's consumer on the AC side. The direction is wing-supplies-bridge and
 # bridge-supplies-AC, which is the opposite of what this row says.
@@ -1284,7 +1284,7 @@ status = "blocked"
 # wing and declared it as its own weak point.
 detail = "The replacement leg. It rides the bridge onto the delivered producer well-order, so it cannot land before the bridge does. This is the single item between AC-as-proved-today and AC-as-proved-on-surviving-machinery."
 blocked_by = "bridge-landing"
-evidence = "agents/reports/archive/l3.31-lt-report.md H2 and row 10; the choice-rehome row above"
+evidence = "agents/tasks/archive/L3-31-LT/l3.31-lt-report.md H2 and row 10; the choice-rehome row above"
 
 [[owed]]
 id = "bridge-landing"
@@ -1296,7 +1296,7 @@ gate_result = "[T125], 2026-08-06, the first thing the exemption released. RED a
 exempt_why = "D30's own exit condition cannot be met while this row is frozen. The wall-clock gate needs the D18 archival; the archival's Choice leg needs ac-rehome; ac-rehome needs this row; this row was frozen by D30. The freeze was blocking the only work that could lift it. The exemption is granted for that circularity alone and covers this row only."
 detail = "Both residues bottom out in one object, a carried sequence of one tower inside the other tower's level. Q-lim at the first limit did NOT close: T65 refuted the recorded carve, because the delivered two-way successor clause is too strong and forces an infinite chain inside a finite HF member. T68 then BUILT that repair and probe-verified the full family equality both ways; T72 removed the last obstacle by showing full-switch was never condemned, so the landing is being closed now. below-lim is still untouched and needs its own per-tower build. AC needs this for the re-home; GCH needs it because the wing rides the same bridge. FROZEN 2026-08-06 by D30, then EXEMPTED the same day, see exempt_why: below-lim's first gate was briefed as [T92] and stopped before it fired, and it is that gate which the exemption releases first. Q-lim's half stands. Nothing here is refuted."
 blocked_by = ""
-evidence = "agents/reports/archive/l3.32-t45-report.md; agents/reports/archive/l3.32-t52-report.md; agents/reports/archive/l3.32-t53-report.md; agents/reports/archive/l3.32-t61-report.md section 7"
+evidence = "agents/tasks/archive/L3-32-T45/l3.32-t45-report.md; agents/tasks/archive/L3-32-T52/l3.32-t52-report.md; agents/tasks/archive/L3-32-T53/l3.32-t53-report.md; agents/tasks/archive/L3-32-T61/l3.32-t61-report.md section 7"
 
 # THE ARCHIVAL, IN THREE ARMS. It was ONE row until 2026-08-06 and that single
 # row is what produced a false deadlock: its `blocked_by` named three things,
@@ -1326,7 +1326,7 @@ status = "delivered"
 delivered = "2026-08-06 by [L3.32-T122], sixteen masters moved to archive/ with their dev/ARCHIVE.md rows; the orchestrator wired src/Everything.lagda.md, 133 lines deleted and nothing added. THE CHECKLIST CARRIED ONE DEFECT, caught in audit: the English StepInL blurb was reported as line 1313 and is 1313 to 1315, the last two being continuation lines of the same bullet. Deleting the reported range alone would have left two orphan prose lines in the index and a red prose gate. Every range was re-derived and asserted before the edit ran."
 detail = "311.8 s of the tree, consumed by NOTHING outside src/Everything.lagda.md's index. Verified 2026-08-06 by rg over src/: L.Godel's fourteen modules have no importer outside src/L/Godel (227.8 s); L.WellOrder.Tree's only importer is L.Godel.Name, which is in the set (0.3 s); L.Rud.StepInL has no importer at all, only the index entry and its two prose blurbs (83.7 s). No crossing to sever, no content to re-home, no mathematics: move the masters under archive/, drop the index entries, write the ARCHIVE.md rows D20 requires. THE ONE THING IT COSTS is that StepInL's sixteen-operation op-graph content leaves src/ before its ideal-form rewrite exists, which is exactly what D18 already ruled and D20 already made safe; W3 was always going to consume the rewrite, never the original, because nothing may import across the archive boundary."
 blocked_by = ""
-evidence = "rg over src/ 2026-08-06, reported in the L3.32-F row; seconds from agents/reports/archive/l3.32-t86-report.md:60-70 and the raw profile"
+evidence = "rg over src/ 2026-08-06, reported in the L3.32-F row; seconds from agents/tasks/archive/L3-32-T86/l3.32-t86-report.md:60-70 and the raw profile"
 
 # CORRECTED 2026-08-06, before arm B was dispatched. Arms B and C were booked
 # as if each ARCHIVED its own chapters and therefore bought its own seconds.
@@ -1378,7 +1378,7 @@ title = "W1': the condensation crossing's transfers"
 status = "in-flight"
 detail = "The crossing's reduction is delivered; four closed statements remain. Planned as six dispatches, the first of which measures the one clause nobody has measured, the Def-step entry at a general transitive carrier."
 blocked_by = ""
-evidence = "agents/reports/archive/l3.32-t51-report.md; agents/reports/archive/l3.32-t64-report.md dispatch list"
+evidence = "agents/tasks/archive/L3-32-T51/l3.32-t51-report.md; agents/tasks/archive/L3-32-T64/l3.32-t64-report.md dispatch list"
 
 [[owed]]
 id = "gch-w3"
@@ -1387,7 +1387,7 @@ title = "W3: the internal definable well-ordering, at a general level"
 status = "frozen"
 detail = "The expressible core is delivered and the sequence-witness flattening is measured green, so the unbounded producer descent is gone from the statement. The op-graph content W3 needs turns out to exist already, in StepInL. What remains is the general-level formula written over the face, plus the consumer wiring to those graphs. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes AT THE ARCHIVAL, per D30(F) ruled 2026-08-07: the wall gate is MET at 487.9 s, and the owner chose to resume the wing on the archival's cushion rather than the gate's 10 s margin."
 blocked_by = ""
-evidence = "agents/reports/archive/l3.32-t44-report.md; agents/reports/archive/l3.32-t48-report.md; agents/reports/archive/l3.32-t50-report.md; agents/reports/archive/l3.32-t63-report.md"
+evidence = "agents/tasks/archive/L3-32-T44/l3.32-t44-report.md; agents/tasks/archive/L3-32-T48/l3.32-t48-report.md; agents/tasks/archive/L3-32-T50/l3.32-t50-report.md; agents/tasks/archive/L3-32-T63/l3.32-t63-report.md"
 
 [[owed]]
 id = "stepinl-rewrite-owed"
@@ -1396,7 +1396,7 @@ title = "Rewrite StepInL fresh so the graph layer survives the retirement"
 status = "delivered"
 detail = "COMPLETE 2026-08-08. The four blocks of L.Rud.StepGraph landed as [T148] 504, [T164] 339, [T165] 609 and [T170] 460: master 1,912 in-fence lines, about 2 s warm, survivors only, wired. The scratch alignments prove the probe's obligation types (Graphs, ValuesLex, StepDescObl) are inhabited, so the three roles below-lim consumes are all supplied by a surviving master and the D18 archival of StepInL loses nothing the route needs. The landing sits inside the original calibrated band (1,610-2,250) at 1,912, eleven percent over the naive top. The remaining row left the ledger with its coverage check recorded in place."
 blocked_by = ""
-evidence = "agents/reports/archive/l3.32-t63-report.md; the delivered rewrite src/L/Rud/StepGraph.lagda.md; the removed row's coverage note in this file, above the trophy-budget block"
+evidence = "agents/tasks/archive/L3-32-T63/l3.32-t63-report.md; the delivered rewrite src/L/Rud/StepGraph.lagda.md; the removed row's coverage note in this file, above the trophy-budget block"
 
 [[owed]]
 id = "gch-w7"
@@ -1405,7 +1405,7 @@ title = "W7's residue: the last mile to the GCH sentence"
 status = "frozen"
 detail = "The hull, the cardinal predicates and the counting side are delivered. What is left is itemized: the 1.1(vii) tower induction (the widest term, and its first gate came back red on two wrong premises, so it needs a re-designed gate), the 5.4 equality half, Cantor, the S_L certificates, Init verification at the counting's ordinals, the truncated transfer, Pow, and the GCH sentence assembly. FROZEN 2026-08-06 by D30: this is new mathematics and the freeze forbids dispatching it. Nothing here is refuted or re-priced; the row resumes AT THE ARCHIVAL, per D30(F) ruled 2026-08-07: the wall gate is MET at 487.9 s, and the owner chose to resume the wing on the archival's cushion rather than the gate's 10 s margin."
 blocked_by = ""
-evidence = "agents/reports/archive/l3.32-t57-report.md section 3; agents/reports/archive/l3.32-t59-report.md; the w7-residue row above"
+evidence = "agents/tasks/archive/L3-32-T57/l3.32-t57-report.md section 3; agents/tasks/archive/L3-32-T59/l3.32-t59-report.md; the w7-residue row above"
 
 [[owed]]
 id = "gch-w5"
@@ -1442,7 +1442,7 @@ net_low = 230
 net_high = 280
 risk = "medium-low"
 klass = "x1.3"
-provenance = "agents/reports/archive/l3.32-t79-report.md lever A; the duplication independently remeasured by the orchestrator"
+provenance = "agents/tasks/archive/L3-32-T79/l3.32-t79-report.md lever A; the duplication independently remeasured by the orchestrator"
 
 [[lever]]
 id = "D-order-core"
@@ -1455,7 +1455,7 @@ net_low = 150
 net_high = 200
 risk = "medium, two consumers re-point"
 klass = "x1.3"
-provenance = "agents/reports/archive/l3.32-t79-report.md lever D"
+provenance = "agents/tasks/archive/L3-32-T79/l3.32-t79-report.md lever D"
 
 [[lever]]
 id = "E-pair-substrate"
@@ -1467,7 +1467,7 @@ net_low = 80
 net_high = 100
 risk = "low-medium"
 klass = "x1.3"
-provenance = "agents/reports/archive/l3.32-t79-report.md lever E"
+provenance = "agents/tasks/archive/L3-32-T79/l3.32-t79-report.md lever E"
 
 [[lever]]
 id = "C-describe-shells"
@@ -1479,7 +1479,7 @@ net_low = 50
 net_high = 90
 risk = "medium-low"
 klass = "x1.3"
-provenance = "agents/reports/archive/l3.32-t79-report.md lever C"
+provenance = "agents/tasks/archive/L3-32-T79/l3.32-t79-report.md lever C"
 
 [[lever]]
 id = "F-small-instances"
@@ -1491,7 +1491,7 @@ net_low = 10
 net_high = 50
 risk = "low"
 klass = "x1.3"
-provenance = "agents/reports/archive/l3.32-t79-report.md lever F"
+provenance = "agents/tasks/archive/L3-32-T79/l3.32-t79-report.md lever F"
 
 [[lever]]
 id = "B-condensation-story"
@@ -1504,7 +1504,7 @@ net_low = 100
 net_high = 250
 risk = "HIGH, and priced only at x3: not defensible until gated"
 klass = "x3"
-provenance = "agents/reports/archive/l3.32-t79-report.md lever B"
+provenance = "agents/tasks/archive/L3-32-T79/l3.32-t79-report.md lever B"
 gated = true
 note = "SHARPENED 2026-08-05: this lever covers the SAME region T77 priced as a forced rewrite (Condensation:324-562). T79 priced it as optional compression at HIGH risk, but the atoms in that region are DEFECTIVE and the story has to be rebuilt regardless, so the risk is no longer risking a working chapter, it is choosing how to rebuild a broken one. Compare against the structural-story row: in place costs 515-688 naive, as A plus B it NETS positive. Neither agent could see this; they ran concurrently and neither read the other."
 
@@ -1726,7 +1726,7 @@ carried_sequence_measured = "904 nbl / 186 s at the limit case alone; block A re
 # port and the landed port at W are the same machinery modulo the carrier, and
 # the successor clause ALREADY solves this exact problem the right way:
 # `L.Rud.StepStory`'s `Clause` telescope is carrier-generic and is instantiated
-# at `src/L/Rud/BelowLim.lagda.md:253` and again at `agents/reports/T237/ProbeT237.agda:164`.
+# at `src/L/Rud/BelowLim.lagda.md:253` and again at `agents/tasks/archive/L3-32-T237/ProbeT237.agda:164`.
 # The limit clause can follow that pattern. The saving is about 250-300 lines.
 # This is AGENTS.md's "write it generic" rule, which the project names as the
 # one that has cost it most, arriving at a site that skipped it.
@@ -2688,8 +2688,29 @@ ac_baseline_ghcrts = "-A64m -I0 -M8g"
 # number for the tool as the tool is written today. Whether the tool should
 # select its masters by the cone instead of by subtraction is an OWNER RULING,
 # not a measurement, and [LJ-1.135] did not take it.
-ac_baseline_module_rate = 0.014367
-ac_baseline_module_lines = 20286
+# RE-SELECTED 2026-08-13 by the owner's ruling, and the figure TIGHTENED.
+# [LJ-1.135] measured 0.014367 over 20,286 lines the same day. That target set
+# was picked by SUBTRACTION, everything not in gch_wing, so 3,101 lines of wing
+# work that the hand-maintained list never named counted as AC SIDE, including
+# the three *Agree masters at 0.0993, 0.0899 and 0.0478 s per line. The wing's
+# own most expensive code was inflating the bar that judges the wing.
+#
+# THE OWNER'S RULE: the AC side was FIXED when its trophy landed and nothing
+# written afterwards joins it. The Landmarks cone states that structurally.
+# MEASURED the same day: the cone gained ZERO members during the three days of
+# wing work that added those 3,101 lines, because Landmarks imports none.
+#
+# 0.011828 s/line, 203.26 s over 17,185 lines, 73 cone masters, each cold with
+# dependencies warm, at the GHCRTS above. ONE run: [LJ-1.135] measured a 5.5
+# percent spread over four runs on the wider set, so this figure carries that
+# spread as its uncertainty and is NOT a tighter number than that one.
+# [LJ-1.135] projected 0.011490 for a cone-only set; the measurement is 2.9
+# percent above its projection.
+#
+# THE BAR TIGHTENED 17.7 PERCENT and the owner accepted the consequence: the
+# six masters left the baseline and joined gch_wing, so DD24 now judges them.
+ac_baseline_module_rate = 0.011828
+ac_baseline_module_lines = 17185
 
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same
@@ -3002,4 +3023,21 @@ gch_wing = [
   "src/FOL/Count.lagda.md",       # [LJ-1.6], 620 in-fence, zero L imports, template
   "src/L/StageCardinal.lagda.md", # [LJ-1.6] then [LJ-1.21] and [LJ-1.25], 491 in-fence
   "src/L/Condensation.lagda.md",  # [LJ-1.5] block 1 on the erase route, 308 in-fence
+  # COMPLETED 2026-08-13 by the owner's ruling, with the red accepted.
+  #
+  # These six are wing work and were never declared, so the subtraction that
+  # used to pick the AC baseline counted them as AC SIDE: 3,101 lines and
+  # 93.99 s, 32.3 percent of the baseline's seconds. The wing's own most
+  # expensive masters were inflating the bar that judges the wing.
+  #
+  # THE OWNER ACCEPTED THE CONSEQUENCE RATHER THAN SOFTENING IT: declaring them
+  # puts them under DD24 immediately, and three of them are known to be far
+  # over. The owner's reason, and it is the right one: a bar that does not
+  # judge its own most expensive code measures somebody else.
+  "src/L/Ordinal/SquareLaw.lagda.md",         # [L3.32-T31], 775 in-fence
+  "src/L/Ordinal/StageArith.lagda.md",        # [LJ-1.20] to [LJ-1.25], 75 in-fence
+  "src/L/BoundedSubset.lagda.md",             # [LJ-1.49], 1,409 in-fence
+  "src/L/Condensation/TwelveAgree.lagda.md",  # [LJ-1.76], 309 in-fence, 0.0993 s/line
+  "src/L/Condensation/UpperAgree.lagda.md",   # [LJ-1.76], 268 in-fence, 0.0478 s/line
+  "src/L/Condensation/LowerAgree.lagda.md",   # [LJ-1.76], 265 in-fence, 0.0899 s/line
 ]

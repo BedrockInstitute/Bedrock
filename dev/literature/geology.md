@@ -3,7 +3,7 @@
 Task `[L3.32-T12]`, attempt 2. Purpose: fetch and pin the set-theoretic
 geology primary sources that the in-repo corpus currently lacks (zero hits
 for mantle, grounds, Hamkins, Usuba, Laver, approximation across all 13,645
-lines of primary sources, per `agents/reports/archive/l3.31-glprobe-report.md`), and answer
+lines of primary sources, per `agents/tasks/archive/L3-31-GLPROBE/l3.31-glprobe-report.md`), and answer
 the five questions the geology phase of `dev/PLAN.md` section 6.1 `[L6]`
 needs answered. House rules: every claim carries its source and location; no
 memory-sourced claims (anything uncited is marked UNVERIFIED with what would
@@ -256,7 +256,7 @@ memory reconstruction.
 
 The exact statement of the Laver-Woodin theorem, its hypotheses, what its
 proof needs, and precisely what it buys (in particular for the mantle's
-universe-size wall measured in `agents/reports/archive/l3.31-glprobe-report.md` section 2.3).
+universe-size wall measured in `agents/tasks/archive/L3-31-GLPROBE/l3.31-glprobe-report.md` section 2.3).
 
 The theorem, verbatim from Gitman and Johnstone (S5, "Theorem 1 [Laver,
 Woodin]"):

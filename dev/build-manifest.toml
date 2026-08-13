@@ -52,7 +52,7 @@ delete_when = "Never."
 promote_when = """
 IMMEDIATELY, as soon as any document cites it. To `dev/measurements/` while a
 live document cites it; to `archive/measurements/` once every citing document is
-historical (`dev/memos/`, `agents/briefs/`, `agents/reports/archive/`,
+historical (`dev/memos/`, `agents/tasks/`, `agents/tasks/archive/`,
 `dev/JOURNAL.md`)."""
 
 [classes.working]
@@ -65,7 +65,7 @@ promote_when = "If the report cites it, it is `evidence`. Promote it, do not del
 # This class said `delete_when = "When that task's report lands"`. It is FALSE in a
 # repository that runs C-22, which orders every agent to write its deliverable as a
 # skeleton FIRST and fill it as answers land. MEASURED: while [LJ-1.136] was still
-# reading, `agents/reports/lj-1.136-report.md` was already 39,948 bytes.
+# reading, `agents/tasks/LJ-1-136/lj-1.136-report.md` was already 39,948 bytes.
 # A MISSING report still proves a task is unfinished, so the signal survives one way
 # round: it may WIDEN a hold and it may never close a task.
 #
@@ -129,7 +129,7 @@ class = "runtime"
 note = """
 The kill log of `scripts/agda-watchdog.sh`, the C-12 backstop. Its two kill
 lines are the only field record that the backstop has ever fired; they are
-quoted in `agents/reports/lj-1.132-report.md` so the evidence survives a clean."""
+quoted in `agents/tasks/LJ-1-132/lj-1.132-report.md` so the evidence survives a clean."""
 
 [[entries]]
 glob = "site/**"

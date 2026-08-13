@@ -196,7 +196,7 @@ python3 scripts/deletion-test.py --run --yes    # the real test (guarded)
 ## `check-probes.py`
 
 The never-commit gate. **One rule with one exemption**: a probe must not enter the repository
-under `src/`, and `agents/reports/` is where it belongs instead. Generated files (anything
+under `src/`, and `agents/tasks/` is where it belongs instead. Generated files (anything
 under `_build/`, the woven mono-lingual copies, any `.agdai`) are never committed at all.
 `dev/LESSONS.md` **D-1** is the canonical rule and this checker only enforces it.
 
@@ -211,7 +211,7 @@ over every tracked file and catches anything that got in historically or past a 
 now, so it can be `git mv`-ed straight into `src/`, and the old filter would have passed it.
 
 **THE LIFECYCLE IS RETIRED**, by the owner's ruling of 2026-08-13. A probe pairs one-to-one
-with its report, lives in `agents/reports/<TASK>/`, is tracked, and is never deleted, so there
+with its report, lives in `agents/tasks/<TASK>/`, is tracked, and is never deleted, so there
 is nothing to sweep and no verdict to compute. `--gate`, `--stale`, `--sweep`, `--index`, the
 live-task trigger and the 24 hour deletion floor are gone; the frozen code is
 `archive/tooling/check-probes-lifecycle.py` with its suite. Every retired flag now exits 2.
@@ -355,7 +355,7 @@ python3 scripts/rules.py --grep seal     # the long tail, by trigger word
 hypotheses that are refutable by regularity: the shape that cost phase LJ-1
 about a thousand delivered lines across seven statement-level defects. A
 flag is a QUESTION, never a verdict, so it must not fail a build; the cure
-is a refutation probe, and `agents/reports/LJ-1-97/ProbeLJ197A.agda` is that probe's shape at
+is a refutation probe, and `agents/tasks/LJ-1-97/ProbeLJ197A.agda` is that probe's shape at
 one line of real content per fact.
 
 Three rules. Rule 1: the conclusion asserts `⟨ A ∈ B ⟩` and a set-typed
@@ -419,6 +419,28 @@ times; **nothing checks that the declaration is true of every row below it.**
 The locator rule **skips a line that names a `DD` code**, because the repaired
 sentences read "archived D11; DD11 in section 3 is a DIFFERENT rule", so a line
 that cites one code correctly and misdirects a second one passes.
+
+## `agents_tree.py`
+
+**Not a checker. The one place that knows the shape of `agents/tasks/`.** Five
+checkers read the tree through it: `check-dispatch-policy.py`,
+`check-task-index.py`, `check-rule-ids.py`, `check-sources-read.py` and
+`check-dev-docs.py`.
+
+Until 2026-08-13 a brief was a file in `agents/briefs/` and a report was a file
+in `agents/reports/`, so the DIRECTORY carried the distinction and each of those
+five wrote the path by hand. `[LJ-1.142]` merged the trees into one directory per
+task, which deleted that signal. This module carries the replacement.
+
+**It offers two brief predicates and the choice matters.** `briefs()` reads the
+content and is exact: MEASURED 415 of 415 briefs found, 0 reports misread.
+`candidate_briefs()` reads the name and is wider: 415 found, 27 archived reports
+misread. **A checker that hunts a MISSING `tier:` line must take the second**,
+because the first finds a brief partly by that line and would never see the
+defect. The docstring states this with its measurements.
+
+`scripts/tests/test_agents_tree.py` pins the layout, the census floors and the
+Agda-safe directory name, which nothing else enforces.
 
 ## `check-task-index.py`
 

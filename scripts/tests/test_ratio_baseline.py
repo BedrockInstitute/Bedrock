@@ -80,6 +80,27 @@ def main() -> int:
     # and both numbers had to be carried under one name. The owner's ruling
     # excludes both catalogs from every size figure and collapses them.
     check("the bucket EQUALS the cone", bucket, cone_lines)
+
+    # THE PARTITION, pinned 2026-08-13 after the owner ruled the AC side FIXED
+    # at its trophy and the wing list completed with the red accepted.
+    #
+    # The bucket check above was RED for three days and it was right: the
+    # module-rate half of check-ratio.py picked the AC side by SUBTRACTION, so
+    # 3,101 lines of wing work that no hand-maintained list named were counted
+    # as AC SIDE, and check-ratio.py PREFERS that half for a per-module
+    # verdict. The wing's three most expensive masters, at 0.0993, 0.0899 and
+    # 0.0478 s per line, were inflating the bar that judges the wing.
+    #
+    # Equality alone did not catch it, because two sets can sum to one number
+    # while holding different files. This pins the SETS, so a master that is
+    # neither reachable from Landmarks nor declared wing fails the day it is
+    # written, instead of silently joining the baseline.
+    print("every master is EITHER the AC cone OR the declared wing, never both, never neither")
+    cone_counted = {f for f in cone if f not in ledger.UNCOUNTED}
+    wing_set = set(ratio.get("gch_wing", []))
+    check_true("no master is in both", not (cone_counted & wing_set))
+    uncovered = sorted(set(files) - cone_counted - wing_set)
+    check_true(f"no master is in neither (uncovered: {uncovered or 'none'})", not uncovered)
     for cat in ledger.UNCOUNTED:
         check_true(f"{cat} is not in the countable list",
                    cat not in ledger.countable_masters())

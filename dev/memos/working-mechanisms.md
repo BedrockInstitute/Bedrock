@@ -50,7 +50,7 @@ the risk row in §9).
 heavy or hard-to-reverse work, the load-bearing assumption is verified cheaply:
 a D-1 probe builds the smallest decisive miniature, reports GO or NO-GO with a
 price extrapolation, and is KEPT: since the owner's ruling of 2026-08-13 the
-probe file lives in `agents/reports/<TASK>/`, beside the report, tracked, and
+probe file lives in `agents/tasks/<TASK>/`, beside the report, tracked, and
 is never deleted. `dev/LESSONS.md` D-1 is the canonical rule. A probe prices
 only OUR departures
 (what the Cubical HIT setting costs us), never feasibility the literature or
@@ -60,7 +60,7 @@ report is a full deliverable: the two most valuable results of this campaign
 were a refutation and a stop.
 
 **Orchestration.** Batches are written by delegated agents against pinned
-briefs, archived in `agents/briefs/`; the orchestrator audits every return
+briefs, archived in `agents/tasks/`; the orchestrator audits every return
 (report, then code, then an independent typecheck and the linters), wires
 `Everything.lagda.md` (agents never touch it), and commits with the goal code.
 Agents never commit and never push. Concurrency and heap caps are governed by
