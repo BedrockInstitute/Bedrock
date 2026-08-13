@@ -40,7 +40,7 @@ against a COLD baseline, and ran Agda inside the commit gate.
 supposed to rest on it.
 
 **Changed.** All 30 repaired across commits `2391f05` to `1410e7c`. The audit
-is `_build/lj-0.1-consistency.md`.
+is `agents/reports/archive/lj-0.1-consistency.md`.
 
 **A defect it could not have caught, found while repairing.** `make test` ran
 three of seven suites, and the four it skipped had been red for days. One was
@@ -64,7 +64,7 @@ and no checker, so by the project's own standard it was a wish.
 **Cost.** 675 s, one codex agent.
 
 **Changed.** All three blocking gaps and five of the eight closed. The audit
-is `_build/lj-0.2-sufficiency.md`. Its N1, the reuse checker, was REFUSED by
+is `agents/reports/archive/lj-0.2-sufficiency.md`. Its N1, the reuse checker, was REFUSED by
 the owner and then partly adopted: no gate, but a report.
 
 ### 2026-08-09, `[LJ-0.3]`: the retrospective, and the ruling moves
@@ -91,7 +91,7 @@ reuse map, its adversarial review and the ruling; `[LJ-3.1]` and `[LJ-3.2]`
 are SUPERSEDED with pointers, because rule 3 forbids a third renumbering and
 prescribes exactly that instead. DD4 accepts `ledger.py --reuse`, a report and
 never a gate. Two laws were admitted with their measurements, `C-28` and
-`C-29`. The retrospective is `_build/lj-0.3-retrospective.md`.
+`C-29`. The retrospective is `agents/reports/archive/lj-0.3-retrospective.md`.
 
 **Its best finding, which nobody had written down: the benchmark is
 self-set.** Phase 1 builds the wing that `[LJ-2.1]` measures to set the number

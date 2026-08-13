@@ -18,8 +18,9 @@ with its dispatches, measurements and refutations) lives in `dev/JOURNAL.md`;
 the large goal rows below point into it. The measured engineering laws
 (performance, conversion, termination, inference traps, design doctrines) live
 in `dev/LESSONS.md` and BIND new code. Route memos live in `dev/memos/`. The
-campaign's reconnaissance and probe reports live in `_build/*.md`, with the
-agent briefs that produced them archived beside them in `_build/briefs/`.
+campaign's reconnaissance and probe reports live in `agents/reports/`, with the
+older ones in `agents/reports/archive/` and the agent briefs that produced them
+in `agents/briefs/`. All three are tracked.
 
 The division is by KIND, and a fact belongs in exactly one place: a **ruling**
 is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
@@ -359,7 +360,7 @@ and `[L8.2]` is the gate that `[L4.1]` waits on.
 | L5.1 | make check split | PLANNED (the three named gate defects belong here: the two linters that skip untracked files, the glossary avoid-list keying off markers, and the missing end-of-file check) |
 | L5.2 | CI strategy | PLANNED |
 | L5.3 | Site pipeline load test | PLANNED |
-| L6 | The narrative master plan (the meeting at bedrock) | **REGISTERED 2026-08-04 by owner direction.** The standing narrative frame: geology and inner model theory meet at the bedrock, with `L is a bedrock` as the second trophy; every asset is valued against both trophies from this row onward. Phases and the asset re-coloring rule are in §6.1; the geology entry fee and the two mandatory corpus gates are measured in `_build/l3.31-glprobe-report.md` |
+| L6 | The narrative master plan (the meeting at bedrock) | **REGISTERED 2026-08-04 by owner direction.** The standing narrative frame: geology and inner model theory meet at the bedrock, with `L is a bedrock` as the second trophy; every asset is valued against both trophies from this row onward. Phases and the asset re-coloring rule are in §6.1; the geology entry fee and the two mandatory corpus gates are measured in `agents/reports/archive/l3.31-glprobe-report.md` |
 | L7 | The endpoint promotion and the archive's completion | **PLANNED**, ruled by D20 2026-08-04; the archive REGIME is in force now, this row is the endpoint work |
 | L7.0 | Archive `main`, promote the working branch | PLANNED (same day as the endpoint, before any tidying) |
 | L7.1 | Final archival sweep, pre-regime deletions entered | PLANNED |
@@ -606,6 +607,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.124 | Probe the bounded level-graph decode | GO, 147 LINES | Both directions close under the 150-line gate. The LJ-1.123 assembly claim holds; three delivered layers compose |
 | LJ-1.126 | Wire pi streaming and resume into the dispatcher | BOTH DONE, PROVEN | pi --mode json streams per event; resume by --session. It also found that every resume ran on the codex path |
 | LJ-1.129 | Adversarial review of the route, LJ-1.60 to LJ-1.127 | DISPATCHED | fable 5 max effort, owner's word. Mathematics only: has D-30 hollowed the theorem out? |
+| LJ-1.130 | Move agent reports out of _build into git management | DONE | Owner ruled the layout: agents/reports, /archive, /briefs. 271 citations rewritten; agents/ is CC and lint-exempt |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |

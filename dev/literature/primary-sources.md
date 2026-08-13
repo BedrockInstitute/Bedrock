@@ -3,7 +3,7 @@
 Developer notes for the rud-route formalization. Second fetch round
 (2026-08-02): the sources the L1 round could not reach, targeting digest OPEN
 items 1, 3, 4, 8 and 9. Every mathematical claim below is quoted from fetched
-text with page cites; failed fetches are reported in `_build/l2-report.md`, not
+text with page cites; failed fetches are reported in `agents/reports/archive/l2-report.md`, not
 reconstructed here. Source abbreviations:
 
 - JM = R. B. Jensen, "Manuscript on fine structure, inner model theory, and

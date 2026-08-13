@@ -29,9 +29,11 @@ WHAT IT CANNOT DO, AND THE LIST IS NOT SHORT.
     `.claude/skills/codex-dispatch/dispatch.py`, so nothing mechanical
     observes it at all. A brief that says `tier: pi` and was run on Opus 5
     passes this checker green. Only the audit catches that.
-  * IT CANNOT DATE A BRIEF RELIABLY. `_build/` is never committed, so git
-    cannot date these files and mtime is all there is. An edited old brief
-    looks new, and a copied new brief can look old.
+  * IT CANNOT DATE A BRIEF RELIABLY. This checker reads mtime, so an edited
+    old brief looks new and a copied new brief can look old. The REASON for
+    the limit changed on 2026-08-13, when the briefs moved from `_build/` to
+    `agents/briefs/` and became tracked: git can now date them, so the limit
+    is this checker's implementation and no longer a fact about the tree.
   * IT CANNOT TELL AN ADVERSARIAL REVIEW FROM A BRIEF THAT DISCUSSES ONE. The
     classifier reads the GOAL section and the tier line for the word
     "adversarial". A review whose GOAL avoids the word is invisible to it.
@@ -70,7 +72,7 @@ except Exception as exc:                                   # pragma: no cover
           file=sys.stderr)
     raise SystemExit(2)
 
-BRIEFS = ROOT / "_build" / "briefs"
+BRIEFS = ROOT / "agents" / "briefs"
 
 # The hour the policy was codified, by [LJ-1.127]. Briefs older than this
 # predate checks 4 and 5 and are noted, never failed.

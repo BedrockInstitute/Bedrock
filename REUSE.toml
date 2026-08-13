@@ -22,8 +22,14 @@ SPDX-FileCopyrightText = "2021 Amelia Liao and contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
 
 # ---- Carve-out: math + user prose + brand mark + user README -> CC BY-NC-SA 4.0 ----
+# `agents/**` and `dev/**` are here by the owner's three-way principle (2026-08-13): source
+# is CC, scripts are AGPL, and agent-generated documents are CC. Both trees are prose about
+# mathematics and about how the work is run, not software, and AGPL is a software licence.
+# The principle also removes a conflict rather than patching it: an agent document is CC from
+# birth, so no later move can relicense it, and the archive rule below needs no exception.
+# `scripts/**` deliberately stays AGPL under the default: that split is the point.
 [[annotations]]
-path = ["src/**", "docs/**", "README.md", "site/static/assets/**"]
+path = ["src/**", "docs/**", "README.md", "site/static/assets/**", "agents/**", "dev/**"]
 precedence = "override"
 SPDX-FileCopyrightText = "2026 Bedrock Institute"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"

@@ -42,7 +42,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BRIEFS = ROOT / "_build" / "briefs"
+BRIEFS = ROOT / "agents" / "briefs"
 LOGS = ROOT / ".claude" / "skills" / "codex-dispatch" / ".state" / "logs"
 
 # A path the brief names inside its ARCHIVE or LITERATURE section.
