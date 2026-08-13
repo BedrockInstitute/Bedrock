@@ -713,7 +713,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.154 | Carve the identity graph by separation, not by replacement | GO: 1.73 s AGAINST 254.22 s | The device BUILDS, not only composes. Devlin's base theory has no replacement at all |
 | LJ-1.155 | Is there a second dominant term, or is the wing intrinsically this expensive | BOTH WORLDS, SPLIT PER MASTER | The Agree masters have a second term, WING-LOCAL, zero baseline impact |
 | LJ-1.156 | Does A5 need CSB at all | DISSOLVED: A5 CARRIES ZERO REPLACEMENT | CSB is out and the swap is not dearer. The new gate is LeastCardInj: 44 lines, 100.64 s |
-| LJ-1.157 | Adversarial review: what did the new route rebuild that the archives held | DISPATCHED | fable 5 max effort, owner's word. DD18's enforcement is review only and it failed once today |
+| LJ-1.157 | Adversarial review: what did the new route rebuild that the archives held | FOUR MISSES, A MEASURED DRIFT | The heading survived, the content decayed. CSB surfaced twice, lost twice |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
