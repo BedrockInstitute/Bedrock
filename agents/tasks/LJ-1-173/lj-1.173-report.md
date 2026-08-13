@@ -906,3 +906,172 @@ gate measured the two ends. The join was the work. **And this audit found that
 the refutation itself had two ends: `[LJ-1.172]` read ONE field and I cured ONE
 field, while the disease was in ten.** **A refutation that names one site
 measures that site. It does not measure how far the site extends.**
+
+---
+
+# PART FOUR: the sweep you ordered found a third layer, and it changes the cure
+
+**Appended after the coordinator committed PART THREE at `584ae24`.**
+
+## 35. LEAD
+
+**THE TEN ARE NOT CURED, AND I STOPPED BEFORE CURING ANY OF THEM. The sweep you
+ordered is why, and it is the third layer you said would outrank the build.**
+
+1. **The same shape is in TWO MORE RECORDS.** `LFacts`
+   (`src/L/Condensation/LowerAgree.lagda.md:137-160`, **6 fields**) and `UFacts`
+   (`src/L/Condensation/UpperAgree.lagda.md:137-160`, **6 fields**). **So the
+   family is 21 fields across three records, not 9 across one.**
+2. **The cure is ATOMIC across the three, and I MEASURED that rather than
+   inferred it.** I added the hypothesis to ONE `TFacts` field and typechecked:
+   **`TwelveAgree` goes RED at `:409`**, the `lf` record's pass-through
+   `envInK-mem = envInK-mem`. **Curing nine without curing twenty-one is not a
+   smaller change. It is a broken tree.** I reverted; `src/` is byte-identical
+   to your commit.
+3. **The five dear fields need a NEW FIELD, not just a new hypothesis.**
+   `codesK` concludes `ar ∈ K`, so the four cheap ones are free as you said.
+   **But nothing in the frame concludes `fst ar ≡ # n`.** `arityNumAtL`
+   lives in `src/L/Coding/CodeSet.lagda.md:247-248`, and the frame never
+   receives it. **So the numeral equation has to enter the three records as a
+   new field.**
+4. **And the fields are threaded into `src/L/Condensation.lagda.md`**, which
+   names them `envK` and `envInK` in about ten `*Agree` telescopes: **24 and 37
+   occurrences.** **`KFacts` is CLEAN** (`:5996-6030`): its fields are closure
+   facts with no satisfaction antecedent and no bare set, which is why
+   `[LJ-1.166]`'s four classes survived.
+
+**Step 6 re-prices at about 260. The CURE prices at about 190 and it is not
+part of that number.** Section 38.
+
+## 36. THE SWEEP, field by field
+
+**`grep` over every record in the condensation cluster**, then each field read
+slot by slot.
+
+| record | `file:line` | diseased fields | clean? |
+|---|---|---|---|
+| `TFacts` | `TwelveAgree.lagda.md:183-215` | 5 `envK-*`, 4 `envInK-*` | no |
+| `LFacts` | `LowerAgree.lagda.md:137-160` | 3 `envK-*` (`mem`, `neg`, `imp`), 3 `envInK-*` (`mem`, `neg`, `imp`) | no |
+| `UFacts` | `UpperAgree.lagda.md:137-160` | 3 `envK-*` (`neg`, `top`, `allin`), 3 `envInK-*` (`neg`, `top`, `imp`) | no |
+| `KFacts` | `Condensation.lagda.md:5996-6030` | **NONE** | **CLEAN** |
+
+**21 fields. I cured one, `envSetK`, and it is not among these 21: it is the
+twenty-second.**
+
+**Why `KFacts` is clean, and it is worth saying because it is the contrast that
+makes the diagnosis certain.** Every `KFacts` field is a CLOSURE fact:
+`innerK`, `innerPairK`, `pairK`, `carrierK`, the twelve `numK`, the twelve
+`tagEq`. **None takes a satisfaction as an antecedent and none quantifies over a
+bare set.** **The disease is exactly "decode a satisfaction at an unbounded set,
+then conclude a membership", and `KFacts` never does that.**
+
+## 37. THE ATOMICITY, MEASURED
+
+**I did not reason about this. I ran it.**
+
+Edit: `envInK-mem` in `TFacts` gains `⟨ fst ar ∈ fst (lookup … K …) γ' ⟩`.
+Run: `GHCRTS="-A64m -I0 -M8g" agda src/L/Condensation/TwelveAgree.lagda.md`.
+
+```
+src/L/Condensation/TwelveAgree.lagda.md:409.20-30: error: [UnequalTerms]
+  … when checking that the expression envInK-mem has type …
+```
+
+**`TwelveAgree` builds `LFacts` and `UFacts` VALUES from its own fields by
+pass-through** (`:404-409` and `:447-452`, the lines `envInK-mem = envInK-mem`
+and their siblings). **Change one side and the pass-through stops typing.**
+
+**So the change is one atomic edit across `TwelveAgree`, `LowerAgree`,
+`UpperAgree` and the `*Agree` telescopes in `L.Condensation` that consume
+them.** **I reverted the experiment. `git diff src/` is empty.**
+
+## 38. THE TWO PRICES, each ONE number naming its basis (DD8)
+
+### 38.1 The cure: about 190 lines
+
+| part | count | lines |
+|---|---|---:|
+| 21 field types in three records | 21 | 25 |
+| the new numeral field, three records | 3 | 12 |
+| `envK` / `envInK` telescopes in `L.Condensation` | about 10 | 30 |
+| application sites, at 3 to 5 lines each | about 30 | 120 |
+| | **the cure** | **about 190** |
+
+**Basis: I counted the occurrences myself.** `envK` 24 and `envInK` 37 in
+`src/L/Condensation.lagda.md`, plus 21 declarations and about 12 pass-throughs
+in the three records. **It is a survey and not a probe measurement (P-l).**
+
+**And it carries a RISK I must name.** The change touches module telescopes in
+`src/L/Condensation.lagda.md`. **`[LJ-1.165]` measured an UNCURED wall in this
+exact cluster at 20 min 1 s and 9.14 GB, and `[LJ-1.172]` set a 40-minute
+criterion for it.** **A telescope change re-elaborates every stored type in the
+module (the `[LJ-1.62]` and `[LJ-1.158]` effect), which is the operation that
+walled.** **I would gate this with a one-telescope probe before funding the
+other nine.**
+
+### 38.2 Step 6: about 260 lines, after the cure and not including it
+
+**Basis: `[LJ-1.168]`'s nine-lemma allocation, with the three diseased lemmas
+re-costed against work this task DELIVERED.**
+
+| `[LJ-1.168]`'s lemma | its figure | now | why |
+|---|---:|---:|---|
+| L9, `envSetK` via `mkReflect` | 45 | **25** | `mkReflect` was refuted; `envSetNumeral∈` is DELIVERED in `src/L/Coding/Key.lagda.md`, so what remains is the `envSet` to `envSetGen` identification through `NumeralFromGeneric.derived` |
+| L4, `envOverAt` to `z ∈ K` | 15 | **20** | plus the `ar ∈ K` discharge at the site |
+| L8, `someEnv` | 30 | **35** | plus the same |
+| the other six lemmas and the 28 entries | 181 | **181** | untouched by the refutation |
+| | **271** | **about 261** | |
+
+**So: about 260. It is LOWER than 270, as I predicted, but only just**, because
+the delivered half bought back 20 lines and the discharges cost 10. **I give one
+number and I do not widen it into a band (DD8).**
+
+**Round it as ONE figure for the brief: step 6 is about 260, and the cure that
+must precede it is about 190.** **Nobody should read 260 as the cost of getting
+step 6 green from today: that number is about 450.**
+
+## 39. WHY I STOPPED INSTEAD OF APPLYING THE RULING
+
+**You ruled nine fields in one record, taking a hypothesis each. The sweep you
+ordered in the same message measured that this is 21 fields in three records,
+plus a new field, plus about ten telescopes in the master that has walled
+twice.** **That is a different change from the one ruled, so AGENTS.md says
+surface it with a recommendation rather than charge ahead on one reading.**
+
+**And the ruling's own reasoning still holds.** One disease, one cure, and
+curing part of it is the dangerous state. **The measurement does not argue
+against your ruling. It argues that the ruling's scope was priced at one
+record and the disease sits in three.**
+
+## 40. PART FOUR: EVERY NEGATIVE, CLASSIFIED
+
+| statement | class |
+|---|---|
+| **all ten are cured** | **MEASURED FALSE. NONE are.** `git diff src/` is empty |
+| **the cure is nine fields in one record** | **MEASURED FALSE. 21 fields in three** |
+| curing `TFacts` alone works | **MEASURED FALSE**, by running it. `TwelveAgree:409` goes red |
+| `codesK` supplies both missing hypotheses | **MEASURED FALSE.** It supplies `ar ∈ K`, not the numeral equation. That needs a new field |
+| **`KFacts` has the disease** | **MEASURED FALSE. It is CLEAN**, and section 36 says why that is the diagnostic contrast |
+| the disease reaches `L.Condensation` | **TRUE**, as `envK` and `envInK` telescope parameters, 24 and 37 occurrences |
+| any record outside the condensation cluster has it | **NOT CHECKED, and I mark it.** I swept the four records of this cluster and `L.BoundedSubset`; I did not sweep the whole tree |
+| I left `src/` modified | **MEASURED FALSE.** The atomicity experiment was reverted and `TwelveAgree` re-typechecks green |
+| step 6 is cheaper than 270 | **TRUE but barely: about 260**, and the cure at about 190 is not in that number |
+| I ran `make check`, committed or pushed | **MEASURED FALSE**, none of the three |
+| the 190 and the 260 are probe measurements | **NOT CLAIMED. Both are surveys**, counted by me at their own sites |
+
+## 41. WHAT I RECOMMEND
+
+1. **Re-rule the cure at its measured scope: 21 fields, three records, one new
+   field, about ten telescopes, about 190 lines.** Same cure, same reasoning,
+   correct extent.
+2. **Gate it with ONE telescope first.** Change `envInK` in a single `*Agree`
+   module and typecheck `src/L/Condensation.lagda.md` under the 40-minute
+   criterion. **`[LJ-1.165]`'s wall is in that master and a telescope change is
+   the operation that triggers it.** **GO if it comes in under the criterion;
+   NO-GO and re-plan if it walls.**
+3. **Then step 6 at about 260.**
+
+**One line, and it is the fourth time.** `envSetK` measured one field. PART
+THREE measured nine. This sweep measured twenty-one and a new field and ten
+telescopes. **Each layer was found by looking one level out from the last, and
+each was cheaper to find than to hit.**
