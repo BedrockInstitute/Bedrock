@@ -1,0 +1,24 @@
+# load before 23:36  up  1:58, 1 user, load averages: 4.97 4.37 4.18
+Checking LJ-1-158.ProbeLJ1158T1 (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-158/ProbeLJ1158T1.agda).
+Total                      21,048ms           
+Miscellaneous                  17ms           
+DeadCode                        0ms (12,949ms)
+DeadCode.DeadCodeReachable 12,948ms           
+Typing                      3,304ms  (3,646ms)
+Typing.TypeSig                235ms           
+Typing.OccursCheck             81ms           
+Typing.CheckLHS                22ms           
+Coverage                    1,973ms           
+Deserialization             1,176ms  (1,709ms)
+Deserialization.Compaction    532ms           
+Serialization                 410ms    (431ms)
+Serialization.BinaryEncode     11ms           
+InterfaceInstantiateFull      136ms           
+Parsing                         7ms     (81ms)
+Parsing.OperatorsExpr          72ms           
+Positivity                     74ms           
+Import                         27ms           
+Scoping                        13ms     (21ms)
+# exit 0
+# wall 21.256122000
+# load after 23:36  up  1:58, 1 user, load averages: 4.26 4.25 4.14

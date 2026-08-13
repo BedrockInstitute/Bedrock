@@ -73,119 +73,145 @@ module KeyNegTies {m : ℕ} (K : Fin m) (γ : S ^ m)
     subst (λ w → ⟨ w ∈ fst (lookup K γ) ⟩) (prʟ-fst ar a)
       (pairK ar a arK aK)
 
+-- THE FRAME'S FACT BLOCK, as ONE record rather than 37 telescope
+-- hypotheses.  `[LJ-1.62]` states the reason at `src/L/Condensation.lagda.md`
+-- :5990-5994, and these masters never got it: a module telescope is prepended
+-- to the STORED TYPE of every definition inside the module, and Agda's
+-- `DeadCode.DeadCodeReachable` pass then walks those stored types once per
+-- definition.
+--
+-- MEASURED by `[LJ-1.158]`, a controlled pair of probes over THIS telescope,
+-- two runs each side: `DeadCode` 2,689 ms to 26 ms and the probe file
+-- 7,243 ms to 3,726, minus 49 percent (probes L1 and L2).
+--
+-- ALL 37 HYPOTHESES ARE FIELDS HERE, and the reason is a name this master
+-- does not have.  P-x says a record field type may not name a transparent
+-- construction of the ambient set theory, and the one such name in this
+-- family is `sucV`.  The lower rows never use the successor closure, so this
+-- master's `open InfinitySet` at :40 takes `#_` alone and no field can carry
+-- it.  `UpperAgree` and `TwelveAgree` DO carry `sucK` and both keep it in the
+-- telescope.
+record LFacts {n : ℕ}
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K : Fin (5 + n))
+  (γ : S ^ (11 + n)) : Type (ℓ-suc ℓ) where
+  field
+    tagEq0 : fst (lookup (suc (suc (suc (suc (suc (suc N0)))))) γ) ≡ fst (numeralL 0)
+    tagEq1 : fst (lookup (suc (suc (suc (suc (suc (suc N1)))))) γ) ≡ fst (numeralL 1)
+    tagEq2 : fst (lookup (suc (suc (suc (suc (suc (suc N2)))))) γ) ≡ fst (numeralL 2)
+    tagEq3 : fst (lookup (suc (suc (suc (suc (suc (suc N3)))))) γ) ≡ fst (numeralL 3)
+    tagEq4 : fst (lookup (suc (suc (suc (suc (suc (suc N4)))))) γ) ≡ fst (numeralL 4)
+    tagEq5 : fst (lookup (suc (suc (suc (suc (suc (suc N5)))))) γ) ≡ fst (numeralL 5)
+    numK0 : ⟨ fst (numeralL 0) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    numK2 : ⟨ fst (numeralL 2) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    numK3 : ⟨ fst (numeralL 3) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    numK4 : ⟨ fst (numeralL 4) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    numK5 : ⟨ fst (numeralL 5) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    innerK : (k : ℕ) (p : S) → ⟨ fst p ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+              → ⟨ fst (prʟ (numeralL k) p) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    pairK : (a b : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+              → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+              → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    codesK : (k : ℕ) (c ar a b : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
+             → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+               × ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+               × ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    codesK-un : (k : ℕ) (c ar a : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
+                → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+                → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                  × ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    valK : (k : ℕ) (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
+           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+           → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ) ⟩
+           → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    valK-un : (k : ℕ) (c ar a yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
+              → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+              → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ) ⟩
+              → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    t0eq : fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ) ≡ fst (numeralL 0)
+    t1eq : fst (lookup (suc (suc (suc (suc (suc (suc t1)))))) γ) ≡ fst (numeralL 1)
+    t0K : ⟨ fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ)
+            ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    num1K : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    envK-mem : (yc b a ar c E : S) → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                 envSetAt zero (suc (suc (suc (suc zero))))
+                           (suc (suc (suc (suc (suc (suc zero)))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    envK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                 envSetAt zero (suc (suc (suc (suc zero))))
+                           (suc (suc (suc (suc (suc (suc zero)))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    envK-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                 envSetAt zero (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    envInK-mem : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
+                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    envInK-neg : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
+                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    envInK-imp : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                   envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
+                               (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    valV : (E yc b a ar c z v w : S) → ⟨ (w ∷ v ∷ z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+              tmValAt (suc (suc (suc (suc (suc (suc zero))))))
+                      (suc (suc zero))
+                      (suc zero) ⟩
+            → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))))
+                              (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
+    valW : (E yc b a ar c z v w : S) → ⟨ (w ∷ v ∷ z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+              tmValAt (suc (suc (suc (suc (suc zero)))))
+                      (suc (suc zero))
+                      zero ⟩
+            → ⟨ fst w ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K))))))))))))))
+                              (v ∷ z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩
+    transK : (x a : S) → ⟨ fst x ∈ fst a ⟩
+             → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+             → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    subK₁-and : (x y yc b a ar c : S) → ⟨ (x ∷ y ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                  subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc (suc (suc zero))))
+                           (suc zero) ⟩
+                → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    subK₀-and : (y ya yc b a ar c : S) → ⟨ (y ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                  subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc (suc zero)))
+                           zero ⟩
+                → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    subK₁-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                  subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                           (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc zero)) ⟩
+                → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    subK₀-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                  subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                           (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc zero))))
+                           (suc zero) ⟩
+                → ⟨ fst yb ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+    someEnv : someEnvDef {n} K γ
+    subK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+                 subValAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                          (suc (suc (suc (suc zero))))
+                          (suc (suc (suc zero)))
+                          (suc zero) ⟩
+               → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+
 module LowerAgree {n : ℕ}
   (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K : Fin (5 + n))
   (γ : S ^ (11 + n))
-  (tagEq0 : fst (lookup (suc (suc (suc (suc (suc (suc N0)))))) γ) ≡ fst (numeralL 0))
-  (tagEq1 : fst (lookup (suc (suc (suc (suc (suc (suc N1)))))) γ) ≡ fst (numeralL 1))
-  (tagEq2 : fst (lookup (suc (suc (suc (suc (suc (suc N2)))))) γ) ≡ fst (numeralL 2))
-  (tagEq3 : fst (lookup (suc (suc (suc (suc (suc (suc N3)))))) γ) ≡ fst (numeralL 3))
-  (tagEq4 : fst (lookup (suc (suc (suc (suc (suc (suc N4)))))) γ) ≡ fst (numeralL 4))
-  (tagEq5 : fst (lookup (suc (suc (suc (suc (suc (suc N5)))))) γ) ≡ fst (numeralL 5))
-  (numK0 : ⟨ fst (numeralL 0) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (numK2 : ⟨ fst (numeralL 2) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (numK3 : ⟨ fst (numeralL 3) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (numK4 : ⟨ fst (numeralL 4) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (numK5 : ⟨ fst (numeralL 5) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (innerK : (k : ℕ) (p : S) → ⟨ fst p ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-             → ⟨ fst (prʟ (numeralL k) p) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-             → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-             → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (codesK : (k : ℕ) (c ar a b : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
-            → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-            → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-              × ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-              × ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (codesK-un : (k : ℕ) (c ar a : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
-               → fst c ≡ pr (fst ar) (pr (# k) (fst a))
-               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-                 × ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (valK : (k : ℕ) (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
-          → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-          → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ) ⟩
-          → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (valK-un : (k : ℕ) (c ar a yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
-             → fst c ≡ pr (fst ar) (pr (# k) (fst a))
-             → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ) ⟩
-             → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (t0eq : fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ) ≡ fst (numeralL 0))
-  (t1eq : fst (lookup (suc (suc (suc (suc (suc (suc t1)))))) γ) ≡ fst (numeralL 1))
-  (t0K : ⟨ fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ)
-           ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (num1K : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (envK-mem : (yc b a ar c E : S) → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                envSetAt zero (suc (suc (suc (suc zero))))
-                          (suc (suc (suc (suc (suc (suc zero)))))) ⟩
-             → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (envK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                envSetAt zero (suc (suc (suc (suc zero))))
-                          (suc (suc (suc (suc (suc (suc zero)))))) ⟩
-             → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (envK-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                envSetAt zero (suc (suc (suc (suc (suc (suc zero))))))
-                          (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
-             → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (envInK-mem : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                  envOverAt zero (suc (suc (suc (suc (suc zero)))))
-                              (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
-               → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (envInK-neg : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                  envOverAt zero (suc (suc (suc (suc (suc zero)))))
-                              (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
-               → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (envInK-imp : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                  envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
-                              (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
-               → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (valV : (E yc b a ar c z v w : S) → ⟨ (w ∷ v ∷ z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-             tmValAt (suc (suc (suc (suc (suc (suc zero))))))
-                     (suc (suc zero))
-                     (suc zero) ⟩
-           → ⟨ fst v ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K)))))))))))))
-                             (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
-  (valW : (E yc b a ar c z v w : S) → ⟨ (w ∷ v ∷ z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-             tmValAt (suc (suc (suc (suc (suc zero)))))
-                     (suc (suc zero))
-                     zero ⟩
-           → ⟨ fst w ∈ fst (lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K))))))))))))))
-                             (v ∷ z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)) ⟩)
-  (transK : (x a : S) → ⟨ fst x ∈ fst a ⟩
-            → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-            → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (subK₁-and : (x y yc b a ar c : S) → ⟨ (x ∷ y ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                 subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
-                          (suc (suc (suc (suc (suc zero)))))
-                          (suc (suc (suc (suc zero))))
-                          (suc zero) ⟩
-               → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (subK₀-and : (y ya yc b a ar c : S) → ⟨ (y ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                 subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
-                          (suc (suc (suc (suc (suc zero)))))
-                          (suc (suc (suc zero)))
-                          zero ⟩
-               → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (subK₁-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                 subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
-                          (suc (suc (suc (suc (suc (suc zero))))))
-                          (suc (suc (suc (suc (suc zero)))))
-                          (suc (suc zero)) ⟩
-               → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (subK₀-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                 subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
-                          (suc (suc (suc (suc (suc (suc zero))))))
-                          (suc (suc (suc (suc zero))))
-                          (suc zero) ⟩
-               → ⟨ fst yb ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
-  (someEnv : someEnvDef {n} K γ)
-  (subK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
-                subValAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
-                         (suc (suc (suc (suc zero))))
-                         (suc (suc (suc zero)))
-                         (suc zero) ⟩
-              → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩)
+  (lf : LFacts N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K γ)
   where
+
+  open LFacts lf
 
   -- The tied keyK-neg, derived once from pairK ([LJ-1.109]
   -- TiesSupplied): pr (fst ar) (fst a) is the hierarchy pair of the
