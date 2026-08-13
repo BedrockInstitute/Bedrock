@@ -723,7 +723,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.164 | Move elem-down out of Co, which is a pure move | PURE MOVE, 146 IN 146 OUT, NET 0 | Zero proof lines changed. Reachability measured BOTH ways: the pre-move tree exits NotInScope |
 | LJ-1.165 | BUILD the crossing face and discharge levelIn and cover | STOP: SIX GATES PRICED DERIVATIONS | The assembly works at 17 lines. Nothing supplies the face: KFacts is never CONSTRUCTED |
 | LJ-1.166 | Gate K(u), the SUPPLY that six gates never priced | GO: 88 LINES, 2.69 s, BOUND FITS | Devlin's engine transfers. Three of four closure classes were proved and no gate cited them |
-| LJ-1.167 | The definable power at a general argument, and pairing at a general limit | DISPATCHED | LJ-1.166's two gaps by risk. One is a single declaration; search L/Choice first |
+| LJ-1.167 | The definable power at a general argument, and pairing at a general limit | GAP 2 GO AT 35, GAP 1 NO-GO | Gap 2 sat in the prior dispatch's file. Devlin leaves gap 1 as an exercise |
 | LJ-1.168 | Re-measure the satisfaction layer, 5,047 lines never re-priced | 5,047 COLLAPSES TO ABOUT 270 | The figure was never measured. LJ-1.10 had already called it a false anchor |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
