@@ -33,6 +33,73 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 - **Toolchain parity:** both repos use Agda 2.8.0 + cubical 0.9; all source
   modules are `--cubical --guardedness`. No toolchain migration is needed.
 
+## 0.0 RESUME HERE, written 2026-08-13 at a machine restart
+
+**Read this first and delete it when it is spent.** The tree is clean at this
+commit and every dispatch has landed. **Nothing is half-applied.**
+
+**FIRST COMMAND, before anything else:** `make check` in the background. Four
+masters changed on 2026-08-13 and each was typechecked alone; **the whole-tree
+gate has not run since.**
+
+**WHERE LJ-1 STANDS.** Three rows are open and they block in this order:
+
+| row | blocked on |
+|---|---|
+| `[LJ-1.7]` | `levelIn` and `cover`. **STRUCTURE ONLY**: 888 lines at 0.0111, under the bar, but the semantic transfer is assumed |
+| `[LJ-1.8]`, the trophy | Route A-prime has no total, because **A5 is unpriced** |
+| `[LJ-1.9]`, the audit | **DD24 reads 1.91x** and the ruling that decides it is the owner's |
+
+**THE FOUR THINGS TO PICK UP, in value order, each with its own evidence
+already on disk.**
+
+**1. Carve the identity graph by SEPARATION instead of replacement.**
+`[LJ-1.152]` named this as the highest-value next hour and measured why: one
+`hasSeparationL` costs under 0.1 s and one `hasReplacementL` costs 259 to 269 s,
+**at least 2,500 to 1**. **If the identity graph lands near 2.5 s, `[LJ-1.136]`'s
+254 s construction was never necessary and A5's seconds collapse.** A5 is
+UNPRICED, not priced low: `[LJ-1.152]` refused to multiply 2.50 by five and said
+so.
+
+**2. Finish `[LJ-1.153]`'s sixteen rule-2 repairs.** Refuted and unrepaired, and
+**it is NOT a C-38 stop**: it found no site that cannot supply the repair and ran
+out of time at the checkpoint. Its report section 10.3 carries the plan whole.
+The tie is `w ∈ K` for all sixteen, the shape is `prK`, and **the suppliers are
+already bound and already unused at both call sites.** The chain terminates at
+`LeafAgree`, which has no consumer, so nothing downstream can break.
+`check-unbound-hyp.py` stands at 18.
+
+**3. Diagnose the Condensation family to exhaustion.** `[LJ-1.145]` found ONE
+term worth 87 percent at one site and **nobody has looked for a second.** This
+decides whether the DD4-against-DD24 conflict has to be ruled at all: if the
+wing has more terms of that size, it closes its own gap; if it does not, the
+owner has the full evidence and must rule.
+
+**4. The `levelIn` wall itself**, `π (Lset m') ≡ Lset (π m')`. `[LJ-1.51]`
+titled it the term I cannot write, `[LJ-1.121]` reached it by another method
+and stopped, and four dispatches went around it. **Nobody has ever been funded
+to build that chapter.** `[LJ-1.151]` MEASURED that the instantiation half is
+separable from it, so the wall is now isolated rather than entangled.
+
+**WHAT IS WAITING ON THE OWNER, and none of it blocks the four above.**
+
+- **DD4 against DD24.** A cure in shared machinery made every master faster and
+  the ratio WORSE, 1.56x to 1.91x, because the AC side gained 41.7 percent and
+  the wing 7.9. **It is a property of the bar, not an accident of that edit.**
+  Item 3 above decides whether the ruling is needed.
+- **The three `*Agree` masters.** Measured stable on the cured tree, but
+  `[LJ-1.146]` found that retiring them retires the wing, because the whole
+  chain is unconsumed only because the trophy is unwritten.
+- **`check-unbound-hyp.py` rule 3.** `answers` and `ih` are NOT refutable,
+  MEASURED, so the fix belongs in the checker.
+
+**ONE ORCHESTRATOR HABIT THAT COST THREE TIMES ON 2026-08-13**, recorded here
+because no checker catches it: **do not change anything under a running agent.**
+Twice a directory-wide `git add -A` swept in a sibling's work in progress; once
+a tool rewrite landed while another agent was measuring with that tool, and it
+lost four figures. **Commit by explicit path, and land a tool change only when
+no agent holds it.**
+
 ## 0. Where the work stands (2026-08-10)
 
 **REWRITTEN 2026-08-09 for the route change, and re-measured 2026-08-10 at the `[LJ-0.4]` closeout.** The text this replaces described
