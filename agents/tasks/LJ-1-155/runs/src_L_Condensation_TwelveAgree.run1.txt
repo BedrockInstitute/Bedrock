@@ -1,0 +1,13 @@
+# module src/L/Condensation/TwelveAgree.lagda.md
+# in-fence lines 399
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=definitions --profile=internal src/L/Condensation/TwelveAgree.lagda.md
+# load before 5.56 / 5.80 / 10.46
+# load after  5.67 / 5.82 / 10.43
+# wall seconds 0.74
+# exit 71
+Error: Cannot use profiling option 'internal' with 'definitions'
+Run 'agda --help' for help on command line options.
+
+----- stderr -----
+
