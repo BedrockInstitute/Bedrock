@@ -206,17 +206,28 @@ naming shape fails silently. On 2026-08-04 one `git add -A src/` committed 13 pr
 `make check` over every tracked file and catches anything that got in historically or past a
 bypass.
 
-`--stale` carries the half an ignore rule cannot express: a probe is **thrown away** once its
+The lifecycle half is what an ignore rule cannot express: a probe is **thrown away** once its
 verdict is recorded, and untracked probes otherwise pile up in `src/` where they are mistaken
-for committed ones. A probe is deletable only when its verdict survives (some report under
-`_build/` names it) AND nobody is writing it (untouched for longer than the freshness window,
-default 6 hours). Anything else is listed as PROTECTED with the reason.
+for committed ones. `[LJ-1.133]` found 284 of them because nothing ever ran the sweep.
+
+**The trigger is a task, not a clock.** A probe is swept when NO LIVE task needs it, and a task
+is live when `dev/PLAN.md` section 11 says `DISPATCHED` or `planned`, when a live task's brief
+names the probe, or when a brief exists for the code and no report file does. The three tests
+are unioned, so each can only ADD a hold and none can release one. **`[LJ-1.138]` measured why
+a brief with no report cannot close a task on its own: C-22 orders an agent to write its
+report as a skeleton first, so a report file exists long before the task ends.** A *missing*
+report proves a task unfinished; a present one proves nothing.
+
+A probe whose verdict survives goes to `archive/probes/`, never to deletion. Deletion is for an
+orphan alone, and an orphan waits out a 24 hour floor first: mtime delays the irreversible step
+and never releases a hold.
 
 ```sh
-python3 scripts/check-probes.py --check           # every tracked file (make check)
-python3 scripts/check-probes.py --staged          # staged files only (pre-commit hook)
-python3 scripts/check-probes.py --stale           # what is safe to delete, and why
-python3 scripts/check-probes.py --stale --delete  # delete it
+python3 scripts/check-probes.py --check   # every tracked file (make check)
+python3 scripts/check-probes.py --staged  # staged files only (pre-commit hook)
+python3 scripts/check-probes.py --gate    # FAIL when a sweepable probe waits (make check)
+python3 scripts/check-probes.py --stale   # every probe, its verdict and the reason
+make probes-sweep                         # act on it; the gate itself moves no file
 ```
 
 ## `check-tree.py`
