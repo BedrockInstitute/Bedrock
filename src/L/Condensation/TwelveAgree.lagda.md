@@ -26,6 +26,7 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Axioms.Numerals {ℓ} using ( numeralL )
 open import L.Coding.Model {ℓ}
   using ( prʟ; envSetAt; envOverAt; tmValAt; subValAt; subValSuccAt; consAtL )
+open import L.Coding.EnvSet {ℓ} lem using ( module Generic )
 open import L.Coding.Graph {ℓ} lem using ( twelveAt )
 open import L.Condensation {ℓ} lem using ( succU; keyU )
 open import L.Condensation.LowerAgree {ℓ} lem using
@@ -185,6 +186,11 @@ module AbstractFrame {n : ℕ}
               → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (sucK : (a : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
           → ⟨ sucV (fst a) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
+  (envSetK : (B ar : S)
+           → ⟨ fst B ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+           → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+           → ⟨ fst (Generic.envSetGen B ar)
+                ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (subK-un : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
                subValSuccAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
                             (suc (suc (suc (suc zero))))
