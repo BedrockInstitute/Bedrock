@@ -184,9 +184,13 @@ The port-era survey of the source repository and its measured cost anatomy moved
 
 | DD26 | **THE CATALOGS ARE NOT COUNTED. `src/Everything.lagda.md` and `src/Landmarks.lagda.md` are excluded from EVERY size figure, past and future.** | **Ruled 2026-08-10 by the owner.** Both are indexes rather than mathematics: one is the import catalog with its per-chapter prose, the other states the two trophies and imports what proves them. **The reason is DRIFT, and it is the owner's:** a catalog GROWS WITH THE PROJECT, so a threshold measured against a total containing one drifts further from the mathematics it is meant to bound, and drifts in the direction that flatters the tree. **It also collapsed a real discrepancy.** The AC side had TWO numbers under one name: the bucket, standing minus the declared wing, at 16,995; and DD24's own tree, the cold-build cone of `Landmarks`, at 16,916. The 79-line gap was exactly `Everything`, which no build of `Landmarks` compiles. Excluding both catalogs makes them ONE number, **16,897**, and a figure with one meaning cannot be quoted in the wrong place. **RETROSPECTIVE, by the owner's word:** the ruling re-bases figures already recorded, so `[LJ-0.4]`'s prerequisite is met at 16,897 rather than 16,995 and DD24's baseline is 0.007913 over 16,897 rather than 0.007904 over 16,916. **DD8's caliber is untouched:** non-blank lines inside ` ```agda ` fences, still. This ruling says which FILES that caliber runs over. **Enforced by `scripts/ledger.py`'s `UNCOUNTED` and `countable_masters()`**, which every size site now calls, and pinned by `scripts/tests/test_ratio_baseline.py` and `test_deletion_test.py`, whose assertion that Everything IS counted was flipped in the same commit. |
 | DD27 | **THE HULL IS INDEXED BY A META TERM ALGEBRA, not by object-language formulas.** | **Ruled 2026-08-10 by the owner**, on a measured fork. `[LJ-1.3]` built the hull as `sett (Σ[ φ ∈ Formula ⟪X⟫ 1 ] Witnessed-small φ)`, so every membership certificate is an X-formula. That choice, not the mathematics, is what blocked condensation: the criterion at HULL parameters needs the order named inside the model, `relL α` sits at rank at least α while `Lset α` holds only rank below α, and the index type leaves no room to widen, because a hull-expressible order yields a hull-formula and the index demands an X-formula. **THE PRICES, and this is why it is a ruling and not a preference.** Keeping the index type costs **1.0 to 3.0k lines and 220 to 890 s, 17 to 23x DD24's bar** (`[LJ-1.16]`). Moving costs about **270 lines under 6 s**: 116 MEASURED by `[LJ-1.18]`'s probe at 0.0103 s/line, about 30 named follow-on, and about 120 for the counting priced by `[LJ-1.22]`. **THE COUNTING OBJECTION DIED ON MEASUREMENT.** `Code` needs the SAME cardinal law as `Formula K 1`, pairing at β, not a stronger one, so the fork neither cures nor worsens `[LJ-1.17]`'s square-law wall; the union over the naturals is internal to the constructor, since `wit` carries its arity. **DD4 IS THE REASON IT IS RIGHT AND NOT MERELY CHEAP.** The obstruction hits BOTH towers, so the blocked shape buys the definable well-order twice; the term algebra needs only a META well-order both towers already have, so it is template content bought once. `[LJ-0.7]` found the definable well-order appears on the whole GCH chain at exactly ONE place, Devlin's own proof of the hull. **WHAT IT REVISES:** `[LJ-1.3]`'s delivered hull, its index, and the statements over that index; it also RETIRES `[LJ-1.3]`'s booked residue piece one, 30 to 80 lines. **TWO CAVEATS STAND AND ARE NOT BURIED:** the 120-line and 2-second counting figures are ESTIMATES from same-class module rates, not measurements, and the mutual `enc`/`encs` termination is unchecked at that site, though the probe's `val`/`vals` passed the analogous shape. |
-## 4. Target skeleton (OWED a re-derivation for DD2)
+## 4. Target skeleton (OWED a re-derivation for DD2, and `[LJ-2.3]` owes it)
 
-The archived D5 target skeleton, its port-era diagram and the rename ledger moved to [dev/memos/target-skeleton-d5.md](memos/target-skeleton-d5.md). Note that DD5 in §3 is a DIFFERENT rule, the two quantitative constraints: the D and DD numbers do not correspond. What stays binding from archived D5: the part level (Base, FOL, ZF, V, L, Landmarks) is fixed, below-part layout is provisional until the [L3.10] re-layering, and the authorities for what `src/` contains are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog), not this section. Read the memo when a rename's history or the port-era layout is needed.
+The archived D5 target skeleton, its port-era diagram and the rename ledger moved to [dev/memos/target-skeleton-d5.md](memos/target-skeleton-d5.md). Note that DD5 in §3 is a DIFFERENT rule, the two quantitative constraints: the D and DD numbers do not correspond. **`[LJ-2.3]` delivers this section's skeleton for the two-tower route**, and §11 carries that row. So the re-derivation has an owner and a place in the order, and this heading is not an unowned debt.
+
+**TWO CLAUSES THIS SECTION CARRIED ARE NO LONGER TRUE OF THE TREE**, found by `[LJ-1.149]` 2026-08-13. They are corrected here, not repeated. **(1) THE PART LEVEL.** Archived D5 fixed it as Base, FOL, ZF, V, L and Landmarks. **`src/` holds no `ZF/` part today**: it was re-cut into `FOL/`, which `src/README.md:53` records. The measured part level is Base, FOL, V, L and Landmarks, and it is still fixed at that level. **(2) THE PROVISIONAL LAYOUT.** The below-part layout was provisional until the `[L3.10]` re-layering. **`[L3.10]` is a child of `[L3]`, which §11 supersedes wholesale**, and its own row is at `archive/dev/STATUS-archived.md:84`. That re-layering will not run, so its condition is dead and `[LJ-2.3]` inherits the arrangement question with the skeleton.
+
+The authorities for what `src/` contains are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog), not this section. Read the memo when a rename's history or the port-era layout is needed.
 
 ## 5. Working mechanisms (pointer)
 
@@ -383,12 +387,20 @@ double trophy on whatever phase 2 rules. A phase is a barrier: phase 2 cannot
 start before phase 1 delivers, because it measures what phase 1 built, and
 phase 3's constraints are the numbers phase 2 sets.
 
-**TWO PIECES OF EVIDENCE THE RULING IS OWED, and both are archived rather
-than lost.** `[L3.32-T261]`'s probe on the S-tower crossing was QUEUED for an
-Agda slot and never ran, and `[L3.32-T257]`'s line comparison carries a
-declared weak point worth 4,238 to 5,218, about a fifth of its band. The
-economics of the architecture rest on both. `[LJ-2.3]` surveys them under DD18
-and says whether either must be re-run before `[LJ-2.5]` can rule.
+**TWO PIECES OF EVIDENCE THE RULING IS OWED, and the record on one of them
+was wrong until `[LJ-1.149]` read it.** `[L3.32-T261]`'s probe on the S-tower
+crossing **RAN**, on 2026-08-09: exit 0, one cold run of 1.50 s over 124 fresh
+lines, at `agents/tasks/archive/L3-32-T261/ProbeT261.agda`, and it is the probe
+`[T260]` specified and could not run. It measured that the GCH wing pays
+neither `carried-sequence` nor `blockpowlim-instance`, the 4,238 to 5,218 that
+`[L3.32-T257]` declared as its own weak point. **This paragraph and three
+`dev/ledger.toml` notes said it never ran, from 2026-08-09 to 2026-08-13**,
+because `[LJ-0.3]`'s closeout read the brief header rather than the report.
+**WHAT IS STILL OWED IS DIFFERENT AND SMALLER:** one bounded op-clause priced
+and multiplied by sixteen, which `[L3.32-T263]` left unmeasured, and a second
+independent pass on `[T257]`'s line comparison, which is still one agent and
+one pass. **`[LJ-2.0]` owns both** and gates `[LJ-2.5]`; `[LJ-2.3]` reads them
+into the reuse map.
 
 **THE ARCHITECTURE RULING SITS AT `[LJ-2.5]`, not at the route change**
 (DD2, amended 2026-08-09 on `[LJ-0.3]`). The endpoint is ruled and closed; the
@@ -626,7 +638,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.146 | Price levelIn and cover, the root of the unconsumed chain | A WALL, NAMED TWICE AT ONE TERM | The trophy needs them. About 1.0k lines. C-35 fires wing-wide, the trophy is unwritten |
 | LJ-1.147 | Seal satGraphAt and measure what unfolding costs | DISPATCHED | LJ-1.145's cure, about 21 s, and its own widest unmeasured term is one edit and one cold run away |
 | LJ-1.148 | DD24's tolerance is narrower than the machine's swing | A BIAS, NOT NOISE: A WARM-UP PENALTY | Run 1 is 1.811 s and runs 2 to 25 are 0.787 s. Fixed at about 0.9 s per series |
-| LJ-1.149 | Audit the six standing OWED markers | DISPATCHED | Five are current-route, not retired residue, and two predicted today's DD24 red before it was measured |
+| LJ-1.149 | Audit the six standing OWED markers | ONE OWED FACT IS FALSE, TWO ARE PAID | T261's probe RAN on 2026-08-09; four live sentences said it never did |
+| LJ-1.150 | Place the twelve-row bridge that LJ-1.144 built in a probe | PLANNED | Priced at 38 lines and 3.5 s with no new master. The cheapest unbought result in the wing |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
