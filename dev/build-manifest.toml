@@ -14,7 +14,7 @@
 # gate on any TRACKED file under `_build/`. A manifest kept inside `_build/` would
 # be untracked, would not survive `make clean` (`Makefile:180`), and would not
 # survive a fresh clone. A regime that a routine command destroys is not a regime.
-# `archive/kits/README.md` records the same finding for refused kits.
+# `archive/src/2026-08-13-kits-to-tasks/README.md` records the same finding for refused kits.
 # `_build/README.md` is therefore GENERATED from this file, never hand-written.
 #
 # HOW THE CLASSES WERE CHOSEN.

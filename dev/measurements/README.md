@@ -15,7 +15,7 @@ except `literature/`. `dev/ledger.toml`, the project's canonical size ledger,
 cited three of these tables as the provenance of standing figures while they
 sat one command from deletion. `[LJ-1.132]` moved them.
 
-`archive/kits/README.md` records the same finding for refused kits: an
+`archive/src/2026-08-13-kits-to-tasks/README.md` records the same finding for refused kits: an
 artifact a routine command destroys is not preserved.
 
 ## Why a measurement record is not exhaust

@@ -125,7 +125,7 @@ def render_readme(data: dict) -> str:
         "| Measurement a LIVE document cites | `dev/measurements/` |",
         "| Measurement only historical documents cite | `archive/dev/measurements/` |",
         "| Probe | `agents/tasks/<TASK>/`, beside its report |",
-        "| Code or prose written, measured, not landed | `archive/kits/` |",
+        "| Code or prose written, measured, not landed | the task's own directory, `agents/tasks/<TASK>/` |",
         "| Retired script | `archive/scripts/` |",
         "| Agent report or brief | `agents/tasks/`, `agents/tasks/` |",
         "",

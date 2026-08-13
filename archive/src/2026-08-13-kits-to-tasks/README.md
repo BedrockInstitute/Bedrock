@@ -1,4 +1,16 @@
-# Refused kits
+# The 2026-08-13 kit move: a tombstone
+
+**THE OLD PATH OF THIS FILE WAS `archive/kits/README.md`.** That directory is
+retired. It held five refused kits from 2026-08-10 to 2026-08-13 and holds
+nothing now.
+
+**Why the record sits under `archive/src/`.** A kit is candidate `src/` content
+that was built, measured and refused, and the tree was reverted. Two of the
+five name their target master in their own first lines. So the kits were
+`src/`-bound, the archive's mirror rule puts their record with the other `src/`
+archivals, and the directory name says which archival it was.
+
+**NOTHING ARRIVES HERE AGAIN.** This file records where the five kits went.
 
 A **refused kit** is code that was written, typechecked, measured, and then
 NOT landed because its arithmetic did not pay. This directory holds those
