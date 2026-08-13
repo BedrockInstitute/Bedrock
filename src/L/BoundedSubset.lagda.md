@@ -1405,6 +1405,152 @@ module Devlin55
     module HS = HullStage lam ordλ succλ UK.X UK.X⊆Lλ UK.∅∈λ
     module HE = HullExt lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
 
+    -- The code count: the hull's term algebra injects into alpha.
+    module CodeCount (g : ⟪ UK.X ⟫ ↪ ⟪ α ⟫) where
+      module B = SC.Bound α ordα α∉ω (sq α (self∈sucV α) α∉ω)
+
+      code-stable-suc : (k k' : ℕ) (p : k' ≡ k) (ψ : Formula (⊥* {ℓ}) (suc k'))
+                      → FOL.Count.code (subst (λ j → Formula (⊥* {ℓ}) (suc j)) p ψ)
+                        ≡ FOL.Count.code ψ
+      code-stable-suc k k' p ψ =
+        J (λ k p → FOL.Count.code (subst (λ j → Formula (⊥* {ℓ}) (suc j)) p ψ)
+                   ≡ FOL.Count.code ψ)
+          (cong FOL.Count.code (transportRefl ψ)) p
+
+      mutual
+        count : HS.H.T.Code → ⟪ α ⟫
+        count (HS.H.T.base m) = B.pair (B.numeral 0) (fst g m)
+        count (HS.H.T.wit k ψ cs) =
+          B.pair (B.numeral (suc k))
+            (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
+              (tuple k cs))
+
+        tuple : (j : ℕ) → Vec HS.H.T.Code j → ⟪ α ⟫
+        tuple zero [] = B.numeral 0
+        tuple (suc j) (c ∷ cs) = B.pair (count c) (tuple j cs)
+
+        tuple-inj : (j : ℕ) (cs ds : Vec HS.H.T.Code j)
+                  → tuple j cs ≡ tuple j ds → cs ≡ ds
+        tuple-inj zero [] [] e = refl
+        tuple-inj (suc j) (c ∷ cs) (d ∷ ds) e =
+          cong₂ (λ (x : HS.H.T.Code) (y : Vec HS.H.T.Code j) → x ∷ y) hc hcs
+          where
+          p : (count c ≡ count d) × (tuple j cs ≡ tuple j ds)
+          p = B.pair-inj (count c) (tuple j cs) (count d) (tuple j ds) e
+          hc : c ≡ d
+          hc = count-inj c d (fst p)
+          hcs : cs ≡ ds
+          hcs = tuple-inj j cs ds (snd p)
+
+        tuple-stable : (j j' : ℕ) (p : j' ≡ j) (cs : Vec HS.H.T.Code j')
+                     → tuple j (subst (Vec HS.H.T.Code) p cs) ≡ tuple j' cs
+        tuple-stable j j' p cs =
+          J (λ j p → tuple j (subst (Vec HS.H.T.Code) p cs) ≡ tuple j' cs)
+            (cong (tuple j') (transportRefl cs)) p
+
+        count-inj : (c d : HS.H.T.Code) → count c ≡ count d → c ≡ d
+        count-inj (HS.H.T.base m) (HS.H.T.base m') e =
+          cong HS.H.T.base (snd g m m' (B.pair-inj _ _ _ _ e .snd))
+        count-inj (HS.H.T.base m) (HS.H.T.wit k' ψ' cs') e =
+          Empty.rec (znots (B.numeral-inj 0 (suc k') (B.pair-inj _ _ _ _ e .fst)))
+        count-inj (HS.H.T.wit k ψ cs) (HS.H.T.base m') e =
+          Empty.rec (snotz (B.numeral-inj (suc k) 0 (B.pair-inj _ _ _ _ e .fst)))
+        count-inj (HS.H.T.wit k ψ cs) (HS.H.T.wit k' ψ' cs') e = wit-eq
+          where
+          e-out : (B.numeral (suc k) ≡ B.numeral (suc k'))
+                × (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
+                     (tuple k cs)
+                  ≡ B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
+                     (tuple k' cs'))
+          e-out = B.pair-inj (B.numeral (suc k))
+                      (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
+                        (tuple k cs))
+                      (B.numeral (suc k'))
+                      (B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
+                        (tuple k' cs'))
+                      e
+          psk : suc k ≡ suc k'
+          psk = B.numeral-inj (suc k) (suc k') (fst e-out)
+          pk : k ≡ k'
+          pk = injSuc psk
+          e-in : B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
+                      (tuple k cs)
+                ≡ B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
+                      (tuple k' cs')
+          e-in = snd e-out
+          e-fst : B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k))
+                ≡ B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k'))
+          e-fst = fst (B.pair-inj _ _ _ _ e-in)
+          e-code : FOL.Count.code ψ ≡ FOL.Count.code ψ'
+          e-code = B.numeral-inj (FOL.Count.code ψ) (FOL.Count.code ψ') (fst (B.pair-inj _ _ _ _ e-fst))
+          e-tup : tuple k cs ≡ tuple k' cs'
+          e-tup = snd (B.pair-inj _ _ _ _ e-in)
+          ψ₀ : Formula (⊥* {ℓ}) (suc k)
+          ψ₀ = subst (λ j → Formula (⊥* {ℓ}) (suc j)) (sym pk) ψ'
+          sψ : ψ ≡ ψ₀
+          sψ = snd FOL.Count.shape-count-inj {k = suc k} {φ = ψ} {ψ = ψ₀}
+                 (e-code ∙ sym (code-stable-suc k k' (sym pk) ψ'))
+          qψ : PathP (λ i → Formula (⊥* {ℓ}) (suc (pk i))) ψ ψ'
+          qψ = toPathP (cong (subst (λ j → Formula (⊥* {ℓ}) (suc j)) pk) sψ
+                        ∙ substSubst⁻ (λ j → Formula (⊥* {ℓ}) (suc j)) pk ψ')
+          cs₀ : Vec HS.H.T.Code k
+          cs₀ = subst (Vec HS.H.T.Code) (sym pk) cs'
+          scs : cs ≡ cs₀
+          scs = tuple-inj k cs cs₀
+                  (e-tup ∙ sym (tuple-stable k k' (sym pk) cs'))
+          qcs : PathP (λ i → Vec HS.H.T.Code (pk i)) cs cs'
+          qcs = toPathP (cong (subst (Vec HS.H.T.Code) pk) scs
+                        ∙ substSubst⁻ (Vec HS.H.T.Code) pk cs')
+          wit-eq : HS.H.T.wit k ψ cs ≡ HS.H.T.wit k' ψ' cs'
+          wit-eq = cong (λ x → HS.H.T.wit (fst x) (fst (snd x)) (snd (snd x)))
+            (ΣPathP {A = λ _ → ℕ} {B = λ i k →
+                         Formula (⊥* {ℓ}) (suc k) × Vec HS.H.T.Code k}
+                     (pk , ΣPathP {A = λ i → Formula (⊥* {ℓ}) (suc (pk i))}
+                  {B = λ i _ → Vec HS.H.T.Code (pk i)}
+                                  (qψ , qcs)))
+
+    code-inj : ⟪ UK.X ⟫ ↪ ⟪ α ⟫
+    code-inj = comp-inj absorbs (stage-card-upper α ordα (self∈sucV α) α∉ω)
+
+    module CC = CodeCount code-inj
+
+    module IC = InvColl HS.M HE.hullExt
+    module CSel = CodeSelect α ordα (SC.OrdSWO.ordSWO α ordα)
+      HS.M HS.H.T.Code (λ c → fst (HS.H.T.val c))
+      HS.H.hull-member CC.count CC.count-inj
+
+    -- WALL 2, PLACED.  The canonical code of each hull member at the
+    -- delivered count (CanonCode at CC.count/CC.count-inj and the
+    -- hull's own well-order), and the HullElemDown instance at the
+    -- hull's stage.  The fibre coercion is V.Presentation.fiber: the
+    -- hull-member type SM is the fiber of the embedding, so the
+    -- canonical-code machinery (stated on ⟪ M ⟫) applies to it.
+    module CCn = CanonCode α ordα (SC.OrdSWO.ordSWO α ordα)
+      HS.M HS.H.T.Code (λ c → fst (HS.H.T.val c))
+      HS.H.hull-member CC.count CC.count-inj
+
+    hedF : (Σ[ x ∈ S ] ⟨ x ∈ˢ HS.M ⟩) → HS.H.T.Code
+    hedF q = CCn.canonical (fiber HS.M (snd q) .fst)
+
+    hedF-spec : (q : Σ[ x ∈ S ] ⟨ x ∈ˢ HS.M ⟩)
+              → fst (HS.H.T.val (hedF q)) ≡ fst q
+    hedF-spec q = go (fiber HS.M (snd q))
+      where
+      go : (f : Σ[ m ∈ ⟪ HS.M ⟫ ] (⟪ HS.M ⟫↪ m ≡ fst q))
+         → fst (HS.H.T.val (CCn.canonical (f .fst))) ≡ fst q
+      go f = CCn.canonical-spec (f .fst) ∙ f .snd
+
+    module HED = HullElemDown lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
+    module HEDC = HED.WithCode hedF hedF-spec
+
+    -- The consumer-facing ElemDown at the hull: the stage reading of
+    -- a formula over hull constants implies the hull reading, wired
+    -- into DownReflect's ElemDown at the hull's stage.
+    module DR54 = DownReflect lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
+
+    elem-down : DR54.ElemDown
+    elem-down = HEDC.elem-down
+
     module Co
       (levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.C.πX ⟩ → ⟨ Lset δ ∈ˢ HS.C.πX ⟩)
       (cover : (y : S) → ⟨ y ∈ˢ HS.M ⟩
@@ -1421,152 +1567,6 @@ module Devlin55
 
       ext : HS.C.πX ≡ Lset β
       ext = Cn.condenses .snd .snd
-
-      -- The code count: the hull's term algebra injects into alpha.
-      module CodeCount (g : ⟪ UK.X ⟫ ↪ ⟪ α ⟫) where
-        module B = SC.Bound α ordα α∉ω (sq α (self∈sucV α) α∉ω)
-
-        code-stable-suc : (k k' : ℕ) (p : k' ≡ k) (ψ : Formula (⊥* {ℓ}) (suc k'))
-                        → FOL.Count.code (subst (λ j → Formula (⊥* {ℓ}) (suc j)) p ψ)
-                          ≡ FOL.Count.code ψ
-        code-stable-suc k k' p ψ =
-          J (λ k p → FOL.Count.code (subst (λ j → Formula (⊥* {ℓ}) (suc j)) p ψ)
-                     ≡ FOL.Count.code ψ)
-            (cong FOL.Count.code (transportRefl ψ)) p
-
-        mutual
-          count : HS.H.T.Code → ⟪ α ⟫
-          count (HS.H.T.base m) = B.pair (B.numeral 0) (fst g m)
-          count (HS.H.T.wit k ψ cs) =
-            B.pair (B.numeral (suc k))
-              (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-                (tuple k cs))
-
-          tuple : (j : ℕ) → Vec HS.H.T.Code j → ⟪ α ⟫
-          tuple zero [] = B.numeral 0
-          tuple (suc j) (c ∷ cs) = B.pair (count c) (tuple j cs)
-
-          tuple-inj : (j : ℕ) (cs ds : Vec HS.H.T.Code j)
-                    → tuple j cs ≡ tuple j ds → cs ≡ ds
-          tuple-inj zero [] [] e = refl
-          tuple-inj (suc j) (c ∷ cs) (d ∷ ds) e =
-            cong₂ (λ (x : HS.H.T.Code) (y : Vec HS.H.T.Code j) → x ∷ y) hc hcs
-            where
-            p : (count c ≡ count d) × (tuple j cs ≡ tuple j ds)
-            p = B.pair-inj (count c) (tuple j cs) (count d) (tuple j ds) e
-            hc : c ≡ d
-            hc = count-inj c d (fst p)
-            hcs : cs ≡ ds
-            hcs = tuple-inj j cs ds (snd p)
-
-          tuple-stable : (j j' : ℕ) (p : j' ≡ j) (cs : Vec HS.H.T.Code j')
-                       → tuple j (subst (Vec HS.H.T.Code) p cs) ≡ tuple j' cs
-          tuple-stable j j' p cs =
-            J (λ j p → tuple j (subst (Vec HS.H.T.Code) p cs) ≡ tuple j' cs)
-              (cong (tuple j') (transportRefl cs)) p
-
-          count-inj : (c d : HS.H.T.Code) → count c ≡ count d → c ≡ d
-          count-inj (HS.H.T.base m) (HS.H.T.base m') e =
-            cong HS.H.T.base (snd g m m' (B.pair-inj _ _ _ _ e .snd))
-          count-inj (HS.H.T.base m) (HS.H.T.wit k' ψ' cs') e =
-            Empty.rec (znots (B.numeral-inj 0 (suc k') (B.pair-inj _ _ _ _ e .fst)))
-          count-inj (HS.H.T.wit k ψ cs) (HS.H.T.base m') e =
-            Empty.rec (snotz (B.numeral-inj (suc k) 0 (B.pair-inj _ _ _ _ e .fst)))
-          count-inj (HS.H.T.wit k ψ cs) (HS.H.T.wit k' ψ' cs') e = wit-eq
-            where
-            e-out : (B.numeral (suc k) ≡ B.numeral (suc k'))
-                  × (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-                       (tuple k cs)
-                    ≡ B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
-                       (tuple k' cs'))
-            e-out = B.pair-inj (B.numeral (suc k))
-                        (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-                          (tuple k cs))
-                        (B.numeral (suc k'))
-                        (B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
-                          (tuple k' cs'))
-                        e
-            psk : suc k ≡ suc k'
-            psk = B.numeral-inj (suc k) (suc k') (fst e-out)
-            pk : k ≡ k'
-            pk = injSuc psk
-            e-in : B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-                        (tuple k cs)
-                  ≡ B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
-                        (tuple k' cs')
-            e-in = snd e-out
-            e-fst : B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k))
-                  ≡ B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k'))
-            e-fst = fst (B.pair-inj _ _ _ _ e-in)
-            e-code : FOL.Count.code ψ ≡ FOL.Count.code ψ'
-            e-code = B.numeral-inj (FOL.Count.code ψ) (FOL.Count.code ψ') (fst (B.pair-inj _ _ _ _ e-fst))
-            e-tup : tuple k cs ≡ tuple k' cs'
-            e-tup = snd (B.pair-inj _ _ _ _ e-in)
-            ψ₀ : Formula (⊥* {ℓ}) (suc k)
-            ψ₀ = subst (λ j → Formula (⊥* {ℓ}) (suc j)) (sym pk) ψ'
-            sψ : ψ ≡ ψ₀
-            sψ = snd FOL.Count.shape-count-inj {k = suc k} {φ = ψ} {ψ = ψ₀}
-                   (e-code ∙ sym (code-stable-suc k k' (sym pk) ψ'))
-            qψ : PathP (λ i → Formula (⊥* {ℓ}) (suc (pk i))) ψ ψ'
-            qψ = toPathP (cong (subst (λ j → Formula (⊥* {ℓ}) (suc j)) pk) sψ
-                          ∙ substSubst⁻ (λ j → Formula (⊥* {ℓ}) (suc j)) pk ψ')
-            cs₀ : Vec HS.H.T.Code k
-            cs₀ = subst (Vec HS.H.T.Code) (sym pk) cs'
-            scs : cs ≡ cs₀
-            scs = tuple-inj k cs cs₀
-                    (e-tup ∙ sym (tuple-stable k k' (sym pk) cs'))
-            qcs : PathP (λ i → Vec HS.H.T.Code (pk i)) cs cs'
-            qcs = toPathP (cong (subst (Vec HS.H.T.Code) pk) scs
-                          ∙ substSubst⁻ (Vec HS.H.T.Code) pk cs')
-            wit-eq : HS.H.T.wit k ψ cs ≡ HS.H.T.wit k' ψ' cs'
-            wit-eq = cong (λ x → HS.H.T.wit (fst x) (fst (snd x)) (snd (snd x)))
-              (ΣPathP {A = λ _ → ℕ} {B = λ i k →
-                           Formula (⊥* {ℓ}) (suc k) × Vec HS.H.T.Code k}
-                       (pk , ΣPathP {A = λ i → Formula (⊥* {ℓ}) (suc (pk i))}
-                    {B = λ i _ → Vec HS.H.T.Code (pk i)}
-                                    (qψ , qcs)))
-
-      code-inj : ⟪ UK.X ⟫ ↪ ⟪ α ⟫
-      code-inj = comp-inj absorbs (stage-card-upper α ordα (self∈sucV α) α∉ω)
-
-      module CC = CodeCount code-inj
-
-      module IC = InvColl HS.M HE.hullExt
-      module CSel = CodeSelect α ordα (SC.OrdSWO.ordSWO α ordα)
-        HS.M HS.H.T.Code (λ c → fst (HS.H.T.val c))
-        HS.H.hull-member CC.count CC.count-inj
-
-      -- WALL 2, PLACED.  The canonical code of each hull member at the
-      -- delivered count (CanonCode at CC.count/CC.count-inj and the
-      -- hull's own well-order), and the HullElemDown instance at the
-      -- hull's stage.  The fibre coercion is V.Presentation.fiber: the
-      -- hull-member type SM is the fiber of the embedding, so the
-      -- canonical-code machinery (stated on ⟪ M ⟫) applies to it.
-      module CCn = CanonCode α ordα (SC.OrdSWO.ordSWO α ordα)
-        HS.M HS.H.T.Code (λ c → fst (HS.H.T.val c))
-        HS.H.hull-member CC.count CC.count-inj
-
-      hedF : (Σ[ x ∈ S ] ⟨ x ∈ˢ HS.M ⟩) → HS.H.T.Code
-      hedF q = CCn.canonical (fiber HS.M (snd q) .fst)
-
-      hedF-spec : (q : Σ[ x ∈ S ] ⟨ x ∈ˢ HS.M ⟩)
-                → fst (HS.H.T.val (hedF q)) ≡ fst q
-      hedF-spec q = go (fiber HS.M (snd q))
-        where
-        go : (f : Σ[ m ∈ ⟪ HS.M ⟫ ] (⟪ HS.M ⟫↪ m ≡ fst q))
-           → fst (HS.H.T.val (CCn.canonical (f .fst))) ≡ fst q
-        go f = CCn.canonical-spec (f .fst) ∙ f .snd
-
-      module HED = HullElemDown lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
-      module HEDC = HED.WithCode hedF hedF-spec
-
-      -- The consumer-facing ElemDown at the hull: the stage reading of
-      -- a formula over hull constants implies the hull reading, wired
-      -- into DownReflect's ElemDown at the hull's stage.
-      module DR54 = DownReflect lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
-
-      elem-down : DR54.ElemDown
-      elem-down = HEDC.elem-down
 
       -- The inverse collapse composite, with NO `collapseCode` hypothesis:
       -- leg 1 is the propositional fibre (π is injective on M), leg 2 is
