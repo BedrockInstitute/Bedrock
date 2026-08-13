@@ -467,6 +467,40 @@ paragraph sneaking back into a row. **Widened 2026-08-10** to see lettered
 codes: `LJ-\d+\.\d+` matched none of `LJ-0.4a` to `LJ-0.4q`, so fifteen rows
 were invisible and twelve of them were over the cap, one at 438 characters.
 
+## `check-archive-cited.py`
+
+**A brief's ARCHIVE section must cite an ARCHIVE, not only the new route's own
+tasks.** `AGENTS.md` requires the section and its enforcement is REVIEW ONLY.
+
+**`[LJ-1.157]` measured what that costs, and the shape is not carelessness.**
+164 of 164 briefs carried the heading. **The content decayed while the form
+survived**: after `[LJ-1.94]` only process tasks cited a retired-route file, and
+the section's meaning drifted to "the new route's own prior tasks". That is
+`dev/LESSONS.md` C-41 one level down, a rule still reading true after its world
+changed.
+
+**The bill, measured:** `[LJ-1.107]` rebuilt 82 delivered lines of
+Cantor-Schroeder-Bernstein; three tasks priced `levelIn` without an 845-line
+comparable that the route's OWN recon had marked ADAPTABLE; and the archived
+`CSB` was surfaced twice in the route's own record and lost both times.
+
+**What it checks:** a live brief has an ARCHIVE section, and that section cites
+a path under `archive/` or `agents/tasks/archive/`.
+
+**What it cannot do**, and this is why it is `make archivecited` and NOT part of
+`make check`:
+
+- It cannot tell whether the cited archive BEARS on the task. A brief citing an
+  irrelevant archive file passes.
+- It cannot tell a process task, which may legitimately have nothing archived,
+  from a mathematical one that does.
+- It reads the brief and never the return.
+
+**So it REPORTS and never gates**, for the reason `check-build-manifest.py`
+does not gate either: **a red gate here buys a pasted citation rather than a
+survey.** Its whole claim is that the drift is VISIBLE, which is the thing that
+was missing.
+
 ## `dispatch_policy.py` and `check-dispatch-policy.py`
 
 `dispatch_policy.py` is **the one home of DD17's dispatch policy**: a hardcoded

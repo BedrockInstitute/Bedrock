@@ -31,7 +31,7 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard archivecited gen html types site serve clean hooks test deploy venv venv-check
 
 check: venv-check typecheck markers lint lint-agda glossary ledger probes tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy
 
@@ -121,6 +121,13 @@ agentsguard:
 # an in-harness Opus dispatch passes through no tool at all.
 dispatchpolicy:
 	$(PY) scripts/check-dispatch-policy.py
+
+# ADVISORY, and deliberately NOT in `check`. [LJ-1.157] measured that 164 of 164
+# briefs carried the ARCHIVE heading while the CONTENT decayed: after [LJ-1.94]
+# only process tasks cited a retired-route file. A red gate here would buy a
+# pasted citation rather than a survey, so this prints and never fails.
+archivecited:
+	$(PY) scripts/check-archive-cited.py
 
 devdocs:
 	$(PY) scripts/check-dev-docs.py
