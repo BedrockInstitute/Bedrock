@@ -32,28 +32,40 @@ An artifact a routine command destroys is not preserved. So refused kits live
 in the archive, which exists precisely because retired code is archived and
 never deleted (ruling D20).
 
-## Why the path is flat, and not the original path
+## WHERE THEY WENT, 2026-08-13, and why the old reasoning was stale
 
-[archive/README.md](../README.md) says an archived module keeps its ORIGINAL
-path, so provenance is self-evident and `git log --follow` keeps working. A
-refused kit has no original path: it never landed in `src/`, and the tree was
-reverted to HEAD. There is nothing to preserve provenance of.
+**The five kits now live in their own task directories** under
+`agents/tasks/archive/`, beside the brief and the report that produced them.
+This file is the index.
 
-**THIS IS ALSO WHY THIS DIRECTORY DOES NOT MIRROR THE ROOT.** The owner ruled
-on 2026-08-13 that `archive/` mirrors the repository root, and `[LJ-1.143]`
-moved five directories to obey it. **`archive/kits/` is the one it left**, and
-the reason is the paragraph above rather than an oversight: the mirror rule
-maps an original path to an archived path, and a refused kit has no original
-path to map. `[LJ-1.143]` refused to invent one. **What would decide it** is
-the owner's word on where a thing that never had a root path belongs. The two
-candidates it names are `archive/src/kits/`, because a kit was written for
-`src/`, and `archive/_build/kits/`, because `_build/kits/` is the path these
-files actually came from (the paragraph below records that move).
+| kit | now at |
+|---|---|
+| `l3.32-t28-CodeSetBlock.lagda.md` | `agents/tasks/archive/L3-32-T28/` |
+| `lj-0.4b-Frame.lagda.md` | `agents/tasks/archive/LJ-0-4B/` |
+| `lj-0.4f-recassembly.lagda.md` | `agents/tasks/archive/LJ-0-4F/` |
+| `lj-0.4f-hierarchy-wiring.diff` | `agents/tasks/archive/LJ-0-4F/` |
+| `lj-0.4i-placeBin.lagda.md` | `agents/tasks/archive/LJ-0-4I/` |
 
-So the filename carries the provenance instead: `<task>-<name>`. The task code
-resolves in `dev/PLAN.md` section 11 and in `dev/JOURNAL.md`, and the
-measurement and the revival trigger for each kit are rows S19 to S22 in
-[dev/memos/simplification-register.md](../../dev/memos/simplification-register.md).
+**This file used to argue that a refused kit has NO original path, because it
+never landed in `src/` and the tree was reverted.** `[LJ-1.143]` read that and
+left the directory unmoved when the owner ruled that `archive/` mirrors the
+repository root.
+
+**The owner refused the argument the same day, and the argument was stale
+rather than wrong when written.** It was written when a kit had two possible
+homes, `src/` and `archive/`. **`agents/tasks/` did not exist until
+2026-08-13.** A kit is an artifact of ONE task, exactly as a probe and a report
+are, and every one of these five carries its task code in its own filename.
+
+**Two of them name an original path in their own first lines**, which the
+argument also missed: `lj-0.4i-placeBin.lagda.md` says the helper was built for
+`src/FOL/Manipulation/Parameters.lagda.md`, and
+`lj-0.4f-hierarchy-wiring.diff` opens with
+`diff --git a/src/L/Hierarchy.lagda.md`.
+
+**The lesson is not about kits.** A rule keeps being applied after the world it
+described has changed, and nothing notices, because the rule still reads true.
+`dev/LESSONS.md` C-32 is the same shape.
 
 ## The same archive rules apply
 
