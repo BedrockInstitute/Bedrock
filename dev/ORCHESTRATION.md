@@ -12,29 +12,68 @@ add one here, name where it fires.
 
 ## 1. Who does the work
 
-**Codex is the default for every dispatch.** The orchestrator uses an in-harness
-Opus subagent in exactly two cases: the owner says so for that task (a past
-override never carries forward), or the orchestrator judges the task
-very-very-heavy, a deliberately high bar meaning whole-campaign synthesis or
-wall-class mathematics beyond measured scale. Ordinary probes, recons, polish
-passes and implementation batches are codex work, and codex has delivered all
-of those green.
+**THE POLICY IS ONE SWITCH, AND IT LIVES IN `scripts/dispatch_policy.py`.** That
+module holds the two versions of DD17, the head for each case, the date the
+current version was set, the reason, and the condition that reverts it. **This
+section does NOT restate the tables**, because a table restated in a second file
+is a table that will drift, and DD19 forbids a rule that is canonical twice.
 
-*Enforcement:* the brief header carries a `tier:` line before dispatch.
-`tier: codex (default)` needs no justification; `tier: opus` must name which
-exception applies and, for the second, why codex cannot carry it. **If that
-sentence will not write, the tier is codex.**
+**Read the policy in force with one command:**
 
-### 1.1 A negative codex return escalates to Opus (PLAN DD25)
+```sh
+python3 scripts/dispatch_policy.py
+```
 
-**Ruled by the owner 2026-08-10.** When a codex return's headline verdict is
-negative, dispatch an in-harness Opus 5 subagent at maximum effort to attack
-that return. Do it **before** auditing the return and before acting on it.
-Then read the two together.
+It prints the version, the full table, the reason and the revert condition.
+Nobody reads code to answer "which head runs this task".
 
-**This is the owner naming Opus, standing, for one class.** It is the first
-exception in section 1 above, made permanent for this trigger only. Every
-other dispatch stays codex.
+**TWO VERSIONS SINCE 2026-08-13, and exactly one is in force.**
+
+- The **normal** version leads with pi and reviews with in-harness Opus 5.
+  **Its default is pi and NOT codex, which is a real change to DD17 rather
+  than a restatement of it:** DD17 as first written made codex the default for
+  every dispatch, and `[LJ-1.126]` made pi viable on 2026-08-13 by landing
+  streaming and resume.
+- The **override** version leads with in-harness Opus 5 and reviews with pi.
+  **It is TEMPORARY and its reason is QUOTA, never quality.** The owner has most
+  of the week's allowance left, and `[LJ-1.121]` measured pi's return quality as
+  fully acceptable. The owner cancels it by word, and the state to return to is
+  the normal version.
+
+**THE INVARIANT UNDER BOTH VERSIONS: the critic is never the same head as the
+author.** That is why the two tables swap the default row and the adversarial
+row. `.claude/skills/codex-dispatch/SKILL.md` states the same rule.
+
+**THE EMERGENCY TIER SITS OUTSIDE BOTH TABLES.** DD17's Fable 5 escalation is
+unchanged and it is never a default: both its conditions bind and the brief
+names its trigger.
+
+**Say WHY in the brief, not merely WHICH.** The head that the version in force
+gives for the case needs no justification. Any other head must name why, and
+**if that sentence will not write, take the head the table gives.**
+
+*Enforcement, and it is honest about its own reach.* The brief header carries a
+`tier:` line before dispatch, and it names the version it was chosen under:
+`tier: opus (override)`. `scripts/check-dispatch-policy.py` reads every brief
+against the switch. **The switch cannot force the choice**, because an
+in-harness Opus dispatch never passes through
+`.claude/skills/codex-dispatch/dispatch.py`. What the switch DOES drive is the
+default harness that dispatcher picks, what the checker accepts, and what the
+inspection command prints. **So a wrong head is detectable by an audit and is
+not impossible.** Anything stronger would be false safety.
+
+### 1.1 A negative return is adversarially reviewed (PLAN DD25)
+
+**Ruled by the owner 2026-08-10.** When a return's headline verdict is
+negative, dispatch a review at maximum effort to attack that return. Do it
+**before** auditing the return and before acting on it. Then read the two
+together.
+
+**THE HEAD FOLLOWS THE SWITCH, and the mechanism does not.** DD25 says a
+negative return is reviewed; `scripts/dispatch_policy.py` says by whom. Under
+the normal version the critic is in-harness Opus 5; under the override it is
+pi. **The rule that survives both is that the critic is never the author**, so
+a return the review's own head produced goes to the other head.
 
 **The trigger.** A refusal, a NO-GO, a RED gate, a stop taken as the
 deliverable, a refutation of the brief's premise, or a landed result that
@@ -50,10 +89,13 @@ cure the return missed. **A review that agrees is a real result.**
 one pair, and report both to the owner, including where they disagree. Neither
 is accepted alone.
 
-**Write DD4, ARCHIVE and LITERATURE into the prompt by hand.** An in-harness
-dispatch never passes through `.claude/skills/codex-dispatch/dispatch.py`, so
-those three refusals do not fire. `[LJ-1.11]` went out short two mandatory
-rules through exactly this gap.
+**Write DD4, ARCHIVE and LITERATURE into the prompt by hand WHEN THE HEAD IS
+IN-HARNESS.** An in-harness dispatch never passes through
+`.claude/skills/codex-dispatch/dispatch.py`, so those three refusals do not
+fire. `[LJ-1.11]` went out short two mandatory rules through exactly this gap.
+**A pi or codex review goes through the dispatcher and the refusals DO fire**,
+so the hand-application follows the head rather than the rule. Check which head
+the version in force gives before you decide.
 
 **This does not contradict DD17's "a RED is never a trigger".** That clause
 forbids re-dispatching the TASK on a RED and it still binds. This dispatches a
