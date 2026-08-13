@@ -711,6 +711,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.152 | Can two L-graphs compose without a second hasReplacementL | GO: 2.50 s, NO REPLACEMENT | Separation carries it, 2,500 to 1. The seal was NOT the cure and A5 is unpriced again |
 | LJ-1.153 | Repair the refutable frame hypotheses that check-unbound-hyp flags | 38 TO 2: 36 REFUTED AND REPAIRED | One tie for all 36. Every site already held the premise and threw it away |
 | LJ-1.154 | Carve the identity graph by separation, not by replacement | DISPATCHED | Separation is 2,500 to 1 cheaper. If it builds as well as composes, A5's 254 s was never necessary |
+| LJ-1.155 | Is there a second dominant term, or is the wing intrinsically this expensive | DISPATCHED | LJ-1.145 found one and nobody looked for a second. This decides whether DD24 must be ruled |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
