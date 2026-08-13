@@ -7144,3 +7144,78 @@ module LeafAgree {n : ℕ} (w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fi
       , DA.back hdef ) )
 
 ```
+
+```agda
+-- =====================================================================
+-- THE SUPPLY.  One `KFacts` VALUE.
+--
+-- `KFactsCons` above builds a `KFacts` FROM a `KFacts`, so until this
+-- block the record had no base case and no value anywhere in `src/`.
+--
+-- The bound is `Lset λ` for a limit λ above the carrier's ordinal, which
+-- is Devlin's `K(u)` on this coding, class for class: `arityK` is the
+-- transitivity of the bound, `numK0-11` the formula set, `pairK` and its
+-- two tagged forms the finite sequences, and `carrierK` the members of
+-- the carrier.  The three limit hypotheses are `HullStage`'s own.
+-- =====================================================================
+open import L.Constructible {ℓ} using ( Lset-mono )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Coding.Bound {ℓ} lem using ( module Bound )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
+
+module KValue (lam : V ℓ) (ordλ : IsOrd lam)
+              (succλ : (d : V ℓ) → ⟨ d ∈ lam ⟩ → ⟨ sucV d ∈ lam ⟩)
+              (∅∈λ : ⟨ ∅ ∈ lam ⟩)
+              (gam : V ℓ) (ordγ : IsOrd gam) (γ∈λ : ⟨ gam ∈ lam ⟩) where
+
+  module B = Bound lam ordλ succλ ∅∈λ
+
+  -- Fourteen slots: the carrier, the bound, and the twelve arity tags.
+  -- The carrier is a stage BELOW the bound, which is the real shape.
+  Kenv : S ^ 14
+  Kenv = LsetS gam ordγ ∷ LsetS lam ordλ
+       ∷ numeralL 0 ∷ numeralL 1 ∷ numeralL 2 ∷ numeralL 3
+       ∷ numeralL 4 ∷ numeralL 5 ∷ numeralL 6 ∷ numeralL 7
+       ∷ numeralL 8 ∷ numeralL 9 ∷ numeralL 10 ∷ numeralL 11 ∷ []
+
+  iA iK i0 i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 : Fin 14
+  iA = zero
+  iK = suc zero
+  i0 = suc (suc zero)
+  i1 = suc (suc (suc zero))
+  i2 = suc (suc (suc (suc zero)))
+  i3 = suc (suc (suc (suc (suc zero))))
+  i4 = suc (suc (suc (suc (suc (suc zero)))))
+  i5 = suc (suc (suc (suc (suc (suc (suc zero))))))
+  i6 = suc (suc (suc (suc (suc (suc (suc (suc zero)))))))
+  i7 = suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+  i8 = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+  i9 = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))
+  i10 = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))
+  i11 = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))))
+
+  facts : KFacts iA iK i0 i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 Kenv
+  facts = record
+    { tagEq0 = refl ; tagEq1 = refl ; tagEq2 = refl ; tagEq3 = refl
+    ; tagEq4 = refl ; tagEq5 = refl ; tagEq6 = refl ; tagEq7 = refl
+    ; tagEq8 = refl ; tagEq9 = refl ; tagEq10 = refl ; tagEq11 = refl
+    ; numK0 = B.num∈λ 0 ; numK1 = B.num∈λ 1 ; numK2 = B.num∈λ 2
+    ; numK3 = B.num∈λ 3 ; numK4 = B.num∈λ 4 ; numK5 = B.num∈λ 5
+    ; numK6 = B.num∈λ 6 ; numK7 = B.num∈λ 7 ; numK8 = B.num∈λ 8
+    ; numK9 = B.num∈λ 9 ; numK10 = B.num∈λ 10 ; numK11 = B.num∈λ 11
+    ; innerK = λ k a ha → B.prʟ∈λ (numeralL k) a (B.num∈λ k) ha
+    ; innerPairK = λ k a b ha hb →
+        B.prʟ∈λ (numeralL k) (prʟ a b) (B.num∈λ k) (B.prʟ∈λ a b ha hb)
+    ; pairK = λ a b ha hb → B.prʟ∈λ a b ha hb
+    ; carrierK = λ v hv → Lset-mono {α = lam} {β = gam} γ∈λ {x = fst v} hv
+    ; arityK = λ N v v∈N N∈K → B.trans∈λ {x = fst N} {y = fst v} v∈N N∈K }
+
+  -- The value is a VALUE, and this is the test: `KFactsCons` is the
+  -- tree's own consumer and it accepts the record at its own indices.
+  consed : (c : S)
+         → KFacts (suc iA) (suc iK) (suc i0) (suc i1) (suc i2) (suc i3)
+             (suc i4) (suc i5) (suc i6) (suc i7) (suc i8) (suc i9)
+             (suc i10) (suc i11) (c ∷ Kenv)
+  consed c = KFactsCons iA iK i0 i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11
+               Kenv c facts
+```
