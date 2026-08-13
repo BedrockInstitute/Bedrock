@@ -1,0 +1,15 @@
+B run1 real=16.09 load=5.26 4.73 4.36
+B run2 real=16.44 load=4.97 4.70 4.36
+B run3 real=16.47 load=4.84 4.68 4.35
+C run1 real=1.44 load=4.96 4.71 4.37
+C run2 real=1.32 load=4.96 4.71 4.37
+C run3 real=1.29 load=4.96 4.71 4.37
+D run1 real=11.72 load=4.96 4.71 4.37
+D run2 real=12.09 load=4.38 4.60 4.34
+D run3 real=11.95 load=4.31 4.58 4.33
+E run1 real=45.54 load=3.57 4.36 4.27 exit_ok=1
+E run2 real=46.03 load=3.79 4.30 4.25 exit_ok=1
+E run3 real=46.89 load=4.03 4.30 4.25 exit_ok=1
+ProbeLJ1156A run1 real=134.48 load=4.48 4.43 4.31 ok=1
+ProbeLJ1156A run2 real=132.60 load=4.19 4.30 4.27 ok=1
+ProbeLJ1156A run3 real=131.93 load=4.95 4.42 4.30 ok=1

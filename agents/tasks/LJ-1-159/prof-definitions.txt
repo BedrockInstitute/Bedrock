@@ -1,0 +1,18 @@
+Checking LJ-1-159.ProbeLJ1159A (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-159/ProbeLJ1159A.agda).
+Total                                       99,310ms 
+Miscellaneous                                2,554ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj._.bInjP  55,937ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj._.b<γ    12,125ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj._.δ∈sα    6,554ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj.nonempty  5,727ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj.κ-min-at  5,248ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj.κ-inj     2,747ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj._.bδ      2,178ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj.oκ        1,391ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj.κ∈sα      1,380ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj.κ-min     1,377ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj.self-eq   1,366ms 
+LJ-1-159.ProbeLJ1159A.LeastCardInj._.b         721ms 
+real 100.18
+user 98.76
+sys 0.65

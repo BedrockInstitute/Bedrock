@@ -1,0 +1,7 @@
+Checking LJ-1-159.ProbeLJ1159D (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-159/ProbeLJ1159D.agda).
+Total                                       11,614ms 
+Miscellaneous                                1,260ms 
+LJ-1-159.ProbeLJ1159D.LeastCardInj.oκ        4,421ms 
+LJ-1-159.ProbeLJ1159D.LeastCardInj.κ-inj     2,964ms 
+LJ-1-159.ProbeLJ1159D.LeastCardInj.κ-min-at  1,506ms 
+LJ-1-159.ProbeLJ1159D.LeastCardInj.κ∈sα      1,460ms 
