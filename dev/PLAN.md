@@ -729,6 +729,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.172 | BUILD the supply, in dependency order, landing incrementally | 1 TO 5 BUILT; 6 REFUTED AT THE JOIN | envSetK asks a level to hold a function space. Six names, one fact, no supplier |
 | LJ-1.173 | Restrict envSetK to a numeral arity, gate first | 21 FIELDS IN THREE RECORDS, CURE ATOMIC | My ruling's scope was one record; the sweep it ordered measured three. Cure 190, step 6 260 |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
+| LJ-1.175 | Sum Route A-prime to ONE total, or name what blocks it | DISPATCHED | Six blocks priced and A5's last unknown dissolved. Nobody has summed them, and LJ-1.8 waits on it |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
