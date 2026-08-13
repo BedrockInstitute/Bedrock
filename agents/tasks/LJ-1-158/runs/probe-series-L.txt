@@ -1,0 +1,15 @@
+# command zsh agents/tasks/LJ-1-158/runprobes.sh
+# GHCRTS -A64m -I0 -M8g
+# waited for a quiet machine 0 s
+# load before 4.03 / 4.19 / 4.12
+# load after  5.16 / 4.54 / 4.25
+# wall seconds 30.82
+# exit 0
+L1 warmup: exit 0 wall 8.138806000
+L1 run1: exit 0 wall 7.253470000
+L2 run1: exit 0 wall 3.812305000
+L1 run2: exit 0 wall 7.468447000
+L2 run2: exit 0 wall 4.064846000
+
+----- stderr -----
+

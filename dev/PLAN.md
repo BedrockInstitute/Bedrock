@@ -714,7 +714,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.155 | Is there a second dominant term, or is the wing intrinsically this expensive | BOTH WORLDS, SPLIT PER MASTER | The Agree masters have a second term, WING-LOCAL, zero baseline impact |
 | LJ-1.156 | Does A5 need CSB at all | DISSOLVED: A5 CARRIES ZERO REPLACEMENT | CSB is out and the swap is not dearer. The new gate is LeastCardInj: 44 lines, 100.64 s |
 | LJ-1.157 | Adversarial review: what did the new route rebuild that the archives held | FOUR MISSES, A MEASURED DRIFT | The heading survived, the content decayed. CSB surfaced twice, lost twice |
-| LJ-1.158 | Collapse the Agree telescopes into one record | DISPATCHED | LJ-1.155's cure: DeadCode by 106x, file minus 52 percent, and WING-LOCAL so the bar does not move |
+| LJ-1.158 | Collapse the Agree telescopes into one record | WING 2.06x TO 1.60x, HALF THE GAP | TwelveAgree behaved BETTER, not worse: DeadCode by 138x. sucK is the only waller |
 | LJ-1.159 | LeastCardInj is 48 times the bar and nobody has attacked it | 133 s TO 46 s, 13 LINES | My order-type lead REFUTED. The cause is sucV at a variable; the cure is prior art next door |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
