@@ -2083,7 +2083,7 @@ up to FOUR concurrent Agda writers at `-M8g` each; HEAVY mode for assembly
 and close-out batches, at most TWO at `-M12g` each; the tier is chosen at
 dispatch, mixed tiers keep the worst-case heap sum at or under 32 GB, and
 the third and fourth slots are filled only when system free memory reads
-above 25%. A watchdog (`_build/tools/agda-watchdog.sh`, restart it each
+above 25%. A watchdog (`scripts/agda-watchdog.sh`, restart it each
 session) backstops at 14 GB per process and an 8% system-free floor. A
 heap-exhausted exit is a WALL event: apply the P-i playbook, never simply
 rerun.

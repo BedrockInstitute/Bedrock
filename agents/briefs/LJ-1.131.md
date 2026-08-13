@@ -1,7 +1,7 @@
 # LJ-1.131: price the V = L route against the ambient one
 
-tier: opus (override 2026-08-13; an adversarial review of this would go to pi,
-per `scripts/dispatch_policy.py`)
+tier: opus (version `override`, set 2026-08-13; the head for every case is in
+`scripts/dispatch_policy.py`, which is the only place the tables live)
 
 ## GOAL
 

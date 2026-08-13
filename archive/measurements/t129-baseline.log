@@ -1,0 +1,21 @@
+Checking L.Condensation (/Users/alsg/Agentic/Bedrock/src/L/Condensation.lagda.md).
+Total                                        142,280ms 
+Miscellaneous                                  2,493ms 
+L.Condensation.ambientOnly-from              130,858ms 
+L.Condensation.AtCarrier.level-abs₀L           2,970ms 
+L.Condensation.AtCarrier.level-abs₀            2,954ms 
+L.Condensation.AtCarrier.levelΣ₁                 541ms 
+L.Condensation.AtCarrier.levelΔ₀                 479ms 
+L.Condensation.AtCarrier.levelΣ₁L                454ms 
+L.Condensation.AtCarrier.levelΔ₀L                452ms 
+L.Condensation.AtCarrier.levelΠ₁L                448ms 
+L.Condensation.AtCarrier.level-transfer          183ms 
+L.Condensation.AtCarrier.level-transfer-up       176ms 
+L.Condensation.AtCarrier.level-transfer-down     173ms 
+L.Condensation.AtCarrier._.go                     47ms 
+L.Condensation.AtCarrier.mapΣ₁                    23ms 
+L.Condensation.AtCarrier.mapΠ₁                    21ms 
+real 143.64
+user 141.89
+sys 0.83
+EXIT=0
