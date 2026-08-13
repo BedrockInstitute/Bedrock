@@ -75,13 +75,17 @@ LEDGER = ROOT / "dev" / "ledger.toml"
 # it is the BETWEEN-SERIES figure rather than the within-series one. That
 # choice is the whole point of the constant.
 #
-# `src/L/Ordinal/StageArith.lagda.md`, five SEPARATE invocations minutes apart,
-# each one warm-up plus three measured runs, nothing in the tree changing:
-# 0.0114 / 0.0107 / 0.0104 / 0.0106 / 0.0104 s per line. Range 9.3 percent of
-# the mean. WITHIN any one of those series the spread was 0.6 to 4.0 percent,
-# so a series cannot see its own displacement and reports a false confidence.
-# A verdict is ONE series on ONE occasion, so the between-series figure is the
-# one that governs it.
+# `src/L/Ordinal/StageArith.lagda.md`, EIGHT separate warmed series over about
+# forty minutes, nothing in the tree changing: 0.0104 / 0.0104 / 0.0105 /
+# 0.0106 / 0.0107 / 0.0114 / 0.0115 / 0.0118 s per line. Range 12.8 percent of
+# the mean, relative standard deviation 5.2 percent. WITHIN any one of those
+# series the spread was 0.5 to 4.0 percent, so a series cannot see its own
+# displacement and reports a false confidence. A verdict is ONE series on ONE
+# occasion, so the between-series figure is the one that governs it.
+#
+# THE FIRST VALUE OF THIS CONSTANT WAS 9.3 PERCENT, from the first five series,
+# and the sixth series broke it within the hour. It is written at 12.8 rather
+# than rounded down, and it is still a floor rather than a ceiling.
 #
 # NOT SEEDED FROM THE SPREADS ON RECORD, and P-l is why. `[LJ-1.135]` measured
 # 5.5 percent over four runs and `[LJ-1.128]` 3.7 percent over five, but both
@@ -92,9 +96,9 @@ LEDGER = ROOT / "dev" / "ledger.toml"
 #
 # IT IS STILL A LOWER BOUND. It is one module, on one machine, on one day, and
 # the BASELINE carries its own spread that this figure does not include.
-INSTRUMENT_SPREAD: float | None = 0.093
+INSTRUMENT_SPREAD: float | None = 0.128
 INSTRUMENT_SPREAD_SOURCE = (
-    "MEASURED [LJ-1.148] 2026-08-13, five separate warmed series on "
+    "MEASURED [LJ-1.148] 2026-08-13, eight separate warmed series on "
     "src/L/Ordinal/StageArith.lagda.md, quiet machine")
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -472,16 +476,16 @@ def main() -> int:
     # WHAT THE TOOL KNOWS ABOUT ITS OWN SWING, said before any row is read.
     # A reader who does not know the band cannot tell a verdict from a coin
     # toss, and this tool printed rows for three days without it.
-    if args.runs > 1:
-        print(f"check-ratio | noise band: from each module's OWN {args.runs} "
-              f"runs, printed per row")
-    elif INSTRUMENT_SPREAD is not None:
-        print(f"check-ratio | noise band: +-{INSTRUMENT_SPREAD:.1%} declared "
-              f"({INSTRUMENT_SPREAD_SOURCE}). One run cannot confirm it here")
-    else:
+    if INSTRUMENT_SPREAD is None:
         print(f"check-ratio | noise band: UNKNOWN. This tool's repeatability is "
               f"{INSTRUMENT_SPREAD_SOURCE}, so NO row below can be called safe "
               f"from the instrument's own swing. Use --runs N")
+    else:
+        print(f"check-ratio | noise band: at least +-{INSTRUMENT_SPREAD:.1%}, "
+              f"{INSTRUMENT_SPREAD_SOURCE}")
+        if args.runs > 1:
+            print(f"check-ratio | each row is flagged on the LARGER of that "
+                  f"floor and its own {args.runs}-run spread")
 
     for rel, lines, samples, warm in rows:
         if warm is not None:
