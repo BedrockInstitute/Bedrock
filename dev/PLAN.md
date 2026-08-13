@@ -520,7 +520,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-0.5 | RE-MEASURE the DD24 baseline | DONE: 0.007913 over 16,897 | Three cold Landmarks runs, spread 2.15 s, +2.85% and inside the 1.15 bar. Caught a confound: make typecheck builds the wing too |
 | LJ-0.8 | ADVERSARIAL review of the AC compression, done and planned | dispatched | tier: fable 5, owner-named. The survey missed 2 of 3 measured blocks. Deliverable is brief corrections |
 | LJ-1.1 | Recon: the GCH route on the internalization tower | RETURNED, one mis-cite | Wing 8.0-10.8k. LJ-1.11 F5: its warrant cites Devlin VI.4.1, a projectum lemma. The true one is II.5.2 |
-| LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Step clause has no Delta-0 witness at ANY carrier. Crossing 5.0-5.1k, or 1.0-1.7k by the cone fork |
+| LJ-1.2 | Gate: probe the widest unmeasured term LJ-1.1 names | NO-GO, re-prices the wing | Its Delta-0 answer was the wrong question, and its 5,047 was quoted not measured. See LJ-1.168 |
 | LJ-1.10 | RE-PRICE the crossing after LJ-1.2's NO-GO | RETURNED, but REFUTED by LJ-1.11 | It read the ⊤̇ Def-step as a saving. T130 had recorded the same fact as the MISSING content |
 | LJ-1.11 | ADVERSARIAL review of LJ-1 vs the literature | RETURNED, 2 math defects | F1: route C's story is trivial in the Def-step, so its target is FALSE. F2: the collapse is trivial where used |
 | LJ-1.3 | Build: the Skolem hull, a least-witness search over the order | DELIVERED 343 lines | Ported from 241 archived. 0.0070 s/line, 0.91x the bar. Does NOT use σ₁-up: LJ-1.5 does |
@@ -724,7 +724,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.165 | BUILD the crossing face and discharge levelIn and cover | STOP: SIX GATES PRICED DERIVATIONS | The assembly works at 17 lines. Nothing supplies the face: KFacts is never CONSTRUCTED |
 | LJ-1.166 | Gate K(u), the SUPPLY that six gates never priced | GO: 88 LINES, 2.69 s, BOUND FITS | Devlin's engine transfers. Three of four closure classes were proved and no gate cited them |
 | LJ-1.167 | The definable power at a general argument, and pairing at a general limit | DISPATCHED | LJ-1.166's two gaps by risk. One is a single declaration; search L/Choice first |
-| LJ-1.168 | Re-measure the satisfaction layer, 5,047 lines never re-priced | DISPATCHED | LJ-1.2 priced it on a different coding and the digest says its NO-GO answered the wrong question |
+| LJ-1.168 | Re-measure the satisfaction layer, 5,047 lines never re-priced | 5,047 COLLAPSES TO ABOUT 270 | The figure was never measured. LJ-1.10 had already called it a false anchor |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
