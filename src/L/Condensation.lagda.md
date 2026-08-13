@@ -6489,14 +6489,25 @@ module WitnessAgree {n : ℕ} (A x K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin
   (witK : (w : S) → ⟨ (w ∷ γ) ⊨ ((var (suc x) ∈̇ var zero)
                ∧̇ (closedAt zero ∧̇ shapedAt zero (suc A))) ⟩
          → ⟨ fst w ∈ fst (lookup K γ) ⟩)
-  (codesK : (w : S) → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst w ⟩
+  -- THE WITNESS SET IS IN K, AND THESE THREE SAY SO ([LJ-1.153]).
+  -- Without the tie, `w` is any set at all: pick the successor of a
+  -- code whose components are the K slot itself, and the conclusion
+  -- gives K ∈ K (agents/tasks/LJ-1-153/ProbeLJ1153A.agda:120, :137,
+  -- exit 0, and that refutation needs NO hypothesis).  The tie is the
+  -- one the sites hold: `witK` returns it in `out`, and the bounded
+  -- witness carries it in `back`.  With K transitive it is also what
+  -- makes the three TRUE, by [LJ-1.151]'s `prK`.
+  (codesK : (w : S) → ⟨ fst w ∈ fst (lookup K γ) ⟩
+           → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst w ⟩
            → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
            → ⟨ fst ar ∈ fst (lookup K γ) ⟩
              × ⟨ fst a ∈ fst (lookup K γ) ⟩ × ⟨ fst b ∈ fst (lookup K γ) ⟩)
-  (unCodesK : (w : S) → (k : ℕ) → (c ar a : S) → ⟨ fst c ∈ fst w ⟩
+  (unCodesK : (w : S) → ⟨ fst w ∈ fst (lookup K γ) ⟩
+             → (k : ℕ) → (c ar a : S) → ⟨ fst c ∈ fst w ⟩
              → fst c ≡ pr (fst ar) (pr (# k) (fst a))
              → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
-  (entryK : (w x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst w ⟩
+  (entryK : (w : S) → ⟨ fst w ∈ fst (lookup K γ) ⟩
+           → (x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst w ⟩
            → ⟨ fst x' ∈ fst (lookup K γ) ⟩ × ⟨ fst y ∈ fst (lookup K γ) ⟩) where
 
   out : ⟨ γ ⊨ hasWitnessAt A x ⟩
@@ -6507,20 +6518,22 @@ module WitnessAgree {n : ℕ} (A x K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin
            ∧̇ (closedAt zero ∧̇ shapedAt zero (suc A))) ⟩
        → ⟨ γ ⊨ hasWitnessBS A x K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 ⟩
     go (w , (hxw , (hcl , hsh))) =
-      ∣ w , ( witK w (hxw , (hcl , hsh))
-            , ( hxw , ( CA.out hcl , SA.out hsh ) ) ) ∣₁
+      ∣ w , ( wK , ( hxw , ( CA.out hcl , SA.out hsh ) ) ) ∣₁
       where
+      -- The site fact this direction already computed and threw away.
+      wK : ⟨ fst w ∈ fst (lookup K γ) ⟩
+      wK = witK w (hxw , (hcl , hsh))
       module CA = ClosedAgree {1 + n} zero (suc K)
                     (suc N2) (suc N3) (suc N4) (suc N5)
                     (suc N8) (suc N9) (suc N10) (suc N11)
                     (suc A) (suc N0) (suc N1) (suc N6) (suc N7) (w ∷ γ)
                     (KFactsCons A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ w f)
-                    (codesK w) (unCodesK w) (entryK w)
+                    (codesK w wK) (unCodesK w wK) (entryK w wK)
       module SA = ShapedAgree {1 + n} zero (suc A) (suc K)
                     (suc N0) (suc N1) (suc N2) (suc N3) (suc N4) (suc N5)
                     (suc N6) (suc N7) (suc N8) (suc N9) (suc N10) (suc N11) (w ∷ γ)
                     (KFactsCons A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ w f)
-                    (codesK w) (unCodesK w)
+                    (codesK w wK) (unCodesK w wK)
 
   back : ⟨ γ ⊨ hasWitnessBS A x K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 ⟩
        → ⟨ γ ⊨ hasWitnessAt A x ⟩
@@ -6537,17 +6550,18 @@ module WitnessAgree {n : ℕ} (A x K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin
     go (w , (wK , (hxw , (hcl , hsh)))) =
       ∣ w , ( hxw , ( CA.back hcl , SA.back hsh ) ) ∣₁
       where
+      -- `wK` was bound by the pattern and unused before [LJ-1.153].
       module CA = ClosedAgree {1 + n} zero (suc K)
                     (suc N2) (suc N3) (suc N4) (suc N5)
                     (suc N8) (suc N9) (suc N10) (suc N11)
                     (suc A) (suc N0) (suc N1) (suc N6) (suc N7) (w ∷ γ)
                     (KFactsCons A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ w f)
-                    (codesK w) (unCodesK w) (entryK w)
+                    (codesK w wK) (unCodesK w wK) (entryK w wK)
       module SA = ShapedAgree {1 + n} zero (suc A) (suc K)
                     (suc N0) (suc N1) (suc N2) (suc N3) (suc N4) (suc N5)
                     (suc N6) (suc N7) (suc N8) (suc N9) (suc N10) (suc N11) (w ∷ γ)
                     (KFactsCons A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ w f)
-                    (codesK w) (unCodesK w)
+                    (codesK w wK) (unCodesK w wK)
 
 -- =====================================================================
 -- THE KEY, ENVIRONMENT AND DEFINES TRANSFERS.  tagBS against
@@ -6751,22 +6765,35 @@ module SatGraphAgree {n : ℕ} (w K : Fin (5 + n))
   (twelve-back : (d e f : S) → ⟨ (f ∷ e ∷ d ∷ γ) ⊨ SatGraphB.twelveB {n} w K N0 N1 N2 N3 N4 N5
                                            N6 N7 N8 N9 N10 N11 t0 t1 ⟩
                → ⟨ (f ∷ e ∷ d ∷ γ) ⊨ twelveAt (suc (suc zero)) (suc zero) zero ⟩)
-  (codesK : (d e f : S) → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
+  -- THE CODE SET AND THE GRAPH ARE IN K ([LJ-1.153]).  The clause set
+  -- is the `d` slot and the graph the `e` slot of the three-deep
+  -- environment, and both are the hypothesis's OWN bound variables.
+  -- Untied, a refuter picks them: `sucʟ` of a code whose components
+  -- are the K slot gives K ∈ K, with NO hypothesis at all
+  -- (agents/tasks/LJ-1-153/ProbeLJ1153A.agda:120, :137, :155, exit 0).
+  -- `witK` below returns exactly these two memberships, so the tie
+  -- costs the sites nothing.
+  (codesK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+           → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
            → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
            → ⟨ fst ar ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
              × ⟨ fst a ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
              × ⟨ fst b ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (unCodesK : (d e f : S) → (k : ℕ) → (c ar a : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
+  (unCodesK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+             → (k : ℕ) → (c ar a : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
              → fst c ≡ pr (fst ar) (pr (# k) (fst a))
              → ⟨ fst ar ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
                × ⟨ fst a ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (closedEntryK : (d e f : S) → (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
+  (closedEntryK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+                  → (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
                   → ⟨ fst x ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
                     × ⟨ fst y ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (domEntryK : (d e f : S) → (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup (suc zero) (f ∷ e ∷ d ∷ γ)) ⟩
+  (domEntryK : (d e f : S) → ⟨ fst e ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+               → (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup (suc zero) (f ∷ e ∷ d ∷ γ)) ⟩
                → ⟨ fst x ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
                  × ⟨ fst y ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (domK : (d e f : S) → (x : S) → ⟨ fst x ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
+  (domK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+          → (x : S) → ⟨ fst x ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
           → ⟨ fst x ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
   (witK : (d e f : S) → ⟨ (f ∷ e ∷ d ∷ γ) ⊨
              (var zero ≐ var (suc (suc (suc (suc (suc (suc w)))))))
@@ -6853,6 +6880,11 @@ module SatGraphAgree {n : ℕ} (w K : Fin (5 + n))
                          , ( h .snd .snd .snd .fst
                            , twelve-out d e f (h .snd .snd .snd .snd) ) ) ) )
     where
+    -- `h` IS `witK`'s premise, at the same environment, so this
+    -- direction supplies the two ties from what it already holds.
+    ks = witK d e f h
+    dK = ks .fst
+    eK = ks .snd .fst
     module CA = ClosedAgree {11 + n} (suc (suc zero))
                   (suc (suc (suc (suc (suc (suc K))))))
                   (suc (suc (suc (suc (suc (suc N2))))))
@@ -6868,13 +6900,20 @@ module SatGraphAgree {n : ℕ} (w K : Fin (5 + n))
                   (suc (suc (suc (suc (suc (suc N1))))))
                   (suc (suc (suc (suc (suc (suc N6))))))
                   (suc (suc (suc (suc (suc (suc N7)))))) (f ∷ e ∷ d ∷ γ)
-                  (lift3 d e f) (codesK d e f) (unCodesK d e f)
-                  (closedEntryK d e f)
+                  (lift3 d e f) (codesK d e f dK) (unCodesK d e f dK)
+                  (closedEntryK d e f dK)
     module DA = DomainAgree {11 + n} (suc zero) (suc (suc zero))
                   (suc (suc (suc (suc (suc (suc K)))))) (f ∷ e ∷ d ∷ γ)
-                  (domEntryK d e f) (domK d e f)
+                  (domEntryK d e f eK) (domK d e f dK)
 
-  body-back : (d e f : S) → ⟨ (f ∷ e ∷ d ∷ γ) ⊨
+  -- The two site facts this direction takes as arguments ([LJ-1.153]).
+  -- The bounded form gives `witK` nothing to act on, but `back` below
+  -- ALREADY BINDS both memberships in its three patterns and threw
+  -- them away, so the caller pays nothing.
+  body-back : (d e f : S)
+            → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+            → ⟨ fst e ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+            → ⟨ (f ∷ e ∷ d ∷ γ) ⊨
                 (var zero ≐ var (suc (suc (suc (suc (suc (suc w)))))))
                 ∧̇ (closedBS (suc (suc zero))
                       (suc (suc (suc (suc (suc (suc K))))))
@@ -6899,7 +6938,7 @@ module SatGraphAgree {n : ℕ} (w K : Fin (5 + n))
                     ∧̇ (appAt (suc zero) (suc (suc (suc (suc zero))))
                                (suc (suc (suc zero)))
                       ∧̇ twelveAt (suc (suc zero)) (suc zero) zero))) ⟩
-  body-back d e f h = ( h .fst
+  body-back d e f dK eK h = ( h .fst
                       , ( CA.back (h .snd .fst)
                         , ( DA.back (h .snd .snd .fst)
                           , ( h .snd .snd .snd .fst
@@ -6920,11 +6959,11 @@ module SatGraphAgree {n : ℕ} (w K : Fin (5 + n))
                   (suc (suc (suc (suc (suc (suc N1))))))
                   (suc (suc (suc (suc (suc (suc N6))))))
                   (suc (suc (suc (suc (suc (suc N7)))))) (f ∷ e ∷ d ∷ γ)
-                  (lift3 d e f) (codesK d e f) (unCodesK d e f)
-                  (closedEntryK d e f)
+                  (lift3 d e f) (codesK d e f dK) (unCodesK d e f dK)
+                  (closedEntryK d e f dK)
     module DA = DomainAgree {11 + n} (suc zero) (suc (suc zero))
                   (suc (suc (suc (suc (suc (suc K)))))) (f ∷ e ∷ d ∷ γ)
-                  (domEntryK d e f) (domK d e f)
+                  (domEntryK d e f eK) (domK d e f dK)
 
   sh3 : ∀ {m} → Fin m → Fin (3 + m)
   sh3 i = suc (suc (suc i))
@@ -6957,7 +6996,7 @@ module SatGraphAgree {n : ℕ} (w K : Fin (5 + n))
       (λ { (d , (dK , hT)) → PT.rec squash₁
         (λ { (e , (eK , hb)) → PT.rec squash₁
           (λ { (f , (fK , body)) →
-            ∣ d , ∣ e , ∣ f , body-back d e f body ∣₁ ∣₁ ∣₁ })
+            ∣ d , ∣ e , ∣ f , body-back d e f dK eK body ∣₁ ∣₁ ∣₁ })
           hb })
         hT })
       h
@@ -6983,16 +7022,22 @@ module LeafAgree {n : ℕ} (w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fi
   (witK : (w' : S) → ⟨ (w' ∷ γ) ⊨ ((var (suc (suc zero)) ∈̇ var zero)
                ∧̇ (closedAt zero ∧̇ shapedAt zero (suc (suc (suc (suc w)))))) ⟩
          → ⟨ fst w' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (wCodesK : (w' : S) → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst w' ⟩
+  -- THE SAME TIE, PASSED THROUGH ([LJ-1.153]).  LeafAgree proves
+  -- nothing here: it hands these to WitnessAgree and SatGraphAgree,
+  -- whose repaired telescopes need the containing set in K.
+  (wCodesK : (w' : S) → ⟨ fst w' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+            → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst w' ⟩
             → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
               × ⟨ fst a ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
               × ⟨ fst b ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (wUnCodesK : (w' : S) → (k : ℕ) → (c ar a : S) → ⟨ fst c ∈ fst w' ⟩
+  (wUnCodesK : (w' : S) → ⟨ fst w' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+              → (k : ℕ) → (c ar a : S) → ⟨ fst c ∈ fst w' ⟩
               → fst c ≡ pr (fst ar) (pr (# k) (fst a))
               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
                 × ⟨ fst a ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (wEntryK : (w' x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst w' ⟩
+  (wEntryK : (w' : S) → ⟨ fst w' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+            → (x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst w' ⟩
             → ⟨ fst x' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
               × ⟨ fst y ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
   (twelve-out : (d e f : S) → ⟨ (f ∷ e ∷ d ∷ γ) ⊨ twelveAt (suc (suc zero)) (suc zero) zero ⟩
@@ -7001,24 +7046,29 @@ module LeafAgree {n : ℕ} (w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fi
   (twelve-back : (d e f : S) → ⟨ (f ∷ e ∷ d ∷ γ) ⊨ SatGraphB.twelveB {n} w K N0 N1 N2 N3 N4 N5
                                             N6 N7 N8 N9 N10 N11 t0 t1 ⟩
                → ⟨ (f ∷ e ∷ d ∷ γ) ⊨ twelveAt (suc (suc zero)) (suc zero) zero ⟩)
-  (gCodesK : (d e f : S) → (k : ℕ) → (c ar a b : S)
+  (gCodesK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+            → (k : ℕ) → (c ar a b : S)
             → ⟨ fst c ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
             → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
             → ⟨ fst ar ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
               × ⟨ fst a ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
               × ⟨ fst b ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (gUnCodesK : (d e f : S) → (k : ℕ) → (c ar a : S)
+  (gUnCodesK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+              → (k : ℕ) → (c ar a : S)
               → ⟨ fst c ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
               → fst c ≡ pr (fst ar) (pr (# k) (fst a))
               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
                 × ⟨ fst a ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (gEntryK : (d e f : S) → (x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
+  (gEntryK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+            → (x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
             → ⟨ fst x' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
               × ⟨ fst y ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (domEntryK : (d e f : S) → (x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst (lookup (suc zero) (f ∷ e ∷ d ∷ γ)) ⟩
+  (domEntryK : (d e f : S) → ⟨ fst e ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+              → (x' y : S) → ⟨ pr (fst x') (fst y) ∈ fst (lookup (suc zero) (f ∷ e ∷ d ∷ γ)) ⟩
               → ⟨ fst x' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
                 × ⟨ fst y ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (domK : (d e f : S) → (x : S) → ⟨ fst x ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
+  (domK : (d e f : S) → ⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩
+         → (x : S) → ⟨ fst x ∈ fst (lookup (suc (suc zero)) (f ∷ e ∷ d ∷ γ)) ⟩
          → ⟨ fst x ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
   (graphWitK : (d e f : S) → ⟨ (f ∷ e ∷ d ∷ γ) ⊨
                (var zero ≐ var (suc (suc (suc (suc (suc (suc w)))))))
