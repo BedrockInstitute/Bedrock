@@ -1,6 +1,6 @@
 # Process tensions and their resolutions (archived from dev/PLAN.md section 8)
 
-> **STATUS: SUPERSEDED.** D11's mechanisms are stated in the D11 row of dev/PLAN.md section 3; the live relief valves are the L0 standing track (dev/PLAN.md section 6.0), the fixed part level (D5), and the L4.1 harmonization (dev/PLAN.md section 11). Read this memo when the design reasoning behind a plan mechanism is needed. Moved out of dev/PLAN.md by [L3.32-T113].
+> **STATUS: SUPERSEDED.** **D11's mechanisms are in archive/dev/DECISIONS-archived.md, NOT in dev/PLAN.md section 3.** The whole D series was archived on 2026-08-09, and section 3 now holds the DD series. **DD11 is a DIFFERENT rule, code and prose craft: the D and DD numbers do not correspond.** The live relief valves are the L0 standing track (the L0 row of dev/PLAN.md section 11), the fixed part level (archived D5, stated live in dev/PLAN.md section 4), and the L4.1 harmonization (dev/PLAN.md section 11). Read this memo when the design reasoning behind a plan mechanism is needed. Moved out of dev/PLAN.md by [L3.32-T113].
 
 ---
 

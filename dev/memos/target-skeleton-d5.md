@@ -1,6 +1,6 @@
 # Target skeleton D5, and the rename ledger (archived from dev/PLAN.md section 4)
 
-> **STATUS: SUPERSEDED.** The authorities for what `src/` contains today are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog), per ruling D5; the diagram here is the port-era record, not the live tree. Read it when a rename's history or the port-era part layout is needed. Moved out of dev/PLAN.md by [L3.32-T113] because it updates rarely. The live part-level rule is D5 in dev/PLAN.md section 3.
+> **STATUS: SUPERSEDED.** The authorities for what `src/` contains today are `src/README.md` (the master symbol table) and `src/Everything.lagda.md` (the reading catalog), per ruling D5; the diagram here is the port-era record, not the live tree. Read it when a rename's history or the port-era part layout is needed. Moved out of dev/PLAN.md by [L3.32-T113] because it updates rarely. **The live part-level rule is dev/PLAN.md section 4, NOT section 3.** Section 3 now holds the DD series, and DD5 there is a DIFFERENT rule, the two quantitative constraints. **Ruling D5 is archived**, in archive/dev/DECISIONS-archived.md, and it still resolves.
 
 ---
 

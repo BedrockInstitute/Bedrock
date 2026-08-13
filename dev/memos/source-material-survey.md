@@ -1,6 +1,6 @@
 # Source material survey, and its cost anatomy (archived from dev/PLAN.md section 2)
 
-> **STATUS: STANDING.** The measurements here remain the calibration anchor for the two-caliber discipline (dev/PLAN.md section 6.2); only the survey's plan placement is archived. Moved out of dev/PLAN.md by [L3.32-T113] because it updates rarely and is evidence, not instruction. Read it when a recon needs the source-scale figures: 172 modules and 70.7k lines, the field-level cost anatomy of the L⊨ZFC cone, the clone measurements, and the lever headroom table. The live plan is dev/PLAN.md section 0, and the goal registry is section 11.
+> **STATUS: STANDING AS EVIDENCE, and its stated PURPOSE is dead.** The measurements stand, and they stay a calibration anchor for pricing (dev/PLAN.md section 6.2). **The two-caliber discipline that this header used to name is REVOKED** (owner 2026-08-09, retiring DD7; dev/PLAN.md section 3 and section 6.2). A projection is now ONE best-effort figure that names its basis, and DD8 carries that rule. Only the survey's plan placement is archived. Moved out of dev/PLAN.md by [L3.32-T113] because it updates rarely and is evidence, not instruction. Read it when a recon needs the source-scale figures: 172 modules and 70.7k lines, the field-level cost anatomy of the L⊨ZFC cone, the clone measurements, and the lever headroom table. The live plan is dev/PLAN.md section 0, and the goal registry is section 11.
 
 ---
 
