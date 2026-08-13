@@ -164,8 +164,12 @@ other side.
 
 ## 3. The brief
 
-Every brief is pinned in `agents/briefs/` before dispatch, so it survives a
-reboot and the owner can read what was actually asked. A brief carries:
+Every brief is pinned in `agents/tasks/<TASK>/` before dispatch, so it survives
+a reboot and the owner can read what was actually asked. **The brief, the report
+and every probe of one task share ONE directory** (owner's ruling 2026-08-13,
+built by `[LJ-1.142]`); `<TASK>` is the task code with `.` written `-`, in
+capitals, because that directory is an Agda module name component. A brief
+carries:
 
 - **`tier:`** (section 1) and a one-line GOAL.
 - **CWD**, and **SCOPE (write)** naming every file the agent may write.
@@ -207,9 +211,10 @@ it is repeated.
 
 Standing clauses that go in every build or probe brief:
 
-- **D-1**: write the probe in `agents/reports/<TASK>/`, beside the report it
-  belongs to, and never in `src/`; the verdict still goes in the report; write
-  the deliverable incrementally, never at the end (C-22).
+- **D-1**: write the probe in `agents/tasks/<TASK>/`, the SAME directory that
+  already holds this brief, and never in `src/`; your report goes there too, so
+  one task is one directory; the verdict still goes in the report; write the
+  deliverable incrementally, never at the end (C-22).
 - **D-10**: check the target's truth at the intended generality before proving
   it, and record any correction beside the original.
 - **DD8**: name the block's widest unmeasured term and the probe that would
@@ -358,8 +363,10 @@ Standing clauses that go in every build or probe brief:
   brief argues for a rewrite, say that over-optimism about rewrite cost is the
   failure mode to guard against.
 
-*Enforcement:* the brief is written to `agents/briefs/` and re-read before the
-dispatch command is issued.
+*Enforcement:* the brief is written to `agents/tasks/<TASK>/` and re-read before
+the dispatch command is issued. `scripts/check-dispatch-policy.py` reads every
+brief through `scripts/agents_tree.py` and prints the count it read, so a layout
+change that emptied the census fails instead of passing quietly (C-40).
 
 ## 4. Tree-wide sweeps
 

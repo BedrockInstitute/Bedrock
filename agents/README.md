@@ -8,17 +8,39 @@ The directory moved here from `_build/` on 2026-08-13, by the owner's ruling. `_
 git-ignored and `make clean` empties it, so 493 reports and 406 briefs sat one command from
 deletion. They are now tracked.
 
-## The layout
+## The layout: ONE TASK, ONE DIRECTORY
 
-| Path | What it holds | Count at the move |
+**A task directory holds the brief that ordered the work, the report that returned it, and every
+probe the task wrote.** The owner ruled that on 2026-08-13 and `[LJ-1.142]` built it. Before that
+ruling a task's three halves sat in three places, and reading one dispatch meant opening three
+directories.
+
+| Path | What it holds | Count at the merge |
 |---|---|---|
-| `reports/` | The reports of the current arc, `LJ-1.90` and later | 41 |
-| `reports/archive/` | Every earlier report, back to the first dispatch | 452 |
-| `reports/<TASK>/` | **The probes of one task**, added 2026-08-13 | 258 files in 118 directories |
-| `briefs/` | Every brief, the instruction each agent was dispatched with | 406 |
+| `tasks/<CODE>/` | One LIVE task: its brief, its report, its probes | 53 directories |
+| `tasks/archive/<CODE>/` | One task of the retired route, the same three files | 494 directories |
+| `tasks/DD25/` | The probes of a RULING, which is not a task | 55 probes |
+| `tasks/Unpaired/` | Probes no report claims by its own name | 12 probes |
 
-The split at `LJ-1.90` is not a date. `[LJ-1.90]` is where the first real consumer landed and
-the current arc began.
+```
+agents/tasks/LJ-1-141/LJ-1.141.md            the brief
+agents/tasks/LJ-1-141/lj-1.141-report.md     the report
+agents/tasks/LJ-1-141/ProbeLJ1141A.agda      the probe
+```
+
+The split between `tasks/` and `tasks/archive/` is the route, not a date. `[LJ-1.90]` is where
+the current arc began; everything earlier is the retired route and nothing writes there again.
+
+**`<CODE>` is the task code with `.` written `-`, in capitals.** `LJ-1.142` is `LJ-1-142` and
+`L3.32-T126` is `L3-32-T126`. The reason is in the next section: the directory is an Agda module
+name component and a `.` is illegal in one.
+
+**A file inside keeps the name it was born with.** A brief and a report are frozen records, and a
+renamed record breaks every citation that ever named it. Only the directory around them is new,
+so an old citation still resolves under `find agents -name <the-old-name>`.
+
+**`scripts/agents_tree.py` is the one place that knows this shape.** Five checkers read the tree
+through it. Do not write `agents/tasks` into a sixth checker by hand.
 
 ## Probes live here
 
@@ -26,20 +48,28 @@ the current arc began.
 deleted.** The owner ruled that on 2026-08-13. `dev/LESSONS.md` **D-1** is the canonical rule
 and everything below is how to obey it.
 
-**Write your probe in `agents/reports/<TASK>/`, and nowhere else.**
-`agents/reports/LJ-1-141/ProbeLJ1141A.agda` sits beside `agents/reports/lj-1.141-report.md`.
+**Write your probe in `agents/tasks/<TASK>/`, and nowhere else.**
+`agents/tasks/LJ-1-141/ProbeLJ1141A.agda` sits beside `agents/tasks/LJ-1-141/lj-1.141-report.md`.
 `src/` is forbidden absolutely; `scripts/check-probes.py` refuses a commit that carries a probe
 there, and that rule was bought on 2026-08-04 when one `git add -A src/` committed 13 probe
 files.
 
 **The directory name is the module qualifier, so declare `module LJ-1-141.ProbeLJ1141A`.**
-`bedrock.agda-lib` lists `agents/reports` as an include root, so your probe imports `L.Choice.Step`
+`bedrock.agda-lib` lists `agents/tasks` as an include root, so your probe imports `L.Choice.Step`
 exactly as a master does, and you run it where you wrote it. It never moves.
 
 **Write the directory as `LJ-1-141`, not `lj-1.141`.** A directory under an include root must
-parse as an Agda name. MEASURED 2026-08-13: `LJ-1-141` works; `lj-1.141`, `LJ-1_141` and
-`LJ_1_141` are all `[ParseError]`, because `.` splits the qualifier, `_` splits a mixfix name,
-and the trailing digits are then a literal.
+parse as an Agda name. MEASURED 2026-08-13 twice, by `[LJ-1.141]` and again by `[LJ-1.142]` at
+its own site: capitals, digits and dashes typecheck, and so does an all-lower-case name. A `.`
+in the name fails, because it splits the qualifier and Agda then looks for a directory that is
+not there. A `_` fails with `[ParseError]`, because it splits a mixfix name and the digits after
+it read as a literal.
+
+**The evidence is kept, not just claimed.** `agents/tasks/LJ-1-142/ProbeNameIndex.agda` imports
+one probe per legal shape, and the two sibling directories `NAMETEST-L3.32-DOT` and
+`NAMETEST-L3_32_UNDERSCORE` are the negative controls. They are the only Agda-illegal directory
+names in the tree and they are illegal on purpose. `scripts/tests/test_agents_tree.py` enforces
+the rule over every other directory and checks that it still rejects those two.
 
 **Nothing typechecks your probe once your task closes.** It becomes text, exactly like your
 report, and its claim is true of the tree at its date. That is why you run it yourself, while
@@ -50,7 +80,10 @@ an `[AmbiguousTopLevelModuleName]` error.
 
 **The 258 probes moved here on 2026-08-13 keep their old flat module lines**, so
 `agda` refuses them with `[ModuleNameDoesntMatchFileName]`. They are frozen records and nothing
-typechecks them. `archive/probes/README.md` maps every old path to its new one.
+typechecks them. `archive/probes/README.md` maps every old path to the path it had after
+`[LJ-1.141]`; `[LJ-1.142]` then renamed the root and moved the retired route's probes under
+`tasks/archive/`, so that map now needs one more hop. **It is a tombstone in `archive/`, which
+[LJ-1.142] was not allowed to edit.**
 
 ## These files are frozen records
 
@@ -87,4 +120,4 @@ An agent document is CC from birth, so no later move can relicense it. Never add
 - **The orchestrator** writes every brief here before dispatch, and audits every report.
 - **A dispatched agent** writes exactly one report here, incrementally, and reads the briefs
   and reports its own brief names.
-- **The owner** reads `reports/` to see where the work stands.
+- **The owner** reads `tasks/` to see where the work stands.

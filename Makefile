@@ -79,7 +79,7 @@ ratio:
 	$(PY) scripts/check-ratio.py --check
 
 # ONE gate, and it answers one question: did a probe get into git outside its
-# home? The owner ruled on 2026-08-13 that a probe lives in agents/reports/
+# home? The owner ruled on 2026-08-13 that a probe lives in agents/tasks/
 # beside its report, is tracked, and is never deleted, so there is no lifecycle
 # left to run. `make probes-sweep` and `--gate` are RETIRED with the rest of
 # [LJ-1.138]'s sweep; the frozen code is archive/tooling/check-probes-lifecycle.py.
@@ -172,6 +172,7 @@ test:
 	$(PY) scripts/tests/test_deletion_test.py
 	$(PY) scripts/tests/test_ratio_baseline.py
 	$(PY) scripts/tests/test_rule_series.py
+	$(PY) scripts/tests/test_agents_tree.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the
 # [LJ-0.4] closeout. _build/literature/ holds the OCR text and PDFs of Devlin,

@@ -46,7 +46,7 @@ underlying constructors `op0..op15` (K1).
 
 **Provenance:** `dev/memos/L3.28-ac-route.md` §9 (from probe P2);
 `dev/PLAN.md` §11 rows L3.29 (M1, M4) and L3.22; the K1 datum:
-`agents/reports/archive/k1-report.md`.
+`agents/tasks/archive/K1/k1-report.md`.
 
 **When it bites:** clause dispatch, tag matching, and any code equation under a
 literal numeral; the first symptom is unsolved metas whose fate depends on
@@ -163,7 +163,7 @@ per-definition tripwire, while the identical code over an abstract `X : Type ℓ
 checked in under a second. Replacing every such step with a direct path lambda
 (`λ ι → let p = … ι in …`) made the whole file check in ≈1.7 s.
 
-**Provenance:** `agents/reports/archive/m5a-report.md` Surprises 1 (the M5a re-cut, committed as
+**Provenance:** `agents/tasks/archive/M5A/m5a-report.md` Surprises 1 (the M5a re-cut, committed as
 `9539088`); PLAN row L3.29 M5a (see the landing record added by the doc surgery).
 
 **When it bites:** goals whose values carry `⟪ A ⟫` (presentation) types; a new
@@ -296,8 +296,8 @@ integrated 2026-08-02 by owner direction. The walk-transparency hypothesis
 under test in the final B batch is this playbook's case-12/case-20 family
 (transparent shared heavy objects at `Lset`-argument positions) meeting the
 B4d walk lesson (P-h). The same-day datum batch (2026-08-03) is filed from
-`agents/reports/archive/g3g4g5-report.md`, `agents/reports/archive/r5d2-report.md`, `agents/reports/archive/k3-report.md`,
-`agents/reports/archive/k4-report.md`, and `agents/reports/archive/r5a-report.md`.
+`agents/tasks/archive/G3G4G5/g3g4g5-report.md`, `agents/tasks/archive/R5D2/r5d2-report.md`, `agents/tasks/archive/K3/k3-report.md`,
+`agents/tasks/archive/K4/k4-report.md`, and `agents/tasks/archive/R5A/r5a-report.md`.
 
 ### P-j. A path lambda is a normalization request
 
@@ -307,7 +307,7 @@ forces `op` to whnf at both endpoints.
 **Measured (r3c, 2026-08-03):** nine of ten `eval-agree` clauses were free
 and the one fatal differed only in whether `op` was sealed.
 
-**Provenance:** `agents/reports/archive/r3c-report.md`.
+**Provenance:** `agents/tasks/archive/R3C/r3c-report.md`.
 
 ## 2. Conversion rules (R series)
 
@@ -561,7 +561,7 @@ concrete arities cost ~60 lines in a 1,347-line chapter, and generic arities
 were not the wall source (probe 11 vs 13).
 
 **Provenance:** PLAN §11 row L2.4 (faithfulness); the K3 datum:
-`agents/reports/archive/k3-report.md`.
+`agents/tasks/archive/K3/k3-report.md`.
 
 **When it bites:** any reading whose environment is a concrete abbreviation.
 
@@ -796,14 +796,14 @@ pre-wall syntax-indexed datum (K2, 2026-08-03): the small-indexed sett over
 external syntax gave both membership directions definitionally in 45 lines.
 
 **Provenance:** the r1b report (the crash-resumed batch); commit `7c28ce2`;
-the K2 datum: `agents/reports/archive/k2-report.md`.
+the K2 datum: `agents/tasks/archive/K2/k2-report.md`.
 
 **Appended (the GLp probe, 2026-08-04):** a nested small-index type
 (`⟪ ⟪ τ ⟫↪ m ⟫`) is free inline but hit a 12 GB heap wall at 4:37 when stored
 in a RECORD FIELD; three distinct cures failed, including I-4's prescribed
 carrier-level restatement, and the only measured cure is to inline the
 decomposition at each use site. Storage position, not expression size, was
-the trigger. Provenance: `agents/reports/archive/l3.31-glprobe-report.md`.
+the trigger. Provenance: `agents/tasks/archive/L3-31-GLPROBE/l3.31-glprobe-report.md`.
 
 ### R-36. Expose a sealed decomposition with an opaque-unfolding read lemma
 
@@ -824,7 +824,7 @@ dependency (r3b2); an opaque index family wants a small block of unfolding
 equalities next to it as its official interface (r2c).
 
 **Provenance:** the r2c report parts 2-4; commits `7c69beb`, `a3c9f80`;
-companion to P-c; the r3b2 read-direction datum: `agents/reports/archive/r3b2-report.md`.
+companion to P-c; the r3b2 read-direction datum: `agents/tasks/archive/R3B2/r3b2-report.md`.
 
 ### R-38. A consumer's alias of a transparent imported operation is a birth site
 
@@ -851,9 +851,9 @@ alias's job is to be the single site that invokes it (R5a-2); second
 prophylactic datum: the base block ran at 1.3 s warm with the discipline
 applied first (K1).
 
-**Provenance:** `agents/reports/archive/r3c-report.md` (the wall trail); commit `d15c114`;
+**Provenance:** `agents/tasks/archive/R3C/r3c-report.md` (the wall trail); commit `d15c114`;
 companion to P-c and R-36; the R5-D2, R5a-2, and K1 datums:
-`agents/reports/archive/r5d2-report.md`, `agents/reports/archive/r5a-report.md`, `agents/reports/archive/k1-report.md`.
+`agents/tasks/archive/R5D2/r5d2-report.md`, `agents/tasks/archive/R5A/r5a-report.md`, `agents/tasks/archive/K1/k1-report.md`.
 
 **Appended (the PZ polish, 2026-08-03):** when an expensive imported
 invocation has consumers in more than one chapter, the single sealed
@@ -863,7 +863,7 @@ invocation belongs in the EARLIEST consumer, trunk-wide, not once per file
 applying a transferred perf datum even when it is trusted: the same 175 s
 profile that confirmed the r5a figure (26-29 s per site) also exposed a
 larger unattributed cost in the same file (`Slot.k1` 31.7 s, `Slot.tupleIn`
-24.9 s). Provenance: `agents/reports/archive/polish2-report.md`.
+24.9 s). Provenance: `agents/tasks/archive/POLISH2/polish2-report.md`.
 
 **Appended (the W3 sealing probe, 2026-08-04, measured at 60x):** never `with`
 on a transparent least-witness term. The construction RE-ELABORATES the search
@@ -879,8 +879,8 @@ two sibling walls (a heap exhaustion at a concrete presentation and a hang on
 comparison types carrying a concrete ordinal) did not reproduce at all under
 pinned implicits and warm caches, so an elaboration-context artifact can look
 exactly like a statement-level wall: re-measure a recorded wall before pricing
-a design around it. Provenance: `agents/reports/archive/l3.32-t22-report.md`,
-`agents/reports/archive/l3.32-t19-report.md`.
+a design around it. Provenance: `agents/tasks/archive/L3-32-T22/l3.32-t22-report.md`,
+`agents/tasks/archive/L3-32-T19/l3.32-t19-report.md`.
 
 ### R-37. A transported membership in a compared statement position re-fires the tower
 
@@ -898,7 +898,7 @@ strictly stronger and the mathematics is unchanged.
 (killed, deletion-bisected to the single lemma); the variable-hypothesis
 restatement checks in 10 s inside a 2.6 s-cold file.
 
-**Provenance:** `agents/reports/archive/r4-report.md` section 6; commit `03f7bc6`.
+**Provenance:** `agents/tasks/archive/R4/r4-report.md` section 6; commit `03f7bc6`.
 
 ### R-34. Pin every implicit universe level a `using`-import leaves open
 
@@ -924,7 +924,7 @@ bounded quantifiers, UmemInJ at `con c` atoms.
 **Measured (G2p, 2026-08-03):** the probe's three clauses plus adequacy in
 286 lines, 1.8 s cold, zero Utrans uses.
 
-**Provenance:** `agents/reports/archive/g2p-report.md`.
+**Provenance:** `agents/tasks/archive/G2P/g2p-report.md`.
 
 ### R-40. A deep successor-chain membership witness normalizes super-linearly; climb by small closures
 
@@ -942,7 +942,7 @@ climb takes the site from KILLED at 631 s to 59 s, exit 0. Found by prefix
 bisection of the below-lim probe; the wall survived every postulate variant
 except postulating the ordinal witness itself.
 
-**Provenance:** `agents/reports/archive/l3.32-t154-report.md` sections 2 to 4; the harness
+**Provenance:** `agents/tasks/archive/L3-32-T154/l3.32-t154-report.md` sections 2 to 4; the harness
 family `/tmp/t154-scratch`.
 
 ## 3. Termination traps (T series)
@@ -1027,7 +1027,7 @@ in four minutes by C-10 staging (three stages, per-swap asserts, typecheck
 per stage, every stage under 4 s); restoring the signatures restored the
 2-second check.
 
-**Provenance:** the polish report `agents/reports/archive/polish-r-report.md` (commit
+**Provenance:** the polish report `agents/tasks/archive/POLISH-R/polish-r-report.md` (commit
 `77ac3e0`); sibling of C-11 and I-2.
 
 **When it bites:** any sound/mirror chain where an object-language equation or
@@ -1057,10 +1057,10 @@ lifecycle of 2026-08-04):** a probe is the REPORT'S OTHER HALF. The report
 carries the verdict; the probe carries the term, which no prose copies without
 loss. Both are evidence and both are kept.
 
-1. **Write the probe in `agents/reports/<TASK>/`, beside the report.** One
+1. **Write the probe in `agents/tasks/<TASK>/`, beside the report.** One
    directory per task, because a task often writes several probes. The
    directory is the module qualifier, so the file declares
-   `module LJ-1-141.ProbeLJ1141A`. `bedrock.agda-lib` lists `agents/reports` as
+   `module LJ-1-141.ProbeLJ1141A`. `bedrock.agda-lib` lists `agents/tasks` as
    an include root, so the probe imports the tower exactly as a master does and
    **you run it where you wrote it. It never moves, so no citation into it is
    ever rewritten.**
@@ -1110,8 +1110,8 @@ probe showed candidate 2's junk skeletons are not excluded by pair projections
 either: "s is a bona fide skeleton" is not first-order definable without a
 finiteness or rank predicate.
 
-**Provenance:** PLAN §11 row L3.29 (M5, d); `agents/reports/archive/cut-probe-report.md` §2.2
-(the four junk cases table); `agents/reports/archive/order-probe-report.md` §3.
+**Provenance:** PLAN §11 row L3.29 (M5, d); `agents/tasks/archive/CUT-PROBE/cut-probe-report.md` §2.2
+(the four junk cases table); `agents/tasks/archive/ORDER-PROBE/order-probe-report.md` §3.
 
 **When it bites:** any object-language description that quantifies a table or
 approximation whose clauses are conditional on shape properties.
@@ -1130,7 +1130,7 @@ orderAt) ran on the term names with zero code changes, 3.3 s, which is the
 interface parity of N2 proved in the consumer. The dependency map showed the
 in-place swap would falsify the old cluster's content, not just its types.
 
-**Provenance:** PLAN §11 row L3.29 (M5, N3); `agents/reports/archive/compression-audit.md` F6.
+**Provenance:** PLAN §11 row L3.29 (M5, N3); `agents/tasks/archive/COMPRESSION-AUDIT/compression-audit.md` F6.
 
 **When it bites:** any swap that must keep the old development typechecking until
 the pedagogy or rewire verdict.
@@ -1149,7 +1149,7 @@ place the route measured to be expensive (a formula carrying coded tables is the
 measured wall class) and would reopen `Transversal`; the collector is the cheap
 end, about 200 to 400 lines for the materialization half of M5c.
 
-**Provenance:** `agents/reports/archive/deep-levers.md` §3.3; `agents/reports/archive/order-probe-report.md`
+**Provenance:** `agents/tasks/archive/DEEP-LEVERS/deep-levers.md` §3.3; `agents/tasks/archive/ORDER-PROBE/order-probe-report.md`
 §2 (candidate 1's internal side needs no certificate for the same reason).
 
 **When it bites:** any endgame (the axiom of choice's least-member pick, an
@@ -1191,7 +1191,7 @@ table).
 
 **Provenance:** PLAN row L3.29 (the tripwire accountings and the B ledger);
 `dev/memos/L3.29-b-pivot.md`; the L3.30 row's calibrated budget clause; the
-R5a-2 family calibration datum: `agents/reports/archive/r5a-report.md`.
+R5a-2 family calibration datum: `agents/tasks/archive/R5A/r5a-report.md`.
 
 ### D-7. A constructive rud basis carries intersection as a primitive
 
@@ -1225,7 +1225,7 @@ isolating pair: the identical application checks in 1.8 s against a written
 type and does not finish in 180 s inside a `PT.map` lambda with the branch
 type inferred.
 
-**Provenance:** `agents/reports/archive/k3-report.md`; commit recorded with the K3 chapter.
+**Provenance:** `agents/tasks/archive/K3/k3-report.md`; commit recorded with the K3 chapter.
 
 **Measured again (2026-08-07, the sharpest instance on record):** `[L3.32-T143]`
 bisected a check-time wall in a below-lim probe to ONE call: `∈sucV-elim` at a
@@ -1264,9 +1264,9 @@ outright and un-spent the walk's transitivity hypothesis. The
 mandated-first-formulation protocol then held a 1,285-line chapter: ten
 incremental checks, one scope-level fix, no formulation retry, no wall (G2).
 
-**Provenance:** `agents/reports/archive/r3a-walls-report.md` (the A/B/C table and the five
+**Provenance:** `agents/tasks/archive/R3A/r3a-walls-report.md` (the A/B/C table and the five
 candidates); commit `6153e58`; sibling of I-2/I-3; the G2 datum:
-`agents/reports/archive/g2-report.md`.
+`agents/tasks/archive/G2/g2-report.md`.
 
 ### I-6. hProp connective carriers come pre-shaped; consume at the carrier level
 
@@ -1279,7 +1279,7 @@ pair), never wrap the result in another `PT.rec`.
 **Measured (2026-08-03):** probe LC-2 (no `PT.rec` needed at `⊓`); K1 lost
 three ~10 s checks to the double-truncation confusion.
 
-**Provenance:** `agents/reports/archive/g2p-report.md` (LC-2); `agents/reports/archive/k1-report.md`.
+**Provenance:** `agents/tasks/archive/G2P/g2p-report.md` (LC-2); `agents/tasks/archive/K1/k1-report.md`.
 
 ### I-7. Refutations through `∈sucV-elim` land in `⊥*` at `ℓ-suc ℓ`
 
@@ -1291,8 +1291,8 @@ no-go eliminated through it must land in `Empty.⊥* {ℓ-suc ℓ}` with
 motive, K4's ordinal contradiction, three occurrences, one of K4's three
 errors.
 
-**Provenance:** `agents/reports/archive/g1g6-report.md`; `agents/reports/archive/r2b-report.md`;
-`agents/reports/archive/k4-report.md`.
+**Provenance:** `agents/tasks/archive/G1G6/g1g6-report.md`; `agents/tasks/archive/R2B/r2b-report.md`;
+`agents/tasks/archive/K4/k4-report.md`.
 
 ### I-8. `dne` is at level ℓ; bridge structure-level memberships before classical steps
 
@@ -1303,7 +1303,7 @@ goes `∈s`, then `dne`, then `∈S`; invisible until the error appears.
 **Measured (R5a, 2026-08-03):** `cap-outr` (not `cap-outl`) is the classical
 half, a one-line idiom.
 
-**Provenance:** `agents/reports/archive/r5a-report.md`.
+**Provenance:** `agents/tasks/archive/R5A/r5a-report.md`.
 
 ### I-9. Verify at-most-one witnesses before LEM decides a witness-shaped proposition
 
@@ -1313,7 +1313,7 @@ witnesses; injectivity is often the missing lemma.
 **Measured (r2a, 2026-08-02/03):** `isSucc` forced `sucV-inj-ord` (27 lines),
 a gap the brief did not list.
 
-**Provenance:** `agents/reports/archive/r2a-report.md`.
+**Provenance:** `agents/tasks/archive/R2A/r2a-report.md`.
 
 ### D-9. Choose the induction carrier by which operations act homomorphically
 
@@ -1328,7 +1328,7 @@ and difference are the same operations one level up; the extraction is one
 F8 with no union), against one of ten over the graph form the classical
 gloss suggests.
 
-**Provenance:** `agents/reports/archive/r5a-report.md`; commit `a34907c`.
+**Provenance:** `agents/tasks/archive/R5A/r5a-report.md`; commit `a34907c`.
 
 ### D-10. Price the truth of a recorded residue before pricing its proof
 
@@ -1354,9 +1354,9 @@ quantifier (the two-limit supplier fails at γ = ω·2, ζ = ω+3); and let a
 corrected target delete a chapter (the same-index restatement removed the
 block map and its missing dichotomy).
 
-**Provenance:** `agents/reports/archive/r5b-report.md`; commits `d15c114`, `a34907c`; the
-same-day extension datums: `agents/reports/archive/g3g4g5-report.md`, `agents/reports/archive/r5d1-report.md`,
-`agents/reports/archive/r5d2-report.md`, `agents/reports/archive/k4-report.md`.
+**Provenance:** `agents/tasks/archive/R5B/r5b-report.md`; commits `d15c114`, `a34907c`; the
+same-day extension datums: `agents/tasks/archive/G3G4G5/g3g4g5-report.md`, `agents/tasks/archive/R5D1/r5d1-report.md`,
+`agents/tasks/archive/R5D2/r5d2-report.md`, `agents/tasks/archive/K4/k4-report.md`.
 
 **Appended (the P1 stop, 2026-08-03):** when a residue is stated as a named
 classical lemma, the truth check INCLUDES a delegated dossier against the
@@ -1368,7 +1368,7 @@ plan's improvement anyway (the flat coding's offset: linear to logarithmic,
 against a required constant), and always tries the delivered machinery at the
 corrected target before concluding the machinery is the problem (two of the
 five stop theorems took eight lines and moved the residue to a satisfiable
-index). Provenance: `agents/reports/archive/l3.31-p1-report.md`.
+index). Provenance: `agents/tasks/archive/L3-31-P1/l3.31-p1-report.md`.
 
 **Appended (the P2R fork recon, 2026-08-03):** a route that keeps failing to
 supply an index should be suspected of aiming at a false statement. K2, K3,
@@ -1376,7 +1376,7 @@ K4 and P1 each failed to supply an index for a consumer nobody had
 truth-checked at the top; the top target (`Matching`) was classically false
 (Devlin names and refutes it), and the "named hypothesis" framing has no
 defence when the hypothesis is false. The truth check now runs on the
-CHAIN'S ROOT before any link is priced. Provenance: `agents/reports/archive/p2-fork-recon.md`.
+CHAIN'S ROOT before any link is priced. Provenance: `agents/tasks/archive/P2-FORK-RECON/p2-fork-recon.md`.
 
 **Appended (the reshaped reduction, 2026-08-05, and this is the sharpest form
 of the rule yet):** truth-checking a TARGET is not enough. When a target is
@@ -1389,7 +1389,7 @@ residue that had been refuted. The theorem was true, but it was not proved, and
 nobody had looked because the falsity was assessed at the residue and never
 propagated backwards through the consumers. **A refutation is not complete until
 the consumers of the refuted object have been walked.** Provenance:
-`agents/reports/archive/l3.32-t35-report.md`.
+`agents/tasks/archive/L3-32-T35/l3.32-t35-report.md`.
 
 ### D-8. A self-containing step operator is not subset-monotone; condition on membership
 
@@ -1409,8 +1409,8 @@ the same hypothesis and construction as the inclusion (Sset-mono/Sset-mem
 differ only by step-⊆ versus step-∈, same price), and the whole fix cost
 one added lemma, one call-site insertion, +4 code lines.
 
-**Provenance:** `agents/reports/archive/r2c-report.md` (the no-go trail);
-`agents/reports/archive/reshape-report.md`; commits `0322860` and the reshape commit.
+**Provenance:** `agents/tasks/archive/R2C/r2c-report.md` (the no-go trail);
+`agents/tasks/archive/RESHAPE/reshape-report.md`; commits `0322860` and the reshape commit.
 
 ### D-11. State two-way adequacy at a tuple, not at a member
 
@@ -1423,7 +1423,7 @@ lines arity-generic (16x), zero `pr-inj` chases in twelve clauses, total
 adequacy 245 lines both directions. This is the tuple-level restatement of
 "price decode-uniqueness once per arity".
 
-**Provenance:** `agents/reports/archive/g2p-report.md` (LC-1); `agents/reports/archive/g2-report.md`
+**Provenance:** `agents/tasks/archive/G2P/g2p-report.md` (LC-1); `agents/tasks/archive/G2/g2-report.md`
 (LC-G2-1).
 
 ### D-12. The tuple calculus
@@ -1474,8 +1474,8 @@ has exactly three moves, which are named.
   `swp` fell from a four-coordinate design to a three-coordinate one, half
   the code (R5a, 2026-08-03).
 
-**Provenance:** `agents/reports/archive/g2-report.md` (LC-G2-2 through LC-G2-5);
-`agents/reports/archive/r5a-report.md` (the three-moves law).
+**Provenance:** `agents/tasks/archive/G2/g2-report.md` (LC-G2-2 through LC-G2-5);
+`agents/tasks/archive/R5A/r5a-report.md` (the three-moves law).
 
 ### D-13. Junk is junk only relative to the tower reading it
 
@@ -1488,7 +1488,7 @@ stage holds the level as a member.
 LevelDesc spends ~700 lines on the same level cases; choose the carrier by
 what it can contain, a sibling of D-9.
 
-**Provenance:** `agents/reports/archive/g3g4g5-report.md`.
+**Provenance:** `agents/tasks/archive/G3G4G5/g3g4g5-report.md`.
 
 ### D-14. A closure fragment cannot live inside the block it closes
 
@@ -1501,7 +1501,7 @@ no offset engineering merges it with the general case.
 **Measured (R5-D1, 2026-08-03):** negatively, it removed a planned 150-line
 layer; the kernel recon registered the base block as its own residue.
 
-**Provenance:** `agents/reports/archive/r5d1-report.md`.
+**Provenance:** `agents/tasks/archive/R5D1/r5d1-report.md`.
 
 ### D-15. Reductions: the equivalence test, and a reduction is a deliverable
 
@@ -1524,8 +1524,8 @@ when a residue cannot be discharged, the reduction itself is the deliverable
   "named and left standing". Measured: 30 lines; second instance of the
   `DefFragment`/`Discharge` pattern (K2, 2026-08-03).
 
-**Provenance:** `agents/reports/archive/r5d1-report.md`; `agents/reports/archive/k2-report.md`;
-`agents/reports/archive/k4-report.md`.
+**Provenance:** `agents/tasks/archive/R5D1/r5d1-report.md`; `agents/tasks/archive/K2/k2-report.md`;
+`agents/tasks/archive/K4/k4-report.md`.
 
 ### D-16. The inner semantics is the working face; Δ₀ absoluteness is a crossing tax only
 
@@ -1539,7 +1539,7 @@ lines, the G2 wall class) became 2,124 lines of ordinary reading work with
 zero walls; the pair kit imported whole cost zero lines against 187; no Δ₀
 witness was constructed anywhere.
 
-**Provenance:** `agents/reports/archive/r5d2-report.md`; `agents/reports/archive/k3-report.md`.
+**Provenance:** `agents/tasks/archive/R5D2/r5d2-report.md`; `agents/tasks/archive/K3/k3-report.md`.
 
 ### D-17. Read the definition, not the case analysis
 
@@ -1552,7 +1552,7 @@ operation whose members are pairs definitionally needs no pairhood split.
 against an estimated 90, removing two of three junk readings; F11-F14 at
 four operations cost zero case splits.
 
-**Provenance:** `agents/reports/archive/r5d2-report.md`; `agents/reports/archive/r5b-report.md`.
+**Provenance:** `agents/tasks/archive/R5D2/r5d2-report.md`; `agents/tasks/archive/R5B/r5b-report.md`.
 
 ### D-18. Cofinality audits: count rank growth per member, then decide where the ranks come from
 
@@ -1569,7 +1569,7 @@ has bounded rank and no cofinality at all.
 five minutes (193 lines for the corrected pair); K4 showed the cofinality is
 the coding's artifact, removable by rank-bounded codes.
 
-**Provenance:** `agents/reports/archive/k2-report.md`; `agents/reports/archive/k4-report.md`.
+**Provenance:** `agents/tasks/archive/K2/k2-report.md`; `agents/tasks/archive/K4/k4-report.md`.
 
 **Appended (the P1 stop, 2026-08-03):** the check has two halves and both are
 cheap: whether the ranks come from the representation, AND whether the
@@ -1577,7 +1577,7 @@ obstruction blamed on the cofinality is a fact about the tower's own step. K4
 ran only the first half: the codes' cofinality is representational (the flat
 coding really cuts it to logarithmic), but the obstruction to the block target
 is `Sset`'s single-application successor, which no representation touches.
-Provenance: `agents/reports/archive/l3.31-p1-report.md`.
+Provenance: `agents/tasks/archive/L3-31-P1/l3.31-p1-report.md`.
 
 ### D-19. Price a port against the retiring tree's transitive closure, and split both directions
 
@@ -1590,7 +1590,7 @@ because the introduction has been the larger half twice.
 importing ~1,400 code lines; K3's re-price omitted the 274-line witness-set
 construction.
 
-**Provenance:** `agents/reports/archive/k2-report.md`; `agents/reports/archive/k3-report.md`.
+**Provenance:** `agents/tasks/archive/K2/k2-report.md`; `agents/tasks/archive/K3/k3-report.md`.
 
 ### D-20. A many-way disjunction is a fold over ℕ, not a right-nested injection chain
 
@@ -1601,7 +1601,7 @@ truncation nests deeper than one.
 **Measured (K3, 2026-08-03):** the twelve-way layer cost 188 lines including
 both meta-level translations, against Shape's 354 for the disjunction alone.
 
-**Provenance:** `agents/reports/archive/k3-report.md`.
+**Provenance:** `agents/tasks/archive/K3/k3-report.md`.
 
 ### D-21. Check whether the approximation's own target is the witness
 
@@ -1614,7 +1614,7 @@ fragment formulation is an indirection.
 collapse at ω and at general limits (`powFragment`); removed
 `Sep`/`Sstage₂` from the general case.
 
-**Provenance:** `agents/reports/archive/k4-report.md`.
+**Provenance:** `agents/tasks/archive/K4/k4-report.md`.
 
 ### D-22. A closure hypothesis on the carrier is worth more than a description chapter
 
@@ -1626,7 +1626,7 @@ followed by `memArm`, one line per operation.
 **Measured (R5b, 2026-08-03):** 16 dispatch lines plus a 12-line helper vs
 the anticipated several hundred.
 
-**Provenance:** `agents/reports/archive/r5b-report.md`.
+**Provenance:** `agents/tasks/archive/R5B/r5b-report.md`.
 
 ### D-23. Transparency of a syntax-directed recursion is an interface asset: seal the heavy values, not the syntax walk
 
@@ -1637,7 +1637,7 @@ syntax-directed recursion is an interface asset.
 recoverable from outside in 78 lines only because the walk stayed
 transparent.
 
-**Provenance:** `agents/reports/archive/r3c-report.md`.
+**Provenance:** `agents/tasks/archive/R3C/r3c-report.md`.
 
 ## 6. Craft and process lessons (C series)
 
@@ -1656,7 +1656,7 @@ family design is committed.
 opened; the build it removed was priced at 1,400 lines. The general form of
 K2's cofinality finding, and a sibling of D-10.
 
-**Provenance:** `agents/reports/archive/l3.31-p1-report.md`; `src/ProbeD10.agda` (untracked).
+**Provenance:** `agents/tasks/archive/L3-31-P1/l3.31-p1-report.md`; `src/ProbeD10.agda` (untracked).
 
 ### D-25. An archive goes red on its own, and pending work that needs it must be extracted first
 
@@ -1680,7 +1680,7 @@ removed 70.3 s. `L.Rud.StepInL` unfolds `left`'s body at three sites
 stopped typechecking: `agda -i archive/src -i src` exits 42 on
 `⟨ v ∈ˢ left (fst (lookup bk δ)) ⟩`. The `below-lim` gate needs exactly three
 objects from that chapter (`values∈L`, `stepSet∈L`, and the op graphs
-`graphOf`/`graph-out`/`graph-in`, recorded in `agents/reports/archive/l3.32-t90-report.md`),
+`graphOf`/`graph-out`/`graph-in`, recorded in `agents/tasks/archive/L3-32-T90/l3.32-t90-report.md`),
 so a gate that could have run against the archive for free now needs a
 scratch tree carrying `[T121]`'s six-line `left-compute` bridge.
 
@@ -1714,7 +1714,7 @@ preference for four days; it is a structural fact about the two towers.
 rud-style tower and a definability-style tower, in either direction. It is
 also the reason `L ⊨ AC` on the rud route pays for a bridge at all.
 
-**Provenance:** `agents/reports/archive/l3.32-t203-route.md` sections 1 to 3;
+**Provenance:** `agents/tasks/archive/L3-32-T203/l3.32-t203-route.md` sections 1 to 3;
 `src/L/Rud/Order.lagda.md:329-332`; `src/L/Choice/Order.lagda.md:184-187`.
 
 ### D-27. "No code consumer" identifies a dead helper, never a dead result
@@ -1767,8 +1767,8 @@ Deleting a dead result typechecks green and is found only by reading prose.
 runs one way, and the criterion that produced the campaign's best result
 (`[LJ-0.4a]`, minus 240) is the same one that over-reaches here.
 
-**Provenance:** `agents/reports/archive/lj-0.4m-report.md` sections 2 and 3;
-`agents/briefs/LJ-0.4m.md` rule 2, which named class 1 and missed class 2;
+**Provenance:** `agents/tasks/archive/LJ-0-4M/lj-0.4m-report.md` sections 2 and 3;
+`agents/tasks/archive/LJ-0-4M/LJ-0.4m.md` rule 2, which named class 1 and missed class 2;
 commits `ab99b23` and `9c6d036`; `dev/LESSONS.md:568-581` for Rule 20.
 
 ### D-28. A kit's break-even is set by its PARAMETER count, not its line count
@@ -1813,8 +1813,8 @@ held one of the five copies and already paid that preamble.
 net POSITIVE (B +24, E +19, G +49, F +4) and the only one that paid took one
 parameter.
 
-**Provenance:** `agents/reports/archive/lj-0.4f-report.md`; `agents/reports/archive/lj-0.4f-review.md` section
-6; `agents/reports/archive/lj-0.4n-report.md`; commits `3269da5` and `dd59127`.
+**Provenance:** `agents/tasks/archive/LJ-0-4F/lj-0.4f-report.md`; `agents/tasks/archive/LJ-0-4F/lj-0.4f-review.md` section
+6; `agents/tasks/archive/LJ-0-4N/lj-0.4n-report.md`; commits `3269da5` and `dd59127`.
 
 ### C-30. A compression block is gated, and the gates have a home
 
@@ -1857,15 +1857,15 @@ decision. Gate 2 was worded "before any wiring" until `[LJ-0.4f-R]` observed
 that it cannot be run, because it needs a measured per-site saving.
 
 **Why it is here rather than in a brief.** These gates lived only in
-`agents/reports/archive/lj-0.8-review.md` 7.1 and in whichever brief last pasted them. A rule
+`agents/tasks/archive/LJ-0-8/lj-0.8-review.md` 7.1 and in whichever brief last pasted them. A rule
 whose only home is a report is found by the person who already knows it. The
 GCH wing will compress too.
 
 **When it bites:** any brief that proposes to share, extract, fold or
 de-duplicate. Cite this entry; do not re-derive the list.
 
-**Provenance:** `agents/reports/archive/lj-0.8-review.md` 7.1; `agents/reports/archive/lj-0.4f-review.md`
-section 7 items 5 to 7; `agents/briefs/LJ-0.4n.md`, the first brief to carry
+**Provenance:** `agents/tasks/archive/LJ-0-8/lj-0.8-review.md` 7.1; `agents/tasks/archive/LJ-0-4F/lj-0.4f-review.md`
+section 7 items 5 to 7; `agents/tasks/archive/LJ-0-4N/LJ-0.4n.md`, the first brief to carry
 all nine.
 
 
@@ -1905,7 +1905,7 @@ per-module rate was never the verdict.
 **When it bites:** every DD24 judgment before the wing is finished, and any
 future budget derived from `gch_wing_apriori` or from a `[[remaining]]` row.
 
-**Provenance:** `agents/reports/archive/lj-1.17-review.md` section 1; `agents/reports/archive/lj-1.17-report.md`;
+**Provenance:** `agents/tasks/archive/LJ-1-17/lj-1.17-review.md` section 1; `agents/tasks/archive/LJ-1-17/lj-1.17-report.md`;
 `dev/ledger.toml`'s `gch_wing_seconds_budget` block, corrected in the same
 commit.
 
@@ -2034,12 +2034,12 @@ its final marker with every gate green.
 **When it bites:** every new file and every end-of-file edit.
 
 **Appended (2026-08-03):** agent report filenames collide across goal
-codes: `agents/reports/archive/p1-report.md` named both the [L3.30-P1] probe report (the
+codes: `agents/tasks/archive/P1/p1-report.md` named both the [L3.30-P1] probe report (the
 cited provenance of I-2, D-7, C-11) and the [L3.31-P1] batch's directed
 output; a brief-directed overwrite of law-book provenance is a blind spot no
 linter covers. Convention adopted: agent reports carry the goal code
-(`agents/reports/archive/l3.31-p1-report.md`), and a batch finding its path occupied writes
-beside it and says so. Provenance: `agents/reports/archive/l3.31-p1-report.md`.
+(`agents/tasks/archive/L3-31-P1/l3.31-p1-report.md`), and a batch finding its path occupied writes
+beside it and says so. Provenance: `agents/tasks/archive/L3-31-P1/l3.31-p1-report.md`.
 
 ### C-9. The graft entry: graft retractions as explicit projections
 
@@ -2052,7 +2052,7 @@ the definitional-equality checks not terminate inside the budget; the same
 content as explicit projections (`(node … (fst (graftL cs ps))) , snd (graftL cs ps)`)
 let the retraction proofs be written as direct path lambdas.
 
-**Provenance:** `agents/reports/archive/m5a-report.md` (Deviation in the graft equations);
+**Provenance:** `agents/tasks/archive/M5A/m5a-report.md` (Deviation in the graft equations);
 committed as `9539088` with P-g.
 
 **When it bites:** any retraction or round-trip proof over a pair-valued
@@ -2135,8 +2135,8 @@ the step (two laws, measured below).
   witness. Measured: one fibre step in `+ω-out` was written the wrong way
   and only the error text exposed it (G6, 2026-08-03).
 
-**Provenance:** `agents/reports/archive/g1g6-report.md`; `agents/reports/archive/r2a-report.md`;
-`agents/reports/archive/r2c-report.md`.
+**Provenance:** `agents/tasks/archive/G1G6/g1g6-report.md`; `agents/tasks/archive/R2A/r2a-report.md`;
+`agents/tasks/archive/R2C/r2c-report.md`.
 
 ### C-14. A restated helper, a missing export, or an unnameable private helper is a delivery defect
 
@@ -2157,18 +2157,18 @@ defect, not a coincidence (two laws, measured below).
   `rightSlice`/`sndExtract` were unnameable and blocked F11-F14's junk facts
   (r2c).
 
-**Provenance:** `agents/reports/archive/r5b-report.md`; `agents/reports/archive/k1-report.md`;
-`agents/reports/archive/r2c-report.md`.
+**Provenance:** `agents/tasks/archive/R5B/r5b-report.md`; `agents/tasks/archive/K1/k1-report.md`;
+`agents/tasks/archive/R2C/r2c-report.md`.
 
 **Appended (2026-08-03):** a missing export breeds MORE than one re-proof:
 `Sset-zero`'s absence from Step's exports produced two independent local
 derivations in BaseBlock (only one of which any report had spotted) and a
 third in Bridge. When filing a missing export, grep the FACT, not the name.
-Provenance: `agents/reports/archive/polish2-report.md`.
+Provenance: `agents/tasks/archive/POLISH2/polish2-report.md`.
 
 **Appended (2026-08-04):** third instance class: four `V.Coding`
 pair/singleton helpers are `private` and were re-derived a third time by the
-GLp probe. Provenance: `agents/reports/archive/l3.31-glprobe-report.md`.
+GLp probe. Provenance: `agents/tasks/archive/L3-31-GLPROBE/l3.31-glprobe-report.md`.
 
 ### C-15. Close out with a consumer probe; the in-file module beats the probe, then the probe still earns its keep
 
@@ -2181,7 +2181,7 @@ only place the module parameters get concrete.
 `f3ad704`'s mid-batch telescope change in 1.7 s; K4's in-file application
 plus probe exercised `slot-empty` at `A := ∅`.
 
-**Provenance:** `agents/reports/archive/r5d1-report.md`; `agents/reports/archive/k4-report.md`.
+**Provenance:** `agents/tasks/archive/R5D1/r5d1-report.md`; `agents/tasks/archive/K4/k4-report.md`.
 
 ### C-16. A wall that survives the obvious seal is a mis-diagnosis: stop sealing, start bisecting
 
@@ -2193,7 +2193,7 @@ retro-fitting credit when the real cause is found.
 one full rewrite and three wall events before bisection found the
 branch-type cause.
 
-**Provenance:** `agents/reports/archive/k3-report.md`.
+**Provenance:** `agents/tasks/archive/K3/k3-report.md`.
 
 ### C-17. Record "two routes are circular", never "the base case is circular"
 
@@ -2205,7 +2205,7 @@ route is often the textbook's.
 artefact; the classical construction is extensionality relativized to
 `p ∪ ⋃p`, 95 lines with one `dne` per direction.
 
-**Provenance:** `agents/reports/archive/r5a-report.md`.
+**Provenance:** `agents/tasks/archive/R5A/r5a-report.md`.
 
 ### C-18. Generalize a working frame from the free variable to an index
 
@@ -2218,7 +2218,7 @@ buys every deeper binder.
 cases green on the first check; all de Bruijn arithmetic lives in one
 20-line definition.
 
-**Provenance:** `agents/reports/archive/r5b-report.md`.
+**Provenance:** `agents/tasks/archive/R5B/r5b-report.md`.
 
 ### C-19. Read the exit code, not the log tail
 
@@ -2228,7 +2228,7 @@ while the tail otherwise looks like a clean check.
 **Measured (r1b, 2026-08-02):** UnsolvedConstraints exits 42 while the tail
 looks clean.
 
-**Provenance:** `agents/reports/archive/r1b-report.md`.
+**Provenance:** `agents/tasks/archive/R1B/r1b-report.md`.
 
 ### C-20. Never write `∈ˢ ⋃` / `⊆ ⋃` directly; bind the union term
 
@@ -2237,7 +2237,7 @@ looks clean.
 **Measured (r2b):** Agda's mixfix parser rejects an infix operator applied
 to a prefix `⋃` operand.
 
-**Provenance:** `agents/reports/archive/r2b-report.md`.
+**Provenance:** `agents/tasks/archive/R2B/r2b-report.md`.
 
 ### C-21. Telescope types may only use level-generic imported names
 
@@ -2249,7 +2249,7 @@ parameters in an inner `module _` block.
 (`L.Constructible.isTransV`, importable only with `{ℓ}` applied) is
 invisible inside the module header.
 
-**Provenance:** `agents/reports/archive/r2b-report.md`.
+**Provenance:** `agents/tasks/archive/R2B/r2b-report.md`.
 
 ### C-22. A dispatched agent writes its deliverable incrementally, never at the end
 
@@ -2309,7 +2309,7 @@ its exports feed `L.Rud.Bridge`, an AC root. The split would have needed a
 cyclic import or a sixty-name telescope. The stop cost one dispatch; a
 landed wrong split would have cost the naturalness condition.
 
-**Provenance:** `agents/reports/archive/l3.32-t160-report.md` sections 1 and 7.
+**Provenance:** `agents/tasks/archive/L3-32-T160/l3.32-t160-report.md` sections 1 and 7.
 
 ## Adding an entry
 
@@ -2494,8 +2494,8 @@ block 1, 604 lines of parameterized story and segment machinery, checks in
 first limit, costs about 210 s, and 66 percent of the profile sits in ten
 decode and placement definitions.
 
-**Provenance:** `agents/reports/archive/l3.32-t219-seconds.md` sections 1 and 3;
-`agents/reports/archive/l3.32-t191-report.md:78`, `:86`; `agents/reports/archive/l3.32-t195-report.md:149-155`.
+**Provenance:** `agents/tasks/archive/L3-32-T219/l3.32-t219-seconds.md` sections 1 and 3;
+`agents/tasks/archive/L3-32-T191/l3.32-t191-report.md:78`, `:86`; `agents/tasks/archive/L3-32-T195/l3.32-t195-report.md:149-155`.
 
 ### P-n. Satisfaction content at a concrete carrier is a payable floor, not a defect
 
@@ -2519,8 +2519,8 @@ in the same neighbourhood, has no purchase here.
 the segment machinery at a concrete stage. `[T217]` priced block 3 at this
 rate for exactly that reason.
 
-**Provenance:** `agents/reports/archive/l3.32-t219-seconds.md` sections 1 and 5;
-`agents/reports/archive/l3.32-t195-report.md` section 5.
+**Provenance:** `agents/tasks/archive/L3-32-T219/l3.32-t219-seconds.md` sections 1 and 5;
+`agents/tasks/archive/L3-32-T195/l3.32-t195-report.md` section 5.
 
 
 ### P-o. A record field at a carrier-indexed type hangs the elaborator; use a nested Σ
@@ -2857,7 +2857,7 @@ be right. Ask what actually changed. If the SUBJECT did not, amend.
 `dev/ORCHESTRATION.md`, `AGENTS.md`, the ledger, three archives and the whole
 task-code series in thirteen commits. It consolidated 25 decision rows into
 15. An audit then found **30 defects, six of them load-bearing**
-(`agents/reports/archive/lj-0.1-consistency.md`), and eleven further commits were spent
+(`agents/tasks/archive/LJ-0-1-CONSISTENCY/lj-0.1-consistency.md`), and eleven further commits were spent
 repairing them. The defects were of exactly the migration class: dangling
 citations, a dropped rule with a live pointer at it, three suspension flags
 with half-written readers, a commit gate left RED by the rebuild itself, and
@@ -2957,8 +2957,8 @@ route out is upstream: a formula with NO constants reaches the parameter-free
 axis through the delivered `erase` with no placement anywhere**
 (`src/FOL/Count.lagda.md:598-611`, `:617-637`).
 
-**Provenance:** `agents/reports/archive/lj-1.27-review.md` sections 4 and 5. Probes
-`agents/reports/DD25/ProbeDD25C.agda`, `agents/reports/DD25/ProbeDD25D.agda` and `agents/reports/DD25/ProbeDD25E.agda`, the
+**Provenance:** `agents/tasks/archive/LJ-1-27/lj-1.27-review.md` sections 4 and 5. Probes
+`agents/tasks/DD25/ProbeDD25C.agda`, `agents/tasks/DD25/ProbeDD25D.agda` and `agents/tasks/DD25/ProbeDD25E.agda`, the
 last red by design with its error message as its measurement.
 
 ### C-32. A cure invalidates every downstream measurement; RE-RUN THE GATE before you act on the old number
@@ -2980,13 +2980,13 @@ measuring walls to route around a gate that had already opened, and not the
 orchestrator, who held the pre-cure figure and quoted it three times.
 
 **The second half, and it cost the same dispatch.** `[LJ-1.27-R]` had already
-WRITTEN the cured block as `agents/reports/DD25/ProbeDD25E.agda`, and it failed at exactly one
+WRITTEN the cured block as `agents/tasks/DD25/ProbeDD25E.agda`, and it failed at exactly one
 line, the `refl` asserting count 0, which is what `[LJ-1.31]` fixed. On the
 cured tree it is green in 2.87 s at 0.0114 s per line. **A finished probe sat
 one command away for a whole dispatch.**
 
 **Why it was missed, stated so the cure is mechanical.** The orchestrator's
-brief scoped the archive read to `agents/reports/archive/lj-1.27-review.md` **section 4**. The
+brief scoped the archive read to `agents/tasks/archive/LJ-1-27/lj-1.27-review.md` **section 4**. The
 erase route and the probe's name are in **section 6**. A brief that names a
 SECTION rather than a document hides everything the orchestrator did not
 already know, and that is exactly what an archive survey exists to prevent
@@ -2998,8 +2998,8 @@ whole documents in an ARCHIVE section, never a section number**, unless the
 document is large and the section is an ADDITION to it rather than a
 restriction.
 
-**Provenance:** `agents/reports/archive/lj-1.32-review.md` sections 1 and 5;
-`agents/reports/archive/lj-1.32-report.md`; `agents/briefs/LJ-1.32.md:101,131-133`.
+**Provenance:** `agents/tasks/archive/LJ-1-32/lj-1.32-review.md` sections 1 and 5;
+`agents/tasks/archive/LJ-1-32/lj-1.32-report.md`; `agents/tasks/archive/LJ-1-32/LJ-1.32.md:101,131-133`.
 
 ### C-33. Name the OBLIGATION in a brief, never one delivered entry point: the agent will use the one you named
 
@@ -3048,8 +3048,8 @@ gets it free** (DD4).
 concrete-carrier floor band. It is not there: a control at 0.297 sits inside
 that band with no carrier at all, so the band does not diagnose this cost.
 
-**Provenance:** `agents/reports/archive/lj-1.33-review.md`; `agents/reports/archive/lj-1.33-report.md`;
-`agents/briefs/LJ-1.33.md:42-43,55-60`.
+**Provenance:** `agents/tasks/archive/LJ-1-33/lj-1.33-review.md`; `agents/tasks/archive/LJ-1-33/lj-1.33-report.md`;
+`agents/tasks/archive/LJ-1-33/LJ-1.33.md:42-43,55-60`.
 
 ### P-v. Never force a satisfaction-level conversion between two spellings of one formula
 
@@ -3105,8 +3105,8 @@ WHOLE seconds budget of 99.6 to 147.7 s. **The route looked infeasible and the
 150 s was a probe artefact.**
 
 
-**Provenance:** `agents/reports/archive/lj-1.34-review.md` sections 1 and 2;
-`agents/reports/DD25/ProbeDD25D5.agda` against `agents/reports/LJ-1-34/ProbeLJ134.agda`.
+**Provenance:** `agents/tasks/archive/LJ-1-34/lj-1.34-review.md` sections 1 and 2;
+`agents/tasks/DD25/ProbeDD25D5.agda` against `agents/tasks/archive/LJ-1-34/ProbeLJ134.agda`.
 
 ### P-w. A module application COPIES; an interposed module cannot amortize one
 
@@ -3179,11 +3179,11 @@ once plus thirteen used surfaces, about **5 s**. **Nine to one, and it is the
 same shape `KFacts` took for the other fact family at `-30 s`.** The generic
 frame is the DD4 move and the cheap one at the same time.
 
-**Provenance:** `agents/reports/archive/lj-1.66-review.md` section E.1, a DD25 review that
+**Provenance:** `agents/tasks/archive/LJ-1-66/lj-1.66-review.md` section E.1, a DD25 review that
 read the four regressions as one mechanism rather than four failures;
-`agents/reports/archive/lj-1.63-report.md` section 5, `agents/reports/archive/lj-1.66-report.md:94`,
-`agents/reports/archive/lj-1.67-report.md:32`, `agents/reports/archive/lj-1.62-report.md:85-112`. The
-amendment is `agents/reports/archive/lj-1.69-report.md` sections 2 to 4.
+`agents/tasks/archive/LJ-1-63/lj-1.63-report.md` section 5, `agents/tasks/archive/LJ-1-66/lj-1.66-report.md:94`,
+`agents/tasks/archive/LJ-1-67/lj-1.67-report.md:32`, `agents/tasks/archive/LJ-1-62/lj-1.62-report.md:85-112`. The
+amendment is `agents/tasks/archive/LJ-1-69/lj-1.69-report.md` sections 2 to 4.
 
 ### C-34. A return that names a cure PRICES it, or reports the wall that stops it
 
@@ -3211,8 +3211,8 @@ be built or walled, not deferred. **Both of these briefs did say "measure it,
 do not argue it" and were still read as permission to defer**, so the sentence
 must name P-l explicitly and say what it does not forbid.
 
-**Provenance:** `agents/reports/archive/lj-1.33-review.md`, `agents/reports/archive/lj-1.34-review.md`,
-`agents/reports/archive/lj-1.33-report.md` section 6, `agents/reports/archive/lj-1.34-report.md` section 6.
+**Provenance:** `agents/tasks/archive/LJ-1-33/lj-1.33-review.md`, `agents/tasks/archive/LJ-1-34/lj-1.34-review.md`,
+`agents/tasks/archive/LJ-1-33/lj-1.33-report.md` section 6, `agents/tasks/archive/LJ-1-34/lj-1.34-report.md` section 6.
 
 ### C-35. A delivered block with no consumer is UNTESTED: its first consumer is its first real audit
 
@@ -3240,7 +3240,7 @@ story frame ended in `∀̇∈ (var yc) body`, which is vacuous at an empty valu
 where the machine's `extAt yc body` constrains it. Worse, at a NONEMPTY value
 one index made the defining condition never mention the element it defines, so
 the row is FALSE of the true satisfaction table, not merely weak.
-`agents/reports/DD25/ProbeDD25E1.agda` proves the countermodel, `agents/reports/DD25/ProbeDD25E3.agda` is the
+`agents/tasks/DD25/ProbeDD25E1.agda` proves the countermodel, `agents/tasks/DD25/ProbeDD25E3.agda` is the
 control that fails with `fst e != fst z` when the index is corrected, and both
 were re-run by the orchestrator.
 
@@ -3253,8 +3253,8 @@ owner, before the defect was known, that the block had "zero consumers" and
 that its delivered-and-unconsumed state "should not be treated as redeemed".
 **Naming a risk is not acting on it.** The gate is: no consumer, no DELIVERED.
 
-**Provenance:** `agents/reports/archive/lj-1.38-review.md`; `agents/reports/archive/lj-1.38-report.md`;
-`agents/reports/archive/lj-1.37-report.md`; commit `92e8b8b`.
+**Provenance:** `agents/tasks/archive/LJ-1-38/lj-1.38-review.md`; `agents/tasks/archive/LJ-1-38/lj-1.38-report.md`;
+`agents/tasks/archive/LJ-1-37/lj-1.37-report.md`; commit `92e8b8b`.
 
 ### D-29. A shared layer propagates a FIX and a DEFECT at the same rate; sharing concentrates risk as well as saving lines
 
@@ -3295,8 +3295,8 @@ residue** (D-10), even when a careful reviewer produces it.
 says a shared layer is untested at N sites simultaneously, so the first
 consumer's audit is worth N times what a single site's audit is worth.
 
-**Provenance:** `agents/reports/archive/lj-1.40-report.md` sections 4 and 5;
-`agents/reports/archive/lj-1.38-review.md` section 6; `agents/reports/archive/lj-1.37-report.md`.
+**Provenance:** `agents/tasks/archive/LJ-1-40/lj-1.40-report.md` sections 4 and 5;
+`agents/tasks/archive/LJ-1-38/lj-1.38-review.md` section 6; `agents/tasks/archive/LJ-1-37/lj-1.37-report.md`.
 
 ### C-36. A failed substitution is not a proof of impossibility: a type error says the types differ, never that no term connects them
 
@@ -3321,18 +3321,18 @@ is K-bounded, `Δ₀` has no `δ-∀` and no `δ-∃`, so no witness exists.
 
 **Every part of that reasoning was refuted by four probes.** The unbounded
 witness is never needed, because every leaf is a K-bounded Δ₀ restatement
-transferred under site facts; `agents/reports/DD25/ProbeDD25F41A.agda` builds the supposedly
+transferred under site facts; `agents/tasks/DD25/ProbeDD25F41A.agda` builds the supposedly
 missing witness in ONE line from the delivered `Δ₀-extAtB` and `Δ₀-envBndGen`,
-GREEN in 1.45 s. `agents/reports/DD25/ProbeDD25F41B.agda` then builds BOTH directions between
+GREEN in 1.45 s. `agents/tasks/DD25/ProbeDD25F41B.agda` then builds BOTH directions between
 the bounded condition and `envSetAt` in 98 lines, GREEN, marginal cost 0.22 s.
 
 **The real defect was ONE MISSING CONJUNCT.** The machine's `extAt` is a pair
 of implications and the story wrote the first and stopped.
-`agents/reports/DD25/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
+`agents/tasks/DD25/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
 PLUS all three site facts and Agda still refuses, so the conjunct is what is
 missing and not the facts.
 
-**The tell was in the failing probe itself.** `agents/reports/LJ-1-41/ProbeLJ141C.agda`'s body is a
+**The tell was in the failing probe itself.** `agents/tasks/archive/LJ-1-41/ProbeLJ141C.agda`'s body is a
 bare `henv`, an identity coercion, and its error shows a Π on one side against
 a Σ of two Π on the other. **The shape of the error named the missing conjunct
 and the return read it as impossibility.**
@@ -3343,8 +3343,8 @@ and nobody read it as this. **Read beside C-35**: a block with no consumer is
 untested, and its own report may already contain the finding nobody has
 consumed.
 
-**Provenance:** `agents/reports/archive/lj-1.41-review.md`; `agents/reports/archive/lj-1.41-report.md`;
-probes `agents/reports/DD25/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
+**Provenance:** `agents/tasks/archive/LJ-1-41/lj-1.41-review.md`; `agents/tasks/archive/LJ-1-41/lj-1.41-report.md`;
+probes `agents/tasks/DD25/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
 
 ### D-30. Price what the CONSUMER needs, never the general law: generality nobody asked for is the cheapest thing to delete and the most expensive thing to keep
 
@@ -3391,9 +3391,9 @@ cheaper.**
 the same rate. This says the same layer propagates unreached GENERALITY at the
 same rate, and that generality is invisible until somebody reads the consumers.
 
-**Provenance:** `agents/reports/archive/lj-1.47-report.md`; `agents/reports/archive/lj-1.46-report.md`;
-probes `agents/reports/LJ-1-47/ProbeLJ147PairingSealed.agda` against
-`agents/reports/LJ-1-47/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.
+**Provenance:** `agents/tasks/archive/LJ-1-47/lj-1.47-report.md`; `agents/tasks/archive/LJ-1-46/lj-1.46-report.md`;
+probes `agents/tasks/archive/LJ-1-47/ProbeLJ147PairingSealed.agda` against
+`agents/tasks/archive/LJ-1-47/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.
 
 ### C-37. State a law with the ACTION it prescribes, never only the prohibition: a law written as a wall hides its own cure
 
@@ -3437,8 +3437,8 @@ point. C-36 says a failed substitution is not a proof of impossibility, and you
 may strengthen. This says the same failure enters one step earlier: **the brief
 can remove the cure from the agent's reach before any substitution is tried.**
 
-**Provenance:** `agents/reports/archive/lj-1.7-review.md`; `agents/reports/archive/lj-1.7-report.md`;
-`agents/briefs/LJ-1.7.md`; probe `agents/reports/DD25/ProbeDD25G1.agda`, re-run by the
+**Provenance:** `agents/tasks/archive/LJ-1-7/lj-1.7-review.md`; `agents/tasks/archive/LJ-1-7/lj-1.7-report.md`;
+`agents/tasks/archive/LJ-1-7/LJ-1.7.md`; probe `agents/tasks/DD25/ProbeDD25G1.agda`, re-run by the
 orchestrator.
 
 ### C-38. A hypothesis is discharged when something SUPPLIES it, never when it is restated
@@ -3472,7 +3472,7 @@ consumer, found the telescope's first fact:
 gives `numeralL 0 ≡ numeralL 1`, refuted by the delivered `numeralL-inj`.
 The type is uninhabited at every frame, not merely at the consumer's, so the
 module could never be instantiated by anything. Machine-checked at
-`agents/reports/LJ-1-71/ProbeLJ171A.agda:170-173` (`tagEq-refutes`), re-run by the orchestrator.
+`agents/tasks/archive/LJ-1-71/ProbeLJ171A.agda:170-173` (`tagEq-refutes`), re-run by the orchestrator.
 
 **The same audit found the slot fix of `[LJ-1.55]` HOLDS**: the frame's row
 facts land at the telescope's slots definitionally. The defect is the
@@ -3503,7 +3503,7 @@ arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩ → ⟨ fst v ∈ fst (lookup K �
 singleton, so it asserts that EVERY set belongs to `K`, including `K`.
 `[LJ-1.77]` machine-checked the refutation in one step through the delivered
 `∈-irrefl`: `arityK ⁅X⁆ X (X ∈ ⁅X⁆)` gives `X ∈ X`
-(`agents/reports/LJ-1-77/ProbeLJ177A.agda:75-78`, green at 2.47 s). `innerK`, `innerPairK` and
+(`agents/tasks/archive/LJ-1-77/ProbeLJ177A.agda:75-78`, green at 2.47 s). `innerK`, `innerPairK` and
 `pairK` are the same shape without any premise at all, refuted by a
 membership cycle rather than by irreflexivity, and they stay INFERRED
 because the tree delivers no no-cycle lemma.
@@ -3531,8 +3531,8 @@ to find these**: the orchestrator's one-line regex over-matched and flagged
 `carrierK`, which is sound. A real checker needs the parse, and it is worth
 writing.
 
-**Provenance:** `agents/reports/archive/lj-1.71-report.md` sections 0 to 2;
-`agents/reports/LJ-1-71/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
+**Provenance:** `agents/tasks/archive/LJ-1-71/lj-1.71-report.md` sections 0 to 2;
+`agents/tasks/archive/LJ-1-71/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
 claim that the twenty-four hypotheses were discharged is false.
 
 ### C-39. A brief's prohibition binds harder than its goal: an agent stops at the wall and never reports the door behind it
@@ -3557,7 +3557,7 @@ the stop.**
 supplied. It measured the T-slot tie for `entryK` absent at the site, which
 was true, and stopped with ten facts unattempted. `[LJ-1.99]` then measured a
 second tie GREEN: four applications of the delivered `KFacts.arityK`
-(`src/L/Condensation.lagda.md:5769-5770`), `agents/reports/LJ-1-99/ProbeLJ199A.agda:65-204`. The
+(`src/L/Condensation.lagda.md:5769-5770`), `agents/tasks/LJ-1-99/ProbeLJ199A.agda:65-204`. The
 question had at least two candidate ties and the criterion admitted one.
 
 `[LJ-1.102]` was told "Do not add a hypothesis to the row to make the tie
@@ -3573,10 +3573,10 @@ was written against invented facts and it blocked a held one.
 was wrong. The defect is upstream of them, in the brief, and it cost one
 dispatch each time.
 
-**Provenance:** `agents/reports/lj-1.98-report.md` section 0; `agents/reports/lj-1.99-report.md`
+**Provenance:** `agents/tasks/LJ-1-98/lj-1.98-report.md` section 0; `agents/tasks/LJ-1-99/lj-1.99-report.md`
 section 0, probe re-run by the orchestrator at 1.85 s;
-`agents/reports/lj-1.102-report.md` sections 0 and 2; briefs
-`agents/briefs/LJ-1.98.md`, `LJ-1.102.md`, whose stop lines are quoted above.
+`agents/tasks/LJ-1-102/lj-1.102-report.md` sections 0 and 2; briefs
+`agents/tasks/LJ-1-98/LJ-1.98.md`, `LJ-1.102.md`, whose stop lines are quoted above.
 
 ### P-x. A transparent construction in a RECORD FIELD type is paid by every elaboration of the record: state it as a telescope fact instead
 
@@ -3608,10 +3608,10 @@ record's elaborations carry.
 
 **The supply is unaffected and was measured separately.** All three tied
 shapes derive from `sucK` plus the existing `pairK` at the generic frame:
-`agents/reports/LJ-1-109/ProbeLJ1109A.agda`, module `TiesSupplied`, GREEN. **The wall is about
+`agents/tasks/LJ-1-109/ProbeLJ1109A.agda`, module `TiesSupplied`, GREEN. **The wall is about
 where the fact is STATED, never about whether it is true or useful.**
 
-**Provenance:** `agents/reports/lj-1.109-report.md` section 2; `agents/reports/LJ-1-109/ProbeLJ1109A.agda`;
+**Provenance:** `agents/tasks/LJ-1-109/lj-1.109-report.md` section 2; `agents/tasks/LJ-1-109/ProbeLJ1109A.agda`;
 the green master at commit `c728e8b` plus the tie landing. Related: [[P-l]],
 [[P-o]], [[P-i]] class 3, and [[P-w]], which measures the same multiplication
 for module applications rather than record fields.

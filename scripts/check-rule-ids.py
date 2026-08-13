@@ -42,7 +42,7 @@ reader at all, and it claims nothing more than that.
 USAGE
     python3 scripts/check-rule-ids.py                 # dev/, AGENTS.md, scripts/
     python3 scripts/check-rule-ids.py <files...>
-    python3 scripts/check-rule-ids.py --briefs        # also agents/briefs/
+    python3 scripts/check-rule-ids.py --briefs        # also agents/tasks/
 """
 
 from __future__ import annotations
@@ -51,6 +51,9 @@ import argparse
 import re
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import agents_tree   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
 
 ROOT = Path(__file__).resolve().parent.parent
 LESSONS = ROOT / "dev" / "LESSONS.md"
@@ -261,7 +264,7 @@ def default_targets(briefs: bool = False) -> list[Path]:
     """The citation check's default file set, named so a test can read it."""
     out = sorted((ROOT / "dev").rglob("*.md")) + [ROOT / "AGENTS.md"]
     if briefs:
-        out += sorted((ROOT / "agents" / "briefs").glob("*.md"))
+        out += agents_tree.briefs()   # [LJ-1.142]: agents/tasks/<TASK>/
     return [p for p in out if p.exists()]
 
 
@@ -305,7 +308,7 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("paths", nargs="*", type=Path)
     ap.add_argument("--briefs", action="store_true",
-                    help="also scan agents/briefs/, which the default run skips")
+                    help="also scan agents/tasks/, which the default run skips")
     args = ap.parse_args()
 
     lessons, decisions = known_lessons(), known_decisions()

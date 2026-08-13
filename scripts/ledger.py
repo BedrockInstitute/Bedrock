@@ -12,7 +12,7 @@ What it measures: non-blank lines inside ```agda fences, over git-tracked *.lagd
 src/. The archive (archive/) is outside every gate (archived D20, live DD13) and is never
 counted. Probe files never appear
 either: since the owner's ruling of 2026-08-13 they are TRACKED, in
-agents/reports/<TASK>/, but this scan is scoped to src/*.lagda.md, so agents/ is
+agents/tasks/<TASK>/, but this scan is scoped to src/*.lagda.md, so agents/ is
 outside it by construction. The reason is not the old one (a probe used to be
 untracked): this ledger counts the DELIVERED PROOF, and a probe is evidence,
 exactly as a report is evidence. Neither is proof.
@@ -99,7 +99,7 @@ UNCOUNTED = ("src/Everything.lagda.md", "src/Landmarks.lagda.md")
 
 def tracked_masters() -> list[str]:
     """Git-tracked .lagda.md under src/. A probe never appears here: it lives in
-    agents/reports/<TASK>/, outside this glob (D-1, owner's ruling 2026-08-13).
+    agents/tasks/<TASK>/, outside this glob (D-1, owner's ruling 2026-08-13).
 
     THIS IS THE STRUCTURAL LIST and it still holds the catalogs, because the
     import graph, the closure and the i18n checks all need them. Use

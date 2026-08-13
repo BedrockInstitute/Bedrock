@@ -2,8 +2,8 @@
 """Never-commit checker: a probe under src/, and any generated file, must not enter the repository.
 
 **THE OWNER'S RULING OF 2026-08-13 CHANGED WHAT A PROBE IS.** A probe pairs one-to-one with its
-report, lives beside it in `agents/reports/`, is tracked, and is NEVER deleted. `bedrock.agda-lib`
-carries `agents/reports` as a second Agda include root, so an agent writes the probe in its FINAL
+report, lives beside it in `agents/tasks/`, is tracked, and is NEVER deleted. `bedrock.agda-lib`
+carries `agents/tasks` as a second Agda include root, so an agent writes the probe in its FINAL
 home, runs it there, and nothing ever moves it again. That is what the root buys: write-and-run
 in place, so no citation into a probe is ever rewritten a second time.
 
@@ -16,11 +16,11 @@ So this script is now ONE rule with one exemption:
 - **Probes are never committed under `src/`** (`dev/LESSONS.md` D-1). On 2026-08-04 a single
   `git add -A src/` committed 13 probe files, 3,274 lines, which had to be untracked afterwards.
   **That rule is not weakened by anything here.**
-- **The ONE exemption is `agents/reports/`,** where a probe is tracked on purpose.
+- **The ONE exemption is `agents/tasks/`,** where a probe is tracked on purpose.
 - **Generated files are never committed**: anything under `_build/`, the woven mono-lingual
   `.lagda.md` copies that `make gen` produces, and any `.agdai` anywhere. An interface file is a
   build output; Agda writes it into `_build/`, never beside the source. MEASURED 2026-08-13:
-  `agents/reports/ProbeLJ1141A.agdai` landed at `_build/2.8.0/agda/agents/reports/`.
+  `agents/tasks/ProbeLJ1141A.agdai` landed at `_build/2.8.0/agda/agents/tasks/`.
 
 `.gitignore` already covers `src/`, which is why this script exists rather than not existing: an
 ignore rule is a default, not a gate. `git add -f` walks straight past it, a pattern that does not
@@ -58,8 +58,10 @@ ROOT = Path(__file__).resolve().parent.parent
 #: probe files and it is not weakened here.
 #:
 #: It is a PREFIX, not a word: `archive/src/L/Probe.agda` is still refused, and so is
-#: `agents/briefs/ProbeX.agda`, because a probe pairs with a report and not with a brief.
-PROBE_HOME = "agents/reports/"
+#: `agents/ProbeX.agda`, because the exemption is the tasks tree and not the word `agents`.
+#: [LJ-1.142] merged the briefs into this tree, so a probe now sits beside BOTH halves of
+#: its task record: the brief that ordered it and the report that reads it.
+PROBE_HOME = "agents/tasks/"
 
 
 def classify(path: str) -> str | None:
@@ -68,10 +70,10 @@ def classify(path: str) -> str | None:
     # An interface file is a build output and never belongs in the repository, exempt directory
     # or not. Agda writes it under _build/, so one here means somebody put it here.
     if p.suffix == ".agdai":
-        return "compiled interface (a build output, never committed, not even in agents/reports/)"
+        return "compiled interface (a build output, never committed, not even in agents/tasks/)"
     # Probe files: the doctrine names src/Probe*.agda, but a probe is a probe wherever it is
     # written and whatever extension it carries, so match the basename shape anywhere. The
-    # single exemption is agents/reports/, the probe's home since the ruling of 2026-08-13.
+    # single exemption is agents/tasks/, the probe's home since the ruling of 2026-08-13.
     if not path.startswith(PROBE_HOME):
         if p.name.startswith("Probe") and p.suffix in {".agda", ".md"}:
             return (f"probe file outside its home (D-1, owner's ruling 2026-08-13: a probe lives "

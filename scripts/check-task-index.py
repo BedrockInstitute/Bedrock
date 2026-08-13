@@ -7,7 +7,7 @@ place that tried to carry their verdicts, the `[L3.32]` row of the master
 table, grew to a 12,633-token cell. `[T108]` moved the episode content out;
 `[T111]` amends the coding rules (§6.0 rules 7 and 8) and builds the index.
 This checker is the machine half of those rules: every code cited anywhere in
-`dev/`, `agents/briefs/` or the git log must have exactly one row in the task
+`dev/`, `agents/tasks/` or the git log must have exactly one row in the task
 index in `dev/PLAN.md` section 11, and no row may exceed the 200-character
 cap. A task whose verdict paragraph sneaks back into its row fails the gate
 on length, which is the regression the cap exists to stop.
@@ -38,7 +38,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PLAN = ROOT / "dev" / "PLAN.md"
-BRIEFS = ROOT / "agents" / "briefs"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import agents_tree as T   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
 
 SECTION = "### Task index"
 CAP = 200
@@ -176,7 +177,7 @@ def scanned_texts() -> str:
     for path in sorted(ROOT.joinpath("dev").rglob("*")):
         if path.is_file() and path.suffix in TEXT_SUFFIXES:
             texts.append(path.read_text(encoding="utf-8", errors="replace"))
-    for path in sorted(BRIEFS.glob("*.md")):
+    for path in T.briefs():
         texts.append(path.read_text(encoding="utf-8", errors="replace"))
     log = subprocess.run(["git", "log", "--oneline", "--all"], cwd=ROOT,
                          capture_output=True, text=True)

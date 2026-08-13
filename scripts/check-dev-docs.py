@@ -61,7 +61,7 @@ HOW A THRESHOLD IS RAISED. A cap that anyone may raise silently is not a cap.
 The gate thresholds are constants below, and raising one is a ruling: only
 the owner may do it, and the change must carry a numbered decision in
 dev/PLAN.md section 3 (with the measured reason) plus an entry in
-the threshold record. The report `agents/reports/archive/l3.32-t110-report.md`
+the threshold record. The report `agents/tasks/archive/L3-32-T110/l3.32-t110-report.md`
 carries every threshold's original argument.
 
 Usage:
@@ -80,6 +80,9 @@ import re
 import sys
 import tomllib
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import agents_tree   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -355,14 +358,12 @@ def sweep_routing(lessons_text: str, rules_data: dict) -> list[str]:
     corpus += sorted((ROOT / "dev").glob("*.md"))
     corpus += sorted((ROOT / "dev" / "memos").glob("*.md"))
     corpus += sorted((ROOT / "dev" / "literature").glob("*.md"))
-    corpus += sorted((ROOT / "agents" / "briefs").glob("*.md"))
-    corpus += sorted((ROOT / "agents" / "reports").glob("*.md"))
-    corpus += sorted((ROOT / "agents" / "reports" / "archive").glob("*.md"))
+    corpus += agents_tree.documents()   # [LJ-1.142]: briefs and reports, one tree
     # The maintenance mechanism's own files are not independent awareness: a
     # sweep that listed an entry and then cited it in its own documentation
     # would clear entries by mentioning them. Everything else counts.
     own_files = {
-                 ROOT / "agents" / "reports" / "archive" / "l3.32-t110-report.md"}
+                 ROOT / "agents" / "tasks" / "archive" / "L3-32-T110" / "l3.32-t110-report.md"}
     corpus = [p for p in corpus if p.name != "LESSONS.md"
               and p not in own_files and p.exists()]
     texts = {p: read(p) for p in corpus}
