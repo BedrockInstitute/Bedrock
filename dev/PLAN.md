@@ -729,7 +729,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.170 | Price BOTH arms of the coding fork | A THIRD ARM SETTLES IT, 37 LINES GREEN | Devlin's split is already delivered on the AC side. The archive ASSUMED arm A's bound, never reached it |
 | LJ-1.171 | The last gate before the build | GO AT 56, AND THE CHAIN IS MEASURED | The search paid a fifth time and changed the ingredient: finSet cannot be read back, env can |
 | LJ-1.172 | BUILD the supply, in dependency order, landing incrementally | 1 TO 5 BUILT; 6 REFUTED AT THE JOIN | envSetK asks a level to hold a function space. Six names, one fact, no supplier |
-| LJ-1.173 | Restrict envSetK to a numeral arity, gate first | DISPATCHED | LJ-1.172 refuted the join and named this cure. The field has one occurrence and no consumer |
+| LJ-1.173 | Restrict envSetK to a numeral arity, gate first | NO-GO ON PRICE; THE NUMERAL CASE IS TRUE | The general arity is OUR invention: zero hits in the archive. Devlin's arities are numeral |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
