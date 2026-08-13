@@ -43,7 +43,7 @@ def check(ok: bool, msg: str) -> None:
 ROOT_DIRS = {p.name for p in ROOT.iterdir() if p.is_dir() and not p.name.startswith(".")}
 
 #: The ONE exception, and it carries its reason. A refused kit never landed in `src/`, so it
-#: has no original path for the mirror rule to map (`archive/kits/README.md:35-40`).
+#: has no original path for the mirror rule to map (`archive/src/2026-08-13-kits-to-tasks/README.md`).
 #: `[LJ-1.143]` left it rather than invent a home. Adding a name here needs the owner's word.
 EXCEPTIONS = {"kits"}
 
