@@ -726,7 +726,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.167 | The definable power at a general argument, and pairing at a general limit | GAP 2 GO AT 35, GAP 1 NO-GO | Gap 2 sat in the prior dispatch's file. Devlin leaves gap 1 as an exercise |
 | LJ-1.168 | Re-measure the satisfaction layer, 5,047 lines never re-priced | 5,047 COLLAPSES TO ABOUT 270 | The figure was never measured. LJ-1.10 had already called it a false anchor |
 | LJ-1.169 | powIter, the last term with no provenance | NO-GO: THE RANK ACCOUNTING FAILS HERE | Devlin's codes are sequences over a fixed set; ours bake parameters into the code tree. P-l |
-| LJ-1.170 | Price BOTH arms of the coding fork | DISPATCHED | AGENTS says an architecture fork is surfaced with a recommendation, never charged ahead on one reading |
+| LJ-1.170 | Price BOTH arms of the coding fork | A THIRD ARM SETTLES IT, 37 LINES GREEN | Devlin's split is already delivered on the AC side. The archive ASSUMED arm A's bound, never reached it |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
