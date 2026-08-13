@@ -33,65 +33,63 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 - **Toolchain parity:** both repos use Agda 2.8.0 + cubical 0.9; all source
   modules are `--cubical --guardedness`. No toolchain migration is needed.
 
-## 0.0 RESUME HERE, written 2026-08-13 at a machine restart
+## 0.0 WHERE LJ-1 STANDS, rewritten 2026-08-14
 
-**Read this first and delete it when it is spent.** The tree is clean at this
-commit and every dispatch has landed. **Nothing is half-applied.**
+**The 2026-08-13 resumption block is SPENT and this replaces it.** All four of
+its items returned. The identity graph carved by separation at 1.73 s against
+254.22 (`[LJ-1.154]`). The sixteen rule-2 repairs landed and
+`check-unbound-hyp.py` fell from 18 to **2**. The Condensation family was
+diagnosed to exhaustion (`[LJ-1.155]`). The `levelIn` wall was BYPASSED, not
+broken, at 16 lines (`[LJ-1.160]`).
 
-**FIRST COMMAND, before anything else:** `make check` in the background. Four
-masters changed on 2026-08-13 and each was typechecked alone; **the whole-tree
-gate has not run since.**
-
-**WHERE LJ-1 STANDS.** Three rows are open and they block in this order:
+**Three rows are open and they block in this order:**
 
 | row | blocked on |
 |---|---|
-| `[LJ-1.7]` | `levelIn` and `cover`. **STRUCTURE ONLY**: 888 lines at 0.0111, under the bar, but the semantic transfer is assumed |
-| `[LJ-1.8]`, the trophy | Route A-prime has no total, because **A5 is unpriced** |
-| `[LJ-1.9]`, the audit | **DD24 reads 1.91x** and the ruling that decides it is the owner's |
+| `[LJ-1.7]` | `levelIn` and `cover` are still undischarged and `theorem` does not derive. **The WALL inside them is gone**: `[LJ-1.160]` measured that it is an artifact of where the argument runs, because a hull is not transitive and the collapse image is |
+| `[LJ-1.8]`, the trophy | **A5 no longer carries `CSB` and carries ZERO replacement** (`[LJ-1.156]`). The new gate is `LeastCardInj`, 44 lines at 100.64 s. Route A-prime still has no TOTAL |
+| `[LJ-1.9]`, the audit | The wing went 2.06x to **1.60x** on wing-local cures. The bar is 0.010514, which is 1.15x the 0.009143 baseline |
 
-**THE FOUR THINGS TO PICK UP, in value order, each with its own evidence
-already on disk.**
+**THE OPEN WORK, in dependency order.**
 
-**1. Carve the identity graph by SEPARATION instead of replacement.**
-`[LJ-1.152]` named this as the highest-value next hour and measured why: one
-`hasSeparationL` costs under 0.1 s and one `hasReplacementL` costs 259 to 269 s,
-**at least 2,500 to 1**. **If the identity graph lands near 2.5 s, `[LJ-1.136]`'s
-254 s construction was never necessary and A5's seconds collapse.** A5 is
-UNPRICED, not priced low: `[LJ-1.152]` refused to multiply 2.50 by five and said
-so.
+**1. The supply chain for the satisfaction layer.** `[LJ-1.168]` measured that
+the 5,047 figure was never a measurement and collapses to about **270**.
+`[LJ-1.172]` built steps 1 to 5 and REFUTED step 6 at the join: `envSetK` asks a
+level to hold a full function space. `[LJ-1.173]` then measured that the same
+disease sits in **21 fields across three records**, that the cure is atomic, and
+that it prices at about 190 with step 6 at about 260 after it. **Green from
+today is about 450.**
 
-**2. Finish `[LJ-1.153]`'s sixteen rule-2 repairs.** Refuted and unrepaired, and
-**it is NOT a C-38 stop**: it found no site that cannot supply the repair and ran
-out of time at the checkpoint. Its report section 10.3 carries the plan whole.
-The tie is `w ∈ K` for all sixteen, the shape is `prK`, and **the suppliers are
-already bound and already unused at both call sites.** The chain terminates at
-`LeafAgree`, which has no consumer, so nothing downstream can break.
-`check-unbound-hyp.py` stands at 18.
+**2. Route A-prime's total.** Six blocks are priced and A5's last unknown
+dissolved. **Nobody has summed them.** That is what `[LJ-1.8]` waits on.
 
-**3. Diagnose the Condensation family to exhaustion.** `[LJ-1.145]` found ONE
-term worth 87 percent at one site and **nobody has looked for a second.** This
-decides whether the DD4-against-DD24 conflict has to be ruled at all: if the
-wing has more terms of that size, it closes its own gap; if it does not, the
-owner has the full evidence and must rule.
+**3. The remaining 48.7 s of the DD24 gap.** `[LJ-1.155]` measured that the
+three `*Agree` masters carry a second term and that its cure is **WING-LOCAL**,
+so it moves the numerator and not the baseline. That is the cure shape the
+DD4-against-DD24 conflict needs.
 
-**4. The `levelIn` wall itself**, `π (Lset m') ≡ Lset (π m')`. `[LJ-1.51]`
-titled it the term I cannot write, `[LJ-1.121]` reached it by another method
-and stopped, and four dispatches went around it. **Nobody has ever been funded
-to build that chapter.** `[LJ-1.151]` MEASURED that the instantiation half is
-separable from it, so the wall is now isolated rather than entangled.
-
-**WHAT IS WAITING ON THE OWNER, and none of it blocks the four above.**
+**WHAT IS WAITING ON THE OWNER, and none of it blocks the three above.**
 
 - **DD4 against DD24.** A cure in shared machinery made every master faster and
   the ratio WORSE, 1.56x to 1.91x, because the AC side gained 41.7 percent and
   the wing 7.9. **It is a property of the bar, not an accident of that edit.**
-  Item 3 above decides whether the ruling is needed.
+  `[LJ-1.155]` then found the counter-case: a wing-local cure does not move the
+  denominator, and the wing went 2.06x to 1.60x. **So the ruling is no longer
+  forced, but the bar still reads a shared cure as a regression.**
+- **The one-site lesson, unnumbered.** A refutation that names one site measures
+  THAT site, and it does not measure how far the site extends. `[LJ-1.173]`
+  restated it four times against three measured layers: one field, then nine,
+  then twenty-one. **The measurement exists; only the ID is missing.**
+- **`src/L/Choice/Name.lagda.md`.** `[LJ-1.172]`'s step-1 drop-in is blocked by
+  **DD23** and not by code. It makes three narrative sentences false, and
+  repairing them is mathematical prose.
 - **The three `*Agree` masters.** Measured stable on the cured tree, but
   `[LJ-1.146]` found that retiring them retires the wing, because the whole
   chain is unconsumed only because the trophy is unwritten.
 - **`check-unbound-hyp.py` rule 3.** `answers` and `ih` are NOT refutable,
   MEASURED, so the fix belongs in the checker.
+- **`dev/memos/source-material-survey.md:3`** is marked STANDING while it
+  endorses the revoked two-caliber rule.
 
 **ONE ORCHESTRATOR HABIT THAT COST THREE TIMES ON 2026-08-13**, recorded here
 because no checker catches it: **do not change anything under a running agent.**
