@@ -36,7 +36,7 @@ module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
@@ -60,11 +60,13 @@ open import L.Coding.Sat {ℓ} lem
         ; cond∃-in; cond∃-out; cond∀-in; cond∀-out
         ; cond∀∈-in; cond∀∈-out; cond∃∈-in; cond∃∈-out )
 open import L.Coding.EnvSet {ℓ} lem
-  using ( envSet; envSet-in; envSet-out; envS; envOver; Ix; module Recover )
+  using ( envSet; envSet-in; envSet-out; envS; envOver; Ix
+        ; module Recover; module Generic )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; keyʟ-shape; satTable; slot; slot-inv; entry-out )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Data.Empty using ( isProp⊥ )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Unit using ( tt* )
@@ -281,6 +283,65 @@ module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
       (subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
         (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb h))
         (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb h)))
+
+module AmbientHoldsGen (B ar : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k)
+  (qE : fst (lookup Ei γ) ≡ fst (Generic.envSetGen B ar))
+  (qd : fst (lookup di γ) ≡ fst ar) (qb : fst (lookup bi γ) ≡ fst B)
+  where
+
+  holds : ⟨ γ ⊨ envSetAt Ei di bi ⟩
+  holds = H.holds
+    where
+    module G = Generic B ar
+    module H = G.Holds γ Ei di bi qE qd qb
+
+module NumeralFromGeneric (B : S) (n : ℕ) where
+
+  derived : fst (envSet B n) ≡ fst (Generic.envSetGen B (nn n))
+  derived = extensionalV (λ w → ⇔toPath (fwd w) (bwd w))
+    where
+    Egen Enum : S
+    Egen = Generic.envSetGen B (nn n)
+    Enum = envSet B n
+
+    γ : S ^ 4
+    γ = Egen ∷ Enum ∷ B ∷ nn n ∷ []
+
+    EiGen EiNum bi di : Fin 4
+    EiGen = zero
+    EiNum = suc zero
+    bi = suc (suc zero)
+    di = suc (suc (suc zero))
+
+    qd : fst (lookup di γ) ≡ fst (nn n)
+    qd = refl
+
+    qb : fst (lookup bi γ) ≡ fst B
+    qb = refl
+
+    holdsNum : ⟨ γ ⊨ envSetAt EiNum di bi ⟩
+    holdsNum = AmbientHolds.holds B γ EiNum di bi n refl qd qb
+
+    module G = Generic B (nn n)
+    module H = G.Holds γ EiGen di bi refl qd qb
+
+    fwd : (w : V ℓ) → ⟨ w ∈ fst Enum ⟩ → ⟨ w ∈ fst Egen ⟩
+    fwd w hw = H.bwd z
+      (extAt-out EiNum (envOverAt zero (suc di) (suc bi)) γ holdsNum z hw)
+      where
+      z : S
+      z = w , isL-trans {x = fst Enum} {y = w} hw (snd Enum)
+
+    bwd : (w : V ℓ) → ⟨ w ∈ fst Egen ⟩ → ⟨ w ∈ fst Enum ⟩
+    bwd w hw =
+      subst (λ w → ⟨ w ∈ fst Enum ⟩)
+        (sym (Recover.recovers B n (z ∷ γ) zero (suc di) (suc bi) qd qb h))
+        (envSet-in B (Recover.g B n (z ∷ γ) zero (suc di) (suc bi) qd qb h))
+      where
+      z : S
+      z = w , isL-trans {x = fst Egen} {y = w} hw (snd Egen)
+      h : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
+      h = H.fwd z hw
 ```
 
 <!--en-->
