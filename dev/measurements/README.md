@@ -6,7 +6,7 @@ directory holds the records that a LIVE document cites, so the citation
 resolves.
 
 Records whose citing documents have all become historical move to
-[archive/measurements](../../archive/measurements/README.md).
+[archive/dev/measurements](../../archive/dev/measurements/README.md).
 
 ## Why they are here and not under `_build/`
 

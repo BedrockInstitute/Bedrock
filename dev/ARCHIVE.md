@@ -28,9 +28,15 @@ is their archive, so no files are restored.
 
 - **Module.** The module's name as it was known in the live tree, e.g.
   `L.Coding.Sequence`.
-- **Original path.** The path the module held before retirement. The archive
-  keeps that path under `archive/`, so the archived path is the original path
-  prefixed with `archive/`.
+- **Original path.** The path the module held before retirement. **`archive/`
+  mirrors the root**, so the archived path is the original path prefixed with
+  `archive/`. **`archive/src/` carries one extra level, the ARCHIVAL EVENT**,
+  because `src/` has been archived six times and two of those archivals took
+  files out of the same directories. `src/L/Godel/Closure.lagda.md`, archived
+  on 2026-08-07, is at `archive/src/2026-08-07-arm-a/L/Godel/Closure.lagda.md`.
+  **Owner's ruling, 2026-08-13**, executed by `[LJ-1.143]`;
+  [archive/README.md](../archive/README.md) is the canonical home of the rule
+  and lists the six events with their commits.
 - **Why archived.** The ruling and its date, e.g. `D17 + D20, 2026-08-04`,
   plus one line on what actually retired the module.
 - **Last green.** The commit at which the module last passed the full gate
@@ -77,14 +83,39 @@ a `README.md` in the subtree:
 
 | Subtree | What it holds | Its record |
 |---|---|---|
-| `archive/tooling/` | Retired scripts | `archive/tooling/README.md`, one section per script, with what it did right and what would reopen it |
+| `archive/scripts/` | Retired scripts | `archive/scripts/README.md`, one section per script, with what it did right and what would reopen it |
 | `archive/kits/` | Code or prose written, measured, not landed | `archive/kits/README.md` |
-| `archive/measurements/` | Measurements only historical documents cite | `archive/measurements/README.md` |
-| `archive/probes/` | **Empty since 2026-08-13.** A tombstone that maps 257 pre-ruling probe paths to their homes in `agents/tasks/<TASK>/` | `archive/probes/README.md` |
+| `archive/dev/measurements/` | Measurements only historical documents cite | `archive/dev/measurements/README.md` |
+| `archive/src/2026-08-13-probe-sweep/` | **Empty since 2026-08-13.** A tombstone that maps 257 pre-ruling probe paths to their homes in `agents/tasks/<TASK>/` | `archive/src/2026-08-13-probe-sweep/README.md` |
 
 `[LJ-1.132]` and `[LJ-1.133]` both reached this conclusion and added no row;
 `[LJ-1.141]` follows them and says so here rather than leaving the registry
 silent about four subtrees.
+
+## The retirement of `archive/probes/`, 2026-08-13
+
+This directory is not a module, so it gets a record here rather than a row.
+
+- **What it was.** A top-level archive directory that held 257 probes for part
+  of one day, 2026-08-13, and held only a tombstone afterwards.
+- **Why it left.** Two reasons, and each is sufficient. **First**, the owner
+  ruled on 2026-08-13 that `archive/` mirrors the root; `probes/` is not a root
+  directory, so a bare `archive/probes/` broke the rule. **Second**, the
+  directory had been empty of probes since the day it was made, because the
+  same afternoon the owner ruled that a probe lives beside its report.
+- **Where it went.** `archive/src/2026-08-13-probe-sweep/`. The 257 probes came
+  out of `src/`, so under the mirror rule the record of that archival sits with
+  the other `src/` archivals, and the directory name says which archival it was.
+- **Last green.** Not applicable, and the empty cell is the honest answer: the
+  directory held no Agda that any gate ever checked. Its content is a map.
+- **What it did right, from measurement.** It left a MACHINE-GENERATED map
+  instead of a memory. That map has now survived three re-pointings, each done
+  by basename lookup rather than by hand: `[LJ-1.141]` moved the probes out,
+  `[LJ-1.142]` renamed the root, and `[LJ-1.143]` split the DD25 bucket.
+  **MEASURED at `[LJ-1.143]`: 489 tokens rewritten across 372 distinct paths,
+  and zero dangle.** A hand-written map would not have survived one of the three.
+- **What would reopen it.** Only a reversal of `dev/LESSONS.md` D-1, which puts
+  a probe beside its report. Nothing else sends a probe to `archive/`.
 
 ## Entries
 

@@ -10,7 +10,7 @@ WHAT CHANGED, and it is why this file replaces `test_probe_lifecycle.py`. The ow
 2026-08-13 that a probe pairs one-to-one with its report, lives beside it in `agents/tasks/`,
 is tracked, and is never deleted. `[LJ-1.138]`'s lifecycle (`--gate`, `--stale`, `--sweep`,
 `--index`, the live-task trigger, the deletion floor) is RETIRED, frozen at
-`archive/tooling/check-probes-lifecycle.py` with its suite. Nothing here tests a lifecycle.
+`archive/scripts/check-probes-lifecycle.py` with its suite. Nothing here tests a lifecycle.
 
 The tests below pin the four things that must never silently invert:
 
@@ -78,8 +78,12 @@ check("agents/tasks/ProbeX.lagda.md is accepted",
       check_probes.classify("agents/tasks/ProbeX.lagda.md") is None)
 check("agents/tasks/archive/ProbeX.agda is accepted (it is under the prefix)",
       check_probes.classify("agents/tasks/archive/ProbeX.agda") is None)
+# `[LJ-1.143]` re-pointed the two archive fixtures at the layout the owner ruled that day:
+# `archive/` mirrors the root, and an archived `src/` sits under its archival-event directory.
+# The shapes tested are unchanged; only the spelling of the archive moved.
 for path in ("agents/ProbeX.agda", "agents/task/ProbeX.agda", "ProbeX.agda",
-             "archive/src/L/ProbeX.agda", "archive/probes/ProbeX.agda",
+             "archive/src/2026-08-07-arm-a/L/ProbeX.agda",
+             "archive/src/2026-08-13-probe-sweep/ProbeX.agda",
              "probes/ProbeX.agda", "dev/ProbeX.agda"):
     check(f"{path} is refused", check_probes.classify(path) is not None)
 

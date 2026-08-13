@@ -1090,7 +1090,7 @@ in `scripts/git-hooks/pre-commit`, pinned by `scripts/tests/test_probe_gate.py`.
 throwaway rule actually cost: 284 probes accumulated untracked in `src/` with
 986 line-number citations pointing into them, one `git clean -xdf` from gone.
 The lifecycle machinery of 2026-08-13 is frozen at
-`archive/tooling/check-probes-lifecycle.py`; `archive/probes/README.md` maps
+`archive/scripts/check-probes-lifecycle.py`; `archive/src/2026-08-13-probe-sweep/README.md` maps
 every pre-ruling path to its new one.
 
 ### D-2. The junk-table lesson
@@ -1676,8 +1676,8 @@ correct and verified ground that nothing outside the `Everything` index
 imported it. Twenty-six minutes later `[L3.32-T124]` sealed `left` opaque in
 `L.Rud.Images`, a survivor, which was the whole point of that dispatch and
 removed 70.3 s. `L.Rud.StepInL` unfolds `left`'s body at three sites
-(`archive/src/L/Rud/StepInL.lagda.md:941, :959, :976`), so the archived file
-stopped typechecking: `agda -i archive/src -i src` exits 42 on
+(`archive/src/2026-08-07-arm-a/L/Rud/StepInL.lagda.md:941, :959, :976`), so the archived file
+stopped typechecking: `agda -i archive/src/2026-08-07-arm-a -i src` exits 42 on
 `⟨ v ∈ˢ left (fst (lookup bk δ)) ⟩`. The `below-lim` gate needs exactly three
 objects from that chapter (`values∈L`, `stepSet∈L`, and the op graphs
 `graphOf`/`graph-out`/`graph-in`, recorded in `agents/tasks/archive/L3-32-T90/l3.32-t90-report.md`),
@@ -2958,7 +2958,7 @@ axis through the delivered `erase` with no placement anywhere**
 (`src/FOL/Count.lagda.md:598-611`, `:617-637`).
 
 **Provenance:** `agents/tasks/archive/LJ-1-27/lj-1.27-review.md` sections 4 and 5. Probes
-`agents/tasks/DD25/ProbeDD25C.agda`, `agents/tasks/DD25/ProbeDD25D.agda` and `agents/tasks/DD25/ProbeDD25E.agda`, the
+`agents/tasks/archive/LJ-1-27/ProbeDD25C.agda`, `agents/tasks/archive/LJ-1-27/ProbeDD25D.agda` and `agents/tasks/archive/LJ-1-27/ProbeDD25E.agda`, the
 last red by design with its error message as its measurement.
 
 ### C-32. A cure invalidates every downstream measurement; RE-RUN THE GATE before you act on the old number
@@ -2980,7 +2980,7 @@ measuring walls to route around a gate that had already opened, and not the
 orchestrator, who held the pre-cure figure and quoted it three times.
 
 **The second half, and it cost the same dispatch.** `[LJ-1.27-R]` had already
-WRITTEN the cured block as `agents/tasks/DD25/ProbeDD25E.agda`, and it failed at exactly one
+WRITTEN the cured block as `agents/tasks/archive/LJ-1-27/ProbeDD25E.agda`, and it failed at exactly one
 line, the `refl` asserting count 0, which is what `[LJ-1.31]` fixed. On the
 cured tree it is green in 2.87 s at 0.0114 s per line. **A finished probe sat
 one command away for a whole dispatch.**
@@ -3106,7 +3106,7 @@ WHOLE seconds budget of 99.6 to 147.7 s. **The route looked infeasible and the
 
 
 **Provenance:** `agents/tasks/archive/LJ-1-34/lj-1.34-review.md` sections 1 and 2;
-`agents/tasks/DD25/ProbeDD25D5.agda` against `agents/tasks/archive/LJ-1-34/ProbeLJ134.agda`.
+`agents/tasks/archive/LJ-1-34/ProbeDD25D5.agda` against `agents/tasks/archive/LJ-1-34/ProbeLJ134.agda`.
 
 ### P-w. A module application COPIES; an interposed module cannot amortize one
 
@@ -3240,7 +3240,7 @@ story frame ended in `∀̇∈ (var yc) body`, which is vacuous at an empty valu
 where the machine's `extAt yc body` constrains it. Worse, at a NONEMPTY value
 one index made the defining condition never mention the element it defines, so
 the row is FALSE of the true satisfaction table, not merely weak.
-`agents/tasks/DD25/ProbeDD25E1.agda` proves the countermodel, `agents/tasks/DD25/ProbeDD25E3.agda` is the
+`agents/tasks/archive/LJ-1-38/ProbeDD25E1.agda` proves the countermodel, `agents/tasks/archive/LJ-1-38/ProbeDD25E3.agda` is the
 control that fails with `fst e != fst z` when the index is corrected, and both
 were re-run by the orchestrator.
 
@@ -3321,14 +3321,14 @@ is K-bounded, `Δ₀` has no `δ-∀` and no `δ-∃`, so no witness exists.
 
 **Every part of that reasoning was refuted by four probes.** The unbounded
 witness is never needed, because every leaf is a K-bounded Δ₀ restatement
-transferred under site facts; `agents/tasks/DD25/ProbeDD25F41A.agda` builds the supposedly
+transferred under site facts; `agents/tasks/archive/LJ-1-41/ProbeDD25F41A.agda` builds the supposedly
 missing witness in ONE line from the delivered `Δ₀-extAtB` and `Δ₀-envBndGen`,
-GREEN in 1.45 s. `agents/tasks/DD25/ProbeDD25F41B.agda` then builds BOTH directions between
+GREEN in 1.45 s. `agents/tasks/archive/LJ-1-41/ProbeDD25F41B.agda` then builds BOTH directions between
 the bounded condition and `envSetAt` in 98 lines, GREEN, marginal cost 0.22 s.
 
 **The real defect was ONE MISSING CONJUNCT.** The machine's `extAt` is a pair
 of implications and the story wrote the first and stopped.
-`agents/tasks/DD25/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
+`agents/tasks/archive/LJ-1-41/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
 PLUS all three site facts and Agda still refuses, so the conjunct is what is
 missing and not the facts.
 
@@ -3344,7 +3344,7 @@ untested, and its own report may already contain the finding nobody has
 consumed.
 
 **Provenance:** `agents/tasks/archive/LJ-1-41/lj-1.41-review.md`; `agents/tasks/archive/LJ-1-41/lj-1.41-report.md`;
-probes `agents/tasks/DD25/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
+probes `agents/tasks/archive/LJ-1-41/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
 
 ### D-30. Price what the CONSUMER needs, never the general law: generality nobody asked for is the cheapest thing to delete and the most expensive thing to keep
 
@@ -3438,7 +3438,7 @@ may strengthen. This says the same failure enters one step earlier: **the brief
 can remove the cure from the agent's reach before any substitution is tried.**
 
 **Provenance:** `agents/tasks/archive/LJ-1-7/lj-1.7-review.md`; `agents/tasks/archive/LJ-1-7/lj-1.7-report.md`;
-`agents/tasks/archive/LJ-1-7/LJ-1.7.md`; probe `agents/tasks/DD25/ProbeDD25G1.agda`, re-run by the
+`agents/tasks/archive/LJ-1-7/LJ-1.7.md`; probe `agents/tasks/archive/LJ-1-7/ProbeDD25G1.agda`, re-run by the
 orchestrator.
 
 ### C-38. A hypothesis is discharged when something SUPPLIES it, never when it is restated

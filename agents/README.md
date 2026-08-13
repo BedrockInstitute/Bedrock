@@ -80,10 +80,11 @@ an `[AmbiguousTopLevelModuleName]` error.
 
 **The 258 probes moved here on 2026-08-13 keep their old flat module lines**, so
 `agda` refuses them with `[ModuleNameDoesntMatchFileName]`. They are frozen records and nothing
-typechecks them. `archive/probes/README.md` maps every old path to the path it had after
-`[LJ-1.141]`; `[LJ-1.142]` then renamed the root and moved the retired route's probes under
-`tasks/archive/`, so that map now needs one more hop. **It is a tombstone in `archive/`, which
-[LJ-1.142] was not allowed to edit.**
+typechecks them. **`archive/src/2026-08-13-probe-sweep/README.md` is the tombstone**, and it maps
+every pre-2026-08-13 probe path to the path the probe holds today. `[LJ-1.143]` corrected it
+through all three hops: `[LJ-1.141]` moved the probes out of `archive/probes/`, `[LJ-1.142]`
+renamed the root to `agents/tasks/`, and `[LJ-1.143]` placed the 55 DD25 probes in the task
+directory of the review that built each one.
 
 ## These files are frozen records
 
