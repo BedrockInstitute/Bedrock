@@ -1656,7 +1656,7 @@ family design is committed.
 opened; the build it removed was priced at 1,400 lines. The general form of
 K2's cofinality finding, and a sibling of D-10.
 
-**Provenance:** `agents/tasks/archive/L3-31-P1/l3.31-p1-report.md`; `src/ProbeD10.agda` (untracked).
+**Provenance:** `agents/tasks/archive/L3-31-P1/l3.31-p1-report.md`. Its probe, `ProbeD10.agda`, was never tracked and is absent from the tree, from the archive, and from the 283-probe index `[LJ-1.133]` built, so the report is the only surviving evidence.
 
 ### D-25. An archive goes red on its own, and pending work that needs it must be extracted first
 
@@ -3653,3 +3653,50 @@ a reason, and the cost was never the reason: it was simply skipped.
 `make check` output, 2026-08-13. Related: [[C-35]], which says a block with
 no consumer is untested, and this is its mirror: a CHANGE with no consumer
 check is unverified.
+
+### C-41. A retired numbering series must carry its home at every citation, because a resolution check cannot see intent
+
+**Rule:** When a numbering series is retired and a new series reuses its
+numbers, **every citation of the old series carries its home beside the code**,
+in the same clause: `archived D7`, `struck D8`. A checker that tests whether a
+code RESOLVES cannot see this defect, because both codes resolve. **Do not
+renumber the old code**; the fix is the home, never the number. And **before
+reusing any number, check what else in the tree already writes that shape**:
+the collision is rarely with only one other series.
+
+**Measured, 2026-08-13, two dispatches.** `[LJ-1.139]` found **10 bad pointers
+in 9 memo headers, 8 of which RESOLVE** and lead to a rule the author never
+meant. `[LJ-1.140]` ran the census the same day and found **87 defective lines
+in 15 live files, all 87 resolving**, of which 68 are a genuine
+archived-decision citation with a live `DD` twin that states a different rule.
+`scripts/check-rule-ids.py` was GREEN through every one, for four days, because
+it verifies that a code resolves and never that it resolves to the series the
+author meant.
+
+**The two multipliers, and they are why this is a law rather than a chore.**
+**(1) Detection is not the failure; CLASSIFICATION is.** Two audits saw it
+first. `agents/tasks/archive/LJ-0-2/lj-0.2-sufficiency.md:214-218` found the
+pair, wrote that both memos name the revoked two-caliber discipline as current,
+and then filed it **under preferences** with "fix when next touched".
+`lj-0.1-consistency.md` never scanned the memos at all. **A pointer that
+resolves to a REVERSED rule was priced as cosmetic staleness, and that bought it
+a deferral instead of a fix.** **(2) A retarget can switch a live rule OFF.**
+`dev/STYLE-agda.md:73` and `:152` cited archived D7 for naming hygiene while DD7
+reads REVOKED OUTRIGHT, so a style rulebook that every dispatched agent reads
+before it writes code told them a live rule was dead.
+
+**The corollary that generalizes, and it is measured too.** The census found
+**four MORE numbering series writing `D<n>`**: a recon batch inside
+`dev/LESSONS.md`, where an R5 recon code of the same shape means a report, `[T95]`'s own defect numbers in
+`scripts/check-timing.py`, a task code in `dev/literature/`, and the checkers'
+own prose about the notation. **A shape that two series share is usually shared
+by more than two.**
+
+**Enforcement:** `scripts/check-rule-ids.py`'s series check, pinned by
+`scripts/tests/test_rule_series.py`, with its limit stated in
+`scripts/README.md`: it reads the word beside the code, never the sentence, so
+it cannot tell which series an author MEANT.
+
+**Provenance:** `agents/tasks/LJ-1-139/lj-1.139-report.md`,
+`agents/tasks/LJ-1-140/lj-1.140-report.md`. Related: [[C-32]], a threshold
+outliving its tree, and [[C-26]], a duplicated rule drifts.

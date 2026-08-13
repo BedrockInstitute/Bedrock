@@ -180,6 +180,30 @@ check("no probe is tracked under src/",
 
 
 print("")
+
+
+# THE MISFILED-PROBE CHECK, B6, added 2026-08-13.
+#
+# The first version of this rule asked whether a probe's name AGREES with its
+# directory, and the corpus refuted it in one run: [LJ-1.143] had placed 55
+# DD25 probes on evidence from eight reviews the same afternoon, so
+# ProbeDD25A.agda sits correctly in LJ-1-27/ and agrees with nothing. About a
+# hundred correctly-filed files were flagged. These cases pin the narrower rule
+# that replaced it: a CONTRADICTION, not a disagreement.
+print("the misfiled-probe check fires only on a contradiction")
+_fires = check_probes.misfiled(["agents/tasks/LJ-1-133/ProbeLJ1120A.agda"])
+check("a probe whose name names another EXISTING task is caught", bool(_fires))
+check("the message names both tasks",
+      bool(_fires) and "LJ-1-120" in _fires[0][1] and "LJ-1-133" in _fires[0][1])
+for _path, _why in (
+    ("agents/tasks/archive/LJ-1-27/ProbeDD25A.agda", "a DD25 probe placed on review evidence"),
+    ("agents/tasks/archive/L3-32-T126/ProbeT126.agda", "the T-series short form"),
+    ("agents/tasks/archive/Unpaired/CutProbe.agda", "a probe whose name carries no code"),
+    ("agents/tasks/LJ-1-136/ProbeLJ1136B.agda", "a probe in its own task"),
+):
+    check(f"silent on {_why}", not check_probes.misfiled([_path]))
+check("silent outside agents/tasks", not check_probes.misfiled(["src/ProbeLJ1120A.agda"]))
+
 if failures:
     print(f"FAIL: {len(failures)} check(s) failed")
     for f in failures:
