@@ -28,7 +28,7 @@ open import L.Coding.Model {ℓ}
   using ( prʟ; envSetAt; envOverAt; tmValAt; subValAt; subValSuccAt; consAtL )
 open import L.Coding.EnvSet {ℓ} lem using ( module Generic )
 open import L.Coding.Graph {ℓ} lem using ( twelveAt )
-open import L.Condensation {ℓ} lem using ( succU; keyU )
+open import L.Condensation {ℓ} lem using ( succU; keyU; module SatGraphB )
 open import L.Condensation.LowerAgree {ℓ} lem using
   ( module LowerAgree; module KeyNegTies; someEnvDef )
 open import L.Condensation.UpperAgree {ℓ} lem using
@@ -43,6 +43,73 @@ open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- =====================================================================
+-- THE GENERIC SIX-AND-SIX RE-ASSOCIATION.
+--
+-- The composer's `twelveB` (:307) is `p0b ∧̇ p1b`, and each half is a
+-- six-fold conjunction.  The consumer's `SatGraphB.twelveB`
+-- (src/L/Condensation.lagda.md:2236-2257) is ONE right-nested chain of
+-- twelve.  `∧̇` is a `Formula` constructor, so the two terms are
+-- different and no `refl` connects them.  dev/PLAN.md:548 records that
+-- and it is true.
+--
+-- It is also not a blocker.  The consumer states its two hypotheses at
+-- SATISFACTION, not at equality.  `γ ⊨ (φ ∧̇ ψ)` is definitionally
+-- `(γ ⊨ φ) ⊓ (γ ⊨ ψ)`, and `⟨ P ⊓ Q ⟩` is definitionally `⟨ P ⟩ × ⟨ Q ⟩`
+-- in the hProp algebra.  So the two satisfactions differ by product
+-- ASSOCIATION only, and the bridge is twelve projections and eleven
+-- pairings.
+--
+-- The two functions name no formula, no environment and no carrier:
+-- they are product re-association and nothing else, so every future
+-- twelve-row consumer on either tower shares this one copy (DD4).
+--
+-- THEY SIT AT THE TOP LEVEL ON PURPOSE, and P-w is the reason.  A
+-- module application COPIES its body.  Written inside `AbstractFrame`
+-- these 28 lines would be copied at every instantiation of the frame.
+-- Here the frame copies two applications instead ([LJ-1.144] section
+-- 5.3, which measured the shape before it measured the price).
+-- =====================================================================
+
+module _ {ℓ' : Level}
+  {A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 A10 A11 : Type ℓ'} where
+
+  sixes→twelve : (A0 × A1 × A2 × A3 × A4 × A5)
+                 × (A6 × A7 × A8 × A9 × A10 × A11)
+               → A0 × A1 × A2 × A3 × A4 × A5
+                 × A6 × A7 × A8 × A9 × A10 × A11
+  sixes→twelve h =
+    ( h .fst .fst
+    , ( h .fst .snd .fst
+      , ( h .fst .snd .snd .fst
+        , ( h .fst .snd .snd .snd .fst
+          , ( h .fst .snd .snd .snd .snd .fst
+            , ( h .fst .snd .snd .snd .snd .snd
+              , ( h .snd .fst
+                , ( h .snd .snd .fst
+                  , ( h .snd .snd .snd .fst
+                    , ( h .snd .snd .snd .snd .fst
+                      , ( h .snd .snd .snd .snd .snd .fst
+                        , h .snd .snd .snd .snd .snd .snd )))))))))))
+
+  twelve→sixes : A0 × A1 × A2 × A3 × A4 × A5
+                 × A6 × A7 × A8 × A9 × A10 × A11
+               → (A0 × A1 × A2 × A3 × A4 × A5)
+                 × (A6 × A7 × A8 × A9 × A10 × A11)
+  twelve→sixes h =
+    ( ( h .fst
+      , ( h .snd .fst
+        , ( h .snd .snd .fst
+          , ( h .snd .snd .snd .fst
+            , ( h .snd .snd .snd .snd .fst
+              , h .snd .snd .snd .snd .snd .fst )))))
+    , ( h .snd .snd .snd .snd .snd .snd .fst
+      , ( h .snd .snd .snd .snd .snd .snd .snd .fst
+        , ( h .snd .snd .snd .snd .snd .snd .snd .snd .fst
+          , ( h .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
+            , ( h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
+              , h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd ))))))
 
 module AbstractFrame {n : ℕ}
   (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K : Fin (5 + n))
@@ -336,4 +403,31 @@ module AbstractFrame {n : ℕ}
        , ( a .snd .snd .snd .snd .fst , ( a .snd .snd .snd .snd .snd
        , ( b .fst , ( b .snd .fst , ( b .snd .snd .fst , ( b .snd .snd .snd .fst
        , ( b .snd .snd .snd .snd .fst , b .snd .snd .snd .snd .snd )))))))))))
+
+  -- The consumer's two hypotheses, in the types it states them.
+  -- src/L/Condensation.lagda.md:6692-6697 declares `twelve-out` and
+  -- `twelve-back` as unsupplied parameters of `SatGraphAgree`, over
+  -- `(d e f : S)` at the environment `f ∷ e ∷ d ∷ γ`.  Here `γ'` IS
+  -- that environment, so the two below are the consumer's parameters
+  -- with the prefix already applied.
+  --
+  -- `w` is a function argument, not a frame parameter: `twelveB` does
+  -- not read it, and a telescope slot would be copied at every
+  -- instantiation while an argument is not (P-w).
+  --
+  -- THIS DISCHARGES NOTHING (C-38).  It exports the consumer's type
+  -- and shortens the chain by one link.  Supplying `SatGraphAgree`
+  -- still needs the frame INSTANTIATED at a real `K`, which is
+  -- [LJ-1.113]'s 28 pieces of new content.
+  twelve-out : (w : Fin (5 + n))
+             → ⟨ γ' ⊨ twelveAt (suc (suc zero)) (suc zero) zero ⟩
+             → ⟨ γ' ⊨ SatGraphB.twelveB {n} w K N0 N1 N2 N3 N4 N5
+                                        N6 N7 N8 N9 N10 N11 t0 t1 ⟩
+  twelve-out w h = sixes→twelve (out h)
+
+  twelve-back : (w : Fin (5 + n))
+              → ⟨ γ' ⊨ SatGraphB.twelveB {n} w K N0 N1 N2 N3 N4 N5
+                                         N6 N7 N8 N9 N10 N11 t0 t1 ⟩
+              → ⟨ γ' ⊨ twelveAt (suc (suc zero)) (suc zero) zero ⟩
+  twelve-back w h = back (twelve→sixes h)
 ```

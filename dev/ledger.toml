@@ -3039,8 +3039,8 @@ gch_wing = [
   "src/L/Hull.lagda.md",          # [LJ-1.3] then DD27's re-index by [LJ-1.23], 431 in-fence
   "src/V/Presentation.lagda.md",  # [LJ-0.4], 18 in-fence; five masters import it, not two
   "src/FOL/Count.lagda.md",       # [LJ-1.6], 620 in-fence, zero L imports, template
-  "src/L/StageCardinal.lagda.md", # [LJ-1.6] then [LJ-1.21] and [LJ-1.25], 491 in-fence
-  "src/L/Condensation.lagda.md",  # [LJ-1.5] block 1 on the erase route, 308 in-fence
+  "src/L/StageCardinal.lagda.md", # [LJ-1.6] then [LJ-1.21] and [LJ-1.25], 482 in-fence
+  "src/L/Condensation.lagda.md",  # [LJ-1.5] block 1 on the erase route, 6,451 in-fence
   # COMPLETED 2026-08-13 by the owner's ruling, with the red accepted.
   #
   # These six are wing work and were never declared, so the subtraction that
