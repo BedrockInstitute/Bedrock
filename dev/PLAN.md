@@ -722,7 +722,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.163 | ElemDown, the residue common to all three open facts | ALREADY SUPPLIED, IN THE WRONG PLACE | My premise was FALSE: my grep excluded the file holding it. 0 new lines, it needs a move |
 | LJ-1.164 | Move elem-down out of Co, which is a pure move | PURE MOVE, 146 IN 146 OUT, NET 0 | Zero proof lines changed. Reachability measured BOTH ways: the pre-move tree exits NotInScope |
 | LJ-1.165 | BUILD the crossing face and discharge levelIn and cover | STOP: SIX GATES PRICED DERIVATIONS | The assembly works at 17 lines. Nothing supplies the face: KFacts is never CONSTRUCTED |
-| LJ-1.166 | Gate K(u), the SUPPLY that six gates never priced | DISPATCHED | Seven site facts and the belief come from one construction. KFacts is never constructed in src/ |
+| LJ-1.166 | Gate K(u), the SUPPLY that six gates never priced | GO: 88 LINES, 2.69 s, BOUND FITS | Devlin's engine transfers. Three of four closure classes were proved and no gate cited them |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
