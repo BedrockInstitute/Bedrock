@@ -623,6 +623,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.143 | Split the DD25 bucket, retire archive/probes, and mirror the root in archive | 55 PLACED, ARCHIVE MIRRORS ROOT | Eight reviews declare what they built; disjoint sets summing to 55 |
 | LJ-1.144 | Settle the three Agree masters: no consumer, bridge owed | BUILD THE BRIDGE, DO NOT RETIRE | The bridge is built in a probe at the consumer's exact types. About 38 lines |
 | LJ-1.145 | Diagnose why the Condensation family is slow | ONE CONVERSION, 65 PERCENT OF ONE DEF | Both leads refuted. Seal satGraphAt: 2,459 ms to under 1 ms, about 21 s off, 40 percent of the gap |
+| LJ-1.146 | Price levelIn and cover, the root of the unconsumed chain | A WALL, NAMED TWICE AT ONE TERM | The trophy needs them. About 1.0k lines. C-35 fires wing-wide, the trophy is unwritten |
+| LJ-1.147 | Seal satGraphAt and measure what unfolding costs | DISPATCHED | LJ-1.145's cure, about 21 s, and its own widest unmeasured term is one edit and one cold run away |
+| LJ-1.148 | DD24's tolerance is narrower than the machine's swing | DISPATCHED | 1.15x against a measured 20.1 percent. Two greens nearest the bar are inside the noise |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |

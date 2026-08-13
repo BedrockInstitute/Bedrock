@@ -1,0 +1,31 @@
+=== BEFORE run 1 ===
+Thu 13 Aug 2026 19:10:53 +08
+load: 19:10  up 10 days, 22:12, 4 users, load averages: 3.93 4.56 4.53
+--- WING ---
+check-ratio | AC baseline 0.0118 s/line (module-cold, warm dependencies) | tolerance 1.15x | bar 0.0136 s/line | cold
+       0.0055     335 lines      1.85 s  src/V/Collapse.lagda.md
+       0.0065     431 lines      2.79 s  src/L/Hull.lagda.md
+  OVER 0.0377      18 lines      0.68 s  src/V/Presentation.lagda.md
+       0.0027     620 lines      1.67 s  src/FOL/Count.lagda.md
+       0.0051     482 lines      2.44 s  src/L/StageCardinal.lagda.md
+  OVER 0.0193   6,445 lines    124.53 s  src/L/Condensation.lagda.md
+       0.0101     775 lines      7.85 s  src/L/Ordinal/SquareLaw.lagda.md
+       0.0126      75 lines      0.94 s  src/L/Ordinal/StageArith.lagda.md
+       0.0112   1,409 lines     15.79 s  src/L/BoundedSubset.lagda.md
+  OVER 0.0824     309 lines     25.45 s  src/L/Condensation/TwelveAgree.lagda.md
+  OVER 0.0420     268 lines     11.26 s  src/L/Condensation/UpperAgree.lagda.md
+  OVER 0.0717     265 lines     19.01 s  src/L/Condensation/LowerAgree.lagda.md
+check-ratio: wing aggregate 0.0187 s/line over 11,432 lines and 214.25 s, OVER THE BAR (1.58x the AC side at the SAME caliber, module-cold with warm dependencies)
+load: 19:14  up 10 days, 22:16, 4 users, load averages: 4.49 4.86 4.68
+--- NON-WING (Graph, Powerset, Choice/Internal, Choice/Adequate) ---
+check-ratio | AC baseline 0.0118 s/line (module-cold, warm dependencies) | tolerance 1.15x | bar 0.0136 s/line | cold
+Traceback (most recent call last):
+  File "/Users/alsg/Agentic/Bedrock/scripts/check-ratio.py", line 498, in <module>
+    if aggregate > module_bar and args.check:
+             ^^^^^^
+  File "/Users/alsg/Agentic/Bedrock/scripts/check-ratio.py", line 411, in main
+    total_seconds = 0.0
+        ^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for +=: 'float' and 'list'
+load: 19:15  up 10 days, 22:16, 4 users, load averages: 4.25 4.70 4.63
+Thu 13 Aug 2026 19:15:20 +08
