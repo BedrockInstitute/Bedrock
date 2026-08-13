@@ -3700,3 +3700,49 @@ it cannot tell which series an author MEANT.
 **Provenance:** `agents/tasks/LJ-1-139/lj-1.139-report.md`,
 `agents/tasks/LJ-1-140/lj-1.140-report.md`. Related: [[C-32]], a threshold
 outliving its tree, and [[C-26]], a duplicated rule drifts.
+
+### P-y. The price of a seal is set by how many definitions look INSIDE the formula, not by how many name it
+
+**Rule:** When you seal a built formula `opaque` to stop the conversion checker
+walking it, count the consumers that must see INSIDE it, not the consumers that
+NAME it. A consumer reaching the formula through a named reader needs no
+`unfolding` at all. **Price the seal by the first count. Pricing it by the
+second is high, and pricing it by the second is the obvious mistake.**
+
+**Measured, 2026-08-13, `[LJ-1.147]`.** `opaque` on `satGraphAt`
+(`src/L/Coding/Graph.lagda.md`). **Five masters name it and THREE needed no
+`unfolding`**, because they reach it through named readers. Two `unfolding`
+blocks in the whole tree. `[LJ-1.145]` priced the edit at about 25 lines from
+the name count; it landed at **18, of which 14 are comments**, so the projection
+was 28 percent high.
+
+**And the exception cost NOTHING.** The one block that carries the `unfolding`,
+`L.Condensation.SatGraphAgree`, went **8,057 ms to 7,861 ms**: minus 169. That
+was the task's abort criterion, on the reasoning that `unfolding` might pay back
+what the seal saves. It did not fire. Meanwhile the site the diagnosis named,
+`LeafAgree.out`, went **9,833 ms to 1,306 ms**, minus 87 percent, and the whole
+`out`/`back` family 35,880 to 23,662 ms.
+
+**Why the cost is not where intuition puts it.** A pattern split reduces a
+satisfaction type while the signature names it folded; the heads then differ and
+the conversion checker walks the whole formula tree. **A definition that only
+names the formula never triggers that walk.** So the seal's blast radius is the
+set of definitions that force the checker inside, and that set is much smaller
+than the import graph suggests.
+
+**P-t is the parent and this sharpens it.** P-t licenses sealing a built formula
+wherever its consumers do not need to see inside. **This says where the seal
+GOES when the consumers are two layers down, and that the exception's price is
+zero.**
+
+**THE WARNING THAT COMES WITH IT, measured the same hour.** The seal was in
+SHARED upstream machinery, so the AC side gained 41.7 percent while the GCH wing
+gained 8 percent, and `ac_baseline_module_rate` fell 0.011828 to 0.009143. **The
+DD24 ratio therefore went 1.56x to 1.91x: every master got faster and the
+verdict got worse.** A cure in shared code improves a ratio only when the judged
+side gains MORE than the reference side. **That is a property of the bar, and it
+is the owner's to rule.** Related: [[P-t]], [[P-q]], [[P-s]].
+
+**Provenance:** `agents/tasks/LJ-1-147/lj-1.147-report.md`, its six raw run logs
+under `agents/tasks/LJ-1-147/runs/`, and `agents/tasks/LJ-1-145/lj-1.145-report.md`
+for the diagnosis it closes.
