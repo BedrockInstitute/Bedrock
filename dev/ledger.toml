@@ -47,10 +47,16 @@
 #      - The archive is NOT counted. archive/ sits outside src/ precisely so
 #        every gate is structurally blind to it (D20). Retired code leaves this
 #        ledger when it is archived.
-#      - Probes are NOT counted, because probe files are never committed (D-1)
-#        and the script reads only git-tracked files. A probe that measured 395
-#        lines contributes nothing to standing, which is correct: it was thrown
-#        away.
+#      - Probes are NOT counted, and the OLD REASON DIED on 2026-08-13. It used
+#        to be that a probe is never committed, so the tracked-files scan could
+#        not see one. Probes are tracked now, in agents/reports/<TASK>/. The
+#        reason that survives is the one that was always doing the work: this
+#        ledger counts the DELIVERED PROOF, which is the in-fence code of a
+#        tracked master under src/. A probe is EVIDENCE, exactly as a report is
+#        evidence, and neither is proof. A probe that measured 395 lines
+#        contributes nothing to standing, which is correct.
+#        The scan is scoped to src/*.lagda.md, so agents/ is outside it by
+#        construction and no exclusion rule is needed.
 #      - A file being in the tree does not mean it is standing. See `retire`.
 #
 # 2. HOW A ROW GOES MISSING, and it is not by being deleted.
@@ -296,7 +302,7 @@ gch_wing_apriori = [7553, 11197]
 # condensation application is at kappa-plus with alpha = kappa, and BOTH are
 # cardinals: dev/literature/devlin-II5.md:164-166, with step F at :282 saying
 # "initial ordinals". Bound's beta is the TARGET, not the level, and
-# archive/probes/ProbeTowerInd2.agda:155-159 already runs the fixed-initial-target shape.
+# agents/reports/Unpaired/ProbeTowerInd2.agda:155-159 already runs the fixed-initial-target shape.
 # So the archived law's restriction to initial ordinals reaches the consumer.
 # Two smaller residuals replace the transfer: the square law at omega, since
 # Init omega is uninhabited, and either verifying Init kappa or adopting Init
@@ -648,7 +654,7 @@ provenance = "agents/reports/archive/l3.32-t52-report.md combined row; PLAN regi
 # the four blocks of L.Rud.StepGraph, all landed ([T148] 504, [T164] 339,
 # [T165] 609, [T170] 460, master 1,912 in-fence lines, ~2 s warm), and the
 # scratch alignments prove the probe's obligation types (Graphs, ValuesLex,
-# StepDescObl, archive/probes/ProbeT145.agda) are inhabited by the delivered objects.
+# StepDescObl, agents/reports/T145/ProbeT145.agda) are inhabited by the delivered objects.
 # Nothing the row priced is untracked: it is standing, measured by the tool.
 # Against the original band 1,240-1,730 naive / 1,610-2,250 calibrated the
 # landing is 1,912: inside the calibrated band, 11 percent over the naive top.
@@ -1720,7 +1726,7 @@ carried_sequence_measured = "904 nbl / 186 s at the limit case alone; block A re
 # port and the landed port at W are the same machinery modulo the carrier, and
 # the successor clause ALREADY solves this exact problem the right way:
 # `L.Rud.StepStory`'s `Clause` telescope is carrier-generic and is instantiated
-# at `src/L/Rud/BelowLim.lagda.md:253` and again at `archive/probes/ProbeT237.agda:164`.
+# at `src/L/Rud/BelowLim.lagda.md:253` and again at `agents/reports/T237/ProbeT237.agda:164`.
 # The limit clause can follow that pattern. The saving is about 250-300 lines.
 # This is AGENTS.md's "write it generic" rule, which the project names as the
 # one that has cost it most, arriving at a site that skipped it.

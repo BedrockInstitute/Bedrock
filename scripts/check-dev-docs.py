@@ -337,8 +337,10 @@ def run_gate(names: list[str]) -> int:
 
 
 def _cite_pattern(rid: str) -> str:
-    """Match an ID as it is actually written, hyphen or not (`D-2` and `D2`
-    are the same LESSONS entry in prose; PLAN decisions are the other D2)."""
+    """Match an ID as it is actually written, hyphen or not. In prose a LESSONS
+    entry appears with the hyphen or without it, and the unhyphenated form
+    collides with a decision code of the same number, which is a different
+    series entirely."""
     if rid.startswith("Rule "):
         return r"Rule\s+" + re.escape(rid.split()[1])
     if re.match(r"^[RTIDC]-\d+$", rid):

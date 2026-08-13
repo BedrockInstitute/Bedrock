@@ -41,7 +41,7 @@ detail = "writes a master under src/. The heaviest bundle, because a build is wh
 ids = ["P-h", "P-k", "P-l", "P-m", "P-n", "R-35", "R-38", "R-40", "I-5", "C-12", "D-10", "C-22"]
 
 [bundle.probe]
-detail = "measures something in a scratch copy and throws it away. Gating, heap discipline, and the transplant law, which is what a probe most often gets wrong."
+detail = "measures one thing and keeps the file as the report's other half. Gating, heap discipline, and the transplant law, which is what a probe most often gets wrong."
 ids = ["D-1", "P-l", "P-i", "C-12", "D-10", "C-22", "R-40"]
 
 [bundle.recon]

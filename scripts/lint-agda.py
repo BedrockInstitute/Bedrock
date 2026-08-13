@@ -284,7 +284,9 @@ def lint_file(path):
     for idx, (_, mtext) in enumerate(mlines):
         toks = [t for t in TOKEN_SPLIT.split(mtext) if t]
         if "postulate" in toks:
-            report(idx, "forbidden", "postulate is banned (PLAN D2; use a module parameter)")
+            report(idx, "forbidden",
+                   "postulate is banned (archived D2, live ruling DD9; "
+                   "use a module parameter)")
         if "?" in toks:
             report(idx, "forbidden", "interaction hole `?` is banned (STYLE-agda §1)")
 
@@ -371,7 +373,7 @@ def main(argv):
         # No explicit FILE: scan all masters (src/ only; a new file must not
         # escape the gate merely by not being committed yet).
         files = tracked_masters()
-    # The archive is outside every gate (D20): explicit archive paths are dropped.
+    # Outside every gate (archived D20, live DD13): archive paths are dropped.
     files = [f for f in files if not f.startswith("archive/")]
     total = 0
     for path in files:

@@ -49,7 +49,10 @@ the risk row in §9).
 **Probes and gates** (standing since `[L3.30]`, sharpened 2026-08-04). Before
 heavy or hard-to-reverse work, the load-bearing assumption is verified cheaply:
 a D-1 probe builds the smallest decisive miniature, reports GO or NO-GO with a
-price extrapolation, and is thrown away. A probe prices only OUR departures
+price extrapolation, and is KEPT: since the owner's ruling of 2026-08-13 the
+probe file lives in `agents/reports/<TASK>/`, beside the report, tracked, and
+is never deleted. `dev/LESSONS.md` D-1 is the canonical rule. A probe prices
+only OUR departures
 (what the Cubical HIT setting costs us), never feasibility the literature or
 the delivered tree already settles. Since 2026-08-04 every wide unprobed
 component is expected to name its gate at estimate time (§6.2), and a stop

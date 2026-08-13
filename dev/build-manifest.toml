@@ -10,7 +10,7 @@
 # `_build/README.md` from it.
 #
 # WHY THIS FILE LIVES IN `dev/` AND NOT IN `_build/`.
-# `.gitignore:2` ignores `_build/`, and `scripts/check-probes.py:139-140` fails the
+# `.gitignore:2` ignores `_build/`, and `scripts/check-probes.py:20-23` fails the
 # gate on any TRACKED file under `_build/`. A manifest kept inside `_build/` would
 # be untracked, would not survive `make clean` (`Makefile:180`), and would not
 # survive a fresh clone. A regime that a routine command destroys is not a regime.

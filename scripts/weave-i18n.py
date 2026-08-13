@@ -118,7 +118,7 @@ def main(argv):
             files.append(a)
         i += 1
 
-    # The archive is outside every gate (D20): explicit archive paths are dropped.
+    # Outside every gate (archived D20, live DD13): archive paths are dropped.
     files = [f for f in files if not f.startswith("archive/")]
 
     if mode == "check":

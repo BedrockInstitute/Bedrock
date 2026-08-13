@@ -124,7 +124,7 @@ def render_readme(data: dict) -> str:
         "|---|---|",
         "| Measurement a LIVE document cites | `dev/measurements/` |",
         "| Measurement only historical documents cite | `archive/measurements/` |",
-        "| Probe a report cites at a line number | `archive/probes/` |",
+        "| Probe | `agents/reports/<TASK>/`, beside its report |",
         "| Code or prose written, measured, not landed | `archive/kits/` |",
         "| Retired script | `archive/tooling/` |",
         "| Agent report or brief | `agents/reports/`, `agents/briefs/` |",

@@ -4,9 +4,16 @@ The registry of Bedrock's retired modules. One entry per module, written at
 the moment of archival, recording what went, why, its last-green state, its
 measured size, and the condition under which it would be worth consulting
 again. The archive itself lives at `archive/` (repository root) and its rules
-are stated in full in [archive/README.md](../archive/README.md) and in ruling
-D20 ([dev/PLAN.md](../dev/PLAN.md) section 3, 2026-08-04). This file is the
-index; the archive is the evidence.
+are stated in full in [archive/README.md](../archive/README.md) and in archived
+ruling D20 ([archive/dev/DECISIONS-archived.md](../archive/dev/DECISIONS-archived.md),
+2026-08-04). The live home of the same rule is DD13 in
+[dev/PLAN.md](../dev/PLAN.md) section 3. This file is the index; the archive is
+the evidence.
+
+**D-SERIES NOTE.** Every bare `D<n>` in this file is the archived decision
+series, in `archive/dev/DECISIONS-archived.md`. The live series is `DD` and the
+two do not correspond. Each entry below records the ruling that applied on its
+own date, so the codes are read as history and are never renumbered.
 
 ## When an entry is made
 
@@ -59,6 +66,25 @@ becomes provably moot, the entry records the closure, with the ruling or
 reasoning that made the condition moot, and the module's files may then be
 genuinely deleted. A revival that lands is recorded in the entry; the archived
 original stays frozen unless and until the condition is closed as moot.
+
+## What this registry does NOT index, and where those records live
+
+**The columns below describe a retired Agda MODULE**: an original path under
+`src/`, a last-green commit, and a size in in-fence code lines. Four archive
+subtrees hold things that have none of those, so forcing a row would put empty
+cells beside a real one. Each carries its own record instead, and the record is
+a `README.md` in the subtree:
+
+| Subtree | What it holds | Its record |
+|---|---|---|
+| `archive/tooling/` | Retired scripts | `archive/tooling/README.md`, one section per script, with what it did right and what would reopen it |
+| `archive/kits/` | Code or prose written, measured, not landed | `archive/kits/README.md` |
+| `archive/measurements/` | Measurements only historical documents cite | `archive/measurements/README.md` |
+| `archive/probes/` | **Empty since 2026-08-13.** A tombstone that maps 257 pre-ruling probe paths to their homes in `agents/reports/<TASK>/` | `archive/probes/README.md` |
+
+`[LJ-1.132]` and `[LJ-1.133]` both reached this conclusion and added no row;
+`[LJ-1.141]` follows them and says so here rather than leaving the registry
+silent about four subtrees.
 
 ## Entries
 

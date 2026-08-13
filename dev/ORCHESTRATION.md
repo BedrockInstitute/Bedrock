@@ -207,8 +207,9 @@ it is repeated.
 
 Standing clauses that go in every build or probe brief:
 
-- **D-1**: probes are never committed; the verdict goes in a report under
-  `agents/reports/`; write the deliverable incrementally, never at the end (C-22).
+- **D-1**: write the probe in `agents/reports/<TASK>/`, beside the report it
+  belongs to, and never in `src/`; the verdict still goes in the report; write
+  the deliverable incrementally, never at the end (C-22).
 - **D-10**: check the target's truth at the intended generality before proving
   it, and record any correction beside the original.
 - **DD8**: name the block's widest unmeasured term and the probe that would

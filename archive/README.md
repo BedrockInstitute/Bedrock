@@ -13,24 +13,16 @@ retired from `src/L/Coding/Sequence.lagda.md` lives at
 `archive/src/L/Coding/Sequence.lagda.md`. No live code, no generated files, no
 half-maintained second tree.
 
-**PROBES ARE ADMITTED, ruled by the owner on 2026-08-13.** This line used to
-read "no probes", and it was written before `archive/tooling/`,
-`archive/kits/` and `archive/measurements/` existed, none of which fits it
-either. The reason is that a probe changes species when a report cites it: it
-stops being a throwaway miniature and becomes the evidence for a `file:line`
-claim, and this project's whole discipline is that a claim is checkable.
+**PROBES ARE NO LONGER HERE.** `archive/probes/` held 257 of them for one day.
+The owner ruled on 2026-08-13, later the same day, that a probe pairs
+one-to-one with its report and lives beside it, so all 257 moved to
+`agents/reports/<TASK>/` and nothing arrives here again.
+`archive/probes/README.md` is the tombstone and it maps the old path to the
+new one; `dev/LESSONS.md` **D-1** is the live rule.
 
-**`archive/probes/` is where such a probe goes.** A probe that no report cites
-is still throwaway and is still deleted; D-1 is unchanged for it.
-
-**`scripts/check-probes.py` now knows the difference**, taught by `[LJ-1.133]`
-on 2026-08-13. `archive/probes/` is its ONE exemption; every other path keeps
-the old refusal, and a probe under `src/` is refused absolutely. The rule was
-bought on 2026-08-04, when one `git add -A src/` committed 13 probe files.
-The checker gives every probe under `src/` one of four verdicts, and only two
-of them are automatic: it archives EVIDENCE and deletes ORPHAN, it never
-touches FRESH, and it refuses to decide NAMED because only reading the report
-settles that one. `archive/probes/README.md` states the test.
+**A probe under `src/` is still refused absolutely**, by
+`scripts/check-probes.py`. That rule was bought on 2026-08-04, when one
+`git add -A src/` committed 13 probe files, and nothing here weakens it.
 
 ## Outside every gate
 

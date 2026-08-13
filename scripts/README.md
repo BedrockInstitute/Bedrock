@@ -195,39 +195,30 @@ python3 scripts/deletion-test.py --run --yes    # the real test (guarded)
 
 ## `check-probes.py`
 
-The never-commit gate, plus the probe lifecycle. Two standing rules from `AGENTS.md`'s Never
-list: probe files are never committed (`dev/LESSONS.md` D-1), and generated files (anything
-under `_build/`, the woven mono-lingual copies) are never committed.
+The never-commit gate. **One rule with one exemption**: a probe must not enter the repository
+under `src/`, and `agents/reports/` is where it belongs instead. Generated files (anything
+under `_build/`, the woven mono-lingual copies, any `.agdai`) are never committed at all.
+`dev/LESSONS.md` **D-1** is the canonical rule and this checker only enforces it.
 
-`.gitignore` already covers both, which is exactly why this exists: **an ignore rule is a
-default, not a gate.** `git add -f` walks past it and a pattern that stops matching a new
-naming shape fails silently. On 2026-08-04 one `git add -A src/` committed 13 probe files,
-3,274 lines. `--staged` runs in the pre-commit hook and stops the commit; `--check` runs in
-`make check` over every tracked file and catches anything that got in historically or past a
-bypass.
+`.gitignore` covers `src/`, which is exactly why this exists: **an ignore rule is a default,
+not a gate.** `git add -f` walks past it and a pattern that stops matching a new naming shape
+fails silently. On 2026-08-04 one `git add -A src/` committed 13 probe files, 3,274 lines.
+`--staged` runs in the pre-commit hook and stops the commit; `--check` runs in `make check`
+over every tracked file and catches anything that got in historically or past a bypass.
 
-The lifecycle half is what an ignore rule cannot express: a probe is **thrown away** once its
-verdict is recorded, and untracked probes otherwise pile up in `src/` where they are mistaken
-for committed ones. `[LJ-1.133]` found 284 of them because nothing ever ran the sweep.
+**`--staged` reads `--diff-filter=ACMR`, and the `R` is load-bearing.** MEASURED 2026-08-13 at
+`[LJ-1.141]`: 257 staged probe renames, and `ACM` reported zero of them. A probe is tracked
+now, so it can be `git mv`-ed straight into `src/`, and the old filter would have passed it.
 
-**The trigger is a task, not a clock.** A probe is swept when NO LIVE task needs it, and a task
-is live when `dev/PLAN.md` section 11 says `DISPATCHED` or `planned`, when a live task's brief
-names the probe, or when a brief exists for the code and no report file does. The three tests
-are unioned, so each can only ADD a hold and none can release one. **`[LJ-1.138]` measured why
-a brief with no report cannot close a task on its own: C-22 orders an agent to write its
-report as a skeleton first, so a report file exists long before the task ends.** A *missing*
-report proves a task unfinished; a present one proves nothing.
-
-A probe whose verdict survives goes to `archive/probes/`, never to deletion. Deletion is for an
-orphan alone, and an orphan waits out a 24 hour floor first: mtime delays the irreversible step
-and never releases a hold.
+**THE LIFECYCLE IS RETIRED**, by the owner's ruling of 2026-08-13. A probe pairs one-to-one
+with its report, lives in `agents/reports/<TASK>/`, is tracked, and is never deleted, so there
+is nothing to sweep and no verdict to compute. `--gate`, `--stale`, `--sweep`, `--index`, the
+live-task trigger and the 24 hour deletion floor are gone; the frozen code is
+`archive/tooling/check-probes-lifecycle.py` with its suite. Every retired flag now exits 2.
 
 ```sh
-python3 scripts/check-probes.py --check   # every tracked file (make check)
+python3 scripts/check-probes.py --check   # every tracked file (make check, make probes)
 python3 scripts/check-probes.py --staged  # staged files only (pre-commit hook)
-python3 scripts/check-probes.py --gate    # FAIL when a sweepable probe waits (make check)
-python3 scripts/check-probes.py --stale   # every probe, its verdict and the reason
-make probes-sweep                         # act on it; the gate itself moves no file
 ```
 
 ## `check-tree.py`
@@ -241,10 +232,11 @@ one file, which is what makes it a trusted single invocation, and the price is t
 nobody imports is never typechecked while the gate still goes green**. PLAN specified this
 audit from the beginning and nothing had implemented it; on its first run it found a real
 in-progress chapter sitting outside the gate. The others: **archive** (no live master imports a
-module that lives only in `archive/`, D20), **shared-cjk** (no CJK in marker-free prose, which
-would reach the English book verbatim, C-8), **spdx** (licensing has one source of truth, D4),
+module that lives only in `archive/`, archived D20, live home DD13), **shared-cjk** (no CJK in
+marker-free prose, which would reach the English book verbatim, C-8), **spdx** (licensing has
+one source of truth, archived D4, live home DD22),
 **retiring**, WARN only and SILENT today (it flagged a surviving master importing a chapter
-the retired route's D18 was retiring; `retire_suspended` empties that set, so the check returns
+the retired route's archived D18 was retiring; `retire_suspended` empties that set, so the check returns
 nothing until the new route rules its own retirements), and **module-body**, WARN only (C-11's
 silently empty parameterized module).
 
@@ -363,7 +355,7 @@ python3 scripts/rules.py --grep seal     # the long tail, by trigger word
 hypotheses that are refutable by regularity: the shape that cost phase LJ-1
 about a thousand delivered lines across seven statement-level defects. A
 flag is a QUESTION, never a verdict, so it must not fail a build; the cure
-is a refutation probe, and `src/ProbeLJ197A.agda` is that probe's shape at
+is a refutation probe, and `agents/reports/LJ-1-97/ProbeLJ197A.agda` is that probe's shape at
 one line of real content per fact.
 
 Three rules. Rule 1: the conclusion asserts `⟨ A ∈ B ⟩` and a set-typed
@@ -396,6 +388,37 @@ Runs in `make check`. Every `[LJ-x.y]`, `DD<n>` and LESSONS id cited anywhere
 under `dev/` must resolve to a real entry, and a struck decision still
 resolves against the archive. It exists because a document written ABOUT rule
 hygiene shipped a fake id.
+
+**THE SERIES CHECK, added 2026-08-13 by `[LJ-1.140]`.** Resolving is not enough
+while two series share the numbers. The `D` series was archived on 2026-08-09
+and the live series is `DD`, so a bare code resolves against the archive and
+points the reader at the `DD` row of the same number, which is a different
+rule. Archived D7 is naming hygiene; DD7 is REVOKED, so two lines of
+`dev/STYLE-agda.md` told every agent that a live naming rule was dead. The
+check has two parts. **A bare `D<n>` in a live document is a defect when a
+`DD<n>` row exists**: the home goes beside the code, as `archived D7` or
+`struck D8`, and the marker may sit at the end of the previous line, so a
+reflow costs nothing. **A `D<n>` sent to `dev/PLAN.md` section 3 is a defect
+whatever else the line says**, because that section holds the `DD` table and no
+`D` row. The scope is wider than the citation check: `dev/LESSONS.md`, which
+binds new code, and `scripts/*.py`, which agents read before they edit a
+checker. `scripts/tests/` is excluded because its fixtures reproduce document
+text verbatim. Pinned by `scripts/tests/test_rule_series.py`, 63 checks.
+
+**WHAT THE SERIES CHECK CANNOT DO, and the limit is real.** It reads the word
+beside the code, never the sentence, so **it cannot tell which series an author
+MEANT.** A citation labelled `archived D5` that argues DD5's content passes
+green. It removes the SILENT retarget, where nothing beside the code warns the
+reader at all, and claims nothing beyond that. Three exemptions let real text
+through and each is deliberate. `dev/JOURNAL.md`, `dev/memos/` and `agents/`
+are dated records, so a July entry citing an August-struck code is correct as
+history and nobody rewrites it. **A file may declare its whole series ONCE**,
+in a fixed `**D-SERIES NOTE.**` sentence that a reader sees, which is what
+keeps `dev/ARCHIVE.md`'s 70 dated retirement rows from saying one thing seventy
+times; **nothing checks that the declaration is true of every row below it.**
+The locator rule **skips a line that names a `DD` code**, because the repaired
+sentences read "archived D11; DD11 in section 3 is a DIFFERENT rule", so a line
+that cites one code correctly and misdirects a second one passes.
 
 ## `check-task-index.py`
 
@@ -480,7 +503,8 @@ obligations, which is the denominator of the per-obligation rates
 ## The archive
 
 Archived modules live in `archive/` at the repository root, outside `src/`, so
-every gate is structurally blind to them (D20, `dev/PLAN.md` section 3).
+every gate is structurally blind to them (archived D20, in
+`archive/dev/DECISIONS-archived.md`; the live home is DD13 in `dev/PLAN.md` section 3).
 `lint-agda.py` and `weave-i18n.py` scan `src/` only, and `lint-prose.py` and
 `check-glossary.py` drop `archive/` paths from their file lists, so neither
 `make check` nor the pre-commit hook inspects the archive; `reuse lint` still

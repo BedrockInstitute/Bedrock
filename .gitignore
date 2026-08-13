@@ -18,7 +18,15 @@ __pycache__/
 # commit anything here if the owner explicitly asks).
 .claude/
 
-# Probes are throwaway by doctrine: never committed (see dev/LESSONS.md D-1)
+# A PROBE IS TRACKED, and its home is agents/reports/<TASK>/, beside the report
+# it belongs to (dev/LESSONS.md D-1, owner's ruling 2026-08-13). NOTHING BELOW
+# IGNORES IT THERE, and that is deliberate.
+#
+# What is ignored is a probe under src/, which is forbidden absolutely. That
+# rule was bought on 2026-08-04, when one `git add -A src/` committed 13 probe
+# files, 3,274 lines. An ignore rule is a default and `git add -f` walks past
+# it; scripts/check-probes.py is the gate.
+#
 # EVERY .agda under src/ is a probe by construction: masters are .lagda.md,
 # and `git ls-files` finds zero tracked .agda there. A probe named anything
 # else slipped past the Probe* pattern once (src/MetaTest.agda, 2026-08-13).
