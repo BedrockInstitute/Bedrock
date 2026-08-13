@@ -596,3 +596,229 @@ row C2, classes the bounded Def-step matrix as per-tower content and names our
 side as "the coding analogue". **So Devlin has no `valK` and no `yc`. He has one
 sentence about `K(u)`'s construction, and our twelve rows turn it into a bill of
 site facts.** **INFERRED**, because I did not open the digest myself.
+
+---
+
+# RESUMPTION: the sixteen rule-2 repairs, finished
+
+Appended after the restart. `make check` was EXIT 0 on the first twenty
+(commit `093a3da`), so this section starts from a green tree.
+
+## R0. Lead
+
+- **`check-unbound-hyp.py`: 18 BEFORE this section, 2 AFTER.**
+- **All 16 rule-2 hypotheses repaired. NONE was left unrepaired.**
+- **The 2 that remain are `answers` and `ih`**, the checker false positives of
+  section 7. They are untouched, as ruled.
+- **Across the whole task: 38 to 2. 36 refuted, 36 repaired.**
+- **Every consumer green**, exit 0, section R4.
+
+**Nothing walled. No heap exhaustion. `src/L/Condensation.lagda.md` compiled
+first try after the edits, and so did every consumer.**
+
+## R1. The repair, stated before and after
+
+**One tie serves all sixteen: THE CONTAINING SET IS IN `K`.** It is the same
+shape as the `valK` repair, and for the same reason: with `K` transitive,
+`c ∈ w ∈ K` gives `c ∈ K`, and two more steps down the Kuratowski pair give the
+components. **That is `[LJ-1.151]`'s `prK`**
+(`agents/tasks/LJ-1-151/lj-1.151-report.md:97`). One delivered lemma supplies the
+`valK` family and all sixteen of these.
+
+### R1.1 `WitnessAgree`, 3 hypotheses
+
+**Before** (`src/L/Condensation.lagda.md` at `093a3da:6492`):
+
+```agda
+  (codesK : (w : S) → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst w ⟩
+           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+           → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ... )
+```
+
+**After** (now `:6500`):
+
+```agda
+  (codesK : (w : S) → ⟨ fst w ∈ fst (lookup K γ) ⟩
+           → (k : ℕ) → (c ar a b : S) → ⟨ fst c ∈ fst w ⟩
+           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+           → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ... )
+```
+
+`unCodesK` takes the same premise. `entryK` takes it too, and its binder group
+`(w x' y : S)` had to SPLIT into `(w : S) → ⟨ ... ⟩ → (x' y : S)`, because the
+tie has to sit between `w` and the rest.
+
+**The premise that now constrains `w`: `w ∈ K`.** Untied, `w` was any set at all.
+
+### R1.2 `SatGraphAgree`, 5 hypotheses
+
+`codesK`, `unCodesK`, `closedEntryK` and `domK` take
+`⟨ fst d ∈ fst (lookup (suc (suc (suc K))) γ) ⟩`, the CLAUSE SET in `K`.
+`domEntryK` takes the `e` form, the GRAPH in `K`, because its premise reads the
+`e` slot and not the `d` slot. **I checked that slot by slot rather than tying
+all five to `d`**: `domEntryK`'s premise is at
+`lookup (suc zero) (f ∷ e ∷ d ∷ γ)`, which is `e`.
+
+### R1.3 `LeafAgree`, 8 hypotheses
+
+**Pure pass-through, no proof content.** The `w*` group takes the `w' ∈ K` form
+for `WitnessAgree`; the `g*` group, `domEntryK` and `domK` take the `d ∈ K` or
+`e ∈ K` form for `SatGraphAgree`. The two module applications
+(`:7093`, `:7105`) needed NO change: the types line up by construction.
+
+### R1.4 This does not weaken the statements
+
+**Each repaired hypothesis keeps its whole conclusion.** `codesK` still says
+every code in the set has its three components in `K`; `entryK` still says both
+sides of every recorded pair are in `K`; `domK` still says every member is in
+`K`. **What changed is that the set is no longer arbitrary.**
+
+**And no theorem changed what it SAYS.** All sixteen are module HYPOTHESES.
+**MEASURED**: `git diff` deletes 32 lines and every one is a line I replaced in
+place; **no `out`, `back`, `body-out` or `body-back` CONCLUSION type was
+touched.** The single signature change is `body-back`, which gained two
+arguments and lost nothing.
+
+## R2. The call sites supply it (C-38, the deciding half)
+
+**Every site already held the tie and threw it away. That is the same finding as
+the first twenty, and it is why this repair is a supply and not a restatement.**
+
+| site | `file:line` | what supplies the tie |
+|---|---|---|
+| `WitnessAgree.out.go` | `:6524-6525`, used at `:6531` | `witK w (hxw , (hcl , hsh))`. **The body already computed this at `093a3da:6510` and used it only for the output pair.** I named it `wK` and passed it |
+| `WitnessAgree.back.go` | `:6550`, used at `:6559` | `wK`, **bound by the pattern `go (w , (wK , ...))` and UNUSED before this repair** |
+| `SatGraphAgree.body-out` | `:6885-6887` | `witK d e f h`. **`h` IS `witK`'s premise, at the same environment**, so the direction supplies both ties from what it holds. No signature change |
+| `SatGraphAgree.body-back` | `:6913-6915`, called at `:6999` | two new arguments, **bound and discarded by the three patterns `(d , (dK , hT))`, `(e , (eK , hb))`, `(f , (fK , body))`** |
+| `LeafAgree` | `:7093`, `:7105` | nothing: it is a pass-through and holds no proof |
+
+**So no site needed a new fact.** The strongest single measurement in this
+section: **`WitnessAgree.back` had `wK` bound by its own pattern and never used
+it.** The checker was pointing at a premise the code had in its hand.
+
+## R3. The chain terminates, so no consumer can break
+
+**MEASURED**: `grep -rn "LeafAgree" src/` returns only its own comment banner and
+its own module header. **`WitnessAgree` and `SatGraphAgree` have no
+instantiation outside `LeafAgree`.** There is no fourth level and no orphaned
+obligation created by this repair.
+
+**This does NOT discharge anything, and I say so plainly (C-38).** `KFacts` still
+has no instance in `src/`, exactly as `[LJ-1.151]` section 3 measured. My repair
+makes sixteen empty types inhabitable; it does not inhabit them.
+
+## R4. Consumer verdicts (C-40). ALL GREEN
+
+One agda process, `GHCRTS="-A64m -I0 -M8g"`, cap never raised.
+
+| master | verdict | real s | load at start |
+|---|---|---:|---:|
+| `src/L/Condensation.lagda.md` | **exit 0** | 124.41 | 5.94 |
+| `src/L/Condensation/TwelveAgree.lagda.md` | **exit 0** | 58.68 | 5.20 |
+| `src/L/Condensation/LowerAgree.lagda.md` | **exit 0** | in the run above | |
+| `src/L/Condensation/UpperAgree.lagda.md` | **exit 0** | in the run above | |
+| `src/L/BoundedSubset.lagda.md` | **exit 0** | 16.35 | 5.42 |
+
+**No unsolved metavariable and no warning.** Each log holds only its `Checking`
+lines. I-5 holds.
+
+**The machine was QUIET for this section**, load 5.20 to 5.94, one user. **I did
+not see `[LJ-1.154]` take a process while I ran.** The seconds above are
+therefore comparable with each other, but I still do not offer them as a price:
+they are a repair's incidental cost, not a measured term (C-31).
+
+## R5. Checkers
+
+- `scripts/check-unbound-hyp.py`: **18 before, 2 after.**
+  **Whole task: 38 before, 2 after.**
+- `scripts/lint-agda.py --check`: **exit 0.**
+- `scripts/check-probes.py --check`: **clean**, 1654 tracked files.
+- `scripts/lint-prose.py --check` on this report: exit 0.
+- **No `make check`.** The orchestrator runs it.
+
+## R6. The diff, audited line by line
+
+**32 lines deleted, and every one is a line I replaced in place.** I read the
+whole deletion list rather than trusting the count, because section 10.2 is my
+own lesson. **Nothing was lost.** The blank line before `body-back` is the only
+non-declaration deletion, and a comment banner replaced it.
+
+| figure | value |
+|---|---:|
+| lines added | 82 |
+| of which in-fence code | 54 |
+| of which code comments | 28 |
+| lines removed, all replaced in place | 32 |
+| **net in-fence code** | **+23** |
+
+**I applied my own 10.2 lesson.** The one scripted multi-site edit in this
+section asserts BOTH the string it matches AND the string it writes, and asserts
+the match count is exactly 1 per site. The two-site edit asserts the count is
+exactly 2, which is what proves it hit `body-out` and `body-back` and not one of
+them twice. **Every other edit was one site at a time.**
+
+## R7. DD4
+
+**All 23 net in-fence lines are TEMPLATE content. They name no tower.**
+
+Every line added is a membership premise at a slot, or one `let`-level binding of
+a fact the site already held. **No `Lset`, no `Sset`, no `J`, no `π`.** A J tower
+re-pays none of it.
+
+**The DD4 reading now covers the whole task, and it is one figure: 55 net
+in-fence lines added, 55 of them shared.** That is 32 from the `valK` half and 23
+from this half.
+
+**This strengthens `[LJ-1.151]` section 6, which corrected `[LJ-1.146]` section
+6.** That report measured 19 of 21 lines naming no tower and called the
+instantiation mostly template. **The repaired STATEMENTS are 100 percent
+template.** The per-tower part is only the eventual SUPPLY at a concrete `K`,
+which `[LJ-1.151]` measured at two lines.
+
+## R8. What I could NOT repair
+
+**Nothing in the sixteen. Every one is repaired and every consumer is green.**
+
+**Two flags remain and neither is a defect. MEASURED, section 7:**
+
+- `src/L/Reflect.lagda.md:365` (`answers`): the conclusion's subject is a
+  FUNCTION of the flagged variable, and the type is INHABITED at a delivered site
+  (`src/L/Reflect.lagda.md:488-489`). **An empty type cannot be supplied by a
+  green module.**
+- `src/L/StageCardinal.lagda.md:281` (`ih`): the conclusion holds NO membership,
+  so C-38's refutation cannot even be stated against it.
+
+**Both untouched, as ruled. The right cure is a `check-unbound-hyp.py` rule-3
+refinement and it is the owner's call.**
+
+## R9. One thing the orchestrator should decide
+
+**`scripts/check-unbound-hyp.py` now has exactly two flags, and both are false
+positives.** Until rule 3 is refined, the checker cannot be armed with `--check`
+in `make check`: it would fail closed on two sound statements.
+
+**The refinement I recommend, stated so it can be priced:** rule 3 should not
+fire when every telescope-bound set variable occurs inside an APPLIED position of
+the conclusion's subject, rather than as the subject itself. That distinguishes
+`pickStage ψ (LsetEnv ... ms)` from a bare `yc`. **I did not write it, and I did
+not measure what else it would silence.** `[LJ-1.153]` is not the dispatch that
+owns that file.
+
+## R10. ARCHIVE USED, addendum
+
+- **`src/L/Condensation.lagda.md`, read `:6360-6372` (`ClosedAgree`),
+  `:6422-6425` (`DomainAgree`).** TOOK their `codesK`, `entryK` and `domK`
+  parameter types, which are stated at a SLOT (`lookup C γ`, `lookup f γ`,
+  `lookup d γ`) and therefore needed NO change. **That reading is what made the
+  repair a one-level edit**: applying the extra argument leaves exactly the type
+  those two modules already expect, because `lookup zero (w ∷ γ)` reduces to `w`.
+- `src/L/Condensation.lagda.md:2765-2772` (HEAD numbering), read again. **It is
+  the playbook in one sentence** and this section follows it to the letter:
+  "the untied `entryK` is refuted at the abstract frame ([LJ-1.97],
+  ProbeLJ197A); the tied form (premise `z ∈ K`) is the honest one, supplied by
+  arityK."
+- **`agents/tasks/archive/LJ-1-95/` through `LJ-1-112/`: still NOT read.** The
+  gap I declared in section 14 stands. **I did not need it**: the delivered
+  comment above carries the cure shape, and my own sixteen refutations priced the
+  defect directly. I record this so nobody reads my green result as evidence that
+  the arc holds nothing.

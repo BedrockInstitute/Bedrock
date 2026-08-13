@@ -709,7 +709,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.150 | Place the twelve-row bridge that LJ-1.144 built in a probe | GREEN, DISCHARGES NOTHING | 88 lines, 2.11 s, 40 percent under projection. The seal forced no unfolding, P-y holds twice |
 | LJ-1.151 | Probe the one term two dispatches named and nobody ran | GO AT 21 LINES, AND valK IS FALSE | The band tightens on 9 of 25, not all 25. The wall stayed out: the two halves are separable |
 | LJ-1.152 | Can two L-graphs compose without a second hasReplacementL | GO: 2.50 s, NO REPLACEMENT | Separation carries it, 2,500 to 1. The seal was NOT the cure and A5 is unpriced again |
-| LJ-1.153 | Repair the refutable frame hypotheses that check-unbound-hyp flags | 36 OF 38 REFUTABLE, 20 REPAIRED | Checker 38 to 18. Every row's back already bound the missing premise |
+| LJ-1.153 | Repair the refutable frame hypotheses that check-unbound-hyp flags | 38 TO 2: 36 REFUTED AND REPAIRED | One tie for all 36. Every site already held the premise and threw it away |
+| LJ-1.154 | Carve the identity graph by separation, not by replacement | DISPATCHED | Separation is 2,500 to 1 cheaper. If it builds as well as composes, A5's 254 s was never necessary |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
