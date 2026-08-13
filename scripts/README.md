@@ -394,6 +394,40 @@ paragraph sneaking back into a row. **Widened 2026-08-10** to see lettered
 codes: `LJ-\d+\.\d+` matched none of `LJ-0.4a` to `LJ-0.4q`, so fifteen rows
 were invisible and twelve of them were over the cap, one at 438 characters.
 
+## `dispatch_policy.py` and `check-dispatch-policy.py`
+
+`dispatch_policy.py` is **the one home of DD17's dispatch policy**: a hardcoded
+`VERSION_IN_FORCE` switch, the two versions of the head table, the date the
+current version was set, its reason and its revert condition. Edit that one
+line to change the policy. **Inspect it with `python3
+scripts/dispatch_policy.py`**, which prints the version in force with its whole
+table, so nobody reads code to answer "which head runs this task".
+
+`check-dispatch-policy.py` runs in `make check` and holds no policy of its own:
+it imports the switch and derives every expectation from it. It enforces five
+things. The switch names a version the module defines. No governed document
+under `dev/`, plus `AGENTS.md` and this file, restates the head table. Every
+brief carries a legal `tier:` token. A brief written after the policy epoch
+names the version it was chosen under. An adversarial review carries the
+critic's head and not the author's.
+
+**WHAT NEITHER TOOL CAN DO, and the list is the point.** **The switch cannot
+force the orchestrator's choice.** An in-harness Opus dispatch never passes
+through `.claude/skills/codex-dispatch/dispatch.py`, so no value here can start
+it, stop it or redirect it. A brief that says `tier: pi` and was run on Opus 5
+passes green. What the switch DOES drive is the dispatcher's default harness,
+what the checker accepts, and what the inspection command prints, which makes a
+wrong head **detectable by an audit** and nothing more. The checker also cannot
+date a brief reliably, because `_build/` is never committed and mtime is all
+there is; and it cannot tell an adversarial review from a brief that discusses
+one, because it reads the GOAL section and the tier line for one word.
+
+**The epoch exists so the gate can be green on its first run.** The
+version-naming and adversarial checks bind only briefs written on or after
+2026-08-13 11:00, which is `check-agents-guard.py`'s self-anchoring pattern. A
+pre-epoch defect is printed as a note by `--notes` and never fails the gate.
+Measured at the landing: 406 briefs read, 4 notes, 0 failures.
+
 ## `check-timing.py`
 
 The repository's ONLY module timer, and it stays that way; a second

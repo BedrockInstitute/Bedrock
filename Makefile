@@ -33,7 +33,7 @@ CF_PROJECT := bedrock
 
 .PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes tree fences reuse ruleids devdocs taskindex agentsguard
+check: venv-check typecheck markers lint lint-agda glossary ledger probes tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -106,6 +106,13 @@ taskindex:
 
 agentsguard:
 	$(PY) scripts/check-agents-guard.py
+
+# The head that runs a dispatch is DD17's, and since 2026-08-13 it has two
+# versions with one switch selecting between them. This checks that briefs
+# agree with the version in force. It cannot check which head actually RAN:
+# an in-harness Opus dispatch passes through no tool at all.
+dispatchpolicy:
+	$(PY) scripts/check-dispatch-policy.py
 
 devdocs:
 	$(PY) scripts/check-dev-docs.py
