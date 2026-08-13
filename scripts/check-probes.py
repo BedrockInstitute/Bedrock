@@ -45,6 +45,7 @@ Exit status: 0 clean, 1 violations found, 2 usage error.
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -112,6 +113,63 @@ def staged() -> list[str]:
     ).stdout.split("\n")
 
 
+#: THE MISFILED-PROBE CHECK, added 2026-08-13 by the owner's ruling (B6).
+#:
+#: D-1's enforcement is honest and THIN: of its six rules only one, `src/` is
+#: refused, had a machine. `[LJ-1.141]` priced this one at about fifteen lines
+#: and named the gap rather than closing it.
+#:
+#: MY FIRST VERSION WAS WRONG AND THE CORPUS SAID SO IMMEDIATELY. It asked
+#: whether a probe's name agrees with its directory's code, and that assumption
+#: was MEASURED FALSE the same afternoon: `[LJ-1.143]` placed 55 DD25 probes on
+#: evidence from eight reviews, so `ProbeDD25A.agda` sits correctly in
+#: `LJ-1-27/` and its name agrees with nothing. The T-series adds a second
+#: shape, `ProbeT126.agda` in `L3-32-T126/`. Naive agreement flagged about a
+#: hundred correctly-filed files.
+#:
+#: SO THE RULE IS NARROWER, and it fires on a CONTRADICTION rather than on a
+#: disagreement: a probe whose name matches a task directory that EXISTS, while
+#: the probe sits in a DIFFERENT one. `ProbeLJ1120A.agda` in `LJ-1-133/` is
+#: caught, because `LJ-1-120/` is a real directory it should be in. A name that
+#: matches no directory says nothing and is left alone.
+#:
+#: THE HONEST LIMIT. It cannot see a probe whose name carries no code at all,
+#: and `[LJ-1.143]` measured twelve of those. It cannot see one filed under a
+#: task that is real but wrong when the name matches that wrong task. It
+#: removes only the case where the tree itself holds the contradiction.
+PROBE_CODE = re.compile(r"^Probe([A-Za-z]+[0-9][A-Za-z0-9]*?)[A-Z]?\.agda$", re.ASCII)
+
+
+def _task_dirs() -> dict[str, str]:
+    """Every task directory, keyed by its code with separators removed."""
+    out = {}
+    for base in (ROOT / "agents" / "tasks", ROOT / "agents" / "tasks" / "archive"):
+        if not base.is_dir():
+            continue
+        for d in base.iterdir():
+            if d.is_dir() and d.name != "archive":
+                out[d.name.replace("-", "").upper()] = d.name
+    return out
+
+
+def misfiled(files: list[str]) -> list[tuple[str, str]]:
+    dirs = _task_dirs()
+    out = []
+    for f in files:
+        parts = f.split("/")
+        if len(parts) < 3 or parts[0] != "agents" or parts[1] != "tasks":
+            continue
+        m = PROBE_CODE.match(parts[-1])
+        if not m:
+            continue
+        claimed = m.group(1).upper()
+        home = parts[-2].replace("-", "").upper()
+        if claimed in dirs and claimed != home:
+            out.append((f, f"the name matches task `{dirs[claimed]}`, which exists, "
+                           f"but the file sits in `{parts[-2]}`"))
+    return out
+
+
 def main(argv: list[str]) -> int:
     mode = None
     for arg in argv[1:]:
@@ -127,7 +185,7 @@ def main(argv: list[str]) -> int:
     mode = mode or "check"
 
     files = [f for f in (staged() if mode == "staged" else tracked()) if f]
-    bad = [(f, why) for f in files if (why := classify(f))]
+    bad = [(f, why) for f in files if (why := classify(f))] + misfiled(files)
 
     if bad:
         where = "staged for commit" if mode == "staged" else "tracked in the repository"
