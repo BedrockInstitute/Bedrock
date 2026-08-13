@@ -6873,31 +6873,38 @@ module SatGraphAgree {n : ℕ} (w K : Fin (5 + n))
   sh3 : ∀ {m} → Fin m → Fin (3 + m)
   sh3 i = suc (suc (suc i))
 
-  out : ⟨ γ ⊨ satGraphAt (sh3 w) (suc zero) zero ⟩
-      → ⟨ γ ⊨ SatGraphB.satGraphB w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 ⟩
-  out h = PT.rec squash₁
-    (λ { (d , hT) → PT.rec squash₁
-      (λ { (e , hb) → PT.rec squash₁
-        (λ { (f , body) →
-          let ks = witK d e f body
-          in ∣ d , ( ks .fst
-                   , ∣ e , ( ks .snd .fst
-                           , ∣ f , ( ks .snd .snd , body-out d e f body ) ∣₁ )
-                     ∣₁ ) ∣₁ })
-        hb })
-      hT })
-    h
+  -- THE ONLY PLACE IN THE TREE THAT OPENS THE SEAL.  These two read the
+  -- three existentials of the machine's graph and rebuild them, so they must
+  -- see the body.  Every other consumer of `satGraphAt` treats it as an atom
+  -- and needs no `unfolding`.
+  opaque
+    unfolding satGraphAt
 
-  back : ⟨ γ ⊨ SatGraphB.satGraphB w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 ⟩
-       → ⟨ γ ⊨ satGraphAt (sh3 w) (suc zero) zero ⟩
-  back h = PT.rec squash₁
-    (λ { (d , (dK , hT)) → PT.rec squash₁
-      (λ { (e , (eK , hb)) → PT.rec squash₁
-        (λ { (f , (fK , body)) →
-          ∣ d , ∣ e , ∣ f , body-back d e f body ∣₁ ∣₁ ∣₁ })
-        hb })
-      hT })
-    h
+    out : ⟨ γ ⊨ satGraphAt (sh3 w) (suc zero) zero ⟩
+        → ⟨ γ ⊨ SatGraphB.satGraphB w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 ⟩
+    out h = PT.rec squash₁
+      (λ { (d , hT) → PT.rec squash₁
+        (λ { (e , hb) → PT.rec squash₁
+          (λ { (f , body) →
+            let ks = witK d e f body
+            in ∣ d , ( ks .fst
+                     , ∣ e , ( ks .snd .fst
+                             , ∣ f , ( ks .snd .snd , body-out d e f body ) ∣₁ )
+                       ∣₁ ) ∣₁ })
+          hb })
+        hT })
+      h
+
+    back : ⟨ γ ⊨ SatGraphB.satGraphB w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 ⟩
+         → ⟨ γ ⊨ satGraphAt (sh3 w) (suc zero) zero ⟩
+    back h = PT.rec squash₁
+      (λ { (d , (dK , hT)) → PT.rec squash₁
+        (λ { (e , (eK , hb)) → PT.rec squash₁
+          (λ { (f , (fK , body)) →
+            ∣ d , ∣ e , ∣ f , body-back d e f body ∣₁ ∣₁ ∣₁ })
+          hb })
+        hT })
+      h
 
 -- =====================================================================
 -- LeafAgree: THE DefBodyB / DefBody LEAF ADEQUACY.  The bounded

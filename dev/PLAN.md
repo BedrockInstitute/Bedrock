@@ -636,7 +636,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.144 | Settle the three Agree masters: no consumer, bridge owed | BUILD THE BRIDGE, DO NOT RETIRE | The bridge is built in a probe at the consumer's exact types. About 38 lines |
 | LJ-1.145 | Diagnose why the Condensation family is slow | ONE CONVERSION, 65 PERCENT OF ONE DEF | Both leads refuted. Seal satGraphAt: 2,459 ms to under 1 ms, about 21 s off, 40 percent of the gap |
 | LJ-1.146 | Price levelIn and cover, the root of the unconsumed chain | A WALL, NAMED TWICE AT ONE TERM | The trophy needs them. About 1.0k lines. C-35 fires wing-wide, the trophy is unwritten |
-| LJ-1.147 | Seal satGraphAt and measure what unfolding costs | DISPATCHED | LJ-1.145's cure, about 21 s, and its own widest unmeasured term is one edit and one cold run away |
+| LJ-1.147 | Seal satGraphAt and measure what unfolding costs | SEAL GREEN, MINUS 38.78 s | unfolding cost nothing, 21 of 21 consumers green. The AC side gained more, so 1.56x became 1.91x |
 | LJ-1.148 | DD24's tolerance is narrower than the machine's swing | A BIAS, NOT NOISE: A WARM-UP PENALTY | Run 1 is 1.811 s and runs 2 to 25 are 0.787 s. Fixed at about 0.9 s per series |
 | LJ-1.149 | Audit the six standing OWED markers | ONE OWED FACT IS FALSE, TWO ARE PAID | T261's probe RAN on 2026-08-09; four live sentences said it never did |
 | LJ-1.150 | Place the twelve-row bridge that LJ-1.144 built in a probe | PLANNED | Priced at 38 lines and 3.5 s with no new master. The cheapest unbought result in the wing |
