@@ -82,7 +82,7 @@ def render_readme(data: dict) -> str:
         "Regenerate with `.venv/bin/python scripts/check-build-manifest.py --readme`.",
         "",
         "This file is not tracked, because `.gitignore:2` ignores `_build/` and",
-        "`scripts/check-probes.py:60` fails the gate on any tracked file here. If",
+        "`scripts/check-probes.py --check` fails on any tracked file here. If",
         "`make clean` removes it, one command brings it back.",
         "",
         "## The rule",

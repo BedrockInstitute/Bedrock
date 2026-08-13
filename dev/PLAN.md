@@ -615,7 +615,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.135 | Re-measure ac_baseline_module_rate | DISPATCHED | Stale by about 11 percent and check-ratio prefers it per module, so a wing module reads worse than it is |
 | LJ-1.136 | Gate the remaining A-prime blocks | 705 PLUS A5 UNPRICED | A2 and A3 are measured; A1, A4, A5, A6, A7 are bands. No block gets funded on a band centre |
 | LJ-1.137 | Apply the four ruled AGENTS blocks and pay for them by trimming | 2,244 WORDS, 56 FREE | Two sentences are false today. The blocks cost 129 words and 43 are free, so the file funds them |
-| LJ-1.138 | Give the probe lifecycle a correct trigger and a real execution point | DISPATCHED | The clock is mtime and nothing runs the sweep, so 284 probes accumulated |
+| LJ-1.138 | Give the probe lifecycle a correct trigger and a real execution point | TRIGGER IS A TASK, GATED | The clock is mtime and nothing runs the sweep, so 284 probes accumulated |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |

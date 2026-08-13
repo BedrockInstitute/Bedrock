@@ -10,7 +10,7 @@
 # `_build/README.md` from it.
 #
 # WHY THIS FILE LIVES IN `dev/` AND NOT IN `_build/`.
-# `.gitignore:2` ignores `_build/`, and `scripts/check-probes.py:60-61` fails the
+# `.gitignore:2` ignores `_build/`, and `scripts/check-probes.py:139-140` fails the
 # gate on any TRACKED file under `_build/`. A manifest kept inside `_build/` would
 # be untracked, would not survive `make clean` (`Makefile:180`), and would not
 # survive a fresh clone. A regime that a routine command destroys is not a regime.
@@ -59,8 +59,22 @@ historical (`dev/memos/`, `agents/briefs/`, `agents/reports/archive/`,
 what = """
 Alive only while ONE task runs. Named with that task's code, so the owner is
 readable from the filename."""
-delete_when = "When that task's report lands, UNLESS the report cites it."
+delete_when = "When that task's task-index row stops saying the task is live."
 promote_when = "If the report cites it, it is `evidence`. Promote it, do not delete it."
+# THE CLOCK WAS WRONG AND [LJ-1.138] CORRECTED IT, 2026-08-13.
+# This class said `delete_when = "When that task's report lands"`. It is FALSE in a
+# repository that runs C-22, which orders every agent to write its deliverable as a
+# skeleton FIRST and fill it as answers land. MEASURED: while [LJ-1.136] was still
+# reading, `agents/reports/lj-1.136-report.md` was already 39,948 bytes.
+# A MISSING report still proves a task is unfinished, so the signal survives one way
+# round: it may WIDEN a hold and it may never close a task.
+#
+# A PROBE IS THIS CLASS, and `scripts/check-probes.py` is the same rule for `src/`.
+# One refinement the `_build/` regime did not need: a task's own closure is not
+# enough, because ANOTHER live task may need the file. On 2026-08-13 [LJ-1.134] was
+# closed and its probe was still read by [LJ-1.136]. The full trigger is therefore
+# "its own task is closed AND no live task needs it", and the tool reads both halves
+# off dev/PLAN.md section 11, the live briefs and the missing reports.
 
 [classes.runtime]
 what = "State a live tool writes and reads while it runs."

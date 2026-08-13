@@ -81,10 +81,10 @@ CASES = [
      "an imported entry with no routing must fire"),
 
     # --- the boundary: at the cap is clean, one over fires ---
-    (lambda: not flagged(check.check_agents_size, words(2200)),
-     "AGENTS.md at exactly 2,200 words is clean"),
-    (lambda: flagged(check.check_agents_size, words(2201)),
-     "AGENTS.md one word over 2,200 fires"),
+    (lambda: not flagged(check.check_agents_size, words(check.AGENTS_WORD_CAP)),
+     "AGENTS.md at exactly the cap is clean"),
+    (lambda: flagged(check.check_agents_size, words(check.AGENTS_WORD_CAP + 1)),
+     "AGENTS.md one word over the cap fires"),
     (lambda: not flagged(check.check_plan_cells, plan_row("D28", words(1600))),
      "a cell at exactly 1,600 words is clean"),
     (lambda: flagged(check.check_plan_cells, plan_row("D28", words(1601))),

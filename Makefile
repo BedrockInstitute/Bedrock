@@ -31,7 +31,7 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes probes-sweep tree reuse ruleids taskindex devdocs agentsguard gen html types site serve clean hooks test deploy venv venv-check
 
 check: venv-check typecheck markers lint lint-agda glossary ledger probes tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy
 
@@ -78,8 +78,23 @@ ledger:
 ratio:
 	$(PY) scripts/check-ratio.py --check
 
+# Two gates, and they answer two different questions. `--check` refuses a probe
+# that got INTO git. `--gate` refuses a probe that stayed in src/ after its task
+# closed: [LJ-1.133] found 284 of them because `--stale` had no caller and
+# nothing ever ran the sweep. THE GATE MOVES NO FILE. A gate with a side effect
+# on the working tree is not idempotent, and AGENTS.md tells a dispatched agent
+# to leave the tree as its report describes it. `make probes-sweep` is the fix
+# and it is one command. Cost: 0.25 s, measured 2026-08-13.
 probes:
 	$(PY) scripts/check-probes.py --check
+	$(PY) scripts/check-probes.py --gate
+
+# Archive what a document points into, delete what nothing names. Never touches
+# a probe a LIVE task needs, and it takes nobody's word for which those are:
+# the task index, the live briefs and the missing reports decide.
+probes-sweep:
+	$(PY) scripts/check-probes.py --sweep
+	$(PY) scripts/check-probes.py --index
 
 tree:
 	$(PY) scripts/check-tree.py --check
@@ -160,6 +175,7 @@ test:
 	$(PY) scripts/tests/test_dev_docs.py
 	$(PY) scripts/tests/test_obligations.py
 	$(PY) scripts/tests/test_task_index.py
+	$(PY) scripts/tests/test_probe_lifecycle.py
 	$(PY) scripts/tests/test_deletion_test.py
 	$(PY) scripts/tests/test_ratio_baseline.py
 
