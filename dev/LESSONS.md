@@ -3327,7 +3327,7 @@ untested, and its own report may already contain the finding nobody has
 consumed.
 
 **Provenance:** `agents/reports/archive/lj-1.41-review.md`; `agents/reports/archive/lj-1.41-report.md`;
-probes `src/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
+probes `archive/probes/ProbeDD25F41{A,B,C,D}.agda`, re-run by the orchestrator.
 
 ### D-30. Price what the CONSUMER needs, never the general law: generality nobody asked for is the cheapest thing to delete and the most expensive thing to keep
 

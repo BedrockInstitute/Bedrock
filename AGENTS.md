@@ -51,28 +51,27 @@ nobody finishes reading binds nothing.
   docs; use an em dash in any language; use half-width sentence punctuation in CJK prose;
   commit or print deployment secrets; add an unpinned or globally-installed dependency; add an
   in-file `SPDX-*` header.
+- **Never leave an undeclared file in `_build/`.** It is a temporary folder, not a rubbish bin.
+  Declare its class in `dev/build-manifest.toml` when you create it, or move it to a permanent
+  home.
 
 ## Commands
 
 - **`make check` is the gate before any commit.** It typechecks the masters, then runs every
-  checker in [scripts/](scripts/README.md): i18n markers, prose, Agda style, rule citations,
-  glossary, size ledger, the never-commit rule, whole-tree invariants, and `reuse lint`. **Run
-  it in the background, never in the foreground**: a cold typecheck takes about twelve minutes
-  and must not block the session (`dev/PLAN.md` DD15). While you work, run the individual
-  checks instead (`agda <file>`, `python3 scripts/lint-prose.py <files>`).
+  checker in [scripts/](scripts/README.md). **Run it in the background, never in the
+  foreground**: a cold typecheck takes about twelve minutes and must not block the session
+  (`dev/PLAN.md` DD15). While you work, run the individual checks instead (`agda <file>`,
+  `python3 scripts/lint-prose.py <files>`).
 - **`python3 scripts/rules.py --for <kind>`** gives the mandatory rules for a build, probe,
   recon, rewrite or review, with each statement. `--grep <term>` finds the long tail by trigger
-  word. **Never pick rules from memory.** Memory drifted for five days while an imported
-  playbook sat uncited in 102 of 112 briefs.
+  word. **Never pick rules from memory.**
 - **`python3 scripts/ledger.py --brief`** is the only admissible source for a standing size
   figure. Never quote a number found in a paragraph.
 - **`make venv`** once per clone, then **`make hooks`**. `make site` / `make serve` / `make gen`
   build the site. `python3 scripts/lint-prose.py --fix <files>` auto-fixes most prose.
 
 **Run every `python3` command as `.venv/bin/python`**, or run `make venv` first and let `make`
-pick the interpreter. The scripts need `tomllib` from Python 3.11: with an older system
-`python3` the FIRST command in this file dies, and `[L3.32-T120]` lost two runs to exactly
-that.
+pick the interpreter.
 
 Requirements: Agda 2.8.0 with cubical 0.9, and Python 3.11 or later.
 [requirements-dev.txt](requirements-dev.txt) pins the dependencies and `make venv` installs
@@ -92,7 +91,7 @@ turns a rule into false safety.
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
 | **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `archive/dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`; the orchestrator; briefs |
-| **Dispatch, slots, briefs, audits.** **Codex is the default for EVERY dispatch** (DD17). An in-harness Opus subagent needs the owner's word for that task, which never carries forward, or a very-very-heavy judgment. The brief header carries a `tier:` line: if the justifying sentence will not write, the tier is codex | `dev/ORCHESTRATION.md` section 1 | the orchestrator, at the points it names |
+| **Dispatch, slots, briefs, audits.** **DD17 has TWO versions and ONE switch picks between them:** `scripts/dispatch_policy.py`, which prints the version in force and why. The brief's `tier:` line names the head AND the version; if the justifying sentence will not write, take the head the table gives | `scripts/dispatch_policy.py`, operated by `dev/ORCHESTRATION.md` section 1 | **PARTIAL.** `check-dispatch-policy.py` reads every brief against the switch. It CANNOT see which head actually RAN: an in-harness dispatch passes through no tool |
 | **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `scripts/ledger.py --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
@@ -102,7 +101,8 @@ turns a rule into false safety.
 | **Documentation taxonomy.** User docs trilingual under `docs/<lang>/`, developer docs English only, `README.md` follows the user rule. Place a new document by audience; give every top-level directory a `README.md` | this row | review |
 | **Licensing.** Three buckets declared centrally; a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
-| **Route memos, digested literature, probe reports** and the briefs that produced them | `dev/memos/`, `dev/literature/`, `_build/` | n/a |
+| **Route memos, digested literature** | `dev/memos/`, `dev/literature/` | n/a |
+| **Agent reports and briefs.** Every dispatch writes one of each. Live reports in `agents/reports/`, older in `agents/reports/archive/`, every brief in `agents/briefs/`. All tracked, all CC, all exempt from the prose linter because a record is never rewritten | `agents/README.md` | review |
 | **What the project IS**: the theorem, the charter, the licences, who wrote it | [README.md](README.md), trilingual under `docs/` | n/a |
 | **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0; `scripts/ledger.py --brief` for the standing figures | n/a |
 
@@ -133,29 +133,29 @@ audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATIO
 
 **Verify the load-bearing assumption cheaply before heavy or hard-to-reverse work.** Build the
 smallest decisive miniature, report GO or NO-GO with a price, throw it away. A probe prices THIS
-setting; it never re-proves what the literature or the delivered tree settles. Nobody commits
-one (`scripts/check-probes.py` enforces both halves, because `git add -f` walks past an ignore
-rule).
+setting; it never re-proves what the literature or the delivered tree settles. A probe is thrown
+away once its verdict is recorded, and `src/` is where it may never be committed
+(`scripts/check-probes.py` enforces that, because `git add -f` walks past an ignore rule). **The
+exception is a probe a document points INTO at a `file:line`: it has become the evidence for a
+checkable claim, and it goes to `archive/probes/`.** Run `scripts/check-probes.py --stale` when
+your task closes.
 
 **Gate every block before you fund it.** Measuring the widest unmeasured term is what turns a
 projection into a price. **A build brief that cannot name that term, and the probe that measures
 it, is not ready to send.**
 
-**An estimate is ONE best-effort number, and it names its basis** (`dev/PLAN.md` DD8). A size
-figure counts non-blank lines inside ` ```agda ` fences. **The two-caliber rule is REVOKED**
-(owner, 2026-08-09): state a projection once and say what it rests on, a probe, a delivered
-comparable or a survey. Record an overage plainly and work it down where real compression
-exists. Evidence can move a technique; a number alone cannot.
+**An estimate is ONE best-effort number, and it names its basis** (`dev/PLAN.md` DD8): a probe,
+a delivered comparable or a survey. A size figure counts non-blank lines inside ` ```agda `
+fences. Record an overage plainly and work it down where real compression exists. Evidence can
+move a technique; a number alone cannot.
 
 **THE ROUTE** (`dev/PLAN.md` DD2 and DD5). **RULED:** both trophies, `L ⊨ AC` and `L ⊨ GCH`,
 both stated in L, and a bridge goes BOTH ways. **CANDIDATE, ruled at `[LJ-2.5]`:** the L tower,
 the J tower through rud, and the bridge. Say which is which in a brief; an agent told the
 architecture is ruled will not report evidence against it. **DD4 above is the core constraint**,
-and the total falls out of it, never from splitting or re-bucketing. Two quantitative
-constraints bind the double-trophy endpoint against the internalization route, one on lines and
-one on seconds, and **NEITHER binds until it is measured**: both are suspended and the ledger
-names the re-arm. **DD24** sets the quality bar as cold seconds over in-fence lines. **DD23
-freezes mathematical prose** until both trophies land.
+and the total falls out of it, never from splitting or re-bucketing. **DD24** sets the quality
+bar as cold seconds over in-fence lines. **DD23 freezes mathematical prose** until both trophies
+land.
 
 **FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
 left `archive/` for code and `archive/dev/` for the records: `TASKS-archived.md` for what each
@@ -164,9 +164,6 @@ dispatch found, `JOURNAL-archived.md` for why, `DECISIONS-archived.md` for the r
 carries an **ARCHIVE** section naming what may bear on the task; every return carries an
 **ARCHIVE USED** section naming what it read and took, at `file:line`. `dev/LESSONS.md` is NOT
 archived and still binds.
-
-**An idle agent slot is a defect.** A slot stays empty only when a real block stops every
-remaining task. An audit is not a reason to leave a slot idle.
 
 ## Retiring code
 

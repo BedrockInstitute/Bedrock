@@ -400,3 +400,136 @@ Mine, deleted: 31 files under `src/`, none of them tracked.
 **Not mine.** `dev/PLAN.md`, `dev/build-manifest.toml`,
 `src/L/Condensation.lagda.md` and `src/ProbeLJ1134A.agda` changed during my
 run or before it. **I touched none of them.**
+
+---
+
+# LJ-1.133, second pass: the owner ruled on the 83
+
+Status: **DONE.** `src/` holds 14 probes, all FRESH. Every other probe is
+archived or deleted. Nothing committed. Nothing pushed.
+
+## 14. THE RULING, APPLIED
+
+The owner ruled that the NAMED class is archived, not left. **The reasoning is
+the one section 1 pointed at:** the test cannot separate NAMED from EVIDENCE,
+because the prose detector was fitted to its own counterexamples and its
+recall is unknown. **When a test cannot separate two classes reliably, take
+the recoverable side.**
+
+### Counts
+
+| | Before this pass | After |
+|---|---:|---:|
+| Probes in `src/` | 98, 3,348 KB | **14, 124 KB** |
+| `archive/probes/` | 160 files | **244 files**, 8,556 KB |
+
+**Moved: 84.** 83 NAMED plus 1 EVIDENCE, which had aged out of the freshness
+window between the two passes and carried a line citation.
+
+### The whole task, end to end
+
+| Verdict | Files | Outcome |
+|---|---:|---|
+| **FRESH** | 14 | In `src/`, untouched |
+| **EVIDENCE** | 156 | `archive/probes/` |
+| **NAMED** | 83 | `archive/probes/`, by the ruling |
+| **ORPHAN** | 31 | Deleted |
+
+14 + 156 + 83 + 31 = 284. **`src/` went from 284 probes and 9,300 KB to 14 and
+124 KB: 95 percent of the files and 99 percent of the bytes are gone from the
+untracked directory.**
+
+The generated index in `archive/probes/README.md` records the strength of each
+file's claim, which is why I kept the two verdicts distinct after they became
+one destination: **27 binding rule, 107 line citation, 110 named.**
+
+## 15. `src/ProbeLJ1134A.agda`: classified by the rule, and the rule kept it
+
+**Verdict: FRESH.** "modified 0.2h ago, inside the 6h freshness window".
+
+**It is still in `src/` and I did not move it.** The coordinator's note says it
+is finished, GREEN and reported, which under any other clause would make it
+EVIDENCE or NAMED. **Freshness runs first and takes nobody's word**, and that
+is deliberate: `dev/LESSONS.md` records two agents killed on 2026-08-05 by a
+probe pulled out from under them, and a rule that accepts "it is done" is a
+rule with a human in its critical path.
+
+**The cost of the rule being right here is zero.** The next `--archive` run
+after about 19:39 today picks it up with no decision from anyone. **I am
+reporting the rule beating the instruction rather than overriding it**, which
+is the outcome the freshness window exists to produce.
+
+## 16. CITATIONS, and the shorthand bug bit the REWRITE side
+
+**Rewritten this pass: 1.** Total for the task: **28**.
+
+**That single citation is the finding.** `dev/LESSONS.md:3330` reads
+`src/ProbeDD25F41{A,B,C,D}.agda`. My first-pass rewriter used
+`src/(Probe[A-Za-z0-9]*)\.agda`, **which does not match a brace form**, so all
+four members moved and the citation would have been left dangling.
+
+**This is the same recall bug, on the other side of the move.** In pass one it
+made three files look like orphans; here it made one live citation invisible
+to the rewriter. **A plain stem search fails in BOTH directions**, and I have
+recorded that in `archive/probes/README.md` for the next mover. The rewriter
+now handles three forms: plain, brace `{A,B,C}` and range `A..F`, and it
+rewrites a family only when **every** member has moved.
+
+**MEASURED: exactly one `src/Probe*` reference remains in any live `dev/`
+document**, and it did not dangle because of me:
+
+> `dev/LESSONS.md:1642` `` `src/ProbeD10.agda` (untracked) ``
+
+**That file does not exist and did not exist when I started.** MEASURED: it is
+absent from `src/`, absent from `archive/probes/`, and absent from the
+283-probe index I built before touching anything. It is not in my delete list.
+**A pre-existing dangling pointer, reported and not repaired**, because
+nothing can make it resolve. It is the exact failure this task exists to
+prevent, left visible as its own evidence.
+
+**Reports and briefs keep every old path**, per `[LJ-1.130]`.
+
+## 17. VERIFICATION
+
+| Check | Result |
+|---|---|
+| `check-probes.py --check` | **exit 0**, 1,479 tracked files |
+| `--staged`, `src/ProbeLJ1133Retest.agda` staged with `git add -f` | **exit 1, REFUSED.** Unstaged and deleted after |
+| `--staged`, `archive/probes/ProbeLJ130B.agda` and `ProbeDD25F41C.agda` | **exit 0, accepted** |
+| `grep` for `src/Probe*` in live `dev/` documents | **1 hit, pre-existing, section 16** |
+| `lint-prose.py --check` | **exit 0** |
+| `check-tree.py --check` | exit 0, 87 masters |
+| `check-rule-ids.py` | exit 0, 141 lessons, 66 decisions |
+| `check-dev-docs.py` | exit 0, 6 subchecks |
+| `ledger.py --check` | exit 0, standing 28,617 unchanged |
+| `reuse lint` | **exit 0, 1,546 / 1,546** |
+
+The two gate rows are the ones that matter: **the exemption still refuses
+`src/` and still accepts `archive/probes/`.** The index was empty before and
+after both tests.
+
+**I did not run `make check`. I did not run Agda.**
+
+## 18. TREE STATE
+
+**The orchestrator committed my first pass during this one**, as
+`8f55b4b [LJ-1.133][LJ-1.134]`. That is why the tracked count moved from 1,320
+to 1,479 and why 160 archived probes are now tracked. **I did not commit it and
+I did not push.**
+
+Mine, uncommitted: `scripts/check-probes.py`, `archive/probes/README.md` and
+`dev/LESSONS.md` modified; **84 new files under `archive/probes/`**; this
+report.
+
+**Not mine:** `dev/PLAN.md`, `agents/reports/lj-1.135-report.md`. I touched
+neither.
+
+## 19. WHAT IS STILL OPEN
+
+- **`AGENTS.md:136-138` is still false.** "Nobody commits one" no longer holds.
+  My proposed replacement is in section 6 and waits on the owner. DD19.
+- **`dev/LESSONS.md:1642` points at a file that does not exist.** Section 16.
+  It needs an owner or an orchestrator decision: drop the citation, or mark it
+  as lost. **I did not edit a live rule's provenance line on my own reading.**
+- **14 FRESH probes remain in `src/`.** They clear themselves on the next
+  `--archive` run once each leaves the 6-hour window. No decision needed.
