@@ -154,9 +154,11 @@ module AbstractFrame {n : ℕ}
                  × ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (valK : (k : ℕ) (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ') ⟩
           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+          → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ') ⟩
           → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (valK-un : (k : ℕ) (c ar a yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ') ⟩
              → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+             → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ') ⟩
              → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
   (t0eq : fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ') ≡ fst (numeralL 0))
   (t1eq : fst (lookup (suc (suc (suc (suc (suc (suc t1)))))) γ') ≡ fst (numeralL 1))

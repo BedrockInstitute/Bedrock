@@ -2728,6 +2728,48 @@ emptyAt→emptyB : ∀ {n} (y K : Fin n) (γ : S ^ n)
 emptyAt→emptyB y K γ h =
   extAt→extAtB y K ⊥̇ ⊥̇ γ (λ z x → x) (λ z x → x) h
 
+-- =====================================================================
+-- THE GRAPH ENTRY THE CLAUSE FRAMES ALREADY BIND ([LJ-1.153]).
+--
+-- Between the shape and the relation, `binClauseAt` and `unClauseAt`
+-- bind the reader `appAt T c yc`: the graph records the value `yc` at
+-- the code `c` (src/L/Coding/Model.lagda.md:901 and :993).  Every row's
+-- `back` binds it as `hc` and hands it straight on.
+--
+-- The site fact `valK` used to conclude `yc ∈ K` from the code alone,
+-- and `yc` occurred in NO premise.  That statement is FALSE: take `yc`
+-- to be the K slot itself and regularity closes it
+-- (agents/tasks/LJ-1-153/ProbeLJ1153A.agda:89, exit 0; first measured
+-- at [LJ-1.151]).  The repaired `valK` takes the graph entry as a
+-- premise, and that is the fact [LJ-1.151] measured supplyable in 21
+-- lines at a concrete level: `pr c yc` sits in the graph, the graph
+-- sits in `K`, and `K` is transitive.
+--
+-- These two read `hc` through adequacy once.  The twelve rows share one
+-- copy instead of writing twelve transports, and neither names a tower
+-- (DD4).
+-- =====================================================================
+module GraphEntry {m : ℕ} (T : Fin m) (γ : S ^ m) where
+
+  bin : (c ar a b yc : S)
+      → ⟨ (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+           appAt (suc (suc (suc (suc (suc T)))))
+                 (suc (suc (suc (suc zero)))) zero ⟩
+      → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+  bin c ar a b yc = subst ⟨_⟩
+    (appAt-adequate (suc (suc (suc (suc (suc T)))))
+                    (suc (suc (suc (suc zero)))) zero
+                    (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))
+
+  un : (c ar a yc : S)
+     → ⟨ (yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+          appAt (suc (suc (suc (suc T)))) (suc (suc (suc zero))) zero ⟩
+     → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
+  un c ar a yc = subst ⟨_⟩
+    (appAt-adequate (suc (suc (suc (suc T))))
+                    (suc (suc (suc zero))) zero
+                    (yc ∷ a ∷ ar ∷ c ∷ γ))
+
 -- The Bot row agreement at the class carrier.
 module BotAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   (tagEq : fst (lookup N γ) ≡ fst (numeralL 7))
@@ -2739,6 +2781,7 @@ module BotAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
            → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 7) (fst a))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩) where
 
   private
@@ -2757,7 +2800,7 @@ module BotAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
         shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
                  (suc (suc zero)) 7 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , aK) = codesK c ar a c∈ shEq
-        ycK = valK c ar a yc c∈ shEq
+        ycK = valK c ar a yc c∈ shEq (GraphEntry.un {m} T γ c ar a yc hc)
         shB = UnaryShape.in' {m} N K 7 (yc ∷ a ∷ ar ∷ c ∷ γ) tagEq numK innerK aK shD
         hb = h c c∈ ar arK a aK yc ycK shB hc
     in emptyB→emptyAt zero (suc (suc (suc (suc K)))) (yc ∷ a ∷ ar ∷ c ∷ γ) hb
@@ -3248,6 +3291,7 @@ module PropAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m) (k : ℕ)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (keyK : (ar a : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩ → ⟨ fst a ∈ fst (lookup K γ) ⟩
            → ⟨ fst (prʟ ar a) ∈ fst (lookup K γ) ⟩)
@@ -3458,7 +3502,7 @@ module PropAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m) (k : ℕ)
                    (suc (suc (suc (suc zero)))) (suc (suc (suc zero))) k
                    (suc (suc zero)) (suc zero) (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , (aK , bK)) = codesK c ar a b c∈ shEq
-        ycK = valK c ar a b yc c∈ shEq
+        ycK = valK c ar a b yc c∈ shEq (GraphEntry.bin {m} T γ c ar a b yc hc)
         shB = BinaryShape.in' {m} N K k (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK pairK aK bK shD
         yaK = subK₁ yb ya yc b a ar c hya
@@ -3498,6 +3542,7 @@ module AndAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 2) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (keyK : (ar a : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩ → ⟨ fst a ∈ fst (lookup K γ) ⟩
            → ⟨ fst (prʟ ar a) ∈ fst (lookup K γ) ⟩)
@@ -3551,6 +3596,7 @@ module OrAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 3) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (keyK : (ar a : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩ → ⟨ fst a ∈ fst (lookup K γ) ⟩
            → ⟨ fst (prʟ ar a) ∈ fst (lookup K γ) ⟩)
@@ -3623,6 +3669,7 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
            → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 6) (fst a))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (envK : (yc a ar c E : S) → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
              envSetAt zero (suc (suc (suc zero)))
@@ -3658,7 +3705,7 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
     let shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
                  (suc (suc zero)) 6 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , aK) = codesK c ar a c∈ shEq
-        ycK = valK c ar a yc c∈ shEq
+        ycK = valK c ar a yc c∈ shEq (GraphEntry.un {m} T γ c ar a yc hc)
         shB = UnaryShape.in' {m} N K 6 (yc ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK aK shD
         EK = envK yc a ar c E hE
@@ -3688,6 +3735,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
            → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 5) (fst a))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (keyK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
          → ⟨ fst a ∈ fst (lookup K γ) ⟩
@@ -3740,7 +3788,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
     let shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
                  (suc (suc zero)) 5 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , aK) = codesK c ar a c∈ shEq
-        ycK = valK c ar a yc c∈ shEq
+        ycK = valK c ar a yc c∈ shEq (GraphEntry.un {m} T γ c ar a yc hc)
         shB = UnaryShape.in' {m} N K 5 (yc ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK aK shD
         yaK = subK ya yc a ar c E hya
@@ -3793,6 +3841,7 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
            → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 9) (fst a))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (succK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
           → succU {m} C T B N K γ E ya yc a ar c)
@@ -3855,7 +3904,7 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
     let shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
                  (suc (suc zero)) 9 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , aK) = codesK c ar a c∈ shEq
-        ycK = valK c ar a yc c∈ shEq
+        ycK = valK c ar a yc c∈ shEq (GraphEntry.un {m} T γ c ar a yc hc)
         shB = UnaryShape.in' {m} N K 9 (yc ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK aK shD
         yaK = subK ya yc a ar c E hya
@@ -3897,6 +3946,7 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
            → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 8) (fst a))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (succK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
           → succU {m} C T B N K γ E ya yc a ar c)
@@ -4026,7 +4076,7 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
     let shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
                  (suc (suc zero)) 8 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , aK) = codesK c ar a c∈ shEq
-        ycK = valK c ar a yc c∈ shEq
+        ycK = valK c ar a yc c∈ shEq (GraphEntry.un {m} T γ c ar a yc hc)
         shB = UnaryShape.in' {m} N K 8 (yc ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK aK shD
         yaK = subK ya yc a ar c E hya
@@ -4071,6 +4121,7 @@ module ClauseAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
            → ⟨ fst ar ∈ fst (lookup K γ) ⟩ × ⟨ fst a ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 8) (fst a))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (succK : (E ya yc a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
           → succU {m} C T B N K γ E ya yc a ar c)
@@ -4335,6 +4386,7 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 0) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (t0eq : fst (lookup t0 γ) ≡ fst (numeralL 0))
   (t1eq : fst (lookup t1 γ) ≡ fst (numeralL 1))
@@ -4390,7 +4442,7 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                    (suc (suc (suc zero))) 0 (suc (suc zero)) (suc zero)
                    (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , (aK , bK)) = codesK c ar a b c∈ shEq
-        ycK = valK c ar a b yc c∈ shEq
+        ycK = valK c ar a b yc c∈ shEq (GraphEntry.bin {m} T γ c ar a b yc hc)
         shB = BinaryShape.in' {m} N K 0 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK pairK aK bK shD
         EK = envK yc b a ar c E hE
@@ -4926,6 +4978,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 10) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (succK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩ → ⟨
              sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
@@ -5002,7 +5055,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                    (suc (suc (suc zero))) 10 (suc (suc zero)) (suc zero)
                    (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , (aK , bK)) = codesK c ar a b c∈ shEq
-        ycK = valK c ar a b yc c∈ shEq
+        ycK = valK c ar a b yc c∈ shEq (GraphEntry.bin {m} T γ c ar a b yc hc)
         shB = BinaryShape.in' {m} N K 10 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK pairK aK bK shD
         yaK = subK E yb yc b a ar c hb
@@ -5046,6 +5099,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 11) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (succK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩ → ⟨
              sucV (fst (lookup (suc (suc (suc (suc (suc zero)))))
@@ -5122,7 +5176,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                    (suc (suc (suc zero))) 11 (suc (suc zero)) (suc zero)
                    (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , (aK , bK)) = codesK c ar a b c∈ shEq
-        ycK = valK c ar a b yc c∈ shEq
+        ycK = valK c ar a b yc c∈ shEq (GraphEntry.bin {m} T γ c ar a b yc hc)
         shB = BinaryShape.in' {m} N K 11 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK pairK aK bK shD
         yaK = subK E yb yc b a ar c hb
@@ -5165,6 +5219,7 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 4) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (keyK : (x y : S) → ⟨ fst x ∈ fst (lookup K γ) ⟩ → ⟨ fst y ∈ fst (lookup K γ) ⟩
            → ⟨ fst (prʟ x y) ∈ fst (lookup K γ) ⟩)
@@ -5220,7 +5275,7 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                    (suc (suc (suc zero))) 4 (suc (suc zero)) (suc zero)
                    (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , (aK , bK)) = codesK c ar a b c∈ shEq
-        ycK = valK c ar a b yc c∈ shEq
+        ycK = valK c ar a b yc c∈ shEq (GraphEntry.bin {m} T γ c ar a b yc hc)
         shB = BinaryShape.in' {m} N K 4 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK pairK aK bK shD
         yaK = subK₁ E yb ya yc b a ar c ha
@@ -5257,6 +5312,7 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              × ⟨ fst b ∈ fst (lookup K γ) ⟩)
   (valK : (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
          → fst c ≡ pr (fst ar) (pr (# 1) (pr (fst a) (fst b)))
+         → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
          → ⟨ fst yc ∈ fst (lookup K γ) ⟩)
   (t0eq : fst (lookup t0 γ) ≡ fst (numeralL 0))
   (t1eq : fst (lookup t1 γ) ≡ fst (numeralL 1))
@@ -5312,7 +5368,7 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                    (suc (suc (suc zero))) 1 (suc (suc zero)) (suc zero)
                    (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
         (arK , (aK , bK)) = codesK c ar a b c∈ shEq
-        ycK = valK c ar a b yc c∈ shEq
+        ycK = valK c ar a b yc c∈ shEq (GraphEntry.bin {m} T γ c ar a b yc hc)
         shB = BinaryShape.in' {m} N K 1 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq numK innerK pairK aK bK shD
         EK = envK yc b a ar c E hE
