@@ -615,12 +615,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.123 | Re-price the level-hood certificate | 2.8k TO 3.3k BECAME 0.6k | The LJ-1 series built the substrate under it; only the hull transfer remains. Read evidence, no probe |
 | LJ-1.125 | Give envSetK a home in the frame | NOT REFUTED, FRAME GREEN | Stated at the frame telescope per P-x, not as a KFacts field. The instantiation re-measures at 0 metas |
 | LJ-1.127 | Codify DD17's two versions and enforce them | SWITCH LANDED, DIFF APPROVED | scripts/dispatch_policy.py is the one switch; the AGENTS.md half landed in cfe2b5a under DD19 |
-| LJ-1.128 | Re-measure the DD24 ratio baseline | DISPATCHED | make check is red: the baseline was measured over 17,006 lines and the tree stands at 17,185. Quiet machine |
+| LJ-1.128 | Re-measure the DD24 ratio baseline | BASELINE RE-MEASURED | The rise was the machine: an identical tree cost 11.2 percent more. The module rate was left owed |
 | LJ-1.124 | Probe the bounded level-graph decode | GO, 147 LINES | Both directions close under the 150-line gate. The LJ-1.123 assembly claim holds; three delivered layers compose |
 | LJ-1.126 | Wire pi streaming and resume into the dispatcher | BOTH DONE, PROVEN | pi --mode json streams per event; resume by --session. It also found that every resume ran on the codex path |
-| LJ-1.129 | Adversarial review of the route, LJ-1.60 to LJ-1.127 | DISPATCHED | fable 5 max effort, owner's word. Mathematics only: has D-30 hollowed the theorem out? |
+| LJ-1.129 | Adversarial review of the route, LJ-1.60 to LJ-1.127 | ROUTE DRIFT AT STATEMENT LEVEL | Devlin 5.5 assumes V=L and our Devlin55 dropped it. No delivered proof is false |
 | LJ-1.130 | Move agent reports out of _build into git management | DONE | Owner ruled the layout: agents/reports, /archive, /briefs. 271 citations rewritten; agents/ is CC and lint-exempt |
-| LJ-1.131 | Price the V = L route against the ambient one | DISPATCHED | Owner leans V = L on elegance. DD8 gate: price both, and say which the mathematics prefers |
+| LJ-1.131 | Price the V = L route against the ambient one | ROUTE A-PRIME, 760 TO 1,320 | The tree already owns the order; V=L buys its DOMAIN. Superseded on price by LJ-1.136 |
 | LJ-1.132 | Salvage what is left in _build | 24 DELETED, 11 REHOMED, 14 ARCHIVED | Seven lifecycle classes, not four. literature/ must stay: copyrighted, and a re-fetch loses the OCR line numbers |
 | LJ-1.133 | Give the probes a lifecycle and settle where evidence lives | 284 TO 1, 257 ARCHIVED | the stale rule was backwards and would have deleted 234 |
 | LJ-1.134 | Probe block A2, the A-prime route's widest term | GO, 207 LINES | The fibre extraction and the composite elaborate. A-prime's 760 to 1,320 price stands; a carrier crossing is new |
@@ -640,6 +640,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.148 | DD24's tolerance is narrower than the machine's swing | A BIAS, NOT NOISE: A WARM-UP PENALTY | Run 1 is 1.811 s and runs 2 to 25 are 0.787 s. Fixed at about 0.9 s per series |
 | LJ-1.149 | Audit the six standing OWED markers | ONE OWED FACT IS FALSE, TWO ARE PAID | T261's probe RAN on 2026-08-09; four live sentences said it never did |
 | LJ-1.150 | Place the twelve-row bridge that LJ-1.144 built in a probe | DISPATCHED | Priced at 38 lines and 3.5 s with no new master. The cheapest unbought result in the wing |
+| LJ-1.151 | Probe the one term two dispatches named and nobody ran | DISPATCHED | The instantiation half of levelIn. GO at 60 lines or the 25 facts are 25 proofs |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
