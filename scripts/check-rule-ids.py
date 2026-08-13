@@ -28,7 +28,7 @@ pointer, and claims nothing more.
 USAGE
     python3 scripts/check-rule-ids.py                 # dev/ and AGENTS.md
     python3 scripts/check-rule-ids.py <files...>
-    python3 scripts/check-rule-ids.py --briefs        # also _build/briefs/
+    python3 scripts/check-rule-ids.py --briefs        # also agents/briefs/
 """
 
 from __future__ import annotations
@@ -144,7 +144,7 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("paths", nargs="*", type=Path)
     ap.add_argument("--briefs", action="store_true",
-                    help="also scan _build/briefs/, which are not tracked")
+                    help="also scan agents/briefs/, which the default run skips")
     args = ap.parse_args()
 
     lessons, decisions = known_lessons(), known_decisions()
@@ -164,7 +164,7 @@ def main() -> int:
     if not targets:
         targets = sorted((ROOT / "dev").rglob("*.md")) + [ROOT / "AGENTS.md"]
         if args.briefs:
-            targets += sorted((ROOT / "_build" / "briefs").glob("*.md"))
+            targets += sorted((ROOT / "agents" / "briefs").glob("*.md"))
     targets = [p for p in targets if p.exists() and p.name != "LESSONS.md"]
 
     findings: list[str] = []

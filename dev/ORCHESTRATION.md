@@ -164,7 +164,7 @@ other side.
 
 ## 3. The brief
 
-Every brief is pinned in `_build/briefs/` before dispatch, so it survives a
+Every brief is pinned in `agents/briefs/` before dispatch, so it survives a
 reboot and the owner can read what was actually asked. A brief carries:
 
 - **`tier:`** (section 1) and a one-line GOAL.
@@ -208,7 +208,7 @@ it is repeated.
 Standing clauses that go in every build or probe brief:
 
 - **D-1**: probes are never committed; the verdict goes in a report under
-  `_build/`; write the deliverable incrementally, never at the end (C-22).
+  `agents/reports/`; write the deliverable incrementally, never at the end (C-22).
 - **D-10**: check the target's truth at the intended generality before proving
   it, and record any correction beside the original.
 - **DD8**: name the block's widest unmeasured term and the probe that would
@@ -357,7 +357,7 @@ Standing clauses that go in every build or probe brief:
   brief argues for a rewrite, say that over-optimism about rewrite cost is the
   failure mode to guard against.
 
-*Enforcement:* the brief is written to `_build/briefs/` and re-read before the
+*Enforcement:* the brief is written to `agents/briefs/` and re-read before the
 dispatch command is issued.
 
 ## 4. Tree-wide sweeps

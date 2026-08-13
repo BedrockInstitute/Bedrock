@@ -173,7 +173,7 @@ consistent, so is ZFC + GCH (`dev2.txt:1390-1406`).
 This section answers the question `[LJ-1.12]` will ask. The question: the
 `[LJ-1.2]` probe measured that the step clause of `LsetGraphAt` has no Δ₀
 witness at any carrier, because its satisfaction leaves carry unbounded
-existentials (`_build/lj-1.2-gate.md` section 2). Does Devlin's condensation
+existentials (`agents/reports/archive/lj-1.2-gate.md` section 2). Does Devlin's condensation
 argument need such a witness? If it does, the crossing needs different
 content; if it does not, the digest must say what it needs instead and at
 what strength.
@@ -249,7 +249,7 @@ concrete set K(u), the finite sequences over the formula set, the variables
 and the members of u (`dev2.txt:593-630`). The Σ₀ matrix C(w, v, u) with
 w = K(u) is the bounded satisfaction substrate of Devlin's engine. The
 `[LJ-1.2]` probe's missing facts, a bounded object-level description of the
-code set and of the satisfaction table (`_build/lj-1.2-gate.md` section 5),
+code set and of the satisfaction table (`agents/reports/archive/lj-1.2-gate.md` section 5),
 are exactly the analogues of this substrate on the project's coding; the
 argument does not require them to have any particular shape, only that some
 bounded description with a bound inside the carrier exists.
@@ -549,7 +549,7 @@ archived records:
    cannot ride the rud-side story, because of the index question and the
    S-versus-L tower mismatch. SURVIVES as a warning: the Def-side level
    story must carry the internalized definable-powerset step
-   (`_build/l3.32-t130-report.md:26-33`), which is exactly the C2
+   (`agents/reports/archive/l3.32-t130-report.md:26-33`), which is exactly the C2
    requirement of section 2 here.
 4. T259 (`archive/dev/TASKS-archived.md:266`): re-targeting the description
    to the S-tower is viable and ungated. SURVIVES as the J-side direction,
@@ -600,7 +600,7 @@ II.5 fetch (`digest.md:513-518`); the fetch map and OCR caveats
   the retired route's reading for section 8.
 - `archive/dev/DECISIONS-archived.md`: `:51-52` (D31/D32 sever the crossing;
   D33 splits the trophy). Took the deferral for section 8.
-- `_build/l3.32-t130-report.md:26-33`: the crossing must carry the
+- `agents/reports/archive/l3.32-t130-report.md:26-33`: the crossing must carry the
   internalized definable-powerset step. Took the T130 warning.
 - `dev/LESSONS.md`: D-10 (`:1302-1361`), D-26 (`:1662-1687`), P-l
   (`:2099-2158`), C-22 (`:2031`). D-26 is the law this digest's section 4

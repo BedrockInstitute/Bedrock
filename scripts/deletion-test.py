@@ -212,7 +212,7 @@ def cmd_shadow(args) -> int:
           f"| cap {cap:,} | headroom {headroom:+,}")
     print("disclosure: file-granular; the board carries the granularity "
           "error [T155] measured at 2,069-2,248 lines "
-          "(_build/l3.32-t155-report.md:137)")
+          "(agents/reports/archive/l3.32-t155-report.md:137)")
     if args.files:
         for part in ("base", "ac_only", "shared"):
             for path in st["split"]["_files"].get(part, []):

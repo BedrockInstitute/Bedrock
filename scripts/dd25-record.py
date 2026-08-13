@@ -12,7 +12,7 @@ paragraph for nine consecutive dispatches. This is the same failure on the
 DISPATCH record, so it gets the same cure: one script, one source, and the
 figure is never typed by hand.
 
-`[LJ-1]`'s retrospective (`_build/lj-1-retrospective.md`) found the miscount
+`[LJ-1]`'s retrospective (`agents/reports/archive/lj-1-retrospective.md`) found the miscount
 and named it a finding in its own right.
 
 USE: `.venv/bin/python scripts/dd25-record.py`

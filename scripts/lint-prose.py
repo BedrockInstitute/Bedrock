@@ -434,7 +434,15 @@ def target_files(explicit, staged):
             if (f.endswith(".md") or f.endswith(".lagda.md"))
             and os.path.basename(f).lower() not in EXCLUDE_BASENAMES
             and not f.startswith(".claude/")    # Claude skill/config, not prose docs
-            and not f.startswith("archive/")]   # the archive is outside every gate (D20)
+            and not f.startswith("archive/")    # the archive is outside every gate (D20)
+            # A brief and a report are FROZEN RECORDS. A brief says what an agent was told
+            # on a date; a report says what it found. Neither is live guidance, and neither
+            # is ever rewritten, so a style gate over them can only force an edit to a
+            # record, which corrupts the record it was meant to protect. The same reasoning
+            # exempts dev/JOURNAL.md at scripts/check-rule-ids.py:83. Measured when the tree
+            # moved here on 2026-08-13: 1,109 violations in 74 archived reports and 24 in 10
+            # briefs, none of them a defect in anything the project still runs on.
+            and not f.startswith("agents/")]
 
 
 def main(argv):

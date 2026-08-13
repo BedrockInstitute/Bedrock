@@ -57,7 +57,7 @@ report is a full deliverable: the two most valuable results of this campaign
 were a refutation and a stop.
 
 **Orchestration.** Batches are written by delegated agents against pinned
-briefs, archived in `_build/briefs/`; the orchestrator audits every return
+briefs, archived in `agents/briefs/`; the orchestrator audits every return
 (report, then code, then an independent typecheck and the linters), wires
 `Everything.lagda.md` (agents never touch it), and commits with the goal code.
 Agents never commit and never push. Concurrency and heap caps are governed by

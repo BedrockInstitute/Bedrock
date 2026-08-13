@@ -4,7 +4,7 @@
 Two standing rules from AGENTS.md's Never list, both of which have already been broken once:
 
 - **Probes are never committed** (dev/LESSONS.md D-1's lifecycle). A probe prices what one
-  setting costs and is then thrown away; the verdict lives in a report under _build/, not in
+  setting costs and is then thrown away; the verdict lives in a report under agents/reports/, not in
   the tree. On 2026-08-04 a single `git add -A src/` committed 13 probe files, 3,274 lines,
   which had to be untracked afterwards.
 - **Generated files are never committed**: anything under _build/, and the woven mono-lingual
@@ -29,7 +29,7 @@ mistaken for committed ones, which is what prompted this tool.
 
 A probe is safe to delete only when BOTH hold, and the script refuses otherwise:
 
-- **its verdict survives**: some report under _build/ names it, which is where D-1 says the
+- **its verdict survives**: some report under agents/reports/ names it, which is where D-1 says the
   verdict lives once the file is gone; and
 - **nobody is writing it**: it has not been modified within the freshness window (default 6
   hours), because a live agent's probe file must never be pulled out from under it. Two
@@ -53,7 +53,7 @@ def classify(path: str) -> str | None:
     # Probe files: the doctrine names src/Probe*.agda, but a probe is a probe wherever it is
     # written and whatever extension it carries, so match the basename shape anywhere.
     if p.name.startswith("Probe") and p.suffix in {".agda", ".agdai", ".md"}:
-        return "probe file (D-1: probes are never committed; the verdict goes in a report under _build/)"
+        return "probe file (D-1: probes are never committed; the verdict goes in a report under agents/reports/)"
     if p.name.startswith("Probe") and p.name.endswith(".lagda.md"):
         return "probe file (D-1: probes are never committed)"
     # Generated: the build tree, and the woven mono-lingual copies.
@@ -83,7 +83,9 @@ FRESH_HOURS = 6.0
 def stale_probes(fresh_hours: float = FRESH_HOURS):
     """Probes on disk, split into safe-to-delete and protected, with the reason for each."""
     import time
-    reports = list((ROOT / "_build").glob("*.md")) if (ROOT / "_build").is_dir() else []
+    rdir = ROOT / "agents" / "reports"
+    reports = (list(rdir.glob("*.md")) + list((rdir / "archive").glob("*.md"))
+               if rdir.is_dir() else [])
     corpus = {r: r.read_text(encoding="utf-8", errors="ignore") for r in reports}
     safe, kept = [], []
     for f in sorted((ROOT / "src").glob("Probe*.agda")):
@@ -91,7 +93,7 @@ def stale_probes(fresh_hours: float = FRESH_HOURS):
         named_in = next((r.name for r, txt in corpus.items() if stem in txt), None)
         age_h = (time.time() - f.stat().st_mtime) / 3600.0
         if named_in is None:
-            kept.append((f, f"no report under _build/ names it, so deleting it would destroy "
+            kept.append((f, f"no report under agents/reports/ names it, so deleting it would destroy "
                             f"the verdict D-1 says must outlive the file"))
         elif age_h < fresh_hours:
             kept.append((f, f"modified {age_h:.1f}h ago, inside the {fresh_hours:.0f}h freshness "
@@ -113,7 +115,7 @@ def cmd_stale(delete: bool, fresh_hours: float) -> int:
         return 0
     print(f"STALE, verdict recorded and untouched for over {fresh_hours:.0f}h:")
     for f, rep, age in safe:
-        print(f"  {f.relative_to(ROOT)}  ({age:.0f}h old; verdict in _build/{rep})")
+        print(f"  {f.relative_to(ROOT)}  ({age:.0f}h old; verdict in agents/reports/{rep})")
     if not delete:
         print(f"\n{len(safe)} probe(s) safe to delete. Re-run with --delete to remove them.")
         return 0
@@ -122,7 +124,7 @@ def cmd_stale(delete: bool, fresh_hours: float) -> int:
         agdai = f.with_suffix(".agdai")
         if agdai.exists():
             agdai.unlink()
-    print(f"\ncheck-probes: deleted {len(safe)} stale probe(s); their verdicts remain in _build/")
+    print(f"\ncheck-probes: deleted {len(safe)} stale probe(s); their verdicts remain in agents/reports/")
     return 0
 
 
