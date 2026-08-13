@@ -1360,9 +1360,6 @@ module HullExt (α : S) (ordα : IsOrd α)
 open import Cubical.Data.Nat.Properties using ( znots; snotz; injSuc )
 
 module Devlin55
-  (absorbs-subset : (α : S) → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-                  → (x : S) → (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
-                  → ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
   where
 
   comp-inj : {A B C : Type ℓ} → A ↪ B → B ↪ C → A ↪ C
@@ -1392,6 +1389,7 @@ module Devlin55
         → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
             ((x y : ⟪ δ ⟫ × ⟪ δ ⟫) → f x ≡ f y → x ≡ y))
     (x : S) (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
+    (absorbs : ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
     (lam : S) (ordλ : IsOrd lam) (α∈λ : ⟨ α ∈ˢ lam ⟩)
     (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
     (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩) where
@@ -1529,7 +1527,7 @@ module Devlin55
                                     (qψ , qcs)))
 
       code-inj : ⟪ UK.X ⟫ ↪ ⟪ α ⟫
-      code-inj = comp-inj (absorbs-subset α α∉ω x x⊆Lα) (stage-card-upper α ordα (self∈sucV α) α∉ω)
+      code-inj = comp-inj absorbs (stage-card-upper α ordα (self∈sucV α) α∉ω)
 
       module CC = CodeCount code-inj
 
