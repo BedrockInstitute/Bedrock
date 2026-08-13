@@ -718,6 +718,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.159 | LeastCardInj is 48 times the bar and nobody has attacked it | 133 s TO 46 s, 13 LINES | My order-type lead REFUTED. The cause is sucV at a variable; the cure is prior art next door |
 | LJ-1.160 | Read the 845-line level substrate against levelIn and cover | THE WALL IS BYPASSED, 16 LINES | Both hypotheses from one crossing face at the collapse image. The wall term is absent |
 | LJ-1.161 | Gate the transfer half of CrossOut at the collapse image | GO AT 20 LINES, AND A NEW WALL | The transfer is cheap. The certificate CrossOut actually needs walls at 20 min, 9.03 GB |
+| LJ-1.162 | Leg 3, the last unknown in CrossOut | DISPATCHED | Legs 1 and 2 measured at 20 and 18 lines. Leg 3's repair is delivered but never run |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
