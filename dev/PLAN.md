@@ -76,10 +76,12 @@ DD4-against-DD24 conflict needs.
   `[LJ-1.155]` then found the counter-case: a wing-local cure does not move the
   denominator, and the wing went 2.06x to 1.60x. **So the ruling is no longer
   forced, but the bar still reads a shared cure as a regression.**
-- **The one-site lesson, unnumbered.** A refutation that names one site measures
-  THAT site, and it does not measure how far the site extends. `[LJ-1.173]`
-  restated it four times against three measured layers: one field, then nine,
-  then twenty-one. **The measurement exists; only the ID is missing.**
+- **The `build` bundle is FULL at the cap of 12, and C-42 did not go in.** I
+  routed the new law to `recon` and `probe`, which had room, and to four trigger
+  words. **A build acting on a refutation therefore reaches it through layer 2
+  and not through its bundle.** Evicting one of the twelve is the alternative
+  and `dev/rules.toml`'s own header says the cap exists to make that question
+  audible. **I am asking it rather than answering it.**
 - **`src/L/Choice/Name.lagda.md`.** `[LJ-1.172]`'s step-1 drop-in is blocked by
   **DD23** and not by code. It makes three narrative sentences false, and
   repairing them is mathematical prose.

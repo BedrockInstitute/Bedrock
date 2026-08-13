@@ -3701,6 +3701,60 @@ it cannot tell which series an author MEANT.
 `agents/tasks/LJ-1-140/lj-1.140-report.md`. Related: [[C-32]], a threshold
 outliving its tree, and [[C-26]], a duplicated rule drifts.
 
+### C-42. A refutation measures the site it names, and it never measures how far that site extends
+
+**Rule:** A refutation is a measurement of ONE site. It says the statement there
+is false. **It says nothing about how many other sites carry the same false
+shape.** So when a refutation lands, the next action is not the cure. **It is
+the sweep: search the tree for the shape, and report the COUNT before you price
+the cure.** A cure funded against the named site is priced against a number
+nobody measured.
+
+**And the sweep is not one level.** Sweep the record, then the sibling records,
+then the consumers. **Stop when a level returns nothing new, never when a level
+returns something.**
+
+**Measured, 2026-08-13 and 2026-08-14, one disease and three layers.**
+`[LJ-1.172]` refuted `envSetK`: it asks a level to hold a full constructible
+function space. **One field.** `[LJ-1.173]` was sent to cure that one field, and
+audited its own record first: **nine more fields, every one quantifying over a
+bare set with no hypothesis.** Ruled to cure the nine, it swept one level
+further and found **six in `LFacts` and six in `UFacts`, so twenty-one fields
+across three records.** Each layer was found by looking one level out from the
+last, and **each was cheaper to find than to hit.**
+
+**The multiplier, and it is why this is a law rather than diligence.** The cure
+turned out to be ATOMIC. `TwelveAgree` builds the other two records' values from
+its own fields by pass-through, so adding the hypothesis to nine fields and not
+twenty-one does not typecheck. **Curing the measured site alone was not a
+smaller change; it was a broken tree.** An unswept refutation therefore does not
+merely underprice the work. It can fund a change that cannot land.
+
+**The contrast that made the diagnosis certain.** `KFacts` is CLEAN: every field
+is a closure fact, none takes a satisfaction antecedent, none quantifies over a
+bare set. **A sweep that finds a boundary is worth more than a sweep that finds
+a count**, because the boundary names the disease. Here it is exactly: decode a
+satisfaction at an unbounded set, then conclude a membership.
+
+**The same law in another domain, already measured.** [[C-41]]'s corollary found
+that a `D<n>` collision was not between two numbering series but **five**, and
+stated it as: a shape that two series share is usually shared by more than two.
+**That is this law with citations in place of fields.**
+
+**Enforcement: the brief and the return, because no checker can hold it.** A
+checker would need the shape, and the shape is what the sweep discovers. **So a
+brief that acts on a refutation carries a SWEEP instruction naming how far to
+look, and the return states the extent it measured, marked MEASURED or
+INFERRED.** A return that cures without a count is incomplete even when it is
+green.
+
+**Provenance:** `agents/tasks/LJ-1-172/lj-1.172-report.md`,
+`agents/tasks/LJ-1-173/lj-1.173-report.md` PARTS THREE and FOUR. Related:
+[[C-38]], a hypothesis is discharged when something SUPPLIES it; [[C-40]],
+verify the consumers of a changed master; [[P-l]], a measured cure does not
+transfer by analogy, which is this law's mirror: **P-l stops a CURE from
+travelling, and C-42 stops a REFUTATION from stopping.**
+
 ### P-y. The price of a seal is set by how many definitions look INSIDE the formula, not by how many name it
 
 **Rule:** When you seal a built formula `opaque` to stop the conversion checker
