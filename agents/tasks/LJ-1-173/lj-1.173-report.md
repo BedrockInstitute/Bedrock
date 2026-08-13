@@ -701,3 +701,208 @@ that would have run three times over; the join it refused to fund then closed
 at 155 on the first agda run once it was named as the work. **A gate that names
 the two ENDS measures the parts. Naming the JOIN is what turned this from a
 refutation into a build.**
+
+---
+
+# PART THREE: the lemma is placed, and step 6 STOPS at the field audit
+
+**Appended after the coordinator committed PART TWO at `d412cf3` with
+`make check` EXIT 0 cold.**
+
+## 28. LEAD
+
+1. **THE LEMMA IS PLACED.** `envSetNumeral∈` is in
+   `src/L/Coding/Key.lagda.md`, green, exit 0, 3 s. The two `Δ₀` facts are
+   re-derived in four lines, as ruled. **The placement forced ONE thing and I
+   name it in section 30: the master works in the OTHER structure, so the block
+   is qualified rather than opened.**
+2. **STEP 6 STOPS BEFORE ITS FIRST LINE, and it is the stop the coordinator
+   named.** **NINE MORE FIELDS CARRY `envSetK`'s DISEASE**, and my restriction
+   cured exactly one of ten. **I wrote no line of step 6, so the count against
+   270 is ZERO, and the reason is not budget.**
+
+**The nine are `envK-mem`, `envK-neg`, `envK-top`, `envK-imp`, `envK-allin`,
+`envInK-mem`, `envInK-neg`, `envInK-top` and `envInK-imp`
+(`src/L/Condensation/TwelveAgree.lagda.md:183-215`).** **Every one of them
+quantifies over a BARE `ar : S` with NO hypothesis on it at all**, and each
+concludes a membership in `K`.
+
+## 29. THE PLACEMENT, and what it forced
+
+`src/L/Coding/Key.lagda.md`, **+363 lines, -6**. In-fence non-blank lines now
+**408**. **The master typechecks at exit 0 in 3 s and has no consumer in `src/`
+beyond `src/Everything.lagda.md:351`, so C-40 is discharged in full.**
+
+| checker | result |
+|---|---|
+| `agda src/L/Coding/Key.lagda.md` | **exit 0**, 3 s, first run |
+| `postulate`, hole, unsolved meta | **all three ABSENT** |
+| `lint-agda.py --check` | **exit 0** |
+| `lint-prose.py --check` on the master | **exit 0** |
+| `weave-i18n.py --check` | **exit 0** |
+| `check-unbound-hyp.py` | **2**, unchanged |
+| consumers of `L.Coding.Key` | **NONE** beyond `Everything` |
+
+**The two `Δ₀` facts, re-derived as ruled**, at four lines, named `Δ₀-prAtLK`
+and `Δ₀-appAtK` so that nothing is ambiguous against `L.Condensation`'s pair.
+**The comment records that they are the same two and that a later pass may point
+the consumer at this copy.**
+
+## 30. WHAT THE PLACEMENT FORCED, and it is the one thing to rule
+
+**`src/L/Coding/Key.lagda.md` opens `hPropStructure 𝒮ᵥ`, so its `S` is the raw
+hierarchy. The environment-set block lives in `𝒮ʟ`.** **The two cannot both be
+opened**, so the block reads `CS.S` throughout, with
+
+```agda
+module CS = hPropStructure 𝒮ʟ
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+```
+
+**This is the pattern `src/L/BoundedSubset.lagda.md:56-58` already uses**, so it
+is a delivered idiom and not a new one. **It costs one qualifier per occurrence
+and nothing else, and I flag it only because it changed the master's shape:
+`Key.lagda.md` now speaks about two structures where it used to speak about
+one.**
+
+**Nothing else was forced.** No cycle, no new module, no change to any other
+master, and `src/Everything.lagda.md` was never opened.
+
+## 31. STEP 6: THE FIELD AUDIT, AND THE STOP
+
+**I ran the audit BEFORE writing any field, because D-10 is the rule that found
+`envSetK` and the coordinator's own grade says a second false field is worth
+more than the rest of the build.**
+
+### 31.1 The five `envK-*` fields are FALSE, by `[LJ-1.172]`'s own argument
+
+`src/L/Condensation/TwelveAgree.lagda.md:183-202`. Taking `envK-mem` as the
+example, and I checked all five slot by slot:
+
+```agda
+    envK-mem : (yc b a ar c E : S) → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                 envSetAt zero (suc (suc (suc (suc zero))))
+                           (suc (suc (suc (suc (suc (suc zero)))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+```
+
+**MEASURED, by counting the environment.** `(E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')`
+puts `E` at 0, `ar` at 4 and `γ'`'s head at 6. So the arity slot IS the
+telescope's `ar` and the carrier slot is `γ'`'s head. **The ONLY hypothesis is
+the satisfaction. `ar` carries no membership hypothesis and no numeral
+hypothesis.**
+
+| field | `file:line` | arity slot | resolves to |
+|---|---|---|---|
+| `envK-mem` | `:183-186` | 4 | `ar`, bare |
+| `envK-neg` | `:187-190` | 4 | `ar`, bare |
+| `envK-top` | `:191-194` | 3 | `ar`, bare |
+| `envK-imp` | `:195-198` | 6 | `ar`, bare |
+| `envK-allin` | `:199-202` | 5 | `ar`, bare |
+
+**`⊨ envSetAt E ar B` says `E` IS the set of all environments over `ar` into
+`B`.** At an unrestricted `ar` that is the full constructible function space,
+and the field then asks a LEVEL to hold it. **That is exactly the statement
+`[LJ-1.172]` refuted at `:752-767`, and my numeral restriction did not touch
+these five.**
+
+**Classification, in the brief's words: the structural half is MEASURED**, at
+the five `file:line`s above; **the cardinality half is INFERRED**, and it is
+`[LJ-1.172]`'s inference re-used at five new sites rather than a new one.
+
+### 31.2 The four `envInK-*` fields are FALSE for a DIFFERENT and CHEAPER reason
+
+`src/L/Condensation/TwelveAgree.lagda.md:203-215`.
+
+```agda
+    envInK-mem : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
+                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+```
+
+**MEASURED: `ar` sits at slot 5 and is again bare.** But here the conclusion is
+about a SINGLE environment, not about the set of them, **so no cardinality is
+needed to refute it. Transitivity alone does it.**
+
+**The witness, and it is cheaper than `[LJ-1.172]`'s.** Take `ar` to be any set
+NOT in `K`, and take `z` to be a constant function on `ar` into the carrier.
+Then `⊨ envOverAt z ar B` holds, and `z` records `ar`'s every member as a first
+component. **`K` is a LEVEL and therefore transitive, so `z ∈ K` would force
+`ar ∈ K`.** Contradiction. **No rank counting and no cardinality: the field is
+false because nothing bounds `ar`.**
+
+**Classification: the structural half is MEASURED at the four `file:line`s; the
+witness is INFERRED, because I did not build it in Agda (C-36).**
+
+### 31.3 The cure is the one already ruled, and a sibling field already supplies half of it
+
+**I offer it and I do not take it, because ten fields is a route decision of the
+same class the coordinator ruled for one.**
+
+| fields | the missing hypothesis | who discharges it at the site |
+|---|---|---|
+| `envInK-mem`, `-neg`, `-top`, `-imp` | `⟨ fst ar ∈ fst (lookup … K …) γ' ⟩` | **`codesK` ALREADY CONCLUDES exactly this** (`:161-165`, its first output component). **The hypothesis one field needs is another field's conclusion** |
+| `envK-mem`, `-neg`, `-top`, `-imp`, `-allin` | `(n : ℕ) → fst ar ≡ # n`, the shape `envSetK` now carries | `codesK` gives the code's shape, `arityNumAtL` (`src/L/Coding/CodeSet.lagda.md:247-248`) gives the numeral, `pr-inj` closes it. **This is section 4's join, unchanged** |
+
+**So the ten fields are ONE disease with ONE cure, and I cured one of them.**
+**MEASURED: `envSetK` was not special. It was the one `[LJ-1.172]` happened to
+read.**
+
+### 31.4 Why this is a STOP and not a detour
+
+**The coordinator's grade names it: "A field turns out FALSE, as `envSetK` did:
+STOP AND SAY SO FIRST."** Nine did.
+
+**And building step 6 first would have been worse than useless.** Its 28 fields
+include these nine. **A supplier written against a false field cannot close, so
+the build would have burned its budget discovering by failure what the audit
+found by reading.** **The audit cost one file read.**
+
+## 32. STEP 6 AGAINST ITS 270
+
+**ZERO lines written, and the reason is the stop, not the budget.** The abort
+grades never engaged: nothing was measured against 270 and nothing walled.
+
+**What the audit changes about the 270 itself, offered not assumed.**
+`[LJ-1.168]` priced the 28 fields at about 270 with `envSetK` costed at 45
+through `mkReflect`. **`[LJ-1.172]` refuted that route and this task replaced it
+with 155 lines of adequacy plus a 4-line bound.** **The nine fields above take
+the SAME cure, and its expensive half is now DELIVERED in
+`src/L/Coding/Key.lagda.md`.** **So a re-priced step 6 should be CHEAPER than
+270 for these ten fields, not dearer**, and I say that as a direction rather
+than a number, because I have measured no field's supply.
+
+## 33. PART THREE: EVERY NEGATIVE, CLASSIFIED
+
+| statement | class |
+|---|---|
+| **the lemma is placed** | **TRUE.** `src/L/Coding/Key.lagda.md`, green |
+| the placement needed a cycle broken | **MEASURED FALSE.** No cycle. Four re-derived lines, as ruled |
+| the placement forced nothing | **MEASURED FALSE.** It forced the two-structure qualifier, section 30 |
+| **step 6 got some way against 270** | **MEASURED FALSE. ZERO lines**, and section 31 is why |
+| **`envSetK` was the only false field** | **MEASURED FALSE. Nine more**, and my restriction cured one of ten |
+| the nine are false for one reason | **MEASURED FALSE. TWO reasons.** Five fail on the power, four fail on transitivity alone |
+| the `envInK-*` refutation needs cardinality | **MEASURED FALSE.** Transitivity alone, section 31.2 |
+| the nine carry a hypothesis on `ar` | **MEASURED FALSE.** Bare in all nine, checked slot by slot |
+| I changed any of the nine | **MEASURED FALSE. I stopped and reported**, as the grade directs |
+| I added the fourth `HullStage` hypothesis | **MEASURED FALSE** |
+| I touched `src/L/Choice/Name.lagda.md` | **MEASURED FALSE.** `Key.lagda.md` already imported it at `:23` before this task |
+| I opened `src/Everything.lagda.md` | **MEASURED FALSE.** No new module: the lemma went into an existing master |
+| I ran `make check`, committed or pushed | **MEASURED FALSE**, none of the three |
+| the nine are certainly false | **the structural half is MEASURED, the witnesses are INFERRED.** I built no Agda counterexample |
+
+## 34. WHAT I RECOMMEND, offered not taken
+
+1. **Rule the same cure onto the nine.** Four `envInK-*` take `ar ∈ K`, which
+   `codesK` already concludes; five `envK-*` take the numeral equation
+   `envSetK` now carries. **One ruling, ten fields, one disease.**
+2. **Then re-price step 6**, because its expensive half is now delivered.
+3. **Do NOT build step 6 before the ruling.** Nine of its 28 fields cannot be
+   supplied as written.
+
+**One line for the brief writer, and it is the same line a third time.** The
+gate measured the two ends. The join was the work. **And this audit found that
+the refutation itself had two ends: `[LJ-1.172]` read ONE field and I cured ONE
+field, while the disease was in ten.** **A refutation that names one site
+measures that site. It does not measure how far the site extends.**
