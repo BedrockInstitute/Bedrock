@@ -1,0 +1,13 @@
+probe-noise | src/L/BoundedSubset.lagda.md | 1409 in-fence lines | GHCRTS=-A64m -I0 -M8g | 6 cold runs, dependencies warm
+run   seconds    s/line   load  running mean  running spread
+  1    16.526   0.01173   6.09        16.526           0.0%
+  2    15.607   0.01108   5.87        16.067           5.7%
+  3    15.815   0.01122   5.17        15.983           5.8%
+  4    15.330   0.01088   5.00        15.820           7.6%
+  5    15.703   0.01115   4.56        15.796           7.6%
+  6    15.373   0.01091   4.37        15.726           7.6%
+
+n=6  min 15.330  max 16.526  mean 15.726  spread 7.6%
+run 1 16.526 against the tail mean 15.566, 1.06x
+tail only: n=5 min 15.330 max 15.815 mean 15.566 spread 3.1%
+rate at the mean 0.01116 s/line
