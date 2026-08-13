@@ -78,6 +78,11 @@ Not the project's content. Owner-private data, or a third party's export. An
 agent must neither delete it nor move it."""
 delete_when = "Only by the owner."
 promote_when = "Never. Promotion would commit private data to a public repository."
+members = """
+NONE today. The class was written for one instance, the owner's billing
+export, and the owner deleted it on 2026-08-13 and will not maintain it. The
+class stays as a SLOT: it says what to do if such material appears again, and
+it claims nothing about what is present."""
 
 # ---------------------------------------------------------------------------
 # The entries. `glob` is matched against the path relative to `_build/`.
@@ -111,14 +116,6 @@ note = """
 The kill log of `scripts/agda-watchdog.sh`, the C-12 backstop. Its two kill
 lines are the only field record that the backstop has ever fired; they are
 quoted in `agents/reports/lj-1.132-report.md` so the evidence survives a clean."""
-
-[[entries]]
-glob = "usage_data_*/**"
-class = "foreign"
-note = """
-The owner's own billing export, mode 0600, carrying a user id. Not cited by
-anything (MEASURED, [LJ-1.132]). An agent must not delete it and must not move
-it: archiving it would commit private data to a public repository."""
 
 [[entries]]
 glob = "site/**"

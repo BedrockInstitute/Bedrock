@@ -2941,7 +2941,7 @@ axis through the delivered `erase` with no placement anywhere**
 (`src/FOL/Count.lagda.md:598-611`, `:617-637`).
 
 **Provenance:** `agents/reports/archive/lj-1.27-review.md` sections 4 and 5. Probes
-`src/ProbeDD25C.agda`, `src/ProbeDD25D.agda` and `src/ProbeDD25E.agda`, the
+`archive/probes/ProbeDD25C.agda`, `archive/probes/ProbeDD25D.agda` and `archive/probes/ProbeDD25E.agda`, the
 last red by design with its error message as its measurement.
 
 ### C-32. A cure invalidates every downstream measurement; RE-RUN THE GATE before you act on the old number
@@ -2963,7 +2963,7 @@ measuring walls to route around a gate that had already opened, and not the
 orchestrator, who held the pre-cure figure and quoted it three times.
 
 **The second half, and it cost the same dispatch.** `[LJ-1.27-R]` had already
-WRITTEN the cured block as `src/ProbeDD25E.agda`, and it failed at exactly one
+WRITTEN the cured block as `archive/probes/ProbeDD25E.agda`, and it failed at exactly one
 line, the `refl` asserting count 0, which is what `[LJ-1.31]` fixed. On the
 cured tree it is green in 2.87 s at 0.0114 s per line. **A finished probe sat
 one command away for a whole dispatch.**
@@ -3089,7 +3089,7 @@ WHOLE seconds budget of 99.6 to 147.7 s. **The route looked infeasible and the
 
 
 **Provenance:** `agents/reports/archive/lj-1.34-review.md` sections 1 and 2;
-`src/ProbeDD25D5.agda` against `src/ProbeLJ134.agda`.
+`archive/probes/ProbeDD25D5.agda` against `archive/probes/ProbeLJ134.agda`.
 
 ### P-w. A module application COPIES; an interposed module cannot amortize one
 
@@ -3223,7 +3223,7 @@ story frame ended in `∀̇∈ (var yc) body`, which is vacuous at an empty valu
 where the machine's `extAt yc body` constrains it. Worse, at a NONEMPTY value
 one index made the defining condition never mention the element it defines, so
 the row is FALSE of the true satisfaction table, not merely weak.
-`src/ProbeDD25E1.agda` proves the countermodel, `src/ProbeDD25E3.agda` is the
+`archive/probes/ProbeDD25E1.agda` proves the countermodel, `archive/probes/ProbeDD25E3.agda` is the
 control that fails with `fst e != fst z` when the index is corrected, and both
 were re-run by the orchestrator.
 
@@ -3304,18 +3304,18 @@ is K-bounded, `Δ₀` has no `δ-∀` and no `δ-∃`, so no witness exists.
 
 **Every part of that reasoning was refuted by four probes.** The unbounded
 witness is never needed, because every leaf is a K-bounded Δ₀ restatement
-transferred under site facts; `src/ProbeDD25F41A.agda` builds the supposedly
+transferred under site facts; `archive/probes/ProbeDD25F41A.agda` builds the supposedly
 missing witness in ONE line from the delivered `Δ₀-extAtB` and `Δ₀-envBndGen`,
-GREEN in 1.45 s. `src/ProbeDD25F41B.agda` then builds BOTH directions between
+GREEN in 1.45 s. `archive/probes/ProbeDD25F41B.agda` then builds BOTH directions between
 the bounded condition and `envSetAt` in 98 lines, GREEN, marginal cost 0.22 s.
 
 **The real defect was ONE MISSING CONJUNCT.** The machine's `extAt` is a pair
 of implications and the story wrote the first and stopped.
-`src/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
+`archive/probes/ProbeDD25F41D.agda` is the control: it supplies the delivered condition
 PLUS all three site facts and Agda still refuses, so the conjunct is what is
 missing and not the facts.
 
-**The tell was in the failing probe itself.** `src/ProbeLJ141C.agda`'s body is a
+**The tell was in the failing probe itself.** `archive/probes/ProbeLJ141C.agda`'s body is a
 bare `henv`, an identity coercion, and its error shows a Π on one side against
 a Σ of two Π on the other. **The shape of the error named the missing conjunct
 and the return read it as impossibility.**
@@ -3375,8 +3375,8 @@ the same rate. This says the same layer propagates unreached GENERALITY at the
 same rate, and that generality is invisible until somebody reads the consumers.
 
 **Provenance:** `agents/reports/archive/lj-1.47-report.md`; `agents/reports/archive/lj-1.46-report.md`;
-probes `src/ProbeLJ147PairingSealed.agda` against
-`src/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.
+probes `archive/probes/ProbeLJ147PairingSealed.agda` against
+`archive/probes/ProbeLJ147PairingGut.agda`, re-run by the orchestrator.
 
 ### C-37. State a law with the ACTION it prescribes, never only the prohibition: a law written as a wall hides its own cure
 
@@ -3421,7 +3421,7 @@ may strengthen. This says the same failure enters one step earlier: **the brief
 can remove the cure from the agent's reach before any substitution is tried.**
 
 **Provenance:** `agents/reports/archive/lj-1.7-review.md`; `agents/reports/archive/lj-1.7-report.md`;
-`agents/briefs/LJ-1.7.md`; probe `src/ProbeDD25G1.agda`, re-run by the
+`agents/briefs/LJ-1.7.md`; probe `archive/probes/ProbeDD25G1.agda`, re-run by the
 orchestrator.
 
 ### C-38. A hypothesis is discharged when something SUPPLIES it, never when it is restated
@@ -3455,7 +3455,7 @@ consumer, found the telescope's first fact:
 gives `numeralL 0 ≡ numeralL 1`, refuted by the delivered `numeralL-inj`.
 The type is uninhabited at every frame, not merely at the consumer's, so the
 module could never be instantiated by anything. Machine-checked at
-`src/ProbeLJ171A.agda:170-173` (`tagEq-refutes`), re-run by the orchestrator.
+`archive/probes/ProbeLJ171A.agda:170-173` (`tagEq-refutes`), re-run by the orchestrator.
 
 **The same audit found the slot fix of `[LJ-1.55]` HOLDS**: the frame's row
 facts land at the telescope's slots definitionally. The defect is the
@@ -3486,7 +3486,7 @@ arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩ → ⟨ fst v ∈ fst (lookup K �
 singleton, so it asserts that EVERY set belongs to `K`, including `K`.
 `[LJ-1.77]` machine-checked the refutation in one step through the delivered
 `∈-irrefl`: `arityK ⁅X⁆ X (X ∈ ⁅X⁆)` gives `X ∈ X`
-(`src/ProbeLJ177A.agda:75-78`, green at 2.47 s). `innerK`, `innerPairK` and
+(`archive/probes/ProbeLJ177A.agda:75-78`, green at 2.47 s). `innerK`, `innerPairK` and
 `pairK` are the same shape without any premise at all, refuted by a
 membership cycle rather than by irreflexivity, and they stay INFERRED
 because the tree delivers no no-cycle lemma.
@@ -3515,7 +3515,7 @@ to find these**: the orchestrator's one-line regex over-matched and flagged
 writing.
 
 **Provenance:** `agents/reports/archive/lj-1.71-report.md` sections 0 to 2;
-`src/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
+`archive/probes/ProbeLJ171A.agda`, re-run by the orchestrator; commit `c21b417`, whose
 claim that the twenty-four hypotheses were discharged is false.
 
 ### C-39. A brief's prohibition binds harder than its goal: an agent stops at the wall and never reports the door behind it
@@ -3540,7 +3540,7 @@ the stop.**
 supplied. It measured the T-slot tie for `entryK` absent at the site, which
 was true, and stopped with ten facts unattempted. `[LJ-1.99]` then measured a
 second tie GREEN: four applications of the delivered `KFacts.arityK`
-(`src/L/Condensation.lagda.md:5769-5770`), `src/ProbeLJ199A.agda:65-204`. The
+(`src/L/Condensation.lagda.md:5769-5770`), `archive/probes/ProbeLJ199A.agda:65-204`. The
 question had at least two candidate ties and the criterion admitted one.
 
 `[LJ-1.102]` was told "Do not add a hypothesis to the row to make the tie
@@ -3591,10 +3591,10 @@ record's elaborations carry.
 
 **The supply is unaffected and was measured separately.** All three tied
 shapes derive from `sucK` plus the existing `pairK` at the generic frame:
-`src/ProbeLJ1109A.agda`, module `TiesSupplied`, GREEN. **The wall is about
+`archive/probes/ProbeLJ1109A.agda`, module `TiesSupplied`, GREEN. **The wall is about
 where the fact is STATED, never about whether it is true or useful.**
 
-**Provenance:** `agents/reports/lj-1.109-report.md` section 2; `src/ProbeLJ1109A.agda`;
+**Provenance:** `agents/reports/lj-1.109-report.md` section 2; `archive/probes/ProbeLJ1109A.agda`;
 the green master at commit `c728e8b` plus the tie landing. Related: [[P-l]],
 [[P-o]], [[P-i]] class 3, and [[P-w]], which measures the same multiplication
 for module applications rather than record fields.
