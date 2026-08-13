@@ -2710,8 +2710,25 @@ ac_baseline_ghcrts = "-A64m -I0 -M8g"
 #
 # THE BAR TIGHTENED 17.7 PERCENT and the owner accepted the consequence: the
 # six masters left the baseline and joined gch_wing, so DD24 now judges them.
-ac_baseline_module_rate = 0.011828
-ac_baseline_module_lines = 17185
+# RE-MEASURED 2026-08-13 on the CURED tree, and the figure FELL 22.7 percent.
+# [LJ-1.147] sealed satGraphAt at src/L/Coding/Graph.lagda.md and the AC side
+# got faster, because the sealed machinery is shared upstream: Choice/Internal
+# and Choice/Adequate together went 24.18 s to 14.09 s, minus 41.7 percent.
+#
+# THE CURE MADE THE BAR HARDER TO CLEAR, and [LJ-1.147] said so before this ran
+# and marked it INFERRED on four masters. The measurement is worse than its
+# estimate. The GCH wing was 1.56x this baseline before the seal; it is about
+# 1.92x after, because the seal helps the AC side MORE than it helps the wing.
+# That is DD4 working exactly as ruled and DD24 reading worse for it.
+#
+# 0.009143 s/line, 157.22 s over 17,197 lines, 73 cone masters, each cold with
+# dependencies warm, at the GHCRTS above. ONE run per master, with the series
+# warm-up DISCARDED: [LJ-1.148] MEASURED a fixed first-run penalty of about
+# 0.9 s per series, so every figure before 2026-08-13 evening carries it once.
+# Between-series uncertainty is 12.8 percent, which is most of DD24's 1.15x
+# tolerance, and check-ratio.py now prints its own spread.
+ac_baseline_module_rate = 0.009143
+ac_baseline_module_lines = 17197
 
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same

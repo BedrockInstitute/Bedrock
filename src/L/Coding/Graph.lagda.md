@@ -188,21 +188,34 @@ many binders as it likes.
 <!--/-->
 
 ```agda
-satGraphAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
-satGraphAt B x y = satGraphOn (var Bi ≐ var (sh3 B)) x y
-
 GraphWitAt : ∀ {n} → Fin n → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
 GraphWitAt B x y γ = GraphWitOn (lookup B γ) x y γ
 
-graphAt-in : ∀ {n} (B x y : Fin n) (γ : S ^ n)
-           → ∥ GraphWitAt B x y γ ∥₁ → ⟨ γ ⊨ satGraphAt B x y ⟩
-graphAt-in B x y γ =
-  graphOn-in (var Bi ≐ var (sh3 B)) (lookup B γ) x y γ (λ _ _ _ e → e)
+-- SEALED (P-t), and the reason is a measurement rather than a preference.
+-- This formula is a conjunct of three larger ones, and every consumer of
+-- those splits them.  A split REDUCES the conjunct's type while the
+-- consumer's own signature names it FOLDED, so the conversion checker walks
+-- the whole tree to see that the two agree.  Open, that one coercion cost
+-- 2,459 ms at the site this seal serves; sealed, both sides are the same
+-- stuck head and the check is syntactic.  The two readers below are the
+-- official unfolding, so no consumer needs `unfolding` to build or read a
+-- witness.
+opaque
+  satGraphAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+  satGraphAt B x y = satGraphOn (var Bi ≐ var (sh3 B)) x y
 
-graphAt-out : ∀ {n} (B x y : Fin n) (γ : S ^ n)
-            → ⟨ γ ⊨ satGraphAt B x y ⟩ → ∥ GraphWitAt B x y γ ∥₁
-graphAt-out B x y γ =
-  graphOn-out (var Bi ≐ var (sh3 B)) (lookup B γ) x y γ (λ _ _ _ h → h)
+opaque
+  unfolding satGraphAt
+
+  graphAt-in : ∀ {n} (B x y : Fin n) (γ : S ^ n)
+             → ∥ GraphWitAt B x y γ ∥₁ → ⟨ γ ⊨ satGraphAt B x y ⟩
+  graphAt-in B x y γ =
+    graphOn-in (var Bi ≐ var (sh3 B)) (lookup B γ) x y γ (λ _ _ _ e → e)
+
+  graphAt-out : ∀ {n} (B x y : Fin n) (γ : S ^ n)
+              → ⟨ γ ⊨ satGraphAt B x y ⟩ → ∥ GraphWitAt B x y γ ∥₁
+  graphAt-out B x y γ =
+    graphOn-out (var Bi ≐ var (sh3 B)) (lookup B γ) x y γ (λ _ _ _ h → h)
 ```
 
 <!--en-->
