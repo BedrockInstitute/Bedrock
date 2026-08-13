@@ -47,7 +47,7 @@ nobody finishes reading binds nothing.
   `AGENTS-diff-approved:` trailer, which `scripts/check-agents-guard.py` refuses to go
   without.
 - **Never:** commit generated files (anything under `_build/`, woven mono-lingual `.lagda.md`)
-  or probe files (`src/Probe*.agda`); DELETE retired code (archive it); translate developer
+  or a probe under `src/`; DELETE retired code (archive it); translate developer
   docs; use an em dash in any language; use half-width sentence punctuation in CJK prose;
   commit or print deployment secrets; add an unpinned or globally-installed dependency; add an
   in-file `SPDX-*` header.
@@ -90,7 +90,7 @@ turns a rule into false safety.
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
-| **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `archive/dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`; the orchestrator; briefs |
+| **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; the whole `D` series was archived on 2026-08-09 when the route changed, and a `D` citation still resolves against the archive | `dev/PLAN.md` section 3, and `archive/dev/DECISIONS-archived.md` for the retired series | `scripts/check-rule-ids.py`, which resolves every code AND refuses a bare `D<n>` where a `DD<n>` row exists, so the two series cannot be confused silently. **It cannot tell which series an author MEANT**; `dev/JOURNAL.md`, `dev/memos/` and `agents/` are exempt as dated records, and a file may declare its whole series once. The orchestrator; briefs |
 | **Dispatch, slots, briefs, audits.** **DD17 has TWO versions and ONE switch picks between them:** `scripts/dispatch_policy.py`, which prints the version in force and why. The brief's `tier:` line names the head AND the version; if the justifying sentence will not write, take the head the table gives | `scripts/dispatch_policy.py`, operated by `dev/ORCHESTRATION.md` section 1 | **PARTIAL.** `check-dispatch-policy.py` reads every brief against the switch. It CANNOT see which head actually RAN: an in-harness dispatch passes through no tool |
 | **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `scripts/ledger.py --check` |
@@ -132,13 +132,12 @@ audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATIO
 ## Probes, gates and estimates
 
 **Verify the load-bearing assumption cheaply before heavy or hard-to-reverse work.** Build the
-smallest decisive miniature, report GO or NO-GO with a price, throw it away. A probe prices THIS
-setting; it never re-proves what the literature or the delivered tree settles. A probe is thrown
-away once its verdict is recorded, and `src/` is where it may never be committed
-(`scripts/check-probes.py` enforces that, because `git add -f` walks past an ignore rule). **The
-exception is a probe a document points INTO at a `file:line`: it has become the evidence for a
-checkable claim, and it goes to `archive/probes/`.** Run `scripts/check-probes.py --stale` when
-your task closes.
+smallest decisive miniature and report GO or NO-GO with a price. A probe prices THIS setting; it
+never re-proves what the literature or the delivered tree settles. **Write it in
+`agents/reports/<TASK>/`, beside your report, and run it there.** It is tracked, it is never
+deleted, and **nothing typechecks it once your task closes, so run it while you can.** **`src/`
+is forbidden**, and `scripts/check-probes.py` enforces that because `git add -f` walks past an
+ignore rule. `dev/LESSONS.md` **D-1** is the rule.
 
 **Gate every block before you fund it.** Measuring the widest unmeasured term is what turns a
 projection into a price. **A build brief that cannot name that term, and the probe that measures
