@@ -2523,7 +2523,45 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # seconds lever, and here it moved the two terms in OPPOSITE directions. Do not
 # read the 0.26 s as a saving; it is inside noise. Read it as evidence that
 # 110 lines of constant-free reader cost nothing to check.
-ac_baseline_seconds_per_line = 0.007847
+#
+# RE-MEASURED 2026-08-13 by [LJ-1.128]. The guard fired on a 179-line drift,
+# which is [LJ-1.122]'s generic environment-set in L.Coding.EnvSet and
+# L.Coding.Sound, added beside the numeral version and not replacing it. The
+# new figure is 0.008793 s per line, 151.11 s over 17,185 lines, five cold
+# runs: 150.24 / 149.33 / 154.11 / 153.31 / 148.56, spread 5.55 s, every exit
+# 0. Against 0.007847 that is plus 12.05 percent.
+#
+# ALMOST NONE OF THAT RISE IS THE CONTENT, and a control run proves it rather
+# than argues it. I built the OLD tree, commit f48ffd7, cold on this machine on
+# this day: 149.06 and 147.85 s, mean 148.46, over its own 17,006 lines, which
+# a run of ledger.py in that worktree confirmed. Its recorded figure is
+# 133.45 s. So the IDENTICAL tree costs 11.2 percent more seconds today than it
+# did on 2026-08-11. The machine moved, not the mathematics.
+#
+# WHAT THE 179 LINES COST, on one instrument on one day: 151.11 s against
+# 148.46 s, plus 2.65 s or 1.79 percent, against a 5.55 s run-to-run spread.
+# The kernel counters are sharper than the wall clock, and they agree:
+# 1.940e12 instructions retired against 1.928e12, plus 0.62 percent, for plus
+# 1.05 percent of lines. P-q again, in the good direction: the added lines are
+# cheaper to check than the tree's mean line.
+#
+# THE MACHINE WAS NOT QUIET, and no tool can see this defect. `ps -Ao pcpu`
+# during the runs showed GF-Trader at about 82 percent across two helpers,
+# Bitcoin-Qt at 49, WindowServer at 28 and three WebKit renderers at about 25
+# each. The CPU CLOCK WAS NOT THE CAUSE: 4.02 to 4.05 GHz on every run, no
+# thermal warning, AC power, peak resident set 1.18 GiB. The instructions per
+# cycle fell instead, a measured 3.20 to 3.25 today against an implied 3.57 on
+# 2026-08-11, which is what memory contention does to this workload. The 3.57
+# assumes the clock was the same that day, and no counter was recorded then.
+#
+# SO THE BAR IS ABOUT 11 PERCENT LOOSE, AND THE DIRECTION MATTERS. A baseline
+# measured under load lets a wing module spend seconds it should not. The
+# figure below is still written as MEASURED, because that is what the
+# instrument said, and a paper rescale is exactly what this guard refuses. The
+# normalization is recorded here instead, for a reader who needs it: 0.007847
+# times 151.11 over 148.46 is 0.007987. RE-MEASURE ON A QUIET MACHINE before
+# DD24 judges any wing module against this number.
+ac_baseline_seconds_per_line = 0.008793
 
 # THE TREE THE BASELINE WAS MEASURED ON, and the reason this field exists.
 # A seconds-per-line baseline is a property of a SPECIFIC tree, not a constant.
@@ -2541,7 +2579,18 @@ ac_baseline_seconds_per_line = 0.007847
 # So the tools REFUSE the baseline when standing has moved away from this
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
 # in scripts/ledger.py and the guard in scripts/check-ratio.py.
-ac_baseline_lines = 17006
+# WRITTEN WITH THE FIGURE ABOVE, 2026-08-13, and never apart from it. The two
+# terms are one measurement: 17,185 in-fence lines, the cold-build cone of
+# src/Landmarks.lagda.md, 74 masters and 73 of them counted, measured by
+# scripts/ledger.py at HEAD rather than typed in.
+#
+# THE TWO TERMS DESCRIBE ONE TREE, and [LJ-1.128] checked that rather than
+# assuming it. A cold build compiles the WORKING tree, while count() reads
+# HEAD (scripts/ledger.py:120-129). The working tree carried uncommitted work
+# at src/L/Condensation/TwelveAgree.lagda.md. That master sits OUTSIDE the
+# cone, with the twelve others outside it, so both sums read 17,185 and the
+# build compiled HEAD content only.
+ac_baseline_lines = 17185
 # THE DENOMINATOR AND THE AC BUCKET ARE NOW ONE NUMBER, 16,897, and that is
 # what the owner's 2026-08-10 catalog ruling bought.
 #
@@ -2562,7 +2611,19 @@ ac_baseline_root = "src/Landmarks.lagda.md"
 # instrument: the ledger's own provenance measured 163.49 s against 133.69 s on
 # one tree, so the missing -A64m -I0 is worth 22.3 percent. check-ratio.py
 # reads this row and passes it through.
-ac_baseline_ghcrts = "-A64m -I0 -M16g"
+#
+# THE HEAP CAP CHANGED 16g TO 8g, 2026-08-13, and this row RECORDS the
+# instrument rather than choosing one. C-12 caps a dispatched agent at 8 GB, so
+# [LJ-1.128] measured at -M8g. Leaving 16g here would make the table describe a
+# run that nobody made.
+#
+# THE TWO CAPS ARE ONE INSTRUMENT ON THIS TREE, and the evidence is measured.
+# Peak resident set size is 1.18 GiB on every run. GHC turns on compacting
+# collection only above 30 percent of the maximum heap, which is 2.4 GiB at
+# -M8g, so the cap never binds and it changes no GC decision. The two flags
+# that DO decide are -A64m and -I0, and they are unchanged: the provenance
+# below prices their absence at 22.3 percent.
+ac_baseline_ghcrts = "-A64m -I0 -M8g"
 
 # THE SECOND CALIBER, measured 2026-08-10 by `check-ratio.py --recalibrate`.
 # 0.011472 s per line over 16,897 lines and 193.85 s, across 73 AC masters,
@@ -2716,6 +2777,42 @@ compression_seconds_ceiling = 133.4   # today's cold wall; no block may exceed i
 ac_baseline_tolerance_lines = 50   # noise, not a licence: a real compression is hundreds
 
 ac_baseline_provenance = """
+RE-MEASURED 2026-08-13 by [LJ-1.128]. Current figure: 151.11 s mean over
+17,185 in-fence lines across 74 masters, 73 of them counted, the cold-build
+cone of src/Landmarks.lagda.md. Ratio 0.008793. Five cold runs, 150.24 /
+149.33 / 154.11 / 153.31 / 148.56, spread 5.55 s, each exit 0. Protocol: the
+whole project interface store `_build/2.8.0/agda` moved aside, then removed
+before each later run, `GHCRTS=-A64m -I0 -M8g` per C-12, one process,
+/usr/bin/time -l. The cubical library keeps its 1,092 interfaces outside the
+project and stayed warm, as it did for every earlier figure here.
+
+THE CONTROL RUN IS THE FINDING, and it is why the plus 12.05 percent must not
+be read as a content regression. The OLD tree, commit f48ffd7, built cold on
+the same machine on the same day, measured 149.06 and 147.85 s, mean 148.46,
+over its own 17,006 lines. Its recorded figure is 133.45 s. The identical tree
+therefore costs 11.2 percent more seconds today. Against that control, the 179
+new lines cost 2.65 s, which is inside the 5.55 s spread, and 0.62 percent more
+retired instructions for 1.05 percent more lines.
+
+THE MACHINE WAS NOT QUIET, and the brief said it was. Measured during the runs:
+GF-Trader at about 82 percent over two helpers, Bitcoin-Qt at 49, WindowServer
+at 28, three WebKit renderers at about 25 each. Not throttling: 4.02 to 4.05
+GHz, no thermal warning, AC power. Instructions per cycle 3.20 to 3.25, against
+an implied 3.57 for the 2026-08-11 figure, which assumes that day's clock was
+the same. RE-ARM: re-measure on a quiet machine before DD24 judges a wing
+module, because a loaded baseline loosens the bar.
+
+THE MODULE-RATE CALIBER BELOW IS STALE BY THE SAME 11 PERCENT and was NOT
+re-measured. `ac_baseline_module_rate` was taken 2026-08-10 by `check-ratio.py
+--recalibrate`, which is 73 separate builds, and it is a property of that day's
+machine as much as this figure is of today's. check-ratio.py prefers it for a
+per-module verdict, so a wing module judged today reads about 11 percent worse
+than it is. [LJ-1.128] measured the whole-cone rate only, which is what the
+guard demands and what the brief funded.
+
+THE PREVIOUS FIGURE, superseded: 133.45 s over 17,006 lines, ratio 0.007847,
+measured 2026-08-11 by [LJ-1.31].
+
 RE-MEASURED 2026-08-10 by [LJ-0.5], AFTER the compression campaign closed.
 Current figure: 133.70 s mean over 16,916 in-fence lines across 74 masters,
 the cold-build cone of src/Landmarks.lagda.md. Ratio 0.007904. Three cold
