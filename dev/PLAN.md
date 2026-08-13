@@ -610,8 +610,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.130 | Move agent reports out of _build into git management | DONE | Owner ruled the layout: agents/reports, /archive, /briefs. 271 citations rewritten; agents/ is CC and lint-exempt |
 | LJ-1.131 | Price the V = L route against the ambient one | DISPATCHED | Owner leans V = L on elegance. DD8 gate: price both, and say which the mathematics prefers |
 | LJ-1.132 | Salvage what is left in _build | 24 DELETED, 11 REHOMED, 14 ARCHIVED | Seven lifecycle classes, not four. literature/ must stay: copyrighted, and a re-fetch loses the OCR line numbers |
-| LJ-1.133 | Give the probes a lifecycle and settle where evidence lives | 284 TO 98, 160 ARCHIVED | 283 on disk, 244 cited by a report. check-probes exists to keep them OUT of git; evidence must stay checkable |
+| LJ-1.133 | Give the probes a lifecycle and settle where evidence lives | 284 TO 1, 257 ARCHIVED | the stale rule was backwards and would have deleted 234 |
 | LJ-1.134 | Probe block A2, the A-prime route's widest term | GO, 207 LINES | The fibre extraction and the composite elaborate. A-prime's 760 to 1,320 price stands; a carrier crossing is new |
+| LJ-1.135 | Re-measure ac_baseline_module_rate | DISPATCHED | Stale by about 11 percent and check-ratio prefers it per module, so a wing module reads worse than it is |
+| LJ-1.136 | Gate the remaining A-prime blocks | 705 PLUS A5 UNPRICED | A2 and A3 are measured; A1, A4, A5, A6, A7 are bands. No block gets funded on a band centre |
+| LJ-1.137 | Apply the four ruled AGENTS blocks and pay for them by trimming | 2,244 WORDS, 56 FREE | Two sentences are false today. The blocks cost 129 words and 43 are free, so the file funds them |
+| LJ-1.138 | Give the probe lifecycle a correct trigger and a real execution point | DISPATCHED | The clock is mtime and nothing runs the sweep, so 284 probes accumulated |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio, cold. PLUS an independent read of what did not need to be there: DD5 measure 3. Read P-m, P-q, P-t |
