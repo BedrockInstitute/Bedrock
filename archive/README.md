@@ -10,8 +10,27 @@ registry that indexes it is [dev/ARCHIVE.md](../dev/ARCHIVE.md).
 The archive holds retired modules, each at its ORIGINAL path under `archive/`,
 so provenance is self-evident and `git log --follow` keeps working. A module
 retired from `src/L/Coding/Sequence.lagda.md` lives at
-`archive/src/L/Coding/Sequence.lagda.md`. Nothing else belongs here: no live
-code, no probes, no generated files, no half-maintained second tree.
+`archive/src/L/Coding/Sequence.lagda.md`. No live code, no generated files, no
+half-maintained second tree.
+
+**PROBES ARE ADMITTED, ruled by the owner on 2026-08-13.** This line used to
+read "no probes", and it was written before `archive/tooling/`,
+`archive/kits/` and `archive/measurements/` existed, none of which fits it
+either. The reason is that a probe changes species when a report cites it: it
+stops being a throwaway miniature and becomes the evidence for a `file:line`
+claim, and this project's whole discipline is that a claim is checkable.
+
+**`archive/probes/` is where such a probe goes.** A probe that no report cites
+is still throwaway and is still deleted; D-1 is unchanged for it.
+
+**`scripts/check-probes.py` now knows the difference**, taught by `[LJ-1.133]`
+on 2026-08-13. `archive/probes/` is its ONE exemption; every other path keeps
+the old refusal, and a probe under `src/` is refused absolutely. The rule was
+bought on 2026-08-04, when one `git add -A src/` committed 13 probe files.
+The checker gives every probe under `src/` one of four verdicts, and only two
+of them are automatic: it archives EVIDENCE and deletes ORPHAN, it never
+touches FRESH, and it refuses to decide NAMED because only reading the report
+settles that one. `archive/probes/README.md` states the test.
 
 ## Outside every gate
 
