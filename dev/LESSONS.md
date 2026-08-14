@@ -3911,3 +3911,68 @@ record all along; `dev/JOURNAL.md`, 2026-08-14, for the file-move episode.
 Related: [[C-39]], an agent cannot contradict its brief; [[C-40]], verify the
 consumers and not the author's own check; [[C-32]], a cure invalidates every
 downstream measurement.
+
+### C-45. An assumed equation in a telescope is a performance idiom when `refl` closes it, and a HYPOTHESIS when it does not
+
+**Rule:** A module parameter whose TYPE is an equation between two
+independently quantified terms is either a cheap idiom or an undischarged
+hypothesis, and **the telescope cannot tell you which.** **So audit the
+INSTANTIATION, never the telescope.** **Any parameter of that shape makes the
+instantiation audit mandatory before its module's result may be recorded as
+delivered.**
+
+**Why the reader cannot separate them.** The idiom binds a term the caller will
+supply by `refl`, and it exists to stop the elaborator normalizing that term at
+every use. The hypothesis binds an equation nobody can prove. **In the source
+they are the same three tokens.** **`exit 0` separates them not at all: a
+module with a false hypothesis typechecks, and it typechecks FAST.**
+
+**Measured, 2026-08-15.** `src/L/Coding/Sequence.lagda.md:332` and
+`agents/tasks/LJ-1-184/ProbeLJ1184B.agda:112` carry the SAME shape. **The first
+is closed by `refl` at `src/L/Hierarchy.lagda.md:539`, and the comment at
+`:540-541` records the 85 seconds it saves. NOTHING closes the second.**
+
+**The cost, and it is the law's measurement.** `[LJ-1.184]` recorded
+`AmbientRead` as SUPPLIED and `theorem` as coming out, both green. **Both sit
+inside a telescope carrying `q : Graph {2} zero (suc zero) ≡ embed φ₀`**, and
+`agents/tasks/LJ-1-184/ProbeLJ1184C.agda:83` RELAYS `q` rather than discharging
+it: `module AS' = P184B.AmbientStep AS AA AG so sb ad av ast gout φ₀ q`.
+**Nothing in the repository instantiates that telescope.** **`dev/PLAN.md` read
+`amb is SUPPLIED` for days**, and two later dispatches were briefed on it as a
+green fact.
+
+**`[LJ-1.184]`'s section 0.2 is the proof that honesty is not enough.** It
+declared its own residue unprompted, named six readings, and omitted the
+seventh hypothesis of its own module telescope. **A report that audits its
+conclusions will still miss a parameter, because the parameter is not a
+conclusion.**
+
+**The extent, MEASURED by a sweep of 4,165 telescopes.** The bare count, 1,379
+equation parameters, is useless. **The BOUNDARY is the result: the idiom form
+has one independent side and closes by `refl`; the hypothesis form has
+independent terms on BOTH sides, so `refl` is impossible.** **Seven
+undischarged sites of the second form**, all in the probe layer. **The
+delivered book is clean.** **And the retired route did it too:**
+`archive/src/2026-08-09-rud-route/L/Condensation.lagda.md:208` parameterizes
+`CrossOut` and never instantiates `σᴹ`, with `:806-809` naming the owed
+equivalence. **So the same crossing has been parameterized and left
+undischarged twice, on two different routes.**
+
+**THE ACTION** (C-37: a law states what to DO). **Before recording a module's
+result as delivered, search for every application of that module and check
+that each equation parameter is given a real term.** **One search settles it:
+`[LJ-1.243]` found `AmbientStep` applied at exactly one site, with every
+argument the caller's own parameter.**
+
+**Enforcement: the return audit, and a checker is possible.** **The trigger is
+syntactic** and a checker could flag a module parameter whose type is `_≡_`
+between terms that both mention an earlier parameter, then require the return
+to name an instantiation. **It is not built.** **This is C-38 sharpened to a
+syntactic trigger:** C-38 says a hypothesis is discharged when something
+SUPPLIES it, and this law says which telescopes make that check mandatory.
+
+**Provenance:** `agents/tasks/LJ-1-243/lj-1.243-report.md` sections 2 and 6,
+which measured the sweep and the boundary;
+`agents/tasks/LJ-1-242/lj-1.242-report.md`, which found the parameter;
+`agents/tasks/LJ-1-184/lj-1.184-report.md` section 0.2, the honest report that
+missed it. Related: [[C-38]], [[C-44]], [[C-35]].
