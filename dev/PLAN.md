@@ -794,7 +794,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.251 | DD25 review of LJ-1.250 | UPHELD. THE PRICE WAS ALREADY IN PLAN 0.0 | About 400 lines. Ten dispatches re-derived open work item 1, which I rewrote around twice |
 | LJ-1.252 | Can omega in lam be supplied | MUST BE ADDED, AND IT IS CHEAP | Five lines at one consumer. Branch 1 refuted by COUNTERMODEL at lam = omega. Step 6 is fundable |
 | LJ-1.253 | Close A-prime's last two reading residues | 1,089. A PRICE. BOTH RESIDUES DISSOLVE | A6's 47 was a double-count of the graph LJ-1.217 later measured at 296. Reading residue is now ZERO |
-| LJ-1.254 | BUILD step 6, the 28 fields, now its join is measured open | DISPATCHED | LJ-1.252 settled all four branches. sucK is inside the 28 and is the known 8 GB waller |
+| LJ-1.254 | BUILD step 6, the 28 fields | 1 OF 28, PLUS THE JOIN. sucK DOES NOT WALL | envSetK is green, and it sits beneath 11 of the 28. 141 lines for the first field plus two lemmas |
+| LJ-1.255 | Build the eleven fields envSetK unlocks | DISPATCHED | The join is green and 11 of the 28 sit on it. Their terms and delivered readers are all named |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.248 | Route A-prime's total | 1,150 ARITHMETIC, and THREE named causes | Per-tower half MEASURED at 146. The last reading residue is 47 lines, 4 percent, down from 555 |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |
