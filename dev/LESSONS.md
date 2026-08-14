@@ -3755,19 +3755,19 @@ verify the consumers of a changed master; [[P-l]], a measured cure does not
 transfer by analogy, which is this law's mirror: **P-l stops a CURE from
 travelling, and C-42 stops a REFUTATION from stopping.**
 
-### C-43. The owner's exercise of their own authority is not evidence about the agent's rules
+### C-43. An escape hatch is the shape a wrong choice hides in, so a legal token is not a checked one
 
-**Rule:** The repository owner may set aside any ruling in this repository at
-any time, for any task, without giving a reason. **That act is the owner using
-their authority. It is NOT a precedent, NOT an interpretation of the ruling, and
-NOT permission for the orchestrator to do the same thing.** A temporary
-instruction binds the task it names and nothing else. **When the instruction
-ends, the ruling was never modified, because it was never being read.**
+**THE RULING IS `dev/PLAN.md` DD0 and this entry does not restate it.** DD0 says
+the owner's temporary instructions are not an interpretation of the `DD` rules
+and not an endorsement that the agent may disobey them. **What follows is the
+measured episode and the mechanical law it exposed.**
 
-**So the orchestrator may never derive a standing rule from a one-off owner
-instruction**, and the test is one question: **would the sentence justifying
-this choice write, citing the RULING rather than the owner's past act?** If it
-will not write, take what the rule gives.
+**Rule:** When a ruling provides an EXCEPTION with its own conditions, the
+exception's token becomes legal everywhere the checker looks. **So the checker
+can no longer separate a correct use of the exception from a wrong use of the
+ordinary rule, and it passes both.** Taking an exception's HEAD without its
+CONDITIONS is therefore invisible by construction. **Price a new exception by
+what it makes UNCHECKABLE, not only by what it permits.**
 
 **Measured, 2026-08-14.** The owner named `fable 5` for one adversarial review
 on 2026-08-13, by their own word, in a brief that says so. Two days later the
@@ -3791,10 +3791,9 @@ critical breakthrough. **Neither held.** Taking a tier's HEAD without its
 CONDITIONS is how an exception becomes a default, and nothing mechanical
 notices, because the head is legal.
 
-**Enforcement: the brief's tier line and the return audit.** The tier line names
-the head AND the version, and the justifying sentence is written OUT when the
-head is not the table's. **No checker can hold this**, because the tokens are
-legal by construction; what the checker delivers is a trace an audit can find.
+**Enforcement: the brief's tier line and the return audit**, as DD0 fixes them.
+**No checker can hold this**, because the tokens are legal by construction; what
+the checker delivers is a trace an audit can find.
 
 **Provenance:** `agents/tasks/LJ-1-157/LJ-1.157.md` for the owner's one-off, and
 this session's four refused dispatches. Related: [[C-41]], a rule that keeps
