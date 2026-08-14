@@ -930,3 +930,71 @@ is ambient, so it is a shape and not a price.
 **One correction that strengthens the target rather than weakening it:** the
 160 was never a price for `pairω` at all. `lj-1.176-report.md:227-229` records
 it as row 1's number transferred to a different object.
+
+### 2026-08-15, `[LJ-1.240]`: I dropped four words, and two reports declined an archive that held the answer
+
+**TWO DEFECTS, and the first is mine alone.**
+
+#### The dropped qualifier
+
+**`[LJ-1.239]` wrote, at `lj-1.239-report.md:23-24`: the `lh` type as stated is
+not instantiable BY THE CITED PIECES.** **Those four words bound the claim to
+the recipe.**
+
+**My brief dropped them** (`agents/tasks/LJ-1-240/LJ-1.240.md:16`), **and
+`dev/PLAN.md` section 0.0 then read「REFUTED `lh`'s TYPE」and「uninhabitable
+hypothesis」.** **Neither phrase occurs in the report.**
+
+**`[LJ-1.240]` measured that the escalation is FALSE.** `φ₀` is a module
+parameter (`ProbeLJ1237A.agda:127-129`), so `lh`'s type is a FAMILY and the
+word UNINHABITABLE is not well formed until `φ₀` is fixed. At `φ₀ := ⊤̇` the member
+is inhabited. **`sl` and `sc` are green over an inhabitable hypothesis, and the
+arity-2 type is RIGHT:** Devlin's `∃z Φ(z,v,γ)` is arity 2 and `erase`
+PRESERVES arity (`src/FOL/Count.lagda.md:598`). `absFo` was the wrong
+instrument.
+
+**This is NOT C-44 and it is not「UPHELD BUT MISATTRIBUTED」.** **pi attributed
+its cause correctly, to the recipe. The misstatement happened AFTER the report,
+in my brief and in the status screen.** **A bounded claim became an unbounded
+one in one hop, and the hop was mine.**
+
+**The action, and it is as cheap as C-44's: when a report bounds a claim with a
+qualifying clause, the brief and the screen carry the clause or they carry
+neither.** The bounded form and the bare form are different claims that read
+alike.
+
+#### The archive that two reports declined
+
+**`[LJ-1.237]` and `[LJ-1.239]` each carried an ARCHIVE USED section recording
+the archive as surveyed and NOT bearing** (`lj-1.237-report.md:191-194`,
+`lj-1.239-report.md:170-172`). **Both said so plainly. Both were wrong.**
+
+**The retired route WROTE the object everyone was looking for.**
+`levelStory : Formula (⊥* {ℓ}) 2` at
+`archive/src/2026-08-09-rud-route/L/Condensation.lagda.md:600-601`, an arity-two
+constant-free level story, embedded to both carriers by `σᴹ` (`:768-769`) and
+`σL` (`:823-824`). **The numeral-closure's two primitives are written and
+constant-free: `zeroForm` (`:529-531`) and `sucAt`
+(`archive/src/2026-08-09-rud-route/L/LevelKit.lagda.md:567-571`).**
+
+**The archive gives the SHAPE and never a discharge**, and `[LJ-1.240]` says so
+itself: `Cl = ⊤̇` there (`:592-593`) and `CrossOut σᴹ` is never applied.
+
+**THE ENFORCEMENT GAP, named rather than hoped away.** DD18 requires an ARCHIVE
+USED section on every return, and `dispatch.py` refuses a brief without an
+ARCHIVE section. **Nothing checks whether a return that says「surveyed, does not
+bear」actually opened anything.** **A judgement of non-relevance is
+unfalsifiable as written.** **A candidate cure that costs nothing: require a
+return claiming the archive does not bear to name ONE archived file it opened
+and one line it read.** That converts an unfalsifiable judgement into a
+checkable one. **It is not built and it is not a rule until it is measured.**
+
+#### What the review did NOT do, and it matters
+
+**It attacked `[LJ-1.239]` section 3 and its attack FAILED**, and it reported
+the failure. It argued that binding the tag slots without defining them would
+suffice for `lh` alone, and that dies at `amb`
+(`agents/tasks/LJ-1-178/ProbeLJ1178A.agda:190-192`): an unconstrained tag
+satisfies the formula at a wrong `v`. **So the numeral-closure is real, and it
+is owed to `amb` rather than to `lh`.** **A review that reports its own failed
+attack is worth more than one that only reports its successes.**
