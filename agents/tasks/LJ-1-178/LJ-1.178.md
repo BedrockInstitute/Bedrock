@@ -37,8 +37,8 @@ halves do not have to land together.
 
 ## THE ABORT CRITERION, fixed BEFORE the run (D-1)
 
-- **BOTH BUILT.** Report the lines, the seconds against DD27's figure, and
-  whether `theorem` derives. STOP.
+- **BOTH BUILT.** Report the lines, the seconds as measured, and whether
+  `theorem` derives. STOP.
 - **ONE BUILT.** `[LJ-1.151]` measured the halves separable, so **landing one is
   a real result.** Report it and name what the second needs.
 - **A NEW WALL.** Name the term you could not write, at `file:line`, and stop.
@@ -153,7 +153,7 @@ Run `.venv/bin/python scripts/rules.py --for build` and `--for probe`.
 - **C-38 as extended.** A hypothesis is discharged when something SUPPLIES it.
 - **C-42.** A refutation measures the site it names, never its extent.
 - **P-k, P-l, P-h, P-m, P-n, R-35, R-38, R-40, C-12, C-22, C-39, C-40.**
-- **DD8, DD27, D-1, D-10, D-26, D-29, D-30. I-5.**
+- **DD8, DD24, D-1, D-10, D-26, D-29, D-30. I-5.**
 
 ## CONSTRAINTS
 
@@ -165,6 +165,6 @@ Run `.venv/bin/python scripts/rules.py --for build` and `--for probe`.
 ## RETURN
 
 **Lead with what built and whether `theorem` derives.** Then the lines and the
-seconds against 0.009143. Then the supply search you ran before writing. Then
+seconds as measured, judged against nothing tightened. Then the supply search you ran before writing. Then
 the DD4 re-instantiation answer. Then what `[LJ-1.7]` still needs. **Mark every
 negative MEASURED or INFERRED.**
