@@ -46,7 +46,7 @@ broken, at 16 lines (`[LJ-1.160]`).
 
 | row | blocked on |
 |---|---|
-| `[LJ-1.7]` | **`levelIn` and `cover` are BUILT** (`[LJ-1.178]`), as functions of four named hypotheses, and `theorem` does NOT derive. **Two of `[LJ-1.160]`'s three open facts are discharged by transports the tree already delivers, so the debt moved off the collapse image onto the STAGE.** The new wall is `AmbientRead`, Devlin's (a) at the AMBIENT carrier: the tree delivers that read-off at the CLASS carrier only |
+| `[LJ-1.7]` | **`levelIn` and `cover` are BUILT** (`[LJ-1.178]`) and `theorem` does NOT derive. `AmbientRead` is **SUPPLIED** (`[LJ-1.184]`), closing one of four hypotheses. **`[LJ-1.196]` then measured NO-GO on the residue: the ambient port is 84 free lines PLUS A CHAPTER**, an outer-carrier port of the satisfaction coding, because `u`'s slot at the use site is the definable powerset of the recorded value and the induction never pins it. **The chapter is ANCHORED, not priced:** its class-carrier twin is 1,288 plus 395 in-fence lines, and P-l forbids transferring that |
 | `[LJ-1.8]`, the trophy | **A5 no longer carries `CSB` and carries ZERO replacement** (`[LJ-1.156]`). The new gate is `LeastCardInj`, 44 lines at 100.64 s. Route A-prime still has no TOTAL |
 | `[LJ-1.9]`, the audit | The wing reads **1.5x to 1.7x** and the instrument cannot separate those. **DD24 is the whole rule** (owner, 2026-08-14): the bar was fixed when the AC trophy landed, it does not drift, every GCH module uses it, and intermediate debt is ALLOWED because only the whole wing at the end is judged |
 
@@ -748,7 +748,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.193 | Build P3, the commit gate against live write territory | BUILT AND GREEN, IN make check | Two git add -A sweeps took a sibling's work. dispatch.py already computes the intersection |
 | LJ-1.194 | Build P4, the DD number-uniqueness check | BUILT, ONE CODE PATH FOR EVERY SERIES | I minted a duplicate DD27 and check-rule-ids reported CLEAN: it verifies resolution, never uniqueness |
 | LJ-1.195 | Consistency audit by document rank | 4 LIVE, 1 ALREADY FIXED | DD4's no-checker claim stood in four documents against a checker that gates. All four repaired |
-| LJ-1.196 | DefAt's ambient reading: 84 lines or a chapter | DISPATCHED | LJ-1.184 fixed this GO and NO-GO in advance. It is the last named term between levelIn and theorem |
+| LJ-1.196 | DefAt's ambient reading: 84 lines or a chapter | NO-GO: IT IS A CHAPTER | u's slot is d, the definable powerset of the recorded value, and the induction never pins it |
 | LJ-1.197 | Do build-manifest.toml and rules.toml actually FIRE | 7 FIRE, 5 SILENT, 1 UNPROVOKABLE | All five silent rules are build-manifest's, and its checker was in no gate at all |
 | LJ-1.198 | Close A6's open charge, the last cell that is not one number | DISPATCHED | A5 is priced at 547 now, so the charge A6 inherits is measurable. LJ-1.8 waits on this sum |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
