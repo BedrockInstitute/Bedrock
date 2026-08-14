@@ -212,8 +212,8 @@ the machine was quiet when I started.**
 - **The AFTER figure cannot exist.** There is no cure of mine to measure.
 - **A later measurement would not compare to `[LJ-1.158]`'s or
   `[LJ-1.173]`'s either**, because `[LJ-1.176]` changes both the wing's lines
-  and its seconds. **The wing is in motion and the debt cannot be re-measured
-  until it settles.**
+  and its seconds. **The wing is in motion and its gap to the bar cannot be
+  re-measured until it settles.**
 
 ## 3. THE TERM THAT REMAINS, and its ceiling is priced from an existing profile
 
@@ -266,8 +266,9 @@ probes also cut `Typing` by 36 percent and `Coverage` to zero, and
 
 ## 4. SHARED OR WING-LOCAL, for every candidate
 
-**This is the column DD27 turns on, so I give it for all five and not only for
-the one I would take.**
+**This is the column that decides whether a cure helps at all, so I give it for
+all five and not only for the one I would take.** A SHARED cure speeds the AC
+side too, and `[LJ-1.147]` measured that this makes the ratio WORSE.
 
 | candidate | site | SHARED or WING-LOCAL | status |
 |---|---|---|---|
@@ -283,34 +284,43 @@ the three `*Agree` masters are **NOT** in the AC baseline cone of
 `src/Landmarks.lagda.md`. **So a cure on any of them cannot move the
 denominator of DD24's bar, and `[LJ-1.147]`'s sting cannot fire.**
 
-## 5. THE DEBT, RE-MEASURED, and the range IS the instrument
+## 5. THE WING'S GAP TO THE BAR, and the spread IS the instrument
 
-**I cannot measure the wing today, so I re-derive the debt from the two most
-recent measured figures and show what separates them.**
+**I report no 「debt repaid」 figure, as the correction instructs.** I cannot
+measure the wing today, so I re-derive its GAP TO THE BAR from the two most
+recent measured figures and show what separates them.
 
 Bar `0.010514` s per line, which is `0.009143` at the 1.15x tolerance.
-**Debt = wing seconds minus bar times wing lines.**
+**Gap = wing seconds minus bar times wing lines.**
 
-| source | seconds | lines | on-bar seconds | **debt** | ratio |
+| source | seconds | lines | on-bar seconds | **gap to the bar** | ratio |
 |---|---:|---:|---:|---:|---:|
 | `[LJ-1.158]` after | 172.17 | 11,743 | 123.47 | **48.70 s** | 1.60x |
 | `[LJ-1.173]` stage zero | 164.60 | 11,825 | 124.33 | **40.27 s** | 1.52x |
 
-**THE BRIEF READS THESE AS A RANGE, 「40 to 49 seconds」. MEASURED: they are ONE
-WING MEASURED TWICE, and the 7.57 s between them is 4.5 percent, well inside
-the instrument's ±12.8 percent band.** `[LJ-1.173]:1554-1557` already says
-this in its own words and declines to report its 1.52x as a correction to
-1.60x. **So the honest statement is that the debt is about 44 s and the
-instrument cannot say whether it is 40 or 49.**
+**THE FIRST BRIEF READ THESE AS A RANGE, 「40 to 49 seconds」. MEASURED: they
+are ONE WING MEASURED TWICE, and the 7.57 s between them is 4.5 percent, well
+inside the instrument's ±12.8 percent band.** `[LJ-1.173]:1554-1557` already
+says this in its own words and declines to report its 1.52x as a correction to
+1.60x. **So the honest statement is that the wing sits about 44 s above the
+bar, and the instrument cannot say whether it is 40 or 49.**
 
-**AND THAT SETS THE BAR FOR ANY CURE.** A cure smaller than about 21 s (12.8
-percent of 164.60) cannot be separated from the noise by ONE pair of runs.
-**Section 3.2's 5.2 s ceiling is a quarter of that.**
+**AND THAT SETS THE SIZE ANY CURE MUST BEAT.** A cure smaller than about 21 s
+(12.8 percent of 164.60) cannot be separated from the noise by ONE pair of
+runs. **Section 3.2's 5.2 s ceiling is a quarter of that.** **This is the
+brief's own test 「a cure worth funding here moves double figures of seconds」,
+and it is the test the next candidate fails.**
 
-**The brief's DD27 arithmetic checks out. MEASURED:** the bar minus the
-baseline is `0.010514 - 0.009143 = 0.001371` s per line, and 500 lines written
-at the baseline repay `0.69 s`, which is 1.6 percent of a 44 s debt. **New work
-cannot retire this debt and the brief is right about that.**
+**UNDER DD24 AS RULED ON 2026-08-14 THIS IS A DISTANCE, NOT AN ARREARS.**
+Intermediate debt is allowed, so the figure above says how far the wing must
+still come down before the whole GCH side is judged. **It does not say anything
+is overdue, and I do not multiply it into a repayment schedule.**
+
+**One arithmetic note, kept because it prices NEW work rather than a debt.**
+The bar minus the baseline is `0.010514 - 0.009143 = 0.001371` s per line. **So
+500 further lines written at the baseline rate bring the wing about 0.69 s
+closer to the bar.** **New work at the baseline moves this gap very little, and
+that is why a cure is the lever.**
 
 ## 6. DD4
 
@@ -453,6 +463,8 @@ near `src/`.**
 4. **The one candidate worth a probe is the 16 s billed outside definitions and
    outside `DeadCode`**, which is module-application instantiation. **P-w is
    the law that names it and nobody has measured it at this master.**
-5. **Consider whether the debt should be re-priced rather than retired.**
-   Section 5 measures that the instrument cannot tell 40 s from 49 s. **A cure
-   is asked to move a quantity the instrument reads with a ±21 s uncertainty.**
+5. **Note what the instrument can and cannot resolve before funding the next
+   cure.** Section 5 measures that it cannot tell 40 s from 49 s. **A cure is
+   asked to move a quantity the instrument reads with about ±21 s of
+   uncertainty**, so only a double-figure cure can be shown to have worked, and
+   only with more than one pair of runs.
