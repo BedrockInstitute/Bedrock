@@ -36,8 +36,8 @@ which `AGENTS.md` names as worse than no rule at all.
 
 THE OVERRIDE IS TEMPORARY. The field records the date it was set and the
 condition that reverts it, because a switch that records only its position
-loses why it is there. The owner cancels the override by word, and the state to
-return to is `normal`.
+loses why it is there. The owner sets a mode by word, and each mode is named
+for the head it LEADS with, so the name says what it does.
 """
 
 from __future__ import annotations
@@ -48,19 +48,19 @@ import sys
 # THE SWITCH. Edit this one value to change the policy. Nothing else.
 # ---------------------------------------------------------------------------
 
-VERSION_IN_FORCE = "normal"
+VERSION_IN_FORCE = "deepseek-subagent-mode"
 
 # The switch's own provenance. A position without a reason is a position
 # nobody can retire.
 SET_ON = "2026-08-14"
 SET_BY = "the repository owner"
-REASON = ("The owner cancelled the 2026-08-13 override BY WORD, which is exactly "
-          "the revert condition that override recorded for itself. No further "
-          "reason was given and none is invented here. The override's own reason "
-          "was QUOTA and never quality, so cancelling it says nothing about any "
+REASON = ("The owner cancelled the 2026-08-13 in-harness mode BY WORD, which is "
+          "exactly the revert condition that mode recorded for itself. No further "
+          "reason was given and none is invented here. That mode's own reason was "
+          "QUOTA and never quality, so cancelling it says nothing about any "
           "head's return quality.")
-REVERT_CONDITION = ("The owner sets an override by word. Set VERSION_IN_FORCE to "
-                    "that version and change nothing else. The last override ran "
+REVERT_CONDITION = ("The owner names another mode by word. Set VERSION_IN_FORCE to "
+                    "it and change nothing else. `in-harness-subagent-mode` ran "
                     "2026-08-13 to 2026-08-14 for QUOTA.")
 
 # ---------------------------------------------------------------------------
@@ -84,8 +84,30 @@ REVERT_CONDITION = ("The owner sets an override by word. Set VERSION_IN_FORCE to
 
 MODEL = "deepseek-v4-pro"
 
+#: THE RETIRED NAMES, and they must keep resolving. `normal` and `override` said
+#: WHICH ONE WAS THE EXCEPTION and never WHICH HEAD LEADS, so a reader had to
+#: open this file to learn what either meant. The owner renamed them
+#: 2026-08-14, by the head each one leads with.
+#:
+#: **52 frozen briefs carry `override` on their tier line.** A brief is a
+#: record and a record is never rewritten, so the old names resolve here
+#: forever. `dev/LESSONS.md` C-41 is the law: a retired name that stops
+#: resolving turns every citation of it into a dangling pointer, and one that
+#: resolves to the WRONG thing is worse still.
+ALIASES: dict[str, str] = {
+    "normal": "deepseek-subagent-mode",
+    "override": "in-harness-subagent-mode",
+}
+
+
+def canonical(version: str) -> str:
+    """The live name for a version, whether it is written new or retired."""
+    v = version.strip().lower()
+    return ALIASES.get(v, v)
+
+
 POLICY: dict[str, dict] = {
-    "normal": {
+    "deepseek-subagent-mode": {
         "summary": "The steady state. pi leads, codex backs it up, Opus reviews.",
         "cases": {
             "default": {
@@ -112,7 +134,7 @@ POLICY: dict[str, dict] = {
                  "made codex the default for EVERY dispatch. [LJ-1.126] made "
                  "pi viable on 2026-08-13 by landing streaming and resume."),
     },
-    "override": {
+    "in-harness-subagent-mode": {
         "summary": "Opus leads while the owner's weekly allowance permits it.",
         "cases": {
             "default": {
@@ -253,7 +275,8 @@ def render(version: str | None = None) -> str:
 def main() -> int:
     which = sys.argv[1] if len(sys.argv) > 1 else None
     if which in ("-h", "--help"):
-        print("usage: dispatch_policy.py [normal|override]")
+        print("usage: dispatch_policy.py "
+              "[deepseek-subagent-mode|in-harness-subagent-mode]")
         print("  no argument: print the version in force")
         return 0
     if which and which not in POLICY:

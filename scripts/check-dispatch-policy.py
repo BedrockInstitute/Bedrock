@@ -92,7 +92,13 @@ TIER_RE = re.compile(r"^tier:\s*(.*)$", re.M | re.I)
 # stripped. `tier: **opus, max effort.**` reads as `opus`.
 TOKEN_RE = re.compile(r"^[*_`\s]*([A-Za-z0-9][A-Za-z0-9-]*)")
 # The version a brief was chosen under, anywhere on the tier line.
-VERSION_RE = re.compile(r"\b(normal|override)\b", re.I)
+# BOTH THE LIVE NAMES AND THE RETIRED ONES. The owner renamed the versions on
+# 2026-08-14 because `normal` and `override` said which one was the EXCEPTION
+# and never which head LEADS. 52 frozen briefs carry `override`, and a brief is
+# a record that is never rewritten, so this pattern must keep matching it.
+# `P.canonical()` maps a retired name to its live one; C-41 is the law.
+VERSION_RE = re.compile(
+    r"\b(deepseek-subagent-mode|in-harness-subagent-mode|normal|override)\b", re.I)
 
 
 def tier_line(text: str) -> str | None:
@@ -221,7 +227,7 @@ def check_briefs(version: str) -> tuple[list[str], list[str]]:
         # trace is exactly what says which table the choice was made from.
         # C-41's shape: a rule keeps reading true after its world has changed.
         m = VERSION_RE.search(line)
-        chosen = m.group(1).lower() if m else version
+        chosen = P.canonical(m.group(1)) if m else version
         adversarial_ok = P.expected_tier_tokens("adversarial", chosen)
         if is_adversarial(text) and token not in adversarial_ok:
             sink.append(
