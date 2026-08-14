@@ -29,12 +29,14 @@ Nobody reads code to answer "which head runs this task".
 
 **TWO VERSIONS SINCE 2026-08-13, and exactly one is in force.**
 
-- The **normal** version leads with pi and reviews with in-harness Opus 5.
-  **Its default is pi and NOT codex, which is a real change to DD17 rather
-  than a restatement of it:** DD17 as first written made codex the default for
-  every dispatch, and `[LJ-1.126]` made pi viable on 2026-08-13 by landing
+- The **normal** version and the **override** version each name a head per
+  case, **and THIS FILE NAMES NEITHER.** `scripts/dispatch_policy.py` is the one
+  home; run it. **A head restated here is canonical twice, which DD19 forbids,
+  and it is how the old fixed-tier text drifted.** The normal version's default
+  changed once already, and `[LJ-1.126]` made that possible on 2026-08-13 by
+  landing
   streaming and resume.
-- The **override** version leads with in-harness Opus 5 and reviews with pi.
+- One version is TEMPORARY and its reason is QUOTA, never quality.
   **It is TEMPORARY and its reason is QUOTA, never quality.** The owner has most
   of the week's allowance left, and `[LJ-1.121]` measured pi's return quality as
   fully acceptable. The owner cancels it by word, and the state to return to is
@@ -71,8 +73,8 @@ together.
 
 **THE HEAD FOLLOWS THE SWITCH, and the mechanism does not.** DD25 says a
 negative return is reviewed; `scripts/dispatch_policy.py` says by whom. Under
-the normal version the critic is in-harness Opus 5; under the override it is
-pi. **The rule that survives both is that the critic is never the author**, so
+each version the critic is whichever head the switch's adversarial row gives.
+**The rule that survives both is that the critic is never the author**, so
 a return the review's own head produced goes to the other head.
 
 **The trigger.** A refusal, a NO-GO, a RED gate, a stop taken as the

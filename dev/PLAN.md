@@ -48,7 +48,7 @@ broken, at 16 lines (`[LJ-1.160]`).
 |---|---|
 | `[LJ-1.7]` | **`levelIn` and `cover` are BUILT** (`[LJ-1.178]`), as functions of four named hypotheses, and `theorem` does NOT derive. **Two of `[LJ-1.160]`'s three open facts are discharged by transports the tree already delivers, so the debt moved off the collapse image onto the STAGE.** The new wall is `AmbientRead`, Devlin's (a) at the AMBIENT carrier: the tree delivers that read-off at the CLASS carrier only |
 | `[LJ-1.8]`, the trophy | **A5 no longer carries `CSB` and carries ZERO replacement** (`[LJ-1.156]`). The new gate is `LeastCardInj`, 44 lines at 100.64 s. Route A-prime still has no TOTAL |
-| `[LJ-1.9]`, the audit | The wing went 2.06x to **1.60x** on wing-local cures. The bar is 0.010514, which is 1.15x the 0.009143 baseline |
+| `[LJ-1.9]`, the audit | The wing reads **1.5x to 1.7x** and the instrument cannot separate those. **DD24 is the whole rule** (owner, 2026-08-14): the bar was fixed when the AC trophy landed, it does not drift, every GCH module uses it, and intermediate debt is ALLOWED because only the whole wing at the end is judged |
 
 **THE OPEN WORK, in dependency order.**
 
@@ -82,15 +82,6 @@ module-application instantiation, and it is UNMEASURED.**
   `[LJ-1.155]` then found the counter-case: a wing-local cure does not move the
   denominator, and the wing went 2.06x to 1.60x. **So the ruling is no longer
   forced, but the bar still reads a shared cure as a regression.**
-- **WHICH BAR PRICES A NEW MODULE. Two are live and they differ by 1.16
-  times.** DD24's bar is **0.007913**, the delivered AC WING over 16,897 lines
-  (`[LJ-0.5]`). The ledger's `ac_baseline_module_rate` is **0.009143**, the
-  MODULE rate over 17,197 lines, re-measured 2026-08-13 on the cured tree.
-  `[LJ-1.136]` used the module rate, `[LJ-1.156]` and `[LJ-1.159]` used DD24's.
-  Against 0.009143 the cured ambient chain is 12.5 times the bar; against
-  0.007913 it is 14.4 times. **My recommendation is the MODULE rate for a new
-  module**, because P-m says a rate is a content-class certificate and a wing
-  rate certifies a different object. **It costs no machine to answer.**
 - **The `build` bundle is FULL at the cap of 12, and C-42 did not go in.** I
   routed the new law to `recon` and `probe`, which had room, and to four trigger
   words. **A build acting on a refutation therefore reaches it through layer 2
