@@ -786,8 +786,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.217 | Re-price A6 from the green interface, with a clock cap | DISPATCHED | LJ-1.215 ruled A6 UNPRICED not WALLED. Start from ProbeLJ1198E, and pair-out is the fixed shape |
 | LJ-1.218 | LJ-1.9's audit: the wing's ratio and removable lines | 1.70x, GAP 60.0 s, 695 REMOVABLE | 523 of the 695 are one superseded chain, so the figure is 695 or 172. LJ-1.222 checks it |
 | LJ-1.219 | Join GenModel to Powerset at the ambient class | MODEL LINK COMPOSES, BRICK TWO LEAKS. DD25 [LJ-1.221] | Five Model names green ambient. Recover's keyOf leaks at :142. Plumbing 21 lines |
-| LJ-1.220 | Parameterize every leak instead of porting it, and census the chain once | DISPATCHED | One brick per dispatch prices 15 more dispatches. This prices the chain's width in one pass |
-| LJ-1.221 | DD25 review of LJ-1.216, LJ-1.219 and the brief pattern behind both | DISPATCHED | Both stopped by design. LJ-1.211 measured briefs cause 8 of 10 overturns, so my method is a target |
+| LJ-1.220 | Parameterize every leak instead of porting it, and census the chain once | DISPATCHED, CORRECTED | LJ-1.221 measured 10 suppliers left, not 15, and supply beats parameterize. Sent |
+| LJ-1.221 | DD25 review of LJ-1.216, LJ-1.219 and the brief pattern | UPHELD, MISATTRIBUTED, WASTEFUL | Brick two is two one-liners GenModel holds. I turned a typecheck order into a dispatch order |
 | LJ-1.222 | Check LJ-1.218's 523-line supersession before 695 reaches the ledger | DISPATCHED | A figure reaches three documents before anyone checks it, and this one discounts the DD5 benchmark |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |

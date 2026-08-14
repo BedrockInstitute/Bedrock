@@ -683,3 +683,46 @@ Twice a directory-wide `git add -A` swept in a sibling's work in progress; once
 a tool rewrite landed while another agent was measuring with that tool, and it
 lost four figures. **Commit by explicit path, and land a tool change only when
 no agent holds it.**
+
+### 2026-08-14, `[LJ-1.221]`: a typecheck order became a dispatch order, and I made the conversion
+
+**`[LJ-1.213]` measured that a fixed supplier module fixes the structure at
+import time. It never wrote the words ORDER, "bottom-up" or "port first"**, and
+a grep of `agents/tasks/LJ-1-213/lj-1.213-report.md` finds none of the three.
+It wrote "until each supplier is ported" beside an exit code.
+
+**`LJ-1.216.md:49-50` turned that into an ORDER. `LJ-1.219.md:23-26` then
+stamped the ORDER as MEASURED and told its agent to walk one link per task.**
+Both agents obeyed. Both returns are clean. **The conversion from a TYPECHECK
+order to a DISPATCH order is the step nobody measured**, and nothing forces one
+dispatch per link.
+
+**`[LJ-1.221]` measured the cost of that conversion.** Brick two was
+`L.Coding.Recover`. `src/L/Coding/Powerset.lagda.md:57` imports exactly two
+names from it, `keyOf` and `keyOf-fst`. Both are one-liners at
+`src/L/Coding/Recover.lagda.md:112-116`. **All four of their ingredients were
+already generic and green** in `agents/tasks/LJ-1-210/GenModel.agda`: `prʟ` at
+`:193`, `prʟ-fst` at `:196`, `numeralL` and `numeralL-fst` as module parameters
+at `:16-17`. **`GenModel.agda:215` carries a body character for character
+identical to `keyOf-fst`.** The probe had already applied that module at
+`JoinAtAmbient.agda:76-77`, and its `using` list at `:79-80` omitted the two
+names. **The repair sat 65 lines above the failure.**
+
+**A rule for a port, and it is cheap to apply: SUPPLY before you PARAMETERIZE.**
+A name that a ported generic module already exports is not a leak. **Count the
+supplied names and the parameterized names apart.** A census that merges them
+overstates the port.
+
+**「Port bottom-up」is not a fact about Agda's module system.** The delivered
+tree holds three counterexamples: `src/FOL/Absoluteness.lagda.md:57-59` supplies
+names at four classes and was never ported;
+`src/FOL/Coding.lagda.md:47-52` takes four operations and is instantiated at two
+structures, one of them at `GenModel.agda:212`; and `src/L/Hull.lagda.md:56-62`
+is a delivered generic module whose own comment cites DD4. **The order binds the
+typecheck, and it binds thick suppliers only.**
+
+**One literature figure was wrong in five documents.**「nine tower-neutral steps
+and three per-tower ones」appears in three briefs and two reports. **The table at
+`dev/literature/devlin-II5.md:370-383` has twelve rows: eight EITHER and four
+PER-TOWER. The word "nine" does not occur in the file.** The briefs are frozen
+records and stay as written. **The figure is 8 and 4.**
