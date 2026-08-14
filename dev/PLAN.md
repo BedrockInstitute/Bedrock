@@ -748,9 +748,13 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.173 | Restrict envSetK to a numeral arity, gate first | 21 FIELDS IN THREE RECORDS, CURE ATOMIC | My ruling's scope was one record; the sweep it ordered measured three. Cure 190, step 6 260 |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
 | LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
-| LJ-1.176 | Price A5 under a stated partition, and gate it first | BRIEF WRITTEN, HELD | A block owns objects and never counts another block's. A5 loses ShiftAbs to A6, so it is five objects |
+| LJ-1.176 | Price A5 under a stated partition, and gate it first | PRICED: 547 LINES, ZERO REPLACEMENT | An A5 object builds into L by ONE separation, 1.72 s. The 300-line item is DISSOLVED, not divided |
 | LJ-1.177 | Cure the Agree masters' second term | STOP: CURED FIVE DISPATCHES AGO | My premise was false, and LJ-1.158's row sits directly below LJ-1.155's in this table. Next lever caps at 5.2 s |
 | LJ-1.178 | Build levelIn and cover on the bypassed wall | DISPATCHED | LJ-1.160 measured the wall is an artifact of where the argument runs. Nobody has ever been funded to build it |
+| LJ-1.179 | DD25 review of LJ-1.169's NO-GO on the rank accounting | DISPATCHED | Four dispatches and a 21-field cure stand downstream of this NO-GO, and nobody re-checked it |
+| LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
+| LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | DISPATCHED | LJ-1.178 is building against this stop at this moment |
+| LJ-1.182 | DD25 review of LJ-1.162's NO-GO on price | DISPATCHED | A NO-GO on price needs no wall and no refutation, only an estimate. CrossOut is still unbuilt |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
