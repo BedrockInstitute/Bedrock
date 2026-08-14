@@ -764,7 +764,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.195 | Consistency audit by document rank | 4 LIVE, 1 ALREADY FIXED | DD4's no-checker claim stood in four documents against a checker that gates. All four repaired |
 | LJ-1.196 | DefAt's ambient reading: 84 lines or a chapter | NO-GO: IT IS A CHAPTER | u's slot is d, the definable powerset of the recorded value, and the induction never pins it |
 | LJ-1.197 | Do build-manifest.toml and rules.toml actually FIRE | 7 FIRE, 5 SILENT, 1 UNPROVOKABLE | All five silent rules are build-manifest's, and its checker was in no gate at all |
-| LJ-1.198 | Close A6's open charge | A WALL, NOT A NUMBER | One typecheck ran 3.06 hours and did not finish. The seven cells do not sum and LJ-1.8 stays blocked |
+| LJ-1.198 | Close A6's open charge | A WALL, NOT A NUMBER. DD25 review [LJ-1.215] | One typecheck ran 3.06 hours and did not finish. The seven cells do not sum and LJ-1.8 stays blocked |
 | LJ-1.199 | BUILD step 6, the satisfaction layer supply | STOP AT ZERO LINES: A JOIN | envSetNumeral needs omega in lam and HullStage's telescope has not got it. Found by reading, no Agda run |
 | LJ-1.200 | DD25 review of LJ-1.196's NO-GO | UPHELD BUT MISATTRIBUTED | The verdict and the reading are right. The cause is not Delta-0 and A CHAPTER is an unmeasured consequent |
 | LJ-1.201 | DD25 review of LJ-1.185's refutation of the 16 s | UPHELD BUT MISATTRIBUTED | The 16 s is dead, but the term is UNPRICED not unmeasurable, and Deserialization rose 8.3 s unowned |
@@ -772,15 +772,16 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.203 | Can herdr Agent Automation replace dispatch.py | OPTIMIZE AND COMPLETE, NEVER REPLACE | 74 pc is Bedrock law no herdr feature can carry. Only the wait protocol has a supersession |
 | LJ-1.204 | Deserialization rose 8.3 s at Condensation | CAUSED: OUR OWN arNum FIELD | Interface size REFUTED, 0.85 pc size against 8.1x time. The cure is a seal hypothesis, UNPRICED |
 | LJ-1.205 | Reconcile our dispatch SKILL against herdr's official one | 7 DELETED, 59 ADDED, ONE RULING OWED | Neither skill supersedes the other. blocked read as FINISHED and the owner ruled it |
-| LJ-1.206 | Measure herdr's wait supersession | DOES NOT HOLD, NOTHING LANDED | events.wait reproduces the at-once-idle flaw and cannot wait on a death. The hand-rolled protocol stands |
+| LJ-1.206 | Measure herdr's wait supersession | DOES NOT HOLD. DD25 [LJ-1.215] | events.wait reproduces the at-once-idle flaw and cannot wait on a death. Nothing landed |
 | LJ-1.207 | Auto-switch the mode on DeepSeek's peak clock | LANDED, AND THE PIN STILL WINS | VERSION_IN_FORCE = auto lets the clock select, and the printout names the window and next boundary |
 | LJ-1.208 | Gate DD25: a negative return whose row names no review | BUILT, PLUS A REGISTER I DID NOT ASK FOR | It found me misreporting DD25's record, and read it back: 71 pc overturn rate |
-| LJ-1.209 | Price the seal LJ-1.204 named | THE SEAL DOES NOT REACH: 83 ms | Emptying the numeral content moved 47 ms the WRONG way, so no restatement reaches the 8.2 s |
+| LJ-1.209 | Price the seal | SEAL DOES NOT REACH: 83 ms. DD25 [LJ-1.215] | Emptying the numeral content moved 47 ms the WRONG way, so no restatement reaches the 8.2 s |
 | LJ-1.210 | Is the chapter really 17 lines | THE CHAPTER DISSOLVES: 42 WRITTEN, 1,272 SURVIVE | Model is class-generic and typechecks first try. Both instantiations green. Devlin agrees |
 | LJ-1.211 | Why is the DD25 overturn rate 71 percent | BRIEFS CAUSED 8 OF 10, REVIEWER 0 | And the rate was my miscount: 71 became 64 became 46 once the register read the decided rows |
-| LJ-1.212 | Build the PREMISES gate, LJ-1.211's change 1 | DISPATCHED | It blocks the failure that caused 4 of 10 overturns: a brief that fixes a method which cannot answer |
+| LJ-1.212 | Build the PREMISES gate | BUILT, AND THE RAW LIST FIRED 118 OF 118 | It measured first and refused to build the list it was given. The active list fires on 23.7 pc |
 | LJ-1.213 | Gate the chain before porting it: Powerset and DefAt-stage | DISPATCHED | LJ-1.210 ported 2 of 17 modules. The plumbing grows LINEARLY and the cure for that walls today |
 | LJ-1.214 | Is the 8.2 s the telescope component or the rest of the commit | DISPATCHED | LJ-1.209 refuted the seal and named this gate with its price: 71 edits, 12 minutes, one trap |
+| LJ-1.215 | DD25 review of the three negatives the new gate caught | DISPATCHED | LJ-1.198's wall, LJ-1.206's refusal and LJ-1.209's refuted seal. The gate found them, not me |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |

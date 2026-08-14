@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 dd25 gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 buildmanifest archivecited
+check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 dd25 premises buildmanifest archivecited
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -99,7 +99,14 @@ probes:
 # hook runs scripts/check-live-territory.py --staged; this target is the
 # --check half. Cost: a registry read, a ps per live agent, one git ls-files.
 liveterritory:
-	$(PY) scripts/check-live-territory.py --check
+# THE STAGED MODE IS THE COMMIT GATE. `--check` audits every TRACKED file, which
+# stays red for the whole life of any dispatch whose report was committed once,
+# and `make check` would then be red for hours for a defect already made. The
+# gate's job is to refuse the NEXT sweep, so it reads the index. MEASURED
+# 2026-08-14: a `git add -- agents/tasks/<CODE>/` swept a live agent's report
+# skeleton into a commit, the audit mode caught it, and the staged mode is what
+# would have refused it at the moment it mattered.
+	$(PY) scripts/check-live-territory.py --staged
 
 tree:
 	$(PY) scripts/check-tree.py --check
@@ -155,6 +162,31 @@ archivecited:
 dd4:
 	$(PY) scripts/check-dd4-stated.py
 
+# DD25: a negative return's index row names its review's code. The verdict
+# cell announces a negative in structured words, so this is mechanical: a row
+# carrying the table's vocabulary must name a review code, declare why this
+# verdict is not a DD25 negative, or be frozen pre-epoch history. It cannot
+# tell whether a verdict is REALLY negative, whether the review was any good,
+# or fire when the return lands; the honest enforcement point is this gate.
+# The measured backlog of 42 pre-epoch rows is reported and never fails.
+dd25:
+	$(PY) scripts/check-dd25-review-named.py
+
+# THE PREMISES GATE, [LJ-1.212], from [LJ-1.211]'s change 1. A brief that
+# carries a trigger token (a fixed gate, a named shape, a measurement
+# mandate, or a threshold figure with a unit) must declare its load-bearing
+# premises in a `## PREMISES` section, each with a basis at `file:line`.
+# The trigger table was tuned against the live briefs: the raw [LJ-1.211]
+# list fires on 118 of 118, so four of its tokens are measured unworkable
+# and live in the tool's table as REFUSED rows instead of gating. The
+# ACTIVE set fires on 28 of 118 live briefs (23.7 percent, measured
+# 2026-08-14). Those 28 are frozen pre-epoch records, reported once and
+# never failed. The gate cannot tell whether a premise is true, cannot tell
+# whether the basis says what the author claims, and fires at the commit or
+# the gate, never at the writing moment.
+premises:
+	$(PY) scripts/check-premises-stated.py
+
 devdocs:
 	$(PY) scripts/check-dev-docs.py
 
@@ -207,6 +239,7 @@ test:
 	$(PY) scripts/tests/test_rule_series.py
 	$(PY) scripts/tests/test_agents_tree.py
 	$(PY) scripts/tests/test_archive_layout.py
+	$(PY) scripts/tests/test_dd25_review_named.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the
 # [LJ-0.4] closeout. _build/literature/ holds the OCR text and PDFs of Devlin,
