@@ -1,8 +1,13 @@
 # LJ-1.181: adversarial review of `[LJ-1.165]`, whose verdict was negative
 
-tier: fable (override), maximum effort. **DD25 with DD17's invariant: the critic is never
-the same head as the author.** `[LJ-1.165]` was written by the in-harness Opus 5
+tier: pi (override). **The switch's adversarial row, taken as the table gives
+it.** DD17's invariant holds under it: the critic is never the same head as the
+author, and `[LJ-1.165]` was written by the in-harness Opus 5
 under the `override` version, so this review does not go to that head.
+
+## GOAL
+
+**Run the DD25 adversarial review of `[LJ-1.165]`'s negative verdict.**
 
 ## WHY YOU WERE SENT
 
@@ -115,6 +120,7 @@ Run `.venv/bin/python scripts/rules.py --for review` and read every statement.
 - **C-42.** A refutation measures the site it names, never its extent.
 - **P-l.** A price from a comparable elsewhere is a hypothesis.
 - **C-38 as extended.** A hypothesis is discharged when something SUPPLIES it.
+- **C-22.** Write your deliverable incrementally, never at the end.
 - **DD8, DD25, D-10, D-26, D-29, D-30. C-31, C-32, C-33, C-34, C-36, C-37,
   C-39, C-40. I-5.**
 

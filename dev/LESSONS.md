@@ -3755,6 +3755,52 @@ verify the consumers of a changed master; [[P-l]], a measured cure does not
 transfer by analogy, which is this law's mirror: **P-l stops a CURE from
 travelling, and C-42 stops a REFUTATION from stopping.**
 
+### C-43. The owner's exercise of their own authority is not evidence about the agent's rules
+
+**Rule:** The repository owner may set aside any ruling in this repository at
+any time, for any task, without giving a reason. **That act is the owner using
+their authority. It is NOT a precedent, NOT an interpretation of the ruling, and
+NOT permission for the orchestrator to do the same thing.** A temporary
+instruction binds the task it names and nothing else. **When the instruction
+ends, the ruling was never modified, because it was never being read.**
+
+**So the orchestrator may never derive a standing rule from a one-off owner
+instruction**, and the test is one question: **would the sentence justifying
+this choice write, citing the RULING rather than the owner's past act?** If it
+will not write, take what the rule gives.
+
+**Measured, 2026-08-14.** The owner named `fable 5` for one adversarial review
+on 2026-08-13, by their own word, in a brief that says so. Two days later the
+orchestrator dispatched **four** DD25 adversarial reviews to `fable`. **The
+switch's adversarial row says `pi`, the orchestrator had READ that table in the
+same session, and it printed the row on screen.** The owner's correction was
+exact: *my temporary instructions do not constitute any interpretation of the DD
+rules, nor any endorsement that you may disobey DD.*
+
+**Why the checker did not save it, and this is the part worth keeping.**
+`scripts/check-dispatch-policy.py` accepts `fable` as a legal token, because
+DD17's emergency breakthrough tier permits it. **So the gate could not tell an
+emergency-tier fable from a wrong-head fable, and it passed all four.** The
+escape hatch a rule provides is exactly the shape a wrong choice hides in.
+**DD17 already names the cure and the orchestrator skipped it: if the sentence
+justifying another head will not write, take the head the table gives.** The
+sentence was never attempted.
+
+**The multiplier.** The emergency tier binds TWO conditions, a poor return AND a
+critical breakthrough. **Neither held.** Taking a tier's HEAD without its
+CONDITIONS is how an exception becomes a default, and nothing mechanical
+notices, because the head is legal.
+
+**Enforcement: the brief's tier line and the return audit.** The tier line names
+the head AND the version, and the justifying sentence is written OUT when the
+head is not the table's. **No checker can hold this**, because the tokens are
+legal by construction; what the checker delivers is a trace an audit can find.
+
+**Provenance:** `agents/tasks/LJ-1-157/LJ-1.157.md` for the owner's one-off, and
+this session's four refused dispatches. Related: [[C-41]], a rule that keeps
+reading true after its world changed; [[C-39]], a brief's prohibition binds
+harder than its goal.
+
 ### P-y. The price of a seal is set by how many definitions look INSIDE the formula, not by how many name it
 
 **Rule:** When you seal a built formula `opaque` to stop the conversion checker
