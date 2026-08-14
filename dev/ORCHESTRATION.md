@@ -29,7 +29,7 @@ Nobody reads code to answer "which head runs this task".
 
 **TWO VERSIONS SINCE 2026-08-13, and exactly one is in force.**
 
-- The **normal** version and the **override** version each name a head per
+- The **`deepseek-subagent-mode`** and **`in-harness-subagent-mode`** modes each name a head per
   case, **and THIS FILE NAMES NEITHER.** `scripts/dispatch_policy.py` is the one
   home; run it. **A head restated here is canonical twice, which DD19 forbids,
   and it is how the old fixed-tier text drifted.** The normal version's default
