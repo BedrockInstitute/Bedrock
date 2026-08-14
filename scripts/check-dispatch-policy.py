@@ -127,9 +127,31 @@ def is_adversarial(text: str) -> bool:
     harmless, so this reads only the two places where the author states what
     the task IS.
     """
+    # AND A MENTION IS NOT A DECLARATION. MEASURED 2026-08-14, when the peak
+    # clock flipped the mode and two briefs went red that are not reviews at
+    # all: one is a probe whose GOAL cites `[LJ-1.201]`, an adversarial review,
+    # as the source of its finding, and one is a checker build whose GOAL quotes
+    # DD25's own sentence. Both merely NAME the practice.
+    #
+    # The flip is what surfaced it: the two modes swap the adversarial head, so
+    # a brief that misclassifies is legal under one mode and red under the
+    # other. `[LJ-1.197]` had already measured this shape in `rules.py`, where
+    # the word in a sentence about ANOTHER task derives the wrong bundle.
+    #
+    # So require the brief to say the task IS one, not that one exists: the
+    # phrase must attach to this task. A GOAL reading "Run the DD25 adversarial
+    # review of [X]" declares; "[X], an adversarial review, found" does not.
     line = tier_line(text) or ""
-    return ("adversarial" in line.lower()
-            or "adversarial" in goal_section(text).lower())
+    if "adversarial" in line.lower():
+        return True
+    goal = goal_section(text).lower()
+    return any(p in goal for p in (
+        "adversarial review of", "run the dd25 adversarial",
+        "you are an adversarial", "this adversarial review",
+        "attack the negative"))
+    # NOT "is adversarially reviewed": that is DD25's own sentence, quoted by a
+    # brief that BUILDS the gate for the rule. Passive voice describes the rule;
+    # it never declares the task. MEASURED on `[LJ-1.208]`.
 
 
 def check_switch() -> list[str]:

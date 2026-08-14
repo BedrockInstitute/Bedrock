@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""THE DISPATCH POLICY. One hardcoded switch, two tables, and one place to edit.
+"""THE DISPATCH POLICY. One switch, two tables, one clock, one place to edit.
 
 WHAT THIS IS. DD17 says which head runs a dispatch. From 2026-08-13 it has TWO
 versions, and exactly one of them is in force. `VERSION_IN_FORCE` below is the
@@ -7,12 +7,28 @@ switch. Edit that one line and every consumer follows: the checker that reads a
 brief's `tier:` line, the default harness `dispatch.py` picks, and the table the
 inspection command prints.
 
+THE PRECEDENCE, and it is the first thing to read in this file:
+
+  * The owner's pinned `VERSION_IN_FORCE` ALWAYS WINS. A pinned value is a
+    ruling, and a tool that silently overrides a ruling is worse than no tool.
+  * `VERSION_IN_FORCE = "auto"` delegates to the clock, which picks the mode
+    from DeepSeek's peak and off-peak windows in Beijing time. The clock
+    decides ONLY when the owner has not pinned a mode.
+
+The clock rule came from the owner's instruction of 2026-08-14: DeepSeek
+prices peak and off-peak, the off-peak price is half the peak price, peak is
+Beijing time 09:00 to 12:00 and 14:00 to 18:00, and the dispatch mode follows
+that clock. OFF-PEAK, deepseek is half price and `deepseek-subagent-mode`
+leads. PEAK, deepseek is dear and the in-harness Opus is not billed on that
+clock, so `in-harness-subagent-mode` leads.
+
 INSPECT IT WITH ONE COMMAND, and never by reading code:
 
     python3 scripts/dispatch_policy.py
 
-It prints the version in force, its full table, why it is in force, and the
-condition that reverts it.
+It prints the version in force, its full table, why it is in force, the
+condition that reverts it, and, when the clock selected the version, the
+window it is in and the next boundary.
 
 THE HONEST LIMIT, AND IT IS THE MOST IMPORTANT LINE IN THIS FILE.
 
@@ -43,25 +59,134 @@ for the head it LEADS with, so the name says what it does.
 from __future__ import annotations
 
 import sys
+from datetime import datetime, time, timedelta, timezone
 
 # ---------------------------------------------------------------------------
-# THE SWITCH. Edit this one value to change the policy. Nothing else.
+# THE SWITCH. One of two values, and the order of power is visible here.
+#   a mode name ("deepseek-subagent-mode", "in-harness-subagent-mode"): a
+#     PIN. The owner set it by word. It wins over the clock, always.
+#   "auto": the clock picks the mode from the Beijing-time peak windows
+#     below. The owner's instruction of 2026-08-14 made the clock the rule;
+#     a mode named here overrides it.
 # ---------------------------------------------------------------------------
 
-VERSION_IN_FORCE = "deepseek-subagent-mode"
+AUTO = "auto"
+VERSION_IN_FORCE = AUTO
 
-# The switch's own provenance. A position without a reason is a position
-# nobody can retire.
+# The auto state's own provenance. A position without a reason is a position
+# nobody can retire. The pin that ran 2026-08-14 was `deepseek-subagent-mode`,
+# set by word when the owner cancelled the quota mode of 2026-08-13.
 SET_ON = "2026-08-14"
 SET_BY = "the repository owner"
-REASON = ("The owner cancelled the 2026-08-13 in-harness mode BY WORD, which is "
-          "exactly the revert condition that mode recorded for itself. No further "
-          "reason was given and none is invented here. That mode's own reason was "
-          "QUOTA and never quality, so cancelling it says nothing about any "
-          "head's return quality.")
-REVERT_CONDITION = ("The owner names another mode by word. Set VERSION_IN_FORCE to "
-                    "it and change nothing else. `in-harness-subagent-mode` ran "
-                    "2026-08-13 to 2026-08-14 for QUOTA.")
+REASON = ("The owner's instruction of 2026-08-14: DeepSeek prices peak and "
+          "off-peak, the off-peak price is half the peak price, peak is "
+          "Beijing time 09:00 to 12:00 and 14:00 to 18:00, and the dispatch "
+          "mode follows that clock. OFF-PEAK, deepseek is half price and "
+          "`deepseek-subagent-mode` leads. PEAK, deepseek is dear and the "
+          "in-harness Opus is not billed on that clock, so "
+          "`in-harness-subagent-mode` leads.")
+REVERT_CONDITION = ("The owner pins a mode by word. Set VERSION_IN_FORCE to "
+                    "`deepseek-subagent-mode` or `in-harness-subagent-mode` "
+                    "and change nothing else; a pinned mode wins over the "
+                    "clock. The pin that ran on 2026-08-14 was deepseek, set "
+                    "by word when the owner cancelled the quota mode, and it "
+                    "is what a pin looks like.")
+
+# ---------------------------------------------------------------------------
+# THE CLOCK. One table of windows, one table of states, and the whole rule.
+# DD4: the clock is generic in the WINDOWS, not in the two modes. A second
+# provider with different windows, or a change to DeepSeek's hours, is one
+# edit to PEAK_WINDOWS and nothing else.
+# ---------------------------------------------------------------------------
+#
+# PEAK_WINDOWS is in BEIJING time, which the rule states. The conversion from
+# UTC is explicit in `beijing_now()`: Beijing is UTC+8 with no daylight
+# saving, so the offset is a constant and a machine in any zone gets the same
+# answer.
+#
+# THE WINDOWS ARE HALF-OPEN [start, end) at minute resolution. A minute
+# belongs to the window that STARTED at its hour: 11:59 is peak, 12:00 is
+# off-peak; 17:59 is peak, 18:00 is off-peak. The boundary instant itself
+# belongs to the window that is starting, so 09:00:00 and 14:00:00 are peak
+# and 12:00:00 and 18:00:00 are off-peak.
+#
+# PEAK_WINDOWS must be ordered by start time and must not be empty; the first
+# window's start is the next day's first boundary.
+PEAK_WINDOWS: tuple[tuple[int, int, int, int], ...] = (
+    (9, 0, 12, 0),   # 09:00 to 12:00 Beijing
+    (14, 0, 18, 0),  # 14:00 to 18:00 Beijing
+)
+
+# The mode each clock state selects. The two states and the two modes are the
+# whole economics: off-peak deepseek is half price, peak it is dear.
+CLOCK_STATES: dict[str, str] = {
+    "peak": "in-harness-subagent-mode",
+    "off-peak": "deepseek-subagent-mode",
+}
+
+BEIJING_TZ = timezone(timedelta(hours=8))
+
+
+def beijing_now(now: datetime | None = None) -> datetime:
+    """Beijing wall-clock time for an instant.
+
+    THE CONVERSION IS EXPLICIT, because the rule is stated in Beijing time
+    and a machine in another zone must get the same answer. The input is
+    converted from its own zone (UTC when none is given) to UTC+8; the
+    machine's local zone is never read.
+    """
+    t = now or datetime.now(timezone.utc)
+    return t.astimezone(BEIJING_TZ)
+
+
+def clock_state(now: datetime | None = None) -> str:
+    """`peak` or `off-peak`, from the Beijing wall clock at `now`."""
+    bj = beijing_now(now)
+    hm = (bj.hour, bj.minute)
+    for sh, sm, eh, em in PEAK_WINDOWS:
+        if (sh, sm) <= hm < (eh, em):
+            return "peak"
+    return "off-peak"
+
+
+def clock_mode(now: datetime | None = None) -> str:
+    """The mode the clock selects at `now`."""
+    return CLOCK_STATES[clock_state(now)]
+
+
+def _boundaries(day) -> list[tuple[datetime, str]]:
+    """Today's window starts and ends, plus tomorrow's first start, so the
+    boundary list is never empty. The state named is the state AFTER the
+    boundary."""
+    out: list[tuple[datetime, str]] = []
+    for sh, sm, eh, em in PEAK_WINDOWS:
+        out.append((datetime.combine(day, time(sh, sm), tzinfo=BEIJING_TZ), "peak"))
+        out.append((datetime.combine(day, time(eh, em), tzinfo=BEIJING_TZ), "off-peak"))
+    sh, sm = PEAK_WINDOWS[0][0], PEAK_WINDOWS[0][1]
+    out.append((datetime.combine(day + timedelta(days=1), time(sh, sm),
+                                 tzinfo=BEIJING_TZ), "peak"))
+    return out
+
+
+def next_boundary(now: datetime | None = None) -> tuple[datetime, str]:
+    """(the next instant the clock state changes, the state after it)."""
+    bj = beijing_now(now)
+    future = [(t, s) for t, s in _boundaries(bj.date()) if t > bj]
+    return min(future, key=lambda x: x[0])
+
+
+def current_window(now: datetime | None = None) -> tuple[datetime | None, datetime, str]:
+    """(start, end, state) of the window `now` falls in, Beijing time.
+    The start is the last boundary at or before now, the end the next one,
+    and the state is constant between them."""
+    bj = beijing_now(now)
+    bs = _boundaries(bj.date())
+    past = [(t, s) for t, s in bs if t <= bj]
+    future = [(t, s) for t, s in bs if t > bj]
+    start = past[-1][0] if past else None
+    end = future[0][0]
+    return start, end, clock_state(bj)
+
 
 # ---------------------------------------------------------------------------
 # THE TWO TABLES. This is their ONE home. Nothing restates them.
@@ -209,13 +334,16 @@ HARNESS_FOR_AGENT = {"pi": "herdr-pi", "codex": "herdr"}
 
 
 def in_force() -> str:
-    """The version in force. Raises when the switch holds an unknown value,
-    because a policy nobody can read must stop rather than pick one."""
+    """The mode in force. A pinned mode wins; `auto` delegates to the clock.
+    Raises when the switch holds an unknown value, because a policy nobody
+    can read must stop rather than pick one."""
+    if VERSION_IN_FORCE == AUTO:
+        return clock_mode()
     if VERSION_IN_FORCE not in POLICY:
         raise SystemExit(
             f"dispatch_policy: VERSION_IN_FORCE is {VERSION_IN_FORCE!r}, which "
-            f"is not one of {', '.join(sorted(POLICY))}. Fix the switch in "
-            f"{__file__}.")
+            f"is not one of {', '.join(sorted(POLICY))} and not {AUTO!r}. Fix "
+            f"the switch in {__file__}.")
     return VERSION_IN_FORCE
 
 
@@ -264,14 +392,51 @@ def expected_tier_tokens(case: str, version: str | None = None) -> set[str]:
 
 
 def render(version: str | None = None) -> str:
+    """Render the policy. `None` or `'auto'` renders what is in force; a mode
+    name renders that mode's table with the (NOT the switch's value) marker
+    when it is not the pin."""
+    explicit = version is not None and version != AUTO
     v = version or in_force()
+    if v == AUTO:
+        v = in_force()
     t = POLICY[v]
     lines = [
         f"DISPATCH POLICY: `{v}` is IN FORCE"
-        + ("" if v == VERSION_IN_FORCE else "   (NOT the switch's value)"),
-        f"  set {SET_ON} by {SET_BY}",
-        f"  reason: {REASON}",
-        f"  revert: {REVERT_CONDITION}",
+        + ("" if not explicit else "   (NOT the switch's value)"),
+    ]
+    if VERSION_IN_FORCE == AUTO:
+        state = clock_state()
+        start, end, _ = current_window()
+        boundary, after_state = next_boundary()
+        win = (f"{start:%H:%M} to {end:%H:%M}" if start
+               else "(before today's first boundary)")
+        lines += [
+            f"  selected by the clock, not by a ruling "
+            f"(VERSION_IN_FORCE = {AUTO!r})",
+            f"  clock: {state.upper()} now. Beijing "
+            f"{beijing_now():%Y-%m-%d %H:%M}, window {win}",
+            f"  peak windows (Beijing): "
+            + ", ".join(f"{sh:02d}:{sm:02d} to {eh:02d}:{em:02d}"
+                         for sh, sm, eh, em in PEAK_WINDOWS),
+            f"  next boundary: {boundary:%Y-%m-%d %H:%M} Beijing, "
+            f"{after_state} begins, mode becomes "
+            f"`{CLOCK_STATES[after_state]}`",
+            f"  set {SET_ON} by {SET_BY}",
+            f"  reason: {REASON}",
+            f"  revert: {REVERT_CONDITION}",
+        ]
+    else:
+        lines += [
+            f"  set {SET_ON} by {SET_BY}",
+            f"  reason: {REASON}",
+            f"  revert: {REVERT_CONDITION}",
+        ]
+        if VERSION_IN_FORCE != AUTO:
+            lines.append(
+                f"  a PIN: `{VERSION_IN_FORCE}` is pinned and wins over the "
+                f"clock, which would select `{clock_mode()}` "
+                f"({clock_state()} now)")
+    lines += [
         "",
         f"  {t['summary']}",
         "",
@@ -301,13 +466,13 @@ def render(version: str | None = None) -> str:
 def main() -> int:
     which = sys.argv[1] if len(sys.argv) > 1 else None
     if which in ("-h", "--help"):
-        print("usage: dispatch_policy.py "
-              "[deepseek-subagent-mode|in-harness-subagent-mode]")
-        print("  no argument: print the version in force")
+        print("usage: dispatch_policy.py [auto|deepseek-subagent-mode|"
+              "in-harness-subagent-mode]")
+        print("  no argument: print the mode the clock selects now")
         return 0
-    if which and which not in POLICY:
-        print(f"unknown version {which!r}; known: {', '.join(sorted(POLICY))}",
-              file=sys.stderr)
+    if which and which != AUTO and which not in POLICY:
+        print(f"unknown version {which!r}; known: auto, "
+              f"{', '.join(sorted(POLICY))}", file=sys.stderr)
         return 2
     print(render(which))
     return 0
