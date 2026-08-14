@@ -769,7 +769,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.223 | Read the suppliers in one pass, thin against thick | 2 THIN, 8 THICK, 2,971 SHARED | Graph was already ported at GenGraph.agda. Plumbing about 200 for ten, per-tower residual 0 |
 | LJ-1.224 | Is LJ-1.220's exit 0 bought? Check the 22 types | NOT BOUGHT. 22 of 22 FAITHFUL | Five reconstructions sound; InL.lagda.md:253 holds the same reduction. Width falls to 8 and 19 |
 | LJ-1.225 | Does the ported chain discharge LJ-1.7's residue at all | NO. IT STOPS ONE MODULE SHORT | The lift is six ambient readings of L.Coding.Sequence, in no port scope. sl and sc stay open |
-| LJ-1.226 | Build pairω into L, the widest unmeasured line in the route | DISPATCHED | A5 row 5 is INFERRED at 160 and LJ-1.176 warned it may be far too low. Nobody has written one |
+| LJ-1.226 | Build pairω into L, the route's widest unmeasured line | MATERIALLY OVER 160. DD25 [LJ-1.231] | 83 lines MEASURED green at 1.69 s; the total is INFERRED at about 700 from that anchor |
+| LJ-1.231 | DD25 review of LJ-1.226, where 160 became about 700 | DISPATCHED | 617 of the 700 are inferred from one 83-line anchor, and the re-price reaches every A5 figure |
 | LJ-1.227 | The gate list for A-prime's reading residue, five blocks | ZERO DISSOLVE, FIVE NAMED TERMS | One overlap stands and double-counts A2 inside A4, so the sum is 1,470 to 1,521, not 1,548 |
 | LJ-1.229 | A2's range set and ranAt, the block every other block names | DISPATCHED | injAt is in no master. Measuring it also pins the one surviving double-count in A-prime's sum |
 | LJ-1.228 | Price sl and sc, the two hypotheses nothing on record prices | NOT SUPPLIED. ABOUT 0.15k EACH | Both records priced something else: 2.8k was the bypassed hull route, 16 was the assembly |
