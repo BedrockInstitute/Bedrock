@@ -48,16 +48,20 @@ import sys
 # THE SWITCH. Edit this one value to change the policy. Nothing else.
 # ---------------------------------------------------------------------------
 
-VERSION_IN_FORCE = "override"
+VERSION_IN_FORCE = "normal"
 
 # The switch's own provenance. A position without a reason is a position
 # nobody can retire.
-SET_ON = "2026-08-13"
+SET_ON = "2026-08-14"
 SET_BY = "the repository owner"
-REASON = ("QUOTA, not quality. The owner has most of the week's allowance left, "
-          "and [LJ-1.121] measured pi's return quality as fully acceptable.")
-REVERT_CONDITION = ("The owner cancels the override by word. Set "
-                    "VERSION_IN_FORCE = \"normal\" and change nothing else.")
+REASON = ("The owner cancelled the 2026-08-13 override BY WORD, which is exactly "
+          "the revert condition that override recorded for itself. No further "
+          "reason was given and none is invented here. The override's own reason "
+          "was QUOTA and never quality, so cancelling it says nothing about any "
+          "head's return quality.")
+REVERT_CONDITION = ("The owner sets an override by word. Set VERSION_IN_FORCE to "
+                    "that version and change nothing else. The last override ran "
+                    "2026-08-13 to 2026-08-14 for QUOTA.")
 
 # ---------------------------------------------------------------------------
 # THE TWO TABLES. This is their ONE home. Nothing restates them.
