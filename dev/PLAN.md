@@ -94,6 +94,15 @@ lines.
   `[LJ-1.155]` then found the counter-case: a wing-local cure does not move the
   denominator, and the wing went 2.06x to 1.60x. **So the ruling is no longer
   forced, but the bar still reads a shared cure as a regression.**
+- **AN OWED REVIEW, and it is the orchestrator's to do, not the owner's.**
+  Three things now touch the same two files and they landed in three different
+  states of the tree. `[LJ-1.205]` reconciled the dispatch skill against herdr's
+  official one. **I then changed `dispatch.py` and that same skill under the C4
+  ruling, WHILE `[LJ-1.203]` was already running.** So `[LJ-1.203]` is reading a
+  tool and a skill that moved after it started, and its conclusions may cite
+  lines that no longer say what they said. **When it returns I re-read all three
+  together against the tree as it then IS, and say what each one measured
+  against which version.** Owner's instruction, 2026-08-14.
 - **The `build` bundle is FULL at the cap of 12, and C-42 did not go in.** I
   routed the new law to `recon` and `probe`, which had room, and to four trigger
   words. **A build acting on a refutation therefore reaches it through layer 2
