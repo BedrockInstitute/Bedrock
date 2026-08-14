@@ -102,7 +102,7 @@ turns a rule into false safety.
 | **Licensing.** Three buckets declared centrally; a new file inherits AGPL-3.0 | `REUSE.toml`, texts in `LICENSES/` | `reuse lint` |
 | **Deployment.** Automatic on merge to `main`; credentials are org secrets and contributors never handle them | `.github/workflows/` | n/a |
 | **Route memos, digested literature** | `dev/memos/`, `dev/literature/` | n/a |
-| **Agent reports and briefs.** Every dispatch writes one of each. Live reports in `agents/reports/`, older in `agents/reports/archive/`, every brief in `agents/briefs/`. All tracked, all CC, all exempt from the prose linter because a record is never rewritten | `agents/README.md` | review |
+| **Agent reports and briefs.** Every dispatch writes one of each, and **both live in ONE directory per task, `agents/tasks/<CODE>/`, beside that task's probes**; retired tasks sit in `agents/tasks/archive/<CODE>/`. All tracked, all CC, all exempt from the prose linter because a record is never rewritten | `agents/README.md` | review |
 | **What the project IS**: the theorem, the charter, the licences, who wrote it | [README.md](README.md), trilingual under `docs/` | n/a |
 | **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0; `scripts/ledger.py --brief` for the standing figures | n/a |
 
@@ -134,7 +134,7 @@ audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATIO
 **Verify the load-bearing assumption cheaply before heavy or hard-to-reverse work.** Build the
 smallest decisive miniature and report GO or NO-GO with a price. A probe prices THIS setting; it
 never re-proves what the literature or the delivered tree settles. **Write it in
-`agents/reports/<TASK>/`, beside your report, and run it there.** It is tracked, it is never
+`agents/tasks/<TASK>/`, beside your brief and your report, and run it there.** It is tracked, it is never
 deleted, and **nothing typechecks it once your task closes, so run it while you can.** **`src/`
 is forbidden**, and `scripts/check-probes.py` enforces that because `git add -f` walks past an
 ignore rule. `dev/LESSONS.md` **D-1** is the rule.
