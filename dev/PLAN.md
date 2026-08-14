@@ -775,10 +775,11 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.206 | Measure herdr's wait supersession | DOES NOT HOLD, NOTHING LANDED | events.wait reproduces the at-once-idle flaw and cannot wait on a death. The hand-rolled protocol stands |
 | LJ-1.207 | Auto-switch the mode on DeepSeek's peak clock | LANDED, AND THE PIN STILL WINS | VERSION_IN_FORCE = auto lets the clock select, and the printout names the window and next boundary |
 | LJ-1.208 | Gate DD25: a negative return whose row names no review | BUILT, PLUS A REGISTER I DID NOT ASK FOR | It found me misreporting DD25's record, and read it back: 71 pc overturn rate |
-| LJ-1.209 | Price the seal that LJ-1.204 named, 8.4 s at 420 ms per field | DISPATCHED | The one wing cure with a MEASURED cause. Its lineage is LJ-1.145's seal, 2,459 ms to under 1 |
-| LJ-1.210 | Is the chapter really 17 lines? The class-parameter probe | DISPATCHED | LJ-1.200 measured Model naming isL on 6 of 1,288 lines. If it holds, LJ-1.7's residue is not a chapter |
+| LJ-1.209 | Price the seal LJ-1.204 named | THE SEAL DOES NOT REACH: 83 ms | Emptying the numeral content moved 47 ms the WRONG way, so no restatement reaches the 8.2 s |
+| LJ-1.210 | Is the chapter really 17 lines | THE CHAPTER DISSOLVES: 42 WRITTEN, 1,272 SURVIVE | Model is class-generic and typechecks first try. Both instantiations green. Devlin agrees |
 | LJ-1.211 | Why is the DD25 overturn rate 71 percent | BRIEFS CAUSED 8 OF 10, REVIEWER 0 | And the rate was my miscount: 71 became 64 became 46 once the register read the decided rows |
 | LJ-1.212 | Build the PREMISES gate, LJ-1.211's change 1 | DISPATCHED | It blocks the failure that caused 4 of 10 overturns: a brief that fixes a method which cannot answer |
+| LJ-1.213 | Gate the chain before porting it: Powerset and DefAt-stage | DISPATCHED | LJ-1.210 ported 2 of 17 modules. The plumbing grows LINEARLY and the cure for that walls today |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |

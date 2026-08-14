@@ -1,0 +1,37 @@
+# module agents/tasks/LJ-1-209/ProbeSeal.agda
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=internal agents/tasks/LJ-1-209/ProbeSeal.agda
+# load before 16:40  up 19:02, 2 users, load averages: 26.04 18.02 10.42
+# started 2026-08-14 16:40:44
+Checking LJ-1-209.ProbeSeal (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-209/ProbeSeal.agda).
+Total                      136,750ms           
+Miscellaneous                   23ms           
+Typing                       1,872ms (85,518ms)
+Typing.CheckRHS             34,036ms           
+Typing.CheckLHS             31,300ms (31,301ms)
+Typing.OccursCheck          12,623ms           
+Typing.TypeSig               5,684ms           
+Serialization               12,403ms (12,597ms)
+Serialization.Compress          97ms           
+Serialization.BinaryEncode      69ms           
+Serialization.Sort              26ms           
+InterfaceInstantiateFull    11,101ms           
+Deserialization              9,782ms (10,352ms)
+Deserialization.Compaction     570ms           
+Positivity                   5,712ms           
+DeadCode                        10ms  (5,538ms)
+DeadCode.DeadCodeReachable   5,527ms           
+Parsing                        332ms  (2,682ms)
+Parsing.OperatorsExpr        2,303ms           
+Parsing.OperatorsPattern        46ms           
+Coverage                     1,815ms  (1,816ms)
+Scoping                        185ms    (718ms)
+Scoping.InverseScopeLookup     533ms           
+Termination                      2ms    (387ms)
+Termination.RecCheck           384ms           
+Highlighting                   236ms           
+Import                          38ms           
+Injectivity                     29ms           
+# wall seconds 137.78
+# exit 0
+# load after 16:43  up 19:05, 2 users, load averages: 6.96 13.28 9.62
