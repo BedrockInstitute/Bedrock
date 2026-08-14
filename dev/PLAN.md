@@ -773,6 +773,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.204 | Deserialization rose 8.3 s at Condensation and no report owns it | DISPATCHED | LJ-1.201 found it in LJ-1.185's own raw files. Larger than the 5.2 s ceiling. Cause INFERRED |
 | LJ-1.205 | Reconcile our dispatch SKILL against herdr's official one | 7 DELETED, 59 ADDED, ONE RULING OWED | Neither skill supersedes the other. blocked read as FINISHED and the owner ruled it |
 | LJ-1.206 | Measure herdr's wait supersession and land it if it holds | DISPATCHED | The only DOCUMENTED supersession LJ-1.203 found, and it is NOT measured. Also: prompt QUEUES |
+| LJ-1.207 | Auto-switch the dispatch mode on DeepSeek's peak and off-peak clock | DISPATCHED | Off-peak is half price, so deepseek leads then and in-harness leads at peak. Beijing 9-12 and 14-18 |
+| LJ-1.208 | Gate DD25: a negative return whose index row names no review | DISPATCHED | I forget DD25 repeatedly. Its own enforcement point is the index row, and that is mechanical |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
