@@ -792,6 +792,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.249 | Port graph-assembly to the class abstraction | IT PORTS. NO CHAPTER. 132 LINES | Step zero green today. The 30-line assembly is verbatim with three renames. DD4 split HELD |
 | LJ-1.250 | Price StepAgree and ApproxAgree | NEITHER BUILDS: UNCONSTRAINED INTERFACES. DD25 [LJ-1.251] | Refutable at that generality. The residue is the leaf-adequacy supply, not one term |
 | LJ-1.251 | DD25 review of LJ-1.250 | UPHELD. THE PRICE WAS ALREADY IN PLAN 0.0 | About 400 lines. Ten dispatches re-derived open work item 1, which I rewrote around twice |
+| LJ-1.252 | Can omega in lam be supplied, and does step 6 become fundable | DISPATCHED | LJ-1.199 stopped at ZERO lines on this join, by reading, with no Agda run. It gates 255 lines |
+| LJ-1.253 | Close A-prime's last two reading residues and make 1,150 a price | DISPATCHED | A4's master gap and A6's 47-line wrapper. 47 of 1,150 is 4 percent, down from 555 |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.248 | Route A-prime's total | 1,150 ARITHMETIC, and THREE named causes | Per-tower half MEASURED at 146. The last reading residue is 47 lines, 4 percent, down from 555 |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |
