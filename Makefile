@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard archivecited gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard archivecited dd4 gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy
+check: venv-check typecheck markers lint lint-agda glossary ledger probes tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -128,6 +128,9 @@ dispatchpolicy:
 # pasted citation rather than a survey, so this prints and never fails.
 archivecited:
 	$(PY) scripts/check-archive-cited.py
+
+dd4:
+	$(PY) scripts/check-dd4-stated.py
 
 devdocs:
 	$(PY) scripts/check-dev-docs.py
