@@ -1,0 +1,40 @@
+# module src/L/Condensation.lagda.md
+# in-fence lines 6676
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=internal src/L/Condensation.lagda.md
+# load before 3.65 / 3.56 / 3.57
+# load after  3.45 / 3.50 / 3.54
+# wall seconds 133.33
+# exit 0
+Checking L.Condensation (/Users/alsg/Agentic/Bedrock/src/L/Condensation.lagda.md).
+Total                      132,444ms           
+Miscellaneous                   17ms           
+Typing                       1,202ms (80,990ms)
+Typing.CheckRHS             33,280ms           
+Typing.CheckLHS             29,619ms (29,620ms)
+Typing.OccursCheck          11,750ms           
+Typing.TypeSig               5,135ms           
+Serialization               20,038ms (20,229ms)
+Serialization.Compress          96ms           
+Serialization.BinaryEncode      67ms           
+Serialization.Sort              25ms           
+Deserialization              9,682ms (10,230ms)
+Deserialization.Compaction     547ms           
+Positivity                   6,294ms           
+DeadCode                         8ms  (5,056ms)
+DeadCode.DeadCodeReachable   5,048ms           
+InterfaceInstantiateFull     3,720ms           
+Parsing                        462ms  (2,692ms)
+Parsing.OperatorsExpr        2,188ms           
+Parsing.OperatorsPattern        41ms           
+Coverage                     1,710ms  (1,711ms)
+Scoping                        196ms    (726ms)
+Scoping.InverseScopeLookup     529ms           
+Termination                      2ms    (364ms)
+Termination.RecCheck           362ms           
+Highlighting                   354ms           
+Import                          30ms           
+Injectivity                     28ms           
+
+----- stderr -----
+
