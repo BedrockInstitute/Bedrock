@@ -780,14 +780,14 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.219 | Join GenModel to Powerset at the ambient class | MODEL LINK COMPOSES, BRICK TWO LEAKS. DD25 [LJ-1.221] | Five Model names green ambient. Recover's keyOf leaks at :142. Plumbing 21 lines |
 | LJ-1.220 | Parameterize every leak and census the chain once | EXIT 0. WIDTH 8 MODULES, 19 NAMES | LJ-1.224 corrected 9 and 22 down. extAt-in and the domAt trio now MEASURED. The 17 was inferred |
 | LJ-1.221 | DD25 review of LJ-1.216, LJ-1.219 and the brief pattern | UPHELD, MISATTRIBUTED, WASTEFUL | Brick two is two one-liners GenModel holds. I turned a typecheck order into a dispatch order |
-| LJ-1.222 | Check LJ-1.218's 523-line supersession before it lands | 695 REFUTED, THE NUMBER IS 83 | The chain holds Condensation's only carrier transfer and both uses of abs₀ and σ₁-up |
+| LJ-1.222 | Check LJ-1.218's 523-line supersession | 695 REFUTED, 83. DD25 review not needed: this IS the review | It holds Condensation's only carrier transfer and both uses of abs₀ and σ₁-up |
 | LJ-1.223 | Read the suppliers in one pass, thin against thick | 2 THIN, 8 THICK, 2,971 SHARED | Graph was already ported at GenGraph.agda. Plumbing about 200 for ten, per-tower residual 0 |
 | LJ-1.224 | Is LJ-1.220's exit 0 bought? Check the 22 types | NOT BOUGHT. 22 of 22 FAITHFUL | Five reconstructions sound; InL.lagda.md:253 holds the same reduction. Width falls to 8 and 19 |
-| LJ-1.225 | Does the ported chain discharge LJ-1.7's residue at all | NO. IT STOPS ONE MODULE SHORT | The lift is six ambient readings of L.Coding.Sequence, in no port scope. sl and sc stay open |
+| LJ-1.225 | Does the port discharge LJ-1.7's residue | NO, IT STOPS ONE MODULE SHORT. DD25 [LJ-1.262] | The lift is six ambient readings of L.Coding.Sequence. LJ-1.238 later ported it |
 | LJ-1.226 | Build pairω into L, the route's widest line | OVER 160 UPHELD, 700 UNQUANTIFIED. DD25 [LJ-1.231] | 83 lines MEASURED green at 1.69 s. Its rows sum to 743 and 190 cite no basis |
 | LJ-1.231 | DD25 review of LJ-1.226, where 160 became 700 | UNQUANTIFIED. 83 IS THE EVIDENCE | Band is half-open from about 355. The consumers demand an injection, not object-language arithmetic |
 | LJ-1.232 | A1 and A3, the gate list's two cheap probes | A1 IS 54 AND NEEDS 3 LEMMAS; A3 IS 26 | isL alone does not suffice. stageBound DOES supply beta free, and A3 lands under its 45 |
-| LJ-1.227 | The gate list for A-prime's reading residue, five blocks | ZERO DISSOLVE, FIVE NAMED TERMS | One overlap stands and double-counts A2 inside A4, so the sum is 1,470 to 1,521, not 1,548 |
+| LJ-1.227 | The gate list for A-prime's residue | FIVE NAMED TERMS. DD25 review not needed: zero dissolutions is its deliverable, not a refusal | One overlap stands, so the sum was 1,470 to 1,521 |
 | LJ-1.229 | A2's range set and ranAt, the block others name | 186 AGAINST 170, AND THE DOUBLE IS 27 | Replacement was needed; separation does not carry it. The 27-to-78 band closes at 27 |
 | LJ-1.228 | Price sl and sc, the two hypotheses nothing on record prices | NOT SUPPLIED. ABOUT 0.15k EACH | Both records priced something else: 2.8k was the bypassed hull route, 16 was the assembly |
 | LJ-1.230 | The stage-carrier decode, named by LJ-1.123, never run | NO-GO, THREE WALLS NAMED. DD25 [LJ-1.233] | The delivered decode reads the UNBOUNDED graph; level-hood needs the BOUNDED one |
@@ -809,7 +809,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.251 | DD25 review of LJ-1.250 | UPHELD. THE PRICE WAS ALREADY IN PLAN 0.0 | About 400 lines. Ten dispatches re-derived open work item 1, which I rewrote around twice |
 | LJ-1.252 | Can omega in lam be supplied | MUST BE ADDED, AND IT IS CHEAP | Five lines at one consumer. Branch 1 refuted by COUNTERMODEL at lam = omega. Step 6 is fundable |
 | LJ-1.253 | Close A-prime's last two reading residues | 1,089. A PRICE. BOTH RESIDUES DISSOLVE | A6's 47 was a double-count of the graph LJ-1.217 later measured at 296. Reading residue is now ZERO |
-| LJ-1.254 | BUILD step 6, the 28 fields | 1 OF 28, PLUS THE JOIN. sucK DOES NOT WALL | envSetK is green, and it sits beneath 11 of the 28. 141 lines for the first field plus two lemmas |
+| LJ-1.254 | BUILD step 6, the 28 fields | 1 OF 28 PLUS THE JOIN. DD25 review not needed: sucK not walling is a positive measurement | envSetK is green and sits beneath 11 of the 28 |
 | LJ-1.255 | Build the eleven fields envSetK unlocks | 5 OF 11, AND THE 255 IS REFUTED. DD25 [LJ-1.256] | Marginal 11 to 17 lines per field against the 255's implied 9.1. The entry estimate was 1.5 |
 | LJ-1.256 | DD25 review of LJ-1.255's refutation | OVERTURNED. THE 255 STANDS, PLUS ABOUT 50 | Five copies of one proof are one observation. someEnv's 120-line blocker is delivered in FOUR |
 | LJ-1.257 | The four envInK fields and someEnv | 5 OF 5. COLLAPSE IS 67 AGAINST 85 | Bodies shrink 55 to 30. The numeral premise is a MASTER change, priced at 40 to 60 mechanical lines |
@@ -817,6 +817,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.258 | The fifteen fields that do not touch envSetK | 12 OF 15. RATES ARE 2, 1, 1 BODY LINES | Far UNDER 9.1. LJ-1.168's 1.5-line entry estimate HOLDS. The three consK need an env closure |
 | LJ-1.259 | Build the env closure | BUILDS ON ONE NEW HYPOTHESIS. 3 consK CLOSE | The sweep caught the supply before it was called absent: Lset-fin and paramEnv∈ are delivered |
 | LJ-1.261 | The finite-supremum merge | BUILDS. finSetK is SUPPLIED, 3 consK CLOSE | 148 lines, 48 for the merge against union's 52. The first attempt walled and the cure is recorded |
+| LJ-1.262 | The DD25 review LJ-1.225 never got, dispatched nineteen dispatches late | DISPATCHED | make check caught it. I will not write 'not needed' where C-43 says the escape hatch hides |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.248 | Route A-prime's total | 1,150 ARITHMETIC, and THREE named causes | Per-tower half MEASURED at 146. The last reading residue is 47 lines, 4 percent, down from 555 |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |
