@@ -771,6 +771,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.225 | Does the ported chain discharge LJ-1.7's residue at all | NO. IT STOPS ONE MODULE SHORT | The lift is six ambient readings of L.Coding.Sequence, in no port scope. sl and sc stay open |
 | LJ-1.226 | Build pairω into L, the route's widest unmeasured line | MATERIALLY OVER 160. DD25 [LJ-1.231] | 83 lines MEASURED green at 1.69 s; the total is INFERRED at about 700 from that anchor |
 | LJ-1.231 | DD25 review of LJ-1.226, where 160 became about 700 | DISPATCHED | 617 of the 700 are inferred from one 83-line anchor, and the re-price reaches every A5 figure |
+| LJ-1.232 | A1 and A3, the gate list's two cheap probes, in one dispatch | DISPATCHED | A1 asks whether isL alone suffices per site; A3 asks whether stageBound supplies beta for free |
 | LJ-1.227 | The gate list for A-prime's reading residue, five blocks | ZERO DISSOLVE, FIVE NAMED TERMS | One overlap stands and double-counts A2 inside A4, so the sum is 1,470 to 1,521, not 1,548 |
 | LJ-1.229 | A2's range set and ranAt, the block others name | 186 AGAINST 170, AND THE DOUBLE IS 27 | Replacement was needed; separation does not carry it. The 27-to-78 band closes at 27 |
 | LJ-1.228 | Price sl and sc, the two hypotheses nothing on record prices | NOT SUPPLIED. ABOUT 0.15k EACH | Both records priced something else: 2.8k was the bypassed hull route, 16 was the assembly |
