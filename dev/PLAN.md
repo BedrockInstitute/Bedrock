@@ -787,6 +787,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.241 | Build phi-zero at arity two, read the declined archive | IT BUILDS. 77 LINES, TOP TYPECHECKS | The archive gave the shape and two primitives, no discharge. It verified the slot trace |
 | LJ-1.242 | The fifth step: does amb hold at the real phi-zero | NO. THE SUPPLY WAS CONDITIONAL. DD25 [LJ-1.243] | It assumes q, an equation false at a constant-free phi-zero, never declared |
 | LJ-1.243 | DD25 review of LJ-1.242's re-opening of amb | UPHELD. NEVER SUPPLIED OUTRIGHT | theorem is equally conditional. A third route exists, and absFo is LIVE and inverts route 1 |
+| LJ-1.244 | The third route: build q-prime, route 2 cut in half | DISPATCHED | q has one use site and its sym spends one direction only. C-45's first test case |
+| LJ-1.245 | Apply C-45 to the record and find the other conditional supplies | DISPATCHED | LJ-1.243 swept 4,165 telescopes and found seven. Which rows rest on the other six |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
