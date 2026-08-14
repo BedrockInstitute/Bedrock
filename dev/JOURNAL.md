@@ -998,3 +998,51 @@ suffice for `lh` alone, and that dies at `amb`
 satisfies the formula at a wrong `v`. **So the numeral-closure is real, and it
 is owed to `amb` rather than to `lh`.** **A review that reports its own failed
 attack is worth more than one that only reports its successes.**
+
+### 2026-08-15, `[LJ-1.251]`: ten dispatches re-derived a price that was already on the screen
+
+**`dev/PLAN.md` section 0.0's open work item 1 has read「Step 6 re-prices at
+about 255 and is UNBUILT」since the screen was written.** **I rewrote section
+0.0 twice on 2026-08-14 and edited the `[LJ-1.7]` row eight times, and I never
+once read the two halves against each other.**
+
+**`[LJ-1.251]` measured that they are the same object.**
+`agents/tasks/LJ-1-173/lj-1.173-report.md:857` says step 6 IS the 28 fields.
+**The words CHAPTER, TWO LEMMAS, LEAF SUPPLY and STEP 6 all name it**, and the
+chain from `[LJ-1.242]` to `[LJ-1.250]` re-derived its price from scratch.
+
+**It had been priced FOUR times before this session: 250 as a hypothesis, 270
+by survey, 405 as a ceiling, 255 on re-cost.** **`[LJ-1.199]` was dispatched to
+BUILD it and stopped at zero lines**, and its row at `dev/PLAN.md:745` says
+why: `envSetNumeral` needs `ω ∈ lam` and `HullStage`'s telescope has not got
+it, found by reading with no Agda run.
+
+**THE FAILURE IS NOT THE DISPATCHES. Each one measured something real and three
+of them corrected the record.** **The failure is that a status screen with two
+halves was maintained as two documents.** **A blocked row names what a goal
+waits on; an open-work list names what the project owes. When the same object
+appears in both under different words, nothing notices.**
+
+**THE ACTION, and it costs one grep: before briefing a blocked row, search the
+open-work list for the object by its CONTENT rather than its name.** **Step 6
+and the leaf supply share no word, and that is exactly why the cross-read has
+to be on content.**
+
+**What the chain DID buy, so the record is fair to it.** `[LJ-1.238]` ported
+`L.Coding.Sequence` at residual ZERO. `[LJ-1.241]` built `φ₀` at arity two.
+`[LJ-1.249]` re-sited 30 known-good archived lines at the class abstraction and
+proved the assembly carrier-generic. `[LJ-1.243]` and `[LJ-1.246]` found two
+undischarged parameters and an archive three reports had declined. **C-44 and
+C-45 both entered `dev/LESSONS.md` from this chain.** **The price was known; the
+route to it was not, and now three of its four steps are green.**
+
+**And `[LJ-1.251]` corrected three carried claims on its way out**, which is
+the shape of a review earning its dispatch:
+
+- **`[LJ-1.240]`'s inhabitability finding is INFERRED, not MEASURED.** Its probe
+  never ran, and `[LJ-1.241]`'s claim to have closed it names no `lh` anywhere.
+- **`[LJ-1.248]`'s per-tower 146 is a BAND, 146 to 196.** Its partition is a
+  survey marked MEASURED and it excludes A5.
+- **`[LJ-1.233]:247` calls the `TwelveAgree:519-522` comment STALE. It is NOT.**
+  `[LJ-1.251]` checked `KValue` against `AbstractFrame` and the comment is true
+  at HEAD, so the error is in `[LJ-1.233]` and not in the source.
