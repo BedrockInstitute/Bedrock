@@ -318,13 +318,13 @@ Standing clauses that go in every build or probe brief:
   new-mathematics builds, so the clause as written forbade the plan. `[LJ-0.1]`
   found it and `[LJ-0.2]` ranked it blocking. **The only freeze still standing
   is DD23, and it covers mathematical PROSE, not mathematics.**
-- **DD4, generic writing and maximum reuse, in EVERY brief.** For a recon: ask explicitly whether
-  the content can be written once at a generic carrier and instantiated, and
-  require the report to price BOTH shapes. For a build: state which shape is to
-  be written and why, with generic as the default. **Add the attitude clause
-  verbatim, because it is the part agents drop:** a stop-line is not a reason to
-  write fixed; if the generic shape does not fit the budget, say so and stop for
-  a re-price rather than delivering the fixed shape inside the cap.
+- **DD4, generic writing and maximum reuse, in EVERY brief.** **The clause is
+  the one above in this section, headed `DD4 GOES IN EVERY BRIEF`, and it is not
+  restated here.** DD4's row names ONE standing brief clause as its enforcement
+  point, so a second copy in the same section is the DD19 canonical-twice
+  defect: two copies drift and a reader who finds one does not know the other
+  exists. Write what that clause requires, including its attitude half, which
+  is the part agents drop.
 - **Seconds, not only lines** (owner's ruling, 2026-08-06). Every build brief
   requires the module's own check time BEFORE and AFTER, measured with
   `GHCRTS=-M8g agda --profile=modules <file>` (or `--profile=definitions` for a

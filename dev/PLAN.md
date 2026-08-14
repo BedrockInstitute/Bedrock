@@ -129,10 +129,10 @@ refuted the TIMING and not the target, and the owner moved the ruling to where
 the evidence will be: after `[LJ-2.1]` measures, `[LJ-2.2]` writes the
 benchmarks in, and `[LJ-2.3]` delivers the reuse map.
 
-**The core constraint is architectural, and it is the one that matters:
-MAXIMIZE THE CODE THE TWO PROOFS SHARE.** The total falls out of that. It is
-never pursued by splitting a chapter, by re-bucketing lines between the two
-wings, or by any other accounting move; `[LJ-0.1]`'s predecessors caught that
+**The core constraint is architectural and it is DD4, whose row in section 3 is
+its only canonical statement.** The total falls out of it and is never pursued
+by splitting a chapter, by re-bucketing lines between the two wings, or by any
+other accounting move; `[LJ-0.1]`'s predecessors caught that
 class of argument twice, and D36's deletion test exists because of it.
 
 **The two quantitative constraints, and NEITHER BINDS TODAY** (DD5). One on
@@ -345,7 +345,9 @@ Every size figure in this registry, unless it says otherwise, is **non-blank
 lines inside ` ```agda ` fences**. File lines, blank lines and prose are not
 counted; a chapter's file is typically about twice its caliber.
 
-**THE TWO-CALIBER DISCIPLINE IS REVOKED** (owner, 2026-08-09, retiring DD7).
+**THE TWO-CALIBER DISCIPLINE IS REVOKED** (owner, 2026-08-09, retiring DD7),
+**and DD8's row is where that ruling lives; this section records what the
+revoked discipline WAS, so a reader meeting it in an old document can date it.**
 It required every projection twice, naive and calibrated, with a x1.3 factor
 where a probe or comparable reached and x3 where only a survey did. It existed
 because a line total was a hard constraint and the spread between the two
@@ -483,11 +485,11 @@ the `L3.32-T` series. Both series resolve and neither reuses a number.
 cap.
 
 **EVERY BRIEF SURVEYS THE ARCHIVE BEFORE IT IS SENT, AND EVERY REPORT NAMES
-WHAT IT USED.** Ruled by the owner 2026-08-09 as a mechanism rather than an
-encouragement. A brief carries an ARCHIVE section listing the archived code,
-the archived task rows and the lessons that may bear on the task; a report
-carries an ARCHIVE USED section naming what it actually read and what it took
-from each. The retired route cost a year of measurement and the whole of it
+WHAT IT USED. THE RULE IS DD18 AND THIS IS NOT A SECOND COPY OF IT**: read the
+row in section 3 for what a brief and a return must carry, and
+`dev/ORCHESTRATION.md` for the operational form, exactly as DD17 and DD25
+point. What follows is WHY the archive is worth surveying, which is this
+section's business. The retired route cost a year of measurement and the whole of it
 is still on disk: `archive/` for the code, `dev/ARCHIVE.md` for why each
 module left and what it did right, `archive/dev/TASKS-archived.md` for what every
 dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
