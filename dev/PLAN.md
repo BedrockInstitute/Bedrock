@@ -35,56 +35,42 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 
 ## 0.0 WHERE LJ-1 STANDS, rewritten 2026-08-14
 
-**The 2026-08-13 resumption block is SPENT and this replaces it.** All four of
-its items returned. The identity graph carved by separation at 1.73 s against
-254.22 (`[LJ-1.154]`). The sixteen rule-2 repairs landed and
-`check-unbound-hyp.py` fell from 18 to **2**. The Condensation family was
-diagnosed to exhaustion (`[LJ-1.155]`). The `levelIn` wall was BYPASSED, not
-broken, at 16 lines (`[LJ-1.160]`).
+**This screen holds the LATEST state and nothing else.** What it replaces sits
+in `dev/JOURNAL.md` under its date. The 2026-08-13 resumption block is SPENT
+and all four of its items returned; that record is in the journal.
 
-**Three rows are open and they block in this order:**
+**Three rows are open and they block in this order. Superseded status moves to
+`dev/JOURNAL.md`; only the latest state stays here** (owner, 2026-08-14).
 
-| row | blocked on |
+| row | blocked on, as of 2026-08-14 |
 |---|---|
-| `[LJ-1.7]` | **`levelIn` and `cover` are BUILT** (`[LJ-1.178]`) and `theorem` does NOT derive. `AmbientRead` is **SUPPLIED** (`[LJ-1.184]`), closing one of four hypotheses. **`[LJ-1.196]` measured NO-GO on the residue and `[LJ-1.200]` UPHELD the verdict while REFUTING its stated cause.** The load-bearing reading is right: `u`'s slot is the definable powerset of the recorded value and the induction never pins it. **But the obstruction is the ENVIRONMENT LIFT, not a missing `Δ₀` cure**: the tree already carries `Δ₀-extAtB`, `Δ₀-DefBodyB` and `abs₀` spent for this very ambient transfer. **A CHAPTER IS AN UNMEASURED CONSEQUENT** and the 1,288 plus 395 twin prices a RE-DERIVATION, not the class-parameter generalization whose surface `[LJ-1.200]` measures at 17 lines. **2026-08-14, `[LJ-1.225]`: THE PORT DOES NOT REACH THE LIFT.** The lift is six ambient readings of `L.Coding.Sequence`, at `:217`, `:221`, `:295`, `:298`, `:303`, `:325`; that module pins `𝒮ʟ` at `:59` and it is in NO port scope, neither `[LJ-1.220]`'s 17 nor `[LJ-1.223]`'s 10. The green ambient body stops at `DefAt-out`. **Of the four hypotheses, `amb` is SUPPLIED, `s₁` is BUILT and BUILT is not SUPPLIED, and `sl` and `sc` are OPEN AND UNPRICED BY ANYTHING.** Devlin marks the whole residue PER-TOWER, the C1 and C2 rows of Step C, so the shared chain was never going to reach it. **Land the port as DD4 and call it DD4** |
-| `[LJ-1.8]`, the trophy | **A5 no longer carries `CSB` and carries ZERO replacement** (`[LJ-1.156]`). The new gate is `LeastCardInj`, 44 lines at 100.64 s. Route A-prime still has no TOTAL |
-| `[LJ-1.9]`, the audit | The wing reads **1.5x to 1.7x** and the instrument cannot separate those. **DD24 is the whole rule** (owner, 2026-08-14): the bar was fixed when the AC trophy landed, it does not drift, every GCH module uses it, and intermediate debt is ALLOWED because only the whole wing at the end is judged |
+| `[LJ-1.7]` | **THE LEVEL-HOOD CERTIFICATE, and the class-generic port does NOT reach it** (`[LJ-1.225]`). Four hypotheses at `agents/tasks/LJ-1-178/ProbeLJ1178A.agda:486-493`: `amb` **SUPPLIED** (`[LJ-1.184]`), `s₁` **BUILT in shape** and BUILT is not SUPPLIED, `sl` and `sc` **OPEN and unpriced by anything**. The missing term is the ambient step reading: six readings of `L.Coding.Sequence` at `:217`, `:221`, `:295`, `:298`, `:303`, `:325`, a module that pins `𝒮ʟ` at `:59` and sits in NO port scope. Devlin marks the whole residue PER-TOWER, the C1 and C2 rows of Step C, so a shared chain was never going to reach it. **`[LJ-1.228]` is pricing `sl` and `sc`**, where the record contradicts itself between 2.8k lines and 16 |
+| `[LJ-1.8]`, the trophy | **A GATE LIST, and still no price** (`[LJ-1.227]`). A6 is CLOSED at 446 (`[LJ-1.217]`) and A5 is 547 (`[LJ-1.176]`), whose rows 4 and 5 stay INFERRED while `[LJ-1.226]` measures `pairω`. The 555-line reading residue across A1, A2, A3, A4 and A7 is **NOT stale**, and each block now has a named widest term and a probe. Four of five overlaps are RESOLVED; one stands and double-counts A2's predicate inside A4 by 27 to 78 lines, so the sum corrects to **1,470 to 1,521** and is still arithmetic, not a price |
+| `[LJ-1.9]`, the audit | **ANSWERED** (`[LJ-1.218]`, corrected by `[LJ-1.222]`). The wing is **1.70x**, 185.41 s over 11,926 lines, and the gap to DD24's bar is **60.0 s**, an upper bound taken on a loaded machine. `dev/ledger.toml` carries `lines_removable = 83`, of which 64 are unaudited against D-27. **DD24 is the whole rule** (owner, 2026-08-14): the bar was fixed when the AC trophy landed, it does not drift, every GCH module uses it, and intermediate debt is ALLOWED because only the whole wing at the end is judged |
 
 **THE OPEN WORK, in dependency order.**
 
-**1. The supply chain for the satisfaction layer.** `[LJ-1.168]` measured that
-the 5,047 figure was never a measurement and collapses to about **270**.
-`[LJ-1.172]` built steps 1 to 5 and REFUTED step 6 at the join. `[LJ-1.173]`
-swept the refutation to **21 fields across three records and CURED all 21**, for
-77 lines, green. **Step 6 now re-prices at about 255 and is UNBUILT.** Its
-seconds are NOT MEASURED, and nothing projects them.
+**1. The supply chain for the satisfaction layer.** `[LJ-1.172]` built steps 1
+to 5 and REFUTED step 6 at the join. `[LJ-1.173]` swept the refutation to **21
+fields across three records and CURED all 21**, for 77 lines, green. **Step 6
+re-prices at about 255 and is UNBUILT.** Its seconds are NOT MEASURED, and
+nothing projects them.
 
-**2. Route A-prime's total.** `[LJ-1.175]` measured a partial sum of **705 over
-six blocks** and named the blocker: **A5 has NO live line price**, and its only
-two figures are both dead. **It also measured that the seven blocks DO NOT
-PARTITION**, with five overlaps quoted from the reports' own text. **So a
-partition ruling comes FIRST, because it costs no machine and it decides what an
-A5 probe must measure.** `levelIn` and `cover` are in NO figure here.
+**2. Route A-prime's five probes, and DD8 now allows them.** `[LJ-1.227]` named
+the widest unmeasured term and the probe for every one of A1, A2, A3, A4 and
+A7, so five build briefs are writable for the first time. **None of the five
+blocks dissolves**, which the same task asked first for each. **A2 is the one
+to run first**: every downstream block names its predicate, `injAt` exists
+nowhere in `src/**/*.lagda.md`, and measuring it also pins the one surviving
+double-count.
 
-**3. The wing's gap to the DD24 bar is 56 to 67 s, LARGER than the 44 recorded.**
-`[LJ-1.185]` re-measured the wing at 192.41 s over 11,926 lines, **1.76x**.
-**The `*Agree` term is SPENT**, cured by `[LJ-1.158]`, which took the wing 2.06x
-to 1.60x. **And the last candidate is REFUTED: the 16 s nobody had measured was
-a DOUBLE SUBTRACTION and never existed**, because `[LJ-1.155]` had already
-subtracted `DeadCode` before `[LJ-1.177]` subtracted it again. The real residue
-is 17.8 s, and it is **`OccursCheck` at 66 percent plus `TypeSig` at 29
-percent**: metavariable solving and signature elaboration. **Module
-instantiation is 0.9 percent of it** and sits INSIDE the 5.2 s ceiling already
-known, so the wing had ONE ceiling of about 5 s and never 5 plus 16. **`[LJ-1.201]` then OVERTURNED the「no cure is measurable」half:** the ±12.8
-percent is a ONE-MODULE BETWEEN-SERIES figure by `check-ratio.py:72-76`'s own
-words, while within-series spread is 0.5 to 4.0 percent, and `[LJ-1.185]` used a
-within-series paired design ITSELF before denying it. **So the term is UNPRICED,
-not unmeasurable, and it is not SPENT.** **And a cure nobody owns is larger than
-the ceiling:** `Deserialization` at this master went 1,689 ms to about 10,000,
-which is 68 percent of its 12.3 s rise in one day and 8.3 s outside the residue.
-Eight of the twelve wing masters are already under the bar together; the
-Condensation family carries 82 percent of the seconds on 65 percent of the
-lines.
+**3. The wing's seconds have a LOCATION, and the cure is the owner's call.**
+`[LJ-1.214]` measured that the telescope component at `Deserialization` carries
+**7,925 of 8,236 ms, 96 percent**. All three cheap levers measured void:
+sealing moves 83 ms, emptying the numeral content moves 47 ms the WRONG way,
+and instantiation is 0.9 percent. **Removing the component would recover the
+8.2 s and restore 21 fields that were FALSE before `[LJ-1.173]` cured them.**
+So it is a design question and not an edit.
 
 **WHAT IS WAITING ON THE OWNER, and none of it blocks the three above.**
 
@@ -94,15 +80,6 @@ lines.
   `[LJ-1.155]` then found the counter-case: a wing-local cure does not move the
   denominator, and the wing went 2.06x to 1.60x. **So the ruling is no longer
   forced, but the bar still reads a shared cure as a regression.**
-- **AN OWED REVIEW, and it is the orchestrator's to do, not the owner's.**
-  Three things now touch the same two files and they landed in three different
-  states of the tree. `[LJ-1.205]` reconciled the dispatch skill against herdr's
-  official one. **I then changed `dispatch.py` and that same skill under the C4
-  ruling, WHILE `[LJ-1.203]` was already running.** So `[LJ-1.203]` is reading a
-  tool and a skill that moved after it started, and its conclusions may cite
-  lines that no longer say what they said. **When it returns I re-read all three
-  together against the tree as it then IS, and say what each one measured
-  against which version.** Owner's instruction, 2026-08-14.
 - **The `build` bundle is FULL at the cap of 12, and C-42 did not go in.** I
   routed the new law to `recon` and `probe`, which had room, and to four trigger
   words. **A build acting on a refutation therefore reaches it through layer 2
@@ -793,7 +770,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.224 | Is LJ-1.220's exit 0 bought? Check the 22 types | NOT BOUGHT. 22 of 22 FAITHFUL | Five reconstructions sound; InL.lagda.md:253 holds the same reduction. Width falls to 8 and 19 |
 | LJ-1.225 | Does the ported chain discharge LJ-1.7's residue at all | NO. IT STOPS ONE MODULE SHORT | The lift is six ambient readings of L.Coding.Sequence, in no port scope. sl and sc stay open |
 | LJ-1.226 | Build pairω into L, the widest unmeasured line in the route | DISPATCHED | A5 row 5 is INFERRED at 160 and LJ-1.176 warned it may be far too low. Nobody has written one |
-| LJ-1.227 | The gate list for A-prime's reading residue, five blocks in one pass | DISPATCHED | DD8 refuses a build brief that cannot name its widest term. Nobody has named these five |
+| LJ-1.227 | The gate list for A-prime's reading residue, five blocks | ZERO DISSOLVE, FIVE NAMED TERMS | One overlap stands and double-counts A2 inside A4, so the sum is 1,470 to 1,521, not 1,548 |
+| LJ-1.229 | A2's range set and ranAt, the block every other block names | DISPATCHED | injAt is in no master. Measuring it also pins the one surviving double-count in A-prime's sum |
 | LJ-1.228 | Price sl and sc, the two hypotheses nothing on record prices | DISPATCHED | LJ-1.121 says 2.8k to 3.3k lines, LJ-1.160 says 16. That gap is phase 1's largest uncertainty |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |

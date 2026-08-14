@@ -773,3 +773,78 @@ carries both:** P-l runs to `:2419`, and `:2355-2372` holds the five-transplant
 table and the sentence「an expected figure anchored on a comparable is a
 HYPOTHESIS, not a price」. **The citation is sound. The heading is narrower than
 the entry**, and that is the whole defect.
+
+### 2026-08-14, what left `dev/PLAN.md` section 0.0, and why a status screen must be swept
+
+**The owner ruled on 2026-08-14 that section 0.0 must not be abused: sweep the
+expired into this file periodically and keep ONLY the latest status.** **The
+ruling names a real failure and the orchestrator had just committed it**: the
+`[LJ-1.7]` row was APPENDED to rather than replaced, so a row that already
+carried five dispatches of history gained a sixth. **This entry holds what the
+sweep removed. Nothing is lost and section 0.0 is short again.**
+
+#### The `[LJ-1.7]` narrative, superseded by measurement
+
+**`[LJ-1.196]` measured NO-GO on the residue and `[LJ-1.200]` UPHELD the
+verdict while REFUTING its stated cause.** The load-bearing reading was right:
+`u`'s slot is the definable powerset of the recorded value and the induction
+never pins it. **The obstruction was named as the ENVIRONMENT LIFT and not a
+missing `Δ₀` cure**, because the tree already carries `Δ₀-extAtB`,
+`Δ₀-DefBodyB` and `abs₀`, spent for this very ambient transfer.
+
+**Two claims from that period are now dead.**
+
+**「A CHAPTER IS AN UNMEASURED CONSEQUENT」and the 1,288 plus 395 twin.**
+`[LJ-1.210]` dissolved the chapter by BUILDING it: 42 lines written, 1,272
+verbatim, first try. `[LJ-1.213]` then measured `Powerset`'s body at 19 written
+and 370 verbatim, and `DefAt-stage` at 8 non-blank lines, a corollary.
+
+**The 17-line class-parameter surface.** `[LJ-1.200]` measured 17 lines of
+class naming on Model plus Powerset. **`[LJ-1.220]` measured the real surface at
+22 parameters across 9 modules, and `[LJ-1.224]` corrected that to 19 names
+across 8.** **`[LJ-1.225]` measured why both figures missed: each sits BELOW the
+six ambient readings, so the 17 lines had nothing behind them.**
+
+#### The A-prime narrative, superseded by three prices
+
+**`[LJ-1.175]` measured a partial sum of 705 over six blocks and named the
+blocker: A5 had NO live line price and its only two figures were both dead. It
+also measured that the seven blocks DO NOT PARTITION**, with five overlaps
+quoted from the reports' own text, and concluded that a partition ruling had to
+come first because it costs no machine.
+
+**All three parts of that are now answered.** `[LJ-1.176]` priced A5 at 547
+under a stated partition. `[LJ-1.217]` closed A6 at 446. `[LJ-1.227]`
+re-checked the five overlaps and RESOLVED four of them, leaving one real
+double-count.
+
+#### The wing's seconds, superseded by two locations
+
+**`[LJ-1.185]` re-measured the wing at 192.41 s over 11,926 lines, 1.76x, and
+the gap read 56 to 67 s against the 44 then recorded.** The `*Agree` term was
+SPENT by `[LJ-1.158]`, which took the wing 2.06x to 1.60x.
+
+**`[LJ-1.177]`'s 16 s was a DOUBLE SUBTRACTION and never existed**, because
+`[LJ-1.155]` had already subtracted `DeadCode` before it was subtracted again.
+The real residue is 17.8 s: `OccursCheck` at 66 percent and `TypeSig` at 29
+percent, metavariable solving and signature elaboration. **Module instantiation
+is 0.9 percent of it**, inside the 5.2 s ceiling already known, so the wing had
+ONE ceiling of about 5 s and never 5 plus 16.
+
+**`[LJ-1.201]` then OVERTURNED the「no cure is measurable」half.** The ±12.8
+percent is a ONE-MODULE BETWEEN-SERIES figure by `check-ratio.py:72-76`'s own
+words, while within-series spread is 0.5 to 4.0 percent, and `[LJ-1.185]` used
+a within-series paired design ITSELF before denying it.
+
+**`[LJ-1.209]` and `[LJ-1.214]` then located the term.** The 8.2 s at
+`Deserialization` is the telescope component and not its content: 7,925 of
+8,236 ms, 96 percent. All three cheap levers measured void, and the cure would
+restore 21 false fields. **That is why it is the owner's design call and not an
+edit.**
+
+#### The figure that was wrong in five documents
+
+**「nine tower-neutral steps and three per-tower ones」is FALSE.** The table at
+`dev/literature/devlin-II5.md:370-383` has twelve rows: **eight EITHER and four
+PER-TOWER**, and the word「nine」does not occur in that file. Three briefs and
+two reports carry the wrong figure and they are frozen records.
