@@ -60,17 +60,19 @@ build, and include the file you think you already know.** Report the search you
 ran. **C-38 as extended: a hypothesis is discharged when something SUPPLIES
 it.**
 
-## THE BAR, RULED 2026-08-14 as DD27
+## THE BAR, AND IT IS DD24 UNCHANGED
 
-**A new module is priced against the MODULE RATE, `ac_baseline_module_rate` =
-0.009143**, not against DD24's whole-wing 0.007913.
+**The owner ruled 2026-08-14 that DD24 is the whole rule and that the readings
+layered on it were the orchestrator's own. Read DD24 fundamentally:**
 
-**AND THE 1.15x TOLERANCE IS SPENT.** The GCH wing sits at 1.54x and carries a
-40 to 49 s debt. **Your acceptance figure is 0.009143 s per line, at 1.00x.**
+1. **The GCH bar was FIXED when the AC trophy landed. It does not drift.**
+2. **EVERY GCH module uses that one number, new or old alike.**
+3. **INTERMEDIATE DEBT IS ALLOWED**, because only the WHOLE GCH side, at the
+   end, is judged against the bar.
 
-**Report your seconds against it and say plainly whether you clear it.** Record
-an overage plainly (DD8). **Never delete a line to improve a ratio**; P-q
-measured 315 lines removed buying 11.8 s.
+**So report your lines and your seconds, and do NOT judge this build against a
+tightened figure.** Record an overage plainly (DD8). **Never delete a line to
+improve a ratio**; P-q measured 315 lines removed buying 11.8 s.
 
 ## THE INSTRUMENT
 

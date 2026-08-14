@@ -1,31 +1,33 @@
-# LJ-1.177: cure the `*Agree` masters' second term, and retire the wing's debt
+# LJ-1.177: cure the `*Agree` masters' second term, so the wing ends inside DD24
 
 tier: opus (version `override`, set 2026-08-13; the head for every case is in
 `scripts/dispatch_policy.py`, which is the only place the tables live)
 
 ## GOAL
 
-**The GCH wing carries a debt of 40 to 49 seconds and DD27 rules that only a
-CURE can retire it.**
+**DD24 judges the WHOLE GCH wing against a bar fixed when the AC trophy landed.
+The wing sits above that bar today, and only a CURE moves it down.**
 
 `[LJ-1.155]` measured that the three `*Agree` masters carry a **second dominant
 term** and that its cure is **WING-LOCAL**. That is the one cure shape that
 improves the ratio, because it moves the numerator and leaves the denominator
 alone.
 
-**Find that term, cure it, and measure what the wing's ratio does.**
+**Find that term, cure it, and measure what the wing's aggregate does.**
 
-## WHY THIS IS THE ONLY ROUTE TO THE DEBT, and DD27 states the arithmetic
+## HOW TO READ DD24, RULED BY THE OWNER 2026-08-14
 
-The debt is wing seconds minus the bar times wing lines. At `[LJ-1.173]`'s
-measurement, 167.01 s over 11,849 lines against a 0.010514 bar, it is about
-**40 s**; the 1.60x reading the same week gives about 49.
+**DD24 is the whole rule, and the readings layered on it were the
+orchestrator's own. Fundamentally:**
 
-**A line written at the baseline instead of the bar repays 0.001371 s.** The
-remaining new work is on the order of 500 lines, which repays about **0.7 s,
-under two percent of the debt.**
+1. **The GCH bar was FIXED when the AC trophy landed. It does not drift.**
+2. **EVERY GCH module uses that one number, new or old alike.**
+3. **INTERMEDIATE DEBT IS ALLOWED**, because only the WHOLE GCH side, at the
+   end, is judged against the bar.
 
-**So new work cannot retire this debt. A cure can. That is this task.**
+**So this task is NOT debt collection and nothing here is urgent because of a
+running total.** It is the work that decides whether the wing ENDS inside the
+bar. **The wing is above the bar and a cure is what lowers it.**
 
 ## WHAT IS MEASURED, and every row is somebody else's measurement
 
@@ -53,7 +55,7 @@ measurement.** Do not extrapolate from one. **If your cure's effect is inside
 the band, say exactly that and do not multiply it.**
 
 **A cure worth funding here moves double figures of seconds**, because that is
-what the debt is made of.
+the size of the wing's gap to the bar.
 
 ## THE ABORT CRITERION, fixed BEFORE the run (D-1)
 
@@ -64,7 +66,7 @@ what the debt is made of.
 - **INSIDE THE BAND.** Your cure's effect cannot be separated from noise.
   **Say so plainly and report the distribution you measured.** That is a
   complete answer: it would mean the wing is intrinsically this expensive and
-  the debt is structural.
+  the gap is structural.
 - **SHARED, NOT LOCAL.** If the cure turns out to live upstream, **STOP before
   applying it** and say what it would do to the baseline. `[LJ-1.147]` made
   every master faster and the verdict worse, and that is DD4 working exactly as
@@ -73,8 +75,7 @@ what the debt is made of.
 ## WHAT YOU MUST NOT DO
 
 - **DO NOT DELETE A LINE TO IMPROVE THE RATIO.** P-q measured 315 lines removed
-  buying 11.8 s, and DD24's own row refuses the shrinking denominator. DD27
-  repeats it.
+  buying 11.8 s, and DD24's own row refuses the shrinking denominator.
 - **Do not revisit P-x or P-w at this site.** Both REFUTED, MEASURED.
 - **Do not touch `src/L/Coding/Graph.lagda.md`.** 21 consumers are green on its
   seal.
@@ -107,7 +108,9 @@ the strongest DD4 result this project holds and it is one file away from your
 target.** If your cure has a generic form, price both and say which you took.
 
 **And say whether the cure is SHARED or WING-LOCAL for every candidate**, not
-only the one you take. That column is what DD27 turns on.
+only the one you take. A SHARED cure speeds the AC side too, and `[LJ-1.147]`
+measured that this makes the ratio WORSE, so the column decides whether a cure
+helps at all.
 
 ## ARCHIVE (DD18)
 
@@ -150,7 +153,7 @@ Run `.venv/bin/python scripts/rules.py --for probe` and `--for build`.
 - **P-q.** Lines removed do not buy seconds.
 - **C-42.** A refutation measures the site it names, never its extent.
 - **P-s, P-m, P-l, P-y, P-w, C-12, C-22, C-36, C-38 as extended, C-39, C-40.**
-- **DD8, DD27, D-1, D-10, D-26, D-29, D-30. I-5.**
+- **DD8, DD24, D-1, D-10, D-26, D-29, D-30. I-5.**
 
 ## CONSTRAINTS
 
@@ -164,5 +167,6 @@ Run `.venv/bin/python scripts/rules.py --for probe` and `--for build`.
 
 **Lead with the wing's aggregate before and after, with run counts, and say
 whether the change is outside the band.** Then the term you found and where.
-Then SHARED or WING-LOCAL for every candidate. Then the debt, re-measured. Then
+Then SHARED or WING-LOCAL for every candidate. Then the wing's gap to the bar,
+re-measured. Then
 the DD4 answer. **Mark every negative MEASURED or INFERRED.**
