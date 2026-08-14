@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited dd4 gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4
+check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 buildmanifest archivecited
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -138,6 +138,17 @@ dispatchpolicy:
 # briefs carried the ARCHIVE heading while the CONTENT decayed: after [LJ-1.94]
 # only process tasks cited a retired-route file. A red gate here would buy a
 # pasted citation rather than a survey, so this prints and never fails.
+# The ADVISORY reports. Neither gates and both exit 0 whatever they find, by
+# their own design: check-archive-cited would buy a pasted citation instead of a
+# survey, and check-build-manifest cannot tell an evidence file from a stray.
+# [LJ-1.197] MEASURED that build-manifest's rules were SILENT, and the cause was
+# not the checker: it was in NO make target, NO hook and NO CI, so it ran only
+# when a human already suspected something. A rule whose enforcement point is
+# "somebody runs a command" fires after the fact. Running them inside `check`
+# makes them VISIBLE at the one moment everyone looks, without making them gate.
+buildmanifest:
+	$(PY) scripts/check-build-manifest.py
+
 archivecited:
 	$(PY) scripts/check-archive-cited.py
 
