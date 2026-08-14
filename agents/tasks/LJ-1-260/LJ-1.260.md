@@ -165,12 +165,40 @@ Run `.venv/bin/python scripts/rules.py --for build` and read every statement.
 says THIS IS AN EXCERPT when it truncated. OPEN the full entry for any law you
 act on.**
 
+**The `build` bundle, which the dispatch gate refused this brief for missing
+once. Read every statement.**
+
+- **P-h.** Definability walks are module-parameterized, never
+  function-parameterized. **You are adding a premise to three RECORDS; keep the
+  parameterization where the master already has it.**
+- **P-k.** A read lemma is stated where its consumers use it.
+- **P-l.** A statement may be ABOUT a concrete stage without dragging that
+  stage's PRESENTATION into its type.
+- **P-m.** The check-cost rate is a content-class certificate, and
+  instantiation is the expensive class. **Eleven row modules re-instantiate
+  after your change; report their seconds.**
+- **P-n.** Satisfaction content at a concrete carrier is a payable floor, not a
+  defect.
+- **R-35.** Union representations are meta-poisoned; state memberships at small
+  indices.
+- **R-38.** A consumer's alias of a transparent imported operation is a birth
+  site. **Fourteen consumers touch this change; watch for an alias.**
+- **R-40.** A deep successor-chain membership witness normalizes
+  super-linearly; climb by small closures.
+- **I-5.** Inner-world truncation branches carry written types. **The premise
+  IS a truncation, so its branches carry written types.**
+- **C-12.** One agda process, the cap never raised.
+- **D-10.** Price the truth of a recorded residue before pricing its proof.
+- **C-22.** Write your deliverable incrementally.
+
+**And the ones this chain earned:**
+
 - **C-40.** **Verify the CONSUMERS, never the record alone. The centre.**
 - **C-44.** A claim is unchecked until you check it.
 - **C-45.** Audit the instantiation, never the telescope.
 - **D-1.** The abort criterion is fixed above.
-- **C-36, C-38, C-39, C-42. P-l, P-i, R-40, R-34. C-12, C-22. P-k, P-m, P-t,
-  P-y. DD0, DD8, DD18, DD23, DD24, D-10, D-26, D-29, D-30. I-5.**
+- **C-36, C-38, C-39, C-42. R-34. P-t, P-y. DD0, DD8, DD18, DD23, DD24, D-26,
+  D-29, D-30.**
 
 ## CONSTRAINTS
 
