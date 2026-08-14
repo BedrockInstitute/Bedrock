@@ -54,12 +54,26 @@ as an answer.**
 
 **Two siblings hold Agda slots and one is mid-recovery.**
 
-**So: make your OWN agent to test against.** Dispatch nothing through
-`dispatch.py`. Start a throwaway herdr agent in a pane you create, drive it, and
-close it when you are done. **Never test against a sibling.**
+**AND YOU MUST NOT CREATE A HERDR AGENT. The first attempt at this task did,
+and it killed itself.** MEASURED 2026-08-14: it created a pane, and while doing
+so the driver's stop loop matched `--until idle`, declared the run finished,
+read the pane and CLOSED it. Its report was still a skeleton of PENDING
+sections. **A supervised agent that manipulates its own supervisor's state
+machine will be misread by it.** That instruction was in my brief and the
+failure is mine.
 
-**If you cannot make a safe test subject, say so and stop.** A measurement taken
-against a live sibling would cost more than the answer is worth.
+**So measure WITHOUT perturbing your own supervision:**
+
+- **Read the docs and the code**, and say what is DOCUMENTED.
+- **Observe agents somebody ELSE started**, read-only: `herdr agent list` and
+  `get` are safe.
+- **Read the tracked evidence**: `.claude/skills/codex-dispatch/.state/logs/`
+  holds the driver's own logs for dozens of real runs, including the waits that
+  worked and the ones that did not. **That is a measurement corpus nobody has
+  mined.**
+
+**If a capability cannot be measured without creating an agent, say so and mark
+it UNMEASURABLE HERE.** That is a complete answer and it is the honest one.
 
 ## THE ABORT CRITERION, fixed BEFORE the run (D-1)
 
