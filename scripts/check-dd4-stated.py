@@ -81,7 +81,14 @@ def briefs() -> list[Path]:
     for d in sorted(TASKS.iterdir()):
         if not d.is_dir() or d.name == "archive":
             continue
-        out += sorted(d.glob("[A-Z]*.md"))
+        # A REPORT IS NOT A BRIEF, and case alone does not separate them. MEASURED
+        # 2026-08-14: three reports were written as `LJ-1.200-report.md` with a
+        # capital prefix while most use lowercase, and the glob read all three
+        # as briefs missing their DD4 section. A report is a frozen record and
+        # renaming it would break every citation, so the FILTER moves, not the
+        # files. DD4 binds the brief; the return answers it in prose.
+        out += sorted(f for f in d.glob("[A-Z]*.md")
+                      if not f.name.lower().endswith("-report.md"))
     return out
 
 
