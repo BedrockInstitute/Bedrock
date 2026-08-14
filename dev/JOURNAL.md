@@ -650,3 +650,36 @@ BOTH towers, so the blocked shape buys the definable well-order twice; the term
 algebra needs only a META well-order both towers already have, so it is
 template content bought once. `[LJ-0.7]` found the definable well-order appears
 on the whole GCH chain at exactly ONE place, Devlin's own proof of the hull.
+
+### 2026-08-14, `[LJ-1.187]`: the task-index evidence and one orchestrator habit moved to their kind
+
+The `[LJ-1.187]` sweep classified every part of `dev/` by kind: a ruling is a
+row in `dev/PLAN.md` section 3, an episode is an entry here, a law is an entry
+in `dev/LESSONS.md`. Two passages in `dev/PLAN.md` were EPISODE sitting in a
+section header and a status screen, and each moved here whole, nothing lost.
+
+#### The task-index preamble, PLAN section 11
+
+**TWO PIECES OF EVIDENCE THE RULING IS OWED, and the record on one of them
+was wrong until `[LJ-1.149]` read it.** `[L3.32-T261]`'s probe on the S-tower
+crossing **RAN**, on 2026-08-09: exit 0, one cold run of 1.50 s over 124 fresh
+lines, at `agents/tasks/archive/L3-32-T261/ProbeT261.agda`, and it is the probe
+`[T260]` specified and could not run. It measured that the GCH wing pays
+neither `carried-sequence` nor `blockpowlim-instance`, the 4,238 to 5,218 that
+`[L3.32-T257]` declared as its own weak point. **This paragraph and three
+`dev/ledger.toml` notes said it never ran, from 2026-08-09 to 2026-08-13**,
+because `[LJ-0.3]`'s closeout read the brief header rather than the report.
+**WHAT IS STILL OWED IS DIFFERENT AND SMALLER:** one bounded op-clause priced
+and multiplied by sixteen, which `[L3.32-T263]` left unmeasured, and a second
+independent pass on `[T257]`'s line comparison, which is still one agent and
+one pass. **`[LJ-2.0]` owns both** and gates `[LJ-2.5]`; `[LJ-2.3]` reads them
+into the reuse map.
+
+#### The orchestrator habit that cost three times, PLAN section 0.0
+
+**ONE ORCHESTRATOR HABIT THAT COST THREE TIMES ON 2026-08-13**, recorded here
+because no checker catches it: **do not change anything under a running agent.**
+Twice a directory-wide `git add -A` swept in a sibling's work in progress; once
+a tool rewrite landed while another agent was measuring with that tool, and it
+lost four figures. **Commit by explicit path, and land a tool change only when
+no agent holds it.**
