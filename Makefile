@@ -147,7 +147,7 @@ dispatchpolicy:
 # "somebody runs a command" fires after the fact. Running them inside `check`
 # makes them VISIBLE at the one moment everyone looks, without making them gate.
 buildmanifest:
-	$(PY) scripts/check-build-manifest.py
+	$(PY) scripts/check-build-manifest.py --check
 
 archivecited:
 	$(PY) scripts/check-archive-cited.py
