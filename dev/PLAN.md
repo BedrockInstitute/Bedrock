@@ -784,6 +784,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.238 | Port L.Coding.Sequence, the six readings | IT PORTS. 40 WRITTEN, 145 VERBATIM, RESIDUAL 0 | The six readings are tower-neutral. The DefAt trio leaks and the ambient body supplies it |
 | LJ-1.239 | Supply lh, the one term LJ-1.7 still owes | NOT SUPPLIED. THE TYPE IS WRONG. DD25 [LJ-1.240] | lh names arity 2; the stage level-hood has arity 4+n because its tag numerals are slots |
 | LJ-1.240 | DD25 review of LJ-1.239's refutation | RECIPE UPHELD, MY ESCALATION REFUTED | The type stands and costs sl and sc zero. The archive holds an arity-2 level story nobody read |
+| LJ-1.241 | Build phi-zero at arity two, and read the archive two reports declined | DISPATCHED | erase preserves arity, so it is the right instrument. Its ARCHIVE section is the task |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
