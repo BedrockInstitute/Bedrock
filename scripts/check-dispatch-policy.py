@@ -211,11 +211,23 @@ def check_briefs(version: str) -> tuple[list[str], list[str]]:
                 f"{rel}: `tier: {line[:48]}` does not name the policy version "
                 f"it was chosen under. Write `tier: {token} ({version})`, so "
                 f"a wrong choice leaves a trace an audit can find.")
+        # A BRIEF IS JUDGED BY THE VERSION IT NAMES, never by today's switch.
+        # MEASURED 2026-08-14, the hour the owner flipped the switch: five briefs
+        # went red at once, every one of them CORRECT when it was written and
+        # every one carrying `(override)` on its own tier line. A brief is a
+        # frozen record, so the cure can never be to rewrite five records; the
+        # defect was here. This file already writes the version onto the tier
+        # line "so a wrong choice leaves a trace an audit can find", and that
+        # trace is exactly what says which table the choice was made from.
+        # C-41's shape: a rule keeps reading true after its world has changed.
+        m = VERSION_RE.search(line)
+        chosen = m.group(1).lower() if m else version
+        adversarial_ok = P.expected_tier_tokens("adversarial", chosen)
         if is_adversarial(text) and token not in adversarial_ok:
             sink.append(
                 f"{rel}: is an adversarial review and carries head {token!r}, "
-                f"but under `{version}` the critic's head is "
-                f"{P.tier_token('adversarial', version)!r} "
+                f"but under `{chosen}` the critic's head is "
+                f"{P.tier_token('adversarial', chosen)!r} "
                 f"(or {', '.join(sorted(adversarial_ok - {P.tier_token('adversarial', version)}))}). "
                 f"{P.INVARIANT}")
     return errors, notes
