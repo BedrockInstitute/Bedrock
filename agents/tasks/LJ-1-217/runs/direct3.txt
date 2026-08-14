@@ -1,0 +1,13 @@
+# label direct3
+# file agents/tasks/LJ-1-217/ProbeLJ1217A.agda
+# interface _build/2.8.0/agda/agents/tasks/LJ-1-217/ProbeLJ1217A.agdai (deleted)
+# load before 1m 5.56
+# wall seconds 14.747
+# exit 0
+# killed False
+# load after 1m 5.49
+---- stdout ----
+Checking LJ-1-217.ProbeLJ1217A (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-217/ProbeLJ1217A.agda).
+
+---- stderr ----
+
