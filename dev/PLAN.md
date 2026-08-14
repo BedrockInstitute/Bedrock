@@ -789,7 +789,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.243 | DD25 review of LJ-1.242's re-opening of amb | UPHELD. NEVER SUPPLIED OUTRIGHT | theorem is equally conditional. A third route exists, and absFo is LIVE and inverts route 1 |
 | LJ-1.244 | The third route: build q-prime | IT COLLAPSES INTO ROUTE 2. DD25 [LJ-1.246] | q-prime IS route 2's hard half. The blocking term is the coding-transfer bridge at the class carrier |
 | LJ-1.246 | DD25 review of LJ-1.244, which turned the last cheap route into a chapter | DISPATCHED | Three of the last four reviews found something material. This one decides a scope question |
-| LJ-1.247 | Re-derive A5 after the dissolution and measure its last inferred row | DISPATCHED | Row 4's 99 was transferred from another site, and LJ-1.176 warned it may be too low as well |
+| LJ-1.247 | Re-derive A5 after the dissolution and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
