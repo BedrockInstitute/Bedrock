@@ -1075,3 +1075,681 @@ record and the disease sits in three.**
 THREE measured nine. This sweep measured twenty-one and a new field and ten
 telescopes. **Each layer was found by looking one level out from the last, and
 each was cheaper to find than to hit.**
+
+---
+
+# PART FIVE: the one-field gate
+
+**Appended after the coordinator committed PART FOUR at `ee6c864` and re-ruled
+at the measured scope.**
+
+## 42. PART FIVE: CRITERIA, FIXED IN WRITING BEFORE THE FIRST RUN (D-1)
+
+**The gate.** Cure ONE field, `envInK-mem`, through every record, telescope and
+site it touches, then typecheck `src/L/Condensation.lagda.md`.
+
+**`envInK-mem` is the right one and the coordinator's reason is the measured
+one:** it needs only `ar ∈ K`, which `codesK` already concludes, so it isolates
+the TELESCOPE cost from the NEW-FIELD cost that section 38.1 bundled.
+
+**What "cold" means here, fixed before I measure it.** `L.Condensation`'s own
+interface is deleted and rebuilt; every dependency stays warm. **That is the
+figure a field change actually pays**, and it is NOT the tree's cold figure.
+
+| outcome | condition |
+|---|---|
+| **GO** | `L.Condensation` typechecks, and the delta over its own baseline extrapolates to a price worth funding |
+| **NO-GO, wall** | it walls. **Cap at 40 minutes.** `[LJ-1.165]` measured this cluster uncured at 20 min 1 s and 9.14 GB. **A heap exhaustion is a wall, never a failure** |
+| **NO-GO, price** | it typechecks but 21 times the per-field delta exceeds what step 6 is worth. **Say so and stop** |
+
+**Method.** ONE agda process. `GHCRTS="-A64m -I0 -M8g"`, cap NEVER raised.
+**Two runs per side, the first DISCARDED as warm-up**, and the machine load
+reported beside every absolute figure.
+
+**I do not move this criterion after I see a number.**
+
+## 43. THE IMPORT-AGAINST-FIELD QUESTION, ANSWERED: NEITHER
+
+**You asked me to spend ten minutes on whether the frame can RECEIVE
+`src/L/Coding/CodeSet.lagda.md` instead of taking a new field. I did, and the
+answer is that both options are wrong. There is a third and it is cheaper than
+either.**
+
+### 43.1 The import is ALREADY THERE, and it does not help
+
+**MEASURED: `src/L/Condensation.lagda.md:55` reads**
+
+```agda
+open import L.Coding.CodeSet {ℓ} lem using ( hasWitnessAt; keyArityAtL )
+```
+
+**So the master already imports that chapter. The import was never the
+obstacle.**
+
+**And it still does not help, for a reason that is about the frame and not about
+the import.** `codesK`'s antecedent is `⟨ fst c ∈ fst (lookup C γ) ⟩`, a bare
+membership in **whatever the `C` slot happens to hold**. **Nothing in the frame
+says the slot holds the code set.** `arityNumAtL` is a statement about the code
+set; the frame never learns that its slot is one. **Only the INSTANTIATOR knows
+that, so the fact has to arrive as a hypothesis. An import cannot supply it.**
+
+**I also checked the one name that looked like it might already be the fact.**
+`keyArityAtL` (`src/L/Coding/CodeSet.lagda.md:135-136`) is
+`∃̇ (tagAtL (suc c) k zero)`: **a FORMULA, at a FIXED metalevel numeral `k`.**
+It says "this code's arity tag is `k`", not "this code's arity is SOME
+numeral". **It is not the reader, and I mark that I checked it rather than
+assumed it.**
+
+### 43.2 The third option: no new field, one extra component on `codesK`
+
+**`codesK` already exists in all three records, it already takes exactly the
+right antecedents, and it already returns a tuple:**
+
+```agda
+    codesK : (k : ℕ) (c ar a b : S) → ⟨ fst c ∈ fst (lookup … C …) ⟩
+           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+           → ⟨ fst ar ∈ K ⟩ × ⟨ fst a ∈ K ⟩ × ⟨ fst b ∈ K ⟩
+```
+
+`src/L/Condensation/TwelveAgree.lagda.md:161-165`. **Add a fourth component,
+`∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁`, and the numeral arrives with no new name.**
+
+**And it reaches every site that needs it. MEASURED, module by module:**
+
+| `*Agree` module | `codesK` param | `envK` / `envInK` params |
+|---|---:|---:|
+| `BotAgree` `:2774` | 1 | **0** |
+| `TopAgree` `:3659` | 2 | 7 |
+| `NegAgree` `:3725` | 2 | 4 |
+| `MemAgree` `:4373` | 1 | 4 |
+| `AllInAgree` `:4965` | 1 | 4 |
+| `ExInAgree` `:5086` | 2 | 4 |
+| `ImpAgree` `:5206` | 2 | 6 |
+| `EqAgree` `:5299` | 1 | 4 |
+
+**EVERY module that hosts a diseased parameter already hosts `codesK`.**
+`BotAgree` is the one with no environment parameter at all, which is right: the
+false row binds no environment set.
+
+**So the new field is REFUTED as the cheapest route, and I recommend the fourth
+component instead.** **It removes the "new field × three records" line from
+section 38.1 and, more importantly, it removes a NEW PARAMETER from about ten
+telescopes — which is the operation the wall risk attaches to.**
+
+## 44. THE ONE FIELD'S SITE LIST, MEASURED BEFORE THE EDIT
+
+**`envInK-mem` touches EIGHT places and I found every one by `grep` and then
+read each.**
+
+| # | `file:line` | what changes |
+|---|---|---|
+| 1 | `src/L/Condensation/TwelveAgree.lagda.md:203` | the `TFacts` field type |
+| 2 | `src/L/Condensation/LowerAgree.lagda.md:149` | the `LFacts` field type |
+| 3 | `src/L/Condensation.lagda.md:4399` | `MemAgree`'s `envInK` telescope entry |
+| 4 | `src/L/Condensation.lagda.md:5325` | `EqAgree`'s `envInK` telescope entry |
+| 5-8 | `:4431`, `:4453`, `:5357`, `:5379` | the four partial applications `(envInK yc b a ar c E)` |
+
+**`UFacts` does NOT carry `envInK-mem`**, so two records move and not three.
+`TwelveAgree:407` (`envInK-mem = envInK-mem`) and `LowerAgree:241, :248` stay
+VERBATIM, because both sides move together.
+
+### 44.1 THE FIND THAT CHANGES THE PRICE: the witness is already bound
+
+**MEASURED at all four application sites. The line IMMEDIATELY ABOVE each one
+reads**
+
+```agda
+                       (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
+                       (envInK yc b a ar c E)
+```
+
+**`arK` is already in scope and already passed to the sibling argument.** It
+comes from `(arK , (aK , bK)) = codesK c ar a b c∈ shEq` a few lines up.
+
+**So each site is a ONE-TOKEN edit: `(envInK yc b a ar c E arK)`.** **My section
+38.1 survey priced these at 3 to 5 lines each. MEASURED: they are zero lines
+each, plus one token.**
+
+**And the reason is structural rather than lucky.** `module EnvSet`
+(`src/L/Condensation.lagda.md:2925-2933`) already takes
+`(ar∈K : ⟨ fst (lookup ar γ) ∈ fst (lookup K γ) ⟩)` **as a parameter of its
+own.** **The cure asks `envInK` for a fact its own call site already had to
+produce for the module beside it.** **That is why the four cheap fields are
+cheap: the hypothesis was already computed and thrown away.**
+
+## 45. THE BASELINE, measured before the edit
+
+**`src/L/Condensation.lagda.md`, own interface deleted, dependencies warm.**
+
+| run | wall | exit | load average at the run |
+|---|---:|---|---|
+| 1, **DISCARDED as warm-up** | 115 s | 0 | 2.26 2.33 3.18 |
+| 2, **the figure** | **114 s** | 0 | 2.14 2.34 3.08 |
+
+**BASELINE = 114 s.** One agda process, `GHCRTS="-A64m -I0 -M8g"`, cap not
+raised. **The two runs agree to within 1 s, so the figure is stable and the load
+did not move it.**
+
+**And the first thing to say about it is a correction to my own risk note.**
+Section 38.1 warned that a telescope change in this master might hit
+`[LJ-1.165]`'s uncured wall at 20 min 1 s and 9.14 GB. **MEASURED: the master
+typechecks in 114 s from its own cold interface.** **The wall `[LJ-1.165]` hit
+was NOT `L.Condensation` re-elaborating; it was a different target.** **So my
+risk note was right to be raised and wrong in its size, and I record that
+before the delta rather than after it.**
+
+## 46. THE TRUNCATION RISK, CHECKED BEFORE THE COMPONENT IS WRITTEN
+
+**You asked me to confirm that each of the five dear fields concludes into a
+PROPOSITION, because a truncated existential eliminates only into one. I
+checked all five. The truncated form is safe, and I give the two reasons
+separately because they are different facts.**
+
+### 46.1 Every one of the five concludes an hProp. MEASURED
+
+`src/L/Condensation/TwelveAgree.lagda.md:183-202`. **All five conclude**
+
+```agda
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+```
+
+**`⟨ P ⟩` for `P : Ω` is a proposition by construction**, so `PT.rec` eliminates
+into it. **MEASURED, by reading all five conclusions, not one and a
+generalization.** The same holds for the four `envInK-*`
+(`:203-215`), which conclude `⟨ fst z ∈ … ⟩`.
+
+### 46.2 And no conclusion MENTIONS the numeral. MEASURED
+
+**This is the half that actually decides it, and it is separate from 46.1.** A
+prop conclusion is not enough on its own: if the conclusion's TYPE mentioned
+`n`, the numeral would be needed computationally and no truncation would
+survive.
+
+**MEASURED: it does not.** The cured `envSetK`
+(`src/L/Condensation/TwelveAgree.lagda.md:281-285`) concludes
+`⟨ fst (Generic.envSetGen B ar) ∈ … ⟩`. **The conclusion names `ar`, never
+`n`.** `n` appears only in the hypothesis `fst ar ≡ # n`, so it is consumed
+inside the proof and never escapes into a type.
+
+**So the numeral is used PROPOSITIONALLY at every one of the ten sites, and the
+truncated fourth component on `codesK` eliminates.** **The untruncated form is
+NOT needed, and I do not price it.**
+
+### 46.3 One consequence for the price, and it sharpens section 44.1
+
+**The four cheap fields stay ONE-TOKEN edits at their sites**, because `arK` is
+an ordinary term already in scope.
+
+**The five dear fields do NOT.** Each site must eliminate the truncation before
+it can apply the field:
+
+```agda
+        EK = PT.rec (snd (fst E ∈ fst (lookup K γ)))
+               (λ { (n , q) → envK yc a ar c E n q hE }) arNum
+```
+
+**So budget about 2 lines per dear site rather than one token.** **MEASURED as a
+shape from the delivered `PT.rec` idiom, INFERRED as a line count, because I
+have not written one.**
+
+## 47. THE 115 s AGAINST 20 min 1 s, ADDRESSED
+
+**One line first: the two figures were never about the same target, and
+attaching one to the other was MY error, not a cured wall and not a
+mismeasurement.**
+
+**MEASURED, from the primary source rather than from a summary.**
+`agents/tasks/LJ-1-165/lj-1.165-report.md:144` and `:298-311` put wall 2 at
+**`σ₁-up` applied to the level-hood Levy witness**. `σ₁-up` is
+`src/FOL/Absoluteness.lagda.md:182`, and the level-hood certificate is the
+`src/L/BoundedSubset.lagda.md` work. **`L.Condensation` is not the target and
+never was.**
+
+**So my section 38.1 risk note transferred a measured wall by ANALOGY to a
+different site, which is exactly what `dev/LESSONS.md` P-l forbids.** **P-l says
+re-measure a cure at its own site; the same binds a WALL, and I did not apply it
+to my own note.** **The 114 s is `L.Condensation`'s real figure and the 20 min 1 s
+still stands, undisturbed, at `σ₁-up`.**
+
+**And a figure drifted on the way here, which I flag because it is the pattern
+this project has measured before.** `[LJ-1.165]:144` records **9.40 GB**.
+`agents/tasks/LJ-1-172/lj-1.172-report.md:895-898` reports the same wall as
+**9.14 GB**, and my PART FOUR repeated the 9.14 from that summary. **The primary
+is 9.40. Nothing turns on the 0.26 GB, and that is the point: it drifted because
+three documents quoted it and none re-read the first.**
+
+**What this does NOT license.** It does not say the cluster is safe. It says
+**`L.Condensation` re-elaborates in 114 s**, and that the wall belongs to a
+different master which this cure does not touch. **Marked MEASURED, both
+halves.**
+
+## 48. THE GATE: GO. +6 s PER FIELD, and about +126 s for all twenty-one
+
+**MEASURED. Same machine, same session, same cap, one agda process throughout,
+warm-up discarded on both sides.**
+
+| side | run 1, DISCARDED | run 2, **the figure** | load at the figure |
+|---|---:|---:|---|
+| baseline | 115 s | **114 s** | 2.14 2.34 3.08 |
+| one field cured | 122 s | **120 s** | 2.70 2.38 2.84 |
+| **delta** | | **+6 s** | |
+
+**PER-FIELD COST: +6 s, which is +5.3 percent of the master's own cold
+figure.** Both sides agree across their two runs to within 2 s, so the 6 s is
+above the noise but not far above it, and I say that rather than let the reader
+assume precision I did not measure.
+
+**TIMES TWENTY-ONE, the figure you asked for: +126 s, taking
+`src/L/Condensation.lagda.md` from 114 s to about 240 s.**
+
+**And I mark that extrapolation as an OVER-estimate, with the reason.** The 21
+fields do NOT each add a fresh telescope: they share the same eight `*Agree`
+modules (section 43.2's table). **`envInK-mem` alone moved 2 of about 20
+telescope entries, so 21 times its cost double-counts the modules the fields
+share.** **The true figure is between +126 s and something smaller, and only
+the full cure measures it.** **I do not quote a smaller number I have not
+measured.**
+
+**VERDICT: GO.** **A cure that takes one master from 114 s to at most 240 s is
+fundable against a step 6 priced at about 260 lines.** **The wall risk that
+made this gate necessary is measured away for THIS master** (section 47), and
+nothing came within two orders of magnitude of the 40-minute cap.
+
+## 49. THE STAGING QUESTION, ANSWERED FROM THE GATE AND NOT BY ARGUMENT
+
+**YES. The cheap four stage independently of the dear five, and the gate proves
+it rather than predicting it.**
+
+**MEASURED: `git diff src/ | grep -c "^[+-].*envK-"` returns ZERO.** **Not one
+line of any `envK-*` field moved, and the tree is green**: `L.Condensation`,
+`LowerAgree`, `UpperAgree` and `TwelveAgree` all at exit 0, verified by explicit
+exit code and not by absence of output.
+
+**Your expectation was right and now it is measured.** The pass-through couples
+the records **per FIELD NAME** — `TFacts.envInK-mem` to `LFacts.envInK-mem` —
+and nothing couples `envInK-mem` to `envK-mem`. **They are different names with
+different pass-throughs.** So the split is real:
+
+| stage | fields | needs the `codesK` component? | measured cost |
+|---|---:|---|---|
+| **cheap first** | the four `envInK-*` | **NO.** `ar ∈ K` is already bound at every site | **+6 s and about +6 lines per field**, measured on one of the four |
+| **dear second** | the five `envK-*` | **YES**, plus a `PT.rec` per site | not measured |
+
+**So the cheap four can land NOW, on this measurement, and the new-field
+decision is deferred to the five.** **That is a smaller first landing and it
+de-risks the component exactly as you hoped.**
+
+## 50. THE PER-FIELD LINE COST, MEASURED
+
+```
+8	6	src/L/Condensation.lagda.md
+3	1	src/L/Condensation/LowerAgree.lagda.md
+3	1	src/L/Condensation/TwelveAgree.lagda.md
+```
+
+**+14 lines, -8 lines, NET +6 for one field**, covering 2 record fields, 2
+telescope entries and 4 application sites.
+
+**Against my section 38.1 survey, which priced the sites at 3 to 5 lines each
+and the whole cure at about 190: the measured per-field figure is +6 lines, so
+the four cheap fields are about +24 lines, not about 80.** **The survey was
+high by roughly a factor of three on this half, and I record that against my own
+number rather than quietly replacing it.**
+
+## 51. THE STATE OF THE TREE, said plainly
+
+**`src/` carries the one-field cure and it is GREEN.** That is **1 of 21**, and
+**it is the partial state I myself called dangerous in PART FOUR.**
+
+**I left it rather than reverting, and here is the reason and the risk, so you
+can rule either way in one line.**
+
+- **Why left:** it typechecks, it is the gate's artifact, and it is the first
+  member of the cheap stage that section 49 measures as landable now.
+- **The risk, unchanged from PART FOUR:** the tree now holds twenty statements
+  that LOOK like the cured one and are not. **`envInK-mem` is cured;
+  `envInK-neg`, `envInK-top`, `envInK-imp` and the five `envK-*` are not.**
+- **Reverting costs nothing:** I backed up all three masters before the edit and
+  the revert is a plain `cp`. **I used no `git checkout`, no `stash`, no
+  `reset`, no `clean` at any point.**
+
+**My recommendation is to complete the cheap four rather than revert**, because
+the measurement now exists and the four are one field's work each.
+
+## 52. PART FIVE: CHECKERS
+
+| checker | result |
+|---|---|
+| `agda` on `L.Condensation`, `LowerAgree`, `UpperAgree`, `TwelveAgree`, `Key` | **exit 0**, all five, verified by explicit exit code |
+| `postulate`, hole, unsolved meta | **all three ABSENT.** Agda printed no warning on any run |
+| `lint-agda.py --check` | **exit 0** |
+| `lint-prose.py --check` on the three edited masters | **exit 0** |
+| `weave-i18n.py --check` | **exit 0** |
+| `check-unbound-hyp.py` | **2**, unchanged |
+| `check-probes.py` | **clean**, 1805 tracked files |
+| `make check` | **NOT RUN.** Yours |
+| agda invocations in PART FIVE | **11.** ONE process at a time, `-M8g` never raised, no heap wall, nothing near the 40-minute cap |
+
+## 53. PART FIVE: EVERY NEGATIVE, CLASSIFIED
+
+| statement | class |
+|---|---|
+| **the gate walls** | **MEASURED FALSE. 120 s against a 40-minute cap** |
+| **the cheap four need the new field** | **MEASURED FALSE.** Zero `envK-*` lines moved and the tree is green |
+| the sites cost 3 to 5 lines each | **MEASURED FALSE.** One token each; the witness `arK` was already bound |
+| my 190-line survey was accurate | **MEASURED FALSE on this half. High by about three times** |
+| **`[LJ-1.165]`'s 20-minute wall is in `L.Condensation`** | **MEASURED FALSE.** It is at `σ₁-up`, and attaching it here was MY analogy error against P-l |
+| the wall figure was 9.14 GB | **MEASURED FALSE. The primary says 9.40 GB**; 9.14 is a drift through two summaries |
+| the first cure attempt worked | **MEASURED FALSE.** It failed at `:4432`: the hypothesis must precede the bound `z`, not follow the set telescope |
+| a new field is the cheapest route to the numeral | **MEASURED FALSE.** A fourth component on `codesK` reaches every site with no new parameter |
+| an import can supply the numeral | **MEASURED FALSE.** The frame is abstract over its `C` slot; only the instantiator knows it holds the code set |
+| `keyArityAtL` is the reader | **MEASURED FALSE.** It is a formula at a FIXED numeral |
+| the truncated component is unsafe | **MEASURED FALSE.** All ten conclusions are hProps and none mentions `n` |
+| the times-twenty-one figure is a measurement | **NOT CLAIMED. It is a linear extrapolation from ONE field**, and an over-estimate because the fields share telescopes |
+| the whole cure is now priced | **NOT CLAIMED.** The dear five are unmeasured |
+| I ran `make check`, committed or pushed | **MEASURED FALSE**, none of the three |
+
+## 54. WHAT I RECOMMEND
+
+1. **Land the cheap four.** Measured: +6 s and +6 lines each, no new field, the
+   witness already bound. **About +24 s and +24 lines for the stage.**
+2. **Then rule the `codesK` fourth component** and land the dear five, budgeting
+   about 2 lines per site for the `PT.rec`.
+3. **Then step 6 at about 260.**
+
+**And one correction to carry forward, because it is mine.** **I attached a
+measured wall to a master it was never measured at, and the gate you ordered is
+what caught it.** **P-l says a measured cure does not transfer by analogy. A
+measured WALL does not either, and I will state it that way if the owner takes
+your law.**
+
+## 55. ONE THING IN THE WORKING TREE THAT IS NOT MINE
+
+**`git status --porcelain` shows an untracked
+`agents/tasks/LJ-1-175/lj-1.175-report.md`.** **I did not create it, I have not
+opened it, and I did not touch it.** **I flag it because I am reporting on the
+state of this working tree and it is not all mine.**
+
+**My own changes are exactly four files:**
+
+```
+ M agents/tasks/LJ-1-173/lj-1.173-report.md
+ M src/L/Condensation.lagda.md
+ M src/L/Condensation/LowerAgree.lagda.md
+ M src/L/Condensation/TwelveAgree.lagda.md
+```
+
+---
+
+# PART SIX: the cheap four
+
+**Appended after the coordinator accepted the GO and ruled the four-stage
+order.**
+
+## 56. A CORRECTION TO MY OWN PART FIVE, and it is the first thing to say
+
+**I wrote that the +6 s per-field delta was "above the noise but not far above
+it". MEASURED FALSE. It is INSIDE the noise, and the project had already
+measured the band I failed to check it against.**
+
+**`scripts/check-ratio.py` prints the band in its own header:**
+
+> noise band: at least +-12.8%, MEASURED [LJ-1.148] 2026-08-13, eight separate
+> warmed series on `src/L/Ordinal/StageArith.lagda.md`, quiet machine
+
+**+6 s on a 114 s baseline is +5.3 percent. The band is at least ±12.8 percent.
+So the delta is NOT ESTABLISHED at n=1**, and my PART FIVE sentence claimed a
+resolution the instrument does not have.
+
+**And an independent run says the same thing.** `check-ratio.py`, run on the
+tree WITH `envInK-mem` already cured, measured
+`src/L/Condensation.lagda.md` at **113.57 s**. **My own measurement of that same
+tree was 120 s.** **Two measurements of ONE tree, 6.4 s apart — which is the
+whole of the delta I attributed to the cure.**
+
+**So the honest per-field figure is: BELOW THE INSTRUMENT'S RESOLUTION.**
+**That is a stronger GO than +6 s, not a weaker one**, and I record it against
+my own number rather than let the +126 s extrapolation stand on a delta that
+was never established.
+
+**What survives of PART FIVE's arithmetic.** The +126 s band was already marked
+an over-estimate. **It is now an over-estimate resting on an unestablished
+per-field cost, so the honest statement is: the cure's seconds are not
+measurable one field at a time, and only the four-field and full-cure figures
+can carry a number.** **That is exactly why you asked for the four measured
+together, and the reason applies harder than either of us wrote.**
+
+## 57. THE WING RATIO BEFORE THIS STAGE
+
+**MEASURED, `scripts/check-ratio.py`, on the tree with `envInK-mem` cured and
+the other twenty not.** **So this is "after stage zero", not the pristine
+figure, and I mark it rather than call it a baseline.**
+
+```
+AC baseline 0.0091 s/line (module-cold, warm dependencies) | tolerance 1.15x
+                                                           | bar 0.0105 s/line
+wing aggregate 0.0139 s/line over 11,825 lines and 164.60 s, OVER THE BAR
+                              (1.52x the AC side at the SAME caliber)
+```
+
+| the wing's rows, as measured | s/line | lines | seconds |
+|---|---:|---:|---:|
+| `src/L/Condensation.lagda.md` | **OVER** 0.0172 | 6,622 | 113.57 |
+| `src/L/Condensation/TwelveAgree.lagda.md` | **OVER** 0.0172 | 475 | 8.17 |
+| `src/L/Condensation/UpperAgree.lagda.md` | **OVER** 0.0186 | 290 | 5.40 |
+| `src/L/Condensation/LowerAgree.lagda.md` | **OVER** 0.0171 | 293 | 5.00 |
+| `src/L/BoundedSubset.lagda.md` | OVER 0.0110, **NOISE: the swing crosses the bar** | 1,409 | 15.44 |
+| **the wing** | **0.0139, 1.52x** | **11,825** | **164.60** |
+
+**Your brief says 1.60x and I measure 1.52x.** **I do NOT report that as a
+correction**, because the two sit well inside the ±12.8 percent band the same
+tool prints. **They are one figure measured twice.**
+
+**And the trade is exactly as you framed it.** The four masters this cure
+touches are four of the five rows already OVER the bar, and they carry 7,680 of
+the wing's 11,825 lines. **A correctness cure lands on the wing's most expensive
+rows.** **I will not soften that and I will not delete a line to improve it: P-q
+measured 315 lines removed buying 11.8 seconds, and DD24's own row refuses the
+shrinking denominator.**
+
+## 58. STAGE TWO PRICED BEFORE IT IS BUILT: the `codesK` component
+
+**You ruled the fourth component and said it adds no parameter to any telescope.
+MEASURED: that is right, and it is not the whole cost. I measured the rest
+before starting it.**
+
+| what moves | count | how I counted |
+|---|---:|---|
+| `codesK` occurrences in `src/L/Condensation.lagda.md` | **47** | `grep -c` |
+| `codesK` telescope entries there | **about 15** | `grep -n "  (codesK"` |
+| **sites that DESTRUCTURE its result** | **12** | `grep -nE "= codesK "` |
+| the field in the three records | 3 | `codesK` at `TwelveAgree:161-165` and its two siblings |
+
+**The destructuring sites are the part your ruling does not cover, and they are
+the reason the component is not free.** They read
+
+```agda
+        (arK , (aK , bK)) = codesK c ar a b c∈ shEq
+        (arK , aK)        = codesK c ar a c∈ shEq
+```
+
+**A fourth component makes every one of these a four-tuple pattern**, so twelve
+sites move by one token each. **No new parameter, as you ruled; twelve pattern
+edits, which nobody had counted.**
+
+**And `codesK` comes in TWO arities**, `(c ar a b : S)` and `(c ar a : S)`
+(`src/L/Condensation.lagda.md:2779` against `:3288`), plus `codesK-un` in the
+records. **So the component has to be added consistently to both, or the
+suppliers will not line up.**
+
+**Stage two's price, ONE number naming its basis: about 40 lines.** 3 field
+declarations, about 15 telescope entries and 12 destructuring sites, at roughly
+one line each plus the suppliers. **Basis: the four counts above, taken by me
+at their own sites. It is a survey and my last survey on this family was high
+by three times, so treat it as an upper bound.**
+
+## 59. THE CHEAP FOUR: MEASURED, and the cure is free at this resolution
+
+**Applied across all three records and every site.** MEASURED by the edit
+script's own counts, then by `git diff`:
+
+| what moved | count |
+|---|---:|
+| field declarations, three records | **10** (`envInK-mem` 2, `-neg` 3, `-top` 2, `-imp` 3) |
+| telescope entries in `src/L/Condensation.lagda.md` | **10** |
+| application sites | **18 matched, 14 changed**, the other 4 already cured |
+| `envK-*` lines touched | **ZERO**, re-measured after the edit |
+
+**Line cost: +68, -38, NET +30 for all four fields**, against my PART FIVE
+per-field figure of +6 which would have predicted +24. **Close, and I report the
+measured +30 rather than the predicted +24.**
+
+### 59.1 The seconds
+
+| tree | run 1 | load |
+|---|---:|---|
+| baseline, no field cured | 114 s | 2.14 2.34 3.08 |
+| ONE field cured | 120 s | 2.70 2.38 2.84 |
+| **FOUR fields cured** | **115 s** | 3.60 2.93 2.84 |
+
+**FOUR fields cost 115 s against a 114 s baseline: +1 s, or +0.9 percent.**
+
+**This settles section 56 rather than merely supporting it.** The one-field
+figure of 120 s and the four-field figure of 115 s are **not ordered by the
+amount of work done**. **Four fields measure CHEAPER than one.** **That is only
+possible if both deltas are noise**, and the ±12.8 percent band says exactly
+that.
+
+**So: the cheap cure's cost in seconds is NOT MEASURABLE, and my +126 s
+extrapolation is withdrawn.** **It was built on a per-field delta that this run
+shows was never there.** **I do not replace it with a smaller number: I replace
+it with "below the instrument's resolution", which is what was measured.**
+
+**Peak resident memory during the run: about 3.5 GB, well under the 8 GB cap.
+No heap wall.**
+
+### 59.2 The second run, and the C-40 verdicts
+
+| tree | run 1 | run 2 | verdict |
+|---|---:|---:|---|
+| **four fields cured** | 115 s | **115 s** | **identical across two runs** |
+
+**Two runs at 115 s exactly.** **The four-field figure is more stable than
+either the baseline (115, 114) or the one-field measurement (122, 120), which
+is a further sign that the 6 s I reported in PART FIVE was drift and not
+cost.**
+
+**C-40, discharged in full, by explicit exit code and not by absence of
+output:**
+
+| master | exit |
+|---|---|
+| `src/L/Condensation.lagda.md` | **0** |
+| `src/L/Condensation/LowerAgree.lagda.md` | **0** |
+| `src/L/Condensation/UpperAgree.lagda.md` | **0** |
+| `src/L/Condensation/TwelveAgree.lagda.md` | **0** |
+
+**And the stage is still clean after the full four-field edit: `git diff src/ |
+grep -c "^[+-].*envK-"` returns ZERO.** **The four cheap fields landed without
+one line of the five dear ones moving**, which is the staging claim measured a
+second time on four times the work.
+
+### 59.3 Checkers
+
+| checker | result |
+|---|---|
+| `lint-agda.py --check` | **exit 0** |
+| `lint-prose.py --check`, four edited masters | **exit 0** |
+| `weave-i18n.py --check` | **exit 0** |
+| `check-unbound-hyp.py` | **2**, unchanged |
+| `check-probes.py` | **clean**, 1807 tracked files |
+| `postulate`, hole, unsolved meta | **all three ABSENT** |
+| `make check` | **NOT RUN.** Yours |
+
+## 60. PART SIX: EVERY NEGATIVE, CLASSIFIED
+
+| statement | class |
+|---|---|
+| **the cheap four are landed and green** | **TRUE.** Four masters at exit 0, verified by exit code |
+| **the per-field cost is +6 s** | **MEASURED FALSE, and it was MY claim.** Four fields cost +1 s; one field measured +6 s. Both are inside the ±12.8 percent band |
+| **the times-twenty-one figure of +126 s** | **WITHDRAWN.** It rested on a delta this run shows was never established |
+| four fields cost more than one | **MEASURED FALSE. 115 s against 120 s.** The ordering is impossible unless both deltas are noise |
+| the cure needed the `envK-*` fields to move | **MEASURED FALSE. ZERO** `envK-*` lines moved, re-measured after the full four-field edit |
+| the cure walled or exhausted the heap | **MEASURED FALSE.** About 3.5 GB peak against an 8 GB cap, and 115 s against a 40-minute criterion |
+| my PART FIVE line prediction was exact | **MEASURED FALSE.** It predicted +24 lines and the measurement is +30 |
+| the wing ratio is 1.60x | **NOT CORRECTED. I measure 1.52x** and the two sit inside the tool's own ±12.8 percent band, so they are one figure measured twice |
+| the `codesK` component adds no work beyond the field | **MEASURED FALSE.** It adds **12 destructuring sites**, which your ruling did not cover and nobody had counted |
+| stages two, three and four are started | **MEASURED FALSE. None of them.** Section 61 says what that leaves |
+| I ran `make check`, committed or pushed | **MEASURED FALSE**, none of the three |
+| the four-field seconds are a cold tree figure | **NOT CLAIMED.** Module-cold with warm dependencies, the same caliber as `check-ratio.py` |
+
+## 61. WHAT THIS LEG LANDED, AND WHAT IT DID NOT
+
+**LANDED: stage one, the cheap four, complete across all three records and every
+site, green, and measured free at this instrument's resolution.**
+
+**NOT STARTED: stages two, three and four.** I priced stage two at about 40
+lines with its twelve destructuring sites named (section 58). **Stage three, the
+dear five, and stage four, the step 6 re-price, are untouched and I did not
+begin them.**
+
+**Why I stopped here rather than pressing on.** **Most of this leg went into
+measurement and into correcting two of my own figures** — the per-field delta
+and the +126 s extrapolation, both withdrawn on evidence I generated after
+publishing them. **A fourth stage started on a tired budget is how a figure like
+the +6 s gets into a report in the first place.** **Four measured numbers hand
+over better than four half-built stages.**
+
+**The tree is green and coherent, and here is the count done properly, because
+I got it wrong once in this very section before checking it.**
+
+| family | field NAMES | DECLARATIONS across the three records | state |
+|---|---:|---:|---|
+| `envInK-*` | 4 | **10** (`mem` 2, `neg` 3, `top` 2, `imp` 3) | **CURED** |
+| `envK-*` | 5 | **11** (`mem` 2, `neg` 3, `top` 2, `imp` 2, `allin` 2) | still diseased |
+| | **9** | **21** | |
+
+**So eleven declarations remain, under five names, and they are exactly the dear
+family.** **The four cheap names are done in every record that carries them.**
+**That is the clean stage boundary your ruling asked for, not a partial edit.**
+
+## 62. THE WING RATIO AFTER THE CHEAP FOUR
+
+**MEASURED, `scripts/check-ratio.py`, same tool and same caliber as section 57.**
+
+| | before this stage (one field cured) | **after (four cured)** | change |
+|---|---:|---:|---:|
+| wing aggregate | 0.0139 s/line | **0.0141 s/line** | **+0.0002** |
+| against the AC side | 1.52x | **1.54x** | **+0.02x** |
+| wing lines | 11,825 | 11,849 | +24 |
+| wing seconds | 164.60 | 167.01 | +2.41 |
+| `src/L/Condensation.lagda.md` | 0.0172, 113.57 s | 0.0175, 115.95 s | +2.38 s |
+| `TwelveAgree` | 0.0172, 8.17 s | 0.0172, 8.25 s | +0.08 s |
+| `UpperAgree` | 0.0186, 5.40 s | 0.0185, 5.47 s | +0.07 s |
+| `LowerAgree` | 0.0171, 5.00 s | **0.0165**, 4.89 s | **-0.11 s** |
+
+**THE BAR MOVED FROM 1.52x TO 1.54x, and I report it without softening it.**
+
+**But the reading that matters is that this is +1.4 percent against a band of at
+least ±12.8 percent, so the movement is NOT ESTABLISHED by this run.** **One row,
+`LowerAgree`, got FASTER while gaining lines.** **A cure cannot make one master
+faster and its siblings slower; that spread is the instrument, and it is the
+third independent sign of the same thing this leg has now measured three
+times.**
+
+**The honest summary of the DD24 consequence you asked me to state:**
+
+- **The wing was over the bar before this cure and it is over the bar after it.**
+  1.52x and 1.54x against a 1.15x tolerance. **The cure did not put it there and
+  the cure cannot take it out.**
+- **The cure's own contribution is +24 wing lines and about +2.4 s, and neither
+  is separable from noise.**
+- **It is still the right trade**, and it is a CORRECTNESS trade: **eleven false
+  statements remain in the tree and ten fewer stand than this morning.**
+- **I deleted no line to improve the ratio.** P-q measured 315 lines removed
+  buying 11.8 s, and DD24's own row refuses the shrinking denominator.
+
+**One accounting note, so the two line figures reconcile.** `git diff` reports
+**net +30 lines from HEAD**, which has NO field cured. The ratio tool reports
+**+24**, because its "before" run already had `envInK-mem` cured. **Both are
+right against their own baseline and neither is the other's error.**
