@@ -748,7 +748,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.173 | Restrict envSetK to a numeral arity, gate first | 21 FIELDS IN THREE RECORDS, CURE ATOMIC | My ruling's scope was one record; the sweep it ordered measured three. Cure 190, step 6 260 |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
 | LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
-| LJ-1.176 | Price A5 under a stated partition, and gate it first | PRICED: 547 LINES, ZERO REPLACEMENT | An A5 object builds into L by ONE separation, 1.72 s. The 300-line item is DISSOLVED, not divided |
+| LJ-1.176 | Price A5 under a stated partition | PRICED: 547 LINES, ZERO REPLACEMENT | An A5 object builds into L by ONE separation, 1.72 s. The 300-line item is DISSOLVED, not divided |
 | LJ-1.177 | Cure the Agree masters' second term | STOP: CURED FIVE DISPATCHES AGO | My premise was false, and LJ-1.158's row sits directly below LJ-1.155's in this table. Next lever caps at 5.2 s |
 | LJ-1.178 | Build levelIn and cover on the bypassed wall | DISPATCHED | LJ-1.160 measured the wall is an artifact of where the argument runs. Nobody has ever been funded to build it |
 | LJ-1.179 | DD25 review of LJ-1.169's NO-GO on the rank accounting | DISPATCHED | Four dispatches and a 21-field cure stand downstream of this NO-GO, and nobody re-checked it |

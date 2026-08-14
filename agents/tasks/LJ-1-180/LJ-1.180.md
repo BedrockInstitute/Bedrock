@@ -1,6 +1,6 @@
 # LJ-1.180: adversarial review of `[LJ-1.172]`, whose verdict was negative
 
-tier: fable 5, maximum effort. **DD25 with DD17's invariant: the critic is never
+tier: fable (override), maximum effort. **DD25 with DD17's invariant: the critic is never
 the same head as the author.** `[LJ-1.172]` was written by the in-harness Opus 5
 under the `override` version, so this review does not go to that head.
 
