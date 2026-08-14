@@ -23,6 +23,26 @@ owner, **who decides.**
 **So write for a reviewer who will check your claims, not for a decision-maker
 who will act on them.** Every capability claim needs its source.
 
+## A SIBLING OVERLAPS YOU AND ITS ANSWER BINDS YOURS
+
+**`[LJ-1.205]` is reconciling `.claude/skills/dispatch-herdr/SKILL.md` against
+herdr's OFFICIAL skill, which is installed at `.claude/skills/herdr/SKILL.md`,
+195 lines, taken from `herdr --skill` so it matches this binary.**
+
+**Read the official skill FIRST, before the website.** It is the authority on
+what this herdr can actually do, and a capability the website promises but the
+installed skill omits is a version question, not a feature.
+
+**AND READ `[LJ-1.205]`'s REPORT IF IT HAS LANDED**, at
+`agents/tasks/LJ-1-205/lj-1.205-report.md`. **It is measuring the same tool from
+the documentation side while you measure it from the replacement side.** If it
+found a capability we did not know we had, that is your best material; if it
+found our skill already correct, that narrows your search.
+
+**WHERE YOU MUST NOT COLLIDE WITH IT:** it WRITES the dispatch skill. **You
+write only your report.** If your conclusion implies a skill change, **say so in
+your report and let the orchestrator sequence it.**
+
 ## THE QUESTION THAT MAKES THIS USEFUL, and it is not a feature tour
 
 **`.claude/skills/codex-dispatch/dispatch.py` is 2,276 lines.**

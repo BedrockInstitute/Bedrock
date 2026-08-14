@@ -769,9 +769,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.200 | DD25 review of LJ-1.196's NO-GO | UPHELD BUT MISATTRIBUTED | The verdict and the reading are right. The cause is not Delta-0 and A CHAPTER is an unmeasured consequent |
 | LJ-1.201 | DD25 review of LJ-1.185's refutation of the 16 s | UPHELD BUT MISATTRIBUTED | The 16 s is dead, but the term is UNPRICED not unmeasurable, and Deserialization rose 8.3 s unowned |
 | LJ-1.202 | Is omega in lam DERIVABLE at the HullStage site | DERIVABLE, CONFIRMED BY TYPECHECK | No new hypothesis: the instantiator derives it from its own telescope, so the prohibition stands |
-| LJ-1.203 | Can herdr Agent Automation replace dispatch.py | REPORT ONLY, DISPATCHED | Which of the 2,276 lines exist because herdr lacked something, and which because Bedrock needs it |
+| LJ-1.203 | Can herdr Agent Automation replace dispatch.py | OPTIMIZE AND COMPLETE, NEVER REPLACE | 74 pc is Bedrock law no herdr feature can carry. Only the wait protocol has a supersession |
 | LJ-1.204 | Deserialization rose 8.3 s at Condensation and no report owns it | DISPATCHED | LJ-1.201 found it in LJ-1.185's own raw files. Larger than the 5.2 s ceiling. Cause INFERRED |
 | LJ-1.205 | Reconcile our dispatch SKILL against herdr's official one | 7 DELETED, 59 ADDED, ONE RULING OWED | Neither skill supersedes the other. blocked read as FINISHED and the owner ruled it |
+| LJ-1.206 | Measure herdr's wait supersession and land it if it holds | DISPATCHED | The only DOCUMENTED supersession LJ-1.203 found, and it is NOT measured. Also: prompt QUEUES |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
