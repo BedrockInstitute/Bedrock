@@ -1,7 +1,11 @@
 # LJ-1.187: put every part of `dev/` in the place its KIND belongs
 
-tier: pi (deepseek-subagent-mode). **The switch's default row, taken as the
-table gives it.** `scripts/dispatch_policy.py` is the only place the tables live.
+tier: pi (deepseek-subagent-mode), **model `deepseek-v4-flash` by the owner's
+word, 2026-08-14.** The head is the switch's default row, taken as the table
+gives it; only the MODEL is the owner's choice, and it is recorded here so the
+choice leaves a trace an audit can find. `scripts/dispatch_policy.py` is the
+only place the tables live. **DD0: this is the owner using their authority and
+it is not a precedent the orchestrator may cite.**
 
 ## GOAL
 
