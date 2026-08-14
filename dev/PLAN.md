@@ -784,8 +784,11 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.215 | DD25 review of three negatives | UPHELD, UPHELD, MISATTRIBUTED | A6 is UNPRICED not WALLED, and my missing clock cap caused it. Re-price starts from the green E interface |
 | LJ-1.216 | Does Powerset serve BOTH towers | NO, AND IT NAMED THE BLOCKER | The delivered L.Coding.Model leaks the tower into the body, so the chain's first brick is now certain |
 | LJ-1.217 | Re-price A6 from the green interface, with a clock cap | DISPATCHED | LJ-1.215 ruled A6 UNPRICED not WALLED. Start from ProbeLJ1198E, and pair-out is the fixed shape |
-| LJ-1.218 | LJ-1.9's audit: the wing's ratio and its net removable lines | DISPATCHED | Planned since the phase opened, never run. DD5 measure 3 owes lines_removable and it reads 0 |
-| LJ-1.219 | Join GenModel to Powerset's body and run BOTH at the ambient class | DISPATCHED | LJ-1.216 named the leak: the DELIVERED Model. Both bricks are already green apart |
+| LJ-1.218 | LJ-1.9's audit: the wing's ratio and removable lines | 1.70x, GAP 60.0 s, 695 REMOVABLE | 523 of the 695 are one superseded chain, so the figure is 695 or 172. LJ-1.222 checks it |
+| LJ-1.219 | Join GenModel to Powerset at the ambient class | MODEL LINK COMPOSES, BRICK TWO LEAKS. DD25 [LJ-1.221] | Five Model names green ambient. Recover's keyOf leaks at :142. Plumbing 21 lines |
+| LJ-1.220 | Parameterize every leak instead of porting it, and census the chain once | DISPATCHED | One brick per dispatch prices 15 more dispatches. This prices the chain's width in one pass |
+| LJ-1.221 | DD25 review of LJ-1.216, LJ-1.219 and the brief pattern behind both | DISPATCHED | Both stopped by design. LJ-1.211 measured briefs cause 8 of 10 overturns, so my method is a target |
+| LJ-1.222 | Check LJ-1.218's 523-line supersession before 695 reaches the ledger | DISPATCHED | A figure reaches three documents before anyone checks it, and this one discounts the DD5 benchmark |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
