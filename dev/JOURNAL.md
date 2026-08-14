@@ -350,3 +350,303 @@ brief. No refusals this round, which is itself a change from `[LJ-0.4]`.
 
 **Owed.** `fin-inj` at 50 to 100 lines. `Successor.go₂`'s 4.5 s. `[LJ-1.17-R]`'s
 definition profile on the two square-law probes.
+
+### 2026-08-14, `[LJ-1.186]`: the `DD` rows compressed to the rule itself
+
+**Asked.** Compress `dev/PLAN.md` section 3 to the rule itself. For every
+sentence in a `DD` ruling, keep what a reader needs to know what to DO or NOT
+DO, and what enforces it. Move the reading, the episodes and the evidence here.
+Owner's instruction 2026-08-14, with DD0's licence: the extended interpretation
+compresses away, the fundamentalist core stays. Nine rows were already pure
+rule and were left alone: DD1, DD8, DD9, DD11, DD13, DD15, DD19, DD22, DD23.
+Ten rows moved their remainder here: DD0, DD2, DD4, DD5, DD17, DD18, DD24,
+DD25, DD26, DD27.
+
+#### DD0
+
+**WHY IT WAS RULED, and the episode is one hour old.** The owner named
+`fable 5` for ONE adversarial review on 2026-08-13, by their own word. On
+2026-08-14 the orchestrator dispatched FOUR DD25 reviews to `fable`, when the
+switch's adversarial row reads `pi` and the orchestrator had printed that table
+in the same session. **`scripts/check-dispatch-policy.py` passed all four**,
+because DD17's emergency tier makes `fable` a legal token and no checker can
+tell an emergency-tier head from a wrong one. `dev/LESSONS.md` **C-43** carries
+the measured episode and the checker finding; **this row is the ruling and
+C-43 does not restate it.**
+
+#### DD2
+
+**WHY THE AMENDMENT.** The original row ruled the architecture on 2026-08-09,
+and `[LJ-0.3]` found the warrant self-contradictory: archived D26 held that a
+number alone may never put the route back on the table, and D39 changed the
+route on `[L3.32-T257]`'s figure, which `dev/ledger.toml` declares NOT YET
+CLEAR ENOUGH TO BIND the constraints that same figure set. **One pass by one
+agent cannot be too weak to set a threshold and strong enough to overturn a
+route.** The retrospective did NOT refute the architecture; it refuted the
+timing, and the owner adopted that.
+
+**A MEASUREMENT FOR `[LJ-2.5]`, recorded 2026-08-10 and NOT a re-opening.**
+`[LJ-1.2]` probed the Def tower's level-story certification and returned NO-GO:
+the step clause has no Delta-0 witness at ANY carrier, because the coded
+satisfaction leaves carry unbounded quantifiers. `[LJ-1.10]` traced that to
+**D-26 being paid**: a definable-power stage carries no generation data, so its
+level-hood must run through codes and satisfaction, and those leaves are
+unbounded. On the J tower the same story is structural with the Def-step
+collapsed to `⊤̇`, and its bounded clause layer is priced at 470 to 610 lines.
+**So the level-story certification is a few hundred lines on one tower and
+thousands on the other**, and that asymmetry is a fact about the architecture
+rather than about this wing. `[LJ-1.10]` states its own limits: the J tower is
+not free, its equivalence still needs fresh bounded clauses, and the hull,
+collapse and counting cost the same on both. **QUALIFIED 2026-08-10 by
+`[LJ-1.11]` F4, which tested this argument on the owner's instruction.** **The
+DIRECTION holds on three independent legs**: D-26's own measurement,
+`[LJ-1.2]`'s probe, and now the literature, since SZ's Sigma-1 engine exists
+precisely because the S-step is syntax-free. **The MAGNITUDE does not.** The
+470 to 610 figure covers only the six STRUCTURAL clauses on the J side, and
+`[L3.32-T263]` records the sixteen op-clauses as unmeasured, so this row
+previously overstated the price as covering the story whole. **Before
+`[LJ-2.5]` rules, strengthen it**: run the queued `[L3.32-T261]`-class probe
+and price one bounded op-clause times sixteen. Until then the asymmetry is a
+direction with an unpriced magnitude, and `[LJ-2.5]` should be told exactly
+that. **This is evidence for `[LJ-2.5]` to weigh, and nothing here re-opens
+the ruling early.**
+
+#### DD4
+
+**BUT IT DOES CARRY A REPORT, amended 2026-08-09 after `[LJ-0.3]` drew the
+distinction the first ruling missed.** Refusing the GATE is right; refusing
+the MEASUREMENT is one step too far, because a report cannot be gamed when
+nothing passes or fails on it, and the machinery already existed in
+`scripts/ledger.py`'s import closures. **`ledger.py --reuse` prints what the
+two proofs actually share**, in masters and in lines, with each closure's own
+total and the shared share of their union. It exits 0 whatever it finds, it is
+NOT in `make check`, and it refuses to compute while no GCH endpoint exists
+rather than inventing a number. **The report is evidence for a human, never a
+score to maximize:** a high share won by fattening the shared core is precisely
+the failure the no-gate ruling protects against, so it is read beside
+`[LJ-2.3]`'s reuse map and never instead of it.
+
+**Provenance.** `dev/LESSONS.md` **P-h** is the measured law, twice on
+2026-08-02, a walk taking set arguments as FUNCTION parameters ran past four
+minutes cold and never finished, and the same walk as a MODULE parameter with
+the arguments abstract dropped the file to about 13 s, then 30 s at the second
+site. Content written structure-generic at full strength makes every
+re-instantiation nearly free. **This campaign has paid for the converse
+twice:** a satisfaction cone whose 134 readings were written fixed to one
+carrier, and `[L3.32-T70]` mirroring at the class carrier what `[L3.32-T69]`
+had just written at the set carrier.
+
+#### DD5
+
+The row kept the two constraints, the caliber, measure 1's ceiling rule, the
+three measures and the per-measure enforcement. Four passages moved here.
+
+**The benchmark status, 2026-08-09.** The row's sentence 'A benchmark that is
+not clear is made clear first, by the owner's own instruction' dropped the
+clause 'and today neither is'. The line benchmark has one pass, `[T257]` at
+25,485-28,258 naive, with a declared weak point worth 4,238-5,218, a fifth of
+the band, which can decide the constraint by itself. The time benchmark is
+half-built: the internalization AC wing measured 133.19 s over 17,492 lines on
+2026-08-09, and its GCH half does not exist until `[LJ-1.8]`.
+
+**THE WING NOW PROJECTS ABOVE ITS OWN CEILING, and this row records the gap
+rather than moving the ceiling.** `[LJ-1.11]` refuted `[LJ-1.10]`'s route C:
+the archived structural story's Def-step collapses to `⊤̇`, so it recognizes no
+level and its target is classically FALSE. The crossing therefore reverts to
+route A's 1.7 to 3.8k, or to an alternative nobody has priced, and `[LJ-1.1]`'s
+wing projection of 8.0 to 10.8k no longer holds. `[LJ-1.12]` prices the
+surviving candidates, and `[LJ-1.13]` and `[LJ-1.14]` carry two more gaps the
+review found in delivered work. **None of it is funded yet: the owner's
+priority is the AC-side compression** (2026-08-10).
+
+**THE COMPRESSION PREREQUISITE IS 17,000, RE-RULED BY THE OWNER 2026-08-10**,
+after 16,000 was refuted and 16,400 was then tested to destruction. **Both
+earlier figures failed the same way and the sequence is worth keeping:** 16,000
+came from `[L3.32-T205]`, which found it an unprobed survey optimum; 16,400
+rested on measurement only for the DELETION class, which block A banked in full
+at minus 240. Five of eight blocks were then measured and FOUR refused, B at
+plus 24, E at plus 19, G at plus 49, and C at minus 59 by gutting two chapters.
+`[LJ-0.8]` then scanned for the remainder and found the mass ABSENT rather than
+mispriced. **The one systematic error behind all four refusals:** a kit costs
+31 to 111 lines and its sites save less, because every survey priced the
+savings and never the kit. **17,000 is therefore the first target set from
+measurement rather than from a survey**, and the ratio cost falls with it, from
+plus 5.3 percent at 16,400 to plus 1.6 percent, which barely moves DD24's bar.
+**MET 2026-08-10 and the prerequisite is DISCHARGED.** At 16,897 on DD26's
+caliber, 103 under, or at 16,995 and five under on the caliber the target was
+set with; both are met and the 98-line difference is the two catalogs coming
+out, not a line of mathematics moving. Nine blocks ran and eight bands were
+tested. What landed was DELETION (A minus 240, the prose-freed names minus 59,
+the citation re-test minus 34) and exactly ONE kit: `[LJ-0.4n]` at minus 104,
+which took ONE parameter where its refused predecessor `[LJ-0.4f]` took eleven.
+That kit also made the tree FASTER by 0.53 s, so it is the only compression
+here that improved the ratio instead of trading against it. `dev/LESSONS.md`
+D-28 records the law and C-30 the gate list. **The seconds half is NOT
+discharged by that number:** `[LJ-0.5]` re-measures the DD24 baseline cold,
+because the old figure was taken over 17,271 lines and both terms of the ratio
+have moved (P-q). The owner first set 16,000 as a prerequisite to phase 1.
+`[LJ-0.4]` refuted it, and the refutation was already on the record:
+`[L3.32-T205]` asked where the 16,000 floor came from and answered UNSUPPORTED,
+a survey's optimistic end never probed; `[L3.32-T208]` then MEASURED the seven
+levers at minus 620 to minus 860 against the survey's minus 755 to minus 1,486.
+The honest floor is 16.3k to 16.6k. **The shared-base foundation kit does not
+close the gap and moves the wrong way**, measured at plus 13 to plus 15 net, so
+it is judged on readability alone. The owner set the target at about 16.4k and
+ruled the phase proceeds. **The blocks land regardless of the total**, because
+`[LJ-0.4]`'s N1 to N4 and levers (c) to (f) are the DD4 move: they replace
+repeated fixed content with one generic frame, and the GCH wing's twelve
+clauses instantiate the same frames. What they make cheaper later outweighs the
+lines they remove today.
+
+**THE BENCHMARK IS SELF-SET, AND THAT IS A HOLE THIS ROW NAMES RATHER THAN
+CLOSES.** Found by `[LJ-0.3]` 2026-08-09 and not previously stated anywhere.
+**Phase 1 builds the internalization GCH wing, and `[LJ-2.1]` measures THAT
+WING to set the benchmark the two-tower route must then beat.** So this project
+writes its own examination paper. A long or wasteful wing sets a high
+benchmark, which the two-tower route then clears while being worse in absolute
+terms, and every threshold here would report a pass. **DD24 guards the wing's
+RATIO and nothing guards its TOTAL**, which is deliberate, because the wing
+exists to measure what GCH costs and a cap would make it report the cap.
+**DD24 IS NOT A DEFENCE HERE, and a first version of this row wrongly said it
+was.** `scripts/check-ratio.py` fails only when the aggregate is ABOVE the bar.
+Padding with cheap lines LOWERS seconds per line, so a padded wing passes DD24
+more easily, not less. The ratio guards the wing's content CLASS and says
+nothing whatever about its SIZE, which is exactly the quantity that sets the
+line benchmark.
+
+#### DD17
+
+The row kept the dispatch order, the switch-is-one-home rule, the six
+mode-switch steps, the emergency tier and the enforcement point. Five fragments
+moved here; each is shown in its original sentence, with the moved part in
+bold.
+
+- 'They are `deepseek-subagent-mode` and `in-harness-subagent-mode`, **each
+  named for the head it LEADS with** (owner, 2026-08-14, **replacing `normal`
+  and `override`, which said which one was the EXCEPTION and never which head
+  leads**).'
+- '**WHAT A MODE SWITCH REQUIRES, and it is written down so nobody derives it
+  again** (owner's instruction, 2026-08-14, **after a flip cost a long
+  session**).'
+- '**(3) Run `scripts/check-dispatch-policy.py` and expect red.** ... the
+  checker must judge a brief by the mode it NAMES, never by today's switch.
+  **Fixed 2026-08-14 when five briefs went red at once.**'
+- '**(4) If a mode is RENAMED, the retired name must keep resolving**, through
+  `ALIASES` in the same file, because briefs carry it: **52 did on
+  2026-08-14.** C-41 is the law.'
+- 'Under a mode that leads through `herdr` they all fire again, and
+  `dispatch.py` becomes load-bearing: a defect in it is invisible while nothing
+  walks that path, **and it had refused EVERY dispatch since the briefs moved
+  into `agents/tasks/`**.'
+
+#### DD18
+
+**WHY THIS WAS ADDED.** Every phase-1 brief so far cited the archive and none
+cited the literature, while `digest.md:513-518` had recorded a sourced
+GCH-in-L derivation, Devlin II.5 with Theorem 5.6, since 2026-08-03. The
+corpus was there and nobody was sent to it.
+
+**WHY BOTH, when the archive half had never lapsed.** Measured 2026-08-10:
+twelve of twelve briefs and thirteen of thirteen returns carried their archive
+sections with no gate at all. That record argued for leaving it to review, and
+the owner ruled for alignment instead. The record makes the gate cheap rather
+than redundant: a rule already obeyed costs nothing to check, and two rules of
+the same shape enforced two different ways is a thing a reader has to explain
+to themselves.
+
+**WHY EVERY BRIEF AND NOT ONLY A BUILD, which is the correction that matters.**
+The literature half was first scoped to master-writing briefs, reasoning that a
+recon needs no mathematics. **That was wrong, and the test is the case that
+prompted the rule:** `[LJ-1.1]` is a recon, it wrote only a report, and it
+PLANNED THE ENTIRE GCH WING without citing a line of `dev/literature/`. The
+build-only scope would have exempted exactly the brief the rule exists for.
+
+**The `[LJ-1.11]` gap clause.** The row's codex-path sentence dropped 'and
+`[LJ-1.11]` proved the gap by going out short two mandatory rules'. The full
+sentence read: 'An in-harness dispatch does not pass through `dispatch.py`, and
+`[LJ-1.11]` proved the gap by going out short two mandatory rules. There the
+orchestrator applies DD18 by hand, and a return that arrives without both USED
+sections is sent back.'
+
+#### DD24
+
+The row kept the ratio bar, the no-other-threshold ruling, the bar-governs-DD5
+ruling, the one-tree baseline ruling and the enforcement. The reasoning and
+measurements moved here.
+
+**Why a RATIO**: a total can be met by writing less of a worse thing and a
+ratio cannot, so it says the content must be the same KIND of content.
+`dev/LESSONS.md` P-m measures why that matters: parameterized work runs about
+0.010 to 0.013 s per line and instantiation about 0.22 to 0.297, a twentyfold
+spread no line count reveals.
+
+**The first measurement of the bar.** The AC wing measured **0.007614 s per
+line** on 2026-08-09, 133.19 s over 17,492 lines, so the bar is a number rather
+than a judgment.
+
+**The wing exists to measure.** That wing exists to MEASURE what GCH costs,
+because the measurement sets DD5's benchmarks; a cap would make the measurement
+report the cap instead of the cost, and this project already paid for that when
+a projection was re-quoted as a measurement for nine dispatches.
+
+**Why the bar also governs the two-tower route.** A wing built at
+instantiation rates would set a seconds benchmark so loose that the new route
+could clear it while being worse, and a benchmark that is easy to beat measures
+nothing.
+
+**Why the baseline belongs to one tree.** A seconds-per-line figure is not a
+constant: `[LJ-0.4]` compresses the tree by roughly 1,500 lines and moves BOTH
+terms, neither predictably, because a line lever is not a seconds lever (P-q).
+
+**The P-q and P-t readings.** P-q measured 315 lines removed buying 11.8
+seconds, so a line lever is not a seconds lever, and P-t found a twentyeightfold
+spread inside ONE file, so the carrier never certifies the class.
+
+#### DD25
+
+**WHY, from measurement rather than caution:** four blocks refused on
+measurement in `[LJ-0.4]` and the orchestrator accepted all four. `[LJ-0.8]`,
+an adversarial review, then found a propagated sign error standing in five
+places and a refusal blamed on the wrong party. A negative return closes a line
+of work, so a wrong one is the most expensive kind of return there is, and it
+is the kind nobody re-checks.
+
+**The fixed-tier history.** This row was first written when the default was
+codex and the critic was Opus, and it named both. The original clause read that
+DD17 required the owner to name the reviewing head per task because a past
+override never carried forward, and that DD25 was that naming, standing, for
+this one class. DD17 no longer names a head at all, so what survived is the
+WHEN/WHO split now in the row.
+
+**The `[LJ-1.11]` hand-applied gap.** An in-harness dispatch does not pass
+through `.claude/skills/codex-dispatch/dispatch.py`, so the DD4 and DD18
+refusals do not fire; `[LJ-1.11]` went out short two mandatory rules through
+exactly this gap.
+
+#### DD26
+
+**It also collapsed a real discrepancy.** The AC side had TWO numbers under one
+name: the bucket, standing minus the declared wing, at 16,995; and DD24's own
+tree, the cold-build cone of `Landmarks`, at 16,916. The 79-line gap was exactly
+`Everything`, which no build of `Landmarks` compiles. Excluding both catalogs
+makes them ONE number, **16,897**, and a figure with one meaning cannot be
+quoted in the wrong place.
+
+#### DD27
+
+**THE PRICES, and this is why it is a ruling and not a preference.** Keeping
+the index type costs **1.0 to 3.0k lines and 220 to 890 s, 17 to 23x DD24's
+bar** (`[LJ-1.16]`). Moving costs about **270 lines under 6 s**: 116 MEASURED
+by `[LJ-1.18]`'s probe at 0.0103 s/line, about 30 named follow-on, and about
+120 for the counting priced by `[LJ-1.22]`.
+
+**THE COUNTING OBJECTION DIED ON MEASUREMENT.** `Code` needs the SAME cardinal
+law as `Formula K 1`, pairing at β, not a stronger one, so the fork neither
+cures nor worsens `[LJ-1.17]`'s square-law wall; the union over the naturals is
+internal to the constructor, since `wit` carries its arity.
+
+**DD4 IS THE REASON IT IS RIGHT AND NOT MERELY CHEAP.** The obstruction hits
+BOTH towers, so the blocked shape buys the definable well-order twice; the term
+algebra needs only a META well-order both towers already have, so it is
+template content bought once. `[LJ-0.7]` found the definable well-order appears
+on the whole GCH chain at exactly ONE place, Devlin's own proof of the hull.
