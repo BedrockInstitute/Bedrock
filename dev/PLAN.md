@@ -745,7 +745,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.190 | Reconcile dispatch.py against the SKILL | 3 CONTRADICTIONS, 2 FIXED, 1 OPEN | The DD canon rules any tie. A refusal is never deleted without evidence its failure cannot recur |
 | LJ-1.191 | Build P1, the load-bearing-claim SKILL | BUILT AND LIVE | LJ-1.189's first proposal. C-32 exists and did not reach the moment of action; the moment is a WRITE |
 | LJ-1.192 | Build P2, the artifact-over-proxy SKILL | BUILT AND LIVE | The artifact is the evidence and the status field is a hint. Three outcomes were recorded from a proxy |
-| LJ-1.193 | Build P3, the commit gate against live write territory | DISPATCHED | Two git add -A sweeps took a sibling's work. dispatch.py already computes the intersection |
+| LJ-1.193 | Build P3, the commit gate against live write territory | BUILT AND GREEN, IN make check | Two git add -A sweeps took a sibling's work. dispatch.py already computes the intersection |
 | LJ-1.194 | Build P4, the DD number-uniqueness check | BUILT, ONE CODE PATH FOR EVERY SERIES | I minted a duplicate DD27 and check-rule-ids reported CLEAN: it verifies resolution, never uniqueness |
 | LJ-1.195 | Consistency audit by document rank: AGENTS.md, then DD, then the rest | DISPATCHED | READ ONLY, five worst only. AGENTS.md itself has stale rows, so rank does not settle every tie |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
