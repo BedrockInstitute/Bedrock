@@ -60,8 +60,12 @@ disease sits in **21 fields across three records**, that the cure is atomic, and
 that it prices at about 190 with step 6 at about 260 after it. **Green from
 today is about 450.**
 
-**2. Route A-prime's total.** Six blocks are priced and A5's last unknown
-dissolved. **Nobody has summed them.** That is what `[LJ-1.8]` waits on.
+**2. Route A-prime's total.** `[LJ-1.175]` measured a partial sum of **705 over
+six blocks** and named the blocker: **A5 has NO live line price**, and its only
+two figures are both dead. **It also measured that the seven blocks DO NOT
+PARTITION**, with five overlaps quoted from the reports' own text. **So a
+partition ruling comes FIRST, because it costs no machine and it decides what an
+A5 probe must measure.** `levelIn` and `cover` are in NO figure here.
 
 **3. The remaining 48.7 s of the DD24 gap.** `[LJ-1.155]` measured that the
 three `*Agree` masters carry a second term and that its cure is **WING-LOCAL**,
@@ -731,7 +735,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.172 | BUILD the supply, in dependency order, landing incrementally | 1 TO 5 BUILT; 6 REFUTED AT THE JOIN | envSetK asks a level to hold a function space. Six names, one fact, no supplier |
 | LJ-1.173 | Restrict envSetK to a numeral arity, gate first | 21 FIELDS IN THREE RECORDS, CURE ATOMIC | My ruling's scope was one record; the sweep it ordered measured three. Cure 190, step 6 260 |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
-| LJ-1.175 | Sum Route A-prime to ONE total, or name what blocks it | DISPATCHED | Six blocks priced and A5's last unknown dissolved. Nobody has summed them, and LJ-1.8 waits on it |
+| LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
