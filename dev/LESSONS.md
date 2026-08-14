@@ -3845,3 +3845,69 @@ is the owner's to rule.** Related: [[P-t]], [[P-q]], [[P-s]].
 **Provenance:** `agents/tasks/LJ-1-147/lj-1.147-report.md`, its six raw run logs
 under `agents/tasks/LJ-1-147/runs/`, and `agents/tasks/LJ-1-145/lj-1.145-report.md`
 for the diagnosis it closes.
+
+### C-44. A brief's claim that something was never done is a MEASUREMENT of the record, and it is the one claim an agent cannot check
+
+**Rule:** A brief may assert that a thing was never built, never run, never
+measured, or does not exist ONLY after the author has opened
+`dev/PLAN.md` section 11 and searched it for the object. **The task index
+exists for exactly this: one row per dispatch, every dispatch since the phase
+opened.** A negative-existence claim carried from another report is not
+evidence; it is a quotation, and it looks identical in a brief.
+
+**Why an agent cannot catch it.** A dispatched agent verifies claims against
+the tree, and a negative-existence claim has no site in the tree to check. **It
+arrives as the statement of the task.** C-39 already measured that an agent
+cannot contradict its brief; this is the sharpest case, because the agent
+cannot even locate what it would have to contradict.
+
+**Measured, 2026-08-14, over about eighteen dispatches in one session.** The
+orchestrator shipped FOUR defective briefs. **Three were assertions about the
+record that one `grep` would have refuted**, and the fourth was a file moved
+under a running agent.
+
+**The expensive one, in full, because its cost is the law's measurement.**
+`[LJ-1.228]`'s report said the stage-carrier decode probe「nobody ran it」.
+`[LJ-1.230]`'s brief carried that sentence forward, unverified, as the reason
+the task existed. `[LJ-1.230]` then spent a full Agda dispatch and returned
+**NO-GO with three walls**, and that NO-GO reached `dev/PLAN.md` section 0.0,
+the live status screen, before anything checked it.
+
+**`dev/PLAN.md:677` had read `[LJ-1.124] | Probe the bounded level-graph decode
+| GO, 147 LINES` since 2026-08-13.** `agents/tasks/LJ-1-124/ProbeLJ1124A.agda:199-209`
+holds `graph-out` and `graph-in`, the two directions of exactly the lemma the
+NO-GO called absent. **`[LJ-1.233]` found the row and OVERTURNED the NO-GO.**
+**Neither `[LJ-1.228]`'s nor `[LJ-1.230]`'s ARCHIVE section names `[LJ-1.124]`.**
+
+**The other two of the three, both caught by an agent rather than a gate.** A
+brief credited `[LJ-1.227]` with a figure and a warning that are
+`[LJ-1.176]`'s, at `:205` and `:265-269`; `[LJ-1.231]` caught it by grep. A
+brief said DD25 is enforced by `scripts/dd25-record.py`; `Makefile:173` runs
+`scripts/check-dd25-review-named.py` and `dd25-record.py` is a read-back
+reporter.
+
+**THE ACTION** (C-37: a law states what to DO). **Before writing that something
+was never done: `grep` `dev/PLAN.md` section 11 for the object, open the row,
+and cite the report that MEASURED the figure rather than the report that
+quoted it.** **A figure quoted at one remove looks identical in a brief and is
+a different claim.**
+
+**Enforcement: the brief, and a token is available and MEASURED.**
+`scripts/check-premises-stated.py` already gates that a brief carrying a
+trigger token declares its load-bearing premises. **Measured 2026-08-14 over
+the 137 live briefs.** The phrase for「nobody has run」fires on 2 briefs, which
+is 1.5 percent. The phrase for「never been run」fires on 1 brief, and the
+phrase for「no figure exists」fires on 1 brief. **One of those two briefs produced
+today's overturn, which is the file's own stated bar for a token earning its
+place.** **The token is NOT yet added**, because adding an ACTIVE token reddens
+the frozen briefs that carry it, and a gate that reddens on a frozen record is
+the defect rather than the cure. **Pricing that is the next step and it is
+named here so it is not forgotten.**
+
+**Provenance:** `agents/tasks/LJ-1-233/lj-1.233-report.md`, which found the row;
+`agents/tasks/LJ-1-231/lj-1.231-report.md` for the attribution defect;
+`agents/tasks/LJ-1-124/lj-1.124-report.md` and its probe for the GO that was on
+record all along; `dev/JOURNAL.md`, 2026-08-14, for the file-move episode.
+Related: [[C-39]], an agent cannot contradict its brief; [[C-40]], verify the
+consumers and not the author's own check; [[C-32]], a cure invalidates every
+downstream measurement.
