@@ -105,22 +105,21 @@ four before you price the cure.**
   `git checkout .`, `git stash`, `git reset --hard` or `git clean`.
 - Do not run `make check`; I run it.
 
-## THE BAR YOU JUDGE SECONDS AGAINST, RULED 2026-08-14 as DD27
+## THE BAR, AND IT IS DD24 UNCHANGED
 
-**The owner ruled it while this brief was held, so it is settled and you do not
-report against two bars.**
+**The owner ruled 2026-08-14 that DD24 is the whole rule and that the readings
+layered on it were the orchestrator's own. Read DD24 fundamentally:**
 
-**A new module is priced against the MODULE RATE, `ac_baseline_module_rate` =
-0.009143**, and not against DD24's whole-wing 0.007913. The module rate measures
-73 cone masters each cold with dependencies warm, which is exactly what a new
-module costs.
+1. **The GCH bar was FIXED when the AC trophy landed. It does not drift.**
+2. **EVERY GCH module uses that one number, new or old alike.**
+3. **INTERMEDIATE DEBT IS ALLOWED**, because only the WHOLE GCH side, at the
+   end, is judged against the bar.
 
-**AND THE 1.15x TOLERANCE IS ALREADY SPENT, so new work gets none of it.** The
-GCH wing sits at 1.54x and carries a debt of **40 to 49 s**. **Your acceptance
-figure is therefore 0.009143 s per line, at 1.00x and not at 1.15x.**
-
-**Report your seconds against 0.009143. Say plainly whether the block clears it.**
-An overage is recorded plainly, as DD8 requires, and never argued away.
+**So report your block's seconds and its in-fence lines, and do NOT judge the
+block against a tightened figure.** The wing's position today is not a
+constraint on your block. **Record an overage plainly if there is one (DD8), and
+never delete a line to improve a ratio** (P-q measured 315 lines removed buying
+11.8 s).
 
 ## THE CLASSIFICATION I WANT ON EVERY NEGATIVE
 
