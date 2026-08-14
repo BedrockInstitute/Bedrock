@@ -106,12 +106,8 @@ the seconds on 65 percent of the lines.
 - **`dev/memos/source-material-survey.md:3`** is marked STANDING while it
   endorses the revoked two-caliber rule.
 
-**ONE ORCHESTRATOR HABIT THAT COST THREE TIMES ON 2026-08-13**, recorded here
-because no checker catches it: **do not change anything under a running agent.**
-Twice a directory-wide `git add -A` swept in a sibling's work in progress; once
-a tool rewrite landed while another agent was measuring with that tool, and it
-lost four figures. **Commit by explicit path, and land a tool change only when
-no agent holds it.**
+**ONE ORCHESTRATOR HABIT THAT COST THREE TIMES ON 2026-08-13**: the episode
+and its rule live in `dev/JOURNAL.md`, 2026-08-14, under `[LJ-1.187]`.
 
 ## 0. Where the work stands (2026-08-10)
 
@@ -468,20 +464,8 @@ double trophy on whatever phase 2 rules. A phase is a barrier: phase 2 cannot
 start before phase 1 delivers, because it measures what phase 1 built, and
 phase 3's constraints are the numbers phase 2 sets.
 
-**TWO PIECES OF EVIDENCE THE RULING IS OWED, and the record on one of them
-was wrong until `[LJ-1.149]` read it.** `[L3.32-T261]`'s probe on the S-tower
-crossing **RAN**, on 2026-08-09: exit 0, one cold run of 1.50 s over 124 fresh
-lines, at `agents/tasks/archive/L3-32-T261/ProbeT261.agda`, and it is the probe
-`[T260]` specified and could not run. It measured that the GCH wing pays
-neither `carried-sequence` nor `blockpowlim-instance`, the 4,238 to 5,218 that
-`[L3.32-T257]` declared as its own weak point. **This paragraph and three
-`dev/ledger.toml` notes said it never ran, from 2026-08-09 to 2026-08-13**,
-because `[LJ-0.3]`'s closeout read the brief header rather than the report.
-**WHAT IS STILL OWED IS DIFFERENT AND SMALLER:** one bounded op-clause priced
-and multiplied by sixteen, which `[L3.32-T263]` left unmeasured, and a second
-independent pass on `[T257]`'s line comparison, which is still one agent and
-one pass. **`[LJ-2.0]` owns both** and gates `[LJ-2.5]`; `[LJ-2.3]` reads them
-into the reuse map.
+**The evidence the `[LJ-2.5]` ruling is owed, and the record `[LJ-1.149]`
+corrected, live in `dev/JOURNAL.md`, 2026-08-14, under `[LJ-1.187]`.**
 
 **THE ARCHITECTURE RULING SITS AT `[LJ-2.5]`, not at the route change**
 (DD2, amended 2026-08-09 on `[LJ-0.3]`). The endpoint is ruled and closed; the
@@ -754,6 +738,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.184 | AmbientRead, Devlin's (a) at the AMBIENT carrier | SUPPLIED, theorem COMES OUT | One of four hypotheses closed. The archive had stopped on this same obligation as AmbientOnly |
 | LJ-1.186 | Compress the DD series to the rule itself | 41,981 TO 28,662, NOTHING LOST | Nine rows were already pure rule. Every removed sentence is in the JOURNAL under its own DD heading |
 | LJ-1.187 | Put every part of dev/ in the place its KIND belongs | DISPATCHED | Section 3 is off limits under DD0. A ruling is a row, an episode is a journal entry, a law is a LESSONS entry |
+| LJ-1.188 | Write the dispatch and herdr knowledge into a project SKILL | DISPATCHED | Keyword auto-load from the model side, never the owner's. Every mistake of 2026-08-14 goes in it |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
