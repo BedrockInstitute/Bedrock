@@ -753,6 +753,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.183 | Audit the orchestrator against every DD, under DD0 | DISPATCHED | Owner-ordered. Replay git log, briefs and reports. It must find what I did NOT self-report |
 | LJ-1.184 | AmbientRead, Devlin's (a) at the AMBIENT carrier | SUPPLIED, theorem COMES OUT | One of four hypotheses closed. The archive had stopped on this same obligation as AmbientOnly |
 | LJ-1.186 | Compress the DD series to the rule itself | 41,981 TO 28,662, NOTHING LOST | Nine rows were already pure rule. Every removed sentence is in the JOURNAL under its own DD heading |
+| LJ-1.187 | Put every part of dev/ in the place its KIND belongs | DISPATCHED | Section 3 is off limits under DD0. A ruling is a row, an episode is a journal entry, a law is a LESSONS entry |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
