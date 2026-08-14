@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes tree reuse ruleids taskindex devdocs agentsguard archivecited dd4 gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited dd4 gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4
+check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -88,6 +88,18 @@ ratio:
 # 2026-08-13 over 1,586 tracked files.
 probes:
 	$(PY) scripts/check-probes.py --check
+
+# The commit gate against a LIVE agent's write territory. [LJ-1.189]'s P3,
+# built by [LJ-1.193]. Two `git add -A` sweeps on 2026-08-13 committed a
+# sibling's work in progress; a staged file inside a live agent's task
+# directory or brief write scope is refused by the pre-commit hook, and this
+# tracked-tree mode audits that nothing already landed there. The ONE
+# exemption is a live record's own brief path, MEASURED: the orchestrator
+# commits a brief while its agent is live (4ae98f3, 82dd1fb, 8eb2ba0). The
+# hook runs scripts/check-live-territory.py --staged; this target is the
+# --check half. Cost: a registry read, a ps per live agent, one git ls-files.
+liveterritory:
+	$(PY) scripts/check-live-territory.py --check
 
 tree:
 	$(PY) scripts/check-tree.py --check
