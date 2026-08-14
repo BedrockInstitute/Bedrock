@@ -756,8 +756,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.184 | AmbientRead, Devlin's (a) at the AMBIENT carrier | DISPATCHED | LJ-1.178's new wall. The tree delivers the read-off at the CLASS carrier only. Given it, CrossOut is ONE line |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
-| LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | DISPATCHED | LJ-1.178 is building against this stop at this moment |
-| LJ-1.182 | DD25 review of LJ-1.162's NO-GO on price | DISPATCHED | A NO-GO on price needs no wall and no refutation, only an estimate. CrossOut is still unbuilt |
+| LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
+| LJ-1.182 | DD25 review of LJ-1.162's NO-GO on price | UPHELD | It re-derived the 125 lines from the PROBE, not from the report's account of the probe |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
