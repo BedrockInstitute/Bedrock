@@ -66,13 +66,20 @@ PARTITION**, with five overlaps quoted from the reports' own text. **So a
 partition ruling comes FIRST, because it costs no machine and it decides what an
 A5 probe must measure.** `levelIn` and `cover` are in NO figure here.
 
-**3. The wing's gap to the DD24 bar, about 44 s.** **The `*Agree` term is SPENT:
-`[LJ-1.158]` cured it and took the wing 2.06x to 1.60x.** `[LJ-1.177]` then
-measured the next candidate and it FAILS the test: the `L/Condensation`
-telescope cure is capped at about **5.2 s** by `[LJ-1.155]`'s own profile,
-because it collapses `DeadCode` and `DeadCode` is 4.4 percent of that master.
-**The one candidate left is the 16 s billed outside every definition, which is
-module-application instantiation, and it is UNMEASURED.**
+**3. The wing's gap to the DD24 bar is 56 to 67 s, LARGER than the 44 recorded.**
+`[LJ-1.185]` re-measured the wing at 192.41 s over 11,926 lines, **1.76x**.
+**The `*Agree` term is SPENT**, cured by `[LJ-1.158]`, which took the wing 2.06x
+to 1.60x. **And the last candidate is REFUTED: the 16 s nobody had measured was
+a DOUBLE SUBTRACTION and never existed**, because `[LJ-1.155]` had already
+subtracted `DeadCode` before `[LJ-1.177]` subtracted it again. The real residue
+is 17.8 s, and it is **`OccursCheck` at 66 percent plus `TypeSig` at 29
+percent**: metavariable solving and signature elaboration. **Module
+instantiation is 0.9 percent of it** and sits INSIDE the 5.2 s ceiling already
+known, so the wing had ONE ceiling of about 5 s and never 5 plus 16. **The whole
+term is smaller than the wing's own noise band of 24.6 s, so a 100 percent cure
+could not be shown to have worked.** Eight of the twelve wing masters are
+already under the bar together; the Condensation family carries 82 percent of
+the seconds on 65 percent of the lines.
 
 **WHAT IS WAITING ON THE OWNER, and none of it blocks the three above.**
 

@@ -1,0 +1,35 @@
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.32 s, load 3.15 / 3.42 / 3.49 -> 3.15 / 3.42 / 3.49 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.defs1.txt
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.32 s, load 3.15 / 3.42 / 3.49 -> 3.15 / 3.42 / 3.49 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.int1.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.23 s, load 3.15 / 3.42 / 3.49 -> 3.15 / 3.42 / 3.49 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.defs1.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.24 s, load 3.15 / 3.42 / 3.49 -> 3.15 / 3.42 / 3.49 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.int1.txt
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.39 s, load 3.15 / 3.42 / 3.49 -> 2.98 / 3.38 / 3.48 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.defs1.txt
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.29 s, load 2.98 / 3.38 / 3.48 -> 2.98 / 3.38 / 3.48 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.int1.txt
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.28 s, load 2.98 / 3.38 / 3.48 -> 2.98 / 3.38 / 3.48 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.defs2.txt
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.27 s, load 2.98 / 3.38 / 3.48 -> 3.06 / 3.39 / 3.48 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.int2.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.21 s, load 3.06 / 3.39 / 3.48 -> 3.06 / 3.39 / 3.48 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.defs2.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.23 s, load 3.06 / 3.39 / 3.48 -> 3.06 / 3.39 / 3.48 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.int2.txt
+  another agda is live (pid ['37184']); waiting
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.44 s, load 2.90 / 3.34 / 3.47 -> 2.90 / 3.34 / 3.47 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.defs2.txt
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.46 s, load 2.90 / 3.34 / 3.47 -> 3.31 / 3.42 / 3.49 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.int2.txt
+  another agda is live (pid ['37285']); waiting
+  another agda is live (pid ['37383']); waiting
+  another agda is live (pid ['38119']); waiting
+  another agda is live (pid ['38119']); waiting
+  another agda is live (pid ['39851']); waiting
+  another agda is live (pid ['39851']); waiting
+  another agda is live (pid ['40373']); waiting
+  another agda is live (pid ['40373']); waiting
+  another agda is live (pid ['42062']); waiting
+  another agda is live (pid ['42062']); waiting
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.32 s, load 3.55 / 3.56 / 3.54 -> 3.55 / 3.56 / 3.54 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.defs3.txt
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.30 s, load 3.55 / 3.56 / 3.54 -> 3.55 / 3.56 / 3.54 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.int3.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.22 s, load 3.55 / 3.56 / 3.54 -> 3.55 / 3.56 / 3.54 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.defs3.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.23 s, load 3.55 / 3.56 / 3.54 -> 3.55 / 3.56 / 3.54 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.int3.txt
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.35 s, load 3.55 / 3.56 / 3.54 -> 3.67 / 3.58 / 3.55 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.defs3.txt
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.32 s, load 3.67 / 3.58 / 3.55 -> 3.67 / 3.58 / 3.55 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.int3.txt
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.27 s, load 3.67 / 3.58 / 3.55 -> 3.46 / 3.54 / 3.53 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.defs4.txt
+agents/tasks/LJ-1-185/ProbeLJ1185B.agda: exit 0, 1.28 s, load 3.46 / 3.54 / 3.53 -> 3.46 / 3.54 / 3.53 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185B.agda.int4.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.21 s, load 3.46 / 3.54 / 3.53 -> 3.46 / 3.54 / 3.53 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.defs4.txt
+agents/tasks/LJ-1-185/ProbeLJ1185C.agda: exit 0, 0.22 s, load 3.46 / 3.54 / 3.53 -> 3.46 / 3.54 / 3.53 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185C.agda.int4.txt
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.36 s, load 3.46 / 3.54 / 3.53 -> 3.46 / 3.54 / 3.53 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.defs4.txt
+agents/tasks/LJ-1-185/ProbeLJ1185D.agda: exit 0, 2.34 s, load 3.58 / 3.56 / 3.54 -> 3.58 / 3.56 / 3.54 -> /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/runs/agents_tasks_LJ-1-185_ProbeLJ1185D.agda.int4.txt

@@ -1,0 +1,27 @@
+# module agents/tasks/LJ-1-185/ProbeLJ1185D.agda
+# in-fence lines 0
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=internal agents/tasks/LJ-1-185/ProbeLJ1185D.agda
+# load before 2.90 / 3.34 / 3.47
+# load after  3.31 / 3.42 / 3.49
+# wall seconds 2.46
+# exit 0
+Checking LJ-1-185.ProbeLJ1185D (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-185/ProbeLJ1185D.agda).
+Total                      2,356ms          
+Miscellaneous                  3ms          
+DeadCode                       4ms (1,019ms)
+DeadCode.DeadCodeReachable 1,014ms          
+Serialization                830ms   (842ms)
+Typing                       158ms   (234ms)
+Typing.TypeSig                37ms          
+Typing.CheckRHS               20ms          
+Typing.OccursCheck            13ms          
+InterfaceInstantiateFull     171ms          
+Deserialization               37ms    (51ms)
+Deserialization.Compaction    14ms          
+Parsing                       13ms    (36ms)
+Parsing.OperatorsExpr         22ms          
+Scoping                       13ms    (20ms)
+
+----- stderr -----
+
