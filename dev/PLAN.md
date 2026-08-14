@@ -75,11 +75,16 @@ subtracted `DeadCode` before `[LJ-1.177]` subtracted it again. The real residue
 is 17.8 s, and it is **`OccursCheck` at 66 percent plus `TypeSig` at 29
 percent**: metavariable solving and signature elaboration. **Module
 instantiation is 0.9 percent of it** and sits INSIDE the 5.2 s ceiling already
-known, so the wing had ONE ceiling of about 5 s and never 5 plus 16. **The whole
-term is smaller than the wing's own noise band of 24.6 s, so a 100 percent cure
-could not be shown to have worked.** Eight of the twelve wing masters are
-already under the bar together; the Condensation family carries 82 percent of
-the seconds on 65 percent of the lines.
+known, so the wing had ONE ceiling of about 5 s and never 5 plus 16. **`[LJ-1.201]` then OVERTURNED the「no cure is measurable」half:** the ±12.8
+percent is a ONE-MODULE BETWEEN-SERIES figure by `check-ratio.py:72-76`'s own
+words, while within-series spread is 0.5 to 4.0 percent, and `[LJ-1.185]` used a
+within-series paired design ITSELF before denying it. **So the term is UNPRICED,
+not unmeasurable, and it is not SPENT.** **And a cure nobody owns is larger than
+the ceiling:** `Deserialization` at this master went 1,689 ms to about 10,000,
+which is 68 percent of its 12.3 s rise in one day and 8.3 s outside the residue.
+Eight of the twelve wing masters are already under the bar together; the
+Condensation family carries 82 percent of the seconds on 65 percent of the
+lines.
 
 **WHAT IS WAITING ON THE OWNER, and none of it blocks the three above.**
 
@@ -753,9 +758,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.198 | Close A6's open charge, the last cell that is not one number | DISPATCHED | A5 is priced at 547 now, so the charge A6 inherits is measurable. LJ-1.8 waits on this sum |
 | LJ-1.199 | BUILD step 6, the satisfaction layer supply | STOP AT ZERO LINES: A JOIN | envSetNumeral needs omega in lam and HullStage's telescope has not got it. Found by reading, no Agda run |
 | LJ-1.200 | DD25 review of LJ-1.196's NO-GO | UPHELD BUT MISATTRIBUTED | The verdict and the reading are right. The cause is not Delta-0 and A CHAPTER is an unmeasured consequent |
-| LJ-1.201 | DD25 review of LJ-1.185's refutation of the 16 s | DISPATCHED | It says the wing has NO lever left. If wrong, DD24 has a cure nobody is looking for |
+| LJ-1.201 | DD25 review of LJ-1.185's refutation of the 16 s | UPHELD BUT MISATTRIBUTED | The 16 s is dead, but the term is UNPRICED not unmeasurable, and Deserialization rose 8.3 s unowned |
 | LJ-1.202 | Is omega in lam DERIVABLE at the HullStage site | DERIVABLE, CONFIRMED BY TYPECHECK | No new hypothesis: the instantiator derives it from its own telescope, so the prohibition stands |
 | LJ-1.203 | Can herdr Agent Automation replace dispatch.py | REPORT ONLY, DISPATCHED | Which of the 2,276 lines exist because herdr lacked something, and which because Bedrock needs it |
+| LJ-1.204 | Deserialization rose 8.3 s at Condensation and no report owns it | DISPATCHED | LJ-1.201 found it in LJ-1.185's own raw files. Larger than the 5.2 s ceiling. Cause INFERRED |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
