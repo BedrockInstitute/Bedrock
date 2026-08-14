@@ -782,9 +782,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.213 | Gate the chain: Powerset and DefAt-stage | NOT AT MODEL'S RATE; THE GATE IS ORDER | Plumbing is 12 not 17, DefAt-stage is 8 lines. Suppliers import the tower, so port bottom-up |
 | LJ-1.214 | Is the 8.2 s the telescope component | THE COMPONENT CARRIES 7,925 OF 8,236 ms | Reverting it alone recovers 96 pc. The cure un-cures 21 fields, so it is the owner's design call |
 | LJ-1.215 | DD25 review of three negatives | UPHELD, UPHELD, MISATTRIBUTED | A6 is UNPRICED not WALLED, and my missing clock cap caused it. Re-price starts from the green E interface |
-| LJ-1.216 | The second instantiation: does Powerset serve BOTH towers | DISPATCHED | LJ-1.213 left the DD4 figure INFERRED. Without it the port serves one tower and DD4 is its whole reason |
+| LJ-1.216 | Does Powerset serve BOTH towers | NO, AND IT NAMED THE BLOCKER | The delivered L.Coding.Model leaks the tower into the body, so the chain's first brick is now certain |
 | LJ-1.217 | Re-price A6 from the green interface, with a clock cap | DISPATCHED | LJ-1.215 ruled A6 UNPRICED not WALLED. Start from ProbeLJ1198E, and pair-out is the fixed shape |
 | LJ-1.218 | LJ-1.9's audit: the wing's ratio and its net removable lines | DISPATCHED | Planned since the phase opened, never run. DD5 measure 3 owes lines_removable and it reads 0 |
+| LJ-1.219 | Join GenModel to Powerset's body and run BOTH at the ambient class | DISPATCHED | LJ-1.216 named the leak: the DELIVERED Model. Both bricks are already green apart |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
