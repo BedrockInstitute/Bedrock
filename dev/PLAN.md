@@ -751,9 +751,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.196 | DefAt's ambient reading: 84 lines or a chapter | NO-GO: IT IS A CHAPTER | u's slot is d, the definable powerset of the recorded value, and the induction never pins it |
 | LJ-1.197 | Do build-manifest.toml and rules.toml actually FIRE | 7 FIRE, 5 SILENT, 1 UNPROVOKABLE | All five silent rules are build-manifest's, and its checker was in no gate at all |
 | LJ-1.198 | Close A6's open charge, the last cell that is not one number | DISPATCHED | A5 is priced at 547 now, so the charge A6 inherits is measurable. LJ-1.8 waits on this sum |
-| LJ-1.199 | BUILD step 6, the satisfaction layer supply, priced at 255 | DISPATCHED | LJ-1.173 cured 21 fields for this and stopped before building. Nine lemmas, three re-costed |
+| LJ-1.199 | BUILD step 6, the satisfaction layer supply | STOP AT ZERO LINES: A JOIN | envSetNumeral needs omega in lam and HullStage's telescope has not got it. Found by reading, no Agda run |
 | LJ-1.200 | DD25 review of LJ-1.196's NO-GO on the ambient reading | DISPATCHED | It turns condensation into a chapter. If the NO-GO is wrong, LJ-1.7 changes completely |
 | LJ-1.201 | DD25 review of LJ-1.185's refutation of the 16 s | DISPATCHED | It says the wing has NO lever left. If wrong, DD24 has a cure nobody is looking for |
+| LJ-1.202 | Is omega in lam DERIVABLE at the sole instantiation site | DISPATCHED | LJ-1.199's join may dissolve: the instantiator holds alpha-not-in-omega and alpha-in-lam |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
