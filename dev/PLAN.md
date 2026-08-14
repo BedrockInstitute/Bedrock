@@ -785,6 +785,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.239 | Supply lh, the one term LJ-1.7 still owes | NOT SUPPLIED. THE TYPE IS WRONG. DD25 [LJ-1.240] | lh names arity 2; the stage level-hood has arity 4+n because its tag numerals are slots |
 | LJ-1.240 | DD25 review of LJ-1.239's refutation | RECIPE UPHELD, MY ESCALATION REFUTED | The type stands and costs sl and sc zero. The archive holds an arity-2 level story nobody read |
 | LJ-1.241 | Build phi-zero at arity two, read the declined archive | IT BUILDS. 77 LINES, TOP TYPECHECKS | The archive gave the shape and two primitives, no discharge. It verified the slot trace |
+| LJ-1.242 | The fifth step: does amb hold at the real phi-zero | DISPATCHED | LJ-1.184's declared six-reading residue is the same six LJ-1.238 ported, and neither knew of the other |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
