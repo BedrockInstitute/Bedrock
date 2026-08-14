@@ -878,3 +878,55 @@ measures the tree it sees.
 **The half that survives is real and was measured independently.** `injAt` and
 `module Small` are in no master under `src/L/`, so the readback device is not
 DELIVERED even though the probe exists. `[LJ-1.231]` separates the two halves.
+
+### 2026-08-14, `[LJ-1.231]`: two false attributions in a brief I wrote, caught by the agent I sent
+
+**`[LJ-1.231]` upheld half of `[LJ-1.226]` and refused the other half, and then
+it audited the brief that sent it.** Both findings against the brief are
+correct and I re-derived both.
+
+**FALSE ATTRIBUTION ONE.** My brief credited `[LJ-1.227]` with measuring the
+column square at 99 INFERRED and with warning that it may be too low as well.
+**Neither figure is `[LJ-1.227]`'s.** The 99 is at `agents/tasks/LJ-1-176/lj-1.176-report.md:205`
+and the warning is at `:265-269`. **A grep of `lj-1.227-report.md` for「99」and
+for「column square」returns only a citation OF `[LJ-1.176]`.**
+
+**FALSE ATTRIBUTION TWO.** My brief leaned on `[LJ-1.227]`'s tower table for a
+DD4 question about `pairω`. **That table covers A1, A2, A3, A4 and A7. A5 and
+A6 are absent from it**, so the premise does not exist in its named source.
+
+**Why this matters more than a citation slip.** `[LJ-1.211]` MEASURED that
+briefs caused 8 of 10 overturns on record. **A brief is the one document an
+agent cannot check against anything**, because it arrives as the statement of
+the task. **An agent told a figure belongs to a report will not go and check
+which report.** This one did, and that is the only reason it was caught.
+
+**The cure is mechanical and costs seconds: cite the report that MEASURED the
+figure, not the report that most recently quoted it.** A figure quoted at one
+remove looks identical in a brief and is a different claim.
+
+**The same day already carried one brief defect of a different kind**: I moved
+a file under a running agent and its report recorded a false MEASURED claim as
+a result. **Two brief defects, two agents, one day, both caught by the agent
+rather than by a gate.**
+
+#### What the review actually decided
+
+**「`pairω` is materially over 160」is UPHELD and MEASURED.** **「About 700」is
+NOT SUPPORTABLE.** Its eight rows sum to **743**, not about 700. **190 of the
+inferred lines carry no basis sentence at all.** The evidence supports only a
+half-open band from about **355**, and that 355 rests on seven comparables at
+seven sites, so P-l binds it too.
+
+**And the shape question was never asked.** Both consumers are Σ-types that
+name no function. `src/L/Ordinal/SquareLaw.lagda.md:685-687` and
+`src/L/StageCardinal.lagda.md:15-19` both demand an injective
+`⟪δ⟫ × ⟪δ⟫ → ⟪δ⟫` and nothing more. **The obligation is an INJECTION and not an
+object-language arithmetic.** The retired route closed the base at `ω` with
+**zero arithmetic** in about 79 lines at
+`archive/src/2026-08-09-rud-route/L/Ordinal/SquareLaw.lagda.md:815-893`. That
+is ambient, so it is a shape and not a price.
+
+**One correction that strengthens the target rather than weakening it:** the
+160 was never a price for `pairω` at all. `lj-1.176-report.md:227-229` records
+it as row 1's number transferred to a different object.
