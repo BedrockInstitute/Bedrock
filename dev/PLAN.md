@@ -793,6 +793,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.224 | Is LJ-1.220's exit 0 bought? Check the 22 types | NOT BOUGHT. 22 of 22 FAITHFUL | Five reconstructions sound; InL.lagda.md:253 holds the same reduction. Width falls to 8 and 19 |
 | LJ-1.225 | Does the ported chain discharge LJ-1.7's residue at all | DISPATCHED | Six dispatches priced the port. None asked whether it unblocks the phase. PLAN:49 names the lift |
 | LJ-1.226 | Build pairω into L, the widest unmeasured line in the route | DISPATCHED | A5 row 5 is INFERRED at 160 and LJ-1.176 warned it may be far too low. Nobody has written one |
+| LJ-1.227 | The gate list for A-prime's reading residue, five blocks in one pass | DISPATCHED | DD8 refuses a build brief that cannot name its widest term. Nobody has named these five |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
