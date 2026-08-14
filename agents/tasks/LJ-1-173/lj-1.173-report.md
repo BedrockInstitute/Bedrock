@@ -1753,3 +1753,245 @@ times.**
 **net +30 lines from HEAD**, which has NO field cured. The ratio tool reports
 **+24**, because its "before" run already had `envInK-mem` cured. **Both are
 right against their own baseline and neither is the other's error.**
+
+---
+
+# PART SEVEN: stages two, three and four
+
+**Appended after the coordinator committed stage one at `a01ef58`, ruled stage
+two, and then STRUCK the DD27 reading he had ruled one message earlier.**
+
+## 63. SIBLING CHECK FIRST, as instructed
+
+**`git status --porcelain` was EMPTY for `src/` before I touched anything.**
+HEAD is `142637c [LJ-1.177] …`, and my stage one is `a01ef58` beneath it.
+**The sibling committed after me and left nothing uncommitted. I found no dirty
+file I did not touch, so I proceeded.**
+
+## 64. STAGE TWO LANDED: the `codesK` fourth component, +45 lines
+
+**GREEN on all four masters.** The component is
+
+```agda
+                 × ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+```
+
+added to the conclusion of `codesK` and `codesK-un` in all three records, and to
+every telescope of that shape in `src/L/Condensation.lagda.md`.
+
+| what moved | count |
+|---|---:|
+| record field declarations (`codesK`, `codesK-un` × 3 records) | **6** |
+| import lines added, one per record | 3 |
+| telescope entries in `L.Condensation`, **first pass by name** | 19 `codesK` + 5 `unCodesK` + 4 `compK`/`unCompK` |
+| telescope entries, **second pass by SHAPE** | **29** |
+| result bindings with an explicit tuple annotation | 4 |
+| projection sites (`ks .snd .snd` to `ks .snd .snd .fst`) | 6 |
+| destructuring sites | **11** (6 binary, 5 unary) |
+
+**LINE COST: +93, -48, NET +45.** **My survey said about 40 and called itself an
+upper bound. The measurement is 45.** **That is the first survey in this task to
+land close, and it landed 12 percent HIGH of my estimate rather than three times
+high.**
+
+### 64.1 What the name-based pass missed, and it is the reusable lesson
+
+**I patched by NAME first and Agda refused four times.** The same field arrives
+in `src/L/Condensation.lagda.md` under **four different local names** —
+`codesK`, `unCodesK`, `compK`, `unCompK` — and `ShapesAgree`
+(`:6101-6116`) binds its arity as **`N`, not `ar`**.
+
+**The fix that worked was to patch by SHAPE rather than by name**: every
+telescope entry whose body carries the code equation
+`fst c ≡ pr (fst X) (pr (# k) …)`, taking `X` as that entry's own arity binder.
+**One pass, 29 entries, and the four aliases stopped mattering.**
+
+**MEASURED cost of the wrong approach: four agda rounds at about two minutes
+each.** **A rename-blind edit in this master is worth writing shape-first from
+the start.**
+
+### 64.2 Checkers after stage two
+
+| checker | result |
+|---|---|
+| `agda` on `L.Condensation`, `LowerAgree`, `UpperAgree`, `TwelveAgree` | **exit 0**, all four |
+| `postulate`, hole, unsolved meta | **all three ABSENT** |
+| `lint-agda.py --check` | **exit 0** |
+| `lint-prose.py --check`, four masters | **exit 0** |
+| `weave-i18n.py --check` | **exit 0** |
+| `check-unbound-hyp.py` | **2**, unchanged |
+| `make check` | **NOT RUN.** Yours |
+
+## 65. THE DD27 CORRECTION, RECORDED
+
+**The coordinator ruled that step 6 would be priced against
+`ac_baseline_module_rate` 0.009143 at 1.00x, then struck that ruling as his own
+misreading. DD24 is unchanged and the bar does not drift.**
+
+**Nothing in stages two or three was built against the struck figure.** They are
+correctness work and no ratio was ever going to decide them. **And I record the
+strike rather than quietly dropping it, because a figure that appeared in a
+brief and then vanished is exactly the kind that drifts back in later.**
+
+**For stage four I will report step 6's lines and seconds as measured, record
+any overage plainly per DD8, and judge it against nothing.**
+
+## 66. STAGE THREE LANDED: all twenty-one fields are now cured
+
+**GREEN on all four masters, FIRST agda run.** **The disease is out of the
+tree.**
+
+| what moved | count |
+|---|---:|
+| dear field declarations | **11** (TFacts 5, LFacts 3, UFacts 3) |
+| `envK` telescopes in `L.Condensation` carrying `envSetAt` | **10** |
+| application sites | **9**, one token each |
+
+**Stage two plus three together: +155, -78, NET +77 lines above stage one's
+commit.** Stage two was +45 of that, so **stage three is +32.**
+
+### 66.1 A CHEAPER FORM THAN I PRICED, and it removes the `PT.rec`
+
+**My section 46.3 priced about 2 lines per dear site for a `PT.rec` to
+eliminate the truncation. MEASURED: none is needed, and the reason is the same
+one that made the cheap four cheap.**
+
+**I gave the FIELD the truncated hypothesis directly:**
+
+```agda
+    envK-mem : (yc b a ar c E : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ … ⊨ envSetAt … ⟩
+               → ⟨ fst E ∈ … ⟩
+```
+
+**So the site is `envK yc a ar c E arNum hE`: ONE TOKEN, and `arNum` is already
+bound by stage two's `codesK` component a few lines above.** **The truncation
+elimination moves INTO the field's eventual supplier, where it happens ONCE,
+instead of eleven times at the consumers.**
+
+**The field is exactly as strong either way** — it concludes an hProp and its
+conclusion never mentions `n` (section 46) — **so this is a free saving of about
+22 lines, and my own price for it is withdrawn.**
+
+**That is the third time this task that a cure looked dear because nobody had
+read the call site.** **`EnvSet` already took `ar∈K`; `codesK` already computed
+`arK`; and now `arNum` is already bound where `envK` is applied.**
+
+### 66.2 Completeness, checked rather than assumed
+
+**I swept all nine field names across all three records for a declaration
+without its hypothesis. NONE.** **`envK-mem`, `-neg`, `-top`, `-imp`, `-allin`,
+`envInK-mem`, `-neg`, `-top`, `-imp`: twenty-one declarations, twenty-one
+cured.**
+
+### 66.3 Checkers after stage three
+
+| checker | result |
+|---|---|
+| `agda` on the four masters | **exit 0**, all four |
+| `postulate`, hole, unsolved meta | **all three ABSENT** |
+| `lint-agda.py`, `lint-prose.py`, `weave-i18n.py` | **exit 0**, all three |
+| `check-unbound-hyp.py` | **2**, unchanged |
+| `make check` | **NOT RUN.** Yours |
+
+## 67. THE WING RATIO AFTER STAGES TWO AND THREE
+
+| | after stage one | **after stages two and three** | change |
+|---|---:|---:|---:|
+| wing aggregate | 0.0141 s/line | **0.0155 s/line** | +0.0014 |
+| against the AC side | 1.54x | **1.69x** | **+0.15x** |
+| wing lines | 11,849 | 11,926 | +77 |
+| wing seconds | 167.01 | 184.68 | +17.67 |
+
+**THE BAR MOVED FROM 1.54x TO 1.69x AND I AM NOT SOFTENING IT.**
+
+**But this run carried a systematic shift, and I report it because otherwise the
++0.15x reads as all mine.** The tool itself printed
+
+> note: no cached interface found for SquareLaw.lagda.md; this run is cold by
+> construction
+
+**and modules I did NOT touch moved with it:**
+
+| untouched module | before | after | change |
+|---|---:|---:|---:|
+| `src/L/BoundedSubset.lagda.md` | 15.39 s | 16.40 s | **+6.6%** |
+| `src/L/Ordinal/SquareLaw.lagda.md` | 7.90 s | 8.63 s | **+9.2%** |
+| `src/L/Ordinal/StageArith.lagda.md` | 0.92 s | 1.02 s | **+10.9%** |
+| `src/L/Condensation.lagda.md` (**touched**) | 115.95 s | 130.40 s | +12.5% |
+
+**So the largest untouched module rose 6.6 percent in the same run that my
+touched one rose 12.5 percent.** **INFERRED, and I mark it: the cure's own share
+is the difference, of order 6 percent on `L.Condensation`, or about 7 s.**
+**MEASURED: the whole +10.6 percent movement in wing seconds is inside the
+±12.8 percent band, so it is not established at n=1 either way.**
+
+**What I will not do is quote the 6 percent as the answer.** It is a difference
+of two n=1 figures inside a band wider than both. **The honest statement is that
+the wing rose in this run, that untouched modules rose too, and that separating
+them needs more runs than a stage report should spend.**
+
+**And the trade stands as you framed it.** **The wing must END inside the bar
+and it is not there now.** **Twenty-one false statements left the tree for
+seventy-seven lines.**
+
+## 68. STAGE FOUR: STEP 6 RE-PRICED, and it is NOT judged against anything
+
+**Per your correction: DD24 is unchanged, the bar does not drift, intermediate
+debt is allowed, and only the whole GCH side is judged at the end. So I report
+step 6's lines as measured-basis survey and its seconds as UNMEASURED, and I
+judge it against nothing.**
+
+**THE NUMBER: about 255 in-fence lines.**
+
+**Basis, `[LJ-1.168]`'s own nine-lemma allocation
+(`agents/tasks/LJ-1-168/lj-1.168-report.md:341-351`), with three lemmas
+re-costed against work THIS TASK DELIVERED and one item added:**
+
+| item | `[LJ-1.168]` | now | why it moved |
+|---|---:|---:|---|
+| L9, `envSetK` | 45 | **25** | `mkReflect` was refuted; `envSetNumeral∈` is DELIVERED in `src/L/Coding/Key.lagda.md`. What remains is the `envSet` to `envSetGen` identification through `NumeralFromGeneric.derived` |
+| L4, `envOverAt` to `z ∈ K` | 15 | **12** | `ar ∈ K` is now a HYPOTHESIS the field receives, not something the supplier must find |
+| L8, `someEnv` | 30 | **25** | same reason |
+| **NEW: supply `codesK`'s numeral component** | — | **+15** | `arityNumAtL-out` at the code set, `src/L/Coding/CodeSet.lagda.md:189-197` |
+| the other six lemmas | 154 | 154 | untouched by any of this |
+| the 28 field entries | 42 | 42 | unchanged |
+| | **271** | **about 255** | |
+
+**SECONDS: NOT MEASURED. Step 6 is unbuilt, so it has no seconds, and I do not
+project any.**
+
+**OVERAGE, recorded plainly per DD8: NONE to record**, because 255 is below
+`[LJ-1.168]`'s 271 and there is no other figure it was promised against.
+
+**And I stop here, before building it, as instructed.**
+
+## 69. PART SEVEN: EVERY NEGATIVE, CLASSIFIED
+
+| statement | class |
+|---|---|
+| **all twenty-one fields are cured** | **TRUE**, swept name by name across all three records |
+| **the `PT.rec` costs about 2 lines per dear site** | **MEASURED FALSE, and it was MY price.** Giving the FIELD the truncated hypothesis costs one token per site and nothing else |
+| patching by field NAME is enough | **MEASURED FALSE.** Four aliases and a different arity binder; four agda rounds lost. Patch by SHAPE |
+| `KFacts` needed curing | **MEASURED FALSE.** It was clean and stays untouched |
+| the wing's +0.15x is all the cure's | **MEASURED FALSE.** Untouched modules rose 6.6 to 10.9 percent in the same run |
+| the cure's share is 6 percent | **NOT CLAIMED. INFERRED**, and it is a difference of two n=1 figures inside a wider band |
+| step 6 is judged against 0.009143 at 1.00x | **STRUCK by the coordinator.** DD24 is unchanged and I judged step 6 against nothing |
+| step 6 has measured seconds | **MEASURED FALSE. It is unbuilt.** Lines only, and those are a survey |
+| I built step 6 | **MEASURED FALSE. I stopped before it**, as instructed |
+| I ran `make check`, committed or pushed | **MEASURED FALSE**, none of the three |
+| the tree was dirty when I started | **MEASURED FALSE.** `git status` was empty for `src/`, checked first as instructed |
+
+## 70. WHAT THIS LEG LANDED
+
+**Stage two: the `codesK` fourth component, +45 lines, four masters green.**
+**Stage three: the five dear fields, +32 lines, four masters green on the first
+run.** **Together +77 lines, and the disease is out of the tree: twenty-one of
+twenty-one.**
+
+**Stage four: step 6 re-priced at about 255 lines, seconds unmeasured, judged
+against nothing, and NOT built.**
+
+**The wing sits at 1.69x and must end inside 1.15x. That is real debt and it is
+not this cure's to pay alone.**
