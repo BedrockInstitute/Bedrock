@@ -3675,7 +3675,8 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc zero)))
                        (suc (suc (suc (suc (suc B))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (yc a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc zero))))
                           (suc (suc (suc (suc (suc (suc B)))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -3694,7 +3695,7 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc B)))))
                        (suc (suc (suc (suc (suc K)))))
                        (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc a ar c E)
+                       (envInK yc a ar c E arK)
         hE' = E'.out henv
         hbM = h c c∈ ar a yc shD hc E hE'
     in extAt→extAtB (suc zero) (suc (suc (suc (suc (suc K))))) body body
@@ -3713,7 +3714,7 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc B)))))
                        (suc (suc (suc (suc (suc K)))))
                        (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc a ar c E)
+                       (envInK yc a ar c E arK)
         henv = E'.back hE
         hb = h c c∈ ar arK a aK yc ycK shB hc E EK henv
     in extAtB→extAt (suc zero) (suc (suc (suc (suc (suc K))))) body body
@@ -3751,7 +3752,8 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -3770,7 +3772,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E)
+                       (envInK ya yc a ar c E arK)
         hE' = E'.out henv
         hya' = SubValB2T.back {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3797,7 +3799,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E)
+                       (envInK ya yc a ar c E arK)
         henv = E'.back hE
         hsub = SubValB2T.out {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3857,7 +3859,8 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -3880,7 +3883,7 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E)
+                       (envInK ya yc a ar c E arK)
         hE' = E'.out henv
         hya' = SubValSuccB2T.back {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3913,7 +3916,7 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E)
+                       (envInK ya yc a ar c E arK)
         henv = E'.back hE
         hsub = SubValSuccB2T.out {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3962,7 +3965,8 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -4056,7 +4060,7 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E)
+                       (envInK ya yc a ar c E arK)
         hE' = E'.out henv
         module L = Leaf E ya yc a ar c
         hya' = SubValSuccB2T.back {m = 6 + m}
@@ -4085,7 +4089,7 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E)
+                       (envInK ya yc a ar c E arK)
         henv = E'.back hE
         module L = Leaf E ya yc a ar c
         hsub = SubValSuccB2T.out {m = 6 + m}
@@ -4137,7 +4141,8 @@ module ClauseAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (ya yc a ar c E z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -4396,7 +4401,8 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (yc b a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -4428,7 +4434,7 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E)
+                       (envInK yc b a ar c E arK)
         hE' = E'.out henv
         hbM = h c c∈ ar a b yc shD hc E hE'
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
@@ -4450,7 +4456,7 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E)
+                       (envInK yc b a ar c E arK)
         henv = E'.back hE
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
                      arityK aK bK t0eq t1eq t0K num1K (valV E yc b a ar c) (valW E yc b a ar c) cmp
@@ -5002,7 +5008,8 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc (suc zero)))))
                        (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                            (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -5033,7 +5040,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                          (suc (suc (suc (suc (suc (suc (suc B)))))))
                          (suc (suc (suc (suc (suc (suc (suc K)))))))
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                         (envInK E ya yc b a ar c)
+                         (envInK E ya yc b a ar c arK)
           module L = BndLeaf B t0 t1 K E ya yc b a ar c γ
                        t0eq t1eq t0K arityK aK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
           hE' = E'.out henv
@@ -5064,7 +5071,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B)))))))
                        (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK E yb yc b a ar c)
+                       (envInK E yb yc b a ar c arK)
         module L = BndLeaf B t0 t1 K E yb yc b a ar c γ
                      t0eq t1eq t0K arityK aK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
         henv = E'.back hE
@@ -5123,7 +5130,8 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc (suc zero)))))
                        (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                            (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -5154,7 +5162,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                          (suc (suc (suc (suc (suc (suc (suc B)))))))
                          (suc (suc (suc (suc (suc (suc (suc K)))))))
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                         (envInK E ya yc b a ar c)
+                         (envInK E ya yc b a ar c arK)
           module L = BndLeaf B t0 t1 K E ya yc b a ar c γ
                        t0eq t1eq t0K arityK aK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
           hE' = E'.out henv
@@ -5185,7 +5193,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B)))))))
                        (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK E yb yc b a ar c)
+                       (envInK E yb yc b a ar c arK)
         module L = BndLeaf B t0 t1 K E yb yc b a ar c γ
                      t0eq t1eq t0K arityK aK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
         henv = E'.back hE
@@ -5237,7 +5245,8 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc (suc (suc zero))))))
                        (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (E ya yc b a ar c z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                           (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -5258,7 +5267,7 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                          (suc (suc (suc (suc (suc (suc (suc B)))))))
                          (suc (suc (suc (suc (suc (suc (suc K)))))))
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                         (envInK E ya yc b a ar c)
+                         (envInK E ya yc b a ar c arK)
           module L = ImpLeaf T B K E yb ya yc b a ar c γ keyK
           hE' = E'.out henv
           hE'' = L.envSet-back hE'
@@ -5285,7 +5294,7 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B)))))))
                        (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK E ya yc b a ar c)
+                       (envInK E ya yc b a ar c arK)
         module L = ImpLeaf T B K E yb ya yc b a ar c γ keyK
         henv = E'.back (L.envSet-out hE)
         hsubA = L.yaOut arK aK ha
@@ -5322,7 +5331,8 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
              envSetAt zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (envInK : (yc b a ar c E z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+  (envInK : (yc b a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → (z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
            → ⟨ fst z ∈ fst (lookup K γ) ⟩)
@@ -5354,7 +5364,7 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E)
+                       (envInK yc b a ar c E arK)
         hE' = E'.out henv
         hbM = h c c∈ ar a b yc shD hc E hE'
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
@@ -5376,7 +5386,7 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E)
+                       (envInK yc b a ar c E arK)
         henv = E'.back hE
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
                      arityK aK bK t0eq t1eq t0K num1K (valV E yc b a ar c) (valW E yc b a ar c) cmp
