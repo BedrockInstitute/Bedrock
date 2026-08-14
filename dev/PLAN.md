@@ -748,6 +748,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.193 | Build P3, the commit gate against live write territory | BUILT AND GREEN, IN make check | Two git add -A sweeps took a sibling's work. dispatch.py already computes the intersection |
 | LJ-1.194 | Build P4, the DD number-uniqueness check | BUILT, ONE CODE PATH FOR EVERY SERIES | I minted a duplicate DD27 and check-rule-ids reported CLEAN: it verifies resolution, never uniqueness |
 | LJ-1.195 | Consistency audit by document rank: AGENTS.md, then DD, then the rest | DISPATCHED | READ ONLY, five worst only. AGENTS.md itself has stale rows, so rank does not settle every tie |
+| LJ-1.196 | DefAt's ambient reading: 84 lines or a chapter | DISPATCHED | LJ-1.184 fixed this GO and NO-GO in advance. It is the last named term between levelIn and theorem |
+| LJ-1.197 | Do build-manifest.toml and rules.toml actually FIRE when they should | DISPATCHED | Landed means triggered at the right moment, not present in the tree. Provoke each one |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
