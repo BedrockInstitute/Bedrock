@@ -1046,3 +1046,48 @@ the shape of a review earning its dispatch:
 - **`[LJ-1.233]:247` calls the `TwelveAgree:519-522` comment STALE. It is NOT.**
   `[LJ-1.251]` checked `KValue` against `AbstractFrame` and the comment is true
   at HEAD, so the error is in `[LJ-1.233]` and not in the source.
+
+### 2026-08-15, `[LJ-1.262]`: two axes, and two figures I did not derive
+
+**THE FINDING THAT MATTERS BEYOND ITS TARGET.** `[LJ-1.225]` read
+`dev/literature/devlin-II5.md:375`'s PER-TOWER mark on the C2 row and applied
+it to the six ambient readings. `[LJ-1.238]` then measured those same readings
+at per-tower residual ZERO. **That looked like a contradiction for a day and it
+is not one: they are TWO AXES.**
+
+**Devlin's PER-TOWER is Def against J.** Its cells read「satisfaction bound
+K(u) or its coding analogue」against「the sixteen op-graphs」.
+**`[LJ-1.238]`'s ZERO is L against AMBIENT.** **Both are true at once.** **The
+target read Devlin faithfully and applied a Def-against-J mark to an
+L-against-ambient figure**, and that single move is the whole misattribution.
+
+**Every DD4 figure in this phase names one of those two axes and none of them
+says which.** That is worth fixing the next time one is written.
+
+#### The target's own defect, which is not the brief's
+
+**`agents/tasks/LJ-1-225/lj-1.225-report.md:164` says that `amb` is
+discharged because `[LJ-1.184]` supplies it, and it cites C-38 as extended by
+name.** **It invoked the law and did not perform its action, which is to audit
+the INSTANTIATION.**
+
+**It cited `ProbeLJ1184B.agda:155`, which sits inside the module whose
+telescope carries the undischarged `q` at `:112`.** **The target reported
+reading `:44-52` and `:155`, and `q` lies between them.** **One screen of a
+file it had open.**
+
+**C-45 was written a day later, so the target lacked the sharpened law. It did
+not lack C-38.**
+
+#### And two figures in my brief do not reproduce
+
+**I wrote「nineteen dispatches late」and「eleven negatives DID get their
+reviews」.** **Neither reproduces from the index.** The measured count is
+**SEVEN** DD25 review rows between the two codes, against seven negative rows.
+**The substance of both claims holds and only the numbers fail**, which is
+exactly the shape C-44 names: a figure asserted about the record without
+opening the record.
+
+**Three of my briefs have now carried a figure I did not derive.** The cure is
+unchanged and it costs a grep: **derive it, or do not write it.** A number in a
+brief reads as measured whether or not anyone measured it.

@@ -817,7 +817,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.258 | The fifteen fields that do not touch envSetK | 12 OF 15. RATES ARE 2, 1, 1 BODY LINES | Far UNDER 9.1. LJ-1.168's 1.5-line entry estimate HOLDS. The three consK need an env closure |
 | LJ-1.259 | Build the env closure | BUILDS ON ONE NEW HYPOTHESIS. 3 consK CLOSE | The sweep caught the supply before it was called absent: Lset-fin and paramEnv∈ are delivered |
 | LJ-1.261 | The finite-supremum merge | BUILDS. finSetK is SUPPLIED, 3 consK CLOSE | 148 lines, 48 for the merge against union's 52. The first attempt walled and the cure is recorded |
-| LJ-1.262 | The DD25 review LJ-1.225 never got, dispatched nineteen dispatches late | DISPATCHED | make check caught it. I will not write 'not needed' where C-43 says the escape hatch hides |
+| LJ-1.262 | The DD25 review LJ-1.225 never got | UPHELD BUT MISATTRIBUTED | Ten numbers re-derive; three carried claims are FALSE. Devlin's PER-TOWER and the port's ZERO are two axes |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.248 | Route A-prime's total | 1,150 ARITHMETIC, and THREE named causes | Per-tower half MEASURED at 146. The last reading residue is 47 lines, 4 percent, down from 555 |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |
