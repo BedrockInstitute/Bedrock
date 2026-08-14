@@ -36,6 +36,7 @@ open import L.Condensation {ℓ} lem using
   ; module ExistAgree; module ForallAgree; module AllInAgree
   ; module ExInAgree )
 open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
@@ -117,10 +118,12 @@ record UFacts {n : ℕ}
              → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
                × ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
                × ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                 × ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
     codesK-un : (k : ℕ) (c ar a : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
                 → fst c ≡ pr (fst ar) (pr (# k) (fst a))
                 → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
                   × ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+                 × ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
     valK : (k : ℕ) (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ) ⟩
            → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
            → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ) ⟩
@@ -134,15 +137,21 @@ record UFacts {n : ℕ}
     t0K : ⟨ fst (lookup (suc (suc (suc (suc (suc (suc t0)))))) γ)
             ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
     num1K : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-    envK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+    envK-neg : (ya yc a ar c E : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                  envSetAt zero (suc (suc (suc (suc zero))))
                            (suc (suc (suc (suc (suc (suc zero)))))) ⟩
               → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-    envK-top : (yc a ar c E : S) → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
+    envK-top : (yc a ar c E : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                  envSetAt zero (suc (suc (suc zero)))
                            (suc (suc (suc (suc (suc zero))))) ⟩
               → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
-    envK-allin : (E ya yc b a ar c : S) → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
+    envK-allin : (E ya yc b a ar c : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                    envSetAt zero (suc (suc (suc (suc (suc zero)))))
                              (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
                 → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
