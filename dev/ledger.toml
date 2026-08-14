@@ -331,8 +331,16 @@ lines_apriori_source = "OWED by [LJ-2.1]: post-[LJ-0.4] standing + gch_wing_apri
 # [LJ-1.9] reports net removable lines. [LJ-2.1] records measured, projected
 # and removable together, so the benchmark is discounted by what a reviewer
 # says was surplus rather than by anyone's impression.
-lines_removable = 0          # 0 = not yet reported; [LJ-1.9] fills it
-lines_removable_source = "OWED by [LJ-1.9]"
+# [LJ-1.218] reported 695 and [LJ-1.222] refuted it to 83. The refutation is
+# the number here, because the two disagreed on ONE block and the block is
+# KEPT: the 523-line erase-transfer chain holds Condensation's only carrier
+# transfer, all eight uses of `⊨ᵛ` in the chapter, and the single consumer of
+# `abs₀` (:301) and of `σ₁-up` (:411). The orchestrator re-derived all four.
+# CAVEAT, stated because the figure is a benchmark discount and not a licence:
+# 64 of the 83 are ten Class A rows that [LJ-1.222] did not audit against D-27.
+# So 83 is the reported figure and 19 is the audited floor.
+lines_removable = 83
+lines_removable_source = "[LJ-1.218] measured, [LJ-1.222] corrected; 64 of 83 unaudited against D-27"
 
 # MEASURE 2 has no field, because it is about what a BRIEF says: a phase-1
 # build brief does not tell the agent its output sets a bar. Enforcement is

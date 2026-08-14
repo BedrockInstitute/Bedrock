@@ -726,3 +726,50 @@ and three per-tower ones」appears in three briefs and two reports. **The table 
 `dev/literature/devlin-II5.md:370-383` has twelve rows: eight EITHER and four
 PER-TOWER. The word "nine" does not occur in the file.** The briefs are frozen
 records and stay as written. **The figure is 8 and 4.**
+
+### 2026-08-14, `[LJ-1.222]`: 695 became 83, and the block that survived is the chapter's only bridge
+
+**`[LJ-1.218]` answered the figure phase 1 has owed since it opened: 695 net
+removable lines, every line at `file:line`.** 523 of them were one block, the
+erase-transfer chain in `src/L/Condensation.lagda.md`. **Its zero application
+points were MEASURED. That it did not need to be written was INFERRED**, from a
+reading that the agreement route superseded it.
+
+**`[LJ-1.222]` refuted that reading, and the orchestrator re-derived the
+refutation before landing it.**
+
+**The two routes are orthogonal and not rival.** The agreement route proves
+`⟨ γ ⊨ topClauseAt ⟩ → ⟨ γ ⊨ φB ⟩` at ONE carrier
+(`src/L/Condensation.lagda.md:3697`, `:3710`). The erase-transfer chain proves
+`⟨ γ ⊨ σL ⟩ ≡ ⟨ map fst γ ⊨ᵛ σL ⟩` across TWO (`:298`). **MEASURED: all eight
+occurrences of `⊨ᵛ` in the chapter lie inside the 523**, at `:298`, `:302`,
+`:304`, `:374`, `:377`, `:410`, `:1800` and `:1802`. **`abs₀` and `σ₁-up` each
+have exactly one consumer in the chapter, at `:301` and `:411`, and both sit
+inside the block.** **Delete it and the condensation chapter never reaches the
+tower.**
+
+**No record before `[LJ-1.218]` says the chain was abandoned.** `dev/PLAN.md:557`
+titles `[LJ-1.40]`「REPAIR: re-index the rows TRUE」and its verdict is REPAIRED.
+`agents/tasks/archive/LJ-1-50/lj-1.50-review.md` heads a section「THE
+`EraseTransfer` EXIT: BUILT」and recommends growing the family.
+
+**The ledger carries 83, and it carries its own caveat: 64 of the 83 are ten
+Class A rows that nobody has audited against D-27.** So 83 is the reported
+figure and 19 is the audited floor. **A benchmark discount is never a licence to
+delete** (P-q, DD13).
+
+**The ratio verdict held with a corrected reason.** `[LJ-1.218]` said the 7 s
+fall from `[LJ-1.185]` is not a finding because the machine was busier. **A
+busier machine that produces FEWER seconds cuts against that conclusion.** The
+real cause was in a report it read whole:
+`agents/tasks/LJ-1-185/lj-1.185-report.md:529` records two sibling Agda
+processes at 6.9 GB and 3.9 GB during that series. **The fall is
+decontamination, and the 60.0 s gap is still an upper bound.**
+
+**One reported defect did NOT hold, and the correction belongs here.**
+`[LJ-1.222]` reported that `AGENTS.md:134` cites P-l for a law P-l does not
+state. **The heading at `dev/LESSONS.md:2323` names one thing and the entry
+carries both:** P-l runs to `:2419`, and `:2355-2372` holds the five-transplant
+table and the sentence「an expected figure anchored on a comparable is a
+HYPOTHESIS, not a price」. **The citation is sound. The heading is narrower than
+the entry**, and that is the whole defect.

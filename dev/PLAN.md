@@ -786,16 +786,17 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.217 | Re-price A6 from the green interface, with a clock cap | DISPATCHED | LJ-1.215 ruled A6 UNPRICED not WALLED. Start from ProbeLJ1198E, and pair-out is the fixed shape |
 | LJ-1.218 | LJ-1.9's audit: the wing's ratio and removable lines | 1.70x, GAP 60.0 s, 695 REMOVABLE | 523 of the 695 are one superseded chain, so the figure is 695 or 172. LJ-1.222 checks it |
 | LJ-1.219 | Join GenModel to Powerset at the ambient class | MODEL LINK COMPOSES, BRICK TWO LEAKS. DD25 [LJ-1.221] | Five Model names green ambient. Recover's keyOf leaks at :142. Plumbing 21 lines |
-| LJ-1.220 | Parameterize every leak instead of porting it, and census the chain once | DISPATCHED, CORRECTED | LJ-1.221 measured 10 suppliers left, not 15, and supply beats parameterize. Sent |
+| LJ-1.220 | Parameterize every leak and census the chain once | EXIT 0. WIDTH IS 9 MODULES, 22 NAMES | 2 names SUPPLIED not leaked. extAt-in and the domAt trio now MEASURED. The 17 was inferred |
 | LJ-1.221 | DD25 review of LJ-1.216, LJ-1.219 and the brief pattern | UPHELD, MISATTRIBUTED, WASTEFUL | Brick two is two one-liners GenModel holds. I turned a typecheck order into a dispatch order |
-| LJ-1.222 | Check LJ-1.218's 523-line supersession before 695 reaches the ledger | DISPATCHED | A figure reaches three documents before anyone checks it, and this one discounts the DD5 benchmark |
+| LJ-1.222 | Check LJ-1.218's 523-line supersession before it lands | 695 REFUTED, THE NUMBER IS 83 | The chain holds Condensation's only carrier transfer and both uses of abs₀ and σ₁-up |
+| LJ-1.223 | Read the ten remaining suppliers in one pass and split them thin from thick | DISPATCHED | LJ-1.221's own repair. Three dispatches produced no total price and every brief forbade one |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
 | LJ-1.182 | DD25 review of LJ-1.162's NO-GO on price | UPHELD | It re-derived the 125 lines from the PROBE, not from the report's account of the probe |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
-| LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
+| LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | ANSWERED: 1.70x AND 83 | LJ-1.218 measured both, LJ-1.222 cut 695 to 83. Ledger carries 83; 64 of them stay unaudited |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
 | LJ-2.1 | MEASURE the internalization double trophy, lines and cold seconds | planned | Records measured, LJ-1.1's projection and LJ-1.9's removable together. Line benchmark is the SMALLER. C-12 |
 | LJ-2.2 | Re-arm the thresholds, rebuild [[remaining]] and [[owed]] | planned | OWNER JUDGES the wing a fair paper BEFORE the flags flip (DD5). Four stale flags to clear |
