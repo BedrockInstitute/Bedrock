@@ -54,11 +54,10 @@ broken, at 16 lines (`[LJ-1.160]`).
 
 **1. The supply chain for the satisfaction layer.** `[LJ-1.168]` measured that
 the 5,047 figure was never a measurement and collapses to about **270**.
-`[LJ-1.172]` built steps 1 to 5 and REFUTED step 6 at the join: `envSetK` asks a
-level to hold a full function space. `[LJ-1.173]` then measured that the same
-disease sits in **21 fields across three records**, that the cure is atomic, and
-that it prices at about 190 with step 6 at about 260 after it. **Green from
-today is about 450.**
+`[LJ-1.172]` built steps 1 to 5 and REFUTED step 6 at the join. `[LJ-1.173]`
+swept the refutation to **21 fields across three records and CURED all 21**, for
+77 lines, green. **Step 6 now re-prices at about 255 and is UNBUILT.** Its
+seconds are NOT MEASURED, and nothing projects them.
 
 **2. Route A-prime's total.** `[LJ-1.175]` measured a partial sum of **705 over
 six blocks** and named the blocker: **A5 has NO live line price**, and its only
@@ -745,7 +744,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.170 | Price BOTH arms of the coding fork | A THIRD ARM SETTLES IT, 37 LINES GREEN | Devlin's split is already delivered on the AC side. The archive ASSUMED arm A's bound, never reached it |
 | LJ-1.171 | The last gate before the build | GO AT 56, AND THE CHAIN IS MEASURED | The search paid a fifth time and changed the ingredient: finSet cannot be read back, env can |
 | LJ-1.172 | BUILD the supply, in dependency order, landing incrementally | 1 TO 5 BUILT; 6 REFUTED AT THE JOIN | envSetK asks a level to hold a function space. Six names, one fact, no supplier |
-| LJ-1.173 | Restrict envSetK to a numeral arity, gate first | 21 FIELDS IN THREE RECORDS, CURE ATOMIC | My ruling's scope was one record; the sweep it ordered measured three. Cure 190, step 6 260 |
+| LJ-1.173 | Restrict envSetK to a numeral arity, gate first | ALL 21 CURED, 77 LINES | My ruling's scope was one record; its sweep measured three. Patch by SHAPE, not name: one field has four aliases |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
 | LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
 | LJ-1.176 | Price A5 under a stated partition | PRICED: 547 LINES, ZERO REPLACEMENT | An A5 object builds into L by ONE separation, 1.72 s. The 300-line item is DISSOLVED, not divided |
