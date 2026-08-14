@@ -781,6 +781,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.235 | Strengthen the bound hasReplacementL discards | THE BOUND COMES OUT, 18 LINES | A sibling lemma; hasReplacementL unchanged and its five consumers untouched. Step zero exit 0 |
 | LJ-1.236 | A4 and A7, the gate list's last two, A7 first | SHAPES MATCH. A7 IS 47, A4 IS 43 AT 1.14 s | The inferred seconds RISE is REFUTED: A4 is 88x cheaper because orderAt is sealed |
 | LJ-1.237 | Assemble sl and sc now that all three walls in front of them are down | DISPATCHED | Converts LJ-1.228's floor into a number. LJ-1.7's last two open hypotheses, and they are one object |
+| LJ-1.238 | Port L.Coding.Sequence, the six ambient readings the port never reached | DISPATCHED | LJ-1.7's other half. 157 lines, called small and mechanical, and that phrase is INFERRED |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
