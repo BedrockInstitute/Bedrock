@@ -163,7 +163,9 @@ def main() -> int:
               f"dev/build-manifest.toml, or move the file to a permanent home:")
         for rel in undeclared:
             print(f"  _build/{rel}")
-        print("\nAdvisory only. This is not a gate.")
+        print("\nRun with --check to make this a gate; `make check` does."
+              if not args.check else
+              "\nThis is a GATE: AGENTS.md forbids an undeclared file in _build/.")
         return 1 if args.check else 0
     print("\nevery file in _build/ declares a lifecycle.")
     return 0
