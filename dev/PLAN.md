@@ -735,13 +735,13 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.176 | Price A5 under a stated partition | PRICED: 547 LINES, ZERO REPLACEMENT | An A5 object builds into L by ONE separation, 1.72 s. The 300-line item is DISSOLVED, not divided |
 | LJ-1.177 | Cure the Agree masters' second term | STOP: CURED FIVE DISPATCHES AGO | My premise was false, and LJ-1.158's row sits directly below LJ-1.155's in this table. Next lever caps at 5.2 s |
 | LJ-1.178 | Build levelIn and cover | BUILT, THEOREM DOES NOT DERIVE | Two of three facts discharged and the debt moves to the STAGE. New wall: Devlin's (a) at the AMBIENT carrier |
-| LJ-1.179 | DD25 review of LJ-1.169's NO-GO on the rank accounting | DISPATCHED | Four dispatches and a 21-field cure stand downstream of this NO-GO, and nobody re-checked it |
-| LJ-1.183 | Audit the orchestrator against every DD, under DD0 | DISPATCHED | Owner-ordered. Replay git log, briefs and reports. It must find what I did NOT self-report |
+| LJ-1.179 | DD25 review of LJ-1.169's rank NO-GO | OVERTURNED: A FIXED-SHAPE NO-GO | Right for the coding it measured, wrong for the tree, which already carries the parameter split |
+| LJ-1.183 | Audit the orchestrator against every DD, under DD0 | SIX FINDINGS, FOUR NEW | The struck ruling still shipped in a live brief and my own rulebook still named the heads |
 | LJ-1.184 | AmbientRead, Devlin's (a) at the AMBIENT carrier | SUPPLIED, theorem COMES OUT | One of four hypotheses closed. The archive had stopped on this same obligation as AmbientOnly |
 | LJ-1.186 | Compress the DD series to the rule itself | 41,981 TO 28,662, NOTHING LOST | Nine rows were already pure rule. Every removed sentence is in the JOURNAL under its own DD heading |
 | LJ-1.187 | Put every part of dev/ where its KIND belongs | DONE: 2 MOVED, 4 DEFECTS FOR THE OWNER | The division HOLDS across dev/. I misread its status field as death; the work was on disk |
-| LJ-1.188 | Write the dispatch and herdr knowledge into a project SKILL | DISPATCHED | Keyword auto-load from the model side, never the owner's. Every mistake of 2026-08-14 goes in it |
-| LJ-1.189 | Which recurring orchestrator errors would a SKILL prevent | DISPATCHED | PROPOSAL ONLY, no skill written. It must separate what a skill fixes from what a checker fixes |
+| LJ-1.188 | Write the dispatch and herdr knowledge into a SKILL | BUILT, AND IT CORRECTED MY BRIEF | The tier line does not drive the model: dispatch.py reads the flag, never the brief |
+| LJ-1.189 | Which recurring orchestrator errors would a SKILL prevent | FOUR PROPOSALS, ONE DISEASE | Seven errors in seven costumes: a claim acted on without being bound to an artifact opened |
 | LJ-1.190 | Reconcile dispatch.py against the SKILL | 3 CONTRADICTIONS, 2 FIXED, 1 OPEN | The DD canon rules any tie. A refusal is never deleted without evidence its failure cannot recur |
 | LJ-1.191 | Build P1, the load-bearing-claim SKILL | BUILT AND LIVE | LJ-1.189's first proposal. C-32 exists and did not reach the moment of action; the moment is a WRITE |
 | LJ-1.192 | Build P2, the artifact-over-proxy SKILL | BUILT AND LIVE | The artifact is the evidence and the status field is a hint. Three outcomes were recorded from a proxy |
@@ -749,10 +749,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.194 | Build P4, the DD number-uniqueness check | BUILT, ONE CODE PATH FOR EVERY SERIES | I minted a duplicate DD27 and check-rule-ids reported CLEAN: it verifies resolution, never uniqueness |
 | LJ-1.195 | Consistency audit by document rank | 4 LIVE, 1 ALREADY FIXED | DD4's no-checker claim stood in four documents against a checker that gates. All four repaired |
 | LJ-1.196 | DefAt's ambient reading: 84 lines or a chapter | DISPATCHED | LJ-1.184 fixed this GO and NO-GO in advance. It is the last named term between levelIn and theorem |
-| LJ-1.197 | Do build-manifest.toml and rules.toml actually FIRE when they should | DISPATCHED | Landed means triggered at the right moment, not present in the tree. Provoke each one |
+| LJ-1.197 | Do build-manifest.toml and rules.toml actually FIRE | 7 FIRE, 5 SILENT, 1 UNPROVOKABLE | All five silent rules are build-manifest's, and its checker was in no gate at all |
 | LJ-1.198 | Close A6's open charge, the last cell that is not one number | DISPATCHED | A5 is priced at 547 now, so the charge A6 inherits is measurable. LJ-1.8 waits on this sum |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
-| LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
+| LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
 | LJ-1.182 | DD25 review of LJ-1.162's NO-GO on price | UPHELD | It re-derived the 125 lines from the PROBE, not from the report's account of the probe |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
