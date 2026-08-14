@@ -1,0 +1,37 @@
+# module agents/tasks/LJ-1-214/ProbeMinusArNum.agda
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=internal agents/tasks/LJ-1-214/ProbeMinusArNum.agda
+# load before 18:29  up 20:52, 2 users, load averages: 4.52 4.03 7.08
+# started 2026-08-14 18:29:46
+Checking LJ-1-214.ProbeMinusArNum (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-214/ProbeMinusArNum.agda).
+Total                      114,872ms           
+Miscellaneous                   14ms           
+Typing                       1,186ms (77,466ms)
+Typing.CheckRHS             30,350ms           
+Typing.CheckLHS             28,493ms (28,494ms)
+Typing.OccursCheck          12,377ms           
+Typing.TypeSig               5,056ms           
+InterfaceInstantiateFull     9,998ms           
+Serialization                9,719ms  (9,896ms)
+Serialization.Compress          91ms           
+Serialization.BinaryEncode      60ms           
+Serialization.Sort              22ms           
+DeadCode                         9ms  (5,018ms)
+DeadCode.DeadCodeReachable   5,009ms           
+Positivity                   4,886ms           
+Parsing                        301ms  (2,476ms)
+Parsing.OperatorsExpr        2,134ms           
+Parsing.OperatorsPattern        40ms           
+Coverage                     2,348ms  (2,348ms)
+Deserialization              1,070ms  (1,566ms)
+Deserialization.Compaction     496ms           
+Scoping                        163ms    (620ms)
+Scoping.InverseScopeLookup     457ms           
+Termination                      2ms    (318ms)
+Termination.RecCheck           315ms           
+Highlighting                   207ms           
+Injectivity                     28ms           
+Import                          28ms           
+# wall seconds 115.90
+# exit 0
+# load after 18:31  up 20:53, 2 users, load averages: 4.28 4.02 6.69

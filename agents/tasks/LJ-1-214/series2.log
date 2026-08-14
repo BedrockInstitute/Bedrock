@@ -1,0 +1,55 @@
+Total                      118,346ms           
+Deserialization              1,162ms  (1,692ms)
+Deserialization.Compaction     530ms           
+# wall seconds 120.00
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbeMinusArNum.m1.txt
+Total                      125,880ms           
+Deserialization              9,061ms  (9,571ms)
+Deserialization.Compaction     510ms           
+# wall seconds 126.77
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbePlain.p1.txt
+Total                      116,215ms           
+Deserialization              1,138ms  (1,658ms)
+Deserialization.Compaction     519ms           
+# wall seconds 117.28
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbeDelete.d1.txt
+Total                      116,138ms           
+Deserialization              1,150ms  (1,671ms)
+Deserialization.Compaction     520ms           
+# wall seconds 117.19
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbeMinusArNum.m2.txt
+Total                      125,655ms           
+Deserialization              9,153ms  (9,673ms)
+Deserialization.Compaction     519ms           
+# wall seconds 126.55
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbePlain.p2.txt
+Total                      116,081ms           
+Deserialization              1,141ms  (1,670ms)
+Deserialization.Compaction     528ms           
+# wall seconds 117.14
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbeDelete.d2.txt
+Total                      115,844ms           
+Deserialization              1,152ms  (1,674ms)
+Deserialization.Compaction     521ms           
+# wall seconds 116.88
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbeMinusArNum.m3.txt
+Total                      125,751ms           
+Deserialization              9,194ms  (9,715ms)
+Deserialization.Compaction     521ms           
+# wall seconds 126.64
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbePlain.p3.txt
+Total                      116,635ms           
+Deserialization              1,152ms  (1,673ms)
+Deserialization.Compaction     521ms           
+# wall seconds 117.71
+# exit 0
+-> agents/tasks/LJ-1-214/runs/ProbeDelete.d3.txt
+SERIES 2 DONE

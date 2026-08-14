@@ -1,0 +1,37 @@
+# module agents/tasks/LJ-1-214/ProbeDelete.agda
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=internal agents/tasks/LJ-1-214/ProbeDelete.agda
+# load before 18:54  up 21:17, 2 users, load averages: 3.21 3.92 4.64
+# started 2026-08-14 18:54:58
+Checking LJ-1-214.ProbeDelete (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-214/ProbeDelete.agda).
+Total                      116,635ms           
+Miscellaneous                   16ms           
+Typing                       1,720ms (78,947ms)
+Typing.CheckRHS             31,358ms           
+Typing.CheckLHS             28,920ms (28,921ms)
+Typing.OccursCheck          11,601ms           
+Typing.TypeSig               5,345ms           
+Serialization               10,319ms (10,496ms)
+Serialization.Compress          92ms           
+Serialization.BinaryEncode      60ms           
+Serialization.Sort              23ms           
+InterfaceInstantiateFull     9,783ms           
+Positivity                   5,101ms           
+DeadCode                         8ms  (5,098ms)
+DeadCode.DeadCodeReachable   5,090ms           
+Parsing                        312ms  (2,582ms)
+Parsing.OperatorsExpr        2,229ms           
+Parsing.OperatorsPattern        40ms           
+Deserialization              1,152ms  (1,673ms)
+Deserialization.Compaction     521ms           
+Coverage                     1,672ms  (1,672ms)
+Scoping                        179ms    (659ms)
+Scoping.InverseScopeLookup     480ms           
+Termination                      2ms    (337ms)
+Termination.RecCheck           335ms           
+Highlighting                   211ms           
+Import                          29ms           
+Injectivity                     28ms           
+# wall seconds 117.71
+# exit 0
+# load after 18:56  up 21:19, 2 users, load averages: 4.88 4.35 4.72

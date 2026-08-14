@@ -779,9 +779,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.210 | Is the chapter really 17 lines | THE CHAPTER DISSOLVES: 42 WRITTEN, 1,272 SURVIVE | Model is class-generic and typechecks first try. Both instantiations green. Devlin agrees |
 | LJ-1.211 | Why is the DD25 overturn rate 71 percent | BRIEFS CAUSED 8 OF 10, REVIEWER 0 | And the rate was my miscount: 71 became 64 became 46 once the register read the decided rows |
 | LJ-1.212 | Build the PREMISES gate | BUILT, AND THE RAW LIST FIRED 118 OF 118 | It measured first and refused to build the list it was given. The active list fires on 23.7 pc |
-| LJ-1.213 | Gate the chain before porting it: Powerset and DefAt-stage | DISPATCHED | LJ-1.210 ported 2 of 17 modules. The plumbing grows LINEARLY and the cure for that walls today |
-| LJ-1.214 | Is the 8.2 s the telescope component or the rest of the commit | DISPATCHED | LJ-1.209 refuted the seal and named this gate with its price: 71 edits, 12 minutes, one trap |
-| LJ-1.215 | DD25 review of the three negatives the new gate caught | DISPATCHED | LJ-1.198's wall, LJ-1.206's refusal and LJ-1.209's refuted seal. The gate found them, not me |
+| LJ-1.213 | Gate the chain: Powerset and DefAt-stage | NOT AT MODEL'S RATE; THE GATE IS ORDER | Plumbing is 12 not 17, DefAt-stage is 8 lines. Suppliers import the tower, so port bottom-up |
+| LJ-1.214 | Is the 8.2 s the telescope component | THE COMPONENT CARRIES 7,925 OF 8,236 ms | Reverting it alone recovers 96 pc. The cure un-cures 21 fields, so it is the owner's design call |
+| LJ-1.215 | DD25 review of three negatives | UPHELD, UPHELD, MISATTRIBUTED | A6 is UNPRICED not WALLED, and my missing clock cap caused it. Re-price starts from the green E interface |
+| LJ-1.216 | The second instantiation: does Powerset serve BOTH towers | DISPATCHED | LJ-1.213 left the DD4 figure INFERRED. Without it the port serves one tower and DD4 is its whole reason |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
