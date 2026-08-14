@@ -744,7 +744,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.170 | Price BOTH arms of the coding fork | A THIRD ARM SETTLES IT, 37 LINES GREEN | Devlin's split is already delivered on the AC side. The archive ASSUMED arm A's bound, never reached it |
 | LJ-1.171 | The last gate before the build | GO AT 56, AND THE CHAIN IS MEASURED | The search paid a fifth time and changed the ingredient: finSet cannot be read back, env can |
 | LJ-1.172 | BUILD the supply, in dependency order, landing incrementally | 1 TO 5 BUILT; 6 REFUTED AT THE JOIN | envSetK asks a level to hold a function space. Six names, one fact, no supplier |
-| LJ-1.173 | Restrict envSetK to a numeral arity, gate first | ALL 21 CURED, 77 LINES | My ruling's scope was one record; its sweep measured three. Patch by SHAPE, not name: one field has four aliases |
+| LJ-1.173 | Restrict envSetK to a numeral arity | ALL 21 CURED, 77 LINES | My ruling's scope was one record; its sweep measured three. Patch by SHAPE, not name: one field has four aliases |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
 | LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
 | LJ-1.176 | Price A5 under a stated partition | PRICED: 547 LINES, ZERO REPLACEMENT | An A5 object builds into L by ONE separation, 1.72 s. The 300-line item is DISSOLVED, not divided |
