@@ -813,7 +813,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.255 | Build the eleven fields envSetK unlocks | 5 OF 11, AND THE 255 IS REFUTED. DD25 [LJ-1.256] | Marginal 11 to 17 lines per field against the 255's implied 9.1. The entry estimate was 1.5 |
 | LJ-1.256 | DD25 review of LJ-1.255's refutation | OVERTURNED. THE 255 STANDS, PLUS ABOUT 50 | Five copies of one proof are one observation. someEnv's 120-line blocker is delivered in FOUR |
 | LJ-1.257 | The four envInK fields and someEnv, not blocked after all | DISPATCHED | The blocker was my own no-master-edit rule. Also: can the five envK copies collapse into one |
-| LJ-1.258 | The fifteen fields that do not touch envSetK | DISPATCHED | Four different groups, so this is the real sample for the 9.1 rate. Every reader is delivered |
+| LJ-1.258 | The fifteen fields that do not touch envSetK | 12 OF 15. RATES ARE 2, 1, 1 BODY LINES | Far UNDER 9.1. LJ-1.168's 1.5-line entry estimate HOLDS. The three consK need an env closure |
+| LJ-1.259 | Build the env closure, the one L-row the nine-lemma table never priced | DISPATCHED | envConsK. The same shape as the sucK hole LJ-1.256 found. It unblocks the last three fields |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.248 | Route A-prime's total | 1,150 ARITHMETIC, and THREE named causes | Per-tower half MEASURED at 146. The last reading residue is 47 lines, 4 percent, down from 555 |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |
