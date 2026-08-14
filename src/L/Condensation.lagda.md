@@ -3682,6 +3682,7 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc B))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc zero))))
                           (suc (suc (suc (suc (suc (suc B)))))) ⟩
@@ -3697,11 +3698,14 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   out : ⟨ γ ⊨ topClauseAt C T B ⟩ → ⟨ γ ⊨ φB ⟩
   out h = λ c c∈ ar arK a aK yc ycK shB hc E EK henv →
     let shD = UnaryShape.out {m} N K 6 (yc ∷ a ∷ ar ∷ c ∷ γ) tagEq shB
+        shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
+                 (suc (suc zero)) 6 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
+        arNum = codesK c ar a c∈ shEq .snd .snd
         module E' = EnvSet {5 + m} zero (suc (suc (suc zero)))
                        (suc (suc (suc (suc (suc B)))))
                        (suc (suc (suc (suc (suc K)))))
                        (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc a ar c E arK)
+                       (envInK yc a ar c E arK arNum)
         hE' = E'.out henv
         hbM = h c c∈ ar a yc shD hc E hE'
     in extAt→extAtB (suc zero) (suc (suc (suc (suc (suc K))))) body body
@@ -3720,7 +3724,7 @@ module TopAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc B)))))
                        (suc (suc (suc (suc (suc K)))))
                        (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc a ar c E arK)
+                       (envInK yc a ar c E arK arNum)
         henv = E'.back hE
         hb = h c c∈ ar arK a aK yc ycK shB hc E EK henv
     in extAtB→extAt (suc zero) (suc (suc (suc (suc (suc K))))) body body
@@ -3761,6 +3765,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -3776,11 +3781,14 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   out : ⟨ γ ⊨ negClauseAt C T B ⟩ → ⟨ γ ⊨ φB ⟩
   out h = λ c c∈ ar arK a aK yc ycK shB hc ya yaK E EK hsub henv →
     let shD = UnaryShape.out {m} N K 5 (yc ∷ a ∷ ar ∷ c ∷ γ) tagEq shB
+        shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
+                 (suc (suc zero)) 5 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
+        arNum = codesK c ar a c∈ shEq .snd .snd
         module E' = EnvSet {6 + m} zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK)
+                       (envInK ya yc a ar c E arK arNum)
         hE' = E'.out henv
         hya' = SubValB2T.back {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3807,7 +3815,7 @@ module NegAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK)
+                       (envInK ya yc a ar c E arK arNum)
         henv = E'.back hE
         hsub = SubValB2T.out {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3870,6 +3878,7 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -3889,11 +3898,14 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   out : ⟨ γ ⊨ forallClauseAt C T B ⟩ → ⟨ γ ⊨ φB ⟩
   out h = λ c c∈ ar arK a aK yc ycK shB hc ya yaK E EK hsub henv →
     let shD = UnaryShape.out {m} N K 9 (yc ∷ a ∷ ar ∷ c ∷ γ) tagEq shB
+        shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
+                 (suc (suc zero)) 9 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
+        arNum = codesK c ar a c∈ shEq .snd .snd
         module E' = EnvSet {6 + m} zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK)
+                       (envInK ya yc a ar c E arK arNum)
         hE' = E'.out henv
         hya' = SubValSuccB2T.back {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3926,7 +3938,7 @@ module ForallAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK)
+                       (envInK ya yc a ar c E arK arNum)
         henv = E'.back hE
         hsub = SubValSuccB2T.out {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -3978,6 +3990,7 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -4068,11 +4081,14 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
   out h = λ c c∈ ar arK a aK yc ycK shB hc ya yaK E EK hsub henv →
     let shD = UnaryShape.out {m} N K 8 (yc ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq shB
+        shEq = transport (cong fst (arityTagAtL-adequate (suc (suc (suc zero)))
+                 (suc (suc zero)) 8 (suc zero) (yc ∷ a ∷ ar ∷ c ∷ γ))) shD
+        arNum = codesK c ar a c∈ shEq .snd .snd
         module E' = EnvSet {6 + m} zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK)
+                       (envInK ya yc a ar c E arK arNum)
         hE' = E'.out henv
         module L = Leaf E ya yc a ar c
         hya' = SubValSuccB2T.back {m = 6 + m}
@@ -4101,7 +4117,7 @@ module ExistAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK)
+                       (envInK ya yc a ar c E arK arNum)
         henv = E'.back hE
         module L = Leaf E ya yc a ar c
         hsub = SubValSuccB2T.out {m = 6 + m}
@@ -4156,6 +4172,7 @@ module ClauseAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (ya yc a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -4418,6 +4435,7 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (yc b a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -4446,11 +4464,15 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   out h = λ c c∈ ar arK a aK b bK yc ycK shB hc E EK henv →
     let shD = BinaryShape.out {m} N K 0 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq shB
+        shEq = transport (cong fst (arityTagPairAtL-adequate (suc (suc (suc (suc zero))))
+                   (suc (suc (suc zero))) 0 (suc (suc zero)) (suc zero)
+                   (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
+        arNum = codesK c ar a b c∈ shEq .snd .snd .snd
         module E' = EnvSet {6 + m} zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E arK)
+                       (envInK yc b a ar c E arK arNum)
         hE' = E'.out henv
         hbM = h c c∈ ar a b yc shD hc E hE'
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
@@ -4472,7 +4494,7 @@ module MemAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E arK)
+                       (envInK yc b a ar c E arK arNum)
         henv = E'.back hE
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
                      arityK aK bK t0eq t1eq t0K num1K (valV E yc b a ar c) (valW E yc b a ar c) cmp
@@ -5027,6 +5049,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                            (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
@@ -5054,11 +5077,15 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   out h = λ c c∈ ar arK a aK b bK yc ycK shB hc ya yaK E EK hsubA henv →
       let shD = BinaryShape.out {m} N K 10 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                   tagEq shB
+          shEq = transport (cong fst (arityTagPairAtL-adequate (suc (suc (suc (suc zero))))
+                   (suc (suc (suc zero))) 10 (suc (suc zero)) (suc zero)
+                   (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
+          arNum = codesK c ar a b c∈ shEq .snd .snd .snd
           module E' = EnvSet {7 + m} zero (suc (suc (suc (suc (suc zero)))))
                          (suc (suc (suc (suc (suc (suc (suc B)))))))
                          (suc (suc (suc (suc (suc (suc (suc K)))))))
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                         (envInK E ya yc b a ar c arK)
+                         (envInK E ya yc b a ar c arK arNum)
           module L = BndLeaf B t0 t1 K E ya yc b a ar c γ
                        t0eq t1eq t0K arityK aK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
           hE' = E'.out henv
@@ -5089,7 +5116,7 @@ module AllInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B)))))))
                        (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK E yb yc b a ar c arK)
+                       (envInK E yb yc b a ar c arK arNum)
         module L = BndLeaf B t0 t1 K E yb yc b a ar c γ
                      t0eq t1eq t0K arityK aK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
         henv = E'.back hE
@@ -5151,6 +5178,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                            (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
@@ -5178,11 +5206,15 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   out h = λ c c∈ ar arK a aK b bK yc ycK shB hc ya yaK E EK hsubA henv →
       let shD = BinaryShape.out {m} N K 11 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                   tagEq shB
+          shEq = transport (cong fst (arityTagPairAtL-adequate (suc (suc (suc (suc zero))))
+                   (suc (suc (suc zero))) 11 (suc (suc zero)) (suc zero)
+                   (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
+          arNum = codesK c ar a b c∈ shEq .snd .snd .snd
           module E' = EnvSet {7 + m} zero (suc (suc (suc (suc (suc zero)))))
                          (suc (suc (suc (suc (suc (suc (suc B)))))))
                          (suc (suc (suc (suc (suc (suc (suc K)))))))
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                         (envInK E ya yc b a ar c arK)
+                         (envInK E ya yc b a ar c arK arNum)
           module L = BndLeaf B t0 t1 K E ya yc b a ar c γ
                        t0eq t1eq t0K arityK aK num1K (wKfact E ya yc b a ar c) (consK E ya yc b a ar c)
           hE' = E'.out henv
@@ -5213,7 +5245,7 @@ module ExInAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B)))))))
                        (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK E yb yc b a ar c arK)
+                       (envInK E yb yc b a ar c arK arNum)
         module L = BndLeaf B t0 t1 K E yb yc b a ar c γ
                      t0eq t1eq t0K arityK aK num1K (wKfact E yb yc b a ar c) (consK E yb yc b a ar c)
         henv = E'.back hE
@@ -5268,6 +5300,7 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (E ya yc b a ar c : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                           (suc (suc (suc (suc (suc (suc (suc (suc B)))))))) ⟩
@@ -5285,11 +5318,15 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
     λ yb ybK hsubB →
       let shD = BinaryShape.out {m} N K 4 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                   tagEq shB
+          shEq = transport (cong fst (arityTagPairAtL-adequate (suc (suc (suc (suc zero))))
+                   (suc (suc (suc zero))) 4 (suc (suc zero)) (suc zero)
+                   (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
+          arNum = codesK c ar a b c∈ shEq .snd .snd .snd
           module E' = EnvSet {7 + m} zero (suc (suc (suc (suc (suc zero)))))
                          (suc (suc (suc (suc (suc (suc (suc B)))))))
                          (suc (suc (suc (suc (suc (suc (suc K)))))))
                          (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                         (envInK E ya yc b a ar c arK)
+                         (envInK E ya yc b a ar c arK arNum)
           module L = ImpLeaf T B K E yb ya yc b a ar c γ keyK
           hE' = E'.out henv
           hE'' = L.envSet-back hE'
@@ -5316,7 +5353,7 @@ module ImpAgree {m : ℕ} (C T B N K : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc (suc B)))))))
                        (suc (suc (suc (suc (suc (suc (suc K)))))))
                        (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK E ya yc b a ar c arK)
+                       (envInK E ya yc b a ar c arK arNum)
         module L = ImpLeaf T B K E yb ya yc b a ar c γ keyK
         henv = E'.back (L.envSet-out hE)
         hsubA = L.yaOut arK aK ha
@@ -5356,6 +5393,7 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B)))))) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
   (envInK : (yc b a ar c E : S) → ⟨ fst ar ∈ fst (lookup K γ) ⟩
+           → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
            → (z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                envOverAt zero (suc (suc (suc (suc (suc zero)))))
                           (suc (suc (suc (suc (suc (suc (suc B))))))) ⟩
@@ -5384,11 +5422,15 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
   out h = λ c c∈ ar arK a aK b bK yc ycK shB hc E EK henv →
     let shD = BinaryShape.out {m} N K 1 (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ)
                 tagEq shB
+        shEq = transport (cong fst (arityTagPairAtL-adequate (suc (suc (suc (suc zero))))
+                   (suc (suc (suc zero))) 1 (suc (suc zero)) (suc zero)
+                   (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ))) shD
+        arNum = codesK c ar a b c∈ shEq .snd .snd .snd
         module E' = EnvSet {6 + m} zero (suc (suc (suc (suc zero))))
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E arK)
+                       (envInK yc b a ar c E arK arNum)
         hE' = E'.out henv
         hbM = h c c∈ ar a b yc shD hc E hE'
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
@@ -5410,7 +5452,7 @@ module EqAgree {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E arK)
+                       (envInK yc b a ar c E arK arNum)
         henv = E'.back hE
         module L = AtomLeaf E yc b a ar c γ t0 t1 K
                      arityK aK bK t0eq t1eq t0K num1K (valV E yc b a ar c) (valW E yc b a ar c) cmp

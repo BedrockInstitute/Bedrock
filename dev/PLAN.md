@@ -813,7 +813,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.255 | Build the eleven fields envSetK unlocks | 5 OF 11, AND THE 255 IS REFUTED. DD25 [LJ-1.256] | Marginal 11 to 17 lines per field against the 255's implied 9.1. The entry estimate was 1.5 |
 | LJ-1.256 | DD25 review of LJ-1.255's refutation | OVERTURNED. THE 255 STANDS, PLUS ABOUT 50 | Five copies of one proof are one observation. someEnv's 120-line blocker is delivered in FOUR |
 | LJ-1.257 | The four envInK fields and someEnv | 5 OF 5. COLLAPSE IS 67 AGAINST 85 | Bodies shrink 55 to 30. The numeral premise is a MASTER change, priced at 40 to 60 mechanical lines |
-| LJ-1.260 | Land the numeral premise in TFacts, LFacts and UFacts | DISPATCHED | The master's own note at TwelveAgree:298-301 says it costs consumers nothing, and codesK proves it |
+| LJ-1.260 | Land the numeral premise in the three records | LANDED. ALL FOUR MASTERS GREEN, NET +42 | Inside the inferred 40 to 60. No new proof: the out directions reuse the delivered decode |
 | LJ-1.258 | The fifteen fields that do not touch envSetK | 12 OF 15. RATES ARE 2, 1, 1 BODY LINES | Far UNDER 9.1. LJ-1.168's 1.5-line entry estimate HOLDS. The three consK need an env closure |
 | LJ-1.259 | Build the env closure | BUILDS ON ONE NEW HYPOTHESIS. 3 consK CLOSE | The sweep caught the supply before it was called absent: Lset-fin and paramEnv∈ are delivered |
 | LJ-1.261 | The finite-supremum merge, the last unpriced ordinal fact | DISPATCHED | Same shape as the union closure. Lset-fin and paramEnv∈ are delivered; the merge to one stage is not |

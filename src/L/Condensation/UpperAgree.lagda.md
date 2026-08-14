@@ -157,18 +157,21 @@ record UFacts {n : ℕ}
                 → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
     envInK-neg : (ya yc a ar c E : S)
                → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
                → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                    envOverAt zero (suc (suc (suc (suc (suc zero)))))
                                (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
                 → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
     envInK-top : (yc a ar c E : S)
                → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
                → (z : S) → ⟨ (z ∷ E ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨
                    envOverAt zero (suc (suc (suc (suc zero))))
                                (suc (suc (suc (suc (suc (suc zero)))))) ⟩
                 → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
     envInK-imp : (E ya yc b a ar c : S)
                → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ) ⟩
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
                → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨
                    envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
                                (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
