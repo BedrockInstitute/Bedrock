@@ -780,6 +780,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.211 | Why is the DD25 overturn rate 71 percent | BRIEFS CAUSED 8 OF 10, REVIEWER 0 | And the rate was my miscount: 71 became 64 became 46 once the register read the decided rows |
 | LJ-1.212 | Build the PREMISES gate, LJ-1.211's change 1 | DISPATCHED | It blocks the failure that caused 4 of 10 overturns: a brief that fixes a method which cannot answer |
 | LJ-1.213 | Gate the chain before porting it: Powerset and DefAt-stage | DISPATCHED | LJ-1.210 ported 2 of 17 modules. The plumbing grows LINEARLY and the cure for that walls today |
+| LJ-1.214 | Is the 8.2 s the telescope component or the rest of the commit | DISPATCHED | LJ-1.209 refuted the seal and named this gate with its price: 71 edits, 12 minutes, one trap |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
