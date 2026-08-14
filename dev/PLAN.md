@@ -812,7 +812,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.254 | BUILD step 6, the 28 fields | 1 OF 28, PLUS THE JOIN. sucK DOES NOT WALL | envSetK is green, and it sits beneath 11 of the 28. 141 lines for the first field plus two lemmas |
 | LJ-1.255 | Build the eleven fields envSetK unlocks | 5 OF 11, AND THE 255 IS REFUTED. DD25 [LJ-1.256] | Marginal 11 to 17 lines per field against the 255's implied 9.1. The entry estimate was 1.5 |
 | LJ-1.256 | DD25 review of LJ-1.255's refutation | OVERTURNED. THE 255 STANDS, PLUS ABOUT 50 | Five copies of one proof are one observation. someEnv's 120-line blocker is delivered in FOUR |
-| LJ-1.257 | The four envInK fields and someEnv, not blocked after all | DISPATCHED | The blocker was my own no-master-edit rule. Also: can the five envK copies collapse into one |
+| LJ-1.257 | The four envInK fields and someEnv | 5 OF 5. COLLAPSE IS 67 AGAINST 85 | Bodies shrink 55 to 30. The numeral premise is a MASTER change, priced at 40 to 60 mechanical lines |
+| LJ-1.260 | Land the numeral premise in TFacts, LFacts and UFacts | DISPATCHED | The master's own note at TwelveAgree:298-301 says it costs consumers nothing, and codesK proves it |
 | LJ-1.258 | The fifteen fields that do not touch envSetK | 12 OF 15. RATES ARE 2, 1, 1 BODY LINES | Far UNDER 9.1. LJ-1.168's 1.5-line entry estimate HOLDS. The three consK need an env closure |
 | LJ-1.259 | Build the env closure, the one L-row the nine-lemma table never priced | DISPATCHED | envConsK. The same shape as the sucK hole LJ-1.256 found. It unblocks the last three fields |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
