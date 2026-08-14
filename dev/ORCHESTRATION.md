@@ -87,7 +87,7 @@ not a second attempt. Four questions: is the refusal correct on its own
 numbers; is the measurement sound; did the BRIEF cause the outcome; is there a
 cure the return missed. **A review that agrees is a real result.**
 
-**Then both are read together.** Audit the codex return and the Opus review as
+**Then both are read together.** Audit the original return and its adversarial review as
 one pair, and report both to the owner, including where they disagree. Neither
 is accepted alone.
 
@@ -128,8 +128,8 @@ territory, on a measurement that would make the work fundable, or on the
 ceilings above. Auditing a return is not a reason to idle.
 
 **The emergency tier belongs to PLAN DD17's standing loop, and this section
-does not restate it.** The short form: a codex return that does not do its
-task well, AT a critical breakthrough, may be re-dispatched to Fable 5 at
+does not restate it.** The short form: a return that does not do its
+task well, AT a critical breakthrough, may be re-dispatched to the emergency head at
 maximum effort. Both conditions bind. A stop, a refutation or a RED is a good
 return and never a trigger. Read DD17 before using it; the ruling names what
 must be recorded.

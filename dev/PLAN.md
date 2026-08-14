@@ -725,17 +725,17 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.159 | LeastCardInj is 48 times the bar and nobody has attacked it | 133 s TO 46 s, 13 LINES | My order-type lead REFUTED. The cause is sucV at a variable; the cure is prior art next door |
 | LJ-1.160 | Read the 845-line level substrate against levelIn and cover | THE WALL IS BYPASSED, 16 LINES | Both hypotheses from one crossing face at the collapse image. The wall term is absent |
 | LJ-1.161 | Gate the transfer half of CrossOut at the collapse image | GO AT 20 LINES, AND A NEW WALL | The transfer is cheap. The certificate CrossOut actually needs walls at 20 min, 9.03 GB |
-| LJ-1.162 | Leg 3, the last unknown in CrossOut | NO-GO ON PRICE: 125 LINES, NOT 60 | The chain typechecks whole. Both NO-GO branches are MEASURED FALSE. CrossOut is 163 lines |
+| LJ-1.162 | Leg 3 of CrossOut | NO-GO ON PRICE: 125 LINES, NOT 60. DD25 review [LJ-1.182] UPHELD | The chain typechecks whole. Both NO-GO branches are MEASURED FALSE. CrossOut is 163 lines |
 | LJ-1.163 | ElemDown, the residue common to all three open facts | ALREADY SUPPLIED, IN THE WRONG PLACE | My premise was FALSE: my grep excluded the file holding it. 0 new lines, it needs a move |
 | LJ-1.164 | Move elem-down out of Co, which is a pure move | PURE MOVE, 146 IN 146 OUT, NET 0 | Zero proof lines changed. Reachability measured BOTH ways: the pre-move tree exits NotInScope |
-| LJ-1.165 | BUILD the crossing face and discharge levelIn and cover | STOP: SIX GATES PRICED DERIVATIONS | The assembly works at 17 lines. Nothing supplies the face: KFacts is never CONSTRUCTED |
+| LJ-1.165 | BUILD the crossing face | STOP: SIX GATES PRICED DERIVATIONS. DD25 review [LJ-1.181] UPHELD | The assembly works at 17 lines. Nothing supplies the face: KFacts is never CONSTRUCTED |
 | LJ-1.166 | Gate K(u), the SUPPLY that six gates never priced | GO: 88 LINES, 2.69 s, BOUND FITS | Devlin's engine transfers. Three of four closure classes were proved and no gate cited them |
 | LJ-1.167 | The definable power at a general argument, and pairing at a general limit | GAP 2 GO AT 35, GAP 1 NO-GO | Gap 2 sat in the prior dispatch's file. Devlin leaves gap 1 as an exercise |
 | LJ-1.168 | Re-measure the satisfaction layer, 5,047 lines never re-priced | 5,047 COLLAPSES TO ABOUT 270 | The figure was never measured. LJ-1.10 had already called it a false anchor |
-| LJ-1.169 | powIter, the last term with no provenance | NO-GO: THE RANK ACCOUNTING FAILS HERE | Devlin's codes are sequences over a fixed set; ours bake parameters into the code tree. P-l |
+| LJ-1.169 | powIter, the last term with no provenance | NO-GO OVERTURNED by DD25 review [LJ-1.179] | Devlin's codes are sequences over a fixed set; ours bake parameters into the code tree. P-l |
 | LJ-1.170 | Price BOTH arms of the coding fork | A THIRD ARM SETTLES IT, 37 LINES GREEN | Devlin's split is already delivered on the AC side. The archive ASSUMED arm A's bound, never reached it |
 | LJ-1.171 | The last gate before the build | GO AT 56, AND THE CHAIN IS MEASURED | The search paid a fifth time and changed the ingredient: finSet cannot be read back, env can |
-| LJ-1.172 | BUILD the supply, in dependency order, landing incrementally | 1 TO 5 BUILT; 6 REFUTED AT THE JOIN | envSetK asks a level to hold a function space. Six names, one fact, no supplier |
+| LJ-1.172 | BUILD the supply | 1 TO 5 BUILT; 6 REFUTED AT THE JOIN. DD25 review [LJ-1.180] UPHELD | envSetK asks a level to hold a function space. Six names, one fact, no supplier |
 | LJ-1.173 | Restrict envSetK to a numeral arity | ALL 21 CURED, 77 LINES | My ruling's scope was one record; its sweep measured three. Patch by SHAPE, not name: one field has four aliases |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
 | LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
