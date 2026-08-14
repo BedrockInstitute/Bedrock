@@ -105,15 +105,22 @@ four before you price the cure.**
   `git checkout .`, `git stash`, `git reset --hard` or `git clean`.
 - Do not run `make check`; I run it.
 
-## THE BAR YOU JUDGE SECONDS AGAINST, and it is disputed
+## THE BAR YOU JUDGE SECONDS AGAINST, RULED 2026-08-14 as DD27
 
-**Two bars are live and they differ by 1.16 times.** DD24's is **0.007913**, the
-delivered AC wing. The ledger's `ac_baseline_module_rate` is **0.009143**.
-`[LJ-1.175]` measured that reports use both and nobody has ruled which prices a
-new module.
+**The owner ruled it while this brief was held, so it is settled and you do not
+report against two bars.**
 
-**Report your figure against BOTH and do not pick one.** The ruling is the
-owner's and it is in the queue.
+**A new module is priced against the MODULE RATE, `ac_baseline_module_rate` =
+0.009143**, and not against DD24's whole-wing 0.007913. The module rate measures
+73 cone masters each cold with dependencies warm, which is exactly what a new
+module costs.
+
+**AND THE 1.15x TOLERANCE IS ALREADY SPENT, so new work gets none of it.** The
+GCH wing sits at 1.54x and carries a debt of **40 to 49 s**. **Your acceptance
+figure is therefore 0.009143 s per line, at 1.00x and not at 1.15x.**
+
+**Report your seconds against 0.009143. Say plainly whether the block clears it.**
+An overage is recorded plainly, as DD8 requires, and never argued away.
 
 ## THE CLASSIFICATION I WANT ON EVERY NEGATIVE
 
