@@ -786,11 +786,11 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.217 | Re-price A6 from the green interface, with a clock cap | A6 = 446, ONE NUMBER WITH ITS BASIS | The wall was fixed-shape: fibre walls at 1,810 s, direct equality is green in 15.0 s |
 | LJ-1.218 | LJ-1.9's audit: the wing's ratio and removable lines | 1.70x, GAP 60.0 s, 695 REMOVABLE | 523 of the 695 are one superseded chain, so the figure is 695 or 172. LJ-1.222 checks it |
 | LJ-1.219 | Join GenModel to Powerset at the ambient class | MODEL LINK COMPOSES, BRICK TWO LEAKS. DD25 [LJ-1.221] | Five Model names green ambient. Recover's keyOf leaks at :142. Plumbing 21 lines |
-| LJ-1.220 | Parameterize every leak and census the chain once | EXIT 0. WIDTH IS 9 MODULES, 22 NAMES | 2 names SUPPLIED not leaked. extAt-in and the domAt trio now MEASURED. The 17 was inferred |
+| LJ-1.220 | Parameterize every leak and census the chain once | EXIT 0. WIDTH 8 MODULES, 19 NAMES | LJ-1.224 corrected 9 and 22 down. extAt-in and the domAt trio now MEASURED. The 17 was inferred |
 | LJ-1.221 | DD25 review of LJ-1.216, LJ-1.219 and the brief pattern | UPHELD, MISATTRIBUTED, WASTEFUL | Brick two is two one-liners GenModel holds. I turned a typecheck order into a dispatch order |
 | LJ-1.222 | Check LJ-1.218's 523-line supersession before it lands | 695 REFUTED, THE NUMBER IS 83 | The chain holds Condensation's only carrier transfer and both uses of abs₀ and σ₁-up |
 | LJ-1.223 | Read the suppliers in one pass, thin against thick | 2 THIN, 8 THICK, 2,971 SHARED | Graph was already ported at GenGraph.agda. Plumbing about 200 for ten, per-tower residual 0 |
-| LJ-1.224 | Is LJ-1.220's exit 0 bought? Check all 22 parameter types | DISPATCHED | A body over weakened hypotheses typechecks more easily than the real one. Five are reconstructions |
+| LJ-1.224 | Is LJ-1.220's exit 0 bought? Check the 22 types | NOT BOUGHT. 22 of 22 FAITHFUL | Five reconstructions sound; InL.lagda.md:253 holds the same reduction. Width falls to 8 and 19 |
 | LJ-1.225 | Does the ported chain discharge LJ-1.7's residue at all | DISPATCHED | Six dispatches priced the port. None asked whether it unblocks the phase. PLAN:49 names the lift |
 | LJ-1.226 | Build pairω into L, the widest unmeasured line in the route | DISPATCHED | A5 row 5 is INFERRED at 160 and LJ-1.176 warned it may be far too low. Nobody has written one |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
