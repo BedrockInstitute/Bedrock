@@ -84,6 +84,32 @@ REVERT_CONDITION = ("The owner names another mode by word. Set VERSION_IN_FORCE 
 
 MODEL = "deepseek-v4-pro"
 
+#: THE MODEL RULE, ruled 2026-08-14 by the owner and separate from the head.
+#: **A task that is pure natural-language work, and touches no Agda code, takes
+#: `deepseek-v4-flash`. Everything else takes the model above.**
+#:
+#: THE HEAD AND THE MODEL ARE TWO DIFFERENT CHOICES and this file holds both.
+#: The switch's `cases` table picks the HEAD, which is who runs the task. This
+#: rule picks the MODEL that head runs on. A brief's `tier:` line names the head
+#: and, when the model is not the default, the model too, so an audit can see
+#: both.
+#:
+#: IT IS NEARLY MECHANICAL, and that is why it is written as a function rather
+#: than as prose. `dispatch.py` already takes `--agda` for a task that will run
+#: Agda, because C-12 caps how many may hold a process at once. That same flag
+#: answers this question, so the rule costs no new declaration.
+#:
+#: WHAT IT CANNOT SEE: a task that runs no Agda but still READS and reasons
+#: about Agda source. `--agda` is about holding a process, not about subject
+#: matter. So the orchestrator overrides with `--model` where the brief is about
+#: code, and the brief records why.
+FLASH = "deepseek-v4-flash"
+
+
+def model_for(runs_agda: bool) -> str:
+    """The model a dispatch takes, from whether it will run Agda."""
+    return MODEL if runs_agda else FLASH
+
 #: THE RETIRED NAMES, and they must keep resolving. `normal` and `override` said
 #: WHICH ONE WAS THE EXCEPTION and never WHICH HEAD LEADS, so a reader had to
 #: open this file to learn what either meant. The owner renamed them
