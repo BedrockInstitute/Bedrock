@@ -778,6 +778,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.230 | The stage-carrier decode, named by LJ-1.123, never run | NO-GO, THREE WALLS NAMED. DD25 [LJ-1.233] | The delivered decode reads the UNBOUNDED graph; level-hood needs the BOUNDED one |
 | LJ-1.233 | DD25 review of LJ-1.230's NO-GO | OVERTURNED. WALL (a) WAS ALREADY GO | LJ-1.124 ran that probe on 2026-08-13 at 147 lines. Two briefs missed the row and I wrote one of them |
 | LJ-1.234 | Does pairω need an object-language arithmetic | NO. DISSOLVED AT 60 GREEN LINES | The order route closes the base at omega, 1.19 s, zero object-language formula. Dissolution four |
+| LJ-1.235 | Strengthen the bound hasReplacementL computes and discards | DISPATCHED | Wall (c) is the last absent term for LJ-1.7. Step zero re-verifies LJ-1.124's probe live |
+| LJ-1.236 | A4 and A7, the gate list's last two, A7 first because it audits the rest | DISPATCHED | A7's risk is the WRONG statement. A4's widest term is SECONDS, not lines: the ambient is 100.64 s |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
