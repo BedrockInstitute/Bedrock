@@ -745,6 +745,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.179 | DD25 review of LJ-1.169's NO-GO on the rank accounting | DISPATCHED | Four dispatches and a 21-field cure stand downstream of this NO-GO, and nobody re-checked it |
 | LJ-1.183 | Audit the orchestrator against every DD, under DD0 | DISPATCHED | Owner-ordered. Replay git log, briefs and reports. It must find what I did NOT self-report |
 | LJ-1.184 | AmbientRead, Devlin's (a) at the AMBIENT carrier | DISPATCHED | LJ-1.178's new wall. The tree delivers the read-off at the CLASS carrier only. Given it, CrossOut is ONE line |
+| LJ-1.186 | Compress the DD series to the rule itself, episodes to JOURNAL | DISPATCHED | 42,000 characters over 19 rows. DD0 licenses stripping the extended reading; nothing may be lost |
 | LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
