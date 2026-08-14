@@ -339,6 +339,14 @@ lines_apriori_source = "OWED by [LJ-2.1]: post-[LJ-0.4] standing + gch_wing_apri
 # CAVEAT, stated because the figure is a benchmark discount and not a licence:
 # 64 of the 83 are ten Class A rows that [LJ-1.222] did not audit against D-27.
 # So 83 is the reported figure and 19 is the audited floor.
+# AND ONE OF THE 64 ALREADY FIRED, within hours. [LJ-1.218] classed
+# `via-col-square`/`via-col-truncated` (SquareLaw.lagda.md:959-963, 4 lines)
+# removable because nothing reads them. [LJ-1.234] then used `via-col-square`
+# as the delivered zero-arithmetic route that DISSOLVED A5's `pairω`. The
+# original measurement stands: no MASTER consumes them. But they are now the
+# named entry point for a measured result, so removing them would cost the
+# route its door. That is C-35 read backwards, and it is why 64 lines nobody
+# audited are not 64 lines nobody needs.
 lines_removable = 83
 lines_removable_source = "[LJ-1.218] measured, [LJ-1.222] corrected; 64 of 83 unaudited against D-27"
 
