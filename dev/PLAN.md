@@ -790,6 +790,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.221 | DD25 review of LJ-1.216, LJ-1.219 and the brief pattern | UPHELD, MISATTRIBUTED, WASTEFUL | Brick two is two one-liners GenModel holds. I turned a typecheck order into a dispatch order |
 | LJ-1.222 | Check LJ-1.218's 523-line supersession before it lands | 695 REFUTED, THE NUMBER IS 83 | The chain holds Condensation's only carrier transfer and both uses of abs₀ and σ₁-up |
 | LJ-1.223 | Read the ten remaining suppliers in one pass and split them thin from thick | DISPATCHED | LJ-1.221's own repair. Three dispatches produced no total price and every brief forbade one |
+| LJ-1.224 | Is LJ-1.220's exit 0 bought? Check all 22 parameter types | DISPATCHED | A body over weakened hypotheses typechecks more easily than the real one. Five are reconstructions |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
