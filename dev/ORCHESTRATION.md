@@ -186,12 +186,17 @@ carries:
 - **RETURN**: the exact deliverable, evidence as `file:line`, and the
   measurements that decide the next ruling.
 
-**DD4 GOES IN EVERY BRIEF, WHATEVER THE KIND, AND THIS CLAUSE IS ITS ONLY
-ENFORCEMENT.** Ruled by the owner 2026-08-09, together with the decision that
+**DD4 GOES IN EVERY BRIEF, WHATEVER THE KIND, AND THIS CLAUSE IS ONE OF ITS
+THREE ENFORCEMENT POINTS.** The DD4 row names all three: this clause, the
+route-planning clause in section 5, and the return audit in section 6, which
+rejects a build that chose fixed without saying so. **And
+`scripts/check-dd4-stated.py` now gates that a brief carries the section at
+all.** Ruled by the owner 2026-08-09, together with the decision that
 DD4 gets NO hard metric. The two halves are one rule: **maximize the code the
-two proofs share, and write it generic.** There is no shared-line count and no
-checker, because a count would be gamed the moment it gated anything, so the
-principle survives only if it is said out loud every time. Say it in the
+two proofs share, and write it generic.** There is no shared-line COUNT, because a count would be
+gamed the moment it gated anything, so the substance survives only if it is said
+out loud every time. **The STATEMENT is gated:
+`scripts/check-dd4-stated.py` reads the heading and never the content.** Say it in the
 brief, and require the return to answer it:
 
 - **A RECON** asks whether the content can be written once at a generic

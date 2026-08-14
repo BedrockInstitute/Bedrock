@@ -18,9 +18,11 @@ nobody finishes reading binds nothing.
   `make check` before committing; author every document in English first, then translate, then
   cross-check the Chinese and Japanese against each other for drift.
 - **Always, DD4, the rule that has cost this project most:** **maximize the code the two proofs
-  share, and write it generic.** One rule, two ends. It has NO metric and no checker by the
-  owner's decision, so it is stated in EVERY brief and answered in every return, and that
-  repetition is its only enforcement. **A stop-line is never a reason to write fixed:** say so
+  share, and write it generic.** One rule, two ends. It has **NO METRIC** by the owner's
+  decision, because a shared-line count would be gamed the moment it gated anything. So it is
+  stated in EVERY brief and answered in every return. **`scripts/check-dd4-stated.py` gates
+  that a brief SAYS it**, reading the heading and never the content: the statement is
+  mechanical, the substance is review. **A stop-line is never a reason to write fixed:** say so
   and stop for a re-price.
 - **Always, write a controlled style, and the AUDIENCE picks it.** Each skill holds its full
   rule set; **Bedrock's own prose rules win over both.**
@@ -57,8 +59,12 @@ nobody finishes reading binds nothing.
 
 ## Commands
 
-- **`make check` is the gate before any commit.** It typechecks the masters, then runs every
-  checker in [scripts/](scripts/README.md). **Run it in the background, never in the
+- **`make check` is the gate before any commit.** It typechecks the masters, then runs the
+  checkers wired into its `check:` target. **It does NOT run every checker in
+  [scripts/](scripts/README.md)**, and several are deliberately outside it: `check-ratio.py`
+  and `check-timing.py` because they cost minutes, and the advisory reports because a red gate
+  would buy a pasted answer. **Read the `Makefile`'s `check:` line for the list that actually
+  runs.** **Run it in the background, never in the
   foreground**: a cold typecheck takes about twelve minutes and must not block the session
   (`dev/PLAN.md` DD15). While you work, run the individual checks instead (`agda <file>`,
   `python3 scripts/lint-prose.py <files>`).
@@ -161,8 +167,10 @@ left `archive/` for code and `archive/dev/` for the records: `TASKS-archived.md`
 dispatch found, `JOURNAL-archived.md` for why, `DECISIONS-archived.md` for the rulings,
 `STATUS-archived.md` for the goal table. Every brief
 carries an **ARCHIVE** section naming what may bear on the task; every return carries an
-**ARCHIVE USED** section naming what it read and took, at `file:line`. `dev/LESSONS.md` is NOT
-archived and still binds.
+**ARCHIVE USED** section naming what it read and took, at `file:line`. **A brief that
+dispatches mathematics carries a LITERATURE section too, and its return carries LITERATURE
+USED, including WHY NOT for anything it did not use** (DD18); `dispatch.py` refuses a brief
+missing either section. `dev/LESSONS.md` is NOT archived and still binds.
 
 ## Retiring code
 
