@@ -777,6 +777,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.228 | Price sl and sc, the two hypotheses nothing on record prices | NOT SUPPLIED. ABOUT 0.15k EACH | Both records priced something else: 2.8k was the bypassed hull route, 16 was the assembly |
 | LJ-1.230 | The stage-carrier decode, named by LJ-1.123, never run | NO-GO, THREE WALLS NAMED. DD25 [LJ-1.233] | The delivered decode reads the UNBOUNDED graph; level-hood needs the BOUNDED one |
 | LJ-1.233 | DD25 review of LJ-1.230, whose NO-GO reaches back through two prices | DISPATCHED | Wall (a)'s machinery is DELIVERED but UNASSEMBLED, and that is not the same as missing |
+| LJ-1.234 | Does pairω need an object-language arithmetic at all | DISPATCHED | Both consumers demand an injection and name no function. The retired route closed the base with zero arithmetic |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
