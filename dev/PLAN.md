@@ -764,7 +764,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.195 | Consistency audit by document rank | 4 LIVE, 1 ALREADY FIXED | DD4's no-checker claim stood in four documents against a checker that gates. All four repaired |
 | LJ-1.196 | DefAt's ambient reading: 84 lines or a chapter | NO-GO: IT IS A CHAPTER | u's slot is d, the definable powerset of the recorded value, and the induction never pins it |
 | LJ-1.197 | Do build-manifest.toml and rules.toml actually FIRE | 7 FIRE, 5 SILENT, 1 UNPROVOKABLE | All five silent rules are build-manifest's, and its checker was in no gate at all |
-| LJ-1.198 | Close A6's open charge, the last cell that is not one number | DISPATCHED | A5 is priced at 547 now, so the charge A6 inherits is measurable. LJ-1.8 waits on this sum |
+| LJ-1.198 | Close A6's open charge | A WALL, NOT A NUMBER | One typecheck ran 3.06 hours and did not finish. The seven cells do not sum and LJ-1.8 stays blocked |
 | LJ-1.199 | BUILD step 6, the satisfaction layer supply | STOP AT ZERO LINES: A JOIN | envSetNumeral needs omega in lam and HullStage's telescope has not got it. Found by reading, no Agda run |
 | LJ-1.200 | DD25 review of LJ-1.196's NO-GO | UPHELD BUT MISATTRIBUTED | The verdict and the reading are right. The cause is not Delta-0 and A CHAPTER is an unmeasured consequent |
 | LJ-1.201 | DD25 review of LJ-1.185's refutation of the 16 s | UPHELD BUT MISATTRIBUTED | The 16 s is dead, but the term is UNPRICED not unmeasurable, and Deserialization rose 8.3 s unowned |
@@ -777,7 +777,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.208 | Gate DD25: a negative return whose row names no review | BUILT, PLUS A REGISTER I DID NOT ASK FOR | It found me misreporting DD25's record, and read it back: 71 pc overturn rate |
 | LJ-1.209 | Price the seal that LJ-1.204 named, 8.4 s at 420 ms per field | DISPATCHED | The one wing cure with a MEASURED cause. Its lineage is LJ-1.145's seal, 2,459 ms to under 1 |
 | LJ-1.210 | Is the chapter really 17 lines? The class-parameter probe | DISPATCHED | LJ-1.200 measured Model naming isL on 6 of 1,288 lines. If it holds, LJ-1.7's residue is not a chapter |
-| LJ-1.211 | Why is the DD25 overturn rate 71 percent | DISPATCHED | The register's own rule: at or above 60 pc indicts the UPSTREAM process. That process is me |
+| LJ-1.211 | Why is the DD25 overturn rate 71 percent | BRIEFS CAUSED 8 OF 10, REVIEWER 0 | And the rate was my miscount: 71 became 64 became 46 once the register read the decided rows |
+| LJ-1.212 | Build the PREMISES gate, LJ-1.211's change 1 | DISPATCHED | It blocks the failure that caused 4 of 10 overturns: a brief that fixes a method which cannot answer |
 | LJ-1.185 | The 16 s billed outside every definition | THE 16 s DOES NOT EXIST | A double subtraction. The residue is OccursCheck plus TypeSig, and instantiation is 0.9 pc of it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | UPHELD | Every load-bearing citation re-derived at the commit the target measured, not at the working tree |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
