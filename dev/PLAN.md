@@ -80,6 +80,15 @@ DD4-against-DD24 conflict needs.
   `[LJ-1.155]` then found the counter-case: a wing-local cure does not move the
   denominator, and the wing went 2.06x to 1.60x. **So the ruling is no longer
   forced, but the bar still reads a shared cure as a regression.**
+- **WHICH BAR PRICES A NEW MODULE. Two are live and they differ by 1.16
+  times.** DD24's bar is **0.007913**, the delivered AC WING over 16,897 lines
+  (`[LJ-0.5]`). The ledger's `ac_baseline_module_rate` is **0.009143**, the
+  MODULE rate over 17,197 lines, re-measured 2026-08-13 on the cured tree.
+  `[LJ-1.136]` used the module rate, `[LJ-1.156]` and `[LJ-1.159]` used DD24's.
+  Against 0.009143 the cured ambient chain is 12.5 times the bar; against
+  0.007913 it is 14.4 times. **My recommendation is the MODULE rate for a new
+  module**, because P-m says a rate is a content-class certificate and a wing
+  rate certifies a different object. **It costs no machine to answer.**
 - **The `build` bundle is FULL at the cap of 12, and C-42 did not go in.** I
   routed the new law to `recon` and `probe`, which had room, and to four trigger
   words. **A build acting on a refutation therefore reaches it through layer 2
@@ -736,6 +745,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.173 | Restrict envSetK to a numeral arity, gate first | 21 FIELDS IN THREE RECORDS, CURE ATOMIC | My ruling's scope was one record; the sweep it ordered measured three. Cure 190, step 6 260 |
 | LJ-1.174 | Rewrite the spent resumption block as the live status | THREE FIGURES WERE FALSE | A5 unpriced, DD24 1.91x, unbound-hyp 18: all had answers. A status screen has no checker |
 | LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
+| LJ-1.176 | Price A5 under a stated partition, and gate it first | BRIEF WRITTEN, HELD | A block owns objects and never counts another block's. A5 loses ShiftAbs to A6, so it is five objects |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
 | LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | planned | DD24's ratio cold, plus what did not need to be there (DD5 measure 3). Bar is 0.010514, wing 1.97x |
