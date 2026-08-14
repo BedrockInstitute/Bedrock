@@ -47,18 +47,29 @@ HEADING = re.compile(
     r"^###\s+((?:Rule\s+\d+)|(?:P-[a-z](?![a-z]))|(?:[RTIDC]-\d+))\b.*$", re.M)
 
 
-def entries() -> dict[str, tuple[str, str]]:
-    """Each LESSONS entry as (title line, first paragraph of its body)."""
+def entries() -> dict[str, tuple[str, str, int]]:
+    """Each LESSONS entry as (title line, first paragraph, heading line number).
+
+    THE LINE NUMBER IS NOT DECORATION. This tool prints ONE paragraph and
+    truncates it at 400 characters, so a law whose action lives further down
+    its entry never reaches an agent that reads only this output. `[LJ-1.256]`
+    MEASURED that on P-l, whose transplant clause sits about thirty lines
+    below its first paragraph and is cited in briefs constantly. The cure is
+    not a longer excerpt, which would bury the bundle; it is telling the
+    reader WHERE the whole law is, so `read every statement` is an
+    instruction someone can follow.
+    """
     text = LESSONS.read_text(encoding="utf-8")
     hits = list(HEADING.finditer(text))
-    out: dict[str, tuple[str, str]] = {}
+    out: dict[str, tuple[str, str, int]] = {}
     for i, m in enumerate(hits):
         end = hits[i + 1].start() if i + 1 < len(hits) else len(text)
         body = text[m.end():end].strip()
         # The first non-empty paragraph is the rule statement by house style.
         para = next((p.strip() for p in body.split("\n\n") if p.strip()), "")
+        line = text.count("\n", 0, m.start()) + 1
         out[re.sub(r"\s+", " ", m.group(1))] = (
-            m.group(0).lstrip("# ").strip(), re.sub(r"\s+", " ", para))
+            m.group(0).lstrip("# ").strip(), re.sub(r"\s+", " ", para), line)
     return out
 
 
@@ -88,11 +99,15 @@ def emit(ids: list[str], ents: dict, header: str) -> int:
     for rid in ids:
         if rid not in ents:
             continue
-        title, para = ents[rid]
+        title, para, line = ents[rid]
         print(f"- **{title}**")
         if para:
-            wrapped = para if len(para) <= 400 else para[:397] + "..."
+            cut = len(para) > 400
+            wrapped = para if not cut else para[:397] + "..."
             print(f"  {wrapped}")
+            # An excerpt is not the law. Say where the law is, every time.
+            tail = "  THIS IS AN EXCERPT. " if cut else "  "
+            print(f"{tail}Full entry: dev/LESSONS.md:{line}")
     if missing:
         print(f"\n  WARNING: {len(missing)} id(s) not found in LESSONS: "
               f"{', '.join(missing)}")

@@ -53,16 +53,23 @@ and all four of its items returned; that record is in the journal.
 **1. The supply chain for the satisfaction layer.** `[LJ-1.172]` built steps 1
 to 5 and REFUTED step 6 at the join. `[LJ-1.173]` swept the refutation to **21
 fields across three records and CURED all 21**, for 77 lines, green.
-**2026-08-15: step 6 is NO LONGER UNBUILT and its 255 is REFUTED.**
+**2026-08-15: step 6 is NO LONGER UNBUILT, and the 255 STANDS at about 305.**
 `[LJ-1.252]` reopened the join `[LJ-1.199]` closed by reading, at five lines.
 `[LJ-1.254]` built `envSetK` and `sucK`, and **measured that `sucK` does NOT
-wall**. `[LJ-1.255]` built **5 of the 28** and measured the marginal cost at
-**11 to 17 lines per field against the 255's implied 9.1**, because the 255
-rested on a 1.5-line entry estimate. **The remaining 27 price at 297 to 459
-before shared lemmas**, and `[LJ-1.256]` reviews that. **Four `envInK-*` fields
-are BLOCKED on one missing hypothesis**, the numeral equation, and
-`[LJ-1.173]`'s cure table assigned them `ar ∈ K` instead, which is insufficient
-because the join is numeral-restricted.
+wall**. `[LJ-1.255]` built **5 of the 28** and read a marginal rate that
+`[LJ-1.256]` then OVERTURNED: **the five bodies are ONE PROOF WRITTEN FIVE
+TIMES, so zero variance across five is one observation**, and the copies are
+avoidable because `src/L/Condensation.lagda.md:2926` is a slot-generic
+`EnvSet` whose own comment says one copy serves every frame layout and both
+towers. **Three of the nine shape rows are now MEASURED and all three came in
+AT OR UNDER budget:** L3 25 against 30, L4 11 against 12, L9 13 against 25.
+**The figure: about 255 plus about 50 for `sucK`'s union closure, which no row
+prices.** **What survives from `[LJ-1.255]`: four `envInK-*` fields lack the
+numeral premise, a real defect in `[LJ-1.173]:843-846`, whose row 1 gave them
+`ar ∈ K` instead.** **They are NOT blocked: the supplier is delivered at
+`src/L/Coding/CodeSet.lagda.md:185-204` and the block was my brief's own
+no-master-edit rule.** **And `someEnv`'s second blocker is delivered in FOUR
+lines at `src/L/Condensation.lagda.md:3042`, not the 120 the report priced.**
 
 **2. Route A-prime's five probes, and DD8 now allows them.** `[LJ-1.227]` named
 the widest unmeasured term and the probe for every one of A1, A2, A3, A4 and
@@ -804,7 +811,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.253 | Close A-prime's last two reading residues | 1,089. A PRICE. BOTH RESIDUES DISSOLVE | A6's 47 was a double-count of the graph LJ-1.217 later measured at 296. Reading residue is now ZERO |
 | LJ-1.254 | BUILD step 6, the 28 fields | 1 OF 28, PLUS THE JOIN. sucK DOES NOT WALL | envSetK is green, and it sits beneath 11 of the 28. 141 lines for the first field plus two lemmas |
 | LJ-1.255 | Build the eleven fields envSetK unlocks | 5 OF 11, AND THE 255 IS REFUTED. DD25 [LJ-1.256] | Marginal 11 to 17 lines per field against the 255's implied 9.1. The entry estimate was 1.5 |
-| LJ-1.256 | DD25 review of LJ-1.255, which refuted a price PLAN 0.0 carried | DISPATCHED | If it holds, step 6 is 297 to 459 before shared lemmas, not 255, and open work item 1 was wrong |
+| LJ-1.256 | DD25 review of LJ-1.255's refutation | OVERTURNED. THE 255 STANDS, PLUS ABOUT 50 | Five copies of one proof are one observation. someEnv's 120-line blocker is delivered in FOUR |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.248 | Route A-prime's total | 1,150 ARITHMETIC, and THREE named causes | Per-tower half MEASURED at 146. The last reading residue is 47 lines, 4 percent, down from 555 |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |
