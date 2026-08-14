@@ -753,6 +753,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.178 | Build levelIn and cover | BUILT, THEOREM DOES NOT DERIVE | Two of three facts discharged and the debt moves to the STAGE. New wall: Devlin's (a) at the AMBIENT carrier |
 | LJ-1.179 | DD25 review of LJ-1.169's NO-GO on the rank accounting | DISPATCHED | Four dispatches and a 21-field cure stand downstream of this NO-GO, and nobody re-checked it |
 | LJ-1.183 | Audit the orchestrator against every DD, under DD0 | DISPATCHED | Owner-ordered. Replay git log, briefs and reports. It must find what I did NOT self-report |
+| LJ-1.184 | AmbientRead, Devlin's (a) at the AMBIENT carrier | DISPATCHED | LJ-1.178's new wall. The tree delivers the read-off at the CLASS carrier only. Given it, CrossOut is ONE line |
+| LJ-1.185 | The 16 s billed outside every definition | DISPATCHED | LJ-1.177 named it the wing's last lever and marked it UNMEASURED. Module-application instantiation |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | DISPATCHED | LJ-1.178 is building against this stop at this moment |
 | LJ-1.182 | DD25 review of LJ-1.162's NO-GO on price | DISPATCHED | A NO-GO on price needs no wall and no refutation, only an estimate. CrossOut is still unbuilt |
