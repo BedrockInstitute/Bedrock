@@ -750,7 +750,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.175 | Sum Route A-prime to ONE total | BLOCKED AT 705, BLOCKS DO NOT PARTITION | A5 has no live line price and five overlaps are quoted. My brief's premise was MEASURED FALSE |
 | LJ-1.176 | Price A5 under a stated partition | PRICED: 547 LINES, ZERO REPLACEMENT | An A5 object builds into L by ONE separation, 1.72 s. The 300-line item is DISSOLVED, not divided |
 | LJ-1.177 | Cure the Agree masters' second term | STOP: CURED FIVE DISPATCHES AGO | My premise was false, and LJ-1.158's row sits directly below LJ-1.155's in this table. Next lever caps at 5.2 s |
-| LJ-1.178 | Build levelIn and cover on the bypassed wall | BUILT, THEOREM DOES NOT DERIVE | Two of three facts discharged and the debt moves to the STAGE. New wall: Devlin's (a) at the AMBIENT carrier |
+| LJ-1.178 | Build levelIn and cover | BUILT, THEOREM DOES NOT DERIVE | Two of three facts discharged and the debt moves to the STAGE. New wall: Devlin's (a) at the AMBIENT carrier |
 | LJ-1.179 | DD25 review of LJ-1.169's NO-GO on the rank accounting | DISPATCHED | Four dispatches and a 21-field cure stand downstream of this NO-GO, and nobody re-checked it |
 | LJ-1.180 | DD25 review of LJ-1.172's refutation at the join | DISPATCHED | This refutation is funding work right now: ten cured declarations are already in src/ |
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | DISPATCHED | LJ-1.178 is building against this stop at this moment |
