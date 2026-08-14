@@ -274,6 +274,48 @@ check("while its locator defect stands, the CLI REPORTS it rather than exempting
       "the file still misdirects a code and the run did not say so")
 
 
+# ---------------------------------------------------------------------------
+# 8. THE UNIQUENESS CHECK: a code appears in more than ONE row of its series.
+# ---------------------------------------------------------------------------
+print("the uniqueness check")
+
+# DD4: the counting logic is ONE code path for every series; the per-series
+# functions only choose which rows feed it.
+check("the generic counter finds a duplicate in any series",
+      cri.duplicate_codes(["P-a", "R-38", "P-a", "C-22"]) == ["P-a"])
+check("and returns nothing when every code is unique",
+      cri.duplicate_codes(["P-a", "R-38", "C-22"]) == [])
+
+DD_DUP = "| DD27 | the hull |\n| DD27 | the debt |\n| DD1 | a row |\n"
+D_DUP = "| D27 | a row |\n| D27 | another |\n| D1 | a row |\n"
+DD_ONE = "| DD5 | a row |\n| DD27 | a row |\n"
+D_ONE = "| D5 | a row |\n| D27 | a row |\n"
+
+check("the real tree has no duplicate in either series",
+      not cri.duplicate_decisions(),
+      "\n".join(cri.duplicate_decisions()[:3]))
+check("a synthetic duplicate DD row is a finding",
+      any("`DD27` appears in 2 rows" in f
+          for f in cri.duplicate_decisions(DD_DUP, D_ONE)))
+check("a synthetic duplicate D row is a finding",
+      any("`D27` appears in 2 rows" in f
+          for f in cri.duplicate_decisions(DD_ONE, D_DUP)))
+check("the finding names the file that holds the series",
+      any("dev/PLAN.md section 3" in f
+          for f in cri.duplicate_decisions(DD_DUP, D_ONE))
+      and any("DECISIONS-archived.md" in f
+              for f in cri.duplicate_decisions(DD_ONE, D_DUP)))
+check("DD<n> and D<n> are different codes and both may exist",
+      not cri.duplicate_decisions(DD_ONE, D_ONE))
+check("the consolidated and revoked codes are prose, not rows, and pass",
+      not cri.duplicate_decisions(
+          "| DD1 | a row |\n**Consolidated and revoked codes.** DD3 merged "
+          "into DD2, DD7 is REVOKED outright.\n", "| D1 | a row |\n"))
+check("a `DD25-GAP` row is not a `DD25` row",
+      not any("DD25" in f for f in cri.duplicate_decisions(
+          "| DD25 | a row |\n| DD25-GAP | an audit |\n", D_ONE)))
+
+
 print("")
 if failures:
     print(f"FAIL: {len(failures)} check(s) failed")

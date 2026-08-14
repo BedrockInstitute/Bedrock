@@ -199,6 +199,20 @@ def known_lessons() -> set[str]:
     return set(lesson_headings())
 
 
+def duplicate_codes(codes: list[str]) -> list[str]:
+    """Codes carried by more than one element of `codes`, sorted.
+
+    [LJ-1.194] extracted this from `duplicate_lessons` so every series shares
+    ONE counting path: the `DD` rows of dev/PLAN.md section 3, the retired `D`
+    rows of the archive, and all six LESSONS prefixes. A code is an address;
+    two laws at one address is a defect at the source, whichever series.
+    """
+    seen: dict[str, int] = {}
+    for c in codes:
+        seen[c] = seen.get(c, 0) + 1
+    return sorted(k for k, n in seen.items() if n > 1)
+
+
 def duplicate_lessons() -> list[str]:
     """IDs carried by more than one heading in dev/LESSONS.md.
 
@@ -208,10 +222,50 @@ def duplicate_lessons() -> list[str]:
     duplicate ID passes that question twice. It is caught here instead: the ID
     is the address, so two laws at one address is a defect at the source.
     """
-    seen: dict[str, int] = {}
-    for h in lesson_headings():
-        seen[h] = seen.get(h, 0) + 1
-    return sorted(k for k, n in seen.items() if n > 1)
+    return duplicate_codes(lesson_headings())
+
+
+def duplicate_decisions(plan_text: str | None = None,
+                        arch_text: str | None = None) -> list[str]:
+    """A code that appears in more than ONE row of its series, as a finding.
+
+    [LJ-1.194], the uniqueness half the citation check cannot see. On
+    2026-08-14 the orchestrator minted a duplicate `DD27` when `DD27` had been
+    ruled on 2026-08-10, and this checker reported CLEAN through the episode,
+    because it verifies that a code RESOLVES and never that a code is UNIQUE.
+    PLAN's own preamble says a number is never reused, in either series, so
+    the rule existed and nothing enforced it.
+
+    THE SERIES BOUNDARY IS THE FILE. The live `DD` rows live in dev/PLAN.md
+    section 3 and the retired `D` rows in archive/dev/DECISIONS-archived.md, so
+    `DD5` and the archived `D5` are DIFFERENT codes and both may exist.
+    Uniqueness is judged WITHIN a series, never across one. The consolidated
+    and revoked codes are preamble prose, never rows, so they cannot be
+    reported: they still resolve on purpose, and a row that was never a row
+    cannot be a duplicate row.
+
+    The texts are parameters so a test can feed a synthetic duplicate without
+    writing to the tree; `series_findings` takes its text for the same reason.
+    """
+    text = PLAN.read_text(encoding="utf-8") if plan_text is None else plan_text
+    arch = (ARCHIVED_DECISIONS.read_text(encoding="utf-8")
+            if arch_text is None else arch_text)
+    dd = [m.group(1) for m in DD_ROW.finditer(text)]
+    d = [m.group(1) for m in PLAN_ROW.finditer(arch)]
+    out: list[str] = []
+    for dup in duplicate_codes(dd):
+        out.append(
+            f"`{dup}` appears in {dd.count(dup)} rows of the `DD` series "
+            f"(dev/PLAN.md section 3), and PLAN's preamble says a number is "
+            f"never reused in either series. A `DD` row is the owner's (DD0): "
+            f"report the duplicate, never fix it.")
+    for dup in duplicate_codes(d):
+        out.append(
+            f"`{dup}` appears in {d.count(dup)} rows of the retired `D` series "
+            f"(archive/dev/DECISIONS-archived.md), and PLAN's preamble says a "
+            f"number is never reused in either series. The archive is a frozen "
+            f"record: report the duplicate, never fix it.")
+    return out
 
 
 def known_decisions() -> set[str]:
@@ -318,6 +372,14 @@ def main() -> int:
                   f"An ID is an address: a citation resolves to whichever heading is "
                   f"found first, and the other law cannot be cited at all. Renumber "
                   f"the one nothing cites yet.")
+        return 1
+    if (dupes := duplicate_decisions()):
+        for f in dupes:
+            print(f"  DEFECT: {f}")
+        print(f"\ncheck-rule-ids: {len(dupes)} duplicate code(s). A number is "
+              f"never reused, in either series, and a code in two rows reads "
+              f"as one rule twice. A `DD` row is the owner's (DD0): report "
+              f"the duplicate, never fix it.")
         return 1
     if not lessons:
         print("check-rule-ids: no headings found in dev/LESSONS.md; refusing to "
