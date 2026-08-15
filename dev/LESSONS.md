@@ -4086,3 +4086,62 @@ the tool and the function, and say: read what it actually reads.**
 it; `agents/tasks/LJ-1-273/LJ-1.273.md:35-39` and `:52-56`, the two defective
 sections, which are mine; `scripts/ledger.py:404-446`, what the tool reads.
 Related: [[C-39]], [[C-43]], [[C-46]].
+
+### C-48. A policy that only a document states is not enforced, and a tool that can read the clock must refuse on it
+
+**Rule:** When a rule depends on a condition the tool can MEASURE, the tool
+refuses on the measurement. A check that reads what a document SAYS about the
+condition catches a typing mistake and misses a thinking mistake. **The two are
+not the same check, and having the first is not having the second.**
+
+**And the assertion that selects a rule's branch goes on the COMMAND LINE, not
+in the document.** A branch inferred from a document is one more thing that
+reads as checked and is not (C-43). A branch asserted on the command line lands
+in the launch log, where an audit can find it.
+
+**The measurement.** DD17's mode follows a clock: `scripts/dispatch_policy.py`
+holds `VERSION_IN_FORCE = 'auto'`, and the Beijing windows 09:00 to 12:00 and
+14:00 to 18:00 are PEAK, where deepseek costs double and the in-harness head is
+not billed on that clock at all. **On 2026-08-15 two dispatches ran the
+off-peak head inside a peak window**: `[LJ-1.272]` at 09:29 and `[LJ-1.273]` at
+10:21, both `pi/deepseek` through `herdr`, when `in-harness-subagent-mode` was
+in force. **The orchestrator answered the question of which head runs this task from
+memory, which the dispatch skill forbids in those words.**
+
+**NO GATE COULD HAVE CAUGHT IT, and this is the part worth keeping.**
+`scripts/check-dispatch-policy.py` judges a brief by the mode the brief NAMES
+and never by today's switch. **That rule is correct**: a frozen brief written
+under the old mode was right when it was written, and a record is never
+rewritten (C-41). **It also makes the checker structurally blind here**, because
+a brief naming the wrong mode with that mode's own head is a self-consistent
+pairing. It read one and passed.
+
+**And `dispatch_policy.default_harness` quietly DOWNGRADED rather than
+refusing.** Its own docstring reasons correctly that an in-harness default
+means this dispatch is by definition NOT the default case, and then it
+returns the fallback harness. **A tool that reaches the right conclusion and
+then picks a legal-looking answer has hidden the finding.**
+
+**The cure, and it is where the clock is readable.** `dispatch.py` refuses at
+launch on the head that will ACTUALLY run, not on the brief's text: a head
+that is in-harness under the mode in force cannot be launched by this tool at
+all; a head correct only for the adversarial case requires `--adversarial`; a
+fallback requires `--fallback`. **A resume is exempt by construction**, because
+DD17 step 6 rules that a running agent keeps the head that was correct when it
+was sent, and the existing `if resume_id is None` guard already implements
+that. **A queued dispatch re-reads the clock at FIRE time**, so one queued
+off-peak that would land in a peak window is refused at the launch.
+
+**Verified nine ways, both modes and all three cases**, including that
+off-peak `pi` still passes and that DD17's emergency `fable` tier passes
+everywhere.
+
+**What to do.** When a rule turns on something measurable, ask what the tool
+can read at the moment it can still change the outcome. **Then refuse there.**
+A document check and a measurement check are different levers, and only the
+second one closes the hole.
+
+**Evidence:** `.claude/skills/codex-dispatch/dispatch.py`, `clock_defects` and
+`case_from_args`; `scripts/dispatch_policy.py:336-382`, the switch and the
+downgrade; `scripts/check-dispatch-policy.py:242`, the rule that is right and
+blind. Related: [[C-43]], [[C-41]], [[C-46]].
