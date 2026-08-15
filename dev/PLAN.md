@@ -1092,6 +1092,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.293 | Discharge q, and with it amb | DISPATCHED | LJ-1.7's ONE open parameter. q is Graph 0 1 = embed phi0, relayed by every application and never proved. Phase blocker |
 | LJ-1.294 | Is an infinite cardinal a limit ordinal | QUEUED | The ONE real gap in Init at the use site. ord-tri covers omega-membership; nothing proves limit-hood. Unblocks LJ-1.8 |
 | LJ-1.295 | MOVE scripts into subdirectories, option C | QUEUED behind LJ-1.291's territory | Owner ruled C 2026-08-15: accept the 3,215 dangling reader pointers, no shims, no resolver |
+| LJ-1.296 | A quota fallback from pi to in-harness | QUEUED | Owner's instruction. The limit is NOT observable: pi has no quota command and logs record no tokens, so the trigger is the refusal |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
