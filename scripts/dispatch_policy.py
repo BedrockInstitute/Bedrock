@@ -207,38 +207,38 @@ def current_window(now: datetime | None = None) -> tuple[datetime | None, dateti
 #                       SKILL.md` states the same rule.
 #   fallback            the head to use when the case's own head is unavailable.
 
-# THE VENDOR SEAM. MODEL and FLASH are the only two lines below that name a
-# real backend. A later vendor swap is one edit to these two literal strings;
-# every mode, table and comment elsewhere in this file names a HEAD (`pi`,
-# `codex`, `opus 5`), never the vendor behind it. [LJ-1.285] took the vendor
-# name off the mode identifiers for the same reason.
+# THE VENDOR SEAM. MODEL is the only line below that names a real backend. A
+# later vendor swap is one edit to this literal string; every mode, table and
+# comment elsewhere in this file names a HEAD (`pi`, `codex`, `opus 5`), never
+# the vendor behind it. [LJ-1.285] took the vendor name off the mode
+# identifiers for the same reason.
+#
+# THERE IS ONE MODEL HERE AND THAT IS DELIBERATE. Pass any other model with
+# `dispatch.py --model`; nothing in this file has an opinion about which.
 MODEL = "deepseek-v4-pro"
 
-#: THE MODEL RULE, ruled 2026-08-14 by the owner and separate from the head.
-#: **A task that is pure natural-language work, and touches no Agda code, takes
-#: `deepseek-v4-flash`. Everything else takes the model above.**
-#:
-#: THE HEAD AND THE MODEL ARE TWO DIFFERENT CHOICES and this file holds both.
-#: The switch's `cases` table picks the HEAD, which is who runs the task. This
-#: rule picks the MODEL that head runs on. A brief's `tier:` line names the head
-#: and, when the model is not the default, the model too, so an audit can see
-#: both.
-#:
-#: IT IS NEARLY MECHANICAL, and that is why it is written as a function rather
-#: than as prose. `dispatch.py` already takes `--agda` for a task that will run
-#: Agda, because C-12 caps how many may hold a process at once. That same flag
-#: answers this question, so the rule costs no new declaration.
-#:
-#: WHAT IT CANNOT SEE: a task that runs no Agda but still READS and reasons
-#: about Agda source. `--agda` is about holding a process, not about subject
-#: matter. So the orchestrator overrides with `--model` where the brief is about
-#: code, and the brief records why.
-FLASH = "deepseek-v4-flash"
-
-
-def model_for(runs_agda: bool) -> str:
-    """The model a dispatch takes, from whether it will run Agda."""
-    return MODEL if runs_agda else FLASH
+# THE MODEL RULE IS REVOKED, 2026-08-15, by the repository owner, in their own
+# words: the flash rule and its code are deleted and the rule is void from now
+# on, because pure natural-language work is nearly always started BY THE OWNER,
+# who will say so, and no automatic judgement is needed.
+#
+# WHAT WAS HERE. `FLASH = "deepseek-v4-flash"` and
+# `model_for(runs_agda) -> MODEL if runs_agda else FLASH`, ruled 2026-08-14 by
+# the same owner. It hung on `dispatch.py`'s existing `--agda` flag, so it cost
+# no new declaration.
+#
+# WHY THE REVOCATION COSTS NOTHING, MEASURED 2026-08-15 before it was made:
+# `model_for` had NO CALLER anywhere in the repository. `dispatch.py` hardcoded
+# `DEFAULT_MODEL = "deepseek-v4-pro"` at :82 and never consulted it, no document
+# stated the rule (zero hits for `flash` in AGENTS.md, dev/ORCHESTRATION.md and
+# dev/PLAN.md), and no checker enforced it. It was a rule written as code that
+# nothing executed, which AGENTS.md calls a wish, and worse than a wish because
+# code reads as enforced.
+#
+# FROZEN BRIEFS THAT CITE IT STAY AS THEY ARE. Several say "the model rule gives
+# flash and I take it". A brief is a record and a record is never rewritten
+# (C-41). Those dispatches really were made under the rule, and the sentence was
+# true on the day.
 
 #: THE RETIRED NAMES, and they must keep resolving. `normal` and `override` said
 #: WHICH ONE WAS THE EXCEPTION and never WHICH HEAD LEADS, so a reader had to
