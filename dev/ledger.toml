@@ -179,29 +179,35 @@ ac_root_why = "the delivered AC endpoint, L models ZFC, at Model.lagda.md:99"
 # never [LJ-1.8]; it was A2, A4 and A7, which landed as L.Coding.Injection,
 # L.Cardinal and L.GCH on 2026-08-15.
 #
-# WHAT THE FIGURE MEANS, AND WHAT IT DOES NOT. L.GCH states the trophy in its
-# honest conditional form, and as of [LJ-1.286] it carries ONE unsupplied
-# hypothesis rather than two: `sq : SqShape` at src/L/GCH.lagda.md:80.
-# `absorbs` is now SUPPLIED, by L.Absorption through the named alias
-# `absorbsL` at src/L/GCH.lagda.md:57-63. The closure from this root is still
-# the closure of the STATEMENT, and it still UNDERSTATES the eventual GCH side,
-# because a hypothesis carries no import edge. The understatement sits in the
-# GCH total, not in the intersection.
+# WHAT THE FIGURE MEANS, AND WHAT IT DOES NOT. L.GCH states the trophy, and
+# since the [LJ-1.323] restatement of 2026-08-15 it carries NO unsupplied
+# hypothesis at all: `sq : SqShape` left the statement and became an owed
+# lemma, and `AbsorbsShape` and `absorbsL` left with it. `SqShape` now has zero
+# hits in src/. The closure from this root is still the closure of the
+# STATEMENT, and it still UNDERSTATES the eventual GCH side, because a lemma
+# the proof will need carries no import edge from the statement.
 #
-# AND THE SHARE FELL WHEN THE PROOF GOT STRONGER, 41.1 to 39.1 percent, which
-# is the first time this project has watched DD4's figure point the wrong way.
-# Read the SHARED row and not the share: SHARED went UP, 43 masters and 7,596
-# lines to 44 and 7,632, because L.Axioms.Infinity was AC-only and is now
-# shared. The AC closure did not move. The ratio fell because the denominator
-# grew by 1,037 GCH-only lines the proof always needed. The old 41.1 percent
-# was high because the GCH proof was MISSING, not because the two proofs shared
-# well. DD4 has no metric by the owner's ruling and this is why.
+# THE PARAGRAPH THAT STOOD HERE IS OVERTAKEN AND ITS READING WAS REVERSED, so
+# it is replaced rather than left to mislead. It recorded the share FALLING
+# 41.1 to 39.1 percent when L.Axioms.Infinity became shared. The restatement
+# reversed that: MEASURED at HEAD by [LJ-1.325], the GCH closure went 51
+# masters and 9,967 lines to 48 and 8,889, SHARED went 44 and 7,632 to 43 and
+# 7,596, and the share ROSE 39.1 to 41.1 percent. L.Absorption, L.InjChain and
+# L.Axioms.Infinity all LEFT the closure.
+#
+# AND THE SHARE ROSE WHILE SHARED FELL, because the denominator fell faster.
+# That is the same lesson from the other side: read the SHARED row and never
+# the share. The figure got prettier and nothing about the mathematics
+# improved. The UNDERSTATEMENT above grew by about 1,027 lines, because the
+# two chapters the proof needs MOST, L.Absorption and L.InjChain, are now
+# outside the closure the statement reaches. DD4 has no metric by the owner's
+# ruling and this pair of episodes is why.
 #
 # The proof endpoint is still [LJ-1.8]. When it lands, this root moves to it
-# and the figure grows. Until then this is DD4's first real measurement and it
-# is a floor.
+# and the figure grows. Until then the number is a floor and its direction
+# carries no information on its own.
 gch_root = "src/L/GCH.lagda.md"
-gch_root_why = "A7's statement, landed 2026-08-15 by [LJ-1.280]; absorbs is SUPPLIED since [LJ-1.286] and sq alone remains an unsupplied Pi-parameter, so the closure is the statement's and it understates"
+gch_root_why = "the trophy statement, restated 2026-08-15 by the [LJ-1.323] ruling as the L-internal cardinal equality; it carries NO unsupplied hypothesis, sq having become an owed lemma, so the closure is the statement's and it understates by about 1,027 lines more than before"
 
 [basis]
 # What the measurement counts, so a figure can never drift basis silently.

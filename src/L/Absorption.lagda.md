@@ -606,8 +606,9 @@ module ShiftGraph (γ : S) (oγ : IsOrd (fst γ))
 
 -- ---------------------------------------------------------------------
 -- PART 5.  A6's CONCLUSION, uniform over the infinite L-ordinals that
--- hold every numeral.  This is the type of A7's `absorbs` hypothesis
--- (`AbsorbsShape`, src/L/GCH.lagda.md:49-53) written out.
+-- hold every numeral.  It was A7's `absorbs` hypothesis, written out.
+-- The [LJ-1.323] restatement removed that hypothesis from the trophy,
+-- so `AbsorbsShape` no longer exists and this shape is proof-side only.
 -- ---------------------------------------------------------------------
 
 absorbs : (γ : S) → IsOrd (fst γ) → (⟨ fst γ ∈ ω ⟩ → Empty.⊥)
