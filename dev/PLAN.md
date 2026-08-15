@@ -1203,7 +1203,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.311 | DD25 review of LJ-1.309's sweep | SPLIT. NO-GO STANDS, 3 MEASUREMENTS FALSE | sucIter is NOT the only iterate: # is a second, in all 96 masters, but its ladder is 38x lower |
 | LJ-1.310 | Name every step of the composite's TERM | 23 STEPS, TEN UNBUILT, PLUS A REFUTATION | About 175 hand-written lines outside the 470. Row 11 may refute the composite's type. INFERRED |
 | LJ-1.312 | Settle phi0's slot roles by machine | REFUTED, MEASURED. THE TYPE IS WRONG. DD25 [LJ-1.313] | A verbatim LevelHood refuses to equal the cured one, exit 42. Devlin's shape is the spec |
-| LJ-1.313 | Fable 5 review of LJ-1.312's phi0 verdict | DISPATCHED | Owner authorized fable 2026-08-15 for THIS review. DD0: a one-off instruction is never a standing head choice |
+| LJ-1.313 | Fable review of LJ-1.312's verdict | UPHELD, AND THE CURE IS FOUR LINES NOT TWO | Two leaf pointers at :82 and :90 name the wrong binder; the two-line cure leaves them. Form 2 REFUTED |
 | LJ-1.314 | DD25 review of InjData's NECESSITY | DISPATCHED | LJ-1.305 marks necessity MEASURED at the eliminator and INFERRED at the theory. A new principle needs that gap closed first |
 | LJ-1.315 | Literature for the phi0 slot-role ruling | DISPATCHED | Owner asked for literature beside the probe. How every source states v = L-gamma and which slots it leaves free |
 | LJ-1.316 | Literature for the InjData ruling | DISPATCHED | Owner asked for literature beside the probe. How the standard proofs select a witness in L with no choice |
