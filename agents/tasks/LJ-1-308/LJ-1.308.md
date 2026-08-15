@@ -1,13 +1,18 @@
 # LJ-1.308: DD25 review of `[LJ-1.306]`, the zero-changed port of the clean 23
 
-tier: opus (in-harness-subagent-mode), **and this departs from the table on
-purpose.** I ran `scripts/dispatch/dispatch_policy.py` before writing this
-line. Today's **adversarial row is `herdr` / `pi` / `glm-5.3`**, and `pi` on
-`glm-5.3` WROTE the target. **DD17's invariant is that the critic is never the
-same head as the author, and the skill states it is not negotiable.** So the
-critic takes the in-harness head, which is today's DEFAULT row. **This is a
-consequence of the evening mode flip that nobody priced: every task authored
-before the flip was authored by the head that the flip made adversarial.**
+tier: opus (pi-subagent-mode), **the switch's ADVERSARIAL row, taken straight.**
+`[LJ-1.306]` was dispatched under `pi-subagent-mode`, whose adversarial row is
+in-harness `opus`. **A review takes the mode its TARGET was dispatched under,
+never the mode in force when the review is written** (owner's ruling,
+2026-08-15): a mode switch binds new tasks only, and the review is part of the
+task. The target was written by `pi` on `glm-5.3`, so DD17's invariant holds:
+the critic is not the author.
+
+**CORRECTION, 2026-08-15, recorded rather than hidden.** This line first read
+`in-harness-subagent-mode` and claimed the head departed from the table because
+the evening flip had made `pi` the adversarial row. **The head was right and the
+reason was wrong**, and the owner ruled it the same evening. **Nothing about the
+task below changes.**
 
 ## WHY THIS REVIEW EXISTS
 
