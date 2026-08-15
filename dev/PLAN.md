@@ -819,8 +819,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.261 | The finite-supremum merge | BUILDS. finSetK is SUPPLIED, 3 consK CLOSE | 148 lines, 48 for the merge against union's 52. The first attempt walled and the cure is recorded |
 | LJ-1.262 | The DD25 review LJ-1.225 never got | UPHELD BUT MISATTRIBUTED | Ten numbers re-derive; three carried claims are FALSE. Devlin's PER-TOWER and the port's ZERO are two axes |
 | LJ-1.263 | Land the three L-rows into src/L/Coding/Key.lagda.md | DISPATCHED | Its two neighbours Lset-fin and paramEnv-in are already there. Re-run the probes against the MASTER |
-| LJ-1.264 | Build A5's row 1, the composition of two injections | DISPATCHED | 46 percent of A5. Ask the dissolution question first: five objects dissolved this month |
-| LJ-1.265 | Align DD24's bar: three rates are in force and they disagree | DISPATCHED | The owner asked whether the wing can be compressed back. Four answers exist and I quoted none |
+| LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
+| LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
 | LJ-1.248 | Route A-prime's total | 1,150 ARITHMETIC, and THREE named causes | Per-tower half MEASURED at 146. The last reading residue is 47 lines, 4 percent, down from 555 |
 | LJ-1.245 | Apply C-45 to the record | 7 UNDISCHARGED, 0 ROWS REST ON THEM | The record is clean and src carries only the idiom form. LJ-1.243's set was wrong: 8 sites, 1 discharged |

@@ -246,9 +246,19 @@ band, so it can decide the constraint by itself.
 # reason to project high.
 gch_wing_apriori = [7553, 11197]
 # A SECONDS BUDGET FALLS OUT OF THIS, and [LJ-1.6-R] was the first to compute
-# it. DD24's bar of 0.013193 s/line over the a-priori wing sets the wing's
-# WHOLE seconds budget at 99.6 to 147.7 s. That number is the one to price a
-# candidate chapter against, and nobody had it until 2026-08-10.
+# it. CORRECTED 2026-08-15 by [LJ-1.265]: the old figure used a bar of
+# 0.013193 s/line, which is the OLD module rate 0.011472 times the 1.15
+# tolerance, and DD26 re-based the bar after that. The live bar is
+# `ac_baseline_module_rate` 0.009143 times 1.15, which is 0.010514, and
+# `scripts/check-ratio.py:462-464` computes exactly that: `module_rate *
+# tolerance`. The code is the authority here, not any comment.
+#
+# TWO NUMBERS, TWO QUESTIONS, and the old field answered one with the other's
+# figure. This budget is a PLANNING figure over the A-PRIORI band, for DD5
+# measure 2 and for pricing a candidate chapter. DD24's judgment of the
+# DELIVERED wing uses the delivered line count instead: at 11,926 lines the
+# on-bar allowance is 125.4 s, the wing measures 185.41 s, and the gap is
+# 60.0 s ([LJ-1.218], reviewed and kept by [LJ-1.222]).
 #
 # THE SQUARE LAW PASSES, AND MY FIRST ARITHMETIC HERE WAS WRONG.
 #
@@ -308,7 +318,7 @@ gch_wing_apriori = [7553, 11197]
 # Init omega is uninhabited, and either verifying Init kappa or adopting Init
 # as the cardinal notion, a choice the archive names itself at
 # SquareLaw.lagda.md:961-963.
-gch_wing_seconds_budget = [99.6, 147.7]
+gch_wing_seconds_budget = [79.4, 117.7]
 gch_wing_apriori_centre = 9400
 gch_wing_apriori_source = """
 [LJ-1.1], agents/tasks/archive/LJ-1-1/lj-1.1-recon.md section 6. Block sum 7,553-11,197; the recon
