@@ -363,6 +363,7 @@ import L.Choice.Stage
 import L.Choice.Finite
 import L.Choice.Name
 import L.Choice.Step
+import L.Cardinal
 import L.Choice.Internal
 import L.Choice.Table
 import L.Choice.Faithful

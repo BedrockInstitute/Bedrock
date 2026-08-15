@@ -987,7 +987,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.275 | DD25 review of LJ-1.266's heap wall | HOLDS, BUT THE WALL IS A LAYOUT ARTIFACT | Full block GREEN in a new master, 465.59 s, exit 0. Env rate 2.378 to 1.267. Option C now targets 1.1 s |
 | LJ-1.276 | LAND step 6 as a new master | LANDED GREEN, 833 LINES, 482.73 s, 55.1x THE BAR | L.Condensation re-runs at 137.60 s against 137.36: zero lines, zero seconds, PROVEN at the landing |
 | LJ-1.277 | LAND A2, the coding injection | LANDED GREEN, 238 LINES, 0.66x THE BAR | 1.66 s cold, n=3. Re-run imports it and exits 0. The 238 against the priced 186 is a CALIBER gap, not an overage |
-| LJ-1.278 | LAND A1, A3 and A4 as src/L/Cardinal.lagda.md | DISPATCHED | A2 is landed so wave 1 is open. A4 is the SECOND of the three masters gch_root needs; only A7 would remain |
+| LJ-1.278 | LAND A1, A3, A4 as src/L/Cardinal.lagda.md | LANDED GREEN, 189 LINES, 50.6x THE BAR | Bisected: A1 alone is 98.24 of the 100.57 s. CONTENT, not layout. A4's minimal-core premise REFUTED |
+| LJ-1.280 | LAND A7, the GCH statement, as src/L/GCH.lagda.md | DISPATCHED | The LAST of the three masters gch_root needs. On the day it lands, DD4's own report runs for the first time |
+| LJ-1.281 | Probe R-35 against A1's 98 seconds | DISPATCHED | LJ-1.278 bisected 98.24 of 100.57 s to kappa-min-at unfolding a union representation, which is R-35's named shape |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
