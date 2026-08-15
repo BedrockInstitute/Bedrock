@@ -303,12 +303,26 @@ records that at `src/L/InjChain.lagda.md:104`, **which is why `[LJ-1.279]`'s row
 5 rebuilt the base at ω from `InitialCore` rather than calling
 `via-col-square`.**
 
-**SO THE FORK IS REAL AND IT IS THE OWNER'S.** Either prove the square law at
-`SqShape`'s stated generality, which nothing has priced, or **re-type
-`SqShape`** so its domain matches a law the tree can supply. **The second is
-cheaper and it changes the trophy's statement, so I will not choose it.**
-`[LJ-1.293]` is attacking `[LJ-1.7]`'s last parameter now; this is the other
-half of the terminus and it needs a ruling before it can be dispatched.
+**CORRECTED THE SAME DAY, AND THE FORK DISSOLVED.** I wrote above that the
+choice was to prove the square law at full generality or to re-type the trophy,
+and I put it to the owner. **That was measured against `SqShape`'s DOMAIN and
+not against the USE SITE, which is where `Init` actually has to be built.** At
+the use site `κ` arrives with `IsCardinalL κ` and `⟨ fst κ ∈ˢ ω ⟩ → ⊥`, and
+three of the four parts change status:
+
+| `Init κ` component | at the USE SITE |
+|---|---|
+| `IsOrd κ` | **GIVEN** by `GCHStatement` |
+| `⟨ ω ∈ˢ κ ⟩` | **DERIVABLE**: `ord-tri` at `src/L/Ordinal/Linear.lagda.md:136` compares any two ordinals, and κ is an ordinal outside ω. LEM is already a module parameter, so this adds no assumption |
+| successor-closed, κ a LIMIT | **THE REAL GAP.** `SquareLaw.lagda.md:695` and `:704` carry it as a HYPOTHESIS and **nothing in the tree proves that an infinite cardinal is a limit ordinal** |
+| `noinj²` | mathematical content, and it is what `via-col-square` exists to consume |
+
+**So the minimal action is neither of the two I offered: it is ONE missing
+lemma.** An infinite cardinal is a limit ordinal, standard in shape (if
+`κ = γ+1` with γ infinite then γ and κ inject both ways, contradicting
+cardinality), **and nobody has priced it.** `[LJ-1.294]` is QUEUED to price and
+build it. **The owner's ruling is no longer needed, and asking for it was my
+error: I escalated a fork I had measured on the wrong object.**
 
 **WHAT IS WAITING ON THE OWNER, and none of it blocks the six above.**
 
@@ -1076,6 +1090,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.291 | Repair the 24 depth-anchored scripts | DISPATCHED, first on glm-5.3 | Reproduced: the same gate a level deeper says clean over 55 files instead of 2,369, exit 0 both times |
 | LJ-1.292 | Sweep Key.lagda.md for the mixed spelling | DISPATCHED | C-42's sweep of LJ-1.287. Same shape at depths 1 to 3, never profiled, and the shape just returned 476 s at one site |
 | LJ-1.293 | Discharge q, and with it amb | DISPATCHED | LJ-1.7's ONE open parameter. q is Graph 0 1 = embed phi0, relayed by every application and never proved. Phase blocker |
+| LJ-1.294 | Is an infinite cardinal a limit ordinal | QUEUED | The ONE real gap in Init at the use site. ord-tri covers omega-membership; nothing proves limit-hood. Unblocks LJ-1.8 |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
