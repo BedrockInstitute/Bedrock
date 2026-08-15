@@ -211,22 +211,23 @@ def check_single_source() -> list[str]:
     return errors
 
 
-def check_briefs(version: str) -> tuple[list[str], list[str]]:
-    """(errors, notes) over every brief."""
+def check_briefs(version: str, found: list[Path]) -> tuple[list[str], list[str]]:
+    """(errors, notes) over every brief.
+
+    THE BRIEF LIST IS PASSED IN, and it used to be read here and again in
+    `main()`'s summary line. Two walks of the whole task tree can disagree, and
+    the number printed would then not be the number judged.
+    """
     errors: list[str] = []
     notes: list[str] = []
     if not T.TASKS.is_dir():
         return [f"no task tree at {T.TASKS}"], notes
-    # candidate_briefs(), NOT briefs(): this check looks for a MISSING `tier:` line, and the
-    # content predicate finds a brief partly BY that line. See `agents_tree`'s docstring.
-    found = T.candidate_briefs()
     if not found:
         # C-40: a checker that reads nothing prints green. A layout change that
         # emptied this list would otherwise pass silently, which is how a census
         # drops to zero unnoticed.
         return [f"no brief found under {T.TASKS}: the census is ZERO"], notes
     legal = set(P.LEGAL_TOKENS)
-    adversarial_ok = P.expected_tier_tokens("adversarial", version)
     for path in found:
         rel = path.relative_to(ROOT)
         try:
@@ -310,8 +311,11 @@ def main() -> int:
         return 1
     version = P.in_force()
 
+    # candidate_briefs(), NOT briefs(): this check looks for a MISSING `tier:` line, and the
+    # content predicate finds a brief partly BY that line. See `agents_tree`'s docstring.
+    found = T.candidate_briefs()
     errors = check_single_source() + check_dispatch_reads_switch()
-    brief_errors, notes = check_briefs(version)
+    brief_errors, notes = check_briefs(version, found)
     errors += brief_errors
 
     for e in errors:
@@ -323,7 +327,7 @@ def main() -> int:
         print(f"{len(errors)} defect(s) against the `{version}` policy")
         return 1
     print(f"dispatch policy OK: `{version}` in force, "
-          f"{len(T.candidate_briefs())} brief(s) read, "
+          f"{len(found)} brief(s) read, "
           f"{len(notes)} pre-epoch note(s) not judged "
           f"(run with --notes to see them)")
     return 0

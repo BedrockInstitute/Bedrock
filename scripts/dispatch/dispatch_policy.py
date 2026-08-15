@@ -467,7 +467,10 @@ CLOCK_STATES: dict[str, str] = {
 # THE RETIRED VIEW, kept because it costs one line. `PEAK_WINDOWS` was this
 # file's window table until the vendor config took it. It now reads the vendor's
 # peak band only, so a reader of the old name still gets the old answer.
-# MEASURED 2026-08-15: no file outside this one reads it.
+# MEASURED 2026-08-15 by `[LJ-1.288]`: no file outside this one reads it.
+# RE-MEASURED 2026-08-15 by `[LJ-1.303]`, and that reading has EXPIRED:
+# `scripts/tests/test_dispatch_clock.py:319` and `:324` now pin it, in the same
+# hour. So retiring the name is no longer free; it costs those two checks.
 PEAK_WINDOWS: tuple[tuple[int, int, int, int], ...] = tuple(
     (sh, sm, eh, em) for sh, sm, eh, em, st in VENDOR.windows if st == "peak")
 
@@ -684,6 +687,29 @@ def canonical(version: str) -> str:
     return ALIASES.get(v, v)
 
 
+#: THE FALLBACK ROW IS ONE ROW, NOT TWO COPIES. Both modes name the same head
+#: for it, and until `[LJ-1.303]` both spelled it out, with the same seven-line
+#: comment written twice. A row stated twice is a row that will drift, which is
+#: DD19's own reason, and these two were already wrong together once.
+#:
+#: CODEX IS FIXED ON DEEPSEEK AND NEVER CARRIES THE VENDOR IN FORCE. Owner's
+#: ruling 2026-08-15. This row used to read `MODEL`, the vendor's model, and
+#: `[LJ-1.296]` MEASURED the consequence: `codex exec -m glm-5.3` is refused by
+#: name, and `~/.codex/config.toml` wires only the deepseek provider. The row
+#: was wrong from the day the vendor changed and nothing noticed, because nobody
+#: has ever passed `--fallback`.
+#:
+#: ONE OBJECT SERVES BOTH TABLES, because a case row is read and never written.
+#: MEASURED 2026-08-15: `head()`, `tier_token()`, `default_harness()`,
+#: `expected_tier_tokens()` and `render()` are every reader in this repository,
+#: and each one reads or rebinds; none assigns into a row.
+FALLBACK_HEAD: dict = {
+    "harness": "herdr",
+    "agent": "codex",
+    "model": CODEX_MODEL,
+    "tier_token": "codex",
+}
+
 POLICY: dict[str, dict] = {
     "pi-subagent-mode": {
         "summary": "The steady state. pi leads, codex backs it up, Opus reviews.",
@@ -700,19 +726,7 @@ POLICY: dict[str, dict] = {
                 "model": "",
                 "tier_token": "opus",
             },
-            "fallback": {
-                "harness": "herdr",
-                "agent": "codex",
-                # CODEX IS FIXED ON DEEPSEEK AND NEVER CARRIES THE VENDOR IN
-                # FORCE. Owner's ruling 2026-08-15. This row used to read
-                # `MODEL`, the vendor's model, and `[LJ-1.296]` MEASURED the
-                # consequence: `codex exec -m glm-5.3` is refused by name, and
-                # `~/.codex/config.toml` wires only the deepseek provider. The
-                # row was wrong from the day the vendor changed and nothing
-                # noticed, because nobody has ever passed `--fallback`.
-                "model": CODEX_MODEL,
-                "tier_token": "codex",
-            },
+            "fallback": FALLBACK_HEAD,
         },
         "note": ("THE DEFAULT IS pi, NOT codex, and that is a real change to "
                  "DD17 rather than a restatement of it. DD17 as first written "
@@ -734,19 +748,7 @@ POLICY: dict[str, dict] = {
                 "model": MODEL,
                 "tier_token": "pi",
             },
-            "fallback": {
-                "harness": "herdr",
-                "agent": "codex",
-                # CODEX IS FIXED ON DEEPSEEK AND NEVER CARRIES THE VENDOR IN
-                # FORCE. Owner's ruling 2026-08-15. This row used to read
-                # `MODEL`, the vendor's model, and `[LJ-1.296]` MEASURED the
-                # consequence: `codex exec -m glm-5.3` is refused by name, and
-                # `~/.codex/config.toml` wires only the deepseek provider. The
-                # row was wrong from the day the vendor changed and nothing
-                # noticed, because nobody has ever passed `--fallback`.
-                "model": CODEX_MODEL,
-                "tier_token": "codex",
-            },
+            "fallback": FALLBACK_HEAD,
         },
         "note": ("TEMPORARY. The reason is quota, never quality. The two "
                  "tables swap the default row and the adversarial row, "
@@ -860,6 +862,20 @@ def expected_tier_tokens(case: str, version: str | None = None) -> set[str]:
             EMERGENCY_TOKEN}
 
 
+def _states_in_order(windows) -> list[str]:
+    """Every band the windows name, in declaration order and without repeats.
+
+    ONE WALK, TWO READERS. `_window_lines()` prints a line per band and
+    `_bands()` lists them for validation, and both need this same order. A third
+    band must cost one place, never two that can disagree.
+    """
+    order: list[str] = []
+    for *_rest, state in windows:
+        if state not in order:
+            order.append(state)
+    return order
+
+
 def _window_lines() -> list[str]:
     """One line per price band the vendor declares, in declaration order.
 
@@ -867,14 +883,10 @@ def _window_lines() -> list[str]:
     before it had a config: `peak windows (Beijing): 09:00 to 12:00, 14:00 to
     18:00`. A three-band vendor prints two lines, and nothing else changes.
     """
-    order: list[str] = []
-    for *_rest, state in VENDOR.windows:
-        if state not in order:
-            order.append(state)
     return [f"  {state} windows (Beijing): "
             + ", ".join(f"{sh:02d}:{sm:02d} to {eh:02d}:{em:02d}"
                         for sh, sm, eh, em, st in VENDOR.windows if st == state)
-            for state in order]
+            for state in _states_in_order(VENDOR.windows)]
 
 
 def _harness_line(version: str) -> str:
@@ -923,9 +935,6 @@ def render(version: str | None = None) -> str:
             f"  next boundary: {boundary:%Y-%m-%d %H:%M} Beijing, "
             f"{after_state} begins, mode becomes "
             f"`{CLOCK_STATES[after_state]}`",
-            f"  set {SET_ON} by {SET_BY}",
-            f"  reason: {REASON}",
-            f"  revert: {REVERT_CONDITION}",
         ]
     elif VERSION_IN_FORCE == AUTO:
         lines += [
@@ -935,25 +944,24 @@ def render(version: str | None = None) -> str:
             f"has no basis and does not run",
             f"  default_mode: `{VENDOR.default_mode}`",
             f"  vendor source: {VENDOR.source}",
-            f"  set {SET_ON} by {SET_BY}",
-            f"  reason: {REASON}",
-            f"  revert: {REVERT_CONDITION}",
         ]
-    else:
-        lines += [
-            f"  set {SET_ON} by {SET_BY}",
-            f"  reason: {REASON}",
-            f"  revert: {REVERT_CONDITION}",
-        ]
-        if VERSION_IN_FORCE != AUTO:
-            beaten = (f"the clock, which would select `{clock_mode()}` "
-                      f"({clock_state()} now)" if VENDOR.banded else
-                      f"the vendor default, which would select "
-                      f"`{VENDOR.default_mode}` (`{VENDOR.name}` declares no "
-                      f"price window, so there is no clock)")
-            lines.append(
-                f"  a PIN: `{VERSION_IN_FORCE}` is pinned and wins over "
-                f"{beaten}")
+    # THE PROVENANCE PRINTS UNDER EVERY BRANCH, and it used to be written three
+    # times. It is the switch's own record: a position without a reason is a
+    # position nobody can retire.
+    lines += [
+        f"  set {SET_ON} by {SET_BY}",
+        f"  reason: {REASON}",
+        f"  revert: {REVERT_CONDITION}",
+    ]
+    if VERSION_IN_FORCE != AUTO:
+        beaten = (f"the clock, which would select `{clock_mode()}` "
+                  f"({clock_state()} now)" if VENDOR.banded else
+                  f"the vendor default, which would select "
+                  f"`{VENDOR.default_mode}` (`{VENDOR.name}` declares no "
+                  f"price window, so there is no clock)")
+        lines.append(
+            f"  a PIN: `{VERSION_IN_FORCE}` is pinned and wins over "
+            f"{beaten}")
     # THE MODEL COLUMN IS 18 WIDE OR THE MODEL, whichever is wider. 18 was a
     # literal until `[LJ-1.288]`, and it fitted `deepseek-v4-pro` exactly. A
     # vendor with a longer model ID would have pushed the `tier:` column out of
@@ -988,10 +996,7 @@ def render(version: str | None = None) -> str:
 
 def _bands(v: Vendor) -> list[str]:
     """Every price band this vendor has, windows first and the base last."""
-    order: list[str] = []
-    for *_rest, state in v.windows:
-        if state not in order:
-            order.append(state)
+    order = _states_in_order(v.windows)
     if v.base_state and v.base_state not in order:
         order.append(v.base_state)
     return order
@@ -1076,10 +1081,10 @@ def main() -> int:
         return 0
     if which and which != AUTO:
         which = canonical(which)
-    if which and which != AUTO and which not in POLICY:
-        print(f"unknown version {which!r}; known: auto, "
-              f"{', '.join(sorted(POLICY))}", file=sys.stderr)
-        return 2
+        if which not in POLICY:
+            print(f"unknown version {which!r}; known: auto, "
+                  f"{', '.join(sorted(POLICY))}", file=sys.stderr)
+            return 2
     print(render(which))
     return 0
 
