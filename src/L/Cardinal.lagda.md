@@ -82,8 +82,23 @@ module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
   InjP' : ⟪ sucV (fst α) ⟫ → hProp ℓ
   InjP' γ = InjP (up γ)
 
-  w : SWO (⟪ sucV (fst α) ⟫)
-  w = ordSWO (sucV (fst α)) (suc-ord oα)
+  -- The well-order is SEALED.  Transparent, its comparison unfolds the
+  -- union representation `⟪ sucV (fst α) ⟫` once in `least` below, and
+  -- again inside every conversion check that `κ-min-at` runs.  The seal
+  -- makes `leastOf w` a stuck atom, so `γ-card` and `fst κ` never
+  -- re-unfold, and the whole master falls from about 100 s to about 9 s.
+  opaque
+    w : SWO (⟪ sucV (fst α) ⟫)
+    w = ordSWO (sucV (fst α)) (suc-ord oα)
+
+  -- The one read the seal needs (R-36): the sealed comparison, in the
+  -- ambient membership form, proved inside the seal.  `κ-min-at` is its
+  -- only consumer, and no exported type names `w`.
+  opaque
+    unfolding w
+    w-lt : (m n : ⟪ sucV (fst α) ⟫)
+         → SWO._<∙_ w m n ≡ ⟨ ⟪ sucV (fst α) ⟫↪ m ∈ˢ ⟪ sucV (fst α) ⟫↪ n ⟩
+    w-lt m n = refl
 
   self : ⟪ sucV (fst α) ⟫
   self = fiber (sucV (fst α)) (self∈sucV (fst α)) .fst
@@ -135,7 +150,8 @@ module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
     bInjP : ⟨ InjP' b ⟩
     bInjP = subst (λ v → ∥ ⟪ fst α ⟫ ↪ ⟪ v ⟫ ∥₁) (sym bδ) α↪δ
     b<γ : SWO._<∙_ w b γ-card
-    b<γ = subst (λ z → ⟨ z ∈ˢ fst κ ⟩) (sym bδ) δ∈κ
+    b<γ = transport (λ i → sym (w-lt b γ-card) i)
+            (subst (λ z → ⟨ z ∈ˢ fst κ ⟩) (sym bδ) δ∈κ)
 
 -- =====================================================================
 -- The stage-bound device shared by the two internal faces (A3 and A4):

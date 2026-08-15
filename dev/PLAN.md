@@ -1021,7 +1021,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.278 | LAND A1, A3, A4 as src/L/Cardinal.lagda.md | LANDED GREEN, 189 LINES, 50.6x THE BAR | Bisected: A1 alone is 98.24 of the 100.57 s. CONTENT, not layout. A4's minimal-core premise REFUTED |
 | LJ-1.280 | LAND A7 as src/L/GCH.lagda.md | LANDED GREEN, 63 LINES | sq and absorbs stay Pi-parameters, unsupplied and honestly so. The 47 code lines cost 0.16x the bar net of the header |
 | LJ-1.281 | Probe R-35 against A1's 98 seconds | BOTH CURES WORK. THE SEAL WINS: 100.50 s to 9.16 | R-35 gives 15.53. Sealing w opaque plus one read lemma gives 9.16, and no exported type names w |
-| LJ-1.282 | LAND the seal on A1 | DISPATCHED in-harness | LJ-1.281 measured 100.50 s to 9.16 s. Two internal definitions name w and neither is what the GCH proof imports, so P-y prices it low |
+| LJ-1.282 | LAND the seal on A1 | LANDED. 99.78 s TO 9.31 s, DELTA 90.48 | 50.2x the bar to 4.34x for 19 lines. THREE definitions name w and ONE looks inside. L.GCH did not slow |
 | LJ-1.283 | Survey the over-bar masters for seals | DISPATCHED in-harness | LJ-1.218 names seven over the bar and P-y decides which are cheap. LJ-1.152 measured one that was not |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |

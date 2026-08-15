@@ -1,0 +1,14 @@
+label,run,rc,elapsed_s,load1
+control,1,0,97.50,8.24
+control,2,0,96.96,5.52
+control,3,0,98.80,5.38
+control,4,0,103.59,7.71
+bisect-no-kappa-min-at,1,0,16.37,5.86
+treated,1,0,9.43,5.28
+treated,2,0,9.25,5.69
+treated,3,0,9.30,5.44
+treated,4,0,9.37,5.30
+gch,1,0,1.68,5.42
+gch,2,0,1.55,5.42
+gch,3,0,1.53,5.39
+gch,4,0,1.56,5.39
