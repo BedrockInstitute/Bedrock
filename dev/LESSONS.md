@@ -4370,8 +4370,17 @@ IS charged is charged, and the two large cures this project landed were both
 found that way. **It means an ABSENCE carries no information until you have read
 the whole file and know what fraction the instrument never attributes.**
 
+**AND AN EMPTY CONTROL, because without it a delta is unreadable.** MEASURED
+2026-08-16 by `[LJ-1.340]`: a control file at 0.85 s against a candidate at
+0.86 s reads as a 0.01 s cost, **and an EMPTY file that only imports checks in
+0.82 s**. So the floor is 0.82, the spread between files is smaller than the
+spread inside one file, and BOTH contents are unmeasurable. **Without the empty
+arm the report would have published a cost that does not exist.**
+
 **What to do.** Every definitions-profile verdict states Total, the
-`Miscellaneous` share, and a control arm from the same run. **No retroactive
+`Miscellaneous` share, and a control arm from the same run. **Every SECONDS
+comparison also states the empty-file floor**, and calls a delta under the
+floor UNMEASURABLE rather than small. **No retroactive
 audit is funded** (`[LJ-1.320]` ruling): the rule binds new measurements.
 
 Related: [[C-52]], [[C-50]], [[C-44]], [[P-y]].

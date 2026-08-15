@@ -1225,7 +1225,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.335 | Where do the sq band terms LAND | NO. THE SUCCESSOR BAND IS A STEP, NOT A SUPPLIER | Two suppliers, one step, one truncation. The consumer needs NOTHING re-plumbed; a lemma buys it |
 | LJ-1.337 | The successor-or-limit dichotomy | DELIVERED, AND ONE BAND IN GIVES THE CONCLUSION OUT | sucV injectivity was live under a reversed name. sq-below is 90 lines, consumer diff EMPTY |
 | LJ-1.339 | Sweep L.Choice.Stage | TEN OF 21 FAIL A SEARCH, AND THE CAUSE IS TRIAGE | The grep RETURNED the term at hit 55 of 59 and the report called every hit a different subject. Law C-57 |
-| LJ-1.340 | Write the mu apparatus generic | DISPATCHED | LJ-1.339 measured 14 of 21 exports as one apparatus never written generic, and one consumer rebuilt its half at 32 lines |
+| LJ-1.340 | Write the mu apparatus generic | SAVES 10, ZERO SECONDS, ZERO NEW IMPORTS, AN EDGE RETIRED | All 29 lines are shared by construction; seals cannot be, so 54 was the attackable half |
+| LJ-1.342 | Land the generic mu form, prose in three languages | DISPATCHED | LJ-1.340 built it and reproduced all nine delivered signatures character for character, but wrote no trilingual prose |
 | LJ-1.336 | Wave 2 of the port: the dirty seven | 7 OF 7, 0 OF 838 CHANGED. ONE-DEBT REFUTED | The second site reuses ZERO of the first and needs a different supplier: downward facts against upward |
 | LJ-1.338 | A THIRD tie site | 327, MEASURED AT THREE SITES, NOT EXTRAPOLATED | The third site is the UNION site and CONTAINS the other four. And a THIRD kind of debt: construction |
 | LJ-1.341 | Are envK and defPairK TRUE as stated | DISPATCHED | LJ-1.338 read both as quantifying over z with no bounding hypothesis. D-10: price the TRUTH before the proof |
