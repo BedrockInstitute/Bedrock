@@ -91,7 +91,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 AUTO = "auto"
-VERSION_IN_FORCE = "pi-subagent-mode"
+VERSION_IN_FORCE = "in-harness-subagent-mode"
 
 # The pin's own provenance. A position without a reason is a position nobody
 # can retire.
@@ -103,15 +103,15 @@ VERSION_IN_FORCE = "pi-subagent-mode"
 # the clock it delegated to has no basis left to read.
 SET_ON = "2026-08-15"
 SET_BY = "the repository owner"
-REASON = ("The owner's instruction of 2026-08-15: pi is now on the zai "
-          "subscription rather than deepseek, and the owner will name the "
-          "mode DAILY from the token consumption they can see and the "
-          "orchestrator cannot. So the mode is pinned by word rather than "
-          "derived, and this pin says pi leads. The outgoing state was "
-          "`auto`, whose own reason was deepseek's peak and off-peak "
-          "pricing: OFF-PEAK deepseek was half price and pi led; PEAK it was "
-          "dear and the in-harness Opus, not billed on that clock, led. That "
-          "reason retired with the vendor and never reflected on a head.")
+REASON = ("The owner's instruction of 2026-08-15, given in the evening: switch "
+          "to in-harness from the NEXT task on. The owner names the mode daily "
+          "from the token consumption they can see and the orchestrator cannot, "
+          "so the mode is pinned by word rather than derived. The OUTGOING pin "
+          "was `pi-subagent-mode`, set by the same owner earlier the same day "
+          "when pi moved to the zai subscription, and it is retired by a fresh "
+          "instruction rather than by any judgement on a head. The pin before "
+          "that was `auto`, which delegated to deepseek's peak clock; that "
+          "clock retired with the vendor.")
 REVERT_CONDITION = ("The owner names a mode by word, daily. Set "
                     "VERSION_IN_FORCE to `pi-subagent-mode` or "
                     "`in-harness-subagent-mode` and change nothing else. "
