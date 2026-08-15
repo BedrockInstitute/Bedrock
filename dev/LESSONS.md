@@ -4018,14 +4018,29 @@ produced is on a proxy axis.** That is not a defect in any report. It is the
 shape of a rule whose object is not built yet, and it stops being true on the
 day the GCH endpoint lands.
 
-**THAT DAY CAME, 2026-08-15, and the paragraph above is now HISTORY rather than
-status.** `[LJ-1.280]` landed `src/L/GCH.lagda.md`, `dev/ledger.toml:203` reads
-`gch_root = "src/L/GCH.lagda.md"`, and `ledger.py --reuse` RUNS. It first printed
-41.1 percent shared and reads 39.1 percent today. **`[LJ-1.308]` found this entry
-still asserting the old state and the orchestrator had not noticed**, which is the
-law's own failure mode turned on the law: a figure kept its qualifier after the
-qualifier expired. **The law itself is unchanged and still binds: name the axis in
-every figure.** Only the「cannot be measured yet」clause retired.
+**THAT DAY HAS NOT COME, and the orchestrator claimed it had on 2026-08-15.**
+**The owner corrected it the same day: the GCH ENDPOINT lands when the WIRING is
+complete, never when the statement lands.** `[LJ-1.280]` landed
+`src/L/GCH.lagda.md` as a STATEMENT with `sq` still an unsupplied Pi-parameter, so
+the trophy is not proved and the endpoint is not there.
+
+**What DID change, and it is smaller than it looks.** `dev/ledger.toml:203` reads
+`gch_root = "src/L/GCH.lagda.md"` and `ledger.py --reuse` now RUNS: 41.1 percent
+shared when it first printed, 39.1 percent today. **So two literal words are stale: `gch_root` is no longer
+empty, and the report is no longer unable to run.**
+**The CONCLUSION they support is not.** `dev/ledger.toml:204` states the reason in
+the file: the closure is the STATEMENT's, and **it understates**. A closure read
+from an unproved statement reaches only what the statement mentions, never what
+the proof will import. **So every DD4 figure is still qualified. The qualifier
+changed from cannot be measured to measured against a statement whose proof is
+unwired, which is a different sentence and a smaller gap.**
+
+**THE EXPIRY STANDS AS WRITTEN: this clause retires when `sq` is supplied and
+`L ⊨ GCH` is proved.** **The orchestrator retired it early on a report's factual
+correction and did not check what the fact supported**, which is this law's own
+failure mode applied to the law: a true measurement carried a conclusion it did
+not license. **The law is unchanged and still binds: name the axis in every
+figure, and say when the rule's own axis cannot be measured yet.**
 
 **What it costs when it goes wrong.** `[LJ-1.225]` applied a Def-against-J mark
 to an L-against-ambient figure and classified a true statement MEASURED FALSE;
