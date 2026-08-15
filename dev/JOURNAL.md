@@ -1091,3 +1091,46 @@ opening the record.
 **Three of my briefs have now carried a figure I did not derive.** The cure is
 unchanged and it costs a grep: **derive it, or do not write it.** A number in a
 brief reads as measured whether or not anyone measured it.
+
+### 2026-08-15, the file move's SECOND consequence, which nobody saw for a day
+
+**`[LJ-1.259]`'s brief and `dev/JOURNAL.md` already record that I moved
+`ProbeLJ1134A.agda` out of `src/` while `[LJ-1.226]` was running, and that its
+report then carried a false MEASURED claim as a result.** **That was recorded
+as one episode with one cost. It had two.**
+
+**`[LJ-1.268]` MEASURED the second: two probes import that module by its OLD
+path and neither resolves today.**
+
+- `agents/tasks/LJ-1-176/ProbeLJ1176A.agda:73` reads
+  `open import ProbeLJ1134A {ℓ} lem`. **That probe is A5 row 3's ONLY probe.**
+- `agents/tasks/LJ-1-217/ProbeLJ1217A.agda:239` reads the same line. **That
+  probe is A6's ONLY probe.**
+
+**`[LJ-1.264]` had already met the failure and named it,
+`[FileNotFound] Failed to find source of module ProbeLJ1134A`**, and nobody
+connected it to the move.
+
+**So two of Route A-prime's seven blocks, 511 of its 1,089 lines, are NOT
+landable today, and the cause is an orchestrator edit rather than any
+mathematics.**
+
+**The move itself was right.** The file sat untracked and git-ignored inside
+`src/`, invisible to `check-probes.py` and to `git status`, one `git clean`
+from gone, and it held A2's only measured core.
+
+**What was wrong is that I moved it and looked only at the tree, not at who
+imports it.** **C-40 says verify the CONSUMERS of a changed master and never
+the master alone.** **A probe is not a master, so C-40 did not fire, and
+nothing else looks at probe-to-probe imports.**
+
+**The cure is cheap and named: re-site both probes to import the landed A2
+master, or inline `injAt`, `Extract` and `Small`.** **The lesson is NOT that
+files must never move.** **It is that `[LJ-1.187]`'s rule, do not change
+anything under a running agent, has a sibling no gate covers: a probe's
+imports are a consumer graph that nothing checks.**
+
+**And it caught a C-44 violation of mine in the same breath.**
+`agents/tasks/LJ-1-268/LJ-1.268.md` states「Every block exists as a GREEN
+PROBE」. **MEASURED FALSE for A6.** I wrote that from the phase's summary
+rather than from a run.
