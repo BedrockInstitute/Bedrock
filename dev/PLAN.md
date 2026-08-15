@@ -50,6 +50,30 @@ and all four of its items returned; that record is in the journal.
 
 **THE OPEN WORK, in dependency order.**
 
+**0. BOTH HALVES OF LJ-1'S TERMINUS NOW HAVE A ROUTE, AND ONE HAS A COMPLETE
+PRICE.**
+
+**`[LJ-1.7]`, whose last open parameter is `amb`.** The only route is `q'`, and
+after four probes its cost is measured end to end, every part at a BUILT site
+rather than a survey:
+
+| part | lines | measured by |
+|---|---:|---|
+| the clean 23 `Agree` modules, generic | ~180 | `[LJ-1.298]`, ZERO changed at one site |
+| the dirty seven's ambient ties | ~100 | `[LJ-1.302]`, 51 built; the ties are ONE debt |
+| `StepAgree` and `ApproxAgree` | ~190 | `[LJ-1.304]`, BOTH built as terms |
+| the composite's type | writable, **and `amb-from-composite` typechecks** | `[LJ-1.302]` |
+| **TOTAL** | **about 470 hand-written lines** | |
+
+**`[LJ-1.8]`, whose blocker is `sq`.** `[LJ-1.301]` BUILT the descent:
+`sq-descent` at 186 lines, 241.9 s, `--safe`, by `WF.WFI.induction
+regularityV`. **`[LJ-1.299]`'s CIRCULAR verdict is refuted by construction.**
+**ONE qualification, which that task put in its own lead: the conclusion is
+TRUNCATED**, `∥ sq α ∥₁` rather than the function object `SqShape` needs.
+
+**SO THE PHASE IS NO LONGER BLOCKED ON A QUESTION. It is blocked on two builds,
+one of them priced.**
+
 **1. STEP 6 IS LANDED AND ITS MASTER IS NOW UNDER THE BAR.**
 **`src/L/Coding/EnvSupply.lagda.md`: 495.23 s to 6.65 s, minus 488.59 s, for
 FIVE inserted lines and three deleted.** **56.5x the DD24 bar to 0.76x.** The
@@ -1097,10 +1121,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.298 | Price q' through the class-carrier analogues | ZERO LINES CHANGED. THE PORT IS VERBATIM | 33 of 33 unchanged. One scaffold serves a chapter. The family: 180 new lines placing 6,900 |
 | LJ-1.299 | Build noinj-squared, Init's last row | CIRCULAR, PLUS SqShape GATES NOTHING. DD25 [LJ-1.300] | A missing pair of parentheses leaves the trophy's last hypothesis inhabited. I verified it |
 | LJ-1.300 | DD25 review of the SqShape parse defect | 1 HOLDS, 2 WRONG, 3 HOLDS. SWEEP COUNT 1 | The circle is NOT real: Init's row 4 quantifies BELOW and squareOmega bypasses it. Finite descent |
-| LJ-1.301 | Build sq by descent from squareOmega | DISPATCHED | LJ-1.300 measured the circle FALSE: Init row 4 quantifies BELOW and squareOmega bypasses Init. Finite descent |
+| LJ-1.301 | Build sq by descent from squareOmega | BUILDS. 186 lines, 241.9 s | WF induction on regularityV. ONE qualification, stated in its own lead: the conclusion is TRUNCATED |
 | LJ-1.302 | Compose the thirty Agree modules | THE TYPE IS WRITABLE AND IT FEEDS | A term of it discharges q' and amb comes out, proved. One dirty module priced at 51 lines; ties are ONE debt |
 | LJ-1.303 | Slim the dispatch scripts, function unchanged | DISPATCHED in-harness, owner named opus | 4,383 lines over four files. The comments record MEASUREMENTS and are not redundancy |
-| LJ-1.304 | Price StepAgree and ApproxAgree at the ambient carrier | DISPATCHED | LJ-1.302 names them the LAST unpriced term on q's route: bounded closure to unbounded, witnesses past a leaf |
+| LJ-1.304 | Price StepAgree and ApproxAgree | BOTH BUILT, ABOUT 190 LINES. BASIS: THE BUILD | q's four named costs are now ALL measured. Neither module exists in src/: they were LJ-1.52's names |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
