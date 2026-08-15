@@ -1214,7 +1214,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.321 | The door: a 2-Constant map Wat to sq | NARROWED. THE DEBT IS ONE PAIRING FUNCTION | A well-order on sq gives the map outright and pullOrder reduces it. The naive map is refuted |
 | LJ-1.324 | Transplant stage-card-upper to CanonInj | REFUTED. THE FIRST INGREDIENT IS THE GOAL | missing-is-goal typechecks with body x, so no work moves. The generic engine survives, tower-blind |
 | LJ-1.325 | Re-price PLAN 0.0 against the restated trophy | MORE BY 600, AND 800 UNDER THE SURVEY | InjCode's four conjuncts are already PROVED in three modules and thrown away at the last step |
-| LJ-1.326 | The 10-line miniature that gates BOTH new debts | DISPATCHED | LJ-1.325 named it: build InjL kappa to P kappa from InjChain's InclGraph, since every member of an ordinal is a subset |
+| LJ-1.326 | The miniature that gates BOTH new debts | BUILDS, 14 LINES, AND THE ADAPTER IS 8 | Debt 1's adapter is MEASURED at absorbs' own site, so its 800 is refuted. The gap is a missing FORMULA |
+| LJ-1.327 | Describe the square law: pairomega needs a FORMULA | DISPATCHED | LJ-1.326 left it as the sole dominating unpriced item. Comp demands eight coded arguments and SquareLaw names none |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | DISPATCHED | LJ-1.320 funds it. No code edit: A1, A2 definitions and internal baselines, then B and C flag arms |
 | LJ-1.323 | Fable RULING: the statement of both trophies | AC UNCHANGED. GCH BECOMES THE INTERNAL EQUALITY | sq leaves, every ambient injection leaves, the conclusion is 2^kappa = kappa-plus in L |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
