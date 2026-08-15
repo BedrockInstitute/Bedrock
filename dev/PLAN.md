@@ -1208,9 +1208,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.315 | Literature for the phi0 slot-role ruling | FORM 1, UNANIMOUS ACROSS FOUR AUTHORS | Form 2 has NO precedent in any source. No formalization faces this, so closeN 14 is a local choice |
 | LJ-1.316 | Literature for the InjData ruling | A DOOR NOBODY TRIED: rec-to-Set, not PT.rec | LJ-1.305 measured the WRONG eliminator. The criterion is a weakly constant endomap, Kraus Theorem 16 |
 | LJ-1.317 | Literature for the typecheck-cost question | THREE MECHANISMS RANKED, RANK 1 NEEDS NO EDIT | agda#5801: syntactic equality goes quadratic on near-identical terms, and one flag tests it |
-| LJ-1.318 | Fable RULING on the phi0 four-line cure | DISPATCHED, workflow, effort max | Owner DELEGATED the ruling to fable 2026-08-15. DD0: one-off, never a standing head choice |
-| LJ-1.319 | Fable RULING on InjData | DISPATCHED, workflow, effort max | Same delegation. Probe, adversarial review and literature go in together; the head rules |
-| LJ-1.320 | Fable RULING on the seconds route | DISPATCHED, workflow, effort max | Same delegation. R-41 is spent, the cost is attributed, and what to fund next is the question |
+| LJ-1.318 | Fable RULING on the phi0 cure | LAND IT, AND IT IS SIX LINES NOT FOUR | The Delta-0 certificate inlines the leaf literals at :116 and :124. Six edits exit 0, four exit 42 |
+| LJ-1.319 | Fable RULING on InjData | NO PRINCIPLE, NO FORK, OPEN THE DOOR | sq-set is GREEN, so rec-to-Set applies and the necessity claim measured the wrong eliminator |
+| LJ-1.320 | Fable RULING on the seconds route | ONE FLAG-ONLY PROBE, FOUR RUNS, THREE MECHANISMS | R-41 CLOSED with the iterate CLASS recorded. RowTies deferred behind a free profile |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
