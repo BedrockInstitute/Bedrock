@@ -4268,6 +4268,42 @@ over-bar masters with a P-y count for each and the void arms;
 `agents/tasks/LJ-1-282/lj-1.282-report.md`, that seal landed.
 Related: [[P-y]], [[P-t]], [[P-l]], [[C-49]].
 
+### C-51. A seal stops the conversion checker walking a formula; it does not stop a `with`-abstraction. Cure that with projections
+
+**Rule:** When a `with`-pattern on a record-returning function exhausts the
+heap, **an `opaque` seal on the formula it consumes will not cure it.** Take
+the fields by projection instead, `fst big` and `fst (snd big)`, and drop the
+`with` entirely.
+
+**The measurement.** `[LJ-1.305]`, 2026-08-15. `with leastOf ... | (m , pm , _)`
+exhausted the 8 GB cap **six times**, at 305, 315, 311, 312, 312 and 314
+seconds, the last inside `stepI`'s successor refutation. **The `opaque` seal of
+`L.Cardinal`'s recorded medicine alone did NOT cure it, MEASURED.** Taking the
+two fields by projection at both sites made the file green in **3 seconds**.
+`agents/tasks/LJ-1-305/lj-1.305-report.md:276-283`.
+
+**Why the seal cannot help, and this is the part that generalises.** P-y prices
+a seal by how many definitions look INSIDE a formula, because a seal stops the
+conversion checker unfolding it. **A `with`-abstraction is a different
+mechanism: it generalises the goal over the scrutinee and rebuilds the clause's
+type around it.** The scrutinee's own cost is not what explodes; the rebuilt
+telescope is. **So a cure aimed at unfolding is aimed at the wrong mechanism.**
+
+**What it costs when it goes wrong.** Six cap exhaustions at about 310 seconds
+each is about 31 minutes of one agent's budget, spent applying a medicine that
+was recorded, correct elsewhere, and inert here. **The seal was KEPT in the
+end**, because it matches the recorded medicine at its own site and costs
+nothing; the point is that it was never the cure.
+
+**What to do.** When a heap wall sits on a `with`, **read the clause before you
+reach for a seal.** If the scrutinee is a record or a Sigma, projections are the
+first thing to try and they are usually two characters longer than the pattern.
+**C-50 is the parent rule: profile before you cure.** This entry names the one
+site where the profile points at a formula and the formula is not the cause.
+
+Related: [[C-50]], [[P-y]], [[P-i]], [[R-40]], [[C-49]].
+
+
 ### R-41. Depth is free and MIXED SPELLING is what costs: state an index in the spelling its proof produces
 
 **Rule:** When a statement's TYPE names a level, an index or a stage, write it

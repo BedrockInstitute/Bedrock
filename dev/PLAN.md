@@ -1195,7 +1195,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.302 | Compose the thirty Agree modules | THE TYPE IS WRITABLE AND IT FEEDS | A term of it discharges q' and amb comes out, proved. One dirty module priced at 51 lines; ties are ONE debt |
 | LJ-1.303 | Slim the dispatch scripts, function unchanged | DISPATCHED in-harness, owner named opus | 4,383 lines over four files. The comments record MEASUREMENTS and are not redundancy |
 | LJ-1.304 | Price StepAgree and ApproxAgree | BOTH BUILT, ABOUT 190 LINES. BASIS: THE BUILD | q's four named costs are now ALL measured. Neither module exists in src/: they were LJ-1.52's names |
-| LJ-1.305 | Untruncate the descent: deliver SqShape | DISPATCHED | LJ-1.301 built the descent but delivers a proposition. This is LJ-1.8's WHOLE remaining gap |
+| LJ-1.305 | Untruncate the descent: deliver SqShape | NEEDS-A-PRINCIPLE: InjData, then GREEN | 322 lines, 4 s. Route 1 CLOSED by countermodel: sq omega is NOT an hProp. sq-initial is unconditional |
 | LJ-1.306 | Port the clean 23 Agree modules generic | 23 OF 23, ZERO CHANGED LINES, 45-LINE SCAFFOLD. DD25 [LJ-1.308] | Five were NOT clean: they name Shape deliveries. Cured at 27 verbatim lines |
 | LJ-1.307 | Are the thirty Agree modules thirty things or one | PARTLY. ONE SHAPE, 15 THINGS, 30 SPELLINGS | Fresh is about 2,150 against 2,619, saving 470. The port is RIGHT, so LJ-1.306 stands |
 | LJ-1.308 | DD25 review of LJ-1.306's zero-changed port | SPLIT. THE ZERO HOLDS, ITS EVIDENCE DID NOT | ProbeCompat checked each row's FIRST field; consumers write the LAST. 26 checks run green |
