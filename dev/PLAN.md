@@ -1211,8 +1211,10 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.318 | Fable RULING on the phi0 cure | LAND IT, AND IT IS SIX LINES NOT FOUR | The Delta-0 certificate inlines the leaf literals at :116 and :124. Six edits exit 0, four exit 42 |
 | LJ-1.319 | Fable RULING on InjData | NO PRINCIPLE, NO FORK, OPEN THE DOOR | sq-set is GREEN, so rec-to-Set applies and the necessity claim measured the wrong eliminator |
 | LJ-1.320 | Fable RULING on the seconds route | ONE FLAG-ONLY PROBE, FOUR RUNS, THREE MECHANISMS | R-41 CLOSED with the iterate CLASS recorded. RowTies deferred behind a free profile |
-| LJ-1.321 | The door: a 2-Constant map Wat to sq | DISPATCHED | LJ-1.319 funds it. Necessary AND sufficient for J1 by trunc-to-Set-equiv, and sq-set is already green |
+| LJ-1.321 | The door: a 2-Constant map Wat to sq | NARROWED. THE DEBT IS ONE PAIRING FUNCTION | A well-order on sq gives the map outright and pullOrder reduces it. The naive map is refuted |
+| LJ-1.324 | Transplant stage-card-upper to CanonInj's pair | DISPATCHED | LJ-1.321 named it and refused to price it by analogy (P-l). A delivered witness-free injection of the wanted shape |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | DISPATCHED | LJ-1.320 funds it. No code edit: A1, A2 definitions and internal baselines, then B and C flag arms |
+| LJ-1.323 | Fable RULING: the natural statement of both trophies | DISPATCHED, workflow, effort max | Owner delegated the STATEMENT itself 2026-08-15, this once, unbound by project rules |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
