@@ -71,6 +71,35 @@ regularityV`. **`[LJ-1.299]`'s CIRCULAR verdict is refuted by construction.**
 **ONE qualification, which that task put in its own lead: the conclusion is
 TRUNCATED**, `∥ sq α ∥₁` rather than the function object `SqShape` needs.
 
+**THE ENDPOINT ESTIMATE, and the owner ruled the one thing it turned on.**
+
+| | lines | basis |
+|---|---:|---|
+| standing today | **32,488** | `ledger.py`, measured from HEAD |
+| of which the GCH wing | 14,099 over 16 masters | same |
+| `q'`'s hand-written part | 470 | four parts, each at a BUILT site |
+| `[LJ-1.8]`'s descent | 186 | `[LJ-1.301]`, built, exit 0 |
+| `[LJ-1.304]`'s two add-ons | 40 | INFERRED, not built |
+| **BEST SINGLE FIGURE** | **about 33,200** | |
+
+**THE OWNER RULED REPLACE, 2026-08-15.** The generic port takes the place of
+the class-specific `Agree` family and the original goes to `archive/`. **That is
+what collapses the band**: the port places about 6,900 lines, and beside the
+original it would have meant about 40,100. **Replacing, it means about 33,200.**
+DD13 governs the archiving and `dev/ARCHIVE.md` owes the record.
+
+**TWO ITEMS ARE NOT IN THAT FIGURE and the larger is the composite's TERM**,
+which has never been written; the other is the truncation, which `[LJ-1.305]` is
+measuring. **So 33,200 is a floor, not a band.**
+
+**AND `[L3.32-T257]`'s BAND IS OVERTAKEN, not merely weak.** Its naive top is
+28,258 and standing is already 32,488. It was one pass by one agent, priced on
+the retired rud route, and a fifth of its band rested on a known weak point.
+
+**THE FIGURE RISES WITH EVERY LANDING, and that is the trap `dev/ledger.toml`
+names in its own words**: the internalization route never proved GCH, so this
+wing IS the number phase 3 must beat. Today added 2,377 lines to it.
+
 **WHAT IS NOT MECHANICAL, and the list is shorter than it was but it is not
 empty.** The owner asked directly and the honest answer is four things:
 

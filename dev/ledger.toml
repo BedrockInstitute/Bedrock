@@ -237,6 +237,23 @@ lines_naive = [25485, 28258]
 lines_calibrated = [29909, 37275]
 lines_source = "[L3.32-T257], one pass, one agent"
 lines_state = "NOT YET CLEAR ENOUGH TO BIND"
+# OVERTAKEN 2026-08-15, and by measurement rather than by opinion. The naive
+# band's TOP is 28,258 and `ledger.py` measures standing at 32,488 from HEAD.
+# [T257] was one pass by one agent, priced on the RETIRED rud route, and its own
+# weak_point above puts a fifth of the band on one pricing.
+#
+# THE ORCHESTRATOR'S ESTIMATE, 2026-08-15, bottom-up from today's built sites:
+# about 33,200. That is standing 32,488 plus 470 for q''s hand-written part
+# ([LJ-1.298], [LJ-1.302], [LJ-1.304], each measured at a site it BUILT), plus
+# 186 for [LJ-1.301]'s descent, plus 40 INFERRED add-ons.
+#
+# IT IS A FLOOR AND NOT A BAND. Two items are outside it: the composite's TERM,
+# which has never been written, and the truncation [LJ-1.305] is measuring.
+#
+# THE OWNER RULED REPLACE on the one question that moved it. The generic Agree
+# port takes the original's place and the original is ARCHIVED (DD13). Kept
+# beside it the figure would be about 40,100, because the port places about
+# 6,900 lines. Replacing, those lines move rather than add.
 lines_weak_point = """
 [T257] prices `carried-sequence` and `blockpowlim-instance` at ZERO for the
 GCH wing, worth 4,238-5,218. [T260] supported that pricing on import-graph
