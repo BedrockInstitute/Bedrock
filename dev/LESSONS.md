@@ -4304,6 +4304,114 @@ site where the profile points at a formula and the formula is not the cause.
 Related: [[C-50]], [[P-y]], [[P-i]], [[R-40]], [[C-49]].
 
 
+### C-52. A sweep's filter names the DISCRIMINATING PROPERTY, never a token and never a family resemblance
+
+**Rule:** When you sweep a tree for a shape, the filter must name the property
+that makes the shape costly or wrong. **A grep for one identifier finds one
+spelling of the property. A grouping by resemblance finds a resemblance.**
+Neither is the property, and both go green over the case that matters.
+
+**MEASUREMENT ONE, a token instead of a class.** `[LJ-1.309]` swept `src/` for
+R-41's costly shape by grepping `sucIter`. **The property is an explicit `sucV`
+chain against ANY numeral iterate, and this tree has TWO iterate channels:**
+`sucIter`, and the library's `#_` at `Constructions.agda:164-166`, **which all
+96 masters name in-fence at 972 occurrences.** The sweep formally missed the
+whole second channel and it missed one real site,
+`src/L/Choice/Name.lagda.md:129-135`. `[LJ-1.311]` found it. **The verdict
+survived only because the `#` ladder happens to sit two rungs lower.**
+
+**MEASUREMENT TWO, a resemblance instead of a property.** `[LJ-1.305]` grouped
+three sites as one debt by the shape that a payload is data.
+`[LJ-1.314]` measured the discriminating property to be that a payload is a
+**PROPOSITION over a WELL-ORDERED carrier**, which `leastOf` demands at
+`src/L/WellOrder/Base.lagda.md:158-161`. **Under the property the three sites
+are TWO debts and one NON-debt:** `src/L/Cardinal.lagda.md:256-258` is coded and
+untruncates today in 24 green lines with no principle. **The resemblance would
+have carried a free repair into a ruling as though it were owed.**
+
+**Why both failures look identical from the outside.** The sweep returns a
+count, the count is small, and a small count reads as a clean tree. **Nothing in
+the output says which cases the filter could not see.** That is why the rule is
+about the filter and not about the diligence.
+
+**What to do.** State the property in words before you write the grep, then ask
+what spells that property in this tree. **Report how many cases a WEAKER filter
+would have returned**, because the difference is the filter's blind spot
+measured rather than assumed.
+
+Related: [[C-42]], [[C-44]], [[C-50]], [[R-41]], [[C-53]].
+
+### C-53. Read a not-charged verdict from the RAW profile output, and know that `Miscellaneous` is the EMPTY account
+
+**Rule:** A verdict that a definition is not charged is read from the profiler's
+own output file. **Never from a report's table, because a report prints a
+selected excerpt and an absence in an excerpt is not an absence.** And when you
+quote a `--profile=definitions` figure, state the **Total**, the
+**`Miscellaneous` share**, and a **same-run charged control**.
+
+**MEASUREMENT ONE, the excerpt.** `[LJ-1.309]` reported an unresolved range of
+0 ms delivered to 522 ms isolated, because a definition did not appear in
+`[LJ-1.292]`'s profile table. **The raw file always charged it 26 ms**,
+`agents/tasks/LJ-1-292/runs/k1.out:26`; the report had printed a selected
+excerpt of a 42-row file. `[LJ-1.311]` reconciled it to about 25 ms by a
+verbatim copy. **The profiler hid nothing. The excerpt did.**
+
+**MEASUREMENT TWO, the instrument.** `Miscellaneous` is the profiler's EMPTY
+account, `showAccount [] = "Miscellaneous"` in Agda 2.8.0's own source. **On
+this project's own runs it is 60.8 percent** (`agents/tasks/LJ-1-292/runs/k1.out:2-3`)
+**and 54.4 percent** (`agents/tasks/LJ-1-309/runs/c1.out:2-3`). **The 2.8.0
+manual page never mentions it.** So more than half of a definitions profile is
+unattributed by construction, and a row's share of the printed rows is not its
+share of the cost. **`--profile=internal` is the activity-side attributor**;
+`[LJ-1.281]` used it and got `Typing.CheckRHS` at 90.7 s of 100.8 s.
+
+**What this does NOT mean.** It does not invalidate the charged rows. A row that
+IS charged is charged, and the two large cures this project landed were both
+found that way. **It means an ABSENCE carries no information until you have read
+the whole file and know what fraction the instrument never attributes.**
+
+**What to do.** Every definitions-profile verdict states Total, the
+`Miscellaneous` share, and a control arm from the same run. **No retroactive
+audit is funded** (`[LJ-1.320]` ruling): the rule binds new measurements.
+
+Related: [[C-52]], [[C-50]], [[C-44]], [[P-y]].
+
+### C-54. A truncation stall at a SET motive is a `2-Constant` obligation before it is a principle
+
+**Rule:** When a proof stalls because an existence arrives as `∥ A ∥₁` and the
+goal is not a proposition, **check whether the goal is a SET before you conclude
+that anything is missing.** `PT.rec` needs a propositional motive. **The library
+also has `rec→Set`, which needs only a weakly constant map into a set**, and
+`trunc→Set≃` makes that condition NECESSARY as well as sufficient. **So at a set
+motive the obligation is exactly a `2-Constant` map, and a stall is a term you
+have not written rather than an axiom the theory lacks.**
+
+**The measurement.** `[LJ-1.305]` recorded that `PT.rec` demands a propositional
+motive and proposed admitting a new principle into a trophy on that basis.
+**That sentence is true of `PT.rec` and false of the library this project builds
+against.** MEASURED at
+`Cubical/HITs/PropositionalTruncation/Properties.agda:181-190`, `:225` and
+`:270-274`, exported at `:268`. **And the goal IS a set:** `sq-set` is green at
+`agents/tasks/LJ-1-319/SqIsSet.agda`, exit 0, 2.01 s. **So the necessity claim
+measured the wrong eliminator, and a proposed axiom became a probe.**
+
+**The general criterion, from the literature.** Kraus, Escardó, Coquand and
+Altenkirch, LMCS 13(1) 2017, Theorem 16: **a type admits `∥X∥ → X` if and only
+if it has a weakly constant endomap.** `dev/literature/truncation-and-selection.md`
+carries the digest.
+
+**What it costs when it goes wrong.** A new assumption in a trophy's telescope,
+permanently, in a project whose first trophy exists to PROVE choice rather than
+assume it. **And the cost is asymmetric: an axiom admitted needlessly is
+expensive and quiet, while a probe that fails costs one file.**
+
+**What to do.** Before claiming that a principle is needed, prove or refute
+`isSet` on the motive. **If it is a set, the report says the proof needs a
+`2-Constant` map, which is a buildable obligation and names its own probe.**
+
+Related: [[C-45]], [[C-36]], [[D-10]], [[C-52]], [[C-38]].
+
+
 ### R-41. Depth is free and MIXED SPELLING is what costs: state an index in the spelling its proof produces
 
 **Rule:** When a statement's TYPE names a level, an index or a stage, write it
@@ -4381,4 +4489,37 @@ alone: **profile first, and expect a low-depth instance to be free.**
 the mechanism; `agents/tasks/LJ-1-289/lj-1.289-report.md`, the landing and the
 paired series with the order reversed; `agents/tasks/LJ-1-283/lj-1.283-report.md`,
 the void seal whose bill was later located.
-Related: [[R-40]], [[R-35]], [[C-50]], [[P-t]], [[P-l]].
+
+**THE SWEEP LINE IS CLOSED, 2026-08-15, and the census is recorded here so
+nobody sweeps it again.** `[LJ-1.309]` swept the tree and `[LJ-1.311]` corrected
+it; the `[LJ-1.320]` ruling closed the line.
+
+**THE CLASS, and it is a class and never a token.** The costly shape is an
+explicit `sucV` chain against ANY numeral iterate. **There are TWO iterate
+channels, not one:** `sucIter`, and the library's `#_` at
+`Constructions.agda:164-166`. **`[LJ-1.309]` grepped only `sucIter` and formally
+missed the whole `#` channel**, which all 96 masters name in-fence at 972
+occurrences. **A sweep names the CLASS.**
+
+**THE SITES, all four, all depth 2.** Three at `src/L/Coding/Key.lagda.md:118-133`
+and one at `src/L/Choice/Name.lagda.md:129-135`, the last at 17 ms delivered.
+**The emitters are the only depth-2 chain sources:** `pr∈Lset-suc` at
+`src/L/Coding/Basic.lagda.md:596-599` and its generic twin `T-pr`, uses
+enumerated at `agents/tasks/LJ-1-311/lj-1.311-report.md:60-65`.
+
+**THE `#` LADDER SITS TWO RUNGS LOWER: 249 ms at depth 3 and 10,903 ms at depth
+4**, against `sucIter`'s 9,286 and 419,218. **So no large prize can hide in that
+channel.**
+
+**VERDICT: DO NOT FUND.** About 0.3 s delivered against a 60.0 s DD24 gap, and
+DD4 value zero: all four sites sit in NEITHER trophy closure. **The half-cure
+moves the cost rather than removing it**, MEASURED by applying the proposed diff
+to a copy: 237 ms migrates to a neighbour at the same depth, total unchanged.
+
+**REOPENING CONDITION, and it is the only one:** a change to `src/` introduces an
+explicit `sucV` chain of depth 3 or more against a numeral iterate, in EITHER
+channel. The gate is a read on a new master that matches both `sucV *( *sucV`
+and an iterate; no checker is funded and the file-level proxy's price is at
+`agents/tasks/LJ-1-309/lj-1.309-report.md:344-368`.
+
+Related: [[R-40]], [[R-35]], [[C-50]], [[P-t]], [[P-l]], [[C-52]].
