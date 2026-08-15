@@ -1,0 +1,17 @@
+--- cycle 1, order CNU ---
+C1 SupplyNewControl.lagda.md 2.01s exit 0 load 4.21 4.85 5.35 -> 4.27 4.85 5.35
+N1 SupplyEnvNew.lagda.md 459.90s exit 0 load 4.27 4.85 5.35 -> 5.90 5.35 5.37
+U1 SupplyFullNew.lagda.md 465.63s exit 0 load 5.90 5.35 5.37 -> 5.31 6.30 5.98
+--- cycle 2, order UNC ---
+U2 SupplyFullNew.lagda.md 463.46s exit 0 load 5.31 6.30 5.98 -> 5.53 5.94 5.90
+N2 SupplyEnvNew.lagda.md 461.57s exit 0 load 5.53 5.94 5.90 -> 4.33 5.08 5.49
+C2 SupplyNewControl.lagda.md 1.88s exit 0 load 4.33 5.08 5.49 -> 4.33 5.08 5.49
+--- cycle 3, order NUC ---
+N3 SupplyEnvNew.lagda.md 460.04s exit 0 load 4.33 5.08 5.49 -> 5.41 5.40 5.48
+U3 SupplyFullNew.lagda.md 467.68s exit 0 load 5.41 5.40 5.48 -> 5.01 5.29 5.39
+C3 SupplyNewControl.lagda.md 1.96s exit 0 load 5.01 5.29 5.39 -> 5.01 5.29 5.39
+
+=== SUMMARY ===
+newcontrol: n=3 mean=1.95s spread=7.1% runs=['2.0', '1.9', '2.0']
+newenv: n=3 mean=460.50s spread=0.4% runs=['459.9', '461.6', '460.0']
+newfull: n=3 mean=465.59s spread=0.9% runs=['465.6', '463.5', '467.7']

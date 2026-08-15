@@ -1,0 +1,7 @@
+# LJ-1.275 CURE A, control arm, FIRST RUN (a warm-up, discarded from the series)
+# command GHCRTS="-A64m -I0 -M8g" agda agents/tasks/LJ-1-275/SupplyNewControl.lagda.md
+# load before 10:49 load averages: 8.34 6.51 6.42
+# load after  10:49 load averages: 8.34 6.51 6.42
+# wall seconds 2.51
+# exit 0
+Checking LJ-1-275.SupplyNewControl (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-275/SupplyNewControl.lagda.md).

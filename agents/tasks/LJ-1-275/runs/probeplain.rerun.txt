@@ -1,0 +1,37 @@
+# module agents/tasks/LJ-1-214/ProbePlain.agda, re-run by [LJ-1.275]
+# GHCRTS -A64m -I0 -M8g
+# command agda --profile=internal agents/tasks/LJ-1-214/ProbePlain.agda
+# load before 11:54  up 1 day, 14:16, 2 users, load averages: 7.47 5.76 5.56
+# started 2026-08-15 11:54:20
+Checking LJ-1-214.ProbePlain (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-214/ProbePlain.agda).
+Total                      124,754ms           
+Miscellaneous                   20ms           
+Typing                       1,178ms (78,338ms)
+Typing.CheckRHS             32,527ms           
+Typing.CheckLHS             27,657ms (27,658ms)
+Typing.OccursCheck          11,663ms           
+Typing.TypeSig               5,310ms           
+Serialization               10,547ms (10,715ms)
+Serialization.Compress          90ms           
+Serialization.BinaryEncode      56ms           
+Serialization.Sort              20ms           
+InterfaceInstantiateFull     9,740ms           
+Deserialization              9,006ms  (9,514ms)
+Deserialization.Compaction     507ms           
+Positivity                   5,241ms           
+DeadCode                         7ms  (5,174ms)
+DeadCode.DeadCodeReachable   5,167ms           
+Parsing                        342ms  (2,520ms)
+Parsing.OperatorsExpr        2,136ms           
+Parsing.OperatorsPattern        42ms           
+Coverage                     2,207ms  (2,208ms)
+Scoping                        177ms    (633ms)
+Scoping.InverseScopeLookup     455ms           
+Termination                      2ms    (375ms)
+Termination.RecCheck           373ms           
+Highlighting                   219ms           
+Import                          28ms           
+Injectivity                     26ms           
+# wall seconds 126.39
+# exit 0
+# load after 11:56  up 1 day, 14:18, 2 users, load averages: 4.49 5.28 5.39

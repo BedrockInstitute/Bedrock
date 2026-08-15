@@ -1,0 +1,36 @@
+# module agents/tasks/LJ-1-275/CondControlToday.lagda.md (today's src/L/Condensation.lagda.md, module renamed)
+# GHCRTS -A64m -I0 -M8g
+# load before 11:57  up 1 day, 14:19, 2 users, load averages: 3.71 4.98 5.28
+# started 2026-08-15 11:57:04
+Checking LJ-1-275.CondControlToday (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-275/CondControlToday.lagda.md).
+Total                      133,213ms           
+Miscellaneous                   26ms           
+Typing                       1,181ms (81,874ms)
+Typing.CheckLHS             31,573ms (31,573ms)
+Typing.CheckRHS             31,504ms           
+Typing.OccursCheck          12,606ms           
+Typing.TypeSig               5,007ms           
+Serialization               21,495ms (21,673ms)
+Serialization.Compress          96ms           
+Serialization.BinaryEncode      59ms           
+Serialization.Sort              20ms           
+InterfaceInstantiateFull    11,575ms           
+Positivity                   5,548ms           
+DeadCode                         7ms  (5,215ms)
+DeadCode.DeadCodeReachable   5,207ms           
+Parsing                        498ms  (2,629ms)
+Parsing.OperatorsExpr        2,091ms           
+Parsing.OperatorsPattern        39ms           
+Coverage                     1,667ms  (1,668ms)
+Deserialization              1,113ms  (1,616ms)
+Deserialization.Compaction     503ms           
+Scoping                        177ms    (625ms)
+Scoping.InverseScopeLookup     447ms           
+Termination                      2ms    (385ms)
+Termination.RecCheck           383ms           
+Highlighting                   314ms           
+Injectivity                     32ms           
+Import                          28ms           
+# wall seconds 135
+# exit 0
+# load after 11:59  up 1 day, 14:21, 2 users, load averages: 4.70 4.79 5.15

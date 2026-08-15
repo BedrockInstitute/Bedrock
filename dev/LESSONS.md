@@ -4145,3 +4145,54 @@ second one closes the hole.
 `case_from_args`; `scripts/dispatch_policy.py:336-382`, the switch and the
 downgrade; `scripts/check-dispatch-policy.py:242`, the rule that is right and
 blind. Related: [[C-43]], [[C-41]], [[C-46]].
+
+### C-49. A heap wall and a check-cost rate can both be properties of the LAYOUT rather than of the content, so re-measure the same bytes somewhere else before you re-plan
+
+**Rule:** An elaboration cost is measured at a SITE. **The same bytes in a
+different module can cost a different number of seconds and can cross or not
+cross the heap cap.** So a wall or a rate that would re-price a route is not
+evidence about the CONTENT until the identical content has been measured in at
+least one other layout. **This is P-l inverted and it is the cheapest experiment
+in the campaign: copy the block into a fresh master and run it.**
+
+**The measurement.** `[LJ-1.266]` priced step 6 inside
+`src/L/Condensation.lagda.md`, a 6,718-line chapter, with a paired three-arm
+rotation. It measured the 362-line env supply at **2.378 s/line, 226x the DD24
+bar**, and the full 805-line block **heap-exhausted at the `-M8g` cap**. Every
+figure re-derives and the verdict was sound.
+
+**`[LJ-1.275]` re-measured the identical content in a NEW MASTER:**
+
+| the same bytes | inside the chapter | in a new master |
+|---|---:|---:|
+| the 362-line env supply | 860.84 s, 2.378 s/line | 458.55 s, **1.267 s/line** |
+| the full 805-line block | **HEAP WALL** | **GREEN, exit 0, 465.59 s, n=3** |
+
+**The wall was a layout artifact.** `agents/tasks/LJ-1-275/runs/series.log:4`,
+`:6` and `:11` record 465.63, 463.46 and 467.68 seconds, all `exit 0`, spread
+0.9 percent, **at the same `-M8g` cap, which was never raised**.
+**`--profile=internal` localizes the 46.7 percent saving to 389.5 s of
+`Typing.CheckRHS` on IDENTICAL proof bodies**, so nothing about the proofs
+changed.
+
+**And the average hid the term** (P-t). **443 of the 805 lines check at 1.09x
+the bar, and the 362-line env block carries 98.9 percent of the seconds.**
+
+**What it would have cost to skip this.** The wall said step 6 could not land
+at all and the rate said landing grows the wing's gap by about 861 s. **The
+truth is that step 6 lands GREEN as a new master, `L.Condensation` gains zero
+lines and zero seconds, and the gap goes to about 517 s on a build that
+passes.** **A phase would have been re-planned around a property of one file.**
+
+**The brief caused it, and that is the reusable half.** The orchestrator's
+brief said to copy the chapter and add the content to the copy, so every arm
+priced one layout and the agent flagged the limit itself. **`[LJ-1.268]` had
+already chosen five NEW masters for Route A-prime for exactly this reason, and
+nobody carried that question across to step 6.** **When one part of a plan has
+answered "where does this land", ask it of every other part.**
+
+**Evidence:** `agents/tasks/LJ-1-275/lj-1.275-report.md`, the re-measurement;
+`agents/tasks/LJ-1-275/runs/series.log`, the raw runs;
+`agents/tasks/LJ-1-266/lj-1.266-report.md`, the sound measurement of the wrong
+layout; `agents/tasks/LJ-1-268/lj-1.268-report.md:45-48`, the question that was
+already asked next door. Related: [[P-l]], [[C-32]], [[C-42]].

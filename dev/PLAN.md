@@ -50,23 +50,37 @@ and all four of its items returned; that record is in the journal.
 
 **THE OPEN WORK, in dependency order.**
 
-**1. STEP 6 IS PRICED IN SECONDS AND THE PRICE IS A WALL.** `[LJ-1.266]`
-measured it inside `src/L/Condensation.lagda.md` with a paired three-arm
-rotation, n=3 cold per arm: **control 137.36 s; the twelve fields plus the env
-closure add 10.3 s at 0.036 s/line; the env supply adds 860.9 s at 2.38
-s/line, which is 226x the DD24 bar; and the FULL block heap-exhausts at
-`-M8g`, so it does not typecheck at the standard cap at all.** **The 60.0 s
-gap does not shrink on the landing day. It grows by about 861 s, if the
-landing is possible.**
+**1. STEP 6 IS LANDABLE, GREEN, AT THE STANDARD CAP, AND THE HEAP WALL WAS A
+LAYOUT ARTIFACT.** `[LJ-1.266]` measured step 6 INSIDE
+`src/L/Condensation.lagda.md`, because my brief told it to, and got 2.38 s/line
+for the env supply and a HEAP WALL on the full block. `[LJ-1.275]` re-measured
+the identical content in a NEW MASTER and the wall is gone.
 
-**THE MEASUREMENT PRICES ONE LAYOUT AND MY BRIEF CHOSE THAT LAYOUT.** It told
-the agent to copy the chapter and add the content to the copy, so every arm
-elaborates step 6 inside 6,718 lines. **`[LJ-1.268]` chose five NEW masters for
-A-prime precisely so no over-the-bar master gains a line, and nobody asked that
-question of step 6.** **`[LJ-1.275]` is measuring the new-master arm now.**
-**Until it returns, the 2.38 is a measurement of a layout and not of the
-content** (P-l inverted). **The owner's ruled option C is also still unapplied,
-so the chapter under measurement is the UNCURED one** (C-32).
+| the same content | inside the chapter | in a new master |
+|---|---:|---:|
+| the 362-line env supply | 860.84 s, **2.378 s/line** | 458.55 s, **1.267 s/line** |
+| the full 805-line block | **HEAP WALL at `-M8g`** | **GREEN, exit 0, 465.59 s, n=3** |
+
+**I re-derived the green runs from `agents/tasks/LJ-1-275/runs/series.log:4`,
+`:6` and `:11`: 465.63, 463.46 and 467.68 seconds, all `exit 0`, spread 0.9
+percent, at loads of 5 to 6 and the `-M8g` cap never raised.**
+**`--profile=internal` localizes the 46.7 percent saving to 389.5 s of
+`Typing.CheckRHS` on IDENTICAL proof bodies.**
+
+**P-t is answered sharply: 443 of the 805 lines check at 1.09x the bar, and the
+362-line env block carries 98.9 percent of the seconds.** So the expensive term
+is named and it is small.
+
+**THE LANDING CONSEQUENCE.** Step 6 lands as a NEW MASTER. **`L.Condensation`
+gains zero lines and zero seconds.** The wing's gap goes from 60.0 s to about
+517 s **on a build that is GREEN**, rather than about 924 s on a build that
+heap-exhausts. **`[LJ-1.266]`'s arithmetic HOLDS and its verdict was sound; the
+layout was mine.**
+
+**`[LJ-1.275]` also ran the reversal `[LJ-1.266]`'s design skipped**, and
+measured the position effect at under 1 percent, seven times too small to
+explain the fact arm's 7.5 percent. **The number survives the test its own
+design argued away.**
 
 **2. The supply chain for the satisfaction layer.** `[LJ-1.172]` built steps 1
 to 5 and REFUTED step 6 at the join. `[LJ-1.173]` swept the refutation to **21
@@ -98,13 +112,20 @@ delivered. **Two sub-blocks are NOT landable**, A5 row 3 and A6, both on the
 same stale import that an orchestrator file move broke; the cure is to re-site
 both probes onto the landed A2 master.
 
-**4. The wing's seconds have a LOCATION, and the cure is the owner's call.**
-`[LJ-1.214]` measured that the telescope component at `Deserialization` carries
-**7,925 of 8,236 ms, 96 percent**. All three cheap levers measured void:
-sealing moves 83 ms, emptying the numeral content moves 47 ms the WRONG way,
-and instantiation is 0.9 percent. **Removing the component would recover the
-8.2 s and restore 21 fields that were FALSE before `[LJ-1.173]` cured them.**
-So it is a design question and not an edit.
+**4. OPTION C'S TARGET SHRANK BY 8x WHILE NOBODY WAS LOOKING, AND THE OWNER'S
+RULING RESTS ON THE OLD FIGURE.** `[LJ-1.214]` measured the telescope component
+at `Deserialization` carrying **7,925 of 8,236 ms, 96 percent**, and the owner
+ruled option C on that. **`[LJ-1.275]` re-ran it today and the term is 1,113
+ms**, at `agents/tasks/LJ-1-275/runs/condcontroltoday.profile.txt:25`.
+
+**The old probe still reproduces at 9,006 ms, so `[LJ-1.214]` was right when it
+measured.** **What changed the chapter is commit `3460a19 [LJ-1.260]`, the
+numeral premise, which I landed.** **C-32 fired and nobody re-ran the gate.**
+
+**So option C now targets a 1.1-second term, not an 8.2-second one**, and
+against step 6's 861-second marginal the component is 241 ms, 0.028 percent.
+**The ruling is not wrong; its basis moved.** It is listed below for the owner
+to re-rule, and nothing has been applied.
 
 **5. THE NAMED-SLOT REFACTOR, REGISTERED AND WAITING ON A CONDITION, NOT ON A
 MOOD.** `[LJ-1.269]` scouted it and every figure below is MEASURED at commit
@@ -176,6 +197,12 @@ which both LANDED.** The law is `dev/LESSONS.md` **C-46**.
 
 **WHAT IS WAITING ON THE OWNER, and none of it blocks the six above.**
 
+- **OPTION C, RULED ON A FIGURE THAT MOVED.** The owner ruled `先C` when the
+  telescope component carried 8.2 s. **`[LJ-1.275]` measured it at 1,113 ms
+  today**, because `[LJ-1.260]`'s numeral premise changed the chapter under it.
+  **Against step 6's marginal it is 241 ms, 0.028 percent.** **Nothing has been
+  applied and nothing is blocked**; the question is whether a 1.1-second term
+  is still worth a design change that makes 21 cured fields false again.
 - **DD4 against DD24.** A cure in shared machinery made every master faster and
   the ratio WORSE, 1.56x to 1.91x, because the AC side gained 41.7 percent and
   the wing 7.9. **It is a property of the bar, not an accident of that edit.**
@@ -906,8 +933,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.261 | The finite-supremum merge | BUILDS. finSetK is SUPPLIED, 3 consK CLOSE | 148 lines, 48 for the merge against union's 52. The first attempt walled and the cure is recorded |
 | LJ-1.262 | The DD25 review LJ-1.225 never got | UPHELD BUT MISATTRIBUTED | Ten numbers re-derive; three carried claims are FALSE. Devlin's PER-TOWER and the port's ZERO are two axes |
 | LJ-1.263 | Land the three L-rows into Key.lagda.md | ALL THREE LANDED. THE MASTER IS GREEN | Three re-runs import the master's versions and all exit 0, so this is a landing and not a copy |
-| LJ-1.266 | Step 6's SECONDS inside Condensation | ABOVE, NOT CLOSE. HEAP WALL. DD25 [LJ-1.275] | Fields 0.036 s/line, env supply 2.38, 226x the bar. The full block will not typecheck at -M8g |
-| LJ-1.275 | DD25 review of LJ-1.266's heap wall | DISPATCHED in-harness | It appended step 6 INSIDE the 6,718-line chapter. Nobody tested a new master, and LJ-1.268 chose new masters for A-prime |
+| LJ-1.266 | Step 6's SECONDS inside Condensation | ABOVE. HEAP WALL. DD25 [LJ-1.275] UPHELD | Sound on every number; the LAYOUT was my brief's. In a new master the wall goes and the rate halves |
+| LJ-1.275 | DD25 review of LJ-1.266's heap wall | HOLDS, BUT THE WALL IS A LAYOUT ARTIFACT | Full block GREEN in a new master, 465.59 s, exit 0. Env rate 2.378 to 1.267. Option C now targets 1.1 s |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
 | LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |
