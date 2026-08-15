@@ -279,6 +279,37 @@ is measured: `[LJ-1.225]` mixed the two axes and called a true statement FALSE,
 and `[LJ-1.272]` measured the same shape in `[LJ-1.258]` and `[LJ-1.260]`,
 which both LANDED.** The law is `dev/LESSONS.md` **C-46**.
 
+**7. `[LJ-1.8]`'s BLOCKER CHANGED TODAY AND IT IS NOT WHAT ITS ROW SAID.** The
+row read「planned. Needs `[LJ-1.7]`」and that was written before the statement
+existed. **The statement is now LANDED**, `src/L/GCH.lagda.md`, and
+`[LJ-1.286]` discharged one of its two hypotheses. **ONE remains: `sq :
+SqShape` at `src/L/GCH.lagda.md:80`.**
+
+**AND IT IS NOT MERELY UNPROVED. `[LJ-1.286]` measured the gap exactly and two
+of its three missing parts are FALSE on `SqShape`'s own domain.** The delivered
+uniform law is `via-col-square` at `src/L/Ordinal/SquareLaw.lagda.md:960`, whose
+hypothesis `Init` is a four-part conjunction; `SqShape` supplies only `IsOrd`:
+
+| `Init α` component | `SqShape` gives it |
+|---|---|
+| `IsOrd α` | YES |
+| `⟨ ω ∈ˢ α ⟩`, ω a STRICT member | **NO, and FALSE at α = ω** |
+| successor-closed, so α is a LIMIT | **NO, and FALSE at every successor** |
+| α's index injects into no infinite member's square | NO |
+
+**`SqShape` quantifies over every ordinal outside ω, which INCLUDES ω itself
+and every successor.** `∈-irrefl` refutes `⟨ ω ∈ˢ ω ⟩`, and the tree already
+records that at `src/L/InjChain.lagda.md:104`, **which is why `[LJ-1.279]`'s row
+5 rebuilt the base at ω from `InitialCore` rather than calling
+`via-col-square`.**
+
+**SO THE FORK IS REAL AND IT IS THE OWNER'S.** Either prove the square law at
+`SqShape`'s stated generality, which nothing has priced, or **re-type
+`SqShape`** so its domain matches a law the tree can supply. **The second is
+cheaper and it changes the trophy's statement, so I will not choose it.**
+`[LJ-1.293]` is attacking `[LJ-1.7]`'s last parameter now; this is the other
+half of the terminus and it needs a ruling before it can be dispatched.
+
 **WHAT IS WAITING ON THE OWNER, and none of it blocks the six above.**
 
 - **THE `premises` GATE IS RED AND I DID NOT SILENCE IT.** **Twelve briefs carry
@@ -1065,7 +1096,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.181 | DD25 review of LJ-1.165's stop on the crossing face | UPHELD, BY TWO HEADS | Both re-derived the citations at the pinned commit. The sibling build is aimed at the RIGHT term |
 | LJ-1.182 | DD25 review of LJ-1.162's NO-GO on price | UPHELD | It re-derived the 125 lines from the PROBE, not from the report's account of the probe |
 | DD25-GAP | Orchestrator audit: DD25 was not followed | SEVEN TRIGGERS MISSED | LJ-1.55, 1.56, 1.59, 1.60, 1.61, 1.65, 1.66 all triggered and none was reviewed. I invented a MEASURED-class exemption DD25 does not grant |
-| LJ-1.8 | Build: assemble L models GCH | planned | The measuring trophy. Needs LJ-1.7. ARCHIVE: CardinalPredicates, 399 lines, PORTABLE per the LJ-1.1 recon |
+| LJ-1.8 | Build: assemble L models GCH | STATEMENT LANDED; ONE HYPOTHESIS BLOCKS THE PROOF | sq : SqShape, and LJ-1.286 measured that the delivered square law CANNOT supply it. Open work 7 |
 | LJ-1.9 | Quality audit: the wing's ratio AND its net removable lines | ANSWERED: 1.70x AND 83 | LJ-1.218 measured both, LJ-1.222 cut 695 to 83. Ledger carries 83; 64 of them stay unaudited |
 | LJ-2.0 | Re-price the owed evidence: T257's weak point and T261's probe | planned | Gates LJ-2.5. LJ-1.11 F4 adds: price ONE bounded op-clause x16, since 470-610 covers only the 6 structural |
 | LJ-2.1 | MEASURE the internalization double trophy, lines and cold seconds | planned | Records measured, LJ-1.1's projection and LJ-1.9's removable together. Line benchmark is the SMALLER. C-12 |
