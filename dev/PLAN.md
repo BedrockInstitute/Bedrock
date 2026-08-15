@@ -988,7 +988,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.276 | LAND step 6 as a new master | LANDED GREEN, 833 LINES, 482.73 s, 55.1x THE BAR | L.Condensation re-runs at 137.60 s against 137.36: zero lines, zero seconds, PROVEN at the landing |
 | LJ-1.277 | LAND A2, the coding injection | LANDED GREEN, 238 LINES, 0.66x THE BAR | 1.66 s cold, n=3. Re-run imports it and exits 0. The 238 against the priced 186 is a CALIBER gap, not an overage |
 | LJ-1.278 | LAND A1, A3 and A4 as src/L/Cardinal.lagda.md | DISPATCHED | A2 is landed so wave 1 is open. A4 is the SECOND of the three masters gch_root needs; only A7 would remain |
-| LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | DISPATCHED | Row 5 is independent and row 1 needs A2, which landed. LJ-1.264 measured row 1 at exactly 160 and NEEDED |
+| LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
 | LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |
