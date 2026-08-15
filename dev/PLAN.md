@@ -1202,8 +1202,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.309 | Sweep the tree for R-41's full-chain shape | THREE SITES, DEEPEST IS DEPTH 2. DD25 [LJ-1.311] | 96 masters searched, 90 cannot hold it. The depth-4 prize is NOT there. DO NOT FUND |
 | LJ-1.311 | DD25 review of LJ-1.309's sweep | RE-DISPATCHED, first launch took the wrong harness | The adversarial path picked codex, not pi. That agent sat 2,762 s on a hook modal writing nothing |
 | LJ-1.310 | Name every step of the composite's TERM | 23 STEPS, TEN UNBUILT, PLUS A REFUTATION | About 175 hand-written lines outside the 470. Row 11 may refute the composite's type. INFERRED |
-| LJ-1.312 | Settle phi0's slot roles by machine | DISPATCHED | LJ-1.310 reads the two free slots as ordinal and BOUND, not value and ordinal. If right, q' asks for what phi0 does not say |
-| LJ-1.313 | Fable 5 review of LJ-1.312's phi0 verdict | PENDING, waits for LJ-1.312 | Owner authorized fable 2026-08-15 for THIS review. DD0: a one-off instruction is never a standing head choice |
+| LJ-1.312 | Settle phi0's slot roles by machine | REFUTED, MEASURED. THE TYPE IS WRONG. DD25 [LJ-1.313] | A verbatim LevelHood refuses to equal the cured one, exit 42. Devlin's shape is the spec |
+| LJ-1.313 | Fable 5 review of LJ-1.312's phi0 verdict | DISPATCHED | Owner authorized fable 2026-08-15 for THIS review. DD0: a one-off instruction is never a standing head choice |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
