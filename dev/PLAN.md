@@ -1087,7 +1087,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.287 | Cure sucV-in, EnvSupply's 99.2 pc | 480.25 s TO 4.10 s FOR THREE LINES | 438 s was an IDENTITY function: depth is free, the MIXED spelling of the level costs. Three diagnoses refuted |
 | LJ-1.289 | LAND the sucV-in respelling | LANDED. 495.23 s TO 6.65 s, MINUS 488.59 | 56.5x the bar to 0.76x, for five lines. The wing's worst master is now UNDER the bar. Law R-41 |
 | LJ-1.290 | Categorize scripts into subdirectories | SPLIT IT, THE MOVE IS NOT THE VALUE | 24 scripts hard-code their depth. A move makes two never-commit gates report clean over 55 files, exit 0 |
-| LJ-1.291 | Repair the 24 depth-anchored scripts | DISPATCHED, first on glm-5.3 | Reproduced: the same gate a level deeper says clean over 55 files instead of 2,369, exit 0 both times |
+| LJ-1.291 | Repair the 24 depth-anchored scripts | 26 REPAIRED. THE DEPTH TEST PASSES | Repaired gate reports 2,388 from both depths; the pre-repair copy reports 2 from the deeper one, exit 0 |
 | LJ-1.292 | Sweep Key.lagda.md for the mixed spelling | DISPATCHED | C-42's sweep of LJ-1.287. Same shape at depths 1 to 3, never profiled, and the shape just returned 476 s at one site |
 | LJ-1.293 | Discharge q, and with it amb | DISPATCHED | LJ-1.7's ONE open parameter. q is Graph 0 1 = embed phi0, relayed by every application and never proved. Phase blocker |
 | LJ-1.294 | Is an infinite cardinal a limit ordinal | QUEUED | The ONE real gap in Init at the use site. ord-tri covers omega-membership; nothing proves limit-hood. Unblocks LJ-1.8 |
