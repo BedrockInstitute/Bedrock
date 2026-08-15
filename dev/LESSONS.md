@@ -4034,3 +4034,55 @@ count; `agents/tasks/LJ-1-262/lj-1.262-report.md` section 7, which found the
 two axes at one site; `scripts/ledger.py:50` and `:404-407`, the axis in code;
 `dev/ledger.toml` `[reuse]`, which says why the report cannot run.
 Related: [[C-42]], [[C-44]], [[C-43]].
+
+### C-47. A brief that welds a true claim to a false one into ONE proposition loses the true half when the agent rejects the false half
+
+**Rule:** When a brief frames a decision, **each branch must carry exactly one
+claim.** A branch that joins an OPERATIONAL claim to a MATHEMATICAL one reads
+as a single proposition, so an agent that refutes either half discards both.
+**The agent is not wrong to do this. The brief made the two inseparable.**
+
+**And a requirement that a TOOL enforces is read from the TOOL, never from a
+comparable.** Pointing an agent at a delivered example and asking it to infer
+the requirement invites it to copy the example's incidental properties.
+
+**The measurement.** `[LJ-1.273]` was asked when `dev/ledger.toml`'s
+`gch_root` can be declared, which is when DD4's own report starts working.
+Its brief offered two branches
+(`agents/tasks/LJ-1-273/LJ-1.273.md:35-39`):
+
+> If A7 IS the endpoint, then A-prime's landing declares `gch_root` ... **The
+> wait is short.**
+> If `[LJ-1.8]` is the endpoint and A7 is only its STATEMENT, then ...
+> **the wait is the whole remaining phase.**
+
+**The first branch welds a FALSE mathematical claim to a TRUE operational
+one.** A7 is not the endpoint: `agents/tasks/LJ-1-236/ProbeLJ1236A7.agda:165-171`
+builds one inhabited site and supplies neither `sq` nor `absorbs`. **But
+A-prime's landing DOES declare `gch_root`.** The agent refuted the mathematics,
+took the second branch as written, and returned about **1,760 lines**.
+
+**The true half was worth six times the answer it returned.** `[LJ-1.274]`
+measured the requirement in the code instead: `scripts/ledger.py:404-446`
+reads `gch_root` as a PATH, checks membership in `countable_masters()`, and
+computes an import closure from `head_text`. **It never reads a proof term,
+never reads a type, and never calls Agda.** So the declaration needs A2, A4
+and A7, which `agents/tasks/LJ-1-268/lj-1.268-report.md:23-38` lands as waves 0
+to 2 at **262 lines**, about one sixth of the 1,760.
+
+**The second defect compounded the first.** The same brief said to read
+`ac_root` and infer what shape an endpoint is
+(`agents/tasks/LJ-1-273/LJ-1.273.md:52-56`), while citing `scripts/ledger.py`
+only for DD4's axis. **So the brief pointed at the comparable for the
+requirement and at the code for something else.** The target dutifully
+inferred from the comparable that `gch_root` needs a proof term, because
+`ac_root` happens to name a module that contains one.
+
+**What to do.** Split every branch until each carries one claim, and let the
+agent take one half and refuse the other. **When a requirement has a tool, name
+the tool and the function, and say: read what it actually reads.**
+
+**Evidence:** `agents/tasks/LJ-1-274/lj-1.274-report.md`, the review that found
+it; `agents/tasks/LJ-1-273/LJ-1.273.md:35-39` and `:52-56`, the two defective
+sections, which are mine; `scripts/ledger.py:404-446`, what the tool reads.
+Related: [[C-39]], [[C-43]], [[C-46]].

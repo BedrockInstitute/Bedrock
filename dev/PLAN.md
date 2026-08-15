@@ -153,9 +153,23 @@ in `src/` yet, so there is nothing to share WITH.**
 
 **So every DD4 figure to date is on a PROXY axis**, either Devlin's
 Def-against-J or the port's L-against-ambient, and that is not a defect in any
-report. **`dev/ledger.toml` says `gch_root = ""` and that `[LJ-1.8]` lands the
-first; `[LJ-1.8]` needs `[LJ-1.7]`.** **So DD4 gets its first real measurement
-on the day the GCH endpoint lands, and not before.** **The cost of the proxies
+report.
+
+**AND THE DAY IS MUCH SOONER THAN THE PLAN SAID.** `[LJ-1.273]` priced it at
+about 1,760 lines and `[LJ-1.274]` measured that WRONG in the code.
+**`scripts/ledger.py:404-446` reads `gch_root` as a PATH, checks membership in
+`countable_masters()`, and computes an import closure from `head_text`. It
+never reads a proof term, never reads a type, and never calls Agda.** **So the
+declaration needs a committed `.lagda.md` under `src/` that is not a catalog,
+and nothing else.** **That is A2, A4 and A7, which `[LJ-1.268]` lands as waves
+0 to 2 at 262 lines**, or 316 as the order actually lands them with A1.
+**About one sixth of the 1,760, and `[LJ-1.8]` is NOT on the path.**
+
+**What the report would print that day, computed by `[LJ-1.274]`: AC 73
+masters and 17,197 lines, GCH 48 and 8,731, SHARED 43 and 7,596, 41.4 percent
+of 18,332.** **It UNDERSTATES, because a hypothesis carries no import edge and
+A7 states `SqShape` and `AbsorbsShape` as hypotheses; the understatement sits
+in the GCH total and not in the intersection.** **The cost of the proxies
 is measured: `[LJ-1.225]` mixed the two axes and called a true statement FALSE,
 and `[LJ-1.272]` measured the same shape in `[LJ-1.258]` and `[LJ-1.260]`,
 which both LANDED.** The law is `dev/LESSONS.md` **C-46**.
@@ -900,8 +914,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.270 | Does the Coq framework bear on GCH | NO. THE SILENCE HOLDS, MEASURED | MetaZF has no Formula, no binder, no satisfaction across 20 files. Every AC win is an axiom removed |
 | LJ-1.271 | The named-slot macro layer | REGISTERED, NOT DISPATCHED. TRIGGER: LJ-1.268 wave 3 lands | Then price the functions, the seconds, the refactor and the rewrite. The owner rules the switch |
 | LJ-1.272 | Label every DD4 figure with its axis | 12 OF 62 UNLABELLED, AND A THIRD AXIS | DD4's own axis is AC-against-GCH, fixed in ledger.py:50. Its report has NEVER run: there is no GCH root |
-| LJ-1.273 | What must land before gch_root can be declared | A7 IS ONLY THE STATEMENT. ABOUT 1,760. DD25 [LJ-1.274] | Band 1,660 to 1,960. The wait is the rest of the phase, not the next landing |
-| LJ-1.274 | DD25 review of LJ-1.273's 1,760 | DISPATCHED in-harness | Also the correction: LJ-1.272 and LJ-1.273 took the off-peak head inside the peak window, and the clock says otherwise |
+| LJ-1.273 | What must land before gch_root is declarable | A7 IS ONLY THE STATEMENT, BUT THE 1,760 IS WRONG. DD25 [LJ-1.274] | My brief welded a true operational claim to a false one. C-47 |
+| LJ-1.274 | DD25 review of LJ-1.273's 1,760 | WRONG. gch_root NEEDS 262 LINES, NOT 1,760 | ledger.py:404-446 reads a PATH and an import closure, never a proof. The day is A7's landing day |
 | LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
 | LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |

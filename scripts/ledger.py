@@ -428,6 +428,25 @@ def reuse_report(data: dict, files: list[str], sizes: dict[str, int]) -> list[st
             "working that day."]
     if not ac_root:
         return out + ["    reuse.ac_root is not declared."]
+    # A DECLARED ROOT THAT IS NOT COMMITTED YET READS AS AN EMPTY FILE, NOT AS AN ERROR.
+    #
+    # `import_graph` reads `head_text`, which is `git show HEAD:<path>` and returns "" when
+    # the path is not in HEAD. A root that is tracked and STAGED but not committed
+    # therefore contributes no import edges, and the closure collapses to the root alone at
+    # zero lines. The report then prints `GCH closure 1 masters 0 lines` and exits 0, which
+    # reads as a measurement rather than as a missing commit.
+    #
+    # Found by [LJ-1.274] on 2026-08-15, which measured that `gch_root` needs only a
+    # committed path plus an import closure and never a proof term. That makes the day of
+    # declaration much earlier than the plan assumed, and it makes this trap much easier to
+    # walk into: the natural move on landing day is to declare the root in the same change
+    # that adds the master.
+    for name, root in (("ac_root", ac_root), ("gch_root", gch_root)):
+        if not head_text(root).strip():
+            return out + [
+                f"    reuse.{name} is declared as {root}, and that path is EMPTY at HEAD.",
+                "    A staged file is not a committed one, and the closure would read",
+                "    zero lines rather than fail. Commit the master, then read this."]
     graph = import_graph(files)
     ac, gch = closure(graph, [ac_root]), closure(graph, [gch_root])
     shared = ac & gch
