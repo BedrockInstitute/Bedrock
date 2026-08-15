@@ -1226,7 +1226,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.337 | The successor-or-limit dichotomy | DELIVERED, AND ONE BAND IN GIVES THE CONCLUSION OUT | sucV injectivity was live under a reversed name. sq-below is 90 lines, consumer diff EMPTY |
 | LJ-1.339 | Sweep L.Choice.Stage | TEN OF 21 FAIL A SEARCH, AND THE CAUSE IS TRIAGE | The grep RETURNED the term at hit 55 of 59 and the report called every hit a different subject. Law C-57 |
 | LJ-1.340 | Write the mu apparatus generic | SAVES 10, ZERO SECONDS, ZERO NEW IMPORTS, AN EDGE RETIRED | All 29 lines are shared by construction; seals cannot be, so 54 was the attackable half |
-| LJ-1.342 | Land the generic mu form, prose in three languages | DISPATCHED | LJ-1.340 built it and reproduced all nine delivered signatures character for character, but wrote no trilingual prose |
+| LJ-1.342 | Land the generic mu form | LANDED, MINUS 11, 12 CONSUMERS GREEN | It refused the Japanese with a measurement: src/ is bilingual by Makefile and STYLE-i18n, and DD19 blocks eight terms |
 | LJ-1.336 | Wave 2 of the port: the dirty seven | 7 OF 7, 0 OF 838 CHANGED. ONE-DEBT REFUTED | The second site reuses ZERO of the first and needs a different supplier: downward facts against upward |
 | LJ-1.338 | A THIRD tie site | 327, MEASURED AT THREE SITES, NOT EXTRAPOLATED | The third site is the UNION site and CONTAINS the other four. And a THIRD kind of debt: construction |
 | LJ-1.341 | Are envK and defPairK TRUE | FALSE. THE TYPES ARE EMPTY, TWO MODULES ARE VACUOUS | Instantiate z with the bound itself and regularity refutes the cycle. The repair's hypothesis is FREE |

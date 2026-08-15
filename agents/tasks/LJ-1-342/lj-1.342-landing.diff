@@ -1,0 +1,373 @@
+--- a/src/L/Choice/Stage.lagda.md
++++ b/src/L/Choice/Stage.lagda.md
+@@ -141,91 +141,53 @@
+ ```
+ 
+ <!--en-->
+-## A first appearance is a successor
++## The predecessor of a least stage
+ <!--zh-->
+-## 首次现身处是后继
++## 最小阶段的前一阶段
+ <!--/-->
+ 
+ <!--en-->
+-Take a member of the cell that has appeared by the least stage. Membership in a
+-stage is membership in the definable subsets of some earlier stage, and the
+-successor identity says those definable subsets are the next stage; so that
+-member has already appeared one stage above the earlier one, and the cell is
+-already met there. Minimality forbids that stage from being strictly below the
+-least one, and a member's successor cannot overshoot: it belongs to the least
+-stage or it *is* it. The first case is the one minimality just refuted, so the
+-second holds, and the least stage is a successor.
+-
+-The refuted case is a named helper with its conclusion written down. That is the
+-discipline the stages chapter set for every split coming out of trichotomy, and
+-the split here is one: `suc∈or≡`{.Agda} is a comparison in disguise.
+-<!--zh-->
+-取该格中一个到最小阶段为止已现身的成员。属于一个阶段，就是属于某个更早阶段的可定义子集，而后继恒等式说那些可定义子集就是下一个阶段；故那个成员在那个更早阶段之上一级就已现身，该格在那里就已被相交。极小性禁止那个阶段严格低于最小阶段，而成员的后继又不会越过头：它或属于最小阶段，或**就是**最小阶段。前一种情形正是极小性刚刚反驳的，故后一种成立，于是最小阶段是后继。
+-
+-被反驳的那一支写成写明结论的具名辅助件。这是阶段那一章为每个出自三歧的分情形定下的纪律，而此处的分情形正是其一：`suc∈or≡`{.Agda} 是乔装的比较。
+-<!--/-->
+-
+-```agda
+-IsPredOf : S → S → Type (ℓ-suc ℓ)
+-IsPredOf σ δ = IsOrd δ × (sucV δ ≡ σ)
+-
+-private
+-  below-case : (u σ δ : S) → isLeastOrd (meets u) σ → IsOrd δ
+-             → ⟨ meets u (sucV δ) ⟩ → ⟨ sucV δ ∈ˢ σ ⟩ → sucV δ ≡ σ
+-  below-case u σ δ least ordδ m s∈σ =
+-    Empty.rec (least (sucV δ) (suc-ord ordδ) m s∈σ)
+-
+-  same-case : (u σ δ : S) → sucV δ ≡ σ → sucV δ ≡ σ
+-  same-case u σ δ e = e
+-
+-meet-suc : (u σ : S) → IsOrd σ → ⟨ meets u σ ⟩ → isLeastOrd (meets u) σ
+-         → ∥ Σ[ δ ∈ S ] IsPredOf σ δ ∥₁
+-meet-suc u σ ordσ m least = PT.rec squash₁ atMember m
+-  where
+-  atCarve : (z : S) → ⟨ z ∈ˢ u ⟩
+-          → Σ[ δ ∈ S ] (⟨ δ ∈ˢ σ ⟩ × ⟨ z ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+-          → Σ[ δ ∈ S ] IsPredOf σ δ
+-  atCarve z z∈u (δ , (δ∈σ , z∈𝒟ₒδ)) = δ , (ordδ , suc≡σ)
+-    where
+-    ordδ : IsOrd δ
+-    ordδ = mem-ord {A = σ} ordσ δ δ∈σ
+-    metAtSuc : ⟨ meets u (sucV δ) ⟩
+-    metAtSuc = ∣ z , (z∈u
+-      , subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (Lset-suc δ)) z∈𝒟ₒδ) ∣₁
+-    suc≡σ : sucV δ ≡ σ
+-    suc≡σ = Sum.rec (below-case u σ δ least ordδ metAtSuc) (same-case u σ δ)
+-      (suc∈or≡ δ σ ordδ ordσ δ∈σ)
+-
+-  atMember : Σ[ z ∈ S ] (⟨ z ∈ˢ u ⟩ × ⟨ z ∈ˢ Lset σ ⟩)
+-           → ∥ Σ[ δ ∈ S ] IsPredOf σ δ ∥₁
+-  atMember (z , (z∈u , z∈Lσ)) = PT.map (atCarve z z∈u) (Lset-out σ z z∈Lσ)
+-```
+-
+-<!--en-->
+-## The stage a first appearance is defined over
+-<!--zh-->
+-## 首次现身所依据的那个阶段
+-<!--/-->
+-
+-<!--en-->
+ A successor determines what it succeeds, at least among ordinals. Compare a
+ candidate predecessor with another: each belongs to the successor of the other,
+ so each is a member of the other or equal to it, and two ordinals cannot be
+ members of each other, since transitivity would then make one a member of
+-itself. So being the predecessor of a given ordinal is a proposition, and the
+-predecessor of the least stage may be extracted from the merely-existing one the
+-previous section produced.
++itself. So being the predecessor of a given ordinal is a proposition, which is
++what lets a merely-existing predecessor be read as a definite one.
+ 
+-That extraction is what makes `defStage`{.Agda} a function: the *definition
+-stage* of a cell, the stage over which the cell's first members are written. It
+-is sealed with its two properties beside it, as `μ`{.Agda} was.
++That a least stage has a predecessor at all is the argument this chapter was
++written for, and it uses nothing about cells. Take anything that has appeared by
++the least stage at which some property of ordinals holds. Membership in a stage
++is membership in the definable subsets of some earlier stage, and the successor
++identity says those definable subsets are the next stage; so the thing has
++already appeared one stage above the earlier one, and the property already holds
++there. Minimality forbids that stage from being strictly below the least one,
++and a successor cannot overshoot: it belongs to the least stage or it *is* it.
++The first case is the one minimality just refuted, so the second holds, and the
++least stage is a successor. The refuted case is a named helper with its
++conclusion written down: that is the discipline the stages chapter set for every
++split coming out of trichotomy, and `suc∈or≡`{.Agda} is a comparison in
++disguise.
++
++Since the property is never read, it is a parameter, and the argument is written
++once for every instance of the least-ordinal operator. `Carved`{.Agda} is the
++datum it runs on: an ordinal below the least stage whose successor already has
++the property. `carveAt`{.Agda} produces that datum, by reading a member out of
++the least stage and renaming the carve to a successor; `predOf`{.Agda} consumes
++it and closes the truncation on the uniqueness above. They are halves of one
++operation rather than two operations, because `carveAt`{.Agda} builds exactly
++what `predOf`{.Agda} takes, and no site has ever wanted one of them alone.
+ <!--zh-->
+-后继决定它所后继的东西，至少在序数之内如此。把一个候选前一阶段与另一个相比：各自属于对方的后继，故各自或是对方的成员、或与对方相等；而两个序数不能互为成员，否则传递性会使其一属于自身。于是「是给定序数的前一阶段」是命题，而最小阶段的前一阶段可以从上一节造出的那个仅仅存在者中取出。
++后继决定它所后继的东西，至少在序数之内如此。把一个候选前一阶段与另一个相比：各自属于对方的后继，故各自或是对方的成员、或与对方相等；而两个序数不能互为成员，否则传递性会使其一属于自身。于是「是给定序数的前一阶段」是命题，正是这一点使一个仅仅存在的前一阶段可以被读作一个确定的前一阶段。
+ 
+-正是这次取出使 `defStage`{.Agda} 成为函数：一格的**定义阶段**，即该格最先现身的诸成员所依据写出的那个阶段。它连同两条性质一并封印，与 `μ`{.Agda} 当初一样。
++最小阶段究竟凭什么有前一阶段，这正是本章为之而写的那个论证，而它没有用到关于格的任何东西。取任何一样到「某条序数性质成立的最小阶段」为止已现身的东西。属于一个阶段，就是属于某个更早阶段的可定义子集，而后继恒等式说那些可定义子集就是下一个阶段；故那样东西在那个更早阶段之上一级就已现身，而那条性质在那里就已成立。极小性禁止那个阶段严格低于最小阶段，而一个后继又不会越过头：它或属于最小阶段，或**就是**最小阶段。前一种情形正是极小性刚刚反驳的，故后一种成立，于是最小阶段是后继。被反驳的那一支写成写明结论的具名辅助件：这是阶段那一章为每个出自三歧的分情形定下的纪律，而 `suc∈or≡`{.Agda} 是乔装的比较。
++
++既然那条性质从未被读取，它就是一个参数，于是这个论证为最小序数算子的每个实例只写一遍。`Carved`{.Agda} 是它运行其上的那个数据：最小阶段以下的一个序数，其后继已具备那条性质。`carveAt`{.Agda} 产出那个数据，办法是从最小阶段中读出一个成员，再把那次雕出改名为一个后继；`predOf`{.Agda} 消费它，并按上面那条唯一性把截断闭合。它们是一次操作的两半、而不是两次操作，因为 `carveAt`{.Agda} 造出的恰是 `predOf`{.Agda} 所取用的，而从没有哪个用处只要其中一半。
+ <!--/-->
+ 
+ ```agda
++IsPredOf : S → S → Type (ℓ-suc ℓ)
++IsPredOf σ δ = IsOrd δ × (sucV δ ≡ σ)
++
+ private
+   cycle₂ : (a b : S) → IsOrd a → ⟨ a ∈ˢ b ⟩ → ⟨ b ∈ˢ a ⟩ → Empty.⊥
+   cycle₂ a b orda a∈b b∈a = ∈-irrefl a (orda .fst a∈b b∈a)
+@@ -252,10 +214,91 @@
+   Σ≡Prop (λ d → isProp× (isPropIsOrd d) (setIsSet (sucV d) σ))
+     (ord-suc-inj δ δ' ordδ (e ∙ sym e'))
+ 
++module _ (P : S → Ω) where
++
++  Carved : S → Type (ℓ-suc ℓ)
++  Carved σ = Σ[ δ ∈ S ] (⟨ δ ∈ˢ σ ⟩ × ⟨ P (sucV δ) ⟩)
++
++  private
++    below-case : (σ δ : S) → isLeastOrd P σ → IsOrd δ → ⟨ P (sucV δ) ⟩
++               → ⟨ sucV δ ∈ˢ σ ⟩ → sucV δ ≡ σ
++    below-case σ δ least ordδ m s∈σ =
++      Empty.rec (least (sucV δ) (suc-ord ordδ) m s∈σ)
++
++    same-case : (σ δ : S) → sucV δ ≡ σ → sucV δ ≡ σ
++    same-case σ δ e = e
++
++    atCarve : (σ : S) → IsOrd σ → isLeastOrd P σ
++            → Carved σ → Σ[ δ ∈ S ] IsPredOf σ δ
++    atCarve σ ordσ least (δ , (δ∈σ , m)) = δ , (ordδ , suc≡σ)
++      where
++      ordδ : IsOrd δ
++      ordδ = mem-ord {A = σ} ordσ δ δ∈σ
++      suc≡σ : sucV δ ≡ σ
++      suc≡σ = Sum.rec (below-case σ δ least ordδ m) (same-case σ δ)
++        (suc∈or≡ δ σ ordδ ordσ δ∈σ)
++
++  predOf : (σ : S) → IsOrd σ → isLeastOrd P σ → ∥ Carved σ ∥₁
++         → Σ[ δ ∈ S ] IsPredOf σ δ
++  predOf σ ordσ least = PT.rec (isPropPredOf σ) (atCarve σ ordσ least)
++
++  carveAt : (σ z : S) → ⟨ z ∈ˢ Lset σ ⟩
++          → ((δ : S) → ⟨ z ∈ˢ Lset (sucV δ) ⟩ → ⟨ P (sucV δ) ⟩)
++          → ∥ Carved σ ∥₁
++  carveAt σ z z∈Lσ k = PT.map
++    (λ { (δ , (δ∈σ , z∈𝒟)) → δ , (δ∈σ
++      , k δ (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (Lset-suc δ)) z∈𝒟)) })
++    (Lset-out σ z z∈Lσ)
++```
++
++<!--en-->
++## A first appearance is a successor
++<!--zh-->
++## 首次现身处是后继
++<!--/-->
++
++<!--en-->
++The cell's case is one application, and its only work is a truncation. A cell is
++met at a stage by *some* member, so the member has to be brought out of a
++truncation before `carveAt`{.Agda} can read it, and put back into one afterwards;
++`carveMeets`{.Agda} is that step, and it is the whole difference between this
++instance and a bare membership. `meet-suc`{.Agda} then states the conclusion in
++the shape this chapter has always exported it in.
++<!--zh-->
++格的这一情形是一次施用，而它唯一要干的活是一次截断。一格在一个阶段处是被**某个**成员相交的，故那个成员必须先从一个截断中取出，`carveAt`{.Agda} 才读得到它，此后再放回一个截断里；`carveMeets`{.Agda} 就是那一步，而它就是这个实例与「光秃秃的隶属」之间的全部差别。随后 `meet-suc`{.Agda} 把结论陈述成本章一贯导出的那个形状。
++<!--/-->
++
++```agda
++carveMeets : (u σ : S) → ⟨ meets u σ ⟩ → ∥ Carved (meets u) σ ∥₁
++carveMeets u σ = PT.rec squash₁
++  (λ { (z , (z∈u , z∈Lσ)) → carveAt (meets u) σ z z∈Lσ
++    (λ δ hz → ∣ z , (z∈u , hz) ∣₁) })
++
++meet-suc : (u σ : S) → IsOrd σ → ⟨ meets u σ ⟩ → isLeastOrd (meets u) σ
++         → ∥ Σ[ δ ∈ S ] IsPredOf σ δ ∥₁
++meet-suc u σ ordσ m least = ∣ predOf (meets u) σ ordσ least (carveMeets u σ m) ∣₁
++```
++
++<!--en-->
++## The stage a first appearance is defined over
++<!--zh-->
++## 首次现身所依据的那个阶段
++<!--/-->
++
++<!--en-->
++Applying the argument at `μ`{.Agda} itself hands the predecessor over outright,
++and that is what makes `defStage`{.Agda} a function: the *definition stage* of a
++cell, the stage over which the cell's first members are written. It is sealed
++with its two properties beside it, as `μ`{.Agda} was.
++<!--zh-->
++把那个论证径直施用在 `μ`{.Agda} 处，前一阶段就当场交出，而正是这一点使 `defStage`{.Agda} 成为函数：一格的**定义阶段**，即该格最先现身的诸成员所依据写出的那个阶段。它连同两条性质一并封印，与 `μ`{.Agda} 当初一样。
++<!--/-->
++
++```agda
+ thePred : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
+         → Σ[ δ ∈ S ] IsPredOf (μ u pu h) δ
+-thePred u pu h = PT.rec (isPropPredOf (μ u pu h)) (λ d → d)
+-  (meet-suc u (μ u pu h) (μ-ord u pu h) (μ-meets u pu h) (μ-earliest u pu h))
++thePred u pu h = predOf (meets u) (μ u pu h) (μ-ord u pu h) (μ-earliest u pu h)
++  (carveMeets u (μ u pu h) (μ-meets u pu h))
+ 
+ opaque
+   defStage : (u : S) → ⟨ isL u ⟩ → Inhabited u → S
+@@ -344,12 +387,16 @@
+ <!--en-->
+ `μ`{.Agda} is the earliest stage at which a set of `L` has a member, and
+ `meet-suc`{.Agda} says that stage is a successor, because a set enters the tower
+-only by being carved out of the stage below. `defStage`{.Agda} is the stage it
+-succeeds, a function because a successor determines what it succeeds among
+-ordinals (`ord-suc-inj`{.Agda}), and `Lset-μ`{.Agda} identifies the stage of
+-first appearance with the definable powerset over it. So every set that first
+-appears there carries a name written over one fixed stage, which is what the
+-choosing device will compare. `stageBound`{.Agda} supplies the ordinal the
++only by being carved out of the stage below. That argument reads nothing about
++cells, so it is written once over any property of ordinals: `carveAt`{.Agda}
++carves a witness below the least stage, and `predOf`{.Agda} turns the carve into
++the predecessor, closing the truncation on `isPropPredOf`{.Agda}. The next
++chapter is its second instance, at plain membership in the tower.
++`defStage`{.Agda} is the stage `μ`{.Agda} succeeds, a function because a
++successor determines what it succeeds among ordinals (`ord-suc-inj`{.Agda}), and
++`Lset-μ`{.Agda} identifies the stage of first appearance with the definable
++powerset over it. So every set that first appears there carries a name written
++over one fixed stage, which is what the choosing device will compare. `stageBound`{.Agda} supplies the ordinal the
+ bookkeeping runs in: above a set's own stage, hence above its members and
+ theirs, and above the tower's limit level, where the names themselves live.
+ 
+@@ -357,7 +404,7 @@
+ comparison and the recursion both arrive in the next chapters, and both are
+ confined to the material this one has located.
+ <!--zh-->
+-`μ`{.Agda} 是 `L` 的一个集合拥有成员的最早阶段，而 `meet-suc`{.Agda} 说那个阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。`defStage`{.Agda} 是它所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})；而 `Lset-μ`{.Agda} 把首次现身的那个阶段与其上的可定义幂集认同。于是每个首次现身于该处的集合，都带着一个写在单一固定阶段之上的名字，而那正是选取装置将要比较的东西。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
++`μ`{.Agda} 是 `L` 的一个集合拥有成员的最早阶段，而 `meet-suc`{.Agda} 说那个阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。那个论证不读取关于格的任何东西，故它对任意一条序数性质只写一遍：`carveAt`{.Agda} 在最小阶段之下雕出一个见证，而 `predOf`{.Agda} 把那次雕出变成前一阶段，并按 `isPropPredOf`{.Agda} 把截断闭合。下一章就是它的第二个实例，取在塔中光秃秃的隶属上。`defStage`{.Agda} 是 `μ`{.Agda} 所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})；而 `Lset-μ`{.Agda} 把首次现身的那个阶段与其上的可定义幂集认同。于是每个首次现身于该处的集合，都带着一个写在单一固定阶段之上的名字，而那正是选取装置将要比较的东西。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
+ 
+ 此处没有一条陈述涉及 `L` 上的关系，也没有一处是递归。比较与递归都在后面几章到场，而两者都被限制在本章所定位的材料之内。
+ <!--/-->
+--- a/src/L/Choice/Step.lagda.md
++++ b/src/L/Choice/Step.lagda.md
+@@ -47,13 +47,12 @@
+ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute )
+ open import V.Model {ℓ} using ( self∈sucV )
+ open import L.Constructible {ℓ}
+-  using ( IsOrd; isPropIsOrd; isL; Lset; Lset-out; Lset-mono; Lset→isL; 𝒟ₒ )
+-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
++  using ( IsOrd; isPropIsOrd; isL; Lset; Lset-mono; Lset→isL )
++open import L.Ordinal {ℓ} using ( mem-ord )
+ open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+-open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
+ open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem; stage-earliest )
+ open import L.Axioms.Basic {ℓ} using ( Lset-suc )
+-open import L.Choice.Stage {ℓ} lem using ( IsPredOf; isPropPredOf )
++open import L.Choice.Stage {ℓ} lem using ( IsPredOf; predOf; carveAt )
+ open import L.Choice.Finite {ℓ} lem using ( Tri-map )
+ open import L.Choice.Name {ℓ} lem using ( module Naming )
+ open import L.WellOrder.Base {ℓ-suc ℓ}
+@@ -87,47 +86,39 @@
+ <!--en-->
+ The stage chapter gave every constructible set its earliest stage, and the
+ choice-stage chapter showed, for a cell, that the earliest stage meeting it is a
+-successor. The argument applies verbatim to a single set, and for the same
+-reason: a set enters the tower only by being carved out of the stage below, so if
+-it is there at all by its earliest stage, that stage has a predecessor and the
+-set is one of the definable subsets over it.
++successor. Neither of those arguments was ever about cells or about single sets.
++Both take a property of ordinals, its least stage, and a witness carved below
++that stage, and both conclude that the least stage is a successor; so the
++argument is written once, there, and this chapter is its second instance.
+ 
+-The one split in the argument is a comparison in disguise, and it is written as a
+-named helper with its conclusion spelled out: either the candidate's successor
+-lies strictly below the earliest stage, which minimality refutes, or it is that
+-stage.
++The property here is plain membership in the tower, and it is the *simpler* of
++the two. A cell is met by *some* member, so the choice-stage chapter has a
++truncation to strip before it can hand the argument a witness; a set is its own
++witness, and there is nothing to strip. The application there is eleven lines and
++the one here is four. What this chapter used to claim, that the argument applies
++verbatim to a single set, was true of the split and of the carve and false of the
++interface: `meet-suc`{.Agda} asks for a cell that is met, and a single set cannot
++supply one, so the reuse it named was never available until the argument itself
++was written over the property.
++
++Two names cross the boundary and no more. `carveAt`{.Agda} reads the set out of
++its earliest stage and renames the carve to a successor, and `predOf`{.Agda}
++turns that into the predecessor, refuting the low branch by minimality. The split
++inside is still a comparison in disguise, written as a named helper with its
++conclusion spelled out, and it is now written in one place rather than two.
+ <!--zh-->
+-阶段那一章为每个可构造集给出了它的最早阶段，而选取阶段那一章为一格证明了与它相交的最早阶段是后继。同一论证逐字适用于单个集合，理由也相同：集合进入塔的唯一途径是从下面那个阶段中被雕出，故它若到最早阶段为止已在那里，那个阶段就有前一阶段，而该集合是其上的可定义子集之一。
++阶段那一章为每个可构造集给出了它的最早阶段，而选取阶段那一章为一格证明了与它相交的最早阶段是后继。那两个论证从来都不是关于格、也不是关于单个集合的。两者收下的都是一条序数的性质、它的最小阶段，以及在那个阶段之下雕出的一个见证，而两者的结论都是「最小阶段是后继」；故那个论证只在那边写一遍，而本章是它的第二个实例。
+ 
+-论证中唯一的分情形是乔装的比较，它写成写明结论的具名辅助件：候选者的后继或严格落在最早阶段之下，这被极小性反驳；或就是那个阶段。
+-<!--/-->
++此处的那条性质，就是塔中光秃秃的隶属，而它是两者中**较简单**的一个。一格是被**某个**成员相交的，故选取阶段那一章要先剥掉一层截断，才交得出论证所要的见证；而一个集合就是它自己的见证，无可剥。那边的施用十一行，此处的施用四行。本章从前所声称的「同一论证逐字适用于单个集合」，这话对分情形与雕出而言为真，对接口而言为假：`meet-suc`{.Agda} 要的是一个被相交的格，而单个集合供不出来，故它所点名的那次复用，在论证本身被写成架在性质之上以前，从来就不存在。
+ 
+-```agda
+-private
+-  decideSuc : (x : S) (p : ⟨ isL x ⟩) (δ : S) → IsOrd δ
+-            → ⟨ x ∈ˢ Lset (sucV δ) ⟩
+-            → ⟨ sucV δ ∈ˢ stage x p ⟩ ⊎ (sucV δ ≡ stage x p)
+-            → sucV δ ≡ stage x p
+-  decideSuc x p δ ordδ m (inl s∈) =
+-    Empty.rec (stage-earliest x p (sucV δ) (suc-ord ordδ) m s∈)
+-  decideSuc x p δ ordδ m (inr e) = e
+-
+-  atCarve : (x : S) (p : ⟨ isL x ⟩)
+-          → Σ[ δ ∈ S ] (⟨ δ ∈ˢ stage x p ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
+-          → Σ[ δ ∈ S ] IsPredOf (stage x p) δ
+-  atCarve x p (δ , (δ∈ , x∈)) = δ , (ordδ , suc≡)
+-    where
+-    ordδ : IsOrd δ
+-    ordδ = mem-ord {A = stage x p} (stage-ord x p) δ δ∈
+-    atSuc : ⟨ x ∈ˢ Lset (sucV δ) ⟩
+-    atSuc = subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Lset-suc δ)) x∈
+-    suc≡ : sucV δ ≡ stage x p
+-    suc≡ = decideSuc x p δ ordδ atSuc
+-      (suc∈or≡ δ (stage x p) ordδ (stage-ord x p) δ∈)
++跨过边界的只有两个名字，再无其他。`carveAt`{.Agda} 把该集合从它的最早阶段中读出，并把那次雕出改名为一个后继，而 `predOf`{.Agda} 把它变成前一阶段，途中按极小性反驳低的那一支。里面的分情形依然是乔装的比较，写成写明结论的具名辅助件，只是如今写在一处，而不是两处。
++<!--/-->
+ 
++```agda
+ theCarve : (x : S) (p : ⟨ isL x ⟩) → Σ[ δ ∈ S ] IsPredOf (stage x p) δ
+-theCarve x p = PT.rec (isPropPredOf (stage x p)) (atCarve x p)
+-  (Lset-out (stage x p) x (stage-mem x p))
++theCarve x p = predOf (λ σ → x ∈ˢ Lset σ) (stage x p) (stage-ord x p)
++  (stage-earliest x p)
++  (carveAt (λ σ → x ∈ˢ Lset σ) (stage x p) x (stage-mem x p) (λ δ hz → hz))
+ 
+ opaque
+   birth : (x : S) → ⟨ isL x ⟩ → S
+@@ -854,9 +845,13 @@
+ <!--en-->
+ `birth`{.Agda} is the ordinal a constructible set is carved over, one below the
+ earliest stage containing it, and it exists because a set enters the tower only
+-by being carved out (`theCarve`{.Agda}). `birth-in`{.Agda} places it strictly
+-below any stage the set belongs to, and `birth-proof`{.Agda} says it does not
+-depend on the constructibility proof supplied.
++by being carved out. `theCarve`{.Agda} is that extraction, and it is the
++choice-stage chapter's `carveAt`{.Agda} and `predOf`{.Agda} applied at plain
++membership in the tower: the simpler of the operator's two instances, four lines
++here against eleven there, because nothing has to be brought out of a truncation
++first. `birth-in`{.Agda} places it strictly below any stage the set belongs to,
++and `birth-proof`{.Agda} says it does not depend on the constructibility proof
++supplied.
+ 
+ `stepAt`{.Agda} is the step: a well-order of `Lset (sucV δ)`{.Agda} out of one of
+ `Lset δ`{.Agda}, at every stage by the previous chapter's name order pulled back
+@@ -891,7 +886,7 @@
+ chapter singled out, hands `stageOrder`{.Agda} to the names written over it, and
+ picks the least name.
+ <!--zh-->
+-`birth`{.Agda} 是一个可构造集据以被雕出的那个序数，比包含它的最早阶段低一级；它之所以存在，是因为集合进入塔的唯一途径就是被雕出 (`theCarve`{.Agda})。`birth-in`{.Agda} 把它安置在该集合所属的任何阶段之下且严格更低，而 `birth-proof`{.Agda} 说它不依赖于所供给的那份可构造性证明。
++`birth`{.Agda} 是一个可构造集据以被雕出的那个序数，比包含它的最早阶段低一级；它之所以存在，是因为集合进入塔的唯一途径就是被雕出。`theCarve`{.Agda} 就是那次取出，而它是选取阶段那一章的 `carveAt`{.Agda} 与 `predOf`{.Agda} 施用在塔中光秃秃的隶属上：那个算子两个实例中较简单的一个，此处四行，那边十一行，因为此处无须先把什么从截断中取出来。`birth-in`{.Agda} 把它安置在该集合所属的任何阶段之下且严格更低，而 `birth-proof`{.Agda} 说它不依赖于所供给的那份可构造性证明。
+ 
+ `stepAt`{.Agda} 就是步进：由 `Lset δ`{.Agda} 上的一个良序造出 `Lset (sucV δ)`{.Agda} 上的一个，在**每一个**阶段处都是上一章的名字序沿**最小名字**拉回，而最小名字之所以是函数，是因为只要下面那个阶段已被良序化，诸名字就已被良序化。它当初写着「极限阶段以下另有一支」，而那一支被实测为多余并删去；正文说了为什么。`pullOrder`{.Agda} 沿一个单射搬运良序，是本章写下的唯一一次搬运；步进用它，`carry`{.Agda} 也用它，后者把一个阶段的诸成员呈现为命名那一章所取的索引类型。
+ 
