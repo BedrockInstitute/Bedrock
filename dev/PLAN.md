@@ -1223,7 +1223,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.333 | Item 2 at the cheaper truncation | STATEMENT-LEVEL. CHEAPER TO PROVE, HARDER TO UNTRUNCATE | The band is the exact complement of the only canonicalizer. Five attempts were not unlucky |
 | LJ-1.334 | Item 1: the pointwise-least pairing | ESCAPES THE DIGEST, THEN REFUTED BY SYMMETRY | A canonical reader of the reachable set is symmetric, so a recipe FAMILY closes. All four settled |
 | LJ-1.335 | Where do the sq band terms LAND | NO. THE SUCCESSOR BAND IS A STEP, NOT A SUPPLIER | Two suppliers, one step, one truncation. The consumer needs NOTHING re-plumbed; a lemma buys it |
-| LJ-1.337 | The successor-or-limit dichotomy, MEASURED ABSENT | DISPATCHED | LJ-1.335 named it: sq-below needs it and three searches found nothing. isProp Init and sucV injectivity are absent too |
+| LJ-1.337 | The successor-or-limit dichotomy | DELIVERED, AND ONE BAND IN GIVES THE CONCLUSION OUT | sucV injectivity was live under a reversed name. sq-below is 90 lines, consumer diff EMPTY |
+| LJ-1.339 | Sweep L.Choice.Stage: two false negatives came from it | DISPATCHED | LJ-1.337 found sucV injectivity and isProp IsSuc there under other names, after three briefs called them absent |
 | LJ-1.336 | Wave 2 of the port: the dirty seven | 7 OF 7, 0 OF 838 CHANGED. ONE-DEBT REFUTED | The second site reuses ZERO of the first and needs a different supplier: downward facts against upward |
 | LJ-1.338 | A THIRD tie site, to tighten the 250 to 350 | DISPATCHED | LJ-1.336 measured two sites at 42 and 51 with zero sharing. Five stay unmeasured and P-l binds the extrapolation |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
