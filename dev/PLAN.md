@@ -71,13 +71,14 @@ numeral premise, a real defect in `[LJ-1.173]:843-846`, whose row 1 gave them
 no-master-edit rule.** **And `someEnv`'s second blocker is delivered in FOUR
 lines at `src/L/Condensation.lagda.md:3042`, not the 120 the report priced.**
 
-**2. Route A-prime's five probes, and DD8 now allows them.** `[LJ-1.227]` named
-the widest unmeasured term and the probe for every one of A1, A2, A3, A4 and
-A7, so five build briefs are writable for the first time. **None of the five
-blocks dissolves**, which the same task asked first for each. **A2 is the one
-to run first**: every downstream block names its predicate, `injAt` exists
-nowhere in `src/**/*.lagda.md`, and measuring it also pins the one surviving
-double-count.
+**2. Route A-prime is PRICED at 1,089 and the landing order is written; NOT ONE
+LINE IS IN `src/`.** All seven blocks are measured and the reading residue is
+ZERO (`[LJ-1.253]`). `[LJ-1.268]` gives the order: **five NEW masters in three
+waves, and nothing extends an existing master, so no over-the-bar master gains
+a line.** Wave 0 can land now: A2, A1 and A5 row 5, in parallel, every import
+delivered. **Two sub-blocks are NOT landable**, A5 row 3 and A6, both on the
+same stale import that an orchestrator file move broke; the cure is to re-site
+both probes onto the landed A2 master.
 
 **3. The wing's seconds have a LOCATION, and the cure is the owner's call.**
 `[LJ-1.214]` measured that the telescope component at `Deserialization` carries
@@ -87,7 +88,36 @@ and instantiation is 0.9 percent. **Removing the component would recover the
 8.2 s and restore 21 fields that were FALSE before `[LJ-1.173]` cured them.**
 So it is a design question and not an edit.
 
-**WHAT IS WAITING ON THE OWNER, and none of it blocks the three above.**
+**4. THE NAMED-SLOT REFACTOR, REGISTERED AND WAITING ON A CONDITION, NOT ON A
+MOOD.** `[LJ-1.269]` scouted it and every figure below is MEASURED at commit
+`414249b`. **Both routes typecheck under `--cubical --safe --guardedness`, the
+exact OPTIONS header every master carries, so `--safe` PERMITS REFLECTION.**
+**The macro route is the cheaper of the two**: 54 lines written fresh against
+the pure-data layer's 78, and it needs NO coverage proof, which the data layer
+needs once per layout. **DD13's rewrite-side question therefore answers: the
+reflection route is the ideal form.** **The census is 190 sites**: one
+hand-written permutation, 133 slot pins and 56 placements, with 58 of the pins
+in `src/L/Condensation.lagda.md` alone as the same `tagEq`/`t0eq`/`t1eq`
+written once per constructor row at six shift depths.
+
+**THE TRIGGER, and it is decidable rather than a feeling: `[LJ-1.268]`'s WAVE 3
+lands.** At that point `src/` holds the whole of Route A-prime, so the census
+stops moving and the refactor does not chase probes that are still the sole
+home of a block. **Doing it BEFORE that voids live measurements (C-32) and
+makes the work chase a moving target; doing it LATER only grows the 190.**
+
+**WHAT THE OWNER RULES, and it is not the timing.** At the trigger I run the
+full pricing: every function the refactor touches, the check-seconds on both
+sides, the code to be refactored and the content to be rewritten. **Then the
+owner rules whether to switch.** **The timing is the orchestrator's call by
+the owner's instruction, 2026-08-15**, because the owner does not hold the
+development's whole picture and should not be asked to time it.
+
+**AND IT IS NOT A SECONDS LEVER.** P-q: a line lever and a seconds lever are
+different levers. **Nothing measures this refactor as buying seconds, and it
+must not be bundled into the DD24 compression pass on that assumption.**
+
+**WHAT IS WAITING ON THE OWNER, and none of it blocks the four above.**
 
 - **DD4 against DD24.** A cure in shared machinery made every master faster and
   the ratio WORSE, 1.56x to 1.91x, because the AC side gained 41.7 percent and
@@ -824,6 +854,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
 | LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |
 | LJ-1.270 | Does the Coq framework bear on GCH | NO. THE SILENCE HOLDS, MEASURED | MetaZF has no Formula, no binder, no satisfaction across 20 files. Every AC win is an axiom removed |
+| LJ-1.271 | The named-slot macro layer | REGISTERED, NOT DISPATCHED. TRIGGER: LJ-1.268 wave 3 lands | Then price the functions, the seconds, the refactor and the rewrite. The owner rules the switch |
 | LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
 | LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
