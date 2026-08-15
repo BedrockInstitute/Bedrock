@@ -4294,6 +4294,29 @@ the same identity bridge, now inside the read lemma that made the seal usable.**
 unfolded chain, or the reverse. **Look for a type and a body that name the same
 object two ways.**
 
+**AND IT IS DEPTH-GATED, which the C-42 sweep measured the same day.**
+`[LJ-1.292]` swept `src/L/Coding/Key.lagda.md`, where the identical mismatch sits
+at depths 1 to 3, and found the master **already cheap at 3,974 ms** with the
+flagged site **NOT CHARGED AT ALL**, below the profiler's threshold. It then
+isolated the ladder in one run:
+
+| depth | ms |
+|---:|---:|
+| 2 | 219 |
+| 3 | 9,286 |
+| 4 | **419,218** |
+
+**Depth 2 to 3 multiplies by 42 and depth 3 to 4 by 45**, so the curve is
+super-linear and R-40's shape holds here with new constants. **The disease is
+real at every depth and only PAYS at 4.** So do not hunt this shape by pattern
+alone: **profile first, and expect a low-depth instance to be free.**
+
+**Two negatives from that sweep are worth keeping.** The anchor reproduces:
+`[LJ-1.287]`'s 438,043 ms came back at 418,031 under a different load, within
+4.6 percent, **so the sweep's negatives are not instrument blindness.** And the
+`Lset` wrapper is NOT required: the same mismatch on a BARE membership costs
+419,218 ms, **so the first site's cost was never about `Lset` opacity.**
+
 **Evidence:** `agents/tasks/LJ-1-287/lj-1.287-report.md`, the six-way bisect and
 the mechanism; `agents/tasks/LJ-1-289/lj-1.289-report.md`, the landing and the
 paired series with the order reversed; `agents/tasks/LJ-1-283/lj-1.283-report.md`,
