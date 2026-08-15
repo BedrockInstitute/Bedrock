@@ -1,0 +1,15 @@
+# arm f6a-membership
+# file agents/tasks/LJ-1-331/CondF6a.lagda.md
+# flags --profile=definitions 
+# GHCRTS -A64m -I0 -M8g
+# agda slots before 0
+# load before  2:10  up 2 days,  4:32, 3 users, load averages: 10.76 11.12 10.74
+# started 2026-08-16 02:10:37
+Checking LJ-1-331.CondF6a (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-331/CondF6a.lagda.md).
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
+# wall seconds 146
+# exit 251
+# agda slots after 1
+# load after  2:13  up 2 days,  4:35, 3 users, load averages: 12.45 11.64 11.00

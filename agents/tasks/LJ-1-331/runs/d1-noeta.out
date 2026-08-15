@@ -1,0 +1,15 @@
+# arm d1-noeta
+# file agents/tasks/LJ-1-331/CondD.lagda.md
+# flags --profile=definitions 
+# GHCRTS -A64m -I0 -M8g
+# agda slots before 0
+# load before  2:03  up 2 days,  4:25, 3 users, load averages: 10.35 11.16 10.70
+# started 2026-08-16 02:03:20
+Checking LJ-1-331.CondD (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-331/CondD.lagda.md).
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
+# wall seconds 133
+# exit 251
+# agda slots after 0
+# load after  2:05  up 2 days,  4:27, 3 users, load averages: 10.96 10.81 10.59

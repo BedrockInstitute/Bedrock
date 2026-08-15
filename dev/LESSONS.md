@@ -2352,7 +2352,7 @@ one transplant guided by a diagnosed ROOT CAUSE succeeded:
 | the same | the same | `Condensation`'s clauses | **no movement at all**, 203.3 s against 203.5 |
 | the `Bridge` read-lemma seal | `Bridge`, 939 s to 199 s | `SquareLaw`'s `h₀-inj` | **neutral transparent, 1.9x SLOWER sealed** |
 | R-38's seal-at-birth, anchored at 25.7 s per unsealed invocation | `r5a` | `L.Rud.Images`' `right-spec` | **zero**: 52.9 to 53.2 s, and `Step` 28.8 to 28.2 |
-| `[T102]`'s telescope lift | `SquareLaw`'s `h₀` pair, 374.3 s to 82 ms | `Condensation`'s three pieces, argued by `[T104]` from resemblance, **unmeasured** | **REFUTED by `[T106]`**: piece 1 made the module WORSE, 204.7 s to 308.8; piece 3's cost MOVED rather than went; piece 2's export-preserving form is worse than the control |
+| `[T102]`'s telescope lift, **which WORKED at its own site** | `SquareLaw`'s `h₀` pair, 374.3 s to 82 ms | `Condensation`'s three pieces, argued by `[T104]` from resemblance, **unmeasured** | **REFUTED by `[T106]`**: piece 1 made the module WORSE, 204.7 s to 308.8; piece 3's cost MOVED rather than went; piece 2's export-preserving form is worse than the control |
 | the abstract restatement, **redirected by root cause** | `[T98]`'s diagnosis, not by analogy | `SquareLaw`'s chase, abstracting the SOURCE rather than the target | **1.28 s where the analogy-guided form had exhausted 8 GB after 26 minutes** |
 
 **Five transplants on 2026-08-06, four failed, and the four failures share one
@@ -4411,6 +4411,63 @@ expensive and quiet, while a probe that fails costs one file.**
 
 Related: [[C-45]], [[C-36]], [[D-10]], [[C-52]], [[C-38]].
 
+
+
+### C-55. A hypothesis whose type states an equation against a coded term is FREE as a module parameter and an 8 GB wall as a record field
+
+**Rule:** Before you fold a telescope of hypotheses into a record, look at what
+each hypothesis's TYPE says. **A hypothesis that states an equation against a
+transparent coded term costs nothing as a module parameter and exhausts the heap
+as a record field.** **Field COUNT does not predict this. The field's TYPE
+does.**
+
+**The measurement, `[LJ-1.331]`, 2026-08-15, on one module of
+`src/L/Condensation.lagda.md` in a copy.** The bisection is the evidence and no
+single figure is:
+
+| arm | result |
+|---|---|
+| control, the delivered telescope | **32 s, exit 0** |
+| the record, full telescope folded | **8 GB EXHAUSTED after 130 s, exit 251** |
+| a record of ZERO fields | 33 s, exit 0 |
+| ONE plain field | 34 s, exit 0 |
+| **FOUR `KFacts`-shaped fields** | **34 s, exit 0** |
+| **`codesK` ALONE, one field** | **8 GB EXHAUSTED after 138 s** |
+| **`valK` ALONE, one field** | **8 GB EXHAUSTED after 136 s** |
+
+**So four fields are free and one field is fatal. Field count is REFUTED as the
+explanation, MEASURED.**
+
+**What the two fatal fields share and the four free ones lack:** their type
+states an equation against a `pr` chain over a numeral,
+`fst c ≡ pr (fst ar) (pr (# 9) (fst a))`. **The four free ones state a
+membership or an equality of a NAME and build no coded term in their type.**
+
+**And the SAME hypothesis is free as a module parameter**: `codesK` as one of
+twelve parameters checks in 32 s, exit 0. **The type is identical. Only its
+position changed.**
+
+**`no-eta-equality` does NOT cure it, MEASURED**, 133 s and a wall. **The wall
+is in the record DECLARATION**: an arm that declares the record and keeps the
+full telescope walls too, 131 s.
+
+**Why the file's own 29-field record works.** `KFacts` carries twenty-nine
+fields and costs nothing, and it looked like a counterexample until the
+bisection: **every one of its fields states a membership or an equality of a
+NAME.** **It is not small. Its fields are cheap.**
+
+**What it costs when it goes wrong.** This law was bought by a funded probe that
+a numeric gate had opened correctly on a real 36.60 s account, 26.6 percent of
+the file's whole cost. **The compression was the last live seconds line on that
+file and it is now refused, on a measurement rather than on an opinion.**
+
+**What to do.** **Fold a telescope only after checking each hypothesis's type
+for a coded term.** **If one is present, leave that hypothesis a parameter and
+fold the rest, or do not fold.** **And bisect before you conclude: the first arm
+here said that records are slow, which is the wrong lesson, and the literature's
+own open issue would have confirmed it.**
+
+Related: [[C-51]], [[C-50]], [[P-y]], [[P-l]], [[R-40]], [[C-49]].
 
 ### R-41. Depth is free and MIXED SPELLING is what costs: state an index in the spelling its proof produces
 
