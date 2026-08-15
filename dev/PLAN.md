@@ -1176,7 +1176,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.282 | LAND the seal on A1 | LANDED. 99.78 s TO 9.31 s, DELTA 90.48 | 50.2x the bar to 4.34x for 19 lines. THREE definitions name w and ONE looks inside. L.GCH did not slow |
 | LJ-1.283 | Survey the over-bar masters for seals | BISECT ALL, SEAL NOT ALL. THE BIG ONE IS 99.2 pc TWO LINES | EnvSupply's 482 s is sucV-in at :223-224 and the seal there is VOID, -0.19 pc. C-50 |
 | LJ-1.284 | LAND A6 and A5 row 3, wave 3 | BOTH LANDED. A-PRIME IS COMPLETE | A6 525 lines at 1.04x the bar, row 3 at 0.69x. The re-site works. A6 DISCHARGES A7's absorbs, proved green |
-| LJ-1.285 | Rename the mode off the vendor name | DISPATCHED in-harness | Owner's instruction: we may not stay on one vendor. 8 live files; 244 frozen records keep the old name via the alias |
+| LJ-1.285 | Rename the mode off the vendor name | DONE. THE MODE IS NOW pi-subagent-mode | Owner's instruction: we may not stay on one vendor. 8 live files; 244 frozen records keep the old name |
 | LJ-1.286 | Take A6's discharge of A7's absorbs | LANDED. ONE HYPOTHESIS LEFT, sq | SHARED rose 43/7,596 to 44/7,632 while the SHARE fell 41.1 to 39.1. The share reads the denominator |
 | LJ-1.287 | Cure sucV-in, EnvSupply's 99.2 pc | 480.25 s TO 4.10 s FOR THREE LINES | 438 s was an IDENTITY function: depth is free, the MIXED spelling of the level costs. Three diagnoses refuted |
 | LJ-1.289 | LAND the sucV-in respelling | LANDED. 495.23 s TO 6.65 s, MINUS 488.59 | 56.5x the bar to 0.76x, for five lines. The wing's worst master is now UNDER the bar. Law R-41 |
@@ -1193,7 +1193,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.300 | DD25 review of the SqShape parse defect | 1 HOLDS, 2 WRONG, 3 HOLDS. SWEEP COUNT 1 | The circle is NOT real: Init's row 4 quantifies BELOW and squareOmega bypasses it. Finite descent |
 | LJ-1.301 | Build sq by descent from squareOmega | BUILDS. 186 lines, 241.9 s | WF induction on regularityV. ONE qualification, stated in its own lead: the conclusion is TRUNCATED |
 | LJ-1.302 | Compose the thirty Agree modules | THE TYPE IS WRITABLE AND IT FEEDS | A term of it discharges q' and amb comes out, proved. One dirty module priced at 51 lines; ties are ONE debt |
-| LJ-1.303 | Slim the dispatch scripts, function unchanged | DISPATCHED in-harness, owner named opus | 4,383 lines over four files. The comments record MEASUREMENTS and are not redundancy |
+| LJ-1.303 | Slim the dispatch scripts, function unchanged | SLACK IS 32 CODE LINES, AND ONE REFUSAL IS DEAD | 4,383 lines over four files. The comments record MEASUREMENTS and are not redundancy |
 | LJ-1.304 | Price StepAgree and ApproxAgree | BOTH BUILT, ABOUT 190 LINES. BASIS: THE BUILD | q's four named costs are now ALL measured. Neither module exists in src/: they were LJ-1.52's names |
 | LJ-1.305 | Untruncate the descent: deliver SqShape | NEEDS-A-PRINCIPLE: InjData, then GREEN | 322 lines, 4 s. Route 1 CLOSED by countermodel: sq omega is NOT an hProp. sq-initial is unconditional |
 | LJ-1.306 | Port the clean 23 Agree modules generic | 23 OF 23, ZERO CHANGED LINES, 45-LINE SCAFFOLD. DD25 [LJ-1.308] | Five were NOT clean: they name Shape deliveries. Cured at 27 verbatim lines |
@@ -1207,7 +1207,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.314 | DD25 review of InjData's NECESSITY | SPLIT. THE RESIDUE IS NOT A NEW PRINCIPLE | Select the CODE, not the function: InjCode is a proposition, so leastOf untruncates it. Green probe |
 | LJ-1.315 | Literature for the phi0 slot-role ruling | FORM 1, UNANIMOUS ACROSS FOUR AUTHORS | Form 2 has NO precedent in any source. No formalization faces this, so closeN 14 is a local choice |
 | LJ-1.316 | Literature for the InjData ruling | DISPATCHED | Owner asked for literature beside the probe. How the standard proofs select a witness in L with no choice |
-| LJ-1.317 | Literature for the typecheck-cost question | DISPATCHED | Owner asked for literature beside the probe. Known Agda cost pathologies, so the sweep looks for shapes it has not met |
+| LJ-1.317 | Literature for the typecheck-cost question | THREE MECHANISMS RANKED, RANK 1 NEEDS NO EDIT | agda#5801: syntactic equality goes quadratic on near-identical terms, and one flag tests it |
 | LJ-1.318 | Fable RULING on the phi0 four-line cure | PENDING all returns | Owner DELEGATED the ruling to fable 2026-08-15, after everything returns. DD0: one-off, never a standing head choice |
 | LJ-1.319 | Fable RULING on InjData | PENDING all returns | Same delegation. Probe, adversarial review and literature go in together; the head rules |
 | LJ-1.320 | Fable RULING on the seconds route | PENDING all returns | Same delegation. R-41 is spent, the cost is attributed, and what to fund next is the question |

@@ -294,6 +294,66 @@ def live_territories(reg: dict) -> tuple[list[tuple[str, dict, dict]], list[tupl
     return live, unverifiable
 
 
+def declared_live(reg: dict) -> list[tuple[str, dict, dict]]:
+    """Live agents the REGISTRY CANNOT SEE, taken from the task index's own rows.
+
+    **THE HOLE THIS CLOSES, MEASURED 2026-08-15.** The registry above is written by
+    `.claude/skills/codex-dispatch/dispatch.py`. **An in-harness dispatch passes through
+    NO tool**, so under a mode whose default head is in-harness this gate is blind to
+    every default-case agent, and the incident it exists for happens again with the gate
+    green. It did: `[LJ-1.309]`, `[LJ-1.311]` and `[LJ-1.317]` each reported their
+    in-progress report being swept into an orchestrator commit, three separate agents,
+    one evening. DD17 already names this coverage inversion for the DD4 and DD18
+    refusals; this is the third gate it hits and the row did not name it.
+
+    **THE SECOND SOURCE IS THE TASK INDEX, because it is the ONE record kept for every
+    dispatch whatever the head** (`dev/PLAN.md` section 11, section 6.0 rule 6: register
+    BEFORE starting). A row whose verdict cell still reads `DISPATCHED`, `QUEUED` or
+    `PENDING` declares a task nobody has audited, so its directory must not be staged.
+    `dispatch.py status` already shouts when such a row outlives its return, so the
+    record is kept honest by an alarm rather than by memory.
+
+    **THE DIRECTORY COMES FROM THE FILESYSTEM, NEVER FROM A NAMING TABLE**, which is the
+    rule the module docstring states. For each declared-live code this globs
+    `agents/tasks/*/<CODE>.md` and takes the brief it finds. A code with no brief on disk
+    is not yet a territory and is skipped in silence.
+
+    A code already live in the registry is skipped here, so a herdr dispatch is reported
+    once and not twice.
+    """
+    plan = ROOT / "dev" / "PLAN.md"
+    if not plan.exists():
+        return []
+    seen = {n.upper() for n in reg}
+    out: list[tuple[str, dict, dict]] = []
+    open_words = ("DISPATCHED", "QUEUED", "PENDING")
+    for line in plan.read_text(encoding="utf-8").splitlines():
+        if not line.startswith("| "):
+            continue
+        cells = [c.strip() for c in line.split("|")]
+        if len(cells) < 5:
+            continue
+        code, verdict = cells[1], cells[3]
+        if not re.fullmatch(r"[A-Za-z0-9.\-]+", code) or code.upper() in seen:
+            continue
+        if not verdict.upper().startswith(open_words):
+            continue
+        briefs = sorted((ROOT / "agents" / "tasks").glob(f"*/{code}.md"))
+        if not briefs:
+            continue
+        brief = briefs[0]
+        rel_brief = repo_rel(brief)
+        if not rel_brief:
+            continue
+        terr = {"brief": {rel_brief}, "taskdir": Path(rel_brief).parent.as_posix() + "/",
+                "files": set(), "dirs": set()}
+        files, dirs = territory_files(brief)
+        terr["files"], terr["dirs"] = files, dirs
+        out.append((code, {"pid": 0, "declared": True}, terr))
+        seen.add(code.upper())
+    return out
+
+
 def in_territory(f: str, terr: dict, check_scope: bool) -> str | None:
     """The reason `f` lies in this territory, or None.
 
@@ -363,6 +423,9 @@ def main(argv: list[str]) -> int:
 
     reg = load_registry(registry)
     live, unverifiable = live_territories(reg)
+    # The registry sees only what `dispatch.py` launched. Everything in-harness is
+    # invisible to it, so the task index supplies the rest. See `declared_live`.
+    live = live + declared_live(reg)
 
     files = [f for f in (staged() if mode == "staged" else tracked()) if f]
     bad: list[tuple[str, str, int, str]] = []
