@@ -935,6 +935,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.263 | Land the three L-rows into Key.lagda.md | ALL THREE LANDED. THE MASTER IS GREEN | Three re-runs import the master's versions and all exit 0, so this is a landing and not a copy |
 | LJ-1.266 | Step 6's SECONDS inside Condensation | ABOVE. HEAP WALL. DD25 [LJ-1.275] UPHELD | Sound on every number; the LAYOUT was my brief's. In a new master the wall goes and the rate halves |
 | LJ-1.275 | DD25 review of LJ-1.266's heap wall | HOLDS, BUT THE WALL IS A LAYOUT ARTIFACT | Full block GREEN in a new master, 465.59 s, exit 0. Env rate 2.378 to 1.267. Option C now targets 1.1 s |
+| LJ-1.276 | LAND step 6 as a new master | DISPATCHED | LJ-1.275 measured the whole 805-line block GREEN in a new master at -M8g, 465.59 s, n=3. L.Condensation gains nothing |
+| LJ-1.277 | LAND A2, the coding injection | DISPATCHED | Wave 0 of LJ-1.268's order. 186 lines, every import delivered, and every downstream A-prime block names its predicate |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
 | LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |
