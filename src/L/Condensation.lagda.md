@@ -6778,9 +6778,17 @@ module EnvOneAgree {m : ℕ} (v K N0 : Fin m) (γ : S ^ (2 + m))
 module DefinesAgree {m : ℕ} (x w v K N0 : Fin m) (γ : S ^ m)
   (N0eq : fst (lookup N0 γ) ≡ fst (numeralL 0))
   (numK : ⟨ fst (numeralL 0) ∈ fst (lookup K γ) ⟩)
-  (envK : (E z : S) → ⟨ (E ∷ z ∷ γ) ⊨ envOneAt zero (suc zero) ⟩
+  -- `z` IS BOUND BY THE CARRIER SLOT `w` ([LJ-1.343]).  Without that
+  -- hypothesis both types are EMPTY: take `z` to be the bound itself and
+  -- the conclusion is a membership cycle, which `regularityV` refutes.
+  -- The bound is not in the formula, because `tagAtL-adequate` and
+  -- `envOneAt-out` make each premise a bare set equation.  The sibling
+  -- tie `satK` below carries the same bound inside its formula.
+  (envK : (E z : S) → ⟨ fst z ∈ fst (lookup w γ) ⟩
+         → ⟨ (E ∷ z ∷ γ) ⊨ envOneAt zero (suc zero) ⟩
          → ⟨ fst E ∈ fst (lookup K γ) ⟩)
-  (pairK : (E z w' : S) → ⟨ (w' ∷ E ∷ z ∷ γ) ⊨ tagAtL zero 0 (suc (suc zero)) ⟩
+  (pairK : (E z w' : S) → ⟨ fst z ∈ fst (lookup w γ) ⟩
+          → ⟨ (w' ∷ E ∷ z ∷ γ) ⊨ tagAtL zero 0 (suc (suc zero)) ⟩
           → ⟨ fst w' ∈ fst (lookup K γ) ⟩)
   (satK : (z : S) → ⟨ (z ∷ γ) ⊨
              ((var zero ∈̇ var (suc w)) ∧̇
@@ -6808,7 +6816,7 @@ module DefinesAgree {m : ℕ} (x w v K N0 : Fin m) (γ : S ^ m)
       eOne = EA.back (hE .fst)
         where
         module EA = EnvOneAgree {m} v K N0 (E ∷ z ∷ γ) N0eq numK
-          (λ w' hw → pairK E z w' hw)
+          (λ w' hw → pairK E z w' hz hw)
 
   bwd : (z : S) → ⟨ (z ∷ γ) ⊨ bodyM ⟩ → ⟨ (z ∷ γ) ⊨ bodyB ⟩
   bwd z (hz , hx) = hz , PT.rec squash₁ go hx
@@ -6817,13 +6825,13 @@ module DefinesAgree {m : ℕ} (x w v K N0 : Fin m) (γ : S ^ m)
                          ∧̇ (var zero ∈̇ var (suc (suc v))) ⟩
        → ⟨ (z ∷ γ) ⊨ ∃̇∈ (var (suc K))
              (envOneBndS v K N0 ∧̇ (var zero ∈̇ var (suc (suc v)))) ⟩
-    go (E , (hE , hv)) = ∣ E , ( envK E z hE , ( eB , hv ) ) ∣₁
+    go (E , (hE , hv)) = ∣ E , ( envK E z hz hE , ( eB , hv ) ) ∣₁
       where
       eB : ⟨ (E ∷ z ∷ γ) ⊨ envOneBndS v K N0 ⟩
       eB = EA.out hE
         where
         module EA = EnvOneAgree {m} v K N0 (E ∷ z ∷ γ) N0eq numK
-          (λ w' hw → pairK E z w' hw)
+          (λ w' hw → pairK E z w' hz hw)
 
   out : ⟨ γ ⊨ DefinesAt x w v ⟩ → ⟨ γ ⊨ DefinesBS x w v K N0 ⟩
   out = extAt→extAtB x K bodyB bodyM γ fwd bwd
@@ -7180,9 +7188,14 @@ module LeafAgree {n : ℕ} (w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fi
            × ⟨ fst f ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
   (keyValK : (t : S) → ⟨ (t ∷ γ) ⊨ tagAtL (suc (suc zero)) 1 zero ⟩
             → ⟨ fst t ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (envK : (E z : S) → ⟨ (E ∷ z ∷ γ) ⊨ envOneAt zero (suc zero) ⟩
+  -- `z` IS BOUND BY THE CARRIER SLOT `w` ([LJ-1.343]).  The same repair
+  -- as `DefinesAgree`'s, at this site's index form; these two are handed
+  -- straight through to `DA` below.
+  (envK : (E z : S) → ⟨ fst z ∈ fst (lookup (suc (suc (suc w))) γ) ⟩
+         → ⟨ (E ∷ z ∷ γ) ⊨ envOneAt zero (suc zero) ⟩
          → ⟨ fst E ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  (defPairK : (E z w' : S) → ⟨ (w' ∷ E ∷ z ∷ γ) ⊨ tagAtL zero 0 (suc (suc zero)) ⟩
+  (defPairK : (E z w' : S) → ⟨ fst z ∈ fst (lookup (suc (suc (suc w))) γ) ⟩
+             → ⟨ (w' ∷ E ∷ z ∷ γ) ⊨ tagAtL zero 0 (suc (suc zero)) ⟩
              → ⟨ fst w' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
   (satK : (z : S) → ⟨ (z ∷ γ) ⊨ ((var zero ∈̇ var (suc (suc (suc (suc w)))))
              ∧̇ ∃̇ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc zero))))) ⟩
