@@ -1185,8 +1185,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.292 | Sweep Key.lagda.md for the mixed spelling | THE SITE IS NOT CHARGED AT ALL. R-41 IS DEPTH-GATED | Key is cheap at 3,974 ms. The ladder: depth 2 is 219 ms, depth 3 is 9,286, depth 4 is 419
 | LJ-1.293 | Discharge q, and with it amb | q IS FALSE, REFUTED BY MACHINE. DD25 [LJ-1.297] | amb stays OPEN. The obligation is q', which LJ-1.244 measured stuck as a definition |
 | LJ-1.294 | Is an infinite cardinal a limit ordinal | PROVED. kappa-limit | Init's rows 1 to 3 are now available at the use site. Row 4, noinj-squared, has NO term anywhere in src/ |
-| LJ-1.295 | MOVE scripts into subdirectories, option C | QUEUED behind LJ-1.291's territory | Owner ruled C 2026-08-15: accept the 3,215 dangling reader pointers, no shims, no resolver |
-| LJ-1.296 | A quota fallback from pi to in-harness | QUEUED | Owner's instruction. The limit is NOT observable: pi has no quota command and logs record no tokens, so the trigger is the refusal |
+| LJ-1.295 | MOVE scripts into subdirectories, option C | MOVED. 39 OF 40 TOOLS REPRODUCE THEIR BASELINE | The one new red was AGENTS.md's 8 script paths, now de-pathed to bare names and committed |
+| LJ-1.296 | A quota fallback from pi to in-harness | DESIGNED, NEVER APPLIED. SUPERSEDED | The refusal signal has NEVER been seen here, MEASURED four ways. The owner then ruled the mutual fallback |
 | LJ-1.297 | DD25 review of q's refutation | HOLDS, AND THE RESIDUE SHRANK | All six AmbientStep readings SUPPLIED by machine. q is the PORT's artifact: Devlin needs no such equation |
 | LJ-1.298 | Price q' through the class-carrier analogues | ZERO LINES CHANGED. THE PORT IS VERBATIM | 33 of 33 unchanged. One scaffold serves a chapter. The family: 180 new lines placing 6,900 |
 | LJ-1.299 | Build noinj-squared, Init's last row | CIRCULAR, PLUS SqShape GATES NOTHING. DD25 [LJ-1.300] | A missing pair of parentheses leaves the trophy's last hypothesis inhabited. I verified it |
@@ -1196,8 +1196,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.303 | Slim the dispatch scripts, function unchanged | DISPATCHED in-harness, owner named opus | 4,383 lines over four files. The comments record MEASUREMENTS and are not redundancy |
 | LJ-1.304 | Price StepAgree and ApproxAgree | BOTH BUILT, ABOUT 190 LINES. BASIS: THE BUILD | q's four named costs are now ALL measured. Neither module exists in src/: they were LJ-1.52's names |
 | LJ-1.305 | Untruncate the descent: deliver SqShape | DISPATCHED | LJ-1.301 built the descent but delivers a proposition. This is LJ-1.8's WHOLE remaining gap |
-| LJ-1.306 | Port the clean 23 Agree modules generic | DISPATCHED | Wave 1 of q's route, priced at about 180 lines by LJ-1.298 at a ZERO-changed rate. Everything else waits on it |
-| LJ-1.307 | Are the thirty Agree modules thirty things or one | DISPATCHED, no Agda | DD13 from the rewrite side. LJ-1.302 found the seven TIES were ONE debt; nobody asked it of the modules |
+| LJ-1.306 | Port the clean 23 Agree modules generic | 23 OF 23, ZERO CHANGED LINES, 45-LINE SCAFFOLD. DD25 [LJ-1.308] | Five were NOT clean: they name Shape deliveries. Cured at 27 verbatim lines |
+| LJ-1.307 | Are the thirty Agree modules thirty things or one | PARTLY. ONE SHAPE, 15 THINGS, 30 SPELLINGS | Fresh is about 2,150 against 2,619, saving 470. The port is RIGHT, so LJ-1.306 stands |
+| LJ-1.308 | DD25 review of LJ-1.306's zero-changed port | DISPATCHED | Today's adversarial row is pi/glm and pi/glm wrote the target, so the invariant forces in-harness |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
