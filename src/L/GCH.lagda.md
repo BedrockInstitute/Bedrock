@@ -44,7 +44,7 @@ module ModelL = FOL.ZFModel 𝒮ʟ
 SqShape : Type (ℓ-suc ℓ)
 SqShape =
   (α : S) → IsOrd (fst α) → (⟨ fst α ∈ˢ ω ⟩ → Empty.⊥)
-          → ⟪ fst α ⟫ × ⟪ fst α ⟫ ↪ ⟪ fst α ⟫
+          → (⟪ fst α ⟫ × ⟪ fst α ⟫) ↪ ⟪ fst α ⟫
 
 -- S4.  A6's conclusion type: the successor absorption, uniformly over the
 -- infinite L-ordinals that contain every numeral.
