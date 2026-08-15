@@ -1217,7 +1217,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.326 | The miniature that gates BOTH new debts | BUILDS, 14 LINES, AND THE ADAPTER IS 8 | Debt 1's adapter is MEASURED at absorbs' own site, so its 800 is refuted. The gap is a missing FORMULA |
 | LJ-1.327 | Describe the square law's pairing as a FORMULA | EXPENSIVE, ABOUT 820, AND DO NOT FUND IT | pairomega is a well-founded RECURSION, and a coded square law is consumed by NOTHING today |
 | LJ-1.328 | The definable well-order of L AS A FORMULA | DELIVERED. THE THREE CONSUMERS ARE TWO | phi-less is a Sigma-1 formula in a WIRED chapter. Two of them want ONE object: an ambient FUNCTION |
-| LJ-1.329 | Code ONE ambient function as a member of an L-set | DISPATCHED | Three investigations converged on it. LJ-1.321 and LJ-1.316 are the same line, MEASURED, and it is the only line |
+| LJ-1.329 | Code ONE ambient function as a member of an L-set | WRONG-OBJECT. THERE IS NO SUCH OBJECT | pullOrder wants a TOTAL MAP OUT of sq, not a point of it. The convergence was on a NAME |
+| LJ-1.330 | A canonical element of sq at NON-INITIAL alpha | DISPATCHED | LJ-1.329's alternative 1. Delivered canonical at initial alpha and at omega; the gap is exactly the non-initial ordinals |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | DISPATCHED | LJ-1.320 funds it. No code edit: A1, A2 definitions and internal baselines, then B and C flag arms |
 | LJ-1.323 | Fable RULING: the statement of both trophies | AC UNCHANGED. GCH BECOMES THE INTERNAL EQUALITY | sq leaves, every ambient injection leaves, the conclusion is 2^kappa = kappa-plus in L |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
