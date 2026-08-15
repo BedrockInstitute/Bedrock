@@ -10,7 +10,7 @@ open import Base.Classical using ( LEM )
 module L.Coding.Key {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; _⇒̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; _⇒̇_; ∀̇∈; ∃̇∈; _∈̇_ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-≐; δ-∧; δ-⇒; δ-∀∈; δ-∃∈ )
 open import FOL.Manipulation.Bounding using ( BoundedFo )
 open import FOL.Manipulation.Relabelling using ( embed )
@@ -20,15 +20,17 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
 open import V.Model {ℓ} using ( ∈sucV-inl; self∈sucV )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; 𝒟ₒ; Lset-mono; Lset→isL
-        ; Lset-layer; layer-trans )
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; 𝒟ₒ; 𝒟ₒ-intro
+        ; Lset-mono; Lset→isL; Lset-layer; layer-trans; ∪-trans
+        ; isPropIsTransV )
 open import L.Absoluteness {ℓ} using ( Δ₀-liftFo )
+open import L.Definability {ℓ} using ( module DefOf )
 open import L.Axioms.Basic {ℓ}
   using ( Lset-suc; pr∈Lset-suc; finSet; module FinOf )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Axioms.Separation {ℓ} lem using ( module AtStage )
 open import L.Coding.Base {ℓ} using ( Δ₀-prAt )
-open import L.Coding.Environment {ℓ} using ( env )
+open import L.Coding.Environment {ℓ} using ( env; cons )
 open import L.Coding.Model {ℓ}
   using ( appAt; prAtL; appAt-adequate; prAtL-adequate
         ; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-intro
@@ -39,20 +41,28 @@ open import L.Coding.Model {ℓ}
 open import L.Coding.EnvSet {ℓ} lem
   using ( Ix; envS; envSet; envSet-in; envSet-out; envSet-mem; module Recover )
 open import L.Choice.Name {ℓ} lem using ( numeral∈limit; code∈limit )
+open import L.Coding.Bound {ℓ} lem using ( Lset-out′ )
+open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; mem-ord )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Ordinal.StageArith {ℓ} lem using ( sucIter; sucIter-ord )
 
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.FinData using ( toℕ; zero; suc )
+open import Cubical.Data.FinData.FiniteChoice using ( choice )
 open import Cubical.Data.Vec using ( lookup )
 open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.Data.Sum as Sum
+open Sum using ( _⊎_; inl; inr )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber )
+  using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber
+        ; extensionality; _⊆_; _∈ₛ_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet )
+  using ( ∅; ⋃_; _∪_; union-ax; pairing-ax; ⁅_,_⁆; ⁅_⁆s
+        ; module InfinitySet )
 open InfinitySet using ( #_; ω; sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -478,4 +488,302 @@ envSetNumeral∈ : (σ : V ℓ) → IsOrd σ → ⟨ ω ∈ σ ⟩ → (B : CS.S
                → ⟨ fst (envSet B n) ∈ Lset (sucIter 4 σ) ⟩
 envSetNumeral∈ σ oσ ω∈ B n hB =
   Land.landed σ oσ ω∈ B (numeralL n) n (numeralL-fst n) hB
+
+-- =====================================================================
+-- THE THREE LEVEL CLOSURES (landed from [LJ-1.254]/[LJ-1.259]/[LJ-1.261]).
+--
+-- `union∈Lset-suc` closes a level under union of its members; `EnvClosure`
+-- closes a transitive level under environment extension; `FiniteSup` merges
+-- finitely many stages into one and supplies `finSetK`.  All three are
+-- stated tower-neutrally (DD4).
+-- =====================================================================
+
+-- The raw union closure, adapted from `L.Axioms.Basic.UnionOf.mkUnion`
+-- ([LJ-1.254]).  `sucV a = ⋃ ⁅ a , ⁅ a ⁆s ⁆`, so the successor closure sits
+-- on this one union step.
+union∈Lset-suc : (σ x : S) → ⟨ x ∈ Lset σ ⟩ → ⟨ ⋃ x ∈ Lset (sucV σ) ⟩
+union∈Lset-suc σ x x∈ =
+  subst (λ w → ⟨ ⋃ x ∈ w ⟩) (sym (Lset-suc σ)) union∈𝒟ₒ
+  where
+  module DefA = DefOf (Lset σ)
+  Atrans = layer-trans (Lset-layer σ)
+  mₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+  qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x
+  qₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
+
+  φ : Formula ⟪ Lset σ ⟫ 1
+  φ = ∃̇∈ (con mₓ) (var (suc zero) ∈̇ var zero)
+
+  defSet≡ : DefA.defSet φ ≡ ⋃ x
+  defSet≡ = extensionality (DefA.defSet φ) (⋃ x) (sub₁ , sub₂)
+    where
+    sub₁ : ⟨ DefA.defSet φ ⊆ ⋃ x ⟩
+    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⋃ x))
+      (λ { ((m , h) , q) →
+        subst (λ w → ⟨ w ∈ₛ ⋃ x ⟩) q
+          (PT.rec (snd (⟪ Lset σ ⟫↪ m ∈ₛ ⋃ x))
+            (λ { (v , (fstv∈mₓ , m∈fstv)) →
+              union-ax x (⟪ Lset σ ⟫↪ m) .snd
+                ∣ fst v
+                , ( ∈∈ₛ {a = fst v} {b = x} .fst
+                      (subst (λ w → ⟨ fst v ∈ w ⟩) qₓ fstv∈mₓ)
+                  , ∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = fst v} .fst m∈fstv ) ∣₁ })
+            (subst ⟨_⟩ (DefA.defSet-mem φ m) ∣ (m , h) , refl ∣₁)) })
+      (∈∈ₛ {a = y} {b = DefA.defSet φ} .snd y∈ₛ)
+    sub₂ : ⟨ ⋃ x ⊆ DefA.defSet φ ⟩
+    sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet φ))
+      (λ { (v , (v∈ₛx , y∈ₛv)) → member v v∈ₛx y∈ₛv })
+      (union-ax x y .fst y∈ₛ)
+      where
+      member : (v : S) → ⟨ v ∈ₛ x ⟩ → ⟨ y ∈ₛ v ⟩
+             → ⟨ y ∈ₛ DefA.defSet φ ⟩
+      member v v∈ₛx y∈ₛv =
+        subst (λ w → ⟨ w ∈ₛ DefA.defSet φ ⟩) q'
+          (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m'} {b = DefA.defSet φ} .fst
+            (subst ⟨_⟩ (sym (DefA.defSet-mem φ m')) sat))
+        where
+        v∈x = ∈∈ₛ {a = v} {b = x} .snd v∈ₛx
+        y∈v = ∈∈ₛ {a = y} {b = v} .snd y∈ₛv
+        v∈A = Atrans {x = x} {y = v} v∈x x∈
+        y∈A = Atrans {x = v} {y = y} y∈v v∈A
+        fib = ∈-asFiber {a = y} {b = Lset σ} y∈A
+        m' = fib .fst
+        q' = fib .snd
+        sat : ⟨ (DefA.ι m' ∷ []) DefA.⊨ᵐ φ ⟩
+        sat = ∣ (v , v∈A)
+              , ( subst (λ w → ⟨ v ∈ w ⟩) (sym qₓ) v∈x
+                , subst (λ w → ⟨ w ∈ v ⟩) (sym q') y∈v ) ∣₁
+
+  union∈𝒟ₒ : ⟨ ⋃ x ∈ 𝒟ₒ (Lset σ) ⟩
+  union∈𝒟ₒ = 𝒟ₒ-intro (Lset σ) (⋃ x) ∣ φ , defSet≡ ∣₁
+
+-- =====================================================================
+-- The env closure, stated over a transitive level (K, Ktr) plus the four
+-- closures the level already carries ([LJ-1.259]).  `envConsK` builds over
+-- (K, Ktr, numK0, sucK, pairK, finSetK) and names no tower.
+-- =====================================================================
+
+module EnvClosure (K : S) (Ktr : isTransV K)
+  (numK0 : ⟨ # 0 ∈ K ⟩)
+  (sucK : (a : S) → ⟨ a ∈ K ⟩ → ⟨ sucV a ∈ K ⟩)
+  (pairK : (a b : S) → ⟨ a ∈ K ⟩ → ⟨ b ∈ K ⟩ → ⟨ pr a b ∈ K ⟩)
+  (finSetK : (n : ℕ) (h : Fin n → S)
+           → ((i : Fin n) → ⟨ h i ∈ K ⟩) → ⟨ finSet n h ∈ K ⟩)
+  where
+
+  -- A transitive set absorbs both components of a Kuratowski pair it
+  -- contains ([LJ-1.151]).
+  prK : (x y : S) → ⟨ pr x y ∈ K ⟩ → ⟨ x ∈ K ⟩ × ⟨ y ∈ K ⟩
+  prK x y h = Ktr (mem x (inl refl)) pairInK , Ktr (mem y (inr refl)) pairInK
+    where
+    pairInK : ⟨ ⁅ x , y ⁆ ∈ K ⟩
+    pairInK = Ktr (∈∈ₛ {a = ⁅ x , y ⁆} {b = pr x y} .snd
+                (pairing-ax ⁅ x ⁆s ⁅ x , y ⁆ ⁅ x , y ⁆ .snd ∣ inr refl ∣₁)) h
+    mem : (z : S) → (z ≡ x) Sum.⊎ (z ≡ y) → ⟨ z ∈ ⁅ x , y ⁆ ⟩
+    mem z e = ∈∈ₛ {a = z} {b = ⁅ x , y ⁆} .snd (pairing-ax x y z .snd ∣ e ∣₁)
+
+  -- Every numeral is in K, by numK0 and sucK alone.
+  numK : (n : ℕ) → ⟨ # n ∈ K ⟩
+  numK zero    = numK0
+  numK (suc n) = sucK (# n) (numK n)
+
+  env-entry : {k : ℕ} (g : Fin k → S) (i : Fin k)
+            → ⟨ pr (# (toℕ i)) (g i) ∈ env g ⟩
+  env-entry g i = ∣ lift i , refl ∣₁
+
+  giK : {k : ℕ} (g : Fin k → S) (i : Fin k)
+      → ⟨ env g ∈ K ⟩ → ⟨ g i ∈ K ⟩
+  giK g i envgK = prK (# (toℕ i)) (g i) (Ktr (env-entry g i) envgK) .snd
+
+  -- THE CLOSURE.  `env (cons x g)` is the finite set of the shifted pairs,
+  -- so one `finSetK` application closes it ([LJ-1.259]).
+  envConsK : {k : ℕ} (g : Fin k → S) (x : S)
+           → ⟨ env g ∈ K ⟩ → ⟨ x ∈ K ⟩
+           → ⟨ env (cons x g) ∈ K ⟩
+  envConsK g x envgK xK =
+    finSetK (suc _) (λ j → pr (# (toℕ j)) (cons x g j))
+      (λ { zero    → pairK (# 0) x numK0 xK
+         ; (suc i) → pairK (sucV (# (toℕ i))) (g i)
+                       (sucK (# (toℕ i)) (numK (toℕ i))) (giK g i envgK) })
+
+-- =====================================================================
+-- The finite-supremum merge ([LJ-1.261]).  Every stage stays a DIRECT term
+-- (`sucV a ∪ sucV b`); `ord-tri` appears only in proofs of propositions,
+-- never in a returned stage (P-i [A], the wall cure).
+-- =====================================================================
+
+module FiniteSup (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ lam ⟩ → ⟨ sucV d ∈ lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ lam ⟩) where
+
+  -- Union membership, ∈ₛ-flavoured for the subset lemmas.
+  ∈ₛ∪l : (a b x : S) → ⟨ x ∈ₛ a ⟩ → ⟨ x ∈ₛ a ∪ b ⟩
+  ∈ₛ∪l a b x x∈a = union-ax ⁅ a , b ⁆ x .snd
+    ∣ a , (pairing-ax a b a .snd ∣ inl refl ∣₁ , x∈a) ∣₁
+
+  ∈ₛ∪r : (a b x : S) → ⟨ x ∈ₛ b ⟩ → ⟨ x ∈ₛ a ∪ b ⟩
+  ∈ₛ∪r a b x x∈b = union-ax ⁅ a , b ⁆ x .snd
+    ∣ b , (pairing-ax a b b .snd ∣ inr refl ∣₁ , x∈b) ∣₁
+
+  -- Union membership, plain-∈-flavoured for the merge.
+  ∈∪l : (a b x : S) → ⟨ x ∈ a ⟩ → ⟨ x ∈ a ∪ b ⟩
+  ∈∪l a b x h = ∈∈ₛ {a = x} {b = a ∪ b} .snd
+    (∈ₛ∪l a b x (∈∈ₛ {a = x} {b = a} .fst h))
+
+  ∈∪r : (a b x : S) → ⟨ x ∈ b ⟩ → ⟨ x ∈ a ∪ b ⟩
+  ∈∪r a b x h = ∈∈ₛ {a = x} {b = a ∪ b} .snd
+    (∈ₛ∪r a b x (∈∈ₛ {a = x} {b = b} .fst h))
+
+  -- Union of two ordinals is an ordinal.
+  ∪-ord : (a b : S) → IsOrd a → IsOrd b → IsOrd (a ∪ b)
+  ∪-ord a b oa ob = ∪-trans (oa .fst) (ob .fst) , memTr
+    where
+    memTr : (x : S) → ⟨ x ∈ a ∪ b ⟩ → isTransV x
+    memTr x x∈∪ = PT.rec (isPropIsTransV x)
+      (λ { (v , (v∈pair , x∈v)) →
+        PT.rec (isPropIsTransV x)
+          (λ { (inl v≡a) → oa .snd x (∈∈ₛ {a = x} {b = a} .snd
+                              (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡a x∈v))
+             ; (inr v≡b) → ob .snd x (∈∈ₛ {a = x} {b = b} .snd
+                              (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡b x∈v)) })
+          (pairing-ax a b v .fst v∈pair) })
+      (union-ax ⁅ a , b ⁆ x .fst (∈∈ₛ {a = x} {b = a ∪ b} .fst x∈∪))
+
+  -- a ∪ a ≡ a, by extensionality.
+  union-idem : (a : S) → a ∪ a ≡ a
+  union-idem a = extensionality (a ∪ a) a (sub , sup)
+    where
+    sup : ⟨ a ⊆ a ∪ a ⟩
+    sup x x∈a = ∈ₛ∪l a a x x∈a
+    sub : ⟨ a ∪ a ⊆ a ⟩
+    sub x x∈∪ = PT.rec (snd (x ∈ₛ a))
+      (λ { (v , (v∈pair , x∈v)) →
+        PT.rec (snd (x ∈ₛ a))
+          (λ { (inl v≡a) → subst (λ w → ⟨ x ∈ₛ w ⟩) v≡a x∈v
+             ; (inr v≡a) → subst (λ w → ⟨ x ∈ₛ w ⟩) v≡a x∈v })
+          (pairing-ax a a v .fst v∈pair) })
+      (union-ax ⁅ a , a ⁆ x .fst x∈∪)
+
+  -- a ∪ b ≡ b when a ⊆ b.
+  union-eq : (a b : S) → ⟨ a ⊆ b ⟩ → a ∪ b ≡ b
+  union-eq a b a⊆b = extensionality (a ∪ b) b (sub , sup)
+    where
+    sup : ⟨ b ⊆ a ∪ b ⟩
+    sup x x∈b = ∈ₛ∪r a b x x∈b
+    sub : ⟨ a ∪ b ⊆ b ⟩
+    sub x x∈∪ = PT.rec (snd (x ∈ₛ b))
+      (λ { (v , (v∈pair , x∈v)) →
+        PT.rec (snd (x ∈ₛ b))
+          (λ { (inl v≡a) → a⊆b x (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡a x∈v)
+             ; (inr v≡b) → subst (λ w → ⟨ x ∈ₛ w ⟩) v≡b x∈v })
+          (pairing-ax a b v .fst v∈pair) })
+      (union-ax ⁅ a , b ⁆ x .fst x∈∪)
+
+  -- a ∪ b ≡ b ∪ a, by extensionality.
+  ∪-comm : (a b : S) → a ∪ b ≡ b ∪ a
+  ∪-comm a b = extensionality (a ∪ b) (b ∪ a) (sub , sup)
+    where
+    sub : ⟨ a ∪ b ⊆ b ∪ a ⟩
+    sub x x∈ = PT.rec (snd (x ∈ₛ b ∪ a))
+      (λ { (v , (v∈pair , x∈v)) →
+        PT.rec (snd (x ∈ₛ b ∪ a))
+          (λ { (inl v≡a) → ∈ₛ∪r b a x (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡a x∈v)
+             ; (inr v≡b) → ∈ₛ∪l b a x (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡b x∈v) })
+          (pairing-ax a b v .fst v∈pair) })
+      (union-ax ⁅ a , b ⁆ x .fst x∈)
+    sup : ⟨ b ∪ a ⊆ a ∪ b ⟩
+    sup x x∈ = PT.rec (snd (x ∈ₛ a ∪ b))
+      (λ { (v , (v∈pair , x∈v)) →
+        PT.rec (snd (x ∈ₛ a ∪ b))
+          (λ { (inl v≡b) → ∈ₛ∪r a b x (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡b x∈v)
+             ; (inr v≡a) → ∈ₛ∪l a b x (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡a x∈v) })
+          (pairing-ax b a v .fst v∈pair) })
+      (union-ax ⁅ b , a ⁆ x .fst x∈)
+
+  -- The binary union of two ordinals in lam stays in lam.
+  union2∈λ : (a b : S) → IsOrd a → IsOrd b → ⟨ a ∈ lam ⟩ → ⟨ b ∈ lam ⟩
+           → ⟨ a ∪ b ∈ lam ⟩
+  union2∈λ a b oa ob ma mb = go (ord-tri a oa b ob)
+    where
+    go : (⟨ a ∈ b ⟩ ⊎ ((a ≡ b) ⊎ ⟨ b ∈ a ⟩)) → ⟨ a ∪ b ∈ lam ⟩
+    go (inl a∈b) = subst (λ w → ⟨ w ∈ lam ⟩) (sym (union-eq a b a⊆b')) mb
+      where
+      a⊆b' : ⟨ a ⊆ b ⟩
+      a⊆b' x x∈a = ∈∈ₛ {a = x} {b = b} .fst
+        (ob .fst {x = a} {y = x} (∈∈ₛ {a = x} {b = a} .snd x∈a) a∈b)
+    go (inr (inl a≡b)) = subst (λ w → ⟨ w ∈ lam ⟩) (sym (union-idem a) ∙ cong (λ w → a ∪ w) a≡b) ma
+    go (inr (inr b∈a)) = subst (λ w → ⟨ w ∈ lam ⟩) (sym (∪-comm a b ∙ union-eq b a b⊆a')) ma
+      where
+      b⊆a' : ⟨ b ⊆ a ⟩
+      b⊆a' x x∈b = ∈∈ₛ {a = x} {b = a} .fst
+        (oa .fst {x = b} {y = x} (∈∈ₛ {a = x} {b = b} .snd x∈b) b∈a)
+
+  -- The binary merge: a direct stage (sucV a ∪ sucV b), no ord-tri.
+  merge2 : (a b : S) → IsOrd a → IsOrd b → ⟨ a ∈ lam ⟩ → ⟨ b ∈ lam ⟩
+         → Σ[ τ ∈ S ] (IsOrd τ × ⟨ τ ∈ lam ⟩ × ⟨ a ∈ τ ⟩ × ⟨ b ∈ τ ⟩)
+  merge2 a b oa ob ma mb = τ , (oτ , τ∈ , a∈τ , b∈τ)
+    where
+    τ = sucV a ∪ sucV b
+    oτ = ∪-ord (sucV a) (sucV b) (suc-ord oa) (suc-ord ob)
+    τ∈ = union2∈λ (sucV a) (sucV b) (suc-ord oa) (suc-ord ob)
+           (succλ a ma) (succλ b mb)
+    a∈τ = ∈∪l (sucV a) (sucV b) a (self∈sucV a)
+    b∈τ = ∈∪r (sucV a) (sucV b) b (self∈sucV b)
+
+  -- The n-ary merge by folding merge2.
+  finSup : (n : ℕ) (γ : Fin n → S)
+         → ((i : Fin n) → IsOrd (γ i))
+         → ((i : Fin n) → ⟨ γ i ∈ lam ⟩)
+         → Σ[ τ ∈ S ] (IsOrd τ × ⟨ τ ∈ lam ⟩ × ((i : Fin n) → ⟨ γ i ∈ τ ⟩))
+  finSup zero γ oγ mγ = ∅ , (∅-ord , ∅∈λ , λ ())
+  finSup (suc n) γ oγ mγ =
+    τ , (oτ , τ∈ , all)
+    where
+    tail = finSup n (λ j → γ (suc j)) (λ j → oγ (suc j)) (λ j → mγ (suc j))
+    τt = tail .fst
+    oτt = tail .snd .fst
+    τt∈ = tail .snd .snd .fst
+    γt∈τt = tail .snd .snd .snd
+    m2 = merge2 (γ zero) τt (oγ zero) oτt (mγ zero) τt∈
+    τ = m2 .fst
+    oτ = m2 .snd .fst
+    τ∈ = m2 .snd .snd .fst
+    γ0∈τ = m2 .snd .snd .snd .fst
+    τt∈τ = m2 .snd .snd .snd .snd
+    all : (i : Fin (suc n)) → ⟨ γ i ∈ τ ⟩
+    all zero    = γ0∈τ
+    all (suc j) = oτ .fst {x = τt} {y = γ (suc j)} (γt∈τt j) τt∈τ
+
+  -- finSetK, the supply.
+  finSetK : (n : ℕ) (h : Fin n → V ℓ)
+          → ((i : Fin n) → ⟨ h i ∈ Lset lam ⟩)
+          → ⟨ finSet n h ∈ Lset lam ⟩
+  finSetK n h hm =
+    PT.rec (snd (finSet n h ∈ Lset lam)) step
+      (choice (λ i → Σ[ δ ∈ S ] (⟨ δ ∈ lam ⟩ × ⟨ h i ∈ Lset (sucV δ) ⟩))
+        (λ i → Lset-out′ lam (h i) (hm i)))
+    where
+    step : ((i : Fin n) → Σ[ δ ∈ S ] (⟨ δ ∈ lam ⟩ × ⟨ h i ∈ Lset (sucV δ) ⟩))
+         → ⟨ finSet n h ∈ Lset lam ⟩
+    step stages =
+      let
+        δ : Fin n → S
+        δ i = stages i .fst
+        δ∈ : (i : Fin n) → ⟨ δ i ∈ lam ⟩
+        δ∈ i = stages i .snd .fst
+        h∈ : (i : Fin n) → ⟨ h i ∈ Lset (sucV (δ i)) ⟩
+        h∈ i = stages i .snd .snd
+        oδ : (i : Fin n) → IsOrd (δ i)
+        oδ i = mem-ord {A = lam} ordλ (δ i) (δ∈ i)
+        sup = finSup n (λ i → sucV (δ i)) (λ i → suc-ord (oδ i))
+                (λ i → succλ (δ i) (δ∈ i))
+        τ = sup .fst
+        oτ = sup .snd .fst
+        τ∈ = sup .snd .snd .fst
+        sucδ∈τ = sup .snd .snd .snd
+        h∈τ : (i : Fin n) → ⟨ h i ∈ Lset τ ⟩
+        h∈τ i = Lset-mono {α = τ} {β = sucV (δ i)} (sucδ∈τ i) (h∈ i)
+      in
+      Lset-mono {α = lam} {β = sucV τ} (succλ τ τ∈)
+        (Lset-fin τ oτ n h h∈τ)
 ```

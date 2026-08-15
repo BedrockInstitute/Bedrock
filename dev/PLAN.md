@@ -818,7 +818,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.259 | Build the env closure | BUILDS ON ONE NEW HYPOTHESIS. 3 consK CLOSE | The sweep caught the supply before it was called absent: Lset-fin and paramEnv∈ are delivered |
 | LJ-1.261 | The finite-supremum merge | BUILDS. finSetK is SUPPLIED, 3 consK CLOSE | 148 lines, 48 for the merge against union's 52. The first attempt walled and the cure is recorded |
 | LJ-1.262 | The DD25 review LJ-1.225 never got | UPHELD BUT MISATTRIBUTED | Ten numbers re-derive; three carried claims are FALSE. Devlin's PER-TOWER and the port's ZERO are two axes |
-| LJ-1.263 | Land the three L-rows into src/L/Coding/Key.lagda.md | DISPATCHED | Its two neighbours Lset-fin and paramEnv-in are already there. Re-run the probes against the MASTER |
+| LJ-1.263 | Land the three L-rows into Key.lagda.md | ALL THREE LANDED. THE MASTER IS GREEN | Three re-runs import the master's versions and all exit 0, so this is a landing and not a copy |
+| LJ-1.266 | What does step 6 cost in SECONDS inside Condensation | DISPATCHED | Every step 6 figure is LINES and DD24 is a seconds rule. The chapter runs at 1.9x the bar |
 | LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
 | LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
