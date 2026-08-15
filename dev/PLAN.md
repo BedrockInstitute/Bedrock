@@ -1218,7 +1218,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.327 | Describe the square law's pairing as a FORMULA | EXPENSIVE, ABOUT 820, AND DO NOT FUND IT | pairomega is a well-founded RECURSION, and a coded square law is consumed by NOTHING today |
 | LJ-1.328 | The definable well-order of L AS A FORMULA | DELIVERED. THE THREE CONSUMERS ARE TWO | phi-less is a Sigma-1 formula in a WIRED chapter. Two of them want ONE object: an ambient FUNCTION |
 | LJ-1.329 | Code ONE ambient function as a member of an L-set | WRONG-OBJECT. THERE IS NO SUCH OBJECT | pullOrder wants a TOTAL MAP OUT of sq, not a point of it. The convergence was on a NAME |
-| LJ-1.330 | A canonical element of sq at NON-INITIAL alpha | DISPATCHED | LJ-1.329's alternative 1. Delivered canonical at initial alpha and at omega; the gap is exactly the non-initial ordinals |
+| LJ-1.330 | A canonical element of sq at non-initial alpha | CANONICAL. 25 CODE LINES, WALL NARROWED | Successors build from a delivered untruncated shift. The gap is the non-initial LIMITS only |
+| LJ-1.332 | The limit band: the last gap in sq | DISPATCHED | LJ-1.330 narrowed it to non-initial LIMITS. stage-card-upper is the lead, and LJ-1.324 refuted it only at a DIFFERENT pair |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
 | LJ-1.331 | The RowTies probe, funded by its own gate | DISPATCHED | LJ-1.322 measured the thirty Agree modules at 36.60 s, 26.6 pct of Total, against a 15 s floor. Both figures are LOWER BOUNDS |
 | LJ-1.323 | Fable RULING: the statement of both trophies | AC UNCHANGED. GCH BECOMES THE INTERNAL EQUALITY | sq leaves, every ambient injection leaves, the conclusion is 2^kappa = kappa-plus in L |
