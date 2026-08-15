@@ -7,7 +7,7 @@ open import Base.Prelude
 open import Base.Truth
 open import Base.Classical using ( LEM )
 
-module L.Condensation {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+module LJ-1-346.CondCold346 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
@@ -54,9 +54,7 @@ open import L.Coding.Shape {ℓ}
         ; shapedAt )
 open import L.Coding.CodeSet {ℓ} lem using ( hasWitnessAt; keyArityAtL )
 open import L.Coding.Graph {ℓ} lem using ( satGraphAt; twelveAt )
-open import L.Coding.Powerset {ℓ} lem
-  using ( isCodeAt; DefBody; DefinesAt; envOneAt; envOne; envOneAt-out )
-open import L.Coding.InL {ℓ} using ( sgl-in; sgl-out )
+open import L.Coding.Powerset {ℓ} lem using ( isCodeAt; DefBody; DefinesAt; envOneAt )
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Data.Nat using ( _+_ )
 import Cubical.Data.Empty as Empty
@@ -64,8 +62,7 @@ open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_⁆s; pairing-ax; module InfinitySet )
-open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ∈∈ₛ; extensionality; _⊆_ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open InfinitySet using ( #_; sucV )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; squash₁; ∥_∥₁ )
@@ -6157,107 +6154,6 @@ KFactsCons A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ c f = record
   ; carrierK = f .carrierK
   ; arityK = f .arityK }
 
--- THE ONE-ENTRY ENVIRONMENT IS THE SINGLETON OF ITS ONLY ENTRY.
--- `envOneAt-out` delivers `fst E ≡ envOne (fst z)`, and the tie needs a
--- PAIR to climb into the bound, so this equation is the joint.  It is
--- stated here, and it is NOT private, because five probes re-wrote the
--- pair access it needs ([LJ-1.104], [LJ-1.302], [LJ-1.341], [LJ-1.344],
--- [LJ-1.345]; [LJ-1.338] imported [LJ-1.302]'s copy instead).
-envOne-pair : (v : V ℓ) → envOne v ≡ ⁅ pr (# 0) v , pr (# 0) v ⁆
-envOne-pair v = extensionality (envOne v) ⁅ a₀ , a₀ ⁆ (s1 , s2)
-  where
-  a₀ : V ℓ
-  a₀ = pr (# 0) v
-
-  readEntry : (w : V ℓ) → ⟨ w ∈ envOne v ⟩ → w ≡ a₀
-  readEntry w = PT.rec (setIsSet w a₀)
-    (λ { (lift zero , q) → sym q ; (lift (suc ()) , _) })
-
-  a₀∈pair : ⟨ a₀ ∈ ⁅ a₀ , a₀ ⁆ ⟩
-  a₀∈pair = subst (λ u → ⟨ a₀ ∈ u ⟩) (sym (pair-singleton a₀))
-    (sgl-in a₀ a₀ refl)
-
-  s1 : ⟨ envOne v ⊆ ⁅ a₀ , a₀ ⁆ ⟩
-  s1 x x∈ₛ = ∈∈ₛ {a = x} {b = ⁅ a₀ , a₀ ⁆} .fst
-    (subst (λ u → ⟨ u ∈ ⁅ a₀ , a₀ ⁆ ⟩)
-      (sym (readEntry x (∈∈ₛ {a = x} {b = envOne v} .snd x∈ₛ))) a₀∈pair)
-
-  s2 : ⟨ ⁅ a₀ , a₀ ⁆ ⊆ envOne v ⟩
-  s2 x x∈ₛ = ∈∈ₛ {a = x} {b = envOne v} .fst
-    ∣ lift zero , sym (sgl-out a₀ x
-        (subst (λ u → ⟨ x ∈ u ⟩) (pair-singleton a₀)
-          (∈∈ₛ {a = x} {b = ⁅ a₀ , a₀ ⁆} .snd x∈ₛ))) ∣₁
-
--- THE TWO ENVIRONMENT TIES, SUPPLIED ([LJ-1.346], built by [LJ-1.344]).
--- `DefinesAgree` and `LeafAgree` took `envK` and `defPairK` as
--- parameters and nothing supplied them.  Both come out of FOUR fields
--- the `KFacts` record already carries, so the record gains no field and
--- `BoundOver` gains no lemma.  The four are taken as module parameters
--- and not as the record, so the supply reads at any carrier with them.
-module KTies {n : ℕ} (A K : Fin n) (γ : S ^ n)
-  (numK0 : ⟨ fst (numeralL 0) ∈ fst (lookup K γ) ⟩)
-  (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup K γ) ⟩
-         → ⟨ fst b ∈ fst (lookup K γ) ⟩
-         → ⟨ fst (prʟ a b) ∈ fst (lookup K γ) ⟩)
-  (carrierK : (v : S) → ⟨ fst v ∈ fst (lookup A γ) ⟩
-            → ⟨ fst v ∈ fst (lookup K γ) ⟩)
-  (arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩ → ⟨ fst N ∈ fst (lookup K γ) ⟩
-          → ⟨ fst v ∈ fst (lookup K γ) ⟩) where
-
-  private
-    module Z = ChainZ {n} K γ arityK
-
-    tagged : S → S
-    tagged z = prʟ (numeralL 0) z
-
-    tagged-fst : (z : S) → fst (tagged z) ≡ pr (# 0) (fst z)
-    tagged-fst z =
-      prʟ-fst (numeralL 0) z ∙ cong (λ u → pr u (fst z)) (numeralL-fst 0)
-
-    tagged∈K : (z : S) → ⟨ fst z ∈ fst (lookup A γ) ⟩
-             → ⟨ fst (tagged z) ∈ fst (lookup K γ) ⟩
-    tagged∈K z hz = pairK (numeralL 0) z numK0 (carrierK z hz)
-
-  -- THE SINGLETON CLOSURE, AT THE SORT THE TIES USE.  A closure over
-  -- the ambient sort cannot serve: the conclusion is about `fst E` for
-  -- an `E : S` the tie quantifies over, and every `KFacts` closure is
-  -- stated at `fst` of a carrier element.  Here it is `pairK` then
-  -- `arityK`: `pairK` puts `pr a a` in the bound and `arityK` brings
-  -- `fst E` down out of it.
-  sgltK : (a E : S) → fst E ≡ ⁅ fst a , fst a ⁆
-        → ⟨ fst a ∈ fst (lookup K γ) ⟩ → ⟨ fst E ∈ fst (lookup K γ) ⟩
-  sgltK a E q ha = arityK (prʟ a a) E mem (pairK a a ha ha)
-    where
-    mem : ⟨ fst E ∈ fst (prʟ a a) ⟩
-    mem = subst (λ u → ⟨ fst E ∈ u ⟩) (sym (prʟ-fst a a))
-            (subst (λ u → ⟨ u ∈ pr (fst a) (fst a) ⟩) (sym q)
-              (Z.pair∈pr (fst a) (fst a)))
-
-  -- TIE 1.  The environment slot lands in the bound.  The carrier
-  -- hypothesis `hz` is [LJ-1.343]'s repair; without it the type is
-  -- EMPTY, which [LJ-1.341] proved.
-  envK : (E z : S) → ⟨ fst z ∈ fst (lookup A γ) ⟩
-       → ⟨ (E ∷ z ∷ γ) ⊨ envOneAt zero (suc zero) ⟩
-       → ⟨ fst E ∈ fst (lookup K γ) ⟩
-  envK E z hz h = sgltK (tagged z) E q (tagged∈K z hz)
-    where
-    q : fst E ≡ ⁅ fst (tagged z) , fst (tagged z) ⁆
-    q = envOneAt-out zero (suc zero) (E ∷ z ∷ γ) h
-      ∙ envOne-pair (fst z)
-      ∙ cong (λ u → ⁅ u , u ⁆) (sym (tagged-fst z))
-
-  -- TIE 2.  The tagged pair lands in the bound, by the same route with
-  -- no singleton step, because `tagAtL-adequate` gives the equation.
-  defPairK : (E z w' : S) → ⟨ fst z ∈ fst (lookup A γ) ⟩
-           → ⟨ (w' ∷ E ∷ z ∷ γ) ⊨ tagAtL zero 0 (suc (suc zero)) ⟩
-           → ⟨ fst w' ∈ fst (lookup K γ) ⟩
-  defPairK E z w' hz h =
-    subst (λ u → ⟨ u ∈ fst (lookup K γ) ⟩) (sym q) (tagged∈K z hz)
-    where
-    q : fst w' ≡ fst (tagged z)
-    q = subst ⟨_⟩ (tagAtL-adequate zero 0 (suc (suc zero)) (w' ∷ E ∷ z ∷ γ)) h
-      ∙ sym (tagged-fst z)
-
 module ShapesAgree {n : ℕ}
   (C : S) (A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin n)
   (γ : S ^ (1 + n))
@@ -6882,27 +6778,22 @@ module EnvOneAgree {m : ℕ} (v K N0 : Fin m) (γ : S ^ (2 + m))
 module DefinesAgree {m : ℕ} (x w v K N0 : Fin m) (γ : S ^ m)
   (N0eq : fst (lookup N0 γ) ≡ fst (numeralL 0))
   (numK : ⟨ fst (numeralL 0) ∈ fst (lookup K γ) ⟩)
-  -- THE TWO ENVIRONMENT TIES ARE NO LONGER PARAMETERS ([LJ-1.346]).
-  -- They were, and nothing supplied them.  `KTies` above derives both
-  -- from the three closure fields below, so this telescope asks for
-  -- `KFacts` fields only.  `z` IS BOUND BY THE CARRIER SLOT `w`
-  -- ([LJ-1.343]): without that hypothesis both tie types are EMPTY,
-  -- because `z` may be the bound itself and the conclusion is then a
-  -- membership cycle, which `regularityV` refutes.  The sibling tie
-  -- `satK` below carries the same bound inside its formula.
-  (pairK : (a b : S) → ⟨ fst a ∈ fst (lookup K γ) ⟩
-          → ⟨ fst b ∈ fst (lookup K γ) ⟩
-          → ⟨ fst (prʟ a b) ∈ fst (lookup K γ) ⟩)
-  (carrierK : (u : S) → ⟨ fst u ∈ fst (lookup w γ) ⟩
-             → ⟨ fst u ∈ fst (lookup K γ) ⟩)
-  (arityK : (N u : S) → ⟨ fst u ∈ fst N ⟩ → ⟨ fst N ∈ fst (lookup K γ) ⟩
-           → ⟨ fst u ∈ fst (lookup K γ) ⟩)
+  -- `z` IS BOUND BY THE CARRIER SLOT `w` ([LJ-1.343]).  Without that
+  -- hypothesis both types are EMPTY: take `z` to be the bound itself and
+  -- the conclusion is a membership cycle, which `regularityV` refutes.
+  -- The bound is not in the formula, because `tagAtL-adequate` and
+  -- `envOneAt-out` make each premise a bare set equation.  The sibling
+  -- tie `satK` below carries the same bound inside its formula.
+  (envK : (E z : S) → ⟨ fst z ∈ fst (lookup w γ) ⟩
+         → ⟨ (E ∷ z ∷ γ) ⊨ envOneAt zero (suc zero) ⟩
+         → ⟨ fst E ∈ fst (lookup K γ) ⟩)
+  (pairK : (E z w' : S) → ⟨ fst z ∈ fst (lookup w γ) ⟩
+          → ⟨ (w' ∷ E ∷ z ∷ γ) ⊨ tagAtL zero 0 (suc (suc zero)) ⟩
+          → ⟨ fst w' ∈ fst (lookup K γ) ⟩)
   (satK : (z : S) → ⟨ (z ∷ γ) ⊨
              ((var zero ∈̇ var (suc w)) ∧̇
               ∃̇ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc v))))) ⟩
          → ⟨ fst z ∈ fst (lookup K γ) ⟩) where
-
-  open KTies {m} w K γ numK pairK carrierK arityK using ( envK; defPairK )
 
   bodyB : Formula S (suc m)
   bodyB = (var zero ∈̇ var (suc w))
@@ -6925,7 +6816,7 @@ module DefinesAgree {m : ℕ} (x w v K N0 : Fin m) (γ : S ^ m)
       eOne = EA.back (hE .fst)
         where
         module EA = EnvOneAgree {m} v K N0 (E ∷ z ∷ γ) N0eq numK
-          (λ w' hw → defPairK E z w' hz hw)
+          (λ w' hw → pairK E z w' hz hw)
 
   bwd : (z : S) → ⟨ (z ∷ γ) ⊨ bodyM ⟩ → ⟨ (z ∷ γ) ⊨ bodyB ⟩
   bwd z (hz , hx) = hz , PT.rec squash₁ go hx
@@ -6940,7 +6831,7 @@ module DefinesAgree {m : ℕ} (x w v K N0 : Fin m) (γ : S ^ m)
       eB = EA.out hE
         where
         module EA = EnvOneAgree {m} v K N0 (E ∷ z ∷ γ) N0eq numK
-          (λ w' hw → defPairK E z w' hz hw)
+          (λ w' hw → pairK E z w' hz hw)
 
   out : ⟨ γ ⊨ DefinesAt x w v ⟩ → ⟨ γ ⊨ DefinesBS x w v K N0 ⟩
   out = extAt→extAtB x K bodyB bodyM γ fwd bwd
@@ -7297,9 +7188,15 @@ module LeafAgree {n : ℕ} (w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fi
            × ⟨ fst f ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
   (keyValK : (t : S) → ⟨ (t ∷ γ) ⊨ tagAtL (suc (suc zero)) 1 zero ⟩
             → ⟨ fst t ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
-  -- THE TWO ENVIRONMENT TIES ARE GONE FROM THIS TELESCOPE ([LJ-1.346]).
-  -- `DefinesAgree` derives them from `f`, so `DA` below takes three
-  -- `KFacts` fields where it took two unsupplied ties.
+  -- `z` IS BOUND BY THE CARRIER SLOT `w` ([LJ-1.343]).  The same repair
+  -- as `DefinesAgree`'s, at this site's index form; these two are handed
+  -- straight through to `DA` below.
+  (envK : (E z : S) → ⟨ fst z ∈ fst (lookup (suc (suc (suc w))) γ) ⟩
+         → ⟨ (E ∷ z ∷ γ) ⊨ envOneAt zero (suc zero) ⟩
+         → ⟨ fst E ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
+  (defPairK : (E z w' : S) → ⟨ fst z ∈ fst (lookup (suc (suc (suc w))) γ) ⟩
+             → ⟨ (w' ∷ E ∷ z ∷ γ) ⊨ tagAtL zero 0 (suc (suc zero)) ⟩
+             → ⟨ fst w' ∈ fst (lookup (suc (suc (suc K))) γ) ⟩)
   (satK : (z : S) → ⟨ (z ∷ γ) ⊨ ((var zero ∈̇ var (suc (suc (suc (suc w)))))
              ∧̇ ∃̇ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc zero))))) ⟩
          → ⟨ fst z ∈ fst (lookup (suc (suc (suc K))) γ) ⟩) where
@@ -7322,7 +7219,7 @@ module LeafAgree {n : ℕ} (w K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fi
 
   module DA = DefinesAgree {8 + n} (suc (suc zero)) (suc (suc (suc w))) zero
                 (suc (suc (suc K))) (suc (suc (suc N0))) γ
-                (f .tagEq0) (f .numK0) (f .pairK) (f .carrierK) (f .arityK) satK
+                (f .tagEq0) (f .numK0) envK defPairK satK
 
   ic-out : ⟨ γ ⊨ isCodeAt (suc zero) (suc (suc (suc w))) ⟩
          → ⟨ γ ⊨ isCodeBS (suc zero) (suc (suc (suc w))) (suc (suc (suc K)))

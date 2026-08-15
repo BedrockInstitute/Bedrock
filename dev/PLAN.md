@@ -1232,7 +1232,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.341 | Are envK and defPairK TRUE | FALSE, THE TYPES ARE EMPTY. DD25 [LJ-1.345] | Instantiate z with the bound itself and regularity refutes the cycle. The repair's hypothesis is FREE |
 | LJ-1.343 | Repair the two vacuous telescopes | LANDED GREEN, 133.96 s, 20 IN AND 7 OUT | The two types are ONE type, proved by identity BOTH ways before any edit. 38 copies go stale, not two |
 | LJ-1.344 | Supply the repaired ties | BOTH SUPPLIED, 25 LINES, NO NEW FIELD | The closure needed stating one SORT up, not a new fact. Two more sites found |
-| LJ-1.346 | Land the tie supply, and settle the private access | DISPATCHED | LJ-1.344 gave 25 lines and a site. Four tasks re-wrote one private 4-line access; that is an interface call |
+| LJ-1.346 | Land the tie supply, settle the access | LANDED GREEN FIRST TRY. THE BLOCK STAYS PRIVATE | A public access already existed, so the supply carries ZERO copies. Two telescopes shortened |
 | LJ-1.345 | DD25 review of LJ-1.341's vacuity claim | UPHOLD. THE CHAPTER WAS EDITED ON A TRUE PREMISE | It rebuilt the countermodel itself and forced an honest cold check past a cache hit |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
 | LJ-1.331 | The RowTies probe, funded by its own gate | NO. ONE FIELD EXHAUSTS 8 GB WHERE A PARAMETER IS FREE | Not field count: two wall alone and four KFacts-shaped ones are green. Law C-55 |
