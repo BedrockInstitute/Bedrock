@@ -1197,6 +1197,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.304 | Price StepAgree and ApproxAgree | BOTH BUILT, ABOUT 190 LINES. BASIS: THE BUILD | q's four named costs are now ALL measured. Neither module exists in src/: they were LJ-1.52's names |
 | LJ-1.305 | Untruncate the descent: deliver SqShape | DISPATCHED | LJ-1.301 built the descent but delivers a proposition. This is LJ-1.8's WHOLE remaining gap |
 | LJ-1.306 | Port the clean 23 Agree modules generic | DISPATCHED | Wave 1 of q's route, priced at about 180 lines by LJ-1.298 at a ZERO-changed rate. Everything else waits on it |
+| LJ-1.307 | Are the thirty Agree modules thirty things or one | DISPATCHED, no Agda | DD13 from the rewrite side. LJ-1.302 found the seven TIES were ONE debt; nobody asked it of the modules |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
