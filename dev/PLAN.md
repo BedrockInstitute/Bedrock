@@ -1097,6 +1097,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.298 | Price q' through the class-carrier analogues | ZERO LINES CHANGED. THE PORT IS VERBATIM | 33 of 33 unchanged. One scaffold serves a chapter. The family: 180 new lines placing 6,900 |
 | LJ-1.299 | Build noinj-squared, Init's last row | CIRCULAR, PLUS SqShape GATES NOTHING. DD25 [LJ-1.300] | A missing pair of parentheses leaves the trophy's last hypothesis inhabited. I verified it |
 | LJ-1.300 | DD25 review of the SqShape parse defect | 1 HOLDS, 2 WRONG, 3 HOLDS. SWEEP COUNT 1 | The circle is NOT real: Init's row 4 quantifies BELOW and squareOmega bypasses it. Finite descent |
+| LJ-1.301 | Build sq by descent from squareOmega | DISPATCHED | LJ-1.300 measured the circle FALSE: Init row 4 quantifies BELOW and squareOmega bypasses Init. Finite descent |
+| LJ-1.302 | Compose the thirty Agree modules into a bridge | DISPATCHED | LJ-1.298 measured NO theorem composes them. Condensation ends at 7319 with LeafAgree and no composite |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
