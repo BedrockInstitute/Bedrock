@@ -173,6 +173,17 @@ class Vendor:
     windows: tuple[tuple[int, int, int, int, str], ...]
     default_mode: str | None
     source: str
+    #: The vendor `pi` retries on when this one refuses, WITHIN the same
+    #: harness. Owner's ruling 2026-08-15: GLM and deepseek are MUTUAL
+    #: fallbacks inside `pi`, and only when `pi` ITSELF is down does the chain
+    #: leave it for `codex`, which is FIXED on deepseek and never carries a
+    #: zai model. Empty means no same-harness retry exists.
+    #:
+    #: THE CHAIN NEVER REACHES IN-HARNESS, and that is why this shape is safer
+    #: than the one `[LJ-1.296]` designed: DD17's invariant, that the critic is
+    #: never the author, cannot be threatened by a fallback that stays inside
+    #: `herdr`.
+    pi_fallback: str = ""
 
     @property
     def banded(self) -> bool:
@@ -198,7 +209,7 @@ BUILTIN_VENDOR = Vendor(
 )
 
 _KNOWN_FIELDS = ("model", "pi_provider", "pi_wired", "base_state", "windows",
-                 "default_mode")
+                 "default_mode", "pi_fallback")
 _KNOWN_WINDOW_FIELDS = ("state", "start", "end")
 
 
@@ -261,6 +272,13 @@ def _vendor_from(path, name: str, row: object, source: str) -> Vendor:
     banded = bool(windows_raw)
     base_state = row.get("base_state")
     default_mode = row.get("default_mode")
+    pi_fallback = row.get("pi_fallback", "")
+    if not isinstance(pi_fallback, str):
+        raise _reject(path, f"`[vendors.{name}]` declares `pi_fallback` as "
+                            f"{pi_fallback!r}; it must be the NAME of another "
+                            f"vendor table, or absent. It is the vendor `pi` "
+                            f"retries on before the chain leaves `pi` for "
+                            f"`codex`.")
 
     if banded and default_mode is not None:
         raise _reject(path, f"`[vendors.{name}]` declares both `windows` and "
@@ -335,6 +353,7 @@ def _vendor_from(path, name: str, row: object, source: str) -> Vendor:
         default_mode=(default_mode.strip()
                       if isinstance(default_mode, str) else None),
         source=source,
+        pi_fallback=pi_fallback.strip(),
     )
 
 
@@ -598,6 +617,13 @@ def current_window(now: datetime | None = None) -> tuple[datetime | None, dateti
 # `dispatch.py --model`; nothing in this file has an opinion about which.
 MODEL = VENDOR.model
 
+#: CODEX'S MODEL, FIXED. It is not the vendor in force and it never follows one:
+#: `~/.codex/config.toml` wires the deepseek provider alone, and codex refuses
+#: any other model BY NAME (`[LJ-1.296]`, MEASURED 2026-08-15). So the fallback
+#: row carries this and not `MODEL`. When codex gains another provider, this is
+#: the one line to change.
+CODEX_MODEL = "deepseek-v4-pro"
+
 # The provider name `pi` needs for the vendor in force. It is exposed so the
 # dispatcher can read it instead of carrying its own copy; the vendor name
 # belongs to the config, not to a caller.
@@ -677,7 +703,14 @@ POLICY: dict[str, dict] = {
             "fallback": {
                 "harness": "herdr",
                 "agent": "codex",
-                "model": MODEL,
+                # CODEX IS FIXED ON DEEPSEEK AND NEVER CARRIES THE VENDOR IN
+                # FORCE. Owner's ruling 2026-08-15. This row used to read
+                # `MODEL`, the vendor's model, and `[LJ-1.296]` MEASURED the
+                # consequence: `codex exec -m glm-5.3` is refused by name, and
+                # `~/.codex/config.toml` wires only the deepseek provider. The
+                # row was wrong from the day the vendor changed and nothing
+                # noticed, because nobody has ever passed `--fallback`.
+                "model": CODEX_MODEL,
                 "tier_token": "codex",
             },
         },
@@ -704,7 +737,14 @@ POLICY: dict[str, dict] = {
             "fallback": {
                 "harness": "herdr",
                 "agent": "codex",
-                "model": MODEL,
+                # CODEX IS FIXED ON DEEPSEEK AND NEVER CARRIES THE VENDOR IN
+                # FORCE. Owner's ruling 2026-08-15. This row used to read
+                # `MODEL`, the vendor's model, and `[LJ-1.296]` MEASURED the
+                # consequence: `codex exec -m glm-5.3` is refused by name, and
+                # `~/.codex/config.toml` wires only the deepseek provider. The
+                # row was wrong from the day the vendor changed and nothing
+                # noticed, because nobody has ever passed `--fallback`.
+                "model": CODEX_MODEL,
                 "tier_token": "codex",
             },
         },

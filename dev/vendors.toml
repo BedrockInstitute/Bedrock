@@ -59,6 +59,8 @@ model = "deepseek-v4-pro"
 pi_provider = "deepseek"
 pi_wired = true
 base_state = "off-peak"
+# The other half of the mutual pair above.
+pi_fallback = "zai"
 windows = [
     { state = "peak", start = "09:00", end = "12:00" },
     { state = "peak", start = "14:00", end = "18:00" },
@@ -87,6 +89,11 @@ model = "glm-5.3"
 pi_provider = "zai"
 pi_wired = true
 default_mode = "pi-subagent-mode"
+# WITHIN pi, GLM AND DEEPSEEK ARE MUTUAL FALLBACKS (owner, 2026-08-15). When
+# this vendor refuses, the same harness retries on the vendor named here before
+# anything leaves `pi`. The chain then ends at `codex`, which is FIXED on
+# deepseek and never carries this model.
+pi_fallback = "deepseek"
 
 # ---------------------------------------------------------------------------
 # HOW TO ADD A VENDOR. Copy one template below, fill the model ID, and set
