@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression tests for the series check in `scripts/check-rule-ids.py`.
+"""Regression tests for the series check in `scripts/gate/check-rule-ids.py`.
 
 WHY THIS FILE EXISTS. On 2026-08-13 `[LJ-1.139]` found ten bad pointers in nine
 memo headers, and EIGHT of them RESOLVED. `check-rule-ids.py` was green through
@@ -30,7 +30,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "check_rule_ids", ROOT / "scripts" / "check-rule-ids.py"
+    "check_rule_ids", ROOT / "scripts" / "gate" / "check-rule-ids.py"
 )
 cri = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cri)
@@ -184,12 +184,12 @@ scope = {str(p.relative_to(ROOT))
 
 for target in ("dev/LESSONS.md", "dev/PLAN.md", "dev/ARCHIVE.md",
                "dev/STYLE-agda.md", "dev/literature/owner-notes-rud.md",
-               "scripts/README.md", "scripts/check-tree.py", "scripts/ledger.py"):
+               "scripts/README.md", "scripts/gate/check-tree.py", "scripts/measure/ledger.py"):
     check(f"{target} is inside the default series scope", target in scope)
 
 check("scripts/*.py reach the series scope and nothing else adds them",
-      "scripts/ledger.py" in scope
-      and "scripts/ledger.py" not in {str(p.relative_to(ROOT))
+      "scripts/measure/ledger.py" in scope
+      and "scripts/measure/ledger.py" not in {str(p.relative_to(ROOT))
                                       for p in cri.default_targets()})
 check("dev/JOURNAL.md is not in the series scope", "dev/JOURNAL.md" not in scope)
 check("no memo is in the series scope",
@@ -217,7 +217,7 @@ check("the declaration does NOT exempt the locator rule in that file",
 import subprocess  # noqa: E402  (only the CLI tests need it)
 
 PY = sys.executable
-SCRIPT = str(ROOT / "scripts" / "check-rule-ids.py")
+SCRIPT = str(ROOT / "scripts" / "gate" / "check-rule-ids.py")
 
 
 def run(*args: str) -> subprocess.CompletedProcess:

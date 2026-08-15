@@ -3,7 +3,7 @@
 This is the **canonical, machine-checked glossary** for Bedrock's trilingual docs. It exists
 to stop terminology drift: when the same English term is translated again and again by
 different passes (often by AI agents), the rendering tends to wander. The glossary fixes the
-rendering once, and `scripts/check-glossary.py` enforces it.
+rendering once, and `scripts/gate/check-glossary.py` enforces it.
 
 The term data lives in **[`glossary.toml`](glossary.toml)**, the single source of truth the
 checker reads (via `tomllib`, so Python 3.11+). This document is the human-readable

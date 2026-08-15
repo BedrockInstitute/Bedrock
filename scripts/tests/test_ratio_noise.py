@@ -36,7 +36,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "check_ratio", ROOT / "scripts" / "check-ratio.py")
+    "check_ratio", ROOT / "scripts" / "measure" / "check-ratio.py")
 cr = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(cr)

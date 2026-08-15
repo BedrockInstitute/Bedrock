@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "obligations", ROOT / "scripts" / "obligations.py"
+    "obligations", ROOT / "scripts" / "measure" / "obligations.py"
 )
 obligations = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(obligations)

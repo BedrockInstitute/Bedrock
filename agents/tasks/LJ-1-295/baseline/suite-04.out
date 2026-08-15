@@ -1,0 +1,33 @@
+  ok    AGENTS.md at the pre-slim 3,450 words must be over the cap
+  ok    the 12,634-word L3.32 cell must be over the cell cap
+  ok    a section 0 heading older than its own body must fire
+  ok    an imported entry with no routing must fire
+  ok    AGENTS.md at exactly the cap is clean
+  ok    AGENTS.md one word over the cap fires
+  ok    a cell at exactly 1,600 words is clean
+  ok    a cell one word over 1,600 fires
+  ok    the current 1,784-word AGENTS.md is clean
+  ok    a 1,125-word cell outside the MASTER table is clean under the word cap (the T110 largest-cell shape)
+  ok    a heading as new as its body is clean
+  ok    C-21's 'imported names' is code prose, not an import marker (the first-version wolf)
+  ok    an imported entry that IS routed is clean
+  ok    PLAN with no section 0 is a finding, not a crash
+  ok    a STATUS header stating a verdict is clean
+  ok    a STATUS header with no verdict word fires
+  ok    a memo with no STATUS header is untouched (form-when-present)
+  ok    a named enforcer that exists is clean
+  ok    a named enforcer that does not exist fires
+  ok    the pre-slim L3.32-F5 row (6,966 chars) fires the goal-row cap
+  ok    the pre-slim L3.32-F2 row (5,131 chars) fires the goal-row cap
+  ok    the pre-slim L3.32-F6.0 row (3,704 chars) fires the goal-row cap
+  ok    the pre-slim L3.32-F6 row (2,836 chars) fires the goal-row cap
+  ok    the pre-slim L3.32-F0 row (3,106 chars) fires the goal-row cap
+  ok    a goal row at exactly the 1,200-character cap is clean
+  ok    a goal row one character over the cap fires
+  ok    the post-slim L3.32 row, the register exemplar, is clean
+  ok    the D-2 citation pattern also matches the PLAN-style D2
+  ok    the D-2 pattern does not match inside D-20
+  ok    a section 11 cell over 600 words is listed by the sweep
+  ok    a section 11 cell under 600 words is not listed
+
+31/31 passed

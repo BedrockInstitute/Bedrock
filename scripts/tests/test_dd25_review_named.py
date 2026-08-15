@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression tests for `scripts/check-dd25-review-named.py`.
+"""Regression tests for `scripts/gate/check-dd25-review-named.py`.
 
 WHY THIS FILE EXISTS. DD25's own enforcement point is the PLAN section 11 row:
 a negative return's row names the code of the adversarial review dispatched
@@ -29,7 +29,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "check_dd25_review_named", ROOT / "scripts" / "check-dd25-review-named.py"
+    "check_dd25_review_named", ROOT / "scripts" / "gate" / "check-dd25-review-named.py"
 )
 cd25 = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cd25)
@@ -147,7 +147,7 @@ check("an -R row is exempt",
 print("the real tree")
 
 PY = sys.executable
-SCRIPT = str(ROOT / "scripts" / "check-dd25-review-named.py")
+SCRIPT = str(ROOT / "scripts" / "gate" / "check-dd25-review-named.py")
 
 
 def run(*args: str) -> subprocess.CompletedProcess:

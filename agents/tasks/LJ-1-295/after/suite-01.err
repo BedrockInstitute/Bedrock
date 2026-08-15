@@ -1,0 +1,15 @@
+test_good_master_is_clean (__main__.MarkerLintTests.test_good_master_is_clean) ... ok
+test_marker_inside_code_fence (__main__.MarkerLintTests.test_marker_inside_code_fence) ... ok
+test_stray_close (__main__.MarkerLintTests.test_stray_close) ... ok
+test_unknown_language_code (__main__.MarkerLintTests.test_unknown_language_code) ... ok
+test_unterminated_group (__main__.MarkerLintTests.test_unterminated_group) ... ok
+test_code_identical_across_languages (__main__.WeaveTests.test_code_identical_across_languages) ... ok
+test_en_keeps_english_and_code_and_shared (__main__.WeaveTests.test_en_keeps_english_and_code_and_shared) ... ok
+test_group_languages (__main__.WeaveTests.test_group_languages) ... ok
+test_zh_falls_back_to_english_when_absent (__main__.WeaveTests.test_zh_falls_back_to_english_when_absent) ... ok
+test_zh_keeps_chinese_and_code (__main__.WeaveTests.test_zh_keeps_chinese_and_code) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.000s
+
+OK

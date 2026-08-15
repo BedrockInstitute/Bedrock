@@ -1,0 +1,49 @@
+one sample has NO spread, and the tool says unknown rather than zero
+  ok   a single sample gives None: want None got None
+  ok   an empty series gives None: want None got None
+  ok   two samples give (max-min)/mean: want 0.666667 got 0.666667
+  ok   the StageArith series reads above 100 percent: want True got True
+the declared band is the MEASURED between-series figure
+  ok   the declared band is the measured one: want 0.128 got 0.128
+  ok   and it says where it came from: want True got True
+  ok   an unmeasured band cannot flag a row: want False got False
+  ok   a zero band cannot flag a row: want False got False
+a band flags exactly the rows whose swing crosses the bar
+  ok   a tight tail keeps its UNDER verdict: want False got False
+  ok   the first-run swing crosses the bar: want True got True
+  ok   a row far OVER stays OVER under its own spread: want False got False
+a series returns every sample, and a failure returns none of them
+  ok   three runs give three samples: want [1.0, 2.0, 3.0] got [1.0, 2.0, 3.0]
+  ok   the timer was called three times: want 3 got 3
+  ok   a failed run voids the whole series: want None got None
+  ok   the series stops at the failure: want 2 got 2
+the warm-up run is DISCARDED, reported, and taken once per SERIES
+  ok   the warm-up is not in the samples: want [0.787, 0.79] got [0.787, 0.79]
+  ok   the warm-up is returned so it can be printed: want 1.811 got 1.811
+  ok   the second module keeps every sample: want [0.5, 0.505] got [0.5, 0.505]
+  ok   the second module has no warm-up of its own: want None got None
+  ok   the timer ran once for warm-up plus twice per module: want 5 got 5
+  ok   --no-warmup restores the historical single sample: want [1.811] got [1.811]
+  ok   and takes no extra run: want 1 got 1
+--runs must be a real count
+  ok   --runs 0 is refused: want 1 got 1
+  ok   the refusal says so: want True got True
+A NOISE TAG NEVER CHANGES THE EXIT CODE, in either direction
+  FAIL a fragile row is named NOISE: want True got False
+  FAIL a fragile row within the bar still exits 0: want 0 got 1
+  ok   a wing far over the bar still exits 1: want 1 got 1
+  ok   and it is not called NOISE: want True got True
+  FAIL a fragile OVER row is named NOISE: want True got False
+  ok   a fragile row over the bar still exits 1: want 1 got 1
+a tight series NEVER shrinks the band below the measured floor
+  FAIL a tight series near the bar is still NOISE: want True got False
+  ok   and it still exits 0: want 0 got 0
+one run says so, and does not pretend to know its own swing
+  ok   a single run advertises n=1: want True got True
+  ok   and prints the declared floor: want True got True
+
+FAIL: 4 failing check(s)
+  - a fragile row is named NOISE
+  - a fragile row within the bar still exits 0
+  - a fragile OVER row is named NOISE
+  - a tight series near the bar is still NOISE

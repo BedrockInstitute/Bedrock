@@ -6,9 +6,9 @@
 Bedrock keeps **one master `.lagda.md` per module** as the single source of truth: the
 Agda code appears exactly once, and prose for every language lives in the same file, wrapped
 in invisible HTML-comment markers. Agda reads only ` ```agda ` blocks and ignores all prose,
-so the code can never drift between languages. A weaver (`scripts/weave-i18n.py`) and the
-site renderer (`scripts/render-site.py`) both read these markers; the linter
-(`scripts/lint-prose.py`) validates them.
+so the code can never drift between languages. A weaver (`scripts/site/weave-i18n.py`) and the
+site renderer (`scripts/site/render-site.py`) both read these markers; the linter
+(`scripts/gate/lint-prose.py`) validates them.
 
 ## Grammar
 
@@ -47,7 +47,7 @@ English prose.
 ## Prose conventions
 
 CJK prose (zh and ja) follows the repository's house style enforced by
-`scripts/lint-prose.py`: full-width sentence punctuation `，；：！？`, corner-bracket quotes
+`scripts/gate/lint-prose.py`: full-width sentence punctuation `，；：！？`, corner-bracket quotes
 `「」`, half-width parentheses with English-style outer spacing, no em dash, no space between
 CJK characters. Agda code blocks are English-only. See the `scripts/` README.
 

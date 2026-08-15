@@ -2,15 +2,15 @@
 #
 # WHAT THIS FILE IS FOR. It names the vendor in force, the model ID that vendor
 # runs, whether `pi` is wired to that vendor today, and the price bands the
-# vendor bills on. `scripts/dispatch_policy.py` reads it with `tomllib`.
+# vendor bills on. `scripts/dispatch/dispatch_policy.py` reads it with `tomllib`.
 #
 # WHAT THIS FILE DOES NOT HOLD, AND THIS IS THE DD19 LINE. It holds NO head
 # table, NO mode, NO case, NO tier token and NO invariant. THE HEAD TABLES LIVE
-# IN `scripts/dispatch_policy.py`, and `AGENTS.md` names that file the ONLY home
+# IN `scripts/dispatch/dispatch_policy.py`, and `AGENTS.md` names that file the ONLY home
 # of the tables. This file says WHEN a vendor is dear. That file says WHICH MODE
 # each price band selects. Neither one states the other.
 #
-# DELETE THIS FILE AND NOTHING BREAKS. `scripts/dispatch_policy.py` then uses its
+# DELETE THIS FILE AND NOTHING BREAKS. `scripts/dispatch/dispatch_policy.py` then uses its
 # built-in default vendor, which holds the data the code carried before this
 # config existed. That default is a compatibility floor, not a second home: when
 # this file exists it wins completely, and no field merges into it from the
@@ -19,7 +19,7 @@
 # THE CAVEAT, from the repository owner, 2026-08-15. `pi` is wired to deepseek
 # and to no other vendor today. This file opens compatibility before the need.
 # It does not claim support that exists. A vendor row with `pi_wired = false` is
-# a legal declaration, and `scripts/dispatch_policy.py` refuses loudly when that
+# a legal declaration, and `scripts/dispatch/dispatch_policy.py` refuses loudly when that
 # vendor is in force and a head must start.
 #
 # NO FIELD HAS A SILENT DEFAULT, because an escape hatch is the shape a wrong
@@ -50,7 +50,7 @@ in_force = "zai"
 #   default_mode the mode that `VERSION_IN_FORCE = "auto"` resolves to. A flat
 #                vendor gives the clock no basis, so the clock does not run.
 #
-# THE BAND NAMES ARE NOT FREE TEXT. `scripts/dispatch_policy.py` maps each band
+# THE BAND NAMES ARE NOT FREE TEXT. `scripts/dispatch/dispatch_policy.py` maps each band
 # to a mode in `CLOCK_STATES`, and it refuses a band that the map does not know.
 # ---------------------------------------------------------------------------
 
@@ -118,7 +118,7 @@ default_mode = "pi-subagent-mode"
 #   ]
 #
 # A NEW BAND NAME NEEDS ONE NEW ROW IN `CLOCK_STATES`, in
-# `scripts/dispatch_policy.py`. That row says which mode the band selects. That
+# `scripts/dispatch/dispatch_policy.py`. That row says which mode the band selects. That
 # is a policy decision about heads, so it belongs in the policy file and not
 # here. This is the DD19 line again, seen from the other side.
 # ---------------------------------------------------------------------------

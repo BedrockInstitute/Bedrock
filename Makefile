@@ -49,19 +49,19 @@ typecheck:
 	$(AGDA) $(EVERYTHING)
 
 lint:
-	$(PY) scripts/lint-prose.py --check
+	$(PY) scripts/gate/lint-prose.py --check
 
 lint-agda:
-	$(PY) scripts/lint-agda.py --check
+	$(PY) scripts/gate/lint-agda.py --check
 
 markers:
-	$(PY) scripts/weave-i18n.py --check
+	$(PY) scripts/site/weave-i18n.py --check
 
 glossary:
-	$(PY) scripts/check-glossary.py --check
+	$(PY) scripts/gate/check-glossary.py --check
 
 ledger:
-	$(PY) scripts/ledger.py --check
+	$(PY) scripts/measure/ledger.py --check
 
 # DD24 makes the seconds-per-line ratio the ONLY threshold on the GCH wing.
 #
@@ -69,14 +69,14 @@ ledger:
 # dev/ORCHESTRATION.md forbids a typecheck in the commit gate: the gate must
 # stay cheap, and this tool fails closed whenever another agda process is
 # live, so in the gate it would turn a busy machine into a red commit. It is
-# an on-demand MEASUREMENT, in the same class as scripts/deletion-test.py.
+# an on-demand MEASUREMENT, in the same class as scripts/measure/deletion-test.py.
 #
 # IT MEASURES COLD, because the baseline it compares against is cold. A warm
 # run against a cold baseline is not a looser check, it is a WRONG one: warm
 # is several times faster, so a wing far over the bar reads as under it.
 # [LJ-0.1] caught the gate wired warm.
 ratio:
-	$(PY) scripts/check-ratio.py --check
+	$(PY) scripts/measure/check-ratio.py --check
 
 # ONE gate, and it answers one question: did a probe get into git outside its
 # home? The owner ruled on 2026-08-13 that a probe lives in agents/tasks/
@@ -87,7 +87,7 @@ ratio:
 # one `git add -A src/` committed 13 probe files. Cost: 0.24 s, measured
 # 2026-08-13 over 1,586 tracked files.
 probes:
-	$(PY) scripts/check-probes.py --check
+	$(PY) scripts/gate/check-probes.py --check
 
 # The commit gate against a LIVE agent's write territory. [LJ-1.189]'s P3,
 # built by [LJ-1.193]. Two `git add -A` sweeps on 2026-08-13 committed a
@@ -96,7 +96,7 @@ probes:
 # tracked-tree mode audits that nothing already landed there. The ONE
 # exemption is a live record's own brief path, MEASURED: the orchestrator
 # commits a brief while its agent is live (4ae98f3, 82dd1fb, 8eb2ba0). The
-# hook runs scripts/check-live-territory.py --staged; this target is the
+# hook runs scripts/gate/check-live-territory.py --staged; this target is the
 # --check half. Cost: a registry read, a ps per live agent, one git ls-files.
 liveterritory:
 # THE STAGED MODE IS THE COMMIT GATE. `--check` audits every TRACKED file, which
@@ -106,40 +106,40 @@ liveterritory:
 # 2026-08-14: a `git add -- agents/tasks/<CODE>/` swept a live agent's report
 # skeleton into a commit, the audit mode caught it, and the staged mode is what
 # would have refused it at the moment it mattered.
-	$(PY) scripts/check-live-territory.py --staged
+	$(PY) scripts/gate/check-live-territory.py --staged
 
 tree:
-	$(PY) scripts/check-tree.py --check
+	$(PY) scripts/gate/check-tree.py --check
 
 # Agda outside a fence is invisible to Agda AND to ledger.py, so a green
 # tree and a right line count both prove nothing about it. [LJ-1.41]
 # reported two theorems CLOSED that sat in prose and carried four defects.
 fences:
-	$(PY) scripts/check-fences.py --check
+	$(PY) scripts/gate/check-fences.py --check
 
 # A dangling rule citation reads as authority. [L3.32-T105] found one in a
 # document written ABOUT rule hygiene, which is the argument for gating it.
 ruleids:
-	$(PY) scripts/check-rule-ids.py
-	$(PY) scripts/rules.py --check
+	$(PY) scripts/gate/check-rule-ids.py
+	$(PY) scripts/dispatch/rules.py --check
 
 # The dev/ documents decay; [L3.32-T110] built the maintenance mechanism so
 # the decay is found here, not by accident. Six cheap subchecks: size caps on
 # AGENTS.md and PLAN cells, routing of imported LESSONS entries, the section 0
 # "as of" date, memo STATUS form, and that AGENTS.md's named enforcers exist.
-# On-demand sweep (never a gate): scripts/check-dev-docs.py --sweep.
+# On-demand sweep (never a gate): scripts/gate/check-dev-docs.py --sweep.
 taskindex:
-	$(PY) scripts/check-task-index.py
+	$(PY) scripts/gate/check-task-index.py
 
 agentsguard:
-	$(PY) scripts/check-agents-guard.py
+	$(PY) scripts/gate/check-agents-guard.py
 
 # The head that runs a dispatch is DD17's, and since 2026-08-13 it has two
 # versions with one switch selecting between them. This checks that briefs
 # agree with the version in force. It cannot check which head actually RAN:
 # an in-harness Opus dispatch passes through no tool at all.
 dispatchpolicy:
-	$(PY) scripts/check-dispatch-policy.py
+	$(PY) scripts/dispatch/check-dispatch-policy.py
 
 # ADVISORY, and deliberately NOT in `check`. [LJ-1.157] measured that 164 of 164
 # briefs carried the ARCHIVE heading while the CONTENT decayed: after [LJ-1.94]
@@ -154,13 +154,13 @@ dispatchpolicy:
 # "somebody runs a command" fires after the fact. Running them inside `check`
 # makes them VISIBLE at the one moment everyone looks, without making them gate.
 buildmanifest:
-	$(PY) scripts/check-build-manifest.py --check
+	$(PY) scripts/gate/check-build-manifest.py --check
 
 archivecited:
-	$(PY) scripts/check-archive-cited.py
+	$(PY) scripts/gate/check-archive-cited.py
 
 dd4:
-	$(PY) scripts/check-dd4-stated.py
+	$(PY) scripts/gate/check-dd4-stated.py
 
 # DD25: a negative return's index row names its review's code. The verdict
 # cell announces a negative in structured words, so this is mechanical: a row
@@ -170,7 +170,7 @@ dd4:
 # or fire when the return lands; the honest enforcement point is this gate.
 # The measured backlog of 42 pre-epoch rows is reported and never fails.
 dd25:
-	$(PY) scripts/check-dd25-review-named.py
+	$(PY) scripts/gate/check-dd25-review-named.py
 
 # THE PREMISES GATE, [LJ-1.212], from [LJ-1.211]'s change 1. A brief that
 # carries a trigger token (a fixed gate, a named shape, a measurement
@@ -185,32 +185,32 @@ dd25:
 # whether the basis says what the author claims, and fires at the commit or
 # the gate, never at the writing moment.
 premises:
-	$(PY) scripts/check-premises-stated.py
+	$(PY) scripts/gate/check-premises-stated.py
 
 devdocs:
-	$(PY) scripts/check-dev-docs.py
+	$(PY) scripts/gate/check-dev-docs.py
 
 # The generated dashboard was ABOLISHED by the owner on 2026-08-09. Its three
 # scripts are frozen in archive/scripts/, with what they did right and the one
 # thing they got wrong. The canonical figures are unchanged and are read with
-# `python3 scripts/ledger.py --brief`.
+# `python3 scripts/measure/ledger.py --brief`.
 
 reuse:
 	$(REUSE) lint
 
 gen:
-	$(PY) scripts/weave-i18n.py --gen --out _build/woven
+	$(PY) scripts/site/weave-i18n.py --gen --out _build/woven
 
 html:
 	$(AGDA) --html --html-highlight=code --html-dir=$(HTML_DIR) $(EVERYTHING)
 
 types:
-	$(PY) scripts/extract-types.py --out _build/types.json
+	$(PY) scripts/site/extract-types.py --out _build/types.json
 
 site: html types
-	$(PY) scripts/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \
+	$(PY) scripts/site/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \
 		--langs $(LANGS) --base-url "$(BASE_URL)"
-	$(PY) scripts/gen-depmap.py --src src --out $(SITE_OUT) --langs $(LANGS)
+	$(PY) scripts/site/gen-depmap.py --src src --out $(SITE_OUT) --langs $(LANGS)
 
 serve:
 	@echo "Serving $(SITE_OUT) at http://localhost:$(PORT)/ (Ctrl-C to stop)"
@@ -239,6 +239,7 @@ test:
 	$(PY) scripts/tests/test_rule_series.py
 	$(PY) scripts/tests/test_agents_tree.py
 	$(PY) scripts/tests/test_archive_layout.py
+	$(PY) scripts/tests/test_scripts_layout.py
 	$(PY) scripts/tests/test_dd25_review_named.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the

@@ -26,15 +26,35 @@ A walk that reaches the top of the filesystem without a marker REFUSES
 back to a guess: a script run outside a repository must fail loudly, never
 guard a tree it guessed at (C-43).
 
-USAGE, the same two lines everywhere:
+USAGE, two stamped shapes and no judgement in either:
+
+A script that sits FLAT in `scripts/` (this module, `agents_tree.py`) puts
+its own directory on `sys.path` and imports:
 
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from repo_root import find_root  # noqa: E402
 
     ROOT = find_root(__file__)
 
-The `sys.path` line is what makes the import survive being run from
-anywhere; together with this module it is the whole anchor, and no script
+A script that lives in a GROUP directory under `scripts/` (LJ-1.295) finds
+the scripts root the same way this module finds the repository root: by
+walking up from the file to `repo_root.py` itself, never by counting
+directories. The group directory joins `sys.path` too, for siblings
+imported by bare name:
+
+    _HERE = Path(__file__).resolve()
+    sys.path.insert(0, str(_HERE.parent))
+    _SCRIPTS = next((p for p in _HERE.parents
+                     if (p / "repo_root.py").is_file()), None)
+    if _SCRIPTS is None:
+        raise FileNotFoundError("no repo_root.py above " + str(_HERE))
+    sys.path.insert(0, str(_SCRIPTS))
+    from repo_root import find_root  # noqa: E402
+
+    ROOT = find_root(__file__)
+
+The `sys.path` lines are what make the import survive being run from
+anywhere; together with this module they are the whole anchor, and no script
 owns a private depth any more.
 """
 

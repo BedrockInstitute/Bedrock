@@ -2,7 +2,7 @@
 #
 # This TOML file is the single source of truth for the trilingual glossary; the prose
 # explanation (what the checks do, how to maintain entries) lives in dev/GLOSSARY.md.
-# scripts/check-glossary.py reads this file via tomllib (Python 3.11+) and enforces it as
+# scripts/gate/check-glossary.py reads this file via tomllib (Python 3.11+) and enforces it as
 # part of `make check` and the pre-commit hook.
 #
 # Each [[term]] has: category, en, zh, ja; optional avoid (a list of known wrong

@@ -1090,10 +1090,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.291 | Repair the 24 depth-anchored scripts | 26 REPAIRED. THE DEPTH TEST PASSES | Repaired gate reports 2,388 from both depths; the pre-repair copy reports 2 from the deeper one, exit 0 |
 | LJ-1.292 | Sweep Key.lagda.md for the mixed spelling | THE SITE IS NOT CHARGED AT ALL. R-41 IS DEPTH-GATED | Key is cheap at 3,974 ms. The ladder: depth 2 is 219 ms, depth 3 is 9,286, depth 4 is 419
 | LJ-1.293 | Discharge q, and with it amb | q IS FALSE, REFUTED BY MACHINE. DD25 [LJ-1.297] | amb stays OPEN. The obligation is q', which LJ-1.244 measured stuck as a definition |
-| LJ-1.294 | Is an infinite cardinal a limit ordinal | QUEUED | The ONE real gap in Init at the use site. ord-tri covers omega-membership; nothing proves limit-hood. Unblocks LJ-1.8 |
+| LJ-1.294 | Is an infinite cardinal a limit ordinal | PROVED. kappa-limit | Init's rows 1 to 3 are now available at the use site. Row 4, noinj-squared, has NO term anywhere in src/ |
 | LJ-1.295 | MOVE scripts into subdirectories, option C | QUEUED behind LJ-1.291's territory | Owner ruled C 2026-08-15: accept the 3,215 dangling reader pointers, no shims, no resolver |
 | LJ-1.296 | A quota fallback from pi to in-harness | QUEUED | Owner's instruction. The limit is NOT observable: pi has no quota command and logs record no tokens, so the trigger is the refusal |
-| LJ-1.297 | DD25 review of q's refutation | DISPATCHED in-harness | It re-prices the phase: a conditional supply whose condition is machine-refuted is not a supply, and amb is LJ-1.7's last |
+| LJ-1.297 | DD25 review of q's refutation | HOLDS, AND THE RESIDUE SHRANK | All six AmbientStep readings SUPPLIED by machine. q is the PORT's artifact: Devlin needs no such equation |
+| LJ-1.298 | Price q' through the delivered class-carrier analogues | DISPATCHED | LJ-1.297's named widest unmeasured term: re-instantiate TagAgree generically and diff. Nobody has run it |
+| LJ-1.299 | Build noinj-squared, Init's last row | DISPATCHED | LJ-1.294 measured NO term of the fourth conjunct anywhere in src/. It is what via-col-square exists to consume |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |

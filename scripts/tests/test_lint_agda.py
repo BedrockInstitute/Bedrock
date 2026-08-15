@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for scripts/lint-agda.py (run: python3 scripts/tests/test_lint_agda.py)."""
+"""Tests for scripts/gate/lint-agda.py (run: python3 scripts/tests/test_lint_agda.py)."""
 
 import importlib.util
 import os
@@ -8,7 +8,7 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SPEC = importlib.util.spec_from_file_location(
-    "lint_agda", os.path.join(HERE, "..", "lint-agda.py"))
+    "lint_agda", os.path.join(HERE, "..", "gate", "lint-agda.py"))
 la = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(la)
 

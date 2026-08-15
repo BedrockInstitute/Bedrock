@@ -15,7 +15,7 @@ DIFFERENT rule, code and prose craft. Tension T1's register is at
 improvise silently.
 
 The mechanical subset of these rules (the OPTIONS header, the import discipline of
-§2, and the forbidden constructs of §1) is machine-enforced by `scripts/lint-agda.py`
+§2, and the forbidden constructs of §1) is machine-enforced by `scripts/gate/lint-agda.py`
 as part of `make check` and the pre-commit hook `[L0.3]`.
 
 ## 0. Meta-principles

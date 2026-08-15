@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pins the peak clock of `scripts/dispatch_policy.py` (LJ-1.207).
+"""Pins the peak clock of `scripts/dispatch/dispatch_policy.py` (LJ-1.207).
 
 THE RULE BEING PINNED, from the owner's instruction of 2026-08-14. DeepSeek
 prices peak and off-peak, the off-peak price is half the peak price, and peak
@@ -36,7 +36,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "dispatch"))
 import dispatch_policy as P  # noqa: E402
 
 # THE CLOCK TESTS PIN THEIR OWN VENDOR, and that is the point rather than a

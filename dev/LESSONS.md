@@ -1066,7 +1066,7 @@ loss. Both are evidence and both are kept.
    ever rewritten.**
 2. **NEVER under `src/`.** Thirteen probes were swept into a commit by a
    `git add -A src/` on 2026-08-04, 3,274 lines, and had to be untracked.
-   `scripts/check-probes.py` is the gate, in `make check` and in the pre-commit
+   `scripts/gate/check-probes.py` is the gate, in `make check` and in the pre-commit
    hook, because an ignore rule is a default that `git add -f` walks past.
 3. **The probe is TRACKED and is NEVER deleted.** Nothing sweeps it, nothing
    archives it, and there is no clock on it.
@@ -1080,7 +1080,7 @@ loss. Both are evidence and both are kept.
    chapter it seeded. A tracked file is still not a home for a lesson.
 
 **Enforcement points, because a rule with none is a wish.** Rule 2 is the only
-mechanical one: `scripts/check-probes.py --check` in `make check` and `--staged`
+mechanical one: `scripts/gate/check-probes.py --check` in `make check` and `--staged`
 in `scripts/git-hooks/pre-commit`, pinned by `scripts/tests/test_probe_gate.py`.
 **Rules 1, 3, 4, 5 and 6 are enforced by the brief and by the return audit**
 (`dev/ORCHESTRATION.md` section 1's standing clauses), and by nothing else.
@@ -1898,7 +1898,7 @@ and not a note: in `dev/ledger.toml`, in the brief the orchestrator wrote from
 it, and in the return that propagated it back. A wrong denominator in a ledger
 looks exactly like a measurement.
 
-**The instrument had already said so.** `scripts/check-ratio.py`'s own header:
+**The instrument had already said so.** `scripts/measure/check-ratio.py`'s own header:
 "THE PER-MODULE FLAG IS ADVICE; THE AGGREGATE IS THE JUDGMENT. A single module
 may sit above the bar for a reason the wing as a whole pays back." A
 per-module rate was never the verdict.
@@ -2101,7 +2101,7 @@ up to FOUR concurrent Agda writers at `-M8g` each; HEAVY mode for assembly
 and close-out batches, at most TWO at `-M12g` each; the tier is chosen at
 dispatch, mixed tiers keep the worst-case heap sum at or under 32 GB, and
 the third and fourth slots are filled only when system free memory reads
-above 25%. A watchdog (`scripts/agda-watchdog.sh`, restart it each
+above 25%. A watchdog (`scripts/ops/agda-watchdog.sh`, restart it each
 session) backstops at 14 GB per process and an 8% system-free floor. A
 heap-exhausted exit is a WALL event: apply the P-i playbook, never simply
 rerun.
@@ -2447,7 +2447,7 @@ happy, no obligation fails. It is not a wrong proof, it is a proof that costs
 eight times what it should, and the project had no instrument that could see the
 difference. `L.Ordinal.SquareLaw` reached **0.94 s/line and 44 percent of the
 entire tree's check time** without tripping anything, and it took a profiler
-months later to find out. `scripts/check-timing.py` exists because of this
+months later to find out. `scripts/measure/check-timing.py` exists because of this
 paragraph; it is the only gate here that can fail a module for being expensive.
 
 **What the cheap tree actually does, read out of it by `[L3.32-T93]` before it
@@ -2837,10 +2837,10 @@ history.** DD5's line benchmark is measured from a GCH wing this project
 builds itself (`dev/PLAN.md` DD5). `[LJ-0.3]` found the same shape and the
 same blindness: a wing larger than it needed to be raises the bar by exactly
 that much. **DD24 does not help**, and a first reading of it was backwards:
-`scripts/check-ratio.py` fails only ABOVE the bar, and padding with cheap
+`scripts/measure/check-ratio.py` fails only ABOVE the bar, and padding with cheap
 lines LOWERS seconds per line, so a padded wing passes it more easily.
 
-**The enforcement point** is `validate_benchmark()` in `scripts/ledger.py`,
+**The enforcement point** is `validate_benchmark()` in `scripts/measure/ledger.py`,
 which refuses a binding line benchmark that has no a-priori projection or one
 larger than it. It is silent while the benchmark reads unbound, so it costs
 nothing until the day the number matters.
@@ -3516,7 +3516,7 @@ row-agreement band. **All of them are uninstantiable as stated, including
 the leaf adequacy the orchestrator had reported as the phase's completed
 mathematics.**
 
-**THE CHECKER NOW EXISTS: `scripts/check-unbound-hyp.py`, written
+**THE CHECKER NOW EXISTS: `scripts/measure/check-unbound-hyp.py`, written
 2026-08-13.** On the unrepaired frame it flags **all eleven** hypotheses this
 phase machine-refuted, plus the two of the same shape that resisted
 refutation, and it does NOT flag `carrierK`, `arityK`, `pairK` or `innerK`.
@@ -3669,7 +3669,7 @@ in 9 memo headers, 8 of which RESOLVE** and lead to a rule the author never
 meant. `[LJ-1.140]` ran the census the same day and found **87 defective lines
 in 15 live files, all 87 resolving**, of which 68 are a genuine
 archived-decision citation with a live `DD` twin that states a different rule.
-`scripts/check-rule-ids.py` was GREEN through every one, for four days, because
+`scripts/gate/check-rule-ids.py` was GREEN through every one, for four days, because
 it verifies that a code resolves and never that it resolves to the series the
 author meant.
 
@@ -3688,11 +3688,11 @@ before it writes code told them a live rule was dead.
 **The corollary that generalizes, and it is measured too.** The census found
 **four MORE numbering series writing `D<n>`**: a recon batch inside
 `dev/LESSONS.md`, where an R5 recon code of the same shape means a report, `[T95]`'s own defect numbers in
-`scripts/check-timing.py`, a task code in `dev/literature/`, and the checkers'
+`scripts/measure/check-timing.py`, a task code in `dev/literature/`, and the checkers'
 own prose about the notation. **A shape that two series share is usually shared
 by more than two.**
 
-**Enforcement:** `scripts/check-rule-ids.py`'s series check, pinned by
+**Enforcement:** `scripts/gate/check-rule-ids.py`'s series check, pinned by
 `scripts/tests/test_rule_series.py`, with its limit stated in
 `scripts/README.md`: it reads the word beside the code, never the sentence, so
 it cannot tell which series an author MEANT.
@@ -3778,7 +3778,7 @@ exact: *my temporary instructions do not constitute any interpretation of the DD
 rules, nor any endorsement that you may disobey DD.*
 
 **Why the checker did not save it, and this is the part worth keeping.**
-`scripts/check-dispatch-policy.py` accepts `fable` as a legal token, because
+`scripts/dispatch/check-dispatch-policy.py` accepts `fable` as a legal token, because
 DD17's emergency breakthrough tier permits it. **So the gate could not tell an
 emergency-tier fable from a wrong-head fable, and it passed all four.** The
 escape hatch a rule provides is exactly the shape a wrong choice hides in.
@@ -3882,8 +3882,8 @@ NO-GO called absent. **`[LJ-1.233]` found the row and OVERTURNED the NO-GO.**
 **The other two of the three, both caught by an agent rather than a gate.** A
 brief credited `[LJ-1.227]` with a figure and a warning that are
 `[LJ-1.176]`'s, at `:205` and `:265-269`; `[LJ-1.231]` caught it by grep. A
-brief said DD25 is enforced by `scripts/dd25-record.py`; `Makefile:173` runs
-`scripts/check-dd25-review-named.py` and `dd25-record.py` is a read-back
+brief said DD25 is enforced by `scripts/dispatch/dd25-record.py`; `Makefile:173` runs
+`scripts/gate/check-dd25-review-named.py` and `dd25-record.py` is a read-back
 reporter.
 
 **THE ACTION** (C-37: a law states what to DO). **Before writing that something
@@ -3893,7 +3893,7 @@ quoted it.** **A figure quoted at one remove looks identical in a brief and is
 a different claim.**
 
 **Enforcement: the brief, and a token is available and MEASURED.**
-`scripts/check-premises-stated.py` already gates that a brief carrying a
+`scripts/gate/check-premises-stated.py` already gates that a brief carrying a
 trigger token declares its load-bearing premises. **Measured 2026-08-14 over
 the 137 live briefs.** The phrase for「nobody has run」fires on 2 briefs, which
 is 1.5 percent. The phrase for「never been run」fires on 1 brief, and the
@@ -4005,12 +4005,12 @@ Def-against-J axis is Devlin's, imported through
 `dev/literature/devlin-II5.md:375`, and DD4's row never names the towers.**
 
 **The tool settles it, and the tool is the evidence prose could not give.**
-`scripts/ledger.py:404-407` is DD4's own report and its docstring reads: what
-the two proofs actually share. `scripts/ledger.py:50` says it computes the AC
+`scripts/measure/ledger.py:414-417` is DD4's own report and its docstring reads: what
+the two proofs actually share. `scripts/measure/ledger.py:50` says it computes the AC
 closure and the GCH closure. **So DD4's axis is AC-against-GCH, in code.**
 
 **And running it returns the finding that no report could have written.**
-`.venv/bin/python scripts/ledger.py --reuse` on 2026-08-15 prints that there is no GCH
+`.venv/bin/python scripts/measure/ledger.py --reuse` on 2026-08-15 prints that there is no GCH
 endpoint in `src/` yet, so there is nothing to share WITH. `dev/ledger.toml`
 declares `gch_root = ""` and says `[LJ-1.8]` lands the first. **So DD4's own
 report has never been able to run, and every DD4 figure this project has
@@ -4031,7 +4031,7 @@ reporting a proxy without its qualifier.
 
 **Evidence:** `agents/tasks/LJ-1-272/lj-1.272-report.md`, the sweep and the
 count; `agents/tasks/LJ-1-262/lj-1.262-report.md` section 7, which found the
-two axes at one site; `scripts/ledger.py:50` and `:404-407`, the axis in code;
+two axes at one site; `scripts/measure/ledger.py:50` and `:404-407`, the axis in code;
 `dev/ledger.toml` `[reuse]`, which says why the report cannot run.
 Related: [[C-42]], [[C-44]], [[C-43]].
 
@@ -4063,7 +4063,7 @@ A-prime's landing DOES declare `gch_root`.** The agent refuted the mathematics,
 took the second branch as written, and returned about **1,760 lines**.
 
 **The true half was worth six times the answer it returned.** `[LJ-1.274]`
-measured the requirement in the code instead: `scripts/ledger.py:404-446`
+measured the requirement in the code instead: `scripts/measure/ledger.py:414-456`
 reads `gch_root` as a PATH, checks membership in `countable_masters()`, and
 computes an import closure from `head_text`. **It never reads a proof term,
 never reads a type, and never calls Agda.** So the declaration needs A2, A4
@@ -4072,7 +4072,7 @@ to 2 at **262 lines**, about one sixth of the 1,760.
 
 **The second defect compounded the first.** The same brief said to read
 `ac_root` and infer what shape an endpoint is
-(`agents/tasks/LJ-1-273/LJ-1.273.md:52-56`), while citing `scripts/ledger.py`
+(`agents/tasks/LJ-1-273/LJ-1.273.md:52-56`), while citing `scripts/measure/ledger.py`
 only for DD4's axis. **So the brief pointed at the comparable for the
 requirement and at the code for something else.** The target dutifully
 inferred from the comparable that `gch_root` needs a proof term, because
@@ -4084,7 +4084,7 @@ the tool and the function, and say: read what it actually reads.**
 
 **Evidence:** `agents/tasks/LJ-1-274/lj-1.274-report.md`, the review that found
 it; `agents/tasks/LJ-1-273/LJ-1.273.md:35-39` and `:52-56`, the two defective
-sections, which are mine; `scripts/ledger.py:404-446`, what the tool reads.
+sections, which are mine; `scripts/measure/ledger.py:404-446`, what the tool reads.
 Related: [[C-39]], [[C-43]], [[C-46]].
 
 ### C-48. A policy that only a document states is not enforced, and a tool that can read the clock must refuse on it
@@ -4099,7 +4099,7 @@ in the document.** A branch inferred from a document is one more thing that
 reads as checked and is not (C-43). A branch asserted on the command line lands
 in the launch log, where an audit can find it.
 
-**The measurement.** DD17's mode follows a clock: `scripts/dispatch_policy.py`
+**The measurement.** DD17's mode follows a clock: `scripts/dispatch/dispatch_policy.py`
 holds `VERSION_IN_FORCE = 'auto'`, and the Beijing windows 09:00 to 12:00 and
 14:00 to 18:00 are PEAK, where deepseek costs double and the in-harness head is
 not billed on that clock at all. **On 2026-08-15 two dispatches ran the
@@ -4109,7 +4109,7 @@ in force. **The orchestrator answered the question of which head runs this task 
 memory, which the dispatch skill forbids in those words.**
 
 **NO GATE COULD HAVE CAUGHT IT, and this is the part worth keeping.**
-`scripts/check-dispatch-policy.py` judges a brief by the mode the brief NAMES
+`scripts/dispatch/check-dispatch-policy.py` judges a brief by the mode the brief NAMES
 and never by today's switch. **That rule is correct**: a frozen brief written
 under the old mode was right when it was written, and a record is never
 rewritten (C-41). **It also makes the checker structurally blind here**, because
@@ -4142,8 +4142,8 @@ A document check and a measurement check are different levers, and only the
 second one closes the hole.
 
 **Evidence:** `.claude/skills/codex-dispatch/dispatch.py`, `clock_defects` and
-`case_from_args`; `scripts/dispatch_policy.py:336-382`, the switch and the
-downgrade; `scripts/check-dispatch-policy.py:242`, the rule that is right and
+`case_from_args`; `scripts/dispatch/dispatch_policy.py:347-393`, the switch and the
+downgrade; `scripts/dispatch/check-dispatch-policy.py:252`, the rule that is right and
 blind. Related: [[C-43]], [[C-41]], [[C-46]].
 
 ### C-49. A heap wall and a check-cost rate can both be properties of the LAYOUT rather than of the content, so re-measure the same bytes somewhere else before you re-plan

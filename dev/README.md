@@ -25,18 +25,18 @@ the detailed specs it points to.
   OPTIONS and assumption policy, naming, the layer-marking system, performance-idiom
   annotations, and the chapter template. Inherits the source project's finalized spec.
 - `STYLE-i18n.md`: the full i18n **marker grammar** (`<!--en|zh|ja|/-->`) used by the
-  literate-Agda masters and shared by `scripts/i18n_markers.py`, `weave-i18n.py`, and
+  literate-Agda masters and shared by `scripts/site/i18n_markers.py`, `weave-i18n.py`, and
   `render-site.py`.
 - `glossary.toml`: the canonical **translation glossary data**, the single source
-  `scripts/check-glossary.py` reads (via `tomllib`). Add a `[[term]]` entry when you confirm a new
+  `scripts/gate/check-glossary.py` reads (via `tomllib`). Add a `[[term]]` entry when you confirm a new
   load-bearing term.
 - `GLOSSARY.md`: the human-readable **explanation** of the glossary, what the two checks do and how
   to maintain `glossary.toml`.
-- `ledger.toml`: the canonical **size ledger data**, the single source `scripts/ledger.py` reads
+- `ledger.toml`: the canonical **size ledger data**, the single source `scripts/measure/ledger.py` reads
   (via `tomllib`): the booked retirement set and the remaining-work rows with their bands,
   classes and provenance. It contains **no standing figure**; standing is measured from the tree,
   never written down.
-- (`LEDGER.md` and `MAINTENANCE.md` were deleted 2026-08-06 by `[T115]`'s audit: no brief ever pointed an agent at either, and their agent-facing content moved into `ledger.toml`'s header comment and `check-dev-docs.py`'s docstring. The owner reads `scripts/ledger.py --brief`.) The caliber convention, what a derived row is,
+- (`LEDGER.md` and `MAINTENANCE.md` were deleted 2026-08-06 by `[T115]`'s audit: no brief ever pointed an agent at either, and their agent-facing content moved into `ledger.toml`'s header comment and `check-dev-docs.py`'s docstring. The owner reads `scripts/measure/ledger.py --brief`.) The caliber convention, what a derived row is,
   and the rule for keeping it current when a chapter lands or a gate returns.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
   (`L3.0.3-subsumption-probe.md` and so on), plus the archived planning sections cut from

@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "deletion_test", ROOT / "scripts" / "deletion-test.py"
+    "deletion_test", ROOT / "scripts" / "measure" / "deletion-test.py"
 )
 deletion_test = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
@@ -57,7 +57,7 @@ def test_shadow_matches_ledger() -> int:
     line, rc = shadow_line()
     fails = check("shadow mode exits clean", rc, 0)
     probe = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "ledger.py"),
+        [sys.executable, str(ROOT / "scripts" / "measure" / "ledger.py"),
          "--trophy-split"],
         cwd=ROOT, capture_output=True, text=True)
     fails += check("ledger --trophy-split exits clean", probe.returncode, 0)

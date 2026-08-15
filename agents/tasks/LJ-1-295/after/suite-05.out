@@ -1,0 +1,19 @@
+  ok   want  0 got  0  line comment with a colon: scored 8, inflating both trees ~11 percent
+  ok   want  0 got  0  indented line comment
+  ok   want  0 got  0  single-line block comment
+  ok   want  0 got  0  block comment spanning lines
+  ok   want  1 got  1  let binding declares z∈m, not `let`: scored 2 at 47 sites
+  ok   want  1 got  1  with-abstraction binder is not itself a name
+  ok   want 16 got 16  the genuine 16-name signature at L.Rud.Step:202
+  ok   want  1 got  1  ordinary top-level signature with a telescope
+  ok   want  1 got  1  indented local signature
+  ok   want  1 got  1  operator name
+  ok   want  0 got  0  import line
+  ok   want  0 got  0  module header with a parameter telescope
+  ok   want  0 got  0  data header
+  ok   want  0 got  0  record header
+  ok   want  0 got  0  variable block header
+  ok   want  0 got  0  fixity
+  ok   want  0 got  0  signature-less definition is NOT counted: real at Bridge:814. [T95] measured this class at 421 lines retiring against 216 surviving, an asymmetry that moves the cross-tree ratio 4.20 to 4.38. If this assertion ever flips, the ledger's caliber block must be re-derived.
+
+17/17 passed

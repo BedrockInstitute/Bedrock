@@ -1,0 +1,39 @@
+the declared baseline is self-consistent
+  ok   a root is declared: want True got True
+  ok   the root is a tracked master: want True got True
+  FAIL ac_baseline_lines IS the cone, not a nearby number: want 17197 got 17185
+the cone excludes the wing, by structure and not by declaration
+  ok   src/V/Collapse.lagda.md is outside the cone: want True got True
+  ok   src/L/Hull.lagda.md is outside the cone: want True got True
+  ok   src/V/Presentation.lagda.md is outside the cone: want True got True
+  ok   src/FOL/Count.lagda.md is outside the cone: want True got True
+  ok   src/L/StageCardinal.lagda.md is outside the cone: want True got True
+  ok   src/L/Condensation.lagda.md is outside the cone: want True got True
+  ok   src/L/Ordinal/SquareLaw.lagda.md is outside the cone: want True got True
+  ok   src/L/Ordinal/StageArith.lagda.md is outside the cone: want True got True
+  ok   src/L/BoundedSubset.lagda.md is outside the cone: want True got True
+  ok   src/L/Condensation/TwelveAgree.lagda.md is outside the cone: want True got True
+  ok   src/L/Condensation/UpperAgree.lagda.md is outside the cone: want True got True
+  ok   src/L/Condensation/LowerAgree.lagda.md is outside the cone: want True got True
+the cone and the AC bucket are ONE number, after the catalog ruling
+  FAIL the bucket EQUALS the cone: want 17197 got 20510
+every master is EITHER the AC cone OR the declared wing, never both, never neither
+  ok   no master is in both: want True got True
+  FAIL no master is in neither (uncovered: ['src/L/Absorption.lagda.md', 'src/L/Cardinal.lagda.md', 'src/L/Coding/Bound.lagda.md', 'src/L/Coding/EnvSupply.lagda.md', 'src/L/Coding/Injection.lagda.md', 'src/L/Coding/Key.lagda.md', 'src/L/Coding/KeyRead.lagda.md', 'src/L/GCH.lagda.md', 'src/L/InjChain.lagda.md']): want True got False
+  ok   src/Everything.lagda.md is not in the countable list: want True got True
+  ok   src/Landmarks.lagda.md is not in the countable list: want True got True
+the guard is quiet on the declared tree
+  ok   no defect at the declared baseline: want [] got []
+the guard fires when the ratio's tree moves
+  ok   a drift past tolerance is refused: want True got True
+  ok   the refusal names the re-measurement task: want True got True
+  ok   the refusal names the cone, not the bucket: want True got True
+the guard tolerates noise
+  ok   a drift inside tolerance is accepted: want [] got []
+the guard stays silent when nothing is declared
+  ok   an undeclared baseline is not a defect: want [] got []
+
+FAIL: 3 failing check(s)
+  - ac_baseline_lines IS the cone, not a nearby number
+  - the bucket EQUALS the cone
+  - no master is in neither (uncovered: ['src/L/Absorption.lagda.md', 'src/L/Cardinal.lagda.md', 'src/L/Coding/Bound.lagda.md', 'src/L/Coding/EnvSupply.lagda.md', 'src/L/Coding/Injection.lagda.md', 'src/L/Coding/Key.lagda.md', 'src/L/Coding/KeyRead.lagda.md', 'src/L/GCH.lagda.md', 'src/L/InjChain.lagda.md'])

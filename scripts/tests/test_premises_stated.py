@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression tests for `scripts/check-premises-stated.py`.
+"""Regression tests for `scripts/gate/check-premises-stated.py`.
 
 WHY THIS FILE EXISTS. `[LJ-1.211]` measured that the briefs caused 8 of 10
 DD25 overturns, and `[LJ-1.212]` built the gate its change 1 proposes: a
@@ -29,7 +29,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "check_premises_stated", ROOT / "scripts" / "check-premises-stated.py"
+    "check_premises_stated", ROOT / "scripts" / "gate" / "check-premises-stated.py"
 )
 cps = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(cps)
@@ -46,7 +46,7 @@ def check(name: str, condition: bool, detail: str = "") -> None:
 
 
 PY = sys.executable
-SCRIPT = str(ROOT / "scripts" / "check-premises-stated.py")
+SCRIPT = str(ROOT / "scripts" / "gate" / "check-premises-stated.py")
 
 # A snippet that carries each ACTIVE token, and one that carries each
 # REFUSED token without any ACTIVE token.
@@ -191,7 +191,7 @@ with tempfile.TemporaryDirectory() as td:
 
 check("a basis matches the project's file:line shapes",
       cps.BASIS.search("dev/PLAN.md:624") is not None
-      and cps.BASIS.search("scripts/dd25-record.py:40") is not None
+      and cps.BASIS.search("scripts/dispatch/dd25-record.py:40") is not None
       and cps.BASIS.search("src/L/Coding/Model.lagda.md:667-678") is not None)
 
 

@@ -5,12 +5,12 @@
 # it is created: under what condition it may be deleted, and under what condition
 # it moves somewhere permanent.
 #
-# This file is that declaration, machine-readable. `scripts/check-build-manifest.py`
+# This file is that declaration, machine-readable. `scripts/gate/check-build-manifest.py`
 # reads it, lists any file in `_build/` that matches no entry, and regenerates
 # `_build/README.md` from it.
 #
 # WHY THIS FILE LIVES IN `dev/` AND NOT IN `_build/`.
-# `.gitignore:2` ignores `_build/`, and `scripts/check-probes.py:20-23` fails the
+# `.gitignore:2` ignores `_build/`, and `scripts/gate/check-probes.py:20-23` fails the
 # gate on any TRACKED file under `_build/`. A manifest kept inside `_build/` would
 # be untracked, would not survive `make clean` (`Makefile:180`), and would not
 # survive a fresh clone. A regime that a routine command destroys is not a regime.
@@ -69,7 +69,7 @@ promote_when = "If the report cites it, it is `evidence`. Promote it, do not del
 # A MISSING report still proves a task is unfinished, so the signal survives one way
 # round: it may WIDEN a hold and it may never close a task.
 #
-# A PROBE IS THIS CLASS, and `scripts/check-probes.py` is the same rule for `src/`.
+# A PROBE IS THIS CLASS, and `scripts/gate/check-probes.py` is the same rule for `src/`.
 # One refinement the `_build/` regime did not need: a task's own closure is not
 # enough, because ANOTHER live task may need the file. On 2026-08-13 [LJ-1.134] was
 # closed and its probe was still read by [LJ-1.136]. The full trigger is therefore
@@ -121,13 +121,13 @@ exempts this directory from `make clean` by name. Provenance for a re-fetch is
 [[entries]]
 glob = ".last-gate"
 class = "runtime"
-note = "The commit hash of the last green gate. Written and read by `scripts/check-tree.py:278`."
+note = "The commit hash of the last green gate. Written and read by `scripts/gate/check-tree.py:288`."
 
 [[entries]]
 glob = "tools/agda-watchdog.log"
 class = "runtime"
 note = """
-The kill log of `scripts/agda-watchdog.sh`, the C-12 backstop. Its two kill
+The kill log of `scripts/ops/agda-watchdog.sh`, the C-12 backstop. Its two kill
 lines are the only field record that the backstop has ever fired; they are
 quoted in `agents/tasks/LJ-1-132/lj-1.132-report.md` so the evidence survives a clean."""
 
@@ -144,12 +144,12 @@ note = "Reproduced by `make site`."
 [[entries]]
 glob = "woven/**"
 class = "exhaust"
-note = "Reproduced by `scripts/weave-i18n.py --gen --out _build/woven` (`Makefile:129`)."
+note = "Reproduced by `scripts/site/weave-i18n.py --gen --out _build/woven` (`Makefile:129`)."
 
 [[entries]]
 glob = "types.json"
 class = "exhaust"
-note = "Reproduced by `scripts/extract-types.py --out _build/types.json` (`Makefile:135`)."
+note = "Reproduced by `scripts/site/extract-types.py --out _build/types.json` (`Makefile:135`)."
 
 [[entries]]
 glob = "tools/*.pid"

@@ -33,7 +33,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "check_probes", ROOT / "scripts" / "check-probes.py"
+    "check_probes", ROOT / "scripts" / "gate" / "check-probes.py"
 )
 check_probes = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(check_probes)
@@ -51,7 +51,7 @@ def check(name: str, condition: bool, detail: str = "") -> None:
 
 def run(args: list[str], env: dict | None = None) -> subprocess.CompletedProcess:
     import os
-    return subprocess.run([sys.executable, "scripts/check-probes.py", *args],
+    return subprocess.run([sys.executable, "scripts/gate/check-probes.py", *args],
                           cwd=ROOT, capture_output=True, text=True,
                           env={**os.environ, **(env or {})})
 
@@ -104,7 +104,7 @@ check("a woven copy is refused", check_probes.classify("x/woven/L/Stage.lagda.md
 print("the gate reads the basename shape and touches nothing else")
 
 for path in ("agents/tasks/LJ-1-141/lj-1.141-report.md", "src/L/Stage.lagda.md",
-             "scripts/check-probes.py", "agents/tasks/LJ-1-141/LJ-1.141.md"):
+             "scripts/gate/check-probes.py", "agents/tasks/LJ-1-141/LJ-1.141.md"):
     check(f"{path} is clean", check_probes.classify(path) is None)
 
 # ---------------------------------------------------------------------------

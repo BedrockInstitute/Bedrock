@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 spec = importlib.util.spec_from_file_location(
-    "check_task_index", ROOT / "scripts" / "check-task-index.py"
+    "check_task_index", ROOT / "scripts" / "gate" / "check-task-index.py"
 )
 check_task_index = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(check_task_index)

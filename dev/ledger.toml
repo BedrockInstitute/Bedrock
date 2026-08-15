@@ -2,7 +2,7 @@
 #
 # The prose that explains this file lives in the section below, moved here when
 # dev/LEDGER.md was deleted on 2026-08-06; this line pointed at that deleted
-# file until then. The tool that reads it is scripts/ledger.py, which
+# file until then. The tool that reads it is scripts/measure/ledger.py, which
 # MEASURES standing from the tree rather than trusting any number written here.
 # That split exists because of a measured failure: the register carried a
 # standing figure of 12,633 for nine dispatches, and [L3.32-T55] found it had
@@ -19,7 +19,7 @@
 #
 # Part 4 is the L content only GCH needs. The AC total is parts 1 to 3.
 # Part 4 exists for the check only. The four parts sum to the tracked total.
-# scripts/ledger.py computes the parts from the import graph. It writes no
+# scripts/measure/ledger.py computes the parts from the import graph. It writes no
 # part here.
 #
 # THE TROPHY MATRIX, added 2026-08-07 by [L3.32-T137].
@@ -27,14 +27,14 @@
 # A row is BOTH when it is genuinely shared, and also when it is unsure.
 # The endpoint for one trophy is that trophy's standing plus the rows it needs.
 # The three columns do not add up, and they must not.
-# scripts/ledger.py computes the nine cells. It writes no cell here.
+# scripts/measure/ledger.py computes the nine cells. It writes no cell here.
 
 # ---------------------------------------------------------------------------
 # WHAT THIS FILE IS, AND THE THREE THINGS A READER MUST KNOW BEFORE EDITING IT.
 #
 # Moved here 2026-08-06 from dev/LEDGER.md, which is deleted. That document was
 # 44 percent a generated rendering of this file and the rest was prose for the
-# owner, who reads `scripts/ledger.py --brief`. [L3.32-T115] found
+# owner, who reads `scripts/measure/ledger.py --brief`. [L3.32-T115] found
 # exactly three passages in it that had no other home; they are below, because
 # a rule with no home is a rule that stops being followed.
 #
@@ -76,9 +76,9 @@
 #
 # 3. STANDING IS MEASURED, NEVER WRITTEN DOWN.
 #    There is no standing figure in this file and there must never be one.
-#    `scripts/ledger.py` measures it from HEAD. A standing figure once written
+#    `scripts/measure/ledger.py` measures it from HEAD. A standing figure once written
 #    into prose was re-quoted unchecked for nine dispatches while the tree moved
-#    under it. Quote `python3 scripts/ledger.py --brief`, never a number found
+#    under it. Quote `python3 scripts/measure/ledger.py --brief`, never a number found
 #    in a paragraph.
 #
 # WHAT THE GATE CANNOT CHECK, AND A CONTRIBUTOR THEREFORE OWES:
@@ -124,7 +124,7 @@ trophy_split_suspended_rearm = "LJ-2.1 rebuilds the split for the two-tower rout
 # route has rows of its own.
 #
 # THE FLAG BELOW MAKES THAT MACHINE-READABLE, and it had to. The warning above
-# said "do not quote it" in a comment, and `scripts/ledger.py --brief` went on
+# said "do not quote it" in a comment, and `scripts/measure/ledger.py --brief` went on
 # quoting it: two revoked calibers, an overage against the superseded 25k
 # reference, and a citation of archived D39. DD5 names --brief the ONLY
 # admissible source for a standing figure, so the one tool a reader is told to
@@ -156,7 +156,7 @@ owed_stale_rearm = "LJ-2.2: rebuild [[owed]] for the two-tower route, then set t
 # [LJ-0.3] then drew the distinction the first ruling missed: refusing the
 # GATE is right, refusing the REPORT is one step too far. A report cannot be
 # gamed, because nothing passes or fails on it, and the machinery to compute
-# it already exists (scripts/ledger.py's import closures). The owner adopted
+# it already exists (scripts/measure/ledger.py's import closures). The owner adopted
 # that on 2026-08-09. So this block declares the two roots and
 # `ledger.py --reuse` prints what the two proofs actually share.
 #
@@ -276,7 +276,7 @@ gch_wing_apriori = [7553, 11197]
 # 0.013193 s/line, which is the OLD module rate 0.011472 times the 1.15
 # tolerance, and DD26 re-based the bar after that. The live bar is
 # `ac_baseline_module_rate` 0.009143 times 1.15, which is 0.010514, and
-# `scripts/check-ratio.py:462-464` computes exactly that: `module_rate *
+# `scripts/measure/check-ratio.py:472-474` computes exactly that: `module_rate *
 # tolerance`. The code is the authority here, not any comment.
 #
 # TWO NUMBERS, TWO QUESTIONS, and the old field answered one with the other's
@@ -406,7 +406,7 @@ that is not known.
 # ---------------------------------------------------------------------------
 # The booked retirement set, ruled by D18 and disposed of by D20 (archive,
 # never delete). Standing = tracked total MINUS these. Each entry is a path
-# prefix or an exact path; scripts/ledger.py verifies every one still exists,
+# prefix or an exact path; scripts/measure/ledger.py verifies every one still exists,
 # which is what catches a stale declaration.
 #
 # NOTE: the R5-era census (agents/tasks/archive/L3-31-R5CENSUS/l3.31-r5census.md) books a DIFFERENT set,
@@ -461,7 +461,7 @@ authority = "D18"
 # [L3.32-T135]. The AC side is the delivered AC endpoint. The GCH side is
 # the import closure of the modules the route assigns to the GCH wing.
 #
-# The computation lives in scripts/ledger.py. It reads this declaration and
+# The computation lives in scripts/measure/ledger.py. It reads this declaration and
 # measures the parts from HEAD. A module in neither closure is ambiguous.
 # It lands in part 3, the shared part.
 # ---------------------------------------------------------------------------
@@ -715,7 +715,7 @@ provenance = "agents/tasks/archive/L3-32-T52/l3.32-t52-report.md combined row; P
 # measured by the D33 trophy split (base + ac-only + shared, surviving tree,
 # non-blank in-fence lines), must land UNDER this cap. The bar it beats: the
 # internalization route delivered L |= AC at 17,492 lines (CORRECTED from 17,496
-# by [T257] 2026-08-09: counted with `scripts/ledger.py:56`'s own regex over
+# by [T257] 2026-08-09: counted with `scripts/measure/ledger.py:56`'s own regex over
 # `git ls-tree -r --name-only main`, 75 masters, with 608 opening and 608
 # closing fence markers and no variants. [T208] recorded 17,496 for the same
 # tree and called the four-line delta a [T205] finding; 17,492 is right at the
@@ -751,8 +751,8 @@ authority = "owner ruling D36, 2026-08-07; demoted by D39, 2026-08-09"
 # that keeps enforcing a retired number is not a safety net, it is a wrong
 # answer with a green light. So every threshold checker DOWNGRADES to a
 # report while this is true: it still measures, still prints, and does not
-# fail. The affected checkers are scripts/ledger.py (the AC-cap tripwire),
-# scripts/deletion-test.py and scripts/check-timing.py.
+# fail. The affected checkers are scripts/measure/ledger.py (the AC-cap tripwire),
+# scripts/measure/deletion-test.py and scripts/measure/check-timing.py.
 #
 # THE RE-ARM CONDITION, and it is specific rather than "later": the owner's
 # task 6. Build `L ⊨ GCH` on the internalization route, MEASURE its lines and
@@ -957,7 +957,7 @@ calibrated_low = 250
 calibrated_high = 450
 klass = "x1.3 (every crossing verified at file:line, with the content named and its ideal form priced from the rewrite side per D17); the wiring residual is the only survey-class part"
 gate = "POST-D32 SCOPE, rewritten 2026-08-07 after [T146] found the old field still describing pre-D32 Build A content and an already-decided ruling. What remains here: the archival wiring at arm-C time, and the Hull order slice. The deletion itself is EXECUTED ([T144], 86 lines, the three D32 artifacts shipped). The band 250-500 is an orchestrator judgment with no measurement behind it, flagged by [T146]; the wiring half becomes measurable at arm C [T189] ITEMIZED THE BAND 2026-08-08 and it replaces the judgment numbers with two terms: the Hull order re-home by the BRIDGE route at 0.04-0.12k x1.3 (Hull:44 consumes orderAt from Choice.Step:740-741, used through wL at Hull:96-97 for the least-witness search; the fallback harvest route costs 0.35-0.65k at x3 and keeps a slice of the choice tree alive, against D18), and the arm-C archival wiring at 0.14-0.19k, itemized from arm A's measured anchor at double the unit count (32 masters against 16). The re-home's export spec for Model:57 is pinned: a surviving module must export a term of type (zf : isZFModel) -> ChoiceStatement zf, the delivered hasChoiceL type at Transversal:382-383."
-provenance = "agents/tasks/archive/L3-32-T67/l3.32-t67-report.md, per-crossing table; measured by scripts/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is agents/tasks/archive/L3-31-LT/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
+provenance = "agents/tasks/archive/L3-32-T67/l3.32-t67-report.md, per-crossing table; measured by scripts/gate/check-tree.py --check retiring; the booked 0.10-0.25k it replaces is agents/tasks/archive/L3-31-LT/l3.31-lt-report.md row 11, which assumed prose plus import surgery"
 
 [[remaining]]
 # THREE ARITHMETIC DEFECTS IN THIS ROW, found by [T257] 2026-08-09 and recorded
@@ -1126,7 +1126,7 @@ baseline_profile_seconds = 1956
 # collapses at another was never a conclusion, and the only way to know which
 # kind you have is to see them next to each other.
 settled = "2026-08-06, L3.32-F0, multi-caliber by owner's ruling"
-tool = "scripts/obligations.py"
+tool = "scripts/measure/obligations.py"
 measured_from = "the working tree at commit 0d8a1ea; it drifts as agents write, so a figure here is a snapshot and says so"
 
 # 1. LINES. The project's standing unit. Exact, cheap, biased by verbosity.
@@ -1264,7 +1264,7 @@ finding = "The question paid for itself in the opposite direction from the one e
 # THE LIVE DISPATCH ORDER IS dev/PLAN.md SECTION 11, the LJ task index, and
 # no other document states it. The generated board that used to render this
 # queue as the next-work column was abolished the same day, so nothing
-# displays these rows today; scripts/ledger.py only VALIDATES their shape.
+# displays these rows today; scripts/measure/ledger.py only VALIDATES their shape.
 #
 # They are KEPT rather than deleted, like the retirement set and the trophy
 # split: they record what the retired route judged it still owed, and DD13
@@ -2137,7 +2137,7 @@ seconds_residual = "25-68 s after everything measured or proposed; 85-230 lines;
 # there is simply nothing to split.
 #
 # WHAT IS REAL, and neither move is a split. A METER DEFECT worth 221 lines,
-# fixed in `scripts/ledger.py` in the same commit: the closures were computed
+# fixed in `scripts/measure/ledger.py` in the same commit: the closures were computed
 # over the FULL tree with the retirement set removed only afterwards, so
 # `L/Coding/Base` (187) and `L/Absoluteness` (34) reached the AC total through
 # retiring importers alone. Their only surviving importer is `L.TowerGraph`, a
@@ -2556,7 +2556,7 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # ---------------------------------------------------------------------------
 # DD24's QUALITY BAR, added 2026-08-09. The internalization GCH wing carries
 # this ratio and nothing else: no line cap, no seconds cap.
-# scripts/check-ratio.py reads this table.
+# scripts/measure/check-ratio.py reads this table.
 #
 # CITATION FIXED 2026-08-10. This header used to read "DD24's QUALITY BAR and
 # DD25's single threshold". There was no DD25: the single-threshold rule was
@@ -2637,15 +2637,15 @@ ac_baseline_seconds_per_line = 0.008793
 #
 # So the tools REFUSE the baseline when standing has moved away from this
 # figure, and name [LJ-0.5] as the re-measurement. See validate_ratio_baseline
-# in scripts/ledger.py and the guard in scripts/check-ratio.py.
+# in scripts/measure/ledger.py and the guard in scripts/measure/check-ratio.py.
 # WRITTEN WITH THE FIGURE ABOVE, 2026-08-13, and never apart from it. The two
 # terms are one measurement: 17,185 in-fence lines, the cold-build cone of
 # src/Landmarks.lagda.md, 74 masters and 73 of them counted, measured by
-# scripts/ledger.py at HEAD rather than typed in.
+# scripts/measure/ledger.py at HEAD rather than typed in.
 #
 # THE TWO TERMS DESCRIBE ONE TREE, and [LJ-1.128] checked that rather than
 # assuming it. A cold build compiles the WORKING tree, while count() reads
-# HEAD (scripts/ledger.py:120-129). The working tree carried uncommitted work
+# HEAD (scripts/measure/ledger.py:130-139). The working tree carried uncommitted work
 # at src/L/Condensation/TwelveAgree.lagda.md. That master sits OUTSIDE the
 # cone, with the twelve others outside it, so both sums read 17,185 and the
 # build compiled HEAD content only.
@@ -2664,7 +2664,7 @@ ac_baseline_lines = 17185
 # count them.
 ac_baseline_root = "src/Landmarks.lagda.md"
 # THE CALIBER, declared so the checker cannot drift from the bar it enforces.
-# scripts/check-timing.py defaults to a bare -M8g, which is what the [[hot]]
+# scripts/measure/check-timing.py defaults to a bare -M8g, which is what the [[hot]]
 # rows were measured at and which must stay their default. This baseline was
 # measured at the Makefile's exported setting, and the two are NOT the same
 # instrument: the ledger's own provenance measured 163.49 s against 133.69 s on
@@ -2726,7 +2726,7 @@ ac_baseline_ghcrts = "-A64m -I0 -M8g"
 #
 # THE TARGET SET IS BUILT BY SUBTRACTION AND IT HAS DRIFTED OFF THE AC SIDE.
 # check-ratio.py takes every countable master that is not in gch_wing
-# (scripts/check-ratio.py:176-177). [LJ-0.5] replaced exactly that construction
+# (scripts/measure/check-ratio.py:186-187). [LJ-0.5] replaced exactly that construction
 # for the whole-cone denominator above, and the module rate never got the fix.
 # MEASURED 2026-08-13: six targets, 3,101 lines or 15.3 percent of this
 # denominator, sit OUTSIDE the Landmarks cone and are reachable only through
@@ -2975,7 +2975,7 @@ the wing landed.
 WHY LANDMARKS IS THE ROOT. It states both trophies and its import closure IS
 the AC side by structure: 74 masters, with the three wing masters outside it
 and no declaration needed. Numerator and denominator then describe one tree.
-scripts/ledger.py computes the cone rather than trusting this comment.
+scripts/measure/ledger.py computes the cone rather than trusting this comment.
 
 THE SPREAD IS THE OTHER FINDING. The Everything series fell monotonically,
 138.75 to 133.25, a spread of 5.50 s, about 4 percent, which reads as a
@@ -2986,7 +2986,7 @@ in both series, but discarding it would define the bar as page-cache-warm and
 bias it LOW, which is the wrong direction for a gate. Report all three and
 take the mean, per DD8.
 
-A CALIBER MISMATCH IS OPEN AND FLAGGED, not resolved. scripts/check-ratio.py
+A CALIBER MISMATCH IS OPEN AND FLAGGED, not resolved. scripts/measure/check-ratio.py
 times each wing module cold with WARM dependencies at -M8g. This baseline is
 whole-cone cold at -M16g. Those are different calibers and P-s says a slice
 rate does not extrapolate to a tree. RE-ARM: before the first GCH wing module

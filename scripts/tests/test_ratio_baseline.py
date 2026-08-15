@@ -33,7 +33,7 @@ import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-spec = importlib.util.spec_from_file_location("ledger", ROOT / "scripts" / "ledger.py")
+spec = importlib.util.spec_from_file_location("ledger", ROOT / "scripts" / "measure" / "ledger.py")
 ledger = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(ledger)

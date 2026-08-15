@@ -1,0 +1,607 @@
+LJ-0.2: no session log found
+LJ-0.3: no session log found
+LJ-0.4: 5/5 named sources opened, 73 tool calls
+LJ-0.4a: 4/4 named sources opened, 107 tool calls
+LJ-0.4b: 6/7 named sources opened, 104 tool calls
+  NOT OPENED  dev/literature/fine-structure.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-0.4c: no session log found
+LJ-0.4e: no session log found
+LJ-0.4f: 7/7 named sources opened, 139 tool calls
+LJ-0.4i: 6/6 named sources opened, 127 tool calls
+LJ-0.4m: 5/5 named sources opened, 82 tool calls
+LJ-0.4n: 7/7 named sources opened, 138 tool calls
+LJ-0.4p: 6/6 named sources opened, 79 tool calls
+LJ-0.4q: 5/5 named sources opened, 60 tool calls
+LJ-0.5: 2/3 named sources opened, 22 tool calls
+  NOT OPENED  _build/lj-0.8-review.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-0.7: 13/13 named sources opened, 84 tool calls
+LJ-0.8: no session log found
+LJ-1.1: no session log found
+LJ-1.10: 7/7 named sources opened, 79 tool calls
+LJ-1.100: no session log found
+LJ-1.101: no session log found
+LJ-1.102: no session log found
+LJ-1.103: no session log found
+LJ-1.104: no session log found
+LJ-1.105: no session log found
+LJ-1.106: no session log found
+LJ-1.107: no session log found
+LJ-1.108: no session log found
+LJ-1.109: no session log found
+LJ-1.11: no session log found
+LJ-1.110: no session log found
+LJ-1.111: no session log found
+LJ-1.112: no session log found
+LJ-1.113: no session log found
+LJ-1.114: no session log found
+LJ-1.115: no session log found
+LJ-1.116: no session log found
+LJ-1.117: no session log found
+LJ-1.118: no session log found
+LJ-1.119: no session log found
+LJ-1.12: 10/10 named sources opened, 77 tool calls
+LJ-1.120: no session log found
+LJ-1.121: no session log found
+LJ-1.122: no session log found
+LJ-1.123: no session log found
+LJ-1.124: no session log found
+LJ-1.125: no session log found
+LJ-1.13: 6/6 named sources opened, 53 tool calls
+LJ-1.131: no session log found
+LJ-1.132: no session log found
+LJ-1.133: no session log found
+LJ-1.136: no session log found
+LJ-1.137: no session log found
+LJ-1.138: no session log found
+LJ-1.139: no session log found
+LJ-1.14: 6/6 named sources opened, 90 tool calls
+LJ-1.140: no session log found
+LJ-1.141: no session log found
+LJ-1.142: no session log found
+LJ-1.143: no session log found
+LJ-1.144: no session log found
+LJ-1.145: no session log found
+LJ-1.146: no session log found
+LJ-1.147: no session log found
+LJ-1.148: no session log found
+LJ-1.149: no session log found
+LJ-1.15: 4/6 named sources opened, 221 tool calls
+  NOT OPENED  dev/literature/devlin-errata.md
+  NOT OPENED  archive/dev/TASKS-archived.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.150: no session log found
+LJ-1.151: no session log found
+LJ-1.152: no session log found
+LJ-1.153: no session log found
+LJ-1.154: no session log found
+LJ-1.155: no session log found
+LJ-1.156: no session log found
+LJ-1.157: no session log found
+LJ-1.158: no session log found
+LJ-1.159: no session log found
+LJ-1.16: 7/8 named sources opened, 105 tool calls
+  NOT OPENED  dev/literature/devlin-errata.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.160: no session log found
+LJ-1.161: no session log found
+LJ-1.162: no session log found
+LJ-1.163: no session log found
+LJ-1.164: no session log found
+LJ-1.165: no session log found
+LJ-1.166: no session log found
+LJ-1.167: no session log found
+LJ-1.168: no session log found
+LJ-1.169: no session log found
+LJ-1.17: 7/7 named sources opened, 90 tool calls
+LJ-1.170: no session log found
+LJ-1.171: no session log found
+LJ-1.172: no session log found
+LJ-1.173: no session log found
+LJ-1.175: no session log found
+LJ-1.176: no session log found
+LJ-1.177: no session log found
+LJ-1.178: no session log found
+LJ-1.179: no session log found
+LJ-1.18: 5/5 named sources opened, 118 tool calls
+LJ-1.180: no session log found
+LJ-1.181: no session log found
+LJ-1.182: no session log found
+LJ-1.183: no session log found
+LJ-1.184: no session log found
+LJ-1.185: no session log found
+LJ-1.186: no session log found
+LJ-1.187: no session log found
+LJ-1.188: no session log found
+LJ-1.189: no session log found
+LJ-1.19: 4/4 named sources opened, 80 tool calls
+LJ-1.190: no session log found
+LJ-1.191: no session log found
+LJ-1.192: no session log found
+LJ-1.193: no session log found
+LJ-1.194: no session log found
+LJ-1.195: no session log found
+LJ-1.196: no session log found
+LJ-1.197: no session log found
+LJ-1.198: no session log found
+LJ-1.199: no session log found
+LJ-1.2: 3/4 named sources opened, 99 tool calls
+  NOT OPENED  archive/dev/JOURNAL-archived.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.20: 4/4 named sources opened, 123 tool calls
+LJ-1.200: no session log found
+LJ-1.201: no session log found
+LJ-1.202: no session log found
+LJ-1.203: no session log found
+LJ-1.204: no session log found
+LJ-1.205: no session log found
+LJ-1.206: no session log found
+LJ-1.207: no session log found
+LJ-1.208: no session log found
+LJ-1.209: no session log found
+LJ-1.21: 4/4 named sources opened, 115 tool calls
+LJ-1.210: no session log found
+LJ-1.211: no session log found
+LJ-1.212: no session log found
+LJ-1.213: no session log found
+LJ-1.214: no session log found
+LJ-1.215: no session log found
+LJ-1.216: no session log found
+LJ-1.217: no session log found
+LJ-1.218: no session log found
+LJ-1.219: no session log found
+LJ-1.22: 8/8 named sources opened, 33 tool calls
+LJ-1.220: no session log found
+LJ-1.221: no session log found
+LJ-1.222: no session log found
+LJ-1.223: no session log found
+LJ-1.224: no session log found
+LJ-1.225: no session log found
+LJ-1.226: no session log found
+LJ-1.227: no session log found
+LJ-1.228: no session log found
+LJ-1.229: no session log found
+LJ-1.23: 7/7 named sources opened, 124 tool calls
+LJ-1.230: no session log found
+LJ-1.231: no session log found
+LJ-1.232: no session log found
+LJ-1.233: no session log found
+LJ-1.234: no session log found
+LJ-1.235: no session log found
+LJ-1.236: no session log found
+LJ-1.237: no session log found
+LJ-1.238: no session log found
+LJ-1.239: no session log found
+LJ-1.24: 3/3 named sources opened, 81 tool calls
+LJ-1.240: no session log found
+LJ-1.241: no session log found
+LJ-1.242: no session log found
+LJ-1.243: no session log found
+LJ-1.244: no session log found
+LJ-1.245: no session log found
+LJ-1.246: no session log found
+LJ-1.247: no session log found
+LJ-1.248: no session log found
+LJ-1.249: no session log found
+LJ-1.25: 5/6 named sources opened, 58 tool calls
+  NOT OPENED  src/ProbeLJ124Base.agda
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.250: no session log found
+LJ-1.251: no session log found
+LJ-1.252: no session log found
+LJ-1.253: no session log found
+LJ-1.254: no session log found
+LJ-1.255: no session log found
+LJ-1.256: no session log found
+LJ-1.257: no session log found
+LJ-1.258: no session log found
+LJ-1.259: no session log found
+LJ-1.26: no session log found
+LJ-1.260: no session log found
+LJ-1.261: no session log found
+LJ-1.262: no session log found
+LJ-1.263: no session log found
+LJ-1.264: no session log found
+LJ-1.265: no session log found
+LJ-1.266: no session log found
+LJ-1.267: no session log found
+LJ-1.268: no session log found
+LJ-1.269: no session log found
+LJ-1.27: 4/5 named sources opened, 148 tool calls
+  NOT OPENED  dev/literature/devlin-errata.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.270: no session log found
+LJ-1.272: no session log found
+LJ-1.273: no session log found
+LJ-1.274: no session log found
+LJ-1.275: no session log found
+LJ-1.276: no session log found
+LJ-1.277: no session log found
+LJ-1.278: no session log found
+LJ-1.279: no session log found
+LJ-1.28: 4/4 named sources opened, 60 tool calls
+LJ-1.280: no session log found
+LJ-1.281: no session log found
+LJ-1.282: no brief, or its DD18 sections name no path
+LJ-1.283: no brief, or its DD18 sections name no path
+LJ-1.284: no brief, or its DD18 sections name no path
+LJ-1.285: no brief, or its DD18 sections name no path
+LJ-1.286: no brief, or its DD18 sections name no path
+LJ-1.287: no brief, or its DD18 sections name no path
+LJ-1.288: no session log found
+LJ-1.289: no session log found
+LJ-1.29: 6/6 named sources opened, 42 tool calls
+LJ-1.290: no session log found
+LJ-1.291: no session log found
+LJ-1.292: no session log found
+LJ-1.293: no session log found
+LJ-1.294: no session log found
+LJ-1.295: no session log found
+LJ-1.296: no session log found
+LJ-1.3: 5/6 named sources opened, 150 tool calls
+  NOT OPENED  archive/dev/TASKS-archived.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.30: 4/4 named sources opened, 100 tool calls
+LJ-1.31: 6/6 named sources opened, 163 tool calls
+LJ-1.32: 6/6 named sources opened, 166 tool calls
+LJ-1.33: 7/8 named sources opened, 133 tool calls
+  NOT OPENED  dev/literature/devlin-II5.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.34: 9/10 named sources opened, 156 tool calls
+  NOT OPENED  _build/lj-1.5-report.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.35: 10/11 named sources opened, 151 tool calls
+  NOT OPENED  src/ProbeDD25D1.agda
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.36: 11/11 named sources opened, 124 tool calls
+LJ-1.37: 13/13 named sources opened, 330 tool calls
+LJ-1.38: 14/14 named sources opened, 106 tool calls
+LJ-1.39: 5/5 named sources opened, 111 tool calls
+LJ-1.4: 4/4 named sources opened, 45 tool calls
+LJ-1.40: 8/8 named sources opened, 309 tool calls
+LJ-1.41: 6/7 named sources opened, 185 tool calls
+  NOT OPENED  dev/literature/devlin-II5.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.42: 6/7 named sources opened, 338 tool calls
+  NOT OPENED  dev/literature/devlin-II5.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.43: 6/6 named sources opened, 299 tool calls
+LJ-1.44: 4/10 named sources opened, 126 tool calls
+  NOT OPENED  archive/dev/TASKS-archived.md
+  NOT OPENED  JOURNAL-archived.md
+  NOT OPENED  DECISIONS-archived.md
+  NOT OPENED  devlin-II5.md
+  NOT OPENED  j-hierarchy.md
+  NOT OPENED  devlin-errata.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.45: 5/9 named sources opened, 121 tool calls
+  NOT OPENED  archive/dev/TASKS-archived.md
+  NOT OPENED  JOURNAL-archived.md
+  NOT OPENED  DECISIONS-archived.md
+  NOT OPENED  devlin-II5.md
+  ^ a miss is a QUESTION for the audit, not a verdict. DD18 allows skipping a source WITH a reason; check the return's WHY NOT before treating this as a defect.
+LJ-1.46: no session log found
+LJ-1.47: no session log found
+LJ-1.48: no session log found
+LJ-1.49: no session log found
+LJ-1.5: 11/11 named sources opened, 101 tool calls
+LJ-1.50: no session log found
+LJ-1.51: no session log found
+LJ-1.52: no session log found
+LJ-1.53: no session log found
+LJ-1.54: no session log found
+LJ-1.55: no session log found
+LJ-1.56: no session log found
+LJ-1.57: no session log found
+LJ-1.58: no session log found
+LJ-1.59: no session log found
+LJ-1.6: 7/7 named sources opened, 110 tool calls
+LJ-1.60: no session log found
+LJ-1.61: no session log found
+LJ-1.62: no session log found
+LJ-1.63: no session log found
+LJ-1.64: no session log found
+LJ-1.65: no session log found
+LJ-1.66: no session log found
+LJ-1.67: no session log found
+LJ-1.68: no session log found
+LJ-1.69: no session log found
+LJ-1.7: no session log found
+LJ-1.70: no session log found
+LJ-1.71: no session log found
+LJ-1.72: no session log found
+LJ-1.73: no session log found
+LJ-1.74: no session log found
+LJ-1.75: no session log found
+LJ-1.76: no session log found
+LJ-1.77: no session log found
+LJ-1.78: no session log found
+LJ-1.79: no session log found
+LJ-1.80: no session log found
+LJ-1.81: no session log found
+LJ-1.82: no session log found
+LJ-1.83: no session log found
+LJ-1.84: no session log found
+LJ-1.85: no session log found
+LJ-1.86: no session log found
+LJ-1.87: no session log found
+LJ-1.88: no session log found
+LJ-1.89: no session log found
+LJ-1.90: no session log found
+LJ-1.91: no session log found
+LJ-1.92: no session log found
+LJ-1.93: no session log found
+LJ-1.94: no session log found
+LJ-1.95: no session log found
+LJ-1.96: no session log found
+LJ-1.97: no session log found
+LJ-1.98: no session log found
+LJ-1.99: no session log found
+geology-legacy-brief: no brief, or its DD18 sections name no path
+ideal-form-recon-brief: no brief, or its DD18 sections name no path
+ifgp-brief: no brief, or its DD18 sections name no path
+ifip-brief: no brief, or its DD18 sections name no path
+ifrp-brief: no brief, or its DD18 sections name no path
+l3.32-t100-brief: no brief, or its DD18 sections name no path
+l3.32-t101-brief: no brief, or its DD18 sections name no path
+l3.32-t102-brief: no brief, or its DD18 sections name no path
+l3.32-t103-brief: no brief, or its DD18 sections name no path
+l3.32-t104-brief: no brief, or its DD18 sections name no path
+l3.32-t105-brief: no brief, or its DD18 sections name no path
+l3.32-t106-brief: no brief, or its DD18 sections name no path
+l3.32-t107-brief: no brief, or its DD18 sections name no path
+l3.32-t108-brief: no brief, or its DD18 sections name no path
+l3.32-t109-brief: no brief, or its DD18 sections name no path
+l3.32-t110-brief: no brief, or its DD18 sections name no path
+l3.32-t111-brief: no brief, or its DD18 sections name no path
+l3.32-t112-brief: no brief, or its DD18 sections name no path
+l3.32-t113-brief: no brief, or its DD18 sections name no path
+l3.32-t114-brief: no brief, or its DD18 sections name no path
+l3.32-t115-brief: no brief, or its DD18 sections name no path
+l3.32-t116-brief: no brief, or its DD18 sections name no path
+l3.32-t117-brief: no brief, or its DD18 sections name no path
+l3.32-t118-brief: no brief, or its DD18 sections name no path
+l3.32-t119-brief: no brief, or its DD18 sections name no path
+l3.32-t120-brief: no brief, or its DD18 sections name no path
+l3.32-t121: no brief, or its DD18 sections name no path
+l3.32-t122: no session log found
+l3.32-t123: no brief, or its DD18 sections name no path
+l3.32-t124: no brief, or its DD18 sections name no path
+l3.32-t125: no brief, or its DD18 sections name no path
+l3.32-t126: no session log found
+l3.32-t127: no brief, or its DD18 sections name no path
+l3.32-t128: no brief, or its DD18 sections name no path
+l3.32-t129: no brief, or its DD18 sections name no path
+l3.32-t130: no brief, or its DD18 sections name no path
+l3.32-t131: no brief, or its DD18 sections name no path
+l3.32-t132: no brief, or its DD18 sections name no path
+l3.32-t133: no brief, or its DD18 sections name no path
+l3.32-t134: no brief, or its DD18 sections name no path
+l3.32-t135: no brief, or its DD18 sections name no path
+l3.32-t136: no brief, or its DD18 sections name no path
+l3.32-t137: no brief, or its DD18 sections name no path
+l3.32-t138: no brief, or its DD18 sections name no path
+l3.32-t139: no brief, or its DD18 sections name no path
+l3.32-t140: no brief, or its DD18 sections name no path
+l3.32-t141: no brief, or its DD18 sections name no path
+l3.32-t142: no brief, or its DD18 sections name no path
+l3.32-t143: no brief, or its DD18 sections name no path
+l3.32-t144: no brief, or its DD18 sections name no path
+l3.32-t145: no brief, or its DD18 sections name no path
+l3.32-t146: no brief, or its DD18 sections name no path
+l3.32-t147: no brief, or its DD18 sections name no path
+l3.32-t148: no brief, or its DD18 sections name no path
+l3.32-t149: no brief, or its DD18 sections name no path
+l3.32-t150: no brief, or its DD18 sections name no path
+l3.32-t151: no brief, or its DD18 sections name no path
+l3.32-t154: no brief, or its DD18 sections name no path
+l3.32-t155: no brief, or its DD18 sections name no path
+l3.32-t156: no brief, or its DD18 sections name no path
+l3.32-t157: no brief, or its DD18 sections name no path
+l3.32-t158: no brief, or its DD18 sections name no path
+l3.32-t159: no brief, or its DD18 sections name no path
+l3.32-t160: no brief, or its DD18 sections name no path
+l3.32-t161: no brief, or its DD18 sections name no path
+l3.32-t162: no brief, or its DD18 sections name no path
+l3.32-t163: no brief, or its DD18 sections name no path
+l3.32-t164: no brief, or its DD18 sections name no path
+l3.32-t165: no session log found
+l3.32-t166: no brief, or its DD18 sections name no path
+l3.32-t167: no brief, or its DD18 sections name no path
+l3.32-t168: no brief, or its DD18 sections name no path
+l3.32-t169: no brief, or its DD18 sections name no path
+l3.32-t170: no session log found
+l3.32-t171: no brief, or its DD18 sections name no path
+l3.32-t172: no brief, or its DD18 sections name no path
+l3.32-t173: no brief, or its DD18 sections name no path
+l3.32-t175: no brief, or its DD18 sections name no path
+l3.32-t176: no brief, or its DD18 sections name no path
+l3.32-t177: no brief, or its DD18 sections name no path
+l3.32-t178: no brief, or its DD18 sections name no path
+l3.32-t179: no brief, or its DD18 sections name no path
+l3.32-t180: no brief, or its DD18 sections name no path
+l3.32-t181: no brief, or its DD18 sections name no path
+l3.32-t182: no brief, or its DD18 sections name no path
+l3.32-t183: no brief, or its DD18 sections name no path
+l3.32-t185: no brief, or its DD18 sections name no path
+l3.32-t186: no brief, or its DD18 sections name no path
+l3.32-t187: no brief, or its DD18 sections name no path
+l3.32-t188: no brief, or its DD18 sections name no path
+l3.32-t189: no brief, or its DD18 sections name no path
+l3.32-t190: no brief, or its DD18 sections name no path
+l3.32-t191: no brief, or its DD18 sections name no path
+l3.32-t192: no brief, or its DD18 sections name no path
+l3.32-t193: no brief, or its DD18 sections name no path
+l3.32-t194: no brief, or its DD18 sections name no path
+l3.32-t195: no brief, or its DD18 sections name no path
+l3.32-t196: no brief, or its DD18 sections name no path
+l3.32-t197: no brief, or its DD18 sections name no path
+l3.32-t198: no brief, or its DD18 sections name no path
+l3.32-t199: no brief, or its DD18 sections name no path
+l3.32-t200: no brief, or its DD18 sections name no path
+l3.32-t201: no brief, or its DD18 sections name no path
+l3.32-t202: no brief, or its DD18 sections name no path
+l3.32-t203: no brief, or its DD18 sections name no path
+l3.32-t204: no brief, or its DD18 sections name no path
+l3.32-t205: no brief, or its DD18 sections name no path
+l3.32-t206: no brief, or its DD18 sections name no path
+l3.32-t207: no brief, or its DD18 sections name no path
+l3.32-t208: no brief, or its DD18 sections name no path
+l3.32-t209: no brief, or its DD18 sections name no path
+l3.32-t210: no brief, or its DD18 sections name no path
+l3.32-t211: no brief, or its DD18 sections name no path
+l3.32-t212: no brief, or its DD18 sections name no path
+l3.32-t213: no brief, or its DD18 sections name no path
+l3.32-t214: no brief, or its DD18 sections name no path
+l3.32-t215: no brief, or its DD18 sections name no path
+l3.32-t216: no brief, or its DD18 sections name no path
+l3.32-t217: no brief, or its DD18 sections name no path
+l3.32-t218: no brief, or its DD18 sections name no path
+l3.32-t219: no brief, or its DD18 sections name no path
+l3.32-t220: no brief, or its DD18 sections name no path
+l3.32-t221: no brief, or its DD18 sections name no path
+l3.32-t222: no brief, or its DD18 sections name no path
+l3.32-t223: no brief, or its DD18 sections name no path
+l3.32-t224: no brief, or its DD18 sections name no path
+l3.32-t225: no brief, or its DD18 sections name no path
+l3.32-t226: no brief, or its DD18 sections name no path
+l3.32-t227: no brief, or its DD18 sections name no path
+l3.32-t228: no brief, or its DD18 sections name no path
+l3.32-t229: no brief, or its DD18 sections name no path
+l3.32-t230-blockA: no brief, or its DD18 sections name no path
+l3.32-t231: no brief, or its DD18 sections name no path
+l3.32-t232: no brief, or its DD18 sections name no path
+l3.32-t233: no brief, or its DD18 sections name no path
+l3.32-t234: no brief, or its DD18 sections name no path
+l3.32-t235: no brief, or its DD18 sections name no path
+l3.32-t236: no session log found
+l3.32-t237: no brief, or its DD18 sections name no path
+l3.32-t238: no brief, or its DD18 sections name no path
+l3.32-t239: no brief, or its DD18 sections name no path
+l3.32-t240: no brief, or its DD18 sections name no path
+l3.32-t241: no brief, or its DD18 sections name no path
+l3.32-t242: no brief, or its DD18 sections name no path
+l3.32-t243: no brief, or its DD18 sections name no path
+l3.32-t244: no brief, or its DD18 sections name no path
+l3.32-t245: no brief, or its DD18 sections name no path
+l3.32-t246: no brief, or its DD18 sections name no path
+l3.32-t247: no brief, or its DD18 sections name no path
+l3.32-t248: no brief, or its DD18 sections name no path
+l3.32-t249: no brief, or its DD18 sections name no path
+l3.32-t250: no brief, or its DD18 sections name no path
+l3.32-t251: no brief, or its DD18 sections name no path
+l3.32-t252: no brief, or its DD18 sections name no path
+l3.32-t253: no brief, or its DD18 sections name no path
+l3.32-t254: no brief, or its DD18 sections name no path
+l3.32-t255: no brief, or its DD18 sections name no path
+l3.32-t257: no brief, or its DD18 sections name no path
+l3.32-t258: no brief, or its DD18 sections name no path
+l3.32-t259: no brief, or its DD18 sections name no path
+l3.32-t260: no brief, or its DD18 sections name no path
+l3.32-t261: no brief, or its DD18 sections name no path
+l3.32-t262: no brief, or its DD18 sections name no path
+l3.32-t263: no brief, or its DD18 sections name no path
+l3.32-t264: no brief, or its DD18 sections name no path
+l3.32-t49-brief: no brief, or its DD18 sections name no path
+l3.32-t50-brief: no brief, or its DD18 sections name no path
+l3.32-t51-brief: no brief, or its DD18 sections name no path
+l3.32-t52-brief: no brief, or its DD18 sections name no path
+l3.32-t53-brief: no brief, or its DD18 sections name no path
+l3.32-t54-brief: no brief, or its DD18 sections name no path
+l3.32-t55-brief: no brief, or its DD18 sections name no path
+l3.32-t56-brief: no brief, or its DD18 sections name no path
+l3.32-t57-brief: no brief, or its DD18 sections name no path
+l3.32-t58-brief: no brief, or its DD18 sections name no path
+l3.32-t59-brief: no brief, or its DD18 sections name no path
+l3.32-t60-brief: no brief, or its DD18 sections name no path
+l3.32-t61-brief: no brief, or its DD18 sections name no path
+l3.32-t62-brief: no brief, or its DD18 sections name no path
+l3.32-t63-brief: no brief, or its DD18 sections name no path
+l3.32-t64-brief: no brief, or its DD18 sections name no path
+l3.32-t65-brief: no brief, or its DD18 sections name no path
+l3.32-t66-brief: no brief, or its DD18 sections name no path
+l3.32-t67-brief: no brief, or its DD18 sections name no path
+l3.32-t68-brief: no brief, or its DD18 sections name no path
+l3.32-t69-brief: no brief, or its DD18 sections name no path
+l3.32-t70-brief: no brief, or its DD18 sections name no path
+l3.32-t71-brief: no brief, or its DD18 sections name no path
+l3.32-t72-brief: no brief, or its DD18 sections name no path
+l3.32-t73-brief: no brief, or its DD18 sections name no path
+l3.32-t74-brief: no brief, or its DD18 sections name no path
+l3.32-t75-brief: no brief, or its DD18 sections name no path
+l3.32-t76-brief: no brief, or its DD18 sections name no path
+l3.32-t77-brief: no brief, or its DD18 sections name no path
+l3.32-t78-brief: no brief, or its DD18 sections name no path
+l3.32-t79-brief: no brief, or its DD18 sections name no path
+l3.32-t80-brief: no brief, or its DD18 sections name no path
+l3.32-t81-brief: no brief, or its DD18 sections name no path
+l3.32-t82-brief: no brief, or its DD18 sections name no path
+l3.32-t83-brief: no brief, or its DD18 sections name no path
+l3.32-t84-brief: no brief, or its DD18 sections name no path
+l3.32-t85-brief: no brief, or its DD18 sections name no path
+l3.32-t86-brief: no brief, or its DD18 sections name no path
+l3.32-t87-brief: no brief, or its DD18 sections name no path
+l3.32-t88-brief: no brief, or its DD18 sections name no path
+l3.32-t89-brief: no brief, or its DD18 sections name no path
+l3.32-t90-brief: no brief, or its DD18 sections name no path
+l3.32-t91-brief: no brief, or its DD18 sections name no path
+l3.32-t92-brief: no brief, or its DD18 sections name no path
+l3.32-t93-brief: no brief, or its DD18 sections name no path
+l3.32-t94-brief: no brief, or its DD18 sections name no path
+l3.32-t95-brief: no brief, or its DD18 sections name no path
+l3.32-t96-brief: no brief, or its DD18 sections name no path
+l3.32-t97-brief: no brief, or its DD18 sections name no path
+l3.32-t98-brief: no brief, or its DD18 sections name no path
+l3.32-t99-brief: no brief, or its DD18 sections name no path
+lt-config-brief: no brief, or its DD18 sections name no path
+r2lever-brief: no brief, or its DD18 sections name no path
+revival-gch-probe-brief: no brief, or its DD18 sections name no path
+t1-r4-brief: no brief, or its DD18 sections name no path
+t10-stepfresh-brief: no brief, or its DD18 sections name no path
+t11-realize-brief: no brief, or its DD18 sections name no path
+t12-geocorpus-brief: no brief, or its DD18 sections name no path
+t13-archive-brief: no brief, or its DD18 sections name no path
+t14-w3-brief: no brief, or its DD18 sections name no path
+t15-face-brief: no brief, or its DD18 sections name no path
+t16-pairing-brief: no brief, or its DD18 sections name no path
+t17-shapecount-brief: no brief, or its DD18 sections name no path
+t18-gchscope-brief: no brief, or its DD18 sections name no path
+t19-w3gate-brief: no brief, or its DD18 sections name no path
+t2-face-brief: no brief, or its DD18 sections name no path
+t20-w2gate-brief: no brief, or its DD18 sections name no path
+t21-squarelaw-brief: no brief, or its DD18 sections name no path
+t22-w3seal-brief: no brief, or its DD18 sections name no path
+t23-bridgerows-brief: no brief, or its DD18 sections name no path
+t24-carve-brief: no brief, or its DD18 sections name no path
+t25-satrel-brief: no brief, or its DD18 sections name no path
+t26-pairkit-brief: no brief, or its DD18 sections name no path
+t27-count-brief: no brief, or its DD18 sections name no path
+t28-codeset-brief: no brief, or its DD18 sections name no path
+t29-realize-retire-brief: no brief, or its DD18 sections name no path
+t3-rehome-brief: no brief, or its DD18 sections name no path
+t30-levelformula-brief: no brief, or its DD18 sections name no path
+t31-squarelaw-brief: no brief, or its DD18 sections name no path
+t32-bridgesigma-brief: no brief, or its DD18 sections name no path
+t33-condense-brief: no brief, or its DD18 sections name no path
+t34-retype-brief: no brief, or its DD18 sections name no path
+t35-reduce-brief: no brief, or its DD18 sections name no path
+t36-w2rest-brief: no brief, or its DD18 sections name no path
+t37-cardpred-brief: no brief, or its DD18 sections name no path
+t38-terms-brief: no brief, or its DD18 sections name no path
+t39-collapse-brief: no brief, or its DD18 sections name no path
+t4-retire-brief: no brief, or its DD18 sections name no path
+t40-hull-brief: no brief, or its DD18 sections name no path
+t41-glossaryreview-brief: no brief, or its DD18 sections name no path
+t42-w3a-brief: no brief, or its DD18 sections name no path
+t43-sqscope-brief: no brief, or its DD18 sections name no path
+t44-w3b-brief: no brief, or its DD18 sections name no path
+t45-seqres-brief: no brief, or its DD18 sections name no path
+t46-cardchapter-brief: no brief, or its DD18 sections name no path
+t47-truncsq-brief: no brief, or its DD18 sections name no path
+t48-w3feas-brief: no brief, or its DD18 sections name no path
+t5-w7-brief: no brief, or its DD18 sections name no path
+t6-foundation-brief: no brief, or its DD18 sections name no path
+t7-wholesale-brief: no brief, or its DD18 sections name no path
+t8-foundkit-brief: no brief, or its DD18 sections name no path
+t9-w7gate-brief: no brief, or its DD18 sections name no path

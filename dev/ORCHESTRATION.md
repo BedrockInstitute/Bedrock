@@ -12,7 +12,7 @@ add one here, name where it fires.
 
 ## 1. Who does the work
 
-**THE POLICY IS ONE SWITCH, AND IT LIVES IN `scripts/dispatch_policy.py`.** That
+**THE POLICY IS ONE SWITCH, AND IT LIVES IN `scripts/dispatch/dispatch_policy.py`.** That
 module holds the two versions of DD17, the head for each case, the date the
 current version was set, the reason, and the condition that reverts it. **This
 section does NOT restate the tables**, because a table restated in a second file
@@ -21,7 +21,7 @@ is a table that will drift, and DD19 forbids a rule that is canonical twice.
 **Read the policy in force with one command:**
 
 ```sh
-python3 scripts/dispatch_policy.py
+python3 scripts/dispatch/dispatch_policy.py
 ```
 
 It prints the version, the full table, the reason and the revert condition.
@@ -30,7 +30,7 @@ Nobody reads code to answer "which head runs this task".
 **TWO VERSIONS SINCE 2026-08-13, and exactly one is in force.**
 
 - The **`pi-subagent-mode`** and **`in-harness-subagent-mode`** modes each name a head per
-  case, **and THIS FILE NAMES NEITHER.** `scripts/dispatch_policy.py` is the one
+  case, **and THIS FILE NAMES NEITHER.** `scripts/dispatch/dispatch_policy.py` is the one
   home; run it. **A head restated here is canonical twice, which DD19 forbids,
   and it is how the old fixed-tier text drifted.** The normal version's default
   changed once already, and `[LJ-1.126]` made that possible on 2026-08-13 by
@@ -58,7 +58,7 @@ gives for the case needs no justification. Any other head must name why, and
 
 *Enforcement, and it is honest about its own reach.* The brief header carries a
 `tier:` line before dispatch, and it names the version it was chosen under:
-`tier: opus (override)`. `scripts/check-dispatch-policy.py` reads every brief
+`tier: opus (override)`. `scripts/dispatch/check-dispatch-policy.py` reads every brief
 against the switch. **The switch cannot force the choice**, because an
 in-harness Opus dispatch never passes through
 `.claude/skills/codex-dispatch/dispatch.py`. What the switch DOES drive is the
@@ -74,7 +74,7 @@ negative, dispatch a review at maximum effort to attack that return. Do it
 together.
 
 **THE HEAD FOLLOWS THE SWITCH, and the mechanism does not.** DD25 says a
-negative return is reviewed; `scripts/dispatch_policy.py` says by whom. Under
+negative return is reviewed; `scripts/dispatch/dispatch_policy.py` says by whom. Under
 each version the critic is whichever head the switch's adversarial row gives.
 **The rule that survives both is that the critic is never the author**, so
 a return the review's own head produced goes to the other head.
@@ -192,13 +192,13 @@ carries:
 THREE ENFORCEMENT POINTS.** The DD4 row names all three: this clause, the
 route-planning clause in section 5, and the return audit in section 6, which
 rejects a build that chose fixed without saying so. **And
-`scripts/check-dd4-stated.py` now gates that a brief carries the section at
+`scripts/gate/check-dd4-stated.py` now gates that a brief carries the section at
 all.** Ruled by the owner 2026-08-09, together with the decision that
 DD4 gets NO hard metric. The two halves are one rule: **maximize the code the
 two proofs share, and write it generic.** There is no shared-line COUNT, because a count would be
 gamed the moment it gated anything, so the substance survives only if it is said
 out loud every time. **The STATEMENT is gated:
-`scripts/check-dd4-stated.py` reads the heading and never the content.** Say it in the
+`scripts/gate/check-dd4-stated.py` reads the heading and never the content.** Say it in the
 brief, and require the return to answer it:
 
 - **A RECON** asks whether the content can be written once at a generic
@@ -229,7 +229,7 @@ Standing clauses that go in every build or probe brief:
 - **DD8**: name the block's widest unmeasured term and the probe that would
   measure it; a brief that cannot is not ready to send.
 - **At every return that touched a master, run
-  `python3 scripts/check-timing.py --changed`.** It is the only gate in the
+  `python3 scripts/measure/check-timing.py --changed`.** It is the only gate in the
   repository that can fail a module for being EXPENSIVE: a slow module
   typechecks correctly, so `make check`, both linters and the whole gate are
   structurally blind to it. `SquareLaw` reached 0.94 s/line and 44 percent of
@@ -243,8 +243,8 @@ Standing clauses that go in every build or probe brief:
   happened twice on 2026-08-06 and cost two full gate runs, roughly thirty
   minutes each, on a tree whose check cost the campaign is spending its days
   reducing. The order is: audit the return, update the ledger, run
-  `scripts/ledger.py --write`, THEN gate.
-- **Paste the rule bundle: `python3 scripts/rules.py --for <kind>`.** Do not
+  `scripts/measure/ledger.py --write`, THEN gate.
+- **Paste the rule bundle: `python3 scripts/dispatch/rules.py --for <kind>`.** Do not
   select the rules by recall. The bundle is declared in `dev/rules.toml`,
   capped so it cannot become the corpus again, and the dispatch path REFUSES a
   brief that does not carry it, with the kind DERIVED from the brief's write
@@ -292,7 +292,7 @@ Standing clauses that go in every build or probe brief:
   dispatches found; `archive/dev/JOURNAL-archived.md` for why; and
   `archive/dev/DECISIONS-archived.md` for the rulings that route ran on.
   `dev/LESSONS.md` is NOT archived and still binds, so it is cited the usual
-  way through `scripts/rules.py`.
+  way through `scripts/dispatch/rules.py`.
 - **AND THE RETURN NAMES WHAT IT USED.** A report carries an **ARCHIVE USED**
   section: what it actually read, and what it took from each item, at
   `file:line`. "I looked at the archive" is not a return. A brief whose
@@ -373,7 +373,7 @@ Standing clauses that go in every build or probe brief:
   failure mode to guard against.
 
 *Enforcement:* the brief is written to `agents/tasks/<TASK>/` and re-read before
-the dispatch command is issued. `scripts/check-dispatch-policy.py` reads every
+the dispatch command is issued. `scripts/dispatch/check-dispatch-policy.py` reads every
 brief through `scripts/agents_tree.py` and prints the count it read, so a layout
 change that emptied the census fails instead of passing quietly (C-40).
 
@@ -473,7 +473,7 @@ In this order, every time:
    **A build that wrote fixed where generic was possible, without saying so,
    is returned** (DD4): the choice is legitimate, hiding it is not.
 
-   **Run `python3 scripts/check-sources-read.py <task>`** (DD18). It diffs the
+   **Run `python3 scripts/dispatch/check-sources-read.py <task>`** (DD18). It diffs the
    sources the brief NAMED against the paths the agent actually OPENED in a
    tool call. **A miss is a question, never a verdict**, and it is answered in
    this order.
@@ -520,7 +520,7 @@ In this order, every time:
    quiet dispatch window, full gates are BATCHED**: after an ordinary return
    run the warm check, which is seconds when the change is shallow and still
    catches a broken consumer, and spend a window only when
-   `scripts/check-tree.py --gate-debt` says one is due (about three to four
+   `scripts/gate/check-tree.py --gate-debt` says one is due (about three to four
    returns, or roughly 1,000 added in-fence lines under `src/`). Record a
    green one with `--gate-passed`. Do not report a wiring as verified before that
    notification lands; a turn may close with the check still running as long as
@@ -532,14 +532,14 @@ In this order, every time:
    `dev/ledger.toml` current in the same turn** (DD15): narrow or close the
    remaining row the work landed against, say whether it came in inside its
    band, and move a gated row's class from x3 toward x1.3 when its gate goes
-   green. Standing needs no edit: `scripts/ledger.py` measures it from the tree
+   green. Standing needs no edit: `scripts/measure/ledger.py` measures it from the tree
    and it is written down nowhere. **If the chapter introduced a load-bearing term the
    glossary does not carry, dispatch the terminology dossier (section 8) before
    the chapter counts as landed.**
 
 8. **Report the standing figures to the owner in the return.** The generated
    dashboard was abolished on 2026-08-09, so there is no page to refresh and
-   no step here beyond quoting `python3 scripts/ledger.py --brief`, which is
+   no step here beyond quoting `python3 scripts/measure/ledger.py --brief`, which is
    the only admissible source for a standing figure.
 
    **There is no hand-written half.** `_build/workbench.md` was deleted on

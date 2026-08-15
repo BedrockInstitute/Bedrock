@@ -14,13 +14,13 @@ nobody finishes reading binds nothing.
 ## Boundaries
 
 - **Always:** **write it generic**, so re-instantiation is nearly free; load the rules for your
-  task with `python3 scripts/rules.py --for <kind>` and read them **before** you write; run
+  task with `python3 `rules.py` --for <kind>` and read them **before** you write; run
   `make check` before committing; author every document in English first, then translate, then
   cross-check the Chinese and Japanese against each other for drift.
 - **Always, DD4, the rule that has cost this project most:** **maximize the code the two proofs
   share, and write it generic.** One rule, two ends. It has **NO METRIC** by the owner's
   decision, because a shared-line count would be gamed the moment it gated anything. So it is
-  stated in EVERY brief and answered in every return. **`scripts/check-dd4-stated.py` gates
+  stated in EVERY brief and answered in every return. **`check-dd4-stated.py` gates
   that a brief SAYS it**, reading the heading and never the content: the statement is
   mechanical, the substance is review. **A stop-line is never a reason to write fixed:** say so
   and stop for a re-price.
@@ -46,7 +46,7 @@ nobody finishes reading binds nothing.
   charging ahead on one reading); adding a top-level directory (then add its `README.md`); a
   translation term not yet in `dev/glossary.toml`; **an edit to `AGENTS.md` itself** (DD19):
   show the owner the diff and the reason, get the ruling, then commit with a dated
-  `AGENTS-diff-approved:` trailer, which `scripts/check-agents-guard.py` refuses to go
+  `AGENTS-diff-approved:` trailer, which `check-agents-guard.py` refuses to go
   without.
 - **Never:** commit generated files (anything under `_build/`, woven mono-lingual `.lagda.md`)
   or a probe under `src/`; DELETE retired code (archive it); translate developer
@@ -67,14 +67,14 @@ nobody finishes reading binds nothing.
   runs.** **Run it in the background, never in the
   foreground**: a cold typecheck takes about twelve minutes and must not block the session
   (`dev/PLAN.md` DD15). While you work, run the individual checks instead (`agda <file>`,
-  `python3 scripts/lint-prose.py <files>`).
-- **`python3 scripts/rules.py --for <kind>`** gives the mandatory rules for a build, probe,
+  `python3 `lint-prose.py` <files>`).
+- **`python3 `rules.py` --for <kind>`** gives the mandatory rules for a build, probe,
   recon, rewrite or review, with each statement. `--grep <term>` finds the long tail by trigger
   word. **Never pick rules from memory.**
-- **`python3 scripts/ledger.py --brief`** is the only admissible source for a standing size
+- **`python3 `ledger.py` --brief`** is the only admissible source for a standing size
   figure. Never quote a number found in a paragraph.
 - **`make venv`** once per clone, then **`make hooks`**. `make site` / `make serve` / `make gen`
-  build the site. `python3 scripts/lint-prose.py --fix <files>` auto-fixes most prose.
+  build the site. `python3 `lint-prose.py` --fix <files>` auto-fixes most prose.
 
 **Run every `python3` command as `.venv/bin/python`**, or run `make venv` first and let `make`
 pick the interpreter.
@@ -93,13 +93,13 @@ PARTIAL: a row claiming more than its checker delivers is false safety.
 
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
-| **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `scripts/rules.py` bundles; review |
-| **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; a bare `D<n>` resolves only against the archive | `dev/PLAN.md` section 3; `archive/dev/DECISIONS-archived.md` | `scripts/check-rule-ids.py` resolves every code. **It cannot tell which series an author MEANT.** Dated records under `dev/` and `agents/` are exempt
-| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** The brief's `tier:` line names the head, the mode printed at dispatch, and the model | Tables and modes: `scripts/dispatch_policy.py`, run it. **Vendor, model, price bands: `dev/vendors.toml`.** Operated by `dev/ORCHESTRATION.md` section 1 | **PARTIAL.** `check-dispatch-policy.py` reads every brief and **cannot see which head RAN**: an in-harness dispatch passes through no tool, so **a default-case task goes through `dispatch.py` and in-harness is reserved for the adversarial row**
-| **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `scripts/check-task-index.py`; review |
-| **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `scripts/ledger.py --check` |
+| **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `rules.py` bundles; review |
+| **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; a bare `D<n>` resolves only against the archive | `dev/PLAN.md` section 3; `archive/dev/DECISIONS-archived.md` | `check-rule-ids.py` resolves every code. **It cannot tell which series an author MEANT.** Dated records under `dev/` and `agents/` are exempt
+| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** **This table names checkers by FILE NAME and never by path, so a directory move cannot make it wrong** (2026-08-15). The brief's `tier:` line names the head, the mode printed at dispatch, and the model | Tables and modes: `dispatch_policy.py`, run it. **Vendor, model, price bands: `dev/vendors.toml`.** Operated by `dev/ORCHESTRATION.md` section 1 | **PARTIAL.** `check-dispatch-policy.py` reads every brief and **cannot see which head RAN**: an in-harness dispatch passes through no tool, so **a default-case task goes through `dispatch.py` and in-harness is reserved for the adversarial row**
+| **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `check-task-index.py`; review |
+| **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `ledger.py` --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
-| **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ```agda ` fences | `dev/STYLE-i18n.md` | `scripts/lint-prose.py`, pre-commit hook; `--fix` handles most |
+| **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ``agda ` fences | `dev/STYLE-i18n.md` | `lint-prose.py`, pre-commit hook; `--fix` handles most |
 | **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers and markers inside fences; **it misses a mid-line marker and a fence inside a language group, and both pass green.** Agda enforces one master per module; `check-probes.py` catches woven copies
 | **Term renderings.** A term the glossary lacks is settled by DD19's two-agent pipeline, never by choosing: a codex dossier, then an opus adversarial review. **Never add an entry yourself** | `dev/glossary.toml`, explained by `dev/GLOSSARY.md`; the protocol is `dev/ORCHESTRATION.md` section 8 | **PARTIAL.** `check-glossary.py` catches renderings on a term's `avoid` list and opt-in coverage. **The pipeline is enforced by review only:** nothing mechanical notices a term settled by choosing |
 | **Documentation taxonomy.** User docs trilingual under `docs/<lang>/`, developer docs English only, `README.md` follows the user rule. Place a new document by audience; give every top-level directory a `README.md` | this row | review |
@@ -108,7 +108,7 @@ PARTIAL: a row claiming more than its checker delivers is false safety.
 | **Route memos, digested literature** | `dev/memos/`, `dev/literature/` | n/a |
 | **Agent reports and briefs.** Every dispatch writes one of each, and **both live in ONE directory per task, `agents/tasks/<CODE>/`, beside that task's probes**; retired tasks sit in `agents/tasks/archive/<CODE>/`. All tracked, all CC, all exempt from the prose linter because a record is never rewritten | `agents/README.md` | review |
 | **What the project IS**: the theorem, the charter, the licences, who wrote it | [README.md](README.md), trilingual under `docs/` | n/a |
-| **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0; `scripts/ledger.py --brief` for the standing figures | n/a |
+| **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0; `ledger.py` --brief` for the standing figures | n/a |
 
 **`dev/LESSONS.md` BINDS NEW CODE.** Its entries are measurements, not opinions. When your work
 discovers a new law, propose it with its measurement; **the orchestrator assigns the ID**
@@ -140,7 +140,7 @@ smallest decisive miniature and report GO or NO-GO with a price. A probe prices 
 never re-proves what the literature or the delivered tree settles. **Write it in
 `agents/tasks/<TASK>/`, beside your brief and your report, and run it there.** It is tracked, it is never
 deleted, and **nothing typechecks it once your task closes, so run it while you can.** **`src/`
-is forbidden**, and `scripts/check-probes.py` enforces that because `git add -f` walks past an
+is forbidden**, and `check-probes.py` enforces that because `git add -f` walks past an
 ignore rule. `dev/LESSONS.md` **D-1** is the rule.
 
 **Gate every block before you fund it.** Measuring the widest unmeasured term is what turns a
@@ -148,7 +148,7 @@ projection into a price. **A build brief that cannot name that term, and the pro
 it, is not ready to send.**
 
 **An estimate is ONE best-effort number, and it names its basis** (`dev/PLAN.md` DD8): a probe,
-a delivered comparable or a survey. A size figure counts non-blank lines inside ` ```agda `
+a delivered comparable or a survey. A size figure counts non-blank lines inside ` ``agda `
 fences. Record an overage plainly and work it down where real compression exists. Evidence can
 move a technique; a number alone cannot.
 
