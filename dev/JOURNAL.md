@@ -1177,3 +1177,48 @@ recommendation is a claim like any other, and C-44 binds it. **A recommendation
 with no measurement behind it is not advice, it is a prohibition wearing
 advice's clothes**, and C-39 already measured that a brief's prohibition binds
 harder than its goal.
+
+### 2026-08-15, `DD17`: the adversarial harness had never been walked
+
+**Asked.** `[LJ-1.311]`, a DD25 review of `[LJ-1.309]`, dispatched with
+`--adversarial` under `in-harness-subagent-mode`. The switch printed the
+adversarial row as `herdr` / `pi` / `glm-5.3`.
+
+**Returned nothing.** The agent sat 2,762 seconds and wrote no report, not even
+a skeleton. `herdr agent wait` timed out on status, and the pane kept for
+forensics held a modal: **`1 hook needs review before it can run`**, waiting on
+a keypress. The agent was `idle` and `interactive_ready` the whole time.
+
+**The cause was not the modal.** The launch argv read `["codex","-m",
+"glm-5.3"]` while the table said `pi`. `default_harness()` in
+`scripts/dispatch/dispatch_policy.py` reads the DEFAULT row, sees `in-harness`,
+and falls to the FALLBACK row, which is `codex`. **It never reads the
+adversarial row at all.** That is correct for a default-case dispatch and wrong
+for an adversarial one, because under this mode the adversarial row is `pi` and
+the tool can run it. `dispatch.py` also computed its `HARNESS` global once at
+import, before it could know which case the dispatch declared.
+
+**This path had never been walked.** Under `pi-subagent-mode` the adversarial
+row is in-harness, which passes through no tool. The defect was invisible for
+as long as that mode was in force, and the evening flip made it live. **DD17's
+own text says to check the path works BEFORE the flip. The flip happened
+first, and this is the second time that sentence has been paid for.**
+
+**The first repair did not work, and its failure is the more useful half.** The
+guard read `if not getattr(a, "harness", None)`, meaning no explicit
+`--harness` was given. But the option carries `default=HARNESS`, so `a.harness` is never
+`None`, the guard is always false, and the block was dead code. The
+re-dispatch launched `codex` a second time. **A test that cannot fail is not a
+test**, which is C-45's shape moved from a supply into a conditional. The
+working guard reads `sys.argv`.
+
+**Cost.** 2,762 seconds of one agent's budget, two dead panes, one re-dispatch
+that repeated the fault, and about thirty minutes. **What it bought:** the
+adversarial path now runs `["pi","--provider","zai","--model","glm-5.3"]`,
+MEASURED from the third launch log, and the case-to-harness map is read per
+dispatch rather than once per process.
+
+**Unresolved, and it will bite the fallback row.** The hook-trust modal is
+`codex`-specific and nothing clears it automatically. **The fallback row of
+BOTH modes is `herdr` / `codex`.** Anything that falls back will hang the same
+way, and the only symptom is an agent that returns nothing after its budget.

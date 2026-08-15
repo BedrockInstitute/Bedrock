@@ -1200,7 +1200,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.307 | Are the thirty Agree modules thirty things or one | PARTLY. ONE SHAPE, 15 THINGS, 30 SPELLINGS | Fresh is about 2,150 against 2,619, saving 470. The port is RIGHT, so LJ-1.306 stands |
 | LJ-1.308 | DD25 review of LJ-1.306's zero-changed port | SPLIT. THE ZERO HOLDS, ITS EVIDENCE DID NOT | ProbeCompat checked each row's FIRST field; consumers write the LAST. 26 checks run green |
 | LJ-1.309 | Sweep the tree for R-41's full-chain shape | THREE SITES, DEEPEST IS DEPTH 2. DD25 [LJ-1.311] | 96 masters searched, 90 cannot hold it. The depth-4 prize is NOT there. DO NOT FUND |
-| LJ-1.311 | DD25 review of LJ-1.309's no-hit sweep | DISPATCHED | The owner funded this line saying do not abandon it, so the NO that closes it gets the adversarial pass |
+| LJ-1.311 | DD25 review of LJ-1.309's sweep | RE-DISPATCHED, first launch took the wrong harness | The adversarial path picked codex, not pi. That agent sat 2,762 s on a hook modal writing nothing |
 | LJ-1.310 | Name every step of the composite's TERM | 23 STEPS, TEN UNBUILT, PLUS A REFUTATION | About 175 hand-written lines outside the 470. Row 11 may refute the composite's type. INFERRED |
 | LJ-1.312 | Settle phi0's slot roles by machine | DISPATCHED | LJ-1.310 reads the two free slots as ordinal and BOUND, not value and ordinal. If right, q' asks for what phi0 does not say |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
