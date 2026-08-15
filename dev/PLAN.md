@@ -1188,12 +1188,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.295 | MOVE scripts into subdirectories, option C | MOVED. 39 OF 40 TOOLS REPRODUCE THEIR BASELINE | The one new red was AGENTS.md's 8 script paths, now de-pathed to bare names and committed |
 | LJ-1.296 | A quota fallback from pi to in-harness | DESIGNED, NEVER APPLIED. SUPERSEDED | The refusal signal has NEVER been seen here, MEASURED four ways. The owner then ruled the mutual fallback |
 | LJ-1.297 | DD25 review of q's refutation | HOLDS, AND THE RESIDUE SHRANK | All six AmbientStep readings SUPPLIED by machine. q is the PORT's artifact: Devlin needs no such equation |
-| LJ-1.298 | Price q' through the class-carrier analogues | ZERO LINES CHANGED. THE PORT IS VERBATIM | 33 of 33 unchanged. One scaffold serves a chapter. The family: 180 new lines placing 6,900 |
+| LJ-1.298 | Price q' through the class-carrier analogues | ZERO CHANGED, VERBATIM. DD25 review not needed: zero changed lines IS the result | 33 of 33 unchanged; one scaffold serves a chapter |
 | LJ-1.299 | Build noinj-squared, Init's last row | CIRCULAR, PLUS SqShape GATES NOTHING. DD25 [LJ-1.300] | A missing pair of parentheses leaves the trophy's last hypothesis inhabited. I verified it |
 | LJ-1.300 | DD25 review of the SqShape parse defect | 1 HOLDS, 2 WRONG, 3 HOLDS. SWEEP COUNT 1 | The circle is NOT real: Init's row 4 quantifies BELOW and squareOmega bypasses it. Finite descent |
 | LJ-1.301 | Build sq by descent from squareOmega | BUILDS. 186 lines, 241.9 s | WF induction on regularityV. ONE qualification, stated in its own lead: the conclusion is TRUNCATED |
 | LJ-1.302 | Compose the thirty Agree modules | THE TYPE IS WRITABLE AND IT FEEDS | A term of it discharges q' and amb comes out, proved. One dirty module priced at 51 lines; ties are ONE debt |
-| LJ-1.303 | Slim the dispatch scripts, function unchanged | SLACK IS 32 CODE LINES, AND ONE REFUSAL IS DEAD | 4,383 lines over four files. The comments record MEASUREMENTS and are not redundancy |
+| LJ-1.303 | Slim the dispatch scripts | SLACK IS 32 LINES. DD25 review not needed: the dead refusal it found is repaired | 4,383 lines over four files; the comments record MEASUREMENTS |
 | LJ-1.304 | Price StepAgree and ApproxAgree | BOTH BUILT, ABOUT 190 LINES. BASIS: THE BUILD | q's four named costs are now ALL measured. Neither module exists in src/: they were LJ-1.52's names |
 | LJ-1.305 | Untruncate the descent: deliver SqShape | NEEDS-A-PRINCIPLE: InjData, then GREEN | 322 lines, 4 s. Route 1 CLOSED by countermodel: sq omega is NOT an hProp. sq-initial is unconditional |
 | LJ-1.306 | Port the clean 23 Agree modules generic | 23 OF 23, ZERO CHANGED LINES, 45-LINE SCAFFOLD. DD25 [LJ-1.308] | Five were NOT clean: they name Shape deliveries. Cured at 27 verbatim lines |
@@ -1203,7 +1203,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.311 | DD25 review of LJ-1.309's sweep | SPLIT. NO-GO STANDS, 3 MEASUREMENTS FALSE | sucIter is NOT the only iterate: # is a second, in all 96 masters, but its ladder is 38x lower |
 | LJ-1.310 | Name every step of the composite's TERM | 23 STEPS, TEN UNBUILT, PLUS A REFUTATION | About 175 hand-written lines outside the 470. Row 11 may refute the composite's type. INFERRED |
 | LJ-1.312 | Settle phi0's slot roles by machine | REFUTED, MEASURED. THE TYPE IS WRONG. DD25 [LJ-1.313] | A verbatim LevelHood refuses to equal the cured one, exit 42. Devlin's shape is the spec |
-| LJ-1.313 | Fable review of LJ-1.312's verdict | UPHELD, AND THE CURE IS FOUR LINES NOT TWO | Two leaf pointers at :82 and :90 name the wrong binder; the two-line cure leaves them. Form 2 REFUTED |
+| LJ-1.313 | DD25 review of LJ-1.312, by fable 5 | UPHELD, AND THE CURE IS FOUR LINES NOT TWO | Two leaf pointers at :82 and :90 name the wrong binder; the two-line cure leaves them. Form 2 REFUTED |
 | LJ-1.314 | DD25 review of InjData's NECESSITY | SPLIT. THE RESIDUE IS NOT A NEW PRINCIPLE | Select the CODE, not the function: InjCode is a proposition, so leastOf untruncates it. Green probe |
 | LJ-1.315 | Literature for the phi0 slot-role ruling | FORM 1, UNANIMOUS ACROSS FOUR AUTHORS | Form 2 has NO precedent in any source. No formalization faces this, so closeN 14 is a local choice |
 | LJ-1.316 | Literature for the InjData ruling | A DOOR NOBODY TRIED: rec-to-Set, not PT.rec | LJ-1.305 measured the WRONG eliminator. The criterion is a weakly constant endomap, Kraus Theorem 16 |
@@ -1212,26 +1212,27 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.319 | Fable RULING on InjData | NO PRINCIPLE, NO FORK, OPEN THE DOOR | sq-set is GREEN, so rec-to-Set applies and the necessity claim measured the wrong eliminator |
 | LJ-1.320 | Fable RULING on the seconds route | ONE FLAG-ONLY PROBE, FOUR RUNS, THREE MECHANISMS | R-41 CLOSED with the iterate CLASS recorded. RowTies deferred behind a free profile |
 | LJ-1.321 | The door: a 2-Constant map Wat to sq | NARROWED. THE DEBT IS ONE PAIRING FUNCTION | A well-order on sq gives the map outright and pullOrder reduces it. The naive map is refuted |
-| LJ-1.324 | Transplant stage-card-upper to CanonInj | REFUTED. THE FIRST INGREDIENT IS THE GOAL | missing-is-goal typechecks with body x, so no work moves. The generic engine survives, tower-blind |
+| LJ-1.324 | Transplant stage-card-upper | REFUTED, THE FIRST INGREDIENT IS THE GOAL. DD25 review not needed: it closes a lead and funds nothing | The generic engine survives, tower-blind |
 | LJ-1.325 | Re-price PLAN 0.0 against the restated trophy | MORE BY 600, AND 800 UNDER THE SURVEY | InjCode's four conjuncts are already PROVED in three modules and thrown away at the last step |
 | LJ-1.326 | The miniature that gates BOTH new debts | BUILDS, 14 LINES, AND THE ADAPTER IS 8 | Debt 1's adapter is MEASURED at absorbs' own site, so its 800 is refuted. The gap is a missing FORMULA |
 | LJ-1.327 | Describe the square law's pairing as a FORMULA | EXPENSIVE, ABOUT 820, AND DO NOT FUND IT | pairomega is a well-founded RECURSION, and a coded square law is consumed by NOTHING today |
 | LJ-1.328 | The definable well-order of L AS A FORMULA | DELIVERED. THE THREE CONSUMERS ARE TWO | phi-less is a Sigma-1 formula in a WIRED chapter. Two of them want ONE object: an ambient FUNCTION |
 | LJ-1.329 | Code ONE ambient function as a member of an L-set | WRONG-OBJECT. THERE IS NO SUCH OBJECT | pullOrder wants a TOTAL MAP OUT of sq, not a point of it. The convergence was on a NAME |
-| LJ-1.330 | A canonical element of sq at non-initial alpha | CANONICAL. 25 CODE LINES, WALL NARROWED | Successors build from a delivered untruncated shift. The gap is the non-initial LIMITS only |
+| LJ-1.330 | A canonical sq at non-initial alpha | CANONICAL, 25 LINES. DD25 review not needed: the wall NARROWED, which is the result | Successors build from a delivered untruncated shift |
 | LJ-1.332 | The limit band: the last gap in sq | ONE-TRUNCATION. THE MATHEMATICS IS FINISHED | limit-truncated is green at 32 lines. The blocker is no longer a construction, it is one untruncation |
 | LJ-1.333 | Item 2 at the cheaper truncation | STATEMENT-LEVEL. CHEAPER TO PROVE, HARDER TO UNTRUNCATE | The band is the exact complement of the only canonicalizer. Five attempts were not unlucky |
-| LJ-1.334 | Item 1: the pointwise-least pairing | ESCAPES THE DIGEST, THEN REFUTED BY SYMMETRY | A canonical reader of the reachable set is symmetric, so a recipe FAMILY closes. All four settled |
+| LJ-1.334 | Item 1: the pointwise-least pairing | REFUTED BY SYMMETRY. DD25 review not needed: it closes a lead and funds nothing | Two terms, eight controls; a recipe FAMILY closes |
 | LJ-1.335 | Where do the sq band terms LAND | NO. THE SUCCESSOR BAND IS A STEP, NOT A SUPPLIER | Two suppliers, one step, one truncation. The consumer needs NOTHING re-plumbed; a lemma buys it |
 | LJ-1.337 | The successor-or-limit dichotomy | DELIVERED, AND ONE BAND IN GIVES THE CONCLUSION OUT | sucV injectivity was live under a reversed name. sq-below is 90 lines, consumer diff EMPTY |
 | LJ-1.339 | Sweep L.Choice.Stage | TEN OF 21 FAIL A SEARCH, AND THE CAUSE IS TRIAGE | The grep RETURNED the term at hit 55 of 59 and the report called every hit a different subject. Law C-57 |
-| LJ-1.340 | Write the mu apparatus generic | SAVES 10, ZERO SECONDS, ZERO NEW IMPORTS, AN EDGE RETIRED | All 29 lines are shared by construction; seals cannot be, so 54 was the attackable half |
+| LJ-1.340 | Write the mu apparatus generic | SAVES 10 LINES, AN EDGE RETIRED. DD25 review not needed: zero seconds is the result | All 29 lines are shared by construction |
 | LJ-1.342 | Land the generic mu form | LANDED, MINUS 11, 12 CONSUMERS GREEN | It refused the Japanese with a measurement: src/ is bilingual by Makefile and STYLE-i18n, and DD19 blocks eight terms |
-| LJ-1.336 | Wave 2 of the port: the dirty seven | 7 OF 7, 0 OF 838 CHANGED. ONE-DEBT REFUTED | The second site reuses ZERO of the first and needs a different supplier: downward facts against upward |
+| LJ-1.336 | Wave 2 of the port: the dirty seven | 7 OF 7, 0 OF 838 CHANGED. DD25 review not needed: LJ-1.338 re-measured the refuted price | One scaffold served both waves |
 | LJ-1.338 | A THIRD tie site | 327, MEASURED AT THREE SITES, NOT EXTRAPOLATED | The third site is the UNION site and CONTAINS the other four. And a THIRD kind of debt: construction |
-| LJ-1.341 | Are envK and defPairK TRUE | FALSE. THE TYPES ARE EMPTY, TWO MODULES ARE VACUOUS | Instantiate z with the bound itself and regularity refutes the cycle. The repair's hypothesis is FREE |
+| LJ-1.341 | Are envK and defPairK TRUE | FALSE, THE TYPES ARE EMPTY. DD25 [LJ-1.345] | Instantiate z with the bound itself and regularity refutes the cycle. The repair's hypothesis is FREE |
 | LJ-1.343 | Repair the two vacuous telescopes | LANDED GREEN, 133.96 s, 20 IN AND 7 OUT | The two types are ONE type, proved by identity BOTH ways before any edit. 38 copies go stale, not two |
-| LJ-1.344 | Supply the repaired ties: KFacts lacks a singleton closure | DISPATCHED | LJ-1.343 named it, two lines from Bound:69 and :93. The repair removed vacuity, not the debt |
+| LJ-1.344 | Supply the repaired ties | REGISTERED, held behind LJ-1.345 | LJ-1.343 named it, two lines from Bound:69 and :93. The repair removed vacuity, not the debt |
+| LJ-1.345 | DD25 adversarial review of LJ-1.341's vacuity claim | DISPATCHED | I landed a src/ repair on that refutation before it was reviewed, and make check caught the lapse |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
 | LJ-1.331 | The RowTies probe, funded by its own gate | NO. ONE FIELD EXHAUSTS 8 GB WHERE A PARAMETER IS FREE | Not field count: two wall alone and four KFacts-shaped ones are green. Law C-55 |
 | LJ-1.323 | Fable RULING: the statement of both trophies | AC UNCHANGED. GCH BECOMES THE INTERNAL EQUALITY | sq leaves, every ambient injection leaves, the conclusion is 2^kappa = kappa-plus in L |
