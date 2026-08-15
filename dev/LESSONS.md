@@ -3976,3 +3976,61 @@ which measured the sweep and the boundary;
 `agents/tasks/LJ-1-242/lj-1.242-report.md`, which found the parameter;
 `agents/tasks/LJ-1-184/lj-1.184-report.md` section 0.2, the honest report that
 missed it. Related: [[C-38]], [[C-44]], [[C-35]].
+
+### C-46. A rule with no metric still has an AXIS, and a figure that names no axis answers a question the rule did not ask
+
+**Rule:** When a project rule has no threshold, its figures are still measured
+along some axis, and **the axis is the part that decays silently.** A threshold
+that drifts is visible because a number crosses it. **An axis that drifts is
+invisible, because every figure stays true.** So when a rule carries no metric,
+**every figure reported against it must name its axis**, and the rule's own text
+is what decides which axis is the rule's own.
+
+**And run the rule's own report before writing figures for it.** A rule with a
+tool has an axis fixed in code. Prose can drift from it; the tool cannot.
+
+**The measurement.** DD4 is this project's core constraint and it has no metric
+by the owner's ruling, so its enforcement is that every brief states it and
+every return answers it. `[LJ-1.272]` swept the `LJ-1` phase and measured that
+**62 reports carry a DD4 figure and 12 name no axis**
+(`agents/tasks/LJ-1-272/lj-1.272-report.md:8-33`). That is the visible half.
+
+**The invisible half is larger.** The phase used two axes, Devlin's
+Def-against-J and the port's L-against-ambient, and `[LJ-1.262]` measured that
+mixing them produced a false claim in a delivered report. **Neither is DD4's
+own axis.** DD4's text says to maximize the code the two proofs share (`dev/PLAN.md:283`), and the two proofs are the two trophies, fixed by DD2
+(`dev/PLAN.md:282`), by the archived D39 (`archive/dev/DECISIONS-archived.md:58`)
+and by the standing brief clause (`dev/ORCHESTRATION.md:352`). **The
+Def-against-J axis is Devlin's, imported through
+`dev/literature/devlin-II5.md:375`, and DD4's row never names the towers.**
+
+**The tool settles it, and the tool is the evidence prose could not give.**
+`scripts/ledger.py:404-407` is DD4's own report and its docstring reads: what
+the two proofs actually share. `scripts/ledger.py:50` says it computes the AC
+closure and the GCH closure. **So DD4's axis is AC-against-GCH, in code.**
+
+**And running it returns the finding that no report could have written.**
+`.venv/bin/python scripts/ledger.py --reuse` on 2026-08-15 prints that there is no GCH
+endpoint in `src/` yet, so there is nothing to share WITH. `dev/ledger.toml`
+declares `gch_root = ""` and says `[LJ-1.8]` lands the first. **So DD4's own
+report has never been able to run, and every DD4 figure this project has
+produced is on a proxy axis.** That is not a defect in any report. It is the
+shape of a rule whose object is not built yet, and it stops being true on the
+day the GCH endpoint lands.
+
+**What it costs when it goes wrong.** `[LJ-1.225]` applied a Def-against-J mark
+to an L-against-ambient figure and classified a true statement MEASURED FALSE;
+`[LJ-1.262]` caught it one dispatch later. `[LJ-1.272]` measured that the same
+shape recurred in `[LJ-1.258]` and `[LJ-1.260]`, which drew a Def-against-J
+conclusion from L-against-ambient evidence, and **both of those landed.**
+
+**What to do.** Name the axis in every figure. Before reporting against a rule,
+read the rule's own text for the axis it names, and run its report if it has
+one. **When the rule's own axis cannot be measured yet, say THAT**, rather than
+reporting a proxy without its qualifier.
+
+**Evidence:** `agents/tasks/LJ-1-272/lj-1.272-report.md`, the sweep and the
+count; `agents/tasks/LJ-1-262/lj-1.262-report.md` section 7, which found the
+two axes at one site; `scripts/ledger.py:50` and `:404-407`, the axis in code;
+`dev/ledger.toml` `[reuse]`, which says why the report cannot run.
+Related: [[C-42]], [[C-44]], [[C-43]].

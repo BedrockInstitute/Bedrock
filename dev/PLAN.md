@@ -117,7 +117,32 @@ development's whole picture and should not be asked to time it.
 different levers. **Nothing measures this refactor as buying seconds, and it
 must not be bundled into the DD24 compression pass on that assumption.**
 
-**WHAT IS WAITING ON THE OWNER, and none of it blocks the four above.**
+**DD9 IS THE TEST, AND `[LJ-1.269]` DID NOT ANSWER IT.** DD9's own words: a
+macro or reflection layer is admissible **only where it is cheaper to READ than
+what it replaces, never merely cheaper to write.** **The scout priced writing:
+54 lines against 78, and no coverage proof.** **Nobody has priced reading.**
+**So the follow-up owes DD9's question first, and a macro that is cheaper to
+write and harder to read is REFUSED by DD9 whatever DD13 says.**
+
+**5. DD4'S OWN REPORT HAS NEVER BEEN ABLE TO RUN, and that reframes every DD4
+figure this project holds.** `[LJ-1.272]` swept the phase: **62 reports carry a
+DD4 figure and 12 name no axis.** **The larger finding is that neither axis the
+phase uses is DD4's own.** DD4 says maximize the code the TWO PROOFS share, and
+the two proofs are the two trophies. **`scripts/ledger.py:404-407` is DD4's own
+report and `scripts/ledger.py:50` fixes its axis in code: the AC closure
+against the GCH closure.** **Run today it prints that there is no GCH endpoint
+in `src/` yet, so there is nothing to share WITH.**
+
+**So every DD4 figure to date is on a PROXY axis**, either Devlin's
+Def-against-J or the port's L-against-ambient, and that is not a defect in any
+report. **`dev/ledger.toml` says `gch_root = ""` and that `[LJ-1.8]` lands the
+first; `[LJ-1.8]` needs `[LJ-1.7]`.** **So DD4 gets its first real measurement
+on the day the GCH endpoint lands, and not before.** **The cost of the proxies
+is measured: `[LJ-1.225]` mixed the two axes and called a true statement FALSE,
+and `[LJ-1.272]` measured the same shape in `[LJ-1.258]` and `[LJ-1.260]`,
+which both LANDED.** The law is `dev/LESSONS.md` **C-46**.
+
+**WHAT IS WAITING ON THE OWNER, and none of it blocks the five above.**
 
 - **DD4 against DD24.** A cure in shared machinery made every master faster and
   the ratio WORSE, 1.56x to 1.91x, because the AC side gained 41.7 percent and
@@ -855,7 +880,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |
 | LJ-1.270 | Does the Coq framework bear on GCH | NO. THE SILENCE HOLDS, MEASURED | MetaZF has no Formula, no binder, no satisfaction across 20 files. Every AC win is an axiom removed |
 | LJ-1.271 | The named-slot macro layer | REGISTERED, NOT DISPATCHED. TRIGGER: LJ-1.268 wave 3 lands | Then price the functions, the seconds, the refactor and the rewrite. The owner rules the switch |
-| LJ-1.272 | Label every DD4 figure with its axis | DISPATCHED | LJ-1.262 measured that the phase mixes Def-against-J with L-against-ambient. No figure says which, so the accounting is unusable |
+| LJ-1.272 | Label every DD4 figure with its axis | 12 OF 62 UNLABELLED, AND A THIRD AXIS | DD4's own axis is AC-against-GCH, fixed in ledger.py:50. Its report has NEVER run: there is no GCH root |
 | LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
 | LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
