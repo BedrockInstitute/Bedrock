@@ -103,8 +103,29 @@ numeral premise, a real defect in `[LJ-1.173]:843-846`, whose row 1 gave them
 no-master-edit rule.** **And `someEnv`'s second blocker is delivered in FOUR
 lines at `src/L/Condensation.lagda.md:3042`, not the 120 the report priced.**
 
-**3. Route A-prime is PRICED at 1,089 and the landing order is written; NOT ONE
-LINE IS IN `src/`.** All seven blocks are measured and the reading residue is
+**3. A2 IS LANDED AND UNDER THE BAR, AND IT MEASURED A CALIBER MISMATCH IN
+A-PRIME'S WHOLE PRICE.** `[LJ-1.277]` delivered
+`src/L/Coding/Injection.lagda.md`: **238 lines, 1.66 s cold over three runs,
+rate 0.0070 s/line, which is 0.66x the 0.010514 bar.** Green, `--safe`, and a
+re-run that IMPORTS it exits 0, so this is a landing and not a copy (C-45). **No
+existing master was edited.**
+
+**BUT 238 IS NOT 186, AND THE GAP IS THE CALIBER RATHER THAN AN OVERAGE.** I
+checked this myself because the report did not. **`[LJ-1.229]:17` says its 186 counts
+definitions only, in the caliber of the 78-line core.** The probe is
+340 raw lines, 268 non-blank, **218 non-blank non-comment**. **DD5's caliber,
+the only admissible one, is non-blank lines inside ` ```agda ` fences, and by
+`ledger.py` the delivered master is 238.**
+
+**SO A-PRIME'S 1,089 IS A SUM IN THE NARROW CALIBER AND ITS DELIVERED TOTAL
+WILL BE LARGER.** At this one site the ratio is 238/186 = **1.28**. **One site
+is one observation** (`[LJ-1.256]`'s law), so the extrapolation is INFERRED and
+the figure to watch is the next landing's. **If the ratio holds, A-prime
+delivers near 1,390 rather than 1,089, and DD5's line benchmark hears about it
+first.**
+
+**The rest of A-prime is priced at 1,089 and the landing order is written; ONE
+BLOCK IS NOW IN `src/`.** All seven blocks are measured and the reading residue is
 ZERO (`[LJ-1.253]`). `[LJ-1.268]` gives the order: **five NEW masters in three
 waves, and nothing extends an existing master, so no over-the-bar master gains
 a line.** Wave 0 can land now: A2, A1 and A5 row 5, in parallel, every import
@@ -936,7 +957,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.266 | Step 6's SECONDS inside Condensation | ABOVE. HEAP WALL. DD25 [LJ-1.275] UPHELD | Sound on every number; the LAYOUT was my brief's. In a new master the wall goes and the rate halves |
 | LJ-1.275 | DD25 review of LJ-1.266's heap wall | HOLDS, BUT THE WALL IS A LAYOUT ARTIFACT | Full block GREEN in a new master, 465.59 s, exit 0. Env rate 2.378 to 1.267. Option C now targets 1.1 s |
 | LJ-1.276 | LAND step 6 as a new master | DISPATCHED | LJ-1.275 measured the whole 805-line block GREEN in a new master at -M8g, 465.59 s, n=3. L.Condensation gains nothing |
-| LJ-1.277 | LAND A2, the coding injection | DISPATCHED | Wave 0 of LJ-1.268's order. 186 lines, every import delivered, and every downstream A-prime block names its predicate |
+| LJ-1.277 | LAND A2, the coding injection | LANDED GREEN, 238 LINES, 0.66x THE BAR | 1.66 s cold, n=3. Re-run imports it and exits 0. The 238 against the priced 186 is a CALIBER gap, not an overage |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
 | LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |

@@ -333,6 +333,7 @@ import L.Axioms.Full
 import L.Axioms.Power
 import L.Absoluteness
 import L.Coding.Model
+import L.Coding.Injection
 import L.Coding.InL
 import L.Coding.Closed
 import L.Recursion
