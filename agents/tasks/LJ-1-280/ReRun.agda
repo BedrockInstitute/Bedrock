@@ -52,13 +52,21 @@ Concl zf κ =
 
 -- A proof of GCHStatement zf, when it exists, is a function of the two
 -- hypotheses and a cardinal.  This term applies such a proof at the
--- consumer site: given the two hypotheses and the cardinal, it returns
--- exactly Concl.
+-- consumer site: given the ONE remaining hypothesis and the cardinal, it
+-- returns exactly Concl.
+--
+-- UPDATED 2026-08-15 by the orchestrator, and the update is the point.
+-- [LJ-1.286] discharged `absorbs` inside src/L/GCH.lagda.md, so the statement
+-- no longer takes it and this re-run went RED with UnequalTerms.  That is C-40
+-- working: a new master has consumers the moment it exists, and a DELIVERED
+-- master has them the moment it changes.  My grep for consumers covered `src/`
+-- and missed this file, which is the same blind spot that broke two probes when
+-- I moved ProbeLJ1134A out from under them.  A probe is a consumer too.
 apply : (zf : ModelL.isZFModel) (proof : GCHStatement zf)
-        (sq : SqShape) (absorbs : AbsorbsShape) (κ : S)
+        (sq : SqShape) (κ : S)
         (cκ : IsCardinalL κ) (nfin : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
       → Concl zf κ
-apply zf proof sq absorbs κ cκ nfin = proof sq absorbs κ cκ nfin
+apply zf proof sq κ cκ nfin = proof sq κ cκ nfin
 
 -- The two hypotheses stay unsupplied: a proof of GCHStatement zf needs
 -- SqShape and AbsorbsShape as inputs, which this site does not build.

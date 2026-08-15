@@ -14,6 +14,7 @@ import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd )
 open import L.Cardinal {ℓ} lem using ( _↪_; IsCardinalL )
+open import L.Absorption {ℓ} lem using ( absorbs )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -33,9 +34,10 @@ module ModelL = FOL.ZFModel 𝒮ʟ
 -- (src/L/Choice/Transversal.lagda.md): a Type over the model, quantifying
 -- over the L-carrier with `∈ˢ`, naming the internal cardinal `IsCardinalL`
 -- (A4, delivered in src/L/Cardinal.lagda.md) and the ambient injection
--- `_↪_` (delivered in the same master).  The two leading hypotheses are
--- A5's conclusion type and A6's conclusion type, stated on the nose and
--- supplied by NOTHING in this master.
+-- `_↪_` (delivered in the same master).  A6's conclusion type is SUPPLIED
+-- here, by `absorbsL` below, so the statement does not hypothesize it.
+-- A5's conclusion type is the ONE remaining hypothesis: nothing in the
+-- tree supplies `SqShape` today.
 
 -- S3.  A5's conclusion type: the square law, uniformly over the infinite
 -- L-ordinals.
@@ -52,6 +54,14 @@ AbsorbsShape =
           → ((k : ℕ) → ⟨ # k ∈ fst γ ⟩)
           → ⟪ sucV (fst γ) ⟫ ↪ ⟪ fst γ ⟫
 
+-- S4a.  A6 SUPPLIES S4, and this line is the supply (C-38: a hypothesis is
+-- discharged when something inhabits it, never when it is deleted).  The
+-- right-hand side is the delivered `L.Absorption.absorbs`
+-- (src/L/Absorption.lagda.md:613-618).  There is no `subst`, no
+-- eta-expansion and no wrapper: the two types are the same type.
+absorbsL : AbsorbsShape
+absorbsL = absorbs
+
 -- δ is the successor cardinal of κ: a cardinal above κ, and the least
 -- cardinal above κ.
 SuccCardL : S → S → Type (ℓ-suc ℓ)
@@ -60,13 +70,14 @@ SuccCardL δ κ =
   × ⟨ fst κ ∈ fst δ ⟩
   × ((c : S) → IsCardinalL c → ⟨ fst κ ∈ fst c ⟩ → (⟪ fst δ ⟫ ↪ ⟪ fst c ⟫))
 
--- S5.  THE STATEMENT.  `sq` and `absorbs` are the two hypotheses A5 and A6
--- discharge; neither is supplied here.  The conclusion is the GCH bound
--- `𝒫(κ) ↪ δ` at the successor cardinal δ of κ.
+-- S5.  THE STATEMENT.  `sq` is the ONE remaining hypothesis, and A5 owes
+-- it: the square law uniformly over the infinite L-ordinals.  A6's
+-- absorption is NOT a hypothesis any more, because `absorbsL` above
+-- supplies it.  The conclusion is the GCH bound `𝒫(κ) ↪ δ` at the
+-- successor cardinal δ of κ.
 GCHStatement : ModelL.isZFModel → Type (ℓ-suc ℓ)
 GCHStatement zf =
   (sq : SqShape)
-  → (absorbs : AbsorbsShape)
   → (κ : S)
   → IsCardinalL κ
   → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)

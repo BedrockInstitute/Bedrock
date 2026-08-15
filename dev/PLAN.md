@@ -1025,7 +1025,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.283 | Survey the over-bar masters for seals | BISECT ALL, SEAL NOT ALL. THE BIG ONE IS 99.2 pc TWO LINES | EnvSupply's 482 s is sucV-in at :223-224 and the seal there is VOID, -0.19 pc. C-50 |
 | LJ-1.284 | LAND A6 and A5 row 3, wave 3 | BOTH LANDED. A-PRIME IS COMPLETE | A6 525 lines at 1.04x the bar, row 3 at 0.69x. The re-site works. A6 DISCHARGES A7's absorbs, proved green |
 | LJ-1.285 | Rename the mode off the vendor name | DISPATCHED in-harness | Owner's instruction: we may not stay on one vendor. 8 live files; 244 frozen records keep the old name via the alias |
-| LJ-1.286 | Take A6's discharge of A7's absorbs | DISPATCHED in-harness | It makes the trophy stronger and LOWERS DD4's figure 41.1 to 39.1 pc. DD4 has no metric for exactly this reason |
+| LJ-1.286 | Take A6's discharge of A7's absorbs | LANDED. ONE HYPOTHESIS LEFT, sq | SHARED rose 43/7,596 to 44/7,632 while the SHARE fell 41.1 to 39.1. The share reads the denominator |
 | LJ-1.287 | Cure sucV-in, EnvSupply's 99.2 percent | DISPATCHED in-harness | Two cures already void: the layer-cap seal and an equation bridge. 479 of 482 s sit in two lines |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
