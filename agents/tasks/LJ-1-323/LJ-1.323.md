@@ -198,6 +198,25 @@ candidates in your own directory.
   of each field, because their whole purpose is to sound native to a
   mathematician and to a type theorist.**
 
+## DD4
+
+**ADDED 2026-08-16, AFTER THE TASK RETURNED, and the omission is recorded rather
+than hidden.** `make check`'s `check-dd4-stated` gate found this brief carrying
+no `## DD4` heading. **The owner's release for this task covered the
+MATHEMATICAL judgement and not the brief's own mechanical requirements**, and I
+dropped one while writing under that release. **The ruling itself is
+unaffected: it weighed the two trophies as siblings under tension 5 and its
+verdict does not move.**
+
+**Maximize the code the two proofs share, and write it generic.** One rule, two
+ends, no metric and no checker, which is why being stated IS its enforcement.
+
+**For this task DD4 bears on the STATEMENTS rather than the code**, and tension
+5 above is the DD4 question in its own words: **a reader meeting both trophies
+should not think they came from two projects.** **Say whether the two statements
+should read as siblings, and if your ruling changes one and not the other, say
+why that asymmetry is right rather than accidental.**
+
 ## THE EVIDENCE, all of it, and read what bears
 
 - **`src/L/GCH.lagda.md`**, the GCH statement, WHOLE. **`src/L/Model.lagda.md:92-100`**,
