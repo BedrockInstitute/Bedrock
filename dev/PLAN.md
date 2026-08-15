@@ -71,8 +71,26 @@ regularityV`. **`[LJ-1.299]`'s CIRCULAR verdict is refuted by construction.**
 **ONE qualification, which that task put in its own lead: the conclusion is
 TRUNCATED**, `∥ sq α ∥₁` rather than the function object `SqShape` needs.
 
+**WHAT IS NOT MECHANICAL, and the list is shorter than it was but it is not
+empty.** The owner asked directly and the honest answer is four things:
+
+1. **The composite's TERM has never been written.** `[LJ-1.302]` proved that a
+   HYPOTHETICAL `comp : Composite` makes `amb` come out. **That says it FEEDS
+   and not that it EXISTS.** The 470 lines price the ingredients; the composite
+   itself is unwritten.
+2. **The truncation is UNKNOWN**, not mechanical. `[LJ-1.305]` is measuring
+   whether it lifts at all, and one of its three branches restates the trophy.
+3. **The cardinal face at κ** is a statement-level fork and it is in the
+   owner's list below.
+4. **Two INFERRED add-ons**, `[LJ-1.304]`'s leaf-frame wrapper at about 25 lines
+   and its `dK` closure lemma at about 15. Small, and inferred is not measured.
+
+**WHAT IS MECHANICAL, and it is most of the volume:** the clean 23 modules
+(MEASURED at zero changed lines), the dirty seven's ties (ONE debt, one built),
+and `StepAgree` with `ApproxAgree` (both BUILT as terms).
+
 **SO THE PHASE IS NO LONGER BLOCKED ON A QUESTION. It is blocked on two builds,
-one of them priced.**
+one of them priced, and on one ruling.**
 
 **1. STEP 6 IS LANDED AND ITS MASTER IS NOW UNDER THE BAR.**
 **`src/L/Coding/EnvSupply.lagda.md`: 495.23 s to 6.65 s, minus 488.59 s, for
@@ -360,6 +378,29 @@ error: I escalated a fork I had measured on the wrong object.**
   new work only, or keep the red until the twelve are answered some other way.**
   **Every brief I write from here carries PREMISES.** The codes are `LJ-1.217`,
   `219`, `220`, `224`, `226`, `230`, `233`, `235`, `236`, `247`, `260`, `275`.
+- **THE CARDINAL FACE AT κ, AND IT IS A STATEMENT-LEVEL FORK.** `[LJ-1.300]`
+  said the trophy must change in TWO places. I fixed the first, the parenthesis
+  defect, because its intent was unambiguous. **This is the second and it is
+  NOT a typo.**
+
+  **MEASURED, three ways.** `IsCardinalL` at `src/L/Cardinal.lagda.md:230-233`
+  refutes **CODED** injections only, because `InjCode`'s `F` ranges over the
+  L-carrier `S`; `noinj²`'s `f` is an **AMBIENT** function.
+  **`InjCode` occurs in exactly ONE file in `src/`.** The only crossing device
+  is `Small` at `src/L/Coding/Injection.lagda.md:123` and **it runs code to
+  ambient; the reverse has no term.** `amb→code` proves
+  `IsCardinal (fst κ) → IsCardinalL κ` and **nothing proves the reverse.**
+
+  **AND THE MISSING DIRECTION IS INDEPENDENT, not false.** `[LJ-1.300]`
+  corrected `[LJ-1.299]`'s label: `AmbientToCode` is TRUE whenever the ambient
+  universe satisfies V=L, and FALSE under a Levy collapse. **So no proof and no
+  countermodel can settle it inside this development.**
+
+  **THE FORK.** Either `GCHStatement` takes the AMBIENT cardinal face, which
+  makes `noinj²` reachable and changes what the trophy claims, or it keeps the
+  coded face and the route needs a device nobody has. **I will not choose
+  between two statements of the theorem.**
+
 - **OPTION C, RULED ON A FIGURE THAT MOVED.** The owner ruled `先C` when the
   telescope component carried 8.2 s. **`[LJ-1.275]` measured it at 1,113 ms
   today**, because `[LJ-1.260]`'s numeral premise changed the chapter under it.
