@@ -1,0 +1,114 @@
+==============================================================================
+CASE 1. NO CONFIG. The built-in default vendor applies.
+------------------------------------------------------------------------------
+vendor:        deepseek
+model:         deepseek-v4-pro
+pi_provider:   deepseek
+pi_wired:      True
+banded:        True
+clock_state(): peak
+auto_mode():   in-harness-subagent-mode
+default_harness(): herdr
+------------------------------------------------------------------------------
+VENDOR IN FORCE: `deepseek`
+  source: the built-in default, because dev/vendors.toml is absent
+  model: deepseek-v4-pro
+  pi provider: deepseek
+  pi wired: yes
+  this vendor prices by the hour, so the clock runs
+  peak windows (Beijing): 09:00 to 12:00, 14:00 to 18:00
+  outside every window: off-peak
+  each band selects: peak -> `in-harness-subagent-mode`, off-peak -> `pi-subagent-mode`
+
+  THE DD19 LINE. This file holds the head tables, the two modes, the
+  invariant and the mode logic. `dev/vendors.toml` holds the vendor
+  rows printed above. Neither one restates the other.
+
+==============================================================================
+CASE 2. THE SHIPPED CONFIG, which names deepseek.
+------------------------------------------------------------------------------
+vendor:        deepseek
+model:         deepseek-v4-pro
+pi_provider:   deepseek
+pi_wired:      True
+banded:        True
+clock_state(): peak
+auto_mode():   in-harness-subagent-mode
+default_harness(): herdr
+------------------------------------------------------------------------------
+VENDOR IN FORCE: `deepseek`
+  source: /Users/alsg/Agentic/Bedrock/dev/vendors.toml, `in_force = "deepseek"`
+  model: deepseek-v4-pro
+  pi provider: deepseek
+  pi wired: yes
+  this vendor prices by the hour, so the clock runs
+  peak windows (Beijing): 09:00 to 12:00, 14:00 to 18:00
+  outside every window: off-peak
+  each band selects: peak -> `in-harness-subagent-mode`, off-peak -> `pi-subagent-mode`
+
+  THE DD19 LINE. This file holds the head tables, the two modes, the
+  invariant and the mode logic. `dev/vendors.toml` holds the vendor
+  rows printed above. Neither one restates the other.
+
+==============================================================================
+CASE 3. A FLAT VENDOR that pi cannot run (glm, pi_wired = false).
+------------------------------------------------------------------------------
+vendor:        glm
+model:         glm-model-id-not-yet-known
+pi_provider:   glm
+pi_wired:      False
+banded:        False
+clock_state(): REFUSED. dispatch_policy: the vendor in force is `glm`, which declares no price window, so the clock has no basis and must not be read. The peak clock exists because a vendor prices by the hour, and `glm` does not. Under `VERSION_IN_FORCE = 'auto'` the mode is that vendor's `default_mode`, which is `in-harness-subagent-mode`, and a pin still beats both. Source: /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-288/probe-glm-flat.toml, `in_force = "glm"`.
+auto_mode():   in-harness-subagent-mode
+default_harness(): REFUSED. dispatch_policy: the vendor in force is `glm`, and its row says `pi_wired = false`. `pi` is NOT wired to `glm`, so no head can start on the model `glm-model-id-not-yet-known`. Source: /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-288/probe-glm-flat.toml, `in_force = "glm"`. Set `in_force` to a wired vendor in /Users/alsg/Agentic/Bedrock/dev/vendors.toml, or wire `pi` to `glm` and set `pi_wired = true` in the same row. This is a refusal, not a reminder: a declaration is not a wiring.
+------------------------------------------------------------------------------
+VENDOR IN FORCE: `glm`
+  source: /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-288/probe-glm-flat.toml, `in_force = "glm"`
+  model: glm-model-id-not-yet-known
+  pi provider: glm
+  pi wired: NO. Every dispatch through this policy is refused, by design
+  this vendor prices one flat rate, so the clock does not run and has no basis
+  `auto` resolves to: `in-harness-subagent-mode`
+
+  THE DD19 LINE. This file holds the head tables, the two modes, the
+  invariant and the mode logic. `dev/vendors.toml` holds the vendor
+  rows printed above. Neither one restates the other.
+
+==============================================================================
+CASE 4. A BANDED VENDOR other than deepseek, with its own hours.
+------------------------------------------------------------------------------
+vendor:        glm
+model:         glm-model-id-not-yet-known
+pi_provider:   glm
+pi_wired:      True
+banded:        True
+clock_state(): off-peak
+auto_mode():   pi-subagent-mode
+default_harness(): herdr-pi
+------------------------------------------------------------------------------
+VENDOR IN FORCE: `glm`
+  source: /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-288/probe-wired-glm-banded.toml, `in_force = "glm"`
+  model: glm-model-id-not-yet-known
+  pi provider: glm
+  pi wired: yes
+  this vendor prices by the hour, so the clock runs
+  peak windows (Beijing): 20:00 to 23:00
+  outside every window: off-peak
+  each band selects: peak -> `in-harness-subagent-mode`, off-peak -> `pi-subagent-mode`
+
+  THE DD19 LINE. This file holds the head tables, the two modes, the
+  invariant and the mode logic. `dev/vendors.toml` holds the vendor
+  rows printed above. Neither one restates the other.
+
+==============================================================================
+CASE 5. AN UNKNOWN VENDOR named by in_force.
+------------------------------------------------------------------------------
+LOAD REFUSED: dispatch_policy: /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-288/probe-unknown-vendor.toml: `in_force` names the vendor `grok`, which has no `[vendors.grok]` table. The declared vendors are: deepseek. A vendor this file does not declare is never guessed (C-43).
+==============================================================================
+CASE 6. A FLAT VENDOR that names no default_mode.
+------------------------------------------------------------------------------
+LOAD REFUSED: dispatch_policy: /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-288/probe-flat-no-default.toml: `[vendors.glm]` declares no window, so the clock has no basis and `VERSION_IN_FORCE = 'auto'` has nothing to ask. Declare `default_mode`, the mode `auto` resolves to for this vendor. There is no silent fallback (C-43).
+==============================================================================
+CASE 7. THREE PRICE BANDS, with no CLOCK_STATES row for the third.
+------------------------------------------------------------------------------
+VALIDATION REFUSED: dispatch_policy: the vendor `example` names the price band `super-peak`, and `CLOCK_STATES` has no row for it. The known bands are off-peak, peak. A new band needs a row saying which mode it selects, and that row is a decision about heads, so it belongs in this file and never in the config. Source: /Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-288/probe-three-bands.toml, `in_force = "example"`.

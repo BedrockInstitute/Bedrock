@@ -54,12 +54,32 @@ THE OVERRIDE IS TEMPORARY. The field records the date it was set and the
 condition that reverts it, because a switch that records only its position
 loses why it is there. The owner sets a mode by word, and each mode is named
 for the head it LEADS with, so the name says what it does.
+
+THE VENDOR DATA IS NOT HERE, AND THAT IS THE DD19 LINE. `dev/vendors.toml`
+holds which vendor is in force, its model ID, whether `pi` is wired to it, and
+its price bands. THIS FILE holds the head tables, the two modes, the invariant
+and the mode logic. `AGENTS.md` names this file the ONLY home of the tables,
+and no vendor row restates one. Read the two sentences together: the config
+says WHEN a vendor is dear, and `CLOCK_STATES` below says WHICH MODE each price
+band selects.
+
+THE CLOCK BELONGS TO THE VENDOR, from the owner's instruction of 2026-08-15.
+The peak and off-peak clock exists because DEEPSEEK prices that way, so the
+clock runs only while the vendor in force declares price bands. A vendor that
+bills one flat price gives the clock no basis, and `auto` then resolves to that
+vendor's `default_mode`. A pin in `VERSION_IN_FORCE` still beats both.
+
+DELETE `dev/vendors.toml` AND NOTHING BREAKS. `BUILTIN_VENDOR` below then
+supplies the data this file carried before the config existed.
 """
 
 from __future__ import annotations
 
 import sys
+import tomllib
+from dataclasses import dataclass
 from datetime import datetime, time, timedelta, timezone
+from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # THE SWITCH. One of two values, and the order of power is visible here.
@@ -93,29 +113,306 @@ REVERT_CONDITION = ("The owner pins a mode by word. Set VERSION_IN_FORCE to "
                     "is what a pin looks like.")
 
 # ---------------------------------------------------------------------------
-# THE CLOCK. One table of windows, one table of states, and the whole rule.
-# DD4: the clock is generic in the WINDOWS, not in the two modes. A second
-# provider with different windows, or a change to DeepSeek's hours, is one
-# edit to PEAK_WINDOWS and nothing else.
+# THE VENDOR. `dev/vendors.toml` is its ONE home, and this file holds no vendor
+# data except the compatibility floor below.
 # ---------------------------------------------------------------------------
 #
-# PEAK_WINDOWS is in BEIJING time, which the rule states. The conversion from
-# UTC is explicit in `beijing_now()`: Beijing is UTC+8 with no daylight
-# saving, so the offset is a constant and a machine in any zone gets the same
-# answer.
+# WHY A CONFIG FILE, from the owner's instruction of 2026-08-15: the model that
+# `pi-subagent-mode` runs on must be switchable between vendors without an edit
+# to this file. A vendor row is DATA. A head table is POLICY. DD19 forbids a
+# rule being canonical twice, so the two never restate each other.
 #
-# THE WINDOWS ARE HALF-OPEN [start, end) at minute resolution. A minute
-# belongs to the window that STARTED at its hour: 11:59 is peak, 12:00 is
-# off-peak; 17:59 is peak, 18:00 is off-peak. The boundary instant itself
-# belongs to the window that is starting, so 09:00:00 and 14:00:00 are peak
-# and 12:00:00 and 18:00:00 are off-peak.
-#
-# PEAK_WINDOWS must be ordered by start time and must not be empty; the first
-# window's start is the next day's first boundary.
-PEAK_WINDOWS: tuple[tuple[int, int, int, int], ...] = (
-    (9, 0, 12, 0),   # 09:00 to 12:00 Beijing
-    (14, 0, 18, 0),  # 14:00 to 18:00 Beijing
+# THE CAVEAT IS THE OWNER'S OWN. `pi` is wired to deepseek and to nothing else
+# today. A vendor is DECLARABLE before `pi` can run it, and `pi_wired` records
+# which is which. `require_vendor_wired()` refuses LOUDLY when an unwired vendor
+# is in force and a head must start, because a silent default is the shape a
+# wrong choice hides in (`dev/LESSONS.md` C-43).
+
+CONFIG_PATH = Path(__file__).resolve().parent.parent / "dev" / "vendors.toml"
+
+
+@dataclass(frozen=True)
+class Vendor:
+    """One vendor's data.
+
+    A BANDED vendor prices by the hour: it declares `windows` and `base_state`,
+    and it drives the clock. A FLAT vendor prices the same at every hour: it
+    declares `default_mode`, and the clock does not run for it at all. The two
+    kinds are exclusive, and the loader refuses a row that is both or neither.
+    """
+
+    name: str
+    model: str
+    pi_provider: str
+    pi_wired: bool
+    base_state: str | None
+    windows: tuple[tuple[int, int, int, int, str], ...]
+    default_mode: str | None
+    source: str
+
+    @property
+    def banded(self) -> bool:
+        """True when this vendor prices by the hour, so the clock has a basis."""
+        return bool(self.windows)
+
+
+# THE COMPATIBILITY FLOOR, AND IT IS NOT A SECOND HOME. This holds the data this
+# file carried as literals before `dev/vendors.toml` existed: the model from the
+# old vendor seam, and the two Beijing windows the owner set on 2026-08-14. It is
+# read ONLY when the config file is absent, so deleting the config cannot break a
+# dispatch. When the config exists it wins whole, and no field of this default
+# merges into it.
+BUILTIN_VENDOR = Vendor(
+    name="deepseek",
+    model="deepseek-v4-pro",
+    pi_provider="deepseek",
+    pi_wired=True,
+    base_state="off-peak",
+    windows=((9, 0, 12, 0, "peak"), (14, 0, 18, 0, "peak")),
+    default_mode=None,
+    source="the built-in default, because dev/vendors.toml is absent",
 )
+
+_KNOWN_FIELDS = ("model", "pi_provider", "pi_wired", "base_state", "windows",
+                 "default_mode")
+_KNOWN_WINDOW_FIELDS = ("state", "start", "end")
+
+
+def _reject(path, what: str) -> SystemExit:
+    """Every vendor refusal, in one shape.
+
+    It names the file, the fault and the fix. A refusal a reader cannot act on
+    is only a crash. `SystemExit` is this file's established loud idiom: it is
+    what `in_force()` already raises on an unreadable switch, and a consumer
+    that wraps the import in `except Exception` does NOT swallow it.
+    """
+    return SystemExit(f"dispatch_policy: {path}: {what}")
+
+
+def _hhmm(path, value, where: str) -> tuple[int, int]:
+    """A `"HH:MM"` string as (hour, minute), Beijing time."""
+    if not isinstance(value, str):
+        raise _reject(path, f'{where} must be a string like "09:00", not '
+                            f'{value!r}.')
+    parts = value.split(":")
+    if len(parts) != 2 or not all(p.isdigit() and len(p) == 2 for p in parts):
+        raise _reject(path, f'{where} must read "HH:MM" with two digits in each '
+                            f'half, not {value!r}.')
+    hour, minute = int(parts[0]), int(parts[1])
+    if not (0 <= hour <= 23 and 0 <= minute <= 59):
+        raise _reject(path, f"{where} is {value!r}, which is not a real time of "
+                            f"day.")
+    return hour, minute
+
+
+def _vendor_from(path, name: str, row: object, source: str) -> Vendor:
+    """One `[vendors.<name>]` table as a `Vendor`, or a loud refusal."""
+    if not isinstance(row, dict):
+        raise _reject(path, f"`[vendors.{name}]` must be a table.")
+    extra = sorted(set(row) - set(_KNOWN_FIELDS))
+    if extra:
+        raise _reject(path, f"`[vendors.{name}]` declares unknown field(s) "
+                            f"{', '.join(extra)}. The fields this loader reads "
+                            f"are {', '.join(_KNOWN_FIELDS)}. A field nothing "
+                            f"reads is never ignored in silence.")
+
+    model = row.get("model")
+    if not isinstance(model, str) or not model.strip():
+        raise _reject(path, f"`[vendors.{name}]` must declare `model`, the model "
+                            f"ID this vendor runs, as a non-empty string.")
+    provider = row.get("pi_provider")
+    if not isinstance(provider, str) or not provider.strip():
+        raise _reject(path, f"`[vendors.{name}]` must declare `pi_provider`, the "
+                            f"provider name `pi` needs, as a non-empty string.")
+    wired = row.get("pi_wired")
+    if not isinstance(wired, bool):
+        raise _reject(path, f"`[vendors.{name}]` must declare `pi_wired` as true "
+                            f"or false. It records whether `pi` can really run "
+                            f"this vendor today, and it has no default.")
+
+    windows_raw = row.get("windows", [])
+    if not isinstance(windows_raw, list):
+        raise _reject(path, f"`[vendors.{name}]` `windows` must be a list of "
+                            f"tables.")
+    banded = bool(windows_raw)
+    base_state = row.get("base_state")
+    default_mode = row.get("default_mode")
+
+    if banded and default_mode is not None:
+        raise _reject(path, f"`[vendors.{name}]` declares both `windows` and "
+                            f"`default_mode`. A banded vendor drives the clock "
+                            f"and the clock picks the mode, so `default_mode` "
+                            f"would never be read. Delete one of the two.")
+    if not banded and default_mode is None:
+        raise _reject(path, f"`[vendors.{name}]` declares no window, so the clock "
+                            f"has no basis and `VERSION_IN_FORCE = 'auto'` has "
+                            f"nothing to ask. Declare `default_mode`, the mode "
+                            f"`auto` resolves to for this vendor. There is no "
+                            f"silent fallback (C-43).")
+    if not banded and base_state is not None:
+        raise _reject(path, f"`[vendors.{name}]` declares no window, so it has one "
+                            f"price band and `base_state` names nothing. Delete "
+                            f"it.")
+    if banded and base_state is None:
+        raise _reject(path, f"`[vendors.{name}]` declares windows, so it must "
+                            f"declare `base_state`, the band that holds outside "
+                            f"every window.")
+    if default_mode is not None and (not isinstance(default_mode, str)
+                                     or not default_mode.strip()):
+        raise _reject(path, f"`[vendors.{name}]` `default_mode` must be a "
+                            f"non-empty string naming a mode.")
+    if base_state is not None and (not isinstance(base_state, str)
+                                   or not base_state.strip()):
+        raise _reject(path, f"`[vendors.{name}]` `base_state` must be a non-empty "
+                            f"string naming a price band.")
+
+    parsed: list[tuple[int, int, int, int, str]] = []
+    for i, win in enumerate(windows_raw, 1):
+        where = f"`[vendors.{name}]` window {i}"
+        if not isinstance(win, dict):
+            raise _reject(path, f"{where} must be a table with `state`, `start` "
+                                f"and `end`.")
+        extra_w = sorted(set(win) - set(_KNOWN_WINDOW_FIELDS))
+        if extra_w:
+            raise _reject(path, f"{where} declares unknown field(s) "
+                                f"{', '.join(extra_w)}. A window reads "
+                                f"{', '.join(_KNOWN_WINDOW_FIELDS)}.")
+        state = win.get("state")
+        if not isinstance(state, str) or not state.strip():
+            raise _reject(path, f"{where} must declare `state`, the price band it "
+                                f"names, as a non-empty string.")
+        sh, sm = _hhmm(path, win.get("start"), f"{where} `start`")
+        eh, em = _hhmm(path, win.get("end"), f"{where} `end`")
+        if (sh, sm) >= (eh, em):
+            raise _reject(path, f"{where} ends at or before it starts "
+                                f"({sh:02d}:{sm:02d} to {eh:02d}:{em:02d}). A "
+                                f"window never crosses midnight. Write two "
+                                f"windows instead.")
+        if state.strip() == str(base_state).strip():
+            raise _reject(path, f"{where} names the band `{state.strip()}`, which "
+                                f"is already this vendor's `base_state`. The "
+                                f"window would change nothing. Delete it.")
+        parsed.append((sh, sm, eh, em, state.strip()))
+
+    for first, second in zip(parsed, parsed[1:]):
+        if (second[0], second[1]) < (first[2], first[3]):
+            raise _reject(path, f"`[vendors.{name}]` windows must be ordered by "
+                                f"start time and must not overlap. A window opens "
+                                f"at {second[0]:02d}:{second[1]:02d}, before the "
+                                f"one closing at {first[2]:02d}:{first[3]:02d}.")
+
+    return Vendor(
+        name=name,
+        model=model.strip(),
+        pi_provider=provider.strip(),
+        pi_wired=wired,
+        base_state=base_state.strip() if isinstance(base_state, str) else None,
+        windows=tuple(parsed),
+        default_mode=(default_mode.strip()
+                      if isinstance(default_mode, str) else None),
+        source=source,
+    )
+
+
+def load_vendor(path=None) -> Vendor:
+    """The vendor the config puts in force.
+
+    `path` defaults to `CONFIG_PATH`; the tests pass a probe file instead, so
+    every branch below is reachable without moving the real config.
+
+    AN ABSENT FILE GIVES `BUILTIN_VENDOR`, and that is the ONLY quiet path here.
+    It is quiet because it is today's data, unchanged, which is what makes
+    deleting the config safe. EVERY OTHER FAULT RAISES, and names the vendor.
+    """
+    p = Path(path) if path is not None else CONFIG_PATH
+    if not p.exists():
+        return BUILTIN_VENDOR
+    try:
+        data = tomllib.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise _reject(p, f"cannot be read as TOML ({exc}). Fix it, or delete it "
+                         f"and the built-in vendor `{BUILTIN_VENDOR.name}` "
+                         f"applies.")
+    extra = sorted(set(data) - {"in_force", "vendors"})
+    if extra:
+        raise _reject(p, f"declares unknown top-level key(s) {', '.join(extra)}. "
+                         f"This file reads `in_force` and `[vendors.<name>]` "
+                         f"only.")
+    name = data.get("in_force")
+    if not isinstance(name, str) or not name.strip():
+        raise _reject(p, "must declare `in_force`, the name of the vendor in "
+                         "force, as a non-empty string.")
+    name = name.strip()
+    vendors = data.get("vendors")
+    if not isinstance(vendors, dict) or not vendors:
+        raise _reject(p, "must declare at least one `[vendors.<name>]` table.")
+    if name not in vendors:
+        raise _reject(p, f"`in_force` names the vendor `{name}`, which has no "
+                         f"`[vendors.{name}]` table. The declared vendors are: "
+                         f"{', '.join(sorted(vendors))}. A vendor this file does "
+                         f"not declare is never guessed (C-43).")
+    return _vendor_from(p, name, vendors[name], f"{p}, `in_force = \"{name}\"`")
+
+
+VENDOR = load_vendor()
+
+
+def vendor() -> Vendor:
+    """The vendor in force. Read it; never rebuild it from the config."""
+    return VENDOR
+
+
+def require_vendor_wired(v: Vendor | None = None) -> None:
+    """Refuse when the vendor in force is one `pi` cannot run.
+
+    THIS IS THE LOUD HALF OF PART 1. A vendor is DECLARABLE before `pi` is wired
+    to it, which is what lets the owner open compatibility ahead of need. What
+    must never happen is a dispatch that starts a head on a vendor nothing can
+    run and finds out later. So the refusal fires at `default_harness()`, the one
+    call `dispatch.py` makes before it launches, and EVERY head that call can
+    return runs on the vendor's model.
+
+    IT DOES NOT FIRE INSIDE `head()` OR `tier_token()`, deliberately. Those two
+    judge FROZEN RECORDS as well as live dispatches, and a record must stay
+    readable whatever the config says today (C-41).
+    """
+    v = v or VENDOR
+    if v.pi_wired:
+        return
+    raise SystemExit(
+        f"dispatch_policy: the vendor in force is `{v.name}`, and its row says "
+        f"`pi_wired = false`. `pi` is NOT wired to `{v.name}`, so no head can "
+        f"start on the model `{v.model}`. Source: {v.source}. Set `in_force` to "
+        f"a wired vendor in {CONFIG_PATH}, or wire `pi` to `{v.name}` and set "
+        f"`pi_wired = true` in the same row. This is a refusal, not a reminder: "
+        f"a declaration is not a wiring.")
+
+
+# ---------------------------------------------------------------------------
+# THE CLOCK, AND IT BELONGS TO THE VENDOR.
+# ---------------------------------------------------------------------------
+#
+# THE OWNER'S INSTRUCTION, 2026-08-15. The peak and off-peak clock exists
+# because DEEPSEEK prices that way. So the clock runs only while the vendor in
+# force declares price bands. A FLAT vendor gives it no basis, and `auto` then
+# resolves to that vendor's `default_mode` instead. A pin beats both.
+#
+# THE WINDOWS ARE THE VENDOR'S, and `dev/vendors.toml` holds them. They are in
+# BEIJING time, which the rule states. The conversion from UTC is explicit in
+# `beijing_now()`: Beijing is UTC+8 with no daylight saving, so the offset is a
+# constant and a machine in any zone gets the same answer.
+#
+# THE WINDOWS ARE HALF-OPEN [start, end) at minute resolution. A minute belongs
+# to the window that STARTED at its hour: 11:59 is peak, 12:00 is off-peak;
+# 17:59 is peak, 18:00 is off-peak. The boundary instant itself belongs to the
+# window that is starting, so 09:00:00 and 14:00:00 are peak and 12:00:00 and
+# 18:00:00 are off-peak.
+#
+# CLOCK_STATES IS POLICY AND IT STAYS HERE. The config says WHEN a vendor is in
+# a band. This table says WHICH MODE the band selects, which is a decision about
+# HEADS. That is the DD19 line, and `dev/vendors.toml` states the same line from
+# the other side. A vendor with a third band adds one row here and two in the
+# config.
 
 # The mode each clock state selects. The two states and the two modes are the
 # whole economics: off-peak deepseek is half price, peak it is dear.
@@ -123,6 +420,13 @@ CLOCK_STATES: dict[str, str] = {
     "peak": "in-harness-subagent-mode",
     "off-peak": "pi-subagent-mode",
 }
+
+# THE RETIRED VIEW, kept because it costs one line. `PEAK_WINDOWS` was this
+# file's window table until the vendor config took it. It now reads the vendor's
+# peak band only, so a reader of the old name still gets the old answer.
+# MEASURED 2026-08-15: no file outside this one reads it.
+PEAK_WINDOWS: tuple[tuple[int, int, int, int], ...] = tuple(
+    (sh, sm, eh, em) for sh, sm, eh, em, st in VENDOR.windows if st == "peak")
 
 BEIJING_TZ = timezone(timedelta(hours=8))
 
@@ -139,32 +443,78 @@ def beijing_now(now: datetime | None = None) -> datetime:
     return t.astimezone(BEIJING_TZ)
 
 
-def clock_state(now: datetime | None = None) -> str:
-    """`peak` or `off-peak`, from the Beijing wall clock at `now`."""
-    bj = beijing_now(now)
-    hm = (bj.hour, bj.minute)
-    for sh, sm, eh, em in PEAK_WINDOWS:
+def _no_clock() -> SystemExit:
+    """The refusal that anything asking the clock gets from a flat vendor.
+
+    It is a refusal and never a fallback. A clock that answered `off-peak` for
+    a vendor with no bands would be inventing a price, and the mode would follow
+    the invention (C-43).
+    """
+    v = VENDOR
+    return SystemExit(
+        f"dispatch_policy: the vendor in force is `{v.name}`, which declares no "
+        f"price window, so the clock has no basis and must not be read. The peak "
+        f"clock exists because a vendor prices by the hour, and `{v.name}` does "
+        f"not. Under `VERSION_IN_FORCE = {AUTO!r}` the mode is that vendor's "
+        f"`default_mode`, which is `{v.default_mode}`, and a pin still beats "
+        f"both. Source: {v.source}.")
+
+
+def _state_at(hour: int, minute: int) -> str:
+    """The vendor's price band at a Beijing wall-clock time."""
+    if not VENDOR.banded:
+        raise _no_clock()
+    hm = (hour, minute)
+    for sh, sm, eh, em, state in VENDOR.windows:
         if (sh, sm) <= hm < (eh, em):
-            return "peak"
-    return "off-peak"
+            return state
+    return str(VENDOR.base_state)
+
+
+def clock_state(now: datetime | None = None) -> str:
+    """The vendor's price band from the Beijing wall clock at `now`.
+
+    For a two-band vendor such as deepseek that is `peak` or `off-peak`, which
+    is what it has always been. A vendor with three bands returns the third name
+    here, and `CLOCK_STATES` maps it.
+    """
+    bj = beijing_now(now)
+    return _state_at(bj.hour, bj.minute)
 
 
 def clock_mode(now: datetime | None = None) -> str:
     """The mode the clock selects at `now`."""
-    return CLOCK_STATES[clock_state(now)]
+    state = clock_state(now)
+    if state not in CLOCK_STATES:
+        # The loader already refuses an unknown band at import. This is the last
+        # line of defence, so the failure names the band instead of raising a
+        # bare KeyError.
+        raise SystemExit(
+            f"dispatch_policy: the vendor `{VENDOR.name}` is in the price band "
+            f"`{state}`, and `CLOCK_STATES` has no row for it. Add the row that "
+            f"says which mode that band selects.")
+    return CLOCK_STATES[state]
 
 
 def _boundaries(day) -> list[tuple[datetime, str]]:
-    """Today's window starts and ends, plus tomorrow's first start, so the
-    boundary list is never empty. The state named is the state AFTER the
-    boundary."""
-    out: list[tuple[datetime, str]] = []
-    for sh, sm, eh, em in PEAK_WINDOWS:
-        out.append((datetime.combine(day, time(sh, sm), tzinfo=BEIJING_TZ), "peak"))
-        out.append((datetime.combine(day, time(eh, em), tzinfo=BEIJING_TZ), "off-peak"))
-    sh, sm = PEAK_WINDOWS[0][0], PEAK_WINDOWS[0][1]
-    out.append((datetime.combine(day + timedelta(days=1), time(sh, sm),
-                                 tzinfo=BEIJING_TZ), "peak"))
+    """Today's band boundaries, plus tomorrow's first, so the list is never
+    empty. The state named is the state AFTER the boundary.
+
+    THE BOUNDARY SET IS EVERY WINDOW START AND EVERY WINDOW END, and the state
+    after each one is read back off the windows. Two adjacent bands therefore
+    share one boundary instead of producing two, which is what makes a third
+    band cost nothing here.
+    """
+    if not VENDOR.banded:
+        raise _no_clock()
+    marks = sorted({time(sh, sm) for sh, sm, _, _, _ in VENDOR.windows}
+                   | {time(eh, em) for _, _, eh, em, _ in VENDOR.windows})
+    out = [(datetime.combine(day, t, tzinfo=BEIJING_TZ),
+            _state_at(t.hour, t.minute)) for t in marks]
+    first = marks[0]
+    out.append((datetime.combine(day + timedelta(days=1), first,
+                                 tzinfo=BEIJING_TZ),
+                _state_at(first.hour, first.minute)))
     return out
 
 
@@ -207,15 +557,27 @@ def current_window(now: datetime | None = None) -> tuple[datetime | None, dateti
 #                       SKILL.md` states the same rule.
 #   fallback            the head to use when the case's own head is unavailable.
 
-# THE VENDOR SEAM. MODEL is the only line below that names a real backend. A
-# later vendor swap is one edit to this literal string; every mode, table and
-# comment elsewhere in this file names a HEAD (`pi`, `codex`, `opus 5`), never
-# the vendor behind it. [LJ-1.285] took the vendor name off the mode
-# identifiers for the same reason.
+# THE VENDOR SEAM MOVED, 2026-08-15 (`[LJ-1.288]`). It was this line, and the
+# comment here said a vendor swap is one edit to a literal string. THAT IS NO
+# LONGER TRUE, and the sentence is corrected rather than deleted: a vendor swap
+# is now one edit to `in_force` in `dev/vendors.toml`, and this file holds no
+# vendor literal outside `BUILTIN_VENDOR`. Every mode, table and comment
+# elsewhere here names a HEAD (`pi`, `codex`, `opus 5`), never the vendor behind
+# it. `[LJ-1.285]` took the vendor name off the mode identifiers for the same
+# reason.
+#
+# MODEL AND PI_PROVIDER STAY AS MODULE NAMES, because consumers read them:
+# `scripts/check-dispatch-policy.py:191` tests a governed document for the model
+# string. The NAMES did not change; only where their values come from did.
 #
 # THERE IS ONE MODEL HERE AND THAT IS DELIBERATE. Pass any other model with
 # `dispatch.py --model`; nothing in this file has an opinion about which.
-MODEL = "deepseek-v4-pro"
+MODEL = VENDOR.model
+
+# The provider name `pi` needs for the vendor in force. It is exposed so the
+# dispatcher can read it instead of carrying its own copy; the vendor name
+# belongs to the config, not to a caller.
+PI_PROVIDER = VENDOR.pi_provider
 
 # THE MODEL RULE IS REVOKED, 2026-08-15, by the repository owner, in their own
 # words: the flash rule and its code are deleted and the rule is void from now
@@ -348,14 +710,32 @@ HARNESS_FOR_AGENT = {"pi": "herdr-pi", "codex": "herdr"}
 # --------------------------------------------------------------------------- api
 
 
+def auto_mode() -> str:
+    """What `auto` resolves to, and it answers the one question a vendor config
+    opens.
+
+    A BANDED vendor gives the clock a basis, so the clock decides, exactly as it
+    did before this file had a config. A FLAT vendor gives the clock no basis, so
+    the mode is that vendor's declared `default_mode`.
+
+    THERE IS NO THIRD PATH AND NO SILENT ONE. A flat vendor that names no
+    `default_mode` is refused when the config loads, so this function cannot
+    reach a state where it must guess (C-43).
+    """
+    if VENDOR.banded:
+        return clock_mode()
+    return canonical(str(VENDOR.default_mode))
+
+
 def in_force() -> str:
-    """The mode in force. A pinned mode wins; `auto` delegates to the clock.
+    """The mode in force. A pinned mode wins; `auto` delegates to the vendor,
+    which means the clock for a banded vendor and `default_mode` for a flat one.
     A pin written as a RETIRED name resolves through `ALIASES` too (C-41), so
     the switch works even if someone pins it by the old word. Raises when the
     switch holds an unknown value, because a policy nobody can read must stop
     rather than pick one."""
     if VERSION_IN_FORCE == AUTO:
-        return clock_mode()
+        return auto_mode()
     v = canonical(VERSION_IN_FORCE)
     if v not in POLICY:
         raise SystemExit(
@@ -392,7 +772,12 @@ def default_harness(version: str | None = None) -> str | None:
     plus codex. So an override-era dispatch that reaches dispatch.py with no
     `--harness` is by definition NOT the default case, and the fallback is the
     honest default for it.
+
+    THE VENDOR IS CHECKED FIRST, and this is the point where an unwired vendor
+    stops a dispatch. Every head this function can return runs on the vendor's
+    model, so the answer would be a head nothing can start.
     """
+    require_vendor_wired()
     d = head("default", version)
     if d["harness"] == "in-harness":
         d = head("fallback", version)
@@ -411,6 +796,37 @@ def expected_tier_tokens(case: str, version: str | None = None) -> set[str]:
             EMERGENCY_TOKEN}
 
 
+def _window_lines() -> list[str]:
+    """One line per price band the vendor declares, in declaration order.
+
+    A TWO-BAND VENDOR PRINTS ONE LINE, and it is the line this file printed
+    before it had a config: `peak windows (Beijing): 09:00 to 12:00, 14:00 to
+    18:00`. A three-band vendor prints two lines, and nothing else changes.
+    """
+    order: list[str] = []
+    for *_rest, state in VENDOR.windows:
+        if state not in order:
+            order.append(state)
+    return [f"  {state} windows (Beijing): "
+            + ", ".join(f"{sh:02d}:{sm:02d} to {eh:02d}:{em:02d}"
+                        for sh, sm, eh, em, st in VENDOR.windows if st == state)
+            for state in order]
+
+
+def _harness_line(version: str) -> str:
+    """The default-harness answer, or the vendor refusal that replaces it.
+
+    THE INSPECTION COMMAND MUST STILL PRINT when the vendor is unwired. A reader
+    who has just set an unrunnable vendor needs to SEE why, and a traceback is
+    not a reading. The refusal still fires at every dispatch path.
+    """
+    try:
+        return (default_harness(version)
+                or "(none: the default head is in-harness)")
+    except SystemExit as exc:
+        return f"REFUSED. {exc}"
+
+
 def render(version: str | None = None) -> str:
     """Render the policy. `None` or `'auto'` renders what is in force; a mode
     name renders that mode's table with the (NOT the switch's value) marker
@@ -426,7 +842,7 @@ def render(version: str | None = None) -> str:
         f"DISPATCH POLICY: `{v}` is IN FORCE"
         + ("" if not explicit else "   (NOT the switch's value)"),
     ]
-    if VERSION_IN_FORCE == AUTO:
+    if VERSION_IN_FORCE == AUTO and VENDOR.banded:
         state = clock_state()
         start, end, _ = current_window()
         boundary, after_state = next_boundary()
@@ -437,12 +853,24 @@ def render(version: str | None = None) -> str:
             f"(VERSION_IN_FORCE = {AUTO!r})",
             f"  clock: {state.upper()} now. Beijing "
             f"{beijing_now():%Y-%m-%d %H:%M}, window {win}",
-            f"  peak windows (Beijing): "
-            + ", ".join(f"{sh:02d}:{sm:02d} to {eh:02d}:{em:02d}"
-                         for sh, sm, eh, em in PEAK_WINDOWS),
+        ]
+        lines += _window_lines()
+        lines += [
             f"  next boundary: {boundary:%Y-%m-%d %H:%M} Beijing, "
             f"{after_state} begins, mode becomes "
             f"`{CLOCK_STATES[after_state]}`",
+            f"  set {SET_ON} by {SET_BY}",
+            f"  reason: {REASON}",
+            f"  revert: {REVERT_CONDITION}",
+        ]
+    elif VERSION_IN_FORCE == AUTO:
+        lines += [
+            f"  selected by the vendor's `default_mode`, not by a ruling and "
+            f"not by a clock (VERSION_IN_FORCE = {AUTO!r})",
+            f"  vendor: `{VENDOR.name}` declares no price window, so the clock "
+            f"has no basis and does not run",
+            f"  default_mode: `{VENDOR.default_mode}`",
+            f"  vendor source: {VENDOR.source}",
             f"  set {SET_ON} by {SET_BY}",
             f"  reason: {REASON}",
             f"  revert: {REVERT_CONDITION}",
@@ -454,27 +882,36 @@ def render(version: str | None = None) -> str:
             f"  revert: {REVERT_CONDITION}",
         ]
         if VERSION_IN_FORCE != AUTO:
+            beaten = (f"the clock, which would select `{clock_mode()}` "
+                      f"({clock_state()} now)" if VENDOR.banded else
+                      f"the vendor default, which would select "
+                      f"`{VENDOR.default_mode}` (`{VENDOR.name}` declares no "
+                      f"price window, so there is no clock)")
             lines.append(
-                f"  a PIN: `{VERSION_IN_FORCE}` is pinned and wins over the "
-                f"clock, which would select `{clock_mode()}` "
-                f"({clock_state()} now)")
+                f"  a PIN: `{VERSION_IN_FORCE}` is pinned and wins over "
+                f"{beaten}")
+    # THE MODEL COLUMN IS 18 WIDE OR THE MODEL, whichever is wider. 18 was a
+    # literal until `[LJ-1.288]`, and it fitted `deepseek-v4-pro` exactly. A
+    # vendor with a longer model ID would have pushed the `tier:` column out of
+    # line. The floor of 18 keeps deepseek's table identical to the day before.
+    mw = max(18, *(len(h["model"]) for h in t["cases"].values()))
     lines += [
         "",
         f"  {t['summary']}",
         "",
-        f"  {'case':<14} {'harness':<12} {'agent':<8} {'model':<18} tier:",
-        f"  {'-' * 14} {'-' * 12} {'-' * 8} {'-' * 18} -----",
+        f"  {'case':<14} {'harness':<12} {'agent':<8} {'model':<{mw}} tier:",
+        f"  {'-' * 14} {'-' * 12} {'-' * 8} {'-' * mw} -----",
     ]
     for case, h in t["cases"].items():
         lines.append(f"  {case:<14} {h['harness']:<12} {h['agent']:<8} "
-                     f"{h['model'] or '-':<18} {h['tier_token']}")
+                     f"{h['model'] or '-':<{mw}} {h['tier_token']}")
     lines += [
         "",
         f"  INVARIANT, both versions: {INVARIANT}",
         f"  {t['note']}",
         "",
         f"  dispatch.py default harness under this version: "
-        f"{default_harness(v) or '(none: the default head is in-harness)'}",
+        f"{_harness_line(v)}",
         "",
         "  THE LIMIT. This switch cannot force the orchestrator's choice. An",
         "  in-harness Opus dispatch never passes through dispatch.py. The",
@@ -485,14 +922,93 @@ def render(version: str | None = None) -> str:
     return "\n".join(lines)
 
 
+def _bands(v: Vendor) -> list[str]:
+    """Every price band this vendor has, windows first and the base last."""
+    order: list[str] = []
+    for *_rest, state in v.windows:
+        if state not in order:
+            order.append(state)
+    if v.base_state and v.base_state not in order:
+        order.append(v.base_state)
+    return order
+
+
+def _validate_vendor_against_policy(v: Vendor | None = None) -> None:
+    """The cross-checks the loader cannot make on its own.
+
+    THE LOADER RUNS BEFORE `CLOCK_STATES` AND `POLICY` EXIST, so the checks that
+    need them run here, once, when the module finishes loading. These are the
+    checks that HOLD THE DD19 LINE. The config may NAME a band or a mode; this
+    file decides whether that name is real, because what a band selects and what
+    a mode is are both policy.
+    """
+    v = v or VENDOR
+    for state in _bands(v):
+        if state not in CLOCK_STATES:
+            raise SystemExit(
+                f"dispatch_policy: the vendor `{v.name}` names the price band "
+                f"`{state}`, and `CLOCK_STATES` has no row for it. The known "
+                f"bands are {', '.join(sorted(CLOCK_STATES))}. A new band needs "
+                f"a row saying which mode it selects, and that row is a decision "
+                f"about heads, so it belongs in this file and never in the "
+                f"config. Source: {v.source}.")
+    if v.default_mode is not None and canonical(v.default_mode) not in POLICY:
+        raise SystemExit(
+            f"dispatch_policy: the vendor `{v.name}` names `default_mode = "
+            f"{v.default_mode!r}`, which is not a mode. The modes are "
+            f"{', '.join(sorted(POLICY))}, and a retired name resolves through "
+            f"ALIASES (C-41). Source: {v.source}.")
+
+
+def render_vendor(v: Vendor | None = None) -> str:
+    """The vendor view, printed by `dispatch_policy.py --vendor`.
+
+    IT IS A SEPARATE COMMAND ON PURPOSE. The default printout is the POLICY, and
+    `[LJ-1.288]` kept it line for line as it was, so that the vendor config is
+    provably a change of shape and not a change of policy.
+    """
+    v = v or VENDOR
+    out = [
+        f"VENDOR IN FORCE: `{v.name}`",
+        f"  source: {v.source}",
+        f"  model: {v.model}",
+        f"  pi provider: {v.pi_provider}",
+        "  pi wired: " + ("yes" if v.pi_wired
+                          else "NO. Every dispatch through this policy is "
+                               "refused, by design"),
+    ]
+    if v.banded:
+        out.append("  this vendor prices by the hour, so the clock runs")
+        out += _window_lines()
+        out.append(f"  outside every window: {v.base_state}")
+        out.append("  each band selects: "
+                   + ", ".join(f"{b} -> `{CLOCK_STATES[b]}`"
+                               for b in _bands(v)))
+    else:
+        out.append("  this vendor prices one flat rate, so the clock does not "
+                   "run and has no basis")
+        out.append(f"  `auto` resolves to: `{v.default_mode}`")
+    out += [
+        "",
+        "  THE DD19 LINE. This file holds the head tables, the two modes, the",
+        "  invariant and the mode logic. `dev/vendors.toml` holds the vendor",
+        "  rows printed above. Neither one restates the other.",
+    ]
+    return "\n".join(out)
+
+
 def main() -> int:
     which = sys.argv[1] if len(sys.argv) > 1 else None
     if which in ("-h", "--help"):
         print("usage: dispatch_policy.py [auto|pi-subagent-mode|"
-              "in-harness-subagent-mode]")
+              "in-harness-subagent-mode|--vendor]")
         print("  no argument: print the mode the clock selects now")
+        print("  --vendor: print the vendor in force, from dev/vendors.toml")
         print("  a retired name (deepseek-subagent-mode, normal, override) "
               "resolves through ALIASES, C-41")
+        return 0
+    if which == "--vendor":
+        print(render_vendor())
         return 0
     if which and which != AUTO:
         which = canonical(which)
@@ -502,6 +1018,12 @@ def main() -> int:
         return 2
     print(render(which))
     return 0
+
+
+# THE CONFIG IS CHECKED WHEN THE MODULE LOADS, never at the first dispatch. A
+# config fault that waits for a dispatch is a fault that lands in a launch log
+# at the worst moment. C-48: a tool that can read a condition must refuse on it.
+_validate_vendor_against_policy()
 
 
 if __name__ == "__main__":

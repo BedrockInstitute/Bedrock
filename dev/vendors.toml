@@ -1,0 +1,100 @@
+# dev/vendors.toml: the VENDOR DATA that the dispatch policy runs on.
+#
+# WHAT THIS FILE IS FOR. It names the vendor in force, the model ID that vendor
+# runs, whether `pi` is wired to that vendor today, and the price bands the
+# vendor bills on. `scripts/dispatch_policy.py` reads it with `tomllib`.
+#
+# WHAT THIS FILE DOES NOT HOLD, AND THIS IS THE DD19 LINE. It holds NO head
+# table, NO mode, NO case, NO tier token and NO invariant. THE HEAD TABLES LIVE
+# IN `scripts/dispatch_policy.py`, and `AGENTS.md` names that file the ONLY home
+# of the tables. This file says WHEN a vendor is dear. That file says WHICH MODE
+# each price band selects. Neither one states the other.
+#
+# DELETE THIS FILE AND NOTHING BREAKS. `scripts/dispatch_policy.py` then uses its
+# built-in default vendor, which holds the data the code carried before this
+# config existed. That default is a compatibility floor, not a second home: when
+# this file exists it wins completely, and no field merges into it from the
+# default.
+#
+# THE CAVEAT, from the repository owner, 2026-08-15. `pi` is wired to deepseek
+# and to no other vendor today. This file opens compatibility before the need.
+# It does not claim support that exists. A vendor row with `pi_wired = false` is
+# a legal declaration, and `scripts/dispatch_policy.py` refuses loudly when that
+# vendor is in force and a head must start.
+#
+# NO FIELD HAS A SILENT DEFAULT, because an escape hatch is the shape a wrong
+# choice hides in (`dev/LESSONS.md` C-43). Each vendor row is one of two kinds,
+# and each kind has its own required fields. A field that belongs to the other
+# kind is a refusal, never an ignored line.
+
+# The vendor in force. It must match one `[vendors.<name>]` table below.
+in_force = "deepseek"
+
+# ---------------------------------------------------------------------------
+# THE VENDOR ROWS. Every row declares these three fields:
+#
+#   model        the model ID the herdr heads run. It is never empty.
+#   pi_provider  the provider name `pi` needs for this vendor.
+#   pi_wired     true only if `pi` can really run this vendor today.
+#
+# A BANDED VENDOR bills different prices at different hours. It adds:
+#
+#   base_state   the band that holds outside every declared window.
+#   windows      the hours the vendor bills at another band, in Beijing time.
+#                Each window names its band, its start and its end. A window is
+#                half-open [start, end), so 09:00 is peak and 12:00 is off-peak.
+#                The windows are ordered by start time and they never overlap.
+#
+# A FLAT VENDOR bills one price at every hour. It adds:
+#
+#   default_mode the mode that `VERSION_IN_FORCE = "auto"` resolves to. A flat
+#                vendor gives the clock no basis, so the clock does not run.
+#
+# THE BAND NAMES ARE NOT FREE TEXT. `scripts/dispatch_policy.py` maps each band
+# to a mode in `CLOCK_STATES`, and it refuses a band that the map does not know.
+# ---------------------------------------------------------------------------
+
+[vendors.deepseek]
+model = "deepseek-v4-pro"
+pi_provider = "deepseek"
+pi_wired = true
+base_state = "off-peak"
+windows = [
+    { state = "peak", start = "09:00", end = "12:00" },
+    { state = "peak", start = "14:00", end = "18:00" },
+]
+
+# ---------------------------------------------------------------------------
+# HOW TO ADD A VENDOR. Copy one template below, fill the model ID, and set
+# `in_force` above.
+#
+# THE MODEL ID IS THE OWNER'S TO SUPPLY. This file ships no glm row and no grok
+# row, because an invented model ID writes a certainty that no evidence gives.
+# A row is added when its model ID is known, not before.
+#
+# A FLAT VENDOR, which is every vendor that does not price by the hour:
+#
+#   [vendors.glm]
+#   model = "<the model ID, from the vendor>"
+#   pi_provider = "glm"
+#   pi_wired = false
+#   default_mode = "in-harness-subagent-mode"
+#
+# A VENDOR WITH THREE PRICE BANDS declares two of them and names the third as
+# its base:
+#
+#   [vendors.example]
+#   model = "<the model ID, from the vendor>"
+#   pi_provider = "example"
+#   pi_wired = false
+#   base_state = "off-peak"
+#   windows = [
+#       { state = "peak", start = "09:00", end = "12:00" },
+#       { state = "super-peak", start = "14:00", end = "18:00" },
+#   ]
+#
+# A NEW BAND NAME NEEDS ONE NEW ROW IN `CLOCK_STATES`, in
+# `scripts/dispatch_policy.py`. That row says which mode the band selects. That
+# is a policy decision about heads, so it belongs in the policy file and not
+# here. This is the DD19 line again, seen from the other side.
+# ---------------------------------------------------------------------------
