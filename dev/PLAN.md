@@ -1023,8 +1023,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.281 | Probe R-35 against A1's 98 seconds | BOTH CURES WORK. THE SEAL WINS: 100.50 s to 9.16 | R-35 gives 15.53. Sealing w opaque plus one read lemma gives 9.16, and no exported type names w |
 | LJ-1.282 | LAND the seal on A1 | LANDED. 99.78 s TO 9.31 s, DELTA 90.48 | 50.2x the bar to 4.34x for 19 lines. THREE definitions name w and ONE looks inside. L.GCH did not slow |
 | LJ-1.283 | Survey the over-bar masters for seals | DISPATCHED in-harness | LJ-1.218 names seven over the bar and P-y decides which are cheap. LJ-1.152 measured one that was not |
-| LJ-1.284 | LAND A6 and A5 row 3, wave 3 | DISPATCHED in-harness | The last A-prime blocks. Their blocker was a stale import my file move broke, and the cure is A2, delivered today |
+| LJ-1.284 | LAND A6 and A5 row 3, wave 3 | BOTH LANDED. A-PRIME IS COMPLETE | A6 525 lines at 1.04x the bar, row 3 at 0.69x. The re-site works. A6 DISCHARGES A7's absorbs, proved green |
 | LJ-1.285 | Rename the mode off the vendor name | DISPATCHED in-harness | Owner's instruction: we may not stay on one vendor. 8 live files; 244 frozen records keep the old name via the alias |
+| LJ-1.286 | Take A6's discharge of A7's absorbs | DISPATCHED in-harness | It makes the trophy stronger and LOWERS DD4's figure 41.1 to 39.1 pc. DD4 has no metric for exactly this reason |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |

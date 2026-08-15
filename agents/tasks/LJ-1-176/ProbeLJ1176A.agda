@@ -70,7 +70,10 @@ open import L.Coding.Model {ℓ}
   using ( prAtL; prAtL-adequate; prʟ; prʟ-fst
         ; svAt; svAt-in; domAt; domAt-intro )
 
-open import ProbeLJ1134A {ℓ} lem
+-- RE-SITED by [LJ-1.284].  This was `ProbeLJ1134A`, which [LJ-1.268]
+-- recorded as removed.  A2 is now the delivered master and supplies the
+-- same three names.
+open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-in; module Small )
 
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
