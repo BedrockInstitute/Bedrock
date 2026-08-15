@@ -60,7 +60,7 @@ rather than a survey:
 | part | lines | measured by |
 |---|---:|---|
 | the clean 23 `Agree` modules, generic | ~180, **and CALIBER-BOUND** | `[LJ-1.298]`, ZERO changed at one site; `[LJ-1.308]` measures it marginal on the project's caliber |
-| the dirty seven's ambient ties | **250 to 350** | `[LJ-1.336]`, TWO sites measured and their sharing measured ZERO; `[LJ-1.302]`'s ONE-debt reading is refuted |
+| the dirty seven's ambient ties | **327, MEASURED** | `[LJ-1.338]`, three sites, and the third CONTAINS the other four; 51 of the 327 STATE a residue nothing proves |
 | `StepAgree` and `ApproxAgree` | ~190 | `[LJ-1.304]`, BOTH built as terms |
 | the composite's type | writable, **and `amb-from-composite` typechecks** | `[LJ-1.302]` |
 | **TOTAL** | **about 470 hand-written lines** | |
@@ -1227,7 +1227,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.339 | Sweep L.Choice.Stage | TEN OF 21 FAIL A SEARCH, AND THE CAUSE IS TRIAGE | The grep RETURNED the term at hit 55 of 59 and the report called every hit a different subject. Law C-57 |
 | LJ-1.340 | Write the mu apparatus generic | DISPATCHED | LJ-1.339 measured 14 of 21 exports as one apparatus never written generic, and one consumer rebuilt its half at 32 lines |
 | LJ-1.336 | Wave 2 of the port: the dirty seven | 7 OF 7, 0 OF 838 CHANGED. ONE-DEBT REFUTED | The second site reuses ZERO of the first and needs a different supplier: downward facts against upward |
-| LJ-1.338 | A THIRD tie site, to tighten the 250 to 350 | DISPATCHED | LJ-1.336 measured two sites at 42 and 51 with zero sharing. Five stay unmeasured and P-l binds the extrapolation |
+| LJ-1.338 | A THIRD tie site | 327, MEASURED AT THREE SITES, NOT EXTRAPOLATED | The third site is the UNION site and CONTAINS the other four. And a THIRD kind of debt: construction |
+| LJ-1.341 | Are envK and defPairK TRUE as stated | DISPATCHED | LJ-1.338 read both as quantifying over z with no bounding hypothesis. D-10: price the TRUTH before the proof |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
 | LJ-1.331 | The RowTies probe, funded by its own gate | NO. ONE FIELD EXHAUSTS 8 GB WHERE A PARAMETER IS FREE | Not field count: two wall alone and four KFacts-shaped ones are green. Law C-55 |
 | LJ-1.323 | Fable RULING: the statement of both trophies | AC UNCHANGED. GCH BECOMES THE INTERNAL EQUALITY | sq leaves, every ambient injection leaves, the conclusion is 2^kappa = kappa-plus in L |
