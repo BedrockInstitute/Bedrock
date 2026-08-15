@@ -375,6 +375,7 @@ import L.Condensation
 import L.Condensation.LowerAgree
 import L.Condensation.UpperAgree
 import L.Condensation.TwelveAgree
+import L.Coding.EnvSupply
 import L.BoundedSubset
 import L.Choice.Transversal
 ```

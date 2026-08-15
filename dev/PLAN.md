@@ -50,8 +50,27 @@ and all four of its items returned; that record is in the journal.
 
 **THE OPEN WORK, in dependency order.**
 
-**1. STEP 6 IS LANDABLE, GREEN, AT THE STANDARD CAP, AND THE HEAP WALL WAS A
-LAYOUT ARTIFACT.** `[LJ-1.266]` measured step 6 INSIDE
+**1. STEP 6 IS LANDED. `src/L/Coding/EnvSupply.lagda.md`, 833 lines, 482.73 s
+cold, exit 0.** **`L.Condensation` re-ran at 137.60 s against the 137.36 s
+control, +0.17 percent: it gained zero lines and zero seconds, and that was
+PROVEN at the landing rather than assumed.** The content is byte-for-byte
+`[LJ-1.275]`'s green arm; the only changes are the module name and a header
+trimmed from 74 lines to 28 after `lint-agda.py` named 121 unused imports.
+
+**THE COST IS REAL AND IT IS RECORDED PLAINLY: 0.5795 s/line, 55.1x the
+0.010514 bar.** DD24 permits this debt because only the whole wing at the end
+is judged (owner, 2026-08-14). **The wing's new ratio is owed to
+`scripts/check-ratio.py`, which is deliberately outside `make check` because it
+costs minutes.**
+
+**WHAT IT DISCHARGES.** Step 6 is not one of `module Whole`'s seven parameters.
+**It SUPPLIES the `lh` hypothesis that `sl` and `sc` stand over.** Those two
+stay BUILT; this landing discharges what they stood on. `el`, `fwd` and `bwd`
+were already supplied, `s₁` is BUILT, and **`amb` is now the ONE OPEN
+parameter of the seven.**
+
+**AND THE HEAP WALL WAS A LAYOUT ARTIFACT, which is why this was landable at
+all.** `[LJ-1.266]` measured step 6 INSIDE
 `src/L/Condensation.lagda.md`, because my brief told it to, and got 2.38 s/line
 for the env supply and a HEAP WALL on the full block. `[LJ-1.275]` re-measured
 the identical content in a NEW MASTER and the wall is gone.
@@ -956,7 +975,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.263 | Land the three L-rows into Key.lagda.md | ALL THREE LANDED. THE MASTER IS GREEN | Three re-runs import the master's versions and all exit 0, so this is a landing and not a copy |
 | LJ-1.266 | Step 6's SECONDS inside Condensation | ABOVE. HEAP WALL. DD25 [LJ-1.275] UPHELD | Sound on every number; the LAYOUT was my brief's. In a new master the wall goes and the rate halves |
 | LJ-1.275 | DD25 review of LJ-1.266's heap wall | HOLDS, BUT THE WALL IS A LAYOUT ARTIFACT | Full block GREEN in a new master, 465.59 s, exit 0. Env rate 2.378 to 1.267. Option C now targets 1.1 s |
-| LJ-1.276 | LAND step 6 as a new master | DISPATCHED | LJ-1.275 measured the whole 805-line block GREEN in a new master at -M8g, 465.59 s, n=3. L.Condensation gains nothing |
+| LJ-1.276 | LAND step 6 as a new master | LANDED GREEN, 833 LINES, 482.73 s, 55.1x THE BAR | L.Condensation re-runs at 137.60 s against 137.36: zero lines, zero seconds, PROVEN at the landing |
 | LJ-1.277 | LAND A2, the coding injection | LANDED GREEN, 238 LINES, 0.66x THE BAR | 1.66 s cold, n=3. Re-run imports it and exits 0. The 238 against the priced 186 is a CALIBER gap, not an overage |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |

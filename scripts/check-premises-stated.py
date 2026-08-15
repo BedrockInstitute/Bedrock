@@ -76,6 +76,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import agents_tree  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 TASKS = ROOT / "agents" / "tasks"
 
@@ -233,16 +236,22 @@ def premises_section(text: str) -> str | None:
 
 
 def briefs(tasks: Path) -> list[Path]:
-    """Every live brief under a task root, the census `check-dd4-stated.py`
-    uses: a file whose name starts with an uppercase letter, in a live task
-    directory. The archive's briefs are frozen records, not authored today.
+    """Every live brief, from the ONE home for that question.
+
+    THIS USED TO ROLL ITS OWN GLOB, `d.glob("[A-Z]*.md")`, and so did
+    `check-dd4-stated.py`. `scripts/agents_tree.py` is where the brief-versus-report
+    signal lives, written once by `[LJ-1.142]` so a correction reaches every reader at
+    the same time, and both checkers bypassed it.
+
+    MEASURED 2026-08-15: the glob read four `.lagda.md` measurement arms under
+    `agents/tasks/LJ-1-275/` as briefs and demanded a PREMISES section from each.
+    `agents_tree.documents()` has excluded `.lagda.md` since it was written.
+
+    `tasks` is kept in the signature for the tests that pass a fixture root.
     """
-    out: list[Path] = []
-    for d in sorted(tasks.iterdir()):
-        if not d.is_dir() or d.name == "archive":
-            continue
-        out += sorted(d.glob("[A-Z]*.md"))
-    return out
+    live = agents_tree.briefs()
+    return [p for p in live
+            if "archive" not in p.parts and str(p).startswith(str(tasks))]
 
 
 def brief_findings(path: Path, text: str) -> tuple[list[str], str] | None:

@@ -58,6 +58,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import agents_tree  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 TASKS = ROOT / "agents" / "tasks"
 
@@ -76,20 +79,23 @@ PRE_EPOCH = {
 
 
 def briefs() -> list[Path]:
-    """Every live brief. The archive's briefs are frozen records, not authored today."""
-    out: list[Path] = []
-    for d in sorted(TASKS.iterdir()):
-        if not d.is_dir() or d.name == "archive":
-            continue
-        # A REPORT IS NOT A BRIEF, and case alone does not separate them. MEASURED
-        # 2026-08-14: three reports were written as `LJ-1.200-report.md` with a
-        # capital prefix while most use lowercase, and the glob read all three
-        # as briefs missing their DD4 section. A report is a frozen record and
-        # renaming it would break every citation, so the FILTER moves, not the
-        # files. DD4 binds the brief; the return answers it in prose.
-        out += sorted(f for f in d.glob("[A-Z]*.md")
-                      if not f.name.lower().endswith("-report.md"))
-    return out
+    """Every live brief, from the ONE home for that question.
+
+    THIS USED TO ROLL ITS OWN GLOB AND THAT WAS THE DEFECT. `scripts/agents_tree.py`
+    exists precisely so a correction reaches every reader at once, and its own
+    docstring says so: the brief-versus-report signal was written once when
+    `[LJ-1.142]` merged the two trees. This checker and `check-premises-stated.py`
+    both bypassed it with `d.glob("[A-Z]*.md")`, so both carried blind spots the
+    shared module had already fixed.
+
+    MEASURED 2026-08-15, in one `make check` run: the glob read
+    `agents/tasks/LJ-1-275/SupplyNewControl.lagda.md`, a measurement ARM, as a brief
+    and demanded a DD4 section from it; and it read `agents/tasks/LJ-1-270/REPORT.md`,
+    a report whose name does not end `-report.md`, as a brief too.
+    `agents_tree.briefs()` gets both right and has since it was written, because it
+    reads CONTENT rather than a name pattern.
+    """
+    return [p for p in agents_tree.briefs() if "archive" not in p.parts]
 
 
 def main(argv: list[str]) -> int:
