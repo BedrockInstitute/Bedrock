@@ -18,9 +18,9 @@ THE PRECEDENCE, and it is the first thing to read in this file:
 The clock rule came from the owner's instruction of 2026-08-14: DeepSeek
 prices peak and off-peak, the off-peak price is half the peak price, peak is
 Beijing time 09:00 to 12:00 and 14:00 to 18:00, and the dispatch mode follows
-that clock. OFF-PEAK, deepseek is half price and `deepseek-subagent-mode`
-leads. PEAK, deepseek is dear and the in-harness Opus is not billed on that
-clock, so `in-harness-subagent-mode` leads.
+that clock. OFF-PEAK, deepseek is half price and `pi-subagent-mode` leads.
+PEAK, deepseek is dear and the in-harness Opus is not billed on that clock, so
+`in-harness-subagent-mode` leads.
 
 INSPECT IT WITH ONE COMMAND, and never by reading code:
 
@@ -63,7 +63,7 @@ from datetime import datetime, time, timedelta, timezone
 
 # ---------------------------------------------------------------------------
 # THE SWITCH. One of two values, and the order of power is visible here.
-#   a mode name ("deepseek-subagent-mode", "in-harness-subagent-mode"): a
+#   a mode name ("pi-subagent-mode", "in-harness-subagent-mode"): a
 #     PIN. The owner set it by word. It wins over the clock, always.
 #   "auto": the clock picks the mode from the Beijing-time peak windows
 #     below. The owner's instruction of 2026-08-14 made the clock the rule;
@@ -82,11 +82,11 @@ REASON = ("The owner's instruction of 2026-08-14: DeepSeek prices peak and "
           "off-peak, the off-peak price is half the peak price, peak is "
           "Beijing time 09:00 to 12:00 and 14:00 to 18:00, and the dispatch "
           "mode follows that clock. OFF-PEAK, deepseek is half price and "
-          "`deepseek-subagent-mode` leads. PEAK, deepseek is dear and the "
+          "`pi-subagent-mode` leads. PEAK, deepseek is dear and the "
           "in-harness Opus is not billed on that clock, so "
           "`in-harness-subagent-mode` leads.")
 REVERT_CONDITION = ("The owner pins a mode by word. Set VERSION_IN_FORCE to "
-                    "`deepseek-subagent-mode` or `in-harness-subagent-mode` "
+                    "`pi-subagent-mode` or `in-harness-subagent-mode` "
                     "and change nothing else; a pinned mode wins over the "
                     "clock. The pin that ran on 2026-08-14 was deepseek, set "
                     "by word when the owner cancelled the quota mode, and it "
@@ -121,7 +121,7 @@ PEAK_WINDOWS: tuple[tuple[int, int, int, int], ...] = (
 # whole economics: off-peak deepseek is half price, peak it is dear.
 CLOCK_STATES: dict[str, str] = {
     "peak": "in-harness-subagent-mode",
-    "off-peak": "deepseek-subagent-mode",
+    "off-peak": "pi-subagent-mode",
 }
 
 BEIJING_TZ = timezone(timedelta(hours=8))
@@ -207,6 +207,11 @@ def current_window(now: datetime | None = None) -> tuple[datetime | None, dateti
 #                       SKILL.md` states the same rule.
 #   fallback            the head to use when the case's own head is unavailable.
 
+# THE VENDOR SEAM. MODEL and FLASH are the only two lines below that name a
+# real backend. A later vendor swap is one edit to these two literal strings;
+# every mode, table and comment elsewhere in this file names a HEAD (`pi`,
+# `codex`, `opus 5`), never the vendor behind it. [LJ-1.285] took the vendor
+# name off the mode identifiers for the same reason.
 MODEL = "deepseek-v4-pro"
 
 #: THE MODEL RULE, ruled 2026-08-14 by the owner and separate from the head.
@@ -245,9 +250,19 @@ def model_for(runs_agda: bool) -> str:
 #: forever. `dev/LESSONS.md` C-41 is the law: a retired name that stops
 #: resolving turns every citation of it into a dangling pointer, and one that
 #: resolves to the WRONG thing is worse still.
+#:
+#: `deepseek-subagent-mode` RETIRED 2026-08-15 (`[LJ-1.285]`), renamed to
+#: `pi-subagent-mode`: the owner's instruction was to take the vendor name off
+#: a structural concept, because staying on one vendor was never guaranteed and
+#: a name tied to one vendor costs a repository sweep when the vendor changes.
+#: **MEASURED 2026-08-15: 189 occurrences across 166 frozen files under
+#: `agents/` carry `deepseek-subagent-mode` on their tier line**, so it
+#: resolves here forever, the same as `override`. `normal` is re-pointed to the
+#: new name so it still resolves in one hop.
 ALIASES: dict[str, str] = {
-    "normal": "deepseek-subagent-mode",
+    "normal": "pi-subagent-mode",
     "override": "in-harness-subagent-mode",
+    "deepseek-subagent-mode": "pi-subagent-mode",
 }
 
 
@@ -258,7 +273,7 @@ def canonical(version: str) -> str:
 
 
 POLICY: dict[str, dict] = {
-    "deepseek-subagent-mode": {
+    "pi-subagent-mode": {
         "summary": "The steady state. pi leads, codex backs it up, Opus reviews.",
         "cases": {
             "default": {
@@ -335,20 +350,25 @@ HARNESS_FOR_AGENT = {"pi": "herdr-pi", "codex": "herdr"}
 
 def in_force() -> str:
     """The mode in force. A pinned mode wins; `auto` delegates to the clock.
-    Raises when the switch holds an unknown value, because a policy nobody
-    can read must stop rather than pick one."""
+    A pin written as a RETIRED name resolves through `ALIASES` too (C-41), so
+    the switch works even if someone pins it by the old word. Raises when the
+    switch holds an unknown value, because a policy nobody can read must stop
+    rather than pick one."""
     if VERSION_IN_FORCE == AUTO:
         return clock_mode()
-    if VERSION_IN_FORCE not in POLICY:
+    v = canonical(VERSION_IN_FORCE)
+    if v not in POLICY:
         raise SystemExit(
             f"dispatch_policy: VERSION_IN_FORCE is {VERSION_IN_FORCE!r}, which "
             f"is not one of {', '.join(sorted(POLICY))} and not {AUTO!r}. Fix "
             f"the switch in {__file__}.")
-    return VERSION_IN_FORCE
+    return v
 
 
 def table(version: str | None = None) -> dict:
-    return POLICY[version or in_force()]
+    """The policy table for a version. A retired name resolves through
+    `ALIASES` (C-41) before the lookup, so a caller may pass the old word."""
+    return POLICY[canonical(version) if version else in_force()]
 
 
 def head(case: str, version: str | None = None) -> dict:
@@ -394,11 +414,13 @@ def expected_tier_tokens(case: str, version: str | None = None) -> set[str]:
 def render(version: str | None = None) -> str:
     """Render the policy. `None` or `'auto'` renders what is in force; a mode
     name renders that mode's table with the (NOT the switch's value) marker
-    when it is not the pin."""
+    when it is not the pin. A retired name resolves through `ALIASES` (C-41)
+    and renders under its live name."""
     explicit = version is not None and version != AUTO
     v = version or in_force()
     if v == AUTO:
         v = in_force()
+    v = canonical(v)
     t = POLICY[v]
     lines = [
         f"DISPATCH POLICY: `{v}` is IN FORCE"
@@ -466,10 +488,14 @@ def render(version: str | None = None) -> str:
 def main() -> int:
     which = sys.argv[1] if len(sys.argv) > 1 else None
     if which in ("-h", "--help"):
-        print("usage: dispatch_policy.py [auto|deepseek-subagent-mode|"
+        print("usage: dispatch_policy.py [auto|pi-subagent-mode|"
               "in-harness-subagent-mode]")
         print("  no argument: print the mode the clock selects now")
+        print("  a retired name (deepseek-subagent-mode, normal, override) "
+              "resolves through ALIASES, C-41")
         return 0
+    if which and which != AUTO:
+        which = canonical(which)
     if which and which != AUTO and which not in POLICY:
         print(f"unknown version {which!r}; known: auto, "
               f"{', '.join(sorted(POLICY))}", file=sys.stderr)

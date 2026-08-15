@@ -29,13 +29,15 @@ Nobody reads code to answer "which head runs this task".
 
 **TWO VERSIONS SINCE 2026-08-13, and exactly one is in force.**
 
-- The **`deepseek-subagent-mode`** and **`in-harness-subagent-mode`** modes each name a head per
+- The **`pi-subagent-mode`** and **`in-harness-subagent-mode`** modes each name a head per
   case, **and THIS FILE NAMES NEITHER.** `scripts/dispatch_policy.py` is the one
   home; run it. **A head restated here is canonical twice, which DD19 forbids,
   and it is how the old fixed-tier text drifted.** The normal version's default
   changed once already, and `[LJ-1.126]` made that possible on 2026-08-13 by
   landing
-  streaming and resume.
+  streaming and resume. **`pi-subagent-mode` was `deepseek-subagent-mode` until
+  `[LJ-1.285]` renamed it 2026-08-15, off the vendor name; the retired name
+  still resolves through `ALIASES`, C-41.**
 - One version is TEMPORARY and its reason is QUOTA, never quality.
   **It is TEMPORARY and its reason is QUOTA, never quality.** The owner has most
   of the week's allowance left, and `[LJ-1.121]` measured pi's return quality as

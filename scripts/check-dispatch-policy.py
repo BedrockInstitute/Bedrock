@@ -96,9 +96,14 @@ TOKEN_RE = re.compile(r"^[*_`\s]*([A-Za-z0-9][A-Za-z0-9-]*)")
 # 2026-08-14 because `normal` and `override` said which one was the EXCEPTION
 # and never which head LEADS. 52 frozen briefs carry `override`, and a brief is
 # a record that is never rewritten, so this pattern must keep matching it.
+# `deepseek-subagent-mode` itself RETIRED 2026-08-15 (`[LJ-1.285]`), renamed to
+# `pi-subagent-mode` to take the vendor name off a structural concept; 189
+# frozen briefs under `agents/` carry the old name, MEASURED 2026-08-15, and
+# this pattern must keep matching that too.
 # `P.canonical()` maps a retired name to its live one; C-41 is the law.
 VERSION_RE = re.compile(
-    r"\b(deepseek-subagent-mode|in-harness-subagent-mode|normal|override)\b", re.I)
+    r"\b(pi-subagent-mode|deepseek-subagent-mode|in-harness-subagent-mode|"
+    r"normal|override)\b", re.I)
 
 
 def tier_line(text: str) -> str | None:

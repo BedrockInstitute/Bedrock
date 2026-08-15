@@ -4,8 +4,10 @@
 THE RULE BEING PINNED, from the owner's instruction of 2026-08-14. DeepSeek
 prices peak and off-peak, the off-peak price is half the peak price, and peak
 is Beijing time 09:00 to 12:00 and 14:00 to 18:00. The dispatch mode follows
-that clock: OFF-PEAK, `deepseek-subagent-mode` leads. PEAK,
-`in-harness-subagent-mode` leads.
+that clock: OFF-PEAK, `pi-subagent-mode` leads. PEAK,
+`in-harness-subagent-mode` leads. `pi-subagent-mode` was `deepseek-subagent-
+mode` until `[LJ-1.285]` renamed it 2026-08-15, off the vendor name; the
+retired name still resolves through `ALIASES` (C-41).
 
 THE PRECEDENCE. The owner's pinned `VERSION_IN_FORCE` wins, always. The clock
 decides only when `VERSION_IN_FORCE` is `auto`. A tool that silently overrides
@@ -56,7 +58,7 @@ def state_of(h: int, m: int) -> str:
 # ------------------------------------------------------------------ the six
 # THE SIX BOUNDARY CASES, with the side each falls on. The owner named these
 # six instants in the brief; the side is the half-open convention above.
-check(state_of(8, 59) == "off-peak", "08:59 must be OFF-PEAK (deepseek leads)")
+check(state_of(8, 59) == "off-peak", "08:59 must be OFF-PEAK (pi leads)")
 check(state_of(9, 0) == "peak", "09:00 must be PEAK (in-harness leads)")
 check(state_of(12, 0) == "off-peak", "12:00 must be OFF-PEAK")
 check(state_of(13, 59) == "off-peak", "13:59 must be OFF-PEAK")
@@ -64,8 +66,8 @@ check(state_of(14, 0) == "peak", "14:00 must be PEAK")
 check(state_of(18, 0) == "off-peak", "18:00 must be OFF-PEAK")
 
 # The mode each state selects, so the six cases pin the economics too.
-check(P.clock_mode(bj(8, 59)) == "deepseek-subagent-mode",
-      "off-peak must select deepseek-subagent-mode")
+check(P.clock_mode(bj(8, 59)) == "pi-subagent-mode",
+      "off-peak must select pi-subagent-mode")
 check(P.clock_mode(bj(9, 0)) == "in-harness-subagent-mode",
       "peak must select in-harness-subagent-mode")
 
@@ -116,12 +118,19 @@ check(nb == bj(9, 0, day=15) and after == "peak",
 # is `auto`.
 old = P.VERSION_IN_FORCE
 try:
-    P.VERSION_IN_FORCE = "deepseek-subagent-mode"
-    check(P.in_force() == "deepseek-subagent-mode",
+    P.VERSION_IN_FORCE = "pi-subagent-mode"
+    check(P.in_force() == "pi-subagent-mode",
           "a pinned mode wins over the clock, even in peak")
     P.VERSION_IN_FORCE = "in-harness-subagent-mode"
     check(P.in_force() == "in-harness-subagent-mode",
           "a pinned in-harness mode wins over the clock, even off-peak")
+    # THE RETIRED NAME MUST KEEP RESOLVING, even as a raw pin, not only on a
+    # brief's tier line (C-41, DD17 step 4). `[LJ-1.285]` renamed
+    # `deepseek-subagent-mode` to `pi-subagent-mode`; 189 frozen briefs under
+    # `agents/` still carry the old name, MEASURED 2026-08-15.
+    P.VERSION_IN_FORCE = "deepseek-subagent-mode"
+    check(P.in_force() == "pi-subagent-mode",
+          "the retired name deepseek-subagent-mode still resolves, through ALIASES")
 finally:
     P.VERSION_IN_FORCE = old
 check(P.VERSION_IN_FORCE == old, "the test restored the switch value")
@@ -131,17 +140,17 @@ check(P.VERSION_IN_FORCE == old, "the test restored the switch value")
 # author. A clock that flips the default must flip the adversarial row with
 # it. The two tables swap exactly those rows, and the test CONFIRMS it rather
 # than assuming it, because the clock makes the swap load-bearing twice a day.
-for mode in ("deepseek-subagent-mode", "in-harness-subagent-mode"):
+for mode in ("pi-subagent-mode", "in-harness-subagent-mode"):
     t = P.POLICY[mode]["cases"]
     check(t["default"]["agent"] != t["adversarial"]["agent"],
           f"{mode}: the critic is not the author (default {t['default']['agent']} "
           f"vs adversarial {t['adversarial']['agent']})")
-check(P.POLICY["deepseek-subagent-mode"]["cases"]["default"]
+check(P.POLICY["pi-subagent-mode"]["cases"]["default"]
       == P.POLICY["in-harness-subagent-mode"]["cases"]["adversarial"],
-      "deepseek's default row is in-harness's adversarial row")
-check(P.POLICY["deepseek-subagent-mode"]["cases"]["adversarial"]
+      "pi's default row is in-harness's adversarial row")
+check(P.POLICY["pi-subagent-mode"]["cases"]["adversarial"]
       == P.POLICY["in-harness-subagent-mode"]["cases"]["default"],
-      "deepseek's adversarial row is in-harness's default row")
+      "pi's adversarial row is in-harness's default row")
 
 # The emergency tier is untouched: `fable` is legal in every case, and no
 # clock state can make it a default.
