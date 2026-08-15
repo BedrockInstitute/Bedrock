@@ -67,10 +67,10 @@ open AbsL using ( _^_ )
 -- =====================================================================
 
 -- The bounded graph at the class carrier, at the environment
--- w ∷ v ∷ γ ∷ K ∷ δ (4 + n).  The witness w is variable zero; v is the
--- value, γ the ordinal index, K the bound.  The bounded existential
--- ranges over K (variable three).  This corrects the probe's bound,
--- which ranged over the ordinal slot.
+-- u ∷ v ∷ γ ∷ K ∷ δ (4 + n).  Slot zero is unused; v is the value,
+-- γ the ordinal index, K the one bound.  The bounded existential
+-- binds the witness w, ranges over K (variable three), and the
+-- machinery shares that bound ([LJ-1.312], [LJ-1.313], [LJ-1.318]).
 module LevelHood {n : ℕ}
   (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fin (5 + n))
   (M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 : Fin (7 + n)) where
@@ -79,7 +79,7 @@ module LevelHood {n : ℕ}
   m = suc (suc (suc (suc (suc n))))
 
   module G = GraphB {m}
-    (DefBodyB {m} (suc zero) (suc (suc (suc (suc zero))))
+    (DefBodyB {m} (suc zero) (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
       (suc (suc (suc (suc (suc N0))))) (suc (suc (suc (suc (suc N1)))))
       (suc (suc (suc (suc (suc N2))))) (suc (suc (suc (suc (suc N3)))))
       (suc (suc (suc (suc (suc N4))))) (suc (suc (suc (suc (suc N5)))))
@@ -87,7 +87,7 @@ module LevelHood {n : ℕ}
       (suc (suc (suc (suc (suc N8))))) (suc (suc (suc (suc (suc N9)))))
       (suc (suc (suc (suc (suc N10))))) (suc (suc (suc (suc (suc N11)))))
       (suc (suc (suc (suc (suc t0))))) (suc (suc (suc (suc (suc t1))))))
-    (DefBodyB {suc (suc m)} (suc zero) (suc (suc (suc (suc zero))))
+    (DefBodyB {suc (suc m)} (suc zero) (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))
       (suc (suc (suc (suc (suc M0)))))
       (suc (suc (suc (suc (suc M1)))))
       (suc (suc (suc (suc (suc M2)))))
@@ -102,18 +102,18 @@ module LevelHood {n : ℕ}
       (suc (suc (suc (suc (suc M11)))))
       (suc (suc (suc (suc (suc s0)))))
       (suc (suc (suc (suc (suc s1))))))
-    zero (suc (suc zero)) (suc (suc (suc zero)))
+    zero (suc (suc (suc zero))) (suc (suc (suc (suc zero))))
 
   -- The bounded matrix: exists w in K (graph w gamma K and v = w).
   levelHoodB : Formula CS.S (suc (suc (suc (suc n))))
   levelHoodB =
     ∃̇∈ (var (suc (suc (suc zero))))
-      (G.graphBndAt ∧̇ (var (suc zero) ≐ var zero))
+      (G.graphBndAt ∧̇ (var (suc (suc zero)) ≐ var zero))
 
   Δ₀-levelHoodB : Δ₀ levelHoodB
   Δ₀-levelHoodB =
     δ-∃∈ (δ-∧ (G.Δ₀-graphBndAt (Δ₀-DefBodyB (suc zero)
-              (suc (suc (suc (suc zero))))
+              (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
               (suc (suc (suc (suc (suc N0))))) (suc (suc (suc (suc (suc N1)))))
               (suc (suc (suc (suc (suc N2))))) (suc (suc (suc (suc (suc N3)))))
               (suc (suc (suc (suc (suc N4))))) (suc (suc (suc (suc (suc N5)))))
@@ -121,7 +121,7 @@ module LevelHood {n : ℕ}
               (suc (suc (suc (suc (suc N8))))) (suc (suc (suc (suc (suc N9)))))
               (suc (suc (suc (suc (suc N10))))) (suc (suc (suc (suc (suc N11)))))
               (suc (suc (suc (suc (suc t0))))) (suc (suc (suc (suc (suc t1))))))
-            (Δ₀-DefBodyB (suc zero) (suc (suc (suc (suc zero))))
+            (Δ₀-DefBodyB (suc zero) (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))
               (suc (suc (suc (suc (suc M0)))))
               (suc (suc (suc (suc (suc M1)))))
               (suc (suc (suc (suc (suc M2)))))
@@ -138,7 +138,7 @@ module LevelHood {n : ℕ}
               (suc (suc (suc (suc (suc s1)))))))
       δ-≐)
 
-  -- The Sigma-1 form: the unbounded witness over the bounded matrix.
+  -- The Sigma-1 form: closes the unused slot over the bounded matrix.
   levelHoodΣ₁ : Formula CS.S (suc (suc (suc n)))
   levelHoodΣ₁ = ∃̇ levelHoodB
 
