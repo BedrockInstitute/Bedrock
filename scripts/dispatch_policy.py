@@ -91,26 +91,35 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 AUTO = "auto"
-VERSION_IN_FORCE = AUTO
+VERSION_IN_FORCE = "pi-subagent-mode"
 
-# The auto state's own provenance. A position without a reason is a position
-# nobody can retire. The pin that ran 2026-08-14 was `deepseek-subagent-mode`,
-# set by word when the owner cancelled the quota mode of 2026-08-13.
-SET_ON = "2026-08-14"
+# The pin's own provenance. A position without a reason is a position nobody
+# can retire.
+#
+# WHAT THIS PIN REPLACED: `auto`, set 2026-08-14, which delegated the mode to
+# deepseek's peak and off-peak clock. That reason is recorded below and it is
+# not a judgement on any head. It stopped applying when the vendor changed:
+# `dev/vendors.toml` now names `zai`, a SUBSCRIPTION with no hourly bands, so
+# the clock it delegated to has no basis left to read.
+SET_ON = "2026-08-15"
 SET_BY = "the repository owner"
-REASON = ("The owner's instruction of 2026-08-14: DeepSeek prices peak and "
-          "off-peak, the off-peak price is half the peak price, peak is "
-          "Beijing time 09:00 to 12:00 and 14:00 to 18:00, and the dispatch "
-          "mode follows that clock. OFF-PEAK, deepseek is half price and "
-          "`pi-subagent-mode` leads. PEAK, deepseek is dear and the "
-          "in-harness Opus is not billed on that clock, so "
-          "`in-harness-subagent-mode` leads.")
-REVERT_CONDITION = ("The owner pins a mode by word. Set VERSION_IN_FORCE to "
-                    "`pi-subagent-mode` or `in-harness-subagent-mode` "
-                    "and change nothing else; a pinned mode wins over the "
-                    "clock. The pin that ran on 2026-08-14 was deepseek, set "
-                    "by word when the owner cancelled the quota mode, and it "
-                    "is what a pin looks like.")
+REASON = ("The owner's instruction of 2026-08-15: pi is now on the zai "
+          "subscription rather than deepseek, and the owner will name the "
+          "mode DAILY from the token consumption they can see and the "
+          "orchestrator cannot. So the mode is pinned by word rather than "
+          "derived, and this pin says pi leads. The outgoing state was "
+          "`auto`, whose own reason was deepseek's peak and off-peak "
+          "pricing: OFF-PEAK deepseek was half price and pi led; PEAK it was "
+          "dear and the in-harness Opus, not billed on that clock, led. That "
+          "reason retired with the vendor and never reflected on a head.")
+REVERT_CONDITION = ("The owner names a mode by word, daily. Set "
+                    "VERSION_IN_FORCE to `pi-subagent-mode` or "
+                    "`in-harness-subagent-mode` and change nothing else. "
+                    "Setting it back to `auto` delegates to the vendor again, "
+                    "which means the clock for a banded vendor and "
+                    "`default_mode` for a flat one; with `zai` in force that "
+                    "is `pi-subagent-mode` today, but it is derived rather "
+                    "than ruled and the owner's daily word is the rule now.")
 
 # ---------------------------------------------------------------------------
 # THE VENDOR. `dev/vendors.toml` is its ONE home, and this file holds no vendor

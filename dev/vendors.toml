@@ -28,7 +28,7 @@
 # kind is a refusal, never an ignored line.
 
 # The vendor in force. It must match one `[vendors.<name>]` table below.
-in_force = "deepseek"
+in_force = "zai"
 
 # ---------------------------------------------------------------------------
 # THE VENDOR ROWS. Every row declares these three fields:
@@ -63,6 +63,30 @@ windows = [
     { state = "peak", start = "09:00", end = "12:00" },
     { state = "peak", start = "14:00", end = "18:00" },
 ]
+
+# ZAI, THE VENDOR IN FORCE SINCE 2026-08-15, on the owner's instruction.
+#
+# IT IS FLAT, not banded, because the owner holds a SUBSCRIPTION rather than
+# per-hour pricing. A flat vendor gives the clock no basis, so `clock_state()`
+# refuses to be read at all and `auto` resolves to `default_mode` below.
+#
+# THE PROVIDER IS `zai` AND NOT `glm`. MEASURED 2026-08-15: `pi auth check
+# --provider glm` returns `provider_not_found`, and `pi --list-models` lists
+# the GLM family under the provider `zai`. `pi auth check --provider zai
+# --model glm-5.3` returns `{"status":"ready","authType":"api_key"}`, which is
+# what `pi_wired = true` records.
+#
+# `default_mode` IS THE ORCHESTRATOR'S PICK AND THE OWNER HAS NOT RULED ON IT.
+# The reason for `pi-subagent-mode`: the clock only ever existed because
+# deepseek billed peak and off-peak, and a subscription has no such hours, so
+# the head that led OFF-PEAK is the honest steady state. The adversarial row
+# still sends its reviews in-harness, which DD17's invariant requires anyway.
+# One line changes it.
+[vendors.zai]
+model = "glm-5.3"
+pi_provider = "zai"
+pi_wired = true
+default_mode = "pi-subagent-mode"
 
 # ---------------------------------------------------------------------------
 # HOW TO ADD A VENDOR. Copy one template below, fill the model ID, and set

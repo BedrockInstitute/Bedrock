@@ -39,6 +39,24 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import dispatch_policy as P  # noqa: E402
 
+# THE CLOCK TESTS PIN THEIR OWN VENDOR, and that is the point rather than a
+# convenience. Until 2026-08-15 they read whatever `dev/vendors.toml` had in
+# force, so the day the owner switched pi to `zai`, a SUBSCRIPTION with no
+# hourly bands, every clock check died on the refusal that a flat vendor has no
+# clock to read. The refusal was correct; the test was wrong to depend on the
+# live config.
+#
+# A test whose meaning changes when configuration changes is not testing the
+# thing it names. These checks are about the WINDOW ARITHMETIC, so they pin the
+# banded vendor the arithmetic was written for.
+#
+# THE PIN IS SCOPED AND THE REAL VENDOR IS KEPT. A first attempt reassigned
+# `P.VENDOR` for the whole file and broke the three checks at the end, which
+# are ABOUT the live config and must see it. `REAL_VENDOR` is restored before
+# that section runs.
+REAL_VENDOR = P.VENDOR
+P.VENDOR = P.BUILTIN_VENDOR
+
 BJ = timezone(timedelta(hours=8))
 
 
@@ -274,20 +292,37 @@ check(missing.name == "deepseek" and missing.model == "deepseek-v4-pro",
 check(missing.windows == ((9, 0, 12, 0, "peak"), (14, 0, 18, 0, "peak")),
       "the built-in windows are the owner's 09:00-12:00 and 14:00-18:00")
 
-# THE SHIPPED CONFIG MUST SAY THE SAME THING AS THE FLOOR. If these two ever
-# disagree, deleting the config would change behaviour, and the claim that the
-# config is a change of shape and not of policy would be false.
+# THESE THREE TEST A RELATIONSHIP, NOT A DAY'S VALUES, and they were rewritten
+# on 2026-08-15 because the first version tested the values.
+#
+# WHAT HAPPENED. When `[LJ-1.288]` landed the config, the shipped config named
+# deepseek and so did the built-in floor, so a check that they were EQUAL
+# proved the config had changed shape and not policy. That was the right proof
+# on that day. Hours later the owner switched pi to the `zai` subscription, and
+# the check failed: not because anything broke, but because it asserted a
+# coincidence of the day it was written.
+#
+# A test that fails when a configuration LEGITIMATELY changes is a test of the
+# configuration, not of the code. What must hold for EVERY vendor is: the floor
+# is read when the config is absent, and the constants consumers read come from
+# whichever vendor is in force. Those are the checks below.
+P.VENDOR = REAL_VENDOR      # the clock section's pin ends here
 shipped = P.load_vendor()
-check(shipped.name == P.BUILTIN_VENDOR.name
-      and shipped.model == P.BUILTIN_VENDOR.model
-      and shipped.windows == P.BUILTIN_VENDOR.windows
-      and shipped.base_state == P.BUILTIN_VENDOR.base_state
-      and shipped.pi_wired == P.BUILTIN_VENDOR.pi_wired,
-      "the shipped config and the built-in floor declare the same vendor")
+check(shipped.name == P.VENDOR.name and shipped.model == P.VENDOR.model,
+      "the vendor in force is the one the shipped config declares")
+check(P.BUILTIN_VENDOR.name == "deepseek" and P.BUILTIN_VENDOR.banded,
+      "the floor is still the pre-config data, banded deepseek, unchanged by "
+      "any config edit")
 check(P.MODEL == P.VENDOR.model,
-      "MODEL is the vendor's model, and the name consumers read did not change")
-check(P.PEAK_WINDOWS == ((9, 0, 12, 0), (14, 0, 18, 0)),
-      "PEAK_WINDOWS still reads as it did, from the vendor's peak band")
+      "MODEL is whichever vendor is in force, not a literal")
+if P.VENDOR.banded:
+    check(P.PEAK_WINDOWS == tuple((sh, sm, eh, em)
+                                  for sh, sm, eh, em, st in P.VENDOR.windows
+                                  if st == "peak"),
+          "PEAK_WINDOWS derives from the vendor's own peak bands")
+else:
+    check(P.PEAK_WINDOWS == (),
+          "a flat vendor has no peak windows, so the retired view is empty")
 
 # A BANDED VENDOR DRIVES THE CLOCK ON ITS OWN HOURS. This is the whole point of
 # moving the windows into the config: they are data about a vendor, never a
