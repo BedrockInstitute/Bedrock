@@ -1,0 +1,7 @@
+Checking LJ-1-322.CondProbe (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-322/CondProbe.lagda.md).
+/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-322/CondProbe.lagda.md:6151.14-15: error: [UnequalTerms]
+n != suc n of type ℕ
+when checking that the expression f has type
+KFacts _A_46186 (suc K) _N0_46188 _N1_46189 _N2_46190 _N3_46191
+_N4_46192 _N5_46193 _N6_46194 _N7_46195 _N8_46196 _N9_46197
+_N10_46198 _N11_46199 (c ∷ γ)

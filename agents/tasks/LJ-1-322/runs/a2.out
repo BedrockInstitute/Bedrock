@@ -1,0 +1,29 @@
+Checking L.Condensation (/Users/alsg/Agentic/Bedrock/src/L/Condensation.lagda.md).
+Total                      137,963ms           
+Miscellaneous                   55ms           
+Typing                       1,239ms (84,556ms)
+Typing.CheckRHS             34,207ms           
+Typing.CheckLHS             30,989ms (30,990ms)
+Typing.OccursCheck          12,853ms           
+Typing.TypeSig               5,266ms           
+Serialization               22,383ms (22,558ms)
+Serialization.Compress          95ms           
+Serialization.BinaryEncode      58ms           
+Serialization.Sort              19ms           
+InterfaceInstantiateFull    12,112ms           
+Positivity                   5,818ms           
+DeadCode                         8ms  (5,350ms)
+DeadCode.DeadCodeReachable   5,341ms           
+Parsing                        504ms  (2,699ms)
+Parsing.OperatorsExpr        2,151ms           
+Parsing.OperatorsPattern        42ms           
+Coverage                     1,727ms  (1,728ms)
+Deserialization              1,118ms  (1,630ms)
+Deserialization.Compaction     511ms           
+Scoping                        194ms    (653ms)
+Scoping.InverseScopeLookup     458ms           
+Termination                      2ms    (413ms)
+Termination.RecCheck           411ms           
+Highlighting                   331ms           
+Import                          29ms           
+Injectivity                     29ms           
