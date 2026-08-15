@@ -881,6 +881,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.270 | Does the Coq framework bear on GCH | NO. THE SILENCE HOLDS, MEASURED | MetaZF has no Formula, no binder, no satisfaction across 20 files. Every AC win is an axiom removed |
 | LJ-1.271 | The named-slot macro layer | REGISTERED, NOT DISPATCHED. TRIGGER: LJ-1.268 wave 3 lands | Then price the functions, the seconds, the refactor and the rewrite. The owner rules the switch |
 | LJ-1.272 | Label every DD4 figure with its axis | 12 OF 62 UNLABELLED, AND A THIRD AXIS | DD4's own axis is AC-against-GCH, fixed in ledger.py:50. Its report has NEVER run: there is no GCH root |
+| LJ-1.273 | What must land before gch_root can be declared | DISPATCHED | LJ-1.272 measured that DD4's own report cannot run until a GCH endpoint is in src/. Nobody has priced that endpoint |
 | LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
 | LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
