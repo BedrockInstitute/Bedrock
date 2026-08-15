@@ -207,20 +207,22 @@ module SupplyEnv (lam : V ℓ) (ordλ : IsOrd lam)
     step : Σ[ δ ∈ V ℓ ] (⟨ δ ∈ lam ⟩ × ⟨ a ∈ Lset (sucV δ) ⟩)
          → ⟨ sucV a ∈ Lset lam ⟩
     step (δ , δ∈ , a∈δ₁) =
-      Lset-mono {α = lam} {β = sucIter 4 δ}
-        (B.suc^∈λ 4 δ δ∈)
+      Lset-mono {α = lam} {β = sucV δ₃}
+        δ₄∈λ
         sucV∈
       where
       δ₁ = sucV δ
       δ₂ = sucV (sucV δ)
       δ₃ = sucV (sucV (sucV δ))
+      δ₄∈λ : ⟨ sucV δ₃ ∈ lam ⟩
+      δ₄∈λ = succλ δ₃ (succλ δ₂ (succλ δ₁ (succλ δ δ∈)))
       a∈δ₂ : ⟨ a ∈ Lset δ₂ ⟩
       a∈δ₂ = Lset-mono {α = δ₂} {β = δ₁} (self∈sucV δ₁) a∈δ₁
       sgl∈δ₂ : ⟨ ⁅ a ⁆s ∈ Lset δ₂ ⟩
       sgl∈δ₂ = sgl∈Lset-suc δ₁ a a∈δ₁
       pair∈δ₃ : ⟨ ⁅ a , ⁅ a ⁆s ⁆ ∈ Lset δ₃ ⟩
       pair∈δ₃ = pair∈Lset-suc δ₂ a ⁅ a ⁆s a∈δ₂ sgl∈δ₂
-      sucV∈ : ⟨ sucV a ∈ Lset (sucIter 4 δ) ⟩
+      sucV∈ : ⟨ sucV a ∈ Lset (sucV δ₃) ⟩
       sucV∈ = union∈Lset-suc δ₃ ⁅ a , ⁅ a ⁆s ⁆ pair∈δ₃
 
   -- A numeral arity lies in the level.

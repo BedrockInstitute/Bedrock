@@ -4243,3 +4243,59 @@ over-bar masters with a P-y count for each and the void arms;
 `agents/tasks/LJ-1-281/lj-1.281-report.md`, the site where the seal won;
 `agents/tasks/LJ-1-282/lj-1.282-report.md`, that seal landed.
 Related: [[P-y]], [[P-t]], [[P-l]], [[C-49]].
+
+### R-41. Depth is free and MIXED SPELLING is what costs: state an index in the spelling its proof produces
+
+**Rule:** When a statement's TYPE names a level, an index or a stage, write it
+in the SAME FORM the proof term produces. **A statement that says
+`sucIter 4 δ` while its proof produces `sucV (sucV (sucV (sucV δ)))` forces the
+conversion checker to bridge two spellings of one object, and that bridge is an
+IDENTITY function that can cost minutes.** **The depth is not the cost. The
+mismatch is.**
+
+**The measurement, and it is the largest single lever this project has found.**
+`src/L/Coding/EnvSupply.lagda.md` cost a three-run cold control of **495.23 s**,
+spread 0.38 percent. `agda --profile=definitions` charged **488,760 ms of
+494,425 ms, 98.85 percent, to ONE two-line definition**, `sucV∈`, whose type
+read `Lset (sucIter 4 δ)` while `union∈Lset-suc` produced the `sucV` chain.
+
+**`[LJ-1.287]` bisected it six ways in one run and isolated the bridge alone:**
+`sucIter 4 δ` against `sucV (sucV (sucV (sucV δ)))` with body `p = p` cost
+**438,043 ms. For an identity function.** The other five arms, including the
+application at the deep index and the membership head at four exposed layers,
+were not charged at all.
+
+**The in-file control settles that depth is innocent.** `envSetK` at the same
+master's `:143-146` is depth 4 in ONE spelling and costs **11 ms**.
+
+**THE CURE IS TO RESPELL THE STATEMENT, not to restructure the proof.**
+`[LJ-1.289]` landed five inserted lines and three deleted, all inside one
+`where` block: the declared level became `sucV δ₃` and the level membership was
+climbed by `succλ`, a module parameter already in scope. **`sucV∈`'s BODY did
+not change.** The master went to **6.65 s over six runs, minus 488.59 s, minus
+98.66 percent**, and its rate crossed the bar from **56.5x to 0.76x**.
+`grep -c "sucV∈"` returns 0 on every profiled treated run, so the term is gone
+rather than moved.
+
+**THREE DIAGNOSES WERE REFUTED BY THE PROFILE, and two were laws.** R-35's and
+R-40's shallow-index restatement is a measured arm at **454,449 ms** and does
+NOT cure. `[LJ-1.283]`'s membership-head mechanism priced at zero. The
+orchestrator's own reading of the Cubical sources reached the same wrong answer.
+**C-50 is why the right one was found: profile before you cure.**
+
+**AND IT EXPLAINS A SEAL THAT FAILED.** `[LJ-1.283]` sealed the same definition
+and measured the seal VOID at minus 0.19 percent. `[LJ-1.287]` replayed that arm
+under the profiler: **462,830 ms, 99.25 percent, charged to `lev4-mem d x h = h`,
+the same identity bridge, now inside the read lemma that made the seal usable.**
+**A seal MOVES a cost; it does not remove one.** Only respelling removes it.
+
+**When it bites:** any statement whose index is written through a helper
+(`sucIter`, an iterated constructor, a fold) while its supplier produces the
+unfolded chain, or the reverse. **Look for a type and a body that name the same
+object two ways.**
+
+**Evidence:** `agents/tasks/LJ-1-287/lj-1.287-report.md`, the six-way bisect and
+the mechanism; `agents/tasks/LJ-1-289/lj-1.289-report.md`, the landing and the
+paired series with the order reversed; `agents/tasks/LJ-1-283/lj-1.283-report.md`,
+the void seal whose bill was later located.
+Related: [[R-40]], [[R-35]], [[C-50]], [[P-t]], [[P-l]].

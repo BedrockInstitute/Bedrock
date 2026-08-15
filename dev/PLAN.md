@@ -50,7 +50,20 @@ and all four of its items returned; that record is in the journal.
 
 **THE OPEN WORK, in dependency order.**
 
-**1. STEP 6 IS LANDED. `src/L/Coding/EnvSupply.lagda.md`, 833 lines, 482.73 s
+**1. STEP 6 IS LANDED AND ITS MASTER IS NOW UNDER THE BAR.**
+**`src/L/Coding/EnvSupply.lagda.md`: 495.23 s to 6.65 s, minus 488.59 s, for
+FIVE inserted lines and three deleted.** **56.5x the DD24 bar to 0.76x.** The
+wing's most expensive master is now one of its cheapest, and I re-ran it myself
+cold at 5.92 s user.
+
+**The whole cost was ONE identity conversion.** The type said
+`Lset (sucIter 4 δ)` while the proof produced a `sucV` chain, and bridging the
+two spellings cost 438 seconds. **Depth is free; the mismatch is what costs.**
+The law is `dev/LESSONS.md` **R-41**, and `dev/LESSONS.md` **C-50** is why it
+was found: profile before you cure. **R-35 and R-40 were both measured NOT to
+cure it**, at 454,449 ms, and so was my own reading.
+
+**THE ORIGINAL LANDING, for the record.** 833 lines, 482.73 s
 cold, exit 0.** **`L.Condensation` re-ran at 137.60 s against the 137.36 s
 control, +0.17 percent: it gained zero lines and zero seconds, and that was
 PROVEN at the landing rather than assumed.** The content is byte-for-byte
@@ -1027,7 +1040,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.285 | Rename the mode off the vendor name | DISPATCHED in-harness | Owner's instruction: we may not stay on one vendor. 8 live files; 244 frozen records keep the old name via the alias |
 | LJ-1.286 | Take A6's discharge of A7's absorbs | LANDED. ONE HYPOTHESIS LEFT, sq | SHARED rose 43/7,596 to 44/7,632 while the SHARE fell 41.1 to 39.1. The share reads the denominator |
 | LJ-1.287 | Cure sucV-in, EnvSupply's 99.2 pc | 480.25 s TO 4.10 s FOR THREE LINES | 438 s was an IDENTITY function: depth is free, the MIXED spelling of the level costs. Three diagnoses refuted |
-| LJ-1.289 | LAND the sucV-in respelling | DISPATCHED in-harness | The largest single lever measured here: about 476 s off one master, and sucV-in's body does not change |
+| LJ-1.289 | LAND the sucV-in respelling | LANDED. 495.23 s TO 6.65 s, MINUS 488.59 | 56.5x the bar to 0.76x, for five lines. The wing's worst master is now UNDER the bar. Law R-41 |
 | LJ-1.290 | Categorize scripts into subdirectories | SPLIT IT, THE MOVE IS NOT THE VALUE | 24 scripts hard-code their depth. A move makes two never-commit gates report clean over 55 files, exit 0 |
 | LJ-1.291 | Repair the 24 depth-anchored scripts | DISPATCHED, first on glm-5.3 | Reproduced: the same gate a level deeper says clean over 55 files instead of 2,369, exit 0 both times |
 | LJ-1.292 | Sweep Key.lagda.md for the mixed spelling | DISPATCHED | C-42's sweep of LJ-1.287. Same shape at depths 1 to 3, never profiled, and the shape just returned 476 s at one site |
