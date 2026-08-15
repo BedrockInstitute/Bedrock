@@ -1219,7 +1219,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.328 | The definable well-order of L AS A FORMULA | DELIVERED. THE THREE CONSUMERS ARE TWO | phi-less is a Sigma-1 formula in a WIRED chapter. Two of them want ONE object: an ambient FUNCTION |
 | LJ-1.329 | Code ONE ambient function as a member of an L-set | WRONG-OBJECT. THERE IS NO SUCH OBJECT | pullOrder wants a TOTAL MAP OUT of sq, not a point of it. The convergence was on a NAME |
 | LJ-1.330 | A canonical element of sq at non-initial alpha | CANONICAL. 25 CODE LINES, WALL NARROWED | Successors build from a delivered untruncated shift. The gap is the non-initial LIMITS only |
-| LJ-1.332 | The limit band: the last gap in sq | DISPATCHED | LJ-1.330 narrowed it to non-initial LIMITS. stage-card-upper is the lead, and LJ-1.324 refuted it only at a DIFFERENT pair |
+| LJ-1.332 | The limit band: the last gap in sq | ONE-TRUNCATION. THE MATHEMATICS IS FINISHED | limit-truncated is green at 32 lines. The blocker is no longer a construction, it is one untruncation |
+| LJ-1.333 | Item 2: the weakly constant endomap at the CHEAPER truncation | DISPATCHED | LJ-1.332 measured the band's truncation is Init's fourth row, which asks for SOME member and not the LEAST |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
 | LJ-1.331 | The RowTies probe, funded by its own gate | NO. ONE FIELD EXHAUSTS 8 GB WHERE A PARAMETER IS FREE | Not field count: two wall alone and four KFacts-shaped ones are green. Law C-55 |
 | LJ-1.323 | Fable RULING: the statement of both trophies | AC UNCHANGED. GCH BECOMES THE INTERNAL EQUALITY | sq leaves, every ambient injection leaves, the conclusion is 2^kappa = kappa-plus in L |

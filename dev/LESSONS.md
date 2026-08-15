@@ -4413,6 +4413,42 @@ Related: [[C-45]], [[C-36]], [[D-10]], [[C-52]], [[C-38]].
 
 
 
+### C-56. When a truncated proof walls, the cost is in the ASSEMBLY and not in the mathematics: bisect the eliminator nesting first
+
+**Rule:** When a proof over `∥ A ∥₁` exhausts the heap or runs past its wall,
+**do not conclude the mathematics is expensive.** **Compare the SAME
+mathematics under an untruncated hypothesis first.** If that form is cheap, the
+cost is in how the eliminators are nested, and the cure is a re-assembly rather
+than a new lemma.
+
+**The measurement, `[LJ-1.332]`, 2026-08-15.** One definition, `noninit-branch`,
+**interrupted at 400 s** while the identical mathematics under an untruncated
+hypothesis checks in **2 s**. **The definition nests `PT.map` inside
+`PT.rec`.** The whole probe is 32 code lines of new mathematics and its final
+green run is 2 s.
+
+**200 times, from the nesting alone.** Nothing about the ordinals, the
+injections or the square law changed between the two forms.
+
+**Why the wrong conclusion is so easy here.** A truncated statement looks like
+the harder statement, so a wall on it reads as evidence that the truncation is
+what costs. **It is not evidence of anything until the untruncated control has
+run**, and that control is usually a one-line change to a hypothesis.
+
+**What to do.** **Write the untruncated control FIRST, before the truncated
+form, and keep it.** It costs one hypothesis, it gives the same-session
+baseline C-53 asks for, and it turns a verdict of expensive into a verdict of
+expensive ASSEMBLY, which names a cure.
+
+**The family this joins.** C-51: a seal does not stop a `with`-abstraction, and
+projections cure it. R-41: depth is free and the mixed spelling is what costs.
+C-55: one record field walls where the same parameter is free. **Four laws now,
+and every one of them says the same thing from a different side: the price is
+in the FORM, and the mathematics is not what you are paying for.**
+
+Related: [[C-51]], [[C-55]], [[R-41]], [[C-53]], [[C-50]], [[P-i]].
+
+
 ### C-55. A hypothesis whose type states an equation against a coded term is FREE as a module parameter and an 8 GB wall as a record field
 
 **Rule:** Before you fold a telescope of hypotheses into a record, look at what
