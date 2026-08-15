@@ -1134,3 +1134,46 @@ imports are a consumer graph that nothing checks.**
 `agents/tasks/LJ-1-268/LJ-1.268.md` states「Every block exists as a GREEN
 PROBE」. **MEASURED FALSE for A6.** I wrote that from the phase's summary
 rather than from a run.
+
+### 2026-08-15, I closed a route by counting precedents, and the owner reopened it
+
+**The owner asked whether the arity arithmetic could be packaged as a tactic or
+macro. I answered that the arithmetic is already typed, that the ad hoc part is
+the slot layout, and then I added a recommendation nothing supported. I said
+Agda reflection was not recommended, and my only reason was that the tree has
+zero precedent for it.**
+
+**The owner overruled it in one sentence: zero precedent is not a reason, and
+no `DD` rule licenses closing a road before any probe data exists.**
+
+**They are right and the rules are on their side, not mine.**
+
+- **DD8** gates a block by MEASURING its widest unmeasured term. It does not
+  license a refusal.
+- **D-1** says build the cheapest decisive probe and fix its abort criterion
+  first. **A macro sketch IS that probe and it costs one file.**
+- **C-36** says a failed substitution is not a proof of impossibility.
+  **I did not even attempt a substitution. I counted grep hits.**
+
+**AND THE ARGUMENT'S SHAPE IS ONE THIS CHAIN HAS ALREADY BEEN BURNED BY THREE
+TIMES.** An argument from ABSENCE is what「the archive does not bear」was, twice,
+and「no second bound exists」was once. **Every one of the three was wrong, and
+each time the cure was to open the thing rather than count references to it.**
+
+**What I should have written instead**: reflection has no precedent here, so
+its first cost is unknown, AND the one real constraint is `--safe`, which every
+master in this tree carries in its OPTIONS header and which interacts with
+reflection. **That is a measurable question with a yes or no answer.** **「No
+precedent」is not.**
+
+**The correction went to `[LJ-1.269]` mid-run**: the recommendation is struck,
+the macro sketch is now a second deliverable of equal standing, and the
+`--safe` interaction is named as the one thing that could be a real reason.
+**If `--safe` forbids what a macro needs, that is a measured answer. If it does
+not, my objection had nothing behind it.**
+
+**The general form, and it is the part worth keeping:** an orchestrator's
+recommendation is a claim like any other, and C-44 binds it. **A recommendation
+with no measurement behind it is not advice, it is a prohibition wearing
+advice's clothes**, and C-39 already measured that a brief's prohibition binds
+harder than its goal.
