@@ -1125,6 +1125,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.302 | Compose the thirty Agree modules | THE TYPE IS WRITABLE AND IT FEEDS | A term of it discharges q' and amb comes out, proved. One dirty module priced at 51 lines; ties are ONE debt |
 | LJ-1.303 | Slim the dispatch scripts, function unchanged | DISPATCHED in-harness, owner named opus | 4,383 lines over four files. The comments record MEASUREMENTS and are not redundancy |
 | LJ-1.304 | Price StepAgree and ApproxAgree | BOTH BUILT, ABOUT 190 LINES. BASIS: THE BUILD | q's four named costs are now ALL measured. Neither module exists in src/: they were LJ-1.52's names |
+| LJ-1.305 | Untruncate the descent: deliver SqShape | DISPATCHED | LJ-1.301 built the descent but delivers a proposition. This is LJ-1.8's WHOLE remaining gap |
+| LJ-1.306 | Port the clean 23 Agree modules generic | DISPATCHED | Wave 1 of q's route, priced at about 180 lines by LJ-1.298 at a ZERO-changed rate. Everything else waits on it |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
