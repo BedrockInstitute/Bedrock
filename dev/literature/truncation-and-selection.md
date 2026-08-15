@@ -300,6 +300,27 @@ When a proof in this tree stalls on `∥ A ∥₁`, ask in this order.
    Schindler and Zeman's own device.
 5. **Does `A` have a weakly constant endomap by any other route?** That is
    necessary and sufficient (Kraus et al., Theorem 16).
+
+**A DEFECT IN STEP 4, MEASURED 2026-08-16 by `[LJ-1.334]`, and it fired on a
+real candidate.** **Step 4 prices whether a canonical map can be DEFINED. It
+does not price whether that map has the property the deliverable needs.** A
+pointwise-least pairing passes step 4, is TOTAL, and compiles. It is then
+REFUTED because it is SYMMETRIC, so it is injective only if the carrier is a
+proposition. **The whole refutation is the flip of a pair and it uses no
+excluded middle.**
+
+**AND THE REFUTATION CLOSES A FAMILY, not one recipe.** **Every canonical
+pairing that reads only the reachable set is symmetric, hence not injective:
+least, greatest or any other reader dies the same way.** The cause is stated
+with a term: the witness family carries an action of the carrier's
+self-injections, and a canonical reader inherits that invariance.
+
+**SO ADD STEP 6, and it is the one this project needed.** **Does the canonical
+map have to BREAK a symmetry the family carries?** **If it does, no reader of
+the family can serve, and the missing datum is a symmetry-breaking one on the
+WITNESSES rather than a well-order on the targets.** **This is the digest's own
+next sentence made operational:** a well-order on the targets is not enough, and
+what is missing is a well-order on the INJECTIONS.
 6. **Only then is a new principle in question.** State it as a module
    parameter, never a postulate (DD9), and expect to rule on it, because the
    literature neither proves nor refutes a set-indexed instance.

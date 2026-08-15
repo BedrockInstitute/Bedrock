@@ -1221,7 +1221,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.330 | A canonical element of sq at non-initial alpha | CANONICAL. 25 CODE LINES, WALL NARROWED | Successors build from a delivered untruncated shift. The gap is the non-initial LIMITS only |
 | LJ-1.332 | The limit band: the last gap in sq | ONE-TRUNCATION. THE MATHEMATICS IS FINISHED | limit-truncated is green at 32 lines. The blocker is no longer a construction, it is one untruncation |
 | LJ-1.333 | Item 2 at the cheaper truncation | STATEMENT-LEVEL. CHEAPER TO PROVE, HARDER TO UNTRUNCATE | The band is the exact complement of the only canonicalizer. Five attempts were not unlucky |
-| LJ-1.334 | Item 1: the pointwise-least pairing, the last untried candidate | DISPATCHED | LJ-1.333 left it untouched and the digest's order-type omega-times-2 line bears directly on it |
+| LJ-1.334 | Item 1: the pointwise-least pairing | ESCAPES THE DIGEST, THEN REFUTED BY SYMMETRY | A canonical reader of the reachable set is symmetric, so a recipe FAMILY closes. All four settled |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
 | LJ-1.331 | The RowTies probe, funded by its own gate | NO. ONE FIELD EXHAUSTS 8 GB WHERE A PARAMETER IS FREE | Not field count: two wall alone and four KFacts-shaped ones are green. Law C-55 |
 | LJ-1.323 | Fable RULING: the statement of both trophies | AC UNCHANGED. GCH BECOMES THE INTERNAL EQUALITY | sq leaves, every ambient injection leaves, the conclusion is 2^kappa = kappa-plus in L |
