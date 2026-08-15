@@ -1,0 +1,7 @@
+Checking LJ-1-311.Ladder3 (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-311/Ladder3.lagda.md).
+Total                421,301ms 
+Miscellaneous            830ms 
+LJ-1-311.Ladder3.t4  402,034ms 
+LJ-1-311.Ladder3.b3    9,214ms 
+LJ-1-311.Ladder3.t3    8,962ms 
+LJ-1-311.Ladder3.t7r     258ms 

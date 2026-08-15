@@ -1200,11 +1200,14 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.307 | Are the thirty Agree modules thirty things or one | PARTLY. ONE SHAPE, 15 THINGS, 30 SPELLINGS | Fresh is about 2,150 against 2,619, saving 470. The port is RIGHT, so LJ-1.306 stands |
 | LJ-1.308 | DD25 review of LJ-1.306's zero-changed port | SPLIT. THE ZERO HOLDS, ITS EVIDENCE DID NOT | ProbeCompat checked each row's FIRST field; consumers write the LAST. 26 checks run green |
 | LJ-1.309 | Sweep the tree for R-41's full-chain shape | THREE SITES, DEEPEST IS DEPTH 2. DD25 [LJ-1.311] | 96 masters searched, 90 cannot hold it. The depth-4 prize is NOT there. DO NOT FUND |
-| LJ-1.311 | DD25 review of LJ-1.309's sweep | RE-DISPATCHED, first launch took the wrong harness | The adversarial path picked codex, not pi. That agent sat 2,762 s on a hook modal writing nothing |
+| LJ-1.311 | DD25 review of LJ-1.309's sweep | SPLIT. NO-GO STANDS, 3 MEASUREMENTS FALSE | sucIter is NOT the only iterate: # is a second, in all 96 masters, but its ladder is 38x lower |
 | LJ-1.310 | Name every step of the composite's TERM | 23 STEPS, TEN UNBUILT, PLUS A REFUTATION | About 175 hand-written lines outside the 470. Row 11 may refute the composite's type. INFERRED |
 | LJ-1.312 | Settle phi0's slot roles by machine | REFUTED, MEASURED. THE TYPE IS WRONG. DD25 [LJ-1.313] | A verbatim LevelHood refuses to equal the cured one, exit 42. Devlin's shape is the spec |
 | LJ-1.313 | Fable 5 review of LJ-1.312's phi0 verdict | DISPATCHED | Owner authorized fable 2026-08-15 for THIS review. DD0: a one-off instruction is never a standing head choice |
 | LJ-1.314 | DD25 review of InjData's NECESSITY | DISPATCHED | LJ-1.305 marks necessity MEASURED at the eliminator and INFERRED at the theory. A new principle needs that gap closed first |
+| LJ-1.315 | Literature for the phi0 slot-role ruling | DISPATCHED | Owner asked for literature beside the probe. How every source states v = L-gamma and which slots it leaves free |
+| LJ-1.316 | Literature for the InjData ruling | DISPATCHED | Owner asked for literature beside the probe. How the standard proofs select a witness in L with no choice |
+| LJ-1.317 | Literature for the typecheck-cost question | DISPATCHED | Owner asked for literature beside the probe. Known Agda cost pathologies, so the sweep looks for shapes it has not met |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
