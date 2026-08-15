@@ -170,12 +170,27 @@ owed_stale_rearm = "LJ-2.2: rebuild [[owed]] for the two-tower route, then set t
 ac_root = "src/L/Model.lagda.md"
 ac_root_why = "the delivered AC endpoint, L models ZFC, at Model.lagda.md:99"
 
-# THE GCH ROOT DOES NOT EXIST YET, and the tool says so rather than guessing.
-# No GCH endpoint has been proved on any tower. [LJ-1.8] builds the first one
-# on the internalization tree; [LJ-3.7] builds it on the bridge. Declare the
-# path here when the module lands, and the report starts working that day.
-gch_root = ""
-gch_root_why = "no GCH endpoint exists in src/ yet; LJ-1.8 lands the first"
+# THE GCH ROOT IS DECLARED, 2026-08-15, and it is a STATEMENT rather than a
+# proof. Say so here, because the reuse report cannot.
+#
+# [LJ-1.274] measured what reuse_report actually reads: a PATH, membership in
+# countable_masters(), and an import closure over head_text. It never reads a
+# proof term, never reads a type and never calls Agda. So the requirement was
+# never [LJ-1.8]; it was A2, A4 and A7, which landed as L.Coding.Injection,
+# L.Cardinal and L.GCH on 2026-08-15.
+#
+# WHAT THE FIGURE MEANS, AND WHAT IT DOES NOT. L.GCH states the trophy in its
+# honest conditional form: `sq : SqShape` and `absorbs : AbsorbsShape` are
+# Pi-parameters that nothing supplies (src/L/GCH.lagda.md:66-76). The closure
+# from this root is therefore the closure of the STATEMENT, and it UNDERSTATES
+# the eventual GCH side, because a hypothesis carries no import edge. The
+# understatement sits in the GCH total, not in the intersection.
+#
+# The proof endpoint is still [LJ-1.8]. When it lands, this root moves to it
+# and the figure grows. Until then this is DD4's first real measurement and it
+# is a floor.
+gch_root = "src/L/GCH.lagda.md"
+gch_root_why = "A7's statement, landed 2026-08-15 by [LJ-1.280]; sq and absorbs are unsupplied Pi-parameters, so the closure is the statement's and it understates"
 
 [basis]
 # What the measurement counts, so a figure can never drift basis silently.

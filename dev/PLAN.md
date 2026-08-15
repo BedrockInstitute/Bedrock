@@ -203,8 +203,39 @@ what it replaces, never merely cheaper to write.** **The scout priced writing:
 **So the follow-up owes DD9's question first, and a macro that is cheaper to
 write and harder to read is REFUSED by DD9 whatever DD13 says.**
 
-**6. DD4'S OWN REPORT HAS NEVER BEEN ABLE TO RUN, and that reframes every DD4
-figure this project holds.** `[LJ-1.272]` swept the phase: **62 reports carry a
+**6. DD4'S OWN REPORT RAN FOR THE FIRST TIME, 2026-08-15.**
+
+```
+    AC closure       73 masters  17,197 lines
+    GCH closure      48 masters   8,879 lines
+    SHARED           43 masters   7,596 lines
+    shared share of the union: 41.1% of 18,480 lines
+```
+
+**`[LJ-1.274]` predicted it a day early and the prediction holds: AC 73 and
+17,197 EXACT, SHARED 43 and 7,596 EXACT, GCH 8,879 against a predicted 8,731,
+and 41.1 percent against 41.4.**
+
+**WHAT THE FIGURE IS.** `reuse.gch_root` is now `src/L/GCH.lagda.md`, landed by
+`[LJ-1.280]`. **It is the STATEMENT, not the proof.** `sq : SqShape` and
+`absorbs : AbsorbsShape` are Pi-parameters that nothing supplies
+(`src/L/GCH.lagda.md:66-76`). **So the closure is the statement's, and it
+UNDERSTATES the eventual GCH side, because a hypothesis carries no import
+edge.** **The understatement sits in the GCH total and not in the
+intersection**, so 41.1 percent is a FLOOR.
+
+**WHAT IT COST TO GET HERE: 262 priced lines, not the 1,760 `[LJ-1.273]` said.**
+`[LJ-1.274]` measured in code that `scripts/ledger.py:404-446` reads a PATH and
+an import closure and never a proof term. **`[LJ-1.8]` was never on the path.**
+The proof endpoint is still `[LJ-1.8]`, and when it lands the root moves and
+the figure grows.
+
+**AND EVERY DD4 FIGURE BEFORE TODAY WAS ON A PROXY AXIS**, either Devlin's
+Def-against-J or the port's L-against-ambient, and that was not a defect in any
+report: the object DD4 measures did not exist. The law is `dev/LESSONS.md`
+**C-46**.
+
+**THE OLD ENTRY, kept because it is what made the above findable.** `[LJ-1.272]` swept the phase: **62 reports carry a
 DD4 figure and 12 name no axis.** **The larger finding is that neither axis the
 phase uses is DD4's own.** DD4 says maximize the code the TWO PROOFS share, and
 the two proofs are the two trophies. **`scripts/ledger.py:404-407` is DD4's own
