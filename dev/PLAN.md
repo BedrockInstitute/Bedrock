@@ -820,6 +820,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.262 | The DD25 review LJ-1.225 never got | UPHELD BUT MISATTRIBUTED | Ten numbers re-derive; three carried claims are FALSE. Devlin's PER-TOWER and the port's ZERO are two axes |
 | LJ-1.263 | Land the three L-rows into Key.lagda.md | ALL THREE LANDED. THE MASTER IS GREEN | Three re-runs import the master's versions and all exit 0, so this is a landing and not a copy |
 | LJ-1.266 | What does step 6 cost in SECONDS inside Condensation | DISPATCHED | Every step 6 figure is LINES and DD24 is a seconds rule. The chapter runs at 1.9x the bar |
+| LJ-1.267 | Re-derive LJ-1.7's residue, because the tree moved under it today | DISPATCHED | module Whole still takes seven parameters, and el, fwd and bwd are in no report of this phase |
+| LJ-1.268 | The landing order for A-prime: 1,089 lines priced, zero delivered | DISPATCHED | Every block is a green probe. Which master, which imports, which Everything line, which side of the bar |
 | LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
 | LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
 | LJ-1.247 | Re-derive A5 and measure its last inferred row | ROW 4 DISSOLVES. A5 = 348, ALL MEASURED | The column square is in NO src file, three greps, zero hits. Dissolution five |
