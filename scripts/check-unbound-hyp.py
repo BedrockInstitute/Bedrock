@@ -45,7 +45,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+# LJ-1.291: the root is found by walking up to the repository marker, never by
+# counting directories; `scripts/repo_root.py` holds the one walk.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from repo_root import find_root  # noqa: E402
+
+ROOT = find_root(__file__)
 
 # A telescope hypothesis opens a line at some indent with `(name : ` and runs
 # until its parenthesis closes. Agda allows `{name : ...}` too; an implicit

@@ -1,0 +1,82 @@
+the twin set: which numbers BOTH series carry
+  ok    every number 1 to 27 has a DD row
+  ok    28 and above have no DD twin
+  ok    the archived D series still resolves
+  ok    a revoked DD code still resolves
+the bare form fails
+  ok    a bare code with a twin is flagged
+  ok    and the message names the twin
+  ok    a bare code with NO twin is not flagged
+  ok    a DD code is never read as a D reference
+  ok    a LESSONS id is never read as a decision
+  ok    a hyphenated task code is not a decision
+the home forms
+  ok    clears: archived D7 is naming hygiene
+  ok    clears: the struck D8 row of the archive
+  ok    clears: fixed by archived PLAN D5, whose live statem
+  ok    clears: so archived `D22` and lesson `D-22` differ
+  ok    clears: ruled by D20 (archived), 2026-08-04
+  ok    clears: ruled by D20, archived, 2026-08-04
+  ok    clears: under D17's archived regime
+  ok    a wrap clears: the marker ends the previous line
+  ok    a wrap clears through an opening backtick
+  ok    the wrap does not reach past ONE line
+  ok    a distant `archived` about ANOTHER noun does not clear
+  ok    `archive` without the `d` does not clear
+  ok    naming the archive DIRECTORY does not clear
+the file-level declaration
+  ok    the declaration text the tool prints is a declaration the tool accepts
+  ok    without it the same rows are flagged
+  ok    the declaration survives a paragraph wrap
+  ok    a declaration missing its home does NOT clear the file
+  ok    prose that merely mentions the archived series does not clear the file
+the locator rule
+  ok    a code sent to PLAN section 3 is flagged
+  ok    the section sign form is flagged
+  ok    a DD code on the line exempts it
+  ok    section 3 of ANOTHER document is not the locator defect
+  ok    a distant section 3 is not attached to the code
+  ok    the locator fires even where the home is written
+the scope of the default run
+  ok    dev/JOURNAL.md is a dated record and is skipped
+  ok    dev/memos/ are dated analyses and are skipped
+  ok    scripts/tests/ is skipped so a fixture stays verbatim
+  ok    dev/LESSONS.md is inside the default series scope
+  ok    dev/PLAN.md is inside the default series scope
+  ok    dev/ARCHIVE.md is inside the default series scope
+  ok    dev/STYLE-agda.md is inside the default series scope
+  ok    dev/literature/owner-notes-rud.md is inside the default series scope
+  ok    scripts/README.md is inside the default series scope
+  ok    scripts/check-tree.py is inside the default series scope
+  ok    scripts/ledger.py is inside the default series scope
+  ok    scripts/*.py reach the series scope and nothing else adds them
+  ok    dev/JOURNAL.md is not in the series scope
+  ok    no memo is in the series scope
+  ok    no test fixture is in the series scope
+  ok    agents/ is out even when the citation check opts in
+  ok    an explicit path list is NOT widened to scripts/
+  ok    dev/ARCHIVE.md declares its series, so its own rows are exempt
+  ok    and stripping the declaration would flag them again
+  ok    the declaration does NOT exempt the locator rule in that file
+  ok    no live document outside the pending handover is red
+  ok    the run exits non-zero while the handover is pending, or clean after it
+  ok    an explicit clean file still reports clean
+  ok    a directory argument is expanded, not crashed on
+  ok    and it scans more than one file
+the sites that shipped the defect
+  ok    dev/STYLE-agda.md no longer writes a bare decision code
+  ok    and it still tells the reader the naming rule is live, not revoked
+  ok    scripts/README.md is read by the series check, fixed or not
+  ok    while its locator defect stands, the CLI REPORTS it rather than exempting it
+the uniqueness check
+  ok    the generic counter finds a duplicate in any series
+  ok    and returns nothing when every code is unique
+  ok    the real tree has no duplicate in either series
+  ok    a synthetic duplicate DD row is a finding
+  ok    a synthetic duplicate D row is a finding
+  ok    the finding names the file that holds the series
+  ok    DD<n> and D<n> are different codes and both may exist
+  ok    the consolidated and revoked codes are prose, not rows, and pass
+  ok    a `DD25-GAP` row is not a `DD25` row
+
+test_rule_series: all checks passed

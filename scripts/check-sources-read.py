@@ -41,9 +41,13 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from repo_root import find_root  # noqa: E402
 import agents_tree as T   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
+
+# LJ-1.291: the root is found by walking up to the repository marker, never by
+# counting directories; `scripts/repo_root.py` holds the one walk.
+ROOT = find_root(__file__)
 LOGS = ROOT / ".claude" / "skills" / "codex-dispatch" / ".state" / "logs"
 
 # A path the brief names inside its ARCHIVE or LITERATURE section.

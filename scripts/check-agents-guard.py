@@ -42,20 +42,42 @@ import argparse
 import re
 import subprocess
 import sys
+from pathlib import Path
+
+# LJ-1.291: the root is found by walking up to the repository marker, never by
+# counting directories; `scripts/repo_root.py` holds the one walk. Every git
+# call below runs with cwd=ROOT, so the `AGENTS.md` pathspec resolves from
+# the root and never from wherever the caller sits.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from repo_root import find_root  # noqa: E402
+
+ROOT = find_root(__file__)
 
 TRAILER_RE = re.compile(r"^AGENTS-diff-approved: \d{4}-\d{2}-\d{2}\s*$", re.M)
-GUARD_PATH = "scripts/check-agents-guard.py"
+
+#: The homes whose committed trees count as "this guard exists". The first is
+#: DERIVED from where this file sits, so a move cannot orphan it; the literal
+#: is kept because [LJ-1.290] Result 2 MEASURED the false green a lone
+#: rewritten literal produces (`0 guarded commit(s)`, exit 0). A commit is
+#: judged when its tree carries the guard at any home it has ever had.
+GUARD_HOMES = list(dict.fromkeys([
+    Path(__file__).resolve().relative_to(ROOT).as_posix(),
+    "scripts/check-agents-guard.py",
+]))
 
 
 def git(*args: str) -> str:
     return subprocess.run(["git", *args], capture_output=True, text=True,
-                          check=True).stdout
+                          check=True, cwd=ROOT).stdout
 
 
 def tree_has_guard(commit: str) -> bool:
-    probe = subprocess.run(["git", "cat-file", "-e", f"{commit}:{GUARD_PATH}"],
-                           capture_output=True)
-    return probe.returncode == 0
+    for home in GUARD_HOMES:
+        probe = subprocess.run(["git", "cat-file", "-e", f"{commit}:{home}"],
+                               capture_output=True, cwd=ROOT)
+        if probe.returncode == 0:
+            return True
+    return False
 
 
 def audit_history() -> int:

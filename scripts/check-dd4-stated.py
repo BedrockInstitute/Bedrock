@@ -60,8 +60,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import agents_tree  # noqa: E402
+from repo_root import find_root  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
+# LJ-1.291: the root is found by walking up to the repository marker, never by
+# counting directories; `scripts/repo_root.py` holds the one walk.
+ROOT = find_root(__file__)
 TASKS = ROOT / "agents" / "tasks"
 
 #: The heading, in the form every compliant brief already writes.

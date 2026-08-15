@@ -83,8 +83,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import agents_tree   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
+from repo_root import find_root  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
+# LJ-1.291: the root is found by walking up to the repository marker, never by
+# counting directories; `scripts/repo_root.py` holds the one walk.
+ROOT = find_root(__file__)
 
 # ---- gate thresholds --------------------------------------------------------
 # Raising one is a ruling, not an edit: see the procedure below.

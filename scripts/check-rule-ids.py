@@ -54,8 +54,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import agents_tree   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
+from repo_root import find_root  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
+# LJ-1.291: the root is found by walking up to the repository marker, never by
+# counting directories; `scripts/repo_root.py` holds the one walk.
+ROOT = find_root(__file__)
 LESSONS = ROOT / "dev" / "LESSONS.md"
 PLAN = ROOT / "dev" / "PLAN.md"
 
@@ -305,7 +308,7 @@ def series_target_paths(targets: list[Path], widen: bool = True) -> list[Path]:
     """
     out = list(targets)
     if widen:
-        out += sorted((ROOT / "scripts").glob("*.py"))
+        out += sorted((ROOT / "scripts").rglob("*.py"))
         out += [ROOT / "scripts" / "README.md"]
     return [p for p in out
             if p.exists() and p.name not in HISTORICAL

@@ -1,0 +1,68 @@
+src/ is refused absolutely, at every depth and every extension
+  ok    src/ProbeX.agda is refused
+  ok    src/L/ProbeX.agda is refused
+  ok    src/L/Rud/ProbeX.agda is refused
+  ok    src/ProbeX.md is refused
+  ok    src/ProbeX.lagda.md is refused
+  ok    the src/ message names the incident's rule
+agents/tasks/ is accepted; every neighbouring path is not
+  ok    agents/tasks/ProbeX.agda is accepted
+  ok    agents/tasks/ProbeX.lagda.md is accepted
+  ok    agents/tasks/archive/ProbeX.agda is accepted (it is under the prefix)
+  ok    agents/ProbeX.agda is refused
+  ok    agents/task/ProbeX.agda is refused
+  ok    ProbeX.agda is refused
+  ok    archive/src/2026-08-07-arm-a/L/ProbeX.agda is refused
+  ok    archive/src/2026-08-13-probe-sweep/ProbeX.agda is refused
+  ok    probes/ProbeX.agda is refused
+  ok    dev/ProbeX.agda is refused
+an .agdai is refused everywhere, exemption or not
+  ok    agents/tasks/ProbeX.agdai is refused
+  ok    src/ProbeX.agdai is refused
+  ok    agents/tasks/L/Anything.agdai is refused
+  ok    agents/tasks/NotAProbe.agdai is refused
+  ok    _build/anything is refused
+  ok    a woven copy is refused
+the gate reads the basename shape and touches nothing else
+  ok    agents/tasks/LJ-1-141/lj-1.141-report.md is clean
+  ok    src/L/Stage.lagda.md is clean
+  ok    scripts/check-probes.py is clean
+  ok    agents/tasks/LJ-1-141/LJ-1.141.md is clean
+a staged RENAME is visible to --staged
+  ok    the filter carries R
+  ok    a probe staged in its home passes
+  ok    the same probe RENAMED into src/ is refused
+  ok    and the message names the file
+every retired flag is a usage error, never a silent success
+  ok    --gate exits 2
+  ok    --gate prints no success line
+  ok    --stale exits 2
+  ok    --stale prints no success line
+  ok    --sweep exits 2
+  ok    --sweep prints no success line
+  ok    --index exits 2
+  ok    --index prints no success line
+  ok    --archive exits 2
+  ok    --archive prints no success line
+  ok    --delete exits 2
+  ok    --delete prints no success line
+  ok    --floor-hours exits 2
+  ok    --floor-hours prints no success line
+  ok    --nonsense exits 2
+  ok    --nonsense prints no success line
+  ok    two modes at once exit 2
+  ok    --check is green on the live tree
+  ok    no argument defaults to --check and is green
+the live tree agrees with the rule
+  ok    393 tracked probe(s), all under agents/tasks/
+  ok    no probe is tracked under src/
+
+the misfiled-probe check fires only on a contradiction
+  ok    a probe whose name names another EXISTING task is caught
+  ok    the message names both tasks
+  ok    silent on a DD25 probe placed on review evidence
+  ok    silent on the T-series short form
+  ok    silent on a probe whose name carries no code
+  ok    silent on a probe in its own task
+  ok    silent outside agents/tasks
+test_probe_gate: all checks passed

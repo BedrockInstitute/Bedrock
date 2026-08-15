@@ -1,0 +1,7 @@
+usage: dd25-record.py [-h] [--phase PHASE]
+
+Read the DD25 review record BACK from the register, never from recall.
+
+options:
+  -h, --help     show this help message and exit
+  --phase PHASE  restrict to one phase prefix, for example LJ-1

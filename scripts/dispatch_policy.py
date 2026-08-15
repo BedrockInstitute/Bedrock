@@ -137,7 +137,12 @@ REVERT_CONDITION = ("The owner names a mode by word, daily. Set "
 # is in force and a head must start, because a silent default is the shape a
 # wrong choice hides in (`dev/LESSONS.md` C-43).
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent / "dev" / "vendors.toml"
+# LJ-1.291: the root is found by walking up to the repository marker, never by
+# counting directories; `scripts/repo_root.py` holds the one walk.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from repo_root import find_root  # noqa: E402
+
+CONFIG_PATH = find_root(__file__) / "dev" / "vendors.toml"
 
 
 @dataclass(frozen=True)

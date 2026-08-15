@@ -1,0 +1,35 @@
+Did the agent actually OPEN the sources its brief named? (DD18)
+
+WHY THIS EXISTS. DD18 makes every brief name what in `archive/` and
+`dev/literature/` may bear on the task, and every return say what it used.
+`dispatch.py` refuses a brief that omits either section, so the BRIEF half is
+mechanical. The RETURN half is review-only, and on 2026-08-10 that gap cost a
+day: `[LJ-1.6]` filed a filled ARCHIVE USED section, and the cure it needed had
+been sitting in `archive/dev/TASKS-archived.md` for five days.
+
+CITING A SOURCE AND READING IT ARE DIFFERENT THINGS. This script separates
+them, using evidence that already exists: the dispatcher keeps the agent's
+whole session log, and a file the agent opened appears there inside a TOOL
+CALL, not merely in prose.
+
+WHAT IT CANNOT DO, stated plainly so nobody trusts it further than it goes.
+
+  1. It proves a path was OPENED. It cannot prove the agent read the part that
+     mattered. `[LJ-1.6]` DID grep the archive, with a topic-shaped pattern
+     (`Count|Cardinal|SquareLaw|counting`) piped through `head -30`; the row it
+     needed was titled "Re-design the tower-induction gate" and matched none of
+     those words. This script would have passed that task.
+  2. A miss is a QUESTION, never a verdict. An agent may legitimately skip a
+     named source and say why; DD18 asks for WHY NOT, not for compliance.
+
+SO THE SECOND HALF OF THE CURE IS NOT MECHANICAL, and it belongs in the brief:
+name the ROW, not just the file, or demand an artifact only reading produces,
+a verbatim quote at `file:line` or the answer to a question the file alone
+settles. `[LJ-1.19]`'s brief said "FIND IT and cite it at file:line" and the
+agent came back with `LevelSigma.lagda.md:203`. That worked.
+
+Usage:
+  check-sources-read.py <task>...   one or more task codes, e.g. LJ-1.6
+  check-sources-read.py --all       every task with a brief and a log
+Exit 0 always: this REPORTS. It is an audit aid, not a gate.
+

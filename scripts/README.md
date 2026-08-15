@@ -420,6 +420,17 @@ The locator rule **skips a line that names a `DD` code**, because the repaired
 sentences read "archived D11; DD11 in section 3 is a DIFFERENT rule", so a line
 that cites one code correctly and misdirects a second one passes.
 
+## `repo_root.py`
+
+**Not a checker. The one way a script finds the repository root.** Written by
+`[LJ-1.291]` after `[LJ-1.290]` measured the failure the old depth anchors buy: 24 scripts
+computed the root as `Path(__file__).resolve().parent.parent`, so a gate copied or moved
+one level deeper guarded the wrong tree and still said `clean` (55 tracked files read as
+2,369, both exit 0). `find_root(__file__)` walks up from the caller to the nearest `.git`
+and REFUSES loudly when no marker is above, so a relocated or exported script can never
+silently guard a guessed tree. Every root-anchored script carries the same three-line
+anchor: put `scripts/` on `sys.path`, import `find_root`, call it with `__file__`.
+
 ## `agents_tree.py`
 
 **Not a checker. The one place that knows the shape of `agents/tasks/`.** Five

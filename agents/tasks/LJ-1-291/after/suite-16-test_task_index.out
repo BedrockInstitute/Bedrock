@@ -1,0 +1,19 @@
+  ok   bare T88 is not a code: want set() got set()
+  ok   capital-hyphen prose is not a code: want set() got set()
+  ok   short form extracts: want {'T88'} got {'T88'}
+  ok   full form extracts: want {'T101'} got {'T101'}
+  ok   mixed forms union: want {'T88', 'T1', 'T101'} got {'T88', 'T1', 'T101'}
+  ok   zero-padded full form resolves to the same code: want {'T1'} got {'T1'}
+  ok   the two series do not collide: want {'LJ-1.1', 'T1'} got {'LJ-1.1', 'T1'}
+  ok   index rows parsed: want ['T1', 'T88'] got ['T1', 'T88']
+  ok   rows outside the section ignored: want 2 got 2
+  ok   missing section yields no rows: want [] got []
+  ok   cited code without a row fails: want True got True
+  ok   the failure names both indexes: want True got True
+  ok   duplicate rows fail: want True got True
+  ok   row over cap fails: want True got True
+  ok   row at exactly the cap passes: want True got True
+  real tree: 592 cited codes, 608 unique rows, 0 defect(s)
+  ok   real tree is green: want [] got []
+
+14/14 checks passed
