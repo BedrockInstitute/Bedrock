@@ -4413,6 +4413,50 @@ Related: [[C-45]], [[C-36]], [[D-10]], [[C-52]], [[C-38]].
 
 
 
+### C-57. The search that finds it and the READING that discards it are two different failures, and the second is invisible
+
+**Rule:** When a report says a thing is absent, ask which step failed: **did the
+search MISS it, or did the search RETURN it and the triage throw it away?**
+**The two need different cures and only the first one is ever suspected.**
+
+**Rule for writing:** **a report that clears a search result says HOW MANY hits
+it read and names the ones it rejected.** **「Every hit is a different
+subject」over 59 lines, naming three, is not a clearance.**
+
+**The measurement, `[LJ-1.339]`, 2026-08-16.** `[LJ-1.335]` reported a
+successor-injectivity lemma MEASURED ABSENT. Its own grep is recorded in its
+report. **Re-run today it returns 59 lines, and line 55 is the delivered lemma,
+top level and exported**, plus three prose lines of the same chapter, one of
+which says in English that the property is a proposition. **The report then
+wrote that every hit was a different subject and named three of the 59.**
+
+**The tool worked. The reading did not.**
+
+**AND THE COST COMPOUNDED.** Two later briefs of mine carried the absence
+forward, and one funded a task to build what the tree already held. **The
+delivered term is consumed elsewhere in `src/` today.**
+
+**Why this is worse than a bad filter.** **A bad filter announces itself: the
+output is empty and somebody re-greps.** **A bad triage produces a confident
+sentence with a real command behind it**, and the next reader has no reason to
+doubt either. **C-52 cures the filter. Nothing cured this until a task was
+funded to look.**
+
+**What to do.** **Count your hits and say the count.** **Reject them by name or
+by class, never by「all of them」.** **And when you inherit an absence, re-run
+the search that established it before you spend on it** (D-10: price the TRUTH
+of a recorded residue before pricing its proof).
+
+**The scale of the recurrence, MEASURED at the same time:** ten of one
+chapter's twenty-one exports fail a natural search, in three shapes: no
+conventional token exists in the tree at all; a competing delivered name for the
+same object; and a wrapper hiding an idiom written inline at nineteen sites.
+**Placement was tested as a cause and REFUTED: every failed search was a
+whole-tree grep, which is directory blind.**
+
+Related: [[C-52]], [[D-10]], [[C-44]], [[C-42]].
+
+
 ### C-56. When a truncated proof walls, the cost is in the ASSEMBLY and not in the mathematics: bisect the eliminator nesting first
 
 **Rule:** When a proof over `∥ A ∥₁` exhausts the heap or runs past its wall,
