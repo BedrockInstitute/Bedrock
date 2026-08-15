@@ -4018,6 +4018,15 @@ produced is on a proxy axis.** That is not a defect in any report. It is the
 shape of a rule whose object is not built yet, and it stops being true on the
 day the GCH endpoint lands.
 
+**THAT DAY CAME, 2026-08-15, and the paragraph above is now HISTORY rather than
+status.** `[LJ-1.280]` landed `src/L/GCH.lagda.md`, `dev/ledger.toml:203` reads
+`gch_root = "src/L/GCH.lagda.md"`, and `ledger.py --reuse` RUNS. It first printed
+41.1 percent shared and reads 39.1 percent today. **`[LJ-1.308]` found this entry
+still asserting the old state and the orchestrator had not noticed**, which is the
+law's own failure mode turned on the law: a figure kept its qualifier after the
+qualifier expired. **The law itself is unchanged and still binds: name the axis in
+every figure.** Only the「cannot be measured yet」clause retired.
+
 **What it costs when it goes wrong.** `[LJ-1.225]` applied a Def-against-J mark
 to an L-against-ambient figure and classified a true statement MEASURED FALSE;
 `[LJ-1.262]` caught it one dispatch later. `[LJ-1.272]` measured that the same

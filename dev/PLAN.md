@@ -59,7 +59,7 @@ rather than a survey:
 
 | part | lines | measured by |
 |---|---:|---|
-| the clean 23 `Agree` modules, generic | ~180 | `[LJ-1.298]`, ZERO changed at one site |
+| the clean 23 `Agree` modules, generic | ~180, **and CALIBER-BOUND** | `[LJ-1.298]`, ZERO changed at one site; `[LJ-1.308]` measures it marginal on the project's caliber |
 | the dirty seven's ambient ties | ~100 | `[LJ-1.302]`, 51 built; the ties are ONE debt |
 | `StepAgree` and `ApproxAgree` | ~190 | `[LJ-1.304]`, BOTH built as terms |
 | the composite's type | writable, **and `amb-from-composite` typechecks** | `[LJ-1.302]` |
@@ -1198,7 +1198,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.305 | Untruncate the descent: deliver SqShape | DISPATCHED | LJ-1.301 built the descent but delivers a proposition. This is LJ-1.8's WHOLE remaining gap |
 | LJ-1.306 | Port the clean 23 Agree modules generic | 23 OF 23, ZERO CHANGED LINES, 45-LINE SCAFFOLD. DD25 [LJ-1.308] | Five were NOT clean: they name Shape deliveries. Cured at 27 verbatim lines |
 | LJ-1.307 | Are the thirty Agree modules thirty things or one | PARTLY. ONE SHAPE, 15 THINGS, 30 SPELLINGS | Fresh is about 2,150 against 2,619, saving 470. The port is RIGHT, so LJ-1.306 stands |
-| LJ-1.308 | DD25 review of LJ-1.306's zero-changed port | DISPATCHED | Takes pi-subagent-mode's adversarial row, in-harness opus, because a review keeps its TARGET's mode (owner 2026-08-15) |
+| LJ-1.308 | DD25 review of LJ-1.306's zero-changed port | SPLIT. THE ZERO HOLDS, ITS EVIDENCE DID NOT | ProbeCompat checked each row's FIRST field; consumers write the LAST. 26 checks run green |
+| LJ-1.309 | Sweep the WHOLE tree for R-41's full-chain shape | DISPATCHED | Owner funded the hunt. LJ-1.292 measured ONE master and said plainly it never swept src/. The ladder is 43x per depth |
+| LJ-1.310 | Name every step of the composite's TERM | DISPATCHED | GCH's largest unpriced piece. LJ-1.302 proved a composite FEEDS, never that it EXISTS. The 470 prices ingredients only |
 | LJ-1.288 | A vendor config for pi-subagent-mode | DONE. dev/vendors.toml, 66 clock checks, 586 green | A vendor with no price windows makes the clock refuse to be read. Declaring is not wiring |
 | LJ-1.279 | LAND A5 rows 5 and 1 as src/L/InjChain.lagda.md | LANDED GREEN, 343 LINES, 0.85x THE BAR | Six premises VERIFIED. A2's P-k boundary HELD: row 1 needs four names, all four exported |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
