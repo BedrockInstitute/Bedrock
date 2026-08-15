@@ -50,7 +50,25 @@ and all four of its items returned; that record is in the journal.
 
 **THE OPEN WORK, in dependency order.**
 
-**1. The supply chain for the satisfaction layer.** `[LJ-1.172]` built steps 1
+**1. STEP 6 IS PRICED IN SECONDS AND THE PRICE IS A WALL.** `[LJ-1.266]`
+measured it inside `src/L/Condensation.lagda.md` with a paired three-arm
+rotation, n=3 cold per arm: **control 137.36 s; the twelve fields plus the env
+closure add 10.3 s at 0.036 s/line; the env supply adds 860.9 s at 2.38
+s/line, which is 226x the DD24 bar; and the FULL block heap-exhausts at
+`-M8g`, so it does not typecheck at the standard cap at all.** **The 60.0 s
+gap does not shrink on the landing day. It grows by about 861 s, if the
+landing is possible.**
+
+**THE MEASUREMENT PRICES ONE LAYOUT AND MY BRIEF CHOSE THAT LAYOUT.** It told
+the agent to copy the chapter and add the content to the copy, so every arm
+elaborates step 6 inside 6,718 lines. **`[LJ-1.268]` chose five NEW masters for
+A-prime precisely so no over-the-bar master gains a line, and nobody asked that
+question of step 6.** **`[LJ-1.275]` is measuring the new-master arm now.**
+**Until it returns, the 2.38 is a measurement of a layout and not of the
+content** (P-l inverted). **The owner's ruled option C is also still unapplied,
+so the chapter under measurement is the UNCURED one** (C-32).
+
+**2. The supply chain for the satisfaction layer.** `[LJ-1.172]` built steps 1
 to 5 and REFUTED step 6 at the join. `[LJ-1.173]` swept the refutation to **21
 fields across three records and CURED all 21**, for 77 lines, green.
 **2026-08-15: step 6 is NO LONGER UNBUILT, and the 255 STANDS at about 305.**
@@ -71,7 +89,7 @@ numeral premise, a real defect in `[LJ-1.173]:843-846`, whose row 1 gave them
 no-master-edit rule.** **And `someEnv`'s second blocker is delivered in FOUR
 lines at `src/L/Condensation.lagda.md:3042`, not the 120 the report priced.**
 
-**2. Route A-prime is PRICED at 1,089 and the landing order is written; NOT ONE
+**3. Route A-prime is PRICED at 1,089 and the landing order is written; NOT ONE
 LINE IS IN `src/`.** All seven blocks are measured and the reading residue is
 ZERO (`[LJ-1.253]`). `[LJ-1.268]` gives the order: **five NEW masters in three
 waves, and nothing extends an existing master, so no over-the-bar master gains
@@ -80,7 +98,7 @@ delivered. **Two sub-blocks are NOT landable**, A5 row 3 and A6, both on the
 same stale import that an orchestrator file move broke; the cure is to re-site
 both probes onto the landed A2 master.
 
-**3. The wing's seconds have a LOCATION, and the cure is the owner's call.**
+**4. The wing's seconds have a LOCATION, and the cure is the owner's call.**
 `[LJ-1.214]` measured that the telescope component at `Deserialization` carries
 **7,925 of 8,236 ms, 96 percent**. All three cheap levers measured void:
 sealing moves 83 ms, emptying the numeral content moves 47 ms the WRONG way,
@@ -88,7 +106,7 @@ and instantiation is 0.9 percent. **Removing the component would recover the
 8.2 s and restore 21 fields that were FALSE before `[LJ-1.173]` cured them.**
 So it is a design question and not an edit.
 
-**4. THE NAMED-SLOT REFACTOR, REGISTERED AND WAITING ON A CONDITION, NOT ON A
+**5. THE NAMED-SLOT REFACTOR, REGISTERED AND WAITING ON A CONDITION, NOT ON A
 MOOD.** `[LJ-1.269]` scouted it and every figure below is MEASURED at commit
 `414249b`. **Both routes typecheck under `--cubical --safe --guardedness`, the
 exact OPTIONS header every master carries, so `--safe` PERMITS REFLECTION.**
@@ -124,7 +142,7 @@ what it replaces, never merely cheaper to write.** **The scout priced writing:
 **So the follow-up owes DD9's question first, and a macro that is cheaper to
 write and harder to read is REFUSED by DD9 whatever DD13 says.**
 
-**5. DD4'S OWN REPORT HAS NEVER BEEN ABLE TO RUN, and that reframes every DD4
+**6. DD4'S OWN REPORT HAS NEVER BEEN ABLE TO RUN, and that reframes every DD4
 figure this project holds.** `[LJ-1.272]` swept the phase: **62 reports carry a
 DD4 figure and 12 name no axis.** **The larger finding is that neither axis the
 phase uses is DD4's own.** DD4 says maximize the code the TWO PROOFS share, and
@@ -142,7 +160,7 @@ is measured: `[LJ-1.225]` mixed the two axes and called a true statement FALSE,
 and `[LJ-1.272]` measured the same shape in `[LJ-1.258]` and `[LJ-1.260]`,
 which both LANDED.** The law is `dev/LESSONS.md` **C-46**.
 
-**WHAT IS WAITING ON THE OWNER, and none of it blocks the five above.**
+**WHAT IS WAITING ON THE OWNER, and none of it blocks the six above.**
 
 - **DD4 against DD24.** A cure in shared machinery made every master faster and
   the ratio WORSE, 1.56x to 1.91x, because the AC side gained 41.7 percent and
@@ -874,7 +892,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.261 | The finite-supremum merge | BUILDS. finSetK is SUPPLIED, 3 consK CLOSE | 148 lines, 48 for the merge against union's 52. The first attempt walled and the cure is recorded |
 | LJ-1.262 | The DD25 review LJ-1.225 never got | UPHELD BUT MISATTRIBUTED | Ten numbers re-derive; three carried claims are FALSE. Devlin's PER-TOWER and the port's ZERO are two axes |
 | LJ-1.263 | Land the three L-rows into Key.lagda.md | ALL THREE LANDED. THE MASTER IS GREEN | Three re-runs import the master's versions and all exit 0, so this is a landing and not a copy |
-| LJ-1.266 | What does step 6 cost in SECONDS inside Condensation | DISPATCHED | Every step 6 figure is LINES and DD24 is a seconds rule. The chapter runs at 1.9x the bar |
+| LJ-1.266 | Step 6's SECONDS inside Condensation | ABOVE, NOT CLOSE. HEAP WALL. DD25 [LJ-1.275] | Fields 0.036 s/line, env supply 2.38, 226x the bar. The full block will not typecheck at -M8g |
+| LJ-1.275 | DD25 review of LJ-1.266's heap wall | DISPATCHED in-harness | It appended step 6 INSIDE the 6,718-line chapter. Nobody tested a new master, and LJ-1.268 chose new masters for A-prime |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
 | LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |

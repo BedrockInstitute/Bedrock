@@ -374,7 +374,21 @@ def main(argv):
         # escape the gate merely by not being committed yet).
         files = tracked_masters()
     # Outside every gate (archived D20, live DD13): archive paths are dropped.
-    files = [f for f in files if not f.startswith("archive/")]
+    #
+    # `agents/` is dropped for the same reason `scripts/lint-prose.py:446` drops it, and
+    # AGENTS.md states the rule: an agent's brief, report and probe are a RECORD, and a
+    # record is never rewritten. Style is a rule for code the project maintains.
+    #
+    # MEASURED 2026-08-15: [LJ-1.266] priced step 6 in seconds by copying
+    # src/L/Condensation.lagda.md into its task directory four times, one arm per
+    # treatment. The copies inherit the master's using-lists, and the appended content
+    # uses fewer of those names, so the linter reported 27 unused imports in the ARMS of
+    # a finished experiment. Repairing them would edit the thing that was measured and
+    # would invalidate the 2.38 s/line figure (C-32). This is the first time a task
+    # directory held a `.lagda.md` at all; probes there are `.agda`, which is why the two
+    # linters disagreed for so long without anyone noticing.
+    files = [f for f in files
+             if not f.startswith("archive/") and not f.startswith("agents/")]
     total = 0
     for path in files:
         for lineno, rule, msg in lint_file(path):

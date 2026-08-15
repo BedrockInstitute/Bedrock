@@ -1,0 +1,4 @@
+Checking LJ-1-266.CondensationStep6 (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-266/CondensationStep6.lagda.md).
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
