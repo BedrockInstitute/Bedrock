@@ -4196,3 +4196,50 @@ answered "where does this land", ask it of every other part.**
 `agents/tasks/LJ-1-266/lj-1.266-report.md`, the sound measurement of the wrong
 layout; `agents/tasks/LJ-1-268/lj-1.268-report.md:45-48`, the question that was
 already asked next door. Related: [[P-l]], [[C-32]], [[C-42]].
+
+### C-50. Profile before you cure: a whole-file rate names no term, and P-y prices a seal's COST while saying nothing about its BENEFIT
+
+**Rule:** A master's seconds-per-line figure is an average and an average hides
+the term (P-t). **Before you propose any cure, run
+`agda --profile=definitions` and read which definition is charged.** The answer
+is routinely one definition, and a cure aimed anywhere else is aimed at
+nothing.
+
+**And P-y is only half a price.** P-y counts the definitions that must look
+INSIDE a sealed term, so it tells you what a seal COSTS. **It cannot tell you
+what a seal BUYS.** A candidate with a textbook P-y price and no seconds behind
+it is a change for nothing.
+
+**The measurement, 2026-08-15, and it is two results from one day.**
+
+**At one site the seal won 91 seconds.** `[LJ-1.281]` and `[LJ-1.282]`:
+`src/L/Cardinal.lagda.md` went 99.78 s to 9.31 s by sealing one transparent
+well-order and adding one read lemma. P-y priced it low, three definitions
+named it and exactly one looked inside, and the price held.
+
+**At the bigger site the seal was VOID.** `[LJ-1.283]` measured
+`src/L/Coding/EnvSupply.lagda.md`, 833 lines and 482.73 s, the most expensive
+master in the wing. **One `--profile=definitions` run charged 475,710 of
+479,311 ms, 99.2 percent, to `sucV∈` at `src/L/Coding/EnvSupply.lagda.md:223-224`,
+which is TWO LINES.** The file carries **zero `opaque` in 833 lines**, so
+nobody had looked. **The layer-cap seal on it moved 0.92 s, minus 0.19 percent,
+inside the content's own 0.9 percent spread.** An equation-bridge arm moved
+plus 0.75 percent. **Both void, MEASURED.**
+
+**And the same task refuted its own best P-y candidate before spending a run on
+it.** `B₀` in the same file has 30 namers and 1 insider, a textbook P-y price,
+and it costs **12 ms**.
+
+**So the two laws answer different questions and neither substitutes for the
+other.** The profile says WHERE the seconds are. P-y says what sealing there
+would cost. **You need both, in that order.**
+
+**What to do.** Profile first and name the charged definition at `file:line`.
+Then price the seal at THAT definition with P-y. **A cure proposed from a
+whole-file rate, or from a P-y count alone, is a hypothesis with no site.**
+
+**Evidence:** `agents/tasks/LJ-1-283/lj-1.283-report.md`, the triage of eight
+over-bar masters with a P-y count for each and the void arms;
+`agents/tasks/LJ-1-281/lj-1.281-report.md`, the site where the seal won;
+`agents/tasks/LJ-1-282/lj-1.282-report.md`, that seal landed.
+Related: [[P-y]], [[P-t]], [[P-l]], [[C-49]].

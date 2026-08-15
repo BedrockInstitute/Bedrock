@@ -1,0 +1,6 @@
+label,base,rc,elapsed_s,load_before,load_after
+warmup-profile,ControlEnv,0,0.02,7.80 6.54 5.98,229.82 54.55 23.15
+warmup-treated,TreatedBridge,0,495.50,105.01 104.57 55.54,8.42 26.34 34.42
+c1,ControlEnv,0,482.20,6.20 22.77 32.59,4.48 9.06 21.10
+t1,TreatedBridge,0,485.80,4.48 9.06 21.10,4.61 5.63 14.05
+s1,TreatedSeal,0,481.28,8.03 6.60 13.98,6.05 34.11 32.35
