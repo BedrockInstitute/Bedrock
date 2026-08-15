@@ -237,6 +237,16 @@ which both LANDED.** The law is `dev/LESSONS.md` **C-46**.
 
 **WHAT IS WAITING ON THE OWNER, and none of it blocks the six above.**
 
+- **THE `premises` GATE IS RED AND I DID NOT SILENCE IT.** **Twelve briefs carry
+  an ACTIVE trigger token and no `## PREMISES` section**, so `make check` fails
+  at that target. **Eleven predate 2026-08-15 and one, `[LJ-1.275]`, is mine.**
+  **All twelve are frozen records, so I will not rewrite them** (C-41), **and I
+  will not widen the pre-epoch set**, because `check-dd4-stated.py`'s own
+  comment rules that a new lapse is a defect and that is the whole point of an
+  epoch. **The choice is the owner's: widen the epoch once and let the gate bind
+  new work only, or keep the red until the twelve are answered some other way.**
+  **Every brief I write from here carries PREMISES.** The codes are `LJ-1.217`,
+  `219`, `220`, `224`, `226`, `230`, `233`, `235`, `236`, `247`, `260`, `275`.
 - **OPTION C, RULED ON A FIGURE THAT MOVED.** The owner ruled `先C` when the
   telescope component carried 8.2 s. **`[LJ-1.275]` measured it at 1,113 ms
   today**, because `[LJ-1.260]`'s numeral premise changed the chapter under it.
