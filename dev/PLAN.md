@@ -822,7 +822,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.266 | What does step 6 cost in SECONDS inside Condensation | DISPATCHED | Every step 6 figure is LINES and DD24 is a seconds rule. The chapter runs at 1.9x the bar |
 | LJ-1.267 | Re-derive LJ-1.7's residue after today | SAME SIZE: 3 SUPPLIED, 3 BUILT, 1 OPEN | el, fwd and bwd are DELIVERED in src and no report said so. The feared hole does not exist |
 | LJ-1.268 | The landing order for A-prime | AN ORDER EXISTS. FIVE NEW MASTERS, NO EXTENSION | So no over-the-bar master gains a line. Two sub-blocks blocked by an import MY file move broke |
-| LJ-1.269 | Scout a named-slot layer, and change nothing | DISPATCHED | The arity arithmetic is already typed. What is ad hoc is the slot layout, whose spec lives in comments |
+| LJ-1.269 | Scout a named-slot layer | BOTH SKETCHES TYPECHECK. --safe PERMITS REFLECTION | Census 190 sites. The MACRO is cheaper: 54 lines against 78, and needs no coverage proof |
 | LJ-1.270 | Does the Coq framework bear on GCH | NO. THE SILENCE HOLDS, MEASURED | MetaZF has no Formula, no binder, no satisfaction across 20 files. Every AC win is an axiom removed |
 | LJ-1.264 | Build A5's row 1, the composition of two injections | IT BUILDS AT EXACTLY 160. NEEDED | noinj-squared survives at a second site the two dissolutions never touched |
 | LJ-1.265 | Align DD24's bar: three rates are in force | 0.010514 IS LIVE. THE GAP IS 60.0 s | 0.013193 is STALE and the budget with it. check-ratio.py:462-464 settles it in code, not comment |
