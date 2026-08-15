@@ -38,3 +38,20 @@ src/Probe*.agdai
 # check-fences counted five probes as masters (89 against 84). check-probes
 # already knew the shape; only the ignore list was blind.
 src/Probe*.lagda.md
+
+# [LJ-1.331] The twelve derived record arms. `make_arms.py --check` rebuilds
+# every one from `CondA.lagda.md` plus `arms.json` and reports identical, so
+# they are generated files and AGENTS.md forbids committing those. The 233 KB
+# that IS committed reproduces all 2.7 MB.
+agents/tasks/LJ-1-331/CondB.lagda.md
+agents/tasks/LJ-1-331/CondC.lagda.md
+agents/tasks/LJ-1-331/CondD.lagda.md
+agents/tasks/LJ-1-331/CondE.lagda.md
+agents/tasks/LJ-1-331/CondF0.lagda.md
+agents/tasks/LJ-1-331/CondF1.lagda.md
+agents/tasks/LJ-1-331/CondF6a.lagda.md
+agents/tasks/LJ-1-331/CondF6b.lagda.md
+agents/tasks/LJ-1-331/CondG2.lagda.md
+agents/tasks/LJ-1-331/CondG4.lagda.md
+agents/tasks/LJ-1-331/CondH1.lagda.md
+agents/tasks/LJ-1-331/CondH2.lagda.md
