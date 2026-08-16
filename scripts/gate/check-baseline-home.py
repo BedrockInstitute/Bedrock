@@ -118,6 +118,14 @@ SKIP_PREFIXES = ("archive", str(Path("agents") / "tasks" / "archive"))
 #: point of the epoch. One entry is a LIVE claim, dev/PLAN.md:502, quoting a
 #: superseded baseline as the bar of today: the owner was told 2026-08-16 and
 #: the entry exists only until the paragraph names the field instead.
+#:
+#: ONE ENTRY WAS RE-QUOTED, NOT ADDED, on 2026-08-16: the DD26 row. An
+#: unrelated repair rewrote `scripts/ledger.py` to `scripts/measure/ledger.py`
+#: inside it, eight characters, and the entry fell out of this set and the gate
+#: went red on a figure nobody had touched. That is the stated design working
+#: as written, and it has a cost worth knowing: ANY edit to a frozen line, for
+#: any reason, re-opens the whole line. Re-quote it and say why; do not widen
+#: the match.
 EPOCH = frozenset({
     # dev/JOURNAL.md:184
     'on the caliber the target was set with. Ratio **0.007913** s per line, plus',
@@ -126,7 +134,7 @@ EPOCH = frozenset({
     # dev/PLAN.md:502
     'in-fence lines. The delivered AC wing measures **0.007913 s/line**, from a',
     # dev/PLAN.md:615
-    "| DD26 | **THE CATALOGS ARE NOT COUNTED. `src/Everything.lagda.md` and `src/Landmarks.lagda.md` are excluded from EVERY size figure, past and future.** | **Ruled 2026-08-10 by the owner.** Both are indexes rather than mathematics: one is the import catalog with its per-chapter prose, the other states the two trophies and imports what proves them. **The reason is DRIFT, and it is the owner's:** a catalog GROWS WITH THE PROJECT, so a threshold measured against a total containing one drifts further from the mathematics it is meant to bound, and drifts in the direction that flatters the tree. **RETROSPECTIVE, by the owner's word:** the ruling re-bases figures already recorded, so `[LJ-0.4]`'s prerequisite is met at 16,897 rather than 16,995 and DD24's baseline is 0.007913 over 16,897 rather than 0.007904 over 16,916. **DD8's caliber is untouched:** non-blank lines inside ` ```agda ` fences, still. This ruling says which FILES that caliber runs over. **Enforced by `scripts/ledger.py`'s `UNCOUNTED` and `countable_masters()`**, which every size site now calls, and pinned by `scripts/tests/test_ratio_baseline.py` and `test_deletion_test.py`, whose assertion that Everything IS counted was flipped in the same commit. **The two-numbers discrepancy this ruling collapsed lives in `dev/JOURNAL.md`, 2026-08-14, under `DD26`.** |",
+    "| DD26 | **THE CATALOGS ARE NOT COUNTED. `src/Everything.lagda.md` and `src/Landmarks.lagda.md` are excluded from EVERY size figure, past and future.** | **Ruled 2026-08-10 by the owner.** Both are indexes rather than mathematics: one is the import catalog with its per-chapter prose, the other states the two trophies and imports what proves them. **The reason is DRIFT, and it is the owner's:** a catalog GROWS WITH THE PROJECT, so a threshold measured against a total containing one drifts further from the mathematics it is meant to bound, and drifts in the direction that flatters the tree. **RETROSPECTIVE, by the owner's word:** the ruling re-bases figures already recorded, so `[LJ-0.4]`'s prerequisite is met at 16,897 rather than 16,995 and DD24's baseline is 0.007913 over 16,897 rather than 0.007904 over 16,916. **DD8's caliber is untouched:** non-blank lines inside ` ```agda ` fences, still. This ruling says which FILES that caliber runs over. **Enforced by `scripts/measure/ledger.py`'s `UNCOUNTED` and `countable_masters()`**, which every size site now calls, and pinned by `scripts/tests/test_ratio_baseline.py` and `test_deletion_test.py`, whose assertion that Everything IS counted was flipped in the same commit. **The two-numbers discrepancy this ruling collapsed lives in `dev/JOURNAL.md`, 2026-08-14, under `DD26`.** |",
     # dev/PLAN.md:873
     '| LJ-0.5 | RE-MEASURE the DD24 baseline | DONE: 0.007913 over 16,897 | Three cold Landmarks runs, spread 2.15 s, +2.85% and inside the 1.15 bar. Caught a confound: make typecheck builds the wing too |',
     # dev/PLAN.md:970

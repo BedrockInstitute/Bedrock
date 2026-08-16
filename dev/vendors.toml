@@ -101,16 +101,37 @@ pi_fallback = "deepseek"
 # The row is added; `in_force` above is UNCHANGED, because they asked to add a
 # vendor and not to switch to one.
 #
-# THE PROVIDER IS `lmstudio` AND NOT `qwen`, MEASURED 2026-08-16, the same
-# trap the zai row records one screen above. `pi --list-models` prints the
-# model under the provider `lmstudio`; `pi auth check --provider qwen --model
-# qwen3.8-27b-mlx@8bit` returns `invalid`, and `pi auth check --provider
-# lmstudio --model qwen3.8-27b-mlx@8bit` returns `ready`, which is what
-# `pi_wired = true` records.
+# THE PROVIDER IS `mlxvlm`, CORRECTED 2026-08-16 ON THE OWNER'S INSTRUCTION
+# AND RE-MEASURED THE SAME DAY. It is the same trap the zai row records one
+# screen above, and this row fell into it twice.
 #
-# IT IS FLAT, and for a reason the other rows do not have: it runs LOCALLY
-# through LM Studio, so it bills no hours at all. A local model gives the
-# clock no basis, exactly as a subscription does.
+# WHAT THIS ROW SAID FIRST, and it is kept because a reason is not a record to
+# be tidied away: it read `lmstudio`, on a measurement taken earlier the same
+# day in which `pi auth check --provider lmstudio` returned `ready` and
+# `--provider qwen` returned `invalid`.
+#
+# WHAT `pi` ANSWERS NOW, re-run at the correction:
+#   pi auth check --provider mlxvlm   --model qwen3.8-27b-mlx@8bit  -> ready
+#   pi auth check --provider lmstudio --model qwen3.8-27b-mlx@8bit  -> invalid
+# The two answers are exactly reversed. `pi --list-models` lists the model
+# under `mlxvlm`, and the CONFUSION HAS A CAUSE worth writing down: the model
+# file lives under LM Studio's own directory
+# (`~/.lmstudio/models/Youssofal/Qwen3.8-27B-MTPLX-Optimized-Speed`), so the
+# storage path names LM Studio while the pi provider does not.
+#
+# `pi_wired = true` records the `mlxvlm` reading and nothing older.
+#
+# ONE THING IS NOT SETTLED AND THIS FILE DOES NOT INVENT IT. `pi --list-models`
+# now prints the model column as that absolute path rather than as
+# `qwen3.8-27b-mlx@8bit`, while `auth check` still answers `ready` for the
+# short ID. The model ID is the owner's to supply, so the short ID stands and
+# the discrepancy is reported rather than guessed.
+#
+# IT IS FLAT, and for a reason the other rows do not have: it runs LOCALLY, so
+# it bills no hours at all. A local model gives the clock no basis, exactly as
+# a subscription does. The runtime is NOT named here: only the provider name
+# and the model's storage path were measured, and this row said "through LM
+# Studio" on the strength of that path until 2026-08-16.
 #
 # WHAT `pi --list-models` MEASURED, 2026-08-16: context 262.1K, max output
 # 32.8K, thinking NO, images NO. The thinking column is the one that bears on
@@ -128,7 +149,7 @@ pi_fallback = "deepseek"
 # vendor, and an invented one would write a certainty no evidence gives.
 [vendors.qwen]
 model = "qwen3.8-27b-mlx@8bit"
-pi_provider = "lmstudio"
+pi_provider = "mlxvlm"
 pi_wired = true
 default_mode = "pi-subagent-mode"
 

@@ -427,6 +427,13 @@ LIVE_DOCS = ["AGENTS.md", "README.md", "CONTRIBUTING.md", "Makefile",
 # are broken instructions; the rest cost a reader one failed `cat`.
 RUNNABLE = re.compile(r"(?:python3?|\.venv/bin/python|make|run)\s+\S*$")
 
+# `scripts/foo.py` is the PLACEHOLDER the layout ruling is explained with, not
+# a path. The owner ruled option C on 2026-08-15: a pre-LJ-1.295 brief that
+# names the flat path is left dangling, no shim and no resolver, and
+# `scripts/README.md` says so using this name. Flagging it would ask the
+# document to stop explaining the ruling.
+PATH_SWEEP_EXEMPT = {"scripts/foo.py"}
+
 
 def sweep_paths() -> list[str]:
     """Dead `scripts/*.py` citations in the LIVE documents.
@@ -457,7 +464,14 @@ def sweep_paths() -> list[str]:
         for i, line in enumerate(read(p).split("\n"), 1):
             for m in SCRIPT_REF.finditer(line):
                 cited = m.group(0)
-                if cited in tracked:
+                # `archive/scripts/foo.py` CONTAINS `scripts/foo.py`, and the
+                # retired checkers are cited at their archive path correctly.
+                # Reading the substring as the citation reported three false
+                # positives on the sweep's own first run, which is the C-44
+                # class: a claim about the record that the record refutes.
+                if line[:m.start()].endswith(("archive/", "/")):
+                    continue
+                if cited in tracked or cited in PATH_SWEEP_EXEMPT:
                     continue
                 # Prefer a live sibling under scripts/ over a copy that a task
                 # directory happens to hold.

@@ -17,7 +17,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 |---|---|---|
 | `scripts/` (flat) | the modules scripts IMPORT BY NAME across groups | `agents_tree.py`, `repo_root.py` |
 | `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-agents-guard.py`, `check-archive-cited.py`, `check-baseline-home.py`, `check-build-manifest.py`, `check-dd18-survey.py`, `check-dd25-review-named.py`, `check-dd4-stated.py`, `check-dev-docs.py`, `check-fences.py`, `check-glossary.py`, `check-live-record-claims.py`, `check-live-territory.py`, `check-premises-stated.py`, `check-probes.py`, `check-rule-ids.py`, `check-task-index.py`, `check-tree.py`, `lint-agda.py`, `lint-prose.py` |
-| `scripts/dispatch/` | everything about running and auditing a dispatch | `check-dispatch-policy.py`, `check-sources-read.py`, `dd25-record.py`, `dispatch_policy.py`, `rules.py` |
+| `scripts/dispatch/` | everything about running and auditing a dispatch | `check-dispatch-policy.py`, `check-sources-read.py`, `dd25-record.py`, `dispatch_policy.py`, `recall-hook.py`, `rules.py` |
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh` |
@@ -448,6 +448,46 @@ section 6, step 2.
 python3 scripts/dispatch/check-sources-read.py LJ-1.6      # one or more task codes
 python3 scripts/dispatch/check-sources-read.py --all
 ```
+
+### `recall-hook.py`
+
+**The only enforcement point in this repository that fires while the brief is
+still being written.** Every other one fires at the commit or is the
+orchestrator's own intention. `dev/LESSONS.md` **C-59** names the disease: an
+enforcement point exists, and nothing carries its verdict to a decision.
+`[LJ-1.376]` measured the dominant detour class as the orchestrator's own live
+record unread, and `[LJ-1.377]`'s report says its gate cannot reach the moment
+that would have prevented it.
+
+It is a Claude Code hook, which is the one UNCONDITIONAL trigger in this
+toolchain. It adds no store, no index, no daemon, no port and no dependency: it
+re-runs `check-live-record-claims.py`, `check-premises-stated.py` and
+`check-dispatch-policy.py`, which are already in `make check`, and prints what
+they say.
+
+**It never blocks and never fails a turn; it always exits 0.** It fires on a
+brief write and on a task-shaped subagent dispatch, and is silent otherwise,
+because `[LJ-1.377]` measured two wider designs at 274 firings out of 274
+briefs and killed both: a gate that fires on everything trains pasting.
+
+**The wiring is owner-private and the script is tracked.** That split answers
+the defect `dev/memos/L3.32-context-layering.md` section 5 named against the
+last routing proposal, whose enforcement point sat in `.claude/`. Delete
+`.claude/settings.json` to turn the mechanism off.
+
+**Session-start injection is deliberately NOT shipped.** A generated session
+card is the shape of the dashboard the owner abolished on 2026-08-09, and the
+repository records no reason for that ruling.
+
+```sh
+python3 scripts/dispatch/recall-hook.py --print-settings   # the .claude/settings.json to place
+python3 scripts/dispatch/recall-hook.py --log             # what it has fired on so far
+```
+
+The log is one JSON line per firing, beside the dispatch registry rather than
+under `_build/`, which `make clean` empties. It exists so that this tool's own
+value becomes a measurement: count how many firings were followed by an edit to
+the same brief before its dispatch.
 
 ### `dd25-record.py`
 
