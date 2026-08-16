@@ -307,7 +307,8 @@ gch_wing_apriori = [7553, 11197]
 # it. CORRECTED 2026-08-15 by [LJ-1.265]: the old figure used a bar of
 # 0.013193 s/line, which is the OLD module rate 0.011472 times the 1.15
 # tolerance, and DD26 re-based the bar after that. The live bar is
-# `ac_baseline_module_rate` 0.009143 times 1.15, which is 0.010514, and
+# `ac_baseline_module_rate` 0.011828 times 1.15, which is 0.013602 (RESTORED
+# 2026-08-16 by the owner's ruling; it read 0.010514 from 2026-08-13), and
 # `scripts/measure/check-ratio.py:472-474` computes exactly that: `module_rate *
 # tolerance`. The code is the authority here, not any comment.
 #
@@ -2596,6 +2597,13 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # says so. The stale citation would now collide with the real DD25, which the
 # owner ruled on 2026-08-10 about escalating a negative codex return.
 [ratio]
+# THE ONLY HOME FOR DD24'S NUMBERS (the rule's home is the DD24 row in
+# dev/PLAN.md, which states no figure by design, amended 2026-08-16). The
+# applied bar is `ac_baseline_module_rate` times `tolerance`, computed at
+# scripts/measure/check-ratio.py and stated nowhere else;
+# scripts/gate/check-baseline-home.py refuses a live restatement of either
+# outside this file. A superseded figure is kept here as a record, with its
+# provenance, and never as a baseline.
 # THE BASELINE IS A MEASUREMENT, and the tool refuses to run without it.
 # Protocol: interface cache moved aside, `make typecheck` at the exported
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
@@ -2799,6 +2807,38 @@ ac_baseline_ghcrts = "-A64m -I0 -M8g"
 # got faster, because the sealed machinery is shared upstream: Choice/Internal
 # and Choice/Adequate together went 24.18 s to 14.09 s, minus 41.7 percent.
 #
+# RULED BY THE OWNER 2026-08-16, AND THE RE-MEASUREMENT ABOVE IS REVERSED.
+# The owner's words: DD24's bar is fixed from the seconds and the lines AT THE
+# MOMENT THE AC TROPHY LANDED, and once set it does not move however the AC
+# side is changed afterwards. So a cure that speeds the AC side does NOT
+# re-base the bar. The 2026-08-13 re-measurement did exactly that and the bar
+# has been 0.010514 since, about 13 percent tighter than the ruling allows.
+# `ac_baseline_module_rate` is restored to 0.011828 and
+# `ac_baseline_module_lines` to the 17,185 it was taken over.
+#
+# WHY THE OWNER'S RULE WAS ALREADY HERE AND STILL FAILED. The rule is stated
+# eight lines above, "the AC side was FIXED when its trophy landed". It was
+# implemented as a MEMBERSHIP guard only: the Landmarks cone gains no members,
+# MEASURED. Nothing stopped the SECONDS being re-measured on a changed tree,
+# so one recalibration moved a threshold the ruling had frozen. A rule that
+# names what may not JOIN must also name what may not be RE-TIMED.
+#
+# THE EARLIER TIGHTENING STANDS AND IS NOT THIS. The 17.7 percent above came
+# from six masters LEAVING the baseline for gch_wing, which is membership, and
+# the owner accepted it in those terms. The 22.7 percent below came from a
+# seal, which is not.
+#
+# WHAT THIS MEANS FOR THE VERDICT: the wing is judged against 0.013602, not
+# 0.010514, so part of the gap reported since 2026-08-13 was instrument and
+# not craft. Any figure quoting the old bar is stale; [LJ-1.364] found this.
+#
+# THE SUPERSEDED MEASUREMENT, KEPT AS A RECORD AND NOT AS A BASELINE:
+# 0.009143 s/line, 157.22 s over 17,197 lines, on the tree cured by
+# [LJ-1.147]'s seal of satGraphAt at src/L/Coding/Graph.lagda.md. That seal
+# made Choice/Internal and Choice/Adequate go 24.18 s to 14.09 s, minus 41.7
+# percent, because the sealed machinery is shared upstream. It is a true
+# figure about a later tree and it is not this bar.
+#
 # THE CURE MADE THE BAR HARDER TO CLEAR, and [LJ-1.147] said so before this ran
 # and marked it INFERRED on four masters. The measurement is worse than its
 # estimate. The GCH wing was 1.56x this baseline before the seal; it is about
@@ -2811,8 +2851,8 @@ ac_baseline_ghcrts = "-A64m -I0 -M8g"
 # 0.9 s per series, so every figure before 2026-08-13 evening carries it once.
 # Between-series uncertainty is 12.8 percent, which is most of DD24's 1.15x
 # tolerance, and check-ratio.py now prints its own spread.
-ac_baseline_module_rate = 0.009143
-ac_baseline_module_lines = 17197
+ac_baseline_module_rate = 0.011828
+ac_baseline_module_lines = 17185
 
 
 # THE COMPRESSION BAR, owner-set 2026-08-10 and RE-RULED to 17,000 the same

@@ -627,8 +627,15 @@ MODEL = VENDOR.model
 #: CODEX'S MODEL, FIXED. It is not the vendor in force and it never follows one:
 #: `~/.codex/config.toml` wires the deepseek provider alone, and codex refuses
 #: any other model BY NAME (`[LJ-1.296]`, MEASURED 2026-08-15). So the fallback
-#: row carries this and not `MODEL`. When codex gains another provider, this is
-#: the one line to change.
+#: row carries this and not `MODEL`.
+#:
+#: RULED BY THE OWNER 2026-08-16, and the ruling is STRONGER than the
+#: measurement it replaces. `[LJ-1.296]` reported a defect and refused to invent
+#: the field, so this line rested on what codex happens to accept today, and the
+#: comment said "when codex gains another provider, this is the one line to
+#: change". The owner's words: **codex uses DeepSeek, without exception.** So a
+#: new codex provider is NOT a reason to change this line. It changes on the
+#: owner's word and on nothing else, and `[LJ-1.296]`'s owed ruling is closed.
 CODEX_MODEL = "deepseek-v4-pro"
 
 # The provider name `pi` needs for the vendor in force. It is exposed so the

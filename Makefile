@@ -31,9 +31,9 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 dd25 gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 dd25 dd18survey gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 dd25 premises buildmanifest archivecited
+check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 dd25 premises buildmanifest archivecited dd18survey baselinehome
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -159,6 +159,19 @@ buildmanifest:
 archivecited:
 	$(PY) scripts/gate/check-archive-cited.py
 
+# DD18's amended enforcement (owner, 2026-08-16), [LJ-1.363]. The two halves
+# are deliberately unequal, and the asymmetry is DD4's own ruling that a
+# count is gamed the moment it gates. B2 GATES the return side: ARCHIVE USED
+# must name every archive path its brief cited, took or declined, and quote
+# one line read per archived file, verified at the cited line. B1 only PRINTS
+# the brief side: which briefs name none of the four corpora, and TEMPLATE
+# clusters of a bullet's reason text verbatim across five briefs. The frozen
+# epochs and their measured scale live in the checker's own comments; a
+# report still in progress is not judged, so a live dispatch never reddens
+# the commit gate. Cost: 0.6 s over 259 pairs, measured 2026-08-16.
+dd18survey:
+	$(PY) scripts/gate/check-dd18-survey.py
+
 dd4:
 	$(PY) scripts/gate/check-dd4-stated.py
 
@@ -186,6 +199,17 @@ dd25:
 # the gate, never at the writing moment.
 premises:
 	$(PY) scripts/gate/check-premises-stated.py
+
+# THE BASELINE-HOME GATE, [LJ-1.367], born 2026-08-16. DD24's numbers live
+# in dev/ledger.toml and nowhere else: a live claim names the field
+# (`ac_baseline_module_rate`, `tolerance`) and a record keeps its figure with
+# HISTORICAL(YYYY-MM-DD) on the line. The guarded figures are DERIVED from
+# the ledger at run time, so the gate catches the next figure and not only
+# today's. Pre-gate restatements are frozen and reported: 12 lines in live
+# files, and every task directory at or below LJ-1-367, because a brief and
+# a report are records written once.
+baselinehome:
+	$(PY) scripts/gate/check-baseline-home.py
 
 devdocs:
 	$(PY) scripts/gate/check-dev-docs.py

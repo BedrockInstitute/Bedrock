@@ -113,8 +113,9 @@ def main() -> int:
           cr.flips_verdict(0.0124, 0.0136, 0.0), False)
 
     print("a band flags exactly the rows whose swing crosses the bar")
-    # StageArith's own numbers: 0.0105 measured, 0.0136 bar. At the tail's
-    # 5.2 percent the verdict holds; at the first-run swing it does not.
+    # StageArith's own numbers, 2026-08-13: 0.0105 measured, 0.0136 the bar
+    # of that day. At the tail's 5.2 percent the verdict holds; at the
+    # first-run swing it does not.
     check("a tight tail keeps its UNDER verdict",
           cr.flips_verdict(0.01049, 0.0136, 0.052), False)
     check("the first-run swing crosses the bar",
@@ -169,23 +170,29 @@ def main() -> int:
     check_true("the refusal says so", "--runs must be 1 or more" in out)
 
     print("A NOISE TAG NEVER CHANGES THE EXIT CODE, in either direction")
-    # The bar is 0.011828 * 1.15 = 0.013602. A 100-line module at 1.36 s sits
-    # on the bar, so any spread at all makes it fragile.
-    on_bar = [("src/Landmarks.lagda.md", 100, [1.30, 1.42], None)]
+    # The bar is `ac_baseline_module_rate` times `tolerance`, READ from the
+    # ledger so this fixture cannot drift from the figure it pins. A 100-line
+    # module whose mean sits on the bar is fragile under any spread.
+    cfg = cr.config()
+    bar = cfg["ac_baseline_module_rate"] * cfg["tolerance"]
+    on_bar = [("src/Landmarks.lagda.md", 100,
+               [bar * 100 * 0.96, bar * 100 * 1.04], None)]
     code, out = run_main(["--module", "src/Landmarks.lagda.md", "--runs", "2",
                           "--check"], on_bar)
     check_true("a fragile row is named NOISE", "NOISE" in out)
     check("a fragile row within the bar still exits 0", code, 0)
 
     # Far OVER, and fragile is impossible there: the verdict must still fail.
-    over = [("src/Landmarks.lagda.md", 100, [9.0, 9.1], None)]
+    over = [("src/Landmarks.lagda.md", 100,
+             [bar * 100 * 5.0, bar * 100 * 5.1], None)]
     code, out = run_main(["--module", "src/Landmarks.lagda.md", "--runs", "2",
                           "--check"], over)
     check("a wing far over the bar still exits 1", code, 1)
     check_true("and it is not called NOISE", "NOISE" not in out)
 
     # Fragile AND over: the tag must not rescue it.
-    fragile_over = [("src/Landmarks.lagda.md", 100, [1.37, 1.50], None)]
+    fragile_over = [("src/Landmarks.lagda.md", 100,
+                     [bar * 100 * 1.01, bar * 100 * 1.11], None)]
     code, out = run_main(["--module", "src/Landmarks.lagda.md", "--runs", "2",
                           "--check"], fragile_over)
     check_true("a fragile OVER row is named NOISE", "NOISE" in out)
@@ -196,7 +203,8 @@ def main() -> int:
     # landed 9.3 percent apart. A row 5 percent from the bar with a 1 percent
     # own-spread is NOT established, and reporting only the own-spread would
     # have called it solid.
-    tight = [("src/Landmarks.lagda.md", 100, [1.30, 1.31], None)]
+    tight = [("src/Landmarks.lagda.md", 100,
+              [bar * 100 * 0.95, bar * 100 * 0.951], None)]
     code, out = run_main(["--module", "src/Landmarks.lagda.md", "--runs", "2"],
                          tight)
     check_true("a tight series near the bar is still NOISE", "NOISE" in out)

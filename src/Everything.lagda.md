@@ -137,6 +137,7 @@ import FOL.Absoluteness
 
 ```agda
 import FOL.ZFModel
+import FOL.Bernstein
 import FOL.Count
 ```
 
@@ -374,6 +375,7 @@ import L.Choice.Step
 import L.Cardinal
 import L.Absorption
 import L.GCH
+import L.CantorBernstein
 import L.Choice.Internal
 import L.Choice.Table
 import L.Choice.Faithful

@@ -3024,7 +3024,8 @@ cell a cold pair at one process, on ONE theorem with ONE set of hypotheses:
 | machine CONTENT projections (`StepAt-out`/`-in`) | **50.13 s, 0.334** | 13.34 s, 0.092 |
 | machine FORMULA readings (`extAt-out`/`-in`/`-in-both`) | 30.00 s, 0.297 | **1.32 s, 0.0108** |
 
-**Neither cure alone passes DD24's 0.013193 bar. Together they pass with
+**Neither cure alone passes DD24's bar, 0.013193 HISTORICAL(2026-08-11) and
+live on the day of the measurement. Together they pass with
 room: 38x in seconds, 31x in rate.** The orchestrator reproduced the endpoints
 independently at 49.79 s and 1.41 s.
 
@@ -3836,11 +3837,20 @@ zero.**
 
 **THE WARNING THAT COMES WITH IT, measured the same hour.** The seal was in
 SHARED upstream machinery, so the AC side gained 41.7 percent while the GCH wing
-gained 8 percent, and `ac_baseline_module_rate` fell 0.011828 to 0.009143. **The
+gained 8 percent, and `ac_baseline_module_rate` fell
+0.011828 to 0.009143, both HISTORICAL(2026-08-13). **The
 DD24 ratio therefore went 1.56x to 1.91x: every master got faster and the
 verdict got worse.** A cure in shared code improves a ratio only when the judged
 side gains MORE than the reference side. **That is a property of the bar, and it
-is the owner's to rule.** Related: [[P-t]], [[P-q]], [[P-s]].
+is the owner's to rule.**
+
+**THE OWNER REVERSED THE RE-BASING, 2026-08-16.** The fall above is a fact
+about a later tree, never about the bar: DD24's figures were fixed when the AC
+trophy landed, a cure to the AC side does not re-time them, and the second
+reading is kept in the `[ratio]` table as a superseded record, not as a
+baseline. The fall was repeated as a live bar for three days, and that is the
+drift `scripts/gate/check-baseline-home.py` now refuses. Related: [[P-t]],
+[[P-q]], [[P-s]].
 
 **Provenance:** `agents/tasks/LJ-1-147/lj-1.147-report.md`, its six raw run logs
 under `agents/tasks/LJ-1-147/runs/`, and `agents/tasks/LJ-1-145/lj-1.145-report.md`

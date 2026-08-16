@@ -45,8 +45,9 @@ module is one sample of a noisy instrument, and this tool used to print that
 sample as though it were the module's cost. It was not: the SAME module, on
 the SAME instrument, at the SAME GHCRTS, hours apart, has already flipped a
 DD24 verdict. `[LJ-1.135]` measured src/L/Ordinal/StageArith.lagda.md at
-0.0144 s per line, which is OVER the 0.0136 bar; the orchestrator measured it
-at 0.0124 the same day, which is UNDER. Nothing in the tree changed.
+0.0144 s per line, which is OVER the 0.0136 bar of that day, 2026-08-13; the
+orchestrator measured it at 0.0124 the same day, which is UNDER. Nothing in
+the tree changed.
 
 So the tool now says how many runs a figure rests on, and marks a row whose
 verdict the instrument's own swing can flip. It STILL RENDERS THE SAME
@@ -237,8 +238,9 @@ def measure(paths: list[str], cold: bool, ghcrts: str | None = None,
     found that shape: see the target-set note above and the two-rates note
     below. Discarding one warm-up run puts both sides on one instrument.
 
-    IT IS NOT A THRESHOLD CHANGE. DD24's bar and its 1.15x tolerance are
-    untouched and are the owner's. This changes only how faithfully the
+    IT IS NOT A THRESHOLD CHANGE. DD24's bar and its tolerance are untouched
+    and are the owner's, and both live in the ledger's `[ratio]` table; this
+    file computes and never states them. This changes only how faithfully the
     instrument reads. `--no-warmup` restores the historical behaviour exactly,
     and the discarded run is REPORTED rather than hidden.
 
