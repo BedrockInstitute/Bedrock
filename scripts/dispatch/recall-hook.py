@@ -39,10 +39,18 @@ EVENTS
                      `dev/ORCHESTRATION.md` section 1.1 records the hole and
                      `[LJ-1.11]` went out short two mandatory rules through it
 
-SESSION START IS DELIBERATELY ABSENT. A generated session card is the shape of
-the dashboard the owner ABOLISHED on 2026-08-09 (commit `0b10503`), and the
-repository records no reason for that ruling. It is not shipped until the owner
-rules on whether the abolition covers it.
+    SessionStart  startup, resume, clear or compact, and never a subagent
+                  -> the orchestrator card: the blocked rows and the open work
+                     as an INDEX, the return checklist, and which cheap gates
+                     are RED right now
+
+THE CARD IS AN INDEX AND NEVER A SUMMARY, ruled by the owner 2026-08-16 after
+he was shown both forms. A generated session card is the shape of the dashboard
+he ABOLISHED on 2026-08-09 (commit `0b10503`) for a reason the repository does
+not record, so the card states no claim of its own: a blocked row gets its
+code, its line and its length, and the reader opens it. An open-work headline
+is printed whole, because its author wrote it as a headline, and a wrapped one
+is REASSEMBLED rather than cut.
 
 THE FIRING LOG turns this tool's own value into a measurement instead of a
 claim. Every firing appends one JSON line beside the dispatch registry, which
@@ -311,18 +319,148 @@ def on_brief_written(path: Path) -> str:
 
 
 def open_work() -> list[str]:
-    """The open-work headlines of dev/PLAN.md section 0.0, with line numbers."""
+    """The open-work items of dev/PLAN.md section 0.0, as an INDEX.
+
+    A HEADLINE IS PRINTED ONLY WHEN ITS AUTHOR FINISHED IT. `dev/PLAN.md`
+    writes each item as `**N. HEADLINE**`, and some headlines run past the
+    line. A headline that does not terminate is NOT continued here and NOT
+    cut: the item gets its number and its line, and the reader opens it.
+
+    WHY, and it is measured rather than fastidious. `dev/JOURNAL.md`:938-959
+    records a four-word qualifier dropped in one hop, which turned a bounded
+    claim into an unbounded one on this very screen. A card that truncates a
+    claim manufactures that failure on a schedule.
+    """
     out: list[str] = []
     lines = (ROOT / "dev" / "PLAN.md").read_text(encoding="utf-8").split("\n")
     for i, line in enumerate(lines[:700], 1):
-        m = re.match(r"^\*\*(\d+)\. (.+)$", line)
-        if not m:
+        if not re.match(r"^\*\*\d+\. ", line):
             continue
-        head = re.sub(r"\*\*|`", "", m.group(2)).rstrip()
-        if not head.endswith((".", "!")) and i < len(lines):
-            head += " " + re.sub(r"\*\*|`", "", lines[i].strip())
-        out.append(f"  PLAN:{i}  item {m.group(1)}. {head[:170]}")
+        # THE HEADLINE IS THE BOLD SPAN THE AUTHOR CLOSED, not the rest of the
+        # line. A first version read to end-of-line and called six of eight
+        # headlines unfinished, because `dev/PLAN.md` continues the paragraph
+        # on the same line after the closing `**`.
+        #
+        # A WRAPPED HEADLINE IS REASSEMBLED, NOT CUT. Four of the eight run
+        # across two or three source lines, and joining them back to the
+        # closing `**` reproduces exactly what the author wrote. That is
+        # unwrapping, and it is the opposite of the truncation this card
+        # refuses to do.
+        num = re.match(r"^\*\*(\d+)\.", line).group(1)
+        span = " ".join(l.strip() for l in lines[i - 1:i + 2])
+        done = re.match(r"^\*\*(\d+)\. (.+?)\*\*", span)
+        if done:
+            head = re.sub(r"\s+", " ", re.sub(r"`", "", done.group(2))).strip()
+            out.append(f"  PLAN:{i:<5} item {num}. {head}")
+        else:
+            out.append(f"  PLAN:{i:<5} item {num}. "
+                       "(headline is not closed within three lines; read it there)")
     return out
+
+
+def blocked_rows() -> list[str]:
+    """The blocked-row table of section 0.0, as an INDEX and never a summary.
+
+    THESE ROWS ARE NOT SUMMARISED, and that is the whole design of this
+    section. MEASURED 2026-08-16: the three rows are 1,155, 806 and 527
+    characters. A 150-character cut keeps 13, 19 and 28 percent of them, and
+    what it drops first is the qualifier at the end of a clause. The code and
+    the line are enough to open the row; a truncated claim is worse than no
+    claim, because it reads as the claim.
+    """
+    out: list[str] = []
+    text = (ROOT / "dev" / "PLAN.md").read_text(encoding="utf-8").split("\n")
+    for i, line in enumerate(text[:520], 1):
+        m = re.match(r"^\| (`\[LJ-[\d.]+\][^|]*) \| (.+) \|$", line)
+        if m and "blocked on" not in line:
+            code = re.sub(r"[`\[\]]", "", m.group(1)).strip()
+            out.append(f"  PLAN:{i:<5} {code}  ({len(line)} characters, not summarised)")
+        if len(out) >= 3:
+            break
+    return out
+
+
+def return_checklist() -> list[str]:
+    """The numbered steps of dev/ORCHESTRATION.md section 6, headline only.
+
+    These ARE headlines by construction: the document writes each step as
+    `N. **Verb the thing**.` and this prints the bold span, whole.
+    """
+    out: list[str] = []
+    lines = (ROOT / "dev" / "ORCHESTRATION.md").read_text(
+        encoding="utf-8").split("\n")
+    inside = False
+    for line in lines:
+        if line.startswith("## 6. Handling a return"):
+            inside = True
+            continue
+        if inside and line.startswith("## 7."):
+            break
+        m = re.match(r"^(\d+)\. \*\*(.+?)\.?\*\*", line)
+        if inside and m:
+            out.append(f"  {m.group(1)}. {m.group(2)}")
+    return out
+
+
+#: The cheap gates the card may run at session start. Each costs well under a
+#: second. The slow ones are NAMED and not run, because a card that took ten
+#: seconds would be a card somebody turns off.
+CHEAP_GATES = [
+    ("premises", "scripts/gate/check-premises-stated.py"),
+    ("dd4", "scripts/gate/check-dd4-stated.py"),
+    ("ruleids", "scripts/gate/check-rule-ids.py"),
+    ("taskindex", "scripts/gate/check-task-index.py"),
+    ("dispatchpolicy", "scripts/dispatch/check-dispatch-policy.py"),
+]
+
+
+def on_session_start() -> str:
+    """The orchestrator card.
+
+    WHAT IT IS FOR. `dev/ORCHESTRATION.md` is 5,952 words and is the
+    orchestrator's own operating manual, and it loads at NO moment: `CLAUDE.md`
+    imports `AGENTS.md` and nothing else. MEASURED 2026-08-16: about 2,694
+    words reach a session unconditionally against 90,715 words of governing
+    text, which is 3.0 percent, and none of the 3 percent is this file.
+
+    IT IS AN INDEX, NOT A DASHBOARD, and the distinction is the owner's
+    2026-08-09 abolition. Nothing here is stored, nothing is generated onto
+    disk, nothing is a figure of its own: every line is a pointer with the
+    line number to open. The card cannot become a proxy for the record,
+    because it never states the record's claims.
+    """
+    sections: list[tuple[str, list[str]]] = []
+
+    sections.append((
+        "BEDROCK ORCHESTRATOR CARD, an INDEX and never a summary.",
+        ["  Regenerated from dev/PLAN.md and dev/ORCHESTRATION.md at session "
+         "start, so no figure here is recalled and no claim here is cut.",
+         "  dev/ORCHESTRATION.md is 5,952 words and loads at no other moment."]))
+
+    sections.append(("BLOCKED ROWS (dev/PLAN.md section 0.0). Open them; they "
+                     "are not summarised here:", blocked_rows()))
+    sections.append(("OPEN WORK, in dependency order. `dev/JOURNAL.md`"
+                     ":1026-1029 rules the cross-read on CONTENT, not on a "
+                     "name:", open_work()))
+    sections.append(("AT EVERY RETURN, in this order (dev/ORCHESTRATION.md "
+                     "section 6):", return_checklist()))
+
+    red: list[str] = []
+    for name, script in CHEAP_GATES:
+        code, _ = run([script])
+        if code != 0:
+            red.append(f"  RED NOW: make {name}   ({script})")
+    names = ", ".join(n for n, _ in CHEAP_GATES)
+    sections.append((
+        "GATE STATE, read now rather than assumed. C-59: a gate you do not run "
+        "is worth what a gate you do not have is worth, and nothing warns you:",
+        (red or [f"  green: {names}"]) +
+        ["  NOT RUN here, each costing seconds to minutes: typecheck, lint, "
+         "liveterritory, liverecord, dd18survey, tree, ledger. `make check` "
+         "stays the gate before any commit."]))
+
+    log_firing("session", "start", {"red_gates": len(red)})
+    return clip(sections)
 
 
 def on_in_harness_dispatch(prompt: str) -> str:
@@ -355,6 +493,12 @@ def on_in_harness_dispatch(prompt: str) -> str:
 
 SETTINGS = {
     "hooks": {
+        "SessionStart": [{
+            "matcher": "startup|resume|clear|compact",
+            "hooks": [{"type": "command", "timeout": 20,
+                       "command": "${CLAUDE_PROJECT_DIR}/.venv/bin/python "
+                                  "${CLAUDE_PROJECT_DIR}/scripts/dispatch/"
+                                  "recall-hook.py"}]}],
         "PostToolUse": [{
             "matcher": "Write|Edit|MultiEdit",
             "hooks": [{"type": "command", "timeout": 15,
@@ -415,6 +559,14 @@ def main() -> None:
     tin = payload.get("tool_input") or {}
 
     try:
+        if event == "SessionStart":
+            # THE CARD IS THE ORCHESTRATOR'S. A dispatched agent gets its rules
+            # from its brief, and a second copy is DD19's canonical-twice
+            # defect: two copies drift and a reader who finds one does not know
+            # the other exists.
+            if payload.get("agent_id") or payload.get("agent_type"):
+                sys.exit(0)
+            emit(event, on_session_start())
         if event == "PostToolUse" and tool in ("Write", "Edit", "MultiEdit"):
             fp = tin.get("file_path") or ""
             if fp and is_brief(Path(fp)):

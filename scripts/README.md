@@ -18,7 +18,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | `scripts/` (flat) | the modules scripts IMPORT BY NAME across groups | `agents_tree.py`, `repo_root.py` |
 | `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-agents-guard.py`, `check-archive-cited.py`, `check-baseline-home.py`, `check-build-manifest.py`, `check-dd18-survey.py`, `check-dd25-review-named.py`, `check-dd4-stated.py`, `check-dev-docs.py`, `check-fences.py`, `check-glossary.py`, `check-live-record-claims.py`, `check-live-territory.py`, `check-premises-stated.py`, `check-probes.py`, `check-rule-ids.py`, `check-task-index.py`, `check-tree.py`, `lint-agda.py`, `lint-prose.py` |
 | `scripts/dispatch/` | everything about running and auditing a dispatch | `check-dispatch-policy.py`, `check-sources-read.py`, `dd25-record.py`, `dispatch_policy.py`, `recall-hook.py`, `rules.py` |
-| `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `ledger.py`, `obligations.py` |
+| `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh` |
 
@@ -475,9 +475,17 @@ the defect `dev/memos/L3.32-context-layering.md` section 5 named against the
 last routing proposal, whose enforcement point sat in `.claude/`. Delete
 `.claude/settings.json` to turn the mechanism off.
 
-**Session-start injection is deliberately NOT shipped.** A generated session
-card is the shape of the dashboard the owner abolished on 2026-08-09, and the
-repository records no reason for that ruling.
+**The session card is an INDEX and never a summary**, and that distinction is
+what the owner's 2026-08-09 abolition of the dashboard bought. It states no
+claim of its own: a blocked row gets its code, its line and its character
+count, and the reader opens it. MEASURED at the design: the three blocked rows
+are 1,155, 806 and 527 characters, and a 150-character cut keeps 13, 19 and 28
+percent of them, dropping the qualifier at the end of a clause first, which is
+the failure `dev/JOURNAL.md`:938-959 records. An open-work headline IS printed,
+whole, because the author wrote it as a headline; where it wraps across source
+lines it is REASSEMBLED, which is unwrapping and not cutting. Ruled by the
+owner on 2026-08-16. It costs about 1,990 characters and 1.0 s per session, and
+it does not fire for a subagent.
 
 ```sh
 python3 scripts/dispatch/recall-hook.py --print-settings   # the .claude/settings.json to place
@@ -624,6 +632,47 @@ this one counter (a second implementation drifts, C-26).
 ```sh
 python3 scripts/measure/obligations.py --by-tree
 python3 scripts/measure/obligations.py src/L/Rud/Bridge.lagda.md
+```
+
+### `dispatch-usage.py`
+
+**Tokens per dispatch, joined from the agent's own session file.** The cost
+model of 2026-08-16 priced a dispatch at about 1,757 words of orchestrator
+prose and about 35 delivered Agda lines, and then named the one input a cost
+decision needs and could not supply: the registry record carries no usage
+field, and `dev/vendors.toml` holds price BANDS that nothing joins to a task
+code. This supplies the missing half.
+
+**It does not touch `dispatch.py`**, and that is a decision rather than
+caution. The data already exists in each agent's session file; `dispatch.py` is
+untracked and no gate reads it; and above all a field written at launch could
+only price dispatches from today forward, while this reads the history.
+MEASURED at the landing: **278 of 467 registry records priced, 59.5 percent**,
+237 joined by the record's `session` field and 41 by the pi session path the
+herdr log announces in its opening event.
+
+**THE TWO STORES HAVE OPPOSITE SEMANTICS AND BOTH WERE MEASURED, not read off a
+document.** codex writes a CUMULATIVE `total_token_usage`, measured strictly
+monotonic over 791 events rising to 391,252,172, so the LAST event is the run;
+summing them returns 347 times the truth. pi writes PER-TURN `usage`, measured
+not monotonic, so they are SUMMED; taking the last returns 121 times low.
+**The two also disagree about caching**: codex's `cached` is a SUBSET of
+`input`, pi's `cacheRead` is DISJOINT from it, and reading them alike made the
+aggregate `input - cached` come out negative at minus 245,596,874. That is how
+it was caught.
+
+**READ THE FRESH PAIR, NOT THE PROCESSED FIGURE.** Measured over the priced
+set: 9,656,291 tokens processed per dispatch at the median, of which **98.8
+percent are cache reads**. The pair a cost question needs is fresh input
+120,686 and output 96,085 per dispatch, both medians.
+
+**No cost figure.** `dev/vendors.toml` names price bands and carries no
+per-token rate, so money is not derivable here and none is invented (DD8).
+
+```sh
+python3 scripts/measure/dispatch-usage.py --summary
+python3 scripts/measure/dispatch-usage.py --task LJ-1.377
+python3 scripts/measure/dispatch-usage.py --json
 ```
 
 ### `check-unbound-hyp.py`
