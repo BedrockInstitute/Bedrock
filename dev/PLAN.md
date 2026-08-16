@@ -1233,10 +1233,12 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.343 | Repair the two vacuous telescopes | LANDED GREEN, 133.96 s, 20 IN AND 7 OUT | The two types are ONE type, proved by identity BOTH ways before any edit. 38 copies go stale, not two |
 | LJ-1.344 | Supply the repaired ties | BOTH SUPPLIED, 25 LINES, NO NEW FIELD | The closure needed stating one SORT up, not a new fact. Two more sites found |
 | LJ-1.346 | Land the tie supply, settle the access | LANDED GREEN FIRST TRY. THE BLOCK STAYS PRIVATE | A public access already existed, so the supply carries ZERO copies. Two telescopes shortened |
-| LJ-1.347 | Settle the arity-numeral conjunct | FALSE. THE WALL IS THE CASE SPLIT, NOT THE NUMERAL | Two lines apart: no split 1.73 s, with split 8 GB at 374 s. The eliminator is 1.64 s. Law C-58 |
+| LJ-1.347 | Settle the arity-numeral conjunct | FALSE. THE WALL IS THE CASE SPLIT. DD25 [LJ-1.352] | No split 1.73 s, with split 8 GB at 374 s, eliminator 1.64 s. Law C-58 |
 | LJ-1.350 | Probe ONE third-shape tie before funding 28 | DISPATCHED | LJ-1.347 counted 24 producers and 20 consumer slots, and priced the repair at about 280 insertions, INFERRED |
-| LJ-1.348 | Supply witK and graphWitK | NEITHER. witK is MEASURED FALSE, the cure unpayable. DD25 [LJ-1.349] | Delivered prose two chapters away states the hole in English. graphWitK INFERRED false |
-| LJ-1.349 | DD25 review of LJ-1.348's witK refutation | DISPATCHED | Three of six construction ties are now FALSE. I skipped this gate once already this session; not twice |
+| LJ-1.348 | Supply witK and graphWitK | NEITHER. witK FALSE, no uniform supplier. DD25 [LJ-1.349] UPHELD | Delivered prose two chapters away states the hole. graphWitK stays INFERRED |
+| LJ-1.351 | Measure graphWitK: 1 of 5 premise conjuncts inhabited | REGISTERED, held one turn behind LJ-1.352 |
+| LJ-1.352 | DD25 review of LJ-1.347's conjunct refutation | DISPATCHED | The same gate, the same discipline. A 24-site chain rests on this verdict being right |
+| LJ-1.349 | DD25 review of LJ-1.348's witK | UPHOLD, AND THE LAST ESCAPE IS CLOSED BY A TERM | The countermodel lives INSIDE the intended premise class, machine-checked |
 | LJ-1.345 | DD25 review of LJ-1.341's vacuity claim | UPHOLD. THE CHAPTER WAS EDITED ON A TRUE PREMISE | It rebuilt the countermodel itself and forced an honest cold check past a cache hit |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
 | LJ-1.331 | The RowTies probe, funded by its own gate | NO. ONE FIELD EXHAUSTS 8 GB WHERE A PARAMETER IS FREE | Not field count: two wall alone and four KFacts-shaped ones are green. Law C-55 |
