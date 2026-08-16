@@ -1236,9 +1236,14 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.347 | Settle the arity-numeral conjunct | FALSE. THE WALL IS THE CASE SPLIT. DD25 [LJ-1.352] SPLIT | Verdict upheld; its count and its repair reading are overturned. Law C-58 |
 | LJ-1.350 | Probe ONE third-shape tie before funding 28 | 8 INSERTIONS, 7 SHARED. 280 BECOMES 43, A FLOOR | Shapedness is NOT the bound; arityNumAtL is, and it is DELIVERED with both directions |
 | LJ-1.348 | Supply witK and graphWitK | NEITHER. witK FALSE, no uniform supplier. DD25 [LJ-1.349] UPHELD | Delivered prose two chapters away states the hole. graphWitK stays INFERRED |
-| LJ-1.351 | Measure graphWitK: 1 of 5 premise conjuncts inhabited | DISPATCHED | LJ-1.349 ruled the INFERRED verdict must be measured before it is believed |
+| LJ-1.351 | Measure graphWitK | FALSE, NOT VACUOUS. THE PREMISE IS A CLOSED TERM. DD25 [LJ-1.354] | All five conjuncts inhabited, first conclusion refuted |
+| LJ-1.354 | DD25 review of LJ-1.351's graphWitK | UPHOLD, AND THE WORD NEEDS NO QUALIFIER | The premise term uses no fact and is generic in the frame, so the falsity is uniform |
+| LJ-1.355 | Port the archived ambient csb into src/V | LANDED GREEN, 118 LINES, 1.39 s | 82 for the port against the archived 80, 21 for the corollary. Two ABSTRACT types, so no tower is named |
+| LJ-1.356 | A mechanism that SHOUTS when DD18 lapses | FOUR LAYERS, AND MY PREMISE OVERSTATED. DD25 review [LJ-1.357] | Gate the ENUMERATION, never the relevance. 256 of 256 fail R1 |
+| LJ-1.357 | DD25 review of LJ-1.356's design | OVERTURN. A LIVE CITATION IS NOT DD18 COMPLIANCE | There is no healthy half and my premise stands. R1 is a NEW rule, R4's counterfactual FALSE |
+| LJ-1.358 | Redesign the DD18 mechanism on LJ-1.357's corrected foundation | DISPATCHED | The core idea survived and three of four signals did not. A delivered checker also states a FALSE history |
 | LJ-1.352 | DD25 review of LJ-1.347's conjunct | SPLIT. THE VERDICT HOLDS, THE COUNT DOES NOT | 32 producers not 24, plus two sites in TwelveAgree. The repair reading is overturned by a term |
-| LJ-1.353 | Recon: how hard is L models Cantor-Bernstein | DISPATCHED | Owner's question. L models ZFC is delivered; the tree has ZERO Cantor and no coded surjection, MEASURED |
+| LJ-1.353 | Recon: L models Cantor-Bernstein | EXPENSIVE, ABOUT 650. BUT THE ARCHIVE DELIVERS AN AMBIENT csb | Port it at about 100 lines. The two rulings disagree because the packagings differ |
 | LJ-1.349 | DD25 review of LJ-1.348's witK | UPHOLD, AND THE LAST ESCAPE IS CLOSED BY A TERM | The countermodel lives INSIDE the intended premise class, machine-checked |
 | LJ-1.345 | DD25 review of LJ-1.341's vacuity claim | UPHOLD. THE CHAPTER WAS EDITED ON A TRUE PREMISE | It rebuilt the countermodel itself and forced an honest cold check past a cache hit |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |

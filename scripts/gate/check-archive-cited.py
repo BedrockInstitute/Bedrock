@@ -105,18 +105,28 @@ def main(argv: list[str]) -> int:
         for p, why in rows:
             print(f"  {p.relative_to(ROOT)}\n      {why}", file=sys.stderr)
         print("", file=sys.stderr)
-        print("A brief that surveys nothing is how [LJ-1.107] rebuilt 82 delivered lines of "
-              "CSB, and how three tasks priced levelIn without the 845-line comparable the "
-              "route's own recon had already marked ADAPTABLE.", file=sys.stderr)
+        print("A brief that surveys nothing is how three tasks priced levelIn without the "
+              "845-line comparable the route's own recon had already marked ADAPTABLE.",
+              file=sys.stderr)
         print("THIS IS A REPORT AND NEVER A GATE. It cannot tell whether an archive bears on "
               "a task, and a red gate would buy a pasted citation rather than a survey.",
               file=sys.stderr)
 
     # [LJ-1.353] THE NEXT DRIFT DOWN, and the owner found it the same way as the
     # first: by reading a brief this checker had passed. A section citing ONLY
-    # `archive/dev/` names the retired route's RECORDS. The failure this file
-    # exists for is `[LJ-1.107]` rebuilding 82 delivered lines of CSB out of
-    # `archive/src/`, and a task index cannot lead anybody to those lines.
+    # `archive/dev/` names the retired route's RECORDS, and a task index cannot
+    # lead anybody to a line of archived CODE.
+    #
+    # THE FOUNDING STORY THIS FILE TOLD FOR MONTHS WAS FALSE, and `[LJ-1.357]`
+    # measured it 2026-08-16. Both this printout and the comment here said
+    # `[LJ-1.107]` rebuilt 82 lines of CSB because nobody surveyed. It DID
+    # survey: `agents/tasks/LJ-1-107/lj-1.107-report.md:235-238` cites the T81
+    # survey and names the retired module and its size, "keep ours, 145 lines
+    # at the retired `L.Cardinal`", confirmed at
+    # `archive/dev/TASKS-archived.md:116`. It then CHOSE to build its own
+    # 97-line CSB for h-sets. A choice is not a lapse, and citing it as one
+    # taught every reader of this gate a history that did not happen. The
+    # levelIn case survives and is now the only case cited.
     # MEASURED 2026-08-16: ten briefs written in one session each cited exactly
     # ONE archive path, eight of them the SAME task index, and none cited a line
     # of archived CODE. One of the ten was a recon into Cantor-Schroeder-

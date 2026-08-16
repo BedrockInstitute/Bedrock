@@ -212,6 +212,38 @@ PRE_EPOCH = frozenset({
     "LJ-1-204", "LJ-1-208", "LJ-1-209", "LJ-1-212",
 })
 
+#: THE SECOND EPOCH, and it is a WORSE failure than the first, so it is
+#: recorded as its own event rather than appended to the set above. That set
+#: says "do not add to this set", and appending would have turned its own
+#: sentence, "reported once, never failed", into a false one.
+#:
+#: WHAT HAPPENED, MEASURED 2026-08-16 by the orchestrator, from `git log`:
+#: this gate was wired into `make check` at 2026-08-14 18:14 (`fdac167`,
+#: `[LJ-1.212]`). The FIRST brief to fail it, `LJ-1.217`, was committed at
+#: 2026-08-14 20:04, one hour and fifty minutes later. The LAST, `LJ-1.349`,
+#: at 2026-08-16 07:53. Twenty-one briefs failed across 38 hours, about one
+#: every two hours, and `PRE_EPOCH` was never touched in between, so no
+#: forgiveness was ever applied. `git log fdac167..HEAD` counts 187 commits.
+#:
+#: SO THE GATE WAS RED AND THE COMMITS WENT IN ANYWAY. `AGENTS.md` says
+#: `make check` is the gate before any commit. The orchestrator either did
+#: not run it or did not read its exit. The lapse is the ORCHESTRATOR's and
+#: not the authors' of these briefs: a dispatched agent never runs this gate.
+#:
+#: RULED by the repository owner 2026-08-16: freeze these and hold new
+#: briefs to the gate. The scale is written here rather than in a commit
+#: message so that it cannot be lost. Law C-59 carries the measurement.
+#: Do not add to this set either. A third epoch would say the ruling failed.
+SECOND_EPOCH = frozenset({
+    "LJ-1-217", "LJ-1-219", "LJ-1-220", "LJ-1-224", "LJ-1-226", "LJ-1-230",
+    "LJ-1-233", "LJ-1-235", "LJ-1-236", "LJ-1-247", "LJ-1-260", "LJ-1-275",
+    "LJ-1-283", "LJ-1-296", "LJ-1-307", "LJ-1-317", "LJ-1-322", "LJ-1-324",
+    "LJ-1-331", "LJ-1-340", "LJ-1-349",
+})
+
+#: The two epochs together are what the gate forgives. Nothing else is.
+FROZEN = PRE_EPOCH | SECOND_EPOCH
+
 
 def token_regex(token: str, mode: str) -> re.Pattern[str]:
     """The pattern for one table row, derived from the row's own words."""
@@ -315,7 +347,7 @@ def main(argv: list[str]) -> int:
         found = brief_findings(p, text)
         if found is None:
             continue
-        if p.parent.name in PRE_EPOCH:
+        if p.parent.name in FROZEN:
             backlog.append(p)
         else:
             defects.append((p, *found))
@@ -341,8 +373,9 @@ def main(argv: list[str]) -> int:
     note = "" if quiet else (
         f"; frozen: {', '.join(sorted(p.parent.name for p in backlog))}")
     print(f"check-premises-stated: {len(files)} briefs, {len(backlog)} "
-          f"frozen pre-epoch brief(s) with a trigger and no declared "
-          f"premises, 0 new defects{note}")
+          f"frozen brief(s) with a trigger and no declared premises across "
+          f"TWO epochs ({len(PRE_EPOCH)} + {len(SECOND_EPOCH)}), "
+          f"0 new defects{note}")
     return 0
 
 

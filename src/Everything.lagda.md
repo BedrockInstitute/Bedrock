@@ -166,6 +166,12 @@ import FOL.Count
   and power set; `V⊨ZF-impredicative`{.Agda} at that exact price, the headline
   `V⊨ZF`{.Agda} from the excluded middle, and by Diaconescu `V⊨ZFC`{.Agda} from
   choice alone.
+- `V.CantorBernstein`{.Agda}: two injections give a bijection. `Bernstein`{.Agda}
+  runs the chain construction at two arbitrary types under one set-ness
+  hypothesis, `cantor-bernstein`{.Agda} reads it at a small carrier, and
+  `MutualInj`{.Agda} turns a truncated pair of coded injections into the
+  bijection a set-theorist expects. The chapter names no tower, so both trophies
+  read it at their own types.
 <!--zh-->
 ## 第三部：累积层级实现 ZF(C)
 
@@ -174,6 +180,7 @@ import FOL.Count
 - `V.Collapse`{.Agda}：传递坍缩，沿成员递归并经载体过滤：映射连同封在读引理之后的计算律、作为集合的像及其传递性 (不需任何假设)，在传递载体之上的外延单射性与双向的隶属同构附唯一性，以及传递子集的逐点不动。凝聚章逐字实例化它。
 - `V.Smallness`{.Agda}：小性工具链：原子经库压缩，联结词与有界量词传递小性见证，`separateFromSmall`{.Agda} 是通往集合的唯一水管；`Δ₀-small`{.Agda} 让 Δ₀ 分离成为零公理定理 (`separateΔ₀`{.Agda})。
 - `V.Model`{.Agda}：本部之巅：库存换形，替换与强无穷白得，第零部的 `Impredicativity`{.Agda} 为全分离与幂集标价；`V⊨ZF-impredicative`{.Agda} 以此精确价格合龙，主打的 `V⊨ZF`{.Agda} 由排中律赎回，经 Diaconescu 的 `V⊨ZFC`{.Agda} 则单凭选择。
+- `V.CantorBernstein`{.Agda}：两条内射给出双射。`Bernstein`{.Agda} 在两个任意类型上跑链构造，只挂一条集性假设；`cantor-bernstein`{.Agda} 在小载体上读它；`MutualInj`{.Agda} 把一对截断的编码内射兑成集合论者预期的那个双射。本章不提及任何塔，故两个奖杯各按自己的类型读它。
 <!--/-->
 
 ```agda
@@ -182,6 +189,7 @@ import V.Presentation
 import V.Collapse
 import V.Smallness
 import V.Model
+import V.CantorBernstein
 ```
 
 <!--en-->

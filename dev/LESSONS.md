@@ -4413,6 +4413,56 @@ carries the digest.
 permanently, in a project whose first trophy exists to PROVE choice rather than
 assume it. **And the cost is asymmetric: an axiom admitted needlessly is
 
+### C-59. A gate you do not run is worth exactly what a gate you do not have is worth, and nothing warns you
+
+**Rule:** **Run the gate and read its EXIT, before every commit.** A gate wired
+into `make check` reports nothing to anybody until somebody runs it. **It does
+not escalate, it does not nag, and it goes red silently for as long as you let
+it.** **Never pipe a gate's output into `tail` or `head` and read the exit code
+of the pipe**: the shell gives you the exit of the LAST command, so a failing
+gate reports success.
+
+**The measurement, `[LJ-1.212]`'s own gate turned on the orchestrator,
+2026-08-16, all figures from `git log`.**
+
+| what | when |
+|---|---|
+| `check-premises-stated.py` wired into `make check` | 2026-08-14 18:14, `fdac167` |
+| the FIRST brief to fail it, `LJ-1.217`, committed | **2026-08-14 20:04, one hour and fifty minutes later** |
+| the LAST, `LJ-1.349`, committed | 2026-08-16 07:53 |
+| briefs that failed, over 38 hours | **21, about one every two hours** |
+| times `PRE_EPOCH` was touched in between | **0, so no forgiveness was ever applied** |
+| commits landed after the wiring | **187** |
+
+**So the gate was red for 38 hours and 187 commits went in.** `AGENTS.md` says
+`make check` is the gate before any commit. **Nothing in the tree noticed,
+because noticing is the thing a gate cannot do for you.**
+
+**The second half is mechanical and it is the half that hid the first.** The
+red was found only when `make check` ran without a pipe. **The run before it
+piped to `tail -40`, which reported `exit code 0` while `make` had printed
+`Error 1` inside the discarded output.** Two runs of the same command, two
+opposite answers, and the difference was a pipe.
+
+**What to do.**
+
+1. **Run `make check` in the background before a commit, never in the
+   foreground** (`dev/PLAN.md` DD15), and **read the EXIT, not the tail.**
+2. **A gate that has been red since it was wired is not a backlog, it is a
+   gate nobody ran.** Date the first failure against the wiring commit before
+   you call it anything else. Those two timestamps are the whole diagnosis.
+3. **When a lapse is forgiven, write its SCALE into the code that forgives
+   it.** The epoch's own comment is where the number survives; a commit
+   message is not read again.
+
+**Why it belongs beside DD18's decay.** `[LJ-1.356]` measured a rule whose gate
+was GREEN and meaningless; this is a rule whose gate was RED and unread. **Both
+are the same disease at different signs: an enforcement point exists, and
+nothing carries its verdict to a decision.** **A rule's enforcement point must
+name who READS it, or it enforces nothing.**
+
+Related: [[C-48]], [[C-45]], [[C-53]], [[C-44]].
+
 ### C-58. A pattern-match case split on a numeral index can exhaust 8 GB where the library eliminator is free
 
 **Rule:** When a proof splits on a numeral index, **write the split with the
