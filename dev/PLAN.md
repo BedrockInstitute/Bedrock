@@ -1234,9 +1234,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.344 | Supply the repaired ties | BOTH SUPPLIED, 25 LINES, NO NEW FIELD | The closure needed stating one SORT up, not a new fact. Two more sites found |
 | LJ-1.346 | Land the tie supply, settle the access | LANDED GREEN FIRST TRY. THE BLOCK STAYS PRIVATE | A public access already existed, so the supply carries ZERO copies. Two telescopes shortened |
 | LJ-1.347 | Settle the arity-numeral conjunct | FALSE. THE WALL IS THE CASE SPLIT. DD25 [LJ-1.352] | No split 1.73 s, with split 8 GB at 374 s, eliminator 1.64 s. Law C-58 |
-| LJ-1.350 | Probe ONE third-shape tie before funding 28 | DISPATCHED | LJ-1.347 counted 24 producers and 20 consumer slots, and priced the repair at about 280 insertions, INFERRED |
+| LJ-1.350 | Probe ONE third-shape tie before funding 28 | 8 INSERTIONS, 7 SHARED. 280 BECOMES 43, A FLOOR | Shapedness is NOT the bound; arityNumAtL is, and it is DELIVERED with both directions |
 | LJ-1.348 | Supply witK and graphWitK | NEITHER. witK FALSE, no uniform supplier. DD25 [LJ-1.349] UPHELD | Delivered prose two chapters away states the hole. graphWitK stays INFERRED |
-| LJ-1.351 | Measure graphWitK: 1 of 5 premise conjuncts inhabited | REGISTERED, held one turn behind LJ-1.352 |
+| LJ-1.351 | Measure graphWitK: 1 of 5 premise conjuncts inhabited | DISPATCHED | LJ-1.349 ruled the INFERRED verdict must be measured before it is believed |
 | LJ-1.352 | DD25 review of LJ-1.347's conjunct refutation | DISPATCHED | The same gate, the same discipline. A 24-site chain rests on this verdict being right |
 | LJ-1.349 | DD25 review of LJ-1.348's witK | UPHOLD, AND THE LAST ESCAPE IS CLOSED BY A TERM | The countermodel lives INSIDE the intended premise class, machine-checked |
 | LJ-1.345 | DD25 review of LJ-1.341's vacuity claim | UPHOLD. THE CHAPTER WAS EDITED ON A TRUE PREMISE | It rebuilt the countermodel itself and forced an honest cold check past a cache hit |
