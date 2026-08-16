@@ -3181,5 +3181,47 @@ gch_wing = [
   "src/L/BoundedSubset.lagda.md",             # [LJ-1.49], 1,409 in-fence
   "src/L/Condensation/TwelveAgree.lagda.md",  # [LJ-1.76], 309 in-fence, 0.0993 s/line
   "src/L/Condensation/UpperAgree.lagda.md",   # [LJ-1.76], 268 in-fence, 0.0478 s/line
-  "src/L/Condensation/LowerAgree.lagda.md",   # [LJ-1.76], 265 in-fence, 0.0899 s/line
+  "src/L/Condensation/LowerAgree.lagda.md",
+  # COMPLETED AGAIN 2026-08-16, and the same defect had recurred at four times
+  # the scale. TWELVE masters had landed since the 2026-08-13 completion and
+  # none was declared, so the subtraction that picks the AC baseline counted
+  # 3,815 lines of GCH work as AC SIDE. `scripts/tests/test_ratio_baseline.py`
+  # was RED on all three of its partition assertions and nothing reported it,
+  # because `make test` did not run that suite until this day.
+  #
+  # THE CRITERION IS THE ONE ABOVE and it was checked rather than assumed. The
+  # consumer graph of these twelve is CLOSED: every master consumer is either
+  # `src/Everything.lagda.md`, which DD26 excludes from every size figure, or
+  # another of the twelve, or `src/L/Condensation.lagda.md`, which is already
+  # wing. NOT ONE has a consumer inside the cone of `src/Landmarks.lagda.md`,
+  # which is what the AC side IS. So the second half of the criterion holds for
+  # the cluster as a whole, and the first half is `src/L/GCH.lagda.md`: the
+  # trophy statement, with the cardinal and coding machinery that feeds it.
+  #
+  # THE CONSEQUENCE IS ACCEPTED AND NOT SOFTENED, as it was on 2026-08-13:
+  # declaring them puts them under DD24 immediately, and it raises the wing's
+  # line count from 12,080 to 15,895, which raises the wing's on-bar allowance.
+  # THE SECONDS SIDE IS NOT MEASURED HERE. `scripts/measure/check-ratio.py` is
+  # the tool that prices them and it is deliberately outside `make check`.
+  #
+  # TWO ARE TEMPLATE-CONTENT CANDIDATES and they are named so the judgement is
+  # visible rather than buried: `src/V/CantorBernstein.lagda.md` and
+  # `src/FOL/Bernstein.lagda.md` are generic Cantor-Bernstein, which is content
+  # both towers want, and that is the shape of the exception this list once
+  # made for `src/L/Ordinal/StageArith.lagda.md`. That exception did not
+  # survive: StageArith sits in this list today, because the partition must be
+  # TOTAL or the subtraction has no home for a master. Move either one out and
+  # the partition breaks until another home exists for it.
+  "src/L/GCH.lagda.md",                 # the GCH trophy statement, 58 in-fence
+  "src/L/Cardinal.lagda.md",            # 204 in-fence; consumed by GCH, Absorption, CantorBernstein
+  "src/L/CantorBernstein.lagda.md",     # 40 in-fence; the L-side statement
+  "src/V/CantorBernstein.lagda.md",     # 140 in-fence; TEMPLATE CANDIDATE, see above
+  "src/FOL/Bernstein.lagda.md",         # 336 in-fence; TEMPLATE CANDIDATE, see above
+  "src/L/Absorption.lagda.md",          # 526 in-fence
+  "src/L/InjChain.lagda.md",            # 502 in-fence
+  "src/L/Coding/Injection.lagda.md",    # 238 in-fence; feeds Cardinal, InjChain, Absorption
+  "src/L/Coding/Key.lagda.md",          # 690 in-fence
+  "src/L/Coding/EnvSupply.lagda.md",    # 835 in-fence
+  "src/L/Coding/Bound.lagda.md",        # 128 in-fence; already consumed by the wing's Condensation
+  "src/L/Coding/KeyRead.lagda.md",      # 118 in-fence   # [LJ-1.76], 265 in-fence, 0.0899 s/line
 ]

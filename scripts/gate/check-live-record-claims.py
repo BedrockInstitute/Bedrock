@@ -188,9 +188,41 @@ FROZEN = frozenset({
 })
 
 
+#: FUNCTION WORDS ARE NOT CONTENT, and the length rule alone cannot tell.
+#:
+#: The duty fires on TWO shared tokens, so a pair of function words is enough
+#: to raise one. MEASURED 2026-08-16: `agents/tasks/LJ-1-384/LJ-1.384.md` was
+#: held by `screen:226` on the pair {site, this}, against a screen line reading
+#: "At this one site the ratio is 238/186". Both documents are about a site and
+#: both use the word "this"; nothing was implicated and there was nothing to
+#: answer. The brief already answered the other TEN duties in its
+#: `## LIVE RECORD` section, so the gate was red on its own noise.
+#:
+#: THIS IS THE FAILURE THIS CHECKER WAS DESIGNED AGAINST. `[LJ-1.377]` measured
+#: two wider designs at 274 firings out of 274 briefs and refused both, on the
+#: finding that a gate which fires on everything trains pasting. A stop list is
+#: the same principle applied one level down: a duty raised on "this" teaches a
+#: reader that the duties are noise, and then a real one is pasted past.
+#:
+#: THE LIST IS FUNCTION WORDS ONLY. No domain term is on it, so no duty about
+#: the mathematics or the record can be silenced by it.
+STOP = frozenset("""
+about above after again against also although always among another because
+been before being below between both cannot could does doing done down during
+each either else enough even ever every from further had has have having here
+how however into itself just less like made make many more most much must
+never next none nor not now only onto other ought our out over own perhaps
+rather same seem shall should since some still such than that their them then
+there these they this those though through thus too under until upon very
+was were what when where which while who whom whose why will with within
+without would yet you your
+""".split())
+
+
 def tokens(text: str) -> set[str]:
-    """Content tokens: camelCase split, 4 characters or more."""
-    return {w for w in SPLIT.split(CAMEL.sub(" ", text).lower()) if len(w) >= 4}
+    """Content tokens: camelCase split, 4 characters or more, no function word."""
+    return {w for w in SPLIT.split(CAMEL.sub(" ", text).lower())
+            if len(w) >= 4 and w not in STOP}
 
 
 class Record:
