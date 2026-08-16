@@ -183,7 +183,7 @@ goal's status from a sub-item's.
 It also carries the **gate-debt** counter. A full `agda src/Everything.lagda.md` costs not its
 twelve background minutes but the **quiet tree** it needs for all of them: no agent may write a
 master while it runs, so every full gate costs one dispatch window. Full gates are therefore
-batched (`dev/PLAN.md` D28), and this reports whether one is due.
+batched (`archive/dev/DECISIONS-archived.md`, archived D28), and this reports whether one is due.
 
 ```sh
 python3 scripts/gate/check-tree.py --check            # every invariant (make check and the hook)

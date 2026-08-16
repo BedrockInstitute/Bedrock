@@ -132,14 +132,14 @@ AGENTS_WORD_CAP = 2300   # raised from 2,200 by the owner 2026-08-10. WHAT DID
                          # first cut its own new text from 2,368 to 2,257; the
                          # residue is the irreducible cost of a second
                          # audience. The failed state was 3,450
-PLAN_CELL_WORD_CAP = 1600  # largest cell is D28 at 572 words; the failed
+PLAN_CELL_WORD_CAP = 1600  # largest cell is archived D28 at 572 words; the failed
                            # state was 12,634
 PLAN_GOAL_ROW_CHAR_CAP = 1200  # the L3.32 target-form row is 1,001 chars, so
                                # 1,200 is that exemplar plus one legit edit;
                                # the failed state was 6,966 (L3.32-F5)
 
 # ---- sweep-only lines -------------------------------------------------------
-EPISODE_SCALE = 600   # largest ruling-class cell (D28) is 572; +5% margin
+EPISODE_SCALE = 600   # largest ruling-class cell (archived D28) is 572; +5% margin
 
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 SECTION0 = re.compile(r"^## 0\. (.*)$", re.M)

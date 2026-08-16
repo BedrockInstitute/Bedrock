@@ -353,7 +353,7 @@ def main(argv: list[str]) -> int:
             return 0
         print(f"check-tree: since {base[:9]}, {n} commit(s) and about {added} added lines "
               f"under src/.")
-        print("  Batch trigger (D28): a full gate is due at 3 to 4 returns or about 1,000 "
+        print("  Batch trigger (archived D28): a full gate is due at 3 to 4 returns or about 1,000 "
               "added lines, whichever comes first, because each gate costs one quiet "
               f"dispatch window. Currently {'DUE' if (n >= 4 or added >= 1000) else 'not yet due'}.")
         return 0

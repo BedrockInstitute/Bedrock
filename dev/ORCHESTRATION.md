@@ -223,7 +223,13 @@ Standing clauses that go in every build or probe brief:
 - **D-1**: write the probe in `agents/tasks/<TASK>/`, the SAME directory that
   already holds this brief, and never in `src/`; your report goes there too, so
   one task is one directory; the verdict still goes in the report; write the
-  deliverable incrementally, never at the end (C-22).
+  deliverable incrementally, never at the end (C-22). **A dispatched report's
+  first line reads `Status: IN PROGRESS` until it is finished, and
+  `scripts/gate/check-dd18-survey.py` waits for it until then.** Without that
+  line the gate falls back to the file's mtime, which is a backstop and not a
+  contract: on 2026-08-16 it judged `[LJ-1.368]`'s report a failure while the
+  agent was still writing it, and `make check` went red on a defect that did
+  not exist.
 - **D-10**: check the target's truth at the intended generality before proving
   it, and record any correction beside the original.
 - **DD8**: name the block's widest unmeasured term and the probe that would

@@ -86,6 +86,7 @@ from __future__ import annotations
 
 import re
 import sys
+import time
 from pathlib import Path
 
 # LJ-1.291: the root is found by walking up to the repository marker, never by
@@ -106,6 +107,7 @@ from repo_root import find_root  # noqa: E402
 
 ROOT = find_root(__file__)
 TASKS = ROOT / "agents" / "tasks"
+PLAN = ROOT / "dev" / "PLAN.md"
 
 #: The first task code this gate judges. LJ-1-363 is the first dispatch whose
 #: brief quotes the amended row AND whose checker existed when it was written.
@@ -180,6 +182,29 @@ QUOTE = re.compile(
 #: task's report carries this line and the gate waits for the return.
 IN_PROGRESS = re.compile(r"(?im)^\**\s*status\s*:?\s*\**\s*in[\s-]?progress")
 
+#: [LJ-1.371] defect 3, the mtime backstop. On 2026-08-16 at 12:57:33 this
+#: gate failed LJ-1-368's report while its agent was still writing it, because
+#: the report carried no status line at all and no dispatched agent is told to
+#: write one: "a marker nobody specifies is luck, not a mechanism"
+#: (`agents/tasks/LJ-1-371/lj-1.371-report.md:75`). So the file's own mtime
+#: backs the marker up: a GATED report younger than BACKSTOP_SECONDS whose
+#: PLAN task-index row still reads DISPATCHED is mid-write, not judged. The
+#: row conjunct is load-bearing, not decoration: LJ-1.371's own report sat
+#: 5.8 minutes old on 2026-08-16 with its row already flipped to a verdict,
+#: and judging it was correct. The skip dies at the audit turn, where the row
+#: takes its verdict before the commit that lands the report.
+BACKSTOP_SECONDS = 600
+
+#: The status column of a task-index row, matched EXACTLY after bold and
+#: space are stripped. The live index holds `REGISTERED, NOT DISPATCHED`
+#: (LJ-1.271) and `STOP: CURED FIVE DISPATCHES AGO` (LJ-1.177), and a
+#: substring test would read both as live. Scoped to the `### Task index`
+#: section only, because the master status table above it reuses the
+#: `LJ-1.<n>` code shape for goals.
+STATUS_ROW = re.compile(
+    r"^\| (LJ-\d+\.\d+[a-z]*(?:-R)?) \|[^\n|]*\| *([^|\n]*?) *\|", re.M)
+TASK_INDEX = re.compile(r"^### Task index.*?(?=^### |^## )", re.S | re.M)
+
 #: The four corpora, as B1 reads them in a brief's ARCHIVE section. CODE is
 #: any archive path that is not one of the record indexes, PLUS `dev/ARCHIVE.md`,
 #: which DD18 names inside the same corpus; the first design missed it and
@@ -212,6 +237,26 @@ def code_of(path: Path) -> int:
     """The task's number, LJ-1-363 -> 363. Zero when the name carries none."""
     m = re.search(r"(\d+)$", path.name.split("-")[-1])
     return int(m.group(1)) if m else 0
+
+
+def row_dispatched(dir_name: str) -> bool:
+    """Does this task's PLAN task-index row still read DISPATCHED?
+
+    Degrades to False, the judge-anyway direction, when PLAN cannot be read
+    or the task has no row: DD19 puts the row there before dispatch starts,
+    so a task without one is a check-task-index defect, not a reason to stop
+    judging returns.
+    """
+    try:
+        block = TASK_INDEX.search(PLAN.read_text(encoding="utf-8"))
+    except OSError:
+        return False
+    if block is None:
+        return False
+    for code, status in STATUS_ROW.findall(block.group(0)):
+        if code.upper().replace(".", "-") == dir_name.upper():
+            return status.replace("*", "").strip() == "DISPATCHED"
+    return False
 
 
 def section_of(text: str, name: str) -> str:
@@ -480,6 +525,13 @@ def main(argv: list[str]) -> int:
             continue
         head = "\n".join(report.read_text(encoding="utf-8").splitlines()[:15])
         if IN_PROGRESS.search(head):
+            live.append(d.name)
+            continue
+        # [LJ-1.371] defect 3: the mtime backstop. A gated report younger
+        # than BACKSTOP_SECONDS whose PLAN row still reads DISPATCHED is
+        # mid-write, so it is not judged, exactly like the marker path above.
+        if (code >= FIRST_GATED_CODE and row_dispatched(d.name)
+                and time.time() - report.stat().st_mtime < BACKSTOP_SECONDS):
             live.append(d.name)
             continue
         defects, _ = b2_findings(brief, report, code >= FIRST_GATED_CODE)

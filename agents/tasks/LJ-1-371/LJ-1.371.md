@@ -82,13 +82,23 @@ in-harness dispatches from the task index and the logs; do not guess.**
 
 ## PREMISES
 
-- **An in-harness dispatch passes through no tool**, at `dev/PLAN.md` DD17 and
+> **BASES COMPLETED IN PLACE 2026-08-16, AND ONLY THE BASES.** As dispatched,
+> three of these four named a file without a line and one named no file at all.
+> `check-premises-stated.py` refused the brief for exactly that, correctly: its
+> rule is one premise per line WITH a basis at `file:line`, and a premise with
+> no line is one nobody can check. **The premises themselves are unchanged and
+> the agent read them as written; only the citations are completed here.**
+> `[LJ-1.371]` verified all four regardless, which is why this is a format
+> defect and not a substance one.
+
+- **An in-harness dispatch passes through no tool**, at `dev/PLAN.md:607` and
   measured by `[LJ-1.356]`.
 - **`gate-ready` gave a false green today**, at
-  `.claude/skills/codex-dispatch/dispatch.py`, the `gate-ready` command.
+  `.claude/skills/codex-dispatch/dispatch.py:2218`, the `gate-ready` command.
 - **`check-dd18-survey.py` gave a false red today** on `LJ-1-368`, at
-  `scripts/gate/check-dd18-survey.py`.
-- **`dispatch.py`'s refusals are dead for an in-harness dispatch.**
+  `scripts/gate/check-dd18-survey.py:1`.
+- **`dispatch.py`'s refusals are dead for an in-harness dispatch**, at
+  `.claude/skills/codex-dispatch/dispatch.py:2278`.
 
 **Mark each VERIFIED or REFUTED at `file:line`.**
 
