@@ -33,7 +33,7 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 - **Toolchain parity:** both repos use Agda 2.8.0 + cubical 0.9; all source
   modules are `--cubical --guardedness`. No toolchain migration is needed.
 
-## 0.0 WHERE LJ-1 STANDS, rewritten 2026-08-14
+## 0.0 WHERE LJ-1 STANDS, rewritten 2026-08-16
 
 **This screen holds the LATEST state and nothing else.** What it replaces sits
 in `dev/JOURNAL.md` under its date. The 2026-08-13 resumption block is SPENT
@@ -47,6 +47,69 @@ and all four of its items returned; that record is in the journal.
 | `[LJ-1.7]` | **IT COSTS ABOUT 400 LINES, AND THE PRICE WAS ALREADY IN THIS SECTION** (`[LJ-1.251]`). **The words CHAPTER, TWO LEMMAS, LEAF SUPPLY and STEP 6 all name ONE OBJECT:** `agents/tasks/LJ-1-173/lj-1.173-report.md:857` says step 6 IS the 28 fields, and **open work item 1 below has read「Step 6 re-prices at about 255 and is UNBUILT」all along.** **The figure: about 400**, being 255 for the 28 fields plus a 147-line delivered comparable (`agents/tasks/LJ-1-124/ProbeLJ1124A.agda`, six directions green). **Unpriced tail:** `LeafAgree`'s 14 site facts, `SF`, and `[LJ-1.199]`'s `ω ∈ σ` term. **`sucK` is inside the 28 and is the known 8 GB waller.** **Per-tower share about 28 lines, about 7 percent**, split by `[LJ-1.113]:219-239` before this chain began. **`[LJ-1.249]`'s port is green and re-sited 30 known-good lines; its `ψs` and `ψa` are BARE at `ProbeLJ1249.agda:150-152` and so is `SF`, so it has THREE unsupplied interfaces, not two.** **`[LJ-1.240]`'s inhabitability finding is INFERRED, not MEASURED: its probe never ran.** **`[LJ-1.233]:247` calls `TwelveAgree:519-522` stale; `[LJ-1.251]` checked and the COMMENT is true at HEAD** |
 | `[LJ-1.8]`, the trophy | **ROUTE A-PRIME HAS A PRICE: 1,089 LINES** (`[LJ-1.253]`), and it is the first price this route has ever had. `54 + 186 + 26 + 43 + 348 + 399 + 33`. **THE READING RESIDUE IS ZERO**, down from 555 this morning. **Both remaining gaps DISSOLVED rather than closing:** A4's inferred 30-line master gap does not exist, and A6's 47 was a DOUBLE-COUNT of the very graph `[LJ-1.217]` later measured at 296, so A6 is 103 plus 296 and not 150 plus 296. **A6 falls 446 to 399 and A7 falls 47 to 33.** **Five objects dissolved this month** and two of them are inside A5's 348. **Per-tower half: 146 to 196** (`[LJ-1.251]`'s band, because `[LJ-1.248]`'s partition is a survey and excludes A5). **What is UNBUILT: A4's master, A5's 348 and A6's 399.** A1, A2, A3 and A7 exist as green probes |
 | `[LJ-1.9]`, the audit | **ANSWERED** (`[LJ-1.218]`, corrected by `[LJ-1.222]`). The wing is **1.70x**, 185.41 s over 11,926 lines, and the gap to DD24's bar is **60.0 s**, an upper bound taken on a loaded machine. `dev/ledger.toml` carries `lines_removable = 83`, of which 64 are unaudited against D-27. **DD24 is the whole rule** (owner, 2026-08-14): the bar was fixed when the AC trophy landed, it does not drift, every GCH module uses it, and intermediate debt is ALLOWED because only the whole wing at the end is judged |
+
+## 0.1 THE PAUSE OF 2026-08-16, AND HOW TO RESUME
+
+**The owner paused the project on 2026-08-16 for infrastructure work, and
+asked that it stop somewhere a fast resumption is possible.** This section is
+that stop. **It is written into the plan and not into a chat log, because a
+chat log is not a recoverable medium** (the same ruling as commit `3388d4b`).
+**Read section 0.0 above for the state; read this for what to DO first.**
+
+**THE TREE AT THE PAUSE.** `make check` green at the pause commit. Standing
+33,078 lines over 97 masters, MEASURED. No agent live, the dispatch census
+clean, nothing unregistered. Nothing is pushed; the owner has given no push
+instruction and none should be inferred.
+
+**THE FIRST TASK ON RESUMPTION, and it is a real gap and not a formality.**
+`[LJ-1.386]` **was registered as DISPATCHED and never dispatched**: the
+orchestrator wrote the row and made the directory and never wrote the brief,
+and no log exists. **It gates the one escape from the `sq` untruncation that
+nobody has aimed at**, found by `[LJ-1.384]`: select the witness as a CODE by
+leastness in the sealed internal order and read it out to ambient data. **Two
+of its three legs are DELIVERED in `src/` today**, `module Canonical` at
+`src/L/Cardinal.lagda.md:182` and `module Small` at
+`src/L/Coding/Injection.lagda.md:144`; **the missing leg is internal existence
+of a pairing code at a band ordinal, and the gate probe is at `+ω ω`, GO or
+NO-GO.** **A NO-GO earns the sentence that every cheap escape is closed, which
+`[LJ-1.384]` measured UNEARNED.**
+
+**WHAT THE PROOF ITSELF STILL OWES, three things, and section 0.0 carries the
+detail.** The composite's TERM, whose assembly `[LJ-1.378]` measured
+MECHANICAL and whose two open rows are now priced: the extraction at about 210
+marginal lines with its factor a green file (`[LJ-1.381]`), and the residue,
+which `[LJ-1.385]` re-measured as FOUR live ties rather than six. The `sq`
+untruncation, unchanged and now the subject of the first task above. And two
+INFERRED add-ons at about 40 lines.
+
+**ONE FINDING TO ACT ON BEFORE RE-PRICING ANYTHING.** `[LJ-1.385]` measured
+that `[LJ-1.378]`'s leaf-stem row cites an instantiation of a FROZEN copy that
+is one landed repair behind the chapter (`b834c2e`, `[LJ-1.346]`), and that no
+prior refutation can even be APPLIED at the residue's environment, `exit 42`.
+**That row must be re-stated against the live chapter before it is
+re-priced.**
+
+**THE OWNER RULINGS OUTSTANDING.** `[LJ-1.382]`, whether `Condensation` is
+accepted as honestly expensive at 1.62x the DD24 bar, DEFERRED by the owner on
+2026-08-16 in favour of finishing the proof. **No craft cure exists**:
+`[LJ-1.380]` measured the cost DIFFUSE, largest definition 2.57 percent, and
+the `EnvSupply` identity-conversion shape ABSENT. **113 insertions are queued
+into that family**, so the ruling and the funding are coupled.
+
+**THREE GATES LANDED ON 2026-08-16 AND EACH CARRIES AN EPOCH.** Read the epoch
+before reading a frozen count as compliance. `scripts/gate/check-dd18-survey.py`
+gates the return side of DD18 and prints the brief side; `check-baseline-home.py`
+holds the DD24 figures to `dev/ledger.toml` alone;
+`check-live-record-claims.py` refuses a brief that names a goal and does not
+answer the open-work list. **They caught the orchestrator twelve times on
+their first day. Two of those twelve were repairs that created new
+violations.**
+
+**ONE KNOWN-STALE LINE, deliberately not rewritten.** Open work item 7 at
+`:410` reads that one blocker remains, `sq : SqShape`. **`SqShape` occurs in ZERO files
+under `src/` and was deleted from the trophy by `[LJ-1.323]` at commit
+`ffb0811`.** It is corrected at `:72` and `:116` and left standing at `:410`,
+because a dated screen is a record.
 
 **THE OPEN WORK, in dependency order.**
 
@@ -69,14 +132,24 @@ rather than a survey:
 `sq-descent` at 186 lines, 241.9 s, `--safe`, by `WF.WFI.induction
 regularityV`. **`[LJ-1.299]`'s CIRCULAR verdict is refuted by construction.**
 **ONE qualification, which that task put in its own lead: the conclusion is
-TRUNCATED**, `∥ sq α ∥₁` rather than the function object `SqShape` needs.
+TRUNCATED**, `∥ sq α ∥₁` rather than the function object its consumers need.
+**CORRECTED 2026-08-16: this line named `SqShape`, which no longer exists.**
+`[LJ-1.323]`'s restatement deleted `(sq : SqShape)` from `GCHStatement` at
+commit `ffb0811`, and `grep -rc SqShape src/` returns ZERO files today,
+MEASURED. **The consumer is now the module parameter itself**, taken as a
+function at `src/L/StageCardinal.lagda.md:17` and spent at `:283` as
+`module B = Bound α oα infα (sq α α∈suc infα)`, with the same shape at
+`src/L/BoundedSubset.lagda.md:1388` and `:1410`. **`sq α` is a Sigma of a
+pairing function and its injectivity**, `src/L/Ordinal/SquareLaw.lagda.md:685-687`,
+so what is wanted is data and the descent yields a truncation. The
+substance is unchanged; only the name was stale.
 
 **THE ENDPOINT ESTIMATE, and the owner ruled the one thing it turned on.**
 
 | | lines | basis |
 |---|---:|---|
-| standing today | **32,488** | `ledger.py`, measured from HEAD |
-| of which the GCH wing | 14,099 over 16 masters | same |
+| standing today | **33,078 over 97 masters**, MEASURED 2026-08-16 | `ledger.py`, from HEAD; it read 32,488 when this table was written on 2026-08-14 |
+| of which the GCH wing | 14,099 over 16 masters | same, and NOT re-measured on 2026-08-16 |
 | `q'`'s hand-written part | 470 | four parts, each at a BUILT site |
 | `[LJ-1.8]`'s descent | 186 | `[LJ-1.301]`, built, exit 0 |
 | `[LJ-1.304]`'s two add-ons | 40 | INFERRED, not built |
@@ -100,19 +173,64 @@ the retired rud route, and a fifth of its band rested on a known weak point.
 names in its own words**: the internalization route never proved GCH, so this
 wing IS the number phase 3 must beat. Today added 2,377 lines to it.
 
-**WHAT IS NOT MECHANICAL, and the list is shorter than it was but it is not
-empty.** The owner asked directly and the honest answer is four things:
+**WHAT IS NOT MECHANICAL. REWRITTEN 2026-08-16 and it is now THREE things, not
+four.** **The owner asked directly on 2026-08-16 what in the GCH proof itself is still
+unwritten, apart from thresholds and wiring. This list had gone stale on two of
+its four items while ten dispatches read it.** That is the
+defect `[LJ-1.376]` measured as this project's costliest: the live record
+unread, and here the record was also unmaintained.
 
 1. **The composite's TERM has never been written.** `[LJ-1.302]` proved that a
    HYPOTHETICAL `comp : Composite` makes `amb` come out. **That says it FEEDS
    and not that it EXISTS.** The 470 lines price the ingredients; the composite
-   itself is unwritten.
-2. **The truncation is UNKNOWN**, not mechanical. `[LJ-1.305]` is measuring
-   whether it lifts at all, and one of its three branches restates the trophy.
-3. **The cardinal face at κ** is a statement-level fork and it is in the
-   owner's list below.
-4. **Two INFERRED add-ons**, `[LJ-1.304]`'s leaf-frame wrapper at about 25 lines
+   itself is unwritten. **UNCHANGED as of 2026-08-16.**
+2. **The truncation: its SHAPE is now pinned and it did not get cheaper.**
+   `[LJ-1.301]` built the descent, 186 lines, exit 0, and its conclusion is
+   `∥ sq α ∥₁` where the consumers want the function object: `sq α` is a Sigma
+   of a pairing function and its injectivity
+   (`src/L/Ordinal/SquareLaw.lagda.md:685-687`), taken as a module parameter
+   at `src/L/StageCardinal.lagda.md:17` and spent at `:283`. **This line named
+   `SqShape` until 2026-08-16; that type was deleted from the trophy by
+   `[LJ-1.323]` at commit `ffb0811` and occurs in ZERO files under `src/`
+   today, MEASURED by `[LJ-1.384]`.** **Five dispatches on 2026-08-16 closed
+   every cheap escape THAT A DISPATCH AIMED AT, and `[LJ-1.384]` measured that
+   the stronger sentence is unearned: the CODED route, selecting the witness
+   by leastness in the sealed internal order and reading it out through
+   `Small`, was never aimed at, and two of its three legs are DELIVERED
+   (`module Canonical`, `src/L/Cardinal.lagda.md:182`; `module Small`,
+   `src/L/Coding/Injection.lagda.md:144`). `[LJ-1.386]` gates its missing
+   leg.** The five: `[LJ-1.365]` claimed a `PT.rec` at
+   the use site cannot help and `[LJ-1.368]` OVERTURNED its verdict word with a
+   green file, since a set-typed term built UNDER the wrap is never an
+   elimination site; `[LJ-1.373]` routed the residue to `SetChoice` and
+   `[LJ-1.375]` measured「with no residue」FALSE, `UnequalSorts` on removing the
+   `Lift`, and restored the verdict to **BLOCKED-BY-THE-COMPLEMENT**;
+   `[LJ-1.374]` measured `SetChoice` in **ZERO** files under `src/L/`, so
+   taking it would be the L side's first ambient choice, in the tower whose
+   other trophy proves choice. **The owner ruled `[LJ-1.369]` on 2026-08-16: do
+   not assume it.** **So the debt is exactly one untruncation at the
+   non-initial limit band, that band is the strict complement of the only
+   canonicalizer (`[LJ-1.333]`), and five attempts have failed.**
+3. **Two INFERRED add-ons**, `[LJ-1.304]`'s leaf-frame wrapper at about 25 lines
    and its `dK` closure lemma at about 15. Small, and inferred is not measured.
+
+**THE ITEM THAT WAS HERE AND IS CLOSED.** The cardinal face at κ was listed as
+an open statement-level fork. **`[LJ-1.323]` ruled it on 2026-08-15, section
+7.3: the CODED face, everywhere, from meaning.** It stayed on this list for a
+day after its own ruling landed.
+
+**WHAT LANDED ON 2026-08-16 AND IS NOT A THRESHOLD OR A WIRE.**
+`src/V/CantorBernstein.lagda.md` (118 lines) proves two injections give a
+bijection at two ARBITRARY types under one set-ness hypothesis;
+`src/L/CantorBernstein.lagda.md` (34) reads it at the trophy's own `InjL`, so
+the step the set-theorist reading left to the reader is now the tree's; and
+`src/FOL/Bernstein.lagda.md` (336) states it over an ARBITRARY model of ZF, on
+the owner's route, under one honest module hypothesis that `L` and `V` both
+satisfy trivially. **None of the three is on the `sq` critical path**, and none
+retires the untruncation. `[LJ-1.360]` also measured that the `hasWitnessAt`
+restatement SUPPLIES the bound at 8 insertions, so `[LJ-1.350]`'s 43 survives
+as the telescope share of a repair totalling about 54 to 56, with one term
+still under it: the BACK direction at the chain.
 
 **WHAT IS MECHANICAL, and it is most of the volume:** the clean 23 modules
 (MEASURED at zero changed lines), the dirty seven's ties (ONE debt, one built),
@@ -1256,7 +1374,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.363 | Land DD18's amended enforcement | LANDED GREEN, AND THE HONEST RATE CORRECTS UP TO 21 | B1's print: 244 of 264 briefs never name JOURNAL, 246 never DECISIONS, 8 template clusters |
 | LJ-1.364 | Fable RULING: seal envSetAt, retire meet-suc | NO-SEAL, AND RETIRE. THE DD24 BAR IS PART ARTIFACT | The seal was shape-selected, never diagnosed. meet-suc's rewrite side prices at ZERO |
 | LJ-1.366 | Owner reversal: DD24's bar is not re-timed by a cure | RESTORED TO THE TROPHY-LANDING FIGURE | The bar is ac_baseline_module_rate x tolerance, at check-ratio.py. Supersedes LJ-1.265 |
-| LJ-1.367 | Consolidate the DD24 bar to ONE home, and gate the restatement | DISPATCHED | The bar had four homes and drifted for three days. DD19 already forbade that and nothing enforced it |
+| LJ-1.367 | Consolidate the DD24 bar to ONE home | BUILT AND WIRED, 22 FIGURES GUARDED, DERIVED NOT HARDCODED | It caught me twice and found a status line quoting a superseded baseline |
 | LJ-1.365 | Does a PT.rec dissolve the last untruncation | SET-MOTIVE. DD25 review [LJ-1.368] | The top wrap types and the body cannot exist. The first data goal IS a set, named by Agda's refusal |
 | LJ-1.368 | DD25 review of LJ-1.365's refutation | SPLIT. ONLY THE PROBE'S PATH CROSSES A SET | A set-typed term built UNDER the wrap is never an elimination site. The obstruction is a level lower |
 | LJ-1.369 | Owner ruling: assume a band choice principle | NO. DO NOT ASSUME IT | Ruled 2026-08-16. BandChoice is admissible only if PROVED; an undischarged hypothesis stays off the trophy |
@@ -1264,6 +1382,16 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.374 | Does the delivered tree depend on SetChoice | L-DOES-NOT. THE TOWERS DIFFER ON THIS | L takes LEM alone and PROVES its choice field. V takes SetChoice at one site, priced in the open |
 | LJ-1.375 | DD25 review of LJ-1.373's BLOCKED-OTHERWISE | SPLIT. NO RESIDUE IS FALSE AND THE DIRECTION IS UNMEASURED | Correct word is BLOCKED-BY-THE-COMPLEMENT. My original framing was NOT refuted |
 | LJ-1.376 | Fable AUDIT: detours from weak logic and skipped surveys | 13 EPISODES, DOMINANT KIND IS MY LIVE RECORD UNREAD | Not the archives. It caused 8 of 10 DD25 overturns and the 4 costliest |
+| LJ-1.377 | An enforcement point for the live record unread | BUILT AND WIRED. THE DEFECT IS MIXED, NOT PERSONAL | Two wider designs killed by measurement first: they fired on 100 percent of briefs |
+| LJ-1.378 | Probe the composite's TERM | MECHANICAL. NO MATHEMATICS HIDES IN THE ASSEMBLY | A Composite term is built at one instance and feeds LJ-1.302's Fed. What hides is the phi-zero EXTRACTION |
+| LJ-1.380 | Diagnose Condensation's seconds | DIFFUSE. THE EnvSupply SHAPE IS ABSENT | Largest definition 2.57 pc, top ten 12.4 pc, Miscellaneous 58.7 pc. My premise is FALSE |
+| LJ-1.382 | Owner ruling: Condensation is honestly expensive at 1.62x | DEFERRED BY THE OWNER 2026-08-16 | Ruled: finish the trophy proof first. No craft cure exists, so nothing is lost by waiting |
+| LJ-1.383 | Price the residue, the second UNPRICED row | ZERO OF SIX INHABITABLE, ALL SIX FALSE. DD25 [LJ-1.385] | Five were already false in the record; LJ-1.378's two-may-be-false was STALE |
+| LJ-1.385 | DD25 review of LJ-1.383's all-six-false | SPLIT. SIX IS A FROZEN COPY'S COUNT; THE LIVE RESIDUE IS FOUR | No prior refutation can even be APPLIED at the residue's environment, exit 42 |
+| LJ-1.384 | Fable ADVERSARIAL: is every cheap escape closed | ESCAPE-OPEN. MY SENTENCE IS UNEARNED | A CODED route nobody aimed at, and two of its three legs are delivered in src/ today |
+| LJ-1.386 | Gate the coded route: internal existence of a pairing code | NEVER DISPATCHED, MY BOOKKEEPING ERROR | I made the row and the directory, never the brief. The resumption's first task |
+| LJ-1.381 | Price the phi-zero EXTRACTION | ABOUT 210 MARGINAL LINES, AND THE FACTOR IS A GREEN FILE | Its legs are BUILT, not described. One repair precedes the landing and it is in the STATEMENT |
+| LJ-1.379 | Measure the BACK direction at the chain | SUPPLIED, 62 LINES. THE FLOOR BECOMES A PRICE AT ABOUT 113 | arityNumAtL's IN direction pays, and the upstream debt LJ-1.360 feared is GONE |
 | LJ-1.370 | Retire meet-suc, on LJ-1.364's fable ruling | RETIRES GREEN AT EXACTLY 3 LINES, MATCHING THE RULING | No consumer appeared. Stage minus 5, Step minus 1, dev/ARCHIVE.md plus 35 |
 | LJ-1.371 | Can anything see an in-harness dispatch | INFERENCE WORKS. DD25 review not needed: it found a working mechanism | Read the tree, not the dispatcher. It refuted MY premise |
 | LJ-1.372 | Land LJ-1.371's two fixes | BOTH LANDED. DD25 review not needed: the false red names a defect class | An mtime backstop plus a second opinion in gate-ready |

@@ -95,6 +95,43 @@ default_mode = "pi-subagent-mode"
 # deepseek and never carries this model.
 pi_fallback = "deepseek"
 
+# QWEN, ADDED 2026-08-16 ON THE OWNER'S INSTRUCTION. NOT IN FORCE.
+#
+# The owner asked for a qwen vendor wired to `pi`'s `qwen3.8-27b-mlx@8bit`.
+# The row is added; `in_force` above is UNCHANGED, because they asked to add a
+# vendor and not to switch to one.
+#
+# THE PROVIDER IS `lmstudio` AND NOT `qwen`, MEASURED 2026-08-16, the same
+# trap the zai row records one screen above. `pi --list-models` prints the
+# model under the provider `lmstudio`; `pi auth check --provider qwen --model
+# qwen3.8-27b-mlx@8bit` returns `invalid`, and `pi auth check --provider
+# lmstudio --model qwen3.8-27b-mlx@8bit` returns `ready`, which is what
+# `pi_wired = true` records.
+#
+# IT IS FLAT, and for a reason the other rows do not have: it runs LOCALLY
+# through LM Studio, so it bills no hours at all. A local model gives the
+# clock no basis, exactly as a subscription does.
+#
+# WHAT `pi --list-models` MEASURED, 2026-08-16: context 262.1K, max output
+# 32.8K, thinking NO, images NO. The thinking column is the one that bears on
+# dispatch: this head cannot be asked for extended reasoning, so it is not a
+# candidate for the adversarial row whatever a mode table says.
+#
+# `default_mode` IS DORMANT HERE AND THE OWNER HAS NOT RULED ON IT. It is read
+# only when `VERSION_IN_FORCE = "auto"`, and the pin is `pi-subagent-mode`
+# today, so this field decides nothing until both change. It carries
+# `pi-subagent-mode` to match the other flat vendor rather than to assert a
+# judgement about this head.
+#
+# NO `pi_fallback`. deepseek and zai name each other because the owner ruled
+# them a mutual pair on 2026-08-15. Nobody has ruled a fallback for this
+# vendor, and an invented one would write a certainty no evidence gives.
+[vendors.qwen]
+model = "qwen3.8-27b-mlx@8bit"
+pi_provider = "lmstudio"
+pi_wired = true
+default_mode = "pi-subagent-mode"
+
 # ---------------------------------------------------------------------------
 # HOW TO ADD A VENDOR. Copy one template below, fill the model ID, and set
 # `in_force` above.

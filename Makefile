@@ -33,7 +33,7 @@ CF_PROJECT := bedrock
 
 .PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 dd25 dd18survey gen html types site serve clean hooks test deploy venv venv-check
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 dd25 premises buildmanifest archivecited dd18survey baselinehome
+check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 dd25 premises buildmanifest archivecited dd18survey baselinehome liverecord
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -210,6 +210,17 @@ premises:
 # a report are records written once.
 baselinehome:
 	$(PY) scripts/gate/check-baseline-home.py
+
+# LJ-1.377: a brief answers the live record its own words implicate. A
+# negative-existence claim about the record ("the probe nobody has run") is
+# searched against the task index and the section 0.0 screen as they stood
+# when the brief was written, and every positive row it implicates must be
+# answered in a ## LIVE RECORD section, quoted or declined in writing. A
+# brief naming a goal code answers the open-work list: the journal's
+# one-grep cure made mechanical. Pre-gate briefs are frozen and reported
+# once: 74 of 275 on 2026-08-16, median 4 duties each, never failed.
+liverecord:
+	$(PY) scripts/gate/check-live-record-claims.py
 
 devdocs:
 	$(PY) scripts/gate/check-dev-docs.py

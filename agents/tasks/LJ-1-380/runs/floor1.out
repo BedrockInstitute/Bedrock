@@ -1,0 +1,12 @@
+/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-380/Floor.lagda.md:2.8-19: error: [ModuleNameDoesntMatchFileName]
+The name `LJ1380Floor` of the top level module does not match the
+file name. A such named module should be defined in one of the
+following files:
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/LJ1380Floor.agda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/LJ1380Floor.lagda
+  /Users/alsg/Agentic/Bedrock/src/LJ1380Floor.agda
+  /Users/alsg/Agentic/Bedrock/src/LJ1380Floor.lagda
+  /Users/alsg/Agentic/Bedrock/agents/tasks/LJ1380Floor.agda
+  /Users/alsg/Agentic/Bedrock/agents/tasks/LJ1380Floor.lagda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/LJ1380Floor.agda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/LJ1380Floor.lagda
