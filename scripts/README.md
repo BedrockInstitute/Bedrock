@@ -16,7 +16,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | directory | holds | members |
 |---|---|---|
 | `scripts/` (flat) | the modules scripts IMPORT BY NAME across groups | `agents_tree.py`, `repo_root.py` |
-| `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-agents-guard.py`, `check-archive-cited.py`, `check-build-manifest.py`, `check-dd25-review-named.py`, `check-dd4-stated.py`, `check-dev-docs.py`, `check-fences.py`, `check-glossary.py`, `check-live-territory.py`, `check-premises-stated.py`, `check-probes.py`, `check-rule-ids.py`, `check-task-index.py`, `check-tree.py`, `lint-agda.py`, `lint-prose.py` |
+| `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-agents-guard.py`, `check-archive-cited.py`, `check-baseline-home.py`, `check-build-manifest.py`, `check-dd18-survey.py`, `check-dd25-review-named.py`, `check-dd4-stated.py`, `check-dev-docs.py`, `check-fences.py`, `check-glossary.py`, `check-live-record-claims.py`, `check-live-territory.py`, `check-premises-stated.py`, `check-probes.py`, `check-rule-ids.py`, `check-task-index.py`, `check-tree.py`, `lint-agda.py`, `lint-prose.py` |
 | `scripts/dispatch/` | everything about running and auditing a dispatch | `check-dispatch-policy.py`, `check-sources-read.py`, `dd25-record.py`, `dispatch_policy.py`, `rules.py` |
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
@@ -347,7 +347,7 @@ does not gate either: **a red gate here buys a pasted citation rather than a
 survey.** Its whole claim is that the drift is VISIBLE, which is the thing that
 was missing.
 
-### `check-dd4-stated.py`, `check-dd25-review-named.py`, `check-premises-stated.py`, `check-build-manifest.py`, `check-fences.py`, `check-live-territory.py`
+### `check-dd4-stated.py`, `check-dd25-review-named.py`, `check-premises-stated.py`, `check-build-manifest.py`, `check-fences.py`, `check-live-territory.py`, `check-dd18-survey.py`, `check-baseline-home.py`, `check-live-record-claims.py`
 
 The remaining gates. Each one's operative documentation is its own docstring,
 which carries the ruling, the epoch and the measured defect it exists to stop:
@@ -359,6 +359,18 @@ premises), `check-build-manifest.py` (`_build/` entries are declared in
 invisible to Agda and to the ledger, so a green tree proves nothing about it),
 and `check-live-territory.py` (the commit gate against a live agent's write
 territory; `--staged` in the hook, `--check` the tracked-tree audit).
+
+**Three landed on 2026-08-16 and each carries an epoch**, so read the epoch
+before reading a frozen count as compliance: `check-dd18-survey.py` (DD18's
+return side, where an ARCHIVE USED section must quote one line per archived
+file at the line it cites), `check-baseline-home.py` (DD24's figures live in
+`dev/ledger.toml` and a live claim names the field), and
+`check-live-record-claims.py` (a brief that names a goal answers the
+open-work list).
+
+**They were absent from this index until 2026-08-16, and
+`scripts/tests/test_scripts_layout.py` was RED from the moment they landed.**
+Nothing reported it, because `make test` is not part of `make check`.
 
 ## dispatch/
 

@@ -58,14 +58,48 @@ def load_module():
 
 
 # ---------------------------------------------------------------- 0. the diff still applies
+#
+# TWO DEFECTS REPAIRED HERE, 2026-08-16, and the second one hid the first.
+#
+# (1) THE CHECK WAS VACUOUS. `apply_edits.py` writes `dispatch_patched.py`
+#     BESIDE ITSELF, so running it in `PROBE` overwrote the shipped copy and
+#     then `regen.read_text() == PATCHED.read_text()` compared the file to
+#     ITSELF. It could not fail. The drift it was written to catch has been
+#     invisible since the day it was written.
+#
+# (2) A TEST MUTATED A TRACKED RECORD. `agents/` is frozen by AGENTS.md and
+#     nobody edits a file in it, yet running this suite rewrote a task's probe
+#     in place. MEASURED on 2026-08-16: one run produced 198 insertions and 31
+#     deletions against the committed copy, and `git status` went dirty from a
+#     read-only-looking `make test`.
+#
+# THE REPAIR: regenerate into a TEMPORARY directory and compare there. The
+# probe directory is never written.
+#
+# AND THE DRIFT IS REPORTED, NOT FAILED. Once the comparison is real it fires,
+# because `.claude/skills/codex-dispatch/dispatch.py` has moved on since the
+# copy was committed. Failing here would demand an edit to a frozen record,
+# which this repository forbids, so the honest enforcement point is a printed
+# drift and an owner's ruling on whether to refresh the copy.
 if PRISTINE.exists() and (PROBE / "apply_edits.py").exists():
+    _regen_dir = Path(tempfile.mkdtemp(prefix="lj1296-regen-"))
+    (_regen_dir / "apply_edits.py").write_bytes(
+        (PROBE / "apply_edits.py").read_bytes())
     r = subprocess.run(
-        [sys.executable, str(PROBE / "apply_edits.py")],
-        capture_output=True, text=True, cwd=str(PROBE))
+        [sys.executable, str(_regen_dir / "apply_edits.py")],
+        capture_output=True, text=True, cwd=str(_regen_dir))
     ok(r.returncode == 0, f"apply_edits.py failed: {r.stdout} {r.stderr}")
-    regen = PROBE / "dispatch_patched.py"
-    ok(regen.read_text() == PATCHED.read_text(),
-       "regenerated copy differs from the shipped copy; re-copy it")
+    _regen = _regen_dir / "dispatch_patched.py"
+    ok(_regen.is_file(), "apply_edits.py wrote no dispatch_patched.py")
+    if _regen.read_text() != PATCHED.read_text():
+        print("test_quota_fallback: DRIFT (reported, not failed): the copy at "
+              f"{PATCHED.relative_to(REPO)} no longer reproduces from the live "
+              "dispatch.py. The copy is a frozen task record, so refreshing it "
+              "is the owner's ruling, not this suite's.")
+    else:
+        checks += 1
+    ok(PROBE.joinpath("dispatch_patched.py").read_text() == PATCHED.read_text(),
+       "this suite must not write into agents/")
 
 D, tmp = load_module()
 

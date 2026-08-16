@@ -2314,8 +2314,21 @@ landed wrong split would have cost the naturalness condition.
 
 ## Adding an entry
 
-Take the next free ID under the series (P-o, R-41, T-3, I-10, D-27, C-24), cite
-the source in the entry, and keep the evidence column to measured numbers. When
+Take the next free ID under the series, and **read it from the file rather
+than from this line**:
+
+```sh
+python3 scripts/gate/check-rule-ids.py --next-id
+```
+
+It computes the next free ID per series from the headings, prints the gaps,
+and cannot go stale. **This line used to carry the six IDs itself**, and on
+2026-08-16 four of the six had been taken: it offered `P-o`, `R-41`, `T-3`,
+`I-10`, `D-27` and `C-24` while `P-y`, `R-41`, `D-30` and `C-59` were the
+highest taken. An author who followed it would have minted a duplicate, which
+is the defect `check-rule-ids.py` fails the gate on.
+
+Cite the source in the entry, and keep the evidence column to measured numbers. When
 a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
 sourced, it is not entered; it is surfaced to the owner instead.

@@ -120,6 +120,34 @@ def fails():
     errs, _, _ = check_task_index.check_index(cap_plan, "[T88]", archived=False)
     check("row at exactly the cap passes", errs == [], True)
 
+    # --- the UPPERCASE audit suffix, 2026-08-16 ---
+    # 26 rows carried `-A`, `-B`, `-C` or `-D` and the grammar admitted only
+    # the lower-case forms and `-R`. Both halves of the checker were blind to
+    # them, and eight were over the cap while the gate reported clean.
+    check("an upper-case audit suffix is a code",
+          check_task_index.extract_codes("the audit [LJ-1.64-D] found it"),
+          {"LJ-1.64-D"})
+    check("the DD25 review suffix still extracts",
+          check_task_index.extract_codes("reviewed as [LJ-0.4f-R]"),
+          {"LJ-0.4f-R"})
+    suffix_plan = PLAN.replace(
+        "| L3.32-T1 | The R4 corrective stop | DELIVERED | dev/JOURNAL.md |",
+        "| L3.32-T1 | The R4 corrective stop | DELIVERED | dev/JOURNAL.md |\n"
+        "| LJ-1.64-D | An audit row | BAND | x |")
+    rows = check_task_index.index_rows(suffix_plan, archived=False)
+    check("an upper-case audit suffix parses as a row",
+          "LJ-1.64-D" in [code for code, _, _ in rows], True)
+
+    # --- THE CAP IS DECOUPLED FROM THE CODE GRAMMAR ---
+    # This is the regression that matters. Twice a new code shape took the cap
+    # down with it, because the cap read the rows the grammar matched. A row
+    # whose first cell is NOT a task code at all must still be capped.
+    alien = "| NOT-A-CODE | " + "x" * 220 + " |"
+    alien_plan = PLAN.replace("### Bookkeeping", alien + "\n\n### Bookkeeping")
+    errs, _, _ = check_task_index.check_index(alien_plan, "[T88]", archived=False)
+    check("a row the code grammar cannot parse is still capped",
+          any("row over cap" in e and "NOT-A-CODE" in e for e in errs), True)
+
     # --- integration smoke: the real tree must be green ---
     plan_text = (ROOT / "dev" / "PLAN.md").read_text(encoding="utf-8")
     errs, cited, unique = check_task_index.check_index(
@@ -128,7 +156,7 @@ def fails():
           f"{len(errs)} defect(s)")
     check("real tree is green", errs, [])
 
-    print(f"\n{14 - failures}/{14} checks passed")
+    print(f"\n{18 - failures}/{18} checks passed")
     return 1 if failures else 0
 
 

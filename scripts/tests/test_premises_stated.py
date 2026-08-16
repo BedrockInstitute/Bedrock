@@ -22,6 +22,7 @@ Run: `python3 scripts/tests/test_premises_stated.py`
 from __future__ import annotations
 
 import importlib.util
+import re
 import subprocess
 import sys
 import tempfile
@@ -203,8 +204,20 @@ print("the real tree")
 rs = run()
 check("the real tree exits 0 after grandfathering", rs.returncode == 0,
       rs.stderr[-400:])
+# THE WORDING CHANGED WHEN THE SECOND EPOCH LANDED and this assertion did
+# not: it looked for "N frozen pre-epoch" while the run prints "N frozen
+# brief(s) ... across TWO epochs".
+#
+# AND THE OLD KEY WAS WRONG IN A SECOND WAY. It compared against
+# `len(PRE_EPOCH)`, the size of the FORGIVEN SET, while the run prints the
+# number of briefs that actually FIRED. Those are different numbers: 49
+# directories are forgiven and 46 of them fire. So the check now reads the
+# printed count and holds it against the names printed beside it, which is
+# self-consistent and cannot drift with either epoch.
+_m = re.search(r"(\d+) frozen brief\(s\)", rs.stdout)
+_named = rs.stdout.split("frozen: ", 1)[-1].strip().split(", ") if _m else []
 check("the run prints the backlog count",
-      f"{len(cps.PRE_EPOCH)} frozen pre-epoch" in rs.stdout, rs.stdout)
+      _m is not None and int(_m.group(1)) == len(_named), rs.stdout)
 check("the run reports 0 new defects", "0 new defects" in rs.stdout)
 check("the frozen briefs are reported, not failed",
       "LJ-1-212" in rs.stdout and "no ## PREMISES section" not in rs.stdout)
@@ -216,7 +229,7 @@ with tempfile.TemporaryDirectory() as td:
     rs = run("--tasks", str(tasks))
     check("a firing brief in a pre-epoch directory is backlog, not defect",
           rs.returncode == 0, f"got {rs.returncode}: {rs.stdout} {rs.stderr}")
-    check("the backlog is counted", "1 frozen pre-epoch" in rs.stdout)
+    check("the backlog is counted", "1 frozen" in rs.stdout)
 
 
 print("")

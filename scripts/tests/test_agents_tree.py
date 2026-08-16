@@ -14,6 +14,7 @@ and the probes into one directory per task. Two things can break silently afterw
 """
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -63,9 +64,39 @@ AGDA_NAME = re.compile(r"^[A-Za-z][A-Za-z0-9-]*$")
 #: it. They are the ONLY exception, and the test below proves the rule catches them.
 NEG = {"NAMETEST-L3.32-DOT", "NAMETEST-L3_32_UNDERSCORE"}
 
+# ONLY TRACKED DIRECTORIES ARE JUDGED, and that is the whole fix of
+# 2026-08-16. `rglob` walks the working tree, so a local `__pycache__` under
+# any task directory failed this check, and `.state/` under a probe did too.
+# Neither is in git, neither reaches another clone, and neither can break an
+# Agda module name for anybody. MEASURED: the suite was RED at HEAD on eight
+# such directories, five of them `__pycache__`, and nothing reported it
+# because `make test` is not part of `make check`.
+#
+# A directory is TRACKED when git holds a file under it. That is the same
+# ground truth `check-probes.py` reads, and it is the only one that survives
+# a machine with a different scratch layout.
+#
+# AND ONLY MODULE SPACE IS JUDGED. The rule exists because `bedrock.agda-lib`
+# lists `agents/tasks` as an include root, so a directory on the path to an
+# Agda file becomes a module qualifier. A directory that holds no Agda file
+# anywhere below it is never a qualifier and the rule does not reach it.
+# MEASURED 2026-08-16: `agents/tasks/LJ-1-290/copy/` is a 58-file, 828 kB
+# dry-run copy of `scripts/` that the layout migration ran against, it holds
+# ZERO Agda files, and its `.github/workflows` failed this check for no
+# reason an Agda run could ever have.
+module_dirs = set()
+for rel in subprocess.run(["git", "ls-files", "agents/tasks"], cwd=T.ROOT,
+                          capture_output=True, text=True).stdout.split():
+    if not (rel.endswith(".agda") or rel.endswith(".lagda.md")):
+        continue
+    p = Path(rel).parent
+    while p != Path("agents/tasks") and p != Path("."):
+        module_dirs.add(T.ROOT / p)
+        p = p.parent
+
 bad = []
 for d in T.TASKS.rglob("*"):
-    if not d.is_dir() or d.name in NEG:
+    if not d.is_dir() or d.name in NEG or d not in module_dirs:
         continue
     if not AGDA_NAME.match(d.name):
         bad.append(str(d.relative_to(T.ROOT)))

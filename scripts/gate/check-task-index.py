@@ -76,9 +76,44 @@ ARCHIVED_INDEX = ROOT / "archive" / "dev" / "TASKS-archived.md"
 # review LJ-0.4f-R. Twelve of those rows were over the 200-character cap, one
 # at 438, and the gate reported clean all day. A cap that cannot see the rows
 # it governs is not a cap.
-FULL = re.compile(r"\[(?:LJ-(\d+)\.(\d+[a-z]*(?:-R)?)|L3\.32-T(\d+))\]")
+#
+# WIDENED AGAIN 2026-08-16, AND THE SAME FAILURE HAD RECURRED IN A NEW LETTER
+# CASE. `(?:-R)?` admits the DD25 review suffix and nothing else, so the 26
+# UPPERCASE audit suffixes this campaign then created (`-A`, `-B`, `-C`, `-D`)
+# were invisible to both halves of the checker. MEASURED at the fix: 464 data
+# rows in the live index, 436 visible to the old grammar, 28 invisible, and
+# EIGHT of the invisible ones over the cap, the longest at 224. The gate
+# reported clean. `(?:-[A-Z])?` subsumes `-R`, because `R` is an upper-case
+# letter, so one class now covers every suffix the campaign has used.
+#
+# THE DEEPER FIX IS BELOW, AND IT IS WHY THIS COMMENT IS NOT THE WHOLE CURE.
+# The cap used to be applied to the rows this grammar matched, so every
+# widening of the grammar was also a widening of the cap, and a code shape
+# nobody predicted took the cap down with it. TWICE. The cap is a property of
+# a ROW, not of a code, and `capped_rows` now reads it that way.
+FULL = re.compile(r"\[(?:LJ-(\d+)\.(\d+[a-z]*(?:-[A-Z])?)|L3\.32-T(\d+))\]")
 SHORT = re.compile(r"\[T(\d+)\]")
-ROW = re.compile(r"^\| ((?:LJ-(?:\d+)\.(?:\d+[a-z]*(?:-R)?))|(?:L3\.32-T\d+)) \|")
+ROW = re.compile(r"^\| ((?:LJ-(?:\d+)\.(?:\d+[a-z]*(?:-[A-Z])?))|(?:L3\.32-T\d+)) \|")
+
+# THE FROZEN PRE-EPOCH SET, and C-59 rule 3 is why the scale is written here
+# rather than in a commit message: "when a lapse is forgiven, write its SCALE
+# into the code that forgives it".
+#
+# These eight rows sat over the cap while the grammar could not see them. They
+# are NOT trimmed, and that is a decision rather than an omission: each is a
+# dense verdict row carrying measured figures and `file:line` claims, the
+# overage runs from 2 to 24 characters, and rewriting a record to save three
+# characters costs more than the rule buys. The cap exists to stop a verdict
+# PARAGRAPH living in a row, and the defect it was bought for was a
+# 12,633-token cell, not a 203-character line.
+#
+# A row added after this date is held to the cap. The set never grows: a new
+# entry here means somebody widened the forgiveness instead of the row.
+CAP_EPOCH = "2026-08-16"
+CAP_FROZEN = {
+    "LJ-1.56-C", "LJ-1.57-A", "LJ-1.58-A", "LJ-1.60-A",
+    "LJ-1.62-A", "LJ-1.64-A", "LJ-1.64-D", "DD25-GAP",
+}
 
 # dev/ holds .md prose and .toml data (ledger, glossary, rules). Nothing else
 # under dev/ is text worth scanning; `.DS_Store` is binary.
@@ -130,12 +165,43 @@ def index_rows(plan_text: str,
     # design (neither reuses one WITHIN itself), so LJ-1.1 and L3.32-T1 are
     # different rows and a number-keyed dedup would call them a duplicate.
     rows = []
-    for line in re.findall(r"^\| (?:LJ-\d+\.\d+[a-z]*(?:-R)?|L3\.32-T\d+) \|.*$", block, re.M):
+    for line in re.findall(
+            r"^\| (?:LJ-\d+\.\d+[a-z]*(?:-[A-Z])?|L3\.32-T\d+) \|.*$",
+            block, re.M):
         code = ROW.match(line).group(1)
         key = (code if code.startswith("LJ-")
                else f"T{int(code.split('-T')[1])}")  # same zero-pad rule
         rows.append((code, key, line))
     return rows
+
+
+def capped_rows(plan_text: str) -> list[tuple[str, str]]:
+    """Every DATA row of the live task index, as `(first cell, line)`.
+
+    THIS FUNCTION IS THE CAP'S OWN READER, and it does not consult the code
+    grammar. Two widenings of that grammar have now been forced by rows the
+    cap could not see, and both times the cap was the casualty rather than the
+    cause. A row is capped because it is a row.
+
+    It reads the LIVE index only. `archive/dev/TASKS-archived.md` is frozen by
+    AGENTS.md and a gate over a frozen record can only force an edit to the
+    record; MEASURED 2026-08-16, its 265 rows top out at exactly 200 anyway.
+
+    The header row and the separator are not data and are dropped by name.
+    """
+    m = re.search(rf"^{re.escape(SECTION)}.*?^(?=### |## )", plan_text,
+                  re.S | re.M)
+    if not m:
+        return []
+    out = []
+    for line in m.group(0).split("\n"):
+        if not line.startswith("| ") or line.startswith("| ---"):
+            continue
+        cell = line.split("|")[1].strip()
+        if cell == "Code":
+            continue
+        out.append((cell, line))
+    return out
 
 
 def check_index(plan_text: str, sources_text: str,
@@ -175,13 +241,15 @@ def check_index(plan_text: str, sources_text: str,
             errors.append(
                 f"no index row: task {code} is cited in dev/, briefs or git "
                 f"log, but has no row in the {where}")
-    for code, lines in sorted(seen.items()):
-        for line in lines:
-            length = len(line.rstrip())
-            if length > CAP:
-                errors.append(
-                    f"row over cap: {code} is {length} characters "
-                    f"(cap {CAP}): {line}")
+    # THE CAP READS EVERY ROW, not the rows the code grammar matched. See
+    # `capped_rows`. A row in CAP_FROZEN is reported by main() and never
+    # fails.
+    for cell, line in capped_rows(plan_text):
+        length = len(line.rstrip())
+        if length > CAP and cell not in CAP_FROZEN:
+            errors.append(
+                f"row over cap: {cell} is {length} characters "
+                f"(cap {CAP}): {line}")
     return errors, len(cited), len(seen)
 
 
@@ -209,9 +277,20 @@ def main() -> int:
         print(f"check-task-index: {exc}")
         return 2
     errors, cited, rows = check_index(plan_text, sources_text)
+    # THE FORGIVEN SET IS PRINTED EVERY RUN. A frozen backlog that nobody
+    # sees is a rule quietly retired (C-59).
+    frozen = [(cell, len(line.rstrip()))
+              for cell, line in capped_rows(plan_text)
+              if len(line.rstrip()) > CAP and cell in CAP_FROZEN]
+    if frozen:
+        worst = max(n for _, n in frozen)
+        print(f"task index: {len(frozen)} row(s) frozen over the cap before "
+              f"the {CAP_EPOCH} epoch, longest {worst}; reported, never "
+              f"failed: {', '.join(c for c, _ in sorted(frozen))}")
     if not errors:
         print(f"task index OK: {cited} cited codes, {rows} unique rows, "
-              f"all within {CAP} characters")
+              f"{len(capped_rows(plan_text))} data rows read for the "
+              f"{CAP}-character cap")
         return 0
     for error in errors:
         print(f"FAIL: {error}")

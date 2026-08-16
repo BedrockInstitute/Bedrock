@@ -68,10 +68,22 @@ def located(text: str) -> bool:
 # ---------------------------------------------------------------------------
 print("the twin set: which numbers BOTH series carry")
 
-check("every number 1 to 27 has a DD row", all(str(n) in TWINS for n in range(1, 28)),
-      f"missing {[n for n in range(1, 28) if str(n) not in TWINS]}")
-check("28 and above have no DD twin",
-      not any(str(n) in TWINS for n in range(28, 40)))
+# THE BOUNDARY IS HARD-CODED ON PURPOSE, and it moves by hand. A new `DD`
+# code makes every bare `D<n>` citation of the same number ambiguous, so the
+# line is pinned here to force somebody to look when it moves. That is the
+# same design as `dev/rules.toml`'s bundle cap.
+#
+# MOVED 27 -> 28 on 2026-08-16, when the owner ruled DD28. The archived series
+# already carried D28, so bare `D28` became ambiguous the moment the row
+# landed; `check-rule-ids.py` caught the citations that day. This suite kept
+# the old boundary and went red, and NOTHING REPORTED IT, because `make test`
+# is not part of `make check`.
+TWIN_MAX = 28
+check(f"every number 1 to {TWIN_MAX} has a DD row",
+      all(str(n) in TWINS for n in range(1, TWIN_MAX + 1)),
+      f"missing {[n for n in range(1, TWIN_MAX + 1) if str(n) not in TWINS]}")
+check(f"{TWIN_MAX + 1} and above have no DD twin",
+      not any(str(n) in TWINS for n in range(TWIN_MAX + 1, 40)))
 check("the archived D series still resolves", "D36" in DECISIONS and "D20" in DECISIONS)
 check("a revoked DD code still resolves", "DD7" in DECISIONS)
 

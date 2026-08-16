@@ -276,6 +276,15 @@ test:
 	$(PY) scripts/tests/test_archive_layout.py
 	$(PY) scripts/tests/test_scripts_layout.py
 	$(PY) scripts/tests/test_dd25_review_named.py
+# THE SAME DEFECT RECURRED, and the comment above was written for it. On
+# 2026-08-16 four suites existed under scripts/tests/ and this target ran
+# none of them: test_premises_stated (RED since check-premises-stated.py was
+# routed through agents_tree, because its fixture root stopped resolving),
+# test_dispatch_clock, test_quota_fallback and test_ratio_noise. Wired here.
+	$(PY) scripts/tests/test_premises_stated.py
+	$(PY) scripts/tests/test_dispatch_clock.py
+	$(PY) scripts/tests/test_quota_fallback.py
+	$(PY) scripts/tests/test_ratio_noise.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the
 # [LJ-0.4] closeout. _build/literature/ holds the OCR text and PDFs of Devlin,

@@ -77,6 +77,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import re
+import subprocess
 import sys
 import tomllib
 from pathlib import Path
@@ -410,12 +411,75 @@ def sweep_cells(plan_text: str) -> list[str]:
     return out
 
 
+# THE LIVE DOCUMENTS, and the list is short on purpose. A record is never
+# rewritten (AGENTS.md), so dev/JOURNAL.md, dev/memos/, dev/literature/,
+# dev/measurements/, agents/ and archive/ are all out: a dead path inside a
+# dated record is what that record said on its date.
+LIVE_DOCS = ["AGENTS.md", "README.md", "CONTRIBUTING.md", "Makefile",
+             "scripts/README.md",
+             "dev/PLAN.md", "dev/LESSONS.md", "dev/ORCHESTRATION.md",
+             "dev/README.md", "dev/ARCHIVE.md", "dev/GLOSSARY.md",
+             "dev/STYLE-agda.md", "dev/STYLE-i18n.md",
+             "dev/rules.toml", "dev/ledger.toml", "dev/vendors.toml",
+             "dev/glossary.toml", "dev/build-manifest.toml"]
+
+# A citation is RUNNABLE when the text tells somebody to run it. Only those
+# are broken instructions; the rest cost a reader one failed `cat`.
+RUNNABLE = re.compile(r"(?:python3?|\.venv/bin/python|make|run)\s+\S*$")
+
+
+def sweep_paths() -> list[str]:
+    """Dead `scripts/*.py` citations in the LIVE documents.
+
+    WHY A SWEEP AND NOT A GATE. MEASURED 2026-08-16, after the scripts/ move
+    into group directories: 32 dead citations across the live documents, 29 of
+    them in dev/PLAN.md, and **only 2 are runnable instructions**. The other 30
+    are mentions. This project's own law is that a red gate buys a pasted
+    answer rather than the work, and a gate over 30 harmless mentions is
+    exactly that trade. So this prints, and never fails.
+
+    THE CURE IS ALREADY RULED AND IT IS NOT AN UPDATED PATH. AGENTS.md names
+    every checker by FILE NAME and never by path, decided 2026-08-15 so that a
+    directory move cannot make the table wrong. MEASURED: AGENTS.md carries
+    zero dead paths and dev/PLAN.md, which did not adopt the rule, carries 29.
+    """
+    out: list[str] = []
+    tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT,
+                                 capture_output=True, text=True).stdout.split())
+    by_name: dict[str, list[str]] = {}
+    for t in tracked:
+        if t.endswith(".py"):
+            by_name.setdefault(Path(t).name, []).append(t)
+    for rel in LIVE_DOCS:
+        p = ROOT / rel
+        if not p.is_file():
+            continue
+        for i, line in enumerate(read(p).split("\n"), 1):
+            for m in SCRIPT_REF.finditer(line):
+                cited = m.group(0)
+                if cited in tracked:
+                    continue
+                # Prefer a live sibling under scripts/ over a copy that a task
+                # directory happens to hold.
+                cands = [c for c in by_name.get(Path(cited).name, [])
+                         if c.startswith("scripts/")] or \
+                        by_name.get(Path(cited).name, [])
+                where = f"moved to `{cands[0]}`" if cands else "gone"
+                kind = ("RUNNABLE" if RUNNABLE.search(line[:m.start()] + " ")
+                        else "mention")
+                out.append(f"  [{kind}] {rel}:{i}: `{cited}` does not exist "
+                           f"({where}). Name it by FILE NAME, as AGENTS.md "
+                           f"does, or cite the path it holds today.")
+    return out
+
+
 def run_sweep() -> int:
     lessons_text = read(ROOT / "dev" / "LESSONS.md")
     plan_text = read(ROOT / "dev" / "PLAN.md")
     rules_data = tomllib.loads(read(ROOT / "dev" / "rules.toml"))
     unmentioned = sweep_routing(lessons_text, rules_data)
     cells = sweep_cells(plan_text)
+    paths = sweep_paths()
     print("check-dev-docs sweep: unrouted AND uncited LESSONS entries")
     print("\n".join(unmentioned) if unmentioned else "  (none: every unrouted "
           "entry is cited somewhere in the corpus or a brief)")
@@ -423,8 +487,17 @@ def run_sweep() -> int:
     print("check-dev-docs sweep: section 11 cells over the episode-scale line")
     print("\n".join(cells) if cells else "  (none)")
     print()
+    runnable = [p for p in paths if "[RUNNABLE]" in p]
+    print("check-dev-docs sweep: dead scripts/*.py citations in LIVE documents")
+    print("\n".join(runnable) if runnable else "  (no broken instruction)")
+    if len(paths) > len(runnable):
+        print(f"  ... and {len(paths) - len(runnable)} mention(s); run with "
+              f"--sweep-paths for the full list")
+    print()
     print(f"sweep: {len(unmentioned)} unmentioned entr(ies), "
-          f"{len(cells)} episode-scale cell(s); informational, exit 0")
+          f"{len(cells)} episode-scale cell(s), {len(runnable)} broken "
+          f"instruction(s) of {len(paths)} dead citation(s); "
+          f"informational, exit 0")
     return 0
 
 
@@ -436,11 +509,22 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--list", action="store_true", help="list the gate subchecks")
     ap.add_argument("--sweep", action="store_true",
                     help="on-demand informational sweep (exit 0)")
+    ap.add_argument("--sweep-paths", action="store_true",
+                    help="every dead scripts/*.py citation in the live "
+                         "documents, mentions included (exit 0)")
     args = ap.parse_args(argv[1:])
 
     if args.list:
         for name in GATE_CHECKS:
             print(name)
+        return 0
+    if args.sweep_paths:
+        found = sweep_paths()
+        print("check-dev-docs: dead scripts/*.py citations in LIVE documents")
+        print("\n".join(found) if found else "  (none)")
+        runnable = sum(1 for p in found if "[RUNNABLE]" in p)
+        print(f"\n{len(found)} dead citation(s), {runnable} of them a broken "
+              f"instruction; informational, exit 0")
         return 0
     if args.sweep:
         return run_sweep()

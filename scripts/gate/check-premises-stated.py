@@ -293,7 +293,29 @@ def briefs(tasks: Path) -> list[Path]:
     `agents_tree.documents()` has excluded `.lagda.md` since it was written.
 
     `tasks` is kept in the signature for the tests that pass a fixture root.
+
+    AND IT HAD STOPPED WORKING AS ONE. The line below filters the REAL tree by
+    a path prefix, so a fixture root outside `agents/tasks/` matched nothing,
+    the checker reported "no briefs under <tmp>/tasks" and exited 2, and
+    `scripts/tests/test_premises_stated.py` had been RED since this function
+    was routed through `agents_tree`. Nothing reported it, because that suite
+    is not in the `make test` target either. Repaired 2026-08-16.
+
+    A ROOT OUTSIDE THE REAL TREE IS WALKED DIRECTLY, and the brief-versus-
+    report signal still comes from `agents_tree`, which is the whole point of
+    the refactor this repaired.
     """
+    # A FIXTURE ROOT USES THE NAME SIGNAL, `is_candidate_brief`, and the real
+    # tree keeps `is_brief`. The difference is deliberate and it is the
+    # narrower question each answers: `is_brief` reads the CONTENT for a
+    # `tier:` line or a SCOPE section, which a two-line fixture snippet does
+    # not carry, while `is_candidate_brief` asks only whether the file bears
+    # its task's own name, which is exactly what the retired glob approximated
+    # and exactly what a fixture asserts by construction.
+    if not str(tasks).startswith(str(agents_tree.TASKS)):
+        return [p for p in sorted(tasks.glob("*/*.md"))
+                if not p.name.endswith(".lagda.md")
+                and agents_tree.is_candidate_brief(p)]
     live = agents_tree.briefs()
     return [p for p in live
             if "archive" not in p.parts and str(p).startswith(str(tasks))]

@@ -370,13 +370,71 @@ def series_findings(path: Path, text: str, twins: set[str]) -> list[str]:
     return out
 
 
+def next_ids() -> int:
+    """Print the next free ID per series, COMPUTED from the headings.
+
+    WHY THIS EXISTS. `dev/LESSONS.md` carried the next free ID as a hard-coded
+    list in its own "Adding an entry" section. MEASURED 2026-08-16: it offered
+    `P-o, R-41, T-3, I-10, D-27, C-24` while `P-y`, `R-41`, `D-30` and `C-59`
+    were the highest taken, so FOUR of its six series collided. An author who
+    followed the line literally would have minted a duplicate, and
+    `duplicate_lessons` above exists because that has happened.
+
+    A number that is written down goes stale; a number that is computed cannot.
+    This is the same cure `dev/ledger.toml` applies to the standing size
+    figure, which it refuses to store for exactly this reason.
+
+    THE DEFAULT IS MAX PLUS ONE, NEVER THE LOWEST GAP. `Rule 7`, `17`, `18`
+    and `19` are absent from the headings, and they occur nowhere in
+    `dev/LESSONS.md`, `dev/PLAN.md` or `dev/JOURNAL.md`, so the record does
+    not say whether they were retired or never minted. Reusing a number risks
+    colliding with a citation in a frozen record, and max plus one never does.
+    The gaps are PRINTED beside the answer, so the author decides rather than
+    the tool deciding quietly (C-48).
+    """
+    taken = known_lessons()
+    print("next free LESSONS id per series, computed from the headings of "
+          "dev/LESSONS.md:")
+    letters = sorted(i.split("-")[1] for i in taken if i.startswith("P-"))
+    free = next((c for c in "abcdefghijklmnopqrstuvwxyz"
+                 if c not in letters), None)
+    top = letters[-1] if letters else "(none)"
+    print(f"  P       next `P-{free}`" if free else
+          "  P       EXHAUSTED: a-z are all taken")
+    print(f"          {len(letters)} taken, highest `P-{top}`")
+    for series, prefix in (("Rule", "Rule "), ("R", "R-"), ("T", "T-"),
+                           ("I", "I-"), ("D", "D-"), ("C", "C-")):
+        nums = sorted(int(i[len(prefix):]) for i in taken
+                      if i.startswith(prefix))
+        if not nums:
+            print(f"  {series:7s} next `{prefix}1` (none taken)")
+            continue
+        # A gap is a hole INSIDE the range the series actually occupies. The
+        # R series starts at 21 because it continues `Rule 1` to `Rule 20`
+        # under a new spelling, so counting from 1 would report twenty false
+        # gaps and bury the four real ones.
+        gaps = [n for n in range(nums[0] + 1, nums[-1]) if n not in nums]
+        line = f"  {series:7s} next `{prefix}{nums[-1] + 1}`"
+        print(line)
+        print(f"          {len(nums)} taken, highest `{prefix}{nums[-1]}`"
+              + (f", GAPS {', '.join(f'{prefix}{g}' for g in gaps)}"
+                 f" (the record does not say whether these were retired;"
+                 f" do not reuse one without checking)" if gaps else ""))
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("paths", nargs="*", type=Path)
     ap.add_argument("--briefs", action="store_true",
                     help="also scan agents/tasks/, which the default run skips")
+    ap.add_argument("--next-id", action="store_true",
+                    help="print the next free LESSONS id per series, computed")
     args = ap.parse_args()
+
+    if args.next_id:
+        return next_ids()
 
     lessons, decisions = known_lessons(), known_decisions()
     if (dupes := duplicate_lessons()):
