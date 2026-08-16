@@ -1233,7 +1233,8 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.343 | Repair the two vacuous telescopes | LANDED GREEN, 133.96 s, 20 IN AND 7 OUT | The two types are ONE type, proved by identity BOTH ways before any edit. 38 copies go stale, not two |
 | LJ-1.344 | Supply the repaired ties | BOTH SUPPLIED, 25 LINES, NO NEW FIELD | The closure needed stating one SORT up, not a new fact. Two more sites found |
 | LJ-1.346 | Land the tie supply, settle the access | LANDED GREEN FIRST TRY. THE BLOCK STAYS PRIVATE | A public access already existed, so the supply carries ZERO copies. Two telescopes shortened |
-| LJ-1.347 | Settle the arity-numeral conjunct: INFERRED FALSE | DISPATCHED | LJ-1.344 walled at m=0 by two routes over four runs. D-10 again, and it found two more sites nobody counted |
+| LJ-1.347 | Settle the arity-numeral conjunct | FALSE. THE WALL IS THE CASE SPLIT, NOT THE NUMERAL | Two lines apart: no split 1.73 s, with split 8 GB at 374 s. The eliminator is 1.64 s. Law C-58 |
+| LJ-1.350 | Probe ONE third-shape tie before funding 28 | DISPATCHED | LJ-1.347 counted 24 producers and 20 consumer slots, and priced the repair at about 280 insertions, INFERRED |
 | LJ-1.348 | Supply witK and graphWitK | NEITHER. witK is MEASURED FALSE, the cure unpayable. DD25 [LJ-1.349] | Delivered prose two chapters away states the hole in English. graphWitK INFERRED false |
 | LJ-1.349 | DD25 review of LJ-1.348's witK refutation | DISPATCHED | Three of six construction ties are now FALSE. I skipped this gate once already this session; not twice |
 | LJ-1.345 | DD25 review of LJ-1.341's vacuity claim | UPHOLD. THE CHAPTER WAS EDITED ON A TRUE PREMISE | It rebuilt the countermodel itself and forced an honest cold check past a cache hit |

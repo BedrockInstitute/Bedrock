@@ -4412,6 +4412,53 @@ carries the digest.
 **What it costs when it goes wrong.** A new assumption in a trophy's telescope,
 permanently, in a project whose first trophy exists to PROVE choice rather than
 assume it. **And the cost is asymmetric: an axiom admitted needlessly is
+
+### C-58. A pattern-match case split on a numeral index can exhaust 8 GB where the library eliminator is free
+
+**Rule:** When a proof splits on a numeral index, **write the split with the
+library's own eliminator, not with a pattern match.** **The two are the same
+mathematics and they are not the same price.**
+
+**The measurement, `[LJ-1.347]`, 2026-08-16, five controls each isolating ONE
+variable.** The whole finding is the third and fourth rows: **they differ by two
+lines.**
+
+| arm | content | result |
+|---|---|---|
+| the zero clause alone, small imports | 1.51 s, exit 0 |
+| the zero clause alone, FULL imports | 1.70 s, exit 0 |
+| **both clauses, NO split** | **1.73 s, exit 0** |
+| **the same, plus a two-line dispatcher** | **8 GB EXHAUSTED, 373.93 s** |
+| both clauses inlined in the split | 8 GB EXHAUSTED, 406.01 s |
+| **the same split via the library eliminator** | **1.64 s, exit 0** |
+
+**Empty-file floor 0.48 s.** **The numeral, the route, the imports, the inlining
+and the two clauses coexisting are each MEASURED INNOCENT by their own control.**
+**Only the pattern-match split is guilty.**
+
+**What it cost before it was found.** Four earlier runs died at 330, 400, 160
+and 300 seconds, and the task that hit them returned INFERRED FALSE rather than
+MEASURED FALSE **because it could not reach the branch.** **The verdict was one
+clause away for a day, and the clause checks in 1.51 s once the split is written
+the other way.**
+
+**And the diagnosis that was carried forward was wrong.** The earlier reading
+blamed refusing a membership at CONCRETE numerals. **MEASURED FALSE: that arm is
+1.51 s on its own.**
+
+**What to do.** **When a numeral split walls, do not bisect the mathematics
+first. Replace the split with the eliminator and re-run.** It is a two-line
+change and it is the cheapest experiment available.
+
+**The family this joins, and it is now five.** C-51: a seal does not stop a
+`with`-abstraction, and projections cure it. C-55: one record field walls where
+the same parameter is free. C-56: a truncated proof that walls is paying for its
+assembly. R-41: depth is free and the mixed spelling costs. **Every one of them
+says the price is in the FORM, and the mathematics is not what you are paying
+for.**
+
+Related: [[C-51]], [[C-55]], [[C-56]], [[R-41]], [[C-53]], [[P-i]].
+
 expensive and quiet, while a probe that fails costs one file.**
 
 **What to do.** Before claiming that a principle is needed, prove or refute
