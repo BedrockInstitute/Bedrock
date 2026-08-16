@@ -112,8 +112,25 @@ def main(argv: list[str]) -> int:
               "a task, and a red gate would buy a pasted citation rather than a survey.",
               file=sys.stderr)
 
-    print(f"check-archive-cited: {total - len(rows)} of {total} live brief(s) cite an archive "
-          f"(advisory, never a gate)")
+    # [LJ-1.353] THE NEXT DRIFT DOWN, and the owner found it the same way as the
+    # first: by reading a brief this checker had passed. A section citing ONLY
+    # `archive/dev/` names the retired route's RECORDS. The failure this file
+    # exists for is `[LJ-1.107]` rebuilding 82 delivered lines of CSB out of
+    # `archive/src/`, and a task index cannot lead anybody to those lines.
+    # MEASURED 2026-08-16: ten briefs written in one session each cited exactly
+    # ONE archive path, eight of them the SAME task index, and none cited a line
+    # of archived CODE. One of the ten was a recon into Cantor-Schroeder-
+    # Bernstein, which the archive delivers GREEN.
+    #
+    # This stays ADVISORY for the reason stated above: a red gate buys a pasted
+    # citation. What changes is that the number it prints is now the one that
+    # correlates with the failure.
+    code = [p for p in briefs() if not verdict(p)
+            and re.search(r"archive/src/|agents/tasks/archive/", p.read_text(encoding="utf-8"))]
+    cited = total - len(rows)
+    print(f"check-archive-cited: {cited} of {total} live brief(s) cite an archive, "
+          f"and {len(code)} cite archived CODE rather than only the retired route's "
+          f"RECORDS (advisory, never a gate)")
     return 0
 
 
