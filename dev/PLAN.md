@@ -1259,8 +1259,9 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.365 | Does a PT.rec dissolve the last untruncation | SET-MOTIVE. DD25 review [LJ-1.368] | The top wrap types and the body cannot exist. The first data goal IS a set, named by Agda's refusal |
 | LJ-1.368 | DD25 review of LJ-1.365's refutation | SPLIT. ONLY THE PROBE'S PATH CROSSES A SET | A set-typed term built UNDER the wrap is never an elimination site. The obstruction is a level lower |
 | LJ-1.369 | Owner ruling: take a choice principle at the limit band | OWED | The untruncation is strictly weaker than a band choice, and the archived reason for refusing choice is spent |
-| LJ-1.370 | Retire meet-suc, on LJ-1.364's fable ruling | QUEUED | The rewrite side prices at ZERO. Three corrections to the recorded price: 3 lines not 4, carveMeets STAYS, 4 edit sites |
-| LJ-1.371 | Recon: the registry cannot see an in-harness dispatch | QUEUED | It caused three defects today: a false green from gate-ready, a dead DD18 refusal, and a false red from dd18survey |
+| LJ-1.370 | Retire meet-suc, on LJ-1.364's fable ruling | RETIRES GREEN AT EXACTLY 3 LINES, MATCHING THE RULING | No consumer appeared. Stage minus 5, Step minus 1, dev/ARCHIVE.md plus 35 |
+| LJ-1.371 | Recon: can anything see an in-harness dispatch | INFERENCE WORKS, REGISTRATION DOES NOT | Read the tree, not the dispatcher. My shared-cause premise is FALSE: two share it, one does not |
+| LJ-1.372 | Land LJ-1.371's two fixes: the false red, then tree inference | DISPATCHED | The false red needs no registry. The inference caught both live agents at 15 min with zero false positives |
 | LJ-1.361 | Owner's route: CSB for ANY ZF model, then at L | OPEN-BUT-NOT-CHEAPER, ABOUT 700 | The crux separation IS a record field, miniature green at an abstract 𝒮. Paid once, all models inherit |
 | LJ-1.352 | DD25 review of LJ-1.347's conjunct | SPLIT. THE VERDICT HOLDS, THE COUNT DOES NOT | 32 producers not 24, plus two sites in TwelveAgree. The repair reading is overturned by a term |
 | LJ-1.353 | Recon: L models Cantor-Bernstein | EXPENSIVE, ABOUT 650. BUT THE ARCHIVE DELIVERS AN AMBIENT csb | Port it at about 100 lines. The two rulings disagree because the packagings differ |

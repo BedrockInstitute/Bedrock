@@ -262,10 +262,9 @@ The cell's case is one application, and its only work is a truncation. A cell is
 met at a stage by *some* member, so the member has to be brought out of a
 truncation before `carveAt`{.Agda} can read it, and put back into one afterwards;
 `carveMeets`{.Agda} is that step, and it is the whole difference between this
-instance and a bare membership. `meet-suc`{.Agda} then states the conclusion in
-the shape this chapter has always exported it in.
+instance and a bare membership.
 <!--zh-->
-格的这一情形是一次施用，而它唯一要干的活是一次截断。一格在一个阶段处是被**某个**成员相交的，故那个成员必须先从一个截断中取出，`carveAt`{.Agda} 才读得到它，此后再放回一个截断里；`carveMeets`{.Agda} 就是那一步，而它就是这个实例与「光秃秃的隶属」之间的全部差别。随后 `meet-suc`{.Agda} 把结论陈述成本章一贯导出的那个形状。
+格的这一情形是一次施用，而它唯一要干的活是一次截断。一格在一个阶段处是被**某个**成员相交的，故那个成员必须先从一个截断中取出，`carveAt`{.Agda} 才读得到它，此后再放回一个截断里；`carveMeets`{.Agda} 就是那一步，而它就是这个实例与「光秃秃的隶属」之间的全部差别。
 <!--/-->
 
 ```agda
@@ -273,10 +272,6 @@ carveMeets : (u σ : S) → ⟨ meets u σ ⟩ → ∥ Carved (meets u) σ ∥�
 carveMeets u σ = PT.rec squash₁
   (λ { (z , (z∈u , z∈Lσ)) → carveAt (meets u) σ z z∈Lσ
     (λ δ hz → ∣ z , (z∈u , hz) ∣₁) })
-
-meet-suc : (u σ : S) → IsOrd σ → ⟨ meets u σ ⟩ → isLeastOrd (meets u) σ
-         → ∥ Σ[ δ ∈ S ] IsPredOf σ δ ∥₁
-meet-suc u σ ordσ m least = ∣ predOf (meets u) σ ordσ least (carveMeets u σ m) ∣₁
 ```
 
 <!--en-->
@@ -386,7 +381,7 @@ bound-below₂ a p x y y∈x x∈a =
 
 <!--en-->
 `μ`{.Agda} is the earliest stage at which a set of `L` has a member, and
-`meet-suc`{.Agda} says that stage is a successor, because a set enters the tower
+that stage is a successor, because a set enters the tower
 only by being carved out of the stage below. That argument reads nothing about
 cells, so it is written once over any property of ordinals: `carveAt`{.Agda}
 carves a witness below the least stage, and `predOf`{.Agda} turns the carve into
@@ -404,7 +399,7 @@ Nothing here states a relation on `L`, and nothing here is a recursion. The
 comparison and the recursion both arrive in the next chapters, and both are
 confined to the material this one has located.
 <!--zh-->
-`μ`{.Agda} 是 `L` 的一个集合拥有成员的最早阶段，而 `meet-suc`{.Agda} 说那个阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。那个论证不读取关于格的任何东西，故它对任意一条序数性质只写一遍：`carveAt`{.Agda} 在最小阶段之下雕出一个见证，而 `predOf`{.Agda} 把那次雕出变成前一阶段，并按 `isPropPredOf`{.Agda} 把截断闭合。下一章就是它的第二个实例，取在塔中光秃秃的隶属上。`defStage`{.Agda} 是 `μ`{.Agda} 所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})；而 `Lset-μ`{.Agda} 把首次现身的那个阶段与其上的可定义幂集认同。于是每个首次现身于该处的集合，都带着一个写在单一固定阶段之上的名字，而那正是选取装置将要比较的东西。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
+`μ`{.Agda} 是 `L` 的一个集合拥有成员的最早阶段，那个阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。那个论证不读取关于格的任何东西，故它对任意一条序数性质只写一遍：`carveAt`{.Agda} 在最小阶段之下雕出一个见证，而 `predOf`{.Agda} 把那次雕出变成前一阶段，并按 `isPropPredOf`{.Agda} 把截断闭合。下一章就是它的第二个实例，取在塔中光秃秃的隶属上。`defStage`{.Agda} 是 `μ`{.Agda} 所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})；而 `Lset-μ`{.Agda} 把首次现身的那个阶段与其上的可定义幂集认同。于是每个首次现身于该处的集合，都带着一个写在单一固定阶段之上的名字，而那正是选取装置将要比较的东西。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
 
 此处没有一条陈述涉及 `L` 上的关系，也没有一处是递归。比较与递归都在后面几章到场，而两者都被限制在本章所定位的材料之内。
 <!--/-->

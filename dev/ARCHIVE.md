@@ -117,6 +117,41 @@ This directory is not a module, so it gets a record here rather than a row.
 - **What would reopen it.** Only a reversal of `dev/LESSONS.md` D-1, which puts
   a probe beside its report. Nothing else sends a probe to `archive/`.
 
+## The retirement of `meet-suc`, 2026-08-16
+
+A lemma, not a module, so this is a record here rather than a row in the table
+below, on the same warrant as the `archive/probes/` record. The master it lived
+in, `src/L/Choice/Stage.lagda.md`, stays live, so the fragment has no archived
+file of its own: the text below IS the archive, per D20's「archived, never
+deleted」.
+
+- **What it was.** A three-line corollary of the generic
+  first-appearance-is-a-successor argument, exported by `L.Choice.Stage`:
+
+  ```agda
+  meet-suc : (u σ : S) → IsOrd σ → ⟨ meets u σ ⟩ → isLeastOrd (meets u) σ
+           → ∥ Σ[ δ ∈ S ] IsPredOf σ δ ∥₁
+  meet-suc u σ ordσ m least = ∣ predOf (meets u) σ ordσ least (carveMeets u σ m) ∣₁
+  ```
+
+- **Why archived.** `[LJ-1.364]` ruled RETIRE under DD13, 2026-08-16, on the
+  owner's authorization. The rewrite side prices at zero: no code consumes the
+  lemma (MEASURED by grep over `src/`), its one designed consumer is recorded
+  structurally unable to call it, and `defStage-suc` already exports the
+  successor fact consumers use. Executed by `[LJ-1.370]`.
+- **Last green.** Commit `9ddb44d` (`[LJ-1.342]`, which wrote the generic form
+  this corollary sat on) through HEAD `9ae4b04`, 2026-08-16. The retirement
+  itself typechecks green; see `agents/tasks/LJ-1-370/lj-1.370-report.md`.
+- **What this code did right.** From measurement, not praise: after
+  `[LJ-1.342]` wrote `carveAt` and `predOf` over an abstract property, the
+  chapter's whole successor statement at an arbitrary least-met ordinal cost
+  exactly three in-fence lines, one application of `predOf ∘ carveMeets`. That
+  is the DD4 re-instantiation-is-nearly-free property, measured at this site.
+- **What would reopen it.** `[LJ-1.364]`'s own line: re-instantiation costs the
+  same three lines if ever wanted. A consumer that needs the statement at an
+  arbitrary least stage rewrites it in place; nothing is worth consulting in
+  `archive/` for it.
+
 ## Entries
 
 | Module | Original path | Why archived (ruling, date) | Last green (commit) | Measured size | What this code did right | Revival condition |

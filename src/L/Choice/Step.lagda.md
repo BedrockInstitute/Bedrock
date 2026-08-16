@@ -97,9 +97,8 @@ truncation to strip before it can hand the argument a witness; a set is its own
 witness, and there is nothing to strip. The application there is eleven lines and
 the one here is four. What this chapter used to claim, that the argument applies
 verbatim to a single set, was true of the split and of the carve and false of the
-interface: `meet-suc`{.Agda} asks for a cell that is met, and a single set cannot
-supply one, so the reuse it named was never available until the argument itself
-was written over the property.
+interface: the reuse it named was never available until the argument itself was
+written over the property.
 
 Two names cross the boundary and no more. `carveAt`{.Agda} reads the set out of
 its earliest stage and renames the carve to a successor, and `predOf`{.Agda}
@@ -109,7 +108,7 @@ conclusion spelled out, and it is now written in one place rather than two.
 <!--zh-->
 阶段那一章为每个可构造集给出了它的最早阶段，而选取阶段那一章为一格证明了与它相交的最早阶段是后继。那两个论证从来都不是关于格、也不是关于单个集合的。两者收下的都是一条序数的性质、它的最小阶段，以及在那个阶段之下雕出的一个见证，而两者的结论都是「最小阶段是后继」；故那个论证只在那边写一遍，而本章是它的第二个实例。
 
-此处的那条性质，就是塔中光秃秃的隶属，而它是两者中**较简单**的一个。一格是被**某个**成员相交的，故选取阶段那一章要先剥掉一层截断，才交得出论证所要的见证；而一个集合就是它自己的见证，无可剥。那边的施用十一行，此处的施用四行。本章从前所声称的「同一论证逐字适用于单个集合」，这话对分情形与雕出而言为真，对接口而言为假：`meet-suc`{.Agda} 要的是一个被相交的格，而单个集合供不出来，故它所点名的那次复用，在论证本身被写成架在性质之上以前，从来就不存在。
+此处的那条性质，就是塔中光秃秃的隶属，而它是两者中**较简单**的一个。一格是被**某个**成员相交的，故选取阶段那一章要先剥掉一层截断，才交得出论证所要的见证；而一个集合就是它自己的见证，无可剥。那边的施用十一行，此处的施用四行。本章从前所声称的「同一论证逐字适用于单个集合」，这话对分情形与雕出而言为真，对接口而言为假：它所点名的那次复用，在论证本身被写成架在性质之上以前，从来就不存在。
 
 跨过边界的只有两个名字，再无其他。`carveAt`{.Agda} 把该集合从它的最早阶段中读出，并把那次雕出改名为一个后继，而 `predOf`{.Agda} 把它变成前一阶段，途中按极小性反驳低的那一支。里面的分情形依然是乔装的比较，写成写明结论的具名辅助件，只是如今写在一处，而不是两处。
 <!--/-->
