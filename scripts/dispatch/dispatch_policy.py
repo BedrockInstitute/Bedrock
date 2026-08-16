@@ -91,7 +91,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 AUTO = "auto"
-VERSION_IN_FORCE = "in-harness-subagent-mode"
+VERSION_IN_FORCE = "pi-subagent-mode"
 
 # The pin's own provenance. A position without a reason is a position nobody
 # can retire.
@@ -101,17 +101,21 @@ VERSION_IN_FORCE = "in-harness-subagent-mode"
 # not a judgement on any head. It stopped applying when the vendor changed:
 # `dev/vendors.toml` now names `zai`, a SUBSCRIPTION with no hourly bands, so
 # the clock it delegated to has no basis left to read.
-SET_ON = "2026-08-15"
+SET_ON = "2026-08-16"
 SET_BY = "the repository owner"
-REASON = ("The owner's instruction of 2026-08-15, given in the evening: switch "
-          "to in-harness from the NEXT task on. The owner names the mode daily "
+REASON = ("The owner's instruction of 2026-08-16: switch to pi from THIS task "
+          "on, and hold until they say switch again. That standing half is new: "
+          "earlier pins were named for a task or a day, and this one names a "
+          "period ending only on the owner's word. The owner names the mode "
           "from the token consumption they can see and the orchestrator cannot, "
-          "so the mode is pinned by word rather than derived. The OUTGOING pin "
-          "was `pi-subagent-mode`, set by the same owner earlier the same day "
-          "when pi moved to the zai subscription, and it is retired by a fresh "
-          "instruction rather than by any judgement on a head. The pin before "
-          "that was `auto`, which delegated to deepseek's peak clock; that "
-          "clock retired with the vendor.")
+          "so it is pinned by word rather than derived, and NO reason beyond "
+          "the instruction was given: none is invented here. The OUTGOING pin "
+          "was `in-harness-subagent-mode`, set by the same owner on 2026-08-15 "
+          "when opus led while the weekly allowance permitted it, and it is "
+          "retired by a fresh instruction rather than by any judgement on a "
+          "head. The pin before that was `pi-subagent-mode`, and before that "
+          "`auto`, which delegated to deepseek's peak clock; that clock retired "
+          "with the vendor.")
 REVERT_CONDITION = ("The owner names a mode by word, daily. Set "
                     "VERSION_IN_FORCE to `pi-subagent-mode` or "
                     "`in-harness-subagent-mode` and change nothing else. "

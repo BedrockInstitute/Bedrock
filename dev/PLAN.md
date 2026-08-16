@@ -1238,6 +1238,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.348 | Supply witK and graphWitK | NEITHER. witK FALSE, no uniform supplier. DD25 [LJ-1.349] UPHELD | Delivered prose two chapters away states the hole. graphWitK stays INFERRED |
 | LJ-1.351 | Measure graphWitK: 1 of 5 premise conjuncts inhabited | DISPATCHED | LJ-1.349 ruled the INFERRED verdict must be measured before it is believed |
 | LJ-1.352 | DD25 review of LJ-1.347's conjunct | SPLIT. THE VERDICT HOLDS, THE COUNT DOES NOT | 32 producers not 24, plus two sites in TwelveAgree. The repair reading is overturned by a term |
+| LJ-1.353 | Recon: how hard is L models Cantor-Bernstein | DISPATCHED | Owner's question. L models ZFC is delivered; the tree has ZERO Cantor and no coded surjection, MEASURED |
 | LJ-1.349 | DD25 review of LJ-1.348's witK | UPHOLD, AND THE LAST ESCAPE IS CLOSED BY A TERM | The countermodel lives INSIDE the intended premise class, machine-checked |
 | LJ-1.345 | DD25 review of LJ-1.341's vacuity claim | UPHOLD. THE CHAPTER WAS EDITED ON A TRUE PREMISE | It rebuilt the countermodel itself and forced an honest cold check past a cache hit |
 | LJ-1.322 | Price all three cost mechanisms in four flag runs | ALL THREE MISS, AND RANK 1 IS BACKWARDS | The shortcut CARRIES this file: without it, 13.1x slower. The RowTies gate FIRES at 36.60 s |
