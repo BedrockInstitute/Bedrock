@@ -10,7 +10,7 @@ Records whose citing documents have all become historical move to
 
 ## Why they are here and not under `_build/`
 
-`_build/` is in `.gitignore` and `Makefile:302` deletes everything in it
+`_build/` is in `.gitignore` and the `clean:` target deletes everything in it
 except `literature/`. `dev/ledger.toml`, the project's canonical size ledger,
 cited three of these tables as the provenance of standing figures while they
 sat one command from deletion. `[LJ-1.132]` moved them.
@@ -35,6 +35,8 @@ tree state that no longer exists cannot be regenerated. It is evidence.
 | `l3.32-t256-belowlim-profile.txt` | per-definition profile of the below-limit master, 546,708 ms | `dev/ledger.toml:2133` |
 | `lj-1.128-run2.log` to `-run5.log` | `[LJ-1.128]` main series, runs 2 to 5 | `agents/tasks/LJ-1-128/lj-1.128-report.md:86` |
 | `lj-1.128-controlA.log`, `-controlB.log` | `[LJ-1.128]` control runs on the old tree | `agents/tasks/LJ-1-128/lj-1.128-report.md:101-106` |
+| `pod-retrieval-scoping-2026-08-17.txt` | the retrieval scoping experiment: gold rank on the full corpus against the archive scope, seven cases | `dev/POD.md` section 7.4 |
+| `pod-retrieval-scoping-2026-08-17.py` | the experiment that produced the line above, frozen. Nothing runs it | the record beside it |
 
 The two control logs are the raw evidence for that report's headline finding
 and are kept with the series they are compared against. The report tabulates

@@ -2599,21 +2599,36 @@ retrieve(query: str, scope: list[str], k: int) -> list[tuple[str, float]]
 - returns: `(repository-relative path, score)`, highest score first.
 
 **THE SCOPE IS THE MEASURED PART, and the ranker is not.** MEASURED 2026-08-17
-over the ten labelled detour episodes of
+over the seven archive cases among the labelled detour episodes of
 `agents/tasks/LJ-1-376/lj-1.376-report.md`. The same BM25 ran twice, with the
-same constants `k1=1.5` and `b=0.75`: once over the whole corpus, and once over
-`archive/` alone.
+same constants `k1=1.5` and `b=0.75` and the same queries: once over the whole
+corpus of 1,706 documents, and once over the archive scope alone. Only the scope
+changed. The record is
+`dev/measurements/pod-retrieval-scoping-2026-08-17.txt`.
 
-| episode | full corpus | scoped |
-|---|---|---|
-| 7 | miss at 499 | rank 1 |
-| 11 | miss at 36 | rank 2 |
-| 10 | miss at 11 | rank 3 |
-| 5 | miss at 1412 | rank 3 |
+| episode | full corpus, of 1,706 | scoped | scope size |
+|---|---|---|---|
+| 7 | 444 | 1 | 97 |
+| 7b | 57 | 1 | 97 |
+| 11 | 15 | 2 | 6 |
+| 5 | 295 | 3 | 97 |
+| 10 | 123 | 3 | 6 |
+| 5b | 1,429 | 16 | 97 |
+| 6 | 1,464 | 28 | 97 |
 
-Five of seven archive cases reach the top 3 and two reach rank 1. Only the scope
-changed. The measured cause of the full-corpus miss is dilution: 293 live task
-documents on the same subject outrank the archive.
+Five of the seven reach the top 3 and two reach rank 1. **The measured cause of
+the full-corpus miss is dilution by the live task corpus.** For episode 7, 443
+documents outrank the gold file and 418 of them are live task documents. For
+episode 5 the figures are 294 and 280. The archive is not outranked by other
+archive files, and it is not outranked by `src/`. It is outranked by the reports
+of dispatches on the same subject.
+
+**AN EARLIER FORM OF THIS TABLE WAS WRONG AND THE CORRECTION IS KEPT.** It read
+the full-corpus column off a raw term-overlap count while the scoped column used
+BM25, so the two columns did not share a ranker and the sentence "only the scope
+changed" was false of the numbers under it. Both columns are BM25 now. The
+conclusion did not change, and the honest comparison is the stronger one: 444 to
+1 with one ranker beats 499 to 1 across two.
 
 **The two corpora grow differently, so the result holds as the project grows.**
 `agents/tasks` holds 1,456 documents today and it grows with every dispatch.
@@ -2654,7 +2669,7 @@ or a better ranker. A ZERO overlap says the file and the query share no
 discriminative token, and no lexical method reaches it.
 
 MEASURED precedent, episode 1, which is the one semantic case in the record: the
-query and the gold passage share two tokens, `step` at document frequency 1,071
+query and the gold passage share two tokens, `step` at document frequency 1,072
 of 1,706 and `lj` at 886 of 1,706. Both are noise at corpus scale.
 `dev/JOURNAL.md:1026` says the same thing in words: "Step 6 and the leaf supply
 share no word".
