@@ -1391,6 +1391,7 @@ dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
 | LJ-1.384 | Fable ADVERSARIAL: is every cheap escape closed | ESCAPE-OPEN. MY SENTENCE IS UNEARNED | A CODED route nobody aimed at, and two of its three legs are delivered in src/ today |
 | LJ-1.386 | Gate the coded route: internal existence of a pairing code | NEVER DISPATCHED, MY BOOKKEEPING ERROR | I made the row and the directory, never the brief. The resumption's first task |
 | LJ-1.381 | Price the phi-zero EXTRACTION | ABOUT 210 MARGINAL LINES, AND THE FACTOR IS A GREEN FILE | Its legs are BUILT, not described. One repair precedes the landing and it is in the STATEMENT |
+| LJ-1.387 | Should the root `site/` and `scripts/site/` merge | NO RETURN, THE QWEN HEAD FAILED | 2 h, 1.1 M tokens, output degenerated, report never created. Head out of force again |
 | LJ-1.379 | Measure the BACK direction at the chain | SUPPLIED, 62 LINES. THE FLOOR BECOMES A PRICE AT ABOUT 113 | arityNumAtL's IN direction pays, and the upstream debt LJ-1.360 feared is GONE |
 | LJ-1.370 | Retire meet-suc, on LJ-1.364's fable ruling | RETIRES GREEN AT EXACTLY 3 LINES, MATCHING THE RULING | No consumer appeared. Stage minus 5, Step minus 1, dev/ARCHIVE.md plus 35 |
 | LJ-1.371 | Can anything see an in-harness dispatch | INFERENCE WORKS. DD25 review not needed: it found a working mechanism | Read the tree, not the dispatcher. It refuted MY premise |

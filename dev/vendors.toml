@@ -95,11 +95,24 @@ default_mode = "pi-subagent-mode"
 # deepseek and never carries this model.
 pi_fallback = "deepseek"
 
-# QWEN, ADDED 2026-08-16 ON THE OWNER'S INSTRUCTION. NOT IN FORCE.
+# QWEN, ADDED 2026-08-16 ON THE OWNER'S INSTRUCTION. IN FORCE FOR ONE TEST ON
+# 2026-08-16, AND OUT OF FORCE AGAIN THE SAME NIGHT BECAUSE THE TEST FAILED.
 #
-# The owner asked for a qwen vendor wired to `pi`'s `qwen3.8-27b-mlx@8bit`.
-# The row is added; `in_force` above is UNCHANGED, because they asked to add a
-# vendor and not to switch to one.
+# THE TEST AND ITS RESULT, `[LJ-1.387]`. The owner asked to try this head on a
+# read-only recon. It ran about two hours, sent about 1.1 M tokens, read files
+# correctly for a long stretch, then produced output unrelated to the task
+# (`porting artifacts/fatthemes/4bpp/icon-sheets/16x16/base16_mocha.png`) and
+# NEVER created its report file, which its brief ordered as its first action.
+# `in_force` returns to `zai`. The row stays, because the measurements in it
+# are worth keeping and because the owner may want to try another local model.
+#
+# The owner asked for a qwen vendor wired to `pi`'s `qwen3.8-27b-mlx@8bit`, and
+# the row was added with `in_force` LEFT ALONE, because adding a vendor is not
+# switching to one. The owner then asked to TEST this head, so `in_force` moved
+# to `qwen` and `[LJ-1.387]` is the test dispatch.
+#
+# THE OUTGOING VENDOR IS `zai`, retired by a fresh instruction and by no
+# judgement on the head. One line above returns to it.
 #
 # THE PROVIDER IS `mlxvlm`, CORRECTED 2026-08-16 ON THE OWNER'S INSTRUCTION
 # AND RE-MEASURED THE SAME DAY. It is the same trap the zai row records one
@@ -121,11 +134,22 @@ pi_fallback = "deepseek"
 #
 # `pi_wired = true` records the `mlxvlm` reading and nothing older.
 #
-# ONE THING IS NOT SETTLED AND THIS FILE DOES NOT INVENT IT. `pi --list-models`
-# now prints the model column as that absolute path rather than as
-# `qwen3.8-27b-mlx@8bit`, while `auth check` still answers `ready` for the
-# short ID. The model ID is the owner's to supply, so the short ID stands and
-# the discrepancy is reported rather than guessed.
+# THE MODEL ID IS THE ABSOLUTE PATH, SETTLED BY A FAILED DISPATCH 2026-08-16.
+# The short ID `qwen3.8-27b-mlx@8bit` was carried here and reported to the
+# owner as unsettled. `[LJ-1.387]` then ran on it and `pi` answered
+# `Warning: Model "qwen3.8-27b-mlx@8bit" not found for provider "mlxvlm".
+# Using custom model id.`, echoed its prompt, and exited `done` in 10 seconds
+# having written nothing.
+#
+# AND THE REASON NO GATE CAUGHT IT IS WORTH MORE THAN THE FIX. `pi auth check`
+# answers `ready` for the REAL path AND for the bogus short ID, MEASURED side
+# by side. **It validates the PROVIDER and not the MODEL.** So `dispatch.py`'s
+# refusal of "a model the backend rejects" cannot fire on a wrong model ID for
+# this vendor, and `pi_wired = true` means the provider answers, never that
+# the model exists.
+#
+# THE ONE CHECK THAT DISCRIMINATES is the model column of `pi --list-models`.
+# Read the ID from there, never from `auth check`.
 #
 # IT IS FLAT, and for a reason the other rows do not have: it runs LOCALLY, so
 # it bills no hours at all. A local model gives the clock no basis, exactly as
@@ -148,7 +172,7 @@ pi_fallback = "deepseek"
 # them a mutual pair on 2026-08-15. Nobody has ruled a fallback for this
 # vendor, and an invented one would write a certainty no evidence gives.
 [vendors.qwen]
-model = "qwen3.8-27b-mlx@8bit"
+model = "/Users/alsg/.lmstudio/models/Youssofal/Qwen3.8-27B-MTPLX-Optimized-Speed"
 pi_provider = "mlxvlm"
 pi_wired = true
 default_mode = "pi-subagent-mode"
