@@ -1,14 +1,13 @@
 # AGENTS.md
 
-**Status: VOID from the POD cutover; `dev/POD.md` section 3 is the rule set then, and this
-file binds until then. Section 1 there names three rules of this file that get no new home.**
+**Status: VOID at the POD cutover, when `dev/POD.md` section 3 becomes the rule set, and its
+section 1 names three rules of this file that get no new home. Until then this file binds.**
 
 The rulebook for AI coding agents on Bedrock. Every session loads it: Claude Code through the
 root `CLAUDE.md`, other agents directly.
 
 **This file is deliberately short.** It holds only what changes what you DO on a task. For
-everything else, read one row in [Where the rules live](#where-the-rules-live). A rulebook
-nobody finishes reading binds nothing.
+everything else, read one row in [Where the rules live](#where-the-rules-live).
 
 > **This project is very early and this guide is incomplete.** No rule here does **not** mean no
 > rule. When unsure, do **not** guess. Stop, ask the repository owner, and wait. A question
@@ -56,8 +55,7 @@ nobody finishes reading binds nothing.
   docs; use an em dash in any language; use half-width sentence punctuation in CJK prose;
   commit or print deployment secrets; add an unpinned or globally-installed dependency; add an
   in-file `SPDX-*` header.
-- **Never leave an undeclared file in `_build/`.** It is a temporary folder, not a rubbish bin.
-  Declare its class in `dev/build-manifest.toml` when you create it, or move it to a permanent
+- **Never leave an undeclared file in `_build/`.** Declare its class in `dev/build-manifest.toml` when you create it, or move it to a permanent
   home.
 
 ## Commands
@@ -91,14 +89,14 @@ them into `.venv`.
 Every rule has ONE canonical home, chosen by who enforces it. **A rule that no machine enforces
 must name its enforcement point:** a gate, a brief section, a review step. A rule with no
 enforcement point is a wish, and nothing is canonical twice. **Read the gloss column to decide
-whether you need the file, without opening it**, and believe the enforcement column when it says
-PARTIAL: a row claiming more than its checker delivers is false safety.
+whether you need the file**, and believe the enforcement column when it says PARTIAL: a row
+claiming more than its checker delivers is false safety.
 
 | What it covers | Canonical home | Enforced by |
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `rules.py` bundles; review |
 | **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; a bare `D<n>` resolves only against the archive | `dev/PLAN.md` section 3; `archive/dev/DECISIONS-archived.md` | `check-rule-ids.py` resolves every code. **It cannot tell which series an author MEANT.** Dated records under `dev/` and `agents/` are exempt
-| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** **This table names checkers by FILE NAME and never by path, so a directory move cannot make it wrong** (2026-08-15; `dispatch_policy.py` moved to `scripts/dispatch/` and this row survived it). The brief's `tier:` line names the head and the model | Tables and modes: `dispatch_policy.py`, run it. Vendors: `dev/vendors.toml`. Operated by `dev/ORCHESTRATION.md` section 1. **All three are SUPERSEDED at the POD cutover by `dev/POD.md` section 6.1 and `dev/pod/heads.toml`** | **PARTIAL.** `check-dispatch-policy.py` **cannot see which head RAN**: an in-harness dispatch passes through no tool. **The mode in force decides which path a dispatch takes, and only one of the two cases walks `dispatch.py`, so the refusals in it are live under one mode and dead under the other. Run the switch to see which.**
+| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** **This table names checkers by FILE NAME, never by path, so a directory move cannot make it wrong** (2026-08-15, and `dispatch_policy.py` has since moved). The brief's `tier:` line names the head and the model | Tables and modes: `dispatch_policy.py`, run it. Vendors: `dev/vendors.toml`. Operated by `dev/ORCHESTRATION.md` section 1. **All three are SUPERSEDED at the POD cutover (`dev/POD.md` section 6.1)** | **PARTIAL.** `check-dispatch-policy.py` **cannot see which head RAN**: an in-harness dispatch passes through no tool. **Only one case walks `dispatch.py`, so its refusals are live under one mode and dead under the other.**
 | **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `check-task-index.py`; review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `ledger.py --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
@@ -152,8 +150,7 @@ it, is not ready to send.**
 
 **An estimate is ONE best-effort number, and it names its basis** (`dev/PLAN.md` DD8): a probe,
 a delivered comparable or a survey. A size figure counts non-blank lines inside ` ``agda `
-fences. Record an overage plainly and work it down where real compression exists. Evidence can
-move a technique; a number alone cannot.
+fences. Record an overage plainly and work it down where real compression exists.
 
 **THE ROUTE is DD2 and DD5 and this file does not restate them.** **RULED:** both trophies,
 `L ⊨ AC` and `L ⊨ GCH`, both stated in L, with a two-directional bridge. **CANDIDATE, ruled at
@@ -161,9 +158,8 @@ move a technique; a number alone cannot.
 told the architecture is ruled will not report evidence against it.
 
 **FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
-left `archive/` for code and `archive/dev/` for the records: `TASKS-archived.md` for what each
-dispatch found, `JOURNAL-archived.md` for why, `DECISIONS-archived.md` for the rulings,
-`STATUS-archived.md` for the goal table. Every brief
+left `archive/` for code and `archive/dev/` for the records, and
+`archive/dev/README.md` is the table that says which of the four answers what. Every brief
 carries an **ARCHIVE** section naming what may bear on the task; every return carries an
 **ARCHIVE USED** section naming what it read and took, at `file:line`. **A brief that
 dispatches mathematics carries a LITERATURE section too, and its return carries LITERATURE
