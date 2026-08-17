@@ -23,7 +23,7 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Seven amendments. Six are the owner's, ruled on 2026-08-17. One is the
+**Fifteen amendments. Fourteen are the owner's, ruled on 2026-08-17. One is the
 orchestrator's and follows from A4.** They are part of the ruled set and this
 document states each where it applies. **The owner ruled once more that day, on
 DD0: PUT BOTH LOST PARTS BACK.** Clause W9 carries part 3 and rules R15 and R16
@@ -51,6 +51,68 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   cannot be mechanised, so section 3.1 states the clause), or SUPERSEDED (it
   blocks the new flow from running mechanically, so the new flow replaces it and
   the row NAMES the contradiction). Sections 3, 3.1 and 7.1.
+
+**FIVE MORE, ruled by the owner on 2026-08-17 after the design was read.**
+
+- **A8. `AGENTS.md` SURVIVES THE CUTOVER, rewritten in place.** This REPLACES the
+  first half of AD4 and cutover step 4b's `git mv AGENTS.md archive/AGENTS.md`.
+  The file keeps its name and its path, and it holds exactly four things: a
+  minimum project summary, the current milestone goal, the most important SHARED
+  Boundary, and a pointer to `dev/pod/instructions/<slot>.md`. **It is the ONE
+  hand-written source**, and the program GENERATES each slot file from it, so one
+  source gives three slices and no slice can drift. `CLAUDE.md` keeps its
+  `@AGENTS.md` import, because the file it imports is now small. Only
+  `dev/ORCHESTRATION.md` is archived at step 4b.
+- **A9. THE THREE DROPPED RULES ARE KEPT**, as clauses W13, W14 and W15, each
+  scoped `every slot`: the document taxonomy, the obligation that a new top-level
+  directory carries a `README.md`, and the ban on an unpinned or globally
+  installed dependency. Section 1 recorded them as lost and they are not lost.
+  Their `enforced by` value is `agent discipline`, which is an admitted value.
+- **A10. DD24 IS NOT SUPERSEDED. Its RATIO form is restored**, seconds over
+  in-fence lines. This overturns the 7.1 row and gap M13. **The consequence is
+  stated rather than hidden:** the design retired the ratio because a ratio needs
+  a seventh fact key and pre-flight P4 refuses one. So P4 admits a seventh key,
+  `lines`, the in-fence line count of the task's own write scope, and section 4.3
+  carries it as fact 7. One seeded system row carries the bar, and a change to
+  that number needs the same approval trailer the spec surface needs.
+- **A11. AN IDLE SLOT IS MECHANICALLY CURED, not merely reported.** This closes
+  gap M12 by building rather than by writing a clause. `pod_tick()` gains rule
+  **(g) REFILL**: when a slot is free AND `dev/pod/queue.toml` holds no
+  dispatchable entry, the program dispatches the mathematician with the standing
+  brief `dev/pod/instructions/refill-queue.md`. **This does not violate AD1.** The
+  program decides only that someone must be asked; the head decides what the work
+  is. It is the same shape as AD15's maintainer trigger and AD16's automatic
+  re-dispatch, which the design already admits.
+- **A12. The maintainer head is `claude-opus-5` at effort `high`.** This closes
+  gap M8. Section 6.1 carries it, and AD2's fifth head is now ruled rather than
+  picked.
+
+**THREE MORE ON THE MEMORY DISCIPLINE, ruled 2026-08-17 after an audit of this
+document against `dev/LESSONS.md` C-12 found three carry-over defects.** C-12 is
+a MEASURED law and it binds new code. The audit is why these exist.
+
+- **A13. THE WATCHDOG GETS AN OWNER, and it is the program.** C-12 says to restart
+  `scripts/ops/agda-watchdog.sh` at every session, and **the POD has no session**;
+  section 7's script table put the watchdog outside the POD entirely, so nothing
+  would ever start it. MEASURED 2026-08-17: it was not running. **`pod.py run`
+  starts it, every tick confirms the process is alive and restarts it with one log
+  line if it is not, and `admits()` REFUSES every Agda task while it is down.**
+  The 14 GB per-process backstop and the 8 percent system-free floor are C-12's
+  and they return with it.
+- **A14. C-12's TIERED CONCURRENCY IS RESTORED.** The design pinned
+  `AGDA_SLOTS = 2` and silently dropped C-12's WIDE tier, halving throughput
+  without saying so. A task declares its tier in its table row. **WIDE admits up
+  to FOUR concurrent Agda writers at `-M8g`; HEAVY admits at most TWO at
+  `-M12g`.** `admits()` keeps the worst-case heap sum at or under 32 GB across
+  mixed tiers, and it fills the third and fourth slots only when system free
+  memory reads above 25 percent. **R13's one caliber becomes one caliber PER
+  TIER**, and a record carries its tier so two measurements are compared only
+  within a tier.
+- **A15. THE PROGRAM'S OWN CALIBER IS SPLIT.** A per-task acceptance run uses
+  `-M8g`, the worker's caliber, so an acceptance measurement compares directly
+  with the run record beside it. **A whole-tree `make check` uses `-M16g`**,
+  which is C-12's orchestrator caliber, because that run holds the machine alone.
+  The design named neither.
 
 ## 1. What this is
 
@@ -105,7 +167,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 | AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked | 6.7, 8.1 |
 | AD2 | A maintainer model writes new table rows. It does not run the loop | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
 | AD3 | All judgement belongs to the mathematician | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
-| AD4 | `AGENTS.md` and `dev/ORCHESTRATION.md` become void AT `[L9.7]` and are LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
+| AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[L9.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
 | AD5 | The goal is unchanged: both trophies | 1 | AD19 | The table is tracked. Runtime state is not. Every transition logs | 5.3 |
 | AD6 | Clean cutover. `pre-pod-2026-08-17` is the rollback anchor | 9.1, 9.2, 9.3 | AD20 | A Chinese daily digest, plus an immediate push on stop | 8.1, 8.3 |
 | AD7 | The rollback criterion is the owner's. The digest prints two numbers | 8.2 | AD21 | A cheap pre-flight on the brief before dispatch | 6.5 |
@@ -187,6 +249,9 @@ slot and the program injects the file ahead of the brief at every dispatch
 | W9 | DD0 | every slot | A one-off instruction from the owner binds ONLY the task it names. It changes no ruling, and it is NOT evidence about what an agent may do. Never derive a standing rule from a one-off owner instruction. Ask the owner for a ruling, and wait. |
 | W10 | none, a standing repository rule | every slot | Write to the repository owner in Chinese, in the Chinese Tech Doc Style: accuracy before rhetoric, one point per paragraph, one term per concept, and the condition before the action it governs. Write to every other reader in ASD-STE100 Simplified Technical English: one meaning per word, active voice, simple tenses, one instruction per sentence. A dispatched agent writes ASD-STE100 and never Chinese, because its reader is the program and the reviewer. Never add a number, a date or a certainty the evidence does not give. Never use an em dash in any language. Never use half-width sentence punctuation in CJK prose. |
 | W11 | none, a standing repository rule | every slot | Author a new document in English first. Translate it into Chinese and Japanese after the English is settled. Then cross-check the Chinese against the Japanese for drift. Never translate a developer document under `dev/`. |
+| W13 | none, kept by A9 | every slot | Place a new document by AUDIENCE. A user document is trilingual under `docs/<lang>/`. A developer document is English only and is never translated. A `README.md` follows the user rule. | `agent discipline` |
+| W14 | none, kept by A9 | every slot | A new top-level directory carries a `README.md` in the same commit that creates it. | `agent discipline` |
+| W15 | none, kept by A9 | every slot | Never add an unpinned dependency and never add a globally installed one. `requirements-dev.txt` pins every one. | `agent discipline` |
 | W12 | none, owner ruling 2026-08-13 | every slot | Every file you create under `_build/` declares its lifecycle in `dev/build-manifest.toml` when you create it: the condition under which it may be deleted, and the condition under which it moves to a permanent home. A file with no declared class moves out of `_build/` instead. `_build/` is a temporary folder and not a rubbish bin. |
 
 **Two losses this section does not repair, and both are stated rather than
@@ -421,7 +486,11 @@ ERR  = re.compile(r"(?:^(?P<file>[^\s:]+):(?P<line>\d+)[.,]\d+[^\n]*?)?"
                   r"error: \[(?P<cls>[A-Za-z.]+)\]", re.M)
 HEAP = re.compile(r"^agda: Heap exhausted;", re.M)
 SAFE = re.compile(r"^\{-#\s+OPTIONS\b[^#]*--safe", re.M)
-CAP  = "-A64m -I0 -M8g"          # R13. One caliber. The 8 GB heap is C-12's.
+CAP  = "-A64m -I0 -M8g"          # R13, AMENDED BY A14 and A15. One caliber PER
+                                 # TIER: WIDE is -M8g at four concurrent, HEAVY
+                                 # is -M12g at two. A15: a per-task acceptance
+                                 # run uses this; a whole-tree make check uses
+                                 # -M16g, C-12's orchestrator caliber.
 
 CLASS = {"TerminationIssue": "termination",
          "UnequalSorts": "universe_level", "UnequalLevel": "universe_level",
@@ -1089,6 +1158,10 @@ def pod_tick():                             # one pass. pod run sleeps, not this
     st = load_state(".pod-state/state.json")
     st = replay_log(st, LOG)                # apply every log line with seq > st.seq
 
+    # AMENDED BY A11: rule (g) REFILL is added below. When a slot is free AND
+    # the queue holds no dispatchable entry, the program dispatches the
+    # mathematician with dev/pod/instructions/refill-queue.md. The program
+    # decides only that somebody must be asked; the head decides the work.
     # (a1) CREATE. dev/pod/queue.toml is the only producer of a task.
     for e in queue_entries_not_yet_created():
         inject_survey(e.brief)            # R10, section 7.4. Before P15 reads it
@@ -1566,6 +1639,11 @@ state record at admission, so a later edit of the brief cannot change a running
 task's class, exactly as `dispatch.py:1324` does for the harness.
 
 ```python
+# AMENDED BY A13 and A14. This body predates both. A13 adds the watchdog limb:
+# admits() REFUSES every Agda task while scripts/ops/agda-watchdog.sh is down.
+# A14 restores C-12's tiers: WIDE four at -M8g, HEAVY two at -M12g, the mixed
+# worst-case heap sum at or under 32 GB, and slots three and four only when
+# system free memory reads above 25 percent.
 def admits(st, t, agda=None):
     running = [x for x in st.tasks.values() if x.status in (RUNNING, CHECKING)]
     if any(x.exclusive for x in running):            return False
@@ -1619,6 +1697,11 @@ path (R15). The two adversarial heads attack one return each. No other model
 exists, and no model runs the loop.
 
 ### 6.1 `dev/pod/heads.toml`
+
+**AMENDED BY A12 and A14.** The maintainer head is `claude-opus-5` at effort
+`high`, ruled 2026-08-17, which closes gap M8. The file also carries C-12's TWO
+concurrency tiers, restored by A14: WIDE at four concurrent `-M8g`, HEAVY at two
+concurrent `-M12g`.
 
 The file is tracked and the owner may change it at any time. It is the ONLY home
 of a model name, an effort level, a deadline or a load threshold. **NOBODY ELSE
@@ -2085,7 +2168,7 @@ model or touches the network. The whole pre-flight is about 80 lines.
 | P1 | The brief file exists, and exactly one fenced block has the info string `toml pod-branches` | `P1 no brief, no branch block, or more than one` |
 | P2 | `tomllib.loads(block)` raises nothing | `P2 branch block does not parse` |
 | P3 | The branch list is non-empty | `P3 branch set is empty` |
-| P4 | Every `when` key is in section 4.3's closed list | `P4 branch <id> matches on <key>` |
+| P4 | **AMENDED BY A10: a seventh key `lines` IS admitted.** | Every `when` key is in section 4.3's closed list | `P4 branch <id> matches on <key>` |
 | P5 | Every `error_class` value is one of the eleven | `P5 branch <id> names class <value>` |
 | P6 | Every `action` is one of the eight in section 4.2 | `P6 branch <id> names action <value>` |
 | P7 | Every branch has a unique BRIEF-LOCAL `id` and a `priority`, and no two share a priority | `P7 branch <id> is a duplicate` |
@@ -2306,7 +2389,7 @@ it. A NOT CARRIED note is a real loss, stated rather than absorbed.
 | DD19 | **WRITTEN RULE** | Clause W5, section 3.1. Part 2, registration before starting, is mechanised by `dev/pod/queue.toml` plus the program-written transition log, which makes the 200-character cap moot. Part 3a's mechanism is harvested into R9's trailer. **The two-agent naming pipeline and the ruling/episode/law division are carried INSIDE clause W5 itself**, because the ruled text retired "ask the owner" and a clause that restored it would supersede DD19 rather than carry it. `dev/ORCHESTRATION.md` section 8, the pipeline's old operational home, archives with the file |
 | DD22 | **MECHANISED** | `reuse lint` at `make check`, row 34, and it survives in the rewritten check line of cutover step 10. `check_spdx` moves into `lint-agda.py` at cutover step 7 and fires at pre-commit and conjunct 6. Nothing in the new flow touches this ruling |
 | DD23 | **WRITTEN RULE** | Clause W6, section 3.1. Nothing mechanical ever enforced it and nothing can: no parser separates mathematical exposition from a code comment. The obligation grammar leans the same way, because a pure-prose task resolves no dotted name and cannot close honestly under P19 |
-| DD24 | **SUPERSEDED** | The bar is a RATIO, seconds over in-fence lines, and there is no `lines` fact; a ratio needs a seventh key and P4 refuses one. Replaced by fact 5, raw wall seconds under R13's caliber, which `matches()` refuses against a record whose `concurrency` is not 1. The tool survives as a maintainer profiler with its bar VOID, row 29. **NOT CARRIED: no automatic quality bar exists, no seeded row carries a `seconds_max`, and the one-home guard retires with row 18. Gap M13** |
+| DD24 | **AMENDED BY A10: NOT SUPERSEDED, the RATIO form is RESTORED.** Fact 7 `lines` is added and P4 admits a seventh key. The superseded reading below is kept as the record of what the design first proposed. The bar is a RATIO, seconds over in-fence lines, and there was no `lines` fact; a ratio needs a seventh key and P4 refuses one. Replaced by fact 5, raw wall seconds under R13's caliber, which `matches()` refuses against a record whose `concurrency` is not 1. The tool survives as a maintainer profiler with its bar VOID, row 29. **NOT CARRIED: no automatic quality bar exists, no seeded row carries a `seconds_max`, and the one-home guard retires with row 18. Gap M13** |
 | DD25 | **MECHANISED** | Three points, against a row that admitted no machine enforced its trigger. Pre-flight P18 refuses a brief with no branch that can attack the return. Rule (f) makes every second instance a review dispatch on `mathematician_adversarial`. An `escalate` row with a `head_slot` dispatches the named critic at routing time. `heads.toml` makes the critic a different model by construction. **NOT CARRIED: a first-instance NO-GO closes through a `done` row and never reaches attempt 2, so it gets no review. Gap M14** |
 | DD26 | **MECHANISED** | `UNCOUNTED` at `scripts/measure/ledger.py:112` and `countable_masters()` at `:129`, which every size site calls. It fires at every DONE close and again at every digest. `test_ratio_baseline.py` and `test_deletion_test.py` are not archived at the cutover, so both keep pinning the exclusion |
 | DD27 | **WRITTEN RULE** | Clause W7, section 3.1. It is already discharged in the tree at `src/L/Hull.lagda.md:72-73` and `:115`, and `L.Hull` is outside the spec surface, so conjunct 5 never sees the index. Conjunct 1 catches only an INCONSISTENT re-index, never a coherent one |
@@ -2927,8 +3010,11 @@ rm .claude/skills/codex-dispatch/dispatch.py .claude/skills/codex-dispatch/pi_st
 #    commit: REGISTRY = ROOT / ".pod-state" / "registry.json". Row 32 keeps that
 #    tool and the digest reads it, so a stale path silently returns zero records.
 
-# 4b. Decommission the two void process documents (AD4). NEVER delete: clause W4.
-git mv AGENTS.md archive/AGENTS.md
+# 4b. Decommission ONE void process document (AD4, AMENDED BY A8). NEVER delete:
+#     clause W4. **AGENTS.md IS NOT ARCHIVED.** A8 rewrites it in place to a
+#     minimum project summary, the current milestone, the shared Boundary and a
+#     pointer to dev/pod/instructions/<slot>.md, and the program GENERATES each
+#     slot file from it. CLAUDE.md KEEPS its @AGENTS.md import.
 git mv dev/ORCHESTRATION.md archive/dev/ORCHESTRATION.md
 #     Then rewrite CLAUDE.md to a title plus one sentence, naming section 3 of
 #     this memo as the rule set and dev/pod/instructions/<slot>.md as the
