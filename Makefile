@@ -31,7 +31,7 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 dd25 dd18survey gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 dd25 dd18survey baselinehome dispatchpolicy fences liverecord premises ratio timing gen html types site serve clean hooks test deploy venv venv-check
 
 check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 dd25 premises buildmanifest archivecited dd18survey baselinehome liverecord
 
@@ -78,6 +78,14 @@ ledger:
 ratio:
 	$(PY) scripts/measure/check-ratio.py --check
 
+# ADVISORY, never in check: it runs Agda and costs minutes, the same class as
+# ratio and deletion-test. It had NO target until 2026-08-17, so the only way to
+# run it was to remember its path, while its named sibling check-ratio.py had
+# one. dev/POD.md section 7.1 row 28 keeps it as a maintainer profiler and NOT
+# as fact 5.
+timing:
+	$(PY) scripts/measure/check-timing.py
+
 # ONE gate, and it answers one question: did a probe get into git outside its
 # home? The owner ruled on 2026-08-13 that a probe lives in agents/tasks/
 # beside its report, is tracked, and is never deleted, so there is no lifecycle
@@ -96,8 +104,9 @@ probes:
 # tracked-tree mode audits that nothing already landed there. The ONE
 # exemption is a live record's own brief path, MEASURED: the orchestrator
 # commits a brief while its agent is live (4ae98f3, 82dd1fb, 8eb2ba0). The
-# hook runs scripts/gate/check-live-territory.py --staged; this target is the
-# --check half. Cost: a registry read, a ps per live agent, one git ls-files.
+# NO hook runs this checker: the pre-commit hook does not call it, MEASURED
+# 2026-08-17. This target is the only place it fires, and it runs --staged, for
+# the reason below. Cost: a registry read, a ps per live agent, one git ls-files.
 liveterritory:
 # THE STAGED MODE IS THE COMMIT GATE. `--check` audits every TRACKED file, which
 # stays red for the whole life of any dispatch whose report was committed once,

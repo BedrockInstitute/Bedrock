@@ -441,8 +441,8 @@ separates three things a naive grep conflates: the brief's text, the report's
 text, and a real read.
 
 **It proves a path was opened, never that the right part was read.** It would
-have passed `[LJ-1.6]`. What to DO with a miss is `dev/ORCHESTRATION.md`
-section 6, step 2.
+have passed `[LJ-1.6]`. A miss is a signal for the adversarial reviewer,
+`dev/POD.md` section 6.6.
 
 ```sh
 python3 scripts/dispatch/check-sources-read.py LJ-1.6      # one or more task codes
@@ -806,14 +806,16 @@ itself) for a script inside `gate/`, `dispatch/`, `measure/` or `site/`.
 
 ### `agents_tree.py`
 
-**Not a checker. The one place that knows the shape of `agents/tasks/`.** Five
-checkers read the tree through it: `check-dispatch-policy.py`,
-`check-task-index.py`, `check-rule-ids.py`, `check-sources-read.py` and
-`check-dev-docs.py`.
+**Not a checker. The one place that knows the shape of `agents/tasks/`.** NINE
+scripts read the tree through it, MEASURED 2026-08-17 by import: in `dispatch/`,
+`check-dispatch-policy.py` and `check-sources-read.py`; in `gate/`,
+`check-dd18-survey.py`, `check-dd4-stated.py`, `check-dev-docs.py`,
+`check-live-record-claims.py`, `check-premises-stated.py`, `check-rule-ids.py`
+and `check-task-index.py`. This paragraph said FIVE until that count was taken.
 
 Until 2026-08-13 a brief was a file in `agents/briefs/` and a report was a file
-in `agents/reports/`, so the DIRECTORY carried the distinction and each of those
-five wrote the path by hand. `[LJ-1.142]` merged the trees into one directory per
+in `agents/reports/`, so the DIRECTORY carried the distinction and each importer
+wrote the path by hand. `[LJ-1.142]` merged the trees into one directory per
 task, which deleted that signal. This module carries the replacement.
 
 **It offers two brief predicates and the choice matters.** `briefs()` reads the
