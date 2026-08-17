@@ -105,9 +105,8 @@ by [GitHub Actions](.github/workflows/typecheck.yml).
 
 ## Contributing
 
-AI agents work from [AGENTS.md](AGENTS.md), the one rule set, which [dev/POD.md](dev/POD.md)
-section 3 replaces at the POD cutover; human contributors,
-start with [CONTRIBUTING.md](CONTRIBUTING.md).
+AI agents work from [AGENTS.md](AGENTS.md), the one rule set. Human contributors start with
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

@@ -14,23 +14,14 @@
 # narrower and different justification:
 #
 #   **the alternative is a written clause read by a model and checked by
-#   nobody.** `dev/POD.md` section 3.1 states the cost of exactly that shape:
-#   clause W2 lost the per-dispatch repetition its gate gave it, measured at 102
-#   briefs of 112 over five days. A mechanical bundle does not decay that way.
+#   nobody.** The census above measures that shape: 102 briefs of 112 cited
+#   none of the sixteen Rules. A mechanical bundle does not decay that way.
 #
 # So the routing is mechanical, it is capped so it cannot become the corpus
 # again, and its IDs are validated against LESSONS headings by
 # `scripts/gate/check-rule-ids.py`, which exists because a document written ABOUT
-# rule hygiene shipped a fake ID.
-#
-# THE ID VALIDATION AFTER THE POD CUTOVER. `check-rule-ids.py` narrows to
-# `dev/LESSONS.md` (dev/POD.md section 7.1, row 15). It must keep reading THIS
-# file too, or a bundle can name an ID no entry carries and nothing catches it.
-#
-# WHO READS THIS FILE AFTER THE CUTOVER. `dev/POD.md` rule R17: the brief
-# builder runs `rules.py --for <kind>` and writes the bundle into the brief's
-# `## LAWS` block, with the kind DERIVED from the write scope. That is how
-# `dev/LESSONS.md` reaches a worker under the new flow.
+# rule hygiene shipped a fake ID. That checker reads THIS file too, or a bundle
+# could name an ID no entry carries and nothing would catch it.
 #
 # THE CAP IS THE DESIGN. A bundle may hold at most `max_ids` entries. A bundle
 # that cannot fit a new law must EVICT one, which forces the question "is this

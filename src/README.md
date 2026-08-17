@@ -2,7 +2,7 @@
 
 The Agda development: literate `.lagda.md` **masters**, the single source of truth for both
 the proofs and their prose. This is an English developer-facing folder guide; the rule set is
-[dev/POD.md](../dev/POD.md) section 3, and `AGENTS.md` holds it until the POD cutover.
+[AGENTS.md](../AGENTS.md).
 
 ## What a master is
 
@@ -29,8 +29,8 @@ entry in the reading catalog**, at the position its first consumer dictates.
 `Everything.lagda.md` is the reading catalog and the ONE list of modules. It imports every
 master, in reading order, with a one-line description for each. Read it there. This file does
 not duplicate it, because a second list drifts: MEASURED 2026-08-17, this section described a
-20-master tree with `V/` and `L/` empty, while the tree held 97 tracked masters, 7 under
-`src/V/` and 72 under `src/L/`, and the repository held zero `.gitkeep` files.
+20-master tree with `V/` and `L/` empty, while the tree held 99 tracked masters, 7 under
+`src/V/` and 71 under `src/L/`, and the repository held zero `.gitkeep` files.
 
 `Landmarks.lagda.md` is the trophy case and reads first in the catalog, by owner ruling: the
 storefront, before Part 0. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC` and `L⊨ZFC`, each a

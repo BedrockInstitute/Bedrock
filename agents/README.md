@@ -2,7 +2,8 @@
 
 **Everything in this directory is agent-generated.** No human wrote these files. They are the
 written record of the dispatches that built Bedrock: what each agent was told, and what it
-found.
+found. This is an English developer-facing folder guide; the rule set is
+[AGENTS.md](../AGENTS.md).
 
 The directory moved here from `_build/` on 2026-08-13, by the owner's ruling. `_build/` is
 git-ignored and `make clean` empties it, so 493 reports and 406 briefs sat one command from
@@ -15,12 +16,11 @@ probe the task wrote.** The owner ruled that on 2026-08-13 and `[LJ-1.142]` buil
 ruling a task's three halves sat in three places, and reading one dispatch meant opening three
 directories.
 
-| Path | What it holds | Count at the merge |
+| Path | What it holds | Count, measured 2026-08-17 |
 |---|---|---|
-| `tasks/<CODE>/` | One LIVE task: its brief, its report, its probes | 53 directories |
+| `tasks/<CODE>/` | One LIVE task: its brief, its report, its probes | 292 directories |
 | `tasks/archive/<CODE>/` | One task of the retired route, the same three files | 494 directories |
-| `tasks/DD25/` | The probes of a RULING, which is not a task | 55 probes |
-| `tasks/Unpaired/` | Probes no report claims by its own name | 12 probes |
+| `tasks/archive/Unpaired/` | Probes no report claims by its own name | 12 probes |
 
 ```
 agents/tasks/LJ-1-141/LJ-1.141.md            the brief
@@ -43,9 +43,9 @@ so an old citation still resolves under `find agents -name <the-old-name>`.
 through it, and `scripts/README.md` names the members. Do not write `agents/tasks` into a tenth
 script by hand.
 
-**The brief's FORM is `dev/ORCHESTRATION.md` section 3 today**, and `dev/POD.md` section 6.3
-at the cutover. This file restates neither. `.claude/skills/codex-dispatch/dispatch.py check`
-refuses a brief that is missing a required section, and that is the live gate on the form.
+**The brief's FORM is `dev/ORCHESTRATION.md` section 3, and this file does not restate it.**
+`.claude/skills/codex-dispatch/dispatch.py check` refuses a brief that is missing a required
+section, and that is the gate on the form.
 
 ## Probes live here
 
@@ -129,24 +129,13 @@ An agent document is CC from birth, so no later move can relicense it. Never add
 
 ## Who reads what
 
-**TODAY the orchestrator is a model** working to `dev/ORCHESTRATION.md`: it writes every brief
-here before dispatch, validates it with `dispatch.py check`, audits the return, wires the
-catalog, gates and commits. **FROM THE POD CUTOVER the orchestrator is a program**, and the
-rows below name it. The cutover is not built.
+**The orchestrator** works to `dev/ORCHESTRATION.md`: it writes every brief here before
+dispatch, validates it with `dispatch.py check`, audits the return, wires the catalog, gates
+and commits.
 
-- **The POD program** will write every brief here before dispatch, write the `.pod` stamp beside
-  it (`dev/POD.md` section 9.3), inject the `## LAWS`, `## ARCHIVE` and `## LITERATURE` blocks,
-  and read the return.
 - **A dispatched worker** writes exactly one report here, incrementally, and reads the briefs
   and reports its own brief names.
-- **The adversarial reviewer** reads the brief and the report together, and writes
-  `review-of-<PRED>.md` beside them.
+- **The adversarial reviewer** is a dispatch like any other. It gets its own task code and its
+  own directory, and it reads the brief and the report it attacks. `agents/tasks/LJ-1-385/` is
+  one: the DD25 review of `[LJ-1.383]`.
 - **The owner** reads `tasks/` to see where the work stands.
-
-**The three paths below arrive AT THE CUTOVER. None of them exists today.**
-
-| Path | What it holds | Written by |
-|---|---|---|
-| `tasks/<CODE>/.pod` | The program's task stamp: table sha, heads sha, creation time | one line per POD task |
-| `tasks/<CODE>/review-<PRED>.md` | The review BRIEF, program-written | the program |
-| `tasks/<CODE>/review-of-<PRED>.md` | The review OUTPUT | the adversarial reviewer |

@@ -1,16 +1,15 @@
 # docs
 
 **User-facing** documentation: the mathematics and the project itself, written for readers
-rather than contributors. This is the one place **trilingual** content lives. This file itself
-is an English developer-facing folder guide (the doc taxonomy is in
-[AGENTS.md](../AGENTS.md)).
+rather than contributors. This is the one place **trilingual** content lives. This file is an
+English developer-facing folder guide; the rule set is [AGENTS.md](../AGENTS.md).
 
 ## Layout
 
 One subtree per language, the same filenames in each:
 
-- `en/`: English. Currently `CHARTER.md`. (The English project README is the repo-root
-  [README.md](../README.md), not here.)
+- `en/`: English. Currently `CHARTER.md`. The English project README is the repo-root
+  [README.md](../README.md), not here.
 - `zh/`: Chinese. `CHARTER.md`, `README.md`.
 - `ja/`: Japanese. `CHARTER.md`, `README.md`.
 
@@ -21,11 +20,11 @@ the README condenses.
 
 ## Rules
 
-- All content here is **trilingual** (en + zh now; ja pre-supported). Add a page in every
-  language, keeping the same filename across `en/`, `zh/`, and `ja/`.
+- All content here is **trilingual**. Add a page in every language, and keep the same filename
+  across `en/`, `zh/` and `ja/`.
 - **Author in English first**, then translate the Chinese and Japanese from the English, then
-  **cross-check the two translations against each other**. Confirmed term renderings are
-  enforced from the canonical glossary data [dev/glossary.toml](../dev/glossary.toml).
-- CJK prose conventions (full-width punctuation, `「」` quotes, no em dash, spacing) are
-  machine-checked; see [AGENTS.md](../AGENTS.md) and `scripts/gate/lint-prose.py`.
-- Developer specs do **not** go here; they live in [dev/](../dev/) and are English-only.
+  **cross-check the two translations against each other**. `check-glossary.py` enforces the
+  confirmed renderings from [dev/glossary.toml](../dev/glossary.toml).
+- `lint-prose.py` machine-checks the CJK conventions: full-width punctuation, `「」` quotes, no
+  em dash, and spacing.
+- Developer specs do **not** go here. They live in [dev/](../dev/) and are English only.

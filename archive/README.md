@@ -1,9 +1,11 @@
 # The archive
 
 `archive/` is the home of Bedrock's retired code. Retired code is archived,
-never deleted (ruling D20, `dev/PLAN.md` section 3, 2026-08-04, superseding
-D14). This README states the rules that govern the archive in full; the
-registry that indexes it is [dev/ARCHIVE.md](../dev/ARCHIVE.md).
+never deleted: archived D20 of 2026-08-04, in
+`archive/dev/DECISIONS-archived.md`, supersedes archived D14, and the live home
+of the rule is DD13 in `dev/PLAN.md` section 3. This README states the archive
+rules in full, [dev/ARCHIVE.md](../dev/ARCHIVE.md) is the registry that indexes
+it, and the rule set is [AGENTS.md](../AGENTS.md).
 
 ## What the namespace is
 
@@ -31,6 +33,7 @@ So `L/Godel/Closure.lagda.md`, archived on 2026-08-07, lives at
 | `2026-08-09-hf-finite` | `43ca411`, `[L3.32-F]` | 2 | `L.Rud.HF`, `L.Rud.Finite` |
 | `2026-08-09-rud-route` | `86c7b66`, `[L3.32-F]` | 74 | the whole retired route's `src/`, plus its patch and its README |
 | `2026-08-13-probe-sweep` | `[LJ-1.141]`, `[LJ-1.143]` | 1 | **empty of code.** The tombstone only |
+| `2026-08-13-kits-to-tasks` | `1044c8a`, `[LJ-1.143]` | 1 | **empty of code.** The tombstone only |
 
 **WHY THE EVENT LEVEL EXISTS, and it is not decoration.** Two archivals both
 took files out of `src/L/Rud/` and `src/L/WellOrder/`. A flat merge would put
@@ -38,23 +41,18 @@ them in one directory and lose which archival each came from, which is the
 exact fact the owner asked the layout to keep.
 
 **PROBES ARE NO LONGER HERE.** `archive/probes/` held 257 of them for one day.
-The owner ruled on 2026-08-13, later the same day, that a probe pairs
-one-to-one with its report and lives beside it, so all 257 moved to
-`agents/tasks/<TASK>/` and nothing arrives here again.
-`archive/src/2026-08-13-probe-sweep/README.md` is the tombstone and it maps the
-old path to the current one; `dev/LESSONS.md` **D-1** is the live rule.
+The owner ruled on 2026-08-13 that a probe pairs one-to-one with its report and
+lives beside it, so all 257 moved to `agents/tasks/<TASK>/` and nothing arrives
+here again. `archive/src/2026-08-13-probe-sweep/README.md` is the tombstone and
+maps the old path to the current one; `dev/LESSONS.md` **D-1** is the live rule,
+and `scripts/gate/check-probes.py` still refuses a probe under `src/`
+absolutely.
 
 **EVERY DIRECTORY MIRRORS THE ROOT.** `archive/kits/` was the one exception and
-it is retired: it held code that was written, measured and never landed, and a
-refused kit has no original path to mirror. `[LJ-1.143]` moved the five refused
-kits into their own task directories under `agents/tasks/archive/`, and
+it is retired: a refused kit has no original path to mirror. `[LJ-1.143]` moved
+the five kits into their own directories under `agents/tasks/archive/`, and
 `archive/src/2026-08-13-kits-to-tasks/README.md` is the tombstone. MEASURED
-2026-08-17: `archive/` holds `dev`, `scripts`, `src` and this file, and nothing
-else.
-
-**A probe under `src/` is still refused absolutely**, by
-`scripts/gate/check-probes.py`. That rule was bought on 2026-08-04, when one
-`git add -A src/` committed 13 probe files, and nothing here weakens it.
+2026-08-17: `archive/` holds `dev`, `scripts`, `src` and this file, nothing else.
 
 ## Outside every gate
 
@@ -67,8 +65,8 @@ than configured:
 - the site builds from `src/` and never publishes it.
 
 That is what makes keeping the archive free: it taxes no build and no check,
-and D2's claim that the whole checked tree is `--safe` and postulate-free
-stays literally true of the tree the gates see.
+and archived D2's claim that the whole checked tree is `--safe` and
+postulate-free stays literally true of the tree the gates see.
 
 ## Not required to be green
 

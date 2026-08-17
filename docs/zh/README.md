@@ -68,7 +68,7 @@ Cubical 类型论是当代类型论的前沿，是当下正被书写的数学基
 
 ## 贡献
 
-AI agent 以 [AGENTS.md](../../AGENTS.md) 的唯一规则集为准，POD 割接后改以 [dev/POD.md](../../dev/POD.md) 第 3 节为准；人类贡献者请从 [CONTRIBUTING.md](../../CONTRIBUTING.md) 开始。
+AI agent 以 [AGENTS.md](../../AGENTS.md) 的唯一规则集为准，人类贡献者请从 [CONTRIBUTING.md](../../CONTRIBUTING.md) 开始。
 
 ## 许可
 

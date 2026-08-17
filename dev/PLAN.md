@@ -584,14 +584,6 @@ and its rule live in `dev/JOURNAL.md`, 2026-08-14, under `[LJ-1.187]`.
 
 ## 0. Where the work stands (2026-08-16)
 
-**Status: LIVE. The ENFORCEMENT sentences on this screen become historical AT THE
-POD cutover, which is not built.** At the cutover DD24's bar is SUPERSEDED with
-no replacement (`dev/POD.md` gap M13), and of the three gates named in section
-0.1, `check-baseline-home.py` and `check-live-record-claims.py` retire and
-`check-dd18-survey.py` becomes `check-survey-quotes.py` (`dev/POD.md` section
-7.1, rows 10, 18 and 19). **All three run green inside `make check` today, and
-DD24's bar is still the bar an outstanding owner ruling is priced against.**
-
 **REWRITTEN 2026-08-09 for the route change, and re-measured 2026-08-10 at the `[LJ-0.4]` closeout.** The text this replaces described
 the internalization route and read as current for the whole day the route
 changed. `[LJ-0.1]` caught it. What follows is the two-tower bridge route.
@@ -721,15 +713,6 @@ Assumption budget of the source proof, to be preserved or improved:
 The port-era survey of the source repository and its measured cost anatomy moved to [dev/memos/source-material-survey.md](memos/source-material-survey.md) ([L3.32-T113]). Its measurements remain a calibration anchor for pricing (§6.2) and for the simplification history (archived §10). Read it when a recon prices a lever or quotes a source-scale figure; the live plan is §0 and the goal registry is §11.
 
 ## 3. Ratified decisions
-
-**Status: SET ASIDE IN THIS FORM from the POD cutover, by amendment A7 of
-`dev/POD.md` section 0.** Every row below has exactly one disposition in
-`dev/POD.md` section 7.1: MECHANISED, WRITTEN RULE, or SUPERSEDED. Read that
-table for what is enforced and where. The rows below are KEPT as the record of
-what the owner ruled and when. **Their ENFORCEMENT sentences bind today and
-become historical AT THE CUTOVER**: several name gates that retire then, and
-several name `dev/ORCHESTRATION.md`, which is void from that moment and live
-until it. No ruling is deleted and none may disappear.
 
 **The `DD` series, rebuilt 2026-08-09 on the two-tower bridge ruling and CONSOLIDATED the same day.** The owner ruled that the whole `D` series be archived and the list rebuilt, keeping only what does not contradict the new route and what is useful to it. **The retired `D` series lives in `archive/dev/DECISIONS-archived.md`, unedited**, and `scripts/gate/check-rule-ids.py` resolves `D` citations against it, so every old citation still means what it meant. **A number is never reused, in either series.**
 
@@ -895,13 +878,7 @@ The S1-S18 register moved to [dev/memos/simplification-register.md](memos/simpli
 
 ## 11. MASTER status table (live)
 
-**Status: LIVE, and SET ASIDE IN THIS FORM AT THE POD cutover, by amendment A7 of
-`dev/POD.md` section 0.** This section is the task producer today and
-`check-task-index.py` enforces it inside `make check`. At the cutover
-`dev/pod/queue.toml` replaces it, and the program-written transition log replaces
-the dispatch index.
-Cutover step 13 seeds the queue with one entry per PLANNED row below, so no
-planned goal is lost. **The rows are KEPT as the record.** A script path inside a
+A script path inside a
 task-index row is the path as of that row's own date; scripts moved into
 `scripts/gate/`, `scripts/measure/`, `scripts/dispatch/` and `scripts/site/` on
 2026-08-15, so resolve an unqualified `scripts/<name>.py` by basename.
@@ -961,6 +938,15 @@ and `[L8.2]` is the gate that `[L4.1]` waits on.
 | L8.0 | Foundation refactor at T8 scale, on the post-archival tree | PLANNED (candidates re-examined, not inherited) |
 | L8.1 | Line-by-line polish over the whole tree | PLANNED |
 | L8.2 | **THE GATE**: report to the owner before any prose phase | PLANNED (the owner adds further code-shaping work here; `[L4.1]` waits on it) |
+| L9 | The orchestration flow becomes a program | **PLANNED.** Designed at `dev/memos/L9-pod-program-design.md`, 2026-08-17. **Nothing is built.** `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow today, and `[L9.7]` is the only row that changes that |
+| L9.0 | Measure, and settle two prices | PLANNED (the recompile probe, and the brief-build cost) |
+| L9.1 | The launcher, and the head table | PLANNED |
+| L9.2 | The recorder and the acceptance runner | PLANNED |
+| L9.3 | The table, the router, the replay, the admission and the pre-flight | PLANNED |
+| L9.4 | The loop, the runner, the state and the log | PLANNED |
+| L9.5 | The gates: the spec-surface check, the survey split and the miss signal | PLANNED |
+| L9.6 | The digest, the push, the maintainer, the first dispatch | PLANNED |
+| L9.7 | RUN THE CUTOVER | PLANNED. **This row archives `dev/ORCHESTRATION.md` and `AGENTS.md`. Nothing archives them before it, because until then they are the only flow there is** |
 
 ### Task index (one row per dispatch, section 6.0 rules 7 and 8)
 

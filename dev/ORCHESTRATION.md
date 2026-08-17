@@ -1,17 +1,5 @@
 # ORCHESTRATION: the orchestrator's operating rules
 
-**Status: LIVE, and VOID AT THE POD CUTOVER. FOLLOW THIS FILE until the cutover
-runs.** It is the orchestrator's operating document today: `AGENTS.md` routes the
-orchestrator here, four `DD` rulings name it as their enforcement point, and
-`scripts/dispatch/recall-hook.py` reads its section 6 and prints the return
-checklist at every session start. The cutover is not built: `dev/pod/` and
-`scripts/pod/` do not exist.
-
-**At the cutover** this file becomes void by the fourth architecture decision of
-`dev/POD.md` section 2, every rule here takes a disposition in `dev/POD.md`
-section 7.1 or a clause in section 3.1, and cutover step 4b moves the file to
-`archive/dev/ORCHESTRATION.md`.
-
 How work is dispatched, audited and landed. Developer doc, English only, not
 translated. **This file is canonical for everything on it.** It exists because
 these rules used to live only in the orchestrator's session memory, where the
@@ -21,6 +9,12 @@ one party remembering.
 **Enforcement.** Rules here are enforced by the orchestrator at named points,
 listed per rule. A rule with no enforcement point is a wish, not a rule: if you
 add one here, name where it fires.
+
+**A program reads this file, so keep its shape.** `scripts/dispatch/recall-hook.py`
+reads section 3 and section 6 at every session start. It prints the return
+checklist. It finds section 6 by the exact heading `## 6. Handling a return` and
+stops at `## 7.`. It reads each step written as `N. **Verb the thing**.`. Keep
+that heading text and that step shape.
 
 ## 1. Who does the work
 
@@ -50,11 +44,10 @@ Nobody reads code to answer "which head runs this task".
   streaming and resume. **`pi-subagent-mode` was `deepseek-subagent-mode` until
   `[LJ-1.285]` renamed it 2026-08-15, off the vendor name; the retired name
   still resolves through `ALIASES`, C-41.**
-- One version is TEMPORARY and its reason is QUOTA, never quality.
-  **It is TEMPORARY and its reason is QUOTA, never quality.** The owner has most
-  of the week's allowance left, and `[LJ-1.121]` measured pi's return quality as
-  fully acceptable. The owner cancels it by word, and the state to return to is
-  the normal version.
+- **One version is TEMPORARY and its reason is QUOTA, never quality.** The owner
+  has most of the week's allowance left, and `[LJ-1.121]` measured pi's return
+  quality as fully acceptable. The owner cancels it by word, and the state to
+  return to is the normal version.
 
 **THE INVARIANT UNDER BOTH VERSIONS: the critic is never the same head as the
 author.** That is why the two tables swap the default row and the adversarial
@@ -434,10 +427,8 @@ and the breach is recorded in the row rather than tidied away.
 
 **A route awaiting a decision is KEPT** (owner ruling, 2026-08-06). Nothing
 is deleted for being unfunded; a route leaves the board only by being refuted
-or done. The conditions are these prose rules, which were moved here when the
-ledger was stripped to measurements (`[L3.32-T113]`). They were also drawn as
-a flowchart on the generated dashboard, which the owner abolished on
-2026-08-09; the prose below is now the only statement of them:
+or done. On 2026-08-09 the owner abolished the flowchart that also drew these
+conditions. The prose below is now their only statement:
 
 - **While DD23 stands, mathematical prose is not funded work.** Nothing else
   is frozen. The retired route's resume order, which named the bridge
@@ -458,9 +449,7 @@ a flowchart on the generated dashboard, which the owner abolished on
 
 *Enforcement:* the standing brief clauses in section 3 (DD8 for the gate,
 DD13 for pricing a port against a fresh write) and the return audit in
-section 6 step 2. The generated route board that used to draw these
-conditions was abolished on 2026-08-09, so this prose is the only statement
-of them.
+section 6 step 2.
 
 ## 6. Handling a return
 
@@ -560,17 +549,11 @@ In this order, every time:
    no step here beyond quoting `python3 scripts/measure/ledger.py --brief`, which is
    the only admissible source for a standing figure.
 
-   **There is no hand-written half.** `_build/workbench.md` was deleted on
-   2026-08-07 by the owner's ruling, superseding the 2026-08-06 ruling that
-   had required it be written by hand at every return. It existed because a
-   board cannot know what the orchestrator intends to dispatch next; the cost
-   was a hand-edited file at every return, a parser for it, and a placement
-   pass onto the route graph. The agent table's `next` column now reads the
-   ledger's `[[owed]]` queue instead. **That is weaker in one stated way: the
-   owed rows say what is READY, not what will be dispatched first.** Ordering
-   is a judgement and it now reaches the ledger, `dev/PLAN.md` and the commit
-   messages, all of which are committed and reviewable, rather than a
-   git-ignored scratch file that was neither.
+   **There is no hand-written half.** The agent table's `next` column reads the
+   ledger's `[[owed]]` queue. **That is weaker in one stated way: the owed rows
+   say what is READY, not what will be dispatched first.** Ordering is a
+   judgement, and it reaches the ledger, `dev/PLAN.md` and the commit messages,
+   which are all committed and reviewable.
 
 
 ## 7. Committing

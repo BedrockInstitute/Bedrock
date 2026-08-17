@@ -1,8 +1,5 @@
 # AGENTS.md
 
-**Status: VOID at the POD cutover, when `dev/POD.md` section 3 becomes the rule set, and its
-section 1 names three rules of this file that get no new home. Until then this file binds.**
-
 The rulebook for AI coding agents on Bedrock. Every session loads it: Claude Code through the
 root `CLAUDE.md`, other agents directly.
 
@@ -55,8 +52,8 @@ everything else, read one row in [Where the rules live](#where-the-rules-live).
   docs; use an em dash in any language; use half-width sentence punctuation in CJK prose;
   commit or print deployment secrets; add an unpinned or globally-installed dependency; add an
   in-file `SPDX-*` header.
-- **Never leave an undeclared file in `_build/`.** Declare its class in `dev/build-manifest.toml` when you create it, or move it to a permanent
-  home.
+- **Never leave an undeclared file in `_build/`.** Declare its class in
+  `dev/build-manifest.toml` when you create it, or move it to a permanent home.
 
 ## Commands
 
@@ -65,10 +62,9 @@ everything else, read one row in [Where the rules live](#where-the-rules-live).
   [scripts/](scripts/README.md)**, and several are deliberately outside it: `check-ratio.py`
   and `check-timing.py` because they cost minutes, and the advisory reports because a red gate
   would buy a pasted answer. **Read the `Makefile`'s `check:` line for the list that actually
-  runs.** **Run it in the background, never in the
-  foreground**: a cold typecheck takes about twelve minutes and must not block the session
-  (`dev/PLAN.md` DD15). While you work, run the individual checks instead (`agda <file>`,
-  `lint-prose.py <files>`).
+  runs.** **Run it in the background, never in the foreground**: a cold typecheck takes about
+  twelve minutes and must not block the session (`dev/PLAN.md` DD15). While you work, run the
+  individual checks instead (`agda <file>`, `lint-prose.py <files>`).
 - **`rules.py --for <kind>`** gives the mandatory rules for a build, probe,
   recon, rewrite or review, with each statement. `--grep <term>` finds the long tail by trigger
   word. **Never pick rules from memory.**
@@ -96,7 +92,7 @@ claiming more than its checker delivers is false safety.
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `rules.py` bundles; review |
 | **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; a bare `D<n>` resolves only against the archive | `dev/PLAN.md` section 3; `archive/dev/DECISIONS-archived.md` | `check-rule-ids.py` resolves every code. **It cannot tell which series an author MEANT.** Dated records under `dev/` and `agents/` are exempt
-| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** **This table names checkers by FILE NAME, never by path, so a directory move cannot make it wrong** (2026-08-15, and `dispatch_policy.py` has since moved). The brief's `tier:` line names the head and the model | Tables and modes: `dispatch_policy.py`, run it. Vendors: `dev/vendors.toml`. Operated by `dev/ORCHESTRATION.md` section 1. **All three are SUPERSEDED at the POD cutover (`dev/POD.md` section 6.1)** | **PARTIAL.** `check-dispatch-policy.py` **cannot see which head RAN**: an in-harness dispatch passes through no tool. **Only one case walks `dispatch.py`, so its refusals are live under one mode and dead under the other.**
+| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** **This table names checkers by FILE NAME, never by path, so a directory move cannot make it wrong** (2026-08-15; `dispatch_policy.py` moved to `scripts/dispatch/` and this row survived it, `dev/PLAN.md:1177` did not). The brief's `tier:` line names the head and the model | Tables and modes: `dispatch_policy.py`, run it. Vendors: `dev/vendors.toml`. Operated by `dev/ORCHESTRATION.md` section 1. | **PARTIAL.** `check-dispatch-policy.py` **cannot see which head RAN**: an in-harness dispatch passes through no tool. **Only one case walks `dispatch.py`, so its refusals are live under one mode and dead under the other.**
 | **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `check-task-index.py`; review |
 | **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `ledger.py --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
@@ -139,9 +135,9 @@ audits the returns, wires the catalog and commits; it works to `dev/ORCHESTRATIO
 **Verify the load-bearing assumption cheaply before heavy or hard-to-reverse work.** Build the
 smallest decisive miniature and report GO or NO-GO with a price. A probe prices THIS setting; it
 never re-proves what the literature or the delivered tree settles. **Write it in
-`agents/tasks/<TASK>/`, beside your brief and your report, and run it there.** It is tracked, it is never
-deleted, and **nothing typechecks it once your task closes, so run it while you can.** **`src/`
-is forbidden**, and `check-probes.py` enforces that because `git add -f` walks past an
+`agents/tasks/<TASK>/`, beside your brief and your report, and run it there.** It is tracked, it
+is never deleted, and **nothing typechecks it once your task closes, so run it while you can.**
+**`src/` is forbidden**, and `check-probes.py` enforces that because `git add -f` walks past an
 ignore rule. `dev/LESSONS.md` **D-1** is the rule.
 
 **Gate every block before you fund it.** Measuring the widest unmeasured term is what turns a
@@ -158,13 +154,15 @@ fences. Record an overage plainly and work it down where real compression exists
 told the architecture is ruled will not report evidence against it.
 
 **FOUR ARCHIVES, and surveying them is a brief section rather than a hope.** The retired route
-left `archive/` for code and `archive/dev/` for the records, and
-`archive/dev/README.md` is the table that says which of the four answers what. Every brief
-carries an **ARCHIVE** section naming what may bear on the task; every return carries an
-**ARCHIVE USED** section naming what it read and took, at `file:line`. **A brief that
-dispatches mathematics carries a LITERATURE section too, and its return carries LITERATURE
-USED, including WHY NOT for anything it did not use** (DD18); `dispatch.py` refuses a brief
-missing either section. `dev/LESSONS.md` is NOT archived and still binds.
+left `archive/` for code and `archive/dev/` for the records, and `archive/dev/README.md` is the
+table that says which of the four answers what. Every brief carries an **ARCHIVE** section
+naming what may bear on the task; every return carries an **ARCHIVE USED** section naming what
+it read and took, at `file:line`. **A brief that dispatches mathematics carries a LITERATURE
+section too, and its return carries LITERATURE USED, including WHY NOT for anything it did not
+use** (DD18); the dispatcher at `.claude/skills/codex-dispatch/dispatch.py` refuses a brief
+missing either section. **That path is git-ignored, so a fresh clone does not have it and the
+refusal is the orchestrator's to apply by hand.** `dev/LESSONS.md` is NOT
+archived and still binds.
 
 ## Retiring code
 

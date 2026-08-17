@@ -2,22 +2,11 @@
 
 **Developer-facing** documentation: conventions and specifications for contributors, written
 primarily for AI-agent contributors (humans second). **English only** (developer docs are not
-translated). **The top-level index is [AGENTS.md](../AGENTS.md)**, and it is the rule set today.
-**[POD.md](POD.md) is a SPECIFICATION and nothing in it is built**: it replaces `AGENTS.md` at
-the POD cutover, when its section 3 becomes the ONE rule set, its section 3.1 the written
-clauses, its section 7.1 the disposition of every gate and every `DD` ruling, and its section
-4.0 the map of the POD files. Read it to know what is coming, not to know what binds. This
-file is the directory index and holds no rule.
-
-**When you will read this file automatically:** at the cutover, the pre-flight will print a
-directory's `README.md` when your write scope names a path in that directory (`POD.md` check
-P22). No pre-flight runs today, so read it yourself.
+translated). **The top-level index is [AGENTS.md](../AGENTS.md)**, and it is the rule set. This
+file is the directory index and holds no rule. Read this file before you write into `dev/`.
 
 ## Contents
 
-- `POD.md`: the **specification of the next flow. Nothing in it is built**, and `dev/pod/` and
-  `scripts/pod/` do not exist. At the cutover, section 3 becomes the one rule set, section 3.1
-  the written clauses, and section 7.1 every disposition. Section 9 is the cutover itself.
 - `PLAN.md`: the **construction registry** for the campaign (the two-tower bridge,
   both trophies): section 0 for where the work stands, the `DD` rulings, the
   goal-coding rules, DD8's single best-effort projection that named its basis,
@@ -51,23 +40,19 @@ P22). No pre-flight runs today, so read it yourself.
   is an EPISODE belongs here, and not on a ruling row.
 - `ARCHIVE.md`: the **archive registry**, one row per retired module: what it was, why it left,
   where it was last green, its measured size and what would reopen it.
-- `ORCHESTRATION.md`: the **orchestrator's operating document**, LIVE today and **VOID at the
-  POD cutover** (`POD.md` section 2), when cutover step 4b moves it to `archive/dev/`. Follow it
-  until then.
-- `rules.toml`: the **law-bundle routing** that `rules.py --for <kind>` reads. The POD's brief
-  builder writes its output into every brief's `## LAWS` block (`POD.md` R17).
-- `build-manifest.toml`: the **lifecycle declaration** for every file under `_build/`. Clause
-  W12 of `POD.md` section 3.1 is the rule it encodes.
-- `vendors.toml`: the **vendor, model and price-band data** for the dispatch heads. It is
-  rewritten into `dev/pod/heads.toml` at the cutover (`POD.md` section 7.1, row 21b).
+- `ORCHESTRATION.md`: the **orchestrator's operating document**. It is LIVE. Follow it.
+- `rules.toml`: the **law-bundle routing** that `rules.py --for <kind>` reads.
+- `build-manifest.toml`: the **lifecycle declaration** for every file under `_build/`. Declare a
+  new file's class here when you create it.
+- `vendors.toml`: the **vendor, model and price-band data** for the dispatch heads.
 - `measurements/`: **frozen measurement records** promoted out of `_build/`, with their own
   index.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
-  (`L3.0.3-subsumption-probe.md` and so on), plus the archived planning sections cut from
-  `PLAN.md` by `[L3.32-T113]` (the target skeleton, route tree, source survey, build
-  constraints, process tensions, risks and simplification register; each carries a status
-  header and a pointer back). `PLAN.md` §11 records the status of the goals. Findings that
-  outlive a goal are promoted into `PLAN.md` itself, so a memo is evidence and reasoning,
-  never the current plan.
+  (`L3.0.3-subsumption-probe.md`, and `L9-pod-program-design.md` for goal `[L9]`), plus the
+  archived planning sections cut from `PLAN.md` by `[L3.32-T113]` (the target skeleton, route
+  tree, source survey, build constraints, process tensions, risks and simplification register;
+  each carries a status header and a pointer back). `PLAN.md` §11 records the status of the
+  goals. Findings that outlive a goal are promoted into `PLAN.md` itself, so a memo is evidence
+  and reasoning, never the current plan.
 
 See [scripts/README.md](../scripts/README.md) for the tooling that consumes these.

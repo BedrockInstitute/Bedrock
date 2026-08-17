@@ -28,7 +28,9 @@ rewrite text, because the right fix is a translation judgement, not a mechanical
 
 ## Maintaining `glossary.toml`
 
-Each term is a `[[term]]` entry. Add one when a load-bearing term gets a confirmed rendering:
+Each term is a `[[term]]` entry. **Never add one yourself.** The two-agent pipeline in
+`dev/ORCHESTRATION.md` section 8 settles a term the glossary lacks. Only a rendering that
+passes it lands here, or one the owner rules. An entry has this shape:
 
 ```toml
 [[term]]

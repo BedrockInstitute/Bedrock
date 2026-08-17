@@ -107,7 +107,7 @@ repair claimed DD24's ratio was a partial defence and that was backwards**:
 seconds per line, so a padded wing passes it more easily. There was no defence
 at all. Three measures replaced the wrong one, and the first is mechanical:
 the line benchmark is the SMALLER of `[LJ-1.1]`'s a-priori projection and the
-measurement, enforced by `validate_benchmark()` in `scripts/ledger.py`.
+measurement, enforced by `validate_benchmark()` in `scripts/measure/ledger.py`.
 
 ### 2026-08-09, the closeout: what phase 1 starts on
 
@@ -254,7 +254,7 @@ GCH wing too, while the denominator excluded the wing by declaration. It read
 plus 3.98 percent against a true plus 2.74. `src/Landmarks.lagda.md`'s import
 cone IS the AC side by structure, so it became the root.
 
-**A caliber.** `scripts/check-ratio.py` timed wing modules at a bare `-M8g`
+**A caliber.** `scripts/measure/check-ratio.py` timed wing modules at a bare `-M8g`
 while the bar was measured at `-A64m -I0 -M16g`, worth 22.3 percent, and it
 compared module SLICES to a WHOLE-CONE rate, which is too lenient by
 construction. Two errors in opposite directions, partly hiding each other. It
@@ -304,7 +304,7 @@ index unfolds the satisfaction tower. The control sat in the same file: the
 descent runs at 0.061 because it is parameterized.
 
 **The three cures were ranked by this tree's own history, not by intuition.**
-`dev/LESSONS.md:2330-2348` records five transplants and four failures, and
+`dev/LESSONS.md:2369-2385` records five transplants and four failures, and
 R-38's seal transplanted at exactly zero. The only cure that ever worked was
 redirected by root cause. It abstracts the SOURCE, not the target. It went
 first and it won: 29.1 s to 2.3 s, 12.8x.
@@ -338,7 +338,7 @@ from 46.3 s and 0.0244 which was 1.85x the bar.
    code. The gate had failed and the summary read green. Capture the exit code
    before reading the output.
 2. **Six PLAN rows over the 200-character cap**, all written by me the same day.
-   `scripts/check-task-index.py` caught every one. I had widened its regexes
+   `scripts/gate/check-task-index.py` caught every one. I had widened its regexes
    that morning, so the checker found its author first.
 3. **Two briefs refused by the dispatch gate** for missing mandatory rules,
    D-26 on one and R-35 with R-40 on the other. Memory dropped them. The gate
@@ -374,7 +374,7 @@ DD25, DD26, DD27.
 `fable 5` for ONE adversarial review on 2026-08-13, by their own word. On
 2026-08-14 the orchestrator dispatched FOUR DD25 reviews to `fable`, when the
 switch's adversarial row reads `pi` and the orchestrator had printed that table
-in the same session. **`scripts/check-dispatch-policy.py` passed all four**,
+in the same session. **`scripts/dispatch/check-dispatch-policy.py` passed all four**,
 because DD17's emergency tier makes `fable` a legal token and no checker can
 tell an emergency-tier head from a wrong one. `dev/LESSONS.md` **C-43** carries
 the measured episode and the checker finding; **this row is the ruling and
@@ -423,7 +423,7 @@ the ruling early.**
 distinction the first ruling missed.** Refusing the GATE is right; refusing
 the MEASUREMENT is one step too far, because a report cannot be gamed when
 nothing passes or fails on it, and the machinery already existed in
-`scripts/ledger.py`'s import closures. **`ledger.py --reuse` prints what the
+`scripts/measure/ledger.py`'s import closures. **`ledger.py --reuse` prints what the
 two proofs actually share**, in masters and in lines, with each closure's own
 total and the shared share of their union. It exits 0 whatever it finds, it is
 NOT in `make check`, and it refuses to compute while no GCH endpoint exists
@@ -514,7 +514,7 @@ terms, and every threshold here would report a pass. **DD24 guards the wing's
 RATIO and nothing guards its TOTAL**, which is deliberate, because the wing
 exists to measure what GCH costs and a cap would make it report the cap.
 **DD24 IS NOT A DEFENCE HERE, and a first version of this row wrongly said it
-was.** `scripts/check-ratio.py` fails only when the aggregate is ABOVE the bar.
+was.** `scripts/measure/check-ratio.py` fails only when the aggregate is ABOVE the bar.
 Padding with cheap lines LOWERS seconds per line, so a padded wing passes DD24
 more easily, not less. The ratio guards the wing's content CLASS and says
 nothing whatever about its SIZE, which is exactly the quantity that sets the
@@ -774,8 +774,8 @@ decontamination, and the 60.0 s gap is still an upper bound.**
 
 **One reported defect did NOT hold, and the correction belongs here.**
 `[LJ-1.222]` reported that `AGENTS.md:134` cites P-l for a law P-l does not
-state. **The heading at `dev/LESSONS.md:2323` names one thing and the entry
-carries both:** P-l runs to `:2419`, and `:2355-2372` holds the five-transplant
+state. **The heading at `dev/LESSONS.md:2343` names one thing and the entry
+carries both:** P-l runs to `:2437`, and `:2369-2390` holds the five-transplant
 table and the sentence「an expected figure anchored on a comparable is a
 HYPOTHESIS, not a price」. **The citation is sound. The heading is narrower than
 the entry**, and that is the whole defect.

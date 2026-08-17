@@ -10,9 +10,9 @@
 # `_build/README.md` from it.
 #
 # WHY THIS FILE LIVES IN `dev/` AND NOT IN `_build/`.
-# `.gitignore:2` ignores `_build/`, and `scripts/gate/check-probes.py:20-23` fails the
+# `.gitignore:2` ignores `_build/`, and `scripts/gate/check-probes.py:101-102` fails the
 # gate on any TRACKED file under `_build/`. A manifest kept inside `_build/` would
-# be untracked, would not survive `make clean` (`Makefile:303`), and would not
+# be untracked, would not survive `make clean` (the `Makefile` `clean:` target), and would not
 # survive a fresh clone. A regime that a routine command destroys is not a regime.
 # `archive/src/2026-08-13-kits-to-tasks/README.md` records the same finding for refused kits.
 # `_build/README.md` is therefore GENERATED from this file, never hand-written.
@@ -38,7 +38,7 @@ what = """
 Cannot be tracked and cannot be deleted. Third-party copyrighted material, or a
 record whose regeneration would not reproduce it. It stays in `_build/` because
 `_build/` is the only place in the tree that is outside git by construction."""
-delete_when = "Never. `Makefile:303` exempts it from `make clean` by name."
+delete_when = "Never. The `Makefile` `clean:` target exempts it by name."
 promote_when = "Never. Promotion would commit it, which is the thing forbidden."
 
 [classes.evidence]
@@ -114,14 +114,14 @@ note = """
 The fetched OCR text and PDFs of Devlin, Jensen, Jech and Schindler-Zeman.
 Copyrighted, so they cannot be committed; `dev/literature/BIBLIOGRAPHY.md:182,191,198`
 and `[LJ-1.11]` cite them BY LINE NUMBER, and a re-fetch would not reproduce the
-line numbers because they are OCR output. Ruled at `Makefile:166-179`, which
-exempts this directory from `make clean` by name. Provenance for a re-fetch is
-`dev/literature/primary-sources.md:317-334`."""
+line numbers because they are OCR output. The `Makefile` `clean:` target exempts
+this directory by name. Provenance for a re-fetch is
+`dev/literature/primary-sources.md:318-336`."""
 
 [[entries]]
 glob = ".last-gate"
 class = "runtime"
-note = "The commit hash of the last green gate. Written and read by `scripts/gate/check-tree.py:288`."
+note = "The commit hash of the last green gate. Written and read by `scripts/gate/check-tree.py:297`."
 
 [[entries]]
 glob = "tools/agda-watchdog.log"
@@ -144,12 +144,12 @@ note = "Reproduced by `make site`."
 [[entries]]
 glob = "woven/**"
 class = "exhaust"
-note = "Reproduced by `scripts/site/weave-i18n.py --gen --out _build/woven` (`Makefile:129`)."
+note = "Reproduced by `scripts/site/weave-i18n.py --gen --out _build/woven` (the `Makefile` `gen:` target)."
 
 [[entries]]
 glob = "types.json"
 class = "exhaust"
-note = "Reproduced by `scripts/site/extract-types.py --out _build/types.json` (`Makefile:135`)."
+note = "Reproduced by `scripts/site/extract-types.py --out _build/types.json` (the `Makefile` `types:` target)."
 
 [[entries]]
 glob = "tools/*.pid"

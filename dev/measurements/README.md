@@ -3,7 +3,7 @@
 A **measurement record** is the raw output of a timing run, a profile or a
 check: the table or the log a live document quotes its numbers from. This
 directory holds the records that a LIVE document cites, so the citation
-resolves.
+resolves. The rule set is [AGENTS.md](../../AGENTS.md).
 
 Records whose citing documents have all become historical move to
 [archive/dev/measurements](../../archive/dev/measurements/README.md).
@@ -14,9 +14,6 @@ Records whose citing documents have all become historical move to
 except `literature/`. `dev/ledger.toml`, the project's canonical size ledger,
 cited three of these tables as the provenance of standing figures while they
 sat one command from deletion. `[LJ-1.132]` moved them.
-
-`archive/src/2026-08-13-kits-to-tasks/README.md` records the same finding for refused kits: an
-artifact a routine command destroys is not preserved.
 
 ## Why a measurement record is not exhaust
 
@@ -30,24 +27,25 @@ tree state that no longer exists cannot be regenerated. It is evidence.
 
 | File | The record | Cited by |
 |---|---|---|
-| `l3.32-coldprofile-2026-08-06.txt` | full per-module cold profile, 124 rows, 1,070.2 s | `dev/ledger.toml:2320,2351` |
-| `l3.32-coldprofile-2026-08-09.txt` | full per-module cold profile, 112 rows, 700.42 s | `dev/ledger.toml:1824` |
-| `l3.32-t256-belowlim-profile.txt` | per-definition profile of the below-limit master, 546,708 ms | `dev/ledger.toml:2133` |
+| `l3.32-coldprofile-2026-08-06.txt` | full per-module cold profile, 124 rows, 1,070.2 s | `dev/ledger.toml:2413,2444` |
+| `l3.32-coldprofile-2026-08-09.txt` | full per-module cold profile, 112 rows, 700.42 s | `dev/ledger.toml:1917` |
+| `l3.32-t256-belowlim-profile.txt` | per-definition profile of the below-limit master, 546,708 ms | `dev/ledger.toml:2226` |
 | `lj-1.128-run2.log` to `-run5.log` | `[LJ-1.128]` main series, runs 2 to 5 | `agents/tasks/LJ-1-128/lj-1.128-report.md:86` |
 | `lj-1.128-controlA.log`, `-controlB.log` | `[LJ-1.128]` control runs on the old tree | `agents/tasks/LJ-1-128/lj-1.128-report.md:101-106` |
-| `pod-retrieval-scoping-2026-08-17.txt` | the retrieval scoping experiment: gold rank on the full corpus against the archive scope, seven cases | `dev/POD.md` section 7.4 |
+| `pod-retrieval-scoping-2026-08-17.txt` | the retrieval scoping experiment: gold rank on the full corpus against the archive scope, seven cases | `dev/memos/L9-pod-program-design.md:2615` |
 | `pod-retrieval-scoping-2026-08-17.py` | the experiment that produced the line above, frozen. Nothing runs it | the record beside it |
 
-The two control logs are the raw evidence for that report's headline finding
-and are kept with the series they are compared against. The report tabulates
-their numbers but does not name the files.
+The report tabulates the two control runs but does not name their files, so
+the table above is their only index.
 
-## The citation in `lj-1.128-report.md` is stale, and stays stale
+## Two citations are stale, and stay stale
 
-A brief and a report are frozen records; they are corrected in the next one,
-never rewritten. `agents/tasks/LJ-1-128/lj-1.128-report.md:86` still cites the old
-`_build/` path. **Find the file by its basename.** The three `dev/ledger.toml`
-citations WERE rewritten, because the ledger is a live document.
+A record is frozen and nobody rewrites it.
+`agents/tasks/LJ-1-128/lj-1.128-report.md:86` still cites the old `_build/`
+path, and the two `pod-retrieval-scoping` records name `dev/POD.md` in their
+own headers, which is now `dev/memos/L9-pod-program-design.md`. **Find the file
+by its basename, and read the table above for the live pointer.** The
+`dev/ledger.toml` citations WERE rewritten, because the ledger is live.
 
 ## When a record belongs here
 

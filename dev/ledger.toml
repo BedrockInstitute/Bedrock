@@ -309,7 +309,7 @@ gch_wing_apriori = [7553, 11197]
 # tolerance, and DD26 re-based the bar after that. The live bar is
 # `ac_baseline_module_rate` 0.011828 times 1.15, which is 0.013602 (RESTORED
 # 2026-08-16 by the owner's ruling; it read 0.010514 from 2026-08-13), and
-# `scripts/measure/check-ratio.py:472-474` computes exactly that: `module_rate *
+# `scripts/measure/check-ratio.py:479-481` computes exactly that: `module_rate *
 # tolerance`. The code is the authority here, not any comment.
 #
 # TWO NUMBERS, TWO QUESTIONS, and the old field answered one with the other's
@@ -420,10 +420,9 @@ lines_removable = 83
 lines_removable_source = "[LJ-1.218] measured, [LJ-1.222] corrected; 64 of 83 unaudited against D-27"
 
 # MEASURE 2 has no field, because it is about what a BRIEF says: a phase-1
-# build brief does not tell the agent its output sets a bar. Enforcement is
-# clause W3 of dev/POD.md section 3.1, injected into
-# dev/pod/instructions/mathematician.md, which is agent discipline only and is
-# named as agent discipline only.
+# build brief does not tell the agent its output sets a bar. The enforcement
+# point is the brief text and the orchestrator's audit of the return. No
+# checker reads it.
 seconds_state = "DOES NOT EXIST (this is the DOUBLE-trophy build time; do not confuse it with DD24's measured 133.19 s AC-only baseline in [ratio])"
 seconds_gap = """
 Nobody has measured the internalization route's build time, at either
@@ -749,7 +748,7 @@ provenance = "agents/tasks/archive/L3-32-T52/l3.32-t52-report.md combined row; P
 # measured by the D33 trophy split (base + ac-only + shared, surviving tree,
 # non-blank in-fence lines), must land UNDER this cap. The bar it beats: the
 # internalization route delivered L |= AC at 17,492 lines (CORRECTED from 17,496
-# by [T257] 2026-08-09: counted with `scripts/measure/ledger.py:56`'s own regex over
+# by [T257] 2026-08-09: counted with `scripts/measure/ledger.py:86`'s own regex over
 # `git ls-tree -r --name-only main`, 75 masters, with 608 opening and 608
 # closing fence markers and no variants. [T208] recorded 17,496 for the same
 # tree and called the four-line delta a [T205] finding; 17,492 is right at the
@@ -2598,16 +2597,14 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # says so. The stale citation would now collide with the real DD25, which the
 # owner ruled on 2026-08-10 about escalating a negative codex return.
 [ratio]
-# THE ONLY HOME FOR THESE NUMBERS. The DD24 RULE is SUPERSEDED at the POD
-# cutover (dev/POD.md section 7.1) and the applied bar is VOID: no gate reads it
-# and no table row carries a seconds_max (dev/POD.md gap M13). The figures below
-# stay as MEASUREMENTS, with their provenance, and scripts/measure/check-ratio.py
-# reads them as a maintainer profiler. A superseded figure is kept here as a
-# record, with its provenance, and never as a baseline.
-# UNTIL THE CUTOVER RUNS the applied bar is `ac_baseline_module_rate` times
-# `tolerance`, computed at scripts/measure/check-ratio.py and stated nowhere
-# else; scripts/gate/check-baseline-home.py refuses a live restatement of either
-# outside this file, and both retire together (rows 18 and 29).
+# THE ONLY HOME FOR THESE NUMBERS. The figures below stay as MEASUREMENTS, with
+# their provenance, and scripts/measure/check-ratio.py reads them as a
+# maintainer profiler. A superseded figure is kept here as a record, with its
+# provenance, and never as a baseline.
+# THE APPLIED BAR is `ac_baseline_module_rate` times `tolerance`, computed at
+# scripts/measure/check-ratio.py and stated nowhere else.
+# scripts/gate/check-baseline-home.py refuses a live restatement of either
+# figure outside this file.
 # THE BASELINE IS A MEASUREMENT, and the tool refuses to run without it.
 # Protocol: interface cache moved aside, `make typecheck` at the exported
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,
@@ -2689,7 +2686,7 @@ ac_baseline_seconds_per_line = 0.008793
 #
 # THE TWO TERMS DESCRIBE ONE TREE, and [LJ-1.128] checked that rather than
 # assuming it. A cold build compiles the WORKING tree, while count() reads
-# HEAD (scripts/measure/ledger.py:130-139). The working tree carried uncommitted work
+# HEAD (scripts/measure/ledger.py:141-150). The working tree carried uncommitted work
 # at src/L/Condensation/TwelveAgree.lagda.md. That master sits OUTSIDE the
 # cone, with the twelve others outside it, so both sums read 17,185 and the
 # build compiled HEAD content only.
@@ -2768,10 +2765,10 @@ ac_baseline_ghcrts = "-A64m -I0 -M8g"
 # lines then. P-q, in the good direction, and it repeats what [LJ-1.128]
 # measured on the same 179 lines.
 #
-# THE TARGET SET IS BUILT BY SUBTRACTION AND IT HAS DRIFTED OFF THE AC SIDE.
-# check-ratio.py takes every countable master that is not in gch_wing
-# (scripts/measure/check-ratio.py:186-187). [LJ-0.5] replaced exactly that construction
-# for the whole-cone denominator above, and the module rate never got the fix.
+# THE TARGET SET WAS BUILT BY SUBTRACTION AND IT HAD DRIFTED OFF THE AC SIDE.
+# check-ratio.py then took every countable master that is not in gch_wing.
+# [LJ-0.5] replaced exactly that construction for the whole-cone denominator
+# above, and the module rate never got the fix.
 # MEASURED 2026-08-13: six targets, 3,101 lines or 15.3 percent of this
 # denominator, sit OUTSIDE the Landmarks cone and are reachable only through
 # src/Everything.lagda.md, so no trophy statement imports them. They cost

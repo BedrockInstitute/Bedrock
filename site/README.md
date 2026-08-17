@@ -3,17 +3,14 @@
 The static-site **front-end assets** consumed by
 [scripts/site/render-site.py](../scripts/site/render-site.py). These are committed source; the rendered
 site they produce is generated into `_build/site/` (git-ignored). English developer doc; the
-rule set is [AGENTS.md](../AGENTS.md), and [dev/POD.md](../dev/POD.md) section 3 replaces it at
-the POD cutover.
+rule set is [AGENTS.md](../AGENTS.md).
 
-**Read this file when your write scope names a path under `site/`.** At the cutover,
-`dev/POD.md` check P22 will print it at that moment. Until then, read it yourself.
+**Read this file when your write scope names a path under `site/`.**
 
-**THE POD DOES NOT TOUCH THE PUBLISHING PIPELINE.** Seven tracked scripts sit outside
-`dev/POD.md` section 7.1 and outside `make check`: `scripts/site/extract-types.py`,
-`gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `depmap-template.html`
-and `scripts/ops/agda-watchdog.sh`. They run from `make site`, `make serve`, `make gen` and the
-two deploy workflows, and `link-check.py` is the only script the deploy runs. Their index is
+**The publishing pipeline runs outside `make check`:** `scripts/site/extract-types.py`,
+`gen-depmap.py`, `link-check.py`, `render-site.py`, `depmap-template.html` and
+`scripts/ops/agda-watchdog.sh`. `make site`, `make serve` and the two deploy workflows run
+them, and `link-check.py` is the only script the deploy runs. Their index is
 [scripts/README.md](../scripts/README.md) and it stays their canonical home.
 
 ## Contents

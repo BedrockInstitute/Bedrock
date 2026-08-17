@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """FROZEN RECORD, not a tool. The retrieval scoping experiment of 2026-08-17.
 
-Cited by dev/POD.md section 7.4. Its output is
+Cited by dev/memos/L9-pod-program-design.md section 7.4. Its output is
 dev/measurements/pod-retrieval-scoping-2026-08-17.txt, beside this file.
 
 Nothing runs this. It is kept so the measurement method can be read, and

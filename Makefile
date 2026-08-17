@@ -81,8 +81,7 @@ ratio:
 # ADVISORY, never in check: it runs Agda and costs minutes, the same class as
 # ratio and deletion-test. It had NO target until 2026-08-17, so the only way to
 # run it was to remember its path, while its named sibling check-ratio.py had
-# one. dev/POD.md section 7.1 row 28 keeps it as a maintainer profiler and NOT
-# as fact 5.
+# one. It is a maintainer profiler. Its thresholds are SUSPENDED, not absent.
 timing:
 	$(PY) scripts/measure/check-timing.py
 
@@ -100,13 +99,13 @@ probes:
 # The commit gate against a LIVE agent's write territory. [LJ-1.189]'s P3,
 # built by [LJ-1.193]. Two `git add -A` sweeps on 2026-08-13 committed a
 # sibling's work in progress; a staged file inside a live agent's task
-# directory or brief write scope is refused by the pre-commit hook, and this
+# directory or brief write scope is refused by --staged, and the --check
 # tracked-tree mode audits that nothing already landed there. The ONE
 # exemption is a live record's own brief path, MEASURED: the orchestrator
-# commits a brief while its agent is live (4ae98f3, 82dd1fb, 8eb2ba0). The
-# NO hook runs this checker: the pre-commit hook does not call it, MEASURED
-# 2026-08-17. This target is the only place it fires, and it runs --staged, for
-# the reason below. Cost: a registry read, a ps per live agent, one git ls-files.
+# commits a brief while its agent is live (4ae98f3, 82dd1fb, 8eb2ba0). NO hook
+# runs this checker: the pre-commit hook does not call it, MEASURED 2026-08-17.
+# This target is the only place it fires, and it runs --staged, for the reason
+# below. Cost: a registry read, a ps per live agent, one git ls-files.
 liveterritory:
 # THE STAGED MODE IS THE COMMIT GATE. `--check` audits every TRACKED file, which
 # stays red for the whole life of any dispatch whose report was committed once,
@@ -132,11 +131,6 @@ ruleids:
 	$(PY) scripts/gate/check-rule-ids.py
 	$(PY) scripts/dispatch/rules.py --check
 
-# The dev/ documents decay; [L3.32-T110] built the maintenance mechanism so
-# the decay is found here, not by accident. Six cheap subchecks: size caps on
-# AGENTS.md and PLAN cells, routing of imported LESSONS entries, the section 0
-# "as of" date, memo STATUS form, and that AGENTS.md's named enforcers exist.
-# On-demand sweep (never a gate): scripts/gate/check-dev-docs.py --sweep.
 taskindex:
 	$(PY) scripts/gate/check-task-index.py
 
@@ -231,6 +225,13 @@ baselinehome:
 liverecord:
 	$(PY) scripts/gate/check-live-record-claims.py
 
+# The dev/ documents decay; [L3.32-T110] built the maintenance mechanism so
+# the decay is found here, not by accident. Six cheap subchecks: size caps on
+# AGENTS.md and PLAN cells, routing of imported LESSONS entries, the section 0
+# "as of" date, memo STATUS form, and that AGENTS.md's named enforcers exist.
+# It sat on `taskindex` until 2026-08-17. The on-demand sweep is NEVER a gate:
+# it prints and exits 0. Run it as
+#   $(PY) scripts/gate/check-dev-docs.py --sweep --sweep-paths
 devdocs:
 	$(PY) scripts/gate/check-dev-docs.py
 

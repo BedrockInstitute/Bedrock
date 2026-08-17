@@ -7,16 +7,16 @@ citation still resolves.
 
 Live records, cited by `dev/ledger.toml` or another live document, live in
 [dev/measurements](../../../dev/measurements/README.md). A record moves here when
-every document that cites it has become historical.
+every document that cites it has become historical. The rule set is
+[AGENTS.md](../../../AGENTS.md).
 
 ## Why they are not under `_build/`
 
-`_build/` is in `.gitignore` and `Makefile:302` runs
+`_build/` is in `.gitignore` and `Makefile:311` runs
 `find _build -mindepth 1 -maxdepth 1 ! -name literature -exec rm -rf {} +`.
 A record kept there is one command from gone.
-`archive/src/2026-08-13-kits-to-tasks/README.md` records
-the same finding for refused kits: an artifact a routine command destroys is
-not preserved.
+`archive/src/2026-08-13-kits-to-tasks/README.md` records the same finding for
+refused kits: an artifact a routine command destroys is not preserved.
 
 ## Why a measurement record is not exhaust
 
@@ -31,7 +31,7 @@ that no longer exists cannot be regenerated, so it is evidence, not exhaust.
 | File | The record | Cited by |
 |---|---|---|
 | `t129-baseline.log` | `[L3.32-T129]` baseline check | `agents/tasks/archive/L3-32-T129/l3.32-t129-report.md` |
-| `t132-check.log` | `[L3.32-T132]` check log | `agents/tasks/archive/L3-32-T132/l3.32-t132-report.md`, `l3.32-t139-report.md` |
+| `t132-check.log` | `[L3.32-T132]` check log | `agents/tasks/archive/L3-32-T132/l3.32-t132-report.md`, `agents/tasks/archive/L3-32-T139/l3.32-t139-report.md` |
 | `l3.32-t242-profile.txt` | `[L3.32-T242]` profile | `agents/tasks/archive/L3-32-T242/l3.32-t242-report.md` |
 | `l3.32-t242-run3.txt` | `[L3.32-T242]` run 3 | same |
 | `l3.32-t242-t222-profile.txt` | `[L3.32-T242]` profile over `[T222]` | same |

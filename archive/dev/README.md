@@ -2,9 +2,9 @@
 
 Moved here 2026-08-09 by the owner's instruction. These four files were
 `dev/*-archived.md`; they are the record of the internalization route, which
-the two-tower bridge route replaced (`dev/PLAN.md` DD2). The rules of the
-archive are [archive/README.md](../README.md): frozen, outside every gate,
-nothing imports across the boundary.
+the two-tower bridge route replaced (`dev/PLAN.md` DD2). The archive rules are
+[archive/README.md](../README.md): frozen, outside every gate, nothing imports
+across the boundary. The rule set is [AGENTS.md](../../AGENTS.md).
 
 **They live under `archive/` and not `dev/` because they are evidence, not
 working documents.** A developer reading `dev/` should see what binds today.
@@ -23,19 +23,14 @@ citations across `dev/LESSONS.md`, the memos, the briefs and the commit
 history point at these codes. Renumbering would falsify all of them, and a
 code that means one thing in a commit message and another here is a trap.
 
-## Nothing here is read by machine, from the POD cutover onward
+## Two gates read these files
 
-Two gates resolve citations against `DECISIONS-archived.md` and
-`TASKS-archived.md` today, and both run green in `make check`. At the cutover
-`check-task-index.py` RETIRES and `check-rule-ids.py`
-is narrowed to `dev/LESSONS.md` and `dev/rules.toml` (`dev/POD.md` section 7.1,
-rows 14 and 15). After that a citation into these files is resolved by a reader
-and by nothing else. Renaming a file here breaks no gate and every citation.
+`check-task-index.py` and `check-rule-ids.py` resolve citations against
+`TASKS-archived.md` and `DECISIONS-archived.md`, and both run green in
+`make check`. **So renaming a file here breaks a gate and every citation.**
 
 ## The archive survey
 
-A brief carries an `## ARCHIVE` section naming what may bear on the task, and the
-return answers it; `check-dd18-survey.py` gates the return half. At the cutover
-the POD program will search these files mechanically at brief build and inject
-the result, under `dev/POD.md` section 7.4, which this file does not restate. **DD18, not DD19, is the ruling** that made the
-survey a brief section; this paragraph named the wrong code until 2026-08-17.
+A brief carries an `## ARCHIVE` section naming what may bear on the task, and
+the return answers it. `check-dd18-survey.py` gates the return half. **DD18,
+not DD19, is the ruling** that made the survey a brief section.

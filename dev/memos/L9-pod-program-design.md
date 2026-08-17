@@ -1,12 +1,14 @@
-# POD: the program that runs the route
+# POD: the design of a program to run the route (goal [L9], PLANNED)
 
-**Status: SPECIFICATION. Nothing below is built. Date: 2026-08-17.**
+**Status: DESIGN, and nothing below is built. Date: 2026-08-17.** This memo is
+the design deliverable of goal `[L9]` in `dev/PLAN.md` section 11. `[L9]` is
+PLANNED, and so is each of its eight rows.
 
-**THE RULE SET IN FORCE IS `AGENTS.md`, AND THE ORCHESTRATOR WORKS TO
-`dev/ORCHESTRATION.md`.** This document replaces both at the cutover of section
-9 and not before. Check it yourself: `dev/pod/` and `scripts/pod/` do not exist,
-and no row of the delivery table in section 11 is built. **Read a sentence here
-as a plan. Never obey one as a rule.**
+**`AGENTS.md` is the rule set today, and the orchestrator works to
+`dev/ORCHESTRATION.md`. Both bind until `[L9.7]` archives them.** Check the
+state yourself: `dev/pod/` and `scripts/pod/` do not exist, and no row of the
+build order in section 10 is built. **Read a sentence here as a design. Never
+obey one as a rule.**
 
 This document assembles four audits and two adversarial reviews into one
 buildable specification. Section 11 carries every open gap.
@@ -42,7 +44,7 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   `obligations_delta_max <= -len(obligations)` OR by `outcome = "no-go"`. Without
   it a NO-GO is inexpressible: a NO-GO leaves every declared name unresolved, so
   the delta stays 0.
-- **A7. THE DD SERIES IS NOT VOID.** It is SET ASIDE IN ITS CURRENT FORM while
+- **A7. THE DD SERIES IS NOT VOID.** It BINDS today. Cutover step 12b would set it aside IN ITS CURRENT FORM while
   the process is restructured, and its SUBSTANCE must survive. Every DD ruling
   takes exactly one of three dispositions and none may disappear: MECHANISED
   (the new flow or a hook enforces it, at a named point), WRITTEN RULE (it
@@ -51,6 +53,8 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   the row NAMES the contradiction). Sections 3, 3.1 and 7.1.
 
 ## 1. What this is
+
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
 
 The POD replaces Bedrock's human orchestrator with a program.
 
@@ -94,12 +98,14 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 
 ## 2. The 27 architecture decisions, AD1 to AD27
 
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
 | AD# | The decision | In | AD# | The decision | In |
 |---|---|---|---|---|---|
 | AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked | 6.7, 8.1 |
 | AD2 | A maintainer model writes new table rows. It does not run the loop | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
 | AD3 | All judgement belongs to the mathematician | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
-| AD4 | `AGENTS.md` and `dev/ORCHESTRATION.md` are void. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
+| AD4 | `AGENTS.md` and `dev/ORCHESTRATION.md` become void AT `[L9.7]` and are LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
 | AD5 | The goal is unchanged: both trophies | 1 | AD19 | The table is tracked. Runtime state is not. Every transition logs | 5.3 |
 | AD6 | Clean cutover. `pre-pod-2026-08-17` is the rollback anchor | 9.1, 9.2, 9.3 | AD20 | A Chinese daily digest, plus an immediate push on stop | 8.1, 8.3 |
 | AD7 | The rollback criterion is the owner's. The digest prints two numbers | 8.2 | AD21 | A cheap pre-flight on the brief before dispatch | 6.5 |
@@ -113,7 +119,9 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 
 ## 3. The rule set, ONE list
 
-**Every rule sits in this one list and carries an `enforced by` value of exactly
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
+**Every rule would sit in this one list and carry an `enforced by` value of exactly
 `program`, `hook` or `agent discipline`.** A rule that can name none of the three
 is deleted rather than written, so no cell below is empty. R1 to R18 are the
 program's own. W1 to W12 are the written clauses, and section 3.1 gives every one
@@ -158,15 +166,17 @@ repository rule that `AGENTS.md` held and no DD code names.**
 
 ### 3.1 The written rules, executed by agent discipline
 
-**A dispatched agent READS this section and FOLLOWS it. Nothing mechanical checks
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
+**A dispatched agent WOULD READ this section and FOLLOW it, once `[L9]` is built. Nothing mechanical checks
 one clause of it.** That is why each clause is short enough to hold and why the
 program carries it: `dev/pod/instructions/<slot>.md` holds the clauses for that
 slot and the program injects the file ahead of the brief at every dispatch
-(section 6.1). The clause text below is the rule; the summary in section 3 is not.
+(section 6.1). The clause text below would be the rule; the summary in section 3 would not.
 
 | # | Carries | Injected into | The clause, verbatim |
 |---|---|---|---|
-| W1 | DD2 | mathematician | The two towers and the bridge are a candidate architecture and not a ruling. Only a measurement changes the architecture, and an argument never does. Queue the architecture decision as a task whose obligation is that measurement. That task is `LJ-2.5` in `dev/pod/queue.toml`. |
+| W1 | DD2 | mathematician | The two towers and the bridge are a candidate architecture and not a ruling. Only a measurement changes the architecture, and an argument never does. Queue the architecture decision as a task whose obligation is that measurement. That task is `[LJ-2.5]`, a live row in `dev/PLAN.md` section 11. |
 | W2 | DD4 | mathematician, coder | Write the mathematics once at a generic carrier and instantiate it, so both proofs share the maximum code. State this rule in the brief and answer it in the return. A deadline does not permit the fixed form: report the conflict and stop for a new price. |
 | W3 | DD8 | mathematician | Name the widest unmeasured term in the brief, and name the probe that measures it. Give an estimate as one best-effort number. Name the estimate's basis: a probe, a delivered comparable, or a survey. Write the probe in `agents/tasks/<CODE>/`, beside the brief and the report, and never under `src/`. The probe is tracked and is never deleted. Run it while your task is live, because nothing typechecks it after the task closes. Write the report first, and write it incrementally. |
 | W4 | DD13 | mathematician, coder | Move a retired MODULE to `archive/` and never delete it. The rule is module-granular: a dead fragment inside a live master, with no consumer, is deleted, and the `dev/LESSONS.md` entry that cited it is restated generally. Record in `dev/ARCHIVE.md` what the module is, why it left, where it was last green, and what would reopen it. Price the ideal form written fresh today, then compare it with the chapter you have. |
@@ -183,7 +193,7 @@ slot and the program injects the file ahead of the brief at every dispatch
 absorbed.** W2 loses the per-dispatch REPETITION that `check-dd4-stated.py` gave
 it: that gate's docstring at `:14` records 11 briefs carrying no DD4 at all, and
 gap M4 records the same decay at 102 of 112 briefs over five days. An injected
-file is read by a model and checked by nobody. W1 loses its ADDRESS: `[LJ-2.5]`
+file is read by a model and checked by nobody. W1 would lose its ADDRESS: `[LJ-2.5]`
 was a row in `dev/PLAN.md` section 11, which `dev/pod/queue.toml` replaces, so
 the clause names a queued task whose obligation is the measurement. **The other
 twelve planned rows of `dev/PLAN.md` section 11 migrate the same way, as REQUEST
@@ -191,6 +201,8 @@ entries in `dev/pod/queue.toml`, so the route survives the replacement of that
 section.** Cutover step 13 seeds all thirteen.
 
 ## 4. The table
+
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
 
 AD8, AD9, AD10 and AD11.
 
@@ -1049,6 +1061,8 @@ expires with it.** It also shows the namespaced id: the mathematician wrote
 
 ## 5. The loop
 
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
 AD1, AD12, AD13, AD14, AD16, AD17, AD18 and AD19.
 
 ### 5.0 The runner
@@ -1593,6 +1607,8 @@ slots**, which is the second limb of `admits()` above: every run record writes a
 task stays READY while the tick records the refusal.
 
 ## 6. The roles
+
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
 
 AD2, AD3, AD12, AD15, AD18, AD21, AD24, AD25, AD26 and AD27.
 
@@ -2258,17 +2274,22 @@ It never repairs a brief itself either: AD3 gives the brief to the mathematician
 
 ## 7. The gates
 
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
 AD22, AD23 and A7.
 
 ### 7.1 The dispositions: every DD ruling, then every gate
 
-**A7 gives every DD ruling exactly one disposition and lets none disappear.** The
-column below names the enforcement point and when it fires. **A gate that
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
+**A7 would give every DD ruling exactly one disposition and let none disappear.** The
+column below names the enforcement point `[L9]` would give it. **It is NOT what enforces the
+ruling today. For that, read `dev/PLAN.md` section 3, whose enforcement columns are live.** **A gate that
 enforces a MECHANISED ruling is KEPT or REWRITTEN and never retired**, which the
 second table obeys: every RETIRE row there names the disposition that released
 it. A NOT CARRIED note is a real loss, stated rather than absorbed.
 
-| DD | Disposition | The enforcement point, and when it fires |
+| DD | Disposition under `[L9]` | The enforcement point `[L9]` would give it |
 |---|---|---|
 | DD0 | **SUPERSEDED IN PART** | The owner ruled the remainder back in on 2026-08-17. SUPERSEDED half: the owner's exclusive authorship of a TABLE ROW is replaced by a mechanical test on the WRITE, not on the writer, because AD2 gives the maintainer the rows: R3 refuses any new row that would move a record an existing row already matches, and `admit_rows()` calls `replay()` before it writes (4.1). **Two clauses are CARRIED and not superseded. Clause 1, WRITTEN RULE: clause W9 of section 3.1**, injected into every `dev/pod/instructions/<slot>.md`. It cannot be mechanised, because the act it forbids is an INFERENCE and the tokens it produces are legal by construction, so its enforcer is `agent discipline`. **Clause 2, MECHANISED in two halves: R15**, the maintainer's one-path write scope, checked by `maintainer_scope_ok()` at the batch return and before the replay (6.7); **and R16**, a named owner approval for any change to section 3, section 3.1 or `dev/pod/heads.toml`, checked by `check-spec-surface.py` at the `commit-msg` hook and again at conjunct 5 (7.3) |
 | DD1 | **MECHANISED** | `check-spec-surface.py`, under R9. Twice: `--check` as acceptance conjunct 5, which runs FIRST of the six (5.4), and `--msg-file` at the `commit-msg` hook. A change makes fact 2 `spec_surface`, and `sys-spec-surface` acts `stop_loop`, which A3 sorts ahead of every task row. **NOT CARRIED: the prose half, never claim an unqualified `Con(ZFC)`. No checker ever read it and the POD reads no prose (R2)** |
@@ -2362,7 +2383,7 @@ table cannot hold.
   is carried by R8 itself: one push is one CI run and one deploy.
 - **Row 15 splits cleanly, and it must be narrowed BEFORE this document is
   committed.** `dev/LESSONS.md` is KEPT, so a `C-39` citation must still resolve,
-  and `dev/PLAN.md` section 3 is set aside, so that half dies with it. The 150 dangling references this row was written for are gone:
+  and `dev/PLAN.md` section 3 would be set aside, so that half would die with it. The 150 dangling references this row was written for are gone:
   section 2's decisions carry the `AD` prefix since 2026-08-17, so the code space
   no longer collides. RE-MEASURED 2026-08-17 after the rename: the un-narrowed
   checker exits 0 on the committed document. The narrowing is still correct at
@@ -2405,9 +2426,9 @@ one.
 | `.claude/skills/codex-dispatch/SKILL.md` and `references/` | **RETIRE** at cutover step 4c. `.state/` is KEPT, because section 9.2 salvages it |
 | `.claude/skills/update-agents-md/` | **RETIRE** at cutover step 4c. Its output document is void, and R16 makes `instructions/<slot>.md` owner-approved, so a skill that regenerates a rule home would defeat R16 |
 | `.claude/skills/asd-ste100/` | **KEEP**. It is clause W10's reference material for English |
-| `.claude/skills/tech-doc-style-chinese/` | **KEEP**. It is clause W10's reference material for Chinese. Its project-override step names `dev/POD.md` section 3.1 and `dev/STYLE-i18n.md`, never `AGENTS.md` |
+| `.claude/skills/tech-doc-style-chinese/` | **KEEP**. It is clause W10's reference material for Chinese. Its project-override step names section 3.1 of this memo and `dev/STYLE-i18n.md`, never `AGENTS.md` |
 | `.claude/skills/artifact-over-proxy/`, `load-bearing-claim/`, `herdr/` | **KEEP**. All three are general craft and name no retired mechanism |
-| `memory/MEMORY.md` | **REWRITE**. Its index sentence names `AGENTS.md` and `dev/PLAN.md` section 3, and both are set aside |
+| `memory/MEMORY.md` | **REWRITE**. Its index sentence names `AGENTS.md` and `dev/PLAN.md` section 3, and both would be set aside |
 | `memory/dispatch-doctrine.md` | **REWRITE** down to the heap caps and the 2026-08-02 crash. The rest describes DD17's clock |
 | `memory/owner-communication.md` | **REWRITE**. Its ASD-STE100 restatement becomes a pointer to clause W10 |
 | `memory/repo-and-docs-infrastructure.md` | **REWRITE**. Its `AGENTS.md` section names a void file and a retired gate |
@@ -2507,7 +2528,7 @@ never sort tokens. Emit `<module>#<name> :: <type>` and hash it; `#` and not
 signature with `file`, `name`, `text` and `sha`. Regenerate with `--write`.
 
 **R16 rides the same snapshot, and that is the whole mechanism.** The file gains
-a `[[guarded]]` entry per RULE HOME: `dev/POD.md`, which carries section 3 and
+a `[[guarded]]` entry per RULE HOME: this memo, which carries section 3 and
 section 3.1, `dev/pod/heads.toml`, and every `dev/pod/instructions/*.md`. A
 guarded entry is one sha256 over the WHOLE file and needs no parser. A changed
 sha fails `--check` exactly as a changed signature does, so conjunct 5 gives the
@@ -2728,6 +2749,8 @@ naming score, which counted prose compliance rather than reading.
 
 ## 8. The digest and the stop push
 
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
 AD7 and AD20.
 
 ### 8.1 The four sections and their sources
@@ -2855,6 +2878,8 @@ BARK_AES_KEY="$BARK_AES_KEY" BARK_KEY_URL="$BARK_KEY_URL" \
 
 ## 9. Migration
 
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
 AD6. No cutover command has been run, and every command below is written for a
 later executor. The anchor, verified today:
 `git log -1 --format='%H %ci' pre-pod-2026-08-17` prints
@@ -2905,8 +2930,8 @@ rm .claude/skills/codex-dispatch/dispatch.py .claude/skills/codex-dispatch/pi_st
 # 4b. Decommission the two void process documents (AD4). NEVER delete: clause W4.
 git mv AGENTS.md archive/AGENTS.md
 git mv dev/ORCHESTRATION.md archive/dev/ORCHESTRATION.md
-#     Then rewrite CLAUDE.md to a title plus one sentence, naming dev/POD.md
-#     section 3 as the rule set and dev/pod/instructions/<slot>.md as the
+#     Then rewrite CLAUDE.md to a title plus one sentence, naming section 3 of
+#     this memo as the rule set and dev/pod/instructions/<slot>.md as the
 #     per-slot standing instruction, with NO @-import. Without this rewrite
 #     every herdr-claude worker loads 179 lines of void process rules AHEAD of
 #     its own instruction file.
@@ -3133,6 +3158,8 @@ and a prefix change breaks every one of those citations.
 
 ## 10. The build order
 
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+
 Seven days. **Each day delivers something useful on its own, even if the POD never
 ships.** No day depends on a later one, checked against sections 5.4, 7.2 and 9.1.
 
@@ -3147,6 +3174,8 @@ ships.** No day depends on a later one, checked against sections 5.4, 7.2 and 9.
 | 7 | **The digest, the push, the maintainer, the first dispatch.** `scripts/pod/digest.py`. `scripts/ops/bark-push.sh` with both secrets removed. Section 6.7's maintainer batch. Dispatch `[LJ-1.386]` with the brief of 6.4, then capture its transcript and write `check-sources-read.py`'s new regex. The digest prints the retrieval miss rate and the zero-overlap share, section 7.4 Part 1b | The owner gets a Chinese digest of the route's state, whichever loop produces the work |
 
 ## 11. Open gaps and risks
+
+*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
 
 A BLOCKING gap stops the build, a MAJOR gap changes what the design promises, and
 a minor gap is a known cost.

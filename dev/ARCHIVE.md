@@ -152,8 +152,7 @@ not a home for an episode and the entry there had lost its subject sentence.
   who reads `ledger.py --brief`.
 - **Where the content went.** Into `dev/ledger.toml`'s header comment, which is
   where a reader editing the declaration will actually be. A second copy went
-  into `check-dev-docs.py`'s docstring; that gate RETIRES at the POD cutover
-  (`dev/POD.md` section 7.1, row 16), so `dev/ledger.toml` is the surviving home.
+  into `check-dev-docs.py`'s docstring, and `dev/ledger.toml` is the primary home.
 - **Last green.** Not applicable: neither file held Agda.
 - **What they did right, from measurement.** They proved the generated-block
   trick, which `scripts/measure/ledger.py` kept: a block written by `--write` and

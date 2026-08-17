@@ -48,6 +48,11 @@ a new measured wall joins a class an entry already covers, extend that entry's
 evidence and provenance instead of minting a duplicate. If a lesson cannot be
 sourced, it is not entered; it is surfaced to the owner instead.
 
+**A `src/` path in an entry is the path at the time of the measurement.** Some
+of those modules are now retired. `dev/ARCHIVE.md` maps each original path to
+its home under `archive/src/`. A retirement does not change the entry, because
+the entry records where the number was taken.
+
 ## 1. Performance laws (P series)
 
 ### P-a. Tag discrimination through helpers with explicit-data numeral indices
@@ -1104,13 +1109,9 @@ loss. Both are evidence and both are kept.
 mechanical one: `scripts/gate/check-probes.py --check` in `make check` and `--staged`
 in `scripts/git-hooks/pre-commit`, pinned by `scripts/tests/test_probe_gate.py`.
 **Rules 1, 3, 4, 5 and 6 are enforced by the brief and by the return audit**, and
-by nothing else. Today the brief carries them and `dev/ORCHESTRATION.md` section
-3 is the orchestrator's standing clause list. At the cutover they become clause
-W3 of `dev/POD.md` section 3.1, injected into
-`dev/pod/instructions/mathematician.md` at every dispatch.
-The old citation named `dev/ORCHESTRATION.md` section 1, which was wrong twice:
-the standing brief clauses were section 3 of that file, and the file is void from
-the POD cutover.
+by nothing else. The brief carries them and `dev/ORCHESTRATION.md` section 3 is
+the orchestrator's standing clause list. The old citation named section 1 of that
+file, and the standing brief clauses are section 3.
 
 **Provenance.** Owner ruling 2026-08-13, which replaced the ruling of
 2026-08-04 after `[LJ-1.133]`, `[LJ-1.138]` and `[LJ-1.141]` measured what the
@@ -1796,7 +1797,7 @@ runs one way, and the criterion that produced the campaign's best result
 
 **Provenance:** `agents/tasks/archive/LJ-0-4M/lj-0.4m-report.md` sections 2 and 3;
 `agents/tasks/archive/LJ-0-4M/LJ-0.4m.md` rule 2, which named class 1 and missed class 2;
-commits `ab99b23` and `9c6d036`; `dev/LESSONS.md:568-581` for Rule 20.
+commits `ab99b23` and `9c6d036`; `dev/LESSONS.md:594-613` for Rule 20.
 
 ### D-28. A kit's break-even is set by its PARAMETER count, not its line count
 
@@ -2388,7 +2389,7 @@ presentation in the telescope; `[T99]` abstracted where the diagnosis said the
 cost was, and the same theorem went from a heap wall to 1.28 seconds. **An
 expected figure anchored on a comparable is a HYPOTHESIS, not a price.** In the
 R-38 case the rule's own text already said "sealing only moves the cost"
-(`dev/LESSONS.md:835`), and the estimate contradicted the rule it cited.
+(`dev/LESSONS.md:875`), and the estimate contradicted the rule it cited.
 
 **THREE DISEASES, NOT ONE, each measured on a different module of this tree,
 and each needing a different cure. Applying the wrong one is worse than doing
@@ -3380,7 +3381,7 @@ convenience is one nobody measured.
 all.** They cost their full check time and return nothing, and they are the
 cheapest possible cure because deleting them cannot break anything.
 
-**Measured (`[LJ-1.47]`, 2026-08-11), 5.45x on seconds.** `src/L/StageCardinal`
+**Measured (`[LJ-1.47]`, 2026-08-11), 5.45x on seconds.** `src/L/StageCardinal.lagda.md`
 takes the square law at EVERY infinite set as the module parameter `sq`, and
 `[LJ-1.21]` chose that form because it was convenient. The GCH chain uses it at
 two sites only, the initial ordinals κ and κ⁺ of Devlin 5.5 and 5.6.
@@ -4029,8 +4030,7 @@ Def-against-J and the port's L-against-ambient, and `[LJ-1.262]` measured that
 mixing them produced a false claim in a delivered report. **Neither is DD4's
 own axis.** DD4's text says to maximize the code the two proofs share (`dev/PLAN.md:742`), and the two proofs are the two trophies, fixed by DD2
 (`dev/PLAN.md:741`), by the archived D39 (`archive/dev/DECISIONS-archived.md:58`)
-and by the standing brief clause (`dev/ORCHESTRATION.md:197-225` until the POD
-cutover archives that file, and clause W2 of `dev/POD.md` section 3.1 after it). **The
+and by the standing brief clause (`dev/ORCHESTRATION.md:196-224`). **The
 Def-against-J axis is Devlin's, imported through
 `dev/literature/devlin-II5.md:375`, and DD4's row never names the towers.**
 
@@ -4777,7 +4777,7 @@ occurrences. **A sweep names the CLASS.**
 **THE SITES, all four, all depth 2.** Three at `src/L/Coding/Key.lagda.md:118-133`
 and one at `src/L/Choice/Name.lagda.md:129-135`, the last at 17 ms delivered.
 **The emitters are the only depth-2 chain sources:** `pr∈Lset-suc` at
-`src/L/Coding/Basic.lagda.md:596-599` and its generic twin `T-pr`, uses
+`src/L/Axioms/Basic.lagda.md:596-599` and its generic twin `T-pr`, uses
 enumerated at `agents/tasks/LJ-1-311/lj-1.311-report.md:60-65`.
 
 **THE `#` LADDER SITS TWO RUNGS LOWER: 249 ms at depth 3 and 10,903 ms at depth
