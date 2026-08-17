@@ -3275,7 +3275,21 @@ with the negative returning exit 42 and `[NotInScope]` inside the witness. B2 by
 A2 and the launch probe: section 6.2 names six edits and the probe verified every
 flag and every line they touch. What remains of both is a price and an ID.
 
-**B3. The acceptance test cost is unmeasured across a 34-fold band.** The floor
+**B3. CLOSED 2026-08-17 by the day 1 probe, and the owner ruled the measured
+value stands without a re-measure.** **Plan on 180 s per acceptance test, band
+16 s to 305 s, at 0.01069 s per in-fence line.** That is 1.22 times
+`ac_baseline_seconds_per_line`, the floor it lands nearest, and the 34-fold band
+closes to 1.48-fold. The probe and its record are
+`agents/tasks/L9-0/l9.0-b3-probe-report.md`. **The probe states its own
+limitation and the owner accepted it:** the machine carried a load average of
+3.88 to 7.16, so the repository's quiet-machine rule was not met. The band
+collapsed 23-fold, which noise does not explain, so the direction stands; read
+180 s as a planning figure and never as a precise one. **One reading is worth an
+eye:** the cold build held 7.23 GB resident against the 8 GB cap.
+
+The paragraph below is the gap as first written.
+
+**B3, AS FIRST WRITTEN. The acceptance test cost is unmeasured across a 34-fold band.** The floor
 is measured at 2.84 to 3.18 s warm. The recompile term is the whole price, and
 three recorded rates bracket it: the field `ac_baseline_seconds_per_line`
 (`dev/ledger.toml:2663`), which is the floor and whose VALUE this document does
@@ -3286,7 +3300,17 @@ of `dev/ledger.toml:1920` over 907 in-fence lines) and 0.297
 is 43 files and 23,752 in-fence lines, priced at 209 s or 7,054 s. **No
 throughput plan can rest on a 34-fold band. What settles it:** the day 1 probe.
 
-**B4. The three model IDs are not verified.** `grep -n "claude-" dev/vendors.toml`
+**B4. CLOSED 2026-08-17 by the day 2 probe. All six entries of `legal.models`
+RESOLVE**, verified by read-back on a throwaway pane rather than from a `--help`
+listing: `claude-opus-5`, `claude-fable-5` and `claude-sonnet-5`, and the three
+aliases `opus`, `fable` and `sonnet`. Section 6.1 needs no value change. The
+record is `agents/tasks/L9-0/l9.0-b4-model-ids.md`. **It also measured the case
+the read-back refusal exists for:** `claude-opus-5-20260101` passes the client
+and fails at the API, so a date suffix dies after the launch looks clean.
+
+The paragraph below is the gap as first written.
+
+**B4, AS FIRST WRITTEN. The three model IDs are not verified.** `grep -n "claude-" dev/vendors.toml`
 returns nothing, and that file's own rule at `:185-186` refuses an invented model
 ID. `claude --help` documents the shape and three aliases, and it does NOT confirm
 that `claude-opus-5`, `claude-fable-5` and `claude-sonnet-5` resolve. Section 6.1
