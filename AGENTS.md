@@ -1,5 +1,8 @@
 # AGENTS.md
 
+**Status: VOID from the POD cutover; `dev/POD.md` section 3 is the rule set then, and this
+file binds until then. Section 1 there names three rules of this file that get no new home.**
+
 The rulebook for AI coding agents on Bedrock. Every session loads it: Claude Code through the
 root `CLAUDE.md`, other agents directly.
 
@@ -14,7 +17,7 @@ nobody finishes reading binds nothing.
 ## Boundaries
 
 - **Always:** **write it generic**, so re-instantiation is nearly free; load the rules for your
-  task with `python3 `rules.py` --for <kind>` and read them **before** you write; run
+  task with `rules.py --for <kind>` and read them **before** you write; run
   `make check` before committing; author every document in English first, then translate, then
   cross-check the Chinese and Japanese against each other for drift.
 - **Always, DD4, the rule that has cost this project most:** **maximize the code the two proofs
@@ -67,14 +70,14 @@ nobody finishes reading binds nothing.
   runs.** **Run it in the background, never in the
   foreground**: a cold typecheck takes about twelve minutes and must not block the session
   (`dev/PLAN.md` DD15). While you work, run the individual checks instead (`agda <file>`,
-  `python3 `lint-prose.py` <files>`).
-- **`python3 `rules.py` --for <kind>`** gives the mandatory rules for a build, probe,
+  `lint-prose.py <files>`).
+- **`rules.py --for <kind>`** gives the mandatory rules for a build, probe,
   recon, rewrite or review, with each statement. `--grep <term>` finds the long tail by trigger
   word. **Never pick rules from memory.**
-- **`python3 `ledger.py` --brief`** is the only admissible source for a standing size
+- **`ledger.py --brief`** is the only admissible source for a standing size
   figure. Never quote a number found in a paragraph.
 - **`make venv`** once per clone, then **`make hooks`**. `make site` / `make serve` / `make gen`
-  build the site. `python3 `lint-prose.py` --fix <files>` auto-fixes most prose.
+  build the site. `lint-prose.py --fix <files>` auto-fixes most prose.
 
 **Run every `python3` command as `.venv/bin/python`**, or run `make venv` first and let `make`
 pick the interpreter.
@@ -95,9 +98,9 @@ PARTIAL: a row claiming more than its checker delivers is false safety.
 |---|---|---|
 | **Measured engineering laws.** Performance, conversion, termination, inference, design, craft. Each exists because something cost time or died | `dev/LESSONS.md` | `rules.py` bundles; review |
 | **Project rulings.** Architecture, process, retirement, numbered and dated. **The live series is `DD`**; a bare `D<n>` resolves only against the archive | `dev/PLAN.md` section 3; `archive/dev/DECISIONS-archived.md` | `check-rule-ids.py` resolves every code. **It cannot tell which series an author MEANT.** Dated records under `dev/` and `agents/` are exempt
-| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** **This table names checkers by FILE NAME and never by path, so a directory move cannot make it wrong** (2026-08-15). The brief's `tier:` line names the head, the mode printed at dispatch, and the model | Tables and modes: `dispatch_policy.py`, run it. **Vendor, model, price bands: `dev/vendors.toml`.** Operated by `dev/ORCHESTRATION.md` section 1 | **PARTIAL.** `check-dispatch-policy.py` reads every brief and **cannot see which head RAN**: an in-harness dispatch passes through no tool, so **a default-case task goes through `dispatch.py` and in-harness is reserved for the adversarial row**
+| **Dispatch, slots, briefs, audits.** **RUN THE SWITCH, THEN TAKE THE HEAD IT GIVES. Never the reverse.** **This table names checkers by FILE NAME and never by path, so a directory move cannot make it wrong** (2026-08-15; `dispatch_policy.py` moved to `scripts/dispatch/` and this row survived it). The brief's `tier:` line names the head and the model | Tables and modes: `dispatch_policy.py`, run it. Vendors: `dev/vendors.toml`. Operated by `dev/ORCHESTRATION.md` section 1. **All three are SUPERSEDED at the POD cutover by `dev/POD.md` section 6.1 and `dev/pod/heads.toml`** | **PARTIAL.** `check-dispatch-policy.py` **cannot see which head RAN**: an in-harness dispatch passes through no tool. **The mode in force decides which path a dispatch takes, and only one of the two cases walks `dispatch.py`, so the refusals in it are live under one mode and dead under the other. Run the switch to see which.**
 | **Goal status and execution history.** **PLAN section 11 indexes every goal and every dispatch, one row each; JOURNAL holds what each dispatch found** | `dev/PLAN.md` section 11, `dev/JOURNAL.md` | PLAN section 6.0 rules 6 to 8 (register before starting, one row per code, 200-character cap); `check-task-index.py`; review |
-| **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `ledger.py` --check` |
+| **Size ledger.** Standing, remaining, endpoint, check cost in seconds | `dev/ledger.toml`, whose header carries the caliber and why standing is never written down | `ledger.py --check` |
 | **Code and chapter style.** OPTIONS header, import necessity, forbidden constructs | `dev/STYLE-agda.md` | **PARTIAL.** `lint-agda.py` covers the OPTIONS header, import necessity and the forbidden constructs. The rest of `dev/STYLE-agda.md` is review only |
 | **Prose.** The em-dash ban, CJK full-width punctuation, `「」` quotes, CJK spacing and reflow, English-only inside ` ``agda ` fences | `dev/STYLE-i18n.md` | `lint-prose.py`, pre-commit hook; `--fix` handles most |
 | **Literate Agda and i18n.** One master `.lagda.md` per module, the `<!--en--> <!--zh--> <!--ja-->` marker grammar, shared code fences, woven copies never committed | `dev/STYLE-i18n.md` | **PARTIAL.** `weave-i18n.py --check` catches stray, unterminated and unknown-language markers and markers inside fences; **it misses a mid-line marker and a fence inside a language group, and both pass green.** Agda enforces one master per module; `check-probes.py` catches woven copies
@@ -108,7 +111,7 @@ PARTIAL: a row claiming more than its checker delivers is false safety.
 | **Route memos, digested literature** | `dev/memos/`, `dev/literature/` | n/a |
 | **Agent reports and briefs.** Every dispatch writes one of each, and **both live in ONE directory per task, `agents/tasks/<CODE>/`, beside that task's probes**; retired tasks sit in `agents/tasks/archive/<CODE>/`. All tracked, all CC, all exempt from the prose linter because a record is never rewritten | `agents/README.md` | review |
 | **What the project IS**: the theorem, the charter, the licences, who wrote it | [README.md](README.md), trilingual under `docs/` | n/a |
-| **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0; `ledger.py` --brief` for the standing figures | n/a |
+| **Where the work stands today**: the live status screen | `dev/PLAN.md` section 0; `ledger.py --brief` for the standing figures | n/a |
 
 **`dev/LESSONS.md` BINDS NEW CODE.** Its entries are measurements, not opinions. When your work
 discovers a new law, propose it with its measurement; **the orchestrator assigns the ID**
