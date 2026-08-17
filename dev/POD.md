@@ -2,6 +2,12 @@
 
 **Status: SPECIFICATION. Nothing below is built. Date: 2026-08-17.**
 
+**THE RULE SET IN FORCE IS `AGENTS.md`, AND THE ORCHESTRATOR WORKS TO
+`dev/ORCHESTRATION.md`.** This document replaces both at the cutover of section
+9 and not before. Check it yourself: `dev/pod/` and `scripts/pod/` do not exist,
+and no row of the delivery table in section 11 is built. **Read a sentence here
+as a plan. Never obey one as a rule.**
+
 This document assembles four audits and two adversarial reviews into one
 buildable specification. Section 11 carries every open gap.
 
@@ -2356,9 +2362,11 @@ table cannot hold.
   is carried by R8 itself: one push is one CI run and one deploy.
 - **Row 15 splits cleanly, and it must be narrowed BEFORE this document is
   committed.** `dev/LESSONS.md` is KEPT, so a `C-39` citation must still resolve,
-  and `dev/PLAN.md` section 3 is set aside, so that half dies with it. MEASURED
-  today: the un-narrowed checker reports 150 dangling references in `dev/POD.md`,
-  every one a bare `D<n>` that section 2 owns and the archive also carries.
+  and `dev/PLAN.md` section 3 is set aside, so that half dies with it. The 150 dangling references this row was written for are gone:
+  section 2's decisions carry the `AD` prefix since 2026-08-17, so the code space
+  no longer collides. RE-MEASURED 2026-08-17 after the rename: the un-narrowed
+  checker exits 0 on the committed document. The narrowing is still correct at
+  the cutover, and it is no longer urgent.
 - **Row 25 retires on physics.** Hooks fire only for in-harness subagents.
 - **Row 26 needs a writer, not only a reader.** `scripts/measure/ledger.py:34-35`
   fails the commit gate the moment the declaration goes stale, so **the DONE
@@ -2960,14 +2968,15 @@ git mv scripts/gate/check-tree.py scripts/pod/check-closure.py
 #    --gate-passed and LAST_GATE, and delete dev/build-manifest.toml:122 in the
 #    same commit (section 7.2).
 
-# 7b. (DAY 3, BEFORE this document is committed.) Narrow check-rule-ids.py to
+# 7b. (DAY 3. NO LONGER A PREREQUISITE.) Narrow check-rule-ids.py to
 #     dev/LESSONS.md and dev/rules.toml, per row 15. Drop dev/PLAN.md section 3
-#     from known_decisions() and drop the bare-D<n> series rule, which reports
-#     150 dangling references in dev/POD.md, every one a bare D<n> that section 2
-#     owns. Then widen the stray filter at scripts/tests/test_rule_series.py:247.
-#     MEASURED 2026-08-17: the un-narrowed checker exits 1 and CI runs make check
-#     (.github/workflows/typecheck.yml:39), so committing this document without
-#     step 7b turns CI red on the commit that lands it.
+#     from known_decisions() and drop the bare-D<n> series rule. Then widen the
+#     stray filter at scripts/tests/test_rule_series.py:247.
+#     THIS STEP WAS WRITTEN AS A BLOCKER and is not one any more. It said the
+#     un-narrowed checker exits 1 on this document, which was true while section
+#     2 used bare D<n> codes. Those codes carry the AD prefix since 2026-08-17,
+#     so the collision is gone. RE-MEASURED 2026-08-17: check-rule-ids.py exits 0
+#     on the committed document and CI is green.
 #     ACCEPTANCE: check-rule-ids.py exits 0 and test_rule_series.py exits 0.
 
 # 8. Rewrite the surveys. Keep answered() (:302) AND audit_quotes() (:339);
