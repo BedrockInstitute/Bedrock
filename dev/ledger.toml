@@ -421,8 +421,9 @@ lines_removable_source = "[LJ-1.218] measured, [LJ-1.222] corrected; 64 of 83 un
 
 # MEASURE 2 has no field, because it is about what a BRIEF says: a phase-1
 # build brief does not tell the agent its output sets a bar. Enforcement is
-# `dev/ORCHESTRATION.md` section 3 and the return audit, which is review only
-# and is named as review only.
+# clause W3 of dev/POD.md section 3.1, injected into
+# dev/pod/instructions/mathematician.md, which is agent discipline only and is
+# named as agent discipline only.
 seconds_state = "DOES NOT EXIST (this is the DOUBLE-trophy build time; do not confuse it with DD24's measured 133.19 s AC-only baseline in [ratio])"
 seconds_gap = """
 Nobody has measured the internalization route's build time, at either
@@ -2597,13 +2598,16 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # says so. The stale citation would now collide with the real DD25, which the
 # owner ruled on 2026-08-10 about escalating a negative codex return.
 [ratio]
-# THE ONLY HOME FOR DD24'S NUMBERS (the rule's home is the DD24 row in
-# dev/PLAN.md, which states no figure by design, amended 2026-08-16). The
-# applied bar is `ac_baseline_module_rate` times `tolerance`, computed at
-# scripts/measure/check-ratio.py and stated nowhere else;
-# scripts/gate/check-baseline-home.py refuses a live restatement of either
-# outside this file. A superseded figure is kept here as a record, with its
-# provenance, and never as a baseline.
+# THE ONLY HOME FOR THESE NUMBERS. The DD24 RULE is SUPERSEDED at the POD
+# cutover (dev/POD.md section 7.1) and the applied bar is VOID: no gate reads it
+# and no table row carries a seconds_max (dev/POD.md gap M13). The figures below
+# stay as MEASUREMENTS, with their provenance, and scripts/measure/check-ratio.py
+# reads them as a maintainer profiler. A superseded figure is kept here as a
+# record, with its provenance, and never as a baseline.
+# UNTIL THE CUTOVER RUNS the applied bar is `ac_baseline_module_rate` times
+# `tolerance`, computed at scripts/measure/check-ratio.py and stated nowhere
+# else; scripts/gate/check-baseline-home.py refuses a live restatement of either
+# outside this file, and both retire together (rows 18 and 29).
 # THE BASELINE IS A MEASUREMENT, and the tool refuses to run without it.
 # Protocol: interface cache moved aside, `make typecheck` at the exported
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,

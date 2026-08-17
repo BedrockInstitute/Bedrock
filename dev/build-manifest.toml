@@ -12,7 +12,7 @@
 # WHY THIS FILE LIVES IN `dev/` AND NOT IN `_build/`.
 # `.gitignore:2` ignores `_build/`, and `scripts/gate/check-probes.py:20-23` fails the
 # gate on any TRACKED file under `_build/`. A manifest kept inside `_build/` would
-# be untracked, would not survive `make clean` (`Makefile:180`), and would not
+# be untracked, would not survive `make clean` (`Makefile:303`), and would not
 # survive a fresh clone. A regime that a routine command destroys is not a regime.
 # `archive/src/2026-08-13-kits-to-tasks/README.md` records the same finding for refused kits.
 # `_build/README.md` is therefore GENERATED from this file, never hand-written.
@@ -38,7 +38,7 @@ what = """
 Cannot be tracked and cannot be deleted. Third-party copyrighted material, or a
 record whose regeneration would not reproduce it. It stays in `_build/` because
 `_build/` is the only place in the tree that is outside git by construction."""
-delete_when = "Never. `Makefile:180` exempts it from `make clean` by name."
+delete_when = "Never. `Makefile:303` exempts it from `make clean` by name."
 promote_when = "Never. Promotion would commit it, which is the thing forbidden."
 
 [classes.evidence]
