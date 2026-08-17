@@ -117,6 +117,51 @@ This directory is not a module, so it gets a record here rather than a row.
 - **What would reopen it.** Only a reversal of `dev/LESSONS.md` D-1, which puts
   a probe beside its report. Nothing else sends a probe to `archive/`.
 
+## Two records rescued from `src/README.md`, 2026-08-17
+
+`src/README.md` carried a hand-maintained module inventory that had drifted to a
+20-master tree while `src/` held 97. The inventory was replaced by a pointer to
+`src/Everything.lagda.md`, the reading catalog. **Two retirement records sat
+inside it and are kept here rather than lost with it.**
+
+- **`FOL/Reification/`, retired under `[L3.1]`, 2026-07-29.** The tree that the
+  two-catalog reading-order note used to route. It went with three coding
+  chapters. **MEASURED: 529 lines that no module imported.**
+- **`L/Frontier.lagda.md`, the debt registry, deleted 2026-07-31.** It was
+  `L.Model`'s second module parameter, and it went when its last field went.
+  **MEASURED: the record opened at eleven fields and shrank six times.** Its live
+  statement was `dev/PLAN.md` section 5.
+
+Neither has a row in the table below: neither is a retired module at an original
+path with a last-green commit, so a row would put empty cells beside a real one,
+which is the rule stated in "What this registry does NOT index".
+
+## The retirement of `dev/LEDGER.md` and `dev/MAINTENANCE.md`, 2026-08-06
+
+Two documents, not modules, so they get a record here rather than a row. **This
+record moved out of `dev/README.md` on 2026-08-17**, because a directory index is
+not a home for an episode and the entry there had lost its subject sentence.
+
+- **What they were.** `dev/LEDGER.md` was a prose rendering of the size ledger.
+  `dev/MAINTENANCE.md` held the caliber convention, the definition of a derived
+  row, and the rule for keeping the ledger current when a chapter lands or a gate
+  returns.
+- **Why they left.** `[T115]`'s audit of the `dev/` documents found that no brief
+  had ever pointed an agent at either file. Measured at the time: 44 percent of
+  `LEDGER.md` was a generated block, and the rest was orientation for the owner,
+  who reads `ledger.py --brief`.
+- **Where the content went.** Into `dev/ledger.toml`'s header comment, which is
+  where a reader editing the declaration will actually be. A second copy went
+  into `check-dev-docs.py`'s docstring; that gate RETIRES at the POD cutover
+  (`dev/POD.md` section 7.1, row 16), so `dev/ledger.toml` is the surviving home.
+- **Last green.** Not applicable: neither file held Agda.
+- **What they did right, from measurement.** They proved the generated-block
+  trick, which `scripts/measure/ledger.py` kept: a block written by `--write` and
+  verified by `--check` fails the gate the moment it goes stale, so the numbers
+  are visible AND cannot rot.
+- **What would reopen them.** A reader who is not the owner and not an agent, and
+  who needs the ledger as prose. No such reader has appeared.
+
 ## The retirement of `meet-suc`, 2026-08-16
 
 A lemma, not a module, so this is a record here rather than a row in the table

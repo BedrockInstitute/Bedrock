@@ -1,5 +1,12 @@
 # ORCHESTRATION: the orchestrator's operating rules
 
+**Status: VOID from the POD cutover, by the fourth architecture decision of
+`dev/POD.md` section 2. Every rule
+here has a disposition in `dev/POD.md` section 7.1 or a clause in section 3.1. DO
+NOT FOLLOW THIS FILE. It is kept as a record, and cutover step 4b moves it to
+`archive/dev/ORCHESTRATION.md`.** The sentence below that calls this file
+canonical was true until 2026-08-17 and is not true now.
+
 How work is dispatched, audited and landed. Developer doc, English only, not
 translated. **This file is canonical for everything on it.** It exists because
 these rules used to live only in the orchestrator's session memory, where the

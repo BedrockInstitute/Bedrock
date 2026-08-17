@@ -27,6 +27,27 @@ the provenance pointer (memo, PLAN row, report, or commit), and when it bites.
 - **D series**: design doctrines.
 - **C series**: craft and process lessons.
 
+## Adding an entry
+
+Take the next free ID under the series, and **read it from the file rather
+than from this line**:
+
+```sh
+python3 scripts/gate/check-rule-ids.py --next-id
+```
+
+It computes the next free ID per series from the headings, prints the gaps,
+and cannot go stale. **This line used to carry the six IDs itself**, and on
+2026-08-16 four of the six had been taken: it offered `P-o`, `R-41`, `T-3`,
+`I-10`, `D-27` and `C-24` while `P-y`, `R-41`, `D-30` and `C-59` were the
+highest taken. An author who followed it would have minted a duplicate, which
+is the defect `check-rule-ids.py` fails the gate on.
+
+Cite the source in the entry, and keep the evidence column to measured numbers. When
+a new measured wall joins a class an entry already covers, extend that entry's
+evidence and provenance instead of minting a duplicate. If a lesson cannot be
+sourced, it is not entered; it is surfaced to the owner instead.
+
 ## 1. Performance laws (P series)
 
 ### P-a. Tag discrimination through helpers with explicit-data numeral indices
@@ -1083,7 +1104,11 @@ loss. Both are evidence and both are kept.
 mechanical one: `scripts/gate/check-probes.py --check` in `make check` and `--staged`
 in `scripts/git-hooks/pre-commit`, pinned by `scripts/tests/test_probe_gate.py`.
 **Rules 1, 3, 4, 5 and 6 are enforced by the brief and by the return audit**
-(`dev/ORCHESTRATION.md` section 1's standing clauses), and by nothing else.
+(clause W3 of `dev/POD.md` section 3.1, injected into
+`dev/pod/instructions/mathematician.md` at every dispatch), and by nothing else.
+The old citation named `dev/ORCHESTRATION.md` section 1, which was wrong twice:
+the standing brief clauses were section 3 of that file, and the file is void from
+the POD cutover.
 
 **Provenance.** Owner ruling 2026-08-13, which replaced the ruling of
 2026-08-04 after `[LJ-1.133]`, `[LJ-1.138]` and `[LJ-1.141]` measured what the
@@ -2311,27 +2336,6 @@ cyclic import or a sixty-name telescope. The stop cost one dispatch; a
 landed wrong split would have cost the naturalness condition.
 
 **Provenance:** `agents/tasks/archive/L3-32-T160/l3.32-t160-report.md` sections 1 and 7.
-
-## Adding an entry
-
-Take the next free ID under the series, and **read it from the file rather
-than from this line**:
-
-```sh
-python3 scripts/gate/check-rule-ids.py --next-id
-```
-
-It computes the next free ID per series from the headings, prints the gaps,
-and cannot go stale. **This line used to carry the six IDs itself**, and on
-2026-08-16 four of the six had been taken: it offered `P-o`, `R-41`, `T-3`,
-`I-10`, `D-27` and `C-24` while `P-y`, `R-41`, `D-30` and `C-59` were the
-highest taken. An author who followed it would have minted a duplicate, which
-is the defect `check-rule-ids.py` fails the gate on.
-
-Cite the source in the entry, and keep the evidence column to measured numbers. When
-a new measured wall joins a class an entry already covers, extend that entry's
-evidence and provenance instead of minting a duplicate. If a lesson cannot be
-sourced, it is not entered; it is surfaced to the owner instead.
 
 ### P-l. A statement may be ABOUT a concrete stage without dragging that stage's PRESENTATION into its type
 
@@ -3695,7 +3699,7 @@ and then filed it **under preferences** with "fix when next touched".
 `lj-0.1-consistency.md` never scanned the memos at all. **A pointer that
 resolves to a REVERSED rule was priced as cosmetic staleness, and that bought it
 a deferral instead of a fix.** **(2) A retarget can switch a live rule OFF.**
-`dev/STYLE-agda.md:73` and `:152` cited archived D7 for naming hygiene while DD7
+`dev/STYLE-agda.md:76` and `:163` cited archived D7 for naming hygiene while DD7
 reads REVOKED OUTRIGHT, so a style rulebook that every dispatched agent reads
 before it writes code told them a live rule was dead.
 
@@ -3896,7 +3900,7 @@ the task existed. `[LJ-1.230]` then spent a full Agda dispatch and returned
 **NO-GO with three walls**, and that NO-GO reached `dev/PLAN.md` section 0.0,
 the live status screen, before anything checked it.
 
-**`dev/PLAN.md:677` had read `[LJ-1.124] | Probe the bounded level-graph decode
+**`dev/PLAN.md:1190` had read `[LJ-1.124] | Probe the bounded level-graph decode
 | GO, 147 LINES` since 2026-08-13.** `agents/tasks/LJ-1-124/ProbeLJ1124A.agda:199-209`
 holds `graph-out` and `graph-in`, the two directions of exactly the lemma the
 NO-GO called absent. **`[LJ-1.233]` found the row and OVERTURNED the NO-GO.**
@@ -4021,9 +4025,10 @@ every return answers it. `[LJ-1.272]` swept the `LJ-1` phase and measured that
 **The invisible half is larger.** The phase used two axes, Devlin's
 Def-against-J and the port's L-against-ambient, and `[LJ-1.262]` measured that
 mixing them produced a false claim in a delivered report. **Neither is DD4's
-own axis.** DD4's text says to maximize the code the two proofs share (`dev/PLAN.md:283`), and the two proofs are the two trophies, fixed by DD2
-(`dev/PLAN.md:282`), by the archived D39 (`archive/dev/DECISIONS-archived.md:58`)
-and by the standing brief clause (`dev/ORCHESTRATION.md:352`). **The
+own axis.** DD4's text says to maximize the code the two proofs share (`dev/PLAN.md:742`), and the two proofs are the two trophies, fixed by DD2
+(`dev/PLAN.md:741`), by the archived D39 (`archive/dev/DECISIONS-archived.md:58`)
+and by the standing brief clause (`dev/ORCHESTRATION.md:197-225` until the POD
+cutover archives that file, and clause W2 of `dev/POD.md` section 3.1 after it). **The
 Def-against-J axis is Devlin's, imported through
 `dev/literature/devlin-II5.md:375`, and DD4's row never names the towers.**
 
@@ -4047,11 +4052,11 @@ complete, never when the statement lands.** `[LJ-1.280]` landed
 `src/L/GCH.lagda.md` as a STATEMENT with `sq` still an unsupplied Pi-parameter, so
 the trophy is not proved and the endpoint is not there.
 
-**What DID change, and it is smaller than it looks.** `dev/ledger.toml:203` reads
+**What DID change, and it is smaller than it looks.** `dev/ledger.toml:218` reads
 `gch_root = "src/L/GCH.lagda.md"` and `ledger.py --reuse` now RUNS: 41.1 percent
 shared when it first printed, 39.1 percent today. **So two literal words are stale: `gch_root` is no longer
 empty, and the report is no longer unable to run.**
-**The CONCLUSION they support is not.** `dev/ledger.toml:204` states the reason in
+**The CONCLUSION they support is not.** `dev/ledger.toml:219` states the reason in
 the file: the closure is the STATEMENT's, and **it understates**. A closure read
 from an unproved statement reaches only what the statement mentions, never what
 the proof will import. **So every DD4 figure is still qualified. The qualifier

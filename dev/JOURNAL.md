@@ -20,6 +20,12 @@ It is a required survey target for a new brief, together with
   written and that is what a record is for.
 - A superseded entry gets a marker pointing at what replaced it. It does not
   get deleted.
+- A script path in an entry is the path as of that entry's date. Scripts moved
+  into `scripts/gate/`, `scripts/measure/`, `scripts/dispatch/` and
+  `scripts/site/` on 2026-08-15. Resolve an unqualified `scripts/<name>.py` by
+  basename, never by path. This is a reading rule and not a licence to edit an
+  entry: seven entries carry a pre-2026-08-15 path and all seven stay as
+  written.
 
 ## Entries
 

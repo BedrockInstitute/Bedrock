@@ -134,6 +134,12 @@ High-frequency concept too long for signatures?
   → only entries in the registered abbreviation list.
 ```
 
+**Three naming rules that the decision tree does not decide.** They are DD11's
+naming half, and this file is their canonical home. A name says what the thing
+IS, never how it was built. An implicit argument that no reader can infer is
+dissolved into an explicit one. A name with zero or one consumer is inlined at
+its use site rather than named.
+
 Registered suffixes for theorem names: `-rep` (combinator families), `-spec`
 (specifications), `-inj` (injectivity), `-ax` (axiom instances, library tradition),
 `-map` (functoriality). Registered abbreviations: `Rep` (representation), `Ord`
