@@ -3,10 +3,11 @@
 The static-site **front-end assets** consumed by
 [scripts/site/render-site.py](../scripts/site/render-site.py). These are committed source; the rendered
 site they produce is generated into `_build/site/` (git-ignored). English developer doc; the
-rule set is [dev/POD.md](../dev/POD.md) section 3.
+rule set is [AGENTS.md](../AGENTS.md), and [dev/POD.md](../dev/POD.md) section 3 replaces it at
+the POD cutover.
 
-**Read this file when your write scope names a path under `site/`.** `dev/POD.md` check P22
-prints it at that moment.
+**Read this file when your write scope names a path under `site/`.** At the cutover,
+`dev/POD.md` check P22 will print it at that moment. Until then, read it yourself.
 
 **THE POD DOES NOT TOUCH THE PUBLISHING PIPELINE.** Seven tracked scripts sit outside
 `dev/POD.md` section 7.1 and outside `make check`: `scripts/site/extract-types.py`,

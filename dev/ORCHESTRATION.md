@@ -1,11 +1,16 @@
 # ORCHESTRATION: the orchestrator's operating rules
 
-**Status: VOID from the POD cutover, by the fourth architecture decision of
-`dev/POD.md` section 2. Every rule
-here has a disposition in `dev/POD.md` section 7.1 or a clause in section 3.1. DO
-NOT FOLLOW THIS FILE. It is kept as a record, and cutover step 4b moves it to
-`archive/dev/ORCHESTRATION.md`.** The sentence below that calls this file
-canonical was true until 2026-08-17 and is not true now.
+**Status: LIVE, and VOID AT THE POD CUTOVER. FOLLOW THIS FILE until the cutover
+runs.** It is the orchestrator's operating document today: `AGENTS.md` routes the
+orchestrator here, four `DD` rulings name it as their enforcement point, and
+`scripts/dispatch/recall-hook.py` reads its section 6 and prints the return
+checklist at every session start. The cutover is not built: `dev/pod/` and
+`scripts/pod/` do not exist.
+
+**At the cutover** this file becomes void by the fourth architecture decision of
+`dev/POD.md` section 2, every rule here takes a disposition in `dev/POD.md`
+section 7.1 or a clause in section 3.1, and cutover step 4b moves the file to
+`archive/dev/ORCHESTRATION.md`.
 
 How work is dispatched, audited and landed. Developer doc, English only, not
 translated. **This file is canonical for everything on it.** It exists because

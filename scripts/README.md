@@ -441,8 +441,9 @@ separates three things a naive grep conflates: the brief's text, the report's
 text, and a real read.
 
 **It proves a path was opened, never that the right part was read.** It would
-have passed `[LJ-1.6]`. A miss is a signal for the adversarial reviewer,
-`dev/POD.md` section 6.6.
+have passed `[LJ-1.6]`. A miss is a signal for the adversarial reviewer:
+`dev/ORCHESTRATION.md` routes one today, and `dev/POD.md` section 6.6 does at the
+cutover.
 
 ```sh
 python3 scripts/dispatch/check-sources-read.py LJ-1.6      # one or more task codes

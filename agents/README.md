@@ -43,7 +43,9 @@ so an old citation still resolves under `find agents -name <the-old-name>`.
 through it, and `scripts/README.md` names the members. Do not write `agents/tasks` into a tenth
 script by hand.
 
-**The POD brief's own FORM is `dev/POD.md` section 6.3, and this file does not restate it.**
+**The brief's FORM is `dev/ORCHESTRATION.md` section 3 today**, and `dev/POD.md` section 6.3
+at the cutover. This file restates neither. `.claude/skills/codex-dispatch/dispatch.py check`
+refuses a brief that is missing a required section, and that is the live gate on the form.
 
 ## Probes live here
 
@@ -127,16 +129,21 @@ An agent document is CC from birth, so no later move can relicense it. Never add
 
 ## Who reads what
 
-**From the POD cutover the orchestrator is a program**, and the rows below name it.
+**TODAY the orchestrator is a model** working to `dev/ORCHESTRATION.md`: it writes every brief
+here before dispatch, validates it with `dispatch.py check`, audits the return, wires the
+catalog, gates and commits. **FROM THE POD CUTOVER the orchestrator is a program**, and the
+rows below name it. The cutover is not built.
 
-- **The POD program** writes every brief here before dispatch, writes the `.pod` stamp beside
-  it (`dev/POD.md` section 9.3), injects the `## LAWS`, `## ARCHIVE` and `## LITERATURE` blocks,
-  and reads the return.
+- **The POD program** will write every brief here before dispatch, write the `.pod` stamp beside
+  it (`dev/POD.md` section 9.3), inject the `## LAWS`, `## ARCHIVE` and `## LITERATURE` blocks,
+  and read the return.
 - **A dispatched worker** writes exactly one report here, incrementally, and reads the briefs
   and reports its own brief names.
 - **The adversarial reviewer** reads the brief and the report together, and writes
   `review-of-<PRED>.md` beside them.
 - **The owner** reads `tasks/` to see where the work stands.
+
+**The three paths below arrive AT THE CUTOVER. None of them exists today.**
 
 | Path | What it holds | Written by |
 |---|---|---|

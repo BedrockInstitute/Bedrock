@@ -23,17 +23,19 @@ citations across `dev/LESSONS.md`, the memos, the briefs and the commit
 history point at these codes. Renumbering would falsify all of them, and a
 code that means one thing in a commit message and another here is a trap.
 
-## Nothing here is read by machine from the POD cutover
+## Nothing here is read by machine, from the POD cutover onward
 
-Until the cutover, two gates resolved citations against `DECISIONS-archived.md`
-and `TASKS-archived.md`. `check-task-index.py` RETIRES and `check-rule-ids.py`
+Two gates resolve citations against `DECISIONS-archived.md` and
+`TASKS-archived.md` today, and both run green in `make check`. At the cutover
+`check-task-index.py` RETIRES and `check-rule-ids.py`
 is narrowed to `dev/LESSONS.md` and `dev/rules.toml` (`dev/POD.md` section 7.1,
 rows 14 and 15). After that a citation into these files is resolved by a reader
 and by nothing else. Renaming a file here breaks no gate and every citation.
 
 ## The archive survey
 
-The POD program searches these files mechanically at brief build and injects the
-result under `## ARCHIVE` in the brief. `dev/POD.md` section 7.4 is the rule and
-this file does not restate it. **DD18, not DD19, is the ruling** that made the
+A brief carries an `## ARCHIVE` section naming what may bear on the task, and the
+return answers it; `check-dd18-survey.py` gates the return half. At the cutover
+the POD program will search these files mechanically at brief build and inject
+the result, under `dev/POD.md` section 7.4, which this file does not restate. **DD18, not DD19, is the ruling** that made the
 survey a brief section; this paragraph named the wrong code until 2026-08-17.

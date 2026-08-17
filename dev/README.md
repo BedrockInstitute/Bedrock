@@ -2,19 +2,22 @@
 
 **Developer-facing** documentation: conventions and specifications for contributors, written
 primarily for AI-agent contributors (humans second). **English only** (developer docs are not
-translated). **The top-level index is [POD.md](POD.md)**: its section 3 holds the ONE rule set,
-its section 3.1 holds the written clauses, its section 7.1 gives every gate and every `DD`
-ruling a disposition, and its section 4.0 says where every POD file lives. Read it before any
-other file here. This file is the directory index and holds no rule.
+translated). **The top-level index is [AGENTS.md](../AGENTS.md)**, and it is the rule set today.
+**[POD.md](POD.md) is a SPECIFICATION and nothing in it is built**: it replaces `AGENTS.md` at
+the POD cutover, when its section 3 becomes the ONE rule set, its section 3.1 the written
+clauses, its section 7.1 the disposition of every gate and every `DD` ruling, and its section
+4.0 the map of the POD files. Read it to know what is coming, not to know what binds. This
+file is the directory index and holds no rule.
 
-**When you read this file:** the pre-flight prints a directory's `README.md` when your write
-scope names a path in that directory (`POD.md` check P22).
+**When you will read this file automatically:** at the cutover, the pre-flight will print a
+directory's `README.md` when your write scope names a path in that directory (`POD.md` check
+P22). No pre-flight runs today, so read it yourself.
 
 ## Contents
 
-- `POD.md`: the **program specification**, and the most load-bearing file in this directory.
-  Section 3 is the one rule set, section 3.1 the written clauses, section 7.1 every
-  disposition, section 9 the cutover.
+- `POD.md`: the **specification of the next flow. Nothing in it is built**, and `dev/pod/` and
+  `scripts/pod/` do not exist. At the cutover, section 3 becomes the one rule set, section 3.1
+  the written clauses, and section 7.1 every disposition. Section 9 is the cutover itself.
 - `PLAN.md`: the **construction registry** for the campaign (the two-tower bridge,
   both trophies): section 0 for where the work stands, the `DD` rulings, the
   goal-coding rules, DD8's single best-effort projection that named its basis,
@@ -48,8 +51,9 @@ scope names a path in that directory (`POD.md` check P22).
   is an EPISODE belongs here, and not on a ruling row.
 - `ARCHIVE.md`: the **archive registry**, one row per retired module: what it was, why it left,
   where it was last green, its measured size and what would reopen it.
-- `ORCHESTRATION.md`: **VOID from the POD cutover** (`POD.md` section 2). Kept as a record and moved
-  to `archive/dev/` at cutover step 4b. Do not follow it.
+- `ORCHESTRATION.md`: the **orchestrator's operating document**, LIVE today and **VOID at the
+  POD cutover** (`POD.md` section 2), when cutover step 4b moves it to `archive/dev/`. Follow it
+  until then.
 - `rules.toml`: the **law-bundle routing** that `rules.py --for <kind>` reads. The POD's brief
   builder writes its output into every brief's `## LAWS` block (`POD.md` R17).
 - `build-manifest.toml`: the **lifecycle declaration** for every file under `_build/`. Clause

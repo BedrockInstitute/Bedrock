@@ -1103,9 +1103,11 @@ loss. Both are evidence and both are kept.
 **Enforcement points, because a rule with none is a wish.** Rule 2 is the only
 mechanical one: `scripts/gate/check-probes.py --check` in `make check` and `--staged`
 in `scripts/git-hooks/pre-commit`, pinned by `scripts/tests/test_probe_gate.py`.
-**Rules 1, 3, 4, 5 and 6 are enforced by the brief and by the return audit**
-(clause W3 of `dev/POD.md` section 3.1, injected into
-`dev/pod/instructions/mathematician.md` at every dispatch), and by nothing else.
+**Rules 1, 3, 4, 5 and 6 are enforced by the brief and by the return audit**, and
+by nothing else. Today the brief carries them and `dev/ORCHESTRATION.md` section
+3 is the orchestrator's standing clause list. At the cutover they become clause
+W3 of `dev/POD.md` section 3.1, injected into
+`dev/pod/instructions/mathematician.md` at every dispatch.
 The old citation named `dev/ORCHESTRATION.md` section 1, which was wrong twice:
 the standing brief clauses were section 3 of that file, and the file is void from
 the POD cutover.
