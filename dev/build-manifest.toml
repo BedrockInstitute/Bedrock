@@ -155,3 +155,74 @@ note = "Reproduced by `scripts/site/extract-types.py --out _build/types.json` (t
 glob = "tools/*.pid"
 class = "runtime"
 note = "A running tool's process id. Stale once the tool exits."
+
+# ---------------------------------------------------------------------------
+# Temporary paths OUTSIDE `_build/`. Same rule, different directory.
+# ---------------------------------------------------------------------------
+#
+# WHY THIS SECTION EXISTS. The owner's ruling of 2026-08-13 is about a lifecycle,
+# not about a directory: every temporary file declares when it may be deleted and
+# when it moves somewhere permanent. The POD writes runtime state to `.pod-state/`
+# and NOT to `_build/`, because the `Makefile` `clean:` target empties `_build/`
+# and would erase a running loop's state (`dev/memos/L9-pod-program-design.md`
+# section 4.0). Those files are temporary all the same, so they declare here.
+#
+# WHAT ENFORCES THIS SECTION, stated plainly so no row claims more than it has.
+# `scripts/gate/check-build-manifest.py` scans `_build/` and nothing else, so it
+# reads `[[entries]]` above and never these rows. `.gitignore` keeps `.pod-state/`
+# out of the index. The declaration below is therefore enforced by REVIEW, and its
+# value is that a reader can learn what may be deleted without reading the program.
+# Extending the checker to a second scanned root would mechanise it.
+#
+# `class` names one of the classes above and carries its meaning. Where the class
+# condition is not exact for the path, the row states its own condition and the row
+# wins, because a lifecycle that is nearly right deletes real measurements.
+
+[[runtime_outside_build]]
+path = ".pod-state/standing.jsonl"
+class = "evidence"
+writer = "scripts/pod/digest.py, record_standing()"
+delete_when = """
+Never while the digest is expected to report AD7's second number. Section 8.2 says
+the digest RECORDS the standing figure once per day so the number is a LOOKUP and
+never a re-derivation, and re-running the digest rebuilds today's row alone. A
+deleted file therefore loses every earlier day, and the net-gain fields print
+`无更早记录` until two days have passed again."""
+promote_when = """
+As soon as a document cites a figure from it. Then that figure is `evidence` in the
+sense above and its home is `dev/measurements/`. The series itself stays here."""
+note = """
+One JSON object per local day: `day`, `standing`, `masters`, `recorded`. Append
+only, and the reader takes the last row of each day, so a second digest in one day
+corrects the first. The caliber is the ledger's, read at HEAD."""
+
+[[runtime_outside_build]]
+path = ".pod-state/digest/<YYYY-MM-DD-HHMM>.txt"
+class = "evidence"
+writer = "scripts/pod/digest.py, write_out()"
+delete_when = """
+Never by hand while the window it reports is inside any live investigation. Every
+FACT behind it is in the tracked transition log, but the three checkout numbers are
+not: the standing figure, the orphan master count and the telescope count measure
+the tree as it stood at that hour. Re-running the digest against that window
+reproduces the counts and NOT those three, so it is not exhaust."""
+promote_when = """
+As soon as a document cites a figure from it. To `dev/measurements/` while a live
+document cites it, and to `archive/dev/measurements/` once every citing document is
+historical, exactly as the `evidence` class rules it."""
+note = """
+One digest, in the shape of section 8.3. About 1.5 KB, and the digest hangs off the
+maintainer batch, so the directory grows by two files a day."""
+
+[[runtime_outside_build]]
+path = ".pod-state/digest/latest.txt"
+class = "exhaust"
+writer = "scripts/pod/digest.py, write_out()"
+delete_when = """
+At any time. The next digest writes it again, and it is a copy of the newest
+stamped file beside it."""
+promote_when = "Never. Promote the stamped file it copies."
+note = """
+The newest digest, at a fixed path. `write_digest()` at `scripts/pod/pod.py:1768`
+runs the digest under `capture_output=True` and keeps neither stream, so this file
+is the only way the text reaches a reader."""

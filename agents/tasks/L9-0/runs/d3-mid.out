@@ -1,0 +1,36 @@
+# arm d3-mid
+# note one comment char at src/L/Coding/Sound.lagda.md:1091
+# argv agda --safe src/Everything.lagda.md
+# GHCRTS -A64m -I0 -M8g
+# root /tmp/l9-b3-probe
+# agda slots before 0
+# load before 21:07  up 3 days, 23:29, 2 users, load averages: 6.30 4.87 4.51
+# started 2026-08-17 21:07:11
+      Checking L.Coding.Sound (/private/tmp/l9-b3-probe/src/L/Coding/Sound.lagda.md).
+     Checking L.Coding.Unique (/private/tmp/l9-b3-probe/src/L/Coding/Unique.lagda.md).
+     Checking L.Coding.Uniform (/private/tmp/l9-b3-probe/src/L/Coding/Uniform.lagda.md).
+    Checking L.Coding.Powerset (/private/tmp/l9-b3-probe/src/L/Coding/Powerset.lagda.md).
+   Checking L.Coding.Sequence (/private/tmp/l9-b3-probe/src/L/Coding/Sequence.lagda.md).
+   Checking L.Hierarchy (/private/tmp/l9-b3-probe/src/L/Hierarchy.lagda.md).
+  Checking L.Choice.Internal (/private/tmp/l9-b3-probe/src/L/Choice/Internal.lagda.md).
+   Checking L.Choice.Table (/private/tmp/l9-b3-probe/src/L/Choice/Table.lagda.md).
+  Checking L.Choice.Faithful (/private/tmp/l9-b3-probe/src/L/Choice/Faithful.lagda.md).
+   Checking L.Choice.Limit (/private/tmp/l9-b3-probe/src/L/Choice/Limit.lagda.md).
+  Checking L.Choice.Before (/private/tmp/l9-b3-probe/src/L/Choice/Before.lagda.md).
+  Checking L.Choice.Adequate (/private/tmp/l9-b3-probe/src/L/Choice/Adequate.lagda.md).
+ Checking L.Choice.Order (/private/tmp/l9-b3-probe/src/L/Choice/Order.lagda.md).
+ Checking L.Condensation (/private/tmp/l9-b3-probe/src/L/Condensation.lagda.md).
+  Checking L.Condensation.UpperAgree (/private/tmp/l9-b3-probe/src/L/Condensation/UpperAgree.lagda.md).
+  Checking L.Condensation.LowerAgree (/private/tmp/l9-b3-probe/src/L/Condensation/LowerAgree.lagda.md).
+ Checking L.Condensation.TwelveAgree (/private/tmp/l9-b3-probe/src/L/Condensation/TwelveAgree.lagda.md).
+   Checking L.Choice.Transversal (/private/tmp/l9-b3-probe/src/L/Choice/Transversal.lagda.md).
+  Checking L.Model (/private/tmp/l9-b3-probe/src/L/Model.lagda.md).
+ Checking Landmarks (/private/tmp/l9-b3-probe/src/Landmarks.lagda.md).
+ Checking L.Coding.EnvSupply (/private/tmp/l9-b3-probe/src/L/Coding/EnvSupply.lagda.md).
+  Checking L.Hull (/private/tmp/l9-b3-probe/src/L/Hull.lagda.md).
+ Checking L.BoundedSubset (/private/tmp/l9-b3-probe/src/L/BoundedSubset.lagda.md).
+Checking Everything (/private/tmp/l9-b3-probe/src/Everything.lagda.md).
+# wall seconds 234.99
+# exit 0
+# agda slots after 0
+# load after 21:11  up 3 days, 23:33, 2 users, load averages: 3.88 4.41 4.38

@@ -1,0 +1,12 @@
+# arm 99-warm-nochange
+# note no edit, closing floor
+# argv agda --safe src/Everything.lagda.md
+# GHCRTS -A64m -I0 -M8g
+# root /tmp/l9-b3-probe
+# agda slots before 0
+# load before 21:20  up 3 days, 23:42, 2 users, load averages: 4.52 4.45 4.43
+# started 2026-08-17 21:20:39
+# wall seconds 3.25
+# exit 0
+# agda slots after 0
+# load after 21:20  up 3 days, 23:42, 2 users, load averages: 4.52 4.45 4.43

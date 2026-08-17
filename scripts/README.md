@@ -20,7 +20,8 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | `scripts/dispatch/` | everything about running and auditing a dispatch | `check-dispatch-policy.py`, `check-sources-read.py`, `dd25-record.py`, `dispatch_policy.py`, `recall-hook.py`, `rules.py` |
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
-| `scripts/ops/` | machine safety | `agda-watchdog.sh` |
+| `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
+| `scripts/pod/` | the POD program of goal L9: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `facts.py`, `heads.py`, `launcher.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `table.py`, `witness.py` |
 
 Unchanged in place: this `README.md`, `scripts/tests/`, `scripts/git-hooks/`.
 
@@ -789,6 +790,98 @@ unguarded parallel writers crashed the 64 GB box; the primary guard is the
 `GHCRTS` heap cap, this is the backstop). It finds the repository root by
 walking up to `.git`, never by counting directories, so its log always lands
 in the true `_build/tools/` whatever directory it runs from.
+
+### `bark-push.sh`
+
+Pushes one encrypted message to the owner's phone. The POD loop has two stops, and
+`notify_owner()` calls this at both of them. It reads the body from `BARK_BODY`, and it
+reads `BARK_KEY_URL` and `BARK_AES_KEY` from the environment. Both are deployment
+secrets, so this copy holds neither and REFUSES to run when either is unset. The push is
+AES-256-GCM with a fresh random 12-byte IV, and a failed encryption pushes nothing.
+
+```sh
+BARK_TITLE="POD 已停止" BARK_GROUP="Bedrock POD" BARK_BODY="<what happened>" \
+  scripts/ops/bark-push.sh </dev/null
+```
+
+## pod/
+
+The POD program of goal L9. `dev/memos/L9-pod-program-design.md` is its design, and each
+file below names the section it implements. **The program does not run yet.** No
+`make check` target calls these files today, and the cutover of the design's section 9
+wires them.
+
+### `facts.py`
+
+The six-fact recorder, section 4.3.1. It holds `run_agda()`, which is the ONE place the
+POD starts Agda, the error class map of fact 2, the changed-file snapshot of fact 4 and
+the verification target rule of section 4.3.2. It measures, and it never routes.
+
+### `witness.py`
+
+The fact 3 witness meter, amendments A1 and A4. It reads one obligation as
+`<probe path>::<dotted name>`, derives a witness module from the probe, runs it, and
+reports one of four values: PASS, MISSING, PROBE RED or NO FILE. Only PASS is resolved.
+Run it directly to meter an obligation:
+
+```sh
+python3 scripts/pod/witness.py "agents/tasks/LJ-1-383/Probe383.agda::Wire.residue2-false-at-record"
+```
+
+### `check-closure.py`
+
+The closure check of section 7.2, and acceptance conjunct 3. It is the split half of
+`scripts/gate/check-tree.py` that the POD needs: closure, the archive boundary, the
+unwired new master and the empty parameterized module. `make check` still calls
+`check-tree.py`, and the cutover repoints the target.
+
+### `check-spec-surface.py`
+
+The spec surface gate of section 7.3, and it serves rules R9 and R16. The surface is
+`src/Landmarks.lagda.md` plus one file per `open import` in its fences, which VERIFIES
+as 8 files and 499 in-fence lines. A bare `import M` is excluded, because those two
+imports hold the proofs and a signature change there fails to typecheck. The gate hashes
+every declaration signature into `dev/pod/spec-surface.toml` and refuses a silent move:
+a worker can change `isZFCModel`, `𝒮ʟ` or `LEM` and leave the whole tree green while the
+trophy asserts something different. R16 rides the same snapshot with one sha256 per rule
+home. Four modes: `--check` at acceptance conjunct 5, `--msg-file` at the `commit-msg`
+hook, no argument for the history audit, and `--write` to regenerate the snapshot.
+
+### `check-survey-quotes.py`
+
+The survey verification of section 7.4 Part 2, and acceptance conjunct 6. It is lifted
+from `scripts/gate/check-dd18-survey.py` and it keeps both gated halves of that file: a
+return must name every path the program injected, and a quoted phrase of twelve
+characters or more must sit at each cited `path:line`. The brief-side print goes,
+because the program performs the search now. The gate judges ONE task. `--all` sweeps
+the tree and it is a survey tool, never a gate: the records written before the amendment
+of 2026-08-16 fail it by construction.
+
+### `retrieve.py`
+
+The retrieval seam of section 7.4 Parts 1a and 1b. `retrieve(query, scope, k)` ranks a
+scope with BM25 over whole files, and a later implementation replaces this one function
+and nothing else. THE SCOPE IS THE MEASURED PART: the same ranker moved the gold file of
+one detour episode from rank 444 over the full corpus to rank 1 over the archive scope,
+and the record is `dev/measurements/pod-retrieval-scoping-2026-08-17.txt`. The module
+also holds the miss signal, which writes one JSON line per dispatch and reports the
+discriminative overlap of every missed file. It reports, and it never triggers.
+
+### `digest.py`
+
+The owner's digest of section 8, in Chinese. **The program writes it and no model writes
+it or edits it.** `FIELD_SOURCES` binds every field to the file and the line that
+produces it, and `scripts/tests/test_pod_digest.py` resolves all of them, so a field
+whose source moves fails the suite rather than printing a stale number. It prints the
+two AD7 numbers and twelve more, and every one of them reports and none of them
+triggers: the rollback criterion is the owner's. NO SENTENCE IN IT RANKS ANYTHING,
+because ranking is a judgement AD1 forbids the program. Rule (e) runs it beside the
+maintainer batch, and it also serves the batch the three log-derived lists of section
+6.7, so the batch and the digest count one thing one way.
+
+```sh
+python3 scripts/pod/digest.py --hours 12
+```
 
 ## The flat modules
 

@@ -55,3 +55,9 @@ agents/tasks/LJ-1-331/CondG2.lagda.md
 agents/tasks/LJ-1-331/CondG4.lagda.md
 agents/tasks/LJ-1-331/CondH1.lagda.md
 agents/tasks/LJ-1-331/CondH2.lagda.md
+
+# The POD runtime state (dev/memos/L9-pod-program-design.md section 4.0). It is NOT
+# _build/, because `make clean` empties that directory and would erase the state. The
+# line also hides the fact 3 witness modules from fact 4, because
+# `git status --untracked-files=all` does not list an ignored path.
+.pod-state/

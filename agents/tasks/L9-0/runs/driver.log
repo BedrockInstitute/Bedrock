@@ -1,0 +1,8 @@
+00-cold: 305.7 s, exit 0
+01-warm-nochange: 3.27 s, exit 0
+d1-leaf: 16.38 s, exit 0
+d2-shallow: 23.92 s, exit 0
+d3-mid: 234.99 s, exit 0
+d4-deep: 271.76 s, exit 0
+d5-base: 300.81 s, exit 0
+99-warm-nochange: 3.25 s, exit 0

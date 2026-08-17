@@ -1,0 +1,151 @@
+# The five POD heads, the limits and the two concurrency tiers.
+#
+# WHY THIS FILE EXISTS. Before it, a model name, an effort level and a deadline
+# lived in three places: a skill document, a policy module and one literal in
+# the dispatcher. The measured failure is at
+# `dev/memos/L9-pod-program-design.md:1826-1836`: after row 21 retires
+# `scripts/dispatch/dispatch_policy.py`, the dispatcher falls back to a hard
+# literal and starts a CODEX agent on a deepseek model for every dispatch that
+# omits `--harness`. This file is the ONE home of a model name, an effort level,
+# a deadline and a load threshold. AD26 and section 6.1 rule it.
+#
+# WHO MAY CHANGE IT. The owner, at any time. NOBODY ELSE changes it without a
+# named owner approval. R16 puts the file in the spec surface gate's guarded set
+# (section 7.3), because it is not a table row and `replay()` never sees it.
+#
+# HOW THE LOADER READS IT. NO FIELD HAS A SILENT DEFAULT. A missing field is a
+# refusal. A misspelt field is a refusal. The loader refuses a model outside
+# `legal.models`, an effort outside `legal.efforts` and a missing slot. It
+# returns a frozen dict.
+#
+# WHERE THE LOADER IS. `scripts/pod/heads.py`, section 6.1's ~40-line loader. It
+# is the ONE OWNER of this file. `scripts/pod/launcher.py` and
+# `scripts/pod/table.py` are READERS: two readers of one file are admissible and
+# two owners are not. A reader that cannot reach the loader says so on every
+# launch path and never guesses a number from this file.
+#
+# AD26, NO RETRO-FIT. The program resolves a head ONCE, at dispatch. It writes
+# `model`, `effort`, `role` and `heads_sha256` into the transition log line
+# (section 5.3.1). Nothing re-reads this file for a running task. A change binds
+# a new task only, and a re-dispatch is a fresh instance.
+
+version = 1
+
+[legal]
+efforts = ["low", "medium", "high", "xhigh", "max"]
+
+# MEASURED 2026-08-17, [L9-0]. Every string below resolves. Two read-backs ran
+# per string: `claude -p --output-format json` reports `modelUsage.<key>` and
+# `canonicalModel`; a live herdr pane prints a display name in its banner.
+# Evidence: `agents/tasks/L9-0/l9.0-b4-model-ids.md:56-70`.
+# The three aliases resolve to the three full IDs:
+#   opus -> claude-opus-5, fable -> claude-fable-5, sonnet -> claude-sonnet-5
+# PREFER A FULL ID IN A `[heads]` ROW. An alias means "the latest model", so it
+# moves, and AD26 records the model that ran.
+# `claude-haiku-5` does NOT resolve and the client refuses it:
+# `[claude-code:unrecognized_model]`, `is_error: true`, zero tokens.
+#
+# A DATE SUFFIX IS THE CASE THE WHITELIST EXISTS FOR, and it is worse than a
+# misspelling because it looks right. MEASURED 2026-08-17:
+# `claude-opus-5-20260101` PASSES the client and fails at the API with
+# `api_error_status: 404`, "There's an issue with the selected model". Evidence:
+# `agents/tasks/L9-0/l9.0-b4-model-ids.md:104-107`. The list below is the first
+# guard, because the loader refuses a string it does not hold; the read-back
+# below is the second, for a string that IS held and still fails in the pane.
+models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
+          "opus", "fable", "sonnet"]
+
+# THE READ-BACK REFUSAL, and the measurement inverted the design's rule.
+#
+# A wrong model ID passes the loader when `legal.models` holds it. It then fails
+# INSIDE the pane. `herdr agent start` still returns `agent_started` with
+# `interactive_ready: true`, the agent reaches `working` and then `done`, and
+# every guard in the launcher reads that as a healthy run.
+# Evidence: `agents/tasks/L9-0/l9.0-b4-model-ids.md:95-101`.
+#
+# So the POD's `launch()` wrapper runs `herdr agent read` after `agent start`
+# and applies THIS rule:
+#
+#   Read the banner line that ends with `· Claude Max`.
+#   PARK the task when that line contains the requested model string verbatim.
+#   Match case sensitively, because `Opus 5` contains `opus` under a
+#   case-insensitive match.
+#
+# A resolving ID prints a DISPLAY NAME and never prints its own ID:
+#   `Opus 5 with max effort · Claude Max`
+# A failing ID prints its own ID verbatim:
+#   `claude-haiku-5 with max effort · Claude Max`
+#
+# Rule (f) parks the task with `reason: "launch"`.
+#
+# WHERE THE RULE IS EXECUTED. `model_readback_ok()` in `scripts/pod/pod.py`, which
+# rule (f) calls after the launcher returns 0. A banner it cannot read is NOT a
+# refusal, because the rule fires only on a POSITIVE detection.
+#
+# THE DESIGN'S OWN TEXT IS REFUTED. Section 6.1 at
+# `dev/memos/L9-pod-program-design.md:1754-1755` reads "A pane that does not
+# name the model it asked for returns NO PID". That rule parks every correct
+# dispatch and passes every wrong one. Evidence:
+# `agents/tasks/L9-0/l9.0-b4-model-ids.md:103-113`.
+
+[limits]
+tick_seconds = 30             # the runner's sleep, section 5.0
+exclusive_max_load1 = 6.0     # refuse to start an exclusive task above this
+agda_deadline_s = 1800        # the POD owns the deadline. See gap M2
+worker_deadline_s = 14400     # a worker that runs longer is killed, section 5.1
+attempt_max = 4               # consecutive retries on ONE row, then PARK. B2
+
+# THE 1800 s AGDA DEADLINE CLEARS THE MEASURED WORST CASE BY 5.9 TIMES.
+# MEASURED 2026-08-17, [L9-0] gap B3: the widest acceptance class, `d5-base`
+# over `src/Base/Prelude.lagda.md`, ran 300.81 s, and a cold whole-tree run ran
+# 305.70 s. Evidence: `agents/tasks/L9-0/l9.0-b3-probe-report.md:133`.
+
+# THE TWO CONCURRENCY TIERS, restored by amendment A14 from `dev/LESSONS.md`
+# C-12. A task declares its tier in its table row. The design pinned
+# `AGDA_SLOTS = 2` and dropped the WIDE tier, which halved throughput.
+#
+# The design names the two tiers and their numbers at
+# `dev/memos/L9-pod-program-design.md:1701-1704` and `:102-112`. It names NO KEY
+# for them. The key names below are this file's, and a reader of `admits()`
+# needs them to match.
+[tiers.wide]
+slots = 4                     # up to FOUR concurrent Agda writers
+heap = "-A64m -I0 -M8g"       # R13's caliber, one caliber PER TIER
+
+[tiers.heavy]
+slots = 2                     # at most TWO concurrent Agda writers
+heap = "-A64m -I0 -M12g"      # the heavy caliber
+
+[tiers.shared]
+max_heap_sum_gb = 32          # `admits()` holds the mixed worst case at or under this
+free_memory_pct_for_extra = 25  # fill slots three and four only above this
+per_process_backstop_gb = 14  # C-12's backstop, restored by A13
+system_free_floor_pct = 8     # C-12's floor, restored by A13
+
+# A RECORD CARRIES ITS TIER. Compare two measurements only inside one tier.
+# `scripts/pod/launcher.py:launch()` writes `tier` and `agda_heap` into the
+# registry record, and its `agda_heap_sum_over()` takes the MIXED sum across
+# every live holder. A slot count cannot see that sum: two HEAVY holders and two
+# WIDE sit inside both per-tier ceilings and still budget 40 GB.
+#
+# WHAT THIS BLOCK DOES NOT HOLD. A15 also names a WHOLE-TREE `make check`
+# caliber, `-A64m -I0 -M16g`, because that run holds the machine alone. It is not
+# a tier: it has no slot count and no concurrency. It lives as a literal at
+# `scripts/pod/facts.py:80` today.
+
+# THE FIVE HEADS. AD24 and AD25 name four. AD2 needs a fifth, the maintainer,
+# and amendment A12 rules it `claude-opus-5` at effort `high` on 2026-08-17,
+# which closes gap M8.
+#
+# `harness` is the launcher's `--harness` value. `herdr-claude` runs a CLAUDE
+# agent in a server-owned pane, and edit 1 of section 6.2 adds it to the
+# launcher's `HERDR_KIND` map.
+# `sandbox` is the `--permission-mode` value. `acceptEdits` matters at the first
+# launch: a trust prompt makes herdr report `blocked`, which the launcher does
+# not treat as a death.
+[heads]
+mathematician             = { model = "claude-opus-5",   effort = "max",  harness = "herdr-claude", sandbox = "acceptEdits" }
+mathematician_adversarial = { model = "claude-fable-5",  effort = "max",  harness = "herdr-claude", sandbox = "acceptEdits" }
+coder                     = { model = "claude-sonnet-5", effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
+coder_adversarial         = { model = "claude-opus-5",   effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
+maintainer                = { model = "claude-opus-5",   effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }

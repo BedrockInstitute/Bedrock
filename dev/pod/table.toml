@@ -1,0 +1,102 @@
+# The ONE rule table of AD8. The router reads this file and nothing else.
+#
+# THIS FILE IS PROGRAM-WRITTEN. `admit_rows()` appends a task's branches at admission and
+# `expire_rows()` retires them at close, both through `write_table()` in
+# `scripts/pod/table.py`, which rewrites the whole file. A comment added by hand inside it
+# does not survive the next write. The header you are reading is a constant in that file.
+#
+# WHAT A ROW IS. One `[row.when]` block of the six facts of AD11 (plus fact 7 `lines`
+# under amendment A10), AND-ed, with no OR. The row's `action` is one of the eight closed
+# names of section 4.2. `outcome` never routes: it declares what a `done` close earns.
+#
+# HOW A CONFLICT IS DECIDED, section 4.4, and no judgement is involved:
+#   1. `stop_loop` first, whatever the scope. Amendment A3.
+#   2. then a `task:<CODE>` row before a `system` row.
+#   3. then `priority` ascending.
+#   4. then `id` ascending by byte order.
+#
+# A ROW IS NEVER DELETED, which is clause W4 applied to a table row. A task row that
+# retires carries `expired = true` and `expired_at`; the router skips it and the file
+# keeps it, because it records why one task routed differently.
+#
+# R3: a new row must not move any record an existing row already matches. `replay()` runs
+# over `dev/pod/replay-corpus.jsonl` before every write. Expiry is exempt.
+
+[meta]
+schema = 1
+vocab = "seven-facts/1"
+
+[[row]]
+id = "sys-spec-surface"
+scope = "system"
+priority = 1
+action = "stop_loop"
+added = 2026-08-17
+added_by = "owner"
+reason = "A change inside the trophy spec surface stops the loop until the owner names an approval."
+expired = false
+
+  [row.when]
+  error_class = "spec_surface"
+
+[[row]]
+id = "sys-coder-adversarial-on-heap-wall"
+scope = "system"
+priority = 90
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-17
+added_by = "maintainer"
+reason = "A heap wall inside src/ is head-sensitive, so a stronger head reads it at the same cap."
+expired = false
+
+  [row.when]
+  changed_files_any = ["src/*"]
+  heap_wall = true
+
+[[row]]
+id = "sys-heap-wall"
+scope = "system"
+priority = 100
+action = "park_and_split"
+added = 2026-08-17
+added_by = "maintainer"
+reason = "A heap wall at the C-12 cap is a block that is too large, not a wrong proof."
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "sys-dd24-ratio-bar"
+scope = "system"
+priority = 150
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-17
+added_by = "owner"
+reason = "DD24's ratio bar, restored by A10. Basis: agents/tasks/L9-0/l9.0-b3-probe-report.md:185 measures 0.01069 s per in-fence line, and the bar is that rate at the [ratio] tolerance."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  seconds_per_line_min = 0.0123
+
+[[row]]
+id = "sys-slow-green-empty"
+scope = "system"
+priority = 200
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-17
+added_by = "maintainer"
+reason = "A long green run that lands no obligation is a conversion cost, and a second reader prices it."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  obligations_delta_max = 0
+  seconds_min = 300.0
+  heap_wall = false

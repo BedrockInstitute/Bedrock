@@ -39,8 +39,11 @@ Usage:
   ledger.py              print the full ledger
   ledger.py --check      validate the declaration against the tree
                          (exit 1 on a defect); this is the mode `make check` runs
-  ledger.py --write      a no-op alias for --check, kept so old invocations work
-                         move, which archived D27 (live DD15) puts at every return
+  ledger.py --write      re-derive every TREE-DERIVED declaration, write back the ones
+                         a machine may write, and REFUSE the ones that need a human
+                         re-measurement. The POD's DONE handler runs it before it
+                         commits (design section 7.1 row 26). It runs --check first,
+                         so --check's own defects still print and still exit 1
   ledger.py --brief      one line: standing, the endpoint or a refusal, and both
                          DD5 benchmarks with the honest state of each
   ledger.py --trophy-split
@@ -60,6 +63,7 @@ Exit status: 0 clean, 1 defect found, 2 usage error.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
@@ -704,6 +708,166 @@ def trophy_matrix(rows: list[dict], split: dict[str, int],
     return cells
 
 
+# --------------------------------------------------------------------------- --write
+#
+# THE WRITER, built 2026-08-17 for the POD's DONE handler (design section 7.1 row 26).
+# Until today `--write` was a NO-OP ALIAS: `if mode == "write": mode = "check"`. The
+# handler that runs at every close therefore validated and wrote nothing, and the design
+# named that as a defect: without a real writer every close commits a stale declaration.
+#
+# WHAT THIS WRITER MAY WRITE, AND THE TWO RULES THAT BOUND IT.
+#
+# 1. IT NEVER WRITES A STANDING FIGURE, whatever it is asked. `dev/ledger.toml:77-82`
+#    rules it in the file's own words: "STANDING IS MEASURED, NEVER WRITTEN DOWN. There
+#    is no standing figure in this file and there must never be one." The measured
+#    failure behind that rule is the reason this whole script exists: a standing figure
+#    written into prose was re-quoted unchecked for nine dispatches while the tree moved
+#    under it, and [L3.32-T55] found it had never been a measurement. The design's day-5
+#    instruction reads "re-derives the standing figure and writes it back into
+#    dev/ledger.toml", which contradicts that rule verbatim. The rule wins; the deviation
+#    is disclosed in the [L9] day-5 report.
+#
+# 2. IT NEVER WRITES HALF OF A MEASURED PAIR. A seconds-per-line bar is a quotient of two
+#    terms measured together over one tree. Rewriting the LINES term alone leaves the
+#    SECONDS term standing over a tree it was never measured on, which is exactly the
+#    C-28 class this file's own `validate_ratio_baseline()` exists to catch, and its
+#    docstring already names the cure: "RE-MEASURE at [LJ-0.5], then write the new figure
+#    and ac_baseline_lines together". So a drifted pair is a REFUSAL that names the
+#    protocol, never a silent rewrite.
+#
+# WHAT IT DOES WRITE. Every field in DERIVED whose deriver is a pure tree census and
+# whose declared value drifted. The rewrite is a TARGETED LINE EDIT, not a TOML re-dump:
+# `dev/ledger.toml` is 3,228 lines and most of it is the comment that carries each
+# figure's provenance, and a re-dump would delete all of it.
+
+#: One derivable declaration. `paired_with` names the figure that was measured TOGETHER
+#: with this one; a field that names one is refused rather than written. `slack_key`
+#: names the declared tolerance.
+#:
+#: THE WRITER USES THE GUARD'S OWN TOLERANCE, and that is not a courtesy. `--check`
+#: refuses a figure only when the drift EXCEEDS `ac_baseline_tolerance_lines`, so a
+#: writer that acted on any drift at all would call a declaration stale that the gate
+#: calls clean. Two owners of one word is the defect this repository refuses everywhere
+#: else, and here it would print a refusal at every close over a two-line drift, which
+#: teaches its reader to ignore the line.
+DERIVED = (
+    ("ratio", "ac_baseline_lines",
+     "ratio.ac_baseline_seconds_per_line",
+     "ac_baseline_tolerance_lines", 50,
+     "DD24's bar is seconds over in-fence lines, measured over one tree in one protocol: "
+     "interface cache moved aside, `make typecheck` at the exported GHCRTS default, Agda "
+     "2.8.0, single process, nothing else running, /usr/bin/time -p"),
+)
+
+
+def derive(table: str, key: str, data: dict, files: list[str], standing: int):
+    """Re-derive ONE declared figure from the tree. It returns (value, basis) or None.
+
+    Every deriver here reads the tree and never another declaration, so the value it
+    returns is a measurement and not a restatement.
+    """
+    if (table, key) == ("ratio", "ac_baseline_lines"):
+        # THE RATIO'S OWN TREE, which is the tree the NUMERATOR builds. This repeats
+        # `validate_ratio_baseline()`'s derivation on purpose: the guard and the writer
+        # must never disagree about what the figure IS, and the alternative, a second
+        # definition of the cone, is how the [LJ-0.5] mismatch happened.
+        ratio = data.get("ratio", {})
+        root = ratio.get("ac_baseline_root", "src/Landmarks.lagda.md")
+        structural = [f for f in tracked_masters()
+                      if f not in set(data.get("retired", []))]
+        if root not in structural:
+            return None
+        cone = closure(import_graph(structural), [root])
+        counted = [f for f in cone if f not in UNCOUNTED]
+        return (sum(count(f) for f in counted),
+                f"the cold-build cone of {root}, {len(cone)} masters, "
+                f"{len(counted)} of them counted")
+    return None
+
+
+def _scalar_line(text: str, table: str, key: str):
+    """The span of `key = <value>` inside `[table]`, or None. It reads ONE table.
+
+    The scan stops at the next table header at column 0, so a key of the same name in a
+    later table is never touched. Comments are never matched, because the pattern anchors
+    the key at the start of a line.
+    """
+    head = re.search(rf"^\[{re.escape(table)}\]\s*$", text, re.M)
+    if head is None:
+        return None
+    body_start = head.end()
+    nxt = re.search(r"^\[", text[body_start:], re.M)
+    body_end = body_start + (nxt.start() if nxt else len(text) - body_start)
+    m = re.search(rf"^{re.escape(key)}([ \t]*=[ \t]*)([^\n#]*)", text[body_start:body_end],
+                  re.M)
+    if m is None:
+        return None
+    return body_start + m.start(2), body_start + m.end(2), m.group(2).strip()
+
+
+def write_scalar(path: Path, table: str, key: str, value) -> bool:
+    """Replace ONE scalar in place, keeping every comment, then write durably.
+
+    tmp -> fsync -> rename -> fsync(dir). The rename is atomic against a process crash;
+    only the fsyncs make the bytes survive a machine crash, which is gap m6's whole point.
+    """
+    text = path.read_text(encoding="utf-8")
+    span = _scalar_line(text, table, key)
+    if span is None:
+        return False
+    start, end, _old = span
+    new = text[:start] + str(value) + text[end:]
+    tmp = path.with_suffix(".toml.tmp")
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(new)
+        fh.flush()
+        os.fsync(fh.fileno())
+    tmp.replace(path)
+    dfd = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+    return True
+
+
+def write_declaration(data: dict, files: list[str], standing: int,
+                      path: Path | None = None) -> tuple[list[str], list[str]]:
+    """Re-derive every DERIVED field and act on it. Returns (written, refused).
+
+    A field with no drift is left alone: an unchanged rewrite of a tracked file is a
+    commit with no content, and the POD commits at every close.
+    """
+    path = LEDGER if path is None else path
+    written: list[str] = []
+    refused: list[str] = []
+    for table, key, paired, slack_key, slack_default, protocol in DERIVED:
+        declared = data.get(table, {}).get(key)
+        if declared is None:
+            continue                       # nothing declared, so nothing can go stale
+        got = derive(table, key, data, files, standing)
+        if got is None:
+            continue
+        value, basis = got
+        slack = data.get(table, {}).get(slack_key, slack_default)
+        if abs(value - declared) <= slack:
+            continue                       # the guard calls this clean, so the writer does
+        ptable, pkey = paired.split(".", 1)
+        if data.get(ptable, {}).get(pkey) is not None:
+            refused.append(
+                f"{table}.{key} is declared {declared:,} and the tree now measures "
+                f"{value:,} ({basis}). IT IS NOT WRITTEN, because {paired} was measured "
+                f"together with it and this tool cannot re-measure seconds. Re-measure "
+                f"both and write both. Protocol: {protocol}.")
+            continue
+        if write_scalar(path, table, key, value):
+            written.append(f"{table}.{key}: {declared:,} -> {value:,} ({basis})")
+        else:
+            refused.append(f"{table}.{key} drifted to {value:,} and the line could not "
+                           f"be found in {path.name}; nothing was written")
+    return written, refused
+
+
 def main(argv: list[str]) -> int:
     mode = "full"
     for arg in argv[1:]:
@@ -803,10 +967,27 @@ def main(argv: list[str]) -> int:
     # rest was orientation for the owner, who reads `--brief`. The
     # three passages that had no other home moved into dev/ledger.toml's header
     # comment, which is where a reader editing the declaration will actually be.
-    # `--write` is kept as a no-op alias for `--check` so old invocations and
-    # the Makefile do not break.
+    # `--write` WAS a no-op alias for `--check`. It is a real writer since 2026-08-17,
+    # built for the POD's DONE handler under design section 7.1 row 26. It runs the whole
+    # of `--check` first, so a caller that replaced `--check` with `--write` loses no
+    # defect, and it then re-derives the tree-derived declarations. Two rules bound it and
+    # the block above DERIVED states both: it never writes a standing figure, and it never
+    # writes half of a measured pair.
     if mode == "write":
-        mode = "check"
+        for d in defects:
+            print(f"ledger: {d}", file=sys.stderr)
+        written, refused = write_declaration(data, files, standing)
+        for w in written:
+            print(f"ledger: WROTE {w}")
+        for r in refused:
+            print(f"ledger: OWED {r}", file=sys.stderr)
+        if not written and not refused:
+            print(f"ledger: declaration clean; standing {standing:,} lines measured over "
+                  f"{len(files)} masters, and standing is written NOWHERE "
+                  f"(dev/ledger.toml:77-82)")
+        if defects:
+            print(f"ledger: {len(defects)} defect(s) in dev/ledger.toml", file=sys.stderr)
+        return 1 if (defects or refused) else 0
 
     if mode == "check":
         for d in defects:
