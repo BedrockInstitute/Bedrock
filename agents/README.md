@@ -39,8 +39,11 @@ name component and a `.` is illegal in one.
 renamed record breaks every citation that ever named it. Only the directory around them is new,
 so an old citation still resolves under `find agents -name <the-old-name>`.
 
-**`scripts/agents_tree.py` is the one place that knows this shape.** Five checkers read the tree
-through it. Do not write `agents/tasks` into a sixth checker by hand.
+**`scripts/agents_tree.py` is the one place that knows this shape.** Nine scripts read the tree
+through it, and `scripts/README.md` names the members. Do not write `agents/tasks` into a tenth
+script by hand.
+
+**The POD brief's own FORM is `dev/POD.md` section 6.3, and this file does not restate it.**
 
 ## Probes live here
 
@@ -48,9 +51,15 @@ through it. Do not write `agents/tasks` into a sixth checker by hand.
 deleted.** The owner ruled that on 2026-08-13. `dev/LESSONS.md` **D-1** is the canonical rule
 and everything below is how to obey it.
 
+**A probe may also copy a live document into `agents/tasks/<TASK>/copy/`.**
+`agents/tasks/LJ-1-290/copy/scripts/` is one, and it holds a 642-line frozen copy of
+`scripts/README.md` used as the root-anchor fixture. A sweep over `README.md` files must
+exclude `agents/`, exactly as the prose linter does at `scripts/gate/lint-prose.py:446`.
+Nothing marks a fixture from the outside, so the sweep's filter is the only protection.
+
 **Write your probe in `agents/tasks/<TASK>/`, and nowhere else.**
 `agents/tasks/LJ-1-141/ProbeLJ1141A.agda` sits beside `agents/tasks/LJ-1-141/lj-1.141-report.md`.
-`src/` is forbidden absolutely; `scripts/check-probes.py` refuses a commit that carries a probe
+`src/` is forbidden absolutely; `scripts/gate/check-probes.py` refuses a commit that carries a probe
 there, and that rule was bought on 2026-08-04 when one `git add -A src/` committed 13 probe
 files.
 
@@ -93,9 +102,9 @@ says what it found. Both are evidence, and evidence that gets rewritten is no lo
 
 Two consequences follow, and both are mechanical:
 
-1. **`scripts/lint-prose.py` skips `agents/`**, beside `archive/`. A style gate over a record
-   can only force an edit to the record. The exemption is at `scripts/lint-prose.py:437` with
-   its reason. The same reasoning exempts `dev/JOURNAL.md` at `scripts/check-rule-ids.py:83`.
+1. **`scripts/gate/lint-prose.py` skips `agents/`**, beside `archive/`. A style gate over a record
+   can only force an edit to the record. The exemption is at `scripts/gate/lint-prose.py:446` with
+   its reason. The same reasoning exempts `dev/JOURNAL.md` at `scripts/gate/check-rule-ids.py:117`.
 2. **Correct a report in the next report, never in place.** If a report is wrong, the record
    of the error and its correction is worth more than a clean file.
 
@@ -118,7 +127,19 @@ An agent document is CC from birth, so no later move can relicense it. Never add
 
 ## Who reads what
 
-- **The orchestrator** writes every brief here before dispatch, and audits every report.
-- **A dispatched agent** writes exactly one report here, incrementally, and reads the briefs
+**From the POD cutover the orchestrator is a program**, and the rows below name it.
+
+- **The POD program** writes every brief here before dispatch, writes the `.pod` stamp beside
+  it (`dev/POD.md` section 9.3), injects the `## LAWS`, `## ARCHIVE` and `## LITERATURE` blocks,
+  and reads the return.
+- **A dispatched worker** writes exactly one report here, incrementally, and reads the briefs
   and reports its own brief names.
+- **The adversarial reviewer** reads the brief and the report together, and writes
+  `review-of-<PRED>.md` beside them.
 - **The owner** reads `tasks/` to see where the work stands.
+
+| Path | What it holds | Written by |
+|---|---|---|
+| `tasks/<CODE>/.pod` | The program's task stamp: table sha, heads sha, creation time | one line per POD task |
+| `tasks/<CODE>/review-<PRED>.md` | The review BRIEF, program-written | the program |
+| `tasks/<CODE>/review-of-<PRED>.md` | The review OUTPUT | the adversarial reviewer |

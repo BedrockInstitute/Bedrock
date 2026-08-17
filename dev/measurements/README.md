@@ -10,7 +10,7 @@ Records whose citing documents have all become historical move to
 
 ## Why they are here and not under `_build/`
 
-`_build/` is in `.gitignore` and `Makefile:180` deletes everything in it
+`_build/` is in `.gitignore` and `Makefile:302` deletes everything in it
 except `literature/`. `dev/ledger.toml`, the project's canonical size ledger,
 cited three of these tables as the provenance of standing figures while they
 sat one command from deletion. `[LJ-1.132]` moved them.

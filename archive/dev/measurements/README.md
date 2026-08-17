@@ -11,9 +11,10 @@ every document that cites it has become historical.
 
 ## Why they are not under `_build/`
 
-`_build/` is in `.gitignore` and `Makefile:180` runs
+`_build/` is in `.gitignore` and `Makefile:302` runs
 `find _build -mindepth 1 -maxdepth 1 ! -name literature -exec rm -rf {} +`.
-A record kept there is one command from gone. `archive/kits/README.md` records
+A record kept there is one command from gone.
+`archive/src/2026-08-13-kits-to-tasks/README.md` records
 the same finding for refused kits: an artifact a routine command destroys is
 not preserved.
 

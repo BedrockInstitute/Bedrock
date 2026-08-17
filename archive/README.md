@@ -44,13 +44,16 @@ one-to-one with its report and lives beside it, so all 257 moved to
 `archive/src/2026-08-13-probe-sweep/README.md` is the tombstone and it maps the
 old path to the current one; `dev/LESSONS.md` **D-1** is the live rule.
 
-**ONE DIRECTORY DOES NOT MIRROR THE ROOT, and it says why.** `archive/kits/`
-holds code that was written, measured and never landed. **A refused kit has no
-original path** (`archive/kits/README.md:35-40`), so the mirror rule has
-nothing to mirror. `[LJ-1.143]` left it rather than invent a home for it.
+**EVERY DIRECTORY MIRRORS THE ROOT.** `archive/kits/` was the one exception and
+it is retired: it held code that was written, measured and never landed, and a
+refused kit has no original path to mirror. `[LJ-1.143]` moved the five refused
+kits into their own task directories under `agents/tasks/archive/`, and
+`archive/src/2026-08-13-kits-to-tasks/README.md` is the tombstone. MEASURED
+2026-08-17: `archive/` holds `dev`, `scripts`, `src` and this file, and nothing
+else.
 
 **A probe under `src/` is still refused absolutely**, by
-`scripts/check-probes.py`. That rule was bought on 2026-08-04, when one
+`scripts/gate/check-probes.py`. That rule was bought on 2026-08-04, when one
 `git add -A src/` committed 13 probe files, and nothing here weakens it.
 
 ## Outside every gate

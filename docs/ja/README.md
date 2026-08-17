@@ -68,7 +68,7 @@ Cubical 型理論は現代型理論の最前線であり、いままさに書か
 
 ## 貢献
 
-AI エージェントは [AGENTS.md](../../AGENTS.md) を、人間の貢献者は [CONTRIBUTING.md](../../CONTRIBUTING.md) を参照してください。
+AI エージェントは [dev/POD.md](../../dev/POD.md) 第 3 節の唯一の規則集を、人間の貢献者は [CONTRIBUTING.md](../../CONTRIBUTING.md) を参照してください。
 
 ## ライセンス
 

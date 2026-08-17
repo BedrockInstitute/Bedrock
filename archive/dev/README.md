@@ -11,8 +11,8 @@ working documents.** A developer reading `dev/` should see what binds today.
 
 | File | What it holds | Read it when |
 |---|---|---|
-| `DECISIONS-archived.md` | The whole `D` ruling series, D1 to D39 | You need what the retired route ruled, or what a consolidated `DD` row dropped. `scripts/check-rule-ids.py` reads this file, so a `D` citation still resolves |
-| `TASKS-archived.md` | All 265 `L3.32-T` dispatch rows | You need what a dispatch actually found. `scripts/check-task-index.py` reads this file, so an `L3.32-T` citation still resolves |
+| `DECISIONS-archived.md` | The whole `D` ruling series, D1 to D39 | You need what the retired route ruled, or what a consolidated `DD` row dropped |
+| `TASKS-archived.md` | All 265 `L3.32-T` dispatch rows | You need what a dispatch actually found |
 | `JOURNAL-archived.md` | The 4,280-line execution journal | You need WHY, and the other three cannot answer. It is long; do not read it through |
 | `STATUS-archived.md` | The 96 goal rows of `dev/PLAN.md` section 11 | You need a retired goal's full status text. Section 11 keeps the top level and the route switches only |
 
@@ -23,17 +23,17 @@ citations across `dev/LESSONS.md`, the memos, the briefs and the commit
 history point at these codes. Renumbering would falsify all of them, and a
 code that means one thing in a commit message and another here is a trap.
 
-## Two of these files are still READ BY MACHINE
+## Nothing here is read by machine from the POD cutover
 
-`check-rule-ids.py` and `check-task-index.py` resolve citations against
-`DECISIONS-archived.md` and `TASKS-archived.md`. **Moving or renaming either
-file breaks a gate**, so both checkers name their path in one constant near
-the top. That is deliberate: the path is stated once and changing it is one
-edit.
+Until the cutover, two gates resolved citations against `DECISIONS-archived.md`
+and `TASKS-archived.md`. `check-task-index.py` RETIRES and `check-rule-ids.py`
+is narrowed to `dev/LESSONS.md` and `dev/rules.toml` (`dev/POD.md` section 7.1,
+rows 14 and 15). After that a citation into these files is resolved by a reader
+and by nothing else. Renaming a file here breaks no gate and every citation.
 
-## The archive-survey mechanism
+## The archive survey
 
-DD19 makes surveying these a brief SECTION rather than a hope. Every brief
-carries an **ARCHIVE** section naming what may bear on the task; every return
-carries an **ARCHIVE USED** section naming what it read and took, at
-`file:line`. `dev/LESSONS.md` is NOT archived and still binds.
+The POD program searches these files mechanically at brief build and injects the
+result under `## ARCHIVE` in the brief. `dev/POD.md` section 7.4 is the rule and
+this file does not restate it. **DD18, not DD19, is the ruling** that made the
+survey a brief section; this paragraph named the wrong code until 2026-08-17.

@@ -27,5 +27,5 @@ the README condenses.
   **cross-check the two translations against each other**. Confirmed term renderings are
   enforced from the canonical glossary data [dev/glossary.toml](../dev/glossary.toml).
 - CJK prose conventions (full-width punctuation, `「」` quotes, no em dash, spacing) are
-  machine-checked; see [AGENTS.md](../AGENTS.md) and `scripts/lint-prose.py`.
+  machine-checked; see [AGENTS.md](../AGENTS.md) and `scripts/gate/lint-prose.py`.
 - Developer specs do **not** go here; they live in [dev/](../dev/) and are English-only.
