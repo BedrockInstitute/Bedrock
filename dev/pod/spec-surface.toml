@@ -1226,7 +1226,7 @@ sha = "7b986e4c35f338a49e0b38ec81fcf0fd4fb1435bfc9de880390035a568ba3cdf"
 
 [[guarded]]
 path = "AGENTS.md"
-sha = "a20d17c547f38d8f54b4e864234c830b63fc2ce50884ed2fb30ce3431d8fd993"
+sha = "c849530b3c9d4377cc30988dc124ffe5b5f92d4c2fe433a0c5ca4b8e42bfeb4f"
 
 [[guarded]]
 path = "dev/memos/LJ-4-pod-program-design.md"
@@ -1238,20 +1238,20 @@ sha = "c01de52b4b08ca128f1c18b15fcf29bae48efa4cf9d6aae7c3ae1385a581cefd"
 
 [[guarded]]
 path = "dev/pod/instructions/coder.md"
-sha = "8a9c271a9c3daf2eefdcb7181638d0b271b8aa626cf56528bf874f671a690980"
+sha = "2a3eadc82dc7a812d0de9c19ef54e00413328fed031ce7ee4c28be20abc6d44e"
 
 [[guarded]]
 path = "dev/pod/instructions/coder_adversarial.md"
-sha = "419a7cd6e2fda26f9e3d12be442f0ad7ce70c1b580fd3a13e5d0dc512ad6d011"
+sha = "d9ebf4a4bbc8acbb19e99dd47798de60ab3b483a4aa809836fd45670c504b2a9"
 
 [[guarded]]
 path = "dev/pod/instructions/maintainer.md"
-sha = "050c8bff2405b771ad8cac7f2923eb27d32b5b6295e82a39223f0f336522919a"
+sha = "b053ecf6f2175b1af3d541742d4a645f94a23c666b399dc9788882fbb311cbbc"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician.md"
-sha = "fac942269f76dad75158df2acfc0755a4ab213f5ddfa9e1ae9b898865a583ca3"
+sha = "aab24d0e4ddcc0f3c5fd393a04a6fb4f2ccfb34c9600cd7978b572e59880afe7"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician_adversarial.md"
-sha = "982506da25f2536adad99c5ca94e1e5a7aafef5501f950223458f27c10ff14ba"
+sha = "b35c808f88f56c13e3193321abb372c0702bf39bad7e53498468e58d5258b8d2"

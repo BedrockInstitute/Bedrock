@@ -143,8 +143,13 @@ check("archive/src holds the 97 masters the record scoped",
 # cutover archived ORCHESTRATION.md, and 9 after DD-archived.md and LJ-dispatch-index.md
 # joined it. **THE PIN DID ITS JOB TWICE:** each time a document entered this corpus the
 # ranks below moved and this line went red first, instead of a rank sliding in silence.
-check("archive/dev holds 9 records after the dev/ slimming",
-      len(retr.corpus(DEV_SCOPE)) == 9, str(len(retr.corpus(DEV_SCOPE))))
+# 10 SINCE THE HISTORY SWEEP OF 2026-08-18 added L-goals-archived.md. THE PIN HAS NOW
+# FIRED THREE TIMES: 6 -> 7 (ORCHESTRATION.md) -> 9 (DD-archived, LJ-dispatch-index)
+# -> 10. **This time the ranks did NOT move**, because a table of goal rows shares no
+# discriminative token with either query. That is the useful reading: the pin catches
+# every corpus change, and only some of them move a rank.
+check("archive/dev holds 10 records after the history sweep",
+      len(retr.corpus(DEV_SCOPE)) == 10, str(len(retr.corpus(DEV_SCOPE))))
 check("the corpus rule keeps a README index out of a code archive",
       not [p for p in retr.corpus(SRC_SCOPE) if p.endswith("README.md")])
 

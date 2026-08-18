@@ -139,25 +139,19 @@ two towers and the bridge and lands both trophies.
 the retired check-cost freeze, which is closed. It is narrower and simpler: the
 code goes first, the prose phase opens after.
 
-**FOUR ARCHIVES, and surveying them is a brief section rather than a hope**
-(DD19). `archive/` holds retired code, with `archive/src/2026-08-09-rud-route/` holding the 72
-files of the retired route; `archive/dev/STATUS-archived.md` holds the 96 goal rows of
-the internalization route; `archive/dev/TASKS-archived.md` holds what each of 265
-dispatches found; `archive/dev/JOURNAL-archived.md` holds why; and
-`archive/dev/DECISIONS-archived.md` holds the rulings that route ran on. Every brief
-names what may bear on its task, and every return names what it used, at
-`file:line`. **`dev/LESSONS.md` is NOT archived and still binds.**
+**THE ARCHIVE IS RETRIEVED, NOT CARRIED.** `archive/` holds every retired thing and
+`archive/dev/README.md` is the table that says which file answers what. A brief's
+`## ARCHIVE` block is injected by the program, which searches the archive scope at brief
+build; the return names what it used at `file:line`. **You do not need to know the
+history to start work, and this file does not carry it.**
 
-**Retired code is archived, never deleted.** The archive sits OUTSIDE `src/`,
-so every gate is structurally blind to it and the postulate-free `--safe` claim
-stays literally true of the whole checked tree. Archived files are frozen and
-nothing imports across the boundary.
+**Retired code is archived, never deleted.** The archive sits OUTSIDE `src/`, so every
+gate is structurally blind to it and the postulate-free `--safe` claim stays literally
+true of the whole checked tree. Nothing imports across the boundary.
 
-**The closing sequence.** `[L3]` and its 59 children are superseded wholesale
-by the `LJ` series. `[L4]` through `[L8]` survive because they are
-route-neutral, and none of them opens until both trophies land: endpoint, then
-`[L7]`'s archival promotion, then `[L8]`'s consolidation and its gate, and only
-after that gate does `[L4]`'s whole-book harmonization open.
+**The closing sequence.** `[L4]` through `[L8]` are route-neutral and none of them opens
+until both trophies land: endpoint, then `[L7]`'s archival promotion, then `[L8]`'s gate,
+and only after that gate does `[L4]`'s whole-book harmonization open.
 
 ## 1. The theorem, stated honestly (DD1)
 
@@ -230,15 +224,6 @@ today, and `dev/memos/LJ-4-pod-program-design.md` section 7.1 for the full reaso
 | DD26 | THE CATALOGS ARE NOT COUNTED | 2026-08-10 | **MECHANISED** | `ledger.py` UNCOUNTED |
 | DD27 | THE HULL IS INDEXED BY A META TERM ALGEBRA | 2026-08-10 | **WRITTEN RULE** | clause W7, and the slot files carry it |
 | DD28 | A PROVABILITY PROBE SURVEYS THE LITERATURE FIRST | 2026-08-16 | **WRITTEN RULE** | clause W8, and the slot files carry it |
-| DD3 | absorbed into DD2; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD6 | absorbed into DD5; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD7 | absorbed into DD8; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD10 | absorbed into DD9; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD12 | absorbed into DD13; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD14 | absorbed into DD13; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD16 | absorbed into DD15; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD20 | absorbed into DD19; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
-| DD21 | absorbed into DD19; it has no row of its own | (consolidated) | **ABSORBED** | [archive/dev/DD-archived.md](../archive/dev/DD-archived.md) |
 
 ## 4. Target skeleton (OWED a re-derivation for DD2, and `[LJ-2.3]` owes it)
 
@@ -413,41 +398,25 @@ One row per goal code; update the row in the same commit that changes the
 status (§6.0 rule 6). Dispatched-task codes are indexed separately below,
 one row per code (§6.0 rules 7 and 8). Bookkeeping lines follow the table.
 
-**COMPRESSED 2026-08-09, and the full table is `archive/dev/STATUS-archived.md`.** It
-held 96 rows of a route that is retired. A live screen that carries a dead
-route's whole history stops being read. So a DONE goal keeps its top-level row
-only, `[L3]` keeps the six rows that were its route switches, and every status
-text is in the archive unedited.
+**THIS TABLE HOLDS OPEN WORK ONLY.** A goal that reached DONE, CLOSED or SUPERSEDED is
+`archive/dev/L-goals-archived.md`, and the fuller status text of the retired route is
+`archive/dev/STATUS-archived.md`. **A live screen that carries a dead route's history
+stops being read**, and the program retrieves from the archive when a task needs it.
 
-**`[L3]` IS SUPERSEDED WHOLESALE BY THE `LJ` SERIES.** Not amended, not
-re-scoped: the two-tower bridge route (DD2) replaces the technical layer
-entirely, and no `L3` child may be re-opened under its old code. The `LJ`
-series is indexed below and carries all live build work.
-
-**THE `LJ` SERIES GATES `[L4]` THROUGH `[L8]`.** Those rows survive unchanged
-because they are route-neutral: convergence, build infrastructure, the
-narrative, the archival promotion, and the consolidation gate describe work
-that any route must do last. **None of them opens until the `LJ` series lands
-BOTH trophies inside both constraints.** DD23 states the same bar for prose,
-and `[L8.2]` is the gate that `[L4.1]` waits on.
+**`[L4]` THROUGH `[L8]` ARE ROUTE-NEUTRAL** and none of them opens until the `LJ` series
+lands BOTH trophies inside both constraints. `[L8.2]` is the gate that `[L4.1]` waits on.
 
 | Code | Goal | Status |
 |---|---|---|
-| L0 | Legislation (standing track) | **DONE.** Five children: STYLE-agda, the first glossary batch, the LEM spike, the import linter, the two-catalog doctrine. All landed 2026-07-16 to 07-25 |
-| L1 | Root and trunk skeleton | **DONE 2026-07-18**, ten children. Base, FOL, ZF, V and `L.Constructible` ported; Landmarks and the `Everything` reading order ruled the same day |
-| L2 | Axiom branches | **DONE 2026-07-31**, five children. Basic, Infinity, Separation and Replacement, Power at 79 lines without Condensation, then `[L2.4]`: **the Frontier is empty and deleted** |
-| L3 | Technical layer | **SUPERSEDED WHOLESALE 2026-08-09 by the `LJ` series** (DD2). Fifty-nine children ran here, and the six rows below are the route switches among them. Every child, with its full status text, is in `archive/dev/STATUS-archived.md` |
-| L3.0 | Internalization theorem for L-recursion | **DONE 2026-07-28**, 99 lines, verdict green. This is the route the `LJ` series now measures against: `src/` today is its tree |
-| L3.29 | AC by the operations calculus (route C), then the B pivot | **SUPERSEDED 2026-08-02.** The first switch. Route C's operations calculus was delivered, then the kinded-closure pivot on top of it, and the `[L3.30]` re-architecture replaced both |
-| L3.30 | The rud re-architecture (exploratory) | **CLOSED 2026-08-02, ADOPTED IN FULL.** The second switch. Posed completion-state-blind, it priced the routes and recommended the rudimentary-function trunk |
-| L3.31 | The rud build, then the architecture fork | **CLOSED 2026-08-04.** The third switch, and a refutation: the bridge kernel rested on one hypothesis that proved classically FALSE (Devlin VI.2.4). Eleven recons priced every repair |
-| L3.32 | The L-trophy build (the ruled configuration) | **CLOSED 2026-08-09** when the route changed. The fourth switch: the Def tower kept the trophy, the wing rode a fresh-generic Sigma-1 face, and the rud-route code is now in `archive/src/2026-08-09-rud-route/` |
-| L3.32-F | The check-cost campaign | **CLOSED 2026-08-09.** It measured what the two towers really cost, and that measurement is why the new route's constraints are seconds and lines rather than lines alone. `SquareLaw` went 856 s to 64.4 s for net zero lines |
+| LJ-0 | Recon and pricing for the LJ route | **CLOSED.** 23 dispatches. Its measurements are why the two-tower route was funded |
+| LJ-1 | THE LIVE CAMPAIGN: both trophies, stated in L | **RUNNING.** 426 dispatches. `dev/pod/queue.toml` produces the next one; `[LJ-1.386]` is the resumption task |
+| LJ-2 | The architecture ruling and the internalization measurement | **OPEN**, 6 entries queued. `[LJ-2.5]` is clause W1's address: the two towers are a CANDIDATE until it lands |
+| LJ-3 | The GCH wing | **OPEN**, 7 entries queued |
+| LJ-4 | The orchestration flow becomes a program | **DONE 2026-08-18** at `fc676cb`. The design is `dev/memos/LJ-4-pod-program-design.md` |
 | L4 | Convergence | PLANNED (runs after `[L3.32]`'s surgery lands) |
 | L4.0 | Empty Frontier, unconditional root | DONE in substance under `[L2.4]` (Frontier empty and deleted, root unconditional) |
 | L4.1 | Whole-book harmonization pass | PLANNED (scope grown: the retirement surgery deletes chapters, and the identification story is corrected) |
 | L4.2 | Landmarks/README/Charter updates | PLANNED (the Charter status must read `L ⊨ ZFC ∧ L ⊨ GCH`) |
-| L4.3 | Seed the GCH successor plan | **CLOSED, ABSORBED 2026-08-03**: the GCH endpoint is the active campaign's own (§0); no successor document is seeded, and the post-GCH narrative is `[L6]` |
 | L5 | Build and site infrastructure | PLANNED |
 | L5.0 | Build machinery port | PLANNED |
 | L5.1 | make check split | PLANNED (the three named gate defects belong here: the two linters that skip untracked files, the glossary avoid-list keying off markers, and the missing end-of-file check) |
@@ -464,15 +433,6 @@ and `[L8.2]` is the gate that `[L4.1]` waits on.
 | L8.0 | Foundation refactor at T8 scale, on the post-archival tree | PLANNED (candidates re-examined, not inherited) |
 | L8.1 | Line-by-line polish over the whole tree | PLANNED |
 | L8.2 | **THE GATE**: report to the owner before any prose phase | PLANNED (the owner adds further code-shaping work here; `[L4.1]` waits on it) |
-| LJ-4 | The orchestration flow becomes a program | **DONE 2026-08-18**, at `fc676cb`. Designed at `dev/memos/LJ-4-pod-program-design.md` on 2026-08-17 and built from `7d086e5` to `fc676cb`. `scripts/pod/pod.py` is the loop, `dev/pod/table.toml` is the rule table, and `dev/pod/queue.toml` is the only producer of a task. **The loop has not run yet**, and `[LJ-4.6]` carries that |
-| LJ-4.0 | Measure, and settle two prices | **DONE** `7d086e5` (the recompile probe, and the brief-build cost; gaps B3 and B4 both closed) |
-| LJ-4.1 | The launcher, and the head table | **DONE** `ed09b26`: `scripts/pod/launcher.py`, `scripts/pod/heads.py` and `dev/pod/heads.toml` |
-| LJ-4.2 | The recorder and the acceptance runner | **DONE** `ed09b26`: `scripts/pod/accept.py`, `scripts/pod/facts.py` and `scripts/pod/witness.py` |
-| LJ-4.3 | The table, the router, the replay, the admission and the pre-flight | **DONE** `ed09b26`: `scripts/pod/table.py`, `scripts/pod/replay.py`, `scripts/pod/preflight.py` and `dev/pod/table.toml` |
-| LJ-4.4 | The loop, the runner, the state and the log | **DONE** `ed09b26`: `scripts/pod/pod.py`. The transition log directory landed at `fc676cb` |
-| LJ-4.5 | The gates: the spec-surface check, the survey split and the miss signal | **DONE** `ed09b26`: `check-spec-surface.py`, `check-survey-quotes.py`, `check-closure.py` and `retrieve.py`. The guard's wiring anchor was repaired at `ab55a8d` |
-| LJ-4.6 | The digest, the push, the maintainer, the first dispatch | **BUILT** `6549c17` and `ed09b26`, with `scripts/pod/pi_stream.py` at `fc676cb`: `scripts/pod/digest.py`, `notify_owner()` at `scripts/pod/pod.py:1462`, the maintainer batch, and the standing refill brief. **THE FIRST DISPATCH IS NOT RUN.** The owner starts the loop |
-| LJ-4.7 | RUN THE CUTOVER | **DONE 2026-08-18**, at `fc676cb`, with the repairs at `02a351a` and `ab55a8d`. 24 files went to `archive/`, and `dev/ORCHESTRATION.md` is one of them. **`AGENTS.md` SURVIVED**, rewritten in place, because amendment A8 reversed the archive order for that one file: it is the shared Boundary and the only hand-written source of it |
 
 ### Task index (one row per dispatch, section 6.0 rules 7 and 8)
 
@@ -498,21 +458,10 @@ third renumbering and prescribes exactly this instead. Inside a phase the steps 
 row says which. The verdict cell is a few words; the detail lives in the named report,
 `dev/JOURNAL.md`, the deliverable or the brief.
 
-**The retired route's 265 rows are `archive/dev/TASKS-archived.md`, unedited**, under
-the `L3.32-T` series. Both series resolve and neither reuses a number.
-`scripts/gate/check-task-index.py` enforces one row per code and the 200-character
-cap.
-
-**EVERY BRIEF SURVEYS THE ARCHIVE BEFORE IT IS SENT, AND EVERY REPORT NAMES
-WHAT IT USED. THE RULE IS DD18 AND THIS IS NOT A SECOND COPY OF IT**: read the
-row in section 3 for what a brief and a return must carry, and
-`dev/ORCHESTRATION.md` for the operational form, exactly as DD17 and DD25
-point. What follows is WHY the archive is worth surveying, which is this
-section's business. The retired route cost a year of measurement and the whole of it
-is still on disk: `archive/` for the code, `dev/ARCHIVE.md` for why each
-module left and what it did right, `archive/dev/TASKS-archived.md` for what every
-dispatch found, `archive/dev/DECISIONS-archived.md` for the rulings, and
-`dev/LESSONS.md`, which is NOT archived and still binds.
+**THE ARCHIVE IS SEARCHED BY THE PROGRAM, not remembered by a reader.** At brief build
+it injects an `## ARCHIVE` block from the archive scope, and the return names what it
+used at `file:line`. `archive/dev/README.md` is the table that says which archived file
+answers what. **`dev/LESSONS.md` is NOT archived and still binds.**
 
 **THE DISPATCH INDEX IS ARCHIVED.** Its 464 rows moved to
 [archive/dev/LJ-dispatch-index.md](../archive/dev/LJ-dispatch-index.md) on 2026-08-18,

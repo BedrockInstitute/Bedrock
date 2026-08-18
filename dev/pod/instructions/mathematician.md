@@ -50,6 +50,11 @@ judgement. Its design is `dev/memos/LJ-4-pod-program-design.md`.
   `agents/tasks/<TASK>/`. **`src/` is forbidden for a probe.** Nothing typechecks it
   once your task closes, so run it while you can.
 - **A measured cure does not transfer by analogy.** Re-measure it at its own site.
+- **A LIVE DOCUMENT CARRIES NO HISTORY. RETRIEVE IT.** A rule that a checker now
+  enforces, a goal that closed, a ruling that moved: each belongs in `archive/`, and
+  the program searches the archive at brief build. **You do not need to know how the
+  project got here to start work**, and a document that makes you read the history
+  first is a defect in the document. Owner's ruling, 2026-08-18.
 - **Archive a retired MODULE, never delete it.** The rule is module-granular: a dead
   fragment inside a live file is not a module.
 - **Never** commit a generated file; use an em dash in any language; use half-width

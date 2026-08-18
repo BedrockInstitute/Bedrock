@@ -134,6 +134,14 @@ PLAN_ROW = re.compile(r"^\|\s*(D\d{1,2})\s*\|", re.M)
 DD_REF = re.compile(r"(?<![\w-])(DD\d{1,2})(?![\w-])")
 DD_ROW = re.compile(r"^\|\s*(DD\d{1,2})\s*\|", re.M)
 ARCHIVED_DECISIONS = ROOT / "archive" / "dev" / "DECISIONS-archived.md"
+#: THE `DD` SERIES IN FULL, archived 2026-08-18. A citation resolves against the ARCHIVE
+#: and never against a bookkeeping row in a live document. **THE OWNER'S STANDARD, ruled
+#: 2026-08-18:** the new flow must not open with history in its context; it retrieves
+#: from the archive when it needs to. Nine `DD` codes were consolidated into other
+#: rulings and have no row of their own, and carrying nine "ABSORBED" rows in
+#: `dev/PLAN.md` so that THIS checker could resolve them put a checker's constraint
+#: inside the document a worker reads first. The checker reads the archive instead.
+ARCHIVED_DD = ROOT / "archive" / "dev" / "DD-archived.md"
 # A DD code merged into another row, or revoked, still RESOLVES. PLAN names
 # them in one paragraph and says so, for the same reason the D series does:
 # a commit message or brief that cites a code is a record of what was true
@@ -324,6 +332,11 @@ def known_decisions() -> set[str]:
     arch = ARCHIVED_DECISIONS.read_text(encoding="utf-8")
     live = {m.group(1) for m in PLAN_ROW.finditer(arch)}
     live |= {m.group(1) for m in DD_ROW.finditer(text)}
+    if ARCHIVED_DD.is_file():
+        dd_arch = ARCHIVED_DD.read_text(encoding="utf-8")
+        live |= {m.group(1) for m in DD_ROW.finditer(dd_arch)}
+        # A consolidated code appears only in the prose of the row that absorbed it.
+        live |= set(re.findall(r"\bDD\d{1,2}\b", dd_arch))
     struck: set[str] = set()
     m = PLAN_RETIRED.search(arch)
     if m:
