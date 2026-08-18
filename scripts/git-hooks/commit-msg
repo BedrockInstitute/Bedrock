@@ -1,11 +1,13 @@
 #!/bin/sh
-# Bedrock commit-msg: the AGENTS.md guard (ruling D34). A commit that stages
-# AGENTS.md must carry the owner's dated approval trailer:
-#     AGENTS-diff-approved: YYYY-MM-DD
-# The orchestrator adds the trailer only after the owner ruled on the diff.
+# Bedrock commit-msg, rewritten by the POD cutover step 11, 2026-08-18.
+#
+# It was the AGENTS.md guard. That guard archived with check-agents-guard.py,
+# and R16 replaces it: the TROPHY SPEC SURFACE and every guarded rule home now
+# need the owner's dated approval, not one file.
+#
 # Bypass in an emergency with: git commit --no-verify
 
 PY=python3
 [ -x .venv/bin/python ] && PY=.venv/bin/python
 
-exec $PY scripts/gate/check-agents-guard.py --msg-file "$1"
+exec $PY scripts/pod/check-spec-surface.py --msg-file "$1"

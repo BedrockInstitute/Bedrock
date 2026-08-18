@@ -5,7 +5,7 @@
 
 derived_from = "src/Landmarks.lagda.md"
 derivation = "src/Landmarks.lagda.md plus one file per `open import` in its fences; a bare `import M` is excluded"
-generated = "2026-08-17"
+generated = "2026-08-18"
 lines = 499  # provenance only; it is never compared
 files = [
   "src/Landmarks.lagda.md",
@@ -1226,8 +1226,32 @@ sha = "7b986e4c35f338a49e0b38ec81fcf0fd4fb1435bfc9de880390035a568ba3cdf"
 
 [[guarded]]
 path = "dev/memos/L9-pod-program-design.md"
-sha = "e2f5b6812c92c1f3cf4ad6668f4e3440ab7cb7bf77840906a56fe8573499a312"
+sha = "c3831d20b71235b55f8ec6f1e3860017ac41fd68eb0c404ac3fd4756293c60f5"
 
 [[guarded]]
 path = "dev/pod/heads.toml"
-sha = "110a69be72886ac38093a4a8b43bb4dafa3e1e4cbb0ab8971ae686ff44886c94"
+sha = "7296b60764985af544a65c15408149c8c4879209387a14040cc88f500ff6b1b7"
+
+[[guarded]]
+path = "dev/pod/instructions/coder.md"
+sha = "aa3e373d7cde5288d691cd3942681c0159aef955e141b30f9f045fc92fc40cc2"
+
+[[guarded]]
+path = "dev/pod/instructions/coder_adversarial.md"
+sha = "30012dc4767607e2f4ae8957532637cfa846720d925227f5f685c463e1012e98"
+
+[[guarded]]
+path = "dev/pod/instructions/maintainer.md"
+sha = "23d23788d9928c787081b1c2bf9136022c1b0ce5fcdaaeeac6d57a8b957b6885"
+
+[[guarded]]
+path = "dev/pod/instructions/mathematician.md"
+sha = "79e01467ed2fff2a77e9bb80dc4c25eb59a895c25cd6bba7aeb118f923775fc5"
+
+[[guarded]]
+path = "dev/pod/instructions/mathematician_adversarial.md"
+sha = "7b437bdbda900f2d480def45884c30537bd81d9cb1bdda0ddf62287d465a2410"
+
+[[guarded]]
+path = "dev/pod/instructions/refill-queue.md"
+sha = "3edae7b0939d9ef2a580b95a032cee644f050d383a33343ac183951616e079b2"

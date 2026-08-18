@@ -119,11 +119,6 @@ this directory by name. Provenance for a re-fetch is
 `dev/literature/primary-sources.md:318-336`."""
 
 [[entries]]
-glob = ".last-gate"
-class = "runtime"
-note = "The commit hash of the last green gate. Written and read by `scripts/gate/check-tree.py:297`."
-
-[[entries]]
 glob = "tools/agda-watchdog.log"
 class = "runtime"
 note = """

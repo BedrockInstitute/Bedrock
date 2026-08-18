@@ -196,6 +196,66 @@ deleted」.
   arbitrary least stage rewrites it in place; nothing is worth consulting in
   `archive/` for it.
 
+
+## The POD cutover, 2026-08-18: 24 files, and none deleted
+
+**Goal `[L9]` replaced the orchestrator with a program.** The design is
+`dev/memos/L9-pod-program-design.md`. Clause W4 governs every row below: a retired
+thing MOVES and is never deleted. **Last green at `ba09bb5`**, the commit before the
+cutover branch, and every figure below is the file's line count at that commit.
+
+**`AGENTS.md` IS NOT HERE, and that is amendment A8.** The owner ruled on 2026-08-17
+that it survives, rewritten in place. Only `dev/ORCHESTRATION.md` left.
+
+### The two process documents
+
+| File | Lines | What it enforced | Why it left | What it did right, from measurement |
+|---|---:|---|---|---|
+| `dev/ORCHESTRATION.md` | 604 | The orchestrator's operating rules: the head switch, the slots, the brief form, the return checklist, the glossary protocol | AD4. Every rule it held has a disposition in section 7.1 or a clause in section 3.1 | **It moved rules out of one session's memory into a file the owner could read and amend.** Its own opening says why it exists: before it, these rules lived only where the owner could neither read nor amend them, and their execution depended on one party remembering |
+| `dev/vendors.toml` | 213 | The vendor, model and price-band data for the dispatch heads | Row 21b. `dev/pod/heads.toml` replaces it, and its one reader left with it | **Its rule at `:185-186` refused an invented model ID**, and that refusal is why gap B4 was opened rather than assumed. B4 then verified all six IDs by read-back |
+
+### The ten gate checkers
+
+| File | Lines | What it enforced | Why it left | What it did right, from measurement |
+|---|---:|---|---|---|
+| `check-agents-guard.py` | 147 | An edit to `AGENTS.md` carries the owner's dated approval trailer | R16 widens it: the trophy spec surface and every guarded rule home need approval, not one file | **22 guarded commits, 30 pre-guard.** It converted silent drift into a dated assertion `git log --grep` audits in seconds |
+| `check-dd4-stated.py` | 146 | Every brief SAYS DD4 | DD4 = WRITTEN RULE, clause W2, injected into the mathematician's instruction file | **270 of 282 live briefs stated DD4.** It proved that gating the STATEMENT works when the substance has no metric by ruling |
+| `check-dd25-review-named.py` | 329 | A negative return's PLAN row names its review's code | DD25 = MECHANISED. Pre-flight P18 refuses a brief with no branch that can attack the return | It found the rows where a negative return closed with no review named |
+| `check-task-index.py` | 302 | One row per task code, the 200-character cap, registration before starting | `dev/pod/queue.toml` and the transition log replace section 11 as the producer | **It caught a fabricated task code inside a sample digest on 2026-08-17**, which is exactly the citation-versus-row confusion it was built for |
+| `check-dev-docs.py` | 555 | Six subchecks over the live documents: the AGENTS.md word cap, dead paths, PLAN cell sizes | Row 16. The POD's own files replace its subjects | **The word cap fired on 2026-08-17 and stopped a rulebook that had grown 57 words past its budget.** A context budget only works if something counts |
+| `check-build-manifest.py` | 190 | Every file under `_build/` declares its lifecycle | Row 16 | It kept `_build/` a temporary folder rather than a rubbish bin |
+| `check-baseline-home.py` | 262 | A DD24 figure lives in `dev/ledger.toml` and nowhere else | Row 18 | **It fired twice on 2026-08-18** on a real baseline hard-coded into a test fixture, which is a live claim that goes stale in silence |
+| `check-live-record-claims.py` | 457 | A brief that names a live record says it READ it | Row 19 | 282 briefs read, 0 new defects, and 72 frozen pre-epoch rows reported and never failed |
+| `check-live-territory.py` | 467 | Two live agents never hold one file | AD17's territory check moves into `admits()` | **MEASURED 2026-08-14: a `git add` swept a live agent's report skeleton into a commit**, and the staged mode is what would have refused it at the moment it mattered |
+| `check-premises-stated.py` | 405 | A brief states its premises | Reimplemented as pre-flight P17. Keeping both would put one rule in two implementations, which clause W5 forbids | Tuned against 118 live briefs. `[LJ-1.211]` measured the need: the brief caused 8 of 10 defects, the agent 2, the reviewer 0 |
+
+### The four dispatch scripts
+
+| File | Lines | What it enforced | Why it left | What it did right, from measurement |
+|---|---:|---|---|---|
+| `dispatch_policy.py` | 1,110 | The ONE home of the head tables and the two modes | DD17 = SUPERSEDED. A static `head_slot` replaces the clock | **It ended "which head runs this task" as a memory question.** One command printed the mode, the reason, the revert condition and the next boundary |
+| `check-dispatch-policy.py` | 337 | Every brief's `tier:` line agrees with the mode it names | The `tier:` line goes with DD17 | **MEASURED 2026-08-14: five correct briefs went red at once when the switch flipped, and the defect was in the CHECKER.** It taught the rule that a frozen record is judged by the mode it names |
+| `dd25-record.py` | 149 | The DD25 review record | DD25 = MECHANISED by rule (f) | It made the review countable |
+| `recall-hook.py` | 585 | Injected the orchestrator card and the brief-time rules at session start | The POD program has no session. `dev/pod/instructions/<slot>.md` is injected at every dispatch instead | **MEASURED: brief-time recall at 0.49 s and about 1,850 characters.** It proved the injection point was cheap, which is why the POD injects unconditionally |
+
+### The whole-tree file, split rather than retired
+
+| File | Lines | What it enforced | Why it left | What it did right, from measurement |
+|---|---:|---|---|---|
+| `check-tree.py` | 382 | Seven whole-tree checks: closure, archive, shared CJK, SPDX, new closure, retiring, module body | Section 7.2. Its closure half became `scripts/pod/check-closure.py` | **Its two homeless checks were MOVED rather than dropped**: `check_shared_cjk` into `lint-prose.py` and `check_spdx` into `lint-agda.py`, both verified to give the same result as the original before the move landed. `check_retiring` is the only one dropped |
+| `check-dd18-survey.py` | 610 | The archive survey, both halves | Section 7.4 splits it. `answered()` and `audit_quotes()` survive in `scripts/pod/check-survey-quotes.py` | **19 gated tasks at or after LJ-1.363, 0 defects.** It also measured its own failure: 244 of 282 live briefs never named `JOURNAL-archived.md`, which is why retrieval moved to the program |
+| `check-archive-cited.py` | 148 | Every archive path a brief cites is answered in the return | Its function moves into the program's brief builder | It made a declined survey visible instead of silent |
+
+### The five retired suites
+
+They archive beside the checkers they pinned: `test_dd25_review_named.py` (199),
+`test_dev_docs.py` (181), `test_task_index.py` (164), `test_dispatch_clock.py` (438)
+and `test_premises_stated.py` (241). **`test_dispatch_clock.py` pinned all six
+boundary instants of DD17's clock**, and it is the reason a timezone bug never
+reached a dispatch.
+
+**24 files, 8,621 lines, none deleted.**
+
 ## Entries
 
 | Module | Original path | Why archived (ruling, date) | Last green (commit) | Measured size | What this code did right | Revival condition |

@@ -1,0 +1,90 @@
+# The POD task queue, seeded by cutover step 13 on 2026-08-18.
+#
+# **THIS FILE IS THE ONLY PRODUCER OF A TASK** (rule (a1)). The mathematician writes
+# an entry, `park_and_split` appends one, and the owner may add one by hand. The
+# program never writes a brief, because AD3 gives the brief to the mathematician.
+#
+# AN ENTRY WITH NO `brief` IS A REQUEST. Rule (a1) skips it, so it dispatches
+# nothing; the digest prints it under the blocked section until the mathematician
+# writes its brief. Seeding one per PLANNED row of dev/PLAN.md section 11 is what
+# makes cutover step 13 lose no planned goal.
+#
+# Rule (g) REFILL (amendment A11) fires when a slot is free AND no entry here is
+# dispatchable. It sends dev/pod/instructions/refill-queue.md to the mathematician.
+
+[[task]]
+code = "LJ-1.386"
+brief = "agents/tasks/LJ-1-386/LJ-1.386.md"
+reason = "The resumption task. dev/PLAN.md:63-66 names it first: internal existence of a pairing code at a band ordinal, GO or NO-GO."
+
+[[task]]
+code = "L4"
+reason = "Convergence"
+
+[[task]]
+code = "L4.1"
+reason = "Whole-book harmonization pass"
+
+[[task]]
+code = "L4.2"
+reason = "Landmarks/README/Charter updates"
+
+[[task]]
+code = "L5"
+reason = "Build and site infrastructure"
+
+[[task]]
+code = "L5.0"
+reason = "Build machinery port"
+
+[[task]]
+code = "L5.1"
+reason = "make check split"
+
+[[task]]
+code = "L5.2"
+reason = "CI strategy"
+
+[[task]]
+code = "L5.3"
+reason = "Site pipeline load test"
+
+[[task]]
+code = "L7"
+reason = "The endpoint promotion and the archive's completion"
+
+[[task]]
+code = "L7.0"
+reason = "Archive `main`, promote the working branch"
+
+[[task]]
+code = "L7.1"
+reason = "Final archival sweep, pre-regime deletions entered"
+
+[[task]]
+code = "L7.2"
+reason = "Verify the exclusions end to end; REUSE still covers `archive/`"
+
+[[task]]
+code = "L7.3"
+reason = "Final pass on `archive/README.md`"
+
+[[task]]
+code = "L7.4"
+reason = "Final pass on `dev/ARCHIVE.md`"
+
+[[task]]
+code = "L8"
+reason = "Consolidation, and the gate before prose"
+
+[[task]]
+code = "L8.0"
+reason = "Foundation refactor at T8 scale, on the post-archival tree"
+
+[[task]]
+code = "L8.1"
+reason = "Line-by-line polish over the whole tree"
+
+[[task]]
+code = "L8.2"
+reason = "THE GATE: report to the owner before any prose phase"

@@ -35,6 +35,13 @@ import os
 import re
 import subprocess
 import sys
+from pathlib import Path   # cutover step 7: _masters_for_cjk() needs it
+
+# CUTOVER STEP 7 gave this per-file linter its first whole-tree check, so it needs
+# a root. It had none: every other check here reads the files named on the command
+# line. ROOT is derived from this file's own location and never from the cwd.
+ROOT = Path(__file__).resolve().parent.parent.parent
+SRC = ROOT / "src"
 
 # Verbatim third-party text (licenses, etc.) is never linted, whatever its extension.
 EXCLUDE_BASENAMES = {
@@ -517,3 +524,41 @@ def main(argv):
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
+
+
+# ---------------------------------------------------------------------------
+# MOVED HERE BY THE POD CUTOVER, step 7, 2026-08-18. It lived in
+# scripts/gate/check-tree.py, which the cutover splits: the closure half became
+# scripts/pod/check-closure.py and this half had no home. **Moving it is what
+# keeps the check alive**: archiving check-tree.py without this move would have
+# retired a live check in silence, which is the failure clause W4 exists for.
+# ---------------------------------------------------------------------------
+CJK_SHARED = re.compile(r"[　-〿㐀-䶿一-鿿！-～]")
+MARKER_SHARED = re.compile(r"<!--\s*(en|zh|ja|/)\s*-->")
+
+def _masters_for_cjk() -> list[Path]:
+    """The working tree, not the index: a new untracked master must not escape the audit."""
+    return sorted(p for p in SRC.rglob("*.lagda.md"))
+
+def check_shared_cjk() -> list[str]:
+    """Prose outside every language marker is shared and reaches the English book verbatim."""
+    bad = []
+    for p in _masters_for_cjk():
+        text = p.read_text(encoding="utf-8")
+        in_fence = False
+        lang = None
+        for n, line in enumerate(text.split("\n"), 1):
+            if line.startswith("```"):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
+            if (m := MARKER_SHARED.search(line)):
+                lang = None if m.group(1) == "/" else m.group(1)
+                continue
+            if lang is None and CJK_SHARED.search(line):
+                bad.append(f"{p.relative_to(ROOT)}:{n}: CJK_SHARED in SHARED prose (outside any "
+                           f"<!--en|zh|ja--> block). Shared prose is copied verbatim into "
+                           f"every language, so this would appear untranslated in the "
+                           f"English book. Wrap it in a language block")
+    return bad

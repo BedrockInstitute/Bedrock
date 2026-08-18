@@ -82,7 +82,9 @@ sys.path.insert(0, str(_SCRIPTS))
 from repo_root import find_root  # noqa: E402
 
 ROOT = find_root(__file__)
-REGISTRY = ROOT / ".claude" / "skills" / "codex-dispatch" / ".state" / "registry.json"
+REGISTRY = ROOT / ".pod-state" / "registry.json"   # cutover step 4. The old store
+# sat under .claude/, which .gitignore hides from every gate, so a stale path here
+# returned zero records in silence and the digest read that as "no dispatches".
 
 SESSION_GLOBS = [
     os.path.expanduser("~/.codex/sessions/**/*.jsonl"),

@@ -1,0 +1,209 @@
+check-archive-cited: 102 of 333 live brief(s) did not survey an archive:
+  agents/tasks/LJ-1-100/LJ-1.100.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-101/LJ-1.101.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-102/LJ-1.102.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-103/LJ-1.103.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-104/LJ-1.104.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-105/LJ-1.105.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-106/LJ-1.106.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-107/LJ-1.107.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-108/LJ-1.108.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-109/LJ-1.109.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-110/LJ-1.110.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-111/LJ-1.111.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-112/LJ-1.112.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-113/LJ-1.113.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-114/LJ-1.114.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-115/LJ-1.115.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-116/LJ-1.116.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-117/LJ-1.117.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-118/LJ-1.118.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-119/LJ-1.119.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-120/LJ-1.120.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-121/LJ-1.121.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-122/LJ-1.122.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-123/LJ-1.123.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-124/LJ-1.124.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-125/LJ-1.125.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-136/LJ-1.136.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-137/LJ-1.137.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-147/LJ-1.147.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-152/LJ-1.152.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-154/LJ-1.154.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-155/LJ-1.155.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-188/LJ-1.188.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-190/LJ-1.190.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-191/LJ-1.191.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-192/LJ-1.192.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-193/LJ-1.193.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-194/LJ-1.194.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-195/LJ-1.195.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-197/LJ-1.197.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-200/LJ-1.200-report.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-201/LJ-1.201-report.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-203/LJ-1.203.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-204/LJ-1.204-report.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-205/LJ-1.205.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-206/LJ-1.206.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-207/LJ-1.207.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-208/LJ-1.208.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-266/CondensationControl.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-266/CondensationEnv.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-266/CondensationFact.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-266/CondensationStep6.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-275/CondControlToday.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-275/SupplyEnvNew.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-275/SupplyFullNew.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-275/SupplyNewControl.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-283/ControlEnv.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-283/TreatedBridge.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-283/TreatedSeal.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-287/Bisect.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-287/ControlEnv.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-287/Min.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-287/SealReplay.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-287/TreatedNoIter.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-287/TreatedShallow.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-289/Consume.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-292/Bisect.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-292/Bisect2.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-292/ControlKey.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-309/Chain2.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-311/Bridge.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-311/KeyCtrl.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-311/KeyHalf.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-311/Ladder3.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-311/NameCtrl.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-311/NameCure.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-322/CondProbe.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-322/SafeProbe.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-323/LJ-1.323.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondA.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondB.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondC.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondD.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondE.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondF0.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondF1.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondF6a.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondF6b.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondG2.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondG4.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondH1.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-331/CondH2.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-342/Stage.proposed.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-342/Step.proposed.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-345/CondCold345.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-346/CondCold346.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-380/Floor.lagda.md
+      no ARCHIVE section at all
+  agents/tasks/LJ-1-95/LJ-1.95.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-96/LJ-1.96.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-97/LJ-1.97.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-98/LJ-1.98.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+  agents/tasks/LJ-1-99/LJ-1.99.md
+      its ARCHIVE section cites no `archive/` path, so it surveyed the new route's own tasks and not the four archives
+
+A brief that surveys nothing is how three tasks priced levelIn without the 845-line comparable the route's own recon had already marked ADAPTABLE.
+THIS IS A REPORT AND NEVER A GATE. It cannot tell whether an archive bears on a task, and a red gate would buy a pasted citation rather than a survey.
+check-archive-cited: 231 of 333 live brief(s) cite an archive, and 109 cite archived CODE rather than only the retired route's RECORDS (advisory, never a gate)

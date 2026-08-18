@@ -31,9 +31,10 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint lint-agda markers glossary ledger probes liveterritory tree reuse ruleids taskindex devdocs agentsguard archivecited buildmanifest dd4 dd25 dd18survey baselinehome dispatchpolicy fences liverecord premises ratio timing gen html types site serve clean hooks test deploy venv venv-check
+.PHONY: check clean closure deploy fences gen glossary hooks html ledger lint lint-agda markers probes ratio reuse ruleids serve site specsurface test timing typecheck types venv venv-check survey
 
-check: venv-check typecheck markers lint lint-agda glossary ledger probes liveterritory tree fences reuse ruleids devdocs taskindex agentsguard dispatchpolicy dd4 dd25 premises buildmanifest archivecited dd18survey baselinehome liverecord
+check: venv-check typecheck markers lint lint-agda glossary ledger probes \
+       closure fences reuse ruleids specsurface
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -106,22 +107,13 @@ probes:
 # runs this checker: the pre-commit hook does not call it, MEASURED 2026-08-17.
 # This target is the only place it fires, and it runs --staged, for the reason
 # below. Cost: a registry read, a ps per live agent, one git ls-files.
-liveterritory:
-# THE STAGED MODE IS THE COMMIT GATE. `--check` audits every TRACKED file, which
-# stays red for the whole life of any dispatch whose report was committed once,
-# and `make check` would then be red for hours for a defect already made. The
-# gate's job is to refuse the NEXT sweep, so it reads the index. MEASURED
-# 2026-08-14: a `git add -- agents/tasks/<CODE>/` swept a live agent's report
-# skeleton into a commit, the audit mode caught it, and the staged mode is what
-# would have refused it at the moment it mattered.
-	$(PY) scripts/gate/check-live-territory.py --staged
 
-tree:
-	$(PY) scripts/gate/check-tree.py --check
+closure:
+	$(PY) scripts/pod/check-closure.py --check closure
 
-# Agda outside a fence is invisible to Agda AND to ledger.py, so a green
-# tree and a right line count both prove nothing about it. [LJ-1.41]
-# reported two theorems CLOSED that sat in prose and carried four defects.
+specsurface:
+	$(PY) scripts/pod/check-spec-surface.py --check
+
 fences:
 	$(PY) scripts/gate/check-fences.py --check
 
@@ -129,116 +121,6 @@ fences:
 # document written ABOUT rule hygiene, which is the argument for gating it.
 ruleids:
 	$(PY) scripts/gate/check-rule-ids.py
-	$(PY) scripts/dispatch/rules.py --check
-
-taskindex:
-	$(PY) scripts/gate/check-task-index.py
-
-agentsguard:
-	$(PY) scripts/gate/check-agents-guard.py
-
-# The head that runs a dispatch is DD17's, and since 2026-08-13 it has two
-# versions with one switch selecting between them. This checks that briefs
-# agree with the version in force. It cannot check which head actually RAN:
-# an in-harness Opus dispatch passes through no tool at all.
-dispatchpolicy:
-	$(PY) scripts/dispatch/check-dispatch-policy.py
-
-# ADVISORY, and deliberately NOT in `check`. [LJ-1.157] measured that 164 of 164
-# briefs carried the ARCHIVE heading while the CONTENT decayed: after [LJ-1.94]
-# only process tasks cited a retired-route file. A red gate here would buy a
-# pasted citation rather than a survey, so this prints and never fails.
-# The ADVISORY reports. Neither gates and both exit 0 whatever they find, by
-# their own design: check-archive-cited would buy a pasted citation instead of a
-# survey, and check-build-manifest cannot tell an evidence file from a stray.
-# [LJ-1.197] MEASURED that build-manifest's rules were SILENT, and the cause was
-# not the checker: it was in NO make target, NO hook and NO CI, so it ran only
-# when a human already suspected something. A rule whose enforcement point is
-# "somebody runs a command" fires after the fact. Running them inside `check`
-# makes them VISIBLE at the one moment everyone looks, without making them gate.
-buildmanifest:
-	$(PY) scripts/gate/check-build-manifest.py --check
-
-archivecited:
-	$(PY) scripts/gate/check-archive-cited.py
-
-# DD18's amended enforcement (owner, 2026-08-16), [LJ-1.363]. The two halves
-# are deliberately unequal, and the asymmetry is DD4's own ruling that a
-# count is gamed the moment it gates. B2 GATES the return side: ARCHIVE USED
-# must name every archive path its brief cited, took or declined, and quote
-# one line read per archived file, verified at the cited line. B1 only PRINTS
-# the brief side: which briefs name none of the four corpora, and TEMPLATE
-# clusters of a bullet's reason text verbatim across five briefs. The frozen
-# epochs and their measured scale live in the checker's own comments; a
-# report still in progress is not judged, so a live dispatch never reddens
-# the commit gate. Cost: 0.6 s over 259 pairs, measured 2026-08-16.
-dd18survey:
-	$(PY) scripts/gate/check-dd18-survey.py
-
-dd4:
-	$(PY) scripts/gate/check-dd4-stated.py
-
-# DD25: a negative return's index row names its review's code. The verdict
-# cell announces a negative in structured words, so this is mechanical: a row
-# carrying the table's vocabulary must name a review code, declare why this
-# verdict is not a DD25 negative, or be frozen pre-epoch history. It cannot
-# tell whether a verdict is REALLY negative, whether the review was any good,
-# or fire when the return lands; the honest enforcement point is this gate.
-# The measured backlog of 42 pre-epoch rows is reported and never fails.
-dd25:
-	$(PY) scripts/gate/check-dd25-review-named.py
-
-# THE PREMISES GATE, [LJ-1.212], from [LJ-1.211]'s change 1. A brief that
-# carries a trigger token (a fixed gate, a named shape, a measurement
-# mandate, or a threshold figure with a unit) must declare its load-bearing
-# premises in a `## PREMISES` section, each with a basis at `file:line`.
-# The trigger table was tuned against the live briefs: the raw [LJ-1.211]
-# list fires on 118 of 118, so four of its tokens are measured unworkable
-# and live in the tool's table as REFUSED rows instead of gating. The
-# ACTIVE set fires on 28 of 118 live briefs (23.7 percent, measured
-# 2026-08-14). Those 28 are frozen pre-epoch records, reported once and
-# never failed. The gate cannot tell whether a premise is true, cannot tell
-# whether the basis says what the author claims, and fires at the commit or
-# the gate, never at the writing moment.
-premises:
-	$(PY) scripts/gate/check-premises-stated.py
-
-# THE BASELINE-HOME GATE, [LJ-1.367], born 2026-08-16. DD24's numbers live
-# in dev/ledger.toml and nowhere else: a live claim names the field
-# (`ac_baseline_module_rate`, `tolerance`) and a record keeps its figure with
-# HISTORICAL(YYYY-MM-DD) on the line. The guarded figures are DERIVED from
-# the ledger at run time, so the gate catches the next figure and not only
-# today's. Pre-gate restatements are frozen and reported: 12 lines in live
-# files, and every task directory at or below LJ-1-367, because a brief and
-# a report are records written once.
-baselinehome:
-	$(PY) scripts/gate/check-baseline-home.py
-
-# LJ-1.377: a brief answers the live record its own words implicate. A
-# negative-existence claim about the record ("the probe nobody has run") is
-# searched against the task index and the section 0.0 screen as they stood
-# when the brief was written, and every positive row it implicates must be
-# answered in a ## LIVE RECORD section, quoted or declined in writing. A
-# brief naming a goal code answers the open-work list: the journal's
-# one-grep cure made mechanical. Pre-gate briefs are frozen and reported
-# once: 74 of 275 on 2026-08-16, median 4 duties each, never failed.
-liverecord:
-	$(PY) scripts/gate/check-live-record-claims.py
-
-# The dev/ documents decay; [L3.32-T110] built the maintenance mechanism so
-# the decay is found here, not by accident. Six cheap subchecks: size caps on
-# AGENTS.md and PLAN cells, routing of imported LESSONS entries, the section 0
-# "as of" date, memo STATUS form, and that AGENTS.md's named enforcers exist.
-# It sat on `taskindex` until 2026-08-17. The on-demand sweep is NEVER a gate:
-# it prints and exits 0. Run it as
-#   $(PY) scripts/gate/check-dev-docs.py --sweep --sweep-paths
-devdocs:
-	$(PY) scripts/gate/check-dev-docs.py
-
-# The generated dashboard was ABOLISHED by the owner on 2026-08-09. Its three
-# scripts are frozen in archive/scripts/, with what they did right and the one
-# thing they got wrong. The canonical figures are unchanged and are read with
-# `python3 scripts/measure/ledger.py --brief`.
 
 reuse:
 	$(REUSE) lint
@@ -275,9 +157,7 @@ test:
 	$(PY) scripts/tests/test_i18n.py
 	$(PY) scripts/tests/test_glossary.py
 	$(PY) scripts/tests/test_lint_agda.py
-	$(PY) scripts/tests/test_dev_docs.py
 	$(PY) scripts/tests/test_obligations.py
-	$(PY) scripts/tests/test_task_index.py
 	$(PY) scripts/tests/test_probe_gate.py
 	$(PY) scripts/tests/test_deletion_test.py
 	$(PY) scripts/tests/test_ratio_baseline.py
@@ -285,16 +165,19 @@ test:
 	$(PY) scripts/tests/test_agents_tree.py
 	$(PY) scripts/tests/test_archive_layout.py
 	$(PY) scripts/tests/test_scripts_layout.py
-	$(PY) scripts/tests/test_dd25_review_named.py
 # THE SAME DEFECT RECURRED, and the comment above was written for it. On
 # 2026-08-16 four suites existed under scripts/tests/ and this target ran
 # none of them: test_premises_stated (RED since check-premises-stated.py was
 # routed through agents_tree, because its fixture root stopped resolving),
 # test_dispatch_clock, test_quota_fallback and test_ratio_noise. Wired here.
-	$(PY) scripts/tests/test_premises_stated.py
-	$(PY) scripts/tests/test_dispatch_clock.py
 	$(PY) scripts/tests/test_quota_fallback.py
 	$(PY) scripts/tests/test_ratio_noise.py
+	$(PY) scripts/tests/test_pod_launcher.py
+	$(PY) scripts/tests/test_pod_facts.py
+	$(PY) scripts/tests/test_pod_gates.py
+	$(PY) scripts/tests/test_pod_table.py
+	$(PY) scripts/tests/test_pod_loop.py
+	$(PY) scripts/tests/test_pod_digest.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the
 # [LJ-0.4] closeout. _build/literature/ holds the OCR text and PDFs of Devlin,
@@ -315,3 +198,11 @@ clean:
 hooks:
 	git config --local core.hooksPath scripts/git-hooks
 	@echo "pre-commit hook activated (core.hooksPath = scripts/git-hooks)"
+
+# NOT A GATE, and check-survey-quotes.py's own docstring says so: `--all` sweeps the
+# whole tree and MEASURED 2026-08-17 that 80 of 278 pairs fail, every one a record
+# written before the 2026-08-16 amendment. A record is never rewritten, so a whole-tree
+# sweep can only teach an author to ignore a red gate. THE GATE IS ONE TASK, at
+# acceptance conjunct 6, and the POD runner fires it there.
+survey:
+	$(PY) scripts/pod/check-survey-quotes.py --all

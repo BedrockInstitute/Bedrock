@@ -714,6 +714,12 @@ The port-era survey of the source repository and its measured cost anatomy moved
 
 ## 3. Ratified decisions
 
+**Status: SET ASIDE IN THIS FORM by the POD cutover of 2026-08-18, amendment A7.**
+Every row is KEPT as the record of what the owner ruled and when, and none may
+disappear. **Each takes exactly one disposition in `dev/memos/L9-pod-program-design.md`
+section 7.1: MECHANISED, WRITTEN RULE or SUPERSEDED.** A row's own ENFORCEMENT sentence
+is historical from this date; read section 7.1 for what enforces it now.
+
 **The `DD` series, rebuilt 2026-08-09 on the two-tower bridge ruling and CONSOLIDATED the same day.** The owner ruled that the whole `D` series be archived and the list rebuilt, keeping only what does not contradict the new route and what is useful to it. **The retired `D` series lives in `archive/dev/DECISIONS-archived.md`, unedited**, and `scripts/gate/check-rule-ids.py` resolves `D` citations against it, so every old citation still means what it meant. **A number is never reused, in either series.**
 
 **Consolidated and revoked codes.** The first cut ran to 25 rows and the owner ruled it down under 20 by merging like with like. **DD3** merged into DD2, **DD6** into DD5, **DD10** into DD9 and DD11, **DD12** and **DD14** into DD13, **DD16** into DD15, **DD20** and **DD21** into DD19, **DD25** into DD24, and the old DD18 content into DD19, freeing DD18 for the archive-survey mechanism. **DD7 is REVOKED outright**, not merged: lines are no longer a hard constraint in their own right, so the two-caliber rule it carried is gone and a projection is now ONE best-effort figure with its basis named, which lives in DD8. These codes still resolve, so a commit message or brief that cites one is not broken. **No pure pointers.** Every row states its own minimum content; a rule you must open another file to read is a rule with a broken home, which DD19 forbids.
@@ -877,6 +883,12 @@ The dated risk register moved to [dev/memos/risks-mitigations.md](memos/risks-mi
 The S1-S18 register moved to [dev/memos/simplification-register.md](memos/simplification-register.md), with its statuses brought current to the `[L3.32-T8]` verdicts: S13 and S15 shipped, S14 and S16 reverted at their gates, S17's probe red, S18 deferred. Live tracking of the deferred row is `dev/ledger.toml`'s [[excluded]] table.
 
 ## 11. MASTER status table (live)
+
+**Status: SET ASIDE AS THE TASK PRODUCER by the POD cutover of 2026-08-18,
+amendment A7.** `dev/pod/queue.toml` produces tasks now and the program-written
+transition log replaces the dispatch index. **The rows are KEPT as the record**, and
+cutover step 13 seeded the queue with one entry per PLANNED row, so no planned goal was
+lost. The goal codes themselves are unchanged and still name the work.
 
 A script path inside a
 task-index row is the path as of that row's own date; scripts moved into

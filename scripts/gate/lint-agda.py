@@ -401,3 +401,32 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
+
+
+# ---------------------------------------------------------------------------
+# MOVED HERE BY THE POD CUTOVER, step 7, 2026-08-18. It lived in
+# scripts/gate/check-tree.py, which the cutover splits: the closure half became
+# scripts/pod/check-closure.py and this half had no home. **Moving it is what
+# keeps the check alive**: archiving check-tree.py without this move would have
+# retired a live check in silence, which is the failure clause W4 exists for.
+# ---------------------------------------------------------------------------
+def check_spdx() -> list[str]:
+    bad = []
+    for p in ROOT.rglob("*"):
+        if not p.is_file() or p.name == "REUSE.toml":
+            continue
+        parts = p.relative_to(ROOT).parts
+        if parts and parts[0] in {".git", "_build", ".venv", "node_modules", "LICENSES"}:
+            continue
+        try:
+            # An SPDX header is a HEADER: it sits in the file's opening comment block. Scanning
+            # the whole file made this check false-positive on its own source, which carries the
+            # string as a literal. Bounding it to the head both matches the rule as written and
+            # kills the self-match.
+            head = "\n".join(p.read_text(encoding="utf-8", errors="ignore").split("\n")[:30])
+        except OSError:
+            continue
+        if "SPDX-License" + "-Identifier" in head:
+            bad.append(f"{p.relative_to(ROOT)}: in-file SPDX header. Licensing has one source "
+                       f"of truth, REUSE.toml (archived D4, live DD22); delete the header")
+    return bad

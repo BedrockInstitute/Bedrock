@@ -4493,6 +4493,48 @@ name who READS it, or it enforces nothing.**
 
 Related: [[C-48]], [[C-45]], [[C-53]], [[C-44]].
 
+### C-60. A pane wait is TWO PHASE, because a fresh agent is already idle
+
+**Rule:** wait for `working` FIRST, then for a stop. A bare wait, or a one-phase
+`--until idle`, returns AT ONCE.
+
+**Why:** the agent is already idle at the moment you submit, so the settled-state
+rule fires before it starts. MEASURED 2026-08-13, twice.
+
+**Provenance.** Harvested from `.claude/skills/dispatch-herdr/SKILL.md` at cutover
+step 4c, 2026-08-18, before that skill was retired. The driver's own pattern was
+`dispatch.py` lines 928 to 949, now `scripts/pod/launcher.py`.
+
+### C-61. A prompt to a BUSY agent QUEUES, and it never interrupts
+
+**Rule:** to reach a busy agent you must first end what is keeping it busy. A
+prompt does not interrupt.
+
+**Why, and it cost 4.25 hours.** An agent's `agda` invocation had run 3.06 hours.
+The orchestrator sent a prompt telling it to interrupt and report the wall. **The
+message queued behind the very run it was telling the agent to stop, and was never
+read.** An hour later the run was at 4 hours 15 minutes and the instruction still
+showed as `Steering`.
+
+**Provenance.** Harvested at cutover step 4c, 2026-08-18.
+
+### C-62. A supervised agent that drives its own supervisor is MISREAD by it
+
+**Rule:** never give a supervised agent a task that creates or drives the pane
+server that supervises it. Measure the supervisor from outside it, or by reading
+and by observing agents somebody else started.
+
+**Why.** `[LJ-1.206]` was told to make a throwaway agent as a test subject. While it
+created the pane, the driver's stop loop matched `--until idle`, declared the run
+finished, read the pane, closed it and returned. **The report was still a skeleton
+of PENDING sections.** The two-phase wait of C-60 was working and was not the
+failure: **the agent perturbed the very state the supervisor reports about IT.**
+
+**The general form is worth more than the case.** A supervised process that
+manipulates its supervisor's state machine will be misread by it.
+
+**Provenance.** MEASURED 2026-08-14. Harvested at cutover step 4c, 2026-08-18.
+
 ### C-58. A pattern-match case split on a numeral index can exhaust 8 GB where the library eliminator is free
 
 **Rule:** When a proof splits on a numeral index, **write the split with the
