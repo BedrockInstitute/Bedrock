@@ -842,27 +842,38 @@ def main() -> int:
           sorted(heads["heads"]),
           ["coder", "coder_adversarial", "maintainer", "mathematician",
            "mathematician_adversarial"])
-    check("legal.efforts is the claude CLI's own five values",
-          heads["legal"]["efforts"], ["low", "medium", "high", "xhigh", "max"])
-    check("legal.models carries the three full IDs and the three aliases, "
-          "all six VERIFIED by [LJ-4-0]",
+    # THE EMPTY STRING JOINED THEM on 2026-08-18, when the owner ruled the two coder
+    # slots onto `pi` vendors. `--effort` is a claude CLI flag and a pi head has no
+    # equivalent, so a pi row carries "" and the launcher omits the flag.
+    check("legal.efforts is the claude CLI's five values plus the pi empty string",
+          heads["legal"]["efforts"], ["", "low", "medium", "high", "xhigh", "max"])
+    check("legal.models carries the six VERIFIED claude strings plus the two pi models",
           heads["legal"]["models"],
           ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
-           "opus", "fable", "sonnet"])
+           "opus", "fable", "sonnet", "glm-5.3", "deepseek-v4-pro"])
+    # **THE TWO PI MODELS ARE NOT READ-BACK VERIFIED.** [LJ-4-0] ran `claude -p` twice
+    # per claude string; no equivalent ran for these two, so the first dispatch on
+    # either is also its verification. The provider map is what makes them reachable.
+    check("each pi model names its provider, which is NOT its family name",
+          heads["legal"]["pi_provider"],
+          {"glm-5.3": "zai", "deepseek-v4-pro": "deepseek"})
     check("claude-haiku-5 is excluded, because the client refuses it",
           "claude-haiku-5" in heads["legal"]["models"], False)
     check("a DATE SUFFIX is excluded too, and it is the harder case: [LJ-4-0] "
           "measured that it passes the client and fails at the API with a 404",
           [m for m in heads["legal"]["models"] if m[-1].isdigit() and len(m) > 16],
           [])
+    # THE OWNER'S RULING OF 2026-08-18 replaced A12's four siblings and kept its own row.
     check("A12's maintainer head is claude-opus-5 at effort high",
           (heads["heads"]["maintainer"]["model"],
            heads["heads"]["maintainer"]["effort"]), ("claude-opus-5", "high"))
     for slot, row in heads["heads"].items():
         check(f"{slot} names a legal model", row["model"] in heads["legal"]["models"], True)
         check(f"{slot} names a legal effort", row["effort"] in heads["legal"]["efforts"], True)
-        check(f"{slot} runs on the launcher's claude harness",
-              row["harness"], "herdr-claude")
+        check(f"{slot} runs on a harness the launcher serves",
+              row["harness"] in ("herdr-claude", "herdr-pi"), True)
+        check(f"{slot}: a pi head carries no effort and a claude head carries one",
+              (row["harness"] == "herdr-pi") == (row["effort"] == ""), True)
         check(f"{slot} runs with acceptEdits, so a trust prompt cannot block it",
               row["sandbox"], "acceptEdits")
         check(f"{slot} names a harness the launcher accepts",

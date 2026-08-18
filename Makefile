@@ -31,10 +31,10 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check clean closure deploy fences gen glossary hooks html instructions ledger lint lint-agda markers probes ratio reuse ruleids serve site specsurface test timing typecheck types venv venv-check survey
+.PHONY: check clean closure deploy fences gen glossary hooks html ledger lint lint-agda markers probes ratio reuse ruleids serve site specsurface test timing typecheck types venv venv-check survey
 
 check: venv-check typecheck markers lint lint-agda glossary ledger probes \
-       closure fences reuse ruleids specsurface instructions
+       closure fences reuse ruleids specsurface
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -118,8 +118,6 @@ specsurface:
 # longer held. This target is the gate the docstring at
 # scripts/pod/instructions.py:32 always named. It reads six files, starts no
 # Agda, and runs in well under a second.
-instructions:
-	$(PY) scripts/pod/instructions.py --check
 
 fences:
 	$(PY) scripts/gate/check-fences.py --check

@@ -2587,5 +2587,42 @@ class MaintainerScopeAgainstRealGit(unittest.TestCase):
             self.assertIn("dev/PLAN.md", bad2)
 
 
+
+class SettledProposalIsRetired(unittest.TestCase):
+    """D2: a settled proposal must never be judged twice.
+
+    MEASURED by a blank agent on 2026-08-18: only the ADMIT path renamed anything, so a
+    `parse`, `scope`, `empty`, `refused` or `reject` proposal stayed where it was and
+    every tick re-read it and wrote another line into the TRACKED log. Three runs, three
+    identical lines. At `tick_seconds = 30` that is 2,880 lines a day, growing the
+    repository without bound and burying the lines that mean something.
+    """
+
+    def test_one_settled_proposal_writes_one_line_however_many_ticks_run(self):
+        import tempfile
+        for verdict, body in (("empty", "queue = []\n"),
+                              ("parse", "this is not TOML {{{\n")):
+            with self.subTest(verdict=verdict), tempfile.TemporaryDirectory() as d:
+                root = pathlib.Path(d)
+                props = root / "dev" / "pod" / "proposals"
+                props.mkdir(parents=True)
+                f = props / "20260818-000000.toml"
+                f.write_text(body)
+                seen = []
+                st = pod.State()
+                old_emit, old_scope = pod.emit_event, pod.maintainer_scope_ok
+                pod.emit_event = lambda st, kind, root=None, **kw: (seen.append(kw), {})[1]
+                pod.maintainer_scope_ok = lambda r, rel: (True, [])
+                try:
+                    for _ in range(3):
+                        pod.harvest_batch(st, root=root)
+                finally:
+                    pod.emit_event, pod.maintainer_scope_ok = old_emit, old_scope
+                self.assertEqual(len(seen), 1,
+                                 f"{verdict}: judged {len(seen)} times, not once")
+                self.assertFalse(f.exists(), "the settled proposal was not retired")
+                self.assertTrue((props / f"20260818-000000.toml.{verdict}").is_file(),
+                                f"expected the .{verdict} suffix")
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

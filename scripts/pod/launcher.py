@@ -201,7 +201,7 @@ except Exception as _exc:                       # pragma: no cover
         # THE TEXT NAMES NO COMMAND-LINE FLAG. `test_pod_launcher.py:743-744` asserts
         # that a brief refusal prints without the effort flag's spelling anywhere in
         # stderr, and this line shares that stream.
-        (f"scripts/dispatch/dispatch_policy.py is RETIRED by section 7.1 row 21 and now "
+        (f"archive/scripts/dispatch/dispatch_policy.py is RETIRED by section 7.1 row 21 and now "
          f"sits under archive/. The default harness is {HARNESS!r}. Every POD dispatch "
          f"names its harness, its model and its effort from dev/pod/heads.toml.")
         if POLICY_RETIRED else
@@ -886,7 +886,7 @@ def launch_defects(brief: Path, sandbox: str, agda: bool = False,
     each removal is a released refusal with a row number in the design's table:
 
       row 10  rule_bundle_defects()  AGENTS.md is void under AD4. The function
-                                     only escaped when scripts/dispatch/rules.py
+                                     only escaped when scripts/pod/rules.py
                                      was absent, and row 22 KEEPS that file, so
                                      it would have stayed live for ever.
       row 11  dd4_defects()          DD4 is a WRITTEN RULE, clause W2. The
@@ -1088,10 +1088,23 @@ def _require_vendor_or_die() -> None:
         POLICY.require_vendor_wired()
 
 
+def _cat_list(preamble, brief) -> str:
+    """The shell-quoted file list `cat` receives: the preamble files, then the brief.
+
+    ONE SOURCE PER FILE AND NO COPY ON DISK. The shared Boundary lives in `AGENTS.md`
+    and a slot's own clauses in its instruction file; `cat` joins them at dispatch, so
+    neither is ever transcribed into the other. That is the owner's single-source rule
+    of 2026-08-18 applied to the prompt itself.
+    """
+    files = list(preamble or []) + [brief]
+    return " ".join(shlex.quote(str(f)) for f in files)
+
+
 def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
            resume_id: str | None = None, note: str | None = None,
            allow_model: bool = False, case: str = "default",
-           effort: str = "", tier: str = AGDA_TIER_DEFAULT) -> int:
+           effort: str = "", tier: str = AGDA_TIER_DEFAULT,
+           preamble: "list[Path] | None" = None) -> int:
     # POD EDIT 3 of 6, part 1 of 3 (design section 6.2). `effort` is the claude
     # CLI's `--effort` value and edit 2 puts it on the argv. It defaults to the
     # empty string so every existing caller keeps working; the POD passes
@@ -1376,7 +1389,12 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # wait returns at once whether or not the agent ever started.
                 # Measured twice on 2026-08-13, once with a bare wait and once
                 # with prompt --wait. Wait for `working` FIRST, then for the stop.
-                f"herdr agent prompt {hname} \"$(cat {shlex.quote(str(brief))})\"\n"
+                # THE PREAMBLE IS CAT'D AHEAD OF THE BRIEF, and until 2026-08-18 nothing was.
+                # MEASURED that day: `INSTRUCTIONS` had ZERO consumers and the three
+                # mentions of a slot file in this program were all comments, so every
+                # worker was launched with its brief ALONE. It received neither the
+                # shared Boundary nor one clause of its own role.
+                f"herdr agent prompt {hname} \"$(cat {_cat_list(preamble, brief)})\"\n"
                 f"herdr agent wait {hname} --until working --timeout 120000 || "
                 "{ echo \"HERDR agent never started working; pane $PANE kept for forensics\"; exit 1; }\n"
                 # THE SECOND WAIT CAN FAIL WITHOUT THE AGENT STOPPING, and an
@@ -2705,11 +2723,11 @@ def brief_kind(text: str) -> str:
 # POD EDIT 6 of 6, row 10 (design section 6.2). `rule_bundle_defects()` IS
 # DELETED HERE, whole. It refused a brief that did not cite its kind's mandatory
 # rule bundle, derived from the brief's write scope and read out of
-# scripts/dispatch/rules.py.
+# scripts/pod/rules.py.
 #
 # WHY IT GOES. The bundle it demanded is AGENTS.md's rule set, and AD4 voids
 # that document. THE FUNCTION WOULD OTHERWISE STAY LIVE: its only escape is
-# `scripts/dispatch/rules.py` being absent, and section 7.1 row 22 KEEPS that
+# `scripts/pod/rules.py` being absent, and section 7.1 row 22 KEEPS that
 # file. So an unremoved copy refuses every POD brief for a rule set that no
 # longer binds.
 #

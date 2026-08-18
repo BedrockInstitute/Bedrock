@@ -32,7 +32,7 @@
 [config]
 max_ids = 12
 # `kind` is DERIVED from the brief's write scope, never self-declared, because
-# an author who picks the kind picks the bundle ([T105]). See scripts/dispatch/rules.py.
+# an author who picks the kind picks the bundle ([T105]). See scripts/pod/rules.py.
 
 # ---------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ ids = ["D-10", "C-22", "P-l"]
 
 # ---------------------------------------------------------------------------
 # Layer 2: the tail, reachable by trigger term rather than carried in context.
-# `scripts/dispatch/rules.py --grep <term>` resolves these. An entry needs no trigger:
+# `scripts/pod/rules.py --grep <term>` resolves these. An entry needs no trigger:
 # absence here means "not routed", which is legal, unlike a dangling ID.
 
 [triggers]

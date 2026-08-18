@@ -38,7 +38,11 @@ SCRIPTS = ROOT / "scripts"
 # step 4 of dev/memos/LJ-4-pod-program-design.md. The POD program is not a gate: it runs
 # the route, and its files carry the six-fact recorder, the fact 3 witness meter and the
 # closure check that acceptance conjunct 3 calls.
-GROUPS = {"gate", "dispatch", "measure", "site", "ops", "pod"}
+# `dispatch` LEFT ON 2026-08-18, by the owner's ruling that the folder not survive.
+# `rules.py` moved to `scripts/pod/` because R17 makes it the LAWS-block producer and
+# the POD is now its only caller; `check-sources-read.py` archived, because its regex
+# is the codex tool-call shape and no codex head exists under the POD heads.
+GROUPS = {"gate", "measure", "site", "ops", "pod"}
 FIXED = {"tests", "git-hooks", "__pycache__"}
 FLAT_MODULES = {"agents_tree.py", "repo_root.py"}
 

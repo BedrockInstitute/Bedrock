@@ -17,11 +17,10 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 |---|---|---|
 | `scripts/` (flat) | the modules scripts IMPORT BY NAME across groups | `agents_tree.py`, `repo_root.py` |
 | `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-fences.py`, `check-glossary.py`, `check-probes.py`, `check-rule-ids.py`, `lint-agda.py`, `lint-prose.py` |
-| `scripts/dispatch/` | everything about running and auditing a dispatch | `check-sources-read.py`, `rules.py` |
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
-| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `facts.py`, `heads.py`, `instructions.py`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `table.py`, `witness.py` |
+| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `facts.py`, `heads.py`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `table.py`, `witness.py` |
 
 Unchanged in place: this `README.md`, `scripts/tests/`, `scripts/git-hooks/`.
 
@@ -288,8 +287,8 @@ The kind is DERIVED from the brief's write scope, never self-declared, because
 an author who picks the kind picks the bundle.
 
 ```sh
-python3 scripts/dispatch/rules.py --for build     # build, probe, recon, rewrite, review
-python3 scripts/dispatch/rules.py --grep seal     # the long tail, by trigger word
+python3 scripts/pod/rules.py --for build     # build, probe, recon, rewrite, review
+python3 scripts/pod/rules.py --grep seal     # the long tail, by trigger word
 ```
 
 ### `check-sources-read.py`
@@ -321,8 +320,8 @@ retarget is section 7.4. Until it lands this tool reads history only, and nothin
 it: no `make` target, no hook and no POD rule.
 
 ```sh
-python3 scripts/dispatch/check-sources-read.py LJ-1.6      # one or more task codes
-python3 scripts/dispatch/check-sources-read.py --all
+python3 archive/scripts/dispatch/check-sources-read.py LJ-1.6      # one or more task codes
+python3 archive/scripts/dispatch/check-sources-read.py --all
 ```
 
 ### Archived dispatch scripts

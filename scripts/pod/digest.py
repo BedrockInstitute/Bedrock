@@ -170,28 +170,28 @@ GAP_ZH = {
 #: a field whose source moves fails the suite instead of printing a stale number.
 FIELD_SOURCES = {
     # 一、今日结论
-    "finished": ("scripts/pod/pod.py", 2291, "CHECKING, DONE"),
-    "dispatched": ("scripts/pod/pod.py", 2402, "READY, RUNNING"),
-    "parked": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
+    "finished": ("scripts/pod/pod.py", 2357, "CHECKING, DONE"),
+    "dispatched": ("scripts/pod/pod.py", 2468, "READY, RUNNING"),
+    "parked": ("scripts/pod/pod.py", 198, "PARK_REASONS"),
     "net_lines": ("scripts/measure/ledger.py", 145, "def count"),
-    "newest_done": ("dev/memos/LJ-4-pod-program-design.md", 2940, "to: DONE"),
+    "newest_done": ("dev/memos/LJ-4-pod-program-design.md", 2941, "to: DONE"),
     # 二、任务台账
-    "task_rows": ("scripts/pod/pod.py", 596, "def emit"),
+    "task_rows": ("scripts/pod/pod.py", 618, "def emit"),
     # 三、报告数, the two AD7 numbers
-    "no_match_rate": ("dev/memos/LJ-4-pod-program-design.md", 2948, "no_match_rate"),
-    "park_reasons_other": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
-    "days_since_gain": ("dev/memos/LJ-4-pod-program-design.md", 2958, "net gain"),
+    "no_match_rate": ("dev/memos/LJ-4-pod-program-design.md", 2949, "no_match_rate"),
+    "park_reasons_other": ("scripts/pod/pod.py", 198, "PARK_REASONS"),
+    "days_since_gain": ("dev/memos/LJ-4-pod-program-design.md", 2959, "net gain"),
     "standing": ("scripts/measure/ledger.py", 133, "def countable_masters"),
     # 三、报告数, the twelve
     "shadowing": ("scripts/pod/table.py", 542, "def hits"),
     "expiry_fallout": ("scripts/pod/table.py", 719, "def expire_rows"),
-    "dropped_returns": ("scripts/pod/pod.py", 2193, "no-change"),
+    "dropped_returns": ("scripts/pod/pod.py", 2259, "no-change"),
     "orphan_masters": ("scripts/pod/check-closure.py", 94, "def imported_modules"),
     "telescope": ("scripts/measure/check-unbound-hyp.py", 118, "def hypotheses"),
     "vacuous_conjunct_4": ("scripts/pod/accept.py", 422, "unbound_vacuous"),
     "vacuous_conjunct_1": ("scripts/pod/accept.py", 422, "agda_vacuous"),
     "foreign_paths": ("scripts/pod/accept.py", 423, "changed_files_foreign"),
-    "corpus_records": ("scripts/pod/pod.py", 512, "def corpus_append"),
+    "corpus_records": ("scripts/pod/pod.py", 534, "def corpus_append"),
     "outcomes": ("scripts/pod/table.py", 104, "outcome"),
     "retrieval_miss": ("scripts/pod/retrieve.py", 376, "def miss_signal"),
     "retrieval_zero_overlap": ("scripts/pod/retrieve.py", 394, "overlap"),
@@ -199,12 +199,12 @@ FIELD_SOURCES = {
     # per-path score anywhere. That same line is the source of the number that says so.
     "retrieval_undetermined": ("scripts/pod/retrieve.py", 394, "overlap"),
     # 四、阻塞与待裁决
-    "blocked_parked": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
-    "queue_requests": ("scripts/pod/pod.py", 730, "def split_entry"),
-    "owner_rulings": ("dev/memos/LJ-4-pod-program-design.md", 3422, "An owner ruling"),
+    "blocked_parked": ("scripts/pod/pod.py", 198, "PARK_REASONS"),
+    "queue_requests": ("scripts/pod/pod.py", 752, "def split_entry"),
+    "owner_rulings": ("dev/memos/LJ-4-pod-program-design.md", 3423, "An owner ruling"),
     # THE ONE FIELD WHOSE SOURCE IS THIS FILE. A refused row is produced by the digest's
     # own readers, so `_refuse()` is its source and there is no other.
-    "refused_rows": ("scripts/pod/digest.py", 281, "def _refuse"),
+    "refused_rows": ("scripts/pod/digest.py", 285, "def _refuse"),
 }
 
 #: Section 二's column widths, in display columns, taken from the worked example at
@@ -239,13 +239,17 @@ def _wrap(text: str, width: int = 76, indent: str = "  ") -> list[str]:
     out, line = [], indent
     for char in text:
         if _width(line) + _width(char) > width and line.strip():
-            cut = line.rstrip()
-            if char.isascii() and not char.isspace() and " " in cut.strip():
-                head, _, tail = cut.rpartition(" ")
-                out.append(head)
+            # SPLIT THE UNSTRIPPED LINE. `rstrip()` first ate the very space the fold
+            # needs, so `rpartition` cut at an EARLIER space and the moved word fused
+            # with the next character. MEASURED 2026-08-18 in a live digest:
+            # `REUSEstill covers` and `thepost-archival tree`. This is the owner's daily
+            # report and the corrupted text is a quoted reason, never decoration.
+            if char.isascii() and not char.isspace() and " " in line.strip():
+                head, _, tail = line.rpartition(" ")
+                out.append(head.rstrip())
                 line = indent + tail
             else:
-                out.append(cut)
+                out.append(line.rstrip())
                 line = indent
         line += char
     if line.strip():

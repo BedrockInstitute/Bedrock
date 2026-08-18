@@ -32,7 +32,12 @@
 version = 1
 
 [legal]
-efforts = ["low", "medium", "high", "xhigh", "max"]
+# THE EMPTY STRING IS LEGAL AND IT MEANS "THIS HARNESS HAS NO EFFORT DIAL".
+# `--effort` is a claude CLI flag. A `herdr-pi` head has no equivalent, so a pi row
+# carries "" and the launcher omits the flag. Admitted 2026-08-18 when the owner
+# ruled the two coder slots onto pi vendors; before that every head was Claude and
+# the loader had never seen a row without one.
+efforts = ["", "low", "medium", "high", "xhigh", "max"]
 
 # MEASURED 2026-08-17, [LJ-4-0]. Every string below resolves. Two read-backs ran
 # per string: `claude -p --output-format json` reports `modelUsage.<key>` and
@@ -53,7 +58,23 @@ efforts = ["low", "medium", "high", "xhigh", "max"]
 # guard, because the loader refuses a string it does not hold; the read-back
 # below is the second, for a string that IS held and still fails in the pane.
 models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
-          "opus", "fable", "sonnet"]
+          "opus", "fable", "sonnet",
+          # THE TWO NON-CLAUDE HEADS, ruled by the owner 2026-08-18. Both run on the
+          # `pi` CLI through `harness = "herdr-pi"`, and each needs its provider named
+          # because the provider is NOT the model's family name. Carried from the
+          # archived `dev/vendors.toml`, which measured both:
+          #   glm-5.3         provider `zai`, and `pi auth check --provider glm`
+          #                   returns `provider_not_found` (MEASURED 2026-08-15)
+          #   deepseek-v4-pro provider `deepseek`, and the API rejects a date suffix
+          # **NEITHER IS READ-BACK VERIFIED THE WAY THE THREE CLAUDE IDS ARE.** Gap B4
+          # ran `claude -p` twice per Claude string; no equivalent ran for these two, so
+          # the first dispatch on either is also its verification.
+          "glm-5.3", "deepseek-v4-pro"]
+
+# THE PROVIDER PER NON-CLAUDE MODEL. `herdr-pi` passes it as `--provider`.
+[legal.pi_provider]
+"glm-5.3" = "zai"
+"deepseek-v4-pro" = "deepseek"
 
 # CARRIED FROM `dev/vendors.toml` BY ROW 21b OF THE GATE TABLE, before that file was
 # archived. Both sentences are measurements and neither is repeated anywhere else. Read
@@ -162,8 +183,11 @@ system_free_floor_pct = 8     # C-12's floor, restored by A13
 # launch: a trust prompt makes herdr report `blocked`, which the launcher does
 # not treat as a death.
 [heads]
-mathematician             = { model = "claude-opus-5",   effort = "max",  harness = "herdr-claude", sandbox = "acceptEdits" }
-mathematician_adversarial = { model = "claude-fable-5",  effort = "max",  harness = "herdr-claude", sandbox = "acceptEdits" }
-coder                     = { model = "claude-sonnet-5", effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
-coder_adversarial         = { model = "claude-opus-5",   effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
-maintainer                = { model = "claude-opus-5",   effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
+# RULED BY THE OWNER, 2026-08-18. The mathematician side runs Claude at three efforts;
+# the coder side runs the two `pi` vendors. **The DD17 invariant still holds: the critic
+# is never the same model as the author**, on both sides.
+mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
+mathematician_adversarial = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
+coder                     = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
+coder_adversarial         = { model = "deepseek-v4-pro", effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
+maintainer                = { model = "claude-opus-5",   effort = "high",  harness = "herdr-claude", sandbox = "acceptEdits" }

@@ -117,6 +117,28 @@ TABLE = ROOT / "dev" / "pod" / "table.toml"
 CORPUS = ROOT / "dev" / "pod" / "replay-corpus.jsonl"
 PROPOSALS = ROOT / "dev" / "pod" / "proposals"
 INSTRUCTIONS = ROOT / "dev" / "pod" / "instructions"
+
+
+def preamble_for(slot, root=None):
+    """The files `cat` puts ahead of the brief: `AGENTS.md`, then the slot's own clauses.
+
+    **NOTHING WAS PUT AHEAD OF A BRIEF UNTIL 2026-08-18.** `INSTRUCTIONS` had zero
+    consumers and every mention of a slot file in the program was a comment, so a worker
+    was launched with its brief alone: no shared Boundary and no clause of its own role.
+    The design's own section 6.1 shows `cat <slot>.md <brief>`, and the code never did it.
+
+    **ONE SOURCE PER FILE.** The shared Boundary is `AGENTS.md` and the slot file holds
+    only what binds that slot. Neither is copied into the other; `cat` joins them at
+    dispatch. A missing slot file is not a reason to launch a worker with no rules, so
+    this returns what exists and the caller's own defect list reports the rest.
+    """
+    root = ROOT if root is None else Path(root)
+    out = [root / "AGENTS.md"]
+    if slot:
+        p = root / "dev" / "pod" / "instructions" / f"{slot}.md"
+        if p.is_file():
+            out.append(p)
+    return [f for f in out if f.is_file()]
 WATCHDOG = ROOT / "scripts" / "ops" / "agda-watchdog.sh"
 BARK = ROOT / "scripts" / "ops" / "bark-push.sh"
 DIGEST = ROOT / "scripts" / "pod" / "digest.py"
@@ -802,7 +824,7 @@ def laws_bundle(paths, root=None):
     """R17's LAWS text for one write scope, or None when the producer refused.
 
     THIS IS HOW `dev/LESSONS.md` REACHES A WORKER, and nothing else in the flow delivers
-    one line of it. Section 7.1 row 22 keeps `scripts/dispatch/rules.py` out of the
+    one line of it. Section 7.1 row 22 keeps `scripts/pod/rules.py` out of the
     `make check` gate and INSIDE the brief builder for exactly this. Pre-flight P21 refuses
     a brief whose block is absent or empty, so a producer that returns None parks the task
     with a reason, which is the loud path.
@@ -1551,7 +1573,8 @@ def launch(t, brief, role, root=None):
         # `"tier": "wide"` into the registry record that `agda_heap_sum_over()` reads. The
         # heap-sum guard then budgeted 8 GB for a worker holding 12.
         rc = mod.launch(t.code, path, bool(t.agda), head["sandbox"], head["model"],
-                        effort=head["effort"], tier=tier_of(t))
+                        effort=head["effort"], tier=tier_of(t),
+                        preamble=preamble_for(t.head_slot))
     except SystemExit:
         return None                            # the launcher REFUSED on a corrupt registry
     except Exception:                          # noqa: BLE001. See the docstring
@@ -1778,9 +1801,39 @@ def maintainer_scope_ok(root=None, proposal=None):
     bad = [p for p in facts_mod._status_paths(root)
            if p not in allowed
            and not p.startswith(PROGRAM_WRITES)
-           and not p.endswith(".toml.admitted")
+           and not any(p.endswith(".toml." + v) for v in RETIRED_SUFFIXES)
            and not p.endswith("/.pod")]   # stamp_pod_marker() at :757
     return (not bad), bad
+
+
+#: EVERY TERMINAL VERDICT A PROPOSAL CAN REACH. A settled proposal is renamed to
+#: `<name>.toml.<verdict>`, which is the PROGRAM's own write and never the model's,
+#: so R15 excludes all of them exactly as it excluded `.admitted` alone before.
+RETIRED_SUFFIXES = ("admitted", "parse", "scope", "empty", "refused", "reject")
+
+
+def retire_proposal(path, verdict, root):
+    """Rename a settled proposal to `<name>.toml.<verdict>` so no tick reads it twice.
+
+    WHY THIS EXISTS. Until 2026-08-18 only the ADMIT path renamed anything, and the six
+    other exits fell through to `continue` with the file left where it was. **A settled
+    proposal was therefore re-read, re-judged and re-logged on EVERY tick, for ever.**
+    MEASURED by a blank agent: three runs, three identical lines. At `tick_seconds = 30`
+    that is 2,880 lines a day into a TRACKED log, so the defect grows the repository
+    without bound and buries the lines that mean something.
+
+    `watchdog_tick()` guards exactly this shape and this did not. The cure is the one the
+    ADMIT path already used: a terminal state gets a suffix, and `*.toml.<verdict>` is
+    outside `*.toml`, which is what `harvest_batch()` globs.
+
+    IT NEVER RAISES. A rename that fails is reported and the tick continues, because a
+    full disk is not a reason to abandon a batch that has already been judged.
+    """
+    try:
+        path.rename(path.with_suffix(path.suffix + "." + verdict))
+        return None
+    except OSError as e:
+        return f"the proposal could not be retired: {e}"
 
 
 def harvest_batch(st, root=None):
@@ -1788,8 +1841,15 @@ def harvest_batch(st, root=None):
 
     THE GATE IS THE REPLAY and it runs through the SAME writer admission uses. On ADMIT
     the rows go in through `write_table()` and the commit is by explicit path. On REJECT
-    the moved records go back into the proposal file and the batch parks, which is a
-    maintainer input at the next batch.
+    the batch is RECORDED and RETIRED, and neither the proposal nor the loop is parked.
+
+    **THAT IS NARROWER THAN THE DESIGN FIRST WROTE, and the departure is disclosed.** The
+    design said a REJECT writes the moved records back into the proposal file and parks
+    the batch. The code does neither, for two reasons a blank agent surfaced on
+    2026-08-18: writing back would make the PROGRAM edit the model's own file, which is
+    the one thing R15 exists to detect; and no batch-park state exists in the state
+    machine, so `park` had nothing to name. The rejection line carries the moved records,
+    the digest prints it, and the maintainer reads its own rejection at the next batch.
 
     DISCLOSED NARROWING of the ruled text: the ruling names `dev/pod/table.toml` as the
     maintainer's one write path, and the design gives it the PROPOSAL file instead,
@@ -1815,15 +1875,18 @@ def harvest_batch(st, root=None):
         except (OSError, ValueError, UnicodeDecodeError) as e:
             out.append(emit_event(st, "batch", result="parse",
                                   proposal=rel, why=str(e)[:200], root=root))
+            retire_proposal(path, "parse", root)
             continue
         if not isinstance(data, dict):
             out.append(emit_event(st, "batch", result="parse", proposal=rel,
                                   why="the proposal is not a TOML table", root=root))
+            retire_proposal(path, "parse", root)
             continue
         ok, bad = maintainer_scope_ok(root, rel)
         if not ok:
             out.append(emit_event(st, "batch", result="scope",
                                   proposal=rel, paths=bad[:20], root=root))
+            retire_proposal(path, "scope", root)
             continue
         queued = data.get("queue")
         for entry in queued if isinstance(queued, list) else []:
@@ -1832,6 +1895,7 @@ def harvest_batch(st, root=None):
         if not isinstance(rows, list) or not rows:
             out.append(emit_event(st, "batch", result="empty",
                                   proposal=rel, root=root))
+            retire_proposal(path, "empty", root)
             continue
         try:
             slots = table_mod.head_slots(root)
@@ -1847,10 +1911,12 @@ def harvest_batch(st, root=None):
             out.append(emit_event(st, "batch", result="refused",
                                   proposal=rel, why=f"{type(e).__name__}: {e}"[:200],
                                   root=root))
+            retire_proposal(path, "refused", root)
             continue
         if verdict != "ADMIT":
             out.append(emit_event(st, "batch", result="reject", proposal=rel,
                                   moved=[list(m) for m in moved][:20], root=root))
+            retire_proposal(path, "reject", root)
             continue
         try:
             table_mod.write_table(new)
@@ -2513,8 +2579,84 @@ def _table(root=None):
 
 
 def cmd_tick(argv):
-    """One pass, then exit. This is the testable unit and `pod run` calls it."""
+    """One pass, then exit. This is the testable unit and `pod run` calls it.
+
+    `--plan` RUNS THE REAL TICK AND LETS IT LAUNCH NOTHING AND COMMIT NOTHING. Every
+    launch goes through one chokepoint, `facts.launcher()`, and every commit through
+    `git_commit()`, so replacing those two is the whole of it: the tick measures, routes,
+    matches and decides exactly as it would, and prints each launch and commit it WOULD
+    have made instead of making it.
+
+    **WHY IT EXISTS.** Until 2026-08-18 the smallest unit was a tick that launches three
+    real agents, and only `pod status` was read-only. A blank agent asked to dry-run the
+    program had to sandbox the tree and intercept the launcher by hand to answer the
+    question safely. Anybody who wants to know what the loop would do should not have to
+    build that first.
+
+    **IT IS NOT A SIMULATION.** The state file and the transition log are still written,
+    because a tick that measured something and recorded nothing would leave the next tick
+    lying to itself. Run it on a scratch worktree when even that is unwanted.
+    """
+    plan = "--plan" in argv
     st = load_state()
+    if plan:
+        planned = []
+
+        real_mod = facts_mod.launcher()
+
+        class _NoLaunch:
+            """The real launcher for every read, and a recorder for `launch`."""
+
+            HARNESS = getattr(real_mod, "HARNESS", "")
+
+            @staticmethod
+            def launch(task, brief, agda, sandbox, model, effort="", tier="wide"):
+                planned.append(f"launch {task} <- {brief} [{model}/{effort}]")
+                # RECORD A PLAUSIBLE REGISTRY ROW. The caller reads the pid back out of
+                # the registry to confirm the start, so a launch that records nothing
+                # would park a task the real loop dispatches, and the plan would report
+                # a failure production does not have.
+                planned_reg[task] = {"pid": -1, "proc_start": 0, "log": "", "final": "",
+                                     "started": "", "events": "", "tier": tier}
+                return 0
+
+            @staticmethod
+            def load():
+                d = dict(real_mod.load())
+                d["dispatches"] = {**(d.get("dispatches") or {}), **planned_reg}
+                return d
+
+            def __getattr__(self, name):
+                return getattr(real_mod, name)
+
+        planned_reg = {}
+
+        stub = _NoLaunch()
+        real_launcher = facts_mod.launcher
+        real_commit = table_mod.git_commit
+        real_readback = globals()["model_readback_ok"]
+        facts_mod.launcher = lambda: stub
+        table_mod.git_commit = lambda paths, msg, root=None: (
+            planned.append(f"commit {[str(x) for x in paths]}: {msg}"), True)[1]
+        # THE READ-BACK ASKS A PANE WHICH MODEL ANSWERED, and no pane exists here, so it
+        # would fail and rule (f) would park a task the real loop dispatches. A plan that
+        # parks what production runs is worse than no plan: it would have reported
+        # LJ-1.386 PARKED on a tree where it dispatches clean.
+        globals()["model_readback_ok"] = lambda name, model: True
+        try:
+            verdict = pod_tick(st)
+        finally:
+            facts_mod.launcher = real_launcher
+            table_mod.git_commit = real_commit
+            globals()["model_readback_ok"] = real_readback
+        print("pod tick --plan: nothing was launched and nothing was committed.")
+        for line in planned:
+            print(f"  WOULD {line}")
+        if not planned:
+            print("  WOULD do neither.")
+        print(f"pod tick: seq {st.seq}, "
+              + ", ".join(f"{s} {st.count(s)}" for s in STATES) + f", {verdict}")
+        return 1 if verdict is STOP else 0
     verdict = pod_tick(st)
     print(f"pod tick: seq {st.seq}, "
           + ", ".join(f"{s} {st.count(s)}" for s in STATES) + f", {verdict}")

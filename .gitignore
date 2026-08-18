@@ -5,6 +5,7 @@ _build/
 # Python developer-tooling virtual environment (created by `make venv` from
 # requirements-dev.txt; never committed). Python bytecode caches.
 .venv/
+.venv
 __pycache__/
 *.pyc
 

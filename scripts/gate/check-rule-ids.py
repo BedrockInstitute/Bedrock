@@ -25,7 +25,7 @@ that names an ID no entry carries is a dead reference nothing else catches".
 The bundle cap is checked with it, because the cap IS the design of that file: a
 bundle that grows without eviction becomes the corpus again.
 
-WHY THAT HALF MOVED HERE. `scripts/dispatch/rules.py --check` used to hold it,
+WHY THAT HALF MOVED HERE. `scripts/pod/rules.py --check` used to hold it,
 and the `ruleids` target of the `Makefile` ran both lines. Cutover step 10b of
 the design deleted the `rules.py --check` line, because row 22 takes `rules.py`
 out of the gate and puts it inside the brief builder. Nothing replaced the
@@ -426,7 +426,7 @@ def rules_toml_findings(lessons: set[str]) -> list[str]:
 
     ROW 15's SECOND TARGET, and it is the half nothing else covers. The citation
     check above reads `.md` and `.py` text; a TOML value is neither, so a bundle
-    could name `R-99` and no gate saw it. `scripts/dispatch/rules.py --check`
+    could name `R-99` and no gate saw it. `scripts/pod/rules.py --check`
     held this until cutover step 10b took that line out of the `ruleids` target.
 
     THE CAP IS CHECKED WITH THE IDS, because `dev/rules.toml`'s own header says

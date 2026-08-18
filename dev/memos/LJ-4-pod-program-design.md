@@ -288,11 +288,12 @@ entries in `dev/pod/queue.toml`, so the route survives the replacement of that
 section.**
 
 **W1'S ADDRESS IS DANGLING TODAY, and this states it rather than absorbing it.**
-MEASURED 2026-08-18: `dev/pod/queue.toml` holds 19 `[[task]]` entries, one per
-non-`LJ-4` PLANNED row of `dev/PLAN.md` section 11 plus `LJ-1.386`, and **no entry
-carries the code `LJ-2.5`**. The clause text of W1 below still reads `a live row
-in dev/PLAN.md section 11`, and section 11 is SET ASIDE by amendment A7. So
-clause W1 names an address that the queue does not hold and that the plan no
+RE-MEASURED 2026-08-18 after the queue was reseeded: `dev/pod/queue.toml` holds 32
+`[[task]]` entries, and `LJ-2.5` IS one of them. The earlier reading of 19 entries with
+no `LJ-2.5` was true of the first seeding and the repair that followed it landed. What
+did NOT land is the clause text of W1 below, which still reads `a live row in
+dev/PLAN.md section 11` while section 11 is SET ASIDE by amendment A7. So clause W1
+names an address that the plan no
 longer operates. **The repair is one queue entry**, a REQUEST with
 `code = "LJ-2.5"` and no `brief`, plus the same edit to the W1 clause text here
 and to the `**W1**` clause of `dev/pod/instructions/mathematician.md` and of
@@ -1912,7 +1913,7 @@ satisfies it.** Rows 15 to 17 sit outside the funnel and go with it.
 | 7 | `validate`: no `SCOPE (write)` section, `:880-886` | KEEP | `## SCOPE (write)` is in the template and in the worked brief |
 | 8 | `validate`: no RETURN section, `:888-891` | REMOVE | `dev/ORCHESTRATION.md` is void under AD4. The branch block is the return contract |
 | 9 | `validate`: no checkable evidence, `:898-900` | REMOVE | The same document. The template would pass it anyway: `## PREMISES` writes `file:line` |
-| 10 | `rule_bundle_defects()`, `:2492-2539` | REMOVE | `AGENTS.md` is void under AD4. It stays LIVE until removed, because section 7.1 row 22 KEEPS `scripts/dispatch/rules.py` and the function's only escape is that file being absent |
+| 10 | `rule_bundle_defects()`, `:2492-2539` | REMOVE | `AGENTS.md` is void under AD4. It stays LIVE until removed, because section 7.1 row 22 KEEPS `scripts/pod/rules.py` and the function's only escape is that file being absent |
 | 11 | `dd4_defects()`, `:2328-2364` | REMOVE | DD4 = WRITTEN RULE, clause W2. See below |
 | 12 | `survey_defects()`: no ARCHIVE section, `:2366-2422` | KEEP | DD18 = MECHANISED. Section 7.4 injects `## ARCHIVE`, and P15 refuses a brief without it |
 | 13 | `survey_defects()`: no LITERATURE section, `:2366-2422` | KEEP | DD18 again. Section 7.4 injects `## LITERATURE`, and P15 reads it |
@@ -3205,7 +3206,7 @@ git mv scripts/gate/check-archive-cited.py archive/scripts/gate/   # W4: never d
 #     out, which the tree had already outgrown. ADD closure, specsurface and
 #     surveyquotes to .PHONY in the same edit.
 #     EDIT the ruleids recipe: keep the check-rule-ids.py line
-#     and DELETE that recipe's `$(PY) scripts/dispatch/rules.py --check` line.
+#     and DELETE that recipe's `$(PY) scripts/pod/rules.py --check` line.
 #     Row 22 keeps rules.py out of the gate and inside the brief builder.
 #     EDIT the ratio recipe from `--check` to the report-only
 #     mode, because row 29 voids the bar and keeps only the profiler. If
