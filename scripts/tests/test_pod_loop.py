@@ -44,6 +44,7 @@ import sys
 import tempfile
 import textwrap
 import time
+import pathlib
 import unittest
 from pathlib import Path
 
@@ -259,8 +260,8 @@ class LoopCase(unittest.TestCase):
                   CORPUS=tmp / "dev" / "pod" / "replay-corpus.jsonl",
                   PROPOSALS=tmp / "dev" / "pod" / "proposals",
                   INSTRUCTIONS=tmp / "dev" / "pod" / "instructions",
-                  REFILL_BRIEF=tmp / "dev" / "pod" / "instructions"
-                  / "refill-queue.md",
+                  REFILL_BRIEF=tmp / "agents" / "tasks" / "POD-REFILL"
+                  / "POD-REFILL.md",
                   WATCHDOG=tmp / "scripts" / "ops" / "agda-watchdog.sh",
                   BARK=tmp / "scripts" / "ops" / "bark-push.sh",
                   DIGEST=tmp / "scripts" / "pod" / "digest.py")
@@ -1829,7 +1830,8 @@ class RuleG(LoopCase):
         super().setUp()
         self.patch(pod, "_rule_g", REAL_RULE_G)
         (self.tmp / "dev" / "pod" / "instructions").mkdir(parents=True, exist_ok=True)
-        (self.tmp / "dev" / "pod" / "instructions" / "refill-queue.md").write_text(
+        (self.tmp / "agents" / "tasks" / "POD-REFILL").mkdir(parents=True, exist_ok=True)
+        (self.tmp / "agents" / "tasks" / "POD-REFILL" / "POD-REFILL.md").write_text(
             "# the standing refill brief\n\n## HEAD\nhead_slot: mathematician\n")
         self.launched = launched = []
 
@@ -1854,7 +1856,7 @@ class RuleG(LoopCase):
         self.assertEqual(len(self.launched), 1)
         task, brief, agda, model, effort = self.launched[0]
         self.assertEqual(task, "POD-REFILL")
-        self.assertTrue(brief.endswith("dev/pod/instructions/refill-queue.md"))
+        self.assertTrue(brief.endswith("agents/tasks/POD-REFILL/POD-REFILL.md"))
         self.assertFalse(agda)
         self.assertEqual(model, heads_mod.head("mathematician")["model"])
         self.assertEqual(self.refill_lines()[-1]["result"], "dispatched")
@@ -1924,12 +1926,12 @@ class RuleG(LoopCase):
     def test_an_ABSENT_standing_brief_is_NAMED_and_never_invented(self):
         """AD3 gives every brief to the mathematician, so the program records the missing
         dependency and waits. It never writes a brief."""
-        (self.tmp / "dev" / "pod" / "instructions" / "refill-queue.md").unlink()
+        (self.tmp / "agents" / "tasks" / "POD-REFILL" / "POD-REFILL.md").unlink()
         pod._rule_g(pod.State(), self.tmp)
         self.assertEqual(self.launched, [])
         line = self.refill_lines()[-1]
         self.assertEqual(line["result"], "absent")
-        self.assertEqual(line["brief"], "dev/pod/instructions/refill-queue.md")
+        self.assertEqual(line["brief"], "agents/tasks/POD-REFILL/POD-REFILL.md")
 
     def test_a_launcher_refusal_is_recorded_and_never_silent(self):
         class Broken:
@@ -2541,6 +2543,48 @@ class Commands(LoopCase):
 
     def test_an_unknown_subcommand_is_a_usage_error(self):
         self.assertEqual(pod.main(["fly"]), 2)
+
+
+
+class MaintainerScopeAgainstRealGit(unittest.TestCase):
+    """R15 against a REAL `git status`, because every other scope test stubs the sensor.
+
+    WHY THIS EXISTS. A blank agent ran one production-faithful tick on 2026-08-18 and
+    measured the failure the suite could not see: batch 1 admitted, batch 2 refused on
+    `scope`, naming three paths the PROGRAM writes. `maintainer_scope_ok()`'s own
+    docstring had named that hazard and excluded two of the five paths. The other tests
+    patch `facts_mod._status_paths` with a hand-written list, so none of them could ever
+    have caught it. **This one calls git.**
+    """
+
+    def test_the_program_s_own_writes_are_not_the_model_s(self):
+        import subprocess, tempfile, os
+        with tempfile.TemporaryDirectory() as d:
+            root = pathlib.Path(d)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.email", "t@t"], cwd=root, check=True)
+            subprocess.run(["git", "config", "user.name", "t"], cwd=root, check=True)
+            (root / "seed").write_text("x")
+            subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+            subprocess.run(["git", "commit", "-qm", "seed"], cwd=root, check=True)
+            # Exactly what one tick leaves behind, and the program wrote every one.
+            for rel in ("dev/pod/transitions/2026-08.jsonl",
+                        "agents/tasks/LJ-1-386/.pod",
+                        "agents/tasks/POD-BATCH/20260818-000000.md",
+                        ".pod-state/state.json"):
+                p = root / rel
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text("written by the program\n")
+            prop = "dev/pod/proposals/20260818-000000.toml"
+            (root / prop).parent.mkdir(parents=True, exist_ok=True)
+            (root / prop).write_text("# the model's one write\n")
+            ok, bad = pod.maintainer_scope_ok(root=root, proposal=prop)
+            self.assertTrue(ok, f"R15 counted the program's own writes as the model's: {bad}")
+            # AND IT STILL REFUSES A REAL FOREIGN WRITE, or the fix would be a hole.
+            (root / "dev" / "PLAN.md").write_text("the model edited a live document\n")
+            ok2, bad2 = pod.maintainer_scope_ok(root=root, proposal=prop)
+            self.assertFalse(ok2, "R15 must refuse a write outside the proposal file")
+            self.assertIn("dev/PLAN.md", bad2)
 
 
 if __name__ == "__main__":

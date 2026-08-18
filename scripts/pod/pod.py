@@ -37,7 +37,7 @@ THE SIX RULES THAT COST THE MOST IF THEY ARE DROPPED
   mixed worst-case heap sum stays at or under 32 GB, and slots three and four open only
   above 25 percent free memory.
 - **AN IDLE SLOT IS CURED, NOT REPORTED (A11).** Rule (g) dispatches the mathematician
-  with the standing brief `dev/pod/instructions/refill-queue.md` when a slot is free and
+  with the standing brief `agents/tasks/POD-REFILL/POD-REFILL.md` when a slot is free and
   the queue holds no dispatchable entry. The program decides only that somebody must be
   asked; the head decides the work, so AD1 holds.
 
@@ -1751,12 +1751,35 @@ def maintainer_scope_ok(root=None, proposal=None):
     rename of an already admitted proposal. Counting either one would make every batch
     after the first refuse on `scope` for a path no model touched, and the maintainer
     would never write another row.
+
+    **THAT CONSEQUENCE WAS REALIZED, and the list above was two paths short.** MEASURED
+    2026-08-18 by a blank agent running one production-faithful tick from a clean tree:
+    batch 1 admitted, and an identical well-formed batch 2 refused on `scope`, naming
+    `dev/pod/transitions/<month>.jsonl`, `agents/tasks/<CODE>/.pod` and
+    `agents/tasks/POD-BATCH/<ts>.md`. **The program writes all three and commits none of
+    them at that point**, at `emit()`, `stamp_pod_marker()` (:757) and
+    `spawn_maintainer()` (:1917), so `git status` shows them and this check read them as
+    the model's. The reasoning above was right and the enumeration was incomplete.
+
+    **THE SUITE MISSED IT BECAUSE EVERY SCOPE TEST REPLACES THE SENSOR.**
+    `scripts/tests/test_pod_loop.py:1013` and `:1041` patch `facts_mod._status_paths`
+    with a hand-written list, so no test ever saw a real `git status` after a real tick.
+    A test that stubs the thing under test cannot fail for the reason it exists.
     """
     root = ROOT if root is None else Path(root)
     allowed = {proposal} if proposal else set()
+    # EVERY PREFIX HERE IS A PATH THE PROGRAM WRITES ITSELF. Adding one is a change to
+    # what R15 means, so name the writer beside it.
+    PROGRAM_WRITES = (
+        ".pod-state/",                  # the loop's runtime state
+        "dev/pod/transitions/",         # emit(), the transition log
+        "agents/tasks/POD-BATCH/",      # spawn_maintainer() at :1917
+    )
     bad = [p for p in facts_mod._status_paths(root)
-           if p not in allowed and not p.startswith(".pod-state/")
-           and not p.endswith(".toml.admitted")]
+           if p not in allowed
+           and not p.startswith(PROGRAM_WRITES)
+           and not p.endswith(".toml.admitted")
+           and not p.endswith("/.pod")]   # stamp_pod_marker() at :757
     return (not bad), bad
 
 
@@ -2413,10 +2436,17 @@ def _rule_g(st, root):
         return None                            # no slot is free
     if hours_since_last_refill(root) < _refill_min_hours():
         return None
-    rel = str(REFILL_BRIEF)
+    # RESOLVE THE BRIEF AGAINST `root`, NEVER AGAINST THE MODULE-LEVEL `ROOT`. The
+    # constant is the live tree's path, and every test and every sandbox passes its own
+    # root. Reading `REFILL_BRIEF` directly made `is_file()` false everywhere but the
+    # live checkout, so rule (g) recorded `absent` and dispatched nothing. MEASURED
+    # 2026-08-18 when the brief moved to `agents/tasks/POD-REFILL/`: eight RuleG tests
+    # went red at once, and the old path had merely hidden the coupling.
+    brief_path = root / REFILL_BRIEF.relative_to(ROOT)
+    rel = str(brief_path)
     with contextlib.suppress(ValueError):
-        rel = str(REFILL_BRIEF.relative_to(root))
-    if not REFILL_BRIEF.is_file():
+        rel = str(brief_path.relative_to(root))
+    if not brief_path.is_file():
         # THE DEPENDENCY IS NAMED AND NEVER GUESSED. A11 says the orchestrator writes the
         # standing brief and AD3 gives every brief to the mathematician, so the program
         # records the miss and waits. The floor above throttles this line too.
@@ -2428,7 +2458,7 @@ def _rule_g(st, root):
     try:
         head = heads_mod.head("mathematician")
         mod.HARNESS = head["harness"]
-        rc = mod.launch(REFILL_TASK, REFILL_BRIEF, False, head["sandbox"],
+        rc = mod.launch(REFILL_TASK, brief_path, False, head["sandbox"],
                         head["model"], effort=head["effort"])
     except SystemExit:
         rc, why = 1, "the launcher refused"

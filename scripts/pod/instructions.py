@@ -46,7 +46,7 @@ OUT_DIR = ROOT / "dev" / "pod" / "instructions"
 
 MARKER = "<!-- GENERATED ABOVE. HAND-WRITTEN BELOW. instructions.py rewrites only the part above. -->"
 
-# The five head slots of section 6.1. `refill-queue.md` is NOT a slot: it is a
+# The five head slots of section 6.1. `POD-REFILL.md` is NOT a slot: it is a
 # standing BRIEF that rule (g) sends, so this program leaves it alone.
 SLOTS = [
     "mathematician",

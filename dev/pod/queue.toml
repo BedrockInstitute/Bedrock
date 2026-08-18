@@ -10,7 +10,7 @@
 # makes cutover step 13 lose no planned goal.
 #
 # Rule (g) REFILL (amendment A11) fires when a slot is free AND no entry here is
-# dispatchable. It sends dev/pod/instructions/refill-queue.md to the mathematician.
+# dispatchable. It sends agents/tasks/POD-REFILL/POD-REFILL.md to the mathematician.
 #
 # WHAT THE SEEDING GOT WRONG, corrected 2026-08-18 before the first run.
 #

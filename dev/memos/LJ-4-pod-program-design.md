@@ -87,7 +87,7 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   gap M12 by building rather than by writing a clause. `pod_tick()` gains rule
   **(g) REFILL**: when a slot is free AND `dev/pod/queue.toml` holds no
   dispatchable entry, the program dispatches the mathematician with the standing
-  brief `dev/pod/instructions/refill-queue.md`. **This does not violate AD1.** The
+  brief `agents/tasks/POD-REFILL/POD-REFILL.md`. **This does not violate AD1.** The
   program decides only that someone must be asked; the head decides what the work
   is. It is the same shape as AD15's maintainer trigger and AD16's automatic
   re-dispatch, which the design already admits.
@@ -1194,7 +1194,7 @@ def pod_tick():                             # one pass. pod run sleeps, not this
 
     # AMENDED BY A11: rule (g) REFILL is added below. When a slot is free AND
     # the queue holds no dispatchable entry, the program dispatches the
-    # mathematician with dev/pod/instructions/refill-queue.md. The program
+    # mathematician with agents/tasks/POD-REFILL/POD-REFILL.md. The program
     # decides only that somebody must be asked; the head decides the work.
     # (a1) CREATE. dev/pod/queue.toml is the only producer of a task.
     for e in queue_entries_not_yet_created():

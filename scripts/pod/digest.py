@@ -170,8 +170,8 @@ GAP_ZH = {
 #: a field whose source moves fails the suite instead of printing a stale number.
 FIELD_SOURCES = {
     # 一、今日结论
-    "finished": ("scripts/pod/pod.py", 2268, "CHECKING, DONE"),
-    "dispatched": ("scripts/pod/pod.py", 2379, "READY, RUNNING"),
+    "finished": ("scripts/pod/pod.py", 2291, "CHECKING, DONE"),
+    "dispatched": ("scripts/pod/pod.py", 2402, "READY, RUNNING"),
     "parked": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
     "net_lines": ("scripts/measure/ledger.py", 145, "def count"),
     "newest_done": ("dev/memos/LJ-4-pod-program-design.md", 2940, "to: DONE"),
@@ -185,7 +185,7 @@ FIELD_SOURCES = {
     # 三、报告数, the twelve
     "shadowing": ("scripts/pod/table.py", 542, "def hits"),
     "expiry_fallout": ("scripts/pod/table.py", 719, "def expire_rows"),
-    "dropped_returns": ("scripts/pod/pod.py", 2170, "no-change"),
+    "dropped_returns": ("scripts/pod/pod.py", 2193, "no-change"),
     "orphan_masters": ("scripts/pod/check-closure.py", 94, "def imported_modules"),
     "telescope": ("scripts/measure/check-unbound-hyp.py", 118, "def hypotheses"),
     "vacuous_conjunct_4": ("scripts/pod/accept.py", 422, "unbound_vacuous"),
@@ -204,7 +204,7 @@ FIELD_SOURCES = {
     "owner_rulings": ("dev/memos/LJ-4-pod-program-design.md", 3422, "An owner ruling"),
     # THE ONE FIELD WHOSE SOURCE IS THIS FILE. A refused row is produced by the digest's
     # own readers, so `_refuse()` is its source and there is no other.
-    "refused_rows": ("scripts/pod/digest.py", 279, "def _refuse"),
+    "refused_rows": ("scripts/pod/digest.py", 281, "def _refuse"),
 }
 
 #: Section 二's column widths, in display columns, taken from the worked example at
