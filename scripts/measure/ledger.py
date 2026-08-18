@@ -725,7 +725,7 @@ def trophy_matrix(rows: list[dict], split: dict[str, int],
 #    under it, and [L3.32-T55] found it had never been a measurement. The design's day-5
 #    instruction reads "re-derives the standing figure and writes it back into
 #    dev/ledger.toml", which contradicts that rule verbatim. The rule wins; the deviation
-#    is disclosed in the [L9] day-5 report.
+#    is disclosed in the [LJ-4] day-5 report.
 #
 # 2. IT NEVER WRITES HALF OF A MEASURED PAIR. A seconds-per-line bar is a quotient of two
 #    terms measured together over one tree. Rewriting the LINES term alone leaves the

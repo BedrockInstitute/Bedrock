@@ -48,7 +48,7 @@ file is the directory index and holds no rule. Read this file before you write i
 - `measurements/`: **frozen measurement records** promoted out of `_build/`, with their own
   index.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
-  (`L3.0.3-subsumption-probe.md`, and `L9-pod-program-design.md` for goal `[L9]`), plus the
+  (`L3.0.3-subsumption-probe.md`, and `LJ-4-pod-program-design.md` for goal `[LJ-4]`), plus the
   archived planning sections cut from `PLAN.md` by `[L3.32-T113]` (the target skeleton, route
   tree, source survey, build constraints, process tensions, risks and simplification register;
   each carries a status header and a pointer back). `PLAN.md` §11 records the status of the

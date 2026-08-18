@@ -340,7 +340,7 @@ class Loader(TreeCase):
 
     def test_the_seeded_ratio_row_carries_the_bar_and_names_its_basis(self):
         """A10 rules ONE seeded system row for DD24's bar. Its figure comes from
-        `agents/tasks/L9-0/l9.0-b3-probe-report.md:185`, 0.01069 s per in-fence line, at
+        `agents/tasks/LJ-4-0/l9.0-b3-probe-report.md:185`, 0.01069 s per in-fence line, at
         the `[ratio]` tolerance. The reason names that record, because a bar whose basis
         is not written down is the drift DD24's own amendment was ruled against."""
         bar = next(r for r in table.load_table() if r["id"] == "sys-dd24-ratio-bar")
@@ -703,7 +703,7 @@ class SeededRows(unittest.TestCase):
     def test_a_green_run_over_dd24s_restored_ratio_bar_reaches_the_coder_critic(self):
         """AMENDMENT A10 closes gap M13: with no ratio row, slow code closes green. The
         bar is seconds over in-fence lines, seeded from
-        `agents/tasks/L9-0/l9.0-b3-probe-report.md:185`."""
+        `agents/tasks/LJ-4-0/l9.0-b3-probe-report.md:185`."""
         over = record(task="LJ-1.386", exit_code=0, seconds=200.0, lines=10000, delta=-1,
                       changed=["src/L/Cardinal.lagda.md"])
         self.assertEqual(table.route(self.rows, over),

@@ -172,7 +172,7 @@ note = "A running tool's process id. Stale once the tool exits."
 # not about a directory: every temporary file declares when it may be deleted and
 # when it moves somewhere permanent. The POD writes runtime state to `.pod-state/`
 # and NOT to `_build/`, because the `Makefile` `clean:` target empties `_build/`
-# and would erase a running loop's state (`dev/memos/L9-pod-program-design.md`
+# and would erase a running loop's state (`dev/memos/LJ-4-pod-program-design.md`
 # section 4.0). Those files are temporary all the same, so they declare here.
 #
 # WHAT ENFORCES THIS SECTION, stated plainly so no row claims more than it has.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The loader of `dev/pod/heads.toml`: the five heads, the limits and the two tiers.
 
-WHY THIS FILE EXISTS. Section 6.1 of `dev/memos/L9-pod-program-design.md` names this
+WHY THIS FILE EXISTS. Section 6.1 of `dev/memos/LJ-4-pod-program-design.md` names this
 loader and names no file for it. Day 2 delivered `dev/pod/heads.toml` and its read-back
 rule; it did not deliver the loader, and `head_slots()` at `scripts/pod/table.py:193`
 says in its own docstring that it is NOT that loader. So the rule had no owner. This file
@@ -10,7 +10,7 @@ docstring already admits: two readers of one file are admissible, two owners are
 
 THE MEASURED FAILURE IT ANSWERS. Before `dev/pod/heads.toml` a model name, an effort
 level and a deadline lived in three places: a skill document, a policy module and one
-literal in the dispatcher. `dev/memos/L9-pod-program-design.md:1826-1836` measures the
+literal in the dispatcher. `dev/memos/LJ-4-pod-program-design.md:1826-1836` measures the
 consequence: after section 7.1 row 21 retires `scripts/dispatch/dispatch_policy.py`, the
 dispatcher falls back to a hard literal and starts a CODEX agent on a deepseek model for
 every dispatch that omits `--harness`.
@@ -74,7 +74,7 @@ class HeadsError(Exception):
 
     EVERY RAISE IS A REFUSAL WITH A REASON. The caller never falls back to a literal,
     because a literal is exactly the defect measured at
-    `dev/memos/L9-pod-program-design.md:1826-1836`.
+    `dev/memos/LJ-4-pod-program-design.md:1826-1836`.
     """
 
 

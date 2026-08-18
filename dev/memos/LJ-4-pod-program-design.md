@@ -1,8 +1,8 @@
-# POD: the program that runs the route (goal [L9], IN FORCE)
+# POD: the program that runs the route (goal [LJ-4], IN FORCE)
 
 **Status: BUILT AND IN FORCE since the POD cutover of 2026-08-18, commit
 `fc676cb`. Written as a design on 2026-08-17.** This memo was the design
-deliverable of goal `[L9]` in `dev/PLAN.md` section 11. The cutover built it,
+deliverable of goal `[LJ-4]` in `dev/PLAN.md` section 11. The cutover built it,
 and the file is now a guarded rule home: `dev/pod/spec-surface.toml` carries its
 sha256 in a `[[guarded]]` entry, so a change to it needs a named owner approval
 under R16.
@@ -185,7 +185,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 | AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked | 6.7, 8.1 |
 | AD2 | A maintainer model writes new table rows. It does not run the loop | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
 | AD3 | All judgement belongs to the mathematician | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
-| AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[L9.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
+| AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[LJ-4.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
 | AD5 | The goal is unchanged: both trophies | 1 | AD19 | The table is tracked. Runtime state is not. Every transition logs | 5.3 |
 | AD6 | Clean cutover. `pre-pod-2026-08-17` is the rollback anchor | 9.1, 9.2, 9.3 | AD20 | A Chinese daily digest, plus an immediate push on stop | 8.1, 8.3 |
 | AD7 | The rollback criterion is the owner's. The digest prints two numbers | 8.2 | AD21 | A cheap pre-flight on the brief before dispatch | 6.5 |
@@ -289,7 +289,7 @@ section.**
 
 **W1'S ADDRESS IS DANGLING TODAY, and this states it rather than absorbing it.**
 MEASURED 2026-08-18: `dev/pod/queue.toml` holds 19 `[[task]]` entries, one per
-non-`L9` PLANNED row of `dev/PLAN.md` section 11 plus `LJ-1.386`, and **no entry
+non-`LJ-4` PLANNED row of `dev/PLAN.md` section 11 plus `LJ-1.386`, and **no entry
 carries the code `LJ-2.5`**. The clause text of W1 below still reads `a live row
 in dev/PLAN.md section 11`, and section 11 is SET ASIDE by amendment A7. So
 clause W1 names an address that the queue does not hold and that the plan no
@@ -2410,7 +2410,7 @@ enforces a MECHANISED ruling is KEPT or REWRITTEN and never retired**, which the
 second table obeys: every RETIRE row there names the disposition that released
 it. A NOT CARRIED note is a real loss, stated rather than absorbed.
 
-| DD | Disposition under `[L9]` | The enforcement point in force |
+| DD | Disposition under `[LJ-4]` | The enforcement point in force |
 |---|---|---|
 | DD0 | **SUPERSEDED IN PART** | The owner ruled the remainder back in on 2026-08-17. SUPERSEDED half: the owner's exclusive authorship of a TABLE ROW is replaced by a mechanical test on the WRITE, not on the writer, because AD2 gives the maintainer the rows: R3 refuses any new row that would move a record an existing row already matches, and `admit_rows()` calls `replay()` before it writes (4.1). **Two clauses are CARRIED and not superseded. Clause 1, WRITTEN RULE: clause W9 of section 3.1**, injected into every `dev/pod/instructions/<slot>.md`. It cannot be mechanised, because the act it forbids is an INFERENCE and the tokens it produces are legal by construction, so its enforcer is `agent discipline`. **Clause 2, MECHANISED in two halves: R15**, the maintainer's one-path write scope, checked by `maintainer_scope_ok()` at the batch return and before the replay (6.7); **and R16**, a named owner approval for any change to section 3, section 3.1 or `dev/pod/heads.toml`, checked by `check-spec-surface.py` at the `commit-msg` hook and again at conjunct 5 (7.3) |
 | DD1 | **MECHANISED** | `check-spec-surface.py`, under R9. Twice: `--check` as acceptance conjunct 5, which runs FIRST of the six (5.4), and `--msg-file` at the `commit-msg` hook. A change makes fact 2 `spec_surface`, and `sys-spec-surface` acts `stop_loop`, which A3 sorts ahead of every task row. **NOT CARRIED: the prose half, never claim an unqualified `Con(ZFC)`. No checker ever read it and the POD reads no prose (R2)** |
@@ -3241,7 +3241,7 @@ git mv scripts/gate/check-archive-cited.py archive/scripts/gate/   # W4: never d
 #     named: LJ-1.386 with a brief, plus one REQUEST entry per non-L9 PLANNED row
 #     of dev/PLAN.md section 11, carrying code, reason and NO brief, so rule (a1)
 #     skips them and the digest prints them until the mathematician writes each
-#     brief. Section 11 carries 27 PLANNED rows and 9 of them are the L9 rows the
+#     brief. Section 11 carries 27 PLANNED rows and 9 of them are the LJ-4 rows the
 #     cutover itself closes, which leaves 18 REQUEST entries. THE SEED MISSED
 #     LJ-2.5, clause W1's address, and section 3.1 records that gap),
 #     heads.toml (five heads and the limits), instructions/ (one file
@@ -3370,7 +3370,7 @@ value stands without a re-measure.** **Plan on 180 s per acceptance test, band
 16 s to 305 s, at 0.01069 s per in-fence line.** That is 1.22 times
 `ac_baseline_seconds_per_line`, the floor it lands nearest, and the 34-fold band
 closes to 1.48-fold. The probe and its record are
-`agents/tasks/L9-0/l9.0-b3-probe-report.md`. **The probe states its own
+`agents/tasks/LJ-4-0/l9.0-b3-probe-report.md`. **The probe states its own
 limitation and the owner accepted it:** the machine carried a load average of
 3.88 to 7.16, so the repository's quiet-machine rule was not met. The band
 collapsed 23-fold, which noise does not explain, so the direction stands; read
@@ -3394,7 +3394,7 @@ throughput plan can rest on a 34-fold band. What settles it:** the day 1 probe.
 RESOLVE**, verified by read-back on a throwaway pane rather than from a `--help`
 listing: `claude-opus-5`, `claude-fable-5` and `claude-sonnet-5`, and the three
 aliases `opus`, `fable` and `sonnet`. Section 6.1 needs no value change. The
-record is `agents/tasks/L9-0/l9.0-b4-model-ids.md`. **It also measured the case
+record is `agents/tasks/LJ-4-0/l9.0-b4-model-ids.md`. **It also measured the case
 the read-back refusal exists for:** `claude-opus-5-20260101` passes the client
 and fails at the API, so a date suffix dies after the launch looks clean.
 

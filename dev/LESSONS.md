@@ -1113,7 +1113,7 @@ by nothing else.
 
 **THE STANDING CLAUSE LIST MOVED ON 2026-08-18, AND IT DID NOT CARRY EVERY RULE.**
 The POD cutover archived `dev/ORCHESTRATION.md`. Clause W3 of
-`dev/memos/L9-pod-program-design.md` section 3.1 carries rules 1, 3, 4 and 5, and the
+`dev/memos/LJ-4-pod-program-design.md` section 3.1 carries rules 1, 3, 4 and 5, and the
 program injects `dev/pod/instructions/<slot>.md` ahead of every brief, so W3 reaches
 an agent there verbatim. The archived text is `archive/dev/ORCHESTRATION.md` section 3.
 
@@ -2918,7 +2918,7 @@ with a MECHANICAL half and a REVIEW half.
 The mechanical half is rule R16. `scripts/pod/check-spec-surface.py` refuses a commit
 that stages a guarded rule home without a dated `Spec-surface-approved:` trailer, at
 the `commit-msg` hook and again at acceptance conjunct 5. The guarded homes are
-`AGENTS.md`, `dev/memos/L9-pod-program-design.md`, `dev/pod/heads.toml` and every file
+`AGENTS.md`, `dev/memos/LJ-4-pod-program-design.md`, `dev/pod/heads.toml` and every file
 under `dev/pod/instructions/`. **It cannot tell a good change from a bad one.** It
 makes the change visible and dated, which is what a rebuild hides.
 
@@ -4058,7 +4058,7 @@ mixing them produced a false claim in a delivered report. **Neither is DD4's
 own axis.** DD4's text says to maximize the code the two proofs share (`dev/PLAN.md:742`), and the two proofs are the two trophies, fixed by DD2
 (`dev/PLAN.md:741`), by the archived D39 (`archive/dev/DECISIONS-archived.md:58`)
 and by the standing brief clause, which is now clause W2 of
-`dev/memos/L9-pod-program-design.md` section 3.1 and reaches every slot through
+`dev/memos/LJ-4-pod-program-design.md` section 3.1 and reaches every slot through
 `dev/pod/instructions/<slot>.md`; the archived text is
 `archive/dev/ORCHESTRATION.md:196-224`. **The
 Def-against-J axis is Devlin's, imported through

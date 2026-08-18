@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The spec surface gate: R9 over the trophy statement, R16 over the rule homes.
 
-Design: `dev/memos/L9-pod-program-design.md` section 7.3 (AD22), wired by
+Design: `dev/memos/LJ-4-pod-program-design.md` section 7.3 (AD22), wired by
 section 5.4 as acceptance conjunct 5 and by the `commit-msg` hook.
 
 WHY THIS EXISTS, and no compiler catches this class. The trophy statement is
@@ -213,7 +213,7 @@ GUARDED_FILES = [
     # the premise that the file was void, which A8 refutes. R16's own text
     # ("a change to this rule set") already covered it; only this list was short.
     "AGENTS.md",
-    "dev/memos/L9-pod-program-design.md",
+    "dev/memos/LJ-4-pod-program-design.md",
     "dev/pod/heads.toml",
 ]
 GUARDED_DIRS = ["dev/pod/instructions"]

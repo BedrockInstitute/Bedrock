@@ -20,7 +20,7 @@ heading in `dev/LESSONS.md`. Decision references without the hyphen are checked
 against `dev/PLAN.md`'s decision table instead.
 
 AND EVERY ID IN `dev/rules.toml` RESOLVES THE SAME WAY, which is the second
-target of row 15 of `dev/memos/L9-pod-program-design.md` section 7.1: "a bundle
+target of row 15 of `dev/memos/LJ-4-pod-program-design.md` section 7.1: "a bundle
 that names an ID no entry carries is a dead reference nothing else catches".
 The bundle cap is checked with it, because the cap IS the design of that file: a
 bundle that grows without eviction becomes the corpus again.

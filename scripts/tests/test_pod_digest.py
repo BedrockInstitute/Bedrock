@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Regression tests for the POD digest, section 8 of the L9 design.
+"""Regression tests for the POD digest, section 8 of the LJ-4 design.
 
 WHY THIS FILE EXISTS. The digest is the one screen the repository owner reads, and three
 of its rules are the kind that a later edit breaks silently.
 
 1. **Every field names its source, and a field with no source is not in the digest**
-   (`dev/memos/L9-pod-program-design.md:2841-2842`). `FIELD_SOURCES` in
+   (`dev/memos/LJ-4-pod-program-design.md:2841-2842`). `FIELD_SOURCES` in
    `scripts/pod/digest.py` states the binding, and this suite RESOLVES every entry
    against the file and the line it names. A source that moves fails here rather than
    printing a stale number to the owner.

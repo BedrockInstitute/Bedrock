@@ -9,7 +9,7 @@ the day the rule was written: 123 masters, 122 imported, one gap, and that gap w
 in-progress chapter.
 
 WHY IT IS SPLIT OUT OF `scripts/gate/check-tree.py`
-(`dev/memos/L9-pod-program-design.md` section 7.2, cutover step 7). AD13 leaves a hole. A
+(`dev/memos/LJ-4-pod-program-design.md` section 7.2, cutover step 7). AD13 leaves a hole. A
 task writes a new master `src/L/Foo.lagda.md`, never edits `src/Everything.lagda.md`, and
 passes: Agda is green on the file, the consumer set is empty, and `make check` never reads
 `L.Foo`. But `scripts/measure/ledger.py:123-126` counts it, so `src/` records a net gain
@@ -207,7 +207,7 @@ CHECKS = {
 #: name, so every invariant ran, `check_archive` included. AFTER: all four callers ask for
 #: `closure` alone (`Makefile`, `scripts/git-hooks/pre-commit`, `scripts/pod/accept.py`
 #: conjunct 3 and `scripts/pod/preflight.py` P16), so `check_archive` had no runner at all
-#: while `dev/memos/L9-pod-program-design.md:2395` still calls it DD13's mechanised half
+#: while `dev/memos/LJ-4-pod-program-design.md:2395` still calls it DD13's mechanised half
 #: "at conjunct 3 and P16". Expanding the NAME rather than editing the four callers keeps
 #: one word as the FAIL class, so a fifth FAIL invariant joins here and reaches every
 #: caller at once. `CHECKS` itself is unchanged, so `--check archive` still runs one.

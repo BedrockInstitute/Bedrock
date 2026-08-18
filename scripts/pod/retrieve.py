@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The retrieval seam of the POD, and the miss signal that measures it.
 
-Design: `dev/memos/L9-pod-program-design.md` section 7.4, Parts 1a and 1b.
+Design: `dev/memos/LJ-4-pod-program-design.md` section 7.4, Parts 1a and 1b.
 Rule R10: the program retrieves the archive and the literature, and the worker
 never surveys by hand.
 

@@ -82,7 +82,7 @@ CLI = ".venv/bin/python scripts/pod/launcher.py"
 # in this copy. That path is not in `.gitignore`, and THREE things in the POD
 # already say where it belongs:
 #
-#   1. `dev/memos/L9-pod-program-design.md` section 4.0 lists `.pod-state/logs/`
+#   1. `dev/memos/LJ-4-pod-program-design.md` section 4.0 lists `.pod-state/logs/`
 #      as the home of the WORKER TRANSCRIPTS, which is what `LOGS` holds.
 #   2. `scripts/pod/pod.py:prune_logs()` reads `<root>/.pod-state/logs` and
 #      matches `<CODE>-*`, which is exactly the name `launch()` writes. Under the
@@ -344,7 +344,7 @@ _C12_FLOOR_TIERS = {
     "heavy": {"slots": 2, "heap": "-A64m -I0 -M12g"},
     "shared": {"max_heap_sum_gb": 32},
 }
-#: The claude CLI's own five `--effort` values, MEASURED 2026-08-17 by [L9-0].
+#: The claude CLI's own five `--effort` values, MEASURED 2026-08-17 by [LJ-4-0].
 #: They are `legal.efforts` in `dev/pod/heads.toml`, and the literal here is the
 #: fallback for a file that will not load at all.
 _CLI_EFFORTS = ("low", "medium", "high", "xhigh", "max")

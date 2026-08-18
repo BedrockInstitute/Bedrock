@@ -35,7 +35,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 SCRIPTS = ROOT / "scripts"
 
 # `pod` joins the set in the same commit that creates scripts/pod/, which is cutover
-# step 4 of dev/memos/L9-pod-program-design.md. The POD program is not a gate: it runs
+# step 4 of dev/memos/LJ-4-pod-program-design.md. The POD program is not a gate: it runs
 # the route, and its files carry the six-fact recorder, the fact 3 witness meter and the
 # closure check that acceptance conjunct 3 calls.
 GROUPS = {"gate", "dispatch", "measure", "site", "ops", "pod"}

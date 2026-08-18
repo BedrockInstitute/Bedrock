@@ -29,7 +29,7 @@ rewrite text, because the right fix is a translation judgement, not a mechanical
 ## Maintaining `glossary.toml`
 
 Each term is a `[[term]]` entry. **Never add one yourself.** Clause W5 of
-`dev/memos/L9-pod-program-design.md` section 3.1 settles a term the glossary lacks, and
+`dev/memos/LJ-4-pod-program-design.md` section 3.1 settles a term the glossary lacks, and
 `AGENTS.md` carries that clause to every slot. The pipeline is two dispatches: a sourced
 provenance dossier, then an adversarial review that returns PASS or FAIL for each term.
 Only a rendering that passes lands here, or one the repository owner rules. The retired

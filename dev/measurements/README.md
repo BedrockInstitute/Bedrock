@@ -32,7 +32,7 @@ tree state that no longer exists cannot be regenerated. It is evidence.
 | `l3.32-t256-belowlim-profile.txt` | per-definition profile of the below-limit master, 546,708 ms | `dev/ledger.toml:2226` |
 | `lj-1.128-run2.log` to `-run5.log` | `[LJ-1.128]` main series, runs 2 to 5 | `agents/tasks/LJ-1-128/lj-1.128-report.md:86` |
 | `lj-1.128-controlA.log`, `-controlB.log` | `[LJ-1.128]` control runs on the old tree | `agents/tasks/LJ-1-128/lj-1.128-report.md:101-106` |
-| `pod-retrieval-scoping-2026-08-17.txt` | the retrieval scoping experiment: gold rank on the full corpus against the archive scope, seven cases | `dev/memos/L9-pod-program-design.md:2615` |
+| `pod-retrieval-scoping-2026-08-17.txt` | the retrieval scoping experiment: gold rank on the full corpus against the archive scope, seven cases | `dev/memos/LJ-4-pod-program-design.md:2615` |
 | `pod-retrieval-scoping-2026-08-17.py` | the experiment that produced the line above, frozen. Nothing runs it | the record beside it |
 
 The report tabulates the two control runs but does not name their files, so
@@ -43,7 +43,7 @@ the table above is their only index.
 A record is frozen and nobody rewrites it.
 `agents/tasks/LJ-1-128/lj-1.128-report.md:86` still cites the old `_build/`
 path, and the two `pod-retrieval-scoping` records name `dev/POD.md` in their
-own headers, which is now `dev/memos/L9-pod-program-design.md`. **Find the file
+own headers, which is now `dev/memos/LJ-4-pod-program-design.md`. **Find the file
 by its basename, and read the table above for the live pointer.** The
 `dev/ledger.toml` citations WERE rewritten, because the ledger is live.
 

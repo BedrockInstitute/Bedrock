@@ -1,5 +1,5 @@
 RETRIEVAL SCOPING MEASUREMENT, 2026-08-17
-Cited by dev/memos/L9-pod-program-design.md section 7.4, Parts 1a and 1b.
+Cited by dev/memos/LJ-4-pod-program-design.md section 7.4, Parts 1a and 1b.
 
 METHOD. BM25 over whole files, k1=1.5, b=0.75, standard library only.
 The tokenizer drops a stop list and words under two characters, lower-cases

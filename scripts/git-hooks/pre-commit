@@ -6,7 +6,7 @@
 # task code. Its own docstring rules that a whole-tree sweep must never gate.
 # The original note follows.
 # THE FIRST SEVEN ARE CONJUNCT 6's LINT CLASS, pinned by section 5.4 of
-# dev/memos/L9-pod-program-design.md. The last two are NOT lint class and
+# dev/memos/LJ-4-pod-program-design.md. The last two are NOT lint class and
 # conjunct 6 does not run them: check-closure is conjunct 3, cheap enough for a
 # hook, and check-rule-ids is row 15. Keeping the pinned member list at seven is
 # what stops this hook and conjunct 6 drifting apart.

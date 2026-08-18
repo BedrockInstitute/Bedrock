@@ -59,7 +59,7 @@ and all four of its items returned; that record is in the journal.
 ## 0.1 The pause of 2026-08-16 (moved)
 
 **Moved to [dev/memos/2026-08-16-pause.md](memos/2026-08-16-pause.md) on 2026-08-18.**
-That pause ended and `[L9]` replaced the flow it planned to resume into. The live screen
+That pause ended and `[LJ-4]` replaced the flow it planned to resume into. The live screen
 is section 0 below and the live task producer is `dev/pod/queue.toml`.
 
 ## 0. Where the work stands (2026-08-16)
@@ -205,7 +205,7 @@ seven times; and for the ten a checker now enforces end to end, the row restated
 the code already carries, which clause W5 forbids.
 
 **A ruling is not repealed by moving.** Read the disposition column for what enforces it
-today, and `dev/memos/L9-pod-program-design.md` section 7.1 for the full reasoning.
+today, and `dev/memos/LJ-4-pod-program-design.md` section 7.1 for the full reasoning.
 **DD0 still binds: a `DD` row is the owner's, and an agent edits one only when asked.**
 
 | DD | What the owner ruled | Date | Disposition | Where it lives now |
@@ -275,7 +275,18 @@ The mechanisms this section carried moved to their enforcers ([L3.32-T113]): the
    `LJ-1.1`, `LJ1-T3` to `LJ-1.3`, `LJ1-T8` to `LJ-1.8`, `LJ1-T11` to
    `LJ-2.1`, `LJ1-T12` to `LJ-3.1`, and the rest by the same phase-and-step
    rule. Every code was PLANNED with no work committed against it, so the
-   carve-out's own conditions held. **`[LJ-0.3]` found the map unrecorded and
+   carve-out's own conditions held.
+   **A SECOND RESTRUCTURE, 2026-08-18, by the owner's explicit instruction:** the POD
+   goal and its eight children were registered as `L9` and `L9.0` to `L9.7`, in the
+   `L` GOAL series. The owner ruled that a TASK carries an `LJ-<phase>.<step>` code,
+   so they are `LJ-4` and `LJ-4.0` to `LJ-4.7`. **The carve-out's conditions did NOT
+   hold this time**: the codes had left PLANNED and 21 commits named them, so this is
+   the owner's ruling and not the carve-out. **`LJ-9` was rejected as the phase**
+   because `LJ-9.0`, `LJ-9.1`, `LJ-9.8` and `LJ-9.99` are the SYNTHETIC codes that
+   frozen test fixtures use, and a real code there would collide with them; `LJ-4` is
+   the next free phase after `LJ-3`. Frozen records keep the old code: 11 commit
+   messages and the reports inside `agents/tasks/LJ-4-0/`, whose file names are the
+   ones they were born with. **`[LJ-0.3]` found the map unrecorded and
    this text still reading "spent", which is the defect: the ruling existed
    and the record of it did not.** The carve-out is spent again.
 4. **What gets a code:** a goal with its own success criterion (a chapter
@@ -359,7 +370,7 @@ archived; it was rewritten as `scripts/pod/check-closure.py`, which runs at
 acceptance conjunct 3 and at pre-flight P16. Rows 5 and 6 name
 `dev/ORCHESTRATION.md`, which is archived at `archive/dev/ORCHESTRATION.md`. The
 return checklist it held is now the six acceptance conjuncts of
-`dev/memos/L9-pod-program-design.md` section 5.4. The heap caps are rule R13's one
+`dev/memos/LJ-4-pod-program-design.md` section 5.4. The heap caps are rule R13's one
 caliber and `admits()` at `scripts/pod/pod.py:1112`.
 
 Struck D10, which used to carry these constraints, went on 2026-08-05 because each constraint is now enforced where it fires. The numbered rows below are routing rows; the full original text is in [dev/memos/build-constraints.md](memos/build-constraints.md), and the older §7.5/§7.6 budgets cited by archived D13 are rules 5 and 6:
@@ -379,7 +390,7 @@ The T1-T6 tension register and its relief valves moved to [dev/memos/process-ten
 
 ## 9. Risks and mitigations (pointer)
 
-The dated risk register moved to [dev/memos/risks-mitigations.md](memos/risks-mitigations.md). Each mitigation is a standing rule with its own home: DD1 and DD5 in §3, `dev/LESSONS.md` D-1/D-6/D-10, the §6.0 rules, and the return checklist in `dev/ORCHESTRATION.md` section 6. **`dev/ORCHESTRATION.md` is archived** at `archive/dev/ORCHESTRATION.md` since 2026-08-18, and the six acceptance conjuncts of `dev/memos/L9-pod-program-design.md` section 5.4 replace that checklist.
+The dated risk register moved to [dev/memos/risks-mitigations.md](memos/risks-mitigations.md). Each mitigation is a standing rule with its own home: DD1 and DD5 in §3, `dev/LESSONS.md` D-1/D-6/D-10, the §6.0 rules, and the return checklist in `dev/ORCHESTRATION.md` section 6. **`dev/ORCHESTRATION.md` is archived** at `archive/dev/ORCHESTRATION.md` since 2026-08-18, and the six acceptance conjuncts of `dev/memos/LJ-4-pod-program-design.md` section 5.4 replace that checklist.
 
 ## 10. Candidate simplification register (pointer)
 
@@ -453,15 +464,15 @@ and `[L8.2]` is the gate that `[L4.1]` waits on.
 | L8.0 | Foundation refactor at T8 scale, on the post-archival tree | PLANNED (candidates re-examined, not inherited) |
 | L8.1 | Line-by-line polish over the whole tree | PLANNED |
 | L8.2 | **THE GATE**: report to the owner before any prose phase | PLANNED (the owner adds further code-shaping work here; `[L4.1]` waits on it) |
-| L9 | The orchestration flow becomes a program | **DONE 2026-08-18**, at `fc676cb`. Designed at `dev/memos/L9-pod-program-design.md` on 2026-08-17 and built from `7d086e5` to `fc676cb`. `scripts/pod/pod.py` is the loop, `dev/pod/table.toml` is the rule table, and `dev/pod/queue.toml` is the only producer of a task. **The loop has not run yet**, and `[L9.6]` carries that |
-| L9.0 | Measure, and settle two prices | **DONE** `7d086e5` (the recompile probe, and the brief-build cost; gaps B3 and B4 both closed) |
-| L9.1 | The launcher, and the head table | **DONE** `ed09b26`: `scripts/pod/launcher.py`, `scripts/pod/heads.py` and `dev/pod/heads.toml` |
-| L9.2 | The recorder and the acceptance runner | **DONE** `ed09b26`: `scripts/pod/accept.py`, `scripts/pod/facts.py` and `scripts/pod/witness.py` |
-| L9.3 | The table, the router, the replay, the admission and the pre-flight | **DONE** `ed09b26`: `scripts/pod/table.py`, `scripts/pod/replay.py`, `scripts/pod/preflight.py` and `dev/pod/table.toml` |
-| L9.4 | The loop, the runner, the state and the log | **DONE** `ed09b26`: `scripts/pod/pod.py`. The transition log directory landed at `fc676cb` |
-| L9.5 | The gates: the spec-surface check, the survey split and the miss signal | **DONE** `ed09b26`: `check-spec-surface.py`, `check-survey-quotes.py`, `check-closure.py` and `retrieve.py`. The guard's wiring anchor was repaired at `ab55a8d` |
-| L9.6 | The digest, the push, the maintainer, the first dispatch | **BUILT** `6549c17` and `ed09b26`, with `scripts/pod/pi_stream.py` at `fc676cb`: `scripts/pod/digest.py`, `notify_owner()` at `scripts/pod/pod.py:1462`, the maintainer batch, and the standing refill brief. **THE FIRST DISPATCH IS NOT RUN.** The owner starts the loop |
-| L9.7 | RUN THE CUTOVER | **DONE 2026-08-18**, at `fc676cb`, with the repairs at `02a351a` and `ab55a8d`. 24 files went to `archive/`, and `dev/ORCHESTRATION.md` is one of them. **`AGENTS.md` SURVIVED**, rewritten in place, because amendment A8 reversed the archive order for that one file: it is the shared Boundary and the only hand-written source of it |
+| LJ-4 | The orchestration flow becomes a program | **DONE 2026-08-18**, at `fc676cb`. Designed at `dev/memos/LJ-4-pod-program-design.md` on 2026-08-17 and built from `7d086e5` to `fc676cb`. `scripts/pod/pod.py` is the loop, `dev/pod/table.toml` is the rule table, and `dev/pod/queue.toml` is the only producer of a task. **The loop has not run yet**, and `[LJ-4.6]` carries that |
+| LJ-4.0 | Measure, and settle two prices | **DONE** `7d086e5` (the recompile probe, and the brief-build cost; gaps B3 and B4 both closed) |
+| LJ-4.1 | The launcher, and the head table | **DONE** `ed09b26`: `scripts/pod/launcher.py`, `scripts/pod/heads.py` and `dev/pod/heads.toml` |
+| LJ-4.2 | The recorder and the acceptance runner | **DONE** `ed09b26`: `scripts/pod/accept.py`, `scripts/pod/facts.py` and `scripts/pod/witness.py` |
+| LJ-4.3 | The table, the router, the replay, the admission and the pre-flight | **DONE** `ed09b26`: `scripts/pod/table.py`, `scripts/pod/replay.py`, `scripts/pod/preflight.py` and `dev/pod/table.toml` |
+| LJ-4.4 | The loop, the runner, the state and the log | **DONE** `ed09b26`: `scripts/pod/pod.py`. The transition log directory landed at `fc676cb` |
+| LJ-4.5 | The gates: the spec-surface check, the survey split and the miss signal | **DONE** `ed09b26`: `check-spec-surface.py`, `check-survey-quotes.py`, `check-closure.py` and `retrieve.py`. The guard's wiring anchor was repaired at `ab55a8d` |
+| LJ-4.6 | The digest, the push, the maintainer, the first dispatch | **BUILT** `6549c17` and `ed09b26`, with `scripts/pod/pi_stream.py` at `fc676cb`: `scripts/pod/digest.py`, `notify_owner()` at `scripts/pod/pod.py:1462`, the maintainer batch, and the standing refill brief. **THE FIRST DISPATCH IS NOT RUN.** The owner starts the loop |
+| LJ-4.7 | RUN THE CUTOVER | **DONE 2026-08-18**, at `fc676cb`, with the repairs at `02a351a` and `ab55a8d`. 24 files went to `archive/`, and `dev/ORCHESTRATION.md` is one of them. **`AGENTS.md` SURVIVED**, rewritten in place, because amendment A8 reversed the archive order for that one file: it is the shared Boundary and the only hand-written source of it |
 
 ### Task index (one row per dispatch, section 6.0 rules 7 and 8)
 

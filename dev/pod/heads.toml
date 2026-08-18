@@ -3,7 +3,7 @@
 # WHY THIS FILE EXISTS. Before it, a model name, an effort level and a deadline
 # lived in three places: a skill document, a policy module and one literal in
 # the dispatcher. The measured failure is at
-# `dev/memos/L9-pod-program-design.md:1826-1836`: after row 21 retires
+# `dev/memos/LJ-4-pod-program-design.md:1826-1836`: after row 21 retires
 # `scripts/dispatch/dispatch_policy.py`, the dispatcher falls back to a hard
 # literal and starts a CODEX agent on a deepseek model for every dispatch that
 # omits `--harness`. This file is the ONE home of a model name, an effort level,
@@ -34,10 +34,10 @@ version = 1
 [legal]
 efforts = ["low", "medium", "high", "xhigh", "max"]
 
-# MEASURED 2026-08-17, [L9-0]. Every string below resolves. Two read-backs ran
+# MEASURED 2026-08-17, [LJ-4-0]. Every string below resolves. Two read-backs ran
 # per string: `claude -p --output-format json` reports `modelUsage.<key>` and
 # `canonicalModel`; a live herdr pane prints a display name in its banner.
-# Evidence: `agents/tasks/L9-0/l9.0-b4-model-ids.md:56-70`.
+# Evidence: `agents/tasks/LJ-4-0/l9.0-b4-model-ids.md:56-70`.
 # The three aliases resolve to the three full IDs:
 #   opus -> claude-opus-5, fable -> claude-fable-5, sonnet -> claude-sonnet-5
 # PREFER A FULL ID IN A `[heads]` ROW. An alias means "the latest model", so it
@@ -49,7 +49,7 @@ efforts = ["low", "medium", "high", "xhigh", "max"]
 # misspelling because it looks right. MEASURED 2026-08-17:
 # `claude-opus-5-20260101` PASSES the client and fails at the API with
 # `api_error_status: 404`, "There's an issue with the selected model". Evidence:
-# `agents/tasks/L9-0/l9.0-b4-model-ids.md:104-107`. The list below is the first
+# `agents/tasks/LJ-4-0/l9.0-b4-model-ids.md:104-107`. The list below is the first
 # guard, because the loader refuses a string it does not hold; the read-back
 # below is the second, for a string that IS held and still fails in the pane.
 models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
@@ -79,7 +79,7 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
 # INSIDE the pane. `herdr agent start` still returns `agent_started` with
 # `interactive_ready: true`, the agent reaches `working` and then `done`, and
 # every guard in the launcher reads that as a healthy run.
-# Evidence: `agents/tasks/L9-0/l9.0-b4-model-ids.md:95-101`.
+# Evidence: `agents/tasks/LJ-4-0/l9.0-b4-model-ids.md:95-101`.
 #
 # So the POD's `launch()` wrapper runs `herdr agent read` after `agent start`
 # and applies THIS rule:
@@ -101,10 +101,10 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
 # refusal, because the rule fires only on a POSITIVE detection.
 #
 # THE DESIGN'S OWN TEXT IS REFUTED. Section 6.1 at
-# `dev/memos/L9-pod-program-design.md:1754-1755` reads "A pane that does not
+# `dev/memos/LJ-4-pod-program-design.md:1754-1755` reads "A pane that does not
 # name the model it asked for returns NO PID". That rule parks every correct
 # dispatch and passes every wrong one. Evidence:
-# `agents/tasks/L9-0/l9.0-b4-model-ids.md:103-113`.
+# `agents/tasks/LJ-4-0/l9.0-b4-model-ids.md:103-113`.
 
 [limits]
 tick_seconds = 30             # the runner's sleep, section 5.0
@@ -114,16 +114,16 @@ worker_deadline_s = 14400     # a worker that runs longer is killed, section 5.1
 attempt_max = 4               # consecutive retries on ONE row, then PARK. B2
 
 # THE 1800 s AGDA DEADLINE CLEARS THE MEASURED WORST CASE BY 5.9 TIMES.
-# MEASURED 2026-08-17, [L9-0] gap B3: the widest acceptance class, `d5-base`
+# MEASURED 2026-08-17, [LJ-4-0] gap B3: the widest acceptance class, `d5-base`
 # over `src/Base/Prelude.lagda.md`, ran 300.81 s, and a cold whole-tree run ran
-# 305.70 s. Evidence: `agents/tasks/L9-0/l9.0-b3-probe-report.md:133`.
+# 305.70 s. Evidence: `agents/tasks/LJ-4-0/l9.0-b3-probe-report.md:133`.
 
 # THE TWO CONCURRENCY TIERS, restored by amendment A14 from `dev/LESSONS.md`
 # C-12. A task declares its tier in its table row. The design pinned
 # `AGDA_SLOTS = 2` and dropped the WIDE tier, which halved throughput.
 #
 # The design names the two tiers and their numbers at
-# `dev/memos/L9-pod-program-design.md:1701-1704` and `:102-112`. It names NO KEY
+# `dev/memos/LJ-4-pod-program-design.md:1701-1704` and `:102-112`. It names NO KEY
 # for them. The key names below are this file's, and a reader of `admits()`
 # needs them to match.
 [tiers.wide]

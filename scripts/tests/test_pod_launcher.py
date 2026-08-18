@@ -845,13 +845,13 @@ def main() -> int:
     check("legal.efforts is the claude CLI's own five values",
           heads["legal"]["efforts"], ["low", "medium", "high", "xhigh", "max"])
     check("legal.models carries the three full IDs and the three aliases, "
-          "all six VERIFIED by [L9-0]",
+          "all six VERIFIED by [LJ-4-0]",
           heads["legal"]["models"],
           ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
            "opus", "fable", "sonnet"])
     check("claude-haiku-5 is excluded, because the client refuses it",
           "claude-haiku-5" in heads["legal"]["models"], False)
-    check("a DATE SUFFIX is excluded too, and it is the harder case: [L9-0] "
+    check("a DATE SUFFIX is excluded too, and it is the harder case: [LJ-4-0] "
           "measured that it passes the client and fails at the API with a 404",
           [m for m in heads["legal"]["models"] if m[-1].isdigit() and len(m) > 16],
           [])
@@ -875,7 +875,7 @@ def main() -> int:
           ["agda_deadline_s", "attempt_max", "exclusive_max_load1",
            "tick_seconds", "worker_deadline_s"])
     check_true("the Agda deadline clears the widest measured acceptance run, "
-               "300.81 s at [L9-0] gap B3", limits["agda_deadline_s"] > 300.81)
+               "300.81 s at [LJ-4-0] gap B3", limits["agda_deadline_s"] > 300.81)
     check("A14's WIDE tier admits four concurrent Agda writers",
           heads["tiers"]["wide"]["slots"], 4)
     check("A14's HEAVY tier admits two", heads["tiers"]["heavy"]["slots"], 2)

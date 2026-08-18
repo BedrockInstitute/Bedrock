@@ -2609,7 +2609,7 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # at commit fc676cb, to archive/scripts/gate/check-baseline-home.py, and the
 # `baselinehome` target left the Makefile `check:` line in the same commit.
 # THE REASON IT WAS RELEASED NO LONGER HOLDS. Row 18 of section 7.1 of
-# dev/memos/L9-pod-program-design.md retired the gate because it read DD24 as
+# dev/memos/LJ-4-pod-program-design.md retired the gate because it read DD24 as
 # SUPERSEDED. Amendment A10, in the amendments list of that memo's preamble,
 # overturned that reading and RESTORED the ratio bar. So the rule stands and its
 # enforcer does not.

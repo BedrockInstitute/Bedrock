@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The POD stop push, section 8.4 of dev/memos/L9-pod-program-design.md.
+# The POD stop push, section 8.4 of dev/memos/LJ-4-pod-program-design.md.
 #
 # WHY THIS FILE EXISTS. The loop has exactly TWO stops: rule (d), when the parked count
 # reaches 3, and apply(), when a `stop_loop` row matched. Both push immediately and

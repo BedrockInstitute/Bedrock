@@ -6,7 +6,7 @@ the codex dispatcher with `scripts/pod/launcher.py`. `LOGS` below now points at
 the directory the POD writes, but `TOOLCALL_RE` at `:94` is still the CODEX
 shell prefix. No Claude head has run through the new launcher, so no transcript
 exists to write the Claude shape against. Design section 7.4 of
-`dev/memos/L9-pod-program-design.md` and gap M9 schedule that for day 7:
+`dev/memos/LJ-4-pod-program-design.md` and gap M9 schedule that for day 7:
 capture one transcript, paste its tool-call line into section 7.4, write the
 regex here, and set `REGEX_BUILT` to True. Until then this script prints UNBUILT
 and scans nothing, because a codex regex over a Claude transcript reports a

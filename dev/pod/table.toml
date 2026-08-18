@@ -75,7 +75,7 @@ action = "escalate"
 head_slot = "coder_adversarial"
 added = 2026-08-17
 added_by = "owner"
-reason = "DD24's ratio bar, restored by A10. Basis: agents/tasks/L9-0/l9.0-b3-probe-report.md:185 measures 0.01069 s per in-fence line, and the bar is that rate at the [ratio] tolerance."
+reason = "DD24's ratio bar, restored by A10. Basis: agents/tasks/LJ-4-0/l9.0-b3-probe-report.md:185 measures 0.01069 s per in-fence line, and the bar is that rate at the [ratio] tolerance."
 expired = false
 
   [row.when]

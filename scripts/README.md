@@ -21,7 +21,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
-| `scripts/pod/` | the POD program of goal L9: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `facts.py`, `heads.py`, `instructions.py`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `table.py`, `witness.py` |
+| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `facts.py`, `heads.py`, `instructions.py`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `table.py`, `witness.py` |
 
 Unchanged in place: this `README.md`, `scripts/tests/`, `scripts/git-hooks/`.
 
@@ -263,7 +263,7 @@ python3 scripts/gate/check-fences.py --run 5   # raise the run threshold
 `check-tree.py` are frozen under `archive/scripts/gate/`, at the same basename.
 Each one's own docstring is still its operative documentation.
 
-**Read the disposition before you read the file.** `dev/memos/L9-pod-program-design.md`
+**Read the disposition before you read the file.** `dev/memos/LJ-4-pod-program-design.md`
 section 7.1 gives every one of them a row: RETIRE, because a ruling it served is
 SUPERSEDED, or REWRITE, because its function moved into `scripts/pod/`. Three
 functions moved rather than died: `check-tree.py`'s closure half is
@@ -316,7 +316,7 @@ of `dev/pod/heads.toml`. The archived operating manual is
 `check-sources-read.py:61` reads `.claude/skills/codex-dispatch/.state/logs`, which the
 retired skill wrote: 1,017 files and 931MB, newest 2026-08-16, git-ignored, so a fresh
 clone has none of it. The POD writes its own logs under `.pod-state/`.
-`dev/memos/L9-pod-program-design.md` section 7.1 row 23 says KEEP AND RETARGET, and the
+`dev/memos/LJ-4-pod-program-design.md` section 7.1 row 23 says KEEP AND RETARGET, and the
 retarget is section 7.4. Until it lands this tool reads history only, and nothing calls
 it: no `make` target, no hook and no POD rule.
 
@@ -337,7 +337,7 @@ per slot, read by `scripts/pod/heads.py`, so no switch and no checker of a
 `tier:` line survives. `dd25-record.py`'s record moved into the transition log's
 `role` field. `recall-hook.py` was retired by physics: a Claude Code hook fires
 only for an in-harness subagent, and the program dispatches through a harness.
-`dev/memos/L9-pod-program-design.md` section 7.1 rows 20, 21, 24 and 25 carry the
+`dev/memos/LJ-4-pod-program-design.md` section 7.1 rows 20, 21, 24 and 25 carry the
 rulings.
 
 ## measure/
@@ -644,7 +644,7 @@ BARK_TITLE="POD 已停止" BARK_GROUP="Bedrock POD" BARK_BODY="<what happened>" 
 
 ## pod/
 
-The POD program of goal L9. `dev/memos/L9-pod-program-design.md` is its design, and each
+The POD program of goal L9. `dev/memos/LJ-4-pod-program-design.md` is its design, and each
 file below names the section it implements. **The program is in force since the cutover of
 2026-08-18.** `make check` runs three of these files, as the `closure`, `specsurface` and
 `instructions` targets; the `commit-msg` hook runs `check-spec-surface.py --msg-file`; and
@@ -654,7 +654,7 @@ file below names the section it implements. **The program is in force since the 
 **Eight of the sixteen files below have no section of their own**: `accept.py`, `heads.py`,
 `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py` and `table.py`. Each
 one's docstring names the design section it implements, and
-`dev/memos/L9-pod-program-design.md` is the operative document for all of them.
+`dev/memos/LJ-4-pod-program-design.md` is the operative document for all of them.
 
 ### `facts.py`
 
@@ -846,7 +846,7 @@ not run it. Nothing else runs it at commit time either: `make survey` is a manua
 `git-hooks/commit-msg` runs R16's spec-surface guard, `check-spec-surface.py --msg-file`.
 It refuses a commit that stages a guarded rule home, or the snapshot, without a
 `Spec-surface-approved: YYYY-MM-DD (name)` trailer in the message. The guarded homes are
-`AGENTS.md`, `dev/memos/L9-pod-program-design.md`, `dev/pod/heads.toml` and every file
+`AGENTS.md`, `dev/memos/LJ-4-pod-program-design.md`, `dev/pod/heads.toml` and every file
 under `dev/pod/instructions/`.
 
 Both hooks are version-controlled; activate them once per clone (or run `make hooks`):

@@ -9,7 +9,7 @@ tree. A router that reads six measured facts and one closed key list cannot read
 wrongly, because it never reads one.
 
 WHAT EACH RULE HERE COSTS IF IT IS DROPPED
-(`dev/memos/L9-pod-program-design.md` sections 4.1 to 4.6):
+(`dev/memos/LJ-4-pod-program-design.md` sections 4.1 to 4.6):
 
 - **The loader refuses an unknown key.** A typo in a `[row.when]` block would otherwise
   become a silent no-match row: the row loads, it never fires, and the maintainer reads
@@ -34,7 +34,7 @@ WHAT EACH RULE HERE COSTS IF IT IS DROPPED
 
 AMENDMENT A10, AND THE KEY NAMES ARE THIS FILE'S PICK. The owner ruled on 2026-08-17 that
 DD24 is NOT superseded and that its RATIO form is restored, seconds over in-fence lines
-(`dev/memos/L9-pod-program-design.md:71-77`). That amendment names the FACT, `lines`, and
+(`dev/memos/LJ-4-pod-program-design.md:71-77`). That amendment names the FACT, `lines`, and
 it names NO `[row.when]` key; section 4.3's key table names none either. **So this file
 picks ONE pair, `seconds_per_line_min` and `seconds_per_line_max`, and says so here.** The
 bar is a QUOTIENT, and no pair of raw keys can express a quotient. This file adds no

@@ -4,7 +4,7 @@
 WHY THIS FILE EXISTS. The owner ruled on 2026-08-17 that `AGENTS.md` survives the
 cutover, rewritten to a minimum project summary, the current milestone, the most
 important SHARED Boundary, and a pointer to the per-slot instruction files. Amendment
-A8 of `dev/memos/L9-pod-program-design.md` carries the ruling and names `AGENTS.md`
+A8 of `dev/memos/LJ-4-pod-program-design.md` carries the ruling and names `AGENTS.md`
 the ONE hand-written source of the shared half.
 
 WHAT MEASURED FAILURE IT ANSWERS. A rule restated in a second file is a rule that

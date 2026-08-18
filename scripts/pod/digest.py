@@ -6,7 +6,7 @@ learn where the route stands. Before the POD a model wrote that screen, and a mo
 that writes a status screen writes the number it remembers. The design answers it with
 one rule: **the program generates the digest, no model writes it and no model edits it,
 every field names its source, and a field with no source is not in the digest**
-(`dev/memos/L9-pod-program-design.md:2841-2842`). `FIELD_SOURCES` below is that rule in
+(`dev/memos/LJ-4-pod-program-design.md:2841-2842`). `FIELD_SOURCES` below is that rule in
 executable form, and `scripts/tests/test_pod_digest.py` reads it.
 
 **NO SENTENCE HERE RANKS ANYTHING.** Ranking is a judgement AD1 forbids the program and
@@ -132,7 +132,7 @@ PARK_UNLISTED = "unlisted"
 RETRIEVAL_TRIGGER = "两周内缺失率高于 20% 且缺失多数为零重叠"
 
 #: The six states of section 5.2. The design names three of them in Chinese at
-#: `dev/memos/L9-pod-program-design.md:2907-2911`; the other three are rendered here.
+#: `dev/memos/LJ-4-pod-program-design.md:2907-2911`; the other three are rendered here.
 STATE_ZH = {"READY": "就绪", "RUNNING": "运行中", "RETURNED": "已返回",
             "CHECKING": "验收中", "DONE": "完成", "PARKED": "停放"}
 
@@ -174,13 +174,13 @@ FIELD_SOURCES = {
     "dispatched": ("scripts/pod/pod.py", 2379, "READY, RUNNING"),
     "parked": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
     "net_lines": ("scripts/measure/ledger.py", 145, "def count"),
-    "newest_done": ("dev/memos/L9-pod-program-design.md", 2940, "to: DONE"),
+    "newest_done": ("dev/memos/LJ-4-pod-program-design.md", 2940, "to: DONE"),
     # 二、任务台账
     "task_rows": ("scripts/pod/pod.py", 596, "def emit"),
     # 三、报告数, the two AD7 numbers
-    "no_match_rate": ("dev/memos/L9-pod-program-design.md", 2948, "no_match_rate"),
+    "no_match_rate": ("dev/memos/LJ-4-pod-program-design.md", 2948, "no_match_rate"),
     "park_reasons_other": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
-    "days_since_gain": ("dev/memos/L9-pod-program-design.md", 2958, "net gain"),
+    "days_since_gain": ("dev/memos/LJ-4-pod-program-design.md", 2958, "net gain"),
     "standing": ("scripts/measure/ledger.py", 133, "def countable_masters"),
     # 三、报告数, the twelve
     "shadowing": ("scripts/pod/table.py", 542, "def hits"),
@@ -201,14 +201,14 @@ FIELD_SOURCES = {
     # 四、阻塞与待裁决
     "blocked_parked": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
     "queue_requests": ("scripts/pod/pod.py", 730, "def split_entry"),
-    "owner_rulings": ("dev/memos/L9-pod-program-design.md", 3422, "An owner ruling"),
+    "owner_rulings": ("dev/memos/LJ-4-pod-program-design.md", 3422, "An owner ruling"),
     # THE ONE FIELD WHOSE SOURCE IS THIS FILE. A refused row is produced by the digest's
     # own readers, so `_refuse()` is its source and there is no other.
     "refused_rows": ("scripts/pod/digest.py", 279, "def _refuse"),
 }
 
 #: Section 二's column widths, in display columns, taken from the worked example at
-#: `dev/memos/L9-pod-program-design.md:2906-2911`.
+#: `dev/memos/LJ-4-pod-program-design.md:2906-2911`.
 COLS = (14, 10, 7, 26)
 
 
@@ -987,7 +987,7 @@ def owner_rulings(root: Path) -> list[dict]:
     printing with no edit here. A row qualifies when its second cell names an owner
     ruling and neither cell records it as closed, absorbed or settled.
     """
-    path = root / "dev" / "memos" / "L9-pod-program-design.md"
+    path = root / "dev" / "memos" / "LJ-4-pod-program-design.md"
     try:
         text = path.read_text(encoding="utf-8")
     except OSError:

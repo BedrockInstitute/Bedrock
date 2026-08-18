@@ -9,7 +9,7 @@ in the tree. This file reads no report. It measures six facts, matches one table
 performs one of eight actions, and every step it takes is one line in a TRACKED log.
 
 THE SIX RULES THAT COST THE MOST IF THEY ARE DROPPED
-(`dev/memos/L9-pod-program-design.md` section 5):
+(`dev/memos/LJ-4-pod-program-design.md` section 5):
 
 - **The log line is written FIRST, then the state file.** The tracked log is the truth and
   `.pod-state/state.json` is a cache of its fold. A lost state file is recoverable from
@@ -1492,13 +1492,13 @@ def model_readback_ok(task, model):
     A wrong model ID passes the loader when `legal.models` holds it, and then fails INSIDE
     the pane: `herdr agent start` still returns `agent_started`, the agent reaches
     `working` and then `done`, and every guard in the launcher reads that as a healthy run
-    (`agents/tasks/L9-0/l9.0-b4-model-ids.md:95-101`).
+    (`agents/tasks/LJ-4-0/l9.0-b4-model-ids.md:95-101`).
 
     THE RULE, and it is the CORRECTED direction. Read the banner line that ends with
     `. Claude Max`. PARK the task when that line contains the requested model string
     VERBATIM, case sensitively, because `Opus 5` contains `opus` under a case-insensitive
     match. A resolving ID prints a DISPLAY NAME and never its own ID. The design's own
-    text at `dev/memos/L9-pod-program-design.md:1754-1755` is REFUTED by that measurement:
+    text at `dev/memos/LJ-4-pod-program-design.md:1754-1755` is REFUTED by that measurement:
     it parks every correct dispatch and passes every wrong one.
 
     A banner that cannot be read is NOT a refusal, because the rule fires only on a

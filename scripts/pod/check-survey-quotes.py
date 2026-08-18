@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The survey verification of the POD: every injected path answered, at its line.
 
-Design: `dev/memos/L9-pod-program-design.md` section 7.4, Part 2. It fires at
+Design: `dev/memos/LJ-4-pod-program-design.md` section 7.4, Part 2. It fires at
 acceptance conjunct 6, section 5.4, on the task that just returned.
 
 WHY THIS EXISTS. It is lifted from `scripts/gate/check-dd18-survey.py`, which

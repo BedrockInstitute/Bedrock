@@ -7,7 +7,7 @@ obligation list." The brief writes one field per obligation, and this module der
 four parts of the witness module that decides whether the name resolves.
 
 WHY THE AMENDMENT WAS NEEDED, and it is measured
-(`dev/memos/L9-pod-program-design.md` section 4.7). `scan()` at
+(`dev/memos/LJ-4-pod-program-design.md` section 4.7). `scan()` at
 `scripts/measure/obligations.py:112` counts signatures, which are DISCHARGED obligations,
 so the count RISES when a task lands work. Reconstructed over every task code whose commit
 touched a master: 63 codes, delta min -18, median +22 and 45 positive. That caliber would

@@ -33,9 +33,9 @@ producer.
 **`ledger.py --brief` is the only admissible source for a standing size figure.** Never
 quote a number found in a paragraph.
 
-**`[L9]` replaced the orchestrator with a program.** The program measures six facts,
+**`[LJ-4]` replaced the orchestrator with a program.** The program measures six facts,
 matches one rule table, and performs one action. It reads no report and it makes no
-judgement. Its design is `dev/memos/L9-pod-program-design.md`.
+judgement. Its design is `dev/memos/LJ-4-pod-program-design.md`.
 
 ## Boundary
 
@@ -119,4 +119,4 @@ file, then run `instructions.py --write`.
 | Translation terms | `dev/glossary.toml`, explained by `dev/GLOSSARY.md` |
 | The size ledger | `dev/ledger.toml` |
 | Briefs, reports and probes, one directory per task | `agents/README.md` |
-| The program that runs all of this | `dev/memos/L9-pod-program-design.md` |
+| The program that runs all of this | `dev/memos/LJ-4-pod-program-design.md` |

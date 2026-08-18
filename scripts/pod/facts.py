@@ -2,7 +2,7 @@
 """The six-fact recorder of the POD program, and the ONE place the POD starts Agda.
 
 WHY THIS EXISTS, and every rule below is a measured failure and not a preference
-(`dev/memos/L9-pod-program-design.md` section 4.3.1):
+(`dev/memos/LJ-4-pod-program-design.md` section 4.3.1):
 
 - **The error regex takes no location.** Agda prints many tags with no
   `file:line.col` prefix. Over the log corpus of 1,017 files, 3,395 error tags and 49

@@ -515,7 +515,7 @@ check("the trailer regex takes the dated, named form",
 check("the trailer regex refuses an undated one",
       not css.TRAILER_RE.search("Spec-surface-approved: yes\n"))
 check("R16 guards the design memo and the heads table",
-      css.is_audited("dev/memos/L9-pod-program-design.md")
+      css.is_audited("dev/memos/LJ-4-pod-program-design.md")
       and css.is_audited("dev/pod/heads.toml")
       and css.is_audited("dev/pod/instructions/coder.md"))
 check("R16 does not guard an unrelated file",
@@ -546,7 +546,7 @@ FIXTURE = {
     "src/V/Model.lagda.md": (
         "# Model\n\n```agda\nmodule V.Model where\n\n"
         "L⊨ZFC : isZFCModel\nL⊨ZFC = proof\n```\n"),
-    "dev/memos/L9-pod-program-design.md": "the rule home fixture\n",
+    "dev/memos/LJ-4-pod-program-design.md": "the rule home fixture\n",
     "dev/pod/heads.toml": 'mathematician = "opus"\n',
     "dev/pod/instructions/coder.md": "the coder slot\n",
 }
@@ -586,8 +586,8 @@ def git(*args, cwd: Path):
 repo = tmp / "repo"
 fix = fixture_repo(repo)
 msg_bad, msg_ok = repo / "msg-bad.txt", repo / "msg-ok.txt"
-msg_bad.write_text("[L9] a commit\n", encoding="utf-8")
-msg_ok.write_text("[L9] a commit\n\nSpec-surface-approved: 2026-08-17 (choukh)\n",
+msg_bad.write_text("[LJ-4] a commit\n", encoding="utf-8")
+msg_ok.write_text("[LJ-4] a commit\n\nSpec-surface-approved: 2026-08-17 (choukh)\n",
                   encoding="utf-8")
 
 check("the fixture surface is Landmarks plus its one `open import`",

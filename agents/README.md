@@ -43,7 +43,7 @@ so an old citation still resolves under `find agents -name <the-old-name>`.
 through it, and `scripts/README.md` names the members. Do not write `agents/tasks` into a tenth
 script by hand.
 
-**The brief's FORM is `dev/memos/L9-pod-program-design.md` section 6.3, and this file does
+**The brief's FORM is `dev/memos/LJ-4-pod-program-design.md` section 6.3, and this file does
 not restate it.** No live rulebook section replaces `dev/ORCHESTRATION.md` section 3. The
 POD cutover of 2026-08-18 archived that file to `archive/dev/ORCHESTRATION.md`, and the
 design memo is the only place that states the form today.
