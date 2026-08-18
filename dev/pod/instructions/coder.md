@@ -72,6 +72,12 @@ judgement. Its design is `dev/memos/L9-pod-program-design.md`.
   ruling, and it is not evidence about what any other agent may do.
 - **`make check` is the gate before any commit**, and it runs in the background: a cold
   typecheck takes about twelve minutes. While you work, run the individual checks.
+- **NEVER COMMIT AND NEVER PUSH.** Leave the working tree exactly as your report
+  describes it. **The program commits**, by explicit path derived from your task's own
+  scope, and it never runs `git add -A` and never pushes (rule R8). A commit you make
+  yourself sweeps whatever else is in the tree, including another task's half-written
+  file. **One push is one CI run and one deploy**, and that is the repository owner's
+  call and nobody else's.
 - **Agda runs under a heap cap, always.** `GHCRTS="-A64m -I0 -M8g"` in the wide tier,
   `-M12g` in the heavy tier, one process per agent. Never raise the cap. A heap
   exhaustion is a WALL event: report it and never simply rerun.

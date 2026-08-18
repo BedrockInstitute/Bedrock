@@ -94,19 +94,30 @@ SRC_SCOPE = ["archive/src"]
 DEV_SCOPE = ["archive/dev"]
 RUD = "archive/src/2026-08-09-rud-route"
 
-#: (episode, brief, gold, scope, the rank the record holds).
-#: `dev/measurements/pod-retrieval-scoping-2026-08-17.txt:21-29`.
+#: (episode, brief, gold, scope, the rank the ranker gives TODAY).
+#: The measurement is `dev/measurements/pod-retrieval-scoping-2026-08-17.txt:21-29`.
+#:
+#: THE TWO `DEV_SCOPE` RANKS MOVED ON 2026-08-18 AND THE RECORD PREDICTED IT.
+#: Its own reproducibility note reads: the scoped column reproduces because the
+#: archive corpus last changed 2026-08-13. **The POD cutover changed it**, by
+#: archiving `dev/ORCHESTRATION.md` into `archive/dev/`. One 604-line document
+#: entering a six-file corpus moves the document frequencies and the average
+#: length, so episode 11 went 2 -> 3 and episode 10 went 3 -> 5.
+#: **The `SRC_SCOPE` ranks are untouched**, because `archive/src/` did not change,
+#: and that is the control that proves the cause.
+#: The ranker is unchanged. Retrieval is a function of its corpus, and this is what
+#: that costs: archiving a document re-ranks every query against that scope.
 EPISODES = [
     ("7", "agents/tasks/LJ-1-237/LJ-1.237.md", f"{RUD}/L/Condensation.lagda.md",
      SRC_SCOPE, 1),
     ("7b", "agents/tasks/LJ-1-239/LJ-1.239.md", f"{RUD}/L/Condensation.lagda.md",
      SRC_SCOPE, 1),
     ("11", "agents/tasks/archive/LJ-1-10/LJ-1.10.md",
-     "archive/dev/TASKS-archived.md", DEV_SCOPE, 2),
+     "archive/dev/TASKS-archived.md", DEV_SCOPE, 3),  # episode 11, was 2 before the cutover
     ("5", "agents/tasks/LJ-1-353/LJ-1.353.md", f"{RUD}/L/Cardinal.lagda.md",
      SRC_SCOPE, 3),
     ("10", "agents/tasks/archive/LJ-1-6/LJ-1.6.md",
-     "archive/dev/TASKS-archived.md", DEV_SCOPE, 3),
+     "archive/dev/TASKS-archived.md", DEV_SCOPE, 5),  # episode 10, was 3 before the cutover
     ("5b", "agents/tasks/LJ-1-136/LJ-1.136.md", f"{RUD}/L/Cardinal.lagda.md",
      SRC_SCOPE, 16),
     ("6", "agents/tasks/LJ-1-92/LJ-1.92.md",
@@ -124,8 +135,12 @@ def rank_of(brief: str, gold: str, scope: list[str]) -> int | None:
 
 check("archive/src holds the 97 masters the record scoped",
       len(retr.corpus(SRC_SCOPE)) == 97, str(len(retr.corpus(SRC_SCOPE))))
-check("archive/dev holds the 6 records the record scoped",
-      len(retr.corpus(DEV_SCOPE)) == 6, str(len(retr.corpus(DEV_SCOPE))))
+# 7 SINCE THE POD CUTOVER, and the count is the point rather than a detail. The
+# record scoped 6; cutover step 4b archived `dev/ORCHESTRATION.md` here, and that
+# one document is why the two DEV_SCOPE ranks above moved. Pin the count, so the
+# next document to enter this corpus fails a test instead of moving a rank quietly.
+check("archive/dev holds 7 records, 6 at the record plus ORCHESTRATION.md",
+      len(retr.corpus(DEV_SCOPE)) == 7, str(len(retr.corpus(DEV_SCOPE))))
 check("the corpus rule keeps a README index out of a code archive",
       not [p for p in retr.corpus(SRC_SCOPE) if p.endswith("README.md")])
 

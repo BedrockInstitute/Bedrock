@@ -196,7 +196,10 @@ scope = {str(p.relative_to(ROOT))
 
 for target in ("dev/LESSONS.md", "dev/PLAN.md", "dev/ARCHIVE.md",
                "dev/STYLE-agda.md", "dev/literature/owner-notes-rud.md",
-               "scripts/README.md", "scripts/gate/check-tree.py", "scripts/measure/ledger.py"):
+               "scripts/README.md", "scripts/pod/check-closure.py", "scripts/measure/ledger.py"):
+    # check-tree.py was the third member until the POD cutover of 2026-08-18 split it
+    # and archived the original. The point of the case is that a scripts/ file reaches
+    # the series scope, so the case moves to the file that replaced it rather than going.
     check(f"{target} is inside the default series scope", target in scope)
 
 check("scripts/*.py reach the series scope and nothing else adds them",

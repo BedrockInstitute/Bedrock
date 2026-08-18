@@ -16,8 +16,8 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | directory | holds | members |
 |---|---|---|
 | `scripts/` (flat) | the modules scripts IMPORT BY NAME across groups | `agents_tree.py`, `repo_root.py` |
-| `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-agents-guard.py`, `check-archive-cited.py`, `check-baseline-home.py`, `check-build-manifest.py`, `check-dd18-survey.py`, `check-dd25-review-named.py`, `check-dd4-stated.py`, `check-dev-docs.py`, `check-fences.py`, `check-glossary.py`, `check-live-record-claims.py`, `check-live-territory.py`, `check-premises-stated.py`, `check-probes.py`, `check-rule-ids.py`, `check-task-index.py`, `check-tree.py`, `lint-agda.py`, `lint-prose.py` |
-| `scripts/dispatch/` | everything about running and auditing a dispatch | `check-dispatch-policy.py`, `check-sources-read.py`, `dd25-record.py`, `dispatch_policy.py`, `recall-hook.py`, `rules.py` |
+| `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-fences.py`, `check-glossary.py`, `check-probes.py`, `check-rule-ids.py`, `lint-agda.py`, `lint-prose.py` |
+| `scripts/dispatch/` | everything about running and auditing a dispatch | `check-sources-read.py`, `rules.py` |
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
