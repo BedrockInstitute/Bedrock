@@ -86,6 +86,16 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
 - **A12. The maintainer head is `claude-opus-5` at effort `high`.** This closes
   gap M8. Section 6.1 carries it, and AD2's fifth head is now ruled rather than
   picked.
+- **A16. THE REMAINING CRASH PATHS ARE THE MAINTAINER'S WORK, ruled 2026-08-18.**
+  Two adversarial rounds hardened the program and each found one layer deeper:
+  the second round closed every path the first named and reported 40 more, all on
+  MALFORMED input. The owner ruled the loop starts anyway and the maintainer
+  fixes them as they fire. **The reasoning is that no producer of malformed input
+  exists today:** `dev/pod/table.toml`, `dev/pod/replay-corpus.jsonl` and the
+  transition log are all tracked and the program writes them itself. **A crash is
+  therefore a REAL signal rather than a hypothetical**, and rule (f) already sends
+  a second instance to a reviewer. Hardening rounds do not converge on their own,
+  and this is the stop line.
 
 **THREE MORE ON THE MEMORY DISCIPLINE, ruled 2026-08-17 after an audit of this
 document against `dev/LESSONS.md` C-12 found three carry-over defects.** C-12 is
