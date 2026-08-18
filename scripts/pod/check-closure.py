@@ -24,7 +24,9 @@ THE FOUR SUBCHECKS THIS FILE KEEPS, and each has a ruled disposition:
 - **archive**, FAIL. No live master imports a module whose only home is `archive/`. The
   archive is unwired and ungated by design, so an import across the boundary drags
   unchecked code into the checked tree. This is DD13's mechanised half and the archive
-  grows at the cutover.
+  grows at the cutover. **The name `closure` runs it too**, because every caller asks for
+  `closure` and this invariant would otherwise have no runner. `GROUPS` below is that
+  expansion and it carries the measurement.
 - **closure-new**, WARN. An UNTRACKED master that is not wired. Its author must wire it
   before committing, but it must not block anyone else. Section 4.3.2 case 1 relies on
   this signal to pick the verification target.
@@ -40,7 +42,9 @@ runner typechecks at every return, so no gate debt is left to count.
 
 Usage:
   check-closure.py --check         run every invariant over the working tree
-  check-closure.py --check NAME    run one: closure, archive, closure-new, module-body
+  check-closure.py --check NAME    closure, archive, closure-new or module-body.
+                                   `closure` runs the whole FAIL class, which is
+                                   `closure` and `archive` together
 Exit status: 0 clean, 1 a FAIL-class violation, 2 usage error.
 """
 
@@ -198,6 +202,19 @@ CHECKS = {
     "module-body": (check_module_body, "WARN"),
 }
 
+#: THE NAME `closure` RUNS BOTH FAIL-CLASS INVARIANTS, and this line is the fix for a
+#: defect the cutover created. BEFORE: `make check` ran `check-tree.py --check` with NO
+#: name, so every invariant ran, `check_archive` included. AFTER: all four callers ask for
+#: `closure` alone (`Makefile`, `scripts/git-hooks/pre-commit`, `scripts/pod/accept.py`
+#: conjunct 3 and `scripts/pod/preflight.py` P16), so `check_archive` had no runner at all
+#: while `dev/memos/L9-pod-program-design.md:2395` still calls it DD13's mechanised half
+#: "at conjunct 3 and P16". Expanding the NAME rather than editing the four callers keeps
+#: one word as the FAIL class, so a fifth FAIL invariant joins here and reaches every
+#: caller at once. `CHECKS` itself is unchanged, so `--check archive` still runs one.
+#: MEASURED 2026-08-18: both invariants exit 0 over the tree today, so this turns nothing
+#: red.
+GROUPS = {"closure": ("closure", "archive")}
+
 
 def main(argv: list[str]) -> int:
     names = [a for a in argv[1:] if not a.startswith("-")]
@@ -209,6 +226,13 @@ def main(argv: list[str]) -> int:
     if any(n not in CHECKS for n in selected):
         print(f"check-closure: unknown check; pick from {', '.join(CHECKS)}", file=sys.stderr)
         return 2
+    # The name is validated FIRST and expanded second, so an unknown name still exits 2.
+    expanded = []
+    for n in selected:
+        for one in GROUPS.get(n, (n,)):
+            if one not in expanded:
+                expanded.append(one)
+    selected = expanded
 
     status = 0
     for name in selected:

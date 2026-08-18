@@ -168,28 +168,28 @@ GAP_ZH = {
 #: a field whose source moves fails the suite instead of printing a stale number.
 FIELD_SOURCES = {
     # 一、今日结论
-    "finished": ("scripts/pod/pod.py", 2077, "CHECKING, DONE"),
-    "dispatched": ("scripts/pod/pod.py", 2188, "READY, RUNNING"),
-    "parked": ("scripts/pod/pod.py", 171, "PARK_REASONS"),
+    "finished": ("scripts/pod/pod.py", 2268, "CHECKING, DONE"),
+    "dispatched": ("scripts/pod/pod.py", 2379, "READY, RUNNING"),
+    "parked": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
     "net_lines": ("scripts/measure/ledger.py", 145, "def count"),
-    "newest_done": ("dev/memos/L9-pod-program-design.md", 2862, "to: DONE"),
+    "newest_done": ("dev/memos/L9-pod-program-design.md", 2940, "to: DONE"),
     # 二、任务台账
-    "task_rows": ("scripts/pod/pod.py", 591, "def emit"),
+    "task_rows": ("scripts/pod/pod.py", 596, "def emit"),
     # 三、报告数, the two AD7 numbers
-    "no_match_rate": ("dev/memos/L9-pod-program-design.md", 2870, "no_match_rate"),
-    "park_reasons_other": ("scripts/pod/pod.py", 171, "PARK_REASONS"),
-    "days_since_gain": ("dev/memos/L9-pod-program-design.md", 2880, "net gain"),
+    "no_match_rate": ("dev/memos/L9-pod-program-design.md", 2948, "no_match_rate"),
+    "park_reasons_other": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
+    "days_since_gain": ("dev/memos/L9-pod-program-design.md", 2958, "net gain"),
     "standing": ("scripts/measure/ledger.py", 133, "def countable_masters"),
     # 三、报告数, the twelve
     "shadowing": ("scripts/pod/table.py", 542, "def hits"),
     "expiry_fallout": ("scripts/pod/table.py", 719, "def expire_rows"),
-    "dropped_returns": ("scripts/pod/pod.py", 2047, "no-change"),
-    "orphan_masters": ("scripts/pod/check-closure.py", 90, "def imported_modules"),
+    "dropped_returns": ("scripts/pod/pod.py", 2170, "no-change"),
+    "orphan_masters": ("scripts/pod/check-closure.py", 94, "def imported_modules"),
     "telescope": ("scripts/measure/check-unbound-hyp.py", 118, "def hypotheses"),
     "vacuous_conjunct_4": ("scripts/pod/accept.py", 422, "unbound_vacuous"),
     "vacuous_conjunct_1": ("scripts/pod/accept.py", 422, "agda_vacuous"),
     "foreign_paths": ("scripts/pod/accept.py", 423, "changed_files_foreign"),
-    "corpus_records": ("scripts/pod/pod.py", 507, "def corpus_append"),
+    "corpus_records": ("scripts/pod/pod.py", 512, "def corpus_append"),
     "outcomes": ("scripts/pod/table.py", 104, "outcome"),
     "retrieval_miss": ("scripts/pod/retrieve.py", 376, "def miss_signal"),
     "retrieval_zero_overlap": ("scripts/pod/retrieve.py", 394, "overlap"),
@@ -197,9 +197,9 @@ FIELD_SOURCES = {
     # per-path score anywhere. That same line is the source of the number that says so.
     "retrieval_undetermined": ("scripts/pod/retrieve.py", 394, "overlap"),
     # 四、阻塞与待裁决
-    "blocked_parked": ("scripts/pod/pod.py", 171, "PARK_REASONS"),
-    "queue_requests": ("scripts/pod/pod.py", 725, "def split_entry"),
-    "owner_rulings": ("dev/memos/L9-pod-program-design.md", 3332, "An owner ruling"),
+    "blocked_parked": ("scripts/pod/pod.py", 176, "PARK_REASONS"),
+    "queue_requests": ("scripts/pod/pod.py", 730, "def split_entry"),
+    "owner_rulings": ("dev/memos/L9-pod-program-design.md", 3422, "An owner ruling"),
     # THE ONE FIELD WHOSE SOURCE IS THIS FILE. A refused row is produced by the digest's
     # own readers, so `_refuse()` is its source and there is no other.
     "refused_rows": ("scripts/pod/digest.py", 279, "def _refuse"),

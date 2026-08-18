@@ -244,17 +244,18 @@ _LAUNCHER = []
 def launcher():
     """The dispatch launcher module, or None. It owns the registry and the write scope.
 
-    Three homes are read, in order: `scripts/pod/dispatch.py`, which is the name cutover
-    step 4 writes, `scripts/pod/launcher.py`, which is the name the day 2 build gave the
-    same file, and the pre-cutover skill copy. The module is loaded by path and never by
-    name, because the skill directory is not a package.
+    ONE HOME IS READ, `scripts/pod/launcher.py`. The list held three candidates until
+    2026-08-18. The other two are gone and neither can come back by accident: cutover
+    step 4 kept the `launcher.py` name and never wrote `scripts/pod/dispatch.py`, and the
+    same cutover deleted the pre-cutover skill copy at
+    `.claude/skills/codex-dispatch/dispatch.py`. A fallback that can never fire documents
+    a file that does not exist, so it is removed rather than kept. The module is loaded by
+    PATH and never by name, because this call must not depend on `sys.path`.
     """
     if _LAUNCHER:
         return _LAUNCHER[0]
     mod = None
-    for cand in (ROOT / "scripts" / "pod" / "dispatch.py",
-                 ROOT / "scripts" / "pod" / "launcher.py",
-                 ROOT / ".claude" / "skills" / "codex-dispatch" / "dispatch.py"):
+    for cand in (ROOT / "scripts" / "pod" / "launcher.py",):
         if not cand.is_file():
             continue
         spec = importlib.util.spec_from_file_location("pod_launcher", cand)

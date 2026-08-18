@@ -35,6 +35,14 @@ is a row here, an **episode** is a journal entry, a **law** is a LESSONS entry.
 
 ## 0.0 WHERE LJ-1 STANDS, rewritten 2026-08-16
 
+**Status: HISTORICAL from the POD cutover of 2026-08-18, cutover step 12b.** This
+screen is the state at the 2026-08-16 pause. The cutover replaced the flow that
+wrote it. `dev/pod/queue.toml` produces a task now, `scripts/pod/pod.py` runs the
+loop, and `dev/pod/table.toml` holds the rule table. **The mathematical rows below
+still hold, because no measurement in them changed.** **Read every sentence about
+an orchestrator, a gate or a dispatch as the record of its own date.** Section 0.1
+carries two dated corrections for the sentences the cutover made false.
+
 **This screen holds the LATEST state and nothing else.** What it replaces sits
 in `dev/JOURNAL.md` under its date. The 2026-08-13 resumption block is SPENT
 and all four of its items returned; that record is in the journal.
@@ -63,8 +71,8 @@ instruction and none should be inferred.
 
 **THE FIRST TASK ON RESUMPTION, and it is a real gap and not a formality.**
 `[LJ-1.386]` **was registered as DISPATCHED and never dispatched**: the
-orchestrator wrote the row and made the directory and never wrote the brief,
-and no log exists. **It gates the one escape from the `sq` untruncation that
+orchestrator wrote the row and never wrote the brief, and no log exists.
+**It gates the one escape from the `sq` untruncation that
 nobody has aimed at**, found by `[LJ-1.384]`: select the witness as a CODE by
 leastness in the sealed internal order and read it out to ambient data. **Two
 of its three legs are DELIVERED in `src/` today**, `module Canonical` at
@@ -73,6 +81,12 @@ of its three legs are DELIVERED in `src/` today**, `module Canonical` at
 of a pairing code at a band ordinal, and the gate probe is at `+ω ω`, GO or
 NO-GO.** **A NO-GO earns the sentence that every cheap escape is closed, which
 `[LJ-1.384]` measured UNEARNED.**
+
+**CORRECTED 2026-08-18.** This row also said the orchestrator made the task
+directory. That is false. `git log --all --oneline -- 'agents/tasks/LJ-1-386*'`
+returns nothing, and the tree holds no such directory, so it never existed. The
+registration defect stands unchanged. The task itself survived the cutover: it
+is the first entry of `dev/pod/queue.toml`.
 
 **WHAT THE PROOF ITSELF STILL OWES, three things, and section 0.0 carries the
 detail.** The composite's TERM, whose assembly `[LJ-1.378]` measured
@@ -96,8 +110,13 @@ accepted as honestly expensive at 1.62x the DD24 bar, DEFERRED by the owner on
 the `EnvSupply` identity-conversion shape ABSENT. **113 insertions are queued
 into that family**, so the ruling and the funding are coupled.
 
-**THREE GATES LANDED ON 2026-08-16 AND EACH CARRIES AN EPOCH.** Read the epoch
-before reading a frozen count as compliance. `scripts/gate/check-dd18-survey.py`
+**THREE GATES LANDED ON 2026-08-16 AND EACH CARRIES AN EPOCH. ALL THREE ARE
+ARCHIVED, at commit `fc676cb` on 2026-08-18.** They are at
+`archive/scripts/gate/`, no `make check` target names them, and none of them
+runs. `dev/ARCHIVE.md` records for each one what it enforced, what released it
+and what it did right, at `:227`, `:228` and `:246`. **The paragraph below is
+the record of 2026-08-16 and no longer describes the tree.**
+Read the epoch before reading a frozen count as compliance. `scripts/gate/check-dd18-survey.py`
 gates the return side of DD18 and prints the brief side; `check-baseline-home.py`
 holds the DD24 figures to `dev/ledger.toml` alone;
 `check-live-record-claims.py` refuses a brief that names a goal and does not
@@ -622,8 +641,11 @@ may be argued from the absence of a number.
 in-fence lines. **This paragraph states NO figure, by design (DD19).** The
 applied bar is `dev/ledger.toml`'s `[ratio]` table read at
 `scripts/measure/check-ratio.py`, which is the ONE place either number lives;
-`scripts/gate/check-baseline-home.py` refuses a live restatement anywhere
-else. **For the record and not as the bar:** the whole-cone rate was
+`scripts/gate/check-baseline-home.py` refused a live restatement anywhere
+else, and it was ARCHIVED on 2026-08-18 at commit `fc676cb`. **Nothing
+mechanical enforces the one-home rule now, and review is all there is.** The
+`[ratio]` header of `dev/ledger.toml` records that loss and names the one live
+restatement the audit found. **For the record and not as the bar:** the whole-cone rate was
 0.007913 over 16,897 lines, HISTORICAL(2026-08-10), re-measured by `[LJ-0.5]`
 after the compression, and 0.008793 over 17,185 lines HISTORICAL(2026-08-13).
 `scripts/measure/check-ratio.py` holds the GCH wing to it
@@ -859,6 +881,15 @@ exists.** Evidence can move a technique. A number alone cannot.
 
 ## 7. Build constraints (pointer)
 
+**Three rows below name a home the POD cutover of 2026-08-18 moved, and this note
+repairs them without rewriting the rows.** Row 3's `scripts/gate/check-tree.py` is
+archived; it was rewritten as `scripts/pod/check-closure.py`, which runs at
+acceptance conjunct 3 and at pre-flight P16. Rows 5 and 6 name
+`dev/ORCHESTRATION.md`, which is archived at `archive/dev/ORCHESTRATION.md`. The
+return checklist it held is now the six acceptance conjuncts of
+`dev/memos/L9-pod-program-design.md` section 5.4. The heap caps are rule R13's one
+caliber and `admits()` at `scripts/pod/pod.py:1112`.
+
 Struck D10, which used to carry these constraints, went on 2026-08-05 because each constraint is now enforced where it fires. The numbered rows below are routing rows; the full original text is in [dev/memos/build-constraints.md](memos/build-constraints.md), and the older §7.5/§7.6 budgets cited by archived D13 are rules 5 and 6:
 
 1. The trusted gate is one invocation, `agda src/Everything.lagda.md`: the build machinery (`Makefile`, [scripts/README.md](../scripts/README.md)).
@@ -876,7 +907,7 @@ The T1-T6 tension register and its relief valves moved to [dev/memos/process-ten
 
 ## 9. Risks and mitigations (pointer)
 
-The dated risk register moved to [dev/memos/risks-mitigations.md](memos/risks-mitigations.md). Each mitigation is a standing rule with its own home: DD1 and DD5 in §3, `dev/LESSONS.md` D-1/D-6/D-10, the §6.0 rules, and the return checklist in `dev/ORCHESTRATION.md` section 6.
+The dated risk register moved to [dev/memos/risks-mitigations.md](memos/risks-mitigations.md). Each mitigation is a standing rule with its own home: DD1 and DD5 in §3, `dev/LESSONS.md` D-1/D-6/D-10, the §6.0 rules, and the return checklist in `dev/ORCHESTRATION.md` section 6. **`dev/ORCHESTRATION.md` is archived** at `archive/dev/ORCHESTRATION.md` since 2026-08-18, and the six acceptance conjuncts of `dev/memos/L9-pod-program-design.md` section 5.4 replace that checklist.
 
 ## 10. Candidate simplification register (pointer)
 
@@ -950,15 +981,15 @@ and `[L8.2]` is the gate that `[L4.1]` waits on.
 | L8.0 | Foundation refactor at T8 scale, on the post-archival tree | PLANNED (candidates re-examined, not inherited) |
 | L8.1 | Line-by-line polish over the whole tree | PLANNED |
 | L8.2 | **THE GATE**: report to the owner before any prose phase | PLANNED (the owner adds further code-shaping work here; `[L4.1]` waits on it) |
-| L9 | The orchestration flow becomes a program | **PLANNED.** Designed at `dev/memos/L9-pod-program-design.md`, 2026-08-17. **Nothing is built.** `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow today, and `[L9.7]` is the only row that changes that |
-| L9.0 | Measure, and settle two prices | PLANNED (the recompile probe, and the brief-build cost) |
-| L9.1 | The launcher, and the head table | PLANNED |
-| L9.2 | The recorder and the acceptance runner | PLANNED |
-| L9.3 | The table, the router, the replay, the admission and the pre-flight | PLANNED |
-| L9.4 | The loop, the runner, the state and the log | PLANNED |
-| L9.5 | The gates: the spec-surface check, the survey split and the miss signal | PLANNED |
-| L9.6 | The digest, the push, the maintainer, the first dispatch | PLANNED |
-| L9.7 | RUN THE CUTOVER | PLANNED. **This row archives `dev/ORCHESTRATION.md` and `AGENTS.md`. Nothing archives them before it, because until then they are the only flow there is** |
+| L9 | The orchestration flow becomes a program | **DONE 2026-08-18**, at `fc676cb`. Designed at `dev/memos/L9-pod-program-design.md` on 2026-08-17 and built from `7d086e5` to `fc676cb`. `scripts/pod/pod.py` is the loop, `dev/pod/table.toml` is the rule table, and `dev/pod/queue.toml` is the only producer of a task. **The loop has not run yet**, and `[L9.6]` carries that |
+| L9.0 | Measure, and settle two prices | **DONE** `7d086e5` (the recompile probe, and the brief-build cost; gaps B3 and B4 both closed) |
+| L9.1 | The launcher, and the head table | **DONE** `ed09b26`: `scripts/pod/launcher.py`, `scripts/pod/heads.py` and `dev/pod/heads.toml` |
+| L9.2 | The recorder and the acceptance runner | **DONE** `ed09b26`: `scripts/pod/accept.py`, `scripts/pod/facts.py` and `scripts/pod/witness.py` |
+| L9.3 | The table, the router, the replay, the admission and the pre-flight | **DONE** `ed09b26`: `scripts/pod/table.py`, `scripts/pod/replay.py`, `scripts/pod/preflight.py` and `dev/pod/table.toml` |
+| L9.4 | The loop, the runner, the state and the log | **DONE** `ed09b26`: `scripts/pod/pod.py`. The transition log directory landed at `fc676cb` |
+| L9.5 | The gates: the spec-surface check, the survey split and the miss signal | **DONE** `ed09b26`: `check-spec-surface.py`, `check-survey-quotes.py`, `check-closure.py` and `retrieve.py`. The guard's wiring anchor was repaired at `ab55a8d` |
+| L9.6 | The digest, the push, the maintainer, the first dispatch | **BUILT** `6549c17` and `ed09b26`, with `scripts/pod/pi_stream.py` at `fc676cb`: `scripts/pod/digest.py`, `notify_owner()` at `scripts/pod/pod.py:1462`, the maintainer batch, and the standing refill brief. **THE FIRST DISPATCH IS NOT RUN.** The owner starts the loop |
+| L9.7 | RUN THE CUTOVER | **DONE 2026-08-18**, at `fc676cb`, with the repairs at `02a351a` and `ab55a8d`. 24 files went to `archive/`, and `dev/ORCHESTRATION.md` is one of them. **`AGENTS.md` SURVIVED**, rewritten in place, because amendment A8 reversed the archive order for that one file: it is the shared Boundary and the only hand-written source of it |
 
 ### Task index (one row per dispatch, section 6.0 rules 7 and 8)
 

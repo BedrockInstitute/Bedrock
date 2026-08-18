@@ -33,20 +33,18 @@ every importer.** No judgement call is needed:
 | module | importers | lands in |
 |---|---|---|
 | `repo_root.py` | scripts in `gate/`, `dispatch/` and `measure/` | `scripts/` (flat) |
-| `agents_tree.py` | `check-dev-docs.py`, `check-rule-ids.py`, `check-task-index.py`, `check-premises-stated.py`, `check-dd4-stated.py` (all `gate/`), `check-dispatch-policy.py`, `check-sources-read.py` (`dispatch/`) | `scripts/` (flat) |
+| `agents_tree.py` | `check-rule-ids.py` (`gate/`), `check-sources-read.py` (`dispatch/`), seven files in `pod/` | `scripts/` (flat) |
 | `i18n_markers.py` | `weave-i18n.py`, `gen-depmap.py`, `render-site.py` (all `site/`) | `site/` |
 | `ledger.py` | `check-ratio.py`, `deletion-test.py` (both `measure/`) | `measure/` |
-| `dispatch_policy.py` | `check-dispatch-policy.py` (`dispatch/`) | `dispatch/` |
 | `lint-prose.py` | `check-glossary.py` (`gate/`, loaded by path) | `gate/` |
-| `check-rule-ids.py` | `check-dev-docs.py` (`gate/`, loaded by path) | `gate/` |
 | `check-timing.py` | `check-ratio.py` (`measure/`, loaded by path) | `measure/` |
 | `obligations.py` | `check-timing.py` (`measure/`, loaded by path) | `measure/` |
 
 `repo_root.py` and `agents_tree.py` are flat BY THIS RULE, not by exception: no shallower
 directory contains all their importers than `scripts/` itself. A consumer outside this
-repository is not an importer for placement; the one such consumer
-(`.claude/skills/codex-dispatch/dispatch.py`) was re-pointed by its owner when
-`dispatch_policy.py` moved.
+repository is not an importer for placement. The one such consumer was the retired
+`codex-dispatch` skill, and the POD cutover of 2026-08-18 replaced it with
+`scripts/pod/launcher.py`, which is inside the tree.
 
 ### The breakage this move accepted
 
@@ -63,10 +61,18 @@ rewritten, so their flat citations are correct as history.
 The GROUP a new script belongs to is a review decision with no mechanical check; this
 README's table is its home, and a script that lands outside its group is caught only by
 reading. Two parts ARE mechanical, in `scripts/tests/test_scripts_layout.py`: the set of
-directories under `scripts/` is pinned (no `misc/` bucket can appear silently, C-43), the
-flat `.py` set is pinned to the two cross-group modules (a new flat script must either
-have importers across groups or join one), and every script outside `tests/` and
-`git-hooks/` must appear in this README by its full `scripts/<group>/<name>` path.
+directories under `scripts/` is pinned (no `misc/` bucket can appear silently, C-43), and
+the flat `.py` set is pinned to the two cross-group modules (a new flat script must either
+have importers across groups or join one).
+
+**THE COVERAGE CHECK RUNS IN ONE DIRECTION ONLY, and this sentence is the record of
+the gap.** `test_readme_table_matches_every_group_directory` compares the LAYOUT TABLE
+above with the tree, file by file, in both directions. **No test reads the per-script
+`###` sections below.** So a script that leaves the tree keeps its section, with its
+command block, until a reader notices: the POD cutover of 2026-08-18 archived seventeen
+scripts and left all seventeen sections live here. The missing half is a reverse check,
+that every `scripts/<group>/<name>.py` path this file names exists in the tree. It is not
+built, and until it is, deleting a script means deleting its section by hand.
 
 ## The multilingual literate-Agda pipeline
 
@@ -157,89 +163,6 @@ python3 scripts/gate/check-probes.py --check   # every tracked file (make check,
 python3 scripts/gate/check-probes.py --staged  # staged files only (pre-commit hook)
 ```
 
-### `check-tree.py`
-
-Whole-tree invariants that the per-file linters structurally cannot see, because they read one
-file at a time.
-
-The one that matters most is **closure** (`dev/PLAN.md` section 7 rule 3): every master under
-`src/` must appear in `src/Everything.lagda.md`'s import list. `make check` typechecks exactly
-one file, which is what makes it a trusted single invocation, and the price is that **a master
-nobody imports is never typechecked while the gate still goes green**. PLAN specified this
-audit from the beginning and nothing had implemented it; on its first run it found a real
-in-progress chapter sitting outside the gate. The others: **archive** (no live master imports a
-module that lives only in `archive/`, archived D20, live home DD13), **shared-cjk** (no CJK in
-marker-free prose, which would reach the English book verbatim, C-8), **spdx** (licensing has
-one source of truth, archived D4, live home DD22),
-**retiring**, WARN only and SILENT today (it flagged a surviving master importing a chapter
-the retired route's archived D18 was retiring; `retire_suspended` empties that set, so the check returns
-nothing until the new route rules its own retirements), and **module-body**, WARN only (C-11's
-silently empty parameterized module).
-
-Its docstring also records what was deliberately NOT made a check and why, since three
-proposals were rejected on false-positive grounds: a rule already enforced by Agda itself, a
-rule whose only hit is in code booked for retirement, and a rule whose predicate cannot tell a
-goal's status from a sub-item's.
-
-It also carries the **gate-debt** counter. A full `agda src/Everything.lagda.md` costs not its
-twelve background minutes but the **quiet tree** it needs for all of them: no agent may write a
-master while it runs, so every full gate costs one dispatch window. Full gates are therefore
-batched (`archive/dev/DECISIONS-archived.md`, archived D28), and this reports whether one is due.
-
-```sh
-python3 scripts/gate/check-tree.py --check            # every invariant (make check and the hook)
-python3 scripts/gate/check-tree.py --check closure    # just one
-python3 scripts/gate/check-tree.py --gate-debt        # commits and added lines since the last gate
-python3 scripts/gate/check-tree.py --gate-passed      # record HEAD after a green full gate
-```
-
-### `check-dev-docs.py`
-
-The maintenance mechanism for the dev/ documents, built by `[L3.32-T110]`
-after a day in which every decay instance below was found by accident and
-none by a gate. The cadence, the thresholds with their arguments, and what
-is deliberately not automated are recorded in
-this script's own docstring, which is its operative home.
-
-The gate half (`make check`'s `devdocs` target) is six cheap pure-Python
-checks: a word cap on AGENTS.md (2,200), a word cap on every dev/PLAN.md
-table cell (1,600), a requirement that a LESSONS entry marked "imported
-from/into" be routed in dev/rules.toml, a check that PLAN section 0's "as of"
-date is no older than the newest date in its own body, a form check on
-dev/memos/ `**STATUS:` headers, and a check that every `scripts/*.py` named
-in AGENTS.md exists (subdirectory paths count; the regex accepts them).
-
-The sweep half is informational and exits 0: it lists LESSONS entries that
-are unrouted AND cited nowhere (the "landed and nobody noticed" class), and
-section 11 cells over the 600-word episode-scale line (episode content
-belongs in dev/JOURNAL.md).
-
-```sh
-python3 scripts/gate/check-dev-docs.py            # run every gate subcheck
-python3 scripts/gate/check-dev-docs.py --check NAME  # run one
-python3 scripts/gate/check-dev-docs.py --sweep    # on-demand informational sweep
-```
-
-### `check-agents-guard.py`
-
-The AGENTS.md guard (ruling D34, owner-approved 2026-08-07). AGENTS.md loads
-into every agent session, so a wrong sentence there governs all work
-silently; the one-process incident (see the script's docstring) is why this
-exists. A commit that edits AGENTS.md must carry the owner's dated approval
-trailer, `AGENTS-diff-approved: YYYY-MM-DD`, written only after the owner
-ruled on the presented diff.
-
-Two modes: with no arguments (the `agentsguard` target in `make check`) it
-audits history, judging only commits whose own tree contains the guard at
-any home it has ever had (the flat home before LJ-1.295, `scripts/gate/`
-after); with `--msg-file` (the `commit-msg` hook) it refuses a trailerless
-commit that stages the file.
-
-```sh
-python3 scripts/gate/check-agents-guard.py                 # history audit
-python3 scripts/gate/check-agents-guard.py --msg-file MSG  # commit-msg hook mode
-```
-
 ### `lint-agda.py`
 
 Enforces the code-side rules of [dev/STYLE-agda.md](../dev/STYLE-agda.md) on the ```agda
@@ -306,72 +229,48 @@ The locator rule **skips a line that names a `DD` code**, because the repaired
 sentences read "archived D11; DD11 in section 3 is a DIFFERENT rule", so a line
 that cites one code correctly and misdirects a second one passes.
 
-### `check-task-index.py`
+### `check-fences.py`
 
-Runs in `make check`. Every cited task code has exactly one row in PLAN
-section 11, and no row exceeds 200 characters. The cap stops a verdict
-paragraph sneaking back into a row. **Widened 2026-08-10** to see lettered
-codes: `LJ-\d+\.\d+` matched none of `LJ-0.4a` to `LJ-0.4q`, so fifteen rows
-were invisible and twelve of them were over the cap, one at 438 characters.
+Catches Agda that sits OUTSIDE a code fence in a `.lagda.md` master. It runs in
+`make check` and in the pre-commit hook.
 
-### `check-archive-cited.py`
+**One measured failure built it.** On 2026-08-11 `[LJ-1.41]` reported two
+condensation row agreements CLOSED and machine-checked. `[LJ-1.42]` then found
+that both sat outside the ` ```agda ` fence, as prose, and that they carried
+four real defects. **Every gate passed.** Agda typechecks only fenced code, and
+`scripts/measure/ledger.py` counts only fenced lines, so the master was green and
+the size figure was right. Unfenced text is invisible BY CONSTRUCTION to every
+tool this repository has.
 
-**A brief's ARCHIVE section must cite an ARCHIVE, not only the new route's own
-tasks.** `AGENTS.md` requires the section and its enforcement is REVIEW ONLY.
+It looks for a RUN of consecutive declaration-shaped lines outside a fence. One
+`Note:` in a paragraph is prose; three or more such lines together is a lost
+fence. **It cannot tell a lost fence from a deliberate code SAMPLE in prose**, so
+a hit is a defect or a style violation, and either way it wants a human.
 
-**`[LJ-1.157]` measured what that costs, and the shape is not carelessness.**
-164 of 164 briefs carried the heading. **The content decayed while the form
-survived**: after `[LJ-1.94]` only process tasks cited a retired-route file, and
-the section's meaning drifted to "the new route's own prior tasks". That is
-`dev/LESSONS.md` C-41 one level down, a rule still reading true after its world
-changed.
+```sh
+python3 scripts/gate/check-fences.py           # report
+python3 scripts/gate/check-fences.py --check   # gate mode (make check, the hook)
+python3 scripts/gate/check-fences.py --run 5   # raise the run threshold
+```
 
-**The bill, measured:** `[LJ-1.107]` rebuilt 82 delivered lines of
-Cantor-Schroeder-Bernstein; three tasks priced `levelIn` without an 845-line
-comparable that the route's OWN recon had marked ADAPTABLE; and the archived
-`CSB` was surfaced twice in the route's own record and lost both times.
+### Archived gates
 
-**What it checks:** a live brief has an ARCHIVE section, and that section cites
-a path under `archive/` or `agents/tasks/archive/`.
+**The POD cutover of 2026-08-18 archived thirteen gates out of this directory.**
+`check-agents-guard.py`, `check-archive-cited.py`, `check-baseline-home.py`,
+`check-build-manifest.py`, `check-dd18-survey.py`, `check-dd25-review-named.py`,
+`check-dd4-stated.py`, `check-dev-docs.py`, `check-live-record-claims.py`,
+`check-live-territory.py`, `check-premises-stated.py`, `check-task-index.py` and
+`check-tree.py` are frozen under `archive/scripts/gate/`, at the same basename.
+Each one's own docstring is still its operative documentation.
 
-**What it cannot do**, and this is why it is `make archivecited` and NOT part
-of `make check`:
-
-- It cannot tell whether the cited archive BEARS on the task. A brief citing an
-  irrelevant archive file passes.
-- It cannot tell a process task, which may legitimately have nothing archived,
-  from a mathematical one that does.
-- It reads the brief and never the return.
-
-**So it REPORTS and never gates**, for the reason `check-build-manifest.py`
-does not gate either: **a red gate here buys a pasted citation rather than a
-survey.** Its whole claim is that the drift is VISIBLE, which is the thing that
-was missing.
-
-### `check-dd4-stated.py`, `check-dd25-review-named.py`, `check-premises-stated.py`, `check-build-manifest.py`, `check-fences.py`, `check-live-territory.py`, `check-dd18-survey.py`, `check-baseline-home.py`, `check-live-record-claims.py`
-
-The remaining gates. Each one's operative documentation is its own docstring,
-which carries the ruling, the epoch and the measured defect it exists to stop:
-`check-dd4-stated.py` (every brief states DD4), `check-dd25-review-named.py`
-(a negative return's index row names its review's code),
-`check-premises-stated.py` (a brief with a trigger token declares its
-premises), `check-build-manifest.py` (`_build/` entries are declared in
-`dev/build-manifest.toml`), `check-fences.py` (Agda outside a fence is
-invisible to Agda and to the ledger, so a green tree proves nothing about it),
-and `check-live-territory.py` (the commit gate against a live agent's write
-territory; `--staged` in the hook, `--check` the tracked-tree audit).
-
-**Three landed on 2026-08-16 and each carries an epoch**, so read the epoch
-before reading a frozen count as compliance: `check-dd18-survey.py` (DD18's
-return side, where an ARCHIVE USED section must quote one line per archived
-file at the line it cites), `check-baseline-home.py` (DD24's figures live in
-`dev/ledger.toml` and a live claim names the field), and
-`check-live-record-claims.py` (a brief that names a goal answers the
-open-work list).
-
-**They were absent from this index until 2026-08-16, and
-`scripts/tests/test_scripts_layout.py` was RED from the moment they landed.**
-Nothing reported it, because `make test` is not part of `make check`.
+**Read the disposition before you read the file.** `dev/memos/L9-pod-program-design.md`
+section 7.1 gives every one of them a row: RETIRE, because a ruling it served is
+SUPERSEDED, or REWRITE, because its function moved into `scripts/pod/`. Three
+functions moved rather than died: `check-tree.py`'s closure half is
+`scripts/pod/check-closure.py`, `check-dd18-survey.py` is
+`scripts/pod/check-survey-quotes.py`, and `check-agents-guard.py`'s approval
+mechanism is `scripts/pod/check-spec-surface.py`. `dev/ARCHIVE.md` is the
+registry.
 
 ## dispatch/
 
@@ -393,40 +292,6 @@ python3 scripts/dispatch/rules.py --for build     # build, probe, recon, rewrite
 python3 scripts/dispatch/rules.py --grep seal     # the long tail, by trigger word
 ```
 
-### `dispatch_policy.py` and `check-dispatch-policy.py`
-
-`dispatch_policy.py` is **the one home of DD17's dispatch policy**: a hardcoded
-`VERSION_IN_FORCE` switch, the two versions of the head table, the date the
-current version was set, its reason and its revert condition. Edit that one
-line to change the policy. **Inspect it with `python3
-scripts/dispatch/dispatch_policy.py`**, which prints the version in force with its whole
-table, so nobody reads code to answer "which head runs this task".
-
-`check-dispatch-policy.py` runs in `make check` and holds no policy of its own:
-it imports the switch and derives every expectation from it. It enforces five
-things. The switch names a version the module defines. No governed document
-under `dev/`, plus `AGENTS.md` and this file, restates the head table. Every
-brief carries a legal `tier:` token. A brief written after the policy epoch
-names the version it was chosen under. An adversarial review carries the
-critic's head and not the author's.
-
-**WHAT NEITHER TOOL CAN DO, and the list is the point.** **The switch cannot
-force the orchestrator's choice.** An in-harness Opus dispatch never passes
-through `.claude/skills/codex-dispatch/dispatch.py`, so no value here can start
-it, stop it or redirect it. A brief that says `tier: pi` and was run on Opus 5
-passes green. What the switch DOES drive is the dispatcher's default harness,
-what the checker accepts, and what the inspection command prints, which makes a
-wrong head **detectable by an audit** and nothing more. The checker also cannot
-date a brief reliably, because `_build/` is never committed and mtime is all
-there is; and it cannot tell an adversarial review from a brief that discusses
-one, because it reads the GOAL section and the tier line for one word.
-
-**The epoch exists so the gate can be green on its first run.** The
-version-naming and adversarial checks bind only briefs written on or after
-2026-08-13 11:00, which is `check-agents-guard.py`'s self-anchoring pattern. A
-pre-epoch defect is printed as a note by `--notes` and never fails the gate.
-Measured at the landing: 406 briefs read, 4 notes, 0 failures.
-
 ### `check-sources-read.py`
 
 **An audit aid, not a gate; exit 0 always.** DD18 makes a brief name what in
@@ -442,67 +307,38 @@ separates three things a naive grep conflates: the brief's text, the report's
 text, and a real read.
 
 **It proves a path was opened, never that the right part was read.** It would
-have passed `[LJ-1.6]`. A miss is a signal for the adversarial reviewer,
-which `dev/ORCHESTRATION.md` section 1.1 routes.
+have passed `[LJ-1.6]`. A miss is a signal for the adversarial reviewer, which the
+program routes through the `mathematician_adversarial` and `coder_adversarial` slots
+of `dev/pod/heads.toml`. The archived operating manual is
+`archive/dev/ORCHESTRATION.md` section 1.1.
+
+**ITS CORPUS IS AN UNTRACKED ORPHAN AND THE RETARGET IS NOT DONE.**
+`check-sources-read.py:61` reads `.claude/skills/codex-dispatch/.state/logs`, which the
+retired skill wrote: 1,017 files and 931MB, newest 2026-08-16, git-ignored, so a fresh
+clone has none of it. The POD writes its own logs under `.pod-state/`.
+`dev/memos/L9-pod-program-design.md` section 7.1 row 23 says KEEP AND RETARGET, and the
+retarget is section 7.4. Until it lands this tool reads history only, and nothing calls
+it: no `make` target, no hook and no POD rule.
 
 ```sh
 python3 scripts/dispatch/check-sources-read.py LJ-1.6      # one or more task codes
 python3 scripts/dispatch/check-sources-read.py --all
 ```
 
-### `recall-hook.py`
+### Archived dispatch scripts
 
-**The only enforcement point in this repository that fires while the brief is
-still being written.** Every other one fires at the commit or is the
-orchestrator's own intention. `dev/LESSONS.md` **C-59** names the disease: an
-enforcement point exists, and nothing carries its verdict to a decision.
-`[LJ-1.376]` measured the dominant detour class as the orchestrator's own live
-record unread, and `[LJ-1.377]`'s report says its gate cannot reach the moment
-that would have prevented it.
+**The POD cutover of 2026-08-18 archived four scripts out of this directory**:
+`dispatch_policy.py` and `check-dispatch-policy.py`, which held DD17's head
+table, `recall-hook.py`, and `dd25-record.py`. All four are frozen under
+`archive/scripts/dispatch/`, with their suites.
 
-It is a Claude Code hook, which is the one UNCONDITIONAL trigger in this
-toolchain. It adds no store, no index, no daemon, no port and no dependency: it
-re-runs `check-live-record-claims.py`, `check-premises-stated.py` and
-`check-dispatch-policy.py`, which are already in `make check`, and prints what
-they say.
-
-**It never blocks and never fails a turn; it always exits 0.** It fires on a
-brief write and on a task-shaped subagent dispatch, and is silent otherwise,
-because `[LJ-1.377]` measured two wider designs at 274 firings out of 274
-briefs and killed both: a gate that fires on everything trains pasting.
-
-**The wiring is owner-private and the script is tracked.** That split answers
-the defect `dev/memos/L3.32-context-layering.md` section 5 named against the
-last routing proposal, whose enforcement point sat in `.claude/`. Delete
-`.claude/settings.json` to turn the mechanism off.
-
-**The session card is an INDEX and never a summary**, and that distinction is
-what the owner's 2026-08-09 abolition of the dashboard bought. It states no
-claim of its own: a blocked row gets its code, its line and its character
-count, and the reader opens it. MEASURED at the design: the three blocked rows
-are 1,155, 806 and 527 characters, and a 150-character cut keeps 13, 19 and 28
-percent of them, dropping the qualifier at the end of a clause first, which is
-the failure `dev/JOURNAL.md`:938-959 records. An open-work headline IS printed,
-whole, because the author wrote it as a headline; where it wraps across source
-lines it is REASSEMBLED, which is unwrapping and not cutting. Ruled by the
-owner on 2026-08-16. It costs about 1,990 characters and 1.0 s per session, and
-it does not fire for a subagent.
-
-```sh
-python3 scripts/dispatch/recall-hook.py --print-settings   # the .claude/settings.json to place
-python3 scripts/dispatch/recall-hook.py --log             # what it has fired on so far
-```
-
-The log is one JSON line per firing, beside the dispatch registry rather than
-under `_build/`, which `make clean` empties. It exists so that this tool's own
-value becomes a measurement: count how many firings were followed by an edit to
-the same brief before its dispatch.
-
-### `dd25-record.py`
-
-Writes a DD25 negative's row into `dev/PLAN.md` section 11 in the structured
-form the gate reads, so a negative return lands as data rather than prose. Its
-usage block is its operative documentation.
+**What replaced each one.** `dev/pod/heads.toml` is now the ONE home of the head
+per slot, read by `scripts/pod/heads.py`, so no switch and no checker of a
+`tier:` line survives. `dd25-record.py`'s record moved into the transition log's
+`role` field. `recall-hook.py` was retired by physics: a Claude Code hook fires
+only for an in-harness subagent, and the program dispatches through a harness.
+`dev/memos/L9-pod-program-design.md` section 7.1 rows 20, 21, 24 and 25 carry the
+rulings.
 
 ## measure/
 
@@ -641,7 +477,7 @@ python3 scripts/measure/obligations.py src/L/GCH.lagda.md
 model of 2026-08-16 priced a dispatch at about 1,757 words of orchestrator
 prose and about 35 delivered Agda lines, and then named the one input a cost
 decision needs and could not supply: the registry record carries no usage
-field, and `dev/vendors.toml` holds price BANDS that nothing joins to a task
+field, and `dev/vendors.toml` held price BANDS that nothing joined to a task
 code. This supplies the missing half.
 
 **It does not touch `dispatch.py`**, and that is a decision rather than
@@ -667,8 +503,10 @@ set: 9,656,291 tokens processed per dispatch at the median, of which **98.8
 percent are cache reads**. The pair a cost question needs is fresh input
 120,686 and output 96,085 per dispatch, both medians.
 
-**No cost figure.** `dev/vendors.toml` names price bands and carries no
-per-token rate, so money is not derivable here and none is invented (DD8).
+**No cost figure.** The vendor data named price bands and carried no per-token
+rate, so money is not derivable here and none is invented (DD8). The POD cutover of
+2026-08-18 archived that file to `archive/dev/vendors.toml` and moved the live model
+data to `dev/pod/heads.toml`, which carries no rate either.
 
 ```sh
 python3 scripts/measure/dispatch-usage.py --summary
@@ -807,9 +645,16 @@ BARK_TITLE="POD 已停止" BARK_GROUP="Bedrock POD" BARK_BODY="<what happened>" 
 ## pod/
 
 The POD program of goal L9. `dev/memos/L9-pod-program-design.md` is its design, and each
-file below names the section it implements. **The program does not run yet.** No
-`make check` target calls these files today, and the cutover of the design's section 9
-wires them.
+file below names the section it implements. **The program is in force since the cutover of
+2026-08-18.** `make check` runs three of these files, as the `closure`, `specsurface` and
+`instructions` targets; the `commit-msg` hook runs `check-spec-surface.py --msg-file`; and
+`make survey` runs `check-survey-quotes.py`. `scripts/pod/pod.py` is the loop itself and no
+`make` target calls it: the repository owner starts it with `pod.py run`.
+
+**Eight of the sixteen files below have no section of their own**: `accept.py`, `heads.py`,
+`launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py` and `table.py`. Each
+one's docstring names the design section it implements, and
+`dev/memos/L9-pod-program-design.md` is the operative document for all of them.
 
 ### `facts.py`
 
@@ -828,12 +673,37 @@ Run it directly to meter an obligation:
 python3 scripts/pod/witness.py "agents/tasks/LJ-1-383/Probe383.agda::Wire.residue2-false-at-record"
 ```
 
+### `instructions.py`
+
+**The generator of the SHARED half of every `dev/pod/instructions/<slot>.md`, from
+`AGENTS.md`.** Amendment A8 makes `AGENTS.md` the ONE hand-written source of that half, and
+this program copies its three sections (What Bedrock is, The milestone, Boundary) into all
+five slot files, above a marker comment. Below the marker each slot's own clauses are
+hand-written and this program never touches them.
+
+**A rule restated in a second file is a rule that drifts**, and the file's docstring carries
+the measurement: on 2026-08-04 a bulk refresh wrote a superseded concurrency rule into the
+rulebook two days after the owner had widened it, three rewrites polished the sentence, and
+the wrong rule steered dispatch for three days. Five slot files each carrying its own copy
+is that failure five times over.
+
+`--check` is the gate, and it is the `instructions` target of `make check`. `--write` is
+what a person runs after editing `AGENTS.md`. **It is not the same gate as
+`check-spec-surface.py`**: that one refuses an unapproved edit to `AGENTS.md`, and this one
+refuses an approved edit that never reached the five files agents read.
+
+```sh
+python3 scripts/pod/instructions.py --check   # exit 1 when any slot file is stale
+python3 scripts/pod/instructions.py --write   # regenerate every shared half
+```
+
 ### `check-closure.py`
 
 The closure check of section 7.2, and acceptance conjunct 3. It is the split half of
-`scripts/gate/check-tree.py` that the POD needs: closure, the archive boundary, the
-unwired new master and the empty parameterized module. `make check` still calls
-`check-tree.py`, and the cutover repoints the target.
+`archive/scripts/gate/check-tree.py` that the POD needs: closure, the archive boundary,
+the unwired new master and the empty parameterized module. `make check` calls THIS file
+as the `closure` target; the cutover of 2026-08-18 repointed it and archived the old
+gate.
 
 ### `check-spec-surface.py`
 
@@ -850,7 +720,8 @@ hook, no argument for the history audit, and `--write` to regenerate the snapsho
 ### `check-survey-quotes.py`
 
 The survey verification of section 7.4 Part 2, and acceptance conjunct 6. It is lifted
-from `scripts/gate/check-dd18-survey.py` and it keeps both gated halves of that file: a
+from `archive/scripts/gate/check-dd18-survey.py` and it keeps both gated halves of that
+file: a
 return must name every path the program injected, and a quoted phrase of twelve
 characters or more must sit at each cited `path:line`. The brief-side print goes,
 because the program performs the search now. The gate judges ONE task. `--all` sweeps
@@ -900,11 +771,12 @@ itself) for a script inside `gate/`, `dispatch/`, `measure/` or `site/`.
 ### `agents_tree.py`
 
 **Not a checker. The one place that knows the shape of `agents/tasks/`.** NINE
-scripts read the tree through it, MEASURED 2026-08-17 by import: in `dispatch/`,
-`check-dispatch-policy.py` and `check-sources-read.py`; in `gate/`,
-`check-dd18-survey.py`, `check-dd4-stated.py`, `check-dev-docs.py`,
-`check-live-record-claims.py`, `check-premises-stated.py`, `check-rule-ids.py`
-and `check-task-index.py`. This paragraph said FIVE until that count was taken.
+scripts read the tree through it before the POD cutover of 2026-08-18, and seven of
+those nine are now archived. **MEASURED 2026-08-18 by import, nine scripts read it
+again**: `check-rule-ids.py` in `gate/`, `check-sources-read.py` in `dispatch/`, and
+`accept.py`, `check-survey-quotes.py`, `digest.py`, `facts.py`, `pod.py`,
+`preflight.py` and `witness.py` in `pod/`. This paragraph said FIVE until the first
+count was taken: re-measure it rather than quoting it.
 
 Until 2026-08-13 a brief was a file in `agents/briefs/` and a report was a file
 in `agents/reports/`, so the DIRECTORY carried the distinction and each importer
@@ -960,10 +832,24 @@ stated in full in `archive/README.md`; the registry is `dev/ARCHIVE.md`.
 
 ## Pre-commit hook
 
-`git-hooks/pre-commit` runs fast source checks on staged Markdown (the prose linter, marker
-integrity, the glossary check, and the Agda code linter) and blocks the commit on any
-violation. `git-hooks/commit-msg` runs the AGENTS.md guard on the message. Both are
-version-controlled; activate them once per clone (or run `make hooks`):
+`git-hooks/pre-commit` runs eight fast checks and blocks the commit on any violation. In
+the order the hook runs them: `lint-prose.py --staged`, `weave-i18n.py --check`,
+`lint-agda.py --staged`, `check-glossary.py`, `check-probes.py --staged`,
+`check-fences.py`, `check-closure.py` and `check-rule-ids.py`. The first six belong to the
+LINT class of the design's section 5.4; the last two are cheap enough for the hook and are
+not LINT class.
+
+**The hook is one check short of what cutover step 11 specifies.** That step names
+`check-survey-quotes.py` in the hook too, as the seventh LINT member, and the hook does
+not run it. Nothing else runs it at commit time either: `make survey` is a manual target.
+
+`git-hooks/commit-msg` runs R16's spec-surface guard, `check-spec-surface.py --msg-file`.
+It refuses a commit that stages a guarded rule home, or the snapshot, without a
+`Spec-surface-approved: YYYY-MM-DD (name)` trailer in the message. The guarded homes are
+`AGENTS.md`, `dev/memos/L9-pod-program-design.md`, `dev/pod/heads.toml` and every file
+under `dev/pod/instructions/`.
+
+Both hooks are version-controlled; activate them once per clone (or run `make hooks`):
 
 ```sh
 git config --local core.hooksPath scripts/git-hooks

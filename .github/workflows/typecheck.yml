@@ -37,3 +37,13 @@ jobs:
           set -euo pipefail
           make venv PYTHON=python3
           make check
+
+      # Cutover step 10b of dev/memos/L9-pod-program-design.md. Before this line
+      # NOTHING ran the suites under scripts/tests/, in CI or in a hook, so an
+      # archived script left an orphaned suite and no gate went red. `make check`
+      # does not call them: `make test` is their only runner.
+      - name: Test (the suites under scripts/tests/)
+        shell: bash
+        run: |
+          set -euo pipefail
+          make test

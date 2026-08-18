@@ -1,14 +1,22 @@
-# POD: the design of a program to run the route (goal [L9], PLANNED)
+# POD: the program that runs the route (goal [L9], IN FORCE)
 
-**Status: DESIGN, and nothing below is built. Date: 2026-08-17.** This memo is
-the design deliverable of goal `[L9]` in `dev/PLAN.md` section 11. `[L9]` is
-PLANNED, and so is each of its eight rows.
+**Status: BUILT AND IN FORCE since the POD cutover of 2026-08-18, commit
+`fc676cb`. Written as a design on 2026-08-17.** This memo was the design
+deliverable of goal `[L9]` in `dev/PLAN.md` section 11. The cutover built it,
+and the file is now a guarded rule home: `dev/pod/spec-surface.toml` carries its
+sha256 in a `[[guarded]]` entry, so a change to it needs a named owner approval
+under R16.
 
-**`AGENTS.md` is the rule set today, and the orchestrator works to
-`dev/ORCHESTRATION.md`. Both bind until `[L9.7]` archives them.** Check the
-state yourself: `dev/pod/` and `scripts/pod/` do not exist, and no row of the
-build order in section 10 is built. **Read a sentence here as a design. Never
-obey one as a rule.**
+**`AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records
+`dev/ORCHESTRATION.md` as archived.** Check the state yourself: `dev/pod/` and
+`scripts/pod/` exist, and the pointer table of `AGENTS.md` sends every slot here,
+under the row `The program that runs all of this`.
+
+**THREE SECTIONS ARE RULES AND THE REST IS A DESIGN RECORD.** Section 3 is the
+rule set, section 3.1 gives every written clause verbatim, and section 7.1 gives
+every ruling and every gate its disposition. Read those three as rules. Read
+every other section as the reason a decision was made. **Where a section and the
+code disagree, the code is the fact and the section is a defect to report.**
 
 This document assembles four audits and two adversarial reviews into one
 buildable specification. Section 11 carries every open gap.
@@ -126,7 +134,7 @@ a MEASURED law and it binds new code. The audit is why these exist.
 
 ## 1. What this is
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 The POD replaces Bedrock's human orchestrator with a program.
 
@@ -170,7 +178,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 
 ## 2. The 27 architecture decisions, AD1 to AD27
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 | AD# | The decision | In | AD# | The decision | In |
 |---|---|---|---|---|---|
@@ -191,14 +199,14 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 
 ## 3. The rule set, ONE list
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
-**Every rule would sit in this one list and carry an `enforced by` value of exactly
+**Every rule sits in this one list and carries an `enforced by` value of exactly
 `program`, `hook` or `agent discipline`.** A rule that can name none of the three
 is deleted rather than written, so no cell below is empty. R1 to R18 are the
-program's own. W1 to W12 are the written clauses, and section 3.1 gives every one
-of them verbatim. W1 to W9 are A7's WRITTEN RULE dispositions; W10, W11 and W12
-carry a standing repository rule that `AGENTS.md` held and no DD code names.
+program's own. W1 to W15 are the written clauses, and section 3.1 gives every one
+of them verbatim. W1 to W9 are A7's WRITTEN RULE dispositions; W10 to W15
+carry a standing repository rule that `AGENTS.md` holds and no DD code names.
 
 | # | Rule | enforced by | The point that fires it |
 |---|---|---|---|
@@ -232,19 +240,23 @@ carry a standing repository rule that `AGENTS.md` held and no DD code names.
 | W10 | The audience picks the style: Chinese Tech Doc Style to the owner, ASD-STE100 to every other reader | `agent discipline` | Section 3.1, to every slot |
 | W11 | Author a document in English first, then translate, then cross-check the Chinese against the Japanese | `agent discipline` | Section 3.1, to every slot |
 | W12 | Declare a `_build/` file's lifecycle when you create it, or move it out | `agent discipline` | Section 3.1, to every slot |
+| W13 | Place a new document by AUDIENCE. A developer document is English only and is never translated | `agent discipline` | Section 3.1, to every slot |
+| W14 | A new top-level directory carries a `README.md` in the commit that creates it | `agent discipline` | Section 3.1, to every slot |
+| W15 | Never add an unpinned dependency and never add a globally installed one | `agent discipline` | Section 3.1, to every slot |
 
-**W1 to W9 are A7's WRITTEN RULE dispositions. W10, W11 and W12 carry a standing
-repository rule that `AGENTS.md` held and no DD code names.**
+**W1 to W9 are A7's WRITTEN RULE dispositions. W10 to W15 carry a standing
+repository rule that `AGENTS.md` holds and no DD code names.** Amendment A9 kept
+W13, W14 and W15, which section 1 first recorded as lost.
 
 ### 3.1 The written rules, executed by agent discipline
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
-**A dispatched agent WOULD READ this section and FOLLOW it, once `[L9]` is built. Nothing mechanical checks
+**A dispatched agent READS this section and FOLLOWS it. Nothing mechanical checks
 one clause of it.** That is why each clause is short enough to hold and why the
 program carries it: `dev/pod/instructions/<slot>.md` holds the clauses for that
 slot and the program injects the file ahead of the brief at every dispatch
-(section 6.1). The clause text below would be the rule; the summary in section 3 would not.
+(section 6.1). **The clause text below is the rule; the summary in section 3 is not.**
 
 | # | Carries | Injected into | The clause, verbatim |
 |---|---|---|---|
@@ -259,25 +271,37 @@ slot and the program injects the file ahead of the brief at every dispatch
 | W9 | DD0 | every slot | A one-off instruction from the owner binds ONLY the task it names. It changes no ruling, and it is NOT evidence about what an agent may do. Never derive a standing rule from a one-off owner instruction. Ask the owner for a ruling, and wait. |
 | W10 | none, a standing repository rule | every slot | Write to the repository owner in Chinese, in the Chinese Tech Doc Style: accuracy before rhetoric, one point per paragraph, one term per concept, and the condition before the action it governs. Write to every other reader in ASD-STE100 Simplified Technical English: one meaning per word, active voice, simple tenses, one instruction per sentence. A dispatched agent writes ASD-STE100 and never Chinese, because its reader is the program and the reviewer. Never add a number, a date or a certainty the evidence does not give. Never use an em dash in any language. Never use half-width sentence punctuation in CJK prose. |
 | W11 | none, a standing repository rule | every slot | Author a new document in English first. Translate it into Chinese and Japanese after the English is settled. Then cross-check the Chinese against the Japanese for drift. Never translate a developer document under `dev/`. |
-| W13 | none, kept by A9 | every slot | Place a new document by AUDIENCE. A user document is trilingual under `docs/<lang>/`. A developer document is English only and is never translated. A `README.md` follows the user rule. | `agent discipline` |
-| W14 | none, kept by A9 | every slot | A new top-level directory carries a `README.md` in the same commit that creates it. | `agent discipline` |
-| W15 | none, kept by A9 | every slot | Never add an unpinned dependency and never add a globally installed one. `requirements-dev.txt` pins every one. | `agent discipline` |
 | W12 | none, owner ruling 2026-08-13 | every slot | Every file you create under `_build/` declares its lifecycle in `dev/build-manifest.toml` when you create it: the condition under which it may be deleted, and the condition under which it moves to a permanent home. A file with no declared class moves out of `_build/` instead. `_build/` is a temporary folder and not a rubbish bin. |
+| W13 | none, kept by A9 | every slot | Place a new document by AUDIENCE. A user document is trilingual under `docs/<lang>/`. A developer document is English only and is never translated. A `README.md` follows the user rule. |
+| W14 | none, kept by A9 | every slot | A new top-level directory carries a `README.md` in the same commit that creates it. |
+| W15 | none, kept by A9 | every slot | Never add an unpinned dependency and never add a globally installed one. `requirements-dev.txt` pins every one. |
 
 **Two losses this section does not repair, and both are stated rather than
 absorbed.** W2 loses the per-dispatch REPETITION that `check-dd4-stated.py` gave
 it: that gate's docstring at `:14` records 11 briefs carrying no DD4 at all, and
 gap M4 records the same decay at 102 of 112 briefs over five days. An injected
-file is read by a model and checked by nobody. W1 would lose its ADDRESS: `[LJ-2.5]`
+file is read by a model and checked by nobody. W1 loses its ADDRESS: `[LJ-2.5]`
 was a row in `dev/PLAN.md` section 11, which `dev/pod/queue.toml` replaces, so
 the clause names a queued task whose obligation is the measurement. **The other
-twelve planned rows of `dev/PLAN.md` section 11 migrate the same way, as REQUEST
+planned rows of `dev/PLAN.md` section 11 migrate the same way, as REQUEST
 entries in `dev/pod/queue.toml`, so the route survives the replacement of that
-section.** Cutover step 13 seeds all thirteen.
+section.**
+
+**W1'S ADDRESS IS DANGLING TODAY, and this states it rather than absorbing it.**
+MEASURED 2026-08-18: `dev/pod/queue.toml` holds 19 `[[task]]` entries, one per
+non-`L9` PLANNED row of `dev/PLAN.md` section 11 plus `LJ-1.386`, and **no entry
+carries the code `LJ-2.5`**. The clause text of W1 below still reads `a live row
+in dev/PLAN.md section 11`, and section 11 is SET ASIDE by amendment A7. So
+clause W1 names an address that the queue does not hold and that the plan no
+longer operates. **The repair is one queue entry**, a REQUEST with
+`code = "LJ-2.5"` and no `brief`, plus the same edit to the W1 clause text here
+and to the `**W1**` clause of `dev/pod/instructions/mathematician.md` and of
+`dev/pod/instructions/mathematician_adversarial.md`. Both slot files are
+guarded, so the edit needs a named owner approval under R16.
 
 ## 4. The table
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 AD8, AD9, AD10 and AD11.
 
@@ -1140,7 +1164,7 @@ expires with it.** It also shows the namespaced id: the mathematician wrote
 
 ## 5. The loop
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 AD1, AD12, AD13, AD14, AD16, AD17, AD18 and AD19.
 
@@ -1696,7 +1720,7 @@ task stays READY while the tick records the refusal.
 
 ## 6. The roles
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 AD2, AD3, AD12, AD15, AD18, AD21, AD24, AD25, AD26 and AD27.
 
@@ -2209,7 +2233,7 @@ Without the second limb no brief could express a refusal. The limb costs nothing
 because P18 already forces every brief to carry a branch that ATTACKS the return.
 
 **P18 is the answer to a measured failure**, and it is DD25's mechanised half. A
-brief that can finish must also be attackable: `dev/ORCHESTRATION.md:108-112`
+brief that can finish must also be attackable: `archive/dev/ORCHESTRATION.md:113-117`
 records `[LJ-0.4]` refusing four blocks on measurement, the orchestrator
 accepting all four, and `[LJ-0.8]` then finding a propagated sign error standing
 in five places. P18 needs no seventh fact, because the mathematician names the
@@ -2367,22 +2391,26 @@ It never repairs a brief itself either: AD3 gives the brief to the mathematician
 
 ## 7. The gates
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 AD22, AD23 and A7.
 
 ### 7.1 The dispositions: every DD ruling, then every gate
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
-**A7 would give every DD ruling exactly one disposition and let none disappear.** The
-column below names the enforcement point `[L9]` would give it. **It is NOT what enforces the
-ruling today. For that, read `dev/PLAN.md` section 3, whose enforcement columns are live.** **A gate that
+**A7 gives every DD ruling exactly one disposition and lets none disappear.** The
+column below names the enforcement point in force since the cutover of
+2026-08-18. **THIS TABLE IS THE LIVE ENFORCEMENT RECORD.** `dev/PLAN.md` section
+3 is SET ASIDE IN THIS FORM by A7 (`dev/PLAN.md:734`) and is kept as the record
+of what the owner ruled and when; its own enforcement columns are historical and
+several name a gate the cutover archived. Read that section for the ruling and
+its date. Read this table for the enforcer. **A gate that
 enforces a MECHANISED ruling is KEPT or REWRITTEN and never retired**, which the
 second table obeys: every RETIRE row there names the disposition that released
 it. A NOT CARRIED note is a real loss, stated rather than absorbed.
 
-| DD | Disposition under `[L9]` | The enforcement point `[L9]` would give it |
+| DD | Disposition under `[L9]` | The enforcement point in force |
 |---|---|---|
 | DD0 | **SUPERSEDED IN PART** | The owner ruled the remainder back in on 2026-08-17. SUPERSEDED half: the owner's exclusive authorship of a TABLE ROW is replaced by a mechanical test on the WRITE, not on the writer, because AD2 gives the maintainer the rows: R3 refuses any new row that would move a record an existing row already matches, and `admit_rows()` calls `replay()` before it writes (4.1). **Two clauses are CARRIED and not superseded. Clause 1, WRITTEN RULE: clause W9 of section 3.1**, injected into every `dev/pod/instructions/<slot>.md`. It cannot be mechanised, because the act it forbids is an INFERENCE and the tokens it produces are legal by construction, so its enforcer is `agent discipline`. **Clause 2, MECHANISED in two halves: R15**, the maintainer's one-path write scope, checked by `maintainer_scope_ok()` at the batch return and before the replay (6.7); **and R16**, a named owner approval for any change to section 3, section 3.1 or `dev/pod/heads.toml`, checked by `check-spec-surface.py` at the `commit-msg` hook and again at conjunct 5 (7.3) |
 | DD1 | **MECHANISED** | `check-spec-surface.py`, under R9. Twice: `--check` as acceptance conjunct 5, which runs FIRST of the six (5.4), and `--msg-file` at the `commit-msg` hook. A change makes fact 2 `spec_surface`, and `sys-spec-surface` acts `stop_loop`, which A3 sorts ahead of every task row. **NOT CARRIED: the prose half, never claim an unqualified `Con(ZFC)`. No checker ever read it and the POD reads no prose (R2)** |
@@ -2431,7 +2459,7 @@ HOUSEKEEPING or LICENSING. **Runner** names what fires the check.
 | 13 | `gate/check-dd25-review-named.py` | PROCESS | **REWRITE** into pre-flight P18 and rule (f). DD25 = MECHANISED, so the function moves and does not die. The FILE archives, because it reads `dev/PLAN.md` section 11 | P18; rule (f) |
 | 14 | `gate/check-task-index.py` | PROCESS | **RETIRE**. Released by DD19's part 2, which `dev/pod/queue.toml` and the program-written log mechanise | retired |
 | 15 | `gate/check-rule-ids.py` | HALF PROCESS | **REWRITE**, narrowed to `dev/LESSONS.md` and `dev/rules.toml`. The second target is not optional: a bundle that names an ID no entry carries is a dead reference nothing else catches | pre-commit |
-| 16 | `gate/check-dev-docs.py` | PROCESS | **RETIRE**. Released by AD4: it enforces `AGENTS.md`'s taxonomy and the `dev/` size caps, and no DD carries either | retired |
+| 16 | `gate/check-dev-docs.py` | PROCESS | **RETIRE, and the release covers TWO of its six subchecks. The other four are dispositioned in the note below** | retired |
 | 17 | `gate/check-build-manifest.py` | HOUSEKEEPING | **RETIRE**. It never fails, and no POD file lives under `_build/` (4.0). The DATA file `dev/build-manifest.toml` is KEPT, and the owner's ruling of 2026-08-13 that it encodes is re-homed to clause W12 | retired |
 | 18 | `gate/check-baseline-home.py` | PROCESS | **RETIRE**. Released by DD24 = SUPERSEDED, which voids the bar it guarded | retired |
 | 19 | `gate/check-live-record-claims.py` | PROCESS | **RETIRE**. Released by AD4: it reads `dev/PLAN.md` sections 0.0 and 11, which `dev/pod/queue.toml` replaces | retired |
@@ -2448,7 +2476,7 @@ HOUSEKEEPING or LICENSING. **Runner** names what fires the check.
 | 29 | `measure/check-ratio.py` | tool PHYSICS, bar PROCESS | **KEEP** the tool, **RETIRE** the bar. DD24 = SUPERSEDED | maintainer |
 | 30 | `measure/check-unbound-hyp.py` | PHYSICS | **KEEP**, promoted into conjunct 4 | the pre-flight snapshot, which carries the finding SET on the task as `unbound_before`; conjunct 4 |
 | 31 | `measure/deletion-test.py` | tool PHYSICS, cap PROCESS | **KEEP** the split, **RETIRE** the cap | maintainer |
-| 32 | `measure/dispatch-usage.py` | PHYSICS | **KEEP** and retarget to the digest | digest |
+| 32 | `measure/dispatch-usage.py` | PHYSICS | **KEEP** as a maintainer profiler. Cutover step 4 repointed its store (`scripts/measure/dispatch-usage.py:85`) and NOTHING CALLS IT: the retarget to the digest was designed and not built, and section 8.1 sources no field from it | maintainer |
 | 33 | `site/weave-i18n.py` | PHYSICS | **KEEP**. The `markers` gate | pre-commit; conjunct 6 |
 | 34 | `reuse` (external tool) | LICENSING | **KEEP** | `make check` |
 | 35 | `repo_root.py` | PHYSICS | **KEEP**. The one root walk; 31 scripts import it. Every new `scripts/pod/` file MUST use `find_root()` and must never compute a depth | imported by every gate and every pod module |
@@ -2463,9 +2491,36 @@ Makefile target names either. KEEP-lint rows 1, 2, 3, 4, 6, 33; REWRITE rows 5, 
 10, 11, 13, 15, 21, 24; KEEP-tool rows 22, 23, 26 to 32, 34; RETIRE rows 7, 8, 12,
 14, 16 to 20, 25. Rows 29 and 31 keep a tool and retire a threshold, so they count
 as KEEP. **No MECHANISED ruling lost a gate:** rows 13 and 24 are the two the
-first table forced from RETIRE to REWRITE. Eight notes carry the reasons the
+first table forced from RETIRE to REWRITE. Nine notes carry the reasons the
 table cannot hold.
 
+- **Row 16 declared SIX subchecks and its release covers TWO. The other four get
+  a disposition here, written 2026-08-18 after an audit found the gap.** The
+  retired file lists them at `archive/scripts/gate/check-dev-docs.py:321-328`.
+  **`agents-size` and `plan-cell-size` are the two AD4 releases**, and the row
+  states them. The four that remain:
+  - **`lessons-imported-routing`: NOT CARRIED, and it is a real loss.** It
+    refused a `dev/LESSONS.md` entry marked imported that `dev/rules.toml` routes
+    into no bundle. `dev/LESSONS.md` is KEPT and R17 makes `rules.py` the only
+    path from a law to a worker, so an unrouted law now reaches nobody and no
+    gate says so. Row 15's narrowed `check-rule-ids.py` resolves an ID and never
+    asks whether a bundle names it.
+  - **`plan-section0-date`: NOT CARRIED, and cutover step 12b is its only
+    remaining performer.** It refused a `dev/PLAN.md` section 0 whose heading
+    date lagged the work the section describes. Section 0 stays the screen that
+    `AGENTS.md:28-30` sends every slot to, so a stale screen is still a live
+    cost, and nothing mechanical measures it.
+  - **`memo-status-form`: NOT CARRIED.** It checked the form of a
+    `**Status: ...**` header in a `dev/memos/` file. R16 covers THIS memo by
+    sha256 and covers no other memo.
+  - **`agents-enforcers`: NOT CARRIED, and it was the meta-gate.** It resolved
+    every `scripts/*.py` path named in the enforcement table and refused a name
+    that no file carries. Section 3's `enforced by` column and the two tables
+    above name scripts by path, and nothing resolves them today. **The cheapest
+    home is one more limb on `check-spec-surface.py --check`:** read every
+    `scripts/*.py` path this section names and refuse a path that does not
+    resolve. That work is not done, and this sentence is the record that it is
+    owed rather than absorbed.
 - **Row 4 is not optional.** `check-fences.py:4-16`: `[LJ-1.41]` reported two
   agreements machine-checked, `[LJ-1.42]` found both outside the fence with four
   real defects, and every gate passed, because unfenced text is invisible.
@@ -2738,6 +2793,18 @@ changed. The record is
 | 5b | 1,429 | 16 | 97 |
 | 6 | 1,464 | 28 | 97 |
 
+**THE TABLE IS THE 2026-08-17 RECORD AND TWO OF ITS SCOPED RANKS HAVE MOVED.**
+Keep the table as it stands, because it is the measurement. MEASURED 2026-08-18:
+episode 11 moved from scoped rank 2 to 3, and episode 10 from 3 to 5. **The
+cause is the cutover itself**, which archived `dev/ORCHESTRATION.md` into
+`archive/dev/`: one 604-line document entering a six-file corpus moves the
+document frequencies and the average length, so every `DEV_SCOPE` query
+re-ranks. **The `SRC_SCOPE` ranks did not move**, because `archive/src/` did not
+change, and that is the control that proves the cause. The ranker is unchanged.
+**The live figures are pinned in `scripts/tests/test_pod_gates.py:100-124` and
+`:141-143`**, so the next document to enter either corpus fails a test instead of
+moving a rank quietly.
+
 Five of the seven reach the top 3 and two reach rank 1. **The measured cause of
 the full-corpus miss is dilution by the live task corpus.** For episode 7, 443
 documents outrank the gold file and 418 of them are live task documents. For
@@ -2754,14 +2821,15 @@ conclusion did not change, and the honest comparison is the stronger one: 444 to
 
 **The two corpora grow differently, so the result holds as the project grows.**
 `agents/tasks` holds 1,456 documents today and it grows with every dispatch.
-`archive/src` holds 97 files and `archive/dev` holds 6, and both grow only when a
-route retires. `git log` gives 1,455 new task documents in one week, and one
-archive change since 2026-08-13. The corpus DD18 tells a brief to survey is
+`archive/src` holds 97 files and `archive/dev` holds 7 since the cutover, and
+both grow only when a route retires. `git log` gives 1,455 new task documents in
+one week, and one archive change since 2026-08-13. The corpus DD18 tells a brief to survey is
 nearly static, so the scoped result does not decay.
 
 **The first implementation uses the standard library only.** It ranks whole
-files, keeps no index file and keeps no cache. The archive scope is 103 files and
-near 1 MB, so one ranking is one pass.
+files, keeps no index file and keeps no cache. MEASURED 2026-08-18 over
+`retrieve.ARCHIVE_SCOPE`: the archive scope is 101 files and 4.8 MB, so one
+ranking is one pass.
 
 **What the builder writes.** It writes the `k` paths as candidates, each on its
 own line, with the word CANDIDATE. It never says that a file bears on the task.
@@ -2842,7 +2910,7 @@ naming score, which counted prose compliance rather than reading.
 
 ## 8. The digest and the stop push
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 AD7 and AD20.
 
@@ -2971,10 +3039,11 @@ BARK_AES_KEY="$BARK_AES_KEY" BARK_KEY_URL="$BARK_KEY_URL" \
 
 ## 9. Migration
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
-AD6. No cutover command has been run, and every command below is written for a
-later executor. The anchor, verified today:
+AD6. **THE CUTOVER RAN ON 2026-08-18, at commit `fc676cb`, and section 9.1 is
+now the RECORD of what it did.** Read it to see what moved and why. Read section
+9.2 to roll it back. The anchor, verified 2026-08-17 and unmoved:
 `git log -1 --format='%H %ci' pre-pod-2026-08-17` prints
 `e54da6c310ead31c5fb98ad171ac478c6b90b628 2026-08-17 10:44:02 +0800`. The tag is
 annotated. Do not move it.
@@ -3168,18 +3237,29 @@ git mv scripts/gate/check-archive-cited.py archive/scripts/gate/   # W4: never d
 #      both are marked. Amendment A7 is the authority.
 
 # 13. Seed the POD: dev/pod/table.toml (the system rows of 4.8, 6.6 and 7.3),
-#     queue.toml (14 entries: LJ-1.386 with a brief, plus one REQUEST entry per
-#     planned row of dev/PLAN.md section 11, carrying code, reason and NO brief,
-#     so rule (a1) skips them and the digest prints them until the mathematician
-#     writes each brief. LJ-2.5 is one of the thirteen and is clause W1's
-#     address), heads.toml (five heads and the limits), instructions/ (one file
-#     per slot, carrying W1 to W12 and the caliber sentence of 6.1),
+#     queue.toml (19 entries AS SEEDED, corrected from the 14 this step first
+#     named: LJ-1.386 with a brief, plus one REQUEST entry per non-L9 PLANNED row
+#     of dev/PLAN.md section 11, carrying code, reason and NO brief, so rule (a1)
+#     skips them and the digest prints them until the mathematician writes each
+#     brief. Section 11 carries 27 PLANNED rows and 9 of them are the L9 rows the
+#     cutover itself closes, which leaves 18 REQUEST entries. THE SEED MISSED
+#     LJ-2.5, clause W1's address, and section 3.1 records that gap),
+#     heads.toml (five heads and the limits), instructions/ (one file
+#     per slot, carrying the shared Boundary generated from AGENTS.md plus that
+#     slot's own clauses out of W1 to W15, and the caliber sentence of 6.1),
 #     spec-surface.toml with its [[guarded]] rule homes,
 #     transitions/2026-08.jsonl (empty) and replay-corpus.jsonl (empty, seeded
 #     on day 4).
 
 # 14. Gate it. Background only. A cold typecheck is about twelve minutes.
 make check                                    # must exit 0
+
+# 14b. CLEAR THE STOP FLAG THAT STEP 0 SET. Step 0 runs `pod.py stop`, which writes
+#      `.pod-state/STOPPED`, and rule (f) returns STOP on it, so `pod run` would do
+#      one tick and exit 1 having dispatched nothing. `.pod-state/` is git-ignored,
+#      so no gate and no `git status` can see the flag. THIS STEP WAS MISSING and the
+#      final audit of 2026-08-18 found it.
+rm -f .pod-state/STOPPED                      # or start with `pod resume`, never `run`
 
 # 15. Pre-flight self-test before the first dispatch, on synthetic briefs.
 .venv/bin/python scripts/pod/preflight.py --brief <a synthetic brief>
@@ -3254,7 +3334,7 @@ and a prefix change breaks every one of those citations.
 
 ## 10. The build order
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 Seven days. **Each day delivers something useful on its own, even if the POD never
 ships.** No day depends on a later one, checked against sections 5.4, 7.2 and 9.1.
@@ -3271,7 +3351,7 @@ ships.** No day depends on a later one, checked against sections 5.4, 7.2 and 9.
 
 ## 11. Open gaps and risks
 
-*Design for `[L9]`, `dev/PLAN.md` section 11. PLANNED and not built. `AGENTS.md` and `dev/ORCHESTRATION.md` are the flow in force; nothing in this section is.*
+*In force since the POD cutover of 2026-08-18, commit `fc676cb`. `AGENTS.md` holds the shared Boundary, and `dev/ARCHIVE.md:214` records `dev/ORCHESTRATION.md` as archived.*
 
 A BLOCKING gap stops the build, a MAJOR gap changes what the design promises, and
 a minor gap is a known cost.

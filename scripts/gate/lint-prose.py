@@ -15,6 +15,10 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
   5. No single quotes as quotation marks in Chinese context, no quote nesting       [report only]
   6. Inside an ```agda code block: no Chinese or full-width symbols (the CJK prose
      rules do not apply there); Agda's own Unicode (≡ ℕ λ …) is fine                 [report only]
+  7. No CJK in SHARED prose of a src/ master, meaning prose outside every
+     <!--en|zh|ja--> block, because that text reaches the English book verbatim
+     (C-8). This one reads all masters and not the FILE list, so it runs only
+     when the caller names no file.                                              [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -515,16 +519,34 @@ def main(argv):
             return 1
         return 0
     else:
+        rc = 0
         if total_fixable or total_manual:
             hint = "run: python3 scripts/gate/lint-prose.py --fix <files>  (auto-fixes punctuation/quotes; em dash & nesting are manual)"
             print(f"\n{total_fixable + total_manual} violation(s). {hint}", file=sys.stderr)
-            return 1
-        return 0
+            rc = 1
+        # C-8, the shared-CJK check. It reads every master under src/ and not the
+        # file list, so a caller that NAMES files gets the lint alone. `make check`
+        # and the pre-commit hook both name none, which is why this fires at both.
+        if not paths:
+            cjk = check_shared_cjk()
+            for msg in cjk:
+                print(msg, file=sys.stderr)
+            if cjk:
+                print(f"\n{len(cjk)} shared-CJK violation(s).", file=sys.stderr)
+                rc = 1
+        return rc
 
 
-if __name__ == "__main__":
-    raise SystemExit(main(sys.argv[1:]))
-
+# ---------------------------------------------------------------------------
+# WIRED 2026-08-18. The move above landed both functions BELOW the `__main__`
+# guard, so in script mode neither `def` ever ran, and no module in the tree
+# imports this file. C-8's shared-CJK check was therefore retired in silence
+# from the cutover until now, while the cutover commit fc676cb reported it moved
+# and verified. `main()` calls `check_shared_cjk()` on the check path, which is
+# both enforcement points the design names for it: the pre-commit hook, which
+# passes `--staged`, and conjunct 6, which passes `--check`.
+# It reads 99 masters in 0.031 s (measured 2026-08-18), so a hook can pay it.
+# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # MOVED HERE BY THE POD CUTOVER, step 7, 2026-08-18. It lived in
@@ -562,3 +584,7 @@ def check_shared_cjk() -> list[str]:
                            f"every language, so this would appear untranslated in the "
                            f"English book. Wrap it in a language block")
     return bad
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

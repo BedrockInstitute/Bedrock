@@ -2603,8 +2603,28 @@ authority = "[LJ-0.4] closure run 2026-08-10: exactly three of 78 masters sit ou
 # provenance, and never as a baseline.
 # THE APPLIED BAR is `ac_baseline_module_rate` times `tolerance`, computed at
 # scripts/measure/check-ratio.py and stated nowhere else.
-# scripts/gate/check-baseline-home.py refuses a live restatement of either
-# figure outside this file.
+# THE ONE-HOME ENFORCER IS GONE, and this comment states the loss rather than
+# leaving it silent. scripts/gate/check-baseline-home.py refused a live
+# restatement of either figure outside this file. It was ARCHIVED on 2026-08-18
+# at commit fc676cb, to archive/scripts/gate/check-baseline-home.py, and the
+# `baselinehome` target left the Makefile `check:` line in the same commit.
+# THE REASON IT WAS RELEASED NO LONGER HOLDS. Row 18 of section 7.1 of
+# dev/memos/L9-pod-program-design.md retired the gate because it read DD24 as
+# SUPERSEDED. Amendment A10, in the amendments list of that memo's preamble,
+# overturned that reading and RESTORED the ratio bar. So the rule stands and its
+# enforcer does not.
+# WHAT ENFORCES THE ONE-HOME RULE TODAY: nothing mechanical. Review only.
+# ONE LIVE RESTATEMENT ALREADY EXISTS, found by audit on 2026-08-18.
+# dev/pod/table.toml:84 carries `seconds_per_line_min = 0.0123`. That number is
+# the [ratio] tolerance of 1.15 applied to a SECOND baseline rate, 0.01069 s per
+# in-fence line, which the same row cites in its `reason` at :78. It is a live
+# threshold outside this file, it goes stale in silence, and it is the exact
+# class the archived gate refused. It is reported and not moved, because
+# dev/pod/table.toml needs a named owner approval under R16.
+# TO MECHANISE THE RULE AGAIN the owner adds a pre-flight check to
+# scripts/pod/preflight.py, or a [[row]] to dev/pod/table.toml. Gap M13 tracks
+# the missing QUALITY BAR; this comment tracks the missing ONE-HOME GUARD, and
+# the two losses are different.
 # THE BASELINE IS A MEASUREMENT, and the tool refuses to run without it.
 # Protocol: interface cache moved aside, `make typecheck` at the exported
 # GHCRTS default, Agda 2.8.0, single process, nothing else running,

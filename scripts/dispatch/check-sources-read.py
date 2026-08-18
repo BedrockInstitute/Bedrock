@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 """Did the agent actually OPEN the sources its brief named? (DD18)
 
+STATUS: UNBUILT, and it gates nothing. The POD cutover of 2026-08-18 replaced
+the codex dispatcher with `scripts/pod/launcher.py`. `LOGS` below now points at
+the directory the POD writes, but `TOOLCALL_RE` at `:94` is still the CODEX
+shell prefix. No Claude head has run through the new launcher, so no transcript
+exists to write the Claude shape against. Design section 7.4 of
+`dev/memos/L9-pod-program-design.md` and gap M9 schedule that for day 7:
+capture one transcript, paste its tool-call line into section 7.4, write the
+regex here, and set `REGEX_BUILT` to True. Until then this script prints UNBUILT
+and scans nothing, because a codex regex over a Claude transcript reports a
+false miss on every named source.
+
 WHY THIS EXISTS. DD18 makes every brief name what in `archive/` and
 `dev/literature/` may bear on the task, and every return say what it used.
 `dispatch.py` refuses a brief that omits either section, so the BRIEF half is
@@ -32,7 +43,8 @@ agent came back with `LevelSigma.lagda.md:203`. That worked.
 Usage:
   check-sources-read.py <task>...   one or more task codes, e.g. LJ-1.6
   check-sources-read.py --all       every task with a brief and a log
-Exit 0 always: this REPORTS. It is an audit aid, not a gate.
+Exit 0 always: this REPORTS. It is an audit aid, not a gate. While
+`REGEX_BUILT` is False it prints UNBUILT and exits 0 without a scan.
 """
 
 from __future__ import annotations
@@ -58,7 +70,19 @@ from repo_root import find_root  # noqa: E402
 import agents_tree as T   # [LJ-1.142]: the briefs moved into agents/tasks/<TASK>/
 
 ROOT = find_root(__file__)
-LOGS = ROOT / ".claude" / "skills" / "codex-dispatch" / ".state" / "logs"
+# THE POD WRITES HERE. `scripts/pod/launcher.py:93` sets `LOGS = STATE / "logs"`
+# under `<root>/.pod-state`, and it names each file `<task>-<stamp>.log` at
+# `launcher.py:1198`, so the glob below still holds. The old target was
+# `.claude/skills/codex-dispatch/.state/logs`, which belonged to the codex
+# dispatcher. That dispatcher left at the cutover, so the old path is a
+# directory nothing writes and every scan of it was a silent empty pass.
+LOGS = ROOT / ".pod-state" / "logs"
+
+# THE TOOL-CALL SHAPE IS UNBUILT, and this flag says so instead of passing in
+# silence. Set it True in the same edit that writes the Claude tool-call regex,
+# on day 7. See the STATUS paragraph of the module docstring.
+REGEX_BUILT = False
+UNBUILT = "UNBUILT: no Claude transcript exists yet (design section 7.4, gap M9)"
 
 # A path the brief names inside its ARCHIVE or LITERATURE section.
 PATH_RE = re.compile(r"`([\w./-]+\.(?:md|txt|agda|lagda\.md|toml))`")
@@ -95,6 +119,12 @@ def opened(task: str) -> tuple[set[str], int]:
 
 
 def report(task: str) -> None:
+    # A task with no transcript is UNBUILT for this check, not a miss. The POD
+    # writes one log for each dispatch, so an absent log means the task never
+    # ran through the launcher.
+    if not sorted(LOGS.glob(f"{task}-*.log")):
+        print(f"{task}: {UNBUILT}")
+        return
     named = named_sources(task)
     if not named:
         print(f"{task}: no brief, or its DD18 sections name no path")
@@ -131,6 +161,15 @@ def main(argv: list[str]) -> int:
     tasks = argv[1:]
     if not tasks:
         print(__doc__)
+        return 0
+    if not REGEX_BUILT:
+        print(UNBUILT)
+        print("  TOOLCALL_RE is the codex shell prefix and matches no Claude "
+              "transcript.")
+        print("  A scan with it reports a false miss, so this script scans "
+              "nothing.")
+        print("  Day 7 writes the regex and sets REGEX_BUILT. Until then this "
+              "gates nothing.")
         return 0
     if tasks == ["--all"]:
         tasks = sorted({p.stem for p in T.briefs()})

@@ -34,13 +34,23 @@ used once leaves both imports unflagged (false negatives over false
 positives); usage detection is lexical (token-level), not scope-aware.
 
 Usage:
-  lint-agda.py [--check] [FILE ...]
-  with no FILE, scans git-tracked src/**/*.lagda.md. Exit 1 on any violation.
+  lint-agda.py [--check] [--staged] [FILE ...]
+  with no FILE, scans src/**/*.lagda.md. `--staged` scans the staged masters
+  only, which is what the pre-commit hook wants. Exit 1 on any violation.
+
+`--check` also runs check_spdx() over the whole tree, and `--staged` runs it
+over the staged files. DD22 bans an in-file SPDX header.
 """
 
 import glob
 import re
+import subprocess
 import sys
+from pathlib import Path   # cutover step 7: check_spdx() needs it
+
+# The repository root. `check_spdx()` reads it and NOTHING defined it until
+# 2026-08-18, so the moved check raised NameError on its first call.
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 OPTIONS_EXPECTED = ["--cubical", "--safe", "--guardedness"]
 EXEMPT_BASENAME = "Everything.lagda.md"
@@ -367,15 +377,27 @@ def tracked_masters():
 
 
 def main(argv):
-    given = [a for a in argv if not a.startswith("--")]
+    # PARSE THE FLAGS, do not drop them. Until 2026-08-18 this line read
+    # `given = [a for a in argv if not a.startswith("--")]`, which threw every
+    # option away in silence: `--check` did nothing and the hook's `--staged`
+    # bought a whole-tree scan.
+    check = "--check" in argv
+    staged = "--staged" in argv
+    unknown = [a for a in argv
+               if a.startswith("-") and a not in ("--check", "--staged")]
+    if unknown:
+        sys.stderr.write(f"unknown option: {unknown[0]}\n")
+        return 2
+    given = [a for a in argv if not a.startswith("-")]
     files = [f for f in given if f.endswith(".lagda.md")]
     if not given:
-        # No explicit FILE: scan all masters (src/ only; a new file must not
-        # escape the gate merely by not being committed yet).
-        files = tracked_masters()
+        # No explicit FILE. `--staged` scans what this commit changes; anything
+        # else scans all masters (src/ only; a new file must not escape the gate
+        # merely by not being committed yet).
+        files = staged_masters() if staged else tracked_masters()
     # Outside every gate (archived D20, live DD13): archive paths are dropped.
     #
-    # `agents/` is dropped for the same reason `scripts/gate/lint-prose.py:446` drops it, and
+    # `agents/` is dropped for the same reason `scripts/gate/lint-prose.py:448` drops it, and
     # AGENTS.md states the rule: an agent's brief, report and probe are a RECORD, and a
     # record is never rewritten. Style is a rule for code the project maintains.
     #
@@ -396,11 +418,19 @@ def main(argv):
             total += 1
     if total:
         print(f"lint-agda: {total} violation(s)")
-    return 1 if total else 0
+    rc = 1 if total else 0
 
-
-if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    # DD22, the in-file SPDX ban. It fires at `make check` over the whole tree
+    # and at the pre-commit hook over the staged files. A bare FILE list runs
+    # the lint alone, because a caller that names a master asks for a lint.
+    if check or staged:
+        spdx = check_spdx(staged_files() if staged else None)
+        for msg in spdx:
+            print(msg)
+        if spdx:
+            print(f"lint-agda: {len(spdx)} in-file SPDX header(s)")
+            rc = 1
+    return rc
 
 
 # ---------------------------------------------------------------------------
@@ -410,9 +440,18 @@ if __name__ == "__main__":
 # keeps the check alive**: archiving check-tree.py without this move would have
 # retired a live check in silence, which is the failure clause W4 exists for.
 # ---------------------------------------------------------------------------
-def check_spdx() -> list[str]:
+def check_spdx(paths=None) -> list[str]:
+    """DD22: licensing has ONE source of truth, REUSE.toml, so no file carries an
+    in-file SPDX header.
+
+    `paths` scopes the scan. `None` means the whole tree, which is the `--check`
+    and conjunct 6 caliber. The pre-commit hook passes the STAGED files instead,
+    because a whole-tree scan costs 5.48 s over 6,230 files (measured 2026-08-18)
+    and a hook must stay cheap. A header enters the tree inside a file that
+    somebody edits, so the staged scope catches it at the commit that adds it.
+    """
     bad = []
-    for p in ROOT.rglob("*"):
+    for p in (ROOT.rglob("*") if paths is None else paths):
         if not p.is_file() or p.name == "REUSE.toml":
             continue
         parts = p.relative_to(ROOT).parts
@@ -430,3 +469,45 @@ def check_spdx() -> list[str]:
             bad.append(f"{p.relative_to(ROOT)}: in-file SPDX header. Licensing has one source "
                        f"of truth, REUSE.toml (archived D4, live DD22); delete the header")
     return bad
+
+
+# ---------------------------------------------------------------------------
+# WIRED 2026-08-18. The move above landed the function BELOW the `__main__`
+# guard and named a global `ROOT` this file did not define, so in script mode
+# the `def` never ran and an import-mode call raised NameError. DD22 was
+# therefore unenforced from the cutover until now, while the cutover commit
+# fc676cb reported it moved and verified. `main()` calls it on both the
+# `--check` and the `--staged` path.
+# ---------------------------------------------------------------------------
+def staged_masters():
+    """The masters this commit adds or changes.
+
+    THE HOOK ASKED FOR THIS AND DID NOT GET IT. scripts/git-hooks/pre-commit
+    passes `--staged`, and the old argument parser dropped every `--` token, so
+    the hook silently scanned the whole tree. Coverage was wider, not narrower,
+    but one pre-existing violation anywhere then blocked every unrelated commit
+    under the hook's `set -e`. This mirrors scripts/gate/lint-prose.py:438-442.
+    """
+    return sorted(f for f in git_lines(["diff", "--cached", "--name-only",
+                                        "--diff-filter=ACM"])
+                  if f.endswith(".lagda.md"))
+
+
+def staged_files():
+    """Every staged path, for the SPDX scan. It is not limited to masters."""
+    return [ROOT / f for f in
+            git_lines(["diff", "--cached", "--name-only", "--diff-filter=ACM"])
+            if (ROOT / f).is_file()]
+
+
+def git_lines(args):
+    try:
+        out = subprocess.run(["git", *args], cwd=ROOT,
+                             capture_output=True, text=True, check=True).stdout
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return []
+    return [l for l in out.splitlines() if l]
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

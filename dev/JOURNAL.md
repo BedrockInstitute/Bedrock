@@ -1228,3 +1228,97 @@ dispatch rather than once per process.
 `codex`-specific and nothing clears it automatically. **The fallback row of
 BOTH modes is `herdr` / `codex`.** Anything that falls back will hang the same
 way, and the only symptom is an agent that returns nothing after its budget.
+
+### 2026-08-18, the pre-launch audit: five records corrected and two checks re-wired
+
+**Asked.** Audit the POD cutover before the owner starts `pod.py run`. This entry
+records only the findings that land in a RECORD or in a gate script. It does not
+repeat what the commits already say.
+
+**A record is never rewritten.** The three commit bodies below stay as written.
+This entry carries the correction, which is the form `dev/PLAN.md` uses for the
+same problem.
+
+**1. `fc676cb` reports the wrong delta for `AGENTS.md`.** The commit body reads
+"AGENTS.md SURVIVED, per amendment A8, and it is 176 lines shorter". The
+measured delta is **71 lines**, from 176 to 105. 176 is the file's size BEFORE
+the commit, reported as if it were the change. Evidence: `git show --numstat
+fc676cb -- AGENTS.md` gives `100 171`, so 171 lines left and 100 arrived.
+`git show fc676cb~1:AGENTS.md | wc -l` gives 176 and `git show fc676cb:AGENTS.md
+| wc -l` gives 105.
+
+**2. `fc676cb` counts fourteen `make check` targets and lists thirteen.** The
+`check:` line of that commit's tree names `venv-check typecheck markers lint
+lint-agda glossary ledger probes closure fences reuse ruleids specsurface`,
+which is 13 names. The commit body's own list names 11 gates plus `venv-check`
+and the typecheck, which is the same 13. The later commit `ab55a8d` reads the
+same line correctly as "eleven gates plus the typecheck". Read `ab55a8d`.
+
+**3. No counter exists for an assertion, so two commit figures cannot be
+checked.** `ab55a8d` reports "make test exits 0 at 1,001 assertions" and
+`ed09b26` reports "441 tests and 966 assertions across six POD suites". The
+TEST half of each pair reproduces exactly. The ASSERTION half reproduces
+nowhere. Measured today: `make test` exits 0 and prints seven `Ran N tests`
+lines that sum to **475**; the four POD `unittest` suites sum to 85 + 117 + 186
++ 53 = **441**, which matches `ed09b26`. No script under `scripts/` counts an
+assertion, and `grep -rn '1,001\|966 assert' dev/ scripts/` finds nothing.
+
+**THE CHOICE, and it is the cheap one: stop quoting an assertion count.** Quote
+the test count, because `make test` prints it and any reader reproduces it in
+one command. A counter in the `test:` target would also work and would cost more
+than the figure is worth. **Nothing in the tree ever produced 966 or 1,001, so
+neither number has a source and neither is repeated here as if it did.**
+
+**4. Two checks moved at the cutover and neither ran.** `fc676cb` states "They
+are moved, and each was verified to give the ORIGINAL's result before the move
+landed". The move landed. The WIRING did not.
+
+- `check_spdx()` sat after the `if __name__ == "__main__"` guard of
+  `scripts/gate/lint-agda.py`, so in script mode the `def` never ran, and its
+  first statement read a module global `ROOT` that the file did not define. An
+  import-mode call raised `NameError`. DD22's in-file SPDX ban was unenforced
+  from the cutover until today.
+- `check_shared_cjk()` sat after the guard of `scripts/gate/lint-prose.py`, and
+  no module in the tree imports that file. C-8's shared-CJK check was retired in
+  silence, which is the failure clause W4 exists for.
+
+**REPAIRED TODAY.** `lint-agda.py` defines `ROOT`, holds `check_spdx()` above
+the guard, and calls it from `main()` on both the `--check` path, over the whole
+tree, and the `--staged` path, over the staged files. `lint-prose.py` holds
+`_masters_for_cjk()` and `check_shared_cjk()` above the guard and calls
+`check_shared_cjk()` on the check path when the caller names no file, which is
+exactly `make check` and the pre-commit hook. **Both were proved to FIRE, not
+merely to run**: a temporary file with an SPDX header made
+`lint-agda.py --check` and `--staged` exit 1, and a temporary master with CJK
+outside every language marker made `lint-prose.py --check` and `--staged` exit
+1. Both temporary files were removed. Both checks report zero violations against
+the real tree.
+
+**5. The pre-commit hook asked `lint-agda.py` for the staged files and got the
+whole tree.** `scripts/git-hooks/pre-commit:22` passes `--staged`. The old
+argument parser dropped every token that starts with `--`, so the flag vanished
+and `--check` did nothing either. Coverage was wider and not narrower, so no
+violation escaped, but one pre-existing violation anywhere then blocked every
+unrelated commit under the hook's `set -e`. `lint-agda.py` now implements
+`--staged` the way `scripts/gate/lint-prose.py` does, and it refuses an unknown
+option with exit 2 instead of ignoring it.
+
+**Cost of the whole-tree SPDX scan, measured today:** 5.48 s over 6,230 files.
+That is why the hook path scans the staged files only, and `make check` scans
+the tree.
+
+**6. Two live skills carried instructions the cutover made wrong.**
+`.claude/skills/dispatch-herdr/` was retired at cutover step 4c and its two-phase
+wait went into `dev/LESSONS.md` as C-60 and C-61. The surviving
+`.claude/skills/herdr/SKILL.md` teaches the ONE-phase wait that C-60 measured as
+wrong twice on 2026-08-13. A Bedrock override note now sits at its wait section
+and cites C-60, C-61 and the owner's 2026-08-14 ruling that `blocked` is not a
+stop state. `.claude/skills/asd-ste100/README.md` carried 13 em dashes while its
+own skill teaches the ban; all 13 are gone. Two sibling files under that skill
+still carry 21 between them and this round did not own them. **`.claude/` is
+git-ignored, so none of this is committed and no gate reads it**
+(`scripts/gate/lint-prose.py:448`).
+
+**What it bought.** Two enforcement points that existed only on paper now run,
+and three figures that a reader would have trusted are corrected against the
+command that measures them.

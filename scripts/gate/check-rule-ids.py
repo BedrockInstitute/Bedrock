@@ -19,6 +19,20 @@ WHAT IT CHECKS. Every token in a scanned file that looks like a LESSONS ID
 heading in `dev/LESSONS.md`. Decision references without the hyphen are checked
 against `dev/PLAN.md`'s decision table instead.
 
+AND EVERY ID IN `dev/rules.toml` RESOLVES THE SAME WAY, which is the second
+target of row 15 of `dev/memos/L9-pod-program-design.md` section 7.1: "a bundle
+that names an ID no entry carries is a dead reference nothing else catches".
+The bundle cap is checked with it, because the cap IS the design of that file: a
+bundle that grows without eviction becomes the corpus again.
+
+WHY THAT HALF MOVED HERE. `scripts/dispatch/rules.py --check` used to hold it,
+and the `ruleids` target of the `Makefile` ran both lines. Cutover step 10b of
+the design deleted the `rules.py --check` line, because row 22 takes `rules.py`
+out of the gate and puts it inside the brief builder. Nothing replaced the
+validation, so between the cutover and this edit `dev/rules.toml` had NO
+validator: a bundle could name `R-99` and every gate stayed green.
+`rules.py --check` still runs by hand and reports the same defects.
+
 THE SERIES CHECK, added 2026-08-13 by `[LJ-1.140]`. Resolution is not enough
 when TWO series share the numbers. The whole `D` series was archived on
 2026-08-09 and the live series is `DD`, so a bare code in a live document
@@ -39,6 +53,26 @@ green, and so does a live `DD` rule miscited as `D` and then labelled archived.
 The check removes the SILENT retarget, where nothing beside the code warns the
 reader at all, and it claims nothing more than that.
 
+WHAT STEP 7b ASKS FOR AND THIS FILE DOES NOT DO, written down rather than left
+silent. Step 7b (design memo `:3092-3101`) asks for two more edits: drop
+`dev/PLAN.md` section 3 from `known_decisions()`, and drop the bare-`D<n>`
+series rule. NEITHER IS DONE, and the reason is measured, not preference.
+
+  1. `dev/PLAN.md` section 3 is SET ASIDE but KEPT as the record, and 740 live
+     `DD<n>` citations sit in `dev/`, `scripts/` and `AGENTS.md` (MEASURED
+     2026-08-18). Dropping the section from the reference set makes every one of
+     them unresolvable and turns this gate red across the tree, so the drop needs
+     the DD resolution check deleted with it. That deletes an enforcement point
+     and replaces it with nothing.
+  2. `scripts/tests/test_rule_series.py` pins the series rule with 63 checks and
+     calls `series_findings`, `dd_numbers` and `known_decisions` directly.
+     Deleting them turns that suite red, and the suite is not in this task's
+     write scope. Step 7b's own acceptance requires the suite to exit 0.
+
+So the series rule and the decision resolution STAY, and this note is the record
+that they stay against a written step. The owner decides whether the step still
+holds now that section 3 was kept.
+
 USAGE
     python3 scripts/gate/check-rule-ids.py                 # dev/, AGENTS.md, scripts/
     python3 scripts/gate/check-rule-ids.py <files...>
@@ -50,6 +84,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+import tomllib
 from pathlib import Path
 
 # LJ-1.291: the root is found by walking up to the repository marker, never by
@@ -71,6 +106,9 @@ from repo_root import find_root  # noqa: E402
 ROOT = find_root(__file__)
 LESSONS = ROOT / "dev" / "LESSONS.md"
 PLAN = ROOT / "dev" / "PLAN.md"
+#: The rule routing. Row 15's second target: its bundles name LESSONS IDs, and a
+#: bundle naming an ID no entry carries is a dead reference nothing else catches.
+RULES_TOML = ROOT / "dev" / "rules.toml"
 
 # A LESSONS heading: `### P-h.` / `### R-38.` / `### Rule 14.` / `### C-23.`
 #
@@ -370,6 +408,56 @@ def series_findings(path: Path, text: str, twins: set[str]) -> list[str]:
     return out
 
 
+def rules_toml_findings(lessons: set[str]) -> list[str]:
+    """Every ID in `dev/rules.toml` resolves, and no bundle passes the cap.
+
+    ROW 15's SECOND TARGET, and it is the half nothing else covers. The citation
+    check above reads `.md` and `.py` text; a TOML value is neither, so a bundle
+    could name `R-99` and no gate saw it. `scripts/dispatch/rules.py --check`
+    held this until cutover step 10b took that line out of the `ruleids` target.
+
+    THE CAP IS CHECKED WITH THE IDS, because `dev/rules.toml`'s own header says
+    the cap IS the design: a bundle that cannot fit a new law must EVICT one, and
+    a bundle that grows without eviction becomes the corpus again.
+
+    A MISSING FILE IS NOT A PASS. This checker refuses an empty reference set
+    above for the same reason, and a routing file that vanished is the loudest
+    version of the defect it exists to catch.
+    """
+    if not RULES_TOML.is_file():
+        return [f"{RULES_TOML.relative_to(ROOT)} is missing. It routes the "
+                f"mandatory laws to a task kind, and a gate cannot pass a "
+                f"reference set that is not there."]
+    rel = RULES_TOML.relative_to(ROOT)
+    try:
+        with RULES_TOML.open("rb") as fh:
+            data = tomllib.load(fh)
+    except (tomllib.TOMLDecodeError, OSError) as e:
+        return [f"{rel}: unreadable ({type(e).__name__}: {e})"]
+
+    out: list[str] = []
+    cap = data.get("config", {}).get("max_ids", 12)
+    for name, bundle in sorted(data.get("bundle", {}).items()):
+        ids = bundle.get("ids", [])
+        if len(ids) > cap:
+            out.append(
+                f"{rel}: bundle.{name} holds {len(ids)} ids, over the cap of "
+                f"{cap}. Evict one: the cap is the design, and a bundle that "
+                f"grows without eviction becomes the corpus again.")
+        for rid in ids:
+            if rid not in lessons:
+                out.append(
+                    f"{rel}: bundle.{name} cites `{rid}`, which is not a "
+                    f"heading in dev/LESSONS.md")
+    for term, ids in sorted(data.get("triggers", {}).items()):
+        for rid in ids:
+            if rid not in lessons:
+                out.append(
+                    f'{rel}: triggers."{term}" cites `{rid}`, which is not a '
+                    f"heading in dev/LESSONS.md")
+    return out
+
+
 def next_ids() -> int:
     """Print the next free ID per series, COMPUTED from the headings.
 
@@ -476,6 +564,11 @@ def main() -> int:
     targets = [p for p in targets if p.name != "LESSONS.md"]
 
     findings: list[str] = []
+    # The routing file is part of the DEFAULT reference set and never part of an
+    # explicit-file run: `check-rule-ids.py dev/PLAN.md` asks about one file, and
+    # answering about a second one would make the exit status unreadable.
+    if not args.paths:
+        findings += rules_toml_findings(lessons)
     for path in series_targets:
         findings += series_findings(
             path, path.read_text(encoding="utf-8"), dd_numbers(decisions))
@@ -503,8 +596,9 @@ def main() -> int:
                         f"decision in dev/PLAN.md section 3")
 
     if not findings:
+        routing = "" if args.paths else ", dev/rules.toml"
         print(f"check-rule-ids: clean ({len(targets)} files, "
-              f"{len(lessons)} lessons, {len(decisions)} decisions)")
+              f"{len(lessons)} lessons, {len(decisions)} decisions{routing})")
         return 0
     for f in findings:
         print(f"  DEFECT: {f}")

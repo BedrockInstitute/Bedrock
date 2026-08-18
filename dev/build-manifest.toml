@@ -5,9 +5,21 @@
 # it is created: under what condition it may be deleted, and under what condition
 # it moves somewhere permanent.
 #
-# This file is that declaration, machine-readable. `scripts/gate/check-build-manifest.py`
-# reads it, lists any file in `_build/` that matches no entry, and regenerates
-# `_build/README.md` from it.
+# This file is that declaration, machine-readable.
+#
+# THE ENFORCER IS GONE, AND THE RULE IS NOT. `scripts/gate/check-build-manifest.py` read
+# this file, listed any file in `_build/` that matched no entry, and regenerated
+# `_build/README.md` from it. The POD cutover archived it at commit `fc676cb` and deleted
+# the `buildmanifest` target from the `Makefile` in the same commit; the checker now sits
+# at `archive/scripts/gate/check-build-manifest.py` and `dev/ARCHIVE.md` row 16 records
+# why. NOTHING READS THIS FILE TODAY. The rule that produced it still binds every agent:
+# `AGENTS.md`, the Boundary clause on `_build/`, orders each new file under `_build/` to
+# declare its lifecycle here. So this file is a DECLARATION READ BY REVIEW, and the gap is
+# written down rather than left silent. Two things would close it: a replacement checker
+# wired into `make check`, or a POD acceptance conjunct that reads these globs.
+#
+# `_build/README.md` is therefore STALE from `fc676cb` onward, because the generator that
+# wrote it is archived. Read this file, never that one.
 #
 # WHY THIS FILE LIVES IN `dev/` AND NOT IN `_build/`.
 # `.gitignore:2` ignores `_build/`, and `scripts/gate/check-probes.py:101-102` fails the
@@ -15,7 +27,8 @@
 # be untracked, would not survive `make clean` (the `Makefile` `clean:` target), and would not
 # survive a fresh clone. A regime that a routine command destroys is not a regime.
 # `archive/src/2026-08-13-kits-to-tasks/README.md` records the same finding for refused kits.
-# `_build/README.md` is therefore GENERATED from this file, never hand-written.
+# `_build/README.md` WAS GENERATED from this file and is never hand-written. Its generator
+# is archived, so that copy is frozen at `fc676cb`; see the header note above.
 #
 # HOW THE CLASSES WERE CHOSEN.
 # They were read off the 73 files `[LJ-1.132]` inventoried, not designed first.
@@ -163,11 +176,12 @@ note = "A running tool's process id. Stale once the tool exits."
 # section 4.0). Those files are temporary all the same, so they declare here.
 #
 # WHAT ENFORCES THIS SECTION, stated plainly so no row claims more than it has.
-# `scripts/gate/check-build-manifest.py` scans `_build/` and nothing else, so it
-# reads `[[entries]]` above and never these rows. `.gitignore` keeps `.pod-state/`
-# out of the index. The declaration below is therefore enforced by REVIEW, and its
+# NOTHING DOES, AND NOTHING ENFORCES `[[entries]]` EITHER. The scanner that read the
+# `[[entries]]` rows above is archived at `fc676cb`, as the header note records; it never
+# read these rows, because it scanned `_build/` and nothing else. `.gitignore` keeps
+# `.pod-state/` out of the index. The whole file is therefore enforced by REVIEW, and its
 # value is that a reader can learn what may be deleted without reading the program.
-# Extending the checker to a second scanned root would mechanise it.
+# A replacement checker with two scanned roots would mechanise both halves at once.
 #
 # `class` names one of the classes above and carries its meaning. Where the class
 # condition is not exact for the path, the row states its own condition and the row

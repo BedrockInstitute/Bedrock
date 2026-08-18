@@ -55,6 +55,24 @@ efforts = ["low", "medium", "high", "xhigh", "max"]
 models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
           "opus", "fable", "sonnet"]
 
+# CARRIED FROM `dev/vendors.toml` BY ROW 21b OF THE GATE TABLE, before that file was
+# archived. Both sentences are measurements and neither is repeated anywhere else. Read
+# them before you add a `pi`-backed vendor to a `[heads]` row.
+#
+# 1. `pi auth check` VALIDATES THE PROVIDER AND NOT THE MODEL. MEASURED 2026-08-16, side
+#    by side: it answered `ready` for a real model path AND for a bogus short ID. So a
+#    launcher refusal built on `auth check` cannot fire on a wrong model ID for this
+#    vendor. `[LJ-1.387]` then ran on the bogus ID, `pi` warned
+#    `Model "..." not found for provider "mlxvlm". Using custom model id.`, echoed its
+#    prompt, and exited `done` in 10 seconds having written nothing.
+# 2. THE ONE CHECK THAT DISCRIMINATES IS THE MODEL COLUMN OF `pi --list-models`. Read a
+#    `pi` model ID from there, never from `auth check`. For this vendor the ID is the
+#    ABSOLUTE STORAGE PATH and never the short name.
+#
+# Evidence: `archive/dev/vendors.toml:144-152`. The same failure class is why the
+# read-back rule below exists for the Claude heads: a provider that answers is not a
+# model that exists.
+
 # THE READ-BACK REFUSAL, and the measurement inverted the design's rule.
 #
 # A wrong model ID passes the loader when `legal.models` holds it. It then fails

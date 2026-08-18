@@ -121,10 +121,15 @@ WATCHDOG = ROOT / "scripts" / "ops" / "agda-watchdog.sh"
 BARK = ROOT / "scripts" / "ops" / "bark-push.sh"
 DIGEST = ROOT / "scripts" / "pod" / "digest.py"
 
+#: R18's one automatic scope path. A task that writes a NEW master must also wire it, or
+#: acceptance conjunct 3 refuses the return the task itself caused. `laws_bundle()` builds
+#: R17's producer path the same way, from the caller's root, so a test root works too.
+EVERYTHING = "src/Everything.lagda.md"
+
 #: Amendment A11's standing brief, rule (g). THE ORCHESTRATOR WRITES IT AND THE PROGRAM
 #: NEVER DOES: AD3 gives every brief to the mathematician, so an absent file is a named
 #: dependency and one recorded refusal, never a brief this file invents.
-REFILL_BRIEF = INSTRUCTIONS / "refill-queue.md"
+REFILL_BRIEF = ROOT / "agents" / "tasks" / "POD-REFILL" / "POD-REFILL.md"
 
 #: Rule (g)'s dispatch name. It is not a task: it holds no state record, exactly like
 #: AD15's `POD-BATCH`, because its return is READ OUT OF `dev/pod/queue.toml` by rule
@@ -766,19 +771,144 @@ def _sha_of(path):
         return "absent"
 
 
+def section_span(text, name):
+    """The (start, end) offsets of one `## NAME` section BODY, or None when it is absent.
+
+    The heading match is a PREFIX match, exactly as `preflight.section()` reads it, because
+    the program appends `(program-generated, do not edit)` to three headings. This function
+    gives the OFFSETS, so a block can be filled in place; `preflight.section()` gives the
+    TEXT, and `laws_missing()` below tests emptiness with that one, so the program and P21
+    can never disagree about which characters are the body.
+    """
+    m = re.search(r"^##[ \t]+" + re.escape(name) + r"[^\n]*\n", text, re.M)
+    if m is None:
+        return None
+    nxt = re.search(r"^##[ \t]", text[m.end():], re.M)
+    return m.end(), (m.end() + nxt.start() if nxt else len(text))
+
+
+def laws_missing(text):
+    """True when P21 would refuse this brief: the `## LAWS` block is absent or empty."""
+    body = preflight_mod.section(text, "LAWS")
+    return body is None or not body.strip()
+
+
+#: R17's heading, exactly as memo section 6.3's template writes it. `preflight.section()`
+#: matches the name by PREFIX, so the parenthesis is prose and never a second name.
+LAWS_HEADING = "## LAWS (program-generated, do not edit)"
+
+
+def laws_bundle(paths, root=None):
+    """R17's LAWS text for one write scope, or None when the producer refused.
+
+    THIS IS HOW `dev/LESSONS.md` REACHES A WORKER, and nothing else in the flow delivers
+    one line of it. Section 7.1 row 22 keeps `scripts/dispatch/rules.py` out of the
+    `make check` gate and INSIDE the brief builder for exactly this. Pre-flight P21 refuses
+    a brief whose block is absent or empty, so a producer that returns None parks the task
+    with a reason, which is the loud path.
+
+    THE KIND IS DERIVED AND NEVER DECLARED ([T105], memo section 6.3). The derivation has
+    ONE home, `kind_for_scope()` in `rules.py`, so this function imports that function
+    rather than repeating the rule; the BUNDLE TEXT is the command's own output, verbatim,
+    which is what the template names. `sys.path` is restored, because `rules.py` puts its
+    own group directory in front at import time.
+
+    THE OUTPUT IS TESTED BY ITS HEADER. `emit()` in `rules.py` opens every real bundle with
+    `MANDATORY for kind`, and its two failure prints do not, so an unknown kind writes no
+    block instead of writing an error message into the brief as if it were law.
+    """
+    root = ROOT if root is None else Path(root)
+    tool = root / "scripts" / "dispatch" / "rules.py"
+    saved = list(sys.path)
+    try:
+        import importlib.util                          # deferred: only the builder needs it
+        spec = importlib.util.spec_from_file_location("pod_rules", tool)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        kind = mod.kind_for_scope(list(paths))
+    except Exception:                                  # noqa: BLE001. See the docstring
+        return None
+    finally:
+        sys.path[:] = saved
+    try:
+        done = subprocess.run([sys.executable, str(tool), "--for", str(kind)],
+                              cwd=str(root), capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    out = (done.stdout or "").strip()
+    return out if out.startswith("MANDATORY for kind") else None
+
+
+def unwired_masters(paths, root=None):
+    """R18's trigger: every `src/` master in a write scope that `Everything` does not import.
+
+    THE MODULE NAME COMES FROM THE PATH AND NEVER FROM THE FILE, because the master the
+    task will write does not exist yet. `check_closure()` in `scripts/pod/check-closure.py`
+    maps the two directions the same way, so the trigger and the refusal agree.
+
+    AN EMPTY IMPORT LIST ADDS NOTHING. `imported_by_everything()` returns an empty set when
+    it cannot read the closure checker, and that is indistinguishable from a catalog that
+    imports nothing. Granting the catalog as write territory on a blind sensor is the wrong
+    direction (AD17), and a tree whose catalog really imports nothing fails conjunct 3 for
+    every task anyway.
+    """
+    try:
+        imported = facts_mod.imported_by_everything(root)
+    except Exception:                                  # noqa: BLE001. A blind reader adds nothing
+        return []
+    if not imported:
+        return []
+    out = []
+    for p in paths:
+        if not p.startswith("src/") or not p.endswith(".lagda.md") or p == EVERYTHING:
+            continue
+        if any(c in p for c in preflight_mod.GLOB_CHARS):
+            continue                                   # a pattern names no one module
+        name = p[len("src/"):-len(".lagda.md")].replace("/", ".")
+        if name not in imported and p not in out:
+            out.append(p)
+    return out
+
+
+def add_everything_to_scope(text):
+    """R18: put `src/Everything.lagda.md` in `## SCOPE (write)`. The text, or None.
+
+    WITHOUT THIS LIMB A NEW MASTER CANNOT BE WIRED. `check_closure()` fails on a master
+    `Everything` does not import, acceptance conjunct 3 runs it, and R8 commits by explicit
+    path derived from the task's scope, so an import line outside the declared scope is
+    neither permitted nor committed. The task would therefore be refused for the defect its
+    own brief forced on it.
+    """
+    span = section_span(text, "SCOPE")
+    if span is None:
+        return None
+    start, end = span
+    body = text[start:end].rstrip("\n")
+    line = (f"- `{EVERYTHING}` (R18, program-generated: wire the new master here, because "
+            f"acceptance conjunct 3 refuses a catalog that does not import it)")
+    return text[:start] + body + "\n" + line + "\n\n" + text[end:]
+
+
 def inject_survey(brief, root=None):
-    """R10, section 7.4: the program performs the survey and INJECTS it into the brief.
+    """The brief builder's augmentation pass: R10 and section 7.4, plus R17 and R18.
 
     THE WORKER CANNOT SKIP A SURVEY IT NEVER HAD TO PERFORM. MEASURED 2026-08-17: 282
     live briefs, of which 244 never name `JOURNAL-archived.md`. The blocks are written
-    BEFORE pre-flight P15 reads them, so a brief with a dead injected path parks rather
-    than dispatching. A brief that already carries both blocks is left alone, because a
-    record is never rewritten.
+    BEFORE pre-flight P15 and P21 read them, so a brief with a dead injected path parks
+    rather than dispatching. A block the brief already carries is left alone, because a
+    record is never rewritten; the ONE exception is a `## LAWS` heading with an empty body,
+    which is filled in place, because a second heading of that name would leave P21 reading
+    the first and empty one for ever.
+
+    THREE RULES, ONE WRITE. R18 goes first, because it changes `## SCOPE (write)` and R17
+    derives its kind from that section. The kind cannot change under it: R18 adds a `src/`
+    path only to a scope that already names one, so a `build` stays a `build`. The file is
+    written once, at the end, and only when the text really changed.
 
     A FAILED INJECTION IS NOT A FAILED TASK. The retrieval reads an index, a corpus and
     the brief itself, so it can fail on a missing file, a malformed `obligations` list or
-    a full disk. Pre-flight P15 then refuses the brief for the block it lacks and the task
-    PARKS with a reason, which is the loud path; raising here would stop the whole loop
+    a full disk. Pre-flight P15 and P21 then refuse the brief for the block it lacks and the
+    task PARKS with a reason, which is the loud path; raising here would stop the whole loop
     for one brief.
     """
     root = ROOT if root is None else Path(root)
@@ -788,25 +918,72 @@ def inject_survey(brief, root=None):
     try:
         if not p.is_file():
             return False
-        text = p.read_text(encoding="utf-8")
-        if "## ARCHIVE" in text and "## LITERATURE" in text:
+        text = original = p.read_text(encoding="utf-8")
+        scope = preflight_mod.scope_paths(text)
+
+        # R18. The new master gets its wiring path before anything reads the scope again.
+        if unwired_masters(scope, root) and EVERYTHING not in scope:
+            text = add_everything_to_scope(text) or text
+
+        # R17. The measured lesson book, for the kind the write scope derives.
+        if laws_missing(text):
+            bundle = laws_bundle(scope, root)
+            span = section_span(text, "LAWS")
+            if bundle is not None and span is None:
+                text = text.rstrip("\n") + "\n\n" + LAWS_HEADING + "\n\n" + bundle + "\n"
+            elif bundle is not None:
+                text = text[:span[0]] + "\n" + bundle + "\n\n" + text[span[1]:]
+
+        # R10, section 7.4. The two retrieval blocks.
+        if "## ARCHIVE" not in text or "## LITERATURE" not in text:
+            try:
+                import retrieve as retrieve_mod         # deferred: it builds an index
+            except ImportError:
+                retrieve_mod = None
+            if retrieve_mod is not None:
+                obligations = witness_mod.obligations_of(p)
+                query = retrieve_mod.build_query(scope, obligations,
+                                                 retrieve_mod.goal_text(str(p)))
+                blocks = []
+                if "## ARCHIVE" not in text:
+                    blocks.append(retrieve_mod.candidate_block(
+                        "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE))
+                if "## LITERATURE" not in text:
+                    blocks.append(retrieve_mod.candidate_block(
+                        "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE))
+                text = text.rstrip("\n") + "\n\n" + "\n".join(blocks)
+
+        if text == original:
             return False
-        try:
-            import retrieve as retrieve_mod             # deferred: it builds an index
-        except ImportError:
-            return False
-        modules = preflight_mod.scope_paths(text)
-        obligations = witness_mod.obligations_of(p)
-        query = retrieve_mod.build_query(modules, obligations,
-                                         retrieve_mod.goal_text(str(p)))
-        blocks = []
-        if "## ARCHIVE" not in text:
-            blocks.append(retrieve_mod.candidate_block(
-                "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE))
-        if "## LITERATURE" not in text:
-            blocks.append(retrieve_mod.candidate_block(
-                "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE))
-        p.write_text(text.rstrip("\n") + "\n\n" + "\n".join(blocks), encoding="utf-8")
+        p.write_text(text, encoding="utf-8")
+    except Exception:                                  # noqa: BLE001. See the docstring
+        return False
+    return True
+
+
+def emit_retrieval(st, t, root=None):
+    """Section 7.4 Part 1b: ONE `retrieval` line per return. It never raises.
+
+    `dispatch_signal()` in `scripts/pod/retrieve.py` is the producer and `scripts/pod/
+    digest.py` is the reader: it counts `retrieval_miss`, `retrieval_zero_overlap` and
+    `retrieval_undetermined` off this event and off nothing else. Without this call all
+    three read zero for ever, and the semantic-index trigger can never fire, so the program
+    would claim a measurement it does not take.
+
+    THE `event` KEY IS DROPPED BEFORE THE CALL. `miss_signal()` puts `"event": "retrieval"`
+    into its own record and `emit_event()` takes the event as a positional argument, so
+    passing the record whole raises `TypeError` for a duplicate keyword.
+
+    A SIGNAL THAT CANNOT BE TAKEN IS NOT A FAILED RETURN. The producer reads the brief and
+    the report beside it, so a missing report, an unreadable corpus or a full disk must cost
+    one log line and never the acceptance that already ran.
+    """
+    root = ROOT if root is None else Path(root)
+    try:
+        import retrieve as retrieve_mod                # deferred: it builds an index
+        signal = retrieve_mod.dispatch_signal(t.code, t.brief)
+        emit_event(st, "retrieval", root=root,
+                   **{k: v for k, v in signal.items() if k != "event"})
     except Exception:                                  # noqa: BLE001. See the docstring
         return False
     return True
@@ -1014,9 +1191,18 @@ def agda_slots(tier=WIDE):
 
     THE TIER SURFACE IS THIN AND THAT IS DISCLOSED. No `[row.when]` key names a tier, so
     a task declares one in the `agda_tier:` line of its brief's `## HEAD` block, which
-    `task_tier()` reads and no pre-flight check enforces. A brief that names none is WIDE,
-    because `run_agda()` pins `-A64m -I0 -M8g`, the WIDE caliber, for every run: a HEAVY
-    declaration therefore buys the SMALLER slot count today and not the bigger heap.
+    `task_tier()` reads and no pre-flight check enforces. A brief that names none is WIDE.
+    A HEAVY declaration now buys BOTH halves: `launch()` passes `tier=tier_of(t)` to the
+    launcher, so the pane gets `-A64m -I0 -M12g` and the registry record carries `heavy`
+    for the heap sum. The program's OWN acceptance run stays at the WIDE caliber (A15).
+
+    THE DANGLING HALF, AND IT IS A DOCUMENTATION GAP RATHER THAN A CODE ONE. No brief
+    template and no slot instruction file names `agda_tier:` today: `grep -rn agda_tier
+    dev/ agents/` returns nothing (MEASURED 2026-08-18). A mathematician therefore has no
+    written way to declare HEAVY, and every task runs WIDE by default until memo section
+    6.3's `## HEAD` template and `dev/pod/instructions/mathematician.md` name the field.
+    Both files are guarded by `check-spec-surface.py`, so the edit needs the owner's dated
+    `Spec-surface-approved:` trailer and cannot be made from here.
     """
     try:
         cfg = heads_mod.load_heads()
@@ -1360,8 +1546,12 @@ def launch(t, brief, role, root=None):
     path = Path(brief) if Path(brief).is_absolute() else root / brief
     try:
         mod.HARNESS = head["harness"]
+        # A14: THE TIER TRAVELS TO THE PANE. `launch()` defaults it to `AGDA_TIER_DEFAULT`,
+        # which is WIDE, so omitting it ran every HEAVY task at the WIDE caliber AND wrote
+        # `"tier": "wide"` into the registry record that `agda_heap_sum_over()` reads. The
+        # heap-sum guard then budgeted 8 GB for a worker holding 12.
         rc = mod.launch(t.code, path, bool(t.agda), head["sandbox"], head["model"],
-                        effort=head["effort"])
+                        effort=head["effort"], tier=tier_of(t))
     except SystemExit:
         return None                            # the launcher REFUSED on a corrupt registry
     except Exception:                          # noqa: BLE001. See the docstring
@@ -2065,6 +2255,7 @@ def _rule_c(st, root):
             emit(st, t, CHECKING, PARKED, reason="no-change", root=root)
             continue
         t.run = rec.get("run")
+        emit_retrieval(st, t, root)            # section 7.4 Part 1b, ONE line per return
         row_id, action = _route(rec, root)     # the WHOLE record
         if row_id is None:
             emit(st, t, CHECKING, PARKED, rec=rec, reason="no-match", root=root)

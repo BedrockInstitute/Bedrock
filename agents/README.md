@@ -43,9 +43,16 @@ so an old citation still resolves under `find agents -name <the-old-name>`.
 through it, and `scripts/README.md` names the members. Do not write `agents/tasks` into a tenth
 script by hand.
 
-**The brief's FORM is `dev/ORCHESTRATION.md` section 3, and this file does not restate it.**
-`.claude/skills/codex-dispatch/dispatch.py check` refuses a brief that is missing a required
-section, and that is the gate on the form.
+**The brief's FORM is `dev/memos/L9-pod-program-design.md` section 6.3, and this file does
+not restate it.** No live rulebook section replaces `dev/ORCHESTRATION.md` section 3. The
+POD cutover of 2026-08-18 archived that file to `archive/dev/ORCHESTRATION.md`, and the
+design memo is the only place that states the form today.
+
+**`scripts/pod/preflight.py` is the gate on the form.** It runs 22 checks over a brief
+before the program spawns it, and it refuses a brief that carries no `## ARCHIVE`, no
+`## LITERATURE`, no `## PREMISES` or no `## LAWS` section. The program writes the archive
+and literature blocks itself, through `scripts/pod/retrieve.py`. `dev/pod/queue.toml` is
+the only producer of a task.
 
 ## Probes live here
 
@@ -129,9 +136,11 @@ An agent document is CC from birth, so no later move can relicense it. Never add
 
 ## Who reads what
 
-**The orchestrator** works to `dev/ORCHESTRATION.md`: it writes every brief here before
-dispatch, validates it with `dispatch.py check`, audits the return, wires the catalog, gates
-and commits.
+**The program** replaced the orchestrator on 2026-08-18. `scripts/pod/pod.py` runs the
+loop: it takes a task from `dev/pod/queue.toml`, builds the brief here, runs
+`scripts/pod/preflight.py` over it, dispatches it, runs the six acceptance conjuncts of
+`scripts/pod/accept.py` over the return, and commits by explicit path under rule R8. It
+reads no report and it makes no judgement.
 
 - **A dispatched worker** writes exactly one report here, incrementally, and reads the briefs
   and reports its own brief names.

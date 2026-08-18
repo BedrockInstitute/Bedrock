@@ -1109,9 +1109,23 @@ loss. Both are evidence and both are kept.
 mechanical one: `scripts/gate/check-probes.py --check` in `make check` and `--staged`
 in `scripts/git-hooks/pre-commit`, pinned by `scripts/tests/test_probe_gate.py`.
 **Rules 1, 3, 4, 5 and 6 are enforced by the brief and by the return audit**, and
-by nothing else. The brief carries them and `dev/ORCHESTRATION.md` section 3 is
-the orchestrator's standing clause list. The old citation named section 1 of that
-file, and the standing brief clauses are section 3.
+by nothing else.
+
+**THE STANDING CLAUSE LIST MOVED ON 2026-08-18, AND IT DID NOT CARRY EVERY RULE.**
+The POD cutover archived `dev/ORCHESTRATION.md`. Clause W3 of
+`dev/memos/L9-pod-program-design.md` section 3.1 carries rules 1, 3, 4 and 5, and the
+program injects `dev/pod/instructions/<slot>.md` ahead of every brief, so W3 reaches
+an agent there verbatim. The archived text is `archive/dev/ORCHESTRATION.md` section 3.
+
+**RULE 6 HAS NO CLAUSE AND NO GATE, and this sentence is its enforcement point.** W3
+says nothing about promoting a reusable shape out of a probe, no pre-flight check
+reads it, and the archived clause list that once carried it is frozen. So rule 6 is
+enforced by the return audit only, meaning the adversarial slot that reads the
+return. Whoever next edits section 3.1 should decide whether rule 6 earns a clause.
+
+**The return audit is REVIEW, and no machine performs it.** The pre-flight of design
+section 6.5 reads the brief and never the return, and none of its 22 checks reads
+these five rules.
 
 **Provenance.** Owner ruling 2026-08-13, which replaced the ruling of
 2026-08-04 after `[LJ-1.133]`, `[LJ-1.138]` and `[LJ-1.141]` measured what the
@@ -2875,7 +2889,8 @@ do not announce themselves, because a document that reads well is assumed to
 be right. Ask what actually changed. If the SUBJECT did not, amend.
 
 **The measurement, 2026-08-09.** A route change rebuilt `dev/PLAN.md`,
-`dev/ORCHESTRATION.md`, `AGENTS.md`, the ledger, three archives and the whole
+`dev/ORCHESTRATION.md` (archived 2026-08-18, now `archive/dev/ORCHESTRATION.md`),
+`AGENTS.md`, the ledger, three archives and the whole
 task-code series in thirteen commits. It consolidated 25 decision rows into
 15. An audit then found **30 defects, six of them load-bearing**
 (`agents/tasks/archive/LJ-0-1-CONSISTENCY/lj-0.1-consistency.md`), and eleven further commits were spent
@@ -2895,10 +2910,22 @@ dispatch and prose were the same rules the day after. `[LJ-0.3]` judged the
 full rebuild a choice rather than a necessity, and the defect count is the
 price of that choice.
 
-**The enforcement point** is review: `dev/ORCHESTRATION.md` section 6, which
-since 2026-08-09 puts the orchestrator's own diffs through the return audit
-and sends a change to the rules themselves OUT for audit rather than
-self-reviewing it.
+**The enforcement point, restated on 2026-08-18 because the old one is archived.**
+It was review: `archive/dev/ORCHESTRATION.md` section 6 sent a change to the rules
+themselves OUT for audit rather than self-reviewing it. The POD program replaced that
+with a MECHANICAL half and a REVIEW half.
+
+The mechanical half is rule R16. `scripts/pod/check-spec-surface.py` refuses a commit
+that stages a guarded rule home without a dated `Spec-surface-approved:` trailer, at
+the `commit-msg` hook and again at acceptance conjunct 5. The guarded homes are
+`AGENTS.md`, `dev/memos/L9-pod-program-design.md`, `dev/pod/heads.toml` and every file
+under `dev/pod/instructions/`. **It cannot tell a good change from a bad one.** It
+makes the change visible and dated, which is what a rebuild hides.
+
+The review half is the owner. R16's trailer asserts that the owner ruled, and no
+machine can verify that assertion. **Nothing mechanical asks whether the subject
+matter changed**, which is this law's actual question, so a rebuild that carries a
+trailer passes.
 
 ### C-25. Two parallel writers may not share a file, and "the home you propose" IS a shared file
 
@@ -4030,7 +4057,10 @@ Def-against-J and the port's L-against-ambient, and `[LJ-1.262]` measured that
 mixing them produced a false claim in a delivered report. **Neither is DD4's
 own axis.** DD4's text says to maximize the code the two proofs share (`dev/PLAN.md:742`), and the two proofs are the two trophies, fixed by DD2
 (`dev/PLAN.md:741`), by the archived D39 (`archive/dev/DECISIONS-archived.md:58`)
-and by the standing brief clause (`dev/ORCHESTRATION.md:196-224`). **The
+and by the standing brief clause, which is now clause W2 of
+`dev/memos/L9-pod-program-design.md` section 3.1 and reaches every slot through
+`dev/pod/instructions/<slot>.md`; the archived text is
+`archive/dev/ORCHESTRATION.md:196-224`. **The
 Def-against-J axis is Devlin's, imported through
 `dev/literature/devlin-II5.md:375`, and DD4's row never names the towers.**
 

@@ -42,8 +42,8 @@ asked. `wait` is the fix and it is deliberately NOT the agents' parent: it only 
 registry, so it inherits none of the ownership that made the original watcher lethal. Run it
 as a tracked background job right after dispatching, and the harness announces the return:
 
-    python3 dispatch.py wait          # exits when the FIRST agent returns
-    python3 dispatch.py wait --all    # exits when the last one does
+    .venv/bin/python scripts/pod/launcher.py wait        # exits when the FIRST agent returns
+    .venv/bin/python scripts/pod/launcher.py wait --all  # exits when the last one does
 
 Exit status: 0 fine, 1 refused or defect found, 2 usage error.
 """
@@ -68,6 +68,14 @@ import time
 from pathlib import Path
 
 ROOT = Path("/Users/alsg/Agentic/Bedrock")
+
+# THE NAME THIS FILE IS INVOKED BY, and it changed at the cutover of 2026-08-18.
+# The module was `.claude/skills/codex-dispatch/dispatch.py`; the cutover deleted that
+# copy and this file is `scripts/pod/launcher.py`. Every remedy string below prints THIS
+# constant, so a rename moves one line and never leaves an operator a command that fails.
+# The interpreter is `.venv/bin/python` because the shared Boundary in `AGENTS.md`
+# requires it and a bare `python3` may not carry the pinned dependencies.
+CLI = ".venv/bin/python scripts/pod/launcher.py"
 # THE RUNTIME STATE IS `.pod-state/`, AND IT USED TO SIT BESIDE THIS FILE.
 #
 # `STATE` was `Path(__file__).parent / ".state"`, which is `scripts/pod/.state`
@@ -167,6 +175,7 @@ VENDOR_ERROR = ""
 try:
     import dispatch_policy as POLICY
     POLICY_ERROR = ""
+    POLICY_RETIRED = False
     try:
         HARNESS = POLICY.default_harness() or "herdr-claude"
     except SystemExit as _vexc:                 # an unwired vendor, by design
@@ -175,8 +184,29 @@ try:
 except Exception as _exc:                       # pragma: no cover
     POLICY = None
     HARNESS = "herdr-claude"
-    POLICY_ERROR = (f"scripts/dispatch/dispatch_policy.py could not be read ({_exc}); "
-                    f"the default harness fell back to {HARNESS!r}")
+    # TWO CAUSES, ONE VARIABLE, AND THE OPERATOR MUST BE ABLE TO TELL THEM APART.
+    # The module is ABSENT by design since 2026-08-18: section 7.1 row 21 RETIRED it and
+    # the cutover moved it to `archive/scripts/dispatch/dispatch_policy.py`. That is not
+    # a defect, and nothing here is load-bearing any more, because the POD passes
+    # `--harness`, `--model` and `--effort` on every dispatch from `dev/pod/heads.toml`.
+    # A module that IS present and still fails to import IS a defect.
+    # The report stays in BOTH cases, because the design rules that the retirement is
+    # reported and never silent, and `test_pod_launcher.py` pins that. Only the WORDING
+    # and the severity change, so the first line the owner reads on `run` and on `status`
+    # no longer reads as an error. `POLICY_RETIRED` picks the prefix in `main()`.
+    _present = [str(Path(_d) / "dispatch_policy.py") for _d in _POLICY_DIRS
+                if (Path(_d) / "dispatch_policy.py").is_file()]
+    POLICY_RETIRED = not _present
+    POLICY_ERROR = (
+        # THE TEXT NAMES NO COMMAND-LINE FLAG. `test_pod_launcher.py:743-744` asserts
+        # that a brief refusal prints without the effort flag's spelling anywhere in
+        # stderr, and this line shares that stream.
+        (f"scripts/dispatch/dispatch_policy.py is RETIRED by section 7.1 row 21 and now "
+         f"sits under archive/. The default harness is {HARNESS!r}. Every POD dispatch "
+         f"names its harness, its model and its effort from dev/pod/heads.toml.")
+        if POLICY_RETIRED else
+        (f"{_present[0]} is present and could not be read ({_exc}); "
+         f"the default harness fell back to {HARNESS!r}"))
 
 # The vendor's own values, with the pre-config literals as the fallback for a
 # policy module that will not import at all.
@@ -819,10 +849,12 @@ def check_model(model: str, allow: bool) -> str | None:
 # read `POLICY.in_force()`, `POLICY.head()` and the `tier:` line.
 #
 # WHY IT GOES. DD17 is SUPERSEDED, section 7.1. It is also INERT once row 21
-# retires scripts/dispatch/dispatch_policy.py: the import fails, POLICY_ERROR
-# becomes truthy, and the function's first statement returns an empty list for
-# ever. A refusal that cannot fire is a lie about what is checked (C-43), so it
-# is removed rather than left.
+# retires scripts/dispatch/dispatch_policy.py: the import fails, `POLICY` is
+# None, and the function's first statement returns an empty list for ever. A
+# refusal that cannot fire is a lie about what is checked (C-43), so it is
+# removed rather than left. (The first form of this note read `POLICY_ERROR
+# becomes truthy`. That variable now stays EMPTY for the designed absence, so
+# the test that matters is `POLICY is None`.)
 #
 # ITS MEASUREMENT IS KEPT. MEASURED 2026-08-15: LJ-1.272 at 09:29 and LJ-1.273
 # at 10:21 Beijing both ran pi/deepseek through herdr, inside the 09:00 to 12:00
@@ -874,7 +906,7 @@ def launch_defects(brief: Path, sandbox: str, agda: bool = False,
                                      loss.
       row 14  switch_defects()       DD17 is SUPERSEDED. It is also inert once
                                      row 21 retires dispatch_policy.py, which
-                                     makes POLICY_ERROR truthy.
+                                     leaves `POLICY` None.
 
     `case` is now unread here. The parameter stays because `cmd_run`,
     `cmd_check` and `cmd_queue` all pass it, and the design orders no signature
@@ -1177,7 +1209,7 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             held = ", ".join(agda_holders(reg))
             print(f"dispatch: the {agda_slots(tier)} Agda slots of the {tier} tier "
                   f"are held by {held}. "
-                  f"Use `dispatch.py queue {task} {brief}` instead of waiting by hand",
+                  f"Use `{CLI} queue {task} {brief}` instead of waiting by hand",
                   file=sys.stderr)
             return 1
         # AND THE SLOT COUNT ALONE IS NOT A14. A14 also caps the MIXED worst case
@@ -1594,7 +1626,7 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
     print(f"dispatch: {task} away, pid {proc.pid}, "
           f"session {session or '(not printed yet; resume rescans the log)'}")
     print(f"          log {log}")
-    print(f"          ARM THE NOTIFIER: dispatch.py wait, as a harness-tracked background "
+    print(f"          ARM THE NOTIFIER: {CLI} wait, as a harness-tracked background "
           f"job. Without it this return is silent.")
     return 0
 
@@ -1662,7 +1694,7 @@ def _wait_for(task: str) -> int:
             print(f"  finished cleanly, final message {final}")
         else:
             print(f"  NO FINAL MESSAGE: killed or ran out of budget. Its work may still be "
-                  f"on disk. Consider `dispatch.py resume {task}`.")
+                  f"on disk. Consider `{CLI} resume {task}`.")
         print(f"  log {d.get('log')}")
         others = [t for t in running(reg) if t != task]
         if others:
@@ -1791,7 +1823,7 @@ def cmd_queue(a) -> int:
     print(f"          The waiter is detached and the agent it launches will be too, so "
           f"stopping either one cannot take the other down.")
     print(f"          waiter log {waiter_log}")
-    print(f"          ARM THE NOTIFIER: dispatch.py wait, as a harness-tracked background "
+    print(f"          ARM THE NOTIFIER: {CLI} wait, as a harness-tracked background "
           f"job, or pass --wait next time and skip this step.")
     return 0
 
@@ -2232,7 +2264,7 @@ def cmd_status(a) -> int:
                 print(f"   {'closed' if ok else 'COULD NOT CLOSE'} {r['pane']} "
                       f"({r['task']})")
         else:
-            print("   Run `dispatch.py status --sweep-panes` to close them. "
+            print(f"   Run `{CLI} status --sweep-panes` to close them. "
                   "This tool reports by default and never closes without the "
                   "flag.")
 
@@ -2343,7 +2375,10 @@ def warn_if_unarmed() -> None:
               f"({', '.join(sorted(live))}).")
         print("   Their returns will produce NO notification. Arm one now, as a")
         print("   harness-tracked background job:")
-        print("       python3 .claude/skills/codex-dispatch/dispatch.py wait")
+        # The cutover deleted `.claude/skills/codex-dispatch/dispatch.py`, which this
+        # line used to print, and moved the `wait` subcommand into THIS file
+        # (`cmd_wait` below). `CLI` is the one home of the invocation string.
+        print(f"       {CLI} wait")
 
 
 def cmd_wait(a) -> int:
@@ -2451,7 +2486,7 @@ def cmd_wait(a) -> int:
             print(f"  {t}: finished cleanly, final message {final}")
         else:
             print(f"  {t}: NO FINAL MESSAGE, so it was killed or ran out of budget. "
-                  f"Its work may still be on disk. Consider `dispatch.py resume {t}`.")
+                  f"Its work may still be on disk. Consider `{CLI} resume {t}`.")
         print(f"       log {d.get('log')}")
     still = [t for t in watched if t not in done]
     if still:
@@ -2839,7 +2874,10 @@ def main() -> int:
     # agent then sat 2762 s on codex's hook-trust modal and returned nothing.
     # The POD cannot repeat it, because it passes `--harness` explicitly.
     if POLICY_ERROR:
-        print(f"dispatch: WARNING: {POLICY_ERROR}", file=sys.stderr)
+        # A designed retirement is a NOTE. A module that is present and broken is a
+        # WARNING. One variable carries both, and `POLICY_RETIRED` separates them.
+        print(f"dispatch: {'NOTE' if POLICY_RETIRED else 'WARNING'}: {POLICY_ERROR}",
+              file=sys.stderr)
     if HEADS_ERROR:
         print(f"dispatch: WARNING: {HEADS_ERROR}", file=sys.stderr)
     return {"run": cmd_run, "queue": cmd_queue, "resume": cmd_resume,

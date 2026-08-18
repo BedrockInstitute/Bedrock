@@ -38,9 +38,10 @@ A definition body, a `where` block's contents, a comment and all prose are NOT
 signatures, so a worker may rewrite a proof freely.
 
 EXTRACTION, without a full Agda run. It reuses `FENCE` at
-`scripts/gate/check-tree.py:101` and the fence join of `code_of()` at `:115`. It
-cuts declarations by INDENT: a head starts at column `c`, and its signature text
-runs to the first line at or left of `c`, or to a bare `where`. It strips
+`archive/scripts/gate/check-tree.py:101` and the fence join of `code_of()` at
+`:115`. It cuts declarations by INDENT: a head starts at column `c`, and its
+signature text runs to the first line at or left of `c`, or to a bare `where`.
+It strips
 comments, collapses whitespace, and never sorts tokens. It emits
 `<module>#<name> :: <type>` and hashes that.
 
@@ -62,9 +63,9 @@ TWO READERS, ONE DERIVATION, AND THE MODE PICKS THE READER. `--check` reads the
 WORKING TREE, because that is the tree the acceptance runner just typechecked.
 `--msg-file` reads the GIT INDEX, because the index is what the next commit
 contains, and refusing that commit is the whole job of a `commit-msg` hook. The
-copied gate `scripts/gate/check-live-territory.py:387-391` reads the index for
-the same reason. A working-tree read in the hook is a MEASURED defect and not a
-detail: on 2026-08-17 the design memo was amended eight times, the live
+copied gate `archive/scripts/gate/check-live-territory.py:387-391` reads the
+index for the same reason. A working-tree read in the hook is a MEASURED defect
+and not a detail: on 2026-08-17 the design memo was amended eight times, the live
 derivation left the snapshot, and the hook then refused every commit in the
 repository, including commits that staged nothing guarded.
 
@@ -85,13 +86,36 @@ definition body.
 
 R16 RIDES THE SAME SNAPSHOT, AND THAT IS THE WHOLE MECHANISM. A `[[guarded]]`
 entry is one sha256 over the WHOLE file and needs no parser. The rule homes are
-the design memo, which carries section 3 and section 3.1, `dev/pod/heads.toml`,
-and every `dev/pod/instructions/*.md`. A changed sha fails `--check` exactly as
-a changed signature does. No second mechanism, no second trailer, no second
-checker.
+`AGENTS.md`, the design memo, which carries section 3 and section 3.1,
+`dev/pod/heads.toml`, and every `dev/pod/instructions/*.md`. A changed sha fails
+`--check` exactly as a changed signature does. No second mechanism, no second
+trailer, no second checker.
 
-THE APPROVAL MECHANISM copies `scripts/gate/check-agents-guard.py`, where
-DD19's harvested half lands. Three parts reuse directly: the trailer regex at
+`AGENTS.md` IS GUARDED HERE BECAUSE ITS OWN GUARD WAS ARCHIVED AND THIS FILE
+REPLACED IT. Before the cutover `archive/scripts/gate/check-agents-guard.py`
+refused any commit that staged `AGENTS.md` without an `AGENTS-diff-approved:`
+trailer. The cutover retired that gate on the premise that the guarded file was
+void, and amendment A8 then ruled the opposite: `AGENTS.md` is NOT archived, and
+`scripts/pod/instructions.py:2` makes it the ONE hand-written source of the
+shared half of all five slot files. So an edit there reaches every agent, and
+since the cutover nothing has asked for approval. That is the 2026-08-04 drift
+the design cites as its own reason, one level up.
+
+THE STALENESS OF THE FIVE SLOT FILES IS A SECOND QUESTION AND THIS GATE DOES NOT
+ANSWER IT. A sha over `AGENTS.md` sees an edit; it cannot see whether
+`instructions.py --write` was run afterwards. `instructions.py --check` is that
+gate, and the `instructions` target of `make check` runs it. **The two gates are
+not interchangeable and both are needed.** This one refuses an unapproved edit to
+the Boundary; that one refuses an approved edit that never reached the five files
+agents read. The pre-commit hook runs NEITHER, so a commit that skips `make check`
+can still ship a stale slot file.
+
+EVERY GATE THIS FILE COPIES IS UNDER `archive/`. The POD cutover of 2026-08-18
+archived them, and the mirror rule keeps each one at the same path with an
+`archive/` prefix. The line numbers below are the archived file's own.
+
+THE APPROVAL MECHANISM copies `archive/scripts/gate/check-agents-guard.py`,
+where DD19's harvested half lands. Three parts reuse directly: the trailer regex at
 `:66`, the commit-time gate at `:120-133`, which reads
 `git diff --cached --name-only`, and the self-anchoring history audit at
 `:86-117`, where `tree_has_guard` asks `git cat-file -e <commit>:<home>`, so a
@@ -171,28 +195,37 @@ SNAPSHOT_REL = "dev/pod/spec-surface.toml"
 DERIVATION = ("src/Landmarks.lagda.md plus one file per `open import` in its "
               "fences; a bare `import M` is excluded")
 
-#: The trailer, copied from `check-agents-guard.py:66` with R16's name. The
-#: machine cannot verify that the owner ruled and does not pretend to: the
+#: The trailer, copied from `archive/scripts/gate/check-agents-guard.py:66` with
+#: R16's name. The machine cannot verify that the owner ruled, and it does not
+#: pretend to: the
 #: trailer turns silent drift into an explicit, dated assertion, and
 #: `git log --grep=Spec-surface-approved` audits every one in seconds.
 TRAILER_RE = re.compile(
     r"^Spec-surface-approved: \d{4}-\d{2}-\d{2}(?: \(.+\))?\s*$", re.M)
 
-#: R16's rule homes. Each is one sha256 over the whole file. The third entry is
+#: R16's rule homes. Each is one sha256 over the whole file. `GUARDED_DIRS` holds
 #: a directory: every file under it is guarded, so a new instruction file is a
 #: change and not a hole.
 GUARDED_FILES = [
+    # `AGENTS.md` is the shared Boundary and amendment A8 makes it the ONE
+    # hand-written source of every slot file's shared half. Its own guard,
+    # `archive/scripts/gate/check-agents-guard.py`, archived at the cutover on
+    # the premise that the file was void, which A8 refutes. R16's own text
+    # ("a change to this rule set") already covered it; only this list was short.
+    "AGENTS.md",
     "dev/memos/L9-pod-program-design.md",
     "dev/pod/heads.toml",
 ]
 GUARDED_DIRS = ["dev/pod/instructions"]
 
 #: The homes whose committed trees count as "this guard exists". DERIVED from
-#: where this file sits, so a move cannot orphan it (`check-agents-guard.py`
-#: :75-78, and `[LJ-1.290]` measured the false green a rewritten literal gives).
+#: where this file sits, so a move cannot orphan it
+#: (`archive/scripts/gate/check-agents-guard.py:75-78`, and `[LJ-1.290]` measured
+#: the false green a rewritten literal gives).
 GUARD_HOMES = [Path(__file__).resolve().relative_to(ROOT).as_posix()]
 
-#: The fence and the code join of `scripts/gate/check-tree.py:101` and `:115`.
+#: The fence and the code join of `archive/scripts/gate/check-tree.py:101` and
+#: `:115`.
 FENCE = re.compile(r"```agda\n(.*?)```", re.S)
 
 PRAGMA = re.compile(r"\{-#.*?#-\}", re.S)
@@ -811,8 +844,9 @@ def gate_commit(msg_file: str) -> int:
     The hook's one job is to refuse the NEXT COMMIT, so it asks what that commit
     contains: `git diff --cached` for the paths it touches, and the index blobs
     for the surface and the snapshot it will carry. An unstaged edit belongs to
-    `--check`, at acceptance. `scripts/gate/check-live-territory.py:387-391`
-    reads the index for the same reason.
+    `--check`, at acceptance. The archived gate
+    `archive/scripts/gate/check-live-territory.py:387-391` reads the index for
+    the same reason.
     """
     drift: list[str] = []
     try:

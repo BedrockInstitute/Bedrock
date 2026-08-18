@@ -1225,33 +1225,33 @@ text = "𝒮ʟ : ZFStructure (hPropAlgebra (ℓ-suc ℓ))"
 sha = "7b986e4c35f338a49e0b38ec81fcf0fd4fb1435bfc9de880390035a568ba3cdf"
 
 [[guarded]]
+path = "AGENTS.md"
+sha = "31cdc35dda710762d611a458eaf4bad76017397735532925bf200b6bb94e7455"
+
+[[guarded]]
 path = "dev/memos/L9-pod-program-design.md"
-sha = "c3831d20b71235b55f8ec6f1e3860017ac41fd68eb0c404ac3fd4756293c60f5"
+sha = "4b51f16ad4338517ddaf6571c2597eb52021fa61840ca868012ad4e27fad9211"
 
 [[guarded]]
 path = "dev/pod/heads.toml"
-sha = "7296b60764985af544a65c15408149c8c4879209387a14040cc88f500ff6b1b7"
+sha = "7feeaa7d4e4bdca19763de4cf9603b92dfa9affaf4d70b05be60786e8924250a"
 
 [[guarded]]
 path = "dev/pod/instructions/coder.md"
-sha = "ac98b538687159e98f2c51fcd8b3521784e589024422e48667bac347ec58fecc"
+sha = "71c33bcfed355b775fc5351ce8068e2f11cfc16cb65ae6af1d88d7329e1e2672"
 
 [[guarded]]
 path = "dev/pod/instructions/coder_adversarial.md"
-sha = "f504b2dc049d02dd6a3446e6c9bf08553bca250f4560c014585efb8e354ea7c6"
+sha = "dbe4c1457aaacbb509059e24e70920d1f37c3db1a6f9d54eb0ae9efb423dc33a"
 
 [[guarded]]
 path = "dev/pod/instructions/maintainer.md"
-sha = "e28bc7d9b0400ccce7431d078f62fe8b1f711a3368bfbed940b596af514dc5f8"
+sha = "60f875f008263bc5e0f508a39a56e6b63e4073340a6fa40b9eac214ceeba213c"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician.md"
-sha = "a58d6b79bc21a0b3d8297bde6c925138e5c4411f0b70abdb474e6d7cca8086a3"
+sha = "a03fa4a15384477ed126c8630b86f21c35c19d52994990ebd0774b548411fca3"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician_adversarial.md"
-sha = "4cad39e264a4c11b9c167b9e46cba02d7e746ca3f25ac0d699047d218ab74423"
-
-[[guarded]]
-path = "dev/pod/instructions/refill-queue.md"
-sha = "3edae7b0939d9ef2a580b95a032cee644f050d383a33343ac183951616e079b2"
+sha = "53bd1a427a8e5d3beb30ca07b69a0d737e20d95b58ceadbfdf5d45ccf25da8c3"

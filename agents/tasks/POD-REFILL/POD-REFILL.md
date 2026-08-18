@@ -71,6 +71,35 @@ named reason is a better state than a queued task nobody wanted.
 **NO-GO** earns a named blocker and the ruling it waits on, which is worth as much:
 it converts an idle loop from a silent state into a reported one.
 
+## ARCHIVE
+
+**Read these before you queue a mathematical task, and name what you took at
+`file:line` in an ARCHIVE USED section of your return.** The retired route left four
+records, and a task queued without them repeats work that is already delivered.
+
+- `archive/src/` holds the retired Agda, one directory per archival event.
+  `archive/src/2026-08-09-rud-route/` is the retired route. A chapter there may
+  already carry the content a new task would rebuild.
+- `archive/dev/TASKS-archived.md` says what each retired dispatch found.
+- `archive/dev/JOURNAL-archived.md` says why, and it carries the episodes.
+- `archive/dev/DECISIONS-archived.md` holds the archived `D` rulings. The live rulings
+  are the written clauses of `dev/memos/L9-pod-program-design.md` section 3.1.
+
+**If nothing in the archives bears on the task you queue, say so in one line and name
+the archives you read.** A `NO HIT` is a first-class result here.
+
+## LITERATURE
+
+`dev/literature/` holds the digested mathematics: `digest.md` for the orthodox route,
+`j-hierarchy.md` for condensation, `devlin-errata.md` for the known errors in the
+primary text, and `BIBLIOGRAPHY.md` for what was fetched and what consumed it.
+
+**THIS TASK QUEUES WORK AND IT PROVES NOTHING, so it reads the literature only to
+price a candidate task.** Read `BIBLIOGRAPHY.md` to learn whether the mathematics a
+candidate needs is digested already. When it is not, say so in the queue entry: the
+task you queue then carries a literature step of its own. Name in a LITERATURE USED
+section of your return what you read, and WHY NOT for anything you skipped.
+
 ## BRANCHES
 
 ```toml pod-branches

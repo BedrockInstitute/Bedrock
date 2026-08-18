@@ -55,6 +55,12 @@ judgement. Its design is `dev/memos/L9-pod-program-design.md`.
 - **Never** commit a generated file; use an em dash in any language; use half-width
   sentence punctuation in CJK prose; commit or print a secret; add an unpinned or
   globally installed dependency; or add an in-file `SPDX-*` header.
+- **Each rule has ONE canonical home, and the home names its enforcer**: the program, a
+  hook, or agent discipline. Never write one rule in two files. **Never add a
+  `dev/glossary.toml` entry that you chose yourself.** A term the glossary lacks is
+  settled by two dispatches. The first writes a sourced provenance dossier, and the
+  second reviews it and returns PASS or FAIL for each term. A PASS lands the entry, and a
+  FAIL goes to the repository owner.
 - **Place a new document by AUDIENCE.** A user document is trilingual under
   `docs/<lang>/`. A developer document is English only and is never translated. A
   `README.md` follows the user rule, and a new top-level directory carries one in the
@@ -66,6 +72,9 @@ judgement. Its design is `dev/memos/L9-pod-program-design.md`.
   every report: ASD-STE100 Simplified Technical English. The two skills carry the full
   rule sets and **Bedrock's own prose rules win over both**. Neither applies to
   mathematical prose, to `docs/`, or to the prose in a `.lagda.md` master.
+- **Write no mathematical prose until both trophies are proved in the tree.** Write only
+  code, the comments inside it, and the project records. The prose phase opens on the day
+  the double trophy lands.
 - **Every file you create under `_build/` declares its lifecycle** in
   `dev/build-manifest.toml`. It is a temporary folder, not a rubbish bin.
 - **A one-off instruction from the owner binds ONLY the task it names.** It changes no
@@ -78,9 +87,11 @@ judgement. Its design is `dev/memos/L9-pod-program-design.md`.
   yourself sweeps whatever else is in the tree, including another task's half-written
   file. **One push is one CI run and one deploy**, and that is the repository owner's
   call and nobody else's.
-- **Agda runs under a heap cap, always.** `GHCRTS="-A64m -I0 -M8g"` in the wide tier,
-  `-M12g` in the heavy tier, one process per agent. Never raise the cap. A heap
-  exhaustion is a WALL event: report it and never simply rerun.
+- **NEVER SET `GHCRTS` YOURSELF.** The program sets the caliber on your pane, one caliber
+  per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M8g` wide and `-A64m -I0 -M12g` heavy.
+  Start one Agda process and no more. A number you measure under any other caliber is not
+  comparable, and you must never report it as a price. A heap exhaustion is a WALL event:
+  report it and never simply rerun.
 
 ## Your slot
 

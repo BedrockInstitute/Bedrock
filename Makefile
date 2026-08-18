@@ -31,10 +31,10 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check clean closure deploy fences gen glossary hooks html ledger lint lint-agda markers probes ratio reuse ruleids serve site specsurface test timing typecheck types venv venv-check survey
+.PHONY: check clean closure deploy fences gen glossary hooks html instructions ledger lint lint-agda markers probes ratio reuse ruleids serve site specsurface test timing typecheck types venv venv-check survey
 
 check: venv-check typecheck markers lint lint-agda glossary ledger probes \
-       closure fences reuse ruleids specsurface
+       closure fences reuse ruleids specsurface instructions
 
 venv:
 	$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
@@ -67,7 +67,7 @@ ledger:
 # DD24 makes the seconds-per-line ratio the ONLY threshold on the GCH wing.
 #
 # IT IS NOT IN `make check`, and that is deliberate. It runs Agda, and
-# dev/ORCHESTRATION.md forbids a typecheck in the commit gate: the gate must
+# rule R14 keeps a typecheck out of the commit gate: the LINT class must
 # stay cheap, and this tool fails closed whenever another agda process is
 # live, so in the gate it would turn a busy machine into a red commit. It is
 # an on-demand MEASUREMENT, in the same class as scripts/measure/deletion-test.py.
@@ -97,22 +97,29 @@ timing:
 probes:
 	$(PY) scripts/gate/check-probes.py --check
 
-# The commit gate against a LIVE agent's write territory. [LJ-1.189]'s P3,
-# built by [LJ-1.193]. Two `git add -A` sweeps on 2026-08-13 committed a
-# sibling's work in progress; a staged file inside a live agent's task
-# directory or brief write scope is refused by --staged, and the --check
-# tracked-tree mode audits that nothing already landed there. The ONE
-# exemption is a live record's own brief path, MEASURED: the orchestrator
-# commits a brief while its agent is live (4ae98f3, 82dd1fb, 8eb2ba0). NO hook
-# runs this checker: the pre-commit hook does not call it, MEASURED 2026-08-17.
-# This target is the only place it fires, and it runs --staged, for the reason
-# below. Cost: a registry read, a ps per live agent, one git ls-files.
+# THE `liveterritory` TARGET IS GONE, and this is its tombstone rather than its
+# recipe. `check-live-territory.py` was RETIRED by the POD cutover of 2026-08-18:
+# rule R8 performs the same function inside the program, because the program
+# commits by explicit path derived from the task's own scope and never runs
+# `git add -A`. The frozen checker is archive/scripts/gate/check-live-territory.py
+# and dev/ARCHIVE.md:229 records what it did right.
 
+# Acceptance conjunct 3, and the pre-commit hook runs the same command.
 closure:
 	$(PY) scripts/pod/check-closure.py --check closure
 
 specsurface:
 	$(PY) scripts/pod/check-spec-surface.py --check
+
+# AGENTS.md is the ONE hand-written source of the shared half of every
+# dev/pod/instructions/<slot>.md, and instructions.py generates the rest. Before
+# 2026-08-18 nothing ran `--check`, so the generator fired only when a person
+# remembered to type it and five slot files could carry a Boundary AGENTS.md no
+# longer held. This target is the gate the docstring at
+# scripts/pod/instructions.py:32 always named. It reads six files, starts no
+# Agda, and runs in well under a second.
+instructions:
+	$(PY) scripts/pod/instructions.py --check
 
 fences:
 	$(PY) scripts/gate/check-fences.py --check
@@ -178,6 +185,7 @@ test:
 	$(PY) scripts/tests/test_pod_table.py
 	$(PY) scripts/tests/test_pod_loop.py
 	$(PY) scripts/tests/test_pod_digest.py
+	$(PY) scripts/tests/test_territory.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the
 # [LJ-0.4] closeout. _build/literature/ holds the OCR text and PDFs of Devlin,
