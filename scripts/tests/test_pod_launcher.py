@@ -972,15 +972,34 @@ def main() -> int:
     print("the pane layout: right for a new column, down once to fill it")
 
     _ly = (ROOT / "scripts" / "pod" / "launcher.py").read_text(encoding="utf-8")
+    # SCOPE EVERY CHECK TO THE SPLIT BLOCK. `--direction right` also appears in the
+    # file's own prose 56 KB earlier, so a whole-file index comparison compares a
+    # comment with a call and reads the order backwards.
+    _blk = _ly[_ly.index("COLF="):_ly.index("HERDR pane=$PANE")]
     check("a DOWN split exists, and it splits the recorded open column",
-          "--direction down" in _ly and "$OPEN" in _ly, True)
-    check("a RIGHT split exists, and it splits the workspace BASE",
-          "--direction right" in _ly and "$BASE" in _ly, True)
+          "--direction down" in _blk and "$OPEN" in _blk, True)
+    check("a RIGHT split exists, and its usual target is the RIGHTMOST column",
+          "--direction right" in _blk and "$FROM" in _blk, True)
     check("DOWN is tried FIRST, so a half-empty column fills before a new one opens",
-          _ly.index("--direction down") < _ly.index("--direction right"), True)
+          _blk.index("--direction down") < _blk.index("--direction right"), True)
+    # MEASURED 2026-08-18: splitting BASE reverses the column order and halves BASE at
+    # every new column. BASE survives as the fallback for the first column and for a
+    # rightmost pane herdr no longer has.
+    check("BASE is the FALLBACK and never the usual target",
+          "FROM=" in _blk and "$BASE" in _blk, True)
+    check("the rightmost column is recorded, so the grid grows left to right",
+          "HERDR_RIGHT_FILE = STATE /" in _ly and "$RIGHTF" in _blk, True)
     check("the open column is CLEARED whichever way the down split went, so DOWN "
           "can never happen twice in one column",
-          _ly.count("$COLF") >= 3, True)
+          _blk.count("$COLF") >= 3, True)
+    # EQUAL WIDTHS. A `pane split` halves its target, so columns come out 130, 65, 32,
+    # 32 without this. MEASURED 2026-08-18 before and after: the cure gives 65, 65, 65,
+    # 64, and six columns go from a 16-wide fourth to 43 each.
+    check("a new COLUMN is followed by the equaliser, and a down-split is not",
+          "EQUALISE" in _blk
+          and _blk.index("EQUALISE") > _blk.index("--direction right"), True)
+    check("the equaliser can never fail a dispatch",
+          "|| true" in _blk[_blk.index("EQUALISE"):], True)
     check("the column file lives under .pod-state, beside the other runtime state",
           "HERDR_COL_FILE = STATE /" in _ly, True)
 

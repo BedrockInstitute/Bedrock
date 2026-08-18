@@ -300,6 +300,28 @@ HERDR_WS_FILE = STATE / "herdr-workspace"
 #: work in the same workspace. One line naming the column we last opened is enough, and
 #: a stale line costs one extra column rather than a wrong split.
 HERDR_COL_FILE = STATE / "herdr-open-column"
+#: THE RIGHTMOST COLUMN'S PANE. A new column is split off IT and never off `BASE`.
+#:
+#: **MEASURED 2026-08-18 in a scratch workspace, because the first version of this was
+#: written from prose and had the geometry backwards.** Two readings settled it:
+#:
+#:   1. `split --pane BASE --direction right` DIVIDES BASE. Twice gave x=23 BASE(w65),
+#:      x=88 the SECOND pane, x=153 the FIRST. The newest column lands NEXT TO BASE and
+#:      the oldest is pushed right, which reverses the owner's left-to-right ruling, and
+#:      BASE fell from w129 to w65, so the pane running the loop is 1/8 wide after three.
+#:   2. Splitting the top pane of an ALREADY DOWN-SPLIT column rightward gives a HALF
+#:      HEIGHT pane (h31) and leaves the bottom one spanning two columns (w129).
+#:
+#: Splitting the RIGHTMOST column instead gave BASE(w130) | col(w65) | col(w64), every
+#: one h62, which is the ruled layout.
+HERDR_RIGHT_FILE = STATE / "herdr-rightmost-column"
+#: The column equaliser, run after a new COLUMN is opened. See its docstring for the
+#: arithmetic and for the measurements that justify it.
+EQUALISE = Path(__file__).resolve().parent / "equalise-panes.py"
+#: The one-liner that reads a pane id out of a `pane split` response. It appears four
+#: times below and a second spelling of it would be a second thing to get wrong.
+SPLIT_ID = ("python3 -c 'import json,sys; "
+            "print(json.load(sys.stdin)[\"result\"][\"pane\"][\"pane_id\"])'")
 
 
 def herdr_name(task: str) -> str:
@@ -1355,22 +1377,46 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # a pane herdr no longer has, the split fails, the fallback opens a new
                 # column, and the cost is one narrower column rather than a wrong pane.
                 f"COLF={shlex.quote(str(HERDR_COL_FILE))}\n"
-                f"OPEN=$(cat \"$COLF\" 2>/dev/null || true)\n"
+                f"RIGHTF={shlex.quote(str(HERDR_RIGHT_FILE))}\n"
+                "OPEN=$(cat \"$COLF\" 2>/dev/null || true)\n"
+                "RIGHT=$(cat \"$RIGHTF\" 2>/dev/null || true)\n"
                 "PANE=\"\"\n"
+                # A HALF-EMPTY COLUMN IS FILLED DOWNWARD FIRST.
                 "if [ -n \"$OPEN\" ]; then\n"
                 f"  PANE=$(herdr pane split --pane \"$OPEN\" --direction down "
                 f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
-                "| python3 -c 'import json,sys; print(json.load(sys.stdin)[\"result\"][\"pane\"][\"pane_id\"])' 2>/dev/null || true)\n"
-                # THE COLUMN IS FULL EITHER WAY. A successful down-split used it, and a
-                # failed one means the pane is gone, so the line is cleared in both cases.
+                f"| {SPLIT_ID} 2>/dev/null || true)\n"
+                # FULL EITHER WAY. A good split used the column and a failed one means the
+                # pane is gone, so clearing in both cases is what caps DOWN at one.
                 "  : > \"$COLF\"\n"
                 "fi\n"
+                # OTHERWISE OPEN A NEW COLUMN OFF THE RIGHTMOST ONE, NEVER OFF BASE.
+                # MEASURED 2026-08-18: splitting BASE puts the newest column next to BASE
+                # and halves BASE every time, so the order reverses and the loop's own
+                # pane is 1/8 wide after three columns.
                 "if [ -z \"$PANE\" ]; then\n"
-                f"  PANE=$(herdr pane split --pane \"$BASE\" --direction right "
+                "  FROM=\"$RIGHT\"\n"
+                "  [ -n \"$FROM\" ] || FROM=\"$BASE\"\n"
+                f"  PANE=$(herdr pane split --pane \"$FROM\" --direction right "
                 f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
-                "| python3 -c 'import json,sys; print(json.load(sys.stdin)[\"result\"][\"pane\"][\"pane_id\"])')\n"
-                # A NEW COLUMN IS HALF EMPTY, so the next dispatch splits it DOWN.
+                f"| {SPLIT_ID} 2>/dev/null || true)\n"
+                # A STALE RIGHTMOST IS RECOVERABLE, and BASE always exists.
+                "  if [ -z \"$PANE\" ]; then\n"
+                f"    PANE=$(herdr pane split --pane \"$BASE\" --direction right "
+                f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
+                f"| {SPLIT_ID})\n"
+                "  fi\n"
+                # THE NEW COLUMN IS BOTH THE RIGHTMOST AND THE HALF-EMPTY ONE.
                 "  printf '%s' \"$PANE\" > \"$COLF\"\n"
+                "  printf '%s' \"$PANE\" > \"$RIGHTF\"\n"
+                # EVERY COLUMN GETS THE SAME WIDTH, and this runs only when a COLUMN was
+                # opened, because a down-split changes no column's width. A `pane split`
+                # halves its target, so without this the columns come out 130, 65, 32, 32
+                # and the fourth is unreadable. MEASURED 2026-08-18, and measured again
+                # after the cure: 65, 65, 65, 64, and six columns go 16 -> 43.
+                # IT NEVER FAILS A DISPATCH. Tidiness is not worth a lost agent, so the
+                # equaliser swallows its own errors and this line ignores the rest.
+                f"  python3 {shlex.quote(str(EQUALISE))} \"$BASE\" >/dev/null 2>&1 || true\n"
                 "fi\n"
                 "echo \"HERDR pane=$PANE\"\n"
                 # A FRESHLY SPLIT PANE IS NOT YET AN INTERACTIVE SHELL. Measured
