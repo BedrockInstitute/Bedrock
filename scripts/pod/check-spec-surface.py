@@ -748,15 +748,29 @@ def is_audited(path: str) -> bool:
 
 
 def tree_has_guard(commit: str) -> bool:
-    for home in GUARD_HOMES:
-        try:
-            probe = subprocess.run(["git", "cat-file", "-e", f"{commit}:{home}"],
-                                   capture_output=True, cwd=ROOT)
-        except OSError as exc:
-            raise GitError(f"cannot run git: {exc}") from exc
-        if probe.returncode == 0:
-            return True
-    return False
+    """Could THIS commit's tree have enforced the guard? Self-anchoring, no epoch hash.
+
+    THE ANCHOR IS THE WIRING AND NOT THE FILE, and that correction cost two false
+    failures. The old AGENTS.md guard anchored on "the tree contains this checker",
+    which was sound for it because the checker and its hook line landed in ONE commit.
+    This checker did not: it entered at `ed09b26` with the hardening round and was wired
+    into `commit-msg` at the cutover, `fc676cb`. Between them, two commits touched a
+    guarded home under a tree that HELD this file and could not RUN it, so presence
+    judged authors for a rule no hook could have told them about. **A gate that fails a
+    commit whose author could not have complied teaches every author to ignore it.**
+
+    So the probe reads the hook. A commit whose `commit-msg` does not call this checker
+    predates enforcement and is not judged.
+    """
+    try:
+        probe = subprocess.run(
+            ["git", "show", f"{commit}:scripts/git-hooks/commit-msg"],
+            capture_output=True, text=True, cwd=ROOT)
+    except OSError as exc:
+        raise GitError(f"cannot run git: {exc}") from exc
+    if probe.returncode != 0:
+        return False                      # no hook in that tree: nothing to enforce
+    return Path(GUARD_HOMES[0]).name in probe.stdout
 
 
 def check() -> int:
