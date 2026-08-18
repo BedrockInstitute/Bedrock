@@ -969,6 +969,21 @@ def main() -> int:
         print("  note the heads loader did not import, so its refusals were "
               "not exercised")
 
+    print("the pane layout: right for a new column, down once to fill it")
+
+    _ly = (ROOT / "scripts" / "pod" / "launcher.py").read_text(encoding="utf-8")
+    check("a DOWN split exists, and it splits the recorded open column",
+          "--direction down" in _ly and "$OPEN" in _ly, True)
+    check("a RIGHT split exists, and it splits the workspace BASE",
+          "--direction right" in _ly and "$BASE" in _ly, True)
+    check("DOWN is tried FIRST, so a half-empty column fills before a new one opens",
+          _ly.index("--direction down") < _ly.index("--direction right"), True)
+    check("the open column is CLEARED whichever way the down split went, so DOWN "
+          "can never happen twice in one column",
+          _ly.count("$COLF") >= 3, True)
+    check("the column file lives under .pod-state, beside the other runtime state",
+          "HERDR_COL_FILE = STATE /" in _ly, True)
+
     print()
     if FAILED:
         print(f"FAIL: {len(FAILED)} failing check(s)")

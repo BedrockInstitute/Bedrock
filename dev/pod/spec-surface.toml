@@ -1226,7 +1226,7 @@ sha = "7b986e4c35f338a49e0b38ec81fcf0fd4fb1435bfc9de880390035a568ba3cdf"
 
 [[guarded]]
 path = "AGENTS.md"
-sha = "c849530b3c9d4377cc30988dc124ffe5b5f92d4c2fe433a0c5ca4b8e42bfeb4f"
+sha = "fb8cf8d8930d7650981c113926c4825bdee0720ed556f891b42ec3cef6300b4f"
 
 [[guarded]]
 path = "dev/memos/LJ-4-pod-program-design.md"

@@ -33,6 +33,20 @@ producer.
 **`ledger.py --brief` is the only admissible source for a standing size figure.** Never
 quote a number found in a paragraph.
 
+**HOW THE LOOP IS STARTED, and it is a plain terminal.**
+
+```sh
+.venv/bin/python scripts/pod/pod.py run       # the loop
+.venv/bin/python scripts/pod/pod.py tick --plan   # one pass, launching nothing
+```
+
+**`pod.py` IS A PROGRAM AND NOT AN AGENT.** Do not start it from inside a coding-agent
+session in the hope that the session's own model or effort applies: it does not, and
+the session would only be a shell. **The program launches all five heads itself**, each
+with the model and effort of its row in `dev/pod/heads.toml`, so the maintainer's
+`claude-opus-5` at `high` takes effect because `spawn_maintainer()` reads that row and
+passes it to the launcher. The same is true of every other slot.
+
 **`[LJ-4]` replaced the orchestrator with a program.** The program measures six facts,
 matches one rule table, and performs one action. It reads no report and it makes no
 judgement. Its design is `dev/memos/LJ-4-pod-program-design.md`.

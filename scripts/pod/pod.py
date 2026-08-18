@@ -2052,7 +2052,8 @@ def spawn_maintainer(st, root=None):
         head = heads_mod.head("maintainer")
         mod.HARNESS = head["harness"]
         rc = mod.launch("POD-BATCH", brief, False, head["sandbox"], head["model"],
-                        effort=head["effort"])
+                        effort=head["effort"],
+                        preamble=preamble_for("maintainer", root))
     except SystemExit:
         return None
     except Exception:                          # noqa: BLE001. The batch is not the loop
@@ -2525,7 +2526,8 @@ def _rule_g(st, root):
         head = heads_mod.head("mathematician")
         mod.HARNESS = head["harness"]
         rc = mod.launch(REFILL_TASK, brief_path, False, head["sandbox"],
-                        head["model"], effort=head["effort"])
+                        head["model"], effort=head["effort"],
+                        preamble=preamble_for("mathematician", root))
     except SystemExit:
         rc, why = 1, "the launcher refused"
     except Exception as e:                     # noqa: BLE001. One refill is not the loop

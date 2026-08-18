@@ -1841,7 +1841,8 @@ class RuleG(LoopCase):
             HARNESS = ""
 
             @staticmethod
-            def launch(task, brief, agda, sandbox, model, effort=""):
+            def launch(task, brief, agda, sandbox, model, effort="", preamble=None,
+                       tier="wide"):
                 launched.append((task, str(brief), agda, model, effort))
                 return 0
         self.patch(facts_mod, "launcher", lambda: FakeLauncher)
@@ -2623,6 +2624,41 @@ class SettledProposalIsRetired(unittest.TestCase):
                 self.assertFalse(f.exists(), "the settled proposal was not retired")
                 self.assertTrue((props / f"20260818-000000.toml.{verdict}").is_file(),
                                 f"expected the .{verdict} suffix")
+
+
+class EveryDispatchCarriesItsRules(unittest.TestCase):
+    """No worker is ever launched without `AGENTS.md` and its slot file ahead of the brief.
+
+    MEASURED 2026-08-18, and it is why this reads the SOURCE rather than a behaviour. The
+    slot files reached nobody for the whole life of the cutover: the launcher cat'd the
+    brief alone. The repair wired `_rule_f` and left the OTHER TWO dispatch points
+    untouched, so the maintainer and the refill still launched with no rules. The owner
+    found that by asking how the maintainer's own head config takes effect.
+
+    **A behavioural test would need three fixtures and would still miss the fourth
+    dispatch point somebody adds next.** Counting the call sites cannot.
+    """
+
+    def test_every_launch_call_passes_a_preamble(self):
+        src = pathlib.Path("scripts/pod/pod.py").read_text(encoding="utf-8")
+        calls = []
+        for i in range(len(src)):
+            if not src.startswith("mod.launch(", i):
+                continue
+            depth, j = 0, i + len("mod.launch")
+            while j < len(src):
+                if src[j] == "(":
+                    depth += 1
+                elif src[j] == ")":
+                    depth -= 1
+                    if depth == 0:
+                        break
+                j += 1
+            calls.append(src[i:j + 1])
+        self.assertGreaterEqual(len(calls), 3, "the dispatch points moved; re-read pod.py")
+        missing = [c.split("(", 1)[1][:60] for c in calls if "preamble" not in c]
+        self.assertEqual(missing, [],
+                         f"{len(missing)} dispatch point(s) launch a worker with no rules")
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

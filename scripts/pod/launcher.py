@@ -290,6 +290,16 @@ HERDR_WORKSPACE_LABEL = "Bedrock"
 # id IS stable, so the id is remembered here and only re-created when a lookup
 # proves it gone.
 HERDR_WS_FILE = STATE / "herdr-workspace"
+#: THE COLUMN THAT IS STILL HALF EMPTY, or absent when every column is full.
+#: THE LAYOUT, ruled by the owner 2026-08-18: split RIGHT for a new column, and split
+#: DOWN inside a column exactly once. Right is unlimited, down is capped at one, so the
+#: panes fill a two-row grid that grows sideways.
+#:
+#: **WHY A FILE AND NOT A QUERY.** herdr can list panes, but the driver runs as a shell
+#: script inside the launch and has no way to tell ITS agent panes from the owner's own
+#: work in the same workspace. One line naming the column we last opened is enough, and
+#: a stale line costs one extra column rather than a wrong split.
+HERDR_COL_FILE = STATE / "herdr-open-column"
 
 
 def herdr_name(task: str) -> str:
@@ -1336,9 +1346,32 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # arguments to `pane split` and the pane got `GHCRTS=-A64m`.
                 # `shlex.quote` is the tool, and this file already ruled that in
                 # the resume driver below: "Python repr is not shell quoting".
-                f"PANE=$(herdr pane split --pane \"$BASE\" --direction right "
+                # THE LAYOUT, ruled by the owner 2026-08-18. RIGHT opens a new column
+                # and is unlimited; DOWN fills a column and happens at most once. So a
+                # half-empty column is split DOWN and consumed, and otherwise a new
+                # column is split RIGHT off the base and recorded as half empty.
+                #
+                # The file holds the column we last opened. It is advisory: if it names
+                # a pane herdr no longer has, the split fails, the fallback opens a new
+                # column, and the cost is one narrower column rather than a wrong pane.
+                f"COLF={shlex.quote(str(HERDR_COL_FILE))}\n"
+                f"OPEN=$(cat \"$COLF\" 2>/dev/null || true)\n"
+                "PANE=\"\"\n"
+                "if [ -n \"$OPEN\" ]; then\n"
+                f"  PANE=$(herdr pane split --pane \"$OPEN\" --direction down "
+                f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
+                "| python3 -c 'import json,sys; print(json.load(sys.stdin)[\"result\"][\"pane\"][\"pane_id\"])' 2>/dev/null || true)\n"
+                # THE COLUMN IS FULL EITHER WAY. A successful down-split used it, and a
+                # failed one means the pane is gone, so the line is cleared in both cases.
+                "  : > \"$COLF\"\n"
+                "fi\n"
+                "if [ -z \"$PANE\" ]; then\n"
+                f"  PANE=$(herdr pane split --pane \"$BASE\" --direction right "
                 f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
                 "| python3 -c 'import json,sys; print(json.load(sys.stdin)[\"result\"][\"pane\"][\"pane_id\"])')\n"
+                # A NEW COLUMN IS HALF EMPTY, so the next dispatch splits it DOWN.
+                "  printf '%s' \"$PANE\" > \"$COLF\"\n"
+                "fi\n"
                 "echo \"HERDR pane=$PANE\"\n"
                 # A FRESHLY SPLIT PANE IS NOT YET AN INTERACTIVE SHELL. Measured
                 # 2026-08-13: `agent start` on a pane created milliseconds earlier
