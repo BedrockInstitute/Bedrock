@@ -156,7 +156,9 @@ RANKING_WORDS = (
 GAP_ZH = {
     "M8": "维护者头位的模型与思考档位",
     "M10": "NO-GO 关闭是否只凭第 5 与第 6 合取",
-    "M12": "空闲槽位是否成为第十一个报告数",
+    # M12 was here until 2026-08-18. Amendment A11 CLOSED it by building `_rule_g()`
+    # REFILL, so it is no longer an open owner ruling and the digest must not
+    # print it as one. The label went with the gap.
     "M13": "系统行的绝对秒数上限",
     "M14": "首次 NO-GO 的对抗评审触发行",
     "m2": "第二个报告数的行数口径",

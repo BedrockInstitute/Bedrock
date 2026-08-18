@@ -113,11 +113,11 @@ EPISODES = [
     ("7b", "agents/tasks/LJ-1-239/LJ-1.239.md", f"{RUD}/L/Condensation.lagda.md",
      SRC_SCOPE, 1),
     ("11", "agents/tasks/archive/LJ-1-10/LJ-1.10.md",
-     "archive/dev/TASKS-archived.md", DEV_SCOPE, 3),  # episode 11, was 2 before the cutover
+     "archive/dev/TASKS-archived.md", DEV_SCOPE, 5),  # episode 11: 2 pre-cutover, 3 post-cutover, 5 after the slimming
     ("5", "agents/tasks/LJ-1-353/LJ-1.353.md", f"{RUD}/L/Cardinal.lagda.md",
      SRC_SCOPE, 3),
     ("10", "agents/tasks/archive/LJ-1-6/LJ-1.6.md",
-     "archive/dev/TASKS-archived.md", DEV_SCOPE, 5),  # episode 10, was 3 before the cutover
+     "archive/dev/TASKS-archived.md", DEV_SCOPE, 7),  # episode 10: 3 pre-cutover, 5 post-cutover, 7 after the slimming
     ("5b", "agents/tasks/LJ-1-136/LJ-1.136.md", f"{RUD}/L/Cardinal.lagda.md",
      SRC_SCOPE, 16),
     ("6", "agents/tasks/LJ-1-92/LJ-1.92.md",
@@ -139,8 +139,12 @@ check("archive/src holds the 97 masters the record scoped",
 # record scoped 6; cutover step 4b archived `dev/ORCHESTRATION.md` here, and that
 # one document is why the two DEV_SCOPE ranks above moved. Pin the count, so the
 # next document to enter this corpus fails a test instead of moving a rank quietly.
-check("archive/dev holds 7 records, 6 at the record plus ORCHESTRATION.md",
-      len(retr.corpus(DEV_SCOPE)) == 7, str(len(retr.corpus(DEV_SCOPE))))
+# 9 SINCE THE DEV/ SLIMMING OF 2026-08-18. It was 6 at the frozen record, 7 after the
+# cutover archived ORCHESTRATION.md, and 9 after DD-archived.md and LJ-dispatch-index.md
+# joined it. **THE PIN DID ITS JOB TWICE:** each time a document entered this corpus the
+# ranks below moved and this line went red first, instead of a rank sliding in silence.
+check("archive/dev holds 9 records after the dev/ slimming",
+      len(retr.corpus(DEV_SCOPE)) == 9, str(len(retr.corpus(DEV_SCOPE))))
 check("the corpus rule keeps a README index out of a code archive",
       not [p for p in retr.corpus(SRC_SCOPE) if p.endswith("README.md")])
 
