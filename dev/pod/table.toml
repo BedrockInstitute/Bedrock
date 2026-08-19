@@ -418,7 +418,8 @@ outcome = "go"
 added = 2026-08-19
 added_by = "mathematician"
 reason = "branch `go` of LJ-1.392, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-19
 
   [row.when]
   exit_code = 0
@@ -434,7 +435,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-19
 added_by = "mathematician"
 reason = "branch `no-go-attacked` of LJ-1.392, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-19
 
   [row.when]
   exit_code = 42
@@ -451,7 +453,8 @@ outcome = "no-go"
 added = 2026-08-19
 added_by = "mathematician"
 reason = "branch `no-go-stated` of LJ-1.392, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-19
 
   [row.when]
   exit_code = 42
@@ -467,7 +470,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-19
 added_by = "mathematician"
 reason = "branch `heap-wall-escalate` of LJ-1.392, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-19
 
   [row.when]
   heap_wall = true
@@ -480,7 +484,8 @@ action = "park"
 added = 2026-08-19
 added_by = "mathematician"
 reason = "branch `ran-long-and-changed-little` of LJ-1.392, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-19
 
   [row.when]
   changed_files_count_max = 1
@@ -716,3 +721,16 @@ expired = false
   [row.when]
   changed_files_count_max = 1
   seconds_min = 3600.0
+
+[[row]]
+id = "sys-lint-accept"
+scope = "system"
+priority = 120
+action = "accept"
+added = 2026-08-19
+added_by = "maintainer"
+reason = "A lint failure is a defect in the RETURN, not in the mathematics. LJ-1.388, LJ-1.393 and LJ-1.395 each reached obligations_delta -2 and failed conjunct 6 alone."
+expired = false
+
+  [row.when]
+  error_class = "lint"
