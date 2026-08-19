@@ -25,6 +25,12 @@ role that repairs the loop, so you cannot be the loop's child: a repairman that 
 with the patient repairs nothing. `scripts/pod/keeper.sh` runs the loop and restarts a
 crash; when it gives up it prompts YOU with the reason.
 
+**`dev/pod/README.md` IS HOW THE LOOP IS OPERATED, and it is the one home for it.** The
+keeper, the four exit codes and what each one means, the hot restart, and how the panes
+and the herdr commands behave. It left `AGENTS.md` on 2026-08-19 because the four
+working slots are not operators and were paying to read it at every dispatch. **You are
+the one slot that acts on it**, so read it there and never restate it here.
+
 **YOU START NO PROCESS.** Three facts make this a rule and not a preference. An agent
 starts a process only inside a tool call, so the process is that call's child; its output
 reaches the tool result and never the keeper's pane; and `pod.py run` is an infinite loop

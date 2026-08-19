@@ -23,11 +23,19 @@ that channel is the centre of this design.
   brief failed to give you.
 - **THE PROBE IS YOURS TOO, and W3's second half moved here on 2026-08-19 by the
   owner's ruling.** The mathematician NAMES the widest unmeasured term and the probe
-  that settles it; **you write that probe and you run it.** It goes in
-  `agents/tasks/<CODE>/`, beside the brief and the report, and NEVER under `src/`. It is
+  that settles it; **you write that probe and you run it.** Build the smallest decisive
+  miniature and report GO or NO-GO with a price. It goes in `agents/tasks/<CODE>/`,
+  beside the brief and the report, and **`src/` is forbidden for a probe**. It is
   tracked and is never deleted. **Run it while your task is live, because nothing
   typechecks it after your task closes.** Report the number it measured, not the number
   the brief guessed.
+
+**NEVER SET `GHCRTS` YOURSELF.** The program sets the caliber on your pane, one caliber
+per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M8g` wide and `-A64m -I0 -M12g` heavy.
+**Start one Agda process and no more.** A number you measure under any other caliber is
+not comparable, and you must never report it as a price. A heap exhaustion is a WALL
+event: report it and never simply rerun. This clause left `AGENTS.md` on 2026-08-19,
+because only the slots that run Agda are bound by it.
 
 **MEASURED 2026-08-19: this slot had NO reachable path.** Every `head_slot` in
 `dev/pod/table.toml` named `mathematician_adversarial` or `coder_adversarial`, every
