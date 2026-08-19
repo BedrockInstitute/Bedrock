@@ -28,14 +28,21 @@ runner's own self-test. The `probe-rerun` seed that used to own this slot was re
 2026-08-19 because a probe record can match only the two heap-wall rows and `replay()`
 skips every NO MATCH record, so the seed could never have armed R3 at all.
 
-### 6. The stop that cannot tell success from sabotage
+**RE-PRICED 2026-08-19, and it is no longer BLOCKING.** Two things changed under it. The
+`live` stream earned three classes on its own, `lint`, `spec_surface` and the Agda class
+`unsolved_meta`, over 16 records; and `check_balance()` now measures the corpus PER
+SCOPE, so a task row naming an unheld class is admitted because no record of that task
+exists to regress-test it. **Only a SYSTEM row is still refused for an unheld class**, and
+none is currently wanted. Three remain missing: `closure_open`, `obligations_up`,
+`unbound_hyp`.
 
-Row `sys-spec-surface` fires on `error_class = "spec_surface"` with no other condition, so
-landing the second trophy, deleting a trophy and weakening one all produce the same class,
-the same action and the same sentence to the owner. **The owner ruled on 2026-08-19 to
-leave the row's behaviour as it is**, so this item changes only what the owner is TOLD:
-name the direction of the move, a declaration added versus changed or removed versus a
-surface file gone.
+**HOW TO MAKE THEM, now that isolation exists.** Build them in a scratch WORKTREE, break
+one conjunct at a time, run `accept.py` over it, and hand-load the record with
+`provenance = "report"`, which `replay.PROVENANCE` admits for exactly this. The main tree
+is never touched. Two ordering facts the attempt must respect: the class is the FIRST
+failing conjunct in order 5, 1, 2, 3, 4, 6, so every earlier conjunct has to be made to
+pass; and conjunct 4 is `unbound_NEW`, so a pre-existing finding does not fire it. The
+live tree already fails `check-unbound-hyp.py --check` and never produced the class.
 
 ### 7. A check for the defect shape three audits missed
 
@@ -45,10 +52,29 @@ audits asked whether documents agreed with each other and whether each rule stil
 enforcer; none asked whether code does what a rule says never happens, and the seed had
 never been run, so it contradicted nothing until it executed.
 
-The four items above share one shape: **a sentence describing the program's behaviour
-lives in a different file from the code that performs it, and the sentence was true when
+The items above share one shape: **a sentence describing the program's behaviour lives
+in a different file from the code that performs it, and the sentence was true when
 written.** Nobody edited the sentence. Somebody added a new write, a new scope entry or a
 new dispatch site, and the old sentence quietly stopped describing the program.
+
+**2026-08-19 ADDS A SECOND SHAPE, AND IT IS THE MORE AUTOMATABLE ONE: A TEST THAT PINS A
+SNAPSHOT OF SOMETHING THE PROGRAMME IS DESIGNED TO GROW.** Six instances in one day, each
+turning red because the programme worked:
+
+| test pinned | what legitimately changed it |
+|---|---|
+| the corpus file is empty | the first `live` record landed |
+| the system rows, by equality | the maintainer admitted `sys-lint-accept`, which AD2 is for |
+| EVERY row unexpired | LJ-1.392 closed and `expire_rows()` retired its branches |
+| `len(PARK_REASONS) == 9` | `salvage:` was ruled in |
+| `VOCAB == "seven-facts/1"` | A23 added fact 8 |
+| `len(ARCHIVE_SCOPE) == 5` | the archive scope was widened to reach DD4 |
+
+Each was repaired by asserting the INVARIANT rather than the snapshot: a seeded row is
+still present, a SYSTEM row is unexpired, the vocabulary is read from the table's own
+constant. **A checker for this shape would look for a test comparing by equality against
+a literal that names a program-written artifact**, which is a narrower and far more
+tractable target than the general case above.
 
 ### 8. Ask of every producer whether it can do its job
 
@@ -78,6 +104,23 @@ at DISPATCH and differenced at return, which is what `changed_files_scoped()` do
 task and what `side_dispatches()` would have to grow. Do not ship the naive version.
 
 ## Closed
+
+### 6. The stop that could not tell success from sabotage. FIXED 2026-08-19
+
+The owner ruled the ROW's behaviour unchanged, so only what the owner is TOLD had to
+move, and it has. **`check-spec-surface.py` already names the direction** and always did:
+`declaration added`, `declaration removed`, `declaration changed`, `surface file added`,
+`surface file removed`, `guarded rule home changed`. What was missing was the plumbing.
+`spec_surface()` discarded the checker's output, so the record and the owner's push both
+carried the bare four words `row sys-spec-surface`.
+
+`accept.py` captures that text on failure into `changed_files_refused`'s neighbour
+`spec_surface_detail`, and the `stop_loop` branch appends it to the owner's message,
+together with a count of FOREIGN dirty files when there are any, because the conjunct
+reads the whole tree. MEASURED the same day: the first stop under it named
+`guarded rule home changed: AGENTS.md`, which is the direction and the mover, where the
+previous three had named neither.
+
 
 ### 11. ONE WORKTREE PER TASK. Probed 2026-08-19 and the price is 46 seconds
 
