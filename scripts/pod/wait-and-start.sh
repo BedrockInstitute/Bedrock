@@ -18,7 +18,14 @@ set -u
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$ROOT" || exit 1
 PY=${WAIT_PY:-"$ROOT/.venv/bin/python"}
-WHEN=${1:?usage: wait-and-start.sh "YYYY-MM-DD HH:MM:SS"}
+# **IT JOINS ALL ARGUMENTS, because the caller may not preserve the quoting.**
+# MEASURED 2026-08-19: `herdr pane run` passes its COMMAND words through
+# individually, so a quoted "YYYY-MM-DD HH:MM:SS" arrived as two arguments and
+# `$1` held only the date. Reading `$*` accepts both spellings.
+if [ $# -eq 0 ]; then
+    printf 'usage: wait-and-start.sh "YYYY-MM-DD HH:MM:SS"\n' >&2; exit 2
+fi
+WHEN=$*
 
 target=$(date -j -f "%Y-%m-%d %H:%M:%S" "$WHEN" +%s 2>/dev/null) || {
     printf 'wait-and-start: cannot read the time %s\n' "$WHEN" >&2; exit 2; }
