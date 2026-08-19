@@ -405,6 +405,28 @@ def run_acceptance(t, root=None, tier=None):
         tier = getattr(t, "tier", None) or DEFAULT_TIER
     ch, foreign = facts_mod.changed_files_scoped(
         t.code, getattr(t, "brief", None), root)          # fact 4, task-scoped
+    # **A MATHEMATICIAN'S AGDA IS DISCARDED, owner's ruling 2026-08-19.** Amendment A21
+    # gives the mathematician two verbs, READ and WRITE A BRIEF, and no Agda at all,
+    # deliverable or probe. The rule is framed in its slot file and in the brief; this is
+    # the detection behind it, and the owner ruled the consequence: the code is thrown
+    # away rather than graded.
+    #
+    # DISCARDING MEANS IT EARNS NOTHING, AND THE FILES ARE NOT DELETED. Dropping them from
+    # fact 4 is the whole penalty and it is total: the record cannot show the work, no row
+    # can match on it, and no `done` can be earned by it. When the drop empties fact 4, R7
+    # below fires and the task parks `no-change`, which is the honest reading of a return
+    # whose only output was work it was told not to do. **The files stay on disk on
+    # purpose**, exactly as a dead agent's pane is kept: they are the evidence of what
+    # happened, and deleting a worker's output is not recoverable.
+    role = str(getattr(t, "role", "") or "")
+    refused_agda = []
+    if role.startswith("mathematician"):
+        refused_agda = [p for p in ch if p.endswith(".agda")]
+        if refused_agda:
+            ch = [p for p in ch if not p.endswith(".agda")]
+            print(f"accept: {t.code} ran as `{role}` and wrote Agda, which A21 forbids. "
+                  f"DISCARDED from fact 4, kept on disk: {', '.join(refused_agda)}",
+                  file=sys.stderr)
     if not ch:
         return None                            # R7, section 4.3.2 case 3. No record.
     c5 = spec_surface(root)                    # cheapest, and A3 puts it first
@@ -433,6 +455,7 @@ def run_acceptance(t, root=None, tier=None):
            "obligations_probe_red": red, "error_names_all": r1["error_names_all"],
            "agda_vacuous": r1.get("vacuous", False), "unbound_vacuous": uvac,
            "changed_files_foreign": foreign,   # outside the scope, 4.3.1. Digest counts it
+           "changed_files_refused": refused_agda,   # A21: a mathematician's Agda, dropped
            "spec_surface_detail": c5_detail,   # provenance for the stop. NOT matchable
            "runs_all": r1["runs_all"],         # every other Agda wall, provenance
            "conjuncts": dict(held),            # provenance. R4 reads it. NOT matchable

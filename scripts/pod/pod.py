@@ -1057,6 +1057,32 @@ def add_everything_to_scope(text):
     return text[:start] + body + "\n" + line + "\n\n" + text[end:]
 
 
+#: The program-generated role block, and the one line each slot gets under it. It states
+#: the BOUNDARY of the role and never the whole clause set: `dev/pod/instructions/<slot>.md`
+#: carries that and the program `cat`s it ahead of the brief already.
+ROLE_HEADING = "## YOUR ROLE (program-generated, do not edit)"
+ROLE_LINE = {
+    "mathematician":
+        "**You write NO Agda, deliverable or probe (A21).** You read the coder's report, "
+        "its code and its probes, and you write briefs. A task that needs Agda written "
+        "carries `head_slot: coder`, and you write that brief instead of the code. "
+        "**Agda written under this slot is DISCARDED from fact 4 and earns nothing**, "
+        "which is the owner's ruling of 2026-08-19 and is enforced in `accept.py`.",
+    "mathematician_adversarial":
+        "**You write NO Agda (A21).** You attack a return: read the brief and the report "
+        "together and answer section 6.6's questions. Your deliverable is "
+        "`review-of-<PRED>.md`. Agda written under this slot is DISCARDED from fact 4.",
+    "coder":
+        "**You write the Agda this brief names, and the probe it names (A21).** The "
+        "mathematician specifies; you build it and make it typecheck. Your report is the "
+        "other half of that channel, so write what the next brief will need.",
+    "coder_adversarial":
+        "**You attack a return, and you never re-run it.** Your deliverable is "
+        "`review-of-<PRED>.md`. Re-price nothing under a caliber other than the one the "
+        "program set on your pane.",
+}
+
+
 def inject_survey(brief, root=None):
     """The brief builder's augmentation pass: R10 and section 7.4, plus R17 and R18.
 
@@ -1088,6 +1114,17 @@ def inject_survey(brief, root=None):
             return False
         text = original = p.read_text(encoding="utf-8")
         scope = preflight_mod.scope_paths(text)
+
+        # **THE BRIEF NAMES THE ROLE'S OWN BOUNDARY, owner's ruling 2026-08-19.** A21 is
+        # framed in the slot file, which the program `cat`s ahead of every brief, and the
+        # owner ruled it must be framed HERE too, in the mechanically generated half, so
+        # the head reads it in the document it is working from. The clause is short on
+        # purpose: it states the boundary and points at the file that carries the rest.
+        if ROLE_HEADING not in text:
+            slot = head_slot_of(p, root) or ""
+            line = ROLE_LINE.get(slot)
+            if line:
+                text = text.rstrip("\n") + "\n\n" + ROLE_HEADING + "\n\n" + line + "\n"
 
         # R18. The new master gets its wiring path before anything reads the scope again.
         if unwired_masters(scope, root) and EVERYTHING not in scope:

@@ -326,17 +326,32 @@ class Loader(TreeCase):
         # A gate that a working program turns red is a gate nobody reads. The invariant
         # is that the five SYSTEM rows are all present and none has expired; the task
         # rows are runtime and belong to no assertion.
+        # **THE SAME REASONING REACHES THE SYSTEM ROWS, and this assertion had to learn
+        # it the same way.** It was an equality, and AD2 gives the MAINTAINER new system
+        # rows: the moment one is admitted through the designed path the equality goes
+        # red for ever, which is a gate a working programme breaks. MEASURED 2026-08-19:
+        # `sys-lint-accept` was admitted by replay after three tasks parked on the gap it
+        # closes, and this test failed for that reason alone. The invariant is that the
+        # five SEEDED rows are all still there and none has expired; a sixth is the
+        # programme working.
         system = sorted(r["id"] for r in rows if r["id"].startswith("sys-"))
-        self.assertEqual(system,
-                         ["sys-coder-adversarial-on-heap-wall", "sys-dd24-ratio-bar",
-                          "sys-heap-wall", "sys-slow-green-empty", "sys-spec-surface"])
+        for seeded in ("sys-coder-adversarial-on-heap-wall", "sys-dd24-ratio-bar",
+                       "sys-heap-wall", "sys-slow-green-empty", "sys-spec-surface"):
+            self.assertIn(seeded, system, "a SEEDED system row went missing")
         # THE SECOND ASSERTION MUST BE ABLE TO FAIL ON ITS OWN, and an id list said twice
         # cannot. This one reads BEHAVIOUR: a plain green return that no seeded row models
         # reaches NO MATCH and parks under R5. A seed row widened by one key would route
         # it, and not one id would change.
         self.assertEqual(table.route(rows, record(exit_code=0, seconds=2.0, delta=-1)),
                          (None, None))
-        self.assertTrue(all(not r["expired"] for r in rows))
+        # **ONLY THE SYSTEM ROWS ARE HELD UNEXPIRED.** A TASK row expires by design the
+        # moment its task closes: section 4.6's first trigger calls `expire_rows()` at a
+        # `done` close, and a row is never deleted, only marked. MEASURED 2026-08-19:
+        # LJ-1.392 became the first task this programme ever closed, its four branch rows
+        # were retired that second, and this assertion went red because the programme had
+        # finally worked end to end.
+        self.assertTrue(all(not r["expired"] for r in rows if r["id"].startswith("sys-")),
+                        "a SYSTEM row expired, and only a task row may")
 
     def test_the_seeded_table_declares_the_seventh_fact_vocabulary(self):
         """Section 4.2 bumps `vocab` when the fact set changes and A10 changed it: fact 7
