@@ -2814,6 +2814,20 @@ def _rule_c(st, root):
             if not accept_mod.r4_holds(rec, row):
                 emit(st, t, CHECKING, PARKED, rec=rec, row=row_id, reason="r4", root=root)
             else:
+                # **THE ROW IS SET BEFORE THE COMMIT, because the commit MESSAGE names
+                # it.** `commit_task()` reads `t.row` at `:1895`, and the `emit()` below
+                # is what used to assign it, so the message carried the row from the
+                # PREVIOUS routing. MEASURED 2026-08-19: LJ-1.394 closed on
+                # `task-lj-1-394-no-go-stated` and git recorded
+                # `pod: LJ-1.394 done, row task-lj-1-394-no-go-attacked`, which is the
+                # escalate row that had routed its attempt 1. The transition log was
+                # right and the permanent human-facing record was wrong.
+                #
+                # IT IS ASSIGNED HERE AND NOT PASSED, because
+                # `scripts/tests/test_pod_loop.py:362` stubs `commit_task` with a pinned
+                # three-argument signature, and widening it would read to that stub as
+                # `TypeError`. The `emit()` below assigns the same value again.
+                t.row = row_id
                 commit_task(t, rec, root)      # ledger.py --write, then R8's path commit
                 emit(st, t, CHECKING, DONE, rec=rec, row=row_id,
                      scope=(row or {}).get("scope"), root=root)

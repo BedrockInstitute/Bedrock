@@ -359,7 +359,12 @@ class LoopCase(unittest.TestCase):
                    self.calls["commit"].append(message) or True)
         self.patch(witness_mod, "witness_unresolved", lambda t: 2)
         self.patch(accept_mod, "unbound_findings", lambda root=None: [])
-        self.patch(pod, "commit_task", lambda t, rec, root=None: True)
+        # THE STUB RECORDS `t.row` AS IT WAS AT CALL TIME, because the real
+        # `commit_task()` builds its git message from exactly that. See
+        # `test_the_commit_message_names_the_row_that_CLOSED_the_task`.
+        self.patch(pod, "commit_task",
+                   lambda t, rec, root=None: self.calls.__setitem__(
+                       "commit_row", getattr(t, "row", None)) or True)
 
     # ---------------------------------------------------------------- helpers
 
@@ -643,6 +648,29 @@ class RuleC(LoopCase):
         rows = {r["id"]: r for r in table_mod.load_table(
             self.tmp / "dev" / "pod" / "table.toml")}
         self.assertTrue(rows["task-lj-1-386-x"]["expired"])
+
+    def test_the_commit_message_names_the_row_that_CLOSED_the_task(self):
+        """**GIT IS THE PERMANENT RECORD AND IT NAMED THE WRONG RULE.**
+
+        `commit_task()` builds its message from `t.row`, and it is called BEFORE the
+        `emit()` that assigns it, so the message carried the row from the PREVIOUS
+        routing. MEASURED 2026-08-19: LJ-1.394 closed on `task-lj-1-394-no-go-stated`
+        while git recorded `pod: LJ-1.394 done, row task-lj-1-394-no-go-attacked`, the
+        escalate row that had routed its attempt 1. The transition log was right and the
+        human-facing record was wrong.
+        """
+        self.write_table([sys_row("sys-stale", scope=f"task:{CODE}", priority=5,
+                                  action="escalate", head_slot="coder_adversarial",
+                                  when={"heap_wall": True}),
+                          sys_row("sys-closer", action="done", outcome="go",
+                                  when={"exit_code": 0})])
+        self.set_acceptance(record())
+        st, t = self.returned()
+        t.row = "sys-stale"                    # what an earlier routing left behind
+        pod._rule_c(st, self.tmp)
+        self.assertEqual(t.status, pod.DONE)
+        self.assertEqual(self.calls["commit_row"], "sys-closer",
+                         "the commit named a row that did not close this task")
 
     def test_r4_refuses_a_go_close_whose_conjuncts_are_not_all_held(self):
         """A `done` row may match `exit_code = 42`, so R4 is what stops a green close
