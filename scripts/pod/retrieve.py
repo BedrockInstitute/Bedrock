@@ -355,11 +355,47 @@ def candidate_block(heading: str, query: str, scope: list[str],
     out = [f"## {heading} (program-generated, do not edit)", ""]
     if not hits:
         out.append(f"Corpus search over {', '.join(scope)}: NO HIT")
+        out += ["", _duty(heading)]
         return "\n".join(out) + "\n"
     out.append(f"Corpus search over {', '.join(scope)}:")
     for path, score in hits:
         out.append(f"- CANDIDATE {path}  (score {score:.3f})")
+    out += ["", _duty(heading)]
     return "\n".join(out) + "\n"
+
+
+def _duty(heading: str) -> str:
+    """The sentence that tells the author how to ANSWER this block.
+
+    **THE BLOCK POSED A QUESTION AND NEVER SAID HOW TO ANSWER IT, and acceptance
+    conjunct 6 failed every return that did not.** MEASURED 2026-08-19: LJ-1.388,
+    a mathematician, and LJ-1.393, a coder, both parked `no-match` with class
+    `lint`, and `check-survey-quotes.py` gave the same six defects for each,
+    beginning `no-heading: the return carries no ARCHIVE USED section`. Nothing in
+    `AGENTS.md`, in any `dev/pod/instructions/*.md`, or in the brief contained the
+    string `ARCHIVE USED`. The duty had a checker and no home in front of the agent.
+
+    IT LIVES HERE BECAUSE THIS IS WHERE THE QUESTION IS ASKED. One canonical home,
+    and the block that injects the candidates is the block that states the answer.
+    """
+    used = f"{heading} USED"
+    return (
+        f"**ANSWER THIS BLOCK IN YOUR RETURN, under a `## {used}` heading.** "
+        f"Acceptance conjunct 6 REFUSES a return without it, whatever the search "
+        f"found above, and `NO HIT` does not excuse the heading.\n"
+        f"\n"
+        f"- **Name every CANDIDATE path above.** A path you never name is an "
+        f"unanswered duty and not a silent decline.\n"
+        f"- **For a file you read**, cite it as `path:line` and quote the line you "
+        f"read. The quote must occur AT that line in that file, and the checker "
+        f"opens the file to confirm it.\n"
+        # THE WORD「bears」IS NOT USED HERE ON PURPOSE. `test_pod_gates.py:199` asserts
+        # this block never contains it, because the program must never say that a file
+        # BEARS on the task: that judgement is the author's. The decline spellings below
+        # are all accepted by `check-survey-quotes.py`'s `DECLINE` pattern.
+        f"- **For a file you did not use, DECLINE IT IN WRITING.** A decline is "
+        f"COMPLIANCE and never a defect: `not read`, `declined`, `not used`, "
+        f"`not surveyed`, or a `why not` sentence all count.")
 
 
 def used_paths(report_text: str) -> list[str]:

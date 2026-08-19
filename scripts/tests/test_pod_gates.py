@@ -196,8 +196,14 @@ block = retr.candidate_block("ARCHIVE", retr.goal_text(EPISODES[0][1]),
                              SRC_SCOPE, 3)
 check("the ARCHIVE block carries the do-not-edit heading",
       block.startswith("## ARCHIVE (program-generated, do not edit)"))
+# IT COUNTS CANDIDATE LINES AND NOT THE BARE WORD. The block gained a paragraph on
+# 2026-08-19 telling the author how to ANSWER it, and that paragraph names the word
+# once, so a bare `count("CANDIDATE")` read 4 where 3 candidates were offered. The
+# `bears` half is unchanged and still load-bearing: the program lists files and never
+# says one BEARS on the task, because that judgement belongs to the author.
 check("the block writes CANDIDATE and never says a file bears",
-      block.count("CANDIDATE") == 3 and "bears" not in block)
+      len([ln for ln in block.splitlines() if ln.startswith("- CANDIDATE ")]) == 3
+      and "bears" not in block)
 check("an empty scope writes NO HIT",
       "NO HIT" in retr.candidate_block("ARCHIVE", "x", ["archive/nope"], 3))
 
