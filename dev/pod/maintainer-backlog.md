@@ -44,6 +44,12 @@ turning red because the programme worked:
 | `len(PARK_REASONS) == 9` | `salvage:` was ruled in |
 | `VOCAB == "seven-facts/1"` | A23 added fact 8 |
 | `len(ARCHIVE_SCOPE) == 5` | the archive scope was widened to reach DD4 |
+| `len(PARK_REASONS) == 10` | `quota:` was ruled in, the day after `salvage:` |
+| the eight park CLASS names | both new reasons, and the class list DERIVES from the reasons |
+| `停放计数 3/3` in the digest | `parked_max` moved to 7 and rule (d) followed it |
+| `HERDR_HARNESSES == (three names)` | `herdr-grok` was wired |
+| `legal.models == (eight strings)` | the two grok ids were admitted |
+| A12's maintainer model | the owner moved the slot to grok |
 
 Each was repaired by asserting the INVARIANT rather than the snapshot: a seeded row is
 still present, a SYSTEM row is unexpired, the vocabulary is read from the table's own
@@ -57,6 +63,30 @@ The retired seed was internally consistent, its four exclusion measurements were
 implementation matched its prose, and it was inert. Three consistency audits ran over it
 and none asked the fourth question: **can the thing this produces actually do the job it
 is produced for?** Sweep the POD's other producers for the same shape.
+
+### 12. A test suite that stops running returns SILENT GREEN
+
+MEASURED 2026-08-19, twice in one day and by two different mechanisms. A helper pasted
+inside `main()` of `scripts/tests/test_pod_launcher.py` made everything after it
+unreachable: the suite printed NOTHING and exited 0. And earlier, `scripts/tests/`
+held 21 suites while four were being run, so two were red for hours with real defects.
+
+`test_pod_launcher.py` now carries a `MIN_CHECKS` floor, enforced OUTSIDE `main()`,
+because a floor at the end of `main()` is skipped by exactly the early return it exists
+to catch. **The other 20 suites have no such floor.** Either give them one, or give
+`make test` a per-suite check count it compares against a recorded floor. A suite that
+reports success without running is the same defect class as a gate that does not bite,
+and `scripts/tests/mutation-audit.py` cannot see it, because a mutant dies for the wrong
+reason when the suite is not running at all.
+
+### 13. `herdr-pi` has no banner marker, so the read-back guard is inert for it
+
+`model_readback_ok()` refuses a dispatch whose pane prints the requested model id
+verbatim, which is what a NON-RESOLVING id does. The marker is per harness and only
+`herdr-claude` and `herdr-grok` have one, both measured. For the two `pi` heads the guard
+always passes. That is recorded rather than hidden, and the vendor's real discriminator is
+`pi --list-models`, but nobody has measured what a `pi` pane prints. Measure it and add
+the marker, or rule that the guard is deliberately absent for that vendor.
 
 ## Closed
 

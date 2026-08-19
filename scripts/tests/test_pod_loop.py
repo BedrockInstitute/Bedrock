@@ -2387,18 +2387,25 @@ class Heads(LoopCase):
         p.write_text(after)
         heads_mod._CACHE.clear()
 
-    def test_the_five_ruled_slots_load_with_the_model_and_effort_each_was_ruled(self):
-        """AD24 and AD25 name four heads; AD2 needs a fifth and A12 ruled it on
-        2026-08-17: the maintainer is `claude-opus-5` at effort `high`. A loader that
-        merely PARSES proves nothing here, because `_require()` already refuses a missing
-        field, so this reads the five names and the one amendment ruled."""
+    def test_the_five_ruled_slots_load_and_every_head_is_INTERNALLY_consistent(self):
+        """AD24 and AD25 name four heads and AD2 needs a fifth. A loader that merely
+        PARSES proves nothing here, because `_require()` already refuses a missing field.
+
+        **THIS PINNED A12's MODEL AND WENT RED FOR AN OWNER RULING.** A12 set the
+        maintainer to `claude-opus-5` at effort `high`; A26 moved the slot to grok on
+        2026-08-19 and kept the effort. A model name is the owner's under AD26 and moves
+        whenever they say so, so what this asserts now is what the LOADER guarantees: five
+        slots, every field inside its legal set, and every head reachable."""
         cfg = heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml")
         self.assertEqual(sorted(cfg["heads"]),
                          ["coder", "coder_adversarial", "maintainer",
                           "mathematician", "mathematician_adversarial"])
-        self.assertEqual((cfg["heads"]["maintainer"]["model"],
-                          cfg["heads"]["maintainer"]["effort"]),
-                         ("claude-opus-5", "high"))      # A12
+        for slot, row in cfg["heads"].items():
+            self.assertIn(row["model"], cfg["legal"]["models"], slot)
+            self.assertIn(row["effort"], cfg["legal"]["efforts"], slot)
+            self.assertTrue(row["harness"], slot)
+        # WHAT SURVIVES A12 IS THE EFFORT, which no ruling since has touched.
+        self.assertEqual(cfg["heads"]["maintainer"]["effort"], "high")
         for k in heads_mod.LIMIT_KEYS:
             self.assertGreater(cfg["limits"][k], 0, k)
 

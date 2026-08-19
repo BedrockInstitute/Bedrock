@@ -78,11 +78,20 @@ POD = ROOT / "scripts" / "pod" / "pod.py"
 PRISTINE = ROOT / ".claude" / "skills" / "codex-dispatch" / "dispatch.py"
 
 FAILED: list[str] = []
+RAN: list[str] = []
 _LOADS = 0
+
+#: **A FLOOR, BECAUSE A TRUNCATED `main()` RETURNS SILENT GREEN.** MEASURED 2026-08-19: a
+#: helper was pasted INSIDE `main()`, everything after it became unreachable, the suite
+#: printed NOTHING and exited 0. `FAILED` was empty because nothing had run. A count of
+#: zero failures is only evidence when a plausible number of checks produced it. Raise
+#: this when the suite grows; never lower it to make a run pass.
+MIN_CHECKS = 180
 
 
 def check(label: str, got, want) -> None:
     ok = got == want
+    RAN.append(label)
     print(f"  {'ok  ' if ok else 'FAIL'} {label}: want {want} got {got}")
     if not ok:
         FAILED.append(label)
@@ -335,6 +344,37 @@ def cli(*args, **kw):
 # ------------------------------------------------------------------------ the tests
 
 
+#: The harnesses whose CLI has NO reasoning-effort dial, so their `[heads]` row carries
+#: the empty string. MEASURED per harness and never inferred from the vendor's name:
+#: `pi` has no such flag, while `claude --effort` and `grok --reasoning-effort` both do.
+NO_EFFORT_HARNESSES = ("herdr-pi", "herdr")
+
+
+def _harness_choices(mod):
+    """The `--harness` choices argparse actually offers, read from the built parser.
+
+    It is READ and never assumed, because that tuple was a hand-written copy of
+    `HERDR_KIND` until 2026-08-19 and refused `--harness herdr-grok` while every runtime
+    path accepted it.
+    """
+    import argparse
+    for name in ("build_parser", "parser", "make_parser"):
+        fn = getattr(mod, name, None)
+        if callable(fn):
+            try:
+                pr = fn()
+            except Exception:                  # noqa: BLE001
+                continue
+            for act in pr._actions:            # noqa: SLF001. argparse has no public read
+                if "--harness" in (act.option_strings or ()):
+                    return tuple(act.choices or ())
+    # No parser factory to call: fall back to the source text, which still catches a
+    # hand-written list because a derived one holds no harness literal.
+    src = (ROOT / "scripts" / "pod" / "launcher.py").read_text(encoding="utf-8")
+    seg = src.split('sp.add_argument("--harness"', 1)[1].split(")", 1)[0]
+    return mod.HERDR_HARNESSES if "HERDR_HARNESSES" in seg else ()
+
+
 def main() -> int:
     mod = load_launcher("real")
     # READ THE DEFAULT BEFORE ANY TEST MOVES IT. The R2 and R5 sections below set
@@ -347,8 +387,17 @@ def main() -> int:
     print("edit 1: the herdr-claude kind reaches the driver")
     check("HERDR_KIND maps herdr-claude to the claude kind",
           mod.HERDR_KIND.get("herdr-claude"), "claude")
-    check("HERDR_HARNESSES is derived, so it now holds three harnesses",
-          tuple(mod.HERDR_HARNESSES), ("herdr", "herdr-pi", "herdr-claude"))
+    # THE DERIVATION IS THE INVARIANT AND THE TUPLE WAS A SNAPSHOT. It named three
+    # harnesses and went red when `herdr-grok` was wired on 2026-08-19, which was a
+    # CORRECT change. What must hold is that nobody hand-writes a second list.
+    check("HERDR_HARNESSES is derived from HERDR_KIND and never typed twice",
+          tuple(mod.HERDR_HARNESSES), tuple(mod.HERDR_KIND))
+    check("every herdr harness names a herdr agent kind",
+          all(isinstance(v, str) and v for v in mod.HERDR_KIND.values()), True)
+    check("the argparse choices are derived too, so a new harness is dispatchable",
+          all(h in _harness_choices(mod) for h in mod.HERDR_HARNESSES), True)
+    check("grok is wired, owner's ruling 2026-08-19",
+          mod.HERDR_KIND.get("herdr-grok"), "grok")
     check("the codex kind is untouched", mod.HERDR_KIND.get("herdr"), "codex")
     check("the pi kind is untouched", mod.HERDR_KIND.get("herdr-pi"), "pi")
 
@@ -856,10 +905,20 @@ def main() -> int:
     # equivalent, so a pi row carries "" and the launcher omits the flag.
     check("legal.efforts is the claude CLI's five values plus the pi empty string",
           heads["legal"]["efforts"], ["", "low", "medium", "high", "xhigh", "max"])
-    check("legal.models carries the six VERIFIED claude strings plus the two pi models",
-          heads["legal"]["models"],
-          ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
-           "opus", "fable", "sonnet", "glm-5.3", "deepseek-v4-pro"])
+    # THE LIST IS A SNAPSHOT NO LONGER. It pinned eight strings and went red when the
+    # owner added grok on 2026-08-19, a CORRECT change. What must hold is that the six
+    # claude strings [LJ-4-0] read back stay in, and that nothing is admitted twice.
+    check("the six READ-BACK VERIFIED claude strings are all still admitted",
+          all(m in heads["legal"]["models"] for m in
+              ("claude-opus-5", "claude-fable-5", "claude-sonnet-5",
+               "opus", "fable", "sonnet")), True)
+    check("no model string is admitted twice",
+          len(heads["legal"]["models"]), len(set(heads["legal"]["models"])))
+    # GROK CAME WITH A DISCRIMINATOR THE TWO PI VENDORS NEVER HAD. `grok models` names the
+    # ids and the login; `pi auth check` validates the PROVIDER and answered `ready` for a
+    # bogus model id, MEASURED 2026-08-16.
+    check("both grok ids are admitted, owner's ruling 2026-08-19",
+          all(m in heads["legal"]["models"] for m in ("grok-4.6", "grok-4.5")), True)
     # **THE TWO PI MODELS ARE NOT READ-BACK VERIFIED.** [LJ-4-0] ran `claude -p` twice
     # per claude string; no equivalent ran for these two, so the first dispatch on
     # either is also its verification. The provider map is what makes them reachable.
@@ -872,17 +931,28 @@ def main() -> int:
           "measured that it passes the client and fails at the API with a 404",
           [m for m in heads["legal"]["models"] if m[-1].isdigit() and len(m) > 16],
           [])
-    # THE OWNER'S RULING OF 2026-08-18 replaced A12's four siblings and kept its own row.
-    check("A12's maintainer head is claude-opus-5 at effort high",
+    # **A12 IS SUPERSEDED FOR THE MODEL AND KEPT FOR THE EFFORT, owner's ruling
+    # 2026-08-19.** It set the maintainer to `claude-opus-5` at effort `high` and the
+    # owner moved the slot to grok. This line pinned the model and went red for that
+    # ruling; what survives A12 is the EFFORT, which no ruling has touched.
+    check("the maintainer head runs at effort high, which is all that survives A12",
+          heads["heads"]["maintainer"]["effort"], "high")
+    check("the maintainer is the grok head, owner's ruling 2026-08-19",
           (heads["heads"]["maintainer"]["model"],
-           heads["heads"]["maintainer"]["effort"]), ("claude-opus-5", "high"))
+           heads["heads"]["maintainer"]["harness"]), ("grok-4.6", "herdr-grok"))
     for slot, row in heads["heads"].items():
         check(f"{slot} names a legal model", row["model"] in heads["legal"]["models"], True)
         check(f"{slot} names a legal effort", row["effort"] in heads["legal"]["efforts"], True)
+        # DERIVED, NEVER LISTED. The literal pair here refused `herdr-grok` while every
+        # runtime path served it, which is the same defect argparse had the same day.
         check(f"{slot} runs on a harness the launcher serves",
-              row["harness"] in ("herdr-claude", "herdr-pi"), True)
-        check(f"{slot}: a pi head carries no effort and a claude head carries one",
-              (row["harness"] == "herdr-pi") == (row["effort"] == ""), True)
+              row["harness"] in mod.HERDR_HARNESSES, True)
+        # **THE EFFORT DIAL IS THE HARNESS'S, and `herdr-pi` is the one without it.**
+        # This read `harness == "herdr-pi"` on one side and meant「has no effort dial」.
+        # grok HAS one: `grok --help` lists `--reasoning-effort`, aliased `--effort`,
+        # MEASURED 2026-08-19, and the probe ran at `high` and the pane showed `(high)`.
+        check(f"{slot}: a head carries an effort exactly when its harness has the dial",
+              (row["harness"] not in NO_EFFORT_HARNESSES) == (row["effort"] != ""), True)
         # A CLAUDE HEAD NEVER READS THIS COLUMN: `--permission-mode` is hardcoded to
         # `auto` for the `claude` kind at `scripts/pod/launcher.py:1353`. The value is
         # still pinned here because codex reads it as `-s` and `validate()` refuses a
@@ -1042,9 +1112,23 @@ def main() -> int:
         for f in FAILED:
             print(f"  - {f}")
         return 1
-    print("PASS: 0 failing check(s)")
+    print(f"PASS: 0 failing check(s), {len(RAN)} ran")
     return 0
 
 
+def _with_floor() -> int:
+    """`main()`, then the floor. **THE FLOOR CANNOT LIVE INSIDE `main()`**, and that was
+    measured on the first attempt: an early `return` skips everything after it, which is
+    exactly the failure the floor exists to catch, so a floor at the end of `main()` is
+    checked only on the runs that did not need it."""
+    rc = main()
+    if len(RAN) < MIN_CHECKS:
+        print(f"FAIL: only {len(RAN)} check(s) ran and the floor is {MIN_CHECKS}. "
+              f"A run that ended early exits 0 with nothing failed, so the COUNT is the "
+              f"evidence and never the empty failure list.")
+        return 1
+    return rc
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_with_floor())

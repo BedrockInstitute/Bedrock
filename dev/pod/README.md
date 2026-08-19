@@ -45,6 +45,44 @@ untouched. A source that does not compile is REFUSED and the old image keeps run
 **A HOT RESTART IS NOT A RESUME.** A reload cures stale CODE. It does not clear
 `.pod-state/STOPPED`.
 
+## Stopping the whole pod, and swapping the resident maintainer
+
+**FOUR THINGS RUN AND STOPPING THE LOOP STOPS ONE OF THEM.** A full stop is:
+
+| what | how to find it | how to stop it |
+|---|---|---|
+| the alarm, when one is set | `ps aux \| grep wait-and-start` | `kill <pid>`, or interrupt its pane |
+| the keeper | `ps aux \| grep keeper.sh` | it exits with the loop; kill it if it waits |
+| the loop | `ps aux \| grep 'pod.py run'` | `pod.py stop`, or kill the runner |
+| the agda watchdog | `ps aux \| grep agda-watchdog` | `kill <pid>`. Rule (f) then REFUSES every Agda task until it is back |
+
+`.pod-state/STOPPED` stays where it is. It is what makes rule (f) refuse a dispatch on the
+next start, and clearing it is `pod.py resume`, which is the owner's call.
+
+**SWAPPING THE RESIDENT MAINTAINER NEEDS ONE MORE STEP THAN A DISPATCHED HEAD, and
+skipping it is silent.** AD26 makes a `dev/pod/heads.toml` change bind new tasks only,
+which is the whole procedure for the four dispatched slots: edit the row, and the next
+dispatch uses it.
+
+The maintainer is RESIDENT and is addressed by its herdr agent NAME, `pod-batch`.
+`maintainer_alive()` answers TRUE while ANY agent holds that name, whatever kind it is, so
+until the outgoing session gives the name up:
+
+- `ensure_maintainer()` sees a live maintainer and never starts the new head, and
+- every batch, every close notification and every keeper alarm reaches the OUTGOING
+  session.
+
+MEASURED 2026-08-19 during the move to grok: a feed sent to test the new head landed in
+the outgoing Claude session. The order is therefore:
+
+1. Stop all four things above.
+2. Edit the `maintainer` row in `dev/pod/heads.toml`. It is the owner's file (AD26).
+3. **Retire the outgoing session** so `pod-batch` is free. Confirm with `herdr agent list`
+   that no row carries that name.
+4. `pod.py resume` and start the keeper. `ensure_maintainer()` starts the new head on the
+   next tick and hands it the batch brief, which is `cat`ed behind `AGENTS.md` and
+   `dev/pod/instructions/maintainer.md`.
+
 ## `pod.py` is a program and not an agent
 
 Do not start it from inside a coding-agent session in the hope that the session's own

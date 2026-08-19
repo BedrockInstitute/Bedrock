@@ -325,6 +325,35 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   `scripts/pod/pod.py`, `vendor_refusal()` and `quota_open()`. Rule (c) names it and rule
   (a2) re-opens it.
 
+- **A26. THE MAINTAINER SLOT MOVES TO GROK, ruled 2026-08-19.** A12 set it to
+  `claude-opus-5` at effort `high`; the owner subscribed to grok and ruled the resident
+  slot onto `grok-4.6` at the same effort. **A12 is superseded for the MODEL and kept for
+  the EFFORT**, and gap M8 stays closed either way.
+
+  **A NEW HARNESS, `herdr-grok`, AND IT IS A HERDR KIND AND NOT A `pi` PROVIDER.** `pi
+  --list-models` lists no grok row; `herdr agent start --kind` lists `grok` and
+  `herdr integration status` prints `grok: current (v1)`, which is the state hook that
+  makes a pane report the lifecycle `launch()` waits on. It takes CLAUDE'S THREE FLAGS,
+  `--model`, `--effort` and `--permission-mode auto`, so the launcher's model-args builder
+  gained a name in an existing branch rather than a branch of its own.
+
+  **THE VENDOR WAS PROBED END TO END BEFORE THE HEAD MOVED**, and the probe asked for a
+  WRITE rather than an answer, because the measured failure class is an agent that echoes
+  its prompt and exits `done` having written nothing. `dev/pod/heads.toml` carries it.
+
+  **THE HANDOVER IS NOT A RE-DISPATCH, and that is the whole difference from every other
+  head change.** AD26 makes a head change bind new tasks only, which is enough for the
+  four dispatched slots. The maintainer is RESIDENT: it is addressed by the herdr agent
+  name `pod-batch`, `maintainer_alive()` answers TRUE while any agent holds that name, and
+  every feed path resolves it. So the sequence is: stop the whole pod, retire the outgoing
+  session so the NAME is free, then let `ensure_maintainer()` start the new head.
+  MEASURED 2026-08-19: a feed sent while the outgoing session still held the name reached
+  the outgoing session.
+
+  **`dev/pod/maintainer-handover.md` is the outgoing session's handover**, and
+  `dev/pod/instructions/maintainer.md` points the slot at it. It is the ONE document in
+  the tree allowed to carry history, and the incoming session is told to prune it.
+
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the
   measured answer was: nothing. **No part of this program counts finished work.**
@@ -2050,61 +2079,52 @@ exists, and no model runs the loop.
 
 ### 6.1 `dev/pod/heads.toml`
 
-**AMENDED BY A12 and A14.** The maintainer head is `claude-opus-5` at effort
-`high`, ruled 2026-08-17, which closes gap M8. The file also carries C-12's TWO
-concurrency tiers, restored by A14: WIDE at four concurrent `-M8g`, HEAVY at two
-concurrent `-M12g`.
+**THE FILE IS THE ONE HOME AND THIS SECTION DOES NOT COPY IT.** It carried a full TOML
+transcript until 2026-08-19, and by that date the copy showed FIVE Claude heads at efforts
+nobody had used since 2026-08-18: the owner had moved both coder slots and one critic onto
+`pi` vendors, and the maintainer onto grok, and none of it reached here. Same defect as
+section 5.1's tick pseudocode and section 4.3's key table, same cure. **Read the live
+values with `.venv/bin/python -c` against `scripts/pod/heads.py`, never from a paragraph.**
 
-The file is tracked and the owner may change it at any time. It is the ONLY home
-of a model name, an effort level, a deadline or a load threshold. **NOBODY ELSE
-changes it without a named owner approval**: R16 puts the file in the spec
-surface gate's guarded set (7.3), because it is not a table row and `replay()`
-never sees it.
+What this section owns, because the file cannot state it about itself:
 
-```toml
-version = 1
+- **It is the ONLY home of a model name, an effort level, a deadline or a load
+  threshold**, and the file is tracked. AD26.
+- **The owner may change it at any time and NOBODY ELSE changes it without a named owner
+  approval.** R16 puts it in the spec surface gate's guarded set (7.3), because it is not
+  a table row and `replay()` never sees it.
+- **AD26, no retro-fit.** The program resolves a head ONCE, at dispatch, and writes
+  `model`, `effort`, `role` and `heads_sha256` into the transition line. A change binds a
+  new task only.
+- **A12 is superseded for the maintainer's MODEL and kept for its EFFORT**, owner's
+  ruling 2026-08-19. A12 set the slot to `claude-opus-5` at `high` and closed gap M8; the
+  owner moved it to grok at the same effort. **A14's two concurrency tiers** live in the
+  same file: WIDE at four concurrent `-M8g`, HEAVY at two concurrent `-M12g`.
+- **Every measurement that admits a model string lives in the file's own comments**, next
+  to the string it admits: gap B4's read-back for the three Claude ids, the
+  `pi --list-models` rule for the two `pi` vendors, and the end-to-end probe for grok.
+  A vendor added without one of those is a vendor nobody measured.
 
-[legal]
-efforts = ["low", "medium", "high", "xhigh", "max"]
-models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
-          "opus", "fable", "sonnet"]
+`scripts/pod/heads.py` is the ONE owner of the file. `scripts/pod/launcher.py` and
+`scripts/pod/table.py` are readers. No field has a silent default: a missing or misspelt
+field is a refusal, and the loader refuses a model outside `legal.models`.
 
-[limits]
-tick_seconds = 30             # the runner's sleep, section 5.0
-exclusive_max_load1 = 6.0     # refuse to start an exclusive task above this
-agda_deadline_s = 1800        # the POD owns the deadline. See gap M2
-worker_deadline_s = 14400     # a worker that runs longer is killed, section 5.1
-attempt_max = 4               # consecutive retries on ONE row, then PARK. B2
+**THE THREE STALE PARAGRAPHS THAT STOOD HERE ARE GONE, and each said something the
+tree had already refuted.** They read: the maintainer slot is an orchestrator pick and
+gap M8 carries it, which A12 closed and the owner's ruling of 2026-08-19 then superseded;
+the three full Claude ids are NOT verified and day 2 will resolve them, which gap B4 did
+on 2026-08-17 and `dev/pod/heads.toml` records; and `dev/vendors.toml` is where a vendor
+row lives, which was archived at the cutover. **A live document carries no history**, and
+the file's own comments carry every one of those measurements beside the string it
+admits.
 
-[heads]
-mathematician             = { model = "claude-opus-5",   effort = "max",  harness = "herdr-claude", sandbox = "acceptEdits" }
-mathematician_adversarial = { model = "claude-fable-5",  effort = "max",  harness = "herdr-claude", sandbox = "acceptEdits" }
-coder                     = { model = "claude-sonnet-5", effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
-coder_adversarial         = { model = "claude-opus-5",   effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
-maintainer                = { model = "claude-opus-5",   effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" }
-```
-
-**The maintainer slot is an orchestrator pick and not an owner ruling.** AD24 and
-AD25 name four heads; AD2 needs a fifth and names no model. Gap M8 carries it.
-
-**The three full model IDs are NOT verified.** `grep -n "claude-" dev/vendors.toml`
-returns nothing, and its own rule at `:185-186` reads: a row is added when its
-model ID is known, not before. `claude --help` documents the SHAPE with the
-example `claude-fable-5` and the aliases `fable`, `opus` and `sonnet`. **So
-`legal.models` carries both forms, and day 2's first act resolves the three full
-IDs against one throwaway pane**, and whichever form resolves is what
-`heads.toml` ships. Gap B4.
-
-**NO FIELD HAS A SILENT DEFAULT.** A missing or misspelt field is a refusal and
-never an assumed value. The loader is about 40 lines: it reads the file with
-`tomllib`, refuses any model outside `legal.models`, refuses any effort outside
-`legal.efforts`, refuses a missing slot, and returns a frozen dict.
-**A misspelt model is loud,
-because the program reads it back:** a wrong ID passes the loader when it is in
-`legal.models` and then fails inside a pane, which `dispatch.py`'s guards read as
-a started run, so after `agent start` the POD's `launch()` wrapper runs
-`herdr agent read`. A pane that does not name the model it asked for returns NO
-PID, and rule (f) parks the task with `reason: "launch"`.
+**THE READ-BACK RULE IN THIS SECTION WAS REFUTED BY ITS OWN MEASUREMENT.** It read「a
+pane that does not name the model it asked for returns NO PID」. That parks every correct
+dispatch and passes every wrong one: a RESOLVING id prints a display name and a FAILING
+id prints its own id verbatim. `model_readback_ok()` in `scripts/pod/pod.py` carries the
+corrected direction, and `dev/pod/heads.toml` carries the evidence. **The guard is per
+harness and an unlisted harness is UNGUARDED**, which was true of every non-Claude head
+from the day the first one shipped until 2026-08-19.
 
 **`dev/pod/instructions/<slot>.md`, one tracked file per head.** The program
 injects the file at dispatch, ahead of the brief. **This is where a standing
@@ -2143,8 +2163,11 @@ reports the `working`, `idle`, `done` and `blocked` lifecycle that
 `--permission-mode` with `acceptEdits`.
 
 **Edit 1, at `dispatch.py:184`.** Replace
-`HERDR_KIND = {"herdr": "codex", "herdr-pi": "pi"}` with
-`HERDR_KIND = {"herdr": "codex", "herdr-pi": "pi", "herdr-claude": "claude"}`.
+`HERDR_KIND = {"herdr": "codex", "herdr-pi": "pi"}` with a map that also holds
+`"herdr-claude": "claude"`. **A FOURTH ENTRY, `"herdr-grok": "grok"`, joined it on
+2026-08-19** with the maintainer's move to grok, and `HERDR_HARNESSES` is derived from
+the map, so it needed no second edit. The exact map is in `scripts/pod/launcher.py` and
+is not transcribed here.
 Line `:185` is `HERDR_HARNESSES = tuple(HERDR_KIND)`, so it needs no edit.
 
 **Edit 2, at `dispatch.py:1028-1029`.** The `model_args` builder is a two-branch
@@ -2169,10 +2192,14 @@ exactly as `:1324` recovers the harness. Thread it from both callers, at `:1440`
 and at `:1697-1698`.
 
 **Edit 4, at `dispatch.py:2565-2566`, and it blocks the other three.** The
-argument reads `choices=("herdr", "herdr-pi", "codex", "pi"), default=HARNESS`,
+argument read a HAND-WRITTEN tuple, `choices=("herdr", "herdr-pi", "codex", "pi")`,
 and `argparse` validates a SUPPLIED value against `choices`, so
-`--harness herdr-claude` is refused before any other edit can run. Add
-`"herdr-claude"` to the tuple. In the same block, add the effort option beside
+`--harness herdr-claude` is refused before any other edit can run. **THE TUPLE IS NOW
+DERIVED FROM `HERDR_KIND` AND THIS EDIT IS SPENT.** Adding `"herdr-claude"` by hand fixed
+one harness and left the trap armed: on 2026-08-19 `herdr-grok` reached every runtime path
+and argparse refused it, the same failure a second time. It now reads
+`choices=tuple(HERDR_HARNESSES) + ("codex", "pi")`, so a new harness is dispatchable the
+moment the map holds it. In the same block, add the effort option beside
 `--model` at `:2564`, with the five values of `legal.efforts` and `""`.
 
 **Edit 5, the harness resolution.** `HARNESS` is a module global set at IMPORT

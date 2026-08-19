@@ -1937,7 +1937,16 @@ def review_brief(t, slot, root=None):
     return rel
 
 
-def model_readback_ok(task, model):
+#: The banner marker per harness, and an ABSENT key means the harness is UNGUARDED here.
+#: Each entry is one measurement of a LIVE pane, never a guess: `herdr-claude` from gap
+#: B4 on 2026-08-17, `herdr-grok` from the vendor probe of 2026-08-19. `herdr-pi` is
+#: deliberately absent, because nobody has measured what a `pi` pane prints and a guessed
+#: marker would either park every correct dispatch or pass every wrong one, which are the
+#: two failures this guard already made once each.
+BANNER_MARK = {"herdr-claude": ("Claude Max",), "herdr-grok": ("\u256f",)}
+
+
+def model_readback_ok(task, model, harness=None):
     """The read-back refusal of `dev/pod/heads.toml`, in the direction B4 MEASURED.
 
     A wrong model ID passes the loader when `legal.models` holds it, and then fails INSIDE
@@ -1954,14 +1963,32 @@ def model_readback_ok(task, model):
 
     A banner that cannot be read is NOT a refusal, because the rule fires only on a
     positive detection.
+
+    **THE MARKER IS PER HARNESS, AND THE GUARD WAS CLAUDE-ONLY UNTIL 2026-08-19.** It
+    looked for `Claude Max` alone, so for every `herdr-pi` head and, when grok arrived,
+    for every grok head, the loop ran with this refusal INERT. That is recorded rather
+    than hidden: an unlisted harness is UNGUARDED here, and adding one means measuring its
+    banner and adding a marker. MEASURED that day on a live grok pane, model `grok-4.6`
+    at effort `high`, the banner line is
+
+        ╰──────────────────────────── Grok 4.6 (high) · auto ─╯
+
+    so the display name is `Grok 4.6` and the requested id `grok-4.6` does NOT appear:
+    the same shape Claude has, and the same case-sensitive test separates them. The
+    marker is the input box's bottom-right corner, which is the one line grok prints its
+    model on. **`herdr-pi` STILL HAS NO MARKER**, which is why `dev/pod/heads.toml`
+    carries `pi --list-models` as that vendor's discriminator instead.
     """
+    marks = BANNER_MARK.get(harness)
+    if marks is None:
+        return True                            # an unlisted harness is UNGUARDED, above
     try:
         done = subprocess.run(["herdr", "agent", "read", task], capture_output=True,
                               text=True, timeout=60)
     except (OSError, subprocess.SubprocessError):
         return True
     for line in done.stdout.split("\n"):
-        if "Claude Max" in line and model in line:
+        if any(m in line for m in marks) and model in line:
             return False
     return True
 
@@ -2050,7 +2077,11 @@ def launch(t, brief, role, root=None):
     if rc != 0:
         return None
     try:
-        if not model_readback_ok(mod.herdr_name(t.code), head["model"]):
+        # **THE HARNESS IS PASSED AND IT USED TO BE ASSUMED.** The guard reads a banner
+        # marker and only `herdr-claude` had one, so it silently passed every other
+        # harness. The head is already in hand here; nothing needs to look it up.
+        if not model_readback_ok(mod.herdr_name(t.code), head["model"],
+                                 head.get("harness")):
             return None
         with mod.registry_lock():
             d = (mod.load().get("dispatches") or {}).get(t.code) or {}
@@ -3642,7 +3673,11 @@ def cmd_tick(argv):
         # would fail and rule (f) would park a task the real loop dispatches. A plan that
         # parks what production runs is worse than no plan: it would have reported
         # LJ-1.386 PARKED on a tree where it dispatches clean.
-        globals()["model_readback_ok"] = lambda name, model: True
+        # THE STUB TAKES THE THIRD ARGUMENT. Widening a function whose test double has a
+        # pinned signature reads to that double as a `TypeError`, which this programme
+        # measured three times on 2026-08-19, each time as a dispatch that「refused」for
+        # a reason nobody had written.
+        globals()["model_readback_ok"] = lambda name, model, harness=None: True
         try:
             verdict = pod_tick(st)
         finally:

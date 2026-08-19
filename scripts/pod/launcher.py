@@ -255,7 +255,16 @@ PI_STREAM = Path(__file__).resolve().parent / "pi_stream.py"
 # `claude: current (v7)`, so a claude pane reports the `working`, `idle`, `done`
 # and `blocked` lifecycle the driver below waits on.
 # `HERDR_HARNESSES` is derived from this map, so it needs no edit.
-HERDR_KIND = {"herdr": "codex", "herdr-pi": "pi", "herdr-claude": "claude"}
+# POD EDIT, 2026-08-19: `herdr-grok` runs a GROK agent in a server-owned pane. MEASURED
+# that day, end to end, before any head was pointed at it: `herdr agent start --kind`
+# lists `grok`; `herdr integration status` prints `grok: current (v1)`, so a grok pane
+# reports the `working`, `idle`, `done` and `blocked` lifecycle this driver waits on; and
+# `herdr agent prompt` reached it, it went to `done` and it WROTE THE FILE it was asked
+# for. That last half is the one that matters, because the failure class this project has
+# measured twice is an agent that echoes its prompt and exits `done` having written
+# nothing.
+HERDR_KIND = {"herdr": "codex", "herdr-pi": "pi", "herdr-claude": "claude",
+              "herdr-grok": "grok"}
 HERDR_HARNESSES = tuple(HERDR_KIND)
 
 # THE AGENT PANES LIVE IN THEIR OWN TAB, and that is not tidiness.
@@ -1348,9 +1357,15 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             # `acceptEdits`. MEASURED 2026-08-19: `claude --help` lists the six
             # choices `acceptEdits`, `auto`, `bypassPermissions`, `manual`,
             # `dontAsk` and `plan`, so the value is spelled exactly `auto`.
+            # **GROK TAKES THE SAME THREE FLAGS AS CLAUDE, and that is measured rather
+            # than assumed.** `grok --help`, 2026-08-19 on grok 1.0.5: `-m, --model`,
+            # `--reasoning-effort` aliased `--effort`, and `--permission-mode` whose
+            # possible values include `auto` spelled exactly that way. The probe that day
+            # started `grok --model grok-4.6 --effort high --permission-mode auto` through
+            # this very builder and the agent wrote its file.
             if kind == "codex":
                 model_args = ["--", "-m", model]
-            elif kind == "claude":
+            elif kind in ("claude", "grok"):
                 model_args = ["--", "--model", model, "--effort", effort,
                               "--permission-mode", "auto"]
             else:
@@ -2920,8 +2935,13 @@ def main() -> int:
         # a SUPPLIED value against `choices`, so `--harness herdr-claude` was
         # refused before any other edit could run. This edit BLOCKS the other
         # three, so it comes with them or none of them work.
+        # **THE LIST IS DERIVED AND IT USED TO BE A SECOND HAND-WRITTEN COPY.** MEASURED
+        # 2026-08-19 while wiring grok: `HERDR_KIND` gained `herdr-grok`, every runtime
+        # path took it, and this tuple did not, so argparse refused `--harness herdr-grok`
+        # before one line of the new wiring could run. The map above is the one home; the
+        # two direct-exec harnesses are not in it and are named beside it.
         sp.add_argument("--harness",
-                        choices=("herdr", "herdr-pi", "herdr-claude", "codex", "pi"),
+                        choices=tuple(HERDR_HARNESSES) + ("codex", "pi"),
                         default=HARNESS,
                         help="herdr-claude runs a CLAUDE agent in a server-owned "
                              "pane, which is the POD's one harness; "

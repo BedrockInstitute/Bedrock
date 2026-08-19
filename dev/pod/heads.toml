@@ -69,7 +69,17 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
           # **NEITHER IS READ-BACK VERIFIED THE WAY THE THREE CLAUDE IDS ARE.** Gap B4
           # ran `claude -p` twice per Claude string; no equivalent ran for these two, so
           # the first dispatch on either is also its verification.
-          "glm-5.3", "deepseek-v4-pro"]
+          "glm-5.3", "deepseek-v4-pro",
+          # THE GROK HEAD, ruled by the owner 2026-08-19. It runs on the `grok` CLI
+          # through `harness = "herdr-grok"`, needs NO provider, and takes the same three
+          # flags Claude takes.
+          #
+          # **BOTH IDS COME FROM `grok models`, WHICH IS A REAL DISCRIMINATOR.** MEASURED
+          # 2026-08-19 on grok 1.0.5: it prints `You are logged in with grok.com`, names
+          # `grok-4.6` as the default and `grok-4.5` beside it. That is the check `pi auth
+          # check` could NOT give for the two `pi` vendors, which is why those two carry
+          # the `--list-models` warning above and these two do not.
+          "grok-4.6", "grok-4.5"]
 
 # THE PROVIDER PER NON-CLAUDE MODEL. `herdr-pi` passes it as `--provider`.
 [legal.pi_provider]
@@ -114,6 +124,43 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
 #    `--until working` FIRST (`scripts/pod/launcher.py:1512` and `:1620`) and only
 #    then for the finish. A guard that skips that step reads every healthy run as a
 #    silent failure.
+
+# 4. THE GROK HEAD IS VERIFIED END TO END, MEASURED 2026-08-19, before the maintainer
+#    slot was pointed at it. It is a `herdr` kind of its own and NOT a `pi` provider:
+#    `pi --list-models` lists no grok row, `herdr agent start --kind` lists `grok`, and
+#    `herdr integration status` prints `grok: current (v1)`, which is the state hook that
+#    makes a pane report `working`, `idle`, `done` and `blocked`.
+#
+#    `grok models` IS A REAL DISCRIMINATOR, which is what `pi auth check` could not be.
+#    It printed `You are logged in with grok.com`, `grok-4.6` as the default and
+#    `grok-4.5` beside it. So for this vendor the model list and the login are ONE
+#    answer, and check 2 above has no counterpart here because it needs none.
+#
+#    THE FLAGS ARE CLAUDE'S THREE, and `grok --help` on grok 1.0.5 names all three:
+#    `-m/--model`, `--reasoning-effort` aliased `--effort`, and `--permission-mode`
+#    whose possible values include `auto` spelled exactly that way.
+#
+#    THE PROBE ASKED FOR A WRITE AND NOT AN ANSWER, for the reason check 1 gives: the
+#    failure class is an agent that echoes and exits `done` having written nothing.
+#      - `herdr agent start --kind grok -- --model grok-4.6 --effort high
+#        --permission-mode auto` returned `agent_started`, `interactive_ready: true`.
+#      - `herdr agent prompt` reached it and it wrote its file. Maintainer.
+#      - The POD's OWN feed function, `launcher.herdr_prompt()`, which
+#        `prompt_maintainer()`, `notify_closes()` and `keeper.sh` all call, reached it
+#        and it wrote a second file.
+#
+#    THE SAME `--until idle` TRAP FIRED AGAIN, on grok this time, and it is the one
+#    trap in this file that has now caught two vendors. Waiting `--until idle --until
+#    done` returned AT ONCE and the file read as unwritten while the pane still showed
+#    `Waiting for response`. `launch()` waits `--until working` FIRST; a hand-run probe
+#    that skips that step reads every healthy grok run as a silent failure.
+#
+#    **THE NAME IS THE ONE OPERATIONAL CATCH.** The resident maintainer is addressed by
+#    its herdr agent NAME, `pod-batch`, and `maintainer_alive()` answers TRUE while ANY
+#    agent holds it whatever its kind. So a feed sent while the OUTGOING maintainer still
+#    holds that name reaches the outgoing session, MEASURED 2026-08-19 when exactly that
+#    happened. Freeing the name is the first step of a maintainer handover and
+#    `dev/pod/instructions/maintainer.md` carries it.
 
 # THE READ-BACK REFUSAL, and the measurement inverted the design's rule.
 #
@@ -217,4 +264,9 @@ mathematician             = { model = "claude-opus-5",   effort = "xhigh", harne
 mathematician_adversarial = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
 coder                     = { model = "deepseek-v4-pro", effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
 coder_adversarial         = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
-maintainer                = { model = "claude-opus-5",   effort = "high",  harness = "herdr-claude", sandbox = "acceptEdits" }
+# **THE MAINTAINER MOVED TO GROK, owner's ruling 2026-08-19.** It was `claude-opus-5` at
+# effort `high` from amendment A12. The slot is the resident one, so the change is not a
+# re-dispatch: the whole pod is stopped first, the old session is retired, and the next
+# `ensure_maintainer()` starts the new head. `dev/pod/instructions/maintainer.md` carries
+# the handover the outgoing session wrote.
+maintainer                = { model = "grok-4.6",        effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits" }
