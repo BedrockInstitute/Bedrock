@@ -95,6 +95,26 @@ second is smaller and matches the exemption already granted to `/.pod`.
 **A RUNNING task has the same shape and is benign only because it ends.** MEASURED the
 same day: with LJ-1.390 dispatched, the gate refuses on its three live files.
 
+### 10. The refill writes real files and NOTHING measures where it wrote them
+
+Rule (g) dispatches `POD-REFILL.md` as an EVENT, so it never enters the state machine:
+no fact 4, no record, no acceptance, no scope check. It is the ONLY producer of tasks and
+it writes `dev/pod/queue.toml` plus one brief per task, and nothing in the program would
+notice if it wrote somewhere else. The maintainer's own proposals get
+`maintainer_scope_ok()`; the refill gets nothing.
+
+REVIEWED BY HAND 2026-08-19 and it was CLEAN: the refill of 15:01 queued five tasks, wrote
+`dev/pod/queue.toml` and exactly five briefs, all `head_slot: coder`, with the dependency
+order written into the queue's own comments. The Agda under `LJ-1-391/` and `LJ-1-393/`
+is the coders' and its mtime proves it, 15:31 against a 15:29 brief. **A clean result by
+hand is not a gate.**
+
+**THE HARD PART IS ATTRIBUTION AND IT IS WHY THIS IS NOT FIXED YET.** By the time a refill
+finishes, the tasks it queued are already dispatched and writing, so a `git status` taken
+at its return blames it for the coders' files. A real check needs the status snapshotted
+at DISPATCH and differenced at return, which is what `changed_files_scoped()` does for a
+task and what `side_dispatches()` would have to grow. Do not ship the naive version.
+
 ## Closed
 
 ### 1 and 2. Fact 4 counted the program's own writes as the worker's. FIXED 2026-08-19
