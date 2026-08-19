@@ -19,30 +19,34 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
-### 5. Five MEASURED corpus records, one per RUNNER class
+### 5. ONE MEASURED corpus record still owed: `unbound_hyp`
 
-`obligations_up`, `closure_open`, `unbound_hyp`, `spec_surface`, `lint`
-(`scripts/pod/accept.py:72-73`). Made by failing acceptance conjuncts 2 to 6 on purpose
-and running the runner over each. It needs no probe, and it doubles as the acceptance
-runner's own self-test. The `probe-rerun` seed that used to own this slot was retired on
-2026-08-19 because a probe record can match only the two heap-wall rows and `replay()`
-skips every NO MATCH record, so the seed could never have armed R3 at all.
+**FOUR OF THE FIVE RUNNER CLASSES ARE HELD, and two of them were made on 2026-08-19.**
+`lint` and `spec_surface` the `live` stream earned by itself. `obligations_up` and
+`closure_open` were MADE, in an isolated worktree, by failing one conjunct on purpose and
+running `accept.py` over it, then hand-loading the record with `provenance = "report"`,
+which `replay.PROVENANCE` admits for exactly this. Evidence:
+`agents/tasks/LJ-9-001/runs/accept-5.out:20` and `accept-6.out:20`.
 
-**RE-PRICED 2026-08-19, and it is no longer BLOCKING.** Two things changed under it. The
-`live` stream earned three classes on its own, `lint`, `spec_surface` and the Agda class
-`unsolved_meta`, over 16 records; and `check_balance()` now measures the corpus PER
-SCOPE, so a task row naming an unheld class is admitted because no record of that task
-exists to regress-test it. **Only a SYSTEM row is still refused for an unheld class**, and
-none is currently wanted. Three remain missing: `closure_open`, `obligations_up`,
-`unbound_hyp`.
+- `obligations_up`: a brief declaring an obligation name nothing resolves, with
+  `--obl-before 0`, so the delta is +1 and conjuncts 1, 3, 4, 5 and 6 all hold.
+- `closure_open`: a master under `src/` that `Everything` does not import. **It must be
+  STAGED**, because `check_closure()` skips an untracked master by design and leaves it
+  to the closure-new WARN check. A worktree has its own index, verified, so staging
+  there never touches the main tree.
 
-**HOW TO MAKE THEM, now that isolation exists.** Build them in a scratch WORKTREE, break
-one conjunct at a time, run `accept.py` over it, and hand-load the record with
-`provenance = "report"`, which `replay.PROVENANCE` admits for exactly this. The main tree
-is never touched. Two ordering facts the attempt must respect: the class is the FIRST
-failing conjunct in order 5, 1, 2, 3, 4, 6, so every earlier conjunct has to be made to
-pass; and conjunct 4 is `unbound_NEW`, so a pre-existing finding does not fire it. The
-live tree already fails `check-unbound-hyp.py --check` and never produced the class.
+**VERIFIED AFTER: a system row naming `obligations_up` now passes `check_balance()`,
+where it was refused before.** Both records route to NO MATCH, so they arm the balance
+check and are inert for R3, which is honest and is what the corpus needed.
+
+**`unbound_hyp` IS STILL OWED AND HERE IS WHERE IT STOPPED.** Conjunct 4 is
+`unbound_NEW`: it needs a changed `src/**.lagda.md` INSIDE the task's write scope, and a
+finding that is not in the dispatch-point snapshot. Two shapes were tried and neither
+fired: a top-level declaration with an empty premise list, and a module-parameter
+telescope of the same shape. `check-unbound-hyp.py` reads `tracked_masters()` only, so
+the master must be staged, and its rule 3 parses a telescope form that has to be read out
+of the parser rather than guessed. **The master must ALSO typecheck**, because conjunct 1
+runs Agda on a master inside the scope and must pass for the class to be 4's and not 1's.
 
 ### 7. A check for the defect shape three audits missed
 

@@ -3111,8 +3111,16 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                 calls.append(kw)
                 return 4242
 
+        # **`make_worktree()` IS A FILESYSTEM SIDE EFFECT ON THIS PATH, and this test
+        # drives `pod.launch()` with the REAL ROOT because it is checking the argv the
+        # launcher receives.** MEASURED 2026-08-19, the hour isolation was turned on: the
+        # suite left a real git worktree at `.pod-state/worktrees/LJ-1-999` in the
+        # repository every time it ran. A test that means to inspect one call must not
+        # perform the other's side effect.
         real = pod.facts_mod.launcher
+        real_wt = pod.make_worktree
         pod.facts_mod.launcher = lambda: _Stub
+        pod.make_worktree = lambda code, root=None: None
         try:
             t = types.SimpleNamespace(code="LJ-1.999", agda=False, tier="wide",
                                       head_slot=None, role=None, model=None,
@@ -3120,6 +3128,7 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
             pod.launch(t, "agents/tasks/LJ-1-999/LJ-1.999.md", role, ROOT)
         finally:
             pod.facts_mod.launcher = real
+            pod.make_worktree = real_wt
         self.assertEqual(len(calls), 1, "the stub was not reached")
         return calls[0]
 
