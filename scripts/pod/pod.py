@@ -2123,6 +2123,26 @@ def rec_alive(t):
         return False
 
 
+def pid_exists(pid):
+    """Is this number a live process? It asks NOTHING about whose process it is.
+
+    `rec_alive()` is the ownership question and compares the recorded `proc_start`. This
+    separates a pid that is genuinely GONE from one that is live and unrecognised, which
+    rule (b) must report differently: the first is a worker that ended, the second is a
+    leak nobody may kill.
+    """
+    n = _int(pid)
+    if not n or n <= 0:
+        return False
+    try:
+        os.kill(n, 0)
+    except ProcessLookupError:
+        return False
+    except OSError:
+        return True                            # EPERM: it exists and is not ours
+    return True
+
+
 def kill_process_group(pid):
     """The deadline kill. It targets the process GROUP, which `start_new_session=True`
     in `launch()`, `scripts/pod/launcher.py`, allows. Without a deadline a hung worker holds an
@@ -2241,10 +2261,21 @@ def hours_since_last_batch(root=None):
 
     A log with no batch line has never run one, so the trigger must fire: returning a
     large number is what makes the FIRST batch happen, and returning 0 would starve it.
+
+    **IT COUNTS A FEED AND NEVER A HARVEST, and one event name carried both until
+    2026-08-19.** `harvest_batch()` emits `event: "batch"` on nine paths of its own,
+    `parse`, `scope`, `empty`, `refused`, `reject` and `admit`, and it runs FIRST inside
+    rule (e). So a single leftover proposal file, even an EMPTY one, reset this clock to
+    zero and `park_since_last_batch()` with it, and the prompt was then skipped: the
+    maintainer was not told about the parks and the twelve hour trigger restarted from a
+    harvest nobody read. Only `result: "prompted"` means the maintainer was TOLD.
+
+    Found by an adversarial review of the rule (e) reorder, which is the change that made
+    this reachable on the tick that matters most, the one that stops the loop.
     """
     newest = None
     for line in log_lines(root):
-        if line.get("event") == "batch":
+        if line.get("event") == "batch" and line.get("result") == "prompted":
             newest = _epoch(line.get("ts")) or newest
     if newest is None:
         return 1e9
@@ -2268,6 +2299,11 @@ def park_since_last_batch(root=None):
     last time the program asked. The 12 hour clock is unchanged and still catches a
     standing park set that nobody has cured.
 
+    **「THE LAST TIME THE PROGRAM ASKED」IS A FEED AND NEVER A HARVEST.** See
+    `hours_since_last_batch()`: `harvest_batch()` emits the same event name on nine paths
+    of its own and runs first, so a leftover proposal file made this read false and
+    swallowed the prompt.
+
     **IT COMPARES `seq` AND NEVER THE TIMESTAMP.** A transition stamp has one second of
     resolution, and a batch line and the park that provoked it routinely land inside the
     same second, so `>` misses the edge and `>=` re-fires for as long as that second
@@ -2276,7 +2312,7 @@ def park_since_last_batch(root=None):
     newest_batch, newest_park = -1, -1
     for line in log_lines(root):
         seq = _int(line.get("seq"), -1)
-        if line.get("event") == "batch":
+        if line.get("event") == "batch" and line.get("result") == "prompted":
             newest_batch = max(newest_batch, seq)
         elif line.get("to") == PARKED:
             newest_park = max(newest_park, seq)
@@ -3201,11 +3237,31 @@ def _rule_b(st, root):
 
     A task past its deadline whose pid is already gone now reports `pid dead`, which is
     the truer of the two words.
+
+    **THE THIRD CASE IS NAMED AND IT USED TO BE CALLED `pid dead`.** An adversarial review
+    on 2026-08-19 refuted the sentence above: `rec_alive()` is false for a pid that is
+    STILL RUNNING whenever the recorded `proc_start` does not match `ps`, which a locale
+    change, a padding difference or a malformed pid all produce, and it is also false when
+    the launcher call raises. Ordering liveness first therefore traded one hazard for
+    another: the old order killed a pid it could not confirm, the new order walked away
+    from a process that may still hold an Agda heap, and both said something untrue.
+
+    **NEITHER RISK IS TAKEN.** A pid that still EXISTS but does not match its record is
+    not ours to kill and not honest to call dead, so it is reported as `pid unrecognised`
+    with the pid in the line. That is a LEAK a person must look at, and naming it is the
+    whole repair: `os.kill(pid, 0)` alone separates it from a pid that is genuinely gone.
     """
     deadline = _limits()["worker_deadline_s"]
     for t in list(st.of(RUNNING)):
         if not rec_alive(t):
-            emit(st, t, RUNNING, RETURNED, why="pid dead", root=root)
+            # `pid_exists()` asks ONE question, whether the number is a live process, and
+            # never whether it is OURS. `rec_alive()` already answered that and said no.
+            why = ("pid unrecognised" if pid_exists(t.pid) else "pid dead")
+            emit(st, t, RUNNING, RETURNED, why=why, root=root,
+                 detail=[f"pid {t.pid} is live and its proc_start does not match the "
+                         f"dispatch record, so it may still hold an Agda heap. It was "
+                         f"NOT killed, because a pid this program cannot confirm is not "
+                         f"its own to kill."] if why == "pid unrecognised" else None)
         elif t.elapsed() > deadline:
             kill_process_group(t.pid)
             emit(st, t, RUNNING, RETURNED, why="deadline", root=root)

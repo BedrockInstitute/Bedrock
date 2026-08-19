@@ -30,14 +30,32 @@ command -v herdr >/dev/null 2>&1 || die "herdr is not on PATH, so no pane can be
 [ -x "$PY" ] || die "$PY is missing. Run \`make venv\`."
 
 # 1. THE RESIDENT NAME MUST BE FREE, and this is the check a person forgets.
+#
+# **AN UNREADABLE LIST REFUSES AND NEVER CLEARS.** MEASURED 2026-08-19 by an adversarial
+# review of this file: the first version swallowed every failure with `sys.exit(0)` and no
+# output, so empty stdin from a down server, and a warning line before the JSON, both read
+# as「the name is free」. One of them had `pod-batch` in the payload. FM12 is the rule this
+# breaks and the tree already states it: a blind sensor never admits. It now prints
+# `UNREADABLE` and the caller stops.
 holder=$(herdr agent list 2>/dev/null | "$PY" -c '
 import sys, json
-try: rows = json.load(sys.stdin)["result"].get("agents") or []
-except Exception: sys.exit(0)
+raw = sys.stdin.read()
+try:
+    rows = json.loads(raw)["result"].get("agents")
+except Exception:
+    print("UNREADABLE herdr-agent-list-did-not-parse"); sys.exit(0)
+if rows is None:
+    print("UNREADABLE herdr-returned-no-agent-list"); sys.exit(0)
 for a in rows:
     if a.get("name") == "pod-batch":
         print(a.get("agent"), a.get("pane_id")); break
 ')
+case "$holder" in
+  UNREADABLE*) die "the name check could not run: ${holder#UNREADABLE }.
+  \`herdr agent list\` gave nothing this script could read, so it cannot tell whether the
+  resident name $NAME is free. Starting anyway would risk a second maintainer beside a
+  live one. Check the herdr server, then run this again." ;;
+esac
 if [ -n "$holder" ]; then
     die "the name $NAME is held by [$holder].
   \`maintainer_alive()\` answers TRUE while ANY agent holds it, whatever kind, so

@@ -601,6 +601,55 @@ class RuleB(LoopCase):
 # ---------------------------------------------------------------- rule (c) ACCEPT
 
 
+class FeedClockCountsFeeds(LoopCase):
+    """**ONE EVENT NAME CARRIED TWO THINGS AND THE HARVEST RESET THE FEED CLOCK.**
+
+    `harvest_batch()` emits `event: "batch"` on nine paths of its own, `parse`, `scope`,
+    `empty`, `refused`, `reject` and `admit`, and it runs FIRST inside rule (e). Both
+    triggers read the newest `batch` line, so ONE leftover proposal file, even an EMPTY
+    one, made `hours_since_last_batch()` read zero and `park_since_last_batch()` read
+    false, and the prompt was skipped: the maintainer was not told about the parks and the
+    twelve hour clock restarted from a harvest nobody read.
+
+    Found by an adversarial review of the rule (e) reorder, which made it reachable on the
+    tick that matters most, the one that stops the loop.
+    """
+
+    def emit_batch(self, result, task=""):
+        st = pod.State()
+        return pod.emit_event(st, "batch", result=result, root=self.tmp)
+
+    def test_a_HARVEST_outcome_does_not_reset_the_twelve_hour_clock(self):
+        for result in ("empty", "admit", "parse", "scope", "reject", "refused"):
+            self.emit_batch(result)
+        self.assertGreater(pod.hours_since_last_batch(self.tmp), 1000,
+                           "a harvest reset the clock that decides whether to FEED")
+
+    def test_a_FEED_does_reset_it(self):
+        self.emit_batch("prompted")
+        self.assertLess(pod.hours_since_last_batch(self.tmp), 1.0)
+
+    def test_a_HARVEST_does_not_swallow_the_NEW_PARK_edge(self):
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.CHECKING)
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, reason="no-match", rec=record(),
+                 root=self.tmp)
+        self.assertTrue(pod.park_since_last_batch(self.tmp))
+        self.emit_batch("empty")               # a leftover proposal, harvested
+        self.assertTrue(pod.park_since_last_batch(self.tmp),
+                        "a harvest swallowed the edge that tells the maintainer")
+
+    def test_a_FEED_closes_the_edge_because_the_maintainer_WAS_told(self):
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.CHECKING)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, reason="no-match", rec=record(),
+                 root=self.tmp)
+        self.assertTrue(pod.park_since_last_batch(self.tmp))
+        self.emit_batch("prompted")
+        self.assertFalse(pod.park_since_last_batch(self.tmp))
+
+
 class MaintainerIsFedBeforeTheStop(LoopCase):
     """**THE STOP MUST NOT SUPPRESS THE ROLE THAT CLEARS A PARK.**
 
@@ -687,6 +736,33 @@ class RuleBKillOrder(LoopCase):
         pod._rule_b(st, self.tmp)
         self.assertEqual(killed, [424242])
         self.assertEqual(self.lines()[-1]["why"], "deadline")
+
+    def test_a_LIVE_but_UNRECOGNISED_pid_is_named_and_never_called_dead(self):
+        """**THE ADVERSARIAL REVIEW REFUTED THE FIRST REPAIR.** `rec_alive()` is false for
+        a pid that is STILL RUNNING whenever `proc_start` does not match, so ordering
+        liveness first walked away from a process that may hold an Agda heap and called it
+        `pid dead`. Neither risk is taken now: it is not killed, and it is not called
+        dead."""
+        self.swap(pod, rec_alive=lambda t: False, pid_exists=lambda pid: True,
+                  kill_process_group=lambda pid: self.fail("it killed a pid it cannot own"))
+        st, t = self.running(10 ** 9)
+        pod._rule_b(st, self.tmp)
+        self.assertEqual(t.status, pod.RETURNED)
+        self.assertEqual(self.lines()[-1]["why"], "pid unrecognised")
+        self.assertIn("NOT killed", " ".join(self.lines()[-1].get("detail") or []))
+
+    def test_a_pid_that_is_GENUINELY_gone_still_reads_pid_dead(self):
+        self.swap(pod, rec_alive=lambda t: False, pid_exists=lambda pid: False,
+                  kill_process_group=lambda pid: self.fail("it killed a dead pid"))
+        st, t = self.running(10 ** 9)
+        pod._rule_b(st, self.tmp)
+        self.assertEqual(self.lines()[-1]["why"], "pid dead")
+
+    def test_pid_exists_asks_only_whether_the_number_is_live(self):
+        """It must NOT re-answer the ownership question, which `rec_alive()` owns."""
+        self.assertTrue(pod.pid_exists(os.getpid()))
+        self.assertFalse(pod.pid_exists(0))
+        self.assertFalse(pod.pid_exists("not a pid"))
 
     def test_a_LIVE_worker_inside_its_deadline_is_left_alone(self):
         self.swap(pod, rec_alive=lambda t: True,
@@ -1265,7 +1341,10 @@ class RuleE(LoopCase):
         """The residency ruling in one assertion. A batch line one minute old holds the
         BATCH, and the maintainer's own liveness is checked all the same."""
         st = pod.State()
-        pod.emit_event(st, "batch", result="admit", root=self.tmp)
+        # `result="prompted"` is what「the maintainer was FED」means. A harvest
+        # outcome carries the same event name and must NOT hold the trigger,
+        # which `FeedClockCountsFeeds` pins.
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
         for _ in range(3):
             pod._rule_e(st, self.tmp)
         self.assertEqual(self.calls["ensure"], 3, "residency is not on the batch clock")
@@ -1336,7 +1415,10 @@ class RuleE(LoopCase):
 
     def test_a_recent_batch_line_holds_the_trigger_below_three_parked(self):
         st = pod.State()
-        pod.emit_event(st, "batch", result="admit", root=self.tmp)
+        # `result="prompted"` is what「the maintainer was FED」means. A harvest
+        # outcome carries the same event name and must NOT hold the trigger,
+        # which `FeedClockCountsFeeds` pins.
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
         pod._rule_e(st, self.tmp)
         self.assertEqual(self.calls["maintainer"], 0)
 
@@ -1353,7 +1435,10 @@ class RuleE(LoopCase):
 
     def test_a_new_park_fires_the_batch_whatever_the_clock_says(self):
         st = pod.State()
-        pod.emit_event(st, "batch", result="admit", root=self.tmp)
+        # `result="prompted"` is what「the maintainer was FED」means. A harvest
+        # outcome carries the same event name and must NOT hold the trigger,
+        # which `FeedClockCountsFeeds` pins.
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
         self._park_three(st)
         pod._rule_e(st, self.tmp)
         self.assertEqual(self.calls["maintainer"], 1)
@@ -1366,7 +1451,10 @@ class RuleE(LoopCase):
         all naming the same three tasks. It is an EDGE now, so a park set that nobody
         has cured is asked about ONCE."""
         st = pod.State()
-        pod.emit_event(st, "batch", result="admit", root=self.tmp)
+        # `result="prompted"` is what「the maintainer was FED」means. A harvest
+        # outcome carries the same event name and must NOT hold the trigger,
+        # which `FeedClockCountsFeeds` pins.
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
         self._park_three(st)
         pod._rule_e(st, self.tmp)
         pod._rule_e(st, self.tmp)

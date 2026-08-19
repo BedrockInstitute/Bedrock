@@ -88,6 +88,42 @@ always passes. That is recorded rather than hidden, and the vendor's real discri
 `pi --list-models`, but nobody has measured what a `pi` pane prints. Measure it and add
 the marker, or rule that the guard is deliberately absent for that vendor.
 
+### 15. The deadline kills the DRIVER and not the agent that hangs
+
+Raised by an adversarial review on 2026-08-19, finding 3.2, and CONFIRMED as process
+topology rather than as a live kill. For a herdr dispatch `t.pid` is the `bash -c driver`
+child; the driver starts the agent with `herdr agent start` and the agent lives in a
+SERVER-OWNED pane, so Agda is a child of the agent and not of that bash session.
+`kill_process_group(t.pid)` therefore kills the waiter and leaves the agent `working` with
+the heap. Rule (b) marks the task RETURNED, `admits()` sees a free slot, and a second
+writer can start beside the first.
+
+The cure is a different mechanism, not a different pid: a herdr agent is ended through
+`herdr agent`, so the deadline limb needs the agent NAME beside the pid. Rule (b) now
+reports `pid unrecognised` for the neighbouring case, which is the same leak arriving
+through the other door.
+
+### 16. Rule (e) writes, commits and spawns on the tick that stops
+
+Raised by the same review, finding 2.1. The reorder of `cf6c519` was justified with「(e)
+dispatches no worker so it is safe under a stop」. `harvest_batch()` writes
+`dev/pod/table.toml`, renames a proposal and runs `git_commit`; `prune_logs()` unlinks
+files; `ensure_maintainer()` launches. **The stop refuses rule (f) and nothing else**, so
+all three were already reachable under `.pod-state/STOPPED` before the reorder; what the
+reorder changed is that they now also run on the tick that DECIDES to stop.
+
+The maintainer start is the one this project wants there, and the other two are older.
+Decide whether a stopping tick should harvest and prune at all, or whether the stop should
+be checked between them.
+
+### 17. An exclusive live task still blocks the maintainer on a stopping tick
+
+Raised by the same review, finding 2.3. `ensure_maintainer()` returns None while any
+RUNNING or CHECKING task is `exclusive`, and rule (d) stops afterwards regardless. The
+shape is the grok handover incident with a different cause: the loop halts and the role
+that repairs it is absent. `--handover` now gives the name back on this path; the LOOP
+path has no equivalent.
+
 ## Closed
 
 ### 14. Rule (b) killed a process group it had not checked. FIXED 2026-08-19
