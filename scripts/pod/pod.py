@@ -253,10 +253,24 @@ TRANSITIONS_LEGAL = {
     (PARKED, READY),        # 9, 10 the table changed, or the brief was repaired
 }
 
-#: The nine park reasons of section 5.5. Each NAMES its cause and rule (a2) branches on
+#: The TEN park reasons of section 5.5. Each NAMES its cause and rule (a2) branches on
 #: it. `no-match` is the ONE reason AD7's first number counts, so its string is exact.
+#:
+#: **`salvage:` IS THE TENTH, ruled by the owner on 2026-08-19 with worktree isolation.**
+#: A task runs in its own worktree and its work is copied back at a `done` close, path by
+#: path, from the brief's `## SCOPE (write)`. That copy is MECHANICAL and needs no merge,
+#: so it cannot conflict in the way a patch or a cherry-pick can. It has exactly one
+#: failure that judgement must settle: the main tree changed the same path while the task
+#: ran, so copying would silently destroy that change.
+#:
+#: **DETECT MECHANICALLY, NEVER RESOLVE MECHANICALLY.** The program compares the main
+#: tree's blob against the worktree's BASE commit and parks when they differ. It does not
+#: merge, and it does not ask a model what to do: AD1 keeps judgement out of the program,
+#: and the resident maintainer is the channel that already exists for what the loop cannot
+#: decide. Reusing one of the other nine names here would make a park reason lie, which is
+#: a defect class this programme measured three times on the day the rule was written.
 PARK_REASONS = ("no-match", "no-change", "preflight:", "attempt_max:", "r4",
-                "admission", "launch", "row:", "stop_loop:")
+                "admission", "launch", "row:", "stop_loop:", "salvage:")
 
 #: `pod_tick()` returns one of these. Only `stop_loop` and rule (d) return STOP.
 CONTINUE, STOP = "CONTINUE", "STOP"
@@ -906,6 +920,151 @@ def split_entry(t, rec):
             "reason": f"park_and_split: error_class {f.get('error_class')}, "
                       f"{len(f.get('changed_files') or [])} changed files",
             "added": datetime.date.today(), "added_by": "maintainer"}
+
+
+#: Where a task's isolated checkout lives. Under `.pod-state/`, which section 4.0 keeps
+#: OUT of `_build/` because `make clean` empties that and would erase a live task's work.
+WORKTREES = POD_STATE / "worktrees"
+
+#: **ONE WORKTREE PER TASK, and this switch is deliberate.** It ships OFF so the code
+#: lands and is tested against a loop with tasks already in flight, and the owner turns it
+#: on when the salvage path has run once under watch. A structural change to a live
+#: unattended loop is exactly the thing to stage rather than to flip on a hot restart.
+#:
+#: WHAT IT BUYS, and every one is measured on 2026-08-19: acceptance conjunct 5 stops
+#: attributing the maintainer's edits to whatever task is being accepted (three times in
+#: one day); `territory_in_flight()` has nothing to collide in; a parked task's work stays
+#: in its own checkout so the main tree never goes dirty (item 9); and the refill's writes
+#: become one worktree's diff (item 10).
+WORKTREE_ISOLATION = False
+
+
+def worktree_of(code, root=None):
+    """The path of one task's isolated checkout. It does not create it."""
+    root = ROOT if root is None else Path(root)
+    return root / ".pod-state" / "worktrees" / agents_tree.normalise(code)
+
+
+def _git(args, root, timeout=120):
+    """One git call under `root`. Returns (rc, output) and never raises."""
+    try:
+        d = subprocess.run(["git", *args], cwd=root, capture_output=True,
+                           text=True, timeout=timeout)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return 1, f"git {' '.join(args)}: {e}"
+    return d.returncode, (d.stdout + d.stderr)
+
+
+def make_worktree(code, root=None):
+    """One isolated checkout for one task, with the build cache cloned in. Or None.
+
+    **WHY A TASK GETS ITS OWN TREE.** Every whole-tree reader in this program attributes
+    what it finds to whatever task is in front of it. MEASURED 2026-08-19, three times in
+    one day: the maintainer edited a guarded rule file, acceptance conjunct 5 read the
+    WHOLE tree, and the running task was stopped for a spec-surface move it had not made.
+    The same shape blocks the maintainer's batch (item 9) and hides the refill's writes
+    (item 10). An isolated checkout removes the class rather than the instances.
+
+    **THE BUILD CACHE IS CLONED AND NEVER SYMLINKED.** PROBED 2026-08-19: a fresh
+    worktree with no `_build` runs the same probe in 45.79 s; with `_build` cloned it runs
+    in 1.58 s, against 1.43 s warm in the main tree, and the clone itself costs 0 s
+    because APFS shares the blocks. So the interfaces are path-portable and isolation is
+    free. A SYMLINK would be equally fast and would give the isolation straight back: the
+    worktree's Agda would write into the main tree's interfaces and two concurrent tasks
+    into each other's.
+
+    `cp -c` is APFS only. A checkout on another filesystem falls back to a plain copy,
+    which is slower and is NOT measured; the task still runs, so this never refuses.
+    """
+    root = ROOT if root is None else Path(root)
+    wt = worktree_of(code, root)
+    if wt.is_dir():
+        return wt                              # a retry re-uses its own tree
+    try:
+        wt.parent.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return None
+    rc, out = _git(["worktree", "add", "--detach", str(wt), "HEAD"], root, timeout=300)
+    if rc != 0:
+        print(f"pod: worktree for {code} refused: {' '.join(out.split())[:200]}",
+              file=sys.stderr)
+        return None
+    src = root / "_build"
+    if src.is_dir():
+        for args in (["cp", "-c", "-R", str(src), str(wt / "_build")],
+                     ["cp", "-R", str(src), str(wt / "_build")]):
+            try:
+                if subprocess.run(args, capture_output=True, timeout=900).returncode == 0:
+                    break
+            except (OSError, subprocess.TimeoutExpired):
+                break                          # the task runs cold, which is not a refusal
+    return wt
+
+
+def salvage_worktree(t, root=None):
+    """Copy a task's DECLARED scope back from its worktree. Returns [] or the refusals.
+
+    **THE SCOPE STOPS BEING AN HONOUR SYSTEM.** Only the paths the brief's
+    `## SCOPE (write)` names are copied, so anything a worker wrote outside its declared
+    scope never reaches the main tree at all. Today that is audited after the fact as
+    `changed_files_foreign`, and 2026-08-19 caught two real cases that way.
+
+    **IT NEVER MERGES, SO IT CANNOT CONFLICT.** A patch or a cherry-pick is a three-way
+    merge and a merge needs judgement when it fails. This is a path list and a file copy.
+    It has ONE failure that judgement must settle, and it is detected and never resolved:
+    the main tree changed the same path while the task ran, so the copy would silently
+    destroy that change. Rule (c) then parks with `salvage:` and the resident maintainer
+    reads it. AD1 keeps the program out of that decision.
+    """
+    root = ROOT if root is None else Path(root)
+    wt = worktree_of(t.code, root)
+    if not wt.is_dir():
+        return [f"the worktree is gone: {wt}"]
+    rc, base = _git(["rev-parse", "HEAD"], wt)
+    if rc != 0:
+        return [f"the worktree has no base commit: {' '.join(base.split())[:160]}"]
+    base = base.strip()
+    bad, moved = [], []
+    for rel in scope_write_paths(t, root):
+        wsrc, mdst = wt / rel, root / rel
+        if not wsrc.is_file():
+            continue                           # the worker wrote nothing there
+        # THE ONE CHECK: has the MAIN tree moved this path since the worktree forked?
+        rc_b, _ = _git(["cat-file", "-e", f"{base}:{rel}"], root)
+        rc_d, diff = _git(["diff", "--quiet", base, "--", rel], root)
+        if rc_b == 0 and rc_d != 0:
+            bad.append(f"{rel} changed in the main tree since this task forked")
+            continue
+        try:
+            mdst.parent.mkdir(parents=True, exist_ok=True)
+            mdst.write_bytes(wsrc.read_bytes())
+            moved.append(rel)
+        except OSError as e:
+            bad.append(f"{rel}: {e}")
+    if not bad:
+        print(f"pod: salvaged {len(moved)} path(s) from {t.code}'s worktree",
+              file=sys.stderr)
+    return bad
+
+
+def scope_write_paths(t, root=None):
+    """The brief's `## SCOPE (write)` list, as repository-relative paths."""
+    root = ROOT if root is None else Path(root)
+    try:
+        text = _abs(t.brief, root).read_text(encoding="utf-8")
+    except (OSError, TypeError):
+        return []
+    return [p for p in preflight_mod.scope_paths(text) if p and not p.endswith("/")]
+
+
+def drop_worktree(code, root=None):
+    """Remove one task's checkout. A task that PARKS keeps it, because it is the scene."""
+    root = ROOT if root is None else Path(root)
+    wt = worktree_of(code, root)
+    if not wt.is_dir():
+        return False
+    _git(["worktree", "remove", "--force", str(wt)], root, timeout=300)
+    return not wt.is_dir()
 
 
 def stamp_pod_marker(code, root=None):
@@ -1796,11 +1955,15 @@ def launch(t, brief, role, root=None):
         # which is WIDE, so omitting it ran every HEAVY task at the WIDE caliber AND wrote
         # `"tier": "wide"` into the registry record that `agda_heap_sum_over()` reads. The
         # heap-sum guard then budgeted 8 GB for a worker holding 12.
+        # THE TASK'S OWN CHECKOUT, when isolation is on. `make_worktree()` returns None
+        # on any refusal and the dispatch then runs in the main tree, because a worker
+        # that cannot be isolated is still a worker and this must never be a refusal.
+        wd = make_worktree(t.code, root) if WORKTREE_ISOLATION else None
         with contextlib.redirect_stderr(buf):
             rc = mod.launch(t.code, path, bool(t.agda), head["sandbox"], head["model"],
                             effort=head["effort"], tier=tier_of(t),
                             preamble=preamble_for(role, root),
-                            provider=head.get("pi_provider"))
+                            provider=head.get("pi_provider"), workdir=wd)
     except SystemExit:
         _tee(buf)
         return None                            # the launcher REFUSED on a corrupt registry
@@ -2806,8 +2969,16 @@ def _rule_c(st, root):
         if not admits(st, t, agda=True):
             continue                           # section 5.6. The runner runs Agda
         emit(st, t, RETURNED, CHECKING, root=root)
+        # **ACCEPTANCE MEASURES THE TASK'S OWN TREE, and that is the point of isolation.**
+        # Conjunct 5 reads the WHOLE tree it is given, so in a shared checkout it charges
+        # the running task for whatever anybody else changed. MEASURED 2026-08-19: the
+        # maintainer edited three guarded rule files and LJ-1.390 was stopped for a
+        # spec-surface move it had not made. In its own worktree there is nothing else to
+        # read.
+        wt = worktree_of(t.code, root)
+        acc_root = wt if (WORKTREE_ISOLATION and wt.is_dir()) else root
         try:
-            rec = accept_mod.run_acceptance(t, root)
+            rec = accept_mod.run_acceptance(t, acc_root)
         except Exception as e:                 # noqa: BLE001. See the docstring
             emit(st, t, CHECKING, PARKED, reason="no-change", root=root,
                  why=f"the acceptance runner raised {type(e).__name__}: {e}"[:400])
@@ -2824,6 +2995,14 @@ def _rule_c(st, root):
             row = _row_of(row_id, root)
             if not accept_mod.r4_holds(rec, row):
                 emit(st, t, CHECKING, PARKED, rec=rec, row=row_id, reason="r4", root=root)
+            elif (bad := (salvage_worktree(t, root) if WORKTREE_ISOLATION else [])):
+                # **DETECTED MECHANICALLY, RESOLVED BY NOBODY.** The only way a
+                # scope-limited copy can fail is that the main tree moved the same path
+                # while the task ran, so copying would destroy that change. The program
+                # does not merge and does not ask a model: AD1 keeps judgement out of it,
+                # and the resident maintainer is the channel that already exists.
+                emit(st, t, CHECKING, PARKED, rec=rec, row=row_id,
+                     reason="salvage:" + t.code, root=root, detail=bad[:8])
             else:
                 # **THE ROW IS SET BEFORE THE COMMIT, because the commit MESSAGE names
                 # it.** `commit_task()` reads `t.row` at `:1895`, and the `emit()` below
@@ -2846,6 +3025,11 @@ def _rule_c(st, root):
                     table_mod.expire_rows(t.code)   # section 4.6, the first trigger
                 except (table_mod.TableError, heads_mod.HeadsError, OSError):
                     pass                       # the close stands; the rows expire later
+                # THE CHECKOUT GOES ONLY ON A CLOSE. A task that PARKS keeps its
+                # worktree, because that tree is the scene: the same reason a dead
+                # agent's pane is kept and never closed.
+                if WORKTREE_ISOLATION:
+                    drop_worktree(t.code, root)
         elif (action in LOOPING
                 and same_row_runs(t, row_id, root) + 1 >= limits["attempt_max"]):
             # THE CAP NAMES THE ROW THAT KEPT MATCHING. That is a design error in the ROW

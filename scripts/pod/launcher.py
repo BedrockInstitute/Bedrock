@@ -1167,7 +1167,8 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
            allow_model: bool = False, case: str = "default",
            effort: str = "", tier: str = AGDA_TIER_DEFAULT,
            preamble: "list[Path] | None" = None,
-           provider: str | None = None, resident: bool = False) -> int:
+           provider: str | None = None, resident: bool = False,
+           workdir: "Path | None" = None) -> int:
     # POD EDIT 3 of 6, part 1 of 3 (design section 6.2). `effort` is the claude
     # CLI's `--effort` value and edit 2 puts it on the argv. It defaults to the
     # empty string so every existing caller keeps working; the POD passes
@@ -1354,6 +1355,12 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                               "--permission-mode", "auto"]
             else:
                 model_args = ["--", "--provider", provider or PI_PROVIDER, "--model", model]
+            # **THE WORKER'S CWD, and it is the TASK'S OWN CHECKOUT when it has one.**
+            # `workdir` is the isolated worktree the POD builds for a task; it defaults to
+            # the repository root, so every existing caller and every non-POD dispatch is
+            # unchanged. Isolation is what stops a whole-tree checker attributing one
+            # agent's writes to another, measured three times on 2026-08-19.
+            WD = str(workdir) if workdir else str(ROOT)
             prompt_text = (note or "Resume where you left off, then write your report.") \
                           if resume_id else brief.read_text(encoding="utf-8")
             driver = (
@@ -1387,7 +1394,7 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 "print((free or [p['pane_id'] for p in m] or [''])[0])"
                 f"\") || {{ echo \"HERDR pane list unreadable\"; exit 1; }}\n"
                 "if [ -z \"$BASE\" ]; then\n"
-                f"  BASE=$(herdr workspace create --cwd {shlex.quote(str(ROOT))} "
+                f"  BASE=$(herdr workspace create --cwd {shlex.quote(WD)} "
                 f"--label {HERDR_WORKSPACE_LABEL} | python3 -c \"import json,sys;"
                 "r=json.load(sys.stdin)['result'];"
                 f"open({str(HERDR_WS_FILE)!r},'w').write(r['root_pane']['workspace_id']);"
@@ -1419,7 +1426,7 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # A HALF-EMPTY COLUMN IS FILLED DOWNWARD FIRST.
                 "if [ -n \"$OPEN\" ]; then\n"
                 f"  PANE=$(herdr pane split --pane \"$OPEN\" --direction down "
-                f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
+                f"--ratio 0.5 --no-focus --cwd {shlex.quote(WD)} {shlex.join(envargs)} "
                 f"| {SPLIT_ID} 2>/dev/null || true)\n"
                 # FULL EITHER WAY. A good split used the column and a failed one means the
                 # pane is gone, so clearing in both cases is what caps DOWN at one.
@@ -1433,12 +1440,12 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 "  FROM=\"$RIGHT\"\n"
                 "  [ -n \"$FROM\" ] || FROM=\"$BASE\"\n"
                 f"  PANE=$(herdr pane split --pane \"$FROM\" --direction right "
-                f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
+                f"--ratio 0.5 --no-focus --cwd {shlex.quote(WD)} {shlex.join(envargs)} "
                 f"| {SPLIT_ID} 2>/dev/null || true)\n"
                 # A STALE RIGHTMOST IS RECOVERABLE, and BASE always exists.
                 "  if [ -z \"$PANE\" ]; then\n"
                 f"    PANE=$(herdr pane split --pane \"$BASE\" --direction right "
-                f"--ratio 0.5 --no-focus --cwd {shlex.quote(str(ROOT))} {shlex.join(envargs)} "
+                f"--ratio 0.5 --no-focus --cwd {shlex.quote(WD)} {shlex.join(envargs)} "
                 f"| {SPLIT_ID})\n"
                 "  fi\n"
                 # THE NEW COLUMN IS BOTH THE RIGHTMOST AND THE HALF-EMPTY ONE.
@@ -1709,7 +1716,7 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # immediate EOF and it proceeds with the argv prompt.
                 proc = subprocess.Popen(cmd, stdout=fh, stderr=subprocess.STDOUT,
                                         stdin=subprocess.DEVNULL,
-                                        cwd=ROOT, env=env, start_new_session=True)
+                                        cwd=WD, env=env, start_new_session=True)
         except OSError as exc:
             # FM13: a missing codex binary used to be a raw traceback.
             print(f"dispatch: could not launch: {exc}", file=sys.stderr)

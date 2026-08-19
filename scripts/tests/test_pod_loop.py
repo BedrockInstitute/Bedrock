@@ -1694,7 +1694,12 @@ class Emit(LoopCase):
         self.assertGreaterEqual(len(written), 8)
         for reason in written:
             self.assertIn(reason, pod.PARK_REASONS, reason)
-        self.assertEqual(len(pod.PARK_REASONS), 9)
+        # TEN since 2026-08-19: `salvage:` joined them with worktree isolation, ruled by
+        # the owner. A scope-limited copy-back cannot conflict the way a merge does, but
+        # it has one failure judgement must settle, the main tree moving the same path
+        # while the task ran, and reusing one of the other nine would make a park reason
+        # lie. The count is asserted so a tenth cannot be added without saying why here.
+        self.assertEqual(len(pod.PARK_REASONS), 10)
 
     def test_the_line_stamps_the_heads_digest_so_ad26_can_read_what_ran(self):
         st = pod.State()
