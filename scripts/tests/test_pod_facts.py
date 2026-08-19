@@ -856,6 +856,31 @@ class ChangedFiles(Patching):
         self.assertEqual(mine, ["agents/tasks/LJ-1-999/report.md"])
         self.assertEqual(foreign, ["src/L/Granted.lagda.md"])
 
+    def test_the_review_INPUT_is_the_programs_and_the_OUTPUT_is_the_reviewers(self):
+        """**THE TWO REVIEW NAMES DIFFER BY DESIGN AND FACT 4 MUST HONOUR IT.**
+
+        Section 6.6: the program's INPUT is `review-<PRED>.md` and the reviewer's OUTPUT
+        is `review-of-<PRED>.md`, so a branch globbing `review-of-*.md` reads the
+        reviewer's work and never the program's own input. Excluding BOTH makes every
+        reviewer look like one that wrote nothing, the escalate row matches again, and
+        the task climbs to `attempt_max` naming a row that did nothing wrong.
+
+        MEASURED 2026-08-19 on LJ-1.391: its critic wrote 17,266 bytes of
+        `review-of-LJ-1-391-1.md` and fact 4 reported only the probe and the report.
+        """
+        snapshot = ["agents/tasks/LJ-1-999/.pod",
+                    "agents/tasks/LJ-1-999/LJ-1.999.md",
+                    "agents/tasks/LJ-1-999/review-LJ-1-999-1.md",
+                    "agents/tasks/LJ-1-999/review-of-LJ-1-999-1.md",
+                    "agents/tasks/LJ-1-999/runs/accept-1.out",
+                    "agents/tasks/LJ-1-999/Probe.agda"]
+        self.patch(facts, "_status_paths", lambda root: list(snapshot))
+        mine, _ = facts.changed_files_scoped("LJ-1.999", None)
+        self.assertEqual(mine, ["agents/tasks/LJ-1-999/review-of-LJ-1-999-1.md",
+                                "agents/tasks/LJ-1-999/Probe.agda"],
+                         "the reviewer's deliverable must survive and the program's "
+                         "four own writes must not")
+
 
 class Fact7(Patching):
     """Amendment A10. `lines` is the in-fence line count of the task's own write scope."""

@@ -378,7 +378,18 @@ def program_task_write(p, code):
     name = p.rsplit("/", 1)[-1]
     return (p.endswith("/.pod")
             or name == str(code) + ".md"                    # the brief, rewritten at dispatch
-            or (name.startswith("review-") and name.endswith(".md"))
+            # **`review-of-` IS THE REVIEWER'S DELIVERABLE AND MUST STAY VISIBLE.**
+            # Section 6.6 rests on the two names being different: the program's INPUT is
+            # `review-<PRED>.md` and the reviewer's OUTPUT is `review-of-<PRED>.md`, so a
+            # branch globbing `review-of-*.md` reads the reviewer's work and never the
+            # program's own input. Excluding both made every reviewer look like a reviewer
+            # that wrote nothing. MEASURED 2026-08-19: LJ-1.391's critic wrote a 17,266
+            # byte `review-of-LJ-1-391-1.md`, fact 4 reported only the probe and the
+            # report, the row's `changed_files_none` was therefore satisfied, and the same
+            # escalate row matched again and sent it to attempt 2. It would have climbed
+            # to `attempt_max` and parked, naming a row that had done nothing wrong.
+            or (name.startswith("review-") and not name.startswith("review-of-")
+                and name.endswith(".md"))
             # `run_acceptance()` writes `runs/accept-<N>.out` AFTER this snapshot, so it
             # is invisible on attempt 1 and counted as the worker's on every attempt
             # after it. MEASURED 2026-08-19 on LJ-1.388's second snapshot.
