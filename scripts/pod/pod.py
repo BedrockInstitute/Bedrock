@@ -1254,6 +1254,25 @@ ROLE_LINE = {
 }
 
 
+def ratio_bar(root=None):
+    """The LIVE `seconds_per_line_min` of the ratio row, or None. A23-era read.
+
+    **IT READS THE TABLE AND NEVER RESTATES THE NUMBER.** `dev/ledger.toml [ratio]` says
+    it is the only home for the measured rate and the tolerance, and `dev/pod/table.toml`
+    carries the applied bar. Writing `0.0123` into an instruction file would make a THIRD
+    home for one number, which W5 forbids and which is how a figure starts to drift. The
+    brief therefore carries whatever the row says on the day it is written.
+    """
+    try:
+        for r in _table(root):
+            if r["id"] == "sys-dd24-ratio-bar" and not r.get("expired"):
+                v = (r.get("when") or {}).get("seconds_per_line_min")
+                return v if isinstance(v, (int, float)) else None
+    except Exception:                          # noqa: BLE001. A brief still goes out
+        return None
+    return None
+
+
 def inject_survey(brief, root=None):
     """The brief builder's augmentation pass: R10 and section 7.4, plus R17 and R18.
 
@@ -1295,6 +1314,28 @@ def inject_survey(brief, root=None):
             slot = head_slot_of(p, root) or ""
             line = ROLE_LINE.get(slot)
             if line:
+                # **THE RATIO BAR IS TOLD, NEVER DISCOVERED.** Owner's ruling 2026-08-19.
+                # MEASURED that day: the string `seconds_per_line` appeared in NO slot
+                # file, not in `AGENTS.md` and not in any brief, so the only way a head
+                # could learn the constraint was to TRIP it, by which time the work is
+                # already built at the wrong shape and a critic is being paid to say so.
+                # A head that knows the bar can make the engineering judgement while it
+                # still costs nothing.
+                bar = ratio_bar(root)
+                if bar and slot in ("mathematician", "coder", "coder_adversarial",
+                                    "mathematician_adversarial"):
+                    line += (
+                        f"\n\n**THE RATIO BAR IS LIVE AND IT IS {bar} SECONDS PER IN-FENCE "
+                        f"LINE.** A green return at or above that rate is ESCALATED to a "
+                        f"critic by row `sys-dd24-ratio-bar`, which is DD24 restored by "
+                        f"amendment A10. The divisor is fact 7, the in-fence line count "
+                        f"of THIS task's write scope, counted the ledger's way: non-blank "
+                        f"lines inside ` ```agda ` fences. **A raw `.agda` probe carries "
+                        f"no fence and counts 0**, so the bar cannot fire on a probe and "
+                        f"it binds the moment you write a `.lagda.md` master under "
+                        f"`src/`. Design for it rather than discovering it: the number "
+                        f"comes from `dev/pod/table.toml` at brief build, and its measured "
+                        f"basis is in `dev/ledger.toml [ratio]`.")
                 text = text.rstrip("\n") + "\n\n" + ROLE_HEADING + "\n\n" + line + "\n"
 
         # R18. The new master gets its wiring path before anything reads the scope again.
