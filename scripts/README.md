@@ -20,7 +20,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
-| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `table.py`, `wait-and-start.sh`, `witness.py` |
+| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `pane-slot.py`, `table.py`, `wait-and-start.sh`, `witness.py` |
 
 Unchanged in place: this `README.md`, `scripts/tests/`, `scripts/git-hooks/`.
 
@@ -715,6 +715,35 @@ a worker can change `isZFCModel`, `𝒮ʟ` or `LEM` and leave the whole tree gre
 trophy asserts something different. R16 rides the same snapshot with one sha256 per rule
 home. Four modes: `--check` at acceptance conjunct 5, `--msg-file` at the `commit-msg`
 hook, no argument for the history audit, and `--write` to regenerate the snapshot.
+
+### `pane-slot.py`
+
+**THE ONE HOME OF THE PANE LAYOUT RULE.** It picks the direction, picks the source pane,
+performs the split, runs the equaliser when a column was opened, and keeps the state. It
+prints a pane id and nothing else, and it never raises: any failure prints nothing and
+`launcher.py`'s driver falls back to one split off BASE, which is ugly and never a lost
+dispatch.
+
+**TWO PHASES AND NO ALTERNATION INSIDE EITHER.** While fewer columns exist than fit at
+`MIN_COL_WIDTH`, a dispatch opens a column by splitting RIGHT off the RIGHTMOST one. Once
+they are open, a dispatch deepens the SHALLOWEST column, leftmost on a tie, by splitting
+its LAST pane DOWN. A down-split changes no width, so the equaliser runs on a right-split
+alone and cannot be confused.
+
+**WHY IT EXISTS.** The rule was about twenty five lines of shell inside the driver, steered
+by two state files that could disagree. MEASURED 2026-08-19 over six dispatches: columns
+145, 73, 36 and 36 wide, panes 62, 31, 16 and 8 rows tall, and each column's BOTTOM pane
+spanning every column opened after it. The cause is a property of `herdr pane split`, which
+divides ONE PANE'S rectangle: a column that has been split DOWN holds no full-height pane,
+so opening a column off its top pane is a nested split inside the top half. Twelve
+dispatches after the repair: every column 58 wide, x strictly increasing left to right,
+and no width moves once the columns are open.
+
+**THE STATE IS ONE ADVISORY FILE**, `.pod-state/herdr-columns`, one line per column left to
+right. A line naming a pane herdr no longer has is dropped on read, so a stale file costs
+one column and never a wrong split.
+
+    .venv/bin/python scripts/pod/pane-slot.py --base <PANE> --plan     # decide, do nothing
 
 ### `wait-and-start.sh`
 

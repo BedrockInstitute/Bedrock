@@ -101,6 +101,25 @@ ending keeps it, because a dead agent's terminal is the only record of how it di
 **THE ONE PANE THAT NEVER CLOSES IS THE MAINTAINER'S**, because it is resident. That is
 what makes it reachable at any hour.
 
+**WHERE A NEW PANE LANDS IS ONE RULE WITH TWO PHASES, and you can ask it without running
+a dispatch.** `scripts/pod/pane-slot.py` owns it. While there is room for another column
+at `MIN_COL_WIDTH`, a dispatch opens one by splitting RIGHT off the RIGHTMOST column, so
+the columns grow left to right and every one is the same width. Once they are open, a
+dispatch deepens the SHALLOWEST column, leftmost on a tie, by splitting its LAST pane
+DOWN. **There is no alternation inside either phase**: the layout goes right, right,
+right, then down, down, down.
+
+    .venv/bin/python scripts/pod/pane-slot.py --base <PANE> --plan
+
+That prints the direction, the source pane and the column count, and changes nothing.
+
+**IT USED TO ALTERNATE and the result was measured broken.** The old rule split DOWN
+whenever a half-empty column existed and RIGHT otherwise, and it opened the new column off
+a pane that had already been split down. MEASURED 2026-08-19 over six dispatches: columns
+145, 73, 36 and 36 wide, panes 62, 31, 16 and 8 rows tall, and each column's BOTTOM pane
+spanning every column opened after it. Twelve dispatches under the rule above: every
+column 58 wide, and no width moves once the columns are open.
+
 ```sh
 herdr agent list                     # every live head and its pane
 herdr agent prompt pod-batch "..."   # send one message without leaving your pane

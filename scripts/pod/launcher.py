@@ -299,34 +299,23 @@ HERDR_WORKSPACE_LABEL = "Bedrock"
 # id IS stable, so the id is remembered here and only re-created when a lookup
 # proves it gone.
 HERDR_WS_FILE = STATE / "herdr-workspace"
-#: THE COLUMN THAT IS STILL HALF EMPTY, or absent when every column is full.
-#: THE LAYOUT, ruled by the owner 2026-08-18: split RIGHT for a new column, and split
-#: DOWN inside a column exactly once. Right is unlimited, down is capped at one, so the
-#: panes fill a two-row grid that grows sideways.
-#:
-#: **WHY A FILE AND NOT A QUERY.** herdr can list panes, but the driver runs as a shell
-#: script inside the launch and has no way to tell ITS agent panes from the owner's own
-#: work in the same workspace. One line naming the column we last opened is enough, and
-#: a stale line costs one extra column rather than a wrong split.
-HERDR_COL_FILE = STATE / "herdr-open-column"
-#: THE RIGHTMOST COLUMN'S PANE. A new column is split off IT and never off `BASE`.
-#:
-#: **MEASURED 2026-08-18 in a scratch workspace, because the first version of this was
-#: written from prose and had the geometry backwards.** Two readings settled it:
-#:
-#:   1. `split --pane BASE --direction right` DIVIDES BASE. Twice gave x=23 BASE(w65),
-#:      x=88 the SECOND pane, x=153 the FIRST. The newest column lands NEXT TO BASE and
-#:      the oldest is pushed right, which reverses the owner's left-to-right ruling, and
-#:      BASE fell from w129 to w65, so the pane running the loop is 1/8 wide after three.
-#:   2. Splitting the top pane of an ALREADY DOWN-SPLIT column rightward gives a HALF
-#:      HEIGHT pane (h31) and leaves the bottom one spanning two columns (w129).
-#:
-#: Splitting the RIGHTMOST column instead gave BASE(w130) | col(w65) | col(w64), every
-#: one h62, which is the ruled layout.
-HERDR_RIGHT_FILE = STATE / "herdr-rightmost-column"
+#: **THE PANE LAYOUT IS NOT DECIDED HERE.** `scripts/pod/pane-slot.py` owns the rule, the
+#: state and the splits, and its docstring carries the two phases and the measurements.
+#: The paragraphs that stood here described the OLD rule, which was measured broken on
+#: 2026-08-19, and the file is the classic place a repaired rule leaves its own obituary.
+#: **THE TWO LAYOUT STATE FILES ARE GONE.** `herdr-open-column` and
+#: `herdr-rightmost-column` steered the old shell rule and could disagree: on 2026-08-19
+#: one was empty while the other named a DEAD pane, which sent the next dispatch down the
+#: BASE fallback this file had MEASURED as the worst case. `scripts/pod/pane-slot.py`
+#: keeps ONE file, `.pod-state/herdr-columns`, and drops a dead pane on read.
 #: The column equaliser, run after a new COLUMN is opened. See its docstring for the
-#: arithmetic and for the measurements that justify it.
+#: arithmetic and for the measurements that justify it. **`pane-slot.py` calls it now**,
+#: because the rule that knows a RIGHT split just happened lives there.
 EQUALISE = Path(__file__).resolve().parent / "equalise-panes.py"
+#: **THE ONE HOME OF THE PANE LAYOUT RULE.** It picks the direction, picks the source
+#: pane, performs the split and keeps the state. Its docstring carries the two phases and
+#: every measurement behind them.
+PANE_SLOT = Path(__file__).resolve().parent / "pane-slot.py"
 #: The one-liner that reads a pane id out of a `pane split` response. It appears four
 #: times below and a second spelling of it would be a second thing to get wrong.
 SPLIT_ID = ("python3 -c 'import json,sys; "
@@ -1342,6 +1331,9 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             # word with no allocation area, and every number measured under it
             # was incomparable with a number measured under R13's.
             envargs = ["--env", f"GHCRTS={agda_heap(tier)}"] if agda else []
+            # `pane-slot.py` takes the same `--env K=V` pairs, so one list serves both it
+            # and the BASE fallback below.
+            slotenv = list(envargs)
             # POD EDIT 2 of 6 (design section 6.2). The old builder was a
             # two-branch conditional expression, so a `claude` kind fell into
             # the `else` branch and emitted `-- --provider deepseek --model
@@ -1425,55 +1417,35 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # arguments to `pane split` and the pane got `GHCRTS=-A64m`.
                 # `shlex.quote` is the tool, and this file already ruled that in
                 # the resume driver below: "Python repr is not shell quoting".
-                # THE LAYOUT, ruled by the owner 2026-08-18. RIGHT opens a new column
-                # and is unlimited; DOWN fills a column and happens at most once. So a
-                # half-empty column is split DOWN and consumed, and otherwise a new
-                # column is split RIGHT off the base and recorded as half empty.
+                # **THE LAYOUT RULE HAS ONE HOME AND IT IS NOT THIS STRING.**
+                # `scripts/pod/pane-slot.py` picks and creates the pane, and its docstring
+                # carries the rule, the two phases and the measurements. It replaced about
+                # twenty five lines of shell here plus the two state files
+                # `herdr-open-column` and `herdr-rightmost-column`, which could disagree
+                # and on 2026-08-19 did: one was empty and the other named a DEAD pane.
                 #
-                # The file holds the column we last opened. It is advisory: if it names
-                # a pane herdr no longer has, the split fails, the fallback opens a new
-                # column, and the cost is one narrower column rather than a wrong pane.
-                f"COLF={shlex.quote(str(HERDR_COL_FILE))}\n"
-                f"RIGHTF={shlex.quote(str(HERDR_RIGHT_FILE))}\n"
-                "OPEN=$(cat \"$COLF\" 2>/dev/null || true)\n"
-                "RIGHT=$(cat \"$RIGHTF\" 2>/dev/null || true)\n"
-                "PANE=\"\"\n"
-                # A HALF-EMPTY COLUMN IS FILLED DOWNWARD FIRST.
-                "if [ -n \"$OPEN\" ]; then\n"
-                f"  PANE=$(herdr pane split --pane \"$OPEN\" --direction down "
-                f"--ratio 0.5 --no-focus --cwd {shlex.quote(WD)} {shlex.join(envargs)} "
-                f"| {SPLIT_ID} 2>/dev/null || true)\n"
-                # FULL EITHER WAY. A good split used the column and a failed one means the
-                # pane is gone, so clearing in both cases is what caps DOWN at one.
-                "  : > \"$COLF\"\n"
-                "fi\n"
-                # OTHERWISE OPEN A NEW COLUMN OFF THE RIGHTMOST ONE, NEVER OFF BASE.
-                # MEASURED 2026-08-18: splitting BASE puts the newest column next to BASE
-                # and halves BASE every time, so the order reverses and the loop's own
-                # pane is 1/8 wide after three columns.
+                # WHAT WAS WRONG, MEASURED that day in a scratch workspace over six
+                # dispatches: columns 145, 73, 36 and 36 wide, panes 62, 31, 16 and 8 rows
+                # tall, and each column's BOTTOM pane spanning every column opened after
+                # it. The cause is a property of `pane split`, which divides ONE PANE'S
+                # rectangle: once a column has been split DOWN it holds no full-height
+                # pane, so opening a「new column」off its top pane is a nested split inside
+                # the top half. The old rule kept `herdr-rightmost-column` pointing at
+                # exactly that pane. **The comment above it had measured this failure and
+                # nothing connected the two.**
+                #
+                # After the repair, twelve dispatches: every column 58 wide, x strictly
+                # increasing left to right, and no width changes once the columns are open.
+                #
+                # IT PRINTS NOTHING WHEN IT CANNOT PLACE A PANE, and the fallback below
+                # then splits off BASE, which is ugly and never a lost dispatch.
+                f"SLOT={shlex.quote(str(PANE_SLOT))}\n"
+                f"PANE=$(python3 \"$SLOT\" --base \"$BASE\" "
+                f"--cwd {shlex.quote(WD)} {shlex.join(slotenv)} 2>/dev/null || true)\n"
                 "if [ -z \"$PANE\" ]; then\n"
-                "  FROM=\"$RIGHT\"\n"
-                "  [ -n \"$FROM\" ] || FROM=\"$BASE\"\n"
-                f"  PANE=$(herdr pane split --pane \"$FROM\" --direction right "
-                f"--ratio 0.5 --no-focus --cwd {shlex.quote(WD)} {shlex.join(envargs)} "
-                f"| {SPLIT_ID} 2>/dev/null || true)\n"
-                # A STALE RIGHTMOST IS RECOVERABLE, and BASE always exists.
-                "  if [ -z \"$PANE\" ]; then\n"
-                f"    PANE=$(herdr pane split --pane \"$BASE\" --direction right "
+                f"  PANE=$(herdr pane split --pane \"$BASE\" --direction right "
                 f"--ratio 0.5 --no-focus --cwd {shlex.quote(WD)} {shlex.join(envargs)} "
                 f"| {SPLIT_ID})\n"
-                "  fi\n"
-                # THE NEW COLUMN IS BOTH THE RIGHTMOST AND THE HALF-EMPTY ONE.
-                "  printf '%s' \"$PANE\" > \"$COLF\"\n"
-                "  printf '%s' \"$PANE\" > \"$RIGHTF\"\n"
-                # EVERY COLUMN GETS THE SAME WIDTH, and this runs only when a COLUMN was
-                # opened, because a down-split changes no column's width. A `pane split`
-                # halves its target, so without this the columns come out 130, 65, 32, 32
-                # and the fourth is unreadable. MEASURED 2026-08-18, and measured again
-                # after the cure: 65, 65, 65, 64, and six columns go 16 -> 43.
-                # IT NEVER FAILS A DISPATCH. Tidiness is not worth a lost agent, so the
-                # equaliser swallows its own errors and this line ignores the rest.
-                f"  python3 {shlex.quote(str(EQUALISE))} \"$BASE\" >/dev/null 2>&1 || true\n"
                 "fi\n"
                 "echo \"HERDR pane=$PANE\"\n"
                 # A FRESHLY SPLIT PANE IS NOT YET AN INTERACTIVE SHELL. Measured

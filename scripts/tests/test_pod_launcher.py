@@ -122,6 +122,16 @@ class _Block:
         return None
 
 
+def load_module(name: str, path):
+    """Load one module by PATH. `pane-slot.py` has a hyphen, so `import` cannot reach it."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def load_launcher(policy: str = "real"):
     """Import `scripts/pod/launcher.py` under a private module name.
 
@@ -1078,33 +1088,56 @@ def main() -> int:
     # SCOPE EVERY CHECK TO THE SPLIT BLOCK. `--direction right` also appears in the
     # file's own prose 56 KB earlier, so a whole-file index comparison compares a
     # comment with a call and reads the order backwards.
-    _blk = _ly[_ly.index("COLF="):_ly.index("HERDR pane=$PANE")]
-    check("a DOWN split exists, and it splits the recorded open column",
-          "--direction down" in _blk and "$OPEN" in _blk, True)
-    check("a RIGHT split exists, and its usual target is the RIGHTMOST column",
-          "--direction right" in _blk and "$FROM" in _blk, True)
-    check("DOWN is tried FIRST, so a half-empty column fills before a new one opens",
-          _blk.index("--direction down") < _blk.index("--direction right"), True)
-    # MEASURED 2026-08-18: splitting BASE reverses the column order and halves BASE at
-    # every new column. BASE survives as the fallback for the first column and for a
-    # rightmost pane herdr no longer has.
-    check("BASE is the FALLBACK and never the usual target",
-          "FROM=" in _blk and "$BASE" in _blk, True)
-    check("the rightmost column is recorded, so the grid grows left to right",
-          "HERDR_RIGHT_FILE = STATE /" in _ly and "$RIGHTF" in _blk, True)
-    check("the open column is CLEARED whichever way the down split went, so DOWN "
-          "can never happen twice in one column",
-          _blk.count("$COLF") >= 3, True)
-    # EQUAL WIDTHS. A `pane split` halves its target, so columns come out 130, 65, 32,
-    # 32 without this. MEASURED 2026-08-18 before and after: the cure gives 65, 65, 65,
-    # 64, and six columns go from a 16-wide fourth to 43 each.
-    check("a new COLUMN is followed by the equaliser, and a down-split is not",
-          "EQUALISE" in _blk
-          and _blk.index("EQUALISE") > _blk.index("--direction right"), True)
-    check("the equaliser can never fail a dispatch",
-          "|| true" in _blk[_blk.index("EQUALISE"):], True)
-    check("the column file lives under .pod-state, beside the other runtime state",
-          "HERDR_COL_FILE = STATE /" in _ly, True)
+    # ---------------------------------------------------------- the pane layout rule
+    #
+    # **THE RULE MOVED OUT OF THE SHELL AND SO DID THESE CHECKS.** They used to read the
+    # driver string for `$COLF`, `$RIGHTF` and the order of two `--direction` flags, which
+    # tested the SPELLING of an implementation and not the layout it produces. That
+    # implementation was WRONG the whole time and every one of those checks passed:
+    # MEASURED 2026-08-19 over six dispatches, columns 145, 73, 36 and 36 wide, panes 62,
+    # 31, 16 and 8 rows tall, each column's BOTTOM pane spanning every column opened after
+    # it. `plan()` in `scripts/pod/pane-slot.py` is a pure function, so the rule itself is
+    # now what is under test.
+    _slot = load_module("pane_slot", ROOT / "scripts" / "pod" / "pane-slot.py")
+    BASE = "w:base"
+
+    check("with no column at all, the first dispatch opens one off BASE",
+          _slot.plan([], 4, BASE), ("right", BASE))
+    check("below the limit, a new column is opened off the RIGHTMOST column",
+          _slot.plan([["c1"], ["c2"]], 4, BASE), ("right", "c2"))
+    # MEASURED 2026-08-19: splitting BASE puts the newest column NEXT TO BASE and halves
+    # BASE every time, so the order reverses and the loop's own pane shrinks. BASE is the
+    # source for the FIRST column only.
+    check("BASE is never the source once a column exists",
+          _slot.plan([["c1"]], 4, BASE)[1] != BASE, True)
+    check("at the limit the rule switches to DOWN and never opens another column",
+          _slot.plan([["c1"], ["c2"]], 2, BASE)[0], "down")
+    check("the SHALLOWEST column is deepened, so the grid fills evenly",
+          _slot.plan([["c1", "c1b"], ["c2"]], 2, BASE), ("down", "c2"))
+    check("a tie is broken LEFTMOST, so the fill order is readable",
+          _slot.plan([["c1"], ["c2"]], 2, BASE), ("down", "c1"))
+    # **THIS IS THE DEFECT THE OLD RULE HAD AND THE FIRST DRAFT OF THE NEW ONE REPEATED.**
+    # Splitting a column's TOP pane divides only the top half: the new pane comes out half
+    # height and every pane below it keeps the wider rectangle. The source must be the
+    # column's LAST pane.
+    check("deepening splits the column's LAST pane and never its top",
+          _slot.plan([["top", "mid", "bottom"]], 1, BASE), ("down", "bottom"))
+    check("an over-full grid DEEPENS and never opens a narrow column, so no width moves",
+          _slot.plan([["c1", "c1b"], ["c2", "c2b"]], 2, BASE)[0], "down")
+    check("a dispatch is never refused for want of a slot",
+          all(_slot.plan([["a", "b", "c"], ["d", "e", "f"]], 2, BASE)), True)
+    check("the column limit is read from the LIVE area and is at least one",
+          _slot.MIN_COL_WIDTH > 0, True)
+
+    check("the driver DELEGATES to pane-slot.py and holds no rule of its own",
+          "pane-slot.py" in _ly or "PANE_SLOT" in _ly, True)
+    check("the two state files the old rule needed are gone from the driver",
+          "$COLF" in _ly or "$RIGHTF" in _ly, False)
+    _blk = _ly[_ly.index("SLOT="):_ly.index("HERDR pane=$PANE")]
+    check("a pane-slot that cannot place a pane falls back rather than losing a dispatch",
+          "--direction right" in _blk and "$BASE" in _blk, True)
+    check("the equaliser is called by the rule's own home and not by the driver",
+          "EQUALISE" in _blk, False)
 
     print()
     if FAILED:
