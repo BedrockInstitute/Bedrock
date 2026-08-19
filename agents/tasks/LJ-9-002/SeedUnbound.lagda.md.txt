@@ -1,0 +1,15 @@
+# SeedUnbound
+
+A master carrying one rule 3 telescope, written in an isolated worktree so acceptance
+conjunct 4 fails and the replay corpus gains one MEASURED `unbound_hyp` record.
+
+```agda
+{-# OPTIONS --cubical --safe #-}
+module SeedUnbound where
+
+S : Set₁
+S = Set
+
+module Seed
+       (seedbad : (x : S) → Set) where
+```

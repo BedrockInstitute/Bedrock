@@ -19,35 +19,6 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
-### 5. ONE MEASURED corpus record still owed: `unbound_hyp`
-
-**FOUR OF THE FIVE RUNNER CLASSES ARE HELD, and two of them were made on 2026-08-19.**
-`lint` and `spec_surface` the `live` stream earned by itself. `obligations_up` and
-`closure_open` were MADE, in an isolated worktree, by failing one conjunct on purpose and
-running `accept.py` over it, then hand-loading the record with `provenance = "report"`,
-which `replay.PROVENANCE` admits for exactly this. Evidence:
-`agents/tasks/LJ-9-001/runs/accept-5.out:20` and `accept-6.out:20`.
-
-- `obligations_up`: a brief declaring an obligation name nothing resolves, with
-  `--obl-before 0`, so the delta is +1 and conjuncts 1, 3, 4, 5 and 6 all hold.
-- `closure_open`: a master under `src/` that `Everything` does not import. **It must be
-  STAGED**, because `check_closure()` skips an untracked master by design and leaves it
-  to the closure-new WARN check. A worktree has its own index, verified, so staging
-  there never touches the main tree.
-
-**VERIFIED AFTER: a system row naming `obligations_up` now passes `check_balance()`,
-where it was refused before.** Both records route to NO MATCH, so they arm the balance
-check and are inert for R3, which is honest and is what the corpus needed.
-
-**`unbound_hyp` IS STILL OWED AND HERE IS WHERE IT STOPPED.** Conjunct 4 is
-`unbound_NEW`: it needs a changed `src/**.lagda.md` INSIDE the task's write scope, and a
-finding that is not in the dispatch-point snapshot. Two shapes were tried and neither
-fired: a top-level declaration with an empty premise list, and a module-parameter
-telescope of the same shape. `check-unbound-hyp.py` reads `tracked_masters()` only, so
-the master must be staged, and its rule 3 parses a telescope form that has to be read out
-of the parser rather than guessed. **The master must ALSO typecheck**, because conjunct 1
-runs Agda on a master inside the scope and must pass for the class to be 4's and not 1's.
-
 ### 7. A check for the defect shape three audits missed
 
 A written rule that some code path contradicts. The instance: `AGENTS.md` said nothing
@@ -88,6 +59,40 @@ and none asked the fourth question: **can the thing this produces actually do th
 is produced for?** Sweep the POD's other producers for the same shape.
 
 ## Closed
+
+### 5. Five MEASURED corpus records, one per RUNNER class. DONE 2026-08-19
+
+**R3's balance check is armed for every RUNNER class.** `lint` and `spec_surface` the
+`live` stream earned by itself. The other three were MADE, each by failing ONE conjunct
+on purpose in an isolated worktree and letting `accept.py` produce the record, then
+hand-loading it with `provenance = "report"`. VERIFIED after: a system row naming any of
+the five now passes `check_balance()`, where three were refused before.
+
+| class | how it was made | evidence |
+|---|---|---|
+| `obligations_up` | an obligation name nothing resolves, `--obl-before 0`, delta +1 | `agents/tasks/LJ-9-001/runs/accept-5.out:20` |
+| `closure_open` | a master `Everything` does not import, STAGED | `agents/tasks/LJ-9-001/runs/accept-6.out:20` |
+| `unbound_hyp` | a rule 3 telescope in a master inside the task's scope | `agents/tasks/LJ-9-002/runs/accept-1.out:21` |
+
+**WHAT `unbound_hyp` COST, because it is the one that resisted.** Four facts had to line
+up at once and each was read out of the code rather than guessed:
+
+- `check-unbound-hyp.py` scans `tracked_masters()`, so the master must be STAGED. A
+  worktree has its own index, verified, so staging there never touches the main tree.
+- Rule 3 needs a telescope whose binder is SET-typed, and `SET_TYPE` is
+  `^S$|^V\b|⟪|hProp`. Two earlier attempts bound `(x : A)` and `(x : Type)`, so `bound`
+  was empty and the rule never looked. A binder of type exactly `S` fires it.
+- `OPEN` matches a `(` or `{` at the START of a line, so the telescope has to sit on its
+  own line and not inside a `module M (...) where` one-liner.
+- **The master must ALSO typecheck**, because conjunct 1 runs Agda on a master inside the
+  scope and its class would win over 4's. The first draft imported
+  `Cubical.Foundations.Prelude` and died on `InfectiveImport` under `--safe`; builtin
+  `Set` needs no import and checks green in 0.35 s.
+
+Conjunct 3 also had to be satisfied, so the master is wired into `Everything` in the
+worktree. `src/Everything.lagda.md` is NOT in the trophy spec surface, checked before
+touching it, so that wiring does not fire conjunct 5 instead.
+
 
 ### 10. Nothing measured where the refill wrote. FIXED 2026-08-19
 
