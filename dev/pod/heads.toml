@@ -93,6 +93,27 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
 # Evidence: `archive/dev/vendors.toml:144-152`. The same failure class is why the
 # read-back rule below exists for the Claude heads: a provider that answers is not a
 # model that exists.
+#
+# 3. BOTH `pi` HEADS ARE VERIFIED END TO END, MEASURED 2026-08-19, and until that day
+#    NEITHER HAD EVER RUN: the `coder` slot had no reachable path (amendment A21) and
+#    `mathematician_adversarial` was never dispatched either, so the whole `herdr-pi`
+#    side of this file was unexercised while four Claude heads did all the work.
+#    The probe ran each vendor in its own pane, exactly as `launch()` builds it, and
+#    asked for a WRITE and not an answer, because the failure class above is an agent
+#    that echoes and exits `done` having written nothing:
+#      - `--provider zai --model glm-5.3` wrote its file. Coder.
+#      - `--provider deepseek --model deepseek-v4-pro` wrote its file. Coder critic.
+#    Check 2 above passed first for both: `pi --list-models` lists `zai/glm-5.3` and
+#    `deepseek/deepseek-v4-pro` as real rows, and `pi auth check --provider <p>`
+#    answered `ready` for both. **`pi auth check` REFUSES with no argument**, so the
+#    sentence in check 1 means `--provider` or `--model`, never a bare invocation.
+#
+#    ONE TRAP THE PROBE FELL INTO AND THE LAUNCHER DOES NOT. Waiting on
+#    `--until idle --until done` alone returns AT ONCE, because a fresh agent is
+#    already idle, and the file then looks unwritten. `launch()` waits
+#    `--until working` FIRST (`scripts/pod/launcher.py:1512` and `:1620`) and only
+#    then for the finish. A guard that skips that step reads every healthy run as a
+#    silent failure.
 
 # THE READ-BACK REFUSAL, and the measurement inverted the design's rule.
 #

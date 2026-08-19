@@ -1234,7 +1234,7 @@ sha = "8e4452ef13779510ece7ee14ee9cddb0a375de898ad407441f49289f86ab85ca"
 
 [[guarded]]
 path = "dev/pod/heads.toml"
-sha = "2ba00586639a45c431dae9f7f39bea0dc0f9e1519701ca86f598b8e86a425466"
+sha = "1b0bc65146b3c2d23bc5f3f8bf6e5a0a9fe84ae23861b12c48f2c9c76ab96c14"
 
 [[guarded]]
 path = "dev/pod/instructions/coder.md"
