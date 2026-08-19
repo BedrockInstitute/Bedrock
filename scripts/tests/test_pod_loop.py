@@ -331,9 +331,16 @@ class LoopCase(unittest.TestCase):
         self.patch(pod, "ensure_maintainer",
                    lambda st, root=None: self.calls.__setitem__(
                        "ensure", self.calls["ensure"] + 1))
-        self.patch(pod, "prompt_maintainer",
-                   lambda st, root=None: self.calls.__setitem__(
-                       "maintainer", self.calls["maintainer"] + 1))
+        # **THE COUNTER ALSO STAMPS THE CLOCK, because the real one does.** A stub that
+        # only counts leaves `hours_since_last_batch()` and `park_since_last_batch()`
+        # reading a log with no batch line in it, so every trigger test measured a
+        # trigger that can never be satisfied and no test could see a re-fire. That is
+        # the same trap `maintainer_scope_ok()` fell into: a test that stubs the thing
+        # under test cannot fail for the reason it exists.
+        def _prompt(st, root=None):
+            self.calls["maintainer"] = self.calls["maintainer"] + 1
+            pod.emit_event(st, "batch", result="prompted", root=root or self.tmp)
+        self.patch(pod, "prompt_maintainer", _prompt)
         self.patch(pod, "inject_survey", lambda brief, root=None: False)
         self.patch(pod, "kill_process_group", lambda pid: True)
         # A13 AND A11 ARE SIDE EFFECTS LIKE ANY OTHER. The real `watchdog_tick()` reads
@@ -1209,13 +1216,39 @@ class RuleE(LoopCase):
         pod._rule_e(st, self.tmp)
         self.assertEqual(self.calls["maintainer"], 0)
 
-    def test_three_parked_tasks_fire_the_batch_whatever_the_clock_says(self):
+    def _park_three(self, st):
+        """Park three tasks the way production does, through a real transition each.
+
+        A hand-set `status = PARKED` with no log line is not a park: `emit()` is the only
+        writer of one, and AD15's trigger reads the log.
+        """
+        for i in range(3):
+            t = pod.Task(f"X{i}", status=pod.CHECKING)
+            st.tasks[f"X{i}"] = t
+            pod.emit(st, t, pod.CHECKING, pod.PARKED, reason="no-match", root=self.tmp)
+
+    def test_a_new_park_fires_the_batch_whatever_the_clock_says(self):
         st = pod.State()
         pod.emit_event(st, "batch", result="admit", root=self.tmp)
-        for i in range(3):
-            st.tasks[f"X{i}"] = pod.Task(f"X{i}", status=pod.PARKED)
+        self._park_three(st)
         pod._rule_e(st, self.tmp)
         self.assertEqual(self.calls["maintainer"], 1)
+
+    def test_the_SAME_parks_never_fire_a_second_batch(self):
+        """**THE PROMPT STORM, and this is its regression guard.** The trigger used to
+        read `st.count(PARKED) >= 3`, which is a LEVEL: three parked tasks stay parked
+        until a row un-parks them, so it held at every tick. MEASURED 2026-08-19: four
+        identical batches at 07:05:03, 07:05:34, 07:06:06 and 07:06:37, one per tick,
+        all naming the same three tasks. It is an EDGE now, so a park set that nobody
+        has cured is asked about ONCE."""
+        st = pod.State()
+        pod.emit_event(st, "batch", result="admit", root=self.tmp)
+        self._park_three(st)
+        pod._rule_e(st, self.tmp)
+        pod._rule_e(st, self.tmp)
+        pod._rule_e(st, self.tmp)
+        self.assertEqual(self.calls["maintainer"], 1,
+                         "the same three parks asked the maintainer more than once")
 
     def test_r15_refuses_a_batch_that_wrote_outside_the_proposal_file(self):
         """`--untracked-files=all` is why the untracked half is visible: a maintainer

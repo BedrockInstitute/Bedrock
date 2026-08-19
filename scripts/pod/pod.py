@@ -1848,6 +1848,38 @@ def hours_since_last_batch(root=None):
     return (time.time() - newest) / 3600.0
 
 
+def park_since_last_batch(root=None):
+    """Has a task parked since the newest `batch` line? AD15's second trigger.
+
+    **THE PARKED COUNT ALONE RE-FIRES EVERY TICK AND IT DID.** AD15 reads「12 hours or at
+    3 parked」, and the count half is a LEVEL, not an edge: once three tasks are parked
+    they stay parked until a row un-parks them, so the condition holds at every tick and
+    the maintainer is prompted every `tick_seconds` for ever.
+
+    MEASURED 2026-08-19: four batch prompts at 07:05:03, 07:05:34, 07:06:06 and 07:06:37,
+    one per tick, all naming the same three parked tasks. **A prompt to a busy head QUEUES
+    (`dev/LESSONS.md` C-61)**, so the storm does not interrupt the maintainer; it stacks
+    behind whatever it is doing and every one of them is stale on arrival.
+
+    THE EDGE IS THE HONEST TEST: ask again only when something NEW has parked since the
+    last time the program asked. The 12 hour clock is unchanged and still catches a
+    standing park set that nobody has cured.
+
+    **IT COMPARES `seq` AND NEVER THE TIMESTAMP.** A transition stamp has one second of
+    resolution, and a batch line and the park that provoked it routinely land inside the
+    same second, so `>` misses the edge and `>=` re-fires for as long as that second
+    lasts. `seq` is the log's own monotonic counter and it has neither failure.
+    """
+    newest_batch, newest_park = -1, -1
+    for line in log_lines(root):
+        seq = _int(line.get("seq"), -1)
+        if line.get("event") == "batch":
+            newest_batch = max(newest_batch, seq)
+        elif line.get("to") == PARKED:
+            newest_park = max(newest_park, seq)
+    return newest_park > newest_batch
+
+
 def direction_changed(st=None, root=None, record=True):
     """Has the owner rewritten `dev/pod/direction.md` since the program last looked?
 
@@ -2790,7 +2822,13 @@ def _rule_e(st, root):
     # liveness is not on the batch clock. A tick that had to START it also handed it a
     # brief, so that tick does NOT also prompt: `started` is the whole of that guard.
     started = ensure_maintainer(st, root)
-    if not started and (hours_since_last_batch(root) >= 12 or st.count(PARKED) >= 3):
+    # **THE PARKED HALF IS AN EDGE AND NOT A LEVEL.** `st.count(PARKED) >= 3` held at
+    # every tick once three tasks were parked, so it prompted the maintainer every
+    # `tick_seconds` for ever: MEASURED 2026-08-19 at 07:05:03, 07:05:34, 07:06:06 and
+    # 07:06:37, four identical batches naming the same three tasks. AD15's trigger is
+    # unchanged in meaning; it now asks again only when something NEW has parked.
+    if not started and (hours_since_last_batch(root) >= 12
+                        or (st.count(PARKED) >= 3 and park_since_last_batch(root))):
         prompt_maintainer(st, root)            # it is resident, so this FEEDS, not spawns
         write_digest(st, root)
 
