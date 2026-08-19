@@ -1,5 +1,13 @@
 # The POD task queue, seeded by cutover step 13 on 2026-08-18.
 #
+# **THIS QUEUE IS FOR NON-RESIDENT AGENTS ONLY**, owner's ruling 2026-08-19. An entry
+# becomes a TASK, and a task is DISPATCHED to a head that does not exist until rule (f)
+# starts it. That is what a queue is for. **The maintainer is resident (A17) and takes no
+# entry here**: work for it goes to `dev/pod/maintainer-backlog.md`, which every batch
+# brief carries, or you attach to its pane and say so. Four program-repair items were
+# written here on 2026-08-19 and removed the same hour: AD3 hands every task brief to a
+# MATHEMATICIAN, so a queued plumbing job reaches the head that does the mathematics.
+#
 # **THIS FILE IS THE ONLY PRODUCER OF A TASK** (rule (a1)). The mathematician writes
 # an entry, `park_and_split` appends one, and the owner may add one by hand. The
 # program never writes a brief, because AD3 gives the brief to the mathematician.
@@ -39,6 +47,67 @@
 code = "LJ-1.386"
 brief = "agents/tasks/LJ-1-386/LJ-1.386.md"
 reason = "The resumption task. dev/PLAN.md:63-66 names it first: internal existence of a pairing code at a band ordinal, GO or NO-GO."
+
+# ---------------------------------------------------------------------------
+# WRITTEN BY THE REFILL OF 2026-08-19, rule (g). The queue held one entry with a
+# brief and it was RUNNING, so nothing was dispatchable and the loop asked for
+# work. `[LJ-1.386]` returned GO on the coded-witness door and named its own
+# successor: build the internal product and its ambient bridge, which is the
+# FIRST of `Leg1`'s two conjuncts
+# (agents/tasks/LJ-1-386/lj-1.386-report.md:254-266).
+# ---------------------------------------------------------------------------
+
+[[task]]
+code = "LJ-1.388"
+brief = "agents/tasks/LJ-1-388/LJ-1.388.md"
+reason = "The internal product of two L-elements and the ambient bridge into it, at GENERIC a and b. It is Leg1's first conjunct, and leg1-gives-sq closes the route from Leg1 untruncated. VERIFIED 2026-08-19: preflight.py prints `22 checks, no refusal`"
+
+# ---------------------------------------------------------------------------
+# WRITTEN BY THE REFILL OF 2026-08-19T06Z, rule (g). The queue held one entry
+# with a brief, `[LJ-1.388]`, and it was RUNNING, so nothing was dispatchable.
+#
+# `[LJ-1.390]` PRICES A SECOND ROUTE TO THE SAME `sq`, AND NOBODY HAS PRICED IT.
+# Every dispatch since `[LJ-1.384]` priced ONE route: build the internal square
+# `P`, bridge the ambient product into it, then code an injection from `P` into
+# `δ`. `[LJ-1.386]`'s door is stated at ARBITRARY `a` and `b`
+# (agents/tasks/LJ-1-386/Probe386.agda:264-268), so the SAME door at `a := δ`,
+# `b := κ` descends to the internal cardinal and needs no product at all. The
+# tree already carries that shape: `InternalLeastCard.Selected.δ-inj` at
+# src/L/Cardinal.lagda.md:257-258 is the truncated coded injection the door
+# consumes. VERIFIED 2026-08-19: preflight.py prints `22 checks, no refusal`.
+# ---------------------------------------------------------------------------
+
+[[task]]
+code = "LJ-1.390"
+brief = "agents/tasks/LJ-1-390/LJ-1.390.md"
+reason = "Price the DESCENT route to `sq` at a non-initial ordinal against `Leg1`'s second conjunct. It builds no set: it moves the square law down to the internal cardinal and back, through `[LJ-1.386]`'s door at `a := δ`, `b := κ`. The risk it measures is that `IsCardinalL` forbids a CODED injection while `Init` forbids an AMBIENT one, and the door runs coded to ambient only"
+
+# A REQUEST and not a task: no brief, so rule (a1) skips it and the digest prints
+# it. **ITS PRICE PREMISE WAS WRONG AND THE REFILL OF 2026-08-19T06Z CORRECTED
+# IT.** The text here used to say the certification needs `ω · 2` injecting into
+# `ω × ω`, a counting fact the tree does not deliver. IT DOES NOT. The tree
+# already records the cheap witness: src/L/InjChain.lagda.md:104 reads「`Init ω`
+# needs `⟨ ω ∈ˢ ω ⟩`, refuted by `∈-irrefl`」, so the residue band is not empty
+# and its first member is `ω` itself, for a DEFINITIONAL reason and not a
+# counting one.
+#
+# **AND THE CERTIFICATION IS NOT LOAD-BEARING, which is why this stays a request
+# and got no brief.** The consumer takes `sq` as a MODULE PARAMETER quantified
+# over every infinite `δ` at or below `α₀`, with NO `Init` hypothesis
+# (src/L/StageCardinal.lagda.md:17-20). So a discharge must serve an ARBITRARY
+# `δ`, and `via-col-square` cannot, whether or not anybody exhibits a non-initial
+# ordinal. `[LJ-1.332]` read the same thing at
+# agents/tasks/LJ-1-332/lj-1.332-report.md:116-118 and called the EMPTY-BAND
+# abort dead at :131. The route is needed by the parameter's TYPE.
+#
+# WHAT IS LEFT HERE IS BOOKKEEPING, and it is worth one cheap dispatch some
+# hour: it retires two INFERRED marks
+# (agents/tasks/LJ-1-332/lj-1.332-report.md:125-128 and
+# agents/tasks/LJ-1-334/lj-1.334-report.md:65). It unblocks nothing.
+
+[[task]]
+code = "LJ-1.389"
+reason = "DEMOTED 2026-08-19 by the refill: bookkeeping, not a blocker. Retire the two INFERRED marks that say the residue band is inhabited. The cheap witness is `ω` itself and not `ω · 2`, because `Init ω` needs `⟨ ω ∈ˢ ω ⟩` (src/L/InjChain.lagda.md:104). No counting fact is needed"
 
 [[task]]
 code = "L4"

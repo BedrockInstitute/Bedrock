@@ -1,0 +1,88 @@
+# Maintainer batch 20260819-114415. THE BATCH IS EMPTY AND THE REASON IS NAMED.
+#
+# `harvest_batch()` (scripts/pod/pod.py:2025) reads `row` and `queue` and nothing
+# else. This file carries neither, so the program writes a `batch` line with
+# `result: "empty"` and retires this file. The reason below is kept with it.
+#
+# THE ONE PARKED TASK: LJ-1.386, `reason: "launch"`.
+#
+# 1. NO ROW CAN ROUTE THIS PARK, because the router never sees it.
+#    `dev/pod/transitions/2026-08.jsonl` seq 2 records `READY -> PARKED` with
+#    `reason: "launch"` and no `facts` key. `.pod-state/state.json` gives the task
+#    `"record": null`. A `[row.when]` block is matched against a record by
+#    `matches()` in `scripts/pod/table.py`, and `_route()` at
+#    `scripts/pod/pod.py:2549` is the only caller. Rule (c) reaches it only for a
+#    worker that RETURNED, and rule (a2) reaches it only after the
+#    `t.record is None` test at `scripts/pod/pod.py:2537`. This task never
+#    dispatched and never returned, so no row of any shape could ever fire on it.
+#
+# 2. THE FIRST CAUSE IS IDENTIFIED AND IT IS ALREADY CURED.
+#    `launch()` at `scripts/pod/pod.py:1696-1699` passes `preamble=` and
+#    `provider=`. The `--plan` stub pinned the signature and accepted neither, so
+#    the `TypeError` was caught at `scripts/pod/pod.py:1702-1703`, `launch()`
+#    returned None, and rule (f) parked the task at `scripts/pod/pod.py:2813`.
+#    The same `TypeError` is logged verbatim for the refill at seq 3 and seq 4.
+#    The stub at `scripts/pod/pod.py:2970` now takes `**kw`, so this cause is
+#    spent. The PREVIOUS batch reached this point and stopped here.
+#
+# 3. THE PREVIOUS BATCH PREDICTED THE PARK WOULD CLEAR, AND THE TREE HAS
+#    FALSIFIED THAT PREDICTION. `dev/pod/proposals/20260818-213533.toml.scope`
+#    item 3 states "the park un-parks at the next table write". MEASURED
+#    2026-08-19 on the live tree: `dev/pod/table.toml` was written at
+#    2026-08-18T11:40:01Z, the park is stamped 2026-08-18T11:06:30Z, the retry
+#    condition of `scripts/pod/pod.py:2534` is therefore TRUE, and the task is
+#    still PARKED. Calling `_rule_a2()` on the live state returns it PARKED.
+#
+# 4. THE SECOND CAUSE, AND IT IS LOAD-BEARING: RULE (a2) CANNOT READ THE PARK
+#    REASON, SO THIS TASK CAN NEVER UN-PARK.
+#    `emit()` writes the park reason into the log under the key `reason`
+#    (`scripts/pod/pod.py:771`) and onto the task under `park_reason`
+#    (`scripts/pod/pod.py:790`). `replay_log()` restores the field only from a key
+#    named `park_reason` (`scripts/pod/pod.py:609`), which no log line carries.
+#    MEASURED 2026-08-19: folding `dev/pod/transitions/2026-08.jsonl` from an
+#    empty state yields `park_reason = None`, and `.pod-state/state.json` carries
+#    `"park_reason": null` beside `"reason": "launch"` in the log.
+#    Rule (a2) at `scripts/pod/pod.py:2528` reads `t.park_reason` alone. With the
+#    value None it takes neither the `preflight:` branch nor the
+#    `("admission", "launch")` branch at `:2533`, and falls to the
+#    `t.record is None` test at `:2537`, which returns. THE TASK IS PERMANENTLY
+#    PARKED.
+#
+# 5. THE CURE IS ALREADY WRITTEN, ONCE, IN THE OTHER READER. `park_reason_of()`
+#    at `scripts/pod/pod.py:2108` reads the reason from the log, and its own
+#    docstring at `:2111` diagnoses this defect in words. `write_batch_brief()`
+#    uses it at `scripts/pod/pod.py:2200`, which is why THIS brief names the
+#    reason `launch` correctly. Rule (a2) does not use it.
+#    MEASURED 2026-08-19: with `t.park_reason or park_reason_of(t.code, root)`
+#    applied in memory, `_rule_a2()` emits `PARKED -> READY` for LJ-1.386 at once.
+#    This is the shape of backlog item 1 and backlog item 7: a repair that reached
+#    one reader of a sensor and not the other.
+#
+# 6. NO `[[queue]]` REQUEST. A queue entry repairs a BRIEF and goes to a
+#    mathematician. The brief was never read: the park is at `launch`, above the
+#    brief. The defect is in `scripts/pod/pod.py`, so its home is
+#    `dev/pod/maintainer-backlog.md`, which this batch's SCOPE does not admit.
+#    The text of item 4 and item 5 above is the backlog item, ready to move.
+#
+# TWO CONDITIONS THE OWNER MUST KNOW, both measured now:
+#
+# A. THIS BATCH WILL BE REFUSED ON SCOPE AND WILL NOT BE HARVESTED.
+#    `maintainer_scope_ok()` (`scripts/pod/pod.py:1958`) is checked BEFORE the
+#    rows are read (`scripts/pod/pod.py:2053`). MEASURED 2026-08-19: it returns
+#    False and names 24 paths, every one of them uncommitted POD work that no
+#    model touched this batch. The previous batch was refused the same way, which
+#    is why it carries the `.toml.scope` suffix and why its analysis never landed.
+#    The tree must be committed before any batch can write a row.
+#
+# B. THE REPLAY GATE IS EMPTY, SO R3 REJECTS NOTHING TODAY.
+#    `dev/pod/replay-corpus.jsonl` is 0 lines. `replay()`
+#    (`scripts/pod/replay.py:274`) iterates that corpus, so it moves no record and
+#    returns ADMIT for any well-formed row. AD10 says a row is admitted by
+#    mechanical replay; with an empty corpus the admission is vacuous. This is the
+#    exact condition the "say so and stop" clause exists for, and it is backlog
+#    item 5.
+
+[batch]
+ts = "20260819-114415"
+rows_proposed = 0
+reason = "The one parked task is parked at `launch` and carries no record, so no row can route it. The park is now known to be PERMANENT: rule (a2) reads `t.park_reason`, which the log fold never restores, so the un-park branch for `launch` is unreachable and the task cannot return to READY. The cure is `park_reason_of()`, already used by the batch brief builder and not by rule (a2). A table row is not the cure and would not fire."
