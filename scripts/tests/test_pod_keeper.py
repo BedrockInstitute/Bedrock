@@ -10,6 +10,15 @@ THE THREE ENDINGS THAT MUST NOT RESTART are the point. Until 2026-08-18 `pod run
 exit 1 to a rule (d) STOP, to a startup refusal and to an unhandled exception alike, and
 a keeper cannot be written against that: restarting a STOP repeals the STOP rule, and
 restarting a lock refusal hot-loops against the runner that already holds the lock.
+
+**`herdr` IS SHADOWED ON `PATH` AND THIS SUITE HAD A LIVE SIDE EFFECT WITHOUT IT.**
+MEASURED 2026-08-19: `tell()` calls `herdr agent prompt` unconditionally, and these tests
+drive exactly the three endings that call it, so every run of this file fired four real
+prompts at the resident maintainer's live session. The owner asked why the loop kept
+dying while everything sat idle. Nothing was dying: the timestamps marched through this
+file's own test order. A stub on `PATH` is preferred over a test-only branch inside
+`keeper.sh`, because a branch that exists to be switched off in tests is a branch that
+can be switched off anywhere, and because the stub lets the tests read what was SENT.
 """
 from __future__ import annotations
 
@@ -46,11 +55,31 @@ class Keeper(unittest.TestCase):
         p.chmod(0o755)
         return p
 
+    def _no_herdr(self, e):
+        """Shadow `herdr` so no test can prompt the LIVE maintainer. Returns the log."""
+        bin_dir = self.tmp / "bin"
+        bin_dir.mkdir(exist_ok=True)
+        sent = self.tmp / "prompts"
+        stub = bin_dir / "herdr"
+        stub.write_text('#!/bin/sh\nprintf \'%s\\n\' "$*" >> "' + str(sent) + '"\n')
+        stub.chmod(0o755)
+        e["PATH"] = str(bin_dir) + os.pathsep + e.get("PATH", "")
+        return sent
+
+    def herdr_calls(self):
+        """EVERY `herdr` call the keeper made, prompts and workspace stamping alike."""
+        p = self.tmp / "prompts"
+        return p.read_text().splitlines() if p.is_file() else []
+
+    def prompts(self):
+        return [l for l in self.herdr_calls() if l.startswith("agent prompt")]
+
     def _run(self, rc, timeout=20, body="", **env):
         e = dict(os.environ, COUNT=str(self.count), FAKE_RC=str(rc),
                  KEEPER_PY="/bin/sh", KEEPER_LOOP=str(self._loop(body)),
                  KEEPER_MAX_FAST="2", KEEPER_BACKOFF="1", KEEPER_HEALTHY="300")
         e.update({k: str(v) for k, v in env.items()})
+        self._no_herdr(e)
         return subprocess.run(["sh", str(KEEPER)], capture_output=True, text=True,
                               timeout=timeout, env=e, cwd=str(ROOT))
 
@@ -69,6 +98,28 @@ class Keeper(unittest.TestCase):
         self.assertEqual(self._runs(), 1)
         self.assertIn("resume", out.stdout, "it must say how to come back")
 
+    def test_NO_TEST_EVER_PROMPTS_THE_LIVE_MAINTAINER(self):
+        """The regression this suite caused. It fired four real prompts at the resident
+        session on every run, and the owner read them as a loop dying while idle."""
+        out = self._run(3)
+        self.assertIn("STOPPED", out.stdout, "the ending under test did not fire")
+        self.assertTrue(self.prompts(),
+                        f"the stub caught no prompt; herdr calls were {self.herdr_calls()}")
+        # EVERY herdr call went to the stub, so none reached the live session. The stub is
+        # the only `herdr` on PATH, so a call that ran at all was intercepted.
+        self.assertTrue(all(c.split()[:1] in (["agent"], ["workspace"], ["pane"])
+                            for c in self.herdr_calls()),
+                        f"the keeper called herdr in an unexpected way: {self.herdr_calls()}")
+
+    def test_every_prompt_carries_the_WALL_CLOCK_it_was_written_at(self):
+        """A prompt QUEUES while the maintainer is busy and arrives hours later, where
+        `$ran` cannot place it: the pane said `exit 3 after 6947 s` while the prompt in
+        hand said `after 0 s`. MEASURED 2026-08-19."""
+        self._run(3)
+        self.assertTrue(self.prompts())
+        for line in self.prompts():
+            self.assertRegex(line, r"\[keeper \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]")
+
     def test_a_startup_refusal_is_never_restarted(self):
         """Exit 4 means it never ticked. A second runner holding the lock gives this,
         and restarting it is a hot loop against a healthy pod."""
@@ -81,6 +132,7 @@ class Keeper(unittest.TestCase):
         e = dict(os.environ, COUNT=str(self.count), FAKE_RC="1",
                  KEEPER_PY="/bin/sh", KEEPER_LOOP=str(self._loop()),
                  KEEPER_MAX_FAST="2", KEEPER_BACKOFF="1", KEEPER_HEALTHY="300")
+        self._no_herdr(e)
         proc = subprocess.Popen(["sh", str(KEEPER)], stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, text=True, env=e, cwd=str(ROOT))
         try:
@@ -104,6 +156,7 @@ class Keeper(unittest.TestCase):
         e = dict(os.environ, COUNT=str(self.count), FAKE_RC="1",
                  KEEPER_PY="/bin/sh", KEEPER_LOOP=str(self._loop("sleep 2")),
                  KEEPER_MAX_FAST="2", KEEPER_BACKOFF="1", KEEPER_HEALTHY="1")
+        self._no_herdr(e)
         proc = subprocess.Popen(["sh", str(KEEPER)], stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, text=True, env=e, cwd=str(ROOT))
         try:

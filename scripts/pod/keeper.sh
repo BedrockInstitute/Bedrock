@@ -41,9 +41,19 @@ BACKOFF_MAX=${KEEPER_BACKOFF_MAX:-300}
 
 # Tell the maintainer, and NEVER the owner first: owner's ruling, 2026-08-18. The prompt
 # queues if the head is busy and is read when its current tool call ends (C-61).
+#
+# **EVERY PROMPT CARRIES THE WALL CLOCK, and without it a queued prompt LIES.** MEASURED
+# 2026-08-19: the maintainer was busy for most of the afternoon, so `herdr agent prompt`
+# queued. Prompts from three separate keeper runs then drained one per tool call, hours
+# after the events, and each read as a live report. The owner asked why the loop was dying
+# while everything sat idle; nothing was dying, and the pane said `exit 3 after 6947 s`
+# while the prompt in hand said `after 0 s`. `$ran` alone cannot separate those, because
+# it measures the RUN and says nothing about WHEN. The stamp does.
 tell() {
-    printf 'keeper: %s\n' "$1"
-    command -v herdr >/dev/null 2>&1 && herdr agent prompt "$AGENT" "$1" >/dev/null 2>&1
+    at=$(date "+%Y-%m-%d %H:%M:%S")
+    printf 'keeper [%s]: %s\n' "$at" "$1"
+    command -v herdr >/dev/null 2>&1 \
+        && herdr agent prompt "$AGENT" "[keeper $at] $1" >/dev/null 2>&1
 }
 
 # Sleep, but wake at once if the maintainer says it has landed a repair.

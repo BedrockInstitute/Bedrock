@@ -873,6 +873,25 @@ def gate_commit(msg_file: str) -> int:
         return 2
     if TRAILER_RE.search(message):
         return 0
+    # **TWO SITUATIONS REACH THIS LINE AND THEY NEED OPPOSITE ANSWERS.** One sentence
+    # named only the first, so the second read as「the owner must rule on a change you
+    # did not make」. MEASURED 2026-08-19: an approved commit moved a rule home and
+    # nobody ran `--write`, so the snapshot went stale, and the NEXT commit, which
+    # staged two files under `scripts/` and touched no guarded home at all, was refused
+    # with `guarded rule home changed: dev/memos/LJ-4-pod-program-design.md` against a
+    # memo whose working copy was byte-identical to HEAD.
+    if not watched:
+        print("check-spec-surface: REFUSED, and this commit stages NOTHING guarded.\n"
+              "The snapshot is STALE: an earlier commit moved a guarded home and never "
+              "refreshed\n`dev/pod/spec-surface.toml`, so every commit is refused until "
+              "it is. If the owner\nALREADY approved that earlier move, the fix is "
+              "mechanical and needs no new ruling:\n"
+              "  .venv/bin/python scripts/pod/check-spec-surface.py --write\n"
+              "then stage the snapshot and carry the SAME approval trailer. If nobody "
+              "approved it,\nshow the owner the drift below first.", file=sys.stderr)
+        for line in drift:
+            print(f"  inherited drift: {line}", file=sys.stderr)
+        return 1
     print("check-spec-surface: REFUSED. This commit STAGES a move of the trophy "
           "spec surface\nor a rule home, and the message carries no "
           "`Spec-surface-approved: YYYY-MM-DD (name)`\ntrailer (R9 and R16).",
