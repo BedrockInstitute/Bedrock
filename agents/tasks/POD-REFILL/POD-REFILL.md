@@ -24,6 +24,29 @@ machine: shared
 
 Write the next task or tasks into `dev/pod/queue.toml`, so the loop has work.
 
+**EVERY BRIEF YOU WRITE MUST CHOOSE ITS `head_slot`, AND THE CODER IS THE DEFAULT
+FOR CODE.** Owner's ruling, 2026-08-19. The brief and the report are the channel
+between the two roles, and that channel is the centre of this design:
+
+- **YOU WRITE NO AGDA, NOT A DELIVERABLE AND NOT A PROBE.** Every task that needs Agda
+  written carries `head_slot: coder`. State the obligation, the file, the statement it
+  must discharge, the scope and the branches; the coder writes it.
+- **W3 IS SPECIFIED BY YOU AND EXECUTED BY THE CODER.** You name the widest unmeasured
+  term and the probe that settles it. The coder writes that probe, runs it while its
+  task is live, and reports the number it measured.
+- **The coder answers in its report**, and that report is what you read to write the
+  next brief. A brief that names no file and no statement gives the coder nothing to
+  answer with.
+- `head_slot: mathematician` is for reading and judgement: a survey, a re-pricing, a
+  ruling, a re-plan of the queue. It is never for putting Agda in the tree.
+
+**MEASURED 2026-08-19, and this clause exists because of it: the `coder` slot had no
+reachable path at all.** Every `head_slot` in `dev/pod/table.toml` named
+`mathematician_adversarial` or `coder_adversarial`, every brief in the tree named
+`mathematician`, and no coder had ever been dispatched. The slot existed in
+`dev/pod/heads.toml` and in `dev/pod/instructions/coder.md`, and nothing could reach
+it, because the one producer of tasks was never told it was there.
+
 ## OBLIGATION NAMES
 
 None. This task writes no Agda and closes no proof obligation. Fact 3's witness
@@ -58,8 +81,27 @@ That is your question to answer.
 
 Read `dev/PLAN.md` section 0, the open-work list and the most recent DONE lines of
 the transition log. Pick the work that unblocks the most, and prefer a task whose
-obligation list you can state as names. **Queue the smallest task that makes real
-progress**, never a large one you cannot price.
+obligation list you can state as names.
+
+**THINK SEVERAL MOVES AHEAD AND QUEUE A SEQUENCE, NOT ONE TASK.** Owner's ruling,
+2026-08-19. One dispatch of yours should carry FOUR OR FIVE coder tasks: a line of
+attack planned out like a chess opening, where you have already seen where move four
+lands before you play move one. **This clause replaces「Queue the smallest task that
+makes real progress」, which produced exactly one task per dispatch and made the
+mathematician a dispatcher of single steps.**
+
+Two things this does NOT relax:
+
+- **AD12 still holds: each BRIEF carries ONE deliverable obligation.** The sequence is
+  several briefs, never one fat brief. That is what keeps each one separately
+  checkable and separately priced.
+- **Each individual brief stays small and priced.** The look-ahead is in the SET, not
+  in any one member. Never queue a single task you cannot price.
+
+Write them in dependency order and say in your return what each later brief assumes
+from the earlier one, because `dev/pod/queue.toml` holds no dependency key. **When a
+coder's report refutes an assumption, the briefs below it are yours to withdraw or
+rewrite**, and saying so is part of your next return.
 
 **A STOP IS A DELIVERABLE HERE TOO.** If the route is genuinely blocked on an owner
 ruling, queue nothing, say so, and name the ruling. The digest prints the block and

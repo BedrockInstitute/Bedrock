@@ -31,10 +31,12 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Twenty amendments. Eighteen are the owner's, and one is the orchestrator's and follows
-from A4.** Fourteen were ruled on 2026-08-17, five on 2026-08-18 and one on 2026-08-19.
+**Twenty-two amendments. Twenty are the owner's, and one is the orchestrator's and follows
+from A4.** Fourteen were ruled on 2026-08-17, five on 2026-08-18 and three on 2026-08-19.
 A17 restores a requirement this document had lost, A18 builds a channel it never had, A19
-gives the programme an ending, and A20 keeps the two work channels apart. They are part of the ruled set and this
+gives the programme an ending, and A20 keeps the two work channels apart. **A21 and A22
+put back two core designs this document NEVER contained: who writes the code, and how far
+ahead a mathematician plans.** They are part of the ruled set and this
 document states each where it applies. **The owner ruled once more that day, on
 DD0: PUT BOTH LOST PARTS BACK.** Clause W9 carries part 3 and rules R15 and R16
 carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
@@ -183,6 +185,47 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   the program that serves it?** The first is a queue entry and goes to a mathematician.
   The second is a backlog item and goes to the maintainer.
 
+- **A21. THE MATHEMATICIAN WRITES NO AGDA, AND THE BRIEF AND THE REPORT ARE THE CHANNEL
+  BETWEEN THE TWO ROLES, ruled 2026-08-19.** The owner names this the centre of the whole
+  design. The mathematician has two verbs: it READS the coder's report, the coder's code
+  and the coder's probes, and it WRITES briefs. **It writes no deliverable and no probe.**
+  Every task that needs Agda written, deliverable or probe, carries `head_slot: coder`.
+  `head_slot: mathematician` is for reading and judgement: a survey, a re-pricing, a
+  ruling, a re-plan of the queue.
+
+  **THIS DOCUMENT NEVER CONTAINED IT, AND THAT IS THE DEFECT THE AMENDMENT RECORDS.**
+  MEASURED 2026-08-19 over `dev/POD.md` at `f1d4492^`, all 3212 lines, and over every
+  version of this memo: the word `coder` appears 20 times and not one of them says who
+  writes the code. AD3 is present, but only ever applied as「AD3 gives the brief to the
+  mathematician」. **The consequence was mechanical and total: the `coder` slot had no
+  reachable path.** Every `head_slot` in `dev/pod/table.toml` named
+  `mathematician_adversarial` or `coder_adversarial`, every brief in the tree named
+  `mathematician`, `dev/pod/instructions/mathematician.md` did not contain the word
+  `coder`, and no coder had ever been dispatched. One role did both jobs for the whole
+  life of the programme, and no gate could notice, because no rule said otherwise.
+
+  **W3 IS AMENDED WITH IT.** The mathematician still NAMES the widest unmeasured term and
+  the probe that settles it, and gives the estimate with its basis. The half that told it
+  to write the probe and to run it while the task is live now binds the coder.
+
+- **A22. A MATHEMATICIAN DISPATCH PLANS SEVERAL MOVES AHEAD AND CARRIES FOUR OR FIVE
+  CODER TASKS, ruled 2026-08-19.** The owner's words: plan it the way an opening is
+  planned, and see where move four lands before you play move one. One mathematician
+  dispatch produces a SEQUENCE of coder briefs, written in dependency order, and the
+  return says what each later brief assumes from the earlier one, because
+  `dev/pod/queue.toml` holds no dependency key. When a coder's report refutes an
+  assumption, the briefs below it are the mathematician's to withdraw or rewrite.
+
+  **AD12 IS NOT RELAXED: each BRIEF still carries ONE deliverable obligation.** The
+  sequence is several briefs and never one fat brief, which is what keeps each one
+  separately priced and separately checkable. The look-ahead lives in the SET.
+
+  **THE DOCUMENT CARRIED THE OPPOSITE INSTRUCTION.** MEASURED 2026-08-19: no version of
+  `dev/POD.md` or this memo contains the look-ahead in any wording, and
+  `agents/tasks/POD-REFILL/POD-REFILL.md`, the standing brief that produces every task,
+  told the mathematician **「Queue the smallest task that makes real progress」**. That
+  sentence is why one dispatch produced one step. It is replaced by this amendment.
+
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the
   measured answer was: nothing. **No part of this program counts finished work.**
@@ -315,7 +358,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 |---|---|---|---|---|---|
 | AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked. **A17 REPLACES THE SPAWN WITH A PROMPT: the trigger FEEDS a resident session** | 6.7, 8.1 |
 | AD2 | A maintainer model writes new table rows. It does not run the loop. **A17 ADDS: it is RESIDENT, one long-lived session, and it owns the loop's health** | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
-| AD3 | All judgement belongs to the mathematician | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
+| AD3 | All judgement belongs to the mathematician. **A21 ADDS THE HALF THIS ROW NEVER CARRIED: judgement is ALL it does. It writes no Agda, deliverable or probe, and the brief and the report are its channel to the coder** | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
 | AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[LJ-4.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
 | AD5 | The goal is unchanged: both trophies | 1 | AD19 | The table is tracked. Runtime state is not. Every transition logs | 5.3 |
 | AD6 | Clean cutover. `pre-pod-2026-08-17` is the rollback anchor | 9.1, 9.2, 9.3 | AD20 | A Chinese daily digest, plus an immediate push on stop | 8.1, 8.3 |
