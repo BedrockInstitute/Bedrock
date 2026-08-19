@@ -87,27 +87,34 @@ implementation matched its prose, and it was inert. Three consistency audits ran
 and none asked the fourth question: **can the thing this produces actually do the job it
 is produced for?** Sweep the POD's other producers for the same shape.
 
-### 10. The refill writes real files and NOTHING measures where it wrote them
-
-Rule (g) dispatches `POD-REFILL.md` as an EVENT, so it never enters the state machine:
-no fact 4, no record, no acceptance, no scope check. It is the ONLY producer of tasks and
-it writes `dev/pod/queue.toml` plus one brief per task, and nothing in the program would
-notice if it wrote somewhere else. The maintainer's own proposals get
-`maintainer_scope_ok()`; the refill gets nothing.
-
-REVIEWED BY HAND 2026-08-19 and it was CLEAN: the refill of 15:01 queued five tasks, wrote
-`dev/pod/queue.toml` and exactly five briefs, all `head_slot: coder`, with the dependency
-order written into the queue's own comments. The Agda under `LJ-1-391/` and `LJ-1-393/`
-is the coders' and its mtime proves it, 15:31 against a 15:29 brief. **A clean result by
-hand is not a gate.**
-
-**THE HARD PART IS ATTRIBUTION AND IT IS WHY THIS IS NOT FIXED YET.** By the time a refill
-finishes, the tasks it queued are already dispatched and writing, so a `git status` taken
-at its return blames it for the coders' files. A real check needs the status snapshotted
-at DISPATCH and differenced at return, which is what `changed_files_scoped()` does for a
-task and what `side_dispatches()` would have to grow. Do not ship the naive version.
-
 ## Closed
+
+### 10. Nothing measured where the refill wrote. FIXED 2026-08-19
+
+Rule (g) dispatches the refill as an EVENT, so it never enters the state machine: no
+fact 4, no record, no acceptance, no scope check. It is the ONLY producer of tasks and
+nothing would have noticed if it wrote somewhere else.
+
+**THE SNAPSHOT IS TAKEN AT DISPATCH AND DIFFERENCED AT RETURN**, which is the repair the
+item said not to ship without. A `git status` taken only at the return blames the refill
+for every file the tasks it queued have written since, and those tasks are dispatched
+BEFORE it finishes. `cmd_run()` snapshots on the first tick a side dispatch is seen, and
+`side_scope_report()` differences it.
+
+FOUR SUBTRACTIONS, each naming what it removes: the refill's declared scope, which is
+what it is FOR; a brief under `agents/tasks/<CODE>/`, which is the rest of that scope;
+every home the program itself created, because a task running in the window wrote there;
+and a retired proposal, which is `retire_proposal()`'s write.
+
+IT REPORTS AND NEVER REFUSES, because AD1 keeps judgement out of the program. The verdict
+rides on the POD-REVIEW prompt the maintainer already gets.
+
+**TWO DEFECTS WERE CAUGHT WHILE BUILDING IT.** The first draft read a name `root` that
+`cmd_run()` does not bind, so it would have raised `NameError` on the first tick that saw
+a side dispatch, which is the tick the alarm fires; no test drives that loop body. And
+the prefix list of program writes now has ONE home, `PROGRAM_WRITES_PREFIX`, because it
+grew a second reader and W5 forbids the copy.
+
 
 ### 6. The stop that could not tell success from sabotage. FIXED 2026-08-19
 

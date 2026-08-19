@@ -117,6 +117,22 @@ STOPPED_FILE = POD_STATE / "STOPPED"
 #: ticks. `cmd_run()` also reloads on its own when `scripts/pod/*.py` changes, so this
 #: file is for the case the signature cannot see: a reload the maintainer wants NOW.
 RELOAD_FILE = POD_STATE / "reload"
+#: **EVERY PREFIX THE PROGRAM WRITES ITSELF, and it has TWO readers now.**
+#: `maintainer_scope_ok()` subtracts it before blaming the maintainer, and
+#: `side_scope_report()` subtracts it before blaming the refill. Adding a prefix here is a
+#: change to what R15 means, so name the writer beside it.
+PROGRAM_WRITES_PREFIX = (
+    ".pod-state/",                  # the loop's runtime state
+    "dev/pod/transitions/",         # emit(), the transition log
+    "agents/tasks/POD-BATCH/",      # write_batch_brief()
+    "dev/pod/replay-corpus.jsonl",  # corpus_append(), the `live` stream
+    # `queue_append()` writes this for `park_and_split` and for a batch's `[[queue]]`
+    # request, and the REFILL declares it as its own write scope. It is never the
+    # maintainer's. MEASURED 2026-08-19: the refill queued LJ-1.396 to LJ-1.400 and its
+    # own declared output then refused the very next maintainer batch.
+    "dev/pod/queue.toml",
+)
+
 LOG_DIR = POD_STATE / "logs"
 LOCKFILE = POD_STATE / "pod.lock"
 
@@ -2314,17 +2330,7 @@ def maintainer_scope_ok(root=None, proposal=None):
     allowed = {proposal} if proposal else set()
     # EVERY PREFIX HERE IS A PATH THE PROGRAM WRITES ITSELF. Adding one is a change to
     # what R15 means, so name the writer beside it.
-    PROGRAM_WRITES = (
-        ".pod-state/",                  # the loop's runtime state
-        "dev/pod/transitions/",         # emit(), the transition log
-        "agents/tasks/POD-BATCH/",      # write_batch_brief()
-        "dev/pod/replay-corpus.jsonl",  # corpus_append(), the `live` stream
-        # `queue_append()` writes this for `park_and_split` and for a batch's `[[queue]]`
-        # request, and the REFILL declares it as its own write scope. It is never the
-        # maintainer's. MEASURED 2026-08-19: the refill queued LJ-1.396 to LJ-1.400 and
-        # its own declared output then refused the very next maintainer batch.
-        "dev/pod/queue.toml",
-    )
+    PROGRAM_WRITES = PROGRAM_WRITES_PREFIX
     # **A TASK HOME THE PROGRAM CREATED IS NOT THE MAINTAINER'S WRITE, and counting it
     # deadlocked the whole cure.** R15 exists to catch the MAINTAINER writing outside its
     # one declared proposal file. A worker's task home is provably not that: the
@@ -3701,8 +3707,60 @@ def side_dispatches(st, root=None):
     return out
 
 
-def notify_side_done(gone, root=None):
-    """Tell the maintainer that a non-task dispatch finished. `gone` is {code: row}.
+#: What a REFILL is allowed to write, section 6.7 and its own standing brief. A path
+#: outside this, and outside a live task's home, is what item 10 exists to surface.
+REFILL_SCOPE_OK = ("dev/pod/queue.toml", "dev/pod/stop-request.toml")
+
+
+def side_scope_report(code, before, st, root=None):
+    """Paths that appeared while ONE non-task dispatch ran, minus what it may write.
+
+    **RULE (g) DISPATCHES THE REFILL AS AN EVENT, so it never enters the state machine:
+    no fact 4, no record, no acceptance, no scope check.** It is the ONLY producer of
+    tasks, it writes `dev/pod/queue.toml` and one brief per task, and nothing in the
+    program would notice if it wrote somewhere else. The maintainer's own proposals get
+    `maintainer_scope_ok()`; the refill got nothing. Backlog item 10.
+
+    **THE SNAPSHOT IS TAKEN AT DISPATCH AND DIFFERENCED AT RETURN, which is the whole
+    repair.** A `git status` taken only at the return blames the refill for every file the
+    tasks it queued have written since, and those tasks are dispatched BEFORE it finishes.
+    That naive version was written down as the thing not to ship.
+
+    THREE SUBTRACTIONS, and each names what it removes and why:
+      - the refill's own declared scope, which is what it is FOR;
+      - a brief, `agents/tasks/<CODE>/<CODE>.md`, which is the rest of that scope;
+      - every home the program itself created, because a task that ran in the window
+        wrote there and the refill did not.
+
+    IT REPORTS AND NEVER REFUSES. AD1 keeps judgement out of the program, so this is a
+    sentence for the resident maintainer and never a gate.
+    """
+    root = ROOT if root is None else Path(root)
+    if before is None:
+        return []
+    now = set(facts_mod._status_paths(root))
+    fresh = sorted(now - set(before))
+    homes = tuple(f"agents/tasks/{agents_tree.normalise(c)}/" for c in st.tasks)
+    out = []
+    for p in fresh:
+        if p in REFILL_SCOPE_OK or p.startswith(PROGRAM_WRITES_PREFIX):
+            continue
+        # A RETIRED PROPOSAL IS `retire_proposal()`'s WRITE, never a dispatch's.
+        # `maintainer_scope_ok()` already subtracts these and this reader must too, or a
+        # refill that merely ran while a batch was harvested is reported as straying.
+        if any(p.endswith(".toml." + v) for v in RETIRED_SUFFIXES):
+            continue
+        name = p.rsplit("/", 1)[-1]
+        if p.startswith("agents/tasks/") and name.endswith(".md"):
+            continue                           # a brief, which the refill may write
+        if any(p.startswith(h) for h in homes):
+            continue                           # a task's own home, written by that task
+        out.append(p)
+    return out
+
+
+def notify_side_done(gone, root=None, st=None):
+    """Tell the maintainer that a non-task dispatch finished. `gone` is {code: (row, snap)}.
 
     IT NAMES THE TRANSCRIPT AND NOT A ROW, because a dispatch outside the state machine
     has no record and no row: the only evidence it leaves is its own log.
@@ -3712,12 +3770,25 @@ def notify_side_done(gone, root=None):
     mod = facts_mod.launcher()
     if mod is None:
         return None
-    what = "; ".join(f"{c} finished, transcript {(r or {}).get('final') or (r or {}).get('log') or '?'}"
-                     for c, r in gone.items())
+    parts, strayed = [], []
+    for c, pair in gone.items():
+        row, snap = pair if isinstance(pair, tuple) else (pair, None)
+        where = (row or {}).get("final") or (row or {}).get("log") or "?"
+        parts.append(f"{c} finished, transcript {where}")
+        if st is not None:
+            out = side_scope_report(c, snap, st, root)
+            if out:
+                strayed.append(f"{c} wrote OUTSIDE its declared scope: "
+                               + ", ".join(out[:8]))
+    what = "; ".join(parts)
+    scope_line = (" **" + ". ".join(strayed) + ".** " if strayed
+                  else " Its writes were inside its declared scope, measured by a "
+                       "snapshot taken at dispatch and differenced now. ")
     try:
         mod.herdr_prompt(
             mod.herdr_name(MAINT_TASK),
-            "POD-REVIEW. " + what + ". This dispatch never entered the state machine, so "
+            "POD-REVIEW. " + what + "." + scope_line
+            + "This dispatch never entered the state machine, so "
             "no record and no row exist for it. Read its transcript and whatever it wrote "
             "(a refill writes `dev/pod/queue.toml` and one brief per queued task). Review "
             "the PROGRAM: did it write inside its declared scope, and did the program "
@@ -3817,8 +3888,19 @@ def cmd_run(argv):
         # `side_before` starts EMPTY, here and after every hot restart, so a dispatch
         # already dead at startup is never reported as a fresh finish. The cost is one
         # missed notice for a head that dies during the exec itself.
-        side_now = side_dispatches(st)
-        notify_side_done({c: r for c, r in side_before.items() if c not in side_now})
+        # **THE SNAPSHOT IS TAKEN THE FIRST TICK A SIDE DISPATCH IS SEEN, and that is
+        # what makes item 10's check possible.** A `git status` taken only at the return
+        # blames the refill for every file the tasks it queued wrote since, and those
+        # tasks are dispatched BEFORE it finishes.
+        side_now = {}
+        for c, row in side_dispatches(st).items():
+            # ROOT AND NOT `root`: `cmd_run()` binds no `root` name, and the first
+            # draft of this read one. It would have raised `NameError` on the first tick
+            # that saw a side dispatch, which is the tick the alarm fires.
+            side_now[c] = (row, side_before.get(c, (None, None))[1]
+                           if c in side_before else facts_mod._status_paths(ROOT))
+        notify_side_done({c: v for c, v in side_before.items() if c not in side_now},
+                         root=ROOT, st=st)
         side_before = side_now
         if result is STOP:
             print(f"pod run: STOP at seq {st.seq}. Read the digest, then `pod resume`.")
