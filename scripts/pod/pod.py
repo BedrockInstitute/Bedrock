@@ -2113,8 +2113,21 @@ def commit_task(t, rec, root=None):
     A `ledger.py --write` REFUSAL DOES NOT BLOCK THE CLOSE, and the reason is that the
     commit here names explicit paths and never `dev/ledger.toml`. The refusal is recorded
     on the record as `ledger`, the digest prints it, and the owed re-measurement is a
-    maintainer input. Blocking here would need a tenth park reason, and section 5.5's list
-    of nine is closed.
+    maintainer input. Blocking here would need a park reason of its own, and the argument
+    that used to stand here, that section 5.5's list was CLOSED at nine, was never a real
+    constraint: the list grew to ten with `salvage:` and to eleven with `quota:`, both on
+    the day after it was written. The reason to record rather than block is that the work
+    stands in the tracked file either way.
+
+    **IT COMMITS ONLY PATHS THAT EXIST, and one that does not used to lose the WHOLE
+    commit in silence.** MEASURED 2026-08-19 in a scratch repository: `git_commit()` over
+    two real edits and one absent path committed NOTHING and returned False, and this
+    function reads no return value, so the close went on and the transition line said
+    DONE. Amendment A24 opened a NEW way for that to happen: fact 4 counts every path
+    under `agents/tasks/<CODE>/` as the worker's work, while `salvage_worktree()` copies
+    back only what `## SCOPE (write)` names, so a file written in the task home and
+    outside the declared scope is in `changed_files` and is not in the main tree. The
+    dropped paths and a refused commit are both recorded on the record.
     """
     root = ROOT if root is None else Path(root)
     rc, out = 0, ""
@@ -2126,27 +2139,46 @@ def commit_task(t, rec, root=None):
         rc, out = 1, str(e)
     rec["ledger"] = "clean" if rc == 0 else "refused"
     rec["ledger_note"] = out[-400:]
-    paths = [p for p in (rec.get("facts") or {}).get("changed_files") or []
+    named = [p for p in (rec.get("facts") or {}).get("changed_files") or []
              if isinstance(p, str)]
+    paths = [p for p in named if (root / p).exists()]
+    gone = [p for p in named if p not in paths]
+    if gone:
+        # NAMED AND NEVER GUESSED. A path fact 4 measured and the main tree does not hold
+        # is either a delete the worker made or a write A24 did not salvage, and this
+        # function cannot tell which. It records the list and commits the rest.
+        rec["commit_absent"] = gone[:16]
     if paths:
+        ok = False
         try:
-            table_mod.git_commit([root / p for p in paths],
-                                 f"pod: {t.code} done, row {t.row}")
-        except Exception:                      # noqa: BLE001. `git_commit` returns False
+            # **`root` IS PASSED, and it used to be dropped.** `git_commit()` defaults to
+            # the MODULE-LEVEL repository root, so this handed it absolute paths from one
+            # tree and ran git in another. In the live checkout the two coincide and the
+            # bug is invisible; every sandbox and every test sees it at once, which is how
+            # it was found.
+            ok = table_mod.git_commit([root / p for p in paths],
+                                      f"pod: {t.code} done, row {t.row}", root=root)
+        except Exception as e:                 # noqa: BLE001
+            rec["commit"] = f"raised {type(e).__name__}: {e}"[:200]
+        else:
             # A FAILED COMMIT IS NOT A FAILED CLOSE, and section 4.1 property 4 rules it:
             # the work stands in the tracked file uncommitted, `pod stop` commits it, and
-            # both checklists run `pod stop` before they require a clean tree.
-            pass
+            # both checklists run `pod stop` before they require a clean tree. **IT IS NO
+            # LONGER SILENT**, because `git_commit()` RETURNS False rather than raising,
+            # so the `except` above never fired and nothing anywhere said the close
+            # committed nothing.
+            rec["commit"] = "clean" if ok else "refused"
     return rc == 0
 
 
 def notify_owner(why, root=None):
     """The stop push, AD20. The loop has exactly TWO stops and both push immediately.
 
-    Rule (d), when the parked count reaches 3, and `apply()`, when a `stop_loop` row
-    matched. Neither waits for the digest. `scripts/ops/bark-push.sh` is day 7's and it
-    reads both secrets from the environment; until it exists the push is a recorded
-    no-op, because a missing channel must never stop the loop from stopping.
+    Rule (d), when the parked count reaches `parked_max`, and `apply()`, when a
+    `stop_loop` row matched. Neither waits for the digest. `scripts/ops/bark-push.sh`
+    reads both secrets from the environment and it EXISTS since 2026-08-18; the
+    `is_file()` guard stays, because a missing channel must never stop the loop from
+    stopping. The sentence that called it day 7's future work outlived the file by a day.
     """
     root = ROOT if root is None else Path(root)
     if not BARK.is_file():

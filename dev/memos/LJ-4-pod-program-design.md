@@ -71,10 +71,21 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   The file keeps its name and its path, and it holds exactly four things: a
   minimum project summary, the current milestone goal, the most important SHARED
   Boundary, and a pointer to `dev/pod/instructions/<slot>.md`. **It is the ONE
-  hand-written source**, and the program GENERATES each slot file from it, so one
-  source gives three slices and no slice can drift. `CLAUDE.md` keeps its
-  `@AGENTS.md` import, because the file it imports is now small. Only
-  `dev/ORCHESTRATION.md` is archived at step 4b.
+  hand-written source of the SHARED Boundary.** `CLAUDE.md` keeps its `@AGENTS.md`
+  import, because the file it imports is now small. Only `dev/ORCHESTRATION.md` is
+  archived at step 4b.
+
+  **THE GENERATOR THIS AMENDMENT ORDERED WAS NEVER BUILT, AND WHAT REPLACED IT IS
+  STRICTLY STRONGER. Corrected 2026-08-19.** A8 said the program GENERATES each slot
+  file from `AGENTS.md`, so that no slice can drift. `scripts/pod/instructions.py` does
+  not exist and no slot file is generated. What the program does instead is `cat` the
+  two files ahead of the brief at every dispatch, `preamble_for()` at
+  `scripts/pod/pod.py:199`, and `AGENTS.md` states the rule that makes it work: NEITHER
+  FILE COPIES THE OTHER. A generator copies and then guards the copies; this copies
+  nothing, so there are no slices to drift and nothing to regenerate. **Edit `AGENTS.md`
+  and every slot has the new clause at the next dispatch.** The amendment is recorded as
+  corrected rather than quietly rewritten, because an unbuilt mechanism that a document
+  still promises is the exact shape L3 went looking for.
 - **A9. THE THREE DROPPED RULES ARE KEPT**, as clauses W13, W14 and W15, each
   scoped `every slot`: the document taxonomy, the obligation that a new top-level
   directory carries a `README.md`, and the ban on an unpinned or globally

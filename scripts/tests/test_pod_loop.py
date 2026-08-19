@@ -3316,5 +3316,70 @@ class TwoThresholds(LoopCase):
         self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
 
 
+class CommitOnClose(unittest.TestCase):
+    """`commit_task()` against a REAL git repository, because the defect was git's shape.
+
+    MEASURED 2026-08-19: `git_commit()` over two real edits and one absent path commits
+    NOTHING and returns False. `commit_task()` read no return value and caught only
+    exceptions, so a close whose commit did nothing wrote a DONE line and said nothing
+    else. Amendment A24 made that reachable: fact 4 counts every path under the task home
+    and `salvage_worktree()` copies back only `## SCOPE (write)`.
+    """
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.tmp = Path(self.dir.name)
+        self.addCleanup(self.dir.cleanup)
+        run = lambda *a: subprocess.run(["git", *a], cwd=self.tmp, capture_output=True)
+        run("init", "-q")
+        run("config", "user.email", "t@t")
+        run("config", "user.name", "t")
+        (self.tmp / "kept.md").write_text("a\n")
+        run("add", "-A")
+        run("commit", "-qm", "base")
+        (self.tmp / "kept.md").write_text("a2\n")
+
+    def commits(self):
+        out = subprocess.run(["git", "log", "--oneline"], cwd=self.tmp,
+                             capture_output=True, text=True).stdout
+        return [l for l in out.splitlines() if l.strip()]
+
+    def close(self, changed):
+        """Run the DONE handler with `ledger.py` stubbed out. It returns the record."""
+        rec = {"facts": {"changed_files": changed}}
+        t = pod.Task("LJ-1.999", status=pod.CHECKING)
+        t.row = "sys-x"
+        real = subprocess.run
+        def fake(argv, *a, **k):
+            if "ledger.py" in " ".join(str(x) for x in argv):
+                return subprocess.CompletedProcess(argv, 0, "", "")
+            return real(argv, *a, **k)
+        subprocess.run = fake
+        try:
+            pod.commit_task(t, rec, self.tmp)
+        finally:
+            subprocess.run = real
+        return rec
+
+    def test_a_path_the_main_tree_does_not_hold_no_longer_loses_the_whole_commit(self):
+        """The measured defect. `never-salvaged.md` is what A24 leaves behind."""
+        rec = self.close(["kept.md", "never-salvaged.md"])
+        self.assertEqual(len(self.commits()), 2, "the close committed nothing at all")
+        self.assertEqual(rec["commit"], "clean")
+        self.assertEqual(rec["commit_absent"], ["never-salvaged.md"])
+
+    def test_a_clean_close_records_that_it_committed(self):
+        rec = self.close(["kept.md"])
+        self.assertEqual(rec["commit"], "clean")
+        self.assertNotIn("commit_absent", rec)
+        self.assertEqual(len(self.commits()), 2)
+
+    def test_a_close_with_NOTHING_left_to_commit_is_recorded_and_not_silent(self):
+        """Every named path is gone. The close still stands; the record says why."""
+        rec = self.close(["never-salvaged.md"])
+        self.assertEqual(rec["commit_absent"], ["never-salvaged.md"])
+        self.assertEqual(len(self.commits()), 1, "it committed something from nothing")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

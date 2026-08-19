@@ -1632,5 +1632,50 @@ class ClosedListHasOneHome(unittest.TestCase):
         self.assertEqual(meta["vocab"], table.VOCAB)
 
 
+class EveryNamedFileExists(unittest.TestCase):
+    """The design document names files. L3 asks whether the tree still holds them.
+
+    MEASURED 2026-08-19: amendment A8 promised that the program GENERATES each slot file
+    from `AGENTS.md`, through `scripts/pod/instructions.py`. That file has never existed.
+    What replaced it is stronger, a `cat` of two files that copies nothing, but the
+    document went on promising the generator, and the promise is the kind of thing only a
+    reader who goes looking would catch. This makes the tree the judge.
+    """
+
+    MEMO = ROOT / "dev" / "memos" / "LJ-4-pod-program-design.md"
+
+    #: A path the memo names as FUTURE work, or as archived, is not a broken promise.
+    #: Each entry is measured, not assumed: it is either under `archive/` or is named in a
+    #: build-order or gap row that says it does not exist yet.
+    ALLOWED_ABSENT = {
+        # Named ONLY as a name the cutover never wrote. `facts.launcher()` records that
+        # the fallback list which once held it is gone and cannot come back by accident.
+        "scripts/pod/dispatch.py",
+        # Named ONLY as the generator amendment A8 ordered and nobody built. The `cat` of
+        # `preamble_for()` replaced it and is stronger. If this file is ever created, the
+        # reverse test below goes red and A8's correction must be re-read before it is
+        # allowed back into this list.
+        "scripts/pod/instructions.py",
+    }
+
+    def named_scripts(self):
+        """Every `scripts/...py` or `.sh` path the memo writes inside backticks."""
+        text = self.MEMO.read_text(encoding="utf-8")
+        return sorted({m for m in re.findall(r"`(scripts/[A-Za-z0-9_./-]+\.(?:py|sh))`",
+                                             text)})
+
+    def test_every_script_the_design_names_is_in_the_tree(self):
+        missing = [p for p in self.named_scripts()
+                   if p not in self.ALLOWED_ABSENT and not (ROOT / p).is_file()]
+        self.assertEqual(missing, [],
+                         f"the design names {len(missing)} script(s) the tree does not "
+                         f"hold: {missing}")
+
+    def test_the_allowance_list_holds_no_file_that_now_EXISTS(self):
+        """An allowance that stopped being true is a hole in the check above."""
+        stale = [p for p in self.ALLOWED_ABSENT if (ROOT / p).is_file()]
+        self.assertEqual(stale, [], f"these exist now and the allowance hides them: {stale}")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
