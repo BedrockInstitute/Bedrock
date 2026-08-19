@@ -269,7 +269,7 @@ READY, RUNNING, RETURNED, CHECKING, DONE, PARKED = (
     "READY", "RUNNING", "RETURNED", "CHECKING", "DONE", "PARKED")
 STATES = (READY, RUNNING, RETURNED, CHECKING, DONE, PARKED)
 
-#: The twelve legal transitions, as (from, to). `NONE` is the creation edge of rule (a1).
+#: The THIRTEEN legal transitions, as (from, to). `NONE` is the creation edge of rule (a1).
 NONE = None
 TRANSITIONS_LEGAL = {
     (NONE, READY),          # 1  a queue entry, rule (a1)
@@ -281,9 +281,17 @@ TRANSITIONS_LEGAL = {
     (CHECKING, PARKED),     # 7, 11 no match, park, R7, attempt_max, R4, or stop_loop
     (READY, PARKED),        # 8  pre-flight, admission or launch refused
     (PARKED, READY),        # 9, 10 the table changed, or the brief was repaired
+    # **13. `orphan:<pid>`, and it is the only edge that leaves RUNNING for anywhere but
+    # RETURNED.** A worker whose pid is LIVE and whose `proc_start` does not match the
+    # dispatch record cannot be confirmed and must not be killed. RETURNED is the wrong
+    # word for it: RETURNED means the worker finished and its work may be accepted, and
+    # rule (c) would then run Agda over a tree that process may still be writing. Two
+    # adversarial rounds on 2026-08-19 produced this edge, the first by refuting the kill
+    # and the second by refuting the RETURNED that replaced it.
+    (RUNNING, PARKED),      # 13 the pid is live and unrecognised, section 5.5
 }
 
-#: The TEN park reasons of section 5.5. Each NAMES its cause and rule (a2) branches on
+#: The park reasons of section 5.5. Each NAMES its cause and rule (a2) branches on
 #: it. `no-match` is the ONE reason AD7's first number counts, so its string is exact.
 #:
 #: **`salvage:` IS THE TENTH, ruled by the owner on 2026-08-19 with worktree isolation.**
@@ -300,7 +308,8 @@ TRANSITIONS_LEGAL = {
 #: decide. Reusing one of the other nine names here would make a park reason lie, which is
 #: a defect class this programme measured three times on the day the rule was written.
 PARK_REASONS = ("no-match", "no-change", "preflight:", "attempt_max:", "r4",
-                "admission", "launch", "row:", "stop_loop:", "salvage:", "quota:")
+                "admission", "launch", "row:", "stop_loop:", "salvage:", "quota:",
+                "orphan:")
 
 #: AD15's parked trigger, and it is AD15's OWN number rather than AD14's `parked_max`.
 #: Owner's ruling, 2026-08-19, recorded at section 6.7: the maintainer is fed at the third
@@ -823,7 +832,7 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
     code = subject.code if isinstance(subject, Task) else (subject or "")
     t = subject if isinstance(subject, Task) else st.tasks.get(code)
     if (frm, to) not in TRANSITIONS_LEGAL and to != LOOP_STOPPED:
-        raise PodError(f"{code}: {frm} -> {to} is not one of the twelve legal transitions")
+        raise PodError(f"{code}: {frm} -> {to} is not a legal transition, section 5.2")
 
     line = {"ts": _now_iso(), "seq": st.seq + 1, "task": code,
             "from": frm, "to": to}
@@ -2201,7 +2210,18 @@ def commit_task(t, rec, root=None):
     rec["ledger_note"] = out[-400:]
     named = [p for p in (rec.get("facts") or {}).get("changed_files") or []
              if isinstance(p, str)]
-    paths = [p for p in named if (root / p).exists()]
+    # **A FILE AND NEVER A DIRECTORY, and `exists()` admitted both.** `git commit -- <dir>`
+    # sweeps EVERYTHING under that directory, which is the `git add -A` hazard R8 exists to
+    # refuse, arriving through a path fact 4 measured. A path that escapes the repository
+    # root goes the same way. Raised by an adversarial review on 2026-08-19.
+    def _committable(rel):
+        try:
+            full = (root / rel).resolve()
+            full.relative_to(root.resolve())   # raises when it escapes the tree
+        except (ValueError, OSError):
+            return False
+        return full.is_file()
+    paths = [p for p in named if _committable(p)]
     gone = [p for p in named if p not in paths]
     if gone:
         # NAMED AND NEVER GUESSED. A path fact 4 measured and the main tree does not hold
@@ -3086,6 +3106,10 @@ def _rule_a2(st, root):
             if _preflight(t, root) == []:
                 emit(st, t, PARKED, READY, root=root)
             continue
+        if reason.startswith("orphan:"):
+            # NO CLOCK AND NO TABLE EDIT CAN SETTLE WHOSE PROCESS THAT PID IS. It waits
+            # for a person, exactly as a `no-change` park does.
+            continue
         if reason.startswith("quota:"):
             # **THE ONLY PARK THAT RE-OPENS ON A CLOCK.** Every other reason waits for a
             # human or for a table edit, because every other cause is inside the project.
@@ -3256,21 +3280,39 @@ def _rule_b(st, root):
     from a process that may still hold an Agda heap, and both said something untrue.
 
     **NEITHER RISK IS TAKEN.** A pid that still EXISTS but does not match its record is
-    not ours to kill and not honest to call dead, so it is reported as `pid unrecognised`
-    with the pid in the line. That is a LEAK a person must look at, and naming it is the
-    whole repair: `os.kill(pid, 0)` alone separates it from a pid that is genuinely gone.
+    not ours to kill and not honest to call dead. `os.kill(pid, 0)` alone separates it
+    from a pid that is genuinely gone.
+
+    **IT PARKS AND IT DOES NOT RETURN, and the first repair got that wrong.** It emitted
+    RETURNED with `why: "pid unrecognised"`, and a second adversarial round refuted the
+    claim that the leak was then bounded. `admits()` counts RUNNING and CHECKING only, so
+    a RETURNED task holds no slot; `heap_sum_ok()` ignores its heap for the same reason;
+    the exclusive limb returns `not running` BEFORE any process census runs; and the Agda
+    ceiling is four, so one leaked process does not stop a second writer. **The sharp harm
+    is rule (c):** RETURNED means「the worker finished and its work may be accepted」, and
+    that is exactly what is not known here, so acceptance could start Agda over a tree the
+    first process may still be writing.
+
+    A PARK says the true thing. It refuses acceptance, it counts toward `parked_max` so
+    the loop stops rather than dispatching around it, and rule (a2) leaves it alone
+    because no clock and no table edit can settle whose process that pid is.
     """
     deadline = _limits()["worker_deadline_s"]
     for t in list(st.of(RUNNING)):
         if not rec_alive(t):
             # `pid_exists()` asks ONE question, whether the number is a live process, and
             # never whether it is OURS. `rec_alive()` already answered that and said no.
-            why = ("pid unrecognised" if pid_exists(t.pid) else "pid dead")
-            emit(st, t, RUNNING, RETURNED, why=why, root=root,
-                 detail=[f"pid {t.pid} is live and its proc_start does not match the "
-                         f"dispatch record, so it may still hold an Agda heap. It was "
-                         f"NOT killed, because a pid this program cannot confirm is not "
-                         f"its own to kill."] if why == "pid unrecognised" else None)
+            if pid_exists(t.pid):
+                emit(st, t, RUNNING, PARKED, reason=f"orphan:{t.pid}", root=root,
+                     why="pid live and unrecognised",
+                     detail=[f"pid {t.pid} is a LIVE process whose proc_start does not "
+                             f"match the dispatch record, so this program can neither "
+                             f"confirm it nor kill it, and it may still be writing. The "
+                             f"task is PARKED and not RETURNED, because RETURNED would "
+                             f"let rule (c) accept a tree the process may still be "
+                             f"changing."])
+            else:
+                emit(st, t, RUNNING, RETURNED, why="pid dead", root=root)
         elif t.elapsed() > deadline:
             kill_process_group(t.pid)
             emit(st, t, RUNNING, RETURNED, why="deadline", root=root)
@@ -4428,7 +4470,15 @@ def rename_maintainer_agent(frm, to):
                            capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.SubprocessError):
         return False
-    return d.returncode == 0 and "error" not in (d.stdout or "")
+    # **THE FAILURE IS READ FROM THE JSON AND NOT FROM A SUBSTRING.** `"error" in stdout`
+    # trips on any agent whose NAME contains the word, and it misses a herdr that reports
+    # a failure with a zero exit. Raised by an adversarial review on 2026-08-19.
+    if d.returncode != 0:
+        return False
+    try:
+        return "error" not in json.loads(d.stdout or "{}")
+    except ValueError:
+        return False                           # an answer this cannot read is not a yes
 
 
 def retire_maintainer_agent(root=None):

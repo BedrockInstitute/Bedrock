@@ -118,7 +118,11 @@ class Keeper(unittest.TestCase):
         self._run(3)
         self.assertTrue(self.prompts())
         for line in self.prompts():
-            self.assertRegex(line, r"\[keeper \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\]")
+            # THE ZONE IS PART OF THE STAMP. A prompt read in another zone, or after a
+            # DST change, cannot be placed without it, and placing it is the whole reason
+            # the stamp exists. Raised by an adversarial review on 2026-08-19.
+            self.assertRegex(
+                line, r"\[keeper \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4}\]")
 
     def test_a_startup_refusal_is_never_restarted(self):
         """Exit 4 means it never ticked. A second runner holding the lock gives this,

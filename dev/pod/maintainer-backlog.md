@@ -124,6 +124,27 @@ shape is the grok handover incident with a different cause: the loop halts and t
 that repairs it is absent. `--handover` now gives the name back on this path; the LOOP
 path has no equivalent.
 
+### 18. What two adversarial rounds found and nobody has fixed
+
+Round 2 of 2026-08-19, `REVIEW-round1.md` and its successor in the session scratch. Each
+line is CONFIRMED unless it says otherwise.
+
+- **B1, the quota reader across a timezone or a DST boundary.** `quota_open()` parses the
+  vendor's reset as LOCAL naive time. A machine that changes zone between the park and the
+  read compares two different clocks. The reader also takes the newest `-final.md` by NAME
+  sort, so a file restored out of order resurrects a refusal.
+- **B4.1, a mutant that cannot be UNPARSED reads as a kill.** `ast.unparse` normalises
+  quotes and formatting, so a preflight mutant changes more than the check it removes; a
+  suite that fails on the reformatting reads as「the gate bites」.
+- **B5.1, `pane-slot.py` under two concurrent dispatches.** `read_columns` then
+  `write_columns` is last-write-wins with no lock, and a torn file reads as no columns,
+  which opens a fresh column instead of deepening. The pod dispatches one at a time today.
+- **A4.1, a `maintainer` row with a trailing comment.** `MAINT_ROW` requires the closing
+  brace at end of line, so a comment after it makes `--use` refuse with「the row is not in
+  the [heads] table」. That is the SAFE direction and the message is wrong about why.
+- **A4.2, a crash between the write and the read-back.** The file is left on the new bytes
+  with no rollback. PLAUSIBLE; no process was killed mid-write.
+
 ## Closed
 
 ### 14. Rule (b) killed a process group it had not checked. FIXED 2026-08-19

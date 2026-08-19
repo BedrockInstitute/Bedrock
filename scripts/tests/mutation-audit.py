@@ -17,6 +17,14 @@ members, 2 of 2 spec-surface refusal paths and 5 R rule properties.
 files and runs four suites once per mutant, which is minutes, not seconds. It is a
 maintainer tool, run when a gate is added or when a gate class is under suspicion.
 
+**WHAT IT CANNOT TELL YOU, and this is a limitation and not a defect.** It reports the
+first suite that goes red and never WHICH test. A mutant can therefore die because it
+broke an unrelated assertion rather than the gate's own, and it still reads as「the gate
+bites」. Raised while attacking this tool on 2026-08-19. Closing it means running one
+named test per mutant, which needs a mutant-to-test map that nothing carries today; until
+then a `died in <suite>` is evidence that SOMETHING noticed and not proof that the right
+thing did.
+
 **IT REFUSES A DIRTY TREE, and that guard is not optional.** It restores by
 `git checkout --`, so an uncommitted edit to a file it mutates would be DESTROYED. The
 refusal names the file.
@@ -249,9 +257,15 @@ def main(argv):
     survived = [l for l, v in results if v == "SURVIVED"]
     skipped = [l for l, v in results if v == "SKIP"]
     if skipped:
-        print(f"{len(skipped)} mutant(s) could not be built; an anchor moved:")
+        # **A SKIP IS AN UNTESTED GATE AND IT USED TO EXIT CLEAN.** An anchor that moved
+        # means the mutant was never built, so nothing was learned about that gate, and
+        # printing it while returning 0 reads as「every gate bites」. Raised by an
+        # adversarial review on 2026-08-19.
+        print(f"mutation-audit: FAIL. {len(skipped)} mutant(s) could not be BUILT, so "
+              f"those gates are UNTESTED and not clean. An anchor moved:")
         for l in skipped:
             print(f"  {l}")
+        return 1
     if survived:
         print(f"mutation-audit: FAIL. {len(survived)} of {len(results)} mutant(s) "
               f"SURVIVED, so no test notices these gates:")

@@ -1617,6 +1617,29 @@ class ClosedListHasOneHome(unittest.TestCase):
     def test_the_two_lists_are_the_same_SIZE_so_neither_can_hide_a_key(self):
         self.assertEqual(sorted(self.declared()), sorted(table.WHEN_TYPES))
 
+    #: The memo's Type column, in its own words, against the loader's python type.
+    TYPE_WORDS = {int: ("int",), float: ("float",), bool: ("bool",),
+                  str: ("str",), list: ("list",)}
+
+    def test_the_declared_TYPE_agrees_with_the_one_the_loader_enforces(self):
+        """**THE CHECKER COMPARED NAMES ALONE, and a type drift was invisible to it.**
+        Raised while attacking this checker on 2026-08-19. Pre-flight P4 refuses a key
+        outside the list; `WHEN_TYPES` is what refuses a key of the WRONG TYPE, and a
+        mathematician reads the memo's Type column to learn which to write. Two documents
+        that agree on the key and disagree on its type send a brief to a refusal whose
+        reason the author cannot see."""
+        text = self.MEMO.read_text(encoding="utf-8")
+        sec = text.split(self.HEAD, 1)[1].split("Globs match with", 1)[0]
+        rows = re.findall(r"^\| `([a-z_]+)` \| ([^|]+) \|", sec, re.M)
+        self.assertEqual(len(rows), len(table.WHEN_TYPES),
+                         "a row of section 4.3 has no readable Type column")
+        for key, declared in rows:
+            want = table.WHEN_TYPES[key]
+            words = self.TYPE_WORDS[want]
+            self.assertTrue(any(w in declared for w in words),
+                            f"section 4.3 calls `{key}` {declared.strip()!r} and the "
+                            f"loader enforces {want.__name__}")
+
     def test_the_vocab_string_the_loader_demands_is_the_one_the_schema_shows(self):
         """A schema example a mathematician copies must produce a table that LOADS. It
         showed `six-facts/1` against a loader demanding `eight-facts/1` until 2026-08-19."""

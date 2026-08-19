@@ -737,19 +737,34 @@ class RuleBKillOrder(LoopCase):
         self.assertEqual(killed, [424242])
         self.assertEqual(self.lines()[-1]["why"], "deadline")
 
-    def test_a_LIVE_but_UNRECOGNISED_pid_is_named_and_never_called_dead(self):
-        """**THE ADVERSARIAL REVIEW REFUTED THE FIRST REPAIR.** `rec_alive()` is false for
-        a pid that is STILL RUNNING whenever `proc_start` does not match, so ordering
-        liveness first walked away from a process that may hold an Agda heap and called it
-        `pid dead`. Neither risk is taken now: it is not killed, and it is not called
-        dead."""
+    def test_a_LIVE_but_UNRECOGNISED_pid_PARKS_and_is_never_RETURNED(self):
+        """**TWO ADVERSARIAL ROUNDS SHAPED THIS ONE BRANCH.** Round 1 refuted the kill:
+        `rec_alive()` is false for a pid that is STILL RUNNING whenever `proc_start` does
+        not match. Round 2 refuted the repair: RETURNED frees the slot, because `admits()`
+        counts RUNNING and CHECKING only, `heap_sum_ok()` ignores a RETURNED task's heap,
+        the exclusive limb returns before any process census, and the Agda ceiling is
+        four. **The sharp harm is rule (c)**, which would accept a tree the live process
+        may still be writing."""
         self.swap(pod, rec_alive=lambda t: False, pid_exists=lambda pid: True,
                   kill_process_group=lambda pid: self.fail("it killed a pid it cannot own"))
         st, t = self.running(10 ** 9)
         pod._rule_b(st, self.tmp)
-        self.assertEqual(t.status, pod.RETURNED)
-        self.assertEqual(self.lines()[-1]["why"], "pid unrecognised")
-        self.assertIn("NOT killed", " ".join(self.lines()[-1].get("detail") or []))
+        self.assertEqual(t.status, pod.PARKED, "RETURNED would let rule (c) accept it")
+        self.assertEqual(t.park_reason, "orphan:424242")
+        self.assertIn("still be writing", " ".join(self.lines()[-1].get("detail") or []))
+
+    def test_an_orphan_park_HOLDS_because_no_clock_can_settle_it(self):
+        """`quota:` re-opens on a clock and `admission` on a table edit. Neither can say
+        whose process a pid is, so this one waits for a person."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md",
+                                      status=pod.PARKED, park_reason="orphan:424242",
+                                      record=None, parked_at=0.0, attempt=1)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    def test_an_orphan_park_is_a_reason_the_program_admits(self):
+        self.assertIn("orphan:", pod.PARK_REASONS)
 
     def test_a_pid_that_is_GENUINELY_gone_still_reads_pid_dead(self):
         self.swap(pod, rec_alive=lambda t: False, pid_exists=lambda pid: False,
@@ -3593,6 +3608,24 @@ class CommitOnClose(unittest.TestCase):
         self.assertEqual(len(self.commits()), 2, "the close committed nothing at all")
         self.assertEqual(rec["commit"], "clean")
         self.assertEqual(rec["commit_absent"], ["never-salvaged.md"])
+
+    def test_a_DIRECTORY_in_changed_files_is_never_committed(self):
+        """**`git commit -- <dir>` SWEEPS EVERYTHING UNDER IT**, which is the `git add -A`
+        hazard R8 exists to refuse, arriving through a path fact 4 measured. Raised by an
+        adversarial review on 2026-08-19."""
+        (self.tmp / "adir").mkdir()
+        (self.tmp / "adir" / "sweep-me.md").write_text("not this task's work\n")
+        rec = self.close(["kept.md", "adir"])
+        self.assertEqual(rec["commit_absent"], ["adir"])
+        out = subprocess.run(["git", "show", "--name-only", "--format="], cwd=self.tmp,
+                             capture_output=True, text=True).stdout
+        self.assertNotIn("sweep-me", out, "a directory swept a file into the close")
+        self.assertIn("kept.md", out)
+
+    def test_a_path_that_ESCAPES_the_repository_is_never_committed(self):
+        rec = self.close(["kept.md", "../outside.md", "/etc/hosts"])
+        self.assertEqual(sorted(rec["commit_absent"]), ["../outside.md", "/etc/hosts"])
+        self.assertEqual(rec["commit"], "clean")
 
     def test_a_clean_close_records_that_it_committed(self):
         rec = self.close(["kept.md"])

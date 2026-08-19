@@ -50,16 +50,26 @@ except Exception:
 sys.stdout.write(d.stdout)
 ' | "$PY" -c '
 import sys, json
-raw = sys.stdin.read()
+# **THE WHOLE READ IS INSIDE THE GUARD, and the loop used to sit outside it.** A second
+# adversarial round on 2026-08-19 fed it `{"result":{"agents":"pod-batch"}}`: the loop
+# raised, python printed a traceback to STDERR and nothing to stdout, and the caller read
+# an empty `holder` as「the name is free」. The shell runs with `set -u` and not `set -e`,
+# so a non-zero inner exit does not stop it either. Anything this cannot turn into a LIST
+# OF OBJECTS is UNREADABLE.
 try:
-    rows = json.loads(raw)["result"].get("agents")
-except Exception:
-    print("UNREADABLE herdr-agent-list-did-not-parse"); sys.exit(0)
-if rows is None:
-    print("UNREADABLE herdr-returned-no-agent-list"); sys.exit(0)
-for a in rows:
-    if a.get("name") == "pod-batch":
-        print(a.get("agent"), a.get("pane_id")); break
+    rows = json.loads(sys.stdin.read())["result"].get("agents")
+    if rows is None:
+        raise ValueError("no agents key")
+    if not isinstance(rows, list):
+        raise TypeError("agents is %s and not a list" % type(rows).__name__)
+    for a in rows:
+        if not isinstance(a, dict):
+            raise TypeError("an agent row is %s and not an object" % type(a).__name__)
+        if a.get("name") == "pod-batch":
+            print(a.get("agent"), a.get("pane_id"))
+            break
+except Exception as e:
+    print("UNREADABLE %s: %s" % (type(e).__name__, str(e)[:60]))
 ')
 case "$holder" in
   UNREADABLE*) die "the name check could not run: ${holder#UNREADABLE }.

@@ -50,7 +50,9 @@ BACKOFF_MAX=${KEEPER_BACKOFF_MAX:-300}
 # while the prompt in hand said `after 0 s`. `$ran` alone cannot separate those, because
 # it measures the RUN and says nothing about WHEN. The stamp does.
 tell() {
-    at=$(date "+%Y-%m-%d %H:%M:%S")
+    # THE ZONE IS IN THE STAMP. A prompt read in another zone, or after a DST change,
+    # cannot be placed without it, and placing it is the whole reason the stamp exists.
+    at=$(date "+%Y-%m-%d %H:%M:%S %z")
     printf 'keeper [%s]: %s\n' "$at" "$1"
     command -v herdr >/dev/null 2>&1 \
         && herdr agent prompt "$AGENT" "[keeper $at] $1" >/dev/null 2>&1
