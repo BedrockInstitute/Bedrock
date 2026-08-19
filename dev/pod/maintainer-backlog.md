@@ -144,10 +144,31 @@ no shared checkout to collide in; item 9 dissolves, because a parked task's dirt
 its own worktree and never in the tree every gate reads; and item 10 becomes measurable,
 because the refill's writes are a diff of one worktree.
 
-**WHAT IS NOT MEASURED AND MUST BE BEFORE ADOPTION.** One probe is one import slice. A
-task that imports most of `src/` approaches the whole-tree cost, and no task has yet
-done that. The salvage path is also undesigned: how work returns from the worktree, by
-patch or by commit-then-cherry-pick, and what happens when it fails to apply.
+**AND THE 46 SECONDS GOES AWAY TOO. PROBED AGAIN 2026-08-19, at the owner's question:
+clone `_build` into the worktree with an APFS copy-on-write clone.**
+
+| worktree | clone cost | first run |
+|---|---|---|
+| no `_build` | | 45.79 s |
+| `cp -c -R _build` | **0 s** | **1.58 s** |
+
+Against the main tree's warm 1.43 s that is the SAME SPEED, so **the Agda interfaces are
+path-portable and a worktree costs nothing at all**. `cp -c` on APFS shares the blocks,
+so the 344 MB is apparent and not real, and the main tree measured 1.48 s immediately
+afterwards, unchanged.
+
+**PREFER THE CLONE TO A SYMLINK, and the reason is the whole point of the exercise.** A
+symlinked `_build` is SHARED: the worktree's Agda writes into the main tree's interfaces,
+two concurrent tasks write into one another's, and the isolation worktrees exist to buy
+is given straight back. A clone is copy-on-write, so it is as cheap as a link and stays
+private.
+
+**WHAT IS NOT MEASURED AND MUST BE BEFORE ADOPTION.** One probe is one import slice, and
+a task that imports most of `src/` was never tried; the clone makes that far less likely
+to matter, because the interfaces come with it. `cp -c` is APFS only, so a non-APFS
+checkout falls back to a real copy or to the 45.79 s cold build, and neither is measured.
+The salvage path is still undesigned: how work returns from the worktree, and what
+happens when it fails to apply.
 
 ## Closed
 
