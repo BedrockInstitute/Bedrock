@@ -250,6 +250,68 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   The keys are `obligations_open_min` and `obligations_open_max`, and `vocab` moves to
   `eight-facts/1`.
 
+- **A24. ONE WORKTREE PER TASK, ruled 2026-08-19.** Every whole-tree reader in this
+  program attributes what it finds to whatever task is in front of it, and the acceptance
+  runner is one. MEASURED 2026-08-19, three times in one day: the maintainer edited a
+  guarded rule file, conjunct 5 read the WHOLE tree, and the RUNNING task was stopped for
+  a spec-surface move it had not made. The class is removed rather than the instances: a
+  task is dispatched into `.pod-state/worktrees/<code>`, accepted there, and only the
+  paths its brief DECLARES are copied back at the close.
+
+  **IT IS NOT A CONCURRENCY DEVICE AND IT DOES NOT REPLACE `admits()`.** Section 5.6
+  still caps the concurrent Agda runs, because the cost it bounds is memory and not the
+  checkout.
+
+  **THE DECLARED SCOPE STOPS BEING AN HONOUR SYSTEM.** Before this, a write outside the
+  brief's `## SCOPE (write)` reached the tracked tree and was audited after the fact as
+  `changed_files_foreign`. It now never arrives. Two real cases on 2026-08-19 were caught
+  by the audit, which is the weaker of the two.
+
+  **THE ONE FAILURE IS DETECTED AND RESOLVED BY NOBODY.** The copy back is a path list
+  and a file copy, never a merge, so it cannot conflict. It can find that the main tree
+  moved the same path while the task ran, and copying would then destroy that change. The
+  task parks with `salvage:<code>` and the resident maintainer reads it. AD1 keeps the
+  program out of that judgement.
+
+  Section 5.7 names the sites. The switch is `WORKTREE_ISOLATION` at
+  `scripts/pod/pod.py:960`.
+
+- **A25. A VENDOR REFUSAL IS NAMED AND IS NOT AN EMPTY RETURN, 2026-08-19.** A head
+  whose vendor answers 429 never runs, so it changes no file, so R7 drops the return and
+  rule (c) parks it `no-change`. That is the same word a head that ran for an hour and
+  achieved nothing gets, and the two need opposite responses.
+
+  **MEASURED THE DAY IT WAS WRITTEN: seven parked tasks, three loop stops and four
+  maintainer batches, all ONE five-hour usage limit.** The vendor had written its reset
+  time into the worker's final message, which is a file this program keeps and never
+  opened. Every one of those stops asked the repository owner to look at a wall the
+  program could have read.
+
+  **THE PHRASE IS NEVER IN THE RAW TEXT, and that is the whole trap.** The final message
+  is a pane capture and the terminal hard-wraps it, in the worst case to one character per
+  line, so `grep` over the bytes finds nothing. MEASURED on both returns of 2026-08-19.
+  The reader removes every byte of whitespace before it matches.
+
+  **NOTHING IS GUESSED.** A refusal it cannot read keeps the honest older name, and only
+  the NEWEST return is read: a task refused this morning that returned this afternoon is
+  not quota-blocked. The reset time is read as LOCAL, because the refusal landed at 16:53
+  local and named 20:19:47, which is the five hours the vendor calls it; read as UTC it
+  would be 11.4 hours under a header saying `5 hour`.
+
+  **A `quota:` PARK COUNTS TOWARD AD14's `parked_max`. Owner's ruling, 2026-08-19,
+  against the maintainer's recommendation, and the recommendation is recorded because a
+  ruling that hides the case it overruled cannot be re-examined.** The maintainer argued
+  that AD14 exists to catch the program running blind into a wall of its OWN making and
+  that a vendor's wall is not one. **The ruling is that a stop is correct anyway:** the
+  loop cannot do the project's work while its heads are refused, and a stop that pages the
+  owner is a truer report of that than a loop that keeps ticking. So AD14 is unchanged and
+  a vendor outage still stops the loop. What A25 buys is not fewer stops: it is that the
+  stop now NAMES the vendor and the reset time, and that the tasks re-open by themselves
+  when the window ends.
+
+  `scripts/pod/pod.py`, `vendor_refusal()` and `quota_open()`. Rule (c) names it and rule
+  (a2) re-opens it.
+
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the
   measured answer was: nothing. **No part of this program counts finished work.**
@@ -380,7 +442,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 
 | AD# | The decision | In | AD# | The decision | In |
 |---|---|---|---|---|---|
-| AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked. **A17 REPLACES THE SPAWN WITH A PROMPT: the trigger FEEDS a resident session** | 6.7, 8.1 |
+| AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked. **A17 REPLACES THE SPAWN WITH A PROMPT: the trigger FEEDS a resident session.** **The 3 is AD15's OWN number and is no longer AD14's**, section 6.7 | 6.7, 8.1 |
 | AD2 | A maintainer model writes new table rows. It does not run the loop. **A17 ADDS: it is RESIDENT, one long-lived session, and it owns the loop's health** | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
 | AD3 | All judgement belongs to the mathematician. **A21 ADDS THE HALF THIS ROW NEVER CARRIED: judgement is ALL it does. It writes no Agda, deliverable or probe, and the brief and the report are its channel to the coder** | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
 | AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[LJ-4.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
@@ -1438,100 +1500,51 @@ it at any moment. **One runner at a time:** `pod run` takes the same `flock` tha
 
 ### 5.1 The tick
 
-```python
-def pod_tick():                             # one pass. pod run sleeps, not this.
-    st = load_state(".pod-state/state.json")
-    st = replay_log(st, LOG)                # apply every log line with seq > st.seq
+**THE TICK IS SPECIFIED BY ITS ORDER AND ITS DUTIES, AND ITS BODY LIVES ONLY IN
+`scripts/pod/pod.py`.** This section carried a second copy of the body until 2026-08-19,
+and by that date the copy had drifted from the running program in nine places: it
+capped every action instead of the four looping ones, which this section's OWN prose
+below states correctly; it stopped and prompted at a literal 3 after `parked_max` moved
+to 7; it placed `ensure_maintainer()` inside the batch condition under a comment saying
+EVERY tick; and it carried no watchdog, no rule (g) body, no declared stop, no worktree
+limb, no `attempt` increment and no A14 tier. **Each of those was a rule with two homes,
+and the home that nobody executes is the one that goes stale.** The cure is the Boundary
+rule: one home per rule. The order and the reasons are here; the body is at
+`pod.py:2877`, and each rule's own docstring carries what it does and why.
 
-    # AMENDED BY A11: rule (g) REFILL is added below. When a slot is free AND
-    # the queue holds no dispatchable entry, the program dispatches the
-    # mathematician with agents/tasks/POD-REFILL/POD-REFILL.md. The program
-    # decides only that somebody must be asked; the head decides the work.
-    # (a1) CREATE. dev/pod/queue.toml is the only producer of a task.
-    for e in queue_entries_not_yet_created():
-        inject_survey(e.brief)            # R10, section 7.4. Before P15 reads it
-        stamp_pod_marker(e.code)          # section 9.3, one `.pod` line per task
-        emit(e.code, NONE -> READY, brief=e.brief)
-    for code in codes_now_under_agents_tasks_archive():
-        expire_rows(code)                 # section 4.6, the second expiry trigger
+| # | Rule | Duty | AD or amendment | Site in `pod.py` |
+|---|---|---|---|---|
+| 0 | `replay_log()` | Apply every log line with `seq > st.seq` before any rule reads the state | AD19, 5.3 | `:2892` |
+| 0 | `watchdog_tick()` | Confirm the backstop FIRST, before any rule consults `admits()` | A13 | `:2894` |
+| 1 | **(a1) CREATE** | `dev/pod/queue.toml` is the ONLY producer of a task. An entry with no `brief` is a REQUEST and never a task. It also expires the rows of an archived code | AD3, 4.6, A14 | `_rule_a1` |
+| 2 | **(a2) UNPARK** | A park is never terminal. Each of the ten park reasons of 5.5 has its own un-park test | AD16 | `_rule_a2` |
+| 3 | **(b) OBSERVE** | A worker is dead when its pid is dead, or when it ran past `worker_deadline_s` | AD17 | `_rule_b` |
+| 4 | **(c) ACCEPT** | ONE task at a time. Run the acceptance, route the WHOLE record, and take the action | AD13, A5, A24 | `_rule_c` |
+| 5 | **(d) STOP** | The declared stop comes FIRST and carries its own reason. Then the parked count against `parked_max` | AD14, A19 | `_rule_d` |
+| 6 | **(e) MAINTAINER** | Harvest, prune, and FEED the resident maintainer on the batch clock or on a NEW park | AD15, A17, A20 | `_rule_e` |
+| 7 | **(f) ADMIT AND SPAWN** | The ONLY writer of a task row. The stop refuses THIS rule and nothing else | AD21, AD27, 4.1 | `_rule_f` |
+| 8 | **(g) REFILL** | A free slot with no dispatchable entry asks the mathematician for work | A11 | `_rule_g` |
 
-    # (a2) UNPARK. AD16, and it is automatic.
-    for t in st.tasks where t.status == PARKED:
-        if (t.park_reason or "").startswith("preflight:"):
-            if preflight(t.brief) == []:  emit(t, PARKED -> READY); continue
-        elif t.park_reason in ("admission", "launch"):
-            if t.parked_at < mtime(TABLE): emit(t, PARKED -> READY)  # retry, 4.1
-        elif t.record is None:            continue    # a no-change park, see 5.5
-        elif t.parked_at < mtime(TABLE):
-            row_id, _ = route(TABLE, t.record)           # the WHOLE record, B3
-            if row_id is None:            continue
-            if t.park_reason == "attempt_max:" + row_id: continue   # B2
-            emit(t, PARKED -> READY, row=row_id)
+**THE ORDER INSIDE RULE (f) IS FIXED AND EACH STEP GUARDS THE NEXT.** The pre-flight
+refuses a malformed brief before any table write, so a branch block that does not parse
+can never reach `dev/pod/table.toml`. Admission then writes the rows, so by the time the
+worker returns, rule (c)'s `route()` can see this task's rows; without that step every
+first instance no-matches. `admits()` then decides concurrency, and only then does the
+dispatch point of fact 3 run. **Rule (g) runs LAST**, because a slot is free only once
+rule (f) has filled every slot it can, and because rule (g) dispatches: rule (f) returns
+STOP on `.pod-state/STOPPED` and the tick returns before rule (g) is reached.
 
-    # (b) OBSERVE. A worker is dead when its pid is dead, or when it ran too long.
-    for t in st.tasks where t.status == RUNNING:
-        if t.elapsed() > LIMITS.worker_deadline_s:
-            kill_process_group(t.pid); emit(t, RUNNING -> RETURNED, why="deadline")
-        elif not rec_alive(t):            emit(t, RUNNING -> RETURNED)
+**THE STOP REFUSES DISPATCHING AND NOTHING ELSE.** Rules (a1) to (e) keep running under
+`.pod-state/STOPPED`, so work that already returned is still observed and closed. Section
+5.5 states the consequence that the PARKED count can pass the limit after the stop.
 
-    # (c) ACCEPT. AD13 runs here, one task at a time.
-    for t in st.tasks where t.status == RETURNED:
-        if not admits(st, t, agda=True): continue   # section 5.6. The runner runs Agda
-        emit(t, RETURNED -> CHECKING)
-        rec = run_acceptance(t)           # section 5.4. One record, six facts nested
-        if rec is None:                   # R7, section 4.3.2 case 3
-            emit(t, CHECKING -> PARKED, reason="no-change"); continue
-        row_id, action = route(TABLE, rec)          # section 4.5.1, the WHOLE record
-        if   row_id is None:              emit(t, CHECKING -> PARKED, rec=rec,
-                                               reason="no-match")   # 5.5 and 8.2
-        elif action == "done":                      # R4 reads rec["conjuncts"]
-            if not r4_holds(rec, row_id): emit(t, CHECKING -> PARKED, rec=rec, reason="r4")
-            else:
-                commit_task(t, rec)     # ledger.py --write, then R8's explicit path
-                emit(t, CHECKING -> DONE, rec=rec, row=row_id)
-                expire_rows(t.code)                 # section 4.6, first trigger
-        elif same_row_runs(t, row_id) + 1 >= LIMITS.attempt_max:   # B2
-            emit(t, CHECKING -> PARKED, rec=rec, reason="attempt_max:" + row_id)
-        elif action == "accept":          emit(t, CHECKING -> READY,  rec=rec, row=row_id)
-        elif apply(action, t, rec, row_id) is STOP:  return STOP   # stop_loop only
-
-    # (d) STOP. AD14.
-    if count(st, PARKED) >= 3:
-        emit(LOOP -> STOPPED, why="3 parked")
-        touch(".pod-state/STOPPED"); notify_owner("3 parked"); return STOP
-
-    # (e) MAINTAINER. AD15. The digest hangs off the same trigger, section 8.1.
-    harvest_batch()                       # R15 then the replay, section 6.7
-    prune_logs(30)                        # the retention of section 4.0
-    if hours_since_last_batch() >= 12 or count(st, PARKED) >= 3:
-        ensure_maintainer()                        # A17. EVERY tick, idempotent
-        prompt_maintainer(); write_digest()        # the trigger FEEDS, not spawns          # sections 6.7 and 8.1
-
-    # (f) ADMIT AND SPAWN. This is the ONLY writer of a task row, section 4.1.
-    # The stop refuses THIS rule and nothing else, section 5.5. Rules (a1) to (e)
-    # keep running, so work that already returned is still observed and closed.
-    if exists(".pod-state/STOPPED"): return STOP
-    for t in st.tasks where t.status == READY, ordered by (t.attempt, t.code):
-        d = preflight(t.brief)            # AD21, section 6.5
-        if d:
-            emit(t, READY -> PARKED, reason="preflight:" + d[0].split()[0], detail=d)
-            continue
-        if not admit_rows(t.code, t.brief):         # section 4.1. R3 guards the write
-            emit(t, READY -> PARKED, reason="admission"); continue
-        if not admits(st, t): continue    # section 5.6
-        slot = t.head_slot or ("mathematician_adversarial"       # AD27, section 6.6
-                               if t.attempt > 1 and not reviewed(t) else None)
-        b, role = ((review_brief(t, slot), slot) if slot
-                   else (t.brief, head_slot_of(t.brief)))
-        t.head_slot = None                # R11. The head is resolved once, here
-        t.obl_before = witness_unresolved(t)        # fact 3 at dispatch, section 4.7
-        pid = launch(t.code, b, ...)      # dispatch.py:921, section 6.2
-        if pid is None:                   # a KEPT refusal of 6.2 fired. Never silent
-            emit(t, READY -> PARKED, reason="launch"); continue
-        emit(t, READY -> RUNNING, pid=pid, brief=t.brief, dispatched_brief=b,
-             role=role, obl_before=t.obl_before)      # K6. brief is ALWAYS the task's
-    return CONTINUE
-```
+**Seven helpers belong to the tick and are specified elsewhere:** `inject_survey()` is
+7.4's retrieval, `stamp_pod_marker()` is 9.3's `.pod` line, `commit_task()` runs
+`ledger.py --write` and then R8's explicit-path commit (7.1 row 26), `write_digest()` is
+section 8's digest, `r4_holds()` reads `rec["conjuncts"]` by the row's `outcome` (5.4),
+`harvest_batch()` is 6.7's R15 check plus the replay, and `prune_logs()` is 4.0's
+retention. Every other name in the tick is a one-line reader or writer of the queue, the
+table, the log, the state file, the process table or the clock.
 
 **`apply()` performs the six actions rule (c) does not handle inline**, so every
 one of the eight actions of section 4.2 reaches an implementation. It writes one
@@ -1563,21 +1576,6 @@ def apply(action, t, rec, row_id):        # scripts/pod/pod.py. Rule (c) calls i
 must not stay CHECKING across the stop; the park line names the row, and
 `pod resume` re-routes it through rule (a2) like any other park. The loop line,
 the `STOPPED` file and the owner push follow in the same tick (8.4).
-
-**The order inside rule (f) is fixed and each step guards the next.** The
-pre-flight refuses a malformed brief before any table write, so a branch block
-that does not parse can never reach `dev/pod/table.toml`. Admission then writes
-the rows, so by the time the worker returns, rule (c)'s `route()` can see this
-task's rows; without that step every first instance no-matches. `admits()` then
-decides concurrency, and only then does the dispatch point of fact 3 run.
-**Seven helpers are named here and specified elsewhere:** `inject_survey()` is
-7.4's retrieval, `stamp_pod_marker()` is 9.3's `.pod` line, `commit_task()` runs
-`ledger.py --write` and then R8's explicit-path commit (7.1 row 26),
-`write_digest()` is section 8's digest, `r4_holds()` reads `rec["conjuncts"]` by
-the row's `outcome` (5.4), `harvest_batch()` is 6.7's R15 check plus the replay,
-and `prune_logs()` is 4.0's retention. Every other name in the tick is a one-line
-reader or writer of the queue, the table, the log, the state file, the process
-table or the clock.
 
 **`witness_unresolved(t)` is the dispatch-point half of fact 3.** It runs the
 meter of section 4.7 over the brief's obligation list, returns the UNRESOLVED
@@ -1880,10 +1878,18 @@ acceptance test: that is DD24's AC-only baseline.
 **On a PARK the program writes exactly one line, with `"row": null`.** The state
 file then carries `status: "PARKED"`, `record: <the same record>` and
 `park_reason`, so the maintainer batch reads one file and not the whole log.
-**Nine park reasons exist and each names its cause:** `no-match`, `no-change`
+**Eleven park reasons exist and each names its cause:** `no-match`, `no-change`
 (R7), `preflight:P<n>`, `attempt_max:<row id>`, `r4` (5.4), `admission` (4.1),
 `launch`, which is a KEPT refusal of section 6.2 firing at the dispatch itself,
-`row:<row id>` for a `park` or `park_and_split` action, and `stop_loop:<row id>`.
+`row:<row id>` for a `park` or `park_and_split` action, `stop_loop:<row id>`,
+`salvage:<code>`, which fires when a closing task's worktree cannot be copied back
+because the main tree moved the same path while the task ran (section 5.7), and
+`quota:<reset>`, which names a vendor that refused the head (amendment A25).
+
+**`quota:` IS THE ONLY PARK THAT RE-OPENS ON A CLOCK.** Every other cause is inside this
+project and ends when a person or a table edit acts on it. A vendor's window is outside
+the project and ends by itself, so rule (a2) compares the named reset time with the wall
+clock and needs nobody.
 **Every park site writes one**, and rule (a2) branches on it: a `preflight:` park
 re-runs the pre-flight, an `admission` or `launch` park retries on the next table
 edit, and the rest re-route on the record. **A `no-change` park carries NO
@@ -1969,6 +1975,34 @@ POD must REFUSE on it, not print about it.** **Exclusive is not only about
 slots**, which is the second limb of `admits()` above: every run record writes a
 `# load before` line (`run.sh:25`), `load1()` reads `os.getloadavg()[0]`, and the
 task stays READY while the tick records the refusal.
+
+### 5.7 One worktree per task, amendment A24
+
+**THE FOUR SITES, and each one is a line of the tick.** The mechanics are in
+`scripts/pod/pod.py` and this section does not restate them: a rule has one home, and a
+second copy of a rule is a copy that drifts.
+
+| When | What | Where |
+|---|---|---|
+| Rule (f), at the dispatch | `make_worktree()` forks the checkout and clones `_build` into it. A refusal is NOT fatal: the task runs in the main tree, exactly as it did before A24 | `pod.py:979`, called at `:2030` |
+| Rule (c), at the acceptance | The runner is given the task's own tree, so conjunct 5 reads nothing anybody else wrote | `pod.py:3050` |
+| Rule (c), on a `done` | `salvage_worktree()` copies back the paths of `## SCOPE (write)` and NOTHING else | `pod.py:1025` |
+| Rule (c), after the close | `drop_worktree()` removes it. **A task that PARKS keeps its tree**, because that tree is the scene, which is the same reason a dead agent's pane is never closed | `pod.py:1088` |
+
+**THE BUILD CACHE IS CLONED AND NEVER SYMLINKED, and the price is measured.** PROBED
+2026-08-19: one probe in a fresh worktree with no `_build` takes 45.79 s, with `_build`
+cloned takes 1.58 s, and warm in the main tree takes 1.43 s. The clone itself costs no
+measurable time, because APFS shares the blocks. **A symlink would be as fast and would
+give the isolation straight back:** the worktree's Agda would write the main tree's
+interfaces, and two concurrent tasks would write each other's.
+
+**NO WORKTREE IS A NO-OP AND NEVER A REFUSAL.** A task dispatched before A24, or one
+whose fork was refused, ran in the main tree, so its work is already there and there is
+nothing to copy back. Eight tasks were in flight at the changeover, and parking them
+would have stranded every one.
+
+**`salvage:<code>` IS THE TENTH PARK REASON**, section 5.5, and it is the only outcome of
+this section that needs a person.
 
 ## 6. The roles
 
@@ -2598,7 +2632,18 @@ head at the same cap: **the escalation does NOT raise `GHCRTS`.** This row and
 
 **The trigger is mechanical.** Rule (e) of the tick spawns the maintainer when 12
 hours passed since the last `batch` line in the transition log, or when the
-PARKED count reaches 3. **The input is one program-written brief**,
+PARKED count reaches 3.
+
+**THAT 3 IS AD15's OWN NUMBER AND IT IS DELIBERATELY BELOW AD14's.** The two were one
+number until 2026-08-19, when `parked_max` moved to 7 and rule (d) followed it while rule
+(e) did not. **The owner ruled the resulting behaviour correct and told this document to
+record it, 2026-08-19**: the maintainer is fed at the THIRD park and the loop stops at the
+seventh, so the role that repairs the loop gets four parks of warning before the loop
+halts and pages a person. A trigger that tracked `parked_max` would arrive at the same
+moment as the stop it exists to prevent. **The number is a literal in `_rule_e` and NOT a
+`[limits]` key**, because `[limits]` is the owner's under AD26 and this is not a knob the
+owner asked for; the invariant that matters is that it stays at or below `parked_max`,
+and `scripts/tests/test_pod_loop.py` asserts exactly that. **The input is one program-written brief**,
 `agents/tasks/POD-BATCH/<ts>.md`, pinned under `agents/tasks/` so KEPT refusal 2
 of section 6.2 holds and `SAFE_TASK` at `dispatch.py:624` admits the name. The
 program fills it from the log: every PARKED code with its `park_reason` and its

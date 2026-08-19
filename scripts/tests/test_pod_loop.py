@@ -1694,12 +1694,17 @@ class Emit(LoopCase):
         self.assertGreaterEqual(len(written), 8)
         for reason in written:
             self.assertIn(reason, pod.PARK_REASONS, reason)
-        # TEN since 2026-08-19: `salvage:` joined them with worktree isolation, ruled by
-        # the owner. A scope-limited copy-back cannot conflict the way a merge does, but
-        # it has one failure judgement must settle, the main tree moving the same path
-        # while the task ran, and reusing one of the other nine would make a park reason
-        # lie. The count is asserted so a tenth cannot be added without saying why here.
-        self.assertEqual(len(pod.PARK_REASONS), 10)
+        # **THE REVERSE HALF: NO DECLARED REASON IS DEAD.** This line asserted a COUNT
+        # until 2026-08-19, and a count is a snapshot of a list the program is designed to
+        # grow: `salvage:` made it ten and `quota:` made it eleven, and each addition
+        # turned this suite red for a change that was correct. What the count was really
+        # guarding is that the tuple and the code agree, and containment says that in both
+        # directions without pinning a number. Three reasons reach `emit()` through a
+        # variable rather than a literal keyword, so the text is what this half reads.
+        body = src.split("PARK_REASONS = (", 1)[1].split(")", 1)[1]
+        for reason in pod.PARK_REASONS:
+            self.assertIn(f'"{reason}"', body,
+                          f"{reason} is declared and no site in pod.py writes it")
 
     def test_the_line_stamps_the_heads_digest_so_ad26_can_read_what_ran(self):
         st = pod.State()
@@ -3157,6 +3162,158 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                 seen[row["model"]] = got
         self.assertGreater(len(set(seen.values())), 1,
                            "every pi head resolved to ONE provider; the lookup is dead")
+
+
+class QuotaPark(LoopCase):
+    """A VENDOR REFUSAL IS NOT AN EMPTY RETURN, and until 2026-08-19 both said `no-change`.
+
+    MEASURED that day: seven parked tasks, three loop stops and four maintainer batches,
+    all one five-hour usage limit whose reset time sat in a file the program never opened.
+    """
+
+    #: THE REAL SHAPE, and it is the whole reason these tests exist. The final message is
+    #: a pane capture and the terminal hard-wrapped it, in the worst case to ONE CHARACTER
+    #: PER LINE, so `grep "Usage limit"` over the raw bytes finds nothing. Copied from
+    #: `.pod-state/logs/LJ-1.396-20260819-164127-final.md`.
+    WRAPPED = "\n".join(" " + c for c in
+                        'Error: 429: {"code":"1308","message":"Usage limit reached for 5 '
+                        'hour. Your limit will reset at 2026-08-19 20:19:47"}')
+
+    def final(self, text, code=CODE, stamp="20260819-164127"):
+        (self.tmp / ".pod-state" / "logs" / f"{code}-{stamp}-final.md").write_text(
+            text, encoding="utf-8")
+
+    def returned(self):
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.RETURNED,
+                     attempt=1, obl_before=2)
+        st.tasks[CODE] = t
+        return st, t
+
+    def parked(self, reason):
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.PARKED,
+                     park_reason=reason, record=None, parked_at=0.0, attempt=1)
+        st.tasks[CODE] = t
+        return st, t
+
+    # ------------------------------------------------------------------ the reader
+
+    def test_the_phrase_is_found_THROUGH_the_terminal_wrapping(self):
+        """The one invariant. A matcher that reads the raw text finds nothing at all."""
+        self.final(self.WRAPPED)
+        self.assertNotIn("Usage limit", self.WRAPPED, "the fixture is no longer wrapped")
+        self.assertEqual(pod.vendor_refusal(CODE, self.tmp), "2026-08-19T20:19:47")
+
+    def test_a_return_with_no_refusal_reads_as_no_refusal(self):
+        self.final("the coder finished and wrote a report\n")
+        self.assertIsNone(pod.vendor_refusal(CODE, self.tmp))
+
+    def test_no_log_at_all_reads_as_no_refusal(self):
+        self.assertIsNone(pod.vendor_refusal(CODE, self.tmp))
+
+    def test_the_NEWEST_return_is_the_one_read(self):
+        """A task that was quota-refused yesterday and ran today is not quota-refused."""
+        self.final(self.WRAPPED, stamp="20260819-100000")
+        self.final("this instance ran and returned\n", stamp="20260819-164127")
+        self.assertIsNone(pod.vendor_refusal(CODE, self.tmp))
+
+    # ------------------------------------------------------------------ rule (c)
+
+    def test_rule_c_names_the_quota_instead_of_calling_it_no_change(self):
+        self.final(self.WRAPPED)
+        self.set_acceptance(None)
+        st, t = self.returned()
+        pod._rule_c(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(t.park_reason, "quota:2026-08-19T20:19:47")
+
+    def test_rule_c_keeps_no_change_when_nothing_proves_a_refusal(self):
+        """THE OLDER NAME IS THE FALLBACK. A reason must never claim what it cannot read."""
+        self.final("the coder ran and changed nothing\n")
+        self.set_acceptance(None)
+        st, t = self.returned()
+        pod._rule_c(st, self.tmp)
+        self.assertEqual(t.park_reason, "no-change")
+
+    def test_quota_is_a_park_reason_the_program_admits(self):
+        self.assertIn("quota:", pod.PARK_REASONS)
+
+    # ------------------------------------------------------------------ rule (a2)
+
+    def test_a_quota_park_HOLDS_while_the_vendor_window_is_still_open(self):
+        future = (datetime.datetime.now()
+                  + datetime.timedelta(hours=2)).isoformat(timespec="seconds")
+        st, t = self.parked(f"quota:{future}")
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    def test_a_quota_park_RE_OPENS_ON_THE_CLOCK_and_needs_no_person(self):
+        """It is the only park that does. Every other cause is inside the project and
+        ends when somebody acts; a vendor's window ends by itself."""
+        past = (datetime.datetime.now()
+                - datetime.timedelta(minutes=1)).isoformat(timespec="seconds")
+        st, t = self.parked(f"quota:{past}")
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+
+    def test_a_quota_park_the_program_did_not_write_opens_at_once(self):
+        """`vendor_refusal()` never emits an unreadable time, so a hand wrote this one,
+        and holding it for ever is the worse of the two failures."""
+        st, t = self.parked("quota:whenever")
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+
+
+class TwoThresholds(LoopCase):
+    """AD15's parked trigger and AD14's stop were ONE number until 2026-08-19.
+
+    `parked_max` moved to 7 that day and rule (d) followed it while rule (e) did not, so
+    the maintainer is fed at the third park and the loop halts at the seventh. The owner
+    ruled that correct. These tests pin the RELATION and never either number, because both
+    are values the project is expected to move.
+    """
+
+    def test_the_maintainer_is_warned_at_or_before_the_stop(self):
+        """The one invariant. A trigger at or above `parked_max` would arrive with the
+        stop it exists to prevent, and the role that repairs the loop would learn of a
+        park only from the page that says the loop already halted."""
+        self.assertLessEqual(pod.BATCH_PARKED, pod._limits()["parked_max"])
+
+    def test_rule_e_feeds_the_maintainer_at_the_batch_threshold_not_at_the_stop(self):
+        st = pod.State()
+        for i in range(pod.BATCH_PARKED):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED, park_reason="no-match",
+                                      record=record(), parked_at=0.0)
+        pod.emit(st, st.tasks["LJ-1.900"], pod.CHECKING, pod.PARKED,
+                 reason="no-match", rec=record(), root=self.tmp)
+        pod._rule_e(st, self.tmp)
+        self.assertEqual(self.calls["maintainer"], 1,
+                         "the maintainer was not fed at the batch threshold")
+
+    def test_rule_d_does_NOT_stop_at_the_batch_threshold(self):
+        """The gap between the two numbers is the warning, so it must be a real gap."""
+        if pod.BATCH_PARKED >= pod._limits()["parked_max"]:
+            self.skipTest("the two thresholds are equal, so there is no warning window")
+        st = pod.State()
+        for i in range(pod.BATCH_PARKED):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED, park_reason="no-match")
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+
+    def test_a_quota_park_COUNTS_toward_the_stop(self):
+        """Owner's ruling, 2026-08-19, against the maintainer's recommendation. The loop
+        cannot do the project's work while its heads are refused, so a stop that pages the
+        owner is a truer report of that than a loop that keeps ticking."""
+        st = pod.State()
+        for i in range(pod._limits()["parked_max"]):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED,
+                                      park_reason="quota:2026-08-19T20:19:47")
+        self.assertIs(pod._rule_d(st, self.tmp), pod.STOP)
+        self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
 
 
 if __name__ == "__main__":

@@ -291,7 +291,14 @@ TRANSITIONS_LEGAL = {
 #: decide. Reusing one of the other nine names here would make a park reason lie, which is
 #: a defect class this programme measured three times on the day the rule was written.
 PARK_REASONS = ("no-match", "no-change", "preflight:", "attempt_max:", "r4",
-                "admission", "launch", "row:", "stop_loop:", "salvage:")
+                "admission", "launch", "row:", "stop_loop:", "salvage:", "quota:")
+
+#: AD15's parked trigger, and it is AD15's OWN number rather than AD14's `parked_max`.
+#: Owner's ruling, 2026-08-19, recorded at section 6.7: the maintainer is fed at the third
+#: park and the loop halts at `parked_max`, so the role that repairs the loop is warned
+#: before a person is paged. It is a literal and not a `[limits]` key because `[limits]`
+#: is the owner's (AD26), and the invariant that matters is `BATCH_PARKED <= parked_max`.
+BATCH_PARKED = 3
 
 #: `pod_tick()` returns one of these. Only `stop_loop` and rule (d) return STOP.
 CONTINUE, STOP = "CONTINUE", "STOP"
@@ -2935,7 +2942,7 @@ def _rule_a1(st, root):
 def _rule_a2(st, root):
     """(a2) UNPARK. AD16, and it is automatic. A park is never terminal.
 
-    Each of the nine park reasons has its own un-park test, and the branch is what makes
+    Each of the eleven park reasons has its own un-park test, and the branch is what makes
     a pre-flight park recoverable: a task refused BEFORE dispatch has no record, so
     `route()` cannot un-park it, and this re-runs `preflight()` instead.
     """
@@ -2955,6 +2962,14 @@ def _rule_a2(st, root):
             reason = park_reason_of(t.code, root) or ""
         if reason.startswith("preflight:"):
             if _preflight(t, root) == []:
+                emit(st, t, PARKED, READY, root=root)
+            continue
+        if reason.startswith("quota:"):
+            # **THE ONLY PARK THAT RE-OPENS ON A CLOCK.** Every other reason waits for a
+            # human or for a table edit, because every other cause is inside the project.
+            # A vendor's five-hour window is outside it and it ends by itself, so waiting
+            # for a person to notice is waiting for nothing.
+            if quota_open(reason):
                 emit(st, t, PARKED, READY, root=root)
             continue
         if reason in ("admission", "launch"):
@@ -3006,6 +3021,77 @@ def _preflight(t, root):
     return out if isinstance(out, list) else []
 
 
+#: **A VENDOR REFUSAL IS NOT AN EMPTY RETURN, and until 2026-08-19 the program could not
+#: tell them apart.** A head whose vendor answered 429 never ran, so it changed no file,
+#: so R7 drops the return and rule (c) parks it `no-change`, which is the same word a head
+#: that ran for an hour and achieved nothing gets. MEASURED 2026-08-19: seven parked
+#: tasks, three loop stops and four maintainer batches, all ONE five-hour usage limit, and
+#: the vendor had written the reset time into a file the program never opened.
+#:
+#: **THE PHRASE IS NEVER IN THE RAW TEXT AND THAT IS THE WHOLE TRAP.** MEASURED on both
+#: returns of 2026-08-19: `grep "Usage limit"` over the final message finds NOTHING,
+#: because the file is a pane capture and the terminal hard-wrapped it, in the worst case
+#: to one character per line. Every byte of whitespace goes before the match is tried.
+QUOTA_RE = re.compile(
+    r"[Uu]sagelimitreached.{0,40}?resetat"
+    r"(\d{4}-\d{2}-\d{2})[T ]?(\d{2}:\d{2}:\d{2})")
+
+
+def vendor_refusal(code, root=None):
+    """The reset time a vendor named when it refused this task's head, or None.
+
+    **THE TIME IS READ AS LOCAL, and that is measured rather than assumed.** The refusal
+    of 2026-08-19 landed at 16:53 local and named `2026-08-19 20:19:47`. Read as local
+    that is a window of a little over five hours, which is what the vendor calls it. Read
+    as UTC it would be 04:19 the next morning, an 11.4 hour wait under a header that says
+    `5 hour`, so the local reading is the only one consistent with the vendor's own words.
+
+    IT RETURNS None ON ANYTHING IT CANNOT READ, and the caller then keeps `no-change`.
+    A park reason carrying a time the program cannot compare is worse than the honest
+    older name: rule (a2) would hold the task for ever waiting for a clock that never
+    passes.
+    """
+    root = ROOT if root is None else Path(root)
+    d = root / ".pod-state" / "logs"
+    try:
+        cands = sorted(d.glob(f"{code}-*-final.md"), key=lambda p: p.name)
+    except OSError:
+        return None
+    # **ONLY THE NEWEST RETURN COUNTS, and reading one more was a defect its own test
+    # caught.** A task the vendor refused this morning and that ran to a real return this
+    # afternoon is not quota-blocked, and looking one instance back said it was. The
+    # stamp is `YYYYmmdd-HHMMSS` under a constant prefix, so the name sort is a time sort.
+    for path in cands[-1:]:
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        m = QUOTA_RE.search("".join(text.split()))
+        if m:
+            return f"{m.group(1)}T{m.group(2)}"
+    return None
+
+
+def quota_open(reason):
+    """True when a `quota:` park's named reset time has passed. Rule (a2) un-parks on it.
+
+    AN UNREADABLE TIME OPENS AT ONCE rather than never. `vendor_refusal()` refuses to
+    write one, so a `quota:` park that carries a time this cannot parse was written by a
+    hand and not by this program, and holding it for ever would be the worse failure.
+    """
+    stamp = reason[len("quota:"):].strip()
+    try:
+        return datetime.datetime.now() >= datetime.datetime.fromisoformat(stamp)
+    except ValueError:
+        return True
+
+
+def _no_change_reason(t, root):
+    """`quota:<reset>` when a vendor refused this head, else `no-change`."""
+    reset = vendor_refusal(t.code, root)
+    return f"quota:{reset}" if reset else "no-change"
+
+
 def _rule_b(st, root):
     """(b) OBSERVE. A worker is dead when its pid is dead, or when it ran too long.
 
@@ -3051,11 +3137,15 @@ def _rule_c(st, root):
         try:
             rec = accept_mod.run_acceptance(t, acc_root)
         except Exception as e:                 # noqa: BLE001. See the docstring
-            emit(st, t, CHECKING, PARKED, reason="no-change", root=root,
+            emit(st, t, CHECKING, PARKED, reason=_no_change_reason(t, root), root=root,
                  why=f"the acceptance runner raised {type(e).__name__}: {e}"[:400])
             continue
         if rec is None:                        # R7, section 4.3.2 case 3
-            emit(st, t, CHECKING, PARKED, reason="no-change", root=root)
+            # A VENDOR REFUSAL LANDS HERE AND IT IS NOT AN EMPTY RETURN. A head the
+            # vendor answered 429 never ran, so it changed nothing, so R7 drops the
+            # return on exactly this line. `_no_change_reason()` keeps `no-change` for
+            # every case it cannot prove otherwise.
+            emit(st, t, CHECKING, PARKED, reason=_no_change_reason(t, root), root=root)
             continue
         t.run = rec.get("run")
         emit_retrieval(st, t, root)            # section 7.4 Part 1b, ONE line per return
@@ -3219,8 +3309,18 @@ def _rule_e(st, root):
     # `tick_seconds` for ever: MEASURED 2026-08-19 at 07:05:03, 07:05:34, 07:06:06 and
     # 07:06:37, four identical batches naming the same three tasks. AD15's trigger is
     # unchanged in meaning; it now asks again only when something NEW has parked.
+    # **THE 3 IS AD15's OWN NUMBER AND IT IS NO LONGER AD14's.** They were one number
+    # until `parked_max` moved to 7 on 2026-08-19 and rule (d) followed it while this line
+    # did not. The owner ruled the result correct and told the design to record it: the
+    # maintainer is fed at the THIRD park and the loop halts at the seventh, so the role
+    # that repairs the loop gets four parks of warning before a person is paged. A trigger
+    # that tracked `parked_max` would arrive at the same moment as the stop it exists to
+    # prevent. It stays a literal and not a `[limits]` key, because `[limits]` is the
+    # owner's under AD26; the invariant is that it never exceeds `parked_max`, and
+    # `scripts/tests/test_pod_loop.py` asserts that.
     if not started and (hours_since_last_batch(root) >= 12
-                        or (st.count(PARKED) >= 3 and park_since_last_batch(root))):
+                        or (st.count(PARKED) >= BATCH_PARKED
+                            and park_since_last_batch(root))):
         prompt_maintainer(st, root)            # it is resident, so this FEEDS, not spawns
         write_digest(st, root)
 
