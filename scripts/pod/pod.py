@@ -3421,6 +3421,14 @@ def cmd_resume(argv):
         STOPPED_FILE.unlink()
     st = load_state()
     replay_log(st)
+    # **THE STATUS LINE SAID `stopped` FOR A LOOP THAT WAS DEMONSTRABLY RUNNING.**
+    # `emit()` sets `st.stopped` when it writes the `LOOP_STOPPED` line and NOTHING ever
+    # clears it: `replay_log()` would, but only while folding a newer loop-level line, and
+    # the value is already durable in `state.json` by then. MEASURED 2026-08-19: the loop
+    # ran for 95 minutes, ticking and dispatching, while `pod status` reported
+    # `stopped 2026-08-19T04:18:49Z`. A status field that contradicts the process table
+    # teaches an operator to distrust the status.
+    st.stopped = None
     before = st.count(PARKED)
     # **A `stop_loop` PARK HAS NO OTHER UN-PARK TRIGGER, and without this it is
     # PERMANENT.** Rule (a2) resolves a record-carrying park only when
@@ -3440,6 +3448,10 @@ def cmd_resume(argv):
             emit(st, t, PARKED, READY, root=ROOT,
                  why="resume: the owner cleared the stop")
     _rule_a2(st, ROOT)
+    # UNDER THE LOCK, because `resume` may run beside a live loop: `cmd_run()` re-reads
+    # the state every tick and writes it through `emit()`, which takes this same lock.
+    with pod_lock():
+        save_state(st)                         # `st.stopped = None` above must be durable
     print(f"pod resume: {before} parked, {st.count(PARKED)} still parked, "
           f"{st.count(READY)} ready")
     if "--once" in argv:
