@@ -75,6 +75,26 @@ implementation matched its prose, and it was inert. Three consistency audits ran
 and none asked the fourth question: **can the thing this produces actually do the job it
 is produced for?** Sweep the POD's other producers for the same shape.
 
+### 9. A PARKED task's output dirties the tree for ever and blocks every batch
+
+`commit_task()` runs only on a `done` close, so a task that parks keeps its deliverables
+uncommitted. `maintainer_scope_ok()` refuses on any path it does not recognise, so ONE
+parked task blocks every maintainer batch from then on.
+
+MEASURED 2026-08-19, and it cost the whole day: LJ-1.386 and LJ-1.388 both parked
+`no-match`, their files stayed dirty, and both batches of the day were retired
+`.toml.scope` without their rows ever being read. The maintainer could not write the very
+rows that would have un-parked those tasks. **The deadlock is exact: a park needs a row,
+the row needs a batch, the batch needs a clean tree, and the tree is dirty BECAUSE of the
+park.** The owner broke it by hand, by authorising a commit.
+
+It is not enough to commit at `done`. Either a park commits the task's own scope too, or
+`maintainer_scope_ok()` stops counting a live task's own home against the maintainer. The
+second is smaller and matches the exemption already granted to `/.pod`.
+
+**A RUNNING task has the same shape and is benign only because it ends.** MEASURED the
+same day: with LJ-1.390 dispatched, the gate refuses on its three live files.
+
 ## Closed
 
 ### 1 and 2. Fact 4 counted the program's own writes as the worker's. FIXED 2026-08-19
