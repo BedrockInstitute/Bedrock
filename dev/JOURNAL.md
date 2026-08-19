@@ -1322,3 +1322,46 @@ git-ignored, so none of this is committed and no gate reads it**
 **What it bought.** Two enforcement points that existed only on paper now run,
 and three figures that a reader would have trusted are corrected against the
 command that measures them.
+
+### 2026-08-19, `[LJ-1.391]` review: the NO-GO stands, its enumeration did not
+
+**Asked.** Attack the return of LJ-1.391#1 (`agents/tasks/LJ-1-391/lj-1.391-report.md`),
+on three questions: does the verdict line match its body, does every
+load-bearing claim resolve today, is the enumeration complete.
+
+**Returned.** The NO-GO verdict STANDS after re-measurement. The probe is RED
+at exactly one hole under my own three runs (rc 42, sole error
+`[UnsolvedInteractionMetas]` at `Probe391.agda:149.35-59`), the 48-line floor
+is rc 0 under three more runs, and the green half resolves through the
+acceptance record (`agents/tasks/LJ-1-391/runs/accept-1.out:24`). The full
+review is `agents/tasks/LJ-1-391/review-of-LJ-1-391-1.md`.
+
+The enumeration did not stand. Four defects and three gaps:
+
+- A mis-citation: the flip refutation is quoted at
+  `dev/literature/truncation-and-selection.md:311-314` but sits at `:307-310`;
+  the well-order prediction cited at `:334-336` runs to `:337`.
+- A false evidence sentence: "a grep returns no other shape" for SWOs. The
+  grep returns `pullOrder` (`src/L/Choice/Step.lagda.md:242`), `natOrder`
+  (`src/L/Choice/Finite.lagda.md:596`), `nameOrder`
+  (`src/L/Choice/Name.lagda.md:804`) and more. My sweep confirms the
+  conclusion, no delivered SWO has an ambient function type as carrier, so
+  the verdict survives its own bad sentence.
+- The digest's five-step checklist for a `∥ A ∥₁` stall
+  (`dev/literature/truncation-and-selection.md:287-302`) is covered only at
+  steps 1, 2 and 4. Steps 3 and 5, the `2-Constant` map and the weakly
+  constant endomap, are named nowhere in the report or the probe, and the
+  digest's rule at `:193-196` orders them discharged or refuted before
+  pricing. **That endomap on `sq δ` is now the widest unmeasured term, and
+  the next probe is named for it.**
+- Two brief orders were dropped: the [T46] check at
+  `src/L/StageCardinal.lagda.md:534-560`, which this review ran instead (the
+  chapter eliminates its hypothesis into injection data at `:550-551` and
+  `:556`, never into the empty type, so the truncated grade fails inside the
+  chapter too and the door stays load-bearing), and the ordered remark on
+  whether a choice parameter would now be admissible, which the return never
+  answers.
+
+**What it bought.** One verdict confirmed with its weakest evidence leg
+repaired by measurement, two corrected citation spans for whoever cites the
+return next, and one named next probe where the previous return closed early.

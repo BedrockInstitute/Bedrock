@@ -109,6 +109,85 @@ reason = "Price the DESCENT route to `sq` at a non-initial ordinal against `Leg1
 code = "LJ-1.389"
 reason = "DEMOTED 2026-08-19 by the refill: bookkeeping, not a blocker. Retire the two INFERRED marks that say the residue band is inhabited. The cheap witness is `ω` itself and not `ω · 2`, because `Init ω` needs `⟨ ω ∈ˢ ω ⟩` (src/L/InjChain.lagda.md:104). No counting fact is needed"
 
+# ---------------------------------------------------------------------------
+# WRITTEN BY THE REFILL OF 2026-08-19T07Z, rule (g). The queue held three
+# entries with a brief and all three had closed, so nothing was dispatchable.
+#
+# **THE FIVE ENTRIES BELOW ARE ONE LINE OF ATTACK AND NOT FIVE ERRANDS.** They
+# carry `head_slot: coder`, because every one of them puts Agda in a probe and
+# clause A21 gives that to the coder.
+#
+# **THE FINDING THAT PLANNED THEM.** The product route (`[LJ-1.386]`,
+# `[LJ-1.388]`) and the descent route (`[LJ-1.390]`) are not two routes. Both
+# owe the SAME missing direction: an AMBIENT injection must produce a CODE. The
+# tree runs coded to ambient twice (`src/L/CantorBernstein.lagda.md:33-38` and
+# `agents/tasks/LJ-1-386/Probe386.agda:264-268`) and never runs the converse, and
+# `[LJ-1.390]` named that converse as the descent route's whole risk
+# (`agents/tasks/LJ-1-390/lj-1.390-report.md:20-27`).
+#
+# **AND THE TREE ALREADY CARRIES MORE OF THE CODED ALGEBRA THAN EITHER REPORT
+# CREDITED.** `src/L/InjChain.lagda.md:314` composes two coded injections and
+# `:575` and `:604` build the coded inclusion, both generic. What is absent is a
+# PRODUCER of a code, not the algebra over codes.
+#
+# **SO THE PLAN DOES NOT ASK FOR THAT CONVERSE. IT GOES AROUND IT**, by asking
+# whether the campaign needs untruncated data at all (`[LJ-1.391]`), and by
+# running the recursion on an AMBIENT cardinality notion that needs no code
+# (`[LJ-1.392]` to `[LJ-1.395]`). `IsCardinalL` forbids a coded injection
+# (`src/L/Cardinal.lagda.md:230-233`) and `Init` forbids an ambient one
+# (`src/L/Ordinal/SquareLaw.lagda.md:692-700`); the campaign has been trying to
+# derive the second from the first, which is exactly the missing direction.
+#
+# **THE ARCHIVE CHANGED TWO OF THESE BEFORE THEY WERE QUEUED, AND THAT IS WHAT
+# THE ARCHIVE BLOCK IS FOR.** `[L3.32-T43]`, `[L3.32-T46]` and `[L3.32-T47]`
+# fought `[LJ-1.391]`'s question on the retired route in August and left three
+# records: the finding that the truncated form suffices, the counterexample at
+# one call site, and the delivered truncated layer
+# (`archive/dev/JOURNAL-archived.md:1623-1631` and `:1696-1699`,
+# `agents/tasks/archive/L3-32-T47/l3.32-t47-report.md:3-26`). And
+# `[LJ-1.392]`'s term is BUILT in the archive: `module Shift` at
+# `archive/src/2026-08-09-rud-route/L/Ordinal/SquareLaw.lagda.md:652-767`. That
+# entry is a PORT with a port price, not a fresh write, and W4 binds it.
+#
+# **DEPENDENCY ORDER, BECAUSE THIS FILE HOLDS NO DEPENDENCY KEY.**
+#   LJ-1.391  independent. It decides whether the four below are needed at all.
+#   LJ-1.392  independent.
+#   LJ-1.393  assumes LJ-1.392's `amb-limit`. Takes it as a hypothesis if absent.
+#   LJ-1.394  independent.
+#   LJ-1.395  assumes LJ-1.393 and LJ-1.394. Takes both as hypotheses.
+# A NO-GO on LJ-1.391 leaves all four standing. A GO on LJ-1.391 makes LJ-1.393
+# to LJ-1.395 cheaper and the mathematician rewrites them. **No entry below is
+# withdrawn by any other entry's failure.**
+#
+# VERIFIED 2026-08-19: `preflight.py --brief` prints `22 checks, no refusal` for
+# each of the five.
+# ---------------------------------------------------------------------------
+
+[[task]]
+code = "LJ-1.391"
+brief = "agents/tasks/LJ-1-391/LJ-1.391.md"
+reason = "THE CHEAPEST DECISIVE QUESTION, AND IT FEEDS AN OWNER RULING THE DIGEST ALREADY NAMED (dev/literature/truncation-and-selection.md:338-340): must the square law be DATA? The trophy states its injections MERELY (`src/L/GCH.lagda.md:37-38`), the consumer spends `sq` at ONE place (`src/L/StageCardinal.lagda.md:283`), and `via-col-truncated` already supplies the truncated grade (`src/L/Ordinal/SquareLaw.lagda.md:963-964`). A GO retires the door, the internal product and the `Init` producer from the critical path. A NO-GO proves the door is load-bearing, which nothing has yet established. THE LITERATURE IS DIGESTED FOR THIS ONE: the collection step IS the HoTT Book's AC (dev/literature/truncation-and-selection.md:223-235), and section 1.5 says a cardinal inequality is a truncated existence by definition"
+
+[[task]]
+code = "LJ-1.392"
+brief = "agents/tasks/LJ-1-392/LJ-1.392.md"
+reason = "The successor absorption at an infinite ordinal, and `Init`'s THIRD conjunct from it. The LIVE tree holds no cardinal arithmetic above `ω` at all: `Coreω` (src/L/InjChain.lagda.md:171) is the one instance and two of its three clauses are vacuous there. IT IS A PORT AND NOT A FRESH WRITE: the archive holds the whole shift at archive/src/2026-08-09-rud-route/L/Ordinal/SquareLaw.lagda.md:652-767, so the deliverable is the term AND the first measured port price for an archived chapter. `amb-limit` is the new half"
+
+[[task]]
+code = "LJ-1.393"
+brief = "agents/tasks/LJ-1-393/LJ-1.393.md"
+reason = "The AMBIENT cardinal notion, and the first `Init` this repository has ever held. It does not bridge `IsCardinalL` to `Init`, which is the direction the tree does not run; it introduces the ambient notion directly and pays one composition. ASSUMES LJ-1.392's `amb-limit`, and takes it as a bare hypothesis if that returned NO-GO"
+
+[[task]]
+code = "LJ-1.394"
+brief = "agents/tasks/LJ-1-394/LJ-1.394.md"
+reason = "The ambient descent, and the one question that decides the ambient route: does the FAILURE of the ambient cardinal notion deliver a smaller ordinal and an injection as DATA? The descent itself is about 20 lines. The negation is unpriced, because the tree's one untruncation device works by a property its subject does not have (agents/tasks/LJ-1-314/CodeUntrunc.agda:75-101)"
+
+[[task]]
+code = "LJ-1.395"
+brief = "agents/tasks/LJ-1-395/LJ-1.395.md"
+reason = "The band recursion, assembled with every case fed for the first time. It has been built twice and both times its residue had no supplier (agents/tasks/LJ-1-337/lj-1.337-report.md:262-263, agents/tasks/LJ-1-390/lj-1.390-report.md:82-95). It discharges `L.StageCardinal`'s module parameter exactly, and the size of what is LEFT is the measurement. ASSUMES LJ-1.393 and LJ-1.394, and takes both as hypotheses"
+
 [[task]]
 code = "L4"
 reason = "Convergence"
