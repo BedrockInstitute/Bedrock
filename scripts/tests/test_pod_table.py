@@ -1580,5 +1580,57 @@ class StopLoopIsOwnerOnly(unittest.TestCase):
                 self.assertEqual(r["added_by"], "owner", f"row {r['id']}")
 
 
+class ClosedListHasOneHome(unittest.TestCase):
+    """`[row.when]`'s closed list is written in TWO places, so a test must join them.
+
+    **MEASURED 2026-08-19: it had already drifted.** Section 4.3 declared fifteen keys and
+    `WHEN_TYPES` enforced nineteen. Amendments A10 and A23 added facts 7 and 8, both
+    amended pre-flight P4, and neither reached the section a mathematician reads to learn
+    what a branch may say, so four LEGAL keys were invisible and a brief that used one
+    looked illegal to its own author.
+
+    The list cannot have one home: P4 must execute it and a mathematician must read it.
+    So the second-best thing is that no edit can move one without the other.
+    """
+
+    MEMO = ROOT / "dev" / "memos" / "LJ-4-pod-program-design.md"
+    HEAD = "### 4.3 The eight-fact vocabulary"
+
+    def declared(self):
+        text = self.MEMO.read_text(encoding="utf-8")
+        self.assertIn(self.HEAD, text, "section 4.3 was renamed; this test cannot find it")
+        sec = text.split(self.HEAD, 1)[1].split("Globs match with", 1)[0]
+        return re.findall(r"^\| `([a-z_]+)` \|", sec, re.M)
+
+    def test_every_key_the_program_enforces_is_declared_to_its_author(self):
+        for key in table.WHEN_TYPES:
+            self.assertIn(key, self.declared(),
+                          f"`{key}` is legal and section 4.3 does not say so")
+
+    def test_every_key_section_4_3_permits_is_one_the_program_admits(self):
+        """The other direction, and it is the worse failure: a mathematician follows the
+        document, writes the key, and P4 refuses the brief for obeying it."""
+        for key in self.declared():
+            self.assertIn(key, table.WHEN_TYPES,
+                          f"section 4.3 permits `{key}` and P4 refuses it")
+
+    def test_the_two_lists_are_the_same_SIZE_so_neither_can_hide_a_key(self):
+        self.assertEqual(sorted(self.declared()), sorted(table.WHEN_TYPES))
+
+    def test_the_vocab_string_the_loader_demands_is_the_one_the_schema_shows(self):
+        """A schema example a mathematician copies must produce a table that LOADS. It
+        showed `six-facts/1` against a loader demanding `eight-facts/1` until 2026-08-19."""
+        text = self.MEMO.read_text(encoding="utf-8")
+        shown = re.findall(r'^vocab = "([^"]+)"', text, re.M)
+        self.assertTrue(shown, "the schema example no longer shows a vocab line")
+        for v in shown:
+            self.assertEqual(v, table.VOCAB)
+
+    def test_the_live_table_carries_the_vocab_the_loader_demands(self):
+        meta = tomllib.loads((ROOT / "dev" / "pod" / "table.toml")
+                             .read_text(encoding="utf-8"))["meta"]
+        self.assertEqual(meta["vocab"], table.VOCAB)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

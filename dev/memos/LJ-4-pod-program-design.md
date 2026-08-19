@@ -244,8 +244,10 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   **NO RECORD IS EVER MIGRATED AND NO FACT IS EVER GUESSED.** Fact 8 is OPTIONAL exactly
   as fact 7 is: a record written before this amendment does not carry it, and
   `matches()` refuses every `obligations_open` key against such a record. R7 is the
-  reason, and the idiom already existed for `lines`. So the sixteen frozen corpus
-  records stay live for every other key and can open no row that keys on a new one.
+  reason, and the idiom already existed for `lines`. So every corpus record written
+  before this amendment stays live for every other key and can open no row that keys on a
+  new one. **The count is deliberately not written here:** the corpus grows with every
+  routed return, so a number in this paragraph would be false within the day.
 
   The keys are `obligations_open_min` and `obligations_open_max`, and `vocab` moves to
   `eight-facts/1`.
@@ -654,7 +656,9 @@ The loader refuses an unknown key, so a typo never becomes a silent no-match row
 ```toml
 [meta]
 schema = 1                  # int, required. The loader refuses any other value.
-vocab = "six-facts/1"       # str, required. Bumped only when AD11 changes.
+vocab = "eight-facts/1"     # str, required. Bumped when the FACT SET changes: A10
+                            # added fact 7 and A23 added fact 8, so a table written
+                            # for one fact set can never route under another.
 
 [[row]]
 id = "sys-heap-wall"        # str, unique table-wide, kebab-case. See B7 below.
@@ -709,9 +713,15 @@ the eight names the function that performs it, and none is unimplemented.**
 
 `escalate` covers both sides of AD27, so no per-head action is needed.
 
-### 4.3 The six-fact vocabulary
+### 4.3 The eight-fact vocabulary
 
-**`[row.when]` keys. This list is closed. Nothing outside it may appear.**
+**`[row.when]` keys. This list is closed. Nothing outside it may appear**, and pre-flight
+P4 refuses a brief that names a key outside it. **THE LIST BELOW AND `WHEN_TYPES` IN
+`scripts/pod/table.py` ARE ONE LIST, and `scripts/tests/test_pod_table.py` asserts that
+in both directions.** It carried fifteen keys against the program's nineteen until
+2026-08-19: amendments A10 and A23 added facts 7 and 8, both amended P4, and neither
+reached this table, so four legal keys were invisible to every mathematician who read
+here to learn what a branch may say.
 
 | Key | Type | Fact | Meaning |
 |---|---|---:|---|
@@ -730,6 +740,17 @@ the eight names the function that performs it, and none is unimplemented.**
 | `seconds_min` | float | 5 | wall seconds >= value |
 | `seconds_max` | float | 5 | wall seconds <= value |
 | `heap_wall` | bool | 6 | equal |
+| `seconds_per_line_min` | float | 5 over 7 | ratio >= value. A10 |
+| `seconds_per_line_max` | float | 5 over 7 | ratio <= value. A10 |
+| `obligations_open_min` | int | 8 | unresolved at exit >= value. A23 |
+| `obligations_open_max` | int | 8 | unresolved at exit <= value. A23 |
+
+**FACTS 7 AND 8 ARE OPTIONAL AND THE OTHER SIX ARE NOT.** A record written before its
+amendment does not carry the fact, is never migrated and is never guessed (R7), so
+`matches()` refuses every key that reads an absent fact. **Fact 7 `lines` has no key of
+its own**: A10 names the fact and names no key, and the ratio is the form the ruled bar
+takes, so the admitted pair is the quotient `seconds_per_line_*`. That pick is this
+program's and is disclosed at `scripts/pod/table.py`.
 
 Globs match with `fnmatch.fnmatchcase` against the repository-relative path, and
 the loader refuses an empty `[row.when]`, which would match everything.

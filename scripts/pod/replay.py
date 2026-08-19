@@ -134,7 +134,8 @@ def _bad_type(value, want) -> bool:
 def check_record(rec, where="record"):
     """One corpus or log record. The corpus line and the transition log line are ONE shape.
 
-    `facts` HOLDS THE SIX KEYS, and `lines` may join them under amendment A10. Every other
+    `facts` HOLDS THE SIX REQUIRED KEYS, and `lines` (A10) and `obligations_open` (A23)
+    may join them as OPTIONAL facts. Every other
     key is provenance and no `[row.when]` key names one, except `concurrency`, which
     `matches()` reads as a GUARD. A `facts` object of any other shape is refused, because
     a half-record with a guessed field would license a row no evidence supports and the
@@ -144,8 +145,11 @@ def check_record(rec, where="record"):
     where a number belongs used to reach `table.matches()` and raise `TypeError` on `>=`:
     `admit_rows()` catches `TableError` and `OSError` and never a `TypeError`, so one
     malformed corpus line stopped the unattended loop with a traceback. Testing the type
-    at each of the seventeen comparisons would put one rule in seventeen homes (W5), so
-    the test is here, and `matches()` states that it validates nothing.
+    at each of `matches()`'s comparisons would put one rule in as many homes (W5), so the
+    test is here, and `matches()` states that it validates nothing. **The count that used
+    to stand in this sentence is gone on purpose:** it said seventeen, `matches()` grew to
+    nineteen with A10 and A23, and a docstring that counts a thing the program is designed
+    to grow is a docstring that goes stale without anybody touching it.
     """
     if not isinstance(rec, dict):
         raise table.TableError(f"{where}: is not an object")
