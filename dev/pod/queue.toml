@@ -188,6 +188,138 @@ code = "LJ-1.395"
 brief = "agents/tasks/LJ-1-395/LJ-1.395.md"
 reason = "The band recursion, assembled with every case fed for the first time. It has been built twice and both times its residue had no supplier (agents/tasks/LJ-1-337/lj-1.337-report.md:262-263, agents/tasks/LJ-1-390/lj-1.390-report.md:82-95). It discharges `L.StageCardinal`'s module parameter exactly, and the size of what is LEFT is the measurement. ASSUMES LJ-1.393 and LJ-1.394, and takes both as hypotheses"
 
+# ---------------------------------------------------------------------------
+# WRITTEN BY THE REFILL OF 2026-08-19T08Z, rule (g). The queue held eight
+# entries with a brief. Five had closed, three were RUNNING, and nothing was
+# dispatchable.
+#
+# **THE FIVE ENTRIES BELOW ARE ONE LINE OF ATTACK. THEY DO NOT GO AROUND THE
+# MISSING DIRECTION ANY MORE. THEY PAY IT.** Every one carries
+# `head_slot: coder`, because every one puts Agda in a probe (A21).
+#
+# **WHAT THE FIVE RETURNS OF 2026-08-19T07Z ESTABLISHED, TAKEN TOGETHER.** Each
+# task measured its own site and none of them read the others, so this is the
+# reading the refill owes them:
+#
+#   1. The consumer's parameter must arrive as DATA. `[LJ-1.391]` refuted the
+#      collection (`agents/tasks/LJ-1-391/lj-1.391-report.md:14-16`), and its
+#      adversarial review confirmed the verdict after re-measuring
+#      (`agents/tasks/LJ-1-391/review-of-LJ-1-391-1.md:13-15`).
+#   2. The recursion ASSEMBLES. `[LJ-1.395]` returned GO with every case fed
+#      (`agents/tasks/LJ-1-395/lj-1.395-report.md:31-35`).
+#   3. Its ONE residue is an ambient arrow below a negative site
+#      (`agents/tasks/LJ-1-395/lj-1.395-report.md:205-210`), and `[LJ-1.394]`
+#      measured that nothing ambient reaches it
+#      (`agents/tasks/LJ-1-394/lj-1.394-report.md:36-44`).
+#   4. `Init` now has a producer, with one hypothesis added: `amb-init'`
+#      (`agents/tasks/LJ-1-393/Probe393.agda:207-221`). What it needs is
+#      `AmbCard`, and both `[LJ-1.393]` and `[LJ-1.395]` record that `AmbCard`
+#      has NO producer (`agents/tasks/LJ-1-395/lj-1.395-report.md:219`).
+#
+# **THE REFILL READ `src/` AND THAT SENTENCE IS FALSE.** `LeastCardInjL`
+# (`src/L/Cardinal.lagda.md:60`) selects the ambient least cardinal of any
+# ordinal as DATA (`:122-123`), and it delivers the no-injection clause at that
+# selected point (`κ-min-at`, `:140-142`). Compose `κ-min-at` with the truncated
+# `κ-inj` (`:133-134`) under `PT.map`: the conclusion is `Empty.⊥`, so the
+# truncation is absorbed and `AmbCard` follows AT THE SELECTED POINT. Nothing is
+# untruncated. That is `[LJ-1.396]`, and it costs about one composition.
+#
+# **AND THE ARROW IS PAYABLE ON THE CODED SIDE.** The two delivered selections
+# hold one half each and neither holds both: `LeastCardInjL` is least over the
+# ORDINAL order (`src/L/Cardinal.lagda.md:91-101`) and its witness never
+# untruncates; `InternalLeastCard` is least over the CODE order (`:246-247`) and
+# `[LJ-1.386]`'s door untruncates its witness
+# (`agents/tasks/LJ-1-386/Probe386.agda:264-268`), but the code order gives no
+# ordinal minimality. **The pair that works is the ORDINAL order with the CODED
+# predicate, and the tree holds both halves and not the pair.** That is
+# `[LJ-1.397]`.
+#
+# **SO THE SPLIT ITSELF WAS THE WRONG CHOICE, NOT THE ROUTE.** `[LJ-1.395]`
+# split by `AmbCard`, whose negative side owes an ambient arrow. Split by
+# `IsCardinalL` instead: the negative side hands over a CODE, and the residue
+# moves to ONE positive case, an L-cardinal that is not its own ambient least
+# cardinal. That is `[LJ-1.398]`.
+#
+# **WHAT IS THEN LEFT IS ONE OBLIGATION AND IT IS MATHEMATICS, NOT A CHOICE
+# PRINCIPLE:** a code, at an L-cardinal, for an injection out of the internal
+# square. `[LJ-1.388]` named it the cardinal arithmetic and named the probe that
+# would measure it (`agents/tasks/LJ-1-388/lj-1.388-report.md:236-243`).
+# `[LJ-1.399]` prices the coding work where the mathematics is free, at `ω`, and
+# `[LJ-1.400]` is the obligation itself.
+#
+# **THE TREE HOLDS EXACTLY ONE CODED MAP, THE IDENTITY**
+# (`agents/tasks/LJ-1-386/Probe386.agda:94-193`). Nobody has measured what a
+# second one costs, and both remaining routes are blocked on that number. That
+# is why `[LJ-1.399]` is a separate task and not a paragraph in `[LJ-1.400]`.
+#
+# **LITERATURE: NOT DIGESTED FOR `[LJ-1.400]`, AND THE BRIEF CARRIES ITS OWN
+# STEP.** No source was found under the name of the square law
+# (`dev/literature/terms-2026-08.md:37`), and the digest names the Gödel pairing
+# only inside a hypothesis of a J-hierarchy result
+# (`dev/literature/j-hierarchy.md:111`). Clause W8 binds that task. The other
+# four need no literature: their mathematics is delivered in `src/` or measured
+# in a probe.
+#
+# **ARCHIVE: NO HIT FOR THESE FIVE, and the archives read were**
+# `archive/dev/JOURNAL-archived.md`, `archive/dev/TASKS-archived.md`,
+# `archive/dev/DECISIONS-archived.md` and `archive/src/2026-08-09-rud-route/`.
+# The archived route holds the AMBIENT square law and its collapse, which the
+# live chapter already carries (`src/L/Ordinal/SquareLaw.lagda.md:944-954`), and
+# it holds no coded pairing. `[LJ-1.391]` and `[LJ-1.392]` read the same
+# archives this hour and their ARCHIVE USED sections stand.
+#
+# **DEPENDENCY ORDER, BECAUSE THIS FILE HOLDS NO DEPENDENCY KEY.**
+#   LJ-1.396  independent. The positive side.
+#   LJ-1.397  independent. The negative side.
+#   LJ-1.398  assumes 396 and 397. Takes each as a bare hypothesis if absent.
+#   LJ-1.399  independent. The unit price of a coded map.
+#   LJ-1.400  assumes 399's number as its comparable, and nothing else.
+# **NO ENTRY BELOW IS WITHDRAWN BY ANOTHER'S FAILURE.** A NO-GO on 396 leaves
+# the positive case in `[LJ-1.398]`'s residue and the other four stand. A NO-GO
+# on 397 does the same for the negative case. A NO-GO on 400 is the first
+# MEASURED warrant for the candidate architecture and goes to `[LJ-2.5]`.
+#
+# **NOTHING WAS DROPPED FROM THIS QUEUE.** No finding of the five returns
+# refutes a premise of any standing entry. `[LJ-1.389]` stays a demoted request.
+#
+# VERIFIED 2026-08-19: `preflight.py --brief` prints `22 checks, no refusal` for
+# each of the five.
+#
+# **ONE PROGRAM DEFECT WAS MET AND WORKED AROUND, AND IT IS THE MAINTAINER'S.**
+# `laws_bundle()` reads `scripts/dispatch/rules.py` (`scripts/pod/pod.py:983`)
+# and commit `061490d` removed that directory on 2026-08-18. So the builder
+# returns None, `inject_survey()` writes no LAWS block, and pre-flight P21
+# refuses every brief that does not already carry one. The live producer is
+# `scripts/pod/rules.py`. The five briefs below carry the block that
+# `.venv/bin/python scripts/pod/rules.py --for probe` prints, written in by
+# hand. **Repair the path, do not repair the briefs.**
+# ---------------------------------------------------------------------------
+
+[[task]]
+code = "LJ-1.396"
+brief = "agents/tasks/LJ-1-396/LJ-1.396.md"
+reason = "`AmbCard` HAS a producer and the tree already holds it. `LeastCardInjL` gives the ambient least cardinal as DATA (src/L/Cardinal.lagda.md:122-123) and the no-injection clause at that point (:140-142); composing it with the truncated witness (:133-134) under a conclusion of `Empty.⊥` absorbs the truncation. Two reports say no producer exists (agents/tasks/LJ-1-395/lj-1.395-report.md:219). This makes the POSITIVE side of the band recursion free through `amb-init'` and `via-col-square`"
+
+[[task]]
+code = "LJ-1.397"
+brief = "agents/tasks/LJ-1-397/LJ-1.397.md"
+reason = "The ordinal-least CODED cardinal, and the arrow as DATA. The tree holds the ordinal order with the ambient predicate (src/L/Cardinal.lagda.md:91-101) and the code order with the coded predicate (:246-247), and the recursion needs the ORDINAL order with the CODED predicate. Then the door untruncates the witness (agents/tasks/LJ-1-386/Probe386.agda:264-268) and the arrow is data. It pays the bill [LJ-1.395] named (agents/tasks/LJ-1-395/lj-1.395-report.md:205-210) on the coded side. It is a MIRROR of a delivered module, not new mathematics"
+
+[[task]]
+code = "LJ-1.398"
+brief = "agents/tasks/LJ-1-398/LJ-1.398.md"
+reason = "The band recursion split by `IsCardinalL` and not by `AmbCard`. [LJ-1.395] returned GO on the assembly and owed the arrow at every negative site; this split hands over a CODE on the negative side and moves the residue to ONE positive case, an L-cardinal that is not its own ambient least cardinal. It must match src/L/StageCardinal.lagda.md:17-19 exactly. ASSUMES LJ-1.396 and LJ-1.397, and takes each as a bare hypothesis if either returned NO-GO"
+
+[[task]]
+code = "LJ-1.399"
+brief = "agents/tasks/LJ-1-399/LJ-1.399.md"
+reason = "What does it cost to CODE one delivered ambient map? The tree holds exactly ONE coded map, the identity (agents/tasks/LJ-1-386/Probe386.agda:94-193), and both remaining routes are blocked on a second one. Measure it at `ω`, where the ambient pairing is delivered (src/L/InjChain.lagda.md:184-185) and no cardinal arithmetic is in question, so the number is the coding work alone. C-42 binds the report: a price at `ω` is a price at `ω`"
+
+[[task]]
+code = "LJ-1.400"
+brief = "agents/tasks/LJ-1-400/LJ-1.400.md"
+reason = "The coded square law at an L-cardinal, and it is the last obligation of the coded route. [LJ-1.388] named it the cardinal arithmetic and named this probe (agents/tasks/LJ-1-388/lj-1.388-report.md:236-243). The ambient theorem and its whole Gödel collapse are already green in the chapter (src/L/Ordinal/SquareLaw.lagda.md:944-954); what the tree lacks is that mathematics in CODED form. THE LITERATURE IS NOT DIGESTED (dev/literature/terms-2026-08.md:37) so the brief carries its own literature step, and clause W8 binds it. A NO-GO is the first measured warrant for the candidate architecture and goes to [LJ-2.5]"
+
 [[task]]
 code = "L4"
 reason = "Convergence"
