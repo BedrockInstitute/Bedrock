@@ -55,6 +55,9 @@ Usage:
   pod.py run          the sleep loop: tick, sleep `tick_seconds`, repeat until STOP
   pod.py tick         one pass, then exit. This is the testable unit and `run` calls it
   pod.py resume       clear `.pod-state/STOPPED`, re-evaluate every PARKED task, then run
+    --retry           ALSO re-ready every parked task. For a cause that was
+                      external to all of them, such as a vendor quota
+    --once            do the above and exit, without entering the loop
   pod.py status       print the state file as a table. It writes nothing
   pod.py stop         write `.pod-state/STOPPED`, wait for every RUNNING worker, then
                       commit the tracked table and log
@@ -3823,8 +3826,25 @@ def cmd_resume(argv):
     # work, so a fresh instance now measures a different record. It belongs HERE and
     # never in rule (a2), which runs every tick and would spin
     # dispatch -> stop -> park -> unpark.
+    # **`--retry` RE-READIES EVERY PARK, and it is opt-in for a reason.** Rule (a2)'s
+    # tests are deliberately narrow: a park is cured by the thing that caused it, and
+    # blanket un-parking would re-dispatch a task whose brief is still wrong, four times
+    # over, until `attempt_max`. So it is never the default.
+    #
+    # IT EXISTS BECAUSE A CAUSE CAN BE EXTERNAL TO EVERY PARKED TASK AT ONCE. MEASURED
+    # 2026-08-19: the coder vendor answered `429: Usage limit reached for 5 hour`, three
+    # tasks started, retried, exited clean and wrote nothing, R7 parked each `no-change`,
+    # and the seventh park stopped the loop. A `no-change` park carries NO record, so rule
+    # (a2) skips it for ever, and the five `no-match` parks hold records written before
+    # A23 that `sys-obligations-satisfied` cannot reach. **Measured on the live state: all
+    # seven route to NO MATCH or carry no record, so a plain resume un-parks none of them
+    # and rule (d) stops the loop again on the first tick, because 7 IS `parked_max`.**
+    retry = "--retry" in argv
     for t in list(st.of(PARKED)):
-        if str(t.park_reason or "").startswith("stop_loop:"):
+        if retry:
+            emit(st, t, PARKED, READY, root=ROOT,
+                 why="resume --retry: the owner cleared the cause for every park")
+        elif str(t.park_reason or "").startswith("stop_loop:"):
             emit(st, t, PARKED, READY, root=ROOT,
                  why="resume: the owner cleared the stop")
     _rule_a2(st, ROOT)

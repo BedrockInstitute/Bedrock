@@ -40,9 +40,12 @@ while [ "$(date +%s)" -lt "$target" ]; do
 done
 printf '\nwait-and-start: the wait is over.\n'
 
-# THE PARKED SET IS NOT CLEARED HERE. `resume` un-parks what its own rules un-park and
-# nothing else; the seven parked tasks are a real state and the maintainer reads them.
-"$PY" scripts/pod/pod.py resume --once || {
+# **`--retry` IS REQUIRED HERE AND A PLAIN RESUME WOULD HAVE DONE NOTHING.** MEASURED
+# 2026-08-19 on the live state: all seven parked tasks either route to NO MATCH or carry
+# no record at all, so rule (a2) un-parks none of them. Seven IS `parked_max`, so the
+# loop would tick once and rule (d) would stop it again. The cause here was external to
+# every one of them, a vendor quota, which is exactly what the flag is for.
+"$PY" scripts/pod/pod.py resume --retry --once || {
     printf 'wait-and-start: resume REFUSED. Not starting the keeper.\n' >&2; exit 1; }
 
 printf 'wait-and-start: handing this pane to the keeper.\n'
