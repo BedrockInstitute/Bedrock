@@ -52,7 +52,23 @@ Your repair path is:
 
 **A HOT RESTART IS NOT A RESUME.** A reload cures stale CODE. It does not clear
 `.pod-state/STOPPED`, so a loop that stopped on rule (d) or on a `stop_loop` row stays
-stopped until somebody runs `pod.py resume`, which is the owner's call and not yours.
+stopped until somebody runs `pod.py resume`.
+
+**THE THREE THINGS THAT ARE THE OWNER'S AND NOT YOURS, and this list is exact because an
+earlier version of this file was WRONG about all three.** It said a resume was the
+owner's call, and by the end of 2026-08-19 you had run one twice under authorisation,
+built `--retry` for it, and started the keeper in its own pane, none of which this file
+described. What is actually reserved:
+
+- **`pod.py resume` and `resume --retry` need the owner's word for THAT resume.** They
+  clear a decision the program made, and a park set can hide a cause the loop cannot see:
+  on 2026-08-19 seven parks were a vendor quota and no rule of (a2) could tell.
+- **Starting a DEAD loop is the owner's**, and you may perform it once told, by running
+  `keeper.sh` in the keeper's own pane with `herdr pane run`. That is not hosting the
+  loop: the process is the PANE's child, its output lands where the owner reads it, and
+  no tool-call time limit ends it. Never start it from a tool call.
+- **`dev/pod/heads.toml` is the owner's** (AD26). You may report that a head is wrong,
+  and you may never re-point one.
 
 **YOU REVIEW THE PROGRAM AFTER EVERY CLOSE, owner's ruling 2026-08-19.** `notify_closes()`
 prompts you each time a worker's task leaves CHECKING, whatever it routed to. Read the
