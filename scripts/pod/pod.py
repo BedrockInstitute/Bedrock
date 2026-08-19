@@ -803,6 +803,15 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
             if to == PARKED:
                 t.parked_at = time.time()
                 t.park_reason = fields.get("reason", t.park_reason)
+                # **A `no-change` PARK MEANS THERE IS NO RECORD, AND THE STATE MUST SAY
+                # SO.** R7 fires when fact 4 is EMPTY, so the return produced nothing to
+                # route. The task kept the record of an EARLIER instance, and rule (a2)
+                # at `:2537` reads `t.record is None` to hold such a park: with a stale
+                # record it re-routed that old record instead, un-parked, re-dispatched,
+                # measured nothing again and parked again. One cycle per table write, for
+                # ever. MEASURED 2026-08-19 on LJ-1.390 at seq 47 and seq 64.
+                if fields.get("reason") == "no-change":
+                    t.record = None
             if rec is not None:
                 t.record = rec
             if "row" in line:
