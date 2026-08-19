@@ -3160,14 +3160,32 @@ def _rule_b(st, root):
 
     `worker_deadline_s` is NEW AND IT IS NEEDED. The only other exit from RUNNING is a
     dead pid, so a hung worker would hold an Agda slot for ever.
+
+    **LIVENESS IS TESTED BEFORE THE KILL, and the order used to be the other way round.**
+    The deadline limb ran `kill_process_group(t.pid)` on a pid it had not checked, and a
+    pid the operating system has RECYCLED belongs to somebody else: `os.killpg` then takes
+    out a whole unrelated process group. `rec_alive()` compares the recorded `proc_start`
+    with the live process, which is exactly the recycling guard, and the old order skipped
+    it for every task past its deadline.
+
+    **IT FIRED TWICE ON 2026-08-19**, at the shutdown for the maintainer handover: two
+    tasks had been RUNNING since 08:43Z, both pids were long gone, and `pod stop` reached
+    the kill for both. Nothing was harmed because `killpg` raised `ProcessLookupError`, so
+    this is a hazard that was measured before it cost anything rather than after. **It is
+    the founding incident of the launcher in miniature**, `scripts/pod/launcher.py:7-9`:
+    on 2026-08-05 two live agents died because a process group was killed out from under
+    them.
+
+    A task past its deadline whose pid is already gone now reports `pid dead`, which is
+    the truer of the two words.
     """
     deadline = _limits()["worker_deadline_s"]
     for t in list(st.of(RUNNING)):
-        if t.elapsed() > deadline:
+        if not rec_alive(t):
+            emit(st, t, RUNNING, RETURNED, why="pid dead", root=root)
+        elif t.elapsed() > deadline:
             kill_process_group(t.pid)
             emit(st, t, RUNNING, RETURNED, why="deadline", root=root)
-        elif not rec_alive(t):
-            emit(st, t, RUNNING, RETURNED, why="pid dead", root=root)
 
 
 def _rule_c(st, root):

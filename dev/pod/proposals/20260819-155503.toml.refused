@@ -1,0 +1,55 @@
+# Maintainer batch 20260819-155503. ONE ROW. Six parked, and only three of them are a
+# routing gap.
+#
+# 1, 2 and 3. LJ-1.388, LJ-1.393 and LJ-1.395, `no-match`, `error_class lint`, all at
+#    `obligations_delta -2`. **THE ROW BELOW.** Both discharged their obligations and
+#    failed conjunct 6 alone. `check-survey-quotes.py` gave each the same first defect,
+#    `no-heading: the return carries no ARCHIVE USED section`, and the two returns came
+#    from DIFFERENT ROLES, a mathematician and a coder, which is what makes it a system
+#    row and not a task row.
+#
+#    **THE FIRST HALF OF THE CURE IS ALREADY LANDED AND IS NOT A ROW.** Nothing ever told
+#    an agent this duty: the string `ARCHIVE USED` appeared in no
+#    `dev/pod/instructions/*.md`, not in `AGENTS.md` and not in any brief, while conjunct
+#    6 refused every return without it. `candidate_block()` now states it where the
+#    question is asked. Without that, `accept` would re-dispatch a head that still does
+#    not know the duty, and `attempt_max` would park it after four identical failures.
+#
+# 3 and 4. LJ-1.386 and LJ-1.390, `no-match`, `exit_code 0`, `error_class None`,
+#    `obligations_delta 0`. **NO ROW, AND THE OWNER SETTLED THIS ON 2026-08-19.** Under
+#    amendment A21 a mathematician writes no Agda, so its obligation list is EMPTY and a
+#    delta of 0 is the CORRECT outcome by construction. I had called the shape ambiguous
+#    and proposed two candidate rows; I was measuring a mathematician with a coder's
+#    yardstick. Both tasks are pre-A21 artifacts that carried real obligations, discharged
+#    them on their first instance, and could not reach -2 on a re-run.
+#
+#    **A GENERAL ROW HERE WOULD BE ACTIVELY WRONG GOING FORWARD**, because after A21 every
+#    healthy mathematician return has exactly these facts: a `done` row would close them
+#    all and an `escalate` row would send every one of them to a critic. The next refill
+#    can drop both from the queue.
+#
+# 5. LJ-1.394, `launch`. **NO ROW CAN REACH IT and it needs none.** A launch park happens
+#    BEFORE any record exists, so `route()` never sees it. Its cause is identified and
+#    repaired in the program this hour: every generated review brief claimed
+#    `dev/JOURNAL.md`, so `territory_in_flight()` refused LJ-1.394's escalation while
+#    LJ-1.391 was live. That was the FIRST adversarial dispatch this programme ever made.
+#    Rule (a2) retries a `launch` park on the next table write, so landing the row below
+#    also releases it.
+
+[[row]]
+id = "sys-lint-accept"
+scope = "system"
+priority = 120
+action = "accept"
+added = 2026-08-19
+added_by = "maintainer"
+reason = "A lint failure is a defect in the RETURN and not in the mathematics, so the head is asked once more to repair it. Basis: LJ-1.388, LJ-1.393 and LJ-1.395 each reached obligations_delta -2 and failed conjunct 6 alone."
+expired = false
+
+  [row.when]
+  error_class = "lint"
+
+[batch]
+ts = "20260819-155503"
+rows_proposed = 1
+reason = "One row for the `lint` gap, measured three times and from both working roles. No row for the two green-and-empty parks: after A21 that is a mathematician's correct outcome, not a defect. No row for the `launch` park: it has no record, and its cause is repaired in the program."

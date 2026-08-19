@@ -600,6 +600,60 @@ class RuleB(LoopCase):
 # ---------------------------------------------------------------- rule (c) ACCEPT
 
 
+class RuleBKillOrder(LoopCase):
+    """**A KILL AIMED AT A RECYCLED PID TAKES OUT SOMEBODY ELSE'S PROCESS GROUP.**
+
+    The deadline limb used to run `kill_process_group()` on a pid it had not checked.
+    MEASURED 2026-08-19 at the maintainer handover: two tasks had been RUNNING since
+    08:43Z, both pids were long gone, and `pod stop` reached the kill for both. Nothing
+    was harmed only because `killpg` raised. It is the launcher's founding incident in
+    miniature.
+    """
+
+    def running(self, elapsed_s):
+        """`elapsed()` reads `started`, the one field `launch()` writes at the dispatch,
+        as `%Y-%m-%d %H:%M:%S` local. A task with no `started` has not run and no deadline
+        can fire on it, so the fixture must set that field and not a made-up one."""
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.RUNNING,
+                     pid=424242, attempt=1,
+                     started=time.strftime("%Y-%m-%d %H:%M:%S",
+                                           time.localtime(time.time() - elapsed_s)))
+        st.tasks[CODE] = t
+        return st, t
+
+    def test_a_dead_pid_past_its_deadline_is_NEVER_killed(self):
+        """The whole point. `rec_alive()` compares the recorded `proc_start` with the live
+        process, which is the recycling guard, and the old order skipped it."""
+        killed = []
+        self.swap(pod, rec_alive=lambda t: False,
+                  kill_process_group=lambda pid: killed.append(pid))
+        st, t = self.running(10 ** 9)
+        pod._rule_b(st, self.tmp)
+        self.assertEqual(killed, [], "it killed a pid it had not checked")
+        self.assertEqual(t.status, pod.RETURNED)
+        self.assertEqual(self.lines()[-1]["why"], "pid dead",
+                         "a task whose pid is gone must not be reported as a deadline")
+
+    def test_a_LIVE_worker_past_its_deadline_is_still_killed(self):
+        """The deadline exists because the only other exit from RUNNING is a dead pid, so
+        a hung worker would hold an Agda slot for ever. Reordering must not lose that."""
+        killed = []
+        self.swap(pod, rec_alive=lambda t: True,
+                  kill_process_group=lambda pid: killed.append(pid))
+        st, t = self.running(10 ** 9)
+        pod._rule_b(st, self.tmp)
+        self.assertEqual(killed, [424242])
+        self.assertEqual(self.lines()[-1]["why"], "deadline")
+
+    def test_a_LIVE_worker_inside_its_deadline_is_left_alone(self):
+        self.swap(pod, rec_alive=lambda t: True,
+                  kill_process_group=lambda pid: self.fail("it killed a healthy worker"))
+        st, t = self.running(1)
+        pod._rule_b(st, self.tmp)
+        self.assertEqual(t.status, pod.RUNNING)
+
+
 class RuleC(LoopCase):
     """AD13 runs here, ONE TASK AT A TIME, and every limb writes exactly one line."""
 

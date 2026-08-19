@@ -1,0 +1,67 @@
+# Maintainer batch 20260819-161356. ONE ROW, and it uses fact 8.
+#
+# **THE ROW THE VOCABULARY WAS BUMPED FOR.** Amendment A23 added `obligations_open`, the
+# UNRESOLVED COUNT AT EXIT, because fact 3 is a DIFFERENCE and a difference cannot
+# separate a finished task from an idle one: 0 before and 0 after reads exactly like 5 and
+# 5. This row is what that fact was for.
+#
+# WHAT IT CLOSES. A green return with nothing left unresolved, whatever its delta. That is
+# the shape of all three legitimate routes that could not close before: a MATHEMATICIAN,
+# whose obligation list is empty under A21 so 0 is correct by construction; a RE-RUN,
+# whose obligations were discharged by its first instance; and a CRITIC, whose whole
+# deliverable is `review-of-<PRED>.md`.
+#
+# WHAT IT STILL REFUSES, which is the whole reason fact 8 exists. A return that achieved
+# nothing carries its obligations OPEN, so `obligations_open_max = 0` fails and the task
+# parks exactly as it should. The old candidate rows I refused to write in three earlier
+# batches all closed both cases; this one does not.
+#
+# PRIORITY 60 places it BELOW every seeded system row and below a task's own `go` branch
+# at 10, so a brief that models its own completion still wins. Section 4.4 sorts
+# `task:<CODE>` before `system` regardless, so the placement only orders it against other
+# system rows.
+
+[[row]]
+id = "sys-obligations-satisfied"
+scope = "system"
+priority = 60
+action = "done"
+outcome = "go"
+added = 2026-08-19
+added_by = "maintainer"
+reason = "A23. A green return with nothing left unresolved is complete, whatever its delta. A return that achieved nothing carries its obligations open and still parks."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  obligations_open_max = 0
+
+# ---------------------------------------------------------------------------
+# **THIS ROW DOES NOT RELEASE TODAY'S FIVE PARKED TASKS, AND I SAY SO RATHER THAN LET
+# THE OWNER DISCOVER IT.**
+#
+# MEASURED before writing this file: the stored records of LJ-1.386, LJ-1.388, LJ-1.390,
+# LJ-1.391 and LJ-1.395 were all written BEFORE A23 and carry no `obligations_open`.
+# `matches()` refuses every `obligations_open` key against a record that lacks the fact,
+# which is R7 and is correct: the program never guesses one. Rule (a2) un-parks a
+# record-carrying park only when `_route()` finds the OLD record a row, so this row cannot
+# reach them and they stay parked.
+#
+# **THE ROW IS THEREFORE FOR EVERY RETURN FROM NOW ON, and the five are a closed set of
+# casualties of the older vocabulary.** Their disposition is a mathematical judgement and
+# AD3 gives it to the mathematician: the next refill reads the transition log and decides
+# which queued entries the day has made wrong. I am not writing five task rows to
+# hand-hold them, because each would be a row I add to a TRACKED table to move one task
+# that a refill can drop in one line.
+#
+# The evidence for that judgement, so the refill does not have to re-derive it: each of
+# the five did real work on its FIRST instance. LJ-1.386 returned GO and refuted its own
+# brief's target; LJ-1.388 and LJ-1.395 each reached `obligations_delta -2`; LJ-1.390
+# returned GO on the descent route; LJ-1.391's critic wrote 17,266 bytes of
+# `review-of-LJ-1-391-1.md`.
+
+[batch]
+ts = "20260819-161356"
+rows_proposed = 1
+reason = "The row A23 was made for: a green return with nothing left unresolved closes, whatever its delta, while a return that achieved nothing keeps its obligations open and still parks. It governs every return from now on and CANNOT release today's five parked tasks, whose records predate the fact and which the next refill should dispose of."

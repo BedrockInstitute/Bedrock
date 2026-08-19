@@ -90,6 +90,25 @@ the marker, or rule that the guard is deliberately absent for that vendor.
 
 ## Closed
 
+### 14. Rule (b) killed a process group it had not checked. FIXED 2026-08-19
+
+The deadline limb ran `kill_process_group(t.pid)` before testing liveness. A pid the
+operating system has RECYCLED belongs to somebody else, and `os.killpg` then takes out a
+whole unrelated process group. `rec_alive()` compares the recorded `proc_start` with the
+live process, which is exactly the recycling guard, and the old order skipped it for every
+task past its deadline.
+
+**IT FIRED TWICE**, at the shutdown for the maintainer handover: LJ-1.398 and LJ-1.399 had
+been RUNNING since 08:43Z, both pids were long gone, and `pod stop` reached the kill for
+both. Nothing was harmed because `killpg` raised `ProcessLookupError`, so this was
+measured before it cost anything rather than after. It is the launcher's founding incident
+in miniature: on 2026-08-05 two live agents died because a process group was killed out
+from under them.
+
+Liveness is tested first now, and a task past its deadline whose pid is already gone
+reports `pid dead`, which is the truer of the two words. Three tests pin the order.
+
+
 ### 5. Five MEASURED corpus records, one per RUNNER class. DONE 2026-08-19
 
 **R3's balance check is armed for every RUNNER class.** `lint` and `spec_surface` the

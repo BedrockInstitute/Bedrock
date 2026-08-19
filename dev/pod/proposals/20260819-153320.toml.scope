@@ -1,0 +1,59 @@
+# Maintainer batch 20260819-153320. ONE ROW, AND THE ROW IS NOT THE REAL CURE.
+#
+# **THE `lint` NO-MATCH IS NOW TWICE AND IT IS THE SAME DEFECT BOTH TIMES.** LJ-1.388,
+# a mathematician, and LJ-1.393, a CODER, both returned `exit_code 1`,
+# `error_class lint`, `obligations_delta -2`. Both discharged their obligations. Both
+# failed conjunct 6 alone, and `check-survey-quotes.py` gave each the same first
+# defect: `no-heading: the return carries no ARCHIVE USED section`.
+#
+# **THE CAUSE IS NOT THE HEADS. NOTHING EVER TOLD THEM.** MEASURED 2026-08-19: the
+# string `ARCHIVE USED` appears in NO `dev/pod/instructions/*.md`, NOT in `AGENTS.md`,
+# and NOT in the brief. `candidate_block()` in `scripts/pod/retrieve.py` injected the
+# CANDIDATE lines and never said how to answer them, while conjunct 6 refused every
+# return that did not. A duty with a checker and no home in front of the agent.
+#
+# **SO THE ROW BELOW IS THE SECOND HALF OF THE CURE AND NOT THE FIRST.** The first half
+# is landed already, outside this proposal and inside my own scope as a program repair:
+# `candidate_block()` now states the duty where the question is asked, including the
+# `NO HIT` case, because the heading is required whatever the search returned. Without
+# that, `accept` would re-dispatch a head that still does not know the duty and
+# `attempt_max` would park it after four identical failures.
+#
+# WHAT THE ROW ADDS ON TOP: a return that fails ONLY conjunct 6 has done its
+# mathematics. Parking it discards a green result over a missing section. `accept` asks
+# the same head once more, and B2's `attempt_max` caps the loop at 4.
+
+[[row]]
+id = "sys-lint-accept"
+scope = "system"
+priority = 120
+action = "accept"
+added = 2026-08-19
+added_by = "maintainer"
+reason = "A lint failure is a defect in the RETURN and not in the mathematics. Basis: LJ-1.388 and LJ-1.393 both reached obligations_delta -2 and failed conjunct 6 alone."
+expired = false
+
+  [row.when]
+  error_class = "lint"
+
+# ---------------------------------------------------------------------------
+# NO ROW FOR LJ-1.386, AND THE OWNER SETTLED WHY ON 2026-08-19.
+#
+# Its shape is `exit_code 0`, `error_class None`, `obligations_delta 0`. I called that
+# ambiguous in the previous batch and proposed two candidate rows. **The owner named
+# the reading I had missed: under amendment A21 a mathematician writes no Agda, so its
+# obligation list is EMPTY and a delta of 0 is the CORRECT outcome by construction, not
+# a suspicious one.** I was measuring a mathematician with a coder's yardstick.
+#
+# LJ-1.386 is a PRE-A21 artifact: it was written as a probe task, so it carried real
+# obligations, discharged them on its first instance, and could not reach -2 again on a
+# re-run. It needs no general row and the next refill can drop it from the queue.
+#
+# **A GENERAL ROW ON THIS SHAPE WOULD BE WRONG GOING FORWARD**, because after A21 every
+# healthy mathematician return has exactly these facts. A `done` row would close them
+# all, and an `escalate` row would send every one of them to a critic.
+
+[batch]
+ts = "20260819-153320"
+rows_proposed = 1
+reason = "One row for the `lint` gap, now measured twice and once from a coder. The row is the SECOND half of the cure: the first half is that `candidate_block()` never stated the duty conjunct 6 enforces, which is repaired in the program. No row for LJ-1.386: after A21 a mathematician's obligation list is empty, so obligations_delta 0 is correct and not a defect."
