@@ -49,9 +49,12 @@ Usage:
 """
 from __future__ import annotations
 
+import fcntl
 import json
+import os
 import subprocess
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -107,6 +110,27 @@ def max_columns(base: str) -> int:
     return max(1, width // MIN_COL_WIDTH - 1)  # minus one, because BASE is a column too
 
 
+@contextmanager
+def columns_lock(state: Path):
+    """ONE WRITER AT A TIME, the same `flock` shape `pod_lock()` uses in `scripts/pod/pod.py`.
+
+    **LAST-WRITE-WINS DROPPED A COLUMN.** MEASURED 2026-08-19 by an adversarial review:
+    two dispatches read the same file, each appended one pane, and the second write
+    erased the first. A torn `Path.write_text` (it truncates, then writes) also made a
+    reader see no columns, and `plan()` then right-split BASE, which is the nested-column
+    failure this file was written to prevent. The in-loop runner serialises on
+    `pod.lock`, but two direct `launcher.py` processes do not.
+    """
+    state.mkdir(parents=True, exist_ok=True)
+    lock = state / (STATE_REL.name + ".lock")
+    with open(lock, "a+") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh, fcntl.LOCK_UN)
+
+
 def read_columns(state: Path, base: str) -> list[list[str]]:
     """The columns, left to right, with every dead pane dropped. `[[top], [top, bottom]]`."""
     try:
@@ -123,10 +147,14 @@ def read_columns(state: Path, base: str) -> list[list[str]]:
 
 
 def write_columns(state: Path, cols: list[list[str]]) -> None:
+    """Atomic replace. A reader never sees a truncated file."""
     try:
         state.mkdir(parents=True, exist_ok=True)
-        (state / STATE_REL.name).write_text(
+        path = state / STATE_REL.name
+        tmp = path.with_name(path.name + ".tmp")
+        tmp.write_text(
             "\n".join(" ".join(c) for c in cols) + "\n", encoding="utf-8")
+        os.replace(tmp, path)
     except OSError:
         pass                                   # an unwritable state file costs one column
 
@@ -196,24 +224,25 @@ def main(argv: list[str]) -> int:
         print("pane-slot: --base <PANE> is required", file=sys.stderr)
         return 2
 
-    cols = read_columns(state, base)
-    limit = max_columns(base)
-    direction, source = plan(cols, limit, base)
-    if show_plan:
-        print(f"{direction} {source} (columns {len(cols)}/{limit})")
-        return 0
-    pane = split(source, direction, cwd, env)
-    if pane is None:
-        return 1                               # print NOTHING; the caller falls back
-    if direction == "right":
-        cols.append([pane])
-        equalise(base)
-    else:
-        for c in cols:
-            if source in c:                    # the source is the column's LAST pane
-                c.append(pane)
-                break
-    write_columns(state, cols)
+    with columns_lock(state):
+        cols = read_columns(state, base)
+        limit = max_columns(base)
+        direction, source = plan(cols, limit, base)
+        if show_plan:
+            print(f"{direction} {source} (columns {len(cols)}/{limit})")
+            return 0
+        pane = split(source, direction, cwd, env)
+        if pane is None:
+            return 1                           # print NOTHING; the caller falls back
+        if direction == "right":
+            cols.append([pane])
+            equalise(base)
+        else:
+            for c in cols:
+                if source in c:                # the source is the column's LAST pane
+                    c.append(pane)
+                    break
+        write_columns(state, cols)
     print(pane)
     return 0
 

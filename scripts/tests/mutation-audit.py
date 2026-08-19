@@ -106,34 +106,51 @@ def _first_literal(node):
     return ""
 
 
-def preflight_family(results):
-    """DELETE one pre-flight check. It is deleted and never renamed, because renaming
-    tests whether the CODE is asserted and deleting tests whether the check bites."""
+def splice_deleted_appends(src: str, code: str) -> str | None:
+    """Delete one pre-flight check IN the original text, and change no other byte.
+
+    **`ast.unparse` OF THE WHOLE FILE IS NOT A MUTANT OF ONE CHECK.** MEASURED 2026-08-19
+    by an adversarial review: unparse rewrote every string to single quotes, and
+    `test_pod_table.py`'s census `r'"(P\\d+) '` then failed for every pre-flight mutant.
+    All 22 died in `table` for quote style, so a check no suite exercises still read as
+    awake. This splices `pass` over each `d.append` of one code and leaves every other
+    byte alone, so a death is a suite noticing THAT check.
+    """
     import ast
-    src = (ROOT / PREFLIGHT).read_text(encoding="utf-8")
-    codes = sorted({m for m in re.findall(r'f?"(P\d+)\b', src)}, key=lambda x: int(x[1:]))
-    print(f"pre-flight, {len(codes)} check(s):")
+    tree = ast.parse(src)
+    killed = []
 
-    class Killer(ast.NodeTransformer):
-        def __init__(self, code):
-            self.code, self.n = code, 0
-
+    class Finder(ast.NodeVisitor):
         def visit_Expr(self, node):
             c = node.value
             if (isinstance(c, ast.Call) and isinstance(c.func, ast.Attribute)
                     and c.func.attr == "append"
-                    and re.match(rf"{self.code}\b", _first_literal(c))):
-                self.n += 1
-                return ast.Pass()
-            return node
+                    and re.match(rf"{code}\b", _first_literal(c))):
+                killed.append(node)
+            self.generic_visit(node)
+
+    Finder().visit(tree)
+    if not killed:
+        return None
+    lines = src.splitlines(keepends=True)
+    for node in sorted(killed, key=lambda n: n.lineno, reverse=True):
+        start = node.lineno - 1
+        end = node.end_lineno or node.lineno
+        indent = re.match(r"[ \t]*", lines[start]).group(0)
+        lines[start:end] = [f"{indent}pass\n"]
+    return "".join(lines)
+
+
+def preflight_family(results):
+    """DELETE one pre-flight check. It is deleted and never renamed, because renaming
+    tests whether the CODE is asserted and deleting tests whether the check bites."""
+    src = (ROOT / PREFLIGHT).read_text(encoding="utf-8")
+    codes = sorted({m for m in re.findall(r'f?"(P\d+)\b', src)}, key=lambda x: int(x[1:]))
+    print(f"pre-flight, {len(codes)} check(s):")
 
     for code in codes:
         def m(o, code=code):
-            tree = ast.parse(o)
-            k = Killer(code)
-            tree = k.visit(tree)
-            ast.fix_missing_locations(tree)
-            return ast.unparse(tree) if k.n else None
+            return splice_deleted_appends(o, code)
         # P22 PRINTS AND NEVER REFUSES, by design, so it has no `d.append` site and its
         # mutant is the print loop instead. The module docstring carries the reason.
         if code == "P22":

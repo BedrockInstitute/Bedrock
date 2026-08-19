@@ -3195,11 +3195,19 @@ QUOTA_RE = re.compile(
 def vendor_refusal(code, root=None):
     """The reset time a vendor named when it refused this task's head, or None.
 
-    **THE TIME IS READ AS LOCAL, and that is measured rather than assumed.** The refusal
-    of 2026-08-19 landed at 16:53 local and named `2026-08-19 20:19:47`. Read as local
-    that is a window of a little over five hours, which is what the vendor calls it. Read
-    as UTC it would be 04:19 the next morning, an 11.4 hour wait under a header that says
-    `5 hour`, so the local reading is the only one consistent with the vendor's own words.
+    **THE TIME IS READ AS LOCAL AND STORED WITH THAT OFFSET.** The refusal of 2026-08-19
+    landed at 16:53 local and named `2026-08-19 20:19:47`. Read as local that is a window
+    of a little over five hours, which is what the vendor calls it. Read as UTC it would
+    be 04:19 the next morning, an 11.4 hour wait under a header that says `5 hour`, so
+    the local reading is the only one consistent with the vendor's own words.
+
+    **THE OFFSET IS STAMPED AT THIS READ, because a later zone change would otherwise
+    move the instant.** MEASURED 2026-08-19 by an adversarial review: `quota_open()`
+    compared two naive clocks, so a machine that changed TZ between the park and the
+    un-park treated 20:19 as a different instant. Storing `+08:00` (or whatever the
+    offset is right now) makes the instant a real time; `quota_open()` then compares
+    UTC. A naive stamp already on disk is still read as local, which is what it was
+    when it was written.
 
     IT RETURNS None ON ANYTHING IT CANNOT READ, and the caller then keeps `no-change`.
     A park reason carrying a time the program cannot compare is worse than the honest
@@ -3209,13 +3217,22 @@ def vendor_refusal(code, root=None):
     root = ROOT if root is None else Path(root)
     d = root / ".pod-state" / "logs"
     try:
-        cands = sorted(d.glob(f"{code}-*-final.md"), key=lambda p: p.name)
+        cands = list(d.glob(f"{code}-*-final.md"))
     except OSError:
         return None
-    # **ONLY THE NEWEST RETURN COUNTS, and reading one more was a defect its own test
-    # caught.** A task the vendor refused this morning and that ran to a real return this
-    # afternoon is not quota-blocked, and looking one instance back said it was. The
-    # stamp is `YYYYmmdd-HHMMSS` under a constant prefix, so the name sort is a time sort.
+    # **ONLY THE NEWEST RETURN COUNTS, and recency is when the file LANDED, not the
+    # stamp in its name.** MEASURED 2026-08-19 by an adversarial review: name sort
+    # treated a restored relic whose stamp sorted last as the newest return, and a
+    # quota that a later clean return had already superseded came back. The program
+    # writes the file at the return, so mtime is that moment; name is the tie-break
+    # when two returns land in the same second. A restored file that keeps its old
+    # mtime loses to a later real return; one whose name merely sorts last cannot win.
+    def recency(p):
+        try:
+            return (p.stat().st_mtime, p.name)
+        except OSError:
+            return (0.0, p.name)
+    cands.sort(key=recency)
     for path in cands[-1:]:
         try:
             text = path.read_text(encoding="utf-8", errors="replace")
@@ -3223,7 +3240,12 @@ def vendor_refusal(code, root=None):
             continue
         m = QUOTA_RE.search("".join(text.split()))
         if m:
-            return f"{m.group(1)}T{m.group(2)}"
+            try:
+                naive = datetime.datetime.fromisoformat(f"{m.group(1)}T{m.group(2)}")
+            except ValueError:
+                return None
+            aware = naive.replace(tzinfo=datetime.datetime.now().astimezone().tzinfo)
+            return aware.isoformat(timespec="seconds")
     return None
 
 
@@ -3233,12 +3255,22 @@ def quota_open(reason):
     AN UNREADABLE TIME OPENS AT ONCE rather than never. `vendor_refusal()` refuses to
     write one, so a `quota:` park that carries a time this cannot parse was written by a
     hand and not by this program, and holding it for ever would be the worse failure.
+
+    An AWARE stamp is compared in UTC, so a TZ change after the park cannot move it. A
+    NAIVE stamp is compared to local `now()`, which is what every park written before
+    this function started attaching an offset still carries.
     """
     stamp = reason[len("quota:"):].strip()
     try:
-        return datetime.datetime.now() >= datetime.datetime.fromisoformat(stamp)
+        reset = datetime.datetime.fromisoformat(stamp)
     except ValueError:
         return True
+    if reset.tzinfo is None:
+        now = datetime.datetime.now()
+    else:
+        now = datetime.datetime.now(datetime.timezone.utc)
+        reset = reset.astimezone(datetime.timezone.utc)
+    return now >= reset
 
 
 def _no_change_reason(t, root):
@@ -4390,7 +4422,11 @@ def cmd_stop(argv):
 #: because the real row was untouched and still valid, and `--use claude` reported success
 #: while the head stayed on grok. A silent no-op that reports success is the worst of the
 #: three outcomes.
-MAINT_ROW = re.compile(r"^(maintainer\s*=\s*)\{[^}]*\}\s*$", re.M)
+#: A trailing comment is part of the row. MEASURED 2026-08-19 by an adversarial review:
+#: `maintainer = { ... }  # note` failed `\s*$` after the brace, and `--use` said the
+#: row was not in `[heads]` while it was sitting there. That refuse is safe and the
+#: message is a lie. Group 2 keeps the comment so a rewrite does not drop it.
+MAINT_ROW = re.compile(r"^(maintainer\s*=\s*)\{[^}]*\}(\s*#.*)?\s*$", re.M)
 
 #: The `[heads]` table, from its header to the next one. `MAINT_ROW` is applied to this
 #: SPAN alone, so a key of the same name anywhere else in the file is out of reach.
@@ -4439,27 +4475,36 @@ def write_maintainer_row(name, root=None):
     span = before[m.end():span_end]
     line = ("maintainer                = { "
             + ", ".join(f'{k} = {json.dumps(row[k])}' for k in need) + " }")
-    new_span, n = MAINT_ROW.subn(lambda _m: line, span, count=1)
+    new_span, n = MAINT_ROW.subn(lambda mm: line + (mm.group(2) or ""), span, count=1)
     if n != 1:
         raise PodError("the `maintainer = { ... }` row is not in the [heads] table of "
                        "dev/pod/heads.toml, so there is nothing to switch")
-    path.write_text(before[:m.end()] + new_span + before[span_end:], encoding="utf-8")
-    # **THE WRITE IS VERIFIED THROUGH THE REAL LOADER, and reading it back is the guard
-    # that catches every variant of a write that did not take.** A refusal rolls the file
-    # back whole, so it is never left holding a row the next dispatch cannot use.
+    # **THE LIVE FILE IS NOT TOUCHED UNTIL THE LOADER ACCEPTS THE NEW BYTES.** MEASURED
+    # 2026-08-19 by an adversarial review: the old order wrote `path` first, then asked
+    # the loader, then rolled back. A kill between the write and the rollback left the
+    # new row on disk, and the next dispatch read a file this function had not accepted.
+    # The loader now reads a sibling `.tmp`; `os.replace` is the one write to `path`.
+    new_text = before[:m.end()] + new_span + before[span_end:]
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(new_text, encoding="utf-8")
     try:
-        got = heads_mod.load_heads(path, cache=False)["heads"]["maintainer"]
-    except Exception as e:                     # noqa: BLE001
-        path.write_text(before, encoding="utf-8")
-        heads_mod._CACHE.clear()               # noqa: SLF001
-        raise PodError(f"preset {name!r} produces a row the loader refuses: {e}") from e
-    if any(got.get(k) != row[k] for k in need):
-        path.write_text(before, encoding="utf-8")
-        heads_mod._CACHE.clear()               # noqa: SLF001
-        raise PodError(f"the write did not take: the row still reads {got.get('model')!r} "
-                       f"on {got.get('harness')!r} and preset {name!r} names "
-                       f"{row['model']!r} on {row['harness']!r}. Nothing was changed.")
-    heads_mod._CACHE.clear()                   # noqa: SLF001. The loader's own cache
+        try:
+            got = heads_mod.load_heads(tmp, cache=False)["heads"]["maintainer"]
+        except Exception as e:                 # noqa: BLE001
+            raise PodError(f"preset {name!r} produces a row the loader refuses: {e}") from e
+        if any(got.get(k) != row[k] for k in need):
+            raise PodError(f"the write did not take: the row still reads {got.get('model')!r} "
+                           f"on {got.get('harness')!r} and preset {name!r} names "
+                           f"{row['model']!r} on {row['harness']!r}. Nothing was changed.")
+        os.replace(tmp, path)
+        tmp = None
+    finally:
+        if tmp is not None:
+            try:
+                tmp.unlink()
+            except OSError:
+                pass
+        heads_mod._CACHE.clear()               # noqa: SLF001. The loader's own cache
     return row
 
 

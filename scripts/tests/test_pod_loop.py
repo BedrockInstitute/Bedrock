@@ -3420,11 +3420,16 @@ class QuotaPark(LoopCase):
 
     # ------------------------------------------------------------------ the reader
 
+    def assertQuotaStamp(self, got, naive="2026-08-19T20:19:47"):
+        """The vendor's clock plus the offset this machine had when the file was read."""
+        self.assertIsNotNone(got)
+        self.assertRegex(got, rf"^{re.escape(naive)}[+-]\d{{2}}:\d{{2}}$", got)
+
     def test_the_phrase_is_found_THROUGH_the_terminal_wrapping(self):
         """The one invariant. A matcher that reads the raw text finds nothing at all."""
         self.final(self.WRAPPED)
         self.assertNotIn("Usage limit", self.WRAPPED, "the fixture is no longer wrapped")
-        self.assertEqual(pod.vendor_refusal(CODE, self.tmp), "2026-08-19T20:19:47")
+        self.assertQuotaStamp(pod.vendor_refusal(CODE, self.tmp))
 
     def test_PROSE_THAT_QUOTES_THE_MESSAGE_is_not_a_refusal(self):
         """**A FALSE POSITIVE, found by an adversarial review on 2026-08-19.** The matcher
@@ -3444,7 +3449,7 @@ class QuotaPark(LoopCase):
     def test_the_ENVELOPE_is_what_makes_it_a_refusal(self):
         """The other direction: the real shape must still match through the wrapping."""
         self.final(self.WRAPPED)
-        self.assertEqual(pod.vendor_refusal(CODE, self.tmp), "2026-08-19T20:19:47")
+        self.assertQuotaStamp(pod.vendor_refusal(CODE, self.tmp))
 
     def test_a_return_with_no_refusal_reads_as_no_refusal(self):
         self.final("the coder finished and wrote a report\n")
@@ -3467,7 +3472,8 @@ class QuotaPark(LoopCase):
         st, t = self.returned()
         pod._rule_c(st, self.tmp)
         self.assertEqual(t.status, pod.PARKED)
-        self.assertEqual(t.park_reason, "quota:2026-08-19T20:19:47")
+        self.assertTrue(t.park_reason.startswith("quota:"), t.park_reason)
+        self.assertQuotaStamp(t.park_reason[len("quota:"):])
 
     def test_rule_c_keeps_no_change_when_nothing_proves_a_refusal(self):
         """THE OLDER NAME IS THE FALLBACK. A reason must never claim what it cannot read."""
@@ -3504,6 +3510,35 @@ class QuotaPark(LoopCase):
         st, t = self.parked("quota:whenever")
         pod._rule_a2(st, self.tmp)
         self.assertEqual(t.status, pod.READY)
+
+    def test_a_RESTORED_relic_with_a_later_NAME_is_not_the_newest_return(self):
+        """Name sort treated a restored quota file as newest when its stamp sorted last.
+        Recency is mtime: when the file landed, which is when this program wrote it."""
+        relic = self.tmp / ".pod-state" / "logs" / f"{CODE}-20260819-200000-final.md"
+        later = self.tmp / ".pod-state" / "logs" / f"{CODE}-20260819-100000-final.md"
+        relic.write_text(self.WRAPPED, encoding="utf-8")
+        later.write_text("this instance ran and returned\n", encoding="utf-8")
+        os.utime(relic, (1_000_000, 1_000_000))
+        os.utime(later, (2_000_000, 2_000_000))
+        self.assertIsNone(pod.vendor_refusal(CODE, self.tmp),
+                          "a restored relic with a later NAME won on the name sort")
+
+    def test_an_AWARE_stamp_does_not_move_when_the_zone_would_have_shifted_a_naive_one(self):
+        """The defect: naive 20:19 compared to local now, so a TZ change moved the
+        instant. An offset stamp is compared in UTC and does not move."""
+        future = (datetime.datetime.now(datetime.timezone.utc)
+                  + datetime.timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        past = (datetime.datetime.now(datetime.timezone.utc)
+                - datetime.timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S+00:00")
+        self.assertFalse(pod.quota_open("quota:" + future),
+                         "a future UTC stamp opened early")
+        self.assertTrue(pod.quota_open("quota:" + past),
+                        "a past UTC stamp held")
+        self.final(self.WRAPPED)
+        got = pod.vendor_refusal(CODE, self.tmp)
+        self.assertQuotaStamp(got)
+        self.assertNotEqual(got, "2026-08-19T20:19:47",
+                            "the stamp was stored naive, so a later TZ change can move it")
 
 
 class TwoThresholds(LoopCase):
@@ -3794,6 +3829,108 @@ class MaintainerPreset(LoopCase):
         for slot in ("mathematician", "mathematician_adversarial",
                      "coder", "coder_adversarial"):
             self.assertEqual(before[slot], after[slot], slot)
+
+    def test_a_TRAILING_COMMENT_on_the_row_is_matched_and_kept(self):
+        """`--use` said the row was not in [heads] when a `# note` sat after the brace.
+        That refuse is safe and the message is a lie. Found 2026-08-19."""
+        h = self.heads()
+        h.write_text(re.sub(
+            r"^(maintainer\s*=\s*\{[^}]*\})\s*$",
+            r"\1  # the current head",
+            h.read_text(encoding="utf-8"), count=1, flags=re.M), encoding="utf-8")
+        pod.write_maintainer_row("claude", self.tmp)
+        text = h.read_text(encoding="utf-8")
+        self.assertEqual(self.row()["model"], "claude-opus-5")
+        self.assertIn("# the current head", text,
+                      "the rewrite dropped the comment it had just matched")
+
+    def test_the_live_file_is_untouched_until_the_loader_ACCEPTS(self):
+        """A kill between write and read-back left the new bytes on disk. The loader
+        must now see a sibling .tmp; the live path stays on `before` until replace."""
+        live = self.heads()
+        before = live.read_text(encoding="utf-8")
+        real = heads_mod.load_heads
+
+        def wrapped(path, cache=True):
+            self.assertEqual(live.read_text(encoding="utf-8"), before,
+                             "the live file changed before the loader ran")
+            return real(path, cache=False)
+
+        self.patch(heads_mod, "load_heads", wrapped)
+        pod.write_maintainer_row("claude", self.tmp)
+        self.assertEqual(self.row()["model"], "claude-opus-5")
+        self.assertFalse(live.with_name(live.name + ".tmp").exists(),
+                         "the sibling .tmp was left behind after a clean replace")
+
+
+class MutationAuditSplicesOneCheck(unittest.TestCase):
+    """A pre-flight mutant that reformats the whole file dies for quote style, not the
+    gate. `splice_deleted_appends` must change only the deleted check."""
+
+    def test_a_P1_mutant_leaves_every_other_double_quoted_P_id_in_place(self):
+        """`ast.unparse` rewrote `"P2 ` to `'P2 ` and test_pod_table went red for every
+        mutant. MEASURED 2026-08-19."""
+        audit = _load("mutation_audit", "scripts/tests/mutation-audit.py")
+        src = (ROOT / "scripts" / "pod" / "preflight.py").read_text(encoding="utf-8")
+        new = audit.splice_deleted_appends(src, "P1")
+        self.assertIsNotNone(new)
+        self.assertNotEqual(new, src)
+        self.assertIn('d.append("P1 ', src)
+        self.assertNotIn('d.append("P1 ', new, "P1's append is still in the mutant")
+        for code in ("P2", "P10", "P22"):
+            self.assertIn(f'"{code} ', new,
+                          f"the mutant reformatted {code}; unparse would do that")
+
+
+class PaneSlotLock(unittest.TestCase):
+    """Two writers without a lock drop a column. `columns_lock` is the same flock
+    shape as `pod_lock()`."""
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.state = Path(self.dir.name)
+        self.addCleanup(self.dir.cleanup)
+        self.ps = _load("pane_slot_for_loop_tests", "scripts/pod/pane-slot.py")
+
+    def test_two_locked_writers_keep_both_columns(self):
+        """Without the lock, both read empty, both write, last write wins. With it,
+        the second read sees the first pane. MEASURED 2026-08-19 as last-write-wins."""
+        worker = (
+            "import sys, time\n"
+            "from pathlib import Path\n"
+            "import importlib.util\n"
+            "spec = importlib.util.spec_from_file_location('ps', sys.argv[1])\n"
+            "ps = importlib.util.module_from_spec(spec)\n"
+            "spec.loader.exec_module(ps)\n"
+            "state = Path(sys.argv[2])\n"
+            "pane = sys.argv[3]\n"
+            "path = state / 'herdr-columns'\n"
+            "with ps.columns_lock(state):\n"
+            "    text = path.read_text() if path.is_file() else ''\n"
+            "    time.sleep(0.4)\n"
+            "    path.write_text(text + pane + '\\n')\n"
+        )
+        script = self.state / "worker.py"
+        script.write_text(worker, encoding="utf-8")
+        slot = str(ROOT / "scripts" / "pod" / "pane-slot.py")
+        procs = [
+            subprocess.Popen([sys.executable, str(script), slot, str(self.state), pane])
+            for pane in ("pA", "pB")
+        ]
+        for p in procs:
+            self.assertEqual(p.wait(timeout=10), 0)
+        got = set((self.state / "herdr-columns").read_text().split())
+        self.assertEqual(got, {"pA", "pB"},
+                         f"a locked pair of writers dropped a column: {got}")
+
+    def test_write_columns_replaces_and_never_truncates_in_place(self):
+        """A torn Path.write_text made the next plan() see no columns and right-split
+        BASE. os.replace of a sibling is the one write to the live name."""
+        path = self.state / "herdr-columns"
+        path.write_text("old\n", encoding="utf-8")
+        self.ps.write_columns(self.state, [["p1"], ["p2"]])
+        self.assertEqual(path.read_text(encoding="utf-8"), "p1\np2\n")
+        self.assertFalse((self.state / "herdr-columns.tmp").exists())
 
 
 if __name__ == "__main__":

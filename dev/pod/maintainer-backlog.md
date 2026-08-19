@@ -124,28 +124,30 @@ shape is the grok handover incident with a different cause: the loop halts and t
 that repairs it is absent. `--handover` now gives the name back on this path; the LOOP
 path has no equivalent.
 
-### 18. What two adversarial rounds found and nobody has fixed
-
-Round 2 of 2026-08-19, `REVIEW-round1.md` and its successor in the session scratch. Each
-line is CONFIRMED unless it says otherwise.
-
-- **B1, the quota reader across a timezone or a DST boundary.** `quota_open()` parses the
-  vendor's reset as LOCAL naive time. A machine that changes zone between the park and the
-  read compares two different clocks. The reader also takes the newest `-final.md` by NAME
-  sort, so a file restored out of order resurrects a refusal.
-- **B4.1, a mutant that cannot be UNPARSED reads as a kill.** `ast.unparse` normalises
-  quotes and formatting, so a preflight mutant changes more than the check it removes; a
-  suite that fails on the reformatting reads as「the gate bites」.
-- **B5.1, `pane-slot.py` under two concurrent dispatches.** `read_columns` then
-  `write_columns` is last-write-wins with no lock, and a torn file reads as no columns,
-  which opens a fresh column instead of deepening. The pod dispatches one at a time today.
-- **A4.1, a `maintainer` row with a trailing comment.** `MAINT_ROW` requires the closing
-  brace at end of line, so a comment after it makes `--use` refuse with「the row is not in
-  the [heads] table」. That is the SAFE direction and the message is wrong about why.
-- **A4.2, a crash between the write and the read-back.** The file is left on the new bytes
-  with no rollback. PLAUSIBLE; no process was killed mid-write.
-
 ## Closed
+
+### 18. What two adversarial rounds found and nobody has fixed. FIXED 2026-08-19
+
+Five findings from the second adversarial review, landed together.
+
+- **B1.** `vendor_refusal()` stamps the machine's current UTC offset onto the vendor's
+  local clock, and `quota_open()` compares aware stamps in UTC. A naive stamp already on
+  disk is still local `now()`, which is what it was when it was written. Newest `-final.md`
+  is by mtime then name, so a restored relic whose stamp sorts last cannot hide a later
+  real return.
+- **B4.1.** `splice_deleted_appends` writes `pass` over one `d.append` in the original
+  text. `ast.unparse` of the whole file is gone, so a death is no longer a quote-style
+  failure in `test_pod_table`.
+- **B5.1.** `columns_lock()` is the same `fcntl.flock` shape as `pod_lock()`. `main()`
+  holds it across read-plan-split-write. `write_columns` uses `os.replace` of a sibling,
+  so a reader never sees a truncate.
+- **A4.1.** `MAINT_ROW` accepts an optional trailing comment and the rewrite keeps it.
+- **A4.2.** The loader reads a sibling `.tmp`. `os.replace` is the one write to the live
+  path, so a kill before it leaves `heads.toml` on the old bytes.
+
+Each fix has a test that went red when the fix was reverted.
+
+
 
 ### 14. Rule (b) killed a process group it had not checked. FIXED 2026-08-19
 
