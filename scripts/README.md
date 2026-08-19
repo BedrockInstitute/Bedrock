@@ -20,7 +20,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
-| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `table.py`, `witness.py` |
+| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `table.py`, `wait-and-start.sh`, `witness.py` |
 
 Unchanged in place: this `README.md`, `scripts/tests/`, `scripts/git-hooks/`.
 
@@ -716,6 +716,23 @@ trophy asserts something different. R16 rides the same snapshot with one sha256 
 home. Four modes: `--check` at acceptance conjunct 5, `--msg-file` at the `commit-msg`
 hook, no argument for the history audit, and `--write` to regenerate the snapshot.
 
+### `wait-and-start.sh`
+
+**The alarm, and it is not part of the loop.** It sleeps until a wall-clock time, then
+runs `pod.py resume` and hands its pane to `keeper.sh` with `exec`. It exists because a
+vendor's usage window ends at a time nobody is awake for: on 2026-08-19 the coder head's
+five-hour quota emptied at 16:53 and reset at 20:19:47, and every dispatch in between
+returned 429 and wrote nothing.
+
+**IT RUNS IN THE KEEPER'S OWN PANE AND DEPENDS ON NO AGENT SESSION.** The maintainer
+cannot host it: an agent starts a process only inside a tool call, the call's time limit
+ends it, and its output never reaches the pane the owner reads.
+
+**IT RESUMES BEFORE IT STARTS**, because `.pod-state/STOPPED` is set whenever rule (d)
+stopped the loop, and starting the keeper without clearing it exits 3 in zero seconds.
+
+    sh scripts/pod/wait-and-start.sh "2026-08-19 20:19:47"
+
 ### `check-survey-quotes.py`
 
 The survey verification of section 7.4 Part 2, and acceptance conjunct 6. It is lifted
@@ -800,6 +817,29 @@ itself: `test_archive_layout.py` derives the legal top-level `archive/`
 directories from the repository root, and `test_scripts_layout.py` pins the
 group directories, the flat module set and this README's coverage of every
 script (see [What enforces the layout](#what-enforces-the-layout-c48)).
+
+### `tests/mutation-audit.py`
+
+**It is NOT a suite and `make test` never runs it.** Every other file under
+`scripts/tests/` answers「does this work」. This one answers a different question:
+**does the gate BITE.** A checker that is imported, run, and whose result nothing
+asserts is indistinguishable from a checker that was deleted, and no `--check` can tell
+you which one you have. It breaks one gate at a time, runs the suites, and requires that
+at least one goes RED. A mutant that SURVIVES names a gate no test notices.
+
+**FIRST FULL RUN, 2026-08-19: every mutant died.** 22 pre-flight checks, 6 acceptance
+conjuncts, 8 pre-commit hook members, 2 spec-surface refusal paths and 5 R rule
+properties. That number is the reason this file exists rather than a paragraph claiming
+the same thing: L3's first round had already established that every gate is PRESENT, and
+present is not the same claim.
+
+**IT REFUSES A DIRTY TREE, and the guard is not optional.** It restores by
+`git checkout --`, so an uncommitted change to a file it mutates would be destroyed. It
+names the file and exits 2. One full pass costs minutes, so run it when a gate is added
+or when a gate class is under suspicion, never in a commit path.
+
+    .venv/bin/python scripts/tests/mutation-audit.py --all
+    .venv/bin/python scripts/tests/mutation-audit.py --preflight --conjuncts
 
 ### `tests/test_archive_layout.py`
 

@@ -1023,6 +1023,82 @@ class AcceptanceRecord(Patching):
         self.assertIsNone(accept.first_failing_target({"runs_all": []}))
 
 
+class R14TheHookAndConjunct6(unittest.TestCase):
+    """R14: the LINT class runs before every commit AND again at every task close.
+
+    **NOTHING PINNED THE HOOK UNTIL 2026-08-19, and the mutation audit is what found it.**
+    `scripts/tests/mutation-audit.py --gates` dropped each `$PY` line from
+    `scripts/git-hooks/pre-commit` in turn and every mutant SURVIVED: no suite in the tree
+    noticed a checker leaving the commit path. R14 names two halves and only one of them
+    had a test, so half of R14 was a sentence.
+
+    The hook is a superset on purpose. It adds `check-closure.py`, which is conjunct 3 and
+    cheap enough for a hook, and `check-rule-ids.py`, which is row 15. The hook's own
+    comment says so. What must hold is that it never DROPS a member of conjunct 6's pinned
+    set, because that set is the half R14 shares with the acceptance.
+    """
+
+    HOOK = ROOT / "scripts" / "git-hooks" / "pre-commit"
+
+    def hook_runs(self):
+        """Every script the hook invokes, as repository-relative paths."""
+        return [l.split()[1] for l in self.HOOK.read_text(encoding="utf-8").split("\n")
+                if l.startswith("$PY ") and len(l.split()) > 1]
+
+    def test_every_member_of_conjunct_6_runs_in_the_pre_commit_hook(self):
+        runs = self.hook_runs()
+        for name, argv in accept.PRECOMMIT_SET:
+            self.assertIn(argv[0], runs,
+                          f"conjunct 6 runs {name} and the commit path does not")
+
+    #: The two members the hook adds beyond conjunct 6, each with the reason it is here
+    #: rather than there. **THE SECOND ONE HAS NO OTHER ENFORCEMENT POINT IN THE TREE.**
+    EXTRAS = {
+        # Conjunct 3, and cheap enough for a hook. Dropping it does not delete the rule,
+        # it delays it: a closure violation then reaches a commit and is caught at the
+        # next task close instead of before the commit that made it.
+        "scripts/pod/check-closure.py",
+        # Section 7.1 row 15, and it has NO conjunct. MEASURED 2026-08-19: every other
+        # reference in the tree is prose or its own unit suite; this line is the only
+        # place the checker RUNS. Dropping it does not weaken the rule, it removes it.
+        "scripts/gate/check-rule-ids.py",
+    }
+
+    def test_the_hook_is_a_SUPERSET_and_every_extra_is_a_real_script(self):
+        """An extra is allowed, R14 says so in the hook's own comment, but a typo is not:
+        a line naming a script that does not exist would fail every commit."""
+        extra = [p for p in self.hook_runs()
+                 if p not in {argv[0] for _n, argv in accept.PRECOMMIT_SET}]
+        self.assertTrue(extra, "the hook stopped being a superset; re-read R14")
+        for rel in self.hook_runs():
+            self.assertTrue((ROOT / rel).is_file(), f"the hook runs {rel}, which is gone")
+
+    def test_the_two_EXTRAS_stay_in_the_commit_path(self):
+        """**THE MUTATION AUDIT FOUND THIS AND NOTHING ELSE COULD HAVE.** Dropping either
+        line from the hook left all 21 suites green, and for `check-rule-ids.py` that is
+        not a weakened rule but a deleted one: the hook is its only run site."""
+        runs = self.hook_runs()
+        for rel in self.EXTRAS:
+            self.assertIn(rel, runs, f"the commit path lost {rel}")
+
+    def test_no_extra_JOINS_the_hook_without_a_reason_written_here(self):
+        """The other direction. A line added silently is a checker nobody chose: the set
+        above carries one reason per member, so growing it means writing the reason."""
+        known = {argv[0] for _n, argv in accept.PRECOMMIT_SET} | self.EXTRAS
+        for rel in self.hook_runs():
+            self.assertIn(rel, known,
+                          f"the hook runs {rel} and neither conjunct 6 nor EXTRAS names it")
+
+    def test_the_hook_runs_them_through_the_project_interpreter(self):
+        """A checker started by whatever `python3` is on PATH reads another tree's
+        dependencies. `requirements-dev.txt` pins them into `.venv` and nothing else."""
+        text = self.HOOK.read_text(encoding="utf-8")
+        self.assertIn("PY=", text)
+        for line in text.split("\n"):
+            if ".py" in line and line.startswith(("python", "python3 ", "/usr/bin/python")):
+                self.fail(f"the hook starts a checker outside the project venv: {line}")
+
+
 if __name__ == "__main__":
     os.environ.setdefault("GIT_OPTIONAL_LOCKS", "0")
     unittest.main(verbosity=2)

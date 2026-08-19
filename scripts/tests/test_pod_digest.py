@@ -452,9 +452,18 @@ class AD7(Fixture):
                   {"to": "DONE", "reason": "r4"}]              # not a park at all
         self.assertEqual(digest.park_reasons_other(window),
                          {"attempt_max": 1, "preflight": 2, "row": 1, "stop_loop": 1})
+        # **THE DERIVATION IS THE INVARIANT, AND THE LITERAL LIST WAS A SNAPSHOT.** This
+        # line held the eight names of 2026-08-18 and went red on 2026-08-19 for two
+        # CORRECT additions, `salvage:` with worktree isolation and `quota:` with the
+        # vendor refusal. `PARK_CLASSES` is derived from `pod.PARK_REASONS`, which the
+        # programme is designed to grow, so what must hold is the derivation: every park
+        # reason except AD7's own numerator, with the instance separator stripped.
         self.assertEqual(sorted(digest.PARK_CLASSES),
-                         sorted(["no-change", "preflight", "attempt_max", "r4",
-                                 "admission", "launch", "row", "stop_loop"]))
+                         sorted(r.rstrip(":") for r in pod.PARK_REASONS
+                                if r != "no-match"))
+        self.assertNotIn("no-match", digest.PARK_CLASSES)
+        self.assertTrue(all(":" not in c for c in digest.PARK_CLASSES),
+                        "a class carries an instance separator, so it is an instance")
 
     def test_a_reason_outside_the_eight_is_not_counted_as_one_of_them(self):
         """A count labelled `eight classes` may not quietly hold a ninth. An unknown
@@ -466,8 +475,13 @@ class AD7(Fixture):
         data = self.data(record=False)
         data["park_reasons_other"] = got
         text = digest.render(data)
-        self.assertIn("其余八类停放原因单独计数：launch 1 次。", text)
-        self.assertIn("另有 1 次停放，其原因不属于第 8.2 节的八类。", text)
+        # THE RENDERED TEXT NO LONGER COUNTS THE CLASSES, and the reason is that it said
+        # 「八类」whatever `PARK_CLASSES` held. It grew to nine and then ten on
+        # 2026-08-19, so the digest was telling the repository owner a number the program
+        # had stopped obeying.
+        self.assertIn("其余各类停放原因单独计数：launch 1 次。", text)
+        self.assertIn("另有 1 次停放，其原因不属于第 8.2 节所列的类别。", text)
+        self.assertNotIn("八类", text, "the digest counts a list designed to grow")
 
     def test_a_zero_denominator_prints_no_rate(self):
         """A window with no return has no rate. Printing 0% would state a measurement
@@ -721,7 +735,13 @@ class Render(Fixture):
         text = digest.render(self.data(record=False))
         self.assertIn("[LJ-1.N02] 停放，原因 preflight:P8。", text)
         self.assertIn("[LJ-1.N03] 停放，原因 no-match。", text)
-        self.assertIn("停放计数 3/3。", text)
+        # **THE DENOMINATOR IS THE LIVE LIMIT AND NOT A LITERAL.** This line read `3/3`
+        # while `parked_max` was 7, so the digest promised the owner a stop four parks
+        # early, every day. `park_stop()` reads `dev/pod/heads.toml`, which is the owner's
+        # under AD26, and the test follows it rather than pinning today's value.
+        stop = digest.park_stop()
+        self.assertIn(f"停放计数 3/{stop}。", text)
+        self.assertIn(f"到 {stop} 个停放，整个循环停止。", text)
         self.assertIn("[LJ-1.386-split] 队列请求，无简报路径", text)
         self.assertIn("待仓库所有者裁决：", text)
 
@@ -780,12 +800,16 @@ class Render(Fixture):
         self.assertEqual(got["fallout"][0]["row"], "task-lj-1-390-old")
         self.assertIsNone(got["fallout"][0]["falls_to"])
 
-    def test_the_batch_brief_reads_the_park_reason_from_the_log(self):
-        """`replay_log()` restores `park_reason` from a key the line does not carry, so
-        a folded state names no reason. The batch reads the park line instead."""
+    def test_the_folded_state_and_the_log_AGREE_about_a_park_reason(self):
+        """**THIS TEST PINNED THE DEFECT AS THE BEHAVIOUR.** It asserted that a folded
+        state names NO reason, because `replay_log()` read a key the line does not carry,
+        and rule (a2) then had no branch to take: the task was parked for ever. The fold
+        now reads `reason`, which every `to=PARKED` line carries. The invariant is that
+        the two readers agree, and the old assertion is exactly its negation."""
         st = pod.replay_log(pod.State(), self.root)
-        self.assertIsNone(st.tasks["LJ-1.N02"].park_reason)
-        self.assertEqual(pod.park_reason_of("LJ-1.N02", self.root), "preflight:P8")
+        from_log = pod.park_reason_of("LJ-1.N02", self.root)
+        self.assertEqual(from_log, "preflight:P8")
+        self.assertEqual(st.tasks["LJ-1.N02"].park_reason, from_log)
 
     def test_the_batch_lists_never_stop_the_batch(self):
         """A reader that cannot resolve is reported inside the brief and never raised:

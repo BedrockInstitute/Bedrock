@@ -115,11 +115,30 @@ ROOT = find_root(__file__)
 WINDOW_HOURS = 12.0
 
 #: AD14's stop threshold. Rule (d) at `scripts/pod/pod.py:2109` stops the loop here.
-PARK_STOP = 3
+def park_stop() -> int:
+    """`parked_max`, read from `dev/pod/heads.toml` and never typed here.
 
-#: THE EIGHT PARK CLASSES OF SECTION 8.2, derived from `pod.PARK_REASONS` and never typed
-#: a second time. `no-match` is the ninth reason and AD7's first number counts it alone,
-#: so it is excluded here. A class is a CLASS: `preflight:P8` and `preflight:P19` are two
+    **IT WAS THE LITERAL 3 AND THE DIGEST WAS TELLING THE OWNER A DEAD NUMBER.** The
+    owner raised `parked_max` to 7 on 2026-08-19, rule (d) followed it, and this file
+    kept printing「停放计数 N/3。到 3 个停放，整个循环停止。」every day. It is the same
+    defect `_rule_d()` was repaired for the same morning, in the same words: a report may
+    count, and it may not recite a limit the program has stopped obeying.
+
+    It falls back to 3 only when the limits cannot be read at all, which is the value
+    every version of this file used before today, and it is the conservative direction:
+    the digest then understates the room left rather than promising room that is gone.
+    """
+    try:
+        return int(pod_mod.heads_mod.limits()["parked_max"])
+    except Exception:                          # noqa: BLE001. A digest never stops the loop
+        return 3
+
+
+#: THE PARK CLASSES OF SECTION 8.2, derived from `pod.PARK_REASONS` and never typed a
+#: second time, so the list grows with the program: `salvage:` and `quota:` joined it on
+#: 2026-08-19 and this line needed no edit. `no-match` is AD7's own numerator and is
+#: counted alone, so it is excluded here. A class is a CLASS: `preflight:P8` and
+#: `preflight:P19` are two
 #: instances of `preflight`, and the count the digest labels `eight classes` is a count
 #: over these eight names.
 PARK_CLASSES = tuple(r.rstrip(":") for r in pod_mod.PARK_REASONS if r != "no-match")
@@ -1166,9 +1185,14 @@ def render(data: dict) -> str:
     eight = {k: v for k, v in other.items() if k in PARK_CLASSES}
     unlisted = other.get(PARK_UNLISTED, 0)
     eight_txt = ("；".join(f"{k} {v} 次" for k, v in eight.items()) if eight else "无")
-    out.append(f"  其余八类停放原因单独计数：{eight_txt}。")
+    # **THE COUNT IS NOT WRITTEN AND THAT IS DELIBERATE.** Both lines said「八类」whatever
+    # `PARK_CLASSES` held, and `PARK_CLASSES` is DERIVED from `pod.PARK_REASONS`, which
+    # the programme is designed to grow: `salvage:` made it nine on 2026-08-19 and
+    # `quota:` made it ten the same day. A digest that tells the owner a number the
+    # program stopped obeying is the defect this file exists to prevent.
+    out.append(f"  其余各类停放原因单独计数：{eight_txt}。")
     if unlisted:
-        out.append(f"  另有 {unlisted} 次停放，其原因不属于第 8.2 节的八类。")
+        out.append(f"  另有 {unlisted} 次停放，其原因不属于第 8.2 节所列的类别。")
     mn, mu = data["retrieval_miss"]
     # THE UNIT IS THE PATH, because the adopt trigger reads "most missed PATHS". The
     # second number names the paths whose own overlap the log recorded only as a mean.
@@ -1219,8 +1243,9 @@ def render(data: dict) -> str:
             out.append(f"  任务目录：{park['dir']}")
         if park["reason"].startswith(BRIEF_REPAIR):
             out.append("  简报由数学家修复。")
-    out.append(f"  停放计数 {data['parked_total']}/{PARK_STOP}。"
-               f"到 {PARK_STOP} 个停放，整个循环停止。")
+    stop = park_stop()
+    out.append(f"  停放计数 {data['parked_total']}/{stop}。"
+               f"到 {stop} 个停放，整个循环停止。")
     for req in data["queue_requests"]:
         out += _wrap(f"[{req['code']}] 队列请求，无简报路径，原因 {req['reason']}。")
     for gap in data["owner_rulings"]:
