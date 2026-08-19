@@ -2103,6 +2103,11 @@ def maintainer_scope_ok(root=None, proposal=None):
         "dev/pod/transitions/",         # emit(), the transition log
         "agents/tasks/POD-BATCH/",      # write_batch_brief()
         "dev/pod/replay-corpus.jsonl",  # corpus_append(), the `live` stream
+        # `queue_append()` writes this for `park_and_split` and for a batch's `[[queue]]`
+        # request, and the REFILL declares it as its own write scope. It is never the
+        # maintainer's. MEASURED 2026-08-19: the refill queued LJ-1.396 to LJ-1.400 and
+        # its own declared output then refused the very next maintainer batch.
+        "dev/pod/queue.toml",
     )
     # **A TASK HOME THE PROGRAM CREATED IS NOT THE MAINTAINER'S WRITE, and counting it
     # deadlocked the whole cure.** R15 exists to catch the MAINTAINER writing outside its
