@@ -269,4 +269,18 @@ coder_adversarial         = { model = "glm-5.3",         effort = "",      harne
 # re-dispatch: the whole pod is stopped first, the old session is retired, and the next
 # `ensure_maintainer()` starts the new head. `dev/pod/instructions/maintainer.md` carries
 # the handover the outgoing session wrote.
-maintainer                = { model = "grok-4.6",        effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits" }
+maintainer                = { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" }
+# THE MAINTAINER PRESETS, and `pod.py maintainer --use <name>` copies one into the row
+# above. **THE ROW IS STILL THE ONE HOME**: this table is a set of rows the owner has
+# already approved, and nothing reads it except that command.
+#
+# WHY A PRESET AND NOT A HAND EDIT. The four fields must move together. A row carrying
+# `harness = "herdr-grok"` with `model = "claude-opus-5"` loads, dispatches, and fails
+# inside the pane, which is the failure class the read-back guard exists for and cannot
+# catch for every harness (see `BANNER_MARK` in `scripts/pod/pod.py`).
+#
+# ADDING A PRESET IS THE OWNER'S, exactly as the row is, and a preset earns its place the
+# same way a model string does: with a measurement recorded beside it above.
+[maintainer_presets]
+claude = { model = "claude-opus-5", effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" }
+grok   = { model = "grok-4.6",      effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits" }

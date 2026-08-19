@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The POD runner: the tick, the state, the transition log and the five subcommands.
+"""The POD runner: the tick, the state, the transition log and the subcommands.
 
 WHY THIS FILE EXISTS. The old flow ran on an orchestrator's attention. It read a report,
 decided what the report meant, and wrote the next brief. Two measurements on 2026-08-16
@@ -63,6 +63,15 @@ Usage:
   pod.py status       print the state file as a table. It writes nothing
   pod.py stop         write `.pod-state/STOPPED`, wait for every RUNNING worker, then
                       commit the tracked table and log
+  pod.py maintainer   print the resident head and the presets `dev/pod/heads.toml` offers
+    --use NAME        copy a preset into the `[heads].maintainer` row. AD26 makes this
+                      bind the NEXT head, and the slot is RESIDENT, so a live session
+                      keeps it until it gives up the herdr name `pod-batch`
+    --handover NAME   the whole swap: write the row, RENAME the live agent so the name is
+                      free and its pane survives, start the next head through the same
+                      `ensure_maintainer()` the loop uses, point it at
+                      `dev/pod/maintainer-handover.md`, and tell the outgoing one it is
+                      retired
 Exit status: 0 clean; 1 the loop stopped, a command refused, or the run failed; 2 a
 usage error, which is an unknown or absent subcommand and nothing else.
 """
@@ -4264,8 +4273,167 @@ def cmd_stop(argv):
     return 0
 
 
+#: The one line of `dev/pod/heads.toml` that `--use` rewrites. It is matched and replaced
+#: as TEXT and never re-serialised, because the file is the owner's and carries about a
+#: hundred lines of measurement in comments that no TOML writer preserves.
+MAINT_ROW = re.compile(r"^(maintainer\s*=\s*)\{[^}]*\}\s*$", re.M)
+
+
+def maintainer_presets(root=None):
+    """`[maintainer_presets]` from `dev/pod/heads.toml`, or an empty dict."""
+    root = ROOT if root is None else Path(root)
+    try:
+        data = tomllib.loads((root / "dev" / "pod" / "heads.toml")
+                             .read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return {}
+    got = data.get("maintainer_presets")
+    return got if isinstance(got, dict) else {}
+
+
+def write_maintainer_row(name, root=None):
+    """Copy one preset into `[heads].maintainer`. Returns the row, or raises `PodError`.
+
+    **IT REWRITES ONE LINE AND RE-READS THE FILE THROUGH THE REAL LOADER.** A preset that
+    produces a row the loader would refuse is rejected BEFORE the file is left changed, so
+    a bad preset cannot make the next dispatch fail in a pane instead of here.
+    """
+    root = ROOT if root is None else Path(root)
+    presets = maintainer_presets(root)
+    row = presets.get(name)
+    if not isinstance(row, dict):
+        raise PodError(f"no maintainer preset named {name!r}. "
+                       f"The file offers: {', '.join(sorted(presets)) or 'none'}")
+    need = ("model", "effort", "harness", "sandbox")
+    missing = [k for k in need if k not in row]
+    if missing:
+        raise PodError(f"preset {name!r} carries no {missing[0]!r}")
+    path = root / "dev" / "pod" / "heads.toml"
+    text = path.read_text(encoding="utf-8")
+    line = ("maintainer                = { "
+            + ", ".join(f'{k} = {json.dumps(row[k])}' for k in need) + " }")
+    new, n = MAINT_ROW.subn(lambda _m: line, text, count=1)
+    if n != 1:
+        raise PodError("the `maintainer = { ... }` row could not be found in heads.toml")
+    before = path.read_text(encoding="utf-8")
+    path.write_text(new, encoding="utf-8")
+    try:
+        heads_mod.load_heads(path, cache=False)
+    except Exception as e:                     # noqa: BLE001
+        path.write_text(before, encoding="utf-8")
+        raise PodError(f"preset {name!r} produces a row the loader refuses: {e}") from e
+    heads_mod._CACHE.clear()                   # noqa: SLF001. The loader's own cache
+    return row
+
+
+def retire_maintainer_agent(root=None):
+    """Free the herdr name `pod-batch`, so `ensure_maintainer()` can start the next head.
+
+    **THIS IS THE STEP A HANDOVER FORGETS AND IT IS SILENT.** `maintainer_alive()` answers
+    TRUE while ANY agent holds the name, whatever kind, so a live outgoing session stops
+    the new head from ever starting AND takes its mail. MEASURED 2026-08-19.
+
+    It RENAMES and never kills. A dead agent's pane is the only record of how it died, and
+    an outgoing maintainer mid-repair must be allowed to finish its sentence.
+    """
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    name = mod.herdr_name(MAINT_TASK)
+    try:
+        agents, _err = mod.herdr_agents()
+    except Exception:                          # noqa: BLE001
+        return None
+    if not any(a.get("name") == name for a in agents or ()):
+        return None                            # already free
+    retired = f"{name}-retired-{time.strftime('%Y%m%d-%H%M%S')}"
+    try:
+        subprocess.run(["herdr", "agent", "rename", name, retired],
+                       capture_output=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return retired
+
+
+def cmd_maintainer(argv):
+    """Show, switch or hand over the resident maintainer head.
+
+    **THE ROW IN `dev/pod/heads.toml` IS STILL THE ONE HOME.** `--use` copies an
+    owner-approved preset into it and changes nothing else, so AD26 holds: the change
+    binds the NEXT head and never the one that is running.
+
+    **`--use` ALONE DOES NOT SWAP A RUNNING MAINTAINER**, and saying so is the point. The
+    slot is RESIDENT: `ensure_maintainer()` starts a head only when the herdr name
+    `pod-batch` is free, so a live session keeps the slot until it gives the name up.
+    `--handover` is the whole procedure and `--use` is the file edit alone.
+    """
+    presets = maintainer_presets()
+    if not argv or argv[0] in ("-h", "--help"):
+        try:
+            cur = heads_mod.head("maintainer")
+        except Exception as e:                 # noqa: BLE001
+            cur = {"model": f"<unreadable: {e}>"}
+        print(f"maintainer now: {cur.get('model')} at effort {cur.get('effort')!r} "
+              f"on {cur.get('harness')}")
+        for k in sorted(presets):
+            r = presets[k]
+            mark = "*" if r.get("model") == cur.get("model") else " "
+            print(f"  {mark} {k:<8} {r.get('model'):<16} effort {r.get('effort'):<6} "
+                  f"{r.get('harness')}")
+        print("\n  pod.py maintainer --use <name>       edit the row. Binds the NEXT head")
+        print("  pod.py maintainer --handover <name>  retire the live one and start it")
+        return 0
+    if argv[0] not in ("--use", "--handover") or len(argv) < 2:
+        print("pod maintainer: REFUSED. usage: --use <name> | --handover <name>",
+              file=sys.stderr)
+        return 2
+    name = argv[1]
+    row = write_maintainer_row(name)
+    print(f"pod maintainer: the row is now {row['model']} at effort {row['effort']!r} "
+          f"on {row['harness']}.")
+    if argv[0] == "--use":
+        print("pod maintainer: this binds the NEXT head. A live session keeps the slot "
+              "until it gives up the name `pod-batch`; use --handover to do the swap.")
+        return 0
+
+    retired = retire_maintainer_agent()
+    print(f"pod maintainer: the outgoing session is renamed {retired}."
+          if retired else "pod maintainer: the name was already free.")
+    st = load_state()
+    replay_log(st)
+    with pod_lock():
+        rel = ensure_maintainer(st, ROOT)
+        save_state(st)
+    if rel is None:
+        print("pod maintainer: REFUSED. the new head did not start. The row is written, "
+              "so the next tick of a running loop will try again.", file=sys.stderr)
+        return 1
+    print(f"pod maintainer: started, and its first brief is {rel}.")
+    mod = facts_mod.launcher()
+    note = (f"HANDOVER. You are the resident maintainer of the Bedrock POD from now on. "
+            f"Read dev/pod/maintainer-handover.md FIRST, then {rel}. "
+            f"The session before you was renamed {retired or '(none was live)'}; its pane "
+            f"is kept, because a pane is a record. Your clauses are "
+            f"dev/pod/instructions/maintainer.md and they were `cat`ed ahead of your "
+            f"brief.")
+    try:
+        mod.herdr_prompt(mod.herdr_name(MAINT_TASK), note)
+    except Exception:                          # noqa: BLE001. The brief already landed
+        pass
+    if retired:
+        try:
+            mod.herdr_prompt(retired,
+                             "RETIRED. The maintainer slot has moved to a new head and it "
+                             "holds the name `pod-batch` now. Finish the sentence you are "
+                             "on, write down anything the handover file does not carry, "
+                             "and stop. You will receive no further batches.")
+        except Exception:                      # noqa: BLE001
+            pass
+    return 0
+
+
 COMMANDS = {"run": cmd_run, "tick": cmd_tick, "resume": cmd_resume,
-            "status": cmd_status, "stop": cmd_stop}
+            "status": cmd_status, "stop": cmd_stop, "maintainer": cmd_maintainer}
 
 
 def main(argv):

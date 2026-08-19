@@ -55,6 +55,35 @@ held**, which is the one step of a maintainer swap that is silent when it is ski
 `--no-resume` to start the keeper against a STOPPED loop, which exits 3 at once and is
 only what you want when you mean to inspect rather than to run.
 
+## Switching the maintainer head
+
+    .venv/bin/python scripts/pod/pod.py maintainer                     # show it and the presets
+    .venv/bin/python scripts/pod/pod.py maintainer --use claude        # edit the row
+    .venv/bin/python scripts/pod/pod.py maintainer --handover grok     # do the whole swap
+
+`dev/pod/heads.toml` carries `[maintainer_presets]`, and the command copies one into the
+`[heads].maintainer` row. **The row is still the ONE home**: a preset is a set of fields
+the owner has already approved, and nothing reads the table except this command.
+
+**THE FOUR FIELDS MOVE TOGETHER, and that is the reason a preset exists.** A row carrying
+`harness = "herdr-grok"` with `model = "claude-opus-5"` loads, dispatches, and fails inside
+the pane; that is the failure class the read-back guard exists for, and it cannot catch it
+for every harness. A preset that produces a row the loader would refuse is rejected before
+the file is left changed.
+
+**`--use` ALONE DOES NOT SWAP A RUNNING MAINTAINER.** AD26 makes a head change bind the
+NEXT head, and the slot is RESIDENT: `ensure_maintainer()` starts one only when the herdr
+name `pod-batch` is free, so a live session keeps the slot until it gives the name up.
+`--use` is the file edit; `--handover` is the procedure.
+
+**WHAT `--handover` DOES, in order.** It writes the row; renames the live agent to
+`pod-batch-retired-<ts>`, which frees the name and KEEPS the pane, because a pane is a
+record and an outgoing session mid-repair must be allowed to finish its sentence; starts
+the new head through the same `ensure_maintainer()` the loop uses, so it arrives with
+`AGENTS.md`, its slot file and a batch brief; prompts it to read
+`dev/pod/maintainer-handover.md` first; and prompts the outgoing one that it is retired and
+will receive no further batches.
+
 ## Stopping the whole pod, and swapping the resident maintainer
 
 **FOUR THINGS RUN AND STOPPING THE LOOP STOPS ONE OF THEM.** A full stop is:

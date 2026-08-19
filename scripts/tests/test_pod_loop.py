@@ -2996,15 +2996,30 @@ class Refuses(LoopCase):
         self.assertEqual(pod.main(["fly"]), 2)
 
 
-# ---------------------------------------------------------------- the five subcommands
+# ---------------------------------------------------------------- the subcommands
 
 
 class Commands(LoopCase):
     """`pod.py` is the program and nothing else runs it."""
 
-    def test_the_five_subcommands_exist_and_no_others(self):
-        self.assertEqual(sorted(pod.COMMANDS),
-                         ["resume", "run", "status", "stop", "tick"])
+    #: The five section 5.0 names. `maintainer` joined them on 2026-08-19.
+    RULED = ("resume", "run", "status", "stop", "tick")
+
+    def test_every_ruled_subcommand_is_still_there(self):
+        """**THIS PINNED THE WHOLE SET BY EQUALITY AND WENT RED FOR AN ADDITION.** It is
+        the seventh snapshot of the day: the set is a thing the program is designed to
+        grow, and what must hold is that nothing RULED disappears."""
+        for name in self.RULED:
+            self.assertIn(name, pod.COMMANDS, name)
+
+    def test_every_subcommand_is_callable_and_named_in_the_usage_text(self):
+        """The other direction, and it is the one that catches a command nobody can find:
+        `main()` prints the module docstring for an unknown name, so a subcommand the
+        docstring does not name is one no reader is told about."""
+        doc = pod.__doc__ or ""
+        for name, fn in pod.COMMANDS.items():
+            self.assertTrue(callable(fn), name)
+            self.assertIn(name, doc, f"`{name}` is a subcommand the usage text omits")
 
     def test_status_writes_nothing(self):
         self.queue({"code": CODE, "brief": f"agents/tasks/{DIR}/{CODE}.md"})
@@ -3481,6 +3496,76 @@ class CommitOnClose(unittest.TestCase):
         rec = self.close(["never-salvaged.md"])
         self.assertEqual(rec["commit_absent"], ["never-salvaged.md"])
         self.assertEqual(len(self.commits()), 1, "it committed something from nothing")
+
+
+class MaintainerPreset(LoopCase):
+    """`pod.py maintainer` switches the resident head, and the ROW stays the one home.
+
+    The four fields must move TOGETHER. A row carrying `harness = "herdr-grok"` with
+    `model = "claude-opus-5"` loads, dispatches, and fails inside the pane, which is the
+    failure class the read-back guard exists for and cannot catch for every harness. A
+    preset is the unit that keeps them together.
+    """
+
+    def heads(self):
+        return self.tmp / "dev" / "pod" / "heads.toml"
+
+    def row(self):
+        import tomllib
+        return tomllib.loads(self.heads().read_text(encoding="utf-8"))["heads"]["maintainer"]
+
+    def test_the_live_file_offers_both_heads_the_owner_named(self):
+        got = pod.maintainer_presets(ROOT)
+        self.assertIn("claude", got)
+        self.assertIn("grok", got)
+        for name, r in got.items():
+            for k in ("model", "effort", "harness", "sandbox"):
+                self.assertIn(k, r, f"preset {name} carries no {k}")
+
+    def test_a_preset_moves_all_four_fields_together(self):
+        pod.write_maintainer_row("claude", self.tmp)
+        self.assertEqual((self.row()["model"], self.row()["harness"]),
+                         ("claude-opus-5", "herdr-claude"))
+        pod.write_maintainer_row("grok", self.tmp)
+        self.assertEqual((self.row()["model"], self.row()["harness"]),
+                         ("grok-4.6", "herdr-grok"))
+
+    def test_an_unknown_preset_is_REFUSED_and_the_file_is_untouched(self):
+        before = self.heads().read_text(encoding="utf-8")
+        with self.assertRaises(pod.PodError):
+            pod.write_maintainer_row("nonesuch", self.tmp)
+        self.assertEqual(self.heads().read_text(encoding="utf-8"), before)
+
+    def test_a_preset_the_LOADER_would_refuse_ROLLS_BACK(self):
+        """The file must never be left holding a row the next dispatch cannot use. The
+        check is the REAL loader and not a second opinion about what it accepts."""
+        h = self.heads()
+        h.write_text(h.read_text(encoding="utf-8") + '\n[maintainer_presets]\n'
+                     'bogus = { model = "claude-haiku-5", effort = "high", '
+                     'harness = "herdr-claude", sandbox = "acceptEdits" }\n',
+                     encoding="utf-8")
+        before = h.read_text(encoding="utf-8")
+        with self.assertRaises(pod.PodError):
+            pod.write_maintainer_row("bogus", self.tmp)
+        self.assertEqual(h.read_text(encoding="utf-8"), before,
+                         "a refused preset left the file changed")
+
+    def test_the_comments_of_the_owners_file_SURVIVE_a_switch(self):
+        """It rewrites ONE LINE as text. A TOML writer would drop about a hundred lines of
+        measurement, which is the whole value of that file."""
+        marker = "THE READ-BACK REFUSAL"
+        self.assertIn(marker, self.heads().read_text(encoding="utf-8"))
+        pod.write_maintainer_row("claude", self.tmp)
+        self.assertIn(marker, self.heads().read_text(encoding="utf-8"))
+
+    def test_a_switch_leaves_the_OTHER_four_slots_alone(self):
+        import tomllib
+        before = tomllib.loads(self.heads().read_text(encoding="utf-8"))["heads"]
+        pod.write_maintainer_row("claude", self.tmp)
+        after = tomllib.loads(self.heads().read_text(encoding="utf-8"))["heads"]
+        for slot in ("mathematician", "mathematician_adversarial",
+                     "coder", "coder_adversarial"):
+            self.assertEqual(before[slot], after[slot], slot)
 
 
 if __name__ == "__main__":

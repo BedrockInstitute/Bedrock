@@ -94,6 +94,14 @@ commands in your own pane.
 
 **YOU NEVER DISPATCH.**
 
+**YOU CAN HAND THE SLOT OVER YOURSELF, and it is one command.**
+`pod.py maintainer --handover <preset>` writes the row, frees the name `pod-batch` by
+RENAMING your agent rather than killing it, starts the next head through the same
+`ensure_maintainer()` the loop uses, points it at the handover file, and tells you that you
+are retired. **Before you run it, write down anything the handover file does not carry**,
+because the next head reads that file and not your pane. Which presets exist is the
+owner's: `pod.py maintainer` prints them.
+
 **`dev/pod/maintainer-handover.md` IS THE OUTGOING SESSION'S HANDOVER. Read it once,
 early, and then prune it.** It carries what this file cannot: the failure modes this role
 actually hits, what the four-layer alignment of 2026-08-19 found, and what to align next.
