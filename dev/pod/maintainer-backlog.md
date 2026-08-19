@@ -115,6 +115,40 @@ at its return blames it for the coders' files. A real check needs the status sna
 at DISPATCH and differenced at return, which is what `changed_files_scoped()` does for a
 task and what `side_dispatches()` would have to grow. Do not ship the naive version.
 
+### 11. ONE WORKTREE PER TASK. Probed 2026-08-19 and the price is 46 seconds
+
+The owner asked whether each task could run in its own git worktree, with the work
+salvaged on return and the worktree cleaned. **The decisive unknown was one number**: a
+fresh worktree carries `src/` but NO `_build/`, so the first Agda run pays a cold cost.
+
+MEASURED, same probe (`LJ-1.390/Probe390.agda`), same runner (`facts.run_agda`), same
+WIDE caliber, so the two numbers are comparable:
+
+| | main tree | fresh worktree |
+|---|---|---|
+| first run | (warm) 1.43 s | **45.79 s** |
+| second run, same tree | 1.43 s | **1.53 s** |
+| `_build` after | 345 MB | **12 MB** |
+| checkout | | 74 MB |
+
+**IT IS CHEAP, AND THE REASON IS THAT A PROBE BUILDS ONLY THE SLICE IT IMPORTS.** The
+twelve-minute figure in `AGENTS.md:91` is the COLD WHOLE TREE and is the wrong
+comparable for a task. Against the measured task durations of the day, 6, 8 and 10
+minutes of agent time, a 46 second one-off is roughly 8 percent and falls to nothing on
+a longer task.
+
+**WHAT IT WOULD BUY, and every one of these is a defect measured on 2026-08-19:**
+conjunct 5 stops attributing the maintainer's edits to whatever task is being accepted
+(three times in one day); `territory_in_flight()` becomes unnecessary because there is
+no shared checkout to collide in; item 9 dissolves, because a parked task's dirt is in
+its own worktree and never in the tree every gate reads; and item 10 becomes measurable,
+because the refill's writes are a diff of one worktree.
+
+**WHAT IS NOT MEASURED AND MUST BE BEFORE ADOPTION.** One probe is one import slice. A
+task that imports most of `src/` approaches the whole-tree cost, and no task has yet
+done that. The salvage path is also undesigned: how work returns from the worktree, by
+patch or by commit-then-cherry-pick, and what happens when it fails to apply.
+
 ## Closed
 
 ### 1 and 2. Fact 4 counted the program's own writes as the worker's. FIXED 2026-08-19
