@@ -2067,11 +2067,31 @@ def maintainer_scope_ok(root=None, proposal=None):
         "agents/tasks/POD-BATCH/",      # write_batch_brief()
         "dev/pod/replay-corpus.jsonl",  # corpus_append(), the `live` stream
     )
+    # **A TASK HOME THE PROGRAM CREATED IS NOT THE MAINTAINER'S WRITE, and counting it
+    # deadlocked the whole cure.** R15 exists to catch the MAINTAINER writing outside its
+    # one declared proposal file. A worker's task home is provably not that: the
+    # maintainer never writes there, and `stamp_pod_marker()` puts a `.pod` in every home
+    # the program itself created, so the marker is the proof on disk.
+    #
+    # WHAT COUNTING IT COST, MEASURED 2026-08-19 and recorded as backlog item 9.
+    # `commit_task()` commits only on a `done` close, so a PARKED task's deliverables stay
+    # dirty for ever, and a RUNNING one is dirty by definition. Every batch was then
+    # refused `scope` and retired unread. The deadlock is exact: a park needs a row, the
+    # row needs a batch, the batch needs a clean tree, and the tree is dirty BECAUSE of
+    # the park. At the moment of this repair six tasks were parked, three of them on ONE
+    # missing row, the gate named 44 blocking paths, and every one of them belonged to a
+    # task the program had created. The owner had to break it by hand once already.
+    homes = {p.rsplit("/", 1)[0] + "/"
+             for p in facts_mod._status_paths(root) if p.endswith("/.pod")}
+    homes |= {str(d.relative_to(root)) + "/"
+              for d in (root / "agents" / "tasks").glob("*")
+              if (d / ".pod").is_file()}
     bad = [p for p in facts_mod._status_paths(root)
            if p not in allowed
            and not p.startswith(PROGRAM_WRITES)
            and not any(p.endswith(".toml." + v) for v in RETIRED_SUFFIXES)
-           and not p.endswith("/.pod")]   # stamp_pod_marker() at :757
+           and not p.endswith("/.pod")     # stamp_pod_marker() at :757
+           and not any(p.startswith(h) for h in homes)]
     return (not bad), bad
 
 
