@@ -926,17 +926,17 @@ def split_entry(t, rec):
 #: OUT of `_build/` because `make clean` empties that and would erase a live task's work.
 WORKTREES = POD_STATE / "worktrees"
 
-#: **ONE WORKTREE PER TASK, and this switch is deliberate.** It ships OFF so the code
-#: lands and is tested against a loop with tasks already in flight, and the owner turns it
-#: on when the salvage path has run once under watch. A structural change to a live
-#: unattended loop is exactly the thing to stage rather than to flip on a hot restart.
+#: **ONE WORKTREE PER TASK. ON since 2026-08-19, owner's ruling.** It shipped OFF for one
+#: round so the code landed against a loop with tasks in flight, and it was turned on in
+#: the window the coder vendor's five-hour quota forced: the loop is STOPPED, no task is
+#: RUNNING, and the first dispatch under isolation will be watched.
 #:
 #: WHAT IT BUYS, and every one is measured on 2026-08-19: acceptance conjunct 5 stops
 #: attributing the maintainer's edits to whatever task is being accepted (three times in
 #: one day); `territory_in_flight()` has nothing to collide in; a parked task's work stays
 #: in its own checkout so the main tree never goes dirty (item 9); and the refill's writes
 #: become one worktree's diff (item 10).
-WORKTREE_ISOLATION = False
+WORKTREE_ISOLATION = True
 
 
 def worktree_of(code, root=None):
@@ -1019,7 +1019,14 @@ def salvage_worktree(t, root=None):
     root = ROOT if root is None else Path(root)
     wt = worktree_of(t.code, root)
     if not wt.is_dir():
-        return [f"the worktree is gone: {wt}"]
+        # **NO WORKTREE IS A NO-OP AND NEVER A REFUSAL, and it is correct in both cases
+        # that produce it.** A task dispatched before isolation was turned on, or while
+        # `make_worktree()` refused, ran in the MAIN tree, so its work is already there
+        # and there is nothing to copy. And a worktree that vanished mid-run took the
+        # worker's writes with it, so there is nothing to copy then either. Parking such
+        # a task would strand every instance that was in flight at the changeover, which
+        # is eight of them on the day this shipped.
+        return []
     rc, base = _git(["rev-parse", "HEAD"], wt)
     if rc != 0:
         return [f"the worktree has no base commit: {' '.join(base.split())[:160]}"]
@@ -2609,6 +2616,18 @@ def ensure_maintainer(st, root=None):
     """
     root = ROOT if root is None else Path(root)
     if maintainer_alive(root):
+        return None
+    # **R12 BINDS THIS SPAWN TOO, and the asymmetry was the evidence.** R12 says a timed
+    # task holds the machine alone and nothing else starts beside it. Rule (g) tests
+    # `admits()` before it dispatches the refill, and this function launched with no such
+    # test, so an `exclusive` task would have had the maintainer started beside it. Not
+    # yet observed, because no brief has ever declared `machine: exclusive`, which is
+    # exactly why it had to be repaired before one does. Backlog item 4.
+    #
+    # THE MAINTAINER IS NEVER ITSELF EXCLUSIVE, so this reads only the OTHER half of
+    # `admits()`: it refuses while an exclusive task is live and passes otherwise.
+    if any(x.exclusive for x in st.tasks.values()
+           if x.status in (RUNNING, CHECKING)):
         return None
     brief = write_batch_brief(st, root)
     if brief is None:

@@ -750,8 +750,14 @@ check("the real return of LJ-1-383 passes, as `check-dd18-survey.py` says",
 _gen_block = retr.candidate_block("ARCHIVE", "condensation isLayer residue",
                                   retr.ARCHIVE_SCOPE, 2)
 _gen_paths = retr.OFFERED_LINE.findall(_gen_block)
-check("the block under test really offers two candidates of five corpora",
-      len(_gen_paths) == 2 and len(retr.ARCHIVE_SCOPE) == 5, str(_gen_paths))
+# IT ASSERTS THE RELATION AND NOT THE COUNT. The point under test is that the block
+# offers FEWER candidates than the provenance line names corpora, which is the gap the
+# two files used to disagree about. Pinning `len(ARCHIVE_SCOPE) == 5` pinned a snapshot
+# instead: backlog item 3 widened the scope on 2026-08-19, because 48 of the 152 archived
+# files sat outside it, and this went red for a repair it does not test.
+check("the block under test offers fewer candidates than the corpora searched",
+      len(_gen_paths) == 2 and len(retr.ARCHIVE_SCOPE) > len(_gen_paths),
+      f"{_gen_paths} of {len(retr.ARCHIVE_SCOPE)} corpora")
 _gen_brief = tmp / "LJ-1.998.md"
 _gen_brief.write_text("# LJ-1.998: a fixture\n\n" + _gen_block, encoding="utf-8")
 _answer = ("# Report\n\n## ARCHIVE USED\n\n"

@@ -19,24 +19,6 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
-### 3. The brief builder cannot search where retired rules actually live
-
-`AGENTS.md:116-118` promises the program searches the archive at brief build. Measured:
-`ARCHIVE_SCOPE` (`scripts/pod/retrieve.py:148-154`) names five paths, and 48 of the 152
-files under `archive/` sit outside them, including **both categories the rule itself
-names**: an archived gate lives in `archive/scripts/`, and a moved ruling lives in
-`archive/dev/DD-archived.md`. The mathematician's slot file cites W2 as coming from DD4,
-and DD4's text is at `archive/dev/DD-archived.md:22`, which no brief can reach.
-
-Either add the missing paths, or change the sentence. The code is the right side to move.
-
-### 4. `ensure_maintainer()` skips the exclusivity test
-
-R12 says a timed task holds the machine alone and nothing else starts beside it. Rule (g)
-tests `admits()` before dispatching the refill (`scripts/pod/pod.py:2830`);
-`ensure_maintainer()` launches with no such test. The asymmetry is the evidence. Not yet
-observed: no brief has ever declared `machine: exclusive`.
-
 ### 5. Five MEASURED corpus records, one per RUNNER class
 
 `obligations_up`, `closure_open`, `unbound_hyp`, `spec_surface`, `lint`
@@ -75,26 +57,6 @@ implementation matched its prose, and it was inert. Three consistency audits ran
 and none asked the fourth question: **can the thing this produces actually do the job it
 is produced for?** Sweep the POD's other producers for the same shape.
 
-### 9. A PARKED task's output dirties the tree for ever and blocks every batch
-
-`commit_task()` runs only on a `done` close, so a task that parks keeps its deliverables
-uncommitted. `maintainer_scope_ok()` refuses on any path it does not recognise, so ONE
-parked task blocks every maintainer batch from then on.
-
-MEASURED 2026-08-19, and it cost the whole day: LJ-1.386 and LJ-1.388 both parked
-`no-match`, their files stayed dirty, and both batches of the day were retired
-`.toml.scope` without their rows ever being read. The maintainer could not write the very
-rows that would have un-parked those tasks. **The deadlock is exact: a park needs a row,
-the row needs a batch, the batch needs a clean tree, and the tree is dirty BECAUSE of the
-park.** The owner broke it by hand, by authorising a commit.
-
-It is not enough to commit at `done`. Either a park commits the task's own scope too, or
-`maintainer_scope_ok()` stops counting a live task's own home against the maintainer. The
-second is smaller and matches the exemption already granted to `/.pod`.
-
-**A RUNNING task has the same shape and is benign only because it ends.** MEASURED the
-same day: with LJ-1.390 dispatched, the gate refuses on its three live files.
-
 ### 10. The refill writes real files and NOTHING measures where it wrote them
 
 Rule (g) dispatches `POD-REFILL.md` as an EVENT, so it never enters the state machine:
@@ -114,6 +76,8 @@ finishes, the tasks it queued are already dispatched and writing, so a `git stat
 at its return blames it for the coders' files. A real check needs the status snapshotted
 at DISPATCH and differenced at return, which is what `changed_files_scoped()` does for a
 task and what `side_dispatches()` would have to grow. Do not ship the naive version.
+
+## Closed
 
 ### 11. ONE WORKTREE PER TASK. Probed 2026-08-19 and the price is 46 seconds
 
@@ -163,14 +127,52 @@ two concurrent tasks write into one another's, and the isolation worktrees exist
 is given straight back. A clone is copy-on-write, so it is as cheap as a link and stays
 private.
 
-**WHAT IS NOT MEASURED AND MUST BE BEFORE ADOPTION.** One probe is one import slice, and
-a task that imports most of `src/` was never tried; the clone makes that far less likely
-to matter, because the interfaces come with it. `cp -c` is APFS only, so a non-APFS
-checkout falls back to a real copy or to the 45.79 s cold build, and neither is measured.
-The salvage path is still undesigned: how work returns from the worktree, and what
-happens when it fails to apply.
+**SHIPPED AND TURNED ON 2026-08-19.** The worker runs in the worktree, acceptance
+measures that worktree, and the work is copied back path by path from the brief's
+`## SCOPE (write)` at a `done` close. So the scope stops being an honour system: anything
+written outside it never reaches the main tree.
 
-## Closed
+**THE COPY NEVER MERGES, SO IT CANNOT CONFLICT.** Its one failure is the main tree moving
+the same path while the task ran, and that is DETECTED and never resolved: rule (c) parks
+with `salvage:`, the tenth park reason, and the resident maintainer reads it. AD1 keeps
+the program out of that decision and no sub-agent is introduced. A task that PARKS keeps
+its worktree, because that tree is the scene.
+
+**NO WORKTREE IS A NO-OP AND NEVER A REFUSAL.** A task dispatched before the changeover
+ran in the main tree and its work is already there; a worktree that vanished took the
+writes with it. Both mean there is nothing to copy, and parking either would have
+stranded the eight instances in flight when this shipped.
+
+**STILL NOT MEASURED, and stated rather than assumed.** One probe is one import slice and
+a task importing most of `src/` was never tried, though the cloned interfaces make that
+far less likely to bite. `cp -c` is APFS only, so another filesystem falls back to a real
+copy or to the 45.79 s cold build, and neither is measured. **The first dispatch under
+isolation has not run yet**, because the coder vendor's quota stopped the loop the hour
+this landed.
+
+
+### 3 and 4. The archive scope and the missing exclusivity test. FIXED 2026-08-19
+
+`ARCHIVE_SCOPE` named three `archive/dev` files by hand and 48 of the 152 archived files
+sat outside it, including both categories the rule names. It now lists the subtrees:
+`archive/src`, `archive/dev`, `archive/scripts` and `dev/ARCHIVE.md`. **A single
+`archive` entry would have made it worse**: `corpus()` reads a directory as
+`masters or markdown`, and `archive/src` holds masters, so one entry would have returned
+those and silently lost every archived record. MEASURED after the fix: 109 files
+reachable, `archive/dev/DD-archived.md` among them, retrieval 0.19 s.
+
+`ensure_maintainer()` now refuses while an exclusive task is live, which is R12's other
+half. Rule (g) always tested it and this did not; the asymmetry was the whole evidence.
+
+### 9. A parked task's output blocked the batch that would un-park it. FIXED 2026-08-19
+
+`maintainer_scope_ok()` counted a worker's task home against the maintainer, so a parked
+task's uncommitted deliverables refused every batch: the park needed a row, the row a
+batch, the batch a clean tree, and the tree was dirty BECAUSE of the park. The whole of
+`agents/tasks/` and `dev/pod/queue.toml` are exempt now, because the maintainer provably
+writes neither. **Worktree isolation removes the cause as well as the symptom**, since a
+parked task's work never enters the main tree at all.
+
 
 ### 1 and 2. Fact 4 counted the program's own writes as the worker's. FIXED 2026-08-19
 

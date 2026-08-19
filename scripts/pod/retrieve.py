@@ -145,11 +145,23 @@ K1 = 1.5
 B = 0.75
 
 #: The archive corpus of section 7.4. The builder passes it for `## ARCHIVE`.
+#: **THE WHOLE ARCHIVE, BY SUBTREE, and the subtrees are separate ON PURPOSE.**
+#: `AGENTS.md` promises every agent that the program searches the archive at brief build.
+#: MEASURED 2026-08-19: the old list named three `archive/dev` files by hand and 48 of the
+#: 152 files under `archive/` sat outside it, including BOTH categories the rule itself
+#: names. An archived gate lives in `archive/scripts/`, and a moved ruling lives in
+#: `archive/dev/DD-archived.md`, whose line 22 is the text of DD4, which clause W2 cites
+#: and which no brief could reach.
+#:
+#: **A SINGLE `archive` ENTRY WOULD HAVE MADE IT WORSE.** `corpus()` above reads a
+#: directory as `masters or markdown`: when a directory holds ANY `.lagda.md` anywhere
+#: beneath it, its Markdown is dropped. `archive/src` holds masters, so one `archive`
+#: entry would have returned those masters and SILENTLY LOST every archived record. The
+#: subtrees are listed apart so each is read by the rule that suits it.
 ARCHIVE_SCOPE = [
-    "archive/src",
-    "archive/dev/TASKS-archived.md",
-    "archive/dev/JOURNAL-archived.md",
-    "archive/dev/DECISIONS-archived.md",
+    "archive/src",       # masters
+    "archive/dev",       # the archived records, rulings and journals
+    "archive/scripts",   # the retired gates, for their README
     "dev/ARCHIVE.md",
 ]
 
