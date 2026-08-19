@@ -213,8 +213,8 @@ system_free_floor_pct = 8     # C-12's floor, restored by A13
 # RULED BY THE OWNER, 2026-08-18. The mathematician side runs Claude at three efforts;
 # the coder side runs the two `pi` vendors. **The DD17 invariant still holds: the critic
 # is never the same model as the author**, on both sides.
-mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
+mathematician             = { model = "claude-opus-5",   effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" }
 mathematician_adversarial = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
-coder                     = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
-coder_adversarial         = { model = "deepseek-v4-pro", effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
+coder                     = { model = "deepseek-v4-pro", effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
+coder_adversarial         = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
 maintainer                = { model = "claude-opus-5",   effort = "high",  harness = "herdr-claude", sandbox = "acceptEdits" }

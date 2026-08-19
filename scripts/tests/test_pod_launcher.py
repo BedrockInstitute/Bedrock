@@ -62,6 +62,7 @@ import inspect
 import io
 import contextlib
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -892,6 +893,19 @@ def main() -> int:
               row["harness"] in mod.HERDR_HARNESSES, True)
         check(f"{slot} names an effort the launcher's argparse accepts",
               row["effort"] in mod.LEGAL_EFFORTS, True)
+    # **THE CRITIC INVARIANT, CHECKED AND NO LONGER MERELY CLAIMED.** DD17's disposition
+    # said it survives mechanically "because `[heads]` pairs every author with a different
+    # model". Nothing tested that, and it drifted: MEASURED 2026-08-19, `glm-5.3` carried
+    # BOTH `coder`, which authors, and `mathematician_adversarial`, which criticises, and
+    # LJ-1.391 was authored and then reviewed twice by that one model. An escalate row may
+    # send any return to any critic, so the CROSS pairs count and not only the direct ones.
+    _authors = ("mathematician", "coder")
+    _critics = ("mathematician_adversarial", "coder_adversarial")
+    for _a in _authors:
+        for _c in _critics:
+            check(f"the critic {_c} does not share a model with the author {_a}",
+                  heads["heads"][_a]["model"] != heads["heads"][_c]["model"], True)
+
     limits = heads["limits"]
     # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a
     # hardcoded 3 to a named limit, so the number has one home and the tests read it.
@@ -971,7 +985,12 @@ def main() -> int:
             got = "refused" if "legal.models" in str(exc) else f"refused: {exc}"
         check("a model outside legal.models is refused by the loader the "
               "launcher uses", got, "refused")
-        doctored.write_text(good.replace('effort = "max"', 'effort = "ultra"', 1),
+        # **IT DOCTORS BY PATTERN AND NOT BY LITERAL.** This replaced `effort = "max"`,
+        # and the owner re-pointed the mathematician to `xhigh` on 2026-08-19: no row said
+        # `max` any more, the mutation became a no-op, and the check reported a VALID file
+        # as "accepted", which reads as the loader having failed. A test that mutates by a
+        # literal someone else owns stops testing the moment they change it.
+        doctored.write_text(re.sub(r'effort = "[^"]*"', 'effort = "ultra"', good, count=1),
                             encoding="utf-8")
         try:
             mod.HEADS_MOD.load_heads(path=doctored, cache=False)

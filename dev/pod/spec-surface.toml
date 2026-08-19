@@ -1230,11 +1230,11 @@ sha = "8cd293c7b5294ec0b869d398a915754242c41d2163a14e87b628a5112ac7a0e6"
 
 [[guarded]]
 path = "dev/memos/LJ-4-pod-program-design.md"
-sha = "783f2c6b0bb7a96e82a3d2026a180aa1dfb5ce1cdcb658f4d7db55918372349a"
+sha = "a8362528520404a2e8258c6f7f7e3abc7d8af73a3b1af8df42c814b55659d49a"
 
 [[guarded]]
 path = "dev/pod/heads.toml"
-sha = "1b0bc65146b3c2d23bc5f3f8bf6e5a0a9fe84ae23861b12c48f2c9c76ab96c14"
+sha = "b691fe130c7fb6122a99ed20f13f38a5a77a7b58f8add8c36408680cb7b61eb8"
 
 [[guarded]]
 path = "dev/pod/instructions/coder.md"
