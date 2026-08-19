@@ -55,8 +55,10 @@ Usage:
   pod.py run          the sleep loop: tick, sleep `tick_seconds`, repeat until STOP
   pod.py tick         one pass, then exit. This is the testable unit and `run` calls it
   pod.py resume       clear `.pod-state/STOPPED`, re-evaluate every PARKED task, then run
-    --retry           ALSO re-ready every parked task. For a cause that was
-                      external to all of them, such as a vendor quota
+    --retry [CODE...] ALSO re-ready parked tasks. With no CODE it takes every one,
+                      for a cause external to all of them such as a vendor quota;
+                      with CODEs it takes only those. A CODE that is not parked
+                      is reported and skipped, never silently dropped
     --once            do the above and exit, without entering the loop
   pod.py status       print the state file as a table. It writes nothing
   pod.py stop         write `.pod-state/STOPPED`, wait for every RUNNING worker, then
@@ -3839,11 +3841,26 @@ def cmd_resume(argv):
     # A23 that `sys-obligations-satisfied` cannot reach. **Measured on the live state: all
     # seven route to NO MATCH or carry no record, so a plain resume un-parks none of them
     # and rule (d) stops the loop again on the first tick, because 7 IS `parked_max`.**
+    # **`--retry` TAKES CODES, because the seven parked tasks did not all want the same
+    # thing.** MEASURED 2026-08-19: three met the coder vendor's quota and never ran at
+    # all, so a re-run is the only honest answer; the other four had already delivered and
+    # were stuck only because their records predate fact 8, so re-running them burns agent
+    # time to buy a bookkeeping close. Naming codes lets the two be treated apart, and the
+    # bare flag still means every park when the cause really was global.
     retry = "--retry" in argv
+    named = [a for a in argv if not a.startswith("-")]
+    # **A NAMED CODE THAT IS NOT PARKED IS REPORTED AND NEVER SILENTLY DROPPED.** A
+    # request that quietly does nothing is the defect shape this programme measured all
+    # day, so a typo says so instead of looking like a no-op resume.
+    parked = {t.code for t in st.of(PARKED)}
+    for code in named:
+        if code not in parked:
+            print(f"pod resume: {code} is not PARKED, so --retry skips it. "
+                  f"Parked now: {', '.join(sorted(parked)) or 'none'}", file=sys.stderr)
     for t in list(st.of(PARKED)):
-        if retry:
+        if retry and (not named or t.code in named):
             emit(st, t, PARKED, READY, root=ROOT,
-                 why="resume --retry: the owner cleared the cause for every park")
+                 why="resume --retry: the owner cleared the cause for this park")
         elif str(t.park_reason or "").startswith("stop_loop:"):
             emit(st, t, PARKED, READY, root=ROOT,
                  why="resume: the owner cleared the stop")

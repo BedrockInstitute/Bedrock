@@ -2920,6 +2920,37 @@ class Commands(LoopCase):
         self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
         self.assertEqual(pod.load_state().tasks[CODE].status, pod.READY)
 
+    def test_retry_takes_the_codes_it_is_given_and_leaves_the_rest_parked(self):
+        """**THE SEVEN PARKED TASKS DID NOT ALL WANT THE SAME THING.** MEASURED
+        2026-08-19: three met the coder vendor's quota and never ran, so a re-run is the
+        only honest answer, while four had already delivered and were stuck only because
+        their records predate fact 8, where a re-run buys a bookkeeping close with agent
+        time. A bare `--retry` still takes every park, for a cause that really is global.
+        """
+        (self.tmp / ".pod-state" / "STOPPED").touch()
+        st = pod.State()
+        for code in ("LJ-1.801", "LJ-1.802", "LJ-1.803"):
+            st.tasks[code] = pod.Task(code, status=pod.PARKED,
+                                      park_reason="no-change", parked_at=0.0)
+        pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+        self.assertEqual(pod.cmd_resume(["--retry", "LJ-1.802", "--once"]), 0)
+        got = pod.load_state().tasks
+        self.assertEqual(got["LJ-1.802"].status, pod.READY, "the named code re-ran")
+        self.assertEqual(got["LJ-1.801"].status, pod.PARKED, "an unnamed code stayed")
+        self.assertEqual(got["LJ-1.803"].status, pod.PARKED, "an unnamed code stayed")
+
+    def test_a_bare_retry_takes_every_park(self):
+        (self.tmp / ".pod-state" / "STOPPED").touch()
+        st = pod.State()
+        for code in ("LJ-1.801", "LJ-1.802"):
+            st.tasks[code] = pod.Task(code, status=pod.PARKED,
+                                      park_reason="no-change", parked_at=0.0)
+        pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+        self.assertEqual(pod.cmd_resume(["--retry", "--once"]), 0)
+        got = pod.load_state().tasks
+        self.assertEqual({c: got[c].status for c in ("LJ-1.801", "LJ-1.802")},
+                         {"LJ-1.801": pod.READY, "LJ-1.802": pod.READY})
+
     def test_tick_returns_1_when_the_loop_stopped(self):
         st = pod.State()
         for i in range(pod._limits()["parked_max"]):     # the limit, never a literal

@@ -45,7 +45,14 @@ printf '\nwait-and-start: the wait is over.\n'
 # no record at all, so rule (a2) un-parks none of them. Seven IS `parked_max`, so the
 # loop would tick once and rule (d) would stop it again. The cause here was external to
 # every one of them, a vendor quota, which is exactly what the flag is for.
-"$PY" scripts/pod/pod.py resume --retry --once || {
+# **IT NAMES TWO CODES AND NOT EVERY PARK.** The seven parked tasks did not all want
+# the same thing. LJ-1.396 and LJ-1.397 met the vendor's 429, started, retried, exited
+# clean and wrote NOTHING, so they never had a turn and a re-run is the only honest
+# answer. The other five had already delivered and are stuck only because their records
+# predate fact 8; re-running them would burn agent time to buy a bookkeeping close, and
+# AD3 gives that judgement to the mathematician at the next refill, which reads the
+# transition log and can drop them from the queue in one line.
+"$PY" scripts/pod/pod.py resume --retry LJ-1.396 LJ-1.397 --once || {
     printf 'wait-and-start: resume REFUSED. Not starting the keeper.\n' >&2; exit 1; }
 
 printf 'wait-and-start: handing this pane to the keeper.\n'
