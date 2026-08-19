@@ -51,7 +51,23 @@ fi
 #    at once and is only ever what you want when you mean to inspect and not to run.
 if [ "$RESUME" = 1 ]; then
     printf 'pod start: resuming.\n'
-    "$PY" scripts/pod/pod.py resume || die "resume failed. Nothing was started."
+    "$PY" scripts/pod/pod.py resume
+    rc=$?
+    # **EXIT 3 IS A DECISION AND NEVER A FAILURE**, and treating it as one refused to
+    # start the pod on 2026-08-19 when the loop resumed, ticked once and stopped again on
+    # its own parked count. That is the loop working. The keeper must still come up: it
+    # is what prompts the maintainer, and the maintainer is the role that clears a park.
+    # `keeper.sh` reads exit 3 correctly and does not restart it.
+    case $rc in
+        0|3) ;;
+        4)  die "the loop REFUSED to start (exit 4). It never ticked. Read the message
+  above, repair it, then run this again." ;;
+        *)  die "resume exited $rc, which is a crash and not a decision. Nothing was
+  started." ;;
+    esac
+    [ "$rc" = 3 ] && printf 'pod start: the loop resumed and then STOPPED on its own
+  count. That is rule (d), not a failure. The keeper still comes up, because it is what
+  prompts the maintainer, and the maintainer is the role that clears a park.\n'
 else
     printf 'pod start: --no-resume, so .pod-state/STOPPED is left in place.\n'
 fi

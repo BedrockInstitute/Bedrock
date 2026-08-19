@@ -600,6 +600,47 @@ class RuleB(LoopCase):
 # ---------------------------------------------------------------- rule (c) ACCEPT
 
 
+class MaintainerIsFedBeforeTheStop(LoopCase):
+    """**THE STOP MUST NOT SUPPRESS THE ROLE THAT CLEARS A PARK.**
+
+    Rule (d) returned STOP before rule (e) ran, so on a tick that reached `parked_max` the
+    maintainer was neither started nor fed. MEASURED 2026-08-19 on the first tick after
+    the grok handover: six parked became NINE in one tick, (d) stopped the loop, and
+    `ensure_maintainer()` was never called, so the new head was never started at all. The
+    loop halted and the only role that could unhalt it did not exist.
+
+    (d)'s STOP means stop DISPATCHING, and (e) dispatches no worker.
+    """
+
+    def parked(self, n):
+        st = pod.State()
+        for i in range(n):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED, park_reason="no-match",
+                                      record=record(), parked_at=0.0)
+        return st
+
+    def test_the_maintainer_is_ENSURED_on_the_very_tick_that_stops(self):
+        st = self.parked(pod._limits()["parked_max"])
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
+        self.assertGreaterEqual(self.calls["ensure"], 1,
+                                "the loop stopped without starting the maintainer")
+
+    def test_the_stop_still_happens(self):
+        """The repair must not cost the stop. AD14 is unchanged."""
+        st = self.parked(pod._limits()["parked_max"])
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
+        self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
+
+    def test_rule_e_runs_before_rule_d_in_the_tick(self):
+        """Read the order out of the source, so a future edit that moves one back is
+        caught by name rather than by a symptom nobody connects to it."""
+        src = (ROOT / "scripts" / "pod" / "pod.py").read_text(encoding="utf-8")
+        body = src.split("def pod_tick(", 1)[1].split("\ndef ", 1)[0]
+        self.assertLess(body.index("_rule_e(st, root)"), body.index("if _rule_d("),
+                        "rule (d) stops before rule (e) feeds the maintainer")
+
+
 class RuleBKillOrder(LoopCase):
     """**A KILL AIMED AT A RECYCLED PID TAKES OUT SOMEBODY ELSE'S PROCESS GROUP.**
 

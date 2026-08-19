@@ -2967,9 +2967,23 @@ def pod_tick(st=None, root=None):
     _rule_b(st, root)
     if _rule_c(st, root) is STOP:
         return STOP
+    # **RULE (e) RUNS BEFORE RULE (d), AND THE OLD ORDER SUPPRESSED THE ONE ROLE THAT
+    # CLEARS A PARK.** (d)'s STOP means STOP DISPATCHING. (e) dispatches no worker: it
+    # starts and feeds the RESIDENT maintainer, which is the role that writes the rows a
+    # parked task is waiting for. Stopping at `parked_max` without telling the repairman
+    # is backwards, and the owner's ruling of 2026-08-19 says so in numbers: the
+    # maintainer is fed at three parks and the loop halts at seven so the repairman gets
+    # four parks of warning.
+    #
+    # **THE WARNING WAS VOID WHENEVER THE COUNT JUMPED, and it jumped on the first tick
+    # after the grok handover: six parked to NINE in one tick, because rule (c) accepted
+    # two returns and rule (b) had just observed two more. (d) then returned STOP and (e)
+    # never ran, so `ensure_maintainer()` was never called and the new head was never
+    # started at all.** The loop halted and the only role that could unhalt it did not
+    # exist.
+    _rule_e(st, root)
     if _rule_d(st, root) is STOP:
         return STOP
-    _rule_e(st, root)
     if _rule_f(st, root) is STOP:
         return STOP
     _rule_g(st, root)                          # A11. A free slot with an empty queue

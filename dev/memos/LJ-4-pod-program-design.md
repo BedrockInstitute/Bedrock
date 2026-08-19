@@ -1581,8 +1581,8 @@ rule: one home per rule. The order and the reasons are here; the body is at
 | 2 | **(a2) UNPARK** | A park is never terminal. Each of the ten park reasons of 5.5 has its own un-park test | AD16 | `_rule_a2` |
 | 3 | **(b) OBSERVE** | A worker is dead when its pid is dead, or when it ran past `worker_deadline_s` | AD17 | `_rule_b` |
 | 4 | **(c) ACCEPT** | ONE task at a time. Run the acceptance, route the WHOLE record, and take the action | AD13, A5, A24 | `_rule_c` |
-| 5 | **(d) STOP** | The declared stop comes FIRST and carries its own reason. Then the parked count against `parked_max` | AD14, A19 | `_rule_d` |
-| 6 | **(e) MAINTAINER** | Harvest, prune, and FEED the resident maintainer on the batch clock or on a NEW park | AD15, A17, A20 | `_rule_e` |
+| 5 | **(e) MAINTAINER** | Harvest, prune, and FEED the resident maintainer on the batch clock or on a NEW park. **It runs BEFORE the stop** | AD15, A17, A20 | `_rule_e` |
+| 6 | **(d) STOP** | The declared stop comes FIRST and carries its own reason. Then the parked count against `parked_max` | AD14, A19 | `_rule_d` |
 | 7 | **(f) ADMIT AND SPAWN** | The ONLY writer of a task row. The stop refuses THIS rule and nothing else | AD21, AD27, 4.1 | `_rule_f` |
 | 8 | **(g) REFILL** | A free slot with no dispatchable entry asks the mathematician for work | A11 | `_rule_g` |
 
@@ -1598,6 +1598,18 @@ STOP on `.pod-state/STOPPED` and the tick returns before rule (g) is reached.
 **THE STOP REFUSES DISPATCHING AND NOTHING ELSE.** Rules (a1) to (e) keep running under
 `.pod-state/STOPPED`, so work that already returned is still observed and closed. Section
 5.5 states the consequence that the PARKED count can pass the limit after the stop.
+
+**RULE (e) RUNS BEFORE RULE (d), and the other order suppressed the one role that clears a
+park.** (d) returning STOP skipped (e) entirely, so on the very tick that reached
+`parked_max` the maintainer was neither started nor fed. MEASURED 2026-08-19 on the first
+tick after the grok handover: six parked became NINE in one tick, because rule (c)
+accepted two returns and rule (b) had just observed two more; the loop halted and
+`ensure_maintainer()` had never been called, so the new head did not exist. The owner's
+ruling of the same day states the intent in numbers, that the maintainer is fed at three
+parks and the loop halts at seven so the repairman gets four parks of warning, and a count
+that jumps makes that warning void unless (e) goes first. **(e) dispatches no worker**: it
+starts and feeds the RESIDENT maintainer, so it is safe under a stop that refuses
+dispatching.
 
 **Seven helpers belong to the tick and are specified elsewhere:** `inject_survey()` is
 7.4's retrieval, `stamp_pod_marker()` is 9.3's `.pod` line, `commit_task()` runs
