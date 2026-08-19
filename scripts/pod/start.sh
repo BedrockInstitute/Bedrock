@@ -37,7 +37,18 @@ command -v herdr >/dev/null 2>&1 || die "herdr is not on PATH, so no pane can be
 # as「the name is free」. One of them had `pod-batch` in the payload. FM12 is the rule this
 # breaks and the tree already states it: a blind sensor never admits. It now prints
 # `UNREADABLE` and the caller stops.
-holder=$(herdr agent list 2>/dev/null | "$PY" -c '
+# **THE CALL IS BOUNDED, and a hung server used to block this script for ever.** There is
+# no `timeout(1)` on this machine, MEASURED at `scripts/pod/facts.py`'s own note about
+# gap M2, so the bound is python's, which is where the parse already happens.
+holder=$("$PY" -c '
+import subprocess, sys
+try:
+    d = subprocess.run(["herdr", "agent", "list"], capture_output=True, text=True,
+                       timeout=20)
+except Exception:
+    print("UNREADABLE herdr-agent-list-timed-out-or-could-not-start"); sys.exit(0)
+sys.stdout.write(d.stdout)
+' | "$PY" -c '
 import sys, json
 raw = sys.stdin.read()
 try:

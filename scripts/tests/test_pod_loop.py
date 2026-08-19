@@ -3411,6 +3411,26 @@ class QuotaPark(LoopCase):
         self.assertNotIn("Usage limit", self.WRAPPED, "the fixture is no longer wrapped")
         self.assertEqual(pod.vendor_refusal(CODE, self.tmp), "2026-08-19T20:19:47")
 
+    def test_PROSE_THAT_QUOTES_THE_MESSAGE_is_not_a_refusal(self):
+        """**A FALSE POSITIVE, found by an adversarial review on 2026-08-19.** The matcher
+        keyed on the SENTENCE, so a report quoting the vendor and a brief describing the
+        rule both fired. The real returns carry the status and the vendor code beside the
+        phrase, `429: {"code":"1308","message":"Usage limit reached`, and prose does not."""
+        for text in (
+            "The coder said `Usage limit reached for 5 hour. Your limit will reset at "
+            "2026-08-19 20:19:47` and then finished the work.",
+            "A25: Usage limit reached for 5 hour. Your limit will reset at "
+            "2026-08-19 20:19:47 is the shape this matches.",
+        ):
+            self.final(text)
+            self.assertIsNone(pod.vendor_refusal(CODE, self.tmp),
+                              f"prose read as a vendor refusal: {text[:40]}")
+
+    def test_the_ENVELOPE_is_what_makes_it_a_refusal(self):
+        """The other direction: the real shape must still match through the wrapping."""
+        self.final(self.WRAPPED)
+        self.assertEqual(pod.vendor_refusal(CODE, self.tmp), "2026-08-19T20:19:47")
+
     def test_a_return_with_no_refusal_reads_as_no_refusal(self):
         self.final("the coder finished and wrote a report\n")
         self.assertIsNone(pod.vendor_refusal(CODE, self.tmp))

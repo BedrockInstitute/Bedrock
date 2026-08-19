@@ -3154,8 +3154,17 @@ def _preflight(t, root):
 #: returns of 2026-08-19: `grep "Usage limit"` over the final message finds NOTHING,
 #: because the file is a pane capture and the terminal hard-wrapped it, in the worst case
 #: to one character per line. Every byte of whitespace goes before the match is tried.
+#: **IT MATCHES THE VENDOR'S ERROR ENVELOPE AND NOT THE SENTENCE.** The first version
+#: keyed on the phrase alone, and an adversarial review on 2026-08-19 showed it firing on
+#: a REPORT that quotes the message and on a BRIEF that describes the rule. The reachable
+#: case is narrow, because `_no_change_reason()` is called only where the acceptance
+#: found NO changed file, so a worker that wrote a report never gets here; it is narrow
+#: and it is still a lie the program would have told. MEASURED on both real returns of
+#: that day: each carries `429: {"code":"1308","message":"Usage limit reached` with the
+#: status and the vendor code beside the phrase, which prose that merely quotes the
+#: sentence does not.
 QUOTA_RE = re.compile(
-    r"[Uu]sagelimitreached.{0,40}?resetat"
+    r"429:\{[^}]{0,80}?[Uu]sagelimitreached.{0,40}?resetat"
     r"(\d{4}-\d{2}-\d{2})[T ]?(\d{2}:\d{2}:\d{2})")
 
 
