@@ -489,19 +489,32 @@ def witness_unresolved(t) -> int:
     return measure(_obligations_of_task(t), code=getattr(t, "code", None))["unresolved"]
 
 
-def witness_delta(t) -> tuple[int, float, bool]:
-    """The EXIT half of fact 3: (delta, witness seconds, probe red).
+def witness_delta(t) -> tuple[int, float, bool, int]:
+    """The EXIT half of fact 3: (delta, witness seconds, probe red, OPEN at exit).
 
     Fact 3 is the UNRESOLVED count at exit minus the UNRESOLVED count at dispatch. A task
     that discharges two names gives -2. A task that writes nothing gives 0, because NO
     FILE holds at both ends.
+
+    **THE FOURTH VALUE IS FACT 8, AND IT USED TO BE COMPUTED AND THROWN AWAY.** A
+    DIFFERENCE cannot tell a finished task from an idle one: unresolved 0 before and 0
+    after gives delta 0, and so does 5 before and 5 after. Every `done` row therefore had
+    to key on `obligations_delta_max = -2`, which fires only on the ONE instance that
+    discharges the names, so a re-run, a review and a mathematician's return could each
+    be complete and unable to close.
+
+    MEASURED 2026-08-19: five tasks parked `no-match` in one afternoon, all reading
+    `exit_code 0`, `error_class None`, `obligations_delta 0`, by three different and
+    entirely legitimate routes. The number that separates them was already in `m` on the
+    line above.
     """
     m = measure(_obligations_of_task(t), code=getattr(t, "code", None))
     before = getattr(t, "obl_before", None)
     if before is None:
         raise ValueError("witness_delta: the task carries no obl_before, so fact 3 has no "
                          "dispatch point. R7 applies: drop the return, never guess a fact")
-    return m["unresolved"] - before, m["witness_seconds"], m["probe_red"]
+    return (m["unresolved"] - before, m["witness_seconds"], m["probe_red"],
+            m["unresolved"])
 
 
 def _usage(message: str) -> int:

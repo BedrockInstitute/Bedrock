@@ -611,7 +611,7 @@ class UnresolvedCount(Patching):
         self.patch(witness, "measure", lambda *a, **k: {
             "unresolved": 1, "witness_seconds": 2.5, "probe_red": False, "rows": []})
         t = types.SimpleNamespace(code="LJ-1.999", obligations=["p::x"], obl_before=3)
-        delta, seconds, red = witness.witness_delta(t)
+        delta, seconds, red, _open = witness.witness_delta(t)
         self.assertEqual((delta, seconds, red), (-2, 2.5, False))
 
     def test_no_dispatch_point_refuses_rather_than_guessing_a_fact(self):
@@ -959,7 +959,11 @@ class AcceptanceRecord(Patching):
                        "seconds": 3.5, "heap_wall": False, "caliber": facts.CALIBER[tier],
                        "tier": tier, "concurrency": 1, "error_names_all": [],
                        "runs_all": [], "vacuous": not tgts})
-        self.patch(accept.witness_mod, "witness_delta", lambda t: (-2, 1.5, False))
+        # A23: the meter returns FOUR values now, the fourth being fact 8, the
+        # unresolved count at EXIT. A stub pinned at three unpacks as a
+        # ValueError inside `run_acceptance`.
+        self.patch(accept.witness_mod, "witness_delta",
+                   lambda t: (-2, 1.5, False, 0))
         self.patch(accept, "spec_surface", lambda root=None: True)
         self.patch(accept, "closure", lambda root=None: True)
         self.patch(accept, "unbound_new", lambda ch, before, root=None: (True, True))
@@ -967,11 +971,14 @@ class AcceptanceRecord(Patching):
         self.patch(accept, "in_fence_lines", lambda ch, root=None: lines)
         self.patch(accept, "_write_run_record", lambda t, rec, root=None: None)
 
-    def test_the_record_carries_all_seven_facts_and_its_tier(self):
+    def test_the_record_carries_all_eight_facts_and_its_tier(self):
         self.stub(targets=["src/Everything.lagda.md"])
         rec = accept.run_acceptance(accept._Task("LJ-1.999", tier="heavy"))
+        # A23 added fact 8, `obligations_open`. The assertion is written against the
+        # table's own constants rather than a literal list, so the vocabulary has ONE
+        # home and this test tracks it instead of pinning a snapshot of it.
         self.assertEqual(set(rec["facts"]),
-                         set(table.FACT_KEYS) | {table.FACT_KEY_A10},
+                         set(table.FACT_KEYS) | {table.FACT_KEY_A10, table.FACT_KEY_A23},
                          "the router's fact vocabulary is the runner's, exactly")
         self.assertEqual(rec["facts"]["lines"], 7)
         self.assertEqual(rec["facts"]["exit_code"], 0)

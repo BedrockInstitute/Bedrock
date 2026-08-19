@@ -103,7 +103,7 @@ def row(rid, action="park", scope="system", priority=100, when=_DEFAULT_WHEN, **
 
 def record(rid="c-1", task="LJ-1.386", exit_code=0, error_class=None, delta=0,
            changed=("agents/tasks/LJ-1-386/Probe386.agda",), seconds=1.0,
-           heap_wall=False, concurrency=1, lines=None, **kw):
+           heap_wall=False, concurrency=1, lines=None, obligations_open=None, **kw):
     """One whole record, in the shape section 4.5.2 stores and section 5.3.1 logs.
 
     `lines` is fact 7 under amendment A10 and it joins the SIX inside `facts`, never at
@@ -117,6 +117,10 @@ def record(rid="c-1", task="LJ-1.386", exit_code=0, error_class=None, delta=0,
                      "seconds": seconds, "heap_wall": heap_wall}}
     if lines is not None:
         out["facts"]["lines"] = lines
+    # Fact 8 under A23, optional exactly as `lines` is: a record written before the
+    # amendment does not carry it, and every `obligations_open` key must FAIL against it.
+    if obligations_open is not None:
+        out["facts"]["obligations_open"] = obligations_open
     out.update(kw)
     return out
 
@@ -142,6 +146,8 @@ WHEN_PROBE = {
     "heap_wall": False,
     "seconds_per_line_min": 0.001,
     "seconds_per_line_max": 0.1,
+    "obligations_open_min": 0,
+    "obligations_open_max": 5,
 }
 
 
@@ -357,7 +363,7 @@ class Loader(TreeCase):
         """Section 4.2 bumps `vocab` when the fact set changes and A10 changed it: fact 7
         `lines` joined the six of AD11."""
         text = (ROOT / "dev" / "pod" / "table.toml").read_text(encoding="utf-8")
-        self.assertIn('vocab = "seven-facts/1"', text)
+        self.assertIn('vocab = "eight-facts/1"', text)   # A23 added fact 8
         self.assertNotIn("six-facts/1", text)
 
     def test_the_seeded_ratio_row_carries_the_bar_and_names_its_basis(self):
@@ -474,7 +480,7 @@ class Loader(TreeCase):
         """`six-facts/1` IS THE ONE THIS LOADER USED BEFORE A10, and it is now refused. A
         table written for another fact set would otherwise be routed by a vocabulary its
         author never agreed to."""
-        self.assertEqual(table.VOCAB, "seven-facts/1")
+        self.assertEqual(table.VOCAB, "eight-facts/1")   # A23 added fact 8
         with self.assertRaises(table.TableError):
             self.load([row("r")], schema=2)
         with self.assertRaises(table.TableError):
@@ -508,7 +514,8 @@ class Matches(unittest.TestCase):
         here, against a record it must decide, and the closed list is compared by NAME."""
         self.assertEqual(set(WHEN_PROBE), set(table.WHEN_TYPES))
         rec = record(exit_code=42, error_class="termination",
-                     changed=["src/L/Foo.lagda.md"], seconds=10.0, lines=1000)
+                     changed=["src/L/Foo.lagda.md"], seconds=10.0, lines=1000,
+                     obligations_open=3)
         for key, value in WHEN_PROBE.items():
             self.assertIs(table.matches({key: value}, rec), True, key)
         with self.assertRaises(KeyError):

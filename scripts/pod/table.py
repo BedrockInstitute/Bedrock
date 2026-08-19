@@ -94,7 +94,14 @@ SCHEMA = 1
 #: 7 `lines` joined the six of AD11. A table written for `six-facts/1` is refused by this
 #: loader, which is the point of the field: a router that reads a table written for
 #: another fact set routes a return by a vocabulary its author never agreed to.
-VOCAB = "seven-facts/1"
+#: **A23 ADDS FACT 8, `obligations_open`, THE UNRESOLVED COUNT AT EXIT.** Fact 3 is a
+#: DIFFERENCE, and a difference cannot separate a finished task from an idle one: 0 before
+#: and 0 after reads exactly like 5 and 5. Every `done` row therefore had to key on
+#: `obligations_delta_max`, which fires only on the ONE instance that discharges the
+#: names, so a re-run, a review and a mathematician's return were each complete and unable
+#: to close. MEASURED 2026-08-19: five tasks parked `no-match` in one afternoon by three
+#: legitimate routes, all reading `exit_code 0`, `error_class None`, `obligations_delta 0`.
+VOCAB = "eight-facts/1"
 
 #: The eight actions of section 4.2. The set is CLOSED, so the program makes no judgement,
 #: and every one names the function that performs it in `scripts/pod/pod.py`.
@@ -125,6 +132,11 @@ BRANCH_KEYS = ("id", "priority", "action", "outcome", "head_slot", "when")
 FACT_KEYS = ("exit_code", "error_class", "obligations_delta", "changed_files",
              "seconds", "heap_wall")
 FACT_KEY_A10 = "lines"
+#: Fact 8, amendment A23. OPTIONAL exactly as `lines` is: a record written before this
+#: amendment does not carry it, is never migrated and is never guessed, and `matches()`
+#: below refuses every `obligations_open` key against such a record. R7: the program never
+#: guesses a fact, so an old record simply cannot open a row that keys on a new one.
+FACT_KEY_A23 = "obligations_open"
 
 #: Every `[row.when]` key, in EMITTED order, with its value type. The list is CLOSED:
 #: R1 says a branch matches only the facts of AD11, and pre-flight P4 refuses a key that
@@ -152,6 +164,8 @@ WHEN_TYPES = {
     # admitted, and it is the quotient, because that is the form the ruled bar takes.
     "seconds_per_line_min": float,
     "seconds_per_line_max": float,
+    "obligations_open_min": int,
+    "obligations_open_max": int,
 }
 WHEN_KEYS = tuple(WHEN_TYPES)
 
@@ -528,6 +542,7 @@ def matches(when, rec):
     g = fnmatch.fnmatchcase
     ch = f["changed_files"]
     lines = f.get(FACT_KEY_A10)              # fact 7, A10. Absent on a six-fact record.
+    op = f.get(FACT_KEY_A23)                 # fact 8, A23. Absent on a seven-fact record.
     one = rec.get("concurrency") == 1
     for k, v in when.items():
         if k == "exit_code":                 ok = f["exit_code"] == v
@@ -545,6 +560,10 @@ def matches(when, rec):
         elif k == "seconds_min":             ok = one and f["seconds"] >= v
         elif k == "seconds_max":             ok = one and f["seconds"] <= v
         elif k == "heap_wall":               ok = f["heap_wall"] == v
+        elif k == "obligations_open_min":
+            ok = op is not None and op >= v
+        elif k == "obligations_open_max":
+            ok = op is not None and op <= v
         elif k == "seconds_per_line_min":
             ok = one and bool(lines) and f["seconds"] / lines >= v
         elif k == "seconds_per_line_max":

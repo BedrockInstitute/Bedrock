@@ -119,6 +119,8 @@ FACT_TYPES = {
     "seconds": (int, float),
     "heap_wall": (bool,),
     table.FACT_KEY_A10: (int, type(None)),
+    #   `obligations_open`   absent on a record written before A23 (2026-08-19).
+    table.FACT_KEY_A23: (int, type(None)),
 }
 
 
@@ -162,7 +164,11 @@ def check_record(rec, where="record"):
     missing = [k for k in table.FACT_KEYS if k not in f]
     if missing:
         raise table.TableError(f"{where}: `facts` carries no `{missing[0]}`")
-    extra = [k for k in f if k not in table.FACT_KEYS and k != table.FACT_KEY_A10]
+    # `lines` (A10) and `obligations_open` (A23) are OPTIONAL facts: a record
+    # written before either amendment does not carry it, is never migrated and is
+    # never guessed. `matches()` refuses every key that reads an absent fact.
+    extra = [k for k in f if k not in table.FACT_KEYS
+             and k not in (table.FACT_KEY_A10, table.FACT_KEY_A23)]
     if extra:
         raise table.TableError(f"{where}: `facts` carries `{extra[0]}`, not a fact")
     for k, want in FACT_TYPES.items():

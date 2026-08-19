@@ -31,8 +31,8 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Twenty-two amendments. Twenty are the owner's, and one is the orchestrator's and follows
-from A4.** Fourteen were ruled on 2026-08-17, five on 2026-08-18 and three on 2026-08-19.
+**Twenty-three amendments. Twenty-one are the owner's, and one is the orchestrator's and follows
+from A4.** Fourteen were ruled on 2026-08-17, five on 2026-08-18 and four on 2026-08-19.
 A17 restores a requirement this document had lost, A18 builds a channel it never had, A19
 gives the programme an ending, and A20 keeps the two work channels apart. **A21 and A22
 put back two core designs this document NEVER contained: who writes the code, and how far
@@ -225,6 +225,30 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   `agents/tasks/POD-REFILL/POD-REFILL.md`, the standing brief that produces every task,
   told the mathematician **「Queue the smallest task that makes real progress」**. That
   sentence is why one dispatch produced one step. It is replaced by this amendment.
+
+- **A23. FACT 8, `obligations_open`, THE UNRESOLVED COUNT AT EXIT, ruled 2026-08-19.**
+  Fact 3 is a DIFFERENCE and the table needed a LEVEL. A difference cannot separate a
+  finished task from an idle one: unresolved 0 before and 0 after reads exactly like 5
+  and 5. So every `done` row had to key on `obligations_delta_max`, which fires only on
+  the ONE instance that discharges the names.
+
+  **THE CONSEQUENCE WAS THAT A COMPLETED TASK COULD NOT CLOSE.** MEASURED 2026-08-19:
+  five tasks parked `no-match` in one afternoon, all reading `exit_code 0`,
+  `error_class None`, `obligations_delta 0`, by three entirely legitimate routes. A
+  MATHEMATICIAN, whose obligation list is empty under A21 so 0 is correct by
+  construction. A RE-RUN, whose obligations were discharged by its first instance. A
+  CRITIC, whose whole deliverable is `review-of-<PRED>.md`. The number that separates
+  all three from a task that achieved nothing was already computed inside the meter and
+  thrown away at `witness.py`.
+
+  **NO RECORD IS EVER MIGRATED AND NO FACT IS EVER GUESSED.** Fact 8 is OPTIONAL exactly
+  as fact 7 is: a record written before this amendment does not carry it, and
+  `matches()` refuses every `obligations_open` key against such a record. R7 is the
+  reason, and the idiom already existed for `lines`. So the sixteen frozen corpus
+  records stay live for every other key and can open no row that keys on a new one.
+
+  The keys are `obligations_open_min` and `obligations_open_max`, and `vocab` moves to
+  `eight-facts/1`.
 
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the

@@ -2443,8 +2443,10 @@ class Acceptance(LoopCase):
                    slots=None, tier=pod.WIDE: dict(
                        accept_mod.VACUOUS, concurrency=1, tier=tier,
                        rc=kw.get("rc", 0), agda_class=kw.get("agda_class")))
+        # A23: FOUR values now, the fourth being fact 8, the unresolved count at EXIT.
+        # A stub pinned at three unpacks as a ValueError inside `run_acceptance`.
         self.patch(witness_mod, "witness_delta",
-                   lambda t: (kw.get("delta", -2), 1.3, False))
+                   lambda t: (kw.get("delta", -2), 1.3, False, kw.get("open", 0)))
         self.patch(facts_mod, "changed_files_scoped",
                    lambda code, brief, root=None: (list(kw.get("ch", ["a.md"])), []))
         self.patch(facts_mod, "verification_target",

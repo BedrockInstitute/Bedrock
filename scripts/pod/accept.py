@@ -443,7 +443,7 @@ def run_acceptance(t, root=None, tier=None):
     # a foreign edit. The row's behaviour is the owner's and stays; this names the mover.
     c5_detail = "" if c5 else " ".join(_run(SPEC_SURFACE, root)[1].split())[:600]
     r1 = conjunct1(facts_mod.verification_target(ch, t.code, root), root, tier=tier)
-    d3, wsec, red = witness_mod.witness_delta(t)          # fact 3, section 4.7
+    d3, wsec, red, open3 = witness_mod.witness_delta(t)   # facts 3 and 8, 4.7
     c3 = closure(root)
     c4, uvac = unbound_new(ch, getattr(t, "unbound_before", None), root)
     c6 = precommit_set(t.code, root)
@@ -467,7 +467,18 @@ def run_acceptance(t, root=None, tier=None):
                      "seconds": r1["seconds"], "heap_wall": r1["heap_wall"],
                      # FACT 7, A10. It is measured over the SAME list fact 4 reports, so
                      # the ratio's numerator and denominator describe one task's work.
-                     "lines": in_fence_lines(ch, root)}}
+                     "lines": in_fence_lines(ch, root),
+                     # **FACT 8: THE UNRESOLVED COUNT AT EXIT, a LEVEL and not a
+                     # difference.** Fact 3 is a delta, and a delta cannot tell a finished
+                     # task from an idle one: 0 before and 0 after reads the same as 5 and
+                     # 5. So every `done` row had to key on `obligations_delta_max = -2`,
+                     # which fires only on the ONE instance that discharges the names, and
+                     # a re-run, a review and a mathematician's return were each complete
+                     # and unable to close. MEASURED 2026-08-19: five tasks parked
+                     # `no-match` in one afternoon, all reading `exit_code 0`,
+                     # `error_class None`, `obligations_delta 0`, by three legitimate
+                     # routes. The number was already in the meter and was discarded.
+                     "obligations_open": open3}}
     # THE DEADLINE NEEDS NO SPECIAL CASE. `r1["rc"]` is None, conjunct 1 fails,
     # `exit_code` is None, and a row keyed on `exit_code_absent` matches.
     rec["run"] = _write_run_record(t, rec, root)

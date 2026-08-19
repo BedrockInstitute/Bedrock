@@ -24,7 +24,7 @@
 
 [meta]
 schema = 1
-vocab = "seven-facts/1"
+vocab = "eight-facts/1"
 
 [[row]]
 id = "sys-spec-surface"
