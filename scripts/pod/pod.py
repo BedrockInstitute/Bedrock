@@ -2118,17 +2118,23 @@ def maintainer_scope_ok(root=None, proposal=None):
     # the park. At the moment of this repair six tasks were parked, three of them on ONE
     # missing row, the gate named 44 blocking paths, and every one of them belonged to a
     # task the program had created. The owner had to break it by hand once already.
-    homes = {p.rsplit("/", 1)[0] + "/"
-             for p in facts_mod._status_paths(root) if p.endswith("/.pod")}
-    homes |= {str(d.relative_to(root)) + "/"
-              for d in (root / "agents" / "tasks").glob("*")
-              if (d / ".pod").is_file()}
+    # **THE WHOLE OF `agents/tasks/` IS EXEMPT, and the narrower version raced.** The
+    # first attempt exempted only a home carrying a `.pod` marker, which is the proof the
+    # program created it. MEASURED 2026-08-19 minutes later: the refill writes
+    # `agents/tasks/<CODE>/<CODE>.md` and rule (a1) stamps the marker on a LATER tick, so
+    # a brand-new brief sat unexempted in that window and refused the batch. LJ-1.396 did
+    # exactly that.
+    #
+    # THE BROAD FORM IS THE HONEST ONE. The maintainer's only write under `agents/tasks/`
+    # is `agents/tasks/POD-BATCH/`, which the PROGRAM writes for it and which is already
+    # in `PROGRAM_WRITES`. Everything else under that tree belongs to a task or to the
+    # producer that queued it, so counting any of it against the maintainer is a false
+    # positive by construction, not a judgement call.
     bad = [p for p in facts_mod._status_paths(root)
            if p not in allowed
            and not p.startswith(PROGRAM_WRITES)
            and not any(p.endswith(".toml." + v) for v in RETIRED_SUFFIXES)
-           and not p.endswith("/.pod")     # stamp_pod_marker() at :757
-           and not any(p.startswith(h) for h in homes)]
+           and not p.startswith("agents/tasks/")]
     return (not bad), bad
 
 
