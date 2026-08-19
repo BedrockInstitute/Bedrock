@@ -65,6 +65,7 @@ usage error, which is an unknown or absent subcommand and nothing else.
 from __future__ import annotations
 
 import contextlib
+import io
 import datetime
 import fcntl
 import hashlib
@@ -1615,11 +1616,22 @@ def review_brief(t, slot, root=None):
         "",
         "## SCOPE (write)",
         f"- {outfile}",
-        "- dev/JOURNAL.md",
+        # **THE JOURNAL LEFT THIS SCOPE ON 2026-08-19, and the reason is a measurement.**
+        # Every generated review brief claimed `dev/JOURNAL.md`, so `territory_in_flight()`
+        # made ANY TWO ESCALATIONS MUTUALLY EXCLUSIVE. With A22 running four or five coder
+        # tasks at once that collision is routine, not rare. MEASURED: LJ-1.394 escalated
+        # to `mathematician_adversarial` at seq 86, the FIRST adversarial dispatch this
+        # programme ever made, and seq 87 parked it `launch` because LJ-1.391 was live and
+        # already held the file.
+        #
+        # THE GUARD WAS RIGHT AND THE TEMPLATE WAS WRONG. Its refusal is exact: two agents
+        # writing one file in one checkout drop each other's edits, and N reviewers all
+        # appending to one journal is that hazard by construction. A reviewer's deliverable
+        # is its own review file, which is tracked and is the record. A journal entry is a
+        # consolidation step and never a per-review write.
         "",
         "## THE OBLIGATION",
-        f"Attack the return of {pred}. Write {outfile} and nothing else, plus one",
-        "`dev/JOURNAL.md` entry for the return you attacked.",
+        f"Attack the return of {pred}. Write {outfile} and nothing else.",
         "",
         "## WHAT YOU READ, and all of it is tracked",
         f"- the newest `agents/tasks/{agents_tree.normalise(t.code)}/*-report.md`",
@@ -1682,6 +1694,25 @@ def model_readback_ok(task, model):
     return True
 
 
+#: The launcher's last refusal text, or None. `launch()` captures the launcher's stderr,
+#: writes it back to the pane, and leaves it here so rule (f) can put it in the park.
+LAUNCH_REFUSAL = None
+
+
+def _tee(buf):
+    """Write a captured stderr buffer back to the real stderr, and remember it.
+
+    The keeper's pane must keep seeing every refusal exactly as before; this only ADDS a
+    second reader, which is the transition log.
+    """
+    global LAUNCH_REFUSAL                      # noqa: PLW0603
+    text = buf.getvalue()
+    if not text:
+        return
+    sys.stderr.write(text)
+    LAUNCH_REFUSAL = " ".join(text.split())[:400]
+
+
 def launch(t, brief, role, root=None):
     """Rule (f)'s dispatch. It returns the PID, or None when a KEPT refusal fired.
 
@@ -1711,20 +1742,35 @@ def launch(t, brief, role, root=None):
     t.role, t.model, t.effort = role, head["model"], head["effort"]
     t.harness, t.sandbox = head["harness"], head["sandbox"]
     path = Path(brief) if Path(brief).is_absolute() else root / brief
+    # **THE LAUNCHER'S REFUSAL IS CAPTURED AND RE-EMITTED, NOT SWALLOWED.** It prints
+    # `dispatch: REFUSED. ...` to stderr and returns 1, so the reason reached the keeper's
+    # pane and NOTHING ELSE: the transition log got `reason: "launch"` with no `why`, and
+    # the maintainer batch that reads the log could not say why anything parked.
+    # MEASURED 2026-08-19 on LJ-1.394's escalation, whose refusal named a live territory
+    # holder and was legible only by reading a pane by hand.
+    # The tee matters: the pane is still the operator's record, so this writes the text
+    # back to stderr and ALSO carries it into `LAST_REFUSAL` for the park.
+    global LAUNCH_REFUSAL                      # noqa: PLW0603
+    LAUNCH_REFUSAL = None
+    buf = io.StringIO()
     try:
         mod.HARNESS = head["harness"]
         # A14: THE TIER TRAVELS TO THE PANE. `launch()` defaults it to `AGDA_TIER_DEFAULT`,
         # which is WIDE, so omitting it ran every HEAVY task at the WIDE caliber AND wrote
         # `"tier": "wide"` into the registry record that `agda_heap_sum_over()` reads. The
         # heap-sum guard then budgeted 8 GB for a worker holding 12.
-        rc = mod.launch(t.code, path, bool(t.agda), head["sandbox"], head["model"],
-                        effort=head["effort"], tier=tier_of(t),
-                        preamble=preamble_for(role, root),
-                        provider=head.get("pi_provider"))
+        with contextlib.redirect_stderr(buf):
+            rc = mod.launch(t.code, path, bool(t.agda), head["sandbox"], head["model"],
+                            effort=head["effort"], tier=tier_of(t),
+                            preamble=preamble_for(role, root),
+                            provider=head.get("pi_provider"))
     except SystemExit:
+        _tee(buf)
         return None                            # the launcher REFUSED on a corrupt registry
     except Exception:                          # noqa: BLE001. See the docstring
+        _tee(buf)
         return None
+    _tee(buf)
     if rc != 0:
         return None
     try:
@@ -2904,7 +2950,9 @@ def _rule_f(st, root):
             continue
         pid = launch(t, b, role, root)
         if pid is None:                        # a KEPT refusal of 6.2 fired. Never silent
-            emit(st, t, READY, PARKED, reason="launch", root=root)
+            # NEVER SILENT NOW MEANS IN THE LOG TOO, and not only in the keeper's pane.
+            emit(st, t, READY, PARKED, reason="launch", root=root,
+                 why=LAUNCH_REFUSAL or None)
             continue
         emit(st, t, READY, RUNNING, pid=pid, brief=t.brief, dispatched_brief=b,
              role=role, obl_before=t.obl_before, root=root)   # K6. brief is the TASK's

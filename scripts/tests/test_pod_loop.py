@@ -1520,7 +1520,16 @@ class RuleF(LoopCase):
         self.assertIn("## SCOPE (write)", text)
         self.assertIn("## ARCHIVE", text)
         self.assertIn("## LITERATURE", text)
-        self.assertIn("dev/JOURNAL.md", text)
+        # **THE REVIEW SCOPE CLAIMS NOTHING SHARED, and this assertion is inverted from
+        # what it used to be.** The template named `dev/JOURNAL.md`, so every generated
+        # review brief claimed one file and `territory_in_flight()` made ANY TWO
+        # ESCALATIONS mutually exclusive. MEASURED 2026-08-19: LJ-1.394's escalation, the
+        # first adversarial dispatch this programme ever made, parked `launch` because
+        # LJ-1.391 was live and already held it. A22 runs four or five coder tasks at
+        # once, so the collision is routine. A reviewer's deliverable is its own review
+        # file; a journal entry is a consolidation step and never a per-review write.
+        self.assertNotIn("dev/JOURNAL.md", text,
+                         "a shared write path serialises every escalation")
 
     def test_the_logged_brief_is_ALWAYS_the_task_brief_and_never_the_review(self):
         """K6. Writing the review brief into `brief` would park the task with
