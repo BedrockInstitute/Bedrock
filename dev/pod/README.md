@@ -45,6 +45,16 @@ untouched. A source that does not compile is REFUSED and the old image keeps run
 **A HOT RESTART IS NOT A RESUME.** A reload cures stale CODE. It does not clear
 `.pod-state/STOPPED`.
 
+## Starting it
+
+    sh scripts/pod/start.sh
+
+That is the whole of it. The script resumes the loop, opens a pane in the pod's workspace
+and runs `keeper.sh` in it, and **it refuses when the resident name `pod-batch` is already
+held**, which is the one step of a maintainer swap that is silent when it is skipped. Pass
+`--no-resume` to start the keeper against a STOPPED loop, which exits 3 at once and is
+only what you want when you mean to inspect rather than to run.
+
 ## Stopping the whole pod, and swapping the resident maintainer
 
 **FOUR THINGS RUN AND STOPPING THE LOOP STOPS ONE OF THEM.** A full stop is:

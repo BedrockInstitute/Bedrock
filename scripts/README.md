@@ -20,7 +20,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
-| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `pane-slot.py`, `table.py`, `wait-and-start.sh`, `witness.py` |
+| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `pane-slot.py`, `start.sh`, `table.py`, `wait-and-start.sh`, `witness.py` |
 
 Unchanged in place: this `README.md`, `scripts/tests/`, `scripts/git-hooks/`.
 
@@ -744,6 +744,27 @@ right. A line naming a pane herdr no longer has is dropped on read, so a stale f
 one column and never a wrong split.
 
     .venv/bin/python scripts/pod/pane-slot.py --base <PANE> --plan     # decide, do nothing
+
+### `start.sh`
+
+**ONE COMMAND BRINGS THE POD UP, and it is the counterpart of `pod.py stop`.** Starting it
+was four commands typed by hand, two of which needed a pane id the operator had to look up
+first.
+
+    sh scripts/pod/start.sh              # resume, open a pane, run the keeper in it
+    sh scripts/pod/start.sh --no-resume  # same, but leave .pod-state/STOPPED in place
+
+**IT REFUSES WHEN THE RESIDENT NAME IS TAKEN, and that is the check a person forgets.**
+`maintainer_alive()` answers TRUE while ANY agent holds the herdr name `pod-batch`,
+whatever kind it is, so `ensure_maintainer()` would never start the head named in
+`dev/pod/heads.toml` and every batch, close notification and keeper alarm would reach the
+stale holder instead. MEASURED 2026-08-19 at the move to grok: a feed sent to test the new
+head landed in the outgoing session. The refusal names the holder and exits 1.
+
+**IT RUNS THE KEEPER IN A PANE AND NEVER AS ITS OWN CHILD**, through `herdr pane run`, for
+the reason `wait-and-start.sh` ends in `exec`: `pod run` is an infinite loop, so a keeper
+started as a script's child dies with the shell that ran it and its output lands nowhere
+the owner reads.
 
 ### `wait-and-start.sh`
 
