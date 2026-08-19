@@ -1197,6 +1197,15 @@ def render(data: dict) -> str:
                f"语料记录 {_num(data['corpus_records'])} 条；"
                + (f"结论 GO {go_nogo[0]} 个，NO-GO {go_nogo[1]} 个。"
                   if go_nogo else "结论 GO 与 NO-GO 未知。"))
+    # A BARE ZERO DOES NOT SAY WHAT ZERO MEANS, and this line printed one every day.
+    # An empty corpus makes `replay()` return ADMIT for every table, so R3 admits any
+    # row a model proposes. `replay.py:41-44` states the day-one emptiness on purpose,
+    # but the owner reads the digest and not that docstring. 2026-08-19.
+    if not data["corpus_records"]:
+        out.append("        语料为空，因此 R3 准入对任何表都返回 ADMIT，这道门当前不设防。"
+                   "语料靠 `live` 流积累，即真实任务返回时逐条写入。"
+                   "另欠五条实测记录，每个 runner 类一条，做法是让验收的第 2 到第 6 个"
+                   "合取项各故意失败一次；这五条不需要任何探针。")
     out.append("  以上只作报告，不触发任何动作。是否回滚由仓库所有者判断。")
     out.append("")
 
@@ -1234,7 +1243,7 @@ def maintainer_inputs(root: Path | None = None, hours: float = WINDOW_HOURS,
 
     THE BATCH BRIEF IS PROGRAM-WRITTEN and the program fills it from the log: every
     PARKED code with its reason and its facts, EVERY NO-MATCH RECORD IN THE WINDOW, THE
-    SHADOWING LIST and THE EXPIRY FALLOUT LIST. `spawn_maintainer()` at
+    SHADOWING LIST and THE EXPIRY FALLOUT LIST. `write_batch_brief()` at
     `scripts/pod/pod.py:1714` writes the parked half and calls this for the other three,
     so the batch and the digest count one thing one way.
 

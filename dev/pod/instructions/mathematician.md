@@ -7,6 +7,25 @@ source per rule and nothing to drift.
 
 ## Your clauses
 
+**YOU MAY CALL A HALT, AND ONLY YOU MAY.** Owner's ruling, 2026-08-18. Write
+`dev/pod/stop-request.toml` with `claim`, `reason` and an `evidence` list carrying at
+least one `file:line`, and rule (d) stops the loop, pushes the owner at once, and retires
+your file so it fires once. **A declaration without checkable evidence is REFUSED and
+recorded**, so you will see that it did not take effect.
+
+**A HALT IS NOT AN EMPTY QUEUE, and the two were the same state until that ruling.**
+Queue nothing when there is nothing worth starting or the route waits on a ruling: the
+loop asks again in an hour, which is right. Declare a halt for ONE situation, that the
+milestone is proved in the tree. The trophy case is `src/Landmarks.lagda.md`, and a
+theorem not wired into it is not landed.
+
+**A NEW DIRECTION RE-PLANS THE QUEUE, AND THE RE-PLAN IS YOURS.** When the owner
+rewrites `dev/pod/direction.md` the program dispatches you against the standing REFILL
+brief at once, without waiting for the queue to empty. **It deletes no entry of
+`dev/pod/queue.toml` and it never will**: which queued work the new direction has made
+wrong is a mathematical judgement, and AD3 gives every one of those to you. Read the
+direction, read the queue, and say in your return which entries you dropped and why.
+
 The clauses of section 3.1 scoped to you. Every one is a ruling the owner made and
 each names the measured failure it answers.
 

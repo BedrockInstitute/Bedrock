@@ -33,19 +33,68 @@ producer.
 **`ledger.py --brief` is the only admissible source for a standing size figure.** Never
 quote a number found in a paragraph.
 
+**`dev/pod/direction.md` CARRIES THE OWNER'S CURRENT MATHEMATICAL DIRECTION, and it is
+in front of you now.** The program `cat`s it into every dispatch, for every slot, so it
+is the freshest thing you were told and it may have been written this hour. It holds
+guidance and never a rule. When it and an older document disagree about WHERE the work
+is going, the direction wins and you say so in your return; when it and a Boundary
+clause disagree, stop and report, because a direction cannot repeal a rule.
+
 **HOW THE LOOP IS STARTED, and it is a plain terminal.**
 
 ```sh
-.venv/bin/python scripts/pod/pod.py run       # the loop
+sh scripts/pod/keeper.sh                          # the keeper, which owns the loop
 .venv/bin/python scripts/pod/pod.py tick --plan   # one pass, launching nothing
 ```
+
+**START THE KEEPER, NOT THE LOOP.** `keeper.sh` runs `pod.py` as a direct child in the
+same pane, so this pane's scrollback is the loop's own output. When the loop crashes the
+keeper restarts it in place, with a backoff; after three fast failures it stops guessing
+and asks the maintainer, then waits for `.pod-state/keeper-retry`. It restarts a CRASH
+and never a decision: `pod run` exits 3 on rule (d)'s STOP and 4 on a startup refusal,
+and neither is restarted.
 
 **`pod.py` IS A PROGRAM AND NOT AN AGENT.** Do not start it from inside a coding-agent
 session in the hope that the session's own model or effort applies: it does not, and
 the session would only be a shell. **The program launches all five heads itself**, each
 with the model and effort of its row in `dev/pod/heads.toml`, so the maintainer's
-`claude-opus-5` at `high` takes effect because `spawn_maintainer()` reads that row and
+`claude-opus-5` at `high` takes effect because `ensure_maintainer()` reads that row and
 passes it to the launcher. The same is true of every other slot.
+
+**THE MAINTAINER IS RESIDENT AND OUTLIVES THIS PROGRAM.** Owner's ruling, 2026-08-18.
+It is the role that repairs `pod.py`, so it cannot be `pod.py`'s child: the loop's
+repairman would die with the loop. Rule (e) ensures it every tick, idempotently, and
+feeds it a batch by prompt. It is ONE long-lived session and its pane is never closed.
+Liveness runs one way and repair runs the other, and neither is a cycle:
+
+```
+you  ->  keeper.sh  ->  pod.py  ->  maintainer        (who is alive)
+maintainer  ->  reads the keeper's pane, edits the tree, touches the retry file
+```
+
+**THE PANES OPEN AND CLOSE THEMSELVES, so there is nothing to attach.** A dispatch splits
+a pane in the keeper's own workspace and starts the head inside it, so a running head is
+already in front of you. A clean finish closes that pane; every other ending keeps it,
+because a dead agent's terminal is the only record of how it died. **Nothing ever takes
+your focus**: the program splits and starts, and never calls `pane focus`.
+
+**THE ONE PANE THAT NEVER CLOSES IS THE MAINTAINER'S**, because it is resident. That is
+what makes it reachable at any hour.
+
+```sh
+herdr agent list                     # every live head and its pane
+herdr agent prompt pod-batch "..."   # send one message without leaving your pane
+herdr agent attach pod-batch         # only from ANOTHER workspace; in the pod's own
+                                     # workspace the pane is already on your screen
+```
+
+**A FINISHED AGENT IS NOT A DEAD ONE.** MEASURED 2026-08-18: after its turn a head
+reports `agent_status: done`, and a second `herdr agent prompt` is accepted and answered
+on the same session. Only `herdr pane close` ends an agent.
+
+**A PROMPT TO A BUSY HEAD QUEUES AND NEVER INTERRUPTS** (`dev/LESSONS.md` C-61): it is
+read when the head finishes its current tool call, and once cost 4.25 hours. To reach a
+busy head, end what is keeping it busy first.
 
 **`[LJ-4]` replaced the orchestrator with a program.** The program measures six facts,
 matches one rule table, and performs one action. It reads no report and it makes no
@@ -125,9 +174,10 @@ puts that file in front of your brief at every dispatch. The five slots are
 `mathematician`, `mathematician_adversarial`, `coder`, `coder_adversarial` and
 `maintainer`.
 
-**The shared half of each slot file is GENERATED from this file** by
-`scripts/pod/instructions.py`, so one Boundary cannot become five that drift. Edit this
-file, then run `instructions.py --write`.
+**NEITHER FILE COPIES THE OTHER.** This file holds the shared Boundary, your slot file
+holds only what binds your slot, and the program `cat`s the two ahead of your brief at
+dispatch. So one Boundary cannot become five that drift, and there is nothing to
+regenerate: edit this file and every slot has the new clause at the next dispatch.
 
 | What else you may need | Where it lives |
 |---|---|

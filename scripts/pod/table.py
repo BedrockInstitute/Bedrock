@@ -312,6 +312,30 @@ def check_row(row, slots=None, where=None):
         _refuse(where, "`added` is not a TOML local date")
     if row["added_by"] not in ADDED_BY:
         _refuse(where, f"added_by `{row['added_by']}` is not one of {list(ADDED_BY)}")
+    # `stop_loop` IS THE OWNER'S ACTION AND NO MODEL'S, ruled 2026-08-19.
+    #
+    # **THE GUARD THAT WAS SUPPOSED TO COVER THIS IS INERT.** R3 admission replays a
+    # candidate table against `dev/pod/replay-corpus.jsonl`, and that file is 0 bytes:
+    # `replay.py --count` prints「EMPTY. replay() returns ADMIT for every table and R3
+    # guards nothing until the first record lands.」The emptiness is a documented day-one
+    # state (`replay.py:41-44`), but it means any model could land a row that halts the
+    # whole programme with nothing checking it. Two model paths reach here: a maintainer
+    # proposal through `harvest_batch()`, and a mathematician's `[[branch]]` block through
+    # `admit_rows()`, which stamps `added_by = "mathematician"` at :649.
+    #
+    # **AND SEEDING THE CORPUS WOULD NOT HAVE CLOSED IT.** R3 rejects a table that MOVES a
+    # frozen record; a `stop_loop` row keyed on a class no record carries moves nothing and
+    # is admitted either way.
+    #
+    # A model that wants a halt has a channel with teeth: `dev/pod/stop-request.toml`,
+    # which rule (d) refuses unless it carries a claim, a reason and a `file:line`
+    # (amendment A19). This refusal costs nothing today: both live `stop_loop` rows carry
+    # `added_by = "owner"`.
+    if row["action"] == "stop_loop" and row["added_by"] != "owner":
+        _refuse(where, "action `stop_loop` halts the whole programme, so only the owner "
+                       f"may add such a row and this one is `{row['added_by']}`. A model "
+                       "declares a halt through dev/pod/stop-request.toml, which is "
+                       "refused unless it carries checkable evidence (A19)")
     reason = row["reason"]
     if not isinstance(reason, str) or not reason.strip():
         _refuse(where, "`reason` is empty")
@@ -674,8 +698,26 @@ def _same_rows(old, new):
     return strip == [{k: v for k, v in r.items() if k != "added"} for r in new]
 
 
+#: THE LAST ADMISSION REFUSAL IN WORDS, or None. `admit_rows()` clears it on entry and
+#: sets it on every refusal; rule (f) reads it to fill the park's `detail`.
+#:
+#: **IT IS A MODULE GLOBAL AND NOT A THIRD ARGUMENT, and that is measured rather than
+#: preferred.** `scripts/tests/test_pod_loop.py` patches `admit_rows` with two-argument
+#: stubs, so widening the signature turned a real admission into a `TypeError` that
+#: rule (f) swallows as「refused」: three suites went red and every dispatch stopped.
+#: It is the same trap `_NoLaunch.launch()` documents with `**kw`. A stub that never
+#: touches this global simply leaves it None, which is exactly the old behaviour.
+LAST_REFUSAL = None
+
+
 def admit_rows(code, brief):
     """Append this brief's branches as task rows. Return True on ADMIT.
+
+    ON A REFUSAL IT SETS `LAST_REFUSAL` above. The park rule (f) writes used to carry
+    `reason: "admission"` and nothing else, because every refusal below is swallowed into
+    a bare `False`. MEASURED 2026-08-19: LJ-1.388 parked on admission with `detail: None`,
+    and the sentence that would have explained it was `check_balance()`'s, which names the
+    error class the corpus lacks.
 
     FOUR PROPERTIES, and rule (f) calling this after the pre-flight and before `launch()`
     is what gives them (section 4.1):
@@ -696,6 +738,8 @@ def admit_rows(code, brief):
     # `scripts/pod/replay.py`. A module-level import either way is a cycle, and copying
     # one of the two functions into the other file would give one rule two homes (W5).
     import replay as replay_mod             # noqa: PLC0415
+    global LAST_REFUSAL                     # noqa: PLW0603. See the constant's comment
+    LAST_REFUSAL = None
     try:
         slots = head_slots()
         rows = [namespace(code, b, slots=slots) for b in branches_of(brief)]
@@ -705,12 +749,17 @@ def admit_rows(code, brief):
         new = [r for r in old if r["scope"] != SCOPE_TASK + code] + rows
         check_table(new, slots)
         records = replay_mod.corpus()
-        if replay_mod.replay(old, new, records)[0] != "ADMIT":   # R3, section 4.5.1
+        verdict, moved = replay_mod.replay(old, new, records)    # R3, section 4.5.1
+        if verdict != "ADMIT":
+            LAST_REFUSAL = (
+                f"R3 REJECT: the rows move {len(moved)} corpus record(s): "
+                + "; ".join(f"{m[0]} {m[1]}/{m[2]} -> {m[3]}/{m[4]}" for m in moved[:4]))
             return False
         write_table(new)                     # tmp -> fsync -> rename -> fsync(dir)
-    except (TableError, OSError):
+    except (TableError, OSError) as e:
         # A `KeyError` from `matches()` is NOT caught. R1 says the loader caught an
         # unknown key first, so a raise there is an alarm and never a routine path.
+        LAST_REFUSAL = f"{type(e).__name__}: {e}"[:400]
         return False
     git_commit([TABLE], "pod: admit " + code)                # R8, explicit path
     return True

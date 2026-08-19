@@ -234,11 +234,30 @@ class ProcessCount(Patching):
     """
 
     def launcher(self, holders):
+        """Stub the Agda-slot census on EVERY `facts` module object, because there are two.
+
+        **THE STUB USED TO ISOLATE ONLY HALF THE TEST.** `_load()` above builds this
+        file's `facts` under the module name `pod_facts`, while `accept.py` runs its own
+        `import facts` and gets a SECOND object for the same file, with its own
+        `_LAUNCHER` list. Patching only the first left every assertion that goes THROUGH
+        `accept` reading the live `.pod-state/registry.json` instead of the stub.
+
+        MEASURED 2026-08-19: `test_a_seconds_key_matches_a_solo_record...` passed with no
+        pod running and failed `1 != 0` with LJ-1.388 dispatched, because the real
+        registry then held one live Agda dispatch. The test was not measuring the stub it
+        set up, and it only ever said so on the day the pod actually ran a task.
+        """
         mod = types.SimpleNamespace(load=lambda: {},
                                     agda_holders=lambda reg: dict.fromkeys(holders, {}))
-        old = list(facts._LAUNCHER)
-        facts._LAUNCHER[:] = [mod]
-        self.addCleanup(lambda: facts._LAUNCHER.__setitem__(slice(None), old))
+        seen = {}
+        for m in (facts, getattr(accept, "facts_mod", None)):
+            if m is not None and hasattr(m, "_LAUNCHER"):
+                seen.setdefault(id(m), m)
+        for m in seen.values():
+            old = list(m._LAUNCHER)
+            m._LAUNCHER[:] = [mod]
+            self.addCleanup(
+                lambda m=m, old=old: m._LAUNCHER.__setitem__(slice(None), old))
 
     def test_a_solo_run_reads_one_and_not_zero(self):
         self.launcher([])

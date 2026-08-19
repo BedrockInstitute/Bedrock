@@ -363,16 +363,24 @@ def main() -> int:
     if branch is not None:
         code = compile(ast.Module(body=[branch], type_ignores=[]), "<builder>", "exec")
 
-        def run(kind):
+        def run(kind, provider=None):
             ns = {"kind": kind, "model": "claude-opus-5", "effort": "max",
-                  "PI_PROVIDER": "deepseek"}
+                  "PI_PROVIDER": "deepseek", "provider": provider}
             exec(code, ns)
             return ns["model_args"]
 
+        # THE PROVIDER IS AN ARGUMENT, NOT A CONSTANT, since 2026-08-18. `PI_PROVIDER`
+        # was a module constant reading a policy module that now lives under archive/,
+        # so it was always "deepseek" and both glm-5.3 heads dispatched to the wrong
+        # vendor. That failure is silent: pi warns, echoes the prompt, and exits done.
+        check("a pi kind takes the provider it is GIVEN",
+              run("pi", "zai")[:3], ["--", "--provider", "zai"])
+        check("a pi kind falls back to the constant only when given nothing",
+              run("pi")[:3], ["--", "--provider", "deepseek"])
         check("a claude kind emits --model, --effort and --permission-mode",
               run("claude"),
               ["--", "--model", "claude-opus-5", "--effort", "max",
-               "--permission-mode", "acceptEdits"])
+               "--permission-mode", "auto"])
         check("a claude kind never emits --provider",
               "--provider" in run("claude"), False)
         check("the codex branch is unchanged",
@@ -874,17 +882,23 @@ def main() -> int:
               row["harness"] in ("herdr-claude", "herdr-pi"), True)
         check(f"{slot}: a pi head carries no effort and a claude head carries one",
               (row["harness"] == "herdr-pi") == (row["effort"] == ""), True)
-        check(f"{slot} runs with acceptEdits, so a trust prompt cannot block it",
+        # A CLAUDE HEAD NEVER READS THIS COLUMN: `--permission-mode` is hardcoded to
+        # `auto` for the `claude` kind at `scripts/pod/launcher.py:1353`. The value is
+        # still pinned here because codex reads it as `-s` and `validate()` refuses a
+        # `read-only` brief that orders a write.
+        check(f"{slot} pins a sandbox codex can take and validate() will not refuse",
               row["sandbox"], "acceptEdits")
         check(f"{slot} names a harness the launcher accepts",
               row["harness"] in mod.HERDR_HARNESSES, True)
         check(f"{slot} names an effort the launcher's argparse accepts",
               row["effort"] in mod.LEGAL_EFFORTS, True)
     limits = heads["limits"]
-    check("the limits block holds all five keys section 6.1 names",
+    # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a
+    # hardcoded 3 to a named limit, so the number has one home and the tests read it.
+    check("the limits block holds all six keys section 6.1 names",
           sorted(limits),
           ["agda_deadline_s", "attempt_max", "exclusive_max_load1",
-           "tick_seconds", "worker_deadline_s"])
+           "parked_max", "tick_seconds", "worker_deadline_s"])
     check_true("the Agda deadline clears the widest measured acceptance run, "
                "300.81 s at [LJ-4-0] gap B3", limits["agda_deadline_s"] > 300.81)
     check("A14's WIDE tier admits four concurrent Agda writers",

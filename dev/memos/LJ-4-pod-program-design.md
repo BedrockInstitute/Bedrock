@@ -31,8 +31,10 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Fifteen amendments. Fourteen are the owner's, ruled on 2026-08-17. One is the
-orchestrator's and follows from A4.** They are part of the ruled set and this
+**Twenty amendments. Eighteen are the owner's, and one is the orchestrator's and follows
+from A4.** Fourteen were ruled on 2026-08-17, five on 2026-08-18 and one on 2026-08-19.
+A17 restores a requirement this document had lost, A18 builds a channel it never had, A19
+gives the programme an ending, and A20 keeps the two work channels apart. They are part of the ruled set and this
 document states each where it applies. **The owner ruled once more that day, on
 DD0: PUT BOTH LOST PARTS BACK.** Clause W9 carries part 3 and rules R15 and R16
 carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
@@ -104,6 +106,135 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   therefore a REAL signal rather than a hypothetical**, and rule (f) already sends
   a second instance to a reviewer. Hardening rounds do not converge on their own,
   and this is the stop line.
+- **A17. THE MAINTAINER IS RESIDENT AND OUTLIVES THE PROGRAM, ruled 2026-08-18.**
+  **This amendment restores a requirement the design LOST.** The owner's original
+  statement named a standing `project owner delegate`, later renamed the maintainer;
+  this document never carried the word, and AD2 and AD15 recorded only a batch job.
+  The owner found it by asking what happens when `pod.py` dies: the maintainer is
+  the role that repairs the loop, and it was the loop's own child, so the loop's
+  repairman died with it and a dead pod stayed dead and silent.
+
+  **THE FIX IS NOT MORE POWER FOR THE MAINTAINER.** An agent starts a process only
+  inside a tool call; the process is that call's child, its output reaches the tool
+  result and never the pane, and `pod.py run` is an infinite loop that the call's
+  own time limit ends. **A model cannot host this loop.** So liveness goes to the
+  dumbest component in the system and the model keeps only the diagnosis:
+
+  ```
+  you  ->  scripts/pod/keeper.sh  ->  pod.py  ->  maintainer   (who is alive)
+  maintainer  ->  reads the keeper's pane, edits the tree, touches the retry file
+  ```
+
+  Liveness is a straight chain and repair runs the other way, so neither is a cycle
+  and the owner is the root of both. **What changes: AD2 and AD15 below, rule (e) in
+  section 5, `cmd_run`'s exit codes, and `launch(resident=True)`.**
+
+  **THREE MEASUREMENTS SETTLED IT, all on 2026-08-18.** (1) A finished head reports
+  `agent_status: done` and a SECOND `herdr agent prompt` is accepted and answered on
+  the same `agent_session` id, so `done` is a label on a live agent and only
+  `herdr pane close` ends one. (2) Text sent to a pane running a foreground process
+  reaches THAT PROCESS'S STDIN and never executes, so the maintainer READS the
+  keeper's pane and writes in its own. (3) `pod run` gave exit 1 to a rule (d) STOP,
+  to a startup refusal and to a crash alike, and no keeper can be written against
+  that: restarting a STOP repeals rule (d). It now exits 3, 4 and otherwise.
+- **A18. THE OWNER GETS A STANDING MATHEMATICAL DIRECTION, ruled 2026-08-18.** The
+  owner asked how to correct a mathematical direction mid-flight, at the level of
+  detail rather than of milestone, and the honest answer was that no channel existed.
+  **MEASURED before the build: no line of this program reads `dev/PLAN.md`.** The only
+  path a direction had was the REFILL brief's prose asking a mathematician to read the
+  plan, and rule (g) fires only when the queue is EMPTY, so a correction took effect
+  whenever the queue happened to drain and reached no RUNNING worker at all. The
+  maintainer could not carry it either: AD3 gives every mathematical judgement to the
+  mathematician.
+
+  **THE CHANNEL IS ONE FILE, `dev/pod/direction.md`.** `preamble_for()` cats it into
+  every dispatch, behind the slot file and ahead of the brief, **for all five slots**
+  (the owner ruled all five: a reviewer who does not know the direction reviews against
+  the old one). It is deliberately NOT a guarded rule home, because a direction that
+  costs an approval round is a direction nobody writes. It carries guidance and never a
+  rule, and a direction cannot repeal a Boundary clause.
+
+  **A CHANGE RE-PLANS THE QUEUE AT ONCE.** `direction_changed()` compares a sha, reports
+  a change exactly once, and rule (g) then fires past both the empty-queue gate and the
+  refill floor. **The program deletes no queue entry**: which queued work the new
+  direction has made wrong is the mathematician's call, ruled again on 2026-08-18.
+
+  **ONE CURRENT DIRECTION, AND THE PROGRAM FILES THE OLD ONE** under
+  `archive/dev/direction/<stamp>.md`, so the live file never becomes a history that
+  every dispatch pays to read and nothing is deleted.
+
+  **A RUNNING WORKER IS NOT REACHED BY THIS FILE** and the direction file says so: that
+  worker was started with the old text, and the owner attaches to it instead.
+- **A20. THE QUEUE IS FOR NON-RESIDENT AGENTS, AND THE RESIDENT ONE HAS A BACKLOG,
+  ruled 2026-08-19.** A17 made the maintainer resident and this amendment is the
+  consequence nobody drew. `dev/pod/queue.toml` exists because a mathematician or a coder
+  does not exist until rule (f) starts one, so an entry is how you hand work to something
+  that is not there yet. **A resident head is talked to, not queued.** The mistake was
+  made in the open: four program-repair items were written into the queue on 2026-08-19
+  and removed the same hour when the owner named it. Queueing them would have sent the
+  program's own plumbing to a MATHEMATICIAN, because AD3 hands every task brief to one.
+
+  **THE CHANNEL IS `dev/pod/maintainer-backlog.md`**, which `write_batch_brief()` copies
+  into every batch brief. The program reads it and never writes it; the maintainer strikes
+  an item by editing the file in the batch that lands the fix. The owner may also just
+  attach to the pane, which A17 made possible.
+
+  **THE TEST FOR WHICH CHANNEL: does the work exist to serve the proof tree, or to serve
+  the program that serves it?** The first is a queue entry and goes to a mathematician.
+  The second is a backlog item and goes to the maintainer.
+
+- **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
+  2026-08-18.** The owner asked what happens when the milestone is reached, and the
+  measured answer was: nothing. **No part of this program counts finished work.**
+  `grep count(DONE)` over `scripts/pod/*.py` returns nothing and `grep -niE
+  "trophy|milestone|gch"` over `pod.py` returns nothing. Rule (g) asks a mathematician
+  what is missing, that agent may legally queue nothing, and an hour later the loop asks
+  again. **The unattended steady state was about 24 `claude-opus-5` dispatches at `max`
+  per day, indefinitely**, from `tick_seconds = 30` and `REFILL_MIN_HOURS = 1.0`.
+
+  **THE LOOP DID STOP ON SUCCESS, BUT BY ACCIDENT AND WITHOUT DIRECTION.** Landing
+  `L ⊨ GCH` means adding an `open import` to `src/Landmarks.lagda.md`, which moves the
+  guarded spec surface, which fails acceptance with `error_class = "spec_surface"`, which
+  matches the `sys-spec-surface` row at `dev/pod/table.toml:29-40` whose action is
+  `stop_loop`. That row cannot tell a trophy landing from a trophy being deleted: both
+  give the same class and the same action, so the owner is told the same sentence for
+  success and for sabotage. It also fails to fire at all if the prover never wires the
+  theorem into the trophy case, and no slot file mentions the spec surface.
+
+  **THE RULING: keep the refill on an empty queue, and give the mathematician a THIRD
+  outcome.** It writes `dev/pod/stop-request.toml`; rule (d) reads it BEFORE the parked
+  count, stops with `why: "declared:<claim>"` rather than `"3 parked"`, pushes the owner
+  with the reason and the evidence, and retires the file so it fires once.
+
+  **EVERY FIELD IS REQUIRED AND THE EVIDENCE MUST CARRY A `file:line`.** A model that can
+  halt the programme by writing four words is a model whose worst hour costs a day, and
+  the Boundary already rules that a report which cannot be checked can only be believed.
+  A refused declaration is retired to `.toml.refused` and recorded as a `stop_request`
+  line, because a declaration the program ignored in silence is the worst of the three
+  outcomes: the mathematician believes the loop stopped and it did not.
+
+  **AND THE TABLE-ROW PATH IS CLOSED TO MODELS, ruled 2026-08-19.** `stop_loop` is also
+  an ACTION, and two model paths reached it: a maintainer proposal through
+  `harvest_batch()`, and a mathematician's `[[branch]]` block through `admit_rows()`,
+  which stamps `added_by = "mathematician"` (`scripts/pod/table.py:649`). **The guard
+  that was supposed to cover that is inert**: `dev/pod/replay-corpus.jsonl` is 0 bytes and
+  `replay.py --count` prints「EMPTY. replay() returns ADMIT for every table and R3 guards
+  nothing until the first record lands.」Seeding would not have closed it either, because
+  R3 rejects a table that MOVES a frozen record and a `stop_loop` row keyed on a class no
+  record carries moves nothing. So `check_row()` now REFUSES a `stop_loop` row whose
+  `added_by` is not `owner`, and names the evidenced channel in the refusal. It costs
+  nothing today: both live `stop_loop` rows carry `added_by = "owner"`.
+
+  **THE EMPTY CORPUS NOW SAYS WHAT ITS ZERO MEANS.** Every day the digest printed a bare
+  zero for the corpus count, and nothing said that zero disarms R3 entirely. `scripts/pod/digest.py` now
+  prints the consequence and names `replay.py --seed` as the way out, whose second half
+  (one record per RUNNER class) is still unbuilt.
+
+  **STILL OPEN, and it is not this amendment's work.** No gate returns green exactly when
+  both trophies are proved, so the declaration rests on a model's reading of the tree. A
+  witness-keyed gate cannot be written today because the route is a CANDIDATE until
+  `[LJ-2.5]`, and a gate keyed to identifiers whose route is not ruled would have to be
+  rewritten with the route. Gap M20.
 
 **THREE MORE ON THE MEMORY DISCIPLINE, ruled 2026-08-17 after an audit of this
 document against `dev/LESSONS.md` C-12 found three carry-over defects.** C-12 is
@@ -182,8 +313,8 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 
 | AD# | The decision | In | AD# | The decision | In |
 |---|---|---|---|---|---|
-| AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked | 6.7, 8.1 |
-| AD2 | A maintainer model writes new table rows. It does not run the loop | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
+| AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked. **A17 REPLACES THE SPAWN WITH A PROMPT: the trigger FEEDS a resident session** | 6.7, 8.1 |
+| AD2 | A maintainer model writes new table rows. It does not run the loop. **A17 ADDS: it is RESIDENT, one long-lived session, and it owns the loop's health** | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
 | AD3 | All judgement belongs to the mathematician | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
 | AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[LJ-4.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
 | AD5 | The goal is unchanged: both trophies | 1 | AD19 | The table is tracked. Runtime state is not. Every transition logs | 5.3 |
@@ -796,7 +927,7 @@ record and the transition log line of section 5.3.1 carry the SAME shape, which
 is why the replay can read a log line with no translation.
 
 ```json
-{"id":"c-0412","task":"LJ-1.383","provenance":"probe-rerun",
+{"id":"c-0412","task":"LJ-1.383","provenance":"live",
  "source":"agents/tasks/LJ-1-383/Probe383.agda","recorded":"2026-08-18",
  "facts":{"exit_code":0,"error_class":null,"obligations_delta":0,
           "changed_files":["agents/tasks/LJ-1-383/Probe383.agda"],
@@ -811,7 +942,7 @@ is why the replay can read a log line with no translation.
   shape. `concurrency` is the one provenance key `matches()` reads, as a guard.
 - A record is never edited and never deleted, which is clause W4 again. An
   obsolete record gets `"retired": true` and stays.
-- `provenance` is `live`, `probe-rerun` or `report`. A `report` record must carry
+- `provenance` is `live` or `report`; `probe-rerun` was retired 2026-08-19. A `report` record must carry
   `source` as `file:line`, and it writes `"concurrency": null` unless the report
   states the process count. No fact is ever guessed.
 
@@ -858,15 +989,60 @@ Three streams build the corpus instead.
 1. **`live`.** `emit()` appends every routed record to the corpus file, per
    section 4.5.2. This IS the corpus in steady state. The other two streams exist
    only so the first table row has something to regress against.
-2. **`probe-rerun`, the seed, restricted to the LIVE route.** 293 live task
-   directories hold 438 `.agda` and `.lagda.md` files, of which 426 are tracked.
-   The archive holds 221 more and **they are excluded**: their imports point at
-   `archive/src/`, which `bedrock.agda-lib` does not put on the include path, so
-   every one buckets to one scope error. The POD runs each live file under R13's
-   caliber and a 300 s deadline. Fact 3 is 0 for every one, a failing record is a
-   valid fixture, and the price is a projection that gap m1's probe settles.
-   **A5 makes one thing explicit: fact 1 must be the RUNNER's code**, so the seed
-   runs conjunct 1 per probe and conjuncts 2 to 6 ONCE.
+2. ~~**`probe-rerun`, the seed, restricted to the LIVE route.**~~ **RETIRED by the
+   owner on 2026-08-19, and the reasoning below is kept as the record of why it was
+   ever written.** It re-ran the 426 tracked live probes and wrote one record each,
+   excluding the 221 archived ones because their imports point at `archive/src/`,
+   "so every one buckets to one scope error" and the corpus "would learn one class
+   221 times".
+
+   **THE OWNER'S RULING: a probe is one-shot, and afterwards it is a STATIC
+   REFERENCE.** To use an old probe you write a NEW probe informed by it, or you
+   turn it into live code. Re-running one to build a regression fixture is a
+   category error. **`AGENTS.md` had said the same thing to every agent all along**:
+   "`src/` is forbidden for a probe. Nothing typechecks it once your task closes, so
+   run it while you can." The seed was the only thing in the project that ever
+   re-ran one, so the Boundary and this stream contradicted each other and the
+   Boundary is right.
+
+   **AND IT WAS BROKEN, WHICH IS HOW THE QUESTION AROSE.** `seed()` never passed
+   `include=` to `run_agda()`, so on 2026-08-19 the first five records all read
+   `exit 42 / other / ~0 s`: every probe failed at MODULE RESOLUTION and never
+   reached typechecking. That is the same failure this paragraph used to disqualify
+   the archived 221, reproduced on the live set. The five records were removed and
+   the run was stopped.
+
+   **AND IT WOULD HAVE LOOKED FINE, WHICH IS THE WARNING.** MEASURED 2026-08-19 over
+   28 live probes with a correct include path: 21 still typecheck GREEN, 4 give
+   `[UnequalTerms]` and 3 give `[FileNotFound]`. So a repaired seed would have
+   produced a plausible spread of classes and read as a working corpus. **A wrong
+   source with a healthy-looking distribution is harder to catch than a broken one**,
+   and this one was caught only because the include defect made every record
+   identical.
+
+   **AND IT COULD NEVER HAVE WORKED, WHICH IS THE FINDING WORTH KEEPING.** A
+   `probe-rerun` record has a fixed shape: `obligations_delta` 0, `changed_files`
+   empty, no `lines`. Enumerated against the live ten-row table, such a record can
+   match the two heap-wall rows and nothing else, and only if a probe exhausts 8 GB.
+   Every other seed record is NO MATCH, and `replay()` skips a NO MATCH record
+   outright (`scripts/pod/replay.py:288-289`, "was NO MATCH. It MAY become a
+   match."), so it can never turn ADMIT into REJECT. **426 records, of which the
+   expected number that could ever arm R3 is about zero.** This holds whatever the
+   include path is and whatever fraction of probes are green.
+
+   **THE LESSON IS NOT ABOUT PROBES.** This section is internally consistent, its
+   four exclusion measurements are real, and its implementation matches its prose.
+   It is wrong anyway, because nobody asked the one question that would have caught
+   it: **can the thing this produces actually do the job it is produced for?** Three
+   consistency audits ran over this document and none asked it. A design can be
+   coherent, honest and complete and still be inert.
+
+   **WHAT THE DESIGN GOT RIGHT AND WHAT IT GOT WRONG.** The reasoning that put the
+   seed here was an argument from exhaustion, and that half stands: the dispatch
+   registry, `returns.log`, the codex transcripts and the pi session store were each
+   measured and none held a usable Agda exit code, so probes looked like the last
+   remaining source of one. What it got wrong was treating a one-shot artefact as a
+   re-runnable fixture, which no measurement in this section tested.
 3. **`report`.** 370 report files state `exit 0` and 101 state a non-zero exit,
    out of 673 reports. These are free-shape prose, so no parser is proposed and
    the maintainer copies a record by hand. **A report's exit code is Agda's and
@@ -875,9 +1051,16 @@ Three streams build the corpus instead.
 
 **Corpus balance.** The digest prints the record count per error class, and the
 replay refuses a row whose `when` block names a class the corpus does not hold.
-**The seed produces conjunct-1 classes only**, so day 4 adds one MEASURED record
-per runner class by making each of conjuncts 2 to 6 fail on purpose and running
-the acceptance runner over it. That doubles as the runner's own self-test.
+**With the seed retired the corpus starts empty and fills from `live` alone**, so
+`check_balance()` is inert until the first real task returns, and the digest says
+so in words rather than printing a bare zero.
+
+**THE ONE THING STILL OWED, and it needs no probe:** one MEASURED record per RUNNER
+class, made by failing each of conjuncts 2 to 6 on purpose and running the
+acceptance runner over it. Five records, for `obligations_up`, `closure_open`,
+`unbound_hyp`, `spec_surface` and `lint` (`scripts/pod/accept.py:72-73`). That
+doubles as the runner's own self-test, and it is the only part of this section that
+survives the retirement unchanged.
 
 #### 4.5.4 A return the program cannot measure
 
@@ -1254,7 +1437,8 @@ def pod_tick():                             # one pass. pod run sleeps, not this
     harvest_batch()                       # R15 then the replay, section 6.7
     prune_logs(30)                        # the retention of section 4.0
     if hours_since_last_batch() >= 12 or count(st, PARKED) >= 3:
-        spawn_maintainer(); write_digest()          # sections 6.7 and 8.1
+        ensure_maintainer()                        # A17. EVERY tick, idempotent
+        prompt_maintainer(); write_digest()        # the trigger FEEDS, not spawns          # sections 6.7 and 8.1
 
     # (f) ADMIT AND SPAWN. This is the ONLY writer of a task row, section 4.1.
     # The stop refuses THIS rule and nothing else, section 5.5. Rules (a1) to (e)
@@ -3433,7 +3617,7 @@ throwaway pane per ID.
 
 | # | Gap | What would settle it |
 |---|---|---|
-| m1 | The probe-rerun seed price is a projection from a comparable and not a measurement of the 438 live files. `dev/LESSONS.md` P-l forbids that transfer | The day 1 seed probe: 20 random LIVE probes, 300 s deadline, one process |
+| m1 | **CLOSED BY RETIREMENT, 2026-08-19.** It asked for the probe-rerun seed's price. The seed is retired (section 4.5.3, owner's ruling), so the price is not owed. The probe it wanted was never run, and running it would have measured a seed that never resolved a module | none |
 | m2 | AD7's second number has two calibers. Section 8.2 picks the ledger, but that is the orchestrator's pick | An owner ruling on the caliber |
 | m4 | AD22 stops at the repository boundary. `bedrock.agda-lib` reads `depend: cubical` with no version, and `src/Base/Prelude.lagda.md` is pure re-export | Record the cubical version in `dev/pod/heads.toml`, which the loader of section 6.1 already reads. `dev/vendors.toml` archives at cutover step 5 under row 21b and the POD never reads it |
 | m6 | `save()` at `dispatch.py:316-321` has no `os.fsync`. The rename is atomic against a process crash and not durable against a machine crash | Day 5 adds both calls. Cost: about 355 per median day |

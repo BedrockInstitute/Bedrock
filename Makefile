@@ -111,13 +111,12 @@ closure:
 specsurface:
 	$(PY) scripts/pod/check-spec-surface.py --check
 
-# AGENTS.md is the ONE hand-written source of the shared half of every
-# dev/pod/instructions/<slot>.md, and instructions.py generates the rest. Before
-# 2026-08-18 nothing ran `--check`, so the generator fired only when a person
-# remembered to type it and five slot files could carry a Boundary AGENTS.md no
-# longer held. This target is the gate the docstring at
-# scripts/pod/instructions.py:32 always named. It reads six files, starts no
-# Agda, and runs in well under a second.
+# AGENTS.md is the ONE hand-written source of the shared Boundary, and there is no
+# generator any more. This comment used to describe an `instructions` target that ran
+# `instructions.py --check` against five slot files carrying a generated half. Those
+# files stopped carrying one: the program `cat`s AGENTS.md, then the slot file, then
+# the brief, so nothing is copied and nothing can go stale. The generator is at
+# archive/scripts/pod/instructions.py and no target calls it. Corrected 2026-08-18.
 
 fences:
 	$(PY) scripts/gate/check-fences.py --check
@@ -183,6 +182,7 @@ test:
 	$(PY) scripts/tests/test_pod_table.py
 	$(PY) scripts/tests/test_pod_loop.py
 	$(PY) scripts/tests/test_pod_digest.py
+	$(PY) scripts/tests/test_pod_keeper.py
 	$(PY) scripts/tests/test_territory.py
 
 # THE FETCHED PRIMARY SOURCES SURVIVE `clean`, added 2026-08-10 at the

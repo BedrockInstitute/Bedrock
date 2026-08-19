@@ -348,8 +348,41 @@ def changed_files_scoped(code, brief, root=None):
     home = "agents/tasks/" + agents_tree.normalise(code) + "/"
     mine, foreign = [], []
     for p in _status_paths(root):
+        if program_task_write(p, code):
+            continue                       # nobody's work. See the function below
         (mine if (p in granted or p.startswith(home)) else foreign).append(p)
     return mine, foreign
+
+
+def program_task_write(p, code):
+    """Is `p` a file THIS PROGRAM writes inside a task home, rather than a worker's work?
+
+    **FACT 4 COUNTED THE PROGRAM'S OWN WRITES AS THE WORKER'S, and three things followed.**
+    `stamp_pod_marker()` writes `agents/tasks/<CODE>/.pod` BEFORE the dispatch,
+    `inject_survey()` rewrites the brief in place, and `review_brief()` writes
+    `review-<PRED>.md`. All three sit under `agents/tasks/<CODE>/`, so the loop above put
+    them in `mine` and `ch` was never empty.
+
+    The consequences were mechanical. R7's dead-worker guard (`if not ch`) was unreachable
+    for every task this program creates. Every `changed_files_count_*` row was off by one
+    or two against its author's intent: MEASURED 2026-08-19, LJ-1.388 returned fact 4
+    `['.pod', 'LJ-1.388.md', 'Probe388.agda', 'lj-1.388-report.md']`, so its own row
+    `ran-long-and-changed-little` keying on `changed_files_count_max = 1` could never fire.
+    And `commit_task()` committed the marker as the worker's work.
+
+    **THE CURE WAS ALREADY WRITTEN ONCE, IN THE OTHER READER.** `maintainer_scope_ok()`
+    in `scripts/pod/pod.py` filters the same paths out of `git status` and its docstring
+    diagnoses this defect in words. The repair reached that reader and not this one, which
+    is the shape of backlog items 1, 2 and 7.
+    """
+    name = p.rsplit("/", 1)[-1]
+    return (p.endswith("/.pod")
+            or name == str(code) + ".md"                    # the brief, rewritten at dispatch
+            or (name.startswith("review-") and name.endswith(".md"))
+            # `run_acceptance()` writes `runs/accept-<N>.out` AFTER this snapshot, so it
+            # is invisible on attempt 1 and counted as the worker's on every attempt
+            # after it. MEASURED 2026-08-19 on LJ-1.388's second snapshot.
+            or "/runs/accept-" in p)
 
 
 def changed_files(t):

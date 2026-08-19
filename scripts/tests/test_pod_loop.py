@@ -44,6 +44,7 @@ import sys
 import tempfile
 import textwrap
 import time
+import types
 import pathlib
 import unittest
 from pathlib import Path
@@ -70,6 +71,14 @@ witness_mod = _load("witness", "scripts/pod/witness.py")
 heads_mod = _load("heads", "scripts/pod/heads.py")
 accept_mod = _load("accept", "scripts/pod/accept.py")
 pod = _load("pod", "scripts/pod/pod.py")
+
+#: THE UNPATCHED FUNCTION, captured at import. `LoopCase.setUp` replaces
+#: `pod.ensure_maintainer` with a counter, so a test that reaches for
+#: `pod.ensure_maintainer` or `pod.__dict__[...]` gets THE COUNTER and passes
+#: without ever running the code it names. That mistake was made and caught in
+#: the same hour on 2026-08-18.
+REAL_ENSURE_MAINTAINER = pod.ensure_maintainer
+REAL_PROMPT_MAINTAINER = pod.prompt_maintainer
 ledger = _load("ledger", "scripts/measure/ledger.py")
 
 #: The real functions, captured BEFORE any test replaces them. A test that wants the real
@@ -222,7 +231,8 @@ class LoopCase(unittest.TestCase):
         self.build_tree()
         self.use_tree()
         self.calls = {"launch": [], "commit": [], "notify": [], "digest": 0,
-                      "maintainer": 0, "acceptance": [], "watchdog": 0, "refill": 0}
+                      "maintainer": 0, "ensure": 0, "acceptance": [], "watchdog": 0,
+                      "refill": 0}
         self.patch_side_effects()
 
     # ---------------------------------------------------------------- the fixture
@@ -313,7 +323,15 @@ class LoopCase(unittest.TestCase):
         self.patch(pod, "write_digest",
                    lambda st, root=None: self.calls.__setitem__(
                        "digest", self.calls["digest"] + 1))
-        self.patch(pod, "spawn_maintainer",
+        # TWO COUNTERS SINCE 2026-08-18, because rule (e) now does two different things
+        # at two different cadences. `ensure_maintainer` runs EVERY tick and is
+        # idempotent: the maintainer is RESIDENT and outlives this program, so its
+        # liveness is not on the batch trigger. `prompt_maintainer` is what the trigger
+        # fires, and it FEEDS the live session instead of launching a new one.
+        self.patch(pod, "ensure_maintainer",
+                   lambda st, root=None: self.calls.__setitem__(
+                       "ensure", self.calls["ensure"] + 1))
+        self.patch(pod, "prompt_maintainer",
                    lambda st, root=None: self.calls.__setitem__(
                        "maintainer", self.calls["maintainer"] + 1))
         self.patch(pod, "inject_survey", lambda brief, root=None: False)
@@ -831,7 +849,15 @@ class Actions(LoopCase):
 
 
 class RuleD(LoopCase):
-    """AD14. Three parked tasks stop the loop, and the stop never touches a worker."""
+    """AD14. `parked_max` parked tasks stop the loop, and the stop never touches a worker.
+
+    **THE THRESHOLD IS READ AND NEVER SPELLED.** These tests carried the literal 3, so
+    raising `[limits].parked_max` to 7 on 2026-08-19 reddened five of them for the one
+    reason that must never redden a test, which is that the configuration changed exactly
+    as it was asked to. The limit now comes from the same place the rule reads it.
+    """
+
+    LIMIT = pod._limits()["parked_max"]
 
     def park(self, st, n):
         for i in range(n):
@@ -840,38 +866,39 @@ class RuleD(LoopCase):
                                       park_reason="no-match", parked_at=time.time())
         return st
 
-    def test_two_parked_tasks_do_not_stop_the_loop(self):
-        st = self.park(pod.State(), 2)
+    def test_one_below_the_limit_does_not_stop_the_loop(self):
+        st = self.park(pod.State(), self.LIMIT - 1)
         self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
         self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
 
-    def test_three_parked_tasks_stop_the_loop_and_push_to_the_owner(self):
-        st = self.park(pod.State(), 3)
+    def test_the_limit_stops_the_loop_and_pushes_to_the_owner(self):
+        st = self.park(pod.State(), self.LIMIT)
         self.assertIs(pod._rule_d(st, self.tmp), pod.STOP)
         self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
-        self.assertEqual(self.calls["notify"], ["3 parked"])
+        # THE SENTENCE COUNTS THE PARKS, it does not recite the limit.
+        self.assertEqual(self.calls["notify"], [f"{self.LIMIT} parked"])
         line = self.lines()[-1]
         self.assertEqual((line["task"], line["to"], line["why"]),
-                         ("", "STOPPED", "3 parked"))
+                         ("", "STOPPED", f"{self.LIMIT} parked"))
 
     def test_the_stop_writes_ONE_loop_line_and_not_one_a_tick(self):
-        st = self.park(pod.State(), 3)
+        st = self.park(pod.State(), self.LIMIT)
         pod._rule_d(st, self.tmp)
         pod._rule_d(st, self.tmp)
         stops = [x for x in self.lines() if x["to"] == "STOPPED"]
         self.assertEqual(len(stops), 1)
 
-    def test_the_park_counter_reaching_three_stops_the_WHOLE_tick(self):
-        """The end-to-end path: three returns that match nothing park, and the third
+    def test_the_park_counter_reaching_the_limit_stops_the_WHOLE_tick(self):
+        """The end-to-end path: `parked_max` returns that match nothing park, and the last
         stops the loop. The fixture CAN fail: with a matching row nothing parks."""
         self.set_acceptance(record())
         st = pod.State()
-        for i in range(3):
+        for i in range(self.LIMIT):
             code = f"LJ-1.{500 + i}"
             st.tasks[code] = pod.Task(code, status=pod.RETURNED,
                                       brief=f"agents/tasks/{DIR}/{CODE}.md")
         self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
-        self.assertEqual(st.count(pod.PARKED), 3)
+        self.assertEqual(st.count(pod.PARKED), self.LIMIT)
         self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
 
     def test_the_same_three_returns_park_NOTHING_when_a_row_matches(self):
@@ -911,8 +938,264 @@ class RuleD(LoopCase):
 # ---------------------------------------------------------------- rule (e) MAINTAINER
 
 
+class DeclaredStop(LoopCase):
+    """A mathematician calling a halt, owner's ruling 2026-08-18.
+
+    **THE RULING IS THAT A DECLARED STOP AND AN EMPTY QUEUE ARE DIFFERENT STATES.** Rule
+    (g) asks a mathematician what is missing and it had two outcomes, both of which the
+    program read as「nothing to dispatch」: so the loop refilled every hour for ever, and
+    nothing in it counted finished work.
+    """
+
+    def _write(self, text):
+        d = self.tmp / "dev" / "pod"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "stop-request.toml").write_text(text, encoding="utf-8")
+        return d / "stop-request.toml"
+
+    GOOD = ('[stop]\nclaim = "milestone"\nreason = "Both trophies are in the case."\n'
+            'evidence = ["src/Landmarks.lagda.md:76", "src/Landmarks.lagda.md:88"]\n')
+
+    def test_a_declared_stop_STOPS_the_loop_with_its_own_reason(self):
+        self._write(self.GOOD)
+        st = pod.State()
+        self.assertIs(pod._rule_d(st, self.tmp), pod.STOP)
+        line = json.loads((self.tmp / "dev" / "pod" / "transitions"
+                           ).glob("*.jsonl").__next__().read_text().splitlines()[-1])
+        self.assertEqual(line.get("why"), "declared:milestone",
+                         "the declared stop must not share a reason with the parked stop")
+        self.assertIn("Landmarks", " ".join(line.get("declared_evidence") or []))
+
+    def test_it_is_read_ONCE_so_a_stale_file_cannot_stop_tomorrow(self):
+        p = self._write(self.GOOD)
+        pod._rule_d(pod.State(), self.tmp)
+        self.assertFalse(p.is_file(), "the honoured request was not retired")
+        self.assertTrue(p.with_suffix(".toml.stopped").is_file())
+
+    def test_a_stop_with_NO_CHECKABLE_EVIDENCE_is_refused_and_never_silent(self):
+        """A model that can halt the programme by writing four words is a model whose
+        worst hour costs a day. And a refusal nobody records is worse than no refusal:
+        the mathematician believes it stopped the loop and it did not."""
+        for bad, what in (
+            ('[stop]\nclaim = "milestone"\nreason = "done"\nevidence = ["it works"]\n',
+             "no file:line"),
+            ('[stop]\nreason = "done"\nevidence = ["a.md:1"]\n', "no claim"),
+            ('[stop]\nclaim = "m"\nevidence = ["a.md:1"]\n', "no reason"),
+            ('[stop]\nclaim = "m"\nreason = "d"\n', "no evidence"),
+            ('not toml at all\n', "unparseable"),
+        ):
+            with self.subTest(what=what):
+                p = self._write(bad)
+                st = pod.State()
+                self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE,
+                              f"an unevidenced stop ({what}) halted the loop")
+                self.assertFalse(p.is_file())
+                self.assertTrue(p.with_suffix(".toml.refused").is_file(),
+                                f"the refusal of ({what}) left no trace")
+                log = (self.tmp / "dev" / "pod" / "transitions").glob("*.jsonl")
+                text = "".join(f.read_text() for f in log)
+                self.assertIn("stop_request", text, "the refusal was silent")
+                p.with_suffix(".toml.refused").unlink()
+
+    def test_NO_request_leaves_rule_d_exactly_as_it_was(self):
+        st = pod.State()
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        for i in range(pod._limits()["parked_max"]):     # the limit, never a literal
+            st.tasks[f"LJ-1.{i}"] = pod.Task(f"LJ-1.{i}", status=pod.PARKED)
+        self.assertIs(pod._rule_d(st, self.tmp), pod.STOP, "the parked stop broke")
+
+
+class StateSalvage(unittest.TestCase):
+    """A state file that something outside this program renamed away.
+
+    **MEASURED 2026-08-18.** `.pod-state/` held `state [conflicted].json`,
+    `state [conflicted 2].json` and `state [conflicted 3].json` at seq 3, 4 and 5, and no
+    `state.json` at all. 27 such files stand in this tree, the oldest from 2026-07-27, in
+    `_build/` (12), `.claude/` (11), `.pod-state/` (3) and `agents/` (1). No tracked
+    source has ever been hit. `save_state()` writes a temporary file and renames it over
+    the target, which is the correct atomic write and the exact shape a naive sync client
+    reads as a two-sided change.
+    """
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.tmp = Path(self.dir.name)
+        self.addCleanup(self.dir.cleanup)
+
+    def _copy(self, name, seq):
+        (self.tmp / name).write_text(
+            json.dumps({"version": 1, "seq": seq, "stopped": False, "tasks": {}}),
+            encoding="utf-8")
+        return self.tmp / name
+
+    def test_the_NEWEST_readable_copy_is_taken_and_restored_in_place(self):
+        import time as _t
+        for i, name in enumerate(("state [conflicted].json",
+                                  "state [conflicted 2].json",
+                                  "state [conflicted 3].json")):
+            q = self._copy(name, 3 + i)
+            os.utime(q, (1000 + i, 1000 + i))
+        st = pod.load_state(self.tmp / "state.json")
+        self.assertEqual(st.seq, 5, "the salvage took a stale copy")
+        self.assertTrue((self.tmp / "state.json").is_file(),
+                        "the salvage must put the file back, or the next tick salvages "
+                        "again and the loop never has a state file of its own")
+
+    def test_both_spellings_are_matched_because_both_are_in_this_tree(self):
+        q = self._copy("state (conflicted).json", 7)
+        os.utime(q, (1000, 1000))
+        self.assertEqual(pod.load_state(self.tmp / "state.json").seq, 7)
+
+    def test_an_unreadable_copy_is_skipped_for_the_next_one(self):
+        old = self._copy("state [conflicted].json", 2)
+        os.utime(old, (1000, 1000))
+        bad = self.tmp / "state [conflicted 2].json"
+        bad.write_text("{ this is not json", encoding="utf-8")
+        os.utime(bad, (2000, 2000))
+        self.assertEqual(pod.load_state(self.tmp / "state.json").seq, 2)
+
+    def test_with_no_copy_at_all_it_is_still_a_blank_state_and_never_a_raise(self):
+        self.assertEqual(pod.load_state(self.tmp / "state.json").seq, 0)
+
+    def test_an_unrelated_neighbour_is_never_taken(self):
+        """`conflict_copies` must not sweep up a file that merely sits beside it."""
+        (self.tmp / "registry.json").write_text('{"seq": 99}', encoding="utf-8")
+        (self.tmp / "state-backup.json").write_text('{"seq": 98}', encoding="utf-8")
+        self.assertEqual(pod.conflict_copies(self.tmp / "state.json"), [])
+
+
+class Direction(LoopCase):
+    """`dev/pod/direction.md`: the owner's standing mathematical direction, ruled
+    2026-08-18.
+
+    **THE GAP IT FILLS WAS MEASURED FIRST.** No line of the program read `dev/PLAN.md`,
+    so a mid-flight correction had no mechanical path at all: the REFILL brief's prose
+    asked a mathematician to read the plan, and rule (g) fires only on an empty queue.
+    """
+
+    def _write(self, text):
+        d = self.tmp / "dev" / "pod"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "direction.md").write_text(text, encoding="utf-8")
+
+    def test_a_change_is_reported_ONCE_so_a_rule_acting_on_it_cannot_loop(self):
+        self._write("aim at the bridge first")
+        self.assertTrue(pod.direction_changed(None, self.tmp))
+        self.assertFalse(pod.direction_changed(None, self.tmp))
+        self._write("aim at GCH first")
+        self.assertTrue(pod.direction_changed(None, self.tmp))
+        self.assertFalse(pod.direction_changed(None, self.tmp))
+
+    def test_the_outgoing_direction_is_ARCHIVED_and_never_deleted(self):
+        """Owner's ruling: keep one current direction and archive the old."""
+        self._write("first direction")
+        pod.direction_changed(None, self.tmp)
+        self._write("second direction")
+        pod.direction_changed(None, self.tmp)
+        arc = self.tmp / "archive" / "dev" / "direction"
+        bodies = [f.read_text(encoding="utf-8") for f in arc.glob("*.md")]
+        self.assertEqual(bodies, ["first direction"],
+                         "the superseded direction must survive under archive/")
+        self.assertEqual((self.tmp / "dev" / "pod" / "direction.md").read_text(),
+                         "second direction", "the live file keeps ONE direction")
+
+    def test_plan_mode_reports_a_change_without_CONSUMING_it(self):
+        """`--plan` that swallowed the change would make the real tick miss it."""
+        self._write("a direction")
+        self.assertTrue(pod.direction_changed(None, self.tmp, record=False))
+        self.assertTrue(pod.direction_changed(None, self.tmp, record=False))
+        self.assertTrue(pod.direction_changed(None, self.tmp))   # still there for real
+
+    def test_every_slot_is_handed_the_direction(self):
+        """Owner's ruling: all five. A reviewer that does not know the direction
+        reviews against the old one."""
+        (self.tmp / "AGENTS.md").write_text("boundary", encoding="utf-8")
+        self._write("d")
+        inst = self.tmp / "dev" / "pod" / "instructions"
+        inst.mkdir(parents=True, exist_ok=True)
+        for slot in ("mathematician", "mathematician_adversarial", "coder",
+                     "coder_adversarial", "maintainer"):
+            (inst / f"{slot}.md").write_text("clauses", encoding="utf-8")
+            names = [f.name for f in pod.preamble_for(slot, self.tmp)]
+            self.assertEqual(names, ["AGENTS.md", f"{slot}.md", "direction.md"],
+                             f"{slot} was dispatched without the direction")
+
+
 class RuleE(LoopCase):
-    """AD15. The trigger is mechanical: 12 hours, or three parked tasks."""
+    """AD15. The trigger is mechanical: 12 hours, or three parked tasks.
+
+    **THE TRIGGER GATES THE BATCH AND NOT THE MAINTAINER, since 2026-08-18.** The owner
+    ruled the master order wrong: the maintainer is the role that repairs `pod.py`, so
+    it must outlive `pod.py`, and its liveness cannot hang off a twelve-hour batch clock.
+    Rule (e) now ensures it EVERY tick, idempotently, and the trigger only feeds it.
+    """
+
+    def test_the_maintainer_is_ensured_every_tick_whatever_the_trigger_says(self):
+        """The residency ruling in one assertion. A batch line one minute old holds the
+        BATCH, and the maintainer's own liveness is checked all the same."""
+        st = pod.State()
+        pod.emit_event(st, "batch", result="admit", root=self.tmp)
+        for _ in range(3):
+            pod._rule_e(st, self.tmp)
+        self.assertEqual(self.calls["ensure"], 3, "residency is not on the batch clock")
+        self.assertEqual(self.calls["maintainer"], 0, "the batch trigger was held")
+
+    def test_the_ensure_is_idempotent_by_construction_not_by_a_refusal(self):
+        """**THE DEFECT THIS REPLACES GOT WORSE WITH TIME.** `spawn_maintainer()` leaned
+        on the launcher's「task already running」refusal, which returned None and wrote NO
+        batch line, so `hours_since_last_batch()` kept reporting a stale age and the
+        trigger re-fired every `tick_seconds`, invisibly. `ensure_maintainer()` asks
+        whether the agent is there and returns without launching when it is, so there is
+        no refusal path for a loop to form on."""
+        seen = []
+        self.patch(pod, "maintainer_alive", lambda root=None: True)
+        self.patch(pod, "write_batch_brief", lambda st, root=None: seen.append(1))
+        st = pod.State()
+        for _ in range(5):
+            REAL_ENSURE_MAINTAINER(st, self.tmp)   # the REAL one, not setUp's counter
+        self.assertEqual(seen, [], "a live maintainer must cost nothing at all")
+
+        # AND IT MUST STILL LAUNCH WHEN THE AGENT IS GONE, or「costs nothing」would be
+        # satisfied by a function that does nothing at all.
+        self.patch(pod, "maintainer_alive", lambda root=None: False)
+        REAL_ENSURE_MAINTAINER(st, self.tmp)
+        self.assertEqual(seen, [1], "a dead maintainer must be started again")
+
+    def test_a_prompt_STAMPS_the_clock_so_the_next_tick_does_not_prompt_again(self):
+        """**THE DEFECT THIS PINS IS THE OLD ONE REBORN ON A NEW PATH.** The spawn era's
+        loop was hidden by the launcher's「task already running」refusal, which cost one
+        wasted launch per tick. A PROMPT HAS NO REFUSAL: `herdr agent prompt` always
+        succeeds and queues, so an unstamped clock would hand the resident maintainer a
+        duplicate batch every `tick_seconds`, and C-61 says each one is read in turn.
+
+        `hours_since_last_batch()` counts `batch` lines, and until 2026-08-18 only
+        `harvest_batch()` wrote one, which happens when the maintainer RETURNS.
+        """
+        prompts = []
+        self.patch(pod, "maintainer_alive", lambda root=None: True)
+        self.patch(pod, "write_batch_brief",
+                   lambda st, root=None: self.tmp / "agents" / "tasks" / "b.md")
+
+        class _Mod:
+            HARNESS = ""
+
+            @staticmethod
+            def herdr_name(t):
+                return "pod-batch"
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                prompts.append(name)
+                return True
+
+        self.patch(facts_mod, "launcher", lambda: _Mod)
+        st = pod.State()
+        self.assertGreaterEqual(pod.hours_since_last_batch(self.tmp), 12)
+        REAL_PROMPT_MAINTAINER(st, self.tmp)   # the REAL one, not setUp's counter
+        self.assertEqual(len(prompts), 1)
+        self.assertLess(pod.hours_since_last_batch(self.tmp), 1,
+                        "the prompt did not stamp the clock; rule (e) will re-fire "
+                        "on the very next tick and flood the resident maintainer")
 
     def test_the_first_batch_fires_because_no_batch_line_exists_yet(self):
         st = pod.State()
@@ -1841,14 +2124,47 @@ class RuleG(LoopCase):
             HARNESS = ""
 
             @staticmethod
+            # `**kw` ON PURPOSE, 2026-08-18. This stub pinned the launcher's exact
+            # signature, so adding a `provider=` argument raised a TypeError inside
+            # `pod.launch()`, whose broad `except Exception` turns any failure into
+            #「nothing launched」. Six RuleG tests then failed with `0 != 1` and named
+            # the floor, not the signature. A stub that pins a signature it does not
+            # assert on buys nothing and costs a wrong diagnosis.
             def launch(task, brief, agda, sandbox, model, effort="", preamble=None,
-                       tier="wide"):
+                       tier="wide", **kw):
                 launched.append((task, str(brief), agda, model, effort))
                 return 0
         self.patch(facts_mod, "launcher", lambda: FakeLauncher)
 
     def refill_lines(self):
         return [x for x in self.lines() if x.get("event") == "refill"]
+
+    def test_a_NEW_DIRECTION_re_plans_a_queue_that_is_not_empty(self):
+        """**THE WHOLE POINT OF THE DIRECTION FILE.** Rule (g) otherwise waits for the
+        queue to drain, so a correction the owner writes now takes effect whenever the
+        queue happens to run out, which on a full queue is hours. A fresh direction
+        bypasses BOTH the empty-queue gate and the refill floor.
+
+        WHAT HAPPENS TO THE ENTRIES ALREADY QUEUED IS NOT THE PROGRAM'S CALL. It deletes
+        none of them. AD3 gives that judgement to the mathematician this dispatch starts.
+        """
+        st = pod.State()
+        self.patch(pod, "dispatchable_entries", lambda s_: [{"task": "LJ-1.999"}])
+        self.patch(pod, "hours_since_last_refill", lambda root=None: 0.0)
+
+        pod._rule_g(st, self.tmp)              # a full queue and a fresh floor: no refill
+        self.assertEqual(self.launched, [], "a full queue must not refill on its own")
+
+        d = self.tmp / "dev" / "pod"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "direction.md").write_text("prove the bridge before GCH", encoding="utf-8")
+
+        pod._rule_g(st, self.tmp)
+        self.assertEqual(len(self.launched), 1,
+                         "a new direction did not re-plan a non-empty queue")
+        pod._rule_g(st, self.tmp)
+        self.assertEqual(len(self.launched), 1,
+                         "the direction fired twice; the sha was not recorded")
 
     def test_a_free_slot_and_an_empty_queue_dispatch_the_standing_brief(self):
         """The program decides only that somebody must be asked; the head decides the
@@ -2529,7 +2845,7 @@ class Commands(LoopCase):
 
     def test_tick_returns_1_when_the_loop_stopped(self):
         st = pod.State()
-        for i in range(3):
+        for i in range(pod._limits()["parked_max"]):     # the limit, never a literal
             st.tasks[f"X{i}"] = pod.Task(f"X{i}", status=pod.PARKED,
                                          park_reason="no-match")
         pod.save_state(st, self.tmp / ".pod-state" / "state.json")
@@ -2635,8 +2951,13 @@ class EveryDispatchCarriesItsRules(unittest.TestCase):
     untouched, so the maintainer and the refill still launched with no rules. The owner
     found that by asking how the maintainer's own head config takes effect.
 
-    **A behavioural test would need three fixtures and would still miss the fourth
-    dispatch point somebody adds next.** Counting the call sites cannot.
+    **THE COUNT IS NECESSARY AND IT IS NOT SUFFICIENT, and the second half of that
+    sentence was learned on 2026-08-18.** This test stayed green while rule (f), the
+    dispatch point every real task passes, sent `preamble_for(t.head_slot)` one
+    statement after `t.head_slot = None`. The call text carried the word `preamble`,
+    so the count was satisfied and the worker still got no slot file. The excuse
+    written here was that a behavioural test「would need three fixtures」. It needs
+    one, and `PreambleAndProviderReachTheWorker` below is it.
     """
 
     def test_every_launch_call_passes_a_preamble(self):
@@ -2659,6 +2980,67 @@ class EveryDispatchCarriesItsRules(unittest.TestCase):
         missing = [c.split("(", 1)[1][:60] for c in calls if "preamble" not in c]
         self.assertEqual(missing, [],
                          f"{len(missing)} dispatch point(s) launch a worker with no rules")
+
+
+class PreambleAndProviderReachTheWorker(unittest.TestCase):
+    """What `launch()` HANDS the launcher, measured through a stub rather than read.
+
+    Two defects hid behind source-reading tests until 2026-08-18. `_rule_f` nulled
+    `t.head_slot` before passing it to `preamble_for`, so every real dispatch lost its
+    slot file; and the provider was a module constant, so both `glm-5.3` heads
+    dispatched on `deepseek`. The second is silent by construction: `pi` warns, echoes
+    the prompt, and exits `done` in ten seconds having written nothing.
+    """
+
+    def _capture(self, role):
+        calls = []
+
+        class _Stub:
+            HARNESS = ""
+
+            @staticmethod
+            def launch(*a, **kw):
+                calls.append(kw)
+                return 4242
+
+        real = pod.facts_mod.launcher
+        pod.facts_mod.launcher = lambda: _Stub
+        try:
+            t = types.SimpleNamespace(code="LJ-1.999", agda=False, tier="wide",
+                                      head_slot=None, role=None, model=None,
+                                      effort=None, harness=None, sandbox=None)
+            pod.launch(t, "agents/tasks/LJ-1-999/LJ-1.999.md", role, ROOT)
+        finally:
+            pod.facts_mod.launcher = real
+        self.assertEqual(len(calls), 1, "the stub was not reached")
+        return calls[0]
+
+    def test_the_worker_gets_agents_md_and_its_own_slot_file(self):
+        for role in sorted(heads_mod.load_heads()["heads"]):
+            with self.subTest(role=role):
+                names = [pathlib.Path(f).name for f in self._capture(role)["preamble"]]
+                # THE DIRECTION IS THIRD AND LAST, closest to the brief. Owner's ruling
+                # of 2026-08-18 gives it to all five slots, so this list is exact rather
+                # than a containment check: a slot silently dropped from the direction
+                # would review against a direction the owner has already replaced.
+                self.assertEqual(names, ["AGENTS.md", f"{role}.md", "direction.md"],
+                                 f"a {role} worker was launched with {names}")
+
+    def test_a_pi_head_gets_its_own_providers_and_never_a_default(self):
+        table = heads_mod.load_heads()["legal"]["pi_provider"]
+        seen = {}
+        for role, row in sorted(heads_mod.load_heads()["heads"].items()):
+            with self.subTest(role=role):
+                got = self._capture(role).get("provider")
+                if row["harness"] != "herdr-pi":
+                    self.assertIsNone(got, f"{role} is not a pi head")
+                    continue
+                self.assertEqual(got, table[row["model"]],
+                                 f"{role} runs {row['model']} and was sent to {got}")
+                seen[row["model"]] = got
+        self.assertGreater(len(set(seen.values())), 1,
+                           "every pi head resolved to ONE provider; the lookup is dead")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

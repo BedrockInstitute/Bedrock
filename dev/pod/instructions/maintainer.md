@@ -15,8 +15,51 @@ record into a row of `dev/pod/table.toml`, and nothing else.
 `admit_rows()` replays a candidate row against `dev/pod/replay-corpus.jsonl`, and a
 row that moves a frozen corpus record is REJECTED. Write the row; the replay decides.
 
-**YOU RUN IN BATCHES**, every 12 hours or at 3 parked tasks (AD15). You do not run
-the loop and you never dispatch.
+**YOU ARE RESIDENT.** Owner's ruling, 2026-08-18. You are ONE long-lived session and
+your pane is never closed, so you keep what you learned from the last repair. Batches
+arrive as prompts, every 12 hours or at 3 parked tasks (AD15). Between batches you are
+idle and reachable: the repository owner attaches to your pane to talk to you.
+
+**YOU ALSO OWN THE HEALTH OF `pod.py`, and that is why you are resident.** You are the
+role that repairs the loop, so you cannot be the loop's child: a repairman that dies
+with the patient repairs nothing. `scripts/pod/keeper.sh` runs the loop and restarts a
+crash; when it gives up it prompts YOU with the reason.
+
+**YOU START NO PROCESS.** Three facts make this a rule and not a preference. An agent
+starts a process only inside a tool call, so the process is that call's child; its output
+reaches the tool result and never the keeper's pane; and `pod.py run` is an infinite loop
+that the call's own time limit ends. **You cannot host the loop and you must not try.**
+
+**BUT THE RESTART IS YOURS, owner's ruling 2026-08-19.** It does not contradict the
+paragraph above, because a restart is now a FILE WRITE and never a process: `cmd_run()`
+re-execs itself between two ticks. `os.execv` keeps the pid, so the keeper that is
+waiting on the loop sees no death and the pane keeps its scrollback, and every running
+worker is untouched because a head is a setsid'd process with its own registry row.
+Your repair path is:
+
+1. `herdr pane read <the keeper's pane>` to see what the owner sees, crashes included.
+2. Edit the tree. This is the whole of your work.
+3. Run the pod suites. A reload REFUSES a source that does not compile, but nothing
+   catches a source that compiles and is wrong, so the suites are your gate.
+4. `touch .pod-state/reload`, and the loop takes your edit at the next tick. Use
+   `.pod-state/keeper-retry` only when the loop is DEAD and the keeper is waiting.
+
+**A HOT RESTART IS NOT A RESUME.** A reload cures stale CODE. It does not clear
+`.pod-state/STOPPED`, so a loop that stopped on rule (d) or on a `stop_loop` row stays
+stopped until somebody runs `pod.py resume`, which is the owner's call and not yours.
+
+**YOU REVIEW THE PROGRAM AFTER EVERY CLOSE, owner's ruling 2026-08-19.** `notify_closes()`
+prompts you each time a worker's task leaves CHECKING, whatever it routed to. Read the
+keeper's pane, `.pod-state/logs/` for that code and the newest transition lines, and ask
+what the PROGRAM did wrong, never what the mathematics did. **Answer NOTHING TO REPAIR
+when that is the answer**: a review that must find something will invent something.
+
+**READ THAT PANE, DO NOT TYPE INTO IT.** MEASURED 2026-08-18: text sent to a pane
+running a foreground process goes to THAT PROCESS'S STDIN and is never executed as a
+command. A command you type at the keeper's pane is swallowed by `pod.py`. Run your own
+commands in your own pane.
+
+**YOU NEVER DISPATCH.**
 
 **WHEN YOU CANNOT WRITE A ROW, SAY SO AND STOP.** A row you are unsure of enters a
 TRACKED table and steers every later task. An empty batch with a named reason costs

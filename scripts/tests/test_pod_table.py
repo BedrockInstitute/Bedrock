@@ -320,7 +320,14 @@ class Loader(TreeCase):
     def test_the_seeded_table_loads_and_carries_the_five_system_rows(self):
         """The fifth is amendment A10's, and it carries DD24's restored ratio bar."""
         rows = table.load_table()
-        self.assertEqual(sorted(r["id"] for r in rows),
+        # A SUPERSET, NOT AN EQUALITY, since 2026-08-18. `dev/pod/table.toml` is a LIVE
+        # file: rule (a1) writes a `task-<code>-*` row into it on every CREATE, so an
+        # equality here is green only until the program runs once, and then red forever.
+        # A gate that a working program turns red is a gate nobody reads. The invariant
+        # is that the five SYSTEM rows are all present and none has expired; the task
+        # rows are runtime and belong to no assertion.
+        system = sorted(r["id"] for r in rows if r["id"].startswith("sys-"))
+        self.assertEqual(system,
                          ["sys-coder-adversarial-on-heap-wall", "sys-dd24-ratio-bar",
                           "sys-heap-wall", "sys-slow-green-empty", "sys-spec-surface"])
         # THE SECOND ASSERTION MUST BE ABLE TO FAIL ON ITS OWN, and an id list said twice
@@ -419,6 +426,11 @@ class Loader(TreeCase):
                 extra["head_slot"] = "coder"
             if action == "done":
                 extra["outcome"] = "go"
+            if action == "stop_loop":
+                # `stop_loop` IS OWNER-ONLY since 2026-08-19, and `row()` defaults to
+                # `added_by = "maintainer"`. The refusal is asserted on its own in
+                # `StopLoopIsOwnerOnly`; here the point is only that the action LOADS.
+                extra["added_by"] = "owner"
             got = table.check_row(row("r", action=action, **extra), SLOTS)
             self.assertEqual(got["action"], action)
         with self.assertRaises(table.TableError):
@@ -782,10 +794,20 @@ class Replay(unittest.TestCase):
         self.assertEqual(moved[0][3], None)
 
     def test_an_empty_corpus_admits_every_table_and_the_count_says_so(self):
-        """DAY ONE THE CORPUS IS EMPTY and the consequence is stated rather than hidden."""
+        """AN EMPTY CORPUS ADMITS EVERY TABLE and the consequence is stated, not hidden.
+
+        **IT NO LONGER READS THE LIVE CORPUS.** It used to assert that
+        `dev/pod/replay-corpus.jsonl` was empty, which was true on day one and is a
+        PROPERTY OF A GROWING FILE rather than of this code. MEASURED 2026-08-19: the
+        first `live` record landed, `c-17` from LJ-1.386's `sys-spec-surface` close, and
+        this test failed for the one reason that should never fail a test, which is that
+        the program worked. R3 arming is the goal, so the assertion moves to a fixture.
+        """
         self.assertEqual(replay_mod.replay(self.old, [], [])[0], "ADMIT")
-        self.assertEqual(replay_mod.corpus(ROOT / "dev" / "pod" / "replay-corpus.jsonl"),
-                         [])
+        with tempfile.TemporaryDirectory() as d:
+            empty = Path(d) / "c.jsonl"
+            empty.write_text("")
+            self.assertEqual(replay_mod.corpus(empty), [])
 
     def test_a_retired_record_stays_in_the_file_and_is_skipped(self):
         with tempfile.TemporaryDirectory() as d:
@@ -1490,6 +1512,50 @@ class Contradiction(unittest.TestCase):
             {"obligations_delta_min": 0}, {"obligations_delta_max": -1}))
         self.assertTrue(preflight_mod.contradicts(
             {"changed_files_any": ["src/*"]}, {"changed_files_none": ["src/*"]}))
+
+
+class StopLoopIsOwnerOnly(unittest.TestCase):
+    """`stop_loop` halts the whole programme, so no model may add such a row.
+    Ruled 2026-08-19.
+
+    **THE GUARD THAT WAS SUPPOSED TO COVER THIS IS INERT.** `dev/pod/replay-corpus.jsonl`
+    is 0 bytes and `replay.py --count` prints「EMPTY. replay() returns ADMIT for every
+    table and R3 guards nothing until the first record lands.」Seeding the corpus would
+    not have closed it either: R3 rejects a table that MOVES a frozen record, and a
+    `stop_loop` row keyed on a class no record carries moves nothing.
+    """
+
+    def _row(self, added_by, action="stop_loop", **extra):
+        row = {"id": "x-1", "scope": "system", "priority": 1, "action": action,
+               "added": datetime.date(2026, 8, 19), "added_by": added_by, "reason": "r",
+               "when": {"error_class": "spec_surface"}}
+        row.update(extra)
+        return row
+
+    def test_the_owner_may_add_one(self):
+        table.check_row(self._row("owner"))          # must not raise
+
+    def test_no_model_may_add_one(self):
+        for who in ("mathematician", "maintainer"):
+            with self.subTest(who=who), self.assertRaises(table.TableError) as e:
+                table.check_row(self._row(who))
+            self.assertIn("stop-request.toml", str(e.exception),
+                          "the refusal must name the channel a model SHOULD use")
+
+    def test_a_model_may_still_add_every_other_action(self):
+        """The refusal is one action wide. A model that could no longer write a `park`
+        row would be a maintainer that cannot do its job."""
+        for act, extra in (("done", {"outcome": "go"}), ("accept", {}),
+                           ("park", {}), ("redispatch", {})):
+            with self.subTest(action=act):
+                table.check_row(self._row("maintainer", action=act, **extra))
+
+    def test_every_live_row_that_stops_the_loop_is_the_owners(self):
+        """This is the assertion that would have caught a model-added halt already in
+        the tree, rather than only the next one."""
+        for r in table.load_table():
+            if r["action"] == "stop_loop":
+                self.assertEqual(r["added_by"], "owner", f"row {r['id']}")
 
 
 if __name__ == "__main__":

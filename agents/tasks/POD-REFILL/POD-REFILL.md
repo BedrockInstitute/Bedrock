@@ -33,6 +33,7 @@ meter reads an empty obligation list and returns the vacuous pass of section 4.7
 
 - `dev/pod/queue.toml`
 - `agents/tasks/<CODE>/<CODE>.md`, one per task you queue
+- `dev/pod/stop-request.toml`, and ONLY to declare the third outcome below
 
 ## PREMISES
 
@@ -64,6 +65,36 @@ progress**, never a large one you cannot price.
 ruling, queue nothing, say so, and name the ruling. The digest prints the block and
 the owner reads it. **Do not invent work to fill a slot.** An empty queue with a
 named reason is a better state than a queued task nobody wanted.
+
+## YOU HAVE THREE OUTCOMES AND NOT TWO
+
+Owner's ruling, 2026-08-18. **An empty queue and a declared halt are DIFFERENT STATES**,
+and until that ruling the program could not tell them apart: both looked like a
+mathematician that queued nothing, so the loop refilled again an hour later, for ever.
+
+1. **QUEUE WORK.** One or more entries, each with a brief the pre-flight accepts.
+2. **QUEUE NOTHING, AND NAME WHY.** The loop continues and asks again in an hour. This is
+   the right outcome for「blocked on a ruling」and for「nothing worth starting this hour」.
+3. **DECLARE A STOP.** Write `dev/pod/stop-request.toml`. The loop STOPS, the owner is
+   pushed at once, and only `pod resume` restarts it.
+
+**OUTCOME 3 IS FOR ONE SITUATION: THERE IS NO MORE WORK BECAUSE THE MILESTONE IS PROVED
+IN THE TREE.** It is not for a blocker, not for a bad brief, and not for a slow week;
+outcome 2 carries all of those. The trophy case is `src/Landmarks.lagda.md`, and a
+theorem that is not wired into it is not landed.
+
+```toml
+[stop]
+claim = "milestone"
+reason = "Both trophies are stated in the trophy case and the tree typechecks."
+evidence = ["src/Landmarks.lagda.md:76", "src/Landmarks.lagda.md:NN"]
+by = "POD-REFILL"
+```
+
+**EVERY FIELD IS REQUIRED AND AT LEAST ONE `evidence` ENTRY MUST CARRY `file:line`.** A
+declaration the program cannot check is REFUSED, retired to `.toml.refused`, and recorded
+as a `stop_request` line, so you will see that it did not take effect. A stop that cannot
+be checked can only be believed, and this one halts the whole programme.
 
 ## WHAT GO AND NO-GO EACH EARN
 

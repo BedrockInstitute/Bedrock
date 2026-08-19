@@ -95,20 +95,19 @@ trailer, no second checker.
 REPLACED IT. Before the cutover `archive/scripts/gate/check-agents-guard.py`
 refused any commit that staged `AGENTS.md` without an `AGENTS-diff-approved:`
 trailer. The cutover retired that gate on the premise that the guarded file was
-void, and amendment A8 then ruled the opposite: `AGENTS.md` is NOT archived, and
-`scripts/pod/instructions.py:2` makes it the ONE hand-written source of the
-shared half of all five slot files. So an edit there reaches every agent, and
-since the cutover nothing has asked for approval. That is the 2026-08-04 drift
-the design cites as its own reason, one level up.
+void, and amendment A8 then ruled the opposite: `AGENTS.md` is NOT archived. It is
+the ONE hand-written source of the shared Boundary, so an edit there reaches every
+agent at the next dispatch, and since the cutover nothing has asked for approval.
+That is the 2026-08-04 drift the design cites as its own reason, one level up.
 
-THE STALENESS OF THE FIVE SLOT FILES IS A SECOND QUESTION AND THIS GATE DOES NOT
-ANSWER IT. A sha over `AGENTS.md` sees an edit; it cannot see whether
-`instructions.py --write` was run afterwards. `instructions.py --check` is that
-gate, and the `instructions` target of `make check` runs it. **The two gates are
-not interchangeable and both are needed.** This one refuses an unapproved edit to
-the Boundary; that one refuses an approved edit that never reached the five files
-agents read. The pre-commit hook runs NEITHER, so a commit that skips `make check`
-can still ship a stale slot file.
+THERE IS NO SECOND STALENESS GATE ANY MORE, and this paragraph used to name one.
+It said `instructions.py --check` refused an approved edit that never reached the
+five slot files. **That generator is archived at `archive/scripts/pod/instructions.py`
+and no `make check` target calls it**, because the slot files stopped carrying a
+generated half: the program `cat`s `AGENTS.md`, then the slot file, then the brief,
+so an edit here cannot go stale in a copy. One source per rule, and nothing to
+regenerate. Corrected 2026-08-18, after `instructions.py --write` was run against a
+file that is not there.
 
 EVERY GATE THIS FILE COPIES IS UNDER `archive/`. The POD cutover of 2026-08-18
 archived them, and the mirror rule keeps each one at the same path with an

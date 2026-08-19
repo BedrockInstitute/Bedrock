@@ -408,6 +408,18 @@ def run_acceptance(t, root=None, tier=None):
     if not ch:
         return None                            # R7, section 4.3.2 case 3. No record.
     c5 = spec_surface(root)                    # cheapest, and A3 puts it first
+    # **THE DETAIL IS CAPTURED ONLY ON FAILURE, and the signature above is unchanged on
+    # purpose**: `scripts/tests/test_pod_facts.py:919` patches `spec_surface` with a
+    # `lambda root=None: <bool>`, so returning a tuple would break every such patch.
+    # The re-run costs one process on the rare path and nothing on the green one.
+    #
+    # WHY IT IS CAPTURED AT ALL, MEASURED 2026-08-19: LJ-1.386 stopped the loop on
+    # `sys-spec-surface` while `src/` carried NO change at all. The mover was
+    # `AGENTS.md`, a FOREIGN uncommitted file, because this conjunct reads the WHOLE
+    # tree and not the task's scope. The owner was told only「row sys-spec-surface」,
+    # which is backlog item 6: the same sentence for a landed trophy, a deleted one and
+    # a foreign edit. The row's behaviour is the owner's and stays; this names the mover.
+    c5_detail = "" if c5 else " ".join(_run(SPEC_SURFACE, root)[1].split())[:600]
     r1 = conjunct1(facts_mod.verification_target(ch, t.code, root), root, tier=tier)
     d3, wsec, red = witness_mod.witness_delta(t)          # fact 3, section 4.7
     c3 = closure(root)
@@ -421,6 +433,7 @@ def run_acceptance(t, root=None, tier=None):
            "obligations_probe_red": red, "error_names_all": r1["error_names_all"],
            "agda_vacuous": r1.get("vacuous", False), "unbound_vacuous": uvac,
            "changed_files_foreign": foreign,   # outside the scope, 4.3.1. Digest counts it
+           "spec_surface_detail": c5_detail,   # provenance for the stop. NOT matchable
            "runs_all": r1["runs_all"],         # every other Agda wall, provenance
            "conjuncts": dict(held),            # provenance. R4 reads it. NOT matchable
            "facts": {"exit_code": 0 if bad is None else

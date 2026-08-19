@@ -54,9 +54,13 @@ from repo_root import find_root  # noqa: E402
 ROOT = find_root(__file__)
 HEADS = ROOT / "dev" / "pod" / "heads.toml"
 
-#: The five limits of section 6.1. Every one is required and none has a default.
+#: The six limits of section 6.1. Every one is required and none has a default.
+#:
+#: `parked_max` joined them on 2026-08-19, owner's ruling, raised from a hardcoded 3 to 7.
+#: It was a bare literal in TWO places in `pod.py`, rule (d)'s test and the status line, so
+#: the number the owner read and the number the program obeyed could drift apart.
 LIMIT_KEYS = ("tick_seconds", "exclusive_max_load1", "agda_deadline_s",
-              "worker_deadline_s", "attempt_max")
+              "worker_deadline_s", "attempt_max", "parked_max")
 
 #: The four fields every `[heads]` slot carries.
 SLOT_KEYS = ("model", "effort", "harness", "sandbox")
@@ -209,10 +213,25 @@ def limits(path=None) -> dict:
 def head(slot: str, path=None) -> dict:
     """One slot's four fields. It REFUSES an unknown slot rather than returning a
     default, because a default head is a model nobody ruled."""
-    heads = load_heads(path)["heads"]
+    data = load_heads(path)
+    heads = data["heads"]
     if slot not in heads:
         _refuse(f"has no [heads].{slot}; the slots are {', '.join(sorted(heads))}")
-    return dict(heads[slot])
+    row = dict(heads[slot])
+    # THE PROVIDER IS DERIVED HERE AND NOWHERE ELSE. `legal.pi_provider` had zero
+    # consumers until 2026-08-18: the launcher passed a module constant, so both
+    # `glm-5.3` heads dispatched on `deepseek`. heads.toml records what that costs,
+    # and the cost is invisible: `pi` warns, echoes the prompt, and exits `done` in
+    # ten seconds having written nothing, which every guard reads as a healthy run.
+    if row["harness"] == "herdr-pi":
+        table = data["legal"].get("pi_provider")
+        if not isinstance(table, dict):
+            _refuse("carries no [legal.pi_provider] table, which every herdr-pi slot needs")
+        if row["model"] not in table:
+            _refuse(f"[legal.pi_provider] has no entry for {row['model']}, which "
+                    f"[heads].{slot} runs on herdr-pi")
+        row["pi_provider"] = str(table[row["model"]])
+    return row
 
 
 def slots_of_tier(tier: str = "wide", path=None) -> int:

@@ -787,6 +787,36 @@ def herdr_agents() -> tuple[list[dict], str | None]:
         return [], f"`herdr agent list` returned an unreadable shape ({exc})"
 
 
+def herdr_present() -> bool:
+    """Is the herdr binary here at all? `herdr_agents()` cannot say.
+
+    It returns `([], None)` both when herdr is MISSING and when herdr knows no agents,
+    and a liveness check must not read the first as the second: that reads「the resident
+    maintainer is gone」on a machine that could never host one, and tries to launch it
+    again on every tick.
+    """
+    return bool(shutil.which("herdr"))
+
+
+def herdr_prompt(name: str, text: str) -> bool:
+    """Submit one prompt to a live agent. It launches nothing and it does NOT wait.
+
+    **NO `--wait`, ON PURPOSE.** A prompt to a busy head queues and is read when that
+    head finishes its current tool call (`dev/LESSONS.md` C-61, once worth 4.25 hours).
+    Waiting here would block the tick loop behind whatever the maintainer is doing, and
+    the queueing is the property rule (e) wants: a batch that arrives mid-repair takes
+    its turn instead of racing it.
+    """
+    if not shutil.which("herdr"):
+        return False
+    try:
+        out = subprocess.run(["herdr", "agent", "prompt", name, text],
+                             capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return out.returncode == 0
+
+
 def sweepable_panes(reg: dict) -> tuple[list[dict], list[dict], str | None]:
     """Panes safe to close, panes that are EVIDENCE, and any blindness warning.
 
@@ -1136,7 +1166,8 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
            resume_id: str | None = None, note: str | None = None,
            allow_model: bool = False, case: str = "default",
            effort: str = "", tier: str = AGDA_TIER_DEFAULT,
-           preamble: "list[Path] | None" = None) -> int:
+           preamble: "list[Path] | None" = None,
+           provider: str | None = None, resident: bool = False) -> int:
     # POD EDIT 3 of 6, part 1 of 3 (design section 6.2). `effort` is the claude
     # CLI's `--effort` value and edit 2 puts it on the argv. It defaults to the
     # empty string so every existing caller keeps working; the POD passes
@@ -1306,19 +1337,23 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             # the `else` branch and emitted `-- --provider deepseek --model
             # <model>`. The claude CLI has no `--provider` flag.
             #
-            # `--permission-mode acceptEdits` matters at the FIRST launch: a
-            # trust prompt makes herdr report `blocked`, which the driver below
-            # does not treat as a death, so the agent would sit forever.
+            # `--permission-mode` matters at the FIRST launch: a trust prompt
+            # makes herdr report `blocked`, which the driver below does not treat
+            # as a death, so the agent would sit forever.
             # MEASURED 2026-08-17: `claude --help` lists `--model`, `--effort`
             # with exactly the five values of `legal.efforts`, and
-            # `--permission-mode` with `acceptEdits`.
+            # `--permission-mode`.
+            # **THE MODE IS `auto`, owner's ruling 2026-08-19**, and it replaces
+            # `acceptEdits`. MEASURED 2026-08-19: `claude --help` lists the six
+            # choices `acceptEdits`, `auto`, `bypassPermissions`, `manual`,
+            # `dontAsk` and `plan`, so the value is spelled exactly `auto`.
             if kind == "codex":
                 model_args = ["--", "-m", model]
             elif kind == "claude":
                 model_args = ["--", "--model", model, "--effort", effort,
-                              "--permission-mode", "acceptEdits"]
+                              "--permission-mode", "auto"]
             else:
-                model_args = ["--", "--provider", PI_PROVIDER, "--model", model]
+                model_args = ["--", "--provider", provider or PI_PROVIDER, "--model", model]
             prompt_text = (note or "Resume where you left off, then write your report.") \
                           if resume_id else brief.read_text(encoding="utf-8")
             driver = (
@@ -1543,8 +1578,19 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # only evidence of how it died, and this session read three deaths
                 # out of a pane that was still there. A finished agent's pane holds
                 # nothing the final-message file does not, so it goes.
-                "herdr pane close \"$PANE\" >/dev/null 2>&1\n"
-                "echo \"HERDR done pane=$PANE closed\"\n"
+                #
+                # A RESIDENT AGENT IS NEVER CLOSED, and closing it is the ONLY thing
+                # that ends one. MEASURED 2026-08-18 on a throwaway `claude` head:
+                # after its turn the agent reports `agent_status: done`, and a SECOND
+                # `herdr agent prompt` was accepted and answered on the SAME
+                # `agent_session` id. `done` is a label on a live agent, not a death.
+                # The maintainer is resident under the owner's ruling of 2026-08-18,
+                # so `pod.py` prompts one long-lived session instead of launching a
+                # fresh batch, and the owner can attach to it at any time.
+                + ("echo \"HERDR done pane=$PANE kept; the agent is RESIDENT\"\n"
+                   if resident else
+                   "herdr pane close \"$PANE\" >/dev/null 2>&1\n"
+                   "echo \"HERDR done pane=$PANE closed\"\n")
             ) if not resume_id else (
                 # [LJ-1.127] THE RESUME DRIVER CARRIED THREE DEFECTS THE FRESH
                 # DRIVER HAD ALREADY PAID FOR, because it was written as a
@@ -1626,7 +1672,7 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             prompt = (note or "Resume where you left off, then write your report.") \
                      if resume_id else brief.read_text(encoding="utf-8")
             pi_cmd = ["pi", "--mode", "json", "-p",
-                      "--provider", PI_PROVIDER, "--model", model]
+                      "--provider", provider or PI_PROVIDER, "--model", model]
             if resume_id:
                 pi_cmd += ["--session", resume_id]
             pi_cmd.append(prompt)

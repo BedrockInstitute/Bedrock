@@ -67,6 +67,7 @@ from __future__ import annotations
 import contextlib
 import datetime
 import fcntl
+import hashlib
 import json
 import os
 import re
@@ -106,6 +107,10 @@ ROOT = find_root(__file__)
 POD_STATE = ROOT / ".pod-state"
 STATE_FILE = POD_STATE / "state.json"
 STOPPED_FILE = POD_STATE / "STOPPED"
+#: THE HOT RESTART, owner's ruling 2026-08-19. Touching it reloads the loop between two
+#: ticks. `cmd_run()` also reloads on its own when `scripts/pod/*.py` changes, so this
+#: file is for the case the signature cannot see: a reload the maintainer wants NOW.
+RELOAD_FILE = POD_STATE / "reload"
 LOG_DIR = POD_STATE / "logs"
 LOCKFILE = POD_STATE / "pod.lock"
 
@@ -113,6 +118,56 @@ LOCKFILE = POD_STATE / "pod.lock"
 #: monthly rotation holds any git blob under 11 MB.
 TRANSITIONS = ROOT / "dev" / "pod" / "transitions"
 QUEUE = ROOT / "dev" / "pod" / "queue.toml"
+#: THE OWNER'S STANDING MATHEMATICAL DIRECTION, ruled 2026-08-18.
+#:
+#: **THE GAP THIS FILLS WAS MEASURED BEFORE IT WAS BUILT.** No line of this program read
+#: `dev/PLAN.md`: the only path a direction had was the REFILL brief's prose telling a
+#: mathematician to go and read it, and rule (g) fires only when the queue is EMPTY. So a
+#: mid-flight correction reached nobody until the queue drained, and reached no RUNNING
+#: worker at all. The maintainer could not carry it either, because AD3 gives every
+#: mathematical judgement to the mathematician.
+#:
+#: **IT IS CAT'D INTO EVERY DISPATCH, FOR ALL FIVE SLOTS** (owner, 2026-08-18). A
+#: reviewer that does not know the current direction reviews against the old one.
+#:
+#: **IT IS NOT A GUARDED RULE HOME AND THAT IS DELIBERATE.** A direction file that costs
+#: an approval round to edit is a direction file the owner will not write. It carries
+#: guidance, never a rule; rules live in `AGENTS.md` and the slot files.
+#: A RELATIVE CONSTANT, and that is not a style choice. Every test and every sandbox
+#: patches `ROOT`, so `DIRECTION.relative_to(ROOT)` raises `ValueError` the moment the
+#: two disagree. MEASURED 2026-08-18: four tests errored on it at once.
+DIRECTION_REL = Path("dev") / "pod" / "direction.md"
+DIRECTION = ROOT / DIRECTION_REL
+#: A MATHEMATICIAN DECLARING THAT THE LOOP SHOULD STOP, ruled by the owner 2026-08-18.
+#:
+#: **THE RULING IS THAT A DECLARED STOP AND AN EMPTY QUEUE ARE DIFFERENT STATES.** Rule
+#: (g) asks a mathematician what is missing, and until now that agent had two outcomes
+#: and the program could tell them apart in neither: it queued work, or it queued nothing
+#: with a reason. **「the trophy is proved and there is no more work」 was indistinguishable
+#: from 「I have nothing to add this hour」**, so the loop refilled for ever. Nothing in the
+#: program counted finished work: `grep count(DONE)` over `scripts/pod/*.py` returned
+#: nothing and `grep -niE "trophy|milestone|gch"` over this file returned nothing.
+#:
+#: This file is the third outcome. It stops the loop, and it is READ ONCE: rule (d)
+#: retires it to `.toml.<verdict>` whether it is honoured or refused, so a stale file
+#: cannot stop tomorrow's loop.
+#: THE RESIDENT HEAD'S BACKLOG, ruled by the owner 2026-08-19.
+#:
+#: **THE QUEUE IS FOR NON-RESIDENT AGENTS AND THIS FILE IS FOR THE RESIDENT ONE.**
+#: `dev/pod/queue.toml` exists because a mathematician or a coder does not exist until
+#: rule (f) starts one, so an entry is how you hand work to something that is not there
+#: yet. The maintainer is resident (A17), so queueing for it confuses the two channels:
+#: rule (a1) would turn a program-repair item into a TASK, and AD3 hands every task brief
+#: to a MATHEMATICIAN, so the program's own plumbing would go to the head that does the
+#: mathematics. Four such entries were written into the queue on 2026-08-19 and removed
+#: the same hour when the owner named the mistake.
+#:
+#: THE PROGRAM READS IT AND NEVER WRITES IT. `write_batch_brief()` copies it into every
+#: batch brief; the maintainer strikes an item by editing the file in the batch that
+#: lands the fix.
+BACKLOG_REL = Path("dev") / "pod" / "maintainer-backlog.md"
+STOP_REQUEST_REL = Path("dev") / "pod" / "stop-request.toml"
+STOP_REQUEST = ROOT / STOP_REQUEST_REL
 TABLE = ROOT / "dev" / "pod" / "table.toml"
 CORPUS = ROOT / "dev" / "pod" / "replay-corpus.jsonl"
 PROPOSALS = ROOT / "dev" / "pod" / "proposals"
@@ -138,6 +193,10 @@ def preamble_for(slot, root=None):
         p = root / "dev" / "pod" / "instructions" / f"{slot}.md"
         if p.is_file():
             out.append(p)
+    # THE DIRECTION COMES LAST, closest to the brief, because it is the freshest thing
+    # the worker is told and the only one the owner may have written this hour. Every
+    # slot gets it by the owner's ruling of 2026-08-18.
+    out.append(root / DIRECTION_REL)
     return [f for f in out if f.is_file()]
 WATCHDOG = ROOT / "scripts" / "ops" / "agda-watchdog.sh"
 BARK = ROOT / "scripts" / "ops" / "bark-push.sh"
@@ -335,6 +394,65 @@ class State:
         return [self.tasks[c] for c in sorted(self.tasks) if self.tasks[c].status == status]
 
 
+def conflict_copies(p):
+    """Sibling files a sync client left behind when it renamed `p` out of the way.
+
+    **MEASURED 2026-08-18, and this is why the function exists.** `.pod-state/state.json`
+    was GONE and three files stood beside it: `state [conflicted].json`,
+    `state [conflicted 2].json` and `state [conflicted 3].json`, holding seq 3, 4 and 5.
+    27 such files stand in this tree, the oldest from 2026-07-27, every one of them in a
+    directory something writes often: `_build/` (12), `.claude/` (11), `.pod-state/` (3)
+    and `agents/` (1). No tracked source has ever been hit.
+
+    **THE PROGRAM'S OWN WRITE IS WHAT PROVOKES IT.** `save_state()` writes a temporary
+    file and renames it over the target, which is the correct way to make a write atomic
+    and the exact shape a naive sync client reads as「both sides changed」.
+
+    Both spellings are matched because both are in this tree: `name [conflicted N].ext`
+    and `name (conflicted).ext`.
+    """
+    try:
+        sibs = list(p.parent.iterdir())
+    except OSError:
+        return []
+    stem, suf = p.stem, p.suffix
+    out = [q for q in sibs
+           if q.is_file() and q.suffix == suf and q.name != p.name
+           and q.stem.startswith(stem)
+           and ("[conflicted" in q.stem or "(conflicted" in q.stem)]
+    return sorted(out, key=lambda q: q.stat().st_mtime, reverse=True)
+
+
+def salvage_state(p):
+    """The newest readable conflict copy of `p`, restored in place, or None.
+
+    **A BLANK STATE IS NOT A SAFE DEFAULT AND THAT WAS THE REAL DEFECT.** `load_state()`
+    returned `State()` for every failure including「the file is not there」, so a state
+    file renamed away made the loop start from ZERO: every RUNNING task's record gone, so
+    rule (b) observes nothing, rule (c) closes nothing, and rule (f) may dispatch again
+    work that is already running under another head.
+
+    **THE DOCSTRING ABOVE PROMISED A RECOVERY THAT DOES NOT EXIST.** It says the file is
+    a cache and the worst a bad one costs is「one fold of the tracked log」, and
+    `pod.py:653` says a lost state file is recoverable from the log. **Nothing folds the
+    log.** This function is the salvage that CAN be done today; the fold is gap M19.
+    """
+    for q in conflict_copies(p):
+        try:
+            data = json.loads(q.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if not isinstance(data, dict):
+            continue
+        print(f"pod: {p.name} was GONE and {q.name} was readable. Restored from it. "
+              f"Something outside this program renames files in {p.parent}.",
+              file=sys.stderr)
+        with contextlib.suppress(OSError):
+            q.replace(p)
+        return data
+    return None
+
+
 def load_state(path=None):
     """The state cache. A missing, unreadable or MALFORMED file gives an EMPTY state, and
     the log then rebuilds it: that is crash window one and it is the designed, safe window.
@@ -348,7 +466,11 @@ def load_state(path=None):
     try:
         data = json.loads(p.read_text(encoding="utf-8"))
     except (OSError, ValueError):          # ValueError covers JSONDecodeError
-        return State()
+        salvaged = salvage_state(p)
+        if salvaged is not None:
+            data = salvaged
+        else:
+            return State()
     if not isinstance(data, dict):
         return State()
     raw = data.get("tasks")
@@ -491,6 +613,17 @@ def replay_log(st, root=None):
                   "park_reason", "obl_before", "row", "tier"):
             if f in line:
                 setattr(t, f, line[f])
+        if to == PARKED and isinstance(line.get("reason"), str):
+            # THE FOLD LOST EVERY PARK REASON, and the loop above is why: `emit()` writes
+            # the reason into the line under the key `reason` (:771) and onto the task
+            # under `park_reason` (:790), so no line ever carried the name this loop reads.
+            # A folded state therefore parked every task with `park_reason = None`, and
+            # rule (a2) then took neither the `preflight:` branch nor the
+            # `("admission", "launch")` branch: the park was PERMANENT.
+            # MEASURED 2026-08-19: LJ-1.386 parked at `launch` on 2026-08-18T11:06:30Z,
+            # `dev/pod/table.toml` was written 33 minutes later, which is rule (a2)'s whole
+            # retry condition, and the task was still PARKED 24 hours on.
+            t.park_reason = line["reason"]
         if "attempt" in line:
             t.attempt = _int(line["attempt"], t.attempt or 0)
         if t.tier not in TIERS:
@@ -570,12 +703,15 @@ def _abs(path, root=None):
 
 
 def emit_event(st, event, root=None, **fields):
-    """One log line that is NOT a task transition, and there are exactly FOUR kinds.
+    """One log line that is NOT a task transition, and there are exactly FIVE kinds.
 
     Section 6.7's `batch` line, which `harvest_batch()` writes and hands to the next batch
     as input; section 7.4 Part 1b's `retrieval` line, which carries the miss signal;
-    A13's `watchdog` line, which records one restart of the memory backstop; and A11's
-    `refill` line, which records one rule (g) dispatch or the one dependency it waits on.
+    A13's `watchdog` line, which records one restart of the memory backstop; A11's
+    `refill` line, which records one rule (g) dispatch or the one dependency it waits on;
+    and the `stop_request` line of 2026-08-18, which records a mathematician's DECLARED
+    stop that rule (d) REFUSED, so a declaration the program did not honour is never
+    silent. An honoured declaration is a real transition and takes the `STOPPED` line.
     None of the four moves a task, so none may claim one of the twelve transitions;
     writing them through `emit()` would need a thirteenth edge that means nothing.
     """
@@ -1574,7 +1710,8 @@ def launch(t, brief, role, root=None):
         # heap-sum guard then budgeted 8 GB for a worker holding 12.
         rc = mod.launch(t.code, path, bool(t.agda), head["sandbox"], head["model"],
                         effort=head["effort"], tier=tier_of(t),
-                        preamble=preamble_for(t.head_slot))
+                        preamble=preamble_for(role, root),
+                        provider=head.get("pi_provider"))
     except SystemExit:
         return None                            # the launcher REFUSED on a corrupt registry
     except Exception:                          # noqa: BLE001. See the docstring
@@ -1711,6 +1848,50 @@ def hours_since_last_batch(root=None):
     return (time.time() - newest) / 3600.0
 
 
+def direction_changed(st=None, root=None, record=True):
+    """Has the owner rewritten `dev/pod/direction.md` since the program last looked?
+
+    **IT ARCHIVES THE OUTGOING DIRECTION AND KEEPS EXACTLY ONE CURRENT** (owner's ruling,
+    2026-08-18). The superseded body lands under `archive/dev/direction/<stamp>.md`, so
+    the live file never becomes a flow of history that every dispatch then pays for. The
+    project's archive-never-delete rule is satisfied without the owner doing the filing.
+
+    **IT RETURNS TRUE ONCE PER CHANGE.** The sha is recorded in the same call, so a rule
+    that acts on this cannot loop: a second call in the same tick sees no change. That is
+    also why `record=False` exists, for `--plan`, which must not consume the change it is
+    only reporting.
+    """
+    root = ROOT if root is None else Path(root)
+    live = root / DIRECTION_REL
+    try:
+        body = live.read_text(encoding="utf-8")
+    except OSError:
+        return False                           # no direction file is not a change
+    digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
+    state = root / ".pod-state"
+    shafile, lastfile = state / "direction.sha", state / "direction-last.md"
+    try:
+        seen = shafile.read_text(encoding="utf-8").strip()
+    except OSError:
+        seen = ""
+    if seen == digest:
+        return False
+    if not record:
+        return True
+    try:
+        state.mkdir(parents=True, exist_ok=True)
+        if seen and lastfile.is_file():
+            arc = root / "archive" / "dev" / "direction"
+            arc.mkdir(parents=True, exist_ok=True)
+            (arc / f"{time.strftime('%Y%m%d-%H%M%S')}.md").write_text(
+                lastfile.read_text(encoding="utf-8"), encoding="utf-8")
+        lastfile.write_text(body, encoding="utf-8")
+        shafile.write_text(digest, encoding="utf-8")
+    except OSError:
+        return False                           # an unwritable state dir is not a change
+    return True
+
+
 def hours_since_last_refill(root=None):
     """Hours since the newest `refill` line, or a large number. A11's floor reads it.
 
@@ -1781,7 +1962,7 @@ def maintainer_scope_ok(root=None, proposal=None):
     `dev/pod/transitions/<month>.jsonl`, `agents/tasks/<CODE>/.pod` and
     `agents/tasks/POD-BATCH/<ts>.md`. **The program writes all three and commits none of
     them at that point**, at `emit()`, `stamp_pod_marker()` (:757) and
-    `spawn_maintainer()` (:1917), so `git status` shows them and this check read them as
+    `write_batch_brief()`, so `git status` shows them and this check read them as
     the model's. The reasoning above was right and the enumeration was incomplete.
 
     **THE SUITE MISSED IT BECAUSE EVERY SCOPE TEST REPLACES THE SENSOR.**
@@ -1796,7 +1977,8 @@ def maintainer_scope_ok(root=None, proposal=None):
     PROGRAM_WRITES = (
         ".pod-state/",                  # the loop's runtime state
         "dev/pod/transitions/",         # emit(), the transition log
-        "agents/tasks/POD-BATCH/",      # spawn_maintainer() at :1917
+        "agents/tasks/POD-BATCH/",      # write_batch_brief()
+        "dev/pod/replay-corpus.jsonl",  # corpus_append(), the `live` stream
     )
     bad = [p for p in facts_mod._status_paths(root)
            if p not in allowed
@@ -1809,7 +1991,8 @@ def maintainer_scope_ok(root=None, proposal=None):
 #: EVERY TERMINAL VERDICT A PROPOSAL CAN REACH. A settled proposal is renamed to
 #: `<name>.toml.<verdict>`, which is the PROGRAM's own write and never the model's,
 #: so R15 excludes all of them exactly as it excluded `.admitted` alone before.
-RETIRED_SUFFIXES = ("admitted", "parse", "scope", "empty", "refused", "reject")
+RETIRED_SUFFIXES = ("admitted", "parse", "scope", "empty", "refused", "reject",
+                    "stopped")   # the declared stop of 2026-08-18
 
 
 def retire_proposal(path, verdict, root):
@@ -1990,7 +2173,7 @@ def batch_lists(root=None):
     return out
 
 
-def spawn_maintainer(st, root=None):
+def write_batch_brief(st, root=None):
     """AD2 and AD15: one program-written brief at `agents/tasks/POD-BATCH/<ts>.md`.
 
     IT IS PINNED UNDER `agents/tasks/` so KEPT refusal 2 of section 6.2 holds and
@@ -2038,6 +2221,17 @@ def spawn_maintainer(st, root=None):
                     f"obligations_delta {f.get('obligations_delta')}, "
                     f"{len(f.get('changed_files') or [])} changed files.{loud}")
     body += batch_lists(root)
+    # THE BACKLOG TRAVELS WITH EVERY BATCH. Without this the file is a note nobody opens:
+    # the maintainer reads the brief it was handed and nothing else.
+    try:
+        backlog = (root / BACKLOG_REL).read_text(encoding="utf-8").strip()
+    except OSError:
+        backlog = ""
+    if backlog:
+        body += ["", "## THE MAINTAINER'S BACKLOG (dev/pod/maintainer-backlog.md)", "",
+                 "**Strike an item by editing that file in the batch that lands its "
+                 "fix.** The program copies this section and never edits it.", "",
+                 backlog, ""]
     body += ["", "## ARCHIVE (program-generated, do not edit)", "", "NO HIT", "",
              "## LITERATURE (program-generated, do not edit)", "", "NO HIT", ""]
     brief = d / f"{ts}.md"
@@ -2045,23 +2239,123 @@ def spawn_maintainer(st, root=None):
         brief.write_text("\n".join(body), encoding="utf-8")
     except OSError:
         return None                            # no brief, no dispatch. The next tick tries
+    return brief
+
+
+MAINT_TASK = "POD-BATCH"
+
+
+def maintainer_alive(root=None):
+    """Is the resident maintainer's herdr agent present, in ANY status?
+
+    **`done` IS NOT A DEATH, MEASURED 2026-08-18.** A throwaway `claude` head reported
+    `agent_status: done` after its turn, and a second `herdr agent prompt` was accepted
+    and answered on the SAME `agent_session` id. Only `herdr pane close` ends an agent,
+    and `launch(resident=True)` suppresses that close. So presence in the list is the
+    whole test, and status is not part of it.
+
+    An unreadable list returns True, which is the SAFE side: a false「it is gone」would
+    launch a SECOND maintainer beside the live one, and two resident sessions writing
+    proposals is worse than a batch that waits one tick.
+    """
+    mod = facts_mod.launcher()
+    if mod is None:
+        return True
+    try:
+        if not mod.herdr_present():
+            return True                        # nothing to ensure and nothing to hammer
+        agents, err = mod.herdr_agents()
+    except Exception:                          # noqa: BLE001. See the docstring
+        return True
+    if err:
+        return True
+    want = mod.herdr_name(MAINT_TASK)
+    return any(a.get("name") == want for a in agents)
+
+
+def ensure_maintainer(st, root=None):
+    """Start the resident maintainer if it is not there. IDEMPOTENT, every tick.
+
+    **THIS IS THE ONLY SPAWN, and that is the repair of a defect that got worse with
+    time.** The old `spawn_maintainer()` launched a FRESH batch on every trigger and
+    leaned on the launcher's own「task already running」refusal. That refusal returned
+    None and wrote NO batch line, so `hours_since_last_batch()` kept reporting a stale
+    age and the trigger re-fired every `tick_seconds`, invisibly. An idempotent ensure
+    has no refusal path, so the loop cannot form.
+
+    THE MAINTAINER OUTLIVES THIS PROGRAM, owner's ruling 2026-08-18. `pod.py` may die
+    and be repaired and restarted; the maintainer may not, because it is the role that
+    repairs `pod.py`. The pane belongs to the herdr server and the process is setsid'd,
+    so it survives this program's death already; what did NOT survive was the lifecycle,
+    and this function plus `scripts/pod/keeper.sh` is the whole of that repair.
+    """
+    root = ROOT if root is None else Path(root)
+    if maintainer_alive(root):
+        return None
+    brief = write_batch_brief(st, root)
+    if brief is None:
+        return None
     mod = facts_mod.launcher()
     if mod is None:
         return None
     try:
         head = heads_mod.head("maintainer")
         mod.HARNESS = head["harness"]
-        rc = mod.launch("POD-BATCH", brief, False, head["sandbox"], head["model"],
+        rc = mod.launch(MAINT_TASK, brief, False, head["sandbox"], head["model"],
                         effort=head["effort"],
-                        preamble=preamble_for("maintainer", root))
+                        preamble=preamble_for("maintainer", root),
+                        provider=head.get("pi_provider"), resident=True)
     except SystemExit:
         return None
     except Exception:                          # noqa: BLE001. The batch is not the loop
-        # THE MAINTAINER IS AD15'S BATCH AND NOT A TASK. A dispatch that fails costs one
-        # batch, which the same trigger re-fires; a raise here would stop the loop from
-        # OBSERVING and CLOSING work that has already returned.
+        # A FAILED ENSURE COSTS ONE TICK. A raise here would stop the loop from OBSERVING
+        # and CLOSING work that has already returned, which is a far larger loss.
         return None
-    return str(brief.relative_to(root)) if rc == 0 else None
+    if rc != 0:
+        return None
+    rel = str(brief.relative_to(root))
+    # A FRESH LAUNCH DELIVERS A BATCH, because the brief is cat'd behind the slot file.
+    # Stamping it here is what lets rule (e) skip the prompt on the same tick: a head
+    # that was just handed this brief does not need to be told to read it.
+    emit_event(st, "batch", result="prompted", proposal=rel, root=root)
+    return rel
+
+
+def prompt_maintainer(st, root=None):
+    """Feed one batch to the RESIDENT maintainer. It launches nothing.
+
+    **A PROMPT TO A BUSY HEAD QUEUES AND NEVER INTERRUPTS** (`dev/LESSONS.md` C-61). That
+    is the property this rule wants: a batch that arrives mid-repair waits its turn
+    instead of racing it.
+
+    THE PROMPT NAMES THE BRIEF AND DOES NOT PASTE IT. The maintainer is ONE long-lived
+    session under the owner's ruling of 2026-08-18, so its context is a standing cost;
+    a path costs one line and the brief is on disk beside it.
+    """
+    root = ROOT if root is None else Path(root)
+    brief = write_batch_brief(st, root)
+    if brief is None:
+        return None
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    rel = str(brief.relative_to(root))
+    try:
+        ok = mod.herdr_prompt(mod.herdr_name(MAINT_TASK),
+                              f"POD-BATCH. Read {rel} and do what it asks.")
+    except Exception:                          # noqa: BLE001. See ensure_maintainer()
+        return None
+    if not ok:
+        return None
+    # **STAMP THE CLOCK HERE OR THE TRIGGER RE-FIRES EVERY TICK.** `hours_since_last_batch()`
+    # reads `batch` lines, and until 2026-08-18 only `harvest_batch()` wrote one, which
+    # happens when the maintainer RETURNS a proposal. Between the prompt and the return
+    # the clock therefore still read「twelve hours」. Under the old spawn the launcher's
+    # 「task already running」refusal hid this; a prompt has no such refusal and always
+    # succeeds, so without this line rule (e) would flood the resident maintainer with a
+    # duplicate batch every `tick_seconds`.
+    emit_event(st, "batch", result="prompted", proposal=rel, root=root)
+    return rel
 
 
 def write_digest(st, root=None):
@@ -2151,7 +2445,21 @@ def apply(action, t, rec, row_id, st, root=None):
         emit(st, "", NONE, LOOP_STOPPED, why="row " + str(row_id), root=root)
         STOPPED_FILE.parent.mkdir(parents=True, exist_ok=True)
         STOPPED_FILE.touch()
-        notify_owner("row " + str(row_id), root)
+        # **THE STOP NAMES THE MOVER, backlog item 6.** The row fires on the CLASS alone,
+        # so a landed trophy, a deleted one and a foreign edit all reached the owner as
+        # the same four words. MEASURED 2026-08-19: LJ-1.386 stopped the loop with `src/`
+        # untouched and `AGENTS.md` the actual mover. The row's behaviour is the owner's
+        # and is unchanged; only this sentence is.
+        why = "row " + str(row_id)
+        detail = (rec or {}).get("spec_surface_detail") or ""
+        if detail:
+            why += ". " + detail
+        stray = (rec or {}).get("changed_files_foreign") or []
+        if stray:
+            why += (f". NOTE: the conjunct reads the WHOLE tree and {len(stray)} FOREIGN "
+                    f"files are dirty, so the move may not be this task's: "
+                    + ", ".join(stray[:5]))
+        notify_owner(why, root)
         return STOP
     else:
         raise KeyError(action)                 # done and accept never arrive
@@ -2248,6 +2556,14 @@ def _rule_a2(st, root):
         mtime = 0.0
     for t in list(st.of(PARKED)):
         reason = t.park_reason if isinstance(t.park_reason, str) else ""
+        if not reason:
+            # FIX 1 ABOVE REPAIRS THE FOLD AND CANNOT REPAIR A STATE ALREADY FOLDED.
+            # `replay_log()` reads only lines newer than `st.seq`, so a park folded before
+            # the fix is never re-read and its reason stays None for ever. The log line
+            # always carries one, so read it there, exactly as `write_batch_brief()` does
+            # at :2200. Every `to=PARKED` emit passes a reason, so an empty one here means
+            # the fold lost it and never that the park had none.
+            reason = park_reason_of(t.code, root) or ""
         if reason.startswith("preflight:"):
             if _preflight(t, root) == []:
                 emit(st, t, PARKED, READY, root=root)
@@ -2380,6 +2696,49 @@ def _rule_c(st, root):
     return CONTINUE
 
 
+def read_stop_request(root=None):
+    """The declared stop, or a reason it was refused, or None when there is no file.
+
+    Returns `(claim, reason, evidence)` when the request is well formed, and the string
+    `"refused: ..."` when a file exists but does not carry what a stop needs.
+
+    **A STOP WITHOUT EVIDENCE IS REFUSED, and that is the Boundary rather than caution.**
+    「Evidence is `file:line`. A report that cannot be checked can only be believed.」 A
+    model that can halt the whole programme by writing four words is a model whose worst
+    hour costs the project a day. Every field below is required, and the evidence must
+    carry at least one `path:line`.
+
+    **A REFUSAL IS NOT SILENCE.** The file is retired to `.toml.refused` and the refusal
+    is recorded, because a declaration the program ignored without saying so is the worst
+    of the three outcomes: the mathematician believes it stopped the loop and it did not.
+    """
+    root = ROOT if root is None else Path(root)
+    p = root / STOP_REQUEST_REL
+    if not p.is_file():
+        return None
+    try:
+        data = tomllib.loads(p.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as e:
+        return f"refused: the file does not parse ({type(e).__name__})"
+    block = data.get("stop")
+    if not isinstance(block, dict):
+        return "refused: there is no [stop] table"
+    claim = str(block.get("claim") or "").strip()
+    reason = str(block.get("reason") or "").strip()
+    ev = block.get("evidence")
+    if not claim:
+        return "refused: [stop].claim is missing, so the digest cannot say WHAT was declared"
+    if not reason:
+        return "refused: [stop].reason is missing"
+    if not isinstance(ev, list) or not ev:
+        return "refused: [stop].evidence is missing or is not a list"
+    ev = [str(x) for x in ev]
+    if not any(re.search(r"\S+:\d+", x) for x in ev):
+        return ("refused: not one [stop].evidence entry carries a `file:line`, and a stop "
+                "that cannot be checked can only be believed")
+    return claim, reason, ev
+
+
 def _rule_d(st, root):
     """(d) STOP. AD14, at three parked tasks.
 
@@ -2387,14 +2746,39 @@ def _rule_d(st, root):
     pass 3 after the stop, because the already-running workers keep landing. That is the
     honest count and gap M7 states it as a ruling.
     """
-    if st.count(PARKED) < 3:
+    # THE DECLARED STOP COMES FIRST AND CARRIES ITS OWN REASON. Owner's ruling of
+    # 2026-08-18: a mathematician may call a halt, and that call is a DIFFERENT STATE
+    # from an empty queue. Both reach the program from the same agent on the same tick,
+    # so the only thing that separates them is this file.
+    req = read_stop_request(root)
+    if isinstance(req, str):                   # a malformed declaration. Refuse it LOUDLY
+        emit_event(st, "stop_request", root=root, result="refused", why=req)
+        retire_proposal(root / STOP_REQUEST_REL, "refused", root)
+        req = None
+    if req is not None:
+        claim, reason, ev = req
+        if STOPPED_FILE.exists():
+            return STOP
+        why = f"declared:{claim}"
+        emit(st, "", NONE, LOOP_STOPPED, why=why, root=root,
+             declared_reason=reason, declared_evidence=ev)
+        STOPPED_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STOPPED_FILE.touch()
+        notify_owner(f"{why}. {reason} Evidence: {'; '.join(ev[:4])}", root)
+        retire_proposal(root / STOP_REQUEST_REL, "stopped", root)
+        return STOP
+    if st.count(PARKED) < _limits()["parked_max"]:
         return CONTINUE
     if STOPPED_FILE.exists():
         return STOP                            # already stopped: one line, not one a tick
-    emit(st, "", NONE, LOOP_STOPPED, why="3 parked", root=root)
+    # THE SENTENCE COUNTS, it does not recite a literal. Both strings said「3 parked」
+    # whatever the limit was, so raising it to 7 on 2026-08-19 would have told the owner
+    # a number the program had stopped obeying.
+    why = f"{st.count(PARKED)} parked"
+    emit(st, "", NONE, LOOP_STOPPED, why=why, root=root)
     STOPPED_FILE.parent.mkdir(parents=True, exist_ok=True)
     STOPPED_FILE.touch()
-    notify_owner("3 parked", root)
+    notify_owner(why, root)
     return STOP
 
 
@@ -2402,8 +2786,12 @@ def _rule_e(st, root):
     """(e) MAINTAINER. AD15. The digest hangs off the same trigger, section 8.1."""
     harvest_batch(st, root)                    # R15 then the replay, section 6.7
     prune_logs(30, st, root)                   # the retention of section 4.0
-    if hours_since_last_batch(root) >= 12 or st.count(PARKED) >= 3:
-        spawn_maintainer(st, root)
+    # A17. IDEMPOTENT AND EVERY TICK: the maintainer outlives this program, so its
+    # liveness is not on the batch clock. A tick that had to START it also handed it a
+    # brief, so that tick does NOT also prompt: `started` is the whole of that guard.
+    started = ensure_maintainer(st, root)
+    if not started and (hours_since_last_batch(root) >= 12 or st.count(PARKED) >= 3):
+        prompt_maintainer(st, root)            # it is resident, so this FEEDS, not spawns
         write_digest(st, root)
 
 
@@ -2428,6 +2816,10 @@ def _rule_f(st, root):
             emit(st, t, READY, PARKED, reason="preflight:" + _check_id(d[0]),
                  detail=d, root=root)
             continue
+        # `LAST_REFUSAL` CARRIES THE REFUSAL IN WORDS, and the CALL keeps its two
+        # arguments: the suites patch `admit_rows` with two-argument stubs, so a third
+        # argument reads to them as `TypeError` and the dispatch dies as「refused」.
+        table_mod.LAST_REFUSAL = None
         try:
             admitted = table_mod.admit_rows(t.code, _abs(t.brief, root))   # R3 guards it
         except Exception as e:                 # noqa: BLE001. A brief is UNTRUSTED text
@@ -2439,7 +2831,8 @@ def _rule_f(st, root):
             d = [f"admission raised {type(e).__name__}: {e}"[:400]]
         if not admitted:
             emit(st, t, READY, PARKED, reason="admission", root=root,
-                 detail=d or None)
+                 detail=(d or ([table_mod.LAST_REFUSAL]
+                               if table_mod.LAST_REFUSAL else [])) or None)
             continue
         if not admits(st, t):
             continue                           # section 5.6
@@ -2497,11 +2890,19 @@ def _rule_g(st, root):
     live brief, so an hour-old refill still working writes `result: "REFUSED"` here and
     never a second agent on one brief.
     """
-    if st.of(READY) or dispatchable_entries(st):
+    # A NEW DIRECTION RE-PLANS THE QUEUE AT ONCE AND DOES NOT WAIT FOR IT TO DRAIN.
+    # Owner's ruling, 2026-08-18. Without this the refill fires only on an empty queue,
+    # so a correction written now took effect whenever the queue happened to run out,
+    # which on a full queue is hours. It bypasses the floor for the same reason, and it
+    # cannot loop because `direction_changed()` records the sha in the call that reports
+    # it. What to do with the entries already queued is the MATHEMATICIAN's call and
+    # never the program's: AD3, and the owner ruled it again on 2026-08-18.
+    fresh = direction_changed(st, root)
+    if not fresh and (st.of(READY) or dispatchable_entries(st)):
         return None
     if not admits(st, Task(REFILL_TASK, agda=True, exclusive=False)):
         return None                            # no slot is free
-    if hours_since_last_refill(root) < _refill_min_hours():
+    if not fresh and hours_since_last_refill(root) < _refill_min_hours():
         return None
     # RESOLVE THE BRIEF AGAINST `root`, NEVER AGAINST THE MODULE-LEVEL `ROOT`. The
     # constant is the live tree's path, and every test and every sandbox passes its own
@@ -2527,7 +2928,8 @@ def _rule_g(st, root):
         mod.HARNESS = head["harness"]
         rc = mod.launch(REFILL_TASK, brief_path, False, head["sandbox"],
                         head["model"], effort=head["effort"],
-                        preamble=preamble_for("mathematician", root))
+                        preamble=preamble_for("mathematician", root),
+                        provider=head.get("pi_provider"))
     except SystemExit:
         rc, why = 1, "the launcher refused"
     except Exception as e:                     # noqa: BLE001. One refill is not the loop
@@ -2612,8 +3014,15 @@ def cmd_tick(argv):
             HARNESS = getattr(real_mod, "HARNESS", "")
 
             @staticmethod
-            def launch(task, brief, agda, sandbox, model, effort="", tier="wide"):
-                planned.append(f"launch {task} <- {brief} [{model}/{effort}]")
+            def launch(task, brief, agda, sandbox, model, effort="", tier="wide", **kw):
+                # `**kw` IS NOT SLOPPINESS, IT IS THE ONLY SAFE SHAPE HERE. Every caller
+                # of `launch()` wraps it in `except Exception: return None`, so a stub
+                # that pins the signature turns a NEW argument into「nothing happened」,
+                # and `--plan` then reports a dispatch production really would make as no
+                # dispatch at all. MEASURED 2026-08-18: adding `resident=` did exactly
+                # that to rule (e), and the plan printed「WOULD do neither」.
+                planned.append(f"launch {task} <- {brief} [{model}/{effort}]"
+                               + (" RESIDENT" if kw.get("resident") else ""))
                 # RECORD A PLAUSIBLE REGISTRY ROW. The caller reads the pid back out of
                 # the registry to confirm the start, so a launch that records nothing
                 # would park a task the real loop dispatches, and the plan would report
@@ -2621,6 +3030,14 @@ def cmd_tick(argv):
                 planned_reg[task] = {"pid": -1, "proc_start": 0, "log": "", "final": "",
                                      "started": "", "events": "", "tier": tier}
                 return 0
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                # A PROMPT IS A SIDE EFFECT AND `--plan` PERFORMS NONE. `__getattr__`
+                # below delegates every unknown name to the REAL launcher, so without
+                # this the plan mode would really message the live maintainer.
+                planned.append(f"prompt {name}: {text[:60]}")
+                return True
 
             @staticmethod
             def load():
@@ -2637,7 +3054,24 @@ def cmd_tick(argv):
         real_launcher = facts_mod.launcher
         real_commit = table_mod.git_commit
         real_readback = globals()["model_readback_ok"]
+        real_emit = globals()["emit_event"]
+
+        def _plan_emit(st_, event, root=None, **kw):
+            # A PLAN MUST NOT MOVE A PRODUCTION CLOCK. `--plan` runs the real tick and
+            # writes real state, which is its documented contract, but a `batch` line is
+            # not state: `hours_since_last_batch()` reads it, so ONE dry run would hold
+            # the real trigger for twelve hours. MEASURED 2026-08-18, one line into
+            # `dev/pod/transitions/`, and removed by hand.
+            if event == "batch":
+                planned.append(f"stamp batch {kw.get('result', '')}")
+                return None
+            return real_emit(st_, event, root=root, **kw)
         facts_mod.launcher = lambda: stub
+        globals()["emit_event"] = _plan_emit
+        real_direction = globals()["direction_changed"]
+        globals()["direction_changed"] = (
+            lambda st_=None, root=None, record=True:
+            real_direction(st_, root, record=False))
         table_mod.git_commit = lambda paths, msg, root=None: (
             planned.append(f"commit {[str(x) for x in paths]}: {msg}"), True)[1]
         # THE READ-BACK ASKS A PANE WHICH MODEL ANSWERED, and no pane exists here, so it
@@ -2649,6 +3083,8 @@ def cmd_tick(argv):
             verdict = pod_tick(st)
         finally:
             facts_mod.launcher = real_launcher
+            globals()["emit_event"] = real_emit
+            globals()["direction_changed"] = real_direction
             table_mod.git_commit = real_commit
             globals()["model_readback_ok"] = real_readback
         print("pod tick --plan: nothing was launched and nothing was committed.")
@@ -2663,6 +3099,208 @@ def cmd_tick(argv):
     print(f"pod tick: seq {st.seq}, "
           + ", ".join(f"{s} {st.count(s)}" for s in STATES) + f", {verdict}")
     return 1 if verdict is STOP else 0
+
+
+#: THE KEEPER READS THESE, so a run's exit code must say WHICH ending it was.
+#:
+#: **UNTIL 2026-08-18 THREE OPPOSITE ENDINGS ALL EXITED 1**: rule (d)'s deliberate STOP,
+#: a startup refusal, and an unhandled exception. `scripts/pod/keeper.sh` restarts a
+#: crash and must never restart the other two, and it could not tell them apart. A STOP
+#: restarted is the STOP rule repealed; a lock refusal restarted is a hot loop against
+#: the runner that already holds it.
+RUN_STOP = 3                                   # rule (d). Read the digest, then `resume`
+RUN_REFUSED = 4                                # it never started. Fix the cause, then run
+
+
+def source_signature(root=None):
+    """One sha256 over every `scripts/pod/*.py`, or "" when they cannot be read.
+
+    IT WATCHES CODE AND NEVER DATA. `dev/pod/table.toml`, `dev/pod/queue.toml` and
+    `dev/pod/heads.toml` are re-read every tick already, so a change there needs no
+    restart. Only an edited MODULE is stale inside a running process.
+    """
+    h = hashlib.sha256()
+    try:
+        for q in sorted(Path(__file__).parent.glob("*.py")):
+            h.update(q.name.encode("utf-8"))
+            h.update(q.read_bytes())
+    except OSError:
+        return ""
+    return h.hexdigest()
+
+
+def sources_compile():
+    """None when every `scripts/pod/*.py` compiles, else the first error as a string.
+
+    **THIS IS THE WHOLE GATE ON A HOT RESTART, AND IT IS DELIBERATELY CHEAP.** A reload
+    replaces the running image, so a source carrying a syntax error would kill the loop AT
+    the exec and leave nothing behind to restart it: the keeper would count three fast
+    failures and stop guessing. Refusing to exec keeps the OLD image alive, which is
+    always the safer of the two outcomes.
+    """
+    try:
+        for q in sorted(Path(__file__).parent.glob("*.py")):
+            compile(q.read_text(encoding="utf-8"), str(q), "exec")
+    except (OSError, SyntaxError, ValueError) as e:
+        return f"{type(e).__name__}: {e}"
+    return None
+
+
+def hot_restart():
+    """Replace this process image with a fresh one. IT NEVER RETURNS.
+
+    **`os.execv` KEEPS THE PID, AND THAT IS THE WHOLE REASON IT IS THE RIGHT PRIMITIVE.**
+    `scripts/pod/keeper.sh` runs this program as a direct child and waits on it, so a
+    restart that forked or exited would read to the keeper as a death and to the owner as
+    a crash. An exec is invisible to both: same pid, same stdout, so the keeper's pane
+    keeps its scrollback and its restart counters stay untouched.
+
+    **A RUNNING WORKER IS UNTOUCHED.** Every head is a setsid'd process in its own herdr
+    pane with its own registry row, and `.pod-state/state.json` holds what this program
+    knows about it. Nothing of a worker lives in THIS process's memory, so rule (b)
+    observes the same pids after the exec that it observed before it.
+
+    The run lock is released by the exec, because Python opens files non-inheritable
+    (PEP 446), and the new image takes it again at the top of `cmd_run()`.
+    """
+    print("pod run: HOT RESTART. The sources changed, they compile, and every running "
+          "worker is untouched.")
+    sys.stdout.flush()
+    sys.stderr.flush()
+    with contextlib.suppress(OSError):
+        RELOAD_FILE.unlink()
+    os.execv(sys.executable,
+             [sys.executable, os.path.abspath(sys.argv[0]), *sys.argv[1:]])
+
+
+def notify_closes(seq_before, root=None):
+    """Tell the RESIDENT maintainer about every worker return this tick closed.
+
+    Owner's ruling, 2026-08-19: the maintainer reviews the PROGRAM after every close, so
+    a defect is found before it costs a task rather than after it did.
+
+    **A CLOSE IS `from == CHECKING` AND NOTHING ELSE.** That is the one fold every branch
+    of rule (c) passes through, whatever it routed to, so this counts each return exactly
+    once and needs no hook in the eight branches themselves. `RUNNING -> RETURNED` is
+    rule (b) OBSERVING a worker, not closing it, so it is not a close.
+
+    **IT WRITES NO `batch` LINE.** `hours_since_last_batch()` reads that line, so stamping
+    one here would hold AD15's twelve-hour batch trigger open for ever. This is a prompt
+    and never a batch.
+    """
+    closes = [l for l in log_lines(root, seq_before) if l.get("from") == CHECKING]
+    if not closes:
+        return None
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    what = "; ".join(
+        f"{l.get('task')} -> {l.get('to')}"
+        + (f" row {l['row']}" if l.get("row") else "")
+        + (f" reason {l['reason']}" if l.get("reason") else "")
+        for l in closes)
+    try:
+        mod.herdr_prompt(
+            mod.herdr_name(MAINT_TASK),
+            "POD-REVIEW. " + what + ". Review the PROGRAM and not the mathematics: read "
+            "the keeper's pane, `.pod-state/logs/` for these codes, and the newest lines "
+            "of `dev/pod/transitions/`. If you find a defect or a worthwhile improvement, "
+            "repair the tree, run the pod suites, then `touch .pod-state/reload` to hot "
+            "restart. Answer NOTHING TO REPAIR when that is the answer.")
+    except Exception:                          # noqa: BLE001. A prompt is never load-bearing
+        return None
+    return what
+
+
+def reap_children():
+    """Reap every exited child, without blocking. It returns the pids it reaped.
+
+    **A ZOMBIE READS AS A LIVE WORKER AND FREEZES THE TASK IN RUNNING.** `rec_alive()`
+    tests `ps` and `os.kill(pid, 0)`, and a `<defunct>` child answers BOTH: it still holds
+    a process-table row until its parent reaps it. Rule (b) therefore never sees the pid
+    die, and the task leaves RUNNING only at `worker_deadline_s`.
+
+    **THE HOT RESTART IS WHAT MAKES THIS REACHABLE.** `os.execv` keeps the pid and the
+    children, and throws away the `Popen` objects that would have reaped them, so after a
+    reload no code in this process is waiting on the dispatch drivers any more.
+    MEASURED 2026-08-19: pid 38917, LJ-1.386's driver, sat `Z` with ppid 38875, the loop
+    itself, while the state said RUNNING and both herdr agents were already gone.
+
+    IT IS SAFE BESIDE `subprocess`. This runs between ticks and this program is single
+    threaded, so no `Popen.wait()` is ever in flight when it collects.
+    """
+    out = []
+    while True:
+        try:
+            pid, _status = os.waitpid(-1, os.WNOHANG)
+        except ChildProcessError:              # no children at all
+            break
+        except OSError:
+            break
+        if pid == 0:                           # children exist, none has exited
+            break
+        out.append(pid)
+    return out
+
+
+def side_dispatches(st, root=None):
+    """Every LIVE dispatch that is not a task and not the maintainer, as {code: row}.
+
+    **RULE (g)'s REFILL RUNS ON THE `mathematician` SLOT AND DOES REAL WORK, and it never
+    enters the state machine.** It is dispatched as an EVENT line with an empty `task`, so
+    it has no CHECKING fold and `notify_closes()` above is blind to it. MEASURED
+    2026-08-19: `st.tasks` held only LJ-1.386 while `pod-refill` was working in pane
+    w7:p59 and writing `dev/pod/queue.toml`.
+
+    The maintainer is excluded because it is the reader of these notices, and a resident
+    head that never dies would never fire one anyway.
+    """
+    mod = facts_mod.launcher()
+    if mod is None:
+        return {}
+    try:
+        with mod.registry_lock():
+            rows = (mod.load().get("dispatches") or {})
+    except Exception:                          # noqa: BLE001. An unreadable registry
+        return {}
+    out = {}
+    for code, row in rows.items():
+        if code in st.tasks or code == MAINT_TASK or not isinstance(row, dict):
+            continue
+        try:
+            if mod.rec_alive(row):
+                out[code] = row
+        except Exception:                      # noqa: BLE001. `ps` and `os.kill` both fail
+            continue
+    return out
+
+
+def notify_side_done(gone, root=None):
+    """Tell the maintainer that a non-task dispatch finished. `gone` is {code: row}.
+
+    IT NAMES THE TRANSCRIPT AND NOT A ROW, because a dispatch outside the state machine
+    has no record and no row: the only evidence it leaves is its own log.
+    """
+    if not gone:
+        return None
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    what = "; ".join(f"{c} finished, transcript {(r or {}).get('final') or (r or {}).get('log') or '?'}"
+                     for c, r in gone.items())
+    try:
+        mod.herdr_prompt(
+            mod.herdr_name(MAINT_TASK),
+            "POD-REVIEW. " + what + ". This dispatch never entered the state machine, so "
+            "no record and no row exist for it. Read its transcript and whatever it wrote "
+            "(a refill writes `dev/pod/queue.toml` and one brief per queued task). Review "
+            "the PROGRAM: did it write inside its declared scope, and did the program "
+            "measure what it did? If you find a defect, repair the tree, run the pod "
+            "suites, then `touch .pod-state/reload`. Answer NOTHING TO REPAIR when that "
+            "is the answer.")
+    except Exception:                          # noqa: BLE001. A prompt is never load-bearing
+        return None
+    return what
 
 
 def cmd_run(argv):
@@ -2680,31 +3318,85 @@ def cmd_run(argv):
         tick_seconds = _limits()["tick_seconds"]
     except PodError as e:
         print(f"pod run: REFUSED. {e}", file=sys.stderr)
-        return 1
+        return RUN_REFUSED
     try:
         POD_STATE.mkdir(parents=True, exist_ok=True)
         runlock = open(POD_STATE / "run.lock", "a+")
     except OSError as e:
         print(f"pod run: REFUSED. {POD_STATE} is not writable: {e}", file=sys.stderr)
-        return 1
+        return RUN_REFUSED
     try:
         fcntl.flock(runlock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
         print("pod run: REFUSED. another runner holds .pod-state/run.lock. Two runners "
               "racing for the last Agda slot both dispatch (FM1).", file=sys.stderr)
-        return 1
-    started = watchdog_tick(load_state())       # A13. The session is this process
+        return RUN_REFUSED
+    # **A BLANK STATE BESIDE A WRITTEN LOG MEANS THE STATE WAS LOST, NOT THAT THIS IS THE
+    # FIRST RUN.** Starting from zero then is the worst of the three outcomes: rule (b)
+    # observes no RUNNING task, rule (c) closes none, and rule (f) can dispatch a second
+    # head onto work another head already holds. MEASURED 2026-08-18: `.pod-state/` held
+    # three conflict copies at seq 3, 4 and 5 and no `state.json` at all, and the loop
+    # would have started at seq 0 without a word.
+    #
+    # `--accept-blank-state` is the escape for a DELIBERATE wipe, and it is a flag rather
+    # than a silent default because the two cases look identical from here.
+    st0 = load_state()
+    if (st0.seq == 0 and not st0.tasks and log_lines() and
+            "--accept-blank-state" not in argv):
+        print("pod run: REFUSED. The state is blank and "
+              f"{TRANSITIONS} already holds lines, so the state file was LOST rather "
+              "than never written. Look in .pod-state/ for a `[conflicted]` or "
+              "`(conflicted)` copy and rename the newest back to `state.json`; if the "
+              "wipe was deliberate, run again with --accept-blank-state.",
+              file=sys.stderr)
+        return RUN_REFUSED
+    started = watchdog_tick(st0)                # A13. The session is this process
     print("pod run: the agda watchdog is up" if started else
           "pod run: the agda watchdog is DOWN. Every Agda task is REFUSED until it "
           "starts, because it is C-12's 14 GB backstop and 8 percent free floor (A13).")
     stopping = []
     signal.signal(signal.SIGINT, lambda *_: stopping.append(1))
     signal.signal(signal.SIGTERM, lambda *_: stopping.append(1))
+    sig0, bad_sig, pending = source_signature(), None, None
+    side_before = {}
     while not stopping:
+        # THE RELOAD IS CHECKED BETWEEN TICKS AND NEVER INSIDE ONE, so an exec can never
+        # land between the two halves of a dispatch or of an accept.
+        #
+        # **THE TWO TRIGGERS ARE NOT EQUALLY TRUSTED.** `.pod-state/reload` is DELIBERATE:
+        # somebody edited, ran the suites and asked for it, so it fires at once. A bare
+        # signature change is not deliberate, it is just a file that moved, so it must be
+        # the SAME change for two consecutive ticks before it fires. MEASURED 2026-08-19:
+        # editing across `pod.py` and `table.py` reloaded the loop three times mid-edit,
+        # and one of those images held `admit_rows` widened on one side of the call only,
+        # which is a mismatch that compiles perfectly and refuses every dispatch.
+        sig = source_signature()
+        want = RELOAD_FILE.exists() or (sig != sig0 and sig == pending)
+        pending = sig if sig != sig0 else None
+        if want and (sig != bad_sig or RELOAD_FILE.exists()):
+            err = sources_compile()
+            if err is None:
+                hot_restart()                  # never returns
+            print("pod run: the sources changed and DO NOT COMPILE, so the reload is "
+                  f"REFUSED and this image keeps running. {err}", file=sys.stderr)
+            bad_sig = sig
+            with contextlib.suppress(OSError):
+                RELOAD_FILE.unlink()
+        reap_children()                        # before rule (b) reads any pid
         st = load_state()
-        if pod_tick(st) is STOP:
+        seq_before = st.seq
+        result = pod_tick(st)
+        notify_closes(seq_before)              # owner's ruling 2026-08-19
+        # THE SECOND HALF OF THE SAME RULING: a dispatch outside the state machine.
+        # `side_before` starts EMPTY, here and after every hot restart, so a dispatch
+        # already dead at startup is never reported as a fresh finish. The cost is one
+        # missed notice for a head that dies during the exec itself.
+        side_now = side_dispatches(st)
+        notify_side_done({c: r for c, r in side_before.items() if c not in side_now})
+        side_before = side_now
+        if result is STOP:
             print(f"pod run: STOP at seq {st.seq}. Read the digest, then `pod resume`.")
-            return 1
+            return RUN_STOP
         for _ in range(int(tick_seconds)):
             if stopping:
                 break
@@ -2730,6 +3422,23 @@ def cmd_resume(argv):
     st = load_state()
     replay_log(st)
     before = st.count(PARKED)
+    # **A `stop_loop` PARK HAS NO OTHER UN-PARK TRIGGER, and without this it is
+    # PERMANENT.** Rule (a2) resolves a record-carrying park only when
+    # `dev/pod/table.toml` is newer than `parked_at`, and a `stop_loop` park is stamped
+    # AFTER the table it matched, so that test is false for ever. The record cannot
+    # change either, because nothing re-runs the task. MEASURED 2026-08-19: LJ-1.386
+    # parked `stop_loop:sys-spec-surface` at 04:18:49Z against a table written
+    # 2026-08-18T11:40:01Z, and `_rule_a2()` left it PARKED.
+    #
+    # **RESUME IS THE OWNER SAYING THE CAUSE IS FIXED**, which is the one thing that
+    # licenses a re-run: the row fired on the STATE OF THE TREE and not on the task's
+    # work, so a fresh instance now measures a different record. It belongs HERE and
+    # never in rule (a2), which runs every tick and would spin
+    # dispatch -> stop -> park -> unpark.
+    for t in list(st.of(PARKED)):
+        if str(t.park_reason or "").startswith("stop_loop:"):
+            emit(st, t, PARKED, READY, root=ROOT,
+                 why="resume: the owner cleared the stop")
     _rule_a2(st, ROOT)
     print(f"pod resume: {before} parked, {st.count(PARKED)} still parked, "
           f"{st.count(READY)} ready")
@@ -2745,7 +3454,7 @@ def cmd_status(argv):
     print(f"pod status: seq {st.seq}, "
           f"stopped {st.stopped or 'no'}, "
           f"table {'present' if TABLE.is_file() else 'ABSENT'}, "
-          f"parked {st.count(PARKED)}/3")
+          f"parked {st.count(PARKED)}/{_limits()['parked_max']}")
     if not st.tasks:
         print("  no task. `dev/pod/queue.toml` is the only producer of one.")
         return 0
