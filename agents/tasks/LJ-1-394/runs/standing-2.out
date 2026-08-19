@@ -1,0 +1,12 @@
+run 1:
+/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-394/Probe394.agda:249.19-20: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+real 1.56
+run 2:
+/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-394/Probe394.agda:249.19-20: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+real 1.73
+run 3:
+/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-394/Probe394.agda:249.19-20: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+real 1.50
