@@ -38,6 +38,7 @@ import datetime
 import importlib.util
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -3557,6 +3558,92 @@ class MaintainerPreset(LoopCase):
         self.assertIn(marker, self.heads().read_text(encoding="utf-8"))
         pod.write_maintainer_row("claude", self.tmp)
         self.assertIn(marker, self.heads().read_text(encoding="utf-8"))
+
+    def test_a_MAINTAINER_KEY_IN_ANOTHER_TABLE_cannot_be_rewritten_instead(self):
+        """**A SILENT NO-OP THAT REPORTED SUCCESS**, found by an adversarial pass over this
+        command on 2026-08-19. The rewrite ran over the WHOLE FILE with `count=1`, so with
+        a table before `[heads]` holding a key named `maintainer` it rewrote THAT key. The
+        loader check passed, because the real row was untouched and still valid, and
+        `--use claude` reported success while the head stayed on grok."""
+        # A SECOND `[maintainer_presets]` would be duplicate TOML and refuse for the
+        # wrong reason. The attack is only that a `maintainer = {...}` LINE sits earlier
+        # in the file, so any table before `[heads]` reproduces it.
+        h = self.heads()
+        early = ('[an_earlier_table]\n'
+                 'maintainer = { model = "claude-opus-5", effort = "xhigh", '
+                 'harness = "herdr-claude", sandbox = "acceptEdits" }\n\n[heads]\n')
+        h.write_text(re.sub(r"^\[heads\]\s*$", early.rstrip("\n"),
+                            h.read_text(encoding="utf-8"), count=1, flags=re.M),
+                     encoding="utf-8")
+        pod.write_maintainer_row("claude", self.tmp)
+        self.assertEqual(self.row()["model"], "claude-opus-5",
+                         "the switch rewrote a key in another table and said it worked")
+
+    def test_a_write_that_DID_NOT_TAKE_is_refused_and_rolled_back(self):
+        """The general guard, and it is stronger than any regex. The row is read back
+        through the REAL loader and compared with the preset field by field, so every way
+        a write can fail to land ends in a refusal rather than in a false success."""
+        # THE TABLE HEADER AND NEVER A COMMENT THAT MENTIONS IT. A plain `.replace` hits
+        # the first prose occurrence and leaves the real table standing, which is a
+        # fixture that tests nothing.
+        h = self.heads()
+        h.write_text(re.sub(r"^\[heads\]\s*$", "[heads_disabled]",
+                            h.read_text(encoding="utf-8"), count=1, flags=re.M),
+                     encoding="utf-8")
+        before = h.read_text(encoding="utf-8")
+        with self.assertRaises(pod.PodError):
+            pod.write_maintainer_row("claude", self.tmp)
+        self.assertEqual(h.read_text(encoding="utf-8"), before)
+
+    def stub_launcher(self, prompts):
+        """The launcher `cmd_maintainer` reaches for. It resolves the name and records
+        every prompt, so a test can read what the two sessions were told."""
+        class _Stub:
+            @staticmethod
+            def herdr_name(task):
+                return "pod-batch"
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                prompts.append((name, text))
+                return True
+        real = pod.facts_mod.launcher
+        pod.facts_mod.launcher = lambda: _Stub
+        self.addCleanup(lambda: setattr(pod.facts_mod, "launcher", real))
+
+    def test_a_HANDOVER_THAT_CANNOT_START_gives_the_name_BACK(self):
+        """**WITHOUT THIS THE SLOT IS LEFT WITH NO MAINTAINER AT ALL.**
+        `ensure_maintainer()` returns None on five paths, one of which is「an exclusive
+        task is live」, and by then the live agent has been renamed away: it receives no
+        mail and nothing has replaced it. If the loop is not running, nothing ever tries
+        again. Found by an adversarial pass on 2026-08-19."""
+        renames, prompts = [], []
+        self.stub_launcher(prompts)
+        self.swap(pod,
+                  retire_maintainer_agent=lambda root=None: "pod-batch-retired-X",
+                  rename_maintainer_agent=lambda a, b: (renames.append((a, b)), True)[1],
+                  ensure_maintainer=lambda st, root=None: None)
+        rc = pod.cmd_maintainer(["--handover", "claude"])
+        self.assertEqual(rc, 1)
+        self.assertIn(("pod-batch-retired-X", "pod-batch"), renames,
+                      "the outgoing session was left without the name")
+
+    def test_a_HANDOVER_THAT_STARTS_does_not_rename_anything_back(self):
+        renames, prompts = [], []
+        self.stub_launcher(prompts)
+        self.swap(pod,
+                  retire_maintainer_agent=lambda root=None: "pod-batch-retired-X",
+                  rename_maintainer_agent=lambda a, b: (renames.append((a, b)), True)[1],
+                  ensure_maintainer=lambda st, root=None: "agents/tasks/POD-BATCH/x.md")
+        rc = pod.cmd_maintainer(["--handover", "claude"])
+        self.assertEqual(rc, 0)
+        self.assertEqual(renames, [], "it took the name back from the head it just started")
+        told = dict(prompts)
+        self.assertIn("pod-batch", told, "the new head was never told it is the maintainer")
+        self.assertIn("maintainer-handover.md", told["pod-batch"],
+                      "the new head was not pointed at the handover")
+        self.assertIn("pod-batch-retired-X", told,
+                      "the outgoing session was never told it is retired")
 
     def test_a_switch_leaves_the_OTHER_four_slots_alone(self):
         import tomllib

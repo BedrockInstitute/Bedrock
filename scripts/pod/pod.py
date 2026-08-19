@@ -4276,7 +4276,18 @@ def cmd_stop(argv):
 #: The one line of `dev/pod/heads.toml` that `--use` rewrites. It is matched and replaced
 #: as TEXT and never re-serialised, because the file is the owner's and carries about a
 #: hundred lines of measurement in comments that no TOML writer preserves.
+#:
+#: **IT IS APPLIED INSIDE `[heads]` AND NEVER OVER THE WHOLE FILE.** MEASURED 2026-08-19
+#: by an adversarial pass over this very command: with a table before `[heads]` holding a
+#: key named `maintainer`, the whole-file form rewrote THAT key, the loader check passed
+#: because the real row was untouched and still valid, and `--use claude` reported success
+#: while the head stayed on grok. A silent no-op that reports success is the worst of the
+#: three outcomes.
 MAINT_ROW = re.compile(r"^(maintainer\s*=\s*)\{[^}]*\}\s*$", re.M)
+
+#: The `[heads]` table, from its header to the next one. `MAINT_ROW` is applied to this
+#: SPAN alone, so a key of the same name anywhere else in the file is out of reach.
+HEADS_TABLE = re.compile(r"^\[heads\]\s*$", re.M)
 
 
 def maintainer_presets(root=None):
@@ -4309,21 +4320,50 @@ def write_maintainer_row(name, root=None):
     if missing:
         raise PodError(f"preset {name!r} carries no {missing[0]!r}")
     path = root / "dev" / "pod" / "heads.toml"
-    text = path.read_text(encoding="utf-8")
+    before = path.read_text(encoding="utf-8")
+    # THE SPAN IS `[heads]` TO THE NEXT TABLE HEADER, so a `maintainer` key in any other
+    # table is unreachable from here whatever order the file is written in.
+    m = HEADS_TABLE.search(before)
+    if m is None:
+        raise PodError("dev/pod/heads.toml carries no [heads] table")
+    tail = before[m.end():]
+    nxt = re.search(r"^\[", tail, re.M)
+    span_end = m.end() + (nxt.start() if nxt else len(tail))
+    span = before[m.end():span_end]
     line = ("maintainer                = { "
             + ", ".join(f'{k} = {json.dumps(row[k])}' for k in need) + " }")
-    new, n = MAINT_ROW.subn(lambda _m: line, text, count=1)
+    new_span, n = MAINT_ROW.subn(lambda _m: line, span, count=1)
     if n != 1:
-        raise PodError("the `maintainer = { ... }` row could not be found in heads.toml")
-    before = path.read_text(encoding="utf-8")
-    path.write_text(new, encoding="utf-8")
+        raise PodError("the `maintainer = { ... }` row is not in the [heads] table of "
+                       "dev/pod/heads.toml, so there is nothing to switch")
+    path.write_text(before[:m.end()] + new_span + before[span_end:], encoding="utf-8")
+    # **THE WRITE IS VERIFIED THROUGH THE REAL LOADER, and reading it back is the guard
+    # that catches every variant of a write that did not take.** A refusal rolls the file
+    # back whole, so it is never left holding a row the next dispatch cannot use.
     try:
-        heads_mod.load_heads(path, cache=False)
+        got = heads_mod.load_heads(path, cache=False)["heads"]["maintainer"]
     except Exception as e:                     # noqa: BLE001
         path.write_text(before, encoding="utf-8")
+        heads_mod._CACHE.clear()               # noqa: SLF001
         raise PodError(f"preset {name!r} produces a row the loader refuses: {e}") from e
+    if any(got.get(k) != row[k] for k in need):
+        path.write_text(before, encoding="utf-8")
+        heads_mod._CACHE.clear()               # noqa: SLF001
+        raise PodError(f"the write did not take: the row still reads {got.get('model')!r} "
+                       f"on {got.get('harness')!r} and preset {name!r} names "
+                       f"{row['model']!r} on {row['harness']!r}. Nothing was changed.")
     heads_mod._CACHE.clear()                   # noqa: SLF001. The loader's own cache
     return row
+
+
+def rename_maintainer_agent(frm, to):
+    """Rename one herdr agent. True when herdr took it. It never raises."""
+    try:
+        d = subprocess.run(["herdr", "agent", "rename", frm, to],
+                           capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return d.returncode == 0 and "error" not in (d.stdout or "")
 
 
 def retire_maintainer_agent(root=None):
@@ -4347,12 +4387,7 @@ def retire_maintainer_agent(root=None):
     if not any(a.get("name") == name for a in agents or ()):
         return None                            # already free
     retired = f"{name}-retired-{time.strftime('%Y%m%d-%H%M%S')}"
-    try:
-        subprocess.run(["herdr", "agent", "rename", name, retired],
-                       capture_output=True, timeout=60)
-    except (OSError, subprocess.SubprocessError):
-        return None
-    return retired
+    return retired if rename_maintainer_agent(name, retired) else None
 
 
 def cmd_maintainer(argv):
@@ -4396,6 +4431,12 @@ def cmd_maintainer(argv):
               "until it gives up the name `pod-batch`; use --handover to do the swap.")
         return 0
 
+    mod0 = facts_mod.launcher()
+    if mod0 is None:
+        print("pod maintainer: REFUSED. no launcher module is readable, so nothing can "
+              "be started. The row is written and nothing else moved.", file=sys.stderr)
+        return 1
+    mod_name = mod0.herdr_name(MAINT_TASK)
     retired = retire_maintainer_agent()
     print(f"pod maintainer: the outgoing session is renamed {retired}."
           if retired else "pod maintainer: the name was already free.")
@@ -4405,8 +4446,22 @@ def cmd_maintainer(argv):
         rel = ensure_maintainer(st, ROOT)
         save_state(st)
     if rel is None:
-        print("pod maintainer: REFUSED. the new head did not start. The row is written, "
-              "so the next tick of a running loop will try again.", file=sys.stderr)
+        # **THE OUTGOING SESSION GETS ITS NAME BACK, and without this the slot was left
+        # with NO maintainer at all.** `ensure_maintainer()` returns None on five paths,
+        # one of which is「an exclusive task is live」, and by then the live agent has
+        # already been renamed away: it receives no mail and nothing has replaced it. If
+        # the loop is not running, nothing ever tries again and the operator has silently
+        # lost the role that repairs the loop. Found by an adversarial pass on 2026-08-19.
+        back = (retired and rename_maintainer_agent(retired, mod_name)) if retired else None
+        print("pod maintainer: REFUSED. the new head did not start."
+              + (f" The outgoing session keeps the slot: {retired} is {mod_name} again."
+                 if back else
+                 f" AND THE NAME COULD NOT BE GIVEN BACK. `{retired}` is the outgoing "
+                 f"session and NOTHING holds `{mod_name}`, so no batch reaches anybody. "
+                 f"Rename it by hand: herdr agent rename {retired} {mod_name}"
+                 if retired else "")
+              + " The row is written, so the next start uses the new preset (AD26).",
+              file=sys.stderr)
         return 1
     print(f"pod maintainer: started, and its first brief is {rel}.")
     mod = facts_mod.launcher()
