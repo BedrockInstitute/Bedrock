@@ -223,7 +223,12 @@ INSTRUCTIONS = ROOT / "dev" / "pod" / "instructions"
 
 
 def preamble_for(slot, root=None):
-    """The files `cat` puts ahead of the brief: `AGENTS.md`, then the slot's own clauses.
+    """The files `cat` puts ahead of the brief: the slot file, then `AGENTS.md`.
+
+    Owner 2026-08-20: the worker must meet its role and the shared Boundary before
+    the project page, the screen or the direction. The slot file is first. `AGENTS.md`
+    is second and now opens on the Boundary. Direction is still last, closest to the
+    brief, because it is the freshest thing the owner may have written this hour.
 
     **NOTHING WAS PUT AHEAD OF A BRIEF UNTIL 2026-08-18.** `INSTRUCTIONS` had zero
     consumers and every mention of a slot file in the program was a comment, so a worker
@@ -236,11 +241,12 @@ def preamble_for(slot, root=None):
     this returns what exists and the caller's own defect list reports the rest.
     """
     root = ROOT if root is None else Path(root)
-    out = [root / "AGENTS.md"]
+    out = []
     if slot:
         p = root / "dev" / "pod" / "instructions" / f"{slot}.md"
         if p.is_file():
             out.append(p)
+    out.append(root / "AGENTS.md")
     # THE SCREEN IS THE STANDING STATUS, extracted from PLAN.md section 0/11
     # on 2026-08-20. It sits behind the slot file and in front of the direction:
     # the direction is still last, because it is the freshest thing the owner
@@ -2654,6 +2660,31 @@ def hours_since_last_refill(root=None):
     return (time.time() - newest) / 3600.0
 
 
+def last_refill_queued_work(root=None):
+    """True when the newest refill line was followed by an a1 create (`to READY`, no `from`).
+
+    THE FLOOR EXISTS BECAUSE A MATHEMATICIAN THAT QUEUES NOTHING IS A LEGAL RETURN, so
+    without it an empty queue would dispatch one refill every `tick_seconds`. A refill
+    that DID queue work has already spaced the next ask: those tasks occupied the slots.
+    Once they leave RUNNING/READY/CHECKING, holding the floor until the dispatch hour
+    elapses leaves free slots idle. MEASURED 2026-08-20: `POD-REFILL-192930` dispatched
+    at 11:30Z (seq 439), a1 created LJ-1.424 to LJ-1.427 at 11:45Z, they were all
+    parked by 12:17Z, and the floor still counted from 11:30Z.
+    """
+    after = None
+    queued = False
+    for line in log_lines(root):
+        if line.get("event") == "refill":
+            after = line.get("seq")
+            queued = False
+            continue
+        if after is None:
+            continue
+        if line.get("to") == READY and not line.get("from"):
+            queued = True
+    return queued
+
+
 def _refill_min_hours():
     """A11's floor between two rule (g) dispatches. The OWNER'S KEY WINS when it exists.
 
@@ -4027,7 +4058,8 @@ def _rule_g(st, root):
     queue entry would become, so the watchdog limb and both A14 limbs bind here too. And
     the floor since the last refill has passed, because a mathematician that queues
     NOTHING is a legal return and without a floor this would dispatch one refill every
-    `tick_seconds`.
+    `tick_seconds`. A refill that queued work (an a1 create after its log line) has
+    already spaced the next ask; the floor does not hold after those tasks leave.
 
     IT IS NOT A TASK AND HOLDS NO STATE RECORD, exactly like `POD-BATCH`. Its return is
     read out of `dev/pod/queue.toml` by rule (a1) on the next tick, so routing it through
@@ -4050,7 +4082,9 @@ def _rule_g(st, root):
         return None
     if not admits(st, Task(REFILL_TASK, agda=True, exclusive=False)):
         return None                            # no slot is free
-    if not fresh and hours_since_last_refill(root) < _refill_min_hours():
+    if (not fresh
+            and hours_since_last_refill(root) < _refill_min_hours()
+            and not last_refill_queued_work(root)):
         return None
     # RESOLVE THE BRIEF AGAINST `root`, NEVER AGAINST THE MODULE-LEVEL `ROOT`. The
     # constant is the live tree's path, and every test and every sandbox passes its own

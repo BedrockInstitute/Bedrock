@@ -1463,7 +1463,7 @@ class Direction(LoopCase):
                      "coder_adversarial", "maintainer"):
             (inst / f"{slot}.md").write_text("clauses", encoding="utf-8")
             names = [f.name for f in pod.preamble_for(slot, self.tmp)]
-            self.assertEqual(names, ["AGENTS.md", f"{slot}.md", "screen.toml",
+            self.assertEqual(names, [f"{slot}.md", "AGENTS.md", "screen.toml",
                                      "direction.md"],
                              f"{slot} was dispatched without the screen or the direction")
 
@@ -2665,6 +2665,25 @@ class RuleG(LoopCase):
         pod._rule_g(fresh, self.tmp)
         self.assertEqual(len(self.launched), 1)
 
+    def test_the_floor_does_not_hold_when_the_last_refill_queued_work(self):
+        """MEASURED 2026-08-20 after POD-REFILL-192930.
+
+        The floor exists because a mathematician that queues NOTHING is a legal
+        return. A refill that produced a task has already spaced the next ask:
+        those tasks occupied the slots. Holding the hour after they park leaves
+        free slots idle.
+        """
+        st = pod.State()
+        pod._rule_g(st, self.tmp)
+        self.assertEqual(len(self.launched), 1)
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.READY)
+        st.tasks[CODE] = t
+        pod.emit(st, t, pod.NONE, pod.READY, brief=t.brief, root=self.tmp)
+        t.status = pod.DONE
+        pod._rule_g(st, self.tmp)
+        self.assertEqual(len(self.launched), 2,
+                         "a refill that queued work still sat behind the hour floor")
+
     def test_the_owner_s_own_limit_key_WINS_over_the_constant(self):
         """`dev/pod/heads.toml` is the one home of a limit, and the constant is a floor
         that yields the moment the owner writes the key."""
@@ -3806,10 +3825,11 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
         for role in sorted(heads_mod.load_heads()["heads"]):
             with self.subTest(role=role):
                 names = [pathlib.Path(f).name for f in self._capture(role)["preamble"]]
+                # THE SLOT FILE IS FIRST, then the shared Boundary. Owner 2026-08-20.
                 # THE DIRECTION IS LAST, closest to the brief. Owner's ruling of
                 # 2026-08-18 gives it to all five slots. The screen sits in front of
                 # it. This list is exact rather than a containment check.
-                self.assertEqual(names, ["AGENTS.md", f"{role}.md", "screen.toml",
+                self.assertEqual(names, [f"{role}.md", "AGENTS.md", "screen.toml",
                                          "direction.md"],
                                  f"a {role} worker was launched with {names}")
 
