@@ -1,7 +1,7 @@
 # LJ-1.390: the descent route to `sq`, priced against `Leg1`'s second conjunct
 
 ## HEAD
-head_slot: mathematician
+head_slot: coder
 machine: shared
 
 ## THE OBLIGATION

@@ -1,7 +1,7 @@
 # LJ-1.386: internal existence of a pairing code at a band ordinal, GO or NO-GO
 
 ## HEAD
-head_slot: mathematician
+head_slot: coder
 machine: shared
 
 ## THE OBLIGATION
