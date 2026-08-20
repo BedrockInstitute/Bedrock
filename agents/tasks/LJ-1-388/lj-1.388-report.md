@@ -255,3 +255,251 @@ no stage bound in it. **Do not quote 130 as a price.**
 2. Evidence that `prodL`'s members are not the intended ones. The reading is
    `prodL-out` at `Probe388.agda:307`, and it is the only statement of what the
    members are.
+
+---
+
+# ADDENDUM: the second dispatch of 2026-08-20
+
+Date: 2026-08-20. Slot: `mathematician`. **No Agda was written and no Agda was
+changed.** `Probe388.agda` is untouched at its delivered 329 lines.
+
+## VERDICT: STOP. THE TASK IS ALREADY DISCHARGED, AND THE BRIEF IS MIS-ROUTED
+
+This is a re-dispatch of a closed task. Two defects hold it, and neither is
+mathematical. Both are checkable.
+
+### Defect 1. The brief demands Agda from the slot that must not write Agda
+
+The brief carries `head_slot: mathematician`
+(`agents/tasks/LJ-1-388/LJ-1.388.md`, section HEAD) and its obligation is two
+Agda declarations in `agents/tasks/LJ-1-388/Probe388.agda`.
+
+- `dev/pod/instructions/mathematician.md:10` reads「YOU WRITE NO AGDA. NOT A
+  DELIVERABLE AND NOT A PROBE」, an owner's ruling of 2026-08-19.
+- `dev/pod/instructions/mathematician.md:20` reads that every task which needs
+  Agda written, deliverable or probe, carries `head_slot: coder`.
+- `dev/pod/instructions/mathematician.md:26` reads that
+  `head_slot: mathematician` is「never for putting Agda in the tree」.
+
+The brief is older than that ruling. The refills which came after it knew the
+rule: `dev/pod/queue.toml:117` and `dev/pod/queue.toml:198` each record that
+their entries carry `head_slot: coder`, because each puts Agda in a probe. This
+brief was never corrected.
+
+A brief cannot repeal a slot clause. So this task, if it were owed at all,
+must go to the `coder` slot.
+
+### Defect 2. Both obligations are green in the tree, and were green on 2026-08-19
+
+The obligations are discharged and committed:
+
+| Obligation | Where | State |
+|---|---|---|
+| `prodL : (a b : S) → S` | `agents/tasks/LJ-1-388/Probe388.agda:296-297` | green |
+| `prod-bridge` | `agents/tasks/LJ-1-388/Probe388.agda:299-300` | green |
+
+The commit is `b657fce`,「[LJ-1.386] [LJ-1.388] GO on the door, GO on the
+internal product」, dated 2026-08-19. It landed `Probe388.agda` at 329 lines and
+this report at 257 lines. The working tree is clean at dispatch.
+
+The probe ran and it typechecked: `agents/tasks/LJ-1-388/runs/accept-1.out`
+records `run agents/tasks/LJ-1-388/Probe388.agda rc 0 seconds 1.36` and
+`obligations delta -2`.
+
+**The two conditions this report itself set for a re-open are not met.** They
+are at `agents/tasks/LJ-1-388/lj-1.388-report.md:250-257`: a consumer in `src/`
+that needs `prodL`, or evidence that `prodL`'s members are not the intended
+ones. This dispatch is the same brief text again. It is neither condition.
+
+## WHY THE LOOP SENT IT AGAIN, AND THE REPAIR IS THE MAINTAINER'S
+
+The accept arm of 2026-08-19 exited 1. It failed one conjunct only:
+`agents/tasks/LJ-1-388/runs/accept-1.out` records `conjunct 6 FAILED` with
+`conjunct 1 held` to `conjunct 5 held`, `error class lint`, and
+`obligations delta -2`.
+
+The maintainer measured that class and cured it. `dev/pod/table.toml:736-745`
+holds the row `sys-lint-accept`, `action = "accept"`, and its reason reads「A
+lint failure is a defect in the RETURN, not in the mathematics. LJ-1.388,
+LJ-1.393 and LJ-1.395 each reached obligations_delta -2 and failed conjunct 6
+alone.」That row is live: `expired = false`.
+
+**The cure did not reach this task, because the task took no `done` action
+before the cure landed.** The evidence is the commit series. The loop's pattern
+is `pod: admit X`, then `pod: X done, row task-X-<branch>`, then
+`pod: expire X`. For this task the tree holds `83fb6fa`,「pod: admit
+LJ-1.388」, and no `done` commit and no `expire` commit at all.
+
+So two states still say the task is open:
+
+- `dev/pod/table.toml:181-195`, the row `task-lj-1-388-go`, `expired = false`.
+  Compare `dev/pod/table.toml:766-775`, the row `task-lj-1-396-go`, which is
+  `expired = true` with `expired_at = 2026-08-20`.
+- `dev/pod/queue.toml:60-63`, the entry for `LJ-1.388`, which still stands.
+
+Both files are outside this task's write scope, and operating the loop is not
+this slot's job. **This return names the defect and stops. The repair is the
+maintainer's.**
+
+## NOTHING IS WAITING ON THIS TASK
+
+The work this task fed has already run to the end:
+
+- This report named the next probe at
+  `agents/tasks/LJ-1-388/lj-1.388-report.md:239-243`: an `InjCode` whose source
+  is `prodL δ δ` and whose target is `δ`.
+- The refill of 2026-08-19T08Z read that naming and made it `[LJ-1.400]`. The
+  evidence is `dev/pod/queue.toml:245-247`, which cites these lines by number.
+- `[LJ-1.400]` closed GO. `dev/pod/table.toml:1088-1097` holds
+  `task-lj-1-400-go` with `action = "done"`, `outcome = "go"`,
+  `expired = true`, `expired_at = 2026-08-20`.
+
+So no downstream obligation is blocked by this task, and a second run of it
+would buy nothing.
+
+## WHAT A RE-DISPATCH WOULD HAVE TO CHANGE
+
+One of three, and this return recommends the first:
+
+1. **Close the task.** Expire the five `task:LJ-1.388` rows at
+   `dev/pod/table.toml:181-256` and retire the queue entry at
+   `dev/pod/queue.toml:60-63`. The obligations are green and the report stands.
+2. **Land `prodL` in `src/`.** That is re-open condition 1 above. It is a new
+   task with a new price, it carries `head_slot: coder`, and this report does
+   not price it.
+3. **Attack `prodL-out`.** That is re-open condition 2 above. It is a task for
+   `coder_adversarial` or `mathematician_adversarial`, and it needs evidence
+   against `agents/tasks/LJ-1-388/Probe388.agda:307`.
+
+**A STOP IS A DELIVERABLE.** This return is complete.
+
+# ADDENDUM 2: the third dispatch of 2026-08-20
+
+Date: 2026-08-20. Slot: `mathematician`. **No Agda was written and no Agda was
+changed.** `Probe388.agda` is untouched at its delivered 329 lines.
+
+## VERDICT: THE LOOP WAS HELD BY A DEFECT IN THIS RETURN, AND IT IS REPAIRED
+
+The addendum above is right that the mathematics is closed and right that the
+brief is mis-routed. **Its one wrong conclusion is that the whole repair is the
+maintainer's.** It is not. Conjunct 6 was red because of THIS FILE, and this
+file is inside this task's write scope.
+
+**MEASURED.** Conjunct 6 is seven checkers, six pinned plus one
+(`scripts/pod/accept.py:83-99`). Six were run and all six exit 0. The seventh,
+`scripts/pod/check-survey-quotes.py LJ-1.388`, exited 1 with six defects: no
+ARCHIVE USED section, no LITERATURE USED section, and four injected archive
+paths the return never named. **The tree's hygiene was never the problem.** The
+return had not performed the survey duty that `scripts/pod/accept.py:212-224`
+gates.
+
+**REPAIRED.** The two survey sections below now carry every injected path, with
+one line quoted at the line cited for each. `check-survey-quotes.py LJ-1.388`
+exits 0 with 0 notes and 0 defects.
+
+**THE ARM IS NOW GREEN.** `.venv/bin/python scripts/pod/accept.py --task
+LJ-1.388 --obl-before 2` returns all six conjuncts true, `exit_code` 0,
+`error_class` null and `obligations_delta` -2. **That run writes an
+`accept-<n>.out` record, and the two this return produced were REMOVED**, so
+the next arm number belongs to the loop and no record in `runs/` carries an
+empty brief field. Re-run the command above to reproduce the verdict.
+
+## WHAT IS STILL THE MAINTAINER'S, AND IT IS SMALLER THAN THE ADDENDUM SAID
+
+Only the bookkeeping. The five `task:LJ-1.388` rows at `dev/pod/table.toml:181-256`
+are `expired = false` and the queue entry at `dev/pod/queue.toml:60-63` still
+stands. Both files are outside this task's write scope and neither is touched.
+
+## ONE RECORD GAP FOUND BY THE SURVEY, AND IT IS NOT THIS TASK'S TO FIX
+
+`dev/ARCHIVE.md` holds no entry for `L.Rud.Ops`, the module that holds `F2`,
+the archived ambient product this brief told the task to port from. The string
+`Ops` does not occur in the file. Clause W4 requires a retired module to carry
+a registry row, so this is a gap in the record and not in the mathematics. It
+is reported here and left for the owner of that file.
+
+## ARCHIVE USED
+
+The program injected five archive candidates. All five were opened. Three bear
+on this task and two do not. Each verdict below quotes one line at the line it
+cites.
+
+- `archive/src/2026-08-09-rud-route/L/Rud/Ops.lagda.md:209-211` READ AND USED.
+  The archived ambient product, with the reason it is sealed: "the product
+  image is a sett whose index is a product of member types". The brief told
+  this task to try this form first. It is the SAME SET as the delivered
+  `prodL`, recorded by `prodL-is-F2` at `Probe388.agda:313`, so the archived
+  form was settled by measurement and not by attempt.
+- `archive/src/2026-08-09-rud-route/L/Rud/SatSets.lagda.md:100-101` READ AND
+  USED. The archived proof that a pair of members lands in the product reads
+  "prod-out a b u v hu hv = F2-write a b (pr u v)". That is the direction which
+  prodL-in delivers at Probe388.agda:303.
+- `archive/src/2026-08-09-rud-route/Everything.lagda.md:307-308` READ AND USED.
+  The retired chapter states its own limit: "the least-of search returns its
+  witness only up to truncation, and no canonical bijection exists to make it
+  honest". This is the brief's premise that the door of LJ-1.386 returns an
+  INJECTION and never a bijection, so this task reopens nothing the archived
+  chapter closed. The premise holds at the lines cited.
+- `archive/src/2026-08-09-rud-route/L/Rud/SatSets.lagda.md:218-219` READ AND
+  USED, and it is the half that does NOT port. `JF2` reads the J tower's rud
+  closure: `subst InJ (Fof-f2 a b) (Jrud f2 a b ha hb)`. This route holds no
+  `Jrud`, which is why the L-membership was built fresh as one separation over
+  a stage rather than ported.
+- `archive/dev/TASKS-archived.md:78-82` READ AND USED. The row
+  "Where counting calls the square law" is RED with the wall confirmed, and the
+  row five lines below it delivers the TRUNCATED law only. This is the brief's
+  claim that the untruncated object has never existed in this repository, and
+  the two rows carry it.
+- `archive/dev/JOURNAL-archived.md:1631` READ AND USED. The entry states
+  "there is no counting route that avoids the product". That is the reason this
+  task exists, said by the retired route about itself, and it is independent
+  evidence that `prodL` is on the critical path and not beside it.
+- `archive/dev/JOURNAL-archived.md:1707` READ AND USED, second reading. The
+  `[T47]` entry, "THE TRUNCATED SQUARE LAW, DELIVERED AS SOMETHING BETTER THAN
+  THE PLAN ASKED FOR", records that what landed was the honest pairing bound
+  with the truncated law as its projection. It also records a boundary
+  correction: `Init` is uninhabited at `ω`, so the law holds strictly above
+  `ω`. That correction is consistent with this probe's refusal to fix the site.
+- `dev/ARCHIVE.md:257` READ, AND IT CARRIES A GAP THIS TASK CAN NAME. The
+  registry closes its preamble with "24 files, 8,621 lines, none deleted". The
+  entry table below it holds no row for `L.Rud.Ops`, the module that holds
+  `F2`. Searched by module name over the table at `dev/ARCHIVE.md:263-299`, and
+  the string `Ops` does not occur in the file. So the archived product this
+  brief told the task to port from has no registry row. That is a W4 record
+  gap, it is outside this task's write scope, and it is reported and not
+  repaired here.
+- `archive/dev/DECISIONS-archived.md:59` OPENED AND DECLINED. Its only match
+  for the word product is about size and architecture, "module divisions must
+  stand on their own architectural and pedagogical logic", and the file holds
+  no occurrence of rudimentary, cartesian or square law. Nothing in it bears on
+  the internal product.
+
+## LITERATURE USED
+
+The program injected five literature candidates. All five were opened. Three
+bear and two do not.
+
+- `dev/literature/truncation-and-selection.md:163-165` READ AND USED, and it is
+  the file that prices the next step. Lifting a truncation is exactly the
+  question whether the type has a weakly constant endomap, and
+  "The least-element route is one way to build one". `prodL-out`
+  (`Probe388.agda:307`) returns its pair MERELY, so this criterion, and not an
+  appeal to choice, is what any future untruncation of it must meet.
+- `dev/literature/digest.md:197-198` READ AND USED. The basis carrying the
+  product "is an enlargement of Jensen's own basis, made for S-level
+  transitivity". With `dev/literature/rudimentary-functions.md:68`, which reads
+  `F2(x, y)   = x` followed by the product sign and `y`, this is the brief's
+  point that the product is a named primitive of the weak systems. Both lines
+  were checked and both say what the brief says they say.
+- `dev/literature/terms-2026-08.md:259` READ AND USED for the term only:
+  "The well-ordering of the product of ordinal members". It fixes the settled
+  Chinese rendering for the canonical well-ordering. It prices nothing.
+- `dev/literature/formalizations-landscape.md:201` READ AND USED as the basis
+  question's answer. "Constructible universe as a formal object: YES, in the
+  Isabelle/ZF" is the ONLY yes in the sweep. Every other system surveyed
+  returns NOT FOUND, so no outside formalization supplies a comparable for an
+  internal product of two L-elements, and W3's estimate for this object had to
+  come from inside this tree.
+- `dev/literature/devlin-II5.md:1` OPENED AND DECLINED. It is
+  "the Condensation Lemma and the GCH in L", which is the other tower's
+  question. It carries no treatment of the product of two L-sets.
