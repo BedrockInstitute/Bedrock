@@ -34,5 +34,22 @@ herdr agent prompt lj-1-386 "..."     # it queues and is read at the next tool c
 
 ## Current direction
 
-**NONE. The owner has written no direction yet.** Work to `dev/PLAN.md` section 0 and to
-your brief.
+**One SRC collection after LJ-1, not after `[LJ-2.5]`.** Owner, 2026-08-20.
+
+Do not wait for the architecture ruling at `[LJ-2.5]` before a W4 pass over `src/`. When
+the LJ-1 campaign as a whole is complete, queue that pass first: move retired modules
+under `archive/`, write the `dev/ARCHIVE.md` rows, and delete nothing. The retirement
+meter in `dev/ledger.toml` stays suspended until `[LJ-2.5]`; this pass is the record,
+not the re-arm.
+
+`[LJ-2.0]` through `[LJ-2.5]` stay queued. They are not this pass. Nothing in phase 3
+starts before `[LJ-2.5]`.
+
+LJ-1 is complete when no further LJ-1 work is worth starting, the parked LJ-1 tasks are
+settled or the owner has declined `--retry`, and `src/Landmarks.lagda.md` is not yet the
+halt: a halt is the trophies in that file. The collection sits between those two.
+
+**Independent adversarial audit, 2026-08-20.** Owner-authorized, outside the five
+slots, covering LJ-1.386 to LJ-1.414 (skip 405). The record is
+`dev/pod/audit-2026-08-20.md`. Read it before you queue the next mathematical
+task. The owner verified findings F1 and F9.

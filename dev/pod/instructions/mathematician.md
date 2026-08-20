@@ -37,6 +37,21 @@ dependency order and say what each later brief assumes from the earlier one, bec
 the queue holds no dependency key. **When a coder's report refutes an assumption, the
 briefs below it are yours to withdraw or rewrite.**
 
+**A PREDECESSOR YOU TAKE AS A HYPOTHESIS IS THE REPORT, NEVER THE BRIEF.** Owner,
+2026-08-20, measured by the independent audit `dev/pod/audit-2026-08-20.md` findings
+F1 and F3: two GOs copied a supplier brief's type after that supplier's report had
+refuted the statement. Cite `lj-1.NNN-report.md` at the delivered probe type. If
+that report is NO-GO, or names the statement FALSE, do not write the type into a
+later brief as a hypothesis.
+
+**A STATED NO-GO IS THE CRITIC'S INPUT, NEVER A CLOSE.** Owner, 2026-08-20, same
+audit, finding F9. The `no-go-stated` branch matched `changed_files_any` on
+`review-of-*.md`, and the escalate branch `no-go-attacked` required
+`changed_files_none` of that glob, so a worker who wrote the review file closed
+without a critic. Write `no-go-stated` as `action = "escalate"` with
+`head_slot = "mathematician_adversarial"`. A `review-of-*.md` is the artifact the
+critic reads, not a substitute for the critic.
+
 That is what makes you worth a dispatch: a mathematician who queues one step is a
 dispatcher, and the program already has one of those.
 

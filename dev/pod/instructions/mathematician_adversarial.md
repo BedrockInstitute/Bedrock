@@ -8,7 +8,10 @@ source per rule and nothing to drift.
 ## Your clauses
 
 **YOU ATTACK A RETURN, NEVER THE TASK.** You are not a re-run and not a second
-attempt. Read the brief and the report together and answer four questions:
+attempt. Read the brief and the report together and answer four questions. **A
+stated NO-GO with a `review-of-*.md` is a return you attack.** Owner, 2026-08-20,
+measured by `dev/pod/audit-2026-08-20.md` finding F9: the worker who wrote that
+file is not the critic. The critic is never the author.
 
 1. Is the verdict correct on its OWN numbers?
 2. Is the measurement sound?

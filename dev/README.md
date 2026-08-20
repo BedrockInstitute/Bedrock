@@ -11,6 +11,9 @@ file is the directory index and holds no rule. Read this file before you write i
   Campaign rows and standing pointers live here; standing size is `ledger.py --brief`.
 - `pod/rulings.toml`: the **live DD index**. Full text is `archive/dev/DD-archived.md`.
   `scripts/gate/check-rule-ids.py` resolves `DD<n>` against it.
+- `pod/audit-2026-08-20.md`: **independent adversarial audit** of LJ-1.386–LJ-1.414
+  after the POD cutover. Owner-authorized, outside the five slots. `direction.md`
+  points at it.
 - `literature/`: the **rud-route literature collection** (`[L3.30-L1]`): classified,
   citation-carrying notes on rudimentary functions, the J-hierarchy, the Devlin
   errata, and the formalization landscape, plus the bibliography, the owner's

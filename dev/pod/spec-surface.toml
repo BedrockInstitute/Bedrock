@@ -1234,7 +1234,7 @@ sha = "c25b028dc2ad4754a97cb854049102b06d0ab8b450db5ce8d508cf5f88130533"
 
 [[guarded]]
 path = "dev/pod/instructions/coder.md"
-sha = "8e4b13efeab13d45adc590cdfe43ebab36b1d3264fa82eb67c00a8807751775e"
+sha = "709ff5685adf32b886dc73f665cda3ec8be77321df54d568d29b462f3623c274"
 
 [[guarded]]
 path = "dev/pod/instructions/coder_adversarial.md"
@@ -1246,8 +1246,8 @@ sha = "16b7fccf26fcbe5d875c900a40276411b12043477955c06b572535c4d519d042"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician.md"
-sha = "5d6843f3b8e125ecf01142b18d42ba8f32b95e0dc774a394692d9e75ee62d67b"
+sha = "1d76e0105d68c2149e07482d91e331db83e2c247b68f73f2b89c3d8a5ddc6a6a"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician_adversarial.md"
-sha = "98df914df358fc1eabef175d3089f9fb75d13002f485a02317042b61b212e681"
+sha = "24583945ab1fc488674a6d4e974f1af09adb157e1cee4a29abec3db60850599a"

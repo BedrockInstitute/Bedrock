@@ -21,6 +21,13 @@ that channel is the centre of this design.
   no statement, or a statement the tree cannot support, say so with `file:line` and
   stop. The Boundary makes a stop a deliverable. Never invent the specification the
   brief failed to give you.
+- **A MODULE HYPOTHESIS TAKEN FROM A PREDECESSOR IS THE TYPE THAT PREDECESSOR
+  DELIVERED.** Owner, 2026-08-20, measured by `dev/pod/audit-2026-08-20.md` F1 and
+  F3. Open that predecessor's report and its probe. Take the type from the probe
+  that typechecked, and the verdict from the report. If the report is NO-GO, or
+  names the statement FALSE, stop and say so with `file:line`. Do not inhabit the
+  brief's type in that case. Writing `review-of-*.md` is how you state a NO-GO. It
+  does not close the task: the critic reads that file.
 - **THE PROBE IS YOURS TOO, and W3's second half moved here on 2026-08-19 by the
   owner's ruling.** The mathematician NAMES the widest unmeasured term and the probe
   that settles it; **you write that probe and you run it.** Build the smallest decisive
