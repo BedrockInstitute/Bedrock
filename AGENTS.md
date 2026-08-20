@@ -1,9 +1,41 @@
 # AGENTS.md
 
-Shared rules for every slot. Slot-only clauses live in the file before this one.
-Loop operation lives in `dev/pod/README.md`. Neither is here.
+## What Bedrock is
+
+Bedrock proves two theorems in Cubical Agda, both inside the constructible
+universe `L`: **`L ⊨ AC`** and **`L ⊨ GCH`**, with a two-directional bridge.
+The proofs are literate `.lagda.md` masters under `src/`.
+
+Requirements: Agda 2.8.0 with cubical 0.9, and Python 3.11 or later.
+[requirements-dev.txt](requirements-dev.txt) pins every dependency.
+**Run every `python3` command as `.venv/bin/python`.**
+
+**The endpoint is RULED. The architecture is a CANDIDATE.** `[LJ-1]` is the live campaign. `dev/pod/screen.toml` is the only standing
+status. `dev/pod/queue.toml` is the task producer.
+
+**`ledger.py --brief` is the only admissible source for a standing size figure.**
+Never quote a number found in a paragraph.
+
+**`dev/pod/direction.md` is guidance, never a rule.** When it and an older
+document disagree about where the work is going, the direction wins and you say
+so in your return. When it and a Boundary clause disagree, stop and report.
+
+| Need | Home |
+|---|---|
+| Measured laws that bind new code | `dev/LESSONS.md` |
+| Rulings, numbered and dated | `dev/pod/rulings.toml` |
+| Agda code and chapter style | `dev/STYLE-agda.md` |
+| Literate Agda, i18n markers, prose rules | `dev/STYLE-i18n.md` |
+| Translation terms | `dev/glossary.toml`, `dev/GLOSSARY.md` |
+| Size ledger | `dev/ledger.toml` |
+| Briefs, reports and probes | `agents/README.md` |
+| The program | `dev/memos/LJ-4-pod-program-design.md` |
+| How the loop is operated | `dev/pod/README.md` |
+
 
 ## Boundary
+
+Shared rules for every slot.
 
 - **Evidence is `file:line`.** A report that cannot be checked can only be believed.
   Never write a number, a date or a certainty the evidence does not give.
@@ -45,41 +77,3 @@ Loop operation lives in `dev/pod/README.md`. Neither is here.
   describes it. **The program commits**, by explicit path from the task's scope.
   It never runs `git add -A` and never pushes (rule R8). One push is one CI run
   and one deploy: the owner's call.
-
-## What Bedrock is
-
-Bedrock proves two theorems in Cubical Agda, both inside the constructible
-universe `L`: **`L ⊨ AC`** and **`L ⊨ GCH`**, with a two-directional bridge.
-The proofs are literate `.lagda.md` masters under `src/`.
-
-**The endpoint is RULED. The architecture is a CANDIDATE.** The two towers and
-the bridge are settled only by a measurement, at `[LJ-2.5]`. A brief says which
-is which.
-
-Requirements: Agda 2.8.0 with cubical 0.9, and Python 3.11 or later.
-[requirements-dev.txt](requirements-dev.txt) pins every dependency.
-**Run every `python3` command as `.venv/bin/python`.**
-
-## The milestone
-
-**`[LJ-1]` is the live campaign.** `dev/pod/screen.toml` is the only standing
-status. `dev/pod/queue.toml` is the task producer.
-
-**`ledger.py --brief` is the only admissible source for a standing size figure.**
-Never quote a number found in a paragraph.
-
-**`dev/pod/direction.md` is guidance, never a rule.** When it and an older
-document disagree about where the work is going, the direction wins and you say
-so in your return. When it and a Boundary clause disagree, stop and report.
-
-| Need | Home |
-|---|---|
-| Measured laws that bind new code | `dev/LESSONS.md` |
-| Rulings, numbered and dated | `dev/pod/rulings.toml` |
-| Agda code and chapter style | `dev/STYLE-agda.md` |
-| Literate Agda, i18n markers, prose rules | `dev/STYLE-i18n.md` |
-| Translation terms | `dev/glossary.toml`, `dev/GLOSSARY.md` |
-| Size ledger | `dev/ledger.toml` |
-| Briefs, reports and probes | `agents/README.md` |
-| The program | `dev/memos/LJ-4-pod-program-design.md` |
-| How the loop is operated | `dev/pod/README.md` |
