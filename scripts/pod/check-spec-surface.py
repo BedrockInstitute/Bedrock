@@ -107,7 +107,7 @@ THERE IS NO SECOND STALENESS GATE ANY MORE, and this paragraph used to name one.
 It said `instructions.py --check` refused an approved edit that never reached the
 five slot files. **That generator is archived at `archive/scripts/pod/instructions.py`
 and no `make check` target calls it**, because the slot files stopped carrying a
-generated half: the program `cat`s `AGENTS.md`, then the slot file, then the brief,
+generated half: the program `cat`s the slot file, then `AGENTS.md`, then the brief,
 so an edit here cannot go stale in a copy. One source per rule, and nothing to
 regenerate. Corrected 2026-08-18, after `instructions.py --write` was run against a
 file that is not there.

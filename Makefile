@@ -114,7 +114,7 @@ specsurface:
 # AGENTS.md is the ONE hand-written source of the shared Boundary, and there is no
 # generator any more. This comment used to describe an `instructions` target that ran
 # `instructions.py --check` against five slot files carrying a generated half. Those
-# files stopped carrying one: the program `cat`s AGENTS.md, then the slot file, then
+# files stopped carrying one: the program `cat`s the slot file, then AGENTS.md, then
 # the brief, so nothing is copied and nothing can go stale. The generator is at
 # archive/scripts/pod/instructions.py and no target calls it. Corrected 2026-08-18.
 

@@ -4,10 +4,10 @@
 owner and the `maintainer` slot. A developer document, English only.
 
 **IT IS NOT IN `AGENTS.md`, and that is the point.** Owner's ruling, 2026-08-19.
-`AGENTS.md` is `cat`ed ahead of every brief for all five slots, so anything written
-there is read by a mathematician who only needs to do mathematics and by a coder who
-only needs to write Agda. **A worker does not operate the loop and must not be told how
-to.** The Boundary stayed in `AGENTS.md`; this left it.
+`AGENTS.md` is `cat`ed into every dispatch for all five slots, after the slot file,
+so a sentence there is read by a mathematician who only needs to do mathematics and
+by a coder who only needs to write Agda. **A worker does not operate the loop and
+must not be told how to.** The Boundary stayed in `AGENTS.md`; this left it.
 
 The design behind all of it is `dev/memos/LJ-4-pod-program-design.md`, which this file
 never restates.

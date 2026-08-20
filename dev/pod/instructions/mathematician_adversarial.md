@@ -1,7 +1,7 @@
 # Standing instruction: `mathematician_adversarial`
 
 **This file holds ONLY what binds the `mathematician_adversarial` slot.** The Boundary every slot
-shares is `AGENTS.md`, and the program `cat`s `AGENTS.md`, then this file, then
+shares is `AGENTS.md`, and the program `cat`s this file, then `AGENTS.md`, then
 your brief, at every dispatch. **Neither file copies the other**, so there is one
 source per rule and nothing to drift.
 
