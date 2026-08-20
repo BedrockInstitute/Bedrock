@@ -1,0 +1,3 @@
+pass      exit=0        1.61s  agents/tasks/LJ-1-395/Probe395.agda::band-owes  (grouped run, exit 0)
+pass      exit=0        1.61s  agents/tasks/LJ-1-395/Probe395.agda::sq-band  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 2, 1.61 s, probe_red=False
