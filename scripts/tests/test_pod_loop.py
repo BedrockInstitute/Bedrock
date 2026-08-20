@@ -628,6 +628,85 @@ class RuleA2(LoopCase):
         pod._rule_a2(st, self.tmp)
         self.assertEqual(t.status, pod.PARKED)
 
+    def test_a_failed_reaccept_does_not_prompt_a_POD_REVIEW(self):
+        """LJ-1.422, 2026-08-20: each reload re-accepted the critic park and
+        `notify_closes` treated CHECKING→PARKED as a worker return."""
+        prompts = []
+
+        class _Mod:
+            @staticmethod
+            def herdr_name(t):
+                return "pod-batch"
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                prompts.append(text)
+                return True
+
+        self.patch(facts_mod, "launcher", lambda: _Mod)
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.PARKED, park_reason="no-match", record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.PARKED, pod.CHECKING, rec=rec, reason="no-match",
+                 root=self.tmp, why="reaccept: the scene is still there, no worker")
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="no-match",
+                 root=self.tmp)
+        self.assertIsNone(pod.notify_closes(seq_before, self.tmp))
+        self.assertEqual(prompts, [])
+
+    def test_a_reaccept_that_closes_DONE_still_prompts(self):
+        prompts = []
+
+        class _Mod:
+            @staticmethod
+            def herdr_name(t):
+                return "pod-batch"
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                prompts.append(text)
+                return True
+
+        self.patch(facts_mod, "launcher", lambda: _Mod)
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.PARKED, park_reason="no-match", record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.PARKED, pod.CHECKING, rec=rec, reason="no-match",
+                 root=self.tmp, why="reaccept: the scene is still there, no worker")
+        pod.emit(st, t, pod.CHECKING, pod.DONE, rec=rec, row="sys-go",
+                 root=self.tmp)
+        self.assertIsNotNone(pod.notify_closes(seq_before, self.tmp))
+        self.assertTrue(any("DONE" in p for p in prompts), prompts)
+
+    def test_a_worker_park_still_prompts_a_POD_REVIEW(self):
+        prompts = []
+
+        class _Mod:
+            @staticmethod
+            def herdr_name(t):
+                return "pod-batch"
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                prompts.append(text)
+                return True
+
+        self.patch(facts_mod, "launcher", lambda: _Mod)
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.RETURNED, record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.RETURNED, pod.CHECKING, root=self.tmp)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="no-match",
+                 root=self.tmp)
+        self.assertIsNotNone(pod.notify_closes(seq_before, self.tmp))
+        self.assertTrue(any("PARKED" in p for p in prompts), prompts)
+
     def test_a_reaccept_close_does_not_launch(self):
         """Full tick: PARKED → CHECKING → DONE, and launch() is never called."""
         rec = record(exit_code=0, delta=-2)
@@ -755,6 +834,37 @@ class FeedClockCountsFeeds(LoopCase):
         self.assertTrue(pod.park_since_last_batch(self.tmp))
         self.emit_batch("prompted")
         self.assertFalse(pod.park_since_last_batch(self.tmp))
+
+    def test_a_failed_reaccept_is_not_a_new_park_edge(self):
+        """LJ-1.422, 2026-08-20: twelve re-accepts of one critic park, each a
+        CHECKING→PARKED after `why: reaccept:`, each firing a batch."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.PARKED)
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
+        rec = record()
+        pod.emit(st, t, pod.PARKED, pod.CHECKING, rec=rec, reason="no-match",
+                 root=self.tmp, why="reaccept: the scene is still there, no worker")
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="no-match",
+                 root=self.tmp)
+        self.assertFalse(pod.park_since_last_batch(self.tmp),
+                         "a re-accept that parks again is the same park")
+
+    def test_a_worker_park_after_a_reaccept_still_counts(self):
+        """A later RETURNED→CHECKING→PARKED is a new park, even of the same code."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.PARKED)
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
+        rec = record()
+        pod.emit(st, t, pod.PARKED, pod.CHECKING, rec=rec, reason="no-match",
+                 root=self.tmp, why="reaccept: the scene is still there, no worker")
+        pod.emit(st, t, pod.CHECKING, pod.READY, rec=rec, root=self.tmp)
+        pod.emit(st, t, pod.READY, pod.RUNNING, root=self.tmp)
+        pod.emit(st, t, pod.RUNNING, pod.RETURNED, why="pid dead", root=self.tmp)
+        pod.emit(st, t, pod.RETURNED, pod.CHECKING, root=self.tmp)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="no-match",
+                 root=self.tmp)
+        self.assertTrue(pod.park_since_last_batch(self.tmp),
+                        "a worker park after a re-accept was swallowed")
 
 
 class MaintainerIsFedBeforeTheStop(LoopCase):

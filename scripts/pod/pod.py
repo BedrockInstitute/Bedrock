@@ -128,10 +128,13 @@ STOPPED_FILE = POD_STATE / "STOPPED"
 #: file is for the case the signature cannot see: a reload the maintainer wants NOW.
 RELOAD_FILE = POD_STATE / "reload"
 #: A park older than this file is re-measured in place (PARKED → CHECKING), with no
-#: worker. `hot_restart()` stamps it, so a meter repair plus reload salvages the
-#: scene that the old image mis-measured. MEASURED 2026-08-20 on LJ-1.400: fact 3
-#: read the main tree, both names were `no-file`, and a green worktree parked
-#: `no-match`. Re-dispatch would burn another head to land the same files.
+#: worker. `hot_restart()` stamps it only when `scripts/pod/*.py` actually moved,
+#: so a meter repair salvages the scene the old image mis-measured. A reload-file
+#: only restart (AGENTS.md, a slot file) is a new image of the same meter and
+#: must not re-accept. MEASURED 2026-08-20 on LJ-1.400: fact 3 read the main tree
+#: and a green worktree parked `no-match`. MEASURED the same day on LJ-1.422:
+#: twelve re-accepts of the same critic park, each from a reload that had not
+#: moved the meter, each prompting a POD-REVIEW and a POD-BATCH.
 REACCEPT_FILE = POD_STATE / "reaccept"
 #: **EVERY PREFIX THE PROGRAM WRITES ITSELF, and it has TWO readers now.**
 #: `maintainer_scope_ok()` subtracts it before blaming the maintainer, and
@@ -225,10 +228,10 @@ INSTRUCTIONS = ROOT / "dev" / "pod" / "instructions"
 def preamble_for(slot, root=None):
     """The files `cat` puts ahead of the brief: the slot file, then `AGENTS.md`.
 
-    Owner 2026-08-20: the worker must meet its role and the shared Boundary before
-    the project page, the screen or the direction. The slot file is first. `AGENTS.md`
-    is second and now opens on the Boundary. Direction is still last, closest to the
-    brief, because it is the freshest thing the owner may have written this hour.
+    Owner 2026-08-20: the slot file is first, so the worker meets its role before
+    the shared Boundary, the screen or the direction. `AGENTS.md` is second.
+    Direction is still last, closest to the brief, because it is the freshest
+    thing the owner may have written this hour.
 
     **NOTHING WAS PUT AHEAD OF A BRIEF UNTIL 2026-08-18.** `INSTRUCTIONS` had zero
     consumers and every mention of a slot file in the program was a comment, so a worker
@@ -2591,11 +2594,26 @@ def park_since_last_batch(root=None):
     lasts. `seq` is the log's own monotonic counter and it has neither failure.
     """
     newest_batch, newest_park = -1, -1
+    last_checking = {}
     for line in log_lines(root):
         seq = _int(line.get("seq"), -1)
         if line.get("event") == "batch" and line.get("result") == "prompted":
             newest_batch = max(newest_batch, seq)
+        elif line.get("to") == CHECKING:
+            last_checking[line.get("task")] = (
+                line.get("from"), line.get("why"), seq)
         elif line.get("to") == PARKED:
+            # A failed re-accept writes PARKED again. That is the same park, not
+            # a new one. MEASURED 2026-08-20 on LJ-1.422: accept-2 through
+            # accept-13, each a CHECKING→PARKED after `why: reaccept:`, each
+            # firing a batch that named the same four critic parks. A later
+            # worker park of the same task still counts: its inbound CHECKING
+            # is from RETURNED, not from PARKED.
+            task = line.get("task")
+            frm, why, cseq = last_checking.get(task, (None, None, -1))
+            if (frm == PARKED and str(why or "").startswith("reaccept:")
+                    and cseq > newest_batch):
+                continue
             newest_park = max(newest_park, seq)
     return newest_park > newest_batch
 
@@ -4346,7 +4364,7 @@ def sources_compile():
     return None
 
 
-def hot_restart():
+def hot_restart(meter=True):
     """Replace this process image with a fresh one. IT NEVER RETURNS.
 
     **`os.execv` KEEPS THE PID, AND THAT IS THE WHOLE REASON IT IS THE RIGHT PRIMITIVE.**
@@ -4360,6 +4378,12 @@ def hot_restart():
     knows about it. Nothing of a worker lives in THIS process's memory, so rule (b)
     observes the same pids after the exec that it observed before it.
 
+    **`meter` IS THE STAMP.** A change to `scripts/pod/*.py` is a new meter, so parks
+    older than the stamp are re-accepted once. A reload-file-only restart is a new
+    image of the SAME meter: AGENTS.md cannot change how a record routes. MEASURED
+    2026-08-20 on LJ-1.422: twelve re-accepts of one critic park, each from a reload
+    that had not moved the meter.
+
     The run lock is released by the exec, because Python opens files non-inheritable
     (PEP 446), and the new image takes it again at the top of `cmd_run()`.
     """
@@ -4367,7 +4391,8 @@ def hot_restart():
           "worker is untouched.")
     sys.stdout.flush()
     sys.stderr.flush()
-    stamp_reaccept()
+    if meter:
+        stamp_reaccept()
     with contextlib.suppress(OSError):
         RELOAD_FILE.unlink()
     os.execv(sys.executable,
@@ -4400,7 +4425,18 @@ def notify_closes(seq_before, root=None):
     one here would hold AD15's twelve-hour batch trigger open for ever. This is a prompt
     and never a batch.
     """
-    closes = [l for l in log_lines(root, seq_before) if l.get("from") == CHECKING]
+    window = log_lines(root, seq_before)
+    # A RE-ACCEPT IS NOT A WORKER RETURN. PARKED → CHECKING (why reaccept:) then
+    # CHECKING → PARKED is the meter re-running on the same scene, with no head.
+    # Counting it as a close prompted a POD-REVIEW for every reload. MEASURED
+    # 2026-08-20 on LJ-1.422: accept-2 through accept-13, same facts, same
+    # no-match. A re-accept that closes DONE still reports: that is a salvage.
+    reaccept = {l.get("task") for l in window
+                if l.get("from") == PARKED and l.get("to") == CHECKING
+                and str(l.get("why") or "").startswith("reaccept:")}
+    closes = [l for l in window
+              if l.get("from") == CHECKING
+              and not (l.get("task") in reaccept and l.get("to") == PARKED)]
     if not closes:
         return None
     mod = facts_mod.launcher()
@@ -4719,7 +4755,7 @@ def cmd_run(argv):
         if want and (sig != bad_sig or RELOAD_FILE.exists()):
             err = sources_compile()
             if err is None:
-                hot_restart()                  # never returns
+                hot_restart(meter=(sig != sig0))   # never returns
             print("pod run: the sources changed and DO NOT COMPILE, so the reload is "
                   f"REFUSED and this image keeps running. {err}", file=sys.stderr)
             bad_sig = sig
