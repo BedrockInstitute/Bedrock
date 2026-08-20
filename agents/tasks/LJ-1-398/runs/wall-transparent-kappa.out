@@ -1,0 +1,4 @@
+Checking LJ-1-398.Probe398 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-398/agents/tasks/LJ-1-398/Probe398.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
