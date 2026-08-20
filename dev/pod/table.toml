@@ -2747,7 +2747,8 @@ outcome = "go"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `go` of LJ-1.422, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-20
 
   [row.when]
   exit_code = 0
@@ -2763,7 +2764,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `no-go-attacked` of LJ-1.422, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-20
 
   [row.when]
   exit_code = 42
@@ -2780,7 +2782,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `no-go-stated` of LJ-1.422, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-20
 
   [row.when]
   exit_code = 42
@@ -2795,7 +2798,8 @@ head_slot = "coder_adversarial"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `heap-wall-escalate` of LJ-1.422, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-20
 
   [row.when]
   heap_wall = true
@@ -2808,7 +2812,8 @@ action = "park"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `ran-long-and-changed-little` of LJ-1.422, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-20
 
   [row.when]
   changed_files_count_max = 1
@@ -3527,3 +3532,68 @@ expired_at = 2026-08-20
   [row.when]
   changed_files_count_max = 1
   seconds_min = 3600.0
+
+[[row]]
+id = "task-lj-1-422-critic-settled"
+scope = "task:LJ-1.422"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. 428 discharged: the attack became two dispatches (424 GO, 426 NO-GO) and both returned. The critic file is present, exit 0, obligation still open."
+expired = true
+expired_at = 2026-08-20
+
+  [row.when]
+  exit_code = 0
+  changed_files_any = ["agents/tasks/LJ-1-422/review-of-LJ-1-422-1.md"]
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-425-critic-settled"
+scope = "task:LJ-1.425"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. Refill 20260820-202416 named this critic-parked no-match and moved the campaign to 429-432, which returned."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  changed_files_any = ["agents/tasks/LJ-1-425/review-of-LJ-1-425-1.md"]
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-426-critic-settled"
+scope = "task:LJ-1.426"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. Refill 20260820-202416: the critic AGREES (queue.toml:1269-1270). 428 used that agreement to discharge 422."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  changed_files_any = ["agents/tasks/LJ-1-426/review-of-LJ-1-426-1.md"]
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-427-critic-settled"
+scope = "task:LJ-1.427"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. Refill 20260820-202416 named this critic-parked no-match and moved the campaign to 429-432, which returned."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  changed_files_any = ["agents/tasks/LJ-1-427/review-of-LJ-1-427-1.md"]
+  heap_wall = false
