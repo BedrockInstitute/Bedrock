@@ -1,0 +1,2 @@
+pass      exit=0        1.66s  agents/tasks/LJ-1-438/Probe438.agda::coded-nonempty
+witness: 0 UNRESOLVED of 1, 1.66 s, probe_red=False
