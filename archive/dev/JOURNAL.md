@@ -1,9 +1,11 @@
 # ARCHIVED 2026-08-20
 
-The per-episode journal is retired. A close writes a report under
-`agents/tasks/<CODE>/` and a line in `dev/pod/transitions/`. The program
-does not write this file. The retired-route journal remains
-`archive/dev/JOURNAL-archived.md`.
+The per-episode journal is retired. Every agent task already keeps its
+whole product under `agents/tasks/<CODE>/`: the brief, the report and the
+probe, one directory per task, all tracked. The history is that directory.
+A second journal would only copy it. A close still writes a report and a
+line in `dev/pod/transitions/`. The program does not write this file. The
+retired-route journal remains `archive/dev/JOURNAL-archived.md`.
 
 Nothing below is current.
 

@@ -627,7 +627,7 @@ Every tracked POD configuration file lives in `dev/pod/`. A brief stays under
 | `.pod-state/state.json` | no | The runtime state, AD19 |
 | `.pod-state/logs/` | no | Worker transcripts |
 | `.pod-state/witness/` | no | The fact 3 witness modules, section 4.7 |
-| `agents/tasks/<CODE>/*-report.md` | yes | The episode record of a close. The mathematician does not write a journal entry; the coder's report and the transition log are the record. `dev/JOURNAL.md` is archived. The transition log holds FACTS and never a finding |
+| `agents/tasks/<CODE>/*-report.md` | yes | The episode record of a close. Every task already keeps its brief, report and probe under `agents/tasks/<CODE>/`, all tracked; a journal would only copy that record. The mathematician does not write a journal entry. `dev/JOURNAL.md` is archived. The transition log holds FACTS and never a finding |
 
 `.gitignore` gains one line, `.pod-state/`. That line matters twice: it keeps the
 runtime state out of the index, and it hides the witness modules from fact 4,
