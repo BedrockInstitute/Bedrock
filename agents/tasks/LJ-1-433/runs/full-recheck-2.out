@@ -1,0 +1,19 @@
+Checking LJ-1-433.Probe433 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-433/agents/tasks/LJ-1-433/Probe433.agda).
+        2.19 real         2.00 user         0.17 sys
+           649281536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41369  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 444  involuntary context switches
+         25394203187  instructions retired
+          9024082513  cycles elapsed
+           589448176  peak memory footprint
