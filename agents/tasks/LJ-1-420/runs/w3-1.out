@@ -1,0 +1,19 @@
+Checking LJ-1-420.Probe420 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-420/agents/tasks/LJ-1-420/Probe420.agda).
+        1.81 real         1.38 user         0.20 sys
+           419790848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24777  page reclaims
+                2588  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 744  voluntary context switches
+                1275  involuntary context switches
+         18956629463  instructions retired
+          6645466790  cycles elapsed
+           360760160  peak memory footprint
