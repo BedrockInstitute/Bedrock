@@ -935,8 +935,9 @@ not run it. Nothing else runs it at commit time either: `make survey` is a manua
 `git-hooks/commit-msg` runs R16's spec-surface guard, `check-spec-surface.py --msg-file`.
 It refuses a commit that stages a guarded rule home, or the snapshot, without a
 `Spec-surface-approved: YYYY-MM-DD (name)` trailer in the message. The guarded homes are
-`AGENTS.md`, `dev/memos/LJ-4-pod-program-design.md`, `dev/pod/heads.toml` and every file
-under `dev/pod/instructions/`.
+`AGENTS.md`, `dev/memos/LJ-4-pod-program-design.md` and every file under
+`dev/pod/instructions/`. `dev/pod/heads.toml` left that list on 2026-08-20 so a
+role's model can move without this gate.
 
 Both hooks are version-controlled; activate them once per clone (or run `make hooks`):
 

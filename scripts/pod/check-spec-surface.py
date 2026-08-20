@@ -86,10 +86,13 @@ definition body.
 
 R16 RIDES THE SAME SNAPSHOT, AND THAT IS THE WHOLE MECHANISM. A `[[guarded]]`
 entry is one sha256 over the WHOLE file and needs no parser. The rule homes are
-`AGENTS.md`, the design memo, which carries section 3 and section 3.1,
-`dev/pod/heads.toml`, and every `dev/pod/instructions/*.md`. A changed sha fails
-`--check` exactly as a changed signature does. No second mechanism, no second
-trailer, no second checker.
+`AGENTS.md`, the design memo, which carries section 3 and section 3.1, and every
+`dev/pod/instructions/*.md`. A changed sha fails `--check` exactly as a changed
+signature does. No second mechanism, no second trailer, no second checker.
+
+`dev/pod/heads.toml` LEFT THIS LIST on 2026-08-20. The owner ruled that a role's
+model may move without this gate. The file is still AD26's (the maintainer may
+not re-point a head); conjunct 5 no longer stops the loop when it does.
 
 `AGENTS.md` IS GUARDED HERE BECAUSE ITS OWN GUARD WAS ARCHIVED AND THIS FILE
 REPLACED IT. Before the cutover `archive/scripts/gate/check-agents-guard.py`
@@ -213,7 +216,9 @@ GUARDED_FILES = [
     # ("a change to this rule set") already covered it; only this list was short.
     "AGENTS.md",
     "dev/memos/LJ-4-pod-program-design.md",
-    "dev/pod/heads.toml",
+    # `dev/pod/heads.toml` left on 2026-08-20. The owner ruled a role's model
+    # may switch without this gate. AD26 still forbids the maintainer to re-point
+    # a head; only conjunct 5 stopped hashing the file.
 ]
 GUARDED_DIRS = ["dev/pod/instructions"]
 

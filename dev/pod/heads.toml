@@ -201,7 +201,7 @@ exclusive_max_load1 = 6.0     # refuse to start an exclusive task above this
 agda_deadline_s = 1800        # the POD owns the deadline. See gap M2
 worker_deadline_s = 14400     # a worker that runs longer is killed, section 5.1
 attempt_max = 4               # consecutive retries on ONE row, then PARK. B2
-parked_max = 7                # this many PARKED tasks stop the loop, rule (d)
+parked_max = 12               # this many PARKED tasks stop the loop, rule (d)
 
 # THE 1800 s AGDA DEADLINE CLEARS THE MEASURED WORST CASE BY 5.9 TIMES.
 # MEASURED 2026-08-17, [LJ-4-0] gap B3: the widest acceptance class, `d5-base`
@@ -257,12 +257,11 @@ system_free_floor_pct = 8     # C-12's floor, restored by A13
 # **THE CLAUDE PERMISSION MODE IS `auto`, owner's ruling 2026-08-19**, and its one
 # home is that launcher line.
 [heads]
-# RULED BY THE OWNER, 2026-08-18. The mathematician side runs Claude at three efforts;
-# the coder side runs the two `pi` vendors. **The DD17 invariant still holds: the critic
-# is never the same model as the author**, on both sides.
+# RULED BY THE OWNER, 2026-08-18, and the coder row moved to grok on 2026-08-20.
+# The critic is never the same model as the author, on both sides.
 mathematician             = { model = "claude-opus-5",   effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" }
 mathematician_adversarial = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
-coder                     = { model = "deepseek-v4-pro", effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
+coder                     = { model = "grok-4.6",        effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits" }
 coder_adversarial         = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
 # **THE MAINTAINER MOVED TO GROK, owner's ruling 2026-08-19.** It was `claude-opus-5` at
 # effort `high` from amendment A12. The slot is the resident one, so the change is not a

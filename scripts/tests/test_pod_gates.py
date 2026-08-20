@@ -525,10 +525,12 @@ check("the trailer regex takes the dated, named form",
           "Spec-surface-approved: 2026-08-17 (choukh)\n")))
 check("the trailer regex refuses an undated one",
       not css.TRAILER_RE.search("Spec-surface-approved: yes\n"))
-check("R16 guards the design memo and the heads table",
+check("R16 guards the design memo and the slot instructions",
       css.is_audited("dev/memos/LJ-4-pod-program-design.md")
-      and css.is_audited("dev/pod/heads.toml")
+      and css.is_audited("AGENTS.md")
       and css.is_audited("dev/pod/instructions/coder.md"))
+check("R16 does not guard heads.toml: a role's model may move without this gate",
+      not css.is_audited("dev/pod/heads.toml"))
 check("R16 does not guard an unrelated file",
       not css.is_audited("src/L/Constructible.lagda.md"))
 
@@ -558,6 +560,7 @@ FIXTURE = {
         "# Model\n\n```agda\nmodule V.Model where\n\n"
         "L⊨ZFC : isZFCModel\nL⊨ZFC = proof\n```\n"),
     "dev/memos/LJ-4-pod-program-design.md": "the rule home fixture\n",
+    "AGENTS.md": "the shared Boundary\n",
     "dev/pod/heads.toml": 'mathematician = "opus"\n',
     "dev/pod/instructions/coder.md": "the coder slot\n",
 }
@@ -631,16 +634,26 @@ git("checkout", "--", "src/Base/Classical.lagda.md", cwd=repo)
 
 # R16's own path: a rule home. The same split holds, and the staged case names
 # the file (`check-agents-guard.py:120-133` is the copied shape).
-heads = repo / "dev" / "pod" / "heads.toml"
-heads.write_text('mathematician = "fable"\n', encoding="utf-8")
+agents = repo / "AGENTS.md"
+agents.write_text("the shared Boundary, edited\n", encoding="utf-8")
 code, text = quiet(fix.main, ["x", "--msg-file", str(msg_bad)])
 check("an UNSTAGED rule home edit does not refuse the commit", code == 0, text)
-git("add", "dev/pod/heads.toml", cwd=repo)
+git("add", "AGENTS.md", cwd=repo)
 code, text = quiet(fix.main, ["x", "--msg-file", str(msg_bad)])
 check("a STAGED rule home refuses the commit and names the file",
-      code == 1 and "dev/pod/heads.toml" in text, text)
+      code == 1 and "AGENTS.md" in text, text)
 code, text = quiet(fix.main, ["x", "--msg-file", str(msg_ok)])
 check("a staged rule home passes with the trailer", code == 0, text)
+git("reset", "-q", cwd=repo)
+git("checkout", "--", "AGENTS.md", cwd=repo)
+
+# Owner 2026-08-20: a role's model is not this gate. Staging heads.toml
+# without the trailer must pass.
+(repo / "dev" / "pod" / "heads.toml").write_text('coder = "grok"\n', encoding="utf-8")
+git("add", "dev/pod/heads.toml", cwd=repo)
+code, text = quiet(fix.main, ["x", "--msg-file", str(msg_bad)])
+check("a staged heads.toml does not refuse: role models are not R16",
+      code == 0, text)
 git("reset", "-q", cwd=repo)
 git("checkout", "--", "dev/pod/heads.toml", cwd=repo)
 

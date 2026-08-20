@@ -5,7 +5,7 @@
 
 derived_from = "src/Landmarks.lagda.md"
 derivation = "src/Landmarks.lagda.md plus one file per `open import` in its fences; a bare `import M` is excluded"
-generated = "2026-08-19"
+generated = "2026-08-20"
 lines = 499  # provenance only; it is never compared
 files = [
   "src/Landmarks.lagda.md",
@@ -1231,10 +1231,6 @@ sha = "8cd293c7b5294ec0b869d398a915754242c41d2163a14e87b628a5112ac7a0e6"
 [[guarded]]
 path = "dev/memos/LJ-4-pod-program-design.md"
 sha = "fb5774f9829de5f6333dda14b8e85a01c36bed8829accf4cedbe44bab5119588"
-
-[[guarded]]
-path = "dev/pod/heads.toml"
-sha = "bcdc3d70b28f05e48a3ba7771de8e5f379215eb439c5d9f1194db07d9b8b21fb"
 
 [[guarded]]
 path = "dev/pod/instructions/coder.md"
