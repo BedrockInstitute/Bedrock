@@ -5,10 +5,10 @@ only). It inherits the source project's finalized code-style spec
 (`../fol-reification/docs/governance/STYLE.md`, finalized 2026-06-12 and proven over
 70k lines) and adapts it to Bedrock's textbook mission; where the two differ, this
 document wins. Process context (goal codes, phases) lives in
-[PLAN.md](PLAN.md); the i18n marker grammar lives in [STYLE-i18n.md](STYLE-i18n.md).
+[screen.toml](pod/screen.toml); the i18n marker grammar lives in [STYLE-i18n.md](STYLE-i18n.md).
 
 Rules marked **(provisional)** are expected to harden after real porting experience
-(archived D11, in `archive/dev/DECISIONS-archived.md`; DD11 in PLAN §3 is a
+(archived D11, in `archive/dev/DECISIONS-archived.md`; DD11 in `dev/pod/rulings.toml` is a
 DIFFERENT rule, code and prose craft. Tension T1's register is at
 `dev/memos/process-tensions.md`). Changing any rule is legislation: open an
 `[L0.x]` item, do not

@@ -6,7 +6,7 @@ the design doctrines that keep recurring. Developer doc, English only, written
 for agent readers: explicit structure over narrative, every entry traceable to
 its source, no entry without its numbers.
 
-`dev/PLAN.md` is the goal-history registry: what was ruled, when, with what
+`dev/pod/rulings.toml` is the live DD index; `archive/dev/PLAN-archived.md` is the goal-history registry: what was ruled, when, with what
 outcome. This file is where the substance of those rows lives. A chapter that
 needs a countermeasure carries a `-- perf:` marker naming the entry here. A
 lesson lands only when it has a source (a memo, a PLAN row, a probe report, or a
@@ -3805,7 +3805,7 @@ travelling, and C-42 stops a REFUTATION from stopping.**
 
 ### C-43. An escape hatch is the shape a wrong choice hides in, so a legal token is not a checked one
 
-**THE RULING IS `dev/PLAN.md` DD0 and this entry does not restate it.** DD0 says
+**THE RULING IS `dev/pod/rulings.toml` DD0 and this entry does not restate it.** DD0 says
 the owner's temporary instructions are not an interpretation of the `DD` rules
 and not an endorsement that the agent may disobey them. **What follows is the
 measured episode and the mechanical law it exposed.**

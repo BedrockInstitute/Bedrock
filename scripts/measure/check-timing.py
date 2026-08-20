@@ -420,7 +420,7 @@ def main() -> int:
               "with benchmarks nobody has\n  measured yet. Re-arm at [LJ-2.1]. "
               "The numbers above are still real.")
         return 0
-    print("\n  DD5 (dev/PLAN.md section 3) binds the build seconds of the double")
+    print("\n  DD5 (dev/pod/rulings.toml) binds the build seconds of the double")
     print("  trophy against the internalization route. A module over the cap")
     print("  is how a tree gets there.")
     return 0 if args.warn_only else 1

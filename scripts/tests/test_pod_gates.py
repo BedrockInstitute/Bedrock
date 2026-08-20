@@ -113,7 +113,7 @@ EPISODES = [
     ("7b", "agents/tasks/LJ-1-239/LJ-1.239.md", f"{RUD}/L/Condensation.lagda.md",
      SRC_SCOPE, 1),
     ("11", "agents/tasks/archive/LJ-1-10/LJ-1.10.md",
-     "archive/dev/TASKS-archived.md", DEV_SCOPE, 5),  # episode 11: 2 pre-cutover, 3 post-cutover, 5 after the slimming
+     "archive/dev/TASKS-archived.md", DEV_SCOPE, 4),  # episode 11: 2 pre-cutover, 3 post-cutover, 5 after the slimming, 4 after PLAN-archived.md
     ("5", "agents/tasks/LJ-1-353/LJ-1.353.md", f"{RUD}/L/Cardinal.lagda.md",
      SRC_SCOPE, 3),
     ("10", "agents/tasks/archive/LJ-1-6/LJ-1.6.md",
@@ -148,8 +148,17 @@ check("archive/src holds the 97 masters the record scoped",
 # -> 10. **This time the ranks did NOT move**, because a table of goal rows shares no
 # discriminative token with either query. That is the useful reading: the pin catches
 # every corpus change, and only some of them move a rank.
-check("archive/dev holds 10 records after the history sweep",
-      len(retr.corpus(DEV_SCOPE)) == 10, str(len(retr.corpus(DEV_SCOPE))))
+# 2026-08-20: `direction_changed()` filed archive/dev/direction/20260820-142326.md
+# and this pin went 10 -> 11. That directory is designed to grow. retrieve.corpus
+# now excludes it, so the pin still tracks the retrieval records.
+# 11 SINCE PLAN.md was archived as archive/dev/PLAN-archived.md on 2026-08-20.
+# THE PIN FIRED: 10 -> 11, and episode 11 moved 5 -> 4. Direction history stays
+# excluded; this file is a retrieval record.
+check("archive/dev holds 11 records after PLAN.md was archived",
+      len(retr.corpus(DEV_SCOPE)) == 11, str(len(retr.corpus(DEV_SCOPE))))
+check("a filed direction is history and is not a retrieval record",
+      not any(p.startswith("archive/dev/direction/")
+              for p in retr.corpus(DEV_SCOPE)))
 check("the corpus rule keeps a README index out of a code archive",
       not [p for p in retr.corpus(SRC_SCOPE) if p.endswith("README.md")])
 

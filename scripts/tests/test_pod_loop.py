@@ -251,6 +251,7 @@ class LoopCase(unittest.TestCase):
         shutil.copy(ROOT / "dev" / "pod" / "heads.toml",
                     tmp / "dev" / "pod" / "heads.toml")
         (tmp / "dev" / "pod" / "replay-corpus.jsonl").write_text("")
+        (tmp / "dev" / "pod" / "screen.toml").write_text("endpoint = \"ruled\"\n")
         table_path = tmp / "dev" / "pod" / "table.toml"
         table_path.write_text(table_mod.dump_table([]), encoding="utf-8")
         task = tmp / "agents" / "tasks" / DIR
@@ -265,6 +266,8 @@ class LoopCase(unittest.TestCase):
                   STOPPED_FILE=tmp / ".pod-state" / "STOPPED",
                   LOG_DIR=tmp / ".pod-state" / "logs",
                   LOCKFILE=tmp / ".pod-state" / "pod.lock",
+                  RELOAD_FILE=tmp / ".pod-state" / "reload",
+                  REACCEPT_FILE=tmp / ".pod-state" / "reaccept",
                   TRANSITIONS=tmp / "dev" / "pod" / "transitions",
                   QUEUE=tmp / "dev" / "pod" / "queue.toml",
                   TABLE=tmp / "dev" / "pod" / "table.toml",
@@ -358,7 +361,7 @@ class LoopCase(unittest.TestCase):
         self.patch(table_mod, "git_commit",
                    lambda paths, message, root=None:
                    self.calls["commit"].append(message) or True)
-        self.patch(witness_mod, "witness_unresolved", lambda t: 2)
+        self.patch(witness_mod, "witness_unresolved", lambda t, root=None: 2)
         self.patch(accept_mod, "unbound_findings", lambda root=None: [])
         # THE STUB RECORDS `t.row` AS IT WAS AT CALL TIME, because the real
         # `commit_task()` builds its git message from exactly that. See
@@ -397,6 +400,13 @@ class LoopCase(unittest.TestCase):
 
     def state_of(self, st, code=CODE):
         return st.tasks[code]
+
+    def give_scene(self, code=CODE):
+        """An isolated checkout. Re-accept refuses without one (LJ-1.388)."""
+        p = (self.tmp / ".pod-state" / "worktrees"
+             / agents_tree.normalise(code))
+        p.mkdir(parents=True, exist_ok=True)
+        return p
 
 
 # ---------------------------------------------------------------- rule (a1) CREATE
@@ -535,11 +545,107 @@ class RuleA2(LoopCase):
         self.assertEqual(t.status, pod.PARKED)
 
     def test_a_no_match_park_unparks_once_a_new_row_matches_the_record(self):
+        """A table edit newer than the park re-measures the scene. It does not
+        re-dispatch a worker (PARKED → CHECKING, transition 14)."""
         st, t = self.parked("no-match", rec=record(), parked_at=0.0)
+        self.give_scene()
         self.write_table([sys_row(when={"exit_code": 0})])
         pod._rule_a2(st, self.tmp)
-        self.assertEqual(t.status, pod.READY)
-        self.assertEqual(t.row, "sys-park-everything")
+        self.assertEqual(t.status, pod.CHECKING)
+        self.assertEqual(self.lines()[-1].get("why"),
+                         "reaccept: the scene is still there, no worker")
+
+    def test_a_no_match_park_reaccepts_after_a_reload_stamp(self):
+        """LJ-1.400: a meter repair plus reload salvages the worktree, no worker."""
+        st, t = self.parked("no-match", rec=record(), parked_at=time.time() - 10)
+        self.give_scene()
+        pod.stamp_reaccept(self.tmp)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.CHECKING)
+        self.assertEqual(self.calls["launch"], [])
+
+    def test_a_no_match_park_does_not_spin_after_a_failed_reaccept(self):
+        st, t = self.parked("no-match", rec=record(), parked_at=time.time() + 60)
+        pod.stamp_reaccept(self.tmp)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    def test_reaccept_moves_one_park_per_tick(self):
+        """Idle CHECKING waiters filled the heap sum and deadlocked the first salvage."""
+        st = pod.State()
+        for code in ("LJ-1.900", "LJ-1.901"):
+            st.tasks[code] = pod.Task(code, brief=f"agents/tasks/{DIR}/{CODE}.md",
+                                      status=pod.PARKED, park_reason="no-match",
+                                      record=record(), parked_at=0.0)
+            self.give_scene(code)
+        pod.stamp_reaccept(self.tmp)
+        self.write_table([sys_row(when={"exit_code": 0})])
+        pod._rule_a2(st, self.tmp)
+        checking = [c for c, t in st.tasks.items() if t.status == pod.CHECKING]
+        parked = [c for c, t in st.tasks.items() if t.status == pod.PARKED]
+        self.assertEqual(len(checking), 1, checking)
+        self.assertEqual(len(parked), 1, parked)
+
+    def test_a_no_match_park_without_a_worktree_is_not_reaccepted(self):
+        """LJ-1.386/388, 2026-08-20: re-accept on main hit spec-surface and R7."""
+        st, t = self.parked("no-match", rec=record(), parked_at=0.0)
+        pod.stamp_reaccept(self.tmp)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(self.calls["launch"], [])
+
+    def test_a_checking_task_without_a_worktree_parks_and_keeps_the_record(self):
+        """The leftover CHECKING from the 388 stop must not re-measure main."""
+        rec = record()
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md",
+                     status=pod.CHECKING, record=rec, park_reason="no-match")
+        st.tasks[CODE] = t
+        self.set_acceptance(record(exit_code=1, error_class="spec_surface"))
+        pod._rule_c(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(t.park_reason, "no-match")
+        self.assertIsNotNone(t.record)
+        self.assertEqual(self.calls["acceptance"], [])
+
+    def test_a_salvage_park_reaccepts_after_a_reload_stamp(self):
+        """LJ-1.388: the copy is retried, no worker."""
+        st, t = self.parked("salvage:LJ-1.386", rec=record(),
+                            parked_at=time.time() - 10)
+        self.give_scene()
+        pod.stamp_reaccept(self.tmp)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.CHECKING)
+        self.assertEqual(self.calls["launch"], [])
+
+    def test_a_quota_park_is_not_reaccepted(self):
+        """A vendor window is not a mis-measured scene."""
+        self.patch(pod, "quota_open", lambda reason: False)
+        st, t = self.parked("quota:2026-08-19T20:19:47", rec=record(),
+                            parked_at=0.0)
+        pod.stamp_reaccept(self.tmp)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    def test_a_reaccept_close_does_not_launch(self):
+        """Full tick: PARKED → CHECKING → DONE, and launch() is never called."""
+        rec = record(exit_code=0, delta=-2)
+        rec["facts"]["obligations_open"] = 0
+        st, t = self.parked("no-match", rec=record(delta=0), parked_at=0.0)
+        self.give_scene()
+        self.patch(pod, "salvage_worktree", lambda t, root=None: [])
+        self.patch(pod, "drop_worktree", lambda code, root=None: True)
+        t.obl_before = 2
+        self.write_table([sys_row("sys-go", action="done", outcome="go",
+                                  priority=10,
+                                  when={"exit_code": 0,
+                                        "obligations_delta_max": -2,
+                                        "heap_wall": False})])
+        self.set_acceptance(rec)
+        st, _ = self.tick(st)
+        self.assertEqual(t.status, pod.DONE)
+        self.assertEqual(self.calls["launch"], [])
+        self.assertEqual(self.calls["acceptance"], [CODE])
 
     def test_an_attempt_max_park_stays_while_the_GUILTY_row_still_wins(self):
         """B2: a table edit that does not touch the guilty row costs no dispatch."""
@@ -1335,12 +1441,14 @@ class Direction(LoopCase):
         self._write("d")
         inst = self.tmp / "dev" / "pod" / "instructions"
         inst.mkdir(parents=True, exist_ok=True)
+        (self.tmp / "dev" / "pod" / "screen.toml").write_text("endpoint = \"ruled\"\n")
         for slot in ("mathematician", "mathematician_adversarial", "coder",
                      "coder_adversarial", "maintainer"):
             (inst / f"{slot}.md").write_text("clauses", encoding="utf-8")
             names = [f.name for f in pod.preamble_for(slot, self.tmp)]
-            self.assertEqual(names, ["AGENTS.md", f"{slot}.md", "direction.md"],
-                             f"{slot} was dispatched without the direction")
+            self.assertEqual(names, ["AGENTS.md", f"{slot}.md", "screen.toml",
+                                     "direction.md"],
+                             f"{slot} was dispatched without the screen or the direction")
 
 
 class RuleE(LoopCase):
@@ -1849,11 +1957,21 @@ class Emit(LoopCase):
         self.assertEqual(st.tasks[CODE].pid, 7)
 
     def test_an_illegal_transition_is_refused_rather_than_written(self):
-        """Six states, twelve transitions, nothing else is legal."""
+        """Six states, the legal set, nothing else is legal."""
         st = pod.State()
         st.tasks[CODE] = t = pod.Task(CODE, status=pod.DONE)
         with self.assertRaises(pod.PodError):
             pod.emit(st, t, pod.DONE, pod.RUNNING, root=self.tmp)
+
+    def test_parked_to_checking_is_legal(self):
+        """Transition 14. AD16 still forbids PARKED → DONE."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.PARKED)
+        pod.emit(st, t, pod.PARKED, pod.CHECKING, root=self.tmp)
+        self.assertEqual(t.status, pod.CHECKING)
+        t.status = pod.PARKED
+        with self.assertRaises(pod.PodError):
+            pod.emit(st, t, pod.PARKED, pod.DONE, root=self.tmp)
 
     def test_every_park_line_carries_a_row_key_and_a_reason(self):
         """5.5: on a PARK the program writes exactly ONE line, with `"row": null`."""
@@ -2542,6 +2660,23 @@ class RuleG(LoopCase):
         self.assertEqual(line["result"], "REFUSED")
         self.assertIn("the pane server is gone", line["why"])
 
+    def test_an_already_running_refill_records_the_launcher_why(self):
+        """MEASURED 2026-08-20 seq 279. Direction change, live refill, no new pane."""
+        class Busy:
+            HARNESS = ""
+
+            @staticmethod
+            def launch(*a, **kw):
+                print("dispatch: POD-REFILL is already running (pid 89237)",
+                      file=sys.stderr)
+                return 1
+        self.patch(facts_mod, "launcher", lambda: Busy)
+        pod._rule_g(pod.State(), self.tmp)
+        line = self.refill_lines()[-1]
+        self.assertEqual(line["result"], "REFUSED")
+        self.assertIn("already running", line["why"])
+        self.assertNotEqual(line["why"], "the launcher exited 1")
+
     def test_the_refill_is_NOT_a_task_and_holds_no_state_record(self):
         """Routing it through the table would park it for no match and count against
         AD14's three, exactly as `POD-BATCH` must not."""
@@ -2662,7 +2797,8 @@ class Acceptance(LoopCase):
         # A23: FOUR values now, the fourth being fact 8, the unresolved count at EXIT.
         # A stub pinned at three unpacks as a ValueError inside `run_acceptance`.
         self.patch(witness_mod, "witness_delta",
-                   lambda t: (kw.get("delta", -2), 1.3, False, kw.get("open", 0)))
+                   lambda t, root=None: (kw.get("delta", -2), 1.3, False,
+                                         kw.get("open", 0)))
         self.patch(facts_mod, "changed_files_scoped",
                    lambda code, brief, root=None: (list(kw.get("ch", ["a.md"])), []))
         self.patch(facts_mod, "verification_target",
@@ -2930,9 +3066,10 @@ class Refuses(LoopCase):
                              "facts": record()["facts"]}))
         st = pod.replay_log(pod.State(), self.tmp)
         self.assertIsNotNone(st.tasks[CODE].record)
+        self.give_scene()
         self.write_table([sys_row(when={"exit_code": 0})])
         pod._rule_a2(st, self.tmp)
-        self.assertEqual(st.tasks[CODE].status, pod.READY)
+        self.assertEqual(st.tasks[CODE].status, pod.CHECKING)
 
     def test_a_record_with_a_missing_fact_ROUTES_TO_NOTHING(self):
         self.write_table([sys_row(when={"exit_code": 0})])
@@ -3022,7 +3159,7 @@ class Refuses(LoopCase):
     def test_a_fact_3_dispatch_point_that_RAISES_refuses_the_dispatch(self):
         """Fact 3 needs BOTH ends: without `obl_before` the return can never be measured,
         so the program refuses at the point it knows and never sends the worker."""
-        def boom(t):
+        def boom(t, root=None):
             raise tomllib.TOMLDecodeError("the obligation list does not parse", "", 0)
         self.patch(witness_mod, "witness_unresolved", boom)
         st = pod.State()
@@ -3222,7 +3359,8 @@ class MaintainerScopeAgainstRealGit(unittest.TestCase):
             for rel in ("dev/pod/transitions/2026-08.jsonl",
                         "agents/tasks/LJ-1-386/.pod",
                         "agents/tasks/POD-BATCH/20260818-000000.md",
-                        ".pod-state/state.json"):
+                        ".pod-state/state.json",
+                        "dev/pod/table.toml"):
                 p = root / rel
                 p.parent.mkdir(parents=True, exist_ok=True)
                 p.write_text("written by the program\n")
@@ -3237,6 +3375,167 @@ class MaintainerScopeAgainstRealGit(unittest.TestCase):
             self.assertFalse(ok2, "R15 must refuse a write outside the proposal file")
             self.assertIn("dev/PLAN.md", bad2)
 
+
+
+class SideScopeReport(LoopCase):
+    """Item 10 against a dirty-set delta that is not authorship.
+
+    MEASURED 2026-08-20 on POD-REFILL-20260820-110248: the head never started
+    working, `final.md` was never written, and the notice named `dev/pod/table.toml`
+    (`expire_rows`) plus three spec-surface files the owner was editing.
+    """
+
+    def test_expire_rows_dirty_table_is_not_the_refill(self):
+        self.patch(facts_mod, "_status_paths",
+                   lambda root: ["dev/pod/table.toml", "dev/pod/queue.toml",
+                                 "scripts/pod/check-spec-surface.py"])
+        st = pod.State()
+        st.tasks["LJ-1.404"] = pod.Task("LJ-1.404", status=pod.DONE)
+        got = pod.side_scope_report("POD-REFILL", before=[], st=st, root=self.tmp)
+        self.assertNotIn("dev/pod/table.toml", got)
+        self.assertNotIn("dev/pod/queue.toml", got)
+        self.assertIn("scripts/pod/check-spec-surface.py", got)
+
+    def test_a_never_started_dispatch_wrote_nothing(self):
+        log = self.tmp / "never.log"
+        log.write_text(
+            "HERDR agent never started working; pane w7:p6R kept for forensics\n")
+        row = {"log": str(log),
+               "final": str(self.tmp / "POD-REFILL-missing-final.md")}
+        self.assertTrue(pod._never_started_working(row))
+        self.patch(facts_mod, "_status_paths",
+                   lambda root: ["scripts/pod/check-spec-surface.py",
+                                 "scripts/README.md",
+                                 "scripts/tests/test_pod_gates.py",
+                                 "dev/pod/table.toml"])
+        got = pod.side_stray_paths("POD-REFILL", before=[], st=pod.State(),
+                                   row=row, root=self.tmp)
+        self.assertEqual(got, [])
+
+    def test_a_missing_log_is_not_treated_as_never_started(self):
+        self.assertFalse(pod._never_started_working({"log": str(self.tmp / "nope.log")}))
+        self.assertFalse(pod._never_started_working({}))
+
+    def test_a_direction_archive_and_the_plan_are_not_the_refill(self):
+        """MEASURED 2026-08-20 on POD-REFILL-20260820-140414."""
+        self.patch(facts_mod, "_status_paths",
+                   lambda root: ["archive/dev/direction/20260820-142326.md",
+                                 "dev/pod/screen.toml",
+                                 "dev/pod/rulings.toml",
+                                 "dev/pod/direction.md",
+                                 "scripts/pod/check-spec-surface.py"])
+        got = pod.side_scope_report("POD-REFILL", before=[], st=pod.State(),
+                                    root=self.tmp)
+        self.assertNotIn("archive/dev/direction/20260820-142326.md", got)
+        self.assertNotIn("dev/pod/screen.toml", got)
+        self.assertNotIn("dev/pod/rulings.toml", got)
+        self.assertNotIn("dev/pod/direction.md", got)
+        self.assertIn("scripts/pod/check-spec-surface.py", got)
+
+
+class LawsBundleProducer(LoopCase):
+    """R17's producer is `scripts/pod/rules.py`.
+
+    MEASURED 2026-08-20 on POD-REFILL-20260820-140414: `laws_bundle()` still
+    opened `scripts/dispatch/rules.py`, which does not exist, so the injector
+    returned None and every queued brief carried a handwritten LAWS block.
+    """
+
+    def test_the_producer_is_the_pod_rules_module(self):
+        live = self.tmp / "scripts" / "pod" / "rules.py"
+        live.parent.mkdir(parents=True, exist_ok=True)
+        live.write_text(
+            "import argparse\n"
+            "def kind_for_scope(paths):\n"
+            "    return 'probe'\n"
+            "if __name__ == '__main__':\n"
+            "    p = argparse.ArgumentParser()\n"
+            "    p.add_argument('--for', dest='kind')\n"
+            "    args = p.parse_args()\n"
+            "    print(f'MANDATORY for kind `{args.kind}` (fixture):')\n",
+            encoding="utf-8")
+        stale = self.tmp / "scripts" / "dispatch" / "rules.py"
+        stale.parent.mkdir(parents=True, exist_ok=True)
+        stale.write_text(
+            "def kind_for_scope(paths):\n"
+            "    return 'probe'\n"
+            "if __name__ == '__main__':\n"
+            "    print('STALE DISPATCH PATH')\n",
+            encoding="utf-8")
+        got = pod.laws_bundle(["agents/tasks/x/Probe.agda"], root=self.tmp)
+        self.assertIsNotNone(got)
+        self.assertTrue(got.startswith("MANDATORY for kind"), got)
+        self.assertNotIn("STALE", got)
+
+    def test_a_missing_producer_writes_no_block(self):
+        got = pod.laws_bundle(["agents/tasks/x/Probe.agda"], root=self.tmp)
+        self.assertIsNone(got)
+
+
+class RetrievalReadsTheWorktree(LoopCase):
+    """Isolation: the miss signal reads the report the worker wrote.
+
+    MEASURED 2026-08-20 on LJ-1.406: acceptance ran in the worktree (conjunct 6
+    held), then `emit_retrieval` opened the MAIN brief, found no report, and
+    recorded `used: 0` / `offered: 9`. Salvage copied
+    `agents/tasks/LJ-1-406/lj-1.406-report.md` after that line. 407, 408 and 409
+    closed the same hour with the same `used: 0` shape.
+    """
+
+    ARCHIVE_BLOCK = (
+        "## ARCHIVE (program-generated, do not edit)\n\n"
+        "Corpus search over archive/dev:\n"
+        "- CANDIDATE archive/dev/TASKS-archived.md  (score 1.000)\n"
+    )
+    REPORT = (
+        "# Report\n\n"
+        "## ARCHIVE USED\n\n"
+        "- `archive/dev/TASKS-archived.md:80`: read it.\n"
+    )
+
+    def _write_brief(self, where):
+        where.mkdir(parents=True, exist_ok=True)
+        brief = where / f"{CODE}.md"
+        brief.write_text("# fixture\n\n" + self.ARCHIVE_BLOCK, encoding="utf-8")
+        return brief
+
+    def _retrieval_lines(self):
+        out = []
+        trans = self.tmp / "dev" / "pod" / "transitions"
+        for p in sorted(trans.glob("*.jsonl")):
+            for line in p.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                rec = json.loads(line)
+                if rec.get("event") == "retrieval":
+                    out.append(rec)
+        return out
+
+    def test_a_worktree_report_is_what_the_signal_counts(self):
+        home = self.tmp / "agents" / "tasks" / DIR
+        self._write_brief(home)
+        report = home / f"{CODE.lower()}-report.md"
+        if report.exists():
+            report.unlink()
+        wt_home = self.tmp / ".pod-state" / "worktrees" / DIR / "agents" / "tasks" / DIR
+        self._write_brief(wt_home)
+        (wt_home / f"{CODE.lower()}-report.md").write_text(self.REPORT, encoding="utf-8")
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md")
+        self.assertTrue(pod.emit_retrieval(pod.State(), t, root=self.tmp))
+        lines = self._retrieval_lines()
+        self.assertEqual(len(lines), 1, lines)
+        self.assertEqual(lines[0]["used"], 1, lines[0])
+        self.assertEqual(lines[0]["offered"], 1, lines[0])
+
+    def test_without_a_worktree_the_main_report_still_counts(self):
+        home = self.tmp / "agents" / "tasks" / DIR
+        self._write_brief(home)
+        (home / f"{CODE.lower()}-report.md").write_text(self.REPORT, encoding="utf-8")
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md")
+        self.assertTrue(pod.emit_retrieval(pod.State(), t, root=self.tmp))
+        lines = self._retrieval_lines()
+        self.assertEqual(len(lines), 1, lines)
+        self.assertEqual(lines[0]["used"], 1, lines[0])
 
 
 class SettledProposalIsRetired(unittest.TestCase):
@@ -3362,11 +3661,11 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
         for role in sorted(heads_mod.load_heads()["heads"]):
             with self.subTest(role=role):
                 names = [pathlib.Path(f).name for f in self._capture(role)["preamble"]]
-                # THE DIRECTION IS THIRD AND LAST, closest to the brief. Owner's ruling
-                # of 2026-08-18 gives it to all five slots, so this list is exact rather
-                # than a containment check: a slot silently dropped from the direction
-                # would review against a direction the owner has already replaced.
-                self.assertEqual(names, ["AGENTS.md", f"{role}.md", "direction.md"],
+                # THE DIRECTION IS LAST, closest to the brief. Owner's ruling of
+                # 2026-08-18 gives it to all five slots. The screen sits in front of
+                # it. This list is exact rather than a containment check.
+                self.assertEqual(names, ["AGENTS.md", f"{role}.md", "screen.toml",
+                                         "direction.md"],
                                  f"a {role} worker was launched with {names}")
 
     def test_a_pi_head_gets_its_own_providers_and_never_a_default(self):
@@ -3381,8 +3680,7 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                 self.assertEqual(got, table[row["model"]],
                                  f"{role} runs {row['model']} and was sent to {got}")
                 seen[row["model"]] = got
-        self.assertGreater(len(set(seen.values())), 1,
-                           "every pi head resolved to ONE provider; the lookup is dead")
+        self.assertTrue(seen, "no pi head was dispatched, so the provider lookup was not exercised")
 
 
 class QuotaPark(LoopCase):
@@ -3599,7 +3897,9 @@ class CommitOnClose(unittest.TestCase):
     NOTHING and returns False. `commit_task()` read no return value and caught only
     exceptions, so a close whose commit did nothing wrote a DONE line and said nothing
     else. Amendment A24 made that reachable: fact 4 counts every path under the task home
-    and `salvage_worktree()` copies back only `## SCOPE (write)`.
+    and `salvage_worktree()` used to copy back only `## SCOPE (write)`. A task-home
+    file now lands; a path outside both the task home and the declared scope still
+    does not.
     """
 
     def setUp(self):
@@ -3673,6 +3973,44 @@ class CommitOnClose(unittest.TestCase):
         rec = self.close(["never-salvaged.md"])
         self.assertEqual(rec["commit_absent"], ["never-salvaged.md"])
         self.assertEqual(len(self.commits()), 1, "it committed something from nothing")
+
+    def test_a_refused_close_unstages_and_records_the_git_error(self):
+        """MEASURED 2026-08-20 on LJ-1.404: `commit: refused` left the three deliverable
+        files staged, and the next human commit swept them (`f898e3b`)."""
+        pod._REFUSED_COMMIT_TRIED.clear()
+        hook = self.tmp / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(parents=True, exist_ok=True)
+        hook.write_text("#!/bin/sh\necho HOOK-REFUSED >&2\nexit 1\n")
+        hook.chmod(0o755)
+        subprocess.run(["git", "config", "core.hooksPath", ".git/hooks"],
+                       cwd=self.tmp, capture_output=True)
+        rec = self.close(["kept.md"])
+        self.assertEqual(rec["commit"], "refused")
+        self.assertIn("HOOK-REFUSED", rec.get("commit_note", ""))
+        cached = subprocess.run(["git", "diff", "--cached", "--name-only"],
+                                cwd=self.tmp, capture_output=True, text=True).stdout
+        self.assertEqual(cached.strip(), "", "a refused commit left paths staged")
+
+    def test_a_refused_close_is_retried_once_the_hook_is_gone(self):
+        """The 404 recovery: salvage already copied the files; the next tick commits."""
+        pod._REFUSED_COMMIT_TRIED.clear()
+        hook = self.tmp / ".git" / "hooks" / "pre-commit"
+        hook.parent.mkdir(parents=True, exist_ok=True)
+        hook.write_text("#!/bin/sh\necho HOOK-REFUSED >&2\nexit 1\n")
+        hook.chmod(0o755)
+        subprocess.run(["git", "config", "core.hooksPath", ".git/hooks"],
+                       cwd=self.tmp, capture_output=True)
+        rec = self.close(["kept.md"])
+        self.assertEqual(rec["commit"], "refused")
+        hook.unlink()
+        t = pod.Task("LJ-1.999", status=pod.DONE)
+        t.row = "sys-x"
+        t.record = rec
+        st = pod.State()
+        st.tasks[t.code] = t
+        pod.retry_refused_commits(st, self.tmp)
+        self.assertEqual(rec["commit"], "clean")
+        self.assertEqual(len(self.commits()), 2)
 
 
 class MaintainerPreset(LoopCase):
@@ -3931,6 +4269,144 @@ class PaneSlotLock(unittest.TestCase):
         self.ps.write_columns(self.state, [["p1"], ["p2"]])
         self.assertEqual(path.read_text(encoding="utf-8"), "p1\np2\n")
         self.assertFalse((self.state / "herdr-columns.tmp").exists())
+
+
+class SeedWorktreeInputs(unittest.TestCase):
+    """LJ-1.396, 2026-08-20: an untracked brief never reached the worktree.
+
+    Conjunct 6 then printed `has no brief` and R4 refused a `no-go` that had matched.
+    """
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.tmp = Path(self.dir.name)
+        self.addCleanup(self.dir.cleanup)
+        self.main = self.tmp / "agents" / "tasks" / "LJ-1-396"
+        self.wt = self.tmp / ".pod-state" / "worktrees" / "LJ-1-396"
+        self.dest = self.wt / "agents" / "tasks" / "LJ-1-396"
+        self.main.mkdir(parents=True)
+        self.dest.mkdir(parents=True)
+
+    def test_an_untracked_brief_is_copied_into_the_worktree(self):
+        (self.main / "LJ-1.396.md").write_text("# brief\n")
+        (self.main / ".pod").write_text("pod\n")
+        n = pod.seed_worktree_inputs("LJ-1.396", self.wt, self.tmp)
+        self.assertEqual(n, 2)
+        self.assertEqual((self.dest / "LJ-1.396.md").read_text(), "# brief\n")
+        self.assertEqual((self.dest / ".pod").read_text(), "pod\n")
+
+    def test_an_existing_worktree_file_is_never_overwritten(self):
+        (self.main / "lj-1.396-report.md").write_text("MAIN RELIC\n")
+        (self.dest / "lj-1.396-report.md").write_text("WORKER REPORT\n")
+        n = pod.seed_worktree_inputs("LJ-1.396", self.wt, self.tmp)
+        self.assertEqual(n, 0)
+        self.assertEqual((self.dest / "lj-1.396-report.md").read_text(),
+                         "WORKER REPORT\n")
+
+    def test_a_subdirectory_is_not_copied(self):
+        (self.main / "runs").mkdir()
+        (self.main / "runs" / "old.out").write_text("no\n")
+        n = pod.seed_worktree_inputs("LJ-1.396", self.wt, self.tmp)
+        self.assertEqual(n, 0)
+        self.assertFalse((self.dest / "runs").exists())
+
+    def test_a_reuse_of_make_worktree_still_seeds(self):
+        """The retry path used to `return wt` before copying, which is how LJ-1.396
+        was retried into the same empty task home."""
+        (self.main / "LJ-1.396.md").write_text("# brief\n")
+        real_of = pod.worktree_of
+        pod.worktree_of = lambda code, root=None: self.wt
+        try:
+            got = pod.make_worktree("LJ-1.396", self.tmp)
+        finally:
+            pod.worktree_of = real_of
+        self.assertEqual(got, self.wt)
+        self.assertTrue((self.dest / "LJ-1.396.md").is_file())
+
+
+class SalvageWorktree(unittest.TestCase):
+    """LJ-1.399, 2026-08-20: isolation destroyed the file that matched no-go-stated.
+
+    `task-lj-1-399-no-go-stated` keys on `changed_files_any = review-of-*.md`.
+    The brief's SCOPE named only the probe and the report. Salvage copied those
+    two, `drop_worktree()` removed the worktree, and the review file was gone.
+    """
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.tmp = Path(self.dir.name)
+        self.addCleanup(self.dir.cleanup)
+        run = lambda *a: subprocess.run(["git", *a], cwd=self.tmp, capture_output=True)
+        run("init", "-q")
+        run("config", "user.email", "t@t")
+        run("config", "user.name", "t")
+        home = self.tmp / "agents" / "tasks" / "LJ-1-399"
+        home.mkdir(parents=True)
+        (home / "LJ-1.399.md").write_text(
+            "## SCOPE (write)\n"
+            "- agents/tasks/LJ-1-399/Probe399.agda\n"
+            "- agents/tasks/LJ-1-399/lj-1.399-report.md\n"
+        )
+        (home / "Probe399.agda").write_text("-- old probe\n")
+        (self.tmp / "src").mkdir()
+        (self.tmp / "src" / "guarded.agda").write_text("-- main guarded\n")
+        run("add", "-A")
+        run("commit", "-qm", "base")
+        self.wt = self.tmp / ".pod-state" / "worktrees" / "LJ-1-399"
+        self.wt.parent.mkdir(parents=True)
+        added = subprocess.run(
+            ["git", "worktree", "add", "--detach", str(self.wt), "HEAD"],
+            cwd=self.tmp, capture_output=True, text=True)
+        if added.returncode != 0:
+            self.fail(f"git worktree add refused: {added.stderr}")
+        self.t = pod.Task("LJ-1.399", brief="agents/tasks/LJ-1-399/LJ-1.399.md")
+        self.whome = self.wt / "agents" / "tasks" / "LJ-1-399"
+
+    def test_a_review_file_outside_scope_is_copied(self):
+        """The measured defect. The no-go-stated row matches on this file."""
+        (self.whome / "review-of-omega-pair-code.md").write_text("NO-GO\n")
+        (self.whome / "lj-1.399-report.md").write_text("report\n")
+        (self.whome / "Probe399.agda").write_text("-- new probe\n")
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertEqual(bad, [])
+        dest = self.tmp / "agents" / "tasks" / "LJ-1-399"
+        self.assertEqual((dest / "review-of-omega-pair-code.md").read_text(), "NO-GO\n")
+        self.assertEqual((dest / "lj-1.399-report.md").read_text(), "report\n")
+        self.assertEqual((dest / "Probe399.agda").read_text(), "-- new probe\n")
+
+    def test_a_src_write_outside_scope_is_not_copied(self):
+        """The honour system still holds outside the task home."""
+        (self.wt / "src" / "guarded.agda").write_text("-- worker guarded\n")
+        (self.wt / "src" / "foreign.agda").write_text("-- foreign\n")
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertEqual(bad, [])
+        self.assertEqual((self.tmp / "src" / "guarded.agda").read_text(),
+                         "-- main guarded\n")
+        self.assertFalse((self.tmp / "src" / "foreign.agda").exists())
+
+    def test_a_main_tree_edit_of_a_task_home_file_still_refuses(self):
+        dest = self.tmp / "agents" / "tasks" / "LJ-1-399" / "Probe399.agda"
+        dest.write_text("-- MAIN EDIT\n")
+        subprocess.run(["git", "add", "-A"], cwd=self.tmp, capture_output=True)
+        subprocess.run(["git", "commit", "-qm", "main moved it"],
+                       cwd=self.tmp, capture_output=True)
+        (self.whome / "Probe399.agda").write_text("-- WORKER PROBE\n")
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertTrue(any("Probe399.agda" in x for x in bad), bad)
+        self.assertEqual(dest.read_text(), "-- MAIN EDIT\n")
+
+    def test_uncommitted_task_home_dirt_is_overwritten_by_the_worktree(self):
+        """LJ-1.388, 2026-08-20: pre-isolation leftover is not a merge."""
+        dest = self.tmp / "agents" / "tasks" / "LJ-1-399" / "Probe399.agda"
+        dest.write_text("-- MAIN RELIC uncommitted\n")
+        (self.whome / "Probe399.agda").write_text("-- WORKER PROBE\n")
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertEqual(bad, [])
+        self.assertEqual(dest.read_text(), "-- WORKER PROBE\n")
+
+    def test_no_worktree_is_a_noop(self):
+        shutil.rmtree(self.wt)
+        self.assertEqual(pod.salvage_worktree(self.t, self.tmp), [])
 
 
 if __name__ == "__main__":

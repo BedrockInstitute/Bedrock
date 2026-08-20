@@ -1,3 +1,8 @@
+# ARCHIVED 2026-08-20
+
+Live screen: `dev/pod/screen.toml`. Live DD index: `dev/pod/rulings.toml`.
+This file is the construction registry as it stood on archival day. Nothing below is current.
+
 # PLAN: the construction registry (V=L ⊨ ZFC, then GCH)
 
 Bedrock's goal registry. It opened in July 2026 as the plan for one milestone,
@@ -409,7 +414,7 @@ lands BOTH trophies inside both constraints. `[L8.2]` is the gate that `[L4.1]` 
 | Code | Goal | Status |
 |---|---|---|
 | LJ-0 | Recon and pricing for the LJ route | **CLOSED.** 23 dispatches. Its measurements are why the two-tower route was funded |
-| LJ-1 | THE LIVE CAMPAIGN: both trophies, stated in L | **RUNNING.** 426 dispatches. `dev/pod/queue.toml` produces the next one; `[LJ-1.386]` is the resumption task |
+| LJ-1 | THE LIVE CAMPAIGN: both trophies, stated in L | **RUNNING.** 426 dispatches. `dev/pod/queue.toml` produces the next one; `[LJ-1.386]` is the resumption task. **Owner 2026-08-20:** one W4 collection of `src/` after this campaign closes, not gated on `[LJ-2.5]` |
 | LJ-2 | The architecture ruling and the internalization measurement | **OPEN**, 6 entries queued. `[LJ-2.5]` is clause W1's address: the two towers are a CANDIDATE until it lands |
 | LJ-3 | The GCH wing | **OPEN**, 7 entries queued |
 | LJ-4 | The orchestration flow becomes a program | **DONE 2026-08-18** at `fc676cb`. The design is `dev/memos/LJ-4-pod-program-design.md` |

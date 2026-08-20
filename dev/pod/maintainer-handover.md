@@ -116,11 +116,10 @@ directions**. Two such checkers exist now, `ClosedListHasOneHome` and
 
 ## 5. What to align next, in the order the outgoing session would have done it
 
-1. **`dev/PLAN.md` against the program.** Section 11's goal registry and section 3's
-   rulings have never been swept the way sections 4 to 7 of the memo just were. `[LJ-2.5]`
-   is a kept row with no queue entry, and the two-tower architecture is still a CANDIDATE
-   that only a measurement can settle. Nobody has checked whether the plan's numbers match
-   `ledger.py --brief`.
+1. **`dev/pod/screen.toml` against the program.** Campaign rows and the architecture
+   gate `[LJ-2.5]` live there. The two-tower architecture is still a CANDIDATE that only
+   a measurement can settle. The screen must never hold a standing size; `ledger.py --brief`
+   is the only admissible figure.
 2. **The digest against what the owner actually needs.** Two of its numbers were wrong for
    a day and the owner found neither, which means the digest is being written and not
    read. Ask the owner which fields they use and delete the rest.

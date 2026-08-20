@@ -86,6 +86,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -126,6 +127,12 @@ STOPPED_FILE = POD_STATE / "STOPPED"
 #: ticks. `cmd_run()` also reloads on its own when `scripts/pod/*.py` changes, so this
 #: file is for the case the signature cannot see: a reload the maintainer wants NOW.
 RELOAD_FILE = POD_STATE / "reload"
+#: A park older than this file is re-measured in place (PARKED → CHECKING), with no
+#: worker. `hot_restart()` stamps it, so a meter repair plus reload salvages the
+#: scene that the old image mis-measured. MEASURED 2026-08-20 on LJ-1.400: fact 3
+#: read the main tree, both names were `no-file`, and a green worktree parked
+#: `no-match`. Re-dispatch would burn another head to land the same files.
+REACCEPT_FILE = POD_STATE / "reaccept"
 #: **EVERY PREFIX THE PROGRAM WRITES ITSELF, and it has TWO readers now.**
 #: `maintainer_scope_ok()` subtracts it before blaming the maintainer, and
 #: `side_scope_report()` subtracts it before blaming the refill. Adding a prefix here is a
@@ -140,6 +147,15 @@ PROGRAM_WRITES_PREFIX = (
     # maintainer's. MEASURED 2026-08-19: the refill queued LJ-1.396 to LJ-1.400 and its
     # own declared output then refused the very next maintainer batch.
     "dev/pod/queue.toml",
+    # `admit_rows()`, `expire_rows()` and `write_table()` rewrite this file. MEASURED
+    # 2026-08-20 on POD-REFILL-20260820-110248: `expire_rows` left it dirty (the 404
+    # close commit was refused) and `side_scope_report` named it as the refill's write.
+    "dev/pod/table.toml",
+    # `direction_changed()` archives the outgoing body here. MEASURED 2026-08-20
+    # on POD-REFILL-20260820-140414: the maintainer rewrote `dev/pod/direction.md`
+    # during the refill, the loop filed `archive/dev/direction/20260820-142326.md`,
+    # and `side_scope_report` named the archive as the refill's write.
+    "archive/dev/direction/",
 )
 
 LOG_DIR = POD_STATE / "logs"
@@ -169,6 +185,7 @@ QUEUE = ROOT / "dev" / "pod" / "queue.toml"
 #: two disagree. MEASURED 2026-08-18: four tests errored on it at once.
 DIRECTION_REL = Path("dev") / "pod" / "direction.md"
 DIRECTION = ROOT / DIRECTION_REL
+SCREEN_REL = Path("dev") / "pod" / "screen.toml"
 #: A MATHEMATICIAN DECLARING THAT THE LOOP SHOULD STOP, ruled by the owner 2026-08-18.
 #:
 #: **THE RULING IS THAT A DECLARED STOP AND AN EMPTY QUEUE ARE DIFFERENT STATES.** Rule
@@ -224,6 +241,11 @@ def preamble_for(slot, root=None):
         p = root / "dev" / "pod" / "instructions" / f"{slot}.md"
         if p.is_file():
             out.append(p)
+    # THE SCREEN IS THE STANDING STATUS, extracted from PLAN.md section 0/11
+    # on 2026-08-20. It sits behind the slot file and in front of the direction:
+    # the direction is still last, because it is the freshest thing the owner
+    # may have written this hour.
+    out.append(root / SCREEN_REL)
     # THE DIRECTION COMES LAST, closest to the brief, because it is the freshest thing
     # the worker is told and the only one the owner may have written this hour. Every
     # slot gets it by the owner's ruling of 2026-08-18.
@@ -264,12 +286,12 @@ TIERS = tuple(facts_mod.TASK_TIERS)
 WIDE = facts_mod.DEFAULT_TIER
 HEAVY = next((x for x in TIERS if x != WIDE), WIDE)
 
-#: Six states. Twelve transitions. Nothing else is legal (section 5.2).
+#: Six states. The legal set. Nothing else is legal (section 5.2).
 READY, RUNNING, RETURNED, CHECKING, DONE, PARKED = (
     "READY", "RUNNING", "RETURNED", "CHECKING", "DONE", "PARKED")
 STATES = (READY, RUNNING, RETURNED, CHECKING, DONE, PARKED)
 
-#: The THIRTEEN legal transitions, as (from, to). `NONE` is the creation edge of rule (a1).
+#: The FOURTEEN legal transitions, as (from, to). `NONE` is the creation edge of rule (a1).
 NONE = None
 TRANSITIONS_LEGAL = {
     (NONE, READY),          # 1  a queue entry, rule (a1)
@@ -289,6 +311,11 @@ TRANSITIONS_LEGAL = {
     # adversarial rounds on 2026-08-19 produced this edge, the first by refuting the kill
     # and the second by refuting the RETURNED that replaced it.
     (RUNNING, PARKED),      # 13 the pid is live and unrecognised, section 5.5
+    # **14. Re-accept the scene, no worker.** AD16 still forbids PARKED → DONE. A
+    # `no-match` or `r4` park whose work is on disk is re-measured through the same
+    # CHECKING close that a live return uses. Owner 2026-08-20: do not re-dispatch a
+    # head to land files the last worker already wrote.
+    (PARKED, CHECKING),     # 14 re-accept after a meter or table repair
 }
 
 #: The park reasons of section 5.5. Each NAMES its cause and rule (a2) branches on
@@ -1001,6 +1028,50 @@ def _git(args, root, timeout=120):
     return d.returncode, (d.stdout + d.stderr)
 
 
+def seed_worktree_inputs(code, wt, root=None):
+    """Copy the main tree's task-home files that HEAD did not hold into the worktree.
+
+    MEASURED 2026-08-20 on LJ-1.396: `git worktree add --detach HEAD` carries only
+    tracked files. The brief was untracked (`?? agents/tasks/LJ-1-396/LJ-1.396.md`).
+    Conjunct 6 ran `check-survey-quotes.py` with cwd = the worktree, which printed
+    `LJ-1-396 has no brief` and exited 2 (`scripts/pod/check-survey-quotes.py:462-464`).
+    R4 then refused the `no-go` close that had already matched (`task-lj-1-396-no-go-stated`).
+    The worker HAD the brief: `launch()` passes the main-tree path. Acceptance did not.
+
+    COPY WHEN THE DESTINATION IS MISSING, never overwrite. The worker's report lives
+    only in the worktree; clobbering it with a main-tree relic would be the salvage
+    failure arriving through the other door. Directories are skipped: `runs/` is the
+    worker's, and a recursive copy from the main tree would invent a second scene.
+    """
+    root = ROOT if root is None else Path(root)
+    name = agents_tree.normalise(code)
+    main = root / "agents" / "tasks" / name
+    dest = Path(wt) / "agents" / "tasks" / name
+    if not main.is_dir():
+        return 0
+    try:
+        dest.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return 0
+    n = 0
+    try:
+        files = list(main.iterdir())
+    except OSError:
+        return 0
+    for src in files:
+        if not src.is_file():
+            continue
+        dst = dest / src.name
+        if dst.exists():
+            continue
+        try:
+            shutil.copy2(src, dst)
+        except OSError:
+            continue
+        n += 1
+    return n
+
+
 def make_worktree(code, root=None):
     """One isolated checkout for one task, with the build cache cloned in. Or None.
 
@@ -1025,6 +1096,7 @@ def make_worktree(code, root=None):
     root = ROOT if root is None else Path(root)
     wt = worktree_of(code, root)
     if wt.is_dir():
+        seed_worktree_inputs(code, wt, root)   # a retry still needs the untracked brief
         return wt                              # a retry re-uses its own tree
     try:
         wt.parent.mkdir(parents=True, exist_ok=True)
@@ -1044,23 +1116,37 @@ def make_worktree(code, root=None):
                     break
             except (OSError, subprocess.TimeoutExpired):
                 break                          # the task runs cold, which is not a refusal
+    seed_worktree_inputs(code, wt, root)
     return wt
 
 
 def salvage_worktree(t, root=None):
-    """Copy a task's DECLARED scope back from its worktree. Returns [] or the refusals.
+    """Copy a task's declared scope AND its task home back from its worktree.
 
-    **THE SCOPE STOPS BEING AN HONOUR SYSTEM.** Only the paths the brief's
-    `## SCOPE (write)` names are copied, so anything a worker wrote outside its declared
-    scope never reaches the main tree at all. Today that is audited after the fact as
-    `changed_files_foreign`, and 2026-08-19 caught two real cases that way.
+    Returns [] or the refusals.
+
+    **THE SCOPE STOPS BEING AN HONOUR SYSTEM FOR EVERYTHING OUTSIDE THE TASK HOME.**
+    A write to `src/` or another guarded path that the brief did not name never
+    reaches the main tree. That is unchanged. Today that is still audited after the
+    fact as `changed_files_foreign`, and 2026-08-19 caught two real cases that way.
+
+    **THE TASK HOME IS THE WORKER'S WORK, which A24 already counted as fact 4.** The
+    mathematician cannot name `review-of-<construction>.md` in `## SCOPE (write)`,
+    because the coder invents that filename after the brief is written. The
+    `no-go-stated` rows key on that glob (`dev/pod/table.toml` `changed_files_any`).
+    MEASURED 2026-08-20 on LJ-1.399: salvage copied the two SCOPE paths, the close
+    matched `task-lj-1-399-no-go-stated` on `review-of-omega-pair-code.md`,
+    `drop_worktree()` then destroyed the file that caused the match, and the landed
+    report cited a path that no longer existed.
 
     **IT NEVER MERGES, SO IT CANNOT CONFLICT.** A patch or a cherry-pick is a three-way
     merge and a merge needs judgement when it fails. This is a path list and a file copy.
-    It has ONE failure that judgement must settle, and it is detected and never resolved:
-    the main tree changed the same path while the task ran, so the copy would silently
-    destroy that change. Rule (c) then parks with `salvage:` and the resident maintainer
-    reads it. AD1 keeps the program out of that decision.
+    A COMMIT on main after the fork is still a collision: rule (c) parks with `salvage:`
+    and the resident maintainer reads it. AD1 keeps the program out of that merge.
+    Uncommitted dirt under THIS task's home is not that collision. MEASURED 2026-08-20
+    on LJ-1.388: the pre-isolation report sat dirty in main, the isolated return had
+    already matched `sys-obligations-satisfied`, and `git diff base -- path` refused
+    the copy. The worktree is the scene.
     """
     root = ROOT if root is None else Path(root)
     wt = worktree_of(t.code, root)
@@ -1078,16 +1164,29 @@ def salvage_worktree(t, root=None):
         return [f"the worktree has no base commit: {' '.join(base.split())[:160]}"]
     base = base.strip()
     bad, moved = [], []
-    for rel in scope_write_paths(t, root):
+    for rel in salvage_copy_paths(t, wt, root):
         wsrc, mdst = wt / rel, root / rel
         if not wsrc.is_file():
             continue                           # the worker wrote nothing there
         # THE ONE CHECK: has the MAIN tree moved this path since the worktree forked?
         rc_b, _ = _git(["cat-file", "-e", f"{base}:{rel}"], root)
-        rc_d, diff = _git(["diff", "--quiet", base, "--", rel], root)
+        rc_d, _ = _git(["diff", "--quiet", base, "--", rel], root)
         if rc_b == 0 and rc_d != 0:
-            bad.append(f"{rel} changed in the main tree since this task forked")
-            continue
+            home = f"agents/tasks/{agents_tree.normalise(t.code)}/"
+            # **TASK-HOME WORKING-TREE DIRT IS THIS TASK'S OWN LEFTOVER.** MEASURED
+            # 2026-08-20 on LJ-1.388: the report sat dirty in main from the
+            # pre-isolation run, the isolated return matched
+            # `sys-obligations-satisfied`, and salvage refused the copy because
+            # `git diff base -- path` sees uncommitted bytes. A COMMIT on main
+            # after the fork is still a collision. R15 says the maintainer does
+            # not write under `agents/tasks/`. Isolation exists so this worktree
+            # is the scene.
+            rc_h = 1
+            if rel.startswith(home):
+                rc_h, _ = _git(["diff", "--quiet", base, "HEAD", "--", rel], root)
+            if not rel.startswith(home) or rc_h != 0:
+                bad.append(f"{rel} changed in the main tree since this task forked")
+                continue
         try:
             mdst.parent.mkdir(parents=True, exist_ok=True)
             mdst.write_bytes(wsrc.read_bytes())
@@ -1098,6 +1197,33 @@ def salvage_worktree(t, root=None):
         print(f"pod: salvaged {len(moved)} path(s) from {t.code}'s worktree",
               file=sys.stderr)
     return bad
+
+
+def salvage_copy_paths(t, wt, root=None):
+    """SCOPE write paths, then every file under the task home in the worktree.
+
+    Order is SCOPE first so a path that is in both is copied once. The task-home
+    walk is how `review-of-*.md` lands: fact 4 already counts it, and the brief
+    cannot name it.
+    """
+    root = ROOT if root is None else Path(root)
+    rels, seen = [], set()
+    def add(rel):
+        if rel and rel not in seen:
+            seen.add(rel)
+            rels.append(rel)
+    for p in scope_write_paths(t, root):
+        add(p)
+    home = Path(wt) / "agents" / "tasks" / agents_tree.normalise(t.code)
+    if home.is_dir():
+        for p in home.rglob("*"):
+            if not p.is_file():
+                continue
+            try:
+                add(p.relative_to(wt).as_posix())
+            except ValueError:
+                continue
+    return rels
 
 
 def scope_write_paths(t, root=None):
@@ -1198,7 +1324,11 @@ def laws_bundle(paths, root=None):
     block instead of writing an error message into the brief as if it were law.
     """
     root = ROOT if root is None else Path(root)
-    tool = root / "scripts" / "dispatch" / "rules.py"
+    # `scripts/dispatch/` left on 2026-08-18. The producer moved with it.
+    # MEASURED 2026-08-20 on POD-REFILL-20260820-140414: this still opened the
+    # old path, the import returned None, and every brief's LAWS block was
+    # handwritten. Repair the path, not the briefs.
+    tool = root / "scripts" / "pod" / "rules.py"
     saved = list(sys.path)
     try:
         import importlib.util                          # deferred: only the builder needs it
@@ -1419,6 +1549,32 @@ def inject_survey(brief, root=None):
     return True
 
 
+def _retrieval_brief(t, root):
+    """The brief the miss signal opens: the worktree copy when isolation holds.
+
+    MEASURED 2026-08-20 on LJ-1.406: `emit_retrieval` opened `t.brief` on MAIN,
+    `report_beside` found no report (the worker wrote it in the worktree), and
+    the log recorded `used: 0` / `offered: 9` against a return whose ARCHIVE USED
+    named the offered files. Acceptance had already measured the worktree
+    (conjunct 6 held). `salvage_worktree()` copies the report AFTER this call.
+    """
+    brief = getattr(t, "brief", None)
+    if not brief:
+        return None
+    rel = brief
+    p = Path(brief)
+    if p.is_absolute():
+        try:
+            rel = str(p.relative_to(root))
+        except ValueError:
+            return p
+    if WORKTREE_ISOLATION:
+        wt_brief = worktree_of(t.code, root) / rel
+        if wt_brief.is_file():
+            return wt_brief
+    return root / rel
+
+
 def emit_retrieval(st, t, root=None):
     """Section 7.4 Part 1b: ONE `retrieval` line per return. It never raises.
 
@@ -1435,11 +1591,18 @@ def emit_retrieval(st, t, root=None):
     A SIGNAL THAT CANNOT BE TAKEN IS NOT A FAILED RETURN. The producer reads the brief and
     the report beside it, so a missing report, an unreadable corpus or a full disk must cost
     one log line and never the acceptance that already ran.
+
+    **IT READS THE SAME TREE ACCEPTANCE DID.** Isolation keeps the return in the
+    worktree until salvage. Passing `t.brief` as a main-tree relative path made
+    every isolated close since 2026-08-20 record `used: 0`.
     """
     root = ROOT if root is None else Path(root)
     try:
         import retrieve as retrieve_mod                # deferred: it builds an index
-        signal = retrieve_mod.dispatch_signal(t.code, t.brief)
+        brief = _retrieval_brief(t, root)
+        if brief is None:
+            return False
+        signal = retrieve_mod.dispatch_signal(t.code, brief)
         emit_event(st, "retrieval", root=root,
                    **{k: v for k, v in signal.items() if k != "event"})
     except Exception:                                  # noqa: BLE001. See the docstring
@@ -2171,6 +2334,29 @@ def kill_process_group(pid):
 # ---------------------------------------------------------------- the close
 
 
+def _committable(rel, root):
+    """True when `rel` is a file inside `root`. A directory is refused: `git commit --
+    <dir>` sweeps everything under it, which is the `git add -A` hazard R8 exists to
+    refuse, arriving through a path fact 4 measured. Raised by an adversarial review
+    on 2026-08-19. A path that escapes the repository root goes the same way.
+    """
+    try:
+        full = (root / rel).resolve()
+        full.relative_to(root.resolve())
+    except (ValueError, OSError):
+        return False
+    return full.is_file()
+
+
+def _close_commit_paths(rec, root):
+    """The committable slice of fact 4, and the named paths the main tree does not hold."""
+    named = [p for p in (rec.get("facts") or {}).get("changed_files") or []
+             if isinstance(p, str)]
+    paths = [p for p in named if _committable(p, root)]
+    gone = [p for p in named if p not in paths]
+    return paths, gone
+
+
 def commit_task(t, rec, root=None):
     """The DONE handler: `ledger.py --write`, then R8's explicit-path commit.
 
@@ -2193,10 +2379,17 @@ def commit_task(t, rec, root=None):
     two real edits and one absent path committed NOTHING and returned False, and this
     function reads no return value, so the close went on and the transition line said
     DONE. Amendment A24 opened a NEW way for that to happen: fact 4 counts every path
-    under `agents/tasks/<CODE>/` as the worker's work, while `salvage_worktree()` copies
-    back only what `## SCOPE (write)` names, so a file written in the task home and
-    outside the declared scope is in `changed_files` and is not in the main tree. The
-    dropped paths and a refused commit are both recorded on the record.
+    under `agents/tasks/<CODE>/` as the worker's work. `salvage_worktree()` now copies
+    the task home as well as `## SCOPE (write)`, so a `review-of-*.md` lands; a file
+    written outside both (a `src/` path the brief did not name) is still in
+    `changed_files` and is not in the main tree. The dropped paths and a refused
+    commit are both recorded on the record.
+
+    **A REFUSED CLOSE COMMIT IS RETRIED, and `pod stop` does not commit the task home.**
+    MEASURED 2026-08-20 on LJ-1.404: `commit: refused`, the three deliverable files sat
+    staged, a later human commit swept them, and the reset that unmixed it left a DONE
+    close with no `pod: LJ-1.404 done` line. `cmd_stop()` commits the table and the log.
+    `retry_refused_commits()` is the recovery for the task home.
     """
     root = ROOT if root is None else Path(root)
     rc, out = 0, ""
@@ -2208,21 +2401,7 @@ def commit_task(t, rec, root=None):
         rc, out = 1, str(e)
     rec["ledger"] = "clean" if rc == 0 else "refused"
     rec["ledger_note"] = out[-400:]
-    named = [p for p in (rec.get("facts") or {}).get("changed_files") or []
-             if isinstance(p, str)]
-    # **A FILE AND NEVER A DIRECTORY, and `exists()` admitted both.** `git commit -- <dir>`
-    # sweeps EVERYTHING under that directory, which is the `git add -A` hazard R8 exists to
-    # refuse, arriving through a path fact 4 measured. A path that escapes the repository
-    # root goes the same way. Raised by an adversarial review on 2026-08-19.
-    def _committable(rel):
-        try:
-            full = (root / rel).resolve()
-            full.relative_to(root.resolve())   # raises when it escapes the tree
-        except (ValueError, OSError):
-            return False
-        return full.is_file()
-    paths = [p for p in named if _committable(p)]
-    gone = [p for p in named if p not in paths]
+    paths, gone = _close_commit_paths(rec, root)
     if gone:
         # NAMED AND NEVER GUESSED. A path fact 4 measured and the main tree does not hold
         # is either a delete the worker made or a write A24 did not salvage, and this
@@ -2242,13 +2421,60 @@ def commit_task(t, rec, root=None):
             rec["commit"] = f"raised {type(e).__name__}: {e}"[:200]
         else:
             # A FAILED COMMIT IS NOT A FAILED CLOSE, and section 4.1 property 4 rules it:
-            # the work stands in the tracked file uncommitted, `pod stop` commits it, and
-            # both checklists run `pod stop` before they require a clean tree. **IT IS NO
+            # the close stands and `retry_refused_commits()` tries again. **IT IS NO
             # LONGER SILENT**, because `git_commit()` RETURNS False rather than raising,
             # so the `except` above never fired and nothing anywhere said the close
-            # committed nothing.
+            # committed nothing. The git stderr is `commit_note`.
             rec["commit"] = "clean" if ok else "refused"
+            if not ok:
+                rec["commit_note"] = (table_mod.GIT_COMMIT_ERROR or "")[:400]
+                print(f"pod: close commit refused for {t.code}", file=sys.stderr)
     return rc == 0
+
+
+#: Codes whose refused close this process already retried. A hot restart (execv) clears
+#: it, so a meter repair plus reload tries again. MEASURED 2026-08-20: LJ-1.404.
+_REFUSED_COMMIT_TRIED = set()
+
+
+def retry_refused_commits(st, root=None):
+    """Commit a DONE close whose `commit_task()` recorded `commit: refused`.
+
+    Once per code per process. The files are already in the main tree (salvage ran
+    before the close). This is not a re-dispatch and not a re-accept.
+    """
+    root = ROOT if root is None else Path(root)
+    changed = False
+    for t in st.tasks.values():
+        if t.status != DONE or t.code in _REFUSED_COMMIT_TRIED:
+            continue
+        rec = t.record
+        if not isinstance(rec, dict) or rec.get("commit") != "refused":
+            continue
+        paths, _gone = _close_commit_paths(rec, root)
+        if not paths:
+            continue
+        _REFUSED_COMMIT_TRIED.add(t.code)
+        ok = False
+        try:
+            ok = table_mod.git_commit([root / p for p in paths],
+                                      f"pod: {t.code} done, row {t.row}", root=root)
+        except Exception as e:                 # noqa: BLE001
+            rec["commit"] = f"raised {type(e).__name__}: {e}"[:200]
+            rec["commit_note"] = str(e)[:400]
+        else:
+            rec["commit"] = "clean" if ok else "refused"
+            if ok:
+                rec.pop("commit_note", None)
+                print(f"pod: committed refused close of {t.code}", file=sys.stderr)
+                changed = True
+            else:
+                rec["commit_note"] = (table_mod.GIT_COMMIT_ERROR or "")[:400]
+    if changed:
+        try:
+            save_state(st, path=Path(root) / ".pod-state" / "state.json")
+        except PodError:
+            pass
 
 
 def notify_owner(why, root=None):
@@ -3027,6 +3253,7 @@ def pod_tick(st=None, root=None):
     replay_log(st, root)                       # apply every log line with seq > st.seq
 
     watchdog_tick(st, root)                    # A13. Every tick confirms the backstop
+    retry_refused_commits(st, root)
     _rule_a1(st, root)
     _rule_a2(st, root)
     _rule_b(st, root)
@@ -3124,6 +3351,25 @@ def _rule_a2(st, root):
             continue
         if t.record is None:
             continue                           # a no-change park, section 5.5
+        # **RE-ACCEPT THE SCENE, DO NOT RE-DISPATCH THE HEAD.** `no-match` and `r4`
+        # parks already ran; their work is in the worktree or the main task home. A
+        # READY here would launch another worker to write the same files. PARKED →
+        # CHECKING is legal transition 14; rule (c) then runs on this tick.
+        #
+        # THE TRIGGER IS A STAMP OR A TABLE EDIT NEWER THAN THE PARK. A failed
+        # re-accept writes a new `parked_at`, so it does not spin. `parked_at is
+        # None` is a fold that lost the clock: do not guess.
+        if ((reason in ("no-match", "r4") or reason.startswith("salvage:"))
+                and _reaccept_due(t, root)
+                and _reaccept_scene(t, root)):
+            # ONE IN FLIGHT. Seven idle CHECKING filled A14's 32 GB sum (they are
+            # not running Agda) and then admits() refused every one of them, so
+            # the salvage deadlocked. Rule (c) drains CHECKING serially.
+            if any(x.status == CHECKING for x in st.tasks.values()):
+                continue
+            emit(st, t, PARKED, CHECKING, rec=t.record, reason=reason, root=root,
+                 why="reaccept: the scene is still there, no worker")
+            continue
         if (t.parked_at or 0) >= mtime:
             continue
         row_id, _act = _route(t.record, root)  # the WHOLE record, B3
@@ -3132,6 +3378,42 @@ def _rule_a2(st, root):
         if reason == "attempt_max:" + str(row_id):
             continue                           # B2: the guilty row did not change
         emit(st, t, PARKED, READY, row=row_id, root=root)
+
+
+def _reaccept_scene(t, root=None):
+    """True when re-accept has an isolated checkout to measure.
+
+    MEASURED 2026-08-20 on LJ-1.388: isolation was ON and the task had no
+    worktree (it ran in the main tree before A24). Re-accept used `acc_root =
+    main`. Conjunct 5 then named `guarded rule home changed: dev/pod/heads.toml`
+    (`agents/tasks/LJ-1-388/runs/accept-3.out`) and `sys-spec-surface` stopped
+    the loop. That file is AD26 and 388 did not touch it. Isolation exists
+    because conjunct 5 attributes whatever it finds to the task in front of it
+    (A24, three times on 2026-08-19). A re-accept with no worktree repeats that.
+    LJ-1.386 on the same tick parked `no-change`: the work was already in main,
+    fact 4 was empty, R7 fired. Skip both.
+    """
+    if not WORKTREE_ISOLATION:
+        return True
+    root = ROOT if root is None else Path(root)
+    return worktree_of(t.code, root).is_dir()
+
+
+def _reaccept_due(t, root=None):
+    """True when a meter repair (reload stamp) or a table edit is newer than the park."""
+    parked = t.parked_at
+    if parked is None:
+        return False
+    times = []
+    try:
+        times.append(TABLE.stat().st_mtime)
+    except OSError:
+        pass
+    try:
+        times.append(REACCEPT_FILE.stat().st_mtime)
+    except OSError:
+        pass
+    return any(parked < ts for ts in times)
 
 
 def _route(rec, root):
@@ -3365,10 +3647,9 @@ def _rule_c(st, root):
     traceback, with the task frozen in CHECKING and no line saying why.
     """
     limits = _limits()
-    for t in list(st.of(RETURNED)):
-        if not admits(st, t, agda=True):
-            continue                           # section 5.6. The runner runs Agda
-        emit(st, t, RETURNED, CHECKING, root=root)
+    ran = set()
+
+    def _accept_one(t):
         # **ACCEPTANCE MEASURES THE TASK'S OWN TREE, and that is the point of isolation.**
         # Conjunct 5 reads the WHOLE tree it is given, so in a shared checkout it charges
         # the running task for whatever anybody else changed. MEASURED 2026-08-19: the
@@ -3382,14 +3663,14 @@ def _rule_c(st, root):
         except Exception as e:                 # noqa: BLE001. See the docstring
             emit(st, t, CHECKING, PARKED, reason=_no_change_reason(t, root), root=root,
                  why=f"the acceptance runner raised {type(e).__name__}: {e}"[:400])
-            continue
+            return CONTINUE
         if rec is None:                        # R7, section 4.3.2 case 3
             # A VENDOR REFUSAL LANDS HERE AND IT IS NOT AN EMPTY RETURN. A head the
             # vendor answered 429 never ran, so it changed nothing, so R7 drops the
             # return on exactly this line. `_no_change_reason()` keeps `no-change` for
             # every case it cannot prove otherwise.
             emit(st, t, CHECKING, PARKED, reason=_no_change_reason(t, root), root=root)
-            continue
+            return CONTINUE
         t.run = rec.get("run")
         emit_retrieval(st, t, root)            # section 7.4 Part 1b, ONE line per return
         row_id, action = _route(rec, root)     # the WHOLE record
@@ -3450,6 +3731,30 @@ def _rule_c(st, root):
             emit(st, t, CHECKING, READY, rec=rec, row=row_id, root=root)
         elif apply(action, t, rec, row_id, st, root) is STOP:
             return STOP                        # stop_loop only
+        return CONTINUE
+
+    for t in list(st.of(RETURNED)):
+        if not admits(st, t, agda=True):
+            continue                           # section 5.6. The runner runs Agda
+        emit(st, t, RETURNED, CHECKING, root=root)
+        ran.add(t.code)
+        if _accept_one(t) is STOP:
+            return STOP
+    # Transition 14 lands here: PARKED → CHECKING, no worker, same runner.
+    # DO NOT CALL admits(). Idle CHECKING waiters are not Agda writers; counting
+    # them toward the 32 GB sum deadlocked the first salvage (seven parks moved
+    # in one tick and none could start). This process runs them serially.
+    for t in list(st.of(CHECKING)):
+        if t.code in ran:
+            continue
+        if not _reaccept_scene(t, root):
+            # Landed here from a re-accept that had no worktree. Do not measure
+            # the dirty main tree. Keep the old record (unlike R7's no-change).
+            emit(st, t, CHECKING, PARKED, rec=t.record, reason="no-match",
+                 root=root, why="reaccept: no isolated scene")
+            continue
+        if _accept_one(t) is STOP:
+            return STOP
     return CONTINUE
 
 
@@ -3619,7 +3924,15 @@ def _rule_f(st, root):
         t.head_slot = None                     # R11. The head is resolved once, here
         try:
             t.unbound_before = accept_mod.unbound_findings(root)
-            t.obl_before = witness_mod.witness_unresolved(t)  # fact 3 at dispatch, 4.7
+            # Fact 3 at dispatch, 4.7. Under isolation the probe lives in the
+            # worktree; measuring the main tree reports `no-file` for a name the
+            # worker has already written (LJ-1.400, 2026-08-20).
+            meter_root = root
+            if WORKTREE_ISOLATION:
+                wt = worktree_of(t.code, root)
+                if wt.is_dir():
+                    meter_root = wt
+            t.obl_before = witness_mod.witness_unresolved(t, meter_root)
         except Exception:                      # noqa: BLE001. NO DISPATCH POINT, NO DISPATCH
             # FACT 3 NEEDS BOTH ENDS. `witness_delta()` refuses at the return when the task
             # carries no `obl_before`, so dispatching without it buys a return the program
@@ -3698,19 +4011,33 @@ def _rule_g(st, root):
     if mod is None:
         return emit_event(st, "refill", result="REFUSED", brief=rel, root=root,
                           why="no launcher module is readable")
+    # **THE LAUNCHER'S STDERR IS THE WHY, and rule (f) already tees it.** This
+    # path called `mod.launch` directly, so a refusal reached the keeper pane
+    # and the log got `the launcher exited 1`. MEASURED 2026-08-20 seq 279: a
+    # direction change fired rule (g) while POD-REFILL-20260820-140414 was
+    # still live; the launcher printed `already running (pid 89237)` and
+    # allocated no pane, so no log file exists. Seq 276/277 used the same why
+    # for `agent_name_taken`. The two causes are not the same.
+    global LAUNCH_REFUSAL                      # noqa: PLW0603
+    LAUNCH_REFUSAL = None
+    buf = io.StringIO()
     try:
         head = heads_mod.head("mathematician")
         mod.HARNESS = head["harness"]
-        rc = mod.launch(REFILL_TASK, brief_path, False, head["sandbox"],
-                        head["model"], effort=head["effort"],
-                        preamble=preamble_for("mathematician", root),
-                        provider=head.get("pi_provider"))
+        with contextlib.redirect_stderr(buf):
+            rc = mod.launch(REFILL_TASK, brief_path, False, head["sandbox"],
+                            head["model"], effort=head["effort"],
+                            preamble=preamble_for("mathematician", root),
+                            provider=head.get("pi_provider"))
     except SystemExit:
-        rc, why = 1, "the launcher refused"
+        _tee(buf)
+        rc, why = 1, LAUNCH_REFUSAL or "the launcher refused"
     except Exception as e:                     # noqa: BLE001. One refill is not the loop
+        _tee(buf)
         rc, why = 1, f"{type(e).__name__}: {e}"[:200]
     else:
-        why = None if rc == 0 else f"the launcher exited {rc}"
+        _tee(buf)
+        why = None if rc == 0 else (LAUNCH_REFUSAL or f"the launcher exited {rc}")
     return emit_event(st, "refill", brief=rel, root=root, why=why,
                       result="dispatched" if rc == 0 else "REFUSED")
 
@@ -3946,10 +4273,22 @@ def hot_restart():
           "worker is untouched.")
     sys.stdout.flush()
     sys.stderr.flush()
+    stamp_reaccept()
     with contextlib.suppress(OSError):
         RELOAD_FILE.unlink()
     os.execv(sys.executable,
              [sys.executable, os.path.abspath(sys.argv[0]), *sys.argv[1:]])
+
+
+def stamp_reaccept(root=None):
+    """Mark this image as a new meter. Parks older than the mark are re-accepted once."""
+    path = REACCEPT_FILE if root is None else Path(root) / ".pod-state" / "reaccept"
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"")
+    except OSError:
+        return False
+    return True
 
 
 def notify_closes(seq_before, root=None):
@@ -4058,6 +4397,45 @@ def side_dispatches(st, root=None):
 #: outside this, and outside a live task's home, is what item 10 exists to surface.
 REFILL_SCOPE_OK = ("dev/pod/queue.toml", "dev/pod/stop-request.toml")
 
+#: Paths the refill is never assigned. A dirty-set delta that names them is someone
+#: else. They are NOT in `PROGRAM_WRITES_PREFIX`: R15 must still refuse a maintainer
+#: batch that rewrites `dev/PLAN.md`. MEASURED 2026-08-20 on POD-REFILL-20260820-140414:
+#: the refill wrote `dev/pod/queue.toml` and five briefs, and the notice named
+#: `dev/PLAN.md` and `dev/pod/direction.md`, which the maintainer had edited in the
+#: same window.
+REFILL_NEVER_WRITES = (
+    "dev/pod/direction.md",
+    "dev/pod/screen.toml",
+    "dev/pod/rulings.toml",
+)
+
+
+def _never_started_working(row):
+    """True when the launcher recorded that the head never ran.
+
+    MEASURED 2026-08-20 on POD-REFILL-20260820-110248: `herdr agent wait --until
+    working` timed out at 120 s, the log carries `HERDR agent never started working`,
+    `final.md` was never written, and `side_scope_report` then named four paths other
+    actors wrote in that window (`expire_rows` on `dev/pod/table.toml`, and the owner's
+    spec-surface commit `aa61e2c` on three `scripts/` files). A delta of dirty paths
+    is not authorship. A head that never ran wrote nothing.
+    """
+    log = (row or {}).get("log")
+    if not log:
+        return False
+    try:
+        text = Path(log).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return False
+    return "never started" in text
+
+
+def side_stray_paths(code, before, st, row=None, root=None):
+    """The dirty-path delta, or empty when the dispatch never ran."""
+    if _never_started_working(row):
+        return []
+    return side_scope_report(code, before, st, root)
+
 
 def side_scope_report(code, before, st, root=None):
     """Paths that appeared while ONE non-task dispatch ran, minus what it may write.
@@ -4072,6 +4450,12 @@ def side_scope_report(code, before, st, root=None):
     repair.** A `git status` taken only at the return blames the refill for every file the
     tasks it queued have written since, and those tasks are dispatched BEFORE it finishes.
     That naive version was written down as the thing not to ship.
+
+    **IT MEASURES A DIRTY-SET DELTA, NOT AUTHORSHIP.** MEASURED 2026-08-20 on
+    POD-REFILL-20260820-110248: the head never started working and the delta named
+    `dev/pod/table.toml` (`expire_rows`) and three spec-surface files the owner was
+    editing. `side_stray_paths()` returns [] when the launcher recorded that the head
+    never ran. `dev/pod/table.toml` is in `PROGRAM_WRITES_PREFIX`.
 
     THREE SUBTRACTIONS, and each names what it removes and why:
       - the refill's own declared scope, which is what it is FOR;
@@ -4091,6 +4475,8 @@ def side_scope_report(code, before, st, root=None):
     out = []
     for p in fresh:
         if p in REFILL_SCOPE_OK or p.startswith(PROGRAM_WRITES_PREFIX):
+            continue
+        if p in REFILL_NEVER_WRITES:
             continue
         # A RETIRED PROPOSAL IS `retire_proposal()`'s WRITE, never a dispatch's.
         # `maintainer_scope_ok()` already subtracts these and this reader must too, or a
@@ -4122,10 +4508,12 @@ def notify_side_done(gone, root=None, st=None):
         row, snap = pair if isinstance(pair, tuple) else (pair, None)
         where = (row or {}).get("final") or (row or {}).get("log") or "?"
         parts.append(f"{c} finished, transcript {where}")
-        if st is not None:
-            out = side_scope_report(c, snap, st, root)
+        if _never_started_working(row):
+            strayed.append(f"{c} never started working, so it wrote nothing")
+        elif st is not None:
+            out = side_stray_paths(c, snap, st, row=row, root=root)
             if out:
-                strayed.append(f"{c} wrote OUTSIDE its declared scope: "
+                strayed.append(f"{c} left these paths dirty, outside its declared scope: "
                                + ", ".join(out[:8]))
     what = "; ".join(parts)
     scope_line = (" **" + ". ".join(strayed) + ".** " if strayed

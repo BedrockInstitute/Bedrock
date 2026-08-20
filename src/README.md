@@ -37,9 +37,9 @@ storefront, before Part 0. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC`
 self-contained signature naming its proving chapter. **`L ⊨ GCH` is NOT there yet**: its
 statement type is `GCHStatement` at `src/L/GCH.lagda.md:59-60` and no proof term exists.
 
-The book-part skeleton is [dev/PLAN.md](../dev/PLAN.md) §4 and the namespace tree is the
+The book-part skeleton is [archive/dev/PLAN-archived.md](../archive/dev/PLAN-archived.md) §4 and the namespace tree is the
 structure catalog, derived and never hand-maintained. **The reading order is not the namespace
-order** (PLAN §5, the two-catalog doctrine). Two retirement records that used to sit in this
+order** (the two-catalog doctrine in `dev/STYLE-agda.md`). Two retirement records that used to sit in this
 section moved to [dev/ARCHIVE.md](../dev/ARCHIVE.md) on 2026-08-17: `FOL/Reification/` and the
 `L/Frontier.lagda.md` debt registry, each with its measurement.
 

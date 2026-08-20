@@ -87,7 +87,7 @@ promote_when = "If the report cites it, it is `evidence`. Promote it, do not del
 # enough, because ANOTHER live task may need the file. On 2026-08-13 [LJ-1.134] was
 # closed and its probe was still read by [LJ-1.136]. The full trigger is therefore
 # "its own task is closed AND no live task needs it", and the tool reads both halves
-# off dev/PLAN.md section 11, the live briefs and the missing reports.
+# off archive/dev/PLAN-archived.md section 11, the live briefs and the missing reports.
 
 [classes.runtime]
 what = "State a live tool writes and reads while it runs."

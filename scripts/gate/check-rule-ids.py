@@ -17,7 +17,8 @@ about gating that happens to exist. This checker knows the difference.
 WHAT IT CHECKS. Every token in a scanned file that looks like a LESSONS ID
 (`P-a`, `R-38`, `Rule 14`, `I-5`, `D-10`, `C-22`, `T-3`) must appear as a
 heading in `dev/LESSONS.md`. Decision references without the hyphen are checked
-against `dev/PLAN.md`'s decision table instead.
+against `archive/dev/DECISIONS-archived.md` instead. The live `DD` index is
+`dev/pod/rulings.toml`.
 
 AND EVERY ID IN `dev/rules.toml` RESOLVES THE SAME WAY, which is the second
 target of row 15 of `dev/memos/LJ-4-pod-program-design.md` section 7.1: "a bundle
@@ -53,25 +54,10 @@ green, and so does a live `DD` rule miscited as `D` and then labelled archived.
 The check removes the SILENT retarget, where nothing beside the code warns the
 reader at all, and it claims nothing more than that.
 
-WHAT STEP 7b ASKS FOR AND THIS FILE DOES NOT DO, written down rather than left
-silent. Step 7b (design memo `:3092-3101`) asks for two more edits: drop
-`dev/PLAN.md` section 3 from `known_decisions()`, and drop the bare-`D<n>`
-series rule. NEITHER IS DONE, and the reason is measured, not preference.
-
-  1. `dev/PLAN.md` section 3 is SET ASIDE but KEPT as the record, and 740 live
-     `DD<n>` citations sit in `dev/`, `scripts/` and `AGENTS.md` (MEASURED
-     2026-08-18). Dropping the section from the reference set makes every one of
-     them unresolvable and turns this gate red across the tree, so the drop needs
-     the DD resolution check deleted with it. That deletes an enforcement point
-     and replaces it with nothing.
-  2. `scripts/tests/test_rule_series.py` pins the series rule with 63 checks and
-     calls `series_findings`, `dd_numbers` and `known_decisions` directly.
-     Deleting them turns that suite red, and the suite is not in this task's
-     write scope. Step 7b's own acceptance requires the suite to exit 0.
-
-So the series rule and the decision resolution STAY, and this note is the record
-that they stay against a written step. The owner decides whether the step still
-holds now that section 3 was kept.
+THE LIVE `DD` INDEX IS `dev/pod/rulings.toml`, extracted from PLAN.md section 3
+on 2026-08-20. `dev/PLAN.md` is archived. Resolution, uniqueness and the
+mechanised-home check read the toml. The bare-`D<n>` series rule stays: two
+series still share the numbers.
 
 USAGE
     python3 scripts/gate/check-rule-ids.py                 # dev/, AGENTS.md, scripts/
@@ -105,7 +91,9 @@ from repo_root import find_root  # noqa: E402
 
 ROOT = find_root(__file__)
 LESSONS = ROOT / "dev" / "LESSONS.md"
-PLAN = ROOT / "dev" / "PLAN.md"
+RULINGS = ROOT / "dev" / "pod" / "rulings.toml"
+SCREEN = ROOT / "dev" / "pod" / "screen.toml"
+STANDING_CMD = "scripts/measure/ledger.py --brief"
 #: The rule routing. Row 15's second target: its bundles name LESSONS IDs, and a
 #: bundle naming an ID no entry carries is a dead reference nothing else catches.
 RULES_TOML = ROOT / "dev" / "rules.toml"
@@ -208,10 +196,11 @@ DECLARATION_TEXT = (
     "decision series, in `archive/dev/DECISIONS-archived.md`. The live series "
     "is `DD` and the two do not correspond.")
 
-# THE LOCATOR RULE. `dev/PLAN.md` section 3 holds the `DD` table and nothing
-# else, so a citation that sends a `D<n>` there names a location that cannot
-# hold it. This is the same defect wearing a second face, and it is the worst
-# one found, because the reader is told exactly where to look and looks there.
+# THE LOCATOR RULE. `dev/pod/rulings.toml` holds the live `DD` index, and
+# `dev/PLAN.md` is archived. A citation that sends a `D<n>` to PLAN section 3
+# names a location that cannot hold it. This is the same defect wearing a
+# second face, and it is the worst one found, because the reader is told
+# exactly where to look and looks there.
 #
 # A line that names a `DD` code of its own is EXEMPT, and the exemption is the
 # whole reason the rule is usable. The repaired sentences read "archived D11
@@ -262,7 +251,7 @@ def duplicate_codes(codes: list[str]) -> list[str]:
     """Codes carried by more than one element of `codes`, sorted.
 
     [LJ-1.194] extracted this from `duplicate_lessons` so every series shares
-    ONE counting path: the `DD` rows of dev/PLAN.md section 3, the retired `D`
+    ONE counting path: the `DD` rows of dev/pod/rulings.toml, the retired `D`
     rows of the archive, and all six LESSONS prefixes. A code is an address;
     two laws at one address is a defect at the source, whichever series.
     """
@@ -270,6 +259,14 @@ def duplicate_codes(codes: list[str]) -> list[str]:
     for c in codes:
         seen[c] = seen.get(c, 0) + 1
     return sorted(k for k, n in seen.items() if n > 1)
+
+
+def ruling_ids(text: str | None = None) -> list[str]:
+    """Live `DD` ids, from the toml, or from a markdown table a test feeds."""
+    if text is None:
+        data = tomllib.loads(RULINGS.read_text(encoding="utf-8"))
+        return [r["id"] for r in data.get("ruling", []) if r.get("id")]
+    return [m.group(1) for m in DD_ROW.finditer(text)]
 
 
 def duplicate_lessons() -> list[str]:
@@ -295,29 +292,30 @@ def duplicate_decisions(plan_text: str | None = None,
     PLAN's own preamble says a number is never reused, in either series, so
     the rule existed and nothing enforced it.
 
-    THE SERIES BOUNDARY IS THE FILE. The live `DD` rows live in dev/PLAN.md
-    section 3 and the retired `D` rows in archive/dev/DECISIONS-archived.md, so
-    `DD5` and the archived `D5` are DIFFERENT codes and both may exist.
-    Uniqueness is judged WITHIN a series, never across one. The consolidated
-    and revoked codes are preamble prose, never rows, so they cannot be
-    reported: they still resolve on purpose, and a row that was never a row
-    cannot be a duplicate row.
+    THE SERIES BOUNDARY IS THE FILE. The live `DD` rows live in
+    dev/pod/rulings.toml and the retired `D` rows in
+    archive/dev/DECISIONS-archived.md, so `DD5` and the archived `D5` are
+    DIFFERENT codes and both may exist. Uniqueness is judged WITHIN a series,
+    never across one. The consolidated and revoked codes are preamble prose,
+    never rows, so they cannot be reported: they still resolve on purpose, and
+    a row that was never a row cannot be a duplicate row.
 
     The texts are parameters so a test can feed a synthetic duplicate without
     writing to the tree; `series_findings` takes its text for the same reason.
+    A markdown table is accepted as `plan_text` so the suite can still feed
+    `| DD27 |` rows without writing the toml.
     """
-    text = PLAN.read_text(encoding="utf-8") if plan_text is None else plan_text
+    dd = ruling_ids(plan_text)
     arch = (ARCHIVED_DECISIONS.read_text(encoding="utf-8")
             if arch_text is None else arch_text)
-    dd = [m.group(1) for m in DD_ROW.finditer(text)]
     d = [m.group(1) for m in PLAN_ROW.finditer(arch)]
     out: list[str] = []
     for dup in duplicate_codes(dd):
         out.append(
             f"`{dup}` appears in {dd.count(dup)} rows of the `DD` series "
-            f"(dev/PLAN.md section 3), and PLAN's preamble says a number is "
-            f"never reused in either series. A `DD` row is the owner's (DD0): "
-            f"report the duplicate, never fix it.")
+            f"(dev/pod/rulings.toml), and a number is never reused in either "
+            f"series. A `DD` row is the owner's (DD0): report the duplicate, "
+            f"never fix it.")
     for dup in duplicate_codes(d):
         out.append(
             f"`{dup}` appears in {d.count(dup)} rows of the retired `D` series "
@@ -328,10 +326,9 @@ def duplicate_decisions(plan_text: str | None = None,
 
 
 def known_decisions() -> set[str]:
-    text = PLAN.read_text(encoding="utf-8")
     arch = ARCHIVED_DECISIONS.read_text(encoding="utf-8")
     live = {m.group(1) for m in PLAN_ROW.finditer(arch)}
-    live |= {m.group(1) for m in DD_ROW.finditer(text)}
+    live |= set(ruling_ids())
     if ARCHIVED_DD.is_file():
         dd_arch = ARCHIVED_DD.read_text(encoding="utf-8")
         live |= {m.group(1) for m in DD_ROW.finditer(dd_arch)}
@@ -341,10 +338,42 @@ def known_decisions() -> set[str]:
     m = PLAN_RETIRED.search(arch)
     if m:
         struck = set(re.findall(r"\bD\d{1,2}\b", m.group(1)))
-    m = DD_CONSOLIDATED.search(text)
-    if m:
-        struck |= set(re.findall(r"\bDD\d{1,2}\b", m.group(1)))
     return live | struck
+
+
+def screen_findings() -> list[str]:
+    """The screen carries no standing size, a real producer, and unique campaigns."""
+    data = tomllib.loads(SCREEN.read_text(encoding="utf-8"))
+    out: list[str] = []
+    if data.get("standing") != STANDING_CMD:
+        out.append(
+            f"dev/pod/screen.toml: standing must be `{STANDING_CMD}`, "
+            f"never a size figure (got {data.get('standing')!r})")
+    producer = data.get("producer")
+    if not producer or not (ROOT / str(producer)).is_file():
+        out.append(f"dev/pod/screen.toml: producer `{producer}` is not a file")
+    ids = [c.get("id") for c in data.get("campaign", []) if c.get("id")]
+    for dup in duplicate_codes(ids):
+        out.append(f"dev/pod/screen.toml: campaign `{dup}` appears twice")
+    return out
+
+
+def rulings_findings() -> list[str]:
+    """Every ruling id is unique, and a path-shaped home is a real file."""
+    data = tomllib.loads(RULINGS.read_text(encoding="utf-8"))
+    out: list[str] = []
+    ids: list[str] = []
+    for row in data.get("ruling", []):
+        rid = row.get("id") or ""
+        ids.append(rid)
+        home = str(row.get("home") or "")
+        if "/" in home or home.endswith((".py", ".toml")):
+            if not (ROOT / home).is_file():
+                out.append(
+                    f"dev/pod/rulings.toml: `{rid}` home `{home}` is not a file")
+    for dup in duplicate_codes([i for i in ids if i]):
+        out.append(f"dev/pod/rulings.toml: `{dup}` appears twice")
+    return out
 
 
 def dd_numbers(decisions: set[str]) -> set[str]:
@@ -578,10 +607,12 @@ def main() -> int:
 
     findings: list[str] = []
     # The routing file is part of the DEFAULT reference set and never part of an
-    # explicit-file run: `check-rule-ids.py dev/PLAN.md` asks about one file, and
+    # explicit-file run: `check-rule-ids.py dev/LESSONS.md` asks about one file, and
     # answering about a second one would make the exit status unreadable.
     if not args.paths:
         findings += rules_toml_findings(lessons)
+        findings += screen_findings()
+        findings += rulings_findings()
     for path in series_targets:
         findings += series_findings(
             path, path.read_text(encoding="utf-8"), dd_numbers(decisions))
@@ -606,7 +637,7 @@ def main() -> int:
                 if m.group(1) not in decisions:
                     findings.append(
                         f"{path.relative_to(ROOT)}:{i}: `{m.group(1)}` is not a "
-                        f"decision in dev/PLAN.md section 3")
+                        f"decision in dev/pod/rulings.toml")
 
     if not findings:
         routing = "" if args.paths else ", dev/rules.toml"

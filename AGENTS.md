@@ -29,10 +29,9 @@ installs them into `.venv`. **Run every `python3` command as `.venv/bin/python`.
 
 ## The milestone
 
-**`[LJ-1]` is the live campaign and `dev/PLAN.md` section 0 is the screen.** Read it
+**`[LJ-1]` is the live campaign and `dev/pod/screen.toml` is the screen.** Read it
 first: it states where the work stands today in one screen, and it is the only place
-that does. Section 11 is the goal registry, and `dev/pod/queue.toml` is the task
-producer.
+that does. `dev/pod/queue.toml` is the task producer.
 
 **`ledger.py --brief` is the only admissible source for a standing size figure.** Never
 quote a number found in a paragraph.
@@ -117,7 +116,7 @@ regenerate: edit this file and every slot has the new clause at the next dispatc
 | What else you may need | Where it lives |
 |---|---|
 | The measured laws that bind new code | `dev/LESSONS.md` |
-| The project's rulings, numbered and dated | `dev/PLAN.md` section 3 |
+| The project's rulings, numbered and dated | `dev/pod/rulings.toml` |
 | Agda code and chapter style | `dev/STYLE-agda.md` |
 | Literate Agda, the i18n markers, the prose rules | `dev/STYLE-i18n.md` |
 | Translation terms | `dev/glossary.toml`, explained by `dev/GLOSSARY.md` |

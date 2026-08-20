@@ -194,7 +194,7 @@ check("scripts/tests/ is skipped so a fixture stays verbatim",
 scope = {str(p.relative_to(ROOT))
          for p in cri.series_target_paths(cri.default_targets())}
 
-for target in ("dev/LESSONS.md", "dev/PLAN.md", "dev/ARCHIVE.md",
+for target in ("dev/LESSONS.md", "dev/pod/README.md", "dev/ARCHIVE.md",
                "dev/STYLE-agda.md", "dev/literature/owner-notes-rud.md",
                "scripts/README.md", "scripts/pod/check-closure.py", "scripts/measure/ledger.py"):
     # check-tree.py was the third member until the POD cutover of 2026-08-18 split it
@@ -216,8 +216,8 @@ check("agents/ is out even when the citation check opts in",
               {str(p.relative_to(ROOT))
                for p in cri.series_target_paths(cri.default_targets(briefs=True))}))
 check("an explicit path list is NOT widened to scripts/",
-      cri.series_target_paths([ROOT / "dev" / "PLAN.md"], widen=False)
-      == [ROOT / "dev" / "PLAN.md"])
+      cri.series_target_paths([ROOT / "dev" / "pod" / "README.md"], widen=False)
+      == [ROOT / "dev" / "pod" / "README.md"])
 
 # dev/ARCHIVE.md carries the declaration, so its 70 dated rows are exempt. That
 # is the exemption's blast radius, and it is measured on the real file.
@@ -253,7 +253,7 @@ check("no live document outside the pending handover is red", not stray,
 check("the run exits non-zero while the handover is pending, or clean after it",
       r.returncode in (0, 1), f"got {r.returncode}")
 check("an explicit clean file still reports clean",
-      run("dev/PLAN.md").returncode == 0)
+      run("dev/pod/README.md").returncode == 0)
 
 # A directory argument used to raise IsADirectoryError, because Path.exists()
 # is true of a directory and read_text() is not. `check-rule-ids.py dev/` is
@@ -316,7 +316,7 @@ check("a synthetic duplicate D row is a finding",
       any("`D27` appears in 2 rows" in f
           for f in cri.duplicate_decisions(DD_ONE, D_DUP)))
 check("the finding names the file that holds the series",
-      any("dev/PLAN.md section 3" in f
+      any("dev/pod/rulings.toml" in f
           for f in cri.duplicate_decisions(DD_DUP, D_ONE))
       and any("DECISIONS-archived.md" in f
               for f in cri.duplicate_decisions(DD_ONE, D_DUP)))

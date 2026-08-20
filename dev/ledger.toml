@@ -138,7 +138,7 @@ remaining_stale_rearm = "LJ-2.2: rebuild the [[remaining]] rows for the two-towe
 
 # AND THE [[owed]] DISPATCH QUEUE IS THE RETIRED ROUTE'S. Its twelve rows
 # price rud-route work and their statuses come from D30's closed freeze; not
-# one is an LJ row. The LIVE dispatch order is dev/PLAN.md section 11. The
+# one is an LJ row. The LIVE producer is dev/pod/queue.toml. The
 # rows are KEPT for the same reason as the retirement set: DD13 makes a new
 # route survey what the old one judged it still owed.
 owed_stale = true
@@ -1294,7 +1294,7 @@ finding = "The question paid for itself in the opposite direction from the one e
 # rewrite. Their statuses (frozen, exempt, delivered) come from D30's freeze,
 # which closed with the route. NOT ONE of them is an LJ row.
 #
-# THE LIVE DISPATCH ORDER IS dev/PLAN.md SECTION 11, the LJ task index, and
+# THE LIVE PRODUCER IS dev/pod/queue.toml, the LJ task index, and
 # no other document states it. The generated board that used to render this
 # queue as the next-work column was abolished the same day, so nothing
 # displays these rows today; scripts/measure/ledger.py only VALIDATES their shape.
@@ -1314,7 +1314,7 @@ title = "The choice leg itself: L satisfies AC, proved"
 status = "at-risk"
 detail = "Delivered and standing on the Def tower, but the current leg runs through the satisfaction-internalization cone, which D18 retires. It is proved; it is not yet proved on machinery that survives."
 blocked_by = ""
-evidence = "dev/PLAN.md section 0, 'what is delivered and standing'"
+evidence = "dev/pod/screen.toml standing; scripts/measure/ledger.py --brief"
 
 [[owed]]
 id = "ac-rehome"

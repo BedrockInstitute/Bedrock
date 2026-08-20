@@ -7,13 +7,10 @@ file is the directory index and holds no rule. Read this file before you write i
 
 ## Contents
 
-- `PLAN.md`: the **construction registry** for the campaign (the two-tower bridge,
-  both trophies): section 0 for where the work stands, the `DD` rulings, the
-  goal-coding rules, DD8's single best-effort projection that named its basis,
-  and the live MASTER status table with the `LJ` task index. Pointers to the
-  archived planning apparatus (target skeleton, route tree, source survey, build
-  constraints, process tensions, risks, simplification register) in `dev/memos/`.
-  Read it before touching `src/`; work carries a goal code.
+- `pod/screen.toml`: the **status screen**. The program cats it into every dispatch.
+  Campaign rows and standing pointers live here; standing size is `ledger.py --brief`.
+- `pod/rulings.toml`: the **live DD index**. Full text is `archive/dev/DD-archived.md`.
+  `scripts/gate/check-rule-ids.py` resolves `DD<n>` against it.
 - `literature/`: the **rud-route literature collection** (`[L3.30-L1]`): classified,
   citation-carrying notes on rudimentary functions, the J-hierarchy, the Devlin
   errata, and the formalization landscape, plus the bibliography, the owner's
@@ -49,10 +46,10 @@ file is the directory index and holds no rule. Read this file before you write i
   index.
 - `memos/`: **goal deliverables** that are documents rather than code, one file per goal code
   (`L3.0.3-subsumption-probe.md`, and `LJ-4-pod-program-design.md` for goal `[LJ-4]`), plus the
-  archived planning sections cut from `PLAN.md` by `[L3.32-T113]` (the target skeleton, route
+  archived planning sections cut from PLAN.md by `[L3.32-T113]` (the target skeleton, route
   tree, source survey, build constraints, process tensions, risks and simplification register;
-  each carries a status header and a pointer back). `PLAN.md` §11 records the status of the
-  goals. Findings that outlive a goal are promoted into `PLAN.md` itself, so a memo is evidence
-  and reasoning, never the current plan.
+  each carries a status header). `dev/pod/screen.toml` records campaign status.
+  Findings that outlive a goal are promoted into the screen or the rulings index, so a
+  memo is evidence and reasoning, never the current plan.
 
 See [scripts/README.md](../scripts/README.md) for the tooling that consumes these.
