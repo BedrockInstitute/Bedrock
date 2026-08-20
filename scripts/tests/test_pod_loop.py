@@ -3620,6 +3620,19 @@ class SideScopeReport(LoopCase):
                                     root=self.tmp)
         self.assertEqual(got, ["scripts/pod/check-spec-surface.py"])
 
+    def test_a_spec_surface_commit_is_not_the_refill(self):
+        """MEASURED 2026-08-20 on POD-REFILL-20260820-202416: Makefile and
+        spec-surface.toml. The transcript names only queue.toml and four briefs."""
+        self.patch(facts_mod, "_status_paths",
+                   lambda root: ["Makefile",
+                                 "dev/pod/spec-surface.toml",
+                                 "scripts/pod/check-spec-surface.py"])
+        got = pod.side_scope_report("POD-REFILL", before=[], st=pod.State(),
+                                    root=self.tmp)
+        self.assertNotIn("Makefile", got)
+        self.assertNotIn("dev/pod/spec-surface.toml", got)
+        self.assertEqual(got, ["scripts/pod/check-spec-surface.py"])
+
 
 class StandingRefillBrief(unittest.TestCase):
     """The standing refill brief names the live screen, never the archived plan.

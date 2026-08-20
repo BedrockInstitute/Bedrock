@@ -4533,6 +4533,11 @@ REFILL_SCOPE_OK = ("dev/pod/queue.toml", "dev/pod/stop-request.toml")
 #: on POD-REFILL-20260820-140414 (direction and the old plan) and on
 #: POD-REFILL-20260820-152340 (the journal archive): the refill wrote `queue.toml`
 #: and the new briefs, and the notice named the maintainer's concurrent files.
+#: MEASURED again 2026-08-20 on POD-REFILL-20260820-202416: the notice named
+#: `Makefile` and `dev/pod/spec-surface.toml`. The transcript
+#: `.pod-state/logs/POD-REFILL-20260820-202416-final.md:338-340` says it wrote
+#: `queue.toml` and four briefs and nothing else. Those two paths were the
+#: maintainer's spec-surface commit in the same window.
 REFILL_NEVER_WRITES = (
     "dev/pod/direction.md",
     "dev/pod/screen.toml",
@@ -4543,6 +4548,8 @@ REFILL_NEVER_WRITES = (
     "agents/README.md",
     "dev/build-manifest.toml",
     "archive/dev/",
+    "Makefile",
+    "dev/pod/spec-surface.toml",
 )
 
 
