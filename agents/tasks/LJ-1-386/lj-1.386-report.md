@@ -426,3 +426,99 @@ cause sits outside my scope. THREE ITEMS, each checkable:
 `changed_files` are my four files and nothing else, and no guarded rule home is
 among them. I did not edit the snapshot and I never ran the checker's `--write`
 mode.
+
+## 12. CODER RE-MEASUREMENT, 2026-08-20
+
+slot: `coder`. Written incrementally (C-22). No commit, no push. I wrote
+only in `agents/tasks/LJ-1-386/`. The program set `GHCRTS="-A64m -I0 -M8g"`
+on this pane. I never set it. One Agda process. No heap event.
+
+This dispatch received the same brief with `head_slot: coder`. The probe
+and the report above were already in the tree from the 2026-08-19
+mathematician run (`dev/pod/transitions/2026-08.jsonl:12-26`). I did not
+rewrite `Probe386.agda`. Later tasks cite it at `file:line`
+(`dev/pod/queue.toml:73`, `agents/tasks/LJ-1-388/lj-1.388-report.md:49`,
+`agents/tasks/LJ-1-397/Probe397.agda:20`). The 2026-08-20 audit marked
+386 CLEAN (`dev/pod/audit-2026-08-20.md:161`). I independently read the
+named types, then I ran the file.
+
+### 12.1 Types I read myself
+
+- `Good` at `src/L/Cardinal.lagda.md:187-190` is three conjuncts. It names
+  no target. The fourth `InjCode` conjunct is at `:228`.
+- `leastOf` at `src/L/WellOrder/Base.lagda.md:158-160` takes truncated
+  existence and returns data. Premise 1 holds at those lines.
+- `small-inj` at `src/L/Coding/Injection.lagda.md:147-150` reads a coded
+  injection to an ambient injection. Premise 2 holds at those lines.
+- `+ω` is opaque at `src/L/Ordinal/StageArith.lagda.md:40-42`. Premise 3's
+  seal holds at those lines.
+- `hasReplacementL` at `src/L/Axioms/Full.lagda.md:277-280` is the
+  replacement the identity graph spends.
+- `code-exists` at `Probe386.agda:227-229` is the brief's proposition at
+  `D := +ω ω`, with the search site equal to the graph. `code-inj` at
+  `:238-242` is the identity on `⟪ fst δ ⟫`.
+
+**`phi-less` is not in `src/`.** MEASURED this dispatch:
+`grep -n phi-less src/` returns 0 hits. The brief asked me to try
+`orderAt`, `phi-less` and replacement. Replacement is what the probe
+spends. `orderAt` is spent inside `code-untruncates`
+(`Probe386.agda:276`). `phi-less` is a name in the brief and in
+`agents/tasks/LJ-1-384/lj-1.384-report.md:104`. It is not a delivered
+identifier. That does not block the named obligations.
+
+### 12.2 W2
+
+`code-untruncates` (`Probe386.agda:264-268`) is at generic `a` and `b`.
+The identity graph (`Probe386.agda:94`) is at generic `D`. Nothing in the
+probe is written fixed at `+ω ω` except the two named obligations. No
+deadline forced a fixed form.
+
+### 12.3 Predecessor types (audit F1/F3 clause)
+
+- `[LJ-1.384]` verdict is ESCAPE-OPEN, not NO-GO
+  (`agents/tasks/LJ-1-384/lj-1.384-report.md:17`). I did not inhabit a
+  refuted type.
+- `[LJ-1.299]` `readback` at `agents/tasks/LJ-1-299/NoInj2.agda:107-110`
+  is the delivered shape `code-untruncates` generalises. That probe is
+  green in the tree. I did not change it.
+
+### 12.4 Runs (this dispatch)
+
+Empty-file floor, then the probe. Both WARM: `_build/2.8.0/agda/src/L/Cardinal.agdai`
+was already present. P-l forbids pricing a landing from these numbers. I
+price no landing.
+
+| run | file | exit | real s |
+|---|---|---:|---:|
+| 7 | `LJ-1-386/Floor386.agda`, the floor | **0** | 0.05 |
+| 8 | `LJ-1-386/Probe386.agda`, this dispatch | **0** | 1.55 |
+
+Slots: `pgrep -fl agda` before each invocation returned only
+`scripts/ops/agda-watchdog.sh`. One process was mine. `GHCRTS` was
+`-A64m -I0 -M8g` on the pane. I never set it. No heap exhaustion, so no
+WALL event.
+
+Machine: 1-minute load 3.46 at the floor and 3.26 at the probe. I report
+no seconds as a price.
+
+**GATES ON THIS ADDENDUM.** `lint-agda.py --check` on `Probe386.agda` and
+`Floor386.agda`: exit 0. `check-probes.py --check`: clean, 3703 tracked
+files. `check-survey-quotes.py LJ-1.386`: clean (0 note(s), 0 defect(s)).
+No em dash in any file in this directory.
+
+### 12.5 Coder verdict
+
+**GO on the two named obligations.** `code-exists` and `code-inj` typecheck
+at `agda --safe`, exit 0. The brief's proposition is inhabited at `+ω ω`
+by the identity graph. That inhabitant carries no cardinal arithmetic, so
+it is not a pairing of the square into the band. Sections 2 to 4 of this
+report already name that limit. I measured the same facts at the same
+`file:line` values, and I did not reopen them.
+
+What the next brief still needs is unchanged: the internal product `P`
+with its ambient bridge, and a coded injection from `P` into `δ`, which
+is `Leg1` at `Probe386.agda:287-291`. `[LJ-1.388]` later built the first
+conjunct. I did not rebuild it here.
+
+I built no pairing and no placement at `a := δ`. I did not touch `src/`.
+I ran no `make` target, no commit, no push.
