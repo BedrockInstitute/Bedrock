@@ -1,0 +1,14 @@
+Checking LJ-1-435.Probe435 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-435/agents/tasks/LJ-1-435/Probe435.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-435/agents/tasks/LJ-1-435/Probe435.agda:253.25-29: error: [UnequalTerms]
+g₁ x != g₂ x of type
+Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+InfinitySet.ωStructure
+Cubical.HITs.SetQuotients.Base./
+Cubical.HITs.CumulativeHierarchy.Properties.Kernel
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ InfinitySet.ωStructure)
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+ InfinitySet.ωStructure)
+when checking that the expression refl has type
+fb ω ω-ord (∈-irrefl ω) pairing g₁↪ φ₀ ≡
+fb ω ω-ord (∈-irrefl ω) pairing g₂↪ ψ₀

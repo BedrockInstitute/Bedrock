@@ -1,0 +1,90 @@
+Checking LJ-1-435.Probe435 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-435/agents/tasks/LJ-1-435/Probe435.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-435/agents/tasks/LJ-1-435/Probe435.agda:306.14-18: error: [UnequalTerms]
+CK.head
+(Cubical.Data.Vec.Base.transpX-Vec
+ (λ n →
+    Cubical.Foundations.Prelude.comp (λ i → ℕ)
+    (λ i →
+       Cubical.Foundations.Prelude.primPOr Cubical.Foundations.Prelude.i0
+       (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n)
+        Cubical.Foundations.Prelude.∨
+        Cubical.Foundations.Prelude.~ n Cubical.Foundations.Prelude.∨
+        Cubical.Foundations.Prelude.i0)
+       (λ .o →
+          suc
+          (Cubical.Foundations.Prelude.transp (λ i₁ → ℕ)
+           (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n)
+            Cubical.Foundations.Prelude.∨ Cubical.Foundations.Prelude.i0)
+           0))
+       (Cubical.Foundations.Prelude.primPOr
+        (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n))
+        (Cubical.Foundations.Prelude.~ n Cubical.Foundations.Prelude.∨
+         Cubical.Foundations.Prelude.i0)
+        (λ .o → countFo (var zero ≐ con (lift false)))
+        (λ .o →
+           suc
+           (Cubical.Foundations.Prelude.transp (λ i₁ → ℕ)
+            Cubical.Foundations.Prelude.i0 0))))
+    (suc
+     (Cubical.Foundations.Prelude.transp (λ i → ℕ)
+      (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n)
+       Cubical.Foundations.Prelude.∨ Cubical.Foundations.Prelude.i0)
+      0)))
+ Cubical.Foundations.Prelude.i0
+ (Cubical.Foundations.Prelude.transp (λ i → K₂)
+  Cubical.Foundations.Prelude.i0 (lift false)
+  ∷
+  Cubical.Foundations.Prelude.transp
+  (λ i →
+     Vec K₂
+     (Cubical.Foundations.Prelude.transp (λ j → ℕ)
+      (Cubical.Foundations.Prelude.~ i Cubical.Foundations.Prelude.∨
+       Cubical.Foundations.Prelude.i0)
+      0))
+  Cubical.Foundations.Prelude.i0 []))
+!=
+head
+(Cubical.Data.Vec.Base.transpX-Vec
+ (λ n →
+    Cubical.Foundations.Prelude.comp (λ i → ℕ)
+    (λ i →
+       Cubical.Foundations.Prelude.primPOr Cubical.Foundations.Prelude.i0
+       (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n)
+        Cubical.Foundations.Prelude.∨
+        Cubical.Foundations.Prelude.~ n Cubical.Foundations.Prelude.∨
+        Cubical.Foundations.Prelude.i0)
+       (λ .o →
+          suc
+          (Cubical.Foundations.Prelude.transp (λ i₁ → ℕ)
+           (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n)
+            Cubical.Foundations.Prelude.∨ Cubical.Foundations.Prelude.i0)
+           0))
+       (Cubical.Foundations.Prelude.primPOr
+        (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n))
+        (Cubical.Foundations.Prelude.~ n Cubical.Foundations.Prelude.∨
+         Cubical.Foundations.Prelude.i0)
+        (λ .o → 1)
+        (λ .o →
+           suc
+           (Cubical.Foundations.Prelude.transp (λ i₁ → ℕ)
+            Cubical.Foundations.Prelude.i0 0))))
+    (suc
+     (Cubical.Foundations.Prelude.transp (λ i → ℕ)
+      (Cubical.Foundations.Prelude.~ (Cubical.Foundations.Prelude.~ n)
+       Cubical.Foundations.Prelude.∨ Cubical.Foundations.Prelude.i0)
+      0)))
+ Cubical.Foundations.Prelude.i0
+ (Cubical.Foundations.Prelude.transp (λ i → K₂)
+  Cubical.Foundations.Prelude.i0 (lift false)
+  ∷
+  Cubical.Foundations.Prelude.transp
+  (λ i →
+     Vec K₂
+     (Cubical.Foundations.Prelude.transp (λ j → ℕ)
+      (Cubical.Foundations.Prelude.~ i Cubical.Foundations.Prelude.∨
+       Cubical.Foundations.Prelude.i0)
+      0))
+  Cubical.Foundations.Prelude.i0 []))
+of type Lift Bool
+when checking that the expression refl has type
+csφ ≡ cs-of (lift false)

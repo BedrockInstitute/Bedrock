@@ -1,0 +1,4 @@
+Checking LJ-1-435.Probe435 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-435/agents/tasks/LJ-1-435/Probe435.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-435/agents/tasks/LJ-1-435/Probe435.agda:207.11-12: error: [UnequalTerms]
+Level !=< (Type _i_605)
+when checking that the expression ℓ has type Type _i_605
