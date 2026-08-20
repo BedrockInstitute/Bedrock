@@ -1,0 +1,16 @@
+Checking LJ-1-400.Probe400 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-400/agents/tasks/LJ-1-400/Probe400.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-400/agents/tasks/LJ-1-400/Probe400.agda:53.46-55: error: [NotInScope]
+Not in scope:
+  isL-trans
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-400/agents/tasks/LJ-1-400/Probe400.agda:53.46-55
+    (did you mean
+       '.#L.Constructible-6971867420469294803.isL-trans' or
+       '.#L.Constructible-6971867420469294803.isTransV' or
+       '.#L.Constructible-6971867420469294803.∅-trans' or
+       '.#L.Constructible-6971867420469294803.∪-trans' or
+       '.#L.Constructible-6971867420469294803.⋃-trans' or
+       '.#L.Constructible-6971867420469294803.𝒟-trans'?)
+when scope checking isL-trans
+real 1.64
+user 1.42
+sys 0.17
