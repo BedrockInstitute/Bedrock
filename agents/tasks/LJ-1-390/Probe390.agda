@@ -145,11 +145,17 @@ descent-gives-sq δ κ incl sqκ h =
 -- PART 3.  THE RESIDUE, AND THE RECURSION THAT SPENDS IT.
 --
 --   `descent-owes` is CLOSED: it takes no parameter of
---   `descent-closes`'s telescope, and it never mentions `sq` at all.
---   Its three disjuncts are the three ways an infinite ordinal can be
---   served, and each already has a delivered supplier at some site:
---   `squareω` at ω, `via-col-square` under `Init`, and
---   `InternalLeastCard.Selected.δ-inj` for the coded descent.
+--   `descent-closes`'s telescope.  It may apply `sq` only to an
+--   internal cardinal that it quantifies itself (clause 2).  Four
+--   disjuncts, each a way an infinite ordinal can be served:
+--     1. a ≡ ω, served by `squareω`.
+--     2. Init a, served by `via-col-square`.
+--     3. IsCardinalL a and sq a, the WEAKEST base at a cardinal.
+--     4. a coded injection into a smaller infinite ordinal.
+--   The third is what the brief asked for: the recursion needs sq at
+--   the cardinal, not Init at the cardinal.  Init stays as a delivered
+--   supplier, because dropping it would force an Init non-cardinal to
+--   produce a coded witness that ¬IsCardinalL does not give as data.
 -- =====================================================================
 
 descent-owes : Type (ℓ-suc ℓ)
@@ -157,16 +163,17 @@ descent-owes =
   (a : S) → IsOrd (fst a) → (⟨ fst a ∈ ω ⟩ → Empty.⊥)
   → (fst a ≡ ω)
   ⊎ (Init (fst a)
+  ⊎ ((IsCardinalL a × sq (fst a))
   ⊎ (Σ[ κ ∈ S ] (⟨ fst κ ∈ fst a ⟩
                × (⟨ fst κ ∈ ω ⟩ → Empty.⊥)
                × ∥ Σ[ A ∈ Mem (Lset (SiteBound.β a)) ]
-                     InjCode (SiteBound.up a A) a κ ∥₁)))
+                     InjCode (SiteBound.up a A) a κ ∥₁))))
 
 -- THE RESIDUE IS NOT VACUOUS, AND THIS IS THE CHECK.  At an ordinal
--- that is an internal cardinal, the THIRD disjunct is refuted outright
+-- that is an internal cardinal, the FOURTH disjunct is refuted outright
 -- by `IsCardinalL` (src/L/Cardinal.lagda.md:230-233), so `descent-owes`
--- is not satisfiable by always descending.  Its hard core is the SECOND
--- disjunct at exactly those ordinals.
+-- is not satisfiable by always descending.  Its hard core at a
+-- non-Init cardinal is the THIRD disjunct: sq at that cardinal.
 owes-third-refuted : (a : S) → IsCardinalL a
                    → (κ : S) → ⟨ fst κ ∈ fst a ⟩
                    → ∥ Σ[ A ∈ Mem (Lset (SiteBound.β a)) ]
@@ -183,13 +190,18 @@ Goal x = ⟨ isL x ⟩ → IsOrd x → (⟨ x ∈ ω ⟩ → Empty.⊥) → sq x
 descent-step : descent-owes
              → (x : V ℓ) → ((y : V ℓ) → ⟨ y ∈ x ⟩ → Goal y) → Goal x
 descent-step owes x ih isLx ox infx =
-  Sum.rec at-ω (Sum.rec at-init by-descent) (owes (x , isLx) ox infx)
+  Sum.rec at-ω
+    (Sum.rec at-init (Sum.rec at-card by-descent))
+    (owes (x , isLx) ox infx)
   where
   at-ω : x ≡ ω → sq x
   at-ω p = subst sq (sym p) squareω
 
   at-init : Init x → sq x
   at-init = via-col-square x
+
+  at-card : IsCardinalL (x , isLx) × sq x → sq x
+  at-card = snd
 
   by-descent : Σ[ κ ∈ S ] (⟨ fst κ ∈ x ⟩
                          × (⟨ fst κ ∈ ω ⟩ → Empty.⊥)
