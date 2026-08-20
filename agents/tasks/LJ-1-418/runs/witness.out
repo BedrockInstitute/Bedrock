@@ -1,0 +1,6 @@
+pass      exit=0        1.05s  agents/tasks/LJ-1-418/Probe418.agda::stage-into-bound
+witness: 0 UNRESOLVED of 1, 1.05 s, probe_red=False
+real 1.11
+user 0.95
+sys 0.15
+EXIT:0
