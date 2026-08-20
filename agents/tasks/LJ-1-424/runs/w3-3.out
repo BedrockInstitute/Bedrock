@@ -1,0 +1,3 @@
+Checking LJ-1-424.Probe424 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-424/agents/tasks/LJ-1-424/Probe424.agda).
+EXIT=0
+GHCRTS=-A64m -I0 -M8g
