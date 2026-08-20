@@ -1,0 +1,9 @@
+GHCRTS=-A64m -I0 -M8g
+Checking LJ-1-422.Probe422 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-422/agents/tasks/LJ-1-422/Probe422.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-422/agents/tasks/LJ-1-422/Probe422.agda:50.34-35: error: [UnequalTerms]
+(Cubical.HITs.CumulativeHierarchy.Base.V ℓ) !=< (Σ _A_20 _B_21)
+when checking that the expression a has type Σ _A_20 _B_21
+real 0.75
+user 0.63
+sys 0.09
+EXIT:42
