@@ -10,7 +10,8 @@ Requirements: Agda 2.8.0 with cubical 0.9, and Python 3.11 or later.
 [requirements-dev.txt](requirements-dev.txt) pins every dependency.
 **Run every `python3` command as `.venv/bin/python`.**
 
-**The endpoint is RULED. The architecture is a CANDIDATE.** `[LJ-1]` is the live campaign. `dev/pod/screen.toml` is the only standing
+**The endpoint is RULED. The architecture is a CANDIDATE.**
+`[LJ-1]` is the live campaign. `dev/pod/screen.toml` is the only standing
 status. `dev/pod/queue.toml` is the task producer.
 
 **`ledger.py --brief` is the only admissible source for a standing size figure.**
