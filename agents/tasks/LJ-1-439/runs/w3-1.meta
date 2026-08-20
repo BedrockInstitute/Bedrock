@@ -1,0 +1,2 @@
+GHCRTS=-A64m -I0 -M8g
+exit=42
