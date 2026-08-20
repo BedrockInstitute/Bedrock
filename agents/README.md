@@ -113,7 +113,7 @@ Two consequences follow, and both are mechanical:
 
 1. **`scripts/gate/lint-prose.py` skips `agents/`**, beside `archive/`. A style gate over a record
    can only force an edit to the record. The exemption is at `scripts/gate/lint-prose.py:446` with
-   its reason. The same reasoning exempts `dev/JOURNAL.md` at `scripts/gate/check-rule-ids.py:117`.
+   its reason. The per-episode journal is archived; it is not a live exemption.
 2. **Correct a report in the next report, never in place.** If a report is wrong, the record
    of the error and its correction is worth more than a clean file.
 

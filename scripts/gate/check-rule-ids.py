@@ -138,22 +138,18 @@ ARCHIVED_DD = ROOT / "archive" / "dev" / "DD-archived.md"
 DD_CONSOLIDATED = re.compile(
     r"\*\*Consolidated and revoked codes\.\*\*(.*?)(?=\n\n)", re.S)
 # Struck decisions still RESOLVE, and PLAN says so in as many words: their full
-# original text is preserved in dev/JOURNAL.md "so a commit message citing a
-# struck code still resolves", and numbers are never reused. A checker that
+# original text is preserved in the archived journal "so a commit message citing
+# a struck code still resolves", and numbers are never reused. A checker that
 # failed those citations would be arguing with the document it checks.
 PLAN_RETIRED = re.compile(
     r"\*\*Retired decisions\.\*\*(.*?)were struck", re.S)
 
-# `dev/JOURNAL.md` is a dated historical record, not live guidance: an entry
-# from July that cites a decision struck in August is CORRECT as history, and
-# rewriting it would falsify the record. PLAN itself says the struck decisions'
-# text is preserved there so an old citation still resolves.
-HISTORICAL = {"JOURNAL.md"}
-
 # Route memos under dev/memos/ are dated analyses, not live guidance: a memo
 # written in July that reasons from a decision struck in August is correct as
 # history. They are checked for LESSONS IDs, which are never renumbered, but
-# not for decision currency.
+# not for decision currency. The per-episode journal left `dev/` on 2026-08-20
+# (`archive/dev/JOURNAL.md`); it is no longer a live-document exemption because
+# it is no longer a live document. `archive/` is outside the default scan.
 HISTORICAL_DIRS = {"memos"}
 
 # --------------------------------------------------------------------------
@@ -221,10 +217,9 @@ LOCATOR_SPAN = 70
 # fixture to satisfy a checker falsifies the test it belongs to.
 SERIES_SKIP_DIRS = {"tests"}
 
-# `agents/` is a FROZEN RECORD, and the same reason exempts it that exempts
-# dev/JOURNAL.md: a brief says what an agent was told on a date and a report
-# says what it found, so a citation there is true of its own moment and nobody
-# rewrites it. `lint-prose.py` already drops the tree for this reason. Measured
+# `agents/` is a FROZEN RECORD: a brief says what an agent was told on a date
+# and a report says what it found, so a citation there is true of its own moment
+# and nobody rewrites it. `lint-prose.py` already drops the tree for this reason. Measured
 # 2026-08-13: with the rest of the tree green, `--briefs` carried 487 findings
 # and 485 of them were series findings inside `agents/`, on text that must not
 # change. That is the noise that gets a gate switched off.
@@ -401,7 +396,7 @@ def series_target_paths(targets: list[Path], widen: bool = True) -> list[Path]:
         out += sorted((ROOT / "scripts").rglob("*.py"))
         out += [ROOT / "scripts" / "README.md"]
     return [p for p in out
-            if p.exists() and p.name not in HISTORICAL
+            if p.exists()
             and p.parent.name not in HISTORICAL_DIRS
             and p.parent.name not in SERIES_SKIP_DIRS
             and not str(p.relative_to(ROOT)).startswith(SERIES_SKIP_TREES)]
@@ -516,7 +511,7 @@ def next_ids() -> int:
 
     THE DEFAULT IS MAX PLUS ONE, NEVER THE LOWEST GAP. `Rule 7`, `17`, `18`
     and `19` are absent from the headings, and they occur nowhere in
-    `dev/LESSONS.md`, `dev/PLAN.md` or `dev/JOURNAL.md`, so the record does
+    `dev/LESSONS.md` or the archived journals, so the record does
     not say whether they were retired or never minted. Reusing a number risks
     colliding with a citation in a frozen record, and max plus one never does.
     The gaps are PRINTED beside the answer, so the author decides rather than
@@ -626,7 +621,7 @@ def main() -> int:
                 findings.append(
                     f"{path.relative_to(ROOT)}:{i}: `{tok}` is not a heading in "
                     f"dev/LESSONS.md")
-            if path.name in HISTORICAL or path.parent.name in HISTORICAL_DIRS:
+            if path.parent.name in HISTORICAL_DIRS:
                 continue
             for m in PLAN_REF.finditer(line):
                 if m.group(1) not in decisions:

@@ -454,7 +454,7 @@ three parked tasks the whole loop stops and the owner gets a push.
 documents: this repository's `AGENTS.md` and `dev/ORCHESTRATION.md`. It SETS
 ASIDE the DD series in `dev/PLAN.md` section 3, under A7, and section 7.1
 carries every DD ruling to a new enforcement point. It KEEPS every artifact:
-`agents/tasks/`, `dev/JOURNAL.md`, `dev/LESSONS.md`, `dev/ledger.toml`, and the
+`agents/tasks/`, `dev/LESSONS.md`, `dev/ledger.toml`, and the
 measurements. It
 also keeps `dev/STYLE-agda.md` and `dev/STYLE-i18n.md`, which are style documents
 and not process rules, and which the gates of section 7.1 read. **The goal does
@@ -562,11 +562,11 @@ slot and the program injects the file ahead of the brief at every dispatch
 
 | # | Carries | Injected into | The clause, verbatim |
 |---|---|---|---|
-| W1 | DD2 | mathematician | The two towers and the bridge are a candidate architecture and not a ruling. Only a measurement changes the architecture, and an argument never does. Queue the architecture decision as a task whose obligation is that measurement. That task is `[LJ-2.5]`, a live row in `dev/PLAN.md` section 11. |
+| W1 | DD2 | mathematician | The two towers and the bridge are a candidate architecture and not a ruling. Only a measurement changes the architecture, and an argument never does. Queue the architecture decision as a task whose obligation is that measurement. That task is `[LJ-2.5]`, a live campaign row in `dev/pod/screen.toml`. |
 | W2 | DD4 | mathematician, coder | Write the mathematics once at a generic carrier and instantiate it, so both proofs share the maximum code. State this rule in the brief and answer it in the return. A deadline does not permit the fixed form: report the conflict and stop for a new price. |
 | W3 | DD8 | mathematician, coder | Name the widest unmeasured term in the brief, and name the probe that measures it. Give an estimate as one best-effort number. Name the estimate's basis: a probe, a delivered comparable, or a survey. **AMENDED BY A21, 2026-08-19: the mathematician SPECIFIES the probe and the CODER writes and runs it.** The half that told it to write the probe and run it while the task is live binds the coder now, and its slot file carries it. The probe still lives in `agents/tasks/<CODE>/`, never under `src/`, is tracked, and is never deleted. Write the report first, and write it incrementally. |
 | W4 | DD13 | mathematician, coder | Move a retired MODULE to `archive/` and never delete it. The rule is module-granular: a dead fragment inside a live master, with no consumer, is deleted, and the `dev/LESSONS.md` entry that cited it is restated generally. Record in `dev/ARCHIVE.md` what the module is, why it left, where it was last green, and what would reopen it. Price the ideal form written fresh today, then compare it with the chapter you have. |
-| W5 | DD19 | every slot | Each rule has one canonical home and names its enforcer: program, hook or agent discipline. Never write a rule in two files. Never add a `dev/glossary.toml` entry that an agent chose. A term the glossary lacks is settled by two dispatches, queued like any other task: a sourced provenance dossier, then an adversarial review that returns PASS or FAIL per term. A PASS lands the entry and the landing commit cites both. A FAIL or a genuine fork escalates that term to the owner. A ruling is a table row, an episode is a `dev/JOURNAL.md` entry, a law is a `dev/LESSONS.md` entry, and a fact belongs in exactly one of the three. |
+| W5 | DD19 | every slot | Each rule has one canonical home and names its enforcer: program, hook or agent discipline. Never write a rule in two files. Never add a `dev/glossary.toml` entry that an agent chose. A term the glossary lacks is settled by two dispatches, queued like any other task: a sourced provenance dossier, then an adversarial review that returns PASS or FAIL per term. A PASS lands the entry and the landing commit cites both. A FAIL or a genuine fork escalates that term to the owner. A ruling is a table row, an episode is a report under `agents/tasks/<CODE>/` plus a transition-log line, a law is a `dev/LESSONS.md` entry, and a fact belongs in exactly one of the three. The per-episode journal is archived. |
 | W6 | DD23 | every slot | Write no mathematical prose until both trophies are proved in the tree. Write only code, its own comments and the project records. The prose phase opens when the double trophy lands, and not before. |
 | W7 | DD27 | mathematician | Index the constructible hull by the meta term algebra `Code`, never by object-language formulas. An object-language index blocks the condensation criterion at hull parameters. |
 | W8 | DD28 | mathematician | Read the injected LITERATURE block before you write Agda for a provability question. Stop the task when the literature shows the shape is an axiom with no condition this tree meets. A literature NO-GO is a full return and not a failure. |
@@ -627,7 +627,7 @@ Every tracked POD configuration file lives in `dev/pod/`. A brief stays under
 | `.pod-state/state.json` | no | The runtime state, AD19 |
 | `.pod-state/logs/` | no | Worker transcripts |
 | `.pod-state/witness/` | no | The fact 3 witness modules, section 4.7 |
-| `dev/JOURNAL.md` | yes | The episode record, one entry per episode. It is KEPT and it needs a writer: the mathematician writes the entry at every close, and the adversarial reviewer writes one for the return it attacked. The transition log holds FACTS and can never hold a finding |
+| `agents/tasks/<CODE>/*-report.md` | yes | The episode record of a close. The mathematician does not write a journal entry; the coder's report and the transition log are the record. `dev/JOURNAL.md` is archived. The transition log holds FACTS and never a finding |
 
 `.gitignore` gains one line, `.pod-state/`. That line matters twice: it keeps the
 runtime state out of the index, and it hides the witness modules from fact 4,
@@ -2644,11 +2644,14 @@ code would also hit `dispatch.py:984-988`.
 **The review's brief is program-written, `agents/tasks/<CODE>/review-<PRED>.md`.**
 `launch()` demands a brief file, so the review needs one; the mathematician never
 writes it. `review_brief(t, slot)` builds it from `dev/pod/instructions/<slot>.md`,
-the slot rule (f) resolved, and fills four sections: `## SCOPE (write)` naming the
-review file and `dev/JOURNAL.md`, `## ARCHIVE` and `## LITERATURE` from section
-7.4's retrieval, and the three questions below. **`dev/JOURNAL.md` is in that
-scope because the episode record needs a writer under the new flow**, and DD0
-forbids a record ABOUT a ruling landing anywhere else. **It carries NO branch block, and the pre-flight
+the slot rule (f) resolved, and fills four sections: `## SCOPE (write)` naming
+only the review file, `## ARCHIVE` and `## LITERATURE` from section
+7.4's retrieval, and the three questions below. **`dev/JOURNAL.md` LEFT that
+scope on 2026-08-19.** MEASURED: every generated review brief claimed the
+journal, so `territory_in_flight()` made any two escalations mutually exclusive,
+and LJ-1.394's first adversarial dispatch parked `launch` because LJ-1.391
+already held the file (`scripts/pod/pod.py:2072-2084`). A reviewer's
+deliverable is its own review file. The journal is archived. **It carries NO branch block, and the pre-flight
 does not read it**, because it produces no routing of its own. It satisfies the
 seven KEPT refusals of section 6.2, rows 1, 2, 5, 6, 7, 12 and 13, by
 construction, which is why those four sections and no fewer are written.

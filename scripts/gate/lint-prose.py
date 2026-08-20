@@ -451,7 +451,8 @@ def target_files(explicit, staged):
             # on a date; a report says what it found. Neither is live guidance, and neither
             # is ever rewritten, so a style gate over them can only force an edit to a
             # record, which corrupts the record it was meant to protect. The same reasoning
-            # exempts dev/JOURNAL.md at scripts/gate/check-rule-ids.py:93. Measured when the tree
+            # used to exempt the per-episode journal; that file is archived.
+            # Measured when the tree
             # moved here on 2026-08-13: 1,109 violations in 74 archived reports and 24 in 10
             # briefs, none of them a defect in anything the project still runs on.
             and not f.startswith("agents/")]

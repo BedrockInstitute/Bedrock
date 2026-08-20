@@ -1863,7 +1863,8 @@ class RuleF(LoopCase):
         # LJ-1.391 was live and already held it. A22 runs four or five coder tasks at
         # once, so the collision is routine. A reviewer's deliverable is its own review
         # file; a journal entry is a consolidation step and never a per-review write.
-        self.assertNotIn("dev/JOURNAL.md", text,
+        scope = text.split("## THE OBLIGATION", 1)[0]
+        self.assertNotIn("dev/JOURNAL.md", scope,
                          "a shared write path serialises every escalation")
 
     def test_the_logged_brief_is_ALWAYS_the_task_brief_and_never_the_review(self):

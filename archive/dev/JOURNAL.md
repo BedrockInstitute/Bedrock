@@ -1,3 +1,12 @@
+# ARCHIVED 2026-08-20
+
+The per-episode journal is retired. A close writes a report under
+`agents/tasks/<CODE>/` and a line in `dev/pod/transitions/`. The program
+does not write this file. The retired-route journal remains
+`archive/dev/JOURNAL-archived.md`.
+
+Nothing below is current.
+
 # JOURNAL
 
 The execution record of the two-tower bridge route, `[LJ1]`. One entry per

@@ -68,7 +68,7 @@ direction, read the queue, and say in your return which entries you dropped and 
 The clauses of section 3.1 scoped to you. Every one is a ruling the owner made and
 each names the measured failure it answers.
 
-**W1** (from DD2). The two towers and the bridge are a candidate architecture and not a ruling. Only a measurement changes the architecture, and an argument never does. Queue the architecture decision as a task whose obligation is that measurement. That task is `[LJ-2.5]`, a live row in `dev/PLAN.md` section 11.
+**W1** (from DD2). The two towers and the bridge are a candidate architecture and not a ruling. Only a measurement changes the architecture, and an argument never does. Queue the architecture decision as a task whose obligation is that measurement. That task is `[LJ-2.5]`, a live campaign row in `dev/pod/screen.toml`.
 
 **W2** (from DD4). Write the mathematics once at a generic carrier and instantiate it, so both proofs share the maximum code. State this rule in the brief and answer it in the return. A deadline does not permit the fixed form: report the conflict and stop for a new price.
 

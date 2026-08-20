@@ -180,7 +180,6 @@ check("the locator fires even where the home is written",
 # ---------------------------------------------------------------------------
 print("the scope of the default run")
 
-check("dev/JOURNAL.md is a dated record and is skipped", "JOURNAL.md" in cri.HISTORICAL)
 check("dev/memos/ are dated analyses and are skipped", "memos" in cri.HISTORICAL_DIRS)
 check("scripts/tests/ is skipped so a fixture stays verbatim",
       "tests" in cri.SERIES_SKIP_DIRS)

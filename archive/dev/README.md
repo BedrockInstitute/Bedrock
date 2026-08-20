@@ -13,7 +13,8 @@ working documents.** A developer reading `dev/` should see what binds today.
 |---|---|---|
 | `DECISIONS-archived.md` | The whole `D` ruling series, D1 to D39 | You need what the retired route ruled, or what a consolidated `DD` row dropped |
 | `TASKS-archived.md` | All 265 `L3.32-T` dispatch rows | You need what a dispatch actually found |
-| `JOURNAL-archived.md` | The 4,280-line execution journal | You need WHY, and the other three cannot answer. It is long; do not read it through |
+| `JOURNAL-archived.md` | The retired-route execution journal (4,280 lines) | You need WHY on the internalization route. It is long; do not read it through |
+| `JOURNAL.md` | The two-tower / LJ-1 episode journal, archived 2026-08-20 | You need an LJ-1 episode. Closes write a report and a transition line; nothing writes this file |
 | `STATUS-archived.md` | The 96 goal rows of the retired PLAN.md section 11 | You need a retired goal's full status text. `dev/pod/screen.toml` keeps the live campaign rows |
 | `PLAN-archived.md` | The construction registry as it stood on 2026-08-20 | You need the old section 0 screen, the DD table as markdown, or a goal-coding rule from §6 |
 

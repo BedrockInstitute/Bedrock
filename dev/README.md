@@ -33,8 +33,6 @@ file is the directory index and holds no rule. Read this file before you write i
   (via `tomllib`): the booked retirement set and the remaining-work rows with their bands,
   classes and provenance. It contains **no standing figure**; standing is measured from the tree,
   never written down.
-- `JOURNAL.md`: the **execution record**, one entry per episode, never rewritten. A fact that
-  is an EPISODE belongs here, and not on a ruling row.
 - `ARCHIVE.md`: the **archive registry**, one row per retired module: what it was, why it left,
   where it was last green, its measured size and what would reopen it.
 - `ORCHESTRATION.md`: the **orchestrator's operating document**. It is LIVE. Follow it.

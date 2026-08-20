@@ -113,11 +113,11 @@ EPISODES = [
     ("7b", "agents/tasks/LJ-1-239/LJ-1.239.md", f"{RUD}/L/Condensation.lagda.md",
      SRC_SCOPE, 1),
     ("11", "agents/tasks/archive/LJ-1-10/LJ-1.10.md",
-     "archive/dev/TASKS-archived.md", DEV_SCOPE, 4),  # episode 11: 2 pre-cutover, 3 post-cutover, 5 after the slimming, 4 after PLAN-archived.md
+     "archive/dev/TASKS-archived.md", DEV_SCOPE, 5),  # episode 11: 2 pre-cutover, 3 post-cutover, 5 after the slimming, 4 after PLAN-archived.md, 5 after JOURNAL.md
     ("5", "agents/tasks/LJ-1-353/LJ-1.353.md", f"{RUD}/L/Cardinal.lagda.md",
      SRC_SCOPE, 3),
     ("10", "agents/tasks/archive/LJ-1-6/LJ-1.6.md",
-     "archive/dev/TASKS-archived.md", DEV_SCOPE, 7),  # episode 10: 3 pre-cutover, 5 post-cutover, 7 after the slimming
+     "archive/dev/TASKS-archived.md", DEV_SCOPE, 8),  # episode 10: 3 pre-cutover, 5 post-cutover, 7 after the slimming, 8 after JOURNAL.md
     ("5b", "agents/tasks/LJ-1-136/LJ-1.136.md", f"{RUD}/L/Cardinal.lagda.md",
      SRC_SCOPE, 16),
     ("6", "agents/tasks/LJ-1-92/LJ-1.92.md",
@@ -154,8 +154,10 @@ check("archive/src holds the 97 masters the record scoped",
 # 11 SINCE PLAN.md was archived as archive/dev/PLAN-archived.md on 2026-08-20.
 # THE PIN FIRED: 10 -> 11, and episode 11 moved 5 -> 4. Direction history stays
 # excluded; this file is a retrieval record.
-check("archive/dev holds 11 records after PLAN.md was archived",
-      len(retr.corpus(DEV_SCOPE)) == 11, str(len(retr.corpus(DEV_SCOPE))))
+# 12 SINCE JOURNAL.md was archived as archive/dev/JOURNAL.md on 2026-08-20.
+# THE PIN FIRED: 11 -> 12. Episode 11 moved 4 -> 5 and episode 10 moved 7 -> 8.
+check("archive/dev holds 12 records after JOURNAL.md was archived",
+      len(retr.corpus(DEV_SCOPE)) == 12, str(len(retr.corpus(DEV_SCOPE))))
 check("a filed direction is history and is not a retrieval record",
       not any(p.startswith("archive/dev/direction/")
               for p in retr.corpus(DEV_SCOPE)))
