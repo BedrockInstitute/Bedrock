@@ -1349,17 +1349,20 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             # `acceptEdits`. MEASURED 2026-08-19: `claude --help` lists the six
             # choices `acceptEdits`, `auto`, `bypassPermissions`, `manual`,
             # `dontAsk` and `plan`, so the value is spelled exactly `auto`.
-            # **GROK TAKES THE SAME THREE FLAGS AS CLAUDE, and that is measured rather
-            # than assumed.** `grok --help`, 2026-08-19 on grok 1.0.5: `-m, --model`,
-            # `--reasoning-effort` aliased `--effort`, and `--permission-mode` whose
-            # possible values include `auto` spelled exactly that way. The probe that day
-            # started `grok --model grok-4.6 --effort high --permission-mode auto` through
-            # this very builder and the agent wrote its file.
+            # **GROK TAKES THE SAME MODEL AND EFFORT FLAGS AS CLAUDE, measured
+            # 2026-08-19.** `grok --help` on grok 1.0.5: `-m/--model`, `--effort`, and
+            # `--permission-mode`. The probe that day started with `--permission-mode auto`.
+            # **CODER GROK STALLS ON TOOL APPROVAL, owner's ruling 2026-08-20.** `auto`
+            # still waits. `grok --help` lists `--always-approve` as "Auto-approve all
+            # tool executions". The grok kind takes that flag. Claude stays on `auto`.
             if kind == "codex":
                 model_args = ["--", "-m", model]
-            elif kind in ("claude", "grok"):
+            elif kind == "claude":
                 model_args = ["--", "--model", model, "--effort", effort,
                               "--permission-mode", "auto"]
+            elif kind == "grok":
+                model_args = ["--", "--model", model, "--effort", effort,
+                              "--always-approve"]
             else:
                 model_args = ["--", "--provider", provider or PI_PROVIDER, "--model", model]
             # **THE WORKER'S CWD, and it is the TASK'S OWN CHECKOUT when it has one.**
@@ -1481,15 +1484,17 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # comparison is SKIPPED rather than failing every dispatch on a
                 # guess.
                 f"herdr agent get {hname} >/dev/null 2>&1 || "
-                "{ echo \"HERDR agent never started; pane $PANE kept for forensics\"; exit 1; }\n"
+                "{ echo \"HERDR agent never started; closing unused pane $PANE\"; "
+                "herdr pane close \"$PANE\" >/dev/null 2>&1 || true; exit 1; }\n"
                 f"GOT=$(herdr agent get {hname} 2>/dev/null | python3 -c "
                 "\"import json,sys;a=(json.load(sys.stdin).get('result') or {})"
                 ".get('agent') or {};print(a.get('pane_id',''))\""
                 " 2>/dev/null)\n"
                 "if [ -n \"$GOT\" ] && [ \"$GOT\" != \"$PANE\" ]; then\n"
                 f"  echo \"HERDR agent {hname} already exists in pane $GOT, not in"
-                " $PANE. A run under this task code is still alive. Refusing to"
-                " drive it; pane $PANE kept for forensics\"\n"
+                " $PANE. A run under this task code is still alive. Closing the"
+                " unused pane $PANE\"\n"
+                "  herdr pane close \"$PANE\" >/dev/null 2>&1 || true\n"
                 "  exit 1\n"
                 "fi\n"
                 # TWO PHASE, AND ONE PHASE IS NOT ENOUGH. `--until idle` matches
@@ -1503,8 +1508,18 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # worker was launched with its brief ALONE. It received neither the
                 # shared Boundary nor one clause of its own role.
                 f"herdr agent prompt {hname} \"$(cat {_cat_list(preamble, brief)})\"\n"
+                # NEVER-STARTED-WORKING MUST FREE THE NAME. MEASURED 2026-08-20 on
+                # POD-REFILL-20260820-110248: `wait --until working` timed out, the
+                # pane was kept for forensics WITH the herdr name still bound, and
+                # the next two hourly refills (seq 276, 277) refused
+                # `agent_name_taken` for three hours. The log already has the
+                # timeout. The pane was a blank splash. Close it. A worker that
+                # DIED after writing still keeps its pane, below.
                 f"herdr agent wait {hname} --until working --timeout 120000 || "
-                "{ echo \"HERDR agent never started working; pane $PANE kept for forensics\"; exit 1; }\n"
+                "{ echo \"HERDR agent never started working; releasing the name and "
+                "closing pane $PANE\"; "
+                f"herdr agent rename {hname} --clear >/dev/null 2>&1 || true; "
+                "herdr pane close \"$PANE\" >/dev/null 2>&1 || true; exit 1; }\n"
                 # THE SECOND WAIT CAN FAIL WITHOUT THE AGENT STOPPING, and an
                 # unchecked failure reads as a finished run. Measured 2026-08-13:
                 # moving the agent's pane between workspaces made `agent wait`

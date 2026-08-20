@@ -1299,6 +1299,25 @@ def laws_missing(text):
     return body is None or not body.strip()
 
 
+def _generated_heading(text, name):
+    """True when `## NAME` already carries the program-generated marker."""
+    m = re.search(r"^##[ \t]+" + re.escape(name) + r"[^\n]*\n", text, re.M)
+    return bool(m) and "program-generated" in m.group(0)
+
+
+def _put_section(text, name, block):
+    """Write one program-generated section, replacing a handwritten heading of
+    the same name, or appending when the heading is absent."""
+    block = block.rstrip() + "\n"
+    m = re.search(r"^##[ \t]+" + re.escape(name) + r"[^\n]*\n", text, re.M)
+    if m is None:
+        return text.rstrip("\n") + "\n\n" + block
+    nxt = re.search(r"^##[ \t]", text[m.end():], re.M)
+    end = m.end() + nxt.start() if nxt else len(text)
+    rest = text[end:].lstrip("\n")
+    return text[:m.start()] + block + ("\n" + rest if rest else "")
+
+
 #: R17's heading, exactly as memo section 6.3's template writes it. `preflight.section()`
 #: matches the name by PREFIX, so the parenthesis is prose and never a second name.
 LAWS_HEADING = "## LAWS (program-generated, do not edit)"
@@ -1450,10 +1469,15 @@ def inject_survey(brief, root=None):
     THE WORKER CANNOT SKIP A SURVEY IT NEVER HAD TO PERFORM. MEASURED 2026-08-17: 282
     live briefs, of which 244 never name `JOURNAL-archived.md`. The blocks are written
     BEFORE pre-flight P15 and P21 read them, so a brief with a dead injected path parks
-    rather than dispatching. A block the brief already carries is left alone, because a
-    record is never rewritten; the ONE exception is a `## LAWS` heading with an empty body,
-    which is filled in place, because a second heading of that name would leave P21 reading
-    the first and empty one for ever.
+    rather than dispatching. A `## LAWS` heading with an empty body is filled in
+    place, because a second heading of that name would leave P21 reading the first
+    and empty one for ever. **A HANDWRITTEN `## ARCHIVE` OR `## LITERATURE` IS
+    NOT THE PROGRAM'S BLOCK.** MEASURED 2026-08-20 on LJ-1.417: the refill wrote
+    `## ARCHIVE` with `NO HIT` and no `(program-generated)` marker;
+    `inject_survey` saw the heading and skipped; conjunct 6 then FAILED (`lint`)
+    because the duty block was never in front of the coder; `sys-lint-accept`
+    re-dispatched the same brief. The program-generated heading is the record R10
+    writes. Anything else under those names is replaced.
 
     THREE RULES, ONE WRITE. R18 goes first, because it changes `## SCOPE (write)` and R17
     derives its kind from that section. The kind cannot change under it: R18 adds a `src/`
@@ -1522,8 +1546,11 @@ def inject_survey(brief, root=None):
             elif bundle is not None:
                 text = text[:span[0]] + "\n" + bundle + "\n\n" + text[span[1]:]
 
-        # R10, section 7.4. The two retrieval blocks.
-        if "## ARCHIVE" not in text or "## LITERATURE" not in text:
+        # R10, section 7.4. The two retrieval blocks. A heading without the
+        # program-generated marker is the handwritten skip LJ-1.417 measured.
+        need_archive = not _generated_heading(text, "ARCHIVE")
+        need_lit = not _generated_heading(text, "LITERATURE")
+        if need_archive or need_lit:
             try:
                 import retrieve as retrieve_mod         # deferred: it builds an index
             except ImportError:
@@ -1532,14 +1559,16 @@ def inject_survey(brief, root=None):
                 obligations = witness_mod.obligations_of(p)
                 query = retrieve_mod.build_query(scope, obligations,
                                                  retrieve_mod.goal_text(str(p)))
-                blocks = []
-                if "## ARCHIVE" not in text:
-                    blocks.append(retrieve_mod.candidate_block(
-                        "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE))
-                if "## LITERATURE" not in text:
-                    blocks.append(retrieve_mod.candidate_block(
-                        "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE))
-                text = text.rstrip("\n") + "\n\n" + "\n".join(blocks)
+                if need_archive:
+                    text = _put_section(
+                        text, "ARCHIVE",
+                        retrieve_mod.candidate_block(
+                            "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE))
+                if need_lit:
+                    text = _put_section(
+                        text, "LITERATURE",
+                        retrieve_mod.candidate_block(
+                            "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE))
 
         if text == original:
             return False
@@ -2803,15 +2832,26 @@ def harvest_batch(st, root=None):
                                   why="the proposal is not a TOML table", root=root))
             retire_proposal(path, "parse", root)
             continue
+        # **A REQUEST IS NOT A WRITE, AND R15 MUST NOT SWALLOW IT.** MEASURED
+        # 2026-08-20 on `dev/pod/proposals/20260820-194053.toml`: the owner
+        # authorised three `[[queue]]` brief-repair requests and no rows.
+        # `maintainer_scope_ok` refused `scope` because `scripts/pod/*.py` were
+        # already dirty from a prior repair, and `continue` skipped
+        # `queue_append`. The A21 repairs never reached `queue.toml`. R15 is
+        # about table rows. A `[[queue]]` entry is a REQUEST the mathematician
+        # reads; the comment at the call already said so. Append it BEFORE the
+        # scope gate, against this harvest's `root`, so a dirty tree still
+        # delivers the request.
+        queued = data.get("queue")
+        qpath = root / "dev" / "pod" / "queue.toml"
+        for entry in queued if isinstance(queued, list) else []:
+            queue_append(entry, path=qpath)
         ok, bad = maintainer_scope_ok(root, rel)
         if not ok:
             out.append(emit_event(st, "batch", result="scope",
                                   proposal=rel, paths=bad[:20], root=root))
             retire_proposal(path, "scope", root)
             continue
-        queued = data.get("queue")
-        for entry in queued if isinstance(queued, list) else []:
-            queue_append(entry)                # R15: a REQUEST is not a write
         rows = data.get("row")
         if not isinstance(rows, list) or not rows:
             out.append(emit_event(st, "batch", result="empty",
@@ -3679,7 +3719,27 @@ def _rule_c(st, root):
         elif action == "done":
             row = _row_of(row_id, root)
             if not accept_mod.r4_holds(rec, row):
-                emit(st, t, CHECKING, PARKED, rec=rec, row=row_id, reason="r4", root=root)
+                held = rec.get("conjuncts") or {}
+                if not bool(held.get(6, held.get("6"))):
+                    # MEASURED 2026-08-20 on LJ-1.419: `no-go-stated` matched
+                    # (exit 42, a `review-of-*.md` present) while conjunct 6
+                    # FAILED. Conjunct 1 supplied `error_class = unsolved_meta`,
+                    # so `sys-lint-accept` (which keys `lint`) could not see the
+                    # return. Parking `r4` left a worktree that re-accept
+                    # re-measures without a worker and parks `r4` again. A
+                    # missing survey is a defect in the RETURN, which is what
+                    # `sys-lint-accept` is for.
+                    row_id = "sys-lint-accept"
+                    if same_row_runs(t, row_id, root) + 1 >= limits["attempt_max"]:
+                        emit(st, t, CHECKING, PARKED, rec=rec, row=row_id,
+                             reason="attempt_max:" + row_id, root=root)
+                    else:
+                        t.attempt = _int(t.attempt, 0) + 1
+                        emit(st, t, CHECKING, READY, rec=rec, row=row_id,
+                             root=root)
+                else:
+                    emit(st, t, CHECKING, PARKED, rec=rec, row=row_id,
+                         reason="r4", root=root)
             elif (bad := (salvage_worktree(t, root) if WORKTREE_ISOLATION else [])):
                 # **DETECTED MECHANICALLY, RESOLVED BY NOBODY.** The only way a
                 # scope-limited copy can fail is that the main tree moved the same path
@@ -4399,15 +4459,31 @@ REFILL_SCOPE_OK = ("dev/pod/queue.toml", "dev/pod/stop-request.toml")
 
 #: Paths the refill is never assigned. A dirty-set delta that names them is someone
 #: else. They are NOT in `PROGRAM_WRITES_PREFIX`: R15 must still refuse a maintainer
-#: batch that rewrites `dev/PLAN.md`. MEASURED 2026-08-20 on POD-REFILL-20260820-140414:
-#: the refill wrote `dev/pod/queue.toml` and five briefs, and the notice named
-#: `dev/PLAN.md` and `dev/pod/direction.md`, which the maintainer had edited in the
-#: same window.
+#: batch that rewrites them. A name that ends in `/` is a prefix. MEASURED 2026-08-20
+#: on POD-REFILL-20260820-140414 (direction and the old plan) and on
+#: POD-REFILL-20260820-152340 (the journal archive): the refill wrote `queue.toml`
+#: and the new briefs, and the notice named the maintainer's concurrent files.
 REFILL_NEVER_WRITES = (
     "dev/pod/direction.md",
     "dev/pod/screen.toml",
     "dev/pod/rulings.toml",
+    "dev/pod/instructions/",
+    "dev/memos/LJ-4-pod-program-design.md",
+    "dev/README.md",
+    "agents/README.md",
+    "dev/build-manifest.toml",
+    "archive/dev/",
 )
+
+
+def _refill_never_write(path):
+    """True when `path` is one of `REFILL_NEVER_WRITES`, or under a prefix there."""
+    for n in REFILL_NEVER_WRITES:
+        if n.endswith("/") and path.startswith(n):
+            return True
+        if path == n:
+            return True
+    return False
 
 
 def _never_started_working(row):
@@ -4457,11 +4533,12 @@ def side_scope_report(code, before, st, root=None):
     editing. `side_stray_paths()` returns [] when the launcher recorded that the head
     never ran. `dev/pod/table.toml` is in `PROGRAM_WRITES_PREFIX`.
 
-    THREE SUBTRACTIONS, and each names what it removes and why:
+    FOUR SUBTRACTIONS, and each names what it removes and why:
       - the refill's own declared scope, which is what it is FOR;
       - a brief, `agents/tasks/<CODE>/<CODE>.md`, which is the rest of that scope;
       - every home the program itself created, because a task that ran in the window
-        wrote there and the refill did not.
+        wrote there and the refill did not;
+      - `REFILL_NEVER_WRITES`, because a dirty-set delta is not authorship.
 
     IT REPORTS AND NEVER REFUSES. AD1 keeps judgement out of the program, so this is a
     sentence for the resident maintainer and never a gate.
@@ -4476,7 +4553,7 @@ def side_scope_report(code, before, st, root=None):
     for p in fresh:
         if p in REFILL_SCOPE_OK or p.startswith(PROGRAM_WRITES_PREFIX):
             continue
-        if p in REFILL_NEVER_WRITES:
+        if _refill_never_write(p):
             continue
         # A RETIRED PROPOSAL IS `retire_proposal()`'s WRITE, never a dispatch's.
         # `maintainer_scope_ok()` already subtracts these and this reader must too, or a

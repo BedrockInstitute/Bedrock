@@ -499,26 +499,55 @@ def write_table(rows, path=None):
     return path
 
 
+#: The last `git add`/`git commit` stderr (or exception text). `commit_task()` stores a
+#: slice on the record as `commit_note` so a `commit: refused` close can be diagnosed.
+GIT_COMMIT_ERROR = ""
+
+
 def git_commit(paths, message, root=None):
     """R8: commit by EXPLICIT PATH, and never push. It returns True on a commit.
 
-    A FAILURE IS NOT FATAL, and section 4.1 property 4 is why: a failed commit leaves the
-    rows in the tracked file uncommitted, `pod stop` commits them, and both checklists run
-    `pod stop` before they require a clean tree. A raise here would park a task whose rows
-    are already correct on disk.
+    A FAILURE IS NOT FATAL, and section 4.1 property 4 is why: a failed commit does not
+    park the task. The close stands; `retry_refused_commits()` tries again on the next
+    tick. `pod stop` commits the tracked table and the log, not a task home.
+
+    **A FAILED COMMIT USED TO LEAVE THE PATHS STAGED.** MEASURED 2026-08-20 on
+    LJ-1.404: `commit_task()` recorded `commit: refused` at 11:04:45, the three
+    deliverable files stayed in the index, and the next human commit (`f898e3b`) swept
+    them in with a spec-surface message. The reset that unmixed that commit left the
+    files untracked and the DONE close with no `pod: LJ-1.404 done` line. On refuse this
+    function unstages the paths it added. The error text is in `GIT_COMMIT_ERROR`.
     """
+    global GIT_COMMIT_ERROR
+    GIT_COMMIT_ERROR = ""
     root = ROOT if root is None else Path(root)
     rel = [str(Path(p).resolve().relative_to(Path(root).resolve())) for p in paths]
+    added = False
     try:
         add = subprocess.run(["git", "add", "--"] + rel, cwd=root,
                              capture_output=True, text=True)
         if add.returncode != 0:
+            GIT_COMMIT_ERROR = (add.stdout + add.stderr).strip()
             return False
+        added = True
         done = subprocess.run(["git", "commit", "-m", message, "--"] + rel, cwd=root,
                               capture_output=True, text=True)
-        return done.returncode == 0
-    except OSError:
+        err = (done.stdout + done.stderr).strip()
+        if done.returncode == 0 or "nothing to commit" in err.lower():
+            GIT_COMMIT_ERROR = ""
+            return True
+        GIT_COMMIT_ERROR = err
         return False
+    except OSError as e:
+        GIT_COMMIT_ERROR = str(e)
+        return False
+    finally:
+        if added and GIT_COMMIT_ERROR:
+            try:
+                subprocess.run(["git", "reset", "-q", "HEAD", "--"] + rel, cwd=root,
+                               capture_output=True, text=True)
+            except OSError:
+                pass
 
 
 # ---------------------------------------------------------------- the router

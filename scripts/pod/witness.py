@@ -465,7 +465,7 @@ def obligations_of(brief) -> list[str]:
     return value
 
 
-def _obligations_of_task(t) -> list[str]:
+def _obligations_of_task(t, root=None) -> list[str]:
     """The task's own declared list: the state file's copy first, then the brief.
 
     A DECLARED VALUE THAT IS NOT A LIST FALLS THROUGH TO THE BRIEF. The state file is
@@ -476,20 +476,31 @@ def _obligations_of_task(t) -> list[str]:
     if declared and isinstance(declared, (list, tuple)):
         return list(declared)
     brief = getattr(t, "brief", None)
-    return obligations_of(brief) if brief else []
+    if not brief:
+        return []
+    p = Path(brief)
+    if root is not None and not p.is_absolute():
+        p = Path(root) / brief
+    return obligations_of(p)
 
 
-def witness_unresolved(t) -> int:
+def witness_unresolved(t, root=None) -> int:
     """The DISPATCH-point half of fact 3, called by rule (f) of the tick.
 
     It runs the meter over the brief's obligation list and returns the UNRESOLVED count
     into `obl_before`. `witness_delta()` subtracts it at exit. It costs the price of
     section 4.7.5 once per dispatch, and rule (f) pays it a second time at the return.
+
+    `root` is the tree the meter reads. Under worktree isolation that is the task's
+    checkout, not the main tree. MEASURED 2026-08-20 on LJ-1.400: the probe lived only
+    in `.pod-state/worktrees/LJ-1-400`, `measure()` defaulted to the module root, both
+    names returned `no-file`, and a green return parked `no-match`.
     """
-    return measure(_obligations_of_task(t), code=getattr(t, "code", None))["unresolved"]
+    return measure(_obligations_of_task(t, root), code=getattr(t, "code", None),
+                   root=root)["unresolved"]
 
 
-def witness_delta(t) -> tuple[int, float, bool, int]:
+def witness_delta(t, root=None) -> tuple[int, float, bool, int]:
     """The EXIT half of fact 3: (delta, witness seconds, probe red, OPEN at exit).
 
     Fact 3 is the UNRESOLVED count at exit minus the UNRESOLVED count at dispatch. A task
@@ -507,8 +518,16 @@ def witness_delta(t) -> tuple[int, float, bool, int]:
     `exit_code 0`, `error_class None`, `obligations_delta 0`, by three different and
     entirely legitimate routes. The number that separates them was already in `m` on the
     line above.
+
+    **`root` IS THE TREE UNDER TEST.** `run_acceptance()` is given the task's worktree
+    under isolation; this function used to ignore that argument and read the main tree.
+    MEASURED 2026-08-20 on LJ-1.400: both obligation names `pass` in the worktree
+    (grouped run, 1.71 s) and `no-file` in the main tree, where `Probe400.agda` does
+    not exist. The record carried `obligations_open` 2 and `obligations_delta` 0, so
+    `task-lj-1-400-go` (`obligations_delta_max = -2`) missed and the task parked.
     """
-    m = measure(_obligations_of_task(t), code=getattr(t, "code", None))
+    m = measure(_obligations_of_task(t, root), code=getattr(t, "code", None),
+                root=root)
     before = getattr(t, "obl_before", None)
     if before is None:
         raise ValueError("witness_delta: the task carries no obl_before, so fact 3 has no "

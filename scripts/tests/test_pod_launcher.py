@@ -441,6 +441,10 @@ def main() -> int:
               run("claude"),
               ["--", "--model", "claude-opus-5", "--effort", "max",
                "--permission-mode", "auto"])
+        check("a grok kind auto-approves tools, owner's ruling 2026-08-20",
+              run("grok"),
+              ["--", "--model", "claude-opus-5", "--effort", "max",
+               "--always-approve"])
         check("a claude kind never emits --provider",
               "--provider" in run("claude"), False)
         check("the codex branch is unchanged",
@@ -689,6 +693,12 @@ def main() -> int:
           "--env 'GHCRTS=-A64m -I0 -M8g'" in driver, True)
     check("an unquoted caliber would have handed -I0 and -M8g to pane split "
           "as two more arguments", "--env GHCRTS=-A64m -I0" in driver, False)
+    # MEASURED 2026-08-20: a never-started refill kept the herdr name and the
+    # next two hourly refills refused `agent_name_taken`.
+    check_true("a never-started-working dispatch clears the herdr name",
+               "herdr agent rename" in driver and "--clear" in driver)
+    check_true("and closes the unused pane instead of keeping a blank splash",
+               "never started working" in driver and "pane close" in driver)
     rc, cmd, _, _ = capture_launch(
         mod, tmp, task="ZZ-2-2", brief=brief, agda=True, sandbox="workspace-write",
         model="claude-opus-5", effort="max", tier="heavy")

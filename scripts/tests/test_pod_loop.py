@@ -80,6 +80,7 @@ pod = _load("pod", "scripts/pod/pod.py")
 #: the same hour on 2026-08-18.
 REAL_ENSURE_MAINTAINER = pod.ensure_maintainer
 REAL_PROMPT_MAINTAINER = pod.prompt_maintainer
+REAL_INJECT_SURVEY = pod.inject_survey
 ledger = _load("ledger", "scripts/measure/ledger.py")
 
 #: The real functions, captured BEFORE any test replaces them. A test that wants the real
@@ -999,6 +1000,22 @@ class RuleC(LoopCase):
         pod._rule_c(st, self.tmp)
         self.assertEqual(t.park_reason, "r4")
 
+    def test_a_no_go_that_fails_conjunct_6_is_accepted_not_parked_r4(self):
+        """MEASURED 2026-08-20 on LJ-1.419: no-go-stated matched, conjunct 6
+        FAILED, error_class stayed unsolved_meta, sys-lint-accept missed, r4
+        parked a worktree that re-accept cannot repair without a worker."""
+        self.write_table([sys_row("sys-nogo", action="done", outcome="no-go",
+                                  when={"exit_code": 42})])
+        rec = record(exit_code=42, error_class="unsolved_meta", delta=0,
+                     conjuncts={1: False, 2: True, 3: True, 4: True,
+                                5: True, 6: False})
+        self.set_acceptance(rec)
+        st, t = self.returned()
+        pod._rule_c(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+        self.assertEqual(t.row, "sys-lint-accept")
+        self.assertEqual(t.attempt, 2)
+
     def test_accept_raises_the_attempt_and_returns_the_task_to_ready(self):
         self.write_table([sys_row("sys-accept", action="accept",
                                   when={"exit_code": 0})])
@@ -1725,6 +1742,31 @@ class RuleE(LoopCase):
         entries = pod.queue_entries(self.tmp / "dev" / "pod" / "queue.toml")
         self.assertEqual(entries[0]["code"], CODE)
         self.assertNotIn("brief", entries[0])
+
+    def test_a_queue_request_is_appended_even_when_R15_refuses_the_batch(self):
+        """MEASURED 2026-08-20 on POD-BATCH 194053.
+
+        The proposal carried three `[[queue]]` requests and no rows. Harvest
+        retired it `scope` because `scripts/pod/*.py` were already dirty, and
+        `continue` skipped `queue_append`. A REQUEST is not a write. The
+        owner-authorised A21 repairs never reached the queue.
+        """
+        self.patch(facts_mod, "_status_paths",
+                   lambda root: ["dev/pod/proposals/x.toml", "scripts/pod/pod.py"])
+        (self.tmp / "dev" / "pod" / "proposals" / "x.toml").write_text(textwrap.dedent("""
+            [[queue]]
+            code = "LJ-1.386"
+            failed_check = "A21"
+            reason = "brief names mathematician and Agda"
+            """))
+        st = pod.State()
+        pod.harvest_batch(st, self.tmp)
+        entries = pod.queue_entries(self.tmp / "dev" / "pod" / "queue.toml")
+        self.assertEqual(len(entries), 1, "the REQUEST was swallowed by R15")
+        self.assertEqual(entries[0]["code"], CODE)
+        self.assertEqual(entries[0].get("failed_check"), "A21")
+        self.assertFalse((self.tmp / "dev" / "pod" / "proposals" / "x.toml").exists())
+        self.assertTrue((self.tmp / "dev" / "pod" / "proposals" / "x.toml.scope").is_file())
 
     def test_prune_logs_keeps_a_LIVE_task_log_whatever_its_age(self):
         """The file is the only transcript of a running worker."""
@@ -3433,6 +3475,42 @@ class SideScopeReport(LoopCase):
         self.assertNotIn("dev/pod/direction.md", got)
         self.assertIn("scripts/pod/check-spec-surface.py", got)
 
+    def test_a_journal_archive_is_not_the_refill(self):
+        """MEASURED 2026-08-20 on POD-REFILL-20260820-152340."""
+        self.patch(facts_mod, "_status_paths",
+                   lambda root: ["agents/README.md",
+                                 "archive/dev/JOURNAL.md",
+                                 "archive/dev/README.md",
+                                 "dev/README.md",
+                                 "dev/build-manifest.toml",
+                                 "dev/memos/LJ-4-pod-program-design.md",
+                                 "dev/pod/instructions/mathematician.md",
+                                 "dev/pod/instructions/mathematician_adversarial.md",
+                                 "scripts/pod/check-spec-surface.py"])
+        got = pod.side_scope_report("POD-REFILL", before=[], st=pod.State(),
+                                    root=self.tmp)
+        self.assertEqual(got, ["scripts/pod/check-spec-surface.py"])
+
+
+class StandingRefillBrief(unittest.TestCase):
+    """The standing refill brief names the live screen, never the archived plan.
+
+    MEASURED 2026-08-20 on POD-REFILL-20260820-162432: the head's first tool
+    call was that `dev/PLAN.md` does not exist (transcript
+    `.pod-state/logs/POD-REFILL-20260820-162432-final.md:140`). PLAN.md was
+    archived the same day as `archive/dev/PLAN-archived.md`. `AGENTS.md`
+    already names `dev/pod/screen.toml`. The standing brief is the one
+    document the program never rewrites, so it drifted.
+    """
+
+    def test_it_names_the_live_screen_and_not_the_archived_plan(self):
+        text = (ROOT / "agents" / "tasks" / "POD-REFILL" / "POD-REFILL.md").read_text(
+            encoding="utf-8")
+        self.assertNotIn("dev/PLAN.md", text)
+        self.assertIn("dev/pod/screen.toml", text)
+        self.assertNotIn("L9-pod-program-design.md", text)
+        self.assertIn("LJ-4-pod-program-design.md", text)
+
 
 class LawsBundleProducer(LoopCase):
     """R17's producer is `scripts/pod/rules.py`.
@@ -3537,6 +3615,72 @@ class RetrievalReadsTheWorktree(LoopCase):
         lines = self._retrieval_lines()
         self.assertEqual(len(lines), 1, lines)
         self.assertEqual(lines[0]["used"], 1, lines[0])
+
+
+class InjectSurveyReplacesHandwritten(LoopCase):
+    """R10 writes the program-generated ARCHIVE block even when a heading exists.
+
+    MEASURED 2026-08-20 on LJ-1.417: the refill wrote `## ARCHIVE` with `NO HIT`
+    and no `(program-generated)` marker. `inject_survey` saw the heading and
+    skipped. Conjunct 6 then FAILED (`lint`) because the duty block was never
+    in front of the coder. `sys-lint-accept` re-dispatched the same brief.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.patch(pod, "inject_survey", REAL_INJECT_SURVEY)
+
+    def test_a_handwritten_archive_is_replaced(self):
+        brief = self.tmp / "agents" / "tasks" / DIR / f"{CODE}.md"
+        brief.parent.mkdir(parents=True, exist_ok=True)
+        brief.write_text(
+            "# fixture\n\n## THE OBLIGATION\n\ngo\n\n"
+            "## ARCHIVE\n\nNO HIT.\n\n"
+            "## LITERATURE\n\nread digest\n",
+            encoding="utf-8")
+        fake = types.SimpleNamespace(
+            ARCHIVE_SCOPE=["archive/src"],
+            LITERATURE_SCOPE=["dev/literature"],
+            build_query=lambda *a, **k: "q",
+            goal_text=lambda p: "g",
+            candidate_block=lambda heading, query, scope, k=5: (
+                f"## {heading} (program-generated, do not edit)\n\n"
+                f"Corpus search over {', '.join(scope)}: NO HIT\n\n"
+                "**ANSWER THIS BLOCK**\n"),
+        )
+        prev = sys.modules.get("retrieve")
+        sys.modules["retrieve"] = fake
+        self.patch(pod.witness_mod, "obligations_of", lambda p: [])
+        try:
+            self.assertTrue(pod.inject_survey(brief, root=self.tmp))
+        finally:
+            if prev is None:
+                sys.modules.pop("retrieve", None)
+            else:
+                sys.modules["retrieve"] = prev
+        text = brief.read_text(encoding="utf-8")
+        self.assertIn("## ARCHIVE (program-generated, do not edit)", text)
+        self.assertIn("## LITERATURE (program-generated, do not edit)", text)
+        self.assertIn("**ANSWER THIS BLOCK**", text)
+        self.assertEqual(text.count("## ARCHIVE"), 1)
+        self.assertEqual(text.count("## LITERATURE"), 1)
+
+    def test_a_program_generated_block_is_left_alone(self):
+        brief = self.tmp / "agents" / "tasks" / DIR / f"{CODE}.md"
+        brief.parent.mkdir(parents=True, exist_ok=True)
+        original = (
+            "# fixture\n\n"
+            "## ARCHIVE (program-generated, do not edit)\n\n"
+            "- CANDIDATE archive/dev/TASKS-archived.md  (score 1.000)\n\n"
+            "## LITERATURE (program-generated, do not edit)\n\n"
+            "Corpus search over dev/literature: NO HIT\n")
+        brief.write_text(original, encoding="utf-8")
+        pod.inject_survey(brief, root=self.tmp)
+        text = brief.read_text(encoding="utf-8")
+        self.assertIn("- CANDIDATE archive/dev/TASKS-archived.md  (score 1.000)", text)
+        self.assertIn("Corpus search over dev/literature: NO HIT", text)
+        self.assertEqual(text.count("## ARCHIVE"), 1)
+        self.assertEqual(text.count("## LITERATURE"), 1)
 
 
 class SettledProposalIsRetired(unittest.TestCase):

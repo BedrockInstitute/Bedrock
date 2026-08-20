@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -614,6 +615,30 @@ class UnresolvedCount(Patching):
         delta, seconds, red, _open = witness.witness_delta(t)
         self.assertEqual((delta, seconds, red), (-2, 2.5, False))
 
+    def test_the_delta_forwards_root_to_measure(self):
+        """LJ-1.400, 2026-08-20: isolation parked a green return as no-match because
+        the meter read the main tree, where the probe did not exist."""
+        seen = {}
+        def fake(obs, code=None, root=None, **k):
+            seen["root"] = root
+            return {"unresolved": 0, "witness_seconds": 0.0, "probe_red": False,
+                    "rows": []}
+        self.patch(witness, "measure", fake)
+        t = types.SimpleNamespace(code="LJ-1.400", obligations=["p::x"], obl_before=2)
+        delta, seconds, red, open_n = witness.witness_delta(t, root="/tmp/wt")
+        self.assertEqual(seen["root"], "/tmp/wt")
+        self.assertEqual((delta, open_n), (-2, 0))
+
+    def test_measure_reports_no_file_against_the_given_root(self):
+        """The main-tree half of LJ-1.400: Probe400.agda is not there."""
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: shutil.rmtree(tmp, ignore_errors=True))
+        m = witness.measure(
+            ["agents/tasks/LJ-1-400/Probe400.agda::card-owes"],
+            code="LJ-1.400", root=tmp, slots=1)
+        self.assertEqual(m["unresolved"], 1)
+        self.assertEqual(m["rows"][0]["value"], witness.NO_FILE)
+
     def test_no_dispatch_point_refuses_rather_than_guessing_a_fact(self):
         """R7: drop the return, never guess. A delta needs both measurement points."""
         self.patch(witness, "measure", lambda *a, **k: {
@@ -963,13 +988,26 @@ class AcceptanceRecord(Patching):
         # unresolved count at EXIT. A stub pinned at three unpacks as a
         # ValueError inside `run_acceptance`.
         self.patch(accept.witness_mod, "witness_delta",
-                   lambda t: (-2, 1.5, False, 0))
+                   lambda t, root=None: (-2, 1.5, False, 0))
         self.patch(accept, "spec_surface", lambda root=None: True)
         self.patch(accept, "closure", lambda root=None: True)
         self.patch(accept, "unbound_new", lambda ch, before, root=None: (True, True))
         self.patch(accept, "precommit_set", lambda code=None, root=None: True)
         self.patch(accept, "in_fence_lines", lambda ch, root=None: lines)
         self.patch(accept, "_write_run_record", lambda t, rec, root=None: None)
+
+    def test_acceptance_forwards_its_root_to_the_witness_meter(self):
+        """LJ-1.400: run_acceptance had the worktree and did not hand it to fact 3."""
+        seen = {}
+        def capture(t, root=None):
+            seen["root"] = root
+            return (-2, 1.5, False, 0)
+        self.stub(targets=["src/Everything.lagda.md"])
+        self.patch(accept.witness_mod, "witness_delta", capture)
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: shutil.rmtree(tmp, ignore_errors=True))
+        accept.run_acceptance(accept._Task("LJ-1.999"), tmp)
+        self.assertEqual(seen["root"], tmp)
 
     def test_the_record_carries_all_eight_facts_and_its_tier(self):
         self.stub(targets=["src/Everything.lagda.md"])

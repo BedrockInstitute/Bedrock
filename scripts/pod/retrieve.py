@@ -242,7 +242,14 @@ def corpus(scope: list[str]) -> list[str]:
             continue
         masters = sorted(p.rglob("*.lagda.md"))
         chosen = masters or sorted(q for q in p.rglob("*.md") if q.is_file())
-        found += [str(q.relative_to(ROOT)) for q in chosen]
+        # Direction history. `direction_changed()` files one body per rewrite.
+        # Every dispatch already `cat`s the live file. MEASURED 2026-08-20: the
+        # first filing made `archive/dev` 11 and the gates pin that pins a
+        # growing history went red. These files are kept (nothing is deleted);
+        # they are not retrieval records.
+        found += [rel for q in chosen
+                  if not (rel := str(q.relative_to(ROOT))).startswith(
+                      "archive/dev/direction/")]
     return sorted(set(found))
 
 
