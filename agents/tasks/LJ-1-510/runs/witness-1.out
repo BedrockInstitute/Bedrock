@@ -1,0 +1,20 @@
+pass      exit=0        3.17s  agents/tasks/LJ-1-510/Probe510.agda::consK-exist-at-frame
+witness: 0 UNRESOLVED of 1, 3.17 s, probe_red=False
+        3.23 real         2.95 user         0.26 sys
+           643153920  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               46131  page reclaims
+                  77  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  15  voluntary context switches
+                 629  involuntary context switches
+           535733201  instructions retired
+           212556302  cycles elapsed
+            19677616  peak memory footprint

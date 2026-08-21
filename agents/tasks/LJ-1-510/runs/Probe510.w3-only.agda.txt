@@ -1,0 +1,128 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.510] The three consK fields: how deep the shift really goes.
+--
+-- W3 FIRST, and ALONE: THE DEPTH.  The brief asks whether `KFactsCons`
+-- composes eight more times over the eight cell prefix, and warns that
+-- nobody has iterated it past six.  Two terms answer it, and the second
+-- is the one that matters:
+--
+--   `tower-14`  iterates the shift to fourteen, by an induction that is
+--               generic in the depth, so it stops at NO depth.
+--   `depth-is-free`  says the fourteen deep lookup over the eight cell
+--               prefix IS the six deep lookup over the frame, by `refl`.
+--
+-- The obligation is added only after W3 lands.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-510.Probe510 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Constructible {ℓ} using ( IsOrd )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS; KFactsCons )
+open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+open KFactsNS
+open KFacts
+
+-- =====================================================================
+-- W3.  THE SHIFT DOES NOT STOP, AND THE FIELDS DO NOT NEED IT.
+--
+-- `KFactsCons` (src/L/Condensation.lagda.md:6122-6128) adds one `suc` to
+-- all fourteen indices and one cons to the environment.  `[LJ-1.495]`
+-- composed it six times at this frame
+-- (agents/tasks/LJ-1-495/lj-1.495-report.md:71).  The brief asks for
+-- eight more.
+--
+-- `KTower k` is that composition stated ONCE, at any depth: the record
+-- `k` cells deeper, over ANY `k` cells.  `kTower` builds it by induction
+-- on `k`, so no depth is special and there is no maximum to find.
+-- =====================================================================
+
+KTower : (k : ℕ) {m : ℕ}
+         (A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
+         (γ : S ^ m) → Type (ℓ-suc ℓ)
+KTower zero A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ =
+  KFacts A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ
+KTower (suc k) A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ =
+  (c : S) → KTower k (suc A) (suc K) (suc N0) (suc N1) (suc N2) (suc N3)
+                     (suc N4) (suc N5) (suc N6) (suc N7) (suc N8) (suc N9)
+                     (suc N10) (suc N11) (c ∷ γ)
+
+kTower : (k : ℕ) {m : ℕ}
+         (A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
+         (γ : S ^ m)
+       → KFacts A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ
+       → KTower k A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ
+kTower zero A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ f = f
+kTower (suc k) A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ f = λ c →
+  kTower k (suc A) (suc K) (suc N0) (suc N1) (suc N2) (suc N3)
+           (suc N4) (suc N5) (suc N6) (suc N7) (suc N8) (suc N9)
+           (suc N10) (suc N11) (c ∷ γ)
+    (KFactsCons A K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ c f)
+
+-- =====================================================================
+-- FOURTEEN, AT `KValue`'s OWN FRAME, AND NOT AN ESTIMATE.
+-- `KValue` (src/L/Condensation.lagda.md:7380-7395) supplies one `KFacts`
+-- over `Kenv : S ^ 14`.  `tower-14` is that record fourteen cells deeper,
+-- which is the six of `[LJ-1.495]` plus the eight the brief asks about.
+-- =====================================================================
+
+module Depth
+  (lam : V ℓ) (ordλ : IsOrd lam)
+  (succλ : (d : V ℓ) → ⟨ d ∈ lam ⟩ → ⟨ sucV d ∈ lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ lam ⟩)
+  (gam : V ℓ) (ordγ : IsOrd gam) (γ∈λ : ⟨ gam ∈ lam ⟩) where
+
+  open KValue lam ordλ succλ ∅∈λ gam ordγ γ∈λ
+
+  tower-14 : KTower 14 iA iK i0 i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 Kenv
+  tower-14 = kTower 14 iA iK i0 i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 Kenv facts
+
+-- =====================================================================
+-- AND THE FIELDS NEED NONE OF IT.
+--
+-- `TFacts.consK-exist` (src/L/Condensation/TwelveAgree.lagda.md:317-321)
+-- concludes at `lookup (suc¹⁴ K)` of an EIGHT cell prefix on `γ'`.
+-- Fourteen minus eight is six, and six is the shift every other field of
+-- the record already carries (:133).  `lookup (suc i) (c ∷ γ)` is
+-- `lookup i γ` by definition and both sides are literal chains, so the
+-- two are THE SAME `S`, not two sets joined by a transport.
+--
+-- The same arithmetic settles the other two: `consK-forall` (:322-325)
+-- is fourteen over eight, and `consK-allin` (:332-336) is sixteen over
+-- ten.  Both leave six.
+-- =====================================================================
+
+depth-is-free : {n : ℕ} (K : Fin (5 + n)) (γ' : S ^ (11 + n))
+                (x z E ya yc a ar c : S)
+  → lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K))))))))))))))
+      (x ∷ z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')
+  ≡ lookup (suc (suc (suc (suc (suc (suc K)))))) γ'
+depth-is-free K γ' x z E ya yc a ar c = refl
+
+depth-is-free-allin : {n : ℕ} (K : Fin (5 + n)) (γ' : S ^ (11 + n))
+                      (x w z E ya yc b a ar c : S)
+  → lookup (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc K))))))))))))))))
+      (x ∷ w ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')
+  ≡ lookup (suc (suc (suc (suc (suc (suc K)))))) γ'
+depth-is-free-allin K γ' x w z E ya yc b a ar c = refl
