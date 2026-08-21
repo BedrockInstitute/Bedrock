@@ -1,0 +1,25 @@
+Checking LJ-1-471.Probe471 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-471/agents/tasks/LJ-1-471/Probe471.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-471/agents/tasks/LJ-1-471/Probe471.agda:88.11-53: error: [UnequalTerms]
+Σ (Type (ℓ-suc ℓ)) (Cubical.Foundations.HLevels.isOfHLevel 1) !=<
+Type (ℓ-suc ℓ)
+when checking that the expression
+z ∈ˢ bnd ⊓ ((z ∷ []) ⊨ orderFo R P B C C₀) has type Type (ℓ-suc ℓ)
+        1.58 real         1.41 user         0.15 sys
+           422166528  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27476  page reclaims
+                  34  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 413  involuntary context switches
+         18446036259  instructions retired
+          6597560258  cycles elapsed
+           362578784  peak memory footprint
+EXIT:42
