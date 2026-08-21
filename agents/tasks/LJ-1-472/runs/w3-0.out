@@ -1,0 +1,25 @@
+Checking LJ-1-472.Probe472 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-472/agents/tasks/LJ-1-472/Probe472.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-472/agents/tasks/LJ-1-472/Probe472.agda:78.17-65: error: [UnequalTerms]
+Empty.⊥ !=< Lift Empty.⊥
+when checking that the inferred type of an application
+  Empty.⊥
+matches the expected type
+  Lift Empty.⊥
+        1.86 real         1.65 user         0.16 sys
+           454787072  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29490  page reclaims
+                  11  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 201  voluntary context switches
+                 395  involuntary context switches
+         21281973750  instructions retired
+          7546742560  cycles elapsed
+           395363192  peak memory footprint
