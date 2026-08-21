@@ -1,0 +1,13 @@
+Checking LJ-1-506.Probe506 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-506/agents/tasks/LJ-1-506/Probe506.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-506/agents/tasks/LJ-1-506/Probe506.agda:119.57-76: warning: -W[no]ModuleDoesntExport
+The module Cubical.HITs.CumulativeHierarchy.Properties doesn't
+export the following:
+  self∈sucV
+when scope checking the declaration
+  open import Cubical.HITs.CumulativeHierarchy.Properties using (self∈sucV)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-506/agents/tasks/LJ-1-506/Probe506.agda:130.11-20: error: [NotInScope]
+Not in scope:
+  self∈sucV
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-506/agents/tasks/LJ-1-506/Probe506.agda:130.11-20
+when scope checking self∈sucV
