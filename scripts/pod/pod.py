@@ -357,9 +357,17 @@ TRANSITIONS_LEGAL = {
 #: and the resident maintainer is the channel that already exists for what the loop cannot
 #: decide. Reusing one of the other nine names here would make a park reason lie, which is
 #: a defect class this programme measured three times on the day the rule was written.
+#:
+#: **`capacity:` IS THE TWELFTH, owner's ruling 2026-08-21 (A27a), after the local coder
+#: head hit its own process memory ceiling twice on real work
+#: (`LJ-1.478`/`LJ-1.479`).** A `no-change` R7 return whose model carried a
+#: `max_concurrency` cap means the SCARCE head produced nothing, and it is worth ONE
+#: automatic retry with that model excluded before this becomes a person's problem: the
+#: uncapped head is never memory-constrained the same way. It is not `no-change` itself,
+#: because that reason waits for a person (section 5.5) and this one does not.
 PARK_REASONS = ("no-match", "no-change", "preflight:", "attempt_max:", "r4",
                 "admission", "launch", "row:", "stop_loop:", "salvage:", "quota:",
-                "orphan:")
+                "orphan:", "capacity:")
 
 #: AD15's parked trigger, and it is AD15's OWN number rather than AD14's `parked_max`.
 #: Owner's ruling, 2026-08-19, recorded at section 6.7: the maintainer is fed at the third
@@ -416,16 +424,19 @@ def pod_lock():
 CARRIED = ("pid", "proc_start", "brief", "agda", "sandbox", "model", "log", "final",
            "started", "harness", "events", "reported")
 
-#: The 14 fields the POD adds, plus `unbound_before` and `tier`. BOTH EXTRAS ARE
-#: DISCLOSED rather than smuggled. Section 5.2 lists fourteen; section 5.4 then reads
-#: `t.unbound_before` for conjunct 4, so a task carrying only the fourteen cannot run its
-#: own acceptance test, and the field is the pre-flight's finding SET, carried and never
-#: re-derived at the return. `tier` is amendment A14's: `admits()` counts slots and heap
-#: PER TIER, and a record carries its tier so two measurements are compared only inside
-#: one tier. Both are copied ONCE, at creation, exactly as `exclusive` is.
+#: The 14 fields the POD adds, plus `unbound_before`, `tier` and `avoid_models`. ALL THREE
+#: EXTRAS ARE DISCLOSED rather than smuggled. Section 5.2 lists fourteen; section 5.4 then
+#: reads `t.unbound_before` for conjunct 4, so a task carrying only the fourteen cannot run
+#: its own acceptance test, and the field is the pre-flight's finding SET, carried and
+#: never re-derived at the return. `tier` is amendment A14's: `admits()` counts slots and
+#: heap PER TIER, and a record carries its tier so two measurements are compared only
+#: inside one tier. `avoid_models` is A27a's: a `capacity:` park writes the model that just
+#: failed onto it, and `launch()` reads it back to skip that model on the retry it
+#: triggers. All three are copied ONCE, at creation or at the park that adds them, exactly
+#: as `exclusive` is.
 ADDED = ("status", "role", "effort", "exclusive", "attempt", "predecessor", "run",
          "record", "obl_before", "row", "park_reason", "parked_at", "head_slot",
-         "scope_narrow", "unbound_before", "tier")
+         "scope_narrow", "unbound_before", "tier", "avoid_models")
 
 FIELDS = CARRIED + ADDED
 
@@ -2436,6 +2447,14 @@ def launch(t, brief, role, root=None, st=None):
     except heads_mod.HeadsError as e:
         LAUNCH_REFUSAL = str(e)[:400]
         return None
+    # A27a. A `capacity:` PARK WROTE `t.avoid_models`, AND THIS IS THE ONE READER. Every
+    # OTHER caller (`mathematician`, `coder_adversarial`, a slot of one model) carries no
+    # avoid list, so this is a no-op for them. Excluding down to nothing is not special-
+    # cased: `pick_head_config()` on an empty tuple returns None exactly as it does when
+    # every config is at its cap, and rule (f) parks it, same as any other refusal.
+    avoid = set(getattr(t, "avoid_models", None) or ())
+    if avoid:
+        cfgs = tuple(c for c in cfgs if c["model"] not in avoid)
     counts = head_live_counts(st, role, cfgs)
     head = pick_head_config(cfgs, counts)
     if head is None:
@@ -3747,7 +3766,7 @@ def _rule_a1(st, root):
 def _rule_a2(st, root):
     """(a2) UNPARK. AD16, and it is automatic. A park is never terminal.
 
-    Each of the eleven park reasons has its own un-park test, and the branch is what makes
+    Each of the twelve park reasons has its own un-park test, and the branch is what makes
     a pre-flight park recoverable: a task refused BEFORE dispatch has no record, so
     `route()` cannot un-park it, and this re-runs `preflight()` instead.
     """
@@ -3784,6 +3803,16 @@ def _rule_a2(st, root):
         if reason in ("admission", "launch"):
             if (t.parked_at or 0) < mtime:
                 emit(st, t, PARKED, READY, root=root)      # retry, section 4.1
+            continue
+        if reason.startswith("capacity:"):
+            # **THE ONE PARK THAT REOPENS AT ONCE, UNCONDITIONALLY.** No clock, no table
+            # edit to wait for: `t.avoid_models` already excludes the model that just
+            # failed, so `launch()`'s next call cannot repeat it, and there is nothing
+            # left to gate on. This terminates because the exclusion is monotonic: a
+            # second `capacity:` on the SAME task can only add a DIFFERENT model, and
+            # `pick_head_config()` returning None once every model is excluded falls
+            # through to the ordinary `launch` refusal, not another capacity park.
+            emit(st, t, PARKED, READY, root=root)
             continue
         if t.record is None:
             continue                           # a no-change park, section 5.5
@@ -3997,6 +4026,21 @@ def _no_change_reason(t, root):
     return f"quota:{reset}" if reset else "no-change"
 
 
+def _capped_model(slot, model, root):
+    """True when `model` is one of `slot`'s configs AND carries a `max_concurrency`. A27a.
+
+    IT RETURNS FALSE ON ANYTHING IT CANNOT READ, the same direction `_no_change_reason()`
+    already takes: a slot of one model, or a `heads.toml` this call cannot load, gets the
+    plain `no-change` it always got, never a guess dressed as a capacity finding.
+    """
+    try:
+        cfgs = heads_mod.configs(slot)
+    except heads_mod.HeadsError:
+        return False
+    return any(c["model"] == model and c.get("max_concurrency") is not None
+               for c in cfgs)
+
+
 def _rule_b(st, root):
     """(b) OBSERVE. A worker is dead when its pid is dead, or when it ran too long.
 
@@ -4105,7 +4149,20 @@ def _rule_c(st, root):
             # vendor answered 429 never ran, so it changed nothing, so R7 drops the
             # return on exactly this line. `_no_change_reason()` keeps `no-change` for
             # every case it cannot prove otherwise.
-            emit(st, t, CHECKING, PARKED, reason=_no_change_reason(t, root), root=root)
+            reason = _no_change_reason(t, root)
+            # A27a. A PLAIN `no-change` ON A CAPPED HEAD GETS ONE AUTOMATIC RETRY, WITH
+            # THAT MODEL EXCLUDED, BEFORE IT WAITS FOR A PERSON. Owner's ruling
+            # 2026-08-21, after LJ-1.478 and LJ-1.479 both hit oMLX's own process memory
+            # ceiling on real work. `_capped_model()` returns False on anything it cannot
+            # read, which keeps this the SAME plain `no-change` a slot of one model, or
+            # an unreadable `heads.toml`, always got.
+            if reason == "no-change" and t.role and t.model:
+                avoid = list(t.avoid_models or [])
+                if t.model not in avoid and _capped_model(t.role, t.model, root):
+                    avoid.append(t.model)
+                    t.avoid_models = avoid
+                    reason = f"capacity:{t.model}"
+            emit(st, t, CHECKING, PARKED, reason=reason, root=root)
             return CONTINUE
         t.run = rec.get("run")
         emit_retrieval(st, t, root)            # section 7.4 Part 1b, ONE line per return
