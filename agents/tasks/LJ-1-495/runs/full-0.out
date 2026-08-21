@@ -1,0 +1,6 @@
+Checking LJ-1-495.Probe495 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-495/agents/tasks/LJ-1-495/Probe495.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-495/agents/tasks/LJ-1-495/Probe495.agda:46.53-54: error: [NotInScope]
+Not in scope:
+  +
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-495/agents/tasks/LJ-1-495/Probe495.agda:46.53-54
+when scope checking +

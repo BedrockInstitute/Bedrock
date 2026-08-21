@@ -1,0 +1,2 @@
+pass      exit=0        2.55s  agents/tasks/LJ-1-495/Probe495.agda::tfacts-shared-from-kfacts
+witness: 0 UNRESOLVED of 1, 2.55 s, probe_red=False
