@@ -1,0 +1,2 @@
+pass      exit=0        2.20s  agents/tasks/LJ-1-501/Probe501.agda::tagEq-at-t
+witness: 0 UNRESOLVED of 1, 2.20 s, probe_red=False
