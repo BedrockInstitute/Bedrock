@@ -1,0 +1,2 @@
+pass      exit=0        1.77s  agents/tasks/LJ-1-464/Probe464.agda::residue-at-successor
+witness: 0 UNRESOLVED of 1, 1.77 s, probe_red=False
