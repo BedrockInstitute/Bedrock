@@ -1,0 +1,2 @@
+missing   exit=42       2.13s  agents/tasks/LJ-1-479/Probe479.agda::HullClosedLset  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-479/.pod-state/witness/Witness-LJ-1-479-fb3d2708.agda:27)
+witness: 1 UNRESOLVED of 1, 2.13 s, probe_red=False
