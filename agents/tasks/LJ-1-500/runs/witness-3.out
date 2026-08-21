@@ -1,0 +1,2 @@
+pass      exit=0        2.57s  agents/tasks/LJ-1-500/Probe500.agda::codesK-family
+witness: 0 UNRESOLVED of 1, 2.57 s, probe_red=False
