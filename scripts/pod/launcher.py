@@ -1398,7 +1398,19 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 model_args = ["--", "--model", model, "--effort", effort,
                               "--always-approve"]
             else:
+                # **PI'S EFFORT DIAL IS `--thinking`, NOT `--effort`, and it was missed
+                # the first time this branch was written.** MEASURED 2026-08-21: `pi
+                # --help` lists `--thinking <level>` with `off, minimal, low, medium,
+                # high, xhigh, max`, a superset of `legal.efforts`. Every string this
+                # branch can receive (the empty string, or any of `legal.efforts`) is
+                # legal to `pi` unchanged; only the empty string omits the flag, exactly
+                # as the claude and grok branches omit nothing they are given but this
+                # one head kept carrying "" by choice until the owner asked for one pi
+                # head to carry a real value (2026-08-21, `Qwen3.8-27B-oQ4e-mtp`
+                # gets `high`).
                 model_args = ["--", "--provider", provider or PI_PROVIDER, "--model", model]
+                if effort:
+                    model_args += ["--thinking", effort]
             # **THE WORKER'S CWD, and it is the TASK'S OWN CHECKOUT when it has one.**
             # `workdir` is the isolated worktree the POD builds for a task; it defaults to
             # the repository root, so every existing caller and every non-POD dispatch is

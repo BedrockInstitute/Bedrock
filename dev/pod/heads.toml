@@ -40,11 +40,16 @@
 version = 1
 
 [legal]
-# THE EMPTY STRING IS LEGAL AND IT MEANS "THIS HARNESS HAS NO EFFORT DIAL".
-# `--effort` is a claude CLI flag. A `herdr-pi` head has no equivalent, so a pi row
-# carries "" and the launcher omits the flag. Admitted 2026-08-18 when the owner
-# ruled the two coder slots onto pi vendors; before that every head was Claude and
-# the loader had never seen a row without one.
+# THE EMPTY STRING IS LEGAL AND IT MEANS "OMIT THE FLAG, RUN AT THE CLI'S OWN
+# DEFAULT". `--effort` is a claude/grok CLI flag; `pi`'s equivalent is `--thinking`,
+# and BOTH read this same field (`scripts/pod/launcher.py`'s pi branch appends
+# `--thinking <effort>` only when it is non-empty). **CORRECTED 2026-08-21**: this
+# comment used to say a `herdr-pi` head "has no equivalent" and the launcher always
+# omitted the flag; that was true only because nobody had wired `--thinking` yet,
+# not because pi lacks the dial. `pi --help` lists it with `off, minimal, low,
+# medium, high, xhigh, max`, a superset of the list below. Admitted 2026-08-18 when
+# the owner ruled the two coder slots onto pi vendors; before that every head was
+# Claude and the loader had never seen a row without one.
 efforts = ["", "low", "medium", "high", "xhigh", "max"]
 
 # MEASURED 2026-08-17, [LJ-4-0]. Every string below resolves. Two read-backs ran
@@ -349,13 +354,17 @@ mathematician_adversarial = { model = "glm-5.3",         effort = "",      harne
 # written first because it is the head the owner wants spent first. THAT ORDER
 # CHANGES NOTHING TODAY: the array order is only the tie-break between two CAPPED
 # heads with headroom, and there is one capped head here. It becomes load-bearing
-# the day a second capped head joins the array. Its `effort` is `""` because a
-# `pi` harness has no effort dial, the same reason both `glm-5.3` rows carry one.
+# the day a second capped head joins the array.
 # **ITS `max_concurrency = 1` IS THE MACHINE AND NOT A PREFERENCE**: `omlx-server`
 # is one process on this laptop serving one 27B model, and a second concurrent
 # task would contend with the first for the same weights and the same memory.
+# **ITS `effort` IS `"high"`, owner's ruling 2026-08-21 (A27b).** `pi`'s status
+# line showed `medium` on every dispatch before this: that was `pi`'s own default
+# with no `--thinking` flag sent at all, not a value this file ever chose. Both
+# `glm-5.3` rows below keep `""` deliberately (never asked to carry a value, not
+# because the harness cannot take one).
 coder                     = [
-  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "high", harness = "herdr-pi",   sandbox = "acceptEdits", max_concurrency = 1 },
   { model = "grok-4.6",             effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
 ]
 coder_adversarial         = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }

@@ -359,7 +359,12 @@ def cli(*args, **kw):
 #: The harnesses whose CLI has NO reasoning-effort dial, so their `[heads]` row carries
 #: the empty string. MEASURED per harness and never inferred from the vendor's name:
 #: `pi` has no such flag, while `claude --effort` and `grok --reasoning-effort` both do.
-NO_EFFORT_HARNESSES = ("herdr-pi", "herdr")
+#: **`herdr-pi` LEFT THIS TUPLE 2026-08-21 (A27b).** `pi --help` names `--thinking
+#: <level>`, so the harness DOES have a dial; a `herdr-pi` head just carries `""` or
+#: a real value by CHOICE now, never by necessity. Only `herdr` (codex) truly has no
+#: equivalent flag: `scripts/pod/launcher.py`'s codex branch is `["--", "-m", model]`
+#: and appends nothing else.
+NO_EFFORT_HARNESSES = ("herdr",)
 
 
 def _harness_choices(mod):
@@ -425,8 +430,8 @@ def main() -> int:
     if branch is not None:
         code = compile(ast.Module(body=[branch], type_ignores=[]), "<builder>", "exec")
 
-        def run(kind, provider=None):
-            ns = {"kind": kind, "model": "claude-opus-5", "effort": "max",
+        def run(kind, provider=None, effort="max"):
+            ns = {"kind": kind, "model": "claude-opus-5", "effort": effort,
                   "PI_PROVIDER": "deepseek", "provider": provider}
             exec(code, ns)
             return ns["model_args"]
@@ -451,8 +456,18 @@ def main() -> int:
               "--provider" in run("claude"), False)
         check("the codex branch is unchanged",
               run("codex"), ["--", "-m", "claude-opus-5"])
-        check("the pi branch is unchanged",
-              run("pi"), ["--", "--provider", "deepseek", "--model", "claude-opus-5"])
+        # **A27b, MEASURED 2026-08-21: `pi --help` names `--thinking <level>` with
+        # `off, minimal, low, medium, high, xhigh, max`, a superset of
+        # `legal.efforts`.** Missed the first time the pi branch was written; the
+        # owner asked for one pi head to carry a real effort value, which needed
+        # this wired first.
+        check("a pi kind with a non-empty effort appends --thinking",
+              run("pi"),
+              ["--", "--provider", "deepseek", "--model", "claude-opus-5",
+               "--thinking", "max"])
+        check("a pi kind with an empty effort omits --thinking, exactly as before",
+              run("pi", effort=""),
+              ["--", "--provider", "deepseek", "--model", "claude-opus-5"])
 
     print("edit 3: the effort reaches the argv, the record and both callers")
     params = inspect.signature(mod.launch).parameters
@@ -1001,12 +1016,15 @@ def main() -> int:
         # runtime path served it, which is the same defect argparse had the same day.
         check(f"{at} runs on a harness the launcher serves",
               row["harness"] in mod.HERDR_HARNESSES, True)
-        # **THE EFFORT DIAL IS THE HARNESS'S, and `herdr-pi` is the one without it.**
-        # This read `harness == "herdr-pi"` on one side and meant「has no effort dial」.
-        # grok HAS one: `grok --help` lists `--reasoning-effort`, aliased `--effort`,
-        # MEASURED 2026-08-19, and the probe ran at `high` and the pane showed `(high)`.
-        check(f"{at}: a head carries an effort exactly when its harness has the dial",
-              (row["harness"] not in NO_EFFORT_HARNESSES) == (row["effort"] != ""), True)
+        # **ONLY `herdr` (codex) TRULY LACKS THE DIAL.** `herdr-claude` and `herdr-grok`
+        # both require a real effort (R5 refuses an empty one at dispatch, elsewhere).
+        # `herdr-pi` HAS a dial (`--thinking`, wired 2026-08-21, A27b) but a head on it
+        # carries "" or a real value by choice, so no reverse implication holds for it
+        # any more: `glm-5.3` stays "" deliberately, `Qwen3.8-27B-oQ4e-mtp` carries
+        # "high" deliberately, and both are correct.
+        if row["harness"] in NO_EFFORT_HARNESSES:
+            check(f"{at}: a codex head never carries an effort",
+                  row["effort"], "")
         # A CLAUDE HEAD NEVER READS THIS COLUMN: `--permission-mode` is hardcoded to
         # `auto` for the `claude` kind at `scripts/pod/launcher.py:1353`. The value is
         # still pinned here because codex reads it as `-s` and `validate()` refuses a
