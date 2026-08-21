@@ -813,9 +813,24 @@ def admit_rows(code, brief):
         slots = head_slots()
         rows = [namespace(code, b, slots=slots) for b in branches_of(brief)]
         old = load_table(TABLE, slots)
-        if _same_rows(rows_of_scope(old, code), rows):
+        # ONLY THE BRIEF'S OWN ROWS ARE THIS FUNCTION'S TO REBUILD. AD2 lets the
+        # maintainer add a task-scoped row from a measured record (the
+        # sys-critic-upheld-no-go shape, at task scope: e.g. task-lj-1-440-
+        # stop-stated), and `namespace()` always stamps `added_by: "mathematician"`
+        # on a brief-derived row, so that field is the one reliable seam between
+        # the two. MEASURED 2026-08-21: without this filter, a re-dispatch (an
+        # escalate re-admits the SAME brief) rebuilt this scope from the brief
+        # alone, which silently proposed DELETING the maintainer's row; R3
+        # correctly refused that deletion (it was moving live corpus records),
+        # and the refusal parked the task on "admission" FOR EVER, since the next
+        # retry hit the identical rebuild and the identical refusal.
+        brief_rows = [r for r in rows_of_scope(old, code)
+                      if r.get("added_by") == "mathematician"]
+        if _same_rows(brief_rows, rows):
             return True                      # IDEMPOTENT. Attempt 2 writes nothing.
-        new = [r for r in old if r["scope"] != SCOPE_TASK + code] + rows
+        new = [r for r in old
+               if r["scope"] != SCOPE_TASK + code
+               or r.get("added_by") != "mathematician"] + rows
         check_table(new, slots)
         records = replay_mod.corpus()
         verdict, moved = replay_mod.replay(old, new, records)    # R3, section 4.5.1
