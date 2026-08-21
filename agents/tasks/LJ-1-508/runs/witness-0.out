@@ -1,0 +1,2 @@
+pass      exit=0        2.47s  agents/tasks/LJ-1-508/Probe508.agda::valK-family
+witness: 0 UNRESOLVED of 1, 2.47 s, probe_red=False

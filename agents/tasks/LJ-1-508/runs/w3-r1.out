@@ -1,0 +1,15 @@
+Checking LJ-1-508.Probe508 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-508/agents/tasks/LJ-1-508/Probe508.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-508/agents/tasks/LJ-1-508/Probe508.agda:64.9-12: error: [UnequalTerms]
+(V.sett
+ (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+  (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst c ⁆s
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst c , fst yc ⁆))
+ (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+  (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst c ⁆s
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst c , fst yc
+   ⁆)))
+!= (fst (pairʟ (pairʟ c c) (pairʟ c yc))) of type (V ℓ)
+when checking that the expression pr∈ has type
+⟨ fst (prʟ c yc) ∈ fst (lookup K γ) ⟩

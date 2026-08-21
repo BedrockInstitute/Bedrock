@@ -1,0 +1,19 @@
+Checking LJ-1-508.Probe508 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-508/agents/tasks/LJ-1-508/Probe508.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-508/agents/tasks/LJ-1-508/Probe508.agda:73.50-51: error: [NotInScope]
+Not in scope:
+  ^
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-508/agents/tasks/LJ-1-508/Probe508.agda:73.50-51
+    (did you mean
+       '.#L.Axioms.Basic-6404691509413033219.FinOf.DefC.Refine.Abs.SemM._^_' or
+       '.#L.Axioms.Basic-6404691509413033219.FinOf.DefC.Refine.Abs.SemV._^_' or
+       '.#L.Axioms.Basic-6404691509413033219.FinOf.DefC.Refine.Abs._^_' or
+       '.#L.Axioms.Basic-6404691509413033219.FinOf.DefC.SemanticsM._^_' or
+       '.#L.Coding.Model-16266996512289301353.AbsL.SemM._^_' or
+       '.#L.Coding.Model-16266996512289301353.AbsL.SemV._^_' or
+       '.#L.Coding.Model-16266996512289301353.AbsL._^_' or
+       '.#L.Condensation-40823670199118746.AbsL.SemM._^_' or
+       '.#L.Condensation-40823670199118746.AbsL.SemV._^_' or
+       '.#L.Condensation-40823670199118746.AbsL._^_' or
+       '.#V.Model-14078885656119608614.SemanticsV._^_' or
+       'Cubical.Data.Nat._^_'?)
+when scope checking ^

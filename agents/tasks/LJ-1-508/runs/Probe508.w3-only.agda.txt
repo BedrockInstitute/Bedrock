@@ -1,0 +1,64 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.508] W3 FIRST, obligation omitted.
+--
+-- Does `arityK` ALONE close `valK`?  `valK`
+-- (src/L/Condensation/TwelveAgree.lagda.md:173-176) concludes a K
+-- membership from a pair in SLOT ONE.  `arityK`
+-- (src/L/Condensation.lagda.md:6114) is transitivity: v ∈ N and
+-- N ∈ K give v ∈ K.  It needs an N that is ALREADY in K, and the
+-- only set the premise names is slot one.
+--
+-- Written with the frame's OWN slot-one membership offered at the
+-- last step ON PURPOSE, so Agda's mismatch names BOTH sides: what
+-- `arityK` needs and what the premise actually gives.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide
+-- caliber, set on the pane by the program and untouched here.
+-- Nothing lands in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-508.Probe508 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Axioms.Numerals {ℓ} using ( pairʟ )
+open import L.Coding.Model {ℓ} using ( prʟ )
+open import L.Condensation {ℓ} lem using ( module ChainZ )
+open import Cubical.Data.Nat using ( ℕ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet {ℓ} using ( #_ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- =====================================================================
+-- W3.  valK-from-arityK, the two memberships and arityK, nothing else.
+-- =====================================================================
+
+module W3 {m : ℕ} (Cs Vs K : Fin m) (γ : S ^ m)
+  (arityK : (N v : S) → ⟨ fst v ∈ fst N ⟩
+          → ⟨ fst N ∈ fst (lookup K γ) ⟩
+          → ⟨ fst v ∈ fst (lookup K γ) ⟩) where
+
+  module Z = ChainZ {m} K γ arityK
+
+  valK-from-arityK : (k : ℕ) (c ar a b yc : S)
+                   → ⟨ fst c ∈ fst (lookup Cs γ) ⟩
+                   → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+                   → ⟨ pr (fst c) (fst yc) ∈ fst (lookup Vs γ) ⟩
+                   → ⟨ fst yc ∈ fst (lookup K γ) ⟩
+  valK-from-arityK k c ar a b yc c∈ shEq pr∈ =
+    arityK (pairʟ c yc) yc (Z.y∈pairʟxy c yc)
+      (arityK (prʟ c yc) (pairʟ c yc) (Z.ysingl∈prxy c yc)
+        pr∈)
