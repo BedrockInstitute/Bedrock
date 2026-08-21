@@ -19,6 +19,10 @@ __pycache__/
 # commit anything here if the owner explicitly asks).
 .claude/
 
+# Local mirror of .claude/skills/ for other agent tools (symlinks only), same
+# local-only policy as .claude/ above.
+.agent/
+
 # A PROBE IS TRACKED, and its home is agents/tasks/<TASK>/, beside the report
 # it belongs to (dev/LESSONS.md D-1, owner's ruling 2026-08-13). NOTHING BELOW
 # IGNORES IT THERE, and that is deliberate.

@@ -19,6 +19,178 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 21. Every seconds gate is inert, and the ratio bar has never had one eligible record. OWNER-RULED 2026-08-21
+
+**THE OWNER ASKED WHETHER THE RUNNING PROBE TASKS ACCOUNT FOR THE SECONDS
+GATES, AND THE ANSWER TURNED INTO A DEFECT.** Written down by `pod-math` at the
+owner's instruction, 2026-08-21.
+
+**THE THREE SECONDS GATES.**
+
+| gate | where | condition |
+|---|---|---|
+| `sys-dd24-ratio-bar` | `dev/pod/table.toml:71-84` | `exit 0`, `heap_wall false`, `seconds_per_line_min = 0.0123` |
+| `sys-slow-green-empty` | `dev/pod/table.toml:86-102` | `exit 0`, `obligations_delta` 0, `seconds_min = 300.0` |
+| `ran-long-and-changed-little` | every task brief | `seconds_min = 3600.0`, `changed_files_count_max = 1` |
+
+**ALL THREE CARRY ONE GUARD AND IT MAKES ALL THREE INERT IN PRACTICE.**
+`matches()` sets `one = rec.get("concurrency") == 1` (`scripts/pod/table.py:575`)
+and every seconds key is `one and ...` (`:589-590`, `:596-599`). **A seconds
+condition can only match a record measured while EXACTLY ONE process ran.**
+
+**THE GUARD IS RIGHT AND IT MUST NOT BE REMOVED.** A wall clock measured while
+two or three Agda processes share the machine is not a rate. The guard is what
+keeps a seconds figure honest.
+
+**THE MEASUREMENT, over `dev/pod/transitions/2026-08.jsonl`, 2026-08-21.**
+
+- 265 acceptance records carry a facts object.
+- By `concurrency`: `0` 51, `1` 64, `2` 40, `3` 54, `4` 56.
+- **64 records are eligible for a seconds condition. Of those, ZERO carry
+  `lines > 0`.**
+
+`lines` is fact 7, the in-fence line count of the task's own write scope, and a
+raw `.agda` probe carries no fence and counts 0. **So the ratio bar prices
+landings only, and no landing record has ever been eligible.** The row appears
+**0 times** in the whole transition log.
+
+**THE TWO LANDINGS, AND NEITHER NUMBER IS ADMISSIBLE.**
+
+| task | seconds | lines | recorded rate | concurrency | closed on |
+|---|---|---|---|---|---|
+| `[LJ-1.442]` | 15.42 | 79 | 0.19519 | **2** | `task-lj-1-442-go` |
+| `[LJ-1.445]` | 3.48 | 280 | 0.01243 | **3** | `task-lj-1-445-go` |
+
+Both rates sit above the 0.0123 bar. **Neither is a measurement of the bar's
+quantity**, because both were taken under contention. `[LJ-1.442]`'s own brief
+predicted the bar would fire and it could not have.
+
+**A SECOND, INDEPENDENT SHADOW, SO FIXING THE GUARD ALONE IS NOT ENOUGH.**
+`sort_key` (`scripts/pod/table.py:607-610`) orders by `stop_loop` first, then
+**scope**, and only then priority: `0 if row["scope"].startswith("task:") else 1`,
+which is AD8. **Every task-scoped row outranks every system row before priority
+is compared.** `sys-dd24-ratio-bar`'s `when` is `exit 0` plus the rate and names
+no obligation condition, so it overlaps a task's own `go` row completely. Even
+with an eligible record, `go` wins. Priority 150 is not the reason and moving it
+to 1 would change nothing.
+
+`sys-slow-green-empty` is NOT affected by this second shadow and must not be
+"fixed" with it: it requires `obligations_delta` 0 and every `go` row requires
+`obligations_delta_max = -1`, so the two are disjoint by construction.
+
+**THE DESIGN CONFLICT UNDERNEATH.** A10 restored DD24's ratio bar. A14 and C-12
+run a WIDE tier of up to four concurrent Agda writers, and that tier is the
+default (`dev/pod/heads.toml [tiers]`). **Under the default tier the bar can
+never see an eligible record.** The two rulings are each correct and together
+they make one of them inert.
+
+**THE FIX HAS TWO HALVES AND THEY ARE INDEPENDENT.**
+
+1. **Make a landing's acceptance measurable.** A task whose write scope touches
+   `src/` should have its acceptance run alone. `machine: exclusive` already
+   exists in the HEAD block and the loop already reads it. **VERIFY that it
+   makes the acceptance record carry `concurrency = 1` before relying on it**;
+   the exclusivity that is measured today is at dispatch, and the acceptance run
+   is a separate moment. If it does not, the fact wants a different source: the
+   coder already reports three forced rechecks under a single process, and that
+   is the honest rate.
+2. **Give the bar a `when` that a `go` row cannot satisfy.** The bar exists to
+   price a GREEN landing, which is exactly what `go` closes, so no `when` edit
+   can separate them while AD8 stands. Either the bar becomes a task-scoped row
+   the mathematician writes into a landing brief at a priority above `go`, or
+   AD8 gains an exception. **This is a rule change and it needs the owner.**
+
+**WHAT `pod-math` CAN DO WITHOUT A RULING, AND WILL ON REQUEST.** Half 1's brief
+side: write `machine: exclusive` into every future brief whose write scope names
+a file under `src/`, and carry a task-scoped ratio row above `go` in those
+briefs. That needs no program change and no ruling. Say the word.
+
+**HALF 1 IS APPROVED AND ADOPTED, 2026-08-21. HALF 2 IS NOT.** The owner
+approved the no-ruling half: `pod-math` writes `machine: exclusive` into every
+future brief whose write scope names a file under `src/`, and carries a
+task-scoped ratio row in those briefs. **The AD8 exception, and making the bar
+generally task-scoped, stay OPEN and UNRULED and are no part of that approval.**
+
+**THE SHAPE, VERIFIED BEFORE ADOPTION.** `pod-math` built it on a copy of a
+landing brief and ran the real gates: `preflight.py` prints `22 checks, no
+refusal`, and `table.check_table` admits 7 rows.
+
+```toml
+[[branch]]
+id = "go"
+priority = 10
+action = "done"
+outcome = "go"
+
+  [branch.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+  seconds_per_line_max = 0.0123      # closes only when MEASURABLY under the bar
+
+[[branch]]
+id = "ratio-bar"
+priority = 11
+action = "escalate"
+head_slot = "coder_adversarial"
+
+  [branch.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+  seconds_per_line_min = 0.0123
+```
+
+**WHY THE CEILING GOES ON `go` AND THE RATIO ROW SITS BELOW IT.** P20 refuses a
+non-`done` branch that OUTRANKS a `done` branch it does not contradict, and its
+contradiction table knows four tests: `exit_code`, the `_in` lists, the
+`obligations_delta` range, and a glob shared between one block's
+`changed_files_any` and the other's `changed_files_none`. **`seconds_per_line`
+is not among them**, so a ratio row placed above `go` is REFUSED however
+exclusive the two are in fact. Putting the ceiling on `go` makes the two
+disjoint by matching instead of by rank, and the ratio row then wins the only
+case `go` no longer takes. A three-row shape with an unmeasured fallback was
+tried and P20 refuses it for the same reason.
+
+**WHY `machine: exclusive` IS THE RIGHT LEVER.** `admits()` returns
+`not running` for an exclusive task (`scripts/pod/pod.py:2056`) and refuses
+every other task while one is live (`:2050-2051`), and `slots` counts the Agda
+processes during the acceptance run **including its own**
+(`scripts/pod/facts.py:207`). So an exclusive landing should record
+`concurrency = 1` and its seconds facts become eligible.
+
+**AND IT IS UNVERIFIED IN THE FIELD. NO BRIEF HAS EVER DECLARED IT.**
+`grep -l "^machine: exclusive" agents/tasks/*/[A-Z]*.md` returns nothing, and
+`scripts/pod/pod.py:3287` says the same in a comment. The first landing under
+this rule IS the measurement.
+
+**THE RESIDUAL RISK, NAMED SO NOBODY IS SURPRISED.** Both seconds keys carry
+the `concurrency == 1` guard. If an exclusive landing still records
+`concurrency != 1`, then NEITHER `go` nor `ratio-bar` matches, nothing matches,
+and the task parks `no-match`. **That is item 20's disease at a new site.**
+`pod-math` watches the first landing under this rule; if it parks, the cure is
+to drop `seconds_per_line_max` from `go` in that brief and report the
+concurrency the record actually carried. Until then this shape goes into
+landing briefs only, never into a probe brief, where `lines` is 0 and both
+keys are dead anyway.
+
+**THE CLAUSE WANTS ITS CANONICAL HOME.** It binds ONE slot, so it belongs in
+`dev/pod/instructions/mathematician.md`, not in this backlog and not in a
+session's memory. `pod-math` cannot write that file. **Maintainer: move the two
+sentences of the approval there, and strike this paragraph when you do.**
+
+**THE ACCEPTANCE TEST.** One landing closes with an acceptance record carrying
+`concurrency = 1` and a non-zero `lines`, and the digest's `shadow_list`
+(`scripts/pod/digest.py:660`) either shows the bar losing or shows it winning.
+Today it can show neither, because the row never enters `hits()` at all.
+
+**A NOTE ON THE DIGEST.** `shadow_list` was built for exactly this signal, and
+its docstring says a row that never wins in 30 days is a maintainer signal. It
+could not have caught this one: a row that never MATCHES never appears in the
+hit list, so it is invisible to a report that counts losses. **A row that has
+never matched needs its own line in the digest, beside the rows that lost.**
+
+
 ### 20. A D-10 stop matches no branch row. MEASURED AND THE CURE IS PROVEN 2026-08-21
 
 **THE DEFECT.** A brief that orders a D-10 stop when a premise is absent gets a
