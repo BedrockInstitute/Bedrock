@@ -140,10 +140,21 @@ PROVENANCE = re.compile(r"^Corpus search (?:over|for)\b.*$", re.M)
 #: (straight or curly), inside CJK corner quotes, or inside backticks, which
 #: is how LJ-1-361 quotes a module line. Short spans match everywhere and
 #: verify nothing, and a span with no space is a term mention, not a line.
+#:
+#: **THE BACKTICK SPAN TOLERATES AN ESCAPED BACKTICK, `\``, AS CONTENT AND
+#: NOT A CLOSE.** MEASURED 2026-08-22 on `[LJ-1.506]`: the cited line itself
+#: reads `` `AllCodes-closed` `` (a backtick-quoted name), so a return
+#: quoting the whole line inside one outer span had to escape the inner
+#: backticks the only way Markdown allows, and the closing `` ` ``
+#: character class used to stop at the FIRST of those escaped backticks,
+#: capturing a few words and reporting a verbatim-correct quote as "text
+#: the file does not hold". `normalize()` strips the backslash along with
+#: the backtick it escapes, so an escaped and an unescaped backtick end up
+#: identical once both sides of the comparison are normalized.
 QUOTE = re.compile(
     r'["“]([^"”]{12,})["”]|'
     r"「([^」]{12,})」|"
-    r"`([^`]{12,})`")
+    r"`((?:\\`|[^`]){12,})`")
 
 WINDOW = 3  # lines of slack before a quote is a mis-cited line
 
@@ -164,7 +175,10 @@ def injected(sec: str) -> str:
 
 
 def normalize(s: str) -> str:
-    s = re.sub(r"[*`_]", "", s)
+    # `\?` before the class: an escaped backtick (`\``, how a return quotes a
+    # line that itself carries a backtick-quoted name) and a bare one both
+    # vanish, so the two sides of a comparison read the same either way.
+    s = re.sub(r"\\?[*`_]", "", s)
     return re.sub(r"\s+", " ", s).strip()
 
 

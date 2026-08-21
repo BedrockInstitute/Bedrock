@@ -825,6 +825,20 @@ check("answered() takes a deeper path and refuses a vaguer parent",
       csq.answered("archive/src", {"archive/src/2026-08-09-rud-route/x.md"})
       and not csq.answered("archive/src/x/y.md", {"archive/src"}))
 
+# MEASURED 2026-08-22 on `[LJ-1.506]`: the cited line itself carries a
+# backtick-quoted name, `AllCodes-closed`, so a return quoting the whole
+# line inside one outer backtick span had to escape the inner ones the
+# only way Markdown allows. The old `` `([^`]{12,})` `` stopped at the
+# first escaped backtick and captured five words, not the line.
+_esc_line = "  (ii).** `AllCodes-closed` is bound to the same fork."
+_esc_quote = r"`  (ii).** \`AllCodes-closed\` is bound to the same fork.`"
+_m = csq.QUOTE.search(_esc_quote)
+check("the backtick span crosses an escaped backtick, not stopping at it",
+      _m is not None and len(next(g for g in _m.groups() if g)) > 20)
+check("an escaped and an unescaped backtick normalize the same",
+      csq.normalize(_esc_line) == csq.normalize(
+          next(g for g in _m.groups() if g)))
+
 # ---------------------------------------------------------------------------
 shutil.rmtree(tmp, ignore_errors=True)
 
