@@ -5005,7 +5005,8 @@ outcome = "go"
 added = 2026-08-21
 added_by = "mathematician"
 reason = "branch `go` of LJ-1.449, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 0
@@ -5021,7 +5022,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-21
 added_by = "mathematician"
 reason = "A D-10 STOP RUNS NO AGDA, SO IT EXITS 0 AND MATCHES NO exit_code 42 BRANCH."
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 0
@@ -5037,7 +5039,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-21
 added_by = "mathematician"
 reason = "branch `no-go-attacked` of LJ-1.449, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 42
@@ -5054,7 +5057,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-21
 added_by = "mathematician"
 reason = "branch `no-go-stated` of LJ-1.449, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 42
@@ -5069,7 +5073,8 @@ head_slot = "coder_adversarial"
 added = 2026-08-21
 added_by = "mathematician"
 reason = "branch `heap-wall-escalate` of LJ-1.449, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   heap_wall = true
@@ -5082,7 +5087,8 @@ action = "park"
 added = 2026-08-21
 added_by = "mathematician"
 reason = "branch `ran-long-and-changed-little` of LJ-1.449, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   changed_files_count_max = 1
@@ -5557,7 +5563,8 @@ outcome = "no-go"
 added = 2026-08-21
 added_by = "maintainer"
 reason = "sys-critic-upheld-no-go's shape at task scope, outranks the broken stop-stated row. Owner-authorised R3 bypass 2026-08-21: live corpus blocks a normal proposal (20260821-103435.toml.reject)."
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 0
