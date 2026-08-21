@@ -19,6 +19,10 @@ file is not the critic. The critic is never the author.
 4. Is there a cure the return missed?
 
 **A review that AGREES is a real result** and it is worth as much as a refutation.
+**AN UPHELD NO-GO CLOSES THE TASK.** Owner, 2026-08-20. Write the program-named
+file in SCOPE (`review-of-<CODE>-<N>.md`) and nothing else. Row
+`sys-critic-upheld-no-go` matches exit 0, that file, and an obligation still
+open, and closes `done` / `no-go`. You do not write a table row.
 
 **THE INVARIANT: the critic is never the author.** A return your own head produced
 goes to the other head. The design's section 6.6 is the rule and this file does not
