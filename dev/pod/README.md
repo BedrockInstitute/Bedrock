@@ -43,7 +43,7 @@ tick. `os.execv` keeps the pid, so the keeper sees no death and every running wo
 untouched. A source that does not compile is REFUSED and the old image keeps running.
 
 **A HOT RESTART IS NOT A RESUME.** A reload cures stale CODE. It does not clear
-`.pod-state/STOPPED`.
+`.pod-state/STOPPED` or `.pod-state/DRAINING`.
 
 ## Starting it
 
@@ -98,10 +98,25 @@ will receive no further batches.
 `.pod-state/STOPPED` stays where it is. It is what makes rule (f) refuse a dispatch on the
 next start, and clearing it is `pod.py resume`, which is the owner's call.
 
+**A SOFT STOP DRAINS.** `pod.py stop --soft` writes `.pod-state/DRAINING`. The live
+loop then launches no new agent (rule (f) and rule (g)), keeps observing and
+closing returns (rules (a1) to (e)), and STOPs when no task is RUNNING,
+RETURNED or CHECKING. It writes `STOPPED` at that moment. Workers are not
+killed. A hard `pod.py stop` still writes `STOPPED` at once, which makes the
+loop exit on the next tick.
+
 **SWAPPING THE RESIDENT MAINTAINER NEEDS ONE MORE STEP THAN A DISPATCHED HEAD, and
 skipping it is silent.** AD26 makes a `dev/pod/heads.toml` change bind new tasks only,
 which is the whole procedure for the four dispatched slots: edit the row, and the next
 dispatch uses it.
+
+The mathematician is also RESIDENT, owner's ruling 2026-08-20. It is addressed by
+the herdr agent name `pod-math`. `ensure_mathematician()` starts it once from
+`agents/tasks/POD-MATH/POD-MATH.md`. Rule (f) and rule (g) then prompt that same
+agent. One turn at a time: a second mathematician task, or a refill, waits while
+the agent is `working` or `blocked`. Isolation is off for this slot: it writes
+briefs in the main tree. Swapping it is the same procedure as the maintainer:
+rename `pod-math` so the name is free, then the next tick starts the new head.
 
 The maintainer is RESIDENT and is addressed by its herdr agent NAME, `pod-batch`.
 `maintainer_alive()` answers TRUE while ANY agent holds that name, whatever kind it is, so

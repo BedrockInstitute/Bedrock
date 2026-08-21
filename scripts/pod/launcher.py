@@ -785,6 +785,24 @@ def herdr_agents() -> tuple[list[dict], str | None]:
         return [], f"`herdr agent list` returned an unreadable shape ({exc})"
 
 
+def herdr_agent_named(name: str) -> dict | None:
+    """The live herdr agent with this name, or None.
+
+    An unreadable list returns a placeholder dict, which is the SAFE side for a
+    resident reuse: treating a live agent as missing would start a SECOND
+    session under the same name. `maintainer_alive()` uses the same direction.
+    """
+    if not herdr_present():
+        return None
+    agents, err = herdr_agents()
+    if err:
+        return {"name": name, "agent_status": "unknown"}
+    for a in agents:
+        if a.get("name") == name:
+            return a
+    return None
+
+
 def herdr_present() -> bool:
     """Is the herdr binary here at all? `herdr_agents()` cannot say.
 
@@ -1148,15 +1166,28 @@ def _require_vendor_or_die() -> None:
         POLICY.require_vendor_wired()
 
 
-def _cat_list(preamble, brief) -> str:
-    """The shell-quoted file list `cat` receives: the preamble files, then the brief.
+def _prompt_files(preamble, brief, reuse_resident: bool = False) -> list:
+    """Files `cat` joins into one prompt.
+
+    A FRESH start (or any dispatched worker) gets the preamble then the brief.
+    A REUSE of a resident agent gets the brief alone: the slot file, AGENTS.md,
+    the screen and the direction were cat'd at session start. Recatting them on
+    every refill and every later task paid the same Boundary again.
+    """
+    if reuse_resident:
+        return [brief]
+    return list(preamble or []) + [brief]
+
+
+def _cat_list(preamble, brief, reuse_resident: bool = False) -> str:
+    """The shell-quoted file list `cat` receives.
 
     ONE SOURCE PER FILE AND NO COPY ON DISK. The shared Boundary lives in `AGENTS.md`
-    and a slot's own clauses in its instruction file; `cat` joins them at dispatch, so
-    neither is ever transcribed into the other. That is the owner's single-source rule
-    of 2026-08-18 applied to the prompt itself.
+    and a slot's own clauses in its instruction file; `cat` joins them at first
+    start, so neither is ever transcribed into the other. That is the owner's
+    single-source rule of 2026-08-18 applied to the prompt itself.
     """
-    files = list(preamble or []) + [brief]
+    files = _prompt_files(preamble, brief, reuse_resident)
     return " ".join(shlex.quote(str(f)) for f in files)
 
 
@@ -1166,7 +1197,8 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
            effort: str = "", tier: str = AGDA_TIER_DEFAULT,
            preamble: "list[Path] | None" = None,
            provider: str | None = None, resident: bool = False,
-           workdir: "Path | None" = None) -> int:
+           workdir: "Path | None" = None,
+           agent_name: str | None = None) -> int:
     # POD EDIT 3 of 6, part 1 of 3 (design section 6.2). `effort` is the claude
     # CLI's `--effort` value and edit 2 puts it on the argv. It defaults to the
     # empty string so every existing caller keeps working; the POD passes
@@ -1321,7 +1353,9 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             # first loosened resume failed with agent_not_found on exactly that.
             # The agent still answers to its original name, so strip the suffix.
             base_task = task[:-7] if resume_id and task.endswith("-resume") else task
-            hname = herdr_name(base_task)
+            hname = agent_name or herdr_name(base_task)
+            reuse_resident = bool(resident and not resume_id
+                                  and herdr_agent_named(hname))
             kind = HERDR_KIND.get(HARNESS, "codex")
             # A herdr pane does NOT inherit this process's environment, so the
             # Agda caliber has to be handed over explicitly. C-12: never raise
@@ -1374,6 +1408,38 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             prompt_text = (note or "Resume where you left off, then write your report.") \
                           if resume_id else brief.read_text(encoding="utf-8")
             driver = (
+                "set -uo pipefail\n"
+                f"herdr agent get {hname} >/dev/null 2>&1 || "
+                "{ echo \"HERDR resident agent " + hname + " no longer exists; "
+                "the next tick will start it again.\"; exit 1; }\n"
+                f"herdr agent prompt {hname} \"$(cat {_cat_list(preamble, brief, True)})\"\n"
+                f"herdr agent wait {hname} --until working --timeout 120000 || "
+                "{ echo \"HERDR resident agent never started working on this prompt\"; "
+                "exit 1; }\n"
+                "STOPPED=0\n"
+                "for i in 1 2 3 4 5 6 7 8 9 10; do\n"
+                f"  herdr agent wait {hname} --until idle --until done "
+                "&& { STOPPED=1; break; }\n"
+                f"  if herdr agent get {hname} 2>/dev/null | grep -q "
+                "'\"agent_status\":\"blocked\"'; then\n"
+                "    echo \"HERDR agent is BLOCKED: it is waiting for input.\"\n"
+                "    break\n"
+                "  fi\n"
+                f"  herdr agent get {hname} >/dev/null 2>&1 || break\n"
+                "  sleep 5\n"
+                "done\n"
+                f"herdr agent get {hname} >/dev/null 2>&1 || "
+                "{ echo \"HERDR resident agent DIED during the run; pane kept\"; "
+                "exit 1; }\n"
+                f"herdr agent read {hname} --source recent --lines 400 > "
+                f"{shlex.quote(str(final))} 2>&1\n"
+                "if [ \"$STOPPED\" != 1 ]; then\n"
+                "  echo \"HERDR resident agent is STILL ALIVE and the wait never "
+                "succeeded; pane kept and NOT closed\"\n"
+                "  exit 1\n"
+                "fi\n"
+                f"echo \"HERDR done; resident agent {hname} kept\"\n"
+            ) if reuse_resident else (
                 "set -uo pipefail\n"
                 # Resolve the agent workspace by LABEL, creating it if the owner
                 # closed it. Then split inside it. Never split into the owner's own.

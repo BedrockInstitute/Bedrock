@@ -211,7 +211,7 @@ BRIEF_386 = """\
 # LJ-1.386: internal existence of a pairing code at a band ordinal, GO or NO-GO
 
 ## HEAD
-head_slot: mathematician
+head_slot: coder
 machine: shared
 
 ## THE OBLIGATION
@@ -759,6 +759,32 @@ class SeededRows(unittest.TestCase):
         self.assertEqual(table.route(self.rows, rec),
                          ("sys-spec-surface", "stop_loop"))
 
+    def test_a_critic_upheld_no_go_closes(self):
+        """Owner 2026-08-20: the critic file plus exit 0 with an obligation still
+        open is an UPHELD NO-GO. A23 keys `obligations_open_max = 0` and misses.
+        MEASURED on LJ-1.422 (seq 748's sibling parks) and LJ-1.436 seq 748."""
+        rec = record(task="LJ-1.436", exit_code=0, delta=0, obligations_open=1,
+                     seconds=0.0,
+                     changed=["agents/tasks/LJ-1-436/lj-1.436-report.md",
+                              "agents/tasks/LJ-1-436/review-of-LJ-1-436-1.md"])
+        self.assertEqual(table.route(self.rows, rec),
+                         ("sys-critic-upheld-no-go", "done"))
+
+    def test_the_coder_obstruction_file_is_not_the_critic_file(self):
+        """`review-of-step-trunc.md` is the coder's stated NO-GO. The critic
+        artefact is `review-of-LJ-1-436-1.md`. Exit 0 on the former must not close."""
+        rec = record(task="LJ-1.436", exit_code=0, delta=0, obligations_open=1,
+                     seconds=0.0,
+                     changed=["agents/tasks/LJ-1-436/review-of-step-trunc.md"])
+        self.assertEqual(table.route(self.rows, rec), (None, None))
+
+    def test_a_critic_close_fails_when_fact_8_is_absent(self):
+        """R7: an old record without `obligations_open` cannot open a row that
+        keys on it. A23's own records of this shape stay unmatched."""
+        rec = record(task="LJ-1.436", exit_code=0, delta=0, seconds=0.0,
+                     changed=["agents/tasks/LJ-1-436/review-of-LJ-1-436-1.md"])
+        self.assertEqual(table.route(self.rows, rec), (None, None))
+
     def test_lj_1_375_must_fail_no_matches_until_its_task_row_exists(self):
         """A task row inverts the default for one task. Without it a must-fail control's
         exit 42 reaches NO MATCH and parks, which is R5 and not a routing."""
@@ -987,6 +1013,15 @@ class Admission(TreeCase):
         ids = [r["id"] for r in self.rows()]
         self.assertIn("task-lj-1-386-go", ids)
         self.assertIn("task-lj-1-388-go", ids)
+
+    def test_a_mathematician_brief_writes_no_row(self):
+        """Owner 2026-08-21: the resident mathematician is not a table task."""
+        text = BRIEF_386.replace("head_slot: coder", "head_slot: mathematician")
+        path = self.brief(text)
+        before = self.table_path.read_text(encoding="utf-8")
+        self.assertTrue(table.admit_rows("LJ-1.999", path))
+        self.assertEqual(self.table_path.read_text(encoding="utf-8"), before)
+        self.assertEqual(self.commits, [])
 
     def test_a_second_admission_of_one_brief_writes_nothing(self):
         self.assertTrue(table.admit_rows("LJ-1.386", self.brief_path))
@@ -1274,7 +1309,7 @@ class Preflight(TreeCase):
                       "are identical", d)
 
     def test_p11_refuses_a_slot_that_is_not_in_heads_toml(self):
-        d = self.run_preflight(BRIEF_386.replace("head_slot: mathematician",
+        d = self.run_preflight(BRIEF_386.replace("head_slot: coder",
                                                  "head_slot: reviewer"))
         self.assertIn("P11 head slot reviewer is not in heads.toml", d)
         e = self.run_preflight(BRIEF_386.replace(

@@ -80,6 +80,7 @@ pod = _load("pod", "scripts/pod/pod.py")
 #: the same hour on 2026-08-18.
 REAL_ENSURE_MAINTAINER = pod.ensure_maintainer
 REAL_PROMPT_MAINTAINER = pod.prompt_maintainer
+REAL_ENSURE_MATHEMATICIAN = pod.ensure_mathematician
 REAL_INJECT_SURVEY = pod.inject_survey
 ledger = _load("ledger", "scripts/measure/ledger.py")
 
@@ -150,7 +151,7 @@ BRIEF = """\
 # LJ-1.386: internal existence of a pairing code at a band ordinal, GO or NO-GO
 
 ## HEAD
-head_slot: mathematician
+head_slot: coder
 machine: shared
 
 ## THE OBLIGATION
@@ -258,6 +259,16 @@ class LoopCase(unittest.TestCase):
         task = tmp / "agents" / "tasks" / DIR
         task.mkdir(parents=True, exist_ok=True)
         (task / f"{CODE}.md").write_text(BRIEF, encoding="utf-8")
+        math = tmp / "agents" / "tasks" / "POD-MATH"
+        math.mkdir(parents=True, exist_ok=True)
+        src_math = ROOT / "agents" / "tasks" / "POD-MATH" / "POD-MATH.md"
+        if src_math.is_file():
+            shutil.copy(src_math, math / "POD-MATH.md")
+        else:
+            (math / "POD-MATH.md").write_text(
+                "# standing\n\n## HEAD\nhead_slot: mathematician\n\n"
+                "## SCOPE (write)\nreport\n\n## ARCHIVE\nnone\n\n"
+                "## LITERATURE\nnone\n")
         (tmp / ".pod-state" / "logs").mkdir(parents=True, exist_ok=True)
 
     def use_tree(self):
@@ -265,6 +276,7 @@ class LoopCase(unittest.TestCase):
         self.swap(pod, ROOT=tmp, POD_STATE=tmp / ".pod-state",
                   STATE_FILE=tmp / ".pod-state" / "state.json",
                   STOPPED_FILE=tmp / ".pod-state" / "STOPPED",
+                  DRAIN_FILE=tmp / ".pod-state" / "DRAINING",
                   LOG_DIR=tmp / ".pod-state" / "logs",
                   LOCKFILE=tmp / ".pod-state" / "pod.lock",
                   RELOAD_FILE=tmp / ".pod-state" / "reload",
@@ -277,6 +289,8 @@ class LoopCase(unittest.TestCase):
                   INSTRUCTIONS=tmp / "dev" / "pod" / "instructions",
                   REFILL_BRIEF=tmp / "agents" / "tasks" / "POD-REFILL"
                   / "POD-REFILL.md",
+                  MATH_BRIEF=tmp / "agents" / "tasks" / "POD-MATH"
+                  / "POD-MATH.md",
                   WATCHDOG=tmp / "scripts" / "ops" / "agda-watchdog.sh",
                   BARK=tmp / "scripts" / "ops" / "bark-push.sh",
                   DIGEST=tmp / "scripts" / "pod" / "digest.py")
@@ -336,6 +350,9 @@ class LoopCase(unittest.TestCase):
         self.patch(pod, "ensure_maintainer",
                    lambda st, root=None: self.calls.__setitem__(
                        "ensure", self.calls["ensure"] + 1))
+        self.patch(pod, "ensure_mathematician",
+                   lambda st, root=None: None)
+        self.patch(pod, "mathematician_busy", lambda st, root=None: False)
         # **THE COUNTER ALSO STAMPS THE CLOCK, because the real one does.** A stub that
         # only counts leaves `hours_since_last_batch()` and `park_since_last_batch()`
         # reading a log with no batch line in it, so every trigger test measured a
@@ -455,6 +472,21 @@ class RuleA1(LoopCase):
         self.queue({"code": "LJ-1.999-split", "split_of": CODE, "reason": "a split"})
         st, _ = self.tick()
         self.assertEqual(st.tasks, {})
+
+    def test_a_mathematician_brief_is_not_a_task_and_writes_no_table_row(self):
+        """Owner 2026-08-21: the mathematician is resident. A queue entry that
+        names that slot is not admitted into the table and is not a TASK."""
+        math = self.tmp / "agents" / "tasks" / "LJ-1-999"
+        math.mkdir(parents=True, exist_ok=True)
+        brief = math / "LJ-1.999.md"
+        brief.write_text(BRIEF.replace("head_slot: coder",
+                                       "head_slot: mathematician"),
+                         encoding="utf-8")
+        self.queue({"code": "LJ-1.999", "brief": "agents/tasks/LJ-1-999/LJ-1.999.md"})
+        st, _ = self.tick()
+        self.assertNotIn("LJ-1.999", st.tasks)
+        rows = table_mod.load_table(self.tmp / "dev" / "pod" / "table.toml")
+        self.assertEqual([r for r in rows if r.get("scope") == "task:LJ-1.999"], [])
 
     def test_the_pod_marker_is_written_at_creation(self):
         """Section 9.3: the marker SURVIVES A COPY, and AD6 salvages `agents/` by
@@ -1389,6 +1421,47 @@ class RuleD(LoopCase):
         self.assertEqual(st.tasks[CODE].status, pod.READY)   # rule (c) ran
         self.assertEqual(self.calls["launch"], [])           # rule (f) did not
 
+    def test_a_soft_stop_does_not_launch_and_keeps_ticking_while_a_worker_runs(self):
+        """`--soft` must not make `_rule_f` return STOP while a pid is still live,
+        or the return has nobody accepting it."""
+        (self.tmp / ".pod-state" / "DRAINING").touch()
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.RUNNING, pid=os.getpid(),
+                                  brief=f"agents/tasks/{DIR}/{CODE}.md")
+        st.tasks["LJ-1.500"] = pod.Task("LJ-1.500", status=pod.READY,
+                                        brief=f"agents/tasks/{DIR}/{CODE}.md")
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
+        self.assertEqual(self.calls["launch"], [])
+        self.assertEqual(st.tasks["LJ-1.500"].status, pod.READY)
+        self.assertTrue((self.tmp / ".pod-state" / "DRAINING").exists())
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+
+    def test_a_soft_stop_STOPs_when_no_agent_is_in_flight(self):
+        (self.tmp / ".pod-state" / "DRAINING").touch()
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.PARKED, park_reason="no-match",
+                                  brief=f"agents/tasks/{DIR}/{CODE}.md")
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
+        self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
+        self.assertFalse((self.tmp / ".pod-state" / "DRAINING").exists())
+        self.assertEqual(self.lines()[-1]["to"], pod.LOOP_STOPPED)
+        self.assertEqual(self.lines()[-1]["why"], "drain")
+
+    def test_a_soft_stop_still_closes_a_return_then_STOPs(self):
+        """Rules (b) and (c) run before the drain check, so the last return is
+        accepted on the same tick the loop exits."""
+        (self.tmp / ".pod-state" / "DRAINING").touch()
+        self.write_table([sys_row("sys-accept", action="accept",
+                                  when={"exit_code": 0})])
+        self.set_acceptance(record())
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.RETURNED,
+                                  brief=f"agents/tasks/{DIR}/{CODE}.md")
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
+        self.assertEqual(st.tasks[CODE].status, pod.READY)
+        self.assertEqual(self.calls["launch"], [])
+        self.assertEqual(self.lines()[-1]["why"], "drain")
+
 
 # ---------------------------------------------------------------- rule (e) MAINTAINER
 
@@ -1900,7 +1973,122 @@ class RuleE(LoopCase):
         self.assertFalse(old.exists())
 
 
-# ---------------------------------------------------------------- rule (f) ADMIT/SPAWN
+# ---------------------------------------------------------------- resident mathematician
+
+
+class ResidentMathematician(LoopCase):
+    """Owner 2026-08-20: the mathematician is one herdr agent, every task a prompt."""
+
+    def test_a_reuse_prompt_is_the_brief_alone(self):
+        """First start cats preamble then brief. Refill and later tasks cat the
+        brief only, so AGENTS.md is not paid a second time."""
+        import launcher as L
+        pre = [Path("mathematician.md"), Path("AGENTS.md")]
+        brief = Path("agents/tasks/POD-REFILL/POD-REFILL.md")
+        self.assertEqual(L._prompt_files(pre, brief, False), pre + [brief])
+        self.assertEqual(L._prompt_files(pre, brief, True), [brief])
+
+    def test_ensure_is_idempotent_when_the_agent_is_there(self):
+        seen = []
+        self.patch(pod, "mathematician_alive", lambda root=None: True)
+        self.patch(pod, "ensure_mathematician", REAL_ENSURE_MATHEMATICIAN)
+
+        class _Mod:
+            HARNESS = ""
+
+            @staticmethod
+            def launch(*a, **kw):
+                seen.append(kw)
+                return 0
+
+        self.patch(facts_mod, "launcher", lambda: _Mod)
+        st = pod.State()
+        for _ in range(3):
+            REAL_ENSURE_MATHEMATICIAN(st, self.tmp)
+        self.assertEqual(seen, [])
+
+    def test_ensure_starts_the_standing_session_when_the_agent_is_gone(self):
+        seen = []
+        self.patch(pod, "mathematician_alive", lambda root=None: False)
+        self.patch(pod, "ensure_mathematician", REAL_ENSURE_MATHEMATICIAN)
+
+        class _Mod:
+            HARNESS = ""
+
+            @staticmethod
+            def herdr_name(t):
+                return t.lower().replace(".", "-")
+
+            @staticmethod
+            def launch(task, brief, agda, sandbox, model, **kw):
+                seen.append((task, kw.get("resident"), kw.get("agent_name")))
+                return 0
+
+        self.patch(facts_mod, "launcher", lambda: _Mod)
+        st = pod.State()
+        REAL_ENSURE_MATHEMATICIAN(st, self.tmp)
+        self.assertEqual(seen, [("POD-MATH", True, "pod-math")])
+
+    def test_a_mathematician_dispatch_reuses_the_resident_name_and_skips_a_worktree(self):
+        seen = []
+
+        class _Stub:
+            HARNESS = ""
+
+            @staticmethod
+            def herdr_name(t):
+                return t.lower().replace(".", "-")
+
+            @staticmethod
+            def launch(*a, **kw):
+                seen.append((a, kw))
+                return 4242
+
+        self.patch(facts_mod, "launcher", lambda: _Stub)
+        self.patch(pod, "launch", REAL_LAUNCH)
+        t = pod.Task(CODE, agda=True, tier="wide")
+        REAL_LAUNCH(t, f"agents/tasks/{DIR}/{CODE}.md", "mathematician", self.tmp)
+        self.assertEqual(len(seen), 1)
+        args, kw = seen[0]
+        self.assertFalse(args[2], "the resident mathematician pane takes no Agda caliber")
+        self.assertTrue(kw.get("resident"))
+        self.assertEqual(kw.get("agent_name"), "pod-math")
+        self.assertIsNone(kw.get("workdir"))
+
+    def test_a_busy_resident_leaves_a_READY_mathematician_task_unlaunched(self):
+        brief = self.tmp / "agents" / "tasks" / DIR / f"{CODE}.md"
+        brief.write_text(BRIEF.replace("head_slot: coder",
+                                       "head_slot: mathematician"),
+                         encoding="utf-8")
+        self.patch(pod, "mathematician_busy", lambda st, root=None: True)
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.READY)
+        st.tasks[CODE] = t
+        self.patch(preflight_mod, "preflight", lambda *a, **k: [])
+        self.patch(table_mod, "admit_rows", lambda *a, **k: True)
+        pod._rule_f(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+        self.assertEqual(self.calls["launch"], [])
+
+    def test_a_busy_resident_holds_the_refill(self):
+        self.patch(pod, "_rule_g", REAL_RULE_G)
+        self.patch(pod, "mathematician_busy", lambda st, root=None: True)
+        (self.tmp / "agents" / "tasks" / "POD-REFILL").mkdir(parents=True, exist_ok=True)
+        (self.tmp / "agents" / "tasks" / "POD-REFILL" / "POD-REFILL.md").write_text(
+            "# refill\n\n## HEAD\nhead_slot: mathematician\n")
+        launched = []
+
+        class FakeLauncher:
+            HARNESS = ""
+
+            @staticmethod
+            def launch(*a, **kw):
+                launched.append(a)
+                return 0
+
+        self.patch(facts_mod, "launcher", lambda: FakeLauncher)
+        pod._rule_g(pod.State(), self.tmp)
+        self.assertEqual(launched, [])
 
 
 class RuleF(LoopCase):
@@ -2036,7 +2224,7 @@ class RuleF(LoopCase):
         t.status = pod.READY
         pod._rule_f(st, self.tmp)
         roles = [c[2] for c in self.calls["launch"]]
-        self.assertEqual(roles, ["mathematician_adversarial", "mathematician"])
+        self.assertEqual(roles, ["mathematician_adversarial", "coder"])
 
     def test_an_escalate_row_head_slot_wins_over_the_review_default(self):
         st, t = self.ready(attempt=2, head_slot="coder_adversarial")
@@ -2193,6 +2381,42 @@ class Emit(LoopCase):
             line, self.tmp / "dev" / "pod" / "replay-corpus.jsonl"))
         text = (self.tmp / "dev" / "pod" / "replay-corpus.jsonl").read_text()
         self.assertEqual(len(text.strip().split("\n")), 1)
+
+    def test_a_stale_emit_does_not_clobber_a_resume_ready_or_reuse_its_seq(self):
+        """MEASURED 2026-08-20 on LJ-1.386 and LJ-1.390.
+
+        `resume --retry` wrote PARKED→READY at seq 714/715. The live tick still held
+        seq 713 and the PARKED copies, then `emit()` assigned those same two seqs to
+        LJ-1.433/434 READY→RUNNING and `save_state()` wrote the PARKED copies back.
+        `replay_log()` only folds `seq > st.seq`, so the READY lines were gone once
+        the cache sat at seq 731.
+        """
+        parked = pod.State(seq=713)
+        parked.tasks[CODE] = pod.Task(CODE, status=pod.PARKED,
+                                      park_reason="no-change")
+        parked.tasks["LJ-1.433"] = pod.Task("LJ-1.433", status=pod.READY)
+        pod.save_state(parked)
+
+        resume = pod.load_state()
+        pod.replay_log(resume, self.tmp)
+        pod.emit(resume, resume.tasks[CODE], pod.PARKED, pod.READY,
+                 why="resume --retry", root=self.tmp)
+
+        stale = parked
+        self.assertEqual(stale.seq, 713)
+        self.assertEqual(stale.tasks[CODE].status, pod.PARKED)
+        pod.emit(stale, stale.tasks["LJ-1.433"], pod.READY, pod.RUNNING,
+                 pid=1, root=self.tmp)
+
+        self.assertEqual(stale.tasks[CODE].status, pod.READY,
+                         "the tick's in-memory copy must absorb the resume READY")
+        self.assertEqual(stale.tasks["LJ-1.433"].status, pod.RUNNING)
+        durable = pod.replay_log(pod.load_state(), self.tmp)
+        self.assertEqual(durable.tasks[CODE].status, pod.READY)
+        self.assertEqual(durable.tasks["LJ-1.433"].status, pod.RUNNING)
+        seqs = [line["seq"] for line in pod.log_lines(self.tmp)]
+        self.assertEqual(seqs, sorted(set(seqs)), "seq numbers are unique")
+        self.assertEqual(durable.seq, 715)
 
 
 # ---------------------------------------------------------------- crash safety
@@ -2899,9 +3123,10 @@ class Heads(LoopCase):
 
         **THIS PINNED A12's MODEL AND WENT RED FOR AN OWNER RULING.** A12 set the
         maintainer to `claude-opus-5` at effort `high`; A26 moved the slot to grok on
-        2026-08-19 and kept the effort. A model name is the owner's under AD26 and moves
-        whenever they say so, so what this asserts now is what the LOADER guarantees: five
-        slots, every field inside its legal set, and every head reachable."""
+        2026-08-19; the owner moved it back to opus at `xhigh` on 2026-08-20. A model
+        name is the owner's under AD26 and moves whenever they say so, so what this
+        asserts now is what the LOADER guarantees: five slots, every field inside its
+        legal set, and every head reachable."""
         cfg = heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml")
         self.assertEqual(sorted(cfg["heads"]),
                          ["coder", "coder_adversarial", "maintainer",
@@ -2910,8 +3135,8 @@ class Heads(LoopCase):
             self.assertIn(row["model"], cfg["legal"]["models"], slot)
             self.assertIn(row["effort"], cfg["legal"]["efforts"], slot)
             self.assertTrue(row["harness"], slot)
-        # WHAT SURVIVES A12 IS THE EFFORT, which no ruling since has touched.
-        self.assertEqual(cfg["heads"]["maintainer"]["effort"], "high")
+        self.assertEqual(cfg["heads"]["maintainer"]["effort"], "xhigh")
+        self.assertEqual(cfg["heads"]["maintainer"]["model"], "claude-sonnet-5")
         for k in heads_mod.LIMIT_KEYS:
             self.assertGreater(cfg["limits"][k], 0, k)
 
@@ -3500,6 +3725,12 @@ class Commands(LoopCase):
         self.assertEqual(pod.cmd_stop([]), 0)
         self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
         self.assertEqual(len(self.calls["commit"]), 1)
+
+    def test_stop_soft_writes_DRAINING_and_does_not_STOPPED(self):
+        self.assertEqual(pod.cmd_stop(["--soft"]), 0)
+        self.assertTrue((self.tmp / ".pod-state" / "DRAINING").exists())
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+        self.assertEqual(len(self.calls["commit"]), 0)
 
     def test_an_unknown_subcommand_is_a_usage_error(self):
         self.assertEqual(pod.main(["fly"]), 2)
@@ -4208,9 +4439,11 @@ class CommitOnClose(unittest.TestCase):
                              capture_output=True, text=True).stdout
         return [l for l in out.splitlines() if l.strip()]
 
-    def close(self, changed):
+    def close(self, changed, refused=None):
         """Run the DONE handler with `ledger.py` stubbed out. It returns the record."""
         rec = {"facts": {"changed_files": changed}}
+        if refused is not None:
+            rec["changed_files_refused"] = list(refused)
         t = pod.Task("LJ-1.999", status=pod.CHECKING)
         t.row = "sys-x"
         real = subprocess.run
@@ -4299,6 +4532,58 @@ class CommitOnClose(unittest.TestCase):
         pod.retry_refused_commits(st, self.tmp)
         self.assertEqual(rec["commit"], "clean")
         self.assertEqual(len(self.commits()), 2)
+
+    def test_a21_discarded_task_home_probe_is_still_committed(self):
+        """MEASURED 2026-08-20 on LJ-1.439: A21 dropped Probe439.agda from fact 4,
+        the close committed the report, and the probe stayed untracked."""
+        probe = Path("agents") / "tasks" / "LJ-1-999" / "Probe999.agda"
+        (self.tmp / probe).parent.mkdir(parents=True)
+        (self.tmp / probe).write_text("module Probe999 where\n")
+        rec = self.close(["kept.md"], refused=[str(probe)])
+        self.assertEqual(rec["commit"], "clean")
+        out = subprocess.run(["git", "show", "--name-only", "--format="], cwd=self.tmp,
+                             capture_output=True, text=True).stdout
+        self.assertIn("kept.md", out)
+        self.assertIn("Probe999.agda", out)
+
+    def test_a21_discarded_src_agda_is_not_committed(self):
+        src = Path("src") / "L" / "Critic.agda"
+        (self.tmp / src).parent.mkdir(parents=True)
+        (self.tmp / src).write_text("module Critic where\n")
+        rec = self.close(["kept.md"], refused=[str(src)])
+        self.assertEqual(rec["commit"], "clean")
+        out = subprocess.run(["git", "show", "--name-only", "--format="], cwd=self.tmp,
+                             capture_output=True, text=True).stdout
+        self.assertIn("kept.md", out)
+        self.assertNotIn("Critic.agda", out)
+        tracked = subprocess.run(["git", "ls-files", "--", str(src)], cwd=self.tmp,
+                                 capture_output=True, text=True).stdout
+        self.assertEqual(tracked.strip(), "")
+
+    def test_a_clean_close_retries_the_untracked_a21_probe(self):
+        """The 439 recovery: the close already committed fact 4; the next tick
+        commits the probe A21 dropped."""
+        pod._REFUSED_COMMIT_TRIED.clear()
+        probe = Path("agents") / "tasks" / "LJ-1-999" / "Probe999.agda"
+        (self.tmp / probe).parent.mkdir(parents=True)
+        (self.tmp / probe).write_text("module Probe999 where\n")
+        rec = self.close(["kept.md"])
+        self.assertEqual(rec["commit"], "clean")
+        tracked = subprocess.run(["git", "ls-files", "--", str(probe)], cwd=self.tmp,
+                                 capture_output=True, text=True).stdout
+        self.assertEqual(tracked.strip(), "")
+        rec["changed_files_refused"] = [str(probe)]
+        t = pod.Task("LJ-1.999", status=pod.DONE)
+        t.row = "sys-critic-upheld-no-go"
+        t.record = rec
+        st = pod.State()
+        st.tasks[t.code] = t
+        pod.retry_refused_commits(st, self.tmp)
+        self.assertEqual(rec["commit"], "clean")
+        out = subprocess.run(["git", "log", "-1", "--name-only", "--format=%s"],
+                             cwd=self.tmp, capture_output=True, text=True).stdout
+        self.assertIn("A21-refused on close", out.splitlines()[0])
+        self.assertIn("Probe999.agda", out)
 
 
 class MaintainerPreset(LoopCase):
@@ -4695,6 +4980,42 @@ class SalvageWorktree(unittest.TestCase):
     def test_no_worktree_is_a_noop(self):
         shutil.rmtree(self.wt)
         self.assertEqual(pod.salvage_worktree(self.t, self.tmp), [])
+
+    def test_an_untouched_brief_does_not_block_salvage_when_main_committed_it(self):
+        """LJ-1.386, 2026-08-20: A21 retargeted the brief on main after the
+        worktree forked. Salvage walked the whole home, the brief collided,
+        and a `sys-obligations-satisfied` close parked `salvage:` in a loop."""
+        dest = self.tmp / "agents" / "tasks" / "LJ-1-399" / "LJ-1.399.md"
+        dest.write_text(dest.read_text() + "head_slot: coder\n")
+        subprocess.run(["git", "add", "-A"], cwd=self.tmp, capture_output=True)
+        subprocess.run(["git", "commit", "-qm", "retarget brief"],
+                       cwd=self.tmp, capture_output=True)
+        (self.whome / "lj-1.399-report.md").write_text("report\n")
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertEqual(bad, [])
+        self.assertIn("head_slot: coder", dest.read_text())
+        self.assertEqual(
+            (self.tmp / "agents" / "tasks" / "LJ-1-399" / "lj-1.399-report.md")
+            .read_text(),
+            "report\n")
+
+    def test_identical_bytes_are_not_a_collision_even_if_both_sides_moved(self):
+        """LJ-1.386 seq 813: worktree brief already matched main, both differed
+        from the fork, and salvage still parked."""
+        dest = self.tmp / "agents" / "tasks" / "LJ-1-399" / "LJ-1.399.md"
+        text = dest.read_text() + "head_slot: coder\n"
+        dest.write_text(text)
+        subprocess.run(["git", "add", "-A"], cwd=self.tmp, capture_output=True)
+        subprocess.run(["git", "commit", "-qm", "retarget brief"],
+                       cwd=self.tmp, capture_output=True)
+        (self.whome / "LJ-1.399.md").write_text(text)
+        (self.whome / "lj-1.399-report.md").write_text("report\n")
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertEqual(bad, [])
+        self.assertEqual(
+            (self.tmp / "agents" / "tasks" / "LJ-1-399" / "lj-1.399-report.md")
+            .read_text(),
+            "report\n")
 
 
 if __name__ == "__main__":

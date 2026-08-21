@@ -257,18 +257,17 @@ system_free_floor_pct = 8     # C-12's floor, restored by A13
 # **THE CLAUDE PERMISSION MODE IS `auto`, owner's ruling 2026-08-19**, and its one
 # home is that launcher line.
 [heads]
-# RULED BY THE OWNER, 2026-08-18, and the coder row moved to grok on 2026-08-20.
-# The critic is never the same model as the author, on both sides.
-mathematician             = { model = "claude-opus-5",   effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" }
+# RULED BY THE OWNER, 2026-08-21. Direct author/critic pairs differ. The F9
+# path is coder → mathematician_adversarial (grok-4.6 → glm-5.3).
+mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
 mathematician_adversarial = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
 coder                     = { model = "grok-4.6",        effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits" }
 coder_adversarial         = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
-# **THE MAINTAINER MOVED TO GROK, owner's ruling 2026-08-19.** It was `claude-opus-5` at
-# effort `high` from amendment A12. The slot is the resident one, so the change is not a
-# re-dispatch: the whole pod is stopped first, the old session is retired, and the next
-# `ensure_maintainer()` starts the new head. `dev/pod/instructions/maintainer.md` carries
-# the handover the outgoing session wrote.
-maintainer                = { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" }
+# **THE MAINTAINER MOVED TO `claude-sonnet-5` at effort `xhigh`, owner's ruling
+# 2026-08-21.** It was `claude-opus-5` at `xhigh` from 2026-08-20. The slot is
+# resident, so the change is not a re-dispatch: the old session is retired, and
+# the next `ensure_maintainer()` starts the new head.
+maintainer                = { model = "claude-sonnet-5", effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" }
 # THE MAINTAINER PRESETS, and `pod.py maintainer --use <name>` copies one into the row
 # above. **THE ROW IS STILL THE ONE HOME**: this table is a set of rows the owner has
 # already approved, and nothing reads it except that command.

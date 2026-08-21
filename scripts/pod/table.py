@@ -746,6 +746,20 @@ def _same_rows(old, new):
     return strip == [{k: v for k, v in r.items() if k != "added"} for r in new]
 
 
+def _brief_head_slot(brief):
+    """The brief's `head_slot:` line, or `coder`. Local so this module does not
+    import `pod` or `preflight` (both already import this file)."""
+    try:
+        text = Path(brief).read_text(encoding="utf-8")
+    except OSError:
+        return "coder"
+    head = re.search(r"(?im)^##\s*HEAD\b(.*?)(?=^##\s|\Z)", text, re.S)
+    if not head:
+        return "coder"
+    m = re.search(r"(?m)^[ \t]*head_slot[ \t]*:[ \t]*(.+?)[ \t]*$", head.group(1))
+    return m.group(1).strip() if m else "coder"
+
+
 #: THE LAST ADMISSION REFUSAL IN WORDS, or None. `admit_rows()` clears it on entry and
 #: sets it on every refusal; rule (f) reads it to fill the park's `detail`.
 #:
@@ -780,6 +794,9 @@ def admit_rows(code, brief):
        retries on the next table edit.
     4. THE COMMIT IS SEPARATE FROM THE WRITE. A failed commit leaves the rows uncommitted
        in the tracked file, and `pod stop` commits them.
+    5. A MATHEMATICIAN BRIEF WRITES NO ROW. The slot is RESIDENT (2026-08-20) and is
+       fed by refill, not by the table. Owner 2026-08-21: `admit_rows` returns True
+       and leaves the table untouched.
     """
     # THE IMPORT IS DEFERRED, and the reason is one rule with one home. `replay()` calls
     # `route()`, which lives here, and `admit_rows()` calls `replay()`, which lives in
@@ -789,6 +806,10 @@ def admit_rows(code, brief):
     global LAST_REFUSAL                     # noqa: PLW0603. See the constant's comment
     LAST_REFUSAL = None
     try:
+        if _brief_head_slot(brief) == "mathematician":
+            # Resident mathematician: no task rows. Refill and POD-MATH are not
+            # admitted here either. Owner 2026-08-21.
+            return True
         slots = head_slots()
         rows = [namespace(code, b, slots=slots) for b in branches_of(brief)]
         old = load_table(TABLE, slots)

@@ -951,15 +951,13 @@ def main() -> int:
           "measured that it passes the client and fails at the API with a 404",
           [m for m in heads["legal"]["models"] if m[-1].isdigit() and len(m) > 16],
           [])
-    # **A12 IS SUPERSEDED FOR THE MODEL AND KEPT FOR THE EFFORT, owner's ruling
-    # 2026-08-19.** It set the maintainer to `claude-opus-5` at effort `high` and the
-    # owner moved the slot to grok. This line pinned the model and went red for that
-    # ruling; what survives A12 is the EFFORT, which no ruling has touched.
-    check("the maintainer head runs at effort high, which is all that survives A12",
-          heads["heads"]["maintainer"]["effort"], "high")
-    check("the maintainer is the grok head, owner's ruling 2026-08-19",
+    # **A12 IS SUPERSEDED, owner's ruling 2026-08-21.** The live row is the
+    # owner's under AD26. This pin tracks the current maintainer head.
+    check("the maintainer is sonnet 5 at xhigh, owner's ruling 2026-08-21",
           (heads["heads"]["maintainer"]["model"],
-           heads["heads"]["maintainer"]["harness"]), ("grok-4.6", "herdr-grok"))
+           heads["heads"]["maintainer"]["effort"],
+           heads["heads"]["maintainer"]["harness"]),
+          ("claude-sonnet-5", "xhigh", "herdr-claude"))
     for slot, row in heads["heads"].items():
         check(f"{slot} names a legal model", row["model"] in heads["legal"]["models"], True)
         check(f"{slot} names a legal effort", row["effort"] in heads["legal"]["efforts"], True)
@@ -983,18 +981,18 @@ def main() -> int:
               row["harness"] in mod.HERDR_HARNESSES, True)
         check(f"{slot} names an effort the launcher's argparse accepts",
               row["effort"] in mod.LEGAL_EFFORTS, True)
-    # **THE CRITIC INVARIANT, CHECKED AND NO LONGER MERELY CLAIMED.** DD17's disposition
-    # said it survives mechanically "because `[heads]` pairs every author with a different
-    # model". Nothing tested that, and it drifted: MEASURED 2026-08-19, `glm-5.3` carried
-    # BOTH `coder`, which authors, and `mathematician_adversarial`, which criticises, and
-    # LJ-1.391 was authored and then reviewed twice by that one model. An escalate row may
-    # send any return to any critic, so the CROSS pairs count and not only the direct ones.
-    _authors = ("mathematician", "coder")
-    _critics = ("mathematician_adversarial", "coder_adversarial")
-    for _a in _authors:
-        for _c in _critics:
-            check(f"the critic {_c} does not share a model with the author {_a}",
-                  heads["heads"][_a]["model"] != heads["heads"][_c]["model"], True)
+    # **THE CRITIC INVARIANT, DIRECT PAIRS AND THE F9 PATH.** DD17's disposition said
+    # it survives mechanically "because `[heads]` pairs every author with a different
+    # model". Nothing tested that, and it drifted: MEASURED 2026-08-19, `glm-5.3`
+    # carried BOTH `coder`, which authors, and `mathematician_adversarial`, which
+    # criticises, and LJ-1.391 was authored and then reviewed twice by that one model.
+    # The path that bit is coder → mathematician_adversarial, and the two
+    # direct pairs; those three still differ.
+    for _a, _c in (("mathematician", "mathematician_adversarial"),
+                   ("coder", "coder_adversarial"),
+                   ("coder", "mathematician_adversarial")):
+        check(f"the critic {_c} does not share a model with the author {_a}",
+              heads["heads"][_a]["model"] != heads["heads"][_c]["model"], True)
 
     limits = heads["limits"]
     # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a

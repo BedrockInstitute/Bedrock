@@ -63,6 +63,8 @@ Usage:
   pod.py status       print the state file as a table. It writes nothing
   pod.py stop         write `.pod-state/STOPPED`, wait for every RUNNING worker, then
                       commit the tracked table and log
+    --soft            DRAIN. The live loop dispatches no new agent, observes every
+                      return, and STOPs when none is RUNNING. Workers are not killed
   pod.py maintainer   print the resident head and the presets `dev/pod/heads.toml` offers
     --use NAME        copy a preset into the `[heads].maintainer` row. AD26 makes this
                       bind the NEXT head, and the slot is RESIDENT, so a live session
@@ -123,6 +125,12 @@ ROOT = find_root(__file__)
 POD_STATE = ROOT / ".pod-state"
 STATE_FILE = POD_STATE / "state.json"
 STOPPED_FILE = POD_STATE / "STOPPED"
+#: SOFT STOP. Touching it refuses new dispatches (rule (f) and rule (g)) while the
+#: loop keeps observing returns. When no task is RUNNING, RETURNED or CHECKING,
+#: the loop writes STOPPED, emits LOOP_STOPPED with why="drain", and exits.
+#: MEASURED 2026-08-20: `pod stop` wrote STOPPED and `_rule_f` returned STOP on
+#: the next tick, so in-flight agents returned with nobody accepting them.
+DRAIN_FILE = POD_STATE / "DRAINING"
 #: THE HOT RESTART, owner's ruling 2026-08-19. Touching it reloads the loop between two
 #: ticks. `cmd_run()` also reloads on its own when `scripts/pod/*.py` changes, so this
 #: file is for the case the signature cannot see: a reload the maintainer wants NOW.
@@ -278,6 +286,12 @@ REFILL_BRIEF = ROOT / "agents" / "tasks" / "POD-REFILL" / "POD-REFILL.md"
 #: AD15's `POD-BATCH`, because its return is READ OUT OF `dev/pod/queue.toml` by rule
 #: (a1) on the next tick and never routed through the table.
 REFILL_TASK = "POD-REFILL"
+
+#: The resident mathematician, owner's ruling 2026-08-20. Same shape as A17's
+#: maintainer: one herdr name, pane never closed, every task is a prompt. The
+#: standing brief starts the session; rule (f) and rule (g) then feed it.
+MATH_TASK = "POD-MATH"
+MATH_BRIEF = ROOT / "agents" / "tasks" / "POD-MATH" / "POD-MATH.md"
 
 #: The floor between two rule (g) dispatches, in hours. A mathematician that queues
 #: NOTHING is a legal return (the standing brief says so), so without a floor an empty
@@ -799,6 +813,30 @@ def _abs(path, root=None):
     return p if p.is_absolute() else root / p
 
 
+def _absorb_disk(st, root=None, keep=None):
+    """Fold any durable line this process has not seen, and take other processes' rows.
+
+    MUST RUN UNDER `pod_lock()`. `keep` is the set of task codes whose in-memory
+    objects this call is about to write. Every other row is taken from the durable
+    fold, so a `resume --retry` READY cannot be overwritten by a tick that still
+    holds the PARKED copy. `st.stopped` is left alone: `cmd_resume` clears it in
+    memory before it writes.
+
+    MEASURED 2026-08-20: `resume --retry LJ-1.386 LJ-1.390 --once` wrote PARKED→READY
+    at seq 714 and 715. The live tick still held seq 713 and the PARKED copies,
+    then `emit()` assigned those same two seqs to LJ-1.433/434 READY→RUNNING and
+    `save_state()` wrote the PARKED copies back. `replay_log()` only folds
+    `seq > st.seq`, so once the cache sat at seq 731 the READY lines were gone.
+    """
+    keep = set(keep or ())
+    fresh = replay_log(load_state(), root)
+    st.seq = max(st.seq, fresh.seq)
+    for code, disk_t in fresh.tasks.items():
+        if code in keep:
+            continue
+        st.tasks[code] = disk_t
+
+
 def emit_event(st, event, root=None, **fields):
     """One log line that is NOT a task transition, and there are exactly FIVE kinds.
 
@@ -813,9 +851,11 @@ def emit_event(st, event, root=None, **fields):
     writing them through `emit()` would need a thirteenth edge that means nothing.
     """
     root = ROOT if root is None else Path(root)
-    line = {"ts": _now_iso(), "seq": st.seq + 1, "task": "", "event": event}
+    line = {"ts": _now_iso(), "task": "", "event": event}
     line.update({k: v for k, v in fields.items() if v is not None})
     with pod_lock():
+        _absorb_disk(st, root)
+        line["seq"] = st.seq + 1
         _append_line(line, root)
         st.seq += 1
         save_state(st)
@@ -855,8 +895,16 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
 
         1. the side effect is already performed by the caller
         2. with pod_lock():                  one flock for both writers
+        2b.    absorb the durable fold: next seq, other tasks from disk
         3.     append one line to LOG; os.fsync(log_fd)
         4.     st.seq += 1; save_state(st)   tmp -> fsync -> rename -> fsync(dir)
+
+    Step 2b is why a live tick cannot clobber a `resume --retry` READY: the lock is
+    one writer at a time, but the caller's `st` was loaded at the start of the tick
+    and `replay_log()` only folds `seq > st.seq`. Without the absorb, a stale
+    `save_state(st)` writes the PARKED copies back and the READY lines are then
+    older than the cache, so they never fold. MEASURED 2026-08-20 on LJ-1.386 at
+    seq 714 (see `_absorb_disk`).
 
     A lost state file is recoverable from the log; a lost log line is recoverable from
     NOTHING. Crash window two, the side effect done and the log not written, is safe for a
@@ -870,7 +918,7 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
     if (frm, to) not in TRANSITIONS_LEGAL and to != LOOP_STOPPED:
         raise PodError(f"{code}: {frm} -> {to} is not a legal transition, section 5.2")
 
-    line = {"ts": _now_iso(), "seq": st.seq + 1, "task": code,
+    line = {"ts": _now_iso(), "task": code,
             "from": frm, "to": to}
     if rec is not None:
         # A PARK line carries `"row": null` and the record that matched nothing, so the
@@ -890,6 +938,8 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
         line.setdefault("heads_sha256", _heads_sha())
 
     with pod_lock():
+        _absorb_disk(st, root, keep={code} if code else set())
+        line["seq"] = st.seq + 1
         _append_line(line, root)           # STEP 3. The log line is durable FIRST.
         if "facts" in line and "row" in line:
             corpus_append(line)            # section 4.5.2, the `live` stream
@@ -1150,12 +1200,17 @@ def salvage_worktree(t, root=None):
 
     **IT NEVER MERGES, SO IT CANNOT CONFLICT.** A patch or a cherry-pick is a three-way
     merge and a merge needs judgement when it fails. This is a path list and a file copy.
-    A COMMIT on main after the fork is still a collision: rule (c) parks with `salvage:`
-    and the resident maintainer reads it. AD1 keeps the program out of that merge.
-    Uncommitted dirt under THIS task's home is not that collision. MEASURED 2026-08-20
-    on LJ-1.388: the pre-isolation report sat dirty in main, the isolated return had
-    already matched `sys-obligations-satisfied`, and `git diff base -- path` refused
-    the copy. The worktree is the scene.
+    A COMMIT on main after the fork is still a collision, but only for a path
+    the worker actually changed: a seeded file the worktree still holds at
+    `base` is skipped, because copying it can only clobber the main-tree
+    edit. MEASURED 2026-08-20 on LJ-1.386: A21 committed `head_slot: coder`
+    into the brief after the worktree forked; salvage walked the whole home;
+    the untouched brief collided; `sys-obligations-satisfied` parked
+    `salvage:` and re-accepted in a loop. AD1 keeps the program out of a
+    merge. Uncommitted dirt under THIS task's home is not that collision.
+    MEASURED 2026-08-20 on LJ-1.388: the pre-isolation report sat dirty in
+    main, the isolated return had already matched `sys-obligations-satisfied`,
+    and `git diff base -- path` refused the copy. The worktree is the scene.
     """
     root = ROOT if root is None else Path(root)
     wt = worktree_of(t.code, root)
@@ -1177,6 +1232,26 @@ def salvage_worktree(t, root=None):
         wsrc, mdst = wt / rel, root / rel
         if not wsrc.is_file():
             continue                           # the worker wrote nothing there
+        # IDENTICAL BYTES ARE A NO-OP. Copying would not change main and must
+        # not count as a collision. MEASURED 2026-08-20 on LJ-1.386 after the
+        # skip-unchanged-from-fork patch: the worktree brief had picked up the
+        # same `head_slot: coder` line main already held, `git diff base`
+        # was therefore dirty, and salvage still parked.
+        if mdst.is_file() and wsrc.read_bytes() == mdst.read_bytes():
+            continue
+        # UNCHANGED-FROM-FORK IS SEED, NOT WORK. Copying it can only clobber a
+        # main-tree edit of the same path. MEASURED 2026-08-20 on LJ-1.386:
+        # the worktree forked before the A21 `head_slot: coder` commit of the
+        # brief; salvage walked the whole task home; the brief collided; a
+        # `sys-obligations-satisfied` close parked `salvage:` and re-accepted
+        # in a loop (seq 753, 774, 777, 786, 804). A new file is not in
+        # `base` (`cat-file` fails) and is still copied, which is the
+        # `review-of-*.md` case LJ-1.399 measured.
+        rc_seed, _ = _git(["cat-file", "-e", f"{base}:{rel}"], wt)
+        if rc_seed == 0:
+            rc_same, _ = _git(["diff", "--quiet", base, "--", rel], wt)
+            if rc_same == 0:
+                continue
         # THE ONE CHECK: has the MAIN tree moved this path since the worktree forked?
         rc_b, _ = _git(["cat-file", "-e", f"{base}:{rel}"], root)
         rc_d, _ = _git(["diff", "--quiet", base, "--", rel], root)
@@ -2007,19 +2082,20 @@ def _limits():
 
 
 def head_slot_of(brief, root=None):
-    """The `head_slot:` line of a brief's `## HEAD` block, or the mathematician.
+    """The `head_slot:` line of a brief's `## HEAD` block, or the coder.
 
     Pre-flight P11 refuses a slot that `heads.toml` does not name, so by the time rule (f)
-    reads it the value is legal. A brief that names none gets `mathematician`, which AD24
-    makes the default author.
+    reads it the value is legal. A brief that names none gets `coder`: the mathematician
+    is RESIDENT (2026-08-20) and is not a queue task. Owner 2026-08-21: a dispatched
+    task's default author is the coder.
     """
     root = ROOT if root is None else Path(root)
     p = Path(brief) if Path(brief).is_absolute() else root / brief
     try:
         text = p.read_text(encoding="utf-8")
     except OSError:
-        return "mathematician"
-    return preflight_mod.head_field(text, "head_slot") or "mathematician"
+        return "coder"
+    return preflight_mod.head_field(text, "head_slot") or "coder"
 
 
 def machine_class(brief, root=None):
@@ -2123,6 +2199,9 @@ def review_brief(t, slot, root=None):
         "",
         "## THE OBLIGATION",
         f"Attack the return of {pred}. Write {outfile} and nothing else.",
+        "If you UPHELD the predecessor's NO-GO, that file plus exit 0 closes the",
+        "task (row sys-critic-upheld-no-go). Put `verdict: upheld` in HEAD when you",
+        "agree, or `verdict: overturned` when you do not.",
         "",
         "## WHAT YOU READ, and all of it is tracked",
         f"- the newest `agents/tasks/{agents_tree.normalise(t.code)}/*-report.md`",
@@ -2280,12 +2359,24 @@ def launch(t, brief, role, root=None):
         # THE TASK'S OWN CHECKOUT, when isolation is on. `make_worktree()` returns None
         # on any refusal and the dispatch then runs in the main tree, because a worker
         # that cannot be isolated is still a worker and this must never be a refusal.
-        wd = make_worktree(t.code, root) if WORKTREE_ISOLATION else None
+        # The mathematician is RESIDENT, owner's ruling 2026-08-20. It runs in
+        # the main tree (it writes briefs, never Agda) and reuses one herdr
+        # agent. Isolation stays for the four dispatched slots.
+        resident = role == "mathematician"
+        agent_name = None
+        if resident:
+            hn = getattr(mod, "herdr_name", None)
+            agent_name = (hn(MATH_TASK) if callable(hn)
+                          else MATH_TASK.lower().replace(".", "-"))
+        wd = None if resident else (
+            make_worktree(t.code, root) if WORKTREE_ISOLATION else None)
         with contextlib.redirect_stderr(buf):
-            rc = mod.launch(t.code, path, bool(t.agda), head["sandbox"], head["model"],
+            rc = mod.launch(t.code, path, False if resident else bool(t.agda),
+                            head["sandbox"], head["model"],
                             effort=head["effort"], tier=tier_of(t),
                             preamble=preamble_for(role, root),
-                            provider=head.get("pi_provider"), workdir=wd)
+                            provider=head.get("pi_provider"), workdir=wd,
+                            resident=resident, agent_name=agent_name)
     except SystemExit:
         _tee(buf)
         return None                            # the launcher REFUSED on a corrupt registry
@@ -2299,7 +2390,8 @@ def launch(t, brief, role, root=None):
         # **THE HARNESS IS PASSED AND IT USED TO BE ASSUMED.** The guard reads a banner
         # marker and only `herdr-claude` had one, so it silently passed every other
         # harness. The head is already in hand here; nothing needs to look it up.
-        if not model_readback_ok(mod.herdr_name(t.code), head["model"],
+        hname = agent_name or mod.herdr_name(t.code)
+        if not model_readback_ok(hname, head["model"],
                                  head.get("harness")):
             return None
         with mod.registry_lock():
@@ -2386,10 +2478,45 @@ def _committable(rel, root):
     return full.is_file()
 
 
+def _a21_probe_paths(rec):
+    """Task-home Agda A21 dropped from matching. The coder wrote it; src/ stays out.
+
+    MEASURED 2026-08-20 on LJ-1.439: `commit_task()` committed fact 4 only, so
+    `56d6af4` landed the report and the run logs and left `Probe439.agda`
+    untracked. The same shape holds for LJ-1.422, 425, 426, 427, 435 and 436.
+    `dev/pod/instructions/coder.md` says a probe is tracked and is never deleted.
+    """
+    out = []
+    for p in rec.get("changed_files_refused") or []:
+        if (isinstance(p, str) and p.endswith(".agda")
+                and p.startswith("agents/tasks/") and p not in out):
+            out.append(p)
+    return out
+
+
+def _git_untracked(rel, root):
+    """True when git does not track `rel`."""
+    try:
+        r = subprocess.run(["git", "ls-files", "--error-unmatch", "--", rel],
+                           cwd=root, capture_output=True, text=True)
+    except OSError:
+        return False
+    return r.returncode != 0
+
+
 def _close_commit_paths(rec, root):
-    """The committable slice of fact 4, and the named paths the main tree does not hold."""
+    """The committable slice of fact 4, plus task-home Agda A21 dropped from matching.
+
+    A21's penalty is the match: the record cannot show the work and no row can
+    fire on it. The files stay on disk as evidence (`accept.py:414-420`). A
+    probe under the task home is that evidence, and the DONE commit is what
+    tracks it. `src/` Agda a mathematician wrote is still refused.
+    """
     named = [p for p in (rec.get("facts") or {}).get("changed_files") or []
              if isinstance(p, str)]
+    for p in _a21_probe_paths(rec):
+        if p not in named:
+            named.append(p)
     paths = [p for p in named if _committable(p, root)]
     gone = [p for p in named if p not in paths]
     return paths, gone
@@ -2476,10 +2603,14 @@ _REFUSED_COMMIT_TRIED = set()
 
 
 def retry_refused_commits(st, root=None):
-    """Commit a DONE close whose `commit_task()` recorded `commit: refused`.
+    """Commit a DONE close whose `commit_task()` recorded `commit: refused`,
+    or whose A21-refused task-home probe stayed untracked after a clean close.
 
     Once per code per process. The files are already in the main tree (salvage ran
     before the close). This is not a re-dispatch and not a re-accept.
+
+    MEASURED 2026-08-20 on LJ-1.439: `commit: clean` and `Probe439.agda` untracked,
+    because A21 dropped it from fact 4 and the close committed the rest.
     """
     root = ROOT if root is None else Path(root)
     changed = False
@@ -2487,16 +2618,26 @@ def retry_refused_commits(st, root=None):
         if t.status != DONE or t.code in _REFUSED_COMMIT_TRIED:
             continue
         rec = t.record
-        if not isinstance(rec, dict) or rec.get("commit") != "refused":
+        if not isinstance(rec, dict):
             continue
         paths, _gone = _close_commit_paths(rec, root)
+        leftover = False
+        if rec.get("commit") == "refused":
+            message = f"pod: {t.code} done, row {t.row}"
+        elif rec.get("commit") == "clean":
+            paths = [p for p in paths
+                     if p in _a21_probe_paths(rec) and _git_untracked(p, root)]
+            message = f"pod: {t.code} probe, A21-refused on close"
+            leftover = True
+        else:
+            continue
         if not paths:
             continue
         _REFUSED_COMMIT_TRIED.add(t.code)
         ok = False
         try:
             ok = table_mod.git_commit([root / p for p in paths],
-                                      f"pod: {t.code} done, row {t.row}", root=root)
+                                      message, root=root)
         except Exception as e:                 # noqa: BLE001
             rec["commit"] = f"raised {type(e).__name__}: {e}"[:200]
             rec["commit_note"] = str(e)[:400]
@@ -2504,13 +2645,16 @@ def retry_refused_commits(st, root=None):
             rec["commit"] = "clean" if ok else "refused"
             if ok:
                 rec.pop("commit_note", None)
-                print(f"pod: committed refused close of {t.code}", file=sys.stderr)
+                what = "A21-refused probe" if leftover else "refused close"
+                print(f"pod: committed {what} of {t.code}", file=sys.stderr)
                 changed = True
             else:
                 rec["commit_note"] = (table_mod.GIT_COMMIT_ERROR or "")[:400]
     if changed:
         try:
-            save_state(st, path=Path(root) / ".pod-state" / "state.json")
+            with pod_lock():
+                _absorb_disk(st, root)
+                save_state(st, path=Path(root) / ".pod-state" / "state.json")
         except PodError:
             pass
 
@@ -2721,8 +2865,9 @@ def dispatchable_entries(st):
     """Every `dev/pod/queue.toml` entry rule (a1) would still turn into a task.
 
     A11 counts THIS and not the raw entries. An entry with no `brief` is a REQUEST and
-    never a task (section 5.2), and an entry whose code already carries a state record was
-    created on an earlier tick, so neither one is work waiting for a free slot.
+    never a task (section 5.2), an entry whose code already carries a state record was
+    created on an earlier tick, and an entry whose brief names `head_slot: mathematician`
+    is not a task (the mathematician is resident; owner 2026-08-21).
     """
     out = []
     for e in queue_entries():
@@ -2730,6 +2875,11 @@ def dispatchable_entries(st):
         if not isinstance(code, str) or not isinstance(brief, str) or not brief:
             continue
         if code in st.tasks:
+            continue
+        # The mathematician is RESIDENT. A queue entry that names that slot is
+        # not a TASK: refill feeds the standing agent, and admit_rows writes no
+        # row for it. Owner 2026-08-21.
+        if head_slot_of(brief) == "mathematician":
             continue
         out.append(e)
     return out
@@ -2910,7 +3060,18 @@ def harvest_batch(st, root=None):
         try:
             slots = table_mod.head_slots(root)
             old = table_mod.load_table(TABLE, slots)
-            new = old + [table_mod.check_row(dict(r), slots) for r in rows]
+            # Owner 2026-08-21: the mathematician is resident. A proposal row
+            # that names that slot as `head_slot` would dispatch a TASK to it.
+            incoming = [table_mod.check_row(dict(r), slots) for r in rows]
+            incoming = [r for r in incoming
+                        if r.get("head_slot") != "mathematician"]
+            if not incoming:
+                out.append(emit_event(st, "batch", result="empty",
+                                      proposal=rel, root=root,
+                                      why="mathematician task rows dropped"))
+                retire_proposal(path, "empty", root)
+                continue
+            new = old + incoming
             table_mod.check_table(new, slots)
             verdict, moved = replay_mod.replay(old, new, replay_mod.corpus())
         except Exception as e:                 # noqa: BLE001. A PROPOSAL IS UNTRUSTED TEXT
@@ -2944,7 +3105,7 @@ def harvest_batch(st, root=None):
                                   root=root))
             continue
         out.append(emit_event(st, "batch", result="admit",
-                              proposal=rel, rows=len(rows), root=root))
+                              proposal=rel, rows=len(incoming), root=root))
     return out
 
 
@@ -3197,6 +3358,94 @@ def prompt_maintainer(st, root=None):
     return rel
 
 
+def mathematician_alive(root=None):
+    """Is the resident mathematician's herdr agent present, in ANY status?
+
+    Same test as `maintainer_alive()`: `done` is not a death, and an unreadable
+    list returns True so this never starts a second session beside a live one.
+    """
+    mod = facts_mod.launcher()
+    if mod is None:
+        return True
+    try:
+        if not mod.herdr_present():
+            return True
+        agents, err = mod.herdr_agents()
+    except Exception:                          # noqa: BLE001
+        return True
+    if err:
+        return True
+    want = mod.herdr_name(MATH_TASK)
+    return any(a.get("name") == want for a in agents)
+
+
+def mathematician_busy(st, root=None):
+    """True when the resident mathematician is already on a turn.
+
+    One agent, one prompt at a time. A second READY mathematician task, or a
+    refill, waits. Prompting a working head queues (C-61) and the waiter for
+    the second task would then read the FIRST turn's idle as its own return.
+    """
+    if any(getattr(t, "role", None) == "mathematician" and t.status == RUNNING
+           for t in st.tasks.values()):
+        return True
+    mod = facts_mod.launcher()
+    if mod is None:
+        return True
+    try:
+        if not mod.herdr_present():
+            return False
+        agents, err = mod.herdr_agents()
+    except Exception:                          # noqa: BLE001
+        return True
+    if err:
+        return True
+    want = mod.herdr_name(MATH_TASK)
+    for a in agents:
+        if a.get("name") == want:
+            return a.get("agent_status") in ("working", "blocked")
+    return False
+
+
+def ensure_mathematician(st, root=None):
+    """Start the resident mathematician if it is not there. IDEMPOTENT, every tick.
+
+    Owner's ruling 2026-08-20. The standing brief
+    `agents/tasks/POD-MATH/POD-MATH.md` starts the session. Rule (f) and rule (g)
+    then prompt that same agent. Isolation is off for this slot: it writes
+    briefs in the main tree and never Agda.
+    """
+    root = ROOT if root is None else Path(root)
+    if mathematician_alive(root):
+        return None
+    if any(x.exclusive for x in st.tasks.values()
+           if x.status in (RUNNING, CHECKING)):
+        return None
+    brief = root / MATH_BRIEF.relative_to(ROOT)
+    if not brief.is_file():
+        return None
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    try:
+        head = heads_mod.head("mathematician")
+        mod.HARNESS = head["harness"]
+        rc = mod.launch(MATH_TASK, brief, False, head["sandbox"], head["model"],
+                        effort=head["effort"],
+                        preamble=preamble_for("mathematician", root),
+                        provider=head.get("pi_provider"), resident=True,
+                        agent_name=mod.herdr_name(MATH_TASK))
+    except SystemExit:
+        return None
+    except Exception:                          # noqa: BLE001
+        return None
+    if rc != 0:
+        return None
+    rel = str(brief.relative_to(root))
+    emit_event(st, "math-session", result="started", brief=rel, root=root)
+    return rel
+
+
 def write_digest(st, root=None):
     """Section 8's digest. It hangs off the same trigger as the maintainer batch.
 
@@ -3350,8 +3599,9 @@ def pod_tick(st=None, root=None):
         return STOP
     # **RULE (e) RUNS BEFORE RULE (d), AND THE OLD ORDER SUPPRESSED THE ONE ROLE THAT
     # CLEARS A PARK.** (d)'s STOP means STOP DISPATCHING. (e) dispatches no worker: it
-    # starts and feeds the RESIDENT maintainer, which is the role that writes the rows a
-    # parked task is waiting for. Stopping at `parked_max` without telling the repairman
+    # starts and feeds the RESIDENT maintainer, and since 2026-08-20 also ensures the
+    # resident mathematician. The maintainer writes the rows a parked task is waiting
+    # for. Stopping at `parked_max` without telling the repairman
     # is backwards, and the owner's ruling of 2026-08-19 says so in numbers: the
     # maintainer is fed at three parks and the loop halts at seven so the repairman gets
     # four parks of warning.
@@ -3375,7 +3625,9 @@ def _rule_a1(st, root):
     """(a1) CREATE. `dev/pod/queue.toml` is the ONLY producer of a task.
 
     An entry with no `brief` is a REQUEST and never a task, so it is skipped here and the
-    digest prints it until the mathematician adds the brief path.
+    digest prints it until the mathematician adds the brief path. An entry whose brief
+    names `head_slot: mathematician` is also not a task: the mathematician is resident
+    and is fed by refill, not by this queue (owner 2026-08-21).
     """
     for e in dispatchable_entries(st):
         code, brief = e["code"], e["brief"]
@@ -3961,6 +4213,7 @@ def _rule_e(st, root):
     # liveness is not on the batch clock. A tick that had to START it also handed it a
     # brief, so that tick does NOT also prompt: `started` is the whole of that guard.
     started = ensure_maintainer(st, root)
+    ensure_mathematician(st, root)
     # **THE PARKED HALF IS AN EDGE AND NOT A LEVEL.** `st.count(PARKED) >= 3` held at
     # every tick once three tasks were parked, so it prompted the maintainer every
     # `tick_seconds` for ever: MEASURED 2026-08-19 at 07:05:03, 07:05:34, 07:06:06 and
@@ -3995,6 +4248,17 @@ def _rule_f(st, root):
     dispatch point of fact 3 run.
     """
     if STOPPED_FILE.exists():
+        return STOP
+    if DRAIN_FILE.exists():
+        # DISPATCH NOTHING. Observe until every in-flight return has been
+        # accepted. READY that was never launched is not an agent and is left.
+        if st.count(RUNNING) or st.count(RETURNED) or st.count(CHECKING):
+            return CONTINUE
+        emit(st, "", NONE, LOOP_STOPPED, why="drain", root=root)
+        STOPPED_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STOPPED_FILE.touch()
+        with contextlib.suppress(OSError):
+            DRAIN_FILE.unlink()
         return STOP
     ready = sorted(st.of(READY), key=lambda t: (_int(t.attempt, 0), str(t.code)))
     for t in ready:
@@ -4031,6 +4295,8 @@ def _rule_f(st, root):
         else:
             b, role = t.brief, head_slot_of(t.brief, root)
         t.head_slot = None                     # R11. The head is resolved once, here
+        if role == "mathematician" and mathematician_busy(st, root):
+            continue                           # one resident turn at a time
         try:
             t.unbound_before = accept_mod.unbound_findings(root)
             # Fact 3 at dispatch, 4.7. Under isolation the probe lives in the
@@ -4083,6 +4349,9 @@ def _rule_g(st, root):
     read out of `dev/pod/queue.toml` by rule (a1) on the next tick, so routing it through
     the table would park it for no match and count against AD14's three.
 
+    A DRAIN REFUSES THIS RULE. A refill is a new agent. `.pod-state/DRAINING` means
+    observe what is already RUNNING and launch nothing, including the mathematician.
+
     A REFILL THAT OUTLIVES THE FLOOR IS THE LAUNCHER'S REFUSAL, and it is recorded. The
     launcher refuses a second dispatch under a live task name and a second dispatch on a
     live brief, so an hour-old refill still working writes `result: "REFUSED"` here and
@@ -4095,6 +4364,10 @@ def _rule_g(st, root):
     # cannot loop because `direction_changed()` records the sha in the call that reports
     # it. What to do with the entries already queued is the MATHEMATICIAN's call and
     # never the program's: AD3, and the owner ruled it again on 2026-08-18.
+    if DRAIN_FILE.exists() or STOPPED_FILE.exists():
+        return None
+    if mathematician_busy(st, root):
+        return None                            # the resident mathematician is mid-turn
     fresh = direction_changed(st, root)
     if not fresh and (st.of(READY) or dispatchable_entries(st)):
         return None
@@ -4137,10 +4410,14 @@ def _rule_g(st, root):
         head = heads_mod.head("mathematician")
         mod.HARNESS = head["harness"]
         with contextlib.redirect_stderr(buf):
+            hn = getattr(mod, "herdr_name", None)
+            math_name = (hn(MATH_TASK) if callable(hn)
+                         else MATH_TASK.lower().replace(".", "-"))
             rc = mod.launch(REFILL_TASK, brief_path, False, head["sandbox"],
                             head["model"], effort=head["effort"],
                             preamble=preamble_for("mathematician", root),
-                            provider=head.get("pi_provider"))
+                            provider=head.get("pi_provider"), resident=True,
+                            agent_name=math_name)
     except SystemExit:
         _tee(buf)
         rc, why = 1, LAUNCH_REFUSAL or "the launcher refused"
@@ -4816,6 +5093,8 @@ def cmd_resume(argv):
     """
     if STOPPED_FILE.exists():
         STOPPED_FILE.unlink()
+    if DRAIN_FILE.exists():
+        DRAIN_FILE.unlink()
     st = load_state()
     replay_log(st)
     # **THE STATUS LINE SAID `stopped` FOR A LOOP THAT WAS DEMONSTRABLY RUNNING.**
@@ -4879,7 +5158,11 @@ def cmd_resume(argv):
     _rule_a2(st, ROOT)
     # UNDER THE LOCK, because `resume` may run beside a live loop: `cmd_run()` re-reads
     # the state every tick and writes it through `emit()`, which takes this same lock.
+    # Absorb first, so a dispatch the loop wrote between this process's last emit and
+    # this save is not overwritten by the in-memory copy loaded at the start of resume.
     with pod_lock():
+        _absorb_disk(st, ROOT)
+        st.stopped = None
         save_state(st)                         # `st.stopped = None` above must be durable
     print(f"pod resume: {before} parked, {st.count(PARKED)} still parked, "
           f"{st.count(READY)} ready")
@@ -4894,6 +5177,7 @@ def cmd_status(argv):
     replay_log(st)
     print(f"pod status: seq {st.seq}, "
           f"stopped {st.stopped or 'no'}, "
+          f"draining {'yes' if DRAIN_FILE.exists() else 'no'}, "
           f"table {'present' if TABLE.is_file() else 'ABSENT'}, "
           f"parked {st.count(PARKED)}/{_limits()['parked_max']}")
     if not st.tasks:
@@ -4920,9 +5204,27 @@ def cmd_stop(argv):
     stopped the watcher shell that had launched them into its own process group
     (`scripts/pod/launcher.py:7-9`).
 
+    `--soft` WRITES `.pod-state/DRAINING` AND RETURNS. The live loop, not this
+    process, waits: rule (f) launches nothing, rules (a1) to (e) still observe
+    and close, and the loop STOPs when no task is RUNNING, RETURNED or CHECKING.
+    A hard STOPPED file makes `_rule_f` return STOP on the next tick, so a
+    return after that tick has nobody accepting it.
+
     Run it before the checklists of sections 9.1 and 9.2: both require a clean tree and
     this is what commits the tracked table and the tracked log.
     """
+    if "--soft" in argv:
+        try:
+            POD_STATE.mkdir(parents=True, exist_ok=True)
+            DRAIN_FILE.touch()
+        except OSError as e:
+            print(f"pod stop: REFUSED. cannot write {DRAIN_FILE}: {e}", file=sys.stderr)
+            return 1
+        st = load_state()
+        replay_log(st)
+        print(f"pod stop: DRAINING. {st.count(RUNNING)} running. The loop will "
+              "dispatch nothing and STOP when every agent has returned.")
+        return 0
     try:
         POD_STATE.mkdir(parents=True, exist_ok=True)
         STOPPED_FILE.touch()
@@ -5145,6 +5447,7 @@ def cmd_maintainer(argv):
     st = load_state()
     replay_log(st)
     with pod_lock():
+        _absorb_disk(st, ROOT)
         rel = ensure_maintainer(st, ROOT)
         save_state(st)
     if rel is None:

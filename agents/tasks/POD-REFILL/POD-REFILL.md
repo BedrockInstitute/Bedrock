@@ -2,7 +2,7 @@
 
 **This file is a STANDING BRIEF and the program never rewrites it.** Rule (g) of
 `pod_tick()` sends it when a slot is free AND `dev/pod/queue.toml` holds no
-dispatchable entry. Amendment A11 of `dev/memos/L9-pod-program-design.md` rules it.
+dispatchable entry. Amendment A11 of `dev/memos/LJ-4-pod-program-design.md` rules it.
 
 **WHY IT EXISTS.** DD17 said an idle agent slot is a defect. The POD's rule set
 supersedes DD17, and gap M12 recorded the loss: `admits()` caps concurrency and
@@ -24,28 +24,10 @@ machine: shared
 
 Write the next task or tasks into `dev/pod/queue.toml`, so the loop has work.
 
-**EVERY BRIEF YOU WRITE MUST CHOOSE ITS `head_slot`, AND THE CODER IS THE DEFAULT
-FOR CODE.** Owner's ruling, 2026-08-19. The brief and the report are the channel
-between the two roles, and that channel is the centre of this design:
-
-- **YOU WRITE NO AGDA, NOT A DELIVERABLE AND NOT A PROBE.** Every task that needs Agda
-  written carries `head_slot: coder`. State the obligation, the file, the statement it
-  must discharge, the scope and the branches; the coder writes it.
-- **W3 IS SPECIFIED BY YOU AND EXECUTED BY THE CODER.** You name the widest unmeasured
-  term and the probe that settles it. The coder writes that probe, runs it while its
-  task is live, and reports the number it measured.
-- **The coder answers in its report**, and that report is what you read to write the
-  next brief. A brief that names no file and no statement gives the coder nothing to
-  answer with.
-- `head_slot: mathematician` is for reading and judgement: a survey, a re-pricing, a
-  ruling, a re-plan of the queue. It is never for putting Agda in the tree.
-
-**MEASURED 2026-08-19, and this clause exists because of it: the `coder` slot had no
-reachable path at all.** Every `head_slot` in `dev/pod/table.toml` named
-`mathematician_adversarial` or `coder_adversarial`, every brief in the tree named
-`mathematician`, and no coder had ever been dispatched. The slot existed in
-`dev/pod/heads.toml` and in `dev/pod/instructions/coder.md`, and nothing could reach
-it, because the one producer of tasks was never told it was there.
+**Your standing clauses already bind.** This prompt is the refill only. It does
+not recat the slot file or `AGENTS.md`. Read `dev/pod/direction.md`; it may have
+changed this hour. Queue coder briefs. Do not queue a mathematician TASK. A
+survey, a re-pricing or a ruling belongs in this return.
 
 ## OBLIGATION NAMES
 
@@ -62,16 +44,18 @@ meter reads an empty obligation list and returns the vacuous pass of section 4.7
 
 1. **The queue is empty or holds nothing dispatchable, and a slot is free.** The
    program measured both before it sent this. You do not re-check them.
-2. **The route is `dev/PLAN.md`.** Section 0 says where the work stands and section
-   11 carries the goal registry. Both are live documents.
+2. **The screen is `dev/pod/screen.toml`.** It states where the work stands today,
+   and it is the only place that does. `dev/pod/queue.toml` is the task producer.
+   Live rulings sit in `dev/pod/rulings.toml`.
 3. **`[LJ-2.5]` is the open architecture question.** The two towers and the bridge
    are a CANDIDATE and not a ruling, and only a measurement settles them. Clause W1
    is the rule.
 
 ## WHAT IS DELIVERED ALREADY
 
-`dev/PLAN.md` section 0 and its open-work list. Read them before you write a row.
-The transition log holds every task the loop has closed, with its outcome.
+`dev/pod/screen.toml` and the open-work list in `dev/pod/queue.toml`. Read them
+before you write a row. The transition log holds every task the loop has closed,
+with its outcome.
 
 ## WHAT IS MISSING
 
@@ -79,9 +63,9 @@ That is your question to answer.
 
 ## THE REASONING
 
-Read `dev/PLAN.md` section 0, the open-work list and the most recent DONE lines of
-the transition log. Pick the work that unblocks the most, and prefer a task whose
-obligation list you can state as names.
+Read `dev/pod/screen.toml`, the open-work list in `dev/pod/queue.toml` and the
+most recent DONE lines of the transition log. Pick the work that unblocks the
+most, and prefer a task whose obligation list you can state as names.
 
 **THINK SEVERAL MOVES AHEAD AND QUEUE A SEQUENCE, NOT ONE TASK.** Owner's ruling,
 2026-08-19. One dispatch of yours should carry FOUR OR FIVE coder tasks: a line of
@@ -155,8 +139,8 @@ records, and a task queued without them repeats work that is already delivered.
   already carry the content a new task would rebuild.
 - `archive/dev/TASKS-archived.md` says what each retired dispatch found.
 - `archive/dev/JOURNAL-archived.md` says why, and it carries the episodes.
-- `archive/dev/DECISIONS-archived.md` holds the archived `D` rulings. The live rulings
-  are the written clauses of `dev/memos/L9-pod-program-design.md` section 3.1.
+- `archive/dev/DECISIONS-archived.md` holds the archived `D` rulings. The live
+  rulings are `dev/pod/rulings.toml`.
 
 **If nothing in the archives bears on the task you queue, say so in one line and name
 the archives you read.** A `NO HIT` is a first-class result here.
