@@ -1,0 +1,2 @@
+pass      exit=0        2.51s  agents/tasks/LJ-1-491/Probe491.agda::kvalue-with-omega
+witness: 0 UNRESOLVED of 1, 2.51 s, probe_red=False

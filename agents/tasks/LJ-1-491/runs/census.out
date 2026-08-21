@@ -1,0 +1,1 @@
+src/L/Condensation.lagda.md:7380:module KValue (lam : V ℓ) (ordλ : IsOrd lam)
