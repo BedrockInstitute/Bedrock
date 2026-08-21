@@ -1,0 +1,2 @@
+No virtualenv at .venv/. Run: make venv
+make: *** [venv-check] Error 1
