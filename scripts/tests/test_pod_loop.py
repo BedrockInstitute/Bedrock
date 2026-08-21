@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import datetime
 import importlib.util
+import inspect
 import json
 import os
 import re
@@ -328,7 +329,10 @@ class LoopCase(unittest.TestCase):
 
     def patch_side_effects(self):
         """Every side effect a tick can have becomes a recorder. NOTHING is dispatched."""
-        def fake_launch(t, brief, role, root=None):
+        # `st` IS THE FIFTH ARGUMENT SINCE A27, and rule (f) passes it positionally. A
+        # stub with the old four-argument shape reads that as `TypeError` and the whole
+        # dispatch dies as a park, which is exactly how this stub failed on 2026-08-21.
+        def fake_launch(t, brief, role, root=None, st=None):
             self.calls["launch"].append((t.code, str(brief), role, t.attempt))
             t.pid, t.proc_start, t.started = 4242, "start", time.strftime(
                 "%Y-%m-%d %H:%M:%S")
@@ -2118,7 +2122,7 @@ class RuleF(LoopCase):
         self.patch(table_mod, "admit_rows",
                    lambda c, b: order.append("admit") or real(c, b))
         self.patch(pod, "launch",
-                   lambda t, b, r, root=None: order.append("launch") or 1)
+                   lambda t, b, r, root=None, st=None: order.append("launch") or 1)
         st, _ = self.ready()
         pod._rule_f(st, self.tmp)
         self.assertEqual(order, ["admit", "launch"])
@@ -2157,7 +2161,7 @@ class RuleF(LoopCase):
             self.tmp / "dev" / "pod" / "table.toml"), [])
 
     def test_a_launch_refusal_parks_and_is_NEVER_silent(self):
-        self.patch(pod, "launch", lambda t, b, r, root=None: None)
+        self.patch(pod, "launch", lambda t, b, r, root=None, st=None: None)
         st, t = self.ready()
         pod._rule_f(st, self.tmp)
         self.assertEqual(t.park_reason, "launch")
@@ -3131,12 +3135,18 @@ class Heads(LoopCase):
         self.assertEqual(sorted(cfg["heads"]),
                          ["coder", "coder_adversarial", "maintainer",
                           "mathematician", "mathematician_adversarial"])
-        for slot, row in cfg["heads"].items():
-            self.assertIn(row["model"], cfg["legal"]["models"], slot)
-            self.assertIn(row["effort"], cfg["legal"]["efforts"], slot)
-            self.assertTrue(row["harness"], slot)
-        self.assertEqual(cfg["heads"]["maintainer"]["effort"], "xhigh")
-        self.assertEqual(cfg["heads"]["maintainer"]["model"], "claude-sonnet-5")
+        # A27: A SLOT MAPS TO A LIST, ALWAYS, whichever of the two spellings the file
+        # uses. One shape is what stops a reader branching on the type it happened to get.
+        for slot, rows in cfg["heads"].items():
+            self.assertIsInstance(rows, list, slot)
+            self.assertTrue(rows, slot)
+            for row in rows:
+                self.assertIn(row["model"], cfg["legal"]["models"], slot)
+                self.assertIn(row["effort"], cfg["legal"]["efforts"], slot)
+                self.assertTrue(row["harness"], slot)
+        maint = heads_mod.head("maintainer", self.tmp / "dev" / "pod" / "heads.toml")
+        self.assertEqual(maint["effort"], "xhigh")
+        self.assertEqual(maint["model"], "claude-sonnet-5")
         for k in heads_mod.LIMIT_KEYS:
             self.assertGreater(cfg["limits"][k], 0, k)
 
@@ -3164,10 +3174,184 @@ class Heads(LoopCase):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
     def test_the_critic_is_never_the_same_model_as_the_author(self):
-        """DD25's invariant survives mechanically, by construction of `[heads]`."""
-        cfg = heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml")
-        self.assertNotEqual(cfg["heads"]["mathematician"]["model"],
-                            cfg["heads"]["mathematician_adversarial"]["model"])
+        """DD25's invariant survives mechanically, by construction of `[heads]`.
+
+        **A27 MADE THIS A SET COMPARISON AND NOT A STRING ONE.** An author slot may now
+        carry two models, and the invariant is that NO model of the author is a model of
+        the critic: one shared string is one review a model gives its own work.
+        """
+        p = self.tmp / "dev" / "pod" / "heads.toml"
+        for author, critic in (("mathematician", "mathematician_adversarial"),
+                               ("coder", "coder_adversarial"),
+                               ("coder", "mathematician_adversarial")):
+            a = {r["model"] for r in heads_mod.configs(author, p)}
+            c = {r["model"] for r in heads_mod.configs(critic, p)}
+            self.assertEqual(a & c, set(), f"{critic} shares a model with {author}")
+
+    # ---------------------------------------------------- A27, the multi-model slot
+
+    def cfgs(self):
+        """Every config of the live `coder` slot, through the loader the program uses."""
+        return heads_mod.configs("coder", self.tmp / "dev" / "pod" / "heads.toml")
+
+    def test_the_single_table_spelling_still_loads_and_still_means_one_head(self):
+        """**BACKWARD COMPATIBILITY IS THE POINT OF THE SUPERSET.** Four slots were not
+        touched by A27 and must load byte-for-byte as they did, so this asserts the SHAPE
+        of the return and not only that the file parses."""
+        p = self.tmp / "dev" / "pod" / "heads.toml"
+        for slot in ("mathematician", "mathematician_adversarial",
+                     "coder_adversarial", "maintainer"):
+            rows = heads_mod.configs(slot, p)
+            self.assertEqual(len(rows), 1, slot)
+            self.assertIsNone(rows[0]["max_concurrency"], slot)
+            # `head()` WITHOUT A MODEL IS THE OLD CALL and it still answers for these four.
+            self.assertEqual(heads_mod.head(slot, p)["model"], rows[0]["model"])
+
+    def test_head_refuses_a_slot_that_carries_a_choice_and_answers_a_named_model(self):
+        """A default head is a model nobody ruled, so `head("coder")` REFUSES rather than
+        returning the first entry and calling it the default."""
+        p = self.tmp / "dev" / "pod" / "heads.toml"
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.head("coder", p)
+        for row in self.cfgs():
+            self.assertEqual(heads_mod.head("coder", p, row["model"])["model"],
+                             row["model"])
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.head("coder", p, "claude-opus-5")
+
+    def test_a_capped_model_with_headroom_is_chosen_before_the_uncapped_one(self):
+        """THE POLICY IS CAPPED FIRST. An idle pod sends the coder to the LOCAL head."""
+        cfgs = self.cfgs()
+        got = pod.pick_head_config(cfgs, [0] * len(cfgs))
+        self.assertEqual(got["max_concurrency"], 1)
+        self.assertEqual(got["harness"], "herdr-pi")
+
+    def test_a_capped_model_AT_its_cap_is_skipped_for_the_next_eligible_one(self):
+        cfgs = self.cfgs()
+        counts = [c["max_concurrency"] or 0 for c in cfgs]
+        got = pod.pick_head_config(cfgs, counts)
+        self.assertIsNotNone(got)
+        self.assertIsNone(got["max_concurrency"], "a full cap was spent anyway")
+
+    def test_every_capped_model_full_falls_through_to_the_uncapped_one(self):
+        """A synthetic three-config slot, because the live file has one capped head and
+        the fall-through needs two. C-45: a fixture that cannot exercise the branch is
+        not a fixture."""
+        cfgs = [{"model": "a", "max_concurrency": 1},
+                {"model": "b", "max_concurrency": 2},
+                {"model": "c", "max_concurrency": None}]
+        self.assertEqual(pod.pick_head_config(cfgs, [0, 0, 0])["model"], "a")
+        self.assertEqual(pod.pick_head_config(cfgs, [1, 0, 0])["model"], "b")
+        self.assertEqual(pod.pick_head_config(cfgs, [1, 2, 0])["model"], "c")
+        # THE TIE-BREAK IS THE FILE'S OWN ORDER, so `b` first would answer `b`.
+        self.assertEqual(pod.pick_head_config(list(reversed(cfgs)),
+                                              [0, 0, 0])["model"], "b")
+
+    def test_a_slot_whose_every_capped_model_is_full_and_none_uncapped_REFUSES(self):
+        """It returns None rather than the first config: dispatching anyway would break
+        the cap the owner wrote, and dispatching nothing in silence is the blind sensor."""
+        cfgs = [{"model": "a", "max_concurrency": 1},
+                {"model": "b", "max_concurrency": 1}]
+        self.assertIsNone(pod.pick_head_config(cfgs, [1, 1]))
+        why = pod.head_full_refusal("coder", cfgs, [1, 1])
+        self.assertIn("a 1/1", why)
+        self.assertIn("b 1/1", why)
+
+    def test_a_slot_of_ONE_config_picks_it_whatever_the_count_says(self):
+        """The four unchanged slots behave exactly as they did before A27: one config,
+        no cap, and the live count is never consulted."""
+        one = [{"model": "solo", "max_concurrency": None}]
+        for n in (0, 1, 7):
+            self.assertIs(pod.pick_head_config(one, [n]), one[0])
+
+    def test_the_live_count_is_per_slot_and_per_model_and_counts_only_live_states(self):
+        """RUNNING and CHECKING hold a head. DONE and PARKED do not: their agent exited,
+        so counting them would shrink a cap that nothing is using."""
+        cfgs = [{"model": "m1"}, {"model": "m2"}]
+        st = pod.State()
+        for code, role, model, status in (
+                ("A", "coder", "m1", pod.RUNNING),
+                ("B", "coder", "m1", pod.CHECKING),
+                ("C", "coder", "m1", pod.DONE),
+                ("D", "coder", "m1", pod.PARKED),
+                ("E", "coder_adversarial", "m1", pod.RUNNING),   # another SLOT
+                ("F", "coder", "m2", pod.RUNNING)):
+            st.tasks[code] = pod.Task(code, role=role, model=model, status=status)
+        self.assertEqual(pod.head_live_counts(st, "coder", cfgs), [2, 1])
+        self.assertEqual(pod.head_live_counts(st, "mathematician", cfgs), [0, 0])
+        # NO STATE COUNTS ZERO, which is the only honest answer a caller with no census
+        # can give. Rule (f) always has one.
+        self.assertEqual(pod.head_live_counts(None, "coder", cfgs), [0, 0])
+
+    def test_rule_f_hands_the_state_to_launch_so_the_cap_can_be_counted(self):
+        """A27's wiring, and the defect it guards is a five-argument call meeting a
+        four-argument stub: rule (f) would then park every dispatch as `launch`."""
+        self.assertIn("st", inspect.signature(pod.launch).parameters)
+        src = inspect.getsource(pod._rule_f)
+        self.assertIn("launch(t, b, role, root, st)", src)
+
+    # ---------------------------------------------------- A27, the loader's refusals
+
+    def test_an_empty_array_of_configs_is_REFUSED(self):
+        self.edit('coder                     = [', 'coder = []\nunused = [')
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+
+    def test_an_array_element_that_is_not_a_table_is_REFUSED(self):
+        """An array of STRINGS parses as TOML and names no harness, so the refusal has to
+        be the loader's and cannot be the parser's."""
+        self.edit('  { model = "grok-4.6",             effort = "high",'
+                  ' harness = "herdr-grok", sandbox = "acceptEdits" },',
+                  '  "grok-4.6",')
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+
+    def test_a_config_missing_a_required_field_is_REFUSED(self):
+        self.edit('{ model = "grok-4.6",             effort = "high",',
+                  '{ model = "grok-4.6",')
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+
+    def test_a_config_carrying_an_unknown_field_is_REFUSED(self):
+        self.edit("max_concurrency = 1 }", "max_concurrancy = 1 }")
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+
+    def test_a_cap_that_is_not_a_positive_integer_is_REFUSED(self):
+        """A ZERO IS NOT `unlimited`: it is a head no task can ever reach. A BOOLEAN is an
+        `int` in Python, so `true` would otherwise load as a cap of one."""
+        for bad in ("0", "-1", '"1"', "1.5", "true"):
+            with self.subTest(cap=bad):
+                self.edit("max_concurrency = 1 }", f"max_concurrency = {bad} }}")
+                with self.assertRaises(heads_mod.HeadsError):
+                    heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml",
+                                         cache=False)
+                self.edit(f"max_concurrency = {bad} }}", "max_concurrency = 1 }")
+
+    def test_one_slot_naming_one_model_twice_is_REFUSED(self):
+        """The dispatcher counts a live head by its SLOT and its MODEL, so two configs on
+        one model are two caps it cannot tell apart."""
+        self.edit('{ model = "grok-4.6",             effort = "high",'
+                  ' harness = "herdr-grok", sandbox = "acceptEdits" },',
+                  '{ model = "Qwen3.8-27B-oQ4e-mtp", effort = "",'
+                  ' harness = "herdr-pi", sandbox = "acceptEdits" },')
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+
+    def test_a_model_outside_legal_models_is_REFUSED_inside_an_array_too(self):
+        """The single-table path had this check and the array path is a second entry to
+        the same rule, so it is checked at both."""
+        self.edit('{ model = "grok-4.6",', '{ model = "claude-haiku-5",')
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+
+    def test_a_herdr_pi_config_with_no_provider_entry_is_REFUSED(self):
+        """`legal.pi_provider` had zero consumers until 2026-08-18 and both `glm-5.3`
+        heads dispatched on `deepseek`. The refusal applies per CONFIG, not per slot."""
+        self.edit('"Qwen3.8-27B-oQ4e-mtp" = "omlx"', '"unused-key" = "omlx"')
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.configs("coder", self.tmp / "dev" / "pod" / "heads.toml",
+                              cache=False)
 
 
 # ---------------------------------------------------------------- the acceptance runner
@@ -4143,7 +4327,7 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
     the prompt, and exits `done` in ten seconds having written nothing.
     """
 
-    def _capture(self, role):
+    def _capture(self, role, st=None, task=None, expect_call=True):
         calls = []
 
         class _Stub:
@@ -4165,20 +4349,29 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
         pod.facts_mod.launcher = lambda: _Stub
         pod.make_worktree = lambda code, root=None: None
         try:
-            t = types.SimpleNamespace(code="LJ-1.999", agda=False, tier="wide",
-                                      head_slot=None, role=None, model=None,
-                                      effort=None, harness=None, sandbox=None)
-            pod.launch(t, "agents/tasks/LJ-1-999/LJ-1.999.md", role, ROOT)
+            t = task or types.SimpleNamespace(
+                code="LJ-1.999", agda=False, tier="wide", head_slot=None, role=None,
+                model=None, effort=None, harness=None, sandbox=None)
+            pod.launch(t, "agents/tasks/LJ-1-999/LJ-1.999.md", role, ROOT, st)
         finally:
             pod.facts_mod.launcher = real
             pod.make_worktree = real_wt
+        if not expect_call:
+            self.assertEqual(calls, [], "a refused dispatch reached the launcher")
+            return None
         self.assertEqual(len(calls), 1, "the stub was not reached")
+        # THE TASK ITSELF IS PART OF THE MEASUREMENT SINCE A27: `launch()` writes the
+        # model it CHOSE onto it, which is the field the transition log records (AD26).
+        calls[0]["_task"] = t
         return calls[0]
 
     def test_the_worker_gets_agents_md_and_its_own_slot_file(self):
         for role in sorted(heads_mod.load_heads()["heads"]):
             with self.subTest(role=role):
                 names = [pathlib.Path(f).name for f in self._capture(role)["preamble"]]
+                # THE SLOT FILE IS THE ROLE'S AND NEVER THE MODEL'S. A27 lets one slot
+                # carry two models; the preamble is per SLOT, so the file list below is
+                # the same whichever model `pick_head_config()` chose.
                 # THE SLOT FILE IS FIRST, then the shared Boundary. Owner 2026-08-20.
                 # THE DIRECTION IS LAST, closest to the brief. Owner's ruling of
                 # 2026-08-18 gives it to all five slots. The screen sits in front of
@@ -4188,10 +4381,21 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                                  f"a {role} worker was launched with {names}")
 
     def test_a_pi_head_gets_its_own_providers_and_never_a_default(self):
+        """**IT ASKS `pick_head_config()` WHICH MODEL RAN, and does not assume one.**
+
+        A27 made a slot a LIST of configs, so `[heads].<role>` no longer names one model.
+        `_capture()` drives `pod.launch()` with no state, which counts every live head as
+        zero, so the config this test expects is the one the policy picks from an idle
+        machine. Reading `[heads].<role>["harness"]` here would raise on a list and, worse,
+        would pin a model the dispatcher may not have chosen.
+        """
         table = heads_mod.load_heads()["legal"]["pi_provider"]
         seen = {}
-        for role, row in sorted(heads_mod.load_heads()["heads"].items()):
+        for role in sorted(heads_mod.load_heads()["heads"]):
             with self.subTest(role=role):
+                cfgs = heads_mod.configs(role)
+                row = pod.pick_head_config(cfgs, pod.head_live_counts(None, role, cfgs))
+                self.assertIsNotNone(row, f"{role} has no eligible head on an idle pod")
                 got = self._capture(role).get("provider")
                 if row["harness"] != "herdr-pi":
                     self.assertIsNone(got, f"{role} is not a pi head")
@@ -4200,6 +4404,76 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                                  f"{role} runs {row['model']} and was sent to {got}")
                 seen[row["model"]] = got
         self.assertTrue(seen, "no pi head was dispatched, so the provider lookup was not exercised")
+
+    # ------------------------------------------------------------------ A27 end to end
+
+    def _live(self, slot, model, n=1, status=None):
+        """A `State` holding `n` live tasks on one slot and one model."""
+        st = pod.State()
+        for i in range(n):
+            code = f"LIVE-{i}"
+            st.tasks[code] = pod.Task(code, role=slot, model=model,
+                                      status=status or pod.RUNNING)
+        return st
+
+    def test_an_idle_coder_slot_dispatches_on_the_CAPPED_head(self):
+        """The whole of A27 through the real `launch()`: the policy picks, the launcher
+        gets that model with that provider, and the TASK records what ran (AD26)."""
+        got = self._capture("coder", pod.State())
+        cap = [c for c in heads_mod.configs("coder")
+               if c["max_concurrency"] is not None][0]
+        self.assertEqual(got["_task"].model, cap["model"])
+        self.assertEqual(got["_task"].harness, cap["harness"])
+        # THE PROVIDER IS THE KEYWORD THE PANE REALLY GETS, and the model reaches the
+        # launcher POSITIONALLY, so `_task.model` above is the readable end of it.
+        self.assertEqual(got["provider"], cap["pi_provider"])
+        self.assertEqual(got["effort"], cap["effort"])
+
+    def test_a_second_task_spills_to_the_UNCAPPED_head_while_the_first_is_live(self):
+        """**THIS IS THE CASE THE FEATURE EXISTS FOR** and no unit test of the policy
+        alone can reach it: the count comes from `st.tasks`, which rule (f) mutates as it
+        dispatches, so the second dispatch of one tick must already see the first."""
+        cap = [c for c in heads_mod.configs("coder")
+               if c["max_concurrency"] is not None][0]
+        free = [c for c in heads_mod.configs("coder")
+                if c["max_concurrency"] is None][0]
+        st = self._live("coder", cap["model"], cap["max_concurrency"])
+        got = self._capture("coder", st)
+        self.assertEqual(got["_task"].model, free["model"])
+        self.assertEqual(got["_task"].harness, free["harness"])
+        self.assertIsNone(got["provider"], "a non-pi head was sent a provider")
+        self.assertEqual(got["effort"], free["effort"])
+
+    def test_a_task_that_is_DONE_frees_the_capped_head_again(self):
+        """A closed task holds no head. Counting one would shrink a cap nothing uses."""
+        cap = [c for c in heads_mod.configs("coder")
+               if c["max_concurrency"] is not None][0]
+        st = self._live("coder", cap["model"], cap["max_concurrency"], pod.DONE)
+        self.assertEqual(self._capture("coder", st)["_task"].model, cap["model"])
+
+    def test_a_live_task_on_ANOTHER_slot_does_not_spend_the_coder_cap(self):
+        """The pair is the slot AND the model, so one model shared by two slots would
+        otherwise have one cap between them."""
+        cap = [c for c in heads_mod.configs("coder")
+               if c["max_concurrency"] is not None][0]
+        st = self._live("coder_adversarial", cap["model"], cap["max_concurrency"])
+        self.assertEqual(self._capture("coder", st)["_task"].model, cap["model"])
+
+    def test_every_head_full_REFUSES_the_dispatch_and_names_the_caps(self):
+        """`launch()` returns None and leaves words in `LAUNCH_REFUSAL`, which rule (f)
+        writes into the park as `why`. A silent None is the defect the stderr tee already
+        repaired once."""
+        cfgs = [{"model": "m1", "effort": "", "harness": "herdr-pi",
+                 "sandbox": "acceptEdits", "max_concurrency": 1, "pi_provider": "p"}]
+        real = heads_mod.configs
+        heads_mod.configs = lambda slot, path=None, cache=True: tuple(cfgs)
+        try:
+            st = self._live("coder", "m1", 1)
+            self.assertIsNone(self._capture("coder", st, expect_call=False))
+        finally:
+            heads_mod.configs = real
+        self.assertIn("max_concurrency", pod.LAUNCH_REFUSAL)
+        self.assertIn("m1 1/1", pod.LAUNCH_REFUSAL)
 
 
 class QuotaPark(LoopCase):

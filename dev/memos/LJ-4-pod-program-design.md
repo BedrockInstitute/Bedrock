@@ -31,8 +31,16 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Twenty-three amendments. Twenty-one are the owner's, and one is the orchestrator's and follows
-from A4.** Fourteen were ruled on 2026-08-17, five on 2026-08-18 and four on 2026-08-19.
+**Twenty-seven amendments, A1 to A27. Twenty-six are the owner's, and one, A6, is the
+orchestrator's and follows from A4.** **The count in this paragraph said 23 until
+2026-08-21, when the list held 26**, and a per-date breakdown stood beside it that nobody
+had recounted either. Both were carried forward rather than measured. The count is now
+the one thing stated here, and the check is the list itself: the entries below run A1 to
+A27 with no gap and no repeat, so the count IS the highest number. **They are not in
+numeric order**, because each was appended where it reads best, and a `grep` over the
+bullet marks is not the check: A6 opens with a comma, and section 6.1 carries a bullet
+that opens with A12 and is not an entry. Each amendment carries its own ruling date in
+its own entry, which is where a date belongs.
 A17 restores a requirement this document had lost, A18 builds a channel it never had, A19
 gives the programme an ending, and A20 keeps the two work channels apart. **A21 and A22
 put back two core designs this document NEVER contained: who writes the code, and how far
@@ -353,6 +361,62 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   **`dev/pod/maintainer-handover.md` is the outgoing session's handover**, and
   `dev/pod/instructions/maintainer.md` points the slot at it. It is the ONE document in
   the tree allowed to carry history, and the incoming session is told to prune it.
+
+- **A27. ONE SLOT MAY CARRY SEVERAL MODELS, EACH WITH ITS OWN CONCURRENCY CAP, ruled
+  2026-08-21.** Every `[heads]` slot resolved to exactly one `{model, effort, harness,
+  sandbox}` until that day. The owner ruled the `coder` slot onto TWO heads: `grok-4.6`
+  on `herdr-grok` with no cap, and a LOCAL model on `herdr-pi` with `max_concurrency = 1`.
+
+  **THE SHAPE IS A STRICT SUPERSET AND NOT A MIGRATION.** A slot is one inline table OR a
+  non-empty array of them, and an array of one means what the single table meant. The
+  other four slots are spelled exactly as they were, so A27 changed no head but the
+  coder's. `max_concurrency` is the ONE optional field in `dev/pod/heads.toml` and its
+  absence is the word UNLIMITED, not a default: it is what every row meant before A27.
+
+  **THE CAP IS NOT A14's CONCURRENCY AND THE TWO NEVER MEET.** `admits()` (5.6) counts
+  AGDA WRITER PROCESSES on the whole machine, per tier, with a heap sum, and it refuses a
+  task before any head is chosen. A27 counts TASKS HOLDING ONE HEAD, per slot and per
+  model, and it runs after `admits()` has said yes. A task passes both or it does not
+  dispatch. The two words are the same and the mechanisms share nothing.
+
+  **THE SELECTION POLICY IS CAPPED FIRST, AND IT IS ONE NAMED FUNCTION**,
+  `pick_head_config()` in `scripts/pod/pod.py`. A head carries a cap because what is
+  behind it is SCARCE and LOCAL, one inference server on this machine, so the program
+  spends it up to its limit before it spills the extra demand onto a head with no limit.
+  A tie between two capped heads that both have headroom goes to the one written FIRST in
+  the array, so the owner ranks heads by editing the file. **THE CONSEQUENCE IS RECORDED
+  BECAUSE IT IS EASY TO MISS: while the pod runs one coder task at a time, every one of
+  them goes to the local head and grok gets nothing. Grok is the OVERFLOW head under this
+  policy, not the ordinary one.** If that reading is wrong, that function is the one line
+  to change; nothing else in the program encodes the preference.
+
+  **A SLOT WITH NO ELIGIBLE HEAD PARKS AND NAMES EVERY CAP.** `pick_head_config()`
+  returns None rather than the first config, `launch()` writes the counts into
+  `LAUNCH_REFUSAL`, and rule (f) parks with `reason: "launch"`. Dispatching anyway would
+  break the cap the owner wrote and dispatching nothing in silence is the blind sensor
+  `pod.py` refuses by rule. It cannot fire while one head of the slot is uncapped.
+
+  **THE LIVE COUNT IS KEYED ON THE SLOT AND THE MODEL**, which are two of the four fields
+  rule (f) already writes onto the task and AD26 already fixes for its life. LIVE is
+  `RUNNING` or `CHECKING`, the two states `admits()` counts; a DONE or PARKED task holds
+  no head. **The loader refuses one slot that names one model twice**, because those would
+  be two caps this count cannot tell apart.
+
+  **`head()` REFUSES A SLOT THAT CARRIES A CHOICE.** Returning the first entry would be a
+  silent default of exactly the kind `dev/pod/heads.toml` exists to forbid, and it would
+  spend an uncapped vendor while a capped one sat idle. `configs()` is the reader that
+  sees them all, and the dispatcher names the model it picked.
+
+  **THE NEW VENDOR IS NOT END TO END VERIFIED AND THE FILE SAYS SO.** `pi --list-models`
+  names the row and `pi auth check --provider omlx` answers `ready`, both MEASURED
+  2026-08-21, and neither can see the failure class this document records twice: an agent
+  that echoes its prompt and exits `done` having written nothing. The first real dispatch
+  is also the verification, exactly as it was for `glm-5.3` and `deepseek-v4-pro` before
+  their probe of 2026-08-19.
+
+  `dev/pod/heads.toml`, `scripts/pod/heads.py` (`configs()`, `head()`), and
+  `scripts/pod/pod.py` (`head_live_counts()`, `pick_head_config()`,
+  `head_full_refusal()`, `launch()`). Section 6.1 carries the rest.
 
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the
@@ -2103,23 +2167,38 @@ What this section owns, because the file cannot state it about itself:
 - **It is the ONLY home of a model name, an effort level, a deadline or a load
   threshold**, and the file is tracked. AD26.
 - **The owner may change it at any time and NOBODY ELSE changes it without a named owner
-  approval.** R16 puts it in the spec surface gate's guarded set (7.3), because it is not
-  a table row and `replay()` never sees it.
+  approval.** **THE FILE LEFT R16's GUARDED SET on 2026-08-20**, owner's ruling, and this
+  bullet said the opposite until 2026-08-21. MEASURED that day: `GUARDED_FILES` at
+  `scripts/pod/check-spec-surface.py:211-222` holds `AGENTS.md` and this memo alone, and
+  the entry that named `dev/pod/heads.toml` is now a comment explaining its removal. The
+  approval rule above is unchanged and so is AD26; only conjunct 5 stopped hashing the
+  bytes.
 - **AD26, no retro-fit.** The program resolves a head ONCE, at dispatch, and writes
   `model`, `effort`, `role` and `heads_sha256` into the transition line. A change binds a
   new task only.
+- **A slot may carry SEVERAL models, each with its own `max_concurrency`**, amendment
+  A27, owner's ruling 2026-08-21. A slot is one inline table or a non-empty ARRAY of
+  them, and `load_heads()["heads"][slot]` is a LIST in both cases. `max_concurrency` is
+  the ONE optional field in the file and an absent one means UNLIMITED. **The cap counts
+  TASKS on one slot and one model; A14's `[tiers]` counts AGDA WRITER PROCESSES on the
+  machine. They share a word and nothing else, and `admits()` runs first.** The policy is
+  CAPPED FIRST, it lives in `pick_head_config()` alone, and A27 states its consequence.
 - **A12 is superseded for the maintainer's MODEL and kept for its EFFORT**, owner's
   ruling 2026-08-19. A12 set the slot to `claude-opus-5` at `high` and closed gap M8; the
   owner moved it to grok at the same effort. **A14's two concurrency tiers** live in the
   same file: WIDE at four concurrent `-M8g`, HEAVY at two concurrent `-M12g`.
 - **Every measurement that admits a model string lives in the file's own comments**, next
   to the string it admits: gap B4's read-back for the three Claude ids, the
-  `pi --list-models` rule for the two `pi` vendors, and the end-to-end probe for grok.
-  A vendor added without one of those is a vendor nobody measured.
+  `pi --list-models` rule for the two `pi` vendors, the end-to-end probe for grok, and
+  for the local `omlx` head the three checks that DID run plus the sentence saying no
+  dispatch has. A vendor added without one of those is a vendor nobody measured, and a
+  vendor whose comment claims more than was run is worse than one with no comment.
 
 `scripts/pod/heads.py` is the ONE owner of the file. `scripts/pod/launcher.py` and
 `scripts/pod/table.py` are readers. No field has a silent default: a missing or misspelt
-field is a refusal, and the loader refuses a model outside `legal.models`.
+field is a refusal, and the loader refuses a model outside `legal.models`. **`head()`
+refuses a slot that carries a CHOICE and no named model**, A27, for the same reason: the
+first entry of an array is not a default, and picking one is the dispatcher's job.
 
 **THE THREE STALE PARAGRAPHS THAT STOOD HERE ARE GONE, and each said something the
 tree had already refuted.** They read: the maintainer slot is an orchestrator pick and

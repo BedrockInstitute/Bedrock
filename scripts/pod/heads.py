@@ -18,16 +18,25 @@ every dispatch that omits `--harness`.
 NO FIELD HAS A SILENT DEFAULT. A missing field is a refusal. A misspelt field is a
 refusal. A model outside `legal.models` is a refusal. An effort outside `legal.efforts`
 is a refusal. A default here would be a number nobody ruled, and the whole point of the
-file is that the owner rules every number in it.
+file is that the owner rules every number in it. `max_concurrency` is the ONE optional
+field (amendment A27) and its absence is not a default: it is the word UNLIMITED, which
+is what every slot carried before A27 and what four of the five carry today.
+
+A SLOT MAY CARRY MORE THAN ONE MODEL, amendment A27, and this loader reads both
+spellings: one inline table, or an ARRAY of inline tables. `load_heads()["heads"][slot]`
+is a LIST in both cases, so no reader branches on the shape it happened to get.
 
 WHAT THIS MODULE DOES NOT DO. It never dispatches, it never reads a brief and it never
-decides which head a task gets. `scripts/pod/pod.py` rule (f) resolves the slot ONCE, at
-dispatch, and writes `model`, `effort`, `role` and `heads_sha256` into the transition log
-line. AD26 says nothing re-reads this file for a running task.
+decides which head a task gets. That is why the CAP lives here and the COUNT does not:
+this module refuses a malformed `max_concurrency` and `pick_head_config()` in
+`scripts/pod/pod.py` is the one place that counts live tasks and picks a config.
+`scripts/pod/pod.py` rule (f) resolves the slot ONCE, at dispatch, and writes `model`,
+`effort`, `role` and `heads_sha256` into the transition log line. AD26 says nothing
+re-reads this file for a running task.
 
 Usage:
   heads.py --check         load the file and print every slot, limit and tier
-  heads.py --slot <name>   print one slot as `model effort harness sandbox`
+  heads.py --slot <name>   print every config of one slot, one per line
   heads.py --sha256        print the digest the transition log records
 Exit status: 0 clean, 1 a refusal, 2 usage error.
 """
@@ -62,8 +71,19 @@ HEADS = ROOT / "dev" / "pod" / "heads.toml"
 LIMIT_KEYS = ("tick_seconds", "exclusive_max_load1", "agda_deadline_s",
               "worker_deadline_s", "attempt_max", "parked_max")
 
-#: The four fields every `[heads]` slot carries.
+#: The four fields every `[heads]` config carries. None has a default.
 SLOT_KEYS = ("model", "effort", "harness", "sandbox")
+
+#: The ONE optional field in this whole file, amendment A27. An ABSENT `max_concurrency`
+#: means UNLIMITED, which is exactly what every slot carried before A27, so a slot written
+#: as one inline table means today what it meant yesterday. A PRESENT one is an integer of
+#: 1 or more and it caps the tasks that may hold this slot ON THIS MODEL at one time.
+#:
+#: THE COUNTING IS NOT THIS MODULE'S. This loader validates the number and stops there;
+#: `pick_head_config()` in `scripts/pod/pod.py` counts the live tasks and picks a config.
+#: The docstring above already rules that this module never decides which head a task
+#: gets, and a cap is that decision by another name.
+SLOT_OPTIONAL = ("max_concurrency",)
 
 #: The tier keys amendment A14 restored from `dev/LESSONS.md` C-12. The names are
 #: `dev/pod/heads.toml`'s own, which its comment at `:89-92` discloses: the design names
@@ -142,20 +162,54 @@ def load_heads(path=None, cache=True) -> dict:
     heads = data.get("heads")
     if not isinstance(heads, dict) or not heads:
         _refuse("carries no [heads] table")
-    for slot, row in heads.items():
-        if not isinstance(row, dict):
-            _refuse(f"[heads].{slot} is not a table")
-        _require(row, SLOT_KEYS, f"[heads].{slot}")
-        for k in row:
-            if k not in SLOT_KEYS:
-                _refuse(f"[heads].{slot} carries `{k}`, which is not one of "
-                        f"{', '.join(SLOT_KEYS)}")
-        if row["model"] not in models:
-            _refuse(f"[heads].{slot} names model {row['model']!r}, which is not in "
-                    f"legal.models")
-        if row["effort"] not in efforts:
-            _refuse(f"[heads].{slot} names effort {row['effort']!r}, which is not in "
-                    f"legal.efforts")
+    slots = {}
+    for slot, value in heads.items():
+        # A27. A SLOT IS ONE INLINE TABLE OR A NON-EMPTY ARRAY OF THEM, and the array is
+        # a STRICT SUPERSET: an array of one means what the single table meant. The
+        # single-table spelling is kept and not merely tolerated, because four of the
+        # five slots have exactly one head and an array around each of them would be
+        # ceremony that hides which slot really carries a choice.
+        rows = [value] if isinstance(value, dict) else value
+        if not isinstance(rows, list) or not rows:
+            _refuse(f"[heads].{slot} is neither a table nor a non-empty array of tables")
+        seen = []
+        for i, row in enumerate(rows):
+            where = (f"[heads].{slot}" if len(rows) == 1
+                     else f"[heads].{slot} config {i + 1}")
+            if not isinstance(row, dict):
+                _refuse(f"{where} is not a table")
+            _require(row, SLOT_KEYS, where)
+            for k in row:
+                if k not in SLOT_KEYS and k not in SLOT_OPTIONAL:
+                    _refuse(f"{where} carries `{k}`, which is not one of "
+                            f"{', '.join(SLOT_KEYS + SLOT_OPTIONAL)}")
+            if row["model"] not in models:
+                _refuse(f"{where} names model {row['model']!r}, which is not in "
+                        f"legal.models")
+            if row["effort"] not in efforts:
+                _refuse(f"{where} names effort {row['effort']!r}, which is not in "
+                        f"legal.efforts")
+            cap = row.get("max_concurrency")
+            if cap is not None:
+                # A BOOLEAN IS AN `int` IN PYTHON, and `max_concurrency = true` would
+                # otherwise load as a cap of one. The `[limits]` block above refuses a
+                # boolean for the same reason and this is the same trap.
+                if isinstance(cap, bool) or not isinstance(cap, int):
+                    _refuse(f"{where} names max_concurrency {cap!r}, which is not an "
+                            f"integer")
+                if cap < 1:
+                    _refuse(f"{where} names max_concurrency {cap!r}, and a cap below 1 "
+                            f"is not `unlimited`: it is a head no task can ever reach. "
+                            f"OMIT the field to mean unlimited")
+            # THE LIVE COUNT IS KEYED ON THE SLOT AND THE MODEL, because `role` and
+            # `model` are the two fields rule (f) writes onto the task at the dispatch
+            # (AD26). Two configs of one slot on ONE model are therefore two caps the
+            # dispatcher cannot tell apart, and it would spend both on the same tasks.
+            if row["model"] in seen:
+                _refuse(f"[heads].{slot} names model {row['model']!r} twice, and the "
+                        f"dispatcher counts a live head by its slot and its model")
+            seen.append(row["model"])
+        slots[slot] = [dict(r) for r in rows]
 
     tiers = data.get("tiers")
     if not isinstance(tiers, dict):
@@ -179,8 +233,12 @@ def load_heads(path=None, cache=True) -> dict:
             _refuse(f"[tiers.{name}] asks {tiers[name]['slots']} slots at {gb} GB, which "
                     f"is above [tiers.shared].max_heap_sum_gb of {cap}")
 
+    # `heads` MAPS A SLOT TO A LIST, ALWAYS, and never to a single row. One shape for
+    # both spellings is what stops a reader branching on the type it happened to get; the
+    # readers that want exactly one head call `head()`, which refuses a slot that carries
+    # a choice rather than picking the first and calling it the default.
     out = {"version": 1, "legal": dict(legal), "limits": dict(limits),
-           "heads": {k: dict(v) for k, v in heads.items()},
+           "heads": slots,
            "tiers": {k: dict(v) for k, v in tiers.items()},
            "sha256": hashlib.sha256(raw).hexdigest()}
     if cache:
@@ -210,14 +268,29 @@ def limits(path=None) -> dict:
     return load_heads(path)["limits"]
 
 
-def head(slot: str, path=None) -> dict:
-    """One slot's four fields. It REFUSES an unknown slot rather than returning a
-    default, because a default head is a model nobody ruled."""
-    data = load_heads(path)
+def configs(slot: str, path=None, cache=True) -> tuple[dict, ...]:
+    """EVERY config of one slot, complete, in the file's own order. A27.
+
+    A slot written as one inline table returns a tuple of one, so a caller written before
+    A27 sees no difference except the container. Each entry carries the four `SLOT_KEYS`,
+    a `max_concurrency` that is an integer or None, and `pi_provider` when the harness is
+    `herdr-pi`.
+
+    THE ORDER IS THE FILE'S AND IT IS LOAD-BEARING. `pick_head_config()` breaks a tie
+    between two capped configs by it, so the owner ranks two heads by editing the array.
+    """
+    data = load_heads(path, cache=cache)
     heads = data["heads"]
     if slot not in heads:
         _refuse(f"has no [heads].{slot}; the slots are {', '.join(sorted(heads))}")
-    row = dict(heads[slot])
+    return tuple(_complete(dict(row), slot, data) for row in heads[slot])
+
+
+def _complete(row: dict, slot: str, data: dict) -> dict:
+    """One config with its derived fields filled in. It never guesses one."""
+    # `max_concurrency` IS ALWAYS PRESENT IN THE RETURN AND IS None WHEN UNCAPPED, so no
+    # caller writes `row.get(...)` and no caller can read an absent cap as a zero.
+    row.setdefault("max_concurrency", None)
     # THE PROVIDER IS DERIVED HERE AND NOWHERE ELSE. `legal.pi_provider` had zero
     # consumers until 2026-08-18: the launcher passed a module constant, so both
     # `glm-5.3` heads dispatched on `deepseek`. heads.toml records what that costs,
@@ -232,6 +305,31 @@ def head(slot: str, path=None) -> dict:
                     f"[heads].{slot} runs on herdr-pi")
         row["pi_provider"] = str(table[row["model"]])
     return row
+
+
+def head(slot: str, path=None, model: str | None = None, cache=True) -> dict:
+    """ONE config of one slot. It REFUSES rather than returning a default, always.
+
+    An unknown slot is a refusal, because a default head is a model nobody ruled.
+
+    **A SLOT THAT CARRIES A CHOICE AND A CALL THAT NAMES NO MODEL IS ALSO A REFUSAL**,
+    amendment A27. Returning the first entry would be a silent default of exactly the
+    kind this file exists to forbid, and it would spend an uncapped vendor while a capped
+    one sat idle. `pick_head_config()` in `scripts/pod/pod.py` makes that choice and then
+    names the model it chose here.
+    """
+    rows = configs(slot, path, cache=cache)
+    if model is None:
+        if len(rows) != 1:
+            _refuse(f"[heads].{slot} carries {len(rows)} model configs "
+                    f"({', '.join(r['model'] for r in rows)}) and this call named none. "
+                    f"The dispatcher picks one (A27); nothing else may guess")
+        return dict(rows[0])
+    for row in rows:
+        if row["model"] == model:
+            return dict(row)
+    _refuse(f"[heads].{slot} carries no config on model {model!r}; it carries "
+            f"{', '.join(r['model'] for r in rows)}")
 
 
 def slots_of_tier(tier: str = "wide", path=None) -> int:
@@ -257,17 +355,26 @@ def main(argv):
             print(data["sha256"])
             return 0
         if argv[0] == "--slot" and len(argv) > 1:
-            row = head(argv[1])
-            print(" ".join(row[k] for k in SLOT_KEYS))
+            # ONE LINE PER CONFIG, so a slot that carries a choice shows the choice. It
+            # prints through `configs()` and never `head()`, because `head()` refuses a
+            # multi-config slot on purpose and a diagnostic must not be the one caller
+            # that cannot look.
+            for row in configs(argv[1]):
+                print(" ".join(row[k] for k in SLOT_KEYS)
+                      + (f" max_concurrency={row['max_concurrency']}"
+                         if row["max_concurrency"] is not None else ""))
             return 0
         if argv[0] == "--check":
             print(f"dev/pod/heads.toml: {len(data['heads'])} slots, "
                   f"{len(data['limits'])} limits, {len(data['tiers'])} tiers, "
                   f"sha256 {data['sha256'][:8]}")
             for slot in sorted(data["heads"]):
-                row = data["heads"][slot]
-                print(f"  {slot:26s} {row['model']:18s} {row['effort']:7s} "
-                      f"{row['harness']:14s} {row['sandbox']}")
+                for i, row in enumerate(data["heads"][slot]):
+                    name = slot if i == 0 else ""
+                    cap = row.get("max_concurrency")
+                    print(f"  {name:26s} {row['model']:22s} {row['effort']:7s} "
+                          f"{row['harness']:14s} {row['sandbox']:12s} "
+                          f"{'uncapped' if cap is None else f'max {cap}'}")
             for k in LIMIT_KEYS:
                 print(f"  limit {k:22s} {data['limits'][k]}")
             for name in sorted(data["tiers"]):

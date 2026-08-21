@@ -2291,6 +2291,87 @@ def model_readback_ok(task, model, harness=None):
     return True
 
 
+# ---------------------------------------------------------------- the head, per model
+#
+# AMENDMENT A27. A SLOT MAY CARRY MORE THAN ONE MODEL, each with its own
+# `max_concurrency`, and these three functions are the whole mechanism: count, pick,
+# report. `scripts/pod/heads.py` validates the cap and never counts; this file counts and
+# never guesses a cap.
+#
+# **THIS IS NOT A14's CONCURRENCY AND THE TWO MUST NOT BE CONFUSED.** `admits()` at
+# section 5.6 counts AGDA WRITER PROCESSES on the whole machine, per tier, with a heap
+# sum; it runs BEFORE any head is chosen and it refuses a task outright. What follows
+# counts TASKS HOLDING ONE HEAD, per slot and per model, and it runs AFTER `admits()` has
+# already said yes. A task passes both or it does not dispatch.
+
+
+def head_live_counts(st, slot, cfgs):
+    """One live-task count per config of `slot`, in the file's own order. A27.
+
+    LIVE IS `RUNNING` OR `CHECKING`, which is what `admits()` and `heap_sum_ok()` count
+    too. A `DONE` or `PARKED` task holds no head: its agent has exited, so its model is
+    free, and counting it would shrink a cap that nothing is using.
+
+    THE PAIR IS THE SLOT AND THE MODEL, because those are two of the four fields rule (f)
+    writes onto the task at the dispatch and AD26 keeps them fixed for its whole life.
+    `t.role` is the slot and `t.model` is the string that reached the pane. The loader
+    refuses two configs of one slot on one model, so the pair is unambiguous.
+
+    A CALLER WITH NO STATE COUNTS ZERO, which is the only honest answer it can give: a
+    read of `st.tasks` is the only census this program has. That path is the source
+    inspection tests take, never a dispatch: rule (f) is the one dispatch point for a
+    slot that carries a choice and it always holds the state.
+    """
+    if st is None:
+        return [0] * len(cfgs)
+    live = [x for x in st.tasks.values() if x.status in (RUNNING, CHECKING)]
+    return [sum(1 for x in live if x.role == slot and x.model == c["model"])
+            for c in cfgs]
+
+
+def pick_head_config(cfgs, live_counts):
+    """THE SELECTION POLICY OF A27, and it is deliberately one small function.
+
+    **CAPPED FIRST, THEN UNCAPPED.** A head carries a cap because the thing behind it is
+    SCARCE and LOCAL, one inference server on this machine, so the program spends it up to
+    its limit before it spills the extra demand onto a head that has no limit. A tie
+    between two capped configs that both have headroom goes to the one written FIRST in
+    `dev/pod/heads.toml`, so the owner ranks two heads by editing the array.
+
+    **THE CONSEQUENCE IS STATED HERE BECAUSE IT IS EASY TO MISS.** While the pod runs ONE
+    task at a time on a slot, every one of them goes to the capped head and the uncapped
+    one gets nothing. The uncapped head is the OVERFLOW head under this policy, not the
+    ordinary one. If that reading is wrong, this function is the one line to change and
+    nothing else in the program encodes the preference.
+
+    IT RETURNS None RATHER THAN A DEFAULT when every config is capped and full. That is a
+    refusal, and `launch()` turns it into a park: dispatching the first config anyway
+    would break the cap the owner wrote, and dispatching nothing in silence is the blind
+    sensor this module's own docstring refuses.
+    """
+    for cfg, live in zip(cfgs, live_counts):
+        cap = cfg.get("max_concurrency")
+        if cap is not None and live < cap:
+            return cfg
+    for cfg in cfgs:
+        if cfg.get("max_concurrency") is None:
+            return cfg
+    return None
+
+
+def head_full_refusal(slot, cfgs, live_counts):
+    """The words a park gets when `pick_head_config()` found nothing. It names every cap.
+
+    A park that says only `launch` costs the maintainer a pane read, which is the defect
+    the launcher's stderr tee already repaired once (2026-08-19, LJ-1.394).
+    """
+    rows = ", ".join(
+        f"{c['model']} {n}/{c.get('max_concurrency')}"
+        for c, n in zip(cfgs, live_counts))
+    return (f"every model of [heads].{slot} is at its own max_concurrency ({rows}), "
+            f"so this task has no head this tick. It re-opens when one closes.")
+
+
 #: The launcher's last refusal text, or None. `launch()` captures the launcher's stderr,
 #: writes it back to the pane, and leaves it here so rule (f) can put it in the park.
 LAUNCH_REFUSAL = None
@@ -2310,7 +2391,7 @@ def _tee(buf):
     LAUNCH_REFUSAL = " ".join(text.split())[:400]
 
 
-def launch(t, brief, role, root=None):
+def launch(t, brief, role, root=None, st=None):
     """Rule (f)'s dispatch. It returns the PID, or None when a KEPT refusal fired.
 
     The launcher's `launch()` returns an exit CODE and writes the pid into its registry,
@@ -2320,6 +2401,12 @@ def launch(t, brief, role, root=None):
     The head is resolved ONCE, here, from `dev/pod/heads.toml` (AD26), and the four values
     are written onto the task so the transition log records what RAN.
 
+    **WHICH MODEL, WHEN THE SLOT CARRIES MORE THAN ONE.** Amendment A27. `st` is the
+    census `pick_head_config()` needs and it is optional only so that a caller inspecting
+    one call's arguments does not have to build a state. Rule (f), the one dispatch point
+    a real task passes, always hands it over. A slot of one model ignores all of it and
+    behaves exactly as it did before A27.
+
     EVERY FAILURE PATH RETURNS None AND NONE RAISES. The launcher is a large program that
     reads a registry, a vendor pin, a brief and a pane server, and any of them can fail in
     a way it did not plan for. Rule (f) parks with `reason: "launch"` on None, which is a
@@ -2327,18 +2414,6 @@ def launch(t, brief, role, root=None):
     dispatch possibly already performed.
     """
     root = ROOT if root is None else Path(root)
-    if not brief:
-        return None
-    mod = facts_mod.launcher()
-    if mod is None:
-        return None
-    try:
-        head = heads_mod.head(role)
-    except heads_mod.HeadsError:
-        return None
-    t.role, t.model, t.effort = role, head["model"], head["effort"]
-    t.harness, t.sandbox = head["harness"], head["sandbox"]
-    path = Path(brief) if Path(brief).is_absolute() else root / brief
     # **THE LAUNCHER'S REFUSAL IS CAPTURED AND RE-EMITTED, NOT SWALLOWED.** It prints
     # `dispatch: REFUSED. ...` to stderr and returns 1, so the reason reached the keeper's
     # pane and NOTHING ELSE: the transition log got `reason: "launch"` with no `why`, and
@@ -2347,8 +2422,28 @@ def launch(t, brief, role, root=None):
     # holder and was legible only by reading a pane by hand.
     # The tee matters: the pane is still the operator's record, so this writes the text
     # back to stderr and ALSO carries it into `LAST_REFUSAL` for the park.
+    # **IT IS CLEARED BEFORE THE FIRST REFUSAL AND NOT AFTER IT.** A27 added two head
+    # refusals ahead of the launcher call, and both must reach the park with words.
     global LAUNCH_REFUSAL                      # noqa: PLW0603
     LAUNCH_REFUSAL = None
+    if not brief:
+        return None
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    try:
+        cfgs = heads_mod.configs(role)
+    except heads_mod.HeadsError as e:
+        LAUNCH_REFUSAL = str(e)[:400]
+        return None
+    counts = head_live_counts(st, role, cfgs)
+    head = pick_head_config(cfgs, counts)
+    if head is None:
+        LAUNCH_REFUSAL = head_full_refusal(role, cfgs, counts)[:400]
+        return None
+    t.role, t.model, t.effort = role, head["model"], head["effort"]
+    t.harness, t.sandbox = head["harness"], head["sandbox"]
+    path = Path(brief) if Path(brief).is_absolute() else root / brief
     buf = io.StringIO()
     try:
         mod.HARNESS = head["harness"]
@@ -4316,7 +4411,9 @@ def _rule_f(st, root):
             emit(st, t, READY, PARKED, reason="launch", root=root,
                  why="the fact 3 dispatch point could not be measured")
             continue
-        pid = launch(t, b, role, root)
+        # THE STATE TRAVELS TO THE DISPATCH, A27. `pick_head_config()` counts the live
+        # tasks on each of the slot's models, and `st` is the only census that holds them.
+        pid = launch(t, b, role, root, st)
         if pid is None:                        # a KEPT refusal of 6.2 fired. Never silent
             # NEVER SILENT NOW MEANS IN THE LOG TOO, and not only in the keeper's pane.
             emit(st, t, READY, PARKED, reason="launch", root=root,
@@ -5333,7 +5430,11 @@ def write_maintainer_row(name, root=None):
     tmp.write_text(new_text, encoding="utf-8")
     try:
         try:
-            got = heads_mod.load_heads(tmp, cache=False)["heads"]["maintainer"]
+            # `head()` AND NOT `load_heads()[...]`, because A27 made a slot a LIST of
+            # configs and `head()` refuses a maintainer row that carries a CHOICE. A
+            # preset is four fields for one head, so a preset that produced two would be
+            # a preset the program could not obey and this is where it is caught.
+            got = heads_mod.head("maintainer", tmp, cache=False)
         except Exception as e:                 # noqa: BLE001
             raise PodError(f"preset {name!r} produces a row the loader refuses: {e}") from e
         if any(got.get(k) != row[k] for k in need):

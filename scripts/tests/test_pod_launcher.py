@@ -86,7 +86,9 @@ _LOADS = 0
 #: printed NOTHING and exited 0. `FAILED` was empty because nothing had run. A count of
 #: zero failures is only evidence when a plausible number of checks produced it. Raise
 #: this when the suite grows; never lower it to make a run pass.
-MIN_CHECKS = 180
+#: RAISED 2026-08-21 with A27's config checks. MEASURED that day: 203 passing checks on
+#: the tree before A27 and 221 after, so the margin under the floor is unchanged.
+MIN_CHECKS = 200
 
 
 def check(label: str, got, want) -> None:
@@ -942,9 +944,27 @@ def main() -> int:
     # **THE TWO PI MODELS ARE NOT READ-BACK VERIFIED.** [LJ-4-0] ran `claude -p` twice
     # per claude string; no equivalent ran for these two, so the first dispatch on
     # either is also its verification. The provider map is what makes them reachable.
-    check("each pi model names its provider, which is NOT its family name",
-          heads["legal"]["pi_provider"],
+    # **EVERY `herdr-pi` HEAD IN THE FILE HAS AN ENTRY, and the check is DERIVED.** It
+    # pinned the map as a literal and went red on 2026-08-21 when the owner added the
+    # local `omlx` head, a CORRECT change, exactly as the model list went red for grok.
+    # What must hold is the coupling: a pi head with no provider entry dispatches on
+    # whatever the launcher's constant says, which is the silent failure heads.toml
+    # records twice.
+    _pi_heads = sorted({r["model"] for rows in heads["heads"].values()
+                        for r in (rows if isinstance(rows, list) else [rows])
+                        if r["harness"] == "herdr-pi"})
+    check("every pi head names its provider, which is NOT its family name",
+          [m for m in _pi_heads if m not in heads["legal"]["pi_provider"]], [])
+    check("and the two vendors probed end to end on 2026-08-19 still map as measured",
+          {k: heads["legal"]["pi_provider"][k]
+           for k in ("glm-5.3", "deepseek-v4-pro")},
           {"glm-5.3": "zai", "deepseek-v4-pro": "deepseek"})
+    # THE LOCAL HEAD, owner's ruling 2026-08-21, amendment A27. MEASURED that day:
+    # `pi --list-models` on pi 0.84.2 prints one row, `omlx Qwen3.8-27B-oQ4e-mtp`, and
+    # `pi auth check --provider omlx` answers `ready`. **NO DISPATCH HAS RUN ON IT**, so
+    # this pins the strings the file admits and claims nothing about the pane.
+    check("the local omlx head maps to the provider its list-models row names",
+          heads["legal"]["pi_provider"].get("Qwen3.8-27B-oQ4e-mtp"), "omlx")
     check("claude-haiku-5 is excluded, because the client refuses it",
           "claude-haiku-5" in heads["legal"]["models"], False)
     check("a DATE SUFFIX is excluded too, and it is the harder case: [LJ-4-0] "
@@ -958,29 +978,51 @@ def main() -> int:
            heads["heads"]["maintainer"]["effort"],
            heads["heads"]["maintainer"]["harness"]),
           ("claude-sonnet-5", "xhigh", "herdr-claude"))
-    for slot, row in heads["heads"].items():
-        check(f"{slot} names a legal model", row["model"] in heads["legal"]["models"], True)
-        check(f"{slot} names a legal effort", row["effort"] in heads["legal"]["efforts"], True)
+    # **A SLOT IS ONE INLINE TABLE OR AN ARRAY OF THEM SINCE A27**, owner's ruling
+    # 2026-08-21, and the checks below bind EVERY config of EVERY slot. This reads the
+    # RAW TOML, so it sees both spellings; `scripts/pod/heads.py` is what normalises them
+    # to a list, and that normalisation is `test_pod_loop.py`'s to prove.
+    check("the coder is the one slot that carries a choice of model, and it is an "
+          "array of tables", isinstance(heads["heads"]["coder"], list), True)
+    check("exactly one of its two models is capped, so the array is not two copies "
+          "of one shape",
+          sorted(str(r.get("max_concurrency")) for r in heads["heads"]["coder"]),
+          ["1", "None"])
+    _rows = [(slot, r) for slot, v in heads["heads"].items()
+             for r in (v if isinstance(v, list) else [v])]
+    check("the file carries six configs across the five slots", len(_rows), 6)
+    for slot, row in _rows:
+        # THE LABEL NAMES THE MODEL AND NOT ONLY THE SLOT, because one slot now produces
+        # several rows and two identical labels cannot be told apart in a failure list.
+        at = f"{slot} on {row['model']}"
+        check(f"{at} names a legal model", row["model"] in heads["legal"]["models"], True)
+        check(f"{at} names a legal effort", row["effort"] in heads["legal"]["efforts"], True)
         # DERIVED, NEVER LISTED. The literal pair here refused `herdr-grok` while every
         # runtime path served it, which is the same defect argparse had the same day.
-        check(f"{slot} runs on a harness the launcher serves",
+        check(f"{at} runs on a harness the launcher serves",
               row["harness"] in mod.HERDR_HARNESSES, True)
         # **THE EFFORT DIAL IS THE HARNESS'S, and `herdr-pi` is the one without it.**
         # This read `harness == "herdr-pi"` on one side and meant「has no effort dial」.
         # grok HAS one: `grok --help` lists `--reasoning-effort`, aliased `--effort`,
         # MEASURED 2026-08-19, and the probe ran at `high` and the pane showed `(high)`.
-        check(f"{slot}: a head carries an effort exactly when its harness has the dial",
+        check(f"{at}: a head carries an effort exactly when its harness has the dial",
               (row["harness"] not in NO_EFFORT_HARNESSES) == (row["effort"] != ""), True)
         # A CLAUDE HEAD NEVER READS THIS COLUMN: `--permission-mode` is hardcoded to
         # `auto` for the `claude` kind at `scripts/pod/launcher.py:1353`. The value is
         # still pinned here because codex reads it as `-s` and `validate()` refuses a
         # `read-only` brief that orders a write.
-        check(f"{slot} pins a sandbox codex can take and validate() will not refuse",
+        check(f"{at} pins a sandbox codex can take and validate() will not refuse",
               row["sandbox"], "acceptEdits")
-        check(f"{slot} names a harness the launcher accepts",
+        check(f"{at} names a harness the launcher accepts",
               row["harness"] in mod.HERDR_HARNESSES, True)
-        check(f"{slot} names an effort the launcher's argparse accepts",
+        check(f"{at} names an effort the launcher's argparse accepts",
               row["effort"] in mod.LEGAL_EFFORTS, True)
+        # **A CAP IS AN INTEGER OF 1 OR MORE OR IT IS ABSENT, A27.** A zero is not
+        # `unlimited`: it is a head no task can ever reach, and the loader refuses it.
+        cap = row.get("max_concurrency")
+        check(f"{at} carries no cap, or a cap of at least one",
+              cap is None or (isinstance(cap, int) and not isinstance(cap, bool)
+                              and cap >= 1), True)
     # **THE CRITIC INVARIANT, DIRECT PAIRS AND THE F9 PATH.** DD17's disposition said
     # it survives mechanically "because `[heads]` pairs every author with a different
     # model". Nothing tested that, and it drifted: MEASURED 2026-08-19, `glm-5.3`
@@ -988,11 +1030,18 @@ def main() -> int:
     # criticises, and LJ-1.391 was authored and then reviewed twice by that one model.
     # The path that bit is coder → mathematician_adversarial, and the two
     # direct pairs; those three still differ.
+    # **A27 MADE IT A SET COMPARISON.** An author slot may carry two models now, so the
+    # invariant is that NO model of the author is a model of the critic: ONE shared
+    # string is one review a model gives its own work, which is the 2026-08-19 defect.
+    def _models(slot):
+        v = heads["heads"][slot]
+        return {r["model"] for r in (v if isinstance(v, list) else [v])}
+
     for _a, _c in (("mathematician", "mathematician_adversarial"),
                    ("coder", "coder_adversarial"),
                    ("coder", "mathematician_adversarial")):
-        check(f"the critic {_c} does not share a model with the author {_a}",
-              heads["heads"][_a]["model"] != heads["heads"][_c]["model"], True)
+        check(f"the critic {_c} shares no model with the author {_a}",
+              sorted(_models(_a) & _models(_c)), [])
 
     limits = heads["limits"]
     # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a

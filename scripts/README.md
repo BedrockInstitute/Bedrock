@@ -332,8 +332,10 @@ table, `recall-hook.py`, and `dd25-record.py`. All four are frozen under
 `archive/scripts/dispatch/`, with their suites.
 
 **What replaced each one.** `dev/pod/heads.toml` is now the ONE home of the head
-per slot, read by `scripts/pod/heads.py`, so no switch and no checker of a
-`tier:` line survives. `dd25-record.py`'s record moved into the transition log's
+or heads per slot, read by `scripts/pod/heads.py`, so no switch and no checker of
+a `tier:` line survives. (A slot carries SEVERAL models since amendment A27, each
+with its own optional `max_concurrency`; `pick_head_config()` in
+`scripts/pod/pod.py` picks one at the dispatch.) `dd25-record.py`'s record moved into the transition log's
 `role` field. `recall-hook.py` was retired by physics: a Claude Code hook fires
 only for an in-harness subagent, and the program dispatches through a harness.
 `dev/memos/LJ-4-pod-program-design.md` section 7.1 rows 20, 21, 24 and 25 carry the
