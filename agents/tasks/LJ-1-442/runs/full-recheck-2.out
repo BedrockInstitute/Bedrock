@@ -1,0 +1,21 @@
+Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-442/src/L/StageBound.lagda.md).
+real 15.17
+user 14.64
+sys 0.48
+          2370191360  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              146405  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   3  voluntary context switches
+                4250  involuntary context switches
+        215614155337  instructions retired
+         62206672527  cycles elapsed
+          2311260368  peak memory footprint

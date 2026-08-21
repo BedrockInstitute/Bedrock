@@ -391,6 +391,7 @@ import L.Condensation.UpperAgree
 import L.Condensation.TwelveAgree
 import L.Coding.EnvSupply
 import L.BoundedSubset
+import L.StageBound
 import L.Choice.Transversal
 ```
 
