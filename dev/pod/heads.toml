@@ -387,17 +387,19 @@ mathematician_adversarial = [
 # **ITS `max_concurrency = 1` IS THE MACHINE AND NOT A PREFERENCE**: `omlx-server`
 # is one process on this laptop serving one 27B model, and a second concurrent
 # task would contend with the first for the same weights and the same memory.
-# **ITS `effort` IS `"high"`, owner's ruling 2026-08-21 (A28).** `pi`'s status
-# line showed `medium` on every dispatch before this: that was `pi`'s own default
-# with no `--thinking` flag sent at all, not a value this file ever chose. Both
-# `glm-5.3` rows keep `""` deliberately (never asked to carry a value, not
-# because the harness cannot take one).
+# **ITS `effort` WENT TO `"high"` (A28) AND BACK TO `""` THE SAME DAY, owner's
+# ruling 2026-08-21/22.** `""` omits `--thinking` entirely and runs at `pi`'s own
+# default, MEASURED as `medium` in the status line before A28 ever set a value
+# here. The revert is deliberate: track whatever `pi` itself defaults to, not a
+# value this file pins. Both `glm-5.3` rows keep `""` for the same reason they
+# always did (never asked to carry a value, not because the harness cannot take
+# one).
 # **THE SECOND HEAD MOVED FROM `grok-4.6` TO `claude-opus-5`, owner's ruling
 # 2026-08-21.** It is the overflow head AND the model A29 retries on when the
 # local server produces nothing, which it did twice on real work (`LJ-1.478`,
 # `LJ-1.479`) before either mechanism existed.
 coder                     = [
-  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "high",  harness = "herdr-pi",     sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits", max_concurrency = 1 },
   { model = "claude-opus-5",        effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
 ]
 # **TWO HEADS SINCE 2026-08-21**, the same pair and the same reasoning as
