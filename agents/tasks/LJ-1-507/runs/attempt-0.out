@@ -1,0 +1,5 @@
+Checking LJ-1-507.Probe507 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-507/agents/tasks/LJ-1-507/Probe507.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-507/agents/tasks/LJ-1-507/Probe507.agda:162.68-71: error: [UnequalTerms]
+(fst ar) != (fst c) of type (V ℓ)
+when checking that the expression arK has type
+⟨ fst c ∈ fst (lookup iC (gam' g1 g2 g3 g4 g5)) ⟩

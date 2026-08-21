@@ -1,0 +1,13 @@
+Checking LJ-1-507.Probe507 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-507/agents/tasks/LJ-1-507/Probe507.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-507/agents/tasks/LJ-1-507/Probe507.agda:141.5-56: error: [UnequalTerms]
+fst g2 != L.Constructible.Lset lam of type V ℓ
+when checking that the inferred type of an application
+  (k : ℕ) (c ar a b : S) →
+  ⟨ fst c ∈ fst (lookup K6 (gam' g1 g2 g3 g4 g5)) ⟩ →
+  fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b))) →
+  ∥ Σ-syntax ℕ (λ n → fst ar ≡ (# n)) ∥₁
+matches the expected type
+  (k : ℕ) (c ar a b : S) →
+  ⟨ fst c ∈ fst (lookup iC (gam' g1 g2 g3 g4 g5)) ⟩ →
+  fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b))) →
+  ∥ Σ-syntax ℕ (λ n → fst ar ≡ (# n)) ∥₁
