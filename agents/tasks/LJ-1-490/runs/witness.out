@@ -1,0 +1,3 @@
+missing   exit=42       1.95s  agents/tasks/LJ-1-490/Probe490.agda::rank-coded  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-490/.pod-state/witness/Witness-LJ-1-490-1cab1af0.agda:25)
+witness: 1 UNRESOLVED of 1, 1.95 s, probe_red=False
+EXIT:1
