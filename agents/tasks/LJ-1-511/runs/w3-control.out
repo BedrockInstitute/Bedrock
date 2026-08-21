@@ -1,0 +1,9 @@
+Checking LJ-1-511.Probe511 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-511/agents/tasks/LJ-1-511/Probe511.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-511/agents/tasks/LJ-1-511/Probe511.agda:156.16-30: error: [UnequalTerms]
+fst (numeralL 0) !=
+fst
+(L.Axioms.Numerals.pairʟ (L.Axioms.Numerals.pairʟ z z)
+ (L.Axioms.Numerals.pairʟ z z))
+of type V ℓ
+when checking that the expression numeralL-fst 0 has type
+fst (prʟ z z) ≡ (# 0)

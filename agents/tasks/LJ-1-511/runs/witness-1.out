@@ -1,0 +1,2 @@
+pass      exit=0        3.72s  agents/tasks/LJ-1-511/Probe511.agda::someEnv-at-corrected-def
+witness: 0 UNRESOLVED of 1, 3.72 s, probe_red=False
