@@ -384,6 +384,7 @@ import L.Choice.Limit
 import L.Choice.Before
 import L.Choice.Order
 import L.Hull
+import L.SquareLawClosed
 import L.StageCardinal
 import L.Condensation
 import L.Condensation.LowerAgree

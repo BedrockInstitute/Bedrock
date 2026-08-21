@@ -3240,6 +3240,7 @@ gch_wing = [
   "src/V/CantorBernstein.lagda.md",     # 140 in-fence; TEMPLATE CANDIDATE, see above
   "src/FOL/Bernstein.lagda.md",         # 336 in-fence; TEMPLATE CANDIDATE, see above
   "src/L/Absorption.lagda.md",          # 526 in-fence
+  "src/L/SquareLawClosed.lagda.md",     # [LJ-1.445], truncated square law at a generic band
   "src/L/InjChain.lagda.md",            # 502 in-fence
   "src/L/Coding/Injection.lagda.md",    # 238 in-fence; feeds Cardinal, InjChain, Absorption
   "src/L/Coding/Key.lagda.md",          # 690 in-fence
