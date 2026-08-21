@@ -220,7 +220,23 @@ def audit_quotes(sec: str) -> dict[str, dict]:
     in writing, or carries a quote verified at the cited line, plus the fail
     reasons of unverified quotes. A quote belongs to the NEAREST citation
     before it in the bullet, never to every citation in the bullet.
+
+    **A MARKDOWN BLOCKQUOTE LINE IS A FOURTH QUOTE FORM, folded into the
+    other three before a bullet is ever extracted.** MEASURED 2026-08-22 on
+    `[LJ-1.500]`: three independent returns (the coder's report, both
+    critic reviews) each cited `archive/dev/LJ-dispatch-index.md:433` with
+    `Quote at ...:` followed by `> | LJ-1.379 | ... |` on its own line, and
+    the cited text is verbatim correct. `QUOTE`'s three delimiters (double
+    quotes, CJK corner quotes, backticks) do not cover `>`, so the checker
+    fell through past the real quote to unrelated backtick spans nearby (the
+    citation's own backtick-quoted path, a stray phrase in the surrounding
+    prose) and reported a correct quote as "text the file does not hold".
+    A `>`-prefixed line is rewritten to a double-quoted span HERE, while
+    newlines still mark where a blockquote starts and ends; `bullets()`
+    collapses them right after, and the existing double-quote branch of
+    `QUOTE` needs no change to pick it up.
     """
+    sec = re.sub(r'(?m)^[ \t]*>[ \t]*(.+)$', r'"\1"', sec)
     files: dict[str, dict] = {}
     for raw in bullets(sec):
         events = ([(m.start(), "cite", m) for m in CITE.finditer(raw)]

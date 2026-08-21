@@ -723,8 +723,26 @@ GOOD = """# Report
 - `archive/dev/JOURNAL-archived.md`: NOT read, nothing in it bears.
 """ % QUOTED
 
+
+# A25's `>` blockquote form, MEASURED 2026-08-22 on `[LJ-1.500]`: three
+# independent returns quoted an archive line this way, verbatim correct, and
+# all three failed because `QUOTE` had no delimiter for it.
+BLOCKQUOTE = """# Report
+
+## ARCHIVE USED
+
+- `archive/dev/TASKS-archived.md`: **READ.** Quote at \
+`archive/dev/TASKS-archived.md:80`:
+
+  > %s
+
+  TOOK the shape only.
+- `archive/dev/JOURNAL-archived.md`: NOT read, nothing in it bears.
+""" % QUOTED
+
 CASES = [
     ("a correct quote at the cited line passes", GOOD, 0, ""),
+    ("a correct quote as a markdown blockquote passes", BLOCKQUOTE, 0, ""),
     ("an unanswered injected path fails", GOOD.replace(
         "- `archive/dev/JOURNAL-archived.md`: NOT read, nothing in it bears.\n",
         ""), 1, "unanswered"),
