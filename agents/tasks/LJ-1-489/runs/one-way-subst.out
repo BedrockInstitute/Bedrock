@@ -1,0 +1,13 @@
+Checking LJ-1-489.Probe489 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-489/agents/tasks/LJ-1-489/Probe489.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-489/agents/tasks/LJ-1-489/Probe489.agda:84.26-72: error: [UnequalTerms]
+Cubical.HITs.PropositionalTruncation.Base.∥
+Σ-syntax (C.Fiber (𝒟ₒ y))
+(λ i →
+   C.π
+   (Cubical.HITs.CumulativeHierarchy.Properties.⟪ 𝒟ₒ y ⟫↪ (i .fst))
+   ≡ z)
+∥₁
+!=< fst (z Cubical.HITs.CumulativeHierarchy.Base.∈ 𝒟ₒ (C.π y))
+when checking that the expression
+subst (λ w → ⟨ z ∈ˢ w ⟩) (left-compute y) z∈πD has type
+⟨ z ∈ˢ 𝒟ₒ (C.π y) ⟩
