@@ -1,0 +1,13 @@
+Checking LJ-1-473.Probe473 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-473/agents/tasks/LJ-1-473/Probe473.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-473/agents/tasks/LJ-1-473/Probe473.agda:55.12-13: error: [NotInScope]
+Not in scope:
+  ∅
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-473/agents/tasks/LJ-1-473/Probe473.agda:55.12-13
+    (did you mean
+       '.#L.Axioms.Basic-11246956757421446708.ModelL.isZFCModel.∅' or
+       '.#L.Axioms.Basic-11246956757421446708.ModelL.isZFModel.∅' or
+       '.#L.Axioms.Numerals-15929534749874868086.ModelL.isZFCModel.∅' or
+       '.#L.Axioms.Numerals-15929534749874868086.ModelL.isZFModel.∅' or
+       'Cubical.HITs.CumulativeHierarchy.Constructions.EmptySet.∅' or
+       'Cubical.HITs.CumulativeHierarchy.Constructions.∅'?)
+when scope checking ∅
