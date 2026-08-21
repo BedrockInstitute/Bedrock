@@ -1,0 +1,13 @@
+    17	open import L.Ordinal.SquareLaw {ℓ} lem using ( sq )
+    18	import L.SquareLawClosed
+    41	-- Collection of truncated squares to a truncated family. Not inhabited.
+    42	
+    43	SqCollect : S → Type (ℓ-suc ℓ)
+    44	SqCollect α =
+    45	    ((δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥) → ∥ sq δ ∥₁)
+    46	  → ∥ SqFam α ∥₁
+   112	    module SLC = L.SquareLawClosed {ℓ} lem α ordα
+   113	
+   114	    bounded-modulo-collect : SqCollect α → ⟨ x ∈ˢ Lset κ ⟩
+   115	    bounded-modulo-collect collect =
+   116	      bounded-from-trunc (collect SLC.sq-trunc-closed)

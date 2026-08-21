@@ -1,0 +1,21 @@
+LJ-1.449 instance-2 gate check, before any Agda
+cwd: /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-449
+HEAD: 706a6e2da569c507b6a8023b8f7455e5977d3540
+HEAD subject: 706a6e2da569c507b6a8023b8f7455e5977d3540 2026-08-21 09:51:26 +0800 pod: resident mathematician (pod-math), soft stop, maintainer -> claude-sonnet-5
+GHCRTS=-A64m -I0 -M8g
+
+=== test 1: LJ-1.442 report and StageBound ===
+-rw-r--r--@ 1 alsg  staff  10991 21 Aug 09:56 agents/tasks/LJ-1-442/lj-1.442-report.md
+-rw-r--r--@ 1 alsg  staff   4269 21 Aug 09:56 src/L/StageBound.lagda.md
+
+=== test 2: LJ-1.445 report and SquareLawClosed ===
+ls: agents/tasks/LJ-1-445/lj-1.445-report.md: No such file or directory
+ls: src/L/SquareLawClosed.lagda.md: No such file or directory
+
+=== task dirs LJ-1-44x ===
+agents/tasks/LJ-1-441
+agents/tasks/LJ-1-442
+agents/tasks/LJ-1-449
+
+=== Everything imports of StageBound / SquareLawClosed ===
+394:import L.StageBound

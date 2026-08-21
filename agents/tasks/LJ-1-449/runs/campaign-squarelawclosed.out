@@ -1,0 +1,6 @@
+    19	module L.SquareLawClosed {ℓ : Level} (lem : LEM (ℓ-suc ℓ))
+    20	  (α₀ : V ℓ) (oα₀ : IsOrd α₀) where
+   325	sq-trunc-closed :
+   326	    (δ : V ℓ) → ⟨ δ ∈ sucV α₀ ⟩ → (⟨ δ ∈ ω ⟩ → Empty.⊥)
+   327	  → ∥ sq δ ∥₁
+   328	sq-trunc-closed δ δ∈ infδ = ∈-induction {P = Goal} step δ (band-ord δ δ∈) infδ

@@ -1,0 +1,11 @@
+=== commits HEAD..pod-cutover count ===
+27
+
+=== ee7ef37 (LJ-1.445) ===
+ee7ef373c29deb88999600d1694145ef56b3197d 2026-08-21 10:02:17 +0800 pod: LJ-1.445 done, row task-lj-1-445-go
+
+=== a7978f4 (LJ-1.453) ===
+a7978f472c99b1670141d1006d33a13730392803 2026-08-21 11:42:02 +0800 pod: LJ-1.453 done, row sys-obligations-satisfied
+
+=== e9b40ad (pod-cutover tip at dump) ===
+e9b40ad739bf577128a7fb39092daff2528a7e35 2026-08-21 11:42:03 +0800 pod: expire LJ-1.453

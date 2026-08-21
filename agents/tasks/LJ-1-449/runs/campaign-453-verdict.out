@@ -1,0 +1,10 @@
+    73	## VERDICT
+    74	
+    75	**GO.** The obligation typechecks at
+    76	`src/L/StageBound.lagda.md:114-116` (exit 0, median 16.95 s on three
+    77	forced rechecks of the master, dependencies warm, caliber
+    78	`-A64m -I0 -M8g`). `SqCollect` is stated at
+    79	`src/L/StageBound.lagda.md:43-46`, generic in `α`, and is not inhabited.
+    80	The body is two applications: the hypothesis applied to
+    81	`SLC.sq-trunc-closed`, then `bounded-from-trunc` applied to that result.
+    82	No postulate. No `subst`. No `--safe` off.
