@@ -1,0 +1,2 @@
+probe-red exit=42       2.10s  agents/tasks/LJ-1-450/Probe450.agda::someEnv-at-K  (exit 42 inside the probe: UnequalTerms)
+witness: 1 UNRESOLVED of 1, 2.10 s, probe_red=True

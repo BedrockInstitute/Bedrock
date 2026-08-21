@@ -1,0 +1,23 @@
+Checking LJ-1-450.Probe450 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-450/agents/tasks/LJ-1-450/Probe450.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-450/agents/tasks/LJ-1-450/Probe450.agda:47.33-35: error: [UnequalTerms]
+14 != 8 of type ℕ
+when checking that the expression iK has type
+Fin (5 Agda.Builtin.Nat.+ 3)
+        1.94 real         1.75 user         0.17 sys
+           619003904  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39521  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 720  involuntary context switches
+         22504797946  instructions retired
+          8001864331  cycles elapsed
+           560038896  peak memory footprint
