@@ -1,0 +1,23 @@
+GHCRTS=-A64m -I0 -M8g
+forced-recheck=3
+interface-removed=_build/2.8.0/agda/agents/tasks/LJ-1-443/Probe443.agdai
+Checking LJ-1-443.Probe443 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-443/agents/tasks/LJ-1-443/Probe443.agda).
+        1.30 real         1.14 user         0.15 sys
+           348291072  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22998  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 437  involuntary context switches
+         14386986329  instructions retired
+          5217699274  cycles elapsed
+           289243928  peak memory footprint
+exit=0
