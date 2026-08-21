@@ -1,0 +1,2 @@
+pass      exit=0        1.65s  agents/tasks/LJ-1-447/Probe447.agda::descent-both
+witness: 0 UNRESOLVED of 1, 1.65 s, probe_red=False
