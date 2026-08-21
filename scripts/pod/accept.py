@@ -177,20 +177,28 @@ def closure(root=None):
 
 
 def unbound_findings(root=None):
-    """The finding SET of `check-unbound-hyp.py`, as `file:line` strings.
+    """The finding SET of `check-unbound-hyp.py`, as `file:name` strings.
 
     THE TOOL HAS NO BASELINE MODE, and a naive read fails every task for ever: MEASURED
     2026-08-17 it prints five findings today (`src/L/Absorption.lagda.md:398` and `:400`,
     `src/L/InjChain.lagda.md:471`, `src/L/Reflect.lagda.md:365`,
     `src/L/StageCardinal.lagda.md:281`). So the pre-flight snapshots the set, the
     acceptance re-runs it, and the conjunct fails on a SET DIFFERENCE.
+
+    THE KEY IS THE HYPOTHESIS NAME, NOT THE LINE. MEASURED 2026-08-21 on LJ-1.469: an
+    import widened earlier in the same file shifted two untouched findings from
+    `:398`/`:400` to `:399`/`:401`; a line-keyed set difference read that shift as two
+    new findings and parked a task with a delivered obligation. The tool's own output
+    carries the bound name at each line (`{file}:{line}: {name}: {why}`,
+    `scripts/measure/check-unbound-hyp.py:367`), so keying on it instead survives a shift
+    an unrelated edit causes.
     """
     rc, out = _run(UNBOUND, root)
     found = []
     for line in out.split("\n"):
         head = line.split(":")
         if len(head) >= 3 and head[1].strip().isdigit() and head[0].endswith(".lagda.md"):
-            found.append(f"{head[0]}:{head[1].strip()}")
+            found.append(f"{head[0]}:{head[2].strip()}")
     return sorted(set(found))
 
 
