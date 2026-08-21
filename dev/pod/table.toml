@@ -6122,116 +6122,6 @@ expired_at = 2026-08-21
   seconds_min = 3600.0
 
 [[row]]
-id = "task-lj-1-459-go"
-scope = "task:LJ-1.459"
-priority = 10
-action = "done"
-outcome = "go"
-added = 2026-08-21
-added_by = "mathematician"
-reason = "branch `go` of LJ-1.459, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 0
-  obligations_delta_max = -1
-  heap_wall = false
-  seconds_per_line_max = 0.0123
-
-[[row]]
-id = "task-lj-1-459-ratio-bar"
-scope = "task:LJ-1.459"
-priority = 11
-action = "escalate"
-head_slot = "coder_adversarial"
-added = 2026-08-21
-added_by = "mathematician"
-reason = "THE DELTA KEY IS DELIBERATELY ABSENT. MEASURED 2026-08-21 on LJ-1.453: its"
-expired = false
-
-  [row.when]
-  exit_code = 0
-  heap_wall = false
-  seconds_per_line_min = 0.0123
-
-[[row]]
-id = "task-lj-1-459-stop-stated"
-scope = "task:LJ-1.459"
-priority = 12
-action = "escalate"
-head_slot = "mathematician_adversarial"
-added = 2026-08-21
-added_by = "mathematician"
-reason = "branch `stop-stated` of LJ-1.459, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 0
-  obligations_delta_min = 0
-  changed_files_any = ["agents/tasks/LJ-1-459/review-of-*.md"]
-  changed_files_none = ["agents/tasks/LJ-1-459/review-of-LJ-*-*.md"]
-
-[[row]]
-id = "task-lj-1-459-no-go-attacked"
-scope = "task:LJ-1.459"
-priority = 15
-action = "escalate"
-head_slot = "mathematician_adversarial"
-added = 2026-08-21
-added_by = "mathematician"
-reason = "branch `no-go-attacked` of LJ-1.459, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 42
-  error_class_in = ["unsolved_meta", "universe_level", "other"]
-  changed_files_any = ["src/L/StageBound.lagda.md"]
-  changed_files_none = ["agents/tasks/LJ-1-459/review-of-*.md"]
-
-[[row]]
-id = "task-lj-1-459-no-go-stated"
-scope = "task:LJ-1.459"
-priority = 20
-action = "escalate"
-head_slot = "mathematician_adversarial"
-added = 2026-08-21
-added_by = "mathematician"
-reason = "branch `no-go-stated` of LJ-1.459, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 42
-  changed_files_any = ["agents/tasks/LJ-1-459/review-of-*.md"]
-
-[[row]]
-id = "task-lj-1-459-heap-wall-escalate"
-scope = "task:LJ-1.459"
-priority = 30
-action = "escalate"
-head_slot = "coder_adversarial"
-added = 2026-08-21
-added_by = "mathematician"
-reason = "branch `heap-wall-escalate` of LJ-1.459, admitted from the brief"
-expired = false
-
-  [row.when]
-  heap_wall = true
-
-[[row]]
-id = "task-lj-1-459-ran-long-and-changed-little"
-scope = "task:LJ-1.459"
-priority = 50
-action = "park"
-added = 2026-08-21
-added_by = "mathematician"
-reason = "branch `ran-long-and-changed-little` of LJ-1.459, admitted from the brief"
-expired = false
-
-  [row.when]
-  changed_files_count_max = 1
-  seconds_min = 3600.0
-
-[[row]]
 id = "task-lj-1-460-go"
 scope = "task:LJ-1.460"
 priority = 10
@@ -7725,6 +7615,134 @@ added_by = "mathematician"
 reason = "branch `ran-long-and-changed-little` of LJ-1.473, admitted from the brief"
 expired = true
 expired_at = 2026-08-21
+
+  [row.when]
+  changed_files_count_max = 1
+  seconds_min = 3600.0
+
+[[row]]
+id = "task-lj-1-459-obligations-satisfied"
+scope = "task:LJ-1.459"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "sys-obligations-satisfied's shape at task scope, outranks the broken ratio-bar row. Owner-authorised R3 bypass 2026-08-21 round 2: live corpus blocks a normal proposal."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  changed_files_any = ["agents/tasks/LJ-1-459/review-of-LJ-*-*.md"]
+  heap_wall = false
+  obligations_open_max = 0
+
+[[row]]
+id = "task-lj-1-459-go"
+scope = "task:LJ-1.459"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `go` of LJ-1.459, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+  seconds_per_line_max = 0.0123
+
+[[row]]
+id = "task-lj-1-459-ratio-bar"
+scope = "task:LJ-1.459"
+priority = 11
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "THE DELTA KEY IS DELIBERATELY ABSENT. MEASURED 2026-08-21 on LJ-1.453: its"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  changed_files_none = ["agents/tasks/LJ-1-459/review-of-LJ-*-*.md"]
+  heap_wall = false
+  seconds_per_line_min = 0.0123
+
+[[row]]
+id = "task-lj-1-459-stop-stated"
+scope = "task:LJ-1.459"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `stop-stated` of LJ-1.459, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-459/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-459/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-459-no-go-attacked"
+scope = "task:LJ-1.459"
+priority = 15
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `no-go-attacked` of LJ-1.459, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  error_class_in = ["unsolved_meta", "universe_level", "other"]
+  changed_files_any = ["src/L/StageBound.lagda.md"]
+  changed_files_none = ["agents/tasks/LJ-1-459/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-459-no-go-stated"
+scope = "task:LJ-1.459"
+priority = 20
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `no-go-stated` of LJ-1.459, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  changed_files_any = ["agents/tasks/LJ-1-459/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-459-heap-wall-escalate"
+scope = "task:LJ-1.459"
+priority = 30
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `heap-wall-escalate` of LJ-1.459, admitted from the brief"
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "task-lj-1-459-ran-long-and-changed-little"
+scope = "task:LJ-1.459"
+priority = 50
+action = "park"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `ran-long-and-changed-little` of LJ-1.459, admitted from the brief"
+expired = false
 
   [row.when]
   changed_files_count_max = 1
