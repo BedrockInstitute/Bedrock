@@ -262,7 +262,11 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
 tick_seconds = 30             # the runner's sleep, section 5.0
 exclusive_max_load1 = 6.0     # refuse to start an exclusive task above this
 agda_deadline_s = 1800        # the POD owns the deadline. See gap M2
-worker_deadline_s = 14400     # a worker that runs longer is killed, section 5.1
+worker_deadline_s = 21600     # a worker that runs longer is killed, section 5.1.
+# RAISED FROM 14400 TO 21600, owner's ruling 2026-08-21/22: LJ-1.490 was still
+# genuinely `working` (not hung, not blocked) past the 4-hour mark on the local
+# qwen head, and the owner chose to give it two more hours rather than force a
+# kill mid-computation.
 attempt_max = 4               # consecutive retries on ONE row, then PARK. B2
 parked_max = 12               # this many PARKED tasks stop the loop, rule (d)
 
