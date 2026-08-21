@@ -4202,7 +4202,8 @@ outcome = "go"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `go` of LJ-1.440, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 0
@@ -4218,7 +4219,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `no-go-attacked` of LJ-1.440, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 42
@@ -4235,7 +4237,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `no-go-stated` of LJ-1.440, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   exit_code = 42
@@ -4250,7 +4253,8 @@ head_slot = "coder_adversarial"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `heap-wall-escalate` of LJ-1.440, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   heap_wall = true
@@ -4263,7 +4267,8 @@ action = "park"
 added = 2026-08-20
 added_by = "mathematician"
 reason = "branch `ran-long-and-changed-little` of LJ-1.440, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-21
 
   [row.when]
   changed_files_count_max = 1
@@ -5261,3 +5266,38 @@ expired = false
   [row.when]
   changed_files_count_max = 1
   seconds_min = 3600.0
+
+[[row]]
+id = "task-lj-1-440-stop-stated"
+scope = "task:LJ-1.440"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "D-10 stop, exit 0, matches no exit_code 42 branch. Same shape as task-lj-1-448-stop-stated. changed_files_none added: without it, that row looped on the critic's own return (transitions:957,961)."
+expired = true
+expired_at = 2026-08-21
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-440/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-440/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-444-stop-stated"
+scope = "task:LJ-1.444"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "D-10 stop, worktree predates LJ-1.442's GO landing in main. Unlike LJ-1.443, premise is now true, so escalation resolves it. changed_files_none added, same reason as LJ-1.440's row."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-444/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-444/review-of-LJ-*-*.md"]
