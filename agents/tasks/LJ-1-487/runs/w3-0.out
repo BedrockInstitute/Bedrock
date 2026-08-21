@@ -1,0 +1,6 @@
+Checking LJ-1-487.Probe487 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-487/agents/tasks/LJ-1-487/Probe487.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-487/agents/tasks/LJ-1-487/Probe487.agda:84.5-85.68: error: [MissingTypeSignature.Function]
+Missing type signature for left hand side trans∅ x hx y hy
+when scope checking the declaration
+  trans∅ x hx y hy
+    = Empty.rec (∅-empty (fst x) (∈∈ₛ {a = fst x} {b = ∅} .fst hx))
