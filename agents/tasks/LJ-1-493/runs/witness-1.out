@@ -1,0 +1,2 @@
+pass      exit=0        3.23s  agents/tasks/LJ-1-493/Probe493.agda::someEnv-inlined
+witness: 0 UNRESOLVED of 1, 3.23 s, probe_red=False
