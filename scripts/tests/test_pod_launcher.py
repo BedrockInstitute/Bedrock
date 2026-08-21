@@ -359,7 +359,7 @@ def cli(*args, **kw):
 #: The harnesses whose CLI has NO reasoning-effort dial, so their `[heads]` row carries
 #: the empty string. MEASURED per harness and never inferred from the vendor's name:
 #: `pi` has no such flag, while `claude --effort` and `grok --reasoning-effort` both do.
-#: **`herdr-pi` LEFT THIS TUPLE 2026-08-21 (A27b).** `pi --help` names `--thinking
+#: **`herdr-pi` LEFT THIS TUPLE 2026-08-21 (A28).** `pi --help` names `--thinking
 #: <level>`, so the harness DOES have a dial; a `herdr-pi` head just carries `""` or
 #: a real value by CHOICE now, never by necessity. Only `herdr` (codex) truly has no
 #: equivalent flag: `scripts/pod/launcher.py`'s codex branch is `["--", "-m", model]`
@@ -456,7 +456,7 @@ def main() -> int:
               "--provider" in run("claude"), False)
         check("the codex branch is unchanged",
               run("codex"), ["--", "-m", "claude-opus-5"])
-        # **A27b, MEASURED 2026-08-21: `pi --help` names `--thinking <level>` with
+        # **A28, MEASURED 2026-08-21: `pi --help` names `--thinking <level>` with
         # `off, minimal, low, medium, high, xhigh, max`, a superset of
         # `legal.efforts`.** Missed the first time the pi branch was written; the
         # owner asked for one pi head to carry a real effort value, which needed
@@ -997,15 +997,30 @@ def main() -> int:
     # 2026-08-21, and the checks below bind EVERY config of EVERY slot. This reads the
     # RAW TOML, so it sees both spellings; `scripts/pod/heads.py` is what normalises them
     # to a list, and that normalisation is `test_pod_loop.py`'s to prove.
-    check("the coder is the one slot that carries a choice of model, and it is an "
-          "array of tables", isinstance(heads["heads"]["coder"], list), True)
-    check("exactly one of its two models is capped, so the array is not two copies "
-          "of one shape",
+    # **THREE SLOTS CARRY A CHOICE SINCE A29**, and it was one under A27. The owner
+    # ruled `mathematician_adversarial` and `coder_adversarial` onto a second head so
+    # that A29's retry has somewhere to go for a critic, not only for the coder.
+    check("the three slots that carry a choice are spelled as arrays of tables",
+          sorted(s for s, v in heads["heads"].items() if isinstance(v, list)),
+          ["coder", "coder_adversarial", "mathematician_adversarial"])
+    check("the two single-head slots keep the inline-table spelling A27 preserved",
+          sorted(s for s, v in heads["heads"].items() if isinstance(v, dict)),
+          ["maintainer", "mathematician"])
+    check("exactly one of the coder's two models is capped, so the array is not two "
+          "copies of one shape",
           sorted(str(r.get("max_concurrency")) for r in heads["heads"]["coder"]),
           ["1", "None"])
+    # **THE CAP IS NOT WHAT MAKES A SLOT RETRYABLE, A29.** Both critic arrays are
+    # entirely uncapped and both still fall back, because the trigger is that the slot
+    # has a second head at all. This check is the one that would have failed under
+    # A27's capacity gate.
+    for _critic in ("mathematician_adversarial", "coder_adversarial"):
+        check(f"{_critic} carries two heads and caps neither",
+              [r.get("max_concurrency") for r in heads["heads"][_critic]],
+              [None, None])
     _rows = [(slot, r) for slot, v in heads["heads"].items()
              for r in (v if isinstance(v, list) else [v])]
-    check("the file carries six configs across the five slots", len(_rows), 6)
+    check("the file carries eight configs across the five slots", len(_rows), 8)
     for slot, row in _rows:
         # THE LABEL NAMES THE MODEL AND NOT ONLY THE SLOT, because one slot now produces
         # several rows and two identical labels cannot be told apart in a failure list.
@@ -1018,7 +1033,7 @@ def main() -> int:
               row["harness"] in mod.HERDR_HARNESSES, True)
         # **ONLY `herdr` (codex) TRULY LACKS THE DIAL.** `herdr-claude` and `herdr-grok`
         # both require a real effort (R5 refuses an empty one at dispatch, elsewhere).
-        # `herdr-pi` HAS a dial (`--thinking`, wired 2026-08-21, A27b) but a head on it
+        # `herdr-pi` HAS a dial (`--thinking`, wired 2026-08-21, A28) but a head on it
         # carries "" or a real value by choice, so no reverse implication holds for it
         # any more: `glm-5.3` stays "" deliberately, `Qwen3.8-27B-oQ4e-mtp` carries
         # "high" deliberately, and both are correct.
@@ -1051,6 +1066,9 @@ def main() -> int:
     # **A27 MADE IT A SET COMPARISON.** An author slot may carry two models now, so the
     # invariant is that NO model of the author is a model of the critic: ONE shared
     # string is one review a model gives its own work, which is the 2026-08-19 defect.
+    # **A29 PUT A CHOICE ON BOTH SIDES OF EVERY PAIR.** The two critics carry two heads
+    # each now, so each comparison below is set against set and no longer set against a
+    # single string. The intent is A27's exactly; only the arity grew.
     def _models(slot):
         v = heads["heads"][slot]
         return {r["model"] for r in (v if isinstance(v, list) else [v])}
@@ -1060,6 +1078,20 @@ def main() -> int:
                    ("coder", "mathematician_adversarial")):
         check(f"the critic {_c} shares no model with the author {_a}",
               sorted(_models(_a) & _models(_c)), [])
+    # **TWO AUTHOR SLOTS SHARING A VENDOR IS NOT THE DEFECT DD25 NAMES, and it is
+    # asserted rather than left to be re-argued.** `claude-opus-5` is the whole of
+    # `mathematician` and the coder's second head since 2026-08-21. Neither slot
+    # criticises the other, so no model reviews its own work; the loop above is the
+    # check that matters and this one records why its complement is silent.
+    check("claude-opus-5 is in two AUTHOR slots, which no author/critic pair covers",
+          sorted(s for s in ("mathematician", "coder", "mathematician_adversarial",
+                             "coder_adversarial")
+                 if "claude-opus-5" in _models(s)),
+          ["coder", "mathematician"])
+    # **THE TWO CRITICS SHARE BOTH THEIR HEADS AND THAT IS ADMISSIBLE**, for the same
+    # reason: DD25 pairs an author with ITS critic and says nothing about two critics.
+    check("the two critic slots carry the same pair, which no pair above forbids",
+          _models("mathematician_adversarial") == _models("coder_adversarial"), True)
 
     limits = heads["limits"]
     # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a

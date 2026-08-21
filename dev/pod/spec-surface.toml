@@ -1230,7 +1230,7 @@ sha = "4a382c3577653da5fc9b02ed5574ab9cb95a364f205e81713f15311ad50a95ba"
 
 [[guarded]]
 path = "dev/memos/LJ-4-pod-program-design.md"
-sha = "0cc412226cd4c64db23fc697838eff41e28ea5d0c82eea6d82b490e1b68178a5"
+sha = "40391229807efea9810f007c451c40324ae63ec1d8e079d7a752d95cc11f00b8"
 
 [[guarded]]
 path = "dev/pod/instructions/coder.md"

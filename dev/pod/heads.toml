@@ -322,10 +322,11 @@ system_free_floor_pct = 8     # C-12's floor, restored by A13
 #
 # A SLOT IS ONE INLINE TABLE OR AN ARRAY OF THEM, amendment A27, owner's ruling
 # 2026-08-21. The array is a STRICT SUPERSET: an array of one means what a single
-# table means, and the four single-head slots below are spelled exactly as they
-# were before A27. `max_concurrency` is the ONE optional field. It caps the tasks
-# that may hold that SLOT on that MODEL at one time, and an omitted one means
-# unlimited, which is what every row here meant until A27.
+# table means, and the two single-head slots below (`mathematician` and
+# `maintainer`) are spelled exactly as they were before A27.
+# `max_concurrency` is the ONE optional field. It caps the tasks that may hold
+# that SLOT on that MODEL at one time, and an omitted one means unlimited, which
+# is what every row here meant until A27 and what seven of the eight mean today.
 #
 # **THE CAP IS NOT THE AGDA CONCURRENCY OF `[tiers]` ABOVE AND THE TWO NEVER
 # MEET.** `[tiers]` is A14's: it counts Agda WRITER processes and their heap, it
@@ -341,33 +342,67 @@ system_free_floor_pct = 8     # C-12's floor, restored by A13
 # headroom goes to the one written FIRST in the array, so the order below is the
 # owner's ranking. **THE CONSEQUENCE, stated because it is easy to miss: while
 # the pod runs ONE coder task at a time, every one of them goes to the local
-# model and grok gets nothing.** Grok is the OVERFLOW head under this policy.
+# model and the second head gets nothing.** The uncapped head is the OVERFLOW
+# head under this policy.
+#
+# **A SECOND HEAD IS ALSO THE RETRY TARGET, amendment A29, and that is a
+# DIFFERENT mechanism from the one above.** `pick_head_config()` chooses at
+# dispatch and reads the caps. A29 fires AFTER a dispatch returned nothing to
+# measure (R7): the failed model goes onto `t.avoid_models`, the task parks
+# `fallback:<model>` and re-opens at once on a head it has not spent. THE TRIGGER
+# IS THIS FILE'S ARITHMETIC AND NOT A CAP: a slot with a choice retries, a slot
+# with one head parks `no-change` and waits for a person, exactly as before.
+# So the ORDER of an array below is a preference and its LENGTH is a promise.
 [heads]
-# RULED BY THE OWNER, 2026-08-21. Direct author/critic pairs differ. The F9
-# path is coder → mathematician_adversarial, and since A27 the coder may author
-# on EITHER of its two models, so the invariant is a set one: NO model of an
-# author slot is a model of its critic. Both coder models differ from `glm-5.3`,
-# which is what both critics run.
+# RULED BY THE OWNER, 2026-08-21: 「前者失败则换后者重试」. Where a slot carries
+# an array, the first head is spent first and the rest are what A29 retries on.
+#
+# DD25 SURVIVES AS A SET INVARIANT: NO model of an author slot is a model of its
+# critic. Three slots carry a choice now, so the check is pairwise over sets and
+# `scripts/tests/test_pod_launcher.py` runs it on all three author/critic pairs.
+# MEASURED 2026-08-21 over the rows below: coder {Qwen3.8-27B-oQ4e-mtp,
+# claude-opus-5} meets neither critic set {glm-5.3, grok-4.6}, and mathematician
+# {claude-opus-5} meets neither either.
+# **`claude-opus-5` IS IN TWO SLOTS AND THAT IS NOT A COLLISION.** It is the whole
+# of `mathematician` and the coder's fallback, and those are two AUTHOR slots. The
+# invariant forbids an author reviewing its own work, never two authors sharing a
+# vendor.
 mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
-mathematician_adversarial = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
-# THE ONE SLOT WITH TWO MODELS, owner's ruling 2026-08-21. The local head is
-# written first because it is the head the owner wants spent first. THAT ORDER
-# CHANGES NOTHING TODAY: the array order is only the tie-break between two CAPPED
-# heads with headroom, and there is one capped head here. It becomes load-bearing
-# the day a second capped head joins the array.
+# **TWO HEADS SINCE 2026-08-21**, `glm-5.3` first and `grok-4.6` behind it. Neither
+# is capped: both are ordinary cloud vendors and neither is a scarce local
+# resource, so `pick_head_config()` takes the first every time and the second is
+# reached only through A29's retry. `grok-4.6` carries `"high"`, which is the
+# effort it carried in the `coder` array before this ruling moved it.
+mathematician_adversarial = [
+  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
+  { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
+]
+# THE LOCAL HEAD IS WRITTEN FIRST because it is the head the owner wants spent
+# first. That order is the tie-break between two CAPPED heads with headroom, and
+# there is one capped head here; since A29 it is ALSO the order the retry walks.
 # **ITS `max_concurrency = 1` IS THE MACHINE AND NOT A PREFERENCE**: `omlx-server`
 # is one process on this laptop serving one 27B model, and a second concurrent
 # task would contend with the first for the same weights and the same memory.
-# **ITS `effort` IS `"high"`, owner's ruling 2026-08-21 (A27b).** `pi`'s status
+# **ITS `effort` IS `"high"`, owner's ruling 2026-08-21 (A28).** `pi`'s status
 # line showed `medium` on every dispatch before this: that was `pi`'s own default
 # with no `--thinking` flag sent at all, not a value this file ever chose. Both
-# `glm-5.3` rows below keep `""` deliberately (never asked to carry a value, not
+# `glm-5.3` rows keep `""` deliberately (never asked to carry a value, not
 # because the harness cannot take one).
+# **THE SECOND HEAD MOVED FROM `grok-4.6` TO `claude-opus-5`, owner's ruling
+# 2026-08-21.** It is the overflow head AND the model A29 retries on when the
+# local server produces nothing, which it did twice on real work (`LJ-1.478`,
+# `LJ-1.479`) before either mechanism existed.
 coder                     = [
-  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "high", harness = "herdr-pi",   sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "grok-4.6",             effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
+  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "high",  harness = "herdr-pi",     sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "claude-opus-5",        effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
 ]
-coder_adversarial         = { model = "glm-5.3",         effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits" }
+# **TWO HEADS SINCE 2026-08-21**, the same pair and the same reasoning as
+# `mathematician_adversarial` above. The two critics may share a model with each
+# other: DD25 pairs an author with ITS critic and says nothing about two critics.
+coder_adversarial         = [
+  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
+  { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
+]
 # **THE MAINTAINER MOVED TO `claude-sonnet-5` at effort `xhigh`, owner's ruling
 # 2026-08-21.** It was `claude-opus-5` at `xhigh` from 2026-08-20. The slot is
 # resident, so the change is not a re-dispatch: the old session is retired, and

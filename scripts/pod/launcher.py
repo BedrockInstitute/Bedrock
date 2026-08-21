@@ -1399,8 +1399,8 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                               "--always-approve"]
             else:
                 # **PI'S EFFORT DIAL IS `--thinking`, NOT `--effort`, and it was missed
-                # the first time this branch was written.** MEASURED 2026-08-21: `pi
-                # --help` lists `--thinking <level>` with `off, minimal, low, medium,
+                # the first time this branch was written** (A28). MEASURED 2026-08-21:
+                # `pi --help` lists `--thinking <level>` with `off, minimal, low, medium,
                 # high, xhigh, max`, a superset of `legal.efforts`. Every string this
                 # branch can receive (the empty string, or any of `legal.efforts`) is
                 # legal to `pi` unchanged; only the empty string omits the flag, exactly

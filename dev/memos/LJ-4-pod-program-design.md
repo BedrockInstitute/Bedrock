@@ -31,12 +31,18 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Twenty-seven amendments, A1 to A27. Twenty-six are the owner's, and one, A6, is the
+**Twenty-nine amendments, A1 to A29. Twenty-eight are the owner's, and one, A6, is the
 orchestrator's and follows from A4.** **The count in this paragraph said 23 until
 2026-08-21, when the list held 26**, and a per-date breakdown stood beside it that nobody
 had recounted either. Both were carried forward rather than measured. The count is now
 the one thing stated here, and the check is the list itself: the entries below run A1 to
-A27 with no gap and no repeat, so the count IS the highest number. **They are not in
+A29 with no gap and no repeat, so the count IS the highest number. **A SECOND WAY TO
+BREAK IT WAS MEASURED ON 2026-08-21 AND CLOSED THE SAME DAY**: two pieces of shipped
+behaviour carried the suffixed names `A27a` and `A27b` in code comments and had no entry
+here at all, so the list ran to A27 with no gap while the program obeyed two rules the
+list did not hold. They are A29 and A28. **A SUFFIXED AMENDMENT NAME IS NOT ADMISSIBLE**:
+a new ruling takes the next integer, or it is written into the entry it extends.
+**They are not in
 numeric order**, because each was appended where it reads best, and a `grep` over the
 bullet marks is not the check: A6 opens with a comma, and section 6.1 carries a bullet
 that opens with A12 and is not an entry. Each amendment carries its own ruling date in
@@ -372,6 +378,9 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   other four slots are spelled exactly as they were, so A27 changed no head but the
   coder's. `max_concurrency` is the ONE optional field in `dev/pod/heads.toml` and its
   absence is the word UNLIMITED, not a default: it is what every row meant before A27.
+  **THAT SENTENCE COUNTS THE SLOTS AS A27 LEFT THEM AND NOT AS THEY STAND**: A29 put both
+  critics onto arrays the same day, so two single-head slots remain. The file is the count
+  that binds.
 
   **THE CAP IS NOT A14's CONCURRENCY AND THE TWO NEVER MEET.** `admits()` (5.6) counts
   AGDA WRITER PROCESSES on the whole machine, per tier, with a heap sum, and it refuses a
@@ -417,6 +426,94 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   `dev/pod/heads.toml`, `scripts/pod/heads.py` (`configs()`, `head()`), and
   `scripts/pod/pod.py` (`head_live_counts()`, `pick_head_config()`,
   `head_full_refusal()`, `launch()`). Section 6.1 carries the rest.
+
+- **A28. `pi`'s EFFORT DIAL IS `--thinking`, AND EVERY `pi` DISPATCH RAN AT THE CLI's OWN
+  DEFAULT UNTIL 2026-08-21.** The owner ruled the coder's local head onto effort `"high"`
+  that day and the value did not reach the pane, because the launcher's `pi` branch built
+  `--provider` and `--model` and nothing else. **This entry carries the number the code
+  comments spelled `A27b` for one day.**
+
+  **THE FIELD WAS NEVER EMPTY; THE FLAG WAS NEVER SENT.** MEASURED 2026-08-21: `pi --help`
+  lists `--thinking <level>` with `off, minimal, low, medium, high, xhigh, max`, which is a
+  SUPERSET of `legal.efforts`, so every string a head can carry is legal to `pi` unchanged.
+  `pi`'s status line had shown `medium` on every dispatch, and that was `pi`'s own default
+  rather than a value `dev/pod/heads.toml` had ever chosen. The file's `[legal]` comment
+  had said a `herdr-pi` head "has no equivalent" to `--effort`; that was true only because
+  nobody had wired the dial, and it is corrected in place.
+
+  **THE EMPTY STRING STILL OMITS THE FLAG**, which is what `legal.efforts` has meant since
+  2026-08-18: run at the CLI's own default. So both `glm-5.3` rows keep `""` by choice and
+  not by a harness limit, and no reverse implication survives for `herdr-pi`: only `herdr`
+  (codex) truly lacks the dial.
+
+  `scripts/pod/launcher.py`, the `pi` branch of the `model_args` builder in `launch()`.
+
+- **A29. A HEAD THAT PRODUCES NOTHING FALLS BACK TO THE SLOT'S NEXT HEAD, ruled
+  2026-08-21.** The ruling came as a model table in which a `+` between two models means
+  exactly one thing, and the owner's own words for it are「前者失败则换后者重试」.
+  **This entry carries
+  the number the code comments spelled `A27a` for one day, AND the generalization the same
+  owner message asked for**; the two are one entry because the narrower rule no longer
+  exists anywhere in the tree, and numbering a superseded gate separately would make this
+  list describe a mechanism the program does not have.
+
+  **THE MEASURED ORIGIN IS A LOCAL MEMORY CEILING.** `[LJ-1.478]` and `[LJ-1.479]` both
+  reached the coder's local head, reasoned correctly about real Cubical Agda, and were
+  aborted mid-write by oMLX: `process memory limit exceeded (usage 50.1 GB, abort threshold
+  45.6 GB)`. `run_acceptance()` saw no changed file, so R7 dropped the return and rule (c)
+  parked `no-change`, which is the reason that WAITS FOR A PERSON (5.5). Nothing was
+  mismeasured and nothing moved either.
+
+  **AN R7 RETURN IS AN INFRASTRUCTURE FAILURE AND NEVER AN ANSWER, and the whole rule rests
+  on that line.** `rec is None` means the runner measured NOTHING: a crash, a rate limit, a
+  silent echo-and-exit, a resource ceiling. A stated NO-GO, a stop, a proof that did not
+  close: each carries a RECORD, each routes through the table, and none of them reaches
+  this branch. A29 must never spend a second head re-asking a question that was answered.
+
+  **THE TRIGGER IS A SLOT WITH A CHOICE, AND IT WAS A CAPPED MODEL FOR ONE DAY.** The first
+  form gated on `max_concurrency`, which was the right answer while the one capped head in
+  the file was also the only head with a spare beside it. The owner then ruled the same
+  retry for `mathematician_adversarial` and `coder_adversarial`, and NEITHER `glm-5.3` nor
+  `grok-4.6` is capped: both are ordinary cloud vendors with no scarce local resource to
+  ration. So the two questions came apart and the gate is now the arithmetic that made the
+  retry possible at all: `len(configs(slot)) > 1`. **A cap is still read, by
+  `pick_head_config()` alone (A27), and it decides the ORDER heads are spent in, never
+  whether a failed one is retried.**
+
+  **THE PARK REASON IS `fallback:<model>` AND IT IS THE THIRTEENTH.** It was `capacity:`
+  under the first form; that name would now lie on every critic dispatch, because an
+  ordinary vendor failure is not a capacity finding. ONE NAME, ONE MECHANISM: the old
+  string is not kept beside the new one, because `PARK_CLASSES` in
+  `scripts/pod/digest.py` is DERIVED from `PARK_REASONS` and two names would split one
+  class in the digest.
+
+  **IT IS THE ONE PARK THAT RE-OPENS UNCONDITIONALLY, on the very next check.** Every other
+  reason waits for a clock (`quota:`), a table edit (`admission`, `launch`), or a person.
+  This one has nothing to gate on: `t.avoid_models` already excludes the model that just
+  failed, so the retry cannot repeat it. **IT TERMINATES BECAUSE THE EXCLUSION IS
+  MONOTONIC**: a second failure on the same task can only add a DIFFERENT model, and once
+  every model is excluded `pick_head_config()` returns None and rule (f) parks the ordinary
+  `launch` refusal, never a third fallback.
+
+  **THE HEADS THE OWNER RULED THE SAME DAY.** `mathematician_adversarial` and
+  `coder_adversarial` each take `glm-5.3` then `grok-4.6` at effort `"high"`; the coder's
+  second head moves from `grok-4.6` to `claude-opus-5` at `"xhigh"`, its local head is
+  untouched; `maintainer` and `mathematician` do not move. **DD25 SURVIVES AND IT WAS
+  CHECKED RATHER THAN ASSUMED**: the three author/critic pairs are
+  mathematician/mathematician_adversarial, coder/coder_adversarial and the F9 path
+  coder/mathematician_adversarial, and all three intersect EMPTY. `claude-opus-5` is now in
+  two slots, `mathematician` and `coder`, and both are AUTHORS: the invariant forbids an
+  author reviewing its own work and says nothing about two authors sharing a vendor.
+
+  **THE FIRST FORM SHIPPED WITH NO TEST AND FIRED TWICE BEFORE ONE EXISTED**
+  (`[LJ-1.481]`, `[LJ-1.488]`, both 2026-08-21, both retried and both correct). The
+  generalization brings the class that was owed: `FallbackPark` in
+  `scripts/tests/test_pod_loop.py`, 19 checks, including the one that separates A29 from
+  what it replaced (an entirely uncapped slot still falls back) and the one that guards the
+  line above (a measured NO-GO never does).
+
+  `dev/pod/heads.toml`, and `scripts/pod/pod.py` (`PARK_REASONS`, `_has_fallback_head()`,
+  rule (c)'s `_accept_one()`, rule (a2), `launch()`).
 
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the
@@ -1642,7 +1739,7 @@ rule: one home per rule. The order and the reasons are here; the body is at
 | 0 | `replay_log()` | Apply every log line with `seq > st.seq` before any rule reads the state | AD19, 5.3 | `:2892` |
 | 0 | `watchdog_tick()` | Confirm the backstop FIRST, before any rule consults `admits()` | A13 | `:2894` |
 | 1 | **(a1) CREATE** | `dev/pod/queue.toml` is the ONLY producer of a task. An entry with no `brief` is a REQUEST and never a task. It also expires the rows of an archived code | AD3, 4.6, A14 | `_rule_a1` |
-| 2 | **(a2) UNPARK** | A park is never terminal. Each of the ten park reasons of 5.5 has its own un-park test | AD16 | `_rule_a2` |
+| 2 | **(a2) UNPARK** | A park is never terminal. Each of the thirteen park reasons of 5.5 has its own un-park test | AD16 | `_rule_a2` |
 | 3 | **(b) OBSERVE** | A worker is dead when its pid is dead, or when it ran past `worker_deadline_s` | AD17 | `_rule_b` |
 | 4 | **(c) ACCEPT** | ONE task at a time. Run the acceptance, route the WHOLE record, and take the action | AD13, A5, A24 | `_rule_c` |
 | 5 | **(e) MAINTAINER** | Harvest, prune, and FEED the resident maintainer on the batch clock or on a NEW park. **It runs BEFORE the stop** | AD15, A17, A20 | `_rule_e` |
@@ -2015,18 +2112,26 @@ acceptance test: that is DD24's AC-only baseline.
 **On a PARK the program writes exactly one line, with `"row": null`.** The state
 file then carries `status: "PARKED"`, `record: <the same record>` and
 `park_reason`, so the maintainer batch reads one file and not the whole log.
-**Eleven park reasons exist and each names its cause:** `no-match`, `no-change`
+**Thirteen park reasons exist and each names its cause:** `no-match`, `no-change`
 (R7), `preflight:P<n>`, `attempt_max:<row id>`, `r4` (5.4), `admission` (4.1),
 `launch`, which is a KEPT refusal of section 6.2 firing at the dispatch itself,
 `row:<row id>` for a `park` or `park_and_split` action, `stop_loop:<row id>`,
 `salvage:<code>`, which fires when a closing task's worktree cannot be copied back
-because the main tree moved the same path while the task ran (section 5.7), and
-`quota:<reset>`, which names a vendor that refused the head (amendment A25).
+because the main tree moved the same path while the task ran (section 5.7),
+`quota:<reset>`, which names a vendor that refused the head (amendment A25),
+`orphan:<pid>`, which names a live process this program can neither confirm nor kill
+(rule (b)), and `fallback:<model>`, which names a head that produced nothing on a slot
+that carries another (amendment A29).
+**THIS COUNT SAID ELEVEN UNTIL 2026-08-21 AND THE TUPLE HELD THIRTEEN**, because
+`orphan:` and the reason A29 renamed were both added without recounting here. The list is
+`PARK_REASONS` at `scripts/pod/pod.py`, and it is the one that binds.
 
-**`quota:` IS THE ONLY PARK THAT RE-OPENS ON A CLOCK.** Every other cause is inside this
-project and ends when a person or a table edit acts on it. A vendor's window is outside
-the project and ends by itself, so rule (a2) compares the named reset time with the wall
-clock and needs nobody.
+**`quota:` IS THE ONLY PARK THAT RE-OPENS ON A CLOCK, AND `fallback:` IS THE ONLY ONE
+THAT RE-OPENS ON NOTHING AT ALL.** Every other cause is inside this project and ends when
+a person or a table edit acts on it. A vendor's window is outside the project and ends by
+itself, so rule (a2) compares the named reset time with the wall clock and needs nobody. A
+`fallback:` park has already done the only thing that was needed, which is to write the
+failed model onto `t.avoid_models`, so rule (a2) re-opens it on the very next check.
 **Every park site writes one**, and rule (a2) branches on it: a `preflight:` park
 re-runs the pre-flight, an `admission` or `launch` park retries on the next table
 edit, and the rest re-route on the record. **A `no-change` park carries NO
@@ -2183,6 +2288,12 @@ What this section owns, because the file cannot state it about itself:
   TASKS on one slot and one model; A14's `[tiers]` counts AGDA WRITER PROCESSES on the
   machine. They share a word and nothing else, and `admits()` runs first.** The policy is
   CAPPED FIRST, it lives in `pick_head_config()` alone, and A27 states its consequence.
+- **A SECOND HEAD IS ALSO WHERE A FAILED DISPATCH IS RETRIED**, amendment A29, owner's
+  ruling 2026-08-21. That is a SECOND mechanism over the same field and not a reading of
+  the cap: `pick_head_config()` chooses at the dispatch, and A29 fires after an R7 return
+  measured nothing, excluding the model that failed. **Its trigger is the ARITY of the
+  slot and never `max_concurrency`**, so the two uncapped critic arrays fall back exactly
+  as the coder's capped one does.
 - **A12 is superseded for the maintainer's MODEL and kept for its EFFORT**, owner's
   ruling 2026-08-19. A12 set the slot to `claude-opus-5` at `high` and closed gap M8; the
   owner moved it to grok at the same effort. **A14's two concurrency tiers** live in the
@@ -3398,12 +3509,17 @@ window. AD20 says daily, and this is the one departure from it.
 `no_match_rate = (park lines with reason "no-match") / (all return lines)`, over
 the window and cumulatively. **Rule (c) writes that exact string on the one site
 that produces a no-match park**, so the numerator has a source. **The
-other eight park reasons are counted separately**, because none of them is a gap
+other twelve park reasons are counted separately**, because none of them is a gap
 in the table: `preflight:P<n>` is a malformed brief, `no-change` is a dead worker,
 `attempt_max:<row id>` is a row that cannot change its own facts, `r4` is a close
 the acceptance refused, `admission` is a table conflict R3 caught, `launch` is a
-launcher refusal, `row:<row id>` is a row that asked for the park, and
-`stop_loop:<row id>` is the stop itself.
+launcher refusal, `row:<row id>` is a row that asked for the park,
+`stop_loop:<row id>` is the stop itself, `salvage:<code>` is a worktree the main
+tree moved under, `quota:<reset>` is a vendor window, `orphan:<pid>` is a process
+this program cannot claim, and `fallback:<model>` is a head that produced nothing
+where another was configured. **`PARK_CLASSES` in `scripts/pod/digest.py` is
+DERIVED from `PARK_REASONS` less `no-match`, so this list is checked and not
+maintained by hand; the count here said eight while that derivation gave twelve.**
 
 **Number two, days since `src/` last had a net gain.** The digest records the
 standing figure once per day, so the number is a lookup and not a re-derivation,

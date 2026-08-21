@@ -358,16 +358,21 @@ TRANSITIONS_LEGAL = {
 #: decide. Reusing one of the other nine names here would make a park reason lie, which is
 #: a defect class this programme measured three times on the day the rule was written.
 #:
-#: **`capacity:` IS THE TWELFTH, owner's ruling 2026-08-21 (A27a), after the local coder
-#: head hit its own process memory ceiling twice on real work
-#: (`LJ-1.478`/`LJ-1.479`).** A `no-change` R7 return whose model carried a
-#: `max_concurrency` cap means the SCARCE head produced nothing, and it is worth ONE
-#: automatic retry with that model excluded before this becomes a person's problem: the
-#: uncapped head is never memory-constrained the same way. It is not `no-change` itself,
-#: because that reason waits for a person (section 5.5) and this one does not.
+#: **`fallback:` IS THE THIRTEENTH, owner's ruling 2026-08-21 (A29).** A `no-change` R7
+#: return means the head produced NOTHING to measure, and when its slot carries another
+#: head that is worth ONE automatic retry on the other model before it becomes a person's
+#: problem. It is not `no-change` itself, because that reason waits for a person
+#: (section 5.5) and this one does not.
+#:
+#: **THE TRIGGER IS A SLOT WITH A CHOICE, AND IT USED TO BE A CAPPED MODEL.** The
+#: mechanism shipped on 2026-08-21 gated on `max_concurrency`, because the head that had
+#: failed twice on real work (`LJ-1.478`/`LJ-1.479`, oMLX's own process memory ceiling)
+#: was the one capped head in the file. The owner then ruled the same retry for two
+#: UNCAPPED critic slots, so the gate is now the plain arithmetic that made the retry
+#: possible at all: the slot has somewhere else to go. A29 states it.
 PARK_REASONS = ("no-match", "no-change", "preflight:", "attempt_max:", "r4",
                 "admission", "launch", "row:", "stop_loop:", "salvage:", "quota:",
-                "orphan:", "capacity:")
+                "orphan:", "fallback:")
 
 #: AD15's parked trigger, and it is AD15's OWN number rather than AD14's `parked_max`.
 #: Owner's ruling, 2026-08-19, recorded at section 6.7: the maintainer is fed at the third
@@ -430,7 +435,7 @@ CARRIED = ("pid", "proc_start", "brief", "agda", "sandbox", "model", "log", "fin
 #: its own acceptance test, and the field is the pre-flight's finding SET, carried and
 #: never re-derived at the return. `tier` is amendment A14's: `admits()` counts slots and
 #: heap PER TIER, and a record carries its tier so two measurements are compared only
-#: inside one tier. `avoid_models` is A27a's: a `capacity:` park writes the model that just
+#: inside one tier. `avoid_models` is A29's: a `fallback:` park writes the model that just
 #: failed onto it, and `launch()` reads it back to skip that model on the retry it
 #: triggers. All three are copied ONCE, at creation or at the park that adds them, exactly
 #: as `exclusive` is.
@@ -2447,9 +2452,9 @@ def launch(t, brief, role, root=None, st=None):
     except heads_mod.HeadsError as e:
         LAUNCH_REFUSAL = str(e)[:400]
         return None
-    # A27a. A `capacity:` PARK WROTE `t.avoid_models`, AND THIS IS THE ONE READER. Every
-    # OTHER caller (`mathematician`, `coder_adversarial`, a slot of one model) carries no
-    # avoid list, so this is a no-op for them. Excluding down to nothing is not special-
+    # A29. A `fallback:` PARK WROTE `t.avoid_models`, AND THIS IS THE ONE READER. A task
+    # that never failed a head carries no avoid list, and a slot of one model can never
+    # write one, so this is a no-op for both. Excluding down to nothing is not special-
     # cased: `pick_head_config()` on an empty tuple returns None exactly as it does when
     # every config is at its cap, and rule (f) parks it, same as any other refusal.
     avoid = set(getattr(t, "avoid_models", None) or ())
@@ -3804,14 +3809,14 @@ def _rule_a2(st, root):
             if (t.parked_at or 0) < mtime:
                 emit(st, t, PARKED, READY, root=root)      # retry, section 4.1
             continue
-        if reason.startswith("capacity:"):
+        if reason.startswith("fallback:"):
             # **THE ONE PARK THAT REOPENS AT ONCE, UNCONDITIONALLY.** No clock, no table
             # edit to wait for: `t.avoid_models` already excludes the model that just
             # failed, so `launch()`'s next call cannot repeat it, and there is nothing
             # left to gate on. This terminates because the exclusion is monotonic: a
-            # second `capacity:` on the SAME task can only add a DIFFERENT model, and
+            # second `fallback:` on the SAME task can only add a DIFFERENT model, and
             # `pick_head_config()` returning None once every model is excluded falls
-            # through to the ordinary `launch` refusal, not another capacity park.
+            # through to the ordinary `launch` refusal, not another fallback park.
             emit(st, t, PARKED, READY, root=root)
             continue
         if t.record is None:
@@ -4026,19 +4031,27 @@ def _no_change_reason(t, root):
     return f"quota:{reset}" if reset else "no-change"
 
 
-def _capped_model(slot, model, root):
-    """True when `model` is one of `slot`'s configs AND carries a `max_concurrency`. A27a.
+def _has_fallback_head(slot, model, root):
+    """True when `model` is one of `slot`'s configs AND the slot carries another. A29.
+
+    **THE TEST IS ARITHMETIC AND NOT A PROPERTY OF THE HEAD.** It asks only whether this
+    slot has somewhere else to send the task. It used to ask whether `model` carried a
+    `max_concurrency`, which was the same answer while the one capped head in the file was
+    also the only head with a spare beside it; the owner then ruled the retry for two
+    UNCAPPED critic slots and the two questions came apart. A cap is still read, by
+    `pick_head_config()` alone, and it decides the ORDER heads are spent in, never whether
+    a failed one is retried.
 
     IT RETURNS FALSE ON ANYTHING IT CANNOT READ, the same direction `_no_change_reason()`
-    already takes: a slot of one model, or a `heads.toml` this call cannot load, gets the
-    plain `no-change` it always got, never a guess dressed as a capacity finding.
+    already takes: a slot of one model, a model this slot does not carry, or a
+    `heads.toml` this call cannot load, gets the plain `no-change` it always got, never a
+    guess dressed as a finding.
     """
     try:
         cfgs = heads_mod.configs(slot)
     except heads_mod.HeadsError:
         return False
-    return any(c["model"] == model and c.get("max_concurrency") is not None
-               for c in cfgs)
+    return len(cfgs) > 1 and any(c["model"] == model for c in cfgs)
 
 
 def _rule_b(st, root):
@@ -4150,18 +4163,23 @@ def _rule_c(st, root):
             # return on exactly this line. `_no_change_reason()` keeps `no-change` for
             # every case it cannot prove otherwise.
             reason = _no_change_reason(t, root)
-            # A27a. A PLAIN `no-change` ON A CAPPED HEAD GETS ONE AUTOMATIC RETRY, WITH
-            # THAT MODEL EXCLUDED, BEFORE IT WAITS FOR A PERSON. Owner's ruling
-            # 2026-08-21, after LJ-1.478 and LJ-1.479 both hit oMLX's own process memory
-            # ceiling on real work. `_capped_model()` returns False on anything it cannot
-            # read, which keeps this the SAME plain `no-change` a slot of one model, or
-            # an unreadable `heads.toml`, always got.
+            # A29. A PLAIN `no-change` ON A SLOT THAT CARRIES ANOTHER HEAD GETS ONE
+            # AUTOMATIC RETRY, WITH THE FAILED MODEL EXCLUDED, BEFORE IT WAITS FOR A
+            # PERSON. Owner's ruling 2026-08-21: 「前者失败则换后者重试」.
+            # **IT FIRES ON THE INFRASTRUCTURE FAILURE AND NEVER ON AN ANSWER.** R7 lands
+            # here only when the runner measured NOTHING, which is a crashed, refused or
+            # ceiling-hit vendor. A stated NO-GO, a stop, a proof that did not close: each
+            # is a real return with real content, each carries a record, and each routes
+            # through the table below exactly as it always did.
+            # `_has_fallback_head()` returns False on anything it cannot read, which keeps
+            # this the SAME plain `no-change` a slot of one model, or an unreadable
+            # `heads.toml`, always got.
             if reason == "no-change" and t.role and t.model:
                 avoid = list(t.avoid_models or [])
-                if t.model not in avoid and _capped_model(t.role, t.model, root):
+                if t.model not in avoid and _has_fallback_head(t.role, t.model, root):
                     avoid.append(t.model)
                     t.avoid_models = avoid
-                    reason = f"capacity:{t.model}"
+                    reason = f"fallback:{t.model}"
             emit(st, t, CHECKING, PARKED, reason=reason, root=root)
             return CONTINUE
         t.run = rec.get("run")
