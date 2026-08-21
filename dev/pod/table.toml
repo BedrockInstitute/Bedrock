@@ -4285,3 +4285,79 @@ expired = false
   changed_files_any = ["agents/tasks/*/review-of-LJ-*-*.md"]
   heap_wall = false
   obligations_open_min = 1
+
+[[row]]
+id = "task-lj-1-441-go"
+scope = "task:LJ-1.441"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `go` of LJ-1.441, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-441-no-go-attacked"
+scope = "task:LJ-1.441"
+priority = 15
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `no-go-attacked` of LJ-1.441, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  error_class_in = ["unsolved_meta", "universe_level", "other"]
+  changed_files_any = ["agents/tasks/LJ-1-441/Probe441.agda"]
+  changed_files_none = ["agents/tasks/LJ-1-441/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-441-no-go-stated"
+scope = "task:LJ-1.441"
+priority = 20
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `no-go-stated` of LJ-1.441, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  changed_files_any = ["agents/tasks/LJ-1-441/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-441-heap-wall-escalate"
+scope = "task:LJ-1.441"
+priority = 30
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `heap-wall-escalate` of LJ-1.441, admitted from the brief"
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "task-lj-1-441-ran-long-and-changed-little"
+scope = "task:LJ-1.441"
+priority = 50
+action = "park"
+added = 2026-08-21
+added_by = "mathematician"
+reason = "branch `ran-long-and-changed-little` of LJ-1.441, admitted from the brief"
+expired = false
+
+  [row.when]
+  changed_files_count_max = 1
+  seconds_min = 3600.0
