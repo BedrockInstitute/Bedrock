@@ -775,6 +775,16 @@ provenance = "agents/tasks/archive/L3-32-T52/l3.32-t52-report.md combined row; P
 # sits, and the deletion test it feeds is kept unchanged, because that test
 # is the structural check that keeps the accounting honest whichever figure
 # binds (see [accounting-honesty]).
+#
+# WHICH METER THIS CAP READS, owner's ruling 2026-08-21 (backlog item 19).
+# `ac_cap` is compared against `ac-total (projection)` (scripts/measure/
+# ledger.py's trophy_split, base + ac_only + shared), printed by
+# `--trophy-split` and `--budget`. It is NEVER compared against the AC
+# delivered closure `--brief` and `--reuse` print (the AC endpoint's own
+# import closure, today's orthodox reference figure): that number has no cap.
+# A future [LJ-2.2] re-arm must say explicitly which of the two it re-arms
+# against, because the two are different and this ruling found them already
+# confused under one shared label.
 ac_cap = 20000
 authority = "owner ruling D36, 2026-08-07; demoted by D39, 2026-08-09"
 

@@ -44,12 +44,16 @@ Usage:
                          re-measurement. The POD's DONE handler runs it before it
                          commits (design section 7.1 row 26). It runs --check first,
                          so --check's own defects still print and still exit 1
-  ledger.py --brief      one line: standing, the endpoint or a refusal, and both
-                         DD5 benchmarks with the honest state of each
+  ledger.py --brief      one line: standing, the AC delivered closure (the
+                         standing AC reference, owner's ruling 2026-08-21),
+                         the endpoint or a refusal, and both DD5 benchmarks
+                         with the honest state of each
   ledger.py --trophy-split
                          one line: the four parts of the per-trophy caliber,
-                         and the AC total. It measures the SURVIVING tree and
-                         sums to standing, like every other figure here
+                         and ac-total (projection). It measures the SURVIVING
+                         tree and sums to standing, like every other figure
+                         here. ac-total is base + ac_only + shared, a
+                         DIFFERENT number from --brief's AC delivered closure
   ledger.py --reuse      DD4's report: what the AC and GCH closures share, in
                          masters and lines. A REPORT, never a gate: DD4 has no
                          threshold by ruling. Exits 0 always
@@ -420,6 +424,26 @@ def closure(graph: dict[str, set[str]], roots: list[str]) -> set[str]:
     return seen
 
 
+def ac_delivered_closure(files: list[str], sizes: dict[str, int],
+                          ac_root: str) -> tuple[int, int] | None:
+    """(masters, lines) in the AC endpoint's own import closure, or None when the
+    root is undeclared, not in the tree, or staged but not committed.
+
+    THIS IS THE ORTHODOX METER, owner's ruling 2026-08-21 (backlog item 19). It
+    needs only `ac_root`, never `gch_root`: unlike `reuse_report()`, which
+    refuses to print at all without a GCH root, the AC side's own closure is
+    computable and worth reporting whether or not GCH exists yet. It is what
+    `--reuse` calls "AC delivered closure" and `--brief` quotes, and it is a
+    DIFFERENT number from `trophy_split()`'s `ac_total`: that one is a
+    projection (base + ac_only + shared), this one is a measurement.
+    """
+    if not ac_root or ac_root not in files or not head_text(ac_root).strip():
+        return None
+    graph = import_graph(files)
+    ac = closure(graph, [ac_root])
+    return len(ac), sum(sizes.get(f, 0) for f in ac)
+
+
 def reuse_report(data: dict, files: list[str], sizes: dict[str, int]) -> list[str]:
     """DD4's report: what the two proofs actually share. NEVER a gate.
 
@@ -471,9 +495,12 @@ def reuse_report(data: dict, files: list[str], sizes: dict[str, int]) -> list[st
     shared = ac & gch
     def lines(s): return sum(sizes.get(f, 0) for f in s)
     union = lines(ac | gch)
-    out.append(f"    AC closure      {len(ac):3} masters  {lines(ac):6,} lines")
-    out.append(f"    GCH closure     {len(gch):3} masters  {lines(gch):6,} lines")
-    out.append(f"    SHARED          {len(shared):3} masters  {lines(shared):6,} lines")
+    # NAMED "AC delivered closure": trophy_split()'s ac_total is a different,
+    # projected number, and the two used to share one printed label.
+    # Owner's ruling 2026-08-21 (backlog item 19).
+    out.append(f"    AC delivered closure  {len(ac):3} masters  {lines(ac):6,} lines")
+    out.append(f"    GCH closure           {len(gch):3} masters  {lines(gch):6,} lines")
+    out.append(f"    SHARED                {len(shared):3} masters  {lines(shared):6,} lines")
     if union:
         out.append(f"    shared share of the union: "
                    f"{lines(shared) / union:.1%} of {union:,} lines")
@@ -554,7 +581,7 @@ def trophy_split(data: dict, files: list[str],
     # The docstring above has said "IT MEASURES THE SURVIVING TREE ONLY" since
     # the owner ruled it on 2026-08-07, but the graph was built from every file,
     # so a master reachable ONLY through a retiring importer still landed in the
-    # AC closure and still counted. `L/Coding/Base` (187) and `L/Absoluteness`
+    # AC delivered closure and still counted. `L/Coding/Base` (187) and `L/Absoluteness`
     # (34) reached the AC total exactly that way: their only surviving importer
     # is `L.TowerGraph`, a gch_only master. That is 221 lines of AC total that
     # the route being built does not touch, and no `gch_assign` could fix it,
@@ -568,7 +595,7 @@ def trophy_split(data: dict, files: list[str],
     # rule below would otherwise bill it to AC forever. Two safety properties:
     # the declaration applies ONLY while no closure reaches the master (the
     # closure wins automatically the day an AC-side master imports it), and a
-    # declaration the AC closure overrides is a DEFECT, so it cannot go stale
+    # declaration the AC delivered closure overrides is a DEFECT, so it cannot go stale
     # silently. Each declaration names its wing consumer; an audit attacks one
     # declaration, not the mechanism.
     assigned: set[str] = set()
@@ -584,7 +611,7 @@ def trophy_split(data: dict, files: list[str],
             continue
         if mod in ac:
             defects.append(
-                f"gch_assign for {mod} is DEAD: the AC closure reaches it, so the "
+                f"gch_assign for {mod} is DEAD: the AC delivered closure reaches it, so the "
                 f"closure wins and the declaration must be removed")
             continue
         assigned.add(mod)
@@ -601,7 +628,7 @@ def trophy_split(data: dict, files: list[str],
             # F4 (D36 amendment, owner's F-series order 2026-08-08): an
             # outside-L master may be declared gch-side too. The same two
             # safeties hold: neither-closure only (the dead-declaration
-            # defect above fires when the AC closure reaches it), and the
+            # defect above fires when the AC delivered closure reaches it), and the
             # deletion test validates the assignment at the landing.
             if f in assigned:
                 parts["gch_only"] += sizes[f]
@@ -932,9 +959,12 @@ def main(argv: list[str]) -> int:
             matrix_defects = [str(exc)]
     defects += matrix_defects
 
-    # THE AC TROPHY BUDGET (D36). The tripwire fires on the MEASURED number
-    # only: a projection never blocks a commit (archived D26), but a tree whose
-    # measured AC closure reaches the cap may not grow by another commit.
+    # THE AC TROPHY BUDGET (D36). The tripwire fires against `ac_total`, the
+    # four-bucket PROJECTION (base + ac_only + shared), never against the AC
+    # delivered closure above: a projection never blocks a commit (archived D26),
+    # but a tree whose measured ac-total reaches the cap may not grow by another
+    # commit. Owner's ruling 2026-08-21 (backlog item 19): the two are different
+    # numbers and neither print may borrow the other's name.
     budget = data.get("trophy_budget", {})
     ac_cap = budget.get("ac_cap")
     # SUSPENDED 2026-08-09: DD5's benchmarks are not quantified, so the
@@ -951,16 +981,17 @@ def main(argv: list[str]) -> int:
     # stdout. Every diagnostic added here belongs on stderr. Stdout is the
     # value, stderr is the commentary.
     if budget.get("thresholds_suspended") and ac_cap and split:
-        print(f"ledger [thresholds SUSPENDED]: AC closure {split['ac_total']:,} "
-              f"against the retired {ac_cap:,} cap, reported and NOT enforced; "
+        print(f"ledger [thresholds SUSPENDED]: ac-total (projection) "
+              f"{split['ac_total']:,} against the retired {ac_cap:,} cap, "
+              f"reported and NOT enforced; "
               f"re-arm is {budget.get('thresholds_rearm', 'unstated')}",
               file=sys.stderr)
         ac_cap = None
     if ac_cap and split and split["ac_total"] >= ac_cap:
         defects.append(
-            f"AC BUDGET TRIPWIRE (D36): measured ac-total {split['ac_total']:,} "
-            f"has reached the cap {ac_cap:,}. No commit may grow the AC closure "
-            f"until compression brings it back under.")
+            f"AC BUDGET TRIPWIRE (D36): measured ac-total (projection) "
+            f"{split['ac_total']:,} has reached the cap {ac_cap:,}. No commit "
+            f"may grow it until compression brings it back under.")
 
     # There is no longer a prose document to render into. That document was
     # deleted on 2026-08-06: 44 percent of it was this generated block, and the
@@ -1019,6 +1050,17 @@ def main(argv: list[str]) -> int:
         # when the rows describe the live route.
         parts = [f"standing {standing:,} lines over {len(files)} masters, measured from HEAD"]
 
+        # THE ORTHODOX AC FIGURE, owner's ruling 2026-08-21 (backlog item 19).
+        # This is a MEASUREMENT (the AC endpoint's own import closure), never
+        # a projection, and it is the standing reference for the AC side: do
+        # not fold ac_total (below, when a live budget is armed) into this
+        # reading or quote either one under the other's name.
+        ac_root = data.get("reuse", {}).get("ac_root", "")
+        delivered = ac_delivered_closure(files, sizes, ac_root)
+        if delivered:
+            dm, dl = delivered
+            parts.append(f"AC delivered closure {dl:,} lines over {dm} masters")
+
         if data.get("remaining_stale"):
             parts.append(
                 "endpoint REFUSED: the [[remaining]] rows price the retired "
@@ -1059,6 +1101,14 @@ def main(argv: list[str]) -> int:
             for f in sorted(listing):
                 mark = " AMBIGUOUS" if f in ambiguous else ""
                 print(f"{part}\t{sizes[f]:6,}\t{f}{mark}")
+        # THE AMBIGUOUS SUBTOTAL, owner's ruling 2026-08-21 (backlog item 19).
+        # A reader who sees each AMBIGUOUS file but never their sum cannot
+        # tell how much of the gap between ac_total and the AC delivered
+        # closure the neither-closure set (parts["shared"]'s ambiguous share)
+        # accounts for.
+        if ambiguous:
+            print(f"ambiguous subtotal\t{sum(sizes[f] for f in ambiguous):6,}\t"
+                  f"({len(ambiguous)} modules, in neither closure, billed to shared)")
         return 1 if defects else 0
 
     if mode == "budget":
@@ -1091,7 +1141,10 @@ def main(argv: list[str]) -> int:
             # The denominator is STANDING, not the tracked total. The parts
             # exclude the retirement set, so naming `tracked` here would invite
             # the same reading that made the first version wrong.
-            f"| ac-total {split['ac_total']:,} | standing {standing:,}"
+            # "(projection)": owner's ruling 2026-08-21 (backlog item 19). This
+            # sum is base + ac_only + shared, never the AC delivered closure
+            # `--reuse` prints, and the name says so now.
+            f"| ac-total (projection) {split['ac_total']:,} | standing {standing:,}"
         )
         return 1 if defects else 0
 

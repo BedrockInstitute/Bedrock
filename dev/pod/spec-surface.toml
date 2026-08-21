@@ -5,7 +5,7 @@
 
 derived_from = "src/Landmarks.lagda.md"
 derivation = "src/Landmarks.lagda.md plus one file per `open import` in its fences; a bare `import M` is excluded"
-generated = "2026-08-20"
+generated = "2026-08-21"
 lines = 499  # provenance only; it is never compared
 files = [
   "src/Landmarks.lagda.md",
@@ -1246,8 +1246,8 @@ sha = "43f1474a3d9a2ad00bd89529b9ef4420a6127a5f4a65efbcb2f38ccb862dabdd"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician.md"
-sha = "a3dec648985ce604349c1073d10ed71b2d1b20f4c8fe18eac54e3b873033c535"
+sha = "0d664f355ce902faa524a5d7b96dfd8f7531c6e73a1c642593cba3e880a5afb7"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician_adversarial.md"
-sha = "20446c565ea983e8c88356546de1219c225faf4a0e10731a14a28ea11d7ec596"
+sha = "bb4b7ad681dfd05b22c5d4bcef8805f8267490a5ed00e336e6fabae3a3a790af"

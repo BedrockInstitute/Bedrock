@@ -19,6 +19,84 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 20. A D-10 stop matches no branch row. MEASURED AND THE CURE IS PROVEN 2026-08-21
+
+**THE DEFECT.** A brief that orders a D-10 stop when a premise is absent gets a
+worker that runs NO Agda. It exits 0 and discharges nothing, so it matches no
+`exit_code = 42` branch and no `obligations_delta_max` branch. Nothing matches,
+the task parks `no-match`, and it re-accepts the same scene on every table
+write. `[LJ-1.440]` did that seven times
+(`dev/pod/transitions/2026-08.jsonl:832`, `:836`, `:849`, `:907`, `:929`), and
+`[LJ-1.443]` has now joined it (`:911`, `:934`).
+
+**THE ROUTING DECISION AD3 ASKED FOR, AND IT IS MADE.** The maintainer's own
+`[LJ-1.440]` queue entry declined to name the action because it is a
+mathematical judgement. **It is `escalate` to `mathematician_adversarial`**: a
+stated NO-GO is the critic's input and never a close, and the close is
+`sys-critic-upheld-no-go`.
+
+**THE ROW, AND IT IS ALREADY PROVEN IN THE FIELD.** `pod-math` put it in the
+five briefs of 2026-08-21. It fired on `[LJ-1.448]`, which stopped on an absent
+predecessor report and was routed to a critic instead of parking
+(`dev/pod/transitions/2026-08.jsonl:915`, row `task-lj-1-448-stop-stated`).
+
+```toml
+[[branch]]
+id = "stop-stated"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+
+  [branch.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/<CODE>/review-of-*.md"]
+```
+
+It passes P10, P19 and P20, and it cannot shadow `go`, which outranks it at
+priority 10 and requires `obligations_delta_max = -1`.
+
+**FOUR BRIEFS STILL NEED IT AND A MATHEMATICIAN CANNOT REACH THEM.** The refill
+scope covers only the briefs it writes, so `[LJ-1.440]`, `[LJ-1.442]`,
+`[LJ-1.443]` and `[LJ-1.444]` still carry the template without the row. Adding
+it un-parks 440 and 443 at the next table write.
+
+**A SECOND, SEPARATE DEFECT IN `[LJ-1.443]`, AND THE ROW DOES NOT FIX IT.** Its
+first gate reads `agents/tasks/LJ-1-440/lj-1.440-report.md` and requires GO.
+`[LJ-1.440]` wrote only into its own worktree and returned NO-GO, so that gate
+can only fail. `[LJ-1.449]` carries the same obligation with the gate
+re-pointed at `[LJ-1.445]`, which is DONE and GO. **`[LJ-1.443]` is superseded
+and settling it is the owner's `--retry` call, not a repair.**
+
+**A THIRD DEFECT, IN THE ROW ITSELF, MEASURED LIVE ON `[LJ-1.448]` 2026-08-21
+AFTER THIS ITEM WAS FIRST WRITTEN.** The `[branch.when]` above has no
+`changed_files_none`, so once the critic writes its OWN return
+(`review-of-LJ-<N>-<M>.md`), that return ALSO carries the coder's leftover
+`review-of-*.md` obstruction file (the worktree's changed-files listing is
+cumulative across attempts) and STILL matches `exit_code = 0`,
+`obligations_delta_min = 0`. The row fires again, task-scope beats
+`sys-critic-upheld-no-go` (section 4.4), and the critic is re-dispatched to
+review its own review. Measured: `[LJ-1.448]` reached attempt 3
+(`dev/pod/transitions/2026-08.jsonl:915`, `:957`, `:983`) before `attempt_max`
+would have parked it. `pod-math` kept writing the SAME unfixed template into
+new briefs after this was found: `[LJ-1.449]` (`:986`) and `[LJ-1.451]`
+(`:994`) both carry it and will loop the same way once their critics return.
+**The cure is one added key:**
+
+```toml
+  changed_files_none = ["agents/tasks/<CODE>/review-of-LJ-*-*.md"]
+```
+
+This maintainer used it in the `[LJ-1.440]` and `[LJ-1.444]` rows proposed
+2026-08-21 (`dev/pod/proposals/20260821-102037.toml`). `[LJ-1.448]`,
+`[LJ-1.449]` and `[LJ-1.451]`'s rows are already admitted and rows are never
+edited; each will self-park via `attempt_max` naming its own row, which is the
+documented behaviour for "a design error in the ROW and not in the task"
+(`scripts/pod/pod.py`, `same_row_runs()`'s neighbouring comment). **Add the
+exclusion to the template `pod-math` writes into new briefs**, so it stops
+propagating.
+
+
 ### 7. A check for the defect shape three audits missed
 
 A written rule that some code path contradicts. The instance: `AGENTS.md` said nothing
@@ -125,6 +203,56 @@ that repairs it is absent. `--handover` now gives the name back on this path; th
 path has no equivalent.
 
 ## Closed
+
+### 19. One label, two meters: the AC line-count figures. DONE 2026-08-21
+
+**THE OWNER RULED THREE THINGS.** Rename the AC line-count definitions so they
+cannot be confused. Unify the several 17,000-series figures into the one most
+orthodox. **The standing reference figure is the 17,000 one and not the 23,000
+one.** Written down by `pod-math` at the owner's instruction, 2026-08-21.
+
+**THE FIX LANDED, BY FILE AND LINE.**
+
+1. `scripts/measure/ledger.py`, `--reuse`. The import closure now prints as
+   `AC delivered closure`, never `AC closure`. A new helper,
+   `ac_delivered_closure(files, sizes, ac_root)`, computes it from `ac_root`
+   alone, with no `gch_root` dependency.
+2. `scripts/measure/ledger.py`, `--brief`. The headline now prints
+   `AC delivered closure {lines} lines over {masters} masters` unconditionally
+   (via the new helper), right after `standing`. It is the orthodox reference
+   figure part 3 of the ruling names. `ac_total` (the projection) is printed
+   only where a live budget is armed, and stays named `ac-total (projection)`
+   everywhere it appears (STDERR threshold banner, the tripwire defect
+   message, `--trophy-split`, `--budget`).
+3. `--trophy-files` now prints an `ambiguous subtotal` line (modules, lines)
+   after its per-file listing, so the count without the lines is no longer the
+   only reading.
+4. `dev/ledger.toml:761` `[trophy_budget]`, beside `ac_cap`: a comment records
+   that the cap reads `ac-total (projection)` and never the AC delivered
+   closure, so a future `[LJ-2.2]` re-arm cannot confuse the two.
+
+**BEYOND THE NAMED FOUR:** `trophy_split()`'s own `gch_assign`-DEAD check
+(two comments, one defect message) also said "the AC closure reaches it" for
+the same import-closure concept; renamed to "the AC delivered closure reaches
+it" for the same reason, since a defect message a reader can see is not
+exempt from the ambiguity this item is about.
+
+**THE ACCEPTANCE TEST, RUN.** `grep -c "AC closure" scripts/measure/ledger.py`
+returns **0** (the item asked for at most 1; every remaining use was
+renamed, not only the two headline prints). `ledger.py --check` exits 0,
+`declaration clean`. No number in `dev/ledger.toml` changed. `check-rule-ids`,
+`check-fences`, `check-closure`, `check-probes` all clean.
+
+**MEASURED AFTER THE FIX**, `ledger.py --reuse`: `AC delivered closure 73
+masters 17,183 lines` (same reading as the ruling's table; the tree has moved
+since 2026-08-21's 23,513 figure, `ledger.py --trophy-split` now reads
+`ac-total (projection) 23,793`, growth from tasks landing in the interim, not
+from this fix).
+
+**WHAT THIS ITEM DID NOT DECIDE, AND STILL DOES NOT.** Whether the retired
+20,000 cap re-arms against the import closure, and at what value. That is a
+threshold ruling for `[LJ-2.1]` and `[LJ-2.2]`, and the owner has not made it.
+No new cap was written.
 
 ### 18. What two adversarial rounds found and nobody has fixed. FIXED 2026-08-19
 
