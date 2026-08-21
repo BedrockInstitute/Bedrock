@@ -1,0 +1,9 @@
+Checking LJ-1-467.Probe467 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-467/agents/tasks/LJ-1-467/Probe467.agda).
+error: [UnsolvedConstraints]
+Failed to solve the following constraints:
+  ℓ = _ℓ_100 (blocked on _ℓ_100)
+  ℓ-suc ℓ = ℓ-suc _ℓ_100 (blocked on _ℓ_100)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-467/agents/tasks/LJ-1-467/Probe467.agda:100.19-20: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-467/agents/tasks/LJ-1-467/Probe467.agda:100.19-20
