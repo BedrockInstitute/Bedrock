@@ -1,0 +1,20 @@
+Checking LJ-1-478.Probe478 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-478/agents/tasks/LJ-1-478/Probe478.agda).
+        1.00 real         0.86 user         0.13 sys
+           311918592  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20778  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 384  involuntary context switches
+         11811000200  instructions retired
+          4159850461  cycles elapsed
+           252740352  peak memory footprint
+EXIT:0
