@@ -1,0 +1,19 @@
+ledger [thresholds SUSPENDED]: ac-total (projection) 23,823 against the retired 20,000 cap, reported and NOT enforced; re-arm is LJ-2.1 measures the internalization double trophy and LJ-2.2 sets both DD5 benchmarks, then this goes false
+       23.73 real        23.27 user         2.99 sys
+          2581512192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              824146  page reclaims
+                4997  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                  13  signals received
+                1057  voluntary context switches
+               13720  involuntary context switches
+            63993098  instructions retired
+            34309102  cycles elapsed
+             1491160  peak memory footprint

@@ -1,0 +1,34 @@
+agda src/Everything.lagda.md
+Checking Everything (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-469/src/Everything.lagda.md).
+ Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-469/src/L/StageBound.lagda.md).
+.venv/bin/python scripts/site/weave-i18n.py --check
+.venv/bin/python scripts/gate/lint-prose.py --check
+.venv/bin/python scripts/gate/lint-agda.py --check
+.venv/bin/python scripts/gate/check-glossary.py --check
+.venv/bin/python scripts/measure/ledger.py --check
+ledger: declaration clean; standing 33,467 lines measured over 99 masters
+.venv/bin/python scripts/gate/check-probes.py --check
+check-probes: clean (4449 tracked files, no probe outside agents/tasks/ and no generated file)
+.venv/bin/python scripts/pod/check-closure.py --check closure
+check-closure: clean (101 masters; closure, archive)
+.venv/bin/python scripts/gate/check-fences.py --check
+check-fences: clean (101 masters, run threshold 3)
+.venv/bin/reuse lint
+# SUMMARY
+
+* Bad licenses: 0
+* Deprecated licenses: 0
+* Licenses without file extension: 0
+* Missing licenses: 0
+* Unused licenses: 0
+* Used licenses: AGPL-3.0-only, CC-BY-NC-SA-4.0, OFL-1.1
+* Read errors: 0
+* Invalid SPDX License Expressions: 0
+* Files with copyright information: 4271 / 4271
+* Files with license information: 4271 / 4271
+
+Congratulations! Your project is compliant with version 3.3 of the REUSE Specification :-)
+.venv/bin/python scripts/gate/check-rule-ids.py
+check-rule-ids: clean (56 files, 165 lessons, 68 decisions, dev/rules.toml)
+.venv/bin/python scripts/pod/check-spec-surface.py --check
+check-spec-surface: clean (8 surface file(s), 201 declaration(s), 7 guarded rule home(s), 499 in-fence lines)

@@ -3249,7 +3249,7 @@ gch_wing = [
   "src/L/CantorBernstein.lagda.md",     # 40 in-fence; the L-side statement
   "src/V/CantorBernstein.lagda.md",     # 140 in-fence; TEMPLATE CANDIDATE, see above
   "src/FOL/Bernstein.lagda.md",         # 336 in-fence; TEMPLATE CANDIDATE, see above
-  "src/L/Absorption.lagda.md",          # 526 in-fence
+  "src/L/Absorption.lagda.md",          # 543 in-fence; [LJ-1.469] shift-coded
   "src/L/SquareLawClosed.lagda.md",     # [LJ-1.445], truncated square law at a generic band
   "src/L/InjChain.lagda.md",            # 502 in-fence
   "src/L/Coding/Injection.lagda.md",    # 238 in-fence; feeds Cardinal, InjChain, Absorption

@@ -34,7 +34,7 @@ open import L.Coding.Model {ℓ}
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-in; module Small )
 open import L.InjChain {ℓ} lem using ( module StageBound )
-open import L.Cardinal {ℓ} lem using ( _↪_ )
+open import L.Cardinal {ℓ} lem using ( InjCode; _↪_ )
 
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
@@ -43,6 +43,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 open InfinitySet {ℓ} using ( ω; sucV; #_ )
 open import Cubical.Data.Nat.Properties using ( injSuc; znots; snotz )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
@@ -603,6 +604,26 @@ module ShiftGraph (γ : S) (oγ : IsOrd (fst γ))
 
   open Carve D C γ ωʟ ∅ʟ sh shInj shNum shTop shOther D-in-dec SB.bnd bel
     hasSeparationL public
+
+-- THE SHIFT CODE.  Four conjuncts ShiftGraph already exports, packed
+-- as InjCode.  Domain D agrees with sucʟ γ on fst; Σ≡Prop moves the
+-- tuple because isL is a proposition.
+shift-coded :
+    (γ : S) (oγ : IsOrd (fst γ)) (γ∉ω : ⟨ fst γ ∈ fst ωʟ ⟩ → Empty.⊥)
+    (numerals : (k : ℕ) → ⟨ # k ∈ fst γ ⟩)
+  → ∥ Σ[ F ∈ S ] InjCode F (sucʟ γ) γ ∥₁
+shift-coded γ oγ γ∉ω numerals = ∣ SG.G , code ∣₁
+  where
+  module SG = ShiftGraph γ oγ γ∉ω numerals
+
+  codeD : InjCode SG.G SG.D γ
+  codeD = SG.sv , SG.dm , SG.ij , SG.ran
+
+  D≡suc : SG.D ≡ sucʟ γ
+  D≡suc = Σ≡Prop (λ x → snd (isL x)) (sym (sucʟ-fst γ))
+
+  code : InjCode SG.G (sucʟ γ) γ
+  code = subst (λ a → InjCode SG.G a γ) D≡suc codeD
 
 -- ---------------------------------------------------------------------
 -- PART 5.  A6's CONCLUSION, uniform over the infinite L-ordinals that
