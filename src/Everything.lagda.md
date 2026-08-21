@@ -374,6 +374,7 @@ import L.Choice.Name
 import L.Choice.Step
 import L.Cardinal
 import L.Absorption
+import L.CodedShift
 import L.GCH
 import L.CantorBernstein
 import L.Choice.Internal

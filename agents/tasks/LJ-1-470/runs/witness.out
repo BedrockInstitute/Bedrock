@@ -1,0 +1,2 @@
+pass      exit=0        1.96s  src/L/CodedShift.lagda.md::shift-coded
+witness: 0 UNRESOLVED of 1, 1.96 s, probe_red=False
