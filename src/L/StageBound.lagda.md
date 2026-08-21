@@ -14,6 +14,8 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( IsOrd; Lset )
 open import L.BoundedSubset {ℓ} lem using
   ( module Devlin55; module UnionKit; module HullStage; IsCardinal; _↪_ )
+open import L.Ordinal.SquareLaw {ℓ} lem using ( sq )
+import L.SquareLawClosed
 
 open import Cubical.Data.Sigma using ( Σ-syntax )
 import Cubical.Data.Empty as Empty
@@ -35,6 +37,13 @@ SqFam α =
   (δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥)
   → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
       ((u v : ⟪ δ ⟫ × ⟪ δ ⟫) → f u ≡ f v → u ≡ v)
+
+-- Collection of truncated squares to a truncated family. Not inhabited.
+
+SqCollect : S → Type (ℓ-suc ℓ)
+SqCollect α =
+    ((δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥) → ∥ sq δ ∥₁)
+  → ∥ SqFam α ∥₁
 
 -- Instantiation: sq as plain data, two module applications.
 -- Telescope of BoundedSubsetAt plus Co, copied unchanged.
@@ -99,5 +108,11 @@ module _
     -- own isProp witness. The branch is go, with a written type.
     bounded-from-trunc : ∥ SqFam α ∥₁ → ⟨ x ∈ˢ Lset κ ⟩
     bounded-from-trunc h = PT.rec (snd (x ∈ˢ Lset κ)) go h
+
+    module SLC = L.SquareLawClosed {ℓ} lem α ordα
+
+    bounded-modulo-collect : SqCollect α → ⟨ x ∈ˢ Lset κ ⟩
+    bounded-modulo-collect collect =
+      bounded-from-trunc (collect SLC.sq-trunc-closed)
 ```
 
