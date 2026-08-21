@@ -1,0 +1,31 @@
+Checking LJ-1-477.Probe477 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-477/agents/tasks/LJ-1-477/Probe477.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-477/agents/tasks/LJ-1-477/Probe477.agda:98.17-21: error: [UnequalTerms]
+(λ { (Cubical.HITs.CumulativeHierarchy.Properties.DeepMonicPresentation.dmp
+        mp
+        _)
+       → mp
+   })
+(Cubical.HITs.CumulativeHierarchy.Base.elimProp
+ Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+ (λ X₁ ix rec →
+    Cubical.HITs.CumulativeHierarchy.Properties.DeepMonicPresentation.dmp
+    (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X₁ ix)
+    (Cubical.HITs.SetQuotients.Properties.elimProp
+     (λ z →
+        Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+        (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X₁ ix .fst
+         .snd .fst z))
+     rec))
+ (Lset y))
+.fst .fst
+!=
+Cubical.HITs.CumulativeHierarchy.Properties.⟪ C.π y ⟫
+Cubical.HITs.SetQuotients.Base./
+Cubical.HITs.CumulativeHierarchy.Properties.Kernel
+Cubical.HITs.CumulativeHierarchy.Properties.⟪ C.π y ⟫
+(λ m →
+   L.Constructible.𝒟ₒ
+   (Lset (Cubical.HITs.CumulativeHierarchy.Properties.⟪ C.π y ⟫↪ m)))
+of type Type ℓ
+when checking that the expression refl has type
+C.step (Lset y) (λ z _ → C.π z) ≡ LsetStep (C.π y) (λ β _ → Lset β)
