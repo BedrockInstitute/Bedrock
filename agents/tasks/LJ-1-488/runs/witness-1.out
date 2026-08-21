@@ -1,0 +1,2 @@
+pass      exit=0        2.19s  agents/tasks/LJ-1-488/Probe488.agda::someEnv-doubly-gated
+witness: 0 UNRESOLVED of 1, 2.19 s, probe_red=False
