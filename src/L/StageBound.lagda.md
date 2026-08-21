@@ -11,7 +11,7 @@ module L.StageBound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; isL; 𝒮ʟ )
 open import L.BoundedSubset {ℓ} lem using
   ( module Devlin55; module UnionKit; module HullStage; IsCardinal; _↪_ )
 open import L.Ordinal.SquareLaw {ℓ} lem using ( sq )
@@ -20,7 +20,7 @@ import L.SquareLawClosed
 open import Cubical.Data.Sigma using ( Σ-syntax )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( _∪_; ⁅_⁆s; module InfinitySet )
 open InfinitySet using ( ω; sucV )
@@ -28,6 +28,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
+open hPropStructure 𝒮ʟ using () renaming (S to Sʟ)
 
 -- The consumer's square-law family, copied from
 -- src/L/BoundedSubset.lagda.md:1388-1390.
@@ -44,6 +45,18 @@ SqCollect : S → Type (ℓ-suc ℓ)
 SqCollect α =
     ((δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥) → ∥ sq δ ∥₁)
   → ∥ SqFam α ∥₁
+
+-- DATA-route residue. Shape of Probe447.agda:208-210. Not inhabited.
+
+Residue :
+    ((y : S) → IsOrd y → ⟨ isL y ⟩)
+  → ((a : Sʟ) → IsOrd (fst a) → Sʟ)
+  → ((a : Sʟ) → IsOrd (fst a) → Sʟ)
+  → Type (ℓ-suc ℓ)
+Residue isL-ord κL κC =
+    (y : S) (oy : IsOrd y) → ⟨ ω ∈ˢ y ⟩
+  → ⟨ fst (κL (y , isL-ord y oy) oy) ∈ˢ y ⟩
+  → ⟨ fst (κC (y , isL-ord y oy) oy) ∈ˢ y ⟩
 
 -- Instantiation: sq as plain data, two module applications.
 -- Telescope of BoundedSubsetAt plus Co, copied unchanged.
@@ -108,6 +121,16 @@ module _
     -- own isProp witness. The branch is go, with a written type.
     bounded-from-trunc : ∥ SqFam α ∥₁ → ⟨ x ∈ˢ Lset κ ⟩
     bounded-from-trunc h = PT.rec (snd (x ∈ˢ Lset κ)) go h
+
+    adapter :
+        ((δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥) → sq δ)
+      → SqFam α
+    adapter f = f
+
+    bounded-from-data :
+        ((δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥) → sq δ)
+      → ⟨ x ∈ˢ Lset κ ⟩
+    bounded-from-data f = bounded-from-trunc ∣ adapter f ∣₁
 
     module SLC = L.SquareLawClosed {ℓ} lem α ordα
 

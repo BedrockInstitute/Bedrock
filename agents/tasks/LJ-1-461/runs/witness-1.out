@@ -1,0 +1,2 @@
+pass      exit=0        4.00s  src/L/StageBound.lagda.md::bounded-from-data
+witness: 0 UNRESOLVED of 1, 4.00 s, probe_red=False

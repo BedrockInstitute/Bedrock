@@ -3210,7 +3210,7 @@ gch_wing = [
   "src/L/Ordinal/SquareLaw.lagda.md",         # [L3.32-T31], 775 in-fence
   "src/L/Ordinal/StageArith.lagda.md",        # [LJ-1.20] to [LJ-1.25], 75 in-fence
   "src/L/BoundedSubset.lagda.md",             # [LJ-1.49], 1,409 in-fence
-  "src/L/StageBound.lagda.md",                # [LJ-1.442] then [LJ-1.453], 90 in-fence
+  "src/L/StageBound.lagda.md",                # [LJ-1.442] then [LJ-1.453] then [LJ-1.461], 109 in-fence
   "src/L/Condensation/TwelveAgree.lagda.md",  # [LJ-1.76], 309 in-fence, 0.0993 s/line
   "src/L/Condensation/UpperAgree.lagda.md",   # [LJ-1.76], 268 in-fence, 0.0478 s/line
   "src/L/Condensation/LowerAgree.lagda.md",
