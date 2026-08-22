@@ -1,0 +1,305 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.551] W3 ONLY, and it runs BEFORE any collection.
+--
+-- THE WIDEST UNMEASURED TERM: can the clean set's hypotheses hold
+-- together at ONE frame.  `[LJ-1.71]` shipped a module whose telescope
+-- was uninhabited at EVERY frame (archive/dev/LJ-dispatch-index.md:135),
+-- so the collection is guarded here before a field is written.
+--
+-- THE CLEAN SET SPANS TWO SUPPLIERS AND THAT IS THE WHOLE RISK.
+--   * 27 rows are supplied by `KValue.facts`, a `KFacts` value at
+--     `KV.Kenv` (src/L/Condensation.lagda.md:7411-7425).
+--   * 10 rows are supplied by `SupplyEnv`, which PINS the environment's
+--     cell 0 to `B₀ = LsetS gam ordγ`
+--     (src/L/Coding/EnvSupply.lagda.md:124-125) and states its
+--     conclusions at `Lset lam`, not at a slot.
+-- The record states BOTH at one `γ'` and one `K`, six successors above
+-- the tag indices (src/L/Condensation/TwelveAgree.lagda.md:133, :262).
+-- If the two suppliers cannot be read at ONE such `γ'` and `K`, the
+-- 37-field value is refuted before it is written.
+--
+-- THE THREE CONJUNCTS BELOW ARE THE THREE WAYS IT COULD FAIL, and each
+-- is discharged with NO `subst` and NO transport.
+--   (a) the tag block, read at the record's SIX-FOLD SHIFTED index over
+--       the pinned 20-cell environment;
+--   (b) the record's `transK`, from `KFacts.arityK` with the binder
+--       roles swapped (src/L/Condensation/TwelveAgree.lagda.md:347-352);
+--   (c) THE DECISIVE ONE: an `EnvSupply` conclusion, stated at
+--       `Lset lam`, read at the record's `K` SLOT.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.  I postulate nothing.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-553.Probe553 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import L.Axioms.Numerals {ℓ} using ( numeralL )
+open import L.Coding.Model {ℓ} using ( envSetAt; envOverAt; prʟ )
+open import L.Coding.EnvSupply {ℓ} lem using ( module SupplyEnv )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( #_; sucV; ω )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+open KFactsNS
+open KFacts
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- =====================================================================
+-- THE 37 CLEAN FIELDS, ONCE, AT `TFacts`'s OWN SHAPE (W2).
+--
+-- Every type below is COPIED VERBATIM out of the master
+-- (src/L/Condensation/TwelveAgree.lagda.md:133-161, :185-243, :262-264).
+-- `statement-matches` is Agda's word that they ARE the master's own.
+--
+-- THE COUNT IS 37 AND NOT 38.  `[LJ-1.512]` counts 54 honest forms and
+-- 16 that ask for more (agents/tasks/LJ-1-512/lj-1.512-report.md:1), and
+-- 54 - 16 = 38.  But that census puts the 54 in THREE buckets, not two:
+-- 37 match exactly, 16 ask for MORE, and `envSetK` asks for LESS and
+-- delivers less (row 54 of its table).  The subtraction silently counts
+-- `envSetK` as clean.  It is not: `SupplyEnv.envSetK`
+-- (src/L/Coding/EnvSupply.lagda.md:140-146) PINS the carrier to `B₀` and
+-- has no `B` binder at all, while the record's field
+-- (src/L/Condensation/TwelveAgree.lagda.md:306-311) quantifies over `B`
+-- and takes `⟨ fst B ∈ K ⟩`.  So the honest form cannot fill the record's
+-- field, and the clean set this file collects is 37.
+--
+-- THE OTHER 22 `TFacts` FIELDS ARE NOT HERE.  AD12 gives this task one
+-- obligation, and the brief forbids the 16 and forbids a `TFacts` value.
+-- =====================================================================
+
+record CleanForms {n : ℕ}
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 K : Fin (5 + n))
+  (γ' : S ^ (11 + n)) : Type (ℓ-suc ℓ) where
+  field
+    tagEq0 : fst (lookup (suc (suc (suc (suc (suc (suc N0)))))) γ') ≡ fst (numeralL 0)
+    tagEq1 : fst (lookup (suc (suc (suc (suc (suc (suc N1)))))) γ') ≡ fst (numeralL 1)
+    tagEq2 : fst (lookup (suc (suc (suc (suc (suc (suc N2)))))) γ') ≡ fst (numeralL 2)
+    tagEq3 : fst (lookup (suc (suc (suc (suc (suc (suc N3)))))) γ') ≡ fst (numeralL 3)
+    tagEq4 : fst (lookup (suc (suc (suc (suc (suc (suc N4)))))) γ') ≡ fst (numeralL 4)
+    tagEq5 : fst (lookup (suc (suc (suc (suc (suc (suc N5)))))) γ') ≡ fst (numeralL 5)
+    tagEq6 : fst (lookup (suc (suc (suc (suc (suc (suc N6)))))) γ') ≡ fst (numeralL 6)
+    tagEq7 : fst (lookup (suc (suc (suc (suc (suc (suc N7)))))) γ') ≡ fst (numeralL 7)
+    tagEq8 : fst (lookup (suc (suc (suc (suc (suc (suc N8)))))) γ') ≡ fst (numeralL 8)
+    tagEq9 : fst (lookup (suc (suc (suc (suc (suc (suc N9)))))) γ') ≡ fst (numeralL 9)
+    tagEq10 : fst (lookup (suc (suc (suc (suc (suc (suc N10)))))) γ') ≡ fst (numeralL 10)
+    tagEq11 : fst (lookup (suc (suc (suc (suc (suc (suc N11)))))) γ') ≡ fst (numeralL 11)
+    numK0 : ⟨ fst (numeralL 0) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK1 : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK2 : ⟨ fst (numeralL 2) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK3 : ⟨ fst (numeralL 3) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK4 : ⟨ fst (numeralL 4) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK5 : ⟨ fst (numeralL 5) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK6 : ⟨ fst (numeralL 6) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK7 : ⟨ fst (numeralL 7) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK8 : ⟨ fst (numeralL 8) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK9 : ⟨ fst (numeralL 9) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK10 : ⟨ fst (numeralL 10) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    numK11 : ⟨ fst (numeralL 11) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    innerK : (k : ℕ) (p : S) → ⟨ fst p ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+              → ⟨ fst (prʟ (numeralL k) p) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    pairK : (a b : S) → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+              → ⟨ fst b ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+              → ⟨ fst (prʟ a b) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    num1K : ⟨ fst (numeralL 1) ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envK-mem : (yc b a ar c E : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                 envSetAt zero (suc (suc (suc (suc zero))))
+                           (suc (suc (suc (suc (suc (suc zero)))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envK-neg : (ya yc a ar c E : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                 envSetAt zero (suc (suc (suc (suc zero))))
+                           (suc (suc (suc (suc (suc (suc zero)))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envK-top : (yc a ar c E : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                 envSetAt zero (suc (suc (suc zero)))
+                           (suc (suc (suc (suc (suc zero))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envK-imp : (E yb ya yc b a ar c : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                 envSetAt zero (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
+              → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envK-allin : (E ya yc b a ar c : S)
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   envSetAt zero (suc (suc (suc (suc (suc zero)))))
+                             (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
+                → ⟨ fst E ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envInK-mem : (yc b a ar c E : S)
+               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → (z : S) → ⟨ (z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
+                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envInK-neg : (ya yc a ar c E : S)
+               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   envOverAt zero (suc (suc (suc (suc (suc zero)))))
+                               (suc (suc (suc (suc (suc (suc (suc zero))))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envInK-top : (yc a ar c E : S)
+               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → (z : S) → ⟨ (z ∷ E ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   envOverAt zero (suc (suc (suc (suc zero))))
+                               (suc (suc (suc (suc (suc (suc zero)))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    envInK-imp : (E ya yc b a ar c : S)
+               → ⟨ fst ar ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+               → ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+               → (z : S) → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   envOverAt zero (suc (suc (suc (suc (suc (suc zero))))))
+                               (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) ⟩
+                → ⟨ fst z ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    transK : (x a : S) → ⟨ fst x ∈ fst a ⟩
+             → ⟨ fst a ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+             → ⟨ fst x ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+-- =====================================================================
+-- THE OBLIGATION, AT `KValue`'s FRAME.  ONE TELESCOPE, 37 FIELDS.
+--
+-- THE UNION TELESCOPE, ITEM BY ITEM.
+--
+--   `lam ordλ succλ ∅∈λ gam ordγ γ∈λ`  `KValue`'s seven
+--     (src/L/Condensation.lagda.md:7380-7383).  BOTH suppliers take
+--     them, so the union carries them ONCE.
+--   `ω∈σ`                              `SupplyEnv`'s eighth parameter
+--     (src/L/Coding/EnvSupply.lagda.md:111), which the ten `EnvSupply`
+--     rows need and the 27 `KFacts` rows never consume.
+--   `g1 g2 g3 g4 g5`                   the five free cells.  Cell 0 is
+--     PINNED to `SE.B₀`, as `[LJ-1.538]` pins it and `[LJ-1.545]`
+--     re-pins it (agents/tasks/LJ-1-545/Probe545.agda:416).
+--
+-- AND THAT IS ALL.  THE CLEAN SET ADDS NO PER-FIELD HYPOTHESIS: that is
+-- what makes it clean.  The union is `[LJ-1.545]`'s telescope with
+-- `valSub` REMOVED, because `valSub` was the seven `subK` rows' price
+-- and no `subK` row is clean.
+--
+-- EVERY FIELD IS ONE APPLICATION, AND NOTHING ELSE.
+--   27 rows  `KV.facts .<field>` at the SHIFTED index with no
+--            conversion, as `[LJ-1.542]` reads them and `[LJ-1.545]`
+--            re-reads them (Probe545.agda:533-538).  `num1K` is
+--            `KV.facts .numK1`, which is the duplicate `[LJ-1.512]`
+--            measured (its census row 34).  `transK` is
+--            `KV.facts .arityK` with the binder roles swapped, which is
+--            the master's own move
+--            (src/L/Condensation/TwelveAgree.lagda.md:347-352).
+--   10 rows  `SE.envK-gen` / `SE.envInK-gen`, as `[LJ-1.538]` applies
+--            them and `[LJ-1.545]` re-applies them
+--            (Probe545.agda:446-490); plus `transK`, which `[LJ-1.512]`
+--            reads at `SupplyEnv.transK` and which this frame pays from
+--            `KFacts.arityK` instead.
+--
+-- NO `subst` IS ADDED AT ANY FIELD.  I DO NOT REBUILD `[LJ-1.495]`'s
+-- SHIFT and `KFactsCons` is not imported.
+-- =====================================================================
+
+module Frame
+  (lam : V ℓ) (ordλ : IsOrd lam)
+  (succλ : (d : V ℓ) → ⟨ d ∈ lam ⟩ → ⟨ sucV d ∈ lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ lam ⟩)
+  (gam : V ℓ) (ordγ : IsOrd gam) (γ∈λ : ⟨ gam ∈ lam ⟩)
+  (ω∈σ : ⟨ ω ∈ sucV gam ⟩) where
+
+  module KV = KValue lam ordλ succλ ∅∈λ gam ordγ γ∈λ
+  module SE = SupplyEnv lam ordλ succλ ∅∈λ gam ordγ γ∈λ ω∈σ
+
+  γ‡ : (g1 g2 g3 g4 g5 : S) → Vec S 20
+  γ‡ g1 g2 g3 g4 g5 = SE.B₀ ∷ g1 ∷ g2 ∷ g3 ∷ g4 ∷ g5 ∷ KV.Kenv
+
+  -- THE OBLIGATION.  The union telescope, then the witness.
+  clean-forms-collected : (g1 g2 g3 g4 g5 : S)
+    → CleanForms {n = 9}
+        KV.i0 KV.i1 KV.i2 KV.i3 KV.i4 KV.i5
+        KV.i6 KV.i7 KV.i8 KV.i9 KV.i10 KV.i11
+        KV.iK (γ‡ g1 g2 g3 g4 g5)
+  clean-forms-collected g1 g2 g3 g4 g5 = record
+    { tagEq0 = KV.facts .tagEq0 ; tagEq1 = KV.facts .tagEq1
+    ; tagEq2 = KV.facts .tagEq2 ; tagEq3 = KV.facts .tagEq3
+    ; tagEq4 = KV.facts .tagEq4 ; tagEq5 = KV.facts .tagEq5
+    ; tagEq6 = KV.facts .tagEq6 ; tagEq7 = KV.facts .tagEq7
+    ; tagEq8 = KV.facts .tagEq8 ; tagEq9 = KV.facts .tagEq9
+    ; tagEq10 = KV.facts .tagEq10 ; tagEq11 = KV.facts .tagEq11
+    ; numK0 = KV.facts .numK0 ; numK1 = KV.facts .numK1
+    ; numK2 = KV.facts .numK2 ; numK3 = KV.facts .numK3
+    ; numK4 = KV.facts .numK4 ; numK5 = KV.facts .numK5
+    ; numK6 = KV.facts .numK6 ; numK7 = KV.facts .numK7
+    ; numK8 = KV.facts .numK8 ; numK9 = KV.facts .numK9
+    ; numK10 = KV.facts .numK10 ; numK11 = KV.facts .numK11
+    ; innerK = KV.facts .innerK
+    ; pairK = KV.facts .pairK
+    ; num1K = KV.facts .numK1
+    ; envK-mem = λ yc b a ar c E arNum h →
+        SE.envK-gen (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          zero (suc (suc (suc (suc zero))))
+          (suc (suc (suc (suc (suc (suc zero))))))
+          refl arNum h
+    ; envK-neg = λ ya yc a ar c E arNum h →
+        SE.envK-gen (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          zero (suc (suc (suc (suc zero))))
+          (suc (suc (suc (suc (suc (suc zero))))))
+          refl arNum h
+    ; envK-top = λ yc a ar c E arNum h →
+        SE.envK-gen (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          zero (suc (suc (suc zero)))
+          (suc (suc (suc (suc (suc zero)))))
+          refl arNum h
+    ; envK-imp = λ E yb ya yc b a ar c arNum h →
+        SE.envK-gen (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          zero (suc (suc (suc (suc (suc (suc zero))))))
+          (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+          refl arNum h
+    ; envK-allin = λ E ya yc b a ar c arNum h →
+        SE.envK-gen (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          zero (suc (suc (suc (suc (suc zero)))))
+          (suc (suc (suc (suc (suc (suc (suc zero)))))))
+          refl arNum h
+    ; envInK-mem = λ yc b a ar c E arK arNum z h →
+        SE.envInK-gen (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          (suc (suc (suc (suc zero))))
+          (suc (suc (suc (suc (suc (suc zero))))))
+          refl arNum arK z h
+    ; envInK-neg = λ ya yc a ar c E arK arNum z h →
+        SE.envInK-gen (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          (suc (suc (suc (suc zero))))
+          (suc (suc (suc (suc (suc (suc zero))))))
+          refl arNum arK z h
+    ; envInK-top = λ yc a ar c E arK arNum z h →
+        SE.envInK-gen (E ∷ yc ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          (suc (suc (suc zero)))
+          (suc (suc (suc (suc (suc zero)))))
+          refl arNum arK z h
+    ; envInK-imp = λ E ya yc b a ar c arK arNum z h →
+        SE.envInK-gen (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ‡ g1 g2 g3 g4 g5)
+          (suc (suc (suc (suc (suc zero)))))
+          (suc (suc (suc (suc (suc (suc (suc zero)))))))
+          refl arNum arK z h
+    ; transK = λ x a hx ha → KV.facts .arityK a x hx ha }
+
+-- THE OBLIGATION AT THE TOP LEVEL: `KValue`'s seven, then `ω∈σ`, then
+-- the five free cells, then the 37 clean fields in ONE value.
+clean-forms-collected = Frame.clean-forms-collected
