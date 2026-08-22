@@ -1,0 +1,56 @@
+GHCRTS=[-A64m -I0 -M8g]
+Checking LJ-1-531.runs.Baseline (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/runs/Baseline.agda).
+        1.54 real         1.06 user         0.18 sys
+           348930048  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18862  page reclaims
+                4179  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 422  voluntary context switches
+                2190  involuntary context switches
+         13756422438  instructions retired
+          4987272344  cycles elapsed
+           290505496  peak memory footprint
+        1.18 real         1.05 user         0.12 sys
+           345178112  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22808  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 203  involuntary context switches
+         13296502812  instructions retired
+          4682850274  cycles elapsed
+           288080664  peak memory footprint
+        1.18 real         1.05 user         0.12 sys
+           345178112  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22809  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 214  involuntary context switches
+         13245670749  instructions retired
+          4680334014  cycles elapsed
+           288080664  peak memory footprint

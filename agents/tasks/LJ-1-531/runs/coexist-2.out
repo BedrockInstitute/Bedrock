@@ -1,0 +1,22 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T09:53:42Z
+Checking LJ-1-531.runs.Coexist (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/runs/Coexist.agda).
+        2.37 real         1.80 user         0.24 sys
+           500940800  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               28080  page reclaims
+                4239  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 761  voluntary context switches
+                1992  involuntary context switches
+         22438423055  instructions retired
+          8161031636  cycles elapsed
+           441533328  peak memory footprint
+EXIT=0

@@ -1,0 +1,20 @@
+GHCRTS=[-A64m -I0 -M8g]
+COLD DELTA: only this task's own .agdai removed; LJ-1-521.Probe521.agdai kept.
+-- probe531 run 1
+Checking LJ-1-531.Probe531 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/Probe531.agda).
+        1.59 real         1.12 user         0.18 sys
+-- baseline run 1
+Checking LJ-1-531.runs.Baseline (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/runs/Baseline.agda).
+        1.18 real         1.03 user         0.13 sys
+-- probe531 run 2
+Checking LJ-1-531.Probe531 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/Probe531.agda).
+        1.29 real         1.14 user         0.13 sys
+-- baseline run 2
+Checking LJ-1-531.runs.Baseline (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/runs/Baseline.agda).
+        1.17 real         1.03 user         0.13 sys
+-- probe531 run 3
+Checking LJ-1-531.Probe531 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/Probe531.agda).
+        1.24 real         1.10 user         0.12 sys
+-- baseline run 3
+Checking LJ-1-531.runs.Baseline (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-531/agents/tasks/LJ-1-531/runs/Baseline.agda).
+        1.14 real         1.02 user         0.12 sys
