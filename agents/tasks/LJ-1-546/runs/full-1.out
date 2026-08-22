@@ -1,0 +1,23 @@
+GHCRTS=-A64m -I0 -M8g
+# full-1: FIRST full probe run
+Checking LJ-1-546.Probe546 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-546/agents/tasks/LJ-1-546/Probe546.agda).
+ Checking L.CodedShift (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-546/src/L/CodedShift.lagda.md).
+  Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-546/src/L/Absorption.lagda.md).
+        6.50 real         6.28 user         0.19 sys
+           638468096  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40685  page reclaims
+                  28  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  10  voluntary context switches
+                 891  involuntary context switches
+         82169354047  instructions retired
+         26133844071  cycles elapsed
+           577930224  peak memory footprint

@@ -1,0 +1,28 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.546]  W3 SLICE, TYPE ONLY.  The widest unmeasured term is
+-- `𝒫 κ` in `InjCode`'s SECOND argument: `InjCode` was written for a
+-- stage, and nobody has fed it a power set.  If this type does not
+-- form, B10 is refuted before any reduction.
+--
+-- Nothing is inhabited.  Nothing is postulated.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-546.Probe546 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import L.Cardinal {ℓ} lem using ( InjCode )
+import FOL.ZFModel
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+module SL = hPropStructure 𝒮ʟ
+module ModelL = FOL.ZFModel 𝒮ʟ
+
+-- W3.  `InjCode F δ (𝒫 κ)` at B10's frame.  TYPE ONLY.
+W3-code-at-power : ModelL.isZFModel → SL.S → SL.S → SL.S → Type (ℓ-suc ℓ)
+W3-code-at-power zf F δ κ = InjCode F δ (𝒫 κ)
+  where open ModelL.isZFModel zf using ( 𝒫 )
