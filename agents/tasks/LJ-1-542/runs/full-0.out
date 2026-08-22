@@ -1,0 +1,11 @@
+Checking LJ-1-542.Probe542 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-542/agents/tasks/LJ-1-542/Probe542.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-542/agents/tasks/LJ-1-542/Probe542.agda:145.36-37: error: [NotInScope]
+Not in scope:
+  ^
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-542/agents/tasks/LJ-1-542/Probe542.agda:145.36-37
+    (did you mean
+       '.#L.Condensation-17352922996727217188.AbsL.SemM._^_' or
+       '.#L.Condensation-17352922996727217188.AbsL.SemV._^_' or
+       '.#L.Condensation-17352922996727217188.AbsL._^_' or
+       'Cubical.Data.Nat._^_'?)
+when scope checking ^
