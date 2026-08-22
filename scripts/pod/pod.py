@@ -233,8 +233,23 @@ PROPOSALS = ROOT / "dev" / "pod" / "proposals"
 INSTRUCTIONS = ROOT / "dev" / "pod" / "instructions"
 
 
+#: What `preamble_for()` expected and did not find on its last call, newest call wins.
+#: It is a GLOBAL for the same reason `LAUNCH_REFUSAL` is one: the call sits inside an
+#: argument list at the dispatch point and there is no return channel beside the file
+#: list itself. A caller that wants the defect reads this immediately after the call.
+PREAMBLE_MISSING = []
+
+
 def preamble_for(slot, root=None):
-    """The files `cat` puts ahead of the brief: the slot file, then `AGENTS.md`.
+    """The files `cat` puts ahead of the brief, in the order the worker reads them.
+
+    FIVE FILES REACH A DISPATCHED WORKER and this function names the first four:
+    `dev/pod/instructions/<slot>.md`, `AGENTS.md`, `dev/pod/screen.toml`,
+    `dev/pod/direction.md`. The brief is the fifth and `_prompt_files()` in
+    `scripts/pod/launcher.py` appends it. **A RESIDENT SLOT GETS THIS PREAMBLE
+    ONCE**, at session start, and every later prompt is the brief alone, which is
+    why the two resident slot files tell their head to open the screen and the
+    direction itself.
 
     Owner 2026-08-20: the slot file is first, so the worker meets its role before
     the shared Boundary, the screen or the direction. `AGENTS.md` is second.
@@ -249,14 +264,20 @@ def preamble_for(slot, root=None):
     **ONE SOURCE PER FILE.** The shared Boundary is `AGENTS.md` and the slot file holds
     only what binds that slot. Neither is copied into the other; `cat` joins them at
     dispatch. A missing slot file is not a reason to launch a worker with no rules, so
-    this returns what exists and the caller's own defect list reports the rest.
+    this returns what exists.
+
+    **AND IT SAYS WHAT IT COULD NOT FIND, added 2026-08-22.** The filter below is
+    silent by construction, so a worker dispatched with NO Boundary at all looked
+    exactly like a healthy one: the returned list is shorter and nothing reads its
+    length. This records the absent paths in `PREAMBLE_MISSING` and prints them to
+    stderr, which rule (f) already tees to the operator's pane through `_tee()`. It
+    still never refuses: an absent file is a defect to repair, and a dispatch that
+    carries three of the four rules is better than a dispatch that carries none.
     """
     root = ROOT if root is None else Path(root)
     out = []
     if slot:
-        p = root / "dev" / "pod" / "instructions" / f"{slot}.md"
-        if p.is_file():
-            out.append(p)
+        out.append(root / "dev" / "pod" / "instructions" / f"{slot}.md")
     out.append(root / "AGENTS.md")
     # THE SCREEN IS THE STANDING STATUS, extracted from PLAN.md section 0/11
     # on 2026-08-20. It sits behind the slot file and in front of the direction:
@@ -267,6 +288,11 @@ def preamble_for(slot, root=None):
     # the worker is told and the only one the owner may have written this hour. Every
     # slot gets it by the owner's ruling of 2026-08-18.
     out.append(root / DIRECTION_REL)
+    global PREAMBLE_MISSING                    # noqa: PLW0603. See the constant above
+    PREAMBLE_MISSING = [str(f) for f in out if not f.is_file()]
+    if PREAMBLE_MISSING:
+        print("preamble: MISSING and the worker will not read "
+              + ", ".join(PREAMBLE_MISSING), file=sys.stderr)
     return [f for f in out if f.is_file()]
 WATCHDOG = ROOT / "scripts" / "ops" / "agda-watchdog.sh"
 BARK = ROOT / "scripts" / "ops" / "bark-push.sh"
@@ -2399,20 +2425,54 @@ def review_brief(t, slot, root=None):
         "agree, or `verdict: overturned` when you do not.",
         *timeout_note,
         "",
-        "## WHAT YOU READ, and all of it is tracked",
+        # THE HEADING NO LONGER SAYS 「all of it is tracked」, because the accept arm
+        # below is not: `git status --untracked-files=all` lists
+        # `agents/tasks/LJ-1-390/runs/accept-2.out` and its siblings as `??`. The
+        # bullets say where each one lives instead, which is the fact the critic needs.
+        "## WHAT YOU READ, and where each one lives",
         f"- the newest `agents/tasks/{agents_tree.normalise(t.code)}/*-report.md`",
         f"- the work brief `{t.brief}`",
         f"- the probes `agents/tasks/{agents_tree.normalise(t.code)}/*.agda`",
-        f"- the six facts, `model`, `effort` and `heads_sha256` of that instance in",
-        "  `dev/pod/transitions/`",
+        # **THE ACCEPTANCE ARM IS IN YOUR OWN CHECKOUT AND THE LOG MAY NOT BE.**
+        # `run_acceptance(t, acc_root)` writes `runs/accept-<n>.out` with `acc_root`
+        # set to the TASK'S WORKTREE under isolation (`_accept_one()`), and a review
+        # of the same code reuses that worktree, so the arm is always there. The
+        # transition log is a TRACKED file, so the worktree holds it at its base
+        # commit and it lags every record written since. MEASURED 2026-08-22: the
+        # critics on LJ-1.532, LJ-1.533 and LJ-1.535 each reported the worktree copy
+        # ending at LJ-1.399 and each rebuilt the facts from the accept arm instead.
+        # Name the arm first, and say what the log is.
+        f"- the acceptance arm `agents/tasks/{agents_tree.normalise(t.code)}/runs/"
+        "accept-*.out`,",
+        "  newest last. It is written into THIS checkout and carries the six facts of",
+        "  the run you are attacking. Read them there.",
+        f"- `dev/pod/transitions/{time.strftime('%Y-%m')}.jsonl` for `model`, `effort`",
+        f"  and `heads_sha256`. Every line carrying `\"task\": \"{t.code}\"` is this",
+        "  task's own history. **It is a tracked file, so an isolated worktree holds it",
+        "  at that worktree's base commit and it can end before your instance.** When",
+        "  it does, say so and use the accept arm; never infer a fact it does not carry.",
         "",
+        # **THE QUESTION LIST NAMES ITS HOME, added 2026-08-22.** MEASURED over the
+        # 124 files matching `agents/tasks/LJ-1-*/review-of-*.md`: 14 head a section
+        # `THE FOUR QUESTIONS ...` or `THE SLOT'S FOUR QUESTIONS` and answer a
+        # DIFFERENT four, and 6 of those 14 name SECTION 6.6 for them. The four are
+        # DD25's, at `archive/dev/DD-archived.md:35`; section 6.6 carries the three
+        # below and no others, so those six returns cite a live memo section for
+        # archived text. The citation costs four lines and settles it at the point
+        # the critic reads the list.
         "## THE THREE QUESTIONS, and answer only these",
+        "These three are section 6.6's own list, at",
+        "`dev/memos/LJ-4-pod-program-design.md:2853-2858`. Your slot file gives you a",
+        "different set of FOUR as the lens you attack with. Use the four to find the",
+        "answers; write these three.",
+        "",
         "1. Does the predecessor's verdict LINE match its own BODY? The project measured",
         "   that failure twice on 2026-08-16: `[LJ-1.375]` caught it on `[LJ-1.373]`, and",
         "   `[LJ-1.376]` named the orchestrator's own unread live record the costliest",
         "   defect in the tree.",
         "2. Is every load-bearing claim backed by a `file:line` that resolves today?",
         "3. Is the predecessor's enumeration complete?",
+        "",
         "",
     ]
     out.write_text("\n".join(body), encoding="utf-8")

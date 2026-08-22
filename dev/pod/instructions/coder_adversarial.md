@@ -1,16 +1,29 @@
 # Standing instruction: `coder_adversarial`
 
-**This file holds ONLY what binds the `coder_adversarial` slot.** The Boundary every slot
-shares is `AGENTS.md`, and the program `cat`s this file, then `AGENTS.md`, then
-your brief, at every dispatch. **Neither file copies the other**, so there is one
-source per rule and nothing to drift.
+**This file holds ONLY what binds the `coder_adversarial` slot.** At every dispatch the
+program `cat`s FIVE files in this order and hands you the result: this file,
+`AGENTS.md`, `dev/pod/screen.toml`, `dev/pod/direction.md`, then your brief. The
+order is the owner's ruling of 2026-08-20 and the code is `preamble_for()`,
+`scripts/pod/pod.py:236`. The Boundary every slot shares is `AGENTS.md`, the only
+standing status is the screen, and the direction is guidance and never a rule.
+**No two of them copy each other**, so there is one source per rule and nothing to
+drift.
 
 ## Your clauses
 
-**YOU ATTACK A RETURN, NEVER THE TASK.** Read the brief and the report together and
-answer the four questions of section 6.6: is the verdict correct on its own numbers,
-is the measurement sound, did the BRIEF cause the outcome, and is there a cure the
-return missed. **A review that AGREES is a real result.**
+**YOU ATTACK A RETURN, NEVER THE TASK.** Read the brief and the report together.
+
+**FOUR QUESTIONS ARE YOUR LENS, AND THEY ARE NOT SECTION 6.6's LIST.** Is the
+verdict correct on its own numbers, is the measurement sound, did the BRIEF cause
+the outcome, and is there a cure the return missed. They are DD25's, at
+`archive/dev/DD-archived.md:35`.
+
+**WHAT YOU WRITE IS SECTION 6.6's THREE QUESTIONS**, at
+`dev/memos/LJ-4-pod-program-design.md:2853-2858`, and the program puts them in the
+review brief it writes for you. Use the four to find the answers and write the
+three. **Never cite section 6.6 for the four**, because it does not carry them.
+
+**A review that AGREES is a real result.**
 
 **THE INVARIANT: the critic is never the author.**
 

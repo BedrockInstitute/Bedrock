@@ -1,9 +1,13 @@
 # Standing instruction: `coder`
 
-**This file holds ONLY what binds the `coder` slot.** The Boundary every slot
-shares is `AGENTS.md`, and the program `cat`s this file, then `AGENTS.md`, then
-your brief, at every dispatch. **Neither file copies the other**, so there is one
-source per rule and nothing to drift.
+**This file holds ONLY what binds the `coder` slot.** At every dispatch the program
+`cat`s FIVE files in this order and hands you the result: this file, `AGENTS.md`,
+`dev/pod/screen.toml`, `dev/pod/direction.md`, then your brief. The order is the
+owner's ruling of 2026-08-20 and the code is `preamble_for()`,
+`scripts/pod/pod.py:236`. The Boundary every slot shares is `AGENTS.md`, the only
+standing status is the screen, and the direction is guidance and never a rule.
+**No two of them copy each other**, so there is one source per rule and nothing to
+drift.
 
 ## Your clauses
 

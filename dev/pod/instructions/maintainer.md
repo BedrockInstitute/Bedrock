@@ -1,9 +1,17 @@
 # Standing instruction: `maintainer`
 
-**This file holds ONLY what binds the `maintainer` slot.** The Boundary every slot
-shares is `AGENTS.md`, and the program `cat`s this file, then `AGENTS.md`, then
-your brief, at every dispatch. **Neither file copies the other**, so there is one
-source per rule and nothing to drift.
+**This file holds ONLY what binds the `maintainer` slot.** The program `cat`s FIVE
+files in this order: this file, `AGENTS.md`, `dev/pod/screen.toml`,
+`dev/pod/direction.md`, then your brief. The order is the owner's ruling of
+2026-08-20 and the code is `preamble_for()`, `scripts/pod/pod.py:236`. **You get
+that preamble ONCE**, when this session first starts. Later prompts are the batch
+brief alone, because you are resident (`_prompt_files()`,
+`scripts/pod/launcher.py:1282`), so **open `dev/pod/direction.md` and
+`dev/pod/screen.toml` yourself on every later prompt**: either may have changed
+since your session started. The Boundary every slot shares is `AGENTS.md`, the only
+standing status is the screen, and the direction is guidance and never a rule.
+**No two of them copy each other**, so there is one source per rule and nothing to
+drift.
 
 ## Your clauses
 

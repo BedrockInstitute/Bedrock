@@ -34,9 +34,11 @@ Run: `python3 scripts/tests/test_pod_loop.py`
 
 from __future__ import annotations
 
+import contextlib
 import datetime
 import importlib.util
 import inspect
+import io
 import json
 import os
 import re
@@ -1654,6 +1656,52 @@ class Direction(LoopCase):
             self.assertEqual(names, [f"{slot}.md", "AGENTS.md", "screen.toml",
                                      "direction.md"],
                              f"{slot} was dispatched without the screen or the direction")
+            self.assertEqual(pod.PREAMBLE_MISSING, [],
+                             "a complete preamble reports no defect")
+
+    def test_a_missing_preamble_file_is_NAMED_and_still_never_refuses(self):
+        """**THE SILENT DROP WAS THE DEFECT.** `preamble_for()` filtered absent files out
+        and said nothing, so a worker dispatched with NO Boundary at all produced a
+        shorter list and nothing in the program read its length. The docstring claimed
+        「the caller's own defect list reports the rest」and no caller had one: `grep -n
+        "defect list" scripts/pod/pod.py` found the claim and nothing else.
+
+        IT MUST STILL NOT REFUSE. Three of the four rules in front of a worker is better
+        than none, and an absent rule home is a repair for the maintainer, not a reason
+        to stop the loop."""
+        self._write("d")
+        inst = self.tmp / "dev" / "pod" / "instructions"
+        inst.mkdir(parents=True, exist_ok=True)
+        (inst / "coder.md").write_text("clauses", encoding="utf-8")
+        # `AGENTS.md` and the screen are both absent in this tree.
+        (self.tmp / "AGENTS.md").unlink(missing_ok=True)
+        (self.tmp / "dev" / "pod" / "screen.toml").unlink(missing_ok=True)
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            got = pod.preamble_for("coder", self.tmp)
+        self.assertEqual([f.name for f in got], ["coder.md", "direction.md"],
+                         "what exists is still handed over")
+        self.assertEqual([pathlib.Path(p).name for p in pod.PREAMBLE_MISSING],
+                         ["AGENTS.md", "screen.toml"])
+        self.assertIn("AGENTS.md", buf.getvalue(),
+                      "the operator's pane is the channel rule (f) already tees")
+
+    def test_the_missing_list_is_the_LAST_call_and_never_an_accumulation(self):
+        """A stale name would send the maintainer to repair a file that is already
+        there."""
+        self._write("d")
+        inst = self.tmp / "dev" / "pod" / "instructions"
+        inst.mkdir(parents=True, exist_ok=True)
+        (inst / "coder.md").write_text("clauses", encoding="utf-8")
+        (self.tmp / "AGENTS.md").unlink(missing_ok=True)
+        (self.tmp / "dev" / "pod" / "screen.toml").unlink(missing_ok=True)
+        with contextlib.redirect_stderr(io.StringIO()):
+            pod.preamble_for("coder", self.tmp)
+            self.assertTrue(pod.PREAMBLE_MISSING)
+            (self.tmp / "AGENTS.md").write_text("boundary", encoding="utf-8")
+            (self.tmp / "dev" / "pod" / "screen.toml").write_text("x = 1\n")
+            pod.preamble_for("coder", self.tmp)
+        self.assertEqual(pod.PREAMBLE_MISSING, [])
 
 
 class RuleE(LoopCase):
@@ -2245,6 +2293,53 @@ class RuleF(LoopCase):
         rel = pod.review_brief(t, "coder_adversarial", self.tmp)
         text = (self.tmp / rel).read_text()
         self.assertNotIn("WHY THIS ESCALATED", text)
+
+    def test_the_three_questions_name_the_section_that_carries_them(self):
+        """**A CITATION THE CRITIC CAN CHECK.** MEASURED 2026-08-22 over the 124 files
+        matching `agents/tasks/LJ-1-*/review-of-*.md`: 14 head a four-question section
+        and 6 of those name SECTION 6.6 for it. Section 6.6 carries three questions and
+        the four are DD25's, at `archive/dev/DD-archived.md:35`, so those six returns
+        cite a live memo section for archived text. The brief now names the home of the
+        list it gives, and names the slot file's four as a different set."""
+        st, t = self.ready(attempt=2)
+        text = (self.tmp / pod.review_brief(t, "coder_adversarial", self.tmp)).read_text()
+        self.assertIn("dev/memos/LJ-4-pod-program-design.md:2853-2858", text)
+        self.assertIn("FOUR", text, "the brief must name the slot file's other list")
+        # The citation sits WITH the list, not in a footer a critic can stop before.
+        self.assertLess(text.index("THE THREE QUESTIONS"),
+                        text.index("LJ-4-pod-program-design.md:2853-2858"))
+        self.assertLess(text.index("LJ-4-pod-program-design.md:2853-2858"),
+                        text.index("1. Does the predecessor's verdict LINE"))
+
+    def test_the_generated_headings_are_separated_by_a_blank_line(self):
+        """`## ARCHIVE` used to land on the line after question 3 with no blank line
+        between them, because the body ended in exactly one newline and the retrieval
+        block was appended straight onto it. A heading glued to a list item is a
+        markdown hazard for no gain."""
+        st, t = self.ready(attempt=2)
+        text = (self.tmp / pod.review_brief(t, "coder_adversarial", self.tmp)).read_text()
+        for head in ("## ARCHIVE", "## LITERATURE"):
+            i = text.index(head)
+            self.assertTrue(text[:i].endswith("\n\n"),
+                            f"{head} must be preceded by a blank line")
+
+    def test_the_review_brief_names_the_accept_arm_and_warns_about_the_log(self):
+        """**THE CRITIC RUNS IN THE TASK'S WORKTREE AND THE LOG IS TRACKED.**
+        `_accept_one()` gives `run_acceptance()` the worktree as its root under
+        isolation, so `runs/accept-<n>.out` is written into the checkout the critic
+        gets. `dev/pod/transitions/<YYYY-MM>.jsonl` is tracked, so that checkout holds
+        it at the worktree's BASE COMMIT. MEASURED 2026-08-22: the critics on LJ-1.532,
+        LJ-1.533 and LJ-1.535 each reported their copy ending at LJ-1.399 and each
+        rebuilt the six facts from the accept arm, which the brief never named."""
+        st, t = self.ready(attempt=2)
+        text = (self.tmp / pod.review_brief(t, "coder_adversarial", self.tmp)).read_text()
+        self.assertIn(f"agents/tasks/{DIR}/runs/accept-*.out", text)
+        self.assertIn(f"dev/pod/transitions/{time.strftime('%Y-%m')}.jsonl", text)
+        self.assertIn(f'"task": "{CODE}"', text)
+        self.assertIn("base commit", text, "the staleness must be stated, not implied")
+        # The arm comes FIRST, because it is the one that is always in the checkout.
+        self.assertLess(text.index("runs/accept-*.out"),
+                        text.index("dev/pod/transitions/"))
 
     def test_the_logged_brief_is_ALWAYS_the_task_brief_and_never_the_review(self):
         """K6. Writing the review brief into `brief` would park the task with
