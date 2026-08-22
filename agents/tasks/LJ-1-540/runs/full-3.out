@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# full-3, the state this report describes
+        2.88 real         2.64 user         0.21 sys
+           762789888  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48298  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 463  involuntary context switches
+         32429396342  instructions retired
+         11762598874  cycles elapsed
+           705856592  peak memory footprint
+exit=0

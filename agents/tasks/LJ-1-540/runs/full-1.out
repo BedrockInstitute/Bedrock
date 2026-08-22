@@ -1,0 +1,23 @@
+GHCRTS=-A64m -I0 -M8g
+# full-1, the whole probe
+Checking LJ-1-540.Probe540 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-540/agents/tasks/LJ-1-540/Probe540.agda).
+ Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-540/src/L/Absorption.lagda.md).
+       16.47 real        16.06 user         0.36 sys
+          1580220416  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               98170  page reclaims
+                  23  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 123  voluntary context switches
+                2622  involuntary context switches
+        202545646371  instructions retired
+         66721064617  cycles elapsed
+          1520109200  peak memory footprint
+exit=0

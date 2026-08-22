@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# final-1, the probe's own interface removed so it RE-ELABORATES; the tree's interfaces stay warm
+Checking LJ-1-540.Probe540 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-540/agents/tasks/LJ-1-540/Probe540.agda).
+       11.90 real        11.59 user         0.30 sys
+          1529397248  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               95088  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                1685  involuntary context switches
+        143015189177  instructions retired
+         48331124701  cycles elapsed
+          1469761120  peak memory footprint
+exit=0

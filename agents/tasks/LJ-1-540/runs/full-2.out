@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# full-2, warm interfaces
+        2.86 real         2.62 user         0.21 sys
+           762773504  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48297  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 471  involuntary context switches
+         32425708573  instructions retired
+         11772215288  cycles elapsed
+           705840208  peak memory footprint
+exit=0

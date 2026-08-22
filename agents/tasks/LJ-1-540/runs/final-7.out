@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# final-7, the state this report describes
+Checking LJ-1-540.Probe540 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-540/agents/tasks/LJ-1-540/Probe540.agda).
+       13.23 real        12.72 user         0.43 sys
+          1556643840  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               96678  page reclaims
+                  77  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 552  voluntary context switches
+                2279  involuntary context switches
+        144245667362  instructions retired
+         51585603514  cycles elapsed
+          1497040528  peak memory footprint
+exit=0
