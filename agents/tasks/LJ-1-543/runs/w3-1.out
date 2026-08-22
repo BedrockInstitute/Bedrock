@@ -1,0 +1,42 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-1, the W3 slice typechecked ALONE
+Checking LJ-1-543.Probe543 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-543/agents/tasks/LJ-1-543/Probe543.agda).
+error: [UnsolvedConstraints]
+Failed to solve the following constraints:
+  fst (z Cubical.HITs.CumulativeHierarchy.Base.∈ fst κ)
+    =< fst (z Cubical.HITs.CumulativeHierarchy.Base.∈ _A_86)
+    (blocked on _A_86)
+  fst (x Cubical.HITs.CumulativeHierarchy.Base.∈ _A_86)
+    =< fst (x Cubical.HITs.CumulativeHierarchy.Base.∈ fst κ)
+    (blocked on _A_86)
+  fst (y₁ Cubical.HITs.CumulativeHierarchy.Base.∈ _A_86)
+    = fst (y₁ Cubical.HITs.CumulativeHierarchy.Base.∈ fst κ)
+    (blocked on _A_86)
+  fst (x Cubical.HITs.CumulativeHierarchy.Base.∈ _A_86)
+    = fst (x Cubical.HITs.CumulativeHierarchy.Base.∈ fst κ)
+    (blocked on _A_86)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-543/agents/tasks/LJ-1-543/Probe543.agda:64.51-69: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-543/agents/tasks/LJ-1-543/Probe543.agda:64.51-58
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-543/agents/tasks/LJ-1-543/Probe543.agda:64.59-63
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-543/agents/tasks/LJ-1-543/Probe543.agda:64.66-69
+        0.97 real         0.84 user         0.11 sys
+           282836992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19004  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  39  voluntary context switches
+                 190  involuntary context switches
+         10309146710  instructions retired
+          3744449250  cycles elapsed
+           223019776  peak memory footprint
+EXIT=42
