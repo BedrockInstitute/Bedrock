@@ -1,0 +1,22 @@
+Checking LJ-1-522.Probe522 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-522/agents/tasks/LJ-1-522/Probe522.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-522/agents/tasks/LJ-1-522/Probe522.agda:134.42-45: error: [NotInScope]
+Not in scope:
+  InL
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-522/agents/tasks/LJ-1-522/Probe522.agda:134.42-45
+    (did you mean
+       '.#L.Absoluteness-260926797273957189.InL' or
+       '.#L.Constructible-11561133861526941624.isL' or
+       'Cubical.Data.Sum._⊎_.inl' or
+       'Cubical.Data.Sum._⊎_.inr' or
+       'Cubical.Data.Sum.inl' or
+       'Cubical.Data.Sum.inr' or
+       'Cubical.Functions.Logic.inl' or
+       'Cubical.Functions.Logic.inr' or
+       'Sum._⊎_.inl' or
+       'Sum._⊎_.inr' or
+       'Sum.inl' or
+       'Sum.inr' or
+       'inl' or
+       'inr' or
+       'isL'?)
+when scope checking InL
