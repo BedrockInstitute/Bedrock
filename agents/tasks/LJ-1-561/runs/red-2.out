@@ -1,0 +1,23 @@
+Checking LJ-1-561.Probe561 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-561/agents/tasks/LJ-1-561/Probe561.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-561/agents/tasks/LJ-1-561/Probe561.agda:181.28-43: error: [UnequalTerms]
+Type (ℓ-suc ℓ) !=< Σ _A_263 _B_264
+when checking that the expression IsGraph a b g G has type
+Σ _A_263 _B_264
+        3.81 real         2.56 user         0.32 sys
+           782254080  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45236  page reclaims
+                4253  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                1033  voluntary context switches
+                2898  involuntary context switches
+         36306027715  instructions retired
+         12387311219  cycles elapsed
+           722633832  peak memory footprint

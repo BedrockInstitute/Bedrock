@@ -1,0 +1,64 @@
+Checking LJ-1-561.Probe561 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-561/agents/tasks/LJ-1-561/Probe561.agda).
+ Checking LJ-1-552.Probe552 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-561/agents/tasks/LJ-1-552/Probe552.agda).
+ Checking LJ-1-557.Probe557 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-561/agents/tasks/LJ-1-557/Probe557.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-561/agents/tasks/LJ-1-561/Probe561.agda:185.11-15: error: [NotInScope]
+Not in scope:
+  SL.^
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-561/agents/tasks/LJ-1-561/Probe561.agda:185.11-15
+    (did you mean
+       '.#L.Axioms.Basic-5906665486074295648.FinOf.DefC.Refine.Abs.SemM._^_' or
+       '.#L.Axioms.Basic-5906665486074295648.FinOf.DefC.Refine.Abs.SemV._^_' or
+       '.#L.Axioms.Basic-5906665486074295648.FinOf.DefC.Refine.Abs._^_' or
+       '.#L.Axioms.Basic-5906665486074295648.FinOf.DefC.SemanticsM._^_' or
+       '.#L.Cardinal-9109811166257884282.AbsL.SemM._^_' or
+       '.#L.Cardinal-9109811166257884282.AbsL.SemV._^_' or
+       '.#L.Cardinal-9109811166257884282.AbsL._^_' or
+       '.#L.Coding.Injection-5865714580124658999.AbsL.SemM._^_' or
+       '.#L.Coding.Injection-5865714580124658999.AbsL.SemV._^_' or
+       '.#L.Coding.Injection-5865714580124658999.AbsL._^_' or
+       '.#L.Coding.Model-17528303294761232240.AbsL.SemM._^_' or
+       '.#L.Coding.Model-17528303294761232240.AbsL.SemV._^_' or
+       '.#L.Coding.Model-17528303294761232240.AbsL._^_' or
+       '.#L.Hierarchy-8225783880878229874.AbsL.SemM._^_' or
+       '.#L.Hierarchy-8225783880878229874.AbsL.SemV._^_' or
+       '.#L.Hierarchy-8225783880878229874.AbsL._^_' or
+       'AbsL.SemM._^_' or
+       'AbsL.SemV._^_' or
+       'AbsL._^_' or
+       'FOL.Absoluteness.Single.SemM._^_' or
+       'FOL.Absoluteness.Single.SemV._^_' or
+       'FOL.Absoluteness.Single._^_' or
+       'LJ-1-549.Probe549.AbsL.SemM._^_' or
+       'LJ-1-549.Probe549.AbsL.SemV._^_' or
+       'LJ-1-549.Probe549.AbsL._^_' or
+       'LJ-1-554.Probe554.AbsL.SemM._^_' or
+       'LJ-1-554.Probe554.AbsL.SemV._^_' or
+       'LJ-1-554.Probe554.AbsL._^_' or
+       'P549.AbsL.SemM._^_' or
+       'P549.AbsL.SemV._^_' or
+       'P549.AbsL._^_' or
+       'P554.AbsL.SemM._^_' or
+       'P554.AbsL.SemV._^_' or
+       'P554.AbsL._^_' or
+       'SemM._^_' or
+       'SemV._^_' or
+       '_^_'?)
+when scope checking SL.^
+        6.43 real         6.13 user         0.27 sys
+          1535082496  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               95435  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  31  voluntary context switches
+                1023  involuntary context switches
+         88924686308  instructions retired
+         27904013325  cycles elapsed
+          1475135096  peak memory footprint
