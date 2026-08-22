@@ -383,6 +383,30 @@ class Loader(TreeCase):
         self.assertIn("0.01069", bar["reason"])
         self.assertEqual(bar["added_by"], "owner")
 
+    def test_the_seeded_sigkill_row_matches_the_watchdog_shape_and_only_that_shape(self):
+        """MEASURED 2026-08-22/23: LJ-1.541 and LJ-1.547 both parked `no-match` with
+        `error_class: "other", exit_code: -9` after `scripts/ops/agda-watchdog.sh` sent
+        SIGKILL to the widest live Agda process under system memory pressure
+        (`_build/tools/agda-watchdog.log`: `23:46:07 KILLED agda pid=23161 (free 7% <
+        8%)`), not `run_agda()`'s own `agda_deadline_s` (both ran well under 1800 s). The
+        row must key on BOTH `error_class` and `exit_code`, because `exit_code` alone
+        would also catch a `heap_wall`-classified kill, and `classify()` checks `heap`
+        before it ever falls through to `other` (`scripts/pod/facts.py:117-124`)."""
+        r = next(rw for rw in table.load_table() if rw["id"] == "sys-sigkill-escalate")
+        self.assertEqual(sorted(r["when"]), ["error_class", "exit_code"])
+        self.assertEqual(r["when"]["error_class"], "other")
+        self.assertEqual(r["when"]["exit_code"], -9)
+        self.assertEqual(r["action"], "escalate")
+        self.assertEqual(r["head_slot"], "coder_adversarial")
+        self.assertEqual(r["added_by"], "owner")
+        rows = table.load_table()
+        killed = record(error_class="other", exit_code=-9, seconds=1156.08)
+        self.assertEqual(table.route(rows, killed)[0], "sys-sigkill-escalate")
+        # A heap wall that also happens to carry exit_code -9 must NOT fall into this row:
+        # `classify()` returns "heap_wall" before it ever reaches "other" for that shape.
+        heap_killed = record(error_class="heap_wall", exit_code=-9, heap_wall=True)
+        self.assertNotEqual(table.route(rows, heap_killed)[0], "sys-sigkill-escalate")
+
     def test_the_ratio_pair_is_the_only_fact_seven_key(self):
         """A10 names the FACT and no key, so `table.py` picks ONE pair and says so in its
         docstring. `lines_min` and `lines_max` were invented by the first build and no
