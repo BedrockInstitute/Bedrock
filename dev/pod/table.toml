@@ -68,6 +68,20 @@ expired = false
   heap_wall = true
 
 [[row]]
+id = "sys-timeout-escalate"
+scope = "system"
+priority = 95
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-22
+added_by = "owner"
+reason = "A timed-out acceptance check is a program measurement, not a stated verdict, so a second reader adjudicates it rather than the task parking no-match."
+expired = false
+
+  [row.when]
+  error_class = "timeout"
+
+[[row]]
 id = "sys-dd24-ratio-bar"
 scope = "system"
 priority = 150
