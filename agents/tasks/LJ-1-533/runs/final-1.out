@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+file sha256: c9bb45c26e67f72abb64feaa4ba4c0f818f92a97db260b846b8dc26c43500633  agents/tasks/LJ-1-533/Probe533.agda
+Checking LJ-1-533.Probe533 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-533/agents/tasks/LJ-1-533/Probe533.agda).
+        3.25 real         2.86 user         0.26 sys
+           820985856  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51781  page reclaims
+                  72  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 753  voluntary context switches
+                 700  involuntary context switches
+         35420199004  instructions retired
+         12754952046  cycles elapsed
+           761726080  peak memory footprint
