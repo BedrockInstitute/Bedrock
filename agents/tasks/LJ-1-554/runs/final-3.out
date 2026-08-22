@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# final-3: the FINAL file, 431 lines, sha256 f34de03e4b28958077209dbe424270f648bd58a15d63729d326a19dbafc3b464, interface deleted first, dependencies warm
+Checking LJ-1-554.Probe554 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-554/agents/tasks/LJ-1-554/Probe554.agda).
+        1.94 real         1.76 user         0.16 sys
+           442826752  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               28769  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 273  involuntary context switches
+         22944514693  instructions retired
+          8095102296  cycles elapsed
+           382649184  peak memory footprint

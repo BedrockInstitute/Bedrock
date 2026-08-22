@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-3: the W3 slice ALONE, TYPE ONLY, interface deleted first
+Checking LJ-1-554.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-554/agents/tasks/LJ-1-554/runs/W3.agda).
+        0.75 real         0.66 user         0.08 sys
+           271187968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18293  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 204  involuntary context switches
+          9484558546  instructions retired
+          3186407451  cycles elapsed
+           211747560  peak memory footprint
