@@ -2212,6 +2212,40 @@ class RuleF(LoopCase):
         self.assertNotIn("dev/JOURNAL.md", scope,
                          "a shared write path serialises every escalation")
 
+    def test_a_timeout_escalation_names_the_timeout_and_not_only_the_three_questions(self):
+        """Owner's instruction 2026-08-22, MEASURED on [LJ-1.541]: a critic sent only
+        the generic three questions has nothing to attack when the predecessor made no
+        stated verdict at all, because the run_agda() call itself hit agda_deadline_s.
+        sys-timeout-escalate (dev/pod/table.toml) routes that record here instead of a
+        no-match park, and the brief must say so explicitly."""
+        st, t = self.ready(attempt=2)
+        t.record = {"facts": {"error_class": "timeout", "exit_code": None}}
+        rel = pod.review_brief(t, "coder_adversarial", self.tmp)
+        text = (self.tmp / rel).read_text()
+        self.assertIn("WHY THIS ESCALATED: THE ACCEPTANCE CHECK ITSELF TIMED OUT", text)
+        self.assertIn("agda_deadline_s", text)
+        # THE NOTE SITS INSIDE THE OBLIGATION, before the generic questions, so a critic
+        # reading top to bottom meets it before the part that assumes a stated verdict.
+        self.assertLess(text.index("WHY THIS ESCALATED"),
+                        text.index("THE THREE QUESTIONS"))
+
+    def test_a_non_timeout_escalation_carries_no_timeout_note(self):
+        """The note is additive and keyed on the fact, not on every escalation."""
+        st, t = self.ready(attempt=2)
+        t.record = {"facts": {"error_class": "lint", "exit_code": 1}}
+        rel = pod.review_brief(t, "coder_adversarial", self.tmp)
+        text = (self.tmp / rel).read_text()
+        self.assertNotIn("WHY THIS ESCALATED", text)
+
+    def test_a_review_brief_with_no_record_at_all_carries_no_timeout_note(self):
+        """`t.record` is None before a task's first CHECKING; the note must not raise on
+        that shape either."""
+        st, t = self.ready(attempt=2)
+        self.assertIsNone(t.record)
+        rel = pod.review_brief(t, "coder_adversarial", self.tmp)
+        text = (self.tmp / rel).read_text()
+        self.assertNotIn("WHY THIS ESCALATED", text)
+
     def test_the_logged_brief_is_ALWAYS_the_task_brief_and_never_the_review(self):
         """K6. Writing the review brief into `brief` would park the task with
         `preflight:P1` for ever, since rule (a2) would re-run P1 against a file that can

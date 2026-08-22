@@ -2333,6 +2333,42 @@ def review_brief(t, slot, root=None):
     except (OSError, ValueError, TypeError):
         return None
     outfile = rel.replace("review-", "review-of-", 1)
+    # **A TIMEOUT ESCALATION NAMES ITS OWN QUESTION, owner's instruction 2026-08-22.**
+    # `sys-timeout-escalate` (dev/pod/table.toml) routes an accept record whose
+    # `error_class` is `timeout` here instead of parking it `no-match` (MEASURED on
+    # `[LJ-1.541]`: run_agda()'s own agda_deadline_s fired, exit_code null, and the
+    # brief's branches had no key for that shape). The generic three-question brief
+    # below asks whether a STATED verdict holds; a timeout states none, so a critic
+    # sent only those three questions would find nothing to attack and could return
+    # a review that never touches why the check did not finish. This section is
+    # additive: the three questions still apply to whatever the predecessor DID say.
+    timeout_note = []
+    rec = t.record if isinstance(t.record, dict) else {}
+    if (rec.get("facts") or {}).get("error_class") == "timeout":
+        try:
+            deadline = _int(_limits().get("agda_deadline_s"))
+        except Exception:                      # noqa: BLE001. The note still writes
+            deadline = None
+        timeout_note = [
+            "",
+            "## WHY THIS ESCALATED: THE ACCEPTANCE CHECK ITSELF TIMED OUT",
+            "The predecessor's own acceptance run did not finish: `exit_code` is null "
+            f"and `error_class` is `timeout`"
+            + (f", against an `agda_deadline_s` of {deadline} s" if deadline else "")
+            + ". This is a program measurement, not a stated verdict, so investigate "
+              "and report on THIS, not on a claim nobody made:",
+            "- WHY the check did not finish in time: an unbounded or exponential "
+            "elaboration, a term the checker cannot decide quickly, or contention "
+            "from other concurrent Agda writers on this shared machine.",
+            "- Whether the same check, re-run alone or with more time, terminates at "
+            "all, and if it does, what it decides.",
+            "- Whether the term can be narrowed or split so a bounded check answers "
+            "the same question.",
+            "A verdict that the check needs more time, that it should be narrowed, or "
+            "that the underlying term does not typecheck, are all acceptable answers. "
+            "A review that skips this and only re-asks the three questions below, "
+            "unchanged, is not.",
+        ]
     body = [
         f"# {t.code}: adversarial review of {pred}",
         "",
@@ -2361,6 +2397,7 @@ def review_brief(t, slot, root=None):
         "If you UPHELD the predecessor's NO-GO, that file plus exit 0 closes the",
         "task (row sys-critic-upheld-no-go). Put `verdict: upheld` in HEAD when you",
         "agree, or `verdict: overturned` when you do not.",
+        *timeout_note,
         "",
         "## WHAT YOU READ, and all of it is tracked",
         f"- the newest `agents/tasks/{agents_tree.normalise(t.code)}/*-report.md`",
