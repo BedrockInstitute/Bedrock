@@ -1,0 +1,63 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.526]  Does the successor L-cardinal exist.
+--
+-- Section 1 is W3: does ANY set satisfy `IsCardinalL`.  The brief
+-- ordered it written first and typechecked alone.
+--
+-- Nothing is postulated.  Nothing lands in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-526.Probe526 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd )
+open import L.Ordinal {ℓ} using ( ∅-ord )
+open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL; InjCode )
+
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ; ⟪_⟫ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; ∅-empty; module InfinitySet )
+open InfinitySet {ℓ} using ( ω )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁; ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+
+-- The V-carrier and the L-carrier, named as [LJ-1.523] named them
+-- (agents/tasks/LJ-1-523/Probe523.agda:36-42).
+module SV = hPropStructure 𝒮ᵥ
+module SL = hPropStructure 𝒮ʟ
+
+open SV using ( _∈ˢ_ )
+
+-- =====================================================================
+-- SECTION 1.  W3.  DOES ANY SET SATISFY `IsCardinalL`.
+--
+--   `[LJ-1.90-A]` measured that the AMBIENT `IsCardinal`
+--   (src/L/BoundedSubset.lagda.md:1046-1047) is never inhabited in the
+--   tree.  The brief asks the same question of the INTERNAL
+--   `IsCardinalL` (src/L/Cardinal.lagda.md:230-233) before anything is
+--   built on it.
+--
+--   The answer is YES and it is VACUOUS.  `IsCardinalL κ` quantifies
+--   over the members of κ, so the empty set satisfies it with nothing
+--   to prove, exactly as `∅-ord` satisfies `IsOrd`
+--   (src/L/Ordinal.lagda.md:77-79).  `∅ʟ` is the delivered L-element
+--   (src/L/Axioms/Basic.lagda.md:508-509).
+-- =====================================================================
+
+someCardinalL : ∥ Σ[ κ ∈ SL.S ] (IsOrd (fst κ) × IsCardinalL κ) ∥₁
+someCardinalL = ∣ ∅ʟ , ∅-ord , vacuous ∣₁
+  where
+  vacuous : IsCardinalL ∅ʟ
+  vacuous δ δ∈∅ _ =
+    Empty.rec (∅-empty (fst δ) (∈∈ₛ {a = fst δ} {b = ∅} .fst δ∈∅))

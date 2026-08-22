@@ -1,0 +1,54 @@
+Checking LJ-1-526.Probe526 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-526/agents/tasks/LJ-1-526/Probe526.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-526/agents/tasks/LJ-1-526/Probe526.agda:40.32-62: warning: -W[no]ModuleDoesntExport
+The module Cubical.Data.Sigma doesn't export the following:
+  isProp×
+when scope checking the declaration
+  open import Cubical.Data.Sigma using (_×_; Σ≡Prop; isProp×)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-526/agents/tasks/LJ-1-526/Probe526.agda:212.12-19: error: [NotInScope]
+Not in scope:
+  isProp×
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-526/agents/tasks/LJ-1-526/Probe526.agda:212.12-19
+    (did you mean
+       'Base.Prelude.isProp' or
+       'Base.Prelude.isPropΠ' or
+       'Base.Prelude.isProp⊥*' or
+       'Cubical.Data.Sum.isProp⊎' or
+       'Cubical.Foundations.HLevels.isProp×' or
+       'Cubical.Foundations.HLevels.isProp×2' or
+       'Cubical.Foundations.HLevels.isProp×3' or
+       'Cubical.Foundations.HLevels.isProp×4' or
+       'Cubical.Foundations.HLevels.isProp×5' or
+       'Cubical.Foundations.HLevels.isPropΠ' or
+       'Cubical.Foundations.HLevels.isPropΠ2' or
+       'Cubical.Foundations.HLevels.isPropΠ3' or
+       'Cubical.Foundations.HLevels.isPropΠ4' or
+       'Cubical.Foundations.HLevels.isPropΠ5' or
+       'Cubical.Foundations.HLevels.isPropΠ6' or
+       'Cubical.Foundations.HLevels.isPropΣ' or
+       'Cubical.Foundations.HLevels.isProp→' or
+       'Cubical.Foundations.HLevels.isProp∃!' or
+       'Empty.isProp⊥' or
+       'Empty.isProp⊥*' or
+       'isProp' or
+       'isPropΠ' or
+       'isProp⊥*'?)
+when scope checking isProp×
+        4.01 real         3.67 user         0.28 sys
+           761757696  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48146  page reclaims
+                  92  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 173  voluntary context switches
+                 783  involuntary context switches
+         32367427294  instructions retired
+         15496382965  cycles elapsed
+           703775824  peak memory footprint
