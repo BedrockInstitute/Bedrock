@@ -1,0 +1,77 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.515]  W3 ALONE.  The rank recursion, re-based on the PREDECESSORS.
+--
+-- This slice carries section 1 only: `swo-rank′` and nothing else.
+-- `swo-rank′-ord` is OMITTED, as the brief requires, so that the one
+-- question W3 asks is asked alone: does the recursion terminate when the
+-- bounding ordinal is taken over `Σ[ x ∈ A ] (x <∙ a)` instead of over the
+-- padded carrier `A`?
+--
+-- THE PADDING IS DELETED.  [LJ-1.490]'s `predAt` and `pred`
+-- (agents/tasks/LJ-1-490/Probe490.agda:129-138) do not appear here and no
+-- term replaces them.  They exist only to pad the family over the whole of
+-- `A`, and [LJ-1.513] ruled they go with it
+-- (agents/tasks/LJ-1-513/lj-1.513-report.md:288-290).
+--
+-- Rebuilds nothing.  Does not import a probe.  Nothing lands in src/.
+-- Does not postulate.
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-515.Probe515 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import L.Constructible {ℓ} using ( IsOrd )
+open import L.Ordinal {ℓ} using ( boundingOrd )
+-- ℓₚ = ℓ.  THE RE-BASED ORDER, [LJ-1.513]'s line
+-- (agents/tasks/LJ-1-513/Probe513.agda:32), and the first instantiation of
+-- this module at ℓ anywhere outside that probe.
+open import L.WellOrder.Base {ℓ} using ( SWO )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
+open import Cubical.Induction.WellFounded using ( Acc; acc )
+
+-- =====================================================================
+-- 1.  W3.  THE RECURSION, ON THE RE-BASED ORDER.
+--
+--     `Rank.go` reads today (agents/tasks/LJ-1-490/Probe490.agda:145):
+--
+--       bnd = boundingOrd A (λ x → pred a ih x .fst) (λ x → pred a ih x .snd)
+--
+--     The index is the WHOLE carrier `A`, and `pred` pads it: at an `x`
+--     not below `a` it returns `∅ , ∅-ord` (Probe490.agda:134-135).  Here
+--     the index is `Pred a`, the predecessors, and there is nothing to
+--     pad, so `ih` is applied at its own proof and nothing else.
+--
+--     `step` is named rather than inlined into `go`'s `where`, because
+--     section 3 must state a law about the bounding ordinal `go` forms.
+--     A `where`-bound `bnd` cannot be named from outside `go`.
+-- =====================================================================
+
+module Rank′ {A : Type ℓ} (w : SWO {ℓc = ℓ} A) where
+  open SWO w
+
+  RankAt : A → Type (ℓ-suc ℓ)
+  RankAt _ = Σ[ ρ ∈ V ℓ ] IsOrd ρ
+
+  -- The predecessor index.  `A : Type ℓ` and `_<∙_` lands in `Type ℓₚ`
+  -- (src/L/WellOrder/Base.lagda.md:103) with `ℓₚ = ℓ`, so this Σ is a
+  -- `Type ℓ` and `boundingOrd` accepts it (src/L/Ordinal.lagda.md:154).
+  Pred : A → Type ℓ
+  Pred a = Σ[ x ∈ A ] (x <∙ a)
+
+  step : (a : A) → ((x : A) → x <∙ a → RankAt x) → RankAt a
+  step a ih = bnd .fst , bnd .snd .fst
+    where
+    bnd = boundingOrd (Pred a) (λ p → ih (p .fst) (p .snd) .fst)
+                               (λ p → ih (p .fst) (p .snd) .snd)
+
+  go : (a : A) → Acc _<∙_ a → RankAt a
+  go a (acc rs) = step a (λ x h → go x (rs x h))
+
+  swo-rank′ : A → V ℓ
+  swo-rank′ a = go a (wf∙ a) .fst
+
+-- THE OBLIGATION.
+swo-rank′ : {A : Type ℓ} (w : SWO {ℓc = ℓ} A) → A → V ℓ
+swo-rank′ w = Rank′.swo-rank′ w
