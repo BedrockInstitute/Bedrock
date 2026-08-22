@@ -1,0 +1,29 @@
+Checking LJ-1-516.Probe516 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/Probe516.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/Probe516.agda:94.11-13: error: [NotInScope]
+Not in scope:
+  SL
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/Probe516.agda:94.11-13
+    (did you mean
+       '.#L.Hull-3912199163648253248.AtStage.SL' or
+       'ASt.SL' or
+       'AtStage.SL' or
+       'Seam.ASt.SL'?)
+when scope checking SL
+        2.44 real         2.19 user         0.21 sys
+           467714048  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               30215  page reclaims
+                  76  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  12  voluntary context switches
+                1110  involuntary context switches
+         20709570358  instructions retired
+          8957444948  cycles elapsed
+           409797496  peak memory footprint

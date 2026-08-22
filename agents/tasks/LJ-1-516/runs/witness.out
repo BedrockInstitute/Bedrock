@@ -1,0 +1,19 @@
+Checking LJ-1-516.runs.WitnessCheck (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/runs/WitnessCheck.agda).
+        2.49 real         2.28 user         0.19 sys
+           460521472  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29849  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  46  voluntary context switches
+                 415  involuntary context switches
+         22101619644  instructions retired
+          9825139976  cycles elapsed
+           401703800  peak memory footprint

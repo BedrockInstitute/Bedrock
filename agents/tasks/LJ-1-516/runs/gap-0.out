@@ -1,0 +1,23 @@
+Checking LJ-1-516.Probe516 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/Probe516.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/Probe516.agda:79.16-39: error: [NoSuchModule]
+No module FOL.Absoluteness.Single in scope
+when scope checking the declaration
+  module AbsLʟ = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+        2.73 real         2.16 user         0.27 sys
+           452231168  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25194  page reclaims
+                4152  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 533  voluntary context switches
+                2213  involuntary context switches
+         20925379992  instructions retired
+          9686479183  cycles elapsed
+           394314616  peak memory footprint
