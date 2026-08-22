@@ -151,10 +151,21 @@ PROVENANCE = re.compile(r"^Corpus search (?:over|for)\b.*$", re.M)
 #: the file does not hold". `normalize()` strips the backslash along with
 #: the backtick it escapes, so an escaped and an unescaped backtick end up
 #: identical once both sides of the comparison are normalized.
+#:
+#: **THE BACKTICK SPAN ALSO REFUSES `「` AND `」` AS CONTENT.** MEASURED
+#: 2026-08-22 on `[LJ-1.508]`: `audit_quotes()` rewrites a `>` blockquote to
+#: `「...」` before a bullet is extracted (see its docstring), and a bullet
+#: that cites two lines names each citation in backticks: `` `path:227` ``
+#: then the quote then `` `path:175` ``. Without this exclusion the backtick
+#: branch, hunting for its own next backtick, opens at the FIRST citation's
+#: own closing backtick and reads straight through the corner-quoted content
+#: to the SECOND citation's opening backtick, capturing prose and a whole
+#: quote as one useless span instead of leaving the corner-quote branch to
+#: match the real content on its own.
 QUOTE = re.compile(
     r'["“]([^"”]{12,})["”]|'
     r"「([^」]{12,})」|"
-    r"`((?:\\`|[^`]){12,})`")
+    r"`((?:\\`|[^`「」]){12,})`")
 
 WINDOW = 3  # lines of slack before a quote is a mis-cited line
 
@@ -245,12 +256,23 @@ def audit_quotes(sec: str) -> dict[str, dict]:
     fell through past the real quote to unrelated backtick spans nearby (the
     citation's own backtick-quoted path, a stray phrase in the surrounding
     prose) and reported a correct quote as "text the file does not hold".
-    A `>`-prefixed line is rewritten to a double-quoted span HERE, while
-    newlines still mark where a blockquote starts and ends; `bullets()`
-    collapses them right after, and the existing double-quote branch of
-    `QUOTE` needs no change to pick it up.
+    A `>`-prefixed line is rewritten HERE, while newlines still mark where a
+    blockquote starts and ends; `bullets()` collapses them right after.
+
+    **THE TARGET IS THE CJK CORNER QUOTE, `「...」`, NOT A DOUBLE QUOTE.**
+    MEASURED 2026-08-22 on `[LJ-1.508]`: converting to `"..."` instead put a
+    quoted blockquote right after `Quote at \`path:line\`:`, and the
+    BACKTICK branch of `QUOTE`, scanning for its own next backtick, opened
+    at the citation's OWN closing backtick and read straight through the
+    inserted double quotes to the FOLLOWING citation's backticks, sixteen
+    lines away, rather than stopping at either one. Switching the delimiter
+    alone did not close this: `QUOTE`'s backtick branch matches `[^\`]`, and
+    that class does not stop at `「` or `」` either, so RE-MEASURED on the
+    same task it still read through the converted blockquote to the next
+    citation's backtick. The backtick branch's content class must refuse
+    `「` and `」` too, so a backtick span can never straddle either one.
     """
-    sec = re.sub(r'(?m)^[ \t]*>[ \t]*(.+)$', r'"\1"', sec)
+    sec = re.sub(r'(?m)^[ \t]*>[ \t]*(.+)$', r'「\1」', sec)
     files: dict[str, dict] = {}
     for raw in bullets(sec):
         events = ([(m.start(), "cite", m) for m in CITE.finditer(raw)]

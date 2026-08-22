@@ -740,9 +740,37 @@ BLOCKQUOTE = """# Report
 - `archive/dev/JOURNAL-archived.md`: NOT read, nothing in it bears.
 """ % QUOTED
 
+# TWO citations to the SAME file in ONE bullet, each its own blockquote,
+# MEASURED 2026-08-22 on `[LJ-1.508]`: converting `>` to `"..."` (the first
+# attempt) put a quoted blockquote right after `Quote at \`path:line\`:`,
+# and `QUOTE`'s backtick branch, hunting for its own next backtick, opened
+# at the FIRST citation's closing backtick and read straight through to the
+# SECOND citation's opening backtick, swallowing the real quote as noise.
+# Switching the target delimiter to `「」` alone did not close this: the
+# backtick branch's content class did not stop at `「` or `」` either, so it
+# read through just the same. Only excluding both from that class fixed it.
+TWO_BLOCKQUOTES = """# Report
+
+## ARCHIVE USED
+
+- `archive/dev/TASKS-archived.md`: READ. Quote at
+  `archive/dev/TASKS-archived.md:80`:
+
+  > L3.32-T45 | Bridge's two sequence residues | STOP
+
+  Quote at `archive/dev/TASKS-archived.md:171`:
+
+  > L3.32-T136 | Build A text block: two atoms, two readings
+
+  Two rows read.
+- `archive/dev/JOURNAL-archived.md`: NOT read, nothing in it bears.
+"""
+
 CASES = [
     ("a correct quote at the cited line passes", GOOD, 0, ""),
     ("a correct quote as a markdown blockquote passes", BLOCKQUOTE, 0, ""),
+    ("two blockquotes citing the same file in one bullet both pass",
+     TWO_BLOCKQUOTES, 0, ""),
     ("an unanswered injected path fails", GOOD.replace(
         "- `archive/dev/JOURNAL-archived.md`: NOT read, nothing in it bears.\n",
         ""), 1, "unanswered"),
