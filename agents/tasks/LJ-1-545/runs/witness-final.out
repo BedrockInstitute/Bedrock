@@ -1,0 +1,2 @@
+pass      exit=0        8.71s  agents/tasks/LJ-1-545/Probe545.agda::three-families-inhabited
+witness: 0 UNRESOLVED of 1, 8.71 s, probe_red=False

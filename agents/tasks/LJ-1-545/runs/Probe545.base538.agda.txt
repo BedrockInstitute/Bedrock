@@ -1,0 +1,53 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.538] The NINE env forms of TFacts, collected at KValue's frame.
+--
+-- W3 FIRST, and alone: the nine hypotheses as ONE telescope, stated and
+-- typechecked, NO witness.  This is the file at the W3 run.  The frame
+-- and the witness are appended after that run lands.
+--
+-- WHY NINE AND NOT SIXTEEN.  The brief reports that [LJ-1.534] took
+-- all sixteen at one frame and matched a heap wall four times, exit
+-- 251 each, and cites dev/pod/transitions/2026-08.jsonl.  I COULD NOT
+-- CHECK THAT CITATION HERE: the tracked copy in this worktree ends at
+-- seq 158, task LJ-1.399, ts 2026-08-19T13:31:57Z, and carries no
+-- LJ-1.534 record (`grep -c LJ-1-534` gives 0).  The claim is the
+-- brief's and it is repeated as the brief's, not confirmed.  No
+-- agents/tasks/LJ-1-534/ directory exists here either, so the brief's
+-- "no report and no probe" is the one half I can confirm.
+-- This file takes the family that is already delivered whole:
+-- src/L/Coding/EnvSupply.lagda.md:293-411 holds all nine, and
+-- [LJ-1.499] measured that they reach TFacts's frame with one `refl`
+-- each (agents/tasks/LJ-1-499/lj-1.499-report.md:277-279).
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-545.Probe545 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Coding.Model {ℓ} using ( envSetAt; envOverAt )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import L.Coding.EnvSupply {ℓ} lem using ( module SupplyEnv )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( #_; sucV; ω )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+open KFactsNS
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )

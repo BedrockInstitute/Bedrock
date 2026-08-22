@@ -1,0 +1,18 @@
+        7.57 real         7.04 user         0.42 sys
+           845774848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               80598  page reclaims
+                  77  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 504  voluntary context switches
+                2455  involuntary context switches
+         91858194334  instructions retired
+         29629486146  cycles elapsed
+          1039680856  peak memory footprint
