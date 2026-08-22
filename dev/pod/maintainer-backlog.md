@@ -19,6 +19,100 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 23. `sys-lint-accept` loops a task whose obligation is ALREADY CLOSED. LIVE NOW on LJ-1.500
+
+**`[LJ-1.500]` HAS RUN FOUR ATTEMPTS AND ITS OBLIGATION IS INHABITED.** Diagnosed
+by `pod-math` 2026-08-22 while answering a refill. This is a program matter, not a
+mathematical one, and the task is looping as this is written.
+
+**THE ROUTING, FROM `dev/pod/transitions/2026-08.jsonl`.**
+
+| attempt | exit | delta | row matched |
+|---|---|---|---|
+| 1 | 1 | **-1** | `task-lj-1-500-accept-failed` (correct: obligation inhabited, acceptance failed) |
+| 2 | 1 | 0 | `sys-lint-accept` |
+| 3 | 1 | 0 | `sys-lint-accept` |
+| 4 | 1 | 0 | `sys-lint-accept` |
+
+**THREE IDENTICAL ITERATIONS WITH NO STATE CHANGE.** Each re-dispatch reaches the
+same acceptance and matches the same system row, so it will run to `attempt_max`.
+
+**THE ACCEPTANCE FACTS, from the worktree's last `runs/accept-*.out`.**
+
+- `conjunct 6 FAILED`; conjuncts 1 to 5 held.
+- `error class lint`, `exit 1`, `wall seconds 0.0`, `in-fence lines 0`.
+- **`"obligations_open": 0`** and attempt 1 carried `obligations_delta: -1`.
+- `"changed_files_refused": ["agents/tasks/LJ-1-500/Probe500.agda"]`.
+- `changed_files` is 32 entries: the coder's report, TWO critic outputs
+  (`review-of-LJ-1-500-1.md`, `review-of-LJ-1-500-2.md`) and 29 files under
+  `runs/`.
+
+**WHAT THIS COSTS.** The coder's work is DONE and is sitting in
+`.pod-state/worktrees/LJ-1-500`, which holds `lj-1.500-report.md`,
+`Probe500.agda` and two critic reviews. **`obligations_open` is 0.** The task
+cannot land it because every re-dispatch fails the same conjunct.
+
+**WHY THE OTHER ESCALATIONS DID NOT HIT THIS.** `[LJ-1.490]`, `[LJ-1.492]`,
+`[LJ-1.494]`, `[LJ-1.496]` and `[LJ-1.504]` all closed on
+`sys-critic-upheld-no-go`. They exited before a second critic ran.
+**`[LJ-1.500]` is different because its attempt 1 was `accept-failed` (exit 1)
+and not a NO-GO**, so the escalation chain kept going. Any task that escalates
+on `accept-failed` may reach this.
+
+**WHAT `pod-math` IS NOT CLAIMING.** I did not determine WHICH clause of
+conjunct 6 fails, and I am not proposing a row. `sys-lint-accept` is a SYSTEM
+row; a task brief cannot reach it, and a row that has already routed live corpus
+records is not fixable by an ordinary batch proposal. The facts above are what
+the record gives.
+
+**ONE CORRECTION `pod-math` OWES.** The refill of 2026-08-22 (seventh) wrote that
+`[LJ-1.500]`'s brief was the defect behind its non-closure. **That is wrong.**
+The brief was too broad (two fields plus a census where one term was the gate),
+but the reason it has not closed is this loop, and its obligation is inhabited.
+
+
+### 22. `salvage:LJ-1.459` is RULED SUPERSEDE. Close the park. RULED 2026-08-22
+
+**THIS IS THE MATHEMATICAL RULING THE MAINTAINER ASKED FOR THREE TIMES.** The
+question reached `pod-math` on 2026-08-21 and again twice; the returns did not
+reach the maintainer, so the ruling is written here where a batch brief carries
+it. Owner's instruction was to decide, not to describe.
+
+**RULING: SUPERSEDE. `[LJ-1.461]`'s `Residue` is the one to keep. Nothing
+mathematical is lost. `salvage_worktree()` was right to refuse.**
+
+**THE EVIDENCE.** `diff src/L/StageBound.lagda.md
+.pod-state/worktrees/LJ-1-459/src/L/StageBound.lagda.md`, re-run against the tree
+of 2026-08-22, is **5 hunks and 18 lines**, and `Residue`'s BODY is byte
+identical in both. There is no third possibility to weigh: the two constructions
+agree on the mathematics and differ only in presentation.
+
+| # | site | difference | content |
+|---|---|---|---|
+| 1 | `src/L/StageBound.lagda.md:23` | `open PT using ( ∣_∣₁; ∥_∥₁ )` against `( ∥_∥₁; ∣_∣₁ )` | none, order inside one `using` |
+| 2 | `:49` | one comment line against two | none |
+| 3 | `:52-54` | the three arguments of `Residue`'s type: landed anonymous, 459 named `isL-ord`, `κL`, `κC`, and `oa` in the two maps | **the same type** |
+| 4 | 459 at `:126-130` | an `inside` helper, `inside f = bounded-from-trunc ∣ f ∣₁` | a factoring |
+| 5 | landed `:133` against 459 `:139` | `bounded-from-data f = bounded-from-trunc ∣ adapter f ∣₁` against `= inside (adapter f)` | the same term, inlined |
+
+**NOTHING IS LOST BY DISCARDING THE WORKTREE.** `[LJ-1.459]`'s whole record is
+already in the main tree at `agents/tasks/LJ-1-459/`: the brief, the report, both
+reviews and `runs/`. `find` reports **no `.agda` file** in either the main tree
+copy or the worktree copy, so rule D-1's probe protection is not engaged. The
+worktree holds exactly one file the tree does not, and that file is the
+superseded copy.
+
+**ONE THING `[LJ-1.459]` DID BETTER, CARRIED FORWARD SO IT IS NOT LOST WITH THE
+WORKTREE.** Its named parameters are the better spelling. `pod-math` will put the
+instruction to name those three arguments into the next brief that writes to
+`src/L/StageBound.lagda.md`. No such brief is queued today, and `pod-math` writes
+no Agda, so this is not an edit anyone should make now.
+
+**WHAT THE MAINTAINER MAY DO.** Close the `salvage:LJ-1.459` park as superseded.
+**Removing `.pod-state/worktrees/LJ-1-459` is a deletion and `pod-math` is not
+directing it**; that is the owner's call, and the park can be closed without it.
+
+
 ### 21. Every seconds gate is inert, and the ratio bar has never had one eligible record. OWNER-RULED 2026-08-21
 
 **THE OWNER ASKED WHETHER THE RUNNING PROBE TASKS ACCOUNT FOR THE SECONDS
