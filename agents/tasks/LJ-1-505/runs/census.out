@@ -1,0 +1,26 @@
+fields parsed: 59
+=== gamma' slot 0 : 9 references
+    ('FORMULA-ARG', 'envK-mem', 186, 'suc^6 over depth 6')
+    ('FORMULA-ARG', 'envK-neg', 192, 'suc^6 over depth 6')
+    ('FORMULA-ARG', 'envK-top', 198, 'suc^5 over depth 5')
+    ('FORMULA-ARG', 'envK-imp', 204, 'suc^8 over depth 8')
+    ('FORMULA-ARG', 'envK-allin', 210, 'suc^7 over depth 7')
+    ('FORMULA-ARG', 'envInK-mem', 216, 'suc^7 over depth 7')
+    ('FORMULA-ARG', 'envInK-neg', 223, 'suc^7 over depth 7')
+    ('FORMULA-ARG', 'envInK-top', 230, 'suc^6 over depth 6')
+    ('FORMULA-ARG', 'envInK-imp', 237, 'suc^8 over depth 8')
+=== gamma' slot 1 : 9 references
+    ('LOOKUP', 'valK', 173)
+    ('LOOKUP', 'valK-un', 177)
+    ('FORMULA-ARG', 'subK₁-and', 265, 'suc^8 over depth 7')
+    ('FORMULA-ARG', 'subK₀-and', 271, 'suc^8 over depth 7')
+    ('FORMULA-ARG', 'subK₁-imp', 277, 'suc^9 over depth 8')
+    ('FORMULA-ARG', 'subK₀-imp', 283, 'suc^9 over depth 8')
+    ('FORMULA-ARG', 'subK-neg', 290, 'suc^7 over depth 6')
+    ('FORMULA-ARG', 'subK-un', 311, 'suc^7 over depth 6')
+    ('FORMULA-ARG', 'subK-allin', 326, 'suc^8 over depth 7')
+=== gamma' slot 2 : 4 references
+    ('LOOKUP', 'codesK', 162)
+    ('LOOKUP', 'codesK-un', 168)
+    ('LOOKUP', 'valK', 173)
+    ('LOOKUP', 'valK-un', 177)
