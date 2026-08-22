@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T22:37:13Z
+Checking LJ-1-564.Probe564 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-564/agents/tasks/LJ-1-564/Probe564.agda).
+ Checking LJ-1-528.Probe528 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-564/agents/tasks/LJ-1-528/Probe528.agda).
+  Checking LJ-1-526.Probe526 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-564/agents/tasks/LJ-1-526/Probe526.agda).
+ Checking LJ-1-543.Probe543 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-564/agents/tasks/LJ-1-543/Probe543.agda).
+ Checking LJ-1-540.Probe540 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-564/agents/tasks/LJ-1-540/Probe540.agda).
+  Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-564/src/L/Absorption.lagda.md).
+ Checking LJ-1-544.Probe544 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-564/agents/tasks/LJ-1-544/Probe544.agda).
+       29.31 real        28.96 user         0.34 sys
+          1608957952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               99923  page reclaims
+                  24  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   5  voluntary context switches
+                4049  involuntary context switches
+        374749705391  instructions retired
+        120107622225  cycles elapsed
+          1548584616  peak memory footprint
+EXIT=0
+ended 2026-08-22T22:37:43Z
