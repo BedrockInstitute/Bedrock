@@ -1,0 +1,137 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.539] The subK family of TFacts, collected at KValue's frame.
+--
+-- W3 FIRST, and alone: WHICH SLOT-ONE FACT THE FAMILY WANTS.  Three are
+-- built at this frame and the brief names all three: `valSub`
+-- ([LJ-1.508], agents/tasks/LJ-1-508/Probe508.agda:201-205), `dK` and
+-- `zK` ([LJ-1.530], agents/tasks/LJ-1-530/Probe530.agda:131 and :169).
+-- `subK-gen` (src/L/Coding/EnvSupply.lagda.md:481-487) takes a
+-- MEMBERSHIP `TK`, and [LJ-1.508] measured that `valSub` does NOT give
+-- that membership back (Probe508.agda:237-240, the converse is FALSE at
+-- this frame).  So the W3 question is not "does valSub give TK": it is
+-- "does the FAMILY need TK at all".  The term below answers it.
+--
+-- This is the file at the W3 run.  The record, the frame and the witness
+-- are appended after that run lands.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-539.Probe539 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; isTransV; IsOrd )
+open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ}
+  using ( prʟ; prʟ-fst; subValAt; subValAt-adequate
+        ; subValSuccAt; subValSuccAt-adequate )
+open import L.Coding.EnvSupply {ℓ} lem using ( module Fact )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import L.Condensation.TwelveAgree {ℓ} lem using ( TFacts )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+open KFactsNS
+open KFacts
+-- =====================================================================
+-- THE FAMILY, WRITTEN ONCE AT `TFacts`'s OWN SHAPE (W2).
+--
+-- SEVEN FIELDS AND NOT SIX.  The brief counts six; `EnvSupply`'s own
+-- comment counts seven (src/L/Coding/EnvSupply.lagda.md:480) and
+-- `[LJ-1.509]`'s report already corrected the count
+-- (agents/tasks/LJ-1-509/lj-1.509-report.md:243-247).  The seventh is
+-- `subK-allin` (src/L/Condensation/TwelveAgree.lagda.md:326-331).  It
+-- is in the family, it reads `T` out of the same cell, and the same one
+-- hypothesis pays it, so leaving it out would have split the family for
+-- nothing.
+--
+-- Copied verbatim from src/L/Condensation/TwelveAgree.lagda.md:265-288,
+-- :290-295, :311-316 and :326-331.  The seven name only `K` and `γ'` of
+-- that record's fifteen index parameters, so only those two are stated
+-- here.  `statement-matches` below is Agda's word that these ARE the
+-- record's own types.
+-- =====================================================================
+
+record SubKSeven {n : ℕ} (K : Fin (5 + n)) (γ' : S ^ (11 + n))
+  : Type (ℓ-suc ℓ) where
+  field
+    subK₁-and : (x y yc b a ar c : S) → ⟨ (x ∷ y ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc (suc (suc zero))))
+                           (suc zero) ⟩
+                → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK₀-and : (y ya yc b a ar c : S) → ⟨ (y ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc (suc zero)))
+                           zero ⟩
+                → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK₁-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                           (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc zero)) ⟩
+                → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK₀-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                           (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc zero))))
+                           (suc zero) ⟩
+                → ⟨ fst yb ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                 subValAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                          (suc (suc (suc (suc zero))))
+                          (suc (suc (suc zero)))
+                          (suc zero) ⟩
+               → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK-un : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                subValSuccAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                             (suc (suc (suc (suc zero))))
+                             (suc (suc (suc zero)))
+                             (suc zero) ⟩
+              → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK-allin : (E ya yc b a ar c : S) → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   subValSuccAt (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                                (suc (suc (suc (suc (suc zero)))))
+                                (suc (suc (suc zero)))
+                                (suc zero) ⟩
+                 → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+
+-- `SubKSeven` IS THE RECORD'S OWN BLOCK, AND AGDA SAYS SO.  Every field
+-- below is read off a `TFacts` value by projection, with no coercion,
+-- no `subst` and no re-association.  It certifies the STATEMENT only;
+-- the obligation never calls it, and no `TFacts` field is used to prove
+-- a `TFacts` field.  If a type here ever drifts from the master, this
+-- term stops checking.
+
+statement-matches : {n : ℕ}
+    (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K : Fin (5 + n))
+    (γ' : S ^ (11 + n))
+  → TFacts N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K γ'
+  → SubKSeven {n} K γ'
+statement-matches N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 K γ' tf = record
+  { subK₁-and  = TFacts.subK₁-and tf
+  ; subK₀-and  = TFacts.subK₀-and tf
+  ; subK₁-imp  = TFacts.subK₁-imp tf
+  ; subK₀-imp  = TFacts.subK₀-imp tf
+  ; subK-neg   = TFacts.subK-neg tf
+  ; subK-un    = TFacts.subK-un tf
+  ; subK-allin = TFacts.subK-allin tf }

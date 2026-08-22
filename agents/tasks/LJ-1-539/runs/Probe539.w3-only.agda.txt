@@ -1,0 +1,106 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.539] The subK family of TFacts, collected at KValue's frame.
+--
+-- W3 FIRST, and alone: WHICH SLOT-ONE FACT THE FAMILY WANTS.  Three are
+-- built at this frame and the brief names all three: `valSub`
+-- ([LJ-1.508], agents/tasks/LJ-1-508/Probe508.agda:201-205), `dK` and
+-- `zK` ([LJ-1.530], agents/tasks/LJ-1-530/Probe530.agda:131 and :169).
+-- `subK-gen` (src/L/Coding/EnvSupply.lagda.md:481-487) takes a
+-- MEMBERSHIP `TK`, and [LJ-1.508] measured that `valSub` does NOT give
+-- that membership back (Probe508.agda:237-240, the converse is FALSE at
+-- this frame).  So the W3 question is not "does valSub give TK": it is
+-- "does the FAMILY need TK at all".  The term below answers it.
+--
+-- This is the file at the W3 run.  The record, the frame and the witness
+-- are appended after that run lands.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-539.Probe539 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; isTransV; IsOrd )
+open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ}
+  using ( prʟ; prʟ-fst; subValAt; subValAt-adequate
+        ; subValSuccAt; subValSuccAt-adequate )
+open import L.Coding.EnvSupply {ℓ} lem using ( module Fact )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+open KFactsNS
+open KFacts
+
+-- =====================================================================
+-- W3.  `subK-gen`'s `TK` ARGUMENT, AT THE FRAME: FROM `valSub`.
+--
+--   `Sub K E` is [LJ-1.508]'s `valSub` shape, stated at a set E and not
+--   at a slot (agents/tasks/LJ-1-508/Probe508.agda:146-147, and the
+--   frame instance at :201-205).  It is KFacts's own shape for the
+--   CARRIER slot (`carrierK`, src/L/Condensation.lagda.md:6113).
+--
+--   `subK-gen` (src/L/Coding/EnvSupply.lagda.md:481-487) spends its
+--   `TK` in EXACTLY ONE place: it promotes the adequacy's Kuratowski
+--   pair out of slot one and into K, through `Ktr`.  A SUBSET fact at
+--   slot one does that promotion directly, so the family does not need
+--   the membership.  Everything after the promotion is `Fact.prK`
+--   (src/L/Coding/EnvSupply.lagda.md:452-459), the same delivered term
+--   `subK-gen` itself spends.
+--
+--   THE COST OF THE WEAKER HYPOTHESIS IS THE PACKAGING.  `valSub`
+--   quantifies over `S`; the adequacy pins a raw `V ℓ` pair.  `prʟ` and
+--   `prʟ-fst` (src/L/Coding/Model.lagda.md:329) close that, and the
+--   `where` block below is the whole of it.
+-- =====================================================================
+
+Sub : (K E : S) → Type (ℓ-suc ℓ)
+Sub K E = (x : S) → ⟨ fst x ∈ fst E ⟩ → ⟨ fst x ∈ fst K ⟩
+
+module W3 (K : S) (Ktr : isTransV (fst K)) where
+
+  module F = Fact K Ktr
+
+  -- The pair the adequacy pins, packaged back into `S`.
+  keyPair : {n : ℕ} (γ : S ^ n) (ar a y : Fin n) → S
+  keyPair γ ar a y = prʟ (prʟ (lookup ar γ) (lookup a γ)) (lookup y γ)
+
+  keyEq : {n : ℕ} (γ : S ^ n) (ar a y : Fin n)
+        → fst (keyPair γ ar a y)
+          ≡ pr (pr (fst (lookup ar γ)) (fst (lookup a γ))) (fst (lookup y γ))
+  keyEq γ ar a y =
+    prʟ-fst (prʟ (lookup ar γ) (lookup a γ)) (lookup y γ)
+    ∙ cong (λ u → pr u (fst (lookup y γ))) (prʟ-fst (lookup ar γ) (lookup a γ))
+
+  -- THE W3 TERM.  `subK-gen`'s conclusion, from `valSub` in place of
+  -- `TK`.  Generic in the environment length, the environment and all
+  -- four indices, exactly as src/ states `subK-gen`.
+  subK-from-sub : {n : ℕ} (γ : S ^ n) (T ar a y : Fin n)
+                → Sub K (lookup T γ)
+                → ⟨ γ ⊨ subValAt T ar a y ⟩
+                → ⟨ fst (lookup y γ) ∈ fst K ⟩
+  subK-from-sub γ T ar a y valSub h =
+    F.prK (pr (fst (lookup ar γ)) (fst (lookup a γ))) (fst (lookup y γ))
+      (subst (λ u → ⟨ u ∈ fst K ⟩) (keyEq γ ar a y)
+        (valSub (keyPair γ ar a y)
+          (subst (λ u → ⟨ u ∈ fst (lookup T γ) ⟩) (sym (keyEq γ ar a y))
+            (subst ⟨_⟩ (subValAt-adequate T ar a y γ) h))))
+      .snd
