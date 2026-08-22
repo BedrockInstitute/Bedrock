@@ -1,0 +1,22 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22 14:32:29
+Checking LJ-1-524.runs.BisA (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-524/agents/tasks/LJ-1-524/runs/BisA.agda).
+        2.04 real         1.81 user         0.20 sys
+           400211968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26168  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 133  voluntary context switches
+                 339  involuntary context switches
+         18591977936  instructions retired
+          7869993919  cycles elapsed
+           340804400  peak memory footprint
+exit=0

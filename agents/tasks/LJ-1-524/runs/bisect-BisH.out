@@ -1,0 +1,22 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22 14:35:30
+Checking LJ-1-524.runs.BisH (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-524/agents/tasks/LJ-1-524/runs/BisH.agda).
+       11.76 real        11.40 user         0.34 sys
+          2549104640  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              157326  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                1531  involuntary context switches
+        138804878205  instructions retired
+         46824259323  cycles elapsed
+          2490435936  peak memory footprint
+exit=0

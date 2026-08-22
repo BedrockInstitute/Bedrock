@@ -1,0 +1,188 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.524]  `svAt`, the FIRST of the four `InjCode` conjuncts, over the
+-- rank carve, with `Q` DETERMINED.
+--
+-- The obligation is `svAt-at-carve`, section 4.  Section 2 is W3, the
+-- instantiation, written first and typechecked ALONE
+-- (agents/tasks/LJ-1-524/runs/W3.agda, runs/w3-1.out to w3-3.out).
+--
+-- THE RULING THIS FILE TESTS.  `RankCoded` (Probe490.agda:289-292)
+-- quantifies over an arbitrary `Q`, and `rankFo-adequate′` consumes
+-- `ord-reads-Q Q a oa`, so no conjunct is provable at an arbitrary `Q`
+-- (agents/tasks/LJ-1-521/lj-1.521-report.md:296-303).  The brief rules
+-- INSTANTIATE rather than carry `hQ`: `Q := ord-set-witness a oa .fst`.
+-- `InjL` and `InjCode` name no `Q` (src/L/GCH.lagda.md:37-38,
+-- src/L/Cardinal.lagda.md:223-228), so nothing downstream can want a
+-- different one.  Section 2 is that instantiation and it is green.
+--
+-- ONE IMPORT OF A PREDECESSOR PROBE, and it is deliberate.  The brief
+-- says "DO NOT REBUILD `rankFo-adequate′`" and prices the whole task at
+-- about 200 lines; [LJ-1.521] measured the adequacy at 1176 lines
+-- (agents/tasks/LJ-1-521/lj-1.521-report.md:286).  The two can only both
+-- hold if this task imports.  `bedrock.agda-lib:2` lists `agents/tasks`
+-- as an include root, and the tree already carries cross-task probe
+-- imports: agents/tasks/LJ-1-184/ProbeLJ1184C.agda:29 imports
+-- `LJ-1-178.ProbeLJ1178A`, and
+-- agents/tasks/LJ-1-224/ProbeGraphSupply.agda:24 imports
+-- `LJ-1-210.GenModel`.  I say it here because five predecessor reports
+-- assert "a probe does not import a probe" and NO rule in `AGENTS.md`,
+-- `dev/pod/instructions/coder.md`, `dev/LESSONS.md`, `dev/pod/rulings.toml`
+-- or `agents/README.md` states it.
+--
+-- REBUILT HERE, and nothing else is:
+--   * section 1, [LJ-1.490]'s `rank-graph` and `rank-graph-out`
+--     (Probe490.agda:105-116), at [LJ-1.521]'s `rankFo`.  Four lines.
+--     [LJ-1.490] is NOT imported, because its `Bound`, `C` and `bnd`
+--     (Probe490.agda:211-232) are built on `swo-rank`, the rank
+--     [LJ-1.497] refuted, and importing the module would pull them in.
+--
+-- `bnd` IS A FREE PARAMETER OF THE OBLIGATION AND THAT IS THE POINT.
+-- `svAt` never looks at the bound: it reads a pair out of the carve and
+-- the carve's separation is over ANY `bnd`.  So the `swo-rank′`
+-- re-basing that [LJ-1.521] priced for `Bound`, `C` and `bnd`
+-- (lj-1.521-report.md:305-308) is NOT needed here, and the obligation
+-- proved at a free `bnd` holds at whatever the re-based bound becomes.
+--
+-- Nothing lands in src/.  Does not postulate.  `swo-rank` is NOT
+-- restored.  `rankFo-adequate′` is NOT rebuilt.  The other three
+-- conjuncts are NOT attempted.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-524.runs.BisC {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure; ↾-reflects )
+open import FOL.Syntax using ( Formula )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr; pr-inj )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
+open import L.Cardinal {ℓ} lem using ( InjCode )
+open import L.Coding.Model {ℓ} using ( svAt; svAt-in; prʟ; prʟ-fst )
+open import Cubical.Data.FinData using ( Fin; zero; suc )
+open import Cubical.Foundations.Prelude using ( J )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+
+import LJ-1-521.Probe521 {ℓ} lem as P521
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- =====================================================================
+-- 1.  THE CARVE.  [LJ-1.490]'s (Probe490.agda:105-116), at [LJ-1.521]'s
+--     `rankFo`.  The two formulas are the same formula: [LJ-1.521]'s
+--     change to [LJ-1.497]'s spelling is naming only, its own file head
+--     says so (Probe521.agda:28-31), and `assignAt`/`supAt` unfold to
+--     [LJ-1.490]'s bodies.  `bnd` stays a parameter.
+-- =====================================================================
+
+rank-graph :
+    (Q a bnd : S)
+  → Σ[ G ∈ S ] ((z : S) → (z ∈ˢ G)
+      ≡ ((z ∈ˢ bnd) ⊓ ((z ∷ []) ⊨ P521.rankFo Q a)))
+rank-graph Q a bnd = hasSeparationL bnd (P521.rankFo Q a) .fst
+
+rank-graph-out :
+    (Q a bnd z : S)
+  → ⟨ z ∈ˢ fst (rank-graph Q a bnd) ⟩
+  → ⟨ z ∈ˢ bnd ⟩ × ⟨ (z ∷ []) ⊨ P521.rankFo Q a ⟩
+rank-graph-out Q a bnd z h =
+  subst ⟨_⟩ (snd (rank-graph Q a bnd) z) h
+
+-- =====================================================================
+-- 2.  W3, THE INSTANTIATION.  `rankFo-adequate′` at
+--     `Q := ord-set-witness a oa .fst`, with the hypothesis discharged by
+--     the witness.  This is runs/W3.agda, repeated here because a file
+--     cannot import the slice it was cut from.
+-- =====================================================================
+
+ordQ : (a : S) → IsOrd (fst a) → S
+ordQ a oa = P521.ord-set-witness a oa .fst
+
+adequate-at-witness :
+    (a : S) (oa : IsOrd (fst a)) (z : S)
+  → ⟨ (z ∷ []) ⊨ P521.rankFo (ordQ a oa) a ⟩
+  → Σ[ m ∈ S ] Σ[ mx ∈ ⟨ fst m ∈ fst a ⟩ ]
+      (fst z ≡ pr (fst m) (fst (P521.rank-at′ a oa m mx)))
+adequate-at-witness a oa z =
+  P521.rankFo-adequate′ (ordQ a oa) a oa z (P521.ord-set-witness a oa .snd)
+
+-- =====================================================================
+-- 3.  THE RANK IS INDIFFERENT TO BOTH ARGUMENTS THAT CAN DIFFER.  The
+--     member is determined only up to `↾-reflects`, and the membership
+--     proof is a proposition.  This is [LJ-1.521]'s `isPropTgt` design
+--     (Probe521.agda:964-1000) at a weaker conclusion: THE MOTIVE DOES
+--     NOT NAME THE PATH.  Writing it as `subst`/`ΣPathP` over the path
+--     puts the path inside a type family, the elaborator normalizes it,
+--     and [LJ-1.521] measured that shape at more than ten minutes
+--     (agents/tasks/LJ-1-521/runs/full-try4.out).
+-- =====================================================================
+
+rank-at′-irr :
+    (a : S) (oa : IsOrd (fst a)) (m m' : S) → m ≡ m'
+  → (mx : ⟨ fst m ∈ fst a ⟩) (mx' : ⟨ fst m' ∈ fst a ⟩)
+  → fst (P521.rank-at′ a oa m mx) ≡ fst (P521.rank-at′ a oa m' mx')
+rank-at′-irr a oa m m' q = atSame q
+  where
+  Mot : (m'' : S) → m ≡ m'' → Type (ℓ-suc ℓ)
+  Mot m'' _ =
+      (u : ⟨ fst m ∈ fst a ⟩) (u' : ⟨ fst m'' ∈ fst a ⟩)
+    → fst (P521.rank-at′ a oa m u) ≡ fst (P521.rank-at′ a oa m'' u')
+
+  base : Mot m refl
+  base u u' = cong (λ v → fst (P521.rank-at′ a oa m v))
+                   (snd (fst m ∈ fst a) u u')
+
+  atSame : {m'' : S} (p : m ≡ m'') → Mot m'' p
+  atSame = J Mot base
+
+-- =====================================================================
+-- 3.1  THE READING.  A pair in the carve is a member-and-rank pair, with
+--      `Q` determined.  Three delivered steps and no adapter:
+--      `prʟ-fst` (src/L/Coding/Model.lagda.md:329-330) to enter the
+--      carve, `rank-graph-out` to leave it with satisfaction,
+--      `adequate-at-witness` to read the pair, `pr-inj`
+--      (src/V/Coding.lagda.md:178-179) to split it.
+-- =====================================================================
+
+module Carve (a : S) (oa : IsOrd (fst a)) (bnd : S) where
+
+  Q : S
+  Q = ordQ a oa
+
+  G : S
+  G = fst (rank-graph Q a bnd)
+
+  sat : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst G ⟩
+      → ⟨ (prʟ x y ∷ []) ⊨ P521.rankFo Q a ⟩
+  sat x y h = rank-graph-out Q a bnd (prʟ x y) inG .snd
+    where
+    inG : ⟨ prʟ x y ∈ˢ G ⟩
+    inG = subst (λ w → ⟨ w ∈ fst G ⟩) (sym (prʟ-fst x y)) h
+
+  read : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst G ⟩
+       → Σ[ m ∈ S ] Σ[ mx ∈ ⟨ fst m ∈ fst a ⟩ ]
+           (pr (fst x) (fst y) ≡ pr (fst m) (fst (P521.rank-at′ a oa m mx)))
+  read x y h =
+    t .fst , (t .snd .fst , sym (prʟ-fst x y) ∙ t .snd .snd)
+    where
+    t = adequate-at-witness a oa (prʟ x y) (sat x y h)
+
+  -- the argument is the member, up to the carrier
+  arg : (x y : S) (h : ⟨ pr (fst x) (fst y) ∈ fst G ⟩)
+      → fst x ≡ fst (read x y h .fst)
+  arg x y h = pr-inj (read x y h .snd .snd) .fst
+
+  -- the value is the rank at that member
+  val : (x y : S) (h : ⟨ pr (fst x) (fst y) ∈ fst G ⟩)
+      → fst y ≡ fst (P521.rank-at′ a oa (read x y h .fst)
+                                        (read x y h .snd .fst))
+  val x y h = pr-inj (read x y h .snd .snd) .snd
+

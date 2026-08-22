@@ -1,0 +1,3 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22 14:21:21
+Checking LJ-1-524.Probe524 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-524/agents/tasks/LJ-1-524/Probe524.agda).

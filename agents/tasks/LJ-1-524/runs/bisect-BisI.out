@@ -1,0 +1,4 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22 14:45:25
+Checking LJ-1-524.runs.BisI (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-524/agents/tasks/LJ-1-524/runs/BisI.agda).
+exit=137
