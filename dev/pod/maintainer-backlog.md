@@ -19,6 +19,66 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 24. `accept-failed`, a branch the MATHEMATICIAN wrote, loops a task that delivers nothing. TEMPLATE FIXED 2026-08-22
+
+**THIS IS `pod-math`'s DEFECT, NOT THE PROGRAM'S, AND IT IS IN A DOZEN BRIEFS.**
+Found 2026-08-22 while answering a refill. The template is repaired for every
+brief written from now on; the briefs already dispatched still carry the broken
+row and that is why this item exists.
+
+**THE ROW, AS WRITTEN IN EVERY BRIEF SINCE `[LJ-1.492]`.**
+
+```toml
+id = "accept-failed"
+priority = 14
+action = "escalate"
+head_slot = "coder_adversarial"
+  [branch.when]
+  exit_code = 1
+  changed_files_none = ["agents/tasks/LJ-1-NNN/review-of-LJ-*-*.md"]
+```
+
+**IT HAS NO `obligations_delta` KEY.** So it matches an acceptance failure
+whether the obligation was delivered or not.
+
+**MEASURED ON `[LJ-1.497]`, from `dev/pod/transitions/2026-08.jsonl`.** The
+worker was silent from 2026-08-21T20:48Z to 2026-08-22T00:29Z, then:
+
+| attempt | ts | exit | delta | row |
+|---|---|---|---|---|
+| 1 | 00:29:45Z | 1 | **0** | `task-lj-1-497-accept-failed` |
+| 2 | 00:31:22Z | 1 | **0** | `task-lj-1-497-accept-failed` |
+| 3 | 00:33:29Z | 1 | **0** | `task-lj-1-497-accept-failed` |
+| 3 | 00:35:35Z | 1 | **0** | same row, `reason: attempt_max:task-lj-1-497-accept-failed` |
+
+**Four matches in six minutes to `attempt_max`.** Its worktree holds the brief
+and two critic briefs and NOTHING ELSE: no probe, no report, no `runs/`, no
+accept record. Two critic dispatches were made against a return that does not
+exist on disk.
+
+**WHY THE ROW EXISTS AND WHAT IT SHOULD HAVE SAID.** It was written after
+`[LJ-1.469]`, where the term was GREEN, the ratio was under the bar, and
+acceptance conjunct 4 failed: exit 1 with `obligations_delta = -1`. **That is
+the case it is for.** A return that delivers nothing and fails acceptance is a
+different event and must not route here.
+
+**THE FIX, NOW IN `pod-math`'s TEMPLATE.** Add `obligations_delta_max = -1` to
+the `[branch.when]` block. Every brief `pod-math` writes from 2026-08-22 carries
+it.
+
+**WHAT THE MAINTAINER MAY WANT TO DECIDE.** Briefs already dispatched carry the
+broken row and their rows are already admitted. `pod-math` is NOT proposing a
+`table.toml` write and is not naming a system row: a row that has already routed
+live corpus records is not fixable by an ordinary batch proposal, and that needs
+the owner's word. This item is the evidence, with the task and the timestamps.
+
+**ONE CORRECTION `pod-math` OWES.** Two refills of 2026-08-22 recorded that
+`[LJ-1.497]` was "silent inside the six-hour `worker_deadline_s`" and that this
+was not a defect. The silence was real for three and a half hours; **what
+followed was not silence but four loops on a row `pod-math` wrote**, and the
+earlier reading did not survive the measurement.
+
+
 ### 23. `sys-lint-accept` loops a task whose obligation is ALREADY CLOSED. LIVE NOW on LJ-1.500
 
 **`[LJ-1.500]` HAS RUN FOUR ATTEMPTS AND ITS OBLIGATION IS INHABITED.** Diagnosed
