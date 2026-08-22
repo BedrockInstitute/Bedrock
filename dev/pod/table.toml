@@ -11277,6 +11277,22 @@ expired = false
   changed_files_none = ["agents/tasks/LJ-1-505/review-of-LJ-*-*.md"]
 
 [[row]]
+id = "task-lj-1-505-no-verdict"
+scope = "task:LJ-1.505"
+priority = 13
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-22
+added_by = "maintainer"
+reason = "Owner R3 bypass 2026-08-22, item 25: an open obligation with no stated verdict, escalated to the critic. AD3 judgement by pod-math; a brief edit alone did not admit this row."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_none = ["agents/tasks/LJ-1-505/review-of-*.md"]
+
+[[row]]
 id = "task-lj-1-505-no-go-attacked"
 scope = "task:LJ-1.505"
 priority = 15
@@ -12164,6 +12180,7 @@ expired = false
 
   [row.when]
   exit_code = 1
+  obligations_delta_max = -1
   changed_files_none = ["agents/tasks/LJ-1-498/review-of-LJ-*-*.md"]
 
 [[row]]
