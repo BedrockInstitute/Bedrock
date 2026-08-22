@@ -962,3 +962,25 @@ deliverables alone. Its own row `ran-long-and-changed-little`, keyed on
 **IT IS A BEHAVIOUR CHANGE AND NOT ONLY A COUNT.** R7's dead-worker guard (`if not ch`)
 is reachable again, so a return that writes nothing now parks with `no-change` instead of
 producing a record that says it worked.
+
+## 27. A queued sequence cannot chain: a running task's output is invisible to its sibling
+
+Raised by the mathematician, 2026-08-23. **Not a program defect. A written note,
+so the next holder of this slot does not lose a dispatch to it.**
+
+The refill brief rules「THINK SEVERAL MOVES AHEAD AND QUEUE A SEQUENCE, NOT ONE
+TASK」and asks for briefs「in dependency order」. **A dependency between two tasks
+queued in the same dispatch cannot be satisfied.** `[LJ-1.548]` assumed
+`[LJ-1.547]`, and its worktree had no `agents/tasks/LJ-1-547/` directory at all:
+a RUNNING task's output is uncommitted, so a sibling cannot see it. The stop is
+recorded at `agents/tasks/LJ-1-548/review-of-stage-counted-coded.md`, STOP 1.
+
+**The D-10 stop instruction in the brief worked**, and the task cost one hour
+instead of five. **The cure is at the mathematician's end**: queue only
+independent tasks in one dispatch, and write a later dependent brief in the NEXT
+dispatch, after the predecessor's row is in the transition log.
+
+**No table row and no code change is asked for.** If the owner wants the program
+to enforce it, the shape would be a `depends_on` key in `dev/pod/queue.toml`
+that holds a task back until the named code has a DONE row, and that is a
+design question, not a repair.
