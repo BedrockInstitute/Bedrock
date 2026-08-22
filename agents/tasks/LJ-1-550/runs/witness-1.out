@@ -1,0 +1,4 @@
+GHCRTS=-A64m -I0 -M8g
+# witness-1: the declared obligation
+missing   exit=42       3.25s  agents/tasks/LJ-1-550/Probe550.agda::bridge-without-B5  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-550/.pod-state/witness/Witness-POD-142af87e.agda:30)
+witness: 1 UNRESOLVED of 1, 3.25 s, probe_red=False

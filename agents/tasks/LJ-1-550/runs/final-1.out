@@ -1,0 +1,27 @@
+GHCRTS=-A64m -I0 -M8g
+# final-1: the whole probe
+Checking LJ-1-550.Probe550 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-550/agents/tasks/LJ-1-550/Probe550.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-550/agents/tasks/LJ-1-550/Probe550.agda:407.5-408.19: error: [UnequalSorts]
+Type (ℓ-suc (ℓ-suc ℓ)) != Type (ℓ-suc ℓ)
+when checking that the expression
+(κ : SV.S) (ordκ : IsOrd κ) (cardκ : CardSpentAt κ (fst (κ , κ))) →
+Type (ℓ-suc ℓ)
+has type Type (ℓ-suc ℓ)
+        5.05 real         4.79 user         0.24 sys
+           891404288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               56132  page reclaims
+                  19  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 868  involuntary context switches
+         58946203298  instructions retired
+         19916721646  cycles elapsed
+           831603864  peak memory footprint

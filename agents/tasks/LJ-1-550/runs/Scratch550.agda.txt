@@ -1,0 +1,317 @@
+{-# OPTIONS --cubical --guardedness #-}
+
+-- [LJ-1.550]  Is B5 needed at all, when the target crosses no ambient
+-- boundary.
+--
+-- SECTION 1 is W3 and the brief ordered it written first and typechecked
+-- ALONE.  That slice is kept at agents/tasks/LJ-1-550/runs/w3-slice.agda.txt.
+--
+-- Nothing is postulated.  Nothing lands in src/.  No hole.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-550.runs.Scratch550 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; Lset; isL; isL-trans )
+open import L.Ordinal {ℓ} using ( ω-ord )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL )
+open import L.BoundedSubset {ℓ} lem using ( IsCardinal; _↪_; module Devlin55 )
+open import L.GCH {ℓ} lem using ( GCHStatement; SuccCardL; InjL )
+open import L.CantorBernstein {ℓ} lem using ( readL )
+import FOL.ZFModel
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; _∪_; ⁅_⁆s )
+open InfinitySet {ℓ} using ( ω; sucV )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+
+module SV = hPropStructure 𝒮ᵥ
+module SL = hPropStructure 𝒮ʟ
+module ModelL = FOL.ZFModel 𝒮ʟ
+
+-- =====================================================================
+-- SECTION 1.  W3.  DOES [LJ-1.523]'S BRIDGE CONSUME B5 AT ALL.
+--
+--   B5 is `AmbientSpentAtSucc` (agents/tasks/LJ-1-523/Probe523.agda:218-220),
+--   copied here letter for letter.  The brief orders the bridge's
+--   conclusion written with B5 BOUND AND UNUSED.
+-- =====================================================================
+
+CardSpentAt : SV.S → SV.S → Type ℓ
+CardSpentAt κ α = ⟪ κ ⟫ ↪ ⟪ α ⟫ → Empty.⊥
+
+AmbientSpentAtSucc : Type (ℓ-suc ℓ)
+AmbientSpentAtSucc =
+  (κ δ : SL.S) → SuccCardL δ κ → CardSpentAt (fst δ) (fst κ)
+
+-- The bridge's conclusion, with B5 bound and never mentioned to its
+-- right.  It elaborates, so THE BRIDGE TYPE DOES NOT CONSUME B5.
+-- What this does NOT settle is whether an INHABITANT consumes it, and
+-- no inhabitant exists: [LJ-1.523] was forbidden the term.
+bridge-b5-unused : AmbientSpentAtSucc → ModelL.isZFModel → Type (ℓ-suc ℓ)
+bridge-b5-unused _ zf = GCHStatement zf
+
+-- =====================================================================
+-- SECTION 2.  [LJ-1.523]'S ANTECEDENT, COPIED LETTER FOR LETTER.
+--
+--   agents/tasks/LJ-1-523/Probe523.agda:97-156.  Nothing here is
+--   weakened and nothing is strengthened: the brief forbids changing
+--   any hypothesis but B5.
+-- =====================================================================
+
+SqLaw : SV.S → Type (ℓ-suc ℓ)
+SqLaw α =
+    (δ : SV.S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥)
+  → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
+      ((u v : ⟪ δ ⟫ × ⟪ δ ⟫) → f u ≡ f v → u ≡ v)
+
+module Tele
+  (κ : SV.S) (ordκ : IsOrd κ) (cardκ : IsCardinal κ)
+  (κ∉ω : ⟨ κ ∈ˢ ω ⟩ → Empty.⊥)
+  (α : SV.S) (ordα : IsOrd α) (α∈κ : ⟨ α ∈ˢ κ ⟩)
+  (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+  (sq : SqLaw α)
+  (x : SV.S) (x⊆Lα : (z : SV.S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
+  (absorbs : ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
+  (lam : SV.S) (ordλ : IsOrd lam) (α∈λ : ⟨ α ∈ˢ lam ⟩)
+  (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩)
+  where
+
+  module BSA = Devlin55.BoundedSubsetAt
+    κ ordκ cardκ κ∉ω α ordα α∈κ α∉ω sq x x⊆Lα absorbs lam ordλ α∈λ succλ x∈Lλ
+
+  LevelIn : Type (ℓ-suc ℓ)
+  LevelIn = (δ : SV.S) → IsOrd δ → ⟨ δ ∈ˢ BSA.HS.C.πX ⟩
+          → ⟨ Lset δ ∈ˢ BSA.HS.C.πX ⟩
+
+  Cover : Type (ℓ-suc ℓ)
+  Cover = (y : SV.S) → ⟨ y ∈ˢ BSA.HS.M ⟩
+        → ∥ Σ[ γ ∈ SV.S ]
+             ( IsOrd γ
+             × ⟨ γ ∈ˢ BSA.HS.C.πX ⟩
+             × ⟨ BSA.HS.C.π y ∈ˢ Lset γ ⟩ ) ∥₁
+
+  At : Type (ℓ-suc ℓ)
+  At = LevelIn → Cover → ⟨ x ∈ˢ Lset κ ⟩
+
+BoundedSubsetTheorem : Type (ℓ-suc ℓ)
+BoundedSubsetTheorem =
+    (κ : SV.S) (ordκ : IsOrd κ) (cardκ : IsCardinal κ)
+    (κ∉ω : ⟨ κ ∈ˢ ω ⟩ → Empty.⊥)
+    (α : SV.S) (ordα : IsOrd α) (α∈κ : ⟨ α ∈ˢ κ ⟩)
+    (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+    (sq : SqLaw α)
+    (x : SV.S) (x⊆Lα : (z : SV.S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
+    (absorbs : ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
+    (lam : SV.S) (ordλ : IsOrd lam) (α∈λ : ⟨ α ∈ˢ lam ⟩)
+    (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+    (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩)
+  → Tele.At κ ordκ cardκ κ∉ω α ordα α∈κ α∉ω sq x x⊆Lα absorbs
+      lam ordλ α∈λ succλ x∈Lλ
+
+-- =====================================================================
+-- SECTION 3.  THE NINE OTHER INPUTS, COPIED LETTER FOR LETTER.
+--
+--   B1 is the model, the bridge's own argument.  B2 and B3 live in
+--   src/ and are imported, not hypothesised.  B4 and B6 to B10 are
+--   agents/tasks/LJ-1-523/Probe523.agda:191-268.  B5 IS ABSENT.
+-- =====================================================================
+
+-- B4
+SuccCardExists : Type (ℓ-suc ℓ)
+SuccCardExists =
+    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
+  → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  → ∥ Σ[ δ ∈ SL.S ] SuccCardL δ κ ∥₁
+
+-- B6
+SubsetIntoStage : ModelL.isZFModel → Type (ℓ-suc ℓ)
+SubsetIntoStage zf =
+    (κ y : SL.S) → IsOrd (fst κ) → ⟨ fst y ∈ˢ fst (𝒫 κ) ⟩
+  → (z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ Lset (fst κ) ⟩
+  where open ModelL.isZFModel zf using ( 𝒫 )
+
+-- B7
+AbsorbsAt : Type (ℓ-suc ℓ)
+AbsorbsAt =
+    (α x : SV.S) → IsOrd α → (⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+  → ((z : SV.S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
+  → ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫
+
+-- B8
+LimitAbove : Type (ℓ-suc ℓ)
+LimitAbove =
+    (α x : SV.S) → IsOrd α → ⟨ isL x ⟩
+  → ∥ Σ[ lam ∈ SV.S ]
+       ( IsOrd lam
+       × ⟨ α ∈ˢ lam ⟩
+       × ((d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+       × ⟨ x ∈ˢ Lset lam ⟩ ) ∥₁
+
+-- B9
+StageCountedCoded : Type (ℓ-suc ℓ)
+StageCountedCoded =
+    (δ Lδ : SL.S) → IsOrd (fst δ) → (fst Lδ ≡ Lset (fst δ))
+  → InjL Lδ δ
+
+-- B10
+SuccIntoPower : ModelL.isZFModel → Type (ℓ-suc ℓ)
+SuccIntoPower zf =
+    (κ δ : SL.S) → SuccCardL δ κ → InjL δ (𝒫 κ)
+  where open ModelL.isZFModel zf using ( 𝒫 )
+
+-- THE OBLIGATION'S TYPE.  [LJ-1.523]'s bridge, with the nine other
+-- inputs named and B5 REMOVED.  B2 and B3 are not arguments because
+-- they are delivered in src/ (src/L/CantorBernstein.lagda.md:33-38
+-- and :51-55).
+BridgeWithoutB5 : ModelL.isZFModel → Type (ℓ-suc ℓ)
+BridgeWithoutB5 zf =
+    BoundedSubsetTheorem
+  → SuccCardExists
+  → SubsetIntoStage zf
+  → AbsorbsAt
+  → LimitAbove
+  → StageCountedCoded
+  → SuccIntoPower zf
+  → GCHStatement zf
+
+-- SCRATCH.  Holes allowed.  Not the obligation.
+
+CoHyps : Type (ℓ-suc ℓ)
+CoHyps =
+    (κ : SV.S) (ordκ : IsOrd κ) (cardκ : IsCardinal κ)
+    (κ∉ω : ⟨ κ ∈ˢ ω ⟩ → Empty.⊥)
+    (α : SV.S) (ordα : IsOrd α) (α∈κ : ⟨ α ∈ˢ κ ⟩)
+    (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+    (sq : SqLaw α)
+    (x : SV.S) (x⊆Lα : (z : SV.S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
+    (absorbs : ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
+    (lam : SV.S) (ordλ : IsOrd lam) (α∈λ : ⟨ α ∈ˢ lam ⟩)
+    (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+    (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩)
+  → Tele.LevelIn κ ordκ cardκ κ∉ω α ordα α∈κ α∉ω sq x x⊆Lα absorbs
+      lam ordλ α∈λ succλ x∈Lλ
+  × Tele.Cover κ ordκ cardκ κ∉ω α ordα α∈κ α∉ω sq x x⊆Lα absorbs
+      lam ordλ α∈λ succλ x∈Lλ
+
+module UseSite (zf : ModelL.isZFModel)
+  (bst : BoundedSubsetTheorem) (b6 : SubsetIntoStage zf)
+  (b7 : AbsorbsAt) (b8 : LimitAbove)
+  (κ δ : SL.S) (ordκ : IsOrd (fst κ)) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  (sc : SuccCardL δ κ)
+  where
+  open ModelL.isZFModel zf using ( 𝒫 )
+
+  ordδ : IsOrd (fst δ)
+  ordδ = fst sc
+
+  κ∈δ : ⟨ fst κ ∈ˢ fst δ ⟩
+  κ∈δ = fst (snd (snd sc))
+
+  δ∉ω : ⟨ fst δ ∈ˢ ω ⟩ → Empty.⊥
+  δ∉ω δ∈ω = κ∉ω (fst ω-ord κ∈δ δ∈ω)
+
+  member-in-stage :
+      IsCardinal (fst δ)
+    → SqLaw (fst κ)
+    → CoHyps
+    → (y : SL.S) → ⟨ fst y ∈ˢ fst (𝒫 κ) ⟩ → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
+  member-in-stage cardδ sq co y y∈ =
+    PT.rec (snd (fst y ∈ˢ Lset (fst δ))) use (b8 (fst κ) (fst y) ordκ (snd y))
+    where
+    x⊆ : (z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ Lset (fst κ) ⟩
+    x⊆ = b6 κ y ordκ y∈
+
+    abs : ⟪ Lset (fst κ) ∪ ⁅ fst y ⁆s ⟫ ↪ ⟪ Lset (fst κ) ⟫
+    abs = b7 (fst κ) (fst y) ordκ κ∉ω x⊆
+
+    use : Σ[ lam ∈ SV.S ]
+            ( IsOrd lam
+            × ⟨ fst κ ∈ˢ lam ⟩
+            × ((d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+            × ⟨ fst y ∈ˢ Lset lam ⟩ )
+        → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
+    use (lam , ordλ , α∈λ , succλ , x∈Lλ) =
+      bst (fst δ) ordδ cardδ δ∉ω (fst κ) ordκ κ∈δ κ∉ω sq (fst y) x⊆ abs
+          lam ordλ α∈λ succλ x∈Lλ
+          (fst hyps) (snd hyps)
+      where
+      hyps = co (fst δ) ordδ cardδ δ∉ω (fst κ) ordκ κ∈δ κ∉ω sq (fst y) x⊆ abs
+                lam ordλ α∈λ succλ x∈Lλ
+
+-- =====================================================================
+-- THE FULL ACCOUNTING.
+-- =====================================================================
+
+AmbientCardAtSucc : Type (ℓ-suc ℓ)
+AmbientCardAtSucc = (κ δ : SL.S) → SuccCardL δ κ → IsCardinal (fst δ)
+
+SqAt : Type (ℓ-suc ℓ)
+SqAt = (κ : SL.S) → IsOrd (fst κ) → SqLaw (fst κ)
+
+StageIsL : Type (ℓ-suc ℓ)
+StageIsL = (δ : SL.S) → IsOrd (fst δ) → ⟨ isL (Lset (fst δ)) ⟩
+
+InclusionCoded : Type (ℓ-suc ℓ)
+InclusionCoded = (a b : SL.S)
+               → ((z : SV.S) → ⟨ z ∈ˢ fst a ⟩ → ⟨ z ∈ˢ fst b ⟩)
+               → InjL a b
+
+InjLTrans : Type (ℓ-suc ℓ)
+InjLTrans = (a b c : SL.S) → InjL a b → InjL b c → InjL a c
+
+bridge-with-residues :
+    (zf : ModelL.isZFModel)
+  → BoundedSubsetTheorem → SuccCardExists → SubsetIntoStage zf → AbsorbsAt
+  → LimitAbove → StageCountedCoded → SuccIntoPower zf
+  → AmbientCardAtSucc → SqAt → CoHyps → StageIsL → InclusionCoded → InjLTrans
+  → GCHStatement zf
+bridge-with-residues zf bst b4 b6 b7 b8 b9 b10 r1 r2 r3 r4 r5 r6
+                     κ ordκ cardLκ κ∉ω =
+  PT.map step (b4 κ ordκ cardLκ κ∉ω)
+  where
+  open ModelL.isZFModel zf using ( 𝒫 )
+  step : Σ[ δ ∈ SL.S ] SuccCardL δ κ
+       → Σ[ δ ∈ SL.S ] (SuccCardL δ κ × InjL (𝒫 κ) δ × InjL δ (𝒫 κ))
+  step (δ , sc) = δ , sc , hard , b10 κ δ sc
+    where
+    module U = UseSite zf bst b6 b7 b8 κ δ ordκ κ∉ω sc
+
+    into : (z : SV.S) → ⟨ z ∈ˢ fst (𝒫 κ) ⟩ → ⟨ z ∈ˢ Lset (fst δ) ⟩
+    into z z∈ = U.member-in-stage (r1 κ δ sc) (r2 κ ordκ) r3
+                  (z , isL-trans z∈ (snd (𝒫 κ))) z∈
+
+    Lδ : SL.S
+    Lδ = Lset (fst δ) , r4 δ U.ordδ
+
+    hard : InjL (𝒫 κ) δ
+    hard = r6 (𝒫 κ) Lδ δ (r5 (𝒫 κ) Lδ into) (b9 δ Lδ U.ordδ refl)
+
+-- =====================================================================
+-- IS THE SITE FORCED.
+-- =====================================================================
+
+ambient→internal : (μ : SL.S) → IsCardinal (fst μ) → IsCardinalL μ
+ambient→internal μ cardμ ν ν∈μ =
+  PT.rec Empty.isProp⊥ (λ code → cardμ (fst ν) ν∈μ (readL μ ν code))
+
+site-forced : (κ δ μ : SL.S) → SuccCardL δ κ → IsOrd (fst μ)
+            → IsCardinal (fst μ) → ⟨ fst κ ∈ˢ fst μ ⟩
+            → ⟨ ModelL._⊆ˢ_ δ μ ⟩
+site-forced κ δ μ sc ordμ cardμ κ∈μ =
+  snd (snd (snd sc)) μ ordμ (ambient→internal μ cardμ) κ∈μ
+
+b5-from-cardδ : (κ δ : SL.S) → SuccCardL δ κ → IsCardinal (fst δ)
+              → CardSpentAt (fst δ) (fst κ)
+b5-from-cardδ κ δ sc cd = cd (fst κ) (fst (snd (snd sc)))

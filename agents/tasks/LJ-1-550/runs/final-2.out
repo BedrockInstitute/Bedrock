@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# final-2: the whole probe, section 6 tail repaired
+Checking LJ-1-550.Probe550 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-550/agents/tasks/LJ-1-550/Probe550.agda).
+        8.47 real         8.15 user         0.31 sys
+          1515520000  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               94241  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   3  voluntary context switches
+                1815  involuntary context switches
+        105897079356  instructions retired
+         33380902854  cycles elapsed
+          1456113248  peak memory footprint
