@@ -399,7 +399,14 @@ mathematician_adversarial = [
 # local server produces nothing, which it did twice on real work (`LJ-1.478`,
 # `LJ-1.479`) before either mechanism existed.
 coder                     = [
-  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "",      harness = "herdr-pi",     sandbox = "acceptEdits", max_concurrency = 1 },
+  # OWNER'S INSTRUCTION 2026-08-22: qwen is down for maintenance, so it is dropped from
+  # this array rather than capped -- `max_concurrency = 0` is refused at load
+  # (dev/pod/heads.py: "a cap below 1 is not `unlimited`, OMIT the field to mean
+  # unlimited"), and `max_concurrency` cannot express "never". claude-opus-5 is the
+  # only config, so every NEW coder dispatch goes there; LJ-1.512's already-RUNNING
+  # qwen dispatch is untouched (head_live_counts() only gates a NEW pick). Re-add the
+  # line below when the owner says qwen is back:
+  #   { model = "Qwen3.8-27B-oQ4e-mtp", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
   { model = "claude-opus-5",        effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
 ]
 # **TWO HEADS SINCE 2026-08-21**, the same pair and the same reasoning as

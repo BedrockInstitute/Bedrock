@@ -1006,10 +1006,14 @@ def main() -> int:
     check("the two single-head slots keep the inline-table spelling A27 preserved",
           sorted(s for s, v in heads["heads"].items() if isinstance(v, dict)),
           ["maintainer", "mathematician"])
-    check("exactly one of the coder's two models is capped, so the array is not two "
-          "copies of one shape",
+    # **QWEN IS OUT OF THE ARRAY, OWNER'S INSTRUCTION 2026-08-22: "qwen要暂时维护一下,
+    # ...只派给opus5,直到我另行通知".** `max_concurrency = 0` is REFUSED at load
+    # (heads.py: "a cap below 1 is not `unlimited`"), so dropping the line is the only
+    # way to disable a capped config, not capping it to zero. Re-add the qwen row and
+    # restore this assertion to `["1", "None"]` when the owner says qwen is back.
+    check("the coder array is claude-opus-5 alone while qwen is out for maintenance",
           sorted(str(r.get("max_concurrency")) for r in heads["heads"]["coder"]),
-          ["1", "None"])
+          ["None"])
     # **THE CAP IS NOT WHAT MAKES A SLOT RETRYABLE, A29.** Both critic arrays are
     # entirely uncapped and both still fall back, because the trigger is that the slot
     # has a second head at all. This check is the one that would have failed under
@@ -1020,7 +1024,8 @@ def main() -> int:
               [None, None])
     _rows = [(slot, r) for slot, v in heads["heads"].items()
              for r in (v if isinstance(v, list) else [v])]
-    check("the file carries eight configs across the five slots", len(_rows), 8)
+    # Seven, not eight, while qwen is dropped from `coder` (see the check above).
+    check("the file carries seven configs across the five slots", len(_rows), 7)
     for slot, row in _rows:
         # THE LABEL NAMES THE MODEL AND NOT ONLY THE SLOT, because one slot now produces
         # several rows and two identical labels cannot be told apart in a failure list.
