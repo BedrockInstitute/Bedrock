@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# cold probe interface, warm tree
+Checking LJ-1-535.Probe535 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-535/agents/tasks/LJ-1-535/Probe535.agda).
+        1.24 real         1.11 user         0.11 sys
+           374259712  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24584  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 230  involuntary context switches
+         15917006813  instructions retired
+          5231351315  cycles elapsed
+           314131224  peak memory footprint
+exit=0
