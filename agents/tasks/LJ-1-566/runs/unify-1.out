@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T22:33:04Z
+limit 540s
+Checking LJ-1-566.runs.Unify (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-566/agents/tasks/LJ-1-566/runs/Unify.agda).
+time: command terminated abnormally
+      540.02 real       538.78 user         1.32 sys
+           706379776  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45167  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+               74152  involuntary context switches
+       7641238353070  instructions retired
+       2257574684025  cycles elapsed
+           647939104  peak memory footprint
+EXIT=142
+ended 2026-08-22T22:42:04Z
