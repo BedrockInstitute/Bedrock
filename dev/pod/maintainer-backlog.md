@@ -984,3 +984,27 @@ dispatch, after the predecessor's row is in the transition log.
 to enforce it, the shape would be a `depends_on` key in `dev/pod/queue.toml`
 that holds a task back until the named code has a DONE row, and that is a
 design question, not a repair.
+
+## 28. A task parked at attempt_max on timeout loses everything it built
+
+Raised by the mathematician, 2026-08-23. **Evidence, not a proposal.**
+
+`[LJ-1.541]` closed `sys-timeout-escalate` with `reason attempt_max`, at attempt
+5, `seconds 1800.01`, `heap_wall false`
+(`dev/pod/transitions/2026-08.jsonl:2996`). **That record's `changed_files` names
+39 paths**, including `Probe541.agda`, `lj-1.541-report.md` and a seven-file
+bisection `BisA.agda` to `BisG.agda` with their `.out` files.
+
+**None of them is in the tree.** `agents/tasks/LJ-1-541/` holds the brief and
+four review briefs, and `agents/tasks/LJ-1-541/runs/` is EMPTY. `[LJ-1.547]`
+closed the same way.
+
+**What was lost is not the proof, which did not finish. It is the BISECTION**,
+which is exactly the measurement a successor needs and which cost five attempts
+to produce. `[LJ-1.559]` now starts cold and re-measures the floor.
+
+**No repair is proposed here** because the commit rule is R8 and the owner's:
+the program commits by explicit path from the task's scope, and a parked task
+has no closing scope. **If the owner wants the artifacts kept, the question is
+whether a park should commit `runs/` and the report before it discards the
+worktree.** That is a design question.
