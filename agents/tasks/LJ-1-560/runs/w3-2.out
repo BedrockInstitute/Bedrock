@@ -1,0 +1,19 @@
+# w3-2: the W3 slice ALONE, repeat
+        0.95 real         0.84 user         0.10 sys
+           300269568  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20068  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 190  involuntary context switches
+         11292840116  instructions retired
+          3850057280  cycles elapsed
+           243139328  peak memory footprint

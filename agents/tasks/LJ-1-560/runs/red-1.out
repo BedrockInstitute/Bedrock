@@ -1,0 +1,36 @@
+# red-1: the obligation at an ARBITRARY stage.  MUST FAIL.
+Checking LJ-1-560.runs.Red (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-560/agents/tasks/LJ-1-560/runs/Red.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-560/agents/tasks/LJ-1-560/runs/Red.agda:33.14-29: error: [UnequalTerms]
+β !=
+V.sett
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  (V.sett (Lift ℕ)
+   (L.Reflect.Ladder.fam lem (Single.βₙ ψ) (Single.βₙ-ord ψ)
+    (Single.βₙ-step ψ)))))
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  (V.sett (Lift ℕ)
+   (L.Reflect.Ladder.fam lem (Single.βₙ ψ) (Single.βₙ-ord ψ)
+    (Single.βₙ-step ψ)))))
+of type V ℓ
+when checking that the expression Single.closed ψ has type
+(ρ : S ^ k) → Below β ρ → ⟨ ρ ⊨ (∃̇ ψ) ⟩ → ⟨ Wit ψ ρ β ⟩
+        0.82 real         0.72 user         0.09 sys
+           285327360  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19156  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 158  involuntary context switches
+         10288136568  instructions retired
+          3456317620  cycles elapsed
+           226165504  peak memory footprint

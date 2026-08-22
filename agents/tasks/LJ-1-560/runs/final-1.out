@@ -1,0 +1,26 @@
+# final-1: the whole probe, obligation included
+Checking LJ-1-560.Probe560 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-560/agents/tasks/LJ-1-560/Probe560.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-560/agents/tasks/LJ-1-560/Probe560.agda:215.24-62: error: [UnequalTerms]
+(S → Ω) → Type (ℓ-suc (ℓ-suc ℓ)) !=< Type _ℓ_229
+when checking that the inferred type of an application
+  (S → Ω) → Type (ℓ-suc (ℓ-suc ℓ))
+matches the expected type
+  Type _ℓ_229
+        1.65 real         1.47 user         0.14 sys
+           455720960  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29556  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  90  voluntary context switches
+                 361  involuntary context switches
+         20926857343  instructions retired
+          7040970147  cycles elapsed
+           396149624  peak memory footprint

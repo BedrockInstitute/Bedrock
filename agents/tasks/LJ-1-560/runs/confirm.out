@@ -1,0 +1,19 @@
+# confirm: final state of the tree as reported
+        0.87 real         0.76 user         0.10 sys
+           294846464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19737  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 232  involuntary context switches
+         11360896858  instructions retired
+          3685527434  cycles elapsed
+           237699816  peak memory footprint
