@@ -1,0 +1,6 @@
+Checking LJ-1-497.Probe497 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-497/agents/tasks/LJ-1-497/Probe497.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-497/agents/tasks/LJ-1-497/Probe497.agda:461.12-31: error: [UnequalSorts]
+Type (ℓ-suc ℓ) != Type ℓ
+when checking that the expression Σ-syntax A λ x → x <∙ a has type
+Type ℓ
+exit=42

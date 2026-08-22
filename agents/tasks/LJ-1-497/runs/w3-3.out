@@ -1,0 +1,20 @@
+Checking LJ-1-497.Probe497 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-497/agents/tasks/LJ-1-497/Probe497.agda).
+        1.82 real         1.70 user         0.11 sys
+           295141376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19755  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 224  involuntary context switches
+         18674606776  instructions retired
+          7184660556  cycles elapsed
+           234849024  peak memory footprint
+  [wall 1.85s  peakRSS 295141376 bytes  exit 0]
