@@ -1,0 +1,6 @@
+Checking LJ-1-518.Probe518 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-518/agents/tasks/LJ-1-518/Probe518.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-518/agents/tasks/LJ-1-518/Probe518.agda:97.53-54: error: [UnequalTerms]
+(Σ (FOL.ZFStructure.ZFStructure.S 𝒮ᵥ) (λ x₁ → x₁ ∈ᶜ isL)) !=<
+(fst (fst _x_105 ∈ fst a))
+when checking that the expression x has type ⟨ fst _x_105 ∈ α ⟩
+exit=0
