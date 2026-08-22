@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# stage-b: sections 0-2
+Checking LJ-1-549.Probe549 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-549/agents/tasks/LJ-1-549/Probe549.agda).
+        1.89 real         1.70 user         0.17 sys
+           417464320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27221  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 336  involuntary context switches
+         19752796110  instructions retired
+          7325161089  cycles elapsed
+           357581640  peak memory footprint

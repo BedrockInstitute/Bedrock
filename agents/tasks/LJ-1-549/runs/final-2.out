@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# final-2: the file exactly as the report describes it, 689 lines, interface deleted first
+Checking LJ-1-549.Probe549 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-549/agents/tasks/LJ-1-549/Probe549.agda).
+        2.40 real         2.20 user         0.17 sys
+           528842752  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34019  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 630  involuntary context switches
+         30268671869  instructions retired
+          9891588272  cycles elapsed
+           468812712  peak memory footprint
