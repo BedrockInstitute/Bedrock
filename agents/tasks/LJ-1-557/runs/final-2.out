@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# final-2: the file exactly as the report describes it, dependencies warm
+Checking LJ-1-557.Probe557 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-557/agents/tasks/LJ-1-557/Probe557.agda).
+        4.58 real         4.37 user         0.20 sys
+          1292238848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               80613  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 675  involuntary context switches
+         58130309659  instructions retired
+         19282724885  cycles elapsed
+          1232537016  peak memory footprint

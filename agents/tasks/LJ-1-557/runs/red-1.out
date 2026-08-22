@@ -1,0 +1,35 @@
+GHCRTS=-A64m -I0 -M8g
+# red-1: first attempt at the whole probe
+Checking LJ-1-557.Probe557 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-557/agents/tasks/LJ-1-557/Probe557.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-557/agents/tasks/LJ-1-557/Probe557.agda:197.16-22: error: [NotInScope]
+Not in scope:
+  Σ≡Prop
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-557/agents/tasks/LJ-1-557/Probe557.agda:197.16-22
+    (did you mean
+       'Agda.Primitive.Prop' or
+       'Base.Prelude.hProp' or
+       'Base.Prelude.isProp' or
+       'Cubical.Data.Sigma.×≡Prop' or
+       'Cubical.Data.Sigma.×≡Prop'' or
+       'Cubical.Data.Sigma.Σ≡Prop' or
+       'hProp' or
+       'isProp'?)
+when scope checking Σ≡Prop
+        1.48 real         1.31 user         0.14 sys
+           395476992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25879  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   4  voluntary context switches
+                 241  involuntary context switches
+         18027342220  instructions retired
+          6235020115  cycles elapsed
+           337412936  peak memory footprint

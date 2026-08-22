@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# confirm: the probe as delivered, after every edit to every document of this task
+Checking LJ-1-557.Probe557 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-557/agents/tasks/LJ-1-557/Probe557.agda).
+        4.22 real         4.03 user         0.19 sys
+          1292238848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               80613  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 608  involuntary context switches
+         58173115001  instructions retired
+         18551148665  cycles elapsed
+          1232520608  peak memory footprint
