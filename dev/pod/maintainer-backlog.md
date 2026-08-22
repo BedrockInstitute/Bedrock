@@ -19,6 +19,51 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 26. `heap-wall-escalate`, another branch the MATHEMATICIAN wrote, loops on a resource fact. TEMPLATE FIXED 2026-08-22
+
+**SECOND DEFECT OF THE SAME SHAPE AS ITEM 24, IN THE SAME TEMPLATE.** Found
+2026-08-22 when `[LJ-1.534]` parked at `attempt_max`. Repaired for every brief
+written from now; the briefs already dispatched still carry the broken row.
+
+**THE ROW, IN EVERY BRIEF SINCE `[LJ-1.492]`.**
+
+```toml
+id = "heap-wall-escalate"
+priority = 30
+action = "escalate"
+head_slot = "coder_adversarial"
+  [branch.when]
+  heap_wall = true
+```
+
+**MEASURED ON `[LJ-1.534]`**, from `dev/pod/transitions/2026-08.jsonl`:
+
+| attempt | ts | exit | heap_wall | row |
+|---|---|---|---|---|
+| 1 | 10:34:13Z | 251 | true | `task-lj-1-534-heap-wall-escalate` |
+| 2 | 10:49:04Z | 251 | true | same |
+| 3 | 10:59:49Z | 251 | true | same |
+| 3 | 11:13:11Z | 251 | true | same, `reason: attempt_max` |
+
+**WHY IT CANNOT WORK, AND IT IS NOT AN EXCLUSION PROBLEM.** Item 24's cure was
+a delta key. **This one is different: a critic dispatched at a heap wall
+RE-RUNS THE SAME PROBE AND RE-HITS THE SAME WALL.** No exclusion helps, because
+the second run is as entitled to the row as the first. **A heap wall is a
+resource fact and no critic can adjudicate it.**
+
+**THE FIX, NOW IN `pod-math`'s TEMPLATE: `action = "park"`.** A park is the
+honest state for "this probe does not fit in memory", and it stops the loop
+dead instead of spending three dispatches to reach `attempt_max`.
+
+**WHAT IT COST HERE, AND THE LOSS IS SMALL.** `[LJ-1.534]`'s worktree holds no
+report and no probe: the wall fired before anything was written. **Unlike
+`[LJ-1.512]` under item 23, nothing delivered was stranded.**
+
+**AND THE WALL ITSELF IS A MEASUREMENT `pod-math` IS ACTING ON.** The task
+collected sixteen hypotheses at one frame and the elaborator ran out of memory
+four times. That is evidence about the frame, not only about the program.
+
+
 ### 25. Amending a dispatched brief does NOT admit its new row. `[LJ-1.505]` needs the owner. MEASURED 2026-08-22
 
 **`pod-math` TRIED THE BRIEF ROUTE AND IT DID NOT WORK.** Answering the
