@@ -1,0 +1,19 @@
+Checking LJ-1-528.Probe528 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-528/agents/tasks/LJ-1-528/Probe528.agda).
+        4.41 real         4.17 user         0.21 sys
+           744390656  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47175  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 777  involuntary context switches
+         53936016315  instructions retired
+         17495849960  cycles elapsed
+           684098616  peak memory footprint
