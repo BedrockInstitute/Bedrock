@@ -41,6 +41,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -2549,6 +2550,37 @@ class Admits(LoopCase):
         self.patch(pod, "agda_pileup", lambda: (2, {900: 2}, None))
         self.assertFalse(pod.admits(self.st, self.t))
 
+    def test_the_pile_up_limb_refuses_a_NON_AGDA_task_too_and_that_is_deliberate(self):
+        """**THIS IS WHAT MADE ONE CENSUS DEFECT A TOTAL STALL ON 2026-08-22.** The limb
+        sits above the `if not t.agda` early-out on purpose, because C-12's hazard is the
+        MACHINE and not the task. It is pinned here so the repair is understood as being
+        in the census and never in this ordering: dropping the limb below the early-out
+        would let a non-Agda task start next to six unguarded writers."""
+        self.patch(pod, "agda_pileup", lambda: (2, {900: 2}, None))
+        self.t.agda = False
+        self.assertFalse(pod.admits(self.st, self.t))
+
+    def test_TWO_ORPHANS_NO_LONGER_LOOK_LIKE_ONE_AGENT(self):
+        """**THE 2026-08-22 STALL, pinned end to end at the boundary that broke.**
+
+        The two leftover Agda processes of LJ-1.524 sat at PPID 1. The old
+        `agda_pileup()` returned `{1: 2}` from that, this function read it as C-12's
+        pile-up, and the loop admitted NOTHING for 2 h 07 min: seq 2448 at
+        `2026-08-22T07:04:19Z` to seq 2449 at `2026-08-22T09:11:26Z` with no line
+        between. `agda_pileup()` now leaves the orphanage out of `per_parent` and keeps
+        both processes in `total`, so the census still charges A14's ceiling for them
+        while it stops claiming one agent holds them."""
+        self.patch(pod, "agda_pileup", lambda: (2, {}, None))
+        self.assertTrue(pod.admits(self.st, self.t))
+        self.t.agda = False
+        self.assertTrue(pod.admits(self.st, self.t))
+
+    def test_but_FOUR_orphans_still_fill_the_WIDE_tier_so_the_cap_is_not_lost(self):
+        """They are real processes burning real heap. The reap removes them; the ceiling
+        must not pretend they are absent until it does."""
+        self.patch(pod, "agda_pileup", lambda: (4, {}, None))
+        self.assertFalse(pod.admits(self.st, self.t))
+
     def test_the_total_at_the_WIDE_ceiling_REFUSES_and_one_below_it_ADMITS(self):
         """THE NUMBER IS WRITTEN OUT, and it is A14's four. Reading the ceiling back out
         of `agda_slots()` made the pair `total >= slots` true for any value the function
@@ -2617,6 +2649,204 @@ class Admits(LoopCase):
                                   brief=f"agents/tasks/{DIR}/{CODE}.md")
         pod._rule_c(st, self.tmp)
         self.assertEqual(seen, [True])         # the task says False and rule (c) says True
+
+
+# ------------------------------------------------- gap M2, the orphaned Agda reaper
+
+
+class ReapOrphanAgda(LoopCase):
+    """**THE 2026-08-22 INCIDENT, and it has two independent halves.**
+
+    MEASURED. Two Agda processes belonging to LJ-1.524 were found alive at PPID 1 at
+    ~100 percent CPU, 153 and 145 minutes elapsed: `agents/tasks/LJ-1-524/Probe524.agda`
+    and `agents/tasks/LJ-1-524/runs/BisI.agda`. `agda_deadline_s` is 1800 s
+    (`dev/pod/heads.toml:264`), so both were over the cap by 5.1 and 4.8 times.
+
+    HALF ONE, THE STALL. `agda_pileup()` bucketed both under PID 1, `admits()` read
+    `{1: 2}` as C-12's pile-up and returned False for EVERY task, and rule (c)
+    (`scripts/pod/pod.py:4267-4269`) `continue`d in silence. The transition log carries
+    NOTHING between seq 2448 at `2026-08-22T07:04:19Z` and seq 2449 at
+    `2026-08-22T09:11:26Z`, 2 h 07 min, with four tasks stuck in RETURNED across the
+    whole gap and all four closed within 86 seconds of it ending.
+
+    HALF TWO, THE MISSING KILL. LJ-1.524 left RUNNING through `_rule_b()`'s `pid dead`
+    limb (`:4122`), which kills nothing, 49 minutes into a `worker_deadline_s` of
+    43200 s. Nothing in this program had ever been able to bound a worker's OWN Agda:
+    `run_agda()`'s `timeout=` covers only the acceptance pipeline's runs.
+
+    NO TEST HERE SIGNALS A REAL PROCESS. `os.kill` is a recorder and the census is a
+    fixture, so the suite can pin the kill order without owning a process to kill.
+    """
+
+    #: The incident's own two orphans, plus one healthy Agda a live worker owns.
+    ORPHANS = [(501, 9180), (502, 8700)]
+
+    def setUp(self):
+        super().setUp()
+        self.killed = []
+        self.censuses = []
+        self.patch(pod, "agda_orphans", self.census)
+        self.patch(pod.os, "kill", lambda pid, sig: self.killed.append((pid, sig)))
+        self.patch(pod.time, "sleep", lambda s: None)
+        self.answers = [(list(self.ORPHANS), None), (list(self.ORPHANS), None)]
+        pod._REAP["reported"] = None
+        self.addCleanup(pod._REAP.__setitem__, "reported", None)
+
+    def census(self, bar):
+        self.censuses.append(bar)
+        return self.answers.pop(0) if self.answers else ([], None)
+
+    def test_the_bar_is_agda_deadline_s_and_no_literal_of_its_own(self):
+        """ONE HOME FOR THE NUMBER. A second literal here would drift from
+        `dev/pod/heads.toml` the first time the owner moved it."""
+        pod.reap_orphan_agda(pod.State(), self.tmp)
+        self.assertEqual(self.censuses[0], heads_mod.limits()["agda_deadline_s"])
+        self.assertEqual(self.censuses[0], 1800)
+
+    def test_each_orphan_takes_a_SIGTERM_and_then_a_SIGKILL(self):
+        killed = pod.reap_orphan_agda(pod.State(), self.tmp)
+        self.assertEqual(killed, [501, 502])
+        self.assertEqual(self.killed,
+                         [(501, signal.SIGTERM), (502, signal.SIGTERM),
+                          (501, signal.SIGKILL), (502, signal.SIGKILL)])
+
+    def test_the_SIGKILL_is_aimed_through_a_SECOND_census_which_is_the_pid_recycling_guard(self):
+        """`_rule_b()`'s docstring at `:4063-4068` records what this guards: a pid the
+        operating system has RECYCLED belongs to somebody else. 501 dies on the TERM, so
+        the second census no longer holds it and no KILL may be aimed at that number."""
+        self.answers = [(list(self.ORPHANS), None), ([(502, 8743)], None)]
+        pod.reap_orphan_agda(pod.State(), self.tmp)
+        self.assertEqual([p for p, s in self.killed if s == signal.SIGKILL], [502])
+
+    def test_a_BLIND_second_census_sends_NO_sigkill_at_all(self):
+        """BLIND means kill nothing, which is the opposite direction from `admits()`,
+        where BLIND means refuse. One is about starting work and the other about ending
+        it."""
+        self.answers = [(list(self.ORPHANS), None), ([], "ps returned nothing; BLIND")]
+        pod.reap_orphan_agda(pod.State(), self.tmp)
+        self.assertEqual([p for p, s in self.killed if s == signal.SIGKILL], [])
+
+    def test_a_quiet_tick_kills_nothing_and_writes_NO_line(self):
+        """A13's watchdog learned this in numbers: at `tick_seconds = 30` a per-tick line
+        is 2,880 lines a day into a TRACKED file."""
+        self.answers = [([], None)]
+        st = pod.State()
+        self.assertEqual(pod.reap_orphan_agda(st, self.tmp), [])
+        self.assertEqual(self.killed, [])
+        self.assertEqual(self.lines(), [])
+
+    def test_a_reap_writes_ONE_event_line_naming_every_pid_and_the_bar(self):
+        """A program that kills a process on this machine without saying so is worse than
+        one that leaves it running."""
+        st = pod.State()
+        pod.reap_orphan_agda(st, self.tmp)
+        lines = self.lines()
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]["event"], "reap")
+        self.assertEqual(lines[0]["result"], "killed")
+        self.assertEqual(lines[0]["pids"], [501, 502])
+        self.assertEqual(lines[0]["bar_s"], 1800)
+        self.assertEqual(lines[0]["task"], "")   # it moves no task
+        self.assertIn("9180 s elapsed", " ".join(lines[0]["detail"]))
+
+    def test_a_BLIND_census_says_so_ONCE_and_not_once_a_tick(self):
+        self.answers = [([], "ps returned nothing; BLIND")] * 4
+        st = pod.State()
+        for _ in range(3):
+            self.assertEqual(pod.reap_orphan_agda(st, self.tmp), [])
+        self.assertEqual(len(self.lines()), 1)
+        self.assertEqual(self.lines()[0]["result"], "BLIND")
+        self.assertEqual(self.killed, [])
+
+    def test_a_BLIND_census_speaks_again_when_the_REASON_changes(self):
+        st = pod.State()
+        self.answers = [([], "ps returned nothing; BLIND")]
+        pod.reap_orphan_agda(st, self.tmp)
+        self.answers = [([], "could not run ps (boom); BLIND")]
+        pod.reap_orphan_agda(st, self.tmp)
+        self.assertEqual(len(self.lines()), 2)
+
+    def test_a_pid_that_is_already_gone_at_the_SIGTERM_is_dropped(self):
+        def boom(pid, sig):
+            if pid == 501:
+                raise ProcessLookupError(3, "No such process")
+            self.killed.append((pid, sig))
+        self.patch(pod.os, "kill", boom)
+        self.assertEqual(pod.reap_orphan_agda(pod.State(), self.tmp), [502])
+
+    def test_the_reap_runs_on_the_tick_BEFORE_any_rule_consults_admits(self):
+        """The capacity it frees must be visible on THIS tick and not the next one.
+        Rules (c), (f) and (g) are the consumers of `admits()`.
+
+        IT MATCHES THE CALL AND NOT THE NAME, because `pod_tick()`'s docstring names
+        `_rule_f()` two paragraphs above the call and a bare-name index read the PROSE."""
+        src = inspect.getsource(pod.pod_tick)
+        first = src.index("reap_orphan_agda(st, root)")
+        for later in ("_rule_c(st, root)", "_rule_f(st, root)", "_rule_g(st, root)"):
+            self.assertLess(first, src.index(later), later)
+
+    def test_it_NEVER_calls_kill_process_group(self):
+        """An orphan's process group is whatever session its dead parent left behind, and
+        this program cannot know what else is in it. The launcher's founding incident
+        (`scripts/pod/launcher.py:7-9`) is a process group killed out from under two live
+        agents on 2026-08-05."""
+        self.patch(pod, "kill_process_group",
+                   lambda pid: self.fail("it killed a group it does not own"))
+        pod.reap_orphan_agda(pod.State(), self.tmp)
+
+    def test_an_unreadable_limits_block_kills_nothing(self):
+        def boom():
+            raise pod.PodError("heads.toml does not parse")
+        self.patch(pod, "_limits", boom)
+        self.assertEqual(pod.reap_orphan_agda(pod.State(), self.tmp), [])
+        self.assertEqual(self.killed, [])
+        self.assertEqual(self.lines()[0]["result"], "BLIND")
+
+
+class AgdaOrphansWrapper(LoopCase):
+    """`agda_orphans()` in `pod.py` owns the REFUSAL; the launcher owns the census.
+
+    THE `getattr` IS THE HOT RESTART AND NOT DEFENSIVENESS. `cmd_run()` reloads this
+    file and the launcher independently, and the loop's own comment at
+    `scripts/pod/pod.py:5204-5207` records a measured split image where one side of a
+    call had widened and the other had not.
+    """
+
+    def with_launcher(self, mod):
+        self.patch(facts_mod, "launcher", lambda: mod)
+
+    def test_no_launcher_is_BLIND(self):
+        self.with_launcher(None)
+        found, warn = pod.agda_orphans(1800)
+        self.assertEqual(found, [])
+        self.assertIn("BLIND", warn)
+
+    def test_a_launcher_with_no_agda_orphans_is_BLIND_and_never_a_traceback(self):
+        self.with_launcher(types.SimpleNamespace())
+        found, warn = pod.agda_orphans(1800)
+        self.assertEqual(found, [])
+        self.assertIn("BLIND", warn)
+
+    def test_a_census_that_RAISES_is_BLIND(self):
+        def boom(bar):
+            raise RuntimeError("ps exploded")
+        self.with_launcher(types.SimpleNamespace(agda_orphans=boom))
+        found, warn = pod.agda_orphans(1800)
+        self.assertEqual(found, [])
+        self.assertIn("RuntimeError", warn)
+
+    def test_an_unreadable_shape_is_BLIND_and_never_half_read(self):
+        for bad in (["not a pair"], [("a", "b")], [(1, 60)], [(None, 1)]):
+            self.with_launcher(
+                types.SimpleNamespace(agda_orphans=lambda bar, v=bad: (v, None)))
+            found, warn = pod.agda_orphans(1800)
+            self.assertEqual(found, [], bad)
+            self.assertIn("BLIND", warn or "", bad)
+
+    def test_a_good_census_passes_through_as_whole_numbers(self):
+        self.with_launcher(types.SimpleNamespace(
+            agda_orphans=lambda bar: ([("501", "9180")], None)))
+        self.assertEqual(pod.agda_orphans(1800), ([(501, 9180)], None))
 
 
 # ---------------------------------------------------------------- A13, the watchdog
@@ -3211,6 +3441,9 @@ class Heads(LoopCase):
             # `head()` WITHOUT A MODEL IS THE OLD CALL and it still answers for these four.
             self.assertEqual(heads_mod.head(slot, p)["model"], rows[0]["model"])
 
+    @unittest.skip("owner 2026-08-22: qwen is out of [heads].coder for maintenance, "
+                    "so coder is a one-config array and no longer 'carries a choice'. "
+                    "Un-skip when qwen's line is restored.")
     def test_head_refuses_a_slot_that_carries_a_choice_and_answers_a_named_model(self):
         """A default head is a model nobody ruled, so `head("coder")` REFUSES rather than
         returning the first entry and calling it the default."""
@@ -3228,6 +3461,9 @@ class Heads(LoopCase):
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.head("coder", p, "glm-5.3")
 
+    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
+                    "for maintenance, coder carries no capped head to pick first. "
+                    "Un-skip when qwen's line is restored.")
     def test_a_capped_model_with_headroom_is_chosen_before_the_uncapped_one(self):
         """THE POLICY IS CAPPED FIRST. An idle pod sends the coder to the LOCAL head."""
         cfgs = self.cfgs()
@@ -3328,11 +3564,17 @@ class Heads(LoopCase):
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
+    @unittest.skip("owner 2026-08-22: `max_concurrency = 1 }` was qwen's line, the one "
+                    "capped config in the live file; it is commented out while qwen is "
+                    "out for maintenance. Un-skip when qwen's line is restored.")
     def test_a_config_carrying_an_unknown_field_is_REFUSED(self):
         self.edit("max_concurrency = 1 }", "max_concurrancy = 1 }")
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
+    @unittest.skip("owner 2026-08-22: `max_concurrency = 1 }` was qwen's line, the one "
+                    "capped config in the live file; it is commented out while qwen is "
+                    "out for maintenance. Un-skip when qwen's line is restored.")
     def test_a_cap_that_is_not_a_positive_integer_is_REFUSED(self):
         """A ZERO IS NOT `unlimited`: it is a head no task can ever reach. A BOOLEAN is an
         `int` in Python, so `true` would otherwise load as a cap of one."""
@@ -3344,6 +3586,10 @@ class Heads(LoopCase):
                                          cache=False)
                 self.edit(f"max_concurrency = {bad} }}", "max_concurrency = 1 }")
 
+    @unittest.skip("owner 2026-08-22: this edit replaces coder's ONLY remaining entry "
+                    "(claude-opus-5) with a qwen line, so the file gains one config and "
+                    "not a duplicate, while qwen's own coder line is out for "
+                    "maintenance. Un-skip when qwen's line is restored.")
     def test_one_slot_naming_one_model_twice_is_REFUSED(self):
         """The dispatcher counts a live head by its SLOT and its MODEL, so two configs on
         one model are two caps it cannot tell apart."""
@@ -3361,6 +3607,10 @@ class Heads(LoopCase):
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
+    @unittest.skip("owner 2026-08-22: this edit targets qwen's coder entry to prove the "
+                    "refusal applies per-config; qwen's line is out of [heads].coder "
+                    "for maintenance, so `configs(\"coder\")` no longer reads it. "
+                    "Un-skip when qwen's line is restored.")
     def test_a_herdr_pi_config_with_no_provider_entry_is_REFUSED(self):
         """`legal.pi_provider` had zero consumers until 2026-08-18 and both `glm-5.3`
         heads dispatched on `deepseek`. The refusal applies per CONFIG, not per slot."""
@@ -4396,6 +4646,11 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                                          "direction.md"],
                                  f"a {role} worker was launched with {names}")
 
+    @unittest.skip("owner 2026-08-22: grok-4.6 now sits first in both critic arrays "
+                    "and claude-opus-5 is coder's only entry, so an idle pod's default "
+                    "pick is herdr-claude or herdr-grok on every slot and no pi head is "
+                    "ever the default choice. Un-skip when a slot's first-choice head "
+                    "is herdr-pi again.")
     def test_a_pi_head_gets_its_own_providers_and_never_a_default(self):
         """**IT ASKS `pick_head_config()` WHICH MODEL RAN, and does not assume one.**
 
@@ -4432,6 +4687,9 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                                       status=status or pod.RUNNING)
         return st
 
+    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
+                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
+                    "max_concurrency set. Un-skip when qwen's line is restored.")
     def test_an_idle_coder_slot_dispatches_on_the_CAPPED_head(self):
         """The whole of A27 through the real `launch()`: the policy picks, the launcher
         gets that model with that provider, and the TASK records what ran (AD26)."""
@@ -4445,6 +4703,9 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
         self.assertEqual(got["provider"], cap["pi_provider"])
         self.assertEqual(got["effort"], cap["effort"])
 
+    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
+                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
+                    "max_concurrency set. Un-skip when qwen's line is restored.")
     def test_a_second_task_spills_to_the_UNCAPPED_head_while_the_first_is_live(self):
         """**THIS IS THE CASE THE FEATURE EXISTS FOR** and no unit test of the policy
         alone can reach it: the count comes from `st.tasks`, which rule (f) mutates as it
@@ -4460,6 +4721,9 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
         self.assertIsNone(got["provider"], "a non-pi head was sent a provider")
         self.assertEqual(got["effort"], free["effort"])
 
+    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
+                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
+                    "max_concurrency set. Un-skip when qwen's line is restored.")
     def test_a_task_that_is_DONE_frees_the_capped_head_again(self):
         """A closed task holds no head. Counting one would shrink a cap nothing uses."""
         cap = [c for c in heads_mod.configs("coder")
@@ -4467,6 +4731,9 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
         st = self._live("coder", cap["model"], cap["max_concurrency"], pod.DONE)
         self.assertEqual(self._capture("coder", st)["_task"].model, cap["model"])
 
+    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
+                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
+                    "max_concurrency set. Un-skip when qwen's line is restored.")
     def test_a_live_task_on_ANOTHER_slot_does_not_spend_the_coder_cap(self):
         """The pair is the slot AND the model, so one model shared by two slots would
         otherwise have one cap between them."""
@@ -4731,11 +4998,15 @@ class FallbackPark(LoopCase):
 
     def test_the_LIVE_file_gives_every_dispatched_slot_a_fallback_but_the_author(self):
         """**THE OWNER'S RULING OF 2026-08-21, READ BACK FROM THE FILE THAT BINDS.**
-        Both critics and the coder carry a choice; `mathematician` is one head and parks
-        `no-change` exactly as it always did."""
-        for slot, model in (("coder", "Qwen3.8-27B-oQ4e-mtp"),
-                            ("coder", "claude-opus-5"),
-                            ("mathematician_adversarial", "glm-5.3"),
+        Both critics carry a choice; `mathematician` is one head and parks `no-change`
+        exactly as it always did.
+
+        **`coder`'S TWO PAIRS ARE OUT, owner 2026-08-22.** qwen is out of
+        `[heads].coder` for maintenance, so coder is a one-config array (claude-opus-5
+        alone) and has no fallback to give either historical model. Both pairs return
+        here when qwen's line is restored, and `coder` rejoins the docstring's
+        "carries a choice" list."""
+        for slot, model in (("mathematician_adversarial", "glm-5.3"),
                             ("mathematician_adversarial", "grok-4.6"),
                             ("coder_adversarial", "glm-5.3"),
                             ("coder_adversarial", "grok-4.6")):
@@ -4743,6 +5014,9 @@ class FallbackPark(LoopCase):
                 self.assertTrue(pod._has_fallback_head(slot, model, self.tmp))
         self.assertFalse(
             pod._has_fallback_head("mathematician", "claude-opus-5", self.tmp))
+        self.assertFalse(
+            pod._has_fallback_head("coder", "claude-opus-5", self.tmp),
+            "coder is a one-config array while qwen is out for maintenance")
 
     # ------------------------------------------------------------------ rule (c)
 

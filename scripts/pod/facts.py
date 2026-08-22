@@ -220,6 +220,10 @@ def run_agda(target, root, deadline_s, slots, include=(), tier=DEFAULT_TIER):
     try:
         # M2: `which timeout gtimeout` returns nothing on this machine and Agda emits no
         # timeout error and no timeout exit code, so the POD owns the deadline.
+        # **THIS BOUNDS ONLY THE AGDA THIS FUNCTION STARTS, and reading it as the whole
+        # of M2 cost 2 h 07 min of stalled loop on 2026-08-22.** A worker's own Agda has
+        # no `Popen` here to time it out. `reap_orphan_agda()` in `scripts/pod/pod.py` is
+        # M2's other half; memo section 11.2.1 carries the measurement.
         p = subprocess.run(argv, cwd=root, env=env, capture_output=True,
                            text=True, timeout=deadline_s, start_new_session=True)
         rc, out, timed_out = p.returncode, (p.stdout + p.stderr), False

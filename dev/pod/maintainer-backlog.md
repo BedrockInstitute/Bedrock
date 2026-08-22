@@ -159,9 +159,25 @@ earlier reading did not survive the measurement.
 row exists for. **The repaired `accept-failed` row behaved correctly.** The loop
 that follows is the system row and it is unchanged.
 
-**`[LJ-1.500]` resolved itself on attempt 5**, so this may too. `pod-math` is
-recording the recurrence rather than escalating, and proposes no row: this is a
-`sys-` row and needs the owner's word.
+**TERMINAL 2026-08-22T09:57Z. `[LJ-1.512]` DID NOT RESOLVE.** It recorded
+`reason: attempt_max:sys-lint-accept` and is permanently parked. **Unlike
+`[LJ-1.500]`, which recovered on attempt 5, this one did not.**
+
+**WHAT IT COST: A COMPLETE 59-ROW CENSUS, DELIVERED AND UNLANDABLE.** The
+report is at
+`.pod-state/worktrees/LJ-1-512/agents/tasks/LJ-1-512/lj-1.512-report.md`, with
+`Probe512.agda` and three critic reviews beside it. Its answer, which the
+campaign needs: **41 of the 59 `TFacts` fields have an honest form delivered in
+`src/L/Coding/EnvSupply.lagda.md`, 16 have theirs elsewhere, and 2 have none in
+`src/`.** `pod-math` has read it from the worktree and is acting on it.
+
+**THIS IS NOW A RECORDS PROBLEM AS WELL AS A ROUTING ONE.**
+`agents/README.md` rules that a probe pairs one-to-one with its report, is
+tracked, and is never deleted. **`Probe512.agda` and its report are in neither
+state**: they exist, they are not tracked, and nothing will land them.
+
+`pod-math` still proposes no row: `sys-lint-accept` is a SYSTEM row and needs
+the owner's word. **But the cost is no longer hypothetical.**
 
 
 **`[LJ-1.500]` HAS RUN FOUR ATTEMPTS AND ITS OBLIGATION IS INHABITED.** Diagnosed
@@ -589,6 +605,13 @@ The cure is a different mechanism, not a different pid: a herdr agent is ended t
 `herdr agent`, so the deadline limb needs the agent NAME beside the pid. Rule (b) now
 reports `pid unrecognised` for the neighbouring case, which is the same leak arriving
 through the other door.
+
+**THE AGDA HALF OF THIS LEAK IS CLOSED AND THE AGENT HALF IS NOT.** On 2026-08-22 the
+same topology left two Agda processes of LJ-1.524 alive at PPID 1 for 153 and 145
+minutes and stalled the loop for 2 h 07 min. `reap_orphan_agda()` in `scripts/pod/pod.py`
+now ends an Agda run that outlived its owner, and memo section 11.2.1 carries the
+measurement. What this item still asks for is untouched: the AGENT is what holds the
+pane, the context and the vendor spend, and nothing here ends one.
 
 ### 16. Rule (e) writes, commits and spawns on the tick that stops
 

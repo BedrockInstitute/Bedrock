@@ -88,7 +88,9 @@ _LOADS = 0
 #: this when the suite grows; never lower it to make a run pass.
 #: RAISED 2026-08-21 with A27's config checks. MEASURED that day: 203 passing checks on
 #: the tree before A27 and 221 after, so the margin under the floor is unchanged.
-MIN_CHECKS = 200
+#: RAISED 2026-08-22 with gap M2's orphan census. MEASURED that day: 254 checks run,
+#: 228 before the section added its 26, so the margin under the floor is unchanged again.
+MIN_CHECKS = 230
 
 
 def check(label: str, got, want) -> None:
@@ -1193,6 +1195,110 @@ def main() -> int:
     else:                                         # pragma: no cover
         print("  note the heads loader did not import, so its refusals were "
               "not exercised")
+
+    print("the agda census: PID 1 is the orphanage and not an agent (2026-08-22)")
+
+    # THE CENSUS IS DRIVEN THROUGH A FAKE `ps`, never through the machine's own
+    # process table. A test that reads live processes passes or fails on what else
+    # the owner is running, which is exactly the flakiness `Admits` was fixed for on
+    # 2026-08-19. `subprocess.run` is patched at the MODULE object, so the real
+    # `agda_processes()` parser runs over text this file controls.
+    _cen = load_launcher()
+
+    def _ps(text: str, rc: int = 0):
+        def fake(argv, **kw):
+            assert argv[0] == "ps", argv
+            return types.SimpleNamespace(returncode=rc, stdout=text, stderr="")
+        return fake
+
+    _saved_run = _cen.subprocess.run
+
+    def _with_ps(text, fn, rc=0):
+        _cen.subprocess.run = _ps(text, rc)
+        try:
+            return fn()
+        finally:
+            _cen.subprocess.run = _saved_run
+
+    #: THE INCIDENT'S SHAPE, 2026-08-22, with its two REPORTED elapsed times and no
+    #: invented precision beyond them: two Agda processes belonging to LJ-1.524 at
+    #: PPID 1, 153 and 145 minutes, beside one healthy Agda a live worker owns. The two
+    #: files were `Probe524.agda` and `runs/BisI.agda`. The pids and the healthy row are
+    #: this test's own.
+    INCIDENT = ("  501     1  02:33:00 /opt/homebrew/bin/agda\n"
+                "  502     1  02:25:00 /opt/homebrew/bin/agda\n"
+                "  503   999     04:12 /opt/homebrew/bin/agda\n"
+                "  504   999     00:31 /bin/bash\n")
+
+    check("etime parses mm:ss", _cen._etime_seconds("41:27"), 2487)
+    check("etime parses hh:mm:ss", _cen._etime_seconds("07:39:52"), 27592)
+    check("etime parses dd-hh:mm:ss", _cen._etime_seconds("03-05:55:58"), 280558)
+    check("an unparseable etime is None and NEVER a zero, because zero would read "
+          "as a young process and a young process is never reaped",
+          _cen._etime_seconds("nonsense"), None)
+    check("a one-field etime is None", _cen._etime_seconds("58"), None)
+
+    _rows, _warn = _with_ps(INCIDENT, _cen.agda_processes)
+    check("agda_processes reads only the agda rows", len(_rows), 3)
+    check("and it carries pid, ppid and elapsed seconds", sorted(_rows),
+          [(501, 1, 9180), (502, 1, 8700), (503, 999, 252)])
+    check("a bash row is not an agda row", [r for r in _rows if r[0] == 504], [])
+
+    _t, _pp, _w = _with_ps(INCIDENT, _cen.agda_pileup)
+    # **THE REGRESSION THIS PINS FROZE THE LIVE LOOP FOR 2 h 07 min ON 2026-08-22.**
+    # The old body counted `{1: 2, 999: 1}`; `admits()` at `scripts/pod/pod.py:2077`
+    # read the PID 1 bucket as C-12's pile-up and returned False for EVERY task, Agda
+    # or not, because that limb runs above the `if not t.agda` early-out at `:2079`.
+    check("the orphans do NOT bucket together as one agent", _pp, {999: 1})
+    check("but they still count toward A14's tier ceiling, because they are real "
+          "processes burning real heap", _t, 3)
+    check("and a clean census still reports no warning", _w, None)
+
+    _t2, _pp2, _ = _with_ps("  601   999  00:10 /opt/homebrew/bin/agda\n"
+                            "  602   999  00:11 /opt/homebrew/bin/agda\n",
+                            _cen.agda_pileup)
+    check("C-12 IS UNTOUCHED: two agda under ONE LIVE parent is still a pile-up",
+          _pp2, {999: 2})
+    check("and the total is still both of them", _t2, 2)
+
+    _o, _ow = _with_ps(INCIDENT, lambda: _cen.agda_orphans(1800))
+    check("agda_orphans takes the two PPID-1 processes past the 1800 s bar",
+          _o, [(501, 9180), (502, 8700)])
+    check("and it takes nothing else", _ow, None)
+
+    _o2, _ = _with_ps(INCIDENT, lambda: _cen.agda_orphans(10 ** 6))
+    check("a bar nothing crosses returns nothing, so the bar is load-bearing "
+          "and not decoration", _o2, [])
+
+    _o3, _ = _with_ps("  501     1  00:31 /opt/homebrew/bin/agda\n",
+                      lambda: _cen.agda_orphans(1800))
+    check("a YOUNG orphan is left alone", _o3, [])
+
+    _o4, _ = _with_ps("  501   999  09:99:99 /opt/homebrew/bin/agda\n",
+                      lambda: _cen.agda_orphans(1800))
+    check("an OLD process with a LIVE parent is left alone, which is what keeps a "
+          "running task's own Agda safe", _o4, [])
+
+    _o5, _ = _with_ps("  501     1  garbage /opt/homebrew/bin/agda\n",
+                      lambda: _cen.agda_orphans(1800))
+    check("an orphan whose clock cannot be read is UNAGED and is never killed",
+          _o5, [])
+
+    _o6, _o6w = _with_ps("", lambda: _cen.agda_orphans(1800), rc=1)
+    check("a ps that returns nothing is BLIND and kills nothing", _o6, [])
+    check_true("and it says so rather than reading as an all-clear",
+               "BLIND" in (_o6w or ""))
+
+    _o7, _o7w = _cen.agda_orphans(0)
+    check("a bar of zero is REFUSED, because it would select every orphan "
+          "including one that started this second", _o7, [])
+    check_true("and the refusal names the bar", "0" in (_o7w or ""))
+    check("a bar that is not a whole number of seconds is REFUSED",
+          _cen.agda_orphans(1800.5)[0], [])
+    check("and True is not a bar either, because bool is an int subclass",
+          _cen.agda_orphans(True)[0], [])
+
+    check("INIT_PID is named once and is 1", _cen.INIT_PID, 1)
 
     print("the pane layout: right for a new column, down once to fill it")
 

@@ -854,17 +854,21 @@ def _absorb_disk(st, root=None, keep=None):
 
 
 def emit_event(st, event, root=None, **fields):
-    """One log line that is NOT a task transition, and there are exactly FIVE kinds.
+    """One log line that is NOT a task transition, and there are exactly SIX kinds.
 
     Section 6.7's `batch` line, which `harvest_batch()` writes and hands to the next batch
     as input; section 7.4 Part 1b's `retrieval` line, which carries the miss signal;
     A13's `watchdog` line, which records one restart of the memory backstop; A11's
     `refill` line, which records one rule (g) dispatch or the one dependency it waits on;
-    and the `stop_request` line of 2026-08-18, which records a mathematician's DECLARED
+    the `stop_request` line of 2026-08-18, which records a mathematician's DECLARED
     stop that rule (d) REFUSED, so a declaration the program did not honour is never
-    silent. An honoured declaration is a real transition and takes the `STOPPED` line.
-    None of the four moves a task, so none may claim one of the twelve transitions;
-    writing them through `emit()` would need a thirteenth edge that means nothing.
+    silent; and the `reap` line of 2026-08-22, which records every Agda process
+    `reap_orphan_agda()` killed and every tick on which its census went BLIND, because a
+    program that kills a process on this machine without saying so is worse than one that
+    leaves it running. An honoured declaration is a real transition and takes the
+    `STOPPED` line. None of the six moves a task, so none may claim one of the twelve
+    transitions; writing them through `emit()` would need a thirteenth edge that means
+    nothing.
     """
     root = ROOT if root is None else Path(root)
     line = {"ts": _now_iso(), "task": "", "event": event}
@@ -2045,6 +2049,137 @@ def agda_pileup():
     return _int(total), per_parent, warning
 
 
+#: The reaper's memo, the shape `_WATCHDOG` uses: ONE line per BLIND reason, not one a
+#: tick. At `tick_seconds = 30` a per-tick line is 2,880 lines a day into a TRACKED file.
+_REAP = {"reported": None}
+
+
+def agda_orphans(bar):
+    """Every ownerless Agda process older than `bar` seconds, as `[(pid, elapsed_s)]`.
+
+    The launcher owns the census; this owns the REFUSAL, exactly as `agda_pileup()`
+    above does. A launcher that cannot be loaded, that raises, or that predates
+    `agda_orphans()` reads as BLIND, and BLIND here means KILL NOTHING. That is the safe
+    direction for a reaper, and it is the opposite of `admits()`, where BLIND means
+    refuse: one of the two is about starting work and the other is about ending it.
+
+    **THE `getattr` IS NOT DEFENSIVENESS, IT IS THE HOT RESTART.** `cmd_run()` reloads
+    this file and the launcher independently (`:5198-5217`), and the loop's own comment
+    at `:5204-5207` records a measured split image where one side of a call had widened
+    and the other had not. An `AttributeError` there would stop the loop with a traceback
+    nobody is watching.
+    """
+    mod = facts_mod.launcher()
+    if mod is None:
+        return [], "no launcher module is readable; the agda orphan census is BLIND"
+    fn = getattr(mod, "agda_orphans", None)
+    if not callable(fn):
+        return [], ("this launcher has no agda_orphans(); the orphan census is BLIND "
+                    "until the two files are the same image")
+    try:
+        found, warning = fn(bar)
+    except Exception as e:                    # noqa: BLE001. A census that RAISES is blind
+        return [], f"agda_orphans raised {type(e).__name__}: {e}; the census is BLIND"
+    if warning:
+        return [], warning
+    out = []
+    for item in found if isinstance(found, (list, tuple)) else []:
+        try:
+            pid, elapsed = item
+        except (TypeError, ValueError):
+            return [], "agda_orphans returned an unreadable census; it is BLIND"
+        if _int(pid) is None or _int(elapsed) is None or _int(pid) <= 1:
+            return [], "agda_orphans returned an unreadable census; it is BLIND"
+        out.append((_int(pid), _int(elapsed)))
+    return out, None
+
+
+def reap_orphan_agda(st, root=None):
+    """Kill every Agda process that outlived its owner, and return the pids it killed.
+
+    **THE MEASURED INCIDENT, 2026-08-22.** Two Agda processes belonging to LJ-1.524 were
+    found alive at PPID 1, at ~100 percent CPU, 153 and 145 minutes elapsed:
+    `agents/tasks/LJ-1-524/Probe524.agda` and `agents/tasks/LJ-1-524/runs/BisI.agda`.
+    `agda_deadline_s` is 1800 s (`dev/pod/heads.toml:264`) and neither had ever been
+    subject to it, because `run_agda()`'s `timeout=` (`scripts/pod/facts.py:223-224`)
+    bounds only the Agda that the ACCEPTANCE pipeline starts (`scripts/pod/accept.py:160`).
+    A `subprocess.run` child is a child of the waiting process, so PPID 1 is itself the
+    proof that neither was one of those. LJ-1.524's own record read RETURNED `why: "pid
+    dead"` at seq 2448, 49 minutes into a `worker_deadline_s` of 43200 s, so the one limb
+    of `_rule_b()` that kills anything (`:4124`) never ran, and would not have reached
+    them if it had: `t.pid` is the `bash -c driver` and the pane agent left that process
+    group at `start_new_session=True` (`scripts/pod/launcher.py:1797-1799`, and
+    `dev/pod/maintainer-backlog.md:555-568` for the topology).
+
+    **IT KILLS ONE PID AND NEVER A PROCESS GROUP.** `kill_process_group()` exists for a
+    pid this program STARTED and therefore knows the group of. An orphan's group is
+    whatever session its dead parent left behind, and this program cannot know what else
+    is in it. The launcher's founding incident (`scripts/pod/launcher.py:7-9`) is a
+    process group killed out from under two live agents on 2026-08-05.
+
+    **THE SIGKILL IS AIMED THROUGH A SECOND CENSUS, which is the pid-recycling guard.**
+    `_rule_b()`'s docstring at `:4063-4068` records the same hazard: a pid the operating
+    system has recycled belongs to somebody else. The SIGTERM goes out on the first
+    census; two seconds later a SECOND census must still show the pid as an Agda process
+    at PPID 1 before the SIGKILL goes out. A pid recycled inside that window is no longer
+    an orphaned Agda and takes no SIGKILL.
+
+    ONE LOG LINE PER REAP, and none at all on a quiet tick. A13's watchdog learned that
+    lesson in numbers (`watchdog_tick()`, `:1901-1906`).
+
+    **IT RUNS ON A STOPPING TICK TOO, and that is the answer this one wants.** It moves
+    no task, writes no state and dispatches nothing, so `dev/pod/maintainer-backlog.md`
+    item 16's objection does not reach it. A stopped loop that leaves an ownerless Agda
+    at 100 percent CPU has stopped in name only.
+    """
+    root = ROOT if root is None else Path(root)
+    try:
+        bar = _limits()["agda_deadline_s"]
+    except Exception as e:                    # noqa: BLE001. An unreadable bar is BLIND
+        bar, found, warn = None, [], f"the limits are unreadable ({e}); the reap is BLIND"
+    if bar is not None:
+        found, warn = agda_orphans(_int(bar))
+    if warn:
+        if _REAP["reported"] != warn:
+            _REAP["reported"] = warn
+            emit_event(st, "reap", root=root, result="BLIND", why=warn)
+        return []
+    _REAP["reported"] = None
+    if not found:
+        return []
+    killed = []
+    for pid, _elapsed in found:
+        try:
+            os.kill(pid, signal.SIGTERM)
+            killed.append(pid)
+        except OSError:                        # already gone, or not ours to signal
+            continue
+    if not killed:
+        return []
+    time.sleep(2)
+    again, again_warn = agda_orphans(_int(bar))
+    still = {pid for pid, _e in again} if not again_warn else set()
+    for pid in killed:
+        if pid not in still:
+            continue                           # it died, or the number is somebody else's
+        with contextlib.suppress(OSError):
+            os.kill(pid, signal.SIGKILL)
+    emit_event(st, "reap", root=root, result="killed", pids=sorted(killed),
+               bar_s=_int(bar),
+               detail=[f"pid {pid} was an agda process at PPID "
+                       f"{launcher_init_pid()} with {elapsed} s elapsed, which is over "
+                       f"the {_int(bar)} s agda_deadline_s. Its parent had exited, so "
+                       f"nothing was waiting on it and nothing could read its answer."
+                       for pid, elapsed in found if pid in killed])
+    return killed
+
+
+def launcher_init_pid():
+    """`INIT_PID` from the launcher, or 1. The number is printed, never compared here."""
+    mod = facts_mod.launcher()
+    return _int(getattr(mod, "INIT_PID", 1)) or 1
+
+
 def admits(st, t, agda=None):
     """Section 5.6, AD17, amended by A13 and A14. It REFUSES; it never prints.
 
@@ -2062,6 +2197,14 @@ def admits(st, t, agda=None):
     and nothing else provides them. The slot ceiling is the TIER's, four for WIDE and two
     for HEAVY, and the third and fourth open only above 25 percent free memory. And the
     mixed worst-case heap sum stays at or under 32 GB, which no per-tier count catches.
+
+    **THE PILE-UP LIMB REFUSES EVERY TASK AND NOT ONLY AN AGDA ONE**, because it runs
+    above the `if not t.agda` early-out. That is deliberate: C-12's hazard is the machine
+    and not the task. It also made ONE census defect into a total stall, and the defect
+    was that `agda_pileup()` bucketed ORPHANS under PID 1 and read them as one agent
+    holding many. That is repaired at its own site
+    (`agda_pileup()`, `scripts/pod/launcher.py`), and `reap_orphan_agda()` removes the
+    processes rather than only stopping them from lying about capacity.
     """
     running = [x for x in st.tasks.values() if x.status in (RUNNING, CHECKING)]
     if any(x.exclusive for x in running):
@@ -3710,6 +3853,10 @@ def pod_tick(st=None, root=None):
     replay_log(st, root)                       # apply every log line with seq > st.seq
 
     watchdog_tick(st, root)                    # A13. Every tick confirms the backstop
+    # **THE REAP RUNS BEFORE ANY RULE CONSULTS `admits()`, so the capacity it frees is
+    # visible on THIS tick and not the next one.** It is not one of the seven rules: it
+    # moves no task and writes no state, exactly like the watchdog above it.
+    reap_orphan_agda(st, root)                 # gap M2, second half
     retry_refused_commits(st, root)
     _rule_a1(st, root)
     _rule_a2(st, root)

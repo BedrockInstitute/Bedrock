@@ -3979,7 +3979,7 @@ throwaway pane per ID.
 | # | Gap | What would settle it |
 |---|---|---|
 | M1 | `universe_level` is not reliably separable from `other`. Measured: 1,375 `UnequalTerms` blocks sampled, 181 of them (13.2 percent) name a sort or a level in the first 400 characters, while the exact names carry 67 occurrences against `UnequalTerms` at 1,513. A row keyed on `universe_level` sees roughly one in four real universe failures | Nothing in this repository. It is an upstream limit and the design absorbs it. Do NOT add a message-text heuristic: it would make the class depend on Agda's prose |
-| M2 | `timeout` has no source and no fallback binary. `which timeout gtimeout` returns nothing on this machine, and Agda emits no timeout error and no timeout exit code | ABSORBED. The POD owns the deadline: `timeout=` on `subprocess.run`, catch `TimeoutExpired`, `start_new_session=True`, kill the group. Section 4.3.1 does all four. The need is measured: the largest single Agda block in the log corpus ran 1,604,413 ms |
+| M2 | **CLOSED on 2026-08-22, and the half that was open is the half that cost 2 h 07 min.** `timeout` has no source and no fallback binary. `which timeout gtimeout` returns nothing on this machine, and Agda emits no timeout error and no timeout exit code. The absorbed cure below covers only the Agda the ACCEPTANCE pipeline starts. A WORKER'S OWN Agda had no deadline in this program at all, and section 11.2.1 below records the incident, the mechanism and the two repairs | ABSORBED, in two halves. Half one, the POD's own runs: `timeout=` on `subprocess.run`, catch `TimeoutExpired`, `start_new_session=True`, kill the group, at `scripts/pod/facts.py:223-224` from `scripts/pod/accept.py:160`. Section 4.3.1 does all four. The need is measured: the largest single Agda block in the log corpus ran 1,604,413 ms. Half two, a worker's runs: `reap_orphan_agda()` in `scripts/pod/pod.py` kills any `agda` at PPID 1 past `agda_deadline_s`, and `agda_pileup()` in `scripts/pod/launcher.py` stops reading the orphanage as an agent |
 | M3 | The historical replay corpus cannot be reconstructed for facts 1, 2, 5 and 6. Measured at 48 of 6,508 invocations, 0.7 percent | ABSORBED. Section 4.5.3 builds forward and seeds from the 426 tracked LIVE probes. AD10 tests regression against a FIXED corpus, not against history |
 | M4 | **CLOSED by A7.** DD4 is a WRITTEN RULE, clause W2, injected into `dev/pod/instructions/mathematician.md` and `coder.md`, with `agent discipline` as its enforcer. `dd4_defects()` is removed on day 2 whatever else is ruled, because it refuses every POD brief | Settled. The residual cost, the lost per-dispatch repetition measured at 102 of 112 briefs over five days, is stated in section 3.1 and not hidden |
 | M5 | AD23 retires `check-probes.py`, which is physics. Its docstring at `:17` records the cost: one `git add -A src/` committed 13 probe files and 3,274 lines. An ignore rule is not a gate, because `git add -f` walks past it (`:26`) | Read the LINT class as covering code hygiene, and keep `check-probes.py --staged` in the pre-commit hook. Cutover step 5 holds the file until this is ruled |
@@ -3993,6 +3993,67 @@ throwaway pane per ID.
 | M13 | **DD24 = SUPERSEDED leaves no automatic quality bar.** No seeded row of sections 4.8, 6.6 or 7.3 carries a `seconds_max`, so slow code closes green. The measured failure the retired anti-drift clause covered is on record: a recalibration moved the bar and stood for three days | An owner ruling: seed one system row with an absolute `seconds_max`, and decide whether a change to that number needs a trailer the way the spec surface does |
 | M14 | **DD25 = MECHANISED misses one ruled trigger.** Rule (f) reviews on `attempt > 1`. A first-instance NO-GO closes through a `done` row with `outcome = "no-go"` and never reaches attempt 2, so it gets no adversarial review, and DD25's trigger list names a stop taken as the deliverable | An owner ruling: seed a system row with `action = "escalate"`, `head_slot = "mathematician_adversarial"`, keyed on the record a NO-GO makes. That restores the trigger inside the six-fact vocabulary |
 | M15 | **R9 and AD22 guard the LANDED trophy only.** The surface is derived from `src/Landmarks.lagda.md`'s `open import` lines, that file does not import `L.GCH`, and MEASURED 2026-08-17 the string `GCH` occurs zero times in it. So `GCHStatement` at `src/L/GCH.lagda.md:59-60` is unguarded for the whole build, and it is the half the route still has to prove | No new mechanism. When the GCH trophy lands, its statement joins `src/Landmarks.lagda.md` as an `open import` and the same derivation grows the surface to 9 files. Until then the gap is a stated limit and not a defect |
+
+### 11.2.1 M2's second half: a worker's own Agda had no deadline
+
+**MEASURED 2026-08-22.** The loop admitted nothing for 2 h 07 min. Direct process
+inspection found two Agda processes at PPID 1, both at about 100 percent CPU:
+`agents/tasks/LJ-1-524/Probe524.agda` at 153 minutes elapsed, and
+`agents/tasks/LJ-1-524/runs/BisI.agda` at 145 minutes. `agda_deadline_s` is 1800 s
+(`dev/pod/heads.toml:264`), so both were over that cap by 5.1 and 4.8 times. PPID 1
+means the parent had already exited. A `kill -TERM` on the two pids ended the stall.
+
+**WHY THE ABSORBED CURE DID NOT REACH THEM.** `run_agda()` passes `timeout=deadline_s`
+to `subprocess.run` (`scripts/pod/facts.py:223-224`) and its one caller is the
+acceptance runner (`scripts/pod/accept.py:160`). A `subprocess.run` child is a child of
+the waiting process, so PPID 1 is itself the proof that neither process was one of
+those. A worker starts its own Agda when it typechecks its own work, that Agda is a
+child of a herdr pane and not of anything the POD holds a pid for, and no limb of the
+program could reach it:
+
+* `_rule_b()`'s `pid dead` limb (`scripts/pod/pod.py:4122`) kills nothing at all. It is
+  the limb LJ-1.524 took, at seq 2448, `2026-08-22T07:04:19Z`, 49 minutes after its
+  dispatch at seq 2408, `2026-08-22T06:14:57Z`.
+* `_rule_b()`'s deadline limb (`:4124`) never ran, because `worker_deadline_s` is
+  43200 s (`dev/pod/heads.toml:265`). It would not have helped: `kill_process_group()`
+  targets the `bash -c driver` group, and the pane agent left that group at
+  `start_new_session=True` (`scripts/pod/launcher.py:1797-1799`). The topology is
+  already on record at `dev/pod/maintainer-backlog.md:555-568`.
+
+**WHY THE LEFTOVERS FROZE THE WHOLE LOOP AND NOT ONLY THE AGDA TASKS.** This is a
+second and independent defect, in the census rather than in the kill. `agda_pileup()`
+buckets live Agda processes by PPID. Two orphans bucketed as `{1: 2}`, `admits()` read
+that as C-12's pile-up and returned False (`scripts/pod/pod.py:2077`), and that limb
+sits above the `if not t.agda` early-out at `:2079`, so it refused every task of every
+kind. Rule (c) then skipped each RETURNED task in silence (`:4267-4269`).
+
+The transition log is the evidence, and no line was lost, because the two sequence
+numbers are consecutive: seq 2448 at `2026-08-22T07:04:19Z`, then seq 2449 at
+`2026-08-22T09:11:26Z`, a gap of 2 h 07 min 07 s with nothing between. Four tasks sat
+in RETURNED across the whole gap (LJ-1.512 at seq 2445, LJ-1.526 at 2446, LJ-1.527 at
+2447, LJ-1.524 at 2448) and all four closed inside 86 s of the gap ending, at seq 2460,
+`2026-08-22T09:12:52Z`. The tick was never blocked inside a subprocess call; it was
+running and refusing.
+
+**THE TWO REPAIRS, one per defect.**
+
+1. `agda_pileup()` (`scripts/pod/launcher.py`) leaves PID 1 out of `per_parent`. C-12's
+   rule is one Agda process per AGENT, and the orphanage is not an agent: N processes at
+   PPID 1 are N dead parents, not one live agent retrying. They stay inside `total`,
+   because they are real processes against A14's tier ceiling.
+2. `reap_orphan_agda()` (`scripts/pod/pod.py`) runs on every tick before any rule
+   consults `admits()`. It kills each `agda` process that is at PPID 1 AND older than
+   `agda_deadline_s`. Condition one is what makes it safe: a live worker's Agda has a
+   live parent, and the program's own `run_agda()` child has the program as its parent,
+   so neither can be selected. It signals one pid and never a process group, and the
+   SIGKILL is aimed through a second census, which is the pid-recycling guard
+   `_rule_b()` documents at `:4063-4068`. Every reap writes one `reap` event line.
+
+**WHAT IS STILL OPEN.** An orphan under 30 minutes is not reaped, so it holds one tier
+slot until it crosses the bar. It can no longer stall the loop, because repair 1 removed
+the total refusal, and A14's ceiling is four for WIDE. Nothing yet stops a worker from
+starting an Agda run that outlives it; the program now ends such a run instead of
+preventing it.
 
 ### 11.3 Minor
 

@@ -652,6 +652,75 @@ def agda_heap_sum_over(reg: dict, tier: str) -> str:
             f"dispatch it in a smaller tier.")
 
 
+#: PID 1 is `launchd` on this machine and `init` elsewhere. IT IS NOT AN AGENT: it is
+#: where the kernel reparents a process whose real parent exited. `agda_pileup()` below
+#: keeps it out of the per-parent count for that reason, and `agda_orphans()` reads it as
+#: the ONE reliable mark of an Agda run that nobody owns any more.
+INIT_PID = 1
+
+
+def _etime_seconds(text: str):
+    """`ps -o etime=` as whole seconds, or None. The format is `[[dd-]hh:]mm:ss`.
+
+    THE THREE SHAPES ARE ALL LIVE ON THIS MACHINE, measured 2026-08-22 from one
+    `ps -A -o pid=,ppid=,etime=,comm=` read: `41:27` (mm:ss), `07:39:52` (hh:mm:ss)
+    and `03-05:55:58` (dd-hh:mm:ss). A shape this cannot parse returns None and the
+    caller then treats the process as UNAGED rather than as old, because a kill
+    decided on an unreadable clock is the wrong direction.
+    """
+    s = (text or "").strip()
+    days = 0
+    if "-" in s:
+        head, _, s = s.partition("-")
+        try:
+            days = int(head)
+        except ValueError:
+            return None
+    parts = s.split(":")
+    if not 2 <= len(parts) <= 3:
+        return None
+    try:
+        nums = [int(p) for p in parts]
+    except ValueError:
+        return None
+    if any(n < 0 for n in nums) or days < 0:
+        return None
+    if len(nums) == 2:
+        nums = [0] + nums
+    return days * 86400 + nums[0] * 3600 + nums[1] * 60 + nums[2]
+
+
+def agda_processes() -> tuple[list[tuple[int, int, int | None]], str | None]:
+    """Every live `agda` process as `(pid, ppid, elapsed_s)`, and a warning or None.
+
+    ONE `ps` READ AND ONE PARSER. `agda_pileup()` and `agda_orphans()` both answer
+    questions about the same population, and two readers of one process table drift.
+    `elapsed_s` is None when `ps` printed an `etime` this cannot parse.
+
+    FM12 applies here as it does to `strays()`: `ps` can fail outright, and an
+    unreadable `ps` must say BLIND rather than return an empty list that reads as an
+    all-clear.
+    """
+    try:
+        out = subprocess.run(["ps", "-A", "-o", "pid=,ppid=,etime=,comm="],
+                             capture_output=True, text=True)
+    except OSError as exc:
+        return [], f"could not run ps ({exc}); the agda census is BLIND"
+    if out.returncode != 0 or not out.stdout.strip():
+        return [], "ps returned nothing; the agda census is BLIND"
+    rows: list[tuple[int, int, int | None]] = []
+    for line in out.stdout.splitlines():
+        parts = line.split(None, 3)
+        if len(parts) != 4 or os.path.basename(parts[3].strip()) != "agda":
+            continue
+        try:
+            pid, ppid = int(parts[0]), int(parts[1])
+        except ValueError:
+            continue
+        rows.append((pid, ppid, _etime_seconds(parts[2])))
+    return rows, None
+
+
 def agda_pileup() -> tuple[int, dict[int, int], str | None]:
     """Total live agda processes, and how many each parent owns.
 
@@ -663,27 +732,71 @@ def agda_pileup() -> tuple[int, dict[int, int], str | None]:
     counted codex agents and never looked at what they had spawned, so a
     per-process cap silently became a machine-level risk. C-12 says ONE agda
     process per agent, and now something checks it.
+
+    **`INIT_PID` IS NOT A PARENT IN THIS COUNT, AND READING IT AS ONE FROZE THE WHOLE
+    LOOP FOR 2 h 07 min.** MEASURED 2026-08-22: two Agda processes left over from
+    LJ-1.524 sat at PPID 1 with 153 and 145 minutes elapsed. They bucketed together as
+    `{1: 2}`, `admits()` at `scripts/pod/pod.py:2077` read that as C-12's pile-up and
+    returned False for EVERY task, Agda or not, because the pile-up limb runs before
+    the `if not t.agda` early-out at `:2079`. Rule (c) at `scripts/pod/pod.py:4267-4269`
+    then `continue`d in silence. The transition log carries NOTHING between seq 2448 at
+    `2026-08-22T07:04:19Z` and seq 2449 at `2026-08-22T09:11:26Z`, and four tasks that
+    had been sitting in RETURNED across that gap all closed inside 86 seconds once the
+    two orphans were killed by hand.
+
+    C-12's rule is ONE agda process per AGENT, and the orphanage is not an agent: N
+    processes at PPID 1 are N different dead parents, not one live agent retrying. The
+    pile-up test therefore skips the bucket. The orphans STAY IN `total`, because they
+    are real processes burning real CPU against A14's tier ceiling, and `agda_orphans()`
+    below is what actually removes them.
     """
-    try:
-        out = subprocess.run(["ps", "-A", "-o", "pid=,ppid=,comm="],
-                             capture_output=True, text=True)
-    except OSError as exc:
-        return 0, {}, f"could not run ps ({exc}); agda pileup detection is BLIND"
-    if out.returncode != 0 or not out.stdout.strip():
-        return 0, {}, "ps returned nothing; agda pileup detection is BLIND"
+    rows, warn = agda_processes()
+    if warn:
+        return 0, {}, warn
     per_parent: dict[int, int] = {}
-    total = 0
-    for line in out.stdout.splitlines():
-        parts = line.split(None, 2)
-        if len(parts) != 3 or os.path.basename(parts[2].strip()) != "agda":
-            continue
-        try:
-            ppid = int(parts[1])
-        except ValueError:
-            continue
+    for _pid, ppid, _elapsed in rows:
+        if ppid == INIT_PID:
+            continue                          # the orphanage, not an agent
         per_parent[ppid] = per_parent.get(ppid, 0) + 1
-        total += 1
-    return total, per_parent, None
+    return len(rows), per_parent, None
+
+
+def agda_orphans(min_elapsed_s: int) -> tuple[list[tuple[int, int]], str | None]:
+    """Every OWNERLESS `agda` process older than `min_elapsed_s`, as `(pid, elapsed_s)`.
+
+    **THIS IS THE OTHER HALF OF GAP M2, and the gap's first half never covered it.**
+    `run_agda()` at `scripts/pod/facts.py:223-224` passes `timeout=deadline_s` to
+    `subprocess.run`, so the POD's OWN Agda runs are bounded. A worker's are not: a
+    coder or a mathematician typechecks its own work inside a herdr pane, that Agda is a
+    child of the pane and not of anything the POD holds a pid for, and no limb of
+    `_rule_b()` at `scripts/pod/pod.py:4108-4125` can reach it. The `pid dead` limb kills
+    nothing at all, and `kill_process_group(t.pid)` on the deadline limb targets the
+    `bash -c driver` group, which the pane agent left at `start_new_session=True`
+    (`:1797-1799`). So a worker's Agda had NO deadline in this program.
+
+    TWO CONDITIONS, AND BOTH ARE THE INCIDENT'S OWN MEASUREMENTS.
+
+      1. `ppid == INIT_PID`. The parent has exited, so nobody is waiting on this run and
+         nobody can read its answer. A live worker's Agda has a live parent; the POD's
+         own `run_agda()` child has the POD as its parent. Neither can match.
+      2. `elapsed_s > min_elapsed_s`. The caller passes `agda_deadline_s`, 1800 s
+         (`dev/pod/heads.toml:264`), which is 5.9 times the measured worst case of
+         300.81 s (`dev/pod/heads.toml:276-279`). The two orphans of 2026-08-22 ran 153
+         and 145 minutes, which is 5.1 and 4.8 times that bar.
+
+    Condition 1 is what makes this safe rather than merely bounded: it cannot select a
+    process that any live thing owns. A process whose `etime` did not parse is UNAGED
+    and is never returned, for the same reason.
+    """
+    bar = min_elapsed_s
+    if not isinstance(bar, int) or isinstance(bar, bool) or bar <= 0:
+        return [], (f"the orphan bar {min_elapsed_s!r} is not a positive whole number "
+                    f"of seconds; the agda orphan reap is REFUSED this tick")
+    rows, warn = agda_processes()
+    if warn:
+        return [], warn
+    return sorted((pid, elapsed) for pid, ppid, elapsed in rows
+                  if ppid == INIT_PID and elapsed is not None and elapsed > bar), None
 
 
 def strays(reg: dict) -> tuple[list[str], str | None]:
@@ -2466,6 +2579,18 @@ def cmd_status(a) -> int:
             print("   exactly this. Kill the extras, then decide whether to stop the agent.")
         elif total_agda:
             print(f"\nagda: {total_agda} live, one per parent, within C-12.")
+        # THE ORPHANS GET THEIR OWN LINE, because `per_parent` no longer holds them and
+        # a census that counts them into the total without naming them reads as a
+        # pile-up that is not there. `pod.py`'s `reap_orphan_agda()` ends them at
+        # `agda_deadline_s`; this only reports what is on the machine right now.
+        owned, _ = agda_orphans(1)
+        if owned:
+            print(f"\n{len(owned)} ORPHANED agda process(es) at PPID {INIT_PID}, whose "
+                  f"parent has exited:")
+            for pid, elapsed in owned:
+                print(f"   pid {pid}, {elapsed} s elapsed")
+            print("   Nobody is waiting on these and nobody can read their answers. The")
+            print("   POD reaps one past agda_deadline_s on its next tick.")
 
     # THE PANE SWEEP. [LJ-1.124]'s pane stayed open because its driver predated
     # the close-on-clean-finish change, and a human closed it. Nothing swept it,
