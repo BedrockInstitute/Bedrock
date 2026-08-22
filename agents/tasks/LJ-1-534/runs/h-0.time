@@ -1,0 +1,7 @@
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
+real 101.38
+user 99.95
+sys 1.37
+exit=251

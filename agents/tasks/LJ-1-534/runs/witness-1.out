@@ -1,0 +1,6 @@
+pass      exit=0        2.19s  agents/tasks/LJ-1-534/Probe534.agda::honest-frame-inhabited
+witness: 0 UNRESOLVED of 1, 2.19 s, probe_red=False
+real 2.26
+user 2.03
+sys 0.21
+exit=0
