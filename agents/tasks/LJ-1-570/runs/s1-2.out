@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T23:15:28Z
+Checking LJ-1-570.Probe570 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-570/agents/tasks/LJ-1-570/Probe570.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-570/agents/tasks/LJ-1-570/Probe570.agda:103.5-22: error: [NotInScope]
+Not in scope:
+  P564.GCHStatement
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-570/agents/tasks/LJ-1-570/Probe570.agda:103.5-22
+when scope checking P564.GCHStatement
+        2.92 real         2.69 user         0.21 sys
+           608501760  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38881  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                1217  involuntary context switches
+         34424385609  instructions retired
+         12002642976  cycles elapsed
+           550601688  peak memory footprint
+EXIT=42
+ended 2026-08-22T23:15:31Z

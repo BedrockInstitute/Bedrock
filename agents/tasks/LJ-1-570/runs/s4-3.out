@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T23:26:32Z
+Checking LJ-1-570.Probe570 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-570/agents/tasks/LJ-1-570/Probe570.agda).
+        8.56 real         8.28 user         0.26 sys
+          1407205376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               87630  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                1241  involuntary context switches
+        124822268582  instructions retired
+         35552768597  cycles elapsed
+          1348191768  peak memory footprint
+EXIT=0
+ended 2026-08-22T23:26:40Z
