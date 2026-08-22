@@ -1,0 +1,119 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.563] THE LAST THREE OF THE SIXTEEN.
+--
+-- W3 STAGE.  THE WIDEST UNMEASURED TERM, as the brief names it: whether
+-- the three fields' EXTRA hypotheses hold TOGETHER at ONE frame.
+--
+-- `[LJ-1.71]` shipped a module whose telescope was uninhabited at EVERY
+-- frame (archive/dev/LJ-dispatch-index.md:135), so the extras are
+-- inhabited here BEFORE a field is touched.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.  I postulate nothing.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-563.Probe563 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; Lset-mono
+        ; Lset-layer; layer-trans )
+open import L.Axioms.Basic {ℓ} using ( isL-Lset; LsetS; finSet )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Coding.Environment {ℓ} using ( env; cons )
+open import L.Coding.Bound {ℓ} lem using ( module Bound )
+open import L.Coding.EnvSupply {ℓ} lem
+  using ( module SupplyEnv; module Fact; module SupplyMerge )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( #_; sucV; ω )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁; ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+open KFactsNS
+open KFacts
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- =====================================================================
+-- W3.  THE THREE EXTRA ASKS, INHABITED TOGETHER AT `KValue`'s FRAME.
+--
+-- The three fields ask for three DIFFERENT things and the brief allows
+-- that.  Read at first hand:
+--
+--   `consK-forall`  src/L/Condensation/TwelveAgree.lagda.md:322-325
+--       honest form src/L/Coding/EnvSupply.lagda.md:712-725
+--       EXTRA: {k : ℕ} (g : Fin k → V ℓ), fst z ≡ env g,
+--              ⟨ fst z ∈ fst K ⟩, ⟨ fst x ∈ fst K ⟩
+--   `consK-allin`   :332-335, honest form :727-740, the SAME extra at a
+--       one-cell-deeper environment
+--   `someEnv`       :289, type `someEnvDef` at
+--       src/L/Condensation/LowerAgree.lagda.md:52-59,
+--       honest form src/L/Coding/EnvSupply.lagda.md:417-424
+--       EXTRA: ∥ Σ[ n ∈ ℕ ] (fst ar ≡ # n) ∥₁
+--
+-- SO W3 IS ONE VALUE CARRYING ALL THREE AT ONE INSTANTIATION, and the
+-- instantiation is CONCRETE, not a free cell: `x = ar = numeralL 0` and
+-- `z` the environment of the EMPTY family.
+-- =====================================================================
+
+module W3
+  (lam : V ℓ) (ordλ : IsOrd lam)
+  (succλ : (d : V ℓ) → ⟨ d ∈ lam ⟩ → ⟨ sucV d ∈ lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ lam ⟩)
+  (gam : V ℓ) (ordγ : IsOrd gam) (γ∈λ : ⟨ gam ∈ lam ⟩)
+  (ω∈σ : ⟨ ω ∈ sucV gam ⟩) where
+
+  module KV = KValue lam ordλ succλ ∅∈λ gam ordγ γ∈λ
+  module SM = SupplyMerge lam ordλ succλ ∅∈λ
+
+  -- The empty family, and the environment over it.
+  g₀ : Fin 0 → V ℓ
+  g₀ ()
+
+  -- `env {0} g₀` IS `finSet 0 (λ i → pr (# (toℕ i)) (g₀ i))`, character
+  -- for character: `env` at src/L/Coding/Environment.lagda.md:84-86 and
+  -- `finSet` at src/L/Axioms/Basic.lagda.md:285-286 are the same `sett`.
+  env₀∈ : ⟨ env {0} g₀ ∈ Lset lam ⟩
+  env₀∈ = SM.finSetK 0 (λ i → pr (# (toℕ i)) (g₀ i)) (λ ())
+
+  z₀ : S
+  z₀ = env {0} g₀
+     , isL-trans {x = Lset lam} {y = env {0} g₀} env₀∈ (isL-Lset lam ordλ)
+
+  x₀ : S
+  x₀ = numeralL 0
+
+  x₀∈ : ⟨ fst x₀ ∈ Lset lam ⟩
+  x₀∈ = KV.facts .numK0
+
+  -- THE THREE EXTRAS, AT ONE FRAME, IN ONE VALUE.
+  --   (1) and (2) are the consK pair's extra: an environment WITNESS for
+  --       `z`, and `z` and `x` in `K`.
+  --   (3) is `someEnv`'s extra: the truncated numeral arity, at the same
+  --       `ar = x₀`.
+  extras-inhabited :
+      (Σ[ k ∈ ℕ ] Σ[ g ∈ (Fin k → V ℓ) ] (fst z₀ ≡ env g))
+    × (⟨ fst z₀ ∈ Lset lam ⟩ × ⟨ fst x₀ ∈ Lset lam ⟩)
+    × ∥ Σ[ m ∈ ℕ ] (fst x₀ ≡ # m) ∥₁
+  extras-inhabited =
+      (0 , (g₀ , refl))
+    , (env₀∈ , x₀∈)
+    , ∣ 0 , numeralL-fst 0 ∣₁
+
+extras-inhabited = W3.extras-inhabited
