@@ -1,0 +1,21 @@
+Checking LJ-1-521.Probe521 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-521/agents/tasks/LJ-1-521/Probe521.agda).
+time: command terminated abnormally
+      570.93 real       565.69 user         3.97 sys
+           663224320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              536864  page reclaims
+                 113  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 106  voluntary context switches
+               94922  involuntary context switches
+       7021030668347  instructions retired
+       2250634758606  cycles elapsed
+           716162152  peak memory footprint
+time: signal: Invalid argument
