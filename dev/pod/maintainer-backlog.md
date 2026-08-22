@@ -141,6 +141,29 @@ earlier reading did not survive the measurement.
 
 ### 23. `sys-lint-accept` loops a task whose obligation is ALREADY CLOSED. LIVE NOW on LJ-1.500
 
+**RECURRENCE 2026-08-22, ON `[LJ-1.512]`, AND THE PATTERN IS IDENTICAL.** From
+`dev/pod/transitions/2026-08.jsonl`:
+
+| attempt | ts | exit | delta | row |
+|---|---|---|---|---|
+| 1 | 09:11:38Z | 1 | **-1** | `task-lj-1-512-accept-failed` |
+| 2 | 09:23:39Z | 1 | 0 | `sys-lint-accept` |
+| 3 | 09:35:42Z | 1 | 0 | `sys-lint-accept` |
+
+**The obligation was INHABITED at attempt 1** (`delta -1`), exactly as on
+`[LJ-1.500]`, and the task then repeats on the system row. Its directory holds
+`review-LJ-1-512-1.md` and `review-LJ-1-512-2.md` and no report.
+
+**ONE THING IS DIFFERENT AND IT IS GOOD NEWS FOR ITEM 24.** Attempt 1 matched
+`task-lj-1-512-accept-failed` at `delta -1`, which is the `[LJ-1.469]` case that
+row exists for. **The repaired `accept-failed` row behaved correctly.** The loop
+that follows is the system row and it is unchanged.
+
+**`[LJ-1.500]` resolved itself on attempt 5**, so this may too. `pod-math` is
+recording the recurrence rather than escalating, and proposes no row: this is a
+`sys-` row and needs the owner's word.
+
+
 **`[LJ-1.500]` HAS RUN FOUR ATTEMPTS AND ITS OBLIGATION IS INHABITED.** Diagnosed
 by `pod-math` 2026-08-22 while answering a refill. This is a program matter, not a
 mathematical one, and the task is looping as this is written.
