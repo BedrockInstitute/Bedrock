@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# final-8, confirmation after the report was finished; the probe is byte-identical to final-5..7
+Checking LJ-1-544.Probe544 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-544/agents/tasks/LJ-1-544/Probe544.agda).
+        1.00 real         0.87 user         0.11 sys
+           294813696  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19735  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 223  involuntary context switches
+         11555429683  instructions retired
+          4012695925  cycles elapsed
+           234783464  peak memory footprint

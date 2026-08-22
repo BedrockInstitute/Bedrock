@@ -1,0 +1,8 @@
+GHCRTS=-A64m -I0 -M8g
+# s2-1, sections 1 and 2 only
+Checking LJ-1-544.Probe544 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-544/agents/tasks/LJ-1-544/Probe544.agda).
+# KILLED at 600 s by my own harness (SIGTERM). No exit line and no heap
+# message, so this is a TIME blow-up and NOT a heap wall. The file was
+# sections 1 and 2 only, with the merge written as a nested Sum.rec whose
+# branch type Agda had to infer. runs/bisectC-1.out is the same row with an
+# explicitly typed `go`: exit 0, 0.94 s.

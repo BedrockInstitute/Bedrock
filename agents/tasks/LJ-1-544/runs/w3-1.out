@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-1, the W3 slice ALONE
+Checking LJ-1-544.Probe544 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-544/agents/tasks/LJ-1-544/Probe544.agda).
+        0.80 real         0.68 user         0.10 sys
+           271908864  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18337  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  31  voluntary context switches
+                 212  involuntary context switches
+          9404175497  instructions retired
+          3237059097  cycles elapsed
+           212796136  peak memory footprint
