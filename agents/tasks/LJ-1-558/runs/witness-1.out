@@ -1,0 +1,29 @@
+GHCRTS=-A64m -I0 -M8g
+# witness-1: the declared obligation
+--- .pod-state/witness/Witness-POD-b5878f04.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.558]  A route to `GCHStatement` that never lands inside
+-- `Lset (fst δ)`.
+--
+-- SECTION 1 is W3 and the brief ordered it written FIRST and typechecked
+-- ALONE: the step of [LJ-1.523]'s bridge whose conclusion sits in the
+-- stage at δ, restated by itself, TYPE ONLY.  That slice is kept at
+-- agents/tasks/LJ-1-558/runs/w3-slice.agda.txt.
+--
+-- Nothing is postulated.  Nothing lands in src/.  No hole.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module Witness-POD-b5878f04 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+import LJ-1-558.Probe558
+module Target = LJ-1-558.Probe558 {ℓ} lem
+
+witness = Target.gch-route-without-stage
+
+pass      exit=0        1.54s  agents/tasks/LJ-1-558/Probe558.agda::gch-route-without-stage
+witness: 0 UNRESOLVED of 1, 1.54 s, probe_red=False
+exit=0

@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-1: the stage landing, restated alone, TYPE ONLY
+Checking LJ-1-558.Probe558 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-558/agents/tasks/LJ-1-558/Probe558.agda).
+        1.52 real         1.33 user         0.15 sys
+           385351680  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25261  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  95  voluntary context switches
+                 298  involuntary context switches
+         18014881351  instructions retired
+          6268699905  cycles elapsed
+           326107928  peak memory footprint
+exit=0

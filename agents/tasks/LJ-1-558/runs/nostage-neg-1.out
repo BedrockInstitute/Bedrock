@@ -1,0 +1,12 @@
+GHCRTS=-A64m -I0 -M8g
+# nostage-neg-1: naming Lset and IsCardinal in that module must FAIL
+Checking LJ-1-558.runs.NoStage558 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-558/agents/tasks/LJ-1-558/runs/NoStage558.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-558/agents/tasks/LJ-1-558/runs/NoStage558.agda:77.31-41: error: [NotInScope]
+Not in scope:
+  IsCardinal
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-558/agents/tasks/LJ-1-558/runs/NoStage558.agda:77.31-41
+    (did you mean
+       '.#L.Cardinal-8564336024702903086.IsCardinalL' or
+       'IsCardinalL'?)
+when scope checking IsCardinal
+exit=42

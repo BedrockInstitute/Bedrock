@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# obl-1: sections 1-3, the obligation
+Checking LJ-1-558.Probe558 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-558/agents/tasks/LJ-1-558/Probe558.agda).
+        1.55 real         1.39 user         0.14 sys
+           399441920  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26121  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 315  involuntary context switches
+         19095793272  instructions retired
+          6567583268  cycles elapsed
+           339772232  peak memory footprint
+exit=0

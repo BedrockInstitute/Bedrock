@@ -1,0 +1,71 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.558]  NEGATIVE CONTROL, and it is the mechanical half of the
+-- claim "the derivation never lands a conclusion inside `Lset (fst δ)`".
+--
+-- This module is `agents/tasks/LJ-1-558/Probe558.agda` sections 2 and 3,
+-- copied letter for letter, with ONE change: the import of
+-- `L.Constructible` does not bring `Lset` (nor `isL`, nor `isL-trans`),
+-- and `L.BoundedSubset` is not imported at all, so neither `IsCardinal`
+-- nor `_↪_` is in scope either.
+--
+-- IF THIS TYPECHECKS, no type written in the route names the stage at δ
+-- and no name it uses can name one.  The companion run
+-- agents/tasks/LJ-1-558/runs/nostage-neg-1.out shows that `Lset` really
+-- is out of scope here, so the green run is not green by accident.
+--
+-- Nothing is postulated.  No hole.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-558.runs.NoStage558 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL )
+open import L.GCH {ℓ} lem using ( GCHStatement; SuccCardL; InjL )
+import FOL.ZFModel
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet {ℓ} using ( ω )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+
+module SL = hPropStructure 𝒮ʟ
+module ModelL = FOL.ZFModel 𝒮ʟ
+
+SuccCardExists : Type (ℓ-suc ℓ)
+SuccCardExists =
+    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
+  → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  → ∥ Σ[ δ ∈ SL.S ] SuccCardL δ κ ∥₁
+
+PowerIntoSucc : ModelL.isZFModel → Type (ℓ-suc ℓ)
+PowerIntoSucc zf =
+    (κ δ : SL.S) → SuccCardL δ κ → InjL (𝒫 κ) δ
+  where open ModelL.isZFModel zf using ( 𝒫 )
+
+SuccIntoPower : ModelL.isZFModel → Type (ℓ-suc ℓ)
+SuccIntoPower zf =
+    (κ δ : SL.S) → SuccCardL δ κ → InjL δ (𝒫 κ)
+  where open ModelL.isZFModel zf using ( 𝒫 )
+
+gch-route-without-stage :
+    (zf : ModelL.isZFModel)
+  → SuccCardExists → PowerIntoSucc zf → SuccIntoPower zf
+  → GCHStatement zf
+gch-route-without-stage zf b4 hard b10 κ ordκ cardLκ κ∉ω =
+  PT.map step (b4 κ ordκ cardLκ κ∉ω)
+  where
+  open ModelL.isZFModel zf using ( 𝒫 )
+  step : Σ[ δ ∈ SL.S ] SuccCardL δ κ
+       → Σ[ δ ∈ SL.S ] (SuccCardL δ κ × InjL (𝒫 κ) δ × InjL δ (𝒫 κ))
+  step (δ , sc) = δ , sc , hard κ δ sc , b10 κ δ sc
