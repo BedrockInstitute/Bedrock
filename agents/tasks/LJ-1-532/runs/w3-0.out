@@ -1,0 +1,24 @@
+Checking LJ-1-532.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-532/agents/tasks/LJ-1-532/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-532/agents/tasks/LJ-1-532/runs/W3.agda:105.28-29: error: [NotInScope]
+Not in scope:
+  ∥
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-532/agents/tasks/LJ-1-532/runs/W3.agda:105.28-29
+when scope checking ∥
+        1.47 real         1.29 user         0.14 sys
+           396394496  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25918  page reclaims
+                  20  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 118  voluntary context switches
+                 258  involuntary context switches
+         16086645512  instructions retired
+          5699345662  cycles elapsed
+           338428744  peak memory footprint

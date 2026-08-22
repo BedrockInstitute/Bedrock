@@ -1,0 +1,31 @@
+Checking LJ-1-532.Probe532 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-532/agents/tasks/LJ-1-532/Probe532.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-532/agents/tasks/LJ-1-532/Probe532.agda:171.16-29: error: [UnequalTerms]
+Σ (FOL.ZFStructure.ZFStructure.S 𝒮ᵥ) (λ x → x ∈ᶜ isL) !=<
+∥
+Σ (FOL.ZFStructure.ZFStructure.S 𝒮ᵥ)
+(λ x →
+   ⟨
+   (IsOrd x , L.Constructible.isPropIsOrd x) ⊓
+   (𝒮ᵥ FOL.ZFStructure.ZFStructure.∈ˢ Lset ω) (Lset x)
+   ⟩)
+∥₁
+when checking that the expression LsetS ω ω-ord has type
+Lset ω ∈ᶜ isL
+        1.52 real         1.37 user         0.14 sys
+           372211712  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24456  page reclaims
+                   6  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   2  voluntary context switches
+                 319  involuntary context switches
+         16955688867  instructions retired
+          6001952549  cycles elapsed
+           312197936  peak memory footprint
