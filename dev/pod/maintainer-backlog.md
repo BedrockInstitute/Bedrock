@@ -19,6 +19,66 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 25. Amending a dispatched brief does NOT admit its new row. `[LJ-1.505]` needs the owner. MEASURED 2026-08-22
+
+**`pod-math` TRIED THE BRIEF ROUTE AND IT DID NOT WORK.** Answering the
+maintainer's `[LJ-1.505]` request, `pod-math` added a `no-verdict` branch to
+`agents/tasks/LJ-1-505/LJ-1.505.md:208-218` at about 00:36Z and said in its
+return that if the program does not re-read an amended brief on re-attempt then
+this needs the owner. **It does not, and it does.**
+
+**THE MEASUREMENT.**
+
+- `grep -n "no-verdict" dev/pod/table.toml` returns **NOTHING**. The row was
+  never admitted.
+- `grep -c "task-lj-1-505" dev/pod/table.toml` returns **7**, which are the
+  rows admitted from the brief at first dispatch. The eighth was not added.
+- `[LJ-1.505]` has recorded `reason: no-match`, `exit_code 0`, **eleven more
+  times** between 2026-08-22T00:38:44Z and T01:11:08Z, all after the edit
+  (`dev/pod/transitions/2026-08.jsonl`).
+
+**SO THE `[LJ-1.422]` PRECEDENT IS THE ONLY ROUTE**, and it is what
+`dev/pod/table.toml:3562-3574` records: a task-scoped row, `added_by =
+"maintainer"`, under an owner's ruling. `pod-math` cannot write it; a row that
+routes live corpus records needs the owner's word.
+
+**THE ROW, READY TO WRITE, WITH THE MATHEMATICAL JUDGEMENT ALREADY MADE (AD3).**
+`[LJ-1.505]`'s obligation is waiting on a verdict the coder never gave: its
+accept record is exit 0, `error_class` null, `obligations_delta` 0,
+`obligations_open` 1, 18 changed files that are its own census scripts, and NO
+`review-of-*.md`. That is neither a GO nor a stated stop. An open obligation
+with no stated verdict is what the adversarial slot exists to adjudicate.
+
+```toml
+[[row]]
+id = "task-lj-1-505-no-verdict"
+scope = "task:LJ-1.505"
+priority = 13
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-22
+added_by = "maintainer"
+reason = "AD3 judgement by pod-math: an open obligation with no stated verdict is neither a GO nor a stop. Disjoint from go (delta max -1) and from stop-stated (which needs a review file PRESENT). The changed_files_none exclusion stops the critic's own return re-matching it."
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_none = ["agents/tasks/LJ-1-505/review-of-*.md"]
+```
+
+**TWO MORE LJ-1 TASKS ARE PARKED AND `pod-math` DID NOT DIAGNOSE THEM.** The
+last recorded event of each carries a reason: `[LJ-1.497]` **`admission`** and
+`[LJ-1.498]` **`launch`**. `[LJ-1.498]` has never produced a probe, a report or
+a `runs/` directory since 2026-08-21T20:48Z, which a launch failure would
+explain. These are named here as facts from the transition log, not as
+diagnoses.
+
+**WHY THIS MATTERS BEYOND ONE TASK.** `dev/pod/direction.md` says LJ-1 is
+complete when, among other things, "the parked LJ-1 tasks are settled or the
+owner has declined `--retry`". **Three of them are parked right now**, and two
+of the three are parked for program reasons rather than mathematical ones.
+
+
 ### 24. `accept-failed`, a branch the MATHEMATICIAN wrote, loops a task that delivers nothing. TEMPLATE FIXED 2026-08-22
 
 **THIS IS `pod-math`'s DEFECT, NOT THE PROGRAM'S, AND IT IS IN A DOZEN BRIEFS.**
