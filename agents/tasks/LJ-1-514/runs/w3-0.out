@@ -1,0 +1,4 @@
+Checking LJ-1-514.Probe514 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-514/agents/tasks/LJ-1-514/Probe514.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-514/agents/tasks/LJ-1-514/Probe514.agda:44.24-28: error: [UnequalTerms]
+664 != 0 of type ℕ
+when checking that the expression refl has type census w b ≡ 0
