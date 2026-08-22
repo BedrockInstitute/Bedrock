@@ -375,14 +375,15 @@ system_free_floor_pct = 8     # C-12's floor, restored by A13
 # invariant forbids an author reviewing its own work, never two authors sharing a
 # vendor.
 mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
-# **TWO HEADS SINCE 2026-08-21**, `glm-5.3` first and `grok-4.6` behind it. Neither
-# is capped: both are ordinary cloud vendors and neither is a scarce local
-# resource, so `pick_head_config()` takes the first every time and the second is
-# reached only through A29's retry. `grok-4.6` carries `"high"`, which is the
-# effort it carried in the `coder` array before this ruling moved it.
+# **TWO HEADS SINCE 2026-08-21, REORDERED 2026-08-22: `grok-4.6` first and
+# `glm-5.3` behind it, owner's ruling.** Neither is capped: both are ordinary
+# cloud vendors and neither is a scarce local resource, so `pick_head_config()`
+# takes the first every time and the second is reached only through A29's
+# retry. `grok-4.6` carries `"high"`, which is the effort it carried in the
+# `coder` array before an earlier ruling moved it here.
 mathematician_adversarial = [
-  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
   { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
+  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
 ]
 # THE LOCAL HEAD IS WRITTEN FIRST because it is the head the owner wants spent
 # first. That order is the tie-break between two CAPPED heads with headroom, and
@@ -412,12 +413,13 @@ coder                     = [
   #   { model = "Qwen3.8-27B-oQ4e-mtp", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
   { model = "claude-opus-5",        effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
 ]
-# **TWO HEADS SINCE 2026-08-21**, the same pair and the same reasoning as
-# `mathematician_adversarial` above. The two critics may share a model with each
-# other: DD25 pairs an author with ITS critic and says nothing about two critics.
+# **TWO HEADS SINCE 2026-08-21, REORDERED 2026-08-22** the same pair and the
+# same reasoning as `mathematician_adversarial` above. The two critics may
+# share a model with each other: DD25 pairs an author with ITS critic and
+# says nothing about two critics.
 coder_adversarial         = [
-  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
   { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
+  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
 ]
 # **THE MAINTAINER MOVED TO `claude-sonnet-5` at effort `xhigh`, owner's ruling
 # 2026-08-21.** It was `claude-opus-5` at `xhigh` from 2026-08-20. The slot is
