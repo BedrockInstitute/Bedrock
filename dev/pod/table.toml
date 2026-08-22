@@ -12832,3 +12832,112 @@ expired = false
   [row.when]
   changed_files_count_max = 1
   seconds_min = 3600.0
+
+[[row]]
+id = "task-lj-1-518-go"
+scope = "task:LJ-1.518"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-22
+added_by = "mathematician"
+reason = "branch `go` of LJ-1.518, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-518-accept-failed"
+scope = "task:LJ-1.518"
+priority = 14
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-22
+added_by = "mathematician"
+reason = "branch `accept-failed` of LJ-1.518, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 1
+  obligations_delta_max = -1
+  changed_files_none = ["agents/tasks/LJ-1-518/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-518-stop-stated"
+scope = "task:LJ-1.518"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-22
+added_by = "mathematician"
+reason = "branch `stop-stated` of LJ-1.518, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-518/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-518/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-518-no-go-attacked"
+scope = "task:LJ-1.518"
+priority = 15
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-22
+added_by = "mathematician"
+reason = "branch `no-go-attacked` of LJ-1.518, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  error_class_in = ["unsolved_meta", "universe_level", "other"]
+  changed_files_any = ["agents/tasks/LJ-1-518/Probe518.agda"]
+  changed_files_none = ["agents/tasks/LJ-1-518/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-518-no-go-stated"
+scope = "task:LJ-1.518"
+priority = 20
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-22
+added_by = "mathematician"
+reason = "branch `no-go-stated` of LJ-1.518, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  changed_files_any = ["agents/tasks/LJ-1-518/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-518-heap-wall-escalate"
+scope = "task:LJ-1.518"
+priority = 30
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-22
+added_by = "mathematician"
+reason = "branch `heap-wall-escalate` of LJ-1.518, admitted from the brief"
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "task-lj-1-518-ran-long-and-changed-little"
+scope = "task:LJ-1.518"
+priority = 50
+action = "park"
+added = 2026-08-22
+added_by = "mathematician"
+reason = "branch `ran-long-and-changed-little` of LJ-1.518, admitted from the brief"
+expired = false
+
+  [row.when]
+  changed_files_count_max = 1
+  seconds_min = 3600.0
