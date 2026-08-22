@@ -1,0 +1,26 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-2: the W3 slice ALONE,      187 lines
+Checking LJ-1-556.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-556/agents/tasks/LJ-1-556/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-556/agents/tasks/LJ-1-556/runs/W3.agda:147.14-65: error: [UnequalSorts]
+Type (ℓ-suc ℓ) != Type ℓ
+when checking that the expression
+Σ-syntax (⟪ fst κ ⟫ × ⟪ fst κ ⟫) λ p → fst z ≡ fst (pw p) has type
+Type ℓ
+        1.35 real         1.21 user         0.13 sys
+           397377536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25995  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 216  involuntary context switches
+         17888173945  instructions retired
+          5912583600  cycles elapsed
+           337380168  peak memory footprint

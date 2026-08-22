@@ -1,0 +1,20 @@
+GHCRTS=-A64m -I0 -M8g
+# full-3: Probe556 whole, 362 lines, confirming run
+        1.40 real         1.25 user         0.14 sys
+           428048384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27867  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 334  involuntary context switches
+         18200231550  instructions retired
+          6001065910  cycles elapsed
+           370951008  peak memory footprint

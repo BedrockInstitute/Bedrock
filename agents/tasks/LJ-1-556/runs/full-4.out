@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# full-4: Probe556 whole, 362 lines, interface deleted first, deps warm
+Checking LJ-1-556.Probe556 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-556/agents/tasks/LJ-1-556/Probe556.agda).
+      176.94 real       176.39 user         0.54 sys
+           656637952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41819  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+               23296  involuntary context switches
+       2619799252521  instructions retired
+        761726420081  cycles elapsed
+           596689928  peak memory footprint

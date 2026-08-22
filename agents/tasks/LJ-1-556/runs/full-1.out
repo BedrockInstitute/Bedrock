@@ -1,0 +1,41 @@
+GHCRTS=-A64m -I0 -M8g
+# full-1: Probe556 whole,      362 lines
+Checking LJ-1-556.Probe556 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-556/agents/tasks/LJ-1-556/Probe556.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-556/agents/tasks/LJ-1-556/Probe556.agda:301.64-67: error: [UnequalTerms]
+(fst u) !=
+((λ { (Cubical.HITs.CumulativeHierarchy.Properties.dmp mp _) → mp
+    })
+ (Cubical.HITs.CumulativeHierarchy.Base.elimProp
+  Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+  (λ X ix rec →
+     Cubical.HITs.CumulativeHierarchy.Properties.dmp
+     (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X ix)
+     (Cubical.HITs.SetQuotients.Properties.elimProp
+      (λ z₁ →
+         Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+         (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X ix .fst
+          .snd .fst z₁))
+      rec))
+  (fst κ))
+ .fst .snd .fst (c .fst .fst))
+of type (V ℓ)
+when checking that the expression hlt has type
+⟨ ⟪ fst κ ⟫↪ (c .fst .fst) ∈ ⟪ fst κ ⟫↪ (c .fst .snd) ⟩
+      177.36 real       176.83 user         0.52 sys
+           656441344  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41807  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  14  voluntary context switches
+               24486  involuntary context switches
+       2618927102702  instructions retired
+        763874550525  cycles elapsed
+           596427784  peak memory footprint
