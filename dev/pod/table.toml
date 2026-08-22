@@ -18497,7 +18497,8 @@ outcome = "go"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "branch `go` of LJ-1.567, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-23
 
   [row.when]
   exit_code = 0
@@ -18513,7 +18514,8 @@ head_slot = "coder_adversarial"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "branch `accept-failed` of LJ-1.567, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-23
 
   [row.when]
   exit_code = 1
@@ -18529,7 +18531,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "branch `stop-stated` of LJ-1.567, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-23
 
   [row.when]
   exit_code = 0
@@ -18546,7 +18549,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "branch `no-go-attacked` of LJ-1.567, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-23
 
   [row.when]
   exit_code = 42
@@ -18563,7 +18567,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "branch `no-go-stated` of LJ-1.567, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-23
 
   [row.when]
   exit_code = 42
@@ -18577,7 +18582,8 @@ action = "park"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "PARK, NOT ESCALATE. MEASURED on LJ-1.534, 2026-08-22: this row matched"
-expired = false
+expired = true
+expired_at = 2026-08-23
 
   [row.when]
   heap_wall = true
@@ -18590,7 +18596,8 @@ action = "park"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "branch `ran-long-and-changed-little` of LJ-1.567, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-23
 
   [row.when]
   changed_files_count_max = 1
