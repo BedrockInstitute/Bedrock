@@ -1,0 +1,31 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T23:11:09Z
+Checking LJ-1-569.runs.W3c (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-569/agents/tasks/LJ-1-569/runs/W3c.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-569/agents/tasks/LJ-1-569/runs/W3c.agda:58.21-23: error: [UnequalTerms]
+(fst (κ₁ Cubical.HITs.CumulativeHierarchy.Base.∈ fst δ)) !=<
+(Σ (L.Constructible.isTransV κ₁)
+ (λ _ →
+    (x : P564.SV.S) →
+    ⟨ x P564.SV.∈ˢ κ₁ ⟩ → L.Constructible.isTransV x))
+when checking that the expression r3 has type
+L.BoundedSubset.IsCardinal lem (fst δ)
+        3.26 real         3.03 user         0.22 sys
+           778551296  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49260  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 603  involuntary context switches
+         39430767298  instructions retired
+         13599915205  cycles elapsed
+           719520848  peak memory footprint
+EXIT=42
+ended 2026-08-22T23:11:13Z

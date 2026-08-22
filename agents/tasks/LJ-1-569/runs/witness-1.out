@@ -1,0 +1,2 @@
+missing   exit=42       3.37s  agents/tasks/LJ-1-569/Probe569.agda::gch-without-row-1  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-569/.pod-state/witness/Witness-POD-1c0e209e.agda:33)
+witness: 1 UNRESOLVED of 1, 3.37 s, probe_red=False

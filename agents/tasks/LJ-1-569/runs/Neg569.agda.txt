@@ -1,0 +1,25 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.569]  THE NEGATIVE, TAKEN AT THIS SITE AND NOT CARRIED OVER.
+--
+-- AGENTS.md:45: a measured cure does not transfer by analogy.
+-- [LJ-1.550] measured that B5 is weaker than the slot at ITS site
+-- (agents/tasks/LJ-1-550/runs/neg-1.out).  This file re-measures it at
+-- the site THIS task names: the spent form of row 1 does NOT give row 1
+-- back.  EXPECTED RED.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-569.runs.Neg569 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+import LJ-1-550.Probe550
+import LJ-1-569.Probe569
+module P550 = LJ-1-550.Probe550 {ℓ} lem
+module P569 = LJ-1-569.Probe569 {ℓ} lem
+
+-- The converse of `row-1-gives-the-spend`.  It is not a term: the slot
+-- is a Π over EVERY member of δ and the spent form gives ONE member.
+spend-gives-row-1 : P569.Row1Spent → P550.AmbientCardAtSucc
+spend-gives-row-1 s κ δ sc = s κ δ sc
