@@ -1,0 +1,62 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.551] W3 ONLY, and it runs BEFORE any collection.
+--
+-- THE WIDEST UNMEASURED TERM: can the clean set's hypotheses hold
+-- together at ONE frame.  `[LJ-1.71]` shipped a module whose telescope
+-- was uninhabited at EVERY frame (archive/dev/LJ-dispatch-index.md:135),
+-- so the collection is guarded here before a field is written.
+--
+-- THE CLEAN SET SPANS TWO SUPPLIERS AND THAT IS THE WHOLE RISK.
+--   * 27 rows are supplied by `KValue.facts`, a `KFacts` value at
+--     `KV.Kenv` (src/L/Condensation.lagda.md:7411-7425).
+--   * 10 rows are supplied by `SupplyEnv`, which PINS the environment's
+--     cell 0 to `B₀ = LsetS gam ordγ`
+--     (src/L/Coding/EnvSupply.lagda.md:124-125) and states its
+--     conclusions at `Lset lam`, not at a slot.
+-- The record states BOTH at one `γ'` and one `K`, six successors above
+-- the tag indices (src/L/Condensation/TwelveAgree.lagda.md:133, :262).
+-- If the two suppliers cannot be read at ONE such `γ'` and `K`, the
+-- 37-field value is refuted before it is written.
+--
+-- THE THREE CONJUNCTS BELOW ARE THE THREE WAYS IT COULD FAIL, and each
+-- is discharged with NO `subst` and NO transport.
+--   (a) the tag block, read at the record's SIX-FOLD SHIFTED index over
+--       the pinned 20-cell environment;
+--   (b) the record's `transK`, from `KFacts.arityK` with the binder
+--       roles swapped (src/L/Condensation/TwelveAgree.lagda.md:347-352);
+--   (c) THE DECISIVE ONE: an `EnvSupply` conclusion, stated at
+--       `Lset lam`, read at the record's `K` SLOT.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.  I postulate nothing.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-551.Probe551 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import L.Axioms.Numerals {ℓ} using ( numeralL )
+open import L.Coding.Model {ℓ} using ( envSetAt; envOverAt; prʟ )
+open import L.Coding.EnvSupply {ℓ} lem using ( module SupplyEnv )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( #_; sucV; ω )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+open KFactsNS
+open KFacts
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )

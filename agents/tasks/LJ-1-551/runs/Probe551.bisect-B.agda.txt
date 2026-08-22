@@ -1,0 +1,74 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.545] The THREE measured families joined: 28 fields in ONE value.
+--
+-- W3 FIRST, and alone: CAN THE TWO NAMED HYPOTHESES HOLD AT ONE FRAME.
+-- `[LJ-1.538]` carries `ω∈σ : ⟨ ω ∈ sucV gam ⟩`
+-- (agents/tasks/LJ-1-538/Probe538.agda:164), `[LJ-1.539]` carries a
+-- slot-one `valSub` (agents/tasks/LJ-1-539/Probe539.agda:369-371) and
+-- `[LJ-1.542]` carries none (agents/tasks/LJ-1-542/Probe542.agda:150).
+-- The brief asks whether the first two are compatible.  If they are not,
+-- the union is refuted before any field is collected.
+--
+-- THE ANSWER IS NOT "THEY DO NOT MENTION EACH OTHER".  They must be
+-- stated at ONE environment, and the two predecessors do not use the
+-- same one.  `[LJ-1.538]` PINS cell 0 to `SupplyEnv.B₀`
+-- (Probe538.agda:178) because the nine env forms read the carrier out of
+-- it.  `[LJ-1.539]` and `[LJ-1.542]` leave all six cells free
+-- (Probe539.agda:366, Probe542.agda:148).  So the union environment is
+-- `[LJ-1.538]`'s, and the question becomes whether `valSub` is still a
+-- sane hypothesis at THAT environment, where cell 0 is no longer free.
+--
+-- The W3 term below answers it in the strongest available form: at the
+-- pinned environment `valSub` is not merely statable, it is INHABITED,
+-- and `KFacts.carrierK` (src/L/Condensation.lagda.md:6112-6113) pays it
+-- with no `subst` at all.  So the two hypotheses hold together and the
+-- union telescope is not vacuous.
+--
+-- WHAT THE FILE DELIVERS AFTER W3.  `ThreeFamilies` states the 28 fields
+-- ONCE at a generic carrier (W2) and `three-families-inhabited` fills
+-- them at `KValue`'s frame from ONE union telescope: `KValue`'s seven
+-- parameters, `[LJ-1.538]`'s `ω∈σ`, the five free cells, and
+-- `[LJ-1.539]`'s `valSub`.  `statement-matches` is Agda's word that the
+-- 28 types ARE `TFacts`'s own.
+--
+-- I DO NOT BUILD A `TFacts` VALUE and I collect NO fourth family.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-551.Probe551 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; isTransV; IsOrd )
+open import L.Axioms.Numerals {ℓ} using ( numeralL; sucʟ; sucʟ-fst )
+open import L.Coding.Model {ℓ}
+  using ( envSetAt; envOverAt; prʟ; prʟ-fst
+        ; subValAt; subValAt-adequate
+        ; subValSuccAt; subValSuccAt-adequate )
+open import L.Coding.EnvSupply {ℓ} lem using ( module SupplyEnv )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( #_; sucV; ω )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+open KFactsNS
+open KFacts
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
