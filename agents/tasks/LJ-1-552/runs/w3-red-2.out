@@ -1,0 +1,40 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-red-2: after the ⊥* level fix
+Checking LJ-1-552.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda).
+error: [UnsolvedConstraints]
+Failed to solve the following constraints:
+  fst (fst κ ∈ fst δ) =< fst (fst κ ∈ _A_103) (blocked on _A_103)
+  fst (x ∈ _A_103) =< fst (x ∈ fst δ) (blocked on _A_103)
+  fst (y ∈ _A_103) = fst (y ∈ fst δ) (blocked on _A_103)
+  fst (x ∈ _A_103) = fst (x ∈ fst δ) (blocked on _A_103)
+  fst (fst a ∈ fst δ) =< fst (fst a ∈ _A_81) (blocked on _A_81)
+  fst (x ∈ _A_81) =< fst (x ∈ fst δ) (blocked on _A_81)
+  fst (y ∈ _A_81) = fst (y ∈ fst δ) (blocked on _A_81)
+  fst (x ∈ _A_81) = fst (x ∈ fst δ) (blocked on _A_81)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:104.8-106.30: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:104.8-15
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:104.16-18
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:104.27-30
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:106.8-15
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:106.16-18
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:106.27-30
+        3.62 real         3.39 user         0.22 sys
+           811991040  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51294  page reclaims
+                  10  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  11  voluntary context switches
+                 689  involuntary context switches
+         45280990268  instructions retired
+         14896653535  cycles elapsed
+           752010344  peak memory footprint

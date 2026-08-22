@@ -1,0 +1,36 @@
+GHCRTS=-A64m -I0 -M8g
+# red-1: first attempt at the whole probe
+Checking LJ-1-552.Probe552 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/Probe552.agda).
+ Checking LJ-1-549.Probe549 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-549/Probe549.agda).
+  Checking L.CodedShift (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/src/L/CodedShift.lagda.md).
+   Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/src/L/Absorption.lagda.md).
+  Checking LJ-1-546.Probe546 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-546/Probe546.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/Probe552.agda:288.3-291.46: error: [UnequalSorts]
+Type (ℓ-suc (ℓ-suc ℓ)) != Type (ℓ-suc ℓ)
+when checking that the expression
+Σ-syntax (⟪ fst δ ⟫ → ⟪ fst (powL κ) ⟫ → Ω)
+λ C →
+  ((k : ⟪ fst δ ⟫) →
+   ∥ (Σ-syntax ⟪ fst (powL κ) ⟫ (λ A → ⟨ C k A ⟩)) ∥₁)
+  ×
+  ((k k' : ⟪ fst δ ⟫) (A : ⟪ fst (powL κ) ⟫) →
+   ⟨ C k A ⟩ → ⟨ C k' A ⟩ → k ≡ k')
+has type Type (ℓ-suc ℓ)
+        9.14 real         8.87 user         0.25 sys
+           998670336  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               62694  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   9  voluntary context switches
+                1361  involuntary context switches
+        118822820959  instructions retired
+         37688299063  cycles elapsed
+           937886968  peak memory footprint

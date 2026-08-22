@@ -1,0 +1,25 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-red-1: first attempt at the W3 slice
+Checking LJ-1-552.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda:116.16-51: error: [UnequalSorts]
+Type != (Type (ℓ-suc ℓ))
+when checking that the solution Empty.⊥ of metavariable _P_207 has
+the expected type Type (ℓ-suc ℓ)
+        3.30 real         3.04 user         0.22 sys
+           769867776  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48719  page reclaims
+                  14  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 183  voluntary context switches
+                 664  involuntary context switches
+         39913530369  instructions retired
+         13443365068  cycles elapsed
+           710067280  peak memory footprint

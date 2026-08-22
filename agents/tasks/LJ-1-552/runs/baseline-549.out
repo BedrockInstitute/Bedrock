@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# baseline-549: Probe549 ALONE, cold, the dependency this file adds to
+Checking LJ-1-549.Probe549 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-549/Probe549.agda).
+        2.52 real         2.34 user         0.16 sys
+           529891328  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34083  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 514  involuntary context switches
+         30256986369  instructions retired
+         10315393781  cycles elapsed
+           469861288  peak memory footprint

@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-red-3: after naming mem-ord's implicit A
+Checking LJ-1-552.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/runs/W3.agda).
+        3.43 real         3.21 user         0.21 sys
+           822476800  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51941  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   2  voluntary context switches
+                 713  involuntary context switches
+         42122462208  instructions retired
+         14148519018  cycles elapsed
+           762774632  peak memory footprint

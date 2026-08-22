@@ -1,0 +1,11 @@
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::residue-first-three  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::card-of  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::member-into-kappa  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::memSWO  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::obligation-is-ambient  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::ambient-is-obligation  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::free-below-kappa  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::free-part-is-a-member  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::codes-suffice  (grouped run, exit 0)
+pass      exit=0        2.95s  agents/tasks/LJ-1-552/Probe552.agda::codes-are-the-obligation  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 10, 2.95 s, probe_red=False

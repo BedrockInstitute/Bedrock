@@ -1,0 +1,21 @@
+GHCRTS=-A64m -I0 -M8g
+# red-2: after the Ω level fix and the small predicate
+Checking LJ-1-552.Probe552 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-552/agents/tasks/LJ-1-552/Probe552.agda).
+        3.89 real         3.66 user         0.22 sys
+           900038656  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               56674  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   4  voluntary context switches
+                 647  involuntary context switches
+         48122815564  instructions retired
+         15995041468  cycles elapsed
+           840287384  peak memory footprint
