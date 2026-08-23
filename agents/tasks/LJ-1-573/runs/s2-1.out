@@ -1,0 +1,70 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T23:53:33Z
+Checking LJ-1-573.Probe573 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/agents/tasks/LJ-1-573/Probe573.agda).
+ Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/src/L/StageBound.lagda.md).
+   Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/src/L/Absorption.lagda.md).
+  Checking L.SquareLawClosed (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/src/L/SquareLawClosed.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/agents/tasks/LJ-1-573/Probe573.agda:42.32-53: warning: -W[no]ModuleDoesntExport
+The module Cubical.Data.Sigma doesn't export the following:
+  isSetΣ (did you mean 'SSet'?)
+when scope checking the declaration
+  open import Cubical.Data.Sigma using (_×_; isSetΣ)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/agents/tasks/LJ-1-573/Probe573.agda:44.41-81: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isPropΠ; isProp×)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/agents/tasks/LJ-1-573/Probe573.agda:124.13-19: error: [NotInScope]
+Not in scope:
+  isSetΣ
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/agents/tasks/LJ-1-573/Probe573.agda:124.13-19
+    (did you mean
+       '.#L.InjChain-13577746485206515344.ModelL.IsSetOf' or
+       'Agda.Primitive.SSet' or
+       'Agda.Primitive.SSetω' or
+       'Base.Classical.Canonical.isSetΩ' or
+       'Base.Prelude.isSet' or
+       'Base.Truth.TruthAlgebra.isSetΩ' or
+       'Cubical.Data.Sigma.SSet' or
+       'Cubical.Data.Sum.isSet⊎' or
+       'Cubical.Foundations.HLevels.isSet×' or
+       'Cubical.Foundations.HLevels.isSetΠ' or
+       'Cubical.Foundations.HLevels.isSetΠ2' or
+       'Cubical.Foundations.HLevels.isSetΠ3' or
+       'Cubical.Foundations.HLevels.isSetΣ' or
+       'Cubical.Foundations.HLevels.isSet→' or
+       'FOL.ZFStructure.ZFStructure.isSetS' or
+       'FOL.ZFStructure.hPropStructure.isSetS' or
+       'SL.isSetS' or
+       'SV.isSetS' or
+       'TruthAlgebra.isSetΩ' or
+       'hPropStructure.isSetS' or
+       'SSet' or
+       'isSet' or
+       'isSetIx' or
+       'isSetΩ'?)
+when scope checking isSetΣ
+       20.03 real        19.57 user         0.39 sys
+          2106064896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              130284  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 439  voluntary context switches
+                2751  involuntary context switches
+        284842852378  instructions retired
+         81868463269  cycles elapsed
+          2045822968  peak memory footprint
+EXIT=42
+ended 2026-08-22T23:53:53Z
