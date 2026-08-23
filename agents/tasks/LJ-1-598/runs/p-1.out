@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T17:35:35Z
+Checking LJ-1-598.Probe598 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-598/agents/tasks/LJ-1-598/Probe598.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-598/agents/tasks/LJ-1-598/Probe598.agda:222.44-69: error: [UnequalTerms]
+fst (T.val c) != fst x of type
+Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression cong Lset (sym (hx .snd)) has
+type Lset (fst x) ≡ _z_343
+        2.65 real         2.33 user         0.21 sys
+           696352768  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44151  page reclaims
+                  95  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 561  voluntary context switches
+                 502  involuntary context switches
+         30461253321  instructions retired
+         10583683103  cycles elapsed
+           636584992  peak memory footprint
+EXIT=42
+ended 2026-08-23T17:35:38Z
