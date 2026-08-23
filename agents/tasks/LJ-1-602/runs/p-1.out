@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T19:50:48Z
+Checking LJ-1-602.Probe602 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-602/agents/tasks/LJ-1-602/Probe602.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-602/agents/tasks/LJ-1-602/Probe602.agda:260.34-35: error: [UnequalTerms]
+(b .fst) != (CI.C.π (fst q)) of type
+(Cubical.HITs.CumulativeHierarchy.Base.V ℓ)
+when checking that the expression h has type
+⟨ (CI.I.SPM CI.I.SemPM.At.⊨ id) (CI.I.g q ∷ []) (mapFo CI.I.g φ) ⟩
+       11.28 real        11.05 user         0.22 sys
+          1102168064  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               68996  page reclaims
+                  19  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                1565  involuntary context switches
+        146873368475  instructions retired
+         45870470766  cycles elapsed
+          1042597160  peak memory footprint
+EXIT=42
+ended 2026-08-23T19:50:59Z
