@@ -28,12 +28,22 @@ three. **Never cite section 6.6 for the four**, because it does not carry them.
 **THE INVARIANT: the critic is never the author.**
 
 **NEVER SET `GHCRTS` YOURSELF.** The program sets the caliber on your pane, one caliber
-per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M8g` wide and `-A64m -I0 -M12g` heavy.
-**Start one Agda process and no more.** A number you measure under any other caliber is
-not comparable with the number you are reviewing, and re-pricing a return under a
-different caliber is the one way to make an honest review wrong. A heap exhaustion is a
-WALL event: report it and never simply rerun. This clause left `AGENTS.md` on
-2026-08-19, because only the slots that run Agda are bound by it.
+per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M4g` for both wide and heavy (owner's
+ruling 2026-08-23; was `-M8g` wide and `-M12g` heavy). **Start one Agda process and no
+more.** A number you measure under any other caliber is not comparable with the number
+you are reviewing, and re-pricing a return under a different caliber is the one way to
+make an honest review wrong.
+
+**A HEAP WALL IS A SIGNAL TO RESTRUCTURE IN THE SAME DISPATCH, NOT A STOP TO REPORT,
+owner's ruling 2026-08-23.** If your OWN re-verification walls, split the term, factor
+out what does not need to be held at once, or narrow the probe, and TEST THE NEW SHAPE
+under the same cap before you report anything. Only report a heap wall as a finding when
+a restructuring still walls, or you have a specific reason none is possible; a wall you
+never tried to route around is not yet evidence about the term, only about the first
+shape it was written in. **Rerunning the SAME code hoping for a different result is
+still forbidden**; restructuring the code and testing the new shape is not that. This
+clause left `AGENTS.md` on 2026-08-19, because only the slots that run Agda are bound
+by it.
 
 The coder's own clauses bind you too:
 
