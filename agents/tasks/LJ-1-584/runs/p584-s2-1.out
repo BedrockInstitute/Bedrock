@@ -1,0 +1,32 @@
+GHCRTS=[-A64m -I0 -M8g]
+BOUND=200s
+started 2026-08-23T04:32:19Z
+Checking LJ-1-584.Probe584 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-584/agents/tasks/LJ-1-584/Probe584.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-584/agents/tasks/LJ-1-584/Probe584.agda:186.38-43: error: [NotInScope]
+Not in scope:
+  SC.𝒟ₒ
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-584/agents/tasks/LJ-1-584/Probe584.agda:186.38-43
+    (did you mean
+       '.#L.Constructible-10029911047389724201.𝒟ₒ' or
+       'L.Constructible.𝒟ₒ'?)
+when scope checking SC.𝒟ₒ
+        3.20 real         2.94 user         0.25 sys
+           779501568  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49315  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 607  involuntary context switches
+         33709474904  instructions retired
+         12579377948  cycles elapsed
+           721634360  peak memory footprint
+EXIT=42
+ended 2026-08-23T04:32:22Z
