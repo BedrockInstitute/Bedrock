@@ -1,0 +1,20 @@
+Checking LJ-1-574.runs.T6 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-574/agents/tasks/LJ-1-574/runs/T6.agda).
+       18.80 real        18.49 user         0.29 sys
+          1073709056  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               67275  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  45  voluntary context switches
+                3072  involuntary context switches
+        248522779161  instructions retired
+         75817241602  cycles elapsed
+          1013515560  peak memory footprint
+EXIT=0

@@ -1,0 +1,3 @@
+missing   exit=42       3.32s  agents/tasks/LJ-1-574/Probe574.agda::succ-assignment-definable  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-574/.pod-state/witness/Witness-POD-fb233c1a.agda:61)
+witness: 1 UNRESOLVED of 1, 3.32 s, probe_red=False
+EXIT=1

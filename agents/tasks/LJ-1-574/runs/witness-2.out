@@ -1,0 +1,11 @@
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::residue-at-stage  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::stage-assignment-definable  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::codes-at-one-stage  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::residue-closes  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::obligation-gives-residue  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::injL-is-search  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::search-is-injL  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::w3-single  (grouped run, exit 0)
+pass      exit=0        2.85s  agents/tasks/LJ-1-574/Probe574.agda::w3-full  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 9, 2.85 s, probe_red=False
+EXIT=0
