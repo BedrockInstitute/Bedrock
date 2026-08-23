@@ -1,0 +1,61 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.582]  SLICE S8.  S7 plus ONE abs0 call on the matrix, and nothing else.
+-- THREE LINES: the erase, the re-embed, and the inverse.  Nothing else.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-582.runs.S8 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.Manipulation.Relabelling using ( embed; mapΔ₀ )
+open import FOL.LevyHierarchy using ( Δ₀ )
+import Cubical.Data.Empty as Empty
+open import FOL.Manipulation.Parameters using ( countFo )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+import FOL.Absoluteness
+open import Cubical.Data.Vec using ( _∷_; [] )
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open import L.BoundedSubset {ℓ} lem using ( module LevelHood0; module Cnt; erase-Δ₀ )
+
+module CS = hPropStructure 𝒮ʟ
+
+module LH0 = LevelHood0
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+
+cf : countFo LH0.matrix ≡ 0
+cf = refl
+
+ψ4 : Formula (⊥* {ℓ-suc ℓ}) 4
+ψ4 = Cnt.erase LH0.matrix cf
+
+matCS : Formula CS.S 4
+matCS = embed ψ4
+
+matCS≡ : matCS ≡ LH0.matrix
+matCS≡ = Cnt.erase-inv LH0.matrix cf
+
+-- THE ONE CHANGE AGAINST runs/S6.agda: `{φ = ψ4}` is written out, so the
+-- elaborator never has to decide `mapFo ?f ?φ` against
+-- `mapFo Empty.rec* (Cnt.erase LH0.matrix cf)` by normalising the matrix.
+Δ₀-ψ4 : Δ₀ ψ4
+Δ₀-ψ4 = erase-Δ₀ LH0.matrix cf LH0.Δ₀-matrix
+
+Δ₀-matCS : Δ₀ matCS
+Δ₀-matCS = mapΔ₀ Empty.rec* {φ = ψ4} Δ₀-ψ4
+
+-- The single question: does Delta-0 absoluteness of the tree's level-hood
+-- matrix fit the caliber?  Every implicit formula argument is written out,
+-- so section 3's law is already applied here.
+module AbsLL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+
+test-abs : (u v γ K : AbsLL.SM)
+         → ⟨ (u ∷ v ∷ γ ∷ K ∷ []) AbsLL.⊨ᵐ matCS ⟩
+         → ⟨ (fst u ∷ fst v ∷ fst γ ∷ fst K ∷ []) AbsLL.⊨ᵛ matCS ⟩
+test-abs u v γ K h =
+  subst ⟨_⟩ (AbsLL.abs₀ {φ = matCS} Δ₀-matCS (u ∷ v ∷ γ ∷ K ∷ [])) h

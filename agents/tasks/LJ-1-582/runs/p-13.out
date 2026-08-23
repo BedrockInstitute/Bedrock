@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T06:40:56Z
+Checking LJ-1-582.Probe582 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-582/agents/tasks/LJ-1-582/Probe582.agda).
+time: command terminated abnormally
+        8.63 real         7.04 user         0.73 sys
+           514703360  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              103861  page reclaims
+                4952  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 961  voluntary context switches
+               10267  involuntary context switches
+         97850971555  instructions retired
+         30550000135  cycles elapsed
+           797017240  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-23T06:41:05Z

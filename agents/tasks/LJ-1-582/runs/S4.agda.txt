@@ -1,0 +1,116 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.582]  SLICE S4.  THE FORMULA ALONE, with no absoluteness step.
+-- TRANSFER IT NEEDS.  Nothing about uniqueness or existence yet.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-582.runs.S4 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( ZFStructure; module hPropStructure; _↾_ )
+open import FOL.Syntax using
+  ( Formula; Term; con; var; _∈̇_; _≐_; _∧̇_; ∃̇_; ∀̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∀∈ )
+open import FOL.Manipulation.Relabelling using
+  ( mapFo; mapFo-comp; embed; mapΔ₀; ⊨-map )
+open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+open import FOL.Manipulation.Parameters using ( countFo )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; Lset→isL )
+open import L.BoundedSubset {ℓ} lem
+  using ( module HullStage; module LevelHood0; erase-Δ₀; module Cnt )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( sucV )
+open import Cubical.Data.Vec using ( Vec; map; lookup; _∷_; [] )
+import Cubical.Data.Empty as Empty
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+module SV = hPropStructure 𝒮ᵥ
+module CS = hPropStructure 𝒮ʟ
+open SV using ( _∈ˢ_ )
+module AbsLL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+
+module LH0 = LevelHood0
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+
+-- THE MATRIX IS CONSTANT-FREE.  Measured in runs/s2-1.out, exit 0.
+cf : countFo LH0.matrix ≡ 0
+cf = refl
+
+-- The parameter-free level-hood matrix, at env  u ∷ v ∷ γ ∷ K ∷ [].
+ψ4 : Formula (⊥* {ℓ-suc ℓ}) 4
+ψ4 = Cnt.erase LH0.matrix cf
+
+-- "k is an ordinal", about a CONSTANT, at any arity: no renaming, and
+-- the constant is stable under every binder.
+ordOf : ∀ {ℓc} {K : Type ℓc} {n : ℕ} → K → Formula K n
+ordOf k =
+    (∀̇∈ (con k) (∀̇∈ (var zero) (var zero ∈̇ con k)))
+  ∧̇ (∀̇∈ (con k) (∀̇∈ (var zero)
+       (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
+
+Δ₀-ordOf : ∀ {ℓc} {K : Type ℓc} {n : ℕ} (k : K) → Δ₀ (ordOf {n = n} k)
+Δ₀-ordOf k = δ-∧ (δ-∀∈ (δ-∀∈ δ-∈)) (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
+
+-- The matrix's four slots, read in MY environment  u ∷ K ∷ γ ∷ v ∷ [].
+ρ : Fin 4 → Fin 4
+ρ zero                         = zero
+ρ (suc zero)                   = suc (suc (suc zero))
+ρ (suc (suc zero))             = suc (suc zero)
+ρ (suc (suc (suc zero)))       = suc zero
+
+module F (lam : SV.S) (ordλ : IsOrd lam)
+         (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+         (X : SV.S)
+         (X⊆Lλ : (z : SV.S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+         (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module HS  = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ
+  module ASt = HS.ASt
+  module T   = HS.H.T
+
+  -- THE FORMULA.  At the stage's inner world, over the hull's codes,
+  -- one free variable v:
+  --
+  --    v is a level of the constant c  :=
+  --        c is an ordinal
+  --      ∧ ∃γ ∃K ∃u ( the level-hood matrix at u, v, γ, K  ∧  γ = c )
+  --
+  -- The three existentials range over the STAGE.  The matrix is the
+  -- tree's own Δ₀ bounded level-hood body, src/L/BoundedSubset.lagda.md
+  -- :108-112, erased of its (zero) constants and re-embedded here.
+  levelFo : T.Code → Formula T.Code 1
+  levelFo c =
+    ordOf c
+    ∧̇ (∃̇ (∃̇ (∃̇ ( renameFo ρ (embed ψ4)
+                ∧̇ (var (suc (suc zero)) ≐ con c) ))))
+
+  -- The same matrix at the stage's carrier and at the class carrier.
+  matSL : Formula ASt.SL 4
+  matSL = embed ψ4
+
+  matCS : Formula CS.S 4
+  matCS = embed ψ4
+
+  Δ₀-matSL : Δ₀ matSL
+  Δ₀-matSL = mapΔ₀ Empty.rec* (erase-Δ₀ LH0.matrix cf LH0.Δ₀-matrix)
+
+  Δ₀-matCS : Δ₀ matCS
+  Δ₀-matCS = mapΔ₀ Empty.rec* (erase-Δ₀ LH0.matrix cf LH0.Δ₀-matrix)
+
+  matCS≡ : matCS ≡ LH0.matrix
+  matCS≡ = Cnt.erase-inv LH0.matrix cf
+
+  -- A stage member is a member of L.
+  up : ASt.SL → CS.S
+  up m = fst m , Lset→isL lam ordλ (fst m) (snd m)
+
+  mapUp : mapFo up matSL ≡ matCS
+  mapUp = mapFo-comp Empty.rec* up ψ4
+        ∙ cong (λ f → mapFo f ψ4) (funExt (λ b → Empty.rec* b))
