@@ -1,0 +1,47 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T19:24:56Z
+Checking LJ-1-601.Probe601 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-601/agents/tasks/LJ-1-601/Probe601.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-601/agents/tasks/LJ-1-601/Probe601.agda:298.13-71: error: [UnequalTerms]
+(λ { (Cubical.HITs.CumulativeHierarchy.Properties.dmp mp _) → mp })
+(Cubical.HITs.CumulativeHierarchy.Base.elimProp
+ Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+ (λ X₁ ix rec →
+    Cubical.HITs.CumulativeHierarchy.Properties.dmp
+    (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X₁ ix)
+    (Cubical.HITs.SetQuotients.Properties.elimProp
+     (λ z →
+        Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+        (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X₁ ix .fst
+         .snd .fst z))
+     rec))
+ (L.Constructible.Lset (InfinitySet.# n)))
+.fst .snd .fst (fiber (finiteStage n) (insideOf n i) .fst)
+!= fst x of type V ℓ
+when checking that the expression
+fiber (finiteStage n) {x = itemOf n i} (insideOf n i) .snd has type
+fst
+(FOL.Semantics.At.⟦ hPropAlgebra (ℓ-suc ℓ) ⟧
+ (𝒮ᵥ FOL.ZFStructure.↾ isL) W3.AbsL.SM id (var (suc zero))
+ (y ∷ x ∷ []))
+≡ _z_547
+       12.10 real        11.31 user         0.36 sys
+           547913728  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32366  page reclaims
+                4436  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 583  voluntary context switches
+                6904  involuntary context switches
+        126358272467  instructions retired
+         46838774882  cycles elapsed
+           495354816  peak memory footprint
+EXIT=42
+ended 2026-08-23T19:25:08Z
