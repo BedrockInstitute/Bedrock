@@ -1,0 +1,36 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T05:13:58Z
+Checking LJ-1-588.Probe588 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-588/Probe588.agda).
+ Checking LJ-1-585.Probe585 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-585/Probe585.agda).
+  Checking LJ-1-523.Probe523 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-523/Probe523.agda).
+  Checking LJ-1-568.Probe568 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-568/Probe568.agda).
+   Checking LJ-1-549.Probe549 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-549/Probe549.agda).
+    Checking L.CodedShift (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/src/L/CodedShift.lagda.md).
+    Checking LJ-1-546.Probe546 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-546/Probe546.agda).
+   Checking LJ-1-554.Probe554 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-554/Probe554.agda).
+   Checking LJ-1-560.Probe560 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-560/Probe560.agda).
+   Checking LJ-1-561.Probe561 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-561/Probe561.agda).
+    Checking LJ-1-552.Probe552 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-552/Probe552.agda).
+    Checking LJ-1-557.Probe557 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-557/Probe557.agda).
+  Checking LJ-1-580.Probe580 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-580/Probe580.agda).
+   Checking LJ-1-577.Probe577 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-588/agents/tasks/LJ-1-577/Probe577.agda).
+      139.01 real       138.26 user         0.69 sys
+          3031793664  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              186787  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 405  voluntary context switches
+               19403  involuntary context switches
+       1871817295537  instructions retired
+        569099729888  cycles elapsed
+          2972191408  peak memory footprint
+EXIT=0
+ended 2026-08-23T05:16:17Z
