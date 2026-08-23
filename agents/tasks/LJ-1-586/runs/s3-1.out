@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T04:47:35Z
+Checking LJ-1-586.Probe586 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-586/agents/tasks/LJ-1-586/Probe586.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-586/agents/tasks/LJ-1-586/Probe586.agda:273.17-19: error: [CannotApply]
+Expression used as function but does not have function type:
+  expr: ∅ʟ
+  type: Σ P568.SV.S (λ x → x ∈ᶜ isL)
+when checking that {ℓ} is a valid argument to a function of type
+P568.SL.S
+        3.54 real         3.14 user         0.25 sys
+           677363712  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               43016  page reclaims
+                  71  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 918  voluntary context switches
+                 579  involuntary context switches
+         38650587853  instructions retired
+         13485509918  cycles elapsed
+           617726984  peak memory footprint
+EXIT=42
+ended 2026-08-23T04:47:38Z
