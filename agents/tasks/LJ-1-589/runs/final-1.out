@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# final-1: Probe589.agda, FINAL, own interface removed
+Checking LJ-1-589.Probe589 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-589/agents/tasks/LJ-1-589/Probe589.agda).
+        3.83 real         3.57 user         0.23 sys
+           715358208  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45403  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  99  voluntary context switches
+                 752  involuntary context switches
+         43821541330  instructions retired
+         15025483913  cycles elapsed
+           655672376  peak memory footprint
+EXIT=0

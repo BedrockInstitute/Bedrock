@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-2: the W3 slice ALONE, after the citation corrections
+Checking LJ-1-589.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-589/agents/tasks/LJ-1-589/runs/W3.agda).
+        1.74 real         1.46 user         0.18 sys
+           387497984  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25312  page reclaims
+                  85  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 514  voluntary context switches
+                 404  involuntary context switches
+         17928591191  instructions retired
+          6479363842  cycles elapsed
+           328221488  peak memory footprint
+EXIT=0

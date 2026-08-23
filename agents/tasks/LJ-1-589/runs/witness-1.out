@@ -1,0 +1,59 @@
+GHCRTS=-A64m -I0 -M8g
+# witness-1: the program's own witness meter over the brief's obligation list
+--- .pod-state/witness/Witness-LJ-1-589-47dc4848.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.589]  THREAD THE INFINITY CLAUSE THROUGH ROW 5.
+--
+-- THE OBLIGATION IS INHABITED.  `row5-carries-infinity` is section 6.
+-- This file carries NO hole and NO postulate, so every line of it is a
+-- measurement and not a claim ([LJ-1.533]'s discipline, kept by
+-- [LJ-1.549], [LJ-1.552], [LJ-1.556], [LJ-1.574] and [LJ-1.581]).
+-- Nothing lands in src/.  `SquareStepInf` is NOT built here and the
+-- square law is NOT built here: the brief forbids both.
+--
+-- WHY THIS TASK EXISTS.  [LJ-1.581] is a NO-GO, upheld
+-- (agents/tasks/LJ-1-581/review-of-LJ-1-581-1.md:7).  It named two
+-- reopeners and recommended the second: "THREAD THE INFINITY CLAUSE
+-- THROUGH ROW 5 FIRST, because the consumer does not carry it today"
+-- (agents/tasks/LJ-1-581/review-of-pairs-into-kappa.md:169-172).
+--
+-- WHAT THIS FILE MEASURES, IN ONE LINE EACH.
+--
+--   Section 1.  THE THREE SPELLINGS, copied from their sites and named.
+--   Section 2.  THE TROPHY'S CLAUSE AND `CodedShift`'s FIRST CONJUNCT
+--               ARE ONE TYPE.  Four identity functions say so.
+--   Section 3.  `SquareStepInf`'s CLAUSE IS STRICTLY STRONGER, and the
+--               gap is exactly omega.  The trophy quantifies over
+--               omega; `SquareStepInf` does not reach it.
+--   Section 4.  `CodedShift`'s SECOND CONJUNCT IS FREE.  `numerals`
+--               follows from the trophy's clause and `IsOrd` alone.
+--               So the trophy spelling and the `CodedShift` spelling
+--               ARE interderivable, and `SquareStepInf`'s is not.
+--   Section 5.  ROW 5, RESTATED WITH THE CLAUSE, three ways, and the
+--               terms that move between them.
+--   Section 6.  THE OBLIGATION.  `GCHStatement` from the NARROWED row
+--               5, with row 4 and the hard leg unchanged.
+--   Section 7.  AND THE CAMPAIGN'S OWN FIVE-ROW BILL closes with the
+--               narrowed row too.  The bill is still five rows.
+--
+-- W3 IS `agents/tasks/LJ-1-589/runs/W3.agda`, written first and
+-- typechecked alone (runs/w3-1.out:4, 1.68 s, EXIT=0).
+--
+-- CALIBER.  The program set GHCRTS on this pane.  I did not set it.
+-- One Agda process at a time.  No heap event.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module Witness-LJ-1-589-47dc4848 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+import LJ-1-589.Probe589
+module Target = LJ-1-589.Probe589 {ℓ} lem
+
+witness = Target.row5-carries-infinity
+
+pass      exit=0        2.96s  agents/tasks/LJ-1-589/Probe589.agda::row5-carries-infinity
+witness: 0 UNRESOLVED of 1, 2.96 s, probe_red=False
+EXIT=0

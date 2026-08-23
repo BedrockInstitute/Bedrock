@@ -1,0 +1,23 @@
+GHCRTS=-A64m -I0 -M8g
+# import-1: LJ-1-558.Probe558 alone
+Checking LJ-1-589.runs.ImportPrice (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-589/agents/tasks/LJ-1-589/runs/ImportPrice.agda).
+ Checking LJ-1-558.Probe558 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-589/agents/tasks/LJ-1-558/Probe558.agda).
+        1.96 real         1.67 user         0.19 sys
+           420839424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27355  page reclaims
+                  75  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 559  voluntary context switches
+                 445  involuntary context switches
+         22618866943  instructions retired
+          7841628652  cycles elapsed
+           361071456  peak memory footprint
+EXIT=0

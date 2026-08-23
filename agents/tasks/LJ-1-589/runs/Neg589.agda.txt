@@ -1,0 +1,43 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.589]  NEGATIVE CONTROL.  THIS FILE IS EXPECTED TO BE RED.
+--
+-- It exists to show that section 2's four identity functions are a
+-- MEASUREMENT and not an artefact of the elaborator accepting
+-- anything.  Section 2 says spelling A and spelling C's first conjunct
+-- are ONE type, by `λ x → x`.  Section 3 says spelling A and spelling
+-- B are NOT one type.  If the elaborator accepted `λ x → x` between
+-- ANY two of these, section 2 would prove nothing.
+--
+-- So this file writes the identity function section 3 says cannot
+-- exist.  It must FAIL.  Its output is agents/tasks/LJ-1-589/runs/neg-1.out.
+--
+-- IT IS KEPT AS A .txt, NOT AS AN .agda, so that `make probes` and the
+-- closure gate never see a red file.  [LJ-1.558] kept its own control
+-- the same way (agents/tasks/LJ-1-558/runs/NoStage558.agda.txt).
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-589.runs.Neg589 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet {ℓ} using ( ω )
+import Cubical.Data.Empty as Empty
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+
+module SL = hPropStructure 𝒮ʟ
+
+-- MUST FAIL.  Spelling A is `⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥`; spelling B is
+-- `⟨ ω ∈ fst κ ⟩`.  `Probe589.agda:169-171` refutes this function.
+bad-trophy-is-squarestepinf :
+    (κ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥) → ⟨ ω ∈ fst κ ⟩
+bad-trophy-is-squarestepinf κ x = x
