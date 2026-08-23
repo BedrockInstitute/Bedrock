@@ -1,0 +1,96 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.565] CONTROL k.  CONTROL h MINUS ITS LAST ROW.
+-- (original header of h follows)
+-- [LJ-1.565] CONTROL h.  THE SUCCESSOR STEP WITH `seq` NEVER MENTIONED.
+--
+-- Control e measured that ONE delta step on `seq`, in the FIRST
+-- argument of `∈`, costs 8 GB and 234.95 s.  Control f is the same row
+-- with the same spelling on both sides and costs 1.71 s.  So this file
+-- states the successor step in the `hierL` spelling THROUGHOUT:
+-- [LJ-1.536]'s abstract engine `AdjoinAt` is imported unchanged and
+-- instantiated at `hierL (sucV α) …` directly, and its `out` and
+-- `into` are rebuilt against `hierL-spec` instead of that task's
+-- `seq-spec`.  Nothing here restates the engine.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-565.runs.Control565k {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; IsOrd; Lset )
+open import L.Ordinal {ℓ} using ( suc-ord )
+open import L.Hierarchy {ℓ} lem using ( hierL; hierL-spec; IsHier )
+open import LJ-1-536.Probe536 {ℓ} lem
+  using ( step; isL-ord; HierBelow; pr-at; module AdjoinAt )
+
+open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁; ∣_∣₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+
+step-suc : (n : ℕ) (α : V ℓ) → step (suc n) α ≡ step n (sucV α)
+step-suc zero    α = refl
+step-suc (suc n) α = cong sucV (step-suc n α)
+
+
+module Succ (α : V ℓ) (oα : IsOrd α) (hyp : HierBelow α oα) where
+  private
+    H : S
+    H = hierL α (isL-ord α oα) oα
+
+    Q : V ℓ
+    Q = pr α (Lset α)
+
+    spH : IsHier α H
+    spH = hierL-spec α (isL-ord α oα) oα
+
+    -- THE SPELLING, AND IT IS `HierBelow (sucV α)`'S OWN.
+    sp : IsHier (sucV α)
+           (hierL (sucV α) (isL-ord (sucV α) (suc-ord oα)) (suc-ord oα))
+    sp = hierL-spec (sucV α) (isL-ord (sucV α) (suc-ord oα)) (suc-ord oα)
+
+    out : (x : S) → (⟨ fst x ∈ fst H ⟩ ⊎ (fst x ≡ Q))
+        → ⟨ fst x ∈ fst (hierL (sucV α) (isL-ord (sucV α) (suc-ord oα))
+                               (suc-ord oα)) ⟩
+    out x (inl x∈H) = subst ⟨_⟩ (sym (sp x))
+      (PT.map (λ { (c , (c∈α , eq)) →
+                   c , (∈sucV-inl {A = α} {x = fst c} c∈α , eq) })
+        (subst ⟨_⟩ (spH x) x∈H))
+    out x (inr p) = subst ⟨_⟩ (sym (sp x))
+      ∣ (α , isL-ord α oα) , (self∈sucV α , p) ∣₁
+
+    into : (x : S) → ⟨ fst x ∈ fst (hierL (sucV α)
+                          (isL-ord (sucV α) (suc-ord oα)) (suc-ord oα)) ⟩
+         → ∥ ⟨ fst x ∈ fst H ⟩ ⊎ (fst x ≡ Q) ∥₁
+    into x x∈ = PT.rec PT.squash₁ pick (subst ⟨_⟩ (sp x) x∈)
+      where
+      pick : Σ[ c ∈ S ] (⟨ fst c ∈ sucV α ⟩
+               × (fst x ≡ pr (fst c) (Lset (fst c))))
+           → ∥ ⟨ fst x ∈ fst H ⟩ ⊎ (fst x ≡ Q) ∥₁
+      pick (c , (c∈ , eq)) = ∈sucV-elim {A = α} {x = fst c} PT.squash₁ c∈
+        (λ c∈α → ∣ inl (subst ⟨_⟩ (sym (spH x)) ∣ c , (c∈α , eq) ∣₁) ∣₁)
+        (λ c≡α → ∣ inr (eq ∙ cong (λ w → pr w (Lset w)) c≡α) ∣₁)
+
+  hier∈ : ⟨ fst (hierL (sucV α) (isL-ord (sucV α) (suc-ord oα))
+                       (suc-ord oα)) ∈ Lset (step 4 α) ⟩
+  hier∈ = AdjoinAt.adjoin∈ (step 3 α) (suc-ord (suc-ord (suc-ord oα)))
+            (fst H) Q hyp (pr-at α oα)
+            (hierL (sucV α) (isL-ord (sucV α) (suc-ord oα)) (suc-ord oα))
+            out into
+
+

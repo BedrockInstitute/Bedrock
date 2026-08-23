@@ -1,0 +1,50 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.565] CONTROL f.  IS IT THE MATHEMATICS, OR IS IT THE NAME?
+--
+-- Control565c walls on ONE `refl` whose two sides, read on the page,
+-- are the same term: [LJ-1.536]'s `HierBelow` at a successor
+-- (Probe536.agda:186-187) and its `seq` at the predecessor
+-- (Probe536.agda:142-143) both spell
+--
+--     hierL (sucV α) (isL-ord (sucV α) (suc-ord oα)) (suc-ord oα)
+--
+-- and Control565e shows Agda compares that term with itself in 1.44 s.
+-- So one of the two names is not unfolding to what the page says.
+--
+-- THIS FILE REPLACES `seq` BY THE SPELLING WRITTEN OUT HERE, and
+-- imports `isL-ord` so that half cannot drift.  `HierBelow` is still
+-- the imported one.  Cheap means the name `seq` was the cost; a wall
+-- means `HierBelow` is.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-565.runs.Control565f {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; IsOrd; Lset )
+open import L.Ordinal {ℓ} using ( suc-ord )
+open import L.Hierarchy {ℓ} lem using ( hierL )
+open import LJ-1-536.Probe536 {ℓ} lem using ( step; isL-ord; HierBelow )
+
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+-- [LJ-1.536]'s `seq`, written out here instead of imported.
+myseq : (γ : V ℓ) → IsOrd γ → S
+myseq γ oγ = hierL (sucV γ) (isL-ord (sucV γ) (suc-ord oγ)) (suc-ord oγ)
+
+same : (α : V ℓ) (oα : IsOrd α)
+     → HierBelow (sucV α) (suc-ord oα)
+       ≡ ⟨ fst (myseq α oα) ∈ Lset (step 3 (sucV α)) ⟩
+same α oα = refl

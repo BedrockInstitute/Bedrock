@@ -1,0 +1,21 @@
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
+      240.56 real       239.12 user         1.36 sys
+         10943315968  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              669668  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+               19413  involuntary context switches
+       3055887669445  instructions retired
+        994424300857  cycles elapsed
+         10889371832  peak memory footprint

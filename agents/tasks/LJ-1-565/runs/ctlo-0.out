@@ -1,0 +1,19 @@
+Checking LJ-1-565.runs.Control565o (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-565/agents/tasks/LJ-1-565/runs/Control565o.agda).
+        1.71 real         1.54 user         0.15 sys
+           646594560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41206  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 352  involuntary context switches
+         22291814242  instructions retired
+          7338162159  cycles elapsed
+           587580400  peak memory footprint

@@ -1,0 +1,83 @@
+# review-of-stage-high: the obligation is not delivered, and the door is not why
+
+**NO-GO.** The obligation is `agents/tasks/LJ-1-565/Probe565.agda::stage-high`.
+It is not inhabited. No postulate stands in for it. `StageHigh` is
+`[LJ-1.536]`'s type, imported and not restated
+(`agents/tasks/LJ-1-536/Probe536.agda:350-352`, imported at
+`Probe565.agda:47`). The probe is green: exit 0, `runs/full-t2.out`, median
+1.94 s and 607 MB over three cold runs (`runs/full-t1.out`, `runs/full-t2.out`,
+`runs/full-t3.out`).
+
+**THE BRIEF'S QUESTION IS ANSWERED AND THE ANSWER IS YES: THE DOOR IS PAID.**
+W3 is green on the first run. `AtStage` applies at `[LJ-1.536]`'s formula with
+both hypotheses fed, and it gives membership in the definable powerset of the
+stage with both directions (`runs/W3.agda:68-83`, exit 0, `runs/w3-0.out`,
+median 1.93 s). `[LJ-1.562]`'s finding reaches this site.
+
+**AND THE STOP IS STILL A STOP, BECAUSE THE DOOR WAS NEVER THE ONLY REASON
+`[LJ-1.536]` GAVE.** That task's own stop names a second reason at
+`agents/tasks/LJ-1-536/review-of-StageHigh.md:88-91`:
+
+> **THE LIMIT DID NOT LEAVE.** ... the induction that pays `HierBelow` has one
+> case the adjunction cannot reach, and that case is a limit ordinal.
+
+and its report names a third at `agents/tasks/LJ-1-536/lj-1.536-report.md:220-231`,
+the successor row that exhausts 8 GB.
+
+## What blocks it, measured
+
+**THE SUCCESSOR STEP IS THE NEAR WALL AND THE LIMIT IS THE FAR ONE.** Both are
+in front of `StageHigh` and neither is the door.
+
+`[LJ-1.536]` split the successor row into three factors in one file that then
+exhausted the heap (`agents/tasks/LJ-1-536/runs/Control536d.agda:135-148`,
+`runs/ctld-0.time`). It isolated factor 1 and factor 3 and it never isolated
+factor 2. This task isolated all three.
+
+| factor | `[LJ-1.536]` | this task | file |
+|---|---|---|---|
+| 1, the step arithmetic (`Control536d.agda:135-136`) | 425.73 s alone | **0.69 s, cured** | `runs/Control565a.agda`, `runs/ctla-0.time` |
+| 2, the sequence identity (`Control536d.agda:140-144`) | never isolated | **HEAP WALL, 8 GB, 234.95 s** | `runs/Control565e.agda`, `runs/ctle-0.out` |
+| 3, the target type (`Control536d.agda:147-148`) | free | **free, 1.75 s** | `runs/Control565j.agda`, `runs/ctlj-0.out` |
+
+Factor 2's twin, with the same spelling on both sides so that no step is asked
+for, costs 1.71 s (`runs/Control565f.agda`, `runs/ctlf-0.out`). That is the
+controlled pair.
+
+**FOUR ROUTES TO THE SUCCESSOR STEP WERE BUILT AND ALL FOUR WALLED.** Every one
+of them is in `runs/` with its measurement: through `[LJ-1.536]`'s `seq`
+(`Control565d.agda`, `Control565e.agda`), through the chapter's uniqueness law
+(`Control565g.agda`, `Control565l.agda`), through a fresh instantiation of that
+task's engine in the other spelling (`Control565h.agda`, `Control565k.agda`,
+`Control565m.agda`), and through that instantiation with the one row of it that
+this task cured (`Control565u.agda`). Eleven runs report
+`Heap exhausted; Current maximum heap size is 8589934592 bytes` and one was
+killed at 10.86 GB (`runs/ctll-0.out`).
+
+**AND THE MOVE THAT ANY INDUCTION ON AN ORDINAL NEEDS IS PRICED THE SAME WAY.**
+`MoveAlong` (`Probe565.agda:234-236`) carries the obligation along an equation
+`sucV δ ≡ γ`. Two independent forms of it walled: a path in `IsOrd` built with
+`isProp→PathP` (`runs/Control565s.agda`, 278.51 s, 8 GB) and the chapter's
+uniqueness law (`runs/Control565t.agda`, 238.81 s, 8 GB).
+
+## What is delivered instead
+
+Ten green rows, each measured alone, are in `Probe565.agda`. They are both
+halves of the successor step (`out` at `:131-139`, `into` at `:142-151`), the
+engine applied at this site with those two halves as hypotheses
+(`:168-178`), and the whole ordinal split (`:192-206`), which is free.
+
+**SO THE SUCCESSOR STEP IS ONE APPLICATION SHORT AND THE APPLICATION IS THE
+WALL.** `runs/Control565p.agda` is the engine with the two directions as
+hypotheses, 1.79 s. `runs/Control565q.agda` is `out`, 1.67 s.
+`runs/Control565r.agda` is `into`, 1.67 s. `runs/Control565u.agda` feeds the
+second and third to the first: 8 GB, 238.63 s.
+
+## What this does not claim
+
+**THIS TASK DID NOT REACH THE LIMIT CASE AND IT MEASURED NOTHING ABOUT IT.**
+`[LJ-1.536]`'s statement that the limit needs a witness inside the carrier
+(`agents/tasks/LJ-1-536/review-of-StageHigh.md:88-91`, and
+`dev/literature/devlin-II5.md:222`) stands untouched by anything here. This
+report does not confirm it and does not refute it, and it must not be read as a
+second site for `[LJ-1.560]`'s question. **The near wall stopped the work first.**

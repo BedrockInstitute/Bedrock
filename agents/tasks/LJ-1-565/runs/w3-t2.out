@@ -1,0 +1,19 @@
+Checking LJ-1-565.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-565/agents/tasks/LJ-1-565/runs/W3.agda).
+        1.94 real         1.77 user         0.15 sys
+           631046144  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40257  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 293  involuntary context switches
+         22711688486  instructions retired
+          7986934565  cycles elapsed
+           571835376  peak memory footprint

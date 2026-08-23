@@ -1,0 +1,22 @@
+Checking LJ-1-565.runs.Control565k (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-565/agents/tasks/LJ-1-565/runs/Control565k.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
+      237.38 real       236.09 user         1.19 sys
+         10982375424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              672052  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+               20295  involuntary context switches
+       3045062980341  instructions retired
+        989305979734  cycles elapsed
+         10928185576  peak memory footprint

@@ -1,0 +1,325 @@
+# LJ-1.565 report: the door is paid, and the successor step is the near wall
+
+**VERDICT: NO-GO.** The obligation
+`agents/tasks/LJ-1-565/Probe565.agda::stage-high` is not inhabited. No
+postulate stands in for it. `agents/tasks/LJ-1-565/review-of-stage-high.md`
+states the stop.
+
+**THE BRIEF'S QUESTION IS ANSWERED IN THE BRIEF'S OWN TERMS.** The door is
+open, W3 proves it at this site, and the door was never the only reason
+`[LJ-1.536]` gave. **What blocks `StageHigh` now is one row that task said it
+could not afford. This task cured the reason that task gave for that row, and
+the row still exhausts 8 GB.**
+
+**AND THE ANSWER IS NOT AN UNBOUNDED SEARCH.** The brief asks for a stop if the
+blocker is one, because that would confirm a shared wall from a second site.
+**It is not one, and this report does not give `[LJ-1.561]` a second site.** The
+work stopped at a resource wall that sits in front of the limit case.
+
+Thirteen wall events and ten green controls are in `runs/`, each one file.
+
+## D-10, BEFORE ANY AGDA
+
+The brief orders one question first: which step could `[LJ-1.536]` not take,
+now that the door is known to be payable? **And it says plainly that it did not
+read the whole file and does not claim the stop names only one reason.**
+
+**IT NAMES THREE, AND THE DOOR IS ONLY THE FIRST.**
+
+1. **The door.** `agents/tasks/LJ-1-536/review-of-StageHigh.md:11-32`. This is
+   the reason the brief carries, and `[LJ-1.562]` paid it.
+2. **The limit.** The same stop document,
+   `agents/tasks/LJ-1-536/review-of-StageHigh.md:88-91`:
+
+   > **THE LIMIT DID NOT LEAVE.** ... the induction that pays `HierBelow` has
+   > one case the adjunction cannot reach, and that case is a limit ordinal.
+
+3. **The successor row.** `agents/tasks/LJ-1-536/lj-1.536-report.md:218-222`
+   and `agents/tasks/LJ-1-536/Probe536.agda:369-378`. That row is
+   `HierBelow α → HierBelow (sucV α)`, it is written out in a comment, and the
+   comment says "IT EXHAUSTS 8 GB".
+
+**SO THE STEP THAT TASK COULD NOT TAKE IS NUMBER 3, AND NUMBER 2 IS BEHIND IT.**
+`[LJ-1.536]` delivered `reduction : HierBelowAll → StageHigh`
+(`Probe536.agda:357-358`). `HierBelowAll` needs an induction on the ordinal.
+The successor case of that induction IS row 3. So row 3 stands between
+`StageHigh` and everything else, and the limit case is only reachable after it.
+
+**AND ROW 3'S STATED REASON IS WRONG.** `[LJ-1.536]` blamed the `sucV`
+spelling. Section 1 of the probe cures that spelling and measures the cure.
+The row still walls.
+
+## W3, WRITTEN FIRST AND ALONE
+
+`agents/tasks/LJ-1-565/runs/W3.agda`, 83 lines, **exit 0 on the FIRST run**,
+`runs/w3-0.out`, 2.07 s. Median **1.93 s** over three cold runs
+(`runs/w3-t1.out`, `runs/w3-t2.out`, `runs/w3-t3.out`), 631 MB. The brief
+estimated about 15 lines and under 2 minutes; the file is longer and much
+cheaper.
+
+**IT IMPORTS THE FORMULA AND DOES NOT RESTATE IT.** `adjoin`, `Δ₀-adjoin` and
+`Below-adjoin` are `[LJ-1.536]`'s own rows
+(`agents/tasks/LJ-1-536/runs/W3.agda:153-163`), imported at
+`runs/W3.agda:37`, so nothing here can drift from what that task typechecked.
+
+| row | where | what it settles |
+|---|---|---|
+| `bnd` | `runs/W3.agda:60-61` | hypothesis two, the constants are in the stage |
+| `carved∈` | `:68-69` | the carved set IS in the definable powerset of the stage |
+| `carved⊆` | `:71-72` | and it stays inside the stage |
+| `mem→sat`, `sat→mem` | `:75-83` | hypothesis one is fed, and membership is satisfaction in BOTH directions |
+
+**W3 IS GO. `[LJ-1.562]`'S FINDING REACHES THIS SITE.** `AtStage` applies at
+`[LJ-1.536]`'s formula with both hypotheses in hand, so nothing about the door
+blocks this task. **The brief's condition for "the finding does not reach this
+site" did not fire.**
+
+## WHAT ACTUALLY BLOCKED IT
+
+**THE SUCCESSOR ROW, AND ITS COST IS THE IDENTIFICATION OF THE SEQUENCE AND NOT
+THE STEP ARITHMETIC.** `[LJ-1.536]` split that row into three factors in
+`agents/tasks/LJ-1-536/runs/Control536d.agda:135-148`; that file exhausted 8 GB
+(`agents/tasks/LJ-1-536/runs/ctld-0.time`), so no factor was measured in it. It
+then reduced to `runs/Control536e.agda` and `runs/Control536f.agda`, which
+carry **factor 1 alone**, and measured 425.73 s and 417.18 s
+(`agents/tasks/LJ-1-536/runs/ctle-0.time`, `runs/ctlf-0.time`). **It never
+isolated factor 2**, and its conclusion "98 PERCENT OF THE COST IS `sucV`"
+(`agents/tasks/LJ-1-536/lj-1.536-report.md:248`) is a statement about factor 1
+against factor 3 only. This task isolated all three: factor 1 is curable to
+0.69 s (`runs/Control565a.agda`, `runs/ctla-0.time`), factor 3 is free at
+1.75 s (`runs/Control565j.agda`, `runs/ctlj-0.out`), and **factor 2, one delta
+step that identifies `seq α oα` with `hierL (sucV α) …`, exhausts 8 GB in
+234.95 s** (`runs/Control565e.agda`, `runs/ctle-0.out`), while its twin with
+the same spelling on both sides costs 1.71 s (`runs/Control565f.agda`,
+`runs/ctlf-0.out`).
+
+## THE UNREPORTED WITNESS
+
+**`[LJ-1.536]` DID REPORT `Δ₀-adjoin`, AND THE BRIEF'S PREMISE IS NOT EXACT.**
+Its report names the row with its `file:line` at
+`agents/tasks/LJ-1-536/lj-1.536-report.md:96`, in the W3 table; what neither
+that report nor its stop does is connect that witness to `AtStage`'s first
+hypothesis, and the stop lists both hypotheses as open at
+`review-of-StageHigh.md:25-27`. **One other thing in that task's `runs/` is
+absent from its report and it is not delivered work:**
+`agents/tasks/LJ-1-536/runs/Control536d.agda:140-144` states `seq-conv`, which
+is exactly the row this task has now measured as the 8 GB wall, and that file
+never typechecked, so the row is a statement and not a term.
+
+## WHAT IS DELIVERED
+
+`agents/tasks/LJ-1-565/Probe565.agda`, 266 lines, exit 0, median **1.94 s** and
+607 MB over three cold runs (`runs/full-t1.out`, `runs/full-t2.out`,
+`runs/full-t3.out`).
+
+### The cure for the reason `[LJ-1.536]` gave
+
+`Probe565.agda:94-96`. A controlled pair, one row apart.
+`runs/Control565a.agda` is `agents/tasks/LJ-1-536/runs/Control536e.agda` line
+for line with one row changed.
+
+| file | the row | result |
+|---|---|---|
+| `agents/tasks/LJ-1-536/runs/Control536e.agda:32-33` | `step-conv α x p = p` | 425.73 s |
+| `agents/tasks/LJ-1-565/runs/Control565a.agda:47` | `subst _ (step-suc 3 α) p` | **0.69 s** |
+
+**AND IT BUYS NOTHING BY ITSELF.** That is the finding, not the cure.
+
+### Both halves of the successor step
+
+`out` at `Probe565.agda:131-139` and `into` at `:142-151`. Both green,
+measured alone at 1.67 s (`runs/Control565q.agda`, `runs/Control565r.agda`).
+
+**ONE LINE OF `[LJ-1.536]` IS REPLACED AND THE REPLACEMENT IS MEASURED.** That
+task declares the reader's domain in a named `where` block
+(`agents/tasks/LJ-1-536/Probe536.agda:326-328`). Declaring it makes Agda
+convert the written spelling of `⟨ fst c ∈ sucV α ⟩` against the unfolded
+`Recorded (sucV α)`, and `sucV α` is transparent: heap wall, 8 GB
+(`runs/Control565m.agda`, `runs/ctlm-0.out`). Letting Agda INFER that domain,
+as `out` already infers the domain of its `PT.map`, costs 1.67 s
+(`runs/Control565r.agda`, `runs/ctlr-0.out`).
+
+### The engine at this site, one application short
+
+`Probe565.agda:168-178`. `[LJ-1.536]`'s abstract engine `AdjoinAt` applied at
+this site with the stage, the two constants, `pr-at`, the hypothesis, and both
+directions as hypotheses: 1.79 s (`runs/Control565p.agda`, `runs/ctlp-0.out`).
+
+**AND FEEDING IT THE PROBE'S OWN `out` AND `into` EXHAUSTS 8 GB**,
+238.63 s (`runs/Control565u.agda`, `runs/ctlu-0.out`). Three rows, each under
+1.8 s alone, and the application of one to the other two is a wall.
+
+### The ordinal split, free
+
+`Probe565.agda:192-206`, 1.84 s (`runs/Control565v.agda`, `runs/ctlv-0.out`).
+`suc∈or≡` (`src/L/Ordinal/Stages.lagda.md:137-139`) says a member's successor
+either stays inside the ordinal or IS it, so refusing an immediate predecessor
+is exactly `[LJ-1.519]`'s `IsLimit`. **Zero needs no case of its own:**
+`IsLimit ∅` holds with nothing to prove, so `HierBelowLimit` already covers it.
+`lem` decides the split (`:198-199`).
+
+### The three statements that remain, stated and not inhabited
+
+`Probe565.agda:225-248`.
+
+| statement | where | price |
+|---|---|---|
+| `SuccessorStep` | `:225-227` | every ingredient green, the application walls at 8 GB |
+| `MoveAlong` | `:234-236` | two independent forms walled, 8 GB |
+| `Residue`, which is `[LJ-1.536]`'s `HierBelowLimit` | `:241-242` | not measured by this task |
+
+`Closing` (`:247-248`) says the three of them give `HierBelowAll`, and
+`reduction-here` (`:252-253`) is `[LJ-1.536]`'s green reduction from there to
+`StageHigh`.
+
+## THE WALL
+
+**THIRTEEN WALL EVENTS AT ONE CALIBER, AND NONE WAS RERUN.** The caliber was
+`GHCRTS="-A64m -I0 -M8g"` on the pane, set by the program and untouched. Twelve
+runs print `Heap exhausted; Current maximum heap size is 8589934592 bytes` and
+one was killed by the operating system at 10.86 GB resident. **The first is the
+probe's own first form**, which carried the successor step: 246.03 s,
+`runs/full-0.out`. The other twelve are the controls below. Every one of them
+is a DIFFERENT file, and each was written to remove one suspect.
+
+| control | what is in it | result |
+|---|---|---|
+| `runs/Control565a.agda` | the step arithmetic, cured | exit 0, **0.69 s**, 268 MB |
+| `runs/Control565b.agda` | the probe minus the transport | WALL, 258.15 s |
+| `runs/Control565c.agda` | the successor step, `seq` route | WALL, 239.61 s |
+| `runs/Control565d.agda` | its re-ascription alone | WALL, 236.56 s |
+| `runs/Control565e.agda` | the same with the stage taken out | WALL, 234.95 s |
+| `runs/Control565f.agda` | **control e with no delta step** | exit 0, **1.71 s** |
+| `runs/Control565g.agda` | the bridge by the uniqueness law | WALL, 234.84 s |
+| `runs/Control565h.agda` | the engine, other spelling, unabbreviated | WALL, 249.12 s |
+| `runs/Control565i.agda` | one delta on `HierBelow`, at a variable | exit 0, **1.71 s** |
+| `runs/Control565j.agda` | the same at `sucV α` | exit 0, **1.75 s** |
+| `runs/Control565k.agda` | control h minus its last row | WALL, 237.38 s |
+| `runs/Control565l.agda` | the bridge alone | KILLED at 10.86 GB, 200.23 s |
+| `runs/Control565m.agda` | the engine with a local abbreviation | WALL, 239.19 s |
+| `runs/Control565n.agda` | the hierarchy's spec at a successor | exit 0, **1.71 s** |
+| `runs/Control565o.agda` | the imported engine, re-ascribed | exit 0, **1.71 s** |
+| `runs/Control565p.agda` | the engine at the site, directions as hypotheses | exit 0, **1.79 s** |
+| `runs/Control565q.agda` | `out` alone | exit 0, **1.67 s** |
+| `runs/Control565r.agda` | `into` alone, domain inferred | exit 0, **1.67 s** |
+| `runs/Control565s.agda` | the transport by `isProp→PathP` | WALL, 278.51 s |
+| `runs/Control565t.agda` | the transport by the uniqueness law | WALL, 238.81 s |
+| `runs/Control565u.agda` | the engine fed the real `out` and `into` | WALL, 238.63 s |
+| `runs/Control565v.agda` | the ordinal split | exit 0, **1.84 s** |
+
+**WHAT THE PAIRS SAY.** Every green row that imports `[LJ-1.536]`'s probe
+falls between 1.67 s and 1.84 s, and every wall falls between 200.23 s and
+278.51 s. **There is no gradient. A row either costs nothing or it exhausts the
+heap.** Controls f, i,
+j, n, o, p, q, r and v carry the same vocabulary as the walls and differ only in
+whether Agda is asked to take one step. **The mechanism is not diagnosed here
+and this report does not guess at it.** What is measured is where the step may
+be asked for and where it may not.
+
+**AND THE CURE THAT WORKED, WORKED ONCE.** Control m walls, control r is control
+m's `into` with the domain inferred and it is free, and control u is control r
+plus the application and it walls again. So the `into` cure is real and it moves
+the wall rather than removing it.
+
+## C-42, THE SWEEP
+
+The law says a refutation measures one site and never measures how far the
+site extends, so the count comes before any cure is priced. Three greps over
+`src` and `agents/tasks`.
+
+| shape | hits | files | in `src/` |
+|---|---|---|---|
+| the internal hierarchy named at a successor, `hierL (sucV` | 43 | 24 | **0** |
+| the successor spelling `step k (sucV` | 17 | 12 | **0** |
+| a declared reader domain `Σ[ c ∈ S ]` | 73 | 56 | 10 |
+
+**THE WALLING SHAPE HAS NOT REACHED `src/`.** Outside this task the first shape
+is carried only by `[LJ-1.519]` and `[LJ-1.536]`, and the second only by
+`[LJ-1.536]`. The third shape is common, but its risky form needs a membership
+into a transparent successor inside the declared domain, and **no file in
+`src/` has one**: of the ten `src/` files with a `Σ[ c ∈ S ]` domain, zero have
+`∈ sucV` within three lines of it, and `src/` has 11 occurrences of `∈ sucV` in
+five files, none of them in a declared reader domain. **So the cure of section 2
+is a probe-level cure today and no chapter needs it.**
+
+## W2 AND W4
+
+**W2.** The brief did not state the rule; the clause says to answer it anyway.
+Nothing in this task is written at a fixed carrier. The probe is generic in `ℓ`
+and in the ordinal, `AdjoinAt` is imported as the abstract engine it already
+is, and no row names a concrete stage in its type. There is no fixed form here
+to report a conflict about.
+
+**W4.** Nothing was retired, so there is no `dev/ARCHIVE.md` row to write.
+
+## WHAT IT COST
+
+| file | lines | result | time | memory |
+|---|---|---|---|---|
+| `runs/W3.agda` | 83 | exit 0, first run | 1.93 s median of 3 cold | 631 MB |
+| `Probe565.agda` | 266 | exit 0 | 1.94 s median of 3 cold | 607 MB |
+| 22 controls | 47 to 100 each | 10 green, 12 walls | see the table above | |
+| `runs/full-0.out` | the probe's first form | HEAP WALL | 246.03 s | 8 GB |
+
+The brief estimated about 180 lines in the probe, of which the obligation was
+about 40. The probe is 266 lines and the obligation is not in it. **About 90 of
+those lines are the two halves of the successor step and the engine's
+application site, and they are green; what is missing is the one application
+that joins them.**
+
+## FOR THE NEXT BRIEF
+
+1. **THE NEXT OBLIGATION IS NOT `StageHigh` AND IT IS NOT THE LIMIT. IT IS
+   `SuccessorStep`** (`Probe565.agda:225-227`). Everything it needs is green in
+   sections 2 and 3 of the probe. **Do not brief the limit case before this row
+   lands: the limit case cannot be reached without it.**
+2. **DO NOT BRIEF THE `sucV` SPELLING AS THE CAUSE.** It is cured and measured
+   (0.69 s against 425.73 s) and the row walls anyway.
+3. **A ROW HERE COSTS EITHER 1.7 SECONDS OR 8 GIGABYTES.** Any brief that
+   estimates a price between those two is estimating a number this site does
+   not produce. Price a row by asking whether Agda is asked to take a step, not
+   by asking how big the row is.
+4. **THE CALIBER IS THE UNMEASURED VARIABLE.** Every wall here is at
+   `-M8g`, and this slot must never set `GHCRTS` itself. Whether the successor
+   row lands at the heavy caliber, `-A64m -I0 -M12g`, is one dispatch and this
+   task could not run it. **That is the cheapest open question in this leg.**
+5. **`[LJ-1.562]`'S GO IS CONFIRMED AT THIS SITE AND IT IS NOT THE BOTTLENECK.**
+   The door costs 1.93 s. Nothing further should be spent on it.
+6. **`[LJ-1.561]` GETS NOTHING FROM THIS TASK.** No unbounded search was
+   reached, so there is no second site for the shared wall, and this report must
+   not be cited as one.
+
+## ARCHIVE USED
+
+- `archive/dev/LJ-dispatch-index.md`: not read, declined. The predecessors this
+  task needs are named in the brief by task code and their probes, reports and
+  runs are live under `agents/tasks/`.
+- `archive/dev/JOURNAL-archived.md`: not read, declined. A live document carries
+  no history and this task needed none.
+- `archive/dev/JOURNAL.md`: not read, declined, for the same reason.
+- `archive/dev/ORCHESTRATION.md`: not read, declined. It is an archived process
+  document and this task is a measurement.
+- `dev/ARCHIVE.md`: not read. Nothing was retired by this task, so clause W4 has
+  no row to write there.
+
+## LITERATURE USED
+
+- `dev/literature/devlin-II5.md`: READ, and it is the source for what sits
+  BEHIND this task's wall rather than at it. `:217`:
+
+  > Strength: the existential over z is UNBOUNDED at the ambient level.
+
+  and `:222`:
+
+  > γ < α. Strength: the Σ₁ form is "witnessed inside the carrier", not
+
+  **It confirms that the limit case is the far obstruction and it says nothing
+  about the near one**, which is a resource fact about a successor row.
+- `dev/literature/truncation-and-selection.md`: not read, declined. No choice
+  and no selection is made anywhere in this task.
+- `dev/literature/digest.md`: not read, declined. `devlin-II5.md` is the chapter
+  digest this task needed.
+- `dev/literature/terms-2026-08.md`: not read, declined. No term is named or
+  translated here, and clause W5 is not touched.
+- `dev/literature/geology.md`: not read, declined. Nothing here is about ground
+  models.
