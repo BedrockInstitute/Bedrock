@@ -15199,114 +15199,6 @@ expired_at = 2026-08-22
   seconds_min = 3600.0
 
 [[row]]
-id = "task-lj-1-541-go"
-scope = "task:LJ-1.541"
-priority = 10
-action = "done"
-outcome = "go"
-added = 2026-08-22
-added_by = "mathematician"
-reason = "branch `go` of LJ-1.541, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 0
-  obligations_delta_max = -1
-  heap_wall = false
-
-[[row]]
-id = "task-lj-1-541-accept-failed"
-scope = "task:LJ-1.541"
-priority = 14
-action = "escalate"
-head_slot = "coder_adversarial"
-added = 2026-08-22
-added_by = "mathematician"
-reason = "branch `accept-failed` of LJ-1.541, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 1
-  obligations_delta_max = -1
-  changed_files_none = ["agents/tasks/LJ-1-541/review-of-LJ-*-*.md"]
-
-[[row]]
-id = "task-lj-1-541-stop-stated"
-scope = "task:LJ-1.541"
-priority = 12
-action = "escalate"
-head_slot = "mathematician_adversarial"
-added = 2026-08-22
-added_by = "mathematician"
-reason = "branch `stop-stated` of LJ-1.541, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 0
-  obligations_delta_min = 0
-  changed_files_any = ["agents/tasks/LJ-1-541/review-of-*.md"]
-  changed_files_none = ["agents/tasks/LJ-1-541/review-of-LJ-*-*.md"]
-
-[[row]]
-id = "task-lj-1-541-no-go-attacked"
-scope = "task:LJ-1.541"
-priority = 15
-action = "escalate"
-head_slot = "mathematician_adversarial"
-added = 2026-08-22
-added_by = "mathematician"
-reason = "branch `no-go-attacked` of LJ-1.541, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 42
-  error_class_in = ["unsolved_meta", "universe_level", "other"]
-  changed_files_any = ["agents/tasks/LJ-1-541/Probe541.agda"]
-  changed_files_none = ["agents/tasks/LJ-1-541/review-of-*.md"]
-
-[[row]]
-id = "task-lj-1-541-no-go-stated"
-scope = "task:LJ-1.541"
-priority = 20
-action = "escalate"
-head_slot = "mathematician_adversarial"
-added = 2026-08-22
-added_by = "mathematician"
-reason = "branch `no-go-stated` of LJ-1.541, admitted from the brief"
-expired = false
-
-  [row.when]
-  exit_code = 42
-  changed_files_any = ["agents/tasks/LJ-1-541/review-of-*.md"]
-
-[[row]]
-id = "task-lj-1-541-heap-wall-park"
-scope = "task:LJ-1.541"
-priority = 30
-action = "park"
-added = 2026-08-22
-added_by = "mathematician"
-reason = "PARK, NOT ESCALATE. MEASURED on LJ-1.534, 2026-08-22: this row matched"
-expired = false
-
-  [row.when]
-  heap_wall = true
-
-[[row]]
-id = "task-lj-1-541-ran-long-and-changed-little"
-scope = "task:LJ-1.541"
-priority = 50
-action = "park"
-added = 2026-08-22
-added_by = "mathematician"
-reason = "branch `ran-long-and-changed-little` of LJ-1.541, admitted from the brief"
-expired = false
-
-  [row.when]
-  changed_files_count_max = 1
-  seconds_min = 3600.0
-
-[[row]]
 id = "task-lj-1-542-go"
 scope = "task:LJ-1.542"
 priority = 10
@@ -22256,6 +22148,114 @@ action = "park"
 added = 2026-08-23
 added_by = "mathematician"
 reason = "branch `ran-long-and-changed-little` of LJ-1.572, admitted from the brief"
+expired = false
+
+  [row.when]
+  changed_files_count_max = 1
+  seconds_min = 3600.0
+
+[[row]]
+id = "task-lj-1-541-go"
+scope = "task:LJ-1.541"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-23
+added_by = "mathematician"
+reason = "branch `go` of LJ-1.541, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-541-accept-failed"
+scope = "task:LJ-1.541"
+priority = 14
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-23
+added_by = "mathematician"
+reason = "branch `accept-failed` of LJ-1.541, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 1
+  obligations_delta_max = -1
+  changed_files_none = ["agents/tasks/LJ-1-541/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-541-stop-stated"
+scope = "task:LJ-1.541"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-23
+added_by = "mathematician"
+reason = "branch `stop-stated` of LJ-1.541, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-541/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-541/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-541-no-go-attacked"
+scope = "task:LJ-1.541"
+priority = 15
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-23
+added_by = "mathematician"
+reason = "branch `no-go-attacked` of LJ-1.541, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  error_class_in = ["unsolved_meta", "universe_level", "other"]
+  changed_files_any = ["agents/tasks/LJ-1-541/Probe541.agda"]
+  changed_files_none = ["agents/tasks/LJ-1-541/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-541-no-go-stated"
+scope = "task:LJ-1.541"
+priority = 20
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-23
+added_by = "mathematician"
+reason = "branch `no-go-stated` of LJ-1.541, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  changed_files_any = ["agents/tasks/LJ-1-541/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-541-heap-wall-park"
+scope = "task:LJ-1.541"
+priority = 30
+action = "park_and_split"
+added = 2026-08-23
+added_by = "mathematician"
+reason = "PARK, NOT ESCALATE. MEASURED on LJ-1.534, 2026-08-22: this row matched"
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "task-lj-1-541-ran-long-and-changed-little"
+scope = "task:LJ-1.541"
+priority = 50
+action = "park"
+added = 2026-08-23
+added_by = "mathematician"
+reason = "branch `ran-long-and-changed-little` of LJ-1.541, admitted from the brief"
 expired = false
 
   [row.when]
