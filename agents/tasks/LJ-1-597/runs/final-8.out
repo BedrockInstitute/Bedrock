@@ -1,0 +1,28 @@
+Checking LJ-1-597.Probe597 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-597/agents/tasks/LJ-1-597/Probe597.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-597/agents/tasks/LJ-1-597/Probe597.agda:139.16-32: error: [NotInScope]
+Not in scope:
+  SC.Upper.fin-inj
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-597/agents/tasks/LJ-1-597/Probe597.agda:139.16-32
+    (did you mean
+       '.#L.Axioms.Basic-10857985233846972542.FinOf.finDisj' or
+       '.#LJ-1-561.Probe561-10905143230503645063.SC.Upper.WOEmb.id-inj' or
+       '.#LJ-1-561.Probe561-10905143230503645063.SC.fin-inj' or
+       '.#LJ-1-568.Probe568-2812390965339344391.SC.Upper.WOEmb.id-inj' or
+       '.#LJ-1-568.Probe568-2812390965339344391.SC.fin-inj' or
+       '.#LJ-1-584.Probe584-2371630398045419378.SC.Upper.WOEmb.id-inj' or
+       '.#LJ-1-584.Probe584-2371630398045419378.SC.fin-inj' or
+       '.#LJ-1-597.runs.W3-6941997387565503294.SC.Upper.WOEmb.id-inj' or
+       '.#LJ-1-597.runs.W3-6941997387565503294.SC.fin-inj' or
+       'L.StageCardinal.Upper.WOEmb.id-inj' or
+       'L.StageCardinal.fin-inj' or
+       'P561.SC.Upper.WOEmb.id-inj' or
+       'P561.SC.fin-inj' or
+       'P568.SC.Upper.WOEmb.id-inj' or
+       'P568.SC.fin-inj' or
+       'P584.SC.Upper.WOEmb.id-inj' or
+       'P584.SC.fin-inj' or
+       'SC.Upper.WOEmb.id-inj' or
+       'SC.fin-inj' or
+       'W3.SC.Upper.WOEmb.id-inj' or
+       'W3.SC.fin-inj'?)
+when scope checking SC.Upper.fin-inj

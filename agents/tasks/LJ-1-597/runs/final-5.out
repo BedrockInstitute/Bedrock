@@ -1,0 +1,8 @@
+Checking LJ-1-597.Probe597 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-597/agents/tasks/LJ-1-597/Probe597.agda).
+ Checking LJ-1-594.Probe594 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-597/agents/tasks/LJ-1-594/Probe594.agda).
+  Checking LJ-1-594.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-597/agents/tasks/LJ-1-594/runs/W3.agda).
+time: command terminated abnormally
+real 95.53
+user 91.82
+sys 2.09
+time: signal: Invalid argument
