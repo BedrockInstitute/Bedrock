@@ -1,0 +1,2 @@
+pass      exit=0        1.62s  agents/tasks/LJ-1-583/Probe583.agda::sealed-gaps-closed
+witness: 0 UNRESOLVED of 1, 1.62 s, probe_red=False
