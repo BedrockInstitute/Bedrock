@@ -2698,8 +2698,17 @@ class Admits(LoopCase):
         `2026-08-22T07:04:19Z` to seq 2449 at `2026-08-22T09:11:26Z` with no line
         between. `agda_pileup()` now leaves the orphanage out of `per_parent` and keeps
         both processes in `total`, so the census still charges A14's ceiling for them
-        while it stops claiming one agent holds them."""
+        while it stops claiming one agent holds them.
+
+        OWNER'S RULING 2026-08-23 tightened the live ceiling to 1, which the total of 2
+        orphans alone would now trip regardless of `per_parent` -- that is
+        `test_but_FOUR_orphans_still_fill_the_WIDE_tier_so_the_cap_is_not_lost`'s own
+        property, tested separately. This test's property is narrower and still needs
+        isolating: an EMPTY `per_parent` must not itself refuse, so the ceiling is
+        patched here to a value the total of 2 sits under, decoupled from whatever the
+        live policy's own number is on any given day."""
         self.patch(pod, "agda_pileup", lambda: (2, {}, None))
+        self.patch(pod, "agda_slots", lambda tier=pod.WIDE: 4)
         self.assertTrue(pod.admits(self.st, self.t))
         self.t.agda = False
         self.assertTrue(pod.admits(self.st, self.t))
@@ -2711,13 +2720,13 @@ class Admits(LoopCase):
         self.assertFalse(pod.admits(self.st, self.t))
 
     def test_the_total_at_the_WIDE_ceiling_REFUSES_and_one_below_it_ADMITS(self):
-        """THE NUMBER IS WRITTEN OUT, and it is A14's four. Reading the ceiling back out
-        of `agda_slots()` made the pair `total >= slots` true for any value the function
-        returned, including a broken zero, so the test held whatever the tier said."""
-        self.patch(pod, "agda_pileup", lambda: (4, {900: 1, 901: 1, 902: 1, 903: 1},
-                                                None))
+        """THE NUMBER IS WRITTEN OUT, and it is the owner's 2026-08-23 one (was A14's
+        four). Reading the ceiling back out of `agda_slots()` made the pair
+        `total >= slots` true for any value the function returned, including a broken
+        zero, so the test held whatever the tier said."""
+        self.patch(pod, "agda_pileup", lambda: (1, {900: 1}, None))
         self.assertFalse(pod.admits(self.st, self.t))
-        self.patch(pod, "agda_pileup", lambda: (3, {900: 1, 901: 1, 902: 1}, None))
+        self.patch(pod, "agda_pileup", lambda: (0, {}, None))
         self.assertTrue(pod.admits(self.st, self.t))
 
     def test_a_non_agda_task_is_admitted_at_the_ceiling(self):
@@ -2753,14 +2762,20 @@ class Admits(LoopCase):
         self.assertFalse(pod.admits(self.st, self.t))
 
     def test_a14_fills_slots_three_and_four_only_above_the_free_memory_floor(self):
-        self.assertEqual(pod.agda_slots(), 4)
+        """OWNER'S RULING 2026-08-23: slots = 1 now, so `floor = min(1, 2)` already
+        equals `slots` itself -- there is no third or fourth slot left to hold back,
+        and low free memory can no longer cut the count below 1."""
+        self.assertEqual(pod.agda_slots(), 1)
         self.patch(pod, "free_memory_pct", lambda: 5.0)
-        self.assertEqual(pod.agda_slots(), 2)
+        self.assertEqual(pod.agda_slots(), 1)
 
     def test_an_unreadable_memory_sensor_drops_to_the_two_slot_floor(self):
-        """NONE IS NOT ZERO AND IT IS NOT A HUNDRED. An unreadable sensor must refuse."""
+        """NONE IS NOT ZERO AND IT IS NOT A HUNDRED. An unreadable sensor must refuse.
+
+        OWNER'S RULING 2026-08-23: the floor an unreadable sensor drops to is now 1,
+        the same as `slots` itself, since `min(1, 2) == 1`."""
         self.patch(pod, "free_memory_pct", lambda: None)
-        self.assertEqual(pod.agda_slots(), 2)
+        self.assertEqual(pod.agda_slots(), 1)
 
     def test_rule_c_passes_agda_True_whatever_the_brief_says(self):
         """The acceptance runner starts Agda for every case except case 4, and the
@@ -2983,7 +2998,7 @@ class AgdaOrphansWrapper(LoopCase):
 
 WATCHDOG_SH = """\
 #!/bin/zsh
-LIMIT_KB=$((14*1024*1024))   # 14 GB per-process backstop
+LIMIT_KB=$((6*1024*1024))    # 6 GB per-process backstop, owner's ruling 2026-08-23
 FREE_MIN=8                   # system free-percentage floor
 while true; do sleep 20; done
 """
@@ -3094,20 +3109,21 @@ class Watchdog(LoopCase):
         self.assertEqual(len(self.watchdog_lines()), 2)
 
     def test_the_backstop_note_is_silent_when_the_two_homes_AGREE(self):
-        """C-12's 14 GB per-process cap and 8 percent free floor are written twice: in
-        the script and in `[tiers.shared]`. The fixture's copies agree."""
+        """The owner's 2026-08-23 6 GB per-process cap and C-12's 8 percent free floor
+        are written twice: in the script and in `[tiers.shared]`. The fixture's copies
+        agree."""
         self.assertIsNone(pod.watchdog_backstop_note())
 
     def test_the_backstop_note_NAMES_a_disagreement_between_the_two_homes(self):
         """Two homes for one number drift silently, and this number is a memory cap."""
         p = self.tmp / "scripts" / "ops" / "agda-watchdog.sh"
-        p.write_text(WATCHDOG_SH.replace("14*1024*1024", "10*1024*1024")
+        p.write_text(WATCHDOG_SH.replace("6*1024*1024", "10*1024*1024")
                      .replace("FREE_MIN=8", "FREE_MIN=3"))
         # THE WHOLE PHRASE, and not the digit alone: `assertIn("3", note)` holds on any
         # note that carries a 3 anywhere, including the one that names the RIGHT number.
         note = pod.watchdog_backstop_note()
         self.assertIn("the script says 10 GB per process and "
-                      "[tiers.shared].per_process_backstop_gb says 14", note)
+                      "[tiers.shared].per_process_backstop_gb says 6", note)
         self.assertIn("the script says 3 percent system free and "
                       "[tiers.shared].system_free_floor_pct says 8", note)
 
@@ -3177,42 +3193,64 @@ class Tiers(LoopCase):
         self.assertEqual(self.lines()[-1]["tier"], pod.HEAVY)
 
     def test_the_WIDE_tier_admits_four_and_the_HEAVY_tier_admits_two(self):
-        self.assertEqual(pod.agda_slots(pod.WIDE), 4)
-        self.assertEqual(pod.agda_slots(pod.HEAVY), 2)
+        """OWNER'S RULING 2026-08-23: both are now one. The two names survive so a
+        brief may still declare either, but `admits()`'s GLOBAL total is checked
+        against the SAME ceiling either way."""
+        self.assertEqual(pod.agda_slots(pod.WIDE), 1)
+        self.assertEqual(pod.agda_slots(pod.HEAVY), 1)
 
     def test_the_third_slot_opens_only_above_the_free_memory_floor(self):
-        """C-12's own 25 percent, and `[tiers.shared]` holds the number."""
-        self.patch(pod, "agda_pileup", lambda: (2, {900: 1, 901: 1}, None))
+        """C-12's own 25 percent, and `[tiers.shared]` holds the number.
+
+        OWNER'S RULING 2026-08-23: `agda_slots()` no longer varies with free memory
+        (`floor = min(1, 2) == slots` already), so there is no THIRD slot left to gate
+        on this floor at all -- both branches now refuse identically, at total >= 1."""
+        self.patch(pod, "agda_pileup", lambda: (1, {900: 1}, None))
         t = pod.Task("X", agda=True, tier=pod.WIDE)
-        self.assertTrue(pod.admits(self.st, t))
+        self.assertFalse(pod.admits(self.st, t))
         self.patch(pod, "free_memory_pct", lambda: 24.0)
         self.assertFalse(pod.admits(self.st, t))
 
     def test_a_HEAVY_task_is_refused_at_TWO_where_a_WIDE_task_is_admitted(self):
-        """The tier changes the ceiling and nothing else does."""
+        """The tier changes the ceiling and nothing else does. OWNER'S RULING
+        2026-08-23 made both tiers' LIVE ceiling the same (1), so this property is
+        demonstrated here by patching `agda_slots` to give the two tiers distinct
+        ceilings again, decoupled from the live policy's own numbers -- the
+        MECHANISM (each tier reads its own ceiling) is what is under test, not
+        today's particular figure."""
         self.patch(pod, "agda_pileup", lambda: (2, {900: 1, 901: 1}, None))
+        self.patch(pod, "agda_slots", lambda tier=pod.WIDE: 3 if tier == pod.WIDE else 2)
         self.assertTrue(pod.admits(self.st, pod.Task("W", agda=True, tier=pod.WIDE)))
         self.assertFalse(pod.admits(self.st, pod.Task("H", agda=True, tier=pod.HEAVY)))
 
-    def test_the_mixed_worst_case_holds_at_or_under_the_32_GB_sum(self):
-        """ONE HEAVY BESIDE THREE WIDE IS 36 GB, and no per-tier count refuses it: the
-        heavy tier sees two of its own and the wide tier sees three of its own."""
+    def test_the_mixed_worst_case_holds_at_or_under_the_4_GB_sum(self):
+        """ONE HEAVY BESIDE THREE WIDE is 16 GB under the owner's 2026-08-23 4 GB-per-
+        writer caliber, and no per-tier count refuses it on its own: the heavy tier
+        sees one of its own and the wide tier sees three of its own. `agda_slots` is
+        patched generously so the CEILING check (now 1 for both tiers, and refusing
+        on its own regardless) does not mask the SUM check this test is about."""
         self.patch(pod, "agda_pileup", lambda: (3, {900: 1, 901: 1, 902: 1}, None))
+        self.patch(pod, "agda_slots", lambda tier=pod.WIDE: 10)
         self.running("A", pod.HEAVY)
         self.running("B", pod.WIDE)
         self.running("C", pod.WIDE)
         self.assertFalse(pod.admits(self.st, pod.Task("D", agda=True, tier=pod.WIDE)))
 
-    def test_four_WIDE_writers_are_exactly_32_GB_and_the_sum_admits_them(self):
-        """The bar is `at or under`, so the tier's own four slots stay reachable."""
-        self.patch(pod, "agda_pileup", lambda: (3, {900: 1, 901: 1, 902: 1}, None))
-        for code in ("A", "B", "C"):
-            self.running(code, pod.WIDE)
+    def test_the_lone_WIDE_writer_is_exactly_the_4_GB_sum_and_still_fits(self):
+        """The bar is `at or under`: owner's ruling 2026-08-23 made the sum cap equal
+        to a single writer's own caliber, so the ONE slot that is now reachable stays
+        reachable at the exact boundary, the same property the old four-writers-at-
+        32-GB test demonstrated for the four-slot cap. `agda_slots` is patched
+        generously to isolate the SUM check from the (now separately refusing)
+        ceiling check."""
+        self.patch(pod, "agda_pileup", lambda: (0, {}, None))
+        self.patch(pod, "agda_slots", lambda tier=pod.WIDE: 10)
         self.assertTrue(pod.admits(self.st, pod.Task("D", agda=True, tier=pod.WIDE)))
 
     def test_a_CHECKING_task_holds_its_heap_too(self):
         """The acceptance runner starts Agda, so a task in CHECKING is a live writer."""
         self.patch(pod, "agda_pileup", lambda: (3, {900: 1, 901: 1, 902: 1}, None))
+        self.patch(pod, "agda_slots", lambda tier=pod.WIDE: 10)
         self.running("A", pod.HEAVY, status=pod.CHECKING)
         self.running("B", pod.WIDE)
         self.running("C", pod.WIDE)
@@ -3220,11 +3258,12 @@ class Tiers(LoopCase):
 
     def test_a_task_never_counts_its_OWN_heap_twice(self):
         """Rule (c) asks about a task that is already CHECKING, and counting it on both
-        sides would refuse the acceptance run of the fourth wide task for ever."""
+        sides would refuse the acceptance run of the fourth wide task for ever.
+        `agda_slots` is patched generously so the (now separately refusing) ceiling
+        does not mask the property this test is about."""
         self.patch(pod, "agda_pileup", lambda: (3, {900: 1, 901: 1, 902: 1}, None))
+        self.patch(pod, "agda_slots", lambda tier=pod.WIDE: 10)
         t = self.running("D", pod.WIDE, status=pod.CHECKING)
-        for code in ("A", "B", "C"):
-            self.running(code, pod.WIDE)
         self.assertTrue(pod.admits(self.st, t))
 
     def test_the_transition_line_carries_the_tier_so_two_records_compare_inside_one(self):
@@ -3526,9 +3565,12 @@ class Heads(LoopCase):
 
     def test_the_mixed_worst_case_heap_sum_is_checked_at_load(self):
         """A14 holds the sum at or under `max_heap_sum_gb`. A future edit that widens a
-        tier is caught here and not on the machine that runs out of memory."""
-        self.edit("slots = 4                     # up to FOUR concurrent Agda writers",
-                  "slots = 8")
+        tier is caught here and not on the machine that runs out of memory. OWNER'S
+        RULING 2026-08-23 made ONE writer at 4 GB the whole budget, so widening to two
+        (2 x 4 = 8 GB) already breaks it."""
+        self.edit("slots = 1                     # OWNER'S RULING 2026-08-23: one Agda "
+                  "writer, no more",
+                  "slots = 2                     # widened past the sum cap for this test")
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 

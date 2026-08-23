@@ -1964,17 +1964,22 @@ def tier_heap_gb(tier):
 def agda_slots(tier=WIDE):
     """A14's slot count for one tier, cut to the floor when free memory is low or unread.
 
-    C-12's TWO TIERS: WIDE is four concurrent Agda writers at `-M8g`, HEAVY is two at
-    `-M12g`, and the mixed worst-case heap sum stays at or under 32 GB, which `heads.py`
-    checks at load and `heap_sum_ok()` checks per admission. Slots three and four fill
-    ONLY above `free_memory_pct_for_extra`, which is C-12's own 25 percent.
+    OWNER'S RULING 2026-08-23 SUPERSEDES C-12's TWO-TIER FIGURES: under any
+    circumstances, only ONE Agda writer, at a 4 GB cap. Both `[tiers.wide]` and
+    `[tiers.heavy]` now carry `slots = 1` and `heap = "-A64m -I0 -M4g"`, and the mixed
+    worst-case heap sum stays at or under 4 GB, which `heads.py` checks at load and
+    `heap_sum_ok()` checks per admission. `free_memory_pct_for_extra` (C-12's 25 percent)
+    still gates a THIRD slot, but with `slots = 1` the floor below (`min(slots, 2)`)
+    already equals `slots` itself, so the low-memory branch and the ordinary branch now
+    return the same number: there is no third or fourth slot left to hold back.
 
     THE TIER SURFACE IS THIN AND THAT IS DISCLOSED. No `[row.when]` key names a tier, so
     a task declares one in the `agda_tier:` line of its brief's `## HEAD` block, which
     `task_tier()` reads and no pre-flight check enforces. A brief that names none is WIDE.
-    A HEAVY declaration now buys BOTH halves: `launch()` passes `tier=tier_of(t)` to the
-    launcher, so the pane gets `-A64m -I0 -M12g` and the registry record carries `heavy`
-    for the heap sum. The program's OWN acceptance run stays at the WIDE caliber (A15).
+    A HEAVY declaration still buys the registry record's own `heavy` label for the heap
+    sum, but both tiers now dispatch the SAME caliber, `-A64m -I0 -M4g` (A15's WIDE
+    caliber for the program's own acceptance run is unaffected by which tier a task
+    declares).
 
     THE DANGLING HALF, AND IT IS A DOCUMENTATION GAP RATHER THAN A CODE ONE. No brief
     template and no slot instruction file names `agda_tier:` today: `grep -rn agda_tier
@@ -1989,9 +1994,9 @@ def agda_slots(tier=WIDE):
         slots = _int(cfg["tiers"][tier]["slots"])
         need = cfg["tiers"]["shared"]["free_memory_pct_for_extra"]
     except (heads_mod.HeadsError, KeyError, TypeError):
-        return 2                              # C-12's floor, never a guess upward
+        return 1                              # OWNER'S RULING 2026-08-23, never a guess upward
     if slots is None or slots < 1 or not isinstance(need, (int, float)):
-        return 2
+        return 1
     floor = min(slots, 2)
     pct = free_memory_pct()
     if pct is None or pct <= need:

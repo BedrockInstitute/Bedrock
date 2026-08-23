@@ -75,8 +75,8 @@ SAFE = re.compile(r"^\{-#\s+OPTIONS\b[^#]*--safe", re.M)
 # own caliber without an edit here. The numbers are `dev/pod/heads.toml [tiers.*] heap`,
 # which is their ONE owner (`scripts/pod/heads.py`); this module is a READER, and
 # `test_pod_facts.py` fails when the two drift apart.
-CAP_WIDE = "-A64m -I0 -M8g"      # A14 WIDE: four concurrent Agda writers
-CAP_HEAVY = "-A64m -I0 -M12g"    # A14 HEAVY: two concurrent Agda writers
+CAP_WIDE = "-A64m -I0 -M4g"      # OWNER'S RULING 2026-08-23: one Agda writer, 4 GB
+CAP_HEAVY = "-A64m -I0 -M4g"     # OWNER'S RULING 2026-08-23: one Agda writer, 4 GB
 CAP_TREE = "-A64m -I0 -M16g"     # A15: a WHOLE-TREE `make check`, C-12's orchestrator
                                  # caliber, because that run holds the machine alone. No
                                  # caller in this module runs one; the constant is the

@@ -182,18 +182,23 @@ class Calibers(unittest.TestCase):
         return tomllib.loads(path.read_text(encoding="utf-8"))
 
     def test_each_tier_caliber_equals_its_heads_toml_row(self):
-        """The loader owns the numbers; this module is a reader. Drift fails HERE."""
+        """The loader owns the numbers; this module is a reader. Drift fails HERE.
+
+        OWNER'S RULING 2026-08-23 made the two tiers carry the SAME slot count (1)
+        and the SAME caliber (-M4g): under any circumstances, only one Agda writer.
+        The two names survive because a brief may still declare either, but they are
+        no longer required to differ, so the old `assertNotEqual` is retired."""
         tiers = self.heads()["tiers"]
         self.assertEqual(facts.CAP_WIDE, tiers["wide"]["heap"])
         self.assertEqual(facts.CAP_HEAVY, tiers["heavy"]["heap"])
-        self.assertNotEqual(facts.CAP_WIDE, facts.CAP_HEAVY,
-                            "A14 gives the two tiers two calibers")
+        self.assertEqual(facts.CAP_WIDE, facts.CAP_HEAVY,
+                         "owner's ruling 2026-08-23: one Agda writer, one caliber")
 
     def test_the_acceptance_caliber_is_the_workers_and_the_tree_caliber_is_not(self):
-        """A15. A per-task run uses -M8g; a whole-tree make check uses -M16g."""
+        """A15. A per-task run uses the tier caliber; a whole-tree make check uses -M16g."""
         self.assertEqual(facts.CAP, facts.CAP_WIDE)
         self.assertEqual(accept.DEFAULT_TIER, "wide")
-        self.assertIn("-M8g", facts.CAP)
+        self.assertIn("-M4g", facts.CAP)
         self.assertIn("-M16g", facts.CAP_TREE)
         self.assertNotIn(facts.CAP_TREE, facts.CALIBER.values().__class__.__name__)
         self.assertNotIn("tree", facts.TASK_TIERS,

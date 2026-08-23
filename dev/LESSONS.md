@@ -2137,14 +2137,16 @@ level cured it with no other change (the p1 report, surprises 1).
 **Rule:** Every agda invocation runs under a GHC heap cap (`GHCRTS=-M<n>g`)
 so a runaway typecheck dies with a clean "Heap exhausted" exit instead of
 OOM-killing the machine; the orchestrator's audits run at `-M16g` and `make`
-exports a default. Sub-agent concurrency is TIERED (owner-widened 2026-08-02
-once the caps and the watchdog were live): WIDE mode for routine batches,
-up to FOUR concurrent Agda writers at `-M8g` each; HEAVY mode for assembly
-and close-out batches, at most TWO at `-M12g` each; the tier is chosen at
-dispatch, mixed tiers keep the worst-case heap sum at or under 32 GB, and
-the third and fourth slots are filled only when system free memory reads
-above 25%. A watchdog (`scripts/ops/agda-watchdog.sh`, restart it each
-session) backstops at 14 GB per process and an 8% system-free floor. A
+exports a default. **OWNER-TIGHTENED 2026-08-23: under any circumstances,
+only ONE Agda writer, at a 4 GB cap.** This supersedes the owner-widened
+2026-08-02 figures (WIDE four at `-M8g`, HEAVY two at `-M12g`, kept below as
+the measured incident and its original cure): both tiers now carry
+`slots = 1` and `heap = "-A64m -I0 -M4g"` (`dev/pod/heads.toml [tiers.*]`),
+the mixed worst-case heap sum stays at or under 4 GB, and the third/fourth-
+slot clause (system free memory above 25%) is dead code under one slot. A
+watchdog (`scripts/ops/agda-watchdog.sh`, restart it each session) backstops
+at 6 GB per process (2 GB above the cap, the same margin the original 14 GB
+kept above HEAVY's 12 GB) and an 8% system-free floor, unchanged. A
 heap-exhausted exit is a WALL event: apply the P-i playbook, never simply
 rerun.
 

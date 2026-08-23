@@ -366,13 +366,15 @@ def herdr_name(task: str) -> str:
 # ONE OWNER FOR THE NUMBERS. `dev/pod/heads.toml` holds them and
 # `scripts/pod/heads.py` is their loader, whose own docstring rules that two
 # READERS of one file are admissible and two OWNERS are not. This file is a
-# reader. The literals below are C-12's own floor and they are used ONLY when
+# reader. The literals below are the floor and they are used ONLY when
 # that loader cannot be reached, which `HEADS_ERROR` reports on every launch
-# path rather than passing in silence.
+# path rather than passing in silence. OWNER'S RULING 2026-08-23 replaced C-12's
+# four-WIDE/two-HEAVY floor with a single 4 GB writer: a broken config file should
+# fall back to the STRICTEST live policy, not a looser historical one.
 _C12_FLOOR_TIERS = {
-    "wide": {"slots": 2, "heap": "-A64m -I0 -M8g"},
-    "heavy": {"slots": 2, "heap": "-A64m -I0 -M12g"},
-    "shared": {"max_heap_sum_gb": 32},
+    "wide": {"slots": 1, "heap": "-A64m -I0 -M4g"},
+    "heavy": {"slots": 1, "heap": "-A64m -I0 -M4g"},
+    "shared": {"max_heap_sum_gb": 4},
 }
 #: The claude CLI's own five `--effort` values, MEASURED 2026-08-17 by [LJ-4-0].
 #: They are `legal.efforts` in `dev/pod/heads.toml`, and the literal here is the

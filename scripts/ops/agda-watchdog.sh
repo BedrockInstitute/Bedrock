@@ -1,7 +1,8 @@
 #!/bin/zsh
 # agda-watchdog: kills runaway agda before it OOMs the machine.
 # Born 2026-08-02 after four unguarded parallel writers crashed the 64GB box.
-# Primary guard is GHCRTS=-M10g on every agent agda run; this is the backstop.
+# Primary guard is GHCRTS=-M4g on every agent agda run (OWNER'S RULING 2026-08-23:
+# one Agda writer, 4 GB cap, under any circumstances); this is the backstop.
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 while [ ! -e "$ROOT/.git" ]; do
 	[ "$ROOT" = "/" ] && { echo "agda-watchdog: no .git above; refusing to guess" >&2; exit 1; }
@@ -9,7 +10,10 @@ while [ ! -e "$ROOT/.git" ]; do
 done
 mkdir -p "$ROOT/_build/tools"
 LOG="$ROOT/_build/tools/agda-watchdog.log"
-LIMIT_KB=$((14*1024*1024))   # 14 GB per-process backstop
+LIMIT_KB=$((6*1024*1024))    # 6 GB per-process backstop, dev/pod/heads.toml
+                              # [tiers.shared].per_process_backstop_gb -- the two must
+                              # agree, watchdog_backstop_note() in scripts/pod/pod.py names
+                              # any drift
 FREE_MIN=8                   # system free-percentage floor
 echo "$(date '+%F %T') watchdog started pid=$$" >> "$LOG"
 while true; do
