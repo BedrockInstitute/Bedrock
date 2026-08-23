@@ -1,0 +1,21 @@
+# w3-1: the W3 slice ALONE, before any other Agda of this task.
+Checking LJ-1-593.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-593/runs/W3.agda).
+        1.57 real         1.38 user         0.16 sys
+           397000704  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25972  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  93  voluntary context switches
+                 269  involuntary context switches
+         17926727555  instructions retired
+          6325361549  cycles elapsed
+           337740640  peak memory footprint
+EXIT=0

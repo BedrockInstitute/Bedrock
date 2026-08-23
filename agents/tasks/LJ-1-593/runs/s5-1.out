@@ -1,0 +1,30 @@
+# s5-1: agents/tasks/LJ-1-593/Probe593.agda
+# GHCRTS=-A64m -I0 -M8g
+Checking LJ-1-593.Probe593 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-593/Probe593.agda).
+ Checking LJ-1-564.Probe564 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-564/Probe564.agda).
+  Checking LJ-1-550.Probe550 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-550/Probe550.agda).
+  Checking LJ-1-558.Probe558 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-558/Probe558.agda).
+  Checking LJ-1-528.Probe528 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-528/Probe528.agda).
+   Checking LJ-1-526.Probe526 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-526/Probe526.agda).
+  Checking LJ-1-543.Probe543 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-543/Probe543.agda).
+  Checking LJ-1-540.Probe540 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-540/Probe540.agda).
+  Checking LJ-1-544.Probe544 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-544/Probe544.agda).
+       31.59 real        31.08 user         0.44 sys
+          2077376512  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              128534  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  70  voluntary context switches
+                4599  involuntary context switches
+        404258297313  instructions retired
+        126760351095  cycles elapsed
+          2017544184  peak memory footprint
+EXIT=0

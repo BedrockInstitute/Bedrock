@@ -1,0 +1,23 @@
+# s1: sections 1 and 2 alone.
+Checking LJ-1-593.Probe593 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/agents/tasks/LJ-1-593/Probe593.agda).
+  Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/src/L/Absorption.lagda.md).
+ Checking L.SquareLawClosed (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-593/src/L/SquareLawClosed.lagda.md).
+        6.49 real         6.28 user         0.18 sys
+           657342464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41862  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  11  voluntary context switches
+                 936  involuntary context switches
+         82349176169  instructions retired
+         26335877642  cycles elapsed
+           596804616  peak memory footprint
+EXIT=0
