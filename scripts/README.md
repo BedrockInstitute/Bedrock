@@ -16,7 +16,7 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | directory | holds | members |
 |---|---|---|
 | `scripts/` (flat) | the modules scripts IMPORT BY NAME across groups | `agents_tree.py`, `repo_root.py` |
-| `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-fences.py`, `check-glossary.py`, `check-probes.py`, `check-rule-ids.py`, `lint-agda.py`, `lint-prose.py` |
+| `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-fences.py`, `check-glossary.py`, `check-omlx-quiet.py`, `check-probes.py`, `check-rule-ids.py`, `lint-agda.py`, `lint-prose.py` |
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
 | `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
@@ -132,6 +132,22 @@ Report-only, like the em-dash rule: there is no `--fix`. Suppress a genuine exce
 ```sh
 python3 scripts/gate/check-glossary.py --check          # scan tracked files; exit 1 on any violation
 python3 scripts/gate/check-glossary.py --check --staged # only staged files (used by the hook)
+```
+
+### `check-omlx-quiet.py`
+
+Refuses `make check`'s whole-tree typecheck (`-M16g`) while qwen's local inference server,
+`omlx-server`, is live (owner's ruling 2026-08-23). Qwen is the one `herdr-pi` model this
+repository dispatches through a local server rather than a remote API
+([dev/pod/heads.toml](../dev/pod/heads.toml) `[legal.pi_provider]`); every other `herdr-pi`
+model is a remote call and carries no local footprint. The check is on process EXISTENCE, not a
+CPU threshold: same as `check-ratio.py`'s `agda_blocker()`, which it copies the pattern from,
+because a measured idle-vs-busy baseline for `omlx-server` does not exist. `make check` wires
+this in front of `typecheck`.
+
+```sh
+python3 scripts/gate/check-omlx-quiet.py --check                # exit 1 if omlx-server is live
+python3 scripts/gate/check-omlx-quiet.py --check --assume-quiet # proceed if neither pgrep nor ps can see
 ```
 
 ### `check-probes.py`

@@ -31,7 +31,7 @@ BASE_URL  :=
 PORT      := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check clean closure deploy fences gen glossary hooks html ledger lint lint-agda markers probes ratio reuse ruleids serve site specsurface test timing typecheck types venv venv-check survey
+.PHONY: check clean closure deploy fences gen glossary hooks html ledger lint lint-agda markers omlxquiet probes ratio reuse ruleids serve site specsurface test timing typecheck types venv venv-check survey
 
 check: venv-check typecheck markers lint lint-agda glossary ledger probes \
        closure fences reuse ruleids specsurface
@@ -46,7 +46,16 @@ venv:
 venv-check:
 	@test -x $(PY) || { echo "No virtualenv at $(VENV)/. Run: make venv"; exit 1; }
 
-typecheck:
+# OWNER'S RULING 2026-08-23: the whole-tree typecheck and qwen's LOCAL inference
+# server (omlx-server) must never run at the same time. Every other herdr-pi model
+# is a remote API call and carries no local footprint; qwen alone runs through a
+# local server this machine also has to feed the typecheck's own -M16g. See
+# scripts/gate/check-omlx-quiet.py for the measured process name and why this
+# refuses on existence rather than a guessed load threshold.
+omlxquiet:
+	$(PY) scripts/gate/check-omlx-quiet.py --check
+
+typecheck: omlxquiet
 	$(AGDA) $(EVERYTHING)
 
 lint:
@@ -176,6 +185,7 @@ test:
 # test_dispatch_clock, test_quota_fallback and test_ratio_noise. Wired here.
 	$(PY) scripts/tests/test_quota_fallback.py
 	$(PY) scripts/tests/test_ratio_noise.py
+	$(PY) scripts/tests/test_omlx_quiet.py
 	$(PY) scripts/tests/test_pod_launcher.py
 	$(PY) scripts/tests/test_pod_facts.py
 	$(PY) scripts/tests/test_pod_gates.py
