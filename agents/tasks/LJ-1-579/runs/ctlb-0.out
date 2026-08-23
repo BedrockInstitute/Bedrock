@@ -1,0 +1,10 @@
+Checking LJ-1-579.runs.Control579b (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-579/agents/tasks/LJ-1-579/runs/Control579b.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-579/agents/tasks/LJ-1-579/runs/Control579b.agda:55.16-58.70: error: [UnequalSorts]
+Type (ℓ-suc (ℓ-suc ℓ)) != Type (ℓ-suc ℓ)
+when checking that the expression
+{n : ℕ} (w b : Fin n) (γ : V ℓ) (oγ : IsOrd γ) →
+(ρ : S ^ n) →
+Below γ ρ →
+ρ ⊨ fst (levelFo-Σ₁ w b) ≡
+ρ ⊨ relativize (LsetS γ oγ) (fst (levelFo-Σ₁ w b))
+has type Type (ℓ-suc ℓ)
