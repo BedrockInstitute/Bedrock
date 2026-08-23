@@ -1,0 +1,34 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T06:18:57Z
+Checking LJ-1-595.Probe595 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-595/Probe595.agda).
+ Checking LJ-1-578.Probe578 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-578/Probe578.agda).
+  Checking LJ-1-550.Probe550 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-550/Probe550.agda).
+  Checking LJ-1-558.Probe558 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-558/Probe558.agda).
+  Checking LJ-1-564.Probe564 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-564/Probe564.agda).
+   Checking LJ-1-528.Probe528 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-528/Probe528.agda).
+    Checking LJ-1-526.Probe526 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-526/Probe526.agda).
+   Checking LJ-1-543.Probe543 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-543/Probe543.agda).
+   Checking LJ-1-540.Probe540 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-540/Probe540.agda).
+    Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/src/L/Absorption.lagda.md).
+   Checking LJ-1-544.Probe544 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-544/Probe544.agda).
+  Checking LJ-1-570.Probe570 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-570/Probe570.agda).
+       68.84 real        67.88 user         0.81 sys
+          2527182848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              188398  page reclaims
+                  43  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 432  voluntary context switches
+               16411  involuntary context switches
+        869268125481  instructions retired
+        270630400702  cycles elapsed
+          2559150456  peak memory footprint
+EXIT=0
+ended 2026-08-23T06:20:06Z

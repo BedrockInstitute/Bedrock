@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T06:23:11Z
+Checking LJ-1-595.Probe595 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-595/Probe595.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-595/Probe595.agda:213.17-22: error: [NotInScope]
+Not in scope:
+  mapFo
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-595/agents/tasks/LJ-1-595/Probe595.agda:213.17-22
+    (did you mean 'FOL.Manipulation.Relabelling.mapFo'?)
+when scope checking mapFo
+        3.75 real         3.33 user         0.28 sys
+           651526144  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41448  page reclaims
+                  70  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 726  voluntary context switches
+                1130  involuntary context switches
+         37231728233  instructions retired
+         14272054868  cycles elapsed
+           593609736  peak memory footprint
+EXIT=42
+ended 2026-08-23T06:23:15Z
