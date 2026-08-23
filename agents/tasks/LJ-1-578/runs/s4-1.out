@@ -1,0 +1,34 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T01:44:31Z
+Checking LJ-1-578.Probe578 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-578/agents/tasks/LJ-1-578/Probe578.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-578/agents/tasks/LJ-1-578/Probe578.agda:316.24-39: warning: -W[no]ModuleDoesntExport
+The module FOL.Syntax doesn't export the following:
+  mapFo
+when scope checking the declaration
+  open import FOL.Syntax using (mapFo)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-578/agents/tasks/LJ-1-578/Probe578.agda:332.56-61: error: [NotInScope]
+Not in scope:
+  mapFo
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-578/agents/tasks/LJ-1-578/Probe578.agda:332.56-61
+when scope checking mapFo
+        3.78 real         3.06 user         0.32 sys
+           840253440  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48860  page reclaims
+                4169  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 723  voluntary context switches
+                3753  involuntary context switches
+         36795120166  instructions retired
+         13444604610  cycles elapsed
+           782320768  peak memory footprint
+EXIT=42
+ended 2026-08-23T01:44:35Z

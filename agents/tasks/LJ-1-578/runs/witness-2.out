@@ -1,0 +1,8 @@
+pass      exit=0        6.03s  agents/tasks/LJ-1-578/Probe578.agda::three-give-cohyps  (grouped run, exit 0)
+pass      exit=0        6.03s  agents/tasks/LJ-1-578/Probe578.agda::remainder-gives-cohyps  (grouped run, exit 0)
+pass      exit=0        6.03s  agents/tasks/LJ-1-578/Probe578.agda::certificate-gives-cohyps  (grouped run, exit 0)
+pass      exit=0        6.03s  agents/tasks/LJ-1-578/Probe578.agda::gch-above-the-certificate  (grouped run, exit 0)
+pass      exit=0        6.03s  agents/tasks/LJ-1-578/Probe578.agda::levels-decode  (grouped run, exit 0)
+pass      exit=0        6.03s  agents/tasks/LJ-1-578/Probe578.agda::elem-down-taken  (grouped run, exit 0)
+pass      exit=0        6.03s  agents/tasks/LJ-1-578/Probe578.agda::w3-is-570s  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 7, 6.03 s, probe_red=False
