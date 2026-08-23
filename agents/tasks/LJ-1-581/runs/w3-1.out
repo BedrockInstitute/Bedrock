@@ -1,0 +1,23 @@
+GHCRTS=-A64m -I0 -M8g
+# w3-1: the W3 slice ALONE, 83 lines, LJ-1-556.Probe556 cold
+Checking LJ-1-581.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/runs/W3.agda).
+ Checking LJ-1-556.Probe556 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-556/Probe556.agda).
+      202.25 real       201.67 user         0.59 sys
+           656785408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41790  page reclaims
+                  41  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 114  voluntary context switches
+               26936  involuntary context switches
+       2621477780619  instructions retired
+        800869567137  cycles elapsed
+           596837384  peak memory footprint
+EXIT=0

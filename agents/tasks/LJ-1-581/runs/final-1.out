@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# final-1: the whole probe, 441 lines, own interface deleted, dependencies warm
+Checking LJ-1-581.Probe581 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/Probe581.agda).
+        2.03 real         1.87 user         0.14 sys
+           439664640  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               28576  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 322  involuntary context switches
+         26667412505  instructions retired
+          8663919337  cycles elapsed
+           379634504  peak memory footprint
+EXIT=0

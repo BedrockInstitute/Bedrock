@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# s45-2: after V -> V ℓ
+Checking LJ-1-581.runs.S45 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/runs/S45.agda).
+        2.23 real         2.04 user         0.17 sys
+           421691392  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27475  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 411  involuntary context switches
+         24302605857  instructions retired
+          8833017370  cycles elapsed
+           361825120  peak memory footprint
+EXIT=0

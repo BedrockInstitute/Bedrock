@@ -1,0 +1,23 @@
+GHCRTS=-A64m -I0 -M8g
+# final-2: the whole probe with LJ-1-556.Probe556 ALSO cold, so the import is paid here
+Checking LJ-1-581.Probe581 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/Probe581.agda).
+ Checking LJ-1-556.Probe556 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-556/Probe556.agda).
+      189.41 real       188.84 user         0.56 sys
+           666386432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               42414  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   2  voluntary context switches
+               26603  involuntary context switches
+       2628856937791  instructions retired
+        784277433628  cycles elapsed
+           606274568  peak memory footprint
+EXIT=0

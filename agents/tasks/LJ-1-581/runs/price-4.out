@@ -1,0 +1,32 @@
+GHCRTS=-A64m -I0 -M8g
+# price-4: ATTRIBUTION RUN after the seal. Profiling adds overhead: an attribution, not a price.
+Checking LJ-1-581.Probe581 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/Probe581.agda).
+Total                                    175,278ms 
+Miscellaneous                              1,462ms 
+LJ-1-581.Probe581.Read.ix→mem-inj        173,465ms 
+LJ-1-581.Probe581._._.go                     149ms 
+LJ-1-581.Probe581.obligation-false            37ms 
+LJ-1-581.Probe581.Read._.f-inj                37ms 
+LJ-1-581.Probe581.squarestep-false            36ms 
+LJ-1-581.Probe581.Read._.f                    36ms 
+LJ-1-581.Probe581.Read.square-from-coded      35ms 
+LJ-1-581.Probe581._.go                        19ms 
+      175.48 real       174.95 user         0.50 sys
+           668450816  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               42540  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 103  voluntary context switches
+               23925  involuntary context switches
+       2650320722887  instructions retired
+        763785044473  cycles elapsed
+           608355336  peak memory footprint
+EXIT=0

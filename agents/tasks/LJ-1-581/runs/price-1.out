@@ -1,0 +1,22 @@
+GHCRTS=-A64m -I0 -M8g
+# price-1: L.Cardinal {ℓ} lem ALONE, 17 lines, every interface warm
+Checking LJ-1-581.runs.ImportPrice (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/runs/ImportPrice.agda).
+        1.65 real         1.45 user         0.17 sys
+           399212544  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26107  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 118  voluntary context switches
+                 359  involuntary context switches
+         17648127605  instructions retired
+          6454695526  cycles elapsed
+           340820808  peak memory footprint
+EXIT=0

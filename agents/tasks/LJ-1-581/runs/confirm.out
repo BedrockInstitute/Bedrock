@@ -1,0 +1,17 @@
+GHCRTS=-A64m -I0 -M8g
+# confirm: every file of this task, final state, back to back, one Agda process at a time
+--- Probe581.agda
+real 1.74
+EXIT=0
+--- runs/W3.agda
+real 1.56
+EXIT=0
+--- runs/S45.agda
+real 1.73
+EXIT=0
+--- runs/Bisect.agda
+real 0.90
+EXIT=0
+--- runs/ImportPrice.agda
+real 1.62
+EXIT=0

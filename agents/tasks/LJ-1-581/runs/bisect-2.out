@@ -1,0 +1,24 @@
+GHCRTS=-A64m -I0 -M8g
+# bisect-2: pr-inj and ↪-inj separated, PROFILED. Profiling adds overhead: an attribution, not a price.
+Checking LJ-1-581.runs.Bisect (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/runs/Bisect.agda).
+Total         679ms 
+Miscellaneous 679ms 
+        0.74 real         0.64 user         0.09 sys
+           277479424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18677  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 129  involuntary context switches
+         10071847159  instructions retired
+          3200271322  cycles elapsed
+           218055400  peak memory footprint
+EXIT=0

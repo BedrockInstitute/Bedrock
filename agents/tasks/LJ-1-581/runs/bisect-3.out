@@ -1,0 +1,30 @@
+GHCRTS=-A64m -I0 -M8g
+# bisect-3: three ways to write the same pair path, PROFILED. Profiling adds overhead: an attribution, not a price.
+Checking LJ-1-581.runs.Bisect (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/runs/Bisect.agda).
+Total         676ms 
+Miscellaneous 676ms 
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/agents/tasks/LJ-1-581/runs/Bisect.agda:26.13-27.57: error: [UnequalSorts]
+Type (ℓ-suc ℓ) != Type ℓ
+when checking that the expression
+pr (⟪ fst κ ⟫↪ (fst p)) (⟪ fst κ ⟫↪ (snd p)) ≡
+pr (⟪ fst κ ⟫↪ (fst q)) (⟪ fst κ ⟫↪ (snd q))
+has type Type ℓ
+        0.74 real         0.64 user         0.09 sys
+           275972096  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18584  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 148  involuntary context switches
+          9951278887  instructions retired
+          3184481187  cycles elapsed
+           216695504  peak memory footprint
+EXIT=42

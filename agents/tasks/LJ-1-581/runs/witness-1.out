@@ -1,0 +1,5 @@
+GHCRTS=-A64m -I0 -M8g
+# witness-1: the program's own obligation witness on the final probe
+missing   exit=42       1.96s  agents/tasks/LJ-1-581/Probe581.agda::pairs-into-kappa-coded  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-581/.pod-state/witness/Witness-POD-ab4ba980.agda:42)
+witness: 1 UNRESOLVED of 1, 1.96 s, probe_red=False
+EXIT=1
