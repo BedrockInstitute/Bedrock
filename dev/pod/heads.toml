@@ -378,14 +378,21 @@ system_free_floor_pct = 8     # C-12's floor, unchanged -- unrelated to the per-
 #
 # DD25 SURVIVES AS A SET INVARIANT: NO model of an author slot is a model of its
 # critic. Three slots carry a choice now, so the check is pairwise over sets and
-# `scripts/tests/test_pod_launcher.py` runs it on all three author/critic pairs.
-# MEASURED 2026-08-21 over the rows below: coder {Qwen3.8-27B-oQ4e-mtp,
-# claude-opus-5} meets neither critic set {glm-5.3, grok-4.6}, and mathematician
-# {claude-opus-5} meets neither either.
-# **`claude-opus-5` IS IN TWO SLOTS AND THAT IS NOT A COLLISION.** It is the whole
-# of `mathematician` and the coder's fallback, and those are two AUTHOR slots. The
-# invariant forbids an author reviewing its own work, never two authors sharing a
-# vendor.
+# `scripts/tests/test_pod_launcher.py` AND `scripts/tests/test_pod_loop.py` run it
+# on the three author/critic pairs. OWNER'S RULING 2026-08-23 WAIVED ONE PAIR:
+# `coder` and `mathematician_adversarial` now both carry `glm-5.3` (qwen's own
+# fallback moved there the same day glm-5.3 left `mathematician_adversarial`'s
+# sibling `coder_adversarial`), so that ONE pair's check is an explicit, dated
+# exception in both test files rather than a silent hole. The other two pairs
+# still hold with no exception: `mathematician` {claude-opus-5} meets neither
+# `mathematician_adversarial` {grok-4.6, glm-5.3} nor is `coder`
+# {Qwen3.8-27B-oQ4e-mtp, glm-5.3} met by `coder_adversarial` {grok-4.6,
+# claude-opus-5}.
+# **`claude-opus-5` IS IN TWO SLOTS AND THAT IS STILL NOT A COLLISION**, though
+# which two slots changed the same ruling: it is the whole of `mathematician`
+# (author) and `coder_adversarial`'s own second head (critic OF CODER, never of
+# mathematician). The invariant forbids an author reviewing its own work; this
+# model reviews a DIFFERENT author's.
 mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
 # **TWO HEADS SINCE 2026-08-21, REORDERED 2026-08-22: `grok-4.6` first and
 # `glm-5.3` behind it, owner's ruling.** Neither is capped: both are ordinary
@@ -410,28 +417,33 @@ mathematician_adversarial = [
 # value this file pins. Both `glm-5.3` rows keep `""` for the same reason they
 # always did (never asked to carry a value, not because the harness cannot take
 # one).
-# **THE SECOND HEAD MOVED FROM `grok-4.6` TO `claude-opus-5`, owner's ruling
-# 2026-08-21.** It is the overflow head AND the model A29 retries on when the
-# local server produces nothing, which it did twice on real work (`LJ-1.478`,
-# `LJ-1.479`) before either mechanism existed.
+# **THE SECOND HEAD MOVED FROM `grok-4.6` TO `claude-opus-5` ON 2026-08-21, AND
+# THEN TO `glm-5.3` ON 2026-08-23** -- the middle name is history and not the
+# current overflow head. Whichever model sits here is the overflow head AND the
+# model A29 retries on when the local server produces nothing, which it did twice
+# on real work (`LJ-1.478`, `LJ-1.479`) before either mechanism existed.
+# OWNER'S RULING 2026-08-23: qwen is back from the 2026-08-22 maintenance drop, and
+# claude-opus-5 leaves this slot for coder_adversarial's own second head below --
+# glm-5.3 is qwen's fallback now, not claude-opus-5. `max_concurrency = 1` is the
+# machine and not a preference (see mathematician_adversarial's own comment above
+# it): `omlx-server` is one process on this laptop serving one 27B model.
 coder                     = [
-  # OWNER'S INSTRUCTION 2026-08-22: qwen is down for maintenance, so it is dropped from
-  # this array rather than capped -- `max_concurrency = 0` is refused at load
-  # (dev/pod/heads.py: "a cap below 1 is not `unlimited`, OMIT the field to mean
-  # unlimited"), and `max_concurrency` cannot express "never". claude-opus-5 is the
-  # only config, so every NEW coder dispatch goes there; LJ-1.512's already-RUNNING
-  # qwen dispatch is untouched (head_live_counts() only gates a NEW pick). Re-add the
-  # line below when the owner says qwen is back:
-  #   { model = "Qwen3.8-27B-oQ4e-mtp", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "claude-opus-5",        effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
+  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "glm-5.3",              effort = "", harness = "herdr-pi", sandbox = "acceptEdits" },
 ]
-# **TWO HEADS SINCE 2026-08-21, REORDERED 2026-08-22** the same pair and the
-# same reasoning as `mathematician_adversarial` above. The two critics may
-# share a model with each other: DD25 pairs an author with ITS critic and
-# says nothing about two critics.
+# **SECOND HEAD MOVED FROM `glm-5.3` TO `claude-opus-5`, OWNER'S RULING
+# 2026-08-23**, the same day qwen returned to `coder` and took `glm-5.3` as ITS OWN
+# fallback. The two critics no longer carry the same pair, and that is deliberate:
+# `test_the_critic_is_never_the_same_model_as_the_author` in both
+# `scripts/tests/test_pod_launcher.py` and `scripts/tests/test_pod_loop.py` waives
+# ONLY the (coder, mathematician_adversarial) pair now, dated the same ruling --
+# `coder` and `mathematician_adversarial` both carry `glm-5.3`, and a coder
+# stop/no-go branch can route to `mathematician_adversarial`. `claude-opus-5` here
+# never reviews its OWN work: it authors `mathematician` and critiques `coder`,
+# two different authors.
 coder_adversarial         = [
-  { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
-  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
+  { model = "grok-4.6", effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits" },
+  { model = "claude-opus-5", effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
 ]
 # **THE MAINTAINER MOVED TO `claude-sonnet-5` at effort `xhigh`, owner's ruling
 # 2026-08-21.** It was `claude-opus-5` at `xhigh` from 2026-08-20. The slot is

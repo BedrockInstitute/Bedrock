@@ -3580,14 +3580,23 @@ class Heads(LoopCase):
         **A27 MADE THIS A SET COMPARISON AND NOT A STRING ONE.** An author slot may now
         carry two models, and the invariant is that NO model of the author is a model of
         the critic: one shared string is one review a model gives its own work.
+
+        **OWNER'S RULING 2026-08-23 WAIVED ONE PAIR.** Qwen's return gave `coder` the
+        fallback `glm-5.3`, which `mathematician_adversarial` already carried and kept.
+        A coder stop/no-go branch CAN route to `mathematician_adversarial`, so this is a
+        real, disclosed exception and not a silent hole: it is asserted on its own,
+        below, rather than folded into the loop that still holds the other two pairs.
         """
         p = self.tmp / "dev" / "pod" / "heads.toml"
         for author, critic in (("mathematician", "mathematician_adversarial"),
-                               ("coder", "coder_adversarial"),
-                               ("coder", "mathematician_adversarial")):
+                               ("coder", "coder_adversarial")):
             a = {r["model"] for r in heads_mod.configs(author, p)}
             c = {r["model"] for r in heads_mod.configs(critic, p)}
             self.assertEqual(a & c, set(), f"{critic} shares a model with {author}")
+        coder = {r["model"] for r in heads_mod.configs("coder", p)}
+        math_adv = {r["model"] for r in heads_mod.configs("mathematician_adversarial", p)}
+        self.assertEqual(coder & math_adv, {"glm-5.3"},
+                         "owner's ruling 2026-08-23's disclosed exception")
 
     # ---------------------------------------------------- A27, the multi-model slot
 
@@ -3714,38 +3723,30 @@ class Heads(LoopCase):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
     #: THE CODER'S SECOND CONFIG, VERBATIM, and the edits below aim at THIS row rather
-    #: than at any other array element. The two critic arrays are byte-identical to each
-    #: other since A29, so a `str.replace` naming one of their rows edits BOTH and the
-    #: refusal under test could come from the wrong slot. This literal is unique in the
-    #: file: `[maintainer_presets].claude` names the same model with single-space
-    #: padding and no trailing comma.
-    CODER_2ND = ('  { model = "claude-opus-5",        effort = "xhigh",'
-                 ' harness = "herdr-claude", sandbox = "acceptEdits" },')
+    #: than at any other array element. OWNER'S RULING 2026-08-23 made it `glm-5.3`
+    #: (qwen's own fallback); `mathematician_adversarial` also carries a `glm-5.3` row,
+    #: but with DIFFERENT padding, so a `str.replace` naming this exact literal still
+    #: cannot land on the wrong slot.
+    CODER_2ND = ('  { model = "glm-5.3",              effort = "",'
+                 ' harness = "herdr-pi", sandbox = "acceptEdits" },')
 
     def test_an_array_element_that_is_not_a_table_is_REFUSED(self):
         """An array of STRINGS parses as TOML and names no harness, so the refusal has to
         be the loader's and cannot be the parser's."""
-        self.edit(self.CODER_2ND, '  "claude-opus-5",')
+        self.edit(self.CODER_2ND, '  "glm-5.3",')
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
     def test_a_config_missing_a_required_field_is_REFUSED(self):
-        self.edit('{ model = "claude-opus-5",        effort = "xhigh",',
-                  '{ model = "claude-opus-5",')
+        self.edit(self.CODER_2ND, '  { model = "glm-5.3", effort = "" },')
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
-    @unittest.skip("owner 2026-08-22: `max_concurrency = 1 }` was qwen's line, the one "
-                    "capped config in the live file; it is commented out while qwen is "
-                    "out for maintenance. Un-skip when qwen's line is restored.")
     def test_a_config_carrying_an_unknown_field_is_REFUSED(self):
         self.edit("max_concurrency = 1 }", "max_concurrancy = 1 }")
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
-    @unittest.skip("owner 2026-08-22: `max_concurrency = 1 }` was qwen's line, the one "
-                    "capped config in the live file; it is commented out while qwen is "
-                    "out for maintenance. Un-skip when qwen's line is restored.")
     def test_a_cap_that_is_not_a_positive_integer_is_REFUSED(self):
         """A ZERO IS NOT `unlimited`: it is a head no task can ever reach. A BOOLEAN is an
         `int` in Python, so `true` would otherwise load as a cap of one."""
@@ -3757,10 +3758,6 @@ class Heads(LoopCase):
                                          cache=False)
                 self.edit(f"max_concurrency = {bad} }}", "max_concurrency = 1 }")
 
-    @unittest.skip("owner 2026-08-22: this edit replaces coder's ONLY remaining entry "
-                    "(claude-opus-5) with a qwen line, so the file gains one config and "
-                    "not a duplicate, while qwen's own coder line is out for "
-                    "maintenance. Un-skip when qwen's line is restored.")
     def test_one_slot_naming_one_model_twice_is_REFUSED(self):
         """The dispatcher counts a live head by its SLOT and its MODEL, so two configs on
         one model are two caps it cannot tell apart."""
@@ -3773,8 +3770,9 @@ class Heads(LoopCase):
     def test_a_model_outside_legal_models_is_REFUSED_inside_an_array_too(self):
         """The single-table path had this check and the array path is a second entry to
         the same rule, so it is checked at both."""
-        self.edit('{ model = "claude-opus-5",        effort = "xhigh",',
-                  '{ model = "claude-haiku-5",       effort = "xhigh",')
+        self.edit(self.CODER_2ND,
+                  '  { model = "claude-haiku-5", effort = "",'
+                  ' harness = "herdr-pi", sandbox = "acceptEdits" },')
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
@@ -5172,32 +5170,30 @@ class FallbackPark(LoopCase):
         Both critics carry a choice; `mathematician` is one head and parks `no-change`
         exactly as it always did.
 
-        **`coder`'S TWO PAIRS ARE OUT, owner 2026-08-22.** qwen is out of
-        `[heads].coder` for maintenance, so coder is a one-config array (claude-opus-5
-        alone) and has no fallback to give either historical model. Both pairs return
-        here when qwen's line is restored, and `coder` rejoins the docstring's
-        "carries a choice" list."""
+        **`coder` REJOINED THE LIST 2026-08-23**, qwen's return from the 2026-08-22
+        maintenance drop giving it a second head (`glm-5.3`) again -- the same ruling
+        that moved `claude-opus-5` from `coder` to `coder_adversarial`'s own second
+        head, replacing `glm-5.3` there."""
         for slot, model in (("mathematician_adversarial", "glm-5.3"),
                             ("mathematician_adversarial", "grok-4.6"),
-                            ("coder_adversarial", "glm-5.3"),
-                            ("coder_adversarial", "grok-4.6")):
+                            ("coder_adversarial", "claude-opus-5"),
+                            ("coder_adversarial", "grok-4.6"),
+                            ("coder", "Qwen3.8-27B-oQ4e-mtp"),
+                            ("coder", "glm-5.3")):
             with self.subTest(slot=slot, model=model):
                 self.assertTrue(pod._has_fallback_head(slot, model, self.tmp))
         self.assertFalse(
             pod._has_fallback_head("mathematician", "claude-opus-5", self.tmp))
-        self.assertFalse(
-            pod._has_fallback_head("coder", "claude-opus-5", self.tmp),
-            "coder is a one-config array while qwen is out for maintenance")
 
     # ------------------------------------------------------------------ rule (c)
 
     def test_an_R7_return_on_a_slot_with_a_choice_parks_fallback_and_names_the_model(self):
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="glm-5.3")
+        st, t = self.returned(role="coder_adversarial", model="grok-4.6")
         pod._rule_c(st, self.tmp)
         self.assertEqual(t.status, pod.PARKED)
-        self.assertEqual(t.park_reason, "fallback:glm-5.3")
-        self.assertEqual(list(t.avoid_models), ["glm-5.3"])
+        self.assertEqual(t.park_reason, "fallback:grok-4.6")
+        self.assertEqual(list(t.avoid_models), ["grok-4.6"])
 
     def test_an_R7_return_on_a_ONE_head_slot_is_the_plain_no_change_it_always_was(self):
         self.set_acceptance(None)
@@ -5213,7 +5209,7 @@ class FallbackPark(LoopCase):
          / f"{CODE}-20260819-164127-final.md").write_text(
             QuotaPark.WRAPPED, encoding="utf-8")
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="glm-5.3")
+        st, t = self.returned(role="coder_adversarial", model="grok-4.6")
         pod._rule_c(st, self.tmp)
         self.assertTrue(t.park_reason.startswith("quota:"), t.park_reason)
         self.assertFalse(t.avoid_models)
@@ -5223,30 +5219,30 @@ class FallbackPark(LoopCase):
         content. It carries a record, so R7 never fires, so nothing is excluded and no
         head is spent twice on a question that was already answered."""
         self.set_acceptance(record(exit_code=42, error_class="unsolved_meta", delta=0))
-        st, t = self.returned(role="coder_adversarial", model="glm-5.3")
+        st, t = self.returned(role="coder_adversarial", model="grok-4.6")
         pod._rule_c(st, self.tmp)
-        self.assertNotEqual(t.park_reason, "fallback:glm-5.3")
+        self.assertNotEqual(t.park_reason, "fallback:grok-4.6")
         self.assertFalse(t.avoid_models)
 
     def test_the_SAME_model_is_never_excluded_twice(self):
         """A task already carrying its model on the avoid list has nothing new to learn
         from a second identical return, so it takes the plain `no-change` and waits."""
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="glm-5.3",
-                              avoid=["glm-5.3"])
+        st, t = self.returned(role="coder_adversarial", model="grok-4.6",
+                              avoid=["grok-4.6"])
         pod._rule_c(st, self.tmp)
         self.assertEqual(t.park_reason, "no-change")
-        self.assertEqual(list(t.avoid_models), ["glm-5.3"])
+        self.assertEqual(list(t.avoid_models), ["grok-4.6"])
 
     def test_a_SECOND_failure_adds_the_other_model_which_is_why_it_terminates(self):
         """The exclusion is MONOTONIC. Once both heads are on the list `launch()` has no
         candidate left and rule (f) parks `launch`, never a third fallback."""
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="grok-4.6",
-                              avoid=["glm-5.3"])
+        st, t = self.returned(role="coder_adversarial", model="claude-opus-5",
+                              avoid=["grok-4.6"])
         pod._rule_c(st, self.tmp)
-        self.assertEqual(t.park_reason, "fallback:grok-4.6")
-        self.assertEqual(sorted(t.avoid_models), ["glm-5.3", "grok-4.6"])
+        self.assertEqual(t.park_reason, "fallback:claude-opus-5")
+        self.assertEqual(sorted(t.avoid_models), ["claude-opus-5", "grok-4.6"])
 
     def test_fallback_is_a_park_reason_the_program_admits_and_capacity_is_gone(self):
         """ONE NAME, ONE MECHANISM. A second redundant reason string would divide the
@@ -5300,8 +5296,8 @@ class FallbackPark(LoopCase):
             return None                        # refuse, so nothing is really dispatched
 
         self.patch(pod, "pick_head_config", spy)
-        self.real_launch(pod.Task(CODE, avoid_models=["glm-5.3"]))
-        self.assertEqual([c["model"] for c in seen["cfgs"]], ["grok-4.6"])
+        self.real_launch(pod.Task(CODE, avoid_models=["grok-4.6"]))
+        self.assertEqual([c["model"] for c in seen["cfgs"]], ["claude-opus-5"])
 
     def test_launch_with_no_avoid_list_sees_every_config_the_slot_carries(self):
         """The contrast: this is every OTHER task in the program, and the filter above
@@ -5315,12 +5311,12 @@ class FallbackPark(LoopCase):
         self.patch(pod, "pick_head_config", spy)
         self.real_launch(pod.Task(CODE))
         self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
-                         ["glm-5.3", "grok-4.6"])
+                         ["claude-opus-5", "grok-4.6"])
 
     def test_excluding_EVERY_model_is_the_ordinary_launch_refusal_and_not_a_loop(self):
         """It is not special-cased: `pick_head_config()` on an empty tuple returns None
         exactly as it does when every config is at its cap, and rule (f) parks `launch`."""
-        t = pod.Task(CODE, avoid_models=["glm-5.3", "grok-4.6"])
+        t = pod.Task(CODE, avoid_models=["claude-opus-5", "grok-4.6"])
         self.assertIsNone(self.real_launch(t))
         # AND IT SAYS SO. A park that names no cap costs the maintainer a pane read.
         self.assertIn("coder_adversarial", pod.LAUNCH_REFUSAL or "")

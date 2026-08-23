@@ -1013,14 +1013,12 @@ def main() -> int:
     check("the two single-head slots keep the inline-table spelling A27 preserved",
           sorted(s for s, v in heads["heads"].items() if isinstance(v, dict)),
           ["maintainer", "mathematician"])
-    # **QWEN IS OUT OF THE ARRAY, OWNER'S INSTRUCTION 2026-08-22: "qwen要暂时维护一下,
-    # ...只派给opus5,直到我另行通知".** `max_concurrency = 0` is REFUSED at load
-    # (heads.py: "a cap below 1 is not `unlimited`"), so dropping the line is the only
-    # way to disable a capped config, not capping it to zero. Re-add the qwen row and
-    # restore this assertion to `["1", "None"]` when the owner says qwen is back.
-    check("the coder array is claude-opus-5 alone while qwen is out for maintenance",
+    # **QWEN IS BACK, OWNER'S RULING 2026-08-23**, ending the 2026-08-22 maintenance
+    # drop. `claude-opus-5` left `coder` the same day (moved to `coder_adversarial`'s
+    # second head instead); `glm-5.3` is qwen's own fallback now.
+    check("the coder array is qwen capped at one, glm-5.3 uncapped behind it",
           sorted(str(r.get("max_concurrency")) for r in heads["heads"]["coder"]),
-          ["None"])
+          ["1", "None"])
     # **THE CAP IS NOT WHAT MAKES A SLOT RETRYABLE, A29.** Both critic arrays are
     # entirely uncapped and both still fall back, because the trigger is that the slot
     # has a second head at all. This check is the one that would have failed under
@@ -1031,8 +1029,8 @@ def main() -> int:
               [None, None])
     _rows = [(slot, r) for slot, v in heads["heads"].items()
              for r in (v if isinstance(v, list) else [v])]
-    # Seven, not eight, while qwen is dropped from `coder` (see the check above).
-    check("the file carries seven configs across the five slots", len(_rows), 7)
+    # Eight again, now that qwen is back in `coder` (see the check above).
+    check("the file carries eight configs across the five slots", len(_rows), 8)
     for slot, row in _rows:
         # THE LABEL NAMES THE MODEL AND NOT ONLY THE SLOT, because one slot now produces
         # several rows and two identical labels cannot be told apart in a failure list.
@@ -1085,25 +1083,39 @@ def main() -> int:
         v = heads["heads"][slot]
         return {r["model"] for r in (v if isinstance(v, list) else [v])}
 
+    # **OWNER'S RULING 2026-08-23 WAIVED ONE PAIR.** Qwen's return moved `glm-5.3`
+    # into BOTH `coder` (its own fallback) and `mathematician_adversarial` (already
+    # there, unchanged) at once, and the owner chose to keep `mathematician_adversarial`
+    # as-is rather than give coder a different fallback. This is a real, disclosed
+    # exception: a coder stop/no-go branch CAN route to `mathematician_adversarial`,
+    # so `glm-5.3` can in principle review its own coder output. The other two pairs
+    # still hold with no exception.
     for _a, _c in (("mathematician", "mathematician_adversarial"),
-                   ("coder", "coder_adversarial"),
-                   ("coder", "mathematician_adversarial")):
+                   ("coder", "coder_adversarial")):
         check(f"the critic {_c} shares no model with the author {_a}",
               sorted(_models(_a) & _models(_c)), [])
+    check("coder and mathematician_adversarial share glm-5.3, owner's ruling "
+          "2026-08-23's disclosed exception",
+          sorted(_models("coder") & _models("mathematician_adversarial")), ["glm-5.3"])
     # **TWO AUTHOR SLOTS SHARING A VENDOR IS NOT THE DEFECT DD25 NAMES, and it is
     # asserted rather than left to be re-argued.** `claude-opus-5` is the whole of
-    # `mathematician` and the coder's second head since 2026-08-21. Neither slot
-    # criticises the other, so no model reviews its own work; the loop above is the
-    # check that matters and this one records why its complement is silent.
-    check("claude-opus-5 is in two AUTHOR slots, which no author/critic pair covers",
+    # `mathematician` and `coder_adversarial`'s second head since 2026-08-23 (moved
+    # there from `coder` the same ruling that brought qwen back). It reviews CODER's
+    # work, never mathematician's own, so no model reviews its own work; the loop
+    # above is the check that matters and this one records why its complement is
+    # silent.
+    check("claude-opus-5 is in an AUTHOR slot and a DIFFERENT author's critic slot",
           sorted(s for s in ("mathematician", "coder", "mathematician_adversarial",
                              "coder_adversarial")
                  if "claude-opus-5" in _models(s)),
-          ["coder", "mathematician"])
-    # **THE TWO CRITICS SHARE BOTH THEIR HEADS AND THAT IS ADMISSIBLE**, for the same
-    # reason: DD25 pairs an author with ITS critic and says nothing about two critics.
-    check("the two critic slots carry the same pair, which no pair above forbids",
-          _models("mathematician_adversarial") == _models("coder_adversarial"), True)
+          ["coder_adversarial", "mathematician"])
+    # **THE TWO CRITICS NO LONGER SHARE THEIR HEADS, owner's ruling 2026-08-23**:
+    # `mathematician_adversarial` kept `glm-5.3`, `coder_adversarial` took
+    # `claude-opus-5` instead. DD25 never required them to match; A27/A29 only
+    # PERMITTED it, since DD25 pairs an author with ITS critic and says nothing
+    # about two critics.
+    check("the two critic slots no longer carry the same pair",
+          _models("mathematician_adversarial") == _models("coder_adversarial"), False)
 
     limits = heads["limits"]
     # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a
