@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T04:53:30Z
+Checking LJ-1-587.Probe587 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-587/agents/tasks/LJ-1-587/Probe587.agda).
+        2.61 real         2.39 user         0.21 sys
+           440565760  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               28631  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  14  voluntary context switches
+                 939  involuntary context switches
+         26272161860  instructions retired
+         10546534776  cycles elapsed
+           380715872  peak memory footprint
+EXIT=0
+ended 2026-08-23T04:53:32Z

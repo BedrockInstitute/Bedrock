@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T04:48:41Z
+Checking LJ-1-587.Probe587 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-587/agents/tasks/LJ-1-587/Probe587.agda).
+ Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-587/src/L/Absorption.lagda.md).
+        6.52 real         6.16 user         0.26 sys
+           667860992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               42436  page reclaims
+                  71  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 753  voluntary context switches
+                1145  involuntary context switches
+         78476614452  instructions retired
+         25294536045  cycles elapsed
+           607355936  peak memory footprint
+EXIT=0
+ended 2026-08-23T04:48:47Z
