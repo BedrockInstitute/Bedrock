@@ -1,0 +1,22 @@
+Checking LJ-1-547.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-547/agents/tasks/LJ-1-547/runs/W3.agda).
+ Checking LJ-1-521.Probe521 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-547/agents/tasks/LJ-1-521/Probe521.agda).
+ Checking LJ-1-529.Probe529 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-547/agents/tasks/LJ-1-529/Probe529.agda).
+        7.03 real         6.71 user         0.26 sys
+          1118699520  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               69946  page reclaims
+                  78  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 194  voluntary context switches
+                1181  involuntary context switches
+         88732043405  instructions retired
+         28229487793  cycles elapsed
+          1058424128  peak memory footprint
+EXIT=0
