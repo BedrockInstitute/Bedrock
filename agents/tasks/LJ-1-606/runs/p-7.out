@@ -1,0 +1,32 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T21:48:41Z
+Checking LJ-1-606.Probe606 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-606/agents/tasks/LJ-1-606/Probe606.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-606/agents/tasks/LJ-1-606/Probe606.agda:284.36-40: error: [UnequalTerms]
+(fst
+ (Cubical.Data.Sum.Base.rec (DR.H.T.search 0 ⊥̇ (DR.H.T.vals []))
+  (λ _ → ∅ , DR.H.∅∈Lsetα)
+  (lem (DR.H.T.Sat 0 ⊥̇ (DR.H.T.vals []) , PT.squash₁))))
+!= (Lset (fst q₀)) of type
+(Cubical.HITs.CumulativeHierarchy.Base.V ℓ)
+when checking that the expression refl has type
+fst q₀ ≡ Lset (fst q₀)
+        4.27 real         3.66 user         0.30 sys
+           583696384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               33057  page reclaims
+                4313  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 606  voluntary context switches
+                3088  involuntary context switches
+         42614551955  instructions retired
+         15717266637  cycles elapsed
+           523322328  peak memory footprint
+EXIT=42
+ended 2026-08-23T21:48:45Z

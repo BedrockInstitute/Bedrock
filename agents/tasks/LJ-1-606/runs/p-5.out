@@ -1,0 +1,39 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T21:46:38Z
+Checking LJ-1-606.Probe606 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-606/agents/tasks/LJ-1-606/Probe606.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-606/agents/tasks/LJ-1-606/Probe606.agda:281.46-57: error: [UnequalTerms]
+Σ
+Cubical.HITs.CumulativeHierarchy.Properties.⟪
+Cubical.HITs.CumulativeHierarchy.Constructions.⁅ ∅ ,
+Cubical.HITs.CumulativeHierarchy.Constructions.⁅ ∅ ⁆s ⁆
+⟫
+(λ r →
+   Cubical.HITs.CumulativeHierarchy.Properties.⟪
+   Cubical.HITs.CumulativeHierarchy.Properties.⟪
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ ∅ ,
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ ∅ ⁆s ⁆
+   ⟫↪
+   r
+   ⟫)
+!= Lift Empty.⊥ of type Type ℓ
+when checking that the expression self∈sucV ∅ has type ⟨ ∅ ∈ˢ ∅ ⟩
+        4.15 real         3.56 user         0.27 sys
+           582664192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32993  page reclaims
+                4314  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 563  voluntary context switches
+                2705  involuntary context switches
+         42253573112  instructions retired
+         15149891261  cycles elapsed
+           522257344  peak memory footprint
+EXIT=42
+ended 2026-08-23T21:46:42Z

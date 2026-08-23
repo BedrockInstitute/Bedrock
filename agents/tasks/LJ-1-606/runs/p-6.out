@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T21:47:12Z
+Checking LJ-1-606.Probe606 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-606/agents/tasks/LJ-1-606/Probe606.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-606/agents/tasks/LJ-1-606/Probe606.agda:282.30-36: error: [UnequalTerms]
+Σ (Type _ℓ_393) (Cubical.Foundations.HLevels.isOfHLevel 1) should
+be a sort, but it isn't
+when checking that the expression ∅ ∈ₛ ∅ has type _392
+        4.21 real         3.55 user         0.29 sys
+           582631424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32993  page reclaims
+                4312  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 751  voluntary context switches
+                3553  involuntary context switches
+         42289280443  instructions retired
+         15130318131  cycles elapsed
+           522273752  peak memory footprint
+EXIT=42
+ended 2026-08-23T21:47:16Z
