@@ -1,0 +1,42 @@
+# p23: agents/tasks/LJ-1-596/Probe596.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.Probe596 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda:277.11-63: error: [UnequalTerms]
+V.sett
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst x₀ ⁆s
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst x₀ ,
+  fst (upb (gf (fiber (fst a) x₀∈ .fst))) ⁆))
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+ (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst x₀ ⁆s
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ fst x₀ ,
+  fst (upb (gf (fiber (fst a) x₀∈ .fst))) ⁆))
+!=
+fst
+(L.Axioms.Numerals.pairʟ (L.Axioms.Numerals.pairʟ x₀ x₀)
+ (L.Axioms.Numerals.pairʟ x₀ (upb (gf (fiber (fst a) x₀∈ .fst)))))
+of type V ℓ
+when checking that the expression
+sym (prʟ-fst x₀ (upb (gf (fiber (fst a) x₀∈ .fst)))) has type
+fst (prʟ x₀ (upb (gf (fiber (fst a) x₀∈ .fst)))) ≡ _z_510
+        2.87 real         2.65 user         0.20 sys
+           769900544  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48732  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 699  involuntary context switches
+         36221837131  instructions retired
+         12231733979  cycles elapsed
+           710067280  peak memory footprint
+EXIT=42

@@ -1,0 +1,22 @@
+# p33: agents/tasks/LJ-1-596/Probe596.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.Probe596 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda).
+        3.94 real         3.42 user         0.26 sys
+           769064960  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47411  page reclaims
+                1275  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 702  voluntary context switches
+                1896  involuntary context switches
+         46366313253  instructions retired
+         15418210985  cycles elapsed
+           709280848  peak memory footprint
+EXIT=0

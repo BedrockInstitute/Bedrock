@@ -1,0 +1,26 @@
+# p24: agents/tasks/LJ-1-596/Probe596.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.Probe596 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda:298.30-44: error: [UnequalTerms]
+fst x₁ != fst x₀ of type V ℓ
+when checking that the expression sym (fj' .fst) has type
+fst x₀ ≡ _z_704
+        2.91 real         2.69 user         0.21 sys
+           769851392  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48729  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 694  involuntary context switches
+         37076512663  instructions retired
+         12465329638  cycles elapsed
+           710050896  peak memory footprint
+EXIT=42

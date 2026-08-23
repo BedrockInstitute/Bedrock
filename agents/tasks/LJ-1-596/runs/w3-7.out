@@ -1,0 +1,26 @@
+# w3-7: agents/tasks/LJ-1-596/runs/W3.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda:147.18-23: error: [UnequalTerms]
+Σ (Type (ℓ-suc ℓ)) (Cubical.Foundations.HLevels.isOfHLevel 1) !=<
+Type (ℓ-suc ℓ)
+when checking that the expression x ∈ A has type Type (ℓ-suc ℓ)
+        2.63 real         2.42 user         0.19 sys
+           769425408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48701  page reclaims
+                   5  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 535  involuntary context switches
+         33448446562  instructions retired
+         11427493131  cycles elapsed
+           710034512  peak memory footprint
+EXIT=42

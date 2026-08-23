@@ -1,0 +1,29 @@
+# w3-5: agents/tasks/LJ-1-596/runs/W3.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda:142.17-18: error: [AmbiguousOverloadedProjection]
+Cannot resolve overloaded projection S because
+it is not applied to a visible argument
+  candidates in scope:
+- S : Type (ℓ-suc ℓ)
+- S : Type (ℓ-suc ℓ)
+when checking that the expression S has type _109
+        2.64 real         2.43 user         0.20 sys
+           769523712  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48703  page reclaims
+                   9  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 454  involuntary context switches
+         33425714536  instructions retired
+         11437016514  cycles elapsed
+           710034512  peak memory footprint
+EXIT=42

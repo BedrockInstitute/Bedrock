@@ -1,0 +1,28 @@
+# p3: agents/tasks/LJ-1-596/Probe596.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.Probe596 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda:318.12-55: error: [NoParseForApplication]
+Could not parse the application
+⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩
+Operators used in the grammar:
+  ⟨_⟩ (closed operator) [⟨_⟩ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Foundations/Structure.agda:43.1-4)]
+when scope checking ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩
+        2.72 real         2.49 user         0.20 sys
+           777502720  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49193  page reclaims
+                   6  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 547  involuntary context switches
+         33883824468  instructions retired
+         11667369445  cycles elapsed
+           719504464  peak memory footprint
+EXIT=42

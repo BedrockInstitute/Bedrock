@@ -1,0 +1,27 @@
+# p30: agents/tasks/LJ-1-596/Probe596.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.Probe596 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda:412.6-53: error: [UnequalTerms]
+Lset (fst δ) != fst Lδ of type V ℓ
+when checking that the expression
+Machine.pays-input (LsetS (fst δ) ordδ) δ g inp has type
+InjL (fst Lδ , _u.snd_1554) δ
+        3.44 real         3.19 user         0.23 sys
+           768999424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48677  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 762  involuntary context switches
+         43335739621  instructions retired
+         14561189959  cycles elapsed
+           709035088  peak memory footprint
+EXIT=42

@@ -1,0 +1,29 @@
+# p21: agents/tasks/LJ-1-596/Probe596.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.Probe596 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/Probe596.agda:274.37-53: error: [UnequalTerms]
+L.Axioms.Numerals.pairʟ (L.Axioms.Numerals.pairʟ x₀ x₀)
+(L.Axioms.Numerals.pairʟ x₀ (upb (gf (fiber (fst a) x₀∈ .fst))))
+!= fn x₀ of type
+Σ (FOL.ZFStructure.ZFStructure.S 𝒮ᵥ) (λ x₁ → x₁ ∈ᶜ isL)
+when checking that the expression sym (feq x₀ x₀∈) has type
+fn x₀ ≡ _z_516
+        2.84 real         2.62 user         0.20 sys
+           769753088  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48723  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 599  involuntary context switches
+         36073175184  instructions retired
+         12155655523  cycles elapsed
+           709919824  peak memory footprint
+EXIT=42

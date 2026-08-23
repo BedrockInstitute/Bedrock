@@ -1,0 +1,39 @@
+# w3-3: agents/tasks/LJ-1-596/runs/W3.agda
+# GHCRTS=-A64m -I0 -M4g
+Checking LJ-1-596.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda).
+ Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/src/L/StageBound.lagda.md).
+   Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/src/L/Absorption.lagda.md).
+  Checking L.SquareLawClosed (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/src/L/SquareLawClosed.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda:102.17-22: error: [AmbiguousName]
+Ambiguous name IsOrd. It could refer to any one of
+  LJ-1-596.runs.W3.IsOrd bound at
+    /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/src/L/Constructible.lagda.md:141.1-6
+  L.Constructible.IsOrd bound at
+    /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/src/L/Constructible.lagda.md:141.1-6
+IsOrd is in scope as
+  * a defined name LJ-1-596.runs.W3._.IsOrd brought into scope by
+    - the application of .#L.Constructible-7443548350238434509 at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda:57.13-28
+    - its definition at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/src/L/Constructible.lagda.md:141.1-6
+  * a defined name L.Constructible.IsOrd brought into scope by
+    - the opening of L.Constructible at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/agents/tasks/LJ-1-596/runs/W3.agda:47.13-28
+    - its definition at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-596/src/L/Constructible.lagda.md:141.1-6
+when scope checking IsOrd
+       18.49 real        18.02 user         0.37 sys
+          2082979840  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              128663  page reclaims
+                 216  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 474  voluntary context switches
+                2865  involuntary context switches
+        284207012208  instructions retired
+         79432247482  cycles elapsed
+          2022737912  peak memory footprint
+EXIT=42
