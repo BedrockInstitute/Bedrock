@@ -1,0 +1,27 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T22:21:20Z
+Checking LJ-1-608.Probe608 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-608/agents/tasks/LJ-1-608/Probe608.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-608/agents/tasks/LJ-1-608/Probe608.agda:143.29-34: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-608/agents/tasks/LJ-1-608/Probe608.agda:143.29-34
+        1.05 real         0.92 user         0.11 sys
+           320503808  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21537  page reclaims
+                  89  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 295  involuntary context switches
+         13094386679  instructions retired
+          4405450214  cycles elapsed
+           260621080  peak memory footprint
+EXIT=42
+ended 2026-08-23T22:21:21Z
