@@ -27,6 +27,13 @@ not give. If `omlx-server` turns out to run as an always-on idle daemon that thi
 refuses needlessly, that is a threshold to add LATER, from a measured baseline, not
 a guess to make now.
 
+THIS IS ONE HALF OF THE RULING. The other direction lives in `scripts/pod/pod.py`:
+the Makefile's `typecheck` target holds `.pod-state/make-check.lock` for the
+whole-tree run (`trap ... EXIT INT TERM` around the Agda call, so an interrupt or a
+failed typecheck still clears it), and `_omlx_excluded()` filters qwen out of a
+`coder` dispatch's candidate configs while that lock exists -- the mirror image of
+this script's own refusal, aimed at the opposite process.
+
 pgrep exits 0 on a match, 1 on no match, 3 on a fatal error; on a fatal error this
 tries `ps` before refusing, for the same reason `agda_blocker()` does: an agent
 sandbox with no `sysmond` makes pgrep exit 3 every time, and a guard nobody can ever

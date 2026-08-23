@@ -24,6 +24,10 @@ PYTHON    ?= python3.11
 PY        ?= $(VENV)/bin/python
 REUSE     ?= $(VENV)/bin/reuse
 EVERYTHING := src/Everything.lagda.md
+# OWNER'S RULING 2026-08-23: held for the duration of the whole-tree typecheck so
+# scripts/pod/pod.py's own dispatch can refuse to pick qwen while it exists. See the
+# `typecheck` target below and `_has_make_check_lock()` in scripts/pod/pod.py.
+MAKE_CHECK_LOCK := .pod-state/make-check.lock
 HTML_DIR  := _build/html
 SITE_OUT  := _build/site
 LANGS     := en,zh
@@ -55,8 +59,14 @@ venv-check:
 omlxquiet:
 	$(PY) scripts/gate/check-omlx-quiet.py --check
 
+# THE OTHER HALF OF THE SAME RULING: qwen's own dispatch (scripts/pod/pod.py) refuses
+# to pick qwen while THIS lock exists, mirroring omlxquiet above in the opposite
+# direction. `trap ... EXIT INT TERM` removes the lock even if Agda is interrupted or
+# fails, and both the touch and the trap sit on the SAME recipe line so they share one
+# subshell (Make gives every recipe line its own).
 typecheck: omlxquiet
-	$(AGDA) $(EVERYTHING)
+	@mkdir -p $(dir $(MAKE_CHECK_LOCK))
+	@trap 'rm -f $(MAKE_CHECK_LOCK)' EXIT INT TERM; touch $(MAKE_CHECK_LOCK); $(AGDA) $(EVERYTHING)
 
 lint:
 	$(PY) scripts/gate/lint-prose.py --check

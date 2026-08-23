@@ -182,7 +182,8 @@ def caliber_of(tier):
     """The heap caliber of ONE tier, or a refusal. A15, and no literal at a call site.
 
     An unknown tier is a REFUSAL and never a fallback to the WIDE caliber: a HEAVY task
-    silently run at `-M8g` records a number that reads as comparable and is not.
+    silently run at `-M4g` (owner's ruling 2026-08-23; was `-M8g`) records a number that
+    reads as comparable and is not.
     """
     try:
         return CALIBER[tier]
@@ -200,9 +201,10 @@ def run_agda(target, root, deadline_s, slots, include=(), tier=DEFAULT_TIER):
     `include: src agents/tasks` and the POD runs with `cwd` at the repository root.
 
     `tier` picks the caliber, A14 and A15. The default is WIDE, which is the per-task
-    acceptance caliber; a HEAVY task passes `tier="heavy"` and gets `-M12g` with no edit
-    here. The record carries BOTH `caliber` and `tier`, because A14 rules that two
-    measurements are compared only inside one tier.
+    acceptance caliber; a HEAVY task passes `tier="heavy"` and gets the same `-M4g` now
+    (owner's ruling 2026-08-23; was `-M12g`) with no edit here. The record carries BOTH
+    `caliber` and `tier`, because A14 rules that two measurements are compared only
+    inside one tier.
 
     `slots` is the Agda process count DURING this run, counting this run's own process.
     It is recorded and never interpreted here: `matches()` refuses a seconds key against a

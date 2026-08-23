@@ -102,10 +102,11 @@ SURVEY_QUOTES = ["scripts/pod/check-survey-quotes.py"]
 #: for the whole `worker_deadline_s`, and none of the seven starts Agda.
 GATE_DEADLINE_S = 600
 
-#: A15. A PER-TASK acceptance run uses the WIDE tier's caliber, `-A64m -I0 -M8g`, which is
-#: the worker's own, so an acceptance measurement compares directly with the run record
-#: beside it. A HEAVY task passes `tier="heavy"` and `run_agda()` gives it `-M12g`. The
-#: whole-tree caliber, `facts.CAP_TREE`, belongs to a `make check` and never to this file.
+#: A15. A PER-TASK acceptance run uses the WIDE tier's caliber, `-A64m -I0 -M4g` (owner's
+#: ruling 2026-08-23; was `-M8g`), which is the worker's own, so an acceptance measurement
+#: compares directly with the run record beside it. A HEAVY task passes `tier="heavy"` and
+#: `run_agda()` gives it the same `-M4g` now (was `-M12g`). The whole-tree caliber,
+#: `facts.CAP_TREE`, belongs to a `make check` and never to this file.
 DEFAULT_TIER = facts_mod.DEFAULT_TIER
 
 

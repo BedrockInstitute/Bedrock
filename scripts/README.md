@@ -143,7 +143,9 @@ repository dispatches through a local server rather than a remote API
 model is a remote call and carries no local footprint. The check is on process EXISTENCE, not a
 CPU threshold: same as `check-ratio.py`'s `agda_blocker()`, which it copies the pattern from,
 because a measured idle-vs-busy baseline for `omlx-server` does not exist. `make check` wires
-this in front of `typecheck`.
+this in front of `typecheck`, which also holds `.pod-state/make-check.lock` for the run; the
+OTHER direction of the same ruling lives in `scripts/pod/pod.py`'s `_omlx_excluded()`, which
+refuses to DISPATCH qwen while that lock exists.
 
 ```sh
 python3 scripts/gate/check-omlx-quiet.py --check                # exit 1 if omlx-server is live

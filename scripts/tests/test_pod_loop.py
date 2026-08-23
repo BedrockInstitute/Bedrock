@@ -5321,6 +5321,65 @@ class FallbackPark(LoopCase):
         # AND IT SAYS SO. A park that names no cap costs the maintainer a pane read.
         self.assertIn("coder_adversarial", pod.LAUNCH_REFUSAL or "")
 
+    # -------------------------------------- owner's ruling 2026-08-23, the omlx lock
+
+    def make_check_lock(self):
+        p = self.tmp / ".pod-state" / "make-check.lock"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.touch()
+        return p
+
+    def test_omlx_excluded_drops_only_the_omlx_provider_config(self):
+        """The provider carries the local footprint, not the model name: this filters
+        on `pi_provider`, so it would ALSO catch a future non-qwen model on `omlx`."""
+        cfgs = ({"model": "Qwen3.8-27B-oQ4e-mtp", "pi_provider": "omlx"},
+               {"model": "glm-5.3", "pi_provider": "zai"},
+               {"model": "grok-4.6"})                    # no pi_provider at all
+        self.make_check_lock()
+        out = pod._omlx_excluded(cfgs, self.tmp)
+        self.assertEqual([c["model"] for c in out], ["glm-5.3", "grok-4.6"])
+
+    def test_omlx_excluded_is_a_no_op_with_no_lock(self):
+        cfgs = ({"model": "Qwen3.8-27B-oQ4e-mtp", "pi_provider": "omlx"},)
+        self.assertEqual(pod._omlx_excluded(cfgs, self.tmp), cfgs)
+
+    def test_omlx_excluded_never_raises_on_an_unreadable_root(self):
+        """A blind sensor is a no-op here, the same direction `watchdog_alive()` takes
+        the OPPOSITE way: this guard is a courtesy exclusion, not C-12's own backstop,
+        so refusing to dispatch on an unreadable path would be inventing a refusal."""
+        cfgs = ({"model": "Qwen3.8-27B-oQ4e-mtp", "pi_provider": "omlx"},)
+        self.assertEqual(pod._omlx_excluded(cfgs, self.tmp / "nowhere" / "at" / "all"),
+                         cfgs)
+
+    def test_LIVE_launch_drops_qwen_from_coder_while_the_lock_is_held(self):
+        """END TO END, through the real `coder` slot of the copied, live heads.toml
+        (`LoopCase.build_tree()`), which carries qwen since the owner's ruling of
+        2026-08-23."""
+        seen = {}
+
+        def spy(cfgs, counts):
+            seen["cfgs"] = list(cfgs)
+            return None
+
+        self.patch(pod, "pick_head_config", spy)
+        self.make_check_lock()
+        self.real_launch(pod.Task(CODE), role="coder")
+        self.assertEqual([c["model"] for c in seen["cfgs"]], ["glm-5.3"])
+
+    def test_LIVE_launch_sees_qwen_again_once_the_lock_clears(self):
+        seen = {}
+
+        def spy(cfgs, counts):
+            seen["cfgs"] = list(cfgs)
+            return None
+
+        self.patch(pod, "pick_head_config", spy)
+        lock = self.make_check_lock()
+        lock.unlink()
+        self.real_launch(pod.Task(CODE), role="coder")
+        self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
+                         sorted(["Qwen3.8-27B-oQ4e-mtp", "glm-5.3"]))
+
 
 class TwoThresholds(LoopCase):
     """AD15's parked trigger and AD14's stop were ONE number until 2026-08-19.

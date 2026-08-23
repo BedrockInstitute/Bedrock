@@ -32,10 +32,11 @@ THE SIX RULES THAT COST THE MOST IF THEY ARE DROPPED
   `dev/LESSONS.md` C-12 says restart `scripts/ops/agda-watchdog.sh` at every session, and
   THE POD HAS NO SESSION, so before A13 nothing started it. MEASURED 2026-08-17: it was
   not running. `pod run` starts it, `watchdog_tick()` confirms it every tick, and
-  `admits()` refuses every Agda task while it is down. A14 restores the two tiers with it:
-  WIDE admits four concurrent Agda writers at `-M8g`, HEAVY admits two at `-M12g`, the
-  mixed worst-case heap sum stays at or under 32 GB, and slots three and four open only
-  above 25 percent free memory.
+  `admits()` refuses every Agda task while it is down. A14 restores the two tiers with it,
+  tightened by the owner's ruling of 2026-08-23: WIDE and HEAVY each admit ONE concurrent
+  Agda writer at `-M4g` (was four at `-M8g` and two at `-M12g`), the mixed worst-case heap
+  sum stays at or under 4 GB (was 32 GB), and the third/fourth-slot clause is dead code
+  under one slot.
 - **AN IDLE SLOT IS CURED, NOT REPORTED (A11).** Rule (g) dispatches the mathematician
   with the standing brief `agents/tasks/POD-REFILL/POD-REFILL.md` when a slot is free and
   the queue holds no dispatchable entry. The program decides only that somebody must be
@@ -125,6 +126,12 @@ ROOT = find_root(__file__)
 POD_STATE = ROOT / ".pod-state"
 STATE_FILE = POD_STATE / "state.json"
 STOPPED_FILE = POD_STATE / "STOPPED"
+#: OWNER'S RULING 2026-08-23, the other half of `scripts/gate/check-omlx-quiet.py`.
+#: `make check`'s `typecheck` target (the Makefile) holds this for the duration of the
+#: whole-tree run; `_omlx_excluded(root)` below is the ONE reader, and `launch()` is the
+#: ONE caller, right where `avoid_models` is already filtered for the same reason: a
+#: model this task must not be dispatched to right now.
+MAKE_CHECK_LOCK = POD_STATE / "make-check.lock"
 #: SOFT STOP. Touching it refuses new dispatches (rule (f) and rule (g)) while the
 #: loop keeps observing returns. When no task is RUNNING, RETURNED or CHECKING,
 #: the loop writes STOPPED, emits LOOP_STOPPED with why="drain", and exits.
@@ -326,8 +333,9 @@ MATH_BRIEF = ROOT / "agents" / "tasks" / "POD-MATH" / "POD-MATH.md"
 #: appears: `_refill_min_hours()` reads `[limits].refill_min_hours` first.
 REFILL_MIN_HOURS = 1.0
 
-#: A14's two tiers, C-12's own. WIDE is four concurrent Agda writers at `-M8g`, HEAVY is
-#: two at `-M12g`, and `dev/pod/heads.toml` `[tiers]` holds both numbers.
+#: A14's two tiers, C-12's own, tightened by the owner's ruling of 2026-08-23: WIDE and
+#: HEAVY each admit ONE concurrent Agda writer at `-M4g` (was four at `-M8g` and two at
+#: `-M12g`), and `dev/pod/heads.toml` `[tiers]` holds both numbers.
 #:
 #: THE VOCABULARY HAS ONE HOME AND IT IS `facts.TASK_TIERS`, because `run_agda()` turns
 #: the name into a caliber: a second spelling here would be a second memory cap.
@@ -495,7 +503,7 @@ class Task:
         if self.reported is None:
             self.reported = False
         if self.tier not in TIERS:
-            # A14. An ABSENT declaration is WIDE, because `-A64m -I0 -M8g` is the caliber
+            # A14. An ABSENT declaration is WIDE, because `-A64m -I0 -M4g` is the caliber
             # `run_agda()` really sets, so WIDE is the true worst case and not an
             # optimistic one. A declaration that is PRESENT and unreadable is a different
             # case and `task_tier()` takes the conservative tier there.
@@ -1839,10 +1847,11 @@ def watchdog_alive():
     """A13: `admits()` refuses every Agda task while `scripts/ops/agda-watchdog.sh` is down.
 
     The watchdog is the BACKSTOP for the guard that matters: it kills any Agda over the
-    14 GB per-process cap and, below an 8 percent system free floor, the largest one. It
-    was born 2026-08-02 after four unguarded parallel writers crashed the 64 GB box. With
-    it down, the POD's own slot arithmetic is the only guard left, and A13 says that is
-    not enough. An unreadable `pgrep` reads as DOWN, which is the safe direction.
+    6 GB per-process cap (owner's ruling 2026-08-23; was 14 GB) and, below an 8 percent
+    system free floor, the largest one. It was born 2026-08-02 after four unguarded
+    parallel writers crashed the 64 GB box. With it down, the POD's own slot arithmetic
+    is the only guard left, and A13 says that is not enough. An unreadable `pgrep` reads
+    as DOWN, which is the safe direction.
     """
     try:
         done = subprocess.run(["pgrep", "-f", "agda-watchdog.sh"],
@@ -1889,8 +1898,9 @@ def watchdog_start(root=None):
 def watchdog_backstop_note(path=None):
     """C-12's two numbers, read from the SCRIPT and compared with `dev/pod/heads.toml`.
 
-    A13 returns the 14 GB per-process backstop and the 8 percent system-free floor WITH
-    the watchdog. Both numbers are written twice: in the shell script at
+    A13 returns the 6 GB per-process backstop (owner's ruling 2026-08-23; was 14 GB) and
+    the 8 percent system-free floor WITH the watchdog. Both numbers are written twice: in
+    the shell script at
     `scripts/ops/agda-watchdog.sh:12-13`, and in `[tiers.shared]` of `dev/pod/heads.toml`.
     Two homes for one number drift silently, so this READS both and NAMES a disagreement
     on the restart line.
@@ -1951,7 +1961,8 @@ def tier_heap_gb(tier):
     """The `-M` cap of one tier, in whole gigabytes, or None when it cannot be read.
 
     THE PARSER HAS ONE HOME. `heads.py` reads the caliber string for its own load-time
-    check of A14's 32 GB sum, and this calls that parser rather than writing a second one:
+    check of A14's 4 GB sum (owner's ruling 2026-08-23; was 32 GB), and this calls that
+    parser rather than writing a second one:
     two readers of one field drift, and the field is a memory cap.
     """
     try:
@@ -2005,13 +2016,16 @@ def agda_slots(tier=WIDE):
 
 
 def heap_sum_ok(st, t, tier):
-    """A14's mixed worst case: the sum of the running heap caps stays at or under 32 GB.
+    """A14's mixed worst case: the sum of the running heap caps stays at or under 4 GB
+    (owner's ruling 2026-08-23; was 32 GB).
 
     ONE TIER'S OWN ARITHMETIC IS NOT ENOUGH, and that is why this exists beside
-    `agda_slots()`. Four WIDE writers are 32 GB and two HEAVY writers are 24 GB, so each
-    tier alone holds; one HEAVY beside three WIDE is 36 GB, which no per-tier count
-    refuses. C-12 measured the cost of getting this wrong on 2026-08-02: four unguarded
-    parallel writers OOM-crashed a 64 GB machine and took four in-flight tasks down.
+    `agda_slots()`. One WIDE writer is 4 GB and one HEAVY writer is also 4 GB, so each
+    tier alone holds; one of each at once is 8 GB, which no per-tier count refuses (both
+    tiers now cap at ONE, so this is the ONLY combination the sum needs to catch). C-12
+    measured the cost of getting this wrong on 2026-08-02, at the OLD, wider caps: four
+    unguarded parallel writers OOM-crashed a 64 GB machine and took four in-flight tasks
+    down.
 
     IT COUNTS THE POD'S OWN WRITERS, which is what it can attribute a tier to. The census
     of `agda_pileup()` counts every Agda process on the machine and `admits()` refuses on
@@ -2223,11 +2237,13 @@ def admits(st, t, agda=None):
     EXCLUSIVE IS NOT ONLY ABOUT SLOTS. A `machine: exclusive` task gets the machine alone
     and stays READY while the load average sits above `exclusive_max_load1`.
 
-    A13 AND A14 ADD THREE LIMBS TO THE AGDA HALF, and all three are C-12's. The watchdog
-    must be UP, because it is the 14 GB per-process backstop and the 8 percent free floor
-    and nothing else provides them. The slot ceiling is the TIER's, four for WIDE and two
-    for HEAVY, and the third and fourth open only above 25 percent free memory. And the
-    mixed worst-case heap sum stays at or under 32 GB, which no per-tier count catches.
+    A13 AND A14 ADD THREE LIMBS TO THE AGDA HALF, and all three are C-12's, tightened by
+    the owner's ruling of 2026-08-23. The watchdog must be UP, because it is the 6 GB
+    per-process backstop (was 14 GB) and the 8 percent free floor and nothing else
+    provides them. The slot ceiling is the TIER's, one for WIDE and one for HEAVY (was
+    four and two), and the third-slot clause is dead code under one slot. And the mixed
+    worst-case heap sum stays at or under 4 GB (was 32 GB), which no per-tier count
+    catches.
 
     **THE PILE-UP LIMB REFUSES EVERY TASK AND NOT ONLY AN AGDA ONE**, because it runs
     above the `if not t.agda` early-out. That is deliberate: C-12's hazard is the machine
@@ -2652,6 +2668,36 @@ def _tee(buf):
     LAUNCH_REFUSAL = " ".join(text.split())[:400]
 
 
+def _omlx_excluded(cfgs, root=None):
+    """`cfgs`, with every `pi_provider == "omlx"` config dropped while `make check` runs.
+
+    OWNER'S RULING 2026-08-23, the reverse of `scripts/gate/check-omlx-quiet.py`: the
+    whole-tree typecheck and qwen's local inference must never run at the same time.
+    That script refuses `make check` while `omlx-server` is live; this is the OTHER
+    direction, refusing to DISPATCH qwen while `make check`'s own `typecheck` target
+    holds `MAKE_CHECK_LOCK` (the Makefile creates it with `trap ... EXIT INT TERM`
+    around the Agda call, so a Ctrl-C or a failed typecheck still clears it).
+
+    IT NEVER RAISES AND NEVER BLOCKS ON THE LOCK ITSELF. Existence is a stat, not a
+    hold; a torn read of a file mid-`touch` cannot happen from a plain `Path.is_file()`.
+    `pi_provider` is present only on a `herdr-pi` config (`scripts/pod/heads.py:
+    _complete()`), so every other harness passes through untouched. Qwen is currently
+    the ONE model with `pi_provider == "omlx"` (`dev/pod/heads.toml
+    [legal.pi_provider]`); if a future model shares that provider, this excludes it too,
+    which is correct: the provider is what carries the local footprint, not the model
+    name.
+    """
+    root = ROOT if root is None else Path(root)
+    lock = root / ".pod-state" / "make-check.lock"
+    try:
+        held = lock.is_file()
+    except OSError:
+        return cfgs                            # unreadable: never guess a refusal here
+    if not held:
+        return cfgs
+    return tuple(c for c in cfgs if c.get("pi_provider") != "omlx")
+
+
 def launch(t, brief, role, root=None, st=None):
     """Rule (f)'s dispatch. It returns the PID, or None when a KEPT refusal fired.
 
@@ -2705,6 +2751,10 @@ def launch(t, brief, role, root=None, st=None):
     avoid = set(getattr(t, "avoid_models", None) or ())
     if avoid:
         cfgs = tuple(c for c in cfgs if c["model"] not in avoid)
+    # OWNER'S RULING 2026-08-23. Same reason and same shape as the avoid_models filter
+    # just above: narrow the candidate list BEFORE `pick_head_config()` ever sees it,
+    # so a `make check` in flight is never a race this function could lose.
+    cfgs = _omlx_excluded(cfgs, root)
     counts = head_live_counts(st, role, cfgs)
     head = pick_head_config(cfgs, counts)
     if head is None:
@@ -5437,7 +5487,7 @@ def cmd_run(argv):
     started = watchdog_tick(st0)                # A13. The session is this process
     print("pod run: the agda watchdog is up" if started else
           "pod run: the agda watchdog is DOWN. Every Agda task is REFUSED until it "
-          "starts, because it is C-12's 14 GB backstop and 8 percent free floor (A13).")
+          "starts, because it is C-12's 6 GB backstop and 8 percent free floor (A13).")
     stopping = []
     signal.signal(signal.SIGINT, lambda *_: stopping.append(1))
     signal.signal(signal.SIGTERM, lambda *_: stopping.append(1))
