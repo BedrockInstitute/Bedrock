@@ -1,0 +1,32 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-23T05:55:31Z
+Checking LJ-1-594.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-594/agents/tasks/LJ-1-594/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-594/agents/tasks/LJ-1-594/runs/W3.agda:32.3-34.52: error: [UnequalSorts]
+Type (ℓ-suc ℓ) != Type ℓ
+when checking that the expression
+(δ : V ℓ) →
+⟨ δ ∈ InfinitySet.sucV α₀ ⟩ →
+(⟨ δ ∈ InfinitySet.ω {ℓ} ⟩ → Empty.⊥) →
+Σ-syntax (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫)
+λ f → (x y : ⟪ δ ⟫ × ⟪ δ ⟫) → f x ≡ f y → x ≡ y
+has type Type ℓ
+        1.02 real         0.88 user         0.11 sys
+           310263808  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20678  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  59  voluntary context switches
+                 201  involuntary context switches
+         11800958058  instructions retired
+          4087804003  cycles elapsed
+           251151104  peak memory footprint
+EXIT=42
+ended 2026-08-23T05:55:32Z
