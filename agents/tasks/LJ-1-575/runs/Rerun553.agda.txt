@@ -1,0 +1,289 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.553] ONE SUPPLIED MEMBERSHIP, AND IT BUYS NINE FIELDS.
+--
+-- THE COUNT IS NINE AND NOT THIRTEEN.  The brief asks D-10 first:
+-- whether ONE supplied membership discharges all thirteen `TFacts`
+-- fields that ask for a membership in `K`, or only the seven that state
+-- the graph slot character for character.  It is NEITHER.  It is NINE:
+-- the seven, PLUS `valK` and `valK-un`, whose honest forms take the
+-- membership at a FRESH binder `T` that the record instantiates to the
+-- very same graph slot (src/L/Condensation/TwelveAgree.lagda.md:175,
+-- :179 against src/L/Coding/EnvSupply.lagda.md:462, :471).  The other
+-- four ask for a membership at a binder the FIELD ITSELF quantifies
+-- over, so no supplied membership can reach them; the report names them.
+--
+-- W3 RUNS FIRST AND IT RUNS ALONE, BEFORE any field is discharged.
+--
+-- THE WIDEST UNMEASURED TERM, as the brief names it: the membership
+-- itself, at `KValue`'s frame, INHABITED.
+--
+--   ⟨ fst (lookup (suc zero) γ') ∈ fst K ⟩   at KValue's frame
+--
+-- `[LJ-1.71]` shipped a module whose telescope was uninhabited at EVERY
+-- frame (archive/dev/LJ-dispatch-index.md:135), so the supplied
+-- hypothesis is guarded here before a field is touched.
+--
+-- THE GUARD IS WEAKER HERE THAN IT WAS FOR `[LJ-1.551]`, AND I SAY SO.
+-- `[LJ-1.71]`'s `tagEq` was uninhabited because its slot was PINNED to a
+-- value that could not satisfy it.  The graph slot, `lookup (suc zero)
+-- γ'`, is a FREE cell of the frame (agents/tasks/LJ-1-551/Probe551.agda
+-- :341, cell `g1`), so it can be instantiated.  A single instantiation
+-- would therefore be a cheap pass.  I give TWO, and the second is the
+-- one that carries weight:
+--
+--   (a) `g1 := numeralL 0`, discharged by `KValue.facts .numK0`.  This
+--       is the cheap one and it proves only non-vacuity.
+--   (b) `g1 := SE.B₀ = LsetS gam ordγ`, THE CARRIER STAGE ITSELF,
+--       discharged from `SupplyEnv.B₀∈σ` and `Lset-mono`.  A value graph
+--       over the carrier is a set of that scale, so this is the witness
+--       at a set the graph slot could actually hold.
+--
+-- `[LJ-1.508]` measured that NOTHING in `src/` states this membership:
+-- `grep -rnE "fst \(lookup T γ'?\) ∈ fst \(lookup .*K" src/` returns 0
+-- (agents/tasks/LJ-1-508/lj-1.508-report.md:360-366).  So it is supplied
+-- here as a hypothesis and inhabited here as a witness, and it is
+-- claimed nowhere else.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M8g", the wide caliber,
+-- set on the pane by the program and untouched here.  Nothing lands in
+-- src/.  I postulate nothing.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-575.Rerun553 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; Lset-mono
+        ; Lset-layer; layer-trans )
+open import L.Axioms.Numerals {ℓ} using ( numeralL )
+open import L.Coding.Model {ℓ} using ( subValAt; subValSuccAt )
+open import L.Coding.EnvSupply {ℓ} lem using ( module SupplyEnv; module Fact )
+open import L.Condensation {ℓ} lem using ( module KValue; module KFactsNS )
+open import L.Condensation.TwelveAgree {ℓ} lem using ( TFacts )
+open import Cubical.Data.Nat using ( ℕ; _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet; ∅ )
+open InfinitySet {ℓ} using ( #_; sucV; ω )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+open KFactsNS
+open KFacts
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- =====================================================================
+-- THE NINE `TFacts` FIELDS THAT ONE MEMBERSHIP BUYS, STATED ONCE AT A
+-- GENERIC `K` AND A GENERIC `γ'` (W2).
+--
+-- EVERY FIELD TYPE BELOW IS COPIED VERBATIM OUT OF THE MASTER, extracted
+-- with `sed` and not retyped:
+--   src/L/Condensation/TwelveAgree.lagda.md:173-176  `valK`
+--                                          :177-180  `valK-un`
+--                                          :265-270  `subK₁-and`
+--                                          :271-276  `subK₀-and`
+--                                          :277-282  `subK₁-imp`
+--                                          :283-288  `subK₀-imp`
+--                                          :290-295  `subK-neg`
+--                                          :311-316  `subK-un`
+--                                          :326-331  `subK-allin`
+-- `statement-matches` below is Agda's word that they ARE the master's
+-- own.  The record takes NO `N` index and NO `t` index, because not one
+-- of the nine mentions a tag.
+-- =====================================================================
+
+record NineOfThirteen {n : ℕ} (K : Fin (5 + n)) (γ' : S ^ (11 + n))
+  : Type (ℓ-suc ℓ) where
+  field
+    valK : (k : ℕ) (c ar a b yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ') ⟩
+           → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
+           → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ') ⟩
+           → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    valK-un : (k : ℕ) (c ar a yc : S) → ⟨ fst c ∈ fst (lookup (suc (suc zero)) γ') ⟩
+              → fst c ≡ pr (fst ar) (pr (# k) (fst a))
+              → ⟨ pr (fst c) (fst yc) ∈ fst (lookup (suc zero) γ') ⟩
+              → ⟨ fst yc ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK₁-and : (x y yc b a ar c : S) → ⟨ (x ∷ y ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc (suc (suc zero))))
+                           (suc zero) ⟩
+                → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK₀-and : (y ya yc b a ar c : S) → ⟨ (y ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt {7 + (11 + n)} (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc (suc zero)))
+                           zero ⟩
+                → ⟨ fst y ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK₁-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                           (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc (suc zero)))))
+                           (suc (suc zero)) ⟩
+                → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK₀-imp : (E yb ya yc b a ar c : S) → ⟨ (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                  subValAt (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+                           (suc (suc (suc (suc (suc (suc zero))))))
+                           (suc (suc (suc (suc zero))))
+                           (suc zero) ⟩
+                → ⟨ fst yb ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK-neg : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                 subValAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                          (suc (suc (suc (suc zero))))
+                          (suc (suc (suc zero)))
+                          (suc zero) ⟩
+               → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK-un : (ya yc a ar c E : S) → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                subValSuccAt (suc (suc (suc (suc (suc (suc (suc zero)))))))
+                             (suc (suc (suc (suc zero))))
+                             (suc (suc (suc zero)))
+                             (suc zero) ⟩
+              → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+    subK-allin : (E ya yc b a ar c : S) → ⟨ (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ') ⊨
+                   subValSuccAt (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+                                (suc (suc (suc (suc (suc zero)))))
+                                (suc (suc (suc zero)))
+                                (suc zero) ⟩
+                 → ⟨ fst ya ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩
+
+-- =====================================================================
+-- THE DISCHARGE, AT A GENERIC `K` AND `γ'`.  ONE MEMBERSHIP IN.
+--
+-- `Ktr` IS NOT A SECOND ASK.  It is the record's own `transK`
+-- (src/L/Condensation/TwelveAgree.lagda.md:262-264) one level up: the
+-- record states transitivity over `S`, `EnvSupply.Fact` needs it over
+-- `V ℓ` (src/L/Coding/EnvSupply.lagda.md:450, `isTransV` at
+-- src/L/Constructible.lagda.md:83-84), and the `S` form cannot produce
+-- the `V` form because `prK`'s intermediate `⁅ x , y ⁆` carries no `isL`
+-- witness (src/L/Coding/EnvSupply.lagda.md:452-459).  So it is a
+-- parameter HERE and it is PAID FROM THE TREE at the frame below, where
+-- `layer-trans (Lset-layer lam)` discharges it and costs the caller
+-- nothing.  `graphK` is the ONE hypothesis the frame does not pay.
+--
+-- NOT ONE FIELD IS WEAKENED and no `subst` is added at any field: every
+-- one of the nine is a single application of an `EnvSupply.Fact` form
+-- whose slot arguments make `graphK` fit DEFINITIONALLY, because
+-- `lookup (suc i) (x ∷ xs)` reduces to `lookup i xs`.
+-- =====================================================================
+
+module Discharge {n : ℕ}
+  (K : Fin (5 + n))
+  (γ' : S ^ (11 + n))
+  (Ktr : isTransV (fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ')))
+  (graphK : ⟨ fst (lookup (suc zero) γ')
+              ∈ fst (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') ⟩)
+  where
+
+  module F = Fact (lookup (suc (suc (suc (suc (suc (suc K)))))) γ') Ktr
+
+  -- The two slots the nine read, named once.
+  Cslot Tslot : S
+  Cslot = lookup (suc (suc zero)) γ'
+  Tslot = lookup (suc zero) γ'
+
+  nine : NineOfThirteen {n} K γ'
+  nine = record
+    { valK = λ k c ar a b yc c∈ shape hc →
+        F.valK Cslot Tslot graphK k c ar a b yc c∈ shape hc
+    ; valK-un = λ k c ar a yc c∈ shape hc →
+        F.valK-un Cslot Tslot graphK k c ar a yc c∈ shape hc
+    ; subK₁-and = λ x y yc b a ar c h →
+        F.subK-gen (x ∷ y ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')
+          (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+          (suc (suc (suc (suc (suc zero)))))
+          (suc (suc (suc (suc zero))))
+          (suc zero) graphK h
+    ; subK₀-and = λ y ya yc b a ar c h →
+        F.subK-gen (y ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')
+          (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+          (suc (suc (suc (suc (suc zero)))))
+          (suc (suc (suc zero)))
+          zero graphK h
+    ; subK₁-imp = λ E yb ya yc b a ar c h →
+        F.subK-gen (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')
+          (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+          (suc (suc (suc (suc (suc (suc zero))))))
+          (suc (suc (suc (suc (suc zero)))))
+          (suc (suc zero)) graphK h
+    ; subK₀-imp = λ E yb ya yc b a ar c h →
+        F.subK-gen (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')
+          (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+          (suc (suc (suc (suc (suc (suc zero))))))
+          (suc (suc (suc (suc zero))))
+          (suc zero) graphK h
+    ; subK-neg = λ ya yc a ar c E h →
+        F.subK-gen (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')
+          (suc (suc (suc (suc (suc (suc (suc zero)))))))
+          (suc (suc (suc (suc zero))))
+          (suc (suc (suc zero)))
+          (suc zero) graphK h
+    ; subK-un = λ ya yc a ar c E h →
+        F.subKSucc-gen (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ')
+          (suc (suc (suc (suc (suc (suc (suc zero)))))))
+          (suc (suc (suc (suc zero))))
+          (suc (suc (suc zero)))
+          (suc zero) graphK h
+    ; subK-allin = λ E ya yc b a ar c h →
+        F.subKSucc-gen (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ')
+          (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))
+          (suc (suc (suc (suc (suc zero)))))
+          (suc (suc (suc zero)))
+          (suc zero) graphK h }
+
+-- =====================================================================
+-- THE OBLIGATION, AT `KValue`'s FRAME.
+--
+-- THE TELESCOPE, ITEM BY ITEM.
+--   `lam ordλ succλ ∅∈λ gam ordγ γ∈λ`  `KValue`'s seven
+--     (src/L/Condensation.lagda.md:7380-7383).
+--   `ω∈σ`                              `SupplyEnv`'s eighth parameter
+--     (src/L/Coding/EnvSupply.lagda.md:111).  It is here only because
+--     the frame is `[LJ-1.551]`'s, whose cell 0 is `SE.B₀`; the nine
+--     fields never consume it.
+--   `g1 g2 g3 g4 g5`                   the five free cells.
+--   `graphK`                           THE ONE SUPPLIED MEMBERSHIP.
+--
+-- `Ktr` IS NOT IN THE TELESCOPE.  It is paid here from the tree.
+-- =====================================================================
+
+module Frame
+  (lam : V ℓ) (ordλ : IsOrd lam)
+  (succλ : (d : V ℓ) → ⟨ d ∈ lam ⟩ → ⟨ sucV d ∈ lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ lam ⟩)
+  (gam : V ℓ) (ordγ : IsOrd gam) (γ∈λ : ⟨ gam ∈ lam ⟩)
+  (ω∈σ : ⟨ ω ∈ sucV gam ⟩) where
+
+  module KV = KValue lam ordλ succλ ∅∈λ gam ordγ γ∈λ
+  module SE = SupplyEnv lam ordλ succλ ∅∈λ gam ordγ γ∈λ ω∈σ
+
+  γ‡ : (g1 g2 g3 g4 g5 : S) → Vec S 20
+  γ‡ g1 g2 g3 g4 g5 = SE.B₀ ∷ g1 ∷ g2 ∷ g3 ∷ g4 ∷ g5 ∷ KV.Kenv
+
+  -- The frame pays `Ktr`.  `lookup (suc^6 iK) (γ‡ ...)` reduces to
+  -- `LsetS lam ordλ` (src/L/Condensation.lagda.md:7389-7390, :7397), so
+  -- `fst` of it is `Lset lam` and the tree's own layer lemma closes it.
+  Ktr‡ : (g1 g2 g3 g4 g5 : S)
+    → isTransV (fst (lookup (suc (suc (suc (suc (suc (suc KV.iK))))))
+                            (γ‡ g1 g2 g3 g4 g5)))
+  Ktr‡ g1 g2 g3 g4 g5 = layer-trans (Lset-layer lam)
+
+  graph-in-K-discharges : (g1 g2 g3 g4 g5 : S)
+    → ⟨ fst (lookup (suc zero) (γ‡ g1 g2 g3 g4 g5))
+        ∈ fst (lookup (suc (suc (suc (suc (suc (suc KV.iK))))))
+                      (γ‡ g1 g2 g3 g4 g5)) ⟩
+    → NineOfThirteen {n = 9} KV.iK (γ‡ g1 g2 g3 g4 g5)
+  graph-in-K-discharges g1 g2 g3 g4 g5 graphK =
+    Discharge.nine {n = 9} KV.iK (γ‡ g1 g2 g3 g4 g5)
+      (Ktr‡ g1 g2 g3 g4 g5) graphK
+
+-- THE OBLIGATION AT THE TOP LEVEL.
+graph-in-K-discharges = Frame.graph-in-K-discharges
