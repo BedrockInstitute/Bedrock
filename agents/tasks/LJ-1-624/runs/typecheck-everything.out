@@ -1,0 +1,31 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T09:30:44Z
+limit 900s
+Checking Everything (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-624/src/Everything.lagda.md).
+ Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-624/src/L/Absorption.lagda.md).
+ Checking L.CodedShift (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-624/src/L/CodedShift.lagda.md).
+ Checking L.SquareLawClosed (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-624/src/L/SquareLawClosed.lagda.md).
+ Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-624/src/L/StageBound.lagda.md).
+agda: Heap exhausted;
+agda: Current maximum heap size is 2147483648 bytes (2048 MB).
+agda: Use `+RTS -M<size>' to increase it.
+       19.18 real        18.37 user         0.47 sys
+          1880276992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              112490  page reclaims
+                4336  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 785  voluntary context switches
+                4308  involuntary context switches
+        272146921639  instructions retired
+         75987347468  cycles elapsed
+          1820247888  peak memory footprint
+EXIT=251
+ended 2026-08-24T09:31:03Z

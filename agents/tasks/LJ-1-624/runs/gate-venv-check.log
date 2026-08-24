@@ -1,0 +1,1 @@
+venv-check rc=0: venv present (.venv/bin/python, Python 3.11.16)

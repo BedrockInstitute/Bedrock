@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-24T18:00:19Z
+limit 900s
+Checking L.CardinalAbove (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-624/src/L/CardinalAbove.lagda.md).
+        4.55 real         3.86 user         0.35 sys
+           933412864  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               54611  page reclaims
+                4433  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 882  voluntary context switches
+                2431  involuntary context switches
+         53955578223  instructions retired
+         16804912694  cycles elapsed
+           872924360  peak memory footprint
+EXIT=0
+ended 2026-08-24T18:00:23Z
