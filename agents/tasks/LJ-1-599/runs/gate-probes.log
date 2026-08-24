@@ -1,0 +1,2 @@
+.venv/bin/python scripts/gate/check-probes.py --check
+check-probes: clean (7609 tracked files, no probe outside agents/tasks/ and no generated file)

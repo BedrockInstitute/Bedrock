@@ -1,0 +1,4 @@
+.venv/bin/python scripts/gate/check-omlx-quiet.py --check
+check-omlx-quiet: refusing, qwen's local inference server (omlx-server) is live (owner's ruling 2026-08-23).
+Stop it, or wait for it to finish, before running `make check`.
+make: *** [omlxquiet] Error 1
