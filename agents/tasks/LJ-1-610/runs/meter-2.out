@@ -1,0 +1,7 @@
+GHCRTS=[-A64m -I0 -M2g]
+python: /Users/alsg/Agentic/Bedrock/.venv/bin/python (the worktree carries no venv; the main repo's pinned venv is used)
+started 2026-08-23T23:18:48Z
+missing   exit=42       2.71s  agents/tasks/LJ-1-610/Probe610.agda::graph-stage  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/.pod-state/witness/Witness-LJ-1-610-50f26975.agda:72)
+witness: 1 UNRESOLVED of 1, 2.71 s, probe_red=False
+EXIT=1
+ended 2026-08-23T23:18:51Z

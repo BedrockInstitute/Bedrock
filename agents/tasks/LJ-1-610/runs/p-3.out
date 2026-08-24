@@ -1,0 +1,38 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-23T23:15:53Z
+Checking LJ-1-610.Probe610 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda:84.41-71: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isSetΣ)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda:246.14-67: error: [UnequalTerms]
+∥ _B_372 ∥₁ !=< Type (ℓ-suc ℓ)
+when checking that the inferred type of an application
+  ∥ _B_372 ∥₁
+matches the expected type
+  Type (ℓ-suc ℓ)
+        3.06 real         2.78 user         0.23 sys
+           707166208  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45144  page reclaims
+                  82  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 124  voluntary context switches
+                1060  involuntary context switches
+         29759415525  instructions retired
+         12118147074  cycles elapsed
+           647103520  peak memory footprint
+EXIT=42
+ended 2026-08-23T23:15:56Z

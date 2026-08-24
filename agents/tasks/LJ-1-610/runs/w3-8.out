@@ -1,0 +1,36 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 120s (perl alarm)
+started 2026-08-23T23:12:22Z
+Checking LJ-1-610.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda:50.41-71: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isSetΣ)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda:80.14-44: error: [UnequalTerms]
+Σ SV.S (λ x → x ∈ᶜ (λ x₁ → x₁ ∈ˢ Lset lam)) !=< Type (ℓ-suc ℓ)
+when checking that the expression PT.rec→Set isSetSL numf numk h
+has type Type (ℓ-suc ℓ)
+        2.66 real         2.46 user         0.18 sys
+           668254208  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               42843  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 464  involuntary context switches
+         28133599122  instructions retired
+         10533286724  cycles elapsed
+           608273416  peak memory footprint
+EXIT=42
+ended 2026-08-23T23:12:25Z

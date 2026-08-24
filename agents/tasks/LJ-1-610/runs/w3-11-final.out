@@ -1,0 +1,41 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 120s (perl alarm)
+started 2026-08-23T23:18:23Z
+Checking LJ-1-610.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda:50.41-71: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isSetΣ)
+
+———— All done; warnings encountered ————————————————————————
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda:50.41-71: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isSetΣ)
+        3.38 real         2.81 user         0.26 sys
+           668647424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38577  page reclaims
+                4297  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 565  voluntary context switches
+                2484  involuntary context switches
+         31407546546  instructions retired
+         12297691948  cycles elapsed
+           608568328  peak memory footprint
+EXIT=0
+ended 2026-08-23T23:18:26Z

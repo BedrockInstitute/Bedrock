@@ -1,0 +1,46 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 120s (perl alarm)
+started 2026-08-23T23:09:03Z
+Checking LJ-1-610.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda:49.30-43: warning: -W[no]ModuleDoesntExport
+The module Cubical.Data.Sum doesn't export the following:
+  Sum
+when scope checking the declaration
+  open import Cubical.Data.Sum using (Sum)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda:60.53-57: error: [NotInScope]
+Not in scope:
+  sucV
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/runs/W3.agda:60.53-57
+    (did you mean
+       '.#L.Axioms.Numerals-4095077003248383408.sucʟ' or
+       'Base.Prelude.Fin.suc' or
+       'Base.Prelude.ℕ.suc' or
+       'Base.Prelude.suc' or
+       'Cubical.Data.Nat.ℕ.suc' or
+       'Cubical.Data.Nat.suc' or
+       'Cubical.HITs.CumulativeHierarchy.Constructions.InfinitySet.sucV' or
+       'Fin.suc' or
+       'ℕ.suc' or
+       'suc'?)
+when scope checking sucV
+        3.63 real         2.46 user         0.31 sys
+           711262208  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41224  page reclaims
+                4259  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 892  voluntary context switches
+                2989  involuntary context switches
+         28090124406  instructions retired
+         11029440320  cycles elapsed
+           653394976  peak memory footprint
+EXIT=42
+ended 2026-08-23T23:09:07Z

@@ -1,0 +1,47 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-23T23:14:48Z
+Checking LJ-1-610.Probe610 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda:84.41-71: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isSetΣ)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda:195.6-9: error: [NotInScope]
+Not in scope:
+  ∀̇∈
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda:195.6-9
+    (did you mean
+       'FOL.Syntax.Formula.∀̇_' or
+       'FOL.Syntax.Formula.∀̇∈' or
+       'FOL.Syntax.Formula.∃̇∈' or
+       'FOL.Syntax.∀̇_' or
+       'FOL.Syntax.∀̇∈' or
+       'FOL.Syntax.∃̇∈' or
+       'Formula.∀̇_' or
+       'Formula.∀̇∈' or
+       'Formula.∃̇∈'?)
+when scope checking ∀̇∈
+        2.63 real         2.43 user         0.19 sys
+           705036288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45086  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 480  involuntary context switches
+         27984477846  instructions retired
+         10466523241  cycles elapsed
+           647054344  peak memory footprint
+EXIT=42
+ended 2026-08-23T23:14:50Z

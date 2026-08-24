@@ -1,0 +1,36 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-23T23:14:58Z
+Checking LJ-1-610.Probe610 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda:84.41-71: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isSetΣ)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-610/agents/tasks/LJ-1-610/Probe610.agda:212.34-60: error: [UnequalTerms]
+fst γ != a of type Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression amb .snd a a∈γ x x∈a y y∈x has
+type y ∈ᶜ (λ x₁ → x₁ ∈ˢ a)
+        2.92 real         2.66 user         0.24 sys
+           707067904  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45211  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 515  involuntary context switches
+         29594451948  instructions retired
+         11353788181  cycles elapsed
+           647070752  peak memory footprint
+EXIT=42
+ended 2026-08-23T23:15:01Z
