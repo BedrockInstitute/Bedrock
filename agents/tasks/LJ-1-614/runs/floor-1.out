@@ -1,0 +1,41 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-24T03:19:41Z
+Checking LJ-1-614.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda).
+ Checking LJ-1-606.Probe606 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-606/Probe606.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-610/Probe610.agda:85.41-71: warning: -W[no]ModuleDoesntExport
+The module Cubical.Foundations.HLevels doesn't export the
+following:
+  isProp→isSet (did you mean 'isPropIsSet'?)
+when scope checking the declaration
+  open import Cubical.Foundations.HLevels using (isProp→isSet;
+                                                 isSetΣ)
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:132.33-192.19: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:132.33-37
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:149.28-32
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:152.32-36
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:166.22-26
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:169.16-20
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:175.27-31
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-614/agents/tasks/LJ-1-614/runs/FLOOR.agda:192.15-19
+        5.16 real         4.51 user         0.31 sys
+           970375168  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               56947  page reclaims
+                4340  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 747  voluntary context switches
+                2587  involuntary context switches
+         64368236222  instructions retired
+         19878787747  cycles elapsed
+           909706464  peak memory footprint
+EXIT=42
+ended 2026-08-24T03:19:46Z
