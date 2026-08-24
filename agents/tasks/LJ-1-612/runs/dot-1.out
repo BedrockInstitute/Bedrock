@@ -1,0 +1,30 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T01:06:01Z
+Checking LJ-1-612.runs.DotW3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/DotW3.agda).
+ Checking LJ-1-136.ProbeLJ1136B (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-136/ProbeLJ1136B.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/DotW3.agda:12.3-31: error: [ModuleNameUnexpected]
+The name of the top level module does not match the file name. The
+module ProbeLJ1136B should probably be named LJ-1-136.ProbeLJ1136B
+when scope checking the declaration
+  import LJ-1-136.ProbeLJ1136B
+        0.09 real         0.05 user         0.02 sys
+           121421824  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                9446  page reclaims
+                  29  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   3  voluntary context switches
+                  51  involuntary context switches
+           950987759  instructions retired
+           279465114  cycles elapsed
+            93078128  peak memory footprint
+EXIT=42
+ended 2026-08-24T01:06:01Z

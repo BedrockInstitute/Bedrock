@@ -1,0 +1,41 @@
+wallcap=60s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T01:17:18Z
+Checking LJ-1-612.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/W3.agda:19.3-22: error: [FileNotFound]
+Failed to find source of module ProbeLJ1136B in any of the
+following locations:
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/ProbeLJ1136B.agda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/ProbeLJ1136B.lagda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/src/ProbeLJ1136B.agda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/src/ProbeLJ1136B.lagda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/ProbeLJ1136B.agda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/ProbeLJ1136B.lagda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/../LJ-1-134/ProbeLJ1136B.agda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/../LJ-1-134/ProbeLJ1136B.lagda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/../LJ-1-136/ProbeLJ1136B.agda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-612/agents/tasks/LJ-1-612/runs/../LJ-1-136/ProbeLJ1136B.lagda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/ProbeLJ1136B.agda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/ProbeLJ1136B.lagda
+when scope checking the declaration
+  import ProbeLJ1136B
+        0.27 real         0.04 user         0.05 sys
+           116916224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                6720  page reclaims
+                2487  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  87  voluntary context switches
+                1135  involuntary context switches
+          1063186071  instructions retired
+           393588723  cycles elapsed
+            88851080  peak memory footprint
+EXIT=42
+ended 2026-08-24T01:17:18Z
