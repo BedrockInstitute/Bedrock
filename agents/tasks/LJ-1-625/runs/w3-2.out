@@ -1,0 +1,27 @@
+wallcap=60s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T08:44:20Z
+Checking LJ-1-625.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-625/agents/tasks/LJ-1-625/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-625/agents/tasks/LJ-1-625/runs/W3.agda:284.34-35: error: [UnequalTerms]
+n != 1 of type ℕ
+when checking that the expression ψ has type Formula ⟪ Lset δ ⟫ 1
+        2.08 real         1.57 user         0.23 sys
+           367116288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20182  page reclaims
+                4288  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 389  voluntary context switches
+                2297  involuntary context switches
+         17756505355  instructions retired
+          7258860502  cycles elapsed
+           306987824  peak memory footprint
+EXIT=42
+ended 2026-08-24T08:44:22Z
