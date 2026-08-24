@@ -1,0 +1,2 @@
+.venv/bin/python scripts/gate/check-fences.py --check
+check-fences: clean (103 masters, run threshold 3)

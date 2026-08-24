@@ -1,0 +1,35 @@
+.venv/bin/python scripts/site/weave-i18n.py --check
+.venv/bin/python scripts/gate/lint-prose.py --check
+.venv/bin/python scripts/gate/lint-agda.py --check
+.venv/bin/python scripts/gate/check-glossary.py --check
+.venv/bin/python scripts/measure/ledger.py --check
+ledger [thresholds SUSPENDED]: ac-total (projection) 23,879 against the retired 20,000 cap, reported and NOT enforced; re-arm is LJ-2.1 measures the internalization double trophy and LJ-2.2 sets both DD5 benchmarks, then this goes false
+ledger: declaration clean; standing 33,523 lines measured over 100 masters
+.venv/bin/python scripts/gate/check-probes.py --check
+check-probes: clean (7862 tracked files, no probe outside agents/tasks/ and no generated file)
+.venv/bin/python scripts/pod/check-closure.py --check closure
+check-closure: clean (103 masters; closure, archive)
+.venv/bin/python scripts/gate/check-fences.py --check
+check-fences: clean (103 masters, run threshold 3)
+.venv/bin/reuse lint
+# SUMMARY
+
+* Bad licenses: 0
+* Deprecated licenses: 0
+* Licenses without file extension: 0
+* Missing licenses: 0
+* Unused licenses: 0
+* Used licenses: AGPL-3.0-only, CC-BY-NC-SA-4.0, OFL-1.1
+* Read errors: 0
+* Invalid SPDX License Expressions: 0
+* Files with copyright information: 7681 / 7681
+* Files with license information: 7681 / 7681
+
+Congratulations! Your project is compliant with version 3.3 of the REUSE Specification :-)
+.venv/bin/python scripts/gate/check-rule-ids.py
+check-rule-ids: clean (56 files, 165 lessons, 68 decisions, dev/rules.toml)
+.venv/bin/python scripts/pod/check-spec-surface.py --check
+check-spec-surface: clean (8 surface file(s), 201 declaration(s), 7 guarded rule home(s), 499 in-fence lines)
+real 9.95
+user 8.93
+sys 3.15

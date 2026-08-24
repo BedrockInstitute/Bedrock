@@ -1,0 +1,1 @@
+.venv/bin/python scripts/site/weave-i18n.py --check

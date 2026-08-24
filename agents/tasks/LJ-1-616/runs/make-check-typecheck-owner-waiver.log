@@ -1,0 +1,27 @@
+# Verbatim transcript of the owner-waived whole-tree typecheck, first run.
+# 2026-08-24 23:16 local, pane caliber GHCRTS=-A64m -I0 -M4g (heavy, set by the
+# program), owner waived the omlx quiet guard by direct instruction at 23:15.
+# Run command: touch .pod-state/make-check.lock; agda src/Everything.lagda.md
+# (trap removed the lock on exit). Warm cache: dispatch-time interfaces under
+# _build/2.8.0/agda/, Everything and L.StageBound stale and re-checked.
+Checking Everything (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-616/src/Everything.lagda.md).
+ Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-616/src/L/StageBound.lagda.md).
+       16.65 real        15.73 user         0.58 sys
+          2479276032  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              148794  page reclaims
+               4273  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   2  messages sent
+                   0  messages received
+                   0  signals received
+               778  voluntary context switches
+              4572  involuntary context switches
+        230937458065  instructions retired
+        65209691758  cycles elapsed
+          2420345112  peak memory footprint
+exit=0
