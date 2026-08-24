@@ -1,0 +1,30 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T00:36:31Z
+Checking LJ-1-609.Probe609 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-609/agents/tasks/LJ-1-609/Probe609.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-609/agents/tasks/LJ-1-609/Probe609.agda:243.5-23: error: [ShouldBeEmpty]
+Vec Code zero should be empty, but the following constructor
+patterns are valid:
+  []
+  Cubical.Foundations.Prelude.hcomp {._} {._} {_} _ _
+when checking the clause left hand side
+encVec-inj [] () e
+        4.31 real         4.07 user         0.19 sys
+           629997568  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40192  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 168  voluntary context switches
+                 722  involuntary context switches
+         59197735109  instructions retired
+         17914852316  cycles elapsed
+           569344984  peak memory footprint
+EXIT=42
+ended 2026-08-24T00:36:35Z

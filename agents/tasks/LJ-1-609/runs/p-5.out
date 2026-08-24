@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T00:35:12Z
+Checking LJ-1-609.Probe609 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-609/agents/tasks/LJ-1-609/Probe609.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-609/agents/tasks/LJ-1-609/Probe609.agda:157.28-65: error: [UnequalTerms]
+δ' != δ of type Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression
+subst (λ w → ⟨ a ∈ˢ Lset w ⟩) e a∈Lδ⁺ has type
+⟨ a ∈ˢ Lset (sucV δ) ⟩
+        2.86 real         2.66 user         0.17 sys
+           629440512  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40052  page reclaims
+                 110  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   2  voluntary context switches
+                 547  involuntary context switches
+         36599829158  instructions retired
+         12002845790  cycles elapsed
+           569476080  peak memory footprint
+EXIT=42
+ended 2026-08-24T00:35:15Z
