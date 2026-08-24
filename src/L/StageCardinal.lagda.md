@@ -33,7 +33,7 @@ open import L.Ordinal {ℓ}
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc; Lset-cumul )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; Tri; lt; eq; gt; leastOf )
+  using ( SWO; Tri; lt; eq; gt; leastOf; IsLeast )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( ω; sucV; #_ )
@@ -262,6 +262,16 @@ module OrdSWO (α : S) (oα : IsOrd α) where
     ; irr∙   = irr₁
     ; trans∙ = trans₁
     ; wf∙    = wf₁ }
+
+-- The standalone selection of the class-pred table: the least element
+-- of a nonempty class over the members of a stage, over the ordinal
+-- order. The limit step's h makes this very call inline at its own
+-- α; the row names it as one importable term, and the result
+-- certifies the leastness with IsLeast.
+least-at-site : (δ : S) (oδ : IsOrd δ) (P : ⟪ δ ⟫ → hProp (ℓ-suc ℓ))
+              → ∥ Σ[ a ∈ ⟪ δ ⟫ ] ⟨ P a ⟩ ∥₁
+              → Σ[ a ∈ ⟪ δ ⟫ ] IsLeast (OrdSWO.ordSWO δ oδ) P a
+least-at-site δ oδ = leastOf (OrdSWO.ordSWO δ oδ) lem
 
 -- The union (limit) step at every infinite ordinal α: the stage's index
 -- injects into ⟪ α ⟫, given an injection of every member stage's index into

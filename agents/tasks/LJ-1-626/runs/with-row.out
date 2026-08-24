@@ -1,0 +1,24 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T11:03:40Z
+Checking L.StageCardinal (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-626/src/L/StageCardinal.lagda.md).
+        2.84 real         2.31 user         0.22 sys
+           470777856  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26342  page reclaims
+                4470  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 542  voluntary context switches
+                2366  involuntary context switches
+         32346271795  instructions retired
+         10009210885  cycles elapsed
+           409650040  peak memory footprint
+EXIT=0
+ended 2026-08-24T11:03:43Z
