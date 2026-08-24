@@ -1,0 +1,23 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-24T05:23:02Z
+        1.05 real         0.84 user         0.12 sys
+           324796416  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21782  page reclaims
+                 106  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 255  voluntary context switches
+                 412  involuntary context switches
+         12389439987  instructions retired
+          4154021347  cycles elapsed
+           267682584  peak memory footprint
+EXIT=0
+ended 2026-08-24T05:23:03Z
