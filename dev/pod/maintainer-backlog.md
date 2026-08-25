@@ -21,6 +21,22 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ### 29. `maintainer_scope_ok()` has no BEFORE snapshot, so long-standing ambient drift refuses every batch on `scope`. MEASURED 2026-08-25
 
+**THE DRIFT NAMED BELOW IS NOW CLEARED, OWNER-AUTHORISED 2026-08-25.** Six
+commits (`f71700d2`, `9de9c337`, `f5e74d0d`, `33a526b6`, `fdc66a15`,
+`3c4a3d2d`, `447f125b`) landed the program, the oMLX watchdog, docs, the
+direction archive and shelf, three orphaned admitted-proposal records, one
+drive-by test regex fix, and 242 terminal tasks' worth of `agents/tasks/`.
+Re-ran the exact `maintainer_scope_ok()` predicate against the live tree
+afterward: **0 bad paths.** A future batch will not lose to this UNLESS new
+drift accumulates the same way. **The structural gap itself (no
+before-snapshot) is UNCHANGED and UNFIXED**: this cleared today's instance,
+it did not close the item. LJ-1.629 through LJ-1.632 were deliberately left
+uncommitted (live at the time), as were two probes `check-probes` refused
+under `agents/tasks/LJ-1-607/runs/cold/` (names collide with LJ-1.134/136,
+task ownership undetermined), and the retired `*.toml.{scope,empty,refused,
+reject}` proposal litter (already exempted from the check by design, left
+alone rather than committed).
+
 **FOUND WHILE REVIEWING A POD-REVIEW, NOT WHILE LOOKING FOR IT.** My own batch
 `dev/pod/proposals/20260825-193112.toml` (0 rows, reasoned) was refused with
 verdict `scope` at `dev/pod/transitions/2026-08.jsonl` seq 3998, one minute
