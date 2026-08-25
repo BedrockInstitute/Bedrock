@@ -19,7 +19,35 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
-### 31. Three `PROGRAM_WRITES_PREFIX` paths were exempted from `scope` on the assumption something commits them. Nothing did. FIXED 2026-08-25, GAP OPEN
+### 32. `scripts/pod/launcher.py:70` hardcodes the absolute repo path, so its own test suite cannot run from a git worktree. FOUND 2026-08-25
+
+**NOT MINE, FOUND BY A DISPATCHED AGENT, VERIFIED HERE.** `ROOT =
+Path("/Users/alsg/Agentic/Bedrock")` is a literal, not a `Path(__file__)`
+derivation. `test_pod_launcher.py` reads `mod.STATE`/`mod.LOGS` off that
+constant, so when the suite runs from ANY OTHER checkout of this repo (a git
+worktree, a second clone), those paths resolve into the MAIN checkout instead
+of the one under test. Two checks fail there every time, unrelated to
+whatever the worktree actually changed.
+
+**MEASURED, NOT TAKEN ON REPORT.** Ran the same suite twice on the identical
+committed test file: from `.claude/worktrees/agent-ad6572326da066201`, 2
+failures (`launcher.py:70`'s doing); from `/Users/alsg/Agentic/Bedrock`
+itself, 268 checks, 0 failures. Same file, same commit, different `ROOT`
+value at runtime.
+
+**WHY IT MATTERS NOW, NOT JUST IN PRINCIPLE.** `isolation: "worktree"` on a
+dispatched agent is the normal way to keep a maintainer-session refactor
+reviewable before it lands (used for backlog item 31's landing and for the
+heads.toml test refactor this item accompanies). Every one of those agents
+gets a false-red `test_pod_launcher.py` it has to explain away, which is
+exactly the "a gate that fails a commit nobody could have complied with
+teaches every author to ignore a red gate" shape memory already names.
+
+**NOT FIXED HERE.** The cure is presumably `Path(__file__).resolve().parents[2]`
+or equivalent, matching how `scripts/pod/pod.py`'s own `ROOT` is derived
+(check before copying the pattern). Left for whoever next touches
+`launcher.py`, since this task's scope was the test file, not the module
+under test.
 
 **LANDED, `7c0bf58b`. FOUND WHILE REVIEWING A POD-REFILL, NOT WHILE LOOKING FOR
 IT.** `dev/pod/queue.toml`, `dev/pod/replay-corpus.jsonl` and
